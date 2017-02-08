@@ -1,0 +1,15 @@
+Package: medfate
+Type: Package
+Title: Mediterranean Forest Simulation
+Version: 0.3.1
+Date: 2017-01-17
+Author: Miquel De Caceres
+Maintainer: Miquel De Caceres <miquelcaceres@gmail.com>
+Description: Functions to simulate forest dynamics using cohort-based description of vegetation.
+License: GPL (>= 2)
+LazyLoad: yes
+Depends: R (>= 2.10), meteoland, sp, spdep
+Imports: methods, meteoland, Rcpp (>= 0.11.0)
+LinkingTo: Rcpp, meteoland
+NeedsCompilation: yes
+Packaged: 2016-10-24 08:16:08 UTC; miquelcaceres

@@ -1,0 +1,83 @@
+\encoding{UTF-8}
+\name{forest}
+\alias{forest}
+\alias{emptyforest}
+\alias{summary.forest}
+\alias{print.summary.forest}
+
+%- Also NEED an '\alias' for EACH other topic documented here.
+\title{Forest description}
+\description{
+Description of a forest patch.
+}
+\usage{
+\method{summary}{forest}(object, SpParams, detailed=FALSE, ...) 
+\method{print}{summary.forest}(x, digits = getOption("digits"), ...)
+emptyforest(ID="", patchsize=10000)
+}
+%- maybe also 'usage' for other objects documented here.
+\arguments{
+  \item{object}{An object of class \code{forest} has the following structure:
+  \itemize{
+  \item{\code{ID}: An identifier of the forest stand (a string).}
+  \item{\code{patchsize}: The area of the forest stand, in square meters.}
+  \item{\code{treeData}: A data frame of tree cohorts (in rows) and the following columns:
+   \itemize{
+      \item{\code{Species}: Non-negative integer for tree species identity (i.e., 0,1,2,...).}
+      \item{\code{Height}: Total height (in cm).}
+      \item{\code{DBH}: Diameter at breast height (in cm).}
+      \item{\code{N}: Density (number of individuals/cell).}
+      \item{\code{Z50}: Depth (in mm) corresponding to 50\% of roots.}
+      \item{\code{Z95}: Depth (in mm) corresponding to 95\% of roots.}
+   }
+  }
+  \item{\code{shrubData}: A data frame of shrub cohorts (in rows) and the following columns:
+   \itemize{
+      \item{\code{Species}: Non-negative integer for shrub species identity (i.e., 0,1,2,...).}
+      \item{\code{Height}: Total height (in cm).}
+      \item{\code{Cover}: Percent cover.}
+      \item{\code{Z}: Depth (in mm) of root system.}
+   }
+  }
+  \item{\code{seedBank}: A data frame containing the abundance of seeds for each species (in rows) and the following columns:
+   \itemize{
+      \item{\code{Species}: Non-negative integer for shrub species identity (i.e., 0,1,2,...).}
+      \item{\code{Abundance}: Abundance class (0 - none; 1 - low; 2 - medium; 3 - high; 4 - very high).}
+   }
+  }
+  \item{\code{herbCover}: Percent cover of the herb layer.}
+  \item{\code{herbHeight}: Mean height (in cm) of the herb layer.}
+  }
+  }
+  \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
+  \item{detailed}{A boolean flag to indicate that a detailed summary is desired.}
+  \item{x}{The object returned by \code{summary.forest}.}
+  \item{digits}{Minimal number of significant digits.}
+  \item{...}{Additional parameters for functions \code{\link{summary}} and \code{\link{print}}.}
+  \item{ID}{An identifier of the forest stand (a string).}
+  \item{patchsize}{The area of the forest stand, in square meters.}
+}
+\details{
+  Function \code{summary.forest} can be used to summarize a \code{forest} object in the console. Function \code{emptyforest} creates an empty \code{forest} object.
+}
+\value{
+  Function \code{summary.forest} returns a data frame with the basal area and LAI of the forest, either expressed as totals or divided among life stages and species. Function \code{emptyforest} returns an empty \code{forest} object.
+}
+\references{
+De \enc{Cáceres}{Caceres} M, \enc{Martínez}{Martinez}-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L. (submitted) Coupling a water balance model with forest inventory data to evaluate plant drought stress at the regional level. Agricultural and Forest Meteorology.
+}
+\author{
+Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
+}
+\seealso{
+ \code{\link{exampleforest}}, \code{\link{extractSFIforest}}, \code{\link{soil}}, \code{\link{SpatialPointsForest}}
+}
+\examples{
+data(exampleforest)
+data(SpParamsMED)
+
+summary(exampleforest, SpParamsMED)
+
+}
+% Add one or more standard keywords, see file 'KEYWORDS' in the
+% R documentation directory.
