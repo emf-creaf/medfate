@@ -49,7 +49,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
     g[c]=gSP[SP[c]];
     Sgdd[c]=SgddSP[SP[c]];
   }
-  List abovedf = DataFrame::create( _["LAI"]=LAI,_["SP"]=SP, _["H"]=H, _["CR"]=CR);
+  List abovedf = DataFrame::create(_["SP"]=SP, _["H"]=H, _["CR"]=CR, _["LAI"]=LAI);
   List df = List::create(_["verbose"] =control["verbose"],_["TranspirationMode"] =transpirationMode, 
                          _["above"] = abovedf, 
                          _["V"] = V,

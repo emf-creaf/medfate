@@ -33,30 +33,36 @@ swbInput(SP, LAI, H, CR,  V,  soil, SpParams, control)
 Functions \code{forest2swbInput} and \code{forest2abovegroundInput} extracts height and species identity from plant cohorts of \code{x}, and calculate leaf area index and crown ratio.\code{forest2swbInput} also calculates the distribution of fine roots across soil. Both \code{forest2swbInput} and \code{swbInput} find parameter values for each plant cohort according to the parameters of its species as specified in \code{SpParams}. If \code{control$transpirationMode = "Sperry"} the functions also estimate the maximum conductance of rhizosphere, root xylem and stem xylem elements.
 }
 \value{
-Function \code{forest2abovegroundInput} returns a data frame with the following columns:
+Function \code{forest2aboveground} returns a data frame with the following columns:
 \itemize{
-  \item{\code{LAI}: Leaf area index (in m2/m2).}
   \item{\code{SP}: Species identity (an integer).}
-  \item{\code{H}: Plant height (in cm).}
+  \item{\code{N}: Cohort density (ind/ha) (see function \code{\link{plant.Density}}).}
+  \item{\code{DBH}: Tree diameter at breast height (cm).}
+  \item{\code{H}: Plant height (cm).}
   \item{\code{CR}: Crown ratio (crown length to total height).}
+  \item{\code{LAI}: Leaf area index (m2/m2).}
+  \item{\code{LA_live}: Live leaf area per individual (m2/ind).}
+  \item{\code{LA_dead}: Dead leaf area per individual (m2/ind).}
+  \item{\code{SA}: Live sapwood area per individual (cm2/ind).}
 }
 
 Functions \code{forest2swbInput} and \code{swbInput} return list of class \code{swbInput} with the following elements:
 \itemize{
-  \item{\code{"TranspirationMode"}: Transpiration mode (either 'Simple' or 'Sperry').}
-  \item{\code{LAI}: Leaf area index (in m2/m2).}
-  \item{\code{SP}: Species identity (an integer).}
-  \item{\code{H}: Plant height (in cm).}
+  \item{\code{verbose}: Boolean flag to indicate extra console output.}
+  \item{\code{TranspirationMode}: Transpiration mode (either 'Simple' or 'Sperry').}
+  \item{\code{above}: A data frame with columns \code{SP}, \code{H}, \code{CR} and \code{LAI} (see function \code{forest2aboveground}).}
   \item{\code{V}: A matrix with the proportion of fine roots of each cohort (in rows) in each soil layer (in columns).}
   \item{\code{k}: PAR extinction coefficient.}
   \item{\code{g}: Canopy water retention capacity per LAI unit (mm/LAI).}
   \item{\code{CR}: Crown ratio (crown length to total height).}
   \item{\code{Sgdd}: Growth degree days needed for leaf budburst (for winter decideous species).}
-  \item{\code{Transpiration}: Plant cohort transpiration (filled with zeroes before simulations).}
+  \item{\code{Transpiration}: Plant cohort transpiration of the current day (mm of water = L/m2; filled with zeroes before simulations).}
+  \item{\code{Photosynthesis}: Plant cohort photosynthesis of the current day (g C/m2; filled with zeroes before simulations).}
 }
 If \code{control$transpirationMode = "Simple"} there is an additional element:
 \itemize{
   \item{\code{Psi_Extract}: Water potential corresponding to 50\% relative conductance (in MPa).}
+  \item{\code{WUE}: Water use efficiency for carbon assimilation (g C/mm water).}
 }
 If \code{control$transpirationMode = "Sperry"} there are the following additional elements:
 \itemize{
@@ -78,6 +84,9 @@ data(exampleforest)
 
 #Default species parameterization
 data(SpParamsMED)
+
+#Aboveground parameters
+forest2aboveground(exampleforest, SpParamsMED)
 
 #Initialize soil with default soil params
 examplesoil = soil(defaultSoilParams())
