@@ -373,16 +373,16 @@ swbInput <- function(above, V, soil, SpParams, control) {
     .Call('medfate_swbInput', PACKAGE = 'medfate', above, V, soil, SpParams, control)
 }
 
-forest2swbInput <- function(x, soil, SpParams, control, gdd = NA_real_) {
-    .Call('medfate_forest2swbInput', PACKAGE = 'medfate', x, soil, SpParams, control, gdd)
+forest2swbInput <- function(x, soil, SpParams, control) {
+    .Call('medfate_forest2swbInput', PACKAGE = 'medfate', x, soil, SpParams, control)
 }
 
 growthInput <- function(above, V, soil, SpParams, control) {
     .Call('medfate_growthInput', PACKAGE = 'medfate', above, V, soil, SpParams, control)
 }
 
-forest2growthInput <- function(x, soil, SpParams, control, gdd = NA_real_) {
-    .Call('medfate_forest2growthInput', PACKAGE = 'medfate', x, soil, SpParams, control, gdd)
+forest2growthInput <- function(x, soil, SpParams, control) {
+    .Call('medfate_forest2growthInput', PACKAGE = 'medfate', x, soil, SpParams, control)
 }
 
 photo.GammaTemp <- function(leaf_temp) {

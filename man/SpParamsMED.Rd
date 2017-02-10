@@ -40,6 +40,7 @@ A data set of parameter values for Mediterranean species, resulting from bibliog
     \item{\code{g}}{Canopy water storage capacity per LAI unit (in mm/LAI).}
     \item{\code{Sgdd}}{Growth degree days for leaf budburst (in Celsius)}
     \item{\code{Al2As}}{Leaf area to sapwood area ratio (in m2·m-2).}
+    \item{\code{WUE}}{Water use efficiency for carbon assimilation (g C /mm water).}
     \item{\code{Psi_Extract}}{Water potential corresponding to 50\% relative conductance (in MPa).}
     \item{\code{Gwmax}}{Maximum stomatal conductance to water vapor per leaf area unit (in mol·s-1·m-2).}
     \item{\code{xylem_kmax}}{Sapwood-specific hydraulic conductivity of stem xylem (in kg H2O·s-1·m-2).}

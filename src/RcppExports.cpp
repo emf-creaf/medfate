@@ -1352,8 +1352,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // forest2swbInput
-List forest2swbInput(List x, List soil, DataFrame SpParams, List control, double gdd);
-RcppExport SEXP medfate_forest2swbInput(SEXP xSEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP, SEXP gddSEXP) {
+List forest2swbInput(List x, List soil, DataFrame SpParams, List control);
+RcppExport SEXP medfate_forest2swbInput(SEXP xSEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1361,8 +1361,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< List >::type control(controlSEXP);
-    Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
-    rcpp_result_gen = Rcpp::wrap(forest2swbInput(x, soil, SpParams, control, gdd));
+    rcpp_result_gen = Rcpp::wrap(forest2swbInput(x, soil, SpParams, control));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1382,8 +1381,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // forest2growthInput
-List forest2growthInput(List x, List soil, DataFrame SpParams, List control, double gdd);
-RcppExport SEXP medfate_forest2growthInput(SEXP xSEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP, SEXP gddSEXP) {
+List forest2growthInput(List x, List soil, DataFrame SpParams, List control);
+RcppExport SEXP medfate_forest2growthInput(SEXP xSEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1391,8 +1390,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< List >::type control(controlSEXP);
-    Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
-    rcpp_result_gen = Rcpp::wrap(forest2growthInput(x, soil, SpParams, control, gdd));
+    rcpp_result_gen = Rcpp::wrap(forest2growthInput(x, soil, SpParams, control));
     return rcpp_result_gen;
 END_RCPP
 }

@@ -91,7 +91,7 @@ List swbDay1(List x, List soil, double gdd, double tday, double pet, double rain
 
   //Vegetation input
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
-  NumericVector LAI = Rcpp::as<Rcpp::NumericVector>(above["LAI"]);
+  NumericVector LAI = Rcpp::as<Rcpp::NumericVector>(above["LAI_live"]);
   NumericVector H = Rcpp::as<Rcpp::NumericVector>(above["H"]);
   NumericVector CR = Rcpp::as<Rcpp::NumericVector>(above["CR"]);
   NumericVector Sgdd = Rcpp::as<Rcpp::NumericVector>(x["Sgdd"]);
@@ -238,7 +238,7 @@ List swbDay2(List x, List soil, double gdd, double tmin, double tmax, double rhm
   
   //Vegetation input
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
-  NumericVector LAI = Rcpp::as<Rcpp::NumericVector>(above["LAI"]);
+  NumericVector LAI = Rcpp::as<Rcpp::NumericVector>(above["LAI_live"]);
   NumericVector H = Rcpp::as<Rcpp::NumericVector>(above["H"]);
   NumericVector CR = Rcpp::as<Rcpp::NumericVector>(above["CR"]);
   NumericVector Sgdd = Rcpp::as<Rcpp::NumericVector>(x["Sgdd"]);
@@ -389,8 +389,8 @@ List swbDay2(List x, List soil, double gdd, double tmin, double tmax, double rhm
       NumericVector PsiVec = supplyNetwork["PsiPlant"];
       NumericVector Ect = ElayersMat(iPM,_);
       for(int l=0;l<nlayersc;l++) Ec[l] += Ect[l]*0.001*0.01802*LAIphe[c]*tstep;
-      NumericVector Ag = photo["Photosynthesis"];
-      photosynthesis[c] +=pow(10,-6)*12.01017*(Ag[iPM]-0.015*Vmax298[c])*LAIphe[c]*tstep;
+      NumericVector An = photo["NetPhotosynthesis"];
+      photosynthesis[c] +=pow(10,-6)*12.01017*An[iPM]*LAIphe[c]*tstep;
       minPsi = std::min(minPsi,PsiVec[iPM]);
       // Rcout<<"[T"<<n<<" Rn: "<<Rninst<<" Qinst: "<< Qinst <<" iPM: "<<iPM<<" E: "<< sum(Ect)<<"]";
       t +=tstep;

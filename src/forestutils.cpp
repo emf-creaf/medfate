@@ -884,7 +884,7 @@ DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL) {
   int nshrub = shrubData.nrows();
   
   NumericVector CR = cohortCrownRatio(x, SpParams);
-  NumericVector LAI = cohortLAI(x, SpParams, gdd);
+  NumericVector LAI_live = cohortLAI(x, SpParams, gdd);
   IntegerVector SP(ntree+nshrub);
   NumericVector H(ntree+nshrub);
   
@@ -896,28 +896,21 @@ DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL) {
   
   NumericVector N = cohortDensity(x, SpParams);
     
-  NumericVector Al2AsSP = SpParams["Al2As"];
-  NumericVector LA_live(ntree+nshrub), LA_dead(ntree+nshrub);
-  NumericVector SA(ntree+nshrub);
+  NumericVector LAI_dead(ntree+nshrub);
   NumericVector DBH(ntree+nshrub);
   
   for(int i=0;i<ntree;i++) {
     SP[i] = treeSP[i];
     H[i] = treeH[i];
     DBH[i] = treeDBH[i];
-    LA_live[i] = LAI[i]/(N[i]/10000.0);
-    LA_dead[i] = 0.0;
-    SA[i] = 10000.0*LA_live[i]/Al2AsSP[SP[i]];//Individual SA in cm2/m2
+    LAI_dead[i] = 0.0;
   }
   for(int i=0;i<nshrub;i++) {
     SP[ntree+i] = shrubSP[i];
     H[ntree+i] = shrubH[i];
     DBH[ntree+i] = NA_REAL;
-    LA_live[ntree+i] = LAI[ntree+i]/(N[ntree+i]/10000.0);
-    LA_dead[ntree+i] = 0.0;
-    SA[ntree+i] = 10000.0*LA_live[ntree+i]/Al2AsSP[SP[ntree+i]]; //Individual SA in cm2/m2
   }
-  return(DataFrame::create(_["SP"]=SP, _["N"] = N,  _["DBH"] = DBH, _["H"]=H, _["CR"] = CR, _["LAI"]=LAI, 
-                           _["LA_live"] = LA_live, _["LA_dead"] = LA_dead, _["SA"] = SA));
+  return(DataFrame::create(_["SP"]=SP, _["N"] = N,  _["DBH"] = DBH, _["H"]=H, _["CR"] = CR, 
+                           _["LAI_live"]=LAI_live, _["LAI_dead"] = LAI_dead));
   
 }

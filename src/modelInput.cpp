@@ -28,7 +28,8 @@ void checkSpeciesParameters(DataFrame SpParams, CharacterVector params) {
 // [[Rcpp::export("swbInput")]]
 List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, List control) {
   IntegerVector SP = above["SP"];
-  NumericVector LAI = above["LAI"];
+  NumericVector LAI_live = above["LAI_live"];
+  NumericVector LAI_dead = above["LAI_dead"];
   NumericVector H = above["H"];
   NumericVector CR = above["CR"];
   
@@ -49,7 +50,8 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
     g[c]=gSP[SP[c]];
     Sgdd[c]=SgddSP[SP[c]];
   }
-  List abovedf = DataFrame::create(_["SP"]=SP, _["H"]=H, _["CR"]=CR, _["LAI"]=LAI);
+  List abovedf = DataFrame::create(_["SP"]=SP, _["H"]=H, _["CR"]=CR, _["LAI_live"]=LAI_live,
+                                   _["LAI_dead"] = LAI_dead);
   List df = List::create(_["verbose"] =control["verbose"],_["TranspirationMode"] =transpirationMode, 
                          _["above"] = abovedf, 
                          _["V"] = V,
@@ -127,7 +129,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
 }
 
 // [[Rcpp::export("forest2swbInput")]]
-List forest2swbInput(List x, List soil, DataFrame SpParams, List control, double gdd = NA_REAL) {
+List forest2swbInput(List x, List soil, DataFrame SpParams, List control) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
   DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
   NumericVector d = soil["dVec"];
@@ -148,7 +150,7 @@ List forest2swbInput(List x, List soil, DataFrame SpParams, List control, double
     Vi = conicRS_one(shrubZ[i],d);
     V(ntree+i,_) = Vi;
   }
-  DataFrame above = forest2aboveground(x, SpParams, gdd);
+  DataFrame above = forest2aboveground(x, SpParams, NA_REAL);
   return(swbInput(above,  V, soil, SpParams, control));
 }
 
@@ -160,13 +162,18 @@ List forest2swbInput(List x, List soil, DataFrame SpParams, List control, double
 // [[Rcpp::export("growthInput")]]
 List growthInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, List control) {
   IntegerVector SP = above["SP"];
-  NumericVector LAI = above["LAI"];
+  NumericVector LAI_live = above["LAI_live"];
+  NumericVector LAI_dead = above["LAI_dead"];
+  NumericVector N = above["N"];
+  NumericVector DBH = above["DBH"];
   NumericVector H = above["H"];
   NumericVector CR = above["CR"];
   String transpirationMode = control["transpirationMode"];
   if((transpirationMode!="Simple") & (transpirationMode!="Sperry")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Simple' or 'Sperry')");
   double fracTotalTreeResistance = control["fracTotalTreeResistance"];
   double averageFracRhizosphereResistance = control["averageFracRhizosphereResistance"];
+  
+  NumericVector Al2AsSP = SpParams["Al2As"];
   
   NumericVector kSP = SpParams["k"];
   NumericVector gSP = SpParams["g"];
@@ -180,8 +187,18 @@ List growthInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams
     g[c]=gSP[SP[c]];
     Sgdd[c]=SgddSP[SP[c]];
   }
+  NumericVector SA(numCohorts), LA_live(numCohorts), LA_dead(numCohorts);
+  for(int c=0;c<numCohorts;c++){
+    LA_live[c] = LAI_live[c]/(N[c]/10000.0);
+    SA[c] = 10000.0*LA_live[c]/Al2AsSP[SP[c]];//Individual SA in cm2/m2
+    LA_dead[c] = LAI_dead[c]/(N[c]/10000.0);
+  }
+  List abovedf = DataFrame::create(_["SP"]=SP, _["N"]=N,_["DBH"]=DBH,  _["H"]=H, _["CR"]=CR, 
+                                   _["LAI_live"]=LAI_live, _["LAI_dead"] = LAI_dead,  
+                                   _["LA_live"]=LA_live, _["LA_dead"]=LA_dead,
+                                   _["SA"] = SA);
   List df = List::create(_["verbose"] =control["verbose"],_["TranspirationMode"] =transpirationMode, 
-                         _["above"] = above, 
+                         _["above"] = abovedf, 
                          _["V"] = V,
                          _["k"] = k, _["g"] = g, _["Sgdd"] = Sgdd);
   if(transpirationMode=="Simple") {
@@ -256,7 +273,7 @@ List growthInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams
   return(df);
 }
 // [[Rcpp::export("forest2growthInput")]]
-List forest2growthInput(List x, List soil, DataFrame SpParams, List control, double gdd = NA_REAL) {
+List forest2growthInput(List x, List soil, DataFrame SpParams, List control) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
   DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
   NumericVector d = soil["dVec"];
@@ -277,6 +294,6 @@ List forest2growthInput(List x, List soil, DataFrame SpParams, List control, dou
     Vi = conicRS_one(shrubZ[i],d);
     V(ntree+i,_) = Vi;
   }
-  DataFrame above = forest2aboveground(x, SpParams, gdd);
+  DataFrame above = forest2aboveground(x, SpParams, NA_REAL);
   return(growthInput(above,  V, soil, SpParams, control));
 }

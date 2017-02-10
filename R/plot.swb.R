@@ -3,7 +3,8 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
   DailyBalance = x$DailyBalance
   SoilWaterBalance = x$SoilWaterBalance
   nlayers = x$NumSoilLayers
-  TYPES = c("PET_Precipitation","PET_NetPrec","ET","Psi","Theta","Vol","PlantStress", "PlantPsi","Export")
+  TYPES = c("PET_Precipitation","PET_NetPrec","ET","Psi","Theta","Vol",
+            "PlantStress", "PlantPsi","PlantPhotosynthesis","PlantTranspiration","Export")
   type = match.arg(type,TYPES)  
   numDays = length(dates)
   numYears = round(numDays/365)
@@ -96,6 +97,18 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
     if(is.null(ylab)) ylab = "Plant water potential (MPa)"
     if(is.null(ylim)) ylim = c(min(x$PlantPsi),0)
     matplot(1:numDays, x$PlantPsi, ylim = ylim, lwd=1, type="l", xlim=xlim,
+            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
+    plotAxes()      
+  } else if(type=="PlantTranspiration") {
+    if(is.null(ylab)) ylab = "Plant transpiration (mm)"
+    if(is.null(ylim)) ylim = c(0,max(x$PlantTranspiration))
+    matplot(1:numDays, x$PlantTranspiration, ylim = ylim, lwd=1, type="l", xlim=xlim,
+            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
+    plotAxes()      
+  } else if(type=="PlantPhotosynthesis") {
+    if(is.null(ylab)) ylab = "Plant photosynthesis (gC/m2)"
+    if(is.null(ylim)) ylim = c(min(x$PlantPhotosynthesis),max(x$PlantPhotosynthesis))
+    matplot(1:numDays, x$PlantPhotosynthesis, ylim = ylim, lwd=1, type="l", xlim=xlim,
             ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
     plotAxes()      
   } else if(type=="Export") {

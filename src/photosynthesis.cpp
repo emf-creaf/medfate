@@ -191,39 +191,41 @@ List photosynthesisFunction(List supplyFunction, double Catm, double Patm, doubl
   NumericVector leafTemp(nsteps);
   NumericVector leafVPD(nsteps);
   NumericVector Gw(nsteps);
-  NumericVector An(nsteps);
+  NumericVector Ag(nsteps), An(nsteps);
   NumericVector beta(nsteps);
   for(int i=0;i<nsteps;i++){
     leafTemp[i] = leafTemperature(absRad, Tair, u, fittedE[i]);
     leafVPD[i] = (meteoland::utils_saturationVP(leafTemp[i])-vpa);
     Gw[i] = Patm*(fittedE[i]/1000)/leafVPD[i];
-    An[i] = photosynthesis(Q, Catm, Gw[i]/1.6, leafTemp[i], Vmax298, Jmax298);
+    Ag[i] = photosynthesis(Q, Catm, Gw[i]/1.6, leafTemp[i], Vmax298, Jmax298);
+    An[i] = Ag[i] - 0.015*VmaxTemp(Vmax298, leafTemp[i]);
   }
   return(List::create(Named("LeafTemperature") = leafTemp,
                       Named("LeafVPD") = leafVPD,
                       Named("WaterVaporConductance") = Gw,
-                      Named("Photosynthesis") = An));
+                      Named("Photosynthesis") = Ag,
+                      Named("NetPhotosynthesis") = An));
 }
 
 // [[Rcpp::export("photo.profitMaximization")]]
 List profitMaximization(List supplyFunction, List photosynthesisFunction, double Gwmin, double Gwmax) {
   NumericVector supplydEdp = supplyFunction["dEdP"];
-  NumericVector An = photosynthesisFunction["Photosynthesis"];
+  NumericVector Ag = photosynthesisFunction["Photosynthesis"];
   NumericVector Gw = photosynthesisFunction["WaterVaporConductance"];
   int nsteps = supplydEdp.size();
   NumericVector profit(nsteps);
   NumericVector cost(nsteps);
   NumericVector gain(nsteps);
   double maxdEdp = 0.0, mindEdp = 99999999.0;
-  double Anmax = 0.0;
+  double Agmax = 0.0;
   for(int i=0;i<nsteps;i++) {
     maxdEdp = std::max(maxdEdp, supplydEdp[i]);
     mindEdp =  std::min(mindEdp, supplydEdp[i]);
-    Anmax = std::max(Anmax, An[i]);
+    Agmax = std::max(Agmax, Ag[i]);
   }
   for(int i=0;i<nsteps;i++) {
     cost[i] = (maxdEdp-supplydEdp[i])/(maxdEdp-mindEdp);
-    gain[i] = An[i]/Anmax;
+    gain[i] = Ag[i]/Agmax;
     profit[i] = gain[i]-cost[i];
   }
 
