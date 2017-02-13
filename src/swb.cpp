@@ -94,17 +94,26 @@ List swbDay1(List x, List soil, double gdd, double tday, double pet, double rain
   NumericVector LAI = Rcpp::as<Rcpp::NumericVector>(above["LAI_live"]);
   NumericVector H = Rcpp::as<Rcpp::NumericVector>(above["H"]);
   NumericVector CR = Rcpp::as<Rcpp::NumericVector>(above["CR"]);
-  NumericVector Sgdd = Rcpp::as<Rcpp::NumericVector>(x["Sgdd"]);
-  NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(x["k"]);
-  NumericVector gRainIntercept = Rcpp::as<Rcpp::NumericVector>(x["g"]);
+  int numCohorts = LAI.size();
+  
+  //Root distribution input
+  List below = Rcpp::as<Rcpp::List>(x["below"]);
+  NumericMatrix V = Rcpp::as<Rcpp::NumericMatrix>(below["V"]);
+
+  //Parameters  
+  DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
+  NumericVector Sgdd = Rcpp::as<Rcpp::NumericVector>(paramsBase["Sgdd"]);
+  NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsBase["k"]);
+  NumericVector gRainIntercept = Rcpp::as<Rcpp::NumericVector>(paramsBase["g"]);
+  
+  DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
+  NumericVector Psi_Extract = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Psi_Extract"]);
+  NumericVector WUE = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE"]);
+
+  //Communication vectors
   NumericVector transpiration = Rcpp::as<Rcpp::NumericVector>(x["Transpiration"]);
   NumericVector photosynthesis = Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
-  NumericVector Psi_Extract = Rcpp::as<Rcpp::NumericVector>(x["Psi_Extract"]);
-  NumericVector WUE = Rcpp::as<Rcpp::NumericVector>(x["WUE"]);
-  int numCohorts = LAI.size();
-
-  //Root distribution input
-  NumericMatrix V = Rcpp::as<Rcpp::NumericMatrix>(x["V"]);
+  
 
 
   //Determine whether leaves are out (phenology) and the adjusted Leaf area
@@ -241,26 +250,38 @@ List swbDay2(List x, List soil, double gdd, double tmin, double tmax, double rhm
   NumericVector LAI = Rcpp::as<Rcpp::NumericVector>(above["LAI_live"]);
   NumericVector H = Rcpp::as<Rcpp::NumericVector>(above["H"]);
   NumericVector CR = Rcpp::as<Rcpp::NumericVector>(above["CR"]);
-  NumericVector Sgdd = Rcpp::as<Rcpp::NumericVector>(x["Sgdd"]);
-  NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(x["k"]);
-  NumericVector gRainIntercept = Rcpp::as<Rcpp::NumericVector>(x["g"]);
+  int numCohorts = LAI.size();
+
+  //Root distribution input
+  List below = Rcpp::as<Rcpp::List>(x["below"]);
+  NumericMatrix V =Rcpp::as<Rcpp::NumericMatrix>(below["V"]);
+  NumericMatrix VCroot_kmax= Rcpp::as<Rcpp::NumericMatrix>(below["VCroot_kmax"]);
+  NumericMatrix VGrhizo_kmax= Rcpp::as<Rcpp::NumericMatrix>(below["VGrhizo_kmax"]);
+  
+  //Base parameters
+  DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
+  NumericVector Sgdd = Rcpp::as<Rcpp::NumericVector>(paramsBase["Sgdd"]);
+  NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsBase["k"]);
+  NumericVector gRainIntercept = Rcpp::as<Rcpp::NumericVector>(paramsBase["g"]);
+
+  //Transpiration parameters
+  DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
+  NumericVector Gwmax = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Gwmax"]);
+  NumericVector VCstem_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_kmax"]);
+  NumericVector VCstem_c = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_c"]);
+  NumericVector VCstem_d = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_d"]);
+  NumericVector VCroot_c = paramsTransp["VCroot_c"];
+  NumericVector VCroot_d = paramsTransp["VCroot_d"];
+  NumericVector Vmax298 = paramsTransp["Vmax298"];
+  NumericVector Jmax298 = paramsTransp["Jmax298"];
+
   NumericVector transpiration = Rcpp::as<Rcpp::NumericVector>(x["Transpiration"]);
   NumericVector photosynthesis = Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
-  NumericVector Gwmax = Rcpp::as<Rcpp::NumericVector>(x["Gwmax"]);
+  
+  
   NumericVector VG_n = Rcpp::as<Rcpp::NumericVector>(soil["VG_n"]);
   NumericVector VG_alpha = Rcpp::as<Rcpp::NumericVector>(soil["VG_alpha"]);
-  NumericVector VCstem_kmax = Rcpp::as<Rcpp::NumericVector>(x["VCstem_kmax"]);
-  NumericVector VCstem_c = Rcpp::as<Rcpp::NumericVector>(x["VCstem_c"]);
-  NumericVector VCstem_d = Rcpp::as<Rcpp::NumericVector>(x["VCstem_d"]);
-  NumericVector VCroot_c = x["VCroot_c"];
-  NumericVector VCroot_d = x["VCroot_d"];
-  NumericVector Vmax298 = x["Vmax298"];
-  NumericVector Jmax298 = x["Jmax298"];
-  //Root distribution input
-  NumericMatrix V =Rcpp::as<Rcpp::NumericMatrix>(x["V"]);
-  NumericMatrix VCroot_kmax= Rcpp::as<Rcpp::NumericMatrix>(x["VCroot_kmax"]);
-  NumericMatrix VGrhizo_kmax= Rcpp::as<Rcpp::NumericMatrix>(x["VGrhizo_kmax"]);
-  int numCohorts = LAI.size();
+  
   
  
   double latrad = latitude * (PI/180.0);
@@ -559,26 +580,43 @@ List swbgridDay(CharacterVector lct, List xList, List soilList,
 
 void checkswbInput(List x, List soil, String transpirationMode) {
   if(!x.containsElementNamed("above")) stop("above missing in swbInput");
-  if(!x.containsElementNamed("V")) stop("V missing in swbInput");
-  if(!x.containsElementNamed("Sgdd")) stop("Sgdd missing in swbInput");
-  if(!x.containsElementNamed("k")) stop("k missing in swbInput");
-  if(!x.containsElementNamed("g")) stop("g missing in swbInput");
+  DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
+  if(!above.containsElementNamed("LAI_live")) stop("LAI_live missing in swbInput$above");
+  if(!above.containsElementNamed("CR")) stop("CR missing in swbInput$above");
+  if(!above.containsElementNamed("H")) stop("H missing in swbInput$above");
+  
+  if(!x.containsElementNamed("below")) stop("below missing in swbInput");
+  List below = Rcpp::as<Rcpp::List>(x["below"]);
+  if(!below.containsElementNamed("V")) stop("V missing in swbInput$below");
+  if(transpirationMode=="Sperry"){
+    if(!below.containsElementNamed("VGrhizo_kmax")) stop("VCstem_kmax missing in swbInput$below");
+    if(!below.containsElementNamed("VCroot_kmax")) stop("VCroot_kmax missing in swbInput$below");
+  }  
+  
+  if(!x.containsElementNamed("paramsBase")) stop("paramsBase missing in swbInput");
+  DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
+  if(!paramsBase.containsElementNamed("Sgdd")) stop("Sgdd missing in swbInput$paramsBase");
+  if(!paramsBase.containsElementNamed("k")) stop("k missing in swbInput$paramsBase");
+  if(!paramsBase.containsElementNamed("g")) stop("g missing in swbInput$paramsBase");
+  
+  if(!x.containsElementNamed("paramsTransp")) stop("paramsTransp missing in swbInput");
+  DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
   if(transpirationMode=="Simple") {
-    if(!x.containsElementNamed("Psi_Extract")) stop("Psi_Extract missing in swbInput");
-    if(!x.containsElementNamed("WUE")) stop("WUE missing in swbInput");
+    if(!paramsTransp.containsElementNamed("Psi_Extract")) stop("Psi_Extract missing in swbInput$paramsTransp");
+    if(!paramsTransp.containsElementNamed("WUE")) stop("WUE missing in swbInput$paramsTransp");
   } else if(transpirationMode=="Sperry") {
-    if(!x.containsElementNamed("VGrhizo_kmax")) stop("VCstem_kmax missing in swbInput");
+    if(!paramsTransp.containsElementNamed("VCstem_kmax")) stop("VCstem_kmax missing in swbInput$paramsTransp");
+    if(!paramsTransp.containsElementNamed("VCstem_c")) stop("VCstem_c missing in swbInput$paramsTransp");
+    if(!paramsTransp.containsElementNamed("VCstem_d")) stop("VCstem_d missing in swbInput$paramsTransp");
+    if(!paramsTransp.containsElementNamed("VCroot_c")) stop("VCroot_c missing in swbInput$paramsTransp");
+    if(!paramsTransp.containsElementNamed("VCroot_d")) stop("VCroot_d missing in swbInput$paramsTransp");
+    if(!paramsTransp.containsElementNamed("Gwmax")) stop("Gwmax missing in swbInput$paramsTransp");
+    if(!paramsTransp.containsElementNamed("Vmax298")) stop("Vmax298 missing in swbInput$paramsTransp");
+    if(!paramsTransp.containsElementNamed("Jmax298")) stop("Jmax298 missing in swbInput$paramsTransp");
+  }
+  if(transpirationMode=="Sperry") {
     if(!soil.containsElementNamed("VG_n")) stop("VG_n missing in soil");
     if(!soil.containsElementNamed("VG_alpha")) stop("VG_alpha missing in soil");
-    if(!x.containsElementNamed("VCstem_kmax")) stop("VCstem_kmax missing in swbInput");
-    if(!x.containsElementNamed("VCstem_c")) stop("VCstem_c missing in swbInput");
-    if(!x.containsElementNamed("VCstem_d")) stop("VCstem_d missing in swbInput");
-    if(!x.containsElementNamed("VCroot_kmax")) stop("VCroot_kmax missing in swbInput");
-    if(!x.containsElementNamed("VCroot_c")) stop("VCroot_c missing in swbInput");
-    if(!x.containsElementNamed("VCroot_d")) stop("VCroot_d missing in swbInput");
-    if(!x.containsElementNamed("Gwmax")) stop("Gwmax missing in swbInput");
-    if(!x.containsElementNamed("Vmax298")) stop("Vmax298 missing in swbInput");
-    if(!x.containsElementNamed("Jmax298")) stop("Jmax298 missing in swbInput");
   }
   if(!soil.containsElementNamed("W")) stop("W missing in soil");
   if(!soil.containsElementNamed("psi")) stop("psi missing in soil");
@@ -596,27 +634,46 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
   bool verbose = x["verbose"];
   
   checkswbInput(x, soil, transpirationMode);
-    
-  NumericVector Precipitation = meteo["Precipitation"];
-  NumericVector Temperature = meteo["MeanTemperature"];
+
+  //Meteorological input    
+  NumericVector MinTemperature, MaxTemperature;
+  NumericVector MinRelativeHumidity, MaxRelativeHumidity;
+  NumericVector PET;
+  NumericVector Radiation, WindSpeed;
   IntegerVector DOY = meteo["DOY"];
+  NumericVector Precipitation = meteo["Precipitation"];
+  NumericVector MeanTemperature = meteo["MeanTemperature"];
+  int numDays = Precipitation.size();
+  if(transpirationMode=="Simple") {
+    PET = meteo["PET"];
+  } else if(transpirationMode=="Sperry") {
+    if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
+    if(NumericVector::is_na(elevation)) stop("Value for 'elevation' should not be missing.");
+    MinTemperature = meteo["MinTemperature"];
+    MaxTemperature = meteo["MaxTemperature"];
+    MinRelativeHumidity = meteo["MinRelativeHumidity"];
+    MaxRelativeHumidity = meteo["MaxRelativeHumidity"];
+    Radiation = meteo["Radiation"];
+    WindSpeed = meteo["WindSpeed"];
+    PET = NumericVector(numDays);
+  }
   CharacterVector dateStrings = meteo.attr("row.names");
   
-  NumericVector GDD = gdd(DOY, Temperature, 5.0);
+  NumericVector GDD = gdd(DOY, MeanTemperature, 5.0);
   NumericVector ER = er(DOY);
   
+  
+  //Plant input
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   NumericVector SP = above["SP"];
   int numCohorts = SP.size();
-  int numDays = Precipitation.size();
   
+  //Soil input
   NumericVector Water_FC = soil["Water_FC"];
   NumericVector W = soil["W"];
-  
   int nlayers = W.size();
-  NumericVector PET(numDays);
 
-  //Water balance variables
+  //Water balance output variables
   NumericVector Esoil(numDays);
   NumericVector LAIcell(numDays);
   NumericVector Cm(numDays);
@@ -632,6 +689,7 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
   NumericMatrix MLdays(numDays, nlayers);
   NumericVector MLTot(numDays, 0.0);
   
+  //Plant output variables
   NumericMatrix PlantPsi(numDays, numCohorts);
   NumericMatrix PlantStress(numDays, numCohorts);
   NumericMatrix PlantTranspiration(numDays, numCohorts);
@@ -647,13 +705,20 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
   }
 
   if(verbose) Rcout << "Daily balance:";
-  if(transpirationMode=="Simple") {
-    PET = meteo["PET"];
-    NumericVector Tday = meteo["MeanTemperature"];
-    for(int i=0;i<numDays;i++) {
+  List s;
+  for(int i=0;i<numDays;i++) {
       if(verbose) Rcout<<".";
-      List s = swbDay1(x, soil, GDD[i], Tday[i], PET[i], Precipitation[i], ER[i], 0.0, false); //No Runon in simulations for a single cell
-
+      if(transpirationMode=="Simple") {
+        s = swbDay1(x, soil, GDD[i], MeanTemperature[i], PET[i], Precipitation[i], ER[i], 0.0, false); //No Runon in simulations for a single cell
+      } else if(transpirationMode=="Sperry") {
+        std::string c = as<std::string>(dateStrings[i]);
+        int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
+        double delta = meteoland::radiation_solarDeclination(J);
+        s = swbDay2(x, soil, GDD[i], MinTemperature[i], MaxTemperature[i], 
+                         MinRelativeHumidity[i], MaxRelativeHumidity[i], Radiation[i], WindSpeed[i], 
+                         latitude, elevation, slope, aspect, delta, Precipitation[i], ER[i], 0.0, false);
+        PET[i] = s["PET"];
+      }
       Lground[i] = s["Lground"];
       Esoil[i] = sum(Rcpp::as<Rcpp::NumericVector>(s["EsoilVec"]));
       LAIcell[i] = s["LAIcell"];
@@ -677,51 +742,6 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
       EplantCohTot = EplantCohTot + EplantCoh;
       
       if(i<(numDays-1)) Wdays(i+1,_) = W;
-    }
-  } else if(transpirationMode=="Sperry") {
-    if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
-    if(NumericVector::is_na(elevation)) stop("Value for 'elevation' should not be missing.");
-    NumericVector MinTemperature = meteo["MinTemperature"];
-    NumericVector MaxTemperature = meteo["MaxTemperature"];
-    NumericVector MinRelativeHumidity = meteo["MinRelativeHumidity"];
-    NumericVector MaxRelativeHumidity = meteo["MaxRelativeHumidity"];
-    NumericVector Radiation = meteo["Radiation"];
-    NumericVector WindSpeed = meteo["WindSpeed"];
-    for(int i=0;i<numDays;i++) {
-      std::string c = as<std::string>(dateStrings[i]);
-      if(verbose) Rcout<<".";
-      //Julian day
-      int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
-      double delta = meteoland::radiation_solarDeclination(J);
-      List s = swbDay2(x, soil, GDD[i], MinTemperature[i], MaxTemperature[i], 
-                       MinRelativeHumidity[i], MaxRelativeHumidity[i], Radiation[i], WindSpeed[i], 
-                       latitude, elevation, slope, aspect, delta, Precipitation[i], ER[i], 0.0, false);
-      
-      PET[i] = s["PET"];
-      Lground[i] = s["Lground"];
-      Esoil[i] = sum(Rcpp::as<Rcpp::NumericVector>(s["EsoilVec"]));
-      LAIcell[i] = s["LAIcell"];
-      Cm[i] = s["Cm"];
-      DeepDrainage[i] = s["DeepDrainage"];
-      Infiltration[i] = s["Infiltration"];
-      Runoff[i] = s["Runoff"];
-      NetPrec[i] = s["NetPrec"];
-      Interception[i] = Precipitation[i]-NetPrec[i];
-      
-      NumericVector psi = s["psiVec"];
-      psidays(i,_) = psi;
-      
-      NumericVector EplantCoh = s["EplantCoh"];
-      NumericVector EplantVec = s["EplantVec"];
-      Eplantdays(i,_) = EplantVec;
-      PlantTranspiration(i,_) = EplantCoh;
-      PlantPhotosynthesis(i,_) = Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
-      PlantPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(s["psiCoh"]);
-      PlantStress(i,_) = Rcpp::as<Rcpp::NumericVector>(s["DDS"]);
-      EplantCohTot = EplantCohTot + EplantCoh;
-      
-      if(i<(numDays-1)) Wdays(i+1,_) = W;
-    }
   }
   if(verbose) Rcout << "done\n";
   

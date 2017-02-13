@@ -848,6 +848,23 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// growth
+List growth(List x, List soil, DataFrame meteo, double latitude, double elevation, double slope, double aspect);
+RcppExport SEXP medfate_growth(SEXP xSEXP, SEXP soilSEXP, SEXP meteoSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type meteo(meteoSEXP);
+    Rcpp::traits::input_parameter< double >::type latitude(latitudeSEXP);
+    Rcpp::traits::input_parameter< double >::type elevation(elevationSEXP);
+    Rcpp::traits::input_parameter< double >::type slope(slopeSEXP);
+    Rcpp::traits::input_parameter< double >::type aspect(aspectSEXP);
+    rcpp_result_gen = Rcpp::wrap(growth(x, soil, meteo, latitude, elevation, slope, aspect));
+    return rcpp_result_gen;
+END_RCPP
+}
 // Psi2K
 double Psi2K(double psi, double Psi_extract, double ws);
 RcppExport SEXP medfate_Psi2K(SEXP psiSEXP, SEXP Psi_extractSEXP, SEXP wsSEXP) {
@@ -1366,17 +1383,18 @@ BEGIN_RCPP
 END_RCPP
 }
 // growthInput
-List growthInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, List control);
-RcppExport SEXP medfate_growthInput(SEXP aboveSEXP, SEXP VSEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
+List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, DataFrame SpParams, List control);
+RcppExport SEXP medfate_growthInput(SEXP aboveSEXP, SEXP ZSEXP, SEXP VSEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< DataFrame >::type above(aboveSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Z(ZSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type V(VSEXP);
     Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< List >::type control(controlSEXP);
-    rcpp_result_gen = Rcpp::wrap(growthInput(above, V, soil, SpParams, control));
+    rcpp_result_gen = Rcpp::wrap(growthInput(above, Z, V, soil, SpParams, control));
     return rcpp_result_gen;
 END_RCPP
 }

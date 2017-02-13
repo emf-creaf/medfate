@@ -113,14 +113,15 @@ plot(S1)
 #Monthly summary (averages) of soil water balance
 summary(S1, freq="months",FUN=mean, output="SoilWaterBalance")
 
-# --- Simulation with Sperry transpiration mode: long to run ---
+# --- Simulation with Sperry transpiration mode ---
 #Initialize soil with default soil params (2 layers)
-#examplesoil2 = soil(defaultSoilParams(2))
+examplesoil2 = soil(defaultSoilParams(2))
 #Change hydraulic mode
-#control$transpirationMode="Sperry"
-#x2 = forest2swbInput(exampleforest,examplesoil2, SpParamsMED, control)
-#Call simulation function
-#S2<-swb(x2, examplesoil2, examplemeteo, latitude = 0.73, elevation = 100)
+control$transpirationMode="Sperry"
+#Initialize input
+x2 = forest2swbInput(exampleforest,examplesoil2, SpParamsMED, control)
+#Call simulation function (5 days)
+S2<-swb(x2, examplesoil2, examplemeteo[100:105,], latitude = 0.73, elevation = 100)
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

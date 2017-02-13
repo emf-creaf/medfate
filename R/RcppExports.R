@@ -249,6 +249,10 @@ fuel.FCCS <- function(object, ShrubCover, CanopyCover, SpParams, gdd = NA_real_,
     .Call('medfate_FCCSproperties', PACKAGE = 'medfate', object, ShrubCover, CanopyCover, SpParams, gdd, heightProfileStep, maxHeightProfile, bulkDensityThreshold)
 }
 
+growth <- function(x, soil, meteo, latitude = NA_real_, elevation = NA_real_, slope = NA_real_, aspect = NA_real_) {
+    .Call('medfate_growth', PACKAGE = 'medfate', x, soil, meteo, latitude, elevation, slope, aspect)
+}
+
 hydraulics.psi2K <- function(psi, Psi_extract, ws = 3.0) {
     .Call('medfate_Psi2K', PACKAGE = 'medfate', psi, Psi_extract, ws)
 }
@@ -377,8 +381,8 @@ forest2swbInput <- function(x, soil, SpParams, control) {
     .Call('medfate_forest2swbInput', PACKAGE = 'medfate', x, soil, SpParams, control)
 }
 
-growthInput <- function(above, V, soil, SpParams, control) {
-    .Call('medfate_growthInput', PACKAGE = 'medfate', above, V, soil, SpParams, control)
+growthInput <- function(above, Z, V, soil, SpParams, control) {
+    .Call('medfate_growthInput', PACKAGE = 'medfate', above, Z, V, soil, SpParams, control)
 }
 
 forest2growthInput <- function(x, soil, SpParams, control) {
