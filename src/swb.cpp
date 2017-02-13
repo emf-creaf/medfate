@@ -3,6 +3,7 @@
 #include "windextinction.h"
 #include "hydraulics.h"
 #include "biophysicsutils.h"
+#include "forestutils.h"
 #include "photosynthesis.h"
 #include "soil.h"
 #include <Rcpp.h>
@@ -31,7 +32,7 @@ NumericVector gdd(IntegerVector DOY, NumericVector Temp, double Tbase = 5.0){
   for(int i=0;i<nDays;i++){
     if((Temp[i]-Tbase < 0.0) & (DOY[i]>180)) {
       cum = 0.0;
-    } else {
+    } else if (DOY[i]<180){ //Only increase in the first part of the year
       if(Temp[i]-Tbase>0.0) cum = cum + (Temp[i]-Tbase);
     }
     GDD[i] = cum;
@@ -75,7 +76,7 @@ double interceptionGashDay(double Precipitation, double Cm, double p, double ER=
 
 // Soil water balance with simple hydraulic model
 // [[Rcpp::export(".swbDay1")]]
-List swbDay1(List x, List soil, double gdd, double tday, double pet, double rain, double er, double runon=0.0, 
+List swbDay1(List x, List soil, double tday, double pet, double rain, double er, double runon=0.0, 
              bool verbose = false) {
 
   //Soil input
@@ -91,10 +92,12 @@ List swbDay1(List x, List soil, double gdd, double tday, double pet, double rain
 
   //Vegetation input
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
-  NumericVector LAI = Rcpp::as<Rcpp::NumericVector>(above["LAI_live"]);
+  NumericVector LAIlive = Rcpp::as<Rcpp::NumericVector>(above["LAI_live"]);
+  NumericVector LAIphe = Rcpp::as<Rcpp::NumericVector>(above["LAI_expanded"]);
+  NumericVector LAIdead = Rcpp::as<Rcpp::NumericVector>(above["LAI_dead"]);
   NumericVector H = Rcpp::as<Rcpp::NumericVector>(above["H"]);
   NumericVector CR = Rcpp::as<Rcpp::NumericVector>(above["CR"]);
-  int numCohorts = LAI.size();
+  int numCohorts = LAIphe.size();
   
   //Root distribution input
   List below = Rcpp::as<Rcpp::List>(x["below"]);
@@ -117,18 +120,16 @@ List swbDay1(List x, List soil, double gdd, double tday, double pet, double rain
 
 
   //Determine whether leaves are out (phenology) and the adjusted Leaf area
-  NumericVector LAIphe(numCohorts);
-  NumericVector Phe = pmin(pmax(gdd/Sgdd,0.0),1.0);
+  NumericVector Phe(numCohorts);
   double s = 0.0, LAIcell = 0.0, Cm = 0.0;
   for(int c=0;c<numCohorts;c++) {
-    if(Sgdd[c]==0.0) Phe[c]=1.0;
-    LAIphe[c] = LAI[c]*Phe[c]; //LAI modified by phenology
+    Phe[c]=LAIphe[c]/LAIlive[c]; //Phenological status
     s += (kPAR[c]*LAIphe[c]);
     LAIcell += LAIphe[c];
     Cm += LAIphe[c]*gRainIntercept[c];
   }
-  NumericVector CohASWRF = cohortAbsorbedSWRFraction(LAIphe,  H, CR, kPAR);
-  NumericVector CohPAR = parcohortC(H, LAIphe, kPAR, CR)/100.0;
+  NumericVector CohASWRF = cohortAbsorbedSWRFraction(LAIphe,  LAIdead, H, CR, kPAR);
+  NumericVector CohPAR = parcohortC(H, LAIphe, LAIdead, kPAR, CR)/100.0;
   double LgroundPAR = exp((-1)*s);
   double LgroundSWR = 1.0 - std::accumulate(CohASWRF.begin(),CohASWRF.end(),0.0);
   
@@ -230,7 +231,7 @@ List swbDay1(List x, List soil, double gdd, double tday, double pet, double rain
 
 // Soil water balance with Sperry hydraulic and stomatal conductance models
 // [[Rcpp::export(".swbDay2")]]
-List swbDay2(List x, List soil, double gdd, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
+List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
              double latitude, double elevation, double slope, double aspect, double delta, 
              double rain, double er, double runon=0.0, bool verbose = false) {
   
@@ -247,10 +248,12 @@ List swbDay2(List x, List soil, double gdd, double tmin, double tmax, double rhm
   
   //Vegetation input
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
-  NumericVector LAI = Rcpp::as<Rcpp::NumericVector>(above["LAI_live"]);
+  NumericVector LAIlive = Rcpp::as<Rcpp::NumericVector>(above["LAI_live"]);
+  NumericVector LAIphe = Rcpp::as<Rcpp::NumericVector>(above["LAI_expanded"]);
+  NumericVector LAIdead = Rcpp::as<Rcpp::NumericVector>(above["LAI_dead"]);
   NumericVector H = Rcpp::as<Rcpp::NumericVector>(above["H"]);
   NumericVector CR = Rcpp::as<Rcpp::NumericVector>(above["CR"]);
-  int numCohorts = LAI.size();
+  int numCohorts = LAIlive.size();
 
   //Root distribution input
   List below = Rcpp::as<Rcpp::List>(x["below"]);
@@ -294,12 +297,10 @@ List swbDay2(List x, List soil, double gdd, double tmin, double tmax, double rhm
 
  
   //Leaf phenology and the adjusted leaf area index
-  NumericVector LAIphe(numCohorts);
-  NumericVector Phe = pmin(pmax(gdd/Sgdd,0.0),1.0);
+  NumericVector Phe(numCohorts);
   double s = 0.0, LAIcell = 0.0, Cm = 0.0, canopyHeight = 0.0;
   for(int c=0;c<numCohorts;c++) {
-    if(Sgdd[c]==0.0) Phe[c]=1.0;
-    LAIphe[c] = LAI[c]*Phe[c]; //LAI modified by phenology
+    Phe[c]=LAIphe[c]/LAIlive[c]; //Phenological status
     s += (kPAR[c]*LAIphe[c]);
     LAIcell += LAIphe[c];
     Cm += LAIphe[c]*gRainIntercept[c];
@@ -307,8 +308,8 @@ List swbDay2(List x, List soil, double gdd, double tmin, double tmax, double rhm
   }
   
   //Light extinction
-  NumericVector CohASWRF = cohortAbsorbedSWRFraction(LAIphe,  H, CR, kPAR);
-  NumericVector CohPAR = parcohortC(H, LAIphe, kPAR, CR)/100.0;
+  NumericVector CohASWRF = cohortAbsorbedSWRFraction(LAIphe, LAIdead,  H, CR, kPAR);
+  NumericVector CohPAR = parcohortC(H, LAIphe, LAIdead, kPAR, CR)/100.0;
   double LgroundPAR = exp((-1)*s);
   double LgroundSWR = 1.0 - std::accumulate(CohASWRF.begin(),CohASWRF.end(),0.0);
   
@@ -589,7 +590,7 @@ void checkswbInput(List x, List soil, String transpirationMode) {
   List below = Rcpp::as<Rcpp::List>(x["below"]);
   if(!below.containsElementNamed("V")) stop("V missing in swbInput$below");
   if(transpirationMode=="Sperry"){
-    if(!below.containsElementNamed("VGrhizo_kmax")) stop("VCstem_kmax missing in swbInput$below");
+    if(!below.containsElementNamed("VGrhizo_kmax")) stop("VGrhizo_kmax missing in swbInput$below");
     if(!below.containsElementNamed("VCroot_kmax")) stop("VCroot_kmax missing in swbInput$below");
   }  
   
@@ -666,7 +667,13 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
   //Plant input
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   NumericVector SP = above["SP"];
+  NumericVector LAI_live = above["LAI_live"];
+  NumericVector LAI_expanded = above["LAI_expanded"];
   int numCohorts = SP.size();
+  
+  //Base parameters
+  DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
+  NumericVector Sgdd = paramsBase["Sgdd"];
   
   //Soil input
   NumericVector Water_FC = soil["Water_FC"];
@@ -708,13 +715,19 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
   List s;
   for(int i=0;i<numDays;i++) {
       if(verbose) Rcout<<".";
+      //Update phenological status
+      NumericVector phe = leafDevelopmentStatus(Sgdd, GDD[i]);
+      for(int j=0;j<numCohorts;j++) {
+        LAI_expanded[j] = LAI_live[j]*phe[j];
+      }
+      //Transpiration
       if(transpirationMode=="Simple") {
-        s = swbDay1(x, soil, GDD[i], MeanTemperature[i], PET[i], Precipitation[i], ER[i], 0.0, false); //No Runon in simulations for a single cell
+        s = swbDay1(x, soil, MeanTemperature[i], PET[i], Precipitation[i], ER[i], 0.0, false); //No Runon in simulations for a single cell
       } else if(transpirationMode=="Sperry") {
         std::string c = as<std::string>(dateStrings[i]);
         int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
         double delta = meteoland::radiation_solarDeclination(J);
-        s = swbDay2(x, soil, GDD[i], MinTemperature[i], MaxTemperature[i], 
+        s = swbDay2(x, soil, MinTemperature[i], MaxTemperature[i], 
                          MinRelativeHumidity[i], MaxRelativeHumidity[i], Radiation[i], WindSpeed[i], 
                          latitude, elevation, slope, aspect, delta, Precipitation[i], ER[i], 0.0, false);
         PET[i] = s["PET"];

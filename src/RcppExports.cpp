@@ -1704,33 +1704,31 @@ BEGIN_RCPP
 END_RCPP
 }
 // swbDay1
-List swbDay1(List x, List soil, double gdd, double tday, double pet, double rain, double er, double runon, bool verbose);
-RcppExport SEXP medfate_swbDay1(SEXP xSEXP, SEXP soilSEXP, SEXP gddSEXP, SEXP tdaySEXP, SEXP petSEXP, SEXP rainSEXP, SEXP erSEXP, SEXP runonSEXP, SEXP verboseSEXP) {
+List swbDay1(List x, List soil, double tday, double pet, double rain, double er, double runon, bool verbose);
+RcppExport SEXP medfate_swbDay1(SEXP xSEXP, SEXP soilSEXP, SEXP tdaySEXP, SEXP petSEXP, SEXP rainSEXP, SEXP erSEXP, SEXP runonSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
-    Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
     Rcpp::traits::input_parameter< double >::type tday(tdaySEXP);
     Rcpp::traits::input_parameter< double >::type pet(petSEXP);
     Rcpp::traits::input_parameter< double >::type rain(rainSEXP);
     Rcpp::traits::input_parameter< double >::type er(erSEXP);
     Rcpp::traits::input_parameter< double >::type runon(runonSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(swbDay1(x, soil, gdd, tday, pet, rain, er, runon, verbose));
+    rcpp_result_gen = Rcpp::wrap(swbDay1(x, soil, tday, pet, rain, er, runon, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
 // swbDay2
-List swbDay2(List x, List soil, double gdd, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, double latitude, double elevation, double slope, double aspect, double delta, double rain, double er, double runon, bool verbose);
-RcppExport SEXP medfate_swbDay2(SEXP xSEXP, SEXP soilSEXP, SEXP gddSEXP, SEXP tminSEXP, SEXP tmaxSEXP, SEXP rhminSEXP, SEXP rhmaxSEXP, SEXP radSEXP, SEXP windSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP deltaSEXP, SEXP rainSEXP, SEXP erSEXP, SEXP runonSEXP, SEXP verboseSEXP) {
+List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, double latitude, double elevation, double slope, double aspect, double delta, double rain, double er, double runon, bool verbose);
+RcppExport SEXP medfate_swbDay2(SEXP xSEXP, SEXP soilSEXP, SEXP tminSEXP, SEXP tmaxSEXP, SEXP rhminSEXP, SEXP rhmaxSEXP, SEXP radSEXP, SEXP windSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP deltaSEXP, SEXP rainSEXP, SEXP erSEXP, SEXP runonSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
-    Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
     Rcpp::traits::input_parameter< double >::type tmin(tminSEXP);
     Rcpp::traits::input_parameter< double >::type tmax(tmaxSEXP);
     Rcpp::traits::input_parameter< double >::type rhmin(rhminSEXP);
@@ -1746,7 +1744,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type er(erSEXP);
     Rcpp::traits::input_parameter< double >::type runon(runonSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(swbDay2(x, soil, gdd, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, delta, rain, er, runon, verbose));
+    rcpp_result_gen = Rcpp::wrap(swbDay2(x, soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, delta, rain, er, runon, verbose));
     return rcpp_result_gen;
 END_RCPP
 }

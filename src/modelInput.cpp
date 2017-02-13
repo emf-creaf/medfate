@@ -29,6 +29,7 @@ void checkSpeciesParameters(DataFrame SpParams, CharacterVector params) {
 List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, List control) {
   IntegerVector SP = above["SP"];
   NumericVector LAI_live = above["LAI_live"];
+  NumericVector LAI_expanded = above["LAI_expanded"];
   NumericVector LAI_dead = above["LAI_dead"];
   NumericVector H = above["H"];
   NumericVector CR = above["CR"];
@@ -48,7 +49,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
     Sgdd[c]=SgddSP[SP[c]];
   }
   DataFrame plantsdf = DataFrame::create(_["SP"]=SP, _["H"]=H, _["CR"]=CR, 
-                                         _["LAI_live"]=LAI_live, _["LAI_dead"] = LAI_dead);
+                                         _["LAI_live"]=LAI_live, _["LAI_expanded"] = LAI_expanded, _["LAI_dead"] = LAI_dead);
   DataFrame paramsBasedf = DataFrame::create(_["k"] = k, _["g"] = g, _["Sgdd"] = Sgdd);
   List input;
   if(transpirationMode=="Simple") {
@@ -168,6 +169,7 @@ List forest2swbInput(List x, List soil, DataFrame SpParams, List control) {
 List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, DataFrame SpParams, List control) {
   IntegerVector SP = above["SP"];
   NumericVector LAI_live = above["LAI_live"];
+  NumericVector LAI_expanded = above["LAI_expanded"];
   NumericVector LAI_dead = above["LAI_dead"];
   NumericVector N = above["N"];
   NumericVector DBH = above["DBH"];
@@ -180,36 +182,42 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   
   NumericVector Al2AsSP = SpParams["Al2As"];
   NumericVector SLASP = SpParams["SLA"];
+  NumericVector WoodCSP = SpParams["WoodC"];
+  NumericVector WoodDensSP = SpParams["WoodDens"];
   
   NumericVector kSP = SpParams["k"];
   NumericVector gSP = SpParams["g"];
   NumericVector SgddSP = SpParams["Sgdd"];
   int numCohorts = SP.size();
   NumericVector k(numCohorts), g(numCohorts), Sgdd(numCohorts);
-  NumericVector SLA(numCohorts), Al2As(numCohorts);
+  NumericVector SLA(numCohorts), Al2As(numCohorts), WoodC(numCohorts), WoodDens(numCohorts);
+  NumericVector Cstoragepmax(numCohorts);
   for(int c=0;c<numCohorts;c++){
     k[c]=kSP[SP[c]];
     g[c]=gSP[SP[c]];
     Sgdd[c]=SgddSP[SP[c]];
     SLA[c]=SLASP[SP[c]];
     Al2As[c]=Al2AsSP[SP[c]];
+    WoodDens[c] = WoodDensSP[SP[c]];
+    WoodC[c] = WoodCSP[SP[c]];
+    Cstoragepmax[c] = 0.5; ///FAKE!!
   }
-  NumericVector SA(numCohorts), LA_live(numCohorts), LA_dead(numCohorts), LA_predrought(numCohorts);
+  NumericVector SA(numCohorts), LAI_predrought(numCohorts);
   NumericVector Psi_leafmin(numCohorts), Cstorage(numCohorts);
   for(int c=0;c<numCohorts;c++){
-    LA_live[c] = LAI_live[c]/(N[c]/10000.0);
-    SA[c] = 10000.0*LA_live[c]/Al2AsSP[SP[c]];//Individual SA in cm2/m2
-    LA_dead[c] = LAI_dead[c]/(N[c]/10000.0);
-    LA_predrought[c] = LA_live[c];
+    SA[c] = 10000.0*(LAI_live[c]/(N[c]/10000.0))/Al2AsSP[SP[c]];//Individual SA in cm2/m2
+    LAI_predrought[c] = LAI_live[c];
     Psi_leafmin[c] = 0.0;
   }
-  DataFrame plantsdf = DataFrame::create(_["SP"]=SP, _["N"]=N,_["DBH"]=DBH,  _["H"]=H, _["CR"]=CR, _["Z"]=Z,
-                                   _["LAI_live"]=LAI_live, _["LAI_dead"] = LAI_dead,  
-                                   _["LA_live"]=LA_live, _["LA_dead"]=LA_dead, _["LA_predrought"] = LA_predrought,
-                                    _["Psi_leafmin"] = Psi_leafmin,
+  DataFrame plantsdf = DataFrame::create(_["SP"]=SP, _["N"]=N,_["DBH"]=DBH,  _["H"]=H, _["CR"]=CR,
+                                   _["LAI_live"]=LAI_live, _["LAI_expanded"]=LAI_expanded, _["LAI_dead"] = LAI_dead,  
+                                   _["LAI_predrought"] = LAI_predrought,
+                                   _["Psi_leafmin"] = Psi_leafmin,
                                    _["SA"] = SA, _["Cstorage"] = Cstorage);
   DataFrame paramsBasedf = DataFrame::create(_["k"] = k, _["g"] = g, _["Sgdd"] = Sgdd);
-  DataFrame paramsGrowthdf = DataFrame::create(_["SLA"] = SLA, _["Al2As"] = Al2As);
+  DataFrame paramsGrowthdf = DataFrame::create(_["SLA"] = SLA, _["Al2As"] = Al2As,
+                                               _["WoodDens"] = WoodDens, _["WoodC"] = WoodC,
+                                               _["Cstoragepmax"] = Cstoragepmax);
   List input;
   if(transpirationMode=="Simple") {
     NumericVector WUESP = SpParams["WUE"];
@@ -221,7 +229,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
       WUE[c]=WUESP[SP[c]];
     }
     DataFrame paramsTranspdf = DataFrame::create(_["Psi_Extract"]=Psi_Extract,_["WUE"] = WUE);
-    List below = List::create(_["V"] = V);
+    List below = List::create( _["Z"]=Z,_["V"] = V);
     input = List::create(_["verbose"] =control["verbose"],_["TranspirationMode"] =transpirationMode, 
                    _["above"] = plantsdf,
                    _["below"] = below,
@@ -277,7 +285,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
       _["Gwmax"]=Gwmax, _["Vmax298"]=Vmax298,
       _["Jmax298"]=Jmax298,_["VCroot_c"]=VCroot_c,_["VCroot_d"]=VCroot_d,_["xylem_kmax"] = xylem_kmax,
       _["VCstem_kmax"]=VCstem_kmax,_["VCstem_c"]=VCstem_c,_["VCstem_d"]=VCstem_d);
-    List below = List::create(_["V"] = V,
+    List below = List::create( _["Z"]=Z,_["V"] = V,
                               _["VGrhizo_kmax"] = VGrhizo_kmax,
                               _["VCroot_kmax"] = VCroot_kmax);
     input = List::create(_["verbose"] =control["verbose"],_["TranspirationMode"] =transpirationMode, 
@@ -302,7 +310,7 @@ List forest2growthInput(List x, List soil, DataFrame SpParams, List control) {
   int nshrub = shrubData.nrows();
   
   int nlayers = d.size();
-  NumericVector Z(ntree+nshrub);
+  NumericVector Z(ntree+nshrub); //Rooting depth in cm
   NumericMatrix V(ntree+nshrub,nlayers);
   NumericVector treeZ50 = treeData["Z50"];
   NumericVector treeZ95 = treeData["Z95"];
@@ -311,12 +319,12 @@ List forest2growthInput(List x, List soil, DataFrame SpParams, List control) {
   for(int i=0;i<ntree;i++) {
     Vi = ldrRS_one(treeZ50[i], treeZ95[i],d);
     V(i,_) = Vi;
-    Z[i] = treeZ95[i];
+    Z[i] = treeZ95[i]/10.0;
   }
   for(int i=0;i<nshrub;i++) {
     Vi = conicRS_one(shrubZ[i],d);
     V(ntree+i,_) = Vi;
-    Z[ntree+i] = shrubZ[i]; 
+    Z[ntree+i] = shrubZ[i]/10.0; 
   }
   DataFrame above = forest2aboveground(x, SpParams, NA_REAL);
   return(growthInput(above,  Z, V, soil, SpParams, control));

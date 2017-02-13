@@ -884,7 +884,8 @@ DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL) {
   int nshrub = shrubData.nrows();
   
   NumericVector CR = cohortCrownRatio(x, SpParams);
-  NumericVector LAI_live = cohortLAI(x, SpParams, gdd);
+  NumericVector LAI_live = cohortLAI(x, SpParams, NA_REAL);
+  NumericVector LAI_expanded = cohortLAI(x, SpParams, gdd);
   IntegerVector SP(ntree+nshrub);
   NumericVector H(ntree+nshrub);
   
@@ -911,6 +912,6 @@ DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL) {
     DBH[ntree+i] = NA_REAL;
   }
   return(DataFrame::create(_["SP"]=SP, _["N"] = N,  _["DBH"] = DBH, _["H"]=H, _["CR"] = CR, 
-                           _["LAI_live"]=LAI_live, _["LAI_dead"] = LAI_dead));
+                           _["LAI_live"]=LAI_live, _["LAI_expanded"] = LAI_expanded, _["LAI_dead"] = LAI_dead));
   
 }

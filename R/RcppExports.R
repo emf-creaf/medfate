@@ -477,12 +477,12 @@ swb.SoilEvaporation <- function(DEF, PETs, Gsoil) {
     .Call('medfate_interceptionGashDay', PACKAGE = 'medfate', Precipitation, Cm, p, ER)
 }
 
-.swbDay1 <- function(x, soil, gdd, tday, pet, rain, er, runon = 0.0, verbose = FALSE) {
-    .Call('medfate_swbDay1', PACKAGE = 'medfate', x, soil, gdd, tday, pet, rain, er, runon, verbose)
+.swbDay1 <- function(x, soil, tday, pet, rain, er, runon = 0.0, verbose = FALSE) {
+    .Call('medfate_swbDay1', PACKAGE = 'medfate', x, soil, tday, pet, rain, er, runon, verbose)
 }
 
-.swbDay2 <- function(x, soil, gdd, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, delta, rain, er, runon = 0.0, verbose = FALSE) {
-    .Call('medfate_swbDay2', PACKAGE = 'medfate', x, soil, gdd, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, delta, rain, er, runon, verbose)
+.swbDay2 <- function(x, soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, delta, rain, er, runon = 0.0, verbose = FALSE) {
+    .Call('medfate_swbDay2', PACKAGE = 'medfate', x, soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, delta, rain, er, runon, verbose)
 }
 
 .swbgridDay <- function(lct, xList, soilList, waterO, queenNeigh, waterQ, gddVec, petVec, rainVec, erVec, trackSpecies) {
