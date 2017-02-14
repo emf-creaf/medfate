@@ -741,7 +741,6 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
       Runoff[i] = s["Runoff"];
       NetPrec[i] = s["NetPrec"];
       Interception[i] = Precipitation[i]-NetPrec[i];
-      
       NumericVector psi = s["psiVec"];
       psidays(i,_) = psi;
 

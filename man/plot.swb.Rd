@@ -1,17 +1,22 @@
 \encoding{UTF-8}
 \name{plot.swb}
 \alias{plot.swb}
+\alias{plot.growth}
 \alias{summary.swb}
+\alias{summary.growth}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{Displays soil water balance results}
+\title{Displays simulation results}
 \description{
-Function \code{plot} plots the results of the soil water balance model (see \code{\link{swb}}), whereas function \code{summary} summarizes the model's output in different temporal steps (i.e. weekly, annual, ...).
+Function \code{plot} plots the results of the soil water balance model (see \code{\link{swb}}) or the forest growth model (see \code{\link{growth}}), whereas function \code{summary} summarizes the model's output in different temporal steps (i.e. weekly, annual, ...).
 }
 \usage{
 \method{plot}{swb}(x, type="PET_Precipitation", yearAxis=FALSE, 
     xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL,...)
+\method{plot}{growth}(x, type="PET_Precipitation", yearAxis=FALSE, 
+    xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL,...)
 \method{summary}{swb}(object, freq="years", output="DailyBalance", FUN=sum, ...)
+\method{summary}{growth}(object, freq="years", output="DailyBalance", FUN=sum, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

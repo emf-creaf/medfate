@@ -1,5 +1,6 @@
 #include <Rcpp.h>
 #include "swb.h"
+#include "growth.h"
 #include "root.h"
 #include "forestutils.h"
 #include "hydraulics.h"
@@ -191,7 +192,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   int numCohorts = SP.size();
   NumericVector k(numCohorts), g(numCohorts), Sgdd(numCohorts);
   NumericVector SLA(numCohorts), Al2As(numCohorts), WoodC(numCohorts), WoodDens(numCohorts);
-  NumericVector Cstoragepmax(numCohorts);
+  NumericVector Cstoragepmax(numCohorts), RGRmax(numCohorts);
   for(int c=0;c<numCohorts;c++){
     k[c]=kSP[SP[c]];
     g[c]=gSP[SP[c]];
@@ -200,7 +201,8 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     Al2As[c]=Al2AsSP[SP[c]];
     WoodDens[c] = WoodDensSP[SP[c]];
     WoodC[c] = WoodCSP[SP[c]];
-    Cstoragepmax[c] = 0.5; ///FAKE!!
+    Cstoragepmax[c] = 0.2; ///FAKE!!
+    RGRmax[c] = 0.005; ///FAKE!!
   }
   NumericVector SA(numCohorts), LAI_predrought(numCohorts);
   NumericVector Psi_leafmin(numCohorts), Cstorage(numCohorts);
@@ -208,6 +210,9 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     SA[c] = 10000.0*(LAI_live[c]/(N[c]/10000.0))/Al2AsSP[SP[c]];//Individual SA in cm2/m2
     LAI_predrought[c] = LAI_live[c];
     Psi_leafmin[c] = 0.0;
+    NumericVector compartments = carbonCompartments(SA[c], LAI_expanded[c], H[c], 
+                                                    Z[c], N[c], SLA[c], WoodDens[c], WoodC[c]);
+    Cstorage[c] = Cstoragepmax[c]*(compartments[0]+compartments[1]+compartments[2]);
   }
   DataFrame plantsdf = DataFrame::create(_["SP"]=SP, _["N"]=N,_["DBH"]=DBH,  _["H"]=H, _["CR"]=CR,
                                    _["LAI_live"]=LAI_live, _["LAI_expanded"]=LAI_expanded, _["LAI_dead"] = LAI_dead,  
@@ -217,7 +222,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   DataFrame paramsBasedf = DataFrame::create(_["k"] = k, _["g"] = g, _["Sgdd"] = Sgdd);
   DataFrame paramsGrowthdf = DataFrame::create(_["SLA"] = SLA, _["Al2As"] = Al2As,
                                                _["WoodDens"] = WoodDens, _["WoodC"] = WoodC,
-                                               _["Cstoragepmax"] = Cstoragepmax);
+                                               _["Cstoragepmax"] = Cstoragepmax, _["RGRmax"] = RGRmax);
   List input;
   if(transpirationMode=="Simple") {
     NumericVector WUESP = SpParams["WUE"];

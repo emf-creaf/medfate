@@ -1,13 +1,16 @@
 \encoding{UTF-8}
 \name{swbpoints}
 \alias{swbpoints}
+\alias{growthpoints}
 
-\title{Soil water balance model for spatially-distributed forest stands}
+\title{Model simulations for spatially-distributed forest stands}
 \description{
-Function \code{swbpoints} allows calling local models \code{\link{swb}} for a set of forest stands distributed in specific locations. No spatial processes are simulated.
+Functions \code{swbpoints} and \code{growthpoints} allow calling local models \code{\link{swb}} and \code{\link{growth}}, respectively, for a set of forest stands distributed in specific locations. No spatial processes are simulated.
 }
 \usage{
 swbpoints(y, SpParams, meteo, control = defaultControl(),
+       dates = NULL, summaryFunction = NULL, args=NULL)
+growthpoints(y, SpParams, meteo, control = defaultControl(),
        dates = NULL, summaryFunction = NULL, args=NULL)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -21,16 +24,16 @@ swbpoints(y, SpParams, meteo, control = defaultControl(),
   \item{args}{List with additional arguments for the summary function.}
 }
 \details{
-Function \code{swbpoints} accepts different formats for meteorological input (parameter \code{meteo}). If a \code{data.frame} is supplied (as in \code{\link{swb}}) then the same meteorology is used for all points (not recommended). To specify different meteorology for different points, the user can use an object of \code{\link{SpatialPointsMeteorology-class}}. Alternatively, the user can supply an object of class \code{\link{SpatialPointsDataFrame-class}} containing the meta data (columns dir and filename) of meteorological files that will be read from the disk.
+Functions \code{swbpoints} and \code{growthpoints}  accept different formats for meteorological input (parameter \code{meteo}). If a \code{data.frame} is supplied (as in \code{\link{swb}} or \code{\link{growth}}) then the same meteorology is used for all points (not recommended). To specify different meteorology for different points, the user can use an object of \code{\link{SpatialPointsMeteorology-class}}. Alternatively, the user can supply an object of class \code{\link{SpatialPointsDataFrame-class}} containing the meta data (columns dir and filename) of meteorological files that will be read from the disk.
 }
 \value{
-Function \code{swbpoints} returns a list with the result of calling \code{\link{swb}} on each forest stand. If \code{summaryFunction} is not null, then each element of the list will contain the result of the summary function.
+Functions \code{swbpoints} and \code{growthpoints} return a list with the result of calling \code{\link{swb}} or \code{\link{growth}} on each forest stand. If \code{summaryFunction} is not null, then each element of the list will contain the result of the summary function.
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 \seealso{
-\code{\link{swb}}, \code{\link{SpatialPointsForest-class}}
+\code{\link{swb}}, \code{\link{growth}}, \code{\link{SpatialPointsForest-class}}
 }
 \examples{
 #Load forest data

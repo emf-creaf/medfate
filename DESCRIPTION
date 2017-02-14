@@ -1,8 +1,8 @@
 Package: medfate
 Type: Package
 Title: Mediterranean Forest Simulation
-Version: 0.3.1
-Date: 2017-01-17
+Version: 0.3.2
+Date: 2017-02-14
 Author: Miquel De Caceres
 Maintainer: Miquel De Caceres <miquelcaceres@gmail.com>
 Description: Functions to simulate forest dynamics using cohort-based description of vegetation.
