@@ -2,6 +2,7 @@
 #include "lightextinction.h"
 #include "biophysicsutils.h"
 #include "forestutils.h"
+#include "hydraulics.h"
 #include "soil.h"
 #include "swb.h"
 #include <Rcpp.h>
@@ -110,7 +111,7 @@ void checkgrowthInput(List x, List soil, String transpirationMode) {
 List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL) {
   String transpirationMode = x["TranspirationMode"];
   bool verbose = x["verbose"];
-  
+  bool allowEmbolism = x["allowEmbolism"];
   checkgrowthInput(x, soil, transpirationMode);
   
   NumericVector Precipitation = meteo["Precipitation"];
@@ -149,16 +150,31 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   NumericVector LAI_dead = above["LAI_dead"];
   NumericVector SA = above["SA"];
   NumericVector Cstorage = above["Cstorage"];
+  NumericVector Psi_leafmin = above["Psi_leafmin"];
+  NumericVector LAI_predrought = above["LAI_predrought"];
   int numCohorts = SP.size();
 
-  //Aboveground parameters  
+  //Belowground parameters  
   List below = Rcpp::as<Rcpp::List>(x["below"]);
   NumericVector Z = Rcpp::as<Rcpp::NumericVector>(below["Z"]);
-  
+
   //Base parameters
   DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
   NumericVector Sgdd = paramsBase["Sgdd"];
-  
+
+
+  //Transpiration parameters
+  DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
+  NumericVector xylem_kmax, VCstem_kmax, Psi_Extract, VCstem_c, VCstem_d;
+  if(transpirationMode=="Sperry") {
+    xylem_kmax = paramsTransp["xylem_kmax"];
+    VCstem_kmax = paramsTransp["VCstem_kmax"];
+    VCstem_c = paramsTransp["VCstem_c"];
+    VCstem_d = paramsTransp["VCstem_d"];
+  } else if(transpirationMode == "Simple"){
+    Psi_Extract = paramsTransp["Psi_Extract"];
+  }
+
   NumericVector Water_FC = soil["Water_FC"];
   NumericVector W = soil["W"];
   
@@ -184,6 +200,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   NumericMatrix PlantPhotosynthesis(numDays, numCohorts);
   NumericMatrix PlantLAIdead(numDays, numCohorts);
   NumericMatrix PlantLAIlive(numDays, numCohorts);
+  
   //Water balance output variables
   NumericVector Esoil(numDays);
   NumericVector LAIcell(numDays);
@@ -276,20 +293,48 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
       Cstorage[j] = std::max(0.0,std::min(Cstorage[j]+(Anj-Rj), Cstorage_max));
       //3.4 Growth in LAI_live and SA
       double deltaSAturnover = (dailySAturnoverProportion/(1.0+15*exp(-0.01*H[j])))*SA[j];
-      double costLA = 0.1*leafCperDry*(Al2As[j]/SLA[j]); //Construction cost in g C·cm-2 of sapwood
-      double costSA = WoodC[j]*(H[j]+Z[j])*WoodDens[j];  //Construction cost in g C·cm-2 of sapwood
-      double costFR = costLA/2.5;
-      double cost = 1.3*(costLA+costSA+costFR);  //Construction cost in g C·cm-2 of sapwood (including 30% growth respiration)
-      double deltaSAsink = Cstorage[j]/cost;
-      double deltaSAsource = RGRmax[j]*SA[j]*temperatureGrowthFactor(MeanTemperature[i])*turgorGrowthFactor(psiCoh[j],-1.1);
-      double deltaSAgrowth = std::min(deltaSAsink, deltaSAsource);
-      Cstorage[j] = Cstorage[j]-deltaSAgrowth*cost; //Remove construction costs from C pool
-      SA[j] = SA[j] + deltaSAgrowth - deltaSAturnover; //Update sapwood area
-      LAI_dead[j] += (N[j]/10000.0)*(deltaSAturnover/10000.0)*Al2As[j]; //Update dead LAI
-      LAI_live[j] += (N[j]/10000.0)*((deltaSAgrowth-deltaSAturnover)/10000.0)*Al2As[j]; //Update live LAI
+      double f_turgor = turgorGrowthFactor(psiCoh[j],-1.1);
+      double deltaSAgrowth = 0.0;
+      if(f_turgor>0.0) { //Growth is possible
+        double costLA = 0.1*leafCperDry*(Al2As[j]/SLA[j]); //Construction cost in g C·cm-2 of sapwood
+        double costSA = WoodC[j]*(H[j]+Z[j])*WoodDens[j];  //Construction cost in g C·cm-2 of sapwood
+        double costFR = costLA/2.5;
+        double cost = 1.3*(costLA+costSA+costFR);  //Construction cost in g C·cm-2 of sapwood (including 30% growth respiration)
+        double deltaSAsink = Cstorage[j]/cost;
+        double f_temp = temperatureGrowthFactor(MeanTemperature[i]);
+        double deltaSAsource = RGRmax[j]*SA[j]*f_temp*f_turgor;
+        deltaSAgrowth = std::min(deltaSAsink, deltaSAsource);
+        Cstorage[j] = Cstorage[j]-deltaSAgrowth*cost; //Remove construction costs from C pool
+        SA[j] = SA[j] + deltaSAgrowth - deltaSAturnover; //Update sapwood area
+        LAI_dead[j] += (N[j]/10000.0)*(deltaSAturnover/10000.0)*Al2As[j]; //Update dead LAI
+        LAI_live[j] += (N[j]/10000.0)*((deltaSAgrowth-deltaSAturnover)/10000.0)*Al2As[j]; //Update live LAI
+        Psi_leafmin[j] = 0.0;
+        LAI_predrought[j] = LAI_live[j];
+      } else if(allowEmbolism) { //Growth is not possible, evaluate embolism
+        Psi_leafmin[j] = std::min(Psi_leafmin[j], psiCoh[j]);
+        double propEmb;
+        if(transpirationMode == "Simple") {
+          propEmb = 1.0-Psi2K(Psi_leafmin[j], Psi_Extract[j]);
+        } else if(transpirationMode == "Sperry") {
+          propEmb = 1.0-exp(-pow(Psi_leafmin[j]/VCstem_d[j],VCstem_c[j]));
+        }
+        SA[j] = SA[j] - deltaSAturnover; //Update sapwood area (only turnover)
+        double LAIturnover = LAI_live[j] - (N[j]/10000.0)*(deltaSAturnover/10000.0)*Al2As[j];
+        double LAIembolism = LAI_predrought[j]*(1.0-propEmb);
+        double prevLive = LAI_live[j];
+        LAI_live[j] = std::min(LAIturnover, LAIembolism);
+        LAI_dead[j] += prevLive - LAI_live[j];
+      }
       LAI_expanded[j] = LAI_live[j]*phe[j]; //Update expanded leaf area
       
-      //3.5 Modify DBH
+      //3.5 Update stem conductance (Sperry mode)
+      if(transpirationMode=="Sperry") {
+        double hubberValue = (LAI_expanded[j]/(N[j]/10000.0))/(SA[j]/10000.0);
+        VCstem_kmax[j]=maximumStemHydraulicConductance(xylem_kmax[j], hubberValue,H[j]);
+        // Rcout<<Al2As[j]<<" "<< hubberValue<<" "<<VCstem_kmax[j]<<"\n";
+      }
+      
+      //3.6 Modify DBH
       if(!NumericVector::is_na(DBH[j])) {
         DBH[j] = 2.0*sqrt(pow(DBH[j]/2.0,2.0)+(deltaSAgrowth/PI));
       }

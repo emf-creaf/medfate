@@ -235,12 +235,14 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     }
     DataFrame paramsTranspdf = DataFrame::create(_["Psi_Extract"]=Psi_Extract,_["WUE"] = WUE);
     List below = List::create( _["Z"]=Z,_["V"] = V);
-    input = List::create(_["verbose"] =control["verbose"],_["TranspirationMode"] =transpirationMode, 
-                   _["above"] = plantsdf,
-                   _["below"] = below,
-                   _["paramsBase"] = paramsBasedf,
-                   _["paramsTransp"] = paramsTranspdf,
-                   _["paramsGrowth"]= paramsGrowthdf);
+    input = List::create(_["verbose"] =control["verbose"],
+                         _["TranspirationMode"] =transpirationMode, 
+                         _["allowEmbolism"] =control["allowEmbolism"],
+                         _["above"] = plantsdf,
+                         _["below"] = below,
+                         _["paramsBase"] = paramsBasedf,
+                         _["paramsTransp"] = paramsTranspdf,
+                         _["paramsGrowth"]= paramsGrowthdf);
     
   } else if(transpirationMode =="Sperry"){
     NumericVector GwmaxSP = SpParams["Gwmax"];
@@ -293,7 +295,9 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     List below = List::create( _["Z"]=Z,_["V"] = V,
                               _["VGrhizo_kmax"] = VGrhizo_kmax,
                               _["VCroot_kmax"] = VCroot_kmax);
-    input = List::create(_["verbose"] =control["verbose"],_["TranspirationMode"] =transpirationMode, 
+    input = List::create(_["verbose"] =control["verbose"],
+                         _["TranspirationMode"] =transpirationMode, 
+                         _["allowEmbolism"] =control["allowEmbolism"],
                    _["above"] = plantsdf,
                    _["below"] = below,
                    _["paramsBase"] = paramsBasedf,

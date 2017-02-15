@@ -5,7 +5,10 @@ defaultControl<-function() {
     # swb
     transpirationMode = "Simple",
     fracTotalTreeResistance = 0.625,
-    averageFracRhizosphereResistance = 0.05
+    averageFracRhizosphereResistance = 0.05,
+    # growth
+    allowEmbolism = FALSE
+    
 #     #For water balance
 #     embolism = FALSE,
     #For forest dynamics
