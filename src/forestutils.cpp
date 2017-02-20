@@ -310,6 +310,19 @@ NumericVector shrubCrownRatio(IntegerVector SP, DataFrame SpParams) {
   }
   return(CR);
 }
+
+double crownCompetitionFactor(NumericVector N, NumericVector dbh, NumericVector Acw, NumericVector Bcw) {
+  int ntree = N.size();
+  double ccf = 0.0;
+  for(int i=0;i<ntree;i++) {
+    if(!NumericVector::is_na(dbh[i])) {
+      double cw = Acw[i]*pow(dbh[i], Bcw[i]);
+      ccf = ccf + (N[i]*PI*pow(cw/2.0,2.0)/100.0);
+    }
+  }
+  return(ccf);
+}
+
 double crownCompetitionFactor(IntegerVector SP, NumericVector N, NumericVector dbh, DataFrame SpParams) {
   NumericVector spAcw = SpParams["a_cw"];
   NumericVector spBcw = SpParams["b_cw"];
@@ -321,6 +334,25 @@ double crownCompetitionFactor(IntegerVector SP, NumericVector N, NumericVector d
   }
   return(ccf);
 }
+
+NumericVector treeCrownRatio(NumericVector N, NumericVector dbh, NumericVector H, 
+                             NumericVector Acw, NumericVector Bcw,
+                             NumericVector Acr, NumericVector B1cr, NumericVector B2cr, NumericVector B3cr,
+                             NumericVector C1cr, NumericVector C2cr) {
+  NumericVector BAL = largerTreeBasalArea(N, dbh);
+  double ccf = crownCompetitionFactor(N, dbh, Acw, Bcw);
+  // Rcout<<ccf<<"\n";
+  int ntree = N.size();
+  NumericVector treeCR(ntree, NA_REAL);
+  for(int i=0;i<ntree;i++) {
+    if(!NumericVector::is_na(dbh[i])) {
+      double lm = Acr[i]+ B1cr[i]*(H[i]/(100.0*dbh[i]))+B2cr[i]*(H[i]/100.0)+B3cr[i]*pow(dbh[i],2.0)+C1cr[i]*BAL[i]+C2cr[i]*log(ccf);
+      treeCR[i] = 1.0/(1.0+ exp(-1.0*lm));
+    }
+  }
+  return(treeCR);
+}
+
 NumericVector treeCrownRatio(IntegerVector SP, NumericVector N, NumericVector dbh, NumericVector H, DataFrame SpParams) {
   NumericVector BAL = largerTreeBasalArea(N, dbh);
   double ccf = crownCompetitionFactor(SP, N, dbh, SpParams);
@@ -339,6 +371,7 @@ NumericVector treeCrownRatio(IntegerVector SP, NumericVector N, NumericVector db
   }
   return(treeCR);
 }
+
 // [[Rcpp::export("plant.CrownRatio")]]
 NumericVector cohortCrownRatio(List x, DataFrame SpParams) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
@@ -894,24 +927,28 @@ DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL) {
   NumericVector treeDBH = treeData["DBH"];
   IntegerVector shrubSP = Rcpp::as<Rcpp::IntegerVector>(shrubData["Species"]);
   NumericVector shrubH = shrubData["Height"];  
+  NumericVector shrubCover = shrubData["Cover"];  
   
   NumericVector N = cohortDensity(x, SpParams);
     
   NumericVector LAI_dead(ntree+nshrub);
   NumericVector DBH(ntree+nshrub);
+  NumericVector Cover(ntree+nshrub);
   
   for(int i=0;i<ntree;i++) {
     SP[i] = treeSP[i];
     H[i] = treeH[i];
     DBH[i] = treeDBH[i];
     LAI_dead[i] = 0.0;
+    Cover[i] = NA_REAL;
   }
   for(int i=0;i<nshrub;i++) {
     SP[ntree+i] = shrubSP[i];
     H[ntree+i] = shrubH[i];
     DBH[ntree+i] = NA_REAL;
+    Cover[ntree+i] = shrubCover[i];
   }
-  return(DataFrame::create(_["SP"]=SP, _["N"] = N,  _["DBH"] = DBH, _["H"]=H, _["CR"] = CR, 
+  return(DataFrame::create(_["SP"]=SP, _["N"] = N,  _["DBH"] = DBH,_["Cover"] = Cover, _["H"]=H, _["CR"] = CR, 
                            _["LAI_live"]=LAI_live, _["LAI_expanded"] = LAI_expanded, _["LAI_dead"] = LAI_dead));
   
 }

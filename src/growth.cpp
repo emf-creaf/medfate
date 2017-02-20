@@ -37,8 +37,8 @@ double temperatureGrowthFactor(double Tmean) {
   double f = ((Tmean-Tlow)*(Thigh-Tmean))/((Topt-Tlow)*(Thigh-Topt));
   return(std::min(std::max(f,0.0),1.0));
 }
-double turgorGrowthFactor(double psi, double psiRef) {
-  return(std::max(0.0,1.0 - pow(exp((psi/psiRef)-1),3.0)));
+double turgorGrowthFactor(double psi, double psi_tlp) {
+  return(std::max(0.0,1.0 - pow(exp((psi/psi_tlp)-1),5.0)));
 }
 
 void checkgrowthInput(List x, List soil, String transpirationMode) {
@@ -143,8 +143,10 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   NumericVector SP = above["SP"];
   NumericVector DBH = above["DBH"];
+  NumericVector Cover = above["Cover"];
   NumericVector H = above["H"];
   NumericVector N = above["N"];
+  NumericVector CR = above["CR"];
   NumericVector LAI_live = above["LAI_live"];
   NumericVector LAI_expanded = above["LAI_expanded"];
   NumericVector LAI_dead = above["LAI_dead"];
@@ -161,7 +163,8 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   //Base parameters
   DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
   NumericVector Sgdd = paramsBase["Sgdd"];
-
+  NumericVector k = paramsBase["k"];
+  
 
   //Transpiration parameters
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
@@ -189,6 +192,25 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   NumericVector Cstoragepmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["Cstoragepmax"]);
   NumericVector RGRmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRmax"]);
   
+  //Allometric parameters
+  DataFrame paramsAllometries = Rcpp::as<Rcpp::DataFrame>(x["paramsAllometries"]);
+  NumericVector Hmax  = paramsAllometries["Hmax"];
+  NumericVector Zmax  = paramsAllometries["Zmax"];
+  NumericVector Aash  = paramsAllometries["Aash"];
+  NumericVector Absh  = paramsAllometries["Absh"];
+  NumericVector Bbsh  = paramsAllometries["Bbsh"];
+  NumericVector r635  = paramsAllometries["r635"];
+  NumericVector Acw  = paramsAllometries["Acw"];
+  NumericVector Bcw  = paramsAllometries["Bcw"];
+  NumericVector Acr  = paramsAllometries["Acr"];
+  NumericVector B1cr  = paramsAllometries["B1cr"];
+  NumericVector B2cr  = paramsAllometries["B2cr"];
+  NumericVector B3cr  = paramsAllometries["B3cr"];
+  NumericVector C1cr  = paramsAllometries["C1cr"];
+  NumericVector C2cr  = paramsAllometries["C2cr"];
+  NumericVector fHDmin= paramsAllometries["fHDmin"];
+  NumericVector fHDmax= paramsAllometries["fHDmax"];
+  
   //Water balance output variables
   NumericMatrix PlantPsi(numDays, numCohorts);
   NumericMatrix PlantStress(numDays, numCohorts);
@@ -200,6 +222,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   NumericMatrix PlantPhotosynthesis(numDays, numCohorts);
   NumericMatrix PlantLAIdead(numDays, numCohorts);
   NumericMatrix PlantLAIlive(numDays, numCohorts);
+  NumericVector SAgrowthcum(numCohorts, 0.0);
   
   //Water balance output variables
   NumericVector Esoil(numDays);
@@ -300,9 +323,9 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
         double costSA = WoodC[j]*(H[j]+Z[j])*WoodDens[j];  //Construction cost in g C·cm-2 of sapwood
         double costFR = costLA/2.5;
         double cost = 1.3*(costLA+costSA+costFR);  //Construction cost in g C·cm-2 of sapwood (including 30% growth respiration)
-        double deltaSAsink = Cstorage[j]/cost;
+        double deltaSAsource = Cstorage[j]/cost;
         double f_temp = temperatureGrowthFactor(MeanTemperature[i]);
-        double deltaSAsource = RGRmax[j]*SA[j]*f_temp*f_turgor;
+        double deltaSAsink = RGRmax[j]*SA[j]*f_temp*f_turgor;
         deltaSAgrowth = std::min(deltaSAsink, deltaSAsource);
         Cstorage[j] = Cstorage[j]-deltaSAgrowth*cost; //Remove construction costs from C pool
         SA[j] = SA[j] + deltaSAgrowth - deltaSAturnover; //Update sapwood area
@@ -310,9 +333,10 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
         LAI_live[j] += (N[j]/10000.0)*((deltaSAgrowth-deltaSAturnover)/10000.0)*Al2As[j]; //Update live LAI
         Psi_leafmin[j] = 0.0;
         LAI_predrought[j] = LAI_live[j];
+        SAgrowthcum[j] += deltaSAgrowth; //Store cumulative SA growth (for structural variable update)
       } else if(allowEmbolism) { //Growth is not possible, evaluate embolism
         Psi_leafmin[j] = std::min(Psi_leafmin[j], psiCoh[j]);
-        double propEmb;
+        double propEmb = 0.0;
         if(transpirationMode == "Simple") {
           propEmb = 1.0-Psi2K(Psi_leafmin[j], Psi_Extract[j]);
         } else if(transpirationMode == "Sperry") {
@@ -334,10 +358,6 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
         // Rcout<<Al2As[j]<<" "<< hubberValue<<" "<<VCstem_kmax[j]<<"\n";
       }
       
-      //3.6 Modify DBH
-      if(!NumericVector::is_na(DBH[j])) {
-        DBH[j] = 2.0*sqrt(pow(DBH[j]/2.0,2.0)+(deltaSAgrowth/PI));
-      }
       //Output variables
       PlantRespiration(i,j) = Rj*(N[j]/10000.0); //Scaled to cohort level
       PlantCstorage(i,j) = Cstorage[j];
@@ -346,7 +366,53 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
       PlantLAIdead(i,j) = LAI_dead[j];
       PlantSAgrowth(i,j) = deltaSAgrowth;
     }
-    
+    //4 Update structural variables
+    if(((DOY[i]==1) & (i>0)) | (i==(numDays-1))) { 
+      if(verbose) Rcout<<" [update structural variables] ";
+      NumericVector deltaDBH(numCohorts, 0.0);
+      for(int j=0;j<numCohorts; j++) {
+        if(!NumericVector::is_na(DBH[j])) {
+          deltaDBH[j] = 2.0*sqrt(pow(DBH[j]/2.0,2.0)+(SAgrowthcum[j]/PI)) - DBH[j];
+          DBH[j] = DBH[j] + deltaDBH[j];
+        } 
+        SAgrowthcum[j] = 0.0; //Reset cumulative growth
+      }
+
+      NumericVector L = parcohortC(H, LAI_live, LAI_dead, k, CR);
+      for(int j=0;j<numCohorts; j++) {
+        if(!NumericVector::is_na(DBH[j])) {
+          double fHmod = std::max(0.0,std::min(1.0,(1.0-((H[j]-137.0)/(Hmax[j]-137.0)))));
+          double fHD = (fHDmin[j]*(L[j]/100.0) + fHDmax[j]*(1.0-(L[j]/100.0)))*fHmod;
+          // Rcout << fHmod<<" "<< fHD<<" "<< L[j]<<"\n";
+          H[j] = H[j] + fHD*deltaDBH[j];
+        }
+      }
+      NumericVector crNew = treeCrownRatio(N, DBH, H, Acw, Bcw, Acr, B1cr, B2cr, B3cr, C1cr, C2cr);
+      for(int j=0;j<numCohorts; j++) {
+        if(!NumericVector::is_na(DBH[j])) {
+          CR[j] = crNew[j];
+        }
+      }
+
+      //Shrub variables
+      for(int j=0;j<numCohorts; j++) {
+        if(NumericVector::is_na(DBH[j])) {
+          double Wleaves = LAI_live[j]/((N[j]/10000)*SLA[j]);  //Calculates the biomass (dry weight) of leaves
+          double PV = pow(Wleaves*r635[j]/Absh[j], 1.0/Bbsh[j]); //Calculates crown phytovolume (in m3)
+          H[j] = pow(pow(10,6.0)*PV/(Aash[j]*CR[j]), 1.0/3.0); //Updates shrub height
+          if(H[j]> Hmax[j]) { //Limit height (and update the former variables)
+            H[j] = Hmax[j];
+            PV = (Aash[j]*pow(H[j],2.0)/10000.0)*(H[j]/100.0)*CR[j];
+            Wleaves = Absh[j]*pow(PV, Bbsh[j])/r635[j];
+            double prevLive = LAI_live[j];
+            LAI_live[j] = Wleaves*((N[j]/10000)*SLA[j]); //Update LAI_live to the maximum
+            LAI_dead[j] += prevLive - LAI_live[j]; //Increment dead LAI with the difference
+            LAI_expanded[j] = LAI_live[j]*phe[j]; //Update expanded leaf area
+          }
+          Cover[j] = (N[j]*Aash[j]*pow(H[j],2.0)/pow(10, 6.0)); //Updates shrub cover
+        }
+      }
+    }
     if(i<(numDays-1)) Wdays(i+1,_) = W;
   }
   if(verbose) Rcout << "done\n";

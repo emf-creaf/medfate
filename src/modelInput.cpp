@@ -174,6 +174,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   NumericVector LAI_dead = above["LAI_dead"];
   NumericVector N = above["N"];
   NumericVector DBH = above["DBH"];
+  NumericVector Cover = above["Cover"];
   NumericVector H = above["H"];
   NumericVector CR = above["CR"];
   String transpirationMode = control["transpirationMode"];
@@ -193,6 +194,29 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   NumericVector k(numCohorts), g(numCohorts), Sgdd(numCohorts);
   NumericVector SLA(numCohorts), Al2As(numCohorts), WoodC(numCohorts), WoodDens(numCohorts);
   NumericVector Cstoragepmax(numCohorts), RGRmax(numCohorts);
+  
+  NumericVector HmaxSP = SpParams["Hmax"];
+  NumericVector ZmaxSP = SpParams["Zmax"];
+  NumericVector r635SP = SpParams["r635"];
+  NumericVector AashSP = SpParams["a_ash"];
+  NumericVector AbshSP = SpParams["a_bsh"];
+  NumericVector BbshSP = SpParams["b_bsh"];
+  NumericVector AcrSP = SpParams["a_cr"];
+  NumericVector B1crSP = SpParams["b_1cr"];
+  NumericVector B2crSP = SpParams["b_2cr"];
+  NumericVector B3crSP = SpParams["b_3cr"];
+  NumericVector C1crSP = SpParams["c_1cr"];
+  NumericVector C2crSP = SpParams["c_2cr"];
+  NumericVector AcwSP = SpParams["a_cw"];
+  NumericVector BcwSP = SpParams["b_cw"];
+  NumericVector fHDminSP = SpParams["fHDmin"];
+  NumericVector fHDmaxSP = SpParams["fHDmax"];
+  
+  NumericVector Hmax(numCohorts), Zmax(numCohorts);
+  NumericVector Aash(numCohorts), Absh(numCohorts), Bbsh(numCohorts), r635(numCohorts);
+  NumericVector fHDmin(numCohorts), fHDmax(numCohorts);
+  NumericVector Acr(numCohorts), B1cr(numCohorts), B2cr(numCohorts), B3cr(numCohorts), C1cr(numCohorts), C2cr(numCohorts);
+  NumericVector Acw(numCohorts), Bcw(numCohorts);
   for(int c=0;c<numCohorts;c++){
     k[c]=kSP[SP[c]];
     g[c]=gSP[SP[c]];
@@ -203,6 +227,25 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     WoodC[c] = WoodCSP[SP[c]];
     Cstoragepmax[c] = 0.2; ///FAKE!!
     RGRmax[c] = 0.005; ///FAKE!!
+
+    //Allometries
+    Hmax[c] = HmaxSP[SP[c]];
+    Zmax[c] = ZmaxSP[SP[c]];
+    
+    Aash[c] = AashSP[SP[c]];
+    Absh[c] = AbshSP[SP[c]];
+    Bbsh[c] = BbshSP[SP[c]];
+    r635[c] = r635SP[SP[c]];
+    Acr[c] = AcrSP[SP[c]];
+    B1cr[c] = B1crSP[SP[c]];
+    B2cr[c] = B2crSP[SP[c]];
+    B3cr[c] = B3crSP[SP[c]];
+    C1cr[c] = C1crSP[SP[c]];
+    C2cr[c] = C2crSP[SP[c]];
+    Acw[c] = AcwSP[SP[c]];
+    Bcw[c] = BcwSP[SP[c]];
+    fHDmax[c] = fHDmaxSP[SP[c]];
+    fHDmin[c] = fHDminSP[SP[c]];
   }
   NumericVector SA(numCohorts), LAI_predrought(numCohorts);
   NumericVector Psi_leafmin(numCohorts), Cstorage(numCohorts);
@@ -214,12 +257,20 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                                                     Z[c], N[c], SLA[c], WoodDens[c], WoodC[c]);
     Cstorage[c] = Cstoragepmax[c]*(compartments[0]+compartments[1]+compartments[2]);
   }
-  DataFrame plantsdf = DataFrame::create(_["SP"]=SP, _["N"]=N,_["DBH"]=DBH,  _["H"]=H, _["CR"]=CR,
+  DataFrame plantsdf = DataFrame::create(_["SP"]=SP, _["N"]=N,_["DBH"]=DBH, _["Cover"] = Cover, _["H"]=H, _["CR"]=CR,
                                    _["LAI_live"]=LAI_live, _["LAI_expanded"]=LAI_expanded, _["LAI_dead"] = LAI_dead,  
                                    _["LAI_predrought"] = LAI_predrought,
                                    _["Psi_leafmin"] = Psi_leafmin,
                                    _["SA"] = SA, _["Cstorage"] = Cstorage);
   DataFrame paramsBasedf = DataFrame::create(_["k"] = k, _["g"] = g, _["Sgdd"] = Sgdd);
+  DataFrame paramsAllometriesdf = DataFrame::create(_["Hmax"] = Hmax,
+                                                    _["Zmax"] = Zmax,
+                                                    _["Aash"] = Aash, _["Absh"] = Absh, _["Bbsh"] = Bbsh,
+                                                    _["r635"] = r635,
+                                                    _["Acr"] = Acr, _["B1cr"] = B1cr, _["B2cr"] = B2cr, _["B3cr"] = B3cr,
+                                                    _["C1cr"] = C1cr, _["C2cr"] = C2cr, 
+                                                    _["Acw"] = Acw, _["Bcw"] = Bcw,
+                                                    _["fHDmin"] = fHDmin,_["fHDmax"] = fHDmax);
   DataFrame paramsGrowthdf = DataFrame::create(_["SLA"] = SLA, _["Al2As"] = Al2As,
                                                _["WoodDens"] = WoodDens, _["WoodC"] = WoodC,
                                                _["Cstoragepmax"] = Cstoragepmax, _["RGRmax"] = RGRmax);
@@ -242,7 +293,8 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                          _["below"] = below,
                          _["paramsBase"] = paramsBasedf,
                          _["paramsTransp"] = paramsTranspdf,
-                         _["paramsGrowth"]= paramsGrowthdf);
+                         _["paramsGrowth"]= paramsGrowthdf,
+                         _["paramsAllometries"] = paramsAllometriesdf);
     
   } else if(transpirationMode =="Sperry"){
     NumericVector GwmaxSP = SpParams["Gwmax"];
@@ -302,7 +354,8 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                    _["below"] = below,
                    _["paramsBase"] = paramsBasedf,
                    _["paramsTransp"] = paramsTranspdf,
-                   _["paramsGrowth"]= paramsGrowthdf);
+                   _["paramsGrowth"]= paramsGrowthdf,
+                   _["paramsAllometries"] = paramsAllometriesdf);
   } 
   input["Transpiration"] = NumericVector(numCohorts, 0.0);
   input["Photosynthesis"] = NumericVector(numCohorts, 0.0);
