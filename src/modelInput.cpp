@@ -179,6 +179,10 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   NumericVector CR = above["CR"];
   String transpirationMode = control["transpirationMode"];
   if((transpirationMode!="Simple") & (transpirationMode!="Sperry")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Simple' or 'Sperry')");
+  String storagePool = control["storagePool"];
+  if((storagePool!="none") & (storagePool!="one")& (storagePool!="two")) stop("Wrong storage pool ('storagePool' should be 'none', 'one' or 'two')");
+  
+  
   double fracTotalTreeResistance = control["fracTotalTreeResistance"];
   double averageFracRhizosphereResistance = control["averageFracRhizosphereResistance"];
   
@@ -186,6 +190,8 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   NumericVector SLASP = SpParams["SLA"];
   NumericVector WoodCSP = SpParams["WoodC"];
   NumericVector WoodDensSP = SpParams["WoodDens"];
+  NumericVector RGRmaxSP = SpParams["RGRmax"];
+  NumericVector CstoragepmaxSP = SpParams["Cstoragepmax"];
   
   NumericVector kSP = SpParams["k"];
   NumericVector gSP = SpParams["g"];
@@ -225,8 +231,8 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     Al2As[c]=Al2AsSP[SP[c]];
     WoodDens[c] = WoodDensSP[SP[c]];
     WoodC[c] = WoodCSP[SP[c]];
-    Cstoragepmax[c] = 0.2; ///FAKE!!
-    RGRmax[c] = 0.005; ///FAKE!!
+    Cstoragepmax[c] = std::max(0.05,CstoragepmaxSP[SP[c]]); //Minimum 5%
+    RGRmax[c] = RGRmaxSP[SP[c]];
 
     //Allometries
     Hmax[c] = HmaxSP[SP[c]];
@@ -248,20 +254,53 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     fHDmin[c] = fHDminSP[SP[c]];
   }
   NumericVector SA(numCohorts), LAI_predrought(numCohorts);
-  NumericVector Psi_leafmin(numCohorts), Cstorage(numCohorts);
+  NumericVector Psi_leafmin(numCohorts);
   for(int c=0;c<numCohorts;c++){
     SA[c] = 10000.0*(LAI_live[c]/(N[c]/10000.0))/Al2AsSP[SP[c]];//Individual SA in cm2/m2
     LAI_predrought[c] = LAI_live[c];
     Psi_leafmin[c] = 0.0;
-    NumericVector compartments = carbonCompartments(SA[c], LAI_expanded[c], H[c], 
-                                                    Z[c], N[c], SLA[c], WoodDens[c], WoodC[c]);
-    Cstorage[c] = Cstoragepmax[c]*(compartments[0]+compartments[1]+compartments[2]);
   }
-  DataFrame plantsdf = DataFrame::create(_["SP"]=SP, _["N"]=N,_["DBH"]=DBH, _["Cover"] = Cover, _["H"]=H, _["CR"]=CR,
+  DataFrame plantsdf, paramsGrowthdf;
+  if(storagePool=="one") {
+    NumericVector fastCstorage(numCohorts);
+    for(int c=0;c<numCohorts;c++){
+      NumericVector compartments = carbonCompartments(SA[c], LAI_expanded[c], H[c], 
+                                                      Z[c], N[c], SLA[c], WoodDens[c], WoodC[c]);
+      fastCstorage[c] = 0.5*Cstoragepmax[c]*(compartments[0]+compartments[1]+compartments[2]);//Pool at 100%
+    }
+    plantsdf = DataFrame::create(_["SP"]=SP, _["N"]=N,_["DBH"]=DBH, _["Cover"] = Cover, _["H"]=H, _["CR"]=CR,
                                    _["LAI_live"]=LAI_live, _["LAI_expanded"]=LAI_expanded, _["LAI_dead"] = LAI_dead,  
                                    _["LAI_predrought"] = LAI_predrought,
                                    _["Psi_leafmin"] = Psi_leafmin,
-                                   _["SA"] = SA, _["Cstorage"] = Cstorage);
+                                   _["SA"] = SA, _["fastCstorage"] = fastCstorage);
+    paramsGrowthdf = DataFrame::create(_["SLA"] = SLA, _["Al2As"] = Al2As,
+                                       _["WoodDens"] = WoodDens, _["WoodC"] = WoodC,
+                                       _["Cstoragepmax"] = Cstoragepmax, _["RGRmax"] = RGRmax);
+  } else if(storagePool=="two") {
+    NumericVector slowCstorage(numCohorts), fastCstorage(numCohorts);
+    for(int c=0;c<numCohorts;c++){
+      NumericVector compartments = carbonCompartments(SA[c], LAI_expanded[c], H[c], 
+                                                      Z[c], N[c], SLA[c], WoodDens[c], WoodC[c]);
+      slowCstorage[c] = 0.5*(Cstoragepmax[c]-0.05)*(compartments[0]+compartments[1]+compartments[2]); //Slow pool at 100%
+      fastCstorage[c] = 0.5*0.05*(compartments[0]+compartments[1]+compartments[2]); //Fast pool at 50%
+    }
+    plantsdf = DataFrame::create(_["SP"]=SP, _["N"]=N,_["DBH"]=DBH, _["Cover"] = Cover, _["H"]=H, _["CR"]=CR,
+                                 _["LAI_live"]=LAI_live, _["LAI_expanded"]=LAI_expanded, _["LAI_dead"] = LAI_dead,  
+                                   _["LAI_predrought"] = LAI_predrought,
+                                   _["Psi_leafmin"] = Psi_leafmin,
+                                   _["SA"] = SA, _["fastCstorage"] = fastCstorage, _["slowCstorage"] = slowCstorage);
+    paramsGrowthdf = DataFrame::create(_["SLA"] = SLA, _["Al2As"] = Al2As,
+                                       _["WoodDens"] = WoodDens, _["WoodC"] = WoodC,
+                                       _["Cstoragepmax"] = Cstoragepmax, _["RGRmax"] = RGRmax);
+  } else {
+    plantsdf = DataFrame::create(_["SP"]=SP, _["N"]=N,_["DBH"]=DBH, _["Cover"] = Cover, _["H"]=H, _["CR"]=CR,
+                                 _["LAI_live"]=LAI_live, _["LAI_expanded"]=LAI_expanded, _["LAI_dead"] = LAI_dead,  
+                                   _["LAI_predrought"] = LAI_predrought,
+                                   _["Psi_leafmin"] = Psi_leafmin, _["SA"] = SA);
+    paramsGrowthdf = DataFrame::create(_["SLA"] = SLA, _["Al2As"] = Al2As,
+                                                 _["WoodDens"] = WoodDens, _["WoodC"] = WoodC,
+                                                 _["RGRmax"] = RGRmax);
+  }
   DataFrame paramsBasedf = DataFrame::create(_["k"] = k, _["g"] = g, _["Sgdd"] = Sgdd);
   DataFrame paramsAllometriesdf = DataFrame::create(_["Hmax"] = Hmax,
                                                     _["Zmax"] = Zmax,
@@ -271,9 +310,6 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                                                     _["C1cr"] = C1cr, _["C2cr"] = C2cr, 
                                                     _["Acw"] = Acw, _["Bcw"] = Bcw,
                                                     _["fHDmin"] = fHDmin,_["fHDmax"] = fHDmax);
-  DataFrame paramsGrowthdf = DataFrame::create(_["SLA"] = SLA, _["Al2As"] = Al2As,
-                                               _["WoodDens"] = WoodDens, _["WoodC"] = WoodC,
-                                               _["Cstoragepmax"] = Cstoragepmax, _["RGRmax"] = RGRmax);
   List input;
   if(transpirationMode=="Simple") {
     NumericVector WUESP = SpParams["WUE"];
@@ -288,6 +324,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     List below = List::create( _["Z"]=Z,_["V"] = V);
     input = List::create(_["verbose"] =control["verbose"],
                          _["TranspirationMode"] =transpirationMode, 
+                         _["storagePool"] = storagePool,
                          _["allowEmbolism"] =control["allowEmbolism"],
                          _["above"] = plantsdf,
                          _["below"] = below,
@@ -349,6 +386,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                               _["VCroot_kmax"] = VCroot_kmax);
     input = List::create(_["verbose"] =control["verbose"],
                          _["TranspirationMode"] =transpirationMode, 
+                         _["storagePool"] = storagePool,
                          _["allowEmbolism"] =control["allowEmbolism"],
                    _["above"] = plantsdf,
                    _["below"] = below,

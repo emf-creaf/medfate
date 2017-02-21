@@ -7,7 +7,8 @@ defaultControl<-function() {
     fracTotalTreeResistance = 0.625,
     averageFracRhizosphereResistance = 0.05,
     # growth
-    allowEmbolism = FALSE
+    allowEmbolism = FALSE,
+    storagePool = "none"
     
 #     #For water balance
 #     embolism = FALSE,

@@ -30,6 +30,10 @@ double dailyRespiration(double B_leaf,double B_stem,double B_root, double Tmean)
   return((B_leaf*leaf_RR + B_stem*stem_RR + B_root*root_RR)*q);
 }
 
+double storageTransferMaximumRate(double fastCstorage, double fastCstoragemax) {
+  double f = ((2.0/(1.0+exp(-2.0*((fastCstorage/fastCstoragemax)-0.5)/0.5)))-1.0);
+  return((fastCstoragemax/30.0)*f);
+}
 double temperatureGrowthFactor(double Tmean) {
   double Tlow = 5.0;
   double Thigh = 40.0;
@@ -49,7 +53,6 @@ void checkgrowthInput(List x, List soil, String transpirationMode) {
   if(!above.containsElementNamed("LAI_dead")) stop("LAI_dead missing in growthInput$above");
   if(!above.containsElementNamed("LAI_predrought")) stop("LAI_predrought missing in growthInput$above");
   if(!above.containsElementNamed("SA")) stop("SA missing in growthInput$above");
-  if(!above.containsElementNamed("Cstorage")) stop("Cstorage missing in growthInput$above");
   if(!above.containsElementNamed("CR")) stop("CR missing in growthInput$above");
   if(!above.containsElementNamed("H")) stop("H missing in growthInput$above");
   if(!above.containsElementNamed("N")) stop("N missing in growthInput$above");
@@ -76,7 +79,7 @@ void checkgrowthInput(List x, List soil, String transpirationMode) {
   if(!paramsGrowth.containsElementNamed("Al2As")) stop("Al2As missing in growthInput$paramsGrowth");
   if(!paramsGrowth.containsElementNamed("WoodC")) stop("WoodC missing in growthInput$paramsGrowth");
   if(!paramsGrowth.containsElementNamed("WoodDens")) stop("WoodDens missing in growthInput$paramsGrowth");
-  if(!paramsGrowth.containsElementNamed("Cstoragepmax")) stop("Cstoragepmax missing in growthInput$paramsGrowth");
+  // if(!paramsGrowth.containsElementNamed("Cstoragepmax")) stop("Cstoragepmax missing in growthInput$paramsGrowth");
   if(!paramsGrowth.containsElementNamed("RGRmax")) stop("RGRmax missing in growthInput$paramsGrowth");
   
   if(!x.containsElementNamed("paramsTransp")) stop("paramsTransp missing in growthInput");
@@ -110,6 +113,7 @@ void checkgrowthInput(List x, List soil, String transpirationMode) {
 // [[Rcpp::export("growth")]]
 List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL) {
   String transpirationMode = x["TranspirationMode"];
+  String storagePool = x["storagePool"];
   bool verbose = x["verbose"];
   bool allowEmbolism = x["allowEmbolism"];
   checkgrowthInput(x, soil, transpirationMode);
@@ -151,9 +155,9 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   NumericVector LAI_expanded = above["LAI_expanded"];
   NumericVector LAI_dead = above["LAI_dead"];
   NumericVector SA = above["SA"];
-  NumericVector Cstorage = above["Cstorage"];
   NumericVector Psi_leafmin = above["Psi_leafmin"];
   NumericVector LAI_predrought = above["LAI_predrought"];
+  NumericVector fastCstorage, slowCstorage;
   int numCohorts = SP.size();
 
   //Belowground parameters  
@@ -189,8 +193,16 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   NumericVector Al2As = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["Al2As"]);
   NumericVector WoodC = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["WoodC"]);
   NumericVector WoodDens = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["WoodDens"]);
-  NumericVector Cstoragepmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["Cstoragepmax"]);
   NumericVector RGRmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRmax"]);
+  NumericVector Cstoragepmax;
+  if(storagePool=="one") {
+    fastCstorage = above["fastCstorage"];
+    Cstoragepmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["Cstoragepmax"]);
+  } else if(storagePool=="two") {
+    fastCstorage = above["fastCstorage"];
+    slowCstorage = above["slowCstorage"];
+    Cstoragepmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["Cstoragepmax"]);
+  }
   
   //Allometric parameters
   DataFrame paramsAllometries = Rcpp::as<Rcpp::DataFrame>(x["paramsAllometries"]);
@@ -216,7 +228,8 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   NumericMatrix PlantStress(numDays, numCohorts);
   NumericMatrix PlantTranspiration(numDays, numCohorts);
   NumericMatrix PlantRespiration(numDays, numCohorts);
-  NumericMatrix PlantCstorage(numDays, numCohorts);
+  NumericMatrix PlantCstorageFast(numDays, numCohorts);
+  NumericMatrix PlantCstorageSlow(numDays, numCohorts);
   NumericMatrix PlantSA(numDays, numCohorts);
   NumericMatrix PlantSAgrowth(numDays, numCohorts);
   NumericMatrix PlantPhotosynthesis(numDays, numCohorts);
@@ -308,12 +321,18 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
       B_leaf_expanded = compartments[0];
       B_stem = compartments[1];
       B_fineroot = compartments[2];
-      double Cstorage_max = Cstoragepmax[j]*(B_leaf_expanded+B_stem+B_fineroot);
+      
       //3.2 Respiration and photosynthesis 
       double Anj = An[j]/(N[j]/10000.0); //Translate g C · m-2 to g C · ind-1
       double Rj = dailyRespiration(B_leaf_expanded, B_stem, B_fineroot, MeanTemperature[i]);
       //3.3. Carbon balance and C storage update
-      Cstorage[j] = std::max(0.0,std::min(Cstorage[j]+(Anj-Rj), Cstorage_max));
+      double growthAvailableC = 0.0;
+      if(storagePool=="none") {
+        growthAvailableC = std::max(0.0,(Anj-Rj));
+      } else  {
+        fastCstorage[j] = std::max(0.0,fastCstorage[j]+(Anj-Rj));
+        growthAvailableC = fastCstorage[j];
+      }
       //3.4 Growth in LAI_live and SA
       double deltaSAturnover = (dailySAturnoverProportion/(1.0+15*exp(-0.01*H[j])))*SA[j];
       double f_turgor = turgorGrowthFactor(psiCoh[j],-1.1);
@@ -323,11 +342,15 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
         double costSA = WoodC[j]*(H[j]+Z[j])*WoodDens[j];  //Construction cost in g C·cm-2 of sapwood
         double costFR = costLA/2.5;
         double cost = 1.3*(costLA+costSA+costFR);  //Construction cost in g C·cm-2 of sapwood (including 30% growth respiration)
-        double deltaSAsource = Cstorage[j]/cost;
+        double deltaSAsource = growthAvailableC/cost;
         double f_temp = temperatureGrowthFactor(MeanTemperature[i]);
         double deltaSAsink = RGRmax[j]*SA[j]*f_temp*f_turgor;
         deltaSAgrowth = std::min(deltaSAsink, deltaSAsource);
-        Cstorage[j] = Cstorage[j]-deltaSAgrowth*cost; //Remove construction costs from C pool
+        
+        //update pools
+        if(storagePool != "none") {
+          fastCstorage[j] = fastCstorage[j]-deltaSAgrowth*cost; //Remove construction costs from (fast) C pool
+        }
         SA[j] = SA[j] + deltaSAgrowth - deltaSAturnover; //Update sapwood area
         LAI_dead[j] += (N[j]/10000.0)*(deltaSAturnover/10000.0)*Al2As[j]; //Update dead LAI
         LAI_live[j] += (N[j]/10000.0)*((deltaSAgrowth-deltaSAturnover)/10000.0)*Al2As[j]; //Update live LAI
@@ -338,7 +361,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
         Psi_leafmin[j] = std::min(Psi_leafmin[j], psiCoh[j]);
         double propEmb = 0.0;
         if(transpirationMode == "Simple") {
-          propEmb = 1.0-Psi2K(Psi_leafmin[j], Psi_Extract[j]);
+          propEmb = pow(1.0-Psi2K(Psi_leafmin[j], Psi_Extract[j]),4.0);
         } else if(transpirationMode == "Sperry") {
           propEmb = 1.0-exp(-pow(Psi_leafmin[j]/VCstem_d[j],VCstem_c[j]));
         }
@@ -351,6 +374,28 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
       }
       LAI_expanded[j] = LAI_live[j]*phe[j]; //Update expanded leaf area
       
+      //update pools
+      if(storagePool == "one") {
+        double Cstorage_max = Cstoragepmax[j]*(B_leaf_expanded+B_stem+B_fineroot);
+        fastCstorage[j] = std::max(0.0,std::min(fastCstorage[j], Cstorage_max));
+      } else if(storagePool == "two") {
+        double fastCstorage_max = 0.05*(B_leaf_expanded+B_stem+B_fineroot);
+        double slowCstorage_max = (Cstoragepmax[j]-0.05)*(B_leaf_expanded+B_stem+B_fineroot);
+        double maxtransferRate = storageTransferMaximumRate(fastCstorage[j], fastCstorage_max);//Maximum transfer rate (maximum daily 5% of fast storage capacity)
+        if(maxtransferRate>0.0) { //Transfer from fast to slow
+          double transfer = std::min(maxtransferRate, fastCstorage[j]);
+          fastCstorage[j] -= transfer;
+          slowCstorage[j] += transfer*0.9; //10% cost in respiration (not added to slow pool)
+        } else { //Transfer from slow to fast
+          double transfer = std::min(-maxtransferRate, slowCstorage[j]);
+          fastCstorage[j] += transfer*0.9; //10% cost in respiration (removed from slow pool)
+          slowCstorage[j] -= transfer;
+        }
+        //Trim pools to maximum capacity
+        fastCstorage[j] = std::max(0.0,std::min(fastCstorage[j], fastCstorage_max));
+        slowCstorage[j] = std::max(0.0,std::min(slowCstorage[j], slowCstorage_max));
+      }
+      
       //3.5 Update stem conductance (Sperry mode)
       if(transpirationMode=="Sperry") {
         double hubberValue = (LAI_expanded[j]/(N[j]/10000.0))/(SA[j]/10000.0);
@@ -360,7 +405,12 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
       
       //Output variables
       PlantRespiration(i,j) = Rj*(N[j]/10000.0); //Scaled to cohort level: Translate g C · ind-1 to g C · m-2
-      PlantCstorage(i,j) = Cstorage[j];
+      if(storagePool=="one") {
+        PlantCstorageFast(i,j) = fastCstorage[j];
+      } else if(storagePool == "two") {
+        PlantCstorageFast(i,j) = fastCstorage[j];
+        PlantCstorageSlow(i,j) = slowCstorage[j];
+      }
       PlantSA(i,j) = SA[j];
       PlantLAIlive(i,j) = LAI_live[j];
       PlantLAIdead(i,j) = LAI_dead[j];
@@ -460,7 +510,8 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
                         Named("PlantTranspiration") = PlantTranspiration,
                         Named("PlantPhotosynthesis") = PlantPhotosynthesis,
                         Named("PlantRespiration") = PlantRespiration,
-                        Named("PlantCstorage") = PlantCstorage,
+                        Named("PlantCstorageFast") = PlantCstorageFast,
+                        Named("PlantCstorageSlow") = PlantCstorageSlow,
                         Named("PlantSAgrowth") = PlantSAgrowth,
                         Named("PlantSA")=PlantSA,
                         Named("PlantPsi") = PlantPsi, 
