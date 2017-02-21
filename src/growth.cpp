@@ -359,7 +359,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
       }
       
       //Output variables
-      PlantRespiration(i,j) = Rj*(N[j]/10000.0); //Scaled to cohort level
+      PlantRespiration(i,j) = Rj*(N[j]/10000.0); //Scaled to cohort level: Translate g C · ind-1 to g C · m-2
       PlantCstorage(i,j) = Cstorage[j];
       PlantSA(i,j) = SA[j];
       PlantLAIlive(i,j) = LAI_live[j];
