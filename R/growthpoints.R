@@ -18,6 +18,7 @@ growthpoints<-function(y, SpParams, meteo, control = defaultControl(), dates = N
   latitude = longlat@coords[,2]
   
   reslist = vector("list",length(IDs))
+  inputlist = vector("list",length(IDs))
   names(reslist) = IDs
   for(i in 1:length(IDs)) {
     id = IDs[i]
@@ -36,8 +37,8 @@ growthpoints<-function(y, SpParams, meteo, control = defaultControl(), dates = N
       yid = y@forestlist[[i]] 
       soil = y@soillist[[i]]
       cat(" - Forest growth")
-      gInput = forest2growthInput(yid, soil, SpParams, control)
-      S<-growth(gInput, soil, meteo=met, 
+      inputlist[[i]] = forest2growthInput(yid, soil, SpParams, control)
+      S<-growth(inputlist[[i]], soil, meteo=met, 
              latitude = latitude[i], elevation = y@data$elevation[i],
             slope = y@data$slope[i], aspect = y@data$aspect[i])      
       if(!is.null(summaryFunction)){
@@ -54,7 +55,7 @@ growthpoints<-function(y, SpParams, meteo, control = defaultControl(), dates = N
       cat("\nEmpty cell at (", y@coords[i,1],", ", y@coords[i,2],")", sep="")
     }
   }
-  l = list(sp = sp, result = reslist)
+  l = list(sp = sp, input = inputlist, result = reslist)
   class(l) = c("growthpoints","list")
   return(l)
 }

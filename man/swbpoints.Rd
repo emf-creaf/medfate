@@ -27,7 +27,12 @@ growthpoints(y, SpParams, meteo, control = defaultControl(),
 Functions \code{swbpoints} and \code{growthpoints}  accept different formats for meteorological input (parameter \code{meteo}). If a \code{data.frame} is supplied (as in \code{\link{swb}} or \code{\link{growth}}) then the same meteorology is used for all points (not recommended). To specify different meteorology for different points, the user can use an object of \code{\link{SpatialPointsMeteorology-class}}. Alternatively, the user can supply an object of class \code{\link{SpatialPointsDataFrame-class}} containing the meta data (columns dir and filename) of meteorological files that will be read from the disk.
 }
 \value{
-Functions \code{swbpoints} and \code{growthpoints} return a list with the result of calling \code{\link{swb}} or \code{\link{growth}} on each forest stand. If \code{summaryFunction} is not null, then each element of the list will contain the result of the summary function.
+Functions \code{swbpoints} and \code{growthpoints} return a list with the following elements:
+\itemize{
+\item{\code{sp}: An object of class \code{\link{SpatialPoints}} with the spatial coordinates of forest stands.}
+\item{\code{input}: A list of objects of class \code{\link{swbInput}} or \code{\link{growthInput}} (one per forest stand). In the case of \code{growthpoints}, the input variables will have been modified by the call to the \code{\link{growth}} function.}
+\item{\code{result}: A list the result of calling \code{\link{swb}} or \code{\link{growth}} on each forest stand. If \code{summaryFunction} is not null, then each element of the list will contain the result of the summary function.}
+}
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
