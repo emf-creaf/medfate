@@ -31,7 +31,7 @@ double dailyRespiration(double B_leaf,double B_stem,double B_root, double Tmean)
 }
 
 double storageTransferMaximumRate(double fastCstorage, double fastCstoragemax) {
-  double f = ((2.0/(1.0+exp(-2.0*((fastCstorage/fastCstoragemax)-0.5)/0.5)))-1.0);
+  double f = ((2.0/(1.0+exp(-5.0*((fastCstorage/fastCstoragemax)-0.5)/0.5)))-1.0);
   return((fastCstoragemax/30.0)*f);
 }
 double temperatureGrowthFactor(double Tmean) {
@@ -194,7 +194,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   NumericVector WoodC = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["WoodC"]);
   NumericVector WoodDens = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["WoodDens"]);
   NumericVector RGRmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRmax"]);
-  NumericVector Cstoragepmax;
+  NumericVector Cstoragepmax, slowCstorage_max(numCohorts), fastCstorage_max(numCohorts);
   if(storagePool=="one") {
     fastCstorage = above["fastCstorage"];
     Cstoragepmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["Cstoragepmax"]);
@@ -316,16 +316,22 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
     //3. Carbon balance and growth
     double B_leaf_expanded, B_stem, B_fineroot;
     for(int j=0;j<numCohorts;j++){
-      //3.1 Live biomass
+      //3.1 Live biomass and maximum C pool capacity
       NumericVector compartments = carbonCompartments(SA[j], LAI_expanded[j], H[j], Z[j], N[j], SLA[j], WoodDens[j], WoodC[j]);
       B_leaf_expanded = compartments[0];
       B_stem = compartments[1];
       B_fineroot = compartments[2];
+      if(storagePool == "one") {
+        fastCstorage_max[j] = Cstoragepmax[j]*(B_leaf_expanded+B_stem+B_fineroot);
+      } else if(storagePool == "two") {
+        fastCstorage_max[j] = 0.05*(B_leaf_expanded+B_stem+B_fineroot);
+        slowCstorage_max[j] = std::max(slowCstorage_max[j],(Cstoragepmax[j]-0.05)*(B_leaf_expanded+B_stem+B_fineroot)); //Slow pool capacity cannot decrease
+      }
       
       //3.2 Respiration and photosynthesis 
       double Anj = An[j]/(N[j]/10000.0); //Translate g C · m-2 to g C · ind-1
       double Rj = dailyRespiration(B_leaf_expanded, B_stem, B_fineroot, MeanTemperature[i]);
-      //3.3. Carbon balance and C storage update
+      //3.3. Carbon balance, update of fast C pool and C available for growth
       double growthAvailableC = 0.0;
       if(storagePool=="none") {
         growthAvailableC = std::max(0.0,(Anj-Rj));
@@ -345,6 +351,10 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
         double deltaSAsource = growthAvailableC/cost;
         double f_temp = temperatureGrowthFactor(MeanTemperature[i]);
         double deltaSAsink = RGRmax[j]*SA[j]*f_temp*f_turgor;
+        if(storagePool!="none") {
+          double f_sugars = (1.0/(1.0+exp(-5.0*((fastCstorage[j]/fastCstorage_max[j])-0.5)/0.5)));
+          deltaSAsink *=f_sugars;
+        } 
         deltaSAgrowth = std::min(deltaSAsink, deltaSAsource);
         
         //update pools
@@ -361,7 +371,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
         Psi_leafmin[j] = std::min(Psi_leafmin[j], psiCoh[j]);
         double propEmb = 0.0;
         if(transpirationMode == "Simple") {
-          propEmb = pow(1.0-Psi2K(Psi_leafmin[j], Psi_Extract[j]),4.0);
+          propEmb = 1.0-Psi2K(Psi_leafmin[j], Psi_Extract[j]);
         } else if(transpirationMode == "Sperry") {
           propEmb = 1.0-exp(-pow(Psi_leafmin[j]/VCstem_d[j],VCstem_c[j]));
         }
@@ -374,14 +384,11 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
       }
       LAI_expanded[j] = LAI_live[j]*phe[j]; //Update expanded leaf area
       
-      //update pools
+      //update C pools
       if(storagePool == "one") {
-        double Cstorage_max = Cstoragepmax[j]*(B_leaf_expanded+B_stem+B_fineroot);
-        fastCstorage[j] = std::max(0.0,std::min(fastCstorage[j], Cstorage_max));
+        fastCstorage[j] = std::max(0.0,std::min(fastCstorage[j], fastCstorage_max[j]));
       } else if(storagePool == "two") {
-        double fastCstorage_max = 0.05*(B_leaf_expanded+B_stem+B_fineroot);
-        double slowCstorage_max = (Cstoragepmax[j]-0.05)*(B_leaf_expanded+B_stem+B_fineroot);
-        double maxtransferRate = storageTransferMaximumRate(fastCstorage[j], fastCstorage_max);//Maximum transfer rate (maximum daily 5% of fast storage capacity)
+        double maxtransferRate = storageTransferMaximumRate(fastCstorage[j], fastCstorage_max[j]);//Maximum transfer rate (maximum daily 5% of fast storage capacity)
         if(maxtransferRate>0.0) { //Transfer from fast to slow
           double transfer = std::min(maxtransferRate, fastCstorage[j]);
           fastCstorage[j] -= transfer;
@@ -392,8 +399,8 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
           slowCstorage[j] -= transfer;
         }
         //Trim pools to maximum capacity
-        fastCstorage[j] = std::max(0.0,std::min(fastCstorage[j], fastCstorage_max));
-        slowCstorage[j] = std::max(0.0,std::min(slowCstorage[j], slowCstorage_max));
+        fastCstorage[j] = std::max(0.0,std::min(fastCstorage[j], fastCstorage_max[j]));
+        slowCstorage[j] = std::max(0.0,std::min(slowCstorage[j], slowCstorage_max[j]));
       }
       
       //3.5 Update stem conductance (Sperry mode)
