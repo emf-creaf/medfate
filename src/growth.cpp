@@ -12,9 +12,9 @@ using namespace Rcpp;
 const double leafCperDry = 0.3; //g C · g dry-1
 const double rootCperDry = 0.4959; //g C · g dry-1
 
-const double leaf_RR = 0.005;
-const double stem_RR = 0.0001;
-const double root_RR = 0.003;
+const double leaf_RR = 0.004; 
+const double stem_RR = 0.001;
+const double root_RR = 0.005;
 const double Q10_resp = 2.0;
 
 const double dailySAturnoverProportion = 0.0001261398; //Equivalent to annual 4.5% 1-(1-0.045)^(1.0/365)
@@ -30,9 +30,9 @@ double dailyRespiration(double B_leaf,double B_stem,double B_root, double Tmean)
   return((B_leaf*leaf_RR + B_stem*stem_RR + B_root*root_RR)*q);
 }
 
-double storageTransferMaximumRate(double fastCstorage, double fastCstoragemax) {
+double storageTransferRelativeRate(double fastCstorage, double fastCstoragemax) {
   double f = ((2.0/(1.0+exp(-5.0*((fastCstorage/fastCstoragemax)-0.5)/0.5)))-1.0);
-  return((fastCstoragemax/30.0)*f);
+  return(f);
 }
 double temperatureGrowthFactor(double Tmean) {
   double Tlow = 5.0;
@@ -330,6 +330,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
       
       //3.2 Respiration and photosynthesis 
       double Anj = An[j]/(N[j]/10000.0); //Translate g C · m-2 to g C · ind-1
+      // double Anj = 0.0;
       double Rj = dailyRespiration(B_leaf_expanded, B_stem, B_fineroot, MeanTemperature[i]);
       //3.3. Carbon balance, update of fast C pool and C available for growth
       double growthAvailableC = 0.0;
@@ -341,21 +342,21 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
       }
       //3.4 Growth in LAI_live and SA
       double deltaSAturnover = (dailySAturnoverProportion/(1.0+15*exp(-0.01*H[j])))*SA[j];
-      double f_turgor = turgorGrowthFactor(psiCoh[j],-1.1);
+      double f_turgor = turgorGrowthFactor(psiCoh[j],-1.5);
       double deltaSAgrowth = 0.0;
       if(f_turgor>0.0) { //Growth is possible
         double costLA = 0.1*leafCperDry*(Al2As[j]/SLA[j]); //Construction cost in g C·cm-2 of sapwood
         double costSA = WoodC[j]*(H[j]+Z[j])*WoodDens[j];  //Construction cost in g C·cm-2 of sapwood
         double costFR = costLA/2.5;
         double cost = 1.3*(costLA+costSA+costFR);  //Construction cost in g C·cm-2 of sapwood (including 30% growth respiration)
-        double deltaSAsource = growthAvailableC/cost;
+        double deltaSAavailable = growthAvailableC/cost;
+        double f_source = 1.0;
+        if(storagePool!="none") {
+          f_source = (1.0/(1.0+exp(-5.0*((fastCstorage[j]/fastCstorage_max[j])-0.5)/0.5)));
+        } 
         double f_temp = temperatureGrowthFactor(MeanTemperature[i]);
         double deltaSAsink = RGRmax[j]*SA[j]*f_temp*f_turgor;
-        if(storagePool!="none") {
-          double f_sugars = (1.0/(1.0+exp(-5.0*((fastCstorage[j]/fastCstorage_max[j])-0.5)/0.5)));
-          deltaSAsink *=f_sugars;
-        } 
-        deltaSAgrowth = std::min(deltaSAsink, deltaSAsource);
+        deltaSAgrowth = std::min(deltaSAsink*f_source, deltaSAavailable);
         
         //update pools
         if(storagePool != "none") {
@@ -384,18 +385,19 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
       }
       LAI_expanded[j] = LAI_live[j]*phe[j]; //Update expanded leaf area
       
-      //update C pools
+      //3.5 transfer between pools and constrain of C pools
       if(storagePool == "one") {
         fastCstorage[j] = std::max(0.0,std::min(fastCstorage[j], fastCstorage_max[j]));
       } else if(storagePool == "two") {
-        double maxtransferRate = storageTransferMaximumRate(fastCstorage[j], fastCstorage_max[j]);//Maximum transfer rate (maximum daily 5% of fast storage capacity)
-        if(maxtransferRate>0.0) { //Transfer from fast to slow
-          double transfer = std::min(maxtransferRate, fastCstorage[j]);
+        //Relative transfer rate (maximum 10% of the source pool)
+        double reltransferRate = 0.1*storageTransferRelativeRate(fastCstorage[j], fastCstorage_max[j]);
+        if(reltransferRate>0.0) { //Transfer from fast to slow 
+          double transfer = std::min(reltransferRate*fastCstorage[j],(slowCstorage_max[j]-slowCstorage[j])*0.9);
           fastCstorage[j] -= transfer;
           slowCstorage[j] += transfer*0.9; //10% cost in respiration (not added to slow pool)
-        } else { //Transfer from slow to fast
-          double transfer = std::min(-maxtransferRate, slowCstorage[j]);
-          fastCstorage[j] += transfer*0.9; //10% cost in respiration (removed from slow pool)
+        } else { //Transfer from slow to fast 
+          double transfer = std::min(-reltransferRate*slowCstorage[j],(fastCstorage_max[j]-fastCstorage[j])*0.9);
+          fastCstorage[j] += transfer*0.9; //10% cost in respiration (removed from what actually reaches fast pool)
           slowCstorage[j] -= transfer;
         }
         //Trim pools to maximum capacity
@@ -403,7 +405,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
         slowCstorage[j] = std::max(0.0,std::min(slowCstorage[j], slowCstorage_max[j]));
       }
       
-      //3.5 Update stem conductance (Sperry mode)
+      //3.6 Update stem conductance (Sperry mode)
       if(transpirationMode=="Sperry") {
         double hubberValue = (LAI_expanded[j]/(N[j]/10000.0))/(SA[j]/10000.0);
         VCstem_kmax[j]=maximumStemHydraulicConductance(xylem_kmax[j], hubberValue,H[j]);
@@ -413,10 +415,10 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
       //Output variables
       PlantRespiration(i,j) = Rj*(N[j]/10000.0); //Scaled to cohort level: Translate g C · ind-1 to g C · m-2
       if(storagePool=="one") {
-        PlantCstorageFast(i,j) = fastCstorage[j];
+        PlantCstorageFast(i,j) = fastCstorage[j]/fastCstorage_max[j];
       } else if(storagePool == "two") {
-        PlantCstorageFast(i,j) = fastCstorage[j];
-        PlantCstorageSlow(i,j) = slowCstorage[j];
+        PlantCstorageFast(i,j) = fastCstorage[j]/fastCstorage_max[j];
+        PlantCstorageSlow(i,j) = slowCstorage[j]/slowCstorage_max[j];
       }
       PlantSA(i,j) = SA[j];
       PlantLAIlive(i,j) = LAI_live[j];

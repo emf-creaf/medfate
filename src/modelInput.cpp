@@ -266,7 +266,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     for(int c=0;c<numCohorts;c++){
       NumericVector compartments = carbonCompartments(SA[c], LAI_expanded[c], H[c], 
                                                       Z[c], N[c], SLA[c], WoodDens[c], WoodC[c]);
-      fastCstorage[c] = 0.5*Cstoragepmax[c]*(compartments[0]+compartments[1]+compartments[2]);//Pool at 100%
+      fastCstorage[c] = 0.5*Cstoragepmax[c]*(compartments[0]+compartments[1]+compartments[2]);//Pool at 50%
     }
     plantsdf = DataFrame::create(_["SP"]=SP, _["N"]=N,_["DBH"]=DBH, _["Cover"] = Cover, _["H"]=H, _["CR"]=CR,
                                    _["LAI_live"]=LAI_live, _["LAI_expanded"]=LAI_expanded, _["LAI_dead"] = LAI_dead,  
@@ -281,7 +281,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     for(int c=0;c<numCohorts;c++){
       NumericVector compartments = carbonCompartments(SA[c], LAI_expanded[c], H[c], 
                                                       Z[c], N[c], SLA[c], WoodDens[c], WoodC[c]);
-      slowCstorage[c] = 0.5*(Cstoragepmax[c]-0.05)*(compartments[0]+compartments[1]+compartments[2]); //Slow pool at 100%
+      slowCstorage[c] = 0.5*(Cstoragepmax[c]-0.05)*(compartments[0]+compartments[1]+compartments[2]); //Slow pool at 50%
       fastCstorage[c] = 0.5*0.05*(compartments[0]+compartments[1]+compartments[2]); //Fast pool at 50%
     }
     plantsdf = DataFrame::create(_["SP"]=SP, _["N"]=N,_["DBH"]=DBH, _["Cover"] = Cover, _["H"]=H, _["CR"]=CR,
