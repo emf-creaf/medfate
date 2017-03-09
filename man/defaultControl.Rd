@@ -18,8 +18,10 @@ A list, with the following options:
 \itemize{
 \item{\code{verbose (=TRUE)}: Boolean flag to indicate console output during calculations.}
 \item{\code{transpirationMode (="Simple")}: Transpiration model. See \code{\link{swbInput}}.}
+\item{\code{cavitationRefill (= TRUE)}: Whether refilling of embolized conduits is activated.}
 \item{\code{fracTotalTreeResistance (=0.625)}: Fraction of the minimum tree (stem+root) resistance that corresponds to stem resistance.}
 \item{\code{averageFracRhizosphereResistance (=0.05)}: Fraction to total continuum (stem+root+rhizosphere) resistance that corresponds to rhizosphere (averaged across soil water potential values).}
+\item{\code{storagePool (="none")}: Whether carbon storage pools are considered (either "none", "one" or "two").}
 }
 }
 \author{

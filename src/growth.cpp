@@ -227,6 +227,9 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   NumericMatrix PlantPsi(numDays, numCohorts);
   NumericMatrix PlantStress(numDays, numCohorts);
   NumericMatrix PlantTranspiration(numDays, numCohorts);
+  NumericMatrix PlantWindSpeed(numDays, numCohorts);
+  NumericMatrix PlantPAR(numDays, numCohorts);
+  NumericMatrix PlantAbsorbedSWR(numDays, numCohorts);
   NumericMatrix PlantRespiration(numDays, numCohorts);
   NumericMatrix PlantCstorageFast(numDays, numCohorts);
   NumericMatrix PlantCstorageSlow(numDays, numCohorts);
@@ -312,7 +315,10 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
     PlantStress(i,_) = Rcpp::as<Rcpp::NumericVector>(s["DDS"]);
     NumericVector psiCoh =  Rcpp::as<Rcpp::NumericVector>(s["psiCoh"]);;
     PlantPsi(i,_) = psiCoh;
-      
+    PlantWindSpeed(i,_) = Rcpp::as<Rcpp::NumericVector>(x["WindSpeed"]);
+    PlantPAR(i,_) = Rcpp::as<Rcpp::NumericVector>(x["PAR"]);
+    PlantAbsorbedSWR(i,_) = Rcpp::as<Rcpp::NumericVector>(x["AbsorbedSWR"]);
+    
     //3. Carbon balance and growth
     double B_leaf_expanded, B_stem, B_fineroot;
     for(int j=0;j<numCohorts;j++){
@@ -523,6 +529,9 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
                         Named("PlantCstorageSlow") = PlantCstorageSlow,
                         Named("PlantSAgrowth") = PlantSAgrowth,
                         Named("PlantSA")=PlantSA,
+                        Named("PlantWindSpeed") = PlantWindSpeed,
+                        Named("PlantPAR") = PlantPAR,
+                        Named("PlantAbsorbedSWR") = PlantAbsorbedSWR,
                         Named("PlantPsi") = PlantPsi, 
                         Named("PlantStress") = PlantStress,
                         Named("PlantLAIdead") = PlantLAIdead,

@@ -196,7 +196,7 @@ List photosynthesisFunction(List supplyFunction, double Catm, double Patm, doubl
   for(int i=0;i<nsteps;i++){
     leafTemp[i] = leafTemperature(absRad, Tair, u, fittedE[i]);
     leafVPD[i] = (meteoland::utils_saturationVP(leafTemp[i])-vpa);
-    Gw[i] = Patm*(fittedE[i]/1000)/leafVPD[i];
+    Gw[i] = Patm*(fittedE[i]/1000.0)/leafVPD[i];
     Ag[i] = photosynthesis(Q, Catm, Gw[i]/1.6, leafTemp[i], Vmax298, Jmax298);
     An[i] = Ag[i] - 0.015*VmaxTemp(Vmax298, leafTemp[i]);
   }
@@ -229,6 +229,102 @@ List profitMaximization(List supplyFunction, List photosynthesisFunction, double
     profit[i] = gain[i]-cost[i];
   }
 
+  int imaxprofit=-1;
+  double maxprofit=0.0;
+  //Searches the step corresponding to minimum (i.e. cuticular) conductance
+  for(int i=0;i<nsteps;i++){
+    if(Gw[i]>Gwmin) {
+      maxprofit = profit[i];
+      imaxprofit = i;
+      break;
+    }
+  }
+  //Searches for maximum profit (up to Gwmax)
+  if(imaxprofit>-1) {
+    for(int i=(imaxprofit+1);i<nsteps;i++){
+      if((profit[i]>maxprofit) & (Gw[i]<Gwmax)) {
+        maxprofit = profit[i];
+        imaxprofit = i;
+      }
+    }
+  } else {
+    imaxprofit = 0;
+  }
+  return(List::create(Named("Cost") = cost,
+                      Named("Gain") = gain,
+                      Named("Profit") = profit,
+                      Named("iMaxProfit")=imaxprofit));
+}
+
+// [[Rcpp::export("photo.profitMaximization2")]]
+List profitMaximization2(List supplyFunction, List photosynthesisFunction, double Gwmin, double Gwmax, double kstemmax) {
+  NumericVector supplyKterm = supplyFunction["kterm"];
+  NumericVector Ag = photosynthesisFunction["Photosynthesis"];
+  NumericVector Gw = photosynthesisFunction["WaterVaporConductance"];
+  int nsteps = supplyKterm.size();
+  NumericVector profit(nsteps);
+  NumericVector cost(nsteps);
+  NumericVector gain(nsteps);
+  double minKterm = 99999999.0;
+  double Agmax = 0.0;
+  for(int i=0;i<nsteps;i++) {
+    minKterm =  std::min(minKterm, supplyKterm[i]);
+    Agmax = std::max(Agmax, Ag[i]);
+  }
+  for(int i=0;i<nsteps;i++) {
+    cost[i] = (kstemmax-supplyKterm[i])/(kstemmax-0.0);
+    gain[i] = Ag[i]/Agmax;
+    profit[i] = gain[i]-cost[i];
+  }
+  
+  int imaxprofit=-1;
+  double maxprofit=0.0;
+  //Searches the step corresponding to minimum (i.e. cuticular) conductance
+  for(int i=0;i<nsteps;i++){
+    if(Gw[i]>Gwmin) {
+      maxprofit = profit[i];
+      imaxprofit = i;
+      break;
+    }
+  }
+  //Searches for maximum profit (up to Gwmax)
+  if(imaxprofit>-1) {
+    for(int i=(imaxprofit+1);i<nsteps;i++){
+      if((profit[i]>maxprofit) & (Gw[i]<Gwmax)) {
+        maxprofit = profit[i];
+        imaxprofit = i;
+      }
+    }
+  } else {
+    imaxprofit = 0;
+  }
+  return(List::create(Named("Cost") = cost,
+                      Named("Gain") = gain,
+                      Named("Profit") = profit,
+                      Named("iMaxProfit")=imaxprofit));
+}
+
+// [[Rcpp::export("photo.profitMaximization3")]]
+List profitMaximization3(List supplyFunction, List photosynthesisFunction, double Gwmin, double Gwmax, double kstemmax) {
+  NumericVector supplyKterm = supplyFunction["ktermcav"];
+  NumericVector Ag = photosynthesisFunction["Photosynthesis"];
+  NumericVector Gw = photosynthesisFunction["WaterVaporConductance"];
+  int nsteps = supplyKterm.size();
+  NumericVector profit(nsteps);
+  NumericVector cost(nsteps);
+  NumericVector gain(nsteps);
+  double minKterm = 99999999.0;
+  double Agmax = 0.0;
+  for(int i=0;i<nsteps;i++) {
+    minKterm =  std::min(minKterm, supplyKterm[i]);
+    Agmax = std::max(Agmax, Ag[i]);
+  }
+  for(int i=0;i<nsteps;i++) {
+    cost[i] = (kstemmax-supplyKterm[i])/(kstemmax-0.0);
+    gain[i] = Ag[i]/Agmax;
+    profit[i] = gain[i]-cost[i];
+  }
+  
   int imaxprofit=-1;
   double maxprofit=0.0;
   //Searches the step corresponding to minimum (i.e. cuticular) conductance

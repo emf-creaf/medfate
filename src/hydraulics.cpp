@@ -163,23 +163,6 @@ double gammds ( double x, double p)
   return value;
 }
 
- 
-
-// [[Rcpp::export(".Egamma")]]
-double Egamma(double psi, double kxylemmax, double c, double d) {
-  if(psi>0.0) stop("psi has to be negative");
-  double h = 1.0/c;
-  double z = pow(psi/d,c);
-  double g = exp(lgamma(h))*gammds(z,h); //Upper incomplete gamma, without the normalizing factor
-  return(kxylemmax*(-d/c)*g);
-}
-
-// [[Rcpp::export("hydraulics.EXylem")]]
-double EXylem(double psiPlant, double psiUpstream, double kxylemmax, double c, double d, bool allowNegativeFlux = true) {
-  if((psiPlant > psiUpstream) & !allowNegativeFlux) ::Rf_error("Downstream potential larger (less negative) than upstream potential");
-  return(Egamma(psiPlant, kxylemmax, c, d)-Egamma(psiUpstream, kxylemmax, c,d));
-}
-
 // [[Rcpp::export("hydraulics.xylemConductance")]]
 double xylemConductance(double psi, double kxylemmax, double c, double d) {
   if(psi>0.0) {
@@ -189,13 +172,45 @@ double xylemConductance(double psi, double kxylemmax, double c, double d) {
   return(kxylemmax*exp(-pow(psi/d,c)));
 }
 
+
+// [[Rcpp::export(".Egamma")]]
+double Egamma(double psi, double kxylemmax, double c, double d, double psiCav = 0.0) {
+  if(psi>0.0) stop("psi has to be negative");
+  double h = 1.0/c;
+  double z = pow(psi/d,c);
+  double g = exp(lgamma(h))*gammds(z,h); //Upper incomplete gamma, without the normalizing factor
+  double E = kxylemmax*(-d/c)*g;
+  if(psiCav<0.0) { //Decrease E from 0 to psiCav (avoid recursiveness!)
+    if(psiCav < psi) {
+      E = xylemConductance(psiCav,kxylemmax,c,d)*(-psi); //square integral
+    } else {
+      double Epsimin = kxylemmax*(-d/c)*exp(lgamma(h))*gammds(pow(psiCav/d,c),h);
+      E = E - Epsimin + xylemConductance(psiCav,kxylemmax,c,d)*(-psiCav); //Remove part of the integral corresponding to psimin and add square integral
+    }
+  }
+  return(E);
+}
+
+
+/*
+ * Integral of the xylem vulnerability curve
+ */
+// [[Rcpp::export("hydraulics.EXylem")]]
+double EXylem(double psiPlant, double psiUpstream, double kxylemmax, double c, double d, bool allowNegativeFlux = true, double psiCav = 0.0) {
+  if((psiPlant > psiUpstream) & !allowNegativeFlux) ::Rf_error("Downstream potential larger (less negative) than upstream potential");
+  return(Egamma(psiPlant, kxylemmax, c, d, psiCav)-Egamma(psiUpstream, kxylemmax, c,d, psiCav));
+}
+
+
+
 // [[Rcpp::export("hydraulics.psiCrit")]]
 double psiCrit(double c, double d) {
   return(d * pow(-log(0.01), 1.0/c));
 }
 
 // [[Rcpp::export("hydraulics.E2psiXylem")]]
-double E2psiXylem(double E, double psiUpstream, double kxylemmax, double c, double d, double psiStep = -0.01, double psiMax = -10.0) {
+double E2psiXylem(double E, double psiUpstream, double kxylemmax, double c, double d, double psiCav = 0.0, 
+                  double psiStep = -0.01, double psiMax = -10.0) {
   if(E<0.0) stop("E has to be positive");
   if(E==0) return(psiUpstream);
   double psi = psiUpstream;
@@ -204,7 +219,7 @@ double E2psiXylem(double E, double psiUpstream, double kxylemmax, double c, doub
   while(Eg<E) {
     psiPrev = psi;
     psi = psi + psiStep;
-    Eg = EXylem(psi,psiUpstream, kxylemmax, c, d);
+    Eg = EXylem(psi,psiUpstream, kxylemmax, c, d, true, psiCav=psiCav);
     if(psi<psiMax) return(NA_REAL);
     if(NumericVector::is_na(Eg)) return(NA_REAL);
   }
@@ -219,7 +234,7 @@ double Ecrit(double psiUpstream, double kxylemmax, double c, double d) {
 // [[Rcpp::export("hydraulics.regulatedPsiXylem")]]
 NumericVector regulatedPsiXylem(double E, double psiUpstream, double kxylemmax, double c, double d, double psiStep = -0.01) {
   //If Ein > Ecrit then set Ein to Ecrit
-  double psiUnregulated = E2psiXylem(E, psiUpstream, kxylemmax, c, d, psiStep);
+  double psiUnregulated = E2psiXylem(E, psiUpstream, kxylemmax, c, d, 0.0, psiStep);
   double Ec = Ecrit(psiUpstream, kxylemmax,c,d);
   double Ein = E;
   if(Ein > Ec) {
@@ -246,7 +261,7 @@ NumericVector regulatedPsiXylem(double E, double psiUpstream, double kxylemmax, 
 
 // [[Rcpp::export("hydraulics.supplyFunctionOneXylem")]]
 List supplyFunctionOneXylem(NumericVector psiSoil, NumericVector v,
-                            double kstemmax, double stemc, double stemd,
+                            double kstemmax, double stemc, double stemd, double psiCav = 0.0,
                            int maxNsteps=200, double psiStep = -0.001, double psiMax = -10.0, double dE=0.01) {
   int nlayers = psiSoil.size();
   NumericVector supplyE(maxNsteps);
@@ -261,7 +276,7 @@ List supplyFunctionOneXylem(NumericVector psiSoil, NumericVector v,
   //Calculate initial slope
   for(int l=0;l<nlayers;l++) {
     Psilayers[l] = E2psiXylem(dE, psiSoil[l], 
-                              kstemmax, stemc,stemd, 
+                              kstemmax, stemc,stemd, psiCav, 
                               psiStep, psiMax);
     // Rcout<<Psilayers[l]<<" ";
   }
@@ -277,7 +292,7 @@ List supplyFunctionOneXylem(NumericVector psiSoil, NumericVector v,
     // Rcout<<supplyE[i]<<" ";
     for(int l=0;l<nlayers;l++) {
       Psilayers[l] = E2psiXylem(supplyE[i], psiSoil[l],
-                                kstemmax, stemc,stemd, 
+                                kstemmax, stemc,stemd, psiCav, 
                                 psiStep, psiMax);
       // Rcout<<Psilayers[l]<<" ";
     }
@@ -365,6 +380,7 @@ double EVanGenuchten(double psiRhizo, double psiSoil, double krhizomax, double n
   double psi = psiSoil;
   double vg = vanGenuchtenConductance(psi, krhizomax, n, alpha);
   double E = 0.0, vgPrev = vg;
+  psiStep = std::max(psiStep, (psiRhizo-psiSoil)/10.0); //Check that step is not too large
   do {
     psi = psi + psiStep;
     if(psi>psiRhizo) {
@@ -382,16 +398,19 @@ double EVanGenuchten(double psiRhizo, double psiSoil, double krhizomax, double n
 
 
 // [[Rcpp::export("hydraulics.E2psiTwoElements")]]
-double E2psiTwoElements(double E, double psiSoil, double krhizomax, double kxylemmax, double n, double alpha, double c, double d, double psiStep = -0.001, double psiMax = -10.0) {
+double E2psiTwoElements(double E, double psiSoil, double krhizomax, double kxylemmax, double n, double alpha, double c, double d, double psiCav = 0.0,
+                        double psiStep = -0.001, double psiMax = -10.0) {
   if(E<0.0) stop("E has to be positive");
   if(E==0) return(psiSoil);
   double psiRoot = E2psiVanGenuchten(E, psiSoil, krhizomax, n, alpha, psiStep, psiMax);
   if(NumericVector::is_na(psiRoot)) return(NA_REAL);
-  return(E2psiXylem(E, psiRoot, kxylemmax, c, d, psiStep, psiMax));
+  return(E2psiXylem(E, psiRoot, kxylemmax, c, d, psiCav, psiStep, psiMax));
 }
 
 // [[Rcpp::export("hydraulics.supplyFunctionTwoElements")]]
-List supplyFunctionTwoElements(double Emax, double psiSoil, double krhizomax, double kxylemmax, double n, double alpha, double c, double d, double dE = 0.1, double psiMax = -10.0) {
+List supplyFunctionTwoElements(double Emax, double psiSoil, double krhizomax, double kxylemmax, double n, double alpha, double c, double d, 
+                               double psiCav = 0.0, 
+                               double dE = 0.1, double psiMax = -10.0) {
   dE = std::min(dE,Emax/5.0);
   int maxNsteps = round(Emax/dE)+1;
   NumericVector supplyE(maxNsteps);
@@ -407,7 +426,7 @@ List supplyFunctionTwoElements(double Emax, double psiSoil, double krhizomax, do
   double psiPlant = psiSoil;
   double vgPrev = vanGenuchtenConductance(psiRoot, krhizomax, n, alpha);
   double vg = 0.0;
-  double wPrev = xylemConductance(psiPlant, kxylemmax, c, d);
+  double wPrev = xylemConductance(std::min(psiCav,psiPlant), kxylemmax, c, d); //conductance can decrease if psiCav < psiPlant
   double w = 0.0;
   double incr = 0.0;
   supplyPsiRoot[0] = psiSoil;
@@ -436,9 +455,9 @@ List supplyFunctionTwoElements(double Emax, double psiSoil, double krhizomax, do
     psiStep2 = -0.01;
     Eg2 = 0.0;
     psiPlant = psiRoot;
-    wPrev = xylemConductance(psiPlant, kxylemmax, c, d);
+    wPrev = xylemConductance(std::min(psiCav,psiPlant), kxylemmax, c, d);
     while((psiStep2<psiPrec) & (psiPlant>psiMax))  {
-      w = xylemConductance(psiPlant+psiStep2, kxylemmax, c, d);
+      w = xylemConductance(std::min(psiCav,psiPlant+psiStep2), kxylemmax, c, d);
       incr = ((w+wPrev)/2.0)*std::abs(psiStep2);
       if((Eg2+incr)>supplyE[i]) {
         psiStep2 = psiStep2*0.5;
@@ -475,7 +494,7 @@ List supplyFunctionTwoElements(double Emax, double psiSoil, double krhizomax, do
 
 // [[Rcpp::export("hydraulics.regulatedPsiTwoElements")]]
 NumericVector regulatedPsiTwoElements(double Emax, double psiSoil, double krhizomax, double kxylemmax, double n, double alpha, double c, double d, double dE = 0.1, double psiMax = -10.0) {
-  List s = supplyFunctionTwoElements(Emax, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, dE,psiMax);
+  List s = supplyFunctionTwoElements(Emax, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, 0.0, dE,psiMax);
   NumericVector supplyPsi = s["PsiPlant"];
   NumericVector Efitted = s["FittedE"];
   NumericVector dEdP = s["dEdP"];
@@ -579,7 +598,8 @@ List E2psiNetwork(double E, NumericVector psiSoil,
                   NumericVector krootmax, double rootc, double rootd, 
                   double kstemmax, double stemc, double stemd,
                   NumericVector psiIni = NumericVector::create(0),
-                  double psiStep = -0.001, double psiMax = -10.0, int ntrial = 10, double psiTol = 0.0001, double ETol = 0.001) {
+                  double psiCav = 0.0, //Minimum plant potential (cavitation)
+                  double psiStep = -0.001, double psiMax = -10.0, int ntrial = 10, double psiTol = 0.0001, double ETol = 0.0001) {
   int nlayers = psiSoil.length();
   //Initialize
   NumericVector x(nlayers+1);
@@ -633,7 +653,8 @@ List E2psiNetwork(double E, NumericVector psiSoil,
     for(int l=0;l<nlayers;l++) { 
       fjac(l,nlayers) = xylemConductance(x[nlayers], krootmax[l], rootc, rootd); //funcio l derivada psi_rootcrown
       fjac(nlayers,l) = xylemConductance(x[l], krootmax[l], rootc, rootd);//funcio nlayers derivada psi_l
-      fjac(nlayers,nlayers) +=-xylemConductance(x[nlayers], krootmax[l], rootc, rootd);// funcio nlayers derivada psi_rootcrown
+      // funcio nlayers derivada psi_rootcrown
+      fjac(nlayers,nlayers) +=-xylemConductance(x[nlayers], krootmax[l], rootc, rootd);
     }
     // for(int l1=0;l1<=nlayers;l1++) { //funcio
     //   for(int l2=0;l2<=nlayers;l2++) { //derivada
@@ -670,16 +691,23 @@ List E2psiNetwork(double E, NumericVector psiSoil,
     psi[l] = x[l];
     // Rcout<<psi[l]<<" ";
   }
-  for(int l=0;l<nlayers;l++) {
+  double Esum = 0.0;
+  for(int l=0;l<(nlayers-1);l++) {
     Erhizo[l] = EVanGenuchten(x[l], psiSoil[l], krhizomax[l], nsoil[l], alphasoil[l], psiStep, psiTol/1000.0);
     // Rcout<<Erhizo[l]<<" ";
+    Esum +=Erhizo[l];
   }
+  // Erhizo[nlayers-1] = E-Esum; //Set the last layer as the complementary
+  // psi[nlayers-1] = E2psiVanGenuchten(E,psiSoil[nlayers-1], krhizomax[nlayers-1], nsoil[nlayers-1], alphasoil[nlayers-1], psiStep, psiMax);
   // Rcout<<"\n";
   if(!NumericVector::is_na(x[nlayers])) {
-    psi[nlayers+1] = E2psiXylem(E, x[nlayers], kstemmax, stemc, stemd, psiStep, psiMax);
+    //Apliquem la fatiga per cavitacio a la caiguda de potencial a la tija
+    psi[nlayers+1] = E2psiXylem(E, x[nlayers], kstemmax, stemc, stemd, psiCav, psiStep, psiMax); 
   } 
   else psi[nlayers+1] = NA_REAL;
-  return(List::create(Named("Psi") = psi, Named("E")=Erhizo));
+  double kterm = xylemConductance(psi[nlayers+1], kstemmax, stemc, stemd);
+  double ktermcav = xylemConductance(std::min(psi[nlayers+1],psiCav), kstemmax, stemc, stemd);
+  return(List::create(Named("Psi") = psi, Named("E")=Erhizo, Named("kterm") = kterm, Named("ktermcav") = ktermcav));
 } 
 
 
@@ -731,24 +759,30 @@ List supplyFunctionNetwork(NumericVector psiSoil,
                            NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
                            NumericVector krootmax, double rootc, double rootd, 
                            double kstemmax, double stemc, double stemd,
-                           int maxNsteps=200, double psiStep = -0.001, double psiMax = -10.0, int ntrial = 10, double psiTol = 0.0001, double ETol = 0.001) {
+                           double psiCav = 0.0,
+                           int maxNsteps=400, double psiStep = -0.001, double psiMax = -10.0, int ntrial = 10, double psiTol = 0.0001, double ETol = 0.0001) {
   int nlayers = psiSoil.size();
   int nnodes = nlayers+2;
   NumericVector supplyE(maxNsteps);
   NumericVector supplydEdp(maxNsteps);
   NumericMatrix supplyElayers(maxNsteps,nlayers);
   NumericMatrix supplyPsi(maxNsteps,nnodes);
+  NumericMatrix supplyKterm(maxNsteps);
+  NumericMatrix supplyKtermcav(maxNsteps);
   
   List sol = E2psiNetwork(0.0, psiSoil, 
                           krhizomax,  nsoil,  alphasoil,
                           krootmax,  rootc,  rootd, 
                           kstemmax,  stemc,  stemd,
                           NumericVector::create(0),
+                          psiCav,
                           psiStep, psiMax, ntrial,psiTol, ETol);
   NumericVector solE = sol["E"];
   NumericVector solPsi = sol["Psi"];
   for(int l=0;l<nlayers;l++) supplyElayers(0,l) = solE[l];
   for(int n=0;n<nnodes;n++) supplyPsi(0,n) = solPsi[n];
+  supplyKterm[0] = sol["kterm"];
+  supplyKtermcav[0] = sol["ktermcav"];
   
   //Calculate initial slope
   List solI = E2psiNetwork(ETol*2.0, psiSoil, 
@@ -756,23 +790,27 @@ List supplyFunctionNetwork(NumericVector psiSoil,
                            krootmax,  rootc,  rootd, 
                            kstemmax,  stemc,  stemd,
                            solPsi,
+                           psiCav,
                            psiStep, psiMax, ntrial,psiTol, ETol);
   NumericVector solPsiI = solI["Psi"];
   double maxdEdp = (ETol*2.0)/std::abs(solPsiI[nnodes-1]-solPsi[nnodes-1]);
   
   int nsteps = 1;
-  double dE = std::min(0.1,maxdEdp*0.05);
+  double dE = std::min(0.05,maxdEdp*0.05);
   for(int i=1;i<maxNsteps;i++) {
+    // if(i==3) stop("kk");
     supplyE[i] = supplyE[i-1]+dE; 
     sol = E2psiNetwork(supplyE[i], psiSoil, 
                             krhizomax,  nsoil,  alphasoil,
                             krootmax,  rootc,  rootd, 
                             kstemmax,  stemc,  stemd,
                             solPsi,
+                            psiCav,
                             psiStep, psiMax, ntrial,psiTol, ETol);
     solE = sol["E"];
     solPsi = sol["Psi"];
-    
+    supplyKterm[i] = sol["kterm"];
+    supplyKtermcav[i] = sol["ktermcav"];
     // Rcout<<supplyE[i]<<" ";
     for(int l=0;l<nlayers;l++) {
       supplyElayers(i,l) = solE[l];
@@ -792,7 +830,7 @@ List supplyFunctionNetwork(NumericVector psiSoil,
         double d2 = (supplyE[i]-supplyE[i-1])/std::abs(supplyPsi(i,nnodes-1)-supplyPsi(i-1,nnodes-1));
         supplydEdp[i-1] = (d1+d2)/2.0;
       }
-      dE = std::min(0.1,supplydEdp[i-1]*0.05);
+      dE = std::min(0.05,supplydEdp[i-1]*0.05);
       nsteps++; 
       if(supplydEdp[i-1]<0.01*maxdEdp) break;
     } else {
@@ -802,6 +840,8 @@ List supplyFunctionNetwork(NumericVector psiSoil,
   //Calculate last dEdP
   if(nsteps>1) supplydEdp[nsteps-1] = (supplyE[nsteps-1]-supplyE[nsteps-2])/std::abs(supplyPsi(nsteps-1,nnodes-1)-supplyPsi(nsteps-2,nnodes-1));
   //Copy values tp nsteps
+  NumericVector supplyKtermDef(nsteps);
+  NumericVector supplyKtermcavDef(nsteps);
   NumericVector supplyEDef(nsteps);
   NumericVector supplydEdpDef(nsteps);
   NumericMatrix supplyElayersDef(nsteps,nlayers);
@@ -811,6 +851,8 @@ List supplyFunctionNetwork(NumericVector psiSoil,
   for(int i=0;i<nsteps;i++) {
     supplyEDef[i] = supplyE[i];
     supplydEdpDef[i] = supplydEdp[i];
+    supplyKtermDef[i] = supplyKterm[i];
+    supplyKtermcavDef[i] = supplyKtermcav[i];
     supplyPsiRoot[i] = supplyPsi(i,nnodes-2);
     supplyPsiPlant[i] = supplyPsi(i,nnodes-1);
     for(int l=0;l<nlayers;l++) {
@@ -823,7 +865,9 @@ List supplyFunctionNetwork(NumericVector psiSoil,
                       Named("PsiRhizo")=supplyPsiRhizo, 
                       Named("PsiPlant")=supplyPsiPlant,
                       Named("PsiRoot")=supplyPsiRoot,
-                      Named("dEdP")=supplydEdpDef));
+                      Named("dEdP")=supplydEdpDef,
+                      Named("kterm") = supplyKtermDef,
+                      Named("ktermcav") = supplyKtermcavDef));
   
 }
 

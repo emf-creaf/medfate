@@ -4,14 +4,14 @@ defaultControl<-function() {
     verbose = TRUE,
     # swb
     transpirationMode = "Simple",
+    cavitationRefill = TRUE,
     fracTotalTreeResistance = 0.625,
     averageFracRhizosphereResistance = 0.05,
+    ndailysteps = 24,
     # growth
-    allowEmbolism = FALSE,
     storagePool = "none"
     
 #     #For water balance
-#     embolism = FALSE,
     #For forest dynamics
 #     freqZopt = 20,
 #     sap2tree=TRUE,
