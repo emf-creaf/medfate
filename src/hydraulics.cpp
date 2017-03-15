@@ -168,7 +168,7 @@ double xylemConductance(double psi, double kxylemmax, double c, double d) {
   if(psi>0.0) {
     Rcout<< psi<<"\n";
     stop("psi has to be negative"); 
-  }
+  } else if(psi==0.0) return(kxylemmax);
   return(kxylemmax*exp(-pow(psi/d,c)));
 }
 
@@ -176,6 +176,7 @@ double xylemConductance(double psi, double kxylemmax, double c, double d) {
 // [[Rcpp::export(".Egamma")]]
 double Egamma(double psi, double kxylemmax, double c, double d, double psiCav = 0.0) {
   if(psi>0.0) stop("psi has to be negative");
+  else if(psi==0.0) return(0.0);
   double h = 1.0/c;
   double z = pow(psi/d,c);
   double g = exp(lgamma(h))*gammds(z,h); //Upper incomplete gamma, without the normalizing factor
@@ -676,6 +677,7 @@ List E2psiNetwork(double E, NumericVector psiSoil,
     for(int fi=0;fi<=nlayers;fi++) {
       errx +=std::abs(p[fi]);
       x[fi]+=p[fi];
+      x[fi] = std::min(0.0, x[fi]);
       if(x[fi]<psiMax) {
         x[fi] = NA_REAL;
         stop = true;

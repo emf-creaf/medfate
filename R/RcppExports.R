@@ -369,6 +369,18 @@ hydraulics.maximumStemHydraulicConductance <- function(xylemConductivity, Al2As,
     .Call('medfate_cohortAbsorbedSWRFraction', PACKAGE = 'medfate', z, x, SpParams, gdd)
 }
 
+layerIrradianceFraction <- function(LAIme, LAImd, k, alpha) {
+    .Call('medfate_layerIrradianceFraction', PACKAGE = 'medfate', LAIme, LAImd, k, alpha)
+}
+
+cohortSunlitShadeAbsorbedRadiation <- function(Ib, Id, beta, LAIme, LAImd, kb, kd, alpha, gamma) {
+    .Call('medfate_cohortSunlitShadeAbsorbedRadiation', PACKAGE = 'medfate', Ib, Id, beta, LAIme, LAImd, kb, kd, alpha, gamma)
+}
+
+layerSunlitFraction <- function(LAIme, LAImd, kb) {
+    .Call('medfate_layerSunlitFraction', PACKAGE = 'medfate', LAIme, LAImd, kb)
+}
+
 .checkSpeciesParameters <- function(SpParams, params) {
     invisible(.Call('medfate_checkSpeciesParameters', PACKAGE = 'medfate', SpParams, params))
 }
@@ -417,8 +429,12 @@ photo.photosynthesis <- function(Q, Catm, Gc, leaf_temp, Vmax298, Jmax298, verbo
     .Call('medfate_photosynthesis', PACKAGE = 'medfate', Q, Catm, Gc, leaf_temp, Vmax298, Jmax298, verbose)
 }
 
-photo.photosynthesisFunction <- function(supplyFunction, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, verbose = FALSE) {
-    .Call('medfate_photosynthesisFunction', PACKAGE = 'medfate', supplyFunction, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, verbose)
+photo.leafPhotosynthesisFunction <- function(supplyFunction, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, verbose = FALSE) {
+    .Call('medfate_leafPhotosynthesisFunction', PACKAGE = 'medfate', supplyFunction, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, verbose)
+}
+
+photo.canopyPhotosynthesisFunction <- function(supplyFunction, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298, Jmax298, verbose = FALSE) {
+    .Call('medfate_canopyPhotosynthesisFunction', PACKAGE = 'medfate', supplyFunction, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298, Jmax298, verbose)
 }
 
 photo.profitMaximization <- function(supplyFunction, photosynthesisFunction, Gwmin, Gwmax) {
@@ -489,8 +505,8 @@ swb.SoilEvaporation <- function(DEF, PETs, Gsoil) {
     .Call('medfate_swbDay1', PACKAGE = 'medfate', x, soil, tday, pet, rain, er, runon, verbose)
 }
 
-.swbDay2 <- function(x, soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, delta, rain, er, runon = 0.0, verbose = FALSE) {
-    .Call('medfate_swbDay2', PACKAGE = 'medfate', x, soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, delta, rain, er, runon, verbose)
+.swbDay2 <- function(x, soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, solarConstant, delta, rain, er, runon = 0.0, verbose = FALSE) {
+    .Call('medfate_swbDay2', PACKAGE = 'medfate', x, soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, solarConstant, delta, rain, er, runon, verbose)
 }
 
 swb.day <- function(x, soil, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, rain, er, runon = 0.0) {

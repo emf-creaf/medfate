@@ -177,3 +177,124 @@ NumericVector cohortAbsorbedSWRFraction(NumericVector z, List x, DataFrame SpPar
   for(int i=0;i<k.size();i++) kSWR[i] = k[i]/1.35;
   return(cohortAbsorbedSWRFraction(LAIme, LAImd, kSWR));
 }
+
+// [[Rcpp::export("layerIrradianceFraction")]]
+NumericVector layerIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericVector k, NumericVector alpha) {
+  int nlayer = LAIme.nrow();
+  int ncoh = LAIme.ncol();
+  NumericVector Ifraction(nlayer);
+  double s = 0.0;
+  for(int i=nlayer-1;i>=0;i--) { //Start from top layer
+    Ifraction[i] = exp(-1.0*s);
+    //for subsequent layers increase s
+    for(int j =0;j<ncoh;j++) s = s + (k[j]*pow(alpha[j],0.5)*(LAIme(i,j)+LAImd(i,j)));
+  }
+  return(Ifraction);
+}
+
+/**
+ *  Direct light absorbed radiation per unit of leaf area, given direct light level at the top of the layer
+ *  I_{dir, ij}
+ */
+NumericMatrix cohortDirectBeamAbsorbedRadiation(NumericVector Ib, double beta, NumericVector alpha) {
+  int ncoh = alpha.size();
+  int nlayer = Ib.size();
+  NumericMatrix Idir(nlayer, ncoh);
+  double sinb = sin(beta);
+  for(int i = 0;i<nlayer;i++) {
+    for(int j = 0;j<ncoh;j++) {
+      Idir(i,j) = Ib[i]*alpha[j]*(0.5/sinb);
+    }
+  }
+  return(Idir);
+}
+
+
+/**
+ *  Diffuse light absorbed radiation per unit of leaf area, given diffuse light level at the top of the layer
+ *  I_{da, ij}
+ */
+NumericMatrix cohortDiffuseAbsorbedRadiation(NumericVector Id, NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kd, NumericVector alpha) {
+  int ncoh = alpha.size();
+  int nlayer = Id.size();
+  NumericMatrix Ida(nlayer, ncoh);
+  for(int i = 0;i<nlayer;i++) {
+    double s = 0.0;
+    for(int j = 0;j<ncoh;j++) s += kd[j]*pow(alpha[j],0.5)*(LAIme(i,j)/2.0+LAImd(i,j)/2.0);
+    for(int j = 0;j<ncoh;j++) {
+      Ida(i,j) = Id[i]*pow(alpha[j],0.5)*kd[j]*exp(-1.0*s);
+    }
+  }
+  return(Ida);
+}
+
+
+/**
+ *  Scattered light absorbed radiation per unit of leaf area, given direct light level at the top of the layer
+ *  I_{bsa, ij}
+ */
+NumericMatrix cohortScatteredAbsorbedRadiation(NumericVector Ib, NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kb, NumericVector alpha, double gamma) {
+  int ncoh = alpha.size();
+  int nlayer = Ib.size();
+  NumericMatrix Ibsa(nlayer, ncoh);
+  for(int i = 0;i<nlayer;i++) {
+    double s1 = 0.0, s2=0.0;
+    for(int j = 0;j<ncoh;j++) {
+      s1 += kb[j]*alpha[j]*(LAIme(i,j)/2.0+LAImd(i,j)/2.0);
+      s2 += kb[j]*(LAIme(i,j)/2.0+LAImd(i,j)/2.0);
+    }
+    for(int j = 0;j<ncoh;j++) {
+      Ibsa(i,j) = Ib[i]*kb[j]*(pow(alpha[j], 0.5)*exp(-1.0*s1) - (alpha[j]/(1.0-gamma))*exp(-1.0*s2));
+    }
+  }
+  return(Ibsa);
+}
+
+
+/**
+ * I_{SU,ij}
+ * I_{SH,ij}
+ */
+// [[Rcpp::export("cohortSunlitShadeAbsorbedRadiation")]]
+List cohortSunlitShadeAbsorbedRadiation(NumericVector Ib, NumericVector Id, double beta,
+                             NumericMatrix LAIme, NumericMatrix LAImd, 
+                             NumericVector kb,  NumericVector kd, NumericVector alpha, double gamma) {
+  NumericMatrix Idir = cohortDirectBeamAbsorbedRadiation(Ib,beta, alpha);
+  NumericMatrix Ida = cohortDiffuseAbsorbedRadiation(Id, LAIme, LAImd, kd, alpha);
+  NumericMatrix Ibsa = cohortScatteredAbsorbedRadiation(Ib, LAIme, LAImd, kb, alpha, gamma);
+  int ncoh = alpha.size();
+  int nlayer = Ib.size();
+  
+  NumericMatrix Ish(nlayer,ncoh); 
+  NumericMatrix Isu(nlayer, ncoh);
+  for(int i = 0;i<nlayer;i++) {
+    for(int j = 0;j<ncoh;j++) {
+      Ish(i,j) = Ida(i,j)+Ibsa(i,j);
+      Isu(i,j) = Ish(i,j)+Idir(i,j);
+    }
+  }
+  List s = List::create(Named("I_sunlit")=Isu, Named("I_shade") = Ish);
+  return(s);
+}
+
+
+/**
+ *  Sunlit leaf fraction per layer
+ *  f_{SL, ij}
+ */
+// [[Rcpp::export("layerSunlitFraction")]]
+NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kb) {
+  int ncoh = kb.size();
+  int nlayer = LAIme.nrow();
+  NumericVector fSL(nlayer);
+  double s1=0.0;
+  for(int i = nlayer-1;i>=0;i--) {
+    double s2=0.0;
+    for(int j = 0;j<ncoh;j++) {
+      s1 += kb[j]*(LAIme(i,j)+LAImd(i,j));
+      s2 += kb[j]*(LAIme(i,j)/2.0+LAImd(i,j)/2.0);
+    }
+    fSL[i] = exp(-1.0*s1)*exp(-1.0*s2);
+  }
+  return(fSL);
+}

@@ -181,18 +181,17 @@ double photosynthesis(double Q, double Catm, double Gc, double leaf_temp, double
   } while (fabs(x1-x)>=e);
   return(photosynthesis_Ci(Q,x1,GT,Km,Vmax,Jmax));
 }
-// [[Rcpp::export("photo.photosynthesisFunction")]]
-List photosynthesisFunction(List supplyFunction, double Catm, double Patm, double Tair, double vpa, double u, 
+
+
+// [[Rcpp::export("photo.leafPhotosynthesisFunction")]]
+List leafPhotosynthesisFunction(List supplyFunction, double Catm, double Patm, double Tair, double vpa, double u, 
                              double absRad, double Q, double Vmax298, double Jmax298, bool verbose = false) {
   NumericVector fittedE = supplyFunction["E"];
-  NumericVector psiPlant = supplyFunction["PsiPlant"];
-  NumericVector dEdP= supplyFunction["dEdP"];
   int nsteps = fittedE.size();
   NumericVector leafTemp(nsteps);
   NumericVector leafVPD(nsteps);
   NumericVector Gw(nsteps);
   NumericVector Ag(nsteps), An(nsteps);
-  NumericVector beta(nsteps);
   for(int i=0;i<nsteps;i++){
     leafTemp[i] = leafTemperature(absRad, Tair, u, fittedE[i]);
     leafVPD[i] = (meteoland::utils_saturationVP(leafTemp[i])-vpa);
@@ -206,6 +205,68 @@ List photosynthesisFunction(List supplyFunction, double Catm, double Patm, doubl
                       Named("Photosynthesis") = Ag,
                       Named("NetPhotosynthesis") = An));
 }
+
+
+/**
+ * Calculates gross/net canopy photosynthesis function, considering a multilayer canopy 
+ * and sunlit/shade leaves.
+ * (Farquhar et al. 1980/Collatz et al 1991/De Pury and Farquhar)
+ * 
+ * supplyFunction - Hydraulic supply function
+ * 
+ * Catm - CO2 air concentration (micromol * mol-1)
+ * Patm - Air pressure (kPa)
+ * Tair - Air temperature (ºC) - changes through the day and from one day to the other
+ * vpa - Air actual vapour pressure (kPa)
+ * 
+ * SLarea, SHarea - leaf area index of sunlit/shade leaves for each canopy layer
+ * u - Wind speed (m/s) for each canopy layer
+ * absRadSL/absRadSH - instantaneous absorbed radiation (W·m-2) per unit of sunlit/shade leaf area, for each canopy layer
+ * QSL/QSH - Active photon flux density (micromol * s-1 * m-2) per unit of sunlit/shade leaf area, for each canopy layer
+ * Vmax298 - maximum Rubisco carboxylation rate per leaf area at 298 ºK (i.e. 25 ºC) (micromol*s-1*m-2), for each canopy layer
+ * Jmax298 - maximum electron transport rate per leaf area at 298 ºK (i.e. 25 ºC) (micromol*s-1*m-2), for each canopy layer
+ * 
+ * return units: micromol*s-1*m-2
+ */
+
+// [[Rcpp::export("photo.canopyPhotosynthesisFunction")]]
+List canopyPhotosynthesisFunction(List supplyFunction, double Catm, double Patm, double Tair, double vpa, 
+                                  NumericVector SLarea, NumericVector SHarea,
+                                  NumericVector u, NumericVector absRadSL, NumericVector absRadSH,
+                                  NumericVector QSL, NumericVector QSH, 
+                                  NumericVector Vmax298, NumericVector Jmax298, 
+                                  bool verbose = false) {
+  NumericVector fittedE = supplyFunction["E"];
+  int nsteps = fittedE.size();
+  int nlayers = SLarea.size();
+  NumericVector Ag(nsteps,0.0), An(nsteps,0.0);
+  double leafT,leafVPD, Gw, Agj, Anj;
+  for(int i=0;i<nsteps;i++){
+    Ag[i]=0.0;
+    An[i]=0.0;
+    for(int j=0;j<nlayers;j++) {
+      //Sunlit leaves
+      leafT = leafTemperature(absRadSL[j], Tair, u[j], fittedE[i]);
+      leafVPD = (meteoland::utils_saturationVP(leafT)-vpa);
+      Gw = Patm*(fittedE[i]/1000.0)/leafVPD;
+      Agj = photosynthesis(QSL[j], Catm, Gw/1.6, leafT, Vmax298[j], Jmax298[j]);
+      Anj = Agj - 0.015*VmaxTemp(Vmax298[j], leafT);
+      Ag[i]+=Agj*SLarea[j];
+      An[i]+=Anj*SLarea[j];
+      //SHADE leaves
+      leafT = leafTemperature(absRadSH[j], Tair, u[j], fittedE[i]);
+      leafVPD = (meteoland::utils_saturationVP(leafT)-vpa);
+      Gw = Patm*(fittedE[i]/1000.0)/leafVPD;
+      Agj = photosynthesis(QSH[j], Catm, Gw/1.6, leafT, Vmax298[j], Jmax298[j]);
+      Anj = Agj - 0.015*VmaxTemp(Vmax298[j], leafT);
+      Ag[i]+=Agj*SHarea[j];
+      An[i]+=Anj*SHarea[j];
+    }
+  }
+  return(List::create(Named("Photosynthesis") = Ag,
+                      Named("NetPhotosynthesis") = An));
+}
+
 
 // [[Rcpp::export("photo.profitMaximization")]]
 List profitMaximization(List supplyFunction, List photosynthesisFunction, double Gwmin, double Gwmax) {

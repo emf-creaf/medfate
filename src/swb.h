@@ -14,5 +14,5 @@ void checkswbInput(List x, List soil, String transpirationMode);
 
 List swbDay1(List x, List soil, double tday, double pet, double rain, double er, double runon=0.0, bool verbose=false);
 List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
-             double latitude, double elevation, double slope, double aspect, double delta, 
+             double latitude, double elevation, double slope, double aspect, double solarConstant, double delta, 
              double rain, double er, double runon=0.0, bool verbose = false);

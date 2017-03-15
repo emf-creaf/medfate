@@ -1350,6 +1350,52 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// layerIrradianceFraction
+NumericVector layerIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericVector k, NumericVector alpha);
+RcppExport SEXP medfate_layerIrradianceFraction(SEXP LAImeSEXP, SEXP LAImdSEXP, SEXP kSEXP, SEXP alphaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type LAIme(LAImeSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type LAImd(LAImdSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type k(kSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type alpha(alphaSEXP);
+    rcpp_result_gen = Rcpp::wrap(layerIrradianceFraction(LAIme, LAImd, k, alpha));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cohortSunlitShadeAbsorbedRadiation
+List cohortSunlitShadeAbsorbedRadiation(NumericVector Ib, NumericVector Id, double beta, NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kb, NumericVector kd, NumericVector alpha, double gamma);
+RcppExport SEXP medfate_cohortSunlitShadeAbsorbedRadiation(SEXP IbSEXP, SEXP IdSEXP, SEXP betaSEXP, SEXP LAImeSEXP, SEXP LAImdSEXP, SEXP kbSEXP, SEXP kdSEXP, SEXP alphaSEXP, SEXP gammaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type Ib(IbSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Id(IdSEXP);
+    Rcpp::traits::input_parameter< double >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type LAIme(LAImeSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type LAImd(LAImdSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type kb(kbSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type kd(kdSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< double >::type gamma(gammaSEXP);
+    rcpp_result_gen = Rcpp::wrap(cohortSunlitShadeAbsorbedRadiation(Ib, Id, beta, LAIme, LAImd, kb, kd, alpha, gamma));
+    return rcpp_result_gen;
+END_RCPP
+}
+// layerSunlitFraction
+NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kb);
+RcppExport SEXP medfate_layerSunlitFraction(SEXP LAImeSEXP, SEXP LAImdSEXP, SEXP kbSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type LAIme(LAImeSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type LAImd(LAImdSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type kb(kbSEXP);
+    rcpp_result_gen = Rcpp::wrap(layerSunlitFraction(LAIme, LAImd, kb));
+    return rcpp_result_gen;
+END_RCPP
+}
 // checkSpeciesParameters
 void checkSpeciesParameters(DataFrame SpParams, CharacterVector params);
 RcppExport SEXP medfate_checkSpeciesParameters(SEXP SpParamsSEXP, SEXP paramsSEXP) {
@@ -1512,9 +1558,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// photosynthesisFunction
-List photosynthesisFunction(List supplyFunction, double Catm, double Patm, double Tair, double vpa, double u, double absRad, double Q, double Vmax298, double Jmax298, bool verbose);
-RcppExport SEXP medfate_photosynthesisFunction(SEXP supplyFunctionSEXP, SEXP CatmSEXP, SEXP PatmSEXP, SEXP TairSEXP, SEXP vpaSEXP, SEXP uSEXP, SEXP absRadSEXP, SEXP QSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP verboseSEXP) {
+// leafPhotosynthesisFunction
+List leafPhotosynthesisFunction(List supplyFunction, double Catm, double Patm, double Tair, double vpa, double u, double absRad, double Q, double Vmax298, double Jmax298, bool verbose);
+RcppExport SEXP medfate_leafPhotosynthesisFunction(SEXP supplyFunctionSEXP, SEXP CatmSEXP, SEXP PatmSEXP, SEXP TairSEXP, SEXP vpaSEXP, SEXP uSEXP, SEXP absRadSEXP, SEXP QSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1529,7 +1575,32 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type Vmax298(Vmax298SEXP);
     Rcpp::traits::input_parameter< double >::type Jmax298(Jmax298SEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(photosynthesisFunction(supplyFunction, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, verbose));
+    rcpp_result_gen = Rcpp::wrap(leafPhotosynthesisFunction(supplyFunction, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
+// canopyPhotosynthesisFunction
+List canopyPhotosynthesisFunction(List supplyFunction, double Catm, double Patm, double Tair, double vpa, NumericVector SLarea, NumericVector SHarea, NumericVector u, NumericVector absRadSL, NumericVector absRadSH, NumericVector QSL, NumericVector QSH, NumericVector Vmax298, NumericVector Jmax298, bool verbose);
+RcppExport SEXP medfate_canopyPhotosynthesisFunction(SEXP supplyFunctionSEXP, SEXP CatmSEXP, SEXP PatmSEXP, SEXP TairSEXP, SEXP vpaSEXP, SEXP SLareaSEXP, SEXP SHareaSEXP, SEXP uSEXP, SEXP absRadSLSEXP, SEXP absRadSHSEXP, SEXP QSLSEXP, SEXP QSHSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type supplyFunction(supplyFunctionSEXP);
+    Rcpp::traits::input_parameter< double >::type Catm(CatmSEXP);
+    Rcpp::traits::input_parameter< double >::type Patm(PatmSEXP);
+    Rcpp::traits::input_parameter< double >::type Tair(TairSEXP);
+    Rcpp::traits::input_parameter< double >::type vpa(vpaSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type SLarea(SLareaSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type SHarea(SHareaSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type u(uSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type absRadSL(absRadSLSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type absRadSH(absRadSHSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type QSL(QSLSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type QSH(QSHSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Vmax298(Vmax298SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Jmax298(Jmax298SEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(canopyPhotosynthesisFunction(supplyFunction, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298, Jmax298, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1760,8 +1831,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // swbDay2
-List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, double latitude, double elevation, double slope, double aspect, double delta, double rain, double er, double runon, bool verbose);
-RcppExport SEXP medfate_swbDay2(SEXP xSEXP, SEXP soilSEXP, SEXP tminSEXP, SEXP tmaxSEXP, SEXP rhminSEXP, SEXP rhmaxSEXP, SEXP radSEXP, SEXP windSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP deltaSEXP, SEXP rainSEXP, SEXP erSEXP, SEXP runonSEXP, SEXP verboseSEXP) {
+List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, double latitude, double elevation, double slope, double aspect, double solarConstant, double delta, double rain, double er, double runon, bool verbose);
+RcppExport SEXP medfate_swbDay2(SEXP xSEXP, SEXP soilSEXP, SEXP tminSEXP, SEXP tmaxSEXP, SEXP rhminSEXP, SEXP rhmaxSEXP, SEXP radSEXP, SEXP windSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP solarConstantSEXP, SEXP deltaSEXP, SEXP rainSEXP, SEXP erSEXP, SEXP runonSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1777,12 +1848,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type elevation(elevationSEXP);
     Rcpp::traits::input_parameter< double >::type slope(slopeSEXP);
     Rcpp::traits::input_parameter< double >::type aspect(aspectSEXP);
+    Rcpp::traits::input_parameter< double >::type solarConstant(solarConstantSEXP);
     Rcpp::traits::input_parameter< double >::type delta(deltaSEXP);
     Rcpp::traits::input_parameter< double >::type rain(rainSEXP);
     Rcpp::traits::input_parameter< double >::type er(erSEXP);
     Rcpp::traits::input_parameter< double >::type runon(runonSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(swbDay2(x, soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, delta, rain, er, runon, verbose));
+    rcpp_result_gen = Rcpp::wrap(swbDay2(x, soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, solarConstant, delta, rain, er, runon, verbose));
     return rcpp_result_gen;
 END_RCPP
 }

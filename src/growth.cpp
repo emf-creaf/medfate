@@ -287,9 +287,10 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
       std::string c = as<std::string>(dateStrings[i]);
       int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
       double delta = meteoland::radiation_solarDeclination(J);
+      double solarConstant = meteoland::radiation_solarConstant(J);
       s = swbDay2(x, soil, MinTemperature[i], MaxTemperature[i], 
                        MinRelativeHumidity[i], MaxRelativeHumidity[i], Radiation[i], WindSpeed[i], 
-                       latitude, elevation, slope, aspect, delta, Precipitation[i], ER[i], 0.0, false);
+                       latitude, elevation, slope, aspect, solarConstant, delta, Precipitation[i], ER[i], 0.0, false);
       
       PET[i] = s["PET"];
     }    

@@ -236,7 +236,7 @@ List swbDay1(List x, List soil, double tday, double pet, double rain, double er,
 // Soil water balance with Sperry hydraulic and stomatal conductance models
 // [[Rcpp::export(".swbDay2")]]
 List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
-             double latitude, double elevation, double slope, double aspect, double delta, 
+             double latitude, double elevation, double slope, double aspect, double solarConstant, double delta, 
              double rain, double er, double runon=0.0, bool verbose = false) {
   
   //Soil input
@@ -358,7 +358,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   
   //Radiation balance (latitude in radians)
   double vpa = meteoland::utils_averageDailyVP(tmin, tmax, rhmin,rhmax);
-  double Rn = meteoland::radiation_netRadiation(latrad, elevation, slorad, asprad, delta, 
+  double Rn = meteoland::radiation_netRadiation(solarConstant, latrad, elevation, slorad, asprad, delta, 
                                                 vpa, tmin, tmax, rad);
   // Rcout<< vpa<<" "<< Rn<<"\n";
   // Cohort wind and light conditions
@@ -431,7 +431,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
       Rninst(c,n) = pow(10.0, 6.0)*absorbedSWR[c]*propRad/LAIphe[c]; //Instantaneous radiation absorbed per leaf area unit
       Qinst(c,n) = irradianceToPhotonFlux(pow(10.0, 6.0)*par[c]*propRad); //Instantaneous incident PAR
       
-      List photo = photosynthesisFunction(supplyNetwork,
+      List photo = leafPhotosynthesisFunction(supplyNetwork,
                                           Catm, Patm,
                                           Tair, vpa,
                                           windspeed[c], Rninst(c,n), Qinst(c,n), Vmax298[c], Jmax298[c]);
@@ -514,6 +514,7 @@ List swbDay(List x, List soil, CharacterVector date, double tmin, double tmax, d
   std::string c = as<std::string>(date[0]);
   int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
   double delta = meteoland::radiation_solarDeclination(J);
+  double solarConstant = meteoland::radiation_solarConstant(J);
   double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
   double latrad = latitude * (PI/180.0);
   double asprad = aspect * (PI/180.0);
@@ -523,7 +524,8 @@ List swbDay(List x, List soil, CharacterVector date, double tmin, double tmax, d
   if(transpirationMode=="Simple") {
     s = swbDay1(x,soil, tday, pet, rain, er, runon, verbose);
   } else {
-    s = swbDay2(x,soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, delta, rain, er, runon, verbose);
+    s = swbDay2(x,soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect,
+                solarConstant, delta, rain, er, runon, verbose);
   }
   s["PET"] = pet;
   return(s);
@@ -803,9 +805,10 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
         std::string c = as<std::string>(dateStrings[i]);
         int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
         double delta = meteoland::radiation_solarDeclination(J);
+        double solarConstant = meteoland::radiation_solarConstant(J);
         s = swbDay2(x, soil, MinTemperature[i], MaxTemperature[i], 
                          MinRelativeHumidity[i], MaxRelativeHumidity[i], Radiation[i], WindSpeed[i], 
-                         latitude, elevation, slope, aspect, delta, Precipitation[i], ER[i], 0.0, false);
+                         latitude, elevation, slope, aspect, solarConstant, delta, Precipitation[i], ER[i], 0.0, false);
         PET[i] = s["PET"];
       }
       Lground[i] = s["Lground"];
