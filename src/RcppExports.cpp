@@ -1365,13 +1365,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // cohortSunlitShadeAbsorbedRadiation
-List cohortSunlitShadeAbsorbedRadiation(NumericVector Ib, NumericVector Id, double beta, NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kb, NumericVector kd, NumericVector alpha, double gamma);
-RcppExport SEXP medfate_cohortSunlitShadeAbsorbedRadiation(SEXP IbSEXP, SEXP IdSEXP, SEXP betaSEXP, SEXP LAImeSEXP, SEXP LAImdSEXP, SEXP kbSEXP, SEXP kdSEXP, SEXP alphaSEXP, SEXP gammaSEXP) {
+List cohortSunlitShadeAbsorbedRadiation(double Ib0, double Id0, NumericVector Ibf, NumericVector Idf, double beta, NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kb, NumericVector kd, NumericVector alpha, double gamma);
+RcppExport SEXP medfate_cohortSunlitShadeAbsorbedRadiation(SEXP Ib0SEXP, SEXP Id0SEXP, SEXP IbfSEXP, SEXP IdfSEXP, SEXP betaSEXP, SEXP LAImeSEXP, SEXP LAImdSEXP, SEXP kbSEXP, SEXP kdSEXP, SEXP alphaSEXP, SEXP gammaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type Ib(IbSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type Id(IdSEXP);
+    Rcpp::traits::input_parameter< double >::type Ib0(Ib0SEXP);
+    Rcpp::traits::input_parameter< double >::type Id0(Id0SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Ibf(IbfSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Idf(IdfSEXP);
     Rcpp::traits::input_parameter< double >::type beta(betaSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type LAIme(LAImeSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type LAImd(LAImdSEXP);
@@ -1379,7 +1381,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type kd(kdSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type alpha(alphaSEXP);
     Rcpp::traits::input_parameter< double >::type gamma(gammaSEXP);
-    rcpp_result_gen = Rcpp::wrap(cohortSunlitShadeAbsorbedRadiation(Ib, Id, beta, LAIme, LAImd, kb, kd, alpha, gamma));
+    rcpp_result_gen = Rcpp::wrap(cohortSunlitShadeAbsorbedRadiation(Ib0, Id0, Ibf, Idf, beta, LAIme, LAImd, kb, kd, alpha, gamma));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1559,8 +1561,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // leafPhotosynthesisFunction
-List leafPhotosynthesisFunction(List supplyFunction, double Catm, double Patm, double Tair, double vpa, double u, double absRad, double Q, double Vmax298, double Jmax298, bool verbose);
-RcppExport SEXP medfate_leafPhotosynthesisFunction(SEXP supplyFunctionSEXP, SEXP CatmSEXP, SEXP PatmSEXP, SEXP TairSEXP, SEXP vpaSEXP, SEXP uSEXP, SEXP absRadSEXP, SEXP QSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP verboseSEXP) {
+List leafPhotosynthesisFunction(List supplyFunction, double Catm, double Patm, double Tair, double vpa, double u, double absRad, double Q, double Vmax298, double Jmax298, double Gwmin, double Gwmax, bool verbose);
+RcppExport SEXP medfate_leafPhotosynthesisFunction(SEXP supplyFunctionSEXP, SEXP CatmSEXP, SEXP PatmSEXP, SEXP TairSEXP, SEXP vpaSEXP, SEXP uSEXP, SEXP absRadSEXP, SEXP QSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP GwminSEXP, SEXP GwmaxSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1574,14 +1576,45 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type Q(QSEXP);
     Rcpp::traits::input_parameter< double >::type Vmax298(Vmax298SEXP);
     Rcpp::traits::input_parameter< double >::type Jmax298(Jmax298SEXP);
+    Rcpp::traits::input_parameter< double >::type Gwmin(GwminSEXP);
+    Rcpp::traits::input_parameter< double >::type Gwmax(GwmaxSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(leafPhotosynthesisFunction(supplyFunction, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, verbose));
+    rcpp_result_gen = Rcpp::wrap(leafPhotosynthesisFunction(supplyFunction, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, Gwmin, Gwmax, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
-// canopyPhotosynthesisFunction
-List canopyPhotosynthesisFunction(List supplyFunction, double Catm, double Patm, double Tair, double vpa, NumericVector SLarea, NumericVector SHarea, NumericVector u, NumericVector absRadSL, NumericVector absRadSH, NumericVector QSL, NumericVector QSH, NumericVector Vmax298, NumericVector Jmax298, bool verbose);
-RcppExport SEXP medfate_canopyPhotosynthesisFunction(SEXP supplyFunctionSEXP, SEXP CatmSEXP, SEXP PatmSEXP, SEXP TairSEXP, SEXP vpaSEXP, SEXP SLareaSEXP, SEXP SHareaSEXP, SEXP uSEXP, SEXP absRadSLSEXP, SEXP absRadSHSEXP, SEXP QSLSEXP, SEXP QSHSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP verboseSEXP) {
+// sunshadePhotosynthesisFunction
+List sunshadePhotosynthesisFunction(List supplyFunction, double Catm, double Patm, double Tair, double vpa, double SLarea, double SHarea, double u, double absRadSL, double absRadSH, double QSL, double QSH, double Vmax298SL, double Vmax298SH, double Jmax298SL, double Jmax298SH, double Gwmin, double Gwmax, bool verbose);
+RcppExport SEXP medfate_sunshadePhotosynthesisFunction(SEXP supplyFunctionSEXP, SEXP CatmSEXP, SEXP PatmSEXP, SEXP TairSEXP, SEXP vpaSEXP, SEXP SLareaSEXP, SEXP SHareaSEXP, SEXP uSEXP, SEXP absRadSLSEXP, SEXP absRadSHSEXP, SEXP QSLSEXP, SEXP QSHSEXP, SEXP Vmax298SLSEXP, SEXP Vmax298SHSEXP, SEXP Jmax298SLSEXP, SEXP Jmax298SHSEXP, SEXP GwminSEXP, SEXP GwmaxSEXP, SEXP verboseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type supplyFunction(supplyFunctionSEXP);
+    Rcpp::traits::input_parameter< double >::type Catm(CatmSEXP);
+    Rcpp::traits::input_parameter< double >::type Patm(PatmSEXP);
+    Rcpp::traits::input_parameter< double >::type Tair(TairSEXP);
+    Rcpp::traits::input_parameter< double >::type vpa(vpaSEXP);
+    Rcpp::traits::input_parameter< double >::type SLarea(SLareaSEXP);
+    Rcpp::traits::input_parameter< double >::type SHarea(SHareaSEXP);
+    Rcpp::traits::input_parameter< double >::type u(uSEXP);
+    Rcpp::traits::input_parameter< double >::type absRadSL(absRadSLSEXP);
+    Rcpp::traits::input_parameter< double >::type absRadSH(absRadSHSEXP);
+    Rcpp::traits::input_parameter< double >::type QSL(QSLSEXP);
+    Rcpp::traits::input_parameter< double >::type QSH(QSHSEXP);
+    Rcpp::traits::input_parameter< double >::type Vmax298SL(Vmax298SLSEXP);
+    Rcpp::traits::input_parameter< double >::type Vmax298SH(Vmax298SHSEXP);
+    Rcpp::traits::input_parameter< double >::type Jmax298SL(Jmax298SLSEXP);
+    Rcpp::traits::input_parameter< double >::type Jmax298SH(Jmax298SHSEXP);
+    Rcpp::traits::input_parameter< double >::type Gwmin(GwminSEXP);
+    Rcpp::traits::input_parameter< double >::type Gwmax(GwmaxSEXP);
+    Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
+    rcpp_result_gen = Rcpp::wrap(sunshadePhotosynthesisFunction(supplyFunction, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gwmin, Gwmax, verbose));
+    return rcpp_result_gen;
+END_RCPP
+}
+// multilayerPhotosynthesisFunction
+List multilayerPhotosynthesisFunction(List supplyFunction, double Catm, double Patm, double Tair, double vpa, NumericVector SLarea, NumericVector SHarea, NumericVector u, NumericVector absRadSL, NumericVector absRadSH, NumericVector QSL, NumericVector QSH, NumericVector Vmax298, NumericVector Jmax298, double Gwmin, double Gwmax, bool verbose);
+RcppExport SEXP medfate_multilayerPhotosynthesisFunction(SEXP supplyFunctionSEXP, SEXP CatmSEXP, SEXP PatmSEXP, SEXP TairSEXP, SEXP vpaSEXP, SEXP SLareaSEXP, SEXP SHareaSEXP, SEXP uSEXP, SEXP absRadSLSEXP, SEXP absRadSHSEXP, SEXP QSLSEXP, SEXP QSHSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP GwminSEXP, SEXP GwmaxSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1599,52 +1632,48 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type QSH(QSHSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type Vmax298(Vmax298SEXP);
     Rcpp::traits::input_parameter< NumericVector >::type Jmax298(Jmax298SEXP);
+    Rcpp::traits::input_parameter< double >::type Gwmin(GwminSEXP);
+    Rcpp::traits::input_parameter< double >::type Gwmax(GwmaxSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(canopyPhotosynthesisFunction(supplyFunction, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298, Jmax298, verbose));
+    rcpp_result_gen = Rcpp::wrap(multilayerPhotosynthesisFunction(supplyFunction, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298, Jmax298, Gwmin, Gwmax, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
 // profitMaximization
-List profitMaximization(List supplyFunction, List photosynthesisFunction, double Gwmin, double Gwmax);
-RcppExport SEXP medfate_profitMaximization(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP, SEXP GwminSEXP, SEXP GwmaxSEXP) {
+List profitMaximization(List supplyFunction, List photosynthesisFunction);
+RcppExport SEXP medfate_profitMaximization(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type supplyFunction(supplyFunctionSEXP);
     Rcpp::traits::input_parameter< List >::type photosynthesisFunction(photosynthesisFunctionSEXP);
-    Rcpp::traits::input_parameter< double >::type Gwmin(GwminSEXP);
-    Rcpp::traits::input_parameter< double >::type Gwmax(GwmaxSEXP);
-    rcpp_result_gen = Rcpp::wrap(profitMaximization(supplyFunction, photosynthesisFunction, Gwmin, Gwmax));
+    rcpp_result_gen = Rcpp::wrap(profitMaximization(supplyFunction, photosynthesisFunction));
     return rcpp_result_gen;
 END_RCPP
 }
 // profitMaximization2
-List profitMaximization2(List supplyFunction, List photosynthesisFunction, double Gwmin, double Gwmax, double kstemmax);
-RcppExport SEXP medfate_profitMaximization2(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP, SEXP GwminSEXP, SEXP GwmaxSEXP, SEXP kstemmaxSEXP) {
+List profitMaximization2(List supplyFunction, List photosynthesisFunction, double kstemmax);
+RcppExport SEXP medfate_profitMaximization2(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP, SEXP kstemmaxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type supplyFunction(supplyFunctionSEXP);
     Rcpp::traits::input_parameter< List >::type photosynthesisFunction(photosynthesisFunctionSEXP);
-    Rcpp::traits::input_parameter< double >::type Gwmin(GwminSEXP);
-    Rcpp::traits::input_parameter< double >::type Gwmax(GwmaxSEXP);
     Rcpp::traits::input_parameter< double >::type kstemmax(kstemmaxSEXP);
-    rcpp_result_gen = Rcpp::wrap(profitMaximization2(supplyFunction, photosynthesisFunction, Gwmin, Gwmax, kstemmax));
+    rcpp_result_gen = Rcpp::wrap(profitMaximization2(supplyFunction, photosynthesisFunction, kstemmax));
     return rcpp_result_gen;
 END_RCPP
 }
 // profitMaximization3
-List profitMaximization3(List supplyFunction, List photosynthesisFunction, double Gwmin, double Gwmax, double kstemmax);
-RcppExport SEXP medfate_profitMaximization3(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP, SEXP GwminSEXP, SEXP GwmaxSEXP, SEXP kstemmaxSEXP) {
+List profitMaximization3(List supplyFunction, List photosynthesisFunction, double kstemmax);
+RcppExport SEXP medfate_profitMaximization3(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP, SEXP kstemmaxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type supplyFunction(supplyFunctionSEXP);
     Rcpp::traits::input_parameter< List >::type photosynthesisFunction(photosynthesisFunctionSEXP);
-    Rcpp::traits::input_parameter< double >::type Gwmin(GwminSEXP);
-    Rcpp::traits::input_parameter< double >::type Gwmax(GwmaxSEXP);
     Rcpp::traits::input_parameter< double >::type kstemmax(kstemmaxSEXP);
-    rcpp_result_gen = Rcpp::wrap(profitMaximization3(supplyFunction, photosynthesisFunction, Gwmin, Gwmax, kstemmax));
+    rcpp_result_gen = Rcpp::wrap(profitMaximization3(supplyFunction, photosynthesisFunction, kstemmax));
     return rcpp_result_gen;
 END_RCPP
 }

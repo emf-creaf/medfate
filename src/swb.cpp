@@ -288,52 +288,72 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   //Comunication with outside
   NumericVector transpiration = Rcpp::as<Rcpp::NumericVector>(x["Transpiration"]);
   NumericVector photosynthesis = Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
-  NumericVector windspeed = Rcpp::as<Rcpp::NumericVector>(x["WindSpeed"]);
-  NumericVector par = Rcpp::as<Rcpp::NumericVector>(x["PAR"]);
-  NumericVector absorbedSWR = Rcpp::as<Rcpp::NumericVector>(x["AbsorbedSWR"]);
 
-  
   NumericVector VG_n = Rcpp::as<Rcpp::NumericVector>(soil["VG_n"]);
   NumericVector VG_alpha = Rcpp::as<Rcpp::NumericVector>(soil["VG_alpha"]);
   
+  String canopyMode = Rcpp::as<Rcpp::String>(x["canopyMode"]);
   
   int ntimesteps = x["ndailysteps"];
   
   double latrad = latitude * (PI/180.0);
+  if(NumericVector::is_na(aspect)) aspect = 0.0;
   double asprad = aspect * (PI/180.0);
+  if(NumericVector::is_na(slope)) slope = 0.0;
   double slorad = slope * (PI/180.0);
-  //Day length (latitude in radians), daylight temperature and VPD 
+  //Day length (latitude in radians), atmospheric pressure, CO2 concentration
   double tauday = meteoland::radiation_daylengthseconds(latrad,  slorad,asprad, delta); 
   double Patm = meteoland::utils_atmosphericPressure(elevation);
   double Catm = 386.0;
-
+  //Daily average water vapor pressure
+  double vpa = meteoland::utils_averageDailyVP(tmin, tmax, rhmin,rhmax);
+  
  
   //Leaf phenology and the adjusted leaf area index
   NumericVector Phe(numCohorts);
-  double s = 0.0, LAIcell = 0.0, Cm = 0.0, canopyHeight = 0.0;
+  double LAIcell = 0.0, Cm = 0.0, canopyHeight = 0.0;
   for(int c=0;c<numCohorts;c++) {
     Phe[c]=LAIphe[c]/LAIlive[c]; //Phenological status
-    s += (kPAR[c]*LAIphe[c]);
-    LAIcell += LAIphe[c];
+    LAIcell += (LAIphe[c]+LAIdead[c]);
     Cm += (LAIphe[c]+LAIdead[c])*gRainIntercept[c]; //LAI dead also counts on interception
     if(canopyHeight<H[c]) canopyHeight = H[c];
   }
+  int nz = ceil(canopyHeight/100.0); //Number of 100 cm layers
+  NumericVector z(nz+1,0.0);
+  NumericVector zmid(nz);
+  for(int i=1;i<=nz;i++) {
+    z[i] = z[i-1] + 100.0;
+    zmid[i-1] = 50.0 + 100.0*((double) (i-1));
+  }
+  NumericMatrix LAIme = LAIdistribution(z, LAIphe, H, CR);
+  NumericMatrix LAImd = LAIdistribution(z, LAIdead, H, CR);
   
-  //Light extinction
-  NumericVector CohASWRF = cohortAbsorbedSWRFraction(LAIphe, LAIdead,  H, CR, kPAR);
-  NumericVector CohPAR = parcohortC(H, LAIphe, LAIdead, kPAR, CR)/100.0;
-  double LgroundPAR = exp((-1)*s);
-  double LgroundSWR = 1.0 - std::accumulate(CohASWRF.begin(),CohASWRF.end(),0.0);
   
-  //Wind extinction
-  NumericVector CohWind = windExtinctionCohort(H,CR, wind, LAIcell, canopyHeight);
-  
-  
-  //Hydrologic input
+  //Light PAR/SWR coefficients
+  double kb = 0.8;
+  double gammaPAR = 0.04;
+  double gammaSWR = 0.05;
+  NumericVector alphaPAR(numCohorts), alphaSWR(numCohorts), kSWR(numCohorts), kbvec(numCohorts);
+  for(int c=0;c<numCohorts;c++) {
+    kSWR[c] = kPAR[c]/1.35;
+    alphaPAR[c] = 0.9;
+    alphaSWR[c] = 0.7;
+    kbvec[c] = kb;
+  }
+  //Average light extinction fractions for direct and diffuse PAR/SWR light
+  NumericVector Ibfpar = layerIrradianceFraction(LAIme,LAImd,kb, alphaPAR);
+  NumericVector Idfpar = layerIrradianceFraction(LAIme,LAImd,kPAR, alphaPAR);
+  NumericVector Ibfswr = layerIrradianceFraction(LAIme,LAImd,kb, alphaSWR);
+  NumericVector Idfswr = layerIrradianceFraction(LAIme,LAImd,kSWR, alphaSWR);
+  //Average sunlit fraction
+  NumericVector fsunlit = layerSunlitFraction(LAIme, LAImd, kb);
+
+    //Hydrologic input
   double NetPrec = 0.0, Infiltration= 0.0, Runoff= 0.0, DeepDrainage= 0.0;
+  double propCover = exp((-1)*kb*LAIcell);
   if(rain>0.0) {
     //Interception
-    NetPrec = rain - interceptionGashDay(rain,Cm,LgroundPAR,er);
+    NetPrec = rain - interceptionGashDay(rain,Cm,propCover,er);
     //Net Runoff and infiltration
     Infiltration = infiltrationDay(NetPrec+runon, soil["Ssoil"]);
     Runoff = (NetPrec+runon) - Infiltration;
@@ -355,19 +375,36 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
     // Rcout<<psi[l]<<" ";
   }
   // Rcout<<"\n";
-  
-  //Radiation balance (latitude in radians)
-  double vpa = meteoland::utils_averageDailyVP(tmin, tmax, rhmin,rhmax);
-  double Rn = meteoland::radiation_netRadiation(solarConstant, latrad, elevation, slorad, asprad, delta, 
-                                                vpa, tmin, tmax, rad);
-  // Rcout<< vpa<<" "<< Rn<<"\n";
-  // Cohort wind and light conditions
-  for(int c=0;c<numCohorts;c++) {
-    windspeed[c] = CohWind[c]; //m·s-1
-    absorbedSWR[c] = rad*CohASWRF[c]; // MJ·m-2·day-1 of surface area
-    par[c] =  rad*0.5*CohPAR[c]; //MJ·m-2·day-1 of surface area
+
+  //Daily series of diffuse/direct light
+  bool clearday = (rain==0.0);
+  DataFrame ddd = meteoland::radiation_directDiffuseDay(solarConstant, latrad, slorad, asprad, delta,
+                                          rad, clearday, ntimesteps);
+  NumericVector solarElevation = ddd["SolarElevation"]; //in radians
+  NumericVector SWR_direct = ddd["SWR_direct"]; //in kW·m-2
+  NumericVector SWR_diffuse = ddd["SWR_diffuse"]; //in kW·m-2
+  NumericVector PAR_direct = ddd["PAR_direct"]; //in kW·m-2
+  NumericVector PAR_diffuse = ddd["PAR_diffuse"]; //in kW·m-2
+  // Rcout<<rad<<" "<< solarElevation[0]<<" "<<SWR_direct[0]<<"\n";
+
+  List abs_PAR_list(ntimesteps);
+  List abs_SWR_list(ntimesteps);
+  for(int n=0;n<ntimesteps;n++) {
+    List abs_PAR = cohortSunlitShadeAbsorbedRadiation(PAR_direct[n]*1000.0, PAR_diffuse[n]*1000.0, 
+                                                      Ibfpar, Idfpar, solarElevation[n],
+                                                                                    LAIme, LAImd, 
+                                                                                    kbvec,  kPAR, alphaPAR, gammaPAR);
+    List abs_SWR = cohortSunlitShadeAbsorbedRadiation(SWR_direct[n]*1000.0, SWR_diffuse[n]*1000.0, 
+                                                      Ibfpar, Idfpar, solarElevation[n],
+                                                                                    LAIme, LAImd, 
+                                                                                    kbvec,  kSWR, alphaSWR, gammaSWR);
+    abs_PAR_list[n] = abs_PAR;
+    abs_SWR_list[n] = abs_SWR;
   }
   
+  //Wind extinction profile
+  NumericVector zWind = windExtinctionProfile(zmid, wind, LAIcell, canopyHeight);
+
   //Transpiration
   NumericMatrix EplantCoh(numCohorts, nlayers);
   NumericVector PlantPsi(numCohorts);
@@ -382,6 +419,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   NumericMatrix Aninst(numCohorts, ntimesteps);
   NumericMatrix PsiPlantinst(numCohorts, ntimesteps);
   List supplyNetwork;
+  double Rnground = 0.0;
   for(int c=0;c<numCohorts;c++) {
     int nlayersc = 0;
     while((nlayersc<nlayers) & (V(c,nlayersc)>0)) {
@@ -416,44 +454,74 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
     NumericVector PsiVec = supplyNetwork["PsiPlant"];
     NumericVector E = supplyNetwork["E"];
     
-    double Tair, propRad;
-
+    double Tair;
     double minPsi = 0.0;
     double tstep = 86400.0/((double) ntimesteps);
     double t = (-1.0*((86400.0-tauday)/2.0))+(tstep/2.0);
     NumericVector Ec(nlayers,0.0);
     photosynthesis[c] = 0.0;
+    
+    //Constant properties through time steps
+    NumericVector Vmax298layer(nz), Jmax298layer(nz), SLarea(nz), SHarea(nz);
+    NumericVector QSH(nz), QSL(nz), absRadSL(nz), absRadSH(nz);
+    for(int i=0;i<nz;i++) {
+      SLarea[i] = LAIme(i,c)*fsunlit[i];
+      SHarea[i] = LAIme(i,c)*(1.0-fsunlit[i]);
+      Vmax298layer[i] = Vmax298[c];
+      Jmax298layer[i] = Jmax298[c];
+    }
     for(int n=0;n<ntimesteps;n++) {
+      //Retrieve Light extinction
+      List abs_PAR = abs_PAR_list[n];
+      List abs_SWR = abs_SWR_list[n];
+      NumericMatrix absPAR_SL = abs_PAR["I_sunlit"];
+      NumericMatrix absSWR_SL = abs_SWR["I_sunlit"];
+      NumericMatrix absPAR_SH = abs_PAR["I_shade"];
+      NumericMatrix absSWR_SH = abs_SWR["I_shade"];
       
+      
+      for(int i=0;i<nz;i++) {
+        QSL[i] = irradianceToPhotonFlux(absPAR_SL(i,c));
+        QSH[i] = irradianceToPhotonFlux(absPAR_SL(i,c));
+        absRadSL[i] = absPAR_SL(i,c);
+        absRadSH[i] = absPAR_SH(i,c);
+        // Rcout<<PAR_direct[n]*1000.0<< " "<<QSL[i]<<" "<<QSH[i]<<" "<<absRadSH[i]<<" "<<absRadSL[i]<<"\n";
+      }
       //Calculate instantaneous temperature and light conditions
       Tair = temperatureDiurnalPattern(t, tmin, tmax, tauday);
-      propRad = std::max(0.0,radiationDiurnalPattern(t, tauday));
-      Rninst(c,n) = pow(10.0, 6.0)*absorbedSWR[c]*propRad/LAIphe[c]; //Instantaneous radiation absorbed per leaf area unit
-      Qinst(c,n) = irradianceToPhotonFlux(pow(10.0, 6.0)*par[c]*propRad); //Instantaneous incident PAR
-      
-      List photo = leafPhotosynthesisFunction(supplyNetwork,
-                                          Catm, Patm,
-                                          Tair, vpa,
-                                          windspeed[c], Rninst(c,n), Qinst(c,n), Vmax298[c], Jmax298[c]);
+
+      List photo = multilayerPhotosynthesisFunction(supplyNetwork, Catm, Patm,Tair, vpa, 
+                                         SLarea, SHarea, 
+                                         zWind, absRadSL, absRadSH, 
+                                         QSL, QSH,
+                                         Vmax298layer,Jmax298layer,
+                                         Gwmin[c], Gwmax[c]);
+
       
       //Profit maximization
-      List PM =  profitMaximization2(supplyNetwork, photo, Gwmin[c], Gwmax[c], VCstem_kmax[c]);
+      List PM =  profitMaximization2(supplyNetwork, photo,  VCstem_kmax[c]);
       int iPM = PM["iMaxProfit"];
       NumericVector An = photo["NetPhotosynthesis"];
-        
-      //Scale transpiration and photosynthesis to cohort level
-      Einst(c,n) = E(iPM);
+      photosynthesis[c] +=pow(10,-6)*12.01017*An[iPM]*tstep; //Scale photosynthesis
       Aninst(c,n) = An(iPM);
+      
+      //Scale transpiration to cohort level
+      Einst(c,n) = E(iPM);
       for(int l=0;l<nlayersc;l++) Ec[l] += ElayersMat(iPM,l)*0.001*0.01802*LAIphe[c]*tstep;
       Eplant[c] += Einst(c,n)*0.001*0.01802*LAIphe[c]*tstep;
-      photosynthesis[c] +=pow(10,-6)*12.01017*An[iPM]*LAIphe[c]*tstep;
       
       //Store the minimum water potential of the day (i.e. mid-day)
       minPsi = std::min(minPsi,PsiVec[iPM]);
       PsiPlantinst(c,n) = PsiVec[iPM];
-      // Rcout<<"[ c: "<<c<<"  T: "<<n<<" Rn: "<<Rninst<<" Qinst: "<< Qinst <<" iPM: "<<iPM<<" E: "<<E[iPM]<<"[";
+      // Rcout<<"[ c: "<<c<<"  T: "<<n<<" iPM: "<<iPM<<" E: "<<E[iPM]<<"[";
       // for(int l=0;l<nlayers;l++) Rcout<<ElayersMat(iPM,l)<< ",";
       // Rcout<<"] An: "<< An[iPM]<<"]\n";
+      //IF cohort #1 increase ground SWR (in J·m-2)
+      if(c==0) {
+        Rnground += (absSWR_SH[0]+absSWR_SL[0])*tstep;
+      }
+      
+      
       t +=tstep;
     }
     // Rcout<<"\n";
@@ -474,7 +542,8 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   }
   
   //Potential soil evaporation
-  double PETsoil = meteoland::penmanmonteith(200.0, elevation, tmin, tmax, rhmin, rhmax, Rn*LgroundSWR, wind);
+  Rnground = Rnground/pow(10.0,6.0); //to MJ·m-2
+  double PETsoil = meteoland::penmanmonteith(200.0, elevation, tmin, tmax, rhmin, rhmax, Rnground, wind);
   
 
   
@@ -497,7 +566,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   
 
   List l = List::create(_["PET"] = NA_REAL, _["NetPrec"] = NetPrec, _["Runon"] = runon, _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
-                        _["LAIcell"] = LAIcell, _["Cm"] = Cm, _["Lground"] = LgroundPAR,
+                        _["LAIcell"] = LAIcell, _["Cm"] = Cm, _["Lground"] = NA_REAL,
                         _["EsoilVec"] = EsoilVec, _["EplantVec"] = EplantVec, _["psiVec"] = psi,
                         _["EplantCoh"] = Eplant, _["psiCoh"] = PlantPsi, _["DDS"] = DDS,
                         _["Rninst"] = Rninst, _["Qinst"] = Qinst, _["Einst"]=Einst, _["Aninst"]=Aninst,

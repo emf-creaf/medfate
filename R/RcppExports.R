@@ -373,8 +373,8 @@ layerIrradianceFraction <- function(LAIme, LAImd, k, alpha) {
     .Call('medfate_layerIrradianceFraction', PACKAGE = 'medfate', LAIme, LAImd, k, alpha)
 }
 
-cohortSunlitShadeAbsorbedRadiation <- function(Ib, Id, beta, LAIme, LAImd, kb, kd, alpha, gamma) {
-    .Call('medfate_cohortSunlitShadeAbsorbedRadiation', PACKAGE = 'medfate', Ib, Id, beta, LAIme, LAImd, kb, kd, alpha, gamma)
+cohortSunlitShadeAbsorbedRadiation <- function(Ib0, Id0, Ibf, Idf, beta, LAIme, LAImd, kb, kd, alpha, gamma) {
+    .Call('medfate_cohortSunlitShadeAbsorbedRadiation', PACKAGE = 'medfate', Ib0, Id0, Ibf, Idf, beta, LAIme, LAImd, kb, kd, alpha, gamma)
 }
 
 layerSunlitFraction <- function(LAIme, LAImd, kb) {
@@ -429,24 +429,28 @@ photo.photosynthesis <- function(Q, Catm, Gc, leaf_temp, Vmax298, Jmax298, verbo
     .Call('medfate_photosynthesis', PACKAGE = 'medfate', Q, Catm, Gc, leaf_temp, Vmax298, Jmax298, verbose)
 }
 
-photo.leafPhotosynthesisFunction <- function(supplyFunction, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, verbose = FALSE) {
-    .Call('medfate_leafPhotosynthesisFunction', PACKAGE = 'medfate', supplyFunction, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, verbose)
+photo.leafPhotosynthesisFunction <- function(supplyFunction, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, Gwmin, Gwmax, verbose = FALSE) {
+    .Call('medfate_leafPhotosynthesisFunction', PACKAGE = 'medfate', supplyFunction, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, Gwmin, Gwmax, verbose)
 }
 
-photo.canopyPhotosynthesisFunction <- function(supplyFunction, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298, Jmax298, verbose = FALSE) {
-    .Call('medfate_canopyPhotosynthesisFunction', PACKAGE = 'medfate', supplyFunction, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298, Jmax298, verbose)
+photo.sunshadePhotosynthesisFunction <- function(supplyFunction, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gwmin, Gwmax, verbose = FALSE) {
+    .Call('medfate_sunshadePhotosynthesisFunction', PACKAGE = 'medfate', supplyFunction, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gwmin, Gwmax, verbose)
 }
 
-photo.profitMaximization <- function(supplyFunction, photosynthesisFunction, Gwmin, Gwmax) {
-    .Call('medfate_profitMaximization', PACKAGE = 'medfate', supplyFunction, photosynthesisFunction, Gwmin, Gwmax)
+photo.multilayerPhotosynthesisFunction <- function(supplyFunction, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298, Jmax298, Gwmin, Gwmax, verbose = FALSE) {
+    .Call('medfate_multilayerPhotosynthesisFunction', PACKAGE = 'medfate', supplyFunction, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298, Jmax298, Gwmin, Gwmax, verbose)
 }
 
-photo.profitMaximization2 <- function(supplyFunction, photosynthesisFunction, Gwmin, Gwmax, kstemmax) {
-    .Call('medfate_profitMaximization2', PACKAGE = 'medfate', supplyFunction, photosynthesisFunction, Gwmin, Gwmax, kstemmax)
+photo.profitMaximization <- function(supplyFunction, photosynthesisFunction) {
+    .Call('medfate_profitMaximization', PACKAGE = 'medfate', supplyFunction, photosynthesisFunction)
 }
 
-photo.profitMaximization3 <- function(supplyFunction, photosynthesisFunction, Gwmin, Gwmax, kstemmax) {
-    .Call('medfate_profitMaximization3', PACKAGE = 'medfate', supplyFunction, photosynthesisFunction, Gwmin, Gwmax, kstemmax)
+photo.profitMaximization2 <- function(supplyFunction, photosynthesisFunction, kstemmax) {
+    .Call('medfate_profitMaximization2', PACKAGE = 'medfate', supplyFunction, photosynthesisFunction, kstemmax)
+}
+
+photo.profitMaximization3 <- function(supplyFunction, photosynthesisFunction, kstemmax) {
+    .Call('medfate_profitMaximization3', PACKAGE = 'medfate', supplyFunction, photosynthesisFunction, kstemmax)
 }
 
 root.conicDistribution <- function(Z, d) {

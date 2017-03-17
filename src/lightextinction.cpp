@@ -192,37 +192,21 @@ NumericVector layerIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd, 
   return(Ifraction);
 }
 
-/**
- *  Direct light absorbed radiation per unit of leaf area, given direct light level at the top of the layer
- *  I_{dir, ij}
- */
-NumericMatrix cohortDirectBeamAbsorbedRadiation(NumericVector Ib, double beta, NumericVector alpha) {
-  int ncoh = alpha.size();
-  int nlayer = Ib.size();
-  NumericMatrix Idir(nlayer, ncoh);
-  double sinb = sin(beta);
-  for(int i = 0;i<nlayer;i++) {
-    for(int j = 0;j<ncoh;j++) {
-      Idir(i,j) = Ib[i]*alpha[j]*(0.5/sinb);
-    }
-  }
-  return(Idir);
-}
 
 
 /**
  *  Diffuse light absorbed radiation per unit of leaf area, given diffuse light level at the top of the layer
  *  I_{da, ij}
  */
-NumericMatrix cohortDiffuseAbsorbedRadiation(NumericVector Id, NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kd, NumericVector alpha) {
+NumericMatrix cohortDiffuseAbsorbedRadiation(double Id0, NumericVector Idf, NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kd, NumericVector alpha, double gamma) {
   int ncoh = alpha.size();
-  int nlayer = Id.size();
+  int nlayer = Idf.size();
   NumericMatrix Ida(nlayer, ncoh);
   for(int i = 0;i<nlayer;i++) {
     double s = 0.0;
     for(int j = 0;j<ncoh;j++) s += kd[j]*pow(alpha[j],0.5)*(LAIme(i,j)/2.0+LAImd(i,j)/2.0);
     for(int j = 0;j<ncoh;j++) {
-      Ida(i,j) = Id[i]*pow(alpha[j],0.5)*kd[j]*exp(-1.0*s);
+      Ida(i,j) = Id0*(1.0-gamma)*Idf[i]*pow(alpha[j],0.5)*kd[j]*exp(-1.0*s);
     }
   }
   return(Ida);
@@ -233,9 +217,9 @@ NumericMatrix cohortDiffuseAbsorbedRadiation(NumericVector Id, NumericMatrix LAI
  *  Scattered light absorbed radiation per unit of leaf area, given direct light level at the top of the layer
  *  I_{bsa, ij}
  */
-NumericMatrix cohortScatteredAbsorbedRadiation(NumericVector Ib, NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kb, NumericVector alpha, double gamma) {
+NumericMatrix cohortScatteredAbsorbedRadiation(double Ib0, NumericVector Ibf, NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kb, NumericVector alpha, double gamma) {
   int ncoh = alpha.size();
-  int nlayer = Ib.size();
+  int nlayer = Ibf.size();
   NumericMatrix Ibsa(nlayer, ncoh);
   for(int i = 0;i<nlayer;i++) {
     double s1 = 0.0, s2=0.0;
@@ -244,7 +228,7 @@ NumericMatrix cohortScatteredAbsorbedRadiation(NumericVector Ib, NumericMatrix L
       s2 += kb[j]*(LAIme(i,j)/2.0+LAImd(i,j)/2.0);
     }
     for(int j = 0;j<ncoh;j++) {
-      Ibsa(i,j) = Ib[i]*kb[j]*(pow(alpha[j], 0.5)*exp(-1.0*s1) - (alpha[j]/(1.0-gamma))*exp(-1.0*s2));
+      Ibsa(i,j) = Ib0*(1.0-gamma)*Ibf[i]*kb[j]*(pow(alpha[j], 0.5)*exp(-1.0*s1) - (alpha[j]/(1.0-gamma))*exp(-1.0*s2));
     }
   }
   return(Ibsa);
@@ -256,21 +240,21 @@ NumericMatrix cohortScatteredAbsorbedRadiation(NumericVector Ib, NumericMatrix L
  * I_{SH,ij}
  */
 // [[Rcpp::export("cohortSunlitShadeAbsorbedRadiation")]]
-List cohortSunlitShadeAbsorbedRadiation(NumericVector Ib, NumericVector Id, double beta,
+List cohortSunlitShadeAbsorbedRadiation(double Ib0, double Id0, NumericVector Ibf, NumericVector Idf, double beta,
                              NumericMatrix LAIme, NumericMatrix LAImd, 
                              NumericVector kb,  NumericVector kd, NumericVector alpha, double gamma) {
-  NumericMatrix Idir = cohortDirectBeamAbsorbedRadiation(Ib,beta, alpha);
-  NumericMatrix Ida = cohortDiffuseAbsorbedRadiation(Id, LAIme, LAImd, kd, alpha);
-  NumericMatrix Ibsa = cohortScatteredAbsorbedRadiation(Ib, LAIme, LAImd, kb, alpha, gamma);
+  NumericMatrix Ida = cohortDiffuseAbsorbedRadiation(Id0, Idf, LAIme, LAImd, kd, alpha, gamma);
+  NumericMatrix Ibsa = cohortScatteredAbsorbedRadiation(Ib0, Ibf, LAIme, LAImd, kb, alpha, gamma);
   int ncoh = alpha.size();
-  int nlayer = Ib.size();
+  int nlayer = Ibf.size();
+  double sinb = sin(beta);
   
   NumericMatrix Ish(nlayer,ncoh); 
   NumericMatrix Isu(nlayer, ncoh);
   for(int i = 0;i<nlayer;i++) {
     for(int j = 0;j<ncoh;j++) {
       Ish(i,j) = Ida(i,j)+Ibsa(i,j);
-      Isu(i,j) = Ish(i,j)+Idir(i,j);
+      Isu(i,j) = Ish(i,j)+Ib0*alpha[j]*(0.5/sinb);
     }
   }
   List s = List::create(Named("I_sunlit")=Isu, Named("I_shade") = Ish);

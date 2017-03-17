@@ -38,7 +38,8 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
   if((transpirationMode!="Simple") & (transpirationMode!="Sperry")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Simple' or 'Sperry')");
   double fracTotalTreeResistance = control["fracTotalTreeResistance"];
   double averageFracRhizosphereResistance = control["averageFracRhizosphereResistance"];
-
+  String canopyMode = control["canopyMode"];
+  
   NumericVector kSP = SpParams["k"];
   NumericVector gSP = SpParams["g"];
   NumericVector SgddSP = SpParams["Sgdd"];
@@ -66,7 +67,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
     DataFrame paramsTranspdf = DataFrame::create(_["Psi_Extract"]=Psi_Extract,_["WUE"] = WUE, _["pEmb"] = pEmb);
     List below = List::create(_["V"] = V);
     input = List::create(_["verbose"] =control["verbose"],
-                         _["transpirationMode"] =transpirationMode, 
+                         _["transpirationMode"] =transpirationMode,
                          _["cavitationRefill"] = control["cavitationRefill"],
                          _["above"] = plantsdf,
                          _["below"] = below,
@@ -130,6 +131,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
                               _["VCroot_kmax"] = VCroot_kmax);
     input = List::create(_["verbose"] =control["verbose"],
                          _["transpirationMode"] =transpirationMode, 
+                         _["canopyMode"] =canopyMode, 
                          _["cavitationRefill"] = control["cavitationRefill"],
                          _["ndailysteps"] = control["ndailysteps"],                               
                          _["above"] = plantsdf,
@@ -193,6 +195,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   if((transpirationMode!="Simple") & (transpirationMode!="Sperry")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Simple' or 'Sperry')");
   String storagePool = control["storagePool"];
   if((storagePool!="none") & (storagePool!="one")& (storagePool!="two")) stop("Wrong storage pool ('storagePool' should be 'none', 'one' or 'two')");
+  String canopyMode = control["canopyMode"];
   
   
   double fracTotalTreeResistance = control["fracTotalTreeResistance"];
@@ -335,7 +338,8 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     DataFrame paramsTranspdf = DataFrame::create(_["Psi_Extract"]=Psi_Extract,_["WUE"] = WUE);
     List below = List::create( _["Z"]=Z,_["V"] = V);
     input = List::create(_["verbose"] =control["verbose"],
-                         _["TranspirationMode"] =transpirationMode, 
+                         _["transpirationMode"] =transpirationMode, 
+                         _["canopyMode"] =canopyMode,
                          _["storagePool"] = storagePool,
                          _["allowEmbolism"] =control["allowEmbolism"],
                          _["above"] = plantsdf,
@@ -412,9 +416,9 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   } 
   input["Transpiration"] = NumericVector(numCohorts, 0.0);
   input["Photosynthesis"] = NumericVector(numCohorts, 0.0);
-  input["WindSpeed"] = NumericVector(numCohorts, 0.0);
-  input["PAR"] = NumericVector(numCohorts, 0.0);
-  input["AbsorbedSWR"] = NumericVector(numCohorts, 0.0);
+  // input["WindSpeed"] = NumericVector(numCohorts, 0.0);
+  // input["PAR"] = NumericVector(numCohorts, 0.0);
+  // input["AbsorbedSWR"] = NumericVector(numCohorts, 0.0);
   input.attr("class") = CharacterVector::create("growthInput","list");
   // df.attr("row.names") = seq(1,numCohorts);
   return(input);

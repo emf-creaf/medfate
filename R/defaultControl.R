@@ -4,6 +4,7 @@ defaultControl<-function() {
     verbose = TRUE,
     # swb
     transpirationMode = "Simple",
+    canopyMode = "sunshade",
     cavitationRefill = TRUE,
     fracTotalTreeResistance = 0.625,
     averageFracRhizosphereResistance = 0.05,

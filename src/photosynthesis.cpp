@@ -185,7 +185,7 @@ double photosynthesis(double Q, double Catm, double Gc, double leaf_temp, double
 
 // [[Rcpp::export("photo.leafPhotosynthesisFunction")]]
 List leafPhotosynthesisFunction(List supplyFunction, double Catm, double Patm, double Tair, double vpa, double u, 
-                             double absRad, double Q, double Vmax298, double Jmax298, bool verbose = false) {
+                             double absRad, double Q, double Vmax298, double Jmax298, double Gwmin, double Gwmax, bool verbose = false) {
   NumericVector fittedE = supplyFunction["E"];
   int nsteps = fittedE.size();
   NumericVector leafTemp(nsteps);
@@ -196,6 +196,7 @@ List leafPhotosynthesisFunction(List supplyFunction, double Catm, double Patm, d
     leafTemp[i] = leafTemperature(absRad, Tair, u, fittedE[i]);
     leafVPD[i] = (meteoland::utils_saturationVP(leafTemp[i])-vpa);
     Gw[i] = Patm*(fittedE[i]/1000.0)/leafVPD[i];
+    Gw[i] = std::max(Gwmin, std::min(Gw[i], Gwmax));
     Ag[i] = photosynthesis(Q, Catm, Gw[i]/1.6, leafTemp[i], Vmax298, Jmax298);
     An[i] = Ag[i] - 0.015*VmaxTemp(Vmax298, leafTemp[i]);
   }
@@ -229,13 +230,59 @@ List leafPhotosynthesisFunction(List supplyFunction, double Catm, double Patm, d
  * return units: micromol*s-1*m-2
  */
 
-// [[Rcpp::export("photo.canopyPhotosynthesisFunction")]]
-List canopyPhotosynthesisFunction(List supplyFunction, double Catm, double Patm, double Tair, double vpa, 
+// [[Rcpp::export("photo.sunshadePhotosynthesisFunction")]]
+List sunshadePhotosynthesisFunction(List supplyFunction, double Catm, double Patm, double Tair, double vpa, 
+                                  double SLarea, double SHarea,
+                                  double u, double absRadSL, double absRadSH,
+                                  double QSL, double QSH, 
+                                  double Vmax298SL, double Vmax298SH, 
+                                  double Jmax298SL, double Jmax298SH, 
+                                  double Gwmin, double Gwmax, bool verbose = false) {
+  NumericVector fittedE = supplyFunction["E"];
+  int nsteps = fittedE.size();
+  NumericVector Ag(nsteps,0.0), An(nsteps,0.0);
+  double leafT,leafVPD, Gw, Agj, Anj;
+  for(int i=0;i<nsteps;i++){
+    Ag[i]=0.0;
+    An[i]=0.0;
+    if(QSL>0.0) {
+      //Sunlit leaves
+       //From rad per ground area to rad per leaf area
+      leafT = leafTemperature(absRadSL/SLarea, Tair, u, fittedE[i]);
+      leafVPD = (meteoland::utils_saturationVP(leafT)-vpa);
+      Gw = Patm*(fittedE[i]/1000.0)/leafVPD;
+      Gw = std::max(Gwmin, std::min(Gw, Gwmax));
+      Gw = Gw*SLarea; //From Gw per leaf area to Gw per ground area
+      Agj = photosynthesis(QSL, Catm, Gw/1.6, leafT, Vmax298SL, Jmax298SL);
+      Anj = Agj - 0.015*VmaxTemp(Vmax298SL, leafT);
+      Ag[i]+=Agj;
+      An[i]+=Anj;
+    }
+    if(QSH>0.0) {
+      //SHADE leaves
+      //From rad per ground area to rad per leaf area
+      leafT = leafTemperature(absRadSH/SHarea, Tair, u, fittedE[i]);
+      leafVPD = (meteoland::utils_saturationVP(leafT)-vpa);
+      Gw = Patm*(fittedE[i]/1000.0)/leafVPD;
+      Gw = std::max(Gwmin, std::min(Gw, Gwmax));
+      Gw = Gw*SHarea; //From Gw per leaf area to Gw per ground area
+      Agj = photosynthesis(QSH, Catm, Gw/1.6, leafT, Vmax298SH, Jmax298SH);
+      Anj = Agj - 0.015*VmaxTemp(Vmax298SH, leafT);
+      Ag[i]+=Agj;
+      An[i]+=Anj;
+    }
+  }
+  return(List::create(Named("Photosynthesis") = Ag,
+                      Named("NetPhotosynthesis") = An));
+}
+
+// [[Rcpp::export("photo.multilayerPhotosynthesisFunction")]]
+List multilayerPhotosynthesisFunction(List supplyFunction, double Catm, double Patm, double Tair, double vpa, 
                                   NumericVector SLarea, NumericVector SHarea,
                                   NumericVector u, NumericVector absRadSL, NumericVector absRadSH,
                                   NumericVector QSL, NumericVector QSH, 
                                   NumericVector Vmax298, NumericVector Jmax298, 
-                                  bool verbose = false) {
+                                  double Gwmin, double Gwmax, bool verbose = false) {
   NumericVector fittedE = supplyFunction["E"];
   int nsteps = fittedE.size();
   int nlayers = SLarea.size();
@@ -245,22 +292,29 @@ List canopyPhotosynthesisFunction(List supplyFunction, double Catm, double Patm,
     Ag[i]=0.0;
     An[i]=0.0;
     for(int j=0;j<nlayers;j++) {
-      //Sunlit leaves
-      leafT = leafTemperature(absRadSL[j], Tair, u[j], fittedE[i]);
-      leafVPD = (meteoland::utils_saturationVP(leafT)-vpa);
-      Gw = Patm*(fittedE[i]/1000.0)/leafVPD;
-      Agj = photosynthesis(QSL[j], Catm, Gw/1.6, leafT, Vmax298[j], Jmax298[j]);
-      Anj = Agj - 0.015*VmaxTemp(Vmax298[j], leafT);
-      Ag[i]+=Agj*SLarea[j];
-      An[i]+=Anj*SLarea[j];
-      //SHADE leaves
-      leafT = leafTemperature(absRadSH[j], Tair, u[j], fittedE[i]);
-      leafVPD = (meteoland::utils_saturationVP(leafT)-vpa);
-      Gw = Patm*(fittedE[i]/1000.0)/leafVPD;
-      Agj = photosynthesis(QSH[j], Catm, Gw/1.6, leafT, Vmax298[j], Jmax298[j]);
-      Anj = Agj - 0.015*VmaxTemp(Vmax298[j], leafT);
-      Ag[i]+=Agj*SHarea[j];
-      An[i]+=Anj*SHarea[j];
+      if(QSL[j]>0.0) {
+        //Sunlit leaves
+        leafT = leafTemperature(absRadSL[j], Tair, u[j], fittedE[i]);
+        leafVPD = (meteoland::utils_saturationVP(leafT)-vpa);
+        Gw = Patm*(fittedE[i]/1000.0)/leafVPD;
+        Gw = std::max(Gwmin, std::min(Gw, Gwmax));
+        Agj = photosynthesis(QSL[j], Catm, Gw/1.6, leafT, Vmax298[j], Jmax298[j]);
+        Anj = Agj - 0.015*VmaxTemp(Vmax298[j], leafT);
+        //From A per leaf area to A per ground area
+        Ag[i]+=Agj*SLarea[j];
+        An[i]+=Anj*SLarea[j];
+      }
+      if(QSH[j]>0.0) {
+        //SHADE leaves
+        leafT = leafTemperature(absRadSH[j], Tair, u[j], fittedE[i]);
+        leafVPD = (meteoland::utils_saturationVP(leafT)-vpa);
+        Gw = Patm*(fittedE[i]/1000.0)/leafVPD;
+        Gw = std::max(Gwmin, std::min(Gw, Gwmax));
+        Agj = photosynthesis(QSH[j], Catm, Gw/1.6, leafT, Vmax298[j], Jmax298[j]);
+        Anj = Agj - 0.015*VmaxTemp(Vmax298[j], leafT);
+        Ag[i]+=Agj*SHarea[j];
+        An[i]+=Anj*SHarea[j];
+      }
     }
   }
   return(List::create(Named("Photosynthesis") = Ag,
@@ -269,10 +323,10 @@ List canopyPhotosynthesisFunction(List supplyFunction, double Catm, double Patm,
 
 
 // [[Rcpp::export("photo.profitMaximization")]]
-List profitMaximization(List supplyFunction, List photosynthesisFunction, double Gwmin, double Gwmax) {
+List profitMaximization(List supplyFunction, List photosynthesisFunction) {
   NumericVector supplydEdp = supplyFunction["dEdP"];
   NumericVector Ag = photosynthesisFunction["Photosynthesis"];
-  NumericVector Gw = photosynthesisFunction["WaterVaporConductance"];
+  // NumericVector Gw = photosynthesisFunction["WaterVaporConductance"];
   int nsteps = supplydEdp.size();
   NumericVector profit(nsteps);
   NumericVector cost(nsteps);
@@ -290,27 +344,27 @@ List profitMaximization(List supplyFunction, List photosynthesisFunction, double
     profit[i] = gain[i]-cost[i];
   }
 
-  int imaxprofit=-1;
-  double maxprofit=0.0;
+  int imaxprofit=0;
+  double maxprofit=profit[0];
   //Searches the step corresponding to minimum (i.e. cuticular) conductance
-  for(int i=0;i<nsteps;i++){
-    if(Gw[i]>Gwmin) {
-      maxprofit = profit[i];
-      imaxprofit = i;
-      break;
-    }
-  }
+  // for(int i=0;i<nsteps;i++){
+  //   if(Gw[i]>Gwmin) {
+  //     maxprofit = profit[i];
+  //     imaxprofit = i;
+  //     break;
+  //   }
+  // }
   //Searches for maximum profit (up to Gwmax)
-  if(imaxprofit>-1) {
+  // if(imaxprofit>-1) {
     for(int i=(imaxprofit+1);i<nsteps;i++){
-      if((profit[i]>maxprofit) & (Gw[i]<Gwmax)) {
+      if((profit[i]>maxprofit)) {
         maxprofit = profit[i];
         imaxprofit = i;
       }
     }
-  } else {
-    imaxprofit = 0;
-  }
+  // } else {
+    // imaxprofit = 0;
+  // }
   return(List::create(Named("Cost") = cost,
                       Named("Gain") = gain,
                       Named("Profit") = profit,
@@ -318,10 +372,10 @@ List profitMaximization(List supplyFunction, List photosynthesisFunction, double
 }
 
 // [[Rcpp::export("photo.profitMaximization2")]]
-List profitMaximization2(List supplyFunction, List photosynthesisFunction, double Gwmin, double Gwmax, double kstemmax) {
+List profitMaximization2(List supplyFunction, List photosynthesisFunction, double kstemmax) {
   NumericVector supplyKterm = supplyFunction["kterm"];
   NumericVector Ag = photosynthesisFunction["Photosynthesis"];
-  NumericVector Gw = photosynthesisFunction["WaterVaporConductance"];
+  // NumericVector Gw = photosynthesisFunction["WaterVaporConductance"];
   int nsteps = supplyKterm.size();
   NumericVector profit(nsteps);
   NumericVector cost(nsteps);
@@ -338,27 +392,28 @@ List profitMaximization2(List supplyFunction, List photosynthesisFunction, doubl
     profit[i] = gain[i]-cost[i];
   }
   
-  int imaxprofit=-1;
-  double maxprofit=0.0;
-  //Searches the step corresponding to minimum (i.e. cuticular) conductance
-  for(int i=0;i<nsteps;i++){
-    if(Gw[i]>Gwmin) {
-      maxprofit = profit[i];
-      imaxprofit = i;
-      break;
-    }
-  }
+  int imaxprofit=0;
+  double maxprofit=profit[0];
+  // Searches the step corresponding to minimum (i.e. cuticular) conductance
+  // for(int i=0;i<nsteps;i++){
+  //   if(Gw[i]>Gwmin) {
+  //     maxprofit = profit[i];
+  //     imaxprofit = i;
+  //     break;
+  //   }
+  // }
   //Searches for maximum profit (up to Gwmax)
-  if(imaxprofit>-1) {
-    for(int i=(imaxprofit+1);i<nsteps;i++){
-      if((profit[i]>maxprofit) & (Gw[i]<Gwmax)) {
+  // if(imaxprofit>-1) {
+    for(int i=imaxprofit+1;i<nsteps;i++){
+      if((profit[i]>maxprofit)) {
+      // if((profit[i]>maxprofit) & (Gw[i]<Gwmax)) {
         maxprofit = profit[i];
         imaxprofit = i;
       }
     }
-  } else {
-    imaxprofit = 0;
-  }
+  // } else {
+  //   imaxprofit = 0;
+  // }
   return(List::create(Named("Cost") = cost,
                       Named("Gain") = gain,
                       Named("Profit") = profit,
@@ -366,10 +421,10 @@ List profitMaximization2(List supplyFunction, List photosynthesisFunction, doubl
 }
 
 // [[Rcpp::export("photo.profitMaximization3")]]
-List profitMaximization3(List supplyFunction, List photosynthesisFunction, double Gwmin, double Gwmax, double kstemmax) {
+List profitMaximization3(List supplyFunction, List photosynthesisFunction, double kstemmax) {
   NumericVector supplyKterm = supplyFunction["ktermcav"];
   NumericVector Ag = photosynthesisFunction["Photosynthesis"];
-  NumericVector Gw = photosynthesisFunction["WaterVaporConductance"];
+  // NumericVector Gw = photosynthesisFunction["WaterVaporConductance"];
   int nsteps = supplyKterm.size();
   NumericVector profit(nsteps);
   NumericVector cost(nsteps);
@@ -386,27 +441,28 @@ List profitMaximization3(List supplyFunction, List photosynthesisFunction, doubl
     profit[i] = gain[i]-cost[i];
   }
   
-  int imaxprofit=-1;
-  double maxprofit=0.0;
+  int imaxprofit=0;
+  double maxprofit=profit[0];
   //Searches the step corresponding to minimum (i.e. cuticular) conductance
-  for(int i=0;i<nsteps;i++){
-    if(Gw[i]>Gwmin) {
-      maxprofit = profit[i];
-      imaxprofit = i;
-      break;
-    }
-  }
+  // for(int i=0;i<nsteps;i++){
+  //   if(Gw[i]>Gwmin) {
+  //     maxprofit = profit[i];
+  //     imaxprofit = i;
+  //     break;
+  //   }
+  // }
   //Searches for maximum profit (up to Gwmax)
-  if(imaxprofit>-1) {
+  // if(imaxprofit>-1) {
     for(int i=(imaxprofit+1);i<nsteps;i++){
-      if((profit[i]>maxprofit) & (Gw[i]<Gwmax)) {
+      // if((profit[i]>maxprofit) & (Gw[i]<Gwmax)) {
+      if((profit[i]>maxprofit)) {
         maxprofit = profit[i];
         imaxprofit = i;
       }
     }
-  } else {
-    imaxprofit = 0;
-  }
+  // } else {
+  //   imaxprofit = 0;
+  // }
   return(List::create(Named("Cost") = cost,
                       Named("Gain") = gain,
                       Named("Profit") = profit,
