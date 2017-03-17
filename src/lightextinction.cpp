@@ -192,7 +192,17 @@ NumericVector layerIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd, 
   return(Ifraction);
 }
 
-
+double groundIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericVector k, NumericVector alpha){
+  int nlayer = LAIme.nrow();
+  int ncoh = LAIme.ncol();
+  double s = 0.0;
+  for(int i=nlayer-1;i>=0;i--) { //Start from top layer
+    //for subsequent layers increase s
+    for(int j =0;j<ncoh;j++) s = s + (k[j]*pow(alpha[j],0.5)*(LAIme(i,j)+LAImd(i,j)));
+  }
+  return(exp(-1.0*s));
+  
+}
 
 /**
  *  Diffuse light absorbed radiation per unit of leaf area, given diffuse light level at the top of the layer

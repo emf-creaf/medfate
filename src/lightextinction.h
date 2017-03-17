@@ -14,6 +14,8 @@ NumericVector cohortAbsorbedSWRFraction(NumericVector z, NumericVector LAI_expan
 NumericVector cohortAbsorbedSWRFraction(NumericVector LAI_expanded, NumericVector LAI_dead, NumericVector H, NumericVector CR, NumericVector kPAR);
 
 NumericVector layerIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericVector k, NumericVector alpha);
+double groundIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericVector k, NumericVector alpha);
+
 List cohortSunlitShadeAbsorbedRadiation(double Ib0, double Id0, NumericVector Ibf, NumericVector Idf, double beta,
                                    NumericMatrix LAIme, NumericMatrix LAImd, 
                                    NumericVector kb,  NumericVector kd, NumericVector alpha, double gamma);
