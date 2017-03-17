@@ -185,7 +185,8 @@ double photosynthesis(double Q, double Catm, double Gc, double leaf_temp, double
 
 // [[Rcpp::export("photo.leafPhotosynthesisFunction")]]
 List leafPhotosynthesisFunction(List supplyFunction, double Catm, double Patm, double Tair, double vpa, double u, 
-                             double absRad, double Q, double Vmax298, double Jmax298, double Gwmin, double Gwmax, bool verbose = false) {
+                             double absRad, double Q, double Vmax298, double Jmax298, double Gwmin, double Gwmax, 
+                             double refLeafArea = 1.0, bool verbose = false) {
   NumericVector fittedE = supplyFunction["E"];
   int nsteps = fittedE.size();
   NumericVector leafTemp(nsteps);
@@ -193,11 +194,11 @@ List leafPhotosynthesisFunction(List supplyFunction, double Catm, double Patm, d
   NumericVector Gw(nsteps);
   NumericVector Ag(nsteps), An(nsteps);
   for(int i=0;i<nsteps;i++){
-    leafTemp[i] = leafTemperature(absRad, Tair, u, fittedE[i]);
+    leafTemp[i] = leafTemperature(absRad/refLeafArea, Tair, u, fittedE[i]);
     leafVPD[i] = (meteoland::utils_saturationVP(leafTemp[i])-vpa);
     Gw[i] = Patm*(fittedE[i]/1000.0)/leafVPD[i];
     Gw[i] = std::max(Gwmin, std::min(Gw[i], Gwmax));
-    Ag[i] = photosynthesis(Q, Catm, Gw[i]/1.6, leafTemp[i], Vmax298, Jmax298);
+    Ag[i] = photosynthesis(Q, Catm, refLeafArea*Gw[i]/1.6, leafTemp[i], Vmax298, Jmax298);
     An[i] = Ag[i] - 0.015*VmaxTemp(Vmax298, leafTemp[i]);
   }
   return(List::create(Named("LeafTemperature") = leafTemp,
