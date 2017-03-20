@@ -79,6 +79,12 @@ double interceptionGashDay(double Precipitation, double Cm, double p, double ER=
 List swbDay1(List x, List soil, double tday, double pet, double rain, double er, double runon=0.0, 
              bool verbose = false) {
 
+  //Control parameters
+  List control = x["control"];
+  
+  bool cavitationRefill = control["cavitationRefill"];
+
+  
   //Soil input
   NumericVector W = soil["W"];
   NumericVector psi = soil["psi"];
@@ -98,7 +104,7 @@ List swbDay1(List x, List soil, double tday, double pet, double rain, double er,
   NumericVector H = Rcpp::as<Rcpp::NumericVector>(above["H"]);
   NumericVector CR = Rcpp::as<Rcpp::NumericVector>(above["CR"]);
   int numCohorts = LAIphe.size();
-  
+
   //Root distribution input
   List below = Rcpp::as<Rcpp::List>(x["below"]);
   NumericMatrix V = Rcpp::as<Rcpp::NumericMatrix>(below["V"]);
@@ -109,7 +115,6 @@ List swbDay1(List x, List soil, double tday, double pet, double rain, double er,
   NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsBase["k"]);
   NumericVector gRainIntercept = Rcpp::as<Rcpp::NumericVector>(paramsBase["g"]);
   
-  bool cavitationRefill = x["cavitationRefill"];
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
   NumericVector Psi_Extract = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Psi_Extract"]);
   NumericVector WUE = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE"]);
@@ -239,6 +244,12 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
              double latitude, double elevation, double slope, double aspect, double solarConstant, double delta, 
              double rain, double er, double runon=0.0, bool verbose = false) {
   
+  //Control parameters
+  List control = x["control"];
+  bool cavitationRefill = control["cavitationRefill"];
+  String canopyMode = Rcpp::as<Rcpp::String>(control["canopyMode"]);
+  int ntimesteps = control["ndailysteps"];
+  
   //Soil input
   NumericVector W = soil["W"];
   NumericVector psi = soil["psi"];
@@ -272,7 +283,6 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   NumericVector gRainIntercept = Rcpp::as<Rcpp::NumericVector>(paramsBase["g"]);
 
   //Transpiration parameters
-  bool cavitationRefill = x["cavitationRefill"];
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
   NumericVector Gwmin = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Gwmin"]);
   NumericVector Gwmax = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Gwmax"]);
@@ -292,9 +302,6 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   NumericVector VG_n = Rcpp::as<Rcpp::NumericVector>(soil["VG_n"]);
   NumericVector VG_alpha = Rcpp::as<Rcpp::NumericVector>(soil["VG_alpha"]);
   
-  String canopyMode = Rcpp::as<Rcpp::String>(x["canopyMode"]);
-  
-  int ntimesteps = x["ndailysteps"];
   
   double latrad = latitude * (PI/180.0);
   if(NumericVector::is_na(aspect)) aspect = 0.0;
@@ -794,7 +801,7 @@ void checkswbInput(List x, List soil, String transpirationMode) {
   if(!x.containsElementNamed("below")) stop("below missing in swbInput");
   List below = Rcpp::as<Rcpp::List>(x["below"]);
   if(!below.containsElementNamed("V")) stop("V missing in swbInput$below");
-  if(transpirationMode=="Sperry"){
+  if(transpirationMode=="Complex"){
     if(!below.containsElementNamed("VGrhizo_kmax")) stop("VGrhizo_kmax missing in swbInput$below");
     if(!below.containsElementNamed("VCroot_kmax")) stop("VCroot_kmax missing in swbInput$below");
   }  
@@ -811,7 +818,7 @@ void checkswbInput(List x, List soil, String transpirationMode) {
   if(transpirationMode=="Simple") {
     if(!paramsTransp.containsElementNamed("Psi_Extract")) stop("Psi_Extract missing in swbInput$paramsTransp");
     if(!paramsTransp.containsElementNamed("WUE")) stop("WUE missing in swbInput$paramsTransp");
-  } else if(transpirationMode=="Sperry") {
+  } else if(transpirationMode=="Complex") {
     if(!paramsTransp.containsElementNamed("VCstem_kmax")) stop("VCstem_kmax missing in swbInput$paramsTransp");
     if(!paramsTransp.containsElementNamed("VCstem_c")) stop("VCstem_c missing in swbInput$paramsTransp");
     if(!paramsTransp.containsElementNamed("VCstem_d")) stop("VCstem_d missing in swbInput$paramsTransp");
@@ -821,7 +828,7 @@ void checkswbInput(List x, List soil, String transpirationMode) {
     if(!paramsTransp.containsElementNamed("Vmax298")) stop("Vmax298 missing in swbInput$paramsTransp");
     if(!paramsTransp.containsElementNamed("Jmax298")) stop("Jmax298 missing in swbInput$paramsTransp");
   }
-  if(transpirationMode=="Sperry") {
+  if(transpirationMode=="Complex") {
     if(!soil.containsElementNamed("VG_n")) stop("VG_n missing in soil");
     if(!soil.containsElementNamed("VG_alpha")) stop("VG_alpha missing in soil");
   }
@@ -837,8 +844,9 @@ void checkswbInput(List x, List soil, String transpirationMode) {
 
 // [[Rcpp::export("swb")]]
 List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL) {
-  String transpirationMode = x["transpirationMode"];
-  bool verbose = x["verbose"];
+  List control = x["control"];
+  String transpirationMode = control["transpirationMode"];
+  bool verbose = control["verbose"];
   
   checkswbInput(x, soil, transpirationMode);
 
@@ -853,7 +861,7 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
   int numDays = Precipitation.size();
   if(transpirationMode=="Simple") {
     PET = meteo["PET"];
-  } else if(transpirationMode=="Sperry") {
+  } else if(transpirationMode=="Complex") {
     if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
     if(NumericVector::is_na(elevation)) stop("Value for 'elevation' should not be missing.");
     MinTemperature = meteo["MinTemperature"];
@@ -907,9 +915,6 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
   NumericMatrix PlantStress(numDays, numCohorts);
   NumericMatrix PlantTranspiration(numDays, numCohorts);
   NumericMatrix PlantPhotosynthesis(numDays, numCohorts);
-  NumericMatrix PlantWindSpeed(numDays, numCohorts);
-  NumericMatrix PlantPAR(numDays, numCohorts);
-  NumericMatrix PlantAbsorbedSWR(numDays, numCohorts);
   NumericVector EplantCohTot(numCohorts, 0.0);
   
   
@@ -933,7 +938,7 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
       //Transpiration
       if(transpirationMode=="Simple") {
         s = swbDay1(x, soil, MeanTemperature[i], PET[i], Precipitation[i], ER[i], 0.0, false); //No Runon in simulations for a single cell
-      } else if(transpirationMode=="Sperry") {
+      } else if(transpirationMode=="Complex") {
         std::string c = as<std::string>(dateStrings[i]);
         int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
         double delta = meteoland::radiation_solarDeclination(J);
@@ -960,9 +965,6 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
       Eplantdays(i,_) = EplantVec;
       PlantPhotosynthesis(i,_) = Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
       PlantTranspiration(i,_) = EplantCoh;
-      PlantWindSpeed(i,_) = Rcpp::as<Rcpp::NumericVector>(x["WindSpeed"]);
-      PlantPAR(i,_) = Rcpp::as<Rcpp::NumericVector>(x["PAR"]);
-      PlantAbsorbedSWR(i,_) = Rcpp::as<Rcpp::NumericVector>(x["AbsorbedSWR"]);
       PlantStress(i,_) = Rcpp::as<Rcpp::NumericVector>(s["DDS"]);
       PlantPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(s["psiCoh"]);
       EplantCohTot = EplantCohTot + EplantCoh;
@@ -1019,15 +1021,13 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
   PlantStress.attr("dimnames") = List::create(meteo.attr("row.names"), SP.attr("names")) ;
   
   if(verbose) Rcout<<"list ...";
-  List l = List::create(Named("TranspirationMode") = transpirationMode,
+
+  List l = List::create(Named("control") = control,
                         Named("NumSoilLayers") = nlayers,
                         Named("DailyBalance")=DWB, 
                         Named("SoilWaterBalance")=SWB,
                         Named("PlantTranspiration") = PlantTranspiration,
                         Named("PlantPhotosynthesis") = PlantPhotosynthesis,
-                        Named("PlantWindSpeed") = PlantWindSpeed,
-                        Named("PlantPAR") = PlantPAR,
-                        Named("PlantAbsorbedSWR") = PlantAbsorbedSWR,
                         Named("PlantPsi") = PlantPsi, 
                         Named("PlantStress") = PlantStress);
   l.attr("class") = CharacterVector::create("swb","list");

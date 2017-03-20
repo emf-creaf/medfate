@@ -62,7 +62,7 @@ void checkgrowthInput(List x, List soil, String transpirationMode) {
   List below = Rcpp::as<Rcpp::List>(x["below"]);
   if(!below.containsElementNamed("Z")) stop("Z missing in growthInput$below");
   if(!below.containsElementNamed("V")) stop("V missing in growthInput$below");
-  if(transpirationMode=="Sperry"){
+  if(transpirationMode=="Complex"){
     if(!below.containsElementNamed("VGrhizo_kmax")) stop("VGrhizo_kmax missing in growthInput$below");
     if(!below.containsElementNamed("VCroot_kmax")) stop("VCroot_kmax missing in growthInput$below");
   }  
@@ -87,7 +87,7 @@ void checkgrowthInput(List x, List soil, String transpirationMode) {
   if(transpirationMode=="Simple") {
     if(!paramsTransp.containsElementNamed("Psi_Extract")) stop("Psi_Extract missing in growthInput$paramsTransp");
     if(!paramsTransp.containsElementNamed("WUE")) stop("WUE missing in growthInput$paramsTransp");
-  } else if(transpirationMode=="Sperry") {
+  } else if(transpirationMode=="Complex") {
     if(!soil.containsElementNamed("VG_n")) stop("VG_n missing in soil");
     if(!soil.containsElementNamed("VG_alpha")) stop("VG_alpha missing in soil");
     
@@ -112,10 +112,12 @@ void checkgrowthInput(List x, List soil, String transpirationMode) {
 
 // [[Rcpp::export("growth")]]
 List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL) {
-  String transpirationMode = x["TranspirationMode"];
-  String storagePool = x["storagePool"];
-  bool verbose = x["verbose"];
-  bool allowEmbolism = x["allowEmbolism"];
+  //Control params
+  List control = x["control"];  
+  String transpirationMode = control["transpirationMode"];
+  String storagePool = control["storagePool"];
+  bool verbose = control["verbose"];
+  bool cavitationRefill = control["cavitationRefill"];
   checkgrowthInput(x, soil, transpirationMode);
   
   NumericVector Precipitation = meteo["Precipitation"];
@@ -123,7 +125,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   IntegerVector DOY = meteo["DOY"];
   NumericVector MinTemperature, MaxTemperature, MinRelativeHumidity, MaxRelativeHumidity, Radiation, WindSpeed, PET;
   int numDays = Precipitation.size();
-  if(transpirationMode=="Sperry") {
+  if(transpirationMode=="Complex") {
     if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
     if(NumericVector::is_na(elevation)) stop("Value for 'elevation' should not be missing.");
     MinTemperature = meteo["MinTemperature"];
@@ -173,7 +175,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   //Transpiration parameters
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
   NumericVector xylem_kmax, VCstem_kmax, Psi_Extract, VCstem_c, VCstem_d;
-  if(transpirationMode=="Sperry") {
+  if(transpirationMode=="Complex") {
     xylem_kmax = paramsTransp["xylem_kmax"];
     VCstem_kmax = paramsTransp["VCstem_kmax"];
     VCstem_c = paramsTransp["VCstem_c"];
@@ -227,9 +229,9 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   NumericMatrix PlantPsi(numDays, numCohorts);
   NumericMatrix PlantStress(numDays, numCohorts);
   NumericMatrix PlantTranspiration(numDays, numCohorts);
-  NumericMatrix PlantWindSpeed(numDays, numCohorts);
-  NumericMatrix PlantPAR(numDays, numCohorts);
-  NumericMatrix PlantAbsorbedSWR(numDays, numCohorts);
+  // NumericMatrix PlantWindSpeed(numDays, numCohorts);
+  // NumericMatrix PlantPAR(numDays, numCohorts);
+  // NumericMatrix PlantAbsorbedSWR(numDays, numCohorts);
   NumericMatrix PlantRespiration(numDays, numCohorts);
   NumericMatrix PlantCstorageFast(numDays, numCohorts);
   NumericMatrix PlantCstorageSlow(numDays, numCohorts);
@@ -283,7 +285,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
     //2. Water balance and photosynthesis
     if(transpirationMode=="Simple") {
       s = swbDay1(x, soil, MeanTemperature[i], PET[i], Precipitation[i], ER[i], 0.0, false); //No Runon in simulations for a single cell
-    } else if(transpirationMode=="Sperry") {
+    } else if(transpirationMode=="Complex") {
       std::string c = as<std::string>(dateStrings[i]);
       int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
       double delta = meteoland::radiation_solarDeclination(J);
@@ -294,7 +296,6 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
       
       PET[i] = s["PET"];
     }    
-    
     Lground[i] = s["Lground"];
     Esoil[i] = sum(Rcpp::as<Rcpp::NumericVector>(s["EsoilVec"]));
     LAIcell[i] = s["LAIcell"];
@@ -316,10 +317,10 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
     PlantStress(i,_) = Rcpp::as<Rcpp::NumericVector>(s["DDS"]);
     NumericVector psiCoh =  Rcpp::as<Rcpp::NumericVector>(s["psiCoh"]);;
     PlantPsi(i,_) = psiCoh;
-    PlantWindSpeed(i,_) = Rcpp::as<Rcpp::NumericVector>(x["WindSpeed"]);
-    PlantPAR(i,_) = Rcpp::as<Rcpp::NumericVector>(x["PAR"]);
-    PlantAbsorbedSWR(i,_) = Rcpp::as<Rcpp::NumericVector>(x["AbsorbedSWR"]);
-    
+    // PlantWindSpeed(i,_) = Rcpp::as<Rcpp::NumericVector>(x["WindSpeed"]);
+    // PlantPAR(i,_) = Rcpp::as<Rcpp::NumericVector>(x["PAR"]);
+    // PlantAbsorbedSWR(i,_) = Rcpp::as<Rcpp::NumericVector>(x["AbsorbedSWR"]);
+
     //3. Carbon balance and growth
     double B_leaf_expanded, B_stem, B_fineroot;
     for(int j=0;j<numCohorts;j++){
@@ -375,12 +376,12 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
         Psi_leafmin[j] = 0.0;
         LAI_predrought[j] = LAI_live[j];
         SAgrowthcum[j] += deltaSAgrowth; //Store cumulative SA growth (for structural variable update)
-      } else if(allowEmbolism) { //Growth is not possible, evaluate embolism
+      } else if(!cavitationRefill) { //Growth is not possible, evaluate embolism
         Psi_leafmin[j] = std::min(Psi_leafmin[j], psiCoh[j]);
         double propEmb = 0.0;
         if(transpirationMode == "Simple") {
           propEmb = 1.0-Psi2K(Psi_leafmin[j], Psi_Extract[j]);
-        } else if(transpirationMode == "Sperry") {
+        } else if(transpirationMode == "Complex") {
           propEmb = 1.0-exp(-pow(Psi_leafmin[j]/VCstem_d[j],VCstem_c[j]));
         }
         SA[j] = SA[j] - deltaSAturnover; //Update sapwood area (only turnover)
@@ -412,8 +413,8 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
         slowCstorage[j] = std::max(0.0,std::min(slowCstorage[j], slowCstorage_max[j]));
       }
       
-      //3.6 Update stem conductance (Sperry mode)
-      if(transpirationMode=="Sperry") {
+      //3.6 Update stem conductance (Complex mode)
+      if(transpirationMode=="Complex") {
         double hubberValue = (LAI_expanded[j]/(N[j]/10000.0))/(SA[j]/10000.0);
         VCstem_kmax[j]=maximumStemHydraulicConductance(xylem_kmax[j], hubberValue,H[j]);
         // Rcout<<Al2As[j]<<" "<< hubberValue<<" "<<VCstem_kmax[j]<<"\n";
@@ -519,7 +520,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   PlantStress.attr("dimnames") = List::create(meteo.attr("row.names"), SP.attr("names")) ;
   
   if(verbose) Rcout<<"list ...";
-  List l = List::create(Named("TranspirationMode") = transpirationMode,
+  List l = List::create(Named("control") = control,
                         Named("NumSoilLayers") = nlayers,
                         Named("DailyBalance")=DWB, 
                         Named("SoilWaterBalance")=SWB,
@@ -530,9 +531,9 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
                         Named("PlantCstorageSlow") = PlantCstorageSlow,
                         Named("PlantSAgrowth") = PlantSAgrowth,
                         Named("PlantSA")=PlantSA,
-                        Named("PlantWindSpeed") = PlantWindSpeed,
-                        Named("PlantPAR") = PlantPAR,
-                        Named("PlantAbsorbedSWR") = PlantAbsorbedSWR,
+                        // Named("PlantWindSpeed") = PlantWindSpeed,
+                        // Named("PlantPAR") = PlantPAR,
+                        // Named("PlantAbsorbedSWR") = PlantAbsorbedSWR,
                         Named("PlantPsi") = PlantPsi, 
                         Named("PlantStress") = PlantStress,
                         Named("PlantLAIdead") = PlantLAIdead,

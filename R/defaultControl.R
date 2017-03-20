@@ -3,8 +3,8 @@ defaultControl<-function() {
     #For all
     verbose = TRUE,
     # swb
-    transpirationMode = "Simple",
-    canopyMode = "sunshade",
+    transpirationMode = "Simple", #vs. "Complex"
+    canopyMode = "sunshade", #vs. "multilayer"
     cavitationRefill = TRUE,
     fracTotalTreeResistance = 0.625,
     averageFracRhizosphereResistance = 0.05,

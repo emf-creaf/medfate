@@ -21,7 +21,7 @@ swb(x, soil, meteo,  latitude = NA, elevation = NA, slope = NA, aspect = NA)
      \item{\code{MeanTemperature}: Mean temperature (in degrees Celsius).}
      \item{\code{PET}: Potential evapotranspiration (in mm).}
     }
-  When \code{x$TranspirationMode = "Sperry"} the following columns are required:
+  When \code{x$TranspirationMode = "Complex"} the following columns are required:
    \itemize{
      \item{\code{DOY}: Day of the year (Julian day).}
      \item{\code{Precipitation}: Precipitation (in mm).}
@@ -34,22 +34,22 @@ swb(x, soil, meteo,  latitude = NA, elevation = NA, slope = NA, aspect = NA)
      \item{\code{WindSpeed}: Wind speed (in m/s). If not available, this column can be left with \code{NA} values.}
     }
   }
-  \item{latitude}{Latitude (in degrees). Required when \code{x$TranspirationMode = "Sperry"}.}
-  \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when \code{x$TranspirationMode = "Sperry"}.}
+  \item{latitude}{Latitude (in degrees). Required when \code{x$TranspirationMode = "Complex"}.}
+  \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when \code{x$TranspirationMode = "Complex"}.}
 }
 \details{
-  Detailed model description is available in the vignettes section. The model using simple transpiration mode is described in De Caceres et al. (2015). Simulations using the 'Sperry' transpiration mode are computationally much more expensive than those using the simple transpiration mode. 
+  Detailed model description is available in the vignettes section. The model using simple transpiration mode is described in De Caceres et al. (2015). Simulations using the 'Complex' transpiration mode are computationally much more expensive than those using the simple transpiration mode. 
 }
 \value{
   A list of class 'swb' with the following elements:
   \itemize{
-  \item{\code{"TranspirationMode"}: Transpiration mode (either 'Simple' or 'Sperry').}
+  \item{\code{"control"}: Control parameters, copied from \code{\link{swbinput}}.}
   \item{\code{"NumSoilLayers"}: Number of soil layers.}
   \item{\code{"DailyBalance"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
   \itemize{
   \item{\code{"LAIcell"}: The LAI of the stand (accounting for leaf phenology) (in m2/m2).}
   \item{\code{"Cm"}: The water retention capacity of the stand (in mm) (accounting for leaf phenology).}
-  \item{\code{"Lground"}: The proportion of PAR that reaches the ground (accounting for leaf phenology).}
+  \item{\code{"Lground"}: The proportion of light that reaches the ground (accounting for leaf phenology).}
   \item{\code{"PET"}: Potential evapotranspiration (in mm).}
   \item{\code{"Rainfall"}: Input precipitation (in mm).}
   \item{\code{"NetPrec"}: Net precipitation, after accounting for interception (in mm).}
@@ -69,8 +69,9 @@ swb(x, soil, meteo,  latitude = NA, elevation = NA, slope = NA, aspect = NA)
   \item{\code{"psi.1"}, \code{...}, \code{"psi.k"}: Soil water potential in each soil layer (in MPa).}
   }
   \item{\code{"PlantTranspiration"}: A data frame with the amount of daily transpiration (in mm) for each plant cohort. Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
-  \item{\code{"PlantStress"}: A data frame with the amount of daily stress suffered by each plant cohort (relative whole-plant conductance). Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
+  \item{\code{"PlantPhotosynthesis"}: A data frame with the amount of daily net photosynthesis (in g C·m-2) for each plant cohort. Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
  \item{\code{"PlantPsi"}: A data frame with the average daily water potential of each plant (in MPa). Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
+  \item{\code{"PlantStress"}: A data frame with the amount of daily stress suffered by each plant cohort (relative whole-plant conductance). Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
   }
 }
 \references{
@@ -113,11 +114,11 @@ plot(S1)
 #Monthly summary (averages) of soil water balance
 summary(S1, freq="months",FUN=mean, output="SoilWaterBalance")
 
-# --- Simulation with Sperry transpiration mode ---
+# --- Simulation with Complex transpiration mode ---
 #Initialize soil with default soil params (2 layers)
 examplesoil2 = soil(defaultSoilParams(2))
 #Change hydraulic mode
-control$transpirationMode="Sperry"
+control$transpirationMode="Complex"
 #Initialize input
 x2 = forest2swbInput(exampleforest,examplesoil2, SpParamsMED, control)
 #Call simulation function (5 days)

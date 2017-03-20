@@ -35,7 +35,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
   NumericVector H = above["H"];
   NumericVector CR = above["CR"];
   String transpirationMode = control["transpirationMode"];
-  if((transpirationMode!="Simple") & (transpirationMode!="Sperry")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Simple' or 'Sperry')");
+  if((transpirationMode!="Simple") & (transpirationMode!="Complex")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Simple' or 'Complex')");
   double fracTotalTreeResistance = control["fracTotalTreeResistance"];
   double averageFracRhizosphereResistance = control["averageFracRhizosphereResistance"];
   String canopyMode = control["canopyMode"];
@@ -66,15 +66,16 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
     }
     DataFrame paramsTranspdf = DataFrame::create(_["Psi_Extract"]=Psi_Extract,_["WUE"] = WUE, _["pEmb"] = pEmb);
     List below = List::create(_["V"] = V);
-    input = List::create(_["verbose"] =control["verbose"],
-                         _["transpirationMode"] =transpirationMode,
-                         _["cavitationRefill"] = control["cavitationRefill"],
+    List paramsControl = List::create(_["verbose"] =control["verbose"],
+                                      _["transpirationMode"] =transpirationMode, 
+                                      _["cavitationRefill"] = control["cavitationRefill"]);
+    input = List::create(_["control"] =paramsControl,
                          _["above"] = plantsdf,
                          _["below"] = below,
                          _["paramsBase"] = paramsBasedf,
                          _["paramsTransp"] = paramsTranspdf);
     
-  } else if(transpirationMode =="Sperry"){
+  } else if(transpirationMode =="Complex"){
     NumericVector Al2AsSP = SpParams["Al2As"];
     NumericVector GwminSP = SpParams["Gwmin"];
     NumericVector GwmaxSP = SpParams["Gwmax"];
@@ -129,11 +130,12 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
     List below = List::create(_["V"] = V,
                               _["VGrhizo_kmax"] = VGrhizo_kmax,
                               _["VCroot_kmax"] = VCroot_kmax);
-    input = List::create(_["verbose"] =control["verbose"],
-                         _["transpirationMode"] =transpirationMode, 
-                         _["canopyMode"] =canopyMode, 
-                         _["cavitationRefill"] = control["cavitationRefill"],
-                         _["ndailysteps"] = control["ndailysteps"],                               
+    List paramsControl = List::create(_["verbose"] =control["verbose"],
+                                      _["transpirationMode"] =transpirationMode, 
+                                      _["canopyMode"] =canopyMode, 
+                                      _["cavitationRefill"] = control["cavitationRefill"],
+                                      _["ndailysteps"] = control["ndailysteps"]);
+    input = List::create(_["control"] = paramsControl,                              
                          _["above"] = plantsdf,
                          _["below"] = below,
                          _["paramsBase"] = paramsBasedf,
@@ -141,9 +143,9 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
   } 
   input["Transpiration"] = NumericVector(numCohorts, 0.0);
   input["Photosynthesis"] = NumericVector(numCohorts, 0.0);
-  input["WindSpeed"] = NumericVector(numCohorts, 0.0);
-  input["PAR"] = NumericVector(numCohorts, 0.0);
-  input["AbsorbedSWR"] = NumericVector(numCohorts, 0.0);
+  // input["WindSpeed"] = NumericVector(numCohorts, 0.0);
+  // input["PAR"] = NumericVector(numCohorts, 0.0);
+  // input["AbsorbedSWR"] = NumericVector(numCohorts, 0.0);
   input.attr("class") = CharacterVector::create("swbInput","list");
   // df.attr("row.names") = seq(1,numCohorts);
   return(input);
@@ -192,7 +194,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   NumericVector H = above["H"];
   NumericVector CR = above["CR"];
   String transpirationMode = control["transpirationMode"];
-  if((transpirationMode!="Simple") & (transpirationMode!="Sperry")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Simple' or 'Sperry')");
+  if((transpirationMode!="Simple") & (transpirationMode!="Complex")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Simple' or 'Complex')");
   String storagePool = control["storagePool"];
   if((storagePool!="none") & (storagePool!="one")& (storagePool!="two")) stop("Wrong storage pool ('storagePool' should be 'none', 'one' or 'two')");
   String canopyMode = control["canopyMode"];
@@ -330,18 +332,20 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     NumericVector WUESP = SpParams["WUE"];
     NumericVector WUE(numCohorts);
     NumericVector Psi_ExtractSP = SpParams["Psi_Extract"];
+    NumericVector pEmb(numCohorts,0.0);
     NumericVector Psi_Extract(numCohorts);
     for(int c=0;c<numCohorts;c++){
       Psi_Extract[c]=Psi_ExtractSP[SP[c]];
       WUE[c]=WUESP[SP[c]];
     }
-    DataFrame paramsTranspdf = DataFrame::create(_["Psi_Extract"]=Psi_Extract,_["WUE"] = WUE);
+    
+    DataFrame paramsTranspdf = DataFrame::create(_["Psi_Extract"]=Psi_Extract,_["WUE"] = WUE,_["pEmb"] = pEmb);
     List below = List::create( _["Z"]=Z,_["V"] = V);
-    input = List::create(_["verbose"] =control["verbose"],
-                         _["transpirationMode"] =transpirationMode, 
-                         _["canopyMode"] =canopyMode,
-                         _["storagePool"] = storagePool,
-                         _["allowEmbolism"] =control["allowEmbolism"],
+    List paramsControl = List::create(_["verbose"] =control["verbose"],
+                                      _["transpirationMode"] =transpirationMode, 
+                                      _["cavitationRefill"] = control["cavitationRefill"],
+                                      _["storagePool"] = storagePool);
+    input = List::create(_["control"] = paramsControl,
                          _["above"] = plantsdf,
                          _["below"] = below,
                          _["paramsBase"] = paramsBasedf,
@@ -349,7 +353,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                          _["paramsGrowth"]= paramsGrowthdf,
                          _["paramsAllometries"] = paramsAllometriesdf);
     
-  } else if(transpirationMode =="Sperry"){
+  } else if(transpirationMode =="Complex"){
     NumericVector GwminSP = SpParams["Gwmin"];
     NumericVector GwmaxSP = SpParams["Gwmax"];
     NumericVector xylem_kmaxSP = SpParams["xylem_kmax"];
@@ -364,6 +368,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     NumericVector VCstem_c(numCohorts), VCstem_d(numCohorts);
     NumericVector VCroot_c(numCohorts), VCroot_d(numCohorts);
     NumericVector Vmax298(numCohorts), Jmax298(numCohorts);
+    NumericVector pEmb(numCohorts,0.0);
     NumericVector dVec = soil["dVec"];
     NumericVector VG_alpha = soil["VG_alpha"];
     NumericVector VG_n = soil["VG_n"];
@@ -398,15 +403,17 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     DataFrame paramsTranspdf = DataFrame::create(
       _["Gwmin"]=Gwmin, _["Gwmax"]=Gwmax, _["Vmax298"]=Vmax298,
       _["Jmax298"]=Jmax298,_["VCroot_c"]=VCroot_c,_["VCroot_d"]=VCroot_d,_["xylem_kmax"] = xylem_kmax,
-      _["VCstem_kmax"]=VCstem_kmax,_["VCstem_c"]=VCstem_c,_["VCstem_d"]=VCstem_d);
+      _["VCstem_kmax"]=VCstem_kmax,_["VCstem_c"]=VCstem_c,_["VCstem_d"]=VCstem_d,_["pEmb"] = pEmb);
     List below = List::create( _["Z"]=Z,_["V"] = V,
                               _["VGrhizo_kmax"] = VGrhizo_kmax,
                               _["VCroot_kmax"] = VCroot_kmax);
-    input = List::create(_["verbose"] =control["verbose"],
-                         _["TranspirationMode"] =transpirationMode, 
-                         _["storagePool"] = storagePool,
-                         _["allowEmbolism"] =control["allowEmbolism"],
-                         _["ndailysteps"] = control["ndailysteps"],                               
+    List paramsControl = List::create(_["verbose"] =control["verbose"],
+                                      _["transpirationMode"] =transpirationMode, 
+                                      _["canopyMode"] = canopyMode,
+                                      _["ndailysteps"] = control["ndailysteps"], 
+                                      _["cavitationRefill"] = control["cavitationRefill"],
+                                      _["storagePool"] = storagePool);
+    input = List::create(_["control"] =paramsControl,
                          _["above"] = plantsdf,
                    _["below"] = below,
                    _["paramsBase"] = paramsBasedf,
