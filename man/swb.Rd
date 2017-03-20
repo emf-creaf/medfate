@@ -5,7 +5,7 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Soil water balance model}
 \description{
-Function \code{swb} is a soil water balance model that determines changes in soil moisture, soil water potentials and plant drought stress at daily steps for a given forest stand during a period specified in the input climatic data. 
+Function \code{swb} is a soil water balance model that determines changes in soil moisture, soil water potentials and plant transpirationa nd drought stress at daily steps for a given forest stand during a period specified in the input climatic data. Additionally, the function also calculates plant net photosynthesis. Transpiration and photosynthesis processes are conducted with different level of detail depending on the transpiration mode.
 }
 \usage{
 swb(x, soil, meteo,  latitude = NA, elevation = NA, slope = NA, aspect = NA) 
@@ -14,14 +14,14 @@ swb(x, soil, meteo,  latitude = NA, elevation = NA, slope = NA, aspect = NA)
 \arguments{
   \item{x}{An object of class \code{\link{swbInput}}.}
   \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
-  \item{meteo}{A data frame with daily meteorological data series. When  \code{x$TranspirationMode = "Simple"} the following columns are required:
+  \item{meteo}{A data frame with daily meteorological data series. When using the 'Simple' transpiration mode the following columns are required:
    \itemize{
      \item{\code{DOY}: Day of the year (Julian day).}
      \item{\code{Precipitation}: Precipitation (in mm).}
      \item{\code{MeanTemperature}: Mean temperature (in degrees Celsius).}
      \item{\code{PET}: Potential evapotranspiration (in mm).}
     }
-  When \code{x$TranspirationMode = "Complex"} the following columns are required:
+  When using the 'Complex' transpiration mode the following columns are required:
    \itemize{
      \item{\code{DOY}: Day of the year (Julian day).}
      \item{\code{Precipitation}: Precipitation (in mm).}
@@ -34,16 +34,16 @@ swb(x, soil, meteo,  latitude = NA, elevation = NA, slope = NA, aspect = NA)
      \item{\code{WindSpeed}: Wind speed (in m/s). If not available, this column can be left with \code{NA} values.}
     }
   }
-  \item{latitude}{Latitude (in degrees). Required when \code{x$TranspirationMode = "Complex"}.}
-  \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when \code{x$TranspirationMode = "Complex"}.}
+  \item{latitude}{Latitude (in degrees). Required when using the 'Complex' transpiration mode.}
+  \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when using the 'Complex' transpiration mode.}
 }
 \details{
-  Detailed model description is available in the vignettes section. The model using simple transpiration mode is described in De Caceres et al. (2015). Simulations using the 'Complex' transpiration mode are computationally much more expensive than those using the simple transpiration mode. 
+  Detailed model description is available in the vignettes section. The model using 'Simple' transpiration mode is described in De Caceres et al. (2015). Simulations using the 'Complex' transpiration mode are computationally much more expensive. 
 }
 \value{
   A list of class 'swb' with the following elements:
   \itemize{
-  \item{\code{"control"}: Control parameters, copied from \code{\link{swbinput}}.}
+  \item{\code{"control"}: Control parameters, copied from \code{\link{swbInput}}.}
   \item{\code{"NumSoilLayers"}: Number of soil layers.}
   \item{\code{"DailyBalance"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
   \itemize{
@@ -81,10 +81,10 @@ De \enc{Cáceres}{Caceres} M, \enc{Martínez}{Martinez}-Vilalta J, Coll L, Llore
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 \note{
-Objects \code{x} and \code{soil} are modified during the simulation. Daily transpiration values are stored in column \code{Transpiration} of object \code{x}. Water content relative to field capacity (vector \code{W}) of \code{soil} is also modified.  
+Objects \code{x} and \code{soil} are modified during the simulation. Daily transpiration and photosynthesis values are stored in columns \code{Transpiration} and \code{Photosynthesis} of object \code{x}. Water content relative to field capacity (vector \code{W}) of \code{soil} is also modified.  
 }
 \seealso{
-\code{\link{swbInput}}, \code{\link{plot.swb}},  \code{\link{swbpoints}}, \code{\link{swbgrid}},\code{\link{forest}}
+\code{\link{swbInput}}, \code{\link{plot.swb}},  \code{\link{swbpoints}}, \code{\link{swbgrid}}, \code{\link{forest}}
 }
 \examples{
 #Load example daily meteorological data
@@ -103,10 +103,10 @@ examplesoil = soil(defaultSoilParams(2))
 control = defaultControl()
 
 #Initialize input
-x = forest2swbInput(exampleforest,examplesoil, SpParamsMED, control)
+x1 = forest2swbInput(exampleforest,examplesoil, SpParamsMED, control)
 
 #Call simulation function
-S1<-swb(x, examplesoil, examplemeteo)
+S1<-swb(x1, examplesoil, examplemeteo)
         
 #Plot results
 plot(S1)
@@ -114,13 +114,17 @@ plot(S1)
 #Monthly summary (averages) of soil water balance
 summary(S1, freq="months",FUN=mean, output="SoilWaterBalance")
 
-# --- Simulation with Complex transpiration mode ---
+
+
 #Initialize soil with default soil params (2 layers)
 examplesoil2 = soil(defaultSoilParams(2))
-#Change hydraulic mode
+
+#Switch to 'Complex' transpiration mode
 control$transpirationMode="Complex"
+
 #Initialize input
 x2 = forest2swbInput(exampleforest,examplesoil2, SpParamsMED, control)
+
 #Call simulation function (5 days)
 S2<-swb(x2, examplesoil2, examplemeteo[100:105,], latitude = 0.73, elevation = 100)
 

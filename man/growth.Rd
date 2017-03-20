@@ -22,7 +22,7 @@ growth(x, soil, meteo,  latitude = NA, elevation = NA, slope = NA, aspect = NA)
      \item{\code{PET}: Potential evapotranspiration (in mm).}
      \item{\code{WindSpeed}: Wind speed (in m/s). If not available, this column can be left with \code{NA} values.}
     }
-  When \code{x$TranspirationMode = "Sperry"} the following columns are required:
+  When \code{x$TranspirationMode = "Complex"} the following columns are required:
    \itemize{
      \item{\code{DOY}: Day of the year (Julian day).}
      \item{\code{Precipitation}: Precipitation (in mm).}
@@ -35,16 +35,16 @@ growth(x, soil, meteo,  latitude = NA, elevation = NA, slope = NA, aspect = NA)
      \item{\code{WindSpeed}: Wind speed (in m/s). If not available, this column can be left with \code{NA} values.}
     }
   }
-  \item{latitude}{Latitude (in degrees). Required when \code{x$TranspirationMode = "Sperry"}.}
-  \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when \code{x$TranspirationMode = "Sperry"}.}
+  \item{latitude}{Latitude (in degrees). Required when \code{x$TranspirationMode = "Complex"}.}
+  \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when \code{x$TranspirationMode = "Complex"}.}
 }
 \details{
-  Detailed model description is available in the vignettes section. Simulations using the 'Sperry' transpiration mode are computationally much more expensive than those using the simple transpiration mode. 
+  Detailed model description is available in the vignettes section. Simulations using the 'Complex' transpiration mode are computationally much more expensive than those using the simple transpiration mode. 
 }
 \value{
   A list of class 'growth' with the following elements:
   \itemize{
-  \item{\code{"TranspirationMode"}: Transpiration mode (either 'Simple' or 'Sperry').}
+  \item{\code{"control"}: Control parameters, copied from \code{\link{growthInput}}.}
   \item{\code{"NumSoilLayers"}: Number of soil layers.}
   \item{\code{"DailyBalance"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
   \itemize{

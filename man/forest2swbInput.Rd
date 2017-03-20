@@ -31,7 +31,7 @@ swbInput(above,  V,  soil, SpParams, control)
   
 }
 \details{
-Functions \code{forest2swbInput} and \code{forest2abovegroundInput} extracts height and species identity from plant cohorts of \code{x}, and calculate leaf area index and crown ratio.\code{forest2swbInput} also calculates the distribution of fine roots across soil. Both \code{forest2swbInput} and \code{swbInput} find parameter values for each plant cohort according to the parameters of its species as specified in \code{SpParams}. If \code{control$transpirationMode = "Sperry"} the functions also estimate the maximum conductance of rhizosphere, root xylem and stem xylem elements.
+Functions \code{forest2swbInput} and \code{forest2abovegroundInput} extracts height and species identity from plant cohorts of \code{x}, and calculate leaf area index and crown ratio.\code{forest2swbInput} also calculates the distribution of fine roots across soil. Both \code{forest2swbInput} and \code{swbInput} find parameter values for each plant cohort according to the parameters of its species as specified in \code{SpParams}. If \code{control$transpirationMode = "Complex"} the functions also estimate the maximum conductance of rhizosphere, root xylem and stem xylem elements.
 }
 \value{
 Function \code{forest2aboveground} returns a data frame with the following columns:
@@ -47,14 +47,13 @@ Function \code{forest2aboveground} returns a data frame with the following colum
 
 Functions \code{forest2swbInput} and \code{swbInput} return a list of class \code{swbInput} with the following elements:
 \itemize{
-  \item{\code{verbose}: Boolean flag to indicate extra console output.}
-  \item{\code{TranspirationMode}: Transpiration mode (either 'Simple' or 'Sperry').}
+  \item{\code{control}: List with control parameters (see \code{\link{defaultControl}}).}
   \item{\code{above}: A data frame with columns \code{SP}, \code{H}, \code{CR} and \code{LAI} (see function \code{forest2aboveground}).}
   \item{\code{below}: A list. If \code{control$transpirationMode = "Simple"} it contains a single element: 
      \itemize{
         \item{\code{V}: A matrix with the proportion of fine roots of each cohort (in rows) in each soil layer (in columns).}
      }
-     If \code{control$transpirationMode = "Sperry"} there are the following additional elements:
+     If \code{control$transpirationMode = "Complex"} there are the following additional elements:
      \itemize{
         \item{\code{VGrhizo_kmax}: A matrix with maximum rhizosphere conductance values of each cohort (in rows) in each soil layer (in columns).}
         \item{\code{VGroot_kmax}: A matrix with maximum root xylem conductance values of each cohort (in rows) in each soil layer (in columns).}
@@ -72,7 +71,7 @@ Functions \code{forest2swbInput} and \code{swbInput} return a list of class \cod
        \item{\code{Psi_Extract}: Water potential corresponding to 50\% relative conductance (in MPa).}
        \item{\code{WUE}: Water use efficiency for carbon assimilation (g C/mm water).} 
     }
-    If \code{control$transpirationMode = "Sperry"} columns are:
+    If \code{control$transpirationMode = "Complex"} columns are:
     \itemize{
        \item{\code{Gwmax}: Maximum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
        \item{\code{Vmax298}: Maximum Rubisco carboxilation rate at 25ºC (in micromol CO2·s-1·m-2).}
@@ -133,8 +132,8 @@ forest2swbInput(exampleforest,examplesoil,SpParamsMED, control)
 forest2growthInput(exampleforest,examplesoil,SpParamsMED, control)
 
 
-#Prepare input for Sperry hydraulic mode
-control$transpirationMode = "Sperry"
+#Prepare input for Complex hydraulic mode
+control$transpirationMode = "Complex"
 
 forest2swbInput(exampleforest,examplesoil,SpParamsMED, control)
 }
