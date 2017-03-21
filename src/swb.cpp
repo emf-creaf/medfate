@@ -81,7 +81,6 @@ List swbDay1(List x, List soil, double tday, double pet, double rain, double er,
 
   //Control parameters
   List control = x["control"];
-  
   bool cavitationRefill = control["cavitationRefill"];
 
   
@@ -131,8 +130,8 @@ List swbDay1(List x, List soil, double tday, double pet, double rain, double er,
   double s = 0.0, LAIcell = 0.0, Cm = 0.0;
   for(int c=0;c<numCohorts;c++) {
     Phe[c]=LAIphe[c]/LAIlive[c]; //Phenological status
-    s += (kPAR[c]*LAIphe[c]);
-    LAIcell += LAIphe[c];
+    s += (kPAR[c]*(LAIphe[c]+LAIdead[c]));
+    LAIcell += LAIphe[c]+LAIdead[c];
     Cm += (LAIphe[c]+LAIdead[c])*gRainIntercept[c]; //LAI dead also counts on interception
   }
   NumericVector CohASWRF = cohortAbsorbedSWRFraction(LAIphe,  LAIdead, H, CR, kPAR);
@@ -648,8 +647,10 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
 List swbDay(List x, List soil, CharacterVector date, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
             double latitude, double elevation, double slope, double aspect,  
             double rain, double er, double runon=0.0) {
-  bool verbose = x["verbose"];
-  String transpirationMode = x["transpirationMode"];
+  //Control parameters
+  List control = x["control"];
+  bool verbose = control["verbose"];
+  String transpirationMode = control["transpirationMode"];
   std::string c = as<std::string>(date[0]);
   int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
   double delta = meteoland::radiation_solarDeclination(J);
