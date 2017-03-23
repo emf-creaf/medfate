@@ -172,6 +172,10 @@ double xylemConductance(double psi, double kxylemmax, double c, double d) {
   return(kxylemmax*exp(-pow(psi/d,c)));
 }
 
+// [[Rcpp::export("hydraulics.xylemPsi")]]
+double xylemPsi(double kxylem, double kxylemmax, double c, double d) {
+  return(d*pow(-log(kxylem/kxylemmax),1.0/c));
+}
 
 // [[Rcpp::export(".Egamma")]]
 double Egamma(double psi, double kxylemmax, double c, double d, double psiCav = 0.0) {

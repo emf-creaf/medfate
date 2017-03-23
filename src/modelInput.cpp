@@ -57,14 +57,14 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
   if(transpirationMode=="Simple") {
     NumericVector WUESP = SpParams["WUE"];
     NumericVector WUE(numCohorts);
-    NumericVector pEmb(numCohorts,0.0);
     NumericVector Psi_ExtractSP = SpParams["Psi_Extract"];
     NumericVector Psi_Extract(numCohorts);
+    NumericVector pRootDisc(numCohorts,0.0);
     for(int c=0;c<numCohorts;c++){
       Psi_Extract[c]=Psi_ExtractSP[SP[c]];
       WUE[c]=WUESP[SP[c]];
     }
-    DataFrame paramsTranspdf = DataFrame::create(_["Psi_Extract"]=Psi_Extract,_["WUE"] = WUE, _["pEmb"] = pEmb);
+    DataFrame paramsTranspdf = DataFrame::create(_["Psi_Extract"]=Psi_Extract,_["WUE"] = WUE,  _["pRootDisc"] = pRootDisc);
     List below = List::create(_["V"] = V);
     List paramsControl = List::create(_["verbose"] =control["verbose"],
                                       _["transpirationMode"] =transpirationMode, 
@@ -88,7 +88,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
     NumericVector Gwmax(numCohorts), Gwmin(numCohorts);
     NumericVector xylem_kmax(numCohorts), Al2As(numCohorts);
     NumericVector VCstem_kmax(numCohorts);
-    NumericVector pEmb(numCohorts,0.0);
+    NumericVector pRootDisc(numCohorts,0.0);
     NumericVector VCstem_c(numCohorts), VCstem_d(numCohorts);
     NumericVector VCroot_c(numCohorts), VCroot_d(numCohorts);
     NumericVector Vmax298(numCohorts), Jmax298(numCohorts);
@@ -126,7 +126,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
     DataFrame paramsTranspdf = DataFrame::create(
       _["Gwmin"]=Gwmin, _["Gwmax"]=Gwmax, _["Vmax298"]=Vmax298,
       _["Jmax298"]=Jmax298,_["VCroot_c"]=VCroot_c,_["VCroot_d"]=VCroot_d,_["xylem_kmax"] = xylem_kmax,
-      _["VCstem_kmax"]=VCstem_kmax,_["VCstem_c"]=VCstem_c,_["VCstem_d"]=VCstem_d, _["pEmb"] = pEmb);
+      _["VCstem_kmax"]=VCstem_kmax,_["VCstem_c"]=VCstem_c,_["VCstem_d"]=VCstem_d, _["pRootDisc"] = pRootDisc);
     List below = List::create(_["V"] = V,
                               _["VGrhizo_kmax"] = VGrhizo_kmax,
                               _["VCroot_kmax"] = VCroot_kmax);
@@ -143,6 +143,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
   } 
   input["Transpiration"] = NumericVector(numCohorts, 0.0);
   input["Photosynthesis"] = NumericVector(numCohorts, 0.0);
+  input["ProportionCavitated"] = NumericVector(numCohorts, 0.0);
   // input["WindSpeed"] = NumericVector(numCohorts, 0.0);
   // input["PAR"] = NumericVector(numCohorts, 0.0);
   // input["AbsorbedSWR"] = NumericVector(numCohorts, 0.0);
@@ -332,14 +333,14 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     NumericVector WUESP = SpParams["WUE"];
     NumericVector WUE(numCohorts);
     NumericVector Psi_ExtractSP = SpParams["Psi_Extract"];
-    NumericVector pEmb(numCohorts,0.0);
+    NumericVector pRootDisc(numCohorts,0.0);
     NumericVector Psi_Extract(numCohorts);
     for(int c=0;c<numCohorts;c++){
       Psi_Extract[c]=Psi_ExtractSP[SP[c]];
       WUE[c]=WUESP[SP[c]];
     }
     
-    DataFrame paramsTranspdf = DataFrame::create(_["Psi_Extract"]=Psi_Extract,_["WUE"] = WUE,_["pEmb"] = pEmb);
+    DataFrame paramsTranspdf = DataFrame::create(_["Psi_Extract"]=Psi_Extract,_["WUE"] = WUE, _["pRootDisc"] = pRootDisc);
     List below = List::create( _["Z"]=Z,_["V"] = V);
     List paramsControl = List::create(_["verbose"] =control["verbose"],
                                       _["transpirationMode"] =transpirationMode, 
@@ -368,7 +369,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     NumericVector VCstem_c(numCohorts), VCstem_d(numCohorts);
     NumericVector VCroot_c(numCohorts), VCroot_d(numCohorts);
     NumericVector Vmax298(numCohorts), Jmax298(numCohorts);
-    NumericVector pEmb(numCohorts,0.0);
+    NumericVector pRootDisc(numCohorts,0.0);
     NumericVector dVec = soil["dVec"];
     NumericVector VG_alpha = soil["VG_alpha"];
     NumericVector VG_n = soil["VG_n"];
@@ -403,7 +404,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     DataFrame paramsTranspdf = DataFrame::create(
       _["Gwmin"]=Gwmin, _["Gwmax"]=Gwmax, _["Vmax298"]=Vmax298,
       _["Jmax298"]=Jmax298,_["VCroot_c"]=VCroot_c,_["VCroot_d"]=VCroot_d,_["xylem_kmax"] = xylem_kmax,
-      _["VCstem_kmax"]=VCstem_kmax,_["VCstem_c"]=VCstem_c,_["VCstem_d"]=VCstem_d,_["pEmb"] = pEmb);
+      _["VCstem_kmax"]=VCstem_kmax,_["VCstem_c"]=VCstem_c,_["VCstem_d"]=VCstem_d, _["pRootDisc"] = pRootDisc);
     List below = List::create( _["Z"]=Z,_["V"] = V,
                               _["VGrhizo_kmax"] = VGrhizo_kmax,
                               _["VCroot_kmax"] = VCroot_kmax);
@@ -423,6 +424,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   } 
   input["Transpiration"] = NumericVector(numCohorts, 0.0);
   input["Photosynthesis"] = NumericVector(numCohorts, 0.0);
+  input["ProportionCavitated"] = NumericVector(numCohorts, 0.0);
   // input["WindSpeed"] = NumericVector(numCohorts, 0.0);
   // input["PAR"] = NumericVector(numCohorts, 0.0);
   // input["AbsorbedSWR"] = NumericVector(numCohorts, 0.0);

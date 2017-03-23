@@ -931,6 +931,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// xylemPsi
+double xylemPsi(double kxylem, double kxylemmax, double c, double d);
+RcppExport SEXP medfate_xylemPsi(SEXP kxylemSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type kxylem(kxylemSEXP);
+    Rcpp::traits::input_parameter< double >::type kxylemmax(kxylemmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type c(cSEXP);
+    Rcpp::traits::input_parameter< double >::type d(dSEXP);
+    rcpp_result_gen = Rcpp::wrap(xylemPsi(kxylem, kxylemmax, c, d));
+    return rcpp_result_gen;
+END_RCPP
+}
 // Egamma
 double Egamma(double psi, double kxylemmax, double c, double d, double psiCav);
 RcppExport SEXP medfate_Egamma(SEXP psiSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP, SEXP psiCavSEXP) {

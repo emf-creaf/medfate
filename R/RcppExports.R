@@ -273,6 +273,10 @@ hydraulics.xylemConductance <- function(psi, kxylemmax, c, d) {
     .Call('medfate_xylemConductance', PACKAGE = 'medfate', psi, kxylemmax, c, d)
 }
 
+hydraulics.xylemPsi <- function(kxylem, kxylemmax, c, d) {
+    .Call('medfate_xylemPsi', PACKAGE = 'medfate', kxylem, kxylemmax, c, d)
+}
+
 .Egamma <- function(psi, kxylemmax, c, d, psiCav = 0.0) {
     .Call('medfate_Egamma', PACKAGE = 'medfate', psi, kxylemmax, c, d, psiCav)
 }

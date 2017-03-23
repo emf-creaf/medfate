@@ -84,6 +84,7 @@ void checkgrowthInput(List x, List soil, String transpirationMode) {
   
   if(!x.containsElementNamed("paramsTransp")) stop("paramsTransp missing in growthInput");
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
+  if(!paramsTransp.containsElementNamed("pRootDisc")) stop("pRootDisc missing in swbInput$paramsTransp");
   if(transpirationMode=="Simple") {
     if(!paramsTransp.containsElementNamed("Psi_Extract")) stop("Psi_Extract missing in growthInput$paramsTransp");
     if(!paramsTransp.containsElementNamed("WUE")) stop("WUE missing in growthInput$paramsTransp");
