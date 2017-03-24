@@ -59,10 +59,12 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
     NumericVector WUE(numCohorts);
     NumericVector Psi_ExtractSP = SpParams["Psi_Extract"];
     NumericVector Psi_Extract(numCohorts);
-    NumericVector pRootDisc(numCohorts,0.0);
+    NumericVector pRootDiscSP = SpParams["pRootDisc"];
+    NumericVector pRootDisc(numCohorts);
     for(int c=0;c<numCohorts;c++){
       Psi_Extract[c]=Psi_ExtractSP[SP[c]];
       WUE[c]=WUESP[SP[c]];
+      pRootDisc[c]=pRootDiscSP[SP[c]];
     }
     DataFrame paramsTranspdf = DataFrame::create(_["Psi_Extract"]=Psi_Extract,_["WUE"] = WUE,  _["pRootDisc"] = pRootDisc);
     List below = List::create(_["V"] = V);
@@ -88,7 +90,8 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
     NumericVector Gwmax(numCohorts), Gwmin(numCohorts);
     NumericVector xylem_kmax(numCohorts), Al2As(numCohorts);
     NumericVector VCstem_kmax(numCohorts);
-    NumericVector pRootDisc(numCohorts,0.0);
+    NumericVector pRootDiscSP = SpParams["pRootDisc"];
+    NumericVector pRootDisc(numCohorts);
     NumericVector VCstem_c(numCohorts), VCstem_d(numCohorts);
     NumericVector VCroot_c(numCohorts), VCroot_d(numCohorts);
     NumericVector Vmax298(numCohorts), Jmax298(numCohorts);
@@ -109,6 +112,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
       VCstem_d[c]=VCstem_dSP[SP[c]];
       VCroot_c[c]=VCroot_cSP[SP[c]];
       VCroot_d[c]=VCroot_dSP[SP[c]];
+      pRootDisc[c]=pRootDiscSP[SP[c]];
       Gwmin[c] = GwminSP[SP[c]];
       Gwmax[c] = GwmaxSP[SP[c]];
       double VCroot_kmaxc = 1.0/((1.0/(VCstem_kmax[c]*fracTotalTreeResistance))-(1.0/VCstem_kmax[c]));
@@ -271,12 +275,9 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     fHDmax[c] = fHDmaxSP[SP[c]];
     fHDmin[c] = fHDminSP[SP[c]];
   }
-  NumericVector SA(numCohorts), LAI_predrought(numCohorts);
-  NumericVector Psi_leafmin(numCohorts);
+  NumericVector SA(numCohorts);
   for(int c=0;c<numCohorts;c++){
     SA[c] = 10000.0*(LAI_live[c]/(N[c]/10000.0))/Al2AsSP[SP[c]];//Individual SA in cm2/m2
-    LAI_predrought[c] = LAI_live[c];
-    Psi_leafmin[c] = 0.0;
   }
   DataFrame plantsdf, paramsGrowthdf;
   if(storagePool=="one") {
@@ -288,8 +289,6 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     }
     plantsdf = DataFrame::create(_["SP"]=SP, _["N"]=N,_["DBH"]=DBH, _["Cover"] = Cover, _["H"]=H, _["CR"]=CR,
                                    _["LAI_live"]=LAI_live, _["LAI_expanded"]=LAI_expanded, _["LAI_dead"] = LAI_dead,  
-                                   _["LAI_predrought"] = LAI_predrought,
-                                   _["Psi_leafmin"] = Psi_leafmin,
                                    _["SA"] = SA, _["fastCstorage"] = fastCstorage);
     paramsGrowthdf = DataFrame::create(_["SLA"] = SLA, _["Al2As"] = Al2As,
                                        _["WoodDens"] = WoodDens, _["WoodC"] = WoodC,
@@ -304,8 +303,6 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     }
     plantsdf = DataFrame::create(_["SP"]=SP, _["N"]=N,_["DBH"]=DBH, _["Cover"] = Cover, _["H"]=H, _["CR"]=CR,
                                  _["LAI_live"]=LAI_live, _["LAI_expanded"]=LAI_expanded, _["LAI_dead"] = LAI_dead,  
-                                   _["LAI_predrought"] = LAI_predrought,
-                                   _["Psi_leafmin"] = Psi_leafmin,
                                    _["SA"] = SA, _["fastCstorage"] = fastCstorage, _["slowCstorage"] = slowCstorage);
     paramsGrowthdf = DataFrame::create(_["SLA"] = SLA, _["Al2As"] = Al2As,
                                        _["WoodDens"] = WoodDens, _["WoodC"] = WoodC,
@@ -313,8 +310,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   } else {
     plantsdf = DataFrame::create(_["SP"]=SP, _["N"]=N,_["DBH"]=DBH, _["Cover"] = Cover, _["H"]=H, _["CR"]=CR,
                                  _["LAI_live"]=LAI_live, _["LAI_expanded"]=LAI_expanded, _["LAI_dead"] = LAI_dead,  
-                                   _["LAI_predrought"] = LAI_predrought,
-                                   _["Psi_leafmin"] = Psi_leafmin, _["SA"] = SA);
+                                 _["SA"] = SA);
     paramsGrowthdf = DataFrame::create(_["SLA"] = SLA, _["Al2As"] = Al2As,
                                                  _["WoodDens"] = WoodDens, _["WoodC"] = WoodC,
                                                  _["RGRmax"] = RGRmax);
@@ -333,11 +329,13 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     NumericVector WUESP = SpParams["WUE"];
     NumericVector WUE(numCohorts);
     NumericVector Psi_ExtractSP = SpParams["Psi_Extract"];
-    NumericVector pRootDisc(numCohorts,0.0);
     NumericVector Psi_Extract(numCohorts);
+    NumericVector pRootDiscSP = SpParams["pRootDisc"];
+    NumericVector pRootDisc(numCohorts);
     for(int c=0;c<numCohorts;c++){
       Psi_Extract[c]=Psi_ExtractSP[SP[c]];
       WUE[c]=WUESP[SP[c]];
+      pRootDisc[c]=pRootDiscSP[SP[c]];
     }
     
     DataFrame paramsTranspdf = DataFrame::create(_["Psi_Extract"]=Psi_Extract,_["WUE"] = WUE, _["pRootDisc"] = pRootDisc);
@@ -369,7 +367,8 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     NumericVector VCstem_c(numCohorts), VCstem_d(numCohorts);
     NumericVector VCroot_c(numCohorts), VCroot_d(numCohorts);
     NumericVector Vmax298(numCohorts), Jmax298(numCohorts);
-    NumericVector pRootDisc(numCohorts,0.0);
+    NumericVector pRootDiscSP = SpParams["pRootDisc"];
+    NumericVector pRootDisc(numCohorts);
     NumericVector dVec = soil["dVec"];
     NumericVector VG_alpha = soil["VG_alpha"];
     NumericVector VG_n = soil["VG_n"];
@@ -389,6 +388,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
       VCroot_d[c]=VCroot_dSP[SP[c]];
       Gwmin[c] = GwminSP[SP[c]];
       Gwmax[c] = GwmaxSP[SP[c]];
+      pRootDisc[c]=pRootDiscSP[SP[c]];
       double VCroot_kmaxc = 1.0/((1.0/(VCstem_kmax[c]*fracTotalTreeResistance))-(1.0/VCstem_kmax[c]));
       VCroot_kmax(c,_) = VCroot_kmaxc*xylemConductanceProportions(Vc,dVec);
       Vmax298[c] =Vmax298SP[SP[c]];

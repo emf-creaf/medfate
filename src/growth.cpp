@@ -12,10 +12,12 @@ using namespace Rcpp;
 const double leafCperDry = 0.3; //g C · g dry-1
 const double rootCperDry = 0.4959; //g C · g dry-1
 
-const double leaf_RR = 0.004; 
-const double stem_RR = 0.001;
+const double leaf_RR = 0.008; 
+const double stem_RR = 0.0005;
 const double root_RR = 0.005;
 const double Q10_resp = 2.0;
+
+const double growthCarbonConcentrationThreshold = 0.5;
 
 const double dailySAturnoverProportion = 0.0001261398; //Equivalent to annual 4.5% 1-(1-0.045)^(1.0/365)
 
@@ -25,13 +27,12 @@ NumericVector carbonCompartments(double SA, double LAI, double H, double Z, doub
   double B_fineroot = B_leaf/2.5;
   return(NumericVector::create(B_leaf, B_stem, B_fineroot)); 
 }
-double dailyRespiration(double B_leaf,double B_stem,double B_root, double Tmean) {
-  double q = pow(Q10_resp,(Tmean-20.0)/10.0);
-  return((B_leaf*leaf_RR + B_stem*stem_RR + B_root*root_RR)*q);
+double qResp(double Tmean) {
+  return(pow(Q10_resp,(Tmean-20.0)/10.0));
 }
 
 double storageTransferRelativeRate(double fastCstorage, double fastCstoragemax) {
-  double f = ((2.0/(1.0+exp(-5.0*((fastCstorage/fastCstoragemax)-0.5)/0.5)))-1.0);
+  double f = ((2.0/(1.0+exp(-5.0*((fastCstorage/fastCstoragemax)-growthCarbonConcentrationThreshold)/growthCarbonConcentrationThreshold)))-1.0);
   return(f);
 }
 double temperatureGrowthFactor(double Tmean) {
@@ -42,7 +43,18 @@ double temperatureGrowthFactor(double Tmean) {
   return(std::min(std::max(f,0.0),1.0));
 }
 double turgorGrowthFactor(double psi, double psi_tlp) {
-  return(std::max(0.0,1.0 - pow(exp((psi/psi_tlp)-1),5.0)));
+  return(std::max(0.0,1.0 - pow(exp((psi/psi_tlp)-1.0),5.0)));
+}
+
+double carbonGrowthFactor(double conc, double threshold) {
+  double k =10.0;
+  return(std::max(0.0,(1.0 - exp(k*(threshold-conc)))/(1.0 - exp(k*(-conc)))));
+}
+
+// [[Rcpp::export("growth.defoliationFraction")]]
+double defoliationFraction(double conc, double threshold) {
+  double k =-10.0;
+  return(std::max(0.0,(exp(k*conc)-exp(k*threshold))/(1.0-exp(k*threshold))));
 }
 
 void checkgrowthInput(List x, List soil, String transpirationMode) {
@@ -51,7 +63,6 @@ void checkgrowthInput(List x, List soil, String transpirationMode) {
   if(!above.containsElementNamed("LAI_live")) stop("LAI_live missing in growthInput$above");
   if(!above.containsElementNamed("LAI_expanded")) stop("LAI_expanded missing in growthInput$above");
   if(!above.containsElementNamed("LAI_dead")) stop("LAI_dead missing in growthInput$above");
-  if(!above.containsElementNamed("LAI_predrought")) stop("LAI_predrought missing in growthInput$above");
   if(!above.containsElementNamed("SA")) stop("SA missing in growthInput$above");
   if(!above.containsElementNamed("CR")) stop("CR missing in growthInput$above");
   if(!above.containsElementNamed("H")) stop("H missing in growthInput$above");
@@ -158,8 +169,6 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   NumericVector LAI_expanded = above["LAI_expanded"];
   NumericVector LAI_dead = above["LAI_dead"];
   NumericVector SA = above["SA"];
-  NumericVector Psi_leafmin = above["Psi_leafmin"];
-  NumericVector LAI_predrought = above["LAI_predrought"];
   NumericVector fastCstorage, slowCstorage;
   int numCohorts = SP.size();
 
@@ -313,6 +322,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
     NumericVector EplantVec = s["EplantVec"];
     Eplantdays(i,_) = EplantVec;
     NumericVector An =  Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
+    NumericVector pEmb =  Rcpp::as<Rcpp::NumericVector>(x["ProportionCavitated"]);
     PlantPhotosynthesis(i,_) = An;
     PlantTranspiration(i,_) = EplantCoh;
     PlantStress(i,_) = Rcpp::as<Rcpp::NumericVector>(s["DDS"]);
@@ -340,66 +350,57 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
       //3.2 Respiration and photosynthesis 
       double Anj = An[j]/(N[j]/10000.0); //Translate g C · m-2 to g C · ind-1
       // double Anj = 0.0;
-      double Rj = dailyRespiration(B_leaf_expanded, B_stem, B_fineroot, MeanTemperature[i]);
+      double QR = qResp(MeanTemperature[i]);
+      double Rj = (B_leaf_expanded*leaf_RR + B_stem*stem_RR + B_fineroot*root_RR)*QR;
+
       //3.3. Carbon balance, update of fast C pool and C available for growth
       double growthAvailableC = 0.0;
       if(storagePool=="none") {
-        growthAvailableC = std::max(0.0,(Anj-Rj));
+        growthAvailableC = std::max(0.0,Anj-Rj);
       } else  {
-        fastCstorage[j] = std::max(0.0,fastCstorage[j]+(Anj-Rj));
-        growthAvailableC = fastCstorage[j];
+        growthAvailableC = std::max(0.0,fastCstorage[j]+(Anj-Rj));
+        fastCstorage[j] = growthAvailableC;
       }
+      
       //3.4 Growth in LAI_live and SA
       double deltaSAturnover = (dailySAturnoverProportion/(1.0+15*exp(-0.01*H[j])))*SA[j];
       double f_turgor = turgorGrowthFactor(psiCoh[j],-1.5);
       double deltaSAgrowth = 0.0;
-      if(f_turgor>0.0) { //Growth is possible
-        double costLA = 0.1*leafCperDry*(Al2As[j]/SLA[j]); //Construction cost in g C·cm-2 of sapwood
-        double costSA = WoodC[j]*(H[j]+Z[j])*WoodDens[j];  //Construction cost in g C·cm-2 of sapwood
-        double costFR = costLA/2.5;
-        double cost = 1.3*(costLA+costSA+costFR);  //Construction cost in g C·cm-2 of sapwood (including 30% growth respiration)
-        double deltaSAavailable = growthAvailableC/cost;
-        double f_source = 1.0;
-        if(storagePool!="none") {
-          f_source = (1.0/(1.0+exp(-5.0*((fastCstorage[j]/fastCstorage_max[j])-0.5)/0.5)));
-        } 
-        double f_temp = temperatureGrowthFactor(MeanTemperature[i]);
-        double deltaSAsink = RGRmax[j]*SA[j]*f_temp*f_turgor;
-        deltaSAgrowth = std::min(deltaSAsink*f_source, deltaSAavailable);
-        
-        //update pools
-        if(storagePool != "none") {
-          fastCstorage[j] = fastCstorage[j]-deltaSAgrowth*cost; //Remove construction costs from (fast) C pool
-        }
-        SA[j] = SA[j] + deltaSAgrowth - deltaSAturnover; //Update sapwood area
-        LAI_dead[j] += (N[j]/10000.0)*(deltaSAturnover/10000.0)*Al2As[j]; //Update dead LAI
-        LAI_live[j] += (N[j]/10000.0)*((deltaSAgrowth-deltaSAturnover)/10000.0)*Al2As[j]; //Update live LAI
-        Psi_leafmin[j] = 0.0;
-        LAI_predrought[j] = LAI_live[j];
-        SAgrowthcum[j] += deltaSAgrowth; //Store cumulative SA growth (for structural variable update)
-      } else if(!cavitationRefill) { //Growth is not possible, evaluate embolism
-        Psi_leafmin[j] = std::min(Psi_leafmin[j], psiCoh[j]);
-        double propEmb = 0.0;
-        if(transpirationMode == "Simple") {
-          propEmb = 1.0-Psi2K(Psi_leafmin[j], Psi_Extract[j]);
-        } else if(transpirationMode == "Complex") {
-          propEmb = 1.0-exp(-pow(Psi_leafmin[j]/VCstem_d[j],VCstem_c[j]));
-        }
-        SA[j] = SA[j] - deltaSAturnover; //Update sapwood area (only turnover)
-        double LAIturnover = LAI_live[j] - (N[j]/10000.0)*(deltaSAturnover/10000.0)*Al2As[j];
-        double LAIembolism = LAI_predrought[j]*(1.0-propEmb);
-        double prevLive = LAI_live[j];
-        LAI_live[j] = std::min(LAIturnover, LAIembolism);
-        LAI_dead[j] += prevLive - LAI_live[j];
+      // if(f_turgor>0.0) { //Growth is possible
+      double costLA = 0.1*leafCperDry*(Al2As[j]/SLA[j]); //Construction cost in g C·cm-2 of sapwood
+      double costSA = WoodC[j]*(H[j]+Z[j])*WoodDens[j];  //Construction cost in g C·cm-2 of sapwood
+      double costFR = costLA/2.5;
+      double cost = 1.3*(costLA+costSA+costFR);  //Construction cost in g C·cm-2 of sapwood (including 30% growth respiration)
+      double deltaSAavailable = growthAvailableC/cost;
+      double f_source = 1.0;
+      if(storagePool!="none") {
+        f_source = carbonGrowthFactor(fastCstorage[j]/fastCstorage_max[j], growthCarbonConcentrationThreshold);
+      } 
+      double f_temp = temperatureGrowthFactor(MeanTemperature[i]);
+      double deltaSAsink = RGRmax[j]*SA[j]*f_temp*f_turgor;
+      deltaSAgrowth = std::min(deltaSAsink*f_source, deltaSAavailable);
+      
+      //update pools
+      if(storagePool != "none") {
+        fastCstorage[j] = fastCstorage[j]-deltaSAgrowth*cost; //Remove construction costs from (fast) C pool
       }
-      LAI_expanded[j] = LAI_live[j]*phe[j]; //Update expanded leaf area
+      if(!cavitationRefill) { //If we track cavitation update proportion of embolized conduits
+        pEmb[j] = pEmb[j]*((SA[j] - deltaSAturnover)/(SA[j] + deltaSAgrowth - deltaSAturnover));
+      }
+      SA[j] = SA[j] + deltaSAgrowth - deltaSAturnover; //Update sapwood area
+      
+      double leafDie = std::min((N[j]/10000.0)*(deltaSAturnover/10000.0)*Al2As[j], LAI_live[j]);
+      LAI_dead[j] += leafDie; //Update dead LAI
+      LAI_live[j] += (N[j]/10000.0)*((deltaSAgrowth-deltaSAturnover)/10000.0)*Al2As[j]; //Update live LAI
+      LAI_live[j] = std::max(LAI_live[j], 0.0); //Check negative values do not occur
+      SAgrowthcum[j] += deltaSAgrowth; //Store cumulative SA growth (for structural variable update)
       
       //3.5 transfer between pools and constrain of C pools
       if(storagePool == "one") {
         fastCstorage[j] = std::max(0.0,std::min(fastCstorage[j], fastCstorage_max[j]));
       } else if(storagePool == "two") {
-        //Relative transfer rate (maximum 10% of the source pool)
-        double reltransferRate = 0.1*storageTransferRelativeRate(fastCstorage[j], fastCstorage_max[j]);
+        //Relative transfer rate (maximum 5% of the source pool per day)
+        double reltransferRate = 0.05*storageTransferRelativeRate(fastCstorage[j], fastCstorage_max[j]);
         if(reltransferRate>0.0) { //Transfer from fast to slow 
           double transfer = std::min(reltransferRate*fastCstorage[j],(slowCstorage_max[j]-slowCstorage[j])*0.9);
           fastCstorage[j] -= transfer;
@@ -414,7 +415,18 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
         slowCstorage[j] = std::max(0.0,std::min(slowCstorage[j], slowCstorage_max[j]));
       }
       
-      //3.6 Update stem conductance (Complex mode)
+      //3.8 Calculate defoliation if fast storage is low
+      if(storagePool!="none") {
+        double def = defoliationFraction(fastCstorage[j]/fastCstorage_max[j], growthCarbonConcentrationThreshold);
+        double maxLAI = (SA[j]*Al2As[j]/10000.0)*(N[j]/10000.0);
+        double defLAI = maxLAI * (1.0-def);
+        // Rcout<<defLAI<<" "<<LAI_live[j]<<"\n";
+        LAI_live[j] = std::min(LAI_live[j], defLAI);
+      }
+      //Update expanded leaf area
+      LAI_expanded[j] = LAI_live[j]*phe[j]; 
+      
+      //3.7 Update stem conductance (Complex mode)
       if(transpirationMode=="Complex") {
         double hubberValue = (LAI_expanded[j]/(N[j]/10000.0))/(SA[j]/10000.0);
         VCstem_kmax[j]=maximumStemHydraulicConductance(xylem_kmax[j], hubberValue,H[j]);

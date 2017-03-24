@@ -848,6 +848,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// defoliationFraction
+double defoliationFraction(double conc, double threshold);
+RcppExport SEXP medfate_defoliationFraction(SEXP concSEXP, SEXP thresholdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type conc(concSEXP);
+    Rcpp::traits::input_parameter< double >::type threshold(thresholdSEXP);
+    rcpp_result_gen = Rcpp::wrap(defoliationFraction(conc, threshold));
+    return rcpp_result_gen;
+END_RCPP
+}
 // growth
 List growth(List x, List soil, DataFrame meteo, double latitude, double elevation, double slope, double aspect);
 RcppExport SEXP medfate_growth(SEXP xSEXP, SEXP soilSEXP, SEXP meteoSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP) {

@@ -249,6 +249,10 @@ fuel.FCCS <- function(object, ShrubCover, CanopyCover, SpParams, gdd = NA_real_,
     .Call('medfate_FCCSproperties', PACKAGE = 'medfate', object, ShrubCover, CanopyCover, SpParams, gdd, heightProfileStep, maxHeightProfile, bulkDensityThreshold)
 }
 
+growth.defoliationFraction <- function(conc, threshold) {
+    .Call('medfate_defoliationFraction', PACKAGE = 'medfate', conc, threshold)
+}
+
 growth <- function(x, soil, meteo, latitude = NA_real_, elevation = NA_real_, slope = NA_real_, aspect = NA_real_) {
     .Call('medfate_growth', PACKAGE = 'medfate', x, soil, meteo, latitude, elevation, slope, aspect)
 }
