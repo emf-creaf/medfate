@@ -20,10 +20,10 @@ extractSFIforest<-function(SFItreeData, SFIshrubData, ID, SpParams,
   f$shrubData = data.frame(Species = yid$Species, Cover = as.numeric(yid$FCC), Height = yid$Ht)
   f$shrubData$Z =rep(NA, nrow(f$shrubData))
   if(setDefaults) {
-    f$treeData$Z95 = SpParams$Z_max[f$treeData$Species+1]
+    f$treeData$Z95 = SpParams$Zmax[f$treeData$Species+1]
     f$treeData$Z95[is.na(f$treeData$Z95)] = 3000
     f$treeData$Z50 = f$treeData$Z95/4
-    f$shrubData$Z = SpParams$Z_max[f$shrubData$Species+1]
+    f$shrubData$Z = SpParams$Zmax[f$shrubData$Species+1]
     f$shrubData$Z[is.na(f$shrubData$Z)] = 1000
   }
   

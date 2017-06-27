@@ -1915,14 +1915,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // swbDay
-List swbDay(List x, List soil, CharacterVector date, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, double latitude, double elevation, double slope, double aspect, double rain, double er, double runon);
-RcppExport SEXP medfate_swbDay(SEXP xSEXP, SEXP soilSEXP, SEXP dateSEXP, SEXP tminSEXP, SEXP tmaxSEXP, SEXP rhminSEXP, SEXP rhmaxSEXP, SEXP radSEXP, SEXP windSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP rainSEXP, SEXP erSEXP, SEXP runonSEXP) {
+List swbDay(List x, List soil, CharacterVector date, int doy, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, double latitude, double elevation, double slope, double aspect, double rain, double er, double runon);
+RcppExport SEXP medfate_swbDay(SEXP xSEXP, SEXP soilSEXP, SEXP dateSEXP, SEXP doySEXP, SEXP tminSEXP, SEXP tmaxSEXP, SEXP rhminSEXP, SEXP rhmaxSEXP, SEXP radSEXP, SEXP windSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP rainSEXP, SEXP erSEXP, SEXP runonSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type date(dateSEXP);
+    Rcpp::traits::input_parameter< int >::type doy(doySEXP);
     Rcpp::traits::input_parameter< double >::type tmin(tminSEXP);
     Rcpp::traits::input_parameter< double >::type tmax(tmaxSEXP);
     Rcpp::traits::input_parameter< double >::type rhmin(rhminSEXP);
@@ -1936,7 +1937,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type rain(rainSEXP);
     Rcpp::traits::input_parameter< double >::type er(erSEXP);
     Rcpp::traits::input_parameter< double >::type runon(runonSEXP);
-    rcpp_result_gen = Rcpp::wrap(swbDay(x, soil, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, rain, er, runon));
+    rcpp_result_gen = Rcpp::wrap(swbDay(x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, rain, er, runon));
     return rcpp_result_gen;
 END_RCPP
 }

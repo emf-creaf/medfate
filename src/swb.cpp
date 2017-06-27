@@ -699,7 +699,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
 }
 
 // [[Rcpp::export("swb.day")]]
-List swbDay(List x, List soil, CharacterVector date, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
+List swbDay(List x, List soil, CharacterVector date, int doy, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
             double latitude, double elevation, double slope, double aspect,  
             double rain, double er, double runon=0.0) {
   //Control parameters
@@ -715,6 +715,31 @@ List swbDay(List x, List soil, CharacterVector date, double tmin, double tmax, d
   double asprad = aspect * (PI/180.0);
   double slorad = slope * (PI/180.0);
   double pet = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
+
+  //Plant input
+  DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
+  NumericVector SP = above["SP"];
+  NumericVector LAI_live = above["LAI_live"];
+  NumericVector LAI_expanded = above["LAI_expanded"];
+  int numCohorts = SP.size();
+  
+  //Base parameters
+  DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
+  NumericVector Sgdd = paramsBase["Sgdd"];
+  double tmean = meteoland::utils_averageDaylightTemperature(tmin, tmax);
+  double gddday = x["gdd"];
+  if((tmean-5.0 < 0.0) & (doy>180)) {
+    gddday = 0.0;
+  } else if (doy<180){ //Only increase in the first part of the year
+    if(tmean-5.0>0.0) gddday = gddday + (tmean-5.0);
+  }
+  x["gdd"] = gddday;
+  //Update phenological status
+  NumericVector phe = leafDevelopmentStatus(Sgdd, gddday);
+  for(int j=0;j<numCohorts;j++) {
+    LAI_expanded[j] = LAI_live[j]*phe[j];
+  }
+  
   List s;
   if(transpirationMode=="Simple") {
     s = swbDay1(x,soil, tday, pet, rain, er, runon, verbose);
@@ -723,6 +748,7 @@ List swbDay(List x, List soil, CharacterVector date, double tmin, double tmax, d
                 solarConstant, delta, rain, er, runon, verbose);
   }
   s["PET"] = pet;
+  s["Rain"] = rain;
   return(s);
 }
   
@@ -987,6 +1013,7 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
   for(int i=0;i<numDays;i++) {
       if(verbose) Rcout<<".";
       //Update phenological status
+      x["gdd"] = GDD[i];
       NumericVector phe = leafDevelopmentStatus(Sgdd, GDD[i]);
       for(int j=0;j<numCohorts;j++) {
         LAI_expanded[j] = LAI_live[j]*phe[j];

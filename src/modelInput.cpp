@@ -72,6 +72,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
                                       _["transpirationMode"] =transpirationMode, 
                                       _["cavitationRefill"] = control["cavitationRefill"]);
     input = List::create(_["control"] =paramsControl,
+                         _["gdd"] = 0,
                          _["above"] = plantsdf,
                          _["below"] = below,
                          _["paramsBase"] = paramsBasedf,
@@ -139,7 +140,8 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
                                       _["canopyMode"] =canopyMode, 
                                       _["cavitationRefill"] = control["cavitationRefill"],
                                       _["ndailysteps"] = control["ndailysteps"]);
-    input = List::create(_["control"] = paramsControl,                              
+    input = List::create(_["control"] = paramsControl,
+                         _["gdd"] = 0,
                          _["above"] = plantsdf,
                          _["below"] = below,
                          _["paramsBase"] = paramsBasedf,
@@ -345,6 +347,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                                       _["cavitationRefill"] = control["cavitationRefill"],
                                       _["storagePool"] = storagePool);
     input = List::create(_["control"] = paramsControl,
+                         _["gdd"] = 0,
                          _["above"] = plantsdf,
                          _["below"] = below,
                          _["paramsBase"] = paramsBasedf,
@@ -415,6 +418,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                                       _["cavitationRefill"] = control["cavitationRefill"],
                                       _["storagePool"] = storagePool);
     input = List::create(_["control"] =paramsControl,
+                         _["gdd"] = 0,
                          _["above"] = plantsdf,
                    _["below"] = below,
                    _["paramsBase"] = paramsBasedf,

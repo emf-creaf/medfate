@@ -283,6 +283,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
     if(NumericVector::is_na(ws)) ws = 1.0; //Default 1 m/s -> 10% of fall every day
     
     //1. Phenology and leaf fall
+    x["gdd"] = GDD[i];
     NumericVector phe = leafDevelopmentStatus(Sgdd, GDD[i]);
     for(int j=0;j<numCohorts;j++) {
       LAI_dead[j] *= exp(-1.0*(ws/10.0)); //Decrease dead leaf area according to wind speed
