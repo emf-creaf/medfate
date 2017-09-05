@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 // radiationDiurnalPattern
 double radiationDiurnalPattern(double t, double daylength);
-RcppExport SEXP medfate_radiationDiurnalPattern(SEXP tSEXP, SEXP daylengthSEXP) {
+RcppExport SEXP _medfate_radiationDiurnalPattern(SEXP tSEXP, SEXP daylengthSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -19,7 +19,7 @@ END_RCPP
 }
 // temperatureDiurnalPattern
 double temperatureDiurnalPattern(double t, double tmin, double tmax, double daylength);
-RcppExport SEXP medfate_temperatureDiurnalPattern(SEXP tSEXP, SEXP tminSEXP, SEXP tmaxSEXP, SEXP daylengthSEXP) {
+RcppExport SEXP _medfate_temperatureDiurnalPattern(SEXP tSEXP, SEXP tminSEXP, SEXP tmaxSEXP, SEXP daylengthSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -33,7 +33,7 @@ END_RCPP
 }
 // leafTemperature
 double leafTemperature(double absRad, double airTemperature, double u, double E, double leafWidth);
-RcppExport SEXP medfate_leafTemperature(SEXP absRadSEXP, SEXP airTemperatureSEXP, SEXP uSEXP, SEXP ESEXP, SEXP leafWidthSEXP) {
+RcppExport SEXP _medfate_leafTemperature(SEXP absRadSEXP, SEXP airTemperatureSEXP, SEXP uSEXP, SEXP ESEXP, SEXP leafWidthSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -48,7 +48,7 @@ END_RCPP
 }
 // FCCSbehaviour
 List FCCSbehaviour(DataFrame FCCSpropsSI, NumericVector MliveSI, NumericVector MdeadSI, double slope, double windSpeedSI);
-RcppExport SEXP medfate_FCCSbehaviour(SEXP FCCSpropsSISEXP, SEXP MliveSISEXP, SEXP MdeadSISEXP, SEXP slopeSEXP, SEXP windSpeedSISEXP) {
+RcppExport SEXP _medfate_FCCSbehaviour(SEXP FCCSpropsSISEXP, SEXP MliveSISEXP, SEXP MdeadSISEXP, SEXP slopeSEXP, SEXP windSpeedSISEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -63,7 +63,7 @@ END_RCPP
 }
 // rothermel
 List rothermel(String modeltype, NumericVector wSI, NumericVector sSI, double delta, double mx_dead, NumericVector hSI, NumericVector mSI, double u, double windDir, double slope, double aspect);
-RcppExport SEXP medfate_rothermel(SEXP modeltypeSEXP, SEXP wSISEXP, SEXP sSISEXP, SEXP deltaSEXP, SEXP mx_deadSEXP, SEXP hSISEXP, SEXP mSISEXP, SEXP uSEXP, SEXP windDirSEXP, SEXP slopeSEXP, SEXP aspectSEXP) {
+RcppExport SEXP _medfate_rothermel(SEXP modeltypeSEXP, SEXP wSISEXP, SEXP sSISEXP, SEXP deltaSEXP, SEXP mx_deadSEXP, SEXP hSISEXP, SEXP mSISEXP, SEXP uSEXP, SEXP windDirSEXP, SEXP slopeSEXP, SEXP aspectSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -84,7 +84,7 @@ END_RCPP
 }
 // genros
 double genros(double phi, double theta, double a1, double a2, double b, double n1, double n2, double c);
-RcppExport SEXP medfate_genros(SEXP phiSEXP, SEXP thetaSEXP, SEXP a1SEXP, SEXP a2SEXP, SEXP bSEXP, SEXP n1SEXP, SEXP n2SEXP, SEXP cSEXP) {
+RcppExport SEXP _medfate_genros(SEXP phiSEXP, SEXP thetaSEXP, SEXP a1SEXP, SEXP a2SEXP, SEXP bSEXP, SEXP n1SEXP, SEXP n2SEXP, SEXP cSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -102,7 +102,7 @@ END_RCPP
 }
 // ellipseROS
 NumericVector ellipseROS(NumericVector phi, double theta, double vws, double ros);
-RcppExport SEXP medfate_ellipseROS(SEXP phiSEXP, SEXP thetaSEXP, SEXP vwsSEXP, SEXP rosSEXP) {
+RcppExport SEXP _medfate_ellipseROS(SEXP phiSEXP, SEXP thetaSEXP, SEXP vwsSEXP, SEXP rosSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -116,7 +116,7 @@ END_RCPP
 }
 // doubleEllipseROS
 NumericVector doubleEllipseROS(NumericVector phi, double theta, double vws, double ros);
-RcppExport SEXP medfate_doubleEllipseROS(SEXP phiSEXP, SEXP thetaSEXP, SEXP vwsSEXP, SEXP rosSEXP) {
+RcppExport SEXP _medfate_doubleEllipseROS(SEXP phiSEXP, SEXP thetaSEXP, SEXP vwsSEXP, SEXP rosSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -130,7 +130,7 @@ END_RCPP
 }
 // fireBrandFallingHeight
 double fireBrandFallingHeight(double initialHeight, double timeFalling, double Dp);
-RcppExport SEXP medfate_fireBrandFallingHeight(SEXP initialHeightSEXP, SEXP timeFallingSEXP, SEXP DpSEXP) {
+RcppExport SEXP _medfate_fireBrandFallingHeight(SEXP initialHeightSEXP, SEXP timeFallingSEXP, SEXP DpSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -143,7 +143,7 @@ END_RCPP
 }
 // totalFirebrandLoftingTime
 double totalFirebrandLoftingTime(double z, double z0, double zF, double Dp);
-RcppExport SEXP medfate_totalFirebrandLoftingTime(SEXP zSEXP, SEXP z0SEXP, SEXP zFSEXP, SEXP DpSEXP) {
+RcppExport SEXP _medfate_totalFirebrandLoftingTime(SEXP zSEXP, SEXP z0SEXP, SEXP zFSEXP, SEXP DpSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -157,7 +157,7 @@ END_RCPP
 }
 // totalGasFlowPersistenceTime
 double totalGasFlowPersistenceTime(double z, double t0, double zF);
-RcppExport SEXP medfate_totalGasFlowPersistenceTime(SEXP zSEXP, SEXP t0SEXP, SEXP zFSEXP) {
+RcppExport SEXP _medfate_totalGasFlowPersistenceTime(SEXP zSEXP, SEXP t0SEXP, SEXP zFSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -170,7 +170,7 @@ END_RCPP
 }
 // findFireBrandLoftedHeight
 double findFireBrandLoftedHeight(double t0, double z0, double zF, double Dp);
-RcppExport SEXP medfate_findFireBrandLoftedHeight(SEXP t0SEXP, SEXP z0SEXP, SEXP zFSEXP, SEXP DpSEXP) {
+RcppExport SEXP _medfate_findFireBrandLoftedHeight(SEXP t0SEXP, SEXP z0SEXP, SEXP zFSEXP, SEXP DpSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -184,7 +184,7 @@ END_RCPP
 }
 // willBurnWhenHitFloor
 bool willBurnWhenHitFloor(double zIni, double Dp);
-RcppExport SEXP medfate_willBurnWhenHitFloor(SEXP zIniSEXP, SEXP DpSEXP) {
+RcppExport SEXP _medfate_willBurnWhenHitFloor(SEXP zIniSEXP, SEXP DpSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -196,7 +196,7 @@ END_RCPP
 }
 // fireBrandBurningTimeFromCanopyStructure
 double fireBrandBurningTimeFromCanopyStructure(double LAIc);
-RcppExport SEXP medfate_fireBrandBurningTimeFromCanopyStructure(SEXP LAIcSEXP) {
+RcppExport SEXP _medfate_fireBrandBurningTimeFromCanopyStructure(SEXP LAIcSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -207,7 +207,7 @@ END_RCPP
 }
 // fireBrandFlameHeightFromCanopyStructure
 double fireBrandFlameHeightFromCanopyStructure(double crownLength, double LAIc);
-RcppExport SEXP medfate_fireBrandFlameHeightFromCanopyStructure(SEXP crownLengthSEXP, SEXP LAIcSEXP) {
+RcppExport SEXP _medfate_fireBrandFlameHeightFromCanopyStructure(SEXP crownLengthSEXP, SEXP LAIcSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -219,7 +219,7 @@ END_RCPP
 }
 // criticalFirelineIntensity
 double criticalFirelineIntensity(double CBH, double M);
-RcppExport SEXP medfate_criticalFirelineIntensity(SEXP CBHSEXP, SEXP MSEXP) {
+RcppExport SEXP _medfate_criticalFirelineIntensity(SEXP CBHSEXP, SEXP MSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -231,7 +231,7 @@ END_RCPP
 }
 // cohortParameter
 NumericVector cohortParameter(List x, DataFrame SpParams, String parName);
-RcppExport SEXP medfate_cohortParameter(SEXP xSEXP, SEXP SpParamsSEXP, SEXP parNameSEXP) {
+RcppExport SEXP _medfate_cohortParameter(SEXP xSEXP, SEXP SpParamsSEXP, SEXP parNameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -244,7 +244,7 @@ END_RCPP
 }
 // cohortCharacterParameter
 CharacterVector cohortCharacterParameter(List x, DataFrame SpParams, String parName);
-RcppExport SEXP medfate_cohortCharacterParameter(SEXP xSEXP, SEXP SpParamsSEXP, SEXP parNameSEXP) {
+RcppExport SEXP _medfate_cohortCharacterParameter(SEXP xSEXP, SEXP SpParamsSEXP, SEXP parNameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -257,7 +257,7 @@ END_RCPP
 }
 // cohortSpecies
 IntegerVector cohortSpecies(List x);
-RcppExport SEXP medfate_cohortSpecies(SEXP xSEXP) {
+RcppExport SEXP _medfate_cohortSpecies(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -268,7 +268,7 @@ END_RCPP
 }
 // cohortSpeciesName
 CharacterVector cohortSpeciesName(List x, DataFrame SpParams);
-RcppExport SEXP medfate_cohortSpeciesName(SEXP xSEXP, SEXP SpParamsSEXP) {
+RcppExport SEXP _medfate_cohortSpeciesName(SEXP xSEXP, SEXP SpParamsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -280,7 +280,7 @@ END_RCPP
 }
 // treeBasalArea
 NumericVector treeBasalArea(NumericVector N, NumericVector dbh);
-RcppExport SEXP medfate_treeBasalArea(SEXP NSEXP, SEXP dbhSEXP) {
+RcppExport SEXP _medfate_treeBasalArea(SEXP NSEXP, SEXP dbhSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -292,7 +292,7 @@ END_RCPP
 }
 // cohortBasalArea
 NumericVector cohortBasalArea(List x);
-RcppExport SEXP medfate_cohortBasalArea(SEXP xSEXP) {
+RcppExport SEXP _medfate_cohortBasalArea(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -303,7 +303,7 @@ END_RCPP
 }
 // speciesBasalArea
 NumericVector speciesBasalArea(List x, DataFrame SpParams);
-RcppExport SEXP medfate_speciesBasalArea(SEXP xSEXP, SEXP SpParamsSEXP) {
+RcppExport SEXP _medfate_speciesBasalArea(SEXP xSEXP, SEXP SpParamsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -315,7 +315,7 @@ END_RCPP
 }
 // cohortLargerTreeBasalArea
 NumericVector cohortLargerTreeBasalArea(List x);
-RcppExport SEXP medfate_cohortLargerTreeBasalArea(SEXP xSEXP) {
+RcppExport SEXP _medfate_cohortLargerTreeBasalArea(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -326,7 +326,7 @@ END_RCPP
 }
 // forestBasalArea
 double forestBasalArea(List x);
-RcppExport SEXP medfate_forestBasalArea(SEXP xSEXP) {
+RcppExport SEXP _medfate_forestBasalArea(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -337,7 +337,7 @@ END_RCPP
 }
 // cohortDensity
 NumericVector cohortDensity(List x, DataFrame SpParams);
-RcppExport SEXP medfate_cohortDensity(SEXP xSEXP, SEXP SpParamsSEXP) {
+RcppExport SEXP _medfate_cohortDensity(SEXP xSEXP, SEXP SpParamsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -349,7 +349,7 @@ END_RCPP
 }
 // cohortHeight
 NumericVector cohortHeight(List x);
-RcppExport SEXP medfate_cohortHeight(SEXP xSEXP) {
+RcppExport SEXP _medfate_cohortHeight(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -360,7 +360,7 @@ END_RCPP
 }
 // shrubCrownRatio
 NumericVector shrubCrownRatio(IntegerVector SP, DataFrame SpParams);
-RcppExport SEXP medfate_shrubCrownRatio(SEXP SPSEXP, SEXP SpParamsSEXP) {
+RcppExport SEXP _medfate_shrubCrownRatio(SEXP SPSEXP, SEXP SpParamsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -372,7 +372,7 @@ END_RCPP
 }
 // cohortCrownRatio
 NumericVector cohortCrownRatio(List x, DataFrame SpParams);
-RcppExport SEXP medfate_cohortCrownRatio(SEXP xSEXP, SEXP SpParamsSEXP) {
+RcppExport SEXP _medfate_cohortCrownRatio(SEXP xSEXP, SEXP SpParamsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -384,7 +384,7 @@ END_RCPP
 }
 // cohortCrownBaseHeight
 NumericVector cohortCrownBaseHeight(List x, DataFrame SpParams);
-RcppExport SEXP medfate_cohortCrownBaseHeight(SEXP xSEXP, SEXP SpParamsSEXP) {
+RcppExport SEXP _medfate_cohortCrownBaseHeight(SEXP xSEXP, SEXP SpParamsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -396,7 +396,7 @@ END_RCPP
 }
 // cohortCrownLength
 NumericVector cohortCrownLength(List x, DataFrame SpParams);
-RcppExport SEXP medfate_cohortCrownLength(SEXP xSEXP, SEXP SpParamsSEXP) {
+RcppExport SEXP _medfate_cohortCrownLength(SEXP xSEXP, SEXP SpParamsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -408,7 +408,7 @@ END_RCPP
 }
 // treeFoliarBiomass
 NumericVector treeFoliarBiomass(IntegerVector SP, NumericVector N, NumericVector dbh, DataFrame SpParams, double gdd);
-RcppExport SEXP medfate_treeFoliarBiomass(SEXP SPSEXP, SEXP NSEXP, SEXP dbhSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
+RcppExport SEXP _medfate_treeFoliarBiomass(SEXP SPSEXP, SEXP NSEXP, SEXP dbhSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -423,7 +423,7 @@ END_RCPP
 }
 // shrubFoliarBiomass
 NumericVector shrubFoliarBiomass(IntegerVector SP, NumericVector Cover, NumericVector H, NumericVector CR, DataFrame SpParams, double gdd);
-RcppExport SEXP medfate_shrubFoliarBiomass(SEXP SPSEXP, SEXP CoverSEXP, SEXP HSEXP, SEXP CRSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
+RcppExport SEXP _medfate_shrubFoliarBiomass(SEXP SPSEXP, SEXP CoverSEXP, SEXP HSEXP, SEXP CRSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -439,7 +439,7 @@ END_RCPP
 }
 // cohortFoliarBiomass
 NumericVector cohortFoliarBiomass(List x, DataFrame SpParams, double gdd);
-RcppExport SEXP medfate_cohortFoliarBiomass(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
+RcppExport SEXP _medfate_cohortFoliarBiomass(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -452,7 +452,7 @@ END_RCPP
 }
 // shrubCover
 double shrubCover(List x, double excludeMinHeight);
-RcppExport SEXP medfate_shrubCover(SEXP xSEXP, SEXP excludeMinHeightSEXP) {
+RcppExport SEXP _medfate_shrubCover(SEXP xSEXP, SEXP excludeMinHeightSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -464,7 +464,7 @@ END_RCPP
 }
 // cohortCover
 NumericVector cohortCover(List x);
-RcppExport SEXP medfate_cohortCover(SEXP xSEXP) {
+RcppExport SEXP _medfate_cohortCover(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -475,7 +475,7 @@ END_RCPP
 }
 // shrubCrownPhytovolume
 NumericVector shrubCrownPhytovolume(IntegerVector SP, NumericVector Cover, NumericVector H, NumericVector CR, DataFrame SpParams);
-RcppExport SEXP medfate_shrubCrownPhytovolume(SEXP SPSEXP, SEXP CoverSEXP, SEXP HSEXP, SEXP CRSEXP, SEXP SpParamsSEXP) {
+RcppExport SEXP _medfate_shrubCrownPhytovolume(SEXP SPSEXP, SEXP CoverSEXP, SEXP HSEXP, SEXP CRSEXP, SEXP SpParamsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -490,7 +490,7 @@ END_RCPP
 }
 // cohortPhytovolume
 NumericVector cohortPhytovolume(List x, DataFrame SpParams);
-RcppExport SEXP medfate_cohortPhytovolume(SEXP xSEXP, SEXP SpParamsSEXP) {
+RcppExport SEXP _medfate_cohortPhytovolume(SEXP xSEXP, SEXP SpParamsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -502,7 +502,7 @@ END_RCPP
 }
 // treeFuel
 NumericVector treeFuel(IntegerVector SP, NumericVector N, NumericVector dbh, DataFrame SpParams, double gdd, bool includeDead);
-RcppExport SEXP medfate_treeFuel(SEXP SPSEXP, SEXP NSEXP, SEXP dbhSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP includeDeadSEXP) {
+RcppExport SEXP _medfate_treeFuel(SEXP SPSEXP, SEXP NSEXP, SEXP dbhSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP includeDeadSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -518,7 +518,7 @@ END_RCPP
 }
 // shrubFuel
 NumericVector shrubFuel(IntegerVector SP, NumericVector Cover, NumericVector H, NumericVector CR, DataFrame SpParams, double gdd, bool includeDead);
-RcppExport SEXP medfate_shrubFuel(SEXP SPSEXP, SEXP CoverSEXP, SEXP HSEXP, SEXP CRSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP includeDeadSEXP) {
+RcppExport SEXP _medfate_shrubFuel(SEXP SPSEXP, SEXP CoverSEXP, SEXP HSEXP, SEXP CRSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP includeDeadSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -535,7 +535,7 @@ END_RCPP
 }
 // cohortFuel
 NumericVector cohortFuel(List x, DataFrame SpParams, double gdd, bool includeDead);
-RcppExport SEXP medfate_cohortFuel(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP includeDeadSEXP) {
+RcppExport SEXP _medfate_cohortFuel(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP includeDeadSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -549,7 +549,7 @@ END_RCPP
 }
 // cohortEquilibriumLeafLitter
 NumericVector cohortEquilibriumLeafLitter(List x, DataFrame SpParams, double AET);
-RcppExport SEXP medfate_cohortEquilibriumLeafLitter(SEXP xSEXP, SEXP SpParamsSEXP, SEXP AETSEXP) {
+RcppExport SEXP _medfate_cohortEquilibriumLeafLitter(SEXP xSEXP, SEXP SpParamsSEXP, SEXP AETSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -562,7 +562,7 @@ END_RCPP
 }
 // cohortEquilibriumSmallBranchLitter
 NumericVector cohortEquilibriumSmallBranchLitter(List x, DataFrame SpParams, double smallBranchDecompositionRate);
-RcppExport SEXP medfate_cohortEquilibriumSmallBranchLitter(SEXP xSEXP, SEXP SpParamsSEXP, SEXP smallBranchDecompositionRateSEXP) {
+RcppExport SEXP _medfate_cohortEquilibriumSmallBranchLitter(SEXP xSEXP, SEXP SpParamsSEXP, SEXP smallBranchDecompositionRateSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -575,7 +575,7 @@ END_RCPP
 }
 // treeLAI
 NumericVector treeLAI(IntegerVector SP, NumericVector N, NumericVector dbh, DataFrame SpParams, double gdd);
-RcppExport SEXP medfate_treeLAI(SEXP SPSEXP, SEXP NSEXP, SEXP dbhSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
+RcppExport SEXP _medfate_treeLAI(SEXP SPSEXP, SEXP NSEXP, SEXP dbhSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -590,7 +590,7 @@ END_RCPP
 }
 // shrubLAI
 NumericVector shrubLAI(IntegerVector SP, NumericVector Cover, NumericVector H, DataFrame SpParams, double gdd);
-RcppExport SEXP medfate_shrubLAI(SEXP SPSEXP, SEXP CoverSEXP, SEXP HSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
+RcppExport SEXP _medfate_shrubLAI(SEXP SPSEXP, SEXP CoverSEXP, SEXP HSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -605,7 +605,7 @@ END_RCPP
 }
 // cohortLAI
 NumericVector cohortLAI(List x, DataFrame SpParams, double gdd);
-RcppExport SEXP medfate_cohortLAI(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
+RcppExport SEXP _medfate_cohortLAI(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -618,7 +618,7 @@ END_RCPP
 }
 // LAIdistribution
 NumericMatrix LAIdistribution(NumericVector z, List x, DataFrame SpParams, double gdd);
-RcppExport SEXP medfate_LAIdistribution(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
+RcppExport SEXP _medfate_LAIdistribution(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -632,7 +632,7 @@ END_RCPP
 }
 // LAIprofile
 NumericVector LAIprofile(NumericVector z, List x, DataFrame SpParams, double gdd);
-RcppExport SEXP medfate_LAIprofile(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
+RcppExport SEXP _medfate_LAIprofile(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -646,7 +646,7 @@ END_RCPP
 }
 // forest2aboveground
 DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd);
-RcppExport SEXP medfate_forest2aboveground(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
+RcppExport SEXP _medfate_forest2aboveground(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -659,7 +659,7 @@ END_RCPP
 }
 // fuelConditions
 NumericVector fuelConditions(double airTemp, double airHumidity, double fuelRadiation, double fuelWindSpeed);
-RcppExport SEXP medfate_fuelConditions(SEXP airTempSEXP, SEXP airHumiditySEXP, SEXP fuelRadiationSEXP, SEXP fuelWindSpeedSEXP) {
+RcppExport SEXP _medfate_fuelConditions(SEXP airTempSEXP, SEXP airHumiditySEXP, SEXP fuelRadiationSEXP, SEXP fuelWindSpeedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -673,7 +673,7 @@ END_RCPP
 }
 // EMCdesorption
 double EMCdesorption(double fuelTemperature, double fuelHumidity);
-RcppExport SEXP medfate_EMCdesorption(SEXP fuelTemperatureSEXP, SEXP fuelHumiditySEXP) {
+RcppExport SEXP _medfate_EMCdesorption(SEXP fuelTemperatureSEXP, SEXP fuelHumiditySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -685,7 +685,7 @@ END_RCPP
 }
 // EMCadsorption
 double EMCadsorption(double fuelTemperature, double fuelHumidity);
-RcppExport SEXP medfate_EMCadsorption(SEXP fuelTemperatureSEXP, SEXP fuelHumiditySEXP) {
+RcppExport SEXP _medfate_EMCadsorption(SEXP fuelTemperatureSEXP, SEXP fuelHumiditySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -697,7 +697,7 @@ END_RCPP
 }
 // EMCSimard
 double EMCSimard(double fuelTemperature, double fuelHumidity);
-RcppExport SEXP medfate_EMCSimard(SEXP fuelTemperatureSEXP, SEXP fuelHumiditySEXP) {
+RcppExport SEXP _medfate_EMCSimard(SEXP fuelTemperatureSEXP, SEXP fuelHumiditySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -709,7 +709,7 @@ END_RCPP
 }
 // woodyFuelProfile
 NumericVector woodyFuelProfile(NumericVector z, List x, DataFrame SpParams, double gdd);
-RcppExport SEXP medfate_woodyFuelProfile(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
+RcppExport SEXP _medfate_woodyFuelProfile(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -723,7 +723,7 @@ END_RCPP
 }
 // layerCohortFuelLoading
 NumericVector layerCohortFuelLoading(double minHeight, double maxHeight, NumericVector cohortLoading, NumericVector H, NumericVector CR);
-RcppExport SEXP medfate_layerCohortFuelLoading(SEXP minHeightSEXP, SEXP maxHeightSEXP, SEXP cohortLoadingSEXP, SEXP HSEXP, SEXP CRSEXP) {
+RcppExport SEXP _medfate_layerCohortFuelLoading(SEXP minHeightSEXP, SEXP maxHeightSEXP, SEXP cohortLoadingSEXP, SEXP HSEXP, SEXP CRSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -738,7 +738,7 @@ END_RCPP
 }
 // layerFuelLoading
 double layerFuelLoading(double minHeight, double maxHeight, NumericVector cohortLoading, NumericVector H, NumericVector CR);
-RcppExport SEXP medfate_layerFuelLoading(SEXP minHeightSEXP, SEXP maxHeightSEXP, SEXP cohortLoadingSEXP, SEXP HSEXP, SEXP CRSEXP) {
+RcppExport SEXP _medfate_layerFuelLoading(SEXP minHeightSEXP, SEXP maxHeightSEXP, SEXP cohortLoadingSEXP, SEXP HSEXP, SEXP CRSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -753,7 +753,7 @@ END_RCPP
 }
 // layerLAI
 double layerLAI(double minHeight, double maxHeight, NumericVector cohortLAI, NumericVector H, NumericVector CR);
-RcppExport SEXP medfate_layerLAI(SEXP minHeightSEXP, SEXP maxHeightSEXP, SEXP cohortLAISEXP, SEXP HSEXP, SEXP CRSEXP) {
+RcppExport SEXP _medfate_layerLAI(SEXP minHeightSEXP, SEXP maxHeightSEXP, SEXP cohortLAISEXP, SEXP HSEXP, SEXP CRSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -768,7 +768,7 @@ END_RCPP
 }
 // layerFuelAverageSpeciesParameter
 double layerFuelAverageSpeciesParameter(String spParName, double minHeight, double maxHeight, List x, DataFrame SpParams, double gdd);
-RcppExport SEXP medfate_layerFuelAverageSpeciesParameter(SEXP spParNameSEXP, SEXP minHeightSEXP, SEXP maxHeightSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
+RcppExport SEXP _medfate_layerFuelAverageSpeciesParameter(SEXP spParNameSEXP, SEXP minHeightSEXP, SEXP maxHeightSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -784,7 +784,7 @@ END_RCPP
 }
 // layerFuelAverageParameter
 double layerFuelAverageParameter(double minHeight, double maxHeight, NumericVector cohortParameter, NumericVector cohortLoading, NumericVector H, NumericVector CR);
-RcppExport SEXP medfate_layerFuelAverageParameter(SEXP minHeightSEXP, SEXP maxHeightSEXP, SEXP cohortParameterSEXP, SEXP cohortLoadingSEXP, SEXP HSEXP, SEXP CRSEXP) {
+RcppExport SEXP _medfate_layerFuelAverageParameter(SEXP minHeightSEXP, SEXP maxHeightSEXP, SEXP cohortParameterSEXP, SEXP cohortLoadingSEXP, SEXP HSEXP, SEXP CRSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -800,7 +800,7 @@ END_RCPP
 }
 // layerFuelAverageCrownLength
 double layerFuelAverageCrownLength(double minHeight, double maxHeight, NumericVector cohortCrownLength, NumericVector cohortLoading, NumericVector H, NumericVector CR);
-RcppExport SEXP medfate_layerFuelAverageCrownLength(SEXP minHeightSEXP, SEXP maxHeightSEXP, SEXP cohortCrownLengthSEXP, SEXP cohortLoadingSEXP, SEXP HSEXP, SEXP CRSEXP) {
+RcppExport SEXP _medfate_layerFuelAverageCrownLength(SEXP minHeightSEXP, SEXP maxHeightSEXP, SEXP cohortCrownLengthSEXP, SEXP cohortLoadingSEXP, SEXP HSEXP, SEXP CRSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -816,7 +816,7 @@ END_RCPP
 }
 // fuelLiveStratification
 List fuelLiveStratification(List object, DataFrame SpParams, double gdd, double heightProfileStep, double maxHeightProfile, double bulkDensityThreshold);
-RcppExport SEXP medfate_fuelLiveStratification(SEXP objectSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP heightProfileStepSEXP, SEXP maxHeightProfileSEXP, SEXP bulkDensityThresholdSEXP) {
+RcppExport SEXP _medfate_fuelLiveStratification(SEXP objectSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP heightProfileStepSEXP, SEXP maxHeightProfileSEXP, SEXP bulkDensityThresholdSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -832,7 +832,7 @@ END_RCPP
 }
 // FCCSproperties
 DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, DataFrame SpParams, double gdd, double heightProfileStep, double maxHeightProfile, double bulkDensityThreshold);
-RcppExport SEXP medfate_FCCSproperties(SEXP objectSEXP, SEXP ShrubCoverSEXP, SEXP CanopyCoverSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP heightProfileStepSEXP, SEXP maxHeightProfileSEXP, SEXP bulkDensityThresholdSEXP) {
+RcppExport SEXP _medfate_FCCSproperties(SEXP objectSEXP, SEXP ShrubCoverSEXP, SEXP CanopyCoverSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP heightProfileStepSEXP, SEXP maxHeightProfileSEXP, SEXP bulkDensityThresholdSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -850,7 +850,7 @@ END_RCPP
 }
 // defoliationFraction
 double defoliationFraction(double conc, double threshold);
-RcppExport SEXP medfate_defoliationFraction(SEXP concSEXP, SEXP thresholdSEXP) {
+RcppExport SEXP _medfate_defoliationFraction(SEXP concSEXP, SEXP thresholdSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -862,7 +862,7 @@ END_RCPP
 }
 // growth
 List growth(List x, List soil, DataFrame meteo, double latitude, double elevation, double slope, double aspect);
-RcppExport SEXP medfate_growth(SEXP xSEXP, SEXP soilSEXP, SEXP meteoSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP) {
+RcppExport SEXP _medfate_growth(SEXP xSEXP, SEXP soilSEXP, SEXP meteoSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -879,7 +879,7 @@ END_RCPP
 }
 // Psi2K
 double Psi2K(double psi, double Psi_extract, double ws);
-RcppExport SEXP medfate_Psi2K(SEXP psiSEXP, SEXP Psi_extractSEXP, SEXP wsSEXP) {
+RcppExport SEXP _medfate_Psi2K(SEXP psiSEXP, SEXP Psi_extractSEXP, SEXP wsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -892,7 +892,7 @@ END_RCPP
 }
 // K2Psi
 double K2Psi(double K, double Psi_extract, double ws);
-RcppExport SEXP medfate_K2Psi(SEXP KSEXP, SEXP Psi_extractSEXP, SEXP wsSEXP) {
+RcppExport SEXP _medfate_K2Psi(SEXP KSEXP, SEXP Psi_extractSEXP, SEXP wsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -905,7 +905,7 @@ END_RCPP
 }
 // averagePsi
 double averagePsi(NumericVector psi, NumericVector v, double c, double d);
-RcppExport SEXP medfate_averagePsi(SEXP psiSEXP, SEXP vSEXP, SEXP cSEXP, SEXP dSEXP) {
+RcppExport SEXP _medfate_averagePsi(SEXP psiSEXP, SEXP vSEXP, SEXP cSEXP, SEXP dSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -919,7 +919,7 @@ END_RCPP
 }
 // gammds
 double gammds(double x, double p);
-RcppExport SEXP medfate_gammds(SEXP xSEXP, SEXP pSEXP) {
+RcppExport SEXP _medfate_gammds(SEXP xSEXP, SEXP pSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -931,7 +931,7 @@ END_RCPP
 }
 // xylemConductance
 double xylemConductance(double psi, double kxylemmax, double c, double d);
-RcppExport SEXP medfate_xylemConductance(SEXP psiSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP) {
+RcppExport SEXP _medfate_xylemConductance(SEXP psiSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -945,7 +945,7 @@ END_RCPP
 }
 // xylemPsi
 double xylemPsi(double kxylem, double kxylemmax, double c, double d);
-RcppExport SEXP medfate_xylemPsi(SEXP kxylemSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP) {
+RcppExport SEXP _medfate_xylemPsi(SEXP kxylemSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -959,7 +959,7 @@ END_RCPP
 }
 // Egamma
 double Egamma(double psi, double kxylemmax, double c, double d, double psiCav);
-RcppExport SEXP medfate_Egamma(SEXP psiSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP, SEXP psiCavSEXP) {
+RcppExport SEXP _medfate_Egamma(SEXP psiSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP, SEXP psiCavSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -974,7 +974,7 @@ END_RCPP
 }
 // EXylem
 double EXylem(double psiPlant, double psiUpstream, double kxylemmax, double c, double d, bool allowNegativeFlux, double psiCav);
-RcppExport SEXP medfate_EXylem(SEXP psiPlantSEXP, SEXP psiUpstreamSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP, SEXP allowNegativeFluxSEXP, SEXP psiCavSEXP) {
+RcppExport SEXP _medfate_EXylem(SEXP psiPlantSEXP, SEXP psiUpstreamSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP, SEXP allowNegativeFluxSEXP, SEXP psiCavSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -991,7 +991,7 @@ END_RCPP
 }
 // psiCrit
 double psiCrit(double c, double d);
-RcppExport SEXP medfate_psiCrit(SEXP cSEXP, SEXP dSEXP) {
+RcppExport SEXP _medfate_psiCrit(SEXP cSEXP, SEXP dSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1003,7 +1003,7 @@ END_RCPP
 }
 // E2psiXylem
 double E2psiXylem(double E, double psiUpstream, double kxylemmax, double c, double d, double psiCav, double psiStep, double psiMax);
-RcppExport SEXP medfate_E2psiXylem(SEXP ESEXP, SEXP psiUpstreamSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP, SEXP psiCavSEXP, SEXP psiStepSEXP, SEXP psiMaxSEXP) {
+RcppExport SEXP _medfate_E2psiXylem(SEXP ESEXP, SEXP psiUpstreamSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP, SEXP psiCavSEXP, SEXP psiStepSEXP, SEXP psiMaxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1021,7 +1021,7 @@ END_RCPP
 }
 // Ecrit
 double Ecrit(double psiUpstream, double kxylemmax, double c, double d);
-RcppExport SEXP medfate_Ecrit(SEXP psiUpstreamSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP) {
+RcppExport SEXP _medfate_Ecrit(SEXP psiUpstreamSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1035,7 +1035,7 @@ END_RCPP
 }
 // regulatedPsiXylem
 NumericVector regulatedPsiXylem(double E, double psiUpstream, double kxylemmax, double c, double d, double psiStep);
-RcppExport SEXP medfate_regulatedPsiXylem(SEXP ESEXP, SEXP psiUpstreamSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP, SEXP psiStepSEXP) {
+RcppExport SEXP _medfate_regulatedPsiXylem(SEXP ESEXP, SEXP psiUpstreamSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP, SEXP psiStepSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1051,7 +1051,7 @@ END_RCPP
 }
 // supplyFunctionOneXylem
 List supplyFunctionOneXylem(NumericVector psiSoil, NumericVector v, double kstemmax, double stemc, double stemd, double psiCav, int maxNsteps, double psiStep, double psiMax, double dE);
-RcppExport SEXP medfate_supplyFunctionOneXylem(SEXP psiSoilSEXP, SEXP vSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP psiCavSEXP, SEXP maxNstepsSEXP, SEXP psiStepSEXP, SEXP psiMaxSEXP, SEXP dESEXP) {
+RcppExport SEXP _medfate_supplyFunctionOneXylem(SEXP psiSoilSEXP, SEXP vSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP psiCavSEXP, SEXP maxNstepsSEXP, SEXP psiStepSEXP, SEXP psiMaxSEXP, SEXP dESEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1071,7 +1071,7 @@ END_RCPP
 }
 // vanGenuchtenConductance
 double vanGenuchtenConductance(double psi, double krhizomax, double n, double alpha);
-RcppExport SEXP medfate_vanGenuchtenConductance(SEXP psiSEXP, SEXP krhizomaxSEXP, SEXP nSEXP, SEXP alphaSEXP) {
+RcppExport SEXP _medfate_vanGenuchtenConductance(SEXP psiSEXP, SEXP krhizomaxSEXP, SEXP nSEXP, SEXP alphaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1085,7 +1085,7 @@ END_RCPP
 }
 // E2psiVanGenuchten
 double E2psiVanGenuchten(double E, double psiSoil, double krhizomax, double n, double alpha, double psiStep, double psiMax);
-RcppExport SEXP medfate_E2psiVanGenuchten(SEXP ESEXP, SEXP psiSoilSEXP, SEXP krhizomaxSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP psiStepSEXP, SEXP psiMaxSEXP) {
+RcppExport SEXP _medfate_E2psiVanGenuchten(SEXP ESEXP, SEXP psiSoilSEXP, SEXP krhizomaxSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP psiStepSEXP, SEXP psiMaxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1102,7 +1102,7 @@ END_RCPP
 }
 // EVanGenuchten
 double EVanGenuchten(double psiRhizo, double psiSoil, double krhizomax, double n, double alpha, double psiStep, double psiTol, bool allowNegativeFlux);
-RcppExport SEXP medfate_EVanGenuchten(SEXP psiRhizoSEXP, SEXP psiSoilSEXP, SEXP krhizomaxSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP psiStepSEXP, SEXP psiTolSEXP, SEXP allowNegativeFluxSEXP) {
+RcppExport SEXP _medfate_EVanGenuchten(SEXP psiRhizoSEXP, SEXP psiSoilSEXP, SEXP krhizomaxSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP psiStepSEXP, SEXP psiTolSEXP, SEXP allowNegativeFluxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1120,7 +1120,7 @@ END_RCPP
 }
 // E2psiTwoElements
 double E2psiTwoElements(double E, double psiSoil, double krhizomax, double kxylemmax, double n, double alpha, double c, double d, double psiCav, double psiStep, double psiMax);
-RcppExport SEXP medfate_E2psiTwoElements(SEXP ESEXP, SEXP psiSoilSEXP, SEXP krhizomaxSEXP, SEXP kxylemmaxSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP cSEXP, SEXP dSEXP, SEXP psiCavSEXP, SEXP psiStepSEXP, SEXP psiMaxSEXP) {
+RcppExport SEXP _medfate_E2psiTwoElements(SEXP ESEXP, SEXP psiSoilSEXP, SEXP krhizomaxSEXP, SEXP kxylemmaxSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP cSEXP, SEXP dSEXP, SEXP psiCavSEXP, SEXP psiStepSEXP, SEXP psiMaxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1141,7 +1141,7 @@ END_RCPP
 }
 // supplyFunctionTwoElements
 List supplyFunctionTwoElements(double Emax, double psiSoil, double krhizomax, double kxylemmax, double n, double alpha, double c, double d, double psiCav, double dE, double psiMax);
-RcppExport SEXP medfate_supplyFunctionTwoElements(SEXP EmaxSEXP, SEXP psiSoilSEXP, SEXP krhizomaxSEXP, SEXP kxylemmaxSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP cSEXP, SEXP dSEXP, SEXP psiCavSEXP, SEXP dESEXP, SEXP psiMaxSEXP) {
+RcppExport SEXP _medfate_supplyFunctionTwoElements(SEXP EmaxSEXP, SEXP psiSoilSEXP, SEXP krhizomaxSEXP, SEXP kxylemmaxSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP cSEXP, SEXP dSEXP, SEXP psiCavSEXP, SEXP dESEXP, SEXP psiMaxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1162,7 +1162,7 @@ END_RCPP
 }
 // regulatedPsiTwoElements
 NumericVector regulatedPsiTwoElements(double Emax, double psiSoil, double krhizomax, double kxylemmax, double n, double alpha, double c, double d, double dE, double psiMax);
-RcppExport SEXP medfate_regulatedPsiTwoElements(SEXP EmaxSEXP, SEXP psiSoilSEXP, SEXP krhizomaxSEXP, SEXP kxylemmaxSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP cSEXP, SEXP dSEXP, SEXP dESEXP, SEXP psiMaxSEXP) {
+RcppExport SEXP _medfate_regulatedPsiTwoElements(SEXP EmaxSEXP, SEXP psiSoilSEXP, SEXP krhizomaxSEXP, SEXP kxylemmaxSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP cSEXP, SEXP dSEXP, SEXP dESEXP, SEXP psiMaxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1182,7 +1182,7 @@ END_RCPP
 }
 // E2psiNetwork
 List E2psiNetwork(double E, NumericVector psiSoil, NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil, NumericVector krootmax, double rootc, double rootd, double kstemmax, double stemc, double stemd, NumericVector psiIni, double psiCav, double psiStep, double psiMax, int ntrial, double psiTol, double ETol);
-RcppExport SEXP medfate_E2psiNetwork(SEXP ESEXP, SEXP psiSoilSEXP, SEXP krhizomaxSEXP, SEXP nsoilSEXP, SEXP alphasoilSEXP, SEXP krootmaxSEXP, SEXP rootcSEXP, SEXP rootdSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP psiIniSEXP, SEXP psiCavSEXP, SEXP psiStepSEXP, SEXP psiMaxSEXP, SEXP ntrialSEXP, SEXP psiTolSEXP, SEXP ETolSEXP) {
+RcppExport SEXP _medfate_E2psiNetwork(SEXP ESEXP, SEXP psiSoilSEXP, SEXP krhizomaxSEXP, SEXP nsoilSEXP, SEXP alphasoilSEXP, SEXP krootmaxSEXP, SEXP rootcSEXP, SEXP rootdSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP psiIniSEXP, SEXP psiCavSEXP, SEXP psiStepSEXP, SEXP psiMaxSEXP, SEXP ntrialSEXP, SEXP psiTolSEXP, SEXP ETolSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1210,7 +1210,7 @@ END_RCPP
 }
 // averageRhizosphereResistancePercent
 double averageRhizosphereResistancePercent(double krhizomax, double n, double alpha, double krootmax, double rootc, double rootd, double kstemmax, double stemc, double stemd, double psiStep);
-RcppExport SEXP medfate_averageRhizosphereResistancePercent(SEXP krhizomaxSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP krootmaxSEXP, SEXP rootcSEXP, SEXP rootdSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP psiStepSEXP) {
+RcppExport SEXP _medfate_averageRhizosphereResistancePercent(SEXP krhizomaxSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP krootmaxSEXP, SEXP rootcSEXP, SEXP rootdSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP psiStepSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1230,7 +1230,7 @@ END_RCPP
 }
 // findRhizosphereMaximumConductance
 double findRhizosphereMaximumConductance(double averageResistancePercent, double n, double alpha, double krootmax, double rootc, double rootd, double kstemmax, double stemc, double stemd);
-RcppExport SEXP medfate_findRhizosphereMaximumConductance(SEXP averageResistancePercentSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP krootmaxSEXP, SEXP rootcSEXP, SEXP rootdSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP) {
+RcppExport SEXP _medfate_findRhizosphereMaximumConductance(SEXP averageResistancePercentSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP krootmaxSEXP, SEXP rootcSEXP, SEXP rootdSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1249,7 +1249,7 @@ END_RCPP
 }
 // supplyFunctionNetwork
 List supplyFunctionNetwork(NumericVector psiSoil, NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil, NumericVector krootmax, double rootc, double rootd, double kstemmax, double stemc, double stemd, double psiCav, int maxNsteps, double psiStep, double psiMax, int ntrial, double psiTol, double ETol);
-RcppExport SEXP medfate_supplyFunctionNetwork(SEXP psiSoilSEXP, SEXP krhizomaxSEXP, SEXP nsoilSEXP, SEXP alphasoilSEXP, SEXP krootmaxSEXP, SEXP rootcSEXP, SEXP rootdSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP psiCavSEXP, SEXP maxNstepsSEXP, SEXP psiStepSEXP, SEXP psiMaxSEXP, SEXP ntrialSEXP, SEXP psiTolSEXP, SEXP ETolSEXP) {
+RcppExport SEXP _medfate_supplyFunctionNetwork(SEXP psiSoilSEXP, SEXP krhizomaxSEXP, SEXP nsoilSEXP, SEXP alphasoilSEXP, SEXP krootmaxSEXP, SEXP rootcSEXP, SEXP rootdSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP psiCavSEXP, SEXP maxNstepsSEXP, SEXP psiStepSEXP, SEXP psiMaxSEXP, SEXP ntrialSEXP, SEXP psiTolSEXP, SEXP ETolSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1276,7 +1276,7 @@ END_RCPP
 }
 // maximumStemHydraulicConductance
 double maximumStemHydraulicConductance(double xylemConductivity, double Al2As, double height);
-RcppExport SEXP medfate_maximumStemHydraulicConductance(SEXP xylemConductivitySEXP, SEXP Al2AsSEXP, SEXP heightSEXP) {
+RcppExport SEXP _medfate_maximumStemHydraulicConductance(SEXP xylemConductivitySEXP, SEXP Al2AsSEXP, SEXP heightSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1289,7 +1289,7 @@ END_RCPP
 }
 // parcohort
 NumericVector parcohort(IntegerVector SP, NumericVector H, NumericVector CR, NumericVector LAI, DataFrame SpParams);
-RcppExport SEXP medfate_parcohort(SEXP SPSEXP, SEXP HSEXP, SEXP CRSEXP, SEXP LAISEXP, SEXP SpParamsSEXP) {
+RcppExport SEXP _medfate_parcohort(SEXP SPSEXP, SEXP HSEXP, SEXP CRSEXP, SEXP LAISEXP, SEXP SpParamsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1304,7 +1304,7 @@ END_RCPP
 }
 // parheight
 NumericVector parheight(NumericVector heights, IntegerVector SP, NumericVector H, NumericVector CR, NumericVector LAI, DataFrame SpParams);
-RcppExport SEXP medfate_parheight(SEXP heightsSEXP, SEXP SPSEXP, SEXP HSEXP, SEXP CRSEXP, SEXP LAISEXP, SEXP SpParamsSEXP) {
+RcppExport SEXP _medfate_parheight(SEXP heightsSEXP, SEXP SPSEXP, SEXP HSEXP, SEXP CRSEXP, SEXP LAISEXP, SEXP SpParamsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1320,7 +1320,7 @@ END_RCPP
 }
 // swrheight
 NumericVector swrheight(NumericVector heights, IntegerVector SP, NumericVector H, NumericVector CR, NumericVector LAI, DataFrame SpParams);
-RcppExport SEXP medfate_swrheight(SEXP heightsSEXP, SEXP SPSEXP, SEXP HSEXP, SEXP CRSEXP, SEXP LAISEXP, SEXP SpParamsSEXP) {
+RcppExport SEXP _medfate_swrheight(SEXP heightsSEXP, SEXP SPSEXP, SEXP HSEXP, SEXP CRSEXP, SEXP LAISEXP, SEXP SpParamsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1336,7 +1336,7 @@ END_RCPP
 }
 // parExtinctionProfile
 NumericVector parExtinctionProfile(NumericVector z, List x, DataFrame SpParams, double gdd);
-RcppExport SEXP medfate_parExtinctionProfile(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
+RcppExport SEXP _medfate_parExtinctionProfile(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1350,7 +1350,7 @@ END_RCPP
 }
 // swrExtinctionProfile
 NumericVector swrExtinctionProfile(NumericVector z, List x, DataFrame SpParams, double gdd);
-RcppExport SEXP medfate_swrExtinctionProfile(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
+RcppExport SEXP _medfate_swrExtinctionProfile(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1364,7 +1364,7 @@ END_RCPP
 }
 // cohortAbsorbedSWRFraction
 NumericVector cohortAbsorbedSWRFraction(NumericVector z, List x, DataFrame SpParams, double gdd);
-RcppExport SEXP medfate_cohortAbsorbedSWRFraction(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
+RcppExport SEXP _medfate_cohortAbsorbedSWRFraction(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1378,7 +1378,7 @@ END_RCPP
 }
 // layerIrradianceFraction
 NumericVector layerIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericVector k, NumericVector alpha);
-RcppExport SEXP medfate_layerIrradianceFraction(SEXP LAImeSEXP, SEXP LAImdSEXP, SEXP kSEXP, SEXP alphaSEXP) {
+RcppExport SEXP _medfate_layerIrradianceFraction(SEXP LAImeSEXP, SEXP LAImdSEXP, SEXP kSEXP, SEXP alphaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1392,7 +1392,7 @@ END_RCPP
 }
 // cohortSunlitShadeAbsorbedRadiation
 List cohortSunlitShadeAbsorbedRadiation(double Ib0, double Id0, NumericVector Ibf, NumericVector Idf, double beta, NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kb, NumericVector kd, NumericVector alpha, double gamma);
-RcppExport SEXP medfate_cohortSunlitShadeAbsorbedRadiation(SEXP Ib0SEXP, SEXP Id0SEXP, SEXP IbfSEXP, SEXP IdfSEXP, SEXP betaSEXP, SEXP LAImeSEXP, SEXP LAImdSEXP, SEXP kbSEXP, SEXP kdSEXP, SEXP alphaSEXP, SEXP gammaSEXP) {
+RcppExport SEXP _medfate_cohortSunlitShadeAbsorbedRadiation(SEXP Ib0SEXP, SEXP Id0SEXP, SEXP IbfSEXP, SEXP IdfSEXP, SEXP betaSEXP, SEXP LAImeSEXP, SEXP LAImdSEXP, SEXP kbSEXP, SEXP kdSEXP, SEXP alphaSEXP, SEXP gammaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1413,7 +1413,7 @@ END_RCPP
 }
 // layerSunlitFraction
 NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kb);
-RcppExport SEXP medfate_layerSunlitFraction(SEXP LAImeSEXP, SEXP LAImdSEXP, SEXP kbSEXP) {
+RcppExport SEXP _medfate_layerSunlitFraction(SEXP LAImeSEXP, SEXP LAImdSEXP, SEXP kbSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1426,7 +1426,7 @@ END_RCPP
 }
 // checkSpeciesParameters
 void checkSpeciesParameters(DataFrame SpParams, CharacterVector params);
-RcppExport SEXP medfate_checkSpeciesParameters(SEXP SpParamsSEXP, SEXP paramsSEXP) {
+RcppExport SEXP _medfate_checkSpeciesParameters(SEXP SpParamsSEXP, SEXP paramsSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
@@ -1437,7 +1437,7 @@ END_RCPP
 }
 // swbInput
 List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, List control);
-RcppExport SEXP medfate_swbInput(SEXP aboveSEXP, SEXP VSEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
+RcppExport SEXP _medfate_swbInput(SEXP aboveSEXP, SEXP VSEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1452,7 +1452,7 @@ END_RCPP
 }
 // forest2swbInput
 List forest2swbInput(List x, List soil, DataFrame SpParams, List control);
-RcppExport SEXP medfate_forest2swbInput(SEXP xSEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
+RcppExport SEXP _medfate_forest2swbInput(SEXP xSEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1466,7 +1466,7 @@ END_RCPP
 }
 // growthInput
 List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, DataFrame SpParams, List control);
-RcppExport SEXP medfate_growthInput(SEXP aboveSEXP, SEXP ZSEXP, SEXP VSEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
+RcppExport SEXP _medfate_growthInput(SEXP aboveSEXP, SEXP ZSEXP, SEXP VSEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1482,7 +1482,7 @@ END_RCPP
 }
 // forest2growthInput
 List forest2growthInput(List x, List soil, DataFrame SpParams, List control);
-RcppExport SEXP medfate_forest2growthInput(SEXP xSEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
+RcppExport SEXP _medfate_forest2growthInput(SEXP xSEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1496,7 +1496,7 @@ END_RCPP
 }
 // gammaTemp
 double gammaTemp(double leaf_temp);
-RcppExport SEXP medfate_gammaTemp(SEXP leaf_tempSEXP) {
+RcppExport SEXP _medfate_gammaTemp(SEXP leaf_tempSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1507,7 +1507,7 @@ END_RCPP
 }
 // KmTemp
 double KmTemp(double leaf_temp, double Oi);
-RcppExport SEXP medfate_KmTemp(SEXP leaf_tempSEXP, SEXP OiSEXP) {
+RcppExport SEXP _medfate_KmTemp(SEXP leaf_tempSEXP, SEXP OiSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1519,7 +1519,7 @@ END_RCPP
 }
 // VmaxTemp
 double VmaxTemp(double Vmax298, double leaf_temp);
-RcppExport SEXP medfate_VmaxTemp(SEXP Vmax298SEXP, SEXP leaf_tempSEXP) {
+RcppExport SEXP _medfate_VmaxTemp(SEXP Vmax298SEXP, SEXP leaf_tempSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1531,7 +1531,7 @@ END_RCPP
 }
 // JmaxTemp
 double JmaxTemp(double Jmax298, double leaf_temp);
-RcppExport SEXP medfate_JmaxTemp(SEXP Jmax298SEXP, SEXP leaf_tempSEXP) {
+RcppExport SEXP _medfate_JmaxTemp(SEXP Jmax298SEXP, SEXP leaf_tempSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1543,7 +1543,7 @@ END_RCPP
 }
 // electronLimitedPhotosynthesis
 double electronLimitedPhotosynthesis(double Q, double Ci, double GT, double Jmax);
-RcppExport SEXP medfate_electronLimitedPhotosynthesis(SEXP QSEXP, SEXP CiSEXP, SEXP GTSEXP, SEXP JmaxSEXP) {
+RcppExport SEXP _medfate_electronLimitedPhotosynthesis(SEXP QSEXP, SEXP CiSEXP, SEXP GTSEXP, SEXP JmaxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1557,7 +1557,7 @@ END_RCPP
 }
 // rubiscoLimitedPhotosynthesis
 double rubiscoLimitedPhotosynthesis(double Ci, double GT, double Km, double Vmax);
-RcppExport SEXP medfate_rubiscoLimitedPhotosynthesis(SEXP CiSEXP, SEXP GTSEXP, SEXP KmSEXP, SEXP VmaxSEXP) {
+RcppExport SEXP _medfate_rubiscoLimitedPhotosynthesis(SEXP CiSEXP, SEXP GTSEXP, SEXP KmSEXP, SEXP VmaxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1571,7 +1571,7 @@ END_RCPP
 }
 // photosynthesis
 double photosynthesis(double Q, double Catm, double Gc, double leaf_temp, double Vmax298, double Jmax298, bool verbose);
-RcppExport SEXP medfate_photosynthesis(SEXP QSEXP, SEXP CatmSEXP, SEXP GcSEXP, SEXP leaf_tempSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP verboseSEXP) {
+RcppExport SEXP _medfate_photosynthesis(SEXP QSEXP, SEXP CatmSEXP, SEXP GcSEXP, SEXP leaf_tempSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1588,7 +1588,7 @@ END_RCPP
 }
 // leafPhotosynthesisFunction
 List leafPhotosynthesisFunction(List supplyFunction, double Catm, double Patm, double Tair, double vpa, double u, double absRad, double Q, double Vmax298, double Jmax298, double Gwmin, double Gwmax, double refLeafArea, bool verbose);
-RcppExport SEXP medfate_leafPhotosynthesisFunction(SEXP supplyFunctionSEXP, SEXP CatmSEXP, SEXP PatmSEXP, SEXP TairSEXP, SEXP vpaSEXP, SEXP uSEXP, SEXP absRadSEXP, SEXP QSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP GwminSEXP, SEXP GwmaxSEXP, SEXP refLeafAreaSEXP, SEXP verboseSEXP) {
+RcppExport SEXP _medfate_leafPhotosynthesisFunction(SEXP supplyFunctionSEXP, SEXP CatmSEXP, SEXP PatmSEXP, SEXP TairSEXP, SEXP vpaSEXP, SEXP uSEXP, SEXP absRadSEXP, SEXP QSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP GwminSEXP, SEXP GwmaxSEXP, SEXP refLeafAreaSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1612,7 +1612,7 @@ END_RCPP
 }
 // sunshadePhotosynthesisFunction
 List sunshadePhotosynthesisFunction(List supplyFunction, double Catm, double Patm, double Tair, double vpa, double SLarea, double SHarea, double u, double absRadSL, double absRadSH, double QSL, double QSH, double Vmax298SL, double Vmax298SH, double Jmax298SL, double Jmax298SH, double Gwmin, double Gwmax, bool verbose);
-RcppExport SEXP medfate_sunshadePhotosynthesisFunction(SEXP supplyFunctionSEXP, SEXP CatmSEXP, SEXP PatmSEXP, SEXP TairSEXP, SEXP vpaSEXP, SEXP SLareaSEXP, SEXP SHareaSEXP, SEXP uSEXP, SEXP absRadSLSEXP, SEXP absRadSHSEXP, SEXP QSLSEXP, SEXP QSHSEXP, SEXP Vmax298SLSEXP, SEXP Vmax298SHSEXP, SEXP Jmax298SLSEXP, SEXP Jmax298SHSEXP, SEXP GwminSEXP, SEXP GwmaxSEXP, SEXP verboseSEXP) {
+RcppExport SEXP _medfate_sunshadePhotosynthesisFunction(SEXP supplyFunctionSEXP, SEXP CatmSEXP, SEXP PatmSEXP, SEXP TairSEXP, SEXP vpaSEXP, SEXP SLareaSEXP, SEXP SHareaSEXP, SEXP uSEXP, SEXP absRadSLSEXP, SEXP absRadSHSEXP, SEXP QSLSEXP, SEXP QSHSEXP, SEXP Vmax298SLSEXP, SEXP Vmax298SHSEXP, SEXP Jmax298SLSEXP, SEXP Jmax298SHSEXP, SEXP GwminSEXP, SEXP GwmaxSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1641,7 +1641,7 @@ END_RCPP
 }
 // multilayerPhotosynthesisFunction
 List multilayerPhotosynthesisFunction(List supplyFunction, double Catm, double Patm, double Tair, double vpa, NumericVector SLarea, NumericVector SHarea, NumericVector u, NumericVector absRadSL, NumericVector absRadSH, NumericVector QSL, NumericVector QSH, NumericVector Vmax298, NumericVector Jmax298, double Gwmin, double Gwmax, bool verbose);
-RcppExport SEXP medfate_multilayerPhotosynthesisFunction(SEXP supplyFunctionSEXP, SEXP CatmSEXP, SEXP PatmSEXP, SEXP TairSEXP, SEXP vpaSEXP, SEXP SLareaSEXP, SEXP SHareaSEXP, SEXP uSEXP, SEXP absRadSLSEXP, SEXP absRadSHSEXP, SEXP QSLSEXP, SEXP QSHSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP GwminSEXP, SEXP GwmaxSEXP, SEXP verboseSEXP) {
+RcppExport SEXP _medfate_multilayerPhotosynthesisFunction(SEXP supplyFunctionSEXP, SEXP CatmSEXP, SEXP PatmSEXP, SEXP TairSEXP, SEXP vpaSEXP, SEXP SLareaSEXP, SEXP SHareaSEXP, SEXP uSEXP, SEXP absRadSLSEXP, SEXP absRadSHSEXP, SEXP QSLSEXP, SEXP QSHSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP GwminSEXP, SEXP GwmaxSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1668,7 +1668,7 @@ END_RCPP
 }
 // profitMaximization
 List profitMaximization(List supplyFunction, List photosynthesisFunction);
-RcppExport SEXP medfate_profitMaximization(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP) {
+RcppExport SEXP _medfate_profitMaximization(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1680,7 +1680,7 @@ END_RCPP
 }
 // profitMaximization2
 List profitMaximization2(List supplyFunction, List photosynthesisFunction, double kstemmax);
-RcppExport SEXP medfate_profitMaximization2(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP, SEXP kstemmaxSEXP) {
+RcppExport SEXP _medfate_profitMaximization2(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP, SEXP kstemmaxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1693,7 +1693,7 @@ END_RCPP
 }
 // profitMaximization3
 List profitMaximization3(List supplyFunction, List photosynthesisFunction, double kstemmax);
-RcppExport SEXP medfate_profitMaximization3(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP, SEXP kstemmaxSEXP) {
+RcppExport SEXP _medfate_profitMaximization3(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP, SEXP kstemmaxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1706,7 +1706,7 @@ END_RCPP
 }
 // conicDistribution
 NumericMatrix conicDistribution(NumericVector Z, NumericVector d);
-RcppExport SEXP medfate_conicDistribution(SEXP ZSEXP, SEXP dSEXP) {
+RcppExport SEXP _medfate_conicDistribution(SEXP ZSEXP, SEXP dSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1718,7 +1718,7 @@ END_RCPP
 }
 // ldrDistribution
 NumericMatrix ldrDistribution(NumericVector Z50, NumericVector Z95, NumericVector d);
-RcppExport SEXP medfate_ldrDistribution(SEXP Z50SEXP, SEXP Z95SEXP, SEXP dSEXP) {
+RcppExport SEXP _medfate_ldrDistribution(SEXP Z50SEXP, SEXP Z95SEXP, SEXP dSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1731,7 +1731,7 @@ END_RCPP
 }
 // xylemConductanceProportions
 NumericVector xylemConductanceProportions(NumericVector v, NumericVector d, double depthWidthRatio);
-RcppExport SEXP medfate_xylemConductanceProportions(SEXP vSEXP, SEXP dSEXP, SEXP depthWidthRatioSEXP) {
+RcppExport SEXP _medfate_xylemConductanceProportions(SEXP vSEXP, SEXP dSEXP, SEXP depthWidthRatioSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1744,7 +1744,7 @@ END_RCPP
 }
 // theta2psi
 double theta2psi(double clay, double sand, double theta);
-RcppExport SEXP medfate_theta2psi(SEXP claySEXP, SEXP sandSEXP, SEXP thetaSEXP) {
+RcppExport SEXP _medfate_theta2psi(SEXP claySEXP, SEXP sandSEXP, SEXP thetaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1757,7 +1757,7 @@ END_RCPP
 }
 // psi2theta
 double psi2theta(double clay, double sand, double psi);
-RcppExport SEXP medfate_psi2theta(SEXP claySEXP, SEXP sandSEXP, SEXP psiSEXP) {
+RcppExport SEXP _medfate_psi2theta(SEXP claySEXP, SEXP sandSEXP, SEXP psiSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1770,7 +1770,7 @@ END_RCPP
 }
 // soilUSDAType
 String soilUSDAType(double clay, double sand);
-RcppExport SEXP medfate_soilUSDAType(SEXP claySEXP, SEXP sandSEXP) {
+RcppExport SEXP _medfate_soilUSDAType(SEXP claySEXP, SEXP sandSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1782,7 +1782,7 @@ END_RCPP
 }
 // vanGenuchtenParams
 NumericVector vanGenuchtenParams(String soilType);
-RcppExport SEXP medfate_vanGenuchtenParams(SEXP soilTypeSEXP) {
+RcppExport SEXP _medfate_vanGenuchtenParams(SEXP soilTypeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1793,7 +1793,7 @@ END_RCPP
 }
 // soil
 List soil(List SoilParams, NumericVector W);
-RcppExport SEXP medfate_soil(SEXP SoilParamsSEXP, SEXP WSEXP) {
+RcppExport SEXP _medfate_soil(SEXP SoilParamsSEXP, SEXP WSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1805,7 +1805,7 @@ END_RCPP
 }
 // er
 NumericVector er(IntegerVector DOY, double ERconv, double ERsyn);
-RcppExport SEXP medfate_er(SEXP DOYSEXP, SEXP ERconvSEXP, SEXP ERsynSEXP) {
+RcppExport SEXP _medfate_er(SEXP DOYSEXP, SEXP ERconvSEXP, SEXP ERsynSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1818,7 +1818,7 @@ END_RCPP
 }
 // gdd
 NumericVector gdd(IntegerVector DOY, NumericVector Temp, double Tbase);
-RcppExport SEXP medfate_gdd(SEXP DOYSEXP, SEXP TempSEXP, SEXP TbaseSEXP) {
+RcppExport SEXP _medfate_gdd(SEXP DOYSEXP, SEXP TempSEXP, SEXP TbaseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1831,7 +1831,7 @@ END_RCPP
 }
 // soilevaporation
 double soilevaporation(double DEF, double PETs, double Gsoil);
-RcppExport SEXP medfate_soilevaporation(SEXP DEFSEXP, SEXP PETsSEXP, SEXP GsoilSEXP) {
+RcppExport SEXP _medfate_soilevaporation(SEXP DEFSEXP, SEXP PETsSEXP, SEXP GsoilSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1844,7 +1844,7 @@ END_RCPP
 }
 // infiltrationDay
 double infiltrationDay(double NetPrec, double Ssoil);
-RcppExport SEXP medfate_infiltrationDay(SEXP NetPrecSEXP, SEXP SsoilSEXP) {
+RcppExport SEXP _medfate_infiltrationDay(SEXP NetPrecSEXP, SEXP SsoilSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1856,7 +1856,7 @@ END_RCPP
 }
 // interceptionGashDay
 double interceptionGashDay(double Precipitation, double Cm, double p, double ER);
-RcppExport SEXP medfate_interceptionGashDay(SEXP PrecipitationSEXP, SEXP CmSEXP, SEXP pSEXP, SEXP ERSEXP) {
+RcppExport SEXP _medfate_interceptionGashDay(SEXP PrecipitationSEXP, SEXP CmSEXP, SEXP pSEXP, SEXP ERSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1870,7 +1870,7 @@ END_RCPP
 }
 // swbDay1
 List swbDay1(List x, List soil, double tday, double pet, double rain, double er, double runon, bool verbose);
-RcppExport SEXP medfate_swbDay1(SEXP xSEXP, SEXP soilSEXP, SEXP tdaySEXP, SEXP petSEXP, SEXP rainSEXP, SEXP erSEXP, SEXP runonSEXP, SEXP verboseSEXP) {
+RcppExport SEXP _medfate_swbDay1(SEXP xSEXP, SEXP soilSEXP, SEXP tdaySEXP, SEXP petSEXP, SEXP rainSEXP, SEXP erSEXP, SEXP runonSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1888,7 +1888,7 @@ END_RCPP
 }
 // swbDay2
 List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, double latitude, double elevation, double slope, double aspect, double solarConstant, double delta, double rain, double er, double runon, bool verbose);
-RcppExport SEXP medfate_swbDay2(SEXP xSEXP, SEXP soilSEXP, SEXP tminSEXP, SEXP tmaxSEXP, SEXP rhminSEXP, SEXP rhmaxSEXP, SEXP radSEXP, SEXP windSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP solarConstantSEXP, SEXP deltaSEXP, SEXP rainSEXP, SEXP erSEXP, SEXP runonSEXP, SEXP verboseSEXP) {
+RcppExport SEXP _medfate_swbDay2(SEXP xSEXP, SEXP soilSEXP, SEXP tminSEXP, SEXP tmaxSEXP, SEXP rhminSEXP, SEXP rhmaxSEXP, SEXP radSEXP, SEXP windSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP solarConstantSEXP, SEXP deltaSEXP, SEXP rainSEXP, SEXP erSEXP, SEXP runonSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1916,7 +1916,7 @@ END_RCPP
 }
 // swbDay
 List swbDay(List x, List soil, CharacterVector date, int doy, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, double latitude, double elevation, double slope, double aspect, double rain, double er, double runon);
-RcppExport SEXP medfate_swbDay(SEXP xSEXP, SEXP soilSEXP, SEXP dateSEXP, SEXP doySEXP, SEXP tminSEXP, SEXP tmaxSEXP, SEXP rhminSEXP, SEXP rhmaxSEXP, SEXP radSEXP, SEXP windSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP rainSEXP, SEXP erSEXP, SEXP runonSEXP) {
+RcppExport SEXP _medfate_swbDay(SEXP xSEXP, SEXP soilSEXP, SEXP dateSEXP, SEXP doySEXP, SEXP tminSEXP, SEXP tmaxSEXP, SEXP rhminSEXP, SEXP rhmaxSEXP, SEXP radSEXP, SEXP windSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP rainSEXP, SEXP erSEXP, SEXP runonSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1943,7 +1943,7 @@ END_RCPP
 }
 // swbgridDay
 List swbgridDay(CharacterVector lct, List xList, List soilList, IntegerVector waterO, List queenNeigh, List waterQ, NumericVector gddVec, NumericVector petVec, NumericVector rainVec, NumericVector erVec, NumericVector trackSpecies);
-RcppExport SEXP medfate_swbgridDay(SEXP lctSEXP, SEXP xListSEXP, SEXP soilListSEXP, SEXP waterOSEXP, SEXP queenNeighSEXP, SEXP waterQSEXP, SEXP gddVecSEXP, SEXP petVecSEXP, SEXP rainVecSEXP, SEXP erVecSEXP, SEXP trackSpeciesSEXP) {
+RcppExport SEXP _medfate_swbgridDay(SEXP lctSEXP, SEXP xListSEXP, SEXP soilListSEXP, SEXP waterOSEXP, SEXP queenNeighSEXP, SEXP waterQSEXP, SEXP gddVecSEXP, SEXP petVecSEXP, SEXP rainVecSEXP, SEXP erVecSEXP, SEXP trackSpeciesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1964,7 +1964,7 @@ END_RCPP
 }
 // swb
 List swb(List x, List soil, DataFrame meteo, double latitude, double elevation, double slope, double aspect);
-RcppExport SEXP medfate_swb(SEXP xSEXP, SEXP soilSEXP, SEXP meteoSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP) {
+RcppExport SEXP _medfate_swb(SEXP xSEXP, SEXP soilSEXP, SEXP meteoSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1981,7 +1981,7 @@ END_RCPP
 }
 // windSpeedAtCanopyHeight
 double windSpeedAtCanopyHeight(double wind20H, double canopyHeight);
-RcppExport SEXP medfate_windSpeedAtCanopyHeight(SEXP wind20HSEXP, SEXP canopyHeightSEXP) {
+RcppExport SEXP _medfate_windSpeedAtCanopyHeight(SEXP wind20HSEXP, SEXP canopyHeightSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1993,7 +1993,7 @@ END_RCPP
 }
 // unshelteredMidflameWindSpeed
 double unshelteredMidflameWindSpeed(double wind20H, double fuelBedHeight);
-RcppExport SEXP medfate_unshelteredMidflameWindSpeed(SEXP wind20HSEXP, SEXP fuelBedHeightSEXP) {
+RcppExport SEXP _medfate_unshelteredMidflameWindSpeed(SEXP wind20HSEXP, SEXP fuelBedHeightSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2005,7 +2005,7 @@ END_RCPP
 }
 // shelteredMidflameWindSpeed
 double shelteredMidflameWindSpeed(double wind20H, double crownFillProportion, double topCanopyHeight);
-RcppExport SEXP medfate_shelteredMidflameWindSpeed(SEXP wind20HSEXP, SEXP crownFillProportionSEXP, SEXP topCanopyHeightSEXP) {
+RcppExport SEXP _medfate_shelteredMidflameWindSpeed(SEXP wind20HSEXP, SEXP crownFillProportionSEXP, SEXP topCanopyHeightSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2018,7 +2018,7 @@ END_RCPP
 }
 // windAdjustmentFactor
 double windAdjustmentFactor(double topShrubHeight, double bottomCanopyHeight, double topCanopyHeight, double canopyCover);
-RcppExport SEXP medfate_windAdjustmentFactor(SEXP topShrubHeightSEXP, SEXP bottomCanopyHeightSEXP, SEXP topCanopyHeightSEXP, SEXP canopyCoverSEXP) {
+RcppExport SEXP _medfate_windAdjustmentFactor(SEXP topShrubHeightSEXP, SEXP bottomCanopyHeightSEXP, SEXP topCanopyHeightSEXP, SEXP canopyCoverSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2032,7 +2032,7 @@ END_RCPP
 }
 // windSpeedAtHeightOverCanopy
 double windSpeedAtHeightOverCanopy(double z, double wind20H, double canopyHeight);
-RcppExport SEXP medfate_windSpeedAtHeightOverCanopy(SEXP zSEXP, SEXP wind20HSEXP, SEXP canopyHeightSEXP) {
+RcppExport SEXP _medfate_windSpeedAtHeightOverCanopy(SEXP zSEXP, SEXP wind20HSEXP, SEXP canopyHeightSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2045,7 +2045,7 @@ END_RCPP
 }
 // windExtinctionProfile
 NumericVector windExtinctionProfile(NumericVector z, double wind20H, double LAIc, double canopyHeight);
-RcppExport SEXP medfate_windExtinctionProfile(SEXP zSEXP, SEXP wind20HSEXP, SEXP LAIcSEXP, SEXP canopyHeightSEXP) {
+RcppExport SEXP _medfate_windExtinctionProfile(SEXP zSEXP, SEXP wind20HSEXP, SEXP LAIcSEXP, SEXP canopyHeightSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2056,4 +2056,152 @@ BEGIN_RCPP
     rcpp_result_gen = Rcpp::wrap(windExtinctionProfile(z, wind20H, LAIc, canopyHeight));
     return rcpp_result_gen;
 END_RCPP
+}
+
+static const R_CallMethodDef CallEntries[] = {
+    {"_medfate_radiationDiurnalPattern", (DL_FUNC) &_medfate_radiationDiurnalPattern, 2},
+    {"_medfate_temperatureDiurnalPattern", (DL_FUNC) &_medfate_temperatureDiurnalPattern, 4},
+    {"_medfate_leafTemperature", (DL_FUNC) &_medfate_leafTemperature, 5},
+    {"_medfate_FCCSbehaviour", (DL_FUNC) &_medfate_FCCSbehaviour, 5},
+    {"_medfate_rothermel", (DL_FUNC) &_medfate_rothermel, 11},
+    {"_medfate_genros", (DL_FUNC) &_medfate_genros, 8},
+    {"_medfate_ellipseROS", (DL_FUNC) &_medfate_ellipseROS, 4},
+    {"_medfate_doubleEllipseROS", (DL_FUNC) &_medfate_doubleEllipseROS, 4},
+    {"_medfate_fireBrandFallingHeight", (DL_FUNC) &_medfate_fireBrandFallingHeight, 3},
+    {"_medfate_totalFirebrandLoftingTime", (DL_FUNC) &_medfate_totalFirebrandLoftingTime, 4},
+    {"_medfate_totalGasFlowPersistenceTime", (DL_FUNC) &_medfate_totalGasFlowPersistenceTime, 3},
+    {"_medfate_findFireBrandLoftedHeight", (DL_FUNC) &_medfate_findFireBrandLoftedHeight, 4},
+    {"_medfate_willBurnWhenHitFloor", (DL_FUNC) &_medfate_willBurnWhenHitFloor, 2},
+    {"_medfate_fireBrandBurningTimeFromCanopyStructure", (DL_FUNC) &_medfate_fireBrandBurningTimeFromCanopyStructure, 1},
+    {"_medfate_fireBrandFlameHeightFromCanopyStructure", (DL_FUNC) &_medfate_fireBrandFlameHeightFromCanopyStructure, 2},
+    {"_medfate_criticalFirelineIntensity", (DL_FUNC) &_medfate_criticalFirelineIntensity, 2},
+    {"_medfate_cohortParameter", (DL_FUNC) &_medfate_cohortParameter, 3},
+    {"_medfate_cohortCharacterParameter", (DL_FUNC) &_medfate_cohortCharacterParameter, 3},
+    {"_medfate_cohortSpecies", (DL_FUNC) &_medfate_cohortSpecies, 1},
+    {"_medfate_cohortSpeciesName", (DL_FUNC) &_medfate_cohortSpeciesName, 2},
+    {"_medfate_treeBasalArea", (DL_FUNC) &_medfate_treeBasalArea, 2},
+    {"_medfate_cohortBasalArea", (DL_FUNC) &_medfate_cohortBasalArea, 1},
+    {"_medfate_speciesBasalArea", (DL_FUNC) &_medfate_speciesBasalArea, 2},
+    {"_medfate_cohortLargerTreeBasalArea", (DL_FUNC) &_medfate_cohortLargerTreeBasalArea, 1},
+    {"_medfate_forestBasalArea", (DL_FUNC) &_medfate_forestBasalArea, 1},
+    {"_medfate_cohortDensity", (DL_FUNC) &_medfate_cohortDensity, 2},
+    {"_medfate_cohortHeight", (DL_FUNC) &_medfate_cohortHeight, 1},
+    {"_medfate_shrubCrownRatio", (DL_FUNC) &_medfate_shrubCrownRatio, 2},
+    {"_medfate_cohortCrownRatio", (DL_FUNC) &_medfate_cohortCrownRatio, 2},
+    {"_medfate_cohortCrownBaseHeight", (DL_FUNC) &_medfate_cohortCrownBaseHeight, 2},
+    {"_medfate_cohortCrownLength", (DL_FUNC) &_medfate_cohortCrownLength, 2},
+    {"_medfate_treeFoliarBiomass", (DL_FUNC) &_medfate_treeFoliarBiomass, 5},
+    {"_medfate_shrubFoliarBiomass", (DL_FUNC) &_medfate_shrubFoliarBiomass, 6},
+    {"_medfate_cohortFoliarBiomass", (DL_FUNC) &_medfate_cohortFoliarBiomass, 3},
+    {"_medfate_shrubCover", (DL_FUNC) &_medfate_shrubCover, 2},
+    {"_medfate_cohortCover", (DL_FUNC) &_medfate_cohortCover, 1},
+    {"_medfate_shrubCrownPhytovolume", (DL_FUNC) &_medfate_shrubCrownPhytovolume, 5},
+    {"_medfate_cohortPhytovolume", (DL_FUNC) &_medfate_cohortPhytovolume, 2},
+    {"_medfate_treeFuel", (DL_FUNC) &_medfate_treeFuel, 6},
+    {"_medfate_shrubFuel", (DL_FUNC) &_medfate_shrubFuel, 7},
+    {"_medfate_cohortFuel", (DL_FUNC) &_medfate_cohortFuel, 4},
+    {"_medfate_cohortEquilibriumLeafLitter", (DL_FUNC) &_medfate_cohortEquilibriumLeafLitter, 3},
+    {"_medfate_cohortEquilibriumSmallBranchLitter", (DL_FUNC) &_medfate_cohortEquilibriumSmallBranchLitter, 3},
+    {"_medfate_treeLAI", (DL_FUNC) &_medfate_treeLAI, 5},
+    {"_medfate_shrubLAI", (DL_FUNC) &_medfate_shrubLAI, 5},
+    {"_medfate_cohortLAI", (DL_FUNC) &_medfate_cohortLAI, 3},
+    {"_medfate_LAIdistribution", (DL_FUNC) &_medfate_LAIdistribution, 4},
+    {"_medfate_LAIprofile", (DL_FUNC) &_medfate_LAIprofile, 4},
+    {"_medfate_forest2aboveground", (DL_FUNC) &_medfate_forest2aboveground, 3},
+    {"_medfate_fuelConditions", (DL_FUNC) &_medfate_fuelConditions, 4},
+    {"_medfate_EMCdesorption", (DL_FUNC) &_medfate_EMCdesorption, 2},
+    {"_medfate_EMCadsorption", (DL_FUNC) &_medfate_EMCadsorption, 2},
+    {"_medfate_EMCSimard", (DL_FUNC) &_medfate_EMCSimard, 2},
+    {"_medfate_woodyFuelProfile", (DL_FUNC) &_medfate_woodyFuelProfile, 4},
+    {"_medfate_layerCohortFuelLoading", (DL_FUNC) &_medfate_layerCohortFuelLoading, 5},
+    {"_medfate_layerFuelLoading", (DL_FUNC) &_medfate_layerFuelLoading, 5},
+    {"_medfate_layerLAI", (DL_FUNC) &_medfate_layerLAI, 5},
+    {"_medfate_layerFuelAverageSpeciesParameter", (DL_FUNC) &_medfate_layerFuelAverageSpeciesParameter, 6},
+    {"_medfate_layerFuelAverageParameter", (DL_FUNC) &_medfate_layerFuelAverageParameter, 6},
+    {"_medfate_layerFuelAverageCrownLength", (DL_FUNC) &_medfate_layerFuelAverageCrownLength, 6},
+    {"_medfate_fuelLiveStratification", (DL_FUNC) &_medfate_fuelLiveStratification, 6},
+    {"_medfate_FCCSproperties", (DL_FUNC) &_medfate_FCCSproperties, 8},
+    {"_medfate_defoliationFraction", (DL_FUNC) &_medfate_defoliationFraction, 2},
+    {"_medfate_growth", (DL_FUNC) &_medfate_growth, 7},
+    {"_medfate_Psi2K", (DL_FUNC) &_medfate_Psi2K, 3},
+    {"_medfate_K2Psi", (DL_FUNC) &_medfate_K2Psi, 3},
+    {"_medfate_averagePsi", (DL_FUNC) &_medfate_averagePsi, 4},
+    {"_medfate_gammds", (DL_FUNC) &_medfate_gammds, 2},
+    {"_medfate_xylemConductance", (DL_FUNC) &_medfate_xylemConductance, 4},
+    {"_medfate_xylemPsi", (DL_FUNC) &_medfate_xylemPsi, 4},
+    {"_medfate_Egamma", (DL_FUNC) &_medfate_Egamma, 5},
+    {"_medfate_EXylem", (DL_FUNC) &_medfate_EXylem, 7},
+    {"_medfate_psiCrit", (DL_FUNC) &_medfate_psiCrit, 2},
+    {"_medfate_E2psiXylem", (DL_FUNC) &_medfate_E2psiXylem, 8},
+    {"_medfate_Ecrit", (DL_FUNC) &_medfate_Ecrit, 4},
+    {"_medfate_regulatedPsiXylem", (DL_FUNC) &_medfate_regulatedPsiXylem, 6},
+    {"_medfate_supplyFunctionOneXylem", (DL_FUNC) &_medfate_supplyFunctionOneXylem, 10},
+    {"_medfate_vanGenuchtenConductance", (DL_FUNC) &_medfate_vanGenuchtenConductance, 4},
+    {"_medfate_E2psiVanGenuchten", (DL_FUNC) &_medfate_E2psiVanGenuchten, 7},
+    {"_medfate_EVanGenuchten", (DL_FUNC) &_medfate_EVanGenuchten, 8},
+    {"_medfate_E2psiTwoElements", (DL_FUNC) &_medfate_E2psiTwoElements, 11},
+    {"_medfate_supplyFunctionTwoElements", (DL_FUNC) &_medfate_supplyFunctionTwoElements, 11},
+    {"_medfate_regulatedPsiTwoElements", (DL_FUNC) &_medfate_regulatedPsiTwoElements, 10},
+    {"_medfate_E2psiNetwork", (DL_FUNC) &_medfate_E2psiNetwork, 18},
+    {"_medfate_averageRhizosphereResistancePercent", (DL_FUNC) &_medfate_averageRhizosphereResistancePercent, 10},
+    {"_medfate_findRhizosphereMaximumConductance", (DL_FUNC) &_medfate_findRhizosphereMaximumConductance, 9},
+    {"_medfate_supplyFunctionNetwork", (DL_FUNC) &_medfate_supplyFunctionNetwork, 17},
+    {"_medfate_maximumStemHydraulicConductance", (DL_FUNC) &_medfate_maximumStemHydraulicConductance, 3},
+    {"_medfate_parcohort", (DL_FUNC) &_medfate_parcohort, 5},
+    {"_medfate_parheight", (DL_FUNC) &_medfate_parheight, 6},
+    {"_medfate_swrheight", (DL_FUNC) &_medfate_swrheight, 6},
+    {"_medfate_parExtinctionProfile", (DL_FUNC) &_medfate_parExtinctionProfile, 4},
+    {"_medfate_swrExtinctionProfile", (DL_FUNC) &_medfate_swrExtinctionProfile, 4},
+    {"_medfate_cohortAbsorbedSWRFraction", (DL_FUNC) &_medfate_cohortAbsorbedSWRFraction, 4},
+    {"_medfate_layerIrradianceFraction", (DL_FUNC) &_medfate_layerIrradianceFraction, 4},
+    {"_medfate_cohortSunlitShadeAbsorbedRadiation", (DL_FUNC) &_medfate_cohortSunlitShadeAbsorbedRadiation, 11},
+    {"_medfate_layerSunlitFraction", (DL_FUNC) &_medfate_layerSunlitFraction, 3},
+    {"_medfate_checkSpeciesParameters", (DL_FUNC) &_medfate_checkSpeciesParameters, 2},
+    {"_medfate_swbInput", (DL_FUNC) &_medfate_swbInput, 5},
+    {"_medfate_forest2swbInput", (DL_FUNC) &_medfate_forest2swbInput, 4},
+    {"_medfate_growthInput", (DL_FUNC) &_medfate_growthInput, 6},
+    {"_medfate_forest2growthInput", (DL_FUNC) &_medfate_forest2growthInput, 4},
+    {"_medfate_gammaTemp", (DL_FUNC) &_medfate_gammaTemp, 1},
+    {"_medfate_KmTemp", (DL_FUNC) &_medfate_KmTemp, 2},
+    {"_medfate_VmaxTemp", (DL_FUNC) &_medfate_VmaxTemp, 2},
+    {"_medfate_JmaxTemp", (DL_FUNC) &_medfate_JmaxTemp, 2},
+    {"_medfate_electronLimitedPhotosynthesis", (DL_FUNC) &_medfate_electronLimitedPhotosynthesis, 4},
+    {"_medfate_rubiscoLimitedPhotosynthesis", (DL_FUNC) &_medfate_rubiscoLimitedPhotosynthesis, 4},
+    {"_medfate_photosynthesis", (DL_FUNC) &_medfate_photosynthesis, 7},
+    {"_medfate_leafPhotosynthesisFunction", (DL_FUNC) &_medfate_leafPhotosynthesisFunction, 14},
+    {"_medfate_sunshadePhotosynthesisFunction", (DL_FUNC) &_medfate_sunshadePhotosynthesisFunction, 19},
+    {"_medfate_multilayerPhotosynthesisFunction", (DL_FUNC) &_medfate_multilayerPhotosynthesisFunction, 17},
+    {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 2},
+    {"_medfate_profitMaximization2", (DL_FUNC) &_medfate_profitMaximization2, 3},
+    {"_medfate_profitMaximization3", (DL_FUNC) &_medfate_profitMaximization3, 3},
+    {"_medfate_conicDistribution", (DL_FUNC) &_medfate_conicDistribution, 2},
+    {"_medfate_ldrDistribution", (DL_FUNC) &_medfate_ldrDistribution, 3},
+    {"_medfate_xylemConductanceProportions", (DL_FUNC) &_medfate_xylemConductanceProportions, 3},
+    {"_medfate_theta2psi", (DL_FUNC) &_medfate_theta2psi, 3},
+    {"_medfate_psi2theta", (DL_FUNC) &_medfate_psi2theta, 3},
+    {"_medfate_soilUSDAType", (DL_FUNC) &_medfate_soilUSDAType, 2},
+    {"_medfate_vanGenuchtenParams", (DL_FUNC) &_medfate_vanGenuchtenParams, 1},
+    {"_medfate_soil", (DL_FUNC) &_medfate_soil, 2},
+    {"_medfate_er", (DL_FUNC) &_medfate_er, 3},
+    {"_medfate_gdd", (DL_FUNC) &_medfate_gdd, 3},
+    {"_medfate_soilevaporation", (DL_FUNC) &_medfate_soilevaporation, 3},
+    {"_medfate_infiltrationDay", (DL_FUNC) &_medfate_infiltrationDay, 2},
+    {"_medfate_interceptionGashDay", (DL_FUNC) &_medfate_interceptionGashDay, 4},
+    {"_medfate_swbDay1", (DL_FUNC) &_medfate_swbDay1, 8},
+    {"_medfate_swbDay2", (DL_FUNC) &_medfate_swbDay2, 18},
+    {"_medfate_swbDay", (DL_FUNC) &_medfate_swbDay, 17},
+    {"_medfate_swbgridDay", (DL_FUNC) &_medfate_swbgridDay, 11},
+    {"_medfate_swb", (DL_FUNC) &_medfate_swb, 7},
+    {"_medfate_windSpeedAtCanopyHeight", (DL_FUNC) &_medfate_windSpeedAtCanopyHeight, 2},
+    {"_medfate_unshelteredMidflameWindSpeed", (DL_FUNC) &_medfate_unshelteredMidflameWindSpeed, 2},
+    {"_medfate_shelteredMidflameWindSpeed", (DL_FUNC) &_medfate_shelteredMidflameWindSpeed, 3},
+    {"_medfate_windAdjustmentFactor", (DL_FUNC) &_medfate_windAdjustmentFactor, 4},
+    {"_medfate_windSpeedAtHeightOverCanopy", (DL_FUNC) &_medfate_windSpeedAtHeightOverCanopy, 3},
+    {"_medfate_windExtinctionProfile", (DL_FUNC) &_medfate_windExtinctionProfile, 4},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_medfate(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
 }

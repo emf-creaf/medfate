@@ -195,11 +195,11 @@ List swbDay1(List x, List soil, double tday, double pet, double rain, double er,
  
     //Limit Kl due to previous cavitation
     if(!cavitationRefill) for(int c=0;c<numCohorts;c++) Kl[c] = std::min(Kl[c], 1.0-pEmb[c]);
-    PsiRoot(_,l) = psi; //Set initial guess of root potential to soil values
     //Limit Kl to minimum value for root disconnection
     Vl = V(_,l);
     epc = pmax(TmaxCoh*Kl*Vl,0.0);
     for(int c=0;c<numCohorts;c++) {
+      PsiRoot(c,l) = psi[l]; //Set initial guess of root potential to soil values
       //If relative conductance is smaller than the value for root disconnection
       //Set root potential to minimum value before disconnection and transpiration from that layer to zero
       if(Kl[c]<pRootDisc[c]) { 
