@@ -1,0 +1,10 @@
+-------------------------------
+ NEWS for R Package "medfate"
+-------------------------------
+
+__Version history__
+
+_Version 0.3.4, September 2017.
+
+1. Added new function 'swb.ldrOptimization' to optimize root distribution for swb simulations (Antoine Cabon).
+
