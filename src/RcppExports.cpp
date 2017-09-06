@@ -1705,14 +1705,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // conicDistribution
-NumericMatrix conicDistribution(NumericVector Z, NumericVector d);
-RcppExport SEXP _medfate_conicDistribution(SEXP ZSEXP, SEXP dSEXP) {
+NumericMatrix conicDistribution(NumericVector Zcone, NumericVector d);
+RcppExport SEXP _medfate_conicDistribution(SEXP ZconeSEXP, SEXP dSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type Z(ZSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Zcone(ZconeSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
-    rcpp_result_gen = Rcpp::wrap(conicDistribution(Z, d));
+    rcpp_result_gen = Rcpp::wrap(conicDistribution(Zcone, d));
     return rcpp_result_gen;
 END_RCPP
 }

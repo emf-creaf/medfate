@@ -10,7 +10,7 @@
 Functions to calculate the distribution of fine roots within the soil, given root system parameters and soil layer definition (layer widths).
 }
 \usage{
-root.conicDistribution(Z, d)
+root.conicDistribution(Zcone, d)
 root.ldrDistribution(Z50, Z95, d)
 root.xylemConductanceProportions(v, d, depthWidthRatio = 1)
 }
@@ -18,7 +18,7 @@ root.xylemConductanceProportions(v, d, depthWidthRatio = 1)
 \arguments{
   \item{Z50}{A vector of depths (in mm) corresponding to 50\% of roots.}
   \item{Z95}{A vector of depths (in mm) corresponding to 95\% of roots.}
-  \item{Z}{A vector of depths (in mm) corresponding to the root cone tip.}
+  \item{Zcone}{A vector of depths (in mm) corresponding to the root cone tip.}
   \item{d}{The width (in mm) corresponding to each soil layer.}
   \item{v}{Proportions of fine roots, as returned by functions \code{root.conicDistribution} or \code{root.ldrDistribution}.}
   \item{depthWidthRatio}{Ratio between radius of the soil layer with the largest radius and maximum rooting depth.}

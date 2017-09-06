@@ -3,6 +3,9 @@
 using namespace Rcpp;
 using namespace std;
 
+
+
+
 /**
  *  Root distribution
  */
@@ -25,7 +28,7 @@ NumericVector ldrRS_one(double Z50, double Z95, NumericVector d){
   }
   return(Vd);
 }
-NumericVector conicRS_one(double Z, NumericVector d){
+NumericVector conicRS_one(double Zcone, NumericVector d){
   int nlayers  = d.size();
   NumericVector Zd(nlayers,0.0);
   NumericVector Vd(nlayers,0.0);
@@ -33,10 +36,10 @@ NumericVector conicRS_one(double Z, NumericVector d){
   //Proportion of root length on each layer
   double sumZd=0.0;
   for(int l=0;l<nlayers;l++) {
-     if(l==0) Zd[l] = std::min(d[l],Z)/Z;
+     if(l==0) Zd[l] = std::min(d[l],Zcone)/Zcone;
      else if(l==(nlayers-1)) Zd[l] = 1.0-sumZd;
      else {
-       Zd[l] = std::max(std::min(d[l]/Z,1.0-sumZd),0.0);  
+       Zd[l] = std::max(std::min(d[l]/Zcone,1.0-sumZd),0.0);  
      }
      sumZd = sumZd+Zd[l];
   }
@@ -69,7 +72,7 @@ NumericVector conicRS_one(double Z, NumericVector d){
   //Remove non-existing part
   double Zsoil = 0.0;
   for(int l=0;l<nlayers;l++) Zsoil +=d[l];
-  double Zreal = std::max((Z-Zsoil)/Z,0.0);  
+  double Zreal = std::max((Zcone-Zsoil)/Zcone,0.0);  
   double Vrem = pow(Zreal,3.0);
   double Vtot = 0.0;
   for(int i=(nlayers-1);i>=0; i--) {
@@ -87,11 +90,11 @@ NumericVector conicRS_one(double Z, NumericVector d){
 }
 
 // [[Rcpp::export("root.conicDistribution")]]
-NumericMatrix conicDistribution(NumericVector Z, NumericVector d) {
-  int numCohorts = Z.size();
+NumericMatrix conicDistribution(NumericVector Zcone, NumericVector d) {
+  int numCohorts = Zcone.size();
   NumericMatrix P(numCohorts,d.size());
   for(int c=0;c<numCohorts;c++){
-    NumericVector PC = conicRS_one(Z[c],d);
+    NumericVector PC = conicRS_one(Zcone[c],d);
     for(int i=0;i<PC.size();i++) P(c,i) = PC[i];
   }
   return(P);

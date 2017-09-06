@@ -461,8 +461,8 @@ photo.profitMaximization3 <- function(supplyFunction, photosynthesisFunction, ks
     .Call('_medfate_profitMaximization3', PACKAGE = 'medfate', supplyFunction, photosynthesisFunction, kstemmax)
 }
 
-root.conicDistribution <- function(Z, d) {
-    .Call('_medfate_conicDistribution', PACKAGE = 'medfate', Z, d)
+root.conicDistribution <- function(Zcone, d) {
+    .Call('_medfate_conicDistribution', PACKAGE = 'medfate', Zcone, d)
 }
 
 root.ldrDistribution <- function(Z50, Z95, d) {
