@@ -2,7 +2,7 @@
 \name{swb.ldrOptimization}
 \alias{swb.ldrOptimization}
 
-\title{Root parameters optimization}
+\title{Optimization of root distribution}
 
 \description{The function \code{swb.ldrOptimization} optimizes the species root distribution within \code{swb}, given the arguments \code{x}, \code{meteo}, \code{soil} and \code{psi_crit}. The optimization is based on the eco-hydrological equilibrium hypothesis (Eagleson, 1982), which is formulated here as the root distribution for which plant transpiration is maximized while the plant water potential is close to the species-defined critical value \code{psi_crit} (Cabon et al., under review). Returns the optimized root distribution for each species, expressed as parameters of the function \code{root.ldrDistribution}.}
 
@@ -60,8 +60,6 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 
 \examples{
-### Example with random plot
-
 #Load example daily meteorological data
 data(examplemeteo)
 
@@ -92,6 +90,6 @@ x$Photosynthesis <- x$Photosynthesis[1]
 x$ProportionCavitated <- x$ProportionCavitated[1] 
 x$control$verbose <- F
 
-swb.ldrOptimization(x = x, meteo = examplemeteo, soil = examplesoil, psi_crit = c(-2,-2,-2))
+swb.ldrOptimization(x = x, meteo = examplemeteo, soil = examplesoil, psi_crit = -2)
 }
 
