@@ -223,8 +223,8 @@ List leafPhotosynthesisFunction(List supplyFunction, double Catm, double Patm, d
  * 
  * SLarea, SHarea - leaf area index of sunlit/shade leaves for each canopy layer
  * u - Wind speed (m/s) for each canopy layer
- * absRadSL/absRadSH - instantaneous absorbed radiation (W·m-2) per unit of sunlit/shade leaf area, for each canopy layer
- * QSL/QSH - Active photon flux density (micromol * s-1 * m-2) per unit of sunlit/shade leaf area, for each canopy layer
+ * absRadSL, absRadSH - instantaneous absorbed radiation (W·m-2) per unit of sunlit/shade leaf area, for each canopy layer
+ * QSL, QSH - Active photon flux density (micromol * s-1 * m-2) per unit of sunlit/shade leaf area, for each canopy layer
  * Vmax298 - maximum Rubisco carboxylation rate per leaf area at 298 ºK (i.e. 25 ºC) (micromol*s-1*m-2), for each canopy layer
  * Jmax298 - maximum electron transport rate per leaf area at 298 ºK (i.e. 25 ºC) (micromol*s-1*m-2), for each canopy layer
  * 

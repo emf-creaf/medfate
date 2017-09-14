@@ -45,8 +45,8 @@ photo.profitMaximization(supplyFunction, photosynthesisFunction, type = 1, kstem
 \arguments{
   \item{leaf_temp}{Leaf temperature (in ºC).}
   \item{Oi}{Oxigen concentration (mmol*mol-1).}
-  \item{Vmax298}{Maximum Rubisco carboxylation rate per leaf area at 298ºK (i.e. 25 ºC) (micromol*s-1*m-2).}
-  \item{Jmax298}{Maximum electron transport rate per leaf area at 298ºK (i.e. 25 ºC) (micromol*s-1*m-2).}
+  \item{Vmax298, Vmax298SL, Vmax298SH}{Maximum Rubisco carboxylation rate per leaf area at 298ºK (i.e. 25 ºC) (micromol*s-1*m-2) (for each canopy layer in the case of \code{photo.multilayerPhotosynthesisFunction}). 'SH' stands for shade leaves, whereas 'SL' stands for sunlit leaves.}
+  \item{Jmax298, Jmax298SL, Jmax298SH}{Maximum electron transport rate per leaf area at 298ºK (i.e. 25 ºC) (micromol*s-1*m-2) (for each canopy layer in the case of \code{photo.multilayerPhotosynthesisFunction}). 'SH' stands for shade leaves, whereas 'SL' stands for sunlit leaves.}
   \item{Q}{Active photon flux density (micromol * s-1 * m-2).}
   \item{Ci}{CO2 internal concentration (micromol * mol-1).}
   \item{GT}{CO2 saturation point corrected by temperature (micromol * mol-1).}
@@ -59,12 +59,15 @@ photo.profitMaximization(supplyFunction, photosynthesisFunction, type = 1, kstem
   \item{Patm}{Atmospheric air pressure (in kPa).}
   \item{Tair}{Air temperature (in ºC).}
   \item{vpa}{Vapour pressure deficit (in kPa).}
-  \item{u}{Wind speed above the leaf boundary layer (in m/s).}
+  \item{u}{Wind speed above the leaf boundary (in m/s) (for each canopy layer in the case of \code{photo.multilayerPhotosynthesisFunction}).}
   \item{absRad}{Absorbed long- and short-wave radiation (in W*m^-2).}
   \item{verbose}{Boolean flag to indicate console output.}
   \item{photosynthesisFunction}{Function returned by \code{photo.photosynthesisFunction()}.}
   \item{type}{Optimization type (1,2 or 3).}
   \item{kstemmax}{Maximum stem conductance (flow per pressure drop).}
+  \item{SLarea, SHarea}{Leaf area index of sunlit/shade leaves (for each canopy layer in the case of \code{photo.multilayerPhotosynthesisFunction}).}
+  \item{absRadSL, absRadSH}{Instantaneous absorbed radiation (W·m-2) per unit of sunlit/shade leaf area (for each canopy layer in the case of \code{photo.multilayerPhotosynthesisFunction}).}
+  \item{QSL, QSH}{Active photon flux density (micromol * s-1 * m-2) per unit of sunlit/shade leaf area (for each canopy layer in the case of \code{photo.multilayerPhotosynthesisFunction}).}
   \item{Gwmin, Gwmax}{Minimum and maximum leaf water conductance (i.e. cuticular and maximum stomatal conductance) (mol * s-1 * m-2).}
 }
 \details{
