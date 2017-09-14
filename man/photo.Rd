@@ -7,7 +7,8 @@
 \alias{photo.electronLimitedPhotosynthesis}
 \alias{photo.rubiscoLimitedPhotosynthesis}
 \alias{photo.photosynthesis}
-\alias{photo.photosynthesisFunction}
+\alias{photo.leafPhotosynthesisFunction}
+\alias{photo.multilayerPhotosynthesisFunction}
 \alias{photo.profitMaximization}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
@@ -25,7 +26,8 @@ photo.electronLimitedPhotosynthesis(Q, Ci, GT, Jmax)
 photo.rubiscoLimitedPhotosynthesis(Ci, GT, Km, Vmax)
 photo.photosynthesis(Q, Catm, Gc, leaf_temp, Vmax298, Jmax298, verbose = FALSE)
 photo.leafPhotosynthesisFunction(supplyFunction, Catm, Patm, Tair, vpa, u, 
-                             absRad, Q, Vmax298, Jmax298, verbose = FALSE)
+                             absRad, Q, Vmax298, Jmax298, Gwmin, Gwmax,
+                             refLeafArea = 1, verbose = FALSE)
 photo.multilayerPhotosynthesisFunction(supplyFunction, Catm, Patm, Tair, vpa, 
                                       SLarea, SHarea, u, 
                                       absRadSL, absRadSH, QSL, QSH, 
@@ -57,7 +59,7 @@ photo.profitMaximization(supplyFunction, photosynthesisFunction, type = 1, kstem
   \item{photosynthesisFunction}{Function returned by \code{photo.photosynthesisFunction()}.}
   \item{type}{Optimization type (1,2 or 3).}
   \item{kstemmax}{Maximum stem conductance (flow per pressure drop).}
-%  \item{Gwmin, Gwmax}{Minimum and maximum leaf water conductance (i.e. cuticular and maximum stomatal conductance) (mol * s-1 * m-2).}
+  \item{Gwmin, Gwmax}{Minimum and maximum leaf water conductance (i.e. cuticular and maximum stomatal conductance) (mol * s-1 * m-2).}
 }
 \details{
 Details of the photosynthesis submodel are given in a vignette.

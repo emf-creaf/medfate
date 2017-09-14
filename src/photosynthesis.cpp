@@ -373,7 +373,6 @@ List profitMaximization1(List supplyFunction, List photosynthesisFunction) {
                       Named("iMaxProfit")=imaxprofit));
 }
 
-// [[Rcpp::export("photo.profitMaximization2")]]
 List profitMaximization2(List supplyFunction, List photosynthesisFunction, double kstemmax) {
   NumericVector supplyKterm = supplyFunction["kterm"];
   NumericVector Ag = photosynthesisFunction["Photosynthesis"];
@@ -422,7 +421,6 @@ List profitMaximization2(List supplyFunction, List photosynthesisFunction, doubl
                       Named("iMaxProfit")=imaxprofit));
 }
 
-// [[Rcpp::export("photo.profitMaximization3")]]
 List profitMaximization3(List supplyFunction, List photosynthesisFunction, double kstemmax) {
   NumericVector supplyKterm = supplyFunction["ktermcav"];
   NumericVector Ag = photosynthesisFunction["Photosynthesis"];

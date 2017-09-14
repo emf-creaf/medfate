@@ -28,6 +28,7 @@ A data set of parameter values for Mediterranean species, resulting from bibliog
     \item{\code{pDead}}{Proportion of total fine fuels that are dead}
     \item{\code{maxFMC}}{Maximum fuel moisture (in percent of dry weight)}
     \item{\code{minFMC}}{Minimum fuel moisture (in percent of dry weight)}
+    \item{\code{Cstoragepmax}}{Maximum storage capacity, expressed as the fraction of C per total respiratory of C.}
     \item{\code{LeafDuration}}{Leaf duration (in years).}
     \item{\code{LigninPercent}}{Percent of lignin+cutin over dry weight in leaves.}
     \item{\code{ParticleDensity}}{Particle density (kg/m3).}
@@ -41,8 +42,12 @@ A data set of parameter values for Mediterranean species, resulting from bibliog
     \item{\code{Sgdd}}{Growth degree days for leaf budburst (in Celsius)}
     \item{\code{Al2As}}{Leaf area to sapwood area ratio (in m2·m-2).}
     \item{\code{WUE}}{Water use efficiency for carbon assimilation (g C /mm water).}
+    \item{\code{WoodC}}{Wood carbon content per dry weight (g C /g dry).}
+    \item{\code{WoodDens}}{Wood density (at 0 percent humidity!).}
+    \item{\code{RGRmax}}{Maximum relative growth rate (in basal area or sapwood area) (in cm2·cm-2).}
     \item{\code{Psi_Extract}}{Water potential corresponding to 50\% relative conductance (in MPa).}
     \item{\code{pRootDisc}}{Relative conductance leading to hydraulic disconnection from soil.}
+    \item{\code{Gwmin}}{Minimum stomatal conductance to water vapor per leaf area unit (in mol·s-1·m-2).}
     \item{\code{Gwmax}}{Maximum stomatal conductance to water vapor per leaf area unit (in mol·s-1·m-2).}
     \item{\code{xylem_kmax}}{Sapwood-specific hydraulic conductivity of stem xylem (in kg H2O·s-1·m-2).}
     \item{\code{VCstem_c}, \code{VCstem_d}}{Parameters of the stem xylem vulnerability curve (\code{VCstem_d} in MPa).}

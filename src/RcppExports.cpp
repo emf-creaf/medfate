@@ -1678,32 +1678,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// profitMaximization2
-List profitMaximization2(List supplyFunction, List photosynthesisFunction, double kstemmax);
-RcppExport SEXP _medfate_profitMaximization2(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP, SEXP kstemmaxSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type supplyFunction(supplyFunctionSEXP);
-    Rcpp::traits::input_parameter< List >::type photosynthesisFunction(photosynthesisFunctionSEXP);
-    Rcpp::traits::input_parameter< double >::type kstemmax(kstemmaxSEXP);
-    rcpp_result_gen = Rcpp::wrap(profitMaximization2(supplyFunction, photosynthesisFunction, kstemmax));
-    return rcpp_result_gen;
-END_RCPP
-}
-// profitMaximization3
-List profitMaximization3(List supplyFunction, List photosynthesisFunction, double kstemmax);
-RcppExport SEXP _medfate_profitMaximization3(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP, SEXP kstemmaxSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type supplyFunction(supplyFunctionSEXP);
-    Rcpp::traits::input_parameter< List >::type photosynthesisFunction(photosynthesisFunctionSEXP);
-    Rcpp::traits::input_parameter< double >::type kstemmax(kstemmaxSEXP);
-    rcpp_result_gen = Rcpp::wrap(profitMaximization3(supplyFunction, photosynthesisFunction, kstemmax));
-    return rcpp_result_gen;
-END_RCPP
-}
 // profitMaximization
 List profitMaximization(List supplyFunction, List photosynthesisFunction, int type, double kstemmax);
 RcppExport SEXP _medfate_profitMaximization(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP, SEXP typeSEXP, SEXP kstemmaxSEXP) {
@@ -2071,6 +2045,9 @@ BEGIN_RCPP
 END_RCPP
 }
 
+RcppExport SEXP _medfate_profitMaximization2(SEXP, SEXP, SEXP);
+RcppExport SEXP _medfate_profitMaximization3(SEXP, SEXP, SEXP);
+
 static const R_CallMethodDef CallEntries[] = {
     {"_medfate_radiationDiurnalPattern", (DL_FUNC) &_medfate_radiationDiurnalPattern, 2},
     {"_medfate_temperatureDiurnalPattern", (DL_FUNC) &_medfate_temperatureDiurnalPattern, 4},
@@ -2185,8 +2162,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_leafPhotosynthesisFunction", (DL_FUNC) &_medfate_leafPhotosynthesisFunction, 14},
     {"_medfate_sunshadePhotosynthesisFunction", (DL_FUNC) &_medfate_sunshadePhotosynthesisFunction, 19},
     {"_medfate_multilayerPhotosynthesisFunction", (DL_FUNC) &_medfate_multilayerPhotosynthesisFunction, 17},
-    {"_medfate_profitMaximization2", (DL_FUNC) &_medfate_profitMaximization2, 3},
-    {"_medfate_profitMaximization3", (DL_FUNC) &_medfate_profitMaximization3, 3},
     {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 4},
     {"_medfate_conicDistribution", (DL_FUNC) &_medfate_conicDistribution, 2},
     {"_medfate_ldrDistribution", (DL_FUNC) &_medfate_ldrDistribution, 3},
@@ -2212,6 +2187,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_windAdjustmentFactor", (DL_FUNC) &_medfate_windAdjustmentFactor, 4},
     {"_medfate_windSpeedAtHeightOverCanopy", (DL_FUNC) &_medfate_windSpeedAtHeightOverCanopy, 3},
     {"_medfate_windExtinctionProfile", (DL_FUNC) &_medfate_windExtinctionProfile, 4},
+    {"_medfate_profitMaximization2",                     (DL_FUNC) &_medfate_profitMaximization2,                      3},
+    {"_medfate_profitMaximization3",                     (DL_FUNC) &_medfate_profitMaximization3,                      3},
     {NULL, NULL, 0}
 };
 
