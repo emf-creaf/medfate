@@ -16,6 +16,7 @@ swb.ldrOptimization<-function(x, soil, meteo, psi_crit,
                               RZmin = 301, RZmax = 4000, V1min = 0.01, V1max = 0.94, resolution = 20, 
                               heat_stop = 0, transformation = "identity", explore_out = FALSE, verbose = FALSE) {
   
+  if(length(psi_crit)!= nrow(x$above)) stop("The length of 'psi_crit' must be equal to the number of cohorts in 'x'.")
   # define the days to keep in the analysis
   op_days <- (heat_stop+1):nrow(meteo)
   
@@ -72,9 +73,10 @@ swb.ldrOptimization<-function(x, soil, meteo, psi_crit,
   cc <- which(mExplore == T, arr.ind = T)
   for(sp in 1:nrow(x$above)){
     SP <- x$cohorts$SP[sp]
-    cat(paste("Exploring root distribution of species", SP,"(", x$cohorts$Name[sp],"):\n"))
+    cat(paste("Exploring root distribution of cohort", row.names(x$cohorts)[sp],"(", x$cohorts$Name[sp],"):\n"))
     
     x_1sp <- x
+    x_1sp$cohorts <- x_1sp$cohorts[sp,]
     x_1sp$above <- x_1sp$above[sp,]
     x_1sp$paramsBase <- x_1sp$paramsBase[sp,] 
     x_1sp$paramsTransp <- x_1sp$paramsTransp[sp,] 
@@ -132,7 +134,8 @@ swb.ldrOptimization<-function(x, soil, meteo, psi_crit,
   #   print(p)
   # }
   
-  optim <- data.frame(SP = x$cohorts$SP, psi_crit = psi_crit[1:length(x$cohorts$SP)], Z50 = NA, Z95 = NA, V1 = NA)
+  optim <- data.frame(psi_crit = psi_crit[1:length(x$cohorts$SP)], Z50 = NA, Z95 = NA, V1 = NA)
+  row.names(optim) = row.names(x$cohorts)
   for (i in 1:length(x$cohorts$SP)){
     if(!is.na(psi_crit[i])){
       psimin <- PsiMin[i,,]

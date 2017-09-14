@@ -62,6 +62,7 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 
 \examples{
+\dontrun{
 #Load example daily meteorological data
 data(examplemeteo)
 
@@ -80,20 +81,9 @@ control = defaultControl()
 #Initialize input
 x = forest2swbInput(exampleforest,examplesoil, SpParamsMED, control)
 
-#Only one species
-x$cohorts <- x$cohorts[1,]
-x$above$LAI_live <- sum(x$above$LAI_live) 
-x$above$LAI_expanded <- sum(x$above$LAI_expanded) 
-x$above$LAI_dead <- sum(x$above$LAI_dead)
-x$above <- x$above[1,]
-x$below$V <- x$below$V[1, ,drop=FALSE]
-x$paramsBase <- x$paramsBase[1,] 
-x$paramsTransp <- x$paramsTransp[1,] 
-x$Transpiration <- x$Transpiration[1] 
-x$Photosynthesis <- x$Photosynthesis[1] 
-x$ProportionCavitated <- x$ProportionCavitated[1] 
-x$control$verbose <- FALSE
-
+#Run optimization
 swb.ldrOptimization(x = x, soil = examplesoil, meteo = examplemeteo, psi_crit = -2)
+}
+
 }
 

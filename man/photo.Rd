@@ -24,9 +24,13 @@ photo.JmaxTemp(Jmax298, leaf_temp)
 photo.electronLimitedPhotosynthesis(Q, Ci, GT, Jmax)
 photo.rubiscoLimitedPhotosynthesis(Ci, GT, Km, Vmax)
 photo.photosynthesis(Q, Catm, Gc, leaf_temp, Vmax298, Jmax298, verbose = FALSE)
-photo.photosynthesisFunction(supplyFunction, Catm, Patm, Tair, vpa, u, 
+photo.leafPhotosynthesisFunction(supplyFunction, Catm, Patm, Tair, vpa, u, 
                              absRad, Q, Vmax298, Jmax298, verbose = FALSE)
-photo.profitMaximization(supplyFunction, photosynthesisFunction)
+photo.multilayerPhotosynthesisFunction(supplyFunction, Catm, Patm, Tair, vpa, 
+                                      SLarea, SHarea, u, 
+                                      absRadSL, absRadSH, QSL, QSH, 
+                                      Vmax298, Jmax298, Gwmin, Gwmax, verbose = FALSE)
+photo.profitMaximization(supplyFunction, photosynthesisFunction, type = 1, kstemmax = NA)
 }
 
 %- maybe also 'usage' for other objects documented here.
@@ -51,6 +55,8 @@ photo.profitMaximization(supplyFunction, photosynthesisFunction)
   \item{absRad}{Absorbed long- and short-wave radiation (in W*m^-2).}
   \item{verbose}{Boolean flag to indicate console output.}
   \item{photosynthesisFunction}{Function returned by \code{photo.photosynthesisFunction()}.}
+  \item{type}{Optimization type (1,2 or 3).}
+  \item{kstemmax}{Maximum stem conductance (flow per pressure drop).}
 %  \item{Gwmin, Gwmax}{Minimum and maximum leaf water conductance (i.e. cuticular and maximum stomatal conductance) (mol * s-1 * m-2).}
 }
 \details{

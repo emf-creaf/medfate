@@ -21,6 +21,7 @@
 \alias{hydraulics.supplyFunctionNetwork}
 \alias{hydraulics.vanGenuchtenConductance}
 \alias{hydraulics.xylemConductance}
+\alias{hydraulics.xylemPsi}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Hydraulic submodel functions
@@ -75,6 +76,7 @@ hydraulics.regulatedPsiTwoElements(Emax, psiSoil, krhizomax, kxylemmax, n, alpha
                                    c, d, dE = 0.1, psiMax = -10.0)
 hydraulics.vanGenuchtenConductance(psi, krhizomax, n, alpha)
 hydraulics.xylemConductance(psi, kxylemmax, c, d)
+hydraulics.xylemPsi(kxylem, kxylemmax, c, d)
 }
 
 %- maybe also 'usage' for other objects documented here.
@@ -113,6 +115,7 @@ hydraulics.xylemConductance(psi, kxylemmax, c, d)
   \item{height}{Plant height (in cm).}
   \item{maxNsteps}{Maximum number of steps in the construction of supply functions.}
   \item{ntrial}{Maximum number of steps in Newton-Raphson optimization.}
+  \item{kxylem}{Xylem hydraulic conductance (defined as flow per surface unit and per pressure drop).}
 }
 \details{
 Details of the hydraulic model are given in a vignette.
@@ -149,6 +152,7 @@ Values returned for each function are:
 \item{\code{hydraulics.regulatedPsiTwoElements}: Plant water potential after regulation (two-element loss function) given an input soil water potential.}
 \item{\code{hydraulics.vanGenuchtenConductance}: Rhizosphere conductance corresponding to an input water potential (soil vulnerability curve).}
 \item{\code{hydraulics.xylemConductance}: Xylem conductance (flow rate per pressure drop) corresponding to an input water potential (plant vulnerability curve).}
+\item{\code{hydraulics.xylemPsi}: Xylem water potential (in MPa) corresponding to an input xylem conductance (flow rate per pressure drop).}
 }
 }
 \references{

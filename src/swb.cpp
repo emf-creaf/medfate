@@ -720,7 +720,7 @@ List swbDay(List x, List soil, CharacterVector date, int doy, double tmin, doubl
   
   //Plant input
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
-  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["above"]);
+  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   NumericVector SP = cohorts["SP"];
   NumericVector LAI_live = above["LAI_live"];
   NumericVector LAI_expanded = above["LAI_expanded"];

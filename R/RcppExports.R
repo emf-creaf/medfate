@@ -453,16 +453,16 @@ photo.multilayerPhotosynthesisFunction <- function(supplyFunction, Catm, Patm, T
     .Call('_medfate_multilayerPhotosynthesisFunction', PACKAGE = 'medfate', supplyFunction, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298, Jmax298, Gwmin, Gwmax, verbose)
 }
 
-photo.profitMaximization <- function(supplyFunction, photosynthesisFunction) {
-    .Call('_medfate_profitMaximization', PACKAGE = 'medfate', supplyFunction, photosynthesisFunction)
-}
-
 photo.profitMaximization2 <- function(supplyFunction, photosynthesisFunction, kstemmax) {
     .Call('_medfate_profitMaximization2', PACKAGE = 'medfate', supplyFunction, photosynthesisFunction, kstemmax)
 }
 
 photo.profitMaximization3 <- function(supplyFunction, photosynthesisFunction, kstemmax) {
     .Call('_medfate_profitMaximization3', PACKAGE = 'medfate', supplyFunction, photosynthesisFunction, kstemmax)
+}
+
+photo.profitMaximization <- function(supplyFunction, photosynthesisFunction, type = 1L, kstemmax = NA_real_) {
+    .Call('_medfate_profitMaximization', PACKAGE = 'medfate', supplyFunction, photosynthesisFunction, type, kstemmax)
 }
 
 root.conicDistribution <- function(Zcone, d) {

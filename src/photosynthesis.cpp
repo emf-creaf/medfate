@@ -323,8 +323,9 @@ List multilayerPhotosynthesisFunction(List supplyFunction, double Catm, double P
 }
 
 
-// [[Rcpp::export("photo.profitMaximization")]]
-List profitMaximization(List supplyFunction, List photosynthesisFunction) {
+
+
+List profitMaximization1(List supplyFunction, List photosynthesisFunction) {
   NumericVector supplydEdp = supplyFunction["dEdP"];
   NumericVector Ag = photosynthesisFunction["Photosynthesis"];
   // NumericVector Gw = photosynthesisFunction["WaterVaporConductance"];
@@ -468,4 +469,11 @@ List profitMaximization3(List supplyFunction, List photosynthesisFunction, doubl
                       Named("Gain") = gain,
                       Named("Profit") = profit,
                       Named("iMaxProfit")=imaxprofit));
+}
+
+// [[Rcpp::export("photo.profitMaximization")]]
+List profitMaximization(List supplyFunction, List photosynthesisFunction, int type=1, double kstemmax = NA_REAL) {
+  if(type==1) return(profitMaximization1(supplyFunction, photosynthesisFunction));
+  else if(type==2) return(profitMaximization2(supplyFunction, photosynthesisFunction, kstemmax));
+  return(profitMaximization3(supplyFunction, photosynthesisFunction, kstemmax));
 }
