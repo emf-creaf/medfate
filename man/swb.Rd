@@ -6,12 +6,12 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Soil water balance model}
 \description{
-Function \code{swb} is a soil water balance model that determines changes in soil moisture, soil water potentials and plant transpirationa nd drought stress at daily steps for a given forest stand during a period specified in the input climatic data. Additionally, the function also calculates plant net photosynthesis. Transpiration and photosynthesis processes are conducted with different level of detail depending on the transpiration mode.
+Function \code{swb} is a soil water balance model that determines changes in soil moisture, soil water potentials and plant transpiration and drought stress at daily steps for a given forest stand during a period specified in the input climatic data. Additionally, the function also calculates plant net photosynthesis. Transpiration and photosynthesis processes are conducted with different level of detail depending on the transpiration mode. Function \code{swb.day} performs soil water balance for a single day.
 }
 \usage{
 swb(x, soil, meteo,  latitude = NA, elevation = NA, slope = NA, aspect = NA)
 swb.day(x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind, 
-        latitude, elevation, slope, aspect, rain, er, runon = 0.0)
+        latitude, elevation, slope, aspect, rain, runon = 0.0)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -19,7 +19,7 @@ swb.day(x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind,
   \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
   \item{meteo}{A data frame with daily meteorological data series. When using the 'Simple' transpiration mode the following columns are required:
    \itemize{
-     \item{\code{DOY}: Day of the year (Julian day).}
+     \item{\code{DOY}: Day of the year.}
      \item{\code{Precipitation}: Precipitation (in mm).}
      \item{\code{MeanTemperature}: Mean temperature (in degrees Celsius).}
      \item{\code{PET}: Potential evapotranspiration (in mm).}
@@ -28,7 +28,7 @@ swb.day(x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind,
    \itemize{
      \item{\code{DOY}: Day of the year (Julian day).}
      \item{\code{Precipitation}: Precipitation (in mm).}
-     \item{\code{MeanTemperature}: Mean temperature(in degrees Celsius).}
+     \item{\code{MeanTemperature}: Mean temperature (in degrees Celsius).}
      \item{\code{MinTemperature}: Minimum temperature (in degrees Celsius).}
      \item{\code{MaxTemperature}: Maximum temperature (in degrees Celsius).}
      \item{\code{MinRelativeHumidity}: Minimum relative humidity (in percent).}
@@ -39,12 +39,20 @@ swb.day(x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind,
   }
   \item{latitude}{Latitude (in degrees). Required when using the 'Complex' transpiration mode.}
   \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when using the 'Complex' transpiration mode.}
+  \item{date}{Date as string "yyyy-mm-dd".}
+  \item{doy}{Day of the year.}
+  \item{tmin, tmax}{Minimum and maximum temperature (in degrees Celsius).}
+  \item{rhmin, rhmax}{Minimum and maximum relative humidity (in percent).}
+  \item{rad}{Solar radiation (in MJ/m2/day).}
+  \item{wind}{Wind speed (in m/s).}
+  \item{rain}{Precipitation (in mm).}
+  \item{runon}{Surface water amount running on the target area from upslope (in mm).}
 }
 \details{
   Detailed model description is available in the vignettes section. The model using 'Simple' transpiration mode is described in De Caceres et al. (2015). Simulations using the 'Complex' transpiration mode are computationally much more expensive. 
 }
 \value{
-  A list of class 'swb' with the following elements:
+  Function \code{swb} returns a list of class 'swb' with the following elements:
   \itemize{
   \item{\code{"control"}: Control parameters, copied from \code{\link{swbInput}}.}
   \item{\code{"cohorts"}: A data frame with cohort information, copied from \code{\link{swbInput}}.}

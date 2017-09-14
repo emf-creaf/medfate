@@ -701,7 +701,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
 // [[Rcpp::export("swb.day")]]
 List swbDay(List x, List soil, CharacterVector date, int doy, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
             double latitude, double elevation, double slope, double aspect,  
-            double rain, double er, double runon=0.0) {
+            double rain, double runon=0.0) {
   //Control parameters
   List control = x["control"];
   bool verbose = control["verbose"];
@@ -715,10 +715,13 @@ List swbDay(List x, List soil, CharacterVector date, int doy, double tmin, doubl
   double asprad = aspect * (PI/180.0);
   double slorad = slope * (PI/180.0);
   double pet = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
-
+  NumericVector ER = er(IntegerVector::create(doy));
+  double er = ER[0];
+  
   //Plant input
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
-  NumericVector SP = above["SP"];
+  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["above"]);
+  NumericVector SP = cohorts["SP"];
   NumericVector LAI_live = above["LAI_live"];
   NumericVector LAI_expanded = above["LAI_expanded"];
   int numCohorts = SP.size();

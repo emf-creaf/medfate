@@ -1927,8 +1927,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // swbDay
-List swbDay(List x, List soil, CharacterVector date, int doy, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, double latitude, double elevation, double slope, double aspect, double rain, double er, double runon);
-RcppExport SEXP _medfate_swbDay(SEXP xSEXP, SEXP soilSEXP, SEXP dateSEXP, SEXP doySEXP, SEXP tminSEXP, SEXP tmaxSEXP, SEXP rhminSEXP, SEXP rhmaxSEXP, SEXP radSEXP, SEXP windSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP rainSEXP, SEXP erSEXP, SEXP runonSEXP) {
+List swbDay(List x, List soil, CharacterVector date, int doy, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, double latitude, double elevation, double slope, double aspect, double rain, double runon);
+RcppExport SEXP _medfate_swbDay(SEXP xSEXP, SEXP soilSEXP, SEXP dateSEXP, SEXP doySEXP, SEXP tminSEXP, SEXP tmaxSEXP, SEXP rhminSEXP, SEXP rhmaxSEXP, SEXP radSEXP, SEXP windSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP rainSEXP, SEXP runonSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1947,9 +1947,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type slope(slopeSEXP);
     Rcpp::traits::input_parameter< double >::type aspect(aspectSEXP);
     Rcpp::traits::input_parameter< double >::type rain(rainSEXP);
-    Rcpp::traits::input_parameter< double >::type er(erSEXP);
     Rcpp::traits::input_parameter< double >::type runon(runonSEXP);
-    rcpp_result_gen = Rcpp::wrap(swbDay(x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, rain, er, runon));
+    rcpp_result_gen = Rcpp::wrap(swbDay(x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, rain, runon));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2202,7 +2201,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_interceptionGashDay", (DL_FUNC) &_medfate_interceptionGashDay, 4},
     {"_medfate_swbDay1", (DL_FUNC) &_medfate_swbDay1, 8},
     {"_medfate_swbDay2", (DL_FUNC) &_medfate_swbDay2, 18},
-    {"_medfate_swbDay", (DL_FUNC) &_medfate_swbDay, 17},
+    {"_medfate_swbDay", (DL_FUNC) &_medfate_swbDay, 16},
     {"_medfate_swbgridDay", (DL_FUNC) &_medfate_swbgridDay, 11},
     {"_medfate_swb", (DL_FUNC) &_medfate_swb, 7},
     {"_medfate_windSpeedAtCanopyHeight", (DL_FUNC) &_medfate_windSpeedAtCanopyHeight, 2},
