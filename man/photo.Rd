@@ -8,6 +8,7 @@
 \alias{photo.rubiscoLimitedPhotosynthesis}
 \alias{photo.photosynthesis}
 \alias{photo.leafPhotosynthesisFunction}
+\alias{photo.sunshadePhotosynthesisFunction}
 \alias{photo.multilayerPhotosynthesisFunction}
 \alias{photo.profitMaximization}
 %- Also NEED an '\alias' for EACH other topic documented here.
@@ -28,6 +29,11 @@ photo.photosynthesis(Q, Catm, Gc, leaf_temp, Vmax298, Jmax298, verbose = FALSE)
 photo.leafPhotosynthesisFunction(supplyFunction, Catm, Patm, Tair, vpa, u, 
                              absRad, Q, Vmax298, Jmax298, Gwmin, Gwmax,
                              refLeafArea = 1, verbose = FALSE)
+photo.sunshadePhotosynthesisFunction(supplyFunction, Catm, Patm, Tair, vpa, 
+                                     SLarea, SHarea, u, 
+                                     absRadSL, absRadSH, QSL, QSH, 
+                                     Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, 
+                                     Gwmin, Gwmax, verbose = FALSE)
 photo.multilayerPhotosynthesisFunction(supplyFunction, Catm, Patm, Tair, vpa, 
                                       SLarea, SHarea, u, 
                                       absRadSL, absRadSH, QSL, QSH, 
@@ -74,7 +80,7 @@ Values returned for each function are:
 \item{\code{photo.electronLimitedPhotosynthesis}: Electron-limited photosynthesis (micromol*s-1*m-2) following Farquhar et al. (1980).}
 \item{\code{photo.rubiscoLimitedPhotosynthesis}: Rubisco-limited photosynthesis (micromol*s-1*m-2) following Farquhar et al. (1980).}
 \item{\code{photo.photosynthesis}: Calculates gross photosynthesis (micromol*s-1*m-2) following (Farquhar et al. (1980) and Collatz et al (1991).}
-\item{\code{photo.photosynthesisFunction}: Returns a list with the following elements:
+\item{\code{photo.leafPhotosynthesisFunction}: Returns a list with the following elements:
 \itemize{
   \item{\code{LeafTemperature}: Leaf temperature (ºC).}
   \item{\code{LeafVPD}: Leaf vapor pressure deficit (kPa).}

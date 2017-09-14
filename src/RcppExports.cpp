@@ -2045,9 +2045,6 @@ BEGIN_RCPP
 END_RCPP
 }
 
-RcppExport SEXP _medfate_profitMaximization2(SEXP, SEXP, SEXP);
-RcppExport SEXP _medfate_profitMaximization3(SEXP, SEXP, SEXP);
-
 static const R_CallMethodDef CallEntries[] = {
     {"_medfate_radiationDiurnalPattern", (DL_FUNC) &_medfate_radiationDiurnalPattern, 2},
     {"_medfate_temperatureDiurnalPattern", (DL_FUNC) &_medfate_temperatureDiurnalPattern, 4},
@@ -2187,8 +2184,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_windAdjustmentFactor", (DL_FUNC) &_medfate_windAdjustmentFactor, 4},
     {"_medfate_windSpeedAtHeightOverCanopy", (DL_FUNC) &_medfate_windSpeedAtHeightOverCanopy, 3},
     {"_medfate_windExtinctionProfile", (DL_FUNC) &_medfate_windExtinctionProfile, 4},
-    {"_medfate_profitMaximization2",                     (DL_FUNC) &_medfate_profitMaximization2,                      3},
-    {"_medfate_profitMaximization3",                     (DL_FUNC) &_medfate_profitMaximization3,                      3},
     {NULL, NULL, 0}
 };
 
