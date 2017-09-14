@@ -22,7 +22,6 @@ biophysics.temperatureDiurnalPattern(t, tmin, tmax, daylength)
   \item{u}{Wind speed above the leaf boundary layer (in m/s).}
   \item{airTemperature}{Air temperature (in ºC).}
   \item{tmin, tmax}{Minimum and maximum daily temperature (ºC).}
-  \item{elevation}{Elevation above sea level (in m).}
   \item{absRad}{Absorbed long- and short-wave radiation (in W·m-2).}
   \item{E}{Transpiration flow (in mmol H20·m-2·s-1) per one sided leaf area basis.}
   \item{leafWidth}{Leaf width (in m).}

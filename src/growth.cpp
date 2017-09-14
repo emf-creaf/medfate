@@ -513,8 +513,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   
   if(verbose) {
     double Precipitationsum = sum(Precipitation);
-    double Eplantsum = sum(Eplanttot);
-    
+
     Rcout<<"Total Precipitation (mm) "  <<round(Precipitationsum) <<"\n";
     for(int l=0;l<nlayers;l++) Rcout << "W"<<(l+1)<<"f:"<< round(100*W[l])/100<<" ";
     Rcout<<"\n";

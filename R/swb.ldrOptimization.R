@@ -169,61 +169,61 @@ swb.ldrOptimization<-function(x, meteo, soil, psi_crit,
 # Function for plotting the outputs of swb.ldrOptimization
 # works with the libraries ggplot2, reshape and viridis
 # x is the output of the function swb.ldrOptimization with explore_out = T
-.plot.ldrOptimization <- function(x, SP = 1, raster_var = "E", contour_var = "E", special_breaks_var = "Psi",
-                             legend_pos = c(1,1), xaxis_pos = "bottom", yaxis_pos = "left", special_breaks = 0, axis_trans = "identity"){
-  
-  Psi.xyz <- melt(x$explore_out$PsiMin[SP,,])
-  E.xyz <- melt(x$explore_out$E[SP,,]*365)
-  xy <- Psi.xyz[,c("V1", "RZ")]
-  
-  # Raster layer
-  if(raster_var == "Psi"){
-    leg_title <- expression(paste(Psi[min],"(MPa)"))
-    data_raster <- Psi.xyz
-  }
-  if(raster_var == "E"){
-    leg_title <- expression(paste("E (mm ", yr^{-1}, ")"))
-    data_raster <- E.xyz
-  }
-  
-  # Contour layer
-  if(contour_var == "Psi"){
-    data_contour <- Psi.xyz
-    bw1 <- 1
-    bw2 <- 0.2
-  }
-  if(contour_var == "E"){
-    data_contour <- E.xyz
-    bw1 <- 50
-    bw2 <- 10
-  }
-  
-  # Add special break
-  if(special_breaks_var == "Psi"){
-    data_special_breaks <- Psi.xyz
-  }
-  if(special_breaks_var == "E"){
-    data_special_breaks <- E.xyz
-  }
-  
-  # Optimized parameters
-  x$optim$RZ <- x$optim$Z95
-  
-  # Plot
-  p <- ggplot(xy, aes(x = RZ, y = V1))+
-    geom_raster(data = data_raster, aes(fill = value))+
-    geom_contour(data = data_contour, aes(z = value), colour = "white", binwidth = bw1, size = 1)+
-    geom_contour(data = data_contour, aes(z = value), colour = "white", binwidth = bw2, size = 0.5)+
-    geom_contour(data = data_special_breaks, aes(z = value), colour = "red", breaks = special_breaks, size = 1)+
-    geom_point(data = x$optim[SP,], aes(x = RZ, y = V1), color = "black", fill = "red", shape = 21, size = 4, inherit.aes = F)+
-    scale_fill_viridis(name = leg_title)+
-    coord_cartesian(expand = F)+
-    ylab(expression(paste(V[1])))+
-    xlab(expression(paste(RZ, "(mm)")))+
-    theme_bw()+
-    theme(legend.position = legend_pos, legend.justification = legend_pos, legend.background = element_rect(fill = rgb(1,1,1,0.7)))+
-    scale_x_continuous(position = xaxis_pos, trans = axis_trans)+
-    scale_y_continuous(position = yaxis_pos, trans = "identity")
-  
-  return(p)
-}
+# .plot.ldrOptimization <- function(x, SP = 1, raster_var = "E", contour_var = "E", special_breaks_var = "Psi",
+#                              legend_pos = c(1,1), xaxis_pos = "bottom", yaxis_pos = "left", special_breaks = 0, axis_trans = "identity"){
+#   
+#   Psi.xyz <- melt(x$explore_out$PsiMin[SP,,])
+#   E.xyz <- melt(x$explore_out$E[SP,,]*365)
+#   xy <- Psi.xyz[,c("V1", "RZ")]
+#   
+#   # Raster layer
+#   if(raster_var == "Psi"){
+#     leg_title <- expression(paste(Psi[min],"(MPa)"))
+#     data_raster <- Psi.xyz
+#   }
+#   if(raster_var == "E"){
+#     leg_title <- expression(paste("E (mm ", yr^{-1}, ")"))
+#     data_raster <- E.xyz
+#   }
+#   
+#   # Contour layer
+#   if(contour_var == "Psi"){
+#     data_contour <- Psi.xyz
+#     bw1 <- 1
+#     bw2 <- 0.2
+#   }
+#   if(contour_var == "E"){
+#     data_contour <- E.xyz
+#     bw1 <- 50
+#     bw2 <- 10
+#   }
+#   
+#   # Add special break
+#   if(special_breaks_var == "Psi"){
+#     data_special_breaks <- Psi.xyz
+#   }
+#   if(special_breaks_var == "E"){
+#     data_special_breaks <- E.xyz
+#   }
+#   
+#   # Optimized parameters
+#   x$optim$RZ <- x$optim$Z95
+#   
+#   # Plot
+#   p <- ggplot(xy, aes(x = RZ, y = V1))+
+#     geom_raster(data = data_raster, aes(fill = value))+
+#     geom_contour(data = data_contour, aes(z = value), colour = "white", binwidth = bw1, size = 1)+
+#     geom_contour(data = data_contour, aes(z = value), colour = "white", binwidth = bw2, size = 0.5)+
+#     geom_contour(data = data_special_breaks, aes(z = value), colour = "red", breaks = special_breaks, size = 1)+
+#     geom_point(data = x$optim[SP,], aes(x = RZ, y = V1), color = "black", fill = "red", shape = 21, size = 4, inherit.aes = F)+
+#     scale_fill_viridis(name = leg_title)+
+#     coord_cartesian(expand = F)+
+#     ylab(expression(paste(V[1])))+
+#     xlab(expression(paste(RZ, "(mm)")))+
+#     theme_bw()+
+#     theme(legend.position = legend_pos, legend.justification = legend_pos, legend.background = element_rect(fill = rgb(1,1,1,0.7)))+
+#     scale_x_continuous(position = xaxis_pos, trans = axis_trans)+
+#     scale_y_continuous(position = yaxis_pos, trans = "identity")
+#   
+#   return(p)
+# }

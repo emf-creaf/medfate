@@ -8,7 +8,7 @@ Maintainer: Miquel De Caceres <miquelcaceres@gmail.com>
 Description: Functions to simulate forest dynamics using cohort-based description of vegetation.
 License: GPL (>= 2)
 LazyLoad: yes
-Depends: R (>= 3.4.1), meteoland, sp, spdep
+Depends: R (>= 3.4.1), sp, spdep
 Imports: methods, meteoland, Rcpp (>= 0.12.12)
 LinkingTo: Rcpp, meteoland
 NeedsCompilation: yes
