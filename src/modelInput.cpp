@@ -58,6 +58,13 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
   for(int i=0;i<V.ncol();i++) slnames[i] = i+1;
   V.attr("dimnames") = List::create(above.attr("row.names"), slnames);
   
+  //Cohort description
+  CharacterVector nameSP = SpParams["Name"];
+  CharacterVector nsp(numCohorts);
+  for(int i=0;i<numCohorts;i++) nsp[i] = nameSP[SP[i]];
+  DataFrame cohortDescdf = DataFrame::create(_["SP"] = SP, _["Name"] = nsp);
+  cohortDescdf.attr("row.names") = above.attr("row.names");
+  
   //Above 
   DataFrame plantsdf = DataFrame::create(_["H"]=H, _["CR"]=CR, 
                                          _["LAI_live"]=LAI_live, _["LAI_expanded"] = LAI_expanded, _["LAI_dead"] = LAI_dead);
@@ -67,13 +74,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
   DataFrame paramsBasedf = DataFrame::create(_["k"] = k, _["g"] = g, _["Sgdd"] = Sgdd);
   paramsBasedf.attr("row.names") = above.attr("row.names");
   
-  //Cohort description
-  CharacterVector nameSP = SpParams["Name"];
-  CharacterVector nsp(numCohorts);
-  for(int i=0;i<numCohorts;i++) nsp[i] = nameSP[SP[i]];
-  DataFrame cohortDescdf = DataFrame::create(_["SP"] = SP, _["Name"] = nsp);
-  cohortDescdf.attr("row.names") = above.attr("row.names");
-  
+ 
   List input;
   if(transpirationMode=="Simple") {
     NumericVector WUESP = SpParams["WUE"];
@@ -315,6 +316,20 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   for(int c=0;c<numCohorts;c++){
     SA[c] = 10000.0*(LAI_live[c]/(N[c]/10000.0))/Al2AsSP[SP[c]];//Individual SA in cm2/m2
   }
+  
+  //Soil layer names
+  CharacterVector slnames(V.ncol());
+  for(int i=0;i<V.ncol();i++) slnames[i] = i+1;
+  V.attr("dimnames") = List::create(above.attr("row.names"), slnames);
+  Z.attr("names") = above.attr("row.names");
+  
+  //Cohort description
+  CharacterVector nameSP = SpParams["Name"];
+  CharacterVector nsp(numCohorts);
+  for(int i=0;i<numCohorts;i++) nsp[i] = nameSP[SP[i]];
+  DataFrame cohortDescdf = DataFrame::create(_["SP"] = SP, _["Name"] = nsp);
+  cohortDescdf.attr("row.names") = above.attr("row.names");
+  
   DataFrame plantsdf, paramsGrowthdf;
   if(storagePool=="one") {
     NumericVector fastCstorage(numCohorts);
@@ -351,7 +366,14 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                                                  _["WoodDens"] = WoodDens, _["WoodC"] = WoodC,
                                                  _["RGRmax"] = RGRmax);
   }
+  plantsdf.attr("row.names") = above.attr("row.names");
+  paramsGrowthdf.attr("row.names") = above.attr("row.names");
+  
+  //Base params
   DataFrame paramsBasedf = DataFrame::create(_["k"] = k, _["g"] = g, _["Sgdd"] = Sgdd);
+  paramsBasedf.attr("row.names") = above.attr("row.names");
+  
+  //Allometries
   DataFrame paramsAllometriesdf = DataFrame::create(_["Hmax"] = Hmax,
                                                     _["Zmax"] = Zmax,
                                                     _["Aash"] = Aash, _["Absh"] = Absh, _["Bbsh"] = Bbsh,
@@ -360,6 +382,8 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                                                     _["C1cr"] = C1cr, _["C2cr"] = C2cr, 
                                                     _["Acw"] = Acw, _["Bcw"] = Bcw,
                                                     _["fHDmin"] = fHDmin,_["fHDmax"] = fHDmax);
+  paramsAllometriesdf.attr("row.names") = above.attr("row.names");
+  
   List input;
   if(transpirationMode=="Simple") {
     NumericVector WUESP = SpParams["WUE"];
@@ -375,6 +399,8 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     }
     
     DataFrame paramsTranspdf = DataFrame::create(_["Psi_Extract"]=Psi_Extract,_["WUE"] = WUE, _["pRootDisc"] = pRootDisc);
+    paramsTranspdf.attr("row.names") = above.attr("row.names");
+    
     List below = List::create( _["Z"]=Z,_["V"] = V);
     List paramsControl = List::create(_["verbose"] =control["verbose"],
                                       _["transpirationMode"] =transpirationMode, 
@@ -382,6 +408,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                                       _["storagePool"] = storagePool);
     input = List::create(_["control"] = paramsControl,
                          _["gdd"] = 0,
+                         _["cohorts"] = cohortDescdf,
                          _["above"] = plantsdf,
                          _["below"] = below,
                          _["paramsBase"] = paramsBasedf,
@@ -438,10 +465,15 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
       }
       // Rcout<<"\n";
     }
+    VGrhizo_kmax.attr("dimnames") = List::create(above.attr("row.names"), slnames);
+    VCroot_kmax.attr("dimnames") = List::create(above.attr("row.names"), slnames);
+    
     DataFrame paramsTranspdf = DataFrame::create(
       _["Gwmin"]=Gwmin, _["Gwmax"]=Gwmax, _["Vmax298"]=Vmax298,
       _["Jmax298"]=Jmax298,_["VCroot_c"]=VCroot_c,_["VCroot_d"]=VCroot_d,_["xylem_kmax"] = xylem_kmax,
       _["VCstem_kmax"]=VCstem_kmax,_["VCstem_c"]=VCstem_c,_["VCstem_d"]=VCstem_d, _["pRootDisc"] = pRootDisc);
+    paramsTranspdf.attr("row.names") = above.attr("row.names");
+    
     List below = List::create( _["Z"]=Z,_["V"] = V,
                               _["VGrhizo_kmax"] = VGrhizo_kmax,
                               _["VCroot_kmax"] = VCroot_kmax);
@@ -453,6 +485,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                                       _["storagePool"] = storagePool);
     input = List::create(_["control"] =paramsControl,
                          _["gdd"] = 0,
+                         _["cohorts"] = cohortDescdf,
                          _["above"] = plantsdf,
                    _["below"] = below,
                    _["paramsBase"] = paramsBasedf,
@@ -460,9 +493,15 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                    _["paramsGrowth"]= paramsGrowthdf,
                    _["paramsAllometries"] = paramsAllometriesdf);
   } 
-  input["Transpiration"] = NumericVector(numCohorts, 0.0);
-  input["Photosynthesis"] = NumericVector(numCohorts, 0.0);
-  input["ProportionCavitated"] = NumericVector(numCohorts, 0.0);
+  NumericVector tvec =  NumericVector(numCohorts, 0.0);
+  tvec.attr("names") = above.attr("row.names");
+  input["Transpiration"] = tvec;
+  NumericVector pvec =  NumericVector(numCohorts, 0.0);
+  pvec.attr("names") = above.attr("row.names");
+  input["Photosynthesis"] = pvec;
+  NumericVector cvec =  NumericVector(numCohorts, 0.0);
+  cvec.attr("names") = above.attr("row.names");
+  input["ProportionCavitated"] = cvec;
   // input["WindSpeed"] = NumericVector(numCohorts, 0.0);
   // input["PAR"] = NumericVector(numCohorts, 0.0);
   // input["AbsorbedSWR"] = NumericVector(numCohorts, 0.0);

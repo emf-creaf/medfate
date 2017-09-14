@@ -45,6 +45,7 @@ growth(x, soil, meteo,  latitude = NA, elevation = NA, slope = NA, aspect = NA)
   A list of class 'growth' with the following elements:
   \itemize{
   \item{\code{"control"}: Control parameters, copied from \code{\link{growthInput}}.}
+  \item{\code{"cohorts"}: A data frame with cohort information, copied from \code{\link{growthInput}}.}
   \item{\code{"NumSoilLayers"}: Number of soil layers.}
   \item{\code{"DailyBalance"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
   \itemize{

@@ -27,6 +27,7 @@ swbInput(above,  V,  soil, SpParams, control)
   \item{soil}{An object of class \code{\link{soil}}.}
   \item{control}{A list with default control parameters (see \code{\link{defaultControl}}).}
   \item{above}{A data frame with aboveground plant information (see the return value of \code{forest2aboveground} below). In the case of \code{swbInput} the variables should include \code{SP}, \code{LAI_live}, \code{LAI_dead}, \code{H} and \code{CR}.}
+  \item{Z}{A numeric vector with cohort rooting depths (in cms).}
   \item{V}{A numeric matrix (with as many columns as soil layers and as many rows as the length as \code{SP}) containing the proportion of roots of each plant in each soil layer.}
   
 }
@@ -48,7 +49,8 @@ Function \code{forest2aboveground} returns a data frame with the following colum
 Functions \code{forest2swbInput} and \code{swbInput} return a list of class \code{swbInput} with the following elements (rows of data frames are identified as specified by function \code{\link{plant.ID}}):
 \itemize{
   \item{\code{control}: List with control parameters (see \code{\link{defaultControl}}).}
-  \item{\code{above}: A data frame with columns \code{SP}, \code{H}, \code{CR} and \code{LAI} (see function \code{forest2aboveground}).}
+  \item{\code{cohorts}: A data frame with cohort information, with columns \code{SP} and \code{Name}.}
+  \item{\code{above}: A data frame with columns  \code{H}, \code{CR} and \code{LAI} (see function \code{forest2aboveground}).}
   \item{\code{below}: A list. If \code{control$transpirationMode = "Simple"} it contains a single element: 
      \itemize{
         \item{\code{V}: A matrix with the proportion of fine roots of each cohort (in rows) in each soil layer (in columns).}
