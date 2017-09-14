@@ -12,6 +12,7 @@
 \alias{plant.FoliarBiomass}
 \alias{plant.Fuel}
 \alias{plant.Height}
+\alias{plant.ID}
 \alias{plant.Parameter}
 \alias{plant.LAI}
 \alias{plant.LargerTreeBasalArea}
@@ -39,6 +40,7 @@ plant.EquilibriumSmallBranchLitter(x, SpParams,
 plant.FoliarBiomass(x, SpParams, gdd = NA)
 plant.Fuel(x, SpParams, gdd = NA, includeDead = TRUE)
 plant.Height(x)
+plant.ID(x, SpParams)
 plant.LAI(x, SpParams, gdd = NA)
 plant.Parameter(x, SpParams, parName)
 plant.Phytovolume(x, SpParams)
@@ -70,6 +72,7 @@ A vector with values for each plant of the input \code{\link{forest}} object:
 \item{\code{plant.FoliarBiomass}: Standing biomass of leaves (in kg/m2).}
 \item{\code{plant.Fuel}: Fine fuel load (in kg/m2).}
 \item{\code{plant.Height}: Total height (in cm).}
+\item{\code{plant.ID}: Cohort coding for simulation functions (concatenation of 'T' (Trees) or 'S' (Shrub), cohort index and species index).}
 \item{\code{plant.LAI}: Leaf area index (m2/m2).}
 \item{\code{plant.Parameter}: The parameter values of each plant, as numeric.}
 \item{\code{plant.Phytovolume}: Shrub phytovolume (m3/m2).}
@@ -103,4 +106,6 @@ sum(plant.Fuel(exampleforest, SpParamsMED))
 summary(exampleforest, SpParamsMED)
 
 plant.SpeciesName(exampleforest, SpParamsMED)
+
+plant.ID(exampleforest, SpParamsMED)
 }

@@ -81,6 +81,10 @@ plant.SpeciesName <- function(x, SpParams) {
     .Call('_medfate_cohortSpeciesName', PACKAGE = 'medfate', x, SpParams)
 }
 
+plant.ID <- function(x, SpParams) {
+    .Call('_medfate_cohortIDs', PACKAGE = 'medfate', x, SpParams)
+}
+
 .treeBasalArea <- function(N, dbh) {
     .Call('_medfate_treeBasalArea', PACKAGE = 'medfate', N, dbh)
 }

@@ -3,7 +3,7 @@ Type: Package
 Title: Mediterranean Forest Simulation
 Version: 0.3.4
 Date: 2017-09-05
-Author: Miquel De Caceres, Antoine Cabon
+Author: Miquel De Caceres, Antoine Cabon, Victor Granda
 Maintainer: Miquel De Caceres <miquelcaceres@gmail.com>
 Description: Functions to simulate forest dynamics using cohort-based description of vegetation.
 License: GPL (>= 2)

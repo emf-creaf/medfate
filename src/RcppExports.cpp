@@ -278,6 +278,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cohortIDs
+CharacterVector cohortIDs(List x, DataFrame SpParams);
+RcppExport SEXP _medfate_cohortIDs(SEXP xSEXP, SEXP SpParamsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
+    rcpp_result_gen = Rcpp::wrap(cohortIDs(x, SpParams));
+    return rcpp_result_gen;
+END_RCPP
+}
 // treeBasalArea
 NumericVector treeBasalArea(NumericVector N, NumericVector dbh);
 RcppExport SEXP _medfate_treeBasalArea(SEXP NSEXP, SEXP dbhSEXP) {
@@ -2079,6 +2091,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_cohortCharacterParameter", (DL_FUNC) &_medfate_cohortCharacterParameter, 3},
     {"_medfate_cohortSpecies", (DL_FUNC) &_medfate_cohortSpecies, 1},
     {"_medfate_cohortSpeciesName", (DL_FUNC) &_medfate_cohortSpeciesName, 2},
+    {"_medfate_cohortIDs", (DL_FUNC) &_medfate_cohortIDs, 2},
     {"_medfate_treeBasalArea", (DL_FUNC) &_medfate_treeBasalArea, 2},
     {"_medfate_cohortBasalArea", (DL_FUNC) &_medfate_cohortBasalArea, 1},
     {"_medfate_speciesBasalArea", (DL_FUNC) &_medfate_speciesBasalArea, 2},

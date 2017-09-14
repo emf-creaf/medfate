@@ -962,7 +962,8 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
   
   //Plant input
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
-  NumericVector SP = above["SP"];
+  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
+  NumericVector SP = cohorts["SP"];
   NumericVector LAI_live = above["LAI_live"];
   NumericVector LAI_expanded = above["LAI_expanded"];
   int numCohorts = SP.size();
@@ -1100,12 +1101,15 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
    DWB.attr("row.names") = meteo.attr("row.names") ;
   if(verbose) Rcout<<"plant output ...";
   
-  PlantTranspiration.attr("dimnames") = List::create(meteo.attr("row.names"), SP.attr("names"));
-  PlantStress.attr("dimnames") = List::create(meteo.attr("row.names"), SP.attr("names")) ;
+  PlantTranspiration.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names"));
+  PlantStress.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
+  PlantPsi.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
+  PlantPhotosynthesis.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   
   if(verbose) Rcout<<"list ...";
 
   List l = List::create(Named("control") = control,
+                        Named("cohorts") = clone(cohorts),
                         Named("NumSoilLayers") = nlayers,
                         Named("DailyBalance")=DWB, 
                         Named("SoilWaterBalance")=SWB,

@@ -1,5 +1,7 @@
 #include <numeric>
 #include <Rcpp.h>
+#include <string.h>
+#include <stdio.h>
 using namespace Rcpp;
 
 
@@ -91,6 +93,30 @@ CharacterVector cohortSpeciesName(List x, DataFrame SpParams) {
     names[ntree+i] = nameSP[shrubSP[i]];
   }
   return(names);
+}
+
+// [[Rcpp::export("plant.ID")]]
+CharacterVector cohortIDs(List x, DataFrame SpParams) {
+  DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
+  DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
+  int ntree = treeData.nrows();
+  int nshrub = shrubData.nrows();
+  int numCohorts  = ntree+nshrub;
+  IntegerVector treeSP = treeData["Species"];
+  IntegerVector shrubSP = shrubData["Species"];  
+
+  CharacterVector IDs(numCohorts);
+  for(int i=0;i<ntree;i++) {
+    char Result[16];
+    sprintf(Result, "T%d_%d", i+1, treeSP[i]);
+    IDs[i] = Result;
+  }
+  for(int i=0;i<nshrub;i++) {
+    char Result[16];
+    sprintf(Result, "S%d_%d", i+1, shrubSP[i]);
+    IDs[ntree+i] =Result;
+  }
+  return(IDs);
 }
 
 /**
@@ -948,7 +974,10 @@ DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL) {
     DBH[ntree+i] = NA_REAL;
     Cover[ntree+i] = shrubCover[i];
   }
-  return(DataFrame::create(_["SP"]=SP, _["N"] = N,  _["DBH"] = DBH,_["Cover"] = Cover, _["H"]=H, _["CR"] = CR, 
-                           _["LAI_live"]=LAI_live, _["LAI_expanded"] = LAI_expanded, _["LAI_dead"] = LAI_dead));
+  DataFrame above = DataFrame::create(_["SP"]=SP, _["N"] = N,  _["DBH"] = DBH,_["Cover"] = Cover, _["H"]=H, _["CR"] = CR, 
+                    _["LAI_live"]=LAI_live, _["LAI_expanded"] = LAI_expanded, _["LAI_dead"] = LAI_dead);
+  above.attr("row.names") = cohortIDs(x, SpParams); //Assign cohort IDs to row.names
+    
+  return(above);
   
 }

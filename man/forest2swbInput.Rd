@@ -34,7 +34,7 @@ swbInput(above,  V,  soil, SpParams, control)
 Functions \code{forest2swbInput} and \code{forest2abovegroundInput} extracts height and species identity from plant cohorts of \code{x}, and calculate leaf area index and crown ratio.\code{forest2swbInput} also calculates the distribution of fine roots across soil. Both \code{forest2swbInput} and \code{swbInput} find parameter values for each plant cohort according to the parameters of its species as specified in \code{SpParams}. If \code{control$transpirationMode = "Complex"} the functions also estimate the maximum conductance of rhizosphere, root xylem and stem xylem elements.
 }
 \value{
-Function \code{forest2aboveground} returns a data frame with the following columns:
+Function \code{forest2aboveground} returns a data frame with the following columns (rows are identified as specified by function \code{\link{plant.ID}}):
 \itemize{
   \item{\code{SP}: Species identity (an integer) (first species is 0).}
   \item{\code{N}: Cohort density (ind/ha) (see function \code{\link{plant.Density}}).}
@@ -45,7 +45,7 @@ Function \code{forest2aboveground} returns a data frame with the following colum
   \item{\code{LAI_dead}: Dead leaf area index (m2/m2) (one-side leaf area relative to plot area).}
 }
 
-Functions \code{forest2swbInput} and \code{swbInput} return a list of class \code{swbInput} with the following elements:
+Functions \code{forest2swbInput} and \code{swbInput} return a list of class \code{swbInput} with the following elements (rows of data frames are identified as specified by function \code{\link{plant.ID}}):
 \itemize{
   \item{\code{control}: List with control parameters (see \code{\link{defaultControl}}).}
   \item{\code{above}: A data frame with columns \code{SP}, \code{H}, \code{CR} and \code{LAI} (see function \code{forest2aboveground}).}
@@ -107,7 +107,7 @@ Functions \code{forest2growthInput} and \code{growthInput} return a list of clas
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
-\seealso{\code{\link{swb}}, \code{\link{soil}},  \code{\link{forest}}, \code{\link{SpParamsMED}}, \code{\link{defaultSoilParams}}}
+\seealso{\code{\link{swb}}, \code{\link{soil}},  \code{\link{forest}}, \code{\link{SpParamsMED}}, \code{\link{defaultSoilParams}}, \code{\link{plant.ID}}}
 
 \examples{
 #Load example plot plant data

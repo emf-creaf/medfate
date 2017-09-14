@@ -4,6 +4,7 @@
 #include "root.h"
 #include "forestutils.h"
 #include "hydraulics.h"
+#include "stdlib.h"
 
 using namespace Rcpp;
 
@@ -28,6 +29,7 @@ void checkSpeciesParameters(DataFrame SpParams, CharacterVector params) {
  */
 // [[Rcpp::export("swbInput")]]
 List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, List control) {
+  
   IntegerVector SP = above["SP"];
   NumericVector LAI_live = above["LAI_live"];
   NumericVector LAI_expanded = above["LAI_expanded"];
@@ -50,9 +52,28 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
     g[c]=gSP[SP[c]];
     Sgdd[c]=SgddSP[SP[c]];
   }
-  DataFrame plantsdf = DataFrame::create(_["SP"]=SP, _["H"]=H, _["CR"]=CR, 
+  
+  //Soil layer names
+  CharacterVector slnames(V.ncol());
+  for(int i=0;i<V.ncol();i++) slnames[i] = i+1;
+  V.attr("dimnames") = List::create(above.attr("row.names"), slnames);
+  
+  //Above 
+  DataFrame plantsdf = DataFrame::create(_["H"]=H, _["CR"]=CR, 
                                          _["LAI_live"]=LAI_live, _["LAI_expanded"] = LAI_expanded, _["LAI_dead"] = LAI_dead);
+  plantsdf.attr("row.names") = above.attr("row.names");
+  
+  //Base params
   DataFrame paramsBasedf = DataFrame::create(_["k"] = k, _["g"] = g, _["Sgdd"] = Sgdd);
+  paramsBasedf.attr("row.names") = above.attr("row.names");
+  
+  //Cohort description
+  CharacterVector nameSP = SpParams["Name"];
+  CharacterVector nsp(numCohorts);
+  for(int i=0;i<numCohorts;i++) nsp[i] = nameSP[SP[i]];
+  DataFrame cohortDescdf = DataFrame::create(_["SP"] = SP, _["Name"] = nsp);
+  cohortDescdf.attr("row.names") = above.attr("row.names");
+  
   List input;
   if(transpirationMode=="Simple") {
     NumericVector WUESP = SpParams["WUE"];
@@ -67,12 +88,14 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
       pRootDisc[c]=pRootDiscSP[SP[c]];
     }
     DataFrame paramsTranspdf = DataFrame::create(_["Psi_Extract"]=Psi_Extract,_["WUE"] = WUE,  _["pRootDisc"] = pRootDisc);
+    paramsTranspdf.attr("row.names") = above.attr("row.names");
     List below = List::create(_["V"] = V);
     List paramsControl = List::create(_["verbose"] =control["verbose"],
                                       _["transpirationMode"] =transpirationMode, 
                                       _["cavitationRefill"] = control["cavitationRefill"]);
     input = List::create(_["control"] =paramsControl,
                          _["gdd"] = 0,
+                         _["cohorts"] = cohortDescdf,
                          _["above"] = plantsdf,
                          _["below"] = below,
                          _["paramsBase"] = paramsBasedf,
@@ -128,10 +151,14 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
       }
       // Rcout<<"\n";
     }
+    VGrhizo_kmax.attr("dimnames") = List::create(above.attr("row.names"), slnames);
+    VCroot_kmax.attr("dimnames") = List::create(above.attr("row.names"), slnames);
+    
     DataFrame paramsTranspdf = DataFrame::create(
       _["Gwmin"]=Gwmin, _["Gwmax"]=Gwmax, _["Vmax298"]=Vmax298,
       _["Jmax298"]=Jmax298,_["VCroot_c"]=VCroot_c,_["VCroot_d"]=VCroot_d,_["xylem_kmax"] = xylem_kmax,
       _["VCstem_kmax"]=VCstem_kmax,_["VCstem_c"]=VCstem_c,_["VCstem_d"]=VCstem_d, _["pRootDisc"] = pRootDisc);
+    paramsTranspdf.attr("row.names") = above.attr("row.names");
     List below = List::create(_["V"] = V,
                               _["VGrhizo_kmax"] = VGrhizo_kmax,
                               _["VCroot_kmax"] = VCroot_kmax);
@@ -142,14 +169,21 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
                                       _["ndailysteps"] = control["ndailysteps"]);
     input = List::create(_["control"] = paramsControl,
                          _["gdd"] = 0,
+                         _["cohorts"] = cohortDescdf,
                          _["above"] = plantsdf,
                          _["below"] = below,
                          _["paramsBase"] = paramsBasedf,
                          _["paramsTransp"] = paramsTranspdf);
-  } 
-  input["Transpiration"] = NumericVector(numCohorts, 0.0);
-  input["Photosynthesis"] = NumericVector(numCohorts, 0.0);
-  input["ProportionCavitated"] = NumericVector(numCohorts, 0.0);
+  }
+  NumericVector tvec =  NumericVector(numCohorts, 0.0);
+  tvec.attr("names") = above.attr("row.names");
+  input["Transpiration"] = tvec;
+  NumericVector pvec =  NumericVector(numCohorts, 0.0);
+  pvec.attr("names") = above.attr("row.names");
+  input["Photosynthesis"] = pvec;
+  NumericVector cvec =  NumericVector(numCohorts, 0.0);
+  cvec.attr("names") = above.attr("row.names");
+  input["ProportionCavitated"] = cvec;
   // input["WindSpeed"] = NumericVector(numCohorts, 0.0);
   // input["PAR"] = NumericVector(numCohorts, 0.0);
   // input["AbsorbedSWR"] = NumericVector(numCohorts, 0.0);
