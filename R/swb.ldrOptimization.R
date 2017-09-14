@@ -12,7 +12,7 @@
   function (y) uniroot((function (x) f(x) - y), lower = lower, upper = upper, extendInt = "yes")[1]
 }
 
-swb.ldrOptimization<-function(x, meteo, soil, psi_crit,
+swb.ldrOptimization<-function(x, soil, meteo, psi_crit,
                               RZmin = 301, RZmax = 4000, V1min = 0.01, V1max = 0.94, resolution = 20, 
                               heat_stop = 0, transformation = "identity", explore_out = FALSE, verbose = FALSE) {
   
@@ -66,13 +66,13 @@ swb.ldrOptimization<-function(x, meteo, soil, psi_crit,
   x$above$LAI_dead <- sum(x$above$LAI_dead)
   
   # Data outputs
-  E <- PsiMin <- array(dim = c(nrow(x$above), length(V1), length(RZ)), dimnames = list(SP = x$above$SP, V1 = V1, RZ = RZ))
+  E <- PsiMin <- array(dim = c(nrow(x$above), length(V1), length(RZ)), dimnames = list(SP = x$cohorts$SP, V1 = V1, RZ = RZ))
   
   # Start loop
   cc <- which(mExplore == T, arr.ind = T)
   for(sp in 1:nrow(x$above)){
-    SP <- x$above$SP[sp]
-    cat(paste("Exploring root distribution of species", SP,"\n"))
+    SP <- x$cohorts$SP[sp]
+    cat(paste("Exploring root distribution of species", SP,"(", x$cohorts$Name[sp],"):\n"))
     
     x_1sp <- x
     x_1sp$above <- x_1sp$above[sp,]
@@ -132,8 +132,8 @@ swb.ldrOptimization<-function(x, meteo, soil, psi_crit,
   #   print(p)
   # }
   
-  optim <- data.frame(SP = x$above$SP, psi_crit = psi_crit[1:length(x$above$SP)], Z50 = NA, Z95 = NA, V1 = NA)
-  for (i in 1:length(x$above$SP)){
+  optim <- data.frame(SP = x$cohorts$SP, psi_crit = psi_crit[1:length(x$cohorts$SP)], Z50 = NA, Z95 = NA, V1 = NA)
+  for (i in 1:length(x$cohorts$SP)){
     if(!is.na(psi_crit[i])){
       psimin <- PsiMin[i,,]
       e <- E[i,,]

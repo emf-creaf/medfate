@@ -1,6 +1,7 @@
 \encoding{UTF-8}
 \name{swb}
 \alias{swb}
+\alias{swb.day}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Soil water balance model}
@@ -8,7 +9,9 @@
 Function \code{swb} is a soil water balance model that determines changes in soil moisture, soil water potentials and plant transpirationa nd drought stress at daily steps for a given forest stand during a period specified in the input climatic data. Additionally, the function also calculates plant net photosynthesis. Transpiration and photosynthesis processes are conducted with different level of detail depending on the transpiration mode.
 }
 \usage{
-swb(x, soil, meteo,  latitude = NA, elevation = NA, slope = NA, aspect = NA) 
+swb(x, soil, meteo,  latitude = NA, elevation = NA, slope = NA, aspect = NA)
+swb.day(x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind, 
+        latitude, elevation, slope, aspect, rain, er, runon = 0.0)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

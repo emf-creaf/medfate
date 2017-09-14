@@ -26,7 +26,7 @@ photo.rubiscoLimitedPhotosynthesis(Ci, GT, Km, Vmax)
 photo.photosynthesis(Q, Catm, Gc, leaf_temp, Vmax298, Jmax298, verbose = FALSE)
 photo.photosynthesisFunction(supplyFunction, Catm, Patm, Tair, vpa, u, 
                              absRad, Q, Vmax298, Jmax298, verbose = FALSE)
-photo.profitMaximization(supplyFunction, photosynthesisFunction, Gwmin, Gwmax)
+photo.profitMaximization(supplyFunction, photosynthesisFunction)
 }
 
 %- maybe also 'usage' for other objects documented here.
@@ -51,7 +51,7 @@ photo.profitMaximization(supplyFunction, photosynthesisFunction, Gwmin, Gwmax)
   \item{absRad}{Absorbed long- and short-wave radiation (in W*m^-2).}
   \item{verbose}{Boolean flag to indicate console output.}
   \item{photosynthesisFunction}{Function returned by \code{photo.photosynthesisFunction()}.}
-  \item{Gwmin, Gwmax}{Minimum and maximum leaf water conductance (i.e. cuticular and maximum stomatal conductance) (mol * s-1 * m-2).}
+%  \item{Gwmin, Gwmax}{Minimum and maximum leaf water conductance (i.e. cuticular and maximum stomatal conductance) (mol * s-1 * m-2).}
 }
 \details{
 Details of the photosynthesis submodel are given in a vignette.

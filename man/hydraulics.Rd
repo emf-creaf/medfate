@@ -35,39 +35,40 @@ hydraulics.averagePsi(psi, v, c, d)
 hydraulics.averageRhizosphereResistancePercent(krhizomax, n, alpha,
                                                krootmax, rootc, rootd,
                                                kstemmax, stemc, stemd, psiStep = -0.01)
-hydraulics.E2psiXylem(E, psiUpstream, kxylemmax, c, d, psiStep = -0.01, 
+hydraulics.E2psiXylem(E, psiUpstream, kxylemmax, c, d, psiCav = 0, psiStep = -0.01, 
                  psiMax = -10.0)
 hydraulics.E2psiVanGenuchten(E, psiSoil, krhizomax, n, alpha, 
                              psiStep = -0.01, psiMax = -10.0)
 hydraulics.E2psiTwoElements(E, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, 
-                            psiStep = -0.001, psiMax = -10.0)
+                            psiCav = 0, psiStep = -0.001, psiMax = -10.0)
 hydraulics.E2psiNetwork(E, psiSoil, 
                         krhizomax, nsoil, alphasoil,
                         krootmax, rootc, rootd, 
                         kstemmax, stemc, stemd,
-                        psiIni = as.numeric(c(0)),
+                        psiIni = as.numeric(c(0)), psiCav = 0,
                         psiStep = -0.001, psiMax = -10.0, ntrial = 10, 
-                        psiTol = 0.0001, ETol = 0.001)
+                        psiTol = 0.0001, ETol = 1e-04)
 hydraulics.Ecrit(psiUpstream, kxylemmax, c, d)
 hydraulics.EVanGenuchten(psiRhizo, psiSoil, krhizomax, n, alpha, 
                          psiStep = -0.001, psiTol = 0.0001, allowNegativeFlux = TRUE)
-hydraulics.EXylem(psiPlant, psiUpstream, kxylemmax, c, d, allowNegativeFlux = TRUE)
+hydraulics.EXylem(psiPlant, psiUpstream, kxylemmax, c, d, allowNegativeFlux = TRUE, 
+                  psiCav = 0)
 hydraulics.findRhizosphereMaximumConductance(averageResistancePercent, n, alpha,
                                              krootmax, rootc, rootd,
                                              kstemmax, stemc, stemd)        
 hydraulics.maximumStemHydraulicConductance(xylemConductivity, Al2As, height)
 hydraulics.supplyFunctionOneXylem(psiSoil, v, 
-                          kstemmax, stemc, stemd,
+                          kstemmax, stemc, stemd, psiCav = 0,
                           maxNsteps=200, psiStep = -0.001, psiMax = -10.0, dE=0.01)
 hydraulics.supplyFunctionTwoElements(Emax, psiSoil, 
                           krhizomax, kxylemmax, n, alpha, c, d, 
-                          dE = 0.1, psiMax = -10.0)
+                          psiCav = 0, dE = 0.1, psiMax = -10.0)
 hydraulics.supplyFunctionNetwork(psiSoil, 
                           krhizomax, nsoil, alphasoil,
                           krootmax, rootc, rootd, 
-                          kstemmax, stemc, stemd,
-                          maxNsteps=200, psiStep = -0.001, psiMax = -10.0, 
-                          ntrial = 10, psiTol = 0.0001, ETol = 0.001)
+                          kstemmax, stemc, stemd, psiCav = 0,
+                          maxNsteps = 400, psiStep = -0.001, psiMax = -10.0, 
+                          ntrial = 10, psiTol = 0.0001, ETol = 1e-04)
 hydraulics.psiCrit(c, d)
 hydraulics.regulatedPsiXylem(E, psiUpstream, kxylemmax, c, d, psiStep = -0.01)
 hydraulics.regulatedPsiTwoElements(Emax, psiSoil, krhizomax, kxylemmax, n, alpha, 
@@ -90,6 +91,7 @@ hydraulics.xylemConductance(psi, kxylemmax, c, d)
   \item{E}{Flow per surface unit.}
   \item{Emax}{Maximum flow per surface unit.}
   \item{psiUpstream}{Water potential upstream (in MPa). In a one-component model corresponds to soil potential. In a two-component model corresponds to the potential inside the roots.}
+  \item{psiCav}{Minimum water potential (in MPa) experienced (for irreversible cavitation).}
   \item{psiPlant}{Plant water potential (in MPa).}
   \item{psiSoil}{Soil water potential (in MPa). A scalar or a vector depending on the function.}
   \item{psiRhizo}{Soil water potential (in MPa) in the rhizosphere (root surface).}
