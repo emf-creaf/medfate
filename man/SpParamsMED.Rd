@@ -38,7 +38,8 @@ A data set of parameter values for Mediterranean species, resulting from bibliog
     \item{\code{HeatContent}}{High fuel heat content (kJ/kg).}
     \item{\code{Zmax}}{Maximum rooting depth (in mm).}
     \item{\code{Hmax}}{Maximum plant height (in m).}
-    \item{\code{fHDmin, fHDmax}}{Minimu/maximum value of the height-to-diameter ratio (dimensionless).}
+    \item{\code{fHDmin}}{Minimum value of the height-to-diameter ratio (dimensionless).}
+    \item{\code{fHDmax}}{Maximum value of the height-to-diameter ratio (dimensionless).}
     \item{\code{k}}{Light extinction coeficient for PAR.}
     \item{\code{g}}{Canopy water storage capacity per LAI unit (in mm/LAI).}
     \item{\code{Sgdd}}{Growth degree days for leaf budburst (in Celsius)}

@@ -61,6 +61,8 @@ photo.profitMaximization(supplyFunction, photosynthesisFunction, type = 1, kstem
   \item{vpa}{Vapour pressure deficit (in kPa).}
   \item{u}{Wind speed above the leaf boundary (in m/s) (for each canopy layer in the case of \code{photo.multilayerPhotosynthesisFunction}).}
   \item{absRad}{Absorbed long- and short-wave radiation (in W*m^-2).}
+  \item{refLeafArea}{Leaf reference area.}
+  \item{Gwmin, Gwmax}{Minimum and maximum leaf water conductance (i.e. cuticular and maximum stomatal conductance) (mol * s-1 * m-2).}
   \item{verbose}{Boolean flag to indicate console output.}
   \item{photosynthesisFunction}{Function returned by \code{photo.photosynthesisFunction()}.}
   \item{type}{Optimization type (1,2 or 3).}
@@ -68,7 +70,6 @@ photo.profitMaximization(supplyFunction, photosynthesisFunction, type = 1, kstem
   \item{SLarea, SHarea}{Leaf area index of sunlit/shade leaves (for each canopy layer in the case of \code{photo.multilayerPhotosynthesisFunction}).}
   \item{absRadSL, absRadSH}{Instantaneous absorbed radiation (W·m-2) per unit of sunlit/shade leaf area (for each canopy layer in the case of \code{photo.multilayerPhotosynthesisFunction}).}
   \item{QSL, QSH}{Active photon flux density (micromol * s-1 * m-2) per unit of sunlit/shade leaf area (for each canopy layer in the case of \code{photo.multilayerPhotosynthesisFunction}).}
-  \item{Gwmin, Gwmax}{Minimum and maximum leaf water conductance (i.e. cuticular and maximum stomatal conductance) (mol * s-1 * m-2).}
 }
 \details{
 Details of the photosynthesis submodel are given in a vignette.
@@ -89,6 +90,13 @@ Values returned for each function are:
   \item{\code{LeafVPD}: Leaf vapor pressure deficit (kPa).}
   \item{\code{WaterVaporConductance}: Leaf vapor conductance (mol * s-1 * m-2).}
   \item{\code{Photosynthesis}: Gross photosynthesis (micromol*s-1*m-2).}
+  \item{\code{NetPhotosynthesis}: Net photosynthesis, after discounting autotrophic respiration (micromol*s-1*m-2).}
+  }
+}
+\item{\code{photo.sunshadePhotosynthesisFunction} and \code{photo.multilayerPhotosynthesisFunction}: Return a list with the following elements:
+\itemize{
+  \item{\code{Photosynthesis}: Gross photosynthesis (micromol*s-1*m-2).}
+  \item{\code{NetPhotosynthesis}: Net photosynthesis, after discounting autotrophic respiration (micromol*s-1*m-2).}
   }
 }
 \item{\code{photo.profitMaximization}:Returns a list with the following elements:
