@@ -381,15 +381,15 @@ hydraulics.maximumStemHydraulicConductance <- function(xylemConductivity, Al2As,
     .Call('_medfate_cohortAbsorbedSWRFraction', PACKAGE = 'medfate', z, x, SpParams, gdd)
 }
 
-.layerIrradianceFraction <- function(LAIme, LAImd, k, alpha) {
+layerIrradianceFraction <- function(LAIme, LAImd, k, alpha) {
     .Call('_medfate_layerIrradianceFraction', PACKAGE = 'medfate', LAIme, LAImd, k, alpha)
 }
 
-.cohortSunlitShadeAbsorbedRadiation <- function(Ib0, Id0, Ibf, Idf, beta, LAIme, LAImd, kb, kd, alpha, gamma) {
+cohortSunlitShadeAbsorbedRadiation <- function(Ib0, Id0, Ibf, Idf, beta, LAIme, LAImd, kb, kd, alpha, gamma) {
     .Call('_medfate_cohortSunlitShadeAbsorbedRadiation', PACKAGE = 'medfate', Ib0, Id0, Ibf, Idf, beta, LAIme, LAImd, kb, kd, alpha, gamma)
 }
 
-.layerSunlitFraction <- function(LAIme, LAImd, kb) {
+layerSunlitFraction <- function(LAIme, LAImd, kb) {
     .Call('_medfate_layerSunlitFraction', PACKAGE = 'medfate', LAIme, LAImd, kb)
 }
 

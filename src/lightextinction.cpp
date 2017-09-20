@@ -178,7 +178,7 @@ NumericVector cohortAbsorbedSWRFraction(NumericVector z, List x, DataFrame SpPar
   return(cohortAbsorbedSWRFraction(LAIme, LAImd, kSWR));
 }
 
-// [[Rcpp::export(".layerIrradianceFraction")]]
+// [[Rcpp::export("layerIrradianceFraction")]]
 NumericVector layerIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericVector k, NumericVector alpha) {
   int nlayer = LAIme.nrow();
   int ncoh = LAIme.ncol();
@@ -249,7 +249,7 @@ NumericMatrix cohortScatteredAbsorbedRadiation(double Ib0, NumericVector Ibf, Nu
  * I_{SU,ij}
  * I_{SH,ij}
  */
-// [[Rcpp::export(".cohortSunlitShadeAbsorbedRadiation")]]
+// [[Rcpp::export("cohortSunlitShadeAbsorbedRadiation")]]
 List cohortSunlitShadeAbsorbedRadiation(double Ib0, double Id0, NumericVector Ibf, NumericVector Idf, double beta,
                              NumericMatrix LAIme, NumericMatrix LAImd, 
                              NumericVector kb,  NumericVector kd, NumericVector alpha, double gamma) {
@@ -276,7 +276,7 @@ List cohortSunlitShadeAbsorbedRadiation(double Ib0, double Id0, NumericVector Ib
  *  Sunlit leaf fraction per layer
  *  f_{SL, ij}
  */
-// [[Rcpp::export(".layerSunlitFraction")]]
+// [[Rcpp::export("layerSunlitFraction")]]
 NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kb) {
   int ncoh = kb.size();
   int nlayer = LAIme.nrow();
