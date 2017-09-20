@@ -19,6 +19,7 @@
 \alias{hydraulics.supplyFunctionOneXylem}
 \alias{hydraulics.supplyFunctionTwoElements}
 \alias{hydraulics.supplyFunctionNetwork}
+\alias{hydraulics.supplyFunctionPlot}
 \alias{hydraulics.vanGenuchtenConductance}
 \alias{hydraulics.xylemConductance}
 \alias{hydraulics.xylemPsi}
@@ -70,6 +71,7 @@ hydraulics.supplyFunctionNetwork(psiSoil,
                           kstemmax, stemc, stemd, psiCav = 0,
                           maxNsteps = 400, psiStep = -0.001, psiMax = -10.0, 
                           ntrial = 10, psiTol = 0.0001, ETol = 1e-04)
+hydraulics.supplyFunctionPlot(soil, x, type = "E")                          
 hydraulics.psiCrit(c, d)
 hydraulics.regulatedPsiXylem(E, psiUpstream, kxylemmax, c, d, psiStep = -0.01)
 hydraulics.regulatedPsiTwoElements(Emax, psiSoil, krhizomax, kxylemmax, n, alpha, 
@@ -116,9 +118,12 @@ hydraulics.xylemPsi(kxylem, kxylemmax, c, d)
   \item{maxNsteps}{Maximum number of steps in the construction of supply functions.}
   \item{ntrial}{Maximum number of steps in Newton-Raphson optimization.}
   \item{kxylem}{Xylem hydraulic conductance (defined as flow per surface unit and per pressure drop).}
+  \item{x}{An object of class \code{\link{swbInput}}.}
+  \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
+  \item{type}{Plot type (either \code{"E"} or \code{"dEdP"}).}
 }
 \details{
-Details of the hydraulic model are given in a vignette.
+Details of the hydraulic model are given in a vignette. Function \code{hydraulics.supplyFunctionPlot} draws a plot of the supply function for the given \code{soil} object and network properties of each plant cohort in \code{x}.
 }
 \value{
 Values returned for each function are:
@@ -162,7 +167,7 @@ Sperry, J. S., and D. M. Love. 2015. What plant hydraulics can tell us about res
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 \seealso{
-\code{\link{swb}}
+\code{\link{swb}}, \code{\link{soil}}
 }
 \examples{
 kstemmax = 4 # in mmol·m-2·s-1·MPa-1
