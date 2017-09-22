@@ -1,5 +1,5 @@
 #Draws the supply function (E vs PlantPsi) for the current soil state and plant hydraulic parameters
-hydraulics.supplyFunctionPlot<-function(soil, x, type="E", ...) {
+hydraulics.supplyFunctionPlot<-function(soil, x, type="E") {
   
   psic = soil$psi
   VG_nc = soil$VG_n
@@ -8,6 +8,8 @@ hydraulics.supplyFunctionPlot<-function(soil, x, type="E", ...) {
   VCroot_kmax = x$below$VCroot_kmax
   VGrhizo_kmax = x$below$VGrhizo_kmax
   pEmb = x$ProportionCavitated
+  
+  numericParams = x$control$numericParams
   
   VCroot_c = x$paramsTransp$VCroot_c
   VCroot_d = x$paramsTransp$VCroot_d
@@ -22,7 +24,10 @@ hydraulics.supplyFunctionPlot<-function(soil, x, type="E", ...) {
     l[[i]] = hydraulics.supplyFunctionNetwork(psic,
                                           VGrhizo_kmax[i,],VG_nc,VG_alphac,
                                           VCroot_kmax[i,], VCroot_c[i],VCroot_d[i],
-                                          VCstem_kmax[i], VCstem_c[i],VCstem_d[i], psiCav = psiCav, ...)
+                                          VCstem_kmax[i], VCstem_c[i],VCstem_d[i], psiCav = psiCav,
+                                          maxNsteps = numericParams$maxNsteps, psiStep = numericParams$psiStep, 
+                                          psiMax = numericParams$psiMax, ntrial = numericParams$ntrial,
+                                          psiTol = numericParams$psiTol, ETol = numericParams$ETol)
   }
   if(type=="E") {
     maxE = 0
@@ -55,6 +60,44 @@ hydraulics.supplyFunctionPlot<-function(soil, x, type="E", ...) {
         lines(-l[[i]]$PsiPlant, l[[i]]$dEdP, lty=i)
       }
     }
+  }
+  else if(type=="Elayers") {
+    minE = 0
+    maxE = 0
+    minPsi = 0
+    for(i in 1:ncoh) {
+      maxE = max(maxE, max(l[[i]]$Elayers, na.rm=T))
+      minE = min(minE, min(l[[i]]$Elayers, na.rm=T))
+      minPsi = min(minPsi, min(l[[i]]$PsiPlant))
+    }
+    for(i in 1:ncoh) {
+      if(i==1) {
+        matplot(-l[[i]]$PsiPlant, l[[i]]$Elayers, type="l", lty=i, ylim=c(minE-0.1,maxE+0.1), xlim=c(0,-minPsi),
+             xlab = "Plant pressure (-MPa)", ylab = "Flow rate")
+      } else {
+        matlines(-l[[i]]$PsiPlant, l[[i]]$Elayers, lty=i)
+      }
+    }
+    abline(h=0, col="gray")
+  }
+  else if(type=="PsiRhizo") {
+    minE = 0
+    maxE = 0
+    minPsi = 0
+    for(i in 1:ncoh) {
+      maxE = max(maxE, max(l[[i]]$PsiRhizo, na.rm=T))
+      minE = min(minE, min(l[[i]]$PsiRhizo, na.rm=T))
+      minPsi = min(minPsi, min(l[[i]]$PsiPlant))
+    }
+    for(i in 1:ncoh) {
+      if(i==1) {
+        matplot(-l[[i]]$PsiPlant, l[[i]]$PsiRhizo, type="l", lty=i, ylim=c(minE-0.1,maxE+0.1), xlim=c(0,-minPsi),
+                xlab = "Plant pressure (-MPa)", ylab = "Rhizosphere pressure (-MPa)")
+      } else {
+        matlines(-l[[i]]$PsiPlant, l[[i]]$PsiRhizo, lty=i)
+      }
+    }
+    abline(h=0, col="gray")
   }
   invisible(l)
 }
