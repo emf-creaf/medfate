@@ -71,7 +71,7 @@ hydraulics.supplyFunctionNetwork(psiSoil,
                           kstemmax, stemc, stemd, psiCav = 0,
                           maxNsteps = 400, psiStep = -0.001, psiMax = -10.0, 
                           ntrial = 10, psiTol = 0.0001, ETol = 1e-04)
-hydraulics.supplyFunctionPlot(soil, x, type = "E", ...)                          
+hydraulics.supplyFunctionPlot(soil, x, type = "E")                          
 hydraulics.psiCrit(c, d)
 hydraulics.regulatedPsiXylem(E, psiUpstream, kxylemmax, c, d, psiStep = -0.01)
 hydraulics.regulatedPsiTwoElements(Emax, psiSoil, krhizomax, kxylemmax, n, alpha, 
@@ -121,7 +121,6 @@ hydraulics.xylemPsi(kxylem, kxylemmax, c, d)
   \item{x}{An object of class \code{\link{swbInput}}.}
   \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
   \item{type}{Plot type (either \code{"E"} or \code{"dEdP"}).}
-  \item{...}{Additional arguments for function \code{hydraulics.supplyFunctionNetwork}.}
 }
 \details{
 Details of the hydraulic model are given in a vignette. Function \code{hydraulics.supplyFunctionPlot} draws a plot of the supply function for the given \code{soil} object and network properties of each plant cohort in \code{x}.
