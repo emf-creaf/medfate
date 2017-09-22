@@ -4,6 +4,9 @@
 
 __Version history__
 
+_Version 0.3.5, September 2017.
+1. Control of numerical methods for supply function added to 'defaulControlParams'.
+
 _Version 0.3.4, September 2017.
 
 1. Added new function 'swb.ldrOptimization' to optimize root distribution for swb simulations (by Antoine Cabon).

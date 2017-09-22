@@ -265,6 +265,14 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   
   //Control parameters
   List control = x["control"];
+  List numericParams = control["numericParams"];
+  double psiStep = numericParams["psiStep"];
+  double psiMax = numericParams["psiMax"];
+  int ntrial = numericParams["ntrial"];
+  int maxNsteps  = numericParams["maxNsteps"];
+  double psiTol = numericParams["psiTol"];
+  double ETol = numericParams["ETol"];
+
   bool cavitationRefill = control["cavitationRefill"];
   String canopyMode = Rcpp::as<Rcpp::String>(control["canopyMode"]);
   int ntimesteps = control["ndailysteps"];
@@ -529,7 +537,9 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
       supplyNetwork = supplyFunctionNetwork(psic,
                                             VGrhizo_kmaxc,VG_nc,VG_alphac,
                                             VCroot_kmaxc, VCroot_c[c],VCroot_d[c],
-                                                                              VCstem_kmax[c], VCstem_c[c],VCstem_d[c], psiCav = psiCav);
+                                            VCstem_kmax[c], VCstem_c[c],VCstem_d[c], 
+                                            psiCav,
+                                            maxNsteps, psiStep, psiMax , ntrial, psiTol, ETol);
       NumericMatrix ElayersMat = supplyNetwork["Elayers"];
       NumericVector PsiLeafVec = supplyNetwork["PsiPlant"];
       NumericVector PsiRootVec = supplyNetwork["PsiRoot"];
@@ -742,7 +752,7 @@ List swbDay(List x, List soil, CharacterVector date, int doy, double tmin, doubl
   for(int j=0;j<numCohorts;j++) {
     LAI_expanded[j] = LAI_live[j]*phe[j];
   }
-  
+
   List s;
   if(transpirationMode=="Simple") {
     s = swbDay1(x,soil, tday, pet, rain, er, runon, verbose);
@@ -750,6 +760,7 @@ List swbDay(List x, List soil, CharacterVector date, int doy, double tmin, doubl
     s = swbDay2(x,soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect,
                 solarConstant, delta, rain, er, runon, verbose);
   }
+  // Rcout<<"hola4\n";
   s["PET"] = pet;
   s["Rain"] = rain;
   return(s);

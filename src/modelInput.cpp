@@ -91,9 +91,11 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
     DataFrame paramsTranspdf = DataFrame::create(_["Psi_Extract"]=Psi_Extract,_["WUE"] = WUE,  _["pRootDisc"] = pRootDisc);
     paramsTranspdf.attr("row.names") = above.attr("row.names");
     List below = List::create(_["V"] = V);
+    List numericParams = control["numericParams"];
     List paramsControl = List::create(_["verbose"] =control["verbose"],
                                       _["transpirationMode"] =transpirationMode, 
-                                      _["cavitationRefill"] = control["cavitationRefill"]);
+                                      _["cavitationRefill"] = control["cavitationRefill"],
+                                      _["numericParams"] = clone(numericParams));
     input = List::create(_["control"] =paramsControl,
                          _["gdd"] = 0,
                          _["cohorts"] = cohortDescdf,
@@ -163,11 +165,13 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
     List below = List::create(_["V"] = V,
                               _["VGrhizo_kmax"] = VGrhizo_kmax,
                               _["VCroot_kmax"] = VCroot_kmax);
+    List numericParams = control["numericParams"];
     List paramsControl = List::create(_["verbose"] =control["verbose"],
                                       _["transpirationMode"] =transpirationMode, 
                                       _["canopyMode"] =canopyMode, 
                                       _["cavitationRefill"] = control["cavitationRefill"],
-                                      _["ndailysteps"] = control["ndailysteps"]);
+                                      _["ndailysteps"] = control["ndailysteps"],
+                                      _["numericParams"] = clone(numericParams));
     input = List::create(_["control"] = paramsControl,
                          _["gdd"] = 0,
                          _["cohorts"] = cohortDescdf,
@@ -402,9 +406,11 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     paramsTranspdf.attr("row.names") = above.attr("row.names");
     
     List below = List::create( _["Z"]=Z,_["V"] = V);
+    List numericParams = control["numericParams"];
     List paramsControl = List::create(_["verbose"] =control["verbose"],
                                       _["transpirationMode"] =transpirationMode, 
                                       _["cavitationRefill"] = control["cavitationRefill"],
+                                      _["numericParams"] = clone(numericParams),                               
                                       _["storagePool"] = storagePool);
     input = List::create(_["control"] = paramsControl,
                          _["gdd"] = 0,
@@ -477,10 +483,12 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     List below = List::create( _["Z"]=Z,_["V"] = V,
                               _["VGrhizo_kmax"] = VGrhizo_kmax,
                               _["VCroot_kmax"] = VCroot_kmax);
+    List numericParams = control["numericParams"];
     List paramsControl = List::create(_["verbose"] =control["verbose"],
                                       _["transpirationMode"] =transpirationMode, 
                                       _["canopyMode"] = canopyMode,
                                       _["ndailysteps"] = control["ndailysteps"], 
+                                      _["numericParams"] = clone(numericParams),
                                       _["cavitationRefill"] = control["cavitationRefill"],
                                       _["storagePool"] = storagePool);
     input = List::create(_["control"] =paramsControl,

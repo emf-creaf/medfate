@@ -1,5 +1,5 @@
 #Draws the supply function (E vs PlantPsi) for the current soil state and plant hydraulic parameters
-hydraulics.supplyFunctionPlot<-function(soil, x, type="E") {
+hydraulics.supplyFunctionPlot<-function(soil, x, type="E", ...) {
   
   psic = soil$psi
   VG_nc = soil$VG_n
@@ -22,7 +22,7 @@ hydraulics.supplyFunctionPlot<-function(soil, x, type="E") {
     l[[i]] = hydraulics.supplyFunctionNetwork(psic,
                                           VGrhizo_kmax[i,],VG_nc,VG_alphac,
                                           VCroot_kmax[i,], VCroot_c[i],VCroot_d[i],
-                                          VCstem_kmax[i], VCstem_c[i],VCstem_d[i], psiCav = psiCav)
+                                          VCstem_kmax[i], VCstem_c[i],VCstem_d[i], psiCav = psiCav, ...)
   }
   if(type=="E") {
     maxE = 0
@@ -56,4 +56,5 @@ hydraulics.supplyFunctionPlot<-function(soil, x, type="E") {
       }
     }
   }
+  invisible(l)
 }
