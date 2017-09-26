@@ -104,7 +104,7 @@ swb.ldrCalibration <- function(x, soil, meteo, calibVar, obs,
   for (sp in 1:nrow(x$above)) {
     
     # check if shrub (not doing anything at the moment with shrubs)
-    sp_code <- rownames(x[['cohorts']][['SP']])[sp]
+    sp_code <- rownames(x[['cohorts']])[sp]
     if (strtrim(sp_code, 1) == 'S') {
       res_by_sp[sp, ] <- c(
         x[['cohorts']][['SP']][sp],
