@@ -6,6 +6,7 @@ __Version history__
 
 _Version 0.3.5, September 2017.
 1. Control of numerical methods for supply function added to 'defaulControlParams'.
+2. Added new function 'swb.ldrCalibration' to calibrate root distribution for swb simulations (by Victor Granda)
 
 _Version 0.3.4, September 2017.
 
