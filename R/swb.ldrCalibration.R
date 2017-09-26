@@ -1,4 +1,4 @@
-swb.ldrCalibration <- function(x, soil, meteo, psi_crit, obs,
+swb.ldrCalibration <- function(x, soil, meteo, psi_crit, obs, calibVar = 'SWC',
                                RZmin = 301, RZmax = 4000, V1min = 0.01,
                                V1max = 0.94, resolution = 20, heat_stop = 0,
                                transformation = "identity", explore_out = FALSE,
@@ -9,10 +9,13 @@ swb.ldrCalibration <- function(x, soil, meteo, psi_crit, obs,
     stop("The length of 'psi_crit' must be equal to the number of cohorts in 'x'.")
   }
   
+  # match calibVar argument
+  calibVar <- match.arg(calibVar, c('SWC', 'Eplanttot', 'Cohorts'))
+  
   ## MAE calculator
-  .MAE <- function(real, predicted) {
+  .MAE <- function(measured, predicted) {
     # calculate MAE
-    res <- mean(abs(real - predicted), na.rm = TRUE)
+    res <- mean(abs(measured - predicted), na.rm = TRUE)
     # return it
     return(res)
   }
@@ -33,7 +36,8 @@ swb.ldrCalibration <- function(x, soil, meteo, psi_crit, obs,
   ## RZ vals
   RZ_trans <- seq(trans(RZmin), trans(RZmax), length.out = resolution)
   RZ <- unlist(sapply(RZ_trans, FUN = inverse_trans))
-  ## the case where RZ = Z1 will create problems when using the LDR model -> remove if it exists
+  ## the case where RZ = Z1 will create problems when using
+  ## the LDR model -> remove if it exists
   Z1 <- soil$dVec[1]
   if (sum(RZ == Z1) > 0) {
     if (verbose) {
@@ -77,6 +81,9 @@ swb.ldrCalibration <- function(x, soil, meteo, psi_crit, obs,
   V <- array(dim = c(length(soil$dVec),length(V1), length(RZ)), 
              dimnames = list(layer = 1:length(soil$dVec), V1 = V1, RZ = RZ))
   
+  # store the original input to be able to access the cohorts LAI in case it
+  # is needed (calibVar = 'Cohorts')
+  old_x <- x
   # Sum LAI for all the species
   x[['above']][['LAI_live']] <- sum(x[['above']][['LAI_live']])
   x[['above']][['LAI_expanded']] <- sum(x[['above']][['LAI_expanded']])
@@ -96,6 +103,18 @@ swb.ldrCalibration <- function(x, soil, meteo, psi_crit, obs,
   
   # Main loop by cohorts
   for (sp in 1:nrow(x$above)) {
+    
+    # check if shrub (not doing anything at the moment with shrubs)
+    sp_code <- rownames(x[['cohorts']][['SP']])[sp]
+    if (strtrim(sp_code, 1) == 'S') {
+      res_by_sp[sp, ] <- c(
+        x[['cohorts']][['SP']][sp],
+        NA, NA, NA, NA
+      )
+      
+      next()
+    }
+    
     # get the sp
     SP <- x[['cohorts']][['SP']][sp]
     cat(paste("Exploring root distribution of cohort",
@@ -114,10 +133,23 @@ swb.ldrCalibration <- function(x, soil, meteo, psi_crit, obs,
     x_1sp$control$verbose <- FALSE
     
     # temp output
-    MAE_res <- array(
-      dim = c(1, length(V1), length(RZ)),
-      dimnames = list(MAE = 'MAE', V1 = V1, RZ = RZ)
-    )
+    if (calibVar == 'SWC') {
+      MAE_res <- array(
+        dim = c(1, length(V1)),
+        dimnames = list(MAE = 'MAE', V1 = V1)
+      )
+      
+      Z50_vals <- array(
+        dim = c(1, length(V1)),
+        dimnames = list(Z50 = 'Z50', V1 = V1)
+      )
+      
+    } else {
+      MAE_res <- array(
+        dim = c(1, length(V1), length(RZ)),
+        dimnames = list(MAE = 'MAE', V1 = V1, RZ = RZ)
+      )
+    }
     
     # Inner loop to iterate by Z and V combinations using indexes_to_explore
     for (row in 1:nrow(indexes_to_explore)) {
@@ -125,53 +157,110 @@ swb.ldrCalibration <- function(x, soil, meteo, psi_crit, obs,
       i <- indexes_to_explore[row, 1]
       j <- indexes_to_explore[row, 2]
       
-      # Here we need to update the depth of the different soil layers to match
-      # RZ value
-      s. <- soil
-      s.$SoilDepth <- RZ[j]
-      dCum <- cumsum(s.$dVec)
-      layersWithinRZ <- dCum < RZ[j]
-      layersWithinRZ <- c(TRUE, layersWithinRZ[-length(layersWithinRZ)])
-      # maintain only the layers included
-      s.$dVec <- s.$dVec[layersWithinRZ]
-      nl <- length(s.$dVec)
-      # modify the width of the last layer
-      s.$dVec[nl] <- s.$dVec[nl] - dCum[nl] + RZ[j]
-      # adjust the water content of the last layer
-      s.$Water_FC[nl] <- soil$Water_FC[nl]*(s.$dVec[nl]/soil$dVec[nl])
-      # adjust the other soil parameters to the new number of layers
-      for (k in 1:length(s.)) {
-        if (length(s.[[k]]) > 1) {
-          s.[[k]] <- s.[[k]][1:nl]
+      ### Id calib and valid are done by SWC
+      if (calibVar == 'SWC') {
+        
+        # calculate Z50 assuming Z95 as soil depth and Z as depth of first layer
+        Z50_val <- .root.ldrZ50(
+          V = V1[i],
+          Z = soil$dVec[1],
+          Z95 = soil$SoilDepth
+        )
+        # Calculate the V and modify x accordingly
+        x_1sp[['below']][['V']] <- root.ldrDistribution(
+          Z50 = Z50_val,
+          Z95 = soil$SoilDepth,
+          d = soil$dVec
+        )
+        
+        # Run the model
+        res_model <- swb(x = x_1sp, meteo = meteo, soil = soil)
+        
+        # calculate the MAE
+        predicted <- res_model[['SoilWaterBalance']][['W.1']]*soil[["Theta_FC"]][[1]]
+        
+        # Store the MAE value
+        MAE_res[,i] <- .MAE(obs, predicted)
+        Z50_vals[,i] <- Z50_val
+        
+      } else {
+        
+        ### Id calib and valid are done by E
+        # Here we need to update the depth of the different soil layers to match
+        # RZ value
+        s. <- soil
+        s.$SoilDepth <- RZ[j]
+        dCum <- cumsum(s.$dVec)
+        layersWithinRZ <- dCum < RZ[j]
+        layersWithinRZ <- c(TRUE, layersWithinRZ[-length(layersWithinRZ)])
+        # maintain only the layers included
+        s.$dVec <- s.$dVec[layersWithinRZ]
+        nl <- length(s.$dVec)
+        # modify the width of the last layer
+        s.$dVec[nl] <- s.$dVec[nl] - dCum[nl] + RZ[j]
+        # adjust the water content of the last layer
+        s.$Water_FC[nl] <- soil$Water_FC[nl]*(s.$dVec[nl]/soil$dVec[nl])
+        # adjust the other soil parameters to the new number of layers
+        for (k in 1:length(s.)) {
+          if (length(s.[[k]]) > 1) {
+            s.[[k]] <- s.[[k]][1:nl]
+          }
+        }
+        
+        # Calculate the V and modify x accordingly
+        x_1sp[['below']][['V']] <- root.ldrDistribution(
+          Z50 = Z50[i,j],
+          Z95 = RZ[j],
+          d = s.$dVec
+        )
+        
+        # Run the model
+        res_model <- swb(x = x_1sp, meteo = meteo, soil = s.)
+        # build a data frame with transpiration values to compare to obs
+        E_df <- data.frame(Eplanttot = res_model[["DailyBalance"]][["Eplanttot"]])
+        E_df <- cbind(E_df, res_model[["PlantTranspiration"]])
+        
+        if (calibVar == 'Eplanttot') {
+          # calculate the MAE
+          real <- obs[['Eplanttot']]
+          predicted <- E_df[['Eplanttot']]
+          
+          # Store the MAE value
+          MAE_res[,i,j] <- .MAE(real, predicted)
+        } else {
+          # calculate the MAE
+          real <- obs[[1 + sp]]
+          # scaling the LAI to be able to compare (here the cohort analyzed is always
+          # the second column of E_df, as we create an input with only one cohort)
+          predicted <- E_df[[2]] * old_x[['above']][['LAI_live']][sp] / x[['above']][['LAI_live']][sp]
+          
+          # Store the MAE value
+          MAE_res[,i,j] <- .MAE(real, predicted)
         }
       }
-      
-      # Calculate the V and modify x accordingly
-      x_1sp[['below']][['V']] <- root.ldrDistribution(
-        Z50 = Z50[i,j],
-        Z95 = RZ[j],
-        d = s.$dVec
-      )
-      
-      # Run the model
-      res_model <- swb(x = x_1sp, meteo = meteo, soil = s.)
-      
-      # calculate the MAE
-      real <- obs
-      predicted <- res_model[['SoilWaterBalance']][['W.1']]*s.[["Theta_FC"]][[1]]
-      
-      # Store the MAE value
-      MAE_res[,i,j] <- .MAE(real, predicted)
     }
     
     # build the res data frame
-    mae_min_index <- which(MAE_res == min(MAE_res, na.rm = TRUE), arr.ind = TRUE)
-    
-    res_by_sp[sp, 'SP'] <- SP[sp]
-    res_by_sp[sp, 'MAE'] <- MAE_res[mae_min_index[1], mae_min_index[2], mae_min_index[3]]
-    res_by_sp[sp, 'Z95'] <- RZ[mae_min_index[3]]
-    res_by_sp[sp, 'Z50'] <- Z50[mae_min_index[2], mae_min_index[3]]
-    res_by_sp[sp, 'V1'] <- V1[mae_min_index[1]]
+    if (calibVar == 'SWC') {
+      
+      mae_min_index <- which(MAE_res == min(MAE_res, na.rm = TRUE), arr.ind = TRUE)
+      
+      res_by_sp[sp, 'SP'] <- SP
+      res_by_sp[sp, 'MAE'] <- MAE_res[mae_min_index[1], mae_min_index[2]]
+      res_by_sp[sp, 'Z95'] <- soil$SoilDepth
+      res_by_sp[sp, 'Z50'] <- Z50_vals[mae_min_index[1], mae_min_index[2]]
+      res_by_sp[sp, 'V1'] <- V1[mae_min_index[2]]
+      
+    } else {
+      
+      mae_min_index <- which(MAE_res == min(MAE_res, na.rm = TRUE), arr.ind = TRUE)
+      
+      res_by_sp[sp, 'SP'] <- SP
+      res_by_sp[sp, 'MAE'] <- MAE_res[mae_min_index[1], mae_min_index[2], mae_min_index[3]]
+      res_by_sp[sp, 'Z95'] <- RZ[mae_min_index[3]]
+      res_by_sp[sp, 'Z50'] <- Z50[mae_min_index[2], mae_min_index[3]]
+      res_by_sp[sp, 'V1'] <- V1[mae_min_index[2]]
+    }
   }
   
   return(res_by_sp)
