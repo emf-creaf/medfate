@@ -70,7 +70,7 @@ NumericVector vanGenuchtenParams(String soilType) {
 // [[Rcpp::export("soil")]]
 List soil(List SoilParams, NumericVector W = NumericVector::create(1.0)) {
   double SoilDepth = 0.0;
-  NumericVector dVec = SoilParams["widths"];
+  NumericVector dVec = clone(as<NumericVector>(SoilParams["widths"]));
   int nlayers = dVec.size();
 
   if(W.size()==1) {
