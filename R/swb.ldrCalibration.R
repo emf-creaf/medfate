@@ -1,8 +1,7 @@
-swb.ldrCalibration <- function(x, soil, meteo, psi_crit, obs, calibVar = 'SWC',
+swb.ldrCalibration <- function(x, soil, meteo, calibVar, obs,
                                RZmin = 301, RZmax = 4000, V1min = 0.01,
                                V1max = 0.94, resolution = 20, heat_stop = 0,
-                               transformation = "identity", explore_out = FALSE,
-                               verbose = FALSE) {
+                               transformation = "identity", verbose = FALSE) {
   
   # check if all the psi_crit are present
   if (length(psi_crit) != nrow(x[['above']])) {
@@ -92,10 +91,10 @@ swb.ldrCalibration <- function(x, soil, meteo, psi_crit, obs, calibVar = 'SWC',
   # Outputs
   res_by_sp <- data.frame(
     SP = vector(),
-    MAE = vector(),
     Z95 = vector(),
     Z50 = vector(),
-    V1 = vector()
+    V1 = vector(),
+    MAE = vector()
   )
   
   # Let's go to the looping thing
