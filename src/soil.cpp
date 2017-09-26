@@ -77,12 +77,14 @@ List soil(List SoilParams, NumericVector W = NumericVector::create(1.0)) {
     double w0 = W[0];
     W = NumericVector(nlayers);
     for(int l=0;l<nlayers;l++) W[l] = w0; 
+  } else {
+    W = clone(W);
   }
   //Soil parameters related to texture
-  NumericVector clay = SoilParams["clay"];
-  NumericVector sand = SoilParams["sand"];
-  NumericVector macro = SoilParams["macro"];
-  NumericVector rfc = SoilParams["rfc"];
+  NumericVector clay = clone(as<NumericVector>(SoilParams["clay"]));
+  NumericVector sand = clone(as<NumericVector>(SoilParams["sand"]));
+  NumericVector macro = clone(as<NumericVector>(SoilParams["macro"]));
+  NumericVector rfc = clone(as<NumericVector>(SoilParams["rfc"]));
 
 
   NumericVector SoilPRFC(nlayers);
