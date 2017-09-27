@@ -11,7 +11,7 @@ print.soil<-function(x,...) {
   for(l in 1:nlayers) {
     dfin = dfin+x$dVec[l]
     silt = 100-x$sand[l]-x$clay[l]
-    if(!is.na(x$om[l])) silt = silt - om[l]
+    if(!is.na(x$om[l])) silt = silt - x$om[l]
     cat(paste("\nLayer ",l," [",dini," to ",dfin,"mm ]",
               "\n    clay (%):", round(x$clay[l]),"silt (%):", round(silt), "sand (%):", round(x$sand[l]), "organic matter (%):", round(x$om[l]),
               "[", x$usda_Type[l],"]\n    Rock fragment content (%):", round(x$rfc[l]),"Macroporosity (%):", round(x$macro[l]*100),  
