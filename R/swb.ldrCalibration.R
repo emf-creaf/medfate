@@ -3,11 +3,6 @@ swb.ldrCalibration <- function(x, soil, meteo, calibVar, obs,
                                V1max = 0.94, resolution = 20, heat_stop = 0,
                                transformation = "identity", verbose = FALSE) {
   
-  # check if all the psi_crit are present
-  if (length(psi_crit) != nrow(x[['above']])) {
-    stop("The length of 'psi_crit' must be equal to the number of cohorts in 'x'.")
-  }
-  
   # match calibVar argument
   calibVar <- match.arg(calibVar, c('SWC', 'Eplanttot', 'Cohorts'))
   

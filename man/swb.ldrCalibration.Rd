@@ -46,7 +46,6 @@ swb.ldrCalibration(x, soil, meteo, calibVar, obs,
   \item{resolution}{An integer defining the number of values to obtain by discretization of the root parameters RZ and V1. The number of parameter combinations and therefore the computation cost increases increase with the square of resolution}
   \item{transformation}{Function to modify the size of Z intervals to be explored (by default, bins are equal).}
   \item{heat_stop}{An integer defining the number of days during to discard from the calculation of the optimal root distribution. Usefull if the soil water content initialization is not certain}
-  \item{explore_out}{A logical value. Are the values of average daily plant transpiration and minimum plant water potential to be returned?}
   \item{verbose}{A logical value. Print the internal messages of the function?}
 }
 
