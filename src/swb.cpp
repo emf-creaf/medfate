@@ -90,11 +90,14 @@ List swbDay1(List x, List soil, double tday, double pet, double rain, double er,
   NumericVector psi = soil["psi"];
   NumericVector dVec = soil["dVec"];
   NumericVector Theta_FC = soil["Theta_FC"];
-  NumericVector Water_FC = soil["Water_FC"];
   NumericVector macro = soil["macro"];
+  NumericVector rfc = soil["rfc"];
   NumericVector clay = soil["clay"];
   NumericVector sand = soil["sand"];
+  NumericVector om = soil["om"];
+  NumericVector Water_FC = waterFC(soil);
   int nlayers = W.size();
+  
 
   //Vegetation input
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
@@ -147,7 +150,7 @@ List swbDay1(List x, List soil, double tday, double pet, double rain, double er,
     //Interception
     NetPrec = rain - interceptionGashDay(rain,Cm,LgroundPAR,er);
     //Net Runoff and infiltration
-    Infiltration = infiltrationDay(NetPrec+runon, soil["Ssoil"]);
+    Infiltration = infiltrationDay(NetPrec+runon, Water_FC[0]);
     Runoff = (NetPrec+runon) - Infiltration;
     //Input of the first soil layer is infiltration
     double VI = Infiltration;
@@ -162,7 +165,7 @@ List swbDay1(List x, List soil, double tday, double pet, double rain, double er,
       DeepDrainage = VI; //Reset deep drainage
     }
   }
-  for(int l=0;l<nlayers;l++) psi[l] = theta2psi(clay[l], sand[l], W[l]*Theta_FC[l]);
+  for(int l=0;l<nlayers;l++) psi[l] = theta2psi(clay[l], sand[l], W[l]*Theta_FC[l], om[l]);
 
 
   //Proportion of transpiration that absorbed by each plant cohort (old version)
@@ -283,12 +286,15 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   NumericVector psi = soil["psi"];
   NumericVector dVec = soil["dVec"];
   NumericVector Theta_FC = soil["Theta_FC"];
-  NumericVector Water_FC = soil["Water_FC"];
   NumericVector macro = soil["macro"];
+  NumericVector rfc = soil["rfc"];
   NumericVector clay = soil["clay"];
   NumericVector sand = soil["sand"];
+  NumericVector om = soil["om"];
+  NumericVector Water_FC = waterFC(soil);
   int nlayers = W.size();
   
+
   //Vegetation input
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   NumericVector LAIlive = Rcpp::as<Rcpp::NumericVector>(above["LAI_live"]);
@@ -394,7 +400,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
     //Interception
     NetPrec = rain - interceptionGashDay(rain,Cm,propCover,er);
     //Net Runoff and infiltration
-    Infiltration = infiltrationDay(NetPrec+runon, soil["Ssoil"]);
+    Infiltration = infiltrationDay(NetPrec+runon, Water_FC[0]);
     Runoff = (NetPrec+runon) - Infiltration;
     //Input of the first soil layer is infiltration
     double VI = Infiltration;
@@ -410,7 +416,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
     }
   }
   for(int l=0;l<nlayers;l++) {
-    psi[l] = theta2psi(clay[l], sand[l], W[l]*Theta_FC[l]);
+    psi[l] = theta2psi(clay[l], sand[l], W[l]*Theta_FC[l], om[l]);
     // Rcout<<psi[l]<<" ";
   }
   // Rcout<<"\n";
@@ -932,7 +938,6 @@ void checkswbInput(List x, List soil, String transpirationMode) {
   if(!soil.containsElementNamed("psi")) stop("psi missing in soil");
   if(!soil.containsElementNamed("dVec")) stop("dVec missing in soil");
   if(!soil.containsElementNamed("Theta_FC")) stop("Theta_FC missing in soil");
-  if(!soil.containsElementNamed("Water_FC")) stop("Water_FC missing in soil");
   if(!soil.containsElementNamed("macro")) stop("macro missing in soil");
   if(!soil.containsElementNamed("clay")) stop("clay missing in soil");
   if(!soil.containsElementNamed("sand")) stop("sand missing in soil");
@@ -987,9 +992,9 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
   NumericVector Sgdd = paramsBase["Sgdd"];
   
   //Soil input
-  NumericVector Water_FC = soil["Water_FC"];
   NumericVector W = soil["W"];
   int nlayers = W.size();
+  NumericVector Water_FC = waterFC(soil);
 
   //Water balance output variables
   NumericVector Esoil(numDays);

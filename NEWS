@@ -4,7 +4,13 @@
 
 __Version history__
 
+_Version 0.3.6, September 2017.
+
+1. Added new pedotransfer functions with organic matter.
+2. New function added 'soil.waterFC'.
+
 _Version 0.3.5, September 2017.
+
 1. Control of numerical methods for supply function added to 'defaulControlParams'.
 2. Added new function 'swb.ldrCalibration' to calibrate root distribution for swb simulations (by Victor Granda)
 3. Added documentation for light extinction functions 'light.layerIrradianceFraction', 'light.layerSunlitFraction' and 'light.cohortSunlitShadeAbsorbedRadiation'.

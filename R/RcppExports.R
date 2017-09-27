@@ -469,12 +469,12 @@ root.xylemConductanceProportions <- function(v, d, depthWidthRatio = 1.0) {
     .Call('_medfate_xylemConductanceProportions', PACKAGE = 'medfate', v, d, depthWidthRatio)
 }
 
-soil.theta2psi <- function(clay, sand, theta) {
-    .Call('_medfate_theta2psi', PACKAGE = 'medfate', clay, sand, theta)
+soil.theta2psi <- function(clay, sand, theta, om = NA_real_) {
+    .Call('_medfate_theta2psi', PACKAGE = 'medfate', clay, sand, theta, om)
 }
 
-soil.psi2theta <- function(clay, sand, psi) {
-    .Call('_medfate_psi2theta', PACKAGE = 'medfate', clay, sand, psi)
+soil.psi2theta <- function(clay, sand, psi, om = NA_real_) {
+    .Call('_medfate_psi2theta', PACKAGE = 'medfate', clay, sand, psi, om)
 }
 
 soil.USDAType <- function(clay, sand) {
@@ -487,6 +487,10 @@ soil.vanGenuchtenParams <- function(soilType) {
 
 soil <- function(SoilParams, W = as.numeric( c(1.0))) {
     .Call('_medfate_soil', PACKAGE = 'medfate', SoilParams, W)
+}
+
+soil.waterFC <- function(soil) {
+    .Call('_medfate_waterFC', PACKAGE = 'medfate', soil)
 }
 
 .er <- function(DOY, ERconv = 0.05, ERsyn = 0.2) {

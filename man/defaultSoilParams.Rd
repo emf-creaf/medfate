@@ -21,7 +21,8 @@ A list with the following elements (and default values):
 \itemize{
 \item{\code{widths (= c(300,700,1000,2000)}: Width of soil layers (in mm).}
 \item{\code{clay (= 25)}: Clay percentage for each layer.}
-\item{\code{sand (= 25)}: Sand percentage for each layer (Percent silt derived from sand and clay).}
+\item{\code{sand (= 25)}: Sand percentage for each layer.}
+\item{\code{om (= NA)}: Organic matter percentage for each layer.}
 \item{\code{macro (= 0.1)}: Macroporosity for each layer.}
 \item{\code{rfc (= c(20,40,60,85))}: Percentage of rock fragment content for each layer.}
 \item{\code{Gsoil (= 0.5)}: Gamma parameter for infiltration.}

@@ -14,8 +14,8 @@ soil(SoilParams, W = as.numeric(c(1)))
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{SoilParams}{A list of soil parameters (see \code{\link{defaultSoilParams}}.}
-  \item{W}{A numerical vector with the relative water content of each soil layer.}
+  \item{SoilParams}{A list of soil parameters (see \code{\link{defaultSoilParams}}).}
+  \item{W}{A numerical vector with the initial relative water content of each soil layer.}
   \item{x}{An object of class \code{soil}.}
   \item{...}{Additional parameters to \code{print}.}
 }
@@ -24,6 +24,22 @@ Function \code{print} prompts a description of soil characteristics and status (
 }
 \value{
 An list of class \code{soil} with the following elements:
+\itemize{
+\item{\code{SoilDepth}: Soil depth (in mm).}
+\item{\code{W}: relative water content of each layer (in as percent relative to FC).}
+\item{\code{psi}: water potential (in MPa) of each layer.}
+\item{\code{Ksoil}: Kappa parameter for infiltration.}
+\item{\code{Gsoil}: Gamma parameter for infiltration.}
+\item{\code{dVec}: Width of soil layers (in mm).}
+\item{\code{sand}: Sand percentage for each layer (in percent volume).}
+\item{\code{clay}: Clay percentage for each layer (in percent volume).}
+\item{\code{om}: Organic matter percentage for each layer (in percent volume).}
+\item{\code{usda_Type}: USDA texture type.}
+\item{\code{VG_alpha}, \code{VG_n}: Parameters for van Genuchten's conductance function, for each layer, corresponding to the USDA texture type.}
+\item{\code{macro}: Macroporosity for each layer.}
+\item{\code{rfc}: Percentage of rock fragment content for each layer.}
+\item{\code{Theta_FC}: Soil moisture at field capacity (in percent volume).}
+}
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
