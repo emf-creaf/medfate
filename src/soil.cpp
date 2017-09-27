@@ -10,20 +10,25 @@ using namespace Rcpp;
 double theta2psi(double clay, double sand, double theta, double om = NA_REAL) {
   double A = NA_REAL;
   double B = NA_REAL;
+  double psi = NA_REAL;
   //If organic matter is missing use Saxton et al (1986)
   //Otherwise use Saxton & Rawls (2006)
   if(NumericVector::is_na(om)) {
     A = -0.1 * exp(-4.396 - (0.0715*clay)-(0.0004880*pow(sand,2.0)) - (0.00004285*pow(sand,2.0)*clay));
     B = -3.140 - (0.00222*pow(clay,2.0)) - (0.00003484*pow(sand,2.0)*(clay));
+    psi = A*pow(theta,B);
   } else {
+    sand = sand/100.0;
+    clay = clay/100.0;
+    om = om/100.0;
     double theta1500t = -0.024*sand + 0.487*clay+0.006*om + 0.005*(sand*om) - 0.013*(clay*om) + 0.068*(sand*clay) + 0.031;
     double theta1500 = theta1500t + (0.14*theta1500t - 0.02);
     double theta33t = -0.251*sand + 0.195*clay + 0.011*om + 0.006*(sand*om) - 0.027*(clay*om) + 0.452*(sand*clay) + 0.299;
     double theta33 = theta33t + (1.283*pow(theta33t,2.0) - 0.374 * theta33t - 0.015);
     B = 3.816712/(log(theta33)-log(theta1500)); //3.816712 = log(1500) - log(33)
     A = exp(3.496508 + B*log(theta33)); // 3.496508 = log(33)
+    psi = -0.001*(A*pow(theta,-1.0*B));
   }
-  double psi = A*pow(theta,B);
   if(psi < -40.0) psi = -40.0;
   if(theta==0.0) psi = -40.0;
   return(psi);
@@ -36,20 +41,27 @@ double theta2psi(double clay, double sand, double theta, double om = NA_REAL) {
 double psi2theta(double clay, double sand, double psi, double om = NA_REAL) {
   double A = NA_REAL;
   double B = NA_REAL;
+  double theta = NA_REAL;
   //If organic matter is missing use Saxton et al (1986)
   //Otherwise use Saxton & Rawls (2006)
   if(NumericVector::is_na(om)) {
     A = -0.1 * exp(-4.396 - (0.0715*clay)-(0.0004880*pow(sand,2.0)) - (0.00004285*pow(sand,2.0)*clay));
     B = -3.140 - (0.00222*pow(clay,2.0)) - (0.00003484*pow(sand,2.0)*(clay));
+    theta = pow(psi/A, 1.0/B);
   } else {
-    double theta1500t = -0.024*sand + 0.487*clay+0.006*om + 0.005*(sand*om)-0.013*(clay*om)+0.068*(sand*clay) + 0.031;
-    double theta1500 = theta1500t + (0.14*theta1500t-0.02);
-    double theta33t = -0.251*sand + 0.195*clay + 0.011*om + 0.006*(sand*om) - 0.027*(clay*om) + 0.452*(sand*clay) + 0.299;
+    sand = sand/100.0;
+    clay = clay/100.0;
+    om = om/100.0;
+    double theta1500t = (-0.024*sand) + (0.487*clay) + (0.006*om) + (0.005*(sand*om)) - (0.013*(clay*om)) + (0.068*(sand*clay)) + 0.031;
+    double theta1500 = theta1500t + ((0.14*theta1500t) - 0.02);
+    double theta33t = (-0.251*sand) + (0.195*clay) + (0.011*om) + (0.006*(sand*om)) - (0.027*(clay*om)) + (0.452*(sand*clay)) + 0.299;
     double theta33 = theta33t + (1.283*pow(theta33t,2.0) - 0.374 * theta33t - 0.015);
     B = 3.816712/(log(theta33)-log(theta1500)); //3.816712 = log(1500) - log(33)
     A = exp(3.496508 + B*log(theta33)); // 3.496508 = log(33)
+    psi = psi*(-1000.0);
+    // Rcout<<theta1500t<<" "<<theta1500<<" "<<theta33t<<" "<<theta33<<" "<< A<<" "<<B<<" "<< psi<<"\n";
+    theta = pow(psi/A, -1.0/B);
   }
-  double theta = pow(psi/A, 1.0/B);
   return(theta);
 }
 
