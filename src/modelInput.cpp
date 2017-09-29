@@ -134,7 +134,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
       xylem_kmax[c] = xylem_kmaxSP[SP[c]];
       Al2As[c] = Al2AsSP[SP[c]];
       //Calculate stem maximum conductance (in mmol·m-2·s-1·MPa-1)
-      VCstem_kmax[c]=maximumStemHydraulicConductance(xylem_kmax[c], Al2As[c],H[c]); 
+      VCstem_kmax[c]=maximumStemHydraulicConductance(xylem_kmax[c], Al2As[c],H[c],control["taper"]); 
       VCstem_c[c]=VCstem_cSP[SP[c]];
       VCstem_d[c]=VCstem_dSP[SP[c]];
       VCroot_c[c]=VCroot_cSP[SP[c]];
@@ -170,6 +170,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
                                       _["transpirationMode"] =transpirationMode, 
                                       _["canopyMode"] =canopyMode, 
                                       _["cavitationRefill"] = control["cavitationRefill"],
+                                      _["taper"] = control["taper"],
                                       _["ndailysteps"] = control["ndailysteps"],
                                       _["numericParams"] = clone(numericParams));
     input = List::create(_["control"] = paramsControl,
@@ -451,7 +452,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
       xylem_kmax[c] = xylem_kmaxSP[SP[c]];
       Al2As[c] = Al2AsSP[SP[c]];
       //Calculate stem maximum conductance (in mmol·m-2·s-1·MPa-1)
-      VCstem_kmax[c]=maximumStemHydraulicConductance(xylem_kmax[c], Al2As[c],H[c]); 
+      VCstem_kmax[c]=maximumStemHydraulicConductance(xylem_kmax[c], Al2As[c],H[c], control["taper"]); 
       VCstem_c[c]=VCstem_cSP[SP[c]];
       VCstem_d[c]=VCstem_dSP[SP[c]];
       VCroot_c[c]=VCroot_cSP[SP[c]];
@@ -486,6 +487,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     List numericParams = control["numericParams"];
     List paramsControl = List::create(_["verbose"] =control["verbose"],
                                       _["transpirationMode"] =transpirationMode, 
+                                      _["taper"] = control["taper"],
                                       _["canopyMode"] = canopyMode,
                                       _["ndailysteps"] = control["ndailysteps"], 
                                       _["numericParams"] = clone(numericParams),

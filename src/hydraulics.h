@@ -14,7 +14,8 @@ double averagePsi(NumericVector psi, NumericVector v, double c, double d);
 double xylemConductance(double psi, double kxylemmax, double c, double d);
 double xylemPsi(double kxylem, double kxylemmax, double c, double d);
 
-double maximumStemHydraulicConductance(double xylemConductivity, double Al2As, double height);
+double taperFactor(double height);
+double maximumStemHydraulicConductance(double xylemConductivity, double Al2As, double height, bool taper = false);
 
 NumericVector regulatedPsiTwoElements(double Emax, double psiSoil, double krhizomax, double kxylemmax, double n, double alpha, double c, double d, double dE = 0.1, double psiMax = -10.0);
 

@@ -1286,16 +1286,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// taperFactor
+double taperFactor(double height);
+RcppExport SEXP _medfate_taperFactor(SEXP heightSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type height(heightSEXP);
+    rcpp_result_gen = Rcpp::wrap(taperFactor(height));
+    return rcpp_result_gen;
+END_RCPP
+}
 // maximumStemHydraulicConductance
-double maximumStemHydraulicConductance(double xylemConductivity, double Al2As, double height);
-RcppExport SEXP _medfate_maximumStemHydraulicConductance(SEXP xylemConductivitySEXP, SEXP Al2AsSEXP, SEXP heightSEXP) {
+double maximumStemHydraulicConductance(double xylemConductivity, double Al2As, double height, bool taper);
+RcppExport SEXP _medfate_maximumStemHydraulicConductance(SEXP xylemConductivitySEXP, SEXP Al2AsSEXP, SEXP heightSEXP, SEXP taperSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type xylemConductivity(xylemConductivitySEXP);
     Rcpp::traits::input_parameter< double >::type Al2As(Al2AsSEXP);
     Rcpp::traits::input_parameter< double >::type height(heightSEXP);
-    rcpp_result_gen = Rcpp::wrap(maximumStemHydraulicConductance(xylemConductivity, Al2As, height));
+    Rcpp::traits::input_parameter< bool >::type taper(taperSEXP);
+    rcpp_result_gen = Rcpp::wrap(maximumStemHydraulicConductance(xylemConductivity, Al2As, height, taper));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2147,7 +2159,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_averageRhizosphereResistancePercent", (DL_FUNC) &_medfate_averageRhizosphereResistancePercent, 10},
     {"_medfate_findRhizosphereMaximumConductance", (DL_FUNC) &_medfate_findRhizosphereMaximumConductance, 9},
     {"_medfate_supplyFunctionNetwork", (DL_FUNC) &_medfate_supplyFunctionNetwork, 17},
-    {"_medfate_maximumStemHydraulicConductance", (DL_FUNC) &_medfate_maximumStemHydraulicConductance, 3},
+    {"_medfate_taperFactor", (DL_FUNC) &_medfate_taperFactor, 1},
+    {"_medfate_maximumStemHydraulicConductance", (DL_FUNC) &_medfate_maximumStemHydraulicConductance, 4},
     {"_medfate_parcohort", (DL_FUNC) &_medfate_parcohort, 5},
     {"_medfate_parheight", (DL_FUNC) &_medfate_parheight, 6},
     {"_medfate_swrheight", (DL_FUNC) &_medfate_swrheight, 6},

@@ -353,8 +353,12 @@ hydraulics.supplyFunctionNetwork <- function(psiSoil, krhizomax, nsoil, alphasoi
     .Call('_medfate_supplyFunctionNetwork', PACKAGE = 'medfate', psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, psiCav, maxNsteps, psiStep, psiMax, ntrial, psiTol, ETol)
 }
 
-hydraulics.maximumStemHydraulicConductance <- function(xylemConductivity, Al2As, height) {
-    .Call('_medfate_maximumStemHydraulicConductance', PACKAGE = 'medfate', xylemConductivity, Al2As, height)
+hydraulics.taperFactor <- function(height) {
+    .Call('_medfate_taperFactor', PACKAGE = 'medfate', height)
+}
+
+hydraulics.maximumStemHydraulicConductance <- function(xylemConductivity, Al2As, height, taper = FALSE) {
+    .Call('_medfate_maximumStemHydraulicConductance', PACKAGE = 'medfate', xylemConductivity, Al2As, height, taper)
 }
 
 .parcohort <- function(SP, H, CR, LAI, SpParams) {

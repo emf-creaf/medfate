@@ -20,6 +20,7 @@
 \alias{hydraulics.supplyFunctionTwoElements}
 \alias{hydraulics.supplyFunctionNetwork}
 \alias{hydraulics.supplyFunctionPlot}
+\alias{hydraulics.taperFactor}
 \alias{hydraulics.vanGenuchtenConductance}
 \alias{hydraulics.xylemConductance}
 \alias{hydraulics.xylemPsi}
@@ -58,7 +59,7 @@ hydraulics.EXylem(psiPlant, psiUpstream, kxylemmax, c, d, allowNegativeFlux = TR
 hydraulics.findRhizosphereMaximumConductance(averageResistancePercent, n, alpha,
                                              krootmax, rootc, rootd,
                                              kstemmax, stemc, stemd)        
-hydraulics.maximumStemHydraulicConductance(xylemConductivity, Al2As, height)
+hydraulics.maximumStemHydraulicConductance(xylemConductivity, Al2As, height, bool taper = FALSE)
 hydraulics.supplyFunctionOneXylem(psiSoil, v, 
                           kstemmax, stemc, stemd, psiCav = 0,
                           maxNsteps=200, psiStep = -0.001, psiMax = -10.0, dE=0.01)
@@ -71,7 +72,8 @@ hydraulics.supplyFunctionNetwork(psiSoil,
                           kstemmax, stemc, stemd, psiCav = 0,
                           maxNsteps = 400, psiStep = -0.001, psiMax = -10.0, 
                           ntrial = 10, psiTol = 0.0001, ETol = 1e-04)
-hydraulics.supplyFunctionPlot(soil, x, type = "E")                          
+hydraulics.supplyFunctionPlot(soil, x, type = "E")   
+hydraulics.taperFactor(height)
 hydraulics.psiCrit(c, d)
 hydraulics.regulatedPsiXylem(E, psiUpstream, kxylemmax, c, d, psiStep = -0.01)
 hydraulics.regulatedPsiTwoElements(Emax, psiSoil, krhizomax, kxylemmax, n, alpha, 
@@ -115,6 +117,7 @@ hydraulics.xylemPsi(kxylem, kxylemmax, c, d)
   \item{xylemConductivity}{Xylem conductivity as flow per length of conduit and pressure drop (in kg·m-1·s-1·MPa-1).}
   \item{Al2As}{Leaf area to sapwood area (in m2·m-2).}
   \item{height}{Plant height (in cm).}
+  \item{taper}{A boolean flag to indicate correction by taper of xylem conduits (Christoffersen et al. 2017)}
   \item{maxNsteps}{Maximum number of steps in the construction of supply functions.}
   \item{ntrial}{Maximum number of steps in Newton-Raphson optimization.}
   \item{kxylem}{Xylem hydraulic conductance (defined as flow per surface unit and per pressure drop).}
@@ -159,10 +162,15 @@ Values returned for each function are:
 \item{\code{hydraulics.vanGenuchtenConductance}: Rhizosphere conductance corresponding to an input water potential (soil vulnerability curve).}
 \item{\code{hydraulics.xylemConductance}: Xylem conductance (flow rate per pressure drop) corresponding to an input water potential (plant vulnerability curve).}
 \item{\code{hydraulics.xylemPsi}: Xylem water potential (in MPa) corresponding to an input xylem conductance (flow rate per pressure drop).}
+\item{\code{hydraulics.taperFunction}: Taper factor according to Savage et al. (2010).}
 }
 }
 \references{
 Sperry, J. S., and D. M. Love. 2015. What plant hydraulics can tell us about responses to climate-change droughts. New Phytologist 207:14–27.
+
+Christoffersen, B. O., M. Gloor, S. Fauset, N. M. Fyllas, D. R. Galbraith, T. R. Baker, L. Rowland, R. A. Fisher, O. J. Binks, S. A. Sevanto, C. Xu, S. Jansen, B. Choat, M. Mencuccini, N. G. McDowell, and P. Meir. 2016. Linking hydraulic traits to tropical forest function in a size-structured and trait-driven model (TFS v.1-Hydro). Geoscientific Model Development Discussions 9: 4227–4255.
+
+Savage, V. M., L. P. Bentley, B. J. Enquist, J. S. Sperry, D. D. Smith, P. B. Reich, and E. I. von Allmen. 2010. Hydraulic trade-offs and space filling enable better predictions of vascular structure and function in plants. Proceedings of the National Academy of Sciences of the United States of America 107:22722–7.
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya

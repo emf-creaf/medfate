@@ -887,6 +887,8 @@ List supplyFunctionNetwork(NumericVector psiSoil,
  * 
  * height - Tree height in cm
  */
+
+// [[Rcpp::export("hydraulics.taperFactor")]]
 double taperFactor(double height) {
  // double p = 1.0/3.0; //taper exponent
   double b_p0 = 1.32, b_p13 = 1.85; //normalizing constants
@@ -904,8 +906,16 @@ double taperFactor(double height) {
  * xylemConductivity - Sapwood-specific conductivity of stem xylem (in kg·m-1·s-1·MPa-1)
  * Al2As - Leaf area to sapwood area ratio (in m2·m-2)
  * height - tree height (in cm)
+ * taper - boolean to apply taper using Savage (2010) model
  */
 // [[Rcpp::export("hydraulics.maximumStemHydraulicConductance")]]
-double maximumStemHydraulicConductance(double xylemConductivity, double Al2As, double height){
-  return(1000.0*(xylemConductivity/0.018)/((height/100.0)*Al2As)*taperFactor(height)); 
+double maximumStemHydraulicConductance(double xylemConductivity, double Al2As, double height, bool taper = false){
+  double kmax = NA_REAL;
+  if(taper) {
+    double petioleConductivity = xylemConductivity*0.8264463; // 0.8264463 = (10/11)^2 Christoffersen, B. O., M. Gloor, S. Fauset, N. M. Fyllas, D. R. Galbraith, T. R. Baker, L. Rowland, R. A. Fisher, O. J. Binks, S. A. Sevanto, C. Xu, S. Jansen, B. Choat, M. Mencuccini, N. G. McDowell, and P. Meir. 2016. Linking hydraulic traits to tropical forest function in a size-structured and trait-driven model (TFS v.1-Hydro). Geoscientific Model Development Discussions 0:1–60.
+    kmax = 1000.0*(petioleConductivity/0.018)/((height/100.0)*Al2As)*taperFactor(height);
+  } else {
+    kmax = 1000.0*(xylemConductivity/0.018)/((height/100.0)*Al2As);
+  }
+  return(kmax); 
 }

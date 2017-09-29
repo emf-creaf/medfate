@@ -433,9 +433,9 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
       
       //3.7 Update stem conductance (Complex mode)
       if(transpirationMode=="Complex") {
-        double hubberValue = (LAI_expanded[j]/(N[j]/10000.0))/(SA[j]/10000.0);
-        VCstem_kmax[j]=maximumStemHydraulicConductance(xylem_kmax[j], hubberValue,H[j]);
-        // Rcout<<Al2As[j]<<" "<< hubberValue<<" "<<VCstem_kmax[j]<<"\n";
+        double al2as = (LAI_expanded[j]/(N[j]/10000.0))/(SA[j]/10000.0);
+        VCstem_kmax[j]=maximumStemHydraulicConductance(xylem_kmax[j], al2as,H[j], x["taper"]);
+        // Rcout<<Al2As[j]<<" "<< al2as<<" "<<VCstem_kmax[j]<<"\n";
       }
       
       //Output variables

@@ -28,6 +28,7 @@ A list, with the following options:
 \item{\code{ETol (= 0.0001)}: Tolerance value for flow.}
 }
 }
+\item{\code{taper (=FALSE)}: Whether taper of xylem conduits is accounted for when calculating aboveground stem conductance from xylem conductivity.}
 \item{\code{cavitationRefill (= TRUE)}: Whether refilling of embolized conduits is activated.}
 \item{\code{fracTotalTreeResistance (=0.625)}: Fraction of the minimum tree (stem+root) resistance that corresponds to stem resistance.}
 \item{\code{averageFracRhizosphereResistance (=0.05)}: Fraction to total continuum (stem+root+rhizosphere) resistance that corresponds to rhizosphere (averaged across soil water potential values).}
