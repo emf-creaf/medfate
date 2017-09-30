@@ -21,3 +21,8 @@ List cohortSunlitShadeAbsorbedRadiation(double Ib0, double Id0, NumericVector Ib
                                    NumericVector kb,  NumericVector kd, NumericVector alpha, double gamma);
 
 NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kb);
+
+List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kPAR,
+                                          double latitude, double elevation, double slope, double aspect, double solarConstant, double delta, 
+                                          double rain, double rad,
+                                          int ntimesteps = 24, String canopyMode= "sunshade");

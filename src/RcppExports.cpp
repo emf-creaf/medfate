@@ -1448,6 +1448,29 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// instantaneousLightExtinctionAbsortion
+List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kPAR, double latitude, double elevation, double slope, double aspect, double solarConstant, double delta, double rain, double rad, int ntimesteps, String canopyMode);
+RcppExport SEXP _medfate_instantaneousLightExtinctionAbsortion(SEXP LAImeSEXP, SEXP LAImdSEXP, SEXP kPARSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP solarConstantSEXP, SEXP deltaSEXP, SEXP rainSEXP, SEXP radSEXP, SEXP ntimestepsSEXP, SEXP canopyModeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type LAIme(LAImeSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type LAImd(LAImdSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type kPAR(kPARSEXP);
+    Rcpp::traits::input_parameter< double >::type latitude(latitudeSEXP);
+    Rcpp::traits::input_parameter< double >::type elevation(elevationSEXP);
+    Rcpp::traits::input_parameter< double >::type slope(slopeSEXP);
+    Rcpp::traits::input_parameter< double >::type aspect(aspectSEXP);
+    Rcpp::traits::input_parameter< double >::type solarConstant(solarConstantSEXP);
+    Rcpp::traits::input_parameter< double >::type delta(deltaSEXP);
+    Rcpp::traits::input_parameter< double >::type rain(rainSEXP);
+    Rcpp::traits::input_parameter< double >::type rad(radSEXP);
+    Rcpp::traits::input_parameter< int >::type ntimesteps(ntimestepsSEXP);
+    Rcpp::traits::input_parameter< String >::type canopyMode(canopyModeSEXP);
+    rcpp_result_gen = Rcpp::wrap(instantaneousLightExtinctionAbsortion(LAIme, LAImd, kPAR, latitude, elevation, slope, aspect, solarConstant, delta, rain, rad, ntimesteps, canopyMode));
+    return rcpp_result_gen;
+END_RCPP
+}
 // checkSpeciesParameters
 void checkSpeciesParameters(DataFrame SpParams, CharacterVector params);
 RcppExport SEXP _medfate_checkSpeciesParameters(SEXP SpParamsSEXP, SEXP paramsSEXP) {
@@ -2170,6 +2193,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_layerIrradianceFraction", (DL_FUNC) &_medfate_layerIrradianceFraction, 4},
     {"_medfate_cohortSunlitShadeAbsorbedRadiation", (DL_FUNC) &_medfate_cohortSunlitShadeAbsorbedRadiation, 11},
     {"_medfate_layerSunlitFraction", (DL_FUNC) &_medfate_layerSunlitFraction, 3},
+    {"_medfate_instantaneousLightExtinctionAbsortion", (DL_FUNC) &_medfate_instantaneousLightExtinctionAbsortion, 13},
     {"_medfate_checkSpeciesParameters", (DL_FUNC) &_medfate_checkSpeciesParameters, 2},
     {"_medfate_swbInput", (DL_FUNC) &_medfate_swbInput, 5},
     {"_medfate_forest2swbInput", (DL_FUNC) &_medfate_forest2swbInput, 4},

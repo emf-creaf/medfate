@@ -3,9 +3,10 @@
 \alias{light.layerSunlitFraction}
 \alias{light.layerIrradianceFraction}
 \alias{light.cohortSunlitShadeAbsorbedRadiation}
+\alias{light.instantaneousLightExtinctionAbsortion}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{Light extinction functions}
+\title{Light extinction and absortion functions}
 \description{
 Function \code{light.layerIrradianceFraction} calculates the fraction of above-canopy irradiance reaching each vegetation layer. Function \code{light.layerSunlitFraction} calculates the proportion of sunlit leaves in each vegetation layer. Function \code{light.cohortSunlitShadeAbsorbedRadiation} calculates the amount of radiation absorved by cohort and vegetation layers, while differentiating between sunlit and shade leaves.
 }
@@ -15,6 +16,10 @@ light.layerSunlitFraction(LAIme, LAImd, kb)
 light.cohortSunlitShadeAbsorbedRadiation(Ib0, Id0, Ibf, Idf, beta,
                                          LAIme, LAImd, 
                                          kb, kd, alpha, gamma)
+light.instantaneousLightExtinctionAbsortion(LAIme, LAImd, kPAR,
+                                          latitude, elevation, slope, aspect, solarConstant, delta, 
+                                          rain, rad,
+                                          ntimesteps = 24, canopyMode= "sunshade")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

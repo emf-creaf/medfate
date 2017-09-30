@@ -397,6 +397,10 @@ light.layerSunlitFraction <- function(LAIme, LAImd, kb) {
     .Call('_medfate_layerSunlitFraction', PACKAGE = 'medfate', LAIme, LAImd, kb)
 }
 
+light.instantaneousLightExtinctionAbsortion <- function(LAIme, LAImd, kPAR, latitude, elevation, slope, aspect, solarConstant, delta, rain, rad, ntimesteps = 24L, canopyMode = "sunshade") {
+    .Call('_medfate_instantaneousLightExtinctionAbsortion', PACKAGE = 'medfate', LAIme, LAImd, kPAR, latitude, elevation, slope, aspect, solarConstant, delta, rain, rad, ntimesteps, canopyMode)
+}
+
 .checkSpeciesParameters <- function(SpParams, params) {
     invisible(.Call('_medfate_checkSpeciesParameters', PACKAGE = 'medfate', SpParams, params))
 }
