@@ -18,6 +18,10 @@ A list, with the following options:
 \itemize{
 \item{\code{verbose (=TRUE)}: Boolean flag to indicate console output during calculations.}
 \item{\code{transpirationMode (="Simple")}: Transpiration model. See \code{\link{swbInput}}.}
+\item{\code{hydraulicCostFunction (= 2)}: Variant of the hydraulic cost function used in the stomatal regulation model of Sperry & Love (2016). Values accepted are 1 (original cost function based on the derivative of supply function), 2 (xylem vulnerability curve), 3 (xylem vulnerability curve, including previous cavitation).}
+\item{\code{canopyMode (="sunshade")}: Indicates how crowns should be described to calculate photosynthesis. Accepted values are \code{"sunshade"} (distinguishes photosynthesis in sun leaves from shade leaves) and \code{"multilayer"} (distinguishes photosynthesis of sun leaves and shade leaves in each canopy layer).}
+\item{\code{cavitationRefill (= TRUE)}: Whether refilling of embolized conduits is activated.}
+\item{\code{taper (=FALSE)}: Whether taper of xylem conduits is accounted for when calculating aboveground stem conductance from xylem conductivity.}
 \item{\code{numericParams}: A list with the following elements:
 \itemize{
 \item{\code{maxNsteps (= 400)}: Maximum number of steps in supply function.}
@@ -28,8 +32,6 @@ A list, with the following options:
 \item{\code{ETol (= 0.0001)}: Tolerance value for flow.}
 }
 }
-\item{\code{taper (=FALSE)}: Whether taper of xylem conduits is accounted for when calculating aboveground stem conductance from xylem conductivity.}
-\item{\code{cavitationRefill (= TRUE)}: Whether refilling of embolized conduits is activated.}
 \item{\code{fracTotalTreeResistance (=0.625)}: Fraction of the minimum tree (stem+root) resistance that corresponds to stem resistance.}
 \item{\code{averageFracRhizosphereResistance (=0.05)}: Fraction to total continuum (stem+root+rhizosphere) resistance that corresponds to rhizosphere (averaged across soil water potential values).}
 \item{\code{storagePool (="none")}: Whether carbon storage pools are considered (either "none", "one" or "two").}

@@ -5,9 +5,10 @@
 #endif
 using namespace Rcpp;
 
-List profitMaximization(List supplyFunction, List photosynthesisFunction);
+List profitMaximization1(List supplyFunction, List photosynthesisFunction);
 List profitMaximization2(List supplyFunction, List photosynthesisFunction, double kstemmax);
 List profitMaximization3(List supplyFunction, List photosynthesisFunction, double kstemmax);
+List profitMaximization(List supplyFunction, List photosynthesisFunction, int type=1, double kstemmax = NA_REAL);
 
 List leafPhotosynthesisFunction(List supplyFunction, double Catm, double Patm, double Tair, double vpa, double u, 
                             double absRad, double Q, double Vmax298, double Jmax298, double Gwmin, double Gwmax, 

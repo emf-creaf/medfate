@@ -279,8 +279,8 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   bool cavitationRefill = control["cavitationRefill"];
   String canopyMode = Rcpp::as<Rcpp::String>(control["canopyMode"]);
   int ntimesteps = control["ndailysteps"];
-  
-  
+  int hydraulicCostFunction = control["hydraulicCostFunction"];
+
   //Soil input
   NumericVector W = soil["W"];
   NumericVector psi = soil["psi"];
@@ -625,7 +625,8 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
         NumericVector An = photo["NetPhotosynthesis"];
         
         //Profit maximization
-        List PM =  profitMaximization2(supplyNetwork, photo,  VCstem_kmax[c]);
+        List PM = profitMaximization(supplyNetwork, photo,  hydraulicCostFunction, VCstem_kmax[c]);
+
         int iPM = PM["iMaxProfit"];
         photosynthesis[c] +=pow(10,-6)*12.01017*An[iPM]*tstep; //Scale photosynthesis
         Aninst(c,n) = An(iPM);
