@@ -101,7 +101,3 @@ hydraulics.supplyFunctionPlot<-function(soil, x, type="E") {
   }
   invisible(l)
 }
-
-photosynthesis.profitMaximizationPlot<-function(soil, x) {
-  
-}
