@@ -145,7 +145,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
       double VCroot_kmaxc = 1.0/((1.0/(VCstem_kmax[c]*fracTotalTreeResistance))-(1.0/VCstem_kmax[c]));
       VCroot_kmax(c,_) = VCroot_kmaxc*xylemConductanceProportions(Vc,dVec);
       Vmax298[c] =Vmax298SP[SP[c]];
-      Jmax298[c] = 1.67*Vmax298[c];
+      Jmax298[c] = exp(1.197 + 0.847*log(Vmax298[c])); //Walker et al 2014
       for(int l=0;l<nlayers;l++) {
         // Rcout<<Vc[l]<<" ";
         VGrhizo_kmax(c,l) = V(c,l)*findRhizosphereMaximumConductance(averageFracRhizosphereResistance*100.0, VG_n[l], VG_alpha[l],
@@ -463,7 +463,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
       double VCroot_kmaxc = 1.0/((1.0/(VCstem_kmax[c]*fracTotalTreeResistance))-(1.0/VCstem_kmax[c]));
       VCroot_kmax(c,_) = VCroot_kmaxc*xylemConductanceProportions(Vc,dVec);
       Vmax298[c] =Vmax298SP[SP[c]];
-      Jmax298[c] = 1.67*Vmax298[c];
+      Jmax298[c] = exp(1.197 + 0.847*log(Vmax298[c]));//Walker et al 2014
       for(int l=0;l<nlayers;l++) {
         // Rcout<<Vc[l]<<" ";
         VGrhizo_kmax(c,l) = V(c,l)*findRhizosphereMaximumConductance(averageFracRhizosphereResistance*100.0, VG_n[l], VG_alpha[l],
