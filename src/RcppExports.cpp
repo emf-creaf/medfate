@@ -1541,6 +1541,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// gdd
+NumericVector gdd(IntegerVector DOY, NumericVector Temp, double Tbase);
+RcppExport SEXP _medfate_gdd(SEXP DOYSEXP, SEXP TempSEXP, SEXP TbaseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type DOY(DOYSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Temp(TempSEXP);
+    Rcpp::traits::input_parameter< double >::type Tbase(TbaseSEXP);
+    rcpp_result_gen = Rcpp::wrap(gdd(DOY, Temp, Tbase));
+    return rcpp_result_gen;
+END_RCPP
+}
 // gammaTemp
 double gammaTemp(double leaf_temp);
 RcppExport SEXP _medfate_gammaTemp(SEXP leaf_tempSEXP) {
@@ -1713,20 +1726,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// profitMaximization
-List profitMaximization(List supplyFunction, List photosynthesisFunction, int type, double kstemmax);
-RcppExport SEXP _medfate_profitMaximization(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP, SEXP typeSEXP, SEXP kstemmaxSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type supplyFunction(supplyFunctionSEXP);
-    Rcpp::traits::input_parameter< List >::type photosynthesisFunction(photosynthesisFunctionSEXP);
-    Rcpp::traits::input_parameter< int >::type type(typeSEXP);
-    Rcpp::traits::input_parameter< double >::type kstemmax(kstemmaxSEXP);
-    rcpp_result_gen = Rcpp::wrap(profitMaximization(supplyFunction, photosynthesisFunction, type, kstemmax));
-    return rcpp_result_gen;
-END_RCPP
-}
 // conicDistribution
 NumericMatrix conicDistribution(NumericVector Zcone, NumericVector d);
 RcppExport SEXP _medfate_conicDistribution(SEXP ZconeSEXP, SEXP dSEXP) {
@@ -1849,19 +1848,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type ERconv(ERconvSEXP);
     Rcpp::traits::input_parameter< double >::type ERsyn(ERsynSEXP);
     rcpp_result_gen = Rcpp::wrap(er(DOY, ERconv, ERsyn));
-    return rcpp_result_gen;
-END_RCPP
-}
-// gdd
-NumericVector gdd(IntegerVector DOY, NumericVector Temp, double Tbase);
-RcppExport SEXP _medfate_gdd(SEXP DOYSEXP, SEXP TempSEXP, SEXP TbaseSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type DOY(DOYSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type Temp(TempSEXP);
-    Rcpp::traits::input_parameter< double >::type Tbase(TbaseSEXP);
-    rcpp_result_gen = Rcpp::wrap(gdd(DOY, Temp, Tbase));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2011,6 +1997,38 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type slope(slopeSEXP);
     Rcpp::traits::input_parameter< double >::type aspect(aspectSEXP);
     rcpp_result_gen = Rcpp::wrap(swb(x, soil, meteo, latitude, elevation, slope, aspect));
+    return rcpp_result_gen;
+END_RCPP
+}
+// profitMaximization
+List profitMaximization(List supplyFunction, List photosynthesisFunction, int type, double kstemmax);
+RcppExport SEXP _medfate_profitMaximization(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP, SEXP typeSEXP, SEXP kstemmaxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type supplyFunction(supplyFunctionSEXP);
+    Rcpp::traits::input_parameter< List >::type photosynthesisFunction(photosynthesisFunctionSEXP);
+    Rcpp::traits::input_parameter< int >::type type(typeSEXP);
+    Rcpp::traits::input_parameter< double >::type kstemmax(kstemmaxSEXP);
+    rcpp_result_gen = Rcpp::wrap(profitMaximization(supplyFunction, photosynthesisFunction, type, kstemmax));
+    return rcpp_result_gen;
+END_RCPP
+}
+// dayCanopyTranspiration
+List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day, double latitude, double elevation, double slope, double aspect);
+RcppExport SEXP _medfate_dayCanopyTranspiration(SEXP xSEXP, SEXP soilSEXP, SEXP meteoSEXP, SEXP daySEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type meteo(meteoSEXP);
+    Rcpp::traits::input_parameter< int >::type day(daySEXP);
+    Rcpp::traits::input_parameter< double >::type latitude(latitudeSEXP);
+    Rcpp::traits::input_parameter< double >::type elevation(elevationSEXP);
+    Rcpp::traits::input_parameter< double >::type slope(slopeSEXP);
+    Rcpp::traits::input_parameter< double >::type aspect(aspectSEXP);
+    rcpp_result_gen = Rcpp::wrap(dayCanopyTranspiration(x, soil, meteo, day, latitude, elevation, slope, aspect));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2199,6 +2217,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_forest2swbInput", (DL_FUNC) &_medfate_forest2swbInput, 4},
     {"_medfate_growthInput", (DL_FUNC) &_medfate_growthInput, 6},
     {"_medfate_forest2growthInput", (DL_FUNC) &_medfate_forest2growthInput, 4},
+    {"_medfate_gdd", (DL_FUNC) &_medfate_gdd, 3},
     {"_medfate_gammaTemp", (DL_FUNC) &_medfate_gammaTemp, 1},
     {"_medfate_KmTemp", (DL_FUNC) &_medfate_KmTemp, 2},
     {"_medfate_VmaxTemp", (DL_FUNC) &_medfate_VmaxTemp, 2},
@@ -2209,7 +2228,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_leafPhotosynthesisFunction", (DL_FUNC) &_medfate_leafPhotosynthesisFunction, 14},
     {"_medfate_sunshadePhotosynthesisFunction", (DL_FUNC) &_medfate_sunshadePhotosynthesisFunction, 19},
     {"_medfate_multilayerPhotosynthesisFunction", (DL_FUNC) &_medfate_multilayerPhotosynthesisFunction, 17},
-    {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 4},
     {"_medfate_conicDistribution", (DL_FUNC) &_medfate_conicDistribution, 2},
     {"_medfate_ldrDistribution", (DL_FUNC) &_medfate_ldrDistribution, 3},
     {"_medfate_xylemConductanceProportions", (DL_FUNC) &_medfate_xylemConductanceProportions, 3},
@@ -2220,7 +2238,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_soil", (DL_FUNC) &_medfate_soil, 2},
     {"_medfate_waterFC", (DL_FUNC) &_medfate_waterFC, 1},
     {"_medfate_er", (DL_FUNC) &_medfate_er, 3},
-    {"_medfate_gdd", (DL_FUNC) &_medfate_gdd, 3},
     {"_medfate_soilevaporation", (DL_FUNC) &_medfate_soilevaporation, 3},
     {"_medfate_infiltrationDay", (DL_FUNC) &_medfate_infiltrationDay, 2},
     {"_medfate_interceptionGashDay", (DL_FUNC) &_medfate_interceptionGashDay, 4},
@@ -2229,6 +2246,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_swbDay", (DL_FUNC) &_medfate_swbDay, 16},
     {"_medfate_swbgridDay", (DL_FUNC) &_medfate_swbgridDay, 11},
     {"_medfate_swb", (DL_FUNC) &_medfate_swb, 7},
+    {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 4},
+    {"_medfate_dayCanopyTranspiration", (DL_FUNC) &_medfate_dayCanopyTranspiration, 8},
     {"_medfate_windSpeedAtCanopyHeight", (DL_FUNC) &_medfate_windSpeedAtCanopyHeight, 2},
     {"_medfate_unshelteredMidflameWindSpeed", (DL_FUNC) &_medfate_unshelteredMidflameWindSpeed, 2},
     {"_medfate_shelteredMidflameWindSpeed", (DL_FUNC) &_medfate_shelteredMidflameWindSpeed, 3},

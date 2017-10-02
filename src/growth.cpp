@@ -1,5 +1,6 @@
 #include <numeric>
 #include "lightextinction.h"
+#include "phenology.h"
 #include "biophysicsutils.h"
 #include "forestutils.h"
 #include "hydraulics.h"

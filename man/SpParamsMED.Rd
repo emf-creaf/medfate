@@ -37,7 +37,7 @@ A data set of parameter values for Mediterranean species, resulting from bibliog
     \item{\code{SAV}}{Surface-area-to-volume ratio of the small fuel (1h) fraction (leaves and branches < 6.35mm) (m2/m3).}
     \item{\code{HeatContent}}{High fuel heat content (kJ/kg).}
     \item{\code{Zmax}}{Maximum rooting depth (in mm).}
-    \item{\code{Hmax}}{Maximum plant height (in m).}
+    \item{\code{Hmax}}{Maximum plant height (in cm).}
     \item{\code{fHDmin}}{Minimum value of the height-to-diameter ratio (dimensionless).}
     \item{\code{fHDmax}}{Maximum value of the height-to-diameter ratio (dimensionless).}
     \item{\code{k}}{Light extinction coeficient for PAR.}

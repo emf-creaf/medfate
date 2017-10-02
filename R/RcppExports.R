@@ -421,6 +421,10 @@ forest2growthInput <- function(x, soil, SpParams, control) {
     .Call('_medfate_forest2growthInput', PACKAGE = 'medfate', x, soil, SpParams, control)
 }
 
+.gdd <- function(DOY, Temp, Tbase = 5.0) {
+    .Call('_medfate_gdd', PACKAGE = 'medfate', DOY, Temp, Tbase)
+}
+
 photo.GammaTemp <- function(leaf_temp) {
     .Call('_medfate_gammaTemp', PACKAGE = 'medfate', leaf_temp)
 }
@@ -459,10 +463,6 @@ photo.sunshadePhotosynthesisFunction <- function(supplyFunction, Catm, Patm, Tai
 
 photo.multilayerPhotosynthesisFunction <- function(supplyFunction, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298, Jmax298, Gwmin, Gwmax, verbose = FALSE) {
     .Call('_medfate_multilayerPhotosynthesisFunction', PACKAGE = 'medfate', supplyFunction, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298, Jmax298, Gwmin, Gwmax, verbose)
-}
-
-photo.profitMaximization <- function(supplyFunction, photosynthesisFunction, type = 1L, kstemmax = NA_real_) {
-    .Call('_medfate_profitMaximization', PACKAGE = 'medfate', supplyFunction, photosynthesisFunction, type, kstemmax)
 }
 
 root.conicDistribution <- function(Zcone, d) {
@@ -505,10 +505,6 @@ soil.waterFC <- function(soil) {
     .Call('_medfate_er', PACKAGE = 'medfate', DOY, ERconv, ERsyn)
 }
 
-.gdd <- function(DOY, Temp, Tbase = 5.0) {
-    .Call('_medfate_gdd', PACKAGE = 'medfate', DOY, Temp, Tbase)
-}
-
 swb.SoilEvaporation <- function(DEF, PETs, Gsoil) {
     .Call('_medfate_soilevaporation', PACKAGE = 'medfate', DEF, PETs, Gsoil)
 }
@@ -539,6 +535,14 @@ swb.day <- function(x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind, lat
 
 swb <- function(x, soil, meteo, latitude = NA_real_, elevation = NA_real_, slope = NA_real_, aspect = NA_real_) {
     .Call('_medfate_swb', PACKAGE = 'medfate', x, soil, meteo, latitude, elevation, slope, aspect)
+}
+
+transp.profitMaximization <- function(supplyFunction, photosynthesisFunction, type = 1L, kstemmax = NA_real_) {
+    .Call('_medfate_profitMaximization', PACKAGE = 'medfate', supplyFunction, photosynthesisFunction, type, kstemmax)
+}
+
+transp.dayCanopyTranspiration <- function(x, soil, meteo, day, latitude, elevation, slope, aspect) {
+    .Call('_medfate_dayCanopyTranspiration', PACKAGE = 'medfate', x, soil, meteo, day, latitude, elevation, slope, aspect)
 }
 
 .windSpeedAtCanopyHeight <- function(wind20H, canopyHeight) {

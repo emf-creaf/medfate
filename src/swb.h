@@ -6,7 +6,6 @@
 using namespace Rcpp;
 
 NumericVector er(IntegerVector DOY, double ERconv=0.05, double ERsyn = 0.2);
-NumericVector gdd(IntegerVector DOY, NumericVector Temp, double Tbase = 5.0);
 double soilevaporation(double DEF,double PETs, double Gsoil);
 double infiltrationDay(double NetPrec, double Ssoil);
 
