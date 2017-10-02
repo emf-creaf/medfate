@@ -307,6 +307,7 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
   
   //Wind extinction profile
   NumericVector zWind;
+  if(NumericVector::is_na(wind)) wind = 2.0; //Default wind speed when missing
   if(canopyMode=="multilayer") {
     zWind = windExtinctionProfile(zmid, wind, LAIcell, canopyHeight);
   } else if(canopyMode=="sunshade"){

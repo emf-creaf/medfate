@@ -409,6 +409,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   double Rnground = 0.0;
 
   //Wind extinction profile
+  if(NumericVector::is_na(wind)) wind = 2.0; 
   NumericVector zWind;
   if(canopyMode=="multilayer") {
     zWind = windExtinctionProfile(zmid, wind, LAIcell, canopyHeight);
