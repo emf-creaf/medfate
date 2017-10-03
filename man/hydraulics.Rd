@@ -59,7 +59,8 @@ hydraulics.EXylem(psiPlant, psiUpstream, kxylemmax, c, d, allowNegativeFlux = TR
 hydraulics.findRhizosphereMaximumConductance(averageResistancePercent, n, alpha,
                                              krootmax, rootc, rootd,
                                              kstemmax, stemc, stemd)        
-hydraulics.maximumStemHydraulicConductance(xylemConductivity, Al2As, height, bool taper = FALSE)
+hydraulics.maximumStemHydraulicConductance(xylemConductivity, Al2As, height, 
+                                           taper = FALSE)
 hydraulics.supplyFunctionOneXylem(psiSoil, v, 
                           kstemmax, stemc, stemd, psiCav = 0,
                           maxNsteps=200, psiStep = -0.001, psiMax = -10.0, dE=0.01)

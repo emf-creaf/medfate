@@ -541,7 +541,7 @@ transp.profitMaximization <- function(supplyFunction, photosynthesisFunction, ty
     .Call('_medfate_profitMaximization', PACKAGE = 'medfate', supplyFunction, photosynthesisFunction, type, kstemmax)
 }
 
-transp.dayCanopyTranspiration <- function(x, soil, meteo, day, latitude, elevation, slope, aspect) {
+transp.dayCanopyTranspiration <- function(x, soil, meteo, day, latitude, elevation, slope = 0.0, aspect = 0.0) {
     .Call('_medfate_dayCanopyTranspiration', PACKAGE = 'medfate', x, soil, meteo, day, latitude, elevation, slope, aspect)
 }
 

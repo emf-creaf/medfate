@@ -17,8 +17,8 @@ light.cohortSunlitShadeAbsorbedRadiation(Ib0, Id0, Ibf, Idf, beta,
                                          LAIme, LAImd, 
                                          kb, kd, alpha, gamma)
 light.instantaneousLightExtinctionAbsortion(LAIme, LAImd, kPAR,
-                                          latitude, elevation, slope, aspect, solarConstant, delta, 
-                                          rain, rad,
+                                          latitude, elevation, slope, aspect, 
+                                          solarConstant, delta, rain, rad,
                                           ntimesteps = 24, canopyMode= "sunshade")
 }
 %- maybe also 'usage' for other objects documented here.
@@ -35,6 +35,16 @@ light.instantaneousLightExtinctionAbsortion(LAIme, LAImd, kPAR,
   \item{alpha}{A vecfor of leaf absorvance by species.}
   \item{beta}{Solar elevation (in radians).}
   \item{gamma}{Canopy reflectance.}
+  \item{kPAR}{A vector of visible light extinction coefficients for each cohort.}
+  \item{latitude}{Latitude (in degrees).}
+  \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North).}
+  \item{solarConstant}{Solar constant.}
+  \item{delta}{Solar declination.}
+  \item{rain}{Precipitation (in mm).}
+  \item{rad}{Solar radiation (in MJ/m2).}
+  \item{ntimesteps}{Number of daily time steps.}
+  \item{canopyMode}{Indicates how crowns should be described to calculate photosynthesis/extinction. Accepted values are \code{"sunshade"} (distinguishes photosynthesis in sun leaves from shade leaves) and \code{"multilayer"} (distinguishes photosynthesis of sun leaves and shade leaves in each canopy layer).}
+
 }
 \details{
 Function codification adapted from Anten & Bastiaans (2016). Vegetation layers are assumed to be ordered from bottom to top.

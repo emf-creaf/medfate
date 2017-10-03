@@ -117,7 +117,6 @@ void checkgrowthInput(List x, List soil, String transpirationMode) {
   if(!soil.containsElementNamed("psi")) stop("psi missing in soil");
   if(!soil.containsElementNamed("dVec")) stop("dVec missing in soil");
   if(!soil.containsElementNamed("Theta_FC")) stop("Theta_FC missing in soil");
-  if(!soil.containsElementNamed("Water_FC")) stop("Water_FC missing in soil");
   if(!soil.containsElementNamed("macro")) stop("macro missing in soil");
   if(!soil.containsElementNamed("clay")) stop("clay missing in soil");
   if(!soil.containsElementNamed("sand")) stop("sand missing in soil");
@@ -199,7 +198,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
     Psi_Extract = paramsTransp["Psi_Extract"];
   }
 
-  NumericVector Water_FC = soil["Water_FC"];
+  NumericVector Water_FC = waterFC(soil);
   NumericVector W = soil["W"];
   
   int nlayers = W.size();

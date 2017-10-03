@@ -40,23 +40,5 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 \seealso{
 \code{\link{swb}}, \code{\link{growth}}, \code{\link{SpatialPointsForest-class}}
 }
-\examples{
-#Load forest data
-data(exampleSPF)
-
-#Load species parameters
-data(SpParamsMED)
-
-#Load meteorology
-data(examplemeteo)
-
-#Disable output
-control = defaultControl()
-control$verbose = FALSE
-
-##Example using the same meteorology for all points
-a = swbpoints(exampleSPF, SpParamsMED, examplemeteo, control)
-
-}
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

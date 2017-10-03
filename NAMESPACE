@@ -6,7 +6,7 @@ import(methods)
 import(meteoland)
 importFrom("stats", "aggregate","filter","uniroot")
 importFrom("graphics", "axis", "abline", "barplot", "legend", "lines", "matplot","mtext",
-           "matlines", "axis.Date")
+           "matlines", "par","axis.Date")
 importFrom("utils", "setTxtProgressBar", "txtProgressBar")
 # Export all names
 useDynLib(medfate)

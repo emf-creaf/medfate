@@ -165,7 +165,7 @@ List profitMaximization(List supplyFunction, List photosynthesisFunction, int ty
 
 // [[Rcpp::export("transp.dayCanopyTranspiration")]]
 List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
-                            double latitude, double elevation, double slope, double aspect) {
+                            double latitude, double elevation, double slope = 0.0, double aspect = 0.0) {
   
   //Extract meteo
   IntegerVector DOY = meteo["DOY"];

@@ -10,7 +10,6 @@
 \alias{photo.leafPhotosynthesisFunction}
 \alias{photo.sunshadePhotosynthesisFunction}
 \alias{photo.multilayerPhotosynthesisFunction}
-\alias{photo.profitMaximization}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Photosynthesis submodel functions
@@ -38,7 +37,6 @@ photo.multilayerPhotosynthesisFunction(supplyFunction, Catm, Patm, Tair, vpa,
                                       SLarea, SHarea, u, 
                                       absRadSL, absRadSH, QSL, QSH, 
                                       Vmax298, Jmax298, Gwmin, Gwmax, verbose = FALSE)
-photo.profitMaximization(supplyFunction, photosynthesisFunction, type = 1, kstemmax = NA)
 }
 
 %- maybe also 'usage' for other objects documented here.
@@ -64,9 +62,6 @@ photo.profitMaximization(supplyFunction, photosynthesisFunction, type = 1, kstem
   \item{refLeafArea}{Leaf reference area.}
   \item{Gwmin, Gwmax}{Minimum and maximum leaf water conductance (i.e. cuticular and maximum stomatal conductance) (mol * s-1 * m-2).}
   \item{verbose}{Boolean flag to indicate console output.}
-  \item{photosynthesisFunction}{Function returned by \code{photo.photosynthesisFunction()}.}
-  \item{type}{Optimization type (1,2 or 3).}
-  \item{kstemmax}{Maximum stem conductance (flow per pressure drop).}
   \item{SLarea, SHarea}{Leaf area index of sunlit/shade leaves (for each canopy layer in the case of \code{photo.multilayerPhotosynthesisFunction}).}
   \item{absRadSL, absRadSH}{Instantaneous absorbed radiation (W·m-2) per unit of sunlit/shade leaf area (for each canopy layer in the case of \code{photo.multilayerPhotosynthesisFunction}).}
   \item{QSL, QSH}{Active photon flux density (micromol * s-1 * m-2) per unit of sunlit/shade leaf area (for each canopy layer in the case of \code{photo.multilayerPhotosynthesisFunction}).}
@@ -98,14 +93,6 @@ Values returned for each function are:
   \item{\code{Photosynthesis}: Gross photosynthesis (micromol*s-1*m-2).}
   \item{\code{NetPhotosynthesis}: Net photosynthesis, after discounting autotrophic respiration (micromol*s-1*m-2).}
   }
-}
-\item{\code{photo.profitMaximization}:Returns a list with the following elements:
-\itemize{
-  \item{\code{Cost}: Cost function [0-1].}
-  \item{\code{Gain}: Gain function [0-1].}
-  \item{\code{Profit}: Profit function [0-1].}
-  \item{\code{iMaxProfit}: Index corresponding to maximum profit (starting from 0).}
-}
 }
 }
 }
