@@ -241,6 +241,8 @@ List sunshadePhotosynthesisFunction(List supplyFunction, double Catm, double Pat
   NumericVector fittedE = supplyFunction["E"];
   int nsteps = fittedE.size();
   NumericVector Ag(nsteps,0.0), An(nsteps,0.0);
+  NumericVector leafTSL(nsteps,0.0), leafTSH(nsteps,0.0);
+  // Rcout<<"ws "<<u<<" tair "<< Tair<< " SLarea "<< SLarea << " SHarea "<< SHarea<< " absRadSL"<< absRadSL<< " absRadSH "<< absRadSH<< " QSL "<<QSL<<" QSH "<<QSH<<"\n";
   double leafT,leafVPD, Gw, Agj, Anj;
   for(int i=0;i<nsteps;i++){
     Ag[i]=0.0;
@@ -249,11 +251,12 @@ List sunshadePhotosynthesisFunction(List supplyFunction, double Catm, double Pat
       //Sunlit leaves
        //From rad per ground area to rad per leaf area
       leafT = leafTemperature(absRadSL/SLarea, Tair, u, fittedE[i]);
+      leafTSL[i]= leafT;
       leafVPD = (meteoland::utils_saturationVP(leafT)-vpa);
       Gw = Patm*(fittedE[i]/1000.0)/leafVPD;
       Gw = std::max(Gwmin, std::min(Gw, Gwmax));
       Gw = Gw*SLarea; //From Gw per leaf area to Gw per ground area
-      Agj = photosynthesis(QSL, Catm, Gw/1.6, leafT, Vmax298SL, Jmax298SL);
+      Agj = photosynthesis(QSL, Catm, Gw/1.6, leafT, Vmax298SL, Jmax298SL);//Call photosynthesis with aggregated values
       Anj = Agj - 0.015*VmaxTemp(Vmax298SL, leafT);
       Ag[i]+=Agj;
       An[i]+=Anj;
@@ -262,18 +265,22 @@ List sunshadePhotosynthesisFunction(List supplyFunction, double Catm, double Pat
       //SHADE leaves
       //From rad per ground area to rad per leaf area
       leafT = leafTemperature(absRadSH/SHarea, Tair, u, fittedE[i]);
+      leafTSH[i]= leafT;
       leafVPD = (meteoland::utils_saturationVP(leafT)-vpa);
       Gw = Patm*(fittedE[i]/1000.0)/leafVPD;
       Gw = std::max(Gwmin, std::min(Gw, Gwmax));
       Gw = Gw*SHarea; //From Gw per leaf area to Gw per ground area
-      Agj = photosynthesis(QSH, Catm, Gw/1.6, leafT, Vmax298SH, Jmax298SH);
+      Agj = photosynthesis(QSH, Catm, Gw/1.6, leafT, Vmax298SH, Jmax298SH); //Call photosynthesis with aggregated values
       Anj = Agj - 0.015*VmaxTemp(Vmax298SH, leafT);
       Ag[i]+=Agj;
       An[i]+=Anj;
     }
+    
   }
   return(List::create(Named("Photosynthesis") = Ag,
-                      Named("NetPhotosynthesis") = An));
+                      Named("NetPhotosynthesis") = An,
+                      Named("LeafTempSL") = leafTSL,
+                      Named("LeafTempSH") = leafTSH));
 }
 
 // [[Rcpp::export("photo.multilayerPhotosynthesisFunction")]]

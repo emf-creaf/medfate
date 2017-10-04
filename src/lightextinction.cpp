@@ -331,9 +331,8 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
   double gdf = groundIrradianceFraction(LAIme,LAImd,kSWR, alphaSWR);
   
   //Average sunlit fraction
-  NumericVector fsunlit = layerSunlitFraction(LAIme, LAImd, kb);
-  
-  
+  NumericVector fsunlit = layerSunlitFraction(LAIme, LAImd, kbvec);
+
   bool clearday = (rain==0.0);
   DataFrame ddd = meteoland::radiation_directDiffuseDay(solarConstant, latrad, slorad, asprad, delta,
                                                         rad, clearday, ntimesteps);
@@ -392,9 +391,9 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
   List res = List::create(_["kb"] = kb,
                           _["fsunlit"] = fsunlit,
                           _["PAR_SL"] = abs_PAR_SL_list,
-                          _["PAR_SH"] = abs_PAR_SL_list,
+                          _["PAR_SH"] = abs_PAR_SH_list,
                           _["SWR_SL"] = abs_SWR_SL_list,
-                          _["SWR_SH"] = abs_SWR_SL_list,
+                          _["SWR_SH"] = abs_SWR_SH_list,
                           _["PAR_diffuse"] = PAR_diffuse,
                           _["SWR_diffuse"] = SWR_diffuse,
                           _["PAR_direct"] = PAR_direct,

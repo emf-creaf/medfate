@@ -490,9 +490,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
       
       //Constant properties through time steps
       NumericVector Vmax298layer(nz), Jmax298layer(nz);
-      double Vmax298SL= 0.0,Vmax298SH= 0.0,Jmax298SL= 0.0,Jmax298SH= 0.0;
       NumericVector SLarealayer(nz), SHarealayer(nz);
-      double SLarea = 0.0, SHarea = 0.0;
       NumericVector QSH(nz), QSL(nz), absRadSL(nz), absRadSH(nz);
       double sn =0.0;
       for(int i=(nz-1);i>=0.0;i--) {
@@ -504,6 +502,8 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
         Vmax298layer[i] = Vmax298[c]*fn;
         Jmax298layer[i] = Jmax298[c]*fn;
       }
+      double Vmax298SL= 0.0,Vmax298SH= 0.0,Jmax298SL= 0.0,Jmax298SH= 0.0;
+      double SLarea = 0.0, SHarea = 0.0;
       if(canopyMode=="sunshade"){
         for(int i=0;i<nz;i++) {
           SLarea +=SLarealayer[i];
@@ -527,7 +527,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
           NumericMatrix absSWR_SH = abs_SWR_SH_list[n];
           for(int i=0;i<nz;i++) {
             QSL[i] = irradianceToPhotonFlux(absPAR_SL(i,c));
-            QSH[i] = irradianceToPhotonFlux(absPAR_SL(i,c));
+            QSH[i] = irradianceToPhotonFlux(absPAR_SH(i,c));
             absRadSL[i] = absSWR_SL(i,c);
             absRadSH[i] = absSWR_SH(i,c);
           }
@@ -547,10 +547,10 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
           photo = sunshadePhotosynthesisFunction(supplyNetwork, Catm, Patm,Tair, vpa, 
                                                  SLarea, SHarea, 
                                                  zWind[c], absSWR_SL[c], absSWR_SH[c], 
-                                                                                  irradianceToPhotonFlux(absPAR_SL[c]), irradianceToPhotonFlux(absPAR_SH[c]),
-                                                                                  Vmax298SL, Vmax298SH,
-                                                                                  Jmax298SL, Jmax298SH,
-                                                                                  Gwmin[c], Gwmax[c]);
+                                                 irradianceToPhotonFlux(absPAR_SL[c]), irradianceToPhotonFlux(absPAR_SH[c]),
+                                                 Vmax298SL, Vmax298SH,
+                                                 Jmax298SL, Jmax298SH,
+                                                 Gwmin[c], Gwmax[c]);
         }
         NumericVector An = photo["NetPhotosynthesis"];
         

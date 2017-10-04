@@ -313,14 +313,7 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
   } else if(canopyMode=="sunshade"){
     zWind = windExtinctionCohort(H,CR, wind,LAIcell, canopyHeight);
   }
-  
-  //Constant properties through time steps
-  NumericVector Vmax298layer(nz), Jmax298layer(nz);
-  double Vmax298SL= 0.0,Vmax298SH= 0.0,Jmax298SL= 0.0,Jmax298SH= 0.0;
-  NumericVector SLarealayer(nz), SHarealayer(nz);
-  double SLarea = 0.0, SHarea = 0.0;
-  NumericVector QSH(nz), QSL(nz), absRadSL(nz), absRadSH(nz);
-  double sn =0.0;
+
   
   NumericVector Vc, VCroot_kmaxc, VGrhizo_kmaxc, psic, VG_nc,VG_alphac;
   
@@ -369,6 +362,10 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
                                           VCstem_kmax[c], VCstem_c[c],VCstem_d[c], 
                                           psiCav, maxNsteps, psiStep, psiMax , ntrial, psiTol, ETol);
     
+    NumericVector Vmax298layer(nz), Jmax298layer(nz);
+    NumericVector SLarealayer(nz), SHarealayer(nz);
+    NumericVector QSH(nz), QSL(nz), absRadSL(nz), absRadSH(nz);
+    double sn =0.0;
     for(int i=(nz-1);i>=0.0;i--) {
       //Effect of nitrogen concentration decay through the canopy
       double fn = exp(-0.713*(sn+LAIme(i,c)/2.0)/sum(LAIme(_,c)));
@@ -378,6 +375,8 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
       Vmax298layer[i] = Vmax298[c]*fn;
       Jmax298layer[i] = Jmax298[c]*fn;
     }
+    double Vmax298SL= 0.0,Vmax298SH= 0.0,Jmax298SL= 0.0,Jmax298SH= 0.0;
+    double SLarea = 0.0, SHarea = 0.0;
     if(canopyMode=="sunshade"){
       for(int i=0;i<nz;i++) {
         SLarea +=SLarealayer[i];
@@ -402,7 +401,7 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
         NumericMatrix absSWR_SH = abs_SWR_SH_list[n];
         for(int i=0;i<nz;i++) {
           QSL[i] = irradianceToPhotonFlux(absPAR_SL(i,c));
-          QSH[i] = irradianceToPhotonFlux(absPAR_SL(i,c));
+          QSH[i] = irradianceToPhotonFlux(absPAR_SH(i,c));
           absRadSL[i] = absSWR_SL(i,c);
           absRadSH[i] = absSWR_SH(i,c);
         }
@@ -422,10 +421,10 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
         photo[n] = sunshadePhotosynthesisFunction(supplyNetwork, Catm, Patm,Tair, vpa, 
                                                SLarea, SHarea, 
                                                zWind[c], absSWR_SL[c], absSWR_SH[c], 
-                                                                                irradianceToPhotonFlux(absPAR_SL[c]), irradianceToPhotonFlux(absPAR_SH[c]),
-                                                                                Vmax298SL, Vmax298SH,
-                                                                                Jmax298SL, Jmax298SH,
-                                                                                Gwmin[c], Gwmax[c]);
+                                               irradianceToPhotonFlux(absPAR_SL[c]), irradianceToPhotonFlux(absPAR_SH[c]),
+                                               Vmax298SL, Vmax298SH,
+                                               Jmax298SL, Jmax298SH,
+                                               Gwmin[c], Gwmax[c]);
       }
 
       //Profit maximization
