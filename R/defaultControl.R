@@ -4,8 +4,9 @@ defaultControl<-function() {
     verbose = TRUE,
     # swb
     transpirationMode = "Simple", #vs. "Complex"
-    canopyMode = "sunshade", #vs. "multilayer"
     hydraulicCostFunction = 2,
+    canopyMode = "sunshade", #vs. "multilayer"
+    verticalLayerSize = 100,
     cavitationRefill = TRUE,
     taper = FALSE,
     numericParams=list(maxNsteps = 400, psiStep = -0.001, psiMax = -10.0, ntrial = 20, psiTol = 0.0001, ETol = 0.0001),

@@ -20,6 +20,7 @@ A list, with the following options:
 \item{\code{transpirationMode (="Simple")}: Transpiration model. See \code{\link{swbInput}}.}
 \item{\code{hydraulicCostFunction (= 2)}: Variant of the hydraulic cost function used in the stomatal regulation model of Sperry & Love (2016). Values accepted are 1 (original cost function based on the derivative of supply function), 2 (xylem vulnerability curve), 3 (xylem vulnerability curve, including previous cavitation).}
 \item{\code{canopyMode (="sunshade")}: Indicates how crowns should be described to calculate photosynthesis. Accepted values are \code{"sunshade"} (distinguishes photosynthesis in sun leaves from shade leaves) and \code{"multilayer"} (distinguishes photosynthesis of sun leaves and shade leaves in each canopy layer).}
+\item{\code{verticalLayerSize (= 100)}: The size of vertical layers (in cm) for photosynthesis calculation.}
 \item{\code{cavitationRefill (= TRUE)}: Whether refilling of embolized conduits is activated.}
 \item{\code{taper (=FALSE)}: Whether taper of xylem conduits is accounted for when calculating aboveground stem conductance from xylem conductivity.}
 \item{\code{numericParams}: A list with the following elements:

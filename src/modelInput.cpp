@@ -94,8 +94,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
     List numericParams = control["numericParams"];
     List paramsControl = List::create(_["verbose"] =control["verbose"],
                                       _["transpirationMode"] =transpirationMode, 
-                                      _["cavitationRefill"] = control["cavitationRefill"],
-                                      _["numericParams"] = clone(numericParams));
+                                      _["cavitationRefill"] = control["cavitationRefill"]);
     input = List::create(_["control"] =paramsControl,
                          _["gdd"] = 0,
                          _["cohorts"] = cohortDescdf,
@@ -169,6 +168,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
     List paramsControl = List::create(_["verbose"] =control["verbose"],
                                       _["transpirationMode"] =transpirationMode, 
                                       _["canopyMode"] =canopyMode, 
+                                      _["verticalLayerSize"] = control["verticalLayerSize"],
                                       _["hydraulicCostFunction"] = control["hydraulicCostFunction"],
                                       _["cavitationRefill"] = control["cavitationRefill"],
                                       _["taper"] = control["taper"],
@@ -488,6 +488,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     List paramsControl = List::create(_["verbose"] =control["verbose"],
                                       _["transpirationMode"] =transpirationMode, 
                                       _["canopyMode"] = canopyMode,
+                                      _["verticalLayerSize"] = control["verticalLayerSize"],
                                       _["hydraulicCostFunction"] = control["hydraulicCostFunction"],
                                       _["taper"] = control["taper"],
                                       _["numericParams"] = clone(numericParams),

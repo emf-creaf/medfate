@@ -208,6 +208,7 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
   bool cavitationRefill = control["cavitationRefill"];
   int ntimesteps = control["ndailysteps"];
   int hydraulicCostFunction = control["hydraulicCostFunction"];
+  double verticalLayerSize = control["verticalLayerSize"];
   
   
   DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
@@ -264,7 +265,7 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
     if(canopyHeight<H[c]) canopyHeight = H[c];
     LAIcell += (LAIphe[c]+LAIdead[c]);
   }
-  int nz = ceil(canopyHeight/100.0); //Number of 100 cm layers
+  int nz = ceil(canopyHeight/verticalLayerSize); //Number of vertical layers
   
   double latrad = latitude * (PI/180.0);
   if(NumericVector::is_na(aspect)) aspect = 0.0;
@@ -279,8 +280,8 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
   NumericVector z(nz+1,0.0);
   NumericVector zmid(nz);
   for(int i=1;i<=nz;i++) {
-    z[i] = z[i-1] + 100.0;
-    zmid[i-1] = 50.0 + 100.0*((double) (i-1));
+    z[i] = z[i-1] + verticalLayerSize;
+    zmid[i-1] = (verticalLayerSize/2.0) + verticalLayerSize*((double) (i-1));
   }
   NumericMatrix LAIme = LAIdistribution(z, LAIphe, H, CR);
   NumericMatrix LAImd = LAIdistribution(z, LAIdead, H, CR);

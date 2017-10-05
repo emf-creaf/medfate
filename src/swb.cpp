@@ -267,7 +267,8 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   String canopyMode = Rcpp::as<Rcpp::String>(control["canopyMode"]);
   int ntimesteps = control["ndailysteps"];
   int hydraulicCostFunction = control["hydraulicCostFunction"];
-
+  double verticalLayerSize = control["verticalLayerSize"];
+    
   //Soil input
   NumericVector W = soil["W"];
   NumericVector psi = soil["psi"];
@@ -347,13 +348,13 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
     Cm += (LAIphe[c]+LAIdead[c])*gRainIntercept[c]; //LAI dead also counts on interception
     if(canopyHeight<H[c]) canopyHeight = H[c];
   }
-  int nz = ceil(canopyHeight/100.0); //Number of 100 cm layers
+  int nz = ceil(canopyHeight/verticalLayerSize); //Number of vertical layers
 
   NumericVector z(nz+1,0.0);
   NumericVector zmid(nz);
   for(int i=1;i<=nz;i++) {
-    z[i] = z[i-1] + 100.0;
-    zmid[i-1] = 50.0 + 100.0*((double) (i-1));
+    z[i] = z[i-1] + verticalLayerSize;
+    zmid[i-1] = (verticalLayerSize/2.0) + verticalLayerSize*((double) (i-1));
   }
   NumericMatrix LAIme = LAIdistribution(z, LAIphe, H, CR);
   NumericMatrix LAImd = LAIdistribution(z, LAIdead, H, CR);

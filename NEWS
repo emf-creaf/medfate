@@ -4,6 +4,10 @@
 
 __Version history__
 
+_Version 0.3.7, October 2017.
+
+1. Added vertical layer size as option in control.
+
 _Version 0.3.6, September 2017.
 
 1. Added new pedotransfer functions with organic matter.
