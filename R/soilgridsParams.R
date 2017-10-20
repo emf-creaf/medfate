@@ -1,5 +1,5 @@
 # function to use soilgrids to estimate soil characteristics
-soilgridsBuilder <- function(lat, long, depths = c(300, 500, 1200)) {
+soilgridsParams <- function(lat, long, depths = c(300, 500, 1200)) {
   
   # spatial points data frame
   coords_df <- data.frame(lon = long, lat = lat, id = 'Site')
