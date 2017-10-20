@@ -4,7 +4,7 @@
 
 \title{SoilGrids soil description fetcher}
 
-\description{\code{soilgridsBuilder} takes a vector of depths and returns a
+\description{\code{soilgridsParams} takes a vector of depths and returns a
 list of soil characteristics ready to use with \code{\link{soil}} function.}
 
 \usage{
@@ -23,7 +23,7 @@ to retrieve the soil physical and chemical characteristics for a site, selected
 by its coordinates. Also, in case the depths are not the default ones in the
 SoilGrids API, the function uses the trapezoidal rule to calculate the values
 for the desired depths (as described in Hengl \emph{et al}. 2007).  
-To do this, it uses internally the \code{rjson} and \code{GSIF} R packages.
+To do this, it uses internally the \code{rjson} and \code{GSIF} R packages. Macroporosity is calculated from bulk density and sand percentage following Stolf et al. (2011).
 }
 
 \value{
@@ -36,14 +36,18 @@ A list, containing the soil characteristics ready to use with the
 }
 
 \references{
-Hengl T, Mendes de Jesus J, Heuvelink GBM, Ruiperez Gonzalez M, Kilibarda M, Blagotić
+Hengl T, Mendes de Jesus J, Heuvelink GBM, Ruiperez Gonzalez M, Kilibarda M, \enc{Blagotić}{Blagotic}
 A, et al. (2017) SoilGrids250m: Global gridded soil information based on machine
 learning. PLoS ONE 12(2): e0169748. doi:10.1371/journal.pone.0169748
-}
 
+Stolf, R., Thurler, Á., Oliveira, O., Bacchi, S., & Reichardt, K. 2011. Method to estimate soil macroporosity and microporosity based on sand content and bulk density. Revista Brasileira de Ciencias do Solo 35: 447–459.
+}
+\seealso{
+ \code{\link{soil}}, \code{\link{defaultSoilParams}}
+}
 \examples{
   \dontrun{
-  foo <- soilgridsBuilder(lat = 42.6667, long = -5.6333, depths = c(300, 600, 1200))
+  foo <- soilgridsParams(lat = 42.6667, long = -5.6333, depths = c(300, 600, 1200))
   foo_soil <- soil(foo)
   foo_soil
   }
