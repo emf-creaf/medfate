@@ -8,7 +8,7 @@
 list of soil characteristics ready to use with \code{\link{soil}} function.}
 
 \usage{
-soilgridsBuilder(lat = , long = , depths = c(300, 500, 1200))
+soilgridsBuilder(lat, long, depths = c(300, 500, 1200))
 }
 
 \arguments{
