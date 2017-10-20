@@ -23,7 +23,7 @@ to retrieve the soil physical and chemical characteristics for a site, selected
 by its coordinates. Also, in case the depths are not the default ones in the
 SoilGrids API, the function uses the trapezoidal rule to calculate the values
 for the desired depths (as described in Hengl \emph{et al}. 2007).  
-To do this, it uses internally the \code{rjson} and \code{GSIF} R packages. Macroporosity is calculated from bulk density and sand percentage following Stolf et al. (2011).
+To do this, it uses internally the \code{rjson} and \code{GSIF} R packages. Macroporosity is calculated from bulk density and sand percentage following Stolf et al. (2011). Although soil layer definition is taken from the input, the function includes absolute depth to bedrock and depth to the R horizon from SoilGrids, in case the user wants to redefine soil definition.
 }
 
 \value{

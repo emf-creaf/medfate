@@ -8,7 +8,7 @@ soilgridsParams <- function(lat, long, depths = c(300, 500, 1200)) {
   
   # soilgrids REST API query
   query <- GSIF::REST.SoilGrids(
-    attributes = c('BDTICM', 'BLDFIE', 'CRFVOL',
+    attributes = c('BDTICM', 'BDRICM', 'BLDFIE', 'CRFVOL',
                    'CLYPPT', 'SLTPPT', 'SNDPPT', 'ORCDRC')
   )
   
@@ -24,7 +24,8 @@ soilgridsParams <- function(lat, long, depths = c(300, 500, 1200)) {
   )
   
   # get the soilGrids values for each variable
-  BDTICM <- sg_description[['BDTICM.BDTICM_M']]
+  BDTICM <- sg_description[['BDTICM.BDTICM_M']]*10 #From cm to mm
+  BDRICM <- sg_description[['BDRICM.BDRICM_M']]*10 #From cm to mm
   BLDFIE <- sg_description[1, paste0('BLDFIE.M.sl', 1:7)]/1000 # from Kg/m3 to Kg/dm3
   CRFVOL <- sg_description[1, paste0('CRFVOL.M.sl', 1:7)]
   CLYPPT <- sg_description[1, paste0('CLYPPT.M.sl', 1:7)]
@@ -48,7 +49,9 @@ soilgridsParams <- function(lat, long, depths = c(300, 500, 1200)) {
     macro = NA,
     rfc = NA,
     Gsoil = 0.5,
-    Ksoil = 0.05
+    Ksoil = 0.05,
+    soilgrids_Rhorizondepth = BDRICM, 
+    soilgrids_absolutesoildepth = BDTICM 
   )
   
   # iterate by desired layer
@@ -90,6 +93,6 @@ soilgridsParams <- function(lat, long, depths = c(300, 500, 1200)) {
       res[['macro']][[layer]] <- 0.693 - 0.465*BLDFIE_res + 0.212*SNDPPT_res/100
     }
   }
-  
+  message("Absolute depth to bedrock : ", BDTICM, " mm\nR horizon depth (up to 2m): ", BDRICM," mm")
   return(res)
 }
