@@ -8,7 +8,7 @@ soilgridsParams <- function(lat, long, depths = c(300, 500, 1200)) {
   
   # soilgrids REST API query
   query <- GSIF::REST.SoilGrids(
-    attributes = c('BDTICM', 'BDRICM', 'BLDFIE', 'CRFVOL',
+    attributes = c('BDTICM', 'BDRICM', 'BDRLOG', 'BLDFIE', 'CRFVOL',
                    'CLYPPT', 'SLTPPT', 'SNDPPT', 'ORCDRC')
   )
   
@@ -26,6 +26,7 @@ soilgridsParams <- function(lat, long, depths = c(300, 500, 1200)) {
   # get the soilGrids values for each variable
   BDTICM <- sg_description[['BDTICM.BDTICM_M']]*10 #From cm to mm
   BDRICM <- sg_description[['BDRICM.BDRICM_M']]*10 #From cm to mm
+  BDRLOG <- sg_description[['BDRLOG.BDRLOG_M']]
   BLDFIE <- sg_description[1, paste0('BLDFIE.M.sl', 1:7)]/1000 # from Kg/m3 to Kg/dm3
   CRFVOL <- sg_description[1, paste0('CRFVOL.M.sl', 1:7)]
   CLYPPT <- sg_description[1, paste0('CLYPPT.M.sl', 1:7)]
@@ -51,6 +52,7 @@ soilgridsParams <- function(lat, long, depths = c(300, 500, 1200)) {
     Gsoil = 0.5,
     Ksoil = 0.05,
     soilgrids_Rhorizondepth = BDRICM, 
+    soilgrids_Rhorizonprob = BDRLOG,
     soilgrids_absolutesoildepth = BDTICM 
   )
   
