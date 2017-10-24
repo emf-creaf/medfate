@@ -24,7 +24,7 @@ swb.ldrOptimization(x, soil, meteo, psi_crit,  RZmin = 301, RZmax = 4000,
      \item{\code{PET}: Potential evapotranspiration (in mm).}
     }
   }
-  \item{psi_crit}{A numerical vector of length iqual to the number of species in the plot containing the species values of water potential inducing hydraulic failure (in MPa)}
+  \item{psi_crit}{A numerical vector of length iqual to the number of species in the plot containing the species values of water potential inducing hydraulic failure (in MPa). Use \code{NA} values to skip optimization for particular plant cohorts.}
   \item{RZmin}{The minimum value of RZ (the rooting depth) to be explored (in mm)}
   \item{RZmax}{The maximum value of RZ (the rooting depth) to be explored (in mm)}
   \item{V1min}{The minimum value of V1 (the root proportion in the first soil layer) to be explored}
