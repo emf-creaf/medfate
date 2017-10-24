@@ -7,7 +7,7 @@
 \description{The function \code{swb.ldrOptimization} optimizes the species root distribution within \code{swb}, given the arguments \code{x}, \code{meteo}, \code{soil} and \code{psi_crit}. The optimization is based on the eco-hydrological equilibrium hypothesis (Eagleson, 1982), which is formulated here as the root distribution for which plant transpiration is maximized while the plant water potential is close to the species-defined critical value \code{psi_crit} (Cabon et al., under review). Returns the optimized root distribution for each species, expressed as parameters of the function \code{root.ldrDistribution}.}
 
 \usage{
-swb.ldrOptimization(x, soil, meteo, psi_crit,  RZmin = 301, RZmax = 4000, 
+swb.ldrOptimization(x, soil, meteo, psi_crit, opt_mode = 1, RZmin = 301, RZmax = 4000, 
                     V1min = 0.01, V1max = 0.94, resolution = 20, heat_stop = 0, 
                     transformation = "identity", explore_out = FALSE, 
                     verbose = FALSE)
@@ -25,6 +25,7 @@ swb.ldrOptimization(x, soil, meteo, psi_crit,  RZmin = 301, RZmax = 4000,
     }
   }
   \item{psi_crit}{A numerical vector of length iqual to the number of species in the plot containing the species values of water potential inducing hydraulic failure (in MPa). Use \code{NA} values to skip optimization for particular plant cohorts.}
+  \item{opt_mode}{Optimization mode (\code{1} maximizes transpiration along the line of stress equal to \code{psi_crit}, \code{2} maximizes transpiration, subject to root construction constrains, among combinations with allowable stress).}
   \item{RZmin}{The minimum value of RZ (the rooting depth) to be explored (in mm)}
   \item{RZmax}{The maximum value of RZ (the rooting depth) to be explored (in mm)}
   \item{V1min}{The minimum value of V1 (the root proportion in the first soil layer) to be explored}

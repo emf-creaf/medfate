@@ -12,7 +12,7 @@
   function (y) uniroot((function (x) f(x) - y), lower = lower, upper = upper, extendInt = "yes")[1]
 }
 
-swb.ldrOptimization<-function(x, soil, meteo, psi_crit,
+swb.ldrOptimization<-function(x, soil, meteo, psi_crit, opt_mode = 1,
                               RZmin = 301, RZmax = 4000, V1min = 0.01, V1max = 0.94, resolution = 20, 
                               heat_stop = 0, transformation = "identity", explore_out = FALSE, verbose = FALSE) {
   
@@ -145,22 +145,38 @@ swb.ldrOptimization<-function(x, soil, meteo, psi_crit,
     if(!is.na(psi_crit[i])){
       psimin <- PsiMin[i,,]
       e <- E[i,,]
-      # emax <- max(e)
-      # e[e >= emax-0.05*emax] <- emax - 0.05*emax
-      # cost <- (matrix(z, ncol = 1)%*%(1-v) + matrix(300, ncol = 1, nrow = length(z))%*%v)^(3/2)
-      supinf <- matrix(0, ncol = ncol(psimin), nrow = nrow(psimin))
-      supinf[psimin >= psi_crit[i]] <- 1
-      subselb <- rbind(supinf[-nrow(supinf),]-supinf[-1,], rep(0, ncol(supinf))) 
-      subselt <- rbind(rep(0, ncol(supinf)), supinf[-1,]-supinf[-nrow(supinf),]) 
-      subsell <- cbind(rep(0, nrow(supinf)), supinf[,-1]-supinf[,-ncol(supinf)])
-      subselr <- cbind(supinf[,-ncol(supinf)]-supinf[,-1], rep(0, nrow(supinf)))
-      sel <- matrix(F, ncol = ncol(psimin), nrow = nrow(psimin))
-      sel[subselb == 1 | subselt == 1 | subsell == 1 | subselr == 1] <- T
-      if(length(e[sel])==0) {
-        warning(paste("Psi value", psi_crit[i],"for cohort ",row.names(x$cohorts)[i],"not reached for any combination."))
-        optim[i,] <- NA
+      if(opt_mode==1) {
+        # emax <- max(e)
+        # e[e >= emax-0.05*emax] <- emax - 0.05*emax
+        # cost <- (matrix(z, ncol = 1)%*%(1-v) + matrix(300, ncol = 1, nrow = length(z))%*%v)^(3/2)
+        supinf <- matrix(0, ncol = ncol(psimin), nrow = nrow(psimin))
+        supinf[psimin >= psi_crit[i]] <- 1
+        subselb <- rbind(supinf[-nrow(supinf),]-supinf[-1,], rep(0, ncol(supinf))) 
+        subselt <- rbind(rep(0, ncol(supinf)), supinf[-1,]-supinf[-nrow(supinf),]) 
+        subsell <- cbind(rep(0, nrow(supinf)), supinf[,-1]-supinf[,-ncol(supinf)])
+        subselr <- cbind(supinf[,-ncol(supinf)]-supinf[,-1], rep(0, nrow(supinf)))
+        sel <- matrix(F, ncol = ncol(psimin), nrow = nrow(psimin))
+        sel[subselb == 1 | subselt == 1 | subsell == 1 | subselr == 1] <- T
+        if(length(e[sel])==0) {
+          warning(paste("Psi value", psi_crit[i],"for cohort ",row.names(x$cohorts)[i],"not reached for any combination."))
+          optim[i,] <- NA
+        } else {
+          point <- which(sel & e == max(e[sel]), arr.ind = T)
+          optim$Z50[i] <- Z50[point[1], point[2]]
+          optim$V1[i] <- V1[point[1]]
+          optim$Z95[i] <- RZ[point[2]]
+        }
       } else {
-        point <- which(sel & e == max(e[sel]), arr.ind = T)
+        V1 = as.numeric(rownames(e))
+        RZ = as.numeric(colnames(e))
+        selPsi = (psimin > psi_crit[i]) # Select combinations with less stress than psi_crit
+        if(sum(selPsi)==0) selPsi = (psimin == max(psimin)) # If none, select combination of minimum stress
+        maxE = max(e[selPsi]) # Find maximum transpiration (among combinations selected)
+        sel2 = selPsi & (e >= maxE*0.95) # Select combinations with > 95% of maximum transpiration
+        points = as.data.frame(which(sel2, arr.ind = TRUE))
+        minZ = min(points$RZ) # Mimimum rooting depth
+        maxV1 = max(points$V1[points$RZ==minZ]) # Maximum V1
+        point = c(maxV1, minZ)
         optim$Z50[i] <- Z50[point[1], point[2]]
         optim$V1[i] <- V1[point[1]]
         optim$Z95[i] <- RZ[point[2]]
