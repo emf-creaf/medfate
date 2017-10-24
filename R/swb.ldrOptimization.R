@@ -105,7 +105,9 @@ swb.ldrOptimization<-function(x, soil, meteo, psi_crit,
         if(length(s.[[k]]) > 1) s.[[k]] <- s.[[k]][1:nl]
       }
       
-      V[,i,j] <- x_1sp$below$V <- root.ldrDistribution(Z50 = Z50[i,j], Z95 = RZ[j], d=s.$dVec)
+      V[,i,j] <- 0
+      x_1sp$below$V <- root.ldrDistribution(Z50 = Z50[i,j], Z95 = RZ[j], d=s.$dVec)
+      V[1:length(x_1sp$below$V),i,j] <- x_1sp$below$V
       
       # Run the model
       swb <- swb(x = x_1sp, meteo = meteo, soil = s.)
