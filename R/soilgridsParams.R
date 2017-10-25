@@ -15,6 +15,12 @@ soilgridsParams <- function(lat, long, depths = c(300, 500, 1200)) {
   # data frame with retrieved values
   sg_description <- GSIF::over(query, coords_df)
   
+  # check if data has been retrieved
+  if (sg_description[1,1] == 'nodata') {
+    stop('No data has been retrieved from SoilGrids.',
+         'Please check the coordinates provided')
+  }
+  
   # get default depths in mm (they come in m)
   def_depths <- abs(
     c(sg_description[['depthCodesMeters.sl1']], sg_description[['depthCodesMeters.sl2']],
