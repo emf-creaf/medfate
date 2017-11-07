@@ -8,6 +8,7 @@ _Version 0.3.7, October 2017.
 
 1. Added vertical layer size as option in control.
 2. New function 'soilgridsParams' (calls functions in package 'GSIF')
+3. Added longwave radiation to leaf energy balance.
 
 _Version 0.3.6, September 2017.
 
