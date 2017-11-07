@@ -331,14 +331,45 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   double asprad = aspect * (PI/180.0);
   if(NumericVector::is_na(slope)) slope = 0.0;
   double slorad = slope * (PI/180.0);
+
+  //Step in seconds
+  double tstep = 86400.0/((double) ntimesteps);
+  
   //Day length (latitude in radians), atmospheric pressure, CO2 concentration
   double tauday = meteoland::radiation_daylengthseconds(latrad,  slorad,asprad, delta); 
   double Patm = meteoland::utils_atmosphericPressure(elevation);
   double Catm = 386.0;
+  
   //Daily average water vapor pressure
   double vpa = meteoland::utils_averageDailyVP(tmin, tmax, rhmin,rhmax);
   
- 
+  //Daily cloud cover
+  double cloudcover = 0.0;
+  if(rain >0.0) cloudcover = 1.0;
+  bool clearday = (rain==0);
+  
+  //Instantaneous direct and diffuse shorwave radiation
+  DataFrame ddd = meteoland::radiation_directDiffuseDay(solarConstant, latrad, slorad, asprad, delta,
+                                                        rad, clearday, ntimesteps);
+  NumericVector solarElevation = ddd["SolarElevation"]; //in radians
+  NumericVector solarHour = ddd["SolarHour"]; //in radians
+  NumericVector SWR_direct = ddd["SWR_direct"]; //in kW·m-2
+  NumericVector SWR_diffuse = ddd["SWR_diffuse"]; //in kW·m-2
+  NumericVector PAR_direct = ddd["PAR_direct"]; //in kW·m-2
+  NumericVector PAR_diffuse = ddd["PAR_diffuse"]; //in kW·m-2
+  
+  //Instantaneous air temperature and longwave radiation
+  NumericVector Tair(ntimesteps), lwdr(ntimesteps);
+  for(int n=0;n<ntimesteps;n++) {
+    //From solar hour (radians) to seconds from sunrise
+    double t_sunrise = (solarHour[n]*43200.0/PI)+ (tauday/2.0) +(tstep/2.0); 
+    
+    //Calculate instantaneous temperature and light conditions
+    Tair[n] = temperatureDiurnalPattern(t_sunrise, tmin, tmax, tauday);
+    //Longwave sky diffuse radiation
+    lwdr[n] = meteoland::radiation_skyLongwaveRadiation(Tair[n], vpa, cloudcover);
+  }
+  
   //Leaf phenology and the adjusted leaf area index
   NumericVector Phe(numCohorts);
   double LAIcell = 0.0, Cm = 0.0, canopyHeight = 0.0;
@@ -362,15 +393,15 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
 
   //Light extinction and absortion by time steps
   List lightExtinctionAbsortion = instantaneousLightExtinctionAbsortion(LAIme, LAImd, kPAR,
-                                                              latitude, elevation, slope, aspect, solarConstant, delta, 
-                                                              rain,  rad,
+                                                              ddd,  lwdr,
                                                               ntimesteps,  canopyMode);
+  
   List abs_PAR_SL_list = lightExtinctionAbsortion["PAR_SL"];
   List abs_SWR_SL_list = lightExtinctionAbsortion["SWR_SL"];
   List abs_PAR_SH_list = lightExtinctionAbsortion["PAR_SH"];
   List abs_SWR_SH_list = lightExtinctionAbsortion["SWR_SH"];
-  NumericVector SWR_direct = lightExtinctionAbsortion["SWR_direct"];
-  NumericVector SWR_diffuse = lightExtinctionAbsortion["SWR_diffuse"];
+  List abs_LWR_SL_list = lightExtinctionAbsortion["LWR_SL"];
+  List abs_LWR_SH_list = lightExtinctionAbsortion["LWR_SH"];
   NumericVector fsunlit = lightExtinctionAbsortion["fsunlit"];
   double kb = lightExtinctionAbsortion["kb"];  //Proportion of sunlit extinction coefficient
   double gbf = lightExtinctionAbsortion["gbf"]; //Ground fractions
@@ -482,10 +513,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
       NumericVector PsiRootVec = supplyNetwork["PsiRoot"];
       NumericVector E = supplyNetwork["E"];
       
-      double Tair;
       double minPsiLeaf = 0.0, minPsiRoot = 0.0;
-      double tstep = 86400.0/((double) ntimesteps);
-      double t = (-1.0*((86400.0-tauday)/2.0))+(tstep/2.0);
       NumericVector Ec(nlayersc,0.0);
       photosynthesis[c] = 0.0;
       
@@ -516,9 +544,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
         }
       }
       for(int n=0;n<ntimesteps;n++) {
-        //Calculate instantaneous temperature and light conditions
-        Tair = temperatureDiurnalPattern(t, tmin, tmax, tauday);
-        
+
         List photo;
         if(canopyMode=="multilayer"){
           //Retrieve Light extinction
@@ -526,13 +552,16 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
           NumericMatrix absPAR_SH = abs_PAR_SH_list[n];
           NumericMatrix absSWR_SL = abs_SWR_SL_list[n];
           NumericMatrix absSWR_SH = abs_SWR_SH_list[n];
+          NumericMatrix absLWR_SL = abs_LWR_SL_list[n];
+          NumericMatrix absLWR_SH = abs_LWR_SH_list[n];
           for(int i=0;i<nz;i++) {
             QSL[i] = irradianceToPhotonFlux(absPAR_SL(i,c));
             QSH[i] = irradianceToPhotonFlux(absPAR_SH(i,c));
-            absRadSL[i] = absSWR_SL(i,c);
-            absRadSH[i] = absSWR_SH(i,c);
+            //Add short wave and long wave radiation
+            absRadSL[i] = absSWR_SL(i,c) + absLWR_SL(i,c);
+            absRadSH[i] = absSWR_SH(i,c)+ absLWR_SH(i,c);
           }
-          photo = multilayerPhotosynthesisFunction(supplyNetwork, Catm, Patm,Tair, vpa, 
+          photo = multilayerPhotosynthesisFunction(supplyNetwork, Catm, Patm,Tair[n], vpa, 
                                                    SLarealayer, SHarealayer, 
                                                    zWind, absRadSL, absRadSH, 
                                                    QSL, QSH,
@@ -544,10 +573,14 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
           NumericVector absPAR_SH = abs_PAR_SH_list[n];
           NumericVector absSWR_SL = abs_SWR_SL_list[n];
           NumericVector absSWR_SH = abs_SWR_SH_list[n];
+          NumericVector absLWR_SL = abs_LWR_SL_list[n];
+          NumericVector absLWR_SH = abs_LWR_SH_list[n];
           
-          photo = sunshadePhotosynthesisFunction(supplyNetwork, Catm, Patm,Tair, vpa, 
+          photo = sunshadePhotosynthesisFunction(supplyNetwork, Catm, Patm,Tair[n], vpa, 
                                                  SLarea, SHarea, 
-                                                 zWind[c], absSWR_SL[c], absSWR_SH[c], 
+                                                 zWind[c], 
+                                                 absSWR_SL[c] + absLWR_SL[c], 
+                                                 absSWR_SH[c] + absLWR_SH[c], 
                                                  irradianceToPhotonFlux(absPAR_SL[c]), irradianceToPhotonFlux(absPAR_SH[c]),
                                                  Vmax298SL, Vmax298SH,
                                                  Jmax298SL, Jmax298SH,
@@ -576,7 +609,6 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
         // Rcout<<"] An: "<< An[iPM]<<"]\n";
         Rnground += ((SWR_direct[n]*gbf) + (SWR_diffuse[n]*gdf))*tstep; //kJ·m-2
         
-        t +=tstep;
       }
       // Rcout<<"\n";
       

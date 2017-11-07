@@ -29,6 +29,9 @@ double radiationDiurnalPattern(double t, double daylength) {
  * Calculated diurnal pattern of temperature assuming a sinusoidal pattern with T = tmin at sunrise
  * and T = (tmin+tmax)/2 at sunset.
  * 
+ * t - time of the day (in seconds from sunrise)
+ * daylength - duration of the day (in seconds)
+ *
  * McMurtrie, R. E., D. A. Rook, and F. M. Kelliher. 1990. 
  * Modelling the yield of Pinus radiata on a site limited by water and nitrogen. 
  * Forest Ecology and Management 30:381–413.

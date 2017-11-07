@@ -189,6 +189,21 @@ NumericVector layerIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd, 
   return(Ifraction);
 }
 
+// [[Rcpp::export("light.layerIrradianceFractionBottomUp")]]
+NumericVector layerIrradianceFractionBottomUp(NumericMatrix LAIme, NumericMatrix LAImd, NumericVector k, NumericVector alpha) {
+  int nlayer = LAIme.nrow();
+  int ncoh = LAIme.ncol();
+  NumericVector Ifraction(nlayer);
+  double s = 0.0;
+  for(int i=0;i<nlayer;i++) { //Start from top layer
+    Ifraction[i] = exp(-1.0*s);
+    //for subsequent layers increase s
+    for(int j =0;j<ncoh;j++) s = s + (k[j]*pow(alpha[j],0.5)*(LAIme(i,j)+LAImd(i,j)));
+  }
+  return(Ifraction);
+}
+
+
 double groundIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericVector k, NumericVector alpha){
   int nlayer = LAIme.nrow();
   int ncoh = LAIme.ncol();
@@ -260,8 +275,8 @@ List cohortSunlitShadeAbsorbedRadiation(double Ib0, double Id0, NumericVector Ib
   NumericMatrix Isu(nlayer, ncoh);
   for(int i = 0;i<nlayer;i++) {
     for(int j = 0;j<ncoh;j++) {
-      Ish(i,j) = Ida(i,j)+Ibsa(i,j);
-      Isu(i,j) = Ish(i,j)+Ib0*alpha[j]*(0.5/sinb);
+      Ish(i,j) = Ida(i,j)+Ibsa(i,j); //Absorved radiation in shade leaves (i.e. diffuse+scatter)
+      Isu(i,j) = Ish(i,j)+Ib0*alpha[j]*(0.5/sinb); //Absorved radiation in sunlit leaves (i.e. diffuse+scatter+direct)
     }
   }
   List s = List::create(Named("I_sunlit")=Isu, Named("I_shade") = Ish);
@@ -279,7 +294,7 @@ NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd, Nume
   int nlayer = LAIme.nrow();
   NumericVector fSL(nlayer);
   double s1=0.0;
-  for(int i = nlayer-1;i>=0;i--) {
+  for(int i = nlayer-1;i>=0;i--) {//Start from top layer
     double s2=0.0;
     for(int j = 0;j<ncoh;j++) {
       s1 += kb[j]*(LAIme(i,j)+LAImd(i,j));
@@ -290,94 +305,124 @@ NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd, Nume
   return(fSL);
 }
 
-
 /*
  * Calculates the amount of radiation absorved by each cohort
  */
 // [[Rcpp::export("light.instantaneousLightExtinctionAbsortion")]]
 List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kPAR,
-                                          double latitude, double elevation, double slope, double aspect, double solarConstant, double delta, 
-                                          double rain, double rad,
-                                          int ntimesteps = 24, String canopyMode= "sunshade") {
+                                           DataFrame ddd, NumericVector LWR_diffuse, 
+                                           int ntimesteps = 24, String canopyMode= "sunshade") {
 
   int numCohorts = LAIme.ncol();
   int nz = LAIme.nrow();
   
-  
-  double latrad = latitude * (PI/180.0);
-  if(NumericVector::is_na(aspect)) aspect = 0.0;
-  double asprad = aspect * (PI/180.0);
-  if(NumericVector::is_na(slope)) slope = 0.0;
-  double slorad = slope * (PI/180.0);
-  
-  //Light PAR/SWR coefficients
-  double kb = 0.8;
-  double gammaPAR = 0.04;
-  double gammaSWR = 0.05;
-  NumericVector alphaPAR(numCohorts), alphaSWR(numCohorts), kSWR(numCohorts), kbvec(numCohorts);
-  for(int c=0;c<numCohorts;c++) {
-    kSWR[c] = kPAR[c]/1.35;
-    alphaPAR[c] = 0.9;
-    alphaSWR[c] = 0.7;
-    kbvec[c] = kb;
-  }
-  
-  //Average light extinction fractions for direct and diffuse PAR/SWR light
-  NumericVector Ibfpar = layerIrradianceFraction(LAIme,LAImd,kb, alphaPAR);
-  NumericVector Idfpar = layerIrradianceFraction(LAIme,LAImd,kPAR, alphaPAR);
-  NumericVector Ibfswr = layerIrradianceFraction(LAIme,LAImd,kb, alphaSWR);
-  NumericVector Idfswr = layerIrradianceFraction(LAIme,LAImd,kSWR, alphaSWR);
-  double gbf = groundIrradianceFraction(LAIme,LAImd,kb, alphaSWR);
-  double gdf = groundIrradianceFraction(LAIme,LAImd,kSWR, alphaSWR);
-  
-  //Average sunlit fraction
-  NumericVector fsunlit = layerSunlitFraction(LAIme, LAImd, kbvec);
-
-  bool clearday = (rain==0.0);
-  DataFrame ddd = meteoland::radiation_directDiffuseDay(solarConstant, latrad, slorad, asprad, delta,
-                                                        rad, clearday, ntimesteps);
   NumericVector solarElevation = ddd["SolarElevation"]; //in radians
   NumericVector SWR_direct = ddd["SWR_direct"]; //in kW·m-2
   NumericVector SWR_diffuse = ddd["SWR_diffuse"]; //in kW·m-2
   NumericVector PAR_direct = ddd["PAR_direct"]; //in kW·m-2
   NumericVector PAR_diffuse = ddd["PAR_diffuse"]; //in kW·m-2
+  
+  //Light PAR/SWR coefficients
+  double kb = 0.8;
+  double gammaPAR = 0.04;
+  double gammaSWR = 0.05;
+  double gammaLWR = 0.0;
+  NumericVector alphaPAR(numCohorts), alphaSWR(numCohorts), alphaLWR(numCohorts);
+  NumericVector kSWR(numCohorts), kbvec(numCohorts), kLWR(numCohorts);
+  for(int c=0;c<numCohorts;c++) {
+    kSWR[c] = kPAR[c]/1.35;
+    alphaPAR[c] = 0.9;
+    alphaSWR[c] = 0.7;
+    kbvec[c] = kb;
+    alphaLWR[c] = 1.0; //Longwave coefficients
+    kLWR[c] = 1.0;
+  }
+  
+  //Average light extinction fractions for direct and diffuse PAR/SWR light
+  NumericVector Ibfpar = layerIrradianceFraction(LAIme,LAImd,kbvec, alphaPAR);
+  NumericVector Idfpar = layerIrradianceFraction(LAIme,LAImd,kPAR, alphaPAR);
+  NumericVector Ibfswr = layerIrradianceFraction(LAIme,LAImd,kbvec, alphaSWR);
+  NumericVector Idfswr = layerIrradianceFraction(LAIme,LAImd,kSWR, alphaSWR);
+  NumericVector Idflwr = layerIrradianceFraction(LAIme,LAImd, kLWR, alphaLWR); //Top-down (atm-plant)
+  NumericVector Idflwrbu = layerIrradianceFractionBottomUp(LAIme,LAImd, kLWR, alphaLWR); //Bottom-up (soil-plant)
+  
+  double gbf = groundIrradianceFraction(LAIme,LAImd,kbvec, alphaSWR);
+  double gdf = groundIrradianceFraction(LAIme,LAImd,kSWR, alphaSWR);
+  
+  //Average sunlit fraction
+  NumericVector fsunlit = layerSunlitFraction(LAIme, LAImd, kbvec);
+
   // Rcout<<rad<<" "<< solarElevation[0]<<" "<<SWR_direct[0]<<"\n";
 
   List abs_PAR_SL_list(ntimesteps);
   List abs_SWR_SL_list(ntimesteps);
+  List abs_LWR_SL_list(ntimesteps);
   List abs_PAR_SH_list(ntimesteps);
   List abs_SWR_SH_list(ntimesteps);
+  List abs_LWR_SH_list(ntimesteps);
   
   for(int n=0;n<ntimesteps;n++) {
     
+    //Calculate PAR absorved radiation for sunlit and shade leaves
     List abs_PAR = cohortSunlitShadeAbsorbedRadiation(PAR_direct[n]*1000.0, PAR_diffuse[n]*1000.0, 
                                                       Ibfpar, Idfpar, solarElevation[n],
-                                                                                    LAIme, LAImd, 
-                                                                                    kbvec,  kPAR, alphaPAR, gammaPAR);
+                                                      LAIme, LAImd, 
+                                                      kbvec,  kPAR, alphaPAR, gammaPAR);
+    //Calculate sWR absorved radiation for sunlit and shade leaves
     List abs_SWR = cohortSunlitShadeAbsorbedRadiation(SWR_direct[n]*1000.0, SWR_diffuse[n]*1000.0, 
-                                                      Ibfpar, Idfpar, solarElevation[n],
-                                                                                    LAIme, LAImd, 
-                                                                                    kbvec,  kSWR, alphaSWR, gammaSWR);
-    
+                                                      Ibfswr, Idfswr, solarElevation[n],
+                                                      LAIme, LAImd, 
+                                                      kbvec,  kSWR, alphaSWR, gammaSWR);
+    //Calculate sky LWR absorved radiation for sunlit and shade leaves
+    List abs_LWR_sky = cohortSunlitShadeAbsorbedRadiation(0.0, LWR_diffuse[n], 
+                                                      Ibfswr, Idflwr, solarElevation[n],
+                                                      LAIme, LAImd, 
+                                                      kbvec,  kLWR, alphaLWR, gammaLWR);
+    //Calculate bottom-up soil LWR absorved radiation for sunlit and shade leaves (assumes same amount of radiation as sky)
+    List abs_LWR_soil = cohortSunlitShadeAbsorbedRadiation(0.0, LWR_diffuse[n], 
+                                                      Ibfswr, Idflwrbu, solarElevation[n],
+                                                      LAIme, LAImd, 
+                                                      kbvec,  kLWR, alphaLWR, gammaLWR);
+    // Rcout << SWR_direct[n]*1000.0 << " "<< SWR_diffuse[n]*1000.0 << " " << LWR_diffuse[n] << "\n";
     if(canopyMode=="multilayer") {
       abs_PAR_SL_list[n] = abs_PAR["I_sunlit"];
       abs_PAR_SH_list[n] = abs_PAR["I_shade"];
       abs_SWR_SL_list[n] = abs_SWR["I_sunlit"];
       abs_SWR_SH_list[n] = abs_SWR["I_shade"];
+      NumericMatrix mlwrsl = abs_LWR_sky["I_sunlit"];
+      NumericMatrix mlwrsh = abs_LWR_sky["I_shade"];
+      NumericMatrix mlwrsl2 = abs_LWR_soil["I_sunlit"];
+      NumericMatrix mlwrsh2 = abs_LWR_soil["I_shade"];
+      NumericMatrix vlwrsl(nz, numCohorts), vlwrsh(nz, numCohorts);
+      for(int i=0;i<nz;i++){
+        for(int c=0;c<numCohorts;c++){
+          vlwrsl(i,c)+=(mlwrsl(i,c)+mlwrsl2(i,c))*LAIme(i,c)*fsunlit[i]; //Add top-down lwr and bottom-up lwd
+          vlwrsh(i,c)+=(mlwrsh(i,c)+mlwrsh2(i,c))*LAIme(i,c)*(1.0-fsunlit[i]); //Add top-down lwr and bottom-up lwd
+        }
+      }
+      abs_LWR_SL_list[n] = vlwrsl;
+      abs_LWR_SH_list[n] = vlwrsh;
     }  else if (canopyMode=="sunshade"){
-      //Aggregate light for sunlit leaves and shade leaves
+      //Aggregate light (PAR, SWR, LWR) for sunlit leaves and shade leaves
       NumericMatrix mparsl = abs_PAR["I_sunlit"];
       NumericMatrix mparsh = abs_PAR["I_shade"];
       NumericMatrix mswrsl = abs_SWR["I_sunlit"];
       NumericMatrix mswrsh = abs_SWR["I_shade"];
+      NumericMatrix mlwrsl = abs_LWR_sky["I_sunlit"];
+      NumericMatrix mlwrsh = abs_LWR_sky["I_shade"];
+      NumericMatrix mlwrsl2 = abs_LWR_soil["I_sunlit"];
+      NumericMatrix mlwrsh2 = abs_LWR_soil["I_shade"];
       NumericVector vparsl(numCohorts,0.0), vparsh(numCohorts,0.0);
       NumericVector vswrsl(numCohorts,0.0), vswrsh(numCohorts,0.0);
+      NumericVector vlwrsl(numCohorts,0.0), vlwrsh(numCohorts,0.0);
       for(int i=0;i<nz;i++){
         for(int c=0;c<numCohorts;c++){
           vparsl[c]+=mparsl(i,c)*LAIme(i,c)*fsunlit[i];
           vparsh[c]+=mparsh(i,c)*LAIme(i,c)*(1.0-fsunlit[i]);
           vswrsl[c]+=mswrsl(i,c)*LAIme(i,c)*fsunlit[i];
           vswrsh[c]+=mswrsh(i,c)*LAIme(i,c)*(1.0-fsunlit[i]);
+          vlwrsl[c]+=(mlwrsl(i,c)+mlwrsl2(i,c))*LAIme(i,c)*fsunlit[i]; //Add top-down lwr and bottom-up lwd
+          vlwrsh[c]+=(mlwrsh(i,c)+mlwrsh2(i,c))*LAIme(i,c)*(1.0-fsunlit[i]); //Add top-down lwr and bottom-up lwd
         }
       }
       // Rcout<<"Hola"<<SWR_direct[n]<<" "<<PAR_direct[n]<<" "<<vswrsl[0]<<" "<<vswrsh[0]<<" "<<vparsl[0]<<" "<<vparsh[0]<<"\n";
@@ -386,6 +431,8 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
       abs_PAR_SH_list[n] = vparsh;
       abs_SWR_SL_list[n] = vswrsl;
       abs_SWR_SH_list[n] = vswrsh;
+      abs_LWR_SL_list[n] = vlwrsl;
+      abs_LWR_SH_list[n] = vlwrsh;
     }
   }
   List res = List::create(_["kb"] = kb,
@@ -394,11 +441,9 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
                           _["PAR_SH"] = abs_PAR_SH_list,
                           _["SWR_SL"] = abs_SWR_SL_list,
                           _["SWR_SH"] = abs_SWR_SH_list,
-                          _["PAR_diffuse"] = PAR_diffuse,
-                          _["SWR_diffuse"] = SWR_diffuse,
-                          _["PAR_direct"] = PAR_direct,
-                          _["SWR_direct"] = SWR_direct,
-                          _["gbf"] = gbf,
-                          _["gdf"] = gdf);
+                          _["LWR_SL"] = abs_LWR_SL_list,
+                          _["LWR_SH"] = abs_LWR_SH_list,
+                          _["gbf"] = gbf, //ground direct radiation fraction
+                          _["gdf"] = gdf); //ground diffuse radiation fraction
   return(res);
 }

@@ -389,6 +389,10 @@ light.layerIrradianceFraction <- function(LAIme, LAImd, k, alpha) {
     .Call('_medfate_layerIrradianceFraction', PACKAGE = 'medfate', LAIme, LAImd, k, alpha)
 }
 
+light.layerIrradianceFractionBottomUp <- function(LAIme, LAImd, k, alpha) {
+    .Call('_medfate_layerIrradianceFractionBottomUp', PACKAGE = 'medfate', LAIme, LAImd, k, alpha)
+}
+
 light.cohortSunlitShadeAbsorbedRadiation <- function(Ib0, Id0, Ibf, Idf, beta, LAIme, LAImd, kb, kd, alpha, gamma) {
     .Call('_medfate_cohortSunlitShadeAbsorbedRadiation', PACKAGE = 'medfate', Ib0, Id0, Ibf, Idf, beta, LAIme, LAImd, kb, kd, alpha, gamma)
 }
@@ -397,8 +401,8 @@ light.layerSunlitFraction <- function(LAIme, LAImd, kb) {
     .Call('_medfate_layerSunlitFraction', PACKAGE = 'medfate', LAIme, LAImd, kb)
 }
 
-light.instantaneousLightExtinctionAbsortion <- function(LAIme, LAImd, kPAR, latitude, elevation, slope, aspect, solarConstant, delta, rain, rad, ntimesteps = 24L, canopyMode = "sunshade") {
-    .Call('_medfate_instantaneousLightExtinctionAbsortion', PACKAGE = 'medfate', LAIme, LAImd, kPAR, latitude, elevation, slope, aspect, solarConstant, delta, rain, rad, ntimesteps, canopyMode)
+light.instantaneousLightExtinctionAbsortion <- function(LAIme, LAImd, kPAR, ddd, LWR_diffuse, ntimesteps = 24L, canopyMode = "sunshade") {
+    .Call('_medfate_instantaneousLightExtinctionAbsortion', PACKAGE = 'medfate', LAIme, LAImd, kPAR, ddd, LWR_diffuse, ntimesteps, canopyMode)
 }
 
 .checkSpeciesParameters <- function(SpParams, params) {
