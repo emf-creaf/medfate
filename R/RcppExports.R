@@ -349,8 +349,8 @@ hydraulics.findRhizosphereMaximumConductance <- function(averageResistancePercen
     .Call('_medfate_findRhizosphereMaximumConductance', PACKAGE = 'medfate', averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd)
 }
 
-hydraulics.supplyFunctionNetwork <- function(psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, psiCav = 0.0, maxNsteps = 400L, psiStep = -0.001, psiMax = -10.0, ntrial = 10L, psiTol = 0.0001, ETol = 0.0001) {
-    .Call('_medfate_supplyFunctionNetwork', PACKAGE = 'medfate', psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, psiCav, maxNsteps, psiStep, psiMax, ntrial, psiTol, ETol)
+hydraulics.supplyFunctionNetwork <- function(psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, psiCav = 0.0, minFlow = 0.0, maxNsteps = 400L, psiStep = -0.001, psiMax = -10.0, ntrial = 10L, psiTol = 0.0001, ETol = 0.0001) {
+    .Call('_medfate_supplyFunctionNetwork', PACKAGE = 'medfate', psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, psiCav, minFlow, maxNsteps, psiStep, psiMax, ntrial, psiTol, ETol)
 }
 
 hydraulics.taperFactor <- function(height) {

@@ -385,11 +385,12 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
       psiCav = xylemPsi(1.0-pEmb[c], 1.0, VCstem_c[c], VCstem_d[c]);//find water potential corresponding to this percentage of conductance loss
       // Rcout<< c <<" "<<psiCav<<"\n";
     }
+    double minFlow = 1000.0*(Gwmin[c]*(tmin+tmax)/2.0)/Patm;
     List supplyNetwork = supplyFunctionNetwork(psic,
                                           VGrhizo_kmaxc,VG_nc,VG_alphac,
                                           VCroot_kmaxc, VCroot_c[c],VCroot_d[c],
                                           VCstem_kmax[c], VCstem_c[c],VCstem_d[c], 
-                                          psiCav, maxNsteps, psiStep, psiMax , ntrial, psiTol, ETol);
+                                          minFlow, psiCav, maxNsteps, psiStep, psiMax , ntrial, psiTol, ETol);
     
     NumericVector Vmax298layer(nz), Jmax298layer(nz);
     NumericVector SLarealayer(nz), SHarealayer(nz);

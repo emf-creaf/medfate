@@ -453,14 +453,13 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   //Hydraulics: determine layers where the plant is connected
   IntegerVector nlayerscon(numCohorts,0);
   LogicalMatrix layerConnected(numCohorts, nlayers);
-  List supplyNetworks(numCohorts);
   for(int c=0;c<numCohorts;c++) {
     nlayerscon[c] = 0;
     for(int l=0;l<nlayers;l++) {
       if(V(c,l)>0.0) {
         double pRoot = xylemConductance(psi[l], 1.0, VCroot_c[c], VCroot_d[c]); //Relative conductance in the root
         layerConnected(c,l)= (pRoot>=pRootDisc[c]);
-        if(layerConnected(c,l)) nlayerscon[c]++;
+        if(layerConnected(c,l)) nlayerscon[c]=nlayerscon[c]+1;
       } else {
         layerConnected(c,l) = false;
       }
@@ -468,6 +467,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   }
 
   //Hydraulics: build supply function
+  List supplyNetworks(numCohorts);
   for(int c=0;c<numCohorts;c++) {
     // Copy values from connected layers
     NumericVector Vc = NumericVector(nlayerscon[c]);
@@ -493,17 +493,19 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
     if(!cavitationRefill) {
       psiCav = xylemPsi(1.0-pEmb[c], 1.0, VCstem_c[c], VCstem_d[c]);//find water potential corresponding to this percentage of conductance loss
     }
+    double minFlow = std::max(0.0,1000.0*(Gwmin[c]*(tmin+tmax)/2.0)/Patm);
+    // Rcout<<minFlow<<"\n";
     supplyNetworks[c] = supplyFunctionNetwork(psic,
                                              VGrhizo_kmaxc,VG_nc,VG_alphac,
                                              VCroot_kmaxc, VCroot_c[c],VCroot_d[c],
                                              VCstem_kmax[c], VCstem_c[c],VCstem_d[c], 
                                              psiCav,
-                                             maxNsteps, psiStep, psiMax , ntrial, psiTol, ETol);
+                                             minFlow, maxNsteps, psiStep, psiMax , ntrial, psiTol, ETol);
   }
 
   //Transpiration
   NumericVector psiBk(nlayers);
-  for(int l=0;l<nlayers;l++) psiBk[l] = psi[l];
+  for(int l=0;l<nlayers;l++) psiBk[l] = psi[l]; //Store initial soil water potential
   NumericMatrix EplantCoh(numCohorts, nlayers);
   NumericVector PlantPsi(numCohorts);
   NumericMatrix K(numCohorts, nlayers);
@@ -611,10 +613,10 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
         //Scale transpiration to cohort level
         Einst(c,n) = 0.0;
         for(int lc=0;lc<nlayerscon[c];lc++) {
-          Ecn[lc] += ElayersMat(iPM,lc)*0.001*0.01802*LAIphe[c]*tstep;
+          Ecn[lc] = ElayersMat(iPM,lc)*0.001*0.01802*LAIphe[c]*tstep;
           Einst(c,n) +=Ecn[lc];
         }
-        Einst(c,n) = std::max(0.0, Einst(c,n)); //Do not allow negative transpiration values
+        Einst(c,n) = std::max(0.0, Einst(c,n)); //Do not allow negative plant transpiration values
         Eplant[c] +=Einst(c,n);
         
         //Store the minimum water potential of the day (i.e. mid-day)
@@ -671,12 +673,13 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
         if(!cavitationRefill) {
           psiCav = xylemPsi(1.0-pEmb[c], 1.0, VCstem_c[c], VCstem_d[c]);//find water potential corresponding to this percentage of conductance loss
         }
+        double minFlow = std::max(0.0,1000.0*(Gwmin[c]*(tmin+tmax)/2.0)/Patm);
         supplyNetworks[c] = supplyFunctionNetwork(psic,
                                                   VGrhizo_kmaxc,VG_nc,VG_alphac,
                                                   VCroot_kmaxc, VCroot_c[c],VCroot_d[c],
-                                                                                    VCstem_kmax[c], VCstem_c[c],VCstem_d[c], 
-                                                                                                                        psiCav,
-                                                                                                                        maxNsteps, psiStep, psiMax , ntrial, psiTol, ETol);
+                                                  VCstem_kmax[c], VCstem_c[c],VCstem_d[c], 
+                                                  psiCav,
+                                                  minFlow, maxNsteps, psiStep, psiMax , ntrial, psiTol, ETol);
       }
       for(int l=0;l<nlayers;l++) psiBk[l] = psi[l];//Reset backup psi
     }

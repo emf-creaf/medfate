@@ -27,7 +27,7 @@ List supplyFunctionNetwork(NumericVector psiSoil,
                            NumericVector krootmax, double rootc, double rootd, 
                            double kstemmax, double stemc, double stemd,
                            double psiCav = 0.0,
-                           int maxNsteps=200, double psiStep = -0.001, double psiMax = -10.0, int ntrial = 10, double psiTol = 0.0001, double ETol = 0.001);
+                           double minFlow = 0.0, int maxNsteps=200, double psiStep = -0.001, double psiMax = -10.0, int ntrial = 10, double psiTol = 0.0001, double ETol = 0.001);
 List E2psiNetwork(double E, NumericVector psiSoil, 
                   NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
                   NumericVector krootmax, double rootc, double rootd, 
