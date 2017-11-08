@@ -503,10 +503,9 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
                                              minFlow, maxNsteps, psiStep, psiMax , ntrial, psiTol, ETol);
   }
 
-  //Transpiration
+  //Transpiration and photosynthesis
   NumericVector psiBk(nlayers);
   for(int l=0;l<nlayers;l++) psiBk[l] = psi[l]; //Store initial soil water potential
-  NumericMatrix EplantCoh(numCohorts, nlayers);
   NumericVector PlantPsi(numCohorts);
   NumericMatrix K(numCohorts, nlayers);
   NumericVector Eplant(numCohorts);
@@ -518,6 +517,11 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   NumericMatrix Aninst(numCohorts, ntimesteps);
   NumericMatrix PsiPlantinst(numCohorts, ntimesteps);
   NumericVector minPsiLeaf(numCohorts,0.0), minPsiRoot(numCohorts,0.0); //Minimum potentials experienced
+  for(int c=0;c<numCohorts;c++) {
+    photosynthesis[c] = 0.0;
+    transpiration[c] = 0.0;
+  }
+  
   for(int n=0;n<ntimesteps;n++) { //Time loop
     NumericVector EplantVecInstant(nlayers,0.0); //Transpiration extracted from each layers, taking into account all cohorts 
     for(int c=0;c<numCohorts;c++) { //Plant cohort loop
@@ -526,10 +530,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
         NumericMatrix ElayersMat = supply["Elayers"];
         NumericVector PsiLeafVec = supply["PsiPlant"];
         NumericVector PsiRootVec = supply["PsiRoot"];
-        NumericVector E = supply["E"];
         
-        NumericVector Ecn(nlayerscon[c],0.0);
-        photosynthesis[c] = 0.0;
         
         //Constant properties through time steps
         NumericVector Vmax298layer(nz), Jmax298layer(nz);
@@ -611,33 +612,39 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
         Aninst(c,n) = An(iPM);
         
         //Scale transpiration to cohort level
+        NumericVector Ecn(nlayerscon[c],0.0);
         Einst(c,n) = 0.0;
         for(int lc=0;lc<nlayerscon[c];lc++) {
-          Ecn[lc] = ElayersMat(iPM,lc)*0.001*0.01802*LAIphe[c]*tstep;
-          Einst(c,n) +=Ecn[lc];
+          Ecn[lc] = ElayersMat(iPM,lc)*0.001*0.01802*LAIphe[c]*tstep; //Scale
+          Einst(c,n) +=Ecn[lc]; //add flow from all layers to estimate plant transpiration
         }
-        Einst(c,n) = std::max(0.0, Einst(c,n)); //Do not allow negative plant transpiration values
+        
+        //Do not allow negative plant transpiration values
+        if(Einst(c,n)<0.0) {
+          Einst(c,n) = 0.0;
+          for(int lc=0;lc<nlayerscon[c];lc++) Ecn[lc] = 0.0;
+          if(verbose) Rcout<<"N";
+        }
+        //Add to daily plant cohort transpiration
         Eplant[c] +=Einst(c,n);
         
         //Store the minimum water potential of the day (i.e. mid-day)
         minPsiLeaf[c] = std::min(minPsiLeaf[c],PsiLeafVec[iPM]);
         minPsiRoot[c] = std::min(minPsiRoot[c],PsiRootVec[iPM]);
         PsiPlantinst(c,n) = PsiLeafVec[iPM]; //Store instantaneous plant potential
-        // Rcout<<"[ c: "<<c<<"  T: "<<n<<" iPM: "<<iPM<<" E: "<<E[iPM]<<"[";
-        // for(int l=0;l<nlayers;l++) Rcout<<ElayersMat(iPM,l)<< ",";
-        // Rcout<<"] An: "<< An[iPM]<<"]\n";
-        
-        //Translate transpiration of connected layers to transpiration from soil layers
+
+        //Copy transpiration from connected layers to transpiration from soil layers
         int cnt = 0;
         for(int l=0;l<nlayers;l++) {
           if(layerConnected(c,l)) {
-            EplantCoh(c,l) += Ecn[cnt]; //Add to cummulative transpiration from layers
+            EplantVec[l] += Ecn[cnt]; //Add to cummulative transpiration from layers
             EplantVecInstant[l] +=Ecn[cnt]; //Add to instantaneous transpiration from layers
             cnt++;
           } 
         }
       }
     } //End of cohort loop
+    
     //Substract plant transpiration from soil moisture and calculate maximum difference in soil psi
     double maxDif = 0;
     for(int l=0;l<nlayers;l++) {
@@ -683,12 +690,8 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
       }
       for(int l=0;l<nlayers;l++) psiBk[l] = psi[l];//Reset backup psi
     }
-  } //End of time loop
+  } //End of timestep loop
   
-  //Add transpiration to plant totals from layers
-  for(int c=0;c<numCohorts;c++) {
-    EplantVec = EplantVec + EplantCoh(c,_);
-  }
   //Plant daily drought stress (from root collar mid-day water potential)
   for(int c=0;c<numCohorts;c++) {
     if(nlayerscon[c]>0) {
