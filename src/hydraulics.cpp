@@ -776,7 +776,8 @@ List supplyFunctionNetwork(NumericVector psiSoil,
   NumericMatrix supplyKterm(maxNsteps);
   NumericMatrix supplyKtermcav(maxNsteps);
   
-  List sol = E2psiNetwork(0.0, psiSoil, 
+  double minFlow = 0.0; //Should we enforce a minimum transpiration flow?
+  List sol = E2psiNetwork(minFlow, psiSoil, 
                           krhizomax,  nsoil,  alphasoil,
                           krootmax,  rootc,  rootd, 
                           kstemmax,  stemc,  stemd,
@@ -789,9 +790,10 @@ List supplyFunctionNetwork(NumericVector psiSoil,
   for(int n=0;n<nnodes;n++) supplyPsi(0,n) = solPsi[n];
   supplyKterm[0] = sol["kterm"];
   supplyKtermcav[0] = sol["ktermcav"];
+  supplyE[0] = minFlow;
   
   //Calculate initial slope
-  List solI = E2psiNetwork(ETol*2.0, psiSoil, 
+  List solI = E2psiNetwork(minFlow+ETol*2.0, psiSoil, 
                            krhizomax,  nsoil,  alphasoil,
                            krootmax,  rootc,  rootd, 
                            kstemmax,  stemc,  stemd,

@@ -124,7 +124,7 @@ hydraulics.xylemPsi(kxylem, kxylemmax, c, d)
   \item{kxylem}{Xylem hydraulic conductance (defined as flow per surface unit and per pressure drop).}
   \item{x}{An object of class \code{\link{swbInput}}.}
   \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
-  \item{type}{Plot type (either \code{"E"} or \code{"dEdP"}).}
+  \item{type}{Plot type (either \code{"E"}, \code{"Elayers"}, \code{"PsiRhizo"} or \code{"dEdP"}).}
 }
 \details{
 Details of the hydraulic model are given in a vignette. Function \code{hydraulics.supplyFunctionPlot} draws a plot of the supply function for the given \code{soil} object and network properties of each plant cohort in \code{x}.
