@@ -2,10 +2,9 @@
 using namespace Rcpp;
 
 // [[Rcpp::export(".gdd")]]
-NumericVector gdd(IntegerVector DOY, NumericVector Temp, double Tbase = 5.0){
+NumericVector gdd(IntegerVector DOY, NumericVector Temp, double Tbase = 5.0, double cum = 0.0){
   int nDays = Temp.size();
   NumericVector GDD(nDays);
-  double cum = 0.0;
   for(int i=0;i<nDays;i++){
     if((Temp[i]-Tbase < 0.0) & (DOY[i]>180)) {
       cum = 0.0;

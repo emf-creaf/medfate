@@ -95,8 +95,9 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
     List paramsControl = List::create(_["verbose"] =control["verbose"],
                                       _["transpirationMode"] =transpirationMode, 
                                       _["cavitationRefill"] = control["cavitationRefill"]);
+    List paramsCanopy = List::create(_["gdd"] = 0);
     input = List::create(_["control"] =paramsControl,
-                         _["gdd"] = 0,
+                         _["canopy"] = paramsCanopy,
                          _["cohorts"] = cohortDescdf,
                          _["above"] = plantsdf,
                          _["below"] = below,
@@ -174,8 +175,9 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
                                       _["taper"] = control["taper"],
                                       _["ndailysteps"] = control["ndailysteps"],
                                       _["numericParams"] = clone(numericParams));
+    List paramsCanopy = List::create(_["gdd"] = 0,_["Temp"] = NA_REAL);
     input = List::create(_["control"] = paramsControl,
-                         _["gdd"] = 0,
+                         _["canopy"] = paramsCanopy,
                          _["cohorts"] = cohortDescdf,
                          _["above"] = plantsdf,
                          _["below"] = below,
@@ -408,13 +410,14 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     paramsTranspdf.attr("row.names") = above.attr("row.names");
     
     List below = List::create( _["Z"]=Z,_["V"] = V);
+    List paramsCanopy = List::create(_["gdd"] = 0);
     List numericParams = control["numericParams"];
     List paramsControl = List::create(_["verbose"] =control["verbose"],
                                       _["transpirationMode"] =transpirationMode, 
                                       _["cavitationRefill"] = control["cavitationRefill"],
                                       _["storagePool"] = storagePool);
     input = List::create(_["control"] = paramsControl,
-                         _["gdd"] = 0,
+                         _["canopy"] = paramsCanopy,
                          _["cohorts"] = cohortDescdf,
                          _["above"] = plantsdf,
                          _["below"] = below,
@@ -495,8 +498,9 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                                       _["ndailysteps"] = control["ndailysteps"], 
                                       _["cavitationRefill"] = control["cavitationRefill"],
                                       _["storagePool"] = storagePool);
+    List paramsCanopy = List::create(_["gdd"] = 0,_["Temp"] = NA_REAL);
     input = List::create(_["control"] =paramsControl,
-                         _["gdd"] = 0,
+                         _["canopy"] = paramsCanopy,
                          _["cohorts"] = cohortDescdf,
                          _["above"] = plantsdf,
                    _["below"] = below,

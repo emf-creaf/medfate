@@ -425,8 +425,8 @@ forest2growthInput <- function(x, soil, SpParams, control) {
     .Call('_medfate_forest2growthInput', PACKAGE = 'medfate', x, soil, SpParams, control)
 }
 
-.gdd <- function(DOY, Temp, Tbase = 5.0) {
-    .Call('_medfate_gdd', PACKAGE = 'medfate', DOY, Temp, Tbase)
+.gdd <- function(DOY, Temp, Tbase = 5.0, cum = 0.0) {
+    .Call('_medfate_gdd', PACKAGE = 'medfate', DOY, Temp, Tbase, cum)
 }
 
 photo.GammaTemp <- function(leaf_temp) {
@@ -495,6 +495,26 @@ soil.USDAType <- function(clay, sand) {
 
 soil.vanGenuchtenParams <- function(soilType) {
     .Call('_medfate_vanGenuchtenParams', PACKAGE = 'medfate', soilType)
+}
+
+soil.thermalconductivity <- function(soil) {
+    .Call('_medfate_soilthermalconductivity', PACKAGE = 'medfate', soil)
+}
+
+soil.thermalcapacity <- function(soil) {
+    .Call('_medfate_soilthermalcapacity', PACKAGE = 'medfate', soil)
+}
+
+soil.midpoints <- function(dVec) {
+    .Call('_medfate_midpoints', PACKAGE = 'medfate', dVec)
+}
+
+soil.temperaturegradient <- function(dVec, Temp) {
+    .Call('_medfate_soilTemperatureGradient', PACKAGE = 'medfate', dVec, Temp)
+}
+
+soil.temperatureChange <- function(dVec, Temp, sand, clay, W, Theta_FC, Gdown) {
+    .Call('_medfate_soilTemperatureChange', PACKAGE = 'medfate', dVec, Temp, sand, clay, W, Theta_FC, Gdown)
 }
 
 soil <- function(SoilParams, W = as.numeric( c(1.0))) {

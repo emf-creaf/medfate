@@ -1551,15 +1551,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // gdd
-NumericVector gdd(IntegerVector DOY, NumericVector Temp, double Tbase);
-RcppExport SEXP _medfate_gdd(SEXP DOYSEXP, SEXP TempSEXP, SEXP TbaseSEXP) {
+NumericVector gdd(IntegerVector DOY, NumericVector Temp, double Tbase, double cum);
+RcppExport SEXP _medfate_gdd(SEXP DOYSEXP, SEXP TempSEXP, SEXP TbaseSEXP, SEXP cumSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< IntegerVector >::type DOY(DOYSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type Temp(TempSEXP);
     Rcpp::traits::input_parameter< double >::type Tbase(TbaseSEXP);
-    rcpp_result_gen = Rcpp::wrap(gdd(DOY, Temp, Tbase));
+    Rcpp::traits::input_parameter< double >::type cum(cumSEXP);
+    rcpp_result_gen = Rcpp::wrap(gdd(DOY, Temp, Tbase, cum));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1821,6 +1822,68 @@ BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< String >::type soilType(soilTypeSEXP);
     rcpp_result_gen = Rcpp::wrap(vanGenuchtenParams(soilType));
+    return rcpp_result_gen;
+END_RCPP
+}
+// soilthermalconductivity
+NumericVector soilthermalconductivity(List soil);
+RcppExport SEXP _medfate_soilthermalconductivity(SEXP soilSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    rcpp_result_gen = Rcpp::wrap(soilthermalconductivity(soil));
+    return rcpp_result_gen;
+END_RCPP
+}
+// soilthermalcapacity
+NumericVector soilthermalcapacity(List soil);
+RcppExport SEXP _medfate_soilthermalcapacity(SEXP soilSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    rcpp_result_gen = Rcpp::wrap(soilthermalcapacity(soil));
+    return rcpp_result_gen;
+END_RCPP
+}
+// midpoints
+NumericVector midpoints(NumericVector dVec);
+RcppExport SEXP _medfate_midpoints(SEXP dVecSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type dVec(dVecSEXP);
+    rcpp_result_gen = Rcpp::wrap(midpoints(dVec));
+    return rcpp_result_gen;
+END_RCPP
+}
+// soilTemperatureGradient
+NumericVector soilTemperatureGradient(NumericVector dVec, NumericVector Temp);
+RcppExport SEXP _medfate_soilTemperatureGradient(SEXP dVecSEXP, SEXP TempSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type dVec(dVecSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Temp(TempSEXP);
+    rcpp_result_gen = Rcpp::wrap(soilTemperatureGradient(dVec, Temp));
+    return rcpp_result_gen;
+END_RCPP
+}
+// soilTemperatureChange
+NumericVector soilTemperatureChange(NumericVector dVec, NumericVector Temp, NumericVector sand, NumericVector clay, NumericVector W, NumericVector Theta_FC, double Gdown);
+RcppExport SEXP _medfate_soilTemperatureChange(SEXP dVecSEXP, SEXP TempSEXP, SEXP sandSEXP, SEXP claySEXP, SEXP WSEXP, SEXP Theta_FCSEXP, SEXP GdownSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type dVec(dVecSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Temp(TempSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type sand(sandSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type clay(claySEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type W(WSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Theta_FC(Theta_FCSEXP);
+    Rcpp::traits::input_parameter< double >::type Gdown(GdownSEXP);
+    rcpp_result_gen = Rcpp::wrap(soilTemperatureChange(dVec, Temp, sand, clay, W, Theta_FC, Gdown));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2227,7 +2290,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_forest2swbInput", (DL_FUNC) &_medfate_forest2swbInput, 4},
     {"_medfate_growthInput", (DL_FUNC) &_medfate_growthInput, 6},
     {"_medfate_forest2growthInput", (DL_FUNC) &_medfate_forest2growthInput, 4},
-    {"_medfate_gdd", (DL_FUNC) &_medfate_gdd, 3},
+    {"_medfate_gdd", (DL_FUNC) &_medfate_gdd, 4},
     {"_medfate_gammaTemp", (DL_FUNC) &_medfate_gammaTemp, 1},
     {"_medfate_KmTemp", (DL_FUNC) &_medfate_KmTemp, 2},
     {"_medfate_VmaxTemp", (DL_FUNC) &_medfate_VmaxTemp, 2},
@@ -2245,6 +2308,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_psi2theta", (DL_FUNC) &_medfate_psi2theta, 4},
     {"_medfate_soilUSDAType", (DL_FUNC) &_medfate_soilUSDAType, 2},
     {"_medfate_vanGenuchtenParams", (DL_FUNC) &_medfate_vanGenuchtenParams, 1},
+    {"_medfate_soilthermalconductivity", (DL_FUNC) &_medfate_soilthermalconductivity, 1},
+    {"_medfate_soilthermalcapacity", (DL_FUNC) &_medfate_soilthermalcapacity, 1},
+    {"_medfate_midpoints", (DL_FUNC) &_medfate_midpoints, 1},
+    {"_medfate_soilTemperatureGradient", (DL_FUNC) &_medfate_soilTemperatureGradient, 2},
+    {"_medfate_soilTemperatureChange", (DL_FUNC) &_medfate_soilTemperatureChange, 7},
     {"_medfate_soil", (DL_FUNC) &_medfate_soil, 2},
     {"_medfate_waterFC", (DL_FUNC) &_medfate_waterFC, 1},
     {"_medfate_er", (DL_FUNC) &_medfate_er, 3},

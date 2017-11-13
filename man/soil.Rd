@@ -26,8 +26,9 @@ Function \code{print} prompts a description of soil characteristics and status (
 An list of class \code{soil} with the following elements:
 \itemize{
 \item{\code{SoilDepth}: Soil depth (in mm).}
-\item{\code{W}: relative water content of each layer (in as percent relative to FC).}
-\item{\code{psi}: water potential (in MPa) of each layer.}
+\item{\code{W}: State variable with relative water content of each layer (in as percent relative to FC).}
+\item{\code{psi}: State variable with water potential (in MPa) of each layer.}
+\item{\code{Temp}: State variable with temperature (in ºC) of each layer.}
 \item{\code{Ksoil}: Kappa parameter for infiltration.}
 \item{\code{Gsoil}: Gamma parameter for infiltration.}
 \item{\code{dVec}: Width of soil layers (in mm).}

@@ -4,6 +4,13 @@
 
 __Version history__
 
+_Version 0.4.0, November 2017.
+
+1. Added soil temperature state variables (for 'complex' mode)
+2. Added canopy temperature state variable (for 'complex' mode)
+3. 'gdd' in swbInput used as initial growth degree days
+4. Soil thermodynamics.
+
 _Version 0.3.7, October 2017.
 
 1. Added vertical layer size as option in control.

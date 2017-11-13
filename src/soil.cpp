@@ -1,6 +1,14 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+// sand 1.7-2.9 W·m-1·K-1, clay 0.8-6.3 W·m-1·K-1 [Geiger et al. The Climate near the Ground]
+const double thermalConductivitySand = 1.57025; //W·m-1·K-1 From Dharssi et al. 2009
+const double thermalConductivitySilt = 1.57025; //W·m-1·K-1 From Dharssi et al. 2009
+const double thermalConductivityClay = 1.16025; //W·m-1·K-1 From Dharssi et al. 2009
+const double thermalConductivityAir = 0.025; //W·m-1·K-1 From Dharssi et al. 2009
+const double capacitySand = 1.25*pow(10.0,6.0); //kg·m-3 
+const double capacitySilt = 1.19*pow(10.0,6.0); //kg·m-3 
+const double capacityClay = 1.23*pow(10.0,6.0); //kg·m-3 
 
 /**
  * Returns Soil water potential (in MPa)
@@ -108,6 +116,115 @@ NumericVector vanGenuchtenParams(String soilType) {
   return(vg);
 }
 
+/**
+ * Soil thermal conductivity 
+ *
+ * Dharssi, I., Vidale, P.L., Verhoef, A., MacPherson, B., Jones, C., & Best, M. 2009. New soil physical properties implemented in the Unified Model at PS18. 9–12.
+ * Best et al. 2011
+ */
+NumericVector layerthermalconductivity(NumericVector sand, NumericVector clay, NumericVector W, NumericVector Theta_FC) {
+  int nlayers = sand.length();
+  NumericVector thermalCond(nlayers,0.0);
+  for(int l=0;l<nlayers;l++) {
+    double silt = 100 - sand[l] - clay[l];
+    double lambda_m = ((thermalConductivitySand*sand[l])+(thermalConductivitySilt*silt)+(thermalConductivityClay*clay[l]))/(silt+sand[l]+clay[l]);
+    double lambda_dry = pow(thermalConductivityAir, Theta_FC[l])*pow(lambda_m, (1.0-Theta_FC[l]));
+    double Ke = 0.0;
+    if(W[l]>=0.1) Ke = log10(W[l]) + 1.0;
+    double lambda_s = std::max(1.58,std::min(2.2,1.58 + 12.4*(lambda_dry-0.25)));
+    thermalCond[l] = (lambda_s-lambda_dry)*Ke + lambda_dry;
+  }
+  return(thermalCond);
+}
+
+// [[Rcpp::export("soil.thermalconductivity")]]
+NumericVector soilthermalconductivity(List soil) {
+  NumericVector sand = soil["sand"];
+  NumericVector clay = soil["clay"];
+  NumericVector W = soil["W"];
+  NumericVector Theta_FC = soil["Theta_FC"];
+  return(layerthermalconductivity(sand, clay, W, Theta_FC));
+}
+
+/**
+ * Soil thermal capacity. Simplified from:
+ * 
+ * Cox, P.M., Betts, R.A., Bunton, C.B., Essery, R.L.H., Rowntree, P.R., & Smith, J. 1999. The impact of new land surface physics on the GCM simulation of climate and climate sensitivity. Climate Dynamics 15: 183–203.
+ */
+NumericVector layerthermalcapacity(NumericVector sand, NumericVector clay, NumericVector W, NumericVector Theta_FC) {
+  int nlayers = sand.length();
+  NumericVector thermalCap(nlayers,0.0);
+  for(int l=0;l<nlayers;l++) {
+    thermalCap[l] = ((sand[l]*capacitySand)+(clay[l]*capacityClay) + ((100.0-clay[l]-sand[l])*capacitySilt))/100.0;
+    thermalCap[l] = thermalCap[l] + 4.19*pow(10.0,3.0)*1000.0*Theta_FC[l]*W[l];//Add water
+  }
+  return(thermalCap);
+}
+
+// [[Rcpp::export("soil.thermalcapacity")]]
+NumericVector soilthermalcapacity(List soil) {
+  NumericVector sand = soil["sand"];
+  NumericVector clay = soil["clay"];
+  NumericVector W = soil["W"];
+  NumericVector Theta_FC = soil["Theta_FC"];
+  return(layerthermalcapacity(sand, clay, W, Theta_FC));
+}
+
+
+/**
+ * Calculates midpoints of soil layers
+ */
+// [[Rcpp::export("soil.midpoints")]]
+NumericVector midpoints(NumericVector dVec) {
+  int nlayers = dVec.length();
+  double sumz = 0.0;
+  NumericVector midZ(nlayers);
+  for(int l = 0;l<nlayers; l++) {
+    midZ[l] = sumz + dVec[l]/2.0;
+    sumz = sumz + dVec[l];
+  }
+  return(midZ);
+}
+
+// [[Rcpp::export("soil.temperaturegradient")]]
+NumericVector soilTemperatureGradient(NumericVector dVec, NumericVector Temp) {
+  NumericVector midZ = midpoints(dVec);
+  int nlayers = Temp.length();
+  NumericVector gradTemp(nlayers-1,0.0);
+  if(nlayers>1) {
+    for(int l = 0;l<nlayers-1; l++) {
+      gradTemp[l] = (Temp[l+1]-Temp[l])/(0.001*(midZ[l+1]-midZ[l]));
+    }
+  }
+  return(gradTemp);
+}
+
+
+// [[Rcpp::export("soil.temperatureChange")]]
+NumericVector soilTemperatureChange(NumericVector dVec, NumericVector Temp,
+                                    NumericVector sand, NumericVector clay, 
+                                    NumericVector W, NumericVector Theta_FC,
+                                    double Gdown) {
+  NumericVector lambda = layerthermalconductivity(sand, clay, W, Theta_FC);
+  NumericVector Ca = layerthermalcapacity(sand, clay, W, Theta_FC);
+  int nlayers = Temp.length();
+  NumericVector gradTemp = soilTemperatureGradient(dVec, Temp);
+  NumericVector midZ = midpoints(dVec);
+  double Gup = Gdown;
+  double Gi;
+  NumericVector tempch(nlayers);
+  for(int l = 0;l<nlayers; l++) {
+    if(l<(nlayers-1)) {
+      Gi = lambda[l]*gradTemp[l];
+      tempch[l] = (Gup-Gi)/(Ca[l]*0.001*dVec[l]);
+      Gup = Gi;
+    } else {
+      tempch[l] = Gup/(Ca[l]*0.001*dVec[l]);
+    }
+  }
+  return(tempch);
+}
+
 // [[Rcpp::export("soil")]]
 List soil(List SoilParams, NumericVector W = NumericVector::create(1.0)) {
   double SoilDepth = 0.0;
@@ -129,6 +246,7 @@ List soil(List SoilParams, NumericVector W = NumericVector::create(1.0)) {
   NumericVector rfc = clone(as<NumericVector>(SoilParams["rfc"]));
 
 
+  NumericVector temperature(nlayers, NA_REAL);
   NumericVector Theta_FC(nlayers);
   NumericVector psi(nlayers);
   CharacterVector usda_Type(nlayers);
@@ -144,7 +262,8 @@ List soil(List SoilParams, NumericVector W = NumericVector::create(1.0)) {
     SoilDepth +=dVec[l];
   }
   List l = List::create(_["SoilDepth"] = SoilDepth,
-                      _["W"] = W, _["psi"] = psi, _["Ksoil"] = SoilParams["Ksoil"], _["Gsoil"] = SoilParams["Gsoil"],
+                      _["W"] = W, _["psi"] = psi, _["Temp"] = temperature,
+                      _["Ksoil"] = SoilParams["Ksoil"], _["Gsoil"] = SoilParams["Gsoil"],
                       _["dVec"] = dVec,
                       _["sand"] = sand, _["clay"] = clay, _["om"] = om,
                       _["usda_Type"] = usda_Type,

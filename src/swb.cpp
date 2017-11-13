@@ -777,13 +777,14 @@ List swbDay(List x, List soil, CharacterVector date, int doy, double tmin, doubl
   DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
   NumericVector Sgdd = paramsBase["Sgdd"];
   double tmean = meteoland::utils_averageDaylightTemperature(tmin, tmax);
-  double gddday = x["gdd"];
+  List canopyParams = x["canopy"];
+  double gddday = canopyParams["gdd"];
   if((tmean-5.0 < 0.0) & (doy>180)) {
     gddday = 0.0;
   } else if (doy<180){ //Only increase in the first part of the year
     if(tmean-5.0>0.0) gddday = gddday + (tmean-5.0);
   }
-  x["gdd"] = gddday;
+  canopyParams["gdd"] = gddday;
   //Update phenological status
   NumericVector phe = leafDevelopmentStatus(Sgdd, gddday);
   for(int j=0;j<numCohorts;j++) {
@@ -1006,7 +1007,12 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
   }
   CharacterVector dateStrings = meteo.attr("row.names");
   
-  NumericVector GDD = gdd(DOY, MeanTemperature, 5.0);
+  //Canpopy parameters
+  List canopyParams = x["canopy"];
+  
+  //Calculate GDD (taking into account initial sum)
+  NumericVector GDD = gdd(DOY, MeanTemperature, 5.0, canopyParams["gdd"]);
+  
   NumericVector ER = er(DOY);
   
   
@@ -1018,6 +1024,7 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
   NumericVector LAI_expanded = above["LAI_expanded"];
   int numCohorts = SP.size();
   
+
   //Base parameters
   DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
   NumericVector Sgdd = paramsBase["Sgdd"];
@@ -1063,8 +1070,7 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
   List s;
   for(int i=0;i<numDays;i++) {
       if(verbose) Rcout<<".";
-      //Update phenological status
-      x["gdd"] = GDD[i];
+      canopyParams["gdd"] = GDD[i];//Update phenological status
       NumericVector phe = leafDevelopmentStatus(Sgdd, GDD[i]);
       for(int j=0;j<numCohorts;j++) {
         LAI_expanded[j] = LAI_live[j]*phe[j];

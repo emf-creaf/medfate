@@ -5,18 +5,19 @@
 \alias{soil.waterFC}
 \alias{soil.USDAType}
 \alias{soil.vanGenuchtenParams}
-
+\alias{soil.thermalconductivity}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Soil texture functions}
 \description{
-Functions \code{soil.psi2theta} and \code{soil.theta2psi} calculate water potentials (psi) and relative water contents (theta) using texture data the formulae of Saxton et al. (1986) or Saxton & Rawls (2006) depending on whether organic matter is available. Function \code{soil.USDAType} returns the USDA type for a given texture. Function \code{soil.vanGenuchtenParams} gives parameters for van Genuchten's conductance function for a given texture type (Leij et al. 1996). Function \code{soil.waterFC} returns the water volume (in mm) of each soil layer at field capacity.
+Functions \code{soil.psi2theta} and \code{soil.theta2psi} calculate water potentials (psi) and relative water contents (theta) using texture data the formulae of Saxton et al. (1986) or Saxton & Rawls (2006) depending on whether organic matter is available. Function \code{soil.USDAType} returns the USDA type for a given texture. Function \code{soil.vanGenuchtenParams} gives parameters for van Genuchten's conductance function for a given texture type (Leij et al. 1996). Function \code{soil.waterFC} returns the water volume (in mm) of each soil layer at field capacity. Function \code{soil.thermalconductivity} calculates thermal conductivity (W/m/ºK) for each soil layer.
 }
 \usage{
 soil.psi2theta(clay, sand, psi, om = NA)
 soil.theta2psi(clay, sand, theta, om = NA)
-soil.waterFC(soil)
 soil.USDAType(clay, sand)
 soil.vanGenuchtenParams(soilType)
+soil.waterFC(soil)
+soil.thermalconductivity(soil)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

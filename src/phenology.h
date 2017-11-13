@@ -5,4 +5,4 @@
 #endif
 using namespace Rcpp;
 
-NumericVector gdd(IntegerVector DOY, NumericVector Temp, double Tbase = 5.0);
+NumericVector gdd(IntegerVector DOY, NumericVector Temp, double Tbase = 5.0, double cum = 0.0);
