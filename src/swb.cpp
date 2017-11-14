@@ -12,6 +12,8 @@
 #include <meteoland.h>
 using namespace Rcpp;
 
+const double SIGMA_W = 5.67*pow(10,-8.0);
+
 // [[Rcpp::export(".er")]]
 NumericVector er(IntegerVector DOY, double ERconv=0.05, double ERsyn = 0.2){
   int nDays = DOY.size();
@@ -292,6 +294,9 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   NumericVector CR = Rcpp::as<Rcpp::NumericVector>(above["CR"]);
   int numCohorts = LAIlive.size();
 
+  //Canopy params
+  List canopyParams = Rcpp::as<Rcpp::List>(x["canopy"]);
+  
   //Root distribution input
   List below = Rcpp::as<Rcpp::List>(x["below"]);
   NumericMatrix V =Rcpp::as<Rcpp::NumericMatrix>(below["V"]);
@@ -358,17 +363,18 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   NumericVector PAR_direct = ddd["PAR_direct"]; //in kW·m-2
   NumericVector PAR_diffuse = ddd["PAR_diffuse"]; //in kW·m-2
   
-  //Instantaneous air temperature and longwave radiation
-  NumericVector Tair(ntimesteps), lwdr(ntimesteps);
+  //Instantaneous air temperature (above canopy) and longwave radiation
+  NumericVector Tatm(ntimesteps), lwdr(ntimesteps), Tcan(ntimesteps, NA_REAL);
   for(int n=0;n<ntimesteps;n++) {
     //From solar hour (radians) to seconds from sunrise
     double t_sunrise = (solarHour[n]*43200.0/PI)+ (tauday/2.0) +(tstep/2.0); 
     
     //Calculate instantaneous temperature and light conditions
-    Tair[n] = temperatureDiurnalPattern(t_sunrise, tmin, tmax, tauday);
+    Tatm[n] = temperatureDiurnalPattern(t_sunrise, tmin, tmax, tauday);
     //Longwave sky diffuse radiation
-    lwdr[n] = meteoland::radiation_skyLongwaveRadiation(Tair[n], vpa, cloudcover);
+    lwdr[n] = meteoland::radiation_skyLongwaveRadiation(Tatm[n], vpa, cloudcover);
   }
+  Tcan[0] = canopyParams["Temp"]; //Take canopy temperature from previous day
   
   //Leaf phenology and the adjusted leaf area index
   NumericVector Phe(numCohorts);
@@ -559,6 +565,10 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
           }
         }
         
+        //Long-wave radiation due to canopy temperature
+        if(NumericVector::is_na(Tcan[n])) Tcan[n] = Tatm[n]; //If missing take above-canopy air temperature
+        double lwcan = SIGMA_W*pow(Tcan[n]+273.16,4.0);
+          
         //Photosynthesis function
         List photo;
         if(canopyMode=="multilayer"){
@@ -572,11 +582,11 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
           for(int i=0;i<nz;i++) {
             QSL[i] = irradianceToPhotonFlux(absPAR_SL(i,c));
             QSH[i] = irradianceToPhotonFlux(absPAR_SH(i,c));
-            //Add short wave and long wave radiation
-            absRadSL[i] = absSWR_SL(i,c) + absLWR_SL(i,c);
-            absRadSH[i] = absSWR_SH(i,c)+ absLWR_SH(i,c);
+            //Add absorved short wave and long wave radiation (from sky and canopy)
+            absRadSL[i] = absSWR_SL(i,c) + absLWR_SL(i,c) + SLarealayer[i]*0.97*lwcan;
+            absRadSH[i] = absSWR_SH(i,c)+ absLWR_SH(i,c) + SHarealayer[i]*0.97*lwcan;
           }
-          photo = multilayerPhotosynthesisFunction(supply, Catm, Patm,Tair[n], vpa, 
+          photo = multilayerPhotosynthesisFunction(supply, Catm, Patm, Tcan[n], vpa, 
                                                    SLarealayer, SHarealayer, 
                                                    zWind, absRadSL, absRadSH, 
                                                    QSL, QSH,
@@ -591,11 +601,11 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
           NumericVector absLWR_SL = abs_LWR_SL_list[n];
           NumericVector absLWR_SH = abs_LWR_SH_list[n];
           
-          photo = sunshadePhotosynthesisFunction(supply, Catm, Patm,Tair[n], vpa, 
+          photo = sunshadePhotosynthesisFunction(supply, Catm, Patm,Tcan[n], vpa, 
                                                  SLarea, SHarea, 
                                                  zWind[c], 
-                                                 absSWR_SL[c] + absLWR_SL[c], 
-                                                 absSWR_SH[c] + absLWR_SH[c], 
+                                                 absSWR_SL[c] + absLWR_SL[c] + SLarea*0.97*lwcan, 
+                                                 absSWR_SH[c] + absLWR_SH[c] + SHarea*0.97*lwcan, 
                                                  irradianceToPhotonFlux(absPAR_SL[c]), irradianceToPhotonFlux(absPAR_SH[c]),
                                                  Vmax298SL, Vmax298SH,
                                                  Jmax298SL, Jmax298SH,

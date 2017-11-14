@@ -210,16 +210,16 @@ NumericVector soilTemperatureChange(NumericVector dVec, NumericVector Temp,
   int nlayers = Temp.length();
   NumericVector gradTemp = soilTemperatureGradient(dVec, Temp);
   NumericVector midZ = midpoints(dVec);
-  double Gup = Gdown;
+  double Gup = -Gdown; //Gdown > 0 when net flux is in the direction of soil
   double Gi;
   NumericVector tempch(nlayers);
   for(int l = 0;l<nlayers; l++) {
     if(l<(nlayers-1)) {
-      Gi = lambda[l]*gradTemp[l];
-      tempch[l] = (Gup-Gi)/(Ca[l]*0.001*dVec[l]);
+      Gi = lambda[l]*gradTemp[l]; //Gi < 0 when net flux is downward
+      tempch[l] = (Gi-Gup)/(Ca[l]*0.001*dVec[l]);
       Gup = Gi;
     } else {
-      tempch[l] = Gup/(Ca[l]*0.001*dVec[l]);
+      tempch[l] = (-Gup)/(Ca[l]*0.001*dVec[l]);
     }
   }
   return(tempch);

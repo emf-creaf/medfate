@@ -11,6 +11,8 @@
 #include <meteoland.h>
 using namespace Rcpp;
 
+const double SIGMA_W = 5.67*pow(10,-8.0);
+
 List profitMaximization1(List supplyFunction, List photosynthesisFunction) {
   NumericVector supplydEdp = supplyFunction["dEdP"];
   NumericVector Ag = photosynthesisFunction["Photosynthesis"];
@@ -237,6 +239,9 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
   int numCohorts = LAIlive.size();
   NumericVector pEmb = Rcpp::as<Rcpp::NumericVector>(x["ProportionCavitated"]);
   
+  //Canopy params
+  List canopyParams = Rcpp::as<Rcpp::List>(x["canopy"]);
+  
   //Root distribution input
   List below = Rcpp::as<Rcpp::List>(x["below"]);
   NumericMatrix V =Rcpp::as<Rcpp::NumericMatrix>(below["V"]);
@@ -309,16 +314,17 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
   NumericVector PAR_diffuse = ddd["PAR_diffuse"]; //in kW·m-2
   
   //Instantaneous air temperature and longwave radiation
-  NumericVector Tair(ntimesteps), lwdr(ntimesteps);
+  NumericVector Tatm(ntimesteps), lwdr(ntimesteps), Tcan(ntimesteps, NA_REAL);
   for(int n=0;n<ntimesteps;n++) {
     //From solar hour (radians) to seconds from sunrise
     double t_sunrise = (solarHour[n]*43200.0/PI)+ (tauday/2.0) +(tstep/2.0); 
     
     //Calculate instantaneous temperature and light conditions
-    Tair[n] = temperatureDiurnalPattern(t_sunrise, tmin, tmax, tauday);
+    Tatm[n] = temperatureDiurnalPattern(t_sunrise, tmin, tmax, tauday);
     //Longwave sky diffuse radiation
-    lwdr[n] = meteoland::radiation_skyLongwaveRadiation(Tair[n], vpa, cloudcover);
+    lwdr[n] = meteoland::radiation_skyLongwaveRadiation(Tatm[n], vpa, cloudcover);
   }
+  Tcan[0] = canopyParams["Temp"]; //Take canopy temperature from previous day
   
   //Light extinction and absortion by time steps
   List lightExtinctionAbsortion = instantaneousLightExtinctionAbsortion(LAIme, LAImd, kPAR,
@@ -420,8 +426,12 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
     List photo(ntimesteps);
     List PM(ntimesteps);
     for(int n=0;n<ntimesteps;n++) {
-        
-      // Rcout<< n<< " sh "<<solarHour[n]<< " t_sr " << t_sunrise<< " Tair "<<Tair<<"\n";
+      
+      //Long-wave radiation due to canopy temperature
+      if(NumericVector::is_na(Tcan[n])) Tcan[n] = Tatm[n]; //If missing take above-canopy air temperature
+      double lwcan = SIGMA_W*pow(Tcan[n]+273.16,4.0);
+      
+      // Rcout<< n<< " sh "<<solarHour[n]<< " t_sr " << t_sunrise<< " Tatm "<<Tatm<<"\n";
       if(canopyMode=="multilayer"){
         //Retrieve Light extinction
         NumericMatrix absPAR_SL = abs_PAR_SL_list[n];
@@ -434,10 +444,10 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
           QSL[i] = irradianceToPhotonFlux(absPAR_SL(i,c));
           QSH[i] = irradianceToPhotonFlux(absPAR_SH(i,c));
           //Add short wave and long wave radiation
-          absRadSL[i] = absSWR_SL(i,c) + absLWR_SL(i,c);
-          absRadSH[i] = absSWR_SH(i,c)+ absLWR_SH(i,c);
+          absRadSL[i] = absSWR_SL(i,c) + absLWR_SL(i,c) + SLarealayer[i]*0.97*lwcan;
+          absRadSH[i] = absSWR_SH(i,c)+ absLWR_SH(i,c) + SHarealayer[i]*0.97*lwcan;
         }
-        photo[n] = multilayerPhotosynthesisFunction(supplyNetwork, Catm, Patm,Tair[n], vpa, 
+        photo[n] = multilayerPhotosynthesisFunction(supplyNetwork, Catm, Patm,Tcan[n], vpa, 
                                                  SLarealayer, SHarealayer, 
                                                  zWind, absRadSL, absRadSH, 
                                                  QSL, QSH,
@@ -452,15 +462,16 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
         NumericVector absLWR_SL = abs_LWR_SL_list[n];
         NumericVector absLWR_SH = abs_LWR_SH_list[n];
         // Rcout<< "cohort " << c << " step "<< n << " "<<absSWR_SL[c]<<" " << absLWR_SL[c] << " "<< absSWR_SH[c] << " "<< absLWR_SH[c]<<"\n";
-        photo[n] = sunshadePhotosynthesisFunction(supplyNetwork, Catm, Patm,Tair[n], vpa, 
+        photo[n] = sunshadePhotosynthesisFunction(supplyNetwork, Catm, Patm,Tcan[n], vpa, 
                                                   SLarea, SHarea, 
                                                   zWind[c], 
-                                                  absSWR_SL[c] + absLWR_SL[c], 
-                                                  absSWR_SH[c] + absLWR_SH[c], 
+                                                  absSWR_SL[c] + absLWR_SL[c] + SLarea*0.97*lwcan, 
+                                                  absSWR_SH[c] + absLWR_SH[c] + SHarea*0.97*lwcan, 
                                                irradianceToPhotonFlux(absPAR_SL[c]), irradianceToPhotonFlux(absPAR_SH[c]),
                                                Vmax298SL, Vmax298SH,
                                                Jmax298SL, Jmax298SH,
                                                Gwmin[c], Gwmax[c]);
+        // Rcout<<n<<", "<< c <<": "<<lwcan<< " "<<absSWR_SL[c]<<" "<< absLWR_SL[c] << " "<<SLarea*0.97*lwcan<< " "<<absSWR_SH[c]<<" "<< absLWR_SH[c] << " "<<SHarea*0.97*lwcan<<"\n";
       }
 
       //Profit maximization

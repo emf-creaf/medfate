@@ -5,6 +5,7 @@
 #endif
 using namespace Rcpp;
 
+
 double leafTemperature(double absRad, double airTemperature, double u, double E,  double leafWidth = 0.01);
 double temperatureDiurnalPattern(double t, double tmin, double tmax, double daylength);
 double radiationDiurnalPattern(double t, double daylength);
