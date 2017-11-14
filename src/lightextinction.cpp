@@ -269,7 +269,7 @@ List cohortSunlitShadeAbsorbedRadiation(double Ib0, double Id0, NumericVector Ib
   NumericMatrix Ibsa = cohortScatteredAbsorbedRadiation(Ib0, Ibf, LAIme, LAImd, kb, alpha, gamma);
   int ncoh = alpha.size();
   int nlayer = Ibf.size();
-  double sinb = sin(beta);
+  // double sinb = sin(beta);
   NumericMatrix Ish(nlayer,ncoh); 
   NumericMatrix Isu(nlayer, ncoh);
   // Rcout<<Ib0<<" "<<beta<<" "<<sinb <<" "<<Ib0*alpha[0]*(0.5/sinb)<<"\n";
@@ -323,7 +323,7 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
   NumericVector PAR_diffuse = ddd["PAR_diffuse"]; //in kW·m-2
   
   //Light PAR/SWR coefficients
-  double kb = 1.0;//0.8;
+  double kb = 0.8;
   double gammaPAR = 0.04;
   double gammaSWR = 0.05;
   double gammaLWR = 0.0;

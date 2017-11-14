@@ -27,7 +27,7 @@ double radiationDiurnalPattern(double t, double daylength) {
 }
 /**
  * Calculated diurnal pattern of temperature assuming a sinusoidal pattern with T = tmin at sunrise
- * and T = (tmin+tmax)/2 at sunset.
+ * and T = (tmin+tmax)/2 at sunset. From sunset to sunrise follows a linear trend 
  * 
  * t - time of the day (in seconds from sunrise)
  * daylength - duration of the day (in seconds)
@@ -38,7 +38,15 @@ double radiationDiurnalPattern(double t, double daylength) {
  */
 // [[Rcpp::export("biophysics.temperatureDiurnalPattern")]]
 double temperatureDiurnalPattern(double t, double tmin, double tmax, double daylength) {
-  double temp = 0.5*(tmin+tmax-(tmax-tmin)*cos(1.5*PI*t/daylength));
+  double temp;
+  if((t<0) | (t>daylength)) {
+    if(t<0) t = t + 86400.0;
+    t = t - daylength;
+    double tfin = 86400.0-daylength;
+    temp = (0.5*(tmax-tmin)*(1.0-(t/tfin)) + tmin*(t/tfin));
+  } else {
+    temp = 0.5*(tmin+tmax-(tmax-tmin)*cos(1.5*PI*t/daylength));
+  }
   return(temp);
 }
 
