@@ -189,20 +189,6 @@ NumericVector layerIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd, 
   return(Ifraction);
 }
 
-// [[Rcpp::export("light.layerIrradianceFractionBottomUp")]]
-NumericVector layerIrradianceFractionBottomUp(NumericMatrix LAIme, NumericMatrix LAImd, NumericVector k, NumericVector alpha) {
-  int nlayer = LAIme.nrow();
-  int ncoh = LAIme.ncol();
-  NumericVector Ifraction(nlayer);
-  double s = 0.0;
-  for(int i=0;i<nlayer;i++) { //Start from top layer
-    Ifraction[i] = exp(-1.0*s);
-    //for subsequent layers increase s
-    for(int j =0;j<ncoh;j++) s = s + (k[j]*pow(alpha[j],0.5)*(LAIme(i,j)+LAImd(i,j)));
-  }
-  return(Ifraction);
-}
-
 
 double groundIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericVector k, NumericVector alpha){
   int nlayer = LAIme.nrow();

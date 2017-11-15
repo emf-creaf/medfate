@@ -8,6 +8,7 @@ importFrom("stats", "aggregate","filter","uniroot")
 importFrom("graphics", "axis", "abline", "barplot", "legend", "lines", "matplot","mtext",
            "matlines", "par","axis.Date")
 importFrom("utils", "setTxtProgressBar", "txtProgressBar")
+importFrom("GSIF", "REST.SoilGrids","over")
 # Export all names
 useDynLib(medfate)
 exportPattern("^[[:alpha:]]+")

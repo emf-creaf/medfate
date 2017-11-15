@@ -15,7 +15,9 @@ print.soil<-function(x,...) {
     cat(paste("\nLayer ",l," [",dini," to ",dfin,"mm ]",
               "\n    clay (%):", round(x$clay[l]),"silt (%):", round(silt), "sand (%):", round(x$sand[l]), "organic matter (%):", round(x$om[l]),
               "[", x$usda_Type[l],"]\n    Rock fragment content (%):", round(x$rfc[l]),"Macroporosity (%):", round(x$macro[l]*100),  
-              "\n    Theta FC (%):", round(100*x$Theta_FC[l]),"Vol. FC (mm):", round(Water_FC[l]), "Vol. current (mm):", round(x$W[l]*Water_FC[l]), "\n"))
+              "\n    Theta FC (%):", round(100*x$Theta_FC[l]),"Vol. FC (mm):", round(Water_FC[l]), "Vol. current (mm):", round(x$W[l]*Water_FC[l]), 
+              "\n    Temperature (ºC):", round(x$Temp[l],1),
+              "\n"))
     dini = dini+x$dVec[l]
   }
   cat(paste("\nTotal soil water holding capacity (mm):", round(sum(Water_FC), digits=0),"\n"))  

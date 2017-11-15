@@ -4,6 +4,11 @@
 
 __Version history__
 
+_Version 0.4.1, November 2017.
+
+1. Documentation of soil thermodynamics
+2. Energy balance output in swb.day
+
 _Version 0.4.0, November 2017.
 
 1. Added soil temperature state variables (for 'complex' mode)

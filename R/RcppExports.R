@@ -389,10 +389,6 @@ light.layerIrradianceFraction <- function(LAIme, LAImd, k, alpha) {
     .Call('_medfate_layerIrradianceFraction', PACKAGE = 'medfate', LAIme, LAImd, k, alpha)
 }
 
-light.layerIrradianceFractionBottomUp <- function(LAIme, LAImd, k, alpha) {
-    .Call('_medfate_layerIrradianceFractionBottomUp', PACKAGE = 'medfate', LAIme, LAImd, k, alpha)
-}
-
 light.cohortSunlitShadeAbsorbedRadiation <- function(Ib0, Id0, Ibf, Idf, beta, LAIme, LAImd, kb, kd, alpha, gamma) {
     .Call('_medfate_cohortSunlitShadeAbsorbedRadiation', PACKAGE = 'medfate', Ib0, Id0, Ibf, Idf, beta, LAIme, LAImd, kb, kd, alpha, gamma)
 }
@@ -505,15 +501,11 @@ soil.thermalcapacity <- function(soil) {
     .Call('_medfate_soilthermalcapacity', PACKAGE = 'medfate', soil)
 }
 
-soil.midpoints <- function(dVec) {
-    .Call('_medfate_midpoints', PACKAGE = 'medfate', dVec)
-}
-
 soil.temperaturegradient <- function(dVec, Temp) {
     .Call('_medfate_soilTemperatureGradient', PACKAGE = 'medfate', dVec, Temp)
 }
 
-soil.temperatureChange <- function(dVec, Temp, sand, clay, W, Theta_FC, Gdown) {
+soil.temperaturechange <- function(dVec, Temp, sand, clay, W, Theta_FC, Gdown) {
     .Call('_medfate_soilTemperatureChange', PACKAGE = 'medfate', dVec, Temp, sand, clay, W, Theta_FC, Gdown)
 }
 

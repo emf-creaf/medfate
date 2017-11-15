@@ -4,9 +4,9 @@
 \alias{print.soil}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{Soil definition}
+\title{Soil initialization}
 \description{
-Defines a soil object for its use in simulation functions.
+Initializes a soil object for its use in simulation functions.
 }
 \usage{
 soil(SoilParams, W = as.numeric(c(1)))
@@ -20,7 +20,7 @@ soil(SoilParams, W = as.numeric(c(1)))
   \item{...}{Additional parameters to \code{print}.}
 }
 \details{
-Function \code{print} prompts a description of soil characteristics and status (water content). Volume at field capacity is calculated from assuming a soil water potential equal to -0.033 MPa.
+Function \code{print} prompts a description of soil characteristics and status (water content). Volume at field capacity is calculated from assuming a soil water potential equal to -0.033 MPa. Parameter \code{Temp} is initialized as missing for all layers.
 }
 \value{
 An list of class \code{soil} with the following elements:

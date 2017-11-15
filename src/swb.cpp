@@ -285,9 +285,9 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   NumericVector Water_FC = waterFC(soil);
   NumericVector Tsoil = soil["Temp"]; 
   int nlayers = W.size();
-  if(NumericVector::is_na(Tsoil[0])) {//Initialize Soil temperature (to average air temperature) if missing
+  if(NumericVector::is_na(Tsoil[0])) {//Initialize Soil temperature (to minimum air temperature) if missing
     for(int l=0;l<nlayers; l++) {
-      Tsoil[l] = (tmin+tmax)/2.0;
+      Tsoil[l] = tmin;
     }
   }
   
@@ -372,6 +372,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   
   //Instantaneous air temperature (above canopy) and longwave radiation
   NumericVector Tatm(ntimesteps), lwdr(ntimesteps), Tcan(ntimesteps, NA_REAL), Tsunrise(ntimesteps), Tsoil1(ntimesteps);
+  NumericVector LE_heat(ntimesteps), H_heat(ntimesteps), G_heat(ntimesteps), LWRcanout(ntimesteps), SWRLWRin(ntimesteps), Ebal(ntimesteps);
   for(int n=0;n<ntimesteps;n++) {
     //From solar hour (radians) to seconds from sunrise
     Tsunrise[n] = (solarHour[n]*43200.0/PI)+ (tauday/2.0) +(tstep/2.0); 
@@ -386,10 +387,11 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   
   //Leaf phenology and the adjusted leaf area index
   NumericVector Phe(numCohorts);
-  double LAIcell = 0.0, Cm = 0.0, canopyHeight = 0.0;
+  double LAIcell = 0.0, Cm = 0.0, canopyHeight = 0.0, LAIcellmax = 0.0;
   for(int c=0;c<numCohorts;c++) {
     Phe[c]=LAIphe[c]/LAIlive[c]; //Phenological status
     LAIcell += (LAIphe[c]+LAIdead[c]);
+    LAIcellmax += (LAIlive[c]+LAIdead[c]);
     Cm += (LAIphe[c]+LAIdead[c])*gRainIntercept[c]; //LAI dead also counts on interception
     if(canopyHeight<H[c]) canopyHeight = H[c];
   }
@@ -717,23 +719,26 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
     emm_LWR_soil[n] =  SIGMA_W*pow(Tsoil[0]+273.16,4.0);
     
     //Surface absorved radiation
-    double SWRLWRin = abs_SWR_can[n]+abs_LWR_can[n] + abs_SWR_soil[n] + abs_LWR_soil[n];
+    SWRLWRin[n] = abs_SWR_can[n]+abs_LWR_can[n] + abs_SWR_soil[n] + abs_LWR_soil[n];
     //Latent heat (PROBLEM: does not include soil evaporation nor interception)
-    double LE = pow(10.0,6.0)*meteoland::utils_latentHeatVaporisation(Tcan[n])*sum(EplantVecInstant)/tstep; 
+    LE_heat[n] = pow(10.0,6.0)*meteoland::utils_latentHeatVaporisation(Tcan[n])*sum(EplantVecInstant)/tstep; 
     //Canopy longwave emmission
-    double LWRcanout = 0.97*SIGMA_W*pow(Tcan[n]+273.16,4.0);
+    LWRcanout[n] = 0.97*SIGMA_W*pow(Tcan[n]+273.16,4.0);
     //Canopy convective heat exchange
-    double ra = 80.0/std::max(0.00001,wind); //Aerodynamic resistance to convective heat transfer
-    double H = (meteoland::utils_airDensity(Tatm[n],Patm)*Cp_JKG*(Tcan[n]-Tatm[n]))/ra;
+    double ra = 80.0/std::max(0.0001,wind); //Aerodynamic resistance to convective heat transfer
+    H_heat[n] = (meteoland::utils_airDensity(Tatm[n],Patm)*Cp_JKG*(Tcan[n]-Tatm[n]))/ra;
     //Soil-canopy heat exchange
-    double G = pow(0.97,2.0)*SIGMA_W*pow(Tcan[n]+273.16,4.0);
-    G = G -  pow(0.97,2.0)*SIGMA_W*pow(Tsoil[0]+273.16,4.0);
-    double racan = 80.0/std::max(0.00001,windSpeedMassmanExtinction(0.0, wind, LAIcell, canopyHeight)); //Aerodynamic resistance to convective heat transfer
-    G = G + (meteoland::utils_airDensity(Tcan[n],Patm)*Cp_JKG*(Tcan[n]-Tsoil[0]))/racan;
+    double G1 = pow(0.97,2.0)*SIGMA_W*pow(Tcan[n]+273.16,4.0);
+    G1 = G1 -  pow(0.97,2.0)*SIGMA_W*pow(Tsoil[0]+273.16,4.0);
+    double racan = 80.0/std::max(0.0001,windSpeedMassmanExtinction(200, wind, LAIcell, canopyHeight)); //Aerodynamic resistance to convective heat transfer
+    G1 = G1 + (meteoland::utils_airDensity(Tcan[n],Patm)*Cp_JKG*(Tcan[n]-Tsoil[0]))/racan;
+    NumericVector lambda_cond = layerthermalconductivity(sand, clay, W, Theta_FC);
+    double G2 = lambda_cond[0]*(Tcan[n]-Tsoil[0]);
+    G_heat[n] = propCover*G1 + (1.0-propCover)*G2;
     //Canopy temperature changes
-    double Ebal = SWRLWRin-LWRcanout - LE - H - G;
-    double canopyThermalCapacity = LAIcell*1000000.0;
-    double Tcannext = Tcan[n]+ (tstep*Ebal/canopyThermalCapacity);
+    Ebal[n] = SWRLWRin[n]-LWRcanout[n] - LE_heat[n] - H_heat[n] - G_heat[n];
+    double canopyThermalCapacity = LAIcellmax*1000000.0;
+    double Tcannext = Tcan[n]+ (tstep*Ebal[n]/canopyThermalCapacity);
     if(LAIcell==0.0) Tcannext = Tatm[n];
     if(n<(ntimesteps-1)) {
       Tcan[n+1] = Tcannext;
@@ -741,7 +746,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
     }
     
     //Soil temperature changes
-    NumericVector soilTchange = soilTemperatureChange(dVec, Tsoil, sand, clay, W, Theta_FC, G);
+    NumericVector soilTchange = soilTemperatureChange(dVec, Tsoil, sand, clay, W, Theta_FC, G_heat[n]);
     for(int l=0;l<nlayers;l++) Tsoil[l] = Tsoil[l] + (soilTchange[l]*tstep);
       
     // Rcout<<n<<", Tatm: "<< Tatm[n]<< " Tcan: "<<Tcan[n]<<" soilT1 "<< Tsoil[0]<<"\n";
@@ -797,8 +802,10 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   }
   
 
-  DataFrame Tinst = DataFrame::create(_["SolarHour"] = solarHour,
-                                      _["Tatm"] = Tatm, _["Tcan"] = Tcan, _["Tsoil"] = Tsoil1);
+  DataFrame Tinst = DataFrame::create(_["SolarHour"] = solarHour, 
+                                      _["Tatm"] = Tatm, _["Tcan"] = Tcan, _["Tsoil"] = Tsoil1,
+                                      _["Rin"] = SWRLWRin, _["Rout"] = LWRcanout,
+                                      _["LE"] = LE_heat, _["H"] = H_heat, _["G"] = G_heat, _["Ebal"] = Ebal);
   List l = List::create(_["PET"] = NA_REAL, _["NetPrec"] = NetPrec, _["Runon"] = runon, _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
                         _["LAIcell"] = LAIcell, _["Cm"] = Cm, _["Lground"] = NA_REAL,
                         _["EsoilVec"] = EsoilVec, _["EplantVec"] = EplantVec, _["psiVec"] = psi,

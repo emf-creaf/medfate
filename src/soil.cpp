@@ -149,6 +149,7 @@ NumericVector soilthermalconductivity(List soil) {
 /**
  * Soil thermal capacity. Simplified from:
  * 
+ *  returns - J·m-3·K-1
  * Cox, P.M., Betts, R.A., Bunton, C.B., Essery, R.L.H., Rowntree, P.R., & Smith, J. 1999. The impact of new land surface physics on the GCM simulation of climate and climate sensitivity. Climate Dynamics 15: 183–203.
  */
 NumericVector layerthermalcapacity(NumericVector sand, NumericVector clay, NumericVector W, NumericVector Theta_FC) {
@@ -174,7 +175,6 @@ NumericVector soilthermalcapacity(List soil) {
 /**
  * Calculates midpoints of soil layers
  */
-// [[Rcpp::export("soil.midpoints")]]
 NumericVector midpoints(NumericVector dVec) {
   int nlayers = dVec.length();
   double sumz = 0.0;
@@ -186,6 +186,9 @@ NumericVector midpoints(NumericVector dVec) {
   return(midZ);
 }
 
+/**
+ * Soil temperature gradient (in ºC/m)
+ */
 // [[Rcpp::export("soil.temperaturegradient")]]
 NumericVector soilTemperatureGradient(NumericVector dVec, NumericVector Temp) {
   NumericVector midZ = midpoints(dVec);
@@ -200,7 +203,7 @@ NumericVector soilTemperatureGradient(NumericVector dVec, NumericVector Temp) {
 }
 
 
-// [[Rcpp::export("soil.temperatureChange")]]
+// [[Rcpp::export("soil.temperaturechange")]]
 NumericVector soilTemperatureChange(NumericVector dVec, NumericVector Temp,
                                     NumericVector sand, NumericVector clay, 
                                     NumericVector W, NumericVector Theta_FC,

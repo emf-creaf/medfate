@@ -71,7 +71,7 @@ hydraulics.supplyFunctionNetwork(psiSoil,
                           krhizomax, nsoil, alphasoil,
                           krootmax, rootc, rootd, 
                           kstemmax, stemc, stemd, psiCav = 0,
-                          maxNsteps = 400, psiStep = -0.001, psiMax = -10.0, 
+                          minFlow = 0, maxNsteps = 400, psiStep = -0.001, psiMax = -10.0, 
                           ntrial = 10, psiTol = 0.0001, ETol = 1e-04)
 hydraulics.supplyFunctionPlot(soil, x, type = "E")   
 hydraulics.taperFactor(height)
@@ -99,6 +99,7 @@ hydraulics.xylemPsi(kxylem, kxylemmax, c, d)
   \item{Emax}{Maximum flow per surface unit.}
   \item{psiUpstream}{Water potential upstream (in MPa). In a one-component model corresponds to soil potential. In a two-component model corresponds to the potential inside the roots.}
   \item{psiCav}{Minimum water potential (in MPa) experienced (for irreversible cavitation).}
+  \item{minFlow}{Minimum flow in supply function.}
   \item{psiPlant}{Plant water potential (in MPa).}
   \item{psiSoil}{Soil water potential (in MPa). A scalar or a vector depending on the function.}
   \item{psiRhizo}{Soil water potential (in MPa) in the rhizosphere (root surface).}
