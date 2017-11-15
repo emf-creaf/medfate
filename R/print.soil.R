@@ -16,7 +16,7 @@ print.soil<-function(x,...) {
               "\n    clay (%):", round(x$clay[l]),"silt (%):", round(silt), "sand (%):", round(x$sand[l]), "organic matter (%):", round(x$om[l]),
               "[", x$usda_Type[l],"]\n    Rock fragment content (%):", round(x$rfc[l]),"Macroporosity (%):", round(x$macro[l]*100),  
               "\n    Theta FC (%):", round(100*x$Theta_FC[l]),"Vol. FC (mm):", round(Water_FC[l]), "Vol. current (mm):", round(x$W[l]*Water_FC[l]), 
-              "\n    Temperature (ºC):", round(x$Temp[l],1),
+              "\n    Temperature (Celsius):", round(x$Temp[l],1),
               "\n"))
     dini = dini+x$dVec[l]
   }
