@@ -755,9 +755,9 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
     
     
     // //Soil input
-    SWRLWRsoilin[n] =abs_SWR_soil[n] + abs_LWR_soil[n];
+    SWRLWRsoilin[n] =abs_SWR_soil[n] + abs_LWR_soil[n]+ (LWRcanout[n]*propCover);
     //Soil energy balance
-    Ebalsoil[n] = SWRLWRsoilin[n] + (LWRcanout[n]*propCover) + Hcansoil - LWRsoilout[n]; //Here we use all LWRsoilout to include LWR escaping to atmosphere
+    Ebalsoil[n] = SWRLWRsoilin[n] + Hcansoil - LWRsoilout[n]; //Here we use all LWRsoilout to include LWR escaping to atmosphere
     //Soil temperature changes
     NumericVector soilTchange = soilTemperatureChange(dVec, Tsoil, sand, clay, W, Theta_FC, Ebalsoil[n]);
     for(int l=0;l<nlayers;l++) Tsoil[l] = Tsoil[l] + (soilTchange[l]*tstep);
