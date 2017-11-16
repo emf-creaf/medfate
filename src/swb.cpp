@@ -370,7 +370,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   //Instantaneous air temperature (above canopy) and longwave radiation
   NumericVector Tatm(ntimesteps), lwdr(ntimesteps), Tcan(ntimesteps, NA_REAL), Tsunrise(ntimesteps);
   NumericVector LEcan_heat(ntimesteps), Hcan_heat(ntimesteps), G1_heat(ntimesteps), LWRcanout(ntimesteps), SWRLWRcanin(ntimesteps), Ebal(ntimesteps);
-  NumericVector SWRLWRsoilin(ntimesteps), G2_heat(ntimesteps), Ebalsoil(ntimesteps);
+  NumericVector SWRLWRsoilin(ntimesteps), LWRsoilout(ntimesteps), Ebalsoil(ntimesteps);
   NumericMatrix Tsoil_mat(ntimesteps, nlayers);
   for(int n=0;n<ntimesteps;n++) {
     //From solar hour (radians) to seconds from sunrise
@@ -733,14 +733,14 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
     //Canopy convective heat exchange
     double ra = aerodynamicResistance(canopyHeight,wind); //Aerodynamic resistance to convective heat transfer
     Hcan_heat[n] = (meteoland::utils_airDensity(Tatm[n],Patm)*Cp_JKG*(Tcan[n]-Tatm[n]))/ra;
-    //Soil-canopy heat exchange
-    double G1 = pow(0.97,2.0)*SIGMA_W*pow(Tcan[n]+273.16,4.0) -  pow(0.97,2.0)*SIGMA_W*pow(Tsoil[0]+273.16,4.0); //Balance between long-wave radiation
+    //Soil-canopy turbulent heat exchange
     double wind2m = windSpeedMassmanExtinction(200.0, wind, LAIcell, canopyHeight);
     double rasoil = aerodynamicResistance(15.0,wind2m); //Aerodynamic resistance to convective heat transfer from soil
-    G1 = G1 + (meteoland::utils_airDensity(Tcan[n],Patm)*Cp_JKG*(Tcan[n]-Tsoil[0]))/rasoil;
-    // NumericVector lambda_cond = layerthermalconductivity(sand, clay, W, Theta_FC);
-    // double G2 = lambda_cond[0]*(Tcan[n]-Tsoil[0]); //Soil-canopy conductive exchange
-    G1_heat[n] = G1;
+    double Hcansoil = (meteoland::utils_airDensity(Tcan[n],Patm)*Cp_JKG*(Tcan[n]-Tsoil[0]))/rasoil;
+    //Soil LWR emmission
+    LWRsoilout[n] = 0.97*SIGMA_W*pow(Tcan[n]+273.16,4.0);
+    //Soil-canopy heat exchange
+    G1_heat[n] = (LWRcanout[n] - LWRsoilout[n])*propCover + Hcansoil; //Only include a fraction equal to absorption
     
       
     //Canopy temperature changes
@@ -756,16 +756,8 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
     
     // //Soil input
     SWRLWRsoilin[n] =abs_SWR_soil[n] + abs_LWR_soil[n];
-    // //Soil-atmosphere heat exchange
-    // double G2 = lwdr[n] - 0.97*SIGMA_W*pow(Tsoil[0]+273.16,4.0); //Outgoing radiation from soil
-    // // Rcout<<" 1 "<< G2;
-    // G2 = G2 + (meteoland::utils_airDensity(Tatm[n],Patm)*Cp_JKG*(Tatm[n]-Tsoil[0]))/rasoil; //Soil-atm turbulent exchange
-    // // Rcout<<" 2 "<< G2;
-    // G2 = G2 + lambda_cond[0]*(Tatm[n]-Tsoil[0]); //Soil-atm conductive exchange
-    // // Rcout<<" 3 "<< G2<<"\n";
-    // G2_heat[n] = (1.0-propCover)*G2;
     //Soil energy balance
-    Ebalsoil[n] = SWRLWRsoilin[n]+G1_heat[n];
+    Ebalsoil[n] = SWRLWRsoilin[n] + (LWRcanout[n]*propCover) + Hcansoil - LWRsoilout[n]; //Here we use all LWRsoilout to include LWR escaping to atmosphere
     //Soil temperature changes
     NumericVector soilTchange = soilTemperatureChange(dVec, Tsoil, sand, clay, W, Theta_FC, Ebalsoil[n]);
     for(int l=0;l<nlayers;l++) Tsoil[l] = Tsoil[l] + (soilTchange[l]*tstep);
@@ -829,7 +821,8 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   DataFrame Tinst = DataFrame::create(_["SolarHour"] = solarHour, 
                                       _["Tatm"] = Tatm, _["Tcan"] = Tcan, _["Tsoil"] = Tsoil_mat,
                                       _["Rcanin"] = SWRLWRcanin, _["Rcanout"] = LWRcanout,
-                                      _["LEcan"] = LEcan_heat, _["Hcan"] = Hcan_heat, _["G"] = G1_heat, _["Ebalcan"] = Ebal, _["Rsoilin"] = SWRLWRsoilin, _["Ebalsoil"] = Ebalsoil);
+                                      _["LEcan"] = LEcan_heat, _["Hcan"] = Hcan_heat, _["G"] = G1_heat, _["Ebalcan"] = Ebal, _["Rsoilin"] = SWRLWRsoilin, _["Rsoilout"] = LWRsoilout,
+                                      _["Ebalsoil"] = Ebalsoil);
   List l = List::create(_["PET"] = NA_REAL, _["NetPrec"] = NetPrec, _["Runon"] = runon, _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
                         _["LAIcell"] = LAIcell, _["Cm"] = Cm, _["Lground"] = 1.0-propCover,
                         _["EsoilVec"] = EsoilVec, _["EplantVec"] = EplantVec, _["psiVec"] = psi,

@@ -6,7 +6,7 @@ __Version history__
 
 _Version 0.4.2, November 2017.
 
-1. Update radiation balance
+1. Design changes for radiation balance (soil/canopy/atmosphere)
 2. Added temperature balance in summary.swb and plot.swb
 3. Added new parameter 'albedo'
 
