@@ -417,7 +417,7 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
     }
     
     //Calculate soil absorved radiation
-    abs_SWR_soil[n] = 0.80*((SWR_direct[n]*1000.0)+(SWR_diffuse[n]*1000.0) -abs_SWR_can[n]); //20% reflectance for SWR
+    abs_SWR_soil[n] = 0.80*((SWR_direct[n]*1000.0)+(SWR_diffuse[n]*1000.0) -abs_SWR_can[n]); //20% reflectance for SWR (Geiger, The climate near the ground)
     abs_LWR_soil[n] = 0.97*(LWR_diffuse[n]-abs_LWR_can[n]); //3% soil reflectance for LWR
     
     // Rcout<<n<<" PAR : "<<(PAR_direct[n]*1000.0)+(PAR_diffuse[n]*1000.0)<<" SWR: "<<(SWR_direct[n]*1000.0)+(SWR_diffuse[n]*1000.0) <<" can: "<< abs_SWR_can[n]<< " soil: "<< abs_SWR_soil[n]<<" LWR: "<< (LWR_diffuse[n]) <<" can: "<< abs_LWR_can[n]<< " soil: "<< abs_LWR_soil[n]<<"\n";
