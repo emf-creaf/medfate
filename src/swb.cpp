@@ -738,7 +738,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
     double rasoil = aerodynamicResistance(15.0,wind2m); //Aerodynamic resistance to convective heat transfer from soil
     double Hcansoil = (meteoland::utils_airDensity(Tcan[n],Patm)*Cp_JKG*(Tcan[n]-Tsoil[0]))/rasoil;
     //Soil LWR emmission
-    LWRsoilout[n] = 0.97*SIGMA_W*pow(Tcan[n]+273.16,4.0);
+    LWRsoilout[n] = 0.97*SIGMA_W*pow(Tsoil[0]+273.16,4.0);
     //Soil-canopy heat exchange
     G1_heat[n] = (LWRcanout[n] - LWRsoilout[n])*propCover + Hcansoil; //Only include a fraction equal to absorption
     
