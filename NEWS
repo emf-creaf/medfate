@@ -4,6 +4,12 @@
 
 __Version history__
 
+_Version 0.4.2, November 2017.
+
+1. Update radiation balance
+2. Added temperature balance in summary.swb and plot.swb
+3. Added new parameter 'albedo'
+
 _Version 0.4.1, November 2017.
 
 1. Documentation of soil thermodynamics

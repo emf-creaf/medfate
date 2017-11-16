@@ -42,13 +42,15 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
   double averageFracRhizosphereResistance = control["averageFracRhizosphereResistance"];
   String canopyMode = control["canopyMode"];
   
+  NumericVector albedoSP = SpParams["albedo"];
   NumericVector kSP = SpParams["k"];
   NumericVector gSP = SpParams["g"];
   NumericVector SgddSP = SpParams["Sgdd"];
   int numCohorts = SP.size();
-  NumericVector k(numCohorts), g(numCohorts), Sgdd(numCohorts);
+  NumericVector albedo(numCohorts),k(numCohorts), g(numCohorts), Sgdd(numCohorts);
   for(int c=0;c<numCohorts;c++){
     k[c]=kSP[SP[c]];
+    albedo[c]=albedoSP[SP[c]];
     g[c]=gSP[SP[c]];
     Sgdd[c]=SgddSP[SP[c]];
   }
@@ -71,7 +73,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
   plantsdf.attr("row.names") = above.attr("row.names");
   
   //Base params
-  DataFrame paramsBasedf = DataFrame::create(_["k"] = k, _["g"] = g, _["Sgdd"] = Sgdd);
+  DataFrame paramsBasedf = DataFrame::create(_["albedo"] = albedo, _["k"] = k, _["g"] = g, _["Sgdd"] = Sgdd);
   paramsBasedf.attr("row.names") = above.attr("row.names");
   
  
@@ -260,11 +262,12 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   NumericVector RGRmaxSP = SpParams["RGRmax"];
   NumericVector CstoragepmaxSP = SpParams["Cstoragepmax"];
   
+  NumericVector albedoSP = SpParams["albedo"];
   NumericVector kSP = SpParams["k"];
   NumericVector gSP = SpParams["g"];
   NumericVector SgddSP = SpParams["Sgdd"];
   int numCohorts = SP.size();
-  NumericVector k(numCohorts), g(numCohorts), Sgdd(numCohorts);
+  NumericVector albedo(numCohorts), k(numCohorts), g(numCohorts), Sgdd(numCohorts);
   NumericVector SLA(numCohorts), Al2As(numCohorts), WoodC(numCohorts), WoodDens(numCohorts);
   NumericVector Cstoragepmax(numCohorts), RGRmax(numCohorts);
   
@@ -291,6 +294,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   NumericVector Acr(numCohorts), B1cr(numCohorts), B2cr(numCohorts), B3cr(numCohorts), C1cr(numCohorts), C2cr(numCohorts);
   NumericVector Acw(numCohorts), Bcw(numCohorts);
   for(int c=0;c<numCohorts;c++){
+    albedo[c]=albedoSP[SP[c]];
     k[c]=kSP[SP[c]];
     g[c]=gSP[SP[c]];
     Sgdd[c]=SgddSP[SP[c]];
@@ -378,7 +382,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   paramsGrowthdf.attr("row.names") = above.attr("row.names");
   
   //Base params
-  DataFrame paramsBasedf = DataFrame::create(_["k"] = k, _["g"] = g, _["Sgdd"] = Sgdd);
+  DataFrame paramsBasedf = DataFrame::create(_["albedo"] = albedo, _["k"] = k, _["g"] = g, _["Sgdd"] = Sgdd);
   paramsBasedf.attr("row.names") = above.attr("row.names");
   
   //Allometries

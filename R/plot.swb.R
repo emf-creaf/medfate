@@ -4,7 +4,8 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
   SoilWaterBalance = x$SoilWaterBalance
   nlayers = x$NumSoilLayers
   TYPES = c("PET_Precipitation","PET_NetPrec","ET","Psi","Theta","Vol",
-            "PlantStress", "PlantPsi","PlantPhotosynthesis","PlantTranspiration","Export")
+            "PlantStress", "PlantPsi","PlantPhotosynthesis","PlantTranspiration",
+            "TemperatureBalance","SoilTemperature", "CanopyTemperature","Export")
   type = match.arg(type,TYPES)  
   numDays = length(dates)
   numYears = round(numDays/365)
@@ -110,7 +111,43 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
     if(is.null(ylim)) ylim = c(min(x$PlantPhotosynthesis),max(x$PlantPhotosynthesis))
     matplot(1:numDays, x$PlantPhotosynthesis, ylim = ylim, lwd=1, type="l", xlim=xlim,
             ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
-    plotAxes()      
+    plotAxes()     
+  } else if(type=="TemperatureBalance") {
+    if(is.null(ylab)) ylab = "Temperature (Celsius)"
+    if(is.null(ylim)) ylim = c(min(x$TemperatureBalance),max(x$TemperatureBalance))
+    plot(1:numDays, x$TemperatureBalance$Tatm_mean, ylim = ylim, lwd=1, type="l", xlim=xlim,
+         ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
+    lines(1:numDays, x$TemperatureBalance$Tatm_min, col="blue")
+    lines(1:numDays, x$TemperatureBalance$Tatm_max, col="red")
+    lines(1:numDays, x$TemperatureBalance$Tcan_mean, col="black", lty=2)
+    lines(1:numDays, x$TemperatureBalance$Tcan_min, col="blue", lty=2)
+    lines(1:numDays, x$TemperatureBalance$Tcan_max, col="red",lty=2)
+    lines(1:numDays, x$TemperatureBalance$Tsoil_mean, col="black", lty=3)
+    lines(1:numDays, x$TemperatureBalance$Tsoil_min, col="blue", lty=3)
+    lines(1:numDays, x$TemperatureBalance$Tsoil_max, col="red",lty=3)
+    plotAxes()   
+  } else if(type=="CanopyTemperature") {
+    if(is.null(ylab)) ylab = "Temperature (Celsius)"
+    if(is.null(ylim)) ylim = c(min(x$TemperatureBalance),max(x$TemperatureBalance))
+    plot(1:numDays, x$TemperatureBalance$Tatm_mean, ylim = ylim, lwd=1, type="l", xlim=xlim,
+         ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
+    lines(1:numDays, x$TemperatureBalance$Tatm_min, col="blue")
+    lines(1:numDays, x$TemperatureBalance$Tatm_max, col="red")
+    lines(1:numDays, x$TemperatureBalance$Tcan_mean, col="black", lty=2)
+    lines(1:numDays, x$TemperatureBalance$Tcan_min, col="blue", lty=2)
+    lines(1:numDays, x$TemperatureBalance$Tcan_max, col="red",lty=2)
+    plotAxes()   
+  } else if(type=="SoilTemperature") {
+    if(is.null(ylab)) ylab = "Temperature (Celsius)"
+    if(is.null(ylim)) ylim = c(min(x$TemperatureBalance),max(x$TemperatureBalance))
+    plot(1:numDays, x$TemperatureBalance$Tatm_mean, ylim = ylim, lwd=1, type="l", xlim=xlim,
+            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
+    lines(1:numDays, x$TemperatureBalance$Tatm_min, col="blue")
+    lines(1:numDays, x$TemperatureBalance$Tatm_max, col="red")
+    lines(1:numDays, x$TemperatureBalance$Tsoil_mean, col="black", lty=2)
+    lines(1:numDays, x$TemperatureBalance$Tsoil_min, col="blue", lty=2)
+    lines(1:numDays, x$TemperatureBalance$Tsoil_max, col="red",lty=2)
+    plotAxes()   
   } else if(type=="Export") {
     if(is.null(ylab)) ylab = "mm water"    
     mnp = max(DailyBalance$DeepDrainage+DailyBalance$Runoff)    

@@ -6,6 +6,7 @@ summary.swb<-function(object, freq="years", output="DailyBalance", FUN=sum,...){
   else if(output=="PlantStress") OM = object$PlantStress
   else if(output=="PlantTranspiration") OM = object$PlantTranspiration
   else if(output=="SoilWaterBalance") OM = object$SoilWaterBalance
+  else if(output=="TemperatureBalance") OM = object$TemperatureBalance
   
   ncoh = ncol(OM)
   M = data.frame(matrix(0,nrow=length(levels(date.factor)), ncol=ncol(OM)))

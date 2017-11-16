@@ -12,3 +12,4 @@ double unshelteredMidflameWindSpeed(double wind20H, double fuelBedHeight);
 double shelteredMidflameWindSpeed(double wind20H, double crownFillProportion, double topCanopyHeight);
 NumericVector windExtinctionProfile(NumericVector z, double wind20H, double LAIc, double canopyHeight);
 NumericVector windExtinctionCohort(NumericVector H, NumericVector CR, double wind20H, double LAIc, double canopyHeight);
+double aerodynamicResistance(double canopyHeight, double wind);

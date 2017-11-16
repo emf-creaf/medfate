@@ -129,5 +129,13 @@ NumericVector windExtinctionCohort(NumericVector H, NumericVector CR, double win
 }
 
 
-
+double aerodynamicResistance(double canopyHeight, double wind) {
+  canopyHeight = canopyHeight/100.0;
+  double d= 2/3*canopyHeight;
+  double zom = 0.123*canopyHeight;
+  double zoh = 0.1*zom;
+  double zm = 2.0+canopyHeight;
+  double zh = zm;
+  return(log((zm-d)/zom)*log((zh-d)/zoh)/(pow(0.41,2.0)*wind));
+}
 

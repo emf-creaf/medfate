@@ -141,6 +141,17 @@ x2 = forest2swbInput(exampleforest,examplesoil2, SpParamsMED, control)
 #Call simulation function (5 days)
 S2<-swb(x2, examplesoil2, examplemeteo[100:105,], latitude = 41.82592, elevation = 100)
 
+
+#Simulate one day only
+examplesoil2 = soil(defaultSoilParams(2))
+x2 = forest2swbInput(exampleforest,examplesoil2, SpParamsMED, control)
+d = 1
+sd1<-swb.day(x2, examplesoil2, rownames(examplemeteo)[d], d , 
+             examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
+             examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
+             examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
+             latitude = 41.82592, elevation = 100, 
+             slope= 0, aspect = 0, rain = examplemeteo$Precipitation[d])
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

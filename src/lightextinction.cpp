@@ -206,7 +206,7 @@ double groundIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd, Numeri
  *  Diffuse light absorbed radiation per unit of leaf area, given diffuse light level at the top of the layer
  *  I_{da, ij}
  */
-NumericMatrix cohortDiffuseAbsorbedRadiation(double Id0, NumericVector Idf, NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kd, NumericVector alpha, double gamma) {
+NumericMatrix cohortDiffuseAbsorbedRadiation(double Id0, NumericVector Idf, NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kd, NumericVector alpha, NumericVector gamma) {
   int ncoh = alpha.size();
   int nlayer = Idf.size();
   NumericMatrix Ida(nlayer, ncoh);
@@ -214,7 +214,7 @@ NumericMatrix cohortDiffuseAbsorbedRadiation(double Id0, NumericVector Idf, Nume
     double s = 0.0;
     for(int j = 0;j<ncoh;j++) s += kd[j]*pow(alpha[j],0.5)*(LAIme(i,j)/2.0+LAImd(i,j)/2.0);
     for(int j = 0;j<ncoh;j++) {
-      Ida(i,j) = Id0*(1.0-gamma)*Idf[i]*pow(alpha[j],0.5)*kd[j]*exp(-1.0*s);
+      Ida(i,j) = Id0*(1.0-gamma[j])*Idf[i]*pow(alpha[j],0.5)*kd[j]*exp(-1.0*s);
     }
   }
   return(Ida);
@@ -225,7 +225,7 @@ NumericMatrix cohortDiffuseAbsorbedRadiation(double Id0, NumericVector Idf, Nume
  *  Scattered light absorbed radiation per unit of leaf area, given direct light level at the top of the layer
  *  I_{bsa, ij}
  */
-NumericMatrix cohortScatteredAbsorbedRadiation(double Ib0, NumericVector Ibf, NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kb, NumericVector alpha, double gamma) {
+NumericMatrix cohortScatteredAbsorbedRadiation(double Ib0, NumericVector Ibf, NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kb, NumericVector alpha, NumericVector gamma) {
   int ncoh = alpha.size();
   int nlayer = Ibf.size();
   NumericMatrix Ibsa(nlayer, ncoh);
@@ -236,7 +236,7 @@ NumericMatrix cohortScatteredAbsorbedRadiation(double Ib0, NumericVector Ibf, Nu
       s2 += kb[j]*(LAIme(i,j)/2.0+LAImd(i,j)/2.0);
     }
     for(int j = 0;j<ncoh;j++) {
-      Ibsa(i,j) = Ib0*(1.0-gamma)*Ibf[i]*kb[j]*(pow(alpha[j], 0.5)*exp(-1.0*s1) - (alpha[j]/(1.0-gamma))*exp(-1.0*s2));
+      Ibsa(i,j) = Ib0*(1.0-gamma[j])*Ibf[i]*kb[j]*(pow(alpha[j], 0.5)*exp(-1.0*s1) - (alpha[j]/(1.0-gamma[j]))*exp(-1.0*s2));
     }
   }
   return(Ibsa);
@@ -250,7 +250,7 @@ NumericMatrix cohortScatteredAbsorbedRadiation(double Ib0, NumericVector Ibf, Nu
 // [[Rcpp::export("light.cohortSunlitShadeAbsorbedRadiation")]]
 List cohortSunlitShadeAbsorbedRadiation(double Ib0, double Id0, NumericVector Ibf, NumericVector Idf, double beta,
                              NumericMatrix LAIme, NumericMatrix LAImd, 
-                             NumericVector kb,  NumericVector kd, NumericVector alpha, double gamma) {
+                             NumericVector kb,  NumericVector kd, NumericVector alpha, NumericVector gamma) {
   NumericMatrix Ida = cohortDiffuseAbsorbedRadiation(Id0, Idf, LAIme, LAImd, kd, alpha, gamma);
   NumericMatrix Ibsa = cohortScatteredAbsorbedRadiation(Ib0, Ibf, LAIme, LAImd, kb, alpha, gamma);
   int ncoh = alpha.size();
@@ -295,7 +295,8 @@ NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd, Nume
  * Calculates the amount of radiation absorved by each cohort
  */
 // [[Rcpp::export("light.instantaneousLightExtinctionAbsortion")]]
-List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kPAR,
+List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LAImd, 
+                                           NumericVector kPAR, NumericVector gammaSWR,
                                            DataFrame ddd, NumericVector LWR_diffuse, 
                                            int ntimesteps = 24, String canopyMode= "sunshade") {
 
@@ -310,9 +311,8 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
   
   //Light PAR/SWR coefficients
   double kb = 0.8;
-  double gammaPAR = 0.04;
-  double gammaSWR = 0.05;
-  double gammaLWR = 0.0;
+  NumericVector gammaPAR(numCohorts); //PAR albedo 
+  NumericVector gammaLWR(numCohorts, 0.03); //3% albedo of LWR
   NumericVector alphaPAR(numCohorts), alphaSWR(numCohorts), alphaLWR(numCohorts);
   NumericVector kSWR(numCohorts), kbvec(numCohorts), kLWR(numCohorts);
   for(int c=0;c<numCohorts;c++) {
@@ -322,6 +322,7 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
     kbvec[c] = kb;
     alphaLWR[c] = 1.0; //Longwave coefficients
     kLWR[c] = 1.0;
+    gammaPAR[c] = gammaSWR[c]*0.8; // (PAR albedo 80% of SWR albedo)
   }
   
   //Average light extinction fractions for direct and diffuse PAR/SWR light
@@ -416,8 +417,8 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
     }
     
     //Calculate soil absorved radiation
-    abs_SWR_soil[n] = 0.85*((SWR_direct[n]*1000.0)+(SWR_diffuse[n]*1000.0) -abs_SWR_can[n]); //15% reflectance for SWR
-    abs_LWR_soil[n] = (LWR_diffuse[n]-abs_LWR_can[n]);
+    abs_SWR_soil[n] = 0.80*((SWR_direct[n]*1000.0)+(SWR_diffuse[n]*1000.0) -abs_SWR_can[n]); //20% reflectance for SWR
+    abs_LWR_soil[n] = 0.97*(LWR_diffuse[n]-abs_LWR_can[n]); //3% soil reflectance for LWR
     
     // Rcout<<n<<" PAR : "<<(PAR_direct[n]*1000.0)+(PAR_diffuse[n]*1000.0)<<" SWR: "<<(SWR_direct[n]*1000.0)+(SWR_diffuse[n]*1000.0) <<" can: "<< abs_SWR_can[n]<< " soil: "<< abs_SWR_soil[n]<<" LWR: "<< (LWR_diffuse[n]) <<" can: "<< abs_LWR_can[n]<< " soil: "<< abs_LWR_soil[n]<<"\n";
   }

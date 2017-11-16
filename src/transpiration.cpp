@@ -214,6 +214,7 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
   
   
   DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
+  NumericVector albedo = Rcpp::as<Rcpp::NumericVector>(paramsBase["albedo"]);
   NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsBase["k"]);
   
   //Soil input
@@ -327,7 +328,8 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
   Tcan[0] = canopyParams["Temp"]; //Take canopy temperature from previous day
   
   //Light extinction and absortion by time steps
-  List lightExtinctionAbsortion = instantaneousLightExtinctionAbsortion(LAIme, LAImd, kPAR,
+  List lightExtinctionAbsortion = instantaneousLightExtinctionAbsortion(LAIme, LAImd, 
+                                                                        kPAR, albedo,
                                                                         ddd, lwdr,
                                                                         ntimesteps,  canopyMode);
   List abs_PAR_SL_list = lightExtinctionAbsortion["PAR_SL"];

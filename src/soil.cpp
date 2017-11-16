@@ -193,12 +193,13 @@ NumericVector midpoints(NumericVector dVec) {
 NumericVector soilTemperatureGradient(NumericVector dVec, NumericVector Temp) {
   NumericVector midZ = midpoints(dVec);
   int nlayers = Temp.length();
-  NumericVector gradTemp(nlayers-1,0.0);
+  NumericVector gradTemp(nlayers,0.0);
   if(nlayers>1) {
     for(int l = 0;l<nlayers-1; l++) {
       gradTemp[l] = (Temp[l+1]-Temp[l])/(0.001*(midZ[l+1]-midZ[l]));
     }
   }
+  gradTemp[nlayers-1] = (15.5-Temp[nlayers-1])/(0.001*(5000.0-midZ[nlayers-1])); //15.5º at 5 m
   return(gradTemp);
 }
 
@@ -217,13 +218,9 @@ NumericVector soilTemperatureChange(NumericVector dVec, NumericVector Temp,
   double Gi;
   NumericVector tempch(nlayers);
   for(int l = 0;l<nlayers; l++) {
-    if(l<(nlayers-1)) {
-      Gi = lambda[l]*gradTemp[l]; //Gi < 0 when net flux is downward
-      tempch[l] = (Gi-Gup)/(Ca[l]*0.001*dVec[l]);
-      Gup = Gi;
-    } else {
-      tempch[l] = (-Gup)/(Ca[l]*0.001*dVec[l]);
-    }
+    Gi = lambda[l]*gradTemp[l]; //Gi < 0 when net flux is downward
+    tempch[l] = (Gi-Gup)/(Ca[l]*0.001*dVec[l]);
+    Gup = Gi;
   }
   return(tempch);
 }

@@ -19,10 +19,11 @@ double groundIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd, Numeri
 
 List cohortSunlitShadeAbsorbedRadiation(double Ib0, double Id0, NumericVector Ibf, NumericVector Idf, double beta,
                                    NumericMatrix LAIme, NumericMatrix LAImd, 
-                                   NumericVector kb,  NumericVector kd, NumericVector alpha, double gamma);
+                                   NumericVector kb,  NumericVector kd, NumericVector alpha, NumericVector gamma);
 
 NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kb);
 
-List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kPAR,
+List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LAImd, 
+                                           NumericVector kPAR, NumericVector albedo,
                                            DataFrame ddd, NumericVector LWR_diffuse,
                                            int ntimesteps = 24, String canopyMode= "sunshade");
