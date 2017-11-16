@@ -199,7 +199,7 @@ NumericVector soilTemperatureGradient(NumericVector dVec, NumericVector Temp) {
       gradTemp[l] = (Temp[l+1]-Temp[l])/(0.001*(midZ[l+1]-midZ[l]));
     }
   }
-  gradTemp[nlayers-1] = (15.5-Temp[nlayers-1])/(0.001*(5000.0-midZ[nlayers-1])); //15.5º at 5 m
+  gradTemp[nlayers-1] = (15.5-Temp[nlayers-1])/(0.001*(10000.0-midZ[nlayers-1])); //15.5º at 10 m
   return(gradTemp);
 }
 
