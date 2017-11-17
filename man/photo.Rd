@@ -27,16 +27,16 @@ photo.rubiscoLimitedPhotosynthesis(Ci, GT, Km, Vmax)
 photo.photosynthesis(Q, Catm, Gc, leaf_temp, Vmax298, Jmax298, verbose = FALSE)
 photo.leafPhotosynthesisFunction(supplyFunction, Catm, Patm, Tair, vpa, u, 
                              absRad, Q, Vmax298, Jmax298, Gwmin, Gwmax,
-                             refLeafArea = 1, verbose = FALSE)
+                             leafWidth = 1.0, refLeafArea = 1, verbose = FALSE)
 photo.sunshadePhotosynthesisFunction(supplyFunction, Catm, Patm, Tair, vpa, 
                                      SLarea, SHarea, u, 
                                      absRadSL, absRadSH, QSL, QSH, 
                                      Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, 
-                                     Gwmin, Gwmax, verbose = FALSE)
+                                     Gwmin, Gwmax, leafWidth = 1.0, verbose = FALSE)
 photo.multilayerPhotosynthesisFunction(supplyFunction, Catm, Patm, Tair, vpa, 
                                       SLarea, SHarea, u, 
                                       absRadSL, absRadSH, QSL, QSH, 
-                                      Vmax298, Jmax298, Gwmin, Gwmax, verbose = FALSE)
+                                      Vmax298, Jmax298, Gwmin, Gwmax, leafWidth = 1.0, verbose = FALSE)
 }
 
 %- maybe also 'usage' for other objects documented here.
@@ -59,6 +59,7 @@ photo.multilayerPhotosynthesisFunction(supplyFunction, Catm, Patm, Tair, vpa,
   \item{vpa}{Vapour pressure deficit (in kPa).}
   \item{u}{Wind speed above the leaf boundary (in m/s) (for each canopy layer in the case of \code{photo.multilayerPhotosynthesisFunction}).}
   \item{absRad}{Absorbed long- and short-wave radiation (in W*m^-2).}
+  \item{leafWidth}{Leaf width (in cm).}
   \item{refLeafArea}{Leaf reference area.}
   \item{Gwmin, Gwmax}{Minimum and maximum leaf water conductance (i.e. cuticular and maximum stomatal conductance) (mol * s-1 * m-2).}
   \item{verbose}{Boolean flag to indicate console output.}

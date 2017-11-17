@@ -315,6 +315,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
 
   //Transpiration parameters
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
+  NumericVector leafWidth = Rcpp::as<Rcpp::NumericVector>(paramsTransp["LeafWidth"]);
   NumericVector Gwmin = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Gwmin"]);
   NumericVector Gwmax = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Gwmax"]);
   NumericVector VCstem_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_kmax"]);
@@ -611,7 +612,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
                                                    zWind, absRadSL, absRadSH, 
                                                    QSL, QSH,
                                                    Vmax298layer,Jmax298layer,
-                                                   Gwmin[c], Gwmax[c]);
+                                                   Gwmin[c], Gwmax[c], leafWidth[c]);
         } else if(canopyMode=="sunshade"){
           //Retrieve Light extinction
           NumericVector absPAR_SL = abs_PAR_SL_list[n];
@@ -629,7 +630,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
                                                  irradianceToPhotonFlux(absPAR_SL[c]), irradianceToPhotonFlux(absPAR_SH[c]),
                                                  Vmax298SL, Vmax298SH,
                                                  Jmax298SL, Jmax298SH,
-                                                 Gwmin[c], Gwmax[c]);
+                                                 Gwmin[c], Gwmax[c], leafWidth[c]);
         }
         NumericVector An = photo["NetPhotosynthesis"];
         

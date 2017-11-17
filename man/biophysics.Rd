@@ -12,7 +12,7 @@ Physical and biophysical utility functions
 Set of functions used in the calculation of biophysical variables. 
 }
 \usage{
-biophysics.leafTemperature(absRad, airTemperature, u, E, leafWidth = 0.01)
+biophysics.leafTemperature(absRad, airTemperature, u, E, leafWidth = 1.0)
 biophysics.radiationDiurnalPattern(t, daylength)
 biophysics.temperatureDiurnalPattern(t, tmin, tmax, daylength)
 }
@@ -24,7 +24,7 @@ biophysics.temperatureDiurnalPattern(t, tmin, tmax, daylength)
   \item{tmin, tmax}{Minimum and maximum daily temperature (ºC).}
   \item{absRad}{Absorbed long- and short-wave radiation (in W·m-2).}
   \item{E}{Transpiration flow (in mmol H20·m-2·s-1) per one sided leaf area basis.}
-  \item{leafWidth}{Leaf width (in m).}
+  \item{leafWidth}{Leaf width (in cm).}
   \item{t}{Time of the day (in seconds).}
   \item{daylength}{Day length (in seconds).}
 }

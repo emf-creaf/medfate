@@ -60,14 +60,14 @@ double temperatureDiurnalPattern(double t, double tmin, double tmax, double dayl
  *  airTemperature - Air temperature (in ºC)
  *  absRad - Absorbed long- and short-wave radiation (in W*m^-2)
  *  E - Transpiration flow (in mmol H20 * m^-2 * s^-1) one sided leaf area basis
- *  leafWidth - Leaf width (in m)
+ *  leafWidth - Leaf width (here in cm)
  *  u - wind speed above the leaf boundary layer (in m/s)
  */
 // [[Rcpp::export("biophysics.leafTemperature")]]
-double leafTemperature(double absRad, double airTemperature, double u, double E,  double leafWidth = 0.01) {
+double leafTemperature(double absRad, double airTemperature, double u, double E,  double leafWidth = 1.0) {
   double lambda = meteoland::utils_latentHeatVaporisationMol(airTemperature);
   u = std::max(u, 0.1);//Force minimum wind speed to avoid excessive heating
-  double gHa = 0.189*pow(u/(leafWidth*0.72), 0.5);
+  double gHa = 0.189*pow(u/(leafWidth*0.0072), 0.5);
   double gr = 4.0*0.97*SIGMA_W*pow(273.16+airTemperature,3.0)/Cp_Jmol;
   double deltaTemp = (absRad- (0.97*SIGMA_W*pow(273.16+airTemperature,4.0)) - (lambda*(E/2000.0)))/(Cp_Jmol*(gr+gHa));
   return(airTemperature+deltaTemp);

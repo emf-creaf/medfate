@@ -107,6 +107,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
                          _["paramsTransp"] = paramsTranspdf);
     
   } else if(transpirationMode =="Complex"){
+    NumericVector leafwidthSP = SpParams["LeafWidth"];
     NumericVector Al2AsSP = SpParams["Al2As"];
     NumericVector GwminSP = SpParams["Gwmin"];
     NumericVector GwmaxSP = SpParams["Gwmax"];
@@ -118,7 +119,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
     NumericVector Vmax298SP = SpParams["Vmax298"];
     NumericVector Gwmax(numCohorts), Gwmin(numCohorts);
     NumericVector xylem_kmax(numCohorts), Al2As(numCohorts);
-    NumericVector VCstem_kmax(numCohorts);
+    NumericVector VCstem_kmax(numCohorts),leafwidth(numCohorts);
     NumericVector pRootDiscSP = SpParams["pRootDisc"];
     NumericVector pRootDisc(numCohorts);
     NumericVector VCstem_c(numCohorts), VCstem_d(numCohorts);
@@ -133,6 +134,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
     NumericVector Vc;
     for(int c=0;c<numCohorts;c++){
       Vc = V(c,_);
+      leafwidth[c] = leafwidthSP[SP[c]];
       xylem_kmax[c] = xylem_kmaxSP[SP[c]];
       Al2As[c] = Al2AsSP[SP[c]];
       //Calculate stem maximum conductance (in mmol·m-2·s-1·MPa-1)
@@ -160,7 +162,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
     VCroot_kmax.attr("dimnames") = List::create(above.attr("row.names"), slnames);
     
     DataFrame paramsTranspdf = DataFrame::create(
-      _["Gwmin"]=Gwmin, _["Gwmax"]=Gwmax, _["Vmax298"]=Vmax298,
+      _["Gwmin"]=Gwmin, _["Gwmax"]=Gwmax,_["LeafWidth"] = leafwidth, _["Vmax298"]=Vmax298,
       _["Jmax298"]=Jmax298,_["VCroot_c"]=VCroot_c,_["VCroot_d"]=VCroot_d,_["xylem_kmax"] = xylem_kmax,
       _["VCstem_kmax"]=VCstem_kmax,_["VCstem_c"]=VCstem_c,_["VCstem_d"]=VCstem_d, _["pRootDisc"] = pRootDisc);
     paramsTranspdf.attr("row.names") = above.attr("row.names");
@@ -268,7 +270,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   NumericVector SgddSP = SpParams["Sgdd"];
   int numCohorts = SP.size();
   NumericVector albedo(numCohorts), k(numCohorts), g(numCohorts), Sgdd(numCohorts);
-  NumericVector SLA(numCohorts), Al2As(numCohorts), WoodC(numCohorts), WoodDens(numCohorts);
+  NumericVector SLA(numCohorts), Al2As(numCohorts),  WoodC(numCohorts), WoodDens(numCohorts);
   NumericVector Cstoragepmax(numCohorts), RGRmax(numCohorts);
   
   NumericVector HmaxSP = SpParams["Hmax"];
@@ -431,6 +433,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                          _["paramsAllometries"] = paramsAllometriesdf);
     
   } else if(transpirationMode =="Complex"){
+    NumericVector leafwidthSP = SpParams["LeafWidth"];
     NumericVector GwminSP = SpParams["Gwmin"];
     NumericVector GwmaxSP = SpParams["Gwmax"];
     NumericVector xylem_kmaxSP = SpParams["xylem_kmax"];
@@ -441,7 +444,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     NumericVector Vmax298SP = SpParams["Vmax298"];
     NumericVector Gwmin(numCohorts), Gwmax(numCohorts);
     NumericVector xylem_kmax(numCohorts), Al2As(numCohorts);
-    NumericVector VCstem_kmax(numCohorts);
+    NumericVector VCstem_kmax(numCohorts),leafwidth(numCohorts);
     NumericVector VCstem_c(numCohorts), VCstem_d(numCohorts);
     NumericVector VCroot_c(numCohorts), VCroot_d(numCohorts);
     NumericVector Vmax298(numCohorts), Jmax298(numCohorts);
@@ -457,6 +460,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     for(int c=0;c<numCohorts;c++){
       Vc = V(c,_);
       xylem_kmax[c] = xylem_kmaxSP[SP[c]];
+      leafwidth[c]=leafwidthSP[SP[c]];
       Al2As[c] = Al2AsSP[SP[c]];
       //Calculate stem maximum conductance (in mmol·m-2·s-1·MPa-1)
       VCstem_kmax[c]=maximumStemHydraulicConductance(xylem_kmax[c], Al2As[c],H[c], control["taper"]); 
@@ -483,7 +487,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     VCroot_kmax.attr("dimnames") = List::create(above.attr("row.names"), slnames);
     
     DataFrame paramsTranspdf = DataFrame::create(
-      _["Gwmin"]=Gwmin, _["Gwmax"]=Gwmax, _["Vmax298"]=Vmax298,
+      _["Gwmin"]=Gwmin, _["Gwmax"]=Gwmax, _["LeafWidth"] = leafwidth, _["Vmax298"]=Vmax298,
       _["Jmax298"]=Jmax298,_["VCroot_c"]=VCroot_c,_["VCroot_d"]=VCroot_d,_["xylem_kmax"] = xylem_kmax,
       _["VCstem_kmax"]=VCstem_kmax,_["VCstem_c"]=VCstem_c,_["VCstem_d"]=VCstem_d, _["pRootDisc"] = pRootDisc);
     paramsTranspdf.attr("row.names") = above.attr("row.names");

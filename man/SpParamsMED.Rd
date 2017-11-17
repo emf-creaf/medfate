@@ -56,6 +56,7 @@ A data set of parameter values for Mediterranean species, resulting from bibliog
     \item{\code{xylem_kmax}}{Sapwood-specific hydraulic conductivity of stem xylem (in kg H2O·s-1·m-2).}
     \item{\code{VCstem_c}, \code{VCstem_d}}{Parameters of the stem xylem vulnerability curve (\code{VCstem_d} in MPa).}
     \item{\code{VCroot_c}, \code{VCroot_d}}{Parameters of the root xylem vulnerability curve (\code{VCroot_d} in MPa).}
+    \item{\code{LeafWidth}}{Leaf width (in cm).}
     \item{\code{Vmax298}}{Maximum Rubisco carboxilation rate at 25ºC (in micromol CO2·s-1·m-2).}
   }
 }

@@ -253,6 +253,7 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
   
   //Transpiration params
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
+  NumericVector leafWidth = paramsTransp["LeafWidth"];
   NumericVector Vmax298 = paramsTransp["Vmax298"];
   NumericVector Jmax298 = paramsTransp["Jmax298"];
   NumericVector VCstem_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_kmax"]);
@@ -454,7 +455,7 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
                                                  zWind, absRadSL, absRadSH, 
                                                  QSL, QSH,
                                                  Vmax298layer,Jmax298layer,
-                                                 Gwmin[c], Gwmax[c]);
+                                                 Gwmin[c], Gwmax[c], leafWidth[c]);
       } else if(canopyMode=="sunshade"){
         //Retrieve Light extinction
         NumericVector absPAR_SL = abs_PAR_SL_list[n];
@@ -472,7 +473,7 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
                                                irradianceToPhotonFlux(absPAR_SL[c]), irradianceToPhotonFlux(absPAR_SH[c]),
                                                Vmax298SL, Vmax298SH,
                                                Jmax298SL, Jmax298SH,
-                                               Gwmin[c], Gwmax[c]);
+                                               Gwmin[c], Gwmax[c], leafWidth[c]);
         // Rcout<<n<<", "<< c <<": "<<lwcan<< " "<<absSWR_SL[c]<<" "<< absLWR_SL[c] << " "<<SLarea*0.97*lwcan<< " "<<absSWR_SH[c]<<" "<< absLWR_SH[c] << " "<<SHarea*0.97*lwcan<<"\n";
       }
 

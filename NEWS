@@ -4,6 +4,9 @@
 
 __Version history__
 
+_Version 0.4.3, November 2017.
+1. Added new parameter 'LeafWidth'
+
 _Version 0.4.2, November 2017.
 
 1. Design changes for radiation balance (soil/canopy/atmosphere)
