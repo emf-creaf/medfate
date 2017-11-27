@@ -177,6 +177,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
                                       _["hydraulicCostFunction"] = control["hydraulicCostFunction"],
                                       _["cavitationRefill"] = control["cavitationRefill"],
                                       _["taper"] = control["taper"],
+                                      _["thermalCapacityLAI"] = control["thermalCapacityLAI"],
                                       _["ndailysteps"] = control["ndailysteps"],
                                       _["numericParams"] = clone(numericParams));
     List paramsCanopy = List::create(_["gdd"] = 0,_["Temp"] = NA_REAL);
@@ -505,6 +506,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                                       _["numericParams"] = clone(numericParams),
                                       _["ndailysteps"] = control["ndailysteps"], 
                                       _["cavitationRefill"] = control["cavitationRefill"],
+                                      _["thermalCapacityLAI"] = control["thermalCapacityLAI"],
                                       _["storagePool"] = storagePool);
     List paramsCanopy = List::create(_["gdd"] = 0,_["Temp"] = NA_REAL);
     input = List::create(_["control"] =paramsControl,

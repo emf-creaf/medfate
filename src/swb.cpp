@@ -272,6 +272,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   int ntimesteps = control["ndailysteps"];
   int hydraulicCostFunction = control["hydraulicCostFunction"];
   double verticalLayerSize = control["verticalLayerSize"];
+  double thermalCapacityLAI = control["thermalCapacityLAI"];
     
   //Soil input
   NumericVector W = soil["W"];
@@ -398,7 +399,8 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
     if(canopyHeight<H[c]) canopyHeight = H[c];
   }
   int nz = ceil(canopyHeight/verticalLayerSize); //Number of vertical layers
-
+  double canopyThermalCapacity = ((3.0*LAIcellmax+LAIcell)/4.0)*thermalCapacityLAI; //Avoids zero capacity for winter deciduous
+  
   NumericVector z(nz+1,0.0);
   NumericVector zmid(nz);
   for(int i=1;i<=nz;i++) {
@@ -752,7 +754,6 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
       
     //Canopy temperature changes
     Ebal[n] = SWRLWRcanin[n] - LWRcanout[n] - LEcan_heat[n] - Hcan_heat[n] - G1_heat[n];
-    double canopyThermalCapacity = ((3.0*LAIcellmax+LAIcell)/4.0)*500000.0; //Avoids zero capacity for winter deciduous
     // double canopyThermalCapacity = LAIcell*1000000.0;
     double Tcannext = Tcan[n]+ (tstep*Ebal[n]/canopyThermalCapacity);
     //Apply changes

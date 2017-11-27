@@ -4,6 +4,9 @@
 
 __Version history__
 
+_Version 0.4.5, November 2017.
+1. New control parameter: Canopy thermal capacity per LAI
+
 _Version 0.4.4, November 2017.
 1. Minimum windspeed (1.0 m/s)
 2. Progressive leaf fall

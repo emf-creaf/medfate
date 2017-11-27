@@ -13,6 +13,7 @@ defaultControl<-function() {
     fracTotalTreeResistance = 0.625,
     averageFracRhizosphereResistance = 0.05,
     ndailysteps = 24,
+    thermalCapacityLAI = 600000,
     # growth
     storagePool = "none"
     
