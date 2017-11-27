@@ -1,11 +1,12 @@
-plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL,...) {
+plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, add=FALSE,...) {
   dates = as.Date(rownames(x$DailyBalance))
   DailyBalance = x$DailyBalance
   SoilWaterBalance = x$SoilWaterBalance
   nlayers = x$NumSoilLayers
   TYPES = c("PET_Precipitation","PET_NetPrec","ET","Psi","Theta","Vol", "LAI",
             "PlantStress", "PlantPsi","PlantPhotosynthesis","PlantTranspiration",
-            "AirTemperature","SoilTemperature", "CanopyTemperature","Export")
+            "AirTemperature","SoilTemperature", "CanopyTemperature","Export",
+            "CanopyEnergyBalance", "SoilEnergyBalance")
   type = match.arg(type,TYPES)  
   numDays = length(dates)
   numYears = round(numDays/365)
@@ -120,27 +121,39 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
   } else if(type=="AirTemperature") {
     if(is.null(ylab)) ylab = "Above-canopy temperature (Celsius)"
     if(is.null(ylim)) ylim = c(min(x$EnergyBalance$Tatm_min),max(x$EnergyBalance$Tatm_max))
-    plot(dates, x$EnergyBalance$Tatm_mean, ylim = ylim, lwd=1, type="l", xlim=xlim,
-         ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
-    lines(dates, x$EnergyBalance$Tatm_min, col="blue")
-    lines(dates, x$EnergyBalance$Tatm_max, col="red")
-    plotAxes()   
+    if(!add) {
+      plot(dates, x$EnergyBalance$Tatm_mean, ylim = ylim, type="l", xlim=xlim,
+         ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE, ...)
+      plotAxes()   
+    } else {
+      lines(dates, x$EnergyBalance$Tatm_min, col="black", ...)
+    }
+    lines(dates, x$EnergyBalance$Tatm_min, col="blue", ...)
+    lines(dates, x$EnergyBalance$Tatm_max, col="red", ...)
   } else if(type=="CanopyTemperature") {
     if(is.null(ylab)) ylab = "Canopy temperature (Celsius)"
     if(is.null(ylim)) ylim = c(min(x$EnergyBalance$Tcan_min),max(x$EnergyBalance$Tcan_max))
-    plot(dates, x$EnergyBalance$Tcan_mean, ylim = ylim, lwd=1, type="l", xlim=xlim,
-         ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
-    lines(dates, x$EnergyBalance$Tcan_min, col="blue")
-    lines(dates, x$EnergyBalance$Tcan_max, col="red")
-    plotAxes()   
+    if(!add) {
+      plot(dates, x$EnergyBalance$Tcan_mean, ylim = ylim, type="l", xlim=xlim,
+         ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE, ...)
+      plotAxes()   
+    } else {
+      lines(dates, x$EnergyBalance$Tcan_mean, col="black", ...)
+    }
+    lines(dates, x$EnergyBalance$Tcan_min, col="blue", ...)
+    lines(dates, x$EnergyBalance$Tcan_max, col="red", ...)
   } else if(type=="SoilTemperature") {
     if(is.null(ylab)) ylab = "Soil temperature (Celsius)"
     if(is.null(ylim)) ylim = c(min(x$EnergyBalance$Tsoil_min),max(x$EnergyBalance$Tsoil_max))
-    plot(dates, x$EnergyBalance$Tsoil_mean, ylim = ylim, lwd=1, type="l", xlim=xlim,
-            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
-    lines(dates, x$EnergyBalance$Tsoil_min, col="blue")
-    lines(dates, x$EnergyBalance$Tsoil_max, col="red")
-    plotAxes()   
+    if(!add) {
+      plot(dates, x$EnergyBalance$Tsoil_mean, ylim = ylim, type="l", xlim=xlim,
+            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE, ...)
+      plotAxes()   
+    } else {
+      lines(dates, x$EnergyBalance$Tsoil_mean, col="black", ...)
+    }
+    lines(dates, x$EnergyBalance$Tsoil_min, col="blue", ...)
+    lines(dates, x$EnergyBalance$Tsoil_max, col="red", ...)
   } else if(type=="Export") {
     if(is.null(ylab)) ylab = "mm water"    
     mnp = max(DailyBalance$DeepDrainage+DailyBalance$Runoff)    
@@ -153,5 +166,38 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
     plotAxes()
     legend("topright", bty="n", col=c("black","blue","red"),lty=c(1,1,1), lwd=c(1.5,1,1),
            legend=c("DD+R","Deep drainage (DD)","Runoff (R)"))        
+  } else if(type=="CanopyEnergyBalance") {
+    if(is.null(ylab)) ylab = "MJ/m2"    
+    mxin = max(c(x$EnergyBalance$Rcanin,-x$EnergyBalance$G,-x$EnergyBalance$LEcan,-x$EnergyBalance$H))    
+    mxout = max(c(x$EnergyBalance$Rcanout,x$EnergyBalance$G,x$EnergyBalance$LEcan,x$EnergyBalance$H))    
+    if(is.null(ylim)) ylim = c(-mxout,mxin)
+    plot(dates, x$EnergyBalance$Rcanin, ylim=ylim, type="n", 
+         ylab=ylab, xlab=xlab, xlim=xlim,
+         frame=FALSE, axes=FALSE,...)
+    plotAxes()
+    abline(h=0, col="black", lwd=1.5)
+    lines(dates, x$EnergyBalance$Ebalcan, col="black",...)
+    lines(dates, x$EnergyBalance$Rcanin, col="red",...)
+    lines(dates, -x$EnergyBalance$Rcanout, col="blue",...)
+    lines(dates, -x$EnergyBalance$G, col="orange",...)
+    lines(dates, -x$EnergyBalance$LEcan, col="green",...)
+    lines(dates, -x$EnergyBalance$H, col="gray",...)
+    legend("topright", bty="n", col=c("red","blue","orange", "green", "gray"), lty=1,
+           legend=c("Radiation IN","Radiation OUT","Soil exchange (G)", "Latent heat (L)","Convective heat (H)"),...)        
+  } else if(type=="SoilEnergyBalance") {
+    if(is.null(ylab)) ylab = "MJ/m2"    
+    mxin = max(x$EnergyBalance$Rsoilin)    
+    mxout = max(x$EnergyBalance$Rsoilout)    
+    if(is.null(ylim)) ylim = c(-mxout,mxin)
+    plot(dates, x$EnergyBalance$Ebalsoil, ylim=ylim, type="n", 
+         ylab=ylab, xlab=xlab, xlim=xlim,
+         frame=FALSE, axes=FALSE,...)
+    plotAxes()
+    abline(h=0, col="black", lwd=1.5)
+    lines(dates, x$EnergyBalance$Ebalsoil, col="black",...)
+    lines(dates, x$EnergyBalance$Rsoilin, col="red",...)
+    lines(dates, -x$EnergyBalance$Rsoilout, col="blue",...)
+    legend("topright", bty="n", col=c("black","red","blue"), lty=1,
+           legend=c("Balance","Energy IN","Energy OUT"),...)        
   }
 }

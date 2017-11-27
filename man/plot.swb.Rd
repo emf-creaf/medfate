@@ -31,6 +31,9 @@ Function \code{plot} plots the results of the soil water balance model (see \cod
     \item{\code{"Vol"}:}{ Soil water volumetric content.}
     \item{\code{"PlantStress"}:}{ Plant cohort average daily drought stress.}
     \item{\code{"PlantPsi"}:}{ Plant cohort water potential.}
+    \item{\code{"AirTemperature"}:}{ Minimum/maximum/mean daily temperatures above canopy.}
+    \item{\code{"CanopyTemperature"}:}{ Minimum/maximum/mean daily temperatures inside canopy.}
+    \item{\code{"SoilTemperature"}:}{ Minimum/maximum/mean daily temperatures inside the first soil layer.}
    }
   }
   \item{yearAxis}{A boolean to indicate whether the units of the x-axis are years (by default they are dates).}
