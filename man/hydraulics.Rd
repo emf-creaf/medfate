@@ -20,6 +20,7 @@
 \alias{hydraulics.supplyFunctionTwoElements}
 \alias{hydraulics.supplyFunctionNetwork}
 \alias{hydraulics.supplyFunctionPlot}
+\alias{hydraulics.heightFactor}
 \alias{hydraulics.taperFactor}
 \alias{hydraulics.vanGenuchtenConductance}
 \alias{hydraulics.xylemConductance}
@@ -74,6 +75,7 @@ hydraulics.supplyFunctionNetwork(psiSoil,
                           minFlow = 0, maxNsteps = 400, psiStep = -0.001, psiMax = -10.0, 
                           ntrial = 10, psiTol = 0.0001, ETol = 1e-04)
 hydraulics.supplyFunctionPlot(soil, x, type = "E")   
+hydraulics.heightFactor(height, taper = TRUE)
 hydraulics.taperFactor(height)
 hydraulics.psiCrit(c, d)
 hydraulics.regulatedPsiXylem(E, psiUpstream, kxylemmax, c, d, psiStep = -0.01)
@@ -164,6 +166,7 @@ Values returned for each function are:
 \item{\code{hydraulics.vanGenuchtenConductance}: Rhizosphere conductance corresponding to an input water potential (soil vulnerability curve).}
 \item{\code{hydraulics.xylemConductance}: Xylem conductance (flow rate per pressure drop) corresponding to an input water potential (plant vulnerability curve).}
 \item{\code{hydraulics.xylemPsi}: Xylem water potential (in MPa) corresponding to an input xylem conductance (flow rate per pressure drop).}
+\item{\code{hydraulics.heightFactor}: Height factor to scale xylem hydraulic conductivity to stem hydraulic conductance as a function of height, according to Christoffersen et al. (2016).}
 \item{\code{hydraulics.taperFunction}: Taper factor according to Savage et al. (2010).}
 }
 }
@@ -192,4 +195,11 @@ kstem = unlist(lapply(psiVec, hydraulics.xylemConductance, kstemmax, stemc, stem
 plot(-psiVec, kstem, type="l",ylab="Xylem conductance (mmol·m-2·s-1·MPa-1)", 
 xlab="Canopy pressure (-MPa)", lwd=1.5,ylim=c(0,kstemmax))
 
+#Plot height factor for scaling of hydraulic conductivity
+hVec = seq(50, 5000, by =10)
+fhn = unlist(lapply(hVec, FUN=hydraulics.heightFactor, taper = F))
+fht = unlist(lapply(hVec, FUN=hydraulics.heightFactor, taper = T))
+plot(hVec, fhn, type="l", log="x", xlab="Height (cm)", ylab="Scaling factor", ylim=c(0,2))
+lines(hVec, fht, lty=2)
+legend("topright", legend=c("No tapper (1/height)", "Tapper"), bty="n", lty=c(1,2))
 }

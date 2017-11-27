@@ -900,6 +900,19 @@ double taperFactor(double height) {
   double K_13 = a_p13*pow(pow(n_ext, N/2.0),b_p13);
   return(K_13/K_0);
 }
+// [[Rcpp::export("hydraulics.heightFactor")]]
+double heightFactor(double height, bool taper = true) {
+  double hf = 100.0/height;
+  if(taper) {
+    double dh0  = pow(10,1.50 +  0.46*log10(height/100.0));//Olson, M.E., Anfodillo, T., Rosell, J.A., Petit, G., Crivellaro, A., Isnard, S., León-Gómez, C., Alvarado-Cárdenas, L.O., & Castorena, M. 2014. Universal hydraulics of the flowering plants: Vessel diameter scales with stem length across angiosperm lineages, habits and climates. Ecology Letters 17: 988–997.
+    double dhn  = pow(10,1.257 +  0.24*log10(height/100.0));//Olson, M.E., Anfodillo, T., Rosell, J.A., Petit, G., Crivellaro, A., Isnard, S., León-Gómez, C., Alvarado-Cárdenas, L.O., & Castorena, M. 2014. Universal hydraulics of the flowering plants: Vessel diameter scales with stem length across angiosperm lineages, habits and climates. Ecology Letters 17: 988–997.
+    double df = pow(dhn/dh0,2.0);
+    double tf = taperFactor(height);
+    return(hf*df*tf); 
+  } 
+  return(hf);
+}
+
 
 /**
  * Calculate maximum leaf-specific stem hydraulic conductance (in mmol·m-2·s-1·MPa-1)
@@ -910,13 +923,8 @@ double taperFactor(double height) {
  * taper - boolean to apply taper using Savage (2010) model
  */
 // [[Rcpp::export("hydraulics.maximumStemHydraulicConductance")]]
-double maximumStemHydraulicConductance(double xylemConductivity, double Al2As, double height, bool taper = false){
-  double kmax = NA_REAL;
-  if(taper) {
-    double petioleConductivity = xylemConductivity*0.8264463; // 0.8264463 = (10/11)^2 Christoffersen, B. O., M. Gloor, S. Fauset, N. M. Fyllas, D. R. Galbraith, T. R. Baker, L. Rowland, R. A. Fisher, O. J. Binks, S. A. Sevanto, C. Xu, S. Jansen, B. Choat, M. Mencuccini, N. G. McDowell, and P. Meir. 2016. Linking hydraulic traits to tropical forest function in a size-structured and trait-driven model (TFS v.1-Hydro). Geoscientific Model Development Discussions 0:1–60.
-    kmax = 1000.0*(petioleConductivity/0.018)/((height/100.0)*Al2As)*taperFactor(height);
-  } else {
-    kmax = 1000.0*(xylemConductivity/0.018)/((height/100.0)*Al2As);
-  }
+double maximumStemHydraulicConductance(double xylemConductivity, double Al2As, double height, bool taper = true){
+  // Christoffersen, B. O., M. Gloor, S. Fauset, N. M. Fyllas, D. R. Galbraith, T. R. Baker, L. Rowland, R. A. Fisher, O. J. Binks, S. A. Sevanto, C. Xu, S. Jansen, B. Choat, M. Mencuccini, N. G. McDowell, and P. Meir. 2016. Linking hydraulic traits to tropical forest function in a size-structured and trait-driven model (TFS v.1-Hydro). Geoscientific Model Development Discussions 0:1–60.
+  double kmax = (1000.0/0.018)*(xylemConductivity/Al2As)*heightFactor(height, taper);
   return(kmax); 
 }

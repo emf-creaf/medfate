@@ -7,6 +7,9 @@ __Version history__
 _Version 0.4.4, November 2017.
 1. Minimum windspeed (1.0 m/s)
 2. Progressive leaf fall
+3. Bug correction (swb.plot)
+4. Energy balance output
+5. Modified conductance scaling
 
 _Version 0.4.3, November 2017.
 1. Added new parameter 'LeafWidth'

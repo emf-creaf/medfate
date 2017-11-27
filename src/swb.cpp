@@ -385,7 +385,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   Tcan[0] = canopyParams["Temp"]; //Take canopy temperature from previous day
   Tsoil_mat(0,_) = Tsoil;
 
-  //Leaf phenology and the adjusted leaf area index
+  //Adjusted leaf area index
   NumericVector Phe(numCohorts);
   double LAIcell = 0.0, Cm = 0.0, canopyHeight = 0.0, LAIcellmax = 0.0;
   for(int c=0;c<numCohorts;c++) {
@@ -747,7 +747,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
       
     //Canopy temperature changes
     Ebal[n] = SWRLWRcanin[n]-LWRcanout[n] - LEcan_heat[n] - Hcan_heat[n] - G1_heat[n];
-    double canopyThermalCapacity = LAIcellmax*1000000.0;
+    double canopyThermalCapacity = ((LAIcellmax+LAIcell)/2.0)*1000000.0;
     double Tcannext = Tcan[n]+ (tstep*Ebal[n]/canopyThermalCapacity);
     //Apply changes
     if(n<(ntimesteps-1)) {
@@ -821,7 +821,8 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   DataFrame Tinst = DataFrame::create(_["SolarHour"] = solarHour, 
                                       _["Tatm"] = Tatm, _["Tcan"] = Tcan, _["Tsoil"] = Tsoil_mat,
                                       _["Rcanin"] = SWRLWRcanin, _["Rcanout"] = LWRcanout,
-                                      _["LEcan"] = LEcan_heat, _["Hcan"] = Hcan_heat, _["G"] = G1_heat, _["Ebalcan"] = Ebal, _["Rsoilin"] = SWRLWRsoilin, _["Rsoilout"] = LWRsoilout,
+                                      _["LEcan"] = LEcan_heat, _["Hcan"] = Hcan_heat, _["G"] = G1_heat, _["Ebalcan"] = Ebal, 
+                                      _["Rsoilin"] = SWRLWRsoilin, _["Rsoilout"] = LWRsoilout,
                                       _["Ebalsoil"] = Ebalsoil);
   List l = List::create(_["PET"] = NA_REAL, _["NetPrec"] = NetPrec, _["Runon"] = runon, _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
                         _["LAIcell"] = LAIcell, _["Cm"] = Cm, _["Lground"] = 1.0-propCover,
@@ -1139,7 +1140,7 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
   NumericMatrix MLdays(numDays, nlayers);
   NumericVector MLTot(numDays, 0.0);
   
-  //Temperature output variables
+  //EnergyBalance output variables
   NumericVector Tatm_mean(numDays, NA_REAL);
   NumericVector Tatm_min(numDays, NA_REAL);
   NumericVector Tatm_max(numDays, NA_REAL);
@@ -1149,7 +1150,16 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
   NumericVector Tsoil_mean(numDays, NA_REAL);
   NumericVector Tsoil_min(numDays, NA_REAL);
   NumericVector Tsoil_max(numDays, NA_REAL);
-  
+  NumericVector SWRLWRcanin(numDays, NA_REAL);
+  NumericVector LWRcanout(numDays, NA_REAL);
+  NumericVector LEcan_heat(numDays, NA_REAL);
+  NumericVector Hcan_heat(numDays, NA_REAL);
+  NumericVector Ebalcan(numDays, NA_REAL);
+  NumericVector SWRLWRsoilin(numDays, NA_REAL);
+  NumericVector LWRsoilout(numDays, NA_REAL);
+  NumericVector Ebalsoil(numDays, NA_REAL);
+  NumericVector G1_heat(numDays, NA_REAL);
+
   //Plant output variables
   NumericMatrix PlantPsi(numDays, numCohorts);
   NumericMatrix PlantStress(numDays, numCohorts);
@@ -1202,7 +1212,18 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
         DataFrame Tinst = Rcpp::as<Rcpp::DataFrame>(s["Tinst"]);
         NumericVector Tcan = Rcpp::as<Rcpp::NumericVector>(Tinst["Tcan"]);
         NumericVector Tsoil = Rcpp::as<Rcpp::NumericVector>(Tinst["Tsoil.1"]);
+
         int ntimesteps = Tcan.length();
+        SWRLWRcanin[i] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(Tinst["Rcanin"]))*((double) ntimesteps);
+        LWRcanout[i] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(Tinst["Rcanout"]))*((double) ntimesteps);
+        LEcan_heat[i] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(Tinst["LEcan"]))*((double) ntimesteps);
+        Hcan_heat[i] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(Tinst["Hcan"]))*((double) ntimesteps);
+        Ebalcan[i] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(Tinst["Ebalcan"]))*((double) ntimesteps);
+        SWRLWRsoilin[i] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(Tinst["Rsoilin"]))*((double) ntimesteps);
+        LWRsoilout[i] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(Tinst["Rsoilout"]))*((double) ntimesteps);
+        Ebalsoil[i] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(Tinst["Ebalsoil"]))*((double) ntimesteps);
+        G1_heat[i] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(Tinst["G"]))*((double) ntimesteps);
+        
         Tatm_min[i] = MinTemperature[i];
         Tatm_max[i] = MaxTemperature[i];
         Tatm_mean[i] = MeanTemperature[i];
@@ -1291,13 +1312,17 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
 
   DataFrame DTB = DataFrame::create(_["Tatm_mean"] = Tatm_mean, _["Tatm_min"] = Tatm_min, _["Tatm_max"] = Tatm_max,
                                     _["Tcan_mean"] = Tcan_mean, _["Tcan_min"] = Tcan_min, _["Tcan_max"] = Tcan_max,
-                                    _["Tsoil_mean"] = Tsoil_mean, _["Tsoil_min"] = Tsoil_min, _["Tsoil_max"] = Tsoil_max);  
+                                    _["Tsoil_mean"] = Tsoil_mean, _["Tsoil_min"] = Tsoil_min, _["Tsoil_max"] = Tsoil_max,
+                                    _["Rcanin"] = SWRLWRcanin, _["Rcanout"] = LWRcanout,
+                                    _["LEcan"] = LEcan_heat, _["Hcan"] = Hcan_heat, _["G"] = G1_heat, _["Ebalcan"] = Ebalcan, 
+                                    _["Rsoilin"] = SWRLWRsoilin, _["Rsoilout"] = LWRsoilout,
+                                    _["Ebalsoil"] = Ebalsoil );  
   List l = List::create(Named("control") = control,
                         Named("cohorts") = clone(cohorts),
                         Named("NumSoilLayers") = nlayers,
                         Named("DailyBalance")=DWB, 
                         Named("SoilWaterBalance")=SWB,
-                        Named("TemperatureBalance")= DTB,
+                        Named("EnergyBalance")= DTB,
                         Named("PlantTranspiration") = PlantTranspiration,
                         Named("PlantPhotosynthesis") = PlantPhotosynthesis,
                         Named("PlantPsi") = PlantPsi, 
