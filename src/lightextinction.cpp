@@ -402,9 +402,10 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
           vswrsh[c]+=mswrsh(i,c)*LAIme(i,c)*(1.0-fsunlit[i]);
           vlwrsl[c]+=mlwrsl(i,c)*LAIme(i,c)*fsunlit[i]; //Add top-down lwr 
           vlwrsh[c]+=mlwrsh(i,c)*LAIme(i,c)*(1.0-fsunlit[i]); //Add top-down lwr
+          //Add both dead and live leaf absortions to canopy (for energy balance)
+          abs_LWR_can[n]+= (mlwrsl(i,c)*(LAIme(i,c)+LAImd(i,c))*fsunlit[i]) + mlwrsh(i,c)*(LAIme(i,c)+LAImd(i,c))*(1.0-fsunlit[i]);
+          abs_SWR_can[n]+= (mswrsl(i,c)*(LAIme(i,c)+LAImd(i,c))*fsunlit[i]) + mswrsh(i,c)*(LAIme(i,c)+LAImd(i,c))*(1.0-fsunlit[i]);
         }
-        abs_LWR_can[n]+= (vlwrsl[c] + vlwrsh[c]);
-        abs_SWR_can[n]+= (vswrsl[c] + vswrsh[c]);
         // Rcout<<"Hola "<<vswrsl[c]<<" "<<vswrsh[c]<<" "<<vparsl[c]<<" "<<vparsh[c]<<"\n";
       }
       

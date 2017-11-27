@@ -61,6 +61,7 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
     plot(dates, DailyBalance$LAIcell, ylim=ylim, type="l", ylab=ylab, 
          xlab=xlab, xlim=xlim,frame=FALSE, col="black", axes=FALSE, lwd=1)
     plotAxes()
+    lines(dates, DailyBalance$LAIcelldead, lty=2)
   } else if(type=="Psi") {
     PsiM = SoilWaterBalance[,paste("psi",1:nlayers,sep=".")]
     if(is.null(ylab)) ylab = "Soil water potential (MPa)"    
@@ -168,8 +169,8 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
            legend=c("DD+R","Deep drainage (DD)","Runoff (R)"))        
   } else if(type=="CanopyEnergyBalance") {
     if(is.null(ylab)) ylab = "MJ/m2"    
-    mxin = max(c(x$EnergyBalance$Rcanin,-x$EnergyBalance$G,-x$EnergyBalance$LEcan,-x$EnergyBalance$H))    
-    mxout = max(c(x$EnergyBalance$Rcanout,x$EnergyBalance$G,x$EnergyBalance$LEcan,x$EnergyBalance$H))    
+    mxin = max(c(x$EnergyBalance$Rcanin,-x$EnergyBalance$G,-x$EnergyBalance$LEcan,-x$EnergyBalance$Hcan))    
+    mxout = max(c(x$EnergyBalance$Rcanout,x$EnergyBalance$G,x$EnergyBalance$LEcan,x$EnergyBalance$Hcan))    
     if(is.null(ylim)) ylim = c(-mxout,mxin)
     plot(dates, x$EnergyBalance$Rcanin, ylim=ylim, type="n", 
          ylab=ylab, xlab=xlab, xlim=xlim,
@@ -181,7 +182,7 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
     lines(dates, -x$EnergyBalance$Rcanout, col="blue",...)
     lines(dates, -x$EnergyBalance$G, col="orange",...)
     lines(dates, -x$EnergyBalance$LEcan, col="green",...)
-    lines(dates, -x$EnergyBalance$H, col="gray",...)
+    lines(dates, -x$EnergyBalance$Hcan, col="gray",...)
     legend("topright", bty="n", col=c("red","blue","orange", "green", "gray"), lty=1,
            legend=c("Radiation IN","Radiation OUT","Soil exchange (G)", "Latent heat (L)","Convective heat (H)"),...)        
   } else if(type=="SoilEnergyBalance") {
