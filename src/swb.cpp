@@ -432,6 +432,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   //Hydrologic input
   double NetPrec = 0.0, Infiltration= 0.0, Runoff= 0.0, DeepDrainage= 0.0;
   double propCover = 1.0-exp((-1)*kb*LAIcell);
+  double propCoverMax = 1.0-exp((-1)*kb*LAIcellmax);
   if(rain>0.0) {
     //Interception
     NetPrec = rain - interceptionGashDay(rain,Cm,propCover,er);
@@ -462,7 +463,6 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
 
 
   //Wind extinction profile
-  if(NumericVector::is_na(wind)) wind = 2.0; 
   NumericVector zWind;
   if(canopyMode=="multilayer") {
     zWind = windExtinctionProfile(zmid, wind, LAIcell, canopyHeight);
@@ -741,22 +741,21 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
     //Soil LWR emmission
     LWRsoilout[n] = 0.97*SIGMA_W*pow(Tsoil[0]+273.16,4.0);
     //Soil-canopy heat exchange
-    G1_heat[n] = (LWRcanout[n] - LWRsoilout[n])*propCover + Hcansoil; //Only include a fraction equal to absorption
+    double cansoilexchprop = (propCoverMax+propCover)/2.0;
+    G1_heat[n] = (LWRcanout[n] - LWRsoilout[n])*(cansoilexchprop) + Hcansoil; //Only include a fraction equal to absorption
     
       
     //Canopy temperature changes
     Ebal[n] = SWRLWRcanin[n]-LWRcanout[n] - LEcan_heat[n] - Hcan_heat[n] - G1_heat[n];
     double canopyThermalCapacity = LAIcellmax*1000000.0;
     double Tcannext = Tcan[n]+ (tstep*Ebal[n]/canopyThermalCapacity);
-    if(LAIcell==0.0) Tcannext = Tatm[n];
     //Apply changes
     if(n<(ntimesteps-1)) {
       Tcan[n+1] = Tcannext;
     }
     
-    
     // //Soil input
-    SWRLWRsoilin[n] =abs_SWR_soil[n] + abs_LWR_soil[n]+ (LWRcanout[n]*propCover);
+    SWRLWRsoilin[n] =abs_SWR_soil[n] + abs_LWR_soil[n]+ (LWRcanout[n]*cansoilexchprop);
     //Soil energy balance
     Ebalsoil[n] = SWRLWRsoilin[n] + Hcansoil - LWRsoilout[n]; //Here we use all LWRsoilout to include LWR escaping to atmosphere
     //Soil temperature changes
@@ -883,6 +882,7 @@ List swbDay(List x, List soil, CharacterVector date, int doy, double tmin, doubl
   if(transpirationMode=="Simple") {
     s = swbDay1(x,soil, tday, pet, rain, er, runon, verbose);
   } else {
+    if(NumericVector::is_na(wind)) wind = 2.0; 
     s = swbDay2(x,soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect,
                 solarConstant, delta, rain, er, runon, verbose);
   }
@@ -1110,6 +1110,7 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
   NumericVector SP = cohorts["SP"];
   NumericVector LAI_live = above["LAI_live"];
   NumericVector LAI_expanded = above["LAI_expanded"];
+  NumericVector LAI_dead = above["LAI_dead"];
   int numCohorts = SP.size();
   
 
@@ -1169,12 +1170,24 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
   List s;
   for(int i=0;i<numDays;i++) {
       if(verbose) Rcout<<".";
-      canopyParams["gdd"] = GDD[i];//Update phenological status
+      canopyParams["gdd"] = GDD[i];
+      double wind = WindSpeed[i];
+      if(NumericVector::is_na(wind)) wind = 1.0; //Default 1 m/s -> 10% of fall every day
+      if(wind<1.0) wind = 1.0; //Minimum windspeed abovecanopy
+      
+      
+      //1. Phenology and leaf fall
       NumericVector phe = leafDevelopmentStatus(Sgdd, GDD[i]);
       for(int j=0;j<numCohorts;j++) {
-        LAI_expanded[j] = LAI_live[j]*phe[j];
+        LAI_dead[j] *= exp(-1.0*(wind/10.0)); //Decrease dead leaf area according to wind speed
+        double LAI_exp_prev=0.0;
+        if(i>0) LAI_exp_prev= LAI_expanded[j]; //Store previous value
+        LAI_expanded[j] = LAI_live[j]*phe[j]; //Update expanded leaf area (will decrease if LAI_live decreases)
+        LAI_dead[j] += std::max(0.0, LAI_exp_prev-LAI_expanded[j]);//Check increase dead leaf area if expanded leaf area has decreased
       }
-      //Transpiration
+      
+      
+      //2. Water balance and photosynthesis
       if(transpirationMode=="Simple") {
         s = swbDay1(x, soil, MeanTemperature[i], PET[i], Precipitation[i], ER[i], 0.0, false); //No Runon in simulations for a single cell
       } else if(transpirationMode=="Complex") {
@@ -1183,7 +1196,7 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
         double delta = meteoland::radiation_solarDeclination(J);
         double solarConstant = meteoland::radiation_solarConstant(J);
         s = swbDay2(x, soil, MinTemperature[i], MaxTemperature[i], 
-                         MinRelativeHumidity[i], MaxRelativeHumidity[i], Radiation[i], WindSpeed[i], 
+                         MinRelativeHumidity[i], MaxRelativeHumidity[i], Radiation[i], wind, 
                          latitude, elevation, slope, aspect, solarConstant, delta, Precipitation[i], ER[i], 0.0, verbose);
         PET[i] = s["PET"];
         DataFrame Tinst = Rcpp::as<Rcpp::DataFrame>(s["Tinst"]);

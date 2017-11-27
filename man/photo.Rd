@@ -36,7 +36,8 @@ photo.sunshadePhotosynthesisFunction(supplyFunction, Catm, Patm, Tair, vpa,
 photo.multilayerPhotosynthesisFunction(supplyFunction, Catm, Patm, Tair, vpa, 
                                       SLarea, SHarea, u, 
                                       absRadSL, absRadSH, QSL, QSH, 
-                                      Vmax298, Jmax298, Gwmin, Gwmax, leafWidth = 1.0, verbose = FALSE)
+                                      Vmax298, Jmax298, Gwmin, Gwmax, leafWidth = 1.0, 
+                                      verbose = FALSE)
 }
 
 %- maybe also 'usage' for other objects documented here.

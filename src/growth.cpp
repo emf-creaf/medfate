@@ -131,7 +131,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   NumericVector SP = cohorts["SP"];
 
-    String transpirationMode = control["transpirationMode"];
+  String transpirationMode = control["transpirationMode"];
   String storagePool = control["storagePool"];
   bool verbose = control["verbose"];
   bool cavitationRefill = control["cavitationRefill"];
