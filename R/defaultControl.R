@@ -14,6 +14,7 @@ defaultControl<-function() {
     averageFracRhizosphereResistance = 0.05,
     ndailysteps = 24,
     thermalCapacityLAI = 600000,
+    defaultWindSpeed = 2,
     # growth
     storagePool = "none"
     

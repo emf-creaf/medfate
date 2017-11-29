@@ -7,6 +7,7 @@ __Version history__
 _Version 0.4.5, November 2017.
 1. New control parameter: Canopy thermal capacity per LAI
 2. Update of calls to meteoland (diffuse radiation)
+3. Wind value when missing data added to control
 
 _Version 0.4.4, November 2017.
 1. Minimum windspeed (1.0 m/s)

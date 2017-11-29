@@ -273,6 +273,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   int hydraulicCostFunction = control["hydraulicCostFunction"];
   double verticalLayerSize = control["verticalLayerSize"];
   double thermalCapacityLAI = control["thermalCapacityLAI"];
+  double defaultWindSpeed = control["defaultWindSpeed"];
     
   //Soil input
   NumericVector W = soil["W"];
@@ -352,6 +353,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   double Patm = meteoland::utils_atmosphericPressure(elevation);
   double Catm = 386.0;
   
+
   //Daily average water vapor pressure at the atmosphere
   double vpatm = meteoland::utils_averageDailyVP(tmin, tmax, rhmin,rhmax);
   
@@ -467,6 +469,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
 
 
   //Wind extinction profile
+  if(NumericVector::is_na(wind)) wind = defaultWindSpeed; //set to default if missing
   NumericVector zWind;
   if(canopyMode=="multilayer") {
     zWind = windExtinctionProfile(zmid, wind, LAIcell, canopyHeight);
@@ -890,7 +893,8 @@ List swbDay(List x, List soil, CharacterVector date, int doy, double tmin, doubl
   if(transpirationMode=="Simple") {
     s = swbDay1(x,soil, tday, pet, rain, er, runon, verbose);
   } else {
-    if(NumericVector::is_na(wind)) wind = 2.0; 
+    if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; 
+    if(wind<0.5) wind = 0.5; //Minimum windspeed abovecanopy
     s = swbDay2(x,soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect,
                 solarConstant, delta, rain, er, runon, verbose);
   }
@@ -1190,8 +1194,8 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
       if(verbose) Rcout<<".";
       canopyParams["gdd"] = GDD[i];
       double wind = WindSpeed[i];
-      if(NumericVector::is_na(wind)) wind = 1.0; //Default 1 m/s -> 10% of fall every day
-      if(wind<1.0) wind = 1.0; //Minimum windspeed abovecanopy
+      if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; //Default 1 m/s -> 10% of fall every day
+      if(wind<0.5) wind = 0.5; //Minimum windspeed abovecanopy
       
       
       //1. Phenology and leaf fall

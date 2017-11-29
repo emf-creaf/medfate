@@ -35,6 +35,7 @@ A list, with the following options:
 }
 \item{\code{fracTotalTreeResistance (=0.625)}: Fraction of the minimum tree (stem+root) resistance that corresponds to stem resistance.}
 \item{\code{thermalCapacityLAI (=600000)}: Thermal canopy capacitance per LAI unit.}
+\item{\code{defaultWindSpeed (=2)}: Default wind speed value (in m/s) to be used when missing from data. }
 \item{\code{averageFracRhizosphereResistance (=0.05)}: Fraction to total continuum (stem+root+rhizosphere) resistance that corresponds to rhizosphere (averaged across soil water potential values).}
 \item{\code{storagePool (="none")}: Whether carbon storage pools are considered (either "none", "one" or "two").}
 }
