@@ -361,7 +361,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   bool clearday = (rain==0);
   
   //Instantaneous direct and diffuse shorwave radiation
-  DataFrame ddd = meteoland::radiation_directDiffuseDay(solarConstant, latrad, slorad, asprad, delta,
+  DataFrame ddd = meteoland::radiation_directDiffuseDay(solarConstant, latrad, delta,
                                                         rad, clearday, ntimesteps);
   NumericVector solarElevation = ddd["SolarElevation"]; //in radians
   NumericVector solarHour = ddd["SolarHour"]; //in radians
@@ -436,7 +436,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   //Hydrologic input
   double NetPrec = 0.0, Infiltration= 0.0, Runoff= 0.0, DeepDrainage= 0.0;
   double propCover = 1.0-exp((-1)*kb*LAIcell);
-  double propCoverMax = 1.0-exp((-1)*kb*LAIcellmax);
+  // double propCoverMax = 1.0-exp((-1)*kb*LAIcellmax);
   if(rain>0.0) {
     //Interception
     NetPrec = rain - interceptionGashDay(rain,Cm,propCover,er);

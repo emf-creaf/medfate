@@ -306,7 +306,7 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
   bool clearday = (rain==0);
   
   //Instantaneous direct and diffuse shorwave radiation
-  DataFrame ddd = meteoland::radiation_directDiffuseDay(solarConstant, latrad, slorad, asprad, delta,
+  DataFrame ddd = meteoland::radiation_directDiffuseDay(solarConstant, latrad, delta,
                                                         rad, clearday, ntimesteps);
   NumericVector solarElevation = ddd["SolarElevation"]; //in radians
   NumericVector solarHour = ddd["SolarHour"]; //in radians

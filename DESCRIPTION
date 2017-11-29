@@ -8,11 +8,11 @@ Authors@R: c(
 	email='miquelcaceres@gmail.com'),
 	person('Víctor', 'Granda', role='aut'),
 	person('Antoine', 'Cabon', role='aut'))
-Description: Functions to simulate forest dynamics using cohort-based description of vegetation.
+Description: Functions to simulate Mediterranean forest functioning and dynamics using cohort-based description of vegetation.
 License: GPL (>= 2)
 LazyLoad: yes
 Depends: R (>= 3.4.1), sp, spdep, GSIF
-Imports: methods, meteoland, Rcpp (>= 0.12.12)
+Imports: methods, meteoland (>= 0.6.8), Rcpp (>= 0.12.12)
 LinkingTo: Rcpp, meteoland
 Encoding: UTF-8
 NeedsCompilation: yes
