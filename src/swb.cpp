@@ -401,7 +401,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
     if(canopyHeight<H[c]) canopyHeight = H[c];
   }
   int nz = ceil(canopyHeight/verticalLayerSize); //Number of vertical layers
-  double canopyThermalCapacity = ((3.0*LAIcellmax+LAIcell)/4.0)*thermalCapacityLAI; //Avoids zero capacity for winter deciduous
+  double canopyThermalCapacity = ((1.0*LAIcellmax+3.0*LAIcell)/4.0)*thermalCapacityLAI; //Avoids zero capacity for winter deciduous
   
   NumericVector z(nz+1,0.0);
   NumericVector zmid(nz);
@@ -437,7 +437,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   
   //Hydrologic input
   double NetPrec = 0.0, Infiltration= 0.0, Runoff= 0.0, DeepDrainage= 0.0;
-  double propCover = 1.0-exp((-1)*kb*LAIcell);
+  double propCover = 1.0-exp(-1.0*LAIcell);
   // double propCoverMax = 1.0-exp((-1)*kb*LAIcellmax);
   if(rain>0.0) {
     //Interception
@@ -742,17 +742,17 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
     double ra = aerodynamicResistance(canopyHeight,wind); //Aerodynamic resistance to convective heat transfer
     Hcan_heat[n] = (meteoland::utils_airDensity(Tatm[n],Patm)*Cp_JKG*(Tcan[n]-Tatm[n]))/ra;
     //Soil-canopy turbulent heat exchange
-    double wind2m = windSpeedMassmanExtinction(200.0, wind, LAIcell, canopyHeight);
-    double rasoil = aerodynamicResistance(15.0,wind2m); //Aerodynamic resistance to convective heat transfer from soil
+    // double wind2m = windSpeedMassmanExtinction(200.0, wind, LAIcell, canopyHeight);
+    double rasoil = aerodynamicResistance(15.0,wind); //Aerodynamic resistance to convective heat transfer from soil
     Hcansoil[n] = (meteoland::utils_airDensity(Tcan[n],Patm)*Cp_JKG*(Tcan[n]-Tsoil[0]))/rasoil;
     //Soil LWR emmission
     LWRsoilout[n] = 0.97*SIGMA_W*pow(Tsoil[0]+273.16,4.0);
     //Soil conductivity
-    // NumericVector lambda = layerthermalconductivity(sand, clay, W, Theta_FC);
-    // double Ccansoil = lambda[0]*(Tcan[n]-Tsoil[0]);
+    NumericVector lambda = layerthermalconductivity(sand, clay, W, Theta_FC);
+    double Ccansoil = lambda[0]*(Tcan[n]-Tsoil[0]);
     //Soil-canopy heat exchange
     double canexchprop = propCover;
-    G1_heat[n] = LWRcanout[n] - (LWRsoilout[n]*propCover)+ Hcansoil[n]; //Only include a fraction equal to absorption
+    G1_heat[n] = LWRcanout[n] - (LWRsoilout[n]*propCover)+ Hcansoil[n] + Ccansoil; //Only include a fraction equal to absorption
     
       
     //Canopy temperature changes
