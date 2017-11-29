@@ -96,6 +96,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
     List numericParams = control["numericParams"];
     List paramsControl = List::create(_["verbose"] =control["verbose"],
                                       _["transpirationMode"] =transpirationMode, 
+                                      _["defaultWindSpeed"] = control["defaultWindSpeed"],
                                       _["cavitationRefill"] = control["cavitationRefill"]);
     List paramsCanopy = List::create(_["gdd"] = 0);
     input = List::create(_["control"] =paramsControl,
@@ -423,6 +424,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     List paramsControl = List::create(_["verbose"] =control["verbose"],
                                       _["transpirationMode"] =transpirationMode, 
                                       _["cavitationRefill"] = control["cavitationRefill"],
+                                      _["defaultWindSpeed"] = control["defaultWindSpeed"],
                                       _["storagePool"] = storagePool);
     input = List::create(_["control"] = paramsControl,
                          _["canopy"] = paramsCanopy,
