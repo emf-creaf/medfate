@@ -554,6 +554,14 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   }
   
   for(int n=0;n<ntimesteps;n++) { //Time loop
+    //Long-wave radiation due to canopy temperature
+    if(NumericVector::is_na(Tcan[n])) Tcan[n] = Tatm[n]; //If missing take above-canopy air temperature
+    if(NumericVector::is_na(Tsoil[0])) {//Initialize Soil temperature (to minimum air temperature) if missing
+      for(int l=0;l<nlayers; l++) {
+        Tsoil[l] = Tatm[n];
+      }
+      Tsoil_mat(n,_) = Tsoil; 
+    }
     //LWR emmited by the canopy, used for leaf absortion
     double LWR_emmcan = SIGMA_W*pow(Tcan[n]+273.16,4.0);
     //Soil longwave emmission
@@ -595,15 +603,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
           }
         }
         
-        //Long-wave radiation due to canopy temperature
-        if(NumericVector::is_na(Tcan[n])) Tcan[n] = Tatm[n]; //If missing take above-canopy air temperature
-        if(NumericVector::is_na(Tsoil[0])) {//Initialize Soil temperature (to minimum air temperature) if missing
-          for(int l=0;l<nlayers; l++) {
-            Tsoil[l] = Tatm[n];
-          }
-          Tsoil_mat(n,_) = Tsoil; 
-        }
- 
+        
         //Photosynthesis function
         List photo;
         if(canopyMode=="multilayer"){
@@ -1331,6 +1331,8 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
   DataFrame DT = DataFrame::create(_["Tatm_mean"] = Tatm_mean, _["Tatm_min"] = Tatm_min, _["Tatm_max"] = Tatm_max,
                                    _["Tcan_mean"] = Tcan_mean, _["Tcan_min"] = Tcan_min, _["Tcan_max"] = Tcan_max,
                                      _["Tsoil_mean"] = Tsoil_mean, _["Tsoil_min"] = Tsoil_min, _["Tsoil_max"] = Tsoil_max);
+  DEB.attr("row.names") = meteo.attr("row.names") ;
+  DT.attr("row.names") = meteo.attr("row.names") ;
   List l = List::create(Named("control") = control,
                         Named("cohorts") = clone(cohorts),
                         Named("NumSoilLayers") = nlayers,
