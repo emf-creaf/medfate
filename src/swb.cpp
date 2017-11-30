@@ -476,7 +476,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   } else if(canopyMode=="sunshade"){
     zWind = windExtinctionCohort(H,CR, wind,LAIcell, canopyHeight);
   }
-  double RAcan = aerodynamicResistance(canopyHeight,wind); //Aerodynamic resistance to convective heat transfer
+  double RAcan = aerodynamicResistance(canopyHeight,std::max(wind,1.0)); //Aerodynamic resistance to convective heat transfer
   double wind2m = windSpeedMassmanExtinction(200.0, wind, LAIcell, canopyHeight);
   double RAsoil = aerodynamicResistance(200.0, std::max(wind2m,1.0)); //Aerodynamic resistance to convective heat transfer from soil
   
