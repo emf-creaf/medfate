@@ -11,20 +11,22 @@
 Function \code{light.layerIrradianceFraction} calculates the fraction of above-canopy irradiance reaching each vegetation layer. Function \code{light.layerSunlitFraction} calculates the proportion of sunlit leaves in each vegetation layer. Function \code{light.cohortSunlitShadeAbsorbedRadiation} calculates the amount of radiation absorved by cohort and vegetation layers, while differentiating between sunlit and shade leaves.
 }
 \usage{
-light.layerIrradianceFraction(LAIme, LAImd, k, alpha)
+light.layerIrradianceFraction(LAIme, LAImd, LAImx, k, alpha, trunkExtinctionFraction = 0.1)
 light.layerSunlitFraction(LAIme, LAImd, kb)
 light.cohortSunlitShadeAbsorbedRadiation(Ib0, Id0, Ibf, Idf, beta,
-                                         LAIme, LAImd, 
+                                         LAIme, LAImd,
                                          kb, kd, alpha, gamma)
-light.instantaneousLightExtinctionAbsortion(LAIme, LAImd, 
+light.instantaneousLightExtinctionAbsortion(LAIme, LAImd, LAImx, 
                                             kPAR, gammaSWR,
                                             ddd, LWR_diffuse,
-                                            ntimesteps = 24, canopyMode= "sunshade")
+                                            ntimesteps = 24, canopyMode= "sunshade", 
+                                            trunkExtinctionFraction = 0.1)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{LAIme}{A numeric matrix of live expanded LAI values per vegetation layer (row) and cohort (column).}
   \item{LAImd}{A numeric matrix of dead LAI values per vegetation layer (row) and cohort (column).}
+  \item{LAImx}{A numeric matrix of maximum LAI values per vegetation layer (row) and cohort (column).}
   \item{k}{A vector of light extinction coefficients.}
   \item{kb}{A vector of direct light extinction coefficients.}
   \item{kd}{A vector of diffuse light extinction coefficients.}
@@ -41,6 +43,7 @@ light.instantaneousLightExtinctionAbsortion(LAIme, LAImd,
   \item{LWR_diffuse}{A vector with diffuse longwave radiation for different subdaily time steps.}
   \item{ntimesteps}{Number of subdaily time steps.}
   \item{canopyMode}{Indicates how crowns should be described to calculate photosynthesis/extinction. Accepted values are \code{"sunshade"} (distinguishes photosynthesis in sun leaves from shade leaves) and \code{"multilayer"} (distinguishes photosynthesis of sun leaves and shade leaves in each canopy layer).}
+  \item{trunkExtinctionFraction}{Fraction of extinction due to trunks (for winter deciduous forests).}
 
 }
 \details{

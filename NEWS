@@ -4,6 +4,9 @@
 
 __Version history__
 
+_Version 0.4.6, December 2017.
+1. Radiation absorbed by trunks
+
 _Version 0.4.5, November 2017.
 1. New control parameter: Canopy thermal capacity per LAI
 2. Update of calls to meteoland (diffuse radiation)
