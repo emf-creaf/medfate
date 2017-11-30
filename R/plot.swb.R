@@ -169,26 +169,29 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
            legend=c("DD+R","Deep drainage (DD)","Runoff (R)"))        
   } else if(type=="CanopyEnergyBalance") {
     if(is.null(ylab)) ylab = "MJ/m2"    
-    mxin = max(c(x$EnergyBalance$Rcanin,-x$EnergyBalance$G,-x$EnergyBalance$LEcan,-x$EnergyBalance$Hcan))    
-    mxout = max(c(x$EnergyBalance$Rcanout,x$EnergyBalance$G,x$EnergyBalance$LEcan,x$EnergyBalance$Hcan))    
+    mxin = max(c(x$EnergyBalance$SWRcanin,x$EnergyBalance$LWRcanin,x$EnergyBalance$LWRsoilcan,-x$EnergyBalance$LEcan,-x$EnergyBalance$Hcan))    
+    mxout = max(c(x$EnergyBalance$LWRcanout,x$EnergyBalance$LEcan,x$EnergyBalance$Hcan))    
     if(is.null(ylim)) ylim = c(-mxout,mxin)
-    plot(dates, x$EnergyBalance$Rcanin, ylim=ylim, type="n", 
+    plot(dates, x$EnergyBalance$Ebalcan, ylim=ylim, type="n", 
          ylab=ylab, xlab=xlab, xlim=xlim,
          frame=FALSE, axes=FALSE,...)
     plotAxes()
     abline(h=0, col="black", lwd=1.5)
     lines(dates, x$EnergyBalance$Ebalcan, col="black",...)
-    lines(dates, x$EnergyBalance$Rcanin, col="red",...)
-    lines(dates, -x$EnergyBalance$Rcanout, col="blue",...)
-    lines(dates, -x$EnergyBalance$G, col="orange",...)
+    lines(dates, x$EnergyBalance$SWRcanin, col="red",...)
+    lines(dates, x$EnergyBalance$LWRcanin, col="brown",...)
+    lines(dates, -x$EnergyBalance$LWRcanout, col="blue",...)
+    lines(dates, -x$EnergyBalance$LWRsoilcan, col="orange",...)
     lines(dates, -x$EnergyBalance$LEcan, col="green",...)
     lines(dates, -x$EnergyBalance$Hcan, col="gray",...)
-    legend("topright", bty="n", col=c("red","blue","orange", "green", "gray"), lty=1,
-           legend=c("Radiation IN","Radiation OUT","Soil exchange (G)", "Latent heat (L)","Convective heat (H)"),...)        
+    lines(dates, -x$EnergyBalance$Hcansoil, col="dark gray",...)
+    legend("topright", bty="n", col=c("red","brown","orange", "blue","green", "gray", "dark gray", "black"), lty=1,
+           legend=c("SWR abs. from atm.","LWR abs. from atm.","LWR abs. from soil","LWR emmited", "Latent heat (L)",
+                    "Convection can./atm.","Convection soil/can.", "Balance"),...)        
   } else if(type=="SoilEnergyBalance") {
     if(is.null(ylab)) ylab = "MJ/m2"    
-    mxin = max(x$EnergyBalance$Rsoilin)    
-    mxout = max(x$EnergyBalance$Rsoilout)    
+    mxin = max(c(x$EnergyBalance$SWRsoilin, x$EnergyBalance$LWRsoilin,x$EnergyBalance$LWRcanout,x$EnergyBalance$Hcansoil))    
+    mxout = max(c(x$EnergyBalance$LWRsoilout,-x$EnergyBalance$Hcansoil))    
     if(is.null(ylim)) ylim = c(-mxout,mxin)
     plot(dates, x$EnergyBalance$Ebalsoil, ylim=ylim, type="n", 
          ylab=ylab, xlab=xlab, xlim=xlim,
@@ -196,9 +199,12 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
     plotAxes()
     abline(h=0, col="black", lwd=1.5)
     lines(dates, x$EnergyBalance$Ebalsoil, col="black",...)
-    lines(dates, x$EnergyBalance$Rsoilin, col="red",...)
-    lines(dates, -x$EnergyBalance$Rsoilout, col="blue",...)
-    legend("topright", bty="n", col=c("black","red","blue"), lty=1,
-           legend=c("Balance","Energy IN","Energy OUT"),...)        
+    lines(dates, x$EnergyBalance$SWRsoilin, col="red",...)
+    lines(dates, x$EnergyBalance$LWRsoilin, col="brown",...)
+    lines(dates, x$EnergyBalance$LWRcanout, col="orange",...)
+    lines(dates, -x$EnergyBalance$LWRsoilout, col="blue",...)
+    lines(dates, x$EnergyBalance$Hcansoil, col="gray",...)
+    legend("topright", bty="n", col=c("red","brown","orange", "blue", "gray", "black"), lty=1,
+           legend=c("SWR abs. from atm.","LWR abs. from atm.", "LWR abs. from canopy","LWR emmited", "Convection soil/can.", "Balance"),...)        
   }
 }

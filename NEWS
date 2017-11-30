@@ -6,6 +6,7 @@ __Version history__
 
 _Version 0.4.6, December 2017.
 1. Radiation absorbed by trunks
+2. Separation of energy balance components
 
 _Version 0.4.5, November 2017.
 1. New control parameter: Canopy thermal capacity per LAI

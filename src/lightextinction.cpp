@@ -415,16 +415,15 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
       abs_LWR_SL_list[n] = vlwrsl;
       abs_LWR_SH_list[n] = vlwrsh;
     }
-    
     //Calculate canopy absorbed radiation (includes absortion by trunks in winter)
-    double abs_dir_swr = SWR_direct[n]*1000.0*(1.0 - gbf);
-    double abs_dif_swr = SWR_diffuse[n]*1000.0*(1.0 - gdf);
+    double abs_dir_swr = SWR_direct[n]*1000.0*(1.0 - gbf); //W/m2
+    double abs_dif_swr = SWR_diffuse[n]*1000.0*(1.0 - gdf); //W/m2
     abs_SWR_can[n] = abs_dir_swr+abs_dif_swr;
     abs_LWR_can[n] = LWR_diffuse[n]*(1.0-glwr);
-    
+    // Rcout<<n<<" "<< abs_SWR_can[n]<< " "<<abs_LWR_can[n]<<"\n";
     //Calculate soil absorved radiation
-    abs_SWR_soil[n] = 0.95*((gbf*SWR_direct[n]*1000.0)+(gdf*SWR_diffuse[n]*1000.0)); //5% reflectance for SWR (Geiger, The climate near the ground)
-    abs_LWR_soil[n] = 0.97*(LWR_diffuse[n]*glwr); //3% soil reflectance for LWR
+    abs_SWR_soil[n] = 0.90*((gbf*SWR_direct[n]*1000.0)+(gdf*SWR_diffuse[n]*1000.0)); //10% reflectance for SWR (Geiger, The climate near the ground)
+    abs_LWR_soil[n] = 0.95*(LWR_diffuse[n]*glwr); //5% soil reflectance for LWR
     
     // Rcout<<n<<" PAR : "<<(PAR_direct[n]*1000.0)+(PAR_diffuse[n]*1000.0)<<" SWR: "<<(SWR_direct[n]*1000.0)+(SWR_diffuse[n]*1000.0) <<" can: "<< abs_SWR_can[n]<< " soil: "<< abs_SWR_soil[n]<<" LWR: "<< (LWR_diffuse[n]) <<" can: "<< abs_LWR_can[n]<< " soil: "<< abs_LWR_soil[n]<<"\n";
   }
