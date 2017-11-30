@@ -176,7 +176,7 @@ NumericVector cohortAbsorbedSWRFraction(NumericVector z, List x, DataFrame SpPar
 }
 
 // [[Rcpp::export("light.layerIrradianceFraction")]]
-NumericVector layerIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericVector k, NumericVector alpha) {
+NumericVector layerIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd,NumericMatrix LAImx, NumericVector k, NumericVector alpha, double trunkExtinctionFraction = 0.1) {
   int nlayer = LAIme.nrow();
   int ncoh = LAIme.ncol();
   NumericVector Ifraction(nlayer);
@@ -184,19 +184,20 @@ NumericVector layerIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd, 
   for(int i=nlayer-1;i>=0;i--) { //Start from top layer
     Ifraction[i] = exp(-1.0*s);
     //for subsequent layers increase s
-    for(int j =0;j<ncoh;j++) s = s + (k[j]*pow(alpha[j],0.5)*(LAIme(i,j)+LAImd(i,j)));
+    //Extinction is the maximum between the sum of dead(standing) and expanded leaves and a fraction of maximum live leaves corresponding to trunks (for winter-deciduous stands)
+    for(int j =0;j<ncoh;j++) s = s + (k[j]*pow(alpha[j],0.5)*(std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j))));
   }
   return(Ifraction);
 }
 
 
-double groundIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericVector k, NumericVector alpha){
+double groundIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, NumericVector k, NumericVector alpha, double trunkExtinctionFraction = 0.1){
   int nlayer = LAIme.nrow();
   int ncoh = LAIme.ncol();
   double s = 0.0;
   for(int i=nlayer-1;i>=0;i--) { //Start from top layer
     //for subsequent layers increase s
-    for(int j =0;j<ncoh;j++) s = s + (k[j]*pow(alpha[j],0.5)*(LAIme(i,j)+LAImd(i,j)));
+    for(int j =0;j<ncoh;j++) s = s + (k[j]*pow(alpha[j],0.5)*(std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j))));
   }
   return(exp(-1.0*s));
   
@@ -295,10 +296,10 @@ NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd, Nume
  * Calculates the amount of radiation absorved by each cohort
  */
 // [[Rcpp::export("light.instantaneousLightExtinctionAbsortion")]]
-List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LAImd, 
+List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, 
                                            NumericVector kPAR, NumericVector gammaSWR,
                                            DataFrame ddd, NumericVector LWR_diffuse, 
-                                           int ntimesteps = 24, String canopyMode= "sunshade") {
+                                           int ntimesteps = 24, String canopyMode= "sunshade", double trunkExtinctionFraction = 0.1) {
 
   int numCohorts = LAIme.ncol();
   int nz = LAIme.nrow();
@@ -320,20 +321,23 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
     alphaPAR[c] = 0.9;
     alphaSWR[c] = 0.7;
     kbvec[c] = kb;
-    alphaLWR[c] = 1.0; //Longwave coefficients
-    kLWR[c] = 1.0;
+    alphaLWR[c] = 0.97; //Longwave coefficients
+    kLWR[c] = 0.8;
     gammaPAR[c] = gammaSWR[c]*0.8; // (PAR albedo 80% of SWR albedo)
   }
   
-  //Average light extinction fractions for direct and diffuse PAR/SWR light
-  NumericVector Ibfpar = layerIrradianceFraction(LAIme,LAImd,kbvec, alphaPAR);
-  NumericVector Idfpar = layerIrradianceFraction(LAIme,LAImd,kPAR, alphaPAR);
-  NumericVector Ibfswr = layerIrradianceFraction(LAIme,LAImd,kbvec, alphaSWR);
-  NumericVector Idfswr = layerIrradianceFraction(LAIme,LAImd,kSWR, alphaSWR);
-  NumericVector Idflwr = layerIrradianceFraction(LAIme,LAImd, kLWR, alphaLWR); //Top-down (atm-plant)
-
-  double gbf = groundIrradianceFraction(LAIme,LAImd,kbvec, alphaSWR);
-  double gdf = groundIrradianceFraction(LAIme,LAImd,kSWR, alphaSWR);
+  //Average radiation extinction fractions for direct and diffuse PAR/SWR radiation and LWR radiation
+  //Include extinction from trunks in winter
+  NumericVector Ibfpar = layerIrradianceFraction(LAIme,LAImd,LAImx, kbvec, alphaPAR, trunkExtinctionFraction);
+  NumericVector Idfpar = layerIrradianceFraction(LAIme,LAImd,LAImx, kPAR, alphaPAR, trunkExtinctionFraction);
+  NumericVector Ibfswr = layerIrradianceFraction(LAIme,LAImd,LAImx, kbvec, alphaSWR,trunkExtinctionFraction);
+  NumericVector Idfswr = layerIrradianceFraction(LAIme,LAImd,LAImx, kSWR, alphaSWR, trunkExtinctionFraction);
+  NumericVector Idflwr = layerIrradianceFraction(LAIme,LAImd,LAImx, kLWR, alphaLWR, trunkExtinctionFraction);
+  
+  //Fraction of incoming diffuse/direct SWR radiation and LWR radiation reaching the ground
+  double gbf = groundIrradianceFraction(LAIme,LAImd,LAImx, kbvec, alphaSWR, trunkExtinctionFraction);
+  double gdf = groundIrradianceFraction(LAIme,LAImd,LAImx, kSWR, alphaSWR, trunkExtinctionFraction);
+  double glwr = groundIrradianceFraction(LAIme,LAImd,LAImx, kLWR, alphaLWR, trunkExtinctionFraction);
   
   //Average sunlit fraction
   NumericVector fsunlit = layerSunlitFraction(LAIme, LAImd, kbvec);
@@ -383,8 +387,6 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
         for(int i=0;i<nz;i++){
           vlwrsl(i,c)+=mlwrsl(i,c)*LAIme(i,c)*fsunlit[i]; //Add top-down lwr 
           vlwrsh(i,c)+=mlwrsh(i,c)*LAIme(i,c)*(1.0-fsunlit[i]); //Add top-down lwr
-          abs_LWR_can[n]+=mlwrsl(i,c)*LAIme(i,c)*fsunlit[i]+mlwrsh(i,c)*LAIme(i,c)*(1.0-fsunlit[i]);
-          abs_SWR_can[n]+=mswrsl(i,c)*LAIme(i,c)*fsunlit[i]+mswrsh(i,c)*LAIme(i,c)*(1.0-fsunlit[i]);
         }
       }
       abs_LWR_SL_list[n] = vlwrsl;
@@ -402,9 +404,6 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
           vswrsh[c]+=mswrsh(i,c)*LAIme(i,c)*(1.0-fsunlit[i]);
           vlwrsl[c]+=mlwrsl(i,c)*LAIme(i,c)*fsunlit[i]; //Add top-down lwr 
           vlwrsh[c]+=mlwrsh(i,c)*LAIme(i,c)*(1.0-fsunlit[i]); //Add top-down lwr
-          //Add both dead and live leaf absortions to canopy (for energy balance)
-          abs_LWR_can[n]+= (mlwrsl(i,c)*(LAIme(i,c)+LAImd(i,c))*fsunlit[i]) + mlwrsh(i,c)*(LAIme(i,c)+LAImd(i,c))*(1.0-fsunlit[i]);
-          abs_SWR_can[n]+= (mswrsl(i,c)*(LAIme(i,c)+LAImd(i,c))*fsunlit[i]) + mswrsh(i,c)*(LAIme(i,c)+LAImd(i,c))*(1.0-fsunlit[i]);
         }
         // Rcout<<"Hola "<<vswrsl[c]<<" "<<vswrsh[c]<<" "<<vparsl[c]<<" "<<vparsh[c]<<"\n";
       }
@@ -417,9 +416,15 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
       abs_LWR_SH_list[n] = vlwrsh;
     }
     
+    //Calculate canopy absorbed radiation (includes absortion by trunks in winter)
+    double abs_dir_swr = SWR_direct[n]*1000.0*(1.0 - gbf);
+    double abs_dif_swr = SWR_diffuse[n]*1000.0*(1.0 - gdf);
+    abs_SWR_can[n] = abs_dir_swr+abs_dif_swr;
+    abs_LWR_can[n] = LWR_diffuse[n]*(1.0-glwr);
+    
     //Calculate soil absorved radiation
-    abs_SWR_soil[n] = 0.80*((SWR_direct[n]*1000.0)+(SWR_diffuse[n]*1000.0) -abs_SWR_can[n]); //20% reflectance for SWR (Geiger, The climate near the ground)
-    abs_LWR_soil[n] = 0.97*(LWR_diffuse[n]-abs_LWR_can[n]); //3% soil reflectance for LWR
+    abs_SWR_soil[n] = 0.95*((gbf*SWR_direct[n]*1000.0)+(gdf*SWR_diffuse[n]*1000.0)); //5% reflectance for SWR (Geiger, The climate near the ground)
+    abs_LWR_soil[n] = 0.97*(LWR_diffuse[n]*glwr); //3% soil reflectance for LWR
     
     // Rcout<<n<<" PAR : "<<(PAR_direct[n]*1000.0)+(PAR_diffuse[n]*1000.0)<<" SWR: "<<(SWR_direct[n]*1000.0)+(SWR_diffuse[n]*1000.0) <<" can: "<< abs_SWR_can[n]<< " soil: "<< abs_SWR_soil[n]<<" LWR: "<< (LWR_diffuse[n]) <<" can: "<< abs_LWR_can[n]<< " soil: "<< abs_LWR_soil[n]<<"\n";
   }
@@ -435,7 +440,8 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
                           _["LWR_can"] = abs_LWR_can,
                           _["SWR_soil"] = abs_SWR_soil,
                           _["LWR_soil"] = abs_LWR_soil,
-                          _["gbf"] = gbf, //ground direct radiation fraction
-                          _["gdf"] = gdf); //ground diffuse radiation fraction
+                          _["gbf"] = gbf, //ground direct SWR fraction
+                          _["gdf"] = gdf, //ground diffuse SWR fraction
+                          _["glwr"] = glwr); //ground diffuse LWR fraction
   return(res);
 }

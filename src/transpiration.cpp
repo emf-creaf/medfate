@@ -286,8 +286,9 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
     z[i] = z[i-1] + verticalLayerSize;
     zmid[i-1] = (verticalLayerSize/2.0) + verticalLayerSize*((double) (i-1));
   }
-  NumericMatrix LAIme = LAIdistribution(z, LAIphe, H, CR);
-  NumericMatrix LAImd = LAIdistribution(z, LAIdead, H, CR);
+  NumericMatrix LAIme = LAIdistribution(z, LAIphe, H, CR); //Expanded leaves
+  NumericMatrix LAImd = LAIdistribution(z, LAIdead, H, CR); //Dead (standing) leaves
+  NumericMatrix LAImx = LAIdistribution(z, LAIlive, H, CR); //Maximum leaf expansion
   
 
   //Day length (latitude in radians), atmospheric pressure, CO2 concentration
@@ -329,7 +330,7 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
   Tcan[0] = canopyParams["Temp"]; //Take canopy temperature from previous day
   
   //Light extinction and absortion by time steps
-  List lightExtinctionAbsortion = instantaneousLightExtinctionAbsortion(LAIme, LAImd, 
+  List lightExtinctionAbsortion = instantaneousLightExtinctionAbsortion(LAIme, LAImd, LAImx,
                                                                         kPAR, albedo,
                                                                         ddd, lwdr,
                                                                         ntimesteps,  canopyMode);

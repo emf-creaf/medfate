@@ -389,8 +389,8 @@ hydraulics.maximumStemHydraulicConductance <- function(xylemConductivity, Al2As,
     .Call('_medfate_cohortAbsorbedSWRFraction', PACKAGE = 'medfate', z, x, SpParams, gdd)
 }
 
-light.layerIrradianceFraction <- function(LAIme, LAImd, k, alpha) {
-    .Call('_medfate_layerIrradianceFraction', PACKAGE = 'medfate', LAIme, LAImd, k, alpha)
+light.layerIrradianceFraction <- function(LAIme, LAImd, LAImx, k, alpha, trunkExtinctionFraction = 0.1) {
+    .Call('_medfate_layerIrradianceFraction', PACKAGE = 'medfate', LAIme, LAImd, LAImx, k, alpha, trunkExtinctionFraction)
 }
 
 light.cohortSunlitShadeAbsorbedRadiation <- function(Ib0, Id0, Ibf, Idf, beta, LAIme, LAImd, kb, kd, alpha, gamma) {
@@ -401,8 +401,8 @@ light.layerSunlitFraction <- function(LAIme, LAImd, kb) {
     .Call('_medfate_layerSunlitFraction', PACKAGE = 'medfate', LAIme, LAImd, kb)
 }
 
-light.instantaneousLightExtinctionAbsortion <- function(LAIme, LAImd, kPAR, gammaSWR, ddd, LWR_diffuse, ntimesteps = 24L, canopyMode = "sunshade") {
-    .Call('_medfate_instantaneousLightExtinctionAbsortion', PACKAGE = 'medfate', LAIme, LAImd, kPAR, gammaSWR, ddd, LWR_diffuse, ntimesteps, canopyMode)
+light.instantaneousLightExtinctionAbsortion <- function(LAIme, LAImd, LAImx, kPAR, gammaSWR, ddd, LWR_diffuse, ntimesteps = 24L, canopyMode = "sunshade", trunkExtinctionFraction = 0.1) {
+    .Call('_medfate_instantaneousLightExtinctionAbsortion', PACKAGE = 'medfate', LAIme, LAImd, LAImx, kPAR, gammaSWR, ddd, LWR_diffuse, ntimesteps, canopyMode, trunkExtinctionFraction)
 }
 
 .checkSpeciesParameters <- function(SpParams, params) {

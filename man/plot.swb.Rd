@@ -34,6 +34,8 @@ Function \code{plot} plots the results of the soil water balance model (see \cod
     \item{\code{"AirTemperature"}:}{ Minimum/maximum/mean daily temperatures above canopy.}
     \item{\code{"CanopyTemperature"}:}{ Minimum/maximum/mean daily temperatures inside canopy.}
     \item{\code{"SoilTemperature"}:}{ Minimum/maximum/mean daily temperatures inside the first soil layer.}
+    \item{\code{"CanopyEnergyBalance"}:}{ Canopy energy balance components.}
+    \item{\code{"SoilEnergyBalance"}:}{ Soil energy balance components.}
    }
   }
   \item{yearAxis}{A boolean to indicate whether the units of the x-axis are years (by default they are dates).}
@@ -42,7 +44,7 @@ Function \code{plot} plots the results of the soil water balance model (see \cod
   \item{xlab}{x-axis label.}
   \item{ylab}{y-axis label.}
   \item{freq}{Frequency of summary statistics (see \code{\link{cut.Date}}).}
-  \item{output}{The data table to be summarized. Accepted values are \code{"DailyBalance"}, \code{"PlantStress"}, \code{"PlantTranspiration"} and \code{"SoilWaterBalance"}.}
+  \item{output}{The data table to be summarized. Accepted values are \code{"DailyBalance"}, \code{"PlantStress"}, \code{"PlantTranspiration"} and \code{"SoilWaterBalance"}, \code{"Temperature"} and \code{"EnergyBalance"}.}
   \item{FUN}{The function to summarize results (e.g., \code{sum}, \code{mean}, ...)}
   \item{...}{Additional parameters for functions \code{plot} or \code{summary}.}
 }
