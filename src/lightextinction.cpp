@@ -191,7 +191,17 @@ NumericVector layerIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd,N
 }
 
 
-double groundIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, NumericVector k, NumericVector alpha, double trunkExtinctionFraction = 0.1){
+double groundDiffuseIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, NumericVector k, double trunkExtinctionFraction = 0.1){
+  int nlayer = LAIme.nrow();
+  int ncoh = LAIme.ncol();
+  double s = 0.0;
+  for(int i=nlayer-1;i>=0;i--) { //Start from top layer
+    //for subsequent layers increase s
+    for(int j =0;j<ncoh;j++) s = s + (k[j]*(std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j))));
+  }
+  return(exp(-1.0*s));
+}
+double groundDirectIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, NumericVector k,  NumericVector alpha, double trunkExtinctionFraction = 0.1){
   int nlayer = LAIme.nrow();
   int ncoh = LAIme.ncol();
   double s = 0.0;
@@ -200,7 +210,6 @@ double groundIrradianceFraction(NumericMatrix LAIme, NumericMatrix LAImd, Numeri
     for(int j =0;j<ncoh;j++) s = s + (k[j]*pow(alpha[j],0.5)*(std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j))));
   }
   return(exp(-1.0*s));
-  
 }
 
 /**
@@ -335,9 +344,9 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
   NumericVector Idflwr = layerIrradianceFraction(LAIme,LAImd,LAImx, kLWR, alphaLWR, trunkExtinctionFraction);
   
   //Fraction of incoming diffuse/direct SWR radiation and LWR radiation reaching the ground
-  double gbf = groundIrradianceFraction(LAIme,LAImd,LAImx, kbvec, alphaSWR, trunkExtinctionFraction);
-  double gdf = groundIrradianceFraction(LAIme,LAImd,LAImx, kSWR, alphaSWR, trunkExtinctionFraction);
-  double glwr = groundIrradianceFraction(LAIme,LAImd,LAImx, kLWR, alphaLWR, trunkExtinctionFraction);
+  double gbf = groundDirectIrradianceFraction(LAIme,LAImd,LAImx, kbvec, alphaSWR, trunkExtinctionFraction);
+  double gdf = groundDiffuseIrradianceFraction(LAIme,LAImd,LAImx, kSWR, trunkExtinctionFraction);
+  double glwr = groundDiffuseIrradianceFraction(LAIme,LAImd,LAImx, kLWR, trunkExtinctionFraction);
   
   //Average sunlit fraction
   NumericVector fsunlit = layerSunlitFraction(LAIme, LAImd, kbvec);

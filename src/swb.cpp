@@ -268,7 +268,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   double ETol = numericParams["ETol"];
 
   bool cavitationRefill = control["cavitationRefill"];
-  String canopyMode = Rcpp::as<Rcpp::String>(control["canopyMode"]);
+  // String canopyMode = Rcpp::as<Rcpp::String>(control["canopyMode"]);
   int ntimesteps = control["ndailysteps"];
   int hydraulicCostFunction = control["hydraulicCostFunction"];
   double verticalLayerSize = control["verticalLayerSize"];
@@ -417,7 +417,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   List lightExtinctionAbsortion = instantaneousLightExtinctionAbsortion(LAIme, LAImd, LAImx,
                                                                         kPAR, albedo,
                                                                         ddd,  lwdr,
-                                                                        ntimesteps,  canopyMode, 0.1);
+                                                                        ntimesteps,  "sunshade", 0.1);
   
   List abs_PAR_SL_list = lightExtinctionAbsortion["PAR_SL"];
   List abs_SWR_SL_list = lightExtinctionAbsortion["SWR_SL"];
@@ -471,11 +471,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   //Wind extinction profile
   if(NumericVector::is_na(wind)) wind = defaultWindSpeed; //set to default if missing
   NumericVector zWind;
-  if(canopyMode=="multilayer") {
-    zWind = windExtinctionProfile(zmid, wind, LAIcell, canopyHeight);
-  } else if(canopyMode=="sunshade"){
-    zWind = windExtinctionCohort(H,CR, wind,LAIcell, canopyHeight);
-  }
+  zWind = windExtinctionCohort(H,CR, wind,LAIcell, canopyHeight);
   double RAcan = aerodynamicResistance(canopyHeight,std::max(wind,1.0)); //Aerodynamic resistance to convective heat transfer
   double wind2m = windSpeedMassmanExtinction(200.0, wind, LAIcell, canopyHeight);
   double RAsoil = aerodynamicResistance(200.0, std::max(wind2m,1.0)); //Aerodynamic resistance to convective heat transfer from soil
@@ -571,6 +567,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
     for(int c=0;c<numCohorts;c++) { //Plant cohort loop
       if(nlayerscon[c]>0) {//If the plant is connected to at least one layer
         List supply = supplyNetworks[c];
+        NumericVector fittedE = supply["E"];
         NumericMatrix ElayersMat = supply["Elayers"];
         NumericVector PsiLeafVec = supply["PsiPlant"];
         NumericVector PsiRootVec = supply["PsiRoot"];
@@ -592,42 +589,39 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
         }
         double Vmax298SL= 0.0,Vmax298SH= 0.0,Jmax298SL= 0.0,Jmax298SH= 0.0;
         double SLarea = 0.0, SHarea = 0.0;
-        if(canopyMode=="sunshade"){
-          for(int i=0;i<nz;i++) {
-            SLarea +=SLarealayer[i];
-            SHarea +=SHarealayer[i];
-            Vmax298SL +=Vmax298layer[i]*LAIme(i,c)*fsunlit[i];
-            Jmax298SL +=Jmax298layer[i]*LAIme(i,c)*fsunlit[i];
-            Vmax298SH +=Vmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
-            Jmax298SH +=Jmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
-          }
+        for(int i=0;i<nz;i++) {
+          SLarea +=SLarealayer[i];
+          SHarea +=SHarealayer[i];
+          Vmax298SL +=Vmax298layer[i]*LAIme(i,c)*fsunlit[i];
+          Jmax298SL +=Jmax298layer[i]*LAIme(i,c)*fsunlit[i];
+          Vmax298SH +=Vmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
+          Jmax298SH +=Jmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
         }
         
         
         //Photosynthesis function
-        List photo;
-        if(canopyMode=="multilayer"){
-          //Retrieve Light extinction
-          NumericMatrix absPAR_SL = abs_PAR_SL_list[n];
-          NumericMatrix absPAR_SH = abs_PAR_SH_list[n];
-          NumericMatrix absSWR_SL = abs_SWR_SL_list[n];
-          NumericMatrix absSWR_SH = abs_SWR_SH_list[n];
-          NumericMatrix absLWR_SL = abs_LWR_SL_list[n];
-          NumericMatrix absLWR_SH = abs_LWR_SH_list[n];
-          for(int i=0;i<nz;i++) {
-            QSL[i] = irradianceToPhotonFlux(absPAR_SL(i,c));
-            QSH[i] = irradianceToPhotonFlux(absPAR_SH(i,c));
-            //Add absorved short wave and long wave radiation (from sky and canopy)
-            absRadSL[i] = absSWR_SL(i,c) + absLWR_SL(i,c) + SLarealayer[i]*0.97*LWR_emmcan;
-            absRadSH[i] = absSWR_SH(i,c)+ absLWR_SH(i,c) + SHarealayer[i]*0.97*LWR_emmcan;
-          }
-          photo = multilayerPhotosynthesisFunction(supply, Catm, Patm, Tcan[n], vpatm, 
-                                                   SLarealayer, SHarealayer, 
-                                                   zWind, absRadSL, absRadSH, 
-                                                   QSL, QSH,
-                                                   Vmax298layer,Jmax298layer,
-                                                   Gwmin[c], Gwmax[c], leafWidth[c]);
-        } else if(canopyMode=="sunshade"){
+        // if(canopyMode=="multilayer"){
+        //   //Retrieve Light extinction
+        //   NumericMatrix absPAR_SL = abs_PAR_SL_list[n];
+        //   NumericMatrix absPAR_SH = abs_PAR_SH_list[n];
+        //   NumericMatrix absSWR_SL = abs_SWR_SL_list[n];
+        //   NumericMatrix absSWR_SH = abs_SWR_SH_list[n];
+        //   NumericMatrix absLWR_SL = abs_LWR_SL_list[n];
+        //   NumericMatrix absLWR_SH = abs_LWR_SH_list[n];
+        //   for(int i=0;i<nz;i++) {
+        //     QSL[i] = irradianceToPhotonFlux(absPAR_SL(i,c));
+        //     QSH[i] = irradianceToPhotonFlux(absPAR_SH(i,c));
+        //     //Add absorved short wave and long wave radiation (from sky and canopy)
+        //     absRadSL[i] = absSWR_SL(i,c) + absLWR_SL(i,c) + SLarealayer[i]*0.97*LWR_emmcan;
+        //     absRadSH[i] = absSWR_SH(i,c)+ absLWR_SH(i,c) + SHarealayer[i]*0.97*LWR_emmcan;
+        //   }
+        //   photo = multilayerPhotosynthesisFunction(supply, Catm, Patm, Tcan[n], vpatm, 
+        //                                            SLarealayer, SHarealayer, 
+        //                                            zWind, absRadSL, absRadSH, 
+        //                                            QSL, QSH,
+        //                                            Vmax298layer,Jmax298layer,
+        //                                            Gwmin[c], Gwmax[c], leafWidth[c]);
+        // } else if(canopyMode=="sunshade"){
           //Retrieve Light extinction
           NumericVector absPAR_SL = abs_PAR_SL_list[n];
           NumericVector absPAR_SH = abs_PAR_SH_list[n];
@@ -636,25 +630,48 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
           NumericVector absLWR_SL = abs_LWR_SL_list[n];
           NumericVector absLWR_SH = abs_LWR_SH_list[n];
           
-          photo = sunshadePhotosynthesisFunction(supply, Catm, Patm,Tcan[n], vpatm, 
-                                                 SLarea, SHarea, 
+          //Photosynthesis function for sunlit and shade leaves
+          List photoSunlit = leafPhotosynthesisFunction(supply, Catm, Patm,Tcan[n], vpatm, 
                                                  zWind[c], 
                                                  absSWR_SL[c] + absLWR_SL[c] + SLarea*0.97*LWR_emmcan, 
-                                                 absSWR_SH[c] + absLWR_SH[c] + SHarea*0.97*LWR_emmcan, 
-                                                 irradianceToPhotonFlux(absPAR_SL[c]), irradianceToPhotonFlux(absPAR_SH[c]),
-                                                 Vmax298SL, Vmax298SH,
-                                                 Jmax298SL, Jmax298SH,
-                                                 Gwmin[c], Gwmax[c], leafWidth[c]);
-        }
-        NumericVector An = photo["NetPhotosynthesis"];
+                                                 irradianceToPhotonFlux(absPAR_SL[c]), 
+                                                 Vmax298SL, 
+                                                 Jmax298SL, 
+                                                 Gwmin[c], Gwmax[c], leafWidth[c], SLarea);
+          List photoShade = leafPhotosynthesisFunction(supply, Catm, Patm,Tcan[n], vpatm, 
+                                                       zWind[c], 
+                                                       absSWR_SH[c] + absLWR_SH[c] + SHarea*0.97*LWR_emmcan, 
+                                                       irradianceToPhotonFlux(absPAR_SH[c]),
+                                                       Vmax298SL, 
+                                                       Jmax298SL, 
+                                                       Gwmin[c], Gwmax[c], leafWidth[c], SHarea);
+          // }
+        NumericVector AnSunlit = photoSunlit["NetPhotosynthesis"];
+        NumericVector AnShade = photoShade["NetPhotosynthesis"];
         
         //Profit maximization
-        List PM = profitMaximization(supply, photo,  hydraulicCostFunction, VCstem_kmax[c]);
-
+        List PMSunlit = profitMaximization(supply, photoSunlit,  hydraulicCostFunction, VCstem_kmax[c]);
+        List PMShade = profitMaximization(supply, photoShade,  hydraulicCostFunction, VCstem_kmax[c]);
+        int iPMSunlit = PMSunlit["iMaxProfit"];
+        int iPMShade = PMShade["iMaxProfit"];
+        
         //Scale photosynthesis
-        int iPM = PM["iMaxProfit"];
-        photosynthesis[c] +=pow(10,-6)*12.01017*An[iPM]*tstep; 
-        Aninst(c,n) = An(iPM);
+        Aninst(c,n) = AnSunlit[iPMSunlit]*SLarea + AnShade[iPMShade]*SHarea;
+        photosynthesis[c] +=pow(10,-6)*12.01017*Aninst(c,n)*tstep; 
+        
+        //Average flow from sunlit and shade leaves
+        double Eaverage = (fittedE[iPMSunlit]*SLarea + fittedE[iPMShade]*SHarea)/(SLarea + SHarea);
+        
+        //Find iPM corresponding to the average flow
+        double absDiff = 9999.9;
+        int iPM = -1;
+        for(int k=0;k<fittedE.length();k++){
+          double adk = std::abs(fittedE[k]-Eaverage);
+          if(adk<absDiff) {
+            absDiff = adk;
+            iPM = k;
+          }
+        }
         
         //Scale transpiration to cohort level
         NumericVector Ecn(nlayerscon[c],0.0);

@@ -11,7 +11,7 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
   numDays = length(dates)
   numYears = round(numDays/365)
   firstYear=as.numeric(format(dates[1],"%Y"))
-  
+  cohortnames = colnames(x$PlantTranspiration)
   plotAxes<-function(){
     if(!yearAxis) axis.Date(1, dates)
     else {
@@ -100,25 +100,33 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
     if(is.null(ylim)) ylim = c(0,1)
     matplot(dates, x$PlantStress, ylim = ylim, lwd=1, type="l", xlim=xlim,
             ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
-    plotAxes()        
+    plotAxes()
+    legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
+           col = 1:length(cohortnames), bty="n")
   } else if(type=="PlantPsi") {
     if(is.null(ylab)) ylab = "Plant water potential (MPa)"
     if(is.null(ylim)) ylim = c(min(x$PlantPsi),0)
     matplot(dates, x$PlantPsi, ylim = ylim, lwd=1, type="l", xlim=xlim,
             ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
-    plotAxes()      
+    plotAxes()
+    legend("bottomright", legend = cohortnames, lty=1:length(cohortnames), 
+           col = 1:length(cohortnames), bty="n")
   } else if(type=="PlantTranspiration") {
     if(is.null(ylab)) ylab = "Plant transpiration (mm)"
     if(is.null(ylim)) ylim = c(0,max(x$PlantTranspiration))
     matplot(dates, x$PlantTranspiration, ylim = ylim, lwd=1, type="l", xlim=xlim,
             ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
     plotAxes()      
+    legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
+           col = 1:length(cohortnames), bty="n")
   } else if(type=="PlantPhotosynthesis") {
     if(is.null(ylab)) ylab = "Plant photosynthesis (gC/m2)"
     if(is.null(ylim)) ylim = c(min(x$PlantPhotosynthesis),max(x$PlantPhotosynthesis))
     matplot(dates, x$PlantPhotosynthesis, ylim = ylim, lwd=1, type="l", xlim=xlim,
             ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
     plotAxes()     
+    legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
+           col = 1:length(cohortnames), bty="n")
   } else if(type=="AirTemperature") {
     if(is.null(ylab)) ylab = "Above-canopy temperature (Celsius)"
     if(is.null(ylim)) ylim = c(min(x$Temperature$Tatm_min),max(x$Temperature$Tatm_max))

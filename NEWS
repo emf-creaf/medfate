@@ -4,6 +4,9 @@
 
 __Version history__
 
+_Version 0.4.7, December 2017.
+1. Profit maximization for sunlit and shade leaves separately
+
 _Version 0.4.6, December 2017.
 1. Radiation absorbed by trunks
 2. Separation of energy balance components
