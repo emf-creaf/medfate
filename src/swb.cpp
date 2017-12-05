@@ -642,16 +642,15 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
                                                        zWind[c], 
                                                        absSWR_SH[c] + absLWR_SH[c] + SHarea*0.97*LWR_emmcan, 
                                                        irradianceToPhotonFlux(absPAR_SH[c]),
-                                                       Vmax298SL, 
-                                                       Jmax298SL, 
+                                                       Vmax298SH, 
+                                                       Jmax298SH, 
                                                        Gwmin[c], Gwmax[c], leafWidth[c], SHarea);
           // }
         NumericVector AnSunlit = photoSunlit["NetPhotosynthesis"];
         NumericVector AnShade = photoShade["NetPhotosynthesis"];
-        
         //Profit maximization
-        List PMSunlit = profitMaximization(supply, photoSunlit,  hydraulicCostFunction, VCstem_kmax[c]);
-        List PMShade = profitMaximization(supply, photoShade,  hydraulicCostFunction, VCstem_kmax[c]);
+        List PMSunlit = profitMaximization(supply, photoSunlit,  hydraulicCostFunction, Gwmax[c], VCstem_kmax[c]);
+        List PMShade = profitMaximization(supply, photoShade,  hydraulicCostFunction, Gwmax[c], VCstem_kmax[c]);
         int iPMSunlit = PMSunlit["iMaxProfit"];
         int iPMShade = PMShade["iMaxProfit"];
         

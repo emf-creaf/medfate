@@ -557,8 +557,8 @@ swb <- function(x, soil, meteo, latitude = NA_real_, elevation = NA_real_, slope
     .Call('_medfate_swb', PACKAGE = 'medfate', x, soil, meteo, latitude, elevation, slope, aspect)
 }
 
-transp.profitMaximization <- function(supplyFunction, photosynthesisFunction, type = 1L, kstemmax = NA_real_) {
-    .Call('_medfate_profitMaximization', PACKAGE = 'medfate', supplyFunction, photosynthesisFunction, type, kstemmax)
+transp.profitMaximization <- function(supplyFunction, photosynthesisFunction, type, Gwmax, kstemmax = NA_real_) {
+    .Call('_medfate_profitMaximization', PACKAGE = 'medfate', supplyFunction, photosynthesisFunction, type, Gwmax, kstemmax)
 }
 
 transp.dayCanopyTranspiration <- function(x, soil, meteo, day, latitude, elevation, slope = 0.0, aspect = 0.0) {

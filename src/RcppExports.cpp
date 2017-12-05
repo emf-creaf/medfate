@@ -2068,16 +2068,17 @@ BEGIN_RCPP
 END_RCPP
 }
 // profitMaximization
-List profitMaximization(List supplyFunction, List photosynthesisFunction, int type, double kstemmax);
-RcppExport SEXP _medfate_profitMaximization(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP, SEXP typeSEXP, SEXP kstemmaxSEXP) {
+List profitMaximization(List supplyFunction, List photosynthesisFunction, int type, double Gwmax, double kstemmax);
+RcppExport SEXP _medfate_profitMaximization(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP, SEXP typeSEXP, SEXP GwmaxSEXP, SEXP kstemmaxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type supplyFunction(supplyFunctionSEXP);
     Rcpp::traits::input_parameter< List >::type photosynthesisFunction(photosynthesisFunctionSEXP);
     Rcpp::traits::input_parameter< int >::type type(typeSEXP);
+    Rcpp::traits::input_parameter< double >::type Gwmax(GwmaxSEXP);
     Rcpp::traits::input_parameter< double >::type kstemmax(kstemmaxSEXP);
-    rcpp_result_gen = Rcpp::wrap(profitMaximization(supplyFunction, photosynthesisFunction, type, kstemmax));
+    rcpp_result_gen = Rcpp::wrap(profitMaximization(supplyFunction, photosynthesisFunction, type, Gwmax, kstemmax));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2318,7 +2319,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_swbDay", (DL_FUNC) &_medfate_swbDay, 16},
     {"_medfate_swbgridDay", (DL_FUNC) &_medfate_swbgridDay, 11},
     {"_medfate_swb", (DL_FUNC) &_medfate_swb, 7},
-    {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 4},
+    {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 5},
     {"_medfate_dayCanopyTranspiration", (DL_FUNC) &_medfate_dayCanopyTranspiration, 8},
     {"_medfate_windSpeedAtCanopyHeight", (DL_FUNC) &_medfate_windSpeedAtCanopyHeight, 2},
     {"_medfate_unshelteredMidflameWindSpeed", (DL_FUNC) &_medfate_unshelteredMidflameWindSpeed, 2},

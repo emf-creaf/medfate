@@ -13,22 +13,27 @@ using namespace Rcpp;
 
 const double SIGMA_W = 5.67*pow(10,-8.0);
 
-List profitMaximization1(List supplyFunction, List photosynthesisFunction) {
+List profitMaximization1(List supplyFunction, List photosynthesisFunction, double Gwmax) {
   NumericVector supplydEdp = supplyFunction["dEdP"];
   NumericVector Ag = photosynthesisFunction["Photosynthesis"];
-  // NumericVector Gw = photosynthesisFunction["WaterVaporConductance"];
+  NumericVector Gw = photosynthesisFunction["WaterVaporConductance"];
   int nsteps = supplydEdp.size();
-  NumericVector profit(nsteps);
-  NumericVector cost(nsteps);
-  NumericVector gain(nsteps);
   double maxdEdp = 0.0, mindEdp = 99999999.0;
   double Agmax = 0.0;
+  int nvalidsteps = 0;
+  while((Gw[nvalidsteps]< Gwmax) & (nvalidsteps<nsteps)) {
+    nvalidsteps++;
+  }
   for(int i=0;i<nsteps;i++) {
     maxdEdp = std::max(maxdEdp, supplydEdp[i]);
     mindEdp =  std::min(mindEdp, supplydEdp[i]);
     Agmax = std::max(Agmax, Ag[i]);
   }
-  for(int i=0;i<nsteps;i++) {
+  //Evaluate profit for valid steps
+  NumericVector profit(nsteps, NA_REAL);
+  NumericVector cost(nsteps, NA_REAL);
+  NumericVector gain(nsteps, NA_REAL);
+  for(int i=0;i<nvalidsteps;i++) {
     cost[i] = (maxdEdp-supplydEdp[i])/(maxdEdp-mindEdp);
     gain[i] = Ag[i]/Agmax;
     profit[i] = gain[i]-cost[i];
@@ -36,94 +41,82 @@ List profitMaximization1(List supplyFunction, List photosynthesisFunction) {
   
   int imaxprofit=0;
   double maxprofit=profit[0];
-  //Searches the step corresponding to minimum (i.e. cuticular) conductance
-  // for(int i=0;i<nsteps;i++){
-  //   if(Gw[i]>Gwmin) {
-  //     maxprofit = profit[i];
-  //     imaxprofit = i;
-  //     break;
-  //   }
-  // }
-  //Searches for maximum profit (up to Gwmax)
-  // if(imaxprofit>-1) {
-  for(int i=(imaxprofit+1);i<nsteps;i++){
+  for(int i=(imaxprofit+1);i<nvalidsteps;i++){
     if((profit[i]>maxprofit)) {
       maxprofit = profit[i];
       imaxprofit = i;
     }
   }
-  // } else {
-  // imaxprofit = 0;
-  // }
+  if(Gw[imaxprofit] == Gwmax) {
+    Rcout<<"GX";
+  }
   return(List::create(Named("Cost") = cost,
                       Named("Gain") = gain,
                       Named("Profit") = profit,
                       Named("iMaxProfit")=imaxprofit));
 }
 
-List profitMaximization2(List supplyFunction, List photosynthesisFunction, double kstemmax) {
+List profitMaximization2(List supplyFunction, List photosynthesisFunction, double Gwmax, double kstemmax) {
   NumericVector supplyKterm = supplyFunction["kterm"];
   NumericVector Ag = photosynthesisFunction["Photosynthesis"];
-  // NumericVector Gw = photosynthesisFunction["WaterVaporConductance"];
+  NumericVector Gw = photosynthesisFunction["WaterVaporConductance"];
   int nsteps = supplyKterm.size();
-  NumericVector profit(nsteps);
-  NumericVector cost(nsteps);
-  NumericVector gain(nsteps);
-  double minKterm = 99999999.0;
   double Agmax = 0.0;
+  int nvalidsteps = 0;
+  while((Gw[nvalidsteps]< Gwmax) & (nvalidsteps<nsteps)) {
+    nvalidsteps++;
+  }
+    
   for(int i=0;i<nsteps;i++) {
-    minKterm =  std::min(minKterm, supplyKterm[i]);
     Agmax = std::max(Agmax, Ag[i]);
   }
-  for(int i=0;i<nsteps;i++) {
-    cost[i] = (kstemmax-supplyKterm[i])/(kstemmax-0.0);
-    gain[i] = Ag[i]/Agmax;
-    profit[i] = gain[i]-cost[i];
+  NumericVector profit(nsteps, NA_REAL);
+  NumericVector cost(nsteps, NA_REAL);
+  NumericVector gain(nsteps, NA_REAL);
+  //Evaluate profit for valid steps
+  for(int i=0;i<nvalidsteps;i++) {
+      cost[i] = (kstemmax-supplyKterm[i])/(kstemmax-0.0);
+      gain[i] = Ag[i]/Agmax;
+      profit[i] = gain[i]-cost[i];
   }
   
   int imaxprofit=0;
   double maxprofit=profit[0];
-  // Searches the step corresponding to minimum (i.e. cuticular) conductance
-  // for(int i=0;i<nsteps;i++){
-  //   if(Gw[i]>Gwmin) {
-  //     maxprofit = profit[i];
-  //     imaxprofit = i;
-  //     break;
-  //   }
-  // }
-  //Searches for maximum profit (up to Gwmax)
-  // if(imaxprofit>-1) {
-  for(int i=imaxprofit+1;i<nsteps;i++){
+  for(int i=0;i<nvalidsteps;i++){
     if((profit[i]>maxprofit)) {
-      // if((profit[i]>maxprofit) & (Gw[i]<Gwmax)) {
       maxprofit = profit[i];
       imaxprofit = i;
     }
   }
-  // } else {
-  //   imaxprofit = 0;
-  // }
+  if(Gw[imaxprofit] == Gwmax) {
+    Rcout<<"GX";
+  }
   return(List::create(Named("Cost") = cost,
                       Named("Gain") = gain,
                       Named("Profit") = profit,
                       Named("iMaxProfit")=imaxprofit));
 }
 
-List profitMaximization3(List supplyFunction, List photosynthesisFunction, double kstemmax) {
+List profitMaximization3(List supplyFunction, List photosynthesisFunction, double Gwmax, double kstemmax) {
   NumericVector supplyKterm = supplyFunction["ktermcav"];
   NumericVector Ag = photosynthesisFunction["Photosynthesis"];
-  // NumericVector Gw = photosynthesisFunction["WaterVaporConductance"];
+  NumericVector Gw = photosynthesisFunction["WaterVaporConductance"];
   int nsteps = supplyKterm.size();
-  NumericVector profit(nsteps);
-  NumericVector cost(nsteps);
-  NumericVector gain(nsteps);
   double minKterm = 99999999.0;
   double Agmax = 0.0;
+  int nvalidsteps = 0;
+  while((Gw[nvalidsteps]< Gwmax) & (nvalidsteps<nsteps)) {
+    nvalidsteps++;
+  }
   for(int i=0;i<nsteps;i++) {
     minKterm =  std::min(minKterm, supplyKterm[i]);
     Agmax = std::max(Agmax, Ag[i]);
   }
-  for(int i=0;i<nsteps;i++) {
+  NumericVector profit(nsteps, NA_REAL);
+  NumericVector cost(nsteps, NA_REAL);
+  NumericVector gain(nsteps, NA_REAL);
+  //Evaluate profit for valid steps
+  for(int i=0;i<nvalidsteps;i++) {
     cost[i] = (kstemmax-supplyKterm[i])/(kstemmax-0.0);
     gain[i] = Ag[i]/Agmax;
     profit[i] = gain[i]-cost[i];
@@ -131,26 +124,15 @@ List profitMaximization3(List supplyFunction, List photosynthesisFunction, doubl
   
   int imaxprofit=0;
   double maxprofit=profit[0];
-  //Searches the step corresponding to minimum (i.e. cuticular) conductance
-  // for(int i=0;i<nsteps;i++){
-  //   if(Gw[i]>Gwmin) {
-  //     maxprofit = profit[i];
-  //     imaxprofit = i;
-  //     break;
-  //   }
-  // }
-  //Searches for maximum profit (up to Gwmax)
-  // if(imaxprofit>-1) {
-  for(int i=(imaxprofit+1);i<nsteps;i++){
-    // if((profit[i]>maxprofit) & (Gw[i]<Gwmax)) {
+  for(int i=(imaxprofit+1);i<nvalidsteps;i++){
     if((profit[i]>maxprofit)) {
       maxprofit = profit[i];
       imaxprofit = i;
     }
   }
-  // } else {
-  //   imaxprofit = 0;
-  // }
+  if(Gw[imaxprofit] == Gwmax) {
+    Rcout<<"GX";
+  }
   return(List::create(Named("Cost") = cost,
                       Named("Gain") = gain,
                       Named("Profit") = profit,
@@ -158,10 +140,10 @@ List profitMaximization3(List supplyFunction, List photosynthesisFunction, doubl
 }
 
 // [[Rcpp::export("transp.profitMaximization")]]
-List profitMaximization(List supplyFunction, List photosynthesisFunction, int type=1, double kstemmax = NA_REAL) {
-  if(type==1) return(profitMaximization1(supplyFunction, photosynthesisFunction));
-  else if(type==2) return(profitMaximization2(supplyFunction, photosynthesisFunction, kstemmax));
-  return(profitMaximization3(supplyFunction, photosynthesisFunction, kstemmax));
+List profitMaximization(List supplyFunction, List photosynthesisFunction, int type, double Gwmax, double kstemmax = NA_REAL) {
+  if(type==1) return(profitMaximization1(supplyFunction, photosynthesisFunction, Gwmax));
+  else if(type==2) return(profitMaximization2(supplyFunction, photosynthesisFunction, Gwmax, kstemmax));
+  return(profitMaximization3(supplyFunction, photosynthesisFunction, Gwmax, kstemmax));
 }
 
 

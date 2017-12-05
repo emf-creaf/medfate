@@ -6,6 +6,8 @@ __Version history__
 
 _Version 0.4.7, December 2017.
 1. Profit maximization for sunlit and shade leaves separately
+2. Bug correction in swb
+3. Check on stomatal conductances in profit maximization
 
 _Version 0.4.6, December 2017.
 1. Radiation absorbed by trunks

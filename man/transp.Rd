@@ -11,7 +11,7 @@ Transpiration submodel functions
 Set of high-level functions used in the calculation of stomatal conductance and transpiration. Function \code{transp.profitMaximization} calculates gain and cost functions, as well as profit maximization from supply and photosynthesis input functions. Function \code{transp.dayCanopyTranspiration} calculates profit maximization for all time steps in a day, starting from stand description, soil description and meteorological input. Function \code{transp.dayCanopyTranspirationPlot} produces a plot with the cohort supply functions against water potential and a plot with the cohort photosynthesis functions against water potential, both with the maximum profit values indicated.
 }
 \usage{
-transp.profitMaximization(supplyFunction, photosynthesisFunction, type = 1, kstemmax = NA)
+transp.profitMaximization(supplyFunction, photosynthesisFunction, type, Gwmax, kstemmax = NA)
 transp.dayCanopyTranspiration(x, soil, meteo, day,
                              latitude, elevation, slope = 0, aspect = 0)
 transp.dayCanopyTranspirationPlot(x, soil, meteo, day, timestep, 
@@ -23,6 +23,7 @@ transp.dayCanopyTranspirationPlot(x, soil, meteo, day, timestep,
   \item{supplyFunction}{Water supply function (see \code{\link{hydraulics.supplyFunctionNetwork}}).}
   \item{photosynthesisFunction}{Function returned by \code{photo.photosynthesisFunction()}.}
   \item{type}{Optimization type (1,2 or 3).}
+  \item{Gwmax}{Maximum stomatal conductance (mol·m-2·s-1).}
   \item{kstemmax}{Maximum stem conductance (flow per pressure drop).}
   \item{x}{An object of class \code{\link{swbInput}} built using the 'Complex' transpiration mode.}
   \item{soil}{An object of class \code{\link{soil}}.}
