@@ -908,7 +908,7 @@ double heightFactor(double height, bool taper = true) {
     double dhn  = pow(10,1.257 +  0.24*log10(height/100.0));//Olson, M.E., Anfodillo, T., Rosell, J.A., Petit, G., Crivellaro, A., Isnard, S., León-Gómez, C., Alvarado-Cárdenas, L.O., & Castorena, M. 2014. Universal hydraulics of the flowering plants: Vessel diameter scales with stem length across angiosperm lineages, habits and climates. Ecology Letters 17: 988–997.
     double df = pow(dhn/dh0,2.0);
     double tf = taperFactor(height);
-    return(hf*df*tf); 
+    hf = hf*df*tf; 
   } 
   return(hf);
 }
