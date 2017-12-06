@@ -1429,6 +1429,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// layerIrradianceFractionBottomUp
+NumericVector layerIrradianceFractionBottomUp(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, NumericVector k, NumericVector alpha, double trunkExtinctionFraction);
+RcppExport SEXP _medfate_layerIrradianceFractionBottomUp(SEXP LAImeSEXP, SEXP LAImdSEXP, SEXP LAImxSEXP, SEXP kSEXP, SEXP alphaSEXP, SEXP trunkExtinctionFractionSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type LAIme(LAImeSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type LAImd(LAImdSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type LAImx(LAImxSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type k(kSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< double >::type trunkExtinctionFraction(trunkExtinctionFractionSEXP);
+    rcpp_result_gen = Rcpp::wrap(layerIrradianceFractionBottomUp(LAIme, LAImd, LAImx, k, alpha, trunkExtinctionFraction));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cohortSunlitShadeAbsorbedRadiation
 List cohortSunlitShadeAbsorbedRadiation(double Ib0, double Id0, NumericVector Ibf, NumericVector Idf, double beta, NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kb, NumericVector kd, NumericVector alpha, NumericVector gamma);
 RcppExport SEXP _medfate_cohortSunlitShadeAbsorbedRadiation(SEXP Ib0SEXP, SEXP Id0SEXP, SEXP IbfSEXP, SEXP IdfSEXP, SEXP betaSEXP, SEXP LAImeSEXP, SEXP LAImdSEXP, SEXP kbSEXP, SEXP kdSEXP, SEXP alphaSEXP, SEXP gammaSEXP) {
@@ -2278,6 +2294,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_swrExtinctionProfile", (DL_FUNC) &_medfate_swrExtinctionProfile, 4},
     {"_medfate_cohortAbsorbedSWRFraction", (DL_FUNC) &_medfate_cohortAbsorbedSWRFraction, 4},
     {"_medfate_layerIrradianceFraction", (DL_FUNC) &_medfate_layerIrradianceFraction, 6},
+    {"_medfate_layerIrradianceFractionBottomUp", (DL_FUNC) &_medfate_layerIrradianceFractionBottomUp, 6},
     {"_medfate_cohortSunlitShadeAbsorbedRadiation", (DL_FUNC) &_medfate_cohortSunlitShadeAbsorbedRadiation, 11},
     {"_medfate_layerSunlitFraction", (DL_FUNC) &_medfate_layerSunlitFraction, 3},
     {"_medfate_instantaneousLightExtinctionAbsortion", (DL_FUNC) &_medfate_instantaneousLightExtinctionAbsortion, 10},

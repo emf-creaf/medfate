@@ -4,6 +4,10 @@
 
 __Version history__
 
+_Version 0.4.8, December 2017.
+1. Leaf radiation balance with LWR from soil
+2. New output for swb
+
 _Version 0.4.7, December 2017.
 1. Profit maximization for sunlit and shade leaves separately
 2. Bug correction in swb

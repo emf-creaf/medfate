@@ -393,6 +393,10 @@ light.layerIrradianceFraction <- function(LAIme, LAImd, LAImx, k, alpha, trunkEx
     .Call('_medfate_layerIrradianceFraction', PACKAGE = 'medfate', LAIme, LAImd, LAImx, k, alpha, trunkExtinctionFraction)
 }
 
+light.layerIrradianceFractionBottomUp <- function(LAIme, LAImd, LAImx, k, alpha, trunkExtinctionFraction = 0.1) {
+    .Call('_medfate_layerIrradianceFractionBottomUp', PACKAGE = 'medfate', LAIme, LAImd, LAImx, k, alpha, trunkExtinctionFraction)
+}
+
 light.cohortSunlitShadeAbsorbedRadiation <- function(Ib0, Id0, Ibf, Idf, beta, LAIme, LAImd, kb, kd, alpha, gamma) {
     .Call('_medfate_cohortSunlitShadeAbsorbedRadiation', PACKAGE = 'medfate', Ib0, Id0, Ibf, Idf, beta, LAIme, LAImd, kb, kd, alpha, gamma)
 }

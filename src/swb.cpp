@@ -543,6 +543,10 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   NumericMatrix Einst(numCohorts, ntimesteps);
   NumericMatrix Aninst(numCohorts, ntimesteps);
   NumericMatrix PsiPlantinst(numCohorts, ntimesteps);
+  NumericMatrix SWR_SL(numCohorts, ntimesteps);
+  NumericMatrix SWR_SH(numCohorts, ntimesteps);
+  NumericMatrix LWR_SL(numCohorts, ntimesteps);
+  NumericMatrix LWR_SH(numCohorts, ntimesteps);
   NumericVector minPsiLeaf(numCohorts,0.0), minPsiRoot(numCohorts,0.0); //Minimum potentials experienced
   for(int c=0;c<numCohorts;c++) {
     photosynthesis[c] = 0.0;
@@ -563,8 +567,20 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
     //Soil longwave emmission
     emm_LWR_soil[n] =  0.95*SIGMA_Wm2*pow(Tsoil[0]+273.16,4.0);
     
+    //Retrieve radiation absorbed
+    NumericVector absPAR_SL = abs_PAR_SL_list[n];
+    NumericVector absPAR_SH = abs_PAR_SH_list[n];
+    NumericVector absSWR_SL = abs_SWR_SL_list[n];
+    NumericVector absSWR_SH = abs_SWR_SH_list[n];
+    NumericVector absLWR_SL = abs_LWR_SL_list[n];
+    NumericVector absLWR_SH = abs_LWR_SH_list[n];
+    
     NumericVector EplantVecInstant(nlayers,0.0); //Transpiration extracted from each layers, taking into account all cohorts 
     for(int c=0;c<numCohorts;c++) { //Plant cohort loop
+      SWR_SL(c,n) = absSWR_SL[c];
+      SWR_SH(c,n) = absSWR_SH[c];
+      LWR_SL(c,n) = absLWR_SL[c];
+      LWR_SH(c,n) = absLWR_SH[c];
       if(nlayerscon[c]>0) {//If the plant is connected to at least one layer
         List supply = supplyNetworks[c];
         NumericVector fittedE = supply["E"];
@@ -622,25 +638,18 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
         //                                            Vmax298layer,Jmax298layer,
         //                                            Gwmin[c], Gwmax[c], leafWidth[c]);
         // } else if(canopyMode=="sunshade"){
-          //Retrieve Light extinction
-          NumericVector absPAR_SL = abs_PAR_SL_list[n];
-          NumericVector absPAR_SH = abs_PAR_SH_list[n];
-          NumericVector absSWR_SL = abs_SWR_SL_list[n];
-          NumericVector absSWR_SH = abs_SWR_SH_list[n];
-          NumericVector absLWR_SL = abs_LWR_SL_list[n];
-          NumericVector absLWR_SH = abs_LWR_SH_list[n];
           
           //Photosynthesis function for sunlit and shade leaves
           List photoSunlit = leafPhotosynthesisFunction(supply, Catm, Patm,Tcan[n], vpatm, 
                                                  zWind[c], 
-                                                 absSWR_SL[c] + absLWR_SL[c] + SLarea*0.97*LWR_emmcan, 
+                                                 absSWR_SL[c] + absLWR_SL[c], 
                                                  irradianceToPhotonFlux(absPAR_SL[c]), 
                                                  Vmax298SL, 
                                                  Jmax298SL, 
                                                  Gwmin[c], Gwmax[c], leafWidth[c], SLarea);
           List photoShade = leafPhotosynthesisFunction(supply, Catm, Patm,Tcan[n], vpatm, 
                                                        zWind[c], 
-                                                       absSWR_SH[c] + absLWR_SH[c] + SHarea*0.97*LWR_emmcan, 
+                                                       absSWR_SH[c] + absLWR_SH[c], 
                                                        irradianceToPhotonFlux(absPAR_SH[c]),
                                                        Vmax298SH, 
                                                        Jmax298SH, 
@@ -848,11 +857,13 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
                                         _["Hcansoil"] = Hcansoil, _["SWRsoilin"] = abs_SWR_soil, _["LWRsoilin"] = abs_LWR_soil,  _["LWRsoilout"] = LWRsoilout,
                                         _["Ebalsoil"] = Ebalsoil, _["RAsoil"] = RAsoil);
   List TEinst = List::create(_["Temperature"]=Tinst, _["CanopyEnergyBalance"] = CEBinst, _["SoilEnergyBalance"] = SEBinst);
-  List l = List::create(_["PET"] = NA_REAL, _["NetPrec"] = NetPrec, _["Runon"] = runon, _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
+  List AbsRadinst = List::create(_["SWR_SH"] = SWR_SH, _["SWR_SL"]=SWR_SL,
+                                 _["LWR_SH"] = LWR_SH, _["LWR_SL"] = LWR_SL);
+  List l = List::create(_["NetPrec"] = NetPrec, _["Runon"] = runon, _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
                         _["LAIcell"] = LAIcell, _["LAIcelldead"] = LAIcelldead, _["Cm"] = Cm, _["Lground"] = 1.0-propCover,
                         _["EsoilVec"] = EsoilVec, _["EplantVec"] = EplantVec, _["psiVec"] = psi,
                         _["EplantCoh"] = Eplant, _["psiCoh"] = PlantPsi, _["DDS"] = DDS,
-                        _["Einst"]=Einst, _["Aninst"]=Aninst,
+                        _["AbsRadinst"] = AbsRadinst, _["Einst"]=Einst, _["Aninst"]=Aninst,
                         _["PsiPlantinst"] = PsiPlantinst, _["TEinst"] = TEinst);
   return(l);
 }
@@ -1196,6 +1207,9 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
   NumericMatrix PlantTranspiration(numDays, numCohorts);
   NumericMatrix PlantPhotosynthesis(numDays, numCohorts);
   NumericVector EplantCohTot(numCohorts, 0.0);
+  NumericMatrix PlantAbsSWR(numDays, numCohorts);
+  NumericMatrix PlantAbsLWR(numDays, numCohorts);
+  NumericMatrix PlantLAI(numDays, numCohorts);
   
   
   Wdays(0,_) = W;
@@ -1224,6 +1238,7 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
         if(i>0) LAI_exp_prev= LAI_expanded[j]; //Store previous value
         LAI_expanded[j] = LAI_live[j]*phe[j]; //Update expanded leaf area (will decrease if LAI_live decreases)
         LAI_dead[j] += std::max(0.0, LAI_exp_prev-LAI_expanded[j]);//Check increase dead leaf area if expanded leaf area has decreased
+        PlantLAI(i,j) = LAI_expanded[j];
       }
       
       
@@ -1231,6 +1246,8 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
       if(transpirationMode=="Simple") {
         s = swbDay1(x, soil, MeanTemperature[i], PET[i], Precipitation[i], ER[i], 0.0, false); //No Runon in simulations for a single cell
       } else if(transpirationMode=="Complex") {
+        int ntimesteps = control["ndailysteps"];
+        double tstep = 86400.0/((double) ntimesteps);
         std::string c = as<std::string>(dateStrings[i]);
         int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
         double delta = meteoland::radiation_solarDeclination(J);
@@ -1238,7 +1255,17 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
         s = swbDay2(x, soil, MinTemperature[i], MaxTemperature[i], 
                          MinRelativeHumidity[i], MaxRelativeHumidity[i], Radiation[i], wind, 
                          latitude, elevation, slope, aspect, solarConstant, delta, Precipitation[i], ER[i], 0.0, verbose);
-        PET[i] = s["PET"];
+        List AbsRadinst = Rcpp::as<Rcpp::List>(s["AbsRadinst"]);
+        NumericMatrix SWR_SL = Rcpp::as<Rcpp::NumericMatrix>(AbsRadinst["SWR_SL"]);
+        NumericMatrix SWR_SH = Rcpp::as<Rcpp::NumericMatrix>(AbsRadinst["SWR_SH"]);
+        NumericMatrix LWR_SL = Rcpp::as<Rcpp::NumericMatrix>(AbsRadinst["LWR_SL"]);
+        NumericMatrix LWR_SH = Rcpp::as<Rcpp::NumericMatrix>(AbsRadinst["LWR_SH"]);
+        for(int j=0;j<numCohorts;j++) {
+          for(int n=0;n<ntimesteps;n++){
+            PlantAbsSWR(i,j) += 0.000001*(SWR_SL(j,n)+SWR_SH(j,n))*tstep;
+            PlantAbsLWR(i,j) += 0.000001*(LWR_SL(j,n)+LWR_SH(j,n))*tstep;
+          }
+        }
         List TEinst = Rcpp::as<Rcpp::List>(s["TEinst"]);
         DataFrame Tinst = Rcpp::as<Rcpp::DataFrame>(TEinst["Temperature"]); 
         DataFrame CEBinst = Rcpp::as<Rcpp::DataFrame>(TEinst["CanopyEnergyBalance"]); 
@@ -1246,8 +1273,6 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
         NumericVector Tcan = Rcpp::as<Rcpp::NumericVector>(Tinst["Tcan"]);
         NumericVector Tsoil = Rcpp::as<Rcpp::NumericVector>(Tinst["Tsoil.1"]);
 
-        int ntimesteps = Tcan.length();
-        double tstep = 86400.0/((double) ntimesteps);
         SWRcanin[i] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(CEBinst["SWRcanin"]))*tstep;
         LWRcanin[i] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(CEBinst["LWRcanin"]))*tstep;
         LWRcanout[i] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(CEBinst["LWRcanout"]))*tstep;
@@ -1347,6 +1372,9 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
   PlantStress.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   PlantPsi.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   PlantPhotosynthesis.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
+  PlantAbsSWR.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
+  PlantAbsLWR.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
+  PlantLAI.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   
   if(verbose) Rcout<<"list ...";
 
@@ -1366,6 +1394,9 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
                         Named("SoilWaterBalance")=SWB,
                         Named("EnergyBalance")= DEB,
                         Named("Temperature")= DT,
+                        Named("PlantLAI") = PlantLAI,
+                        Named("PlantAbsorbedSWR") =PlantAbsSWR,
+                        Named("PlantAbsorbedLWR") =PlantAbsLWR,
                         Named("PlantTranspiration") = PlantTranspiration,
                         Named("PlantPhotosynthesis") = PlantPhotosynthesis,
                         Named("PlantPsi") = PlantPsi, 

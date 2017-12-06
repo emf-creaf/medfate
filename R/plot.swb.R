@@ -3,8 +3,11 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
   DailyBalance = x$DailyBalance
   SoilWaterBalance = x$SoilWaterBalance
   nlayers = x$NumSoilLayers
-  TYPES = c("PET_Precipitation","PET_NetPrec","ET","Psi","Theta","Vol", "LAI",
+  TYPES = c("PET_Precipitation","PET_NetPrec","ET","Psi","Theta","Vol", "LAI", "PlantLAI",
             "PlantStress", "PlantPsi","PlantPhotosynthesis","PlantTranspiration",
+            "PlantPhotosynthesisLeaf","PlantTranspirationLeaf",
+            "PlantAbsorbedSWR", "PlantAbsorbedSWRLeaf",
+            "PlantAbsorbedLWR", "PlantAbsorbedLWRLeaf",
             "AirTemperature","SoilTemperature", "CanopyTemperature","Export",
             "CanopyEnergyBalance", "SoilEnergyBalance")
   type = match.arg(type,TYPES)  
@@ -95,6 +98,14 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
     legend("topleft", bty="n", col="black",lty=c(1,1:nlayers), lwd=c(2,rep(1.5,5)),
            legend=c("Total",paste("Layer", 1:nlayers)))
     
+  } else if(type=="PlantLAI") {
+    if(is.null(ylab)) ylab = "Leaf Area Index (m2/m2)"
+    if(is.null(ylim)) ylim = c(0,max(x$PlantLAI))
+    matplot(dates, x$PlantLAI, ylim = ylim, lwd=1, type="l", xlim=xlim,
+            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
+    plotAxes()
+    legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
+           col = 1:length(cohortnames), bty="n")
   } else if(type=="PlantStress") {
     if(is.null(ylab)) ylab = "Drought stress [0-1]"
     if(is.null(ylim)) ylim = c(0,1)
@@ -119,10 +130,62 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
     plotAxes()      
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
            col = 1:length(cohortnames), bty="n")
+  } else if(type=="PlantTranspirationLeaf") {
+    pt = x$PlantTranspiration/x$PlantLAI
+    if(is.null(ylab)) ylab = "Plant transpiration per leaf area (mm)"
+    if(is.null(ylim)) ylim = c(0,max(pt))
+    matplot(dates, pt, ylim = ylim, lwd=1, type="l", xlim=xlim,
+            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
+    plotAxes()      
+    legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
+           col = 1:length(cohortnames), bty="n")
   } else if(type=="PlantPhotosynthesis") {
     if(is.null(ylab)) ylab = "Plant photosynthesis (gC/m2)"
     if(is.null(ylim)) ylim = c(min(x$PlantPhotosynthesis),max(x$PlantPhotosynthesis))
     matplot(dates, x$PlantPhotosynthesis, ylim = ylim, lwd=1, type="l", xlim=xlim,
+            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
+    plotAxes()     
+    legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
+           col = 1:length(cohortnames), bty="n")
+  } else if(type=="PlantPhotosynthesisLeaf") {
+    pf = x$PlantPhotosynthesis/x$PlantLAI
+    if(is.null(ylab)) ylab = "Plant photosynthesis per leaf area (gC/m2)"
+    if(is.null(ylim)) ylim = c(min(pf),max(pf))
+    matplot(dates, pf, ylim = ylim, lwd=1, type="l", xlim=xlim,
+            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
+    plotAxes()     
+    legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
+           col = 1:length(cohortnames), bty="n")
+  } else if(type=="PlantAbsorbedSWR") {
+    if(is.null(ylab)) ylab = "Plant absorbed SWR (MJ/m2)"
+    if(is.null(ylim)) ylim = c(0,max(x$PlantAbsorbedSWR))
+    matplot(dates, x$PlantAbsorbedSWR, ylim = ylim, lwd=1, type="l", xlim=xlim,
+            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
+    plotAxes()     
+    legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
+           col = 1:length(cohortnames), bty="n")
+  } else if(type=="PlantAbsorbedSWRLeaf") {
+    pf = x$PlantAbsorbedSWR/x$PlantLAI
+    if(is.null(ylab)) ylab = "Plant absorbed SWR per leaf area (MJ/m2)"
+    if(is.null(ylim)) ylim = c(min(pf),max(pf))
+    matplot(dates, pf, ylim = ylim, lwd=1, type="l", xlim=xlim,
+            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
+    plotAxes()     
+    legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
+           col = 1:length(cohortnames), bty="n")
+  } else if(type=="PlantAbsorbedLWR") {
+    if(is.null(ylab)) ylab = "Plant absorbed LWR (MJ/m2)"
+    if(is.null(ylim)) ylim = c(0,max(x$PlantAbsorbedLWR))
+    matplot(dates, x$PlantAbsorbedLWR, ylim = ylim, lwd=1, type="l", xlim=xlim,
+            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
+    plotAxes()     
+    legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
+           col = 1:length(cohortnames), bty="n")
+  } else if(type=="PlantAbsorbedLWRLeaf") {
+    pf = x$PlantAbsorbedLWR/x$PlantLAI
+    if(is.null(ylab)) ylab = "Plant absorbed LWR per leaf area (MJ/m2)"
+    if(is.null(ylim)) ylim = c(min(pf),max(pf))
+    matplot(dates, pf, ylim = ylim, lwd=1, type="l", xlim=xlim,
             ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
     plotAxes()     
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
