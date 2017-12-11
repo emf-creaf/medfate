@@ -147,7 +147,8 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
       pRootDisc[c]=pRootDiscSP[SP[c]];
       Gwmin[c] = GwminSP[SP[c]];
       Gwmax[c] = GwmaxSP[SP[c]];
-      double VCroot_kmaxc = 1.0/((1.0/(VCstem_kmax[c]*fracTotalTreeResistance))-(1.0/VCstem_kmax[c]));
+      // double VCroot_kmaxc = 1.0/((1.0/(VCstem_kmax[c]*fracTotalTreeResistance))-(1.0/VCstem_kmax[c]));
+      double VCroot_kmaxc = maximumRootHydraulicConductance(xylem_kmax[c],Al2As[c], Vc, dVec);
       VCroot_kmax(c,_) = VCroot_kmaxc*xylemConductanceProportions(Vc,dVec);
       Vmax298[c] =Vmax298SP[SP[c]];
       Jmax298[c] = exp(1.197 + 0.847*log(Vmax298[c])); //Walker et al 2014
@@ -476,7 +477,8 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
       Gwmin[c] = GwminSP[SP[c]];
       Gwmax[c] = GwmaxSP[SP[c]];
       pRootDisc[c]=pRootDiscSP[SP[c]];
-      double VCroot_kmaxc = 1.0/((1.0/(VCstem_kmax[c]*fracTotalTreeResistance))-(1.0/VCstem_kmax[c]));
+      // double VCroot_kmaxc = 1.0/((1.0/(VCstem_kmax[c]*fracTotalTreeResistance))-(1.0/VCstem_kmax[c]));
+      double VCroot_kmaxc = maximumRootHydraulicConductance(xylem_kmax[c],Al2As[c], Vc, dVec);
       VCroot_kmax(c,_) = VCroot_kmaxc*xylemConductanceProportions(Vc,dVec);
       Vmax298[c] =Vmax298SP[SP[c]];
       Jmax298[c] = exp(1.197 + 0.847*log(Vmax298[c]));//Walker et al 2014
