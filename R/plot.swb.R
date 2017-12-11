@@ -1,15 +1,22 @@
 plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, add=FALSE,...) {
   dates = as.Date(rownames(x$DailyBalance))
+  transpMode = x$control$transpirationMode
   DailyBalance = x$DailyBalance
   SoilWaterBalance = x$SoilWaterBalance
   nlayers = x$NumSoilLayers
-  TYPES = c("PET_Precipitation","PET_NetPrec","ET","Psi","Theta","Vol", "LAI", "PlantLAI",
-            "PlantStress", "PlantPsi","PlantPhotosynthesis","PlantTranspiration",
-            "PlantPhotosynthesisLeaf","PlantTranspirationLeaf",
-            "PlantAbsorbedSWR", "PlantAbsorbedSWRLeaf",
-            "PlantAbsorbedLWR", "PlantAbsorbedLWRLeaf",
-            "AirTemperature","SoilTemperature", "CanopyTemperature","Export",
-            "CanopyEnergyBalance", "SoilEnergyBalance")
+  if(transpMode=="Complex") {
+    TYPES = c("PET_Precipitation","PET_NetPrec","ET","Psi","Theta","Vol", "LAI", "PlantLAI",
+              "PlantStress", "PlantPsi","PlantPhotosynthesis","PlantTranspiration",
+              "PlantPhotosynthesisLeaf","PlantTranspirationLeaf",
+              "PlantAbsorbedSWR", "PlantAbsorbedSWRLeaf",
+              "PlantAbsorbedLWR", "PlantAbsorbedLWRLeaf",
+              "AirTemperature","SoilTemperature", "CanopyTemperature","Export",
+              "CanopyEnergyBalance", "SoilEnergyBalance")
+  } else {
+    TYPES = c("PET_Precipitation","PET_NetPrec","ET","Psi","Theta","Vol", "LAI", "PlantLAI",
+              "PlantStress", "PlantPsi","PlantPhotosynthesis","PlantTranspiration",
+              "Export")
+  }
   type = match.arg(type,TYPES)  
   numDays = length(dates)
   numYears = round(numDays/365)
@@ -132,8 +139,9 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
            col = 1:length(cohortnames), bty="n")
   } else if(type=="PlantTranspirationLeaf") {
     pt = x$PlantTranspiration/x$PlantLAI
+    pt[x$PlantLAI==0] = NA
     if(is.null(ylab)) ylab = "Plant transpiration per leaf area (mm)"
-    if(is.null(ylim)) ylim = c(0,max(pt))
+    if(is.null(ylim)) ylim = c(0,max(pt, na.rm=T))
     matplot(dates, pt, ylim = ylim, lwd=1, type="l", xlim=xlim,
             ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
     plotAxes()      
@@ -149,8 +157,9 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
            col = 1:length(cohortnames), bty="n")
   } else if(type=="PlantPhotosynthesisLeaf") {
     pf = x$PlantPhotosynthesis/x$PlantLAI
+    pf[x$PlantLAI==0] = NA
     if(is.null(ylab)) ylab = "Plant photosynthesis per leaf area (gC/m2)"
-    if(is.null(ylim)) ylim = c(min(pf),max(pf))
+    if(is.null(ylim)) ylim = c(min(pf, na.rm=T),max(pf, na.rm=T))
     matplot(dates, pf, ylim = ylim, lwd=1, type="l", xlim=xlim,
             ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
     plotAxes()     
@@ -166,8 +175,9 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
            col = 1:length(cohortnames), bty="n")
   } else if(type=="PlantAbsorbedSWRLeaf") {
     pf = x$PlantAbsorbedSWR/x$PlantLAI
+    pf[x$PlantLAI==0] = NA
     if(is.null(ylab)) ylab = "Plant absorbed SWR per leaf area (MJ/m2)"
-    if(is.null(ylim)) ylim = c(min(pf),max(pf))
+    if(is.null(ylim)) ylim = c(min(pf, na.rm=T),max(pf, na.rm=T))
     matplot(dates, pf, ylim = ylim, lwd=1, type="l", xlim=xlim,
             ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
     plotAxes()     
@@ -183,8 +193,9 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
            col = 1:length(cohortnames), bty="n")
   } else if(type=="PlantAbsorbedLWRLeaf") {
     pf = x$PlantAbsorbedLWR/x$PlantLAI
+    pf[x$PlantLAI==0] = NA
     if(is.null(ylab)) ylab = "Plant absorbed LWR per leaf area (MJ/m2)"
-    if(is.null(ylim)) ylim = c(min(pf),max(pf))
+    if(is.null(ylim)) ylim = c(min(pf, na.rm=T),max(pf, na.rm=T))
     matplot(dates, pf, ylim = ylim, lwd=1, type="l", xlim=xlim,
             ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
     plotAxes()     

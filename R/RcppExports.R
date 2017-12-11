@@ -365,6 +365,10 @@ hydraulics.maximumStemHydraulicConductance <- function(xylemConductivity, Al2As,
     .Call('_medfate_maximumStemHydraulicConductance', PACKAGE = 'medfate', xylemConductivity, Al2As, height, taper)
 }
 
+hydraulics.maximumRootHydraulicConductance <- function(xylemConductivity, Al2As, v, d, depthWidthRatio = 1.0) {
+    .Call('_medfate_maximumRootHydraulicConductance', PACKAGE = 'medfate', xylemConductivity, Al2As, v, d, depthWidthRatio)
+}
+
 .parcohort <- function(SP, H, CR, LAI, SpParams) {
     .Call('_medfate_parcohort', PACKAGE = 'medfate', SP, H, CR, LAI, SpParams)
 }
@@ -479,6 +483,10 @@ root.conicDistribution <- function(Zcone, d) {
 
 root.ldrDistribution <- function(Z50, Z95, d) {
     .Call('_medfate_ldrDistribution', PACKAGE = 'medfate', Z50, Z95, d)
+}
+
+root.rootLengths <- function(v, d, depthWidthRatio = 1.0) {
+    .Call('_medfate_rootLengths', PACKAGE = 'medfate', v, d, depthWidthRatio)
 }
 
 root.xylemConductanceProportions <- function(v, d, depthWidthRatio = 1.0) {

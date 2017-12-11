@@ -165,6 +165,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
     DataFrame paramsTranspdf = DataFrame::create(
       _["Gwmin"]=Gwmin, _["Gwmax"]=Gwmax,_["LeafWidth"] = leafwidth, _["Vmax298"]=Vmax298,
       _["Jmax298"]=Jmax298,_["VCroot_c"]=VCroot_c,_["VCroot_d"]=VCroot_d,_["xylem_kmax"] = xylem_kmax,
+      _["Al2As"] = Al2As,  
       _["VCstem_kmax"]=VCstem_kmax,_["VCstem_c"]=VCstem_c,_["VCstem_d"]=VCstem_d, _["pRootDisc"] = pRootDisc);
     paramsTranspdf.attr("row.names") = above.attr("row.names");
     List below = List::create(_["V"] = V,
@@ -491,9 +492,10 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     VCroot_kmax.attr("dimnames") = List::create(above.attr("row.names"), slnames);
     
     DataFrame paramsTranspdf = DataFrame::create(
-      _["Gwmin"]=Gwmin, _["Gwmax"]=Gwmax, _["LeafWidth"] = leafwidth, _["Vmax298"]=Vmax298,
-      _["Jmax298"]=Jmax298,_["VCroot_c"]=VCroot_c,_["VCroot_d"]=VCroot_d,_["xylem_kmax"] = xylem_kmax,
-      _["VCstem_kmax"]=VCstem_kmax,_["VCstem_c"]=VCstem_c,_["VCstem_d"]=VCstem_d, _["pRootDisc"] = pRootDisc);
+        _["Gwmin"]=Gwmin, _["Gwmax"]=Gwmax, _["LeafWidth"] = leafwidth, _["Vmax298"]=Vmax298,
+        _["Jmax298"]=Jmax298,_["VCroot_c"]=VCroot_c,_["VCroot_d"]=VCroot_d,_["xylem_kmax"] = xylem_kmax,
+        _["Al2As"] = Al2As,  
+        _["VCstem_kmax"]=VCstem_kmax,_["VCstem_c"]=VCstem_c,_["VCstem_d"]=VCstem_d, _["pRootDisc"] = pRootDisc);
     paramsTranspdf.attr("row.names") = above.attr("row.names");
     
     List below = List::create( _["Z"]=Z,_["V"] = V,

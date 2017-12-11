@@ -1,4 +1,5 @@
 #include "Rcpp.h"
+#include "root.h"
 #include <math.h>
 
 
@@ -926,5 +927,23 @@ double heightFactor(double height, bool taper = true) {
 double maximumStemHydraulicConductance(double xylemConductivity, double Al2As, double height, bool taper = true){
   // Christoffersen, B. O., M. Gloor, S. Fauset, N. M. Fyllas, D. R. Galbraith, T. R. Baker, L. Rowland, R. A. Fisher, O. J. Binks, S. A. Sevanto, C. Xu, S. Jansen, B. Choat, M. Mencuccini, N. G. McDowell, and P. Meir. 2016. Linking hydraulic traits to tropical forest function in a size-structured and trait-driven model (TFS v.1-Hydro). Geoscientific Model Development Discussions 0:1–60.
   double kmax = (1000.0/0.018)*(xylemConductivity/Al2As)*heightFactor(height, taper);
+  return(kmax); 
+}
+
+/**
+ * Calculate maximum leaf-specific root hydraulic conductance (in mmol·m-2·s-1·MPa-1)
+ * 
+ * xylemConductivity - Sapwood-specific conductivity of root xylem (in kg·m-1·s-1·MPa-1)
+ * Al2As - Leaf area to sapwood area ratio (in m2·m-2)
+ * v - proportion of fine roots in each soil layer
+ * d - soil layer depths (in mm)
+ */
+// [[Rcpp::export("hydraulics.maximumRootHydraulicConductance")]]
+double maximumRootHydraulicConductance(double xylemConductivity, double Al2As, NumericVector v, NumericVector d, double depthWidthRatio = 1.0){
+  NumericVector rl = rootLengths(v,d, depthWidthRatio);
+  NumericVector w = xylemConductanceProportions(v,d, depthWidthRatio);
+  int nlayers = v.length();
+  double kmax = 0.0;
+  for(int i=0;i<nlayers;i++) kmax = kmax + w[i]*(1000.0/0.018)*(xylemConductivity/((rl[i]/1000.0)*Al2As));
   return(kmax); 
 }

@@ -4,9 +4,14 @@
 
 __Version history__
 
+_Version 0.4.9, December 2017.
+1. Alternative way of calculating maximum root conductance
+2. Default value for averageFracRhizosphereResistance changed to 0.15
+
 _Version 0.4.8, December 2017.
 1. Leaf radiation balance with LWR from soil
 2. New output for swb
+3. Bug fix in plot.swb (match according to transpiration model)
 
 _Version 0.4.7, December 2017.
 1. Profit maximization for sunlit and shade leaves separately
