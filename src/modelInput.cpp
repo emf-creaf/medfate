@@ -144,6 +144,9 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
       VCstem_d[c]=VCstem_dSP[SP[c]];
       VCroot_c[c]=VCroot_cSP[SP[c]];
       VCroot_d[c]=VCroot_dSP[SP[c]];
+      //Default vulnerability curve parameters if missing
+      if(NumericVector::is_na(VCroot_c[c])) VCroot_c[c] = VCstem_c[c];
+      if(NumericVector::is_na(VCroot_d[c])) VCroot_d[c] = VCstem_d[c]/2.0;
       pRootDisc[c]=pRootDiscSP[SP[c]];
       Gwmin[c] = GwminSP[SP[c]];
       Gwmax[c] = GwmaxSP[SP[c]];
@@ -474,6 +477,9 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
       VCstem_d[c]=VCstem_dSP[SP[c]];
       VCroot_c[c]=VCroot_cSP[SP[c]];
       VCroot_d[c]=VCroot_dSP[SP[c]];
+      //Default vulnerability curve parameters if missing
+      if(NumericVector::is_na(VCroot_c[c])) VCroot_c[c] = VCstem_c[c];
+      if(NumericVector::is_na(VCroot_d[c])) VCroot_d[c] = VCstem_d[c]/2.0;
       Gwmin[c] = GwminSP[SP[c]];
       Gwmax[c] = GwmaxSP[SP[c]];
       pRootDisc[c]=pRootDiscSP[SP[c]];

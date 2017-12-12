@@ -562,7 +562,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
       }
       Tsoil_mat(n,_) = Tsoil; 
     }
-    //LWR emmited by the canopy, used for leaf absortion
+    //LWR emmited by the canopy, per ground area
     double LWR_emmcan = 0.95*SIGMA_Wm2*pow(Tcan[n]+273.16,4.0);
     //Soil longwave emmission
     emm_LWR_soil[n] =  0.95*SIGMA_Wm2*pow(Tsoil[0]+273.16,4.0);

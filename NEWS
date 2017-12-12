@@ -7,6 +7,7 @@ __Version history__
 _Version 0.4.9, December 2017.
 1. Alternative way of calculating maximum root conductance
 2. Default value for averageFracRhizosphereResistance changed to 0.15
+3. Root vulnerability curve parameters taken from stem vulnerability curve when missing (d_root = d_stem/2)
 
 _Version 0.4.8, December 2017.
 1. Leaf radiation balance with LWR from soil
