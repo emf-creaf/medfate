@@ -4,6 +4,9 @@
 
 __Version history__
 
+_Version 0.5.0, December 2017.
+1. Atmospheric CO2 is an input control parameter
+
 _Version 0.4.9, December 2017.
 1. Alternative way of calculating maximum root conductance
 2. Default value for averageFracRhizosphereResistance changed to 0.15

@@ -12,6 +12,7 @@ defaultControl<-function() {
     numericParams=list(maxNsteps = 400, psiStep = -0.001, psiMax = -10.0, ntrial = 20, psiTol = 0.0001, ETol = 0.0001),
     fracTotalTreeResistance = 0.625,
     averageFracRhizosphereResistance = 0.15,
+    Catm = 386,
     ndailysteps = 24,
     thermalCapacityLAI = 1000000,
     defaultWindSpeed = 5,

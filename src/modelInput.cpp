@@ -178,6 +178,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
     List numericParams = control["numericParams"];
     List paramsControl = List::create(_["verbose"] =control["verbose"],
                                       _["transpirationMode"] =transpirationMode, 
+                                      _["Catm"] = control["Catm"],
                                       _["averageFracRhizosphereResistance"] = control["averageFracRhizosphereResistance"],
                                       _["canopyMode"] =canopyMode, 
                                       _["verticalLayerSize"] = control["verticalLayerSize"],
@@ -513,6 +514,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     List numericParams = control["numericParams"];
     List paramsControl = List::create(_["verbose"] =control["verbose"],
                                       _["transpirationMode"] =transpirationMode, 
+                                      _["Catm"] = control["Catm"],                                      
                                       _["averageFracRhizosphereResistance"] = control["averageFracRhizosphereResistance"],
                                       _["canopyMode"] = canopyMode,
                                       _["verticalLayerSize"] = control["verticalLayerSize"],

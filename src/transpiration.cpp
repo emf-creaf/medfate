@@ -47,9 +47,9 @@ List profitMaximization1(List supplyFunction, List photosynthesisFunction, doubl
       imaxprofit = i;
     }
   }
-  if(Gw[imaxprofit] == Gwmax) {
-    Rcout<<"GX";
-  }
+  // if(Gw[imaxprofit] == Gwmax) {
+  //   Rcout<<"GX";
+  // }
   return(List::create(Named("Cost") = cost,
                       Named("Gain") = gain,
                       Named("Profit") = profit,
@@ -88,9 +88,9 @@ List profitMaximization2(List supplyFunction, List photosynthesisFunction, doubl
       imaxprofit = i;
     }
   }
-  if(Gw[imaxprofit] == Gwmax) {
-    Rcout<<"GX";
-  }
+  // if(Gw[imaxprofit] == Gwmax) {
+  //   Rcout<<"GX";
+  // }
   return(List::create(Named("Cost") = cost,
                       Named("Gain") = gain,
                       Named("Profit") = profit,
@@ -130,9 +130,9 @@ List profitMaximization3(List supplyFunction, List photosynthesisFunction, doubl
       imaxprofit = i;
     }
   }
-  if(Gw[imaxprofit] == Gwmax) {
-    Rcout<<"GX";
-  }
+  // if(Gw[imaxprofit] == Gwmax) {
+  //   Rcout<<"GX";
+  // }
   return(List::create(Named("Cost") = cost,
                       Named("Gain") = gain,
                       Named("Profit") = profit,

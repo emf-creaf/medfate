@@ -351,7 +351,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   //Day length (latitude in radians), atmospheric pressure, CO2 concentration
   double tauday = meteoland::radiation_daylengthseconds(latrad,  slorad,asprad, delta); 
   double Patm = meteoland::utils_atmosphericPressure(elevation);
-  double Catm = 386.0;
+  double Catm = control["Catm"];
   
 
   //Daily average water vapor pressure at the atmosphere (kPa)
