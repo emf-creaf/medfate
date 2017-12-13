@@ -7,14 +7,15 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
   if(transpMode=="Complex") {
     TYPES = c("PET_Precipitation","PET_NetPrec","ET","Psi","Theta","Vol", "LAI", "PlantLAI",
               "PlantStress", "PlantPsi","PlantPhotosynthesis","PlantTranspiration",
-              "PlantPhotosynthesisLeaf","PlantTranspirationLeaf",
+              "PlantPhotosynthesisLeaf","PlantTranspirationLeaf","Export",
               "PlantAbsorbedSWR", "PlantAbsorbedSWRLeaf",
               "PlantAbsorbedLWR", "PlantAbsorbedLWRLeaf",
-              "AirTemperature","SoilTemperature", "CanopyTemperature","Export",
+              "AirTemperature","SoilTemperature", "CanopyTemperature",
               "CanopyEnergyBalance", "SoilEnergyBalance")
   } else {
     TYPES = c("PET_Precipitation","PET_NetPrec","ET","Psi","Theta","Vol", "LAI", "PlantLAI",
               "PlantStress", "PlantPsi","PlantPhotosynthesis","PlantTranspiration",
+              "PlantPhotosynthesisLeaf","PlantTranspirationLeaf",
               "Export")
   }
   type = match.arg(type,TYPES)  

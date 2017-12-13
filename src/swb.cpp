@@ -1387,20 +1387,34 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
                                      _["Tsoil_mean"] = Tsoil_mean, _["Tsoil_min"] = Tsoil_min, _["Tsoil_max"] = Tsoil_max);
   DEB.attr("row.names") = meteo.attr("row.names") ;
   DT.attr("row.names") = meteo.attr("row.names") ;
-  List l = List::create(Named("control") = control,
-                        Named("cohorts") = clone(cohorts),
-                        Named("NumSoilLayers") = nlayers,
-                        Named("DailyBalance")=DWB, 
-                        Named("SoilWaterBalance")=SWB,
-                        Named("EnergyBalance")= DEB,
-                        Named("Temperature")= DT,
-                        Named("PlantLAI") = PlantLAI,
-                        Named("PlantAbsorbedSWR") =PlantAbsSWR,
-                        Named("PlantAbsorbedLWR") =PlantAbsLWR,
-                        Named("PlantTranspiration") = PlantTranspiration,
-                        Named("PlantPhotosynthesis") = PlantPhotosynthesis,
-                        Named("PlantPsi") = PlantPsi, 
-                        Named("PlantStress") = PlantStress);
+  List l;
+  if(transpirationMode=="Simple") {
+    l = List::create(Named("control") = control,
+                     Named("cohorts") = clone(cohorts),
+                     Named("NumSoilLayers") = nlayers,
+                     Named("DailyBalance")=DWB, 
+                     Named("SoilWaterBalance")=SWB,
+                     Named("PlantLAI") = PlantLAI,
+                     Named("PlantTranspiration") = PlantTranspiration,
+                     Named("PlantPhotosynthesis") = PlantPhotosynthesis,
+                     Named("PlantPsi") = PlantPsi, 
+                     Named("PlantStress") = PlantStress);
+  } else {
+    l = List::create(Named("control") = control,
+                     Named("cohorts") = clone(cohorts),
+                     Named("NumSoilLayers") = nlayers,
+                     Named("DailyBalance")=DWB, 
+                     Named("SoilWaterBalance")=SWB,
+                     Named("EnergyBalance")= DEB,
+                     Named("Temperature")= DT,
+                     Named("PlantLAI") = PlantLAI,
+                     Named("PlantAbsorbedSWR") =PlantAbsSWR,
+                     Named("PlantAbsorbedLWR") =PlantAbsLWR,
+                     Named("PlantTranspiration") = PlantTranspiration,
+                     Named("PlantPhotosynthesis") = PlantPhotosynthesis,
+                     Named("PlantPsi") = PlantPsi, 
+                     Named("PlantStress") = PlantStress);
+  }
   l.attr("class") = CharacterVector::create("swb","list");
   if(verbose) Rcout<<"done.\n";
   return(l);

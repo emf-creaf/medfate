@@ -1,17 +1,14 @@
 \encoding{UTF-8}
 \name{swb}
 \alias{swb}
-\alias{swb.day}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{Soil water balance model}
+\title{Soil water balance}
 \description{
-Function \code{swb} is a soil water balance model that determines changes in soil moisture, soil water potentials and plant transpiration and drought stress at daily steps for a given forest stand during a period specified in the input climatic data. Additionally, the function also calculates plant net photosynthesis. Transpiration and photosynthesis processes are conducted with different level of detail depending on the transpiration mode. Function \code{swb.day} performs soil water balance for a single day.
+Function \code{swb} is a soil water balance model that determines changes in soil moisture, soil water potentials and plant transpiration and drought stress at daily steps for a given forest stand during a period specified in the input climatic data. Additionally, the function also calculates plant net photosynthesis. Transpiration and photosynthesis processes are conducted with different level of detail depending on the transpiration mode.
 }
 \usage{
 swb(x, soil, meteo,  latitude = NA, elevation = NA, slope = NA, aspect = NA)
-swb.day(x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind, 
-        latitude, elevation, slope, aspect, rain, runon = 0.0)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -39,14 +36,6 @@ swb.day(x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind,
   }
   \item{latitude}{Latitude (in degrees). Required when using the 'Complex' transpiration mode.}
   \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when using the 'Complex' transpiration mode.}
-  \item{date}{Date as string "yyyy-mm-dd".}
-  \item{doy}{Day of the year.}
-  \item{tmin, tmax}{Minimum and maximum temperature (in degrees Celsius).}
-  \item{rhmin, rhmax}{Minimum and maximum relative humidity (in percent).}
-  \item{rad}{Solar radiation (in MJ/m2/day).}
-  \item{wind}{Wind speed (in m/s).}
-  \item{rain}{Precipitation (in mm).}
-  \item{runon}{Surface water amount running on the target area from upslope (in mm).}
 }
 \details{
   Detailed model description is available in the vignettes section. The model using 'Simple' transpiration mode is described in De Caceres et al. (2015). Simulations using the 'Complex' transpiration mode are computationally much more expensive. 
@@ -96,7 +85,7 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 Objects \code{x} and \code{soil} are modified during the simulation. Daily transpiration and photosynthesis values are stored in columns \code{Transpiration} and \code{Photosynthesis} of object \code{x}. Water content relative to field capacity (vector \code{W}) of \code{soil} is also modified.  
 }
 \seealso{
-\code{\link{swbInput}}, \code{\link{plot.swb}},  \code{\link{swbpoints}}, \code{\link{swbgrid}}, 
+\code{\link{swbInput}}, \code{\link{swb.day}}, \code{\link{plot.swb}},  \code{\link{swbpoints}}, \code{\link{swbgrid}}, 
 \code{\link{swb.ldrOptimization}}, \code{\link{forest}}
 }
 \examples{
@@ -141,17 +130,4 @@ x2 = forest2swbInput(exampleforest,examplesoil2, SpParamsMED, control)
 #Call simulation function (5 days)
 S2<-swb(x2, examplesoil2, examplemeteo[100:105,], latitude = 41.82592, elevation = 100)
 
-
-#Simulate one day only
-examplesoil2 = soil(defaultSoilParams(2))
-x2 = forest2swbInput(exampleforest,examplesoil2, SpParamsMED, control)
-d = 1
-sd1<-swb.day(x2, examplesoil2, rownames(examplemeteo)[d], d , 
-             examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
-             examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
-             examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
-             latitude = 41.82592, elevation = 100, 
-             slope= 0, aspect = 0, rain = examplemeteo$Precipitation[d])
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.

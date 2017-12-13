@@ -29,13 +29,23 @@ Function \code{plot} plots the results of the soil water balance model (see \cod
     \item{\code{"Psi"}:}{ Soil water potential.}
     \item{\code{"Theta"}:}{ Soil relative water content.}
     \item{\code{"Vol"}:}{ Soil water volumetric content.}
+    \item{\code{"LAI"}:}{ Expanded and dead leaf area index of the whole stand.}
+    \item{\code{"PlantLAI"}:}{ Plant cohort leaf area index.}
     \item{\code{"PlantStress"}:}{ Plant cohort average daily drought stress.}
     \item{\code{"PlantPsi"}:}{ Plant cohort water potential.}
-    \item{\code{"AirTemperature"}:}{ Minimum/maximum/mean daily temperatures above canopy.}
-    \item{\code{"CanopyTemperature"}:}{ Minimum/maximum/mean daily temperatures inside canopy.}
-    \item{\code{"SoilTemperature"}:}{ Minimum/maximum/mean daily temperatures inside the first soil layer.}
-    \item{\code{"CanopyEnergyBalance"}:}{ Canopy energy balance components.}
-    \item{\code{"SoilEnergyBalance"}:}{ Soil energy balance components.}
+    \item{\code{"PlantTranspiration"}:}{ Plant cohort transpiration.}
+    \item{\code{"PlantTranspirationLeaf"}:}{ Plant cohort transpiration per leaf area.}
+    \item{\code{"PlantPhotosynthesis"}:}{ Plant cohort photosynthesis.}
+    \item{\code{"PlantPhotosynthesisLeaf"}:}{ Plant cohort photosynthesis per leaf area.}
+    \item{\code{"PlantAbsorbedSWR"}:}{ Plant cohort absorbed short wave radiation (only for \code{transpirationMode = "Complex"}).}
+    \item{\code{"PlantAbsorbedSWRLeaf"}:}{ Plant cohort absorbed short wave radiation per leaf area (only for \code{transpirationMode = "Complex"}).}
+    \item{\code{"PlantAbsorbedLWR"}:}{ Plant cohort absorbed long wave radiation (only for \code{transpirationMode = "Complex"}).}
+    \item{\code{"PlantAbsorbedLWRLeaf"}:}{ Plant cohort absorbed long wave radiation per leaf area (only for \code{transpirationMode = "Complex"}).}
+    \item{\code{"AirTemperature"}:}{ Minimum/maximum/mean daily temperatures above canopy (only for \code{transpirationMode = "Complex"}).}
+    \item{\code{"CanopyTemperature"}:}{ Minimum/maximum/mean daily temperatures inside canopy (only for \code{transpirationMode = "Complex"}).}
+    \item{\code{"SoilTemperature"}:}{ Minimum/maximum/mean daily temperatures inside the first soil layer (only for \code{transpirationMode = "Complex"}).}
+    \item{\code{"CanopyEnergyBalance"}:}{ Canopy energy balance components (only for \code{transpirationMode = "Complex"}).}
+    \item{\code{"SoilEnergyBalance"}:}{ Soil energy balance components (only for \code{transpirationMode = "Complex"}).}
    }
   }
   \item{yearAxis}{A boolean to indicate whether the units of the x-axis are years (by default they are dates).}
