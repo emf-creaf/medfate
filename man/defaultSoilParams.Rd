@@ -33,7 +33,7 @@ A list with the following elements (and default values):
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 \seealso{
- \code{\link{soil}}, \code{\link{defaultControl}}, \code{\link{SpParamsMED}}
+ \code{\link{soil}}, \code{\link{soilgridsParams}}, \code{\link{defaultControl}}, \code{\link{SpParamsMED}}
 }
 \examples{
 defaultSoilParams(4)

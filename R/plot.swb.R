@@ -108,7 +108,8 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
   } else if(type=="PlantLAI") {
     if(is.null(ylab)) ylab = "Leaf Area Index (m2/m2)"
     if(is.null(ylim)) ylim = c(0,max(x$PlantLAI))
-    matplot(dates, x$PlantLAI, ylim = ylim, lwd=1, type="l", xlim=xlim,
+    matplot(dates, x$PlantLAI, ylim = ylim, lty=1:length(cohortnames), col = 1:length(cohortnames),
+            lwd=1, type="l", xlim=xlim,
             ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
     plotAxes()
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
@@ -116,7 +117,8 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
   } else if(type=="PlantStress") {
     if(is.null(ylab)) ylab = "Drought stress [0-1]"
     if(is.null(ylim)) ylim = c(0,1)
-    matplot(dates, x$PlantStress, ylim = ylim, lwd=1, type="l", xlim=xlim,
+    matplot(dates, x$PlantStress, lty=1:length(cohortnames), col = 1:length(cohortnames),
+            ylim = ylim, lwd=1, type="l", xlim=xlim,
             ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
     plotAxes()
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
@@ -124,7 +126,8 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
   } else if(type=="PlantPsi") {
     if(is.null(ylab)) ylab = "Plant water potential (MPa)"
     if(is.null(ylim)) ylim = c(min(x$PlantPsi),0)
-    matplot(dates, x$PlantPsi, ylim = ylim, lwd=1, type="l", xlim=xlim,
+    matplot(dates, x$PlantPsi, ylim = ylim, lty=1:length(cohortnames), col = 1:length(cohortnames),
+            lwd=1, type="l", xlim=xlim,
             ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
     plotAxes()
     legend("bottomright", legend = cohortnames, lty=1:length(cohortnames), 
@@ -132,7 +135,9 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
   } else if(type=="PlantTranspiration") {
     if(is.null(ylab)) ylab = "Plant transpiration (mm)"
     if(is.null(ylim)) ylim = c(0,max(x$PlantTranspiration))
-    matplot(dates, x$PlantTranspiration, ylim = ylim, lwd=1, type="l", xlim=xlim,
+    matplot(dates, x$PlantTranspiration, ylim = ylim,
+            lty=1:length(cohortnames), col = 1:length(cohortnames),
+            lwd=1, type="l", xlim=xlim,
             ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
     plotAxes()      
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
@@ -142,7 +147,9 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
     pt[x$PlantLAI==0] = NA
     if(is.null(ylab)) ylab = "Plant transpiration per leaf area (mm)"
     if(is.null(ylim)) ylim = c(0,max(pt, na.rm=T))
-    matplot(dates, pt, ylim = ylim, lwd=1, type="l", xlim=xlim,
+    matplot(dates, pt, ylim = ylim, 
+            lty=1:length(cohortnames), col = 1:length(cohortnames),
+            lwd=1, type="l", xlim=xlim,
             ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
     plotAxes()      
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
@@ -150,7 +157,9 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
   } else if(type=="PlantPhotosynthesis") {
     if(is.null(ylab)) ylab = "Plant photosynthesis (gC/m2)"
     if(is.null(ylim)) ylim = c(min(x$PlantPhotosynthesis),max(x$PlantPhotosynthesis))
-    matplot(dates, x$PlantPhotosynthesis, ylim = ylim, lwd=1, type="l", xlim=xlim,
+    matplot(dates, x$PlantPhotosynthesis, ylim = ylim, 
+            lty=1:length(cohortnames), col = 1:length(cohortnames),
+            lwd=1, type="l", xlim=xlim,
             ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
     plotAxes()     
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
@@ -160,7 +169,9 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
     pf[x$PlantLAI==0] = NA
     if(is.null(ylab)) ylab = "Plant photosynthesis per leaf area (gC/m2)"
     if(is.null(ylim)) ylim = c(min(pf, na.rm=T),max(pf, na.rm=T))
-    matplot(dates, pf, ylim = ylim, lwd=1, type="l", xlim=xlim,
+    matplot(dates, pf, ylim = ylim, 
+            lty=1:length(cohortnames), col = 1:length(cohortnames),
+            lwd=1, type="l", xlim=xlim,
             ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
     plotAxes()     
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
@@ -168,7 +179,9 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
   } else if(type=="PlantAbsorbedSWR") {
     if(is.null(ylab)) ylab = "Plant absorbed SWR (MJ/m2)"
     if(is.null(ylim)) ylim = c(0,max(x$PlantAbsorbedSWR))
-    matplot(dates, x$PlantAbsorbedSWR, ylim = ylim, lwd=1, type="l", xlim=xlim,
+    matplot(dates, x$PlantAbsorbedSWR, 
+            lty=1:length(cohortnames), col = 1:length(cohortnames), 
+            ylim = ylim, lwd=1, type="l", xlim=xlim,
             ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
     plotAxes()     
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
@@ -178,7 +191,8 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
     pf[x$PlantLAI==0] = NA
     if(is.null(ylab)) ylab = "Plant absorbed SWR per leaf area (MJ/m2)"
     if(is.null(ylim)) ylim = c(min(pf, na.rm=T),max(pf, na.rm=T))
-    matplot(dates, pf, ylim = ylim, lwd=1, type="l", xlim=xlim,
+    matplot(dates, pf, ylim = ylim, lwd=1, type="l", 
+            lty=1:length(cohortnames), col = 1:length(cohortnames),xlim=xlim,
             ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
     plotAxes()     
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
@@ -186,7 +200,9 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
   } else if(type=="PlantAbsorbedLWR") {
     if(is.null(ylab)) ylab = "Plant absorbed LWR (MJ/m2)"
     if(is.null(ylim)) ylim = c(0,max(x$PlantAbsorbedLWR))
-    matplot(dates, x$PlantAbsorbedLWR, ylim = ylim, lwd=1, type="l", xlim=xlim,
+    matplot(dates, x$PlantAbsorbedLWR, ylim = ylim, 
+            lty=1:length(cohortnames), col = 1:length(cohortnames),
+            lwd=1, type="l", xlim=xlim,
             ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
     plotAxes()     
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
@@ -196,7 +212,9 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
     pf[x$PlantLAI==0] = NA
     if(is.null(ylab)) ylab = "Plant absorbed LWR per leaf area (MJ/m2)"
     if(is.null(ylim)) ylim = c(min(pf, na.rm=T),max(pf, na.rm=T))
-    matplot(dates, pf, ylim = ylim, lwd=1, type="l", xlim=xlim,
+    matplot(dates, pf, ylim = ylim, 
+            lty=1:length(cohortnames), col = 1:length(cohortnames),
+            lwd=1, type="l", xlim=xlim,
             ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
     plotAxes()     
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
