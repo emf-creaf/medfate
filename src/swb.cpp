@@ -893,6 +893,7 @@ List swbDay(List x, List soil, CharacterVector date, int doy, double tmin, doubl
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   NumericVector SP = cohorts["SP"];
   NumericVector LAI_live = above["LAI_live"];
+  NumericVector LAI_dead = above["LAI_dead"];
   NumericVector LAI_expanded = above["LAI_expanded"];
   int numCohorts = SP.size();
   
@@ -911,7 +912,10 @@ List swbDay(List x, List soil, CharacterVector date, int doy, double tmin, doubl
   //Update phenological status
   NumericVector phe = leafDevelopmentStatus(Sgdd, gddday);
   for(int j=0;j<numCohorts;j++) {
-    LAI_expanded[j] = LAI_live[j]*phe[j];
+    LAI_dead[j] *= exp(-1.0*(wind/10.0)); //Decrease dead leaf area according to wind speed
+    double LAI_exp_prev= LAI_expanded[j]; //Store previous value
+    LAI_expanded[j] = LAI_live[j]*phe[j]; //Update expanded leaf area (will decrease if LAI_live decreases)
+    LAI_dead[j] += std::max(0.0, LAI_exp_prev-LAI_expanded[j]);//Check increase dead leaf area if expanded leaf area has decreased
   }
 
   List s;
