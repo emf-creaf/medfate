@@ -109,6 +109,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
     
   } else if(transpirationMode =="Complex"){
     NumericVector leafwidthSP = SpParams["LeafWidth"];
+    NumericVector HmedSP = SpParams["Hmed"]; //To correct conductivity
     NumericVector Al2AsSP = SpParams["Al2As"];
     NumericVector GwminSP = SpParams["Gwmin"];
     NumericVector GwmaxSP = SpParams["Gwmax"];
@@ -120,7 +121,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
     NumericVector Vmax298SP = SpParams["Vmax298"];
     NumericVector Gwmax(numCohorts), Gwmin(numCohorts);
     NumericVector xylem_kmax(numCohorts), Al2As(numCohorts);
-    NumericVector VCstem_kmax(numCohorts),leafwidth(numCohorts);
+    NumericVector VCroottot_kmax(numCohorts, 0.0), VCstem_kmax(numCohorts),leafwidth(numCohorts);
     NumericVector pRootDiscSP = SpParams["pRootDisc"];
     NumericVector pRootDisc(numCohorts);
     NumericVector VCstem_c(numCohorts), VCstem_d(numCohorts);
@@ -139,7 +140,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
       xylem_kmax[c] = xylem_kmaxSP[SP[c]];
       Al2As[c] = Al2AsSP[SP[c]];
       //Calculate stem maximum conductance (in mmol·m-2·s-1·MPa-1)
-      VCstem_kmax[c]=maximumStemHydraulicConductance(xylem_kmax[c], Al2As[c],H[c],control["taper"]); 
+      VCstem_kmax[c]=maximumStemHydraulicConductance(xylem_kmax[c], HmedSP[SP[c]], Al2As[c],H[c],control["taper"]); 
       VCstem_c[c]=VCstem_cSP[SP[c]];
       VCstem_d[c]=VCstem_dSP[SP[c]];
       VCroot_c[c]=VCroot_cSP[SP[c]];
@@ -153,6 +154,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
       // double VCroot_kmaxc = 1.0/((1.0/(VCstem_kmax[c]*fracTotalTreeResistance))-(1.0/VCstem_kmax[c]));
       double VCroot_kmaxc = maximumRootHydraulicConductance(xylem_kmax[c],Al2As[c], Vc, dVec);
       VCroot_kmax(c,_) = VCroot_kmaxc*xylemConductanceProportions(Vc,dVec);
+      VCroottot_kmax[c] = sum(VCroot_kmax(c,_));
       Vmax298[c] =Vmax298SP[SP[c]];
       Jmax298[c] = exp(1.197 + 0.847*log(Vmax298[c])); //Walker et al 2014
       for(int l=0;l<nlayers;l++) {
@@ -168,7 +170,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
     
     DataFrame paramsTranspdf = DataFrame::create(
       _["Gwmin"]=Gwmin, _["Gwmax"]=Gwmax,_["LeafWidth"] = leafwidth, _["Vmax298"]=Vmax298,
-      _["Jmax298"]=Jmax298,_["VCroot_c"]=VCroot_c,_["VCroot_d"]=VCroot_d,_["xylem_kmax"] = xylem_kmax,
+      _["Jmax298"]=Jmax298, _["VCroot_kmax"] = VCroottot_kmax ,_["VCroot_c"]=VCroot_c,_["VCroot_d"]=VCroot_d,_["xylem_kmax"] = xylem_kmax,
       _["Al2As"] = Al2As,  
       _["VCstem_kmax"]=VCstem_kmax,_["VCstem_c"]=VCstem_c,_["VCstem_d"]=VCstem_d, _["pRootDisc"] = pRootDisc);
     paramsTranspdf.attr("row.names") = above.attr("row.names");
@@ -444,6 +446,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                          _["paramsAllometries"] = paramsAllometriesdf);
     
   } else if(transpirationMode =="Complex"){
+    NumericVector HmedSP = SpParams["Hmed"]; //To correct conductivity
     NumericVector leafwidthSP = SpParams["LeafWidth"];
     NumericVector GwminSP = SpParams["Gwmin"];
     NumericVector GwmaxSP = SpParams["Gwmax"];
@@ -474,7 +477,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
       leafwidth[c]=leafwidthSP[SP[c]];
       Al2As[c] = Al2AsSP[SP[c]];
       //Calculate stem maximum conductance (in mmol·m-2·s-1·MPa-1)
-      VCstem_kmax[c]=maximumStemHydraulicConductance(xylem_kmax[c], Al2As[c],H[c], control["taper"]); 
+      VCstem_kmax[c]=maximumStemHydraulicConductance(xylem_kmax[c], HmedSP[SP[c]], Al2As[c],H[c], control["taper"]); 
       VCstem_c[c]=VCstem_cSP[SP[c]];
       VCstem_d[c]=VCstem_dSP[SP[c]];
       VCroot_c[c]=VCroot_cSP[SP[c]];

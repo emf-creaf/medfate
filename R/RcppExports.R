@@ -357,12 +357,16 @@ hydraulics.taperFactor <- function(height) {
     .Call('_medfate_taperFactor', PACKAGE = 'medfate', height)
 }
 
-hydraulics.heightFactor <- function(height, taper = TRUE) {
-    .Call('_medfate_heightFactor', PACKAGE = 'medfate', height, taper)
+hydraulics.conductanceHeightFactor <- function(height, taper = FALSE) {
+    .Call('_medfate_conductanceHeightFactor', PACKAGE = 'medfate', height, taper)
 }
 
-hydraulics.maximumStemHydraulicConductance <- function(xylemConductivity, Al2As, height, taper = TRUE) {
-    .Call('_medfate_maximumStemHydraulicConductance', PACKAGE = 'medfate', xylemConductivity, Al2As, height, taper)
+hydraulics.referenceConductivityHeightFactor <- function(refheight, height) {
+    .Call('_medfate_referenceConductivityHeightFactor', PACKAGE = 'medfate', refheight, height)
+}
+
+hydraulics.maximumStemHydraulicConductance <- function(xylemConductivity, refheight, Al2As, height, taper = FALSE) {
+    .Call('_medfate_maximumStemHydraulicConductance', PACKAGE = 'medfate', xylemConductivity, refheight, Al2As, height, taper)
 }
 
 hydraulics.maximumRootHydraulicConductance <- function(xylemConductivity, Al2As, v, d, depthWidthRatio = 1.0) {

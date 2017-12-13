@@ -16,6 +16,9 @@ A data set of parameter values for Mediterranean species, resulting from bibliog
     \item{\code{IFNcodes}}{A factor with levels corresponding to species codes in the Third Spanish forest inventory (DGCN 2005.)}
     \item{\code{SpIndex}}{A numeric vector of the species index}
     \item{\code{GrowthForm}}{A factor with levels \code{Shrub}, \code{Tree} and \code{Tree/Shrub}}
+    \item{\code{Hmed}}{Median plant height (in cm).}
+    \item{\code{Hmax}}{Maximum plant height (in cm).}
+    \item{\code{Zmax}}{Maximum rooting depth (in mm).}
     \item{\code{a_ash}}{Regression coefficient relating the square of shrub height with shrub area.}
     \item{\code{a_bsh}, \code{b_bsh}}{Allometric coefficients relating phytovolume with dry weight of shrub individuals.}
     \item{\code{cr}}{Ratio between crown length and total height (for shrubs).}
@@ -36,8 +39,6 @@ A data set of parameter values for Mediterranean species, resulting from bibliog
     \item{\code{Flammability}}{Flammability modifier (either 1 or 2 for normal or high, respectively).}
     \item{\code{SAV}}{Surface-area-to-volume ratio of the small fuel (1h) fraction (leaves and branches < 6.35mm) (m2/m3).}
     \item{\code{HeatContent}}{High fuel heat content (kJ/kg).}
-    \item{\code{Zmax}}{Maximum rooting depth (in mm).}
-    \item{\code{Hmax}}{Maximum plant height (in cm).}
     \item{\code{fHDmin}}{Minimum value of the height-to-diameter ratio (dimensionless).}
     \item{\code{fHDmax}}{Maximum value of the height-to-diameter ratio (dimensionless).}
     \item{\code{albedo}}{Leaf reflectance for short wave radiation.}

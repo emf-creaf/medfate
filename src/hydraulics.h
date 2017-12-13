@@ -15,8 +15,10 @@ double xylemConductance(double psi, double kxylemmax, double c, double d);
 double xylemPsi(double kxylem, double kxylemmax, double c, double d);
 
 double taperFactor(double height);
-double maximumStemHydraulicConductance(double xylemConductivity, double Al2As, double height, bool taper = false);
-double maximumRootHydraulicConductance(double xylemConductivity, double Al2As, NumericVector v, NumericVector d, double depthWidthRatio = 1.0);
+double conductanceHeightFactor(double height, bool taper = false);
+double referenceConductivityHeightFactor(double refheight, double height);
+double maximumStemHydraulicConductance(double xylemConductivity, double refheight, double Al2As,  double height, bool taper = false);
+  double maximumRootHydraulicConductance(double xylemConductivity, double Al2As, NumericVector v, NumericVector d, double depthWidthRatio = 1.0);
 
 NumericVector regulatedPsiTwoElements(double Emax, double psiSoil, double krhizomax, double kxylemmax, double n, double alpha, double c, double d, double dE = 0.1, double psiMax = -10.0);
 
