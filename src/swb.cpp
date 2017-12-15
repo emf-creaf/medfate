@@ -717,11 +717,12 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
           Einst(c,n) +=Ecn[lc]; //add flow from all layers to estimate plant transpiration
         }
         
-        //Do not allow negative plant transpiration values
+        //Do not allow negative plant transpiration values (inaccurate numerical estimation)
         if(Einst(c,n)<0.0) {
+          double toAdd = std::abs(Einst(c,n));
+          for(int lc=0;lc<nlayerscon[c];lc++) Ecn[lc] = Ecn[lc]+(toAdd/((double) nlayerscon[c]));//Shift all flows equally
           Einst(c,n) = 0.0;
-          for(int lc=0;lc<nlayerscon[c];lc++) Ecn[lc] = 0.0;
-          if(verbose) Rcout<<"N";
+          // if(verbose) Rcout<<"N";
         }
         //Add to daily plant cohort transpiration
         Eplant[c] +=Einst(c,n);
