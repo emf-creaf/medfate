@@ -194,10 +194,10 @@ List leafPhotosynthesisFunction(List supplyFunction, double Catm, double Patm, d
   NumericVector Ag(nsteps), An(nsteps);
   for(int i=0;i<nsteps;i++){
     leafTemp[i] = leafTemperature(absRad/refLeafArea, Tair, u, fittedE[i], leafWidth);
-    leafVPD[i] = (meteoland::utils_saturationVP(leafTemp[i])-vpa);
+    leafVPD[i] = (meteoland::utils_saturationVP(std::max(0.0,leafTemp[i]))-vpa);
     Gw[i] = Patm*(fittedE[i]/1000.0)/leafVPD[i]; //Transform flow from mmol to mol
     Gw[i] = std::max(Gwmin, std::min(Gw[i], Gwmax));
-    Ag[i] = photosynthesis(Q, Catm, Gw[i]/1.6, leafTemp[i], Vmax298, Jmax298);
+    Ag[i] = photosynthesis(Q, Catm, Gw[i]/1.6, std::max(0.0,leafTemp[i]), Vmax298, Jmax298);
     An[i] = Ag[i] - 0.015*VmaxTemp(Vmax298, leafTemp[i]);
   }
   return(List::create(Named("LeafTemperature") = leafTemp,

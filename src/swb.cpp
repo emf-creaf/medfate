@@ -655,14 +655,14 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
           //Photosynthesis function for sunlit and shade leaves
           List photoSunlit = leafPhotosynthesisFunction(supply, Catm, Patm,Tcan[n], vpatm, 
                                                  zWind[c], 
-                                                 absSWR_SL[c] + absLWR_SL[c], 
+                                                 absSWR_SL[c] + LWR_emmcan*SLarea, 
                                                  irradianceToPhotonFlux(absPAR_SL[c]), 
                                                  Vmax298SL, 
                                                  Jmax298SL, 
                                                  Gwmin[c], Gwmax[c], leafWidth[c], SLarea);
           List photoShade = leafPhotosynthesisFunction(supply, Catm, Patm,Tcan[n], vpatm, 
                                                        zWind[c], 
-                                                       absSWR_SH[c] + absLWR_SH[c], 
+                                                       absSWR_SH[c] + LWR_emmcan*SHarea, 
                                                        irradianceToPhotonFlux(absPAR_SH[c]),
                                                        Vmax298SH, 
                                                        Jmax298SH, 
