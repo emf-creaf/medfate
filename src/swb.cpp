@@ -149,6 +149,7 @@ List swbDay1(List x, List soil, double tday, double pet, double rain, double er,
     //Update topsoil layer
     for(int l=0;l<nlayers;l++) {
       if((dVec[l]>0) & (VI>0)) {
+        //PROBLEM: THE effect of MACROPOROSITY SHOULD not be affected by layer subdivision
         Wn = W[l]*Water_FC[l] + VI*(1.0-macro[l]); //Update water volume
         VI = VI*macro[l] + std::max(Wn - Water_FC[l],0.0); //Update VI, adding the excess to the infiltrating water (saturated flow)
         W[l] = std::min(std::max(0.0,Wn/Water_FC[l]),1.0); //Update theta
@@ -243,10 +244,16 @@ List swbDay1(List x, List soil, double tday, double pet, double rain, double er,
     photosynthesis[c] = alpha*WUE[c]*transpiration[c];
   }
 
-  List l = List::create(_["PET"] = pet, _["NetPrec"] = NetPrec, _["Runon"] = runon, _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
-                        _["LAIcell"] = LAIcell, _["LAIcelldead"] = LAIcelldead, _["Cm"] = Cm, _["Lground"] = LgroundPAR,
-                        _["EsoilVec"] = EsoilVec, _["EplantVec"] = EplantVec, _["psiVec"] = psi,
-                        _["EplantCoh"] = Eplant, _["psiCoh"] = PlantPsi, _["DDS"] = DDS);
+  List DB = List::create(_["PET"] = pet, _["Rain"] = rain, _["NetPrec"] = NetPrec, _["Runon"] = runon, _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
+                    _["LAIcell"] = LAIcell, _["LAIcelldead"] = LAIcelldead, _["Cm"] = Cm, _["Lground"] = LgroundPAR);
+  List SB = List::create(_["EsoilVec"] = EsoilVec, _["EplantVec"] = EplantVec, _["psiVec"] = psi);
+  Eplant.attr("names") = above.attr("row.names");
+  PlantPsi.attr("names") = above.attr("row.names");
+  DDS.attr("names") = above.attr("row.names");
+  List Plants = List::create(_["EplantCoh"] = Eplant, _["psiCoh"] = PlantPsi, _["DDS"] = DDS);
+  List l = List::create(_["DailyBalance"] = DB, _["SoilBalance"] = SB,
+                        _["Plants"] = Plants);
+  l.attr("class") = CharacterVector::create("swb.day","list");
   return(l);
 }
 
@@ -431,14 +438,14 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   NumericVector abs_LWR_can = lightExtinctionAbsortion["LWR_can"];
   NumericVector abs_LWR_soil = lightExtinctionAbsortion["LWR_soil"];
   NumericVector emm_LWR_soil(ntimesteps,0.0);
-  double kb = lightExtinctionAbsortion["kb"];  //Proportion of sunlit extinction coefficient
+  // double kb = lightExtinctionAbsortion["kb"];  //Proportion of sunlit extinction coefficient
   // double gbf = lightExtinctionAbsortion["gbf"]; //Ground fractions
   // double gdf = lightExtinctionAbsortion["gdf"];
   
   //Hydrologic input
   double NetPrec = 0.0, Infiltration= 0.0, Runoff= 0.0, DeepDrainage= 0.0;
   double propCover = 1.0-exp(-1.0*LAIcell);
-  double propCoverMax = 1.0-exp(-1.0*LAIcellmax);
+  // double propCoverMax = 1.0-exp(-1.0*LAIcellmax);
   if(rain>0.0) {
     //Interception
     NetPrec = rain - interceptionGashDay(rain,Cm,propCover,er);
@@ -547,6 +554,12 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   NumericMatrix SWR_SH(numCohorts, ntimesteps);
   NumericMatrix LWR_SL(numCohorts, ntimesteps);
   NumericMatrix LWR_SH(numCohorts, ntimesteps);
+  NumericMatrix GW_SH(numCohorts, ntimesteps);
+  NumericMatrix GW_SL(numCohorts, ntimesteps);
+  NumericMatrix VPD_SH(numCohorts, ntimesteps);
+  NumericMatrix VPD_SL(numCohorts, ntimesteps);
+  NumericMatrix Temp_SH(numCohorts, ntimesteps);
+  NumericMatrix Temp_SL(numCohorts, ntimesteps);
   NumericVector minPsiLeaf(numCohorts,0.0), minPsiRoot(numCohorts,0.0); //Minimum potentials experienced
   for(int c=0;c<numCohorts;c++) {
     photosynthesis[c] = 0.0;
@@ -657,11 +670,26 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
           // }
         NumericVector AnSunlit = photoSunlit["NetPhotosynthesis"];
         NumericVector AnShade = photoShade["NetPhotosynthesis"];
+        NumericVector GwSunlit = photoSunlit["WaterVaporConductance"];
+        NumericVector GwShade = photoShade["WaterVaporConductance"];
+        NumericVector VPDSunlit = photoSunlit["LeafVPD"];
+        NumericVector VPDShade = photoShade["LeafVPD"];
+        NumericVector TempSunlit = photoSunlit["LeafTemperature"];
+        NumericVector TempShade = photoShade["LeafTemperature"];
+        
         //Profit maximization
         List PMSunlit = profitMaximization(supply, photoSunlit,  hydraulicCostFunction, Gwmax[c], VCstem_kmax[c]);
         List PMShade = profitMaximization(supply, photoShade,  hydraulicCostFunction, Gwmax[c], VCstem_kmax[c]);
         int iPMSunlit = PMSunlit["iMaxProfit"];
         int iPMShade = PMShade["iMaxProfit"];
+        
+        //Get leaf status
+        GW_SH(c,n)= GwShade[iPMShade];
+        GW_SL(c,n)= GwSunlit[iPMSunlit];
+        VPD_SH(c,n)= VPDShade[iPMShade];
+        VPD_SL(c,n)= VPDSunlit[iPMSunlit];
+        Temp_SH(c,n)= TempShade[iPMShade];
+        Temp_SL(c,n)= TempSunlit[iPMSunlit];
         
         //Scale photosynthesis
         Aninst(c,n) = AnSunlit[iPMSunlit]*SLarea + AnShade[iPMShade]*SHarea;
@@ -834,7 +862,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   //Evaporation from bare soil
   double Gsoil = soil["Gsoil"];
   double Ksoil = soil["Ksoil"];
-  double Esoil = soilevaporation((Water_FC[0]*(1.0 - W[0])), PETsoil, Gsoil);
+  double Esoil = std::max(0.0,soilevaporation((Water_FC[0]*(1.0 - W[0])), PETsoil, Gsoil));
   NumericVector EsoilVec(nlayers,0.0);//Exponential decay to divide bare soil evaporation among layers
   for(int l=0;l<nlayers;l++) {
     double cumAnt = 0.0;
@@ -847,7 +875,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
     psi[l] = theta2psi(clay[l], sand[l], W[l]*Theta_FC[l], om[l]);
   }
   
-
+  
   DataFrame Tinst = DataFrame::create(_["SolarHour"] = solarHour, 
                                       _["Tatm"] = Tatm, _["Tcan"] = Tcan, _["Tsoil"] = Tsoil_mat);
   DataFrame CEBinst = DataFrame::create(_["SolarHour"] = solarHour, 
@@ -856,15 +884,37 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   DataFrame SEBinst = DataFrame::create(_["SolarHour"] = solarHour, 
                                         _["Hcansoil"] = Hcansoil, _["SWRsoilin"] = abs_SWR_soil, _["LWRsoilin"] = abs_LWR_soil,  _["LWRsoilout"] = LWRsoilout,
                                         _["Ebalsoil"] = Ebalsoil, _["RAsoil"] = RAsoil);
-  List TEinst = List::create(_["Temperature"]=Tinst, _["CanopyEnergyBalance"] = CEBinst, _["SoilEnergyBalance"] = SEBinst);
+  List EB = List::create(_["Temperature"]=Tinst, _["CanopyEnergyBalance"] = CEBinst, _["SoilEnergyBalance"] = SEBinst);
+  SWR_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  SWR_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  LWR_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  LWR_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  GW_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  GW_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  Temp_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  Temp_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  VPD_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  VPD_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   List AbsRadinst = List::create(_["SWR_SH"] = SWR_SH, _["SWR_SL"]=SWR_SL,
                                  _["LWR_SH"] = LWR_SH, _["LWR_SL"] = LWR_SL);
-  List l = List::create(_["NetPrec"] = NetPrec, _["Runon"] = runon, _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
-                        _["LAIcell"] = LAIcell, _["LAIcelldead"] = LAIcelldead, _["Cm"] = Cm, _["Lground"] = 1.0-propCover,
-                        _["EsoilVec"] = EsoilVec, _["EplantVec"] = EplantVec, _["psiVec"] = psi,
-                        _["EplantCoh"] = Eplant, _["psiCoh"] = PlantPsi, _["DDS"] = DDS,
-                        _["AbsRadinst"] = AbsRadinst, _["Einst"]=Einst, _["Aninst"]=Aninst,
-                        _["PsiPlantinst"] = PsiPlantinst, _["TEinst"] = TEinst);
+  List DB = List::create(_["Rain"] = rain,_["NetPrec"] = NetPrec, _["Runon"] = runon, _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
+                         _["LAIcell"] = LAIcell, _["LAIcelldead"] = LAIcelldead, _["Cm"] = Cm, _["Lground"] = 1.0 - propCover);
+  List SB = List::create(_["EsoilVec"] = EsoilVec, _["EplantVec"] = EplantVec, _["psiVec"] = psi);
+  Einst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  PsiPlantinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  Aninst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  Eplant.attr("names") = above.attr("row.names");
+  PlantPsi.attr("names") = above.attr("row.names");
+  DDS.attr("names") = above.attr("row.names");
+  List Plants = List::create(_["EplantCoh"] = Eplant, _["psiCoh"] = PlantPsi, _["DDS"] = DDS,
+                             _["AbsRadinst"] = AbsRadinst, _["Einst"]=Einst, _["Aninst"]=Aninst,
+                             _["PsiPlantinst"] = PsiPlantinst, 
+                             _["GWsunlitinst"] = GW_SL, _["GWshadeinst"] = GW_SH,
+                             _["VPDsunlitinst"] = VPD_SL, _["VPDshadeinst"] = VPD_SH,
+                             _["Tempsunlitinst"] = Temp_SL, _["Tempshadeinst"] = Temp_SH);
+  List l = List::create(_["DailyBalance"] = DB, _["SoilBalance"] = SB, _["Plants"] = Plants,
+                        _["EnergyBalance"] = EB);
+  l.attr("class") = CharacterVector::create("swb.day","list");
   return(l);
 }
 
@@ -928,8 +978,6 @@ List swbDay(List x, List soil, CharacterVector date, int doy, double tmin, doubl
                 solarConstant, delta, rain, er, runon, verbose);
   }
   // Rcout<<"hola4\n";
-  s["PET"] = pet;
-  s["Rain"] = rain;
   return(s);
 }
   
@@ -1259,7 +1307,8 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
         s = swbDay2(x, soil, MinTemperature[i], MaxTemperature[i], 
                          MinRelativeHumidity[i], MaxRelativeHumidity[i], Radiation[i], wind, 
                          latitude, elevation, slope, aspect, solarConstant, delta, Precipitation[i], ER[i], 0.0, verbose);
-        List AbsRadinst = Rcpp::as<Rcpp::List>(s["AbsRadinst"]);
+        List Plants = Rcpp::as<Rcpp::List>(s["Plants"]);
+        List AbsRadinst = Rcpp::as<Rcpp::List>(Plants["AbsRadinst"]);
         NumericMatrix SWR_SL = Rcpp::as<Rcpp::NumericMatrix>(AbsRadinst["SWR_SL"]);
         NumericMatrix SWR_SH = Rcpp::as<Rcpp::NumericMatrix>(AbsRadinst["SWR_SH"]);
         NumericMatrix LWR_SL = Rcpp::as<Rcpp::NumericMatrix>(AbsRadinst["LWR_SL"]);
@@ -1270,10 +1319,10 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
             PlantAbsLWR(i,j) += 0.000001*(LWR_SL(j,n)+LWR_SH(j,n))*tstep;
           }
         }
-        List TEinst = Rcpp::as<Rcpp::List>(s["TEinst"]);
-        DataFrame Tinst = Rcpp::as<Rcpp::DataFrame>(TEinst["Temperature"]); 
-        DataFrame CEBinst = Rcpp::as<Rcpp::DataFrame>(TEinst["CanopyEnergyBalance"]); 
-        DataFrame SEBinst = Rcpp::as<Rcpp::DataFrame>(TEinst["SoilEnergyBalance"]); 
+        List EB = Rcpp::as<Rcpp::List>(s["EnergyBalance"]);
+        DataFrame Tinst = Rcpp::as<Rcpp::DataFrame>(EB["Temperature"]); 
+        DataFrame CEBinst = Rcpp::as<Rcpp::DataFrame>(EB["CanopyEnergyBalance"]); 
+        DataFrame SEBinst = Rcpp::as<Rcpp::DataFrame>(EB["SoilEnergyBalance"]); 
         NumericVector Tcan = Rcpp::as<Rcpp::NumericVector>(Tinst["Tcan"]);
         NumericVector Tsoil = Rcpp::as<Rcpp::NumericVector>(Tinst["Tsoil.1"]);
 
@@ -1302,26 +1351,30 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
         Tsoil_max[i] = max(Tsoil);
         Tsoil_mean[i] = sum(Tsoil)/((double) ntimesteps);
       }
-      Lground[i] = s["Lground"];
-      Esoil[i] = sum(Rcpp::as<Rcpp::NumericVector>(s["EsoilVec"]));
-      LAIcell[i] = s["LAIcell"];
-      LAIcelldead[i] = s["LAIcelldead"];
-      Cm[i] = s["Cm"];
-      DeepDrainage[i] = s["DeepDrainage"];
-      Infiltration[i] = s["Infiltration"];
-      Runoff[i] = s["Runoff"];
-      NetPrec[i] = s["NetPrec"];
+      List db = s["DailyBalance"];
+      Lground[i] = db["Lground"];
+      LAIcell[i] = db["LAIcell"];
+      LAIcelldead[i] = db["LAIcelldead"];
+      Cm[i] = db["Cm"];
+      DeepDrainage[i] = db["DeepDrainage"];
+      Infiltration[i] = db["Infiltration"];
+      Runoff[i] = db["Runoff"];
+      NetPrec[i] = db["NetPrec"];
       Interception[i] = Precipitation[i]-NetPrec[i];
-      NumericVector psi = s["psiVec"];
+      
+      List sb = s["SoilBalance"];
+      NumericVector psi = sb["psiVec"];
       psidays(i,_) = psi;
-
-      NumericVector EplantCoh = s["EplantCoh"];
-      NumericVector EplantVec = s["EplantVec"];
+      NumericVector EplantVec = sb["EplantVec"];
+      Esoil[i] = sum(Rcpp::as<Rcpp::NumericVector>(sb["EsoilVec"]));
+      
+      List Plants = s["Plants"];
+      NumericVector EplantCoh = Plants["EplantCoh"];
       Eplantdays(i,_) = EplantVec;
       PlantPhotosynthesis(i,_) = Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
       PlantTranspiration(i,_) = EplantCoh;
-      PlantStress(i,_) = Rcpp::as<Rcpp::NumericVector>(s["DDS"]);
-      PlantPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(s["psiCoh"]);
+      PlantStress(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["DDS"]);
+      PlantPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["psiCoh"]);
       EplantCohTot = EplantCohTot + EplantCoh;
       Eplanttot[i] = sum(EplantCoh);
       

@@ -30,6 +30,7 @@ swb.day(x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind,
   Detailed model description is available in the vignettes section. The model using 'Simple' transpiration mode is described in De Caceres et al. (2015). Simulations using the 'Complex' transpiration mode are computationally much more expensive. 
 }
 \value{
+An object of class \code{swb.day}:
 TO BE DONE
 }
 \references{
@@ -55,23 +56,31 @@ data(exampleforest)
 #Default species parameterization
 data(SpParamsMED)
 
-#Initialize soil with default soil params (2 layers)
-examplesoil = soil(defaultSoilParams(2))
-
 #Initialize control parameters
 control = defaultControl()
 control$ndailysteps = 24  
 
 #Initialize soil with default soil params (2 layers)
-examplesoil2 = soil(defaultSoilParams(2), W=c(0.5,0.5))
+examplesoil = soil(defaultSoilParams(2), W=c(0.5,0.5))
+
+
+#Simulate one day only
+x1 = forest2swbInput(exampleforest,examplesoil, SpParamsMED, control)
+d = 100
+sd1<-swb.day(x1, examplesoil, rownames(examplemeteo)[d], d , 
+             examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
+             examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
+             examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
+             latitude = 41.82592, elevation = 100, 
+             slope= 0, aspect = 0, rain = examplemeteo$Precipitation[d])
 
 #Switch to 'Complex' transpiration mode
 control$transpirationMode="Complex"
 
 #Simulate one day only
-x2 = forest2swbInput(exampleforest,examplesoil2, SpParamsMED, control)
+x2 = forest2swbInput(exampleforest,examplesoil, SpParamsMED, control)
 d = 100
-sd1<-swb.day(x2, examplesoil2, rownames(examplemeteo)[d], d , 
+sd2<-swb.day(x2, examplesoil, rownames(examplemeteo)[d], d , 
              examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
              examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
              examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
