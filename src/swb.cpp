@@ -244,13 +244,19 @@ List swbDay1(List x, List soil, double tday, double pet, double rain, double er,
     photosynthesis[c] = alpha*WUE[c]*transpiration[c];
   }
 
+  //Copy LAIexpanded for output
+  NumericVector LAIcohort(numCohorts);
+  for(int c=0;c<numCohorts;c++) LAIcohort[c]= LAIphe[c];
+  LAIcohort.attr("names") = above.attr("row.names");
+  
   List DB = List::create(_["PET"] = pet, _["Rain"] = rain, _["NetPrec"] = NetPrec, _["Runon"] = runon, _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
                     _["LAIcell"] = LAIcell, _["LAIcelldead"] = LAIcelldead, _["Cm"] = Cm, _["Lground"] = LgroundPAR);
   List SB = List::create(_["EsoilVec"] = EsoilVec, _["EplantVec"] = EplantVec, _["psiVec"] = psi);
   Eplant.attr("names") = above.attr("row.names");
   PlantPsi.attr("names") = above.attr("row.names");
   DDS.attr("names") = above.attr("row.names");
-  List Plants = List::create(_["EplantCoh"] = Eplant, _["psiCoh"] = PlantPsi, _["DDS"] = DDS);
+  List Plants = List::create(_["LAI"] = LAIcohort,
+                             _["EplantCoh"] = Eplant, _["psiCoh"] = PlantPsi, _["DDS"] = DDS);
   List l = List::create(_["DailyBalance"] = DB, _["SoilBalance"] = SB,
                         _["Plants"] = Plants);
   l.attr("class") = CharacterVector::create("swb.day","list");
@@ -560,6 +566,8 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   NumericMatrix VPD_SL(numCohorts, ntimesteps);
   NumericMatrix Temp_SH(numCohorts, ntimesteps);
   NumericMatrix Temp_SL(numCohorts, ntimesteps);
+  NumericMatrix LAI_SH(numCohorts, ntimesteps);
+  NumericMatrix LAI_SL(numCohorts, ntimesteps);
   NumericVector minPsiLeaf(numCohorts,0.0), minPsiRoot(numCohorts,0.0); //Minimum potentials experienced
   for(int c=0;c<numCohorts;c++) {
     photosynthesis[c] = 0.0;
@@ -617,10 +625,11 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
           Jmax298layer[i] = Jmax298[c]*fn;
         }
         double Vmax298SL= 0.0,Vmax298SH= 0.0,Jmax298SL= 0.0,Jmax298SH= 0.0;
-        double SLarea = 0.0, SHarea = 0.0;
+        LAI_SH(c,n) = 0.0; 
+        LAI_SL(c,n) = 0.0;
         for(int i=0;i<nz;i++) {
-          SLarea +=SLarealayer[i];
-          SHarea +=SHarealayer[i];
+          LAI_SL(c,n) +=SLarealayer[i];
+          LAI_SH(c,n) +=SHarealayer[i];
           Vmax298SL +=Vmax298layer[i]*LAIme(i,c)*fsunlit[i];
           Jmax298SL +=Jmax298layer[i]*LAIme(i,c)*fsunlit[i];
           Vmax298SH +=Vmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
@@ -655,18 +664,18 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
           //Photosynthesis function for sunlit and shade leaves
           List photoSunlit = leafPhotosynthesisFunction(supply, Catm, Patm,Tcan[n], vpatm, 
                                                  zWind[c], 
-                                                 absSWR_SL[c] + LWR_emmcan*SLarea, 
+                                                 absSWR_SL[c] + LWR_emmcan*LAI_SL(c,n), 
                                                  irradianceToPhotonFlux(absPAR_SL[c]), 
                                                  Vmax298SL, 
                                                  Jmax298SL, 
-                                                 Gwmin[c], Gwmax[c], leafWidth[c], SLarea);
+                                                 Gwmin[c], Gwmax[c], leafWidth[c], LAI_SL(c,n));
           List photoShade = leafPhotosynthesisFunction(supply, Catm, Patm,Tcan[n], vpatm, 
                                                        zWind[c], 
-                                                       absSWR_SH[c] + LWR_emmcan*SHarea, 
+                                                       absSWR_SH[c] + LWR_emmcan*LAI_SH(c,n), 
                                                        irradianceToPhotonFlux(absPAR_SH[c]),
                                                        Vmax298SH, 
                                                        Jmax298SH, 
-                                                       Gwmin[c], Gwmax[c], leafWidth[c], SHarea);
+                                                       Gwmin[c], Gwmax[c], leafWidth[c], LAI_SH(c,n));
           // }
         NumericVector AnSunlit = photoSunlit["NetPhotosynthesis"];
         NumericVector AnShade = photoShade["NetPhotosynthesis"];
@@ -692,11 +701,11 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
         Temp_SL(c,n)= TempSunlit[iPMSunlit];
         
         //Scale photosynthesis
-        Aninst(c,n) = AnSunlit[iPMSunlit]*SLarea + AnShade[iPMShade]*SHarea;
+        Aninst(c,n) = AnSunlit[iPMSunlit]*LAI_SL(c,n) + AnShade[iPMShade]*LAI_SH(c,n);
         photosynthesis[c] +=pow(10,-6)*12.01017*Aninst(c,n)*tstep; 
         
         //Average flow from sunlit and shade leaves
-        double Eaverage = (fittedE[iPMSunlit]*SLarea + fittedE[iPMShade]*SHarea)/(SLarea + SHarea);
+        double Eaverage = (fittedE[iPMSunlit]*LAI_SL(c,n) + fittedE[iPMShade]*LAI_SH(c,n))/(LAI_SL(c,n) + LAI_SH(c,n));
         
         //Find iPM corresponding to the average flow
         double absDiff = 9999.9;
@@ -876,7 +885,11 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
     psi[l] = theta2psi(clay[l], sand[l], W[l]*Theta_FC[l], om[l]);
   }
   
-  
+  //Copy LAIexpanded for output
+  NumericVector LAIcohort(numCohorts);
+  for(int c=0;c<numCohorts;c++) LAIcohort[c]= LAIphe[c];
+  LAIcohort.attr("names") = above.attr("row.names");
+    
   DataFrame Tinst = DataFrame::create(_["SolarHour"] = solarHour, 
                                       _["Tatm"] = Tatm, _["Tcan"] = Tcan, _["Tsoil"] = Tsoil_mat);
   DataFrame CEBinst = DataFrame::create(_["SolarHour"] = solarHour, 
@@ -896,6 +909,8 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   Temp_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   VPD_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   VPD_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  LAI_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  LAI_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   List AbsRadinst = List::create(_["SWR_SH"] = SWR_SH, _["SWR_SL"]=SWR_SL,
                                  _["LWR_SH"] = LWR_SH, _["LWR_SL"] = LWR_SL);
   List DB = List::create(_["Rain"] = rain,_["NetPrec"] = NetPrec, _["Runon"] = runon, _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
@@ -907,7 +922,9 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   Eplant.attr("names") = above.attr("row.names");
   PlantPsi.attr("names") = above.attr("row.names");
   DDS.attr("names") = above.attr("row.names");
-  List Plants = List::create(_["EplantCoh"] = Eplant, _["psiCoh"] = PlantPsi, _["DDS"] = DDS,
+  List Plants = List::create(_["LAI"] = LAIcohort,
+                             _["LAIsunlit"] = LAI_SL, _["LAIshade"] = LAI_SH, 
+                             _["EplantCoh"] = Eplant, _["psiCoh"] = PlantPsi, _["DDS"] = DDS,
                              _["AbsRadinst"] = AbsRadinst, _["Einst"]=Einst, _["Aninst"]=Aninst,
                              _["PsiPlantinst"] = PsiPlantinst, 
                              _["GWsunlitinst"] = GW_SL, _["GWshadeinst"] = GW_SH,

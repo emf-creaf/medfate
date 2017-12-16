@@ -7,6 +7,8 @@ __Version history__
 _Version 0.5.1, December 2017.
 1. Structure of swb.day output
 2. Increased output (leaf temperature, stomatal conductance and leaf VPD) in swb.day
+3. Taper modifications
+4. New function plot.swb.day
 
 _Version 0.5.0, December 2017.
 1. Atmospheric CO2 is an input control parameter

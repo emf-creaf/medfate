@@ -282,7 +282,7 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
     lines(dates, x$EnergyBalance$SWRcanin, col="red",...)
     lines(dates, x$EnergyBalance$LWRcanin, col="brown",...)
     lines(dates, -x$EnergyBalance$LWRcanout, col="blue",...)
-    lines(dates, -x$EnergyBalance$LWRsoilcan, col="orange",...)
+    lines(dates, x$EnergyBalance$LWRsoilcan, col="orange",...)
     lines(dates, -x$EnergyBalance$LEcan, col="green",...)
     lines(dates, -x$EnergyBalance$Hcan, col="gray",...)
     lines(dates, -x$EnergyBalance$Hcansoil, col="dark gray",...)
