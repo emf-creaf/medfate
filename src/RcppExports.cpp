@@ -1287,26 +1287,25 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// taperFactor
-double taperFactor(double height);
-RcppExport SEXP _medfate_taperFactor(SEXP heightSEXP) {
+// taperFactorSavage
+double taperFactorSavage(double height);
+RcppExport SEXP _medfate_taperFactorSavage(SEXP heightSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type height(heightSEXP);
-    rcpp_result_gen = Rcpp::wrap(taperFactor(height));
+    rcpp_result_gen = Rcpp::wrap(taperFactorSavage(height));
     return rcpp_result_gen;
 END_RCPP
 }
-// conductanceHeightFactor
-double conductanceHeightFactor(double height, bool taper);
-RcppExport SEXP _medfate_conductanceHeightFactor(SEXP heightSEXP, SEXP taperSEXP) {
+// terminalConduitRadius
+double terminalConduitRadius(double height);
+RcppExport SEXP _medfate_terminalConduitRadius(SEXP heightSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type height(heightSEXP);
-    Rcpp::traits::input_parameter< bool >::type taper(taperSEXP);
-    rcpp_result_gen = Rcpp::wrap(conductanceHeightFactor(height, taper));
+    rcpp_result_gen = Rcpp::wrap(terminalConduitRadius(height));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1323,8 +1322,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // maximumStemHydraulicConductance
-double maximumStemHydraulicConductance(double xylemConductivity, double refheight, double Al2As, double height, bool taper);
-RcppExport SEXP _medfate_maximumStemHydraulicConductance(SEXP xylemConductivitySEXP, SEXP refheightSEXP, SEXP Al2AsSEXP, SEXP heightSEXP, SEXP taperSEXP) {
+double maximumStemHydraulicConductance(double xylemConductivity, double refheight, double Al2As, double height, bool angiosperm, bool taper);
+RcppExport SEXP _medfate_maximumStemHydraulicConductance(SEXP xylemConductivitySEXP, SEXP refheightSEXP, SEXP Al2AsSEXP, SEXP heightSEXP, SEXP angiospermSEXP, SEXP taperSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1332,8 +1331,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type refheight(refheightSEXP);
     Rcpp::traits::input_parameter< double >::type Al2As(Al2AsSEXP);
     Rcpp::traits::input_parameter< double >::type height(heightSEXP);
+    Rcpp::traits::input_parameter< bool >::type angiosperm(angiospermSEXP);
     Rcpp::traits::input_parameter< bool >::type taper(taperSEXP);
-    rcpp_result_gen = Rcpp::wrap(maximumStemHydraulicConductance(xylemConductivity, refheight, Al2As, height, taper));
+    rcpp_result_gen = Rcpp::wrap(maximumStemHydraulicConductance(xylemConductivity, refheight, Al2As, height, angiosperm, taper));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2325,10 +2325,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_averageRhizosphereResistancePercent", (DL_FUNC) &_medfate_averageRhizosphereResistancePercent, 10},
     {"_medfate_findRhizosphereMaximumConductance", (DL_FUNC) &_medfate_findRhizosphereMaximumConductance, 9},
     {"_medfate_supplyFunctionNetwork", (DL_FUNC) &_medfate_supplyFunctionNetwork, 18},
-    {"_medfate_taperFactor", (DL_FUNC) &_medfate_taperFactor, 1},
-    {"_medfate_conductanceHeightFactor", (DL_FUNC) &_medfate_conductanceHeightFactor, 2},
+    {"_medfate_taperFactorSavage", (DL_FUNC) &_medfate_taperFactorSavage, 1},
+    {"_medfate_terminalConduitRadius", (DL_FUNC) &_medfate_terminalConduitRadius, 1},
     {"_medfate_referenceConductivityHeightFactor", (DL_FUNC) &_medfate_referenceConductivityHeightFactor, 2},
-    {"_medfate_maximumStemHydraulicConductance", (DL_FUNC) &_medfate_maximumStemHydraulicConductance, 5},
+    {"_medfate_maximumStemHydraulicConductance", (DL_FUNC) &_medfate_maximumStemHydraulicConductance, 6},
     {"_medfate_maximumRootHydraulicConductance", (DL_FUNC) &_medfate_maximumRootHydraulicConductance, 5},
     {"_medfate_parcohort", (DL_FUNC) &_medfate_parcohort, 5},
     {"_medfate_parheight", (DL_FUNC) &_medfate_parheight, 6},

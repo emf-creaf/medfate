@@ -890,10 +890,9 @@ List supplyFunctionNetwork(NumericVector psiSoil,
  * height - Tree height in cm
  */
 
-// [[Rcpp::export("hydraulics.taperFactor")]]
-double taperFactor(double height) {
- // double p = 1.0/3.0; //taper exponent
-  double b_p0 = 1.32, b_p13 = 1.85; //normalizing constants
+// [[Rcpp::export("hydraulics.taperFactorSavage")]]
+double taperFactorSavage(double height) {
+  double b_p0 = 1.32, b_p13 = 1.85; //normalizing constants (p = 1/3)
   double a_p0 = 7.20E-13, a_p13 = 6.67E-13;
   double n_ext = 2.0; //Number of daughter branches per parent
   double N = ((3.0*log(1.0-(height/4.0)*(1.0-pow(n_ext, 1.0/3.0))))/log(n_ext))-1.0;
@@ -901,24 +900,24 @@ double taperFactor(double height) {
   double K_13 = a_p13*pow(pow(n_ext, N/2.0),b_p13);
   return(K_13/K_0);
 }
-// [[Rcpp::export("hydraulics.conductanceHeightFactor")]]
-double conductanceHeightFactor(double height, bool taper = false) {
-  double hf = 100.0/height;
-  if(taper) {
-    // double dh0  = pow(10,1.50 +  0.46*log10(height/100.0));//Olson, M.E., Anfodillo, T., Rosell, J.A., Petit, G., Crivellaro, A., Isnard, S., León-Gómez, C., Alvarado-Cárdenas, L.O., & Castorena, M. 2014. Universal hydraulics of the flowering plants: Vessel diameter scales with stem length across angiosperm lineages, habits and climates. Ecology Letters 17: 988–997.
-    // double dhn  = pow(10,1.257 +  0.24*log10(height/100.0));//Olson, M.E., Anfodillo, T., Rosell, J.A., Petit, G., Crivellaro, A., Isnard, S., León-Gómez, C., Alvarado-Cárdenas, L.O., & Castorena, M. 2014. Universal hydraulics of the flowering plants: Vessel diameter scales with stem length across angiosperm lineages, habits and climates. Ecology Letters 17: 988–997.
-    // double df = pow(dhn/dh0,2.0);
-    double tf = taperFactor(height);
-    hf = hf*tf; 
-  } 
-  return(hf);
+
+/**
+ *  Returns the terminal conduit radius (in micras)
+ *  
+ *  height - plant height in cm
+ */
+// [[Rcpp::export("hydraulics.terminalConduitRadius")]]
+double terminalConduitRadius(double height) {
+  double dh  = pow(10,1.257 +  0.24*log10(height/100.0));//Olson, M.E., Anfodillo, T., Rosell, J.A., Petit, G., Crivellaro, A., Isnard, S., León-Gómez, C., Alvarado-Cárdenas, L.O., & Castorena, M. 2014. Universal hydraulics of the flowering plants: Vessel diameter scales with stem length across angiosperm lineages, habits and climates. Ecology Letters 17: 988–997.
+  return(dh/2.0);
 }
+
 
 // [[Rcpp::export("hydraulics.referenceConductivityHeightFactor")]]
 double referenceConductivityHeightFactor(double refheight, double height) {
-  double dhr  = pow(10,1.257 +  0.24*log10(refheight/100.0));//Olson, M.E., Anfodillo, T., Rosell, J.A., Petit, G., Crivellaro, A., Isnard, S., León-Gómez, C., Alvarado-Cárdenas, L.O., & Castorena, M. 2014. Universal hydraulics of the flowering plants: Vessel diameter scales with stem length across angiosperm lineages, habits and climates. Ecology Letters 17: 988–997.
-  double dh  = pow(10,1.257 +  0.24*log10(height/100.0));//Olson, M.E., Anfodillo, T., Rosell, J.A., Petit, G., Crivellaro, A., Isnard, S., León-Gómez, C., Alvarado-Cárdenas, L.O., & Castorena, M. 2014. Universal hydraulics of the flowering plants: Vessel diameter scales with stem length across angiosperm lineages, habits and climates. Ecology Letters 17: 988–997.
-  double df = pow(dh/dhr,2.0);
+  double rhref  = terminalConduitRadius(refheight);
+  double rh  = terminalConduitRadius(height);
+  double df = pow(rh/rhref,2.0);
   return(df);
 }
 
@@ -931,14 +930,23 @@ double referenceConductivityHeightFactor(double refheight, double height) {
  * refheight - Reference plant height (on which xylem conductivity was measured)
  * Al2As - Leaf area to sapwood area ratio (in m2·m-2)
  * height - plant height (in cm)
- * taper - boolean to apply taper using Savage (2010) model
+ * taper - boolean to apply taper
  */
 // [[Rcpp::export("hydraulics.maximumStemHydraulicConductance")]]
-double maximumStemHydraulicConductance(double xylemConductivity, double refheight, double Al2As, double height, bool taper = false) {
-  // Correct reference conductivity in relation to the reference plant height in which it was measured
-  xylemConductivity = xylemConductivity*referenceConductivityHeightFactor(refheight, height);
+double maximumStemHydraulicConductance(double xylemConductivity, double refheight, double Al2As, double height, 
+                                       bool angiosperm = true, bool taper = false) {
+  
+  
   // Christoffersen, B. O., M. Gloor, S. Fauset, N. M. Fyllas, D. R. Galbraith, T. R. Baker, L. Rowland, R. A. Fisher, O. J. Binks, S. A. Sevanto, C. Xu, S. Jansen, B. Choat, M. Mencuccini, N. G. McDowell, and P. Meir. 2016. Linking hydraulic traits to tropical forest function in a size-structured and trait-driven model (TFS v.1-Hydro). Geoscientific Model Development Discussions 0:1–60.
-  double kmax = (1000.0/0.018)*(xylemConductivity/Al2As)*conductanceHeightFactor(height, taper);
+  double kmax = 0.0;
+  if(!taper) {
+    double xylemConductivityCorrected = xylemConductivity*referenceConductivityHeightFactor(refheight, height);
+    kmax =   (1000.0/0.018)*(xylemConductivityCorrected/Al2As)*(100.0/height);
+  } else {
+    double petioleConductivity = xylemConductivity*referenceConductivityHeightFactor(refheight, 100.0);
+    // Correct reference conductivity in relation to the reference plant height in which it was measured
+    kmax =   (1000.0/0.018)*(petioleConductivity/Al2As)*(100.0/height)*(taperFactorSavage(height)/(taperFactorSavage(100.0)));
+  } 
   return(kmax); 
 }
 

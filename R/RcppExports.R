@@ -353,20 +353,20 @@ hydraulics.supplyFunctionNetwork <- function(psiSoil, krhizomax, nsoil, alphasoi
     .Call('_medfate_supplyFunctionNetwork', PACKAGE = 'medfate', psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, psiCav, minFlow, maxNsteps, psiStep, psiMax, ntrial, psiTol, ETol)
 }
 
-hydraulics.taperFactor <- function(height) {
-    .Call('_medfate_taperFactor', PACKAGE = 'medfate', height)
+hydraulics.taperFactorSavage <- function(height) {
+    .Call('_medfate_taperFactorSavage', PACKAGE = 'medfate', height)
 }
 
-hydraulics.conductanceHeightFactor <- function(height, taper = FALSE) {
-    .Call('_medfate_conductanceHeightFactor', PACKAGE = 'medfate', height, taper)
+hydraulics.terminalConduitRadius <- function(height) {
+    .Call('_medfate_terminalConduitRadius', PACKAGE = 'medfate', height)
 }
 
 hydraulics.referenceConductivityHeightFactor <- function(refheight, height) {
     .Call('_medfate_referenceConductivityHeightFactor', PACKAGE = 'medfate', refheight, height)
 }
 
-hydraulics.maximumStemHydraulicConductance <- function(xylemConductivity, refheight, Al2As, height, taper = FALSE) {
-    .Call('_medfate_maximumStemHydraulicConductance', PACKAGE = 'medfate', xylemConductivity, refheight, Al2As, height, taper)
+hydraulics.maximumStemHydraulicConductance <- function(xylemConductivity, refheight, Al2As, height, angiosperm = TRUE, taper = FALSE) {
+    .Call('_medfate_maximumStemHydraulicConductance', PACKAGE = 'medfate', xylemConductivity, refheight, Al2As, height, angiosperm, taper)
 }
 
 hydraulics.maximumRootHydraulicConductance <- function(xylemConductivity, Al2As, v, d, depthWidthRatio = 1.0) {

@@ -108,6 +108,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
                          _["paramsTransp"] = paramsTranspdf);
     
   } else if(transpirationMode =="Complex"){
+    CharacterVector GroupSP = SpParams["Group"];
     NumericVector leafwidthSP = SpParams["LeafWidth"];
     NumericVector HmedSP = SpParams["Hmed"]; //To correct conductivity
     NumericVector Al2AsSP = SpParams["Al2As"];
@@ -140,7 +141,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
       xylem_kmax[c] = xylem_kmaxSP[SP[c]];
       Al2As[c] = Al2AsSP[SP[c]];
       //Calculate stem maximum conductance (in mmol·m-2·s-1·MPa-1)
-      VCstem_kmax[c]=maximumStemHydraulicConductance(xylem_kmax[c], HmedSP[SP[c]], Al2As[c],H[c],control["taper"]); 
+      VCstem_kmax[c]=maximumStemHydraulicConductance(xylem_kmax[c], HmedSP[SP[c]], Al2As[c],H[c], (GroupSP[SP[c]]=="Angiosperm"),control["taper"]); 
       VCstem_c[c]=VCstem_cSP[SP[c]];
       VCstem_d[c]=VCstem_dSP[SP[c]];
       VCroot_c[c]=VCroot_cSP[SP[c]];
@@ -446,6 +447,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                          _["paramsAllometries"] = paramsAllometriesdf);
     
   } else if(transpirationMode =="Complex"){
+    CharacterVector GroupSP = SpParams["Group"];
     NumericVector HmedSP = SpParams["Hmed"]; //To correct conductivity
     NumericVector leafwidthSP = SpParams["LeafWidth"];
     NumericVector GwminSP = SpParams["Gwmin"];
@@ -477,7 +479,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
       leafwidth[c]=leafwidthSP[SP[c]];
       Al2As[c] = Al2AsSP[SP[c]];
       //Calculate stem maximum conductance (in mmol·m-2·s-1·MPa-1)
-      VCstem_kmax[c]=maximumStemHydraulicConductance(xylem_kmax[c], HmedSP[SP[c]], Al2As[c],H[c], control["taper"]); 
+      VCstem_kmax[c]=maximumStemHydraulicConductance(xylem_kmax[c], HmedSP[SP[c]], Al2As[c],H[c], GroupSP[SP[c]]=="Angiosperm", control["taper"]); 
       VCstem_c[c]=VCstem_cSP[SP[c]];
       VCstem_d[c]=VCstem_dSP[SP[c]];
       VCroot_c[c]=VCroot_cSP[SP[c]];
