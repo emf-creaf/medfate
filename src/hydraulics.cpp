@@ -691,6 +691,11 @@ List E2psiNetwork(double E, NumericVector psiSoil,
     }
     // Rcout<<"\n";
     if(errx<=psiTol) break;
+    else if(k==(ntrial-1)) { //Last trial and no convergence
+      for(int fi=0;fi<=nlayers;fi++) x[fi] = NA_REAL;
+      Rcout<<"LC";
+      stop = true;
+    }
     if(stop) break;
   }
   NumericVector psi(nlayers+2);

@@ -28,7 +28,7 @@ A list, with the following options:
 \item{\code{maxNsteps (= 400)}: Maximum number of steps in supply function.}
 \item{\code{psiStep (= - 0.001)}: Step in water potential.}
 \item{\code{psiMax (= - 10.0)}: Minimum water potential allowed.}
-\item{\code{ntrial (= 20)}: Number of iteration trials when finding root of equation system.}
+\item{\code{ntrial (= 200)}: Number of iteration trials when finding root of equation system.}
 \item{\code{psiTol (= 0.0001)}: Tolerance value for water potential.}
 \item{\code{ETol (= 0.0001)}: Tolerance value for flow.}
 }

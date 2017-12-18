@@ -159,12 +159,13 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
       Vmax298[c] =Vmax298SP[SP[c]];
       Jmax298[c] = exp(1.197 + 0.847*log(Vmax298[c])); //Walker et al 2014
       for(int l=0;l<nlayers;l++) {
-        // Rcout<<Vc[l]<<" ";
+        
         VGrhizo_kmax(c,l) = V(c,l)*findRhizosphereMaximumConductance(averageFracRhizosphereResistance*100.0, VG_n[l], VG_alpha[l],
                      VCroot_kmaxc, VCroot_c[c], VCroot_d[c],
                                                         VCstem_kmax[c], VCstem_c[c], VCstem_d[c]);
+        Rcout<<VGrhizo_kmax(c,l)<<" ";
       }
-      // Rcout<<"\n";
+      Rcout<<"\n";
     }
     VGrhizo_kmax.attr("dimnames") = List::create(above.attr("row.names"), slnames);
     VCroot_kmax.attr("dimnames") = List::create(above.attr("row.names"), slnames);

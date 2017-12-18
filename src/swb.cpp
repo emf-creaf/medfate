@@ -361,8 +361,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   //Step in seconds
   double tstep = 86400.0/((double) ntimesteps);
   
-  //Day length (latitude in radians), atmospheric pressure, CO2 concentration
-  double tauday = meteoland::radiation_daylengthseconds(latrad,  slorad,asprad, delta); 
+  //Atmospheric pressure, CO2 concentration
   double Patm = meteoland::utils_atmosphericPressure(elevation);
   double Catm = control["Catm"];
   
@@ -390,10 +389,11 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   NumericVector LEcan_heat(ntimesteps), Hcan_heat(ntimesteps), LWRsoilcan(ntimesteps), LWRcanout(ntimesteps), Ebal(ntimesteps);
   NumericVector LWRsoilout(ntimesteps), Ebalsoil(ntimesteps), Hcansoil(ntimesteps);
   NumericMatrix Tsoil_mat(ntimesteps, nlayers);
+  //Daylength in seconds (assuming flat area because we want to model air temperature variation)
+  double tauday = meteoland::radiation_daylengthseconds(latrad,0.0,0.0, delta); 
   for(int n=0;n<ntimesteps;n++) {
     //From solar hour (radians) to seconds from sunrise
     Tsunrise[n] = (solarHour[n]*43200.0/PI)+ (tauday/2.0) +(tstep/2.0); 
-    
     //Calculate instantaneous temperature and light conditions
     Tatm[n] = temperatureDiurnalPattern(Tsunrise[n], tmin, tmax, tauday);
     //Longwave sky diffuse radiation (W/m2)
@@ -635,41 +635,16 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
           Vmax298SH +=Vmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
           Jmax298SH +=Jmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
         }
-        
-        
-        //Photosynthesis function
-        // if(canopyMode=="multilayer"){
-        //   //Retrieve Light extinction
-        //   NumericMatrix absPAR_SL = abs_PAR_SL_list[n];
-        //   NumericMatrix absPAR_SH = abs_PAR_SH_list[n];
-        //   NumericMatrix absSWR_SL = abs_SWR_SL_list[n];
-        //   NumericMatrix absSWR_SH = abs_SWR_SH_list[n];
-        //   NumericMatrix absLWR_SL = abs_LWR_SL_list[n];
-        //   NumericMatrix absLWR_SH = abs_LWR_SH_list[n];
-        //   for(int i=0;i<nz;i++) {
-        //     QSL[i] = irradianceToPhotonFlux(absPAR_SL(i,c));
-        //     QSH[i] = irradianceToPhotonFlux(absPAR_SH(i,c));
-        //     //Add absorved short wave and long wave radiation (from sky and canopy)
-        //     absRadSL[i] = absSWR_SL(i,c) + absLWR_SL(i,c) + SLarealayer[i]*0.97*LWR_emmcan;
-        //     absRadSH[i] = absSWR_SH(i,c)+ absLWR_SH(i,c) + SHarealayer[i]*0.97*LWR_emmcan;
-        //   }
-        //   photo = multilayerPhotosynthesisFunction(supply, Catm, Patm, Tcan[n], vpatm, 
-        //                                            SLarealayer, SHarealayer, 
-        //                                            zWind, absRadSL, absRadSH, 
-        //                                            QSL, QSH,
-        //                                            Vmax298layer,Jmax298layer,
-        //                                            Gwmin[c], Gwmax[c], leafWidth[c]);
-        // } else if(canopyMode=="sunshade"){
-          
-          //Photosynthesis function for sunlit and shade leaves
-          List photoSunlit = leafPhotosynthesisFunction(supply, Catm, Patm,Tcan[n], vpatm, 
+
+        //Photosynthesis function for sunlit and shade leaves
+        List photoSunlit = leafPhotosynthesisFunction(supply, Catm, Patm,Tcan[n], vpatm, 
                                                  zWind[c], 
                                                  absSWR_SL[c] + LWR_emmcan*LAI_SL(c,n), 
                                                  irradianceToPhotonFlux(absPAR_SL[c]), 
                                                  Vmax298SL, 
                                                  Jmax298SL, 
                                                  Gwmin[c], Gwmax[c], leafWidth[c], LAI_SL(c,n));
-          List photoShade = leafPhotosynthesisFunction(supply, Catm, Patm,Tcan[n], vpatm, 
+        List photoShade = leafPhotosynthesisFunction(supply, Catm, Patm,Tcan[n], vpatm, 
                                                        zWind[c], 
                                                        absSWR_SH[c] + LWR_emmcan*LAI_SH(c,n), 
                                                        irradianceToPhotonFlux(absPAR_SH[c]),
@@ -728,10 +703,11 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
         
         //Do not allow negative plant transpiration values (inaccurate numerical estimation)
         if(Einst(c,n)<0.0) {
-          double toAdd = std::abs(Einst(c,n));
-          for(int lc=0;lc<nlayerscon[c];lc++) Ecn[lc] = Ecn[lc]+(toAdd/((double) nlayerscon[c]));//Shift all flows equally
+          // double toAdd = std::abs(Einst(c,n));
+          // for(int lc=0;lc<nlayerscon[c];lc++) Ecn[lc] = Ecn[lc]+(toAdd/((double) nlayerscon[c]));//Shift all flows equally
           Einst(c,n) = 0.0;
-          // if(verbose) Rcout<<"N";
+          for(int lc=0;lc<nlayerscon[c];lc++) Ecn[lc] = 0.0;
+          if(verbose) Rcout<<"N";
         }
         //Add to daily plant cohort transpiration
         Eplant[c] +=Einst(c,n);
@@ -998,6 +974,7 @@ List swbDay(List x, List soil, CharacterVector date, int doy, double tmin, doubl
   // Rcout<<"hola4\n";
   return(s);
 }
+
   
 NumericVector getTrackSpeciesTranspiration( NumericVector trackSpecies, NumericVector Eplant, DataFrame x) {
   int nTrackSpecies = trackSpecies.size();

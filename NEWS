@@ -4,6 +4,9 @@
 
 __Version history__
 
+_Version 0.5.2, December 2017.
+1. Modification of default for ntrial
+
 _Version 0.5.1, December 2017.
 1. Structure of swb.day output
 2. Increased output (leaf temperature, stomatal conductance and leaf VPD) in swb.day
