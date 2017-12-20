@@ -337,6 +337,9 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   NumericVector VCstem_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_kmax"]);
   NumericVector VCstem_c = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_c"]);
   NumericVector VCstem_d = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_d"]);
+  NumericVector VCleaf_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_kmax"]);
+  NumericVector VCleaf_c = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_c"]);
+  NumericVector VCleaf_d = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_d"]);
   NumericVector VCroot_c = paramsTransp["VCroot_c"];
   NumericVector VCroot_d = paramsTransp["VCroot_d"];
   NumericVector Vmax298 = paramsTransp["Vmax298"];
@@ -538,7 +541,8 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
     supplyNetworks[c] = supplyFunctionNetwork(psic,
                                              VGrhizo_kmaxc,VG_nc,VG_alphac,
                                              VCroot_kmaxc, VCroot_c[c],VCroot_d[c],
-                                             VCstem_kmax[c], VCstem_c[c],VCstem_d[c], 
+                                             VCstem_kmax[c], VCstem_c[c],VCstem_d[c],
+                                             VCleaf_kmax[c], VCleaf_c[c],VCleaf_d[c],
                                              psiCav,
                                              minFlow, maxNsteps, psiStep, psiMax , ntrial, psiTol, ETol);
   }
@@ -606,7 +610,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
         List supply = supplyNetworks[c];
         NumericVector fittedE = supply["E"];
         NumericMatrix ElayersMat = supply["Elayers"];
-        NumericVector PsiLeafVec = supply["PsiPlant"];
+        NumericVector PsiLeafVec = supply["PsiLeaf"];
         NumericVector PsiRootVec = supply["PsiRoot"];
         
         
@@ -769,6 +773,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
                                                   VGrhizo_kmaxc,VG_nc,VG_alphac,
                                                   VCroot_kmaxc, VCroot_c[c],VCroot_d[c],
                                                   VCstem_kmax[c], VCstem_c[c],VCstem_d[c], 
+                                                  VCleaf_kmax[c], VCleaf_c[c],VCleaf_d[c],
                                                   psiCav,
                                                   minFlow, maxNsteps, psiStep, psiMax , ntrial, psiTol, ETol);
       }

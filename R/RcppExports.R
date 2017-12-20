@@ -341,20 +341,20 @@ hydraulics.regulatedPsiTwoElements <- function(Emax, psiSoil, krhizomax, kxylemm
     .Call('_medfate_regulatedPsiTwoElements', PACKAGE = 'medfate', Emax, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, dE, psiMax)
 }
 
-hydraulics.E2psiNetwork <- function(E, psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, psiIni = as.numeric( c(0)), psiCav = 0.0, psiStep = -0.001, psiMax = -10.0, ntrial = 10L, psiTol = 0.0001, ETol = 0.0001) {
-    .Call('_medfate_E2psiNetwork', PACKAGE = 'medfate', E, psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, psiIni, psiCav, psiStep, psiMax, ntrial, psiTol, ETol)
+hydraulics.E2psiNetwork <- function(E, psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiIni = as.numeric( c(0)), psiCav = 0.0, psiStep = -0.001, psiMax = -10.0, ntrial = 10L, psiTol = 0.0001, ETol = 0.0001) {
+    .Call('_medfate_E2psiNetwork', PACKAGE = 'medfate', E, psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiIni, psiCav, psiStep, psiMax, ntrial, psiTol, ETol)
 }
 
-hydraulics.averageRhizosphereResistancePercent <- function(krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, psiStep = -0.01) {
-    .Call('_medfate_averageRhizosphereResistancePercent', PACKAGE = 'medfate', krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, psiStep)
+hydraulics.averageRhizosphereResistancePercent <- function(krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiStep = -0.01) {
+    .Call('_medfate_averageRhizosphereResistancePercent', PACKAGE = 'medfate', krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiStep)
 }
 
-hydraulics.findRhizosphereMaximumConductance <- function(averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd) {
-    .Call('_medfate_findRhizosphereMaximumConductance', PACKAGE = 'medfate', averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd)
+hydraulics.findRhizosphereMaximumConductance <- function(averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd) {
+    .Call('_medfate_findRhizosphereMaximumConductance', PACKAGE = 'medfate', averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd)
 }
 
-hydraulics.supplyFunctionNetwork <- function(psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, psiCav = 0.0, minFlow = 0.0, maxNsteps = 400L, psiStep = -0.001, psiMax = -10.0, ntrial = 10L, psiTol = 0.0001, ETol = 0.0001) {
-    .Call('_medfate_supplyFunctionNetwork', PACKAGE = 'medfate', psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, psiCav, minFlow, maxNsteps, psiStep, psiMax, ntrial, psiTol, ETol)
+hydraulics.supplyFunctionNetwork <- function(psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiCav = 0.0, minFlow = 0.0, maxNsteps = 400L, psiStep = -0.001, psiMax = -10.0, ntrial = 10L, psiTol = 0.0001, ETol = 0.0001) {
+    .Call('_medfate_supplyFunctionNetwork', PACKAGE = 'medfate', psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiCav, minFlow, maxNsteps, psiStep, psiMax, ntrial, psiTol, ETol)
 }
 
 hydraulics.taperFactorSavage <- function(height) {
@@ -577,8 +577,8 @@ swb <- function(x, soil, meteo, latitude = NA_real_, elevation = NA_real_, slope
     .Call('_medfate_swb', PACKAGE = 'medfate', x, soil, meteo, latitude, elevation, slope, aspect)
 }
 
-transp.profitMaximization <- function(supplyFunction, photosynthesisFunction, type, Gwmax, kstemmax = NA_real_) {
-    .Call('_medfate_profitMaximization', PACKAGE = 'medfate', supplyFunction, photosynthesisFunction, type, Gwmax, kstemmax)
+transp.profitMaximization <- function(supplyFunction, photosynthesisFunction, type, Gwmax, kleafmax = NA_real_) {
+    .Call('_medfate_profitMaximization', PACKAGE = 'medfate', supplyFunction, photosynthesisFunction, type, Gwmax, kleafmax)
 }
 
 transp.dayCanopyTranspiration <- function(x, soil, meteo, day, latitude, elevation, slope = 0.0, aspect = 0.0) {

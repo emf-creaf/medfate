@@ -4,7 +4,7 @@ defaultControl<-function() {
     verbose = TRUE,
     # swb
     transpirationMode = "Simple", #vs. "Complex"
-    hydraulicCostFunction = 2,
+    hydraulicCostFunction = 1, #vs. 2
     canopyMode = "sunshade", #vs. "multilayer"
     verticalLayerSize = 100,
     cavitationRefill = TRUE,

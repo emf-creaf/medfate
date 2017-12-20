@@ -50,6 +50,7 @@ hydraulics.E2psiNetwork(E, psiSoil,
                         krhizomax, nsoil, alphasoil,
                         krootmax, rootc, rootd, 
                         kstemmax, stemc, stemd,
+                        kleafmax, leafc, leafd,
                         psiIni = as.numeric(c(0)), psiCav = 0,
                         psiStep = -0.001, psiMax = -10.0, ntrial = 10, 
                         psiTol = 0.0001, ETol = 1e-04)
@@ -60,7 +61,8 @@ hydraulics.EXylem(psiPlant, psiUpstream, kxylemmax, c, d, allowNegativeFlux = TR
                   psiCav = 0)
 hydraulics.findRhizosphereMaximumConductance(averageResistancePercent, n, alpha,
                                              krootmax, rootc, rootd,
-                                             kstemmax, stemc, stemd)        
+                                             kstemmax, stemc, stemd,
+                                             kleafmax, leafc, leafd)        
 hydraulics.maximumStemHydraulicConductance(xylemConductivity, Al2As, height, 
                                            taper = FALSE)
 hydraulics.supplyFunctionOneXylem(psiSoil, v, 
@@ -76,7 +78,9 @@ hydraulics.supplyFunctionThreeElements(Emax, psiSoil,
 hydraulics.supplyFunctionNetwork(psiSoil, 
                           krhizomax, nsoil, alphasoil,
                           krootmax, rootc, rootd, 
-                          kstemmax, stemc, stemd, psiCav = 0,
+                          kstemmax, stemc, stemd, 
+                          kleafmax, leafc, leafd,
+                          psiCav = 0,
                           minFlow = 0, maxNsteps = 400, psiStep = -0.001, psiMax = -10.0, 
                           ntrial = 10, psiTol = 0.0001, ETol = 1e-04)
 hydraulics.supplyFunctionPlot(soil, x, type = "E")   

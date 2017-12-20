@@ -4,9 +4,13 @@
 
 __Version history__
 
+_Version 0.5.3, December 2017.
+1. Network representation of the continuum now includes a leaf segment
+
 _Version 0.5.2, December 2017.
 1. Modification of default for ntrial
 2. Three element supply function added
+3. Parameters of the leaf maximum conductance and leaf vulnerability curve added
 
 _Version 0.5.1, December 2017.
 1. Structure of swb.day output

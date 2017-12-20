@@ -38,7 +38,6 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
   NumericVector CR = above["CR"];
   String transpirationMode = control["transpirationMode"];
   if((transpirationMode!="Simple") & (transpirationMode!="Complex")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Simple' or 'Complex')");
-  double fracTotalTreeResistance = control["fracTotalTreeResistance"];
   double averageFracRhizosphereResistance = control["averageFracRhizosphereResistance"];
   String canopyMode = control["canopyMode"];
   
@@ -114,17 +113,21 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
     NumericVector Al2AsSP = SpParams["Al2As"];
     NumericVector GwminSP = SpParams["Gwmin"];
     NumericVector GwmaxSP = SpParams["Gwmax"];
+    NumericVector VCleaf_kmaxSP = SpParams["VCleaf_kmax"];
     NumericVector xylem_kmaxSP = SpParams["xylem_kmax"];
+    NumericVector VCleaf_cSP = SpParams["VCleaf_c"];
+    NumericVector VCleaf_dSP = SpParams["VCleaf_d"];
     NumericVector VCstem_cSP = SpParams["VCstem_c"];
     NumericVector VCstem_dSP = SpParams["VCstem_d"];
     NumericVector VCroot_cSP = SpParams["VCroot_c"];
     NumericVector VCroot_dSP = SpParams["VCroot_d"];
     NumericVector Vmax298SP = SpParams["Vmax298"];
     NumericVector Gwmax(numCohorts), Gwmin(numCohorts);
-    NumericVector xylem_kmax(numCohorts), Al2As(numCohorts);
+    NumericVector VCleaf_kmax(numCohorts), xylem_kmax(numCohorts), Al2As(numCohorts);
     NumericVector VCroottot_kmax(numCohorts, 0.0), VCstem_kmax(numCohorts),leafwidth(numCohorts);
     NumericVector pRootDiscSP = SpParams["pRootDisc"];
     NumericVector pRootDisc(numCohorts);
+    NumericVector VCleaf_c(numCohorts), VCleaf_d(numCohorts);
     NumericVector VCstem_c(numCohorts), VCstem_d(numCohorts);
     NumericVector VCroot_c(numCohorts), VCroot_d(numCohorts);
     NumericVector Vmax298(numCohorts), Jmax298(numCohorts);
@@ -149,6 +152,12 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
       //Default vulnerability curve parameters if missing
       if(NumericVector::is_na(VCroot_c[c])) VCroot_c[c] = VCstem_c[c];
       if(NumericVector::is_na(VCroot_d[c])) VCroot_d[c] = VCstem_d[c]/2.0;
+      VCleaf_kmax[c] = VCleaf_kmaxSP[SP[c]];
+      VCleaf_c[c]=VCleaf_cSP[SP[c]];
+      VCleaf_d[c]=VCleaf_dSP[SP[c]];
+      //Default vulnerability curve parameters if missing
+      if(NumericVector::is_na(VCleaf_c[c])) VCleaf_c[c] = VCstem_c[c];
+      if(NumericVector::is_na(VCleaf_d[c])) VCleaf_d[c] = VCstem_d[c]/1.5;
       pRootDisc[c]=pRootDiscSP[SP[c]];
       Gwmin[c] = GwminSP[SP[c]];
       Gwmax[c] = GwmaxSP[SP[c]];
@@ -162,8 +171,9 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
         
         VGrhizo_kmax(c,l) = V(c,l)*findRhizosphereMaximumConductance(averageFracRhizosphereResistance*100.0, VG_n[l], VG_alpha[l],
                      VCroot_kmaxc, VCroot_c[c], VCroot_d[c],
-                                                        VCstem_kmax[c], VCstem_c[c], VCstem_d[c]);
-        Rcout<<VGrhizo_kmax(c,l)<<" ";
+                     VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
+                     VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c]);
+        // Rcout<<VGrhizo_kmax(c,l)<<" ";
       }
       Rcout<<"\n";
     }
@@ -172,9 +182,12 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
     
     DataFrame paramsTranspdf = DataFrame::create(
       _["Gwmin"]=Gwmin, _["Gwmax"]=Gwmax,_["LeafWidth"] = leafwidth, _["Vmax298"]=Vmax298,
-      _["Jmax298"]=Jmax298, _["VCroot_kmax"] = VCroottot_kmax ,_["VCroot_c"]=VCroot_c,_["VCroot_d"]=VCroot_d,_["xylem_kmax"] = xylem_kmax,
+      _["Jmax298"]=Jmax298, _["xylem_kmax"] = xylem_kmax,
       _["Al2As"] = Al2As,  
-      _["VCstem_kmax"]=VCstem_kmax,_["VCstem_c"]=VCstem_c,_["VCstem_d"]=VCstem_d, _["pRootDisc"] = pRootDisc);
+      _["VCleaf_kmax"]=VCleaf_kmax,_["VCleaf_c"]=VCleaf_c,_["VCleaf_d"]=VCleaf_d,
+      _["VCstem_kmax"]=VCstem_kmax,_["VCstem_c"]=VCstem_c,_["VCstem_d"]=VCstem_d, 
+      _["VCroot_kmax"] = VCroottot_kmax ,_["VCroot_c"]=VCroot_c,_["VCroot_d"]=VCroot_d,
+      _["pRootDisc"] = pRootDisc);
     paramsTranspdf.attr("row.names") = above.attr("row.names");
     List below = List::create(_["V"] = V,
                               _["VGrhizo_kmax"] = VGrhizo_kmax,
@@ -268,7 +281,6 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   String canopyMode = control["canopyMode"];
   
   
-  double fracTotalTreeResistance = control["fracTotalTreeResistance"];
   double averageFracRhizosphereResistance = control["averageFracRhizosphereResistance"];
   
   NumericVector Al2AsSP = SpParams["Al2As"];
@@ -453,15 +465,18 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     NumericVector leafwidthSP = SpParams["LeafWidth"];
     NumericVector GwminSP = SpParams["Gwmin"];
     NumericVector GwmaxSP = SpParams["Gwmax"];
+    NumericVector VCleaf_kmaxSP = SpParams["VCleaf_kmax"];
     NumericVector xylem_kmaxSP = SpParams["xylem_kmax"];
+    NumericVector VCleaf_cSP = SpParams["VCleaf_c"];
+    NumericVector VCleaf_dSP = SpParams["VCleaf_d"];
     NumericVector VCstem_cSP = SpParams["VCstem_c"];
     NumericVector VCstem_dSP = SpParams["VCstem_d"];
     NumericVector VCroot_cSP = SpParams["VCroot_c"];
     NumericVector VCroot_dSP = SpParams["VCroot_d"];
     NumericVector Vmax298SP = SpParams["Vmax298"];
     NumericVector Gwmin(numCohorts), Gwmax(numCohorts);
-    NumericVector xylem_kmax(numCohorts), Al2As(numCohorts);
-    NumericVector VCstem_kmax(numCohorts),leafwidth(numCohorts);
+    NumericVector VCleaf_kmax(numCohorts), xylem_kmax(numCohorts), Al2As(numCohorts);
+    NumericVector VCroottot_kmax(numCohorts, 0.0), VCstem_kmax(numCohorts),leafwidth(numCohorts);
     NumericVector VCstem_c(numCohorts), VCstem_d(numCohorts);
     NumericVector VCroot_c(numCohorts), VCroot_d(numCohorts);
     NumericVector Vmax298(numCohorts), Jmax298(numCohorts);
@@ -471,6 +486,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     NumericVector VG_alpha = soil["VG_alpha"];
     NumericVector VG_n = soil["VG_n"];
     int nlayers = dVec.size();
+    NumericVector VCleaf_c(numCohorts), VCleaf_d(numCohorts);
     NumericMatrix VCroot_kmax(numCohorts, nlayers); 
     NumericMatrix VGrhizo_kmax(numCohorts, nlayers);
     NumericVector Vc;
@@ -488,19 +504,27 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
       //Default vulnerability curve parameters if missing
       if(NumericVector::is_na(VCroot_c[c])) VCroot_c[c] = VCstem_c[c];
       if(NumericVector::is_na(VCroot_d[c])) VCroot_d[c] = VCstem_d[c]/2.0;
+      VCleaf_kmax[c] = VCleaf_kmaxSP[SP[c]];
+      VCleaf_c[c]=VCleaf_cSP[SP[c]];
+      VCleaf_d[c]=VCleaf_dSP[SP[c]];
+      //Default vulnerability curve parameters if missing
+      if(NumericVector::is_na(VCleaf_c[c])) VCleaf_c[c] = VCstem_c[c];
+      if(NumericVector::is_na(VCleaf_d[c])) VCleaf_d[c] = VCstem_d[c]/1.5;
       Gwmin[c] = GwminSP[SP[c]];
       Gwmax[c] = GwmaxSP[SP[c]];
       pRootDisc[c]=pRootDiscSP[SP[c]];
       // double VCroot_kmaxc = 1.0/((1.0/(VCstem_kmax[c]*fracTotalTreeResistance))-(1.0/VCstem_kmax[c]));
       double VCroot_kmaxc = maximumRootHydraulicConductance(xylem_kmax[c],Al2As[c], Vc, dVec);
       VCroot_kmax(c,_) = VCroot_kmaxc*xylemConductanceProportions(Vc,dVec);
+      VCroottot_kmax[c] = sum(VCroot_kmax(c,_));
       Vmax298[c] =Vmax298SP[SP[c]];
       Jmax298[c] = exp(1.197 + 0.847*log(Vmax298[c]));//Walker et al 2014
       for(int l=0;l<nlayers;l++) {
         // Rcout<<Vc[l]<<" ";
         VGrhizo_kmax(c,l) = V(c,l)*findRhizosphereMaximumConductance(averageFracRhizosphereResistance*100.0, VG_n[l], VG_alpha[l],
                      VCroot_kmaxc, VCroot_c[c], VCroot_d[c],
-                                                        VCstem_kmax[c], VCstem_c[c], VCstem_d[c]);
+                     VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
+                     VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c]);
       }
       // Rcout<<"\n";
     }
@@ -509,9 +533,11 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     
     DataFrame paramsTranspdf = DataFrame::create(
         _["Gwmin"]=Gwmin, _["Gwmax"]=Gwmax, _["LeafWidth"] = leafwidth, _["Vmax298"]=Vmax298,
-        _["Jmax298"]=Jmax298,_["VCroot_c"]=VCroot_c,_["VCroot_d"]=VCroot_d,_["xylem_kmax"] = xylem_kmax,
-        _["Al2As"] = Al2As,  
-        _["VCstem_kmax"]=VCstem_kmax,_["VCstem_c"]=VCstem_c,_["VCstem_d"]=VCstem_d, _["pRootDisc"] = pRootDisc);
+        _["Jmax298"]=Jmax298,_["xylem_kmax"] = xylem_kmax,_["Al2As"] = Al2As,  
+        _["VCleaf_kmax"]=VCleaf_kmax,_["VCleaf_c"]=VCleaf_c,_["VCleaf_d"]=VCleaf_d,
+        _["VCstem_kmax"]=VCstem_kmax,_["VCstem_c"]=VCstem_c,_["VCstem_d"]=VCstem_d, 
+        _["VCroot_kmax"] = VCroottot_kmax ,_["VCroot_c"]=VCroot_c,_["VCroot_d"]=VCroot_d,
+        _["pRootDisc"] = pRootDisc);
     paramsTranspdf.attr("row.names") = above.attr("row.names");
     
     List below = List::create( _["Z"]=Z,_["V"] = V,

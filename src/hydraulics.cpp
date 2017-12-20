@@ -578,9 +578,9 @@ List supplyFunctionThreeElements(double Emax, double psiSoil, double krhizomax, 
     psiStep3 = -0.01;
     Eg3 = 0.0;
     psiLeaf = psiStem;
-    wPrevLeaf = xylemConductance(std::min(psiCav,psiLeaf), kleafmax,  leafc, leafd);
+    wPrevLeaf = xylemConductance(psiLeaf, kleafmax,  leafc, leafd);
     while((psiStep3<psiPrec) & (psiLeaf>psiMax))  {
-      w = xylemConductance(std::min(psiCav,psiLeaf+psiStep3), kleafmax,  leafc, leafd);
+      w = xylemConductance(psiLeaf+psiStep3, kleafmax,  leafc, leafd);
       incr = ((w+wPrevLeaf)/2.0)*std::abs(psiStep3);
       if((Eg3+incr)>supplyE[i]) {
         psiStep3 = psiStep3*0.5;
@@ -725,6 +725,7 @@ List E2psiNetwork(double E, NumericVector psiSoil,
                   NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
                   NumericVector krootmax, double rootc, double rootd, 
                   double kstemmax, double stemc, double stemd,
+                  double kleafmax, double leafc, double leafd,
                   NumericVector psiIni = NumericVector::create(0),
                   double psiCav = 0.0, //Minimum plant potential (cavitation)
                   double psiStep = -0.001, double psiMax = -10.0, int ntrial = 10, double psiTol = 0.0001, double ETol = 0.0001) {
@@ -820,50 +821,55 @@ List E2psiNetwork(double E, NumericVector psiSoil,
     }
     if(stop) break;
   }
-  NumericVector psi(nlayers+2);
+
+  //Initialize and copy output
+  NumericVector psi(nlayers+3);
   for(int l=0;l<=nlayers;l++) {
     psi[l] = x[l];
     // Rcout<<psi[l]<<" ";
   }
-  double Esum = 0.0;
   for(int l=0;l<(nlayers-1);l++) {
     Erhizo[l] = EVanGenuchten(x[l], psiSoil[l], krhizomax[l], nsoil[l], alphasoil[l], psiStep, psiTol/1000.0);
     // Rcout<<Erhizo[l]<<" ";
-    Esum +=Erhizo[l];
   }
-  // Erhizo[nlayers-1] = E-Esum; //Set the last layer as the complementary
-  // psi[nlayers-1] = E2psiVanGenuchten(E,psiSoil[nlayers-1], krhizomax[nlayers-1], nsoil[nlayers-1], alphasoil[nlayers-1], psiStep, psiMax);
-  // Rcout<<"\n";
   if(!NumericVector::is_na(x[nlayers])) {
-    //Apliquem la fatiga per cavitacio a la caiguda de potencial a la tija
-    psi[nlayers+1] = E2psiXylem(E, x[nlayers], kstemmax, stemc, stemd, psiCav, psiStep, psiMax); 
+    psi[nlayers+1] = E2psiXylem(E, x[nlayers], kstemmax, stemc, stemd, psiCav, psiStep, psiMax); //Apliquem la fatiga per cavitacio a la caiguda de potencial a la tija 
+    psi[nlayers+2] = E2psiXylem(E, psi[nlayers+1], kleafmax, leafc, leafd, 0.0, psiStep, psiMax); 
   } 
-  else psi[nlayers+1] = NA_REAL;
-  double kterm = xylemConductance(psi[nlayers+1], kstemmax, stemc, stemd);
-  double ktermcav = xylemConductance(std::min(psi[nlayers+1],psiCav), kstemmax, stemc, stemd);
-  return(List::create(Named("Psi") = psi, Named("E")=Erhizo, Named("kterm") = kterm, Named("ktermcav") = ktermcav));
+  else {
+    psi[nlayers+1] = NA_REAL;
+    psi[nlayers+2] = NA_REAL;
+  } 
+  double kterm = xylemConductance(psi[nlayers+2], kleafmax, leafc, leafd);
+  return(List::create(Named("Psi") = psi, Named("E")=Erhizo, Named("kterm") = kterm));
 } 
 
 
 double rhizosphereResistancePercent(double psiSoil, 
                                     double krhizomax, double n, double alpha,
                                     double krootmax, double rootc, double rootd,
-                                    double kstemmax, double stemc, double stemd) {
+                                    double kstemmax, double stemc, double stemd,
+                                    double kleafmax, double leafc, double leafd) {
   double krhizo = vanGenuchtenConductance(psiSoil, krhizomax, n, alpha);
   double kroot = xylemConductance(psiSoil, krootmax, rootc, rootd);
   double kstem = xylemConductance(psiSoil, kstemmax, stemc, stemd);
-  return(100.0*(1.0/krhizo)/((1.0/kroot)+(1.0/kstem)+(1.0/krhizo)));
+  double kleaf = xylemConductance(psiSoil, kleafmax, leafc, leafd);
+  return(100.0*(1.0/krhizo)/((1.0/kroot)+(1.0/kstem)+(1.0/kleaf)+(1.0/krhizo)));
 }
 
 // [[Rcpp::export("hydraulics.averageRhizosphereResistancePercent")]]
 double averageRhizosphereResistancePercent(double krhizomax, double n, double alpha,
                                            double krootmax, double rootc, double rootd,
-                                           double kstemmax, double stemc, double stemd, double psiStep = -0.01){
+                                           double kstemmax, double stemc, double stemd, 
+                                           double kleafmax, double leafc, double leafd,
+                                           double psiStep = -0.01){
   double psiC = psiCrit(stemc, stemd);
   double cnt = 0.0;
   double sum = 0.0;
   for(double psi=0.0; psi>psiC;psi += psiStep) {
-    sum +=rhizosphereResistancePercent(psi, krhizomax, n,alpha,krootmax, rootc, rootd,kstemmax, stemc,stemd);
+    sum +=rhizosphereResistancePercent(psi, krhizomax, n,alpha,krootmax, rootc, rootd,
+                                       kstemmax, stemc,stemd,
+                                       kleafmax, leafc,leafd);
     cnt+=1.0;
   }
   return(sum/cnt);
@@ -872,11 +878,14 @@ double averageRhizosphereResistancePercent(double krhizomax, double n, double al
 // [[Rcpp::export("hydraulics.findRhizosphereMaximumConductance")]]
 double findRhizosphereMaximumConductance(double averageResistancePercent, double n, double alpha,
                                          double krootmax, double rootc, double rootd,
-                                         double kstemmax, double stemc, double stemd) {
+                                         double kstemmax, double stemc, double stemd,
+                                         double kleafmax, double leafc, double leafd) {
   double step = 1.0;
   double fTol = 0.1;
   double krhizomaxlog = 0.0;
-  double f = averageRhizosphereResistancePercent(exp(krhizomaxlog), n,alpha,krootmax, rootc, rootd,kstemmax, stemc,stemd);
+  double f = averageRhizosphereResistancePercent(exp(krhizomaxlog), n,alpha,krootmax, rootc, rootd,
+                                                 kstemmax, stemc,stemd,
+                                                 kleafmax, leafc,leafd);
   while(std::abs(f-averageResistancePercent)>fTol) {
     if(f>averageResistancePercent) {
       krhizomaxlog += step; 
@@ -884,7 +893,9 @@ double findRhizosphereMaximumConductance(double averageResistancePercent, double
       krhizomaxlog -= step;
       step = step/2.0;
     }
-    f = averageRhizosphereResistancePercent(exp(krhizomaxlog), n,alpha,krootmax, rootc, rootd,kstemmax, stemc,stemd);
+    f = averageRhizosphereResistancePercent(exp(krhizomaxlog), n,alpha,krootmax, rootc, rootd,
+                                            kstemmax, stemc,stemd,
+                                            kleafmax, leafc,leafd);
   }
   return(exp(krhizomaxlog));
 }
@@ -893,21 +904,22 @@ List supplyFunctionNetwork(NumericVector psiSoil,
                            NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
                            NumericVector krootmax, double rootc, double rootd, 
                            double kstemmax, double stemc, double stemd,
+                           double kleafmax, double leafc, double leafd,
                            double psiCav = 0.0,
                            double minFlow = 0.0, int maxNsteps=400, double psiStep = -0.001, double psiMax = -10.0, int ntrial = 10, double psiTol = 0.0001, double ETol = 0.0001) {
   int nlayers = psiSoil.size();
-  int nnodes = nlayers+2;
+  int nnodes = nlayers+3; //Rhizosphere+rootcollar+stem+leaf
   NumericVector supplyE(maxNsteps);
   NumericVector supplydEdp(maxNsteps);
   NumericMatrix supplyElayers(maxNsteps,nlayers);
   NumericMatrix supplyPsi(maxNsteps,nnodes);
   NumericMatrix supplyKterm(maxNsteps);
-  NumericMatrix supplyKtermcav(maxNsteps);
-  
+
   List sol = E2psiNetwork(minFlow, psiSoil, 
                           krhizomax,  nsoil,  alphasoil,
                           krootmax,  rootc,  rootd, 
                           kstemmax,  stemc,  stemd,
+                          kleafmax,  leafc,  leafd,
                           NumericVector::create(0),
                           psiCav,
                           psiStep, psiMax, ntrial,psiTol, ETol);
@@ -916,7 +928,6 @@ List supplyFunctionNetwork(NumericVector psiSoil,
   for(int l=0;l<nlayers;l++) supplyElayers(0,l) = solE[l];
   for(int n=0;n<nnodes;n++) supplyPsi(0,n) = solPsi[n];
   supplyKterm[0] = sol["kterm"];
-  supplyKtermcav[0] = sol["ktermcav"];
   supplyE[0] = minFlow;
   
   //Calculate initial slope
@@ -924,6 +935,7 @@ List supplyFunctionNetwork(NumericVector psiSoil,
                            krhizomax,  nsoil,  alphasoil,
                            krootmax,  rootc,  rootd, 
                            kstemmax,  stemc,  stemd,
+                           kleafmax,  leafc,  leafd,
                            solPsi,
                            psiCav,
                            psiStep, psiMax, ntrial,psiTol, ETol);
@@ -939,13 +951,13 @@ List supplyFunctionNetwork(NumericVector psiSoil,
                             krhizomax,  nsoil,  alphasoil,
                             krootmax,  rootc,  rootd, 
                             kstemmax,  stemc,  stemd,
+                            kleafmax,  leafc,  leafd,
                             solPsi,
                             psiCav,
                             psiStep, psiMax, ntrial,psiTol, ETol);
     solE = sol["E"];
     solPsi = sol["Psi"];
     supplyKterm[i] = sol["kterm"];
-    supplyKtermcav[i] = sol["ktermcav"];
     // Rcout<<supplyE[i]<<" ";
     for(int l=0;l<nlayers;l++) {
       supplyElayers(i,l) = solE[l];
@@ -976,20 +988,20 @@ List supplyFunctionNetwork(NumericVector psiSoil,
   if(nsteps>1) supplydEdp[nsteps-1] = (supplyE[nsteps-1]-supplyE[nsteps-2])/std::abs(supplyPsi(nsteps-1,nnodes-1)-supplyPsi(nsteps-2,nnodes-1));
   //Copy values tp nsteps
   NumericVector supplyKtermDef(nsteps);
-  NumericVector supplyKtermcavDef(nsteps);
   NumericVector supplyEDef(nsteps);
   NumericVector supplydEdpDef(nsteps);
   NumericMatrix supplyElayersDef(nsteps,nlayers);
   NumericMatrix supplyPsiRhizo(nsteps,nlayers);
-  NumericVector supplyPsiPlant(nsteps);
+  NumericVector supplyPsiStem(nsteps);
+  NumericVector supplyPsiLeaf(nsteps);
   NumericVector supplyPsiRoot(nsteps);
   for(int i=0;i<nsteps;i++) {
     supplyEDef[i] = supplyE[i];
     supplydEdpDef[i] = supplydEdp[i];
     supplyKtermDef[i] = supplyKterm[i];
-    supplyKtermcavDef[i] = supplyKtermcav[i];
-    supplyPsiRoot[i] = supplyPsi(i,nnodes-2);
-    supplyPsiPlant[i] = supplyPsi(i,nnodes-1);
+    supplyPsiRoot[i] = supplyPsi(i,nnodes-3);
+    supplyPsiStem[i] = supplyPsi(i,nnodes-2);
+    supplyPsiLeaf[i] = supplyPsi(i,nnodes-1);
     for(int l=0;l<nlayers;l++) {
       supplyElayersDef(i,l) = supplyElayers(i,l);
       supplyPsiRhizo(i,l) = supplyPsi(i,l);
@@ -998,11 +1010,11 @@ List supplyFunctionNetwork(NumericVector psiSoil,
   return(List::create(Named("E") = supplyEDef,
                       Named("Elayers") = supplyElayersDef,
                       Named("PsiRhizo")=supplyPsiRhizo, 
-                      Named("PsiPlant")=supplyPsiPlant,
                       Named("PsiRoot")=supplyPsiRoot,
+                      Named("PsiStem")=supplyPsiStem,
+                      Named("PsiLeaf")=supplyPsiLeaf,
                       Named("dEdP")=supplydEdpDef,
-                      Named("kterm") = supplyKtermDef,
-                      Named("ktermcav") = supplyKtermcavDef));
+                      Named("kterm") = supplyKtermDef));
   
 }
 
