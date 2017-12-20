@@ -18,6 +18,7 @@
 \alias{hydraulics.regulatedPsiTwoElements}
 \alias{hydraulics.supplyFunctionOneXylem}
 \alias{hydraulics.supplyFunctionTwoElements}
+\alias{hydraulics.supplyFunctionThreeElements}
 \alias{hydraulics.supplyFunctionNetwork}
 \alias{hydraulics.supplyFunctionPlot}
 \alias{hydraulics.heightFactor}
@@ -68,6 +69,10 @@ hydraulics.supplyFunctionOneXylem(psiSoil, v,
 hydraulics.supplyFunctionTwoElements(Emax, psiSoil, 
                           krhizomax, kxylemmax, n, alpha, c, d, 
                           psiCav = 0, dE = 0.1, psiMax = -10.0)
+hydraulics.supplyFunctionThreeElements(Emax, psiSoil, 
+                          krhizomax, kxylemmax, kleafmax,
+                          n, alpha, stemc, stemd, leafc, leafd,
+                          psiCav = 0, dE = 0.1, psiMax = -10.0)
 hydraulics.supplyFunctionNetwork(psiSoil, 
                           krhizomax, nsoil, alphasoil,
                           krootmax, rootc, rootd, 
@@ -93,10 +98,11 @@ hydraulics.xylemPsi(kxylem, kxylemmax, c, d)
   \item{Psi_extract}{Soil water potential (in MPa) corresponding to 50\% whole-plant relative conductance.}
   \item{ws}{Exponent of the whole-plant relative conductance Weibull function.}
   \item{v}{Proportion of fine roots within each soil layer.}
-  \item{krhizomax}{Maximum rhizosphere hydraulic conductance (defined as flow per surface unit and per pressure drop).}
-  \item{kxylemmax}{Maximum xylem hydraulic conductance (defined as flow per surface unit and per pressure drop).}
-  \item{kstemmax}{Maximum stem xylem hydraulic conductance (defined as flow per surface unit and per pressure drop).}
-  \item{krootmax}{Maximum root xylem hydraulic conductance (defined as flow per surface unit and per pressure drop).}
+  \item{krhizomax}{Maximum rhizosphere hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}
+  \item{kxylemmax}{Maximum xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}
+  \item{kleafmax}{Maximum leaf hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}
+  \item{kstemmax}{Maximum stem xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}
+  \item{krootmax}{Maximum root xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}
   \item{E}{Flow per surface unit.}
   \item{Emax}{Maximum flow per surface unit.}
   \item{psiUpstream}{Water potential upstream (in MPa). In a one-component model corresponds to soil potential. In a two-component model corresponds to the potential inside the roots.}
@@ -112,8 +118,9 @@ hydraulics.xylemPsi(kxylem, kxylemmax, c, d)
   \item{dE}{Increment of flow per surface unit.}
   \item{ETol}{Precision for water flow per surface unit.}
   \item{c, d}{Parameters of the Weibull function (generic xylem vulnerability curve).}
-  \item{rootc, rootd}{Parameters of the Weibull function (root xylem vulnerability curve).}
-  \item{stemc, stemd}{Parameters of the Weibull function (stem xylem vulnerability curve).}
+  \item{rootc, rootd}{Parameters of the Weibull function for roots (root xylem vulnerability curve).}
+  \item{stemc, stemd}{Parameters of the Weibull function for stems (stem xylem vulnerability curve).}
+  \item{leafc, leafd}{Parameters of the Weibull function for leaves (leaf vulnerability curve).}
   \item{n, alpha}{Parameters of the Van Genuchten function (rhizosphere vulnerability curve).}
   \item{nsoil, alphasoil}{Parameter vectors of the Van Genuchten function (rhizosphere vulnerability curve) with one value for each soil layer.}
   \item{allowNegativeFlux}{A boolean to indicate wether negative flux (i.e. from plant to soil) is allowed.}
@@ -194,12 +201,4 @@ psiVec = seq(-0.1, -7.0, by =-0.01)
 kstem = unlist(lapply(psiVec, hydraulics.xylemConductance, kstemmax, stemc, stemd))
 plot(-psiVec, kstem, type="l",ylab="Xylem conductance (mmol·m-2·s-1·MPa-1)", 
 xlab="Canopy pressure (-MPa)", lwd=1.5,ylim=c(0,kstemmax))
-
-#Plot height factor for scaling of hydraulic conductivity
-hVec = seq(50, 5000, by =10)
-fhn = unlist(lapply(hVec, FUN=hydraulics.heightFactor, taper = F))
-fht = unlist(lapply(hVec, FUN=hydraulics.heightFactor, taper = T))
-plot(hVec, fhn, type="l", log="x", xlab="Height (cm)", ylab="Scaling factor", ylim=c(0,2))
-lines(hVec, fht, lty=2)
-legend("topright", legend=c("No tapper (1/height)", "Tapper"), bty="n", lty=c(1,2))
 }

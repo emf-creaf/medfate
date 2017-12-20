@@ -1172,6 +1172,30 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// supplyFunctionThreeElements
+List supplyFunctionThreeElements(double Emax, double psiSoil, double krhizomax, double kxylemmax, double kleafmax, double n, double alpha, double stemc, double stemd, double leafc, double leafd, double psiCav, double dE, double psiMax);
+RcppExport SEXP _medfate_supplyFunctionThreeElements(SEXP EmaxSEXP, SEXP psiSoilSEXP, SEXP krhizomaxSEXP, SEXP kxylemmaxSEXP, SEXP kleafmaxSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP leafcSEXP, SEXP leafdSEXP, SEXP psiCavSEXP, SEXP dESEXP, SEXP psiMaxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type Emax(EmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type psiSoil(psiSoilSEXP);
+    Rcpp::traits::input_parameter< double >::type krhizomax(krhizomaxSEXP);
+    Rcpp::traits::input_parameter< double >::type kxylemmax(kxylemmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type kleafmax(kleafmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type n(nSEXP);
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< double >::type stemc(stemcSEXP);
+    Rcpp::traits::input_parameter< double >::type stemd(stemdSEXP);
+    Rcpp::traits::input_parameter< double >::type leafc(leafcSEXP);
+    Rcpp::traits::input_parameter< double >::type leafd(leafdSEXP);
+    Rcpp::traits::input_parameter< double >::type psiCav(psiCavSEXP);
+    Rcpp::traits::input_parameter< double >::type dE(dESEXP);
+    Rcpp::traits::input_parameter< double >::type psiMax(psiMaxSEXP);
+    rcpp_result_gen = Rcpp::wrap(supplyFunctionThreeElements(Emax, psiSoil, krhizomax, kxylemmax, kleafmax, n, alpha, stemc, stemd, leafc, leafd, psiCav, dE, psiMax));
+    return rcpp_result_gen;
+END_RCPP
+}
 // regulatedPsiTwoElements
 NumericVector regulatedPsiTwoElements(double Emax, double psiSoil, double krhizomax, double kxylemmax, double n, double alpha, double c, double d, double dE, double psiMax);
 RcppExport SEXP _medfate_regulatedPsiTwoElements(SEXP EmaxSEXP, SEXP psiSoilSEXP, SEXP krhizomaxSEXP, SEXP kxylemmaxSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP cSEXP, SEXP dSEXP, SEXP dESEXP, SEXP psiMaxSEXP) {
@@ -2320,6 +2344,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_EVanGenuchten", (DL_FUNC) &_medfate_EVanGenuchten, 8},
     {"_medfate_E2psiTwoElements", (DL_FUNC) &_medfate_E2psiTwoElements, 11},
     {"_medfate_supplyFunctionTwoElements", (DL_FUNC) &_medfate_supplyFunctionTwoElements, 11},
+    {"_medfate_supplyFunctionThreeElements", (DL_FUNC) &_medfate_supplyFunctionThreeElements, 14},
     {"_medfate_regulatedPsiTwoElements", (DL_FUNC) &_medfate_regulatedPsiTwoElements, 10},
     {"_medfate_E2psiNetwork", (DL_FUNC) &_medfate_E2psiNetwork, 18},
     {"_medfate_averageRhizosphereResistancePercent", (DL_FUNC) &_medfate_averageRhizosphereResistancePercent, 10},

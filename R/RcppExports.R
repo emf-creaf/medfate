@@ -333,6 +333,10 @@ hydraulics.supplyFunctionTwoElements <- function(Emax, psiSoil, krhizomax, kxyle
     .Call('_medfate_supplyFunctionTwoElements', PACKAGE = 'medfate', Emax, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, psiCav, dE, psiMax)
 }
 
+hydraulics.supplyFunctionThreeElements <- function(Emax, psiSoil, krhizomax, kxylemmax, kleafmax, n, alpha, stemc, stemd, leafc, leafd, psiCav = 0.0, dE = 0.1, psiMax = -10.0) {
+    .Call('_medfate_supplyFunctionThreeElements', PACKAGE = 'medfate', Emax, psiSoil, krhizomax, kxylemmax, kleafmax, n, alpha, stemc, stemd, leafc, leafd, psiCav, dE, psiMax)
+}
+
 hydraulics.regulatedPsiTwoElements <- function(Emax, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, dE = 0.1, psiMax = -10.0) {
     .Call('_medfate_regulatedPsiTwoElements', PACKAGE = 'medfate', Emax, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, dE, psiMax)
 }

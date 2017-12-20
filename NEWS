@@ -6,6 +6,7 @@ __Version history__
 
 _Version 0.5.2, December 2017.
 1. Modification of default for ntrial
+2. Three element supply function added
 
 _Version 0.5.1, December 2017.
 1. Structure of swb.day output

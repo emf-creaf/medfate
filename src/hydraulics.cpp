@@ -498,6 +498,128 @@ List supplyFunctionTwoElements(double Emax, double psiSoil, double krhizomax, do
                       Named("dEdP")=supplydEdp));
 }
 
+// [[Rcpp::export("hydraulics.supplyFunctionThreeElements")]]
+List supplyFunctionThreeElements(double Emax, double psiSoil, double krhizomax, double kxylemmax, double kleafmax, 
+                                 double n, double alpha, 
+                                 double stemc, double stemd, 
+                                 double leafc, double leafd,
+                                 double psiCav = 0.0, 
+                                 double dE = 0.1, double psiMax = -10.0) {
+  dE = std::min(dE,Emax/5.0);
+  int maxNsteps = round(Emax/dE)+1;
+  NumericVector supplyE(maxNsteps);
+  NumericVector supplydEdp(maxNsteps);
+  NumericVector supplyFittedE(maxNsteps);
+  NumericVector supplyPsiRoot(maxNsteps);
+  NumericVector supplyPsiStem(maxNsteps);
+  NumericVector supplyPsiLeaf(maxNsteps);
+  double Eg1 = 0.0;
+  double Eg2 = 0.0;
+  double Eg3 = 0.0;
+  double psiStep1 = -0.1;
+  double psiStep2 = -0.1;
+  double psiStep3 = -0.1;
+  double psiRoot = psiSoil;
+  double psiStem = psiSoil;
+  double psiLeaf = psiSoil;
+  double vgPrev = vanGenuchtenConductance(psiRoot, krhizomax, n, alpha);
+  double vg = 0.0;
+  //conductance can decrease if psiCav < psiStem/psiLeaf
+  double wPrevStem = xylemConductance(std::min(psiCav,psiStem), kxylemmax, stemc, stemd); 
+  double wPrevLeaf = xylemConductance(std::min(psiCav,psiLeaf), kleafmax, leafc, leafd); 
+  double w = 0.0;
+  double incr = 0.0;
+  supplyPsiRoot[0] = psiSoil;
+  supplyPsiStem[0] = psiSoil;
+  supplyPsiLeaf[0] = psiSoil;
+  supplyE[0] = 0.0;
+  double psiPrec = -0.000001;
+  for(int i=1;i<maxNsteps;i++) {
+    supplyE[i] = supplyE[i-1]+dE;
+    psiStep1 = -0.01;
+    
+    // Root
+    psiRoot = supplyPsiRoot[i-1];
+    vgPrev = vanGenuchtenConductance(psiRoot, krhizomax, n, alpha);
+    while((psiStep1<psiPrec) & (psiRoot>psiMax))  {
+      vg = vanGenuchtenConductance(psiRoot+psiStep1, krhizomax, n, alpha);
+      incr = ((vg+vgPrev)/2.0)*std::abs(psiStep1);
+      if((Eg1+incr)>supplyE[i]) {
+        psiStep1 = psiStep1*0.5;
+      } else {
+        psiRoot = psiRoot + psiStep1;
+        Eg1 = Eg1+incr;
+        vgPrev = vg;
+      }
+    }
+    supplyPsiRoot[i] = psiRoot;
+    if(supplyPsiRoot[i]<psiMax) supplyPsiRoot[i] = psiMax;
+    
+    //Stem
+    psiStep2 = -0.01;
+    Eg2 = 0.0;
+    psiStem = psiRoot;
+    wPrevStem = xylemConductance(std::min(psiCav,psiStem), kxylemmax, stemc, stemd);
+    while((psiStep2<psiPrec) & (psiStem>psiMax))  {
+      w = xylemConductance(std::min(psiCav,psiStem+psiStep2), kxylemmax, stemc, stemd);
+      incr = ((w+wPrevStem)/2.0)*std::abs(psiStep2);
+      if((Eg2+incr)>supplyE[i]) {
+        psiStep2 = psiStep2*0.5;
+      } else {
+        psiStem = psiStem + psiStep2;
+        Eg2 = Eg2+incr;
+        wPrevStem = w;
+      }
+    }
+    supplyPsiStem[i] = psiStem;
+    if(supplyPsiStem[i]<psiMax) supplyPsiStem[i] = psiMax;
+    
+    //Leaf
+    psiStep3 = -0.01;
+    Eg3 = 0.0;
+    psiLeaf = psiStem;
+    wPrevLeaf = xylemConductance(std::min(psiCav,psiLeaf), kleafmax,  leafc, leafd);
+    while((psiStep3<psiPrec) & (psiLeaf>psiMax))  {
+      w = xylemConductance(std::min(psiCav,psiLeaf+psiStep3), kleafmax,  leafc, leafd);
+      incr = ((w+wPrevLeaf)/2.0)*std::abs(psiStep3);
+      if((Eg3+incr)>supplyE[i]) {
+        psiStep3 = psiStep3*0.5;
+      } else {
+        psiLeaf = psiLeaf + psiStep3;
+        Eg3 = Eg3+incr;
+        wPrevLeaf = w;
+      }
+    }
+    supplyPsiLeaf[i] = psiLeaf;
+    if(supplyPsiLeaf[i]<psiMax) supplyPsiLeaf[i] = psiMax;
+    
+    
+    //Ensure non-decreasing function
+    supplyFittedE[i] = std::max(supplyFittedE[i-1], Eg3); 
+    
+    
+    // supplyFittedE[i] = Eg2;
+    if(i==1) {
+      supplydEdp[0] = (supplyFittedE[1]-supplyFittedE[0])/(supplyPsiLeaf[0]-supplyPsiLeaf[1]); 
+      if((supplyPsiLeaf[0]-supplyPsiLeaf[1])==0.0) supplydEdp[0] = 0.0;
+    }
+    else if(i>1) {
+      supplydEdp[i-1] = 0.5*(supplyFittedE[i-1]-supplyFittedE[i-2])/(supplyPsiLeaf[i-2]-supplyPsiLeaf[i-1])+0.5*(supplyFittedE[i]-supplyFittedE[i-1])/(supplyPsiLeaf[i-1]-supplyPsiLeaf[i]); 
+      if((supplyPsiLeaf[i-2]-supplyPsiLeaf[i-1])==0.0) supplydEdp[i-1] = 0.0;
+      else if((supplyPsiLeaf[i-1]-supplyPsiLeaf[i])==0.0) supplydEdp[i-1] = 0.0;
+    }
+    if(i==(maxNsteps-1)) {
+      supplydEdp[i] = (supplyFittedE[i]-supplyFittedE[i-1])/(supplyPsiLeaf[i-1]-supplyPsiLeaf[i]); 
+      if((supplyPsiLeaf[i-1]-supplyPsiLeaf[i])==0.0) supplydEdp[i] = 0.0;
+    }
+  }
+  return(List::create(Named("E") = supplyE,
+                      Named("FittedE") = supplyFittedE,
+                      Named("PsiRoot")=supplyPsiRoot, 
+                      Named("PsiStem")=supplyPsiStem,
+                      Named("PsiLeaf")=supplyPsiLeaf,
+                      Named("dEdP")=supplydEdp));
+}
 // [[Rcpp::export("hydraulics.regulatedPsiTwoElements")]]
 NumericVector regulatedPsiTwoElements(double Emax, double psiSoil, double krhizomax, double kxylemmax, double n, double alpha, double c, double d, double dE = 0.1, double psiMax = -10.0) {
   List s = supplyFunctionTwoElements(Emax, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, 0.0, dE,psiMax);
