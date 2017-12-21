@@ -33,7 +33,6 @@ A list, with the following options:
 \item{\code{ETol (= 0.0001)}: Tolerance value for flow.}
 }
 }
-\item{\code{fracTotalTreeResistance (=0.625)}: Fraction of the minimum tree (stem+root) resistance that corresponds to stem resistance.}
 \item{\code{thermalCapacityLAI (=1000000)}: Thermal canopy capacitance per LAI unit.}
 \item{\code{defaultWindSpeed (=5)}: Default wind speed value (in m/s) to be used when missing from data. }
 \item{\code{Catm (=386)}: Atmospheric CO2 concentration (in micromol·mol-1 = ppm).}
