@@ -153,6 +153,13 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
       if(NumericVector::is_na(VCroot_c[c])) VCroot_c[c] = VCstem_c[c];
       if(NumericVector::is_na(VCroot_d[c])) VCroot_d[c] = VCstem_d[c]/2.0;
       VCleaf_kmax[c] = VCleaf_kmaxSP[SP[c]];
+      if(NumericVector::is_na(VCleaf_kmax[c])) { //Sack, L., & Holbrook, N.M. 2006. Leaf Hydraulics. Annual Review of Plant Biology 57: 361–381.
+        if(GroupSP[SP[c]]=="Angiosperm") {
+          VCleaf_kmax[c] = 8.0;
+        } else {
+          VCleaf_kmax[c] = 6.0;
+        }
+      } 
       VCleaf_c[c]=VCleaf_cSP[SP[c]];
       VCleaf_d[c]=VCleaf_dSP[SP[c]];
       //Default vulnerability curve parameters if missing
@@ -505,6 +512,13 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
       if(NumericVector::is_na(VCroot_c[c])) VCroot_c[c] = VCstem_c[c];
       if(NumericVector::is_na(VCroot_d[c])) VCroot_d[c] = VCstem_d[c]/2.0;
       VCleaf_kmax[c] = VCleaf_kmaxSP[SP[c]];
+      if(NumericVector::is_na(VCleaf_kmax[c])) { //Sack, L., & Holbrook, N.M. 2006. Leaf Hydraulics. Annual Review of Plant Biology 57: 361–381.
+        if(GroupSP[SP[c]]=="Angiosperm") {
+          VCleaf_kmax[c] = 8.0;
+        } else {
+          VCleaf_kmax[c] = 5.0;
+        }
+      } 
       VCleaf_c[c]=VCleaf_cSP[SP[c]];
       VCleaf_d[c]=VCleaf_dSP[SP[c]];
       //Default vulnerability curve parameters if missing
