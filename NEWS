@@ -8,6 +8,7 @@ _Version 0.5.3, December 2017.
 1. Network representation of the continuum now includes a leaf segment
 2. Stem fraction of total resistance removed as estimation of root xylem conductance
 3. Default kleaf_max (8 for temperate angiosperms and 5 for gymnosperms)
+4. New parameter rootxylem_kmax (hydraulic conductivity of roots)
 
 _Version 0.5.2, December 2017.
 1. Modification of default for ntrial

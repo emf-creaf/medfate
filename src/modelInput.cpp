@@ -119,11 +119,12 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
     NumericVector VCleaf_dSP = SpParams["VCleaf_d"];
     NumericVector VCstem_cSP = SpParams["VCstem_c"];
     NumericVector VCstem_dSP = SpParams["VCstem_d"];
+    NumericVector rootxylem_kmaxSP = SpParams["rootxylem_kmax"];
     NumericVector VCroot_cSP = SpParams["VCroot_c"];
     NumericVector VCroot_dSP = SpParams["VCroot_d"];
     NumericVector Vmax298SP = SpParams["Vmax298"];
     NumericVector Gwmax(numCohorts), Gwmin(numCohorts);
-    NumericVector VCleaf_kmax(numCohorts), xylem_kmax(numCohorts), Al2As(numCohorts);
+    NumericVector VCleaf_kmax(numCohorts), xylem_kmax(numCohorts), rootxylem_kmax(numCohorts), Al2As(numCohorts);
     NumericVector VCroottot_kmax(numCohorts, 0.0), VCstem_kmax(numCohorts),leafwidth(numCohorts);
     NumericVector pRootDiscSP = SpParams["pRootDisc"];
     NumericVector pRootDisc(numCohorts);
@@ -142,6 +143,8 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
       Vc = V(c,_);
       leafwidth[c] = leafwidthSP[SP[c]];
       xylem_kmax[c] = xylem_kmaxSP[SP[c]];
+      rootxylem_kmax[c] = rootxylem_kmaxSP[SP[c]];
+      if(NumericVector::is_na(rootxylem_kmax[c])) rootxylem_kmax[c] = xylem_kmax[c];
       Al2As[c] = Al2AsSP[SP[c]];
       //Calculate stem maximum conductance (in mmol·m-2·s-1·MPa-1)
       VCstem_kmax[c]=maximumStemHydraulicConductance(xylem_kmax[c], HmedSP[SP[c]], Al2As[c],H[c], (GroupSP[SP[c]]=="Angiosperm"),control["taper"]); 
@@ -169,7 +172,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
       Gwmin[c] = GwminSP[SP[c]];
       Gwmax[c] = GwmaxSP[SP[c]];
       // double VCroot_kmaxc = 1.0/((1.0/(VCstem_kmax[c]*fracTotalTreeResistance))-(1.0/VCstem_kmax[c]));
-      double VCroot_kmaxc = maximumRootHydraulicConductance(xylem_kmax[c],Al2As[c], Vc, dVec);
+      double VCroot_kmaxc = maximumRootHydraulicConductance(rootxylem_kmax[c],Al2As[c], Vc, dVec);
       VCroot_kmax(c,_) = VCroot_kmaxc*xylemConductanceProportions(Vc,dVec);
       VCroottot_kmax[c] = sum(VCroot_kmax(c,_));
       Vmax298[c] =Vmax298SP[SP[c]];
@@ -189,7 +192,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
     
     DataFrame paramsTranspdf = DataFrame::create(
       _["Gwmin"]=Gwmin, _["Gwmax"]=Gwmax,_["LeafWidth"] = leafwidth, _["Vmax298"]=Vmax298,
-      _["Jmax298"]=Jmax298, _["xylem_kmax"] = xylem_kmax,
+      _["Jmax298"]=Jmax298, _["xylem_Kmax"] = xylem_kmax, _["root_Kmax"] = rootxylem_kmax,
       _["Al2As"] = Al2As,  
       _["VCleaf_kmax"]=VCleaf_kmax,_["VCleaf_c"]=VCleaf_c,_["VCleaf_d"]=VCleaf_d,
       _["VCstem_kmax"]=VCstem_kmax,_["VCstem_c"]=VCstem_c,_["VCstem_d"]=VCstem_d, 
@@ -478,11 +481,12 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     NumericVector VCleaf_dSP = SpParams["VCleaf_d"];
     NumericVector VCstem_cSP = SpParams["VCstem_c"];
     NumericVector VCstem_dSP = SpParams["VCstem_d"];
+    NumericVector rootxylem_kmaxSP = SpParams["rootxylem_kmax"];
     NumericVector VCroot_cSP = SpParams["VCroot_c"];
     NumericVector VCroot_dSP = SpParams["VCroot_d"];
     NumericVector Vmax298SP = SpParams["Vmax298"];
     NumericVector Gwmin(numCohorts), Gwmax(numCohorts);
-    NumericVector VCleaf_kmax(numCohorts), xylem_kmax(numCohorts), Al2As(numCohorts);
+    NumericVector VCleaf_kmax(numCohorts), xylem_kmax(numCohorts), rootxylem_kmax(numCohorts),Al2As(numCohorts);
     NumericVector VCroottot_kmax(numCohorts, 0.0), VCstem_kmax(numCohorts),leafwidth(numCohorts);
     NumericVector VCstem_c(numCohorts), VCstem_d(numCohorts);
     NumericVector VCroot_c(numCohorts), VCroot_d(numCohorts);
@@ -500,6 +504,8 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     for(int c=0;c<numCohorts;c++){
       Vc = V(c,_);
       xylem_kmax[c] = xylem_kmaxSP[SP[c]];
+      rootxylem_kmax[c] = rootxylem_kmaxSP[SP[c]];
+      if(NumericVector::is_na(rootxylem_kmax[c])) rootxylem_kmax[c] = xylem_kmax[c];
       leafwidth[c]=leafwidthSP[SP[c]];
       Al2As[c] = Al2AsSP[SP[c]];
       //Calculate stem maximum conductance (in mmol·m-2·s-1·MPa-1)
@@ -528,7 +534,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
       Gwmax[c] = GwmaxSP[SP[c]];
       pRootDisc[c]=pRootDiscSP[SP[c]];
       // double VCroot_kmaxc = 1.0/((1.0/(VCstem_kmax[c]*fracTotalTreeResistance))-(1.0/VCstem_kmax[c]));
-      double VCroot_kmaxc = maximumRootHydraulicConductance(xylem_kmax[c],Al2As[c], Vc, dVec);
+      double VCroot_kmaxc = maximumRootHydraulicConductance(rootxylem_kmax[c],Al2As[c], Vc, dVec);
       VCroot_kmax(c,_) = VCroot_kmaxc*xylemConductanceProportions(Vc,dVec);
       VCroottot_kmax[c] = sum(VCroot_kmax(c,_));
       Vmax298[c] =Vmax298SP[SP[c]];
@@ -547,7 +553,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     
     DataFrame paramsTranspdf = DataFrame::create(
         _["Gwmin"]=Gwmin, _["Gwmax"]=Gwmax, _["LeafWidth"] = leafwidth, _["Vmax298"]=Vmax298,
-        _["Jmax298"]=Jmax298,_["xylem_kmax"] = xylem_kmax,_["Al2As"] = Al2As,  
+        _["Jmax298"]=Jmax298,_["xylem_Kmax"] = xylem_kmax, _["root_Kmax"] = rootxylem_kmax,_["Al2As"] = Al2As,  
         _["VCleaf_kmax"]=VCleaf_kmax,_["VCleaf_c"]=VCleaf_c,_["VCleaf_d"]=VCleaf_d,
         _["VCstem_kmax"]=VCstem_kmax,_["VCstem_c"]=VCstem_c,_["VCstem_d"]=VCstem_d, 
         _["VCroot_kmax"] = VCroottot_kmax ,_["VCroot_c"]=VCroot_c,_["VCroot_d"]=VCroot_d,
