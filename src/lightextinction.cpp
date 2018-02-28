@@ -115,8 +115,6 @@ NumericMatrix cohortLayerAbsorbedSWRFractionIncident(NumericVector fi, NumericMa
     for(int c=0;c<ncoh; c++) s+=kSWR[c]*(LAIme(l,c)+LAImd(l,c));
     if(s>0.0) {
       for(int c=0;c<ncoh; c++) fij(l,c) = fi[l]*kSWR[c]*LAIme(l,c)/s; 
-    } else {
-      for(int c=0;c<ncoh; c++) fij(l,c) = 0.0;
     }
   }
   return(fij);

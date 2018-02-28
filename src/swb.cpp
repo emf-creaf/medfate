@@ -121,10 +121,11 @@ List swbDay1(List x, List soil, double tday, double pet, double rain, double er,
 
 
   //Determine whether leaves are out (phenology) and the adjusted Leaf area
-  NumericVector Phe(numCohorts);
+  NumericVector Phe(numCohorts,0.0);
   double s = 0.0, LAIcell = 0.0, LAIcelldead = 0.0, Cm = 0.0;
   for(int c=0;c<numCohorts;c++) {
-    Phe[c]=LAIphe[c]/LAIlive[c]; //Phenological status
+    if(LAIlive[c]>0) Phe[c]=LAIphe[c]/LAIlive[c]; //Phenological status
+    else Phe[c]=0.0;
     s += (kPAR[c]*(LAIphe[c]+LAIdead[c]));
     LAIcell += LAIphe[c]+LAIdead[c];
     LAIcelldead += LAIdead[c];
@@ -173,9 +174,9 @@ List swbDay1(List x, List soil, double tday, double pet, double rain, double er,
 
   //Fraction of Tmax attributed to each plant cohort
   double pabs = std::accumulate(CohASWRF.begin(),CohASWRF.end(),0.0);
-  NumericVector TmaxCoh(numCohorts);
+  NumericVector TmaxCoh(numCohorts,0.0);
   if(pabs>0.0) TmaxCoh = Tmax*(CohASWRF/pabs);
-  
+
   //Actual plant transpiration
   NumericMatrix EplantCoh(numCohorts, nlayers);
   NumericMatrix PsiRoot(numCohorts, nlayers);

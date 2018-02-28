@@ -48,6 +48,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
   int numCohorts = SP.size();
   NumericVector albedo(numCohorts),k(numCohorts), g(numCohorts), Sgdd(numCohorts);
   for(int c=0;c<numCohorts;c++){
+    if(NumericVector::is_na(CR[c])) CR[c] = 0.5; //PATCH TO AVOID MISSING VALUES!!!!
     k[c]=kSP[SP[c]];
     albedo[c]=albedoSP[SP[c]];
     g[c]=gSP[SP[c]];
@@ -332,6 +333,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   NumericVector Acr(numCohorts), B1cr(numCohorts), B2cr(numCohorts), B3cr(numCohorts), C1cr(numCohorts), C2cr(numCohorts);
   NumericVector Acw(numCohorts), Bcw(numCohorts);
   for(int c=0;c<numCohorts;c++){
+    if(NumericVector::is_na(CR[c])) CR[c] = 0.5; //PATCH TO AVOID MISSING VALUES!!!!
     albedo[c]=albedoSP[SP[c]];
     k[c]=kSP[SP[c]];
     g[c]=gSP[SP[c]];
