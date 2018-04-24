@@ -46,6 +46,33 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// symplasticRelativeWaterContent
+double symplasticRelativeWaterContent(double psi, double pi0, double epsilon);
+RcppExport SEXP _medfate_symplasticRelativeWaterContent(SEXP psiSEXP, SEXP pi0SEXP, SEXP epsilonSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type psi(psiSEXP);
+    Rcpp::traits::input_parameter< double >::type pi0(pi0SEXP);
+    Rcpp::traits::input_parameter< double >::type epsilon(epsilonSEXP);
+    rcpp_result_gen = Rcpp::wrap(symplasticRelativeWaterContent(psi, pi0, epsilon));
+    return rcpp_result_gen;
+END_RCPP
+}
+// leafRelativeWaterContent
+double leafRelativeWaterContent(double psi, double pi0, double epsilon, double rwc_res);
+RcppExport SEXP _medfate_leafRelativeWaterContent(SEXP psiSEXP, SEXP pi0SEXP, SEXP epsilonSEXP, SEXP rwc_resSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type psi(psiSEXP);
+    Rcpp::traits::input_parameter< double >::type pi0(pi0SEXP);
+    Rcpp::traits::input_parameter< double >::type epsilon(epsilonSEXP);
+    Rcpp::traits::input_parameter< double >::type rwc_res(rwc_resSEXP);
+    rcpp_result_gen = Rcpp::wrap(leafRelativeWaterContent(psi, pi0, epsilon, rwc_res));
+    return rcpp_result_gen;
+END_RCPP
+}
 // FCCSbehaviour
 List FCCSbehaviour(DataFrame FCCSpropsSI, NumericVector MliveSI, NumericVector MdeadSI, double slope, double windSpeedSI);
 RcppExport SEXP _medfate_FCCSbehaviour(SEXP FCCSpropsSISEXP, SEXP MliveSISEXP, SEXP MdeadSISEXP, SEXP slopeSEXP, SEXP windSpeedSISEXP) {
@@ -2276,6 +2303,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_radiationDiurnalPattern", (DL_FUNC) &_medfate_radiationDiurnalPattern, 2},
     {"_medfate_temperatureDiurnalPattern", (DL_FUNC) &_medfate_temperatureDiurnalPattern, 4},
     {"_medfate_leafTemperature", (DL_FUNC) &_medfate_leafTemperature, 5},
+    {"_medfate_symplasticRelativeWaterContent", (DL_FUNC) &_medfate_symplasticRelativeWaterContent, 3},
+    {"_medfate_leafRelativeWaterContent", (DL_FUNC) &_medfate_leafRelativeWaterContent, 4},
     {"_medfate_FCCSbehaviour", (DL_FUNC) &_medfate_FCCSbehaviour, 5},
     {"_medfate_rothermel", (DL_FUNC) &_medfate_rothermel, 11},
     {"_medfate_genros", (DL_FUNC) &_medfate_genros, 8},

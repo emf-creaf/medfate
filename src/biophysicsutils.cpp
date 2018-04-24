@@ -84,11 +84,12 @@ double leafTemperature(double absRad, double airTemperature, double u, double E,
  *  psi - Leaf water potential (MPa)
  *  pi0 - Full turgor osmotic potential (MPa)
  *  epsilon - bulk modulus elasticity (MPa)
- *  af - Apoplastic fraction (percentage)
+ *  rwc_res - Residual (apoplastic) fraction (percentage)
  *  
  *  Returns Leaf RWC as percentage of maximum hydration (including apoplastic fraction)
  */
-double leafRelativeWaterContent(double psi, double pi0, double epsilon, double af) {
+// [[Rcpp::export("biophysics.symplasticRelativeWaterContent")]]
+double symplasticRelativeWaterContent(double psi, double pi0, double epsilon) {
   double psi_tl = (pi0*epsilon)/(pi0+epsilon);
   double rwc = 0;
   if(psi< psi_tl) {
@@ -99,10 +100,14 @@ double leafRelativeWaterContent(double psi, double pi0, double epsilon, double a
     double a = -epsilon;
     rwc = ((-b)-sqrt(pow(b,2.0)-4.0*a*c))/(2.0*a);
   }
-  return((100.0-af)*rwc+af);
+  return(rwc);
 }
 
-
+// [[Rcpp::export("biophysics.leafRelativeWaterContent")]]
+double leafRelativeWaterContent(double psi, double pi0, double epsilon, double rwc_res) {
+  return((100.0-rwc_res)*symplasticRelativeWaterContent(psi,pi0,epsilon)+rwc_res);
+}
+  
 /**
  * Converts irradiance units (W*m-2) to quantum flux (micromol * m-2 * s-1), 
  * defined as the number of photons (in micromol) per second and unit area

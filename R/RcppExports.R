@@ -13,6 +13,14 @@ biophysics.leafTemperature <- function(absRad, airTemperature, u, E, leafWidth =
     .Call('_medfate_leafTemperature', PACKAGE = 'medfate', absRad, airTemperature, u, E, leafWidth)
 }
 
+biophysics.symplasticRelativeWaterContent <- function(psi, pi0, epsilon) {
+    .Call('_medfate_symplasticRelativeWaterContent', PACKAGE = 'medfate', psi, pi0, epsilon)
+}
+
+biophysics.leafRelativeWaterContent <- function(psi, pi0, epsilon, rwc_res) {
+    .Call('_medfate_leafRelativeWaterContent', PACKAGE = 'medfate', psi, pi0, epsilon, rwc_res)
+}
+
 fire.FCCS <- function(FCCSpropsSI, MliveSI = as.numeric( c(90, 90, 60)), MdeadSI = as.numeric( c(6, 6, 6, 6, 6)), slope = 0.0, windSpeedSI = 11.0) {
     .Call('_medfate_FCCSbehaviour', PACKAGE = 'medfate', FCCSpropsSI, MliveSI, MdeadSI, slope, windSpeedSI)
 }
