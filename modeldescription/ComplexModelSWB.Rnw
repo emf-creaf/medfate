@@ -19,22 +19,6 @@
 options(width=67)
 library(medfate)
 @
-\section{Introduction}
-\subsection{Processes and model functions}
-Hydrological processes and drought stress are fundamental for the simulation models included in the \texttt{medfate} package. Hydrological processes can be divided into local and landscape processes. By local water processes we refer to the soil water balance of forest stands. Processes affecting soil water content include rainfall, canopy interception, infiltration and runoff, percolation and deep drainage, soil evaporation and plant transpiration. In \texttt{medfate}, the soil water balance of a forest is primarily used to predict drought stress for living plants in it. Soil water balance can be studied for a single forest stand using function \texttt{swb()} or for multiple stands distributed spatially using function \texttt{swbpoints()} or \texttt{swbgrid()}. When input data is in form of continuous spatial variation of forests over a landscape, the \texttt{medfate} package allows studying local soil water balance in combination with water discharge from one cell to the other (a landscape hydrological process). This is done using function \texttt{swbgrid()}.
-
-\subsection{Potential applications}
-Functions \texttt{swb()} and \texttt{swbpoints()} may be used to:
-\begin{itemize}
-\item{Monitor or forecast temporal variation in soil water content in particular stands (for example to estimate mushroom yield).}
-\item{Monitor or forecast temporal variation of plant drought stress in particular stands (for example to anticipate mortality events).}
-\item{Monitor or forecast temporal variation of fuel moisture in particular stands (for example to monitor wildfire risk).}
-\end{itemize}
-Function \texttt{swbgrid()} may be used to:
-\begin{itemize}
-\item{Determine areas where particular plant species have high vulnerability to suffer from drought stress.}
-\item{Partition the total rainfall in given area among: (1) water evaporated from canopy interception or bare soil evaporation; (2) water transpired by plants; (3) water exported via runoff or deep drainage into the water table and river streams.}
-\end{itemize}
 
 \section{Model overview}
 \subsection{Design principles}

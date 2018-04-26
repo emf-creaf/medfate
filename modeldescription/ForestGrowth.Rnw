@@ -22,17 +22,6 @@
 options(width=67)
 library(medfate)
 @
-\section{Introduction}
-
-Changes in leaf area and plant growth are key to evaluate the influence of climatic conditions on forest structure and function. Processes affecting annual changes leaf area and plant size are those involved water and carbon balances, as well as those affecting growth directly. Processes influencing plant water balance include those affecting soil water content, such as rainfall, canopy interception, infiltration and runoff, percolation and deep drainage, soil evaporation and plant transpiration. Carbon balance arises from the relationship between plant photosynthesis and respiration, although carbon reserves play a role in the availabity of carbon for growth. Water and carbon balances are coupled through the regulation of transpiration done by stomata. Plant growth is affected by the availability of carbon (source limitation), but also by temperature and water status (sink limitation). 
-
-Package \texttt{medfate} includes allows simulating plant growth of a set of cohorts (competing for light and water) in a single forest stand using function \texttt{growth()} or for multiple stands distributed spatially using function \texttt{growthpoints()}. Leaf area of plants can be severely decreased by drought stress, causing an increase in dead leaf area and affecting carbon and water fluxes. Functions \texttt{growth()} and \texttt{growthpoints()} may be used to:
-\begin{itemize}
-\item{Monitor or forecast temporal variation in water fluxes and soil water content in particular stands (for example to estimate regulation ecosystem services) taking into account processes determining plant growth.}
-\item{Monitor or forecast temporal variation of plant drought stress in particular stands(for example to anticipate mortality events) taking into account processes determining plant growth.}
-\item{Monitor or forecast temporal variation of live fuel moisture and the amount of standing dead and live fuels in particular stands (for example to monitor wildfire risk).}
-\end{itemize}
-
 \section{Model overview}
 \subsection{Design principles}
 The physical structure of the stand is represented in one (vertical) dimension. Height (or depth) is the only dimension that matters (i.e. the coordinates of plants are not explicit). The model is cohort-based, meaning that similar plant individuals are represented using a single entity with average properties (e.g. tree height or diameter) and a density variable is used to scale from individual level to the cohort level. Processes are implemented either at the cohort-level (water balance and photosynthesis) or at the individual level (carbon balance and growth). The model has been designed to be executed on forest inventory plots, but it can be run on other kind of vegetation (e.g. shrublands or crops) provided vegetation is described using the appropriate variables (i.e. diameter and height for trees, percent cover and height for shrubs). The model tries to reproduce the physiological processes that modulate leaf area changes and plant growth rates. Nevertheless, since the model does not implement all processes that may affect growth (such as nutrient availability), maximum growth rates and maximum plant sizes are constrained from user inputs, to ensure that model can be more easily calibrated and validated with observations. Consequently, we believe the model is suited to study variations of plant growth derived from environmental conditions and competition for light and water.

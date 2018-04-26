@@ -17,42 +17,82 @@ knitr::opts_chunk$set(echo = TRUE)
 library(medfate)
 ```
 
-## Introduction
+## About this vignette
+
+This document describes how to run a soil water balance model that uses a relatively simple transpiration submodel, described in De Cáceres et al. (2015). This document is meant to teach users to run the simulation model within R. All the details of the model design and formulation are given in a separate document that can be found on the website of the R package (http://vegmod.ctfc.cat/medfateweb). 
 
 ## Preparing model input
+Any forest water balance model needs information on climate, vegetation and soils of the forest stand to be simulated. Moreover, since the soil water balance in `medfate` differentiates between species, information on species-specific model parameters is also needed. In this subsection we explain the different steps (including optional pathways) to prepare all the data needed to run function `swb()`.
 
-### Soil data
-Soil parameters can be initialized to default values, for a given number of layers, using:
+### Soil information
+
+Simulation models in `medfate` require information on the physical attributes of soil, namely soil depth, texture, macroporosity and rock fragment content. Soil information needs to be entered as a named list. The model accepts different layer definitions (from one to five layers). Soil parameters can be initialized to default values, for a given number of layers, using function `defaultSoilParams()`:
 
 ```{r}
-s = defaultSoilParams(2) #Default soil parameters for three layers
-print(s)
+spar = defaultSoilParams(2) #Default soil parameters for three layers
+print(spar)
 ```
+where `widths` are soil layer widths in mm; `clay` and `sand` are the percentage of clay and sand, in percent of dry weight, and `om` stands for organic matter. `macro` specifies the macroporosity of each layer and `rfc` the percentage of rock fragments. Finally, `Gsoil` and `Ksoil` are parameters needed for infiltration. 
 
-Soil input for function `swb()` is an object of class `soil` that
-is created using a function with the same name. Function `soil()` calculates
-water content at field capacity and initializes soil moisture to a given level:
+### Soil input object
+Soil input for function `swb()` is actually an object of class `soil` that is created using a function with the same name:
 ```{r}
-examplesoil = soil(s, c(0.8, 0.5))
-print(examplesoil)
+examplesoil = soil(spar)
 ```
-
+The soil object is used to store the state of the soil, specifically its degree of moisture. If we inspect the elements of the soil object, we will see that `W` contains the state variable that represents moisture (the proportion of moisture relative to field capacity), which is normally initialized to 1.
 ```{r}
 names(examplesoil)
+examplesoil$W
 ```
-Functions `swbInput()` and `forest2swbInput()` are used to build input
-for the soil water balance model:
+The meaining of all elements in the soil object can be found in the help page for `soil`. It is important to remember that, unlike normal objects in R, any water balance simulation will modify the soil object, in the sense that the state of the soil at the end of the simulated process (i.e. `W`) will be stored. Hence, one can use the same object to simulate water balance sequentially and the final state of one simulation is the initial state of the next.
 
-### Species parameters
+At any time, one can print the status of the soil object:
+```{r}
+print(examplesoil, model = "SX")
+```
+The actual moisture content of the soil depends on the pedotransfer functions used to calculate water content (mm = L/m2) or water potential (MPa) from the soil state variable that represents moisture . By default these functions follow Saxton equations, but the user may choose to follow Van Genuchten - Mualem equations, which will give different values for the same texture:
+```{r}
+print(examplesoil, model="VG")
+```
+The following figure illustrates the difference between the two pedotransfer models:
+```{r pedotransfer, fig = TRUE, fig.width= 5, fig.height=4, fig.align= 'center', echo=TRUE}
+par(mar=c(4,4,1,1))
+# Plot Saxton's pedotransfer curve
+psi = seq(-0.01, -2.0, by=-0.001)
+plot(-psi, lapply(as.list(psi), FUN=soil.psi2thetaSX, clay=25, sand=25), 
+     type="l", ylim=c(0,0.5),ylab="Water content (prop. volume)", xlab = "Soil water potential (-MPa)")
+
+#Add Van Genuchten pedotransfer curve
+lines(-psi, lapply(as.list(psi), FUN=soil.psi2thetaVG, 
+      alpha=examplesoil$VG_alpha[1], n = examplesoil$VG_n[1], 
+      theta_res = examplesoil$VG_theta_res[1], 
+      theta_sat = examplesoil$VG_theta_sat[1]), lty=2) 
+
+legend("topright", legend=c("Saxton", "Van Genuchten"), lty=c(1,2), bty="n")
+
+```
+
+Functions `soil.psi2thetaSX()` and `soil.psi2thetaVG()` (and their counterparts) can be used to calculate volumetric soil moisture from the water potential using the two pedotransfer models. When simulating soil water balance, the user can choose among the two pedotransfer models (see control parameters below).
+
+### Species data table
+
+Simulation models in `medfate` require a data frame with species parameter values. The package provides a default data set of parameter values for 89 Mediterranean species (rows), resulting from bibliographic search, fit to empirical data or expert-based guesses:
 
 ```{r}
 data("SpParamsMED")
+```
+
+These species commonly occur in the Spanish forest inventory of Catalonia, but may not be sufficient for other areas. A large number of parameters (columns) can be found in `SpParamsMED`:
+
+```{r}
 names(SpParamsMED)
 ```
 
+Not all parameters are needed for all models. The user can find parameter definitions in the help page of this data set. However, to fully understand the role of parameters in the model, the user should read the details of model design and formulation (http://vegmod.ctfc.cat/medfateweb). 
+
 ### Forest plot data
 
-Models included in `medfate` were primarily designed to be ran on **forest inventory plots**. Thus, the vegetation is described using the set of woody plants (trees and shrubs) found in a sampled area. Specifically, objects of class `forest` are lists that contain several elements. Among them, the most important items are two data frames, `treeData` (for trees) and `shrubData` for shrubs:
+Models included in `medfate` were primarily designed to be ran on **forest inventory plots**. In this kind of data, the  vegetation of a sampled area is described in terms of woody plants (trees and shrubs) along with their size and species identity. Forest plots in `medfate` are assumed to be in a format that follows closely the Spanish forest inventory. Each forest plot is represented in an object of class `forest`, a list that contains several elements. Among them, the most important items are two data frames, `treeData` (for trees) and `shrubData` for shrubs:
 ```{r}
 data(exampleforest)
 exampleforest
@@ -60,14 +100,14 @@ exampleforest
 Trees are expected to be primarily described in terms of species, diameter (DBH) and height, whereas shrubs are described in terms of species, percent cover and mean height. 
 
 ### Aboveground and belowground data tables
-Because the forest plot format is rather specific, simulation functions in medfate allow starting from two data frames, one for **aboveground** information and the other describing **belowground** (i.e. root distribution) information. Aboveground data frame that does not distinguish between trees and shrubs. It includes, for each plant cohort to be considered in rows, its species identity, height and leaf area index (LAI). While users can build their input data themselves, we use function `forest2aboveground()` on the object `exampleforest` to show how should the data look like:
+Because the forest plot format is rather specific, simulation functions in `medfate` allow starting in a more general way using two data frames, one with **aboveground** information (i.e. the leave area and size of plants) and the other with **belowground** information (i.e. root distribution). The aboveground data frame does not distinguish between trees and shrubs. It includes, for each plant cohort to be considered in rows, its *species identity*, *height* and *leaf area index* (LAI). While users can build their input data themselves, we use function `forest2aboveground()` on the object `exampleforest` to show how should the data look like:
 ```{r}
 above = forest2aboveground(exampleforest, SpParamsMED)
 above
 ```
-Columns `N`, `DBH` and `Cover` are required for simulating growth, but not for soil water balance, which only requires columns `SP`, `H` (in cm), `CR` (i.e. the crown ratio), `LAI_live`, `LAI_expanded` and `LAI_dead`. Here plant cohorts are given unique codes that tell us whether they correspond to trees or shrubs, but the user can use other row identifiers as long as they are unique. In practice, the user only needs to worry to calculate the values for `LAI_live`. `LAI_live` and `LAI_expanded` can contain the same LAI values, and `LAI_dead` is normally zero. This is so because models update `LAI_expanded` and `LAI_dead` according to the leaf phenology of species.
+Note that the call to `forest2aboveground()` included species parameters, because species-specific values are needed to calculate leaf area from tree diameters or shrub cover. Columns `N`, `DBH` and `Cover` are required for simulating growth, but not for soil water balance, which only requires columns `SP`, `H` (in cm), `CR` (i.e. the crown ratio), `LAI_live`, `LAI_expanded` and `LAI_dead`. Here plant cohorts are given unique codes that tell us whether they correspond to trees or shrubs, but the user can use other row identifiers as long as they are unique. In practice, the user only needs to worry to calculate the values for `LAI_live`. `LAI_live` and `LAI_expanded` can contain the same LAI values, and `LAI_dead` is normally zero. This is so because models update `LAI_expanded` and `LAI_dead` according to the leaf phenology of species.
 
-Regarding belowground information, a matrix describing for each plant cohort, the proportion of fine roots in each soil layer. As before, we use function `forest2belowground()` on the object `exampleforest` to show how should the data look like:
+Regarding **belowground** information, a matrix describing for each plant cohort, the proportion of fine roots in each soil layer. As before, we use function `forest2belowground()` on the object `exampleforest` to show how should the data look like:
 ```{r}
 below = forest2belowground(exampleforest, examplesoil, SpParamsMED)
 below
@@ -86,35 +126,98 @@ root.conicDistribution(exampleforest$shrubData$Z[1],
 The user is free to build any numeric matrix for root distribution, as long as values in rows sum always one (i.e. we have proportions). Otherwise, functions `root.conicDistribution()` and `root.ldrDistribution()` can be used to calculate root distribution under specific assumptions.
 
 
+### Meteorological forcing data
+
+Soil water simulations require daily weather inputs. The weather variables that are required depend on the complexity of the soil water balance model we are using. In the simplest case, only mean temperature, precipitation and potential evapotranspiration is required, but the more complex simulation model also requires radiation, wind speed, min/max temparature and relative humitidy. Here we show an example of meteorological forcing data. 
+```{r}
+data(examplemeteo)
+head(examplemeteo)
+```
+Simulation models in `medfate` have been designed to work along with data generated from package `meteoland`. The user is strongly recommended to resort to this package to obtain suitable weather input for soil water balance simulations.
+
 ### Simulation control parameters
+
+Apart from data inputs, the behaviour of simulation models can be controlled using a set of global parameters. The default parameterization is obtained using function `defaultControl()`:
 
 ```{r}
 control = defaultControl()
 control
 ```
+Most of these parameters should normally be left to their default value. However, there are three that deserve explanation here. First the user can trun off console output by setting `verbose = FALSE`. Second, the soil pedotransfer functions can be switched between Saxton's and Van Genuchten's using parameter `soilFunctions`. Finally, the complexity of the soil water balance calculations will be very different if we set `transpirationMode = "Complex"`. Most of the other options apply in the case of complex soil water balance only. 
 
 ### Soil water balance input object
 
+A last step is needed before calling simulation functions, consisting in the compilation of all aboveground and belowground parameters and the specification of additional parameter values for each plant cohort, such as their extinction coefficient or their response to drought. This is done by calling function `swbInput()` and taking parameter values from species parameter data:
 ```{r}
 x = swbInput(above, below, examplesoil, SpParamsMED, control)
 ```
-
+At this step different parameter values will be drawn depending on the value of `transpirationMode`. For the simple model, relatively few parameters are needed. All the input information for forest data and species parameter values can be inspected by printing the input object.
 ```{r}
 x
 ```
+As with the soil input object, this object may be modified during simulations. In the case of soil water balance, these modifications are minimal, for example concerning `LAI_expanded`, but in the case of growth simulations the object is used to store the status of vegetation during and at the end of simulations. Finally, note that one can play with plant-specific parameters for soil water balance (instead of using species-level values) by modifying manually the parameter values in this object.
 
 
-### Meteorological forcing data
+## Executing the soil water balance model
 
+### Water balance for a single day
 ```{r}
-data(examplemeteo)
+d = 100
+sd1<-swb.day(x, examplesoil, rownames(examplemeteo)[d], d , 
+             examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
+             examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
+             examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
+             latitude = 41.82592, elevation = 100, 
+             slope= 0, aspect = 0, rain = examplemeteo$Precipitation[d])
 ```
 
+```{r}
+sd1
+```
 
-## Running the soil water balance model
-
+### Water balance for multiple days
 ```{r}
 S = swb(x, examplesoil, examplemeteo)
 ```
 
-## Inspecting the model output
+```{r}
+names(S)
+```
+
+## Inspecting and extracting results
+
+### Plotting water balance dynamics
+
+```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
+par(mar=c(4,4,1,1))
+plot(S)
+```
+
+```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
+par(mar=c(4,4,1,1))
+plot(S, type="Theta")
+```
+
+
+```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
+par(mar=c(4,4,1,1))
+plot(S, type="Psi")
+```
+
+
+```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
+par(mar=c(4,4,1,1))
+plot(S, type="PlantTranspiration")
+```
+
+### Result summaries
+Monthly summary (averages) of soil water balance
+
+```{r}
+summary(S, freq="months",FUN=mean, output="SoilWaterBalance")
+```
+
+
+```{r}
+format(summary(S, freq="months",FUN=mean, output="PlantStress"), dig=3, scientific = FALSE)
+```
