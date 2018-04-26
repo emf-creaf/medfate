@@ -13,3 +13,4 @@ modeldescription/*.log
 modeldescription/*.pdf
 modeldescription/*.gz
 modeldescription/*.toc
+inst/doc/*.*

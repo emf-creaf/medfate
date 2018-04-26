@@ -1,8 +1,8 @@
 Package: medfate
 Type: Package
 Title: Mediterranean Forest Simulation
-Version: 0.5.3
-Date: 2017-12-20
+Version: 0.5.4
+Date: 2018-04-26
 Authors@R: c(
 	person('Miquel', 'De Cáceres', role=c('aut','cre'),
 	email='miquelcaceres@gmail.com'),
@@ -13,6 +13,8 @@ License: GPL (>= 2)
 LazyLoad: yes
 Depends: R (>= 3.4.0), sp, spdep, GSIF
 Imports: methods, meteoland (>= 0.6.8), Rcpp (>= 0.12.12)
+Suggests: knitr, rmarkdown
 LinkingTo: Rcpp, meteoland
 Encoding: UTF-8
 NeedsCompilation: yes
+VignetteBuilder: utils, knitr
