@@ -1,0 +1,900 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{natbib}
+\usepackage{authblk}
+\usepackage{hyperref}
+\usepackage{amsmath}
+
+%\VignetteIndexEntry{Soil water balance and plant drought stress}
+%\VignettePackage{medfate}
+
+\title{Simple model: Soil water balance and plant drought stress}
+\author[1,2]{Miquel De Cáceres}
+\author[1]{Víctor Granda}
+\affil[1]{Centre Tecnològic Forestal de Catalunya. Ctra. St. Llorenç de Morunys km 2, 25280, Solsona, Catalonia, Spain}
+\affil[2]{CREAF, Cerdanyola del Vallès, 08193, Spain}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\maketitle
+\tableofcontents
+
+<<echo=FALSE>>=
+options(width = 67)
+library(medfate)
+@
+
+
+\section{Introduction}
+\subsection{Processes and model functions}
+Eco-hydrological processes are fundamental for the simulation models included in the \texttt{medfate} package. Eco-hydrological processes can be divided into local and landscape processes. By local processes we refer to the soil water balance of forest stands. Processes affecting soil water content include rainfall, canopy interception, infiltration and runoff, percolation and deep drainage, soil evaporation and plant transpiration. In \texttt{medfate}, the soil water balance of a forest is primarily used to predict drought stress for living plants in it. Soil water balance can be studied for a single forest stand using function \texttt{swb()} or for multiple stands distributed spatially using function \texttt{swbpoints()} or \texttt{swbgrid()}. When input data is in form of continuous spatial variation of forests over a landscape, the \texttt{medfate} package allows studying local soil water balance in combination with water discharge from one cell to the other (a landscape hydrological process). This is done using function \texttt{swbgrid()}. 
+
+This document describes a soil water balance model that uses a relatively simple transpiration submodel (\texttt{transpirationMode = "Simple"}), and which was described in De Cáceres et al. (2015).
+
+\subsection{Potential applications}
+Functions \texttt{swb()} and \texttt{swbpoints()} with \texttt{transpirationMode = "Simple"} may be used to:
+\begin{itemize}
+\item{Monitor or forecast temporal variation in soil water content in particular stands (for example to estimate mushroom yield).}
+\item{Monitor or forecast temporal variation of plant drought stress in particular stands (for example to anticipate mortality events).}
+\item{Monitor or forecast temporal variation of fuel moisture in particular stands (for example to monitor wildfire risk).}
+\end{itemize}
+Function \texttt{swbgrid()} may be used to:
+\begin{itemize}
+\item{Determine areas where particular plant species have high vulnerability to suffer from drought stress.}
+\item{Partition the total rainfall in given area among: (1) water evaporated from canopy interception or bare soil evaporation; (2) water transpired by plants; (3) water exported via runoff or deep drainage into the water table and river streams.}
+\end{itemize}
+
+\section{Model overview}
+\subsection{Design principles}
+Soil water balance is calculated on a daily step basis for the input forest stand
+and for the period corresponding to input weather data. The model considers only
+the vertical spatial dimension of the stand and not the horizontal distribution of
+plants within it. In other words, the model is not spatially explicit. Still, the stand is divided into groups of plants (here referred to as `plant cohorts`) of different species, height and leaf area index ($LAI$). The soil water balance follows the design principles of SIERRA (Mouillot et al., 2001,
+Ruffault et al., 2014, 2013) and BILJOU (Granier et al., 2007, 1999), although
+some features are taken from other models. Potential evapotranspiration ($PET$)
+is given as input and the model determines maximum canopy transpiration
+($Tr_{\max}$) using an empirical relationship between the $LAI$ of the stand and
+the ratio $Tr_{\max}/PET$ (Granier et al. 1999). Actual plant transpiration is
+calculated using a simple function depending on current soil moisture level and
+degree of shading.
+
+When lateral water transport is also considered the water inputs of the stand
+includes net precipitation but also runoff water from cells of its upper
+microwatershed, as done in SIERRA (Mouillot et al., 2001). 
+
+\subsection{Process scheduling}
+Every day water balance is perfomed as follows. The model first updates leaf area
+values according to the phenology of species and calculates light extinction.
+After that, the model updates soil water content of soil layers in two steps:
+(1) it increases soil moisture due to precipitation, $P$, after accounting for
+canopy interception loss, $In$, surface runoff, $Ru$, and deep drainage, $Dd$;
+(2) it decreases water content due to bare soil evaporation, $Es$, and plant
+transpiration, $Tr$. After updating soil layers, the model determines drought
+stress indez for each plant cohort. Daily variations in soil water content can be summarized as:
+  \begin{equation}
+  \Delta{SWC} = P - In - Ru - Dd - Es -Tr
+  \end{equation}
+
+When landscape hydrological processes are not considered, daily water balance
+simluations can be done for cells independently (i.e., the whole simulation
+period can be done one cell before going to the next one). When lateral water
+transport is also considered, however, water balance of a given day is conducted
+for all cells before starting the next day. Moreover, a discharge parameter table
+is prepared at the beginning of the simulation, cells are processed in an order
+determined by elevation (i.e. cells at higher elevation are processed before cells
+at lower elevation) and the water balance of a given target cell is influenced by
+surface runon, $Ro$, coming froom those neighboring cells that are at higher
+elevation. Daily variations in soil water content is then summarized as:
+  \begin{equation}
+  \Delta{SWC} = P + Ro - In - Ru - Dd - Es - Tr
+  \end{equation}
+
+
+\section{Model inputs and outputs}
+\subsection{Soil description}
+Soil can be described using between 1 and 5 soil layers. For each soil layer $s$ the following parameters are needed:
+\begin{itemize}
+\item{Soil layer width ($d_s$, in mm).}
+\item{Soil texture: percent of sand ($P_{sand,s}$), silt ($P_{silt,s}$) and clay ($P_{clay,s}$).}
+\item{Soil organic mater (optional).}
+\item{Macroporosity (percent of macropores).}
+\item{Percentage of rock fragment content ($P_{rocks,s}$).}
+\end{itemize}
+
+Soil texture (i.e. percent of sand, silt and clay), bulk density and rock fragment content can differ between soil layers. Specifying a deep rocky layer is important because Mediterranean plants may extend their roots into cracks existing in the parent rock (Ruffault et al., 2013). 
+
+Relative soil moisture content is tracked at each layer $s$ using the pair of coupled state variables:
+\begin{itemize}
+\item{$\Psi_s$, the soil water potential (in MPa).}
+\item{$W = \theta(\Psi_s)/ \theta_{fc,s}$, the proportion of volumetric soil moisture in relation to field capacity $\theta_{fc,s}$}
+\end{itemize}
+Following Reynolds et al. (2000), volumetric soil moisture $\theta(\Psi_s)$ corresponding to a given water potential $\Psi_s$ (in MPa) is calculated using the pedotransfer functions of Saxton et al. (1986):
+\begin{equation}
+\theta(\Psi_s) = (\Psi_s/A_s)^{(1/B_s)}
+\end{equation}
+where
+$A_s = -0.1 \cdot e^{(- 4.396 - 0.0715 \cdot P_{clay,s} - 0.0004880\cdot P_{sand,s}^2 - 0.00004285 \cdot P_{sand,s}^2 \cdot P_{clay,s})}$
+and $B = - 3.140 - 0.00222 \cdot P_{clay,s}^2 - 0.00003484 \cdot P_{sand,s}^2 \cdot P_{clay,s}$. Here $P_{clay,s}$ and $P_{sand,s}$ are the percentage of clay and sand, respectively. Soil water holding capacity ($V_s$, in mm) in soil layer $s$ is defined as the volumetric water content at field capacity:
+\begin{equation}
+V_s = d_s\cdot ((100-P_{rocks,s})/100)\cdot\theta_{fc,s}
+\end{equation}
+where $d_s$ is the depth of the soil layer (in mm) and $P_{rocks,s}$ is the percentage of rock fragments. Soil initialization requires a list of soil parameters (see function \texttt{defaultSoilParams()}) that is is given as input to function \texttt{soil()}: 
+\begin{itemize}
+\item{$Z_{s}$ [\texttt{widths}]: Depth corresponding to each soil layer (in mm).}
+\item{$P_{clay,s}$ [\texttt{clay}]: Percentage of clay corresponding to each soil layer.}
+\item{$P_{sand,s}$ [\texttt{sand}]: Percentage of sand corresponding to each soil layer.}
+\item{$P_{rocks,s}$ [\texttt{rfc}]: Percentage of rock fragments (>2 mm)
+corresponding to each soil layer.}
+\item{$P_{macro, s}$ [\texttt{macro}]: Percentage of macroporosity corresponding
+to each soil layers. Macroporosity values can be calculated for each soil layer
+from its percentage of sand and bulk density, using the equations given in Stolf
+et al. (2011).}
+\item{$OM$ [\texttt{om}]: Percentage of organic matter corresponding to each soil layer.}
+\item{$\gamma_{soil}$ [\texttt{Gsoil}]: Maximum daily bare soil evaporation
+(mm·day$^{-1}$).}
+\item{$\kappa_{soil}$ [\texttt{Ksoil}]: Exponential decay coefficient for bare
+soil evaporation.}
+\end{itemize}
+
+For those users lacking soil information, package \texttt{medfate} provides a function to get the soil description from SoilGrids.org (see \texttt{soilgridsParams()}).
+
+\subsection{Vegetation description}
+
+Vegetation in the stand is described using a set of plant cohorts, in an object
+of class \texttt{swbInput}. Each plant cohort $i$ is primarly defined by its
+species identity ($SP_i$; with R name [\texttt{SP}]).
+
+\subsubsection{Aboveground parameters}
+
+The aboveground structure if each cohort is defined using the following attributes:
+\begin{itemize}
+\item{$H_i$ [\texttt{H}]: Total tree or shrub height (in cm).}
+\item{$CR_i$ [\texttt{CR}]: Crown ratio (i.e. the ratio between crown length and
+total height).}
+\item{$LAI^{live}_i$ [\texttt{LAI\_live}]: (Maximum) leaf area index (one-side
+leaf area of plants in the cohort per surface area of the stand).}
+\item{$LAI^{dead}_i$ [\texttt{LAI\_dead}]: Dead leaf area index (one-side dead
+leaf area of plants in the cohort per surface area of the stand).}
+\item{$LAI^{\phi}_i$ [\texttt{LAI\_expanded}]: Current expanded leaf area index (one-side expanded
+leaf area of plants in the cohort per surface area of the stand).}
+\end{itemize}
+All vegetation characteristics stay constant during water balance simulations, although the actual expanded leaf area and dead leaf area may vary is the species is winter deciduous.
+
+\subsubsection{Belowground parameters}
+
+The root system of each plant cohorts is described using the proportion of fine
+roots in each soil layer.
+\begin{itemize}
+\item{$v_{i,s}$ [\texttt{V}]: The proportion of fine roots in each soil layer $s$.}
+\end{itemize}
+
+The rooting system of each cohort $i$ (i.e. the proportions $v_{i,s}$) can be defined assuming conic distribution of fine roots (see \texttt{root.conicDistribution()}). In this case, only rooting depth parameter is needed to determine fine root proportions. Alternatively, one can adopt the linear dose response model (Collins and Bras, 2007; Schenk and Jackson, 2002): 
+\begin{equation}
+Y_i(z)=\frac{1}{1+(z/Z_{50,i})^{c_i}}
+\end{equation}
+where $Y_i(z)$ is the cumulative fraction of fine root mass located between surface and depth $z$; $Z_{50,i}$ is the depth above which 50\% of the root mass is located; and $c_i$ is a shape parameter related to $Z_{50,i}$ and $Z_{95,i}$ as $c_i  = 2.94 / \ln(Z_{50,i} / Z_{95,i})$ (see \texttt{root.ldrDistribution()}). 
+
+\begin{center}
+<<fig=TRUE, width=7, height=4, echo=FALSE>>==
+par(mar=c(4,4,1,1), mfrow=c(1,2))
+P = root.conicDistribution(c(200,1500), rep(10,151))
+matplot(x=t(P)*10, y=seq(0,1500, by=10), type="l", xlim=c(0,2), ylim=c(1500,0), ylab = "Depth (mm)", 
+        xlab="Percentage of fine roots/mm")
+legend("bottomright", legend=c("Z = 200", 
+       "Z = 1500"), col=c("black","red"), lty=1:2, bty="n")
+P = root.ldrDistribution(c(100,500), c(200,1500), rep(10,151))
+matplot(x=t(P)*10, y=seq(0,1500, by=10), type="l", xlim=c(0,2), ylim=c(1500,0), ylab = "Depth (mm)", 
+        xlab="Percentage of fine roots/mm")
+legend("bottomright", legend=c("Z50 = 100, Z95 = 200", 
+       "Z50 = 200, Z95 = 1500"), col=c("black","red"), lty=1:2, bty="n")
+@
+\end{center}
+\begin{center}
+\emph{Fig. 1}: Examples of root density profile according to a conic distribution (left) and the linear dose response model (right).
+\end{center}
+
+\subsubsection{Basic functional parameters}
+Functional attributes can be modified at the cohort level but are normally derived
+from species identity.
+\begin{itemize}
+\item{$k_{PAR,i}$ [\texttt{k}]: PAR extinction coefficient.}
+\item{$s_{water, i}$ [\texttt{g}]: Crown water storage capacity (i.e. depth of
+water that can be retained by leaves and branches) per LAI unit (in mm·LAI$^{-1}$).}
+\item{$S_{GDD,i}$ [\texttt{Sgdd}]: Growth degree days corresponding to leave
+budburst (in degrees Celsius).}
+\end{itemize}
+
+\subsubsection{Transpiration parameters}
+\begin{itemize}
+\item{$\Psi_{extract,i}$ [\texttt{Psi\_extract}]: Soil water potential (in MPa) corresponding to 50\% of water extractive capacity.}
+\item{$WUE_{\max,i}$ [\texttt{WUE}]: Maximum water use efficiency (in g C · mm$^{-1}$).}
+\item{$K_{rootdisc,i}$ [\texttt{pRootDisc}]: Relative conductance of roots that leads to hydraulic disconnection from soil.}
+\end{itemize}
+
+\subsection{Metereological input}
+Weather input data must include variables calculated at the \textbf{daily} scale.
+\begin{itemize}
+\item{$J$ [\texttt{DOY}]: Day of the year.}
+\item{$P$ [\texttt{Precipitation}]: Daily precipitation (in L·m$^{-2}$ = mm of water).}
+\item{$T_{mean}$ [\texttt{MeanTemperature}]: Mean daily temperature (in $^{\circ} \mathrm{C}$).}
+\item{$PET$ [\texttt{PET}]: Daily potential evapotranspiration (in  L·m$^{-2}$ = mm of water), ideally calculated using Penman's equation.}
+\end{itemize}
+Optionally, the user may specify values of wind speed ($u$, in m·s$^{-1}$, \texttt{WindSpeed}) that are used to control leaf fall in autumn.
+
+\subsection{Control parameters}
+Control parameters are a list of parameter values, initialized using function \texttt{defaultControl()}, that the user can modify to change the general behavior of the model. The control values relevant for the simple water balance model are:
+
+\begin{itemize}
+\item{\texttt{verbose [=TRUE]}: Whether extra console output is desired during simulations.}
+\item{\texttt{transpirationMode [= "Simple"]}: Transpiration model, in this case "Simple".}
+\item{\texttt{defaultWindSpeed [= 5]}: Default value for wind speed when this is missing (only used for leaf fall).}
+\item{\texttt{cavitationRefill [= TRUE]}: If \texttt{FALSE} the model operates in a irreversible cavitation mode.}
+\end{itemize}
+
+\subsection{Model output}
+Function \texttt{swb} returns a list object whose elements are data tables. Each table has dates as rows and has different output variables:
+\begin{itemize}
+\item{\texttt{"DailyBalance"}: Components of the climatic and soil daily water balance (i.e. net precipitation, infiltration, runoff, plant transpiration...).}
+\item{\texttt{"SoilWaterBalance"}: Daily variation of soil variables  (volume, moisture relative to field capacity, water potential) for soil layers.}
+\item{\texttt{"PlantLAI"}: Daily leaf area index for each plant cohort.}
+\item{\texttt{"PlantTranspiration"}: Daily transpiration (in mm) for each plant cohort.}
+\item{\texttt{"PlantPhotosynthesis"}: Daily net photosynthesis (in g C·m-2) for each plant cohort.}
+\item{\texttt{"PlantPsi"}: Daily water potential of each plant (in MPa).}
+\item{\texttt{"PlantStress"}: Daily stress level suffered by each plant cohort (relative whole-plant conductance).}
+\end{itemize}
+
+
+\section{Details of processes}
+\subsection{Leaf phenology and leaf fall}
+Given a base temperature ($T_{base} = 5^{\circ} \mathrm{C}$), the growth degree
+days ($GDD$) are zero for all those days where mean temperature $T_{mean}$ is below
+$T_{base}$ and start increasing when temperatures become warmer than this threshold.
+In other words, the $GDD$ function accumulates $\max(0.0, T_{mean} - T_{base})$
+for all days previous to the current one. At the end of a year the cummulative
+value is set again to zero.
+Plant species can have either evergreen or winter deciduous phenology. Evergreen
+plants maintain constant leaf area over the year, whereas in deciduous plants
+leaf-phenological status is updated daily, represented by $\phi_i$, the fraction
+of maximum leaf area. Leaf area index (LAI) values of deciduous plants are adjusted
+for leaf phenology following (Prentice et al., 1993; Sitch et al., 2003):
+\begin{equation}
+LAI_{i}^{\phi}=LAI^{live}_i\,\cdot\phi_i
+\end{equation}
+Budburst occurs when daily temperature exceeds $T_{base}$ and $\phi_i$ increases
+linearly from 0 to 1 as function of the degree days above $T_{base}$, until a the
+value $S_{GDD,i}$ is reached (i.e. until $GDD > S_{GDD,i}$). In autumn, $\phi_i$
+drops to 0 when average daily temperature falls again below $T_{base}$ (Sitch
+et al., 2003). The drop of $\phi_i$ causes live expanded leaves to become dead leaves. To avoid a sudden decrease of leaf area, dead leaves are kept in the canopy and they are reduced daily using a negative exponential function of wind speed:
+\begin{equation}
+LAI^{dead}_i=LAI^{dead}_i\,\cdot e^{- u/10}
+\end{equation}
+where $u$ is wind speed in (m·s$^{-1}$).
+
+After updating the leaf area of each cohort, the model updates the total leaf area of the stand. To simplify the notation, let us call $LAI^{all}_{i}$ the sum of dead and live expanded leaves of a cohort $i$:
+\begin{equation}
+LAI^{all}_{i} = LAI^{\phi}_{i}+LAI^{dead}_{i}
+\end{equation}
+If there are $c$ plant cohorts, the leaf area index of the whole stand, $LAI_{stand}$
+is then:
+\begin{equation}
+LAI_{stand} = \sum_{i=1}^c{LAI_{i}^{all}}= \sum_{i=1}^c{LAI^{\phi}_{i}+LAI^{dead}_{i}}
+\end{equation}
+
+Although simulations will normally start in winter and $GDD$ will be zero at the beginning, the user can specify a starting non-zero value for $GDD$ in the object created by function \texttt{swbInput()}.
+
+\subsection{Light extinction}
+The proportion of photosynthetic active radiation (PAR) decreases with leaf area following thee Beer-Lambert’s light extinction equation. To calculate the proportion of PAR available for a given plant cohort one must accumulate the light extinction caused by cohorts whose crown is above that of the target cohort:
+\begin{equation}
+L^{PAR}_i=e^{-\sum_{h=1}^{c}{k_{PAR,h} \cdot LAI_{h}^{all} \cdot p_{ih}}}
+\end{equation}
+where $k_{PAR,h}$ is the PAR extinction coefficient of cohort $h$. Because plant
+cohorts may differ in height only slightly, leaf area is multiplied by $p_{ih}$,
+the proportion of the crown of cohort $h$ that overtops that of cohort $i$: 
+\begin{equation}
+p_{ih}=\max(0,\min(1,(H_h-H_i\cdot (1 - CR_i))/(H_h-H_h\cdot (1 - CR_h))))
+\end{equation}
+where $CR_i$ and $CR_h$ are the crown ratio of cohorts $i$ and $h$. In other terms,
+cohorts whose crown is completely above that of $i$ reduce the amount of light
+available more strongly by than cohorts that are only slightly taller.
+$L^{PAR}_{ground}$, the proportion of PAR that reaches the ground, is calculated as:
+\begin{equation}
+L^{PAR}_{ground}=e^{-\sum_{i=1}^{c}{k_{PAR,i} \cdot LAI_{i}^{all}}}
+\end{equation}
+
+The shortwave radiation (SWR; 400-3000 nm) energy absorbed by each plant cohort
+needs to be calculated to determine plant transpiration, and the radiation absorbed
+by the soil is needed to calculate soil evaporation. Foliage absorbs a higher
+proportion of PAR than SWR; thus, the extinction coefficient is higher for PAR
+than for SWR. However, values for the ratio of extinction coefficients are rather
+constant. Following Friend et al. (1997) here it is assumed that the extinction
+coefficient for PAR is 1.35 times larger than that for SWR (i.e.
+$k_{SWR,i} = k_{PAR,i}/1.35$). 
+
+To calculate radiation absorption, where the vertical dimension of the plot is
+divided into 1 m deep layers, and the SWR absorbed is calculated for each plant
+cohort in each layer. Let $n$ be the number of canopy layers. The fraction of
+radiation incident on layer $j$ that is absorbed in the same layer is:
+\begin{equation}
+f_j=1 - e^{-\sum_{i=1}^{c}{k_{SWR,i} \cdot LAI_{i,j}^{all}}}
+\end{equation}
+where $LAI_{i,j}^{all} = LAI_{i,j}^{\phi}+LAI_{i,j}^{dead}$ is the leaf area
+index of cohort $i$ in layer $j$. Hence, the fraction transmitted is $(1-f_j)$.
+The fraction of radiation incident on layer $j$ that is absorbed by expanded leaves
+of plant cohort $i$ in that layer ($f_{ij}$) is calculated from the relative
+contribution of these leaves to the total absorption in the layer:
+\begin{equation}
+f_{ij} = f_j \cdot \frac{k_{SWR,i}\cdot LAI_{i,j}^{\phi}}{\sum_{h=1}^{c}{k_{SWR,h} \cdot LAI_{h,j}^{all}}}
+\end{equation}
+The fraction of canopy radiation absorbed by a plant cohort $i$ across all layers
+is found by adding the fraction absorbed in each layer:
+\begin{equation}
+f_i = \sum_{j=1}^{n}{f_{ij}\cdot \prod_{h>j}^{n}{(1-f_h)}}
+\end{equation}
+where for each layer the fraction of the radiation incident in the canopy that
+reaches the layer is found by multiplying the transmitted fractions across the
+layers above it. The proportion of (shortwave) net radiation absorbed by the
+ground is simply:
+\begin{equation}
+L^{SWR}_{ground} = 1 - \sum_{j}^{n}{f_j}
+\end{equation}
+
+\subsection{Rainfall interception loss}
+Rainfall interception loss, $In$, is modelled following the Gash et al. (1995)
+analytical interception model for sparse canopies, where rain is assumed to fall
+in a single event during the day. First, the amount of rainfall needed to saturate
+the canopy is calculated: 
+\begin{equation}
+P_G = - \frac{S/C}{(E/R)} \cdot \ln(1-(E/R))
+\end{equation}
+where $S$ is the canopy water storage capacity (in mm) –  i.e. the minimum amount
+of water needed to saturate the canopy –, $C$ is the canopy cover and $(E/R)$ is
+the ratio of evaporation rate to rainfall rate during the rainfall event.
+Simplifying assumptions are made to determine $(E/R)$. In De Cáceres et al. (2015)
+a value of 0.2 is used for all days between December and June, and a value of
+0.05 is used for the remaining months (Miralles et al. 2010).
+
+The amount of water evaporated from interception, $I$ (mm), is calculated as:
+\begin{eqnarray}
+In = C\cdot P_G+C\cdot(E/R)\cdot(P-P_G) \: {if}\: P > P_G \\
+In = C\cdot P\: {if}\: P \leq P_G
+\end{eqnarray}
+where $P$ is the daily gross precipitation (in mm). Net rainfall, $P_{net}$, is
+calculated as the difference between gross rainfall and interception loss.
+Although interception models are normally applied to single-canopy stands, we
+apply the sparse Gash model to the whole stand (including shrubs). Moreover, in
+our implementation stem interception is lumped with canopy interception, so that
+$S$ represents both. Following Watanabe \& Mizutani (1996) we estimate $S$, the
+canopy water storage capacity, from adjusted LAI values:
+\begin{equation}
+S=\sum_{i}{s_{water,i}\cdot LAI_{i}^{\phi}}
+\end{equation}
+where $s_{water,i}$ is the depth of water that can be retained by leaves and
+trunks of a  species $i$ per unit of leaf area index (mm·LAI$^{-1}$). To estimate
+the stand cover, $C$, we use the complement of the percentage of PAR that reaches
+the ground, i.e. $C = 1 - L^{PAR}_{ground}$  (Deguchi et al., 2006). Fig. 1 below
+shows examples of relative throughfall, calculated according to the interception
+model, under different situations (see function \texttt{swb.RainInterception}). 
+
+\begin{center}
+
+<<fig=TRUE, width=9, height=9, echo=FALSE>>=
+par(mfrow=c(2,2), mar=c(5,5,5,1))
+throughfallMatrixGash<-function(P = seq(1,50, by=1), Cm = seq(1,5, by=1), ER = 0.08,p=0.8) {
+  m2<-P-swb.RainInterception(P,Cm[1],p,ER=ER)
+  for(i in 2:length(Cm)) {
+    m2<-rbind(m2,P-swb.RainInterception(P,Cm[i],p,ER=ER))
+  }
+  colnames(m2)<-P
+  rownames(m2)<-Cm
+  return(m2)
+}
+
+Cm = c(0.5,seq(1,4, by=1))
+P = seq(1,50, by=1)
+
+m2 = throughfallMatrixGash(P=P, p=0.2, Cm=Cm,ER = 0.05)
+rt = sweep(m2,2,P,"/")*100
+matplot(t(rt), type="l", axes=TRUE, ylab="Relative throughfall (%)", 
+        xlab="Gross rainfall (mm)", xlim=c(0,length(P)), 
+        lty=1:length(Cm), col="black", ylim=c(0,100))
+title(main="p = 0.2 E/R = 0.05")
+m2 = throughfallMatrixGash(P=P, p=0.8, Cm=Cm,ER = 0.05)
+rt = sweep(m2,2,P,"/")*100
+matplot(t(rt), type="l", axes=TRUE, ylab="Relative throughfall (%)", 
+        xlab="Gross rainfall (mm)", xlim=c(0,length(P)), 
+        lty=1:length(Cm), col="black", ylim=c(0,100))
+title(main="p = 0.8 E/R = 0.05")
+m2 = throughfallMatrixGash(P=P, p=0.2, Cm=Cm,ER = 0.2)
+rt = sweep(m2,2,P,"/")*100
+matplot(t(rt), type="l", axes=TRUE, ylab="Relative throughfall (%)", 
+        xlab="Gross rainfall (mm)", xlim=c(0,length(P)), 
+        lty=1:length(Cm), col="black", ylim=c(0,100))
+title(main="p = 0.2 E/R = 0.2")
+m2 = throughfallMatrixGash(P=P, p=0.8, Cm=Cm,ER = 0.2)
+rt = sweep(m2,2,P,"/")*100
+matplot(t(rt), type="l", axes=TRUE, ylab="Relative throughfall (%)", 
+        xlab="Gross rainfall (mm)", xlim=c(0,length(P)), 
+        lty=1:length(Cm), col="black", ylim=c(0,100))
+title(main="p = 0.8 E/R = 0.2")
+
+legend("bottomright",lty=1:length(Cm), legend=paste("S =",Cm), bty="n")
+@
+\end{center}
+
+
+\begin{center}
+\emph{Fig. 1}: Examples of canopy interception with different $S$ (canopy water
+storage capacity), $E/R$ (ratio between evaporation and rainfall rates) and p
+(throughfall coefficient; $p = 1 - C$).
+\end{center}
+
+\subsection{Runoff, infiltration and percolation}
+Runoff, $Ru$ (in mm), is calculated using the USDA SCS curve number method, as
+in Boughton (1989):
+\begin{equation}
+Ru=\frac{(P_{net} - 0.2 \cdot V_{soil})^2}{(P_{net} - 0.8 \cdot V_{soil})}
+\end{equation}
+where $V_{soil}$ (in mm) is the overall soil water retention capacity (i.e. the
+sum of $V_s$ values for topsoil and subsoil).
+
+The amount of water infiltrating into the soil is $P_{net} - Ru$, where $Ru$ is
+the water lost by runoff (see function \texttt{swb.SoilInfiltration}). Following
+Granier (1999), part of the water reaching one soil layer percolates quickly
+through the macropores. The remaining water is retained by the micropores refilling
+the current soil layer. When this soil layer reaches its field capacity the excess
+of water percolates to the soil layer below. The water percolating from the lowest
+layer is considered deep drainage, $Dd$. 
+\begin{center}
+<<fig=TRUE, width=8, height=4, echo=FALSE>>==
+par(mfrow=c(1,2), mar=c(5,5,5,1))
+
+SoilDepth = c(200,400,800,1200,1500)
+
+#TOPSOIL LAYERS
+d1 = pmin(SoilDepth, 300) #<300
+#SUBSOIL LAYERS
+d2 = pmax(0, pmin(SoilDepth-300,1200)) #300-1500 mm
+#ROCK LAYER
+d3 = 4000-(d1+d2) #From SoilDepth down to 4.0 m
+
+TS_clay = 15
+TS_sand = 25
+SS_clay = 15
+SS_sand = 25
+RL_clay = 15
+RL_sand = 25
+TS_gravel = 20
+SS_gravel = 40
+RL_gravel = 95
+
+Theta_FC1=soil.psi2theta(TS_clay, TS_sand, -33) #in m3/m3
+Theta_FC2=soil.psi2theta(SS_clay, SS_sand, -33) #in m3/m3
+Theta_FC3=soil.psi2theta(RL_clay, RL_sand, -33) #in m3/m3
+pcTS_gravel = 1-(TS_gravel/100)
+pcSS_gravel = 1-(SS_gravel/100)
+pcRL_gravel = 1-(RL_gravel/100)
+MaxVol1 = (d1*Theta_FC1*pcTS_gravel)
+MaxVol2 = (d2*Theta_FC2*pcSS_gravel)
+MaxVol3 = (d3*Theta_FC3*pcRL_gravel)
+V = MaxVol1+MaxVol2+MaxVol3
+
+par(mar=c(5,5,1,1), mfrow=c(1,2))
+NP = seq(0,60, by=1)
+plot(NP,swb.SoilInfiltration(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
+     ylab="Infiltration (mm)", xlab="Net rainfall (mm)", frame=FALSE)
+lines(NP,swb.SoilInfiltration(NP, V[2]), lty=2)
+lines(NP,swb.SoilInfiltration(NP, V[3]), lty=3)
+lines(NP,swb.SoilInfiltration(NP, V[4]), lty=4)
+lines(NP,swb.SoilInfiltration(NP, V[5]), lty=5)
+legend("topleft", bty="n", lty=1:5, legend=c(paste("d =", SoilDepth, "Vsoil =",round(V),"mm")))
+plot(NP,NP-swb.SoilInfiltration(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
+     ylab="Runoff (mm)", xlab="Net rainfall (mm)", frame=FALSE)
+lines(NP,NP-swb.SoilInfiltration(NP, V[2]), lty=2)
+lines(NP,NP-swb.SoilInfiltration(NP, V[3]), lty=3)
+lines(NP,NP-swb.SoilInfiltration(NP, V[4]), lty=4)
+lines(NP,NP-swb.SoilInfiltration(NP, V[5]), lty=5)
+legend("topleft", bty="n", lty=1:5, legend=c(paste("d =", SoilDepth,"Vsoil =",round(V),"mm")))
+@
+\end{center}
+
+\begin{center}
+\emph{Fig. 2}: Examples of infiltration/runoff calculation for different values
+of net rainfall and overall retention capacity (see function
+\texttt{swb.SoilInfiltration}), $V_{soil}$, calculated from different soil depths
+(topsoil+subsoil) and assuming that soil texture is 15\% clay and 25\% sand. Rock
+fragment content was 25\% and 40\% for the topsoil and subsoil, respectively.
+\end{center}
+
+\subsection{Plant transpiration and photosynthesis}
+\subsubsection{PET and maximum canopy transpiration}
+
+In this model daily potential evapotranspiration ($PET$; in mm·day$^{-1}$; the amount of evaporation that would occur if a sufficient water source was available) is part of the meteorological input and has to be calculated externally. $PET$ is assumed to represent open water evaporation potential (like in Penman's formula). Maximum canopy transpiration $Tr_{\max}$ not only depends on $PET$ but also on the amount of transpirating surface. To estimate $Tr_{\max}$ we take the approach of Granier et al. (1999), where $Tr_{\max}/PET$ is a function of $LAI_{stand}$ – the cumulative leaf area of the forest stand –, according to the empirical equation:
+\begin{equation}
+\frac{Tr_{\max}}{PET}= -0.006\,LAI_{stand}^2+0.134\,LAI_{stand}+0.036
+\end{equation}
+This equation has already been adopted for Mediterranean biomes (Fyllas and
+Troumbis, 2009; Ruffault et al., 2013). 
+\begin{center}
+<<fig=TRUE, width=4, height=4, echo=FALSE>>==
+par(mar=c(4,4,1,1))
+LAIc = seq(0,10, by=0.01)
+TmaxPET = -0.006*(LAIc^2) + 0.134*LAIc + 0.036
+plot(LAIc, TmaxPET, type="l", ylab="Tr_max/PET", xlab="LAIstand", ylim=c(0,1))
+@
+\end{center}
+\begin{center}
+\emph{Fig. 3}: Experimental relationship between $Tr_{\max}/PET$ and $LAI_{stand}$.
+\end{center}
+
+The maximum transpiration for a given plant cohort $i$ is calculated as the
+portion of $Tr_{\max}$ defined by the fraction of total absorbed SWR that is due
+to cohort $i$:
+\begin{equation}
+Tr_{\max, i} = Tr_{\max} \cdot \frac{f_i}{\sum_{j}{f_j}}
+\end{equation}
+
+\subsubsection{Actual plant transpiration}
+Actual plant transpiration depends on soil moisture and is calculated for each
+plant cohort and each soil layer separately. $Tr_{i,s}$ (in mm·day$^{-1}$) represents
+the transpiration made by cohort $i$ from layer $s$. Actual plant transpiration from a given layer is regulated by soil moisture and the resistance to water flow through the plant. For each plant cohort $i$ and soil layer $s$, the model first
+estimates the a whole-plant relative water conductance, $K_{i,s}$, which varies between 0 and 1 depending on $\Psi_{extract,i}$, the potential at which conductance is 50\% of maximum, and $\Psi_s$, the water potential in layer $s$ (see function \texttt{hydraulics.psi2K()}):
+\begin{equation}
+K_{i,s}=K_{i}(\Psi_s) = \exp \left \{\ln{(0.5)}\cdot \left[ \frac{\Psi_s}{\Psi_{extract,i}} \right] ^r \right \} 
+\end{equation}
+where $r$ is an exponent that modulates the steepness of the decrease in relative
+conductance when soil potential becomes negative (by default, $r = 3$) and $\ln(0.5)$
+is used to ensure that $K_{i}(\Psi_{extract,i}) = 0.5$ (Fig. 4).
+\begin{center}
+<<fig=TRUE, width=4, height=4, echo=FALSE>>==
+par(mar=c(4,4,1,1))
+x = seq(-10, 0, by=0.01)
+plot(-x ,unlist(lapply(x,hydraulics.psi2K,-2.0,3.0)), type="l", ylab="K (relative conductance)", xlim=c(0,10), ylim=c(0,1),xlab="Soil water potential (-MPa)", frame=FALSE)
+lines(-x, unlist(lapply(x,hydraulics.psi2K,-3.0,3.0)), lty=2)
+lines(-x, unlist(lapply(x,hydraulics.psi2K,-4.0,3.0)), lty=3)
+lines(-x, unlist(lapply(x,hydraulics.psi2K,-5.0,3.0)), lty=4)
+legend("topright", lty=1:4, col=c(rep("black",4)), 
+       legend = paste("Psi_extract = ", c(-2.0,-3.0,-4.0, -5.0), "MPa"), bty="n", cex=0.8)
+abline(h=50, col="gray", lwd=2)
+@
+\end{center}
+\begin{center}
+\emph{Fig. 4}: Whole-plant relative water conductance functions for different
+$\Psi_{extract,i}$ values ($r = 3$ in all cases).
+\end{center}
+
+Actual transpiration of plant cohort $i$ from a given soil layer $s$, $Tr_{i,s}$,
+is defined as the product of (Mouillot et al., 2001): (i) the maximum transpiration
+of the plant cohort; (ii) the relative whole-plant conductance, $K_{i,s}$,
+corresponding to the species and water potential in layer $s$; (iii) the
+proportion of plant fine roots in layer $s$, $v_{i,s}$:
+\begin{equation}
+Tr_{i,s} =  Tr_{\max,i} \cdot K_{i,s} \cdot v_{i,s}
+\end{equation}
+The total amount of water transpired by plants, $Tr$ (in mm·day$^{-1}$), is the sum of
+$Tr_{i,s}$ values over all plant cohorts and soil layers:
+\begin{equation}
+Tr =\sum_{s}\sum_{i}{Tr_{i,s}}
+\end{equation}
+Assuming no water limitations (i.e. $K_{i,s} = 1$), we have that $Tr = Tr_{\max}$.
+Total stand transpiration will be lower than $Tr_{\max}$ if soil water potential
+in any layer is negative enough to cause a significant reduction in whole-plant
+conductance. At the plant level, the transpiration of a given plant cohort will
+be lower than that of others if: (1) the cohort is under the shade (it reduces
+$f_i$ and hence $Tr_{\max,i}$); (2) the cohort has a lower amount of leaf area
+(it reduces $f_i$ and hence $Tr_{\max,i}$); (3) the soil layers exploited by the
+cohort have more negative water potentials (it reduces $K_{i,s}$). 
+
+
+\subsubsection{Plant photosynthesis}
+Because it is useful for growth and forest dynamics, and for compatibility with
+the 'Complex' transpiration mode, the 'Simple' transpiration mode also calculates
+net assimilated carbon. Assuming a constant water use efficiency (WUE),
+photosynthesis for a given plant cohort $i$ (in g C · m$^{-2}$ · day$^{-1}$) is
+estimated as (Mouillot et al. 2001):
+\begin{equation}
+A_n = \alpha \cdot WUE_{\max} \cdot Tr_i
+\end{equation}
+where $Tr_i$ is the transpiration of plant cohort $i$, $WUE_{\max}$ is the
+maximum water use efficiency of the corresponding species (in g C · mm$^{-1}$)
+and $\alpha = T_{mean}/20$ is bounded between 0 and 1.
+
+\subsubsection{Plant drought stress and plant water potential}
+
+Similarly to Mouillot et al. (2002), daily drought stress of a given plant cohort
+$i$, $DDS_i$, is defined as the complement of relative whole-plant conductance and
+is aggregated across soil layers using the proportion of fine roots in each layer
+as weights:
+\begin{equation}
+DDS_i=\phi_i \cdot \sum_{s}{(1-K_{i,s})\cdot v_{i,s}}
+\end{equation}
+Leaf-phenological status is included to prevent winter deciduous plants from
+suffering drought stress during winter. Daily drought stress values can be later
+used to define drought stress indices for larger temporal scales, as presented in
+the main text.
+
+The simple transpiration model does not allow estimating a water potential drop
+from soil to the leaf. Moreover, in a multilayered soil it is difficult to know
+what would be the water potential of the plant. Despite these limitations, a
+gross surrogate of 'leaf water potential' ($\Psi_{leaf,i}$; in MPa) may be
+obtained averaging whole-plant relative conductance values:
+\begin{equation}
+\Psi_{leaf,i}=K^{-1}(K_i) = K^{-1}\left(\sum_{s}{K_{i,s}\cdot v_{i,s}}\right)
+\end{equation}
+where $K_i$ is the average whole-plant relative conductance obtained from the
+scalar product of conductances and fine root proportions. 
+
+\subsubsection{Irreversible cavitation and hydraulic disconnection}
+The water balance model is normally run assuming that although soil drought may
+reduce transpiration, embolized xylem conduits are automatically refilled when
+soil moisture recovers (in other words, cavitation is reversible). It is possible
+to simulate irreversible cavitation by setting \texttt{cavitationRefill = FALSE} in the control parameters. This option causes the model to keep track of the maximum value of drought stress so far experienced:
+\begin{equation}
+P_{embolized,i}= \max \{P_{embolized,i}, DDS_i \}
+\end{equation}
+and then $K_{i,s}$ cannot be larger than the complement of this maximum drought
+stress:
+\begin{equation}
+K_{i,s} = \min \{K_{i}(\Psi_s), 1.0 - P_{embolized,i} \}
+\end{equation}
+
+Another optional behavior consists in allowing the plant to disconnect from the
+soil when its potential becomes too negative. This may be advantageous for a
+cavitation-sensitive plant that is competing for water with another plant with
+higher extraction capacity. Parameter $K_{rootdisc,i}$ can be used to specify the
+minimum relative conductance value that the plant will tolerate without
+disconnecting hydraulically from the soil (by default $K_{rootdisc,i} = 0$).
+If, after possibly accounting for irreversible cavitation, $K_{i,s}<K_{rootdisc,i}$
+for a given soil layer, then the model assumes that transpiration from this soil
+layer is absent. Moreover, $K_{i,s}$ is assumed equal to $K_{rootdisc,i}$ for the
+sake of determining plant water potential. 
+
+
+\subsection{Bare soil evaporation}
+Evaporation from the soil surface is the last component of the soil water balance
+to be calculated. There is a difference in the way that soil evaporative demand
+is calculated depending on the transpiration mode. Potential evaporation from the soil ($PE_{soil}$; in $mm\cdot day^{-1}$) is defined as the product between $PET$ and $L^{SWR}_{ground}$, the proportion of SWR absorbed by the ground:
+\begin{equation}
+PE_{soil} =  PET\cdot L^{SWR}_{ground}
+\end{equation}
+
+Actual evaporation from the soil surface is modeled as in Mouillot et al. (2001), who
+followed Ritchie (1972).  First, the model determines the time needed to evaporate
+the current water deficit (difference between field capacity and current moisture)
+in the surface soil layer:
+\begin{equation}
+t = \left \{ \frac{V_1\cdot(1- W_1)}{\gamma_{soil}} \right \}
+\end{equation}
+where $\gamma_{soil}$ is the maximum daily evaporation (mm·day$^{-1}$). The
+calculated time is used to determine the ‘supplied’ evaporation, $SE_{soil}$:
+\begin{equation}
+SE_{soil} = \gamma_{soil} \cdot (\sqrt{t+1}-\sqrt{1})
+\end{equation}
+The amount of water evaporated from the soil, $E_{soil}$, is then calculated as
+the minimum between supply and demand (Federer, 1982), the latter being the product
+of PET and the proportion of light that reaches the ground (see function
+\texttt{swb.SoilEvaporation}): 
+\begin{equation}
+E_{soil} = \min(PE_{soil}, SE_{soil})
+\end{equation}
+Finally, $E_{soil}$ is distributed along the soil profile according to an
+exponential decay function with an extinction coefficient $\kappa_{soil}$
+(Mouillot et al., 2001).
+
+\begin{center}
+<<fig=TRUE, width=4, height=4, echo=FALSE>>==
+TS_clay=10
+TS_silt=65
+TS_sand=25
+TS_gravel=40
+SS_clay=10
+SS_silt=65
+SS_sand = 25
+SS_gravel=40
+TS_macro=0.25
+TS_micro = 0.75
+SS_macro=0.10
+SS_micro=0.90
+#Rock layer is like subsoil but with 95% of rocks
+RL_clay = SS_clay
+RL_sand = SS_sand
+RL_macro = SS_macro
+RL_micro = SS_micro
+RL_gravel = 95
+
+
+RunEvaporation<-function(Gsoil, Ksoil, d1,d2,d3, numDays = 15){
+  PET = 100 #Not limited by PET
+  Lground = 1
+  
+  Theta_FC1=soil.psi2theta(TS_clay, TS_sand, -33) #in m3/m3
+  Theta_FC2=soil.psi2theta(SS_clay, SS_sand, -33) #in m3/m3
+  Theta_FC3=soil.psi2theta(RL_clay, RL_sand, -33) #in m3/m3
+  pcTS_gravel = 1-(TS_gravel/100)
+  pcSS_gravel = 1-(SS_gravel/100)
+  pcRL_gravel = 1-(RL_gravel/100)
+  MaxVol1 = (d1*Theta_FC1*pcTS_gravel)
+  MaxVol2 = (d2*Theta_FC2*pcSS_gravel)
+  MaxVol3 = (d3*Theta_FC3*pcRL_gravel)
+  Ssoil = MaxVol1 + MaxVol2 + MaxVol3
+
+  W1=rep(0, numDays)
+  W2=rep(0, numDays)
+  W3=rep(0, numDays)
+  W1[1] = 1
+  W2[1] = 1
+  W3[1] = 1
+  Esoil = rep(NA,numDays)
+  EsoilCum = rep(NA,numDays)
+  t = rep(NA, numDays)
+  for(i in 1:numDays){
+    #Evaporation from bare soil
+    Esoil[i] = swb.SoilEvaporation(DEF=(MaxVol1*(1 - W1[i])), PETs = PET*Lground, Gsoil = Gsoil)
+    if(i==1) EsoilCum[i] = Esoil[i]
+    else EsoilCum[i] = EsoilCum[i-1]+Esoil[i]
+    #Exponential decay to divide bare soil evaporation among layers
+    Esoil1 = Esoil[i]*(1-exp(-Ksoil*d1))
+    Esoil2 = Esoil[i]*(exp(-Ksoil*d1)-exp(-Ksoil*(d1+d2)))
+    Esoil3 = Esoil[i]*(exp(-Ksoil*(d1+d2)))
+    if(i<numDays){
+      W1[i+1] = max(W1[i]-(Esoil1)/MaxVol1,0)
+      W2[i+1] = max(min(W2[i]-(Esoil2)/MaxVol2,1),0)
+      W3[i+1] = max(min(W3[i]-(Esoil3)/MaxVol3,1),0)
+    }  
+  }
+  return(list(Esoil = Esoil, EsoilCum = EsoilCum))  
+}
+
+E11=RunEvaporation(Gsoil=1, Ksoil = 0.05, d1=300, d2=1200, d3= 2500)
+E12=RunEvaporation(Gsoil=2, Ksoil = 0.05, d1=300, d2=1200, d3= 2500)
+E13=RunEvaporation(Gsoil=3, Ksoil = 0.05, d1=300, d2=1200, d3= 2500)
+E21=RunEvaporation(Gsoil=1, Ksoil = 0.005, d1=300, d2=1200, d3= 2500)
+E22=RunEvaporation(Gsoil=2, Ksoil = 0.005, d1=300, d2=1200, d3= 2500)
+E23=RunEvaporation(Gsoil=3, Ksoil = 0.005, d1=300, d2=1200, d3= 2500)
+
+
+par(mar=c(4,4,1,1))
+plot(x=1:length(E11$EsoilCum), y=E11$EsoilCum, ylim=c(0,15), ylab="Cummulative soil evaporation (mm)", xlab="day", type="l", axes=FALSE)
+axis(1, at=1:length(E11$EsoilCum), cex.axis=0.7)
+axis(2)
+points(x=1:length(E11$EsoilCum), y=E11$EsoilCum, pch=1)
+lines(x=1:length(E12$EsoilCum), y=E12$EsoilCum, lty=2)
+points(x=1:length(E12$EsoilCum), y=E12$EsoilCum, pch=1)
+lines(x=1:length(E13$EsoilCum), y=E13$EsoilCum, lty=3)
+points(x=1:length(E13$EsoilCum), y=E13$EsoilCum, pch=1)
+lines(x=1:length(E21$EsoilCum), y=E21$EsoilCum, lty=1)
+points(x=1:length(E21$EsoilCum), y=E21$EsoilCum, pch=2)
+lines(x=1:length(E22$EsoilCum), y=E22$EsoilCum, lty=2)
+points(x=1:length(E22$EsoilCum), y=E22$EsoilCum, pch=2)
+lines(x=1:length(E23$EsoilCum), y=E23$EsoilCum, lty=3)
+points(x=1:length(E23$EsoilCum), y=E23$EsoilCum, pch=2)
+legend("topleft", lty=rep(1:3,2), pch=c(1,1,1,2,2,2), legend=c("Gsoil = 1 Ksoil = 0.05", 
+                                    "Gsoil = 2 Ksoil = 0.05", 
+                                    "Gsoil = 3 Ksoil = 0.05",
+                                    "Gsoil = 1 Ksoil = 0.005", 
+                                    "Gsoil = 2 Ksoil = 0.005", 
+                                    "Gsoil = 3 Ksoil = 0.005"), cex = 0.7, bty="n")
+@
+\end{center}
+\begin{center}
+\emph{Fig. 4}: Cumulative bare soil evaporation for different values of maximum
+evaporation rate $\gamma_{soil}$ and extinction coefficient $\kappa_{soil}$.
+Three soil layers (0 – 30 cm; 30 – 150 cm; 150 – 400 cm) are initialized at field
+capacity ($V_1 = 50 mm$; $V_2 = 201 mm$; $V_3 = 35 mm$). $PE_{soil}$ was assumed
+not to be limiting. When the extinction coefficient is smaller a higher proportion
+of the evaporated water is removed from the subsoil and less from the topsoil.
+This causes more water being available to calculate t in the next step.
+\end{center}
+
+\subsection{Landscape hydrological processes}
+To simulate runoff from one cell to the other, the approach of Ostendorf \& Reynolds
+(1993) is used, as in SIERRA (Mouillot et al. 2001). Water lateral transport depends
+on topography only. The model determines cell neigbours following the queen rule
+(up to eight neighbours per cell). The proportion of water runoff of cell $i$ will
+be an input to a neighbouring cell $j$ is:
+\begin{equation}
+q_{ij} = \frac{\Delta z_{ij}/L_{ij}}{\sum_{j}{\Delta z_{ij}/L_{ij}}}
+\end{equation}
+if $\Delta z_{ij} = z_i - z_j > 0$, that is, if the difference in elevation between
+the two cells is positive (i.e. if $z_j < z_i$). Otherwise there is no discharge
+from $i$ to $j$, i.e. $q_{ij} = 0$. $L_{ij}$ indicates the distance between cell
+$i$ and $j$ (which depends on cell size and on whether the neighbouring cell $j$
+is diagonal to cell $i$). The sumatory of the denominator is done only for
+neighbours at lower elevation, so that $\sum_{i}{qij} = 1$. 
+ 
+The table of $q_{ij}$ values is calculated at the beginning of simulations only.
+Every day, cells are processed in order from higher to lower elevation. After the
+daily water balance of a given cell $i$, water runoff $R_i$ is divided among the
+neighbouring cells situated at lower elevation. The runon of a neighbour $j$,
+$O_j$ is updated as:
+\begin{equation}
+O_j = O_j + R_i \cdot q_{ij}
+\end{equation}
+Note that a given cell $j$ can receive water discharge from more than one
+neighbour. $O_j$ values are set to zero at the beginning of each day.
+
+\section{Examples}
+\subsection{Model inputs}
+Soil parameters can be initialized to default values, for a given number of layers, using:
+<<>>=
+s = defaultSoilParams(3) #Default soil parameters for three layers
+print(s)
+@
+Soil input for function \texttt{swb()} is an object of class \texttt{soil} that
+is created using a function with the same name. Function \texttt{soil()} calculates
+water content at field capacity and initializes soil moisture to a given level:
+<<>>=
+examplesoil = soil(s, c(0.8, 0.5,0.5))
+print(examplesoil)
+@
+Functions \texttt{swbInput} and \texttt{forest2swbInput} are used to build input
+for the soil water balance model:
+<<>>=
+data(exampleforest)
+data(SpParamsMED)
+#Initialize control parameters
+control = defaultControl()
+x = forest2swbInput(exampleforest,examplesoil,SpParamsMED, control)
+x
+@
+
+\subsection{Model run}
+<<>>=
+data(examplemeteo)
+S = swb(x, examplesoil, examplemeteo)
+@
+
+\section{References}
+\begin{itemize}
+\item{Collins, D.B.G., Bras, R.L., 2007. Plant rooting strategies in water-limited ecosystems. Water Resour. Res. 43, W06407. doi:10.1029/2006WR005541}
+
+\item{De Cáceres, M., Martínez-Vilalta, J., Coll, L., Llorens, P., Casals, P., Poyatos, R., Pausas, J.G., Brotons, L., 2015. Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes. Agric. For. Meteorol. 213, 77–90. doi:10.1016/j.agrformet.2015.06.012}
+
+\item{Deguchi, A., Hattori, S., Park, H.-T., 2006. The influence of seasonal changes in canopy structure on interception loss: Application of the revised Gash model. J. Hydrol. 318, 80–102. doi:10.1016/j.jhydrol.2005.06.005}
+
+\item{Federer, C., 1982. Transpirational supply and demand: plant, soil, and atmospheric effects evaluated by simulation. Water Resour. Res. 18, 355–362.}
+
+\item{Fyllas, N.M., Troumbis, A.Y., 2009. Simulating vegetation shifts in north-eastern Mediterranean mountain forests under climatic change scenarios. Glob. Ecol. Biogeogr. 18, 64–77. doi:10.1111/j.1466-8238.2008.00419.x}
+
+\item{Gash, J., Lloyd, C., Lachaud, G., 1995. Estimating sparse forest rainfall interception with an analytical model. J. Hydrol. 170.}
+
+\item{Granier, A., Bréda, N., Biron, P., Villette, S., 1999. A lumped water balance model to evaluate duration and intensity of drought constraints in forest stands. Ecol. Modell. 116, 269–283.}
+
+\item{Granier, A., Reichstein, M., Bréda, N., Janssens, I.A., Falge, E., Ciais, P., Grünwald, T., Aubinet, M., Berbigier, P., Bernhofer, C., Buchmann, N., Facini, O., Grassi, G., Heinesch, B., Ilvesniemi, H., Keronen, P., Knohl, A., Köstner, B., Lagergren, F., Lindroth, A., Longdoz, B., Loustau, D., Mateus, J., Montagnani, L., Nys, C., Moors, E., Papale, D., Peiffer, M., Pilegaard, K., Pita, G., Pumpanen, J., Rambal, S., Rebmann, C., Rodrigues, A., Seufert, G., Tenhunen, J., Vesala, T., Wang, Q., 2007. Evidence for soil water control on carbon and water dynamics in European forests during the extremely dry year: 2003. Agric. For. Meteorol. 143, 123–145. doi:10.1016/j.agrformet.2006.12.004}
+
+\item{Jarvis, P., McNaughton, K., 1986. Stomatal control of transpiration: Scaling Up from leaf to region. Adv. Ecol. Res. 15, 1–49.}
+
+\item{Linacre, E.T., 1968. Estimating the net-radiation flux. Agric. Meteorol. 93, 49–63.}
+
+\item{Liu, B. Y. H.  and Jordan, R. C.  “The interrelationship and characteristic distribution of direct, diffuse and total solar radiation,” Solar Energy, vol. 4, no. 3, pp. 1–19, 1960.}
+ 
+\item{Miralles, D.G., Gash, J.H., Holmes, T.R.H., de Jeu, R.A.M., Dolman, A.J., 2010. Global canopy interception from satellite observations. J. Geophys. Res. 115, D16122. doi:10.1029/2009JD013530}
+
+\item{Mouillot, F., Rambal, S., Joffre, R., 2002. Simulating climate change impacts on fire frequency and vegetation dynamics in a Mediterranean-type ecosystem. Glob. Chang. Biol. 8, 423–437.}
+
+\item{Mouillot, F., Rambal, S., Lavorel, S., 2001. A generic process-based SImulator for meditERRanean landscApes (SIERRA): design and validation exercises. For. Ecol. Manage. 147, 75–97. doi:10.1016/S0378-1127(00)00432-1}
+\item{Ostendorf, B., Reynolds, J.F., 1993. Relationships between a terrain-based hydrologic model and patch-scale vegetation patterns in an arctic tundra landscape. Landsc. Ecol. 8, 229–237. doi:10.1007/BF00125130}
+\item{Prentice, I.C., Sykes, M.T., Cramer, W., 1993. A simulation model for the transient effects of climate change on forest landscapes. Ecol. Modell. 65, 51–70. doi:10.1016/0304-3800(93)90126-D}
+
+\item{Reynolds, C.A., Jackson, T.J., Rawls, W.J., 2000. Estimating soil water-holding capacities by linking the Food and Agriculture Organization Soil map of the world with global pedon databases and continuous pedotransfer functions. Water Resour. Res. 36, 3653–3662. doi:10.1029/2000WR900130}
+
+\item{Ritchie, J., 1972. Model for predicting evaporation from a row crop with incomplete cover. Water Resour. Res. 8, 1204–1213.}
+
+\item{Ruffault, J., Martin-StPaul, N.K., Duffet, C., Goge, F., Mouillot, F., 2014. Projecting future drought in Mediterranean forests: bias correction of climate models matters! Theor. Appl. Climatol. 117, 113–122. doi:10.1007/s00704-013-0992-z}
+
+\item{Saxton, K.E., Rawls, W.J., Romberger, J.S., Papendick, R.I., 1986. Estimating generalized soil-water characteristics from texture. Soil Sci. Soc. Am. J. 50, 1031–1036.}
+
+\item{Schenk, H., Jackson, R., 2002. The global biogeography of roots. Ecol. Monogr. 72, 311–328.}
+
+\item{Sitch, S., Smith, B., Prentice, I.C., Arneth, a., Bondeau, a., Cramer, W., Kaplan, J.O., Levis, S., Lucht, W., Sykes, M.T., Thonicke, K., Venevsky, S., 2003. Evaluation of ecosystem dynamics, plant geography and terrestrial carbon cycling in the LPJ dynamic global vegetation model. Glob. Chang. Biol. 9, 161–185. doi:10.1046/j.1365-2486.2003.00569.x}
+
+\item{Sperry, J.S., Love, D.M., 2015. What plant hydraulics can tell us about responses to climate-change droughts. New Phytol. 207, 14–27. doi:10.1111/nph.13354}
+
+\item{Spitters, C.J.T., Toussaint, H.A.J.M., Goudriaan, J. 1986. Separating the diffuse and direct components of global radiation and its implications for modeling canopy photosynthesis. I. Components of incoming radiation. Agricultural and Forest Meteorology, 38, 231–242.}
+
+\item{Stolf, R., Thurler, Á., Oliveira, O., Bacchi, S., Reichardt, K., 2011. Method to estimate soil macroporosity and microporosity based on sand content and bulk density. Rev. Bras. Ciencias do Solo 35, 447–459.}
+
+\item{Watanabe, T., Mizutani, K., 1996. Model study on micrometeorological aspects of rainfall interception over an evergreen broad-leaved. Agric. For. Meteorol. 80, 195–214.}
+\end{itemize}
+
+\end{document}

@@ -1,0 +1,273 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{natbib}
+\usepackage{authblk}
+\usepackage{hyperref}
+\usepackage{amsmath}
+
+
+\title{Complex model: Radiation and energy balance}
+\author[1,2]{Miquel De Cáceres}
+\affil[1]{Centre Tecnològic Forestal de Catalunya. Ctra. St. Llorenç de Morunys km 2, 25280, Solsona, Catalonia, Spain}
+\affil[2]{CREAF, Cerdanyola del Vallès, 08193, Spain}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\maketitle
+\tableofcontents
+
+<<echo=FALSE>>=
+options(width=67)
+library(medfate)
+@
+
+\section{Energy balance}
+\subsection{Energy balance and coupling with water balance}
+Radiation and energy balances are conducted at two scales: canopy/soil and leaf. One one hand the model keeps track of temperature variation of the air in the canopy (i.e. canopy energy balance) and in the soil (i.e. soil energy balance) as the result of energy exchanges between them and with the atmosphere. On the other, the model performs the energy balance at the leaf level to determine transpiration. At this scale, radiation inputs include shortwave radiation from the atmosphere absorbed by the leaf and absorbed longwave radiation coming from both the atmosphere and the canopy itself. Leaf temperature is determined assuming that the temperature of the air is that of the canopy. After performing stomatal regulation, the model upscales the transpiration flux at the canopy level and the corresponding latent heat is used to complete the calculation of the energy balance at the canopy level. Note that the latent heat fluxes from evaporation from the soil and of intercepted water are not included in the energy balance.
+
+\subsection{Canopy energy balance equations}
+Energy balance equations are very similar to those of Best et al. (2011) for JULES. The canopy absorbs shortwave radiation from the atmosphere ($K_{abs,ca}$). It also absorbs longwave counterradiation from the atmosphere ($L_{abs,ca}$) and longwave radiation emmited from the soil ($L_{abs,cs}$). These inputs are counterbalanced by the longwave radiation emmited by the canopy ($L_{em,c}$) in both cases. Other energy fluxes considered are convective exchanges between the canopy and atmosphere ($H_{ca}$) and between the canopy and the soil ($H_{cs}$). Finally, energy is released to the atmosphere through latent heat ($LE_{c}$) produced via transpiration (so far, interception and soil evaporation are not included). The instantaneous energy balance equation for the canopy is thus:
+\begin{equation}
+  C_{c} \cdot \frac{\delta T_{c}}{\delta t} = K_{abs,ca} + (L_{abs,ca} - L_{em,c}) + (L_{abs,cs} - L_{em,c}) - LE_{c} - H_{ca} - H_{cs} 
+\end{equation}
+where $C_{c}$ is the canopy thermal capacitance. Like the canopy, the soil absorbs short- and longwave radiation from the atmosphere ($K_{abs,sa}$ and $L_{abs,sa}$). It also absorbs longwave radiation released by the canopy ($L_{abs,sc} = L_{em,c}$) and emmits longwave radiation ($L_{em,s}$). Note that $L_{abs,cs} \leq L_{em,s}$ because part of the radiation emmitted by the soil is sent to the atmosphere without being intercepted by the canopy. Finally, it also exchanges convective energy with the canopy ($H_{cs}$). The energy balance equation for the soil is:
+\begin{equation}
+  C_{s} \cdot \frac{\delta T_{s}}{\delta t} = K_{abs,sa} + L_{abs,sa} - L_{em,s} + L_{abs,sc} + H_{cs} 
+\end{equation}
+where $C_{s}$ is the soil thermal capacitance.
+
+\subsection{Leaf energy balance}
+Leaf temperature ($T_{leaf}$; in Celsius) can be calculated for any given flow rate $E(\Psi_{leaf})$ using (Campbell and Norman 1998):
+\begin{equation}
+T_{leaf}(\Psi_{leaf}) = T_{can}+\frac{I_{abs}-\epsilon\cdot\sigma\cdot(T_{can}+273.15)^4-\lambda_v\cdot E(\Psi_{leaf})}{C_p\cdot(g_r+g_{Ha})}
+\end{equation}
+where $I_{abs}$ (in W·m$^{-2}$) is the instantaneous shortwave and longwave radiation absorbed per leaf area unit, $E(\Psi_{leaf})$ is the flow (converted to mol·s$^{-1}$·m$^{-2}$ per two-sided leaf area basis), $\epsilon$ is longwave radiation emissivity (0.97), $\sigma$ is the Stephan-Boltzman constant, $T_{can}$ is the canopy air temperature (in ºC; see '\texttt{Complex model: Radiation and energy balance}'), $C_p = 29.3$ J·mol$^{-1}$·ºC$^{-1}$ is the specific heat capacity of dry air at constant pressure and $\lambda_v$ is the latent heat of vaporization (in J·mol$^{-1}$):
+\begin{equation}
+\lambda_v = (2.5023\cdot 10^6-(2430.54\cdot T_{can}))\cdot 0.018
+\end{equation}
+Finally, $g_r$ and $g_{Ha}$ are the radiative and heat conductance values (in mol·m$^{-2}$·s$^{-1}$), respectively (Campbell and Norman 1998):
+\begin{eqnarray}
+g_r &=& \frac{4\cdot \epsilon \cdot \sigma \cdot (T_{can}+273.15)^3}{C_p} \\
+g_{Ha} &=& 0.189 \cdot (u/d)^{0.5}
+\end{eqnarray}
+where $u$ is wind speed (in m·s$^{-1}$), taken as the wind speed at mid-crown height, and $d$ is 0.72 times the leaf width (species parameter \texttt{LeafWidth} in $cm$). 
+
+\subsection{Atmospheric forcing}
+
+\subsubsection{Shortwave diffuse and direct radiation}
+Daily global radiation (in MJ·m$^{-2}$) is assumed to include both direct and diffuse shortwave radiation (SWR). Using latitude, topographic information and whether is a rainy day, this quantity is partitioned into instantaneous direct and diffuse SWR for different daily substeps. Values of instantaneous direct and diffuse SWR above the canopy (i.e. $I_{beam}$ and $I_{dif}$) are calculated using the methods described in Spitters et al. (1986), which involve comparing daily global radiation with daily potential radiation. For example, for a flat terrain located at 42ºN latitude and 100 m.a.s.l, having 30 MJ·m$^{-2}$ of daily global radiation on the 2001/June/01 in a clear day, the hourly variation in solar elevation, potential/global radiation and diffuse/direct light for PAR and SWR would be:
+\begin{center}
+<<echo=FALSE, fig=TRUE, width=7, height=7>>=
+par(mar=c(4,4,1,1), mfrow=c(2,2))
+latrad = 0.73
+elevation = 100
+clearday = TRUE
+J = meteoland::radiation_julianDay(2001,6,1)
+gsc = meteoland::radiation_solarConstant(J)
+delta = meteoland::radiation_solarDeclination(J)
+a=meteoland::radiation_directDiffuseDay(gsc, latrad,delta, 30, clearday, 100)
+se = a$SolarElevation*(180/pi)
+se[a$Rpot==0]=NA
+plot(a$SolarHour*12/pi, se, type="l", ylim=c(0,70), ylab="Solar elevation angle (º)", xlab="Solar hour")
+plot(a$SolarHour*12/pi, a$Rpot, type="l", ylab="Radiation (W·m-2)", xlab="Solar hour")
+lines(a$SolarHour*12/pi, a$Rg,  lty=2)
+legend("topleft", legend=c("Potential", "Global"), lty=c(1,2), bty="n")
+plot(a$SolarHour*12/pi, a$SWR_direct, type="l", ylab="SWR radiation (W·m-2)", xlab="Solar hour")
+lines(a$SolarHour*12/pi, a$SWR_diffuse,  lty=2)
+legend("topleft", legend=c("Direct", "Diffuse"), lty=c(1,2), bty="n")
+plot(a$SolarHour*12/pi, a$PAR_direct, type="l", ylab="PAR radiation (W·m-2)", xlab="Solar hour")
+lines(a$SolarHour*12/pi, a$PAR_diffuse,  lty=2)
+legend("topleft", legend=c("Direct", "Diffuse"), lty=c(1,2), bty="n")
+@
+\end{center}
+
+\subsubsection{Atmospheric longwave irradiance}
+Longwave radiation (LWR) coming from the atmosphere is calculated following Campbell \& Norman (1998):
+\begin{equation}
+L_{a} = \epsilon_{a} \cdot \sigma \cdot (T_{a} + 273.16)^{4.0}
+\end{equation}
+where $T_{a}$ is air temperature, $\sigma = 5.67 \cdot 10^{-8.0}$  W·K$^{-4}$·m$^{-2}$ is the Stephan-Boltzmann constant and $\epsilon_{a}$ is the emmissivity of the atmosphere, calculated using:
+\begin{eqnarray}
+\epsilon_{a} &=& (1 - 0.84 \cdot c) \cdot \epsilon_{ac} + 0.84 \cdot c \\
+\epsilon_{ac} &=& 1.72 \cdot \left(\frac{vp_{day}}{T_{a} + 273.16} \right)^{1/7}
+\end{eqnarray}
+where $vp_{day}$ is the average daily vapor pressure (in kPa) and $c$ is the proportion of clouds. 
+
+\subsubsection{Diurnal variations in air temperature}
+Diurnal above-canopy air temperature ($T_a$) variations are modeled assuming a sinusoidal pattern with $T_a = T_{\min}$ at sunrise and $T_a = (T_{\min}+T_{\max})/2$ at sunset. Air temperature varies linearly between sunset and sunrise (McMurtrie et al. 1990).
+
+\section{Radiation energy fluxes}
+The following subsection detail the calculation of radiation components of the energy balance equations.
+
+
+\subsection{Shortwave radiation absorbed by the canopy}
+
+the canopy is also divided into 1 m layers and the expanded and dead leaf area index of each cohort within each layer is determined. Furthermore, it is generally accepted that sunlit and shade leaves need to be treated separately (De Pury and Farquhar 1997). This separation is necessary because photosynthesis of shade leaves has an essentially linear response to irradiance, while photosynthesis of leaves in sunflecks is often light saturated and independent of irradiance.
+
+The average irradiance reaching the top of each canopy layer $j$ is calculated separately for direct beam and diffuse radiation:
+\begin{eqnarray}
+I_{beam,j} &=& (1 - \gamma) \cdot I_{beam} \cdot \exp\left[ \sum_{h=j+1}^{n}{\sum_{i}^{c}{-k_{b,i}\cdot \alpha_i^{0.5}\cdot LAI^{all}_{i,h}}}\right]\\
+I_{dif,j} &=& (1 - \gamma) \cdot I_{dif} \cdot \exp\left[ \sum_{h=j+1}^{n}{\sum_{i}^{c}{-k_{d,i}\cdot \alpha_i^{0.5}\cdot LAI^{all}_{i,h}}}\right]
+\end{eqnarray}
+where $I_{beam}$ and $I_{dif}$ are the direct and diffuse irrradiance at the top of the canopy, $\gamma$ is the leaf reflectance ($\gamma_{PAR} = 0.04$, $\gamma_{SWR} = 0.05$), $k_{b,i}$ is the extinction coefficient of cohort $i$ for direct light ($k_{b,i} = 0.8$), $k_{d,i}$ is the extinction coefficient of cohort $i$ for diffuse light (i.e. $k_{PAR}$ or $k_{SWR}$) and $\alpha_i$ is the absorbance coefficient ($\alpha_{i,PAR} = 0.9$, $\alpha_{i,SWR} = 0.7$).
+
+The proportion of sunlit leaves, i.e. leaves in a canopy layer that the direct light beams (sunflecks) reach is:
+\begin{equation}
+f_{SL, j}  = \exp\left( \sum_{k>j}^{n}{\sum_{i}^{c}{-k_{b,i} \cdot LAI^{all}_{i,k}}}\right) \cdot \exp\left( \sum_{i}^{c}{-k_{b,i} \cdot 0.5\cdot LAI^{all}_{i,j}}\right)
+\end{equation}
+As an example we will consider a canopy of one species of LAI = 2, divided into ten layers with constant leaf density.
+<<echo=FALSE>>=
+LAI = 2
+nlayer = 10
+LAIlayerlive = matrix(rep(LAI/nlayer,nlayer),nlayer,1)
+LAIlayermax = matrix(rep(LAI/nlayer,nlayer),nlayer,1)
+LAIlayerdead = matrix(0,nlayer,1)
+kb = 0.8
+kd_PAR = 0.5
+kd_SWR = kd_PAR/1.35
+alpha_PAR = 0.9
+gamma_PAR = 0.04
+gamma_SWR = 0.05
+alpha_SWR = 0.7
+@
+This canopy definition leads to a percentage of the above-canopy irradiance reaching each layer (Goudriaan 2016; Anten and Bastiaans 2016). Extinction of direct radiation also defines the proportion of leaves of each layer that are affected by sunflecks (i.e. the proportion of sunlit leaves).
+
+
+\begin{center}
+<<fig = TRUE, echo=FALSE, width=7, height=4>>=
+Ibfpar = light.layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayermax, kb, alpha_PAR)
+Idfpar = light.layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayermax, kd_PAR, alpha_PAR)
+Ibfswr = light.layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayermax, kb, alpha_SWR)
+Idfswr = light.layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayermax, kd_SWR, alpha_SWR)
+fsunlit = light.layerSunlitFraction(LAIlayerlive, LAIlayerdead, kb)
+SHarea = (1-fsunlit)*LAIlayerlive[,1] 
+SLarea = fsunlit*LAIlayerlive[,1] 
+
+par(mar=c(4,4,1,1), mfrow=c(1,2))
+plot(Ibfpar*100, 1:nlayer,type="l", ylab="Layer", xlab="Percentage of irradiance", xlim=c(0,100), ylim=c(1,nlayer), col="dark green")
+lines(Idfpar*100, 1:nlayer, col="dark green", lty=2)
+lines(Ibfswr*100, 1:nlayer, col="red")
+lines(Idfswr*100, 1:nlayer, col="red", lty=2)
+legend("topleft", legend=c("direct PAR","diffuse PAR",
+                           "direct SWR","diffuse SWR"), 
+       lty=c(1,2,1,2),
+       col=c("dark green", "dark green","red", "red"), bty="n")
+
+plot(fsunlit*100, 1:nlayer,type="l", ylab="Layer", xlab="Percentage of leaves", xlim=c(0,100), ylim=c(1,nlayer))
+lines((1-fsunlit)*100, 1:nlayer, lty=2)
+legend("bottom", legend=c("sunlit","shade"), lty=c(1,2), bty="n")
+@
+\end{center}
+
+The amount of absorved diffuse radiation per leaf area unit of cohort $i$ within a given canopy layer $j$ is calculated as:
+\begin{equation}
+I_{dif,i,j} = I_{dif,j} \cdot k_{d,i} \cdot \alpha_i^{0.5} \exp\left[ \sum_{h}^{c}{-k_{d,h}\cdot \alpha_h^{0.5}\cdot 0.5\cdot LAI^{all}_{h,j}}\right]
+\end{equation}
+
+
+The amount of absorved scattered beam radiation per leaf area unit of cohort $i$ within a given canopy layer $j$ is calculated as:
+\begin{equation}
+% \begin{split}
+I_{sca,i,j} = I_{b,j} \cdot k_{b,i} \left( \alpha_i^{0.5}\cdot \exp \left( \sum_{h}^{c}{-k_{b,h}\cdot \alpha_h\cdot 0.5\cdot LAI^{all}_{h,i}}\right) 
+-\frac{\alpha_i}{(1-\gamma)}\cdot \exp\left( \sum_{h}^{c}{-k_{b,h}\cdot 0.5\cdot LAI^{all}_{h,i}}\right) \right)
+% \end{split}
+\end{equation}
+
+Finally, the direct radiation absorbed by a unit of sunlit leaf area of cohort $i$ in a canopy layer $j$ does not depend on the position of the canopy layer and is:
+\begin{equation}
+I_{dir,i,j} = I_{beam} \cdot \alpha_i \cdot 0.5/\sin{\beta}
+\end{equation}
+where $\beta$ is the solar elevation angle, which changes throughout the day. The amount of light absorbed by shaded/sunlit foliage of cohort $i$ in layer $j$ per leaf area unit ($I_{SH,i,j}$ and $I_{SL,i,j}$, respectively) is:
+\begin{eqnarray}
+I_{SH,i,j} &=& I_{dif,i,j} + I_{sca,i,j} \\
+I_{SL,i,j} &=& I_{dif,i,j} + I_{sca,i,j} + I_{dir,i,j}
+\end{eqnarray}
+The total amount of light absorbed by shaded/sunlit foliage of cohort $i$ per ground area unit is found by taking into account the proportion of sunlit foliage:
+\begin{eqnarray}
+\Phi_{SH,i,j} &=& I_{SH,i,j}\cdot (1 - f_{SL,j}) \cdot LAI^{\phi}_{i,j}\\
+\Phi_{SL,i,j} &=& I_{SL,i,j}\cdot f_{SL,j} \cdot LAI^{\phi}_{i,j}
+\end{eqnarray}
+
+
+\subsection{Shortwave radiation absorbed by the soil}
+The instantaneous shortwave radiation reaching the soil is calculated separately for direct beam and diffuse radiation:
+\begin{eqnarray}
+K_{beam, soil} &=&  K_{beam} \cdot \exp\left[ \sum_{h=j+1}^{n}{\sum_{i}^{c}{-k_{b,i}\cdot \alpha_i^{0.5} \cdot LAI^{all}_{i,h}}}\right]\\
+K_{dif, soil} &=& K_{dif} \cdot \exp\left[ \sum_{h=j+1}^{n}{\sum_{i}^{c}{-k_{d,i}\cdot LAI^{all}_{i,h}}}\right]
+\end{eqnarray}
+where $K_{beam}$ and $K_{dif}$ are the direct and diffuse irrradiance at the top of the canopy, $k_{b,i}$ is the extinction coefficient of cohort $i$ for direct light ($k_{b,i} = 0.8$) and $k_{d,i}$ is the extinction coefficient of cohort $i$ for diffuse SWR. From these, the SWR absorbed by the soil is found by:
+\begin{equation}
+K_{abs,sa} = (1 - \gamma_{SWR, soil})\cdot (K_{beam, soil} + K_{dif, soil})
+\end{equation}
+where $\gamma_{SWR, soil} = 0.10$ is the SWR reflectance (10\% albedo) of the soil. LWR is treated in the same way as diffuse SWR. The instantaneous LWR reaching the soil is:
+\begin{equation}
+L_{abs,sa} = (1 - \gamma_{LWR, soil})\cdot L_{a} \cdot \exp\left[ \sum_{h=j+1}^{n}{\sum_{i}^{c}{-k_{LWR}\cdot LAI^{all}_{i,h}}}\right]
+\end{equation}
+where $L_a$ is the atmosphere longwave irradiance, $k_{LWR} = 0.8$ is the extinction coefficient for LWR and $\gamma_{LWR, soil} = 0.05$ is LWR soil reflectance (5\% albedo) of the soil.
+
+\subsection{Longwave radiation exchange between the canopy and the soil}
+Longwave radiation (LWR) emmited by a surface at the canopy temperature $T_{can}$ would be:
+\begin{equation}
+L_{em} = 0.95 \cdot \sigma \cdot (T_{can} + 273.16)^{4.0}
+\end{equation}
+where $0.95$ is emissivity and $\sigma = 5.67 \cdot 10^{-8.0}  Wm^{-2}$ is the Stephan-Boltzmann constant. However, the canopy may only partially cover the soil surface, so the value must be reduced by the proportion of the canopy layer actually exchanging energy. We take this as the proportion between atmospheric and absorbed LWR:
+\begin{eqnarray}
+p_{exch} &=& \frac{L_{abs,ca}}{L_a} \\
+L_{em, c} &=& p_{exch} \cdot L_{em}
+\end{eqnarray}
+$L_{em, c}$ is discounted twice from the canopy energy balance: as losses to the atmosphere and losses to the soil. 
+
+LWR emmited by the soil is calculated from the temperature of the first soil layer:
+\begin{equation}
+L_{em, s} = 0.95 \cdot \sigma \cdot (T_{soil} + 273.16)^{4.0}
+\end{equation}
+Again, the canopy only absorbs part of this radiation, the remaining going to the atmosphere:
+\begin{equation}
+L_{abs, cs} &=& p_{exch} \cdot L_{em,s}
+\end{equation}
+
+\section{Other energy fluxes}
+\subsection{Convective energy}
+Convective energy fluxes between atmosphere and the canopy ($H_{ca}$) and between the canopy and the soil ($H_{cs}$) are determined as follows:
+\begin{eqnarray}
+H_{ca} &=& \frac{\rho_{a} \cdot c_p}{r_{ca}}\cdot (T_{can} - T_a) \\
+H_{cs} &=& \frac{\rho_{c} \cdot c_p}{r_{cs}}\cdot (T_{can} - T_{soil})
+\end{eqnarray}
+where $\rho_{a}$ and $\rho_{c}$ are the air density above-canopy and inside-canopy, respectively, $c_{p} = 1013.86$ J·kg$^{-1}$·C$^{-1}$ is the specific heat capacity of the air. $r_{ca}$ and $r_{cs}$ are the atmosphere-canopy and canopy-soil aerodynamic resistances (in s·m$^{-1}$). These, in turn, are calculated using canopy height, total LAI and above-canopy and below-canopy wind speeds.
+
+\subsection{Latent heat}
+As mentioned above, the model only considers latent heat exchanged from plant transpiration, neglecting energy fluxes corresponding to evaporation from the soil and evaporation of rain intercepted by the canopy. After determining stomatal regulation and transpiration for each plant cohort, latent heat of transpiration is simply calculated as:
+\begin{equation}
+LE_{c} = \lambda_{T_{can}} \sum_{i}{E_i}
+\end{equation}
+where $\lambda_{T_{can}}$ is the latent heat of vaporization at temperature $T_{can}$ (in J·kg$^{-1}$) and $E_i$ is the instanteous transpiration flux calculated for cohort $i$.
+
+\section{Temperature changes}
+\subsection{Canopy capacitance and temperature changes}
+TO BE DONE
+\subsection{Soil temperature changes}
+Instantaneous soil temperature changes on each soil layer depend on the balance between incoming and outcoming energies ($G_k$ and $G_{k-1}$):
+\begin{equation}
+\frac{\delta T_{soil,k}}{\delta t} = \frac{G_k - G_{k-1}}{C_{soil,k} \cdot \Delta z_k}
+\end{equation}
+where $\Delta z_k$ is the soil width of layer $k$ and $C_{soil,k}$ is the thermal capacity of layer $k$, depending on soil moisture and texture (see function \texttt{soil.thermalcapacity}).
+
+Energy inflow to the first layer (i.e. $G_0$) is the result of the soil energy balance explained above, while energy transfers between layers (i.e. $G_k$) depend on the soil temperature gradient:
+\begin{eqnarray}
+G_0 &=& K_{abs,sa} + L_{abs,sa} - L_{em,s} + L_{abs,sc} + H_{cs}\\
+G_k &=& \lambda_{soil,k} \cdot \frac{\delta T_{soil,k}}{\delta z}
+\end{eqnarray}
+where $\lambda_{soil,k}$ is the thermal conductivity of layer $k$, depending on soil moisture and texture (see function \texttt{soil.thermalconductivity}). The gradient in the bottom layer is calculated assuming a temperature of the earth (at 10 m) of 15.5 Celsius.
+
+\section{References}
+\begin{itemize}
+
+\item{Best, M.J., Pryor, M., & Clarck, D.B. 2011. The Joint UK Land Environment Simulator (JULES), Model description – Part 1: Energy and water fluxes. Geoscientific Model Development Discussions 4: 677–699.}
+
+\item{Campbell, G.S., \& Norman, J.M. 1998. An introduction to environmental biophysics. 2nd edition.}
+
+\item{Spitters, C.J.T., Toussaint, H.A.J.M., Goudriaan, J. 1986. Separating the diffuse and direct components of global radiation and its implications for modeling canopy photosynthesis. I. Components of incoming radiation. Agricultural and Forest Meteorology, 38, 231–242.}
+
+\end{itemize}
+\end{document}

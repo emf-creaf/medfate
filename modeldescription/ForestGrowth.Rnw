@@ -1,0 +1,639 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{natbib}
+\usepackage{authblk}
+\usepackage{hyperref}
+
+%\VignetteIndexEntry{Forest growth}
+%\VignettePackage{medfate}
+
+\title{Forest growth}
+\author[1,2]{Miquel De Cáceres}
+\affil[1]{Centre Tecnològic Forestal de Catalunya. Ctra. St. Llorenç de Morunys km 2, 25280, Solsona, Catalonia, Spain}
+\affil[2]{CREAF, Cerdanyola del Vallès, 08193, Spain}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\maketitle
+\tableofcontents
+
+<<echo=FALSE>>=
+options(width=67)
+library(medfate)
+@
+\section{Introduction}
+
+Changes in leaf area and plant growth are key to evaluate the influence of climatic conditions on forest structure and function. Processes affecting annual changes leaf area and plant size are those involved water and carbon balances, as well as those affecting growth directly. Processes influencing plant water balance include those affecting soil water content, such as rainfall, canopy interception, infiltration and runoff, percolation and deep drainage, soil evaporation and plant transpiration. Carbon balance arises from the relationship between plant photosynthesis and respiration, although carbon reserves play a role in the availabity of carbon for growth. Water and carbon balances are coupled through the regulation of transpiration done by stomata. Plant growth is affected by the availability of carbon (source limitation), but also by temperature and water status (sink limitation). 
+
+Package \texttt{medfate} includes allows simulating plant growth of a set of cohorts (competing for light and water) in a single forest stand using function \texttt{growth()} or for multiple stands distributed spatially using function \texttt{growthpoints()}. Leaf area of plants can be severely decreased by drought stress, causing an increase in dead leaf area and affecting carbon and water fluxes. Functions \texttt{growth()} and \texttt{growthpoints()} may be used to:
+\begin{itemize}
+\item{Monitor or forecast temporal variation in water fluxes and soil water content in particular stands (for example to estimate regulation ecosystem services) taking into account processes determining plant growth.}
+\item{Monitor or forecast temporal variation of plant drought stress in particular stands(for example to anticipate mortality events) taking into account processes determining plant growth.}
+\item{Monitor or forecast temporal variation of live fuel moisture and the amount of standing dead and live fuels in particular stands (for example to monitor wildfire risk).}
+\end{itemize}
+
+\section{Model overview}
+\subsection{Design principles}
+The physical structure of the stand is represented in one (vertical) dimension. Height (or depth) is the only dimension that matters (i.e. the coordinates of plants are not explicit). The model is cohort-based, meaning that similar plant individuals are represented using a single entity with average properties (e.g. tree height or diameter) and a density variable is used to scale from individual level to the cohort level. Processes are implemented either at the cohort-level (water balance and photosynthesis) or at the individual level (carbon balance and growth). The model has been designed to be executed on forest inventory plots, but it can be run on other kind of vegetation (e.g. shrublands or crops) provided vegetation is described using the appropriate variables (i.e. diameter and height for trees, percent cover and height for shrubs). The model tries to reproduce the physiological processes that modulate leaf area changes and plant growth rates. Nevertheless, since the model does not implement all processes that may affect growth (such as nutrient availability), maximum growth rates and maximum plant sizes are constrained from user inputs, to ensure that model can be more easily calibrated and validated with observations. Consequently, we believe the model is suited to study variations of plant growth derived from environmental conditions and competition for light and water.
+
+Leaf area of each plant cohort is divided between live (wether in resistance buds or unfolded leaves) and dead (standing dead trees). Expanded leaf area corresponds to the portion of live leaf area that is unfolded at any given moment through the leaf phenological cycle. Leaf area density of individuals is considered constant across the crown. Sapwood area of individuals is another important state variable. The Pipe model (Shinozaki et al. 1964) is adopted to link increments of leaf area, sapwood area and fine root biomass. Ratios of leaf area to sapwood area (Huber value) can vary within species, due to environmental conditions (Mencuccini and Grace 1995). The model assumes a constant, species-specific Huber value, but allows deviations from the pipe model caused by drought-related leaf area reductions. 
+
+Water fluxes, soil water balance and plant photosynthesis processes follow the design of the soil water balance model (function \texttt{swb()}; see De Cáceres et al. 2015 and vignette '\textbf{Soil water balance and drought stress}') and this part of the model design will not be repeated here. Plant respiration is calculated at the individual level, by estimating the respiration of leaves, stem and fine root compartments. While fine root respiration is proportional to leaf respiration, and hence to expanded leaf area, stem respiration depends on plant size.
+
+Growth is determined taking into account environmental limitations onboth source (i.e. carbon assimilation) and sink (i.e. carbon investment on plant tissue expansion) (Fatichi et al. 2014; Guillemot et al. 2015; Körner 2015). With respect to carbon availability for growth, the model offers three alternatives. In the first one, carbon available for growth is simply the daily difference between net photosynthesis and maintenance respiration (i.e. no carbon storage). The second alternatives involves a single (fast) carbon storage pool that allows decoupling assimilation from growth. Finally, the third alternative involves two carbon storage pools ('fast' and 'slow') with a transfer rate between them (Richardson et al. 2013; Dietze et al. 2014), which we assume to be regulated by the need to maintain, as much as possible, a minimum amount of carbon in the fast pool (i.e. for metabolic and osmotic purposes). In the second and third modes, maximum overall C storage capacity is proportional to plant size.
+
+The LPG model (Sitch et al. 2003) applies different turnover rates for different tissues, but then tries to satisfy the pipe model (Shinozaki et al. 1964) by allocating C where it is more limiting. Instead, we assume that baseline leaf and fine root turnover rates are linearly related to conversion from sapwood to heartwood. Similarly to 3-PG (Landsberg and Waring 1997) we assume that the turnover rate is smallest for young plants, and it increases up to a maximum value. The model assumes that plants cannot suffer from cavitation if the leaf water potential is large enough for growth to occur (i.e. if cell turgidity is large enough for cell elongation). Similarly, it also assumes that growth stops before cavitation starts during drought events. When sapwood area reduction occurs, this not only reduces leaf area, but also decreases the amount of fast C reserves available for future growth. Thus it is assumed that parts of the plant are effectively disconnected.
+
+Tree structural variables are updated as in forest gap models (e.g., Lindner et al. 1997)
+
+
+\subsection{Process scheduling}
+Every day the growth model first updates the expanded leaf area of living plants according to the phenology of species and the day of the year. Then the model performs soil water balance, transpiration and photosynthesis calculations by calling the soil water balance submodel. After dealing with water fluxes and photosynthesis, the model determines the amount of respiratory biomass, the maximum storage value per individual and maintenance respiration at the individual level. The comparison between photosynthesis and respiration leads to an amount of carbon available for growth (if no carbon pools are considered) or a change in the amount of fast carbon storage pool (if one or two carbon pools are considered). After that, the model determines variations in sapwood area, dead leaf area and live leaf area, which can originate due to conversion from sapwood to heartwood, growth or drought-induced cavitation. If two carbon storage pools are considered, at the end of the day the model determines the direction and amount of carbon transfer between them. Once a year (or by the end of the simulated period) the model translates sapwood area growth into structural variables (i.e., plant height, tree DBH, tree crown ratio and shrub cover). 
+
+\section{Model inputs}
+\subsection{Soil description}
+
+As in the case of soil water balance simulations, soil is described using 1 to 5 soil layers, each layer having its width, texture, macroporosity and rock fragment content. Details of the soil description are given in '\textbf{Soil description and root system architecture}'. The following is a list of soil parameters needed (their R code names are shown in brackets):
+\begin{itemize}
+\item{$Z_{s}$ [\texttt{widths}]: Depth corresponding to each soil layer (in mm).}
+\item{$P_{clay,s}$ [\texttt{clay}]: Percentage of clay corresponding to each soil layer.}
+\item{$P_{sand,s}$ [\texttt{sand}]: Percentage of sand corresponding to each soil layer.}
+\item{$P_{rocks,s}$ [\texttt{rfc}]: Percentage of rock fragments (>2 mm) corresponding to each soil layer.}
+\item{$P_{macro, s}$ [\texttt{macro}]: Percentage of macroporosity corresponding to each soil layers. Macroporosity values can be calculated for each soil layer from its percentage of sand and bulk density, using the equations given in Stolf et al. (2011).}
+\item{$\gamma_{soil}$ [\texttt{Gsoil}]: Maximum daily bare soil evaporation ($mm \cdot day^{-1}$).}
+\item{$\kappa_{soil}$ [\texttt{Ksoil}]: Exponential decay coefficient for bare soil evaporation.}
+\end{itemize}
+
+\subsection{Vegetation state variables and parameters}
+
+Vegetation in the stand is described using a set of plant cohorts, described in an object of class \texttt{growthInput}. This function assembles all parameters needed for the simulation of a given stand in a single list. Model parameters are grouped by category.  Regarding physical aboveground description of the stand, each plant cohort is defined by its species identity ($SP$; with R name [\texttt{SP}]). In addition, each cohort needs to be defined regarding the following state variables:
+
+\begin{itemize}
+\item{$N$ [\texttt{N}]: The density of individuals (in ind · ha$^{-1}$).}
+\item{$DBH$ [\texttt{DBH}]: Tree diameter at breast height (in cm).}
+\item{$Cover$ [\texttt{Cover}]: Shrub percent cover (in \%).}
+\item{$H$ [\texttt{H}]: Total tree or shrub height (in cm).}
+\item{$CR$ [\texttt{CR}]: Crown ratio (i.e. the ratio between crown length and total height).}
+\item{$LAI^{live}$ [\texttt{LAI\_live}]: Live leaf area index (one-side live leaf area of plants in the cohort per surface area of the stand) (in m$^2$·m$^{-2}$).}
+\item{$LAI^{\phi}$ [\texttt{LAI\_expanded}]: Expanded leaf area index (one-side expanded leaf area of plants in the cohort per surface area of the stand) (in m$^2$·m$^{-2}$).}
+\item{$LAI^{dead}$ [\texttt{LAI\_dead}]: Dead leaf area index (one-side dead leaf area of plants in the cohort per surface area of the stand) (in m$^2$·m$^{-2}$).}
+\item{$LAI^{predrought}$ [\texttt{LAI\_predrought}]: Live leaf area index before the current drought started (one-side dead leaf area of plants in the cohort per surface area of the stand) (in m$^2$·m$^{-2}$).}
+\item{$SA$ [\texttt{SA}]: Area of functional sapwood per individual (in cm$^2$·ind$^{-1}$).}
+\item{$C_{fast}$ [\texttt{fastCstorage}]: Amount of C in the fast carbon storage pool (in g C·ind$^{-1}$).}
+\item{$C_{slow}$ [\texttt{slowCstorage}]: Amount of C in the slow carbon storage pool (in g C·ind$^{-1}$).}
+\end{itemize}
+
+Excepting $SP$ (species identity) and $N$ (density), the remaining aboveground state variables are modified during growth simulations. Belowground parameters are the following:
+\begin{itemize}
+\item{$Z$ [\texttt{Z}]: The rooting depth (in cm).}
+\item{$V$ [\texttt{V}]: A matrix with the proportion of fine roots in each soil layer.}
+\end{itemize}
+Additional belowground variables are included if \texttt{transpirationMode = "Complex"}. These, and the parameters needed for water balance calculations are described in vignette '\textbf{Soil description and root system architecture}'. 
+
+The following physiological parameters are needed for growth calculations:
+\begin{itemize}
+\item{$SLA$ [\texttt{SLA}]: Specific leaf area (m$^2$·kg$^{-1}$).}
+\item{$Hv$ [\texttt{Al2As}]: Huber value. Leaf area to sapwood area ratio (in m$^2$·m$^{-2}$).}
+\item{$W_{dens}$ [\texttt{WoodDens}]: Wood density (at 0\% humidity) (in g·cm$^{-3}$).}
+\item{$W_{C}$ [\texttt{WoodC}]: Wood carbon content in relation to dry weight (in g·g$^{-1}$).}
+\item{$C_{p,\max}$ [\texttt{Cstoragepmax}]: Maximum storage capacity, expressed as C per total respiratory C (in gC·gC$^{-1}$).}
+\item{$RGR_{\max}$ [\texttt{RGRmax}]: Maximum daily relative growth rate (in sapwood area basis) (in cm$^2$·cm$^{-2}$).}
+\end{itemize}
+
+Another set of parameters is needed to transform changes in sapwood area and leaf area to changes in the structural variables such as tree height, tree crown ratio or shrub cover:
+\begin{itemize}
+\item{$H_{\max}$ [\texttt{Hmax}]: Maximum plant height (in cm).}
+\item{$f_{HD,\min}$, $f_{HD,\max}$ [\texttt{fHDmin}, \texttt{fHDmax}]: Minimum and maximum values of the height-diameter ratio (in cm·cm$^{-1}$).}
+\item{$Z_{\max}$ [\texttt{Zmax}]: Maximum rooting depth (in mm).}
+\item{$a_{ash}$ [\texttt{Aash}]: Regression coefficient for the quadratic relationship between shrub height and shrub area.}
+\item{$a_{bsh}$, $b_{bsh}$ [\texttt{Absh}, \texttt{Bbsh}]: Allometric coefficients relating crown phytovolume with dry weight of shrub individuals.}
+\item{$CR$ [\texttt{cr}]: Ratio between crown length and total height (constant value for shrubs).}
+\item{$r_{6.35}$ [\texttt{r635}]: Ratio between the dry weight of leaves plus branches and the dry weight of leaves alone for branches of 6.35 mm of diameter.}
+\item{$a_{cr}$, $b_{1cr}$, $b_{2cr}$, $b_{3cr}$, $c_{1cr}$, $c_{2cr}$ [\texttt{B1cr}, \texttt{B2cr}, \texttt{B3cr}, \texttt{C1cr}, \texttt{C2cr}]: Regression coefficients used to update the crown ratio of trees.}
+\item{$a_{cw}$, $b_{cw}$ [\texttt{Acw}, \texttt{Bcw}]: Regression coefficients used to calculate the crown width of trees (as intermediary step to obtain the crown ratio).}
+\end{itemize}
+
+\subsection{Meteorological input}
+Weather input data must include variables calculated at the \textbf{daily} scale. The variables required depend on the potential evapotranspiration (PET) mode. Similarly to function \texttt{swb()}, the following input variables are required by \texttt{growth()} when \texttt{transpirationMode = "Simple"}: 
+\begin{itemize}
+\item{$J$ [\texttt{DOY}]: Day of the year.}
+\item{$P$ [\texttt{Precipitation}]: Precipitation (in L·m$^{-2}$ = mm of water).}
+\item{$T_{mean}$ [\texttt{MeanTemperature}]: Mean temperature (in $^{\circ} \mathrm{C}$).}
+\item{$PET$ [\texttt{PET}]: Potential evapotranspiration (in  L·m$^{-2}$ = mm of water).}
+\item{$u$ [\texttt{WindSpeed}]: Wind speed (in m·s$^{-1}$).}
+\end{itemize}
+The following input variables are required if \texttt{transpirationMode = "Complex"}: 
+\begin{itemize}
+\item{$J$ [\texttt{DOY}]: Day of the year.}
+\item{$P$ [\texttt{Precipitation}]: Precipitation (in L·m$^{-2}$ = mm of water).}
+\item{$T_{mean}$ [\texttt{MeanTemperature}]: Mean temperature (in $^{\circ} \mathrm{C}$).}
+\item{$T_{min}$ [\texttt{MinTemperature}]: Minimum temperature (in $^{\circ} \mathrm{C}$).}
+\item{$T_{max}$ [\texttt{MaxTemperature}]: Maximum temperature (in $^{\circ} \mathrm{C}$).}
+\item{$RH_{min}$ [\texttt{MinRelativeHumidity}]: Minimum relative humidity (in percent).}
+\item{$RH_{max}$ [\texttt{MaxRelativeHumidity}]: Maximum relative humidity (in percent).}
+\item{$Rad$ [\texttt{Radiation}]: Solar radiation after accounting for clouds (in MJ·m$^{-2}$).}
+\item{$u$ [\texttt{WindSpeed}]: Wind speed (in m·s$^{-1}$).}
+\end{itemize}
+
+
+\section{Details of processes}
+\subsection{Leaf phenology}
+The growth model distinguishes between the leaf area index of living leaves ($LAI^{live}$) and standing dead leaves ($LAI^{dead}$). Furthermore, living leaves of winter deciduous species may be expanded or kept in winter resistance buds. In evergreen plants, the leaf area index of expanded leaves is always equal to the living leaf area index:
+\begin{equation}
+LAI^{\phi} = LAI^{live}
+\end{equation}
+In deciduous plants leaf-phenological status is updated daily, represented by $\phi$, the fraction of maximum leaf area. Leaf area index values of deciduous plants are adjusted for leaf phenology following (Prentice et al., 1993; Sitch et al., 2003):
+\begin{equation}
+LAI^{\phi}=LAI^{live}\,\cdot\phi
+\end{equation}
+At the beginning of a new year $\phi = 0$. Budburst occurs when daily temperature exceeds $T_{base}$ and $\phi$ increases linearly from 0 to 1 as function of the degree days above $T_{base}$, until a the value $S_{GDD}$ is reached (i.e. until $GDD > S_{GDD}$). In autumn, $\phi$ drops to 0 when average daily temperature falls again below $T_{base}$ (Sitch et al., 2003). At this point standing dead leaf area, $LAI^{dead}$, is increased by $LAI^{\phi}$ and $LAI^{\phi}$ is set to zero. 
+
+Given a base temperature ($T_{base} = 5^{\circ} \mathrm{C}$), the growth degree days ($GDD$) are zero for all those days where average daily temperature $T_{mean}$ is below $T_{base}$ and start increasing when temperatures become warmer than this threshold. In other words, the $GDD$ function accumulates $\max(0.0, T_{mean} - T_{base})$ for all days previous to the current one. At the end of a year the cummulative value is set again to $GDD = 0$.
+
+\subsection{Water balance, plant transpiration and photosynthesis}
+The growth model calls the soil water balance model as a submodel to perform soil water balance and photosynthesis calculations. Details can be found in vignette '\textbf{Soil water balance and drought stress}' but we summarize the steps here. The submodel first increases soil moisture due to precipitation, accounting for canopy interception loss, surface runoff and deep drainage. To calculate water losses due to transpiration, the submodel acts differently depending on whether  transpiration mode is set to 'Simple' or 'Complex'. Generally speaking, though, the submodel determines stomatal conductance of each plant cohort according to the environmental conditions (i.e. light, leaf temperature, water vapor deficit and soil moisture) and this leads to an estimation of transpiration and net photosynthesis. The submodel then decreases water content due to bare soil evaporation, and plant transpiration, which completes the daily water balance. 
+
+ Among other outputs, the soil water balance submodel provides values of leaf water potential $\Psi_{leaf}$ (in MPa) and net photosynthesis calculated at the plant cohort level, $A_n^{coh}$ (in g C · m$^{-2}$ · day$^{-1}$).  $\Psi_{leaf}$ is used in the growth model to modulate drought effects on growth and leaf area losses (see below), whereas $A_n$ is obviously needed to determine carbon balance and growth. Since carbon balance is calculated at the individual level, $A_n^{coh}$ needs to be scaled to net photosynthesis per individual (in g C · ind$^{-1}$ · day$^{-1}$) using:
+\begin{equation}
+A_{n}^{ind} = 10000 \cdot A_n^{coh} / N
+\end{equation}
+where $N$ is the density of individuals per hectare.
+
+\subsection{Plant comparments, respiration and carbon balance}
+\subsubsection{Biomass compartments}
+Biomass of leaves, sapwood and fine roots is needed in the model to estimate respiratory costs (and, if needed, the size of the C storage pools). Respiratory leaf biomass per individual ($B_{leaf}$; g C·ind$^{-1}$) is the result of dividing live expanded leaf area by $SLA$ (kg dry weight·m$^{-2}$), the specific leaf area coefficient of the species, and multypling by a carbon conversion factor (0.3 g C · g dry$^{-1}$):
+\begin{equation}
+B_{leaf} = 0.3 \cdot 1000 \cdot LA^{\phi} / SLA
+\end{equation}
+where $LA^{\phi} = 10000 \cdot LAI^{\phi} / N$ is the expanded leaf area per individual (in m$^2$) and factor 1000 is used to convert from kg to g. Hence, only expanded leaf area has respiratory cost (i.e. winter resistance buds do not) and counts for C storage purposes. 
+
+Respiratory sapwood biomass per individual ($B_{stem}$; g C·ind$^{-1}$) represents the sapwood biomass of stems (including trunks and branches) and coarse roots. It is defined as the product of sapwood area ($SA$; in cm$^2$) per individual times the sum of height ($H$; in cm) and rooting depth ($Z$; cm), transformed to carbon biomass using species-specific parameters of wood C density  ($W_{dens}$; g dry·cm$^{-3}$) and carbon content ($W_{C}$; g C · g dry$^{-1}$):
+\begin{equation}
+B_{stem} = SA\cdot (H + Z) \cdot W_{dens} \cdot W_{C}
+\end{equation}
+
+Finally, the biomass of fine roots per individual ($B_{root}$; g C·ind$^{-1}$) is simply assumed proportional to expanded leaf biomass per individual:
+\begin{equation}
+B_{root} = B_{leaf}/2.5
+\end{equation}
+where 2.5 is a ratio between leaf biomass and fine root biomass. Hence, fine-root maintenance respiration costs are also influenced by leaf-phenological status (Sitch et al. 2003). 
+
+\subsubsection{Maximum capacity of C pools}
+If carbon pools are considered, their maximum capacity is updated at this point. If there is a single (fast) carbon pool, its maximum storage capacity per individual ($C_{fast,\max}$; g C·ind$^{-1}$) is defined proportional to the total living biomass (i.e., easily accessed C sources like sugars are assumed to be stored in all living parts of the plant):
+\begin{equation}
+C_{fast,\max} = C_{p,\max} \cdot (B_{leaf} + B_{stem} + B_{root})
+\end{equation}
+where $C_{p,\max}$ is the amount of C storage per plant respiratory C weight. If two carbon pools are considered, their maximum capacity is updated assuming that the fast pool corresponds to 5\% of plant respiratory weight, and the slow pool corresponds to the remaining:
+\begin{eqnarray}
+C_{fast,\max} &=& 0.05 \cdot (B_{leaf} + B_{stem} + B_{root})\\
+C_{slow,\max} &=& \max \left(C_{slow,\max},\, (C_{p, \max}-0.05) \cdot (B_{leaf} + B_{stem} + B_{root})\right)
+\end{eqnarray}
+Note the maximum function for the slow C pool, which ensures that the size of the slow pool will not decrease if there is a decrease in leaf area. Thus, while the slow C pool is still calculated in relation to the total living biomass, it is assumed to be primarily found in long-lasting organs (stem, roots, lignotubers, ...).
+\subsubsection{Maintenance respiration and C balance}
+Individual daily maintenance respiration ($R^{ind}$; in g C·ind$^{-1}$) is calculated for each of the three compartments (leaves, alive vascular tissues (stem and coarse roots), and fine roots) (Mouillot et al. 2001).  The model uses a $Q_{10}$ relationship with temperature, which means that for every 10ºC change in temperature there is a $Q_{10}$ factor change in respiration. Baseline respiration rates ($r_{leaf}$, $r_{stem}$ and $r_{root}$ for leaves, vascular tissues and fine roots, respectively; in gC·gC$^{-1}$) are not species-specific and all refer to 20ºC:
+\begin{eqnarray}
+R_{leaf} &=& B_{leaf} \cdot r_{leaf} \cdot Q_{10}^{(T_{mean}-20)/10} \\
+R_{stem} &=& B_{stem} \cdot r_{stem} \cdot Q_{10}^{(T_{mean}-20)/10} \\
+R_{root} &=& B_{root} \cdot r_{root} \cdot Q_{10}^{(T_{mean}-20)/10} \\
+R^{ind} &=& R_{leaf}+R_{stem}+R_{root}
+\end{eqnarray}
+where $T_{mean}$ is the average daily temperature (in ºC). Note that the output of \texttt{growth()} regarding respiration is actually the result of scaling $R^{ind}$ to the cohort level ($R^{coh}$ in g C · m$^{-2}$ · day$^{-1}$), for comparability with photosynthesis and transpiration:
+\begin{equation}
+R^{coh} =  R^{ind} \cdot N / 10000
+\end{equation}
+If no carbon pools are considered, the carbon available for growth is simply the difference between individual's net photosynthesis and maintenance respiration:
+\begin{equation}
+C_{available} = \max(0,\, A_n^{ind} -  R^{ind})
+\end{equation}
+whereas if carbon pools are considered, the fast C pool is updated with the result of adding photosynthesis and subtracting respiration; and the resulting pool size sets the amount of C available for growth:
+\begin{eqnarray}
+C_{fast} &=& \max(0,\,C_{fast} + A_n^{ind} -  R^{ind})\\
+C_{available} &=& C_{fast}
+\end{eqnarray}
+
+
+\subsection{Sapwood conversion to heartwood, embolism and growth}
+
+Prentice et al. (1993) assumed a constant annual rate of 4\% for the conversion from sapwood to heartwood. Similarly, Sitch et al (2003) assumed a sapwood annual turnover rate of 5\% for all biomes. A reasonable value for maximum daily turnover rate would be (assuming an annual rate 4.5\%):
+\begin{equation}
+1-0.955^{(1/365)} = 0.0001261398
+\end{equation}
+The actual proportion of sapwood area that is transformed into heartwood is:
+\begin{equation}
+p_{heartwood} = \frac{0.0001261398}{1+15\cdot e^{-0.01\cdot H}}
+\end{equation}
+where 0.01 is a constant causing short plants to have slower turnover rates. 
+
+Sapwood turnover is applied at the same rate in evergreen and deciduous species. The amount of sapwood that is converted to heartwood every day, $\Delta SA_{turnover}$, is thus:
+\begin{equation}
+\Delta SA_{turnover} = SA \cdot p_{heartwood}
+\end{equation}
+Before applying either growth or cavitation the model determines the extent to which cell turgor allows growth using a negative exponential function: 
+\begin{equation}
+f_{turgor}(\Psi_{leaf}) = 1 - \left[e^{(\Psi_{leaf}/\Psi_{tlp})-1}\right]^5
+\end{equation}
+where $f_{turgor}(\Psi_{leaf})=0$ if $\Psi_{leaf} > \Psi_{tlp}$. The following figure illustrates the function for $\Psi_{tlp}=-1.5$ MPa:
+\begin{center}
+<<fig=TRUE, echo=FALSE, width=4, height=3.5>>=
+par(mar=c(4,4,1,1))
+psi = seq(0,3, by = 0.1)
+f_turg = pmax(0, 1 - exp((psi/1.5) - 1)^5)
+plot(psi, f_turg, xlab = "Leaf water potential (-MPa)", ylab = "Turgor function", type="l", ylim=c(0,1))
+@
+\end{center}
+If $f_{turgor}(\Psi_{leaf})>0$ growth is applied, but there can be leaf area losses from sapwood turnover, whereas if $f_{turgor}(\Psi_{leaf}) = 0$ growth does not occur and cavitation is possible. The following two subsection detail the behavior of the growth model in each case.
+
+\subsubsection{Growth and turnover during non-drought periods}
+If (i.e.$f_{turgor}(\Psi_{leaf})>0$) the model determines growth, expressed as formation of new sapwood and leaf area increase. Daily sapwood growth rate is assumed to depend on the availability of carbon (i.e., $C_{available}>0$), but also requires temperature to be within acceptable ranges (because it affects biochemical rates) and minimum turgor for cell elongation. 
+
+The adoption of the pipe model (Shinozaki et al. 1964) implies that the addition of new foliage requires building a proportional amount of xylem conduits and fine roots. This is represented in the model by a species-specific Huber value $Hv$ (in m$^2$·m$^{-2}$). Since all living biomass equations are linearly related to sapwood area, the total cost in g C per 1 cm$^2$ of newly formed sapwood area:
+\begin{eqnarray}
+C_{cost,leaf} &=& 0.3 \cdot \frac{0.1\cdot Hv}{SLA}\\
+C_{cost,stem} &=& (H + Z) \cdot W_{dens} \cdot W_{C}\\
+C_{cost,root} &=& C_{cost,leaf}/2.5\\
+C_{cost,overall} &=& 1.3 \cdot (C_{cost,leaf}+C_{cost,stem} + C_{cost,root})
+\end{eqnarray}
+where 0.1 is needed to express $C_{cost,leaf}$ in units of g · cm$^{-2}$ and factor 1.3 is used in the calculation of $C_{cost,overall}$ because growth respiration is assumed to be a constant proportion of all new tissue growth (30\% of new tissue is respired, Ryan 1990). Note that carbon allocation to the three compartments does not follow constant proportions for different plants because the larger the size of a plant, the more C will need to be allocated in the vascular system per unit of sapwood area increment, and hence the proportion of C allocated to leaves and fine roots will decrease. The maximum increase in sapwood area according to the availability of C is: 
+\begin{equation}
+\Delta SA_{available} = \frac{C_{available}}{C_{cost,overall}}
+\end{equation}
+
+Several sink limitations may occur. One is the turgor limitation, which is represented in the model by $f_{turgor}$.  If carbon pools are considered, then the C concentration in the fast pool (i.e. $C_{fast}/C_{fast, \max}$) may also limit the rate of growth. We model this sink limitation by assuming that the maximum rate of growth will decrease with decreasing concentration, following a sigmoidal function:
+\begin{equation}
+f_{conc} = \frac{1}{1+\exp \left(-5 \cdot \frac{(C_{fast}/C_{fast, \max})-0.5}{0.5}\right)}
+\end{equation}
+\begin{center}
+<<fig=TRUE, echo=FALSE, width=4, height=3.5>>=
+par(mar=c(4,4,1,1))
+p = seq(0,100, by = 0.1)
+f  = pmax(0,(1-(exp(10*((50-p)/100))))/ (1-(exp(10*(-50/100)))))
+f_def = pmax(0,(exp(-10*((p)/100))-exp(-10*(0.5)))/(1.0-exp(-10*(0.5))))
+plot(p, f, xlab = "Carbon concentration in the fast pool (%)", ylab = "Prop. of max. growth rate", type="l", ylim=c(0,1))
+lines(p, f_def, col="black",lty=2)
+legend("bottomright", col=c("black","black"), legend=c("Growth rate", "Defoliation proportion"),
+      lty=c(1,2), bty="n", cex=0.7)
+abline(v=50, col="gray")
+@
+\end{center}
+Obviously, if carbon pools are not considered $f_{conc} = 1$.
+
+Growth modulation due to temperature is incorporated through $f_{temp}(T_{mean})$, using a truncated parabolic function as in Poyatos et al. (2007):
+\begin{equation}
+f_{temp}(T) = \frac{(T-T_{low}) \cdot (T_{high}-T)}{(T_{opt}-T_{low}) \cdot (T_{high}-T_{opt})}
+\end{equation}
+where $0 \leq f_{temp}(T) \leq 1$, $T_{low}$ and $T_{high}$ minimum and maximum temperature values for growth and $T_{opt}$ is the optimum growth temperature. 
+\begin{center}
+<<fig=TRUE, echo=FALSE, width=4, height=3.5>>=
+par(mar=c(4,4,1,1))
+Tm = seq(0,40, by = 0.1)
+Tlow = 5.0
+Thigh = 35.0
+Topt = 25.0
+ftm = ((Tm-Tlow)*(Thigh-Tm))/((Topt-Tlow)*(Thigh-Topt));
+ftm = pmin(pmax(ftm,0),1)
+plot(Tm, ftm, xlab = "Temperature (ºC)", ylab = "Prop. of max. growth rate", type="l", ylim=c(0,1))
+@
+\end{center}
+
+The rate of daily increase in sapwood area taking into account sink limitations is ($\Delta SA_{sink}$; cm$^2$):
+\begin{equation}
+\Delta SA_{sink} = RGR_{\max} \cdot SA \cdot f_{turgor}(\Psi_{leaf}) \cdot f_{conc} \cdot f_{temp}(T_{mean})
+\end{equation}
+where $RGR_{\max}$ is the user-defined, species-specific maximum relative growth rate in sapwood area (in cm$^2$·cm$^{-2}$), which can incorporate nutrient deficiency effects.
+
+The final growth rate of sapwood area per individual, $\Delta SA_{growth}$ (in cm$^2$), is found by combining the potential increase in sapwood area according to availability and cost with the sink limitations:
+\begin{equation}
+\Delta SA_{growth} = \min(\Delta SA_{available}, \, \Delta SA_{sink})
+\end{equation}
+If carbon pools are considered the actual carbon growth consumption (i.e. $C_{cost,overall} \cdot \Delta SA_{growth}$) has to be subtracted from $C_{fast}$:
+\begin{equation}
+C_{fast} = C_{fast} - C_{cost,overall} \cdot \Delta SA_{growth}
+\end{equation}
+
+Sapwood area is updated considering both new sapwood formation and sapwood conversion to heartwood ($\Delta SA_{turnover}$):
+\begin{equation}
+SA = SA + \Delta SA_{growth} - \Delta SA_{turnover} 
+\end{equation}
+After updating sapwood area, the model updates living, expanded and dead leaf area accordingly:
+\begin{eqnarray}
+LAI^{live} &=& LAI^{live} + N \cdot (\Delta SA_{growth} - \Delta SA_{turnover}) \cdot Hv \\
+LAI^{\phi} &=& LAI^{live}\,\cdot\phi \\
+LAI^{dead} &=& LAI^{dead} + N \cdot \Delta SA_{turnover} \cdot Hv 
+\end{eqnarray}
+
+During non-drought periods the state variables regulating drought effects are kept at initial values (i.e. $\Psi_{\min} = 0$ and $LAI^{predrought} = LAI^{live}$). 
+
+\subsubsection{Leaf area losses during drought-periods}
+During drought-periods (i.e. if $f_{turgor}(\Psi_{leaf})=0$) cavitation may occur. However, cavitation is applied at the leaf area level and not at the sapwood area level. During drought periods reductions of live leaf area can come from either sapwood conversion into heartwood or cavitation. First, the model compares the current $\Psi_{leaf}$ value with $\Psi_{\min}$ the minimum potential experienced since drought started:
+\begin{equation}
+\Psi_{\min} = \min(\Psi_{leaf}, \, \Psi_{\min})
+\end{equation}
+Then the model determines the proportion of embolized conducts as the complement of hydraulic conductance corresponding to $\Psi_{\min}$, relative to the maximum hydraulic conductance. If the transpiration mode is "Simple", this is done using a whole-plant conductance function:
+\begin{equation}
+P_{embolism}=1- K(\Psi_{\min}) = \exp \left \{\ln{(0.5)}\cdot \left[ \frac{\Psi_{\min}}{\Psi_{extract}} \right] ^r \right \} 
+\end{equation}
+where $\Psi_{extract}$ is the potential at which conductance is 50\% of maximum and $r=3$. If the transpiration mode is "Complex", $P_{embolism}$ is calculated using the stem-leaves vulnerability curve:
+\begin{equation}
+P_{emb}= 1- \frac{k_{stem}(\Psi_{\min})}{k_{stem}(0)} = 1 - \exp \left \{-\left[ \frac{\Psi_{\min}}{d_{stem}} \right] ^{c_{stem}} \right \} 
+\end{equation}
+Since leaf area reduction may also come from sapwood conversion into heartwood, the model determines which process leads to a larger reduction in leaf area:
+\begin{equation}
+LAI^{live} = \min(LAI^{live} - N \cdot \Delta SA_{turnover} \cdot Hv , \, LAI^{predrought} \cdot (1 - P_{emb}))
+\end{equation}
+and expanded leaf area ($LAI^{\phi}$) and dead leaf area ($LAI^{dead}$) are modified accordingly. 
+
+\subsubsection{Transfer between carbon pools}
+If two carbon pools are considered then carbon can be transferred from one to the other. The model assumes that the direction of transfer depends on the C concentration in the fast pool. When the pool is at full capacity its C should be converted to long-term storage, whereas if the pool is empty C stored in the slow pool should be mobilised. The relative rate of transfer ($r_{transfer}$; in g C·g C$^{-1}$) is modelled using a sigmoidal function:
+\begin{equation}
+r_{transf} = 0.1 \cdot \frac{2}{1+\exp \left(-5 \cdot \frac{(C_{fast}/C_{fast, \max})-0.5}{0.5}\right)}-1
+\end{equation}
+\begin{center}
+<<fig=TRUE, echo=FALSE, width=4, height=3.5>>=
+par(mar=c(4,4,1,1))
+p = seq(0,100, by = 0.1)
+f = 0.1*(2.0/(1.0+exp(-5.0*((p/100)-0.5)/0.5))-1.0)
+plot(p, f, xlab = "Carbon concentration in the fast pool (%)", ylab = "Relative rate of C transfer", type="l", ylim=c(-0.1,0.1))
+abline(h=0, col="gray", lty=2)
+abline(v=50, col="gray", lty=2)
+@
+\end{center}
+where $0.1$ indicates that the maximum daily transfer rate is 10\% of the source C pool size. If $r_{transf}<0$ then $-r_{transf} \cdot C_{slow, \max}$ g of carbon are taken from the slow C pool and 90\% of this amount is added into the fast C pool (the remaining 10\% is assumed to be the transfer cost). Similarly, if $r_{transf}>0$ then $r_{transf} \cdot C_{fast, \max}$ g of carbon are taken from the fast C pool and 90\% of this amount is added into the slow C pool (again, the remaining 10\% is assumed to be the transfer cost). The amounts of C transferred are also limited by the amount that would be needed to fill the sink pool (i.e., if the sink pool is already full, no carbon is transferred).
+
+
+\subsubsection{Update of maximum stem conductance}
+The inclusion of $Hv$ in the initialization of $SA$ and in growth equations causes sapwood area and leaf area to maintain a constant ratio equal to $Hv$. However, this rule may be broken by leaf phenology or when losing leaves because of drought stress. Leaf area reductions cause transpirational demand to be reduced accordingly. Moreover, in the case of Complex's transpiration mode leaf loss causes variations in leaf area to sapwood area ratio, which may become lower than $Hv$ and, hence, maximum stem hydraulic conductance may increase. Tree size controls much of the variation in stem hydraulic conductance, since hydraulic path length increases with tree height. We modelled stem conductance per leaf area unit ($k_{stem, \max}$; in mmol·m$^{-2}$·s$^{-1}$·MPa$^{-1}$) as a function of species-specific xylem conductivity ($k_{xylem, \max}$; in kg·m$^{-1}$·s$^{-1}$·MPa$^{-1}$), leaf area to sapwood area ratio and tree height (Christoffersen et al. 2016):
+\begin{equation}
+k_{stem, \max} = \frac{1000}{0.018} \cdot \frac{k_{xylem, \max} \cdot (SA/10000)}{(H/100) \cdot LA^{\phi}} \cdot \chi_{taper}
+\end{equation}
+where $\chi_{taper}$ is a factor to account for taper of xylem conduit with height (Savage et al. 2010, Christoffersen et al. 2016), 0.018 is the molar weight of water (in kg·mol$^{-1}$). This way, if the leaf-to-sapwood area ratio decreases with tree height, as has been documented in several species (McDowell et al. 2002), the decreasing conductance effects with height may be partially overcome (Christoffersen et al. 2016). A drought-induced decrease in $LA^{\phi}$ alleviate drought effects (i.e. a lower decrease in water potential across the stem for the same flow) because of an increase in conductance. 
+
+\subsection{Structural variables}
+Unlike functional variables, structural variables are updated for simplicity once a year only (or before the end of the simulated period). 
+
+\subsubsection{Tree diameter, height and crown ratio}
+In the case of tree cohorts, the cumulated new sapwood area ($\sum{SA_{growth}}$) is translated to an increment in DBH ($\Delta DBH$, in cm) following:
+\begin{equation}
+\Delta DBH = 2 \cdot \sqrt{(DBH/2)^2+(\sum{SA_{growth}}/\pi)} - DBH
+\end{equation}
+Furthermore, the model assumes that increments in height are linearly related to increments in diameter through a function $f_{HD}$ (Lindner et al. 1997):
+
+\begin{equation}
+\Delta H = f_{HD} \cdot \Delta DBH
+\end{equation}
+Hence, $f_{HD}$ represents the height increment (in cm) per each cm of diameter increment. It was customary in forest gap models to prevent height from being larger than a species-specific value $H_{\max}$, so that beyond some point trees only grew in size by increasing their diameter. Moreover, light conditions influence growth in height with trees living under the shade of others generally showing larger increases in height than trees living in open conditions. Hence, our formulation for $f_{HD}$ is (Lindner et al. 1997, Rasche et al. 2012):
+\begin{equation}
+f_{HD} = \left[f_{HD,\min} \cdot L + f_{HD,\max} \cdot (1-L) \right] \cdot \left( 1 - \frac{H-137}{H_{\max} - 137} \right)
+\end{equation}
+where $f_{HD,\min}$ would be the height-diameter ratio for a tree of 137 cm height growing in full light and $f_{HD,\max}$ would be the same ratio for a tree of the same height growing in the shadow. This formulation seems slightly easier to calibrate than that presented in Rasche et al. (2012). $H_{\max}$ could be dependent on environmental conditions, but we skip this here, because environmental conditions already affect growth rate and carbon balance.
+
+After updating tree diameter ($DBH$) and tree height ($H$), the model updates tree crown ratio ($CR$) by applying allometric relationships that take into account tree size and competition (see details in vignette XX).
+
+\subsubsection{Shrub height and cover}
+Since shrub structural variables are height and cover, shrub growth is done in a way somewhat different from trees. Shrubs are often multi-stemmed (some trees also are), so that increases in sapwood area are not easily related to diameter growth. Since leaf biomass is related to sapwood area, one may model shrub growth assuming an allometric relationship between phytovolume of individual shrub crowns and photosynthetic biomass. This strategy entails that shrubs may grow or shrink in size depending on their C balance, in the same way that tree crowns would become denser or sparser depending on their C balance. Hence, shrubs can be understood as crowns in the floor.
+
+Starting from live leaf area (m$^2$·m$^{-2}$) we can calculate the foliar weight per shrub individual (in kg · ind$^{-1}$):
+\begin{equation}
+W_{leaves} = \frac{LAI^{live}} {(N/10000) \cdot SLA}
+\end{equation}
+An allometric relationship relating the biomass of leaves plus small branches and crown phytovolume ($PV$; in m$^3$·ind$^{-1}$) can be drawn from fuel calculations:
+\begin{equation}
+W_{leaves+branches} = W_{leaves} \cdot r_{6.35}  = a_{bsh} \cdot PV^{b_{bsh}}
+\end{equation}
+where $a_{bsh}$ and $b_{bsh}$ are allometric relationships and $r_{6.35}$ is a species-specific ratio relating the dry weight of leaves plus small branches to the dry weight of leaves. Inverting this relationship we obtain an expression of shrub crown phytovolume:
+\begin{equation}
+PV = \left[\frac{W_{leaves} \cdot r_{6.35}}{a_{bsh}}\right]^{1/b_{bsh}}
+\end{equation}
+Phytovolume is defined as the volume occupied by the shrub crown, i.e.:
+\begin{equation}
+PV =  (A_{sh}/10000) \cdot (H/100) \cdot CR
+\end{equation}
+where $A_{sh}$ is the area of a single shrub individual (in cm$^2$). If we use the following quadratic relationship between $A_{sh}$ and $H$:
+\begin{equation}
+A_{sh} = a_{ash} \cdot H^2
+\end{equation}
+we can calculate shrub height from phytovolume using:
+\begin{equation}
+H = \left[\frac{10^6 \cdot PV}{a_{ash} \cdot CR}\right]^{1/3}
+\end{equation}
+Finally, the new value for shrub cover (in percent) can be obtained from $H$ and $N$ (in ind·ha$^{-1}$):
+\begin{equation}
+Cover = 100 \cdot (N/10000) \cdot (A_{sh}/10000) = \frac{N \cdot a_{ash} \cdot H^2}{10^6}
+\end{equation}
+Note that crown ratio for shrubs is assumed constant in the model. Like for trees, shrub height is limited to a maximum height $H_{\max}$. However, unlike trees, shrubs are not allowed to continue growing once this maximum size is attained. When the estimated height is over the maximum value, the exceeding amount of live leaf area is allocated to dead live area.
+
+
+\section{Examples}
+\subsection{Model inputs}
+
+
+Soil parameters can be initialized to default values, for a given number of layers, using:
+<<>>=
+s = defaultSoilParams(3) #Default soil parameters for three layers
+print(s)
+@
+Soil input for function \texttt{growth()} is an object of class \texttt{soil} that is created using a function with the same name. Function \texttt{soil()} calculates water content at field capacity and initializes soil moisture to a given level:
+<<>>=
+examplesoil = soil(s, c(1.0, 1.0, 1.0))
+print(examplesoil)
+@
+
+
+
+<<echo=false>>=
+data("SpParamsMED")
+data("exampleforest")
+fo <- emptyforest()
+fo$treeData<-exampleforest$treeData[1,]
+fo$treeData$Z50 = 300
+fo$treeData$Z95 = 2000
+fo$treeData$N = 500
+fo$shrubData<-exampleforest$shrubData[1,]
+fo$shrubData$Cover = 50
+fo$shrubData$Height = 70
+fo$shrubData$Z = 500
+control <- defaultControl()
+control$verbose = FALSE
+control$storagePool = "two"
+x <-forest2growthInput(fo, examplesoil, SpParamsMED, control)
+@
+The following is the result of calling function \texttt{forest2growthInput} for a forest stand with a single cohort with 500 trees/ha where all individuals are 8 m height and 37.55 cm DBH:
+<<>>=
+x
+@
+
+In this vignette we will use one year of example meteorological data with the following precipitation and temperature seasonal trends:
+\begin{center}
+<<fig=TRUE, echo=FALSE, width=5, height=4>>=
+data("examplemeteo")
+dates <-as.Date(rownames(examplemeteo))
+#Call simulation function
+S1<-growth(x, examplesoil, examplemeteo)
+plot(S1)
+@
+\end{center}
+
+\subsection{Water balance and photosynthesis}
+
+\begin{center}
+<<fig=TRUE, echo=FALSE, width=5, height=4>>=
+par(mar=c(4,4,1,4))
+plot(dates,rowSums(S1$PlantPhotosynthesis), type="l", col="green", xlab="",ylab="Net photosynthesis (gC/m2)")
+lines(dates,rowSums(S1$PlantTranspiration)*4, type="l", col="blue")
+axis(4, at=c(0,4,8,12), labels=c(0,1,2,3))
+mtext("Transpiration (mm)", 4, line=2)
+legend("topleft", lty=c(1,1), legend = c("Net photosynthesis","Transpiration"), col=c("green", "blue"), bty="n")
+@
+\end{center}
+
+\begin{center}
+<<fig=TRUE, echo=FALSE, width=8, height=8>>=
+par(mar=c(4,4,1,4), mfrow=c(2,2))
+plot(dates,S1$PlantPhotosynthesis[,1], type="l", xlab="",ylab="Photosynthesis per ground area (gC/m2)")
+lines(dates, S1$PlantPhotosynthesis[,2], lty=2)
+
+x1 = (S1$PlantPhotosynthesis[,1])/(x$above$N[1]/10000)#/S1$PlantLAIlive[,2]
+x2 = (S1$PlantPhotosynthesis[,2])/(x$above$N[2]/10000)#/S1$PlantLAIlive[,2]
+plot(dates,x1, type="l", xlab="",ylab="Photosynthesis per individual (gC/ind)")
+lines(dates, x2, lty=2)
+abline(h=0, col="gray")
+
+plot(dates,S1$PlantTranspiration[,1], type="l", xlab="",ylab="Transpiration per ground area (mm/m2)")
+lines(dates, S1$PlantTranspiration[,2], lty=2)
+abline(h=0, col="gray")
+
+x1 = (S1$PlantTranspiration[,1])/(x$above$N[1]/10000)
+x2 = (S1$PlantTranspiration[,2])/(x$above$N[2]/10000)
+plot(dates,x1, type="l", xlab="",ylab="Transpiration per individual (mm/ind)")
+lines(dates, x2, lty=2)
+abline(h=0, col="gray")
+@
+\end{center}
+
+\begin{center}
+<<fig=TRUE, echo=FALSE, width=8, height=4>>=
+par(mar=c(4,4,1,4), mfrow=c(1,2))
+plot(S1, "Psi", xlab="")
+plot(dates,S1$PlantPsi[,1], type="l", ylab="Leaf water potential (MPa)", xlab="",ylim=c(-5,0))
+lines(dates,S1$PlantPsi[,2], lty=2)
+legend("bottomleft", lty=c(1,2), legend = c("Tree individuals","Shrub individuals"), bty="n")
+@
+\end{center}
+
+\subsection{Respiration and carbon balance}
+
+\begin{center}
+<<fig=TRUE, echo=FALSE, width=8, height=8>>=
+par(mar=c(4,4,1,4), mfrow=c(2,2))
+plot(dates,S1$PlantRespiration[,1], type="l", xlab="",ylab="Respiration per ground area (gC/m2)", ylim=c(0,2))
+lines(dates, S1$PlantRespiration[,2], lty=2)
+
+x1 = (S1$PlantRespiration[,1])/(x$above$N[1]/10000)#/S1$PlantLAIlive[,2]
+x2 = (S1$PlantRespiration[,2])/(x$above$N[2]/10000)#/S1$PlantLAIlive[,2]
+plot(dates,x1, type="l", xlab="",ylab="Respiration per individual (gC/ind)", ylim=c(0,35))
+lines(dates, x2, lty=2)
+abline(h=0, col="gray")
+
+plot(dates,S1$PlantPhotosynthesis[,1]-S1$PlantRespiration[,1], type="l", xlab="",ylab="Photosynthesis-Respiration per ground area (gC/m2)", ylim=c(-1,7))
+lines(dates, S1$PlantPhotosynthesis[,2]-S1$PlantRespiration[,2], lty=2)
+abline(h=0, col="gray")
+
+x1 = (S1$PlantPhotosynthesis[,1]-S1$PlantRespiration[,1])/(x$above$N[1]/10000)
+x2 = (S1$PlantPhotosynthesis[,2]-S1$PlantRespiration[,2])/(x$above$N[2]/10000)
+plot(dates,x1, type="l", xlab="",ylab="Photosynthesis-Respiration per individual (gC/ind)")
+lines(dates, x2, lty=2)
+abline(h=0, col="gray")
+@
+\end{center}
+
+\subsection{Growth}
+
+\begin{center}
+<<fig=TRUE, echo=FALSE, width=5, height=4>>=
+par(mar=c(4,4,1,4))
+plot(dates,100*S1$PlantSAgrowth[,1]/S1$PlantSA[,1], type="l", xlab="",ylab="Relative growth rate (cm2·cm-2)")
+lines(dates,100*S1$PlantSAgrowth[,2]/S1$PlantSA[,2],lty=2)
+# axis(4, at=c(0,4,8,12), labels=c(0,1,2,3))
+# mtext("Transpiration (mm)", 4, line=2)
+legend("topleft", lty=c(1,2), legend = c("Tree individuals","Shrub individuals"), bty="n")
+@
+\end{center}
+
+\begin{center}
+<<fig=TRUE, echo=FALSE, width=5, height=4>>=
+par(mar=c(4,4,1,4))
+plot(dates,S1$PlantLAIlive[,1], type="l", xlab="",ylab="Live leaf area index (m2·m-2)", ylim=c(0,2.5))
+lines(dates,S1$PlantLAIlive[,2],lty=2)
+# axis(4, at=c(0,4,8,12), labels=c(0,1,2,3))
+# mtext("Transpiration (mm)", 4, line=2)
+legend("topleft", lty=c(1,2), legend = c("Tree individuals","Shrub individuals"), bty="n")
+@
+\end{center}
+
+\subsection{Dynamics of carbon pools}
+
+\begin{center}
+<<fig=TRUE, echo=FALSE, width=5, height=4>>=
+par(mar=c(4,4,1,4))
+plot(dates,100*S1$PlantCstorageFast[,1], type="l", ylab="Fast C pool (%)", xlab="", ylim=c(0,100))
+lines(dates,100*S1$PlantCstorageFast[,2], lty=2)
+legend("bottomleft", lty=c(1,2), legend = c("Tree individuals","Shrub individuals"), bty="n")
+@
+\end{center}
+
+
+\begin{center}
+<<fig=TRUE, echo=FALSE, width=5, height=4>>=
+par(mar=c(4,4,1,4))
+plot(dates,100*S1$PlantCstorageSlow[,1], type="l", ylab="Slow C pool (%)", xlab="", ylim=c(0,100))
+lines(dates,100*S1$PlantCstorageSlow[,2], lty=2)
+legend("bottomleft", lty=c(1,2), legend = c("Tree individuals","Shrub individuals"), bty="n")
+@
+
+<<echo=TRUE>>=
+x$above[,1:5]
+@
+
+
+\end{center}
+\section{References}
+\begin{itemize}
+
+\item{Christoffersen, B. O., M. Gloor, S. Fauset, N. M. Fyllas, D. R. Galbraith, T. R. Baker, L. Rowland, R. A. Fisher, O. J. Binks, S. A. Sevanto, C. Xu, S. Jansen, B. Choat, M. Mencuccini, N. G. McDowell, and P. Meir. 2016. Linking hydraulic traits to tropical forest function in a size-structured and trait-driven model (TFS v.1-Hydro). Geoscientific Model Development Discussions 0:1–60.}
+
+\item{De Cáceres, M., Martínez-Vilalta, J., Coll, L., Llorens, P., Casals, P., Poyatos, R., Pausas, J.G., Brotons, L., 2015. Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes. Agric. For. Meteorol. 213, 77–90. doi:10.1016/j.agrformet.2015.06.012}
+
+\item{Dietze MC, Sala A, Carbone MS, Czimczik CI, Mantooth JA, Richardson AD, Vargas R (2014) Nonstructural Carbon in Woody Plants. Annual Review of Plant Biology 65, 667–687. doi:10.1146/annurev-arplant-050213-040054.}
+
+\item{Fatichi S, Leuzinger S, Körner C (2014) Moving beyond photosynthesis: From carbon source to sink-driven vegetation modeling. New Phytologist 201, 1086–1095. doi:10.1111/nph.12614.}
+
+\item{Guillemot J, Martin-Stpaul NK, Dufrêne E, François C, Soudani K, Ourcival JM, Delpierre N (2015) The dynamic of the annual carbon allocation to wood in European tree species is consistent with a combined source-sink limitation of growth: Implications for modelling. Biogeosciences 12, 2773–2790. doi:10.5194/bg-12-2773-2015.}
+
+\item{Körner C (2015) Paradigm shift in plant growth control. Current Opinion in Plant Biology 25, 107–114. doi:10.1016/j.pbi.2015.05.003.}
+
+\item{Landsberg, J. J., and R. H. Waring. 1997. A generalised model of forest productivity using simplified concepts of radiation-use efficiency, carbon balance and partitioning. Forest Ecology and Management 95:209–228.}
+
+\item{Lindner, M., R. Sievänen, and H. Pretzsch. 1997. Improving the simulation of stand structure in a forest gap model. Forest Ecology and Management 95:183–195.}
+
+\item{McDowell, N., H. Barnard, B. J. Bond, T. Hinckley, R. M. Hubbard, H. Ishii, B. Köstner, F. Magnani, J. D. Marshall, F. C. Meinzer, N. Phillips, M. G. Ryan, and D. Whitehead. 2002. The relationship between tree height and leaf area: Sapwood area ratio. Oecologia 132:12–20.}
+
+\item{Mencuccini, M., and J. Grace. 1995. Climate influences the leaf area/sapwood area ratio in Scots pine. Tree Physiology 15:1–10.}
+
+\item{Mouillot, F., Rambal, S., Lavorel, S., 2001. A generic process-based SImulator for meditERRanean landscApes (SIERRA): design and validation exercises. For. Ecol. Manage. 147, 75–97. doi:10.1016/S0378-1127(00)00432-1}
+
+\item{Prentice, I. C., M. T. Sykes, and W. Cramer. 1993. A simulation model for the transient effects of climate change on forest landscapes. Ecological Modelling 65:51–70}
+
+\item{Rasche, L., L. Fahse, A. Zingg, and H. Bugmann. 2012. Enhancing gap model accuracy by modeling dynamic height growth and dynamic maximum tree height. Ecological Modelling 232:133–143.}
+
+\item{Richardson AD, Carbone MS, Keenan TF, Czimczik CI, Hollinger DY, Murakami P, Schaberg PG, Xu X (2013) Seasonal dynamics and age of stemwood nonstructural carbohydrates in temperate forest trees. New Phytologist 197, 850–861. doi:10.1111/nph.12042.}
+
+\item{Savage, V. M., L. P. Bentley, B. J. Enquist, J. S. Sperry, D. D. Smith, P. B. Reich, and E. I. von Allmen. 2010. Hydraulic trade-offs and space filling enable better predictions of vascular structure and function in plants. Proceedings of the National Academy of Sciences of the United States of America 107:22722–7.}
+
+\item{Shinozaki, K., K. Yoda, K. Hozumi, and T. Kira. 1964. A quantitative analysis of plant form - the pipe model theory. I. Basic analysis. Japanese Journal of Ecology 14:97–105}
+
+\item{Sitch, S., Smith, B., Prentice, I.C., Arneth, a., Bondeau, a., Cramer, W., Kaplan, J.O., Levis, S., Lucht, W., Sykes, M.T., Thonicke, K., Venevsky, S., 2003. Evaluation of ecosystem dynamics, plant geography and terrestrial carbon cycling in the LPJ dynamic global vegetation model. Glob. Chang. Biol. 9, 161–185. doi:10.1046/j.1365-2486.2003.00569.x}
+
+\item{Stolf, R., Thurler, Á., Oliveira, O., Bacchi, S., Reichardt, K., 2011. Method to estimate soil macroporosity and microporosity based on sand content and bulk density. Rev. Bras. Ciencias do Solo 35, 447–459.}
+
+\end{itemize}
+\end{document}

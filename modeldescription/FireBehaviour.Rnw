@@ -1,0 +1,865 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{natbib}
+\usepackage{authblk}
+\usepackage{amsmath}
+
+%\VignetteIndexEntry{Fuel characteristics and potential fire behaviour}
+%\VignettePackage{medfate}
+
+\title{Fuel characteristics and potential fire behaviour}
+\author[1,2]{Miquel De Cáceres}
+\affil[1]{Centre Tecnològic Forestal de Catalunya. Ctra. St. Llorenç de Morunys km 2, 25280, Solsona, Catalonia, Spain}
+\affil[2]{CREAF, Cerdanyola del Vallès, 08193, Spain}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\maketitle
+\tableofcontents
+
+\newpage
+
+<<echo=FALSE>>=
+options(width=67)
+library(medfate)
+data("SpParamsMED")
+data(exampleforest)
+@
+\section{Introduction}
+\subsection{Model overview}
+Functions \texttt{FCCSproperties()} and \texttt{FCCSbehaviour()} allow calculating potential fire behaviour for forest inventory plots. Formulation of fuel characteristics and fire behaviour is an adaptation of the Fuel Characteristics Classification System (FCCS; Prichard et al. 2013). In FCCS, fuelbed is divided into six strata, including canopy, shrub, herbaceous vegetation, dead woody materials, leaf litter and ground fuels. All except ground fuels are considered here. The intensity of burning depends on several factors, including topography, wind conditions, fuel structure and its moisture content, which is determined from antecedent and current meteorological conditions.  A modification of the Rothermel's (1972) model is used to calculate the intensity of surface fire reaction (in $kW/m^2$) and the rate of fire spread (in $m/min$) of surface fires assuming a steady-state fire. Both quantities are dependent on fuel characteristics, windspeed and direction, and topographic slope and aspect. The model returns the following results: (1) Fuel characteristics by stratum; (2) Surface fire behavior (i.e. reaction intensity, rate of spread, fireline intensity and flame length); (3) Crown fire behavior; (4) Fire potential ratings of surface fire behavior and crown fire behavior.
+
+\subsection{Input data}
+\subsubsection{Forest inventory plot data}
+The input data for tree cohorts are:
+\begin{itemize}
+\item{$SP_i$: Species identity}
+\item{$DBH_i$: Diameter at breast height (in cm) of the representative tree.}
+\item{$H_i$: Height (in cm) of the representative tree.}
+\item{$N_i$: Cohort density (in $ind.\cdot ha^{-1}$).}
+\end{itemize}
+The input data for shrub cohorts are:
+\begin{itemize}
+\item{$SP_i$: Species identity}
+\item{$C_i$: Plant cover (in percent).}
+\item{$H_i$: Mean plant height (in cm).}
+\end{itemize}
+Cohorts are not distinguished for the herbaceous stratum, and the variables needed are:
+\begin{itemize}
+\item{$C_{he}$: Herbaceous cover (in percent).}
+\item{$H_{he}$: Mean herb height (in cm).}
+\end{itemize}
+Finally, the model also requires the percent cover of trees in the canopy ($C_{ca}$). This is easily available from forest inventory data, but could also be derived from the description of tree cohorts.
+
+\subsubsection{Other inputs}
+Other inputs may be given by expert opinion or they may be calculated from another model. Specifically, for each plant cohort (and for any day of application) the fire behaviour model requires:
+\begin{itemize}
+\item{$P_{dead,i}$: Proportion of the plant that is dead.}
+\item{$M_i$: Foliar moisture value (in percent of dry weight).}
+\end{itemize}
+Analogously, the same variables are needed for the herbaceous stratum.
+\begin{itemize}
+\item{$P_{dead,he}$: Proportion of herb fuels that respond to humidity changes as 1-h dead fuels.}
+\item{$M_{live,he}$: Foliar moisture value of live herb fuels (in percent of dry weight).}
+\end{itemize}
+
+The model also needs the following input parameters:
+\begin{itemize}
+\item{$M_{dead}$: the moisture of 1-h dead fuels (in percent of dry weight).}
+\item{$U$: Midflame windspeed (in $m\cdot s^{-1}$).}
+\item{$S$: Slope (in percent).}
+\end{itemize}
+
+
+\section{Fuel characteristics}
+
+\subsection{Cohort fuel loading}
+Here we consider as burnable fuels foliage and branches up to 6.35 mm = 0.25 in in diameter. The same consideration applies to both trees and shrubs. 
+\subsubsection{Tree cohorts}
+Foliar biomass for a single tree of cohort $i$ ($FB_{tree,i}$; in $kg$) is calculated using:
+\begin{equation}
+FB_{tree,i} = a_{fbt} \cdot DBH_{i}^{b_{fbt}}\cdot e^{c_{fbt}\cdot BAL_i} \cdot DBH_{i}^{d_{fbt} \cdot BA_{sup}}
+\end{equation}
+where $DBH_{i}$ is the diameter of the tree (in $cm$), $BAL_i$ is the cummulative basal area ($m^2\cdot ha^{-1}$) of trees having a larger diameter, and $a_{fbt}$, $b_{fbt}$, $c_{fbt}$ and $c_{fbt}$ are species-specific regression coefficients. The foliar biomass of the whole tree cohort ($FB_{i}$; in $kg\cdot m^{-2}$) is obtained multiplying tree foliar biomass by tree density  ($N_{i}$; in $ind.\cdot ha^{-1}$):
+\begin{equation}
+FB_{i} = FB_{tree,i}\cdot (N_{i}/10000)
+\end{equation}
+Fine fuel loading for the tree cohort ($W_{i}$; in $kg\cdot m^{-2}$), including its leaves and branches with diameter up to 6.35 mm = 0.25 in, is then calculated using:
+\begin{equation}
+W_{i} = r_{6.35}(SP_i)\cdot FB_{i}
+\end{equation}
+where $r_{6.35}(SP_i)$ is the ratio between the weight of leaves plus branches and the weight of leaves alone for branches of 6.35 mm in diameter for the species of cohort $i$. The biomass corresponding to branches of less than < 6.35 mm ($SBB_{i}$, also in $kg\cdot m^{-2}$) is obtained by subtraction: 
+\begin{equation}
+SBB_{i} = (r_{6.35}(SP_i)-1)\cdot FB_{i}
+\end{equation}
+Whereas $W_{i}$ is the cohort loading variable influencing fire behavior, $FB_{i}$ and $SBB_{i}$ are cohort variables used to estimate fine dead woody and leaf litter loadings.
+
+\subsubsection{Shrub cohorts}
+To calculate the fuel loading of a shrub cohort (including both leaves and stems up to 6.35mm), we first determine $A_{sh,i}$, the area (in $cm^2$) occupied by one average individual of height $H_{i}$ (in $cm$), using the quadratic relationship: 
+\begin{equation}
+A_{sh,i} = a_{ash} \cdot H_{i}^2
+\end{equation}
+where $a_{ash}$ is a species-specific parameter. The model then estimates the dry weight of leaves and branches up to 6.35mm in diameter ($B_{sh,i}$, in kg) of this average individual, using an allometric relationship with shrub crown phytovolume assuming a cylinder (in $cm^3$):
+\begin{equation}
+B_{sh,i} = a_{bsh} \cdot (A_{sh,i}\cdot H_{i}\cdot cr(SP_i))^{b_{bsh}}
+\end{equation}
+where $a_{bsh}$ and $b_{bsh}$ are species-specific parameters and $cr(SP_i)$ is a species-specific crown ratio (a proportion between 0 and 1, the ratio between crown length and total height). Shrub density ($N_{i}$; in $ind.\cdot m^{-2}$) can be grossly estimated from percent cover ($C_{i}$, in percent) and $A_{sh,i}$ (in $cm^{-2}$):
+\begin{equation}
+N_{i} = \frac{C_{i}/100}{A_{sh,i}/10000}
+\end{equation}
+The fine fuel loading of a shrub cohort $W_{i}$, in $kg \cdot m^{-2}$) is simply the product of $B_{sh,i}$ ($kg$ of dry weight) and $N_{i}$:
+\begin{equation}
+W_{i} =  B_{sh,i}\cdot N_{i}
+\end{equation}
+Our procedure differs from Prichard et al. (2013) because they calculate first total biomass of the shrub species and then consider the percentage of total weight that corresponds to leaves and small branches. Foliar biomass and small branch biomass (both in $kg \cdot m^{-2}$) can be obtained using the species-specific ratio $r_{6.35}(SP_i)$:
+\begin{subequations}
+\begin{align}
+FB_{i} &=  W_{i}/r_{6.35}(SP_i)\\
+SBB_{i} &= W_{i} - FB_{i}
+\end{align}
+\end{subequations}
+If not known, $r_{6.35}(SP_i)$ can be set to a default value of 2 (equivalent to \%50 of weight corresponding to leaves).
+\subsection{Vertical structure of fuels}
+\subsubsection{Strata definition}
+The Fuel Characteristics Classification System (FCCS) on which this document is based, defines six fuel strata (Prichard et al. 2013):
+\begin{itemize}
+\item{\textbf{Canopy}: Trees, snags and ladder fuels.}
+\item{\textbf{Shrubs}: Primary and secondary layers.}
+\item{\textbf{Non-woody vegetation} (herbs): grasses, sedges, rushes and forbs.}
+\item{\textbf{Woody fuels}: All downed and dead wood, sound wood, rotten wood and stumps.}
+\item{\textbf{Litter-lichen-moss}: Lichen, litter and moss layers.}
+\item{\textbf{Ground fuels}: Duff, basal accumulation and squirrel middens.}
+\end{itemize}
+Shrubs, herbs and woody fuels are constitute the \textbf{upper surface fuels}, whereas herbs and woody fuels alone consitute the \textbf{lower surface fuels}. FCCS summarizes and calculates characteristics for each fuelbed stratum and layer. Our model estimates fuel loading and characteristics for canopy, shrub, non-woody vegetation, as well as fine (1h) woody fuels and litter fuels. Larger woody fuels (10h or 100h) could be considered if information about forest management actions is available. Ground fuels are not included here.
+
+\subsubsection{Vertical distribution of tree and shrub fuels}
+For all tree or shrub cohorts fuels are assumed to be homogeneously distributed between the crown base height and the total height ($H_i$). Crown base height ($H_{b,i}$; in cm) is defined as the height corresponding to the first living branch expressed as a fraction of total height. It is calculated from the crown ratio ($CR$; a proportion between 0 and 1), i.e. the ratio between crown length and total height:
+\begin{equation}\label{eq:CrownHeight}
+H_{b,i} = H_{i} \cdot (1 - CR_i)
+\end{equation}
+In the case of shrubs the crown ratio is simply equal by a species-specific parameter: $CR_i =  cr(SP_i)$. In the case of trees, the crown ratio is modelled as a function of tree size and stand competition, following a modification of the logistic equation of Hasenauer \& Monserud (1996):
+\begin{equation}
+CR_i = \frac{1}{1+e^{-(a_{cr}+b_{1cr}\cdot HD +b_{2cr} \cdot (H_i/100)+b_{3cr} \cdot DBH_i^2+c_{1cr} \cdot BAL_i + c_{2cr} \cdot ln(CCF))}}
+\end{equation}
+where $HD = H_i/(100\cdot DBH_i)$ is the height to diameter ratio (in $m\cdot cm^{-1}$), $H_i$ is the tree height, $DBH_i$ is the diameter, $CCF$ is the crown competition factor and $a_{cr}$, $b_{1cr}$, $b_{2cr}$, $b_{3cr}$, $c_{1cr}$ and $c_{2cr}$ are species-specific parameters. The crown competition factor is in turn calculated using (Krajicek et al. 1961):
+\begin{equation}
+CCF = \sum_{i}{N_i \cdot MCA_i}= \sum_{i}{N_i \cdot \pi \cdot (CW_i/2)^2/100}
+\end{equation}
+where $N_i$ is the tree density, $MCA_i$ is the maximum crown area (in percent of unit area) and $CW_i$ is the crown width (in m) assuming an open-grown tree, estimated from an allometric relationship with tree diameter:
+\begin{equation}
+CW_i = a_{cw}\cdot BDH_i^{b_{cw}} 
+\end{equation}
+where again $a_{cw}$ and $b_{cw}$ are species-specific parameters. 
+
+The loading of a cohort that occurs within a given height interval of limits $H_1$ and $H_2$ is calculated as:
+\begin{equation}
+W_i(H_1, H_2) = W_i\cdot p_i(H_1, H_2)
+\end{equation}
+where $p_i(H_1, H_2)$ is the proportion of the crown of cohort $i$ that corresponds to the height interval $(H_1, H_2)$:
+\begin{equation}
+p_i(H_1, H_2) = \frac{\max(0, \min(H_i, H_2) - \max(H_{b,i}, H_1))}{H_{i}-H_{b,i}}
+\end{equation}
+
+\subsubsection{Fuel bulk density profile}
+Knowing at which height fuels are placed, the \textbf{fuel bulk density profile} (Reinhardt et al. 2006) is defined for any given interval $(H_1, H_2)$ as the bulk density ($kg/m^3$) of fine  fuels corresponding to that interval:
+\begin{equation}
+BDP(H_1, H_2) = \frac{\sum_{i} W_i(H_1, H_2)}{H_2-H_1}
+\end{equation}
+Canopy bulk density normally ranges between 0 and 0.4 $kg/m^3$ (Scott \& Reinhardt 2002). Sando and Wick (1972) arbitrarily defined canopy base height as the lower vertical 0.3-m section with a weight greater than $0.01124 kg/m^3$. A user-defined threshold $t_{BDP}$ (in $kg/m^3$) in 0.1-m sections is used to differentiate the surface fuelbed from canopy fuels. Using this threshold the model calculates the following three heights (Reinhardt et al. 2006):
+\begin{itemize}
+\item{\textbf{Shrub stratum base height}, $H_{sb}$ (in $cm$): the minimum height between 0 and 2 m where fuel bulk density is larger than $t_{BDP}$.} 
+\item{\textbf{Shrub stratum top height}, $H_{st}$ (in $cm$): the maximum height between 0 and 2 m where fuel bulk density larger than $t_{BDP}$. With this definition $h_{s}$ cannot be higher than 2 m (corresponding to fuel model 4 in Anderson 1982).}
+\item{\textbf{Canopy base height}, $H_{cb}$  (in $cm$): In terms of its consequences to crown fire initiation, canopy base height can be defined as the lowest height above the ground at which there is sufficient canopy fuel to propagate fire vertically through the canopy. It is calculated as the minimum height over $H_st$ when the bulk density starts again to be larger than $t_{BDP}$.}
+\item{\textbf{Canopy top height}, $H_{ct}$ (in $cm$): the maximum height where bulk density is larger than $t_{BDP}$.}
+\item{\textbf{Canopy gap}, $H_{gap}$ (in $cm$): the difference between $H_{cb}$ and $H_{st}$. The canopy gap is used to calculate crown initiation potential.}
+\end{itemize}
+The following figure illustrates the definition and analysis of the fuel bulk density profile for a given forest stand. Following Mitsopoulos \& Dimtrakopoulos (2007), a threshold $t_{BDP} = 0.04$ has been used to determine shrub and canopy heights.
+\begin{center}
+<<fig=TRUE, echo=FALSE, width=4, height=4>>=
+vprofile.FuelBulkDensity(exampleforest, SpParamsMED, z = seq(0,1000, by=1))
+fs = fuel.Stratification(exampleforest,SpParamsMED, bulkDensityThreshold = 0.04)
+abline(v=0.04, col="red", lty=2)
+abline(h=fs$surfaceLayerBaseHeight, col="gray", lty=3, lwd=1.5)
+abline(h=fs$surfaceLayerTopHeight, col="gray", lty=3, lwd=1.5)
+abline(h=fs$canopyBaseHeight, col="gray", lty=3, lwd=1.5)
+abline(h=fs$canopyTopHeight, col="gray", lty=3, lwd=1.5)
+@
+\end{center}
+ 
+
+\subsection{Fuel loading ($w$) and fuel depth ($\delta$)}
+\subsubsection{Canopy stratum}
+Canopy loading (in $kg\cdot m^{-2}$) is the sum of (tree and shrub) cohort loadings above 2 m (i.e. 200 cm):
+\begin{equation}
+w_{ca} = \sum_{i}w_{i,ca} =\sum_{i}{W_i(200, \infty})
+\end{equation}
+where $w_{i,ca}$ is the canopy stratum loading of cohort $i$. Canopy depth (in $m$) is defined as the average of tree (or shrub) crown lengths above 2 m, weighted by the loadings of cohorts in the canopy:
+\begin{equation}
+\delta_{ca} = \frac{1}{100}\cdot\frac{\sum_{i}{w_{i,ca}\cdot (H_i - H_{b,i})\cdot p_{i,ca} }}{\sum_{i}{w_{i,ca}}}
+\end{equation}
+where the proportion of a tree (or shrub) cohort in the canopy stratum is $p_{i,ca}=p_{i}(200,\infty)$.
+
+\subsubsection{Shrub stratum}
+Shrub loading (in $kg\cdot m^{-2}$) is the sum of (tree and shrub) cohort loadings between the ground and 2 m (i.e. 200 cm):
+\begin{equation}
+w_{sh} = \sum_{i}w_{i,sh} =\sum_{i}W_i(0, 200)
+\end{equation}
+where $w_{i,sh}$ is the shrub stratum loading of cohort $i$. The depth of the shrub stratum (in $m$) is defined as the average of tree (or shrub) crown lengths below 2 m, weighted by the loadings of cohorts in the shrub stratum:
+\begin{equation}
+\delta_{sh} = \frac{1}{100}\cdot \frac{\sum_{i}{w_{i,sh}\cdot (H_i - H_{b,i})\cdot p_{i,sh} }}{\sum_{i}{w_{i,sh}}}
+\end{equation}
+where the proportion of a shrub (or tree) cohort in the shrub stratum is $p_{i,sh}=p_{i}(0,200)$.
+
+
+\subsubsection{Non-woody stratum}
+Herb percent cover and average herb height are transformed into herbaceous loading ($kg\cdot m^{-2}$) using (ref piropinos): 
+\begin{equation}
+w_{he} = 0.014 \cdot C_{he} \cdot (H_{he}/100)
+\end{equation}
+The depth of the herbaceous stratum (in $m$) is simply the mean height of herbs:
+\begin{equation}
+\delta_{he} = H_{he}/100
+\end{equation}
+
+\subsubsection{Woody and litter strata}
+In FCCS (Prichard et al. 2013), woody surface loading includes several fuel sizes. However, when calculating surface fire behavior $w_{wo}$ includes 100\% of 1h fuels, 25\% of 10h fuels and 12.5\% of 100h fuels, which represents the material available for flaming combustion. Obtaining loading estimates for 10h- and 100h-fuels is very difficult without field fuel sampling. However, we might estimate 1h woody fuels and leaf litter from standing biomass of small branches (< 6.35mm) and leaves for trees and shrubs. Hence, our treatment of surface woody fuels includes only fine (1h) fuels.
+
+Assuming a continuous input of litter, the variation in accumulated litter is described by a simple differential equation (Olson 1963; Birk and Simpson 1980):
+\begin{equation}
+\frac{\mathrm{d}X}{\mathrm{d}t} = L - k\cdot X
+\end{equation}
+where $k$ is the decay constant, $L$ is the rate of litterfall and $X$ is the litter mass accumulated in the forest floor. Assuming that litter mass has reached a steady state, $X$ can be estimated as the ratio between $L$ and $k$. If litterfall is estimated as the total foliar biomass divided by leaf duration, the amount of steady state leaf litter corresponding to each tree and srhub cohort can be estimated using:
+\begin{equation}
+w_{li, i} = \frac{FB_i}{LD(SP_i) \cdot k_i}
+\end{equation}
+where $FB_i$ is the foliar biomass of cohort $i$, $LD(SP_i)$ is the species-specific average leaf duration (in years) and $k_i$ is the rate of decay of leaves of cohort $i$, which is given by the regreession model of Meentemeyer (1978):
+\begin{equation}
+k_i = (-0.5365+0.00241\cdot AET) - (-0.01586+0.000056\cdot AET) \cdot LI(SP_i) 
+\end{equation}
+where $LI(SP_i)$ is the species-specific percentage of lignin content in leaves and AET is actual evapotranspiration (default $AET = 1000 mm$). Litter loadings are summed for four litter types (short pine needles, long pine needles, other conifers, broadleaves). In the case of fine dead woody materials (small fallen branches), loading of small branches is taken as woody litter and it is assumed that small branch litterfall occurs at the same time as leaf litterfall (i.e. according to leaf duration):
+\begin{equation}
+w_{wo} = \sum_{i}{w_{wo, i}} = \sum_{i}{\frac{SBB_i}{LD(SP_i)\cdot k_{wo}} }
+\end{equation}
+where $k_{wo} = 0.95 y^{-1}$ is a constant rate of decomposition for small branches.
+
+In FCCS, the depth of woody and LLM strata are inputs. In our case the depth of the woody and litter strata are estimated from the corresponding fuel loadings:
+\begin{subequations}
+\begin{align}
+\delta_{wo} &= w_{wo}/\rho_{b, wo}\\
+\delta_{li} &= w_{li}/\rho_{b, li}
+\end{align}
+\end{subequations}
+where $\rho_{b, wo}$, $\rho_{b, li}$ are the woody and litter bulk density (in $kg\cdot m^{-3}$), respectively. Litter bulk density $\rho_{b,li}$ is calculated as a weighted average of litter types:
+\begin{equation}
+ \rho_{b,li} = \frac{\sum_{k}{ \rho_{b,k}\cdot w_{li,k}}}{\sum_{k} {\cdot w_{li,k}}}
+\end{equation}
+where $k$ indicates litter type. The bulk density for litter types are (Prichard et al. 2013, Table 1): 
+\begin{subequations}
+\begin{align}
+\rho_{b,shortneedlepine} &= \rho_{b,longneedlepine} = \rho_{b,otherconifer}= 1.65 lb\cdot ft^{-3} = 26.43 kg\cdot m^{-3}\\
+\rho_{b,hardwood} &= 0.83 lb\cdot ft^{-3} = 13.30  kg\cdot m^{-3}
+\end{align}
+\end{subequations}
+
+
+\subsection{Other fuel characteristics}
+All the following characteristics are calculated in metric units (although British units are indicated to qualify specific values for compatibility).
+\subsubsection{Particle density ($\rho_{p}$)}
+Particle density is the ratio of dry weight over volume for fuel particles (in $kg\cdot m^{-3}$). When species have different values, particle density averages for shrub and canopy strata can be obtained as:
+\begin{subequations}
+\begin{align}
+\rho_{p, sh} &= \frac{\sum_{i}{w_{i,sh} \cdot \rho_p(SP_i)}}{\sum_{i}{w_{i,sh}}}\\
+\rho_{p, ca} &= \frac{\sum_{i}{w_{i,ca} \cdot \rho_p(SP_i)}}{\sum_{i}{w_{i,ca}}}
+\end{align}
+\end{subequations}
+where $\rho_p(SP_i)$ is the species-specific particle density. $\rho_{p, he}$, $\rho_{p, wo}$ and $\rho_{p, li}$ are all set to a default value $\rho_{p} = 400 kg\cdot m^{-3}= 25 lb\cdot ft^{-3}$ (Prichard et al. 2013). 
+
+\subsubsection{Particle volume ($PV$)}
+Particle volume is defined as the volume of particles per surface area (in $m^3\cdot m^{-2}$). Is calculated as dry weight loading divided by particle density. If species have different particle density values, the particle volume for canopy ($PV_{ca}$) and shrub($PV_{sh}$) strata can be calculated using:
+\begin{subequations}
+\begin{align}
+PV_{ca} &= \sum_{i}{PV_{i,ca}} = \sum_{i}{w_{i,ca}/\rho_{p}(SP_i)}\\
+PV_{sh} &= \sum_{i}{PV_{i,sh}} = \sum_{i}{w_{i,sh}/\rho_{p}(SP_i)}
+\end{align}
+\end{subequations}
+where $PV_{i,ca}$ and $PV_{i,sh}$ are the particle volume of cohort $i$ in the canopy and shrub strata, respectively. The particle volume for woody and herb strata are simply:
+\begin{subequations}
+\begin{align}
+PV_{wo} &= w_{wo}/\rho_{p,wo}\\
+PV_{he} &= w_{he}/\rho_{p,he}
+\end{align}
+\end{subequations}
+The particle volume for the litter stratum is the sum of particle volume of litter components:
+\begin{equation}
+PV_{li} = \sum_{i}{PV_{li,k}} = \sum_{i}{w_{li,k}/\rho_{p, li}}
+\end{equation}
+\subsubsection{Packing ratio ($\beta$)}
+The proportion of fuelbed stratum volume occupied by fuel particles is an important factor to predict fire behavior. At low packing ratios (low particle density) fire intensity is limited by excessive heat loss. At high packing ratios (high particle density), lack of oxygen limits combustion. The packing ratios for the canopy and shrub stratum ($\beta_{ca}$ and $\beta_{sh}$; dimensionless) are given by:
+\begin{subequations}\label{eq:packingratioshrub}
+\begin{align}
+\beta _{ca} &= \frac{PV_{ca}}{\delta_{ca}}\\
+\beta _{sh} &= \frac{PV_{sh}}{\delta_{sh}}
+\end{align}
+\end{subequations}
+where $w_{i,ca}$ and $w_{i,sh}$ are the contribution of cohort $i$ to canopy and shrub strata loading (in $kg\cdot m^{-2}$), respectively, and $\rho_p(SP_i)$ is the particle density (in $kg\cdot m^{-3}$) of fuels in cohort $i$. The packing ratio for the herbaceous, woody and litter strata are:
+\begin{subequations}
+\begin{align}
+\beta _{he} &= \frac{PV_{he}}{\delta_{he}}\\
+\beta _{wo} &= \frac{PV_{wo}}{\delta_{wo}}= \frac{\rho_{b,wo}}{\rho_{p,wo}}\\
+\beta _{li} &= \frac{PV_{li}}{\delta_{li}}= \frac{\rho_{b,li}}{\rho_{p,li}}
+\end{align}
+\end{subequations}
+Note that the packing ratio expressions for woody and litter strata as a ratio of bulk and particle density arises as a consequence of how fuel depth and particle volume are estimated.
+
+\subsubsection{Surface-area-to-volume ratio ($\sigma$)}
+The surface-area-to-volume ratio (in $m^2\cdot m^{-3}$) for the canopy or shrub strata are calculated using weighted averages:
+\begin{subequations}
+\begin{align}
+\sigma_{ca} &= \frac{\sum_{i}{w_{i,ca} \cdot \sigma(SP_i)}}{\sum_{i}{w_{i,ca}}}\\
+\sigma_{sh} &= \frac{\sum_{i}{w_{i,sh} \cdot \sigma(SP_i)}}{\sum_{i}{w_{i,sh}}}
+\end{align}
+\end{subequations}
+where $w_{i,ca}$ and $w_{i,sh}$ are the contribution of cohort $i$ to canopy and shrub strata loading (in $kg\cdot m^{-2}$), respectively, and $\sigma(SP_i)$ is the species-specific surface-area-to-volume ratio. The surface-area-to-volume ratio of herbs is assumed constant $\sigma_{he} = 11483 m^2\cdot m^{-3} = 3500 ft^2\cdot ft^{-3} $ and that of small (1-h) woody fuels is $\sigma_{wo} = 1601.05 m^2\cdot m^{-3} = 488 ft^2\cdot ft^{-3} $. The surface-area-to-volume ratio for the litter stratum is:
+\begin{equation}
+\sigma_{li} = \frac{\sum_{k}{w_{li,k} \cdot \sigma_{k}}}{\sum_{k}{w_{li,k}}}
+\end{equation}
+and the surface-area-to-volume ratio for litter types are:
+\begin{subequations}
+\begin{align}
+\sigma_{shortneedlepine} &= 6562 m^{2}\cdot m^{-3}= 2000 ft^{2}\cdot ft^{-3}\\
+\sigma_{longneedlepine} &= 4921 m^{2}\cdot m^{-3}= 1500 ft^{2}\cdot ft^{-3}\\
+\sigma_{otherconifer} &= 8202 m^{2}\cdot m^{-3}= 2500 ft^{2}\cdot ft^{-3}\\
+\sigma_{hardwood} &= 8202 m^{2}\cdot m^{-3}= 2500 ft^{2}\cdot ft^{-3}
+\end{align}
+\end{subequations}
+
+\subsubsection{Fuel area index (FAI)}
+The fuel area index (FAI) is the total fuel surface area per unit of ground area (unitless). It is analogous to leave area index (LAI), and it is used to calculate FCCS fire potentials (Schaaf et al. 2007). For shrub and canopy strata, FAI is calculated as:
+\begin{subequations}
+\begin{align}
+FAI_{ca} &= \sum_{i}{FAI_{i, ca}} = \sum_{i}{PV_{i,ca} \cdot\sigma(SP_i)}\\
+FAI_{sh} &= \sum_{i}{FAI_{i, sh}}= \sum_{i}{PV_{i,sh} \cdot \sigma(SP_i)}
+\end{align}
+\end{subequations}
+where $FAI_{i, ca}$ and $FAI_{i, sh}$ are the FAI of cohort $i$ in the canopy and shrub strata, respectively. The FAI of herbs and woody strata are given by:
+\begin{subequations}
+\begin{align}
+FAI_{he} &= PV_{he} \cdot \sigma_{he}\\
+FAI_{wo} &= PV_{wo} \cdot \sigma_{wo}
+\end{align}
+\end{subequations}
+For the litter layer, FAI is calculated as a sum of FAI for litter components:
+\begin{equation}
+FAI_{li} = \sum_{k}{FAI_{li,k}} = \sum_{k}{PV_{li,k} \cdot \sigma_{k}}
+\end{equation}
+
+\subsubsection{Moisture ($M$)}
+Live foliar moisture (in percent of dry weight) is also averaged across cohorts composing the shrub or canopy strata:
+\begin{subequations}
+\begin{align}
+M_{live, sh} &= \frac{\sum_{i}{w_{i,sh} \cdot M_i}}{\sum_{i}{w_{i,sh}}} \\
+M_{live, ca} &= \frac{\sum_{i}{w_{i,ca} \cdot M_i}}{\sum_{i}{w_{i,ca}}}
+\end{align}
+\end{subequations}
+Live foliar moisture of herb stratum ($M_{live, he}$) is an input. The moisture of dead plant in the canopy and shrub layers ($M_{dead, ca}$ and $M_{dead, sh}$), the moisture of dead herbs ($M_{dead, he}$), as well as that of litter ($M_{li}$) and woody ($M_{wo}$) strata are all assumed equal to the moisture of 1-h dead fuels, which is an input of the model.
+
+\subsubsection{Proportion of dead fuel ($P_{dead}$)}
+Woody and litter strata are dead fuels, but for canopy, shrub and herb strata the proportion of fuels that are dead are variable. The proportion of dead fuels in the herbaceous stratum ($P_{dead,he}$) is an input of the model, but for the shrub and canopy strata these are calculated from the proportion of dead fuels in each cohort:
+\begin{subequations}
+\begin{align}
+P_{dead,sh} &= \frac{\sum_{i}{w_{i,sh} \cdot P_{dead,i}}}{\sum_{i}{w_{i,sh}}} \\
+P_{dead, ca} &= \frac{\sum_{i}{w_{i,ca} \cdot P_{dead,i}}}{\sum_{i}{w_{i,ca}}}
+\end{align}
+\end{subequations}
+
+\subsubsection{Low heat content ($h$)}
+The low fuel heat content of each surface fuel stratum (in $kJ\cdot kg^{-1}$) is used for the calculation of reaction intensity. Heat content values are adjusted for live foliar moisture content in canopy, shrub and herb strata; and are left to the default value for woody and litter strata:
+\begin{subequations}
+\begin{align}
+h_{ca} &= h_{ca, def} - (M_{live, ca}/100)\cdot V \\
+h_{sh} &= h_{sh, def} - (M_{live, sh}/100)\cdot V \\
+h_{he} &= h_{def} - (M_{live, he}/100)\cdot V \\
+h_{wo} &= h_{li} = h_{def}
+\end{align}
+\end{subequations}
+where $h_{def} = 18608 kJ\cdot kg^{-1} = 8000 Btu\cdot lb^{-1} $ is the default low heat content value for herbs, woody and litter strata, and $V = 2596 kJ\cdot kg^{-1} = 1116 Btu\cdot lb$ is the latent heat of vaporisation of water. The default low heat of contents for the canopy and shrub strata ($h_{ca, def}$ and $h_{sh, def}$) are calculated as a weighted average across cohorts:
+\begin{subequations}
+\begin{align}
+h_{ca, def} &= \frac{\sum_{i}{w_{i,ca} \cdot h(SP_i)}}{\sum_{i}{w_{i,ca}}}\\
+h_{sh, def} &= \frac{\sum_{i}{w_{i,sh} \cdot h(SP_i)}}{\sum_{i}{w_{i,sh}}}
+\end{align}
+\end{subequations}
+where $h(SP_i)$ is a species-specific low heat content value.
+
+\subsubsection{Flammability index ($\eta_{F}$)}
+Flammability index ($\eta_{F} \in [1, 2]$) is a multiplier of reaction efficiency based on expert opinion applied to species that burn with more intensity than others, resulting from differences in fuel chemistry. Flammability index of canopy and shrub strata are the result of averaging the flammability of cohorts using loading as weights:
+\begin{subequations}
+\begin{align}
+\eta_{F, ca} &= \frac{\sum_{i}{w_{i,ca} \cdot \eta_{F}(SP_i)}}{\sum_{i}{w_{i,ca}}}\\
+\eta_{F, sh} &= \frac{\sum_{i}{w_{i,sh} \cdot \eta_{F}(SP_i)}}{\sum_{i}{w_{i,sh}}}
+\end{align}
+\end{subequations}
+where $\eta_{F}(SP_i)$ is a species-specific flammability value. Flamability index for other strata are set to default values: 
+\begin{subequations}
+\begin{align}
+\eta_{F, he} &= \eta_{F, li} = 1.5 \\
+\eta_{F, wo} &= 1.0
+\end{align}
+\end{subequations}
+
+\subsubsection{Reactive volume ($RV$)}
+The volume per surface unit ($m^3\cdot m^{-2}$) that would be involved in flaming combustion. 
+\begin{subequations}
+\begin{align}
+RV_{sh} &= w_{shrub}/\rho_{p, sh}\\
+RV_{he} &= w_{he}/\rho_{p, he}\\
+RV_{wo} &= w_{wo}/\rho_{p, wo}\\
+RV_{li} &= \min(w_{li}, w_{\max,li})/\rho_{p, li}
+\end{align}
+\end{subequations}
+In the case of litter, the flame loading is limited by $w_{\max,li}$, the maximum loading that would be consumed in the flaming stage of combustion, calculated as a weighted average of litter types:
+\begin{equation}
+ w_{\max,li} = \frac{\sum_{k}{ w_{\max,k}\cdot w_{li,k}}}{\sum_{k} {\cdot w_{li,k}}}
+\end{equation}
+where $k$ indicates litter type. The maximum combustion loadings for litter types are (Prichard et al. 2013, Table 2): 
+\begin{subequations}
+\begin{align}
+w_{\max,shortneedlepine} &= w_{\max,otherconifer} = 0.3248 kg \cdot m^{-2} = 2900 lb\cdot ac^{-1} \\
+w_{\max,longneedlepine} &= 0.6496 kg \cdot m^{-2}= 5800 lb\cdot ac^{-1} \\
+w_{\max,hardwood} &= 0.3472 kg \cdot m^{-2}= 3100 lb\cdot ac^{-1} 
+\end{align}
+\end{subequations}
+
+\subsection{Unit conversion of fuel characteristics}
+FCCS calculations employ empirical equations that were derived in British units system. Hence, all the fuel characteristics and model inputs that are in metric units have to be translated into British units prior to fire behaviour calculations:
+\begin{itemize}
+\item{Loading: $1 kg\cdot m^{-2} = 0.204918 lb\cdot ft^{-2}$}
+\item{Depths: $1m = 3.2808399ft$}
+\item{Particle density and bulk density: $1 kg\cdot m^{-3} = 0.06242796 lb\cdot ft^{-3}$}
+\item{Particle volume and reactive volume: $1 m^{3}\cdot m^{-2} = 3.2808399 ft^{3}\cdot ft^{-2}$}
+\item{Surface-to-area-volume ratio: $1 m^{2}\cdot m^{-3} = 0.3048 ft^{2}\cdot ft^{-3}$}
+\item{Heat content: $1kJ\cdot kg^{-1} = 0.429922614 Btu\cdot lb^{-1} $}
+\item{Wind speed: $1 m \cdot s^{-1} = 2.23693629 mph$}
+\end{itemize}
+
+\section{Surface fire behavior}
+\subsection{Surface rate of spread ($R$)}
+In the Rothermel (1972) model, surface rate of spread is defined as the ratio of heat source (i.e. the surface fire energy propagated to unburned fuels) to surface fuel heat sink (i.e. the energy required to preheat fuels).  Owing to the difference in packing ratio between the litter stratum and the other surface fuels, litter-dominated fuelbeds may have substantially different spread rates than other fuelbeds. For this reason, in FCCS the rate of spread (in $ft \cdot min^{-1}$) is calculated separately for litter stratum and the final rate of spread is the maximum of the rate of spread of all surface fuels and that of the litter stratum. Rate of spread is also limited to a maximum based in windspeed and slope.
+\begin{equation}
+R = \min(WindSlopeCap, \max(R_{surf}, R_{litter}))
+\end{equation}
+The surface fuel and litter fuel rates of spread are given by the application of Rothermel's (1972) equation to each case:
+\begin{subequations} 
+\begin{align}
+R_{surf} &= \frac{I_{R,surf} \cdot \xi_{surf}\cdot (1 + \phi_W + \phi_S)}{q_{surf}}\\
+R_{litter} &= \frac{I_{R,litter} \cdot \xi_{litter}\cdot (1 + \phi_W + \phi_S)}{q_{litter}}
+\end{align}
+\end{subequations}
+where $I_{R,surf}$ and $I_{R,litter}$ are the reaction intensities (in $Btu \cdot ft^{-2} \cdot min^{-1}$), $\xi_{surf}$ and $\xi_{litter}$ are the propagating flux ratios, $q_{surf}$ and $q_{litter}$ are the heat sinks.  Finally, $\phi_W$ and $\phi_S$ are the slope and wind  modifiers. All of them are explained in the following sections. The maximum rate of spread calculated from windspeed and slope is:
+\begin{equation}
+WindSlopeCap = 88 \cdot U \cdot (1 + \phi_S)
+\end{equation}
+where $U$ is windspeed (in $mph$) and $88$ is a conversion factor (from $mph$ to $ft/min$).
+
+\subsection{Reaction intensity  ($I_R$)}
+Reaction intensity of surface fuels (in $Btu \cdot ft^{-2} \cdot min^{-1}$) is calculated as the sum of component reaction intensities of the four different surface fuel strata, whereas the reaction intensity in the litter uses this strata alone:
+\begin{subequations} \label{eq:reactintensity}
+\begin{align}
+I_{R,surf} &= I_{R, sh} + I_{R, he}+ I_{R, wo}+I_{R, li}\\
+I_{R,litter} &= I_{R, li}
+\end{align}
+\end{subequations}
+Each component reaction intensity is calculated using:
+\begin{subequations} \label{eq:reactintensitycomp}
+\begin{align}
+I_{R,sh} &= (\eta_{\beta_{allsurf}'})^{A_{sh}}\cdot \Gamma_{\max, sh}'\cdot w_{sh} \cdot h_{sh} \cdot \eta_{M,sh}\cdot \eta_{K,sh}\cdot \eta_{F,sh}\\
+I_{R,he} &= (\eta_{\beta_{lowsurf}'})^{A_{he}}\cdot \Gamma_{\max, he}'\cdot w_{he} \cdot h_{he} \cdot \eta_{M,he}\cdot \eta_{K,he}\cdot \eta_{F,he}\\
+I_{R,wo} &= (\eta_{\beta_{lowsurf}'})^{A_{wo}}\cdot \Gamma_{\max, wo}'\cdot w_{wo} \cdot h_{wo} \cdot \eta_{M,wo}\cdot \eta_{K,wo}\cdot \eta_{F,wo}\\
+I_{R,li} &= (\eta_{\beta_{litter}'})^{A_{li}}\cdot \Gamma_{\max, li}'\cdot w_{li} \cdot h_{li} \cdot \eta_{M,li}\cdot \eta_{K,li}\cdot \eta_{F,li}
+\end{align}
+\end{subequations}
+In the above equations, $w_{sh}$, $w_{he}$, $w_{wo}$ and $w_{li}$ are the loadings of the corresponding shrub, herb, woody and litter strata, respectively. These quantities were defined in previous sections, as were the corresponding low heat fuel contents ($h_{sh}$, $h_{he}$, $h_{wo}$ and $h_{li}$) and flammability indices ($\eta_{F,sh}$, $\eta_{F,he}$, $\eta_{F,wo}$ and $\eta_{F,li}$). Mineral damping coefficient ($\eta_{K}$; dimensionless) is set to the same value (corresponding to the conventional value for silica-free ash content of 1\%) for all strata:
+\begin{equation}
+\eta_{K,sh} = \eta_{K,he} =\eta_{K,wo} = \eta_{K,li} = 0.42
+\end{equation}
+In the following subsections, we describe the calculation of the remaining variables for each stratum: reaction efficiency ($\eta_{\beta'}$), Rothermel's $A$ parameter, maximum reaction velocity ($\Gamma_{\max}'$) and moisture damping coefficient ($\eta_{M}$).
+
+\subsubsection{Reaction efficiency ($\eta_{\beta'}$)}
+Reaction efficiency (between 0 and 1) represents the damping effect of inefficiently packed fuels in the reaction intensity. Because shrubs rarely burn without lower surface fuels, the reaction efficiency of the surface layer ($\eta_{\beta_{allsurf}'}$) includes shrubs, herbs and woody fuels. Low surface fuels may carry flames without involving shrubs, so are assumed to burn with a single reaction efficiency ($\eta_{\beta_{lowsurf}'}$) determined by the combined characteristics of herb and woody fuel strata. Both are calculated similarly:
+\begin{subequations} \label{eq:reacteff}
+\begin{align}
+\eta_{\beta_{allsurf}'} &= \beta_{allsurf}'\cdot e^{1- \beta_{allsurf}'}\\
+\eta_{\beta_{lowsurf}'} &=\beta_{lowsurf}'\cdot e^{1- \beta_{lowsurf}'}
+\end{align}
+\end{subequations}
+where $\beta_{allsurf}'$ and $\beta_{lowsurf}'$ are the relative packing ratios corresponding to all surface fuels and low surface fuels, respectively. Relative packing ratios ($\beta'$; dimensionless)  are defined as the ratio of optimum depth ($\delta_{opt}$) to effective depth ($\delta_{eff}$):
+\begin{subequations} \label{eq:relpacking}
+\begin{align}
+\beta_{allsurf}' &= \delta_{opt, allsurf} / \delta_{eff, allsurf} \\
+\beta_{lowsurf}' &= \delta_{opt, lowsurf} / \delta_{eff, lowsurf}
+\end{align}
+\end{subequations}
+Optimum depth is the depth (in $ft$) at which fuels are optimally packed for maximum reaction intensity:
+\begin{subequations}
+\begin{align}
+\delta_{opt, allsurf} &= PV_{allsurf} +OptAirVol_{allsurf}\\
+\delta_{opt, lowsurf} &= PV_{lowsurf} +OptAirVol_{lowsurf}
+\end{align}
+\end{subequations}
+where $PV_{allsurf}$ and $PV_{lowsurf}$ are the volume of particles (in $ft^3 \cdot ft^{-2}$) for all surface fuels and low surface fuels, respectively, given by:
+\begin{subequations}
+\begin{align}
+PV_{allsurf} &= PV_{sh} + PV_{he} + PV_{wo}\\
+PV_{lowsurf} &= PV_{he} + PV_{wo}
+\end{align}
+\end{subequations}
+$OptAirVol_{allsurf}$ and $OptAirVol_{allsurf}$ are the volume of air space (in $ft^3 \cdot ft^{-2}$) between fuel particles that would result in maximum reaction intensity:
+\begin{subequations}
+\begin{align}
+OptAirVol_{allsurf} &= 45\cdot (RV_{sh} + RV_{he} + RV_{wo})\\
+OptAirVol_{lowsurf} &= 45\cdot (RV_{he} + RV_{wo})
+\end{align}
+\end{subequations}
+On the other hand, effective depths of all surface fuels and low surface fuels (in $ft$) are calculated as their depth, weighted by the reactive volume (and percentage cover in FCCS):
+\begin{subequations}
+\begin{align}
+\delta_{eff, allsurf} &= \frac{(RV_{sh}\cdot \delta_{sh}) +(RV_{he}\cdot \delta_{he}) + (RV_{wo}\cdot \delta_{wo})}{RV_{sh} +RV_{he}+RV_{wo}}\\
+\delta_{eff, lowsurf} &= \frac{(RV_{he}\cdot \delta_{he}) + (RV_{wo}\cdot \delta_{wo})}{RV_{he}+RV_{wo}}
+\end{align}
+\end{subequations}
+
+Reaction efficiency of the litter stratum is determined separately from the other strata. It is defined as the average of reaction efficiency across litter types, calculated using loadings as weights:
+\begin{equation}
+\eta_{\beta_{litter}'} = \frac{\sum_{k} {\eta_{\beta_{k}'}\cdot w_{li,k}}}{\sum_{k} {\cdot w_{li,k}}}
+\end{equation}
+where $k$ indicates litter type. The reaction efficiencies of litter types are (Prichard et al. 2013, Table 2): 
+\begin{subequations}
+\begin{align}
+\eta_{\beta_{shortneedlepine}'} &= \eta_{\beta_{otherconifer}'} = 0.18\\
+\eta_{\beta_{longneedlepine}'} &= 0.27\\
+\eta_{\beta_{hardwood}'} &= 0.11
+\end{align}
+\end{subequations}
+
+\subsubsection{Rothermel's A}
+A dimensionless coefficient that modifies reaction's efficiency (eq. \ref{eq:reacteff}) to account for lower sensitivity of reaction efficiency to relative packing ratio in flash fuels:
+\begin{subequations}
+\begin{align}
+A_{wo} &= A_{li} = 1.0\\
+A_{sh} &= 133\cdot \sigma_{sh}^{-0.7913}\\
+A_{he} &= 133\cdot \sigma_{he}^{-0.7913}
+\end{align}
+\end{subequations}
+where $\sigma_{sh}$ and $\sigma_{he}$ have to be expressed in $ft^2\cdot ft^{-3}$; Values $133$ and $-0.7913$ are empirical constants (Rothermel 1972).
+
+\subsubsection{Maximum reaction velocity ($\Gamma_{\max}'$)}
+The reaction velocity (in $min^{-1}$) that would exist at optimum fuelbed depth with no fuel moisture or mineral content.
+\begin{subequations}\label{eq:maxreactvel}
+\begin{align}
+\Gamma_{\max, sh}' &= 9.495 \cdot \frac{\sigma_{sh}}{\sigma_{wo}}\\
+\Gamma_{\max, he}' &= 9.495 \cdot \frac{\sigma_{he}}{\sigma_{wo}}\\
+\Gamma_{\max, wo}' &= 9.495 \\
+\Gamma_{\max, li}' &= 15 
+\end{align}
+\end{subequations}
+where $\sigma_{wo} = 488 ft^2\cdot ft^{-3} = 1601.05 m^2\cdot m^{-3}$ is the surface-to-area-volume ratio typical of small woody fuels. In Prichard et al. (2013) $\sigma_{sh}$ is defined as the average of shrub foliar surface-to-area-volume ratio and $\sigma_{wo}$, but in our case $\sigma_(SP_i)$ for each species includes both leaves and small branches. Eq. \ref{eq:maxreactvel} represent a significant departure from Rothermel (1972) maximum reaction velocity, and are also different from Sandberg et al. (2007).
+
+\subsubsection{Moisture damping coefficient ($\eta_M$)}
+Moisture damping reduces reaction velocity and hence reaction intensity (eq. \ref{eq:reactintensity}). It is calculated for each stratum using the following regression equations:
+\begin{subequations}\label{eq:moistdamp}
+\begin{align}
+\eta_{M, live, sh} &= \left[1-2.59\cdot \left(\frac{M_{live, sh}}{X_{live, sh}}\right)\right] +\left[ 5.11\cdot \left(\frac{M_{live, sh}}{X_{live, sh}}\right)^2\right]-\left[ 3.52\cdot \left(\frac{M_{live, sh}}{X_{live, sh}}\right)^3\right] \\
+\eta_{M, dead, sh} &= \left[1-2.59\cdot \left(\frac{M_{dead, sh}}{X_{dead, sh}}\right)\right] +\left[ 5.11\cdot \left(\frac{M_{dead, sh}}{X_{dead, sh}}\right)^2\right]-\left[ 3.52\cdot \left(\frac{M_{dead, sh}}{X_{dead, sh}}\right)^3\right] \\
+\eta_{M, live, he} &= \left[1-2.59\cdot \left(\frac{M_{live, he}}{X_{live, he}}\right)\right] +\left[ 5.11\cdot \left(\frac{M_{live, he}}{X_{live, he}}\right)^2\right]-\left[ 3.52\cdot \left(\frac{M_{live, he}}{X_{live, he}}\right)^3\right] \\
+\eta_{M, dead, he} &= \left[1-2.59\cdot \left(\frac{M_{dead, he}}{X_{dead, he}}\right)\right] +\left[ 5.11\cdot \left(\frac{M_{dead, he}}{X_{dead, he}}\right)^2\right]-\left[ 3.52\cdot \left(\frac{M_{dead, he}}{X_{dead, he}}\right)^3\right] \\
+\eta_{M, wo} &= \left[1-2.59\cdot \left(\frac{M_{wo}}{X_{wo}}\right)\right] +\left[ 5.11\cdot \left(\frac{M_{wo}}{X_{wo}}\right)^2\right]-\left[ 3.52\cdot \left(\frac{M_{wo}}{X_{wo}}\right)^3\right] \\
+\eta_{M, li} &= \left[1-2.59\cdot \left(\frac{M_{li}}{X_{li}}\right)\right] +\left[ 5.11\cdot \left(\frac{M_{li}}{X_{li}}\right)^2\right]-\left[ 3.52\cdot \left(\frac{M_{li}}{X_{li}}\right)^3\right] 
+\end{align}
+\end{subequations}
+where moisture contents of extinctions were arbitrarily set to $X_{dead, sh} = X_{dead, he} X_{wo} = X_{li} = 25$, $X_{live, sh} = 180$ and $X_{live, he} = 120$ in Sandberg et al. (2007). As it can be seen in the equations above, in the case of shrub and herb strata, moisture damping of live and dead fuels are differentiated. Average values are found after accounting for the proportion of live and dead material:
+\begin{subequations}
+\begin{align}
+\eta_{M, sh} &= \eta_{M, live, sh} \cdot (1 - P_{dead, sh})+ \eta_{M, dead, sh} \cdot P_{dead, sh}\\
+\eta_{M, he} &= \eta_{M, live, he} \cdot (1 - P_{dead, he})+ \eta_{M, dead, he} \cdot P_{dead, he}
+\end{align}
+\end{subequations}
+
+\subsection{Propagating flux ratio ($\xi$)}
+The propagating flux ratio (dimensionless) is the proportion of the reaction intensity (eq. \ref{eq:reactintensity}) that contributes to the forward rate of spread, estimated using an empirical regression:
+\begin{subequations}
+\begin{align}
+\xi_{surf} &= 0.03 + 2.5 \cdot \min \left[0.06, \frac{RV_{sh}+RV_{he}+RV_{wo}+RV_{li}}{\delta_{surfheatsink}} \right]\\
+\xi_{litter} &= 0.03 + 2.5 \cdot \min \left[0.06, \frac{RV_{li}}{\delta_{li}} \right]
+\end{align}
+\end{subequations}
+where $\delta_{surfheatsink}$ is the depth of surface heat sink (in $ft$), which in Prichard et al. (2013) is calculated as the sum of strata depths weighted by their relative cover. In our case we weighted stratum depths as in the calculation of effective depth ($\delta_{eff, allsurf}$), but considering all four strata:
+\begin{equation}
+\delta_{surfheatsink} = \frac{(RV_{sh}\cdot \delta_{sh}) +(RV_{he}\cdot \delta_{he}) + (RV_{wo}\cdot \delta_{wo})+ (RV_{li}\cdot \delta_{li})}{RV_{sh} +RV_{he}+RV_{wo}+RV_{li}}
+\end{equation}
+
+\subsection{Heat sink ($q$)}
+Like reaction intensity, the heat sink term (in $Btu \cdot ft^{-3}$) of the rate of spread equation is calculated in FCCS for each fuel stratum and then summed:
+\begin{subequations}\label{eq:heatsink}
+\begin{align}
+q_{surf} &= q_{sh}+q_{he}+q_{wo}+q_{li}\\
+q_{litter} &= q_{li}
+\end{align}
+\end{subequations}
+where the heat sink for each stratum is:
+\begin{subequations}\label{eq:heatsinkstrat}
+\begin{align}
+q_{sh} &= \eta_{\beta_{surf}'}\cdot \frac{RV_{sh}\cdot \rho_{p,sh}\cdot Qig_{sh}}{\min(\delta_{sh}, 1ft)}\\
+q_{he} &= \eta_{\beta_{lowsurf}'}\cdot \frac{RV_{he}\cdot \rho_{p,he}\cdot Qig_{he}}{\min(\delta_{he}, 1ft)}\\
+q_{wo} &= \eta_{\beta_{lowsurf}'}\cdot \frac{RV_{wo}\cdot \rho_{p,wo}\cdot Qig_{wo}}{\min(\delta_{wo}, 1ft)}\\
+q_{li} &= \eta_{\beta_{li}'}\cdot \frac{RV_{li}\cdot \rho_{p,li}\cdot Qig_{li}}{\min(\delta_{li}, 1ft)}
+\end{align}
+\end{subequations}
+Where $\rho_{p,sh}$, $\rho_{p,he}$, $\rho_{p,wo}$ and $\rho_{p,li}$ are the particle densities (in $lb\cdot ft^{-3}$) of each fuel stratum; and $RV_{sh}$, $RV_{he}$, $RV_{wo}$, and $RV_{li}$ are the reactive volumes of each fuel stratum. Unlike in Sandberg et al. (2007), the calculated heat sink is corrected by the reaction-efficiency term ($\eta_{\beta_{surf}'}$, $\eta_{\beta_{lowsurf}'}$ or $\eta_{\beta_{li}'}$), and the effective depth of each stratum included is limited to 1ft, based on the assumption that it is not necessary to preheat more than one 1ft of depth within a stratum to achieve ignition.
+
+Heat of pre-ignition ($Qig$; in $Btu \cdot lb^{-1}$) is the amount of heat required to ignite $1 lb$ of fuel. It is calculated by stratum as a weighted average of live and dead fuels in shrubs and herbs.
+\begin{subequations}
+\begin{align}
+Qig_{sh} &= Qig_{live, sh} \cdot (1 - P_{dead, sh})+ Qig_{dead, sh} \cdot P_{dead, sh}\\
+Qig_{he} &= Qig_{live, he} \cdot (1 - P_{dead, he})+ Qig_{dead, he} \cdot P_{dead, he}
+\end{align}
+\end{subequations}
+Whereas $Qig_{live, sh}$ and $Qig_{live, he}$ are corrected by fuel moisture, $Qig_{dead, sh}$, $Qig_{dead, he}$ and the other strata ($Qig_{wo}$ and $Qig_{li}$) are assumed a constant value:
+\begin{subequations}
+\begin{align}
+Qig_{live, sh} &= 250 + (V\cdot (M_{live, sh}/100))\\
+Qig_{live, he} &= 250 + (V\cdot (M_{live, he}/100))\\
+Qig_{dead, sh} &= Qig_{dead, he} = Qig_{wo} = Qig_{li} = 250
+\end{align}
+\end{subequations}
+where $250 Btu/lb$ is the heat of preignition of dry cellulose and $V = 1116 Btu/lb$ is the latent heat of vaporization.
+\subsection{Wind and slope coefficients ($\phi_W$ and $\phi_S$)}
+Wind and slope coefficients modify the heat source term of the rate of spread equation. Owing to differences in fuel characteristics and boundary conditions between the litter stratum and other surface fuel strata, in FCCS wind and slope coefficients are calculated separately for the litter stratum. The wind and slope coefficients terms in the rate fo spread equation are a weighted average of litter and surface wind and slope coefficients using the relative contribution to reaction intensity as weights:
+\begin{subequations}
+\begin{align}
+\phi_W &= (1 - I_{R, litter}/I_{R, surf})\cdot \phi_{W, surf} + (I_{R, litter}/I_{R, surf})\cdot \phi_{W, litter}\\
+\phi_S &= (1 - I_{R, litter}/I_{R, surf})\cdot \phi_{S, surf} + (I_{R, litter}/I_{R, surf})\cdot \phi_{S, litter}
+\end{align}
+\end{subequations}
+Wind coefficients are calculated using:
+\begin{subequations}
+\begin{align}
+\phi_{W, surf} &= 8.8 \cdot \beta_{surf}'^{-E}\cdot (U/BMU)^B\\
+\phi_{W, litter} &= 8.8 \cdot \beta_{litter}^{-E}\cdot (U/BMU)^B
+\end{align}
+\end{subequations}
+where $U$ is the input midflame windspeed (in $ft\cdot min^{-1}$), $BMU=352 ft\cdot min^{-1}$ is the benchmark midflame windspeed, $\beta_{surf}'$ is the relative packing ratio (eq. \ref{eq:relpacking}), $B$ is the exponential response of wind coefficient to windspeed ($B=1.2$ in Sandberg et al. 2007), and $E$ is the exponential term representing the mild effect of large fuels in reducing the accelerating effect of wind on fire spread by attenuating wind flow, given by:
+\begin{equation}
+E = 0.55 - 0.2 \cdot \frac{FAI_{sh}+FAI_{he}}{FAI_{sh}+FAI_{he}+FAI_{wo}}
+\end{equation}
+$E$ is assumed to be the same for both all surface fuels and litter fuels.
+
+Slope coefficients are calculated using the empirical equation of Rothermel (1972), applied to all surface fuels and litter fuels:
+\begin{subequations}
+\begin{align}
+\phi_{S, surf} &= 5.275 \cdot (S/100)^{2}\cdot (\beta_{sh}+\beta_{he}+\beta_{wo})^{-0.3}\\
+\phi_{S, litter} &= 5.275 \cdot (S/100)^{2}\cdot \beta_{li}^{-0.3}
+\end{align}
+\end{subequations}
+where $S$ is the slope (in percent) and $\beta$ is the packing ratio (not relative!) of fuels.
+
+\subsection{Fireline intensity ($I_B$) and flame length ($FL$)}
+Byram's fireline intensity ($I_B$) is the rate of heat release per unit of fire edge (in $Btu\cdot ft^{-1} \cdot min^{-1}$), and in FCCS is calculated as (Albini 1976):
+\begin{equation}
+I_B = I_{R,surf} \cdot (R \cdot t_R)
+\end{equation}
+where $I_{R,surf}$ is the surface reaction intensity, $R$ is the rate of spread and $t_R$ is the flame residence time, which is defined as the time (in $min$) fuels contribute to propagating flux and is estimated as (Albini 1976):
+\begin{equation}
+t_R = 192 \cdot \frac{(I_{R,sh}\cdot RT_{sh})+(I_{R,he}\cdot RT_{he})+(I_{R,wo}\cdot RT_{wo})+(I_{R,li}\cdot RT_{li})}{I_{R,surf}}
+\end{equation}
+where $RT$ is the reaction thickness, the approximate thickness (in $ft$) of a fuel element shell that contributes to reaction intensity. In FCCS, reaction thickness is estimated as $RT = 0.0028 ft$ for thermally thick fuel elements (Sandberg et al. 2007). When the diameter of a fuel element is less than twice the reaction thickness, the entire fuel element contributes to reaction intensity. Reaction thickness values for each stratum are given by:
+\begin{subequations}
+\begin{align}
+RT_{sh} &= \min(0.0028, 2/\sigma_{sh})\\
+RT_{he} &= \min(0.0028, 2/\sigma_{he})\\
+RT_{wo} &= \min(0.0028, 2/\sigma_{wo})\\
+RT_{li} &= \min(0.0028, 2/\sigma_{li})
+\end{align}
+\end{subequations}
+
+Flame length is defined as the distance (in $ft$) between the flame tip and the midpoint of the flame depth at the base of the flame, and is calculated (Byram 1959): 
+\begin{equation}
+FL = 0.45 \cdot (I_B/60)^{0.46}
+\end{equation}
+where 60.0 is a factor to convert from $Btu\cdot ft^{-1} \cdot min^{-1}$ to $Btu\cdot ft^{-1} \cdot s^{-1}$.
+
+
+\section{Crown fire behavior}
+Crown fire behavior is difficult to model and actual rates of spread are not possible to predict. Here we mainly follow the approach given in FCCS (Prichard et al. 2013), although in our case the canopy is not subdivided into layers (overstory, midstory and understory).
+
+\subsection{Crown fire rate of spread ($R_{crown}$)}
+The rate of spread of crown fires is estimated by using a modification of Rothermel's equation:
+\begin{equation}
+R_{crown} = \frac{I_{R,crown} \cdot \xi_{crown}\cdot WAF}{q_{crown}} = \frac{(I_{R,surf}+I_{R,ca}) \cdot \xi_{crown}\cdot WAF}{q_{surf}+q_{ca}}
+\end{equation}
+where $I_{R,surf}$ is the surface reaction intensity, $I_{R,ca}$ is the canopy reaction intensity, $\xi_{crown}$ is the propagating flux ratio in the canopy, $q_{surf}$ is the surface heat sink and $q_{ca}$ is the canopy heat sink. Note that reaction intensities and heat sinks of canopy and surface fuels are added for the application of Rothermel's equation. Other modifications include the exclusion of slope effects and the consideration of wind effects through a wind adjusment factor (WAF). 
+
+Crown propagating flux ratio ($\xi_{crown}$; in $Btu \cdot ft^{-3}$) represents the proportion of the crown reaction intensity that contributes to crown fire's forward rate of spread:
+\begin{equation}
+\xi_{crown} = 1 - e^{\left(-\frac{FAI_{ca}}{4 \cdot \delta_{ca}}\right)}
+\end{equation}
+where $FAI_{ca}$ is the fuel area index of the canopy, and $\delta_{ca}$ is the canopy depth (in $ft$). Wind adjustment factor ($WAF$) is defined as:
+\begin{equation}
+WAF = \frac{U/\sqrt{U^2+VS^2}}{BMU/\sqrt{BMU^2+VS^2}}
+\end{equation}
+where $U$ is the input (midflame) windspeed (in $ft \cdot min^{-1}$), $BMU = 352 ft \cdot min^{-1}$ is the benchmark windspeed and $VS = 900 ft \cdot min^{-1}$ is the vertical stack velocity.
+
+The following two subsections detail the calculation of canopy reaction intensity ($I_{R, ca}$) and canopy heat sink ($q_{ca}$). 
+
+\subsection{Canopy reaction intensity ($I_{R, ca}$)}
+Reaction intensity of canopy fuels (in $Btu \cdot ft^{-2} \cdot min^{-1}$) is estimated as:
+\begin{equation}
+I_{R,ca} = (\eta_{\beta_{ca}'})^{A_{ca}}\cdot \Gamma_{\max, ca}'\cdot w_{ca} \cdot h_{ca} \cdot \eta_{M,ca}\cdot \eta_{K,ca}\cdot \eta_{F,ca}
+\end{equation}
+where $A_{ca} = 133\cdot \sigma_{ca}^{-0.7913}$ is Rothermel's A coefficient,  $\Gamma_{\max, ca}' = 15 min^{-1}$ is the maximum reaction velocity of the canopy, $w_{ca}$ is the loading of canopy fuels (in $lb \cdot ft^{-2}$), $h_{ca}$ is the heat content of the canopy fuels (in $Btu \cdot lb^{-1}$), $\eta_{K,ca}=0.42$ is the mineral damping coefficient and $\eta_{F,ca}$ is the flammability index of the canopy stratum. Moisture damping coefficient for the canopy ($\eta_{M,ca}$) is estimated as done for shrub and herb strata:
+\begin{subequations}
+\begin{align}
+\eta_{M, live, ca} &= \left[1-2.59\cdot \left(\frac{M_{live, ca}}{X_{live, ca}}\right)\right] +\left[ 5.11\cdot \left(\frac{M_{live, ca}}{X_{live, ca}}\right)^2\right]-\left[ 3.52\cdot \left(\frac{M_{live, ca}}{X_{live, ca}}\right)^3\right] \\
+\eta_{M, dead, ca} &= \left[1-2.59\cdot \left(\frac{M_{dead, ca}}{X_{dead, ca}}\right)\right] +\left[ 5.11\cdot \left(\frac{M_{dead, ca}}{X_{dead, ca}}\right)^2\right]-\left[ 3.52\cdot \left(\frac{M_{dead, ca}}{X_{dead, ca}}\right)^3\right] \\
+\eta_{M, ca} &= \eta_{M, live, ca} \cdot (1 - P_{dead, ca})+ \eta_{M, dead, ca} \cdot P_{dead, ca}
+\end{align}
+\end{subequations}
+where moisture contents of extinctions were arbitrarily set to $X_{dead, ca} = 25$ and $X_{live, ca} = 180$.
+
+The reaction efficiency in the canopy ($\eta_{\beta_{canopy}'}$) represents the damping effect of inefficiently packed fuels in the canopy:
+\begin{equation}
+\eta_{\beta_{canopy}'} =\beta_{canopy}'\cdot e^{1- \beta_{canopy}'}
+\end{equation}
+where $\beta_{canopy}'$ is the relative packing ratio in the canopy:
+\begin{equation}
+\beta_{canopy}' = \delta_{opt, canopy} / \delta_{eff, canopy}
+\end{equation}
+where the effective depth is $\delta_{eff, canopy}=\delta_{ca}$ (in $ft$) and the optimum canopy depth is calculated using:
+\begin{equation}
+\delta_{opt, canopy} = 0.4 \cdot FAI_{ca} + \beta_{ca} \cdot (\delta_{ca} \cdot C_{ca}/100)
+\end{equation}
+where $C_{ca}$ is the percent cover of the canopy, $FAI_{ca}$ is the fuel area index of the canopy, $\beta_{ca}$ is the packing ratio of canopy fuels and $\delta_{ca}$ is the canopy depth (in $ft$).
+
+\subsection{Canopy heat sink ($q_{ca}$)}
+Canopy heat sink (in $Btu \cdot ft^{-3}$) is estimated using:
+\begin{equation}
+q_{ca} = \frac{0.5 \cdot FAI_{ca} \cdot RT_{ca} \cdot \rho_{p, ca} \cdot Qig_{ca}}{(C_{ca}/100)\cdot \delta_{ca}}
+\end{equation}
+where $C_{ca}$ is the percent cover of the canopy, $FAI_{ca}$ is the fuel area index of the canopy, $RT_{ca} = \min(0.0028, 2/\sigma_{ca})$ is the reaction thickness of the canopy stratum (in $ft$), $\rho_{p, ca}$ is the particle density of the canopy (in $lb \cdot ft^{-3}$), $\delta_{ca}$ is the canopy depth (in $ft$) and $Qig_{ca}$ is the heat of pre-ignition of the canopy stratum (in $Btu \cdot lb^{-1}$), which is calculated as a weighted average of live and dead fuels:
+\begin{subequations}
+\begin{align}
+Qig_{live, ca} &= 250 + (V\cdot (M_{live, ca}/100))\\
+Qig_{dead, ca} &= 250\\
+Qig_{ca} &= Qig_{live, ca} \cdot (1 - P_{dead, ca})+ Qig_{dead, ca} \cdot P_{dead, ca}
+\end{align}
+\end{subequations}
+where $250 Btu/lb$ is the heat of preignition of dry cellulose and $V = 1116 Btu/lb$ is the latent heat of vaporization of water.
+
+\subsection{Fireline intensity ($I_{B,crown}$) and flame length ($FL_{crown}$)}
+Byram's fireline intensity for crown fires is estimated using:
+\begin{equation}
+I_{B,crown} = I_{R,crown} \cdot (R_{crown} \cdot t_{R,crown})
+\end{equation}
+where $I_{R,crown}$ is the crown reaction intensity (i.e. the sum of canopy and surface reaction intensities), $R_{crown}$ is the rate of crown fire spread and $t_{R,crown}$ is the flame residence time, estimated as:
+\begin{equation}
+t_R = 192 \cdot RT_{ca}
+\end{equation}
+where $RT_{ca} = \min(0.0028, 2/\sigma_{ca}$ is the reaction thickness of the canopy. As for surface fires, flame length is calculated using: 
+\begin{equation}
+FL_{crown} = 0.45 \cdot (I_{B,crown}/60)^{0.46}
+\end{equation}
+where 60.0 is a factor to convert from $Btu\cdot ft^{-1} \cdot min^{-1}$ to $Btu\cdot ft^{-1} \cdot s^{-1}$.
+
+\section{Fire potentials}
+\subsection{Surface fire behavior potentials}
+The \textbf{surface fire behavior potential} ($SFP$; between 0 and 9) is an index defined as the maximum of spread potential ($SP$) and flame length ($FL$) potential indices (both between 0 and 9):
+\begin{equation}
+SFP = \max(SP, FP)
+\end{equation}
+\textbf{Spread potential} is derived from $R$ (in $ft\cdot min^{-1}$), and \textbf{flame length potential} is derived from $FL$ (in $ft$), both quantities being calculated at benchmark environmental conditions:
+\begin{subequations}
+\begin{align}
+SP &= \min \left[ 9, R^{1/2}\right] \\
+FP &= \min \left[ 9, FL^{1/2}\right] 
+\end{align}
+\end{subequations}
+\subsection{Crown fire behavior potentials}
+The \textbf{crown fire summary potential} ($CPF$) combines three subpotentials into a single index value between 0 and 9. It places more emphasis on crown fire initiation ($IC$) and rate of spread ($RC$) than to crown-to-crown transmissivity ($TC$):
+\begin{equation}
+CFP = 0.4286 \cdot (IC+(TC/3)+RC)
+\end{equation}
+where $0.4286$ is used to limit $CPF$ between 0 and 9.
+
+The \textbf{crown fire initiation potential} ($IC$) represents the likelihood of a surface fire torching into single or multiple trees. $IC$ is based on the work by Van Wagner. If $FAI_{ca} = 0$ then $IC = 0$. Otherwise it is calculated as:
+\begin{equation}
+IC = \min \left[ 9, 4 \cdot \left(\frac{I_B/60}{I_c}\right)^{0.2}\right]
+\end{equation}
+where $I_B$ is the surface fireline intensity (60 is used to convert it to $Btu\cdot ft^{-1} \cdot s^{-1}$) and $I'$ is Van Wagner's critical fireline intensity (Scott and Reinhardt 2001):
+\begin{equation}
+I_c = 0.288894658 \cdot \left[ 0.01\cdot (H_{gap}/100) \cdot (460 +25.9\cdot M_{live, ca})\right]^{1.5}
+\end{equation}
+where $M_{live, ca}$ is the moisture content of the canopy (in percent of dry weight), 0.288894658 is used to convert from $kJ \cdot m^{-1}\cdot s^{-1}$ to $Btu \cdot ft^{-1}\cdot s^{-1}$ and $H_{gap}$ is the canopy gap (in $cm$) determined from the analysis of the bulk density profile.
+
+The \textbf{crown-to-crown transmittivity potential} ($TC$) is set to zero if $FAI_{ca} < TFAI/(3\cdot \pi)$, where $TFAI$ is a threshold for FAI calculated as: 
+\begin{equation}
+TFAI = A_{q}\cdot e^{-0.0019 \cdot U}
+\end{equation}
+where $A_{q} = 3.2868$ if $\sigma_{ca} > 2000 ft^{2}\cdot ft^{-3}$ and $A_{q} = 2.6296$ otherwise. If $FAI_{ca} > TFAI/(3\cdot \pi)$, then $TC$ is calculated as:
+\begin{equation}
+TC = \min \left[ 9, 10 \cdot TC_q \right]
+\end{equation}
+where $TC_q$ is the efficiency of crown-to-crown heat transfer, as a proportion of maximum efficiency at 100 \% canopy cover:
+\begin{equation}
+TC_q = \frac{(\max(0.0, C_{ca}\cdot WAF - 40))^{0.3}}{(100 \cdot WAF -40)^{0.3}}
+\end{equation}
+In this last equation 40 represents the threshold of canopy cover necessary to initiate dependent crown spread, and 0.3 is a coefficient describing the assumed effect of crown cover on transmittivity at benchmark windspeed. The canopy adjustment ratio $WAF$ is added to modulate transmittivity depending on windspeed.
+
+Finally, the \textbf{crown fire rate of spread potential} ($RC$) is defined as:
+\begin{equation}
+RC = \min \left[ 9, 2.5 \cdot R_{crown}^{1/e} \right]
+\end{equation}
+where $R_{crown}$ is the rate of spread (in $ft \cdot min^{-1}$) of the crown fire.
+
+\section{Unit conversion of outputs}
+The following factors are used to express fire behavior outputs to metric units:
+\begin{itemize}
+\item{Fire spread rates: $1 ft\cdot min^{-1} = 0.3048 m\cdot min^{-1}$}
+\item{Flame length: $1 ft = 0.3048 m$}
+\item{Reaction intensity: $1 Btu\cdot ft^{-2} \cdot min^{-1} = 11.3484 kJ \cdot m^{-2}\cdot min^{-1}$}
+\item{Heat sink: $1 Btu\cdot ft^{-3} = 37.2589458 kJ \cdot m^{-3}$}
+\item{Fireline intensity: $1 Btu\cdot ft^{-1} \cdot min^{-1} = 0.0576911555  kW\cdot m^{-1}$}
+\end{itemize}
+\section{Species-specific parameters}
+\begin{itemize}
+\item{$cr(SP_i)$: [\texttt{cr}]: Ratio between crown length and total height for shrubs.}
+\item{$a_{fbt}, b_{fbt}, c_{fbt}, d_{fbt}$ [\texttt{a\_fbt}, \texttt{b\_fbt}, \texttt{c\_fbt}, \texttt{d\_fbt}]: Regression coefficients used to calculate foliar biomass of an individual tree from its $DBH$ and the cummulative basal area of larger trees.}
+\item{$a_{ash}$ [\texttt{a\_ash}]: Regression coefficient relating the square of shrub height with shrub area.}
+\item{$a_{bsh}$ and $b_{bsh}$ [\texttt{a\_bsh}, \texttt{b\_bsh}]: Allometric coefficients relating phytovolume with dry weight of shrub individuals.}
+\item{$r_{6.35}(SP_i)$ [\texttt{r635}]: Ratio between the weight of leaves plus branches and the weight of leaves alone for branches of 6.35 mm.}
+\item{$\rho_p(SP_i)$ [\texttt{PD}]: Particle density.}
+\item{$\sigma(SP_i)$ [\texttt{SAV}]: Surface-area-to-volume ratio of the small fuel (1h) fraction (leaves and branches < 6.35mm).}
+\item{$h(SP_i)$ [\texttt{HeatContent}]: High fuel heat content.}
+\item{$\eta_{F}(SP_i)$ [\texttt{Flammability}]: Flammability value (either 1 or 2 for normal or high, respectively).}
+\item{$LD(SP_i)$ [\texttt{LeafDuration}]: Leaf duration (in years).}
+\item{$LI(SP_i)$ [\texttt{PercentLignin}]: Percentage of lignin in leaves.}
+\end{itemize}
+
+
+\section{References}
+\begin{itemize}
+\item{Anderson, H., 1982. Aids to determining fuel models for estimating fire behavior. USDA, For. Serv. Gen. Tech. Rep. INT-122. 22.}
+\item{Hasenauer, H., Monserud, R.A., 1996. A crown ratio model for Austrian Forests. For. Ecol. Manage. 84, 49–60. doi:10.1016/0378-1127(96)03768-1}
+\item{Mitsopoulos, I., Dimitrakopoulos, A.P., 2007. Canopy fuel characteristics and potential crown fire behavior in Aleppo pine (Pinus halepensis Mill.) forests. Ann. For. Sci. 64, 287–299. doi:10.1051/forest:2007006}
+\item{Prichard, S.J., Sandberg, D. V, Ottmar, R.D., Eberhardt, E., Andreu, A., Eagle, P., Swedin, K., 2013. Classification System Version 3.0: Technical Documentation.}
+\item{Rothermel, R.C., 1972. A mathematical model for predicting fire spread in wildland fuels. USDA For. Serv. Res. Pap. INT USA.}
+\item{Rothermel, R.C., Wilson, R. a., Morris, G. a., Sackett, S.S., 1986. Modeling moisture content of fine dead wildland fuels. USDA For. Serv. Res. Pap. INT 359, 1–64.}
+\item{Reinhardt, E., Lutes, D., Scott, J., 2006. FuelCalc: A method for estimating fuel characteristics?, in: Fuels Management- How to Measure Success. pp. 273–282.}
+\item{Sandberg, D. V, Riccardi, C.L., Schaaf, M.D., 2007. Reformulation of Rothermel’s wildland fire behaviour model for heterogeneous fuelbeds. Can. J. For. Res. 37, 2438–2455.}
+\item{Sando, R.W., Wick, C.H., 1972. A method of evaluating crown fuels in forest stands. Research Paper NC-84. USDA For. Serv. Res. Pap. NC-84 10 pp.}
+\item{Schaaf, M.D., Sandberg, D. V, Schreuder, M.D., Riccardi, C.L., 2007. A conceptual framework for ranking crown fire potential in wildland fuelbeds. Can. J. For. Res. 37, 2464–2478. doi:10.1139/X07-102}
+\item{Scott, J.H., Reinhardt, E.D., 2001. Assessing Crown Fire Potential by Linking Models of Surface and Crown Fire Behavior. Usda For. Serv. Rocky Mt. Res. Stn. Res. Pap. Rmrs RMRS-RP-29, 59.}
+\item{Scott, J.H., Reinhardt, E.D., 2002. Estimating canopy fuels in conifer forests. Fire Manag. Today 62, 45–50.}
+\item{Wilson, R., 1980. Reformulation of Forest Fire Spread Equations, USDA Forest Service, Intermountain Forest and Range Experiment Station, Research Note INT-292.}
+\end{itemize}
+
+\end{document}
