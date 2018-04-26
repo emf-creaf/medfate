@@ -58,7 +58,7 @@ double defoliationFraction(double conc, double threshold) {
   return(std::max(0.0,(exp(k*conc)-exp(k*threshold))/(1.0-exp(k*threshold))));
 }
 
-void checkgrowthInput(List x, List soil, String transpirationMode) {
+void checkgrowthInput(List x, List soil, String transpirationMode, String soilFunctions) {
   if(!x.containsElementNamed("above")) stop("above missing in growthInput");
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   if(!above.containsElementNamed("LAI_live")) stop("LAI_live missing in growthInput$above");
@@ -114,12 +114,18 @@ void checkgrowthInput(List x, List soil, String transpirationMode) {
     if(!paramsTransp.containsElementNamed("Jmax298")) stop("Jmax298 missing in growthInput$paramsTransp");
   }
   if(!soil.containsElementNamed("W")) stop("W missing in soil");
-  if(!soil.containsElementNamed("psi")) stop("psi missing in soil");
   if(!soil.containsElementNamed("dVec")) stop("dVec missing in soil");
-  if(!soil.containsElementNamed("Theta_FC")) stop("Theta_FC missing in soil");
   if(!soil.containsElementNamed("macro")) stop("macro missing in soil");
-  if(!soil.containsElementNamed("clay")) stop("clay missing in soil");
-  if(!soil.containsElementNamed("sand")) stop("sand missing in soil");
+  if(soilFunctions=="SX") {
+    if(!soil.containsElementNamed("clay")) stop("clay missing in soil");
+    if(!soil.containsElementNamed("sand")) stop("sand missing in soil");
+  }
+  if(soilFunctions=="VG") {
+    if(!soil.containsElementNamed("VG_n")) stop("VG_n missing in soil");
+    if(!soil.containsElementNamed("VG_alpha")) stop("VG_alpha missing in soil");
+    if(!soil.containsElementNamed("VG_theta_res")) stop("VG_theta_res missing in soil");
+    if(!soil.containsElementNamed("VG_theta_sat")) stop("VG_theta_sat missing in soil");
+  }
 }
 
 // [[Rcpp::export("growth")]]
@@ -132,10 +138,12 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   NumericVector SP = cohorts["SP"];
 
   String transpirationMode = control["transpirationMode"];
+  String soilFunctions = control["soilFunctions"];
+  
   String storagePool = control["storagePool"];
   bool verbose = control["verbose"];
   bool cavitationRefill = control["cavitationRefill"];
-  checkgrowthInput(x, soil, transpirationMode);
+  checkgrowthInput(x, soil, transpirationMode, soilFunctions);
   
   NumericVector Precipitation = meteo["Precipitation"];
   NumericVector MeanTemperature = meteo["MeanTemperature"];
@@ -311,27 +319,31 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
       
       PET[i] = s["PET"];
     }    
-    Lground[i] = s["Lground"];
-    Esoil[i] = sum(Rcpp::as<Rcpp::NumericVector>(s["EsoilVec"]));
-    LAIcell[i] = s["LAIcell"];
-    Cm[i] = s["Cm"];
-    DeepDrainage[i] = s["DeepDrainage"];
-    Infiltration[i] = s["Infiltration"];
-    Runoff[i] = s["Runoff"];
-    NetPrec[i] = s["NetPrec"];
+    List db = s["DailyBalance"];
+    Lground[i] = db["Lground"];
+    LAIcell[i] = db["LAIcell"];
+    Cm[i] = db["Cm"];
+    DeepDrainage[i] = db["DeepDrainage"];
+    Infiltration[i] = db["Infiltration"];
+    Runoff[i] = db["Runoff"];
+    NetPrec[i] = db["NetPrec"];
     Interception[i] = Precipitation[i]-NetPrec[i];
-    NumericVector psi = s["psiVec"];
-    psidays(i,_) = psi;
     
-    NumericVector EplantCoh = s["EplantCoh"];
-    NumericVector EplantVec = s["EplantVec"];
+    List sb = s["SoilBalance"];
+    NumericVector psi = sb["psiVec"];
+    Esoil[i] = sum(Rcpp::as<Rcpp::NumericVector>(sb["EsoilVec"]));
+    psidays(i,_) = psi;
+    NumericVector EplantVec = sb["EplantVec"];
+    
+    List Plants = s["Plants"];
+    NumericVector EplantCoh = Plants["EplantCoh"];
     Eplantdays(i,_) = EplantVec;
     NumericVector An =  Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
     NumericVector pEmb =  Rcpp::as<Rcpp::NumericVector>(x["ProportionCavitated"]);
     PlantPhotosynthesis(i,_) = An;
     PlantTranspiration(i,_) = EplantCoh;
-    PlantStress(i,_) = Rcpp::as<Rcpp::NumericVector>(s["DDS"]);
-    NumericVector psiCoh =  Rcpp::as<Rcpp::NumericVector>(s["psiCoh"]);;
+    PlantStress(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["DDS"]);
+    NumericVector psiCoh =  Rcpp::as<Rcpp::NumericVector>(Plants["psiCoh"]);;
     PlantPsi(i,_) = psiCoh;
     // PlantWindSpeed(i,_) = Rcpp::as<Rcpp::NumericVector>(x["WindSpeed"]);
     // PlantPAR(i,_) = Rcpp::as<Rcpp::NumericVector>(x["PAR"]);

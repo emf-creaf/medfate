@@ -36,11 +36,13 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
   NumericVector LAI_dead = above["LAI_dead"];
   NumericVector H = above["H"];
   NumericVector CR = above["CR"];
+  
   String transpirationMode = control["transpirationMode"];
-  String soilFunctions = control["soilFunctions"]; 
-    
   if((transpirationMode!="Simple") & (transpirationMode!="Complex")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Simple' or 'Complex')");
+
+  String soilFunctions = control["soilFunctions"]; 
   if((soilFunctions!="SX") & (soilFunctions!="VG")) stop("Wrong soil functions ('soilFunctions' should be either 'SX' or 'VG')");
+  
   double averageFracRhizosphereResistance = control["averageFracRhizosphereResistance"];
   String canopyMode = control["canopyMode"];
   
@@ -294,8 +296,13 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   NumericVector Cover = above["Cover"];
   NumericVector H = above["H"];
   NumericVector CR = above["CR"];
+  
   String transpirationMode = control["transpirationMode"];
   if((transpirationMode!="Simple") & (transpirationMode!="Complex")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Simple' or 'Complex')");
+
+  String soilFunctions = control["soilFunctions"]; 
+  if((soilFunctions!="SX") & (soilFunctions!="VG")) stop("Wrong soil functions ('soilFunctions' should be either 'SX' or 'VG')");
+  
   String storagePool = control["storagePool"];
   if((storagePool!="none") & (storagePool!="one")& (storagePool!="two")) stop("Wrong storage pool ('storagePool' should be 'none', 'one' or 'two')");
   String canopyMode = control["canopyMode"];
@@ -466,6 +473,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     List paramsCanopy = List::create(_["gdd"] = 0);
     List numericParams = control["numericParams"];
     List paramsControl = List::create(_["verbose"] =control["verbose"],
+                                      _["soilFunctions"] =soilFunctions, 
                                       _["transpirationMode"] =transpirationMode, 
                                       _["cavitationRefill"] = control["cavitationRefill"],
                                       _["defaultWindSpeed"] = control["defaultWindSpeed"],
@@ -481,6 +489,10 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                          _["paramsAllometries"] = paramsAllometriesdf);
     
   } else if(transpirationMode =="Complex"){
+    if(soilFunctions=="SX") {
+      soilFunctions = "VG"; 
+      warning("Soil pedotransfer functions set to Van Genuchten ('VG').");
+    }
     CharacterVector GroupSP = SpParams["Group"];
     NumericVector HmedSP = SpParams["Hmed"]; //To correct conductivity
     NumericVector leafwidthSP = SpParams["LeafWidth"];
@@ -577,6 +589,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     List numericParams = control["numericParams"];
     List paramsControl = List::create(_["verbose"] =control["verbose"],
                                       _["transpirationMode"] =transpirationMode, 
+                                      _["soilFunctions"] =soilFunctions, 
                                       _["Catm"] = control["Catm"],                                      
                                       _["averageFracRhizosphereResistance"] = control["averageFracRhizosphereResistance"],
                                       _["canopyMode"] = canopyMode,
