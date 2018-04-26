@@ -1,0 +1,811 @@
+\documentclass{article}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+
+\subsection{Stomatal regulation for combinations of environmental cues}
+The following figures illustrate the behavior of stomatal regulation by profit maximization under different combination of light levels (from 0\% to 100\% of absorbed SWR and PAR) and soil water potential (from 0 to -4 MPa). In these calculations we are using $Profit_2$ as function for profit maximization. 
+\begin{center}
+<<fig=TRUE, width=8, height=12, echo=FALSE>>==
+Vmax298 = 100
+Jmax298 = 1.67*Vmax298
+
+par(mar=c(4,4,3,2), mfrow=c(4,2))
+psiSoil = c(-0.033,seq(-0.2, -4.0, by=-0.2))
+npsi = length(psiSoil)
+L = c(0,1,2,3,4,seq(5, 100, by=5))
+nL = length(L)
+psiCanopy = matrix(0.0, npsi, nL)
+psiDrop = matrix(0.0, npsi, nL)
+psiPlant = matrix(0.0, npsi, nL)
+E = matrix(0.0, npsi, nL)
+Gw = matrix(0.0, npsi, nL)
+An = matrix(0.0, npsi, nL)
+for(i in 1:npsi) {
+  psiSoilLayers = c(-0.2,-0.1,-0.0) + psiSoil[i]
+  supplyNetwork1 = hydraulics.supplyFunctionNetwork(psiSoilLayers,
+                                  krhizomaxvec1,rep(n1,3),rep(alpha1,3),
+                                  krootmaxvec, rootc,rootd,
+                                  kstemmax, stemc,stemd,
+                                  psiCav=0.0,
+                                  maxNsteps = 200, psiMax = psiMax)
+  for(j in 1:nL) {
+    Rabs = 740*L[j]/100
+    Q = 2000*L[j]/100
+    psi2A1 = photo.leafPhotosynthesisFunction(supplyNetwork1,Catm, Patm,Tair, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+    PM1 =transp.profitMaximization(supplyNetwork1, psi2A1, type=2, kstemmax)
+    psiPlant[i,j] = supplyNetwork1$PsiPlant[PM1$iMaxProfit+1]
+    psiDrop[i,j] = psiSoil[i]-psiPlant[i,j]
+    E[i,j] = supplyNetwork1$E[PM1$iMaxProfit+1]
+    An[i,j] = psi2A1$NetPhotosynthesis[PM1$iMaxProfit+1]
+    Gw[i,j] = psi2A1$WaterVaporConductance[PM1$iMaxProfit+1]
+  }
+}
+
+psiCanopyCav = matrix(0.0, npsi, nL)
+psiDropCav = matrix(0.0, npsi, nL)
+ECav = matrix(0.0, npsi, nL)
+AnCav = matrix(0.0, npsi, nL)
+GwCav = matrix(0.0, npsi, nL)
+for(i in 1:npsi) {
+  psiSoilLayers = c(-0.2,-0.1,-0.0) + psiSoil[i]
+  supplyNetwork1 = hydraulics.supplyFunctionNetwork(psiSoilLayers,
+                                  krhizomaxvec1,rep(n1,3),rep(alpha1,3),
+                                  krootmaxvec, rootc,rootd,
+                                  kstemmax, stemc,stemd,
+                                  psiCav=psiCav,
+                                  maxNsteps = 200, psiMax = psiMax)
+  for(j in 1:nL) {
+    Rabs = 740*L[j]/100
+    Q = 2000*L[j]/100
+    psi2A1 = photo.leafPhotosynthesisFunction(supplyNetwork1,Catm, Patm,Tair, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+    PM1 =transp.profitMaximization(supplyNetwork1, psi2A1, type=2, kstemmax)
+    psiCanopyCav[i,j] = supplyNetwork1$PsiPlant[PM1$iMaxProfit+1]
+    psiDropCav[i,j] = psiSoil[i]-psiCanopyCav[i,j]
+    ECav[i,j] = supplyNetwork1$E[PM1$iMaxProfit+1]
+    AnCav[i,j] = psi2A1$NetPhotosynthesis[PM1$iMaxProfit+1]
+    GwCav[i,j] = psi2A1$WaterVaporConductance[PM1$iMaxProfit+1]
+  }
+}
+
+contour(x=-psiSoil, y=L, z = psiDrop, main="Pressure drop (original)", xlab = "Soil pressure (-MPa)", ylab="Percent light")
+contour(x=-psiSoil, y=L, z = psiDropCav, main="Pressure drop (after cavitation)", xlab = "Soil pressure (-MPa)", ylab="Percent light")
+contour(x=-psiSoil, y=L, z = Gw, main = "Vapor diffusive conductance (original)", xlab = "Soil pressure (-MPa)", ylab="Percent light")
+contour(x=-psiSoil, y=L, z = GwCav, main = "Vapor diffusive conductance (after cavitation)", xlab = "Soil pressure (-MPa)", ylab="Percent light")
+contour(x=-psiSoil, y=L, z = E, main = "Regulated flow rate (original)", xlab = "Soil pressure (-MPa)", ylab="Percent light")
+contour(x=-psiSoil, y=L, z = ECav, main = "Regulated flow rate (after cavitation)", xlab = "Soil pressure (-MPa)", ylab="Percent light")
+contour(x=-psiSoil, y=L, z = An, main = "Net photosynthesis (original)", xlab = "Soil pressure (-MPa)", ylab="Percent light")
+contour(x=-psiSoil, y=L, z = AnCav, main = "Net photosynthesis (after cavitation)", xlab = "Soil pressure (-MPa)", ylab="Percent light")
+@
+\end{center}
+As expected, canopy pressure drop, regulated flow rates and net photosynthesis are largest for high levels of light and low levels of soil water deficit. Decreases of light availability or increases of soil water deficit lead to a decrease in these three variables. Net photosynthesis (i.e. after accounting for autotrophic respiration) can be negative for dry soils (or very low levels of light).
+
+\begin{center}
+<<fig=TRUE, width=8, height=15, echo=FALSE>>==
+par(mar=c(4,4,3,2), mfrow=c(5,2))
+psiSoil = c(-0.033,seq(-0.2, -4.0, by=-0.2))
+npsi = length(psiSoil)
+maxvp = meteoland::utils_saturationVP(Tair)
+vpdv = seq(0, maxvp, length=20)
+nvpd = length(vpdv)
+psiCanopy = matrix(0.0, npsi, nvpd)
+psiDrop = matrix(0.0, npsi, nvpd)
+psiPlant = matrix(0.0, npsi, nvpd)
+LeafVPD = matrix(0.0, npsi, nvpd)
+E = matrix(0.0, npsi, nvpd)
+An = matrix(0.0, npsi, nvpd)
+Gw = matrix(0.0, npsi, nvpd)
+for(i in 1:npsi) {
+  psiSoilLayers = c(-0.2,-0.1,-0.0) + psiSoil[i]
+  supplyNetwork1 = hydraulics.supplyFunctionNetwork(psiSoilLayers,
+                                  krhizomaxvec1,rep(n1,3),rep(alpha1,3),
+                                  krootmaxvec, rootc,rootd,
+                                  kstemmax, stemc,stemd,
+                                  psiCav=0.0,
+                                  maxNsteps = 200, psiMax = psiMax)
+  for(j in 1:nvpd) {
+    Rabs = 740
+    Q = 2000
+    psi2A1 = photo.leafPhotosynthesisFunction(supplyNetwork1,Catm, Patm,Tair, maxvp-vpdv[j], u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+    PM1 =transp.profitMaximization(supplyNetwork1, psi2A1, type=2, kstemmax)
+    psiPlant[i,j] = supplyNetwork1$PsiPlant[PM1$iMaxProfit+1]
+    psiDrop[i,j] = psiSoil[i]-psiPlant[i,j]
+    E[i,j] = supplyNetwork1$E[PM1$iMaxProfit+1]
+    An[i,j] = psi2A1$NetPhotosynthesis[PM1$iMaxProfit+1]
+    Gw[i,j] = psi2A1$WaterVaporConductance[PM1$iMaxProfit+1]
+    LeafVPD[i,j] = psi2A1$LeafVPD[PM1$iMaxProfit+1]
+  }
+}
+
+psiCanopyCav = matrix(0.0, npsi, nvpd)
+psiDropCav = matrix(0.0, npsi, nvpd)
+ECav = matrix(0.0, npsi, nvpd)
+AnCav = matrix(0.0, npsi, nvpd)
+GwCav = matrix(0.0, npsi, nvpd)
+LeafVPDCav = matrix(0.0, npsi, nvpd)
+for(i in 1:npsi) {
+  psiSoilLayers = c(-0.2,-0.1,-0.0) + psiSoil[i]
+  supplyNetwork1 = hydraulics.supplyFunctionNetwork(psiSoilLayers,
+                                  krhizomaxvec1,rep(n1,3),rep(alpha1,3),
+                                  krootmaxvec, rootc,rootd,
+                                  kstemmax, stemc,stemd,
+                                  psiCav=psiCav,
+                                  maxNsteps = 200, psiMax = psiMax)
+  for(j in 1:nvpd) {
+    Rabs = 740
+    Q = 2000
+    psi2A1 = photo.leafPhotosynthesisFunction(supplyNetwork1,Catm, Patm,Tair, maxvp-vpdv[j], u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+    PM1 =transp.profitMaximization(supplyNetwork1, psi2A1, type=2, kstemmax)
+    psiCanopyCav[i,j] = supplyNetwork1$PsiPlant[PM1$iMaxProfit+1]
+    psiDropCav[i,j] = psiSoil[i]-psiCanopyCav[i,j]
+    ECav[i,j] = supplyNetwork1$E[PM1$iMaxProfit+1]
+    AnCav[i,j] = psi2A1$NetPhotosynthesis[PM1$iMaxProfit+1]
+    GwCav[i,j] = psi2A1$WaterVaporConductance[PM1$iMaxProfit+1]
+    LeafVPDCav[i,j] = psi2A1$LeafVPD[PM1$iMaxProfit+1]
+  }
+}
+
+
+contour(x=-psiSoil, y=vpdv, z = psiDrop, main="Pressure drop (original)", xlab = "Soil pressure (-MPa)", ylab="Vapor pressure deficit (kPa)")
+contour(x=-psiSoil, y=vpdv, z = psiDropCav, main="Pressure drop (after cavitation)", xlab = "Soil pressure (-MPa)", ylab="Vapor pressure deficit  (kPa)")
+contour(x=-psiSoil, y=vpdv, z = LeafVPD, main = "Leaf VPD (original)", xlab = "Soil pressure (-MPa)", ylab="Vapor pressure deficit (kPa)")
+contour(x=-psiSoil, y=vpdv, z = LeafVPDCav, main = "Leaf VPD (after cavitation)", xlab = "Soil pressure (-MPa)", ylab="Vapor pressure deficit (kPa)")
+contour(x=-psiSoil, y=vpdv, z = Gw, main = "Vapor diffusive conductance (original)", xlab = "Soil pressure (-MPa)", ylab="Vapor pressure deficit (kPa)")
+contour(x=-psiSoil, y=vpdv, z = GwCav, main = "Vapor diffusive conductance (after cavitation)", xlab = "Soil pressure (-MPa)", ylab="Vapor pressure deficit (kPa)")
+contour(x=-psiSoil, y=vpdv, z = E, main = "Regulated flow rate (original)", xlab = "Soil pressure (-MPa)", ylab="Vapor pressure deficit  (kPa)")
+contour(x=-psiSoil, y=vpdv, z = ECav, main = "Regulated flow rate (after cavitation)", xlab = "Soil pressure (-MPa)", ylab="Vapor pressure deficit  (kPa)")
+contour(x=-psiSoil, y=vpdv, z = An, main = "Net photosynthesis (original)", xlab = "Soil pressure (-MPa)", ylab="Vapor pressure deficit (kPa)")
+contour(x=-psiSoil, y=vpdv, z = AnCav, main = "Net photosynthesis (after cavitation)", xlab = "Soil pressure (-MPa)", ylab="Vapor pressure deficit (kPa)")
+@
+\end{center}
+
+
+\begin{center}
+<<fig=TRUE, width=8, height=15, echo=FALSE>>==
+par(mar=c(4,4,3,2), mfrow=c(5,2))
+psiSoilLayers = c(-0.1,-0.1,-0.1)
+
+airTemp = seq(0, 40, by=0.5)
+nair = length(airTemp)
+windSpeed = c(0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, seq(0.1, 5, by=0.1))
+nws = length(windSpeed)
+psiCanopy = matrix(0.0, nair, nws)
+psiDrop = matrix(0.0, nair, nws)
+psiPlant = matrix(0.0, nair, nws)
+E = matrix(0.0, nair, nws)
+An = matrix(0.0, nair, nws)
+Gw = matrix(0.0, nair, nws)
+LeafVPD = matrix(0.0, nair, nws)
+psiCanopyCav = matrix(0.0, nair, nws)
+psiDropCav = matrix(0.0, nair, nws)
+ECav = matrix(0.0, nair, nws)
+AnCav = matrix(0.0, nair, nws)
+GwCav = matrix(0.0, nair, nws)
+LeafVPDCav = matrix(0.0, nair, nws)
+
+supplyNetwork1 = hydraulics.supplyFunctionNetwork(psiSoilLayers,
+                                  krhizomaxvec1,rep(n1,3),rep(alpha1,3),
+                                  krootmaxvec, rootc,rootd,
+                                  kstemmax, stemc,stemd,
+                                  psiCav=0.0,
+                                  maxNsteps = 200, psiMax = psiMax)
+for(i in 1:nair) {
+  for(j in 1:nws) {
+    Rabs = 740
+    Q = 2000
+    vpai = meteoland::utils_averageDailyVP(airTemp[i]-5, airTemp[i]+5, RHmin, RHmax)
+    psi2A1 = photo.leafPhotosynthesisFunction(supplyNetwork1,Catm, Patm,airTemp[i], vpai, windSpeed[j], Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+    PM1 =transp.profitMaximization(supplyNetwork1, psi2A1, type=2, kstemmax)
+    psiPlant[i,j] = supplyNetwork1$PsiPlant[PM1$iMaxProfit+1]
+    psiDrop[i,j] = -0.1 - psiPlant[i,j]
+    E[i,j] = supplyNetwork1$E[PM1$iMaxProfit+1]
+    An[i,j] = psi2A1$NetPhotosynthesis[PM1$iMaxProfit+1]
+    Gw[i,j] = psi2A1$WaterVaporConductance[PM1$iMaxProfit+1]
+    LeafVPD[i,j] = psi2A1$LeafVPD[PM1$iMaxProfit+1]
+  }
+}
+supplyNetwork1 = hydraulics.supplyFunctionNetwork(psiSoilLayers,
+                                  krhizomaxvec1,rep(n1,3),rep(alpha1,3),
+                                  krootmaxvec, rootc,rootd,
+                                  kstemmax, stemc,stemd,
+                                  psiCav=psiCav,
+                                  maxNsteps = 200, psiMax = psiMax)
+
+for(i in 1:nair) {
+  for(j in 1:nws) {
+    Rabs = 740
+    Q = 2000
+    vpai = meteoland::utils_averageDailyVP(airTemp[i]-5, airTemp[i]+5, RHmin, RHmax)
+    psi2A1 = photo.leafPhotosynthesisFunction(supplyNetwork1,Catm, Patm,airTemp[i], vpai, windSpeed[j], Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+    PM1 =transp.profitMaximization(supplyNetwork1, psi2A1, type=2, kstemmax)
+    psiCanopyCav[i,j] = supplyNetwork1$PsiPlant[PM1$iMaxProfit+1]
+    psiDropCav[i,j] = -0.1-psiCanopyCav[i,j]
+    ECav[i,j] = supplyNetwork1$E[PM1$iMaxProfit+1]
+    AnCav[i,j] = psi2A1$NetPhotosynthesis[PM1$iMaxProfit+1]
+    GwCav[i,j] = psi2A1$WaterVaporConductance[PM1$iMaxProfit+1]
+    LeafVPDCav[i,j] = psi2A1$LeafVPD[PM1$iMaxProfit+1]
+  }
+}
+
+
+contour(x=airTemp, y=windSpeed, z = psiDrop, main="Pressure drop (original)", xlab = "Air temperature (ºC)", ylab="Wind speed (m/s)", log="y")
+contour(x=airTemp, y=windSpeed, z = psiDropCav, main="Pressure drop (after cavitation)", xlab = "Air temperature (ºC)", ylab="Wind speed (m/s)", log="y")
+contour(x=airTemp, y=windSpeed, z = LeafVPD, main = "Leaf VPD (original)", xlab = "Air temperature (ºC)", ylab="Wind speed (m/s)", log="y")
+contour(x=airTemp, y=windSpeed, z = LeafVPDCav, main = "Leaf VPD (after cavitation)", xlab = "Air temperature (ºC)", ylab="Wind speed (m/s)", log="y")
+contour(x=airTemp, y=windSpeed, z = Gw, main = "Vapor diffusive conductance (original)", xlab = "Air temperature (ºC)", ylab="Wind speed (m/s)", log="y")
+contour(x=airTemp, y=windSpeed, z = GwCav, main = "Vapor diffusive conductance (after cavitation)", xlab = "Air temperature (ºC)", ylab="Wind speed (m/s)", log="y")
+contour(x=airTemp, y=windSpeed, z = E, main = "Regulated flow rate (original)", xlab = "Air temperature (ºC)", ylab="Wind speed (m/s)", log="y")
+contour(x=airTemp, y=windSpeed, z = ECav, main = "Regulated flow rate (after cavitation)", xlab = "Air temperature (ºC)", ylab="Wind speed (m/s)", log="y")
+contour(x=airTemp, y=windSpeed, z = An, main = "Net photosynthesis (original)", xlab = "Air temperature (ºC)", ylab="Wind speed (m/s)", log="y")
+contour(x=airTemp, y=windSpeed, z = AnCav, main = "Net photosynthesis (after cavitation)", xlab = "Air temperature (ºC)", ylab="Wind speed (m/s)", log="y")
+@
+\end{center}
+
+
+% \subsection{Loss function}
+% The loss function specifies where the plant regulates its actual transpiration rate along the supply function. The supply function derivative ($dE/d\Psi_{canopy}$) drives the loss function. Soil drought and high demand both push the plant towards lower $dE/d\Psi_{canopy}$ values. A simple rule for a loss function is that stomata should close more as stress pushes $dE/d\Psi_{canopy}$ closer to zero. The loss function needs an input water demand $E'$ (which can be derived using Penman's equation or other approaches). The corresponding $Psi_{canopy}'$ (and hence the unregulated pressure drop $\Delta \Psi'$) is first determined from $E'$ by inverting the supply function. The derivative $dE'/d\Psi_{canopy}'$ corresponding to the demand is also calculated from the supply function. The maximum $dE/d\Psi_{canopy}$ is at the start of the curve ($dE/d\Psi_{max}$) and equals maximum soil-plant conductance. The fraction $(dE'/d\Psi_{canopy}')/(dE/d\Psi_{max})$ drops from 1 to 0 as $E'$ increases, quantifying how close the plant is pushed to the critical point of complete hydraulic failure without stomatal closure. Regulated pressure drop ($\Delta \Psi$) is calculated as:
+% \begin{equation}
+% \Delta \Psi = \Delta \Psi' \cdot ((dE'/d\Psi_{canopy}')/(dE/d\Psi_{max}))
+% \end{equation}
+% The regulated pressure drop is then used to determine the regulated $\Psi_{canopy}$ and, using again the supply function, find the regulated $E$ value. Due to its formulation,$\Delta \Psi$ reaches a maximum before $dE'/d\Psi_{canopy}' \simeq 0$. At this point $\Delta \Psi$ should saturate with water demand, rather than to show an unrealistic decline with further $E'$ increases. Thus, beyond this $\Delta \Psi$ saturation point the stomata are assumed to be maximally sensitive to water demand by closing sufficiently to keep $E$ and $\Psi_{canopy}$ constant.
+% 
+% The following figure represents the loss function (which is not reducible to a single equation) for a xylem element only starting from three different values of transpiration demand ($E'$) (see \texttt{hydraulics.regulatedPsiXylem()}). Black lines indicate the supply functions corresponding to different upstream pressure values. Each point of the loss function (in gray) is the result of finding unregulated pressure drop from $E'$, determining the regulated drop and determining the corresponding regulated $\Psi_{canopy}$ and $E$, the latter being drawn.
+% 
+% \begin{center}
+% <<fig=TRUE, width=4, height=3.5, echo=FALSE>>==
+% par(mar=c(4,4,1,1))
+% plot(-psiVec, unlist(lapply(psiVec, hydraulics.EXylem, -0.25, kstemmax, stemc, stemd)), type="l", ylab="Transpiration rate", xlab="Canopy sap pressure (-MPa)", xlim = c(0,5))
+% for(psi in seq(-0.5, -4.5, by=-0.25)) {
+%    lines(-psiVec, unlist(lapply(psiVec, hydraulics.EXylem, psi, kstemmax, stemc, stemd)))
+% }
+% Ein1 = 4
+% Ein2 = 8
+% Ein3 = 15
+% psiVec = seq(-0.25, -4.5, by =-0.25)
+% LU1 = rep(NA, length(psiVec))
+% LR1 = rep(NA, length(psiVec))
+% PU1 = rep(NA, length(psiVec))
+% PR1 = rep(NA, length(psiVec))
+% G1 = rep(NA, length(psiVec))
+% LU2 = rep(NA, length(psiVec))
+% LR2 = rep(NA, length(psiVec))
+% PU2 = rep(NA, length(psiVec))
+% PR2 = rep(NA, length(psiVec))
+% G2 = rep(NA, length(psiVec))
+% LU3 = rep(NA, length(psiVec))
+% LR3 = rep(NA, length(psiVec))
+% PU3 = rep(NA, length(psiVec))
+% PR3 = rep(NA, length(psiVec))
+% G3 = rep(NA, length(psiVec))
+% for(i in 1:length(psiVec)) {
+%    rp1 = hydraulics.regulatedPsiXylem(Ein1, psiVec[i], kstemmax, stemc,stemd)
+%    PU1[i] = rp1[1]
+%    PR1[i] = rp1[2]
+%    LU1[i] = rp1[3]
+%    LR1[i] = rp1[4]
+%    G1[i] = rp1[6]
+%    rp2 = hydraulics.regulatedPsiXylem(Ein2, psiVec[i], kstemmax, stemc,stemd)
+%    PU2[i] = rp2[1]
+%    PR2[i] = rp2[2]
+%    LU2[i] = rp2[3]
+%    LR2[i] = rp2[4]
+%    G2[i] = rp2[6]
+%    rp3 = hydraulics.regulatedPsiXylem(Ein3, psiVec[i], kstemmax, stemc,stemd)
+%    PU3[i] = rp3[1]
+%    PR3[i] = rp3[2]
+%    LU3[i] = rp3[3]
+%    LR3[i] = rp3[4]
+%    G3[i] = rp3[6]
+%  }
+%  lines(-PR1, LR1, col="gray", lwd=1.5, lty=1)
+%  lines(-PR2, LR2, col="gray", lwd=1.5, lty=2)
+%  lines(-PR3, LR3, col="gray", lwd=1.5, lty=3)
+%  legend("topleft", col=rep("gray",3), lty=1:3, lwd=1.5,
+%         legend=c(paste("E\'=",Ein1,sep=""), paste("E\'=",Ein2,sep=""), paste("E\'=",Ein3,sep="")), bty="n", cex=0.8)
+% @
+% \end{center}
+% 
+% The following three graphs illustrate the loss function when considering a two-element network (rhizosphere + xylem) for the three soil texture types (see \texttt{hydraulics.regulatedPsiTwoElements()}):
+% \begin{center}
+% <<fig=TRUE, width=7, height=7, echo=FALSE>>==
+% par(mar=c(4,4,3,1), mfrow=c(2,2))
+% Ein1 = 4
+% Ein2 = 8
+% Ein3 = 15
+% dE = 0.1
+% psiVec = seq(-0.01, -2.0, by =-0.03)
+% LU1 = rep(NA, length(psiVec))
+% LR1 = rep(NA, length(psiVec))
+%   PU1 = rep(NA, length(psiVec))
+%   PR1 = rep(NA, length(psiVec))
+%   G1 = rep(NA, length(psiVec))
+%   LU2 = rep(NA, length(psiVec))
+%   LR2 = rep(NA, length(psiVec))
+%   PU2 = rep(NA, length(psiVec))
+%   PR2 = rep(NA, length(psiVec))
+%   G2 = rep(NA, length(psiVec))
+%   LU3 = rep(NA, length(psiVec))
+%   LR3 = rep(NA, length(psiVec))
+%   PU3 = rep(NA, length(psiVec))
+%   PR3 = rep(NA, length(psiVec))
+%   G3 = rep(NA, length(psiVec))
+%   for(i in 1:length(psiVec)) {
+%     rp1 = hydraulics.regulatedPsiTwoElements(Ein1, psiVec[i], krmax1, kstemmax, n1, alpha1, stemc, stemd,dE)
+%     PU1[i] = rp1[1]
+%     PR1[i] = rp1[2]
+%     LU1[i] = rp1[3]
+%     LR1[i] = rp1[4]
+%     G1[i] = LR1[i]/LU1[i]
+%     rp2 = hydraulics.regulatedPsiTwoElements(Ein2, psiVec[i], krmax1, kstemmax, n1, alpha1, stemc,stemd,dE)
+%     PU2[i] = rp2[1]
+%     PR2[i] = rp2[2]
+%     LU2[i] = rp2[3]
+%     LR2[i] = rp2[4]
+%     G2[i] = LR2[i]/LU2[i]
+%     rp3 = hydraulics.regulatedPsiTwoElements(Ein3, psiVec[i], krmax1, kstemmax, n1, alpha1, stemc,stemd,dE)
+%     PU3[i] = rp3[1]
+%     PR3[i] = rp3[2]
+%     LU3[i] = rp3[3]
+%     LR3[i] = rp3[4]
+%     G3[i] = LR3[i]/LU3[i]
+%   }
+%   plot(-PR1, LR1, type="l", col="black", ylab="Transpiration rate", xlab = "Canopy pressure (-MPa)",  main = textures[1],  xlim=c(0, 2.0), ylim=c(0,10), lwd=1.5, lty=1)
+%   lines(-PR2, LR2, col="gray", lwd=1.5, lty=1)
+%   lines(-PR3, LR3, col="red", lwd=1.5, lty=1)
+%   for(i in 1:length(psiVec)) {
+%     pp = hydraulics.supplyFunctionTwoElements(15, psiVec[i], krmax1, kstemmax, n1, alpha1, stemc,stemd, dE = dE)
+%     lines(-pp$PsiPlant, pp$FittedE, col="black", lwd=1, lty=1)
+%   }
+%    legend("topleft", col=c("black","gray","red"), lty=1, lwd=1.5,
+%          legend=c(paste("E\'=",Ein1,sep=""), paste("E\'=",Ein2,sep=""), paste("E\'=",Ein3,sep="")),
+%          bty="n", cex=0.8)
+% plot(-psiVec, -(PR1-psiVec), type="l", asp= 1, col="black", ylab="Regulated pressure drop (-MPa)", xlab = "Soil pressure (-MPa)",  main = textures[1],  xlim=c(0, 2.0), ylim=c(0,2), lwd=1.5, lty=1)
+%   lines(-psiVec, -(PR2-psiVec), col="gray", lwd=1.5, lty=1)
+%   lines(-psiVec, -(PR3-psiVec), col="red", lwd=1.5, lty=1)
+%   for(a in seq(0, 5, by=0.25)) abline(a=a, b=-1, col="gray")
+%    legend("topleft", col=c("black","gray","red"), lty=1, lwd=1.5,
+%          legend=c(paste("E\'=",Ein1,sep=""), paste("E\'=",Ein2,sep=""), paste("E\'=",Ein3,sep="")),
+%          bty="n", cex=0.8)
+%   pp = hydraulics.supplyFunctionTwoElements(15, psiVec[1], krmax1, kstemmax, n1, alpha1, stemc,stemd, dE = dE)
+%   plot(-pp$PsiPlant, pp$dEdP, type="l", col="black", ylab="dEdP", xlab = "Canopy sap pressure (-MPa)",  main = textures[1],  xlim=c(0, 2.0), ylim=c(0,10), lwd=1.5, lty=1)
+%   for(i in 2:length(psiVec)) {
+%     pp = hydraulics.supplyFunctionTwoElements(15, psiVec[i], krmax1, kstemmax, n1, alpha1, stemc,stemd, dE = dE)
+%     lines(-pp$PsiPlant, pp$dEdP, col="black", lwd=1, lty=1)
+%   }
+% @
+% \end{center}
+% \begin{center}
+% <<fig=TRUE, width=7, height=7, echo=FALSE>>==
+%   par(mar=c(4,4,3,1), mfrow=c(2,2))
+%   Ein1 = 4
+%   Ein2 = 8
+%   Ein3 = 15
+%   dE = 0.1
+%   psiVec = seq(-0.25, -4.5, by =-0.25)
+%   LU1 = rep(NA, length(psiVec))
+%   LR1 = rep(NA, length(psiVec))
+%   PU1 = rep(NA, length(psiVec))
+%   PR1 = rep(NA, length(psiVec))
+%   G1 = rep(NA, length(psiVec))
+%   LU2 = rep(NA, length(psiVec))
+%   LR2 = rep(NA, length(psiVec))
+%   PU2 = rep(NA, length(psiVec))
+%   PR2 = rep(NA, length(psiVec))
+%   G2 = rep(NA, length(psiVec))
+%   LU3 = rep(NA, length(psiVec))
+%   LR3 = rep(NA, length(psiVec))
+%   PU3 = rep(NA, length(psiVec))
+%   PR3 = rep(NA, length(psiVec))
+%   G3 = rep(NA, length(psiVec))
+%   for(i in 1:length(psiVec)) {
+%     rp1 = hydraulics.regulatedPsiTwoElements(Ein1, psiVec[i], krmax2, kstemmax, n2, alpha2, stemc, stemd, dE)
+%     PU1[i] = rp1[1]
+%     PR1[i] = rp1[2]
+%     LU1[i] = rp1[3]
+%     LR1[i] = rp1[4]
+%     G1[i] = LR1[i]/LU1[i]
+%     rp2 = hydraulics.regulatedPsiTwoElements(Ein2, psiVec[i], krmax2, kstemmax, n2, alpha2, stemc,stemd, dE)
+%     PU2[i] = rp2[1]
+%     PR2[i] = rp2[2]
+%     LU2[i] = rp2[3]
+%     LR2[i] = rp2[4]
+%     G2[i] = LR2[i]/LU2[i]
+%     rp3 = hydraulics.regulatedPsiTwoElements(Ein3, psiVec[i], krmax2, kstemmax, n2, alpha2, stemc,stemd, dE)
+%     PU3[i] = rp3[1]
+%     PR3[i] = rp3[2]
+%     LU3[i] = rp3[3]
+%     LR3[i] = rp3[4]
+%     G3[i] = LR3[i]/LU3[i]
+%   }
+%   plot(-PR1, LR1, type="l", col="black", ylab="Transpiration rate", xlab = "Canopy sap pressure (-MPa)",   main = textures[2], xlim=c(0, 5), ylim=c(0,15), lwd=1.5, lty=2)
+%   lines(-PR2, LR2, col="gray", lwd=1.5, lty=2)
+%   lines(-PR3, LR3, col="red", lwd=1.5, lty=2)
+%   for(i in 1:length(psiVec)) {
+%     pp = hydraulics.supplyFunctionTwoElements(15, psiVec[i], krmax2, kstemmax, n2, alpha2, stemc,stemd, dE = dE)
+%     lines(-pp$PsiPlant, pp$FittedE, col="black", lwd=1, lty=1)
+%   }
+% 
+%   legend("topleft", col=c("black","gray","red"), lty=2, lwd=1.5,
+%          legend=c(paste("E\'=",Ein1,sep=""), paste("E\'=",Ein2,sep=""), paste("E\'=",Ein3,sep="")),
+%          bty="n", cex=0.8)
+% plot(-psiVec, -(PR1-psiVec), type="l", asp= 1, col="black", ylab="Regulated pressure drop (-MPa)", xlab = "Soil pressure (-MPa)",  main = textures[2],  xlim=c(0, 2.0), ylim=c(0,2), lwd=1.5, lty=2)
+% lines(-psiVec, -(PR2-psiVec), col="gray", lwd=1.5, lty=2)
+% lines(-psiVec, -(PR3-psiVec), col="red", lwd=1.5, lty=2)
+% for(a in seq(0, 5, by=0.25)) abline(a=a, b=-1, col="gray")
+%  legend("topleft", col=c("black","gray","red"), lty=2, lwd=1.5,
+%        legend=c(paste("E\'=",Ein1,sep=""), paste("E\'=",Ein2,sep=""), paste("E\'=",Ein3,sep="")),
+%        bty="n", cex=0.8)
+%   pp = hydraulics.supplyFunctionTwoElements(15, psiVec[1], krmax2, kstemmax, n2, alpha2, stemc,stemd, dE = dE)
+%   plot(-pp$PsiPlant, pp$dEdP, type="l", col="black", ylab="dEdP", xlab = "Canopy sap pressure (-MPa)",  main = textures[2],  xlim=c(0, 5.0), ylim=c(0,10), lwd=1.5, lty=1)
+%   for(i in 2:length(psiVec)) {
+%     pp = hydraulics.supplyFunctionTwoElements(15, psiVec[i], krmax2, kstemmax, n2, alpha2, stemc,stemd, dE = dE)
+%     lines(-pp$PsiPlant, pp$dEdP, col="black", lwd=1, lty=1)
+%   }
+% @
+% \end{center}
+% 
+% \begin{center}
+% <<fig=TRUE, width=7, height=7, echo=FALSE>>==
+% par(mar=c(4,4,3,1), mfrow=c(2,2))
+% psiVec = seq(-0.25, -4.5, by =-0.25)
+%  LU1 = rep(NA, length(psiVec))
+%   LR1 = rep(NA, length(psiVec))
+%   PU1 = rep(NA, length(psiVec))
+%   PR1 = rep(NA, length(psiVec))
+%   G1 = rep(NA, length(psiVec))
+%   LU2 = rep(NA, length(psiVec))
+%   LR2 = rep(NA, length(psiVec))
+%   PU2 = rep(NA, length(psiVec))
+%   PR2 = rep(NA, length(psiVec))
+%   G2 = rep(NA, length(psiVec))
+%   LU3 = rep(NA, length(psiVec))
+%   LR3 = rep(NA, length(psiVec))
+%   PU3 = rep(NA, length(psiVec))
+%   PR3 = rep(NA, length(psiVec))
+%   G3 = rep(NA, length(psiVec))
+%   for(i in 1:length(psiVec)) {
+%     rp1 = hydraulics.regulatedPsiTwoElements(Ein1, psiVec[i], krmax3, kstemmax, n3, alpha3, stemc, stemd)
+%     PU1[i] = rp1[1]
+%     PR1[i] = rp1[2]
+%     LU1[i] = rp1[3]
+%     LR1[i] = rp1[4]
+%     G1[i] = LR1[i]/LU1[i]
+%     rp2 = hydraulics.regulatedPsiTwoElements(Ein2, psiVec[i], krmax3, kstemmax, n3, alpha3, stemc,stemd)
+%     PU2[i] = rp2[1]
+%     PR2[i] = rp2[2]
+%     LU2[i] = rp2[3]
+%     LR2[i] = rp2[4]
+%     G2[i] = LR2[i]/LU2[i]
+%     rp3 = hydraulics.regulatedPsiTwoElements(Ein3, psiVec[i], krmax3, kstemmax, n3, alpha3, stemc,stemd)
+%     PU3[i] = rp3[1]
+%     PR3[i] = rp3[2]
+%     LU3[i] = rp3[3]
+%     LR3[i] = rp3[4]
+%     G3[i] = LR3[i]/LU3[i]
+%   }
+%   plot(-PR1, LR1, type="l", col="black", ylab="Transpiration rate", xlab = "Canopy sap pressure (-MPa)",  main = textures[3], xlim=c(0, 5), ylim=c(0,15), lwd=1.5, lty=3)
+%   lines(-PR2, LR2, col="gray", lwd=1.5, lty=3)
+%   lines(-PR3, LR3, col="red", lwd=1.5, lty=3)
+%   for(i in 1:length(psiVec)) {
+%     pp = hydraulics.supplyFunctionTwoElements(15, psiVec[i], krmax3, kstemmax, n3, alpha3, stemc,stemd, dE = 0.1)
+%     lines(-pp$PsiPlant, pp$E, col="black", lwd=1, lty=1)
+%   }
+%   legend("topleft", col=c("black","gray","red"), lty=3, lwd=1.5,
+%          legend=c(paste("E=",Ein1,sep=""), paste("E=",Ein2,sep=""), paste("E=",Ein3,sep="")),
+%          bty="n", cex=0.8)
+%   plot(-psiVec, -(PR1-psiVec), type="l", asp= 1, col="black", ylab="Regulated pressure drop (-MPa)", xlab = "Soil pressure (-MPa)",  main = textures[3],  xlim=c(0, 2.0), ylim=c(0,2), lwd=1.5, lty=3)
+%   lines(-psiVec, -(PR2-psiVec), col="gray", lwd=1.5, lty=3)
+%   lines(-psiVec, -(PR3-psiVec), col="red", lwd=1.5, lty=3)
+%   for(a in seq(0, 5, by=0.25)) abline(a=a, b=-1, col="gray")
+%    legend("topleft", col=c("black","gray","red"), lty=3, lwd=1.5,
+%          legend=c(paste("E\'=",Ein1,sep=""), paste("E\'=",Ein2,sep=""), paste("E\'=",Ein3,sep="")),
+%          bty="n", cex=0.8)
+% pp = hydraulics.supplyFunctionTwoElements(15, psiVec[1], krmax3, kstemmax, n3, alpha3, stemc,stemd, dE = dE)
+% plot(-pp$PsiPlant, pp$dEdP, type="l", col="black", ylab="dEdP", xlab = "Canopy sap pressure (-MPa)",  main = textures[3],  xlim=c(0, 5.0), ylim=c(0,10), lwd=1.5, lty=1)
+% for(i in 2:length(psiVec)) {
+%   pp = hydraulics.supplyFunctionTwoElements(15, psiVec[i], krmax3, kstemmax, n3, alpha3, stemc,stemd, dE = dE)
+%   lines(-pp$PsiPlant, pp$dEdP, col="black", lwd=1, lty=1)
+% }
+% @
+% \end{center}
+
+% \subsection{Rhizosphere maximum conductance $k_{rmax}$}
+% Rhizosphere vulnerability curves $k_r(\Psi)$ start astronomically high compared with xylem curves $k(\Psi)$, mainly because root surface is much greater than xylem cross-sectional area. Under wet conditions the relatively low xylem conductance limits the loss function. As soils dry, however, the decrease in rhizosphere conductance may become relevant because it becomes closer to the range of xylem conductance. This is shown in the following figure:
+% \begin{center}
+% <<fig=TRUE, width=4, height=3.5, echo=FALSE>>==
+% par(mar=c(4,4,1,1))
+% psiVec = seq(-0.1, -7.0, by =-0.01)
+% k = unlist(lapply(psiVec, hydraulics.xylemConductance, kstemmax, stemc, stemd))
+% plot(-psiVec, k, type="l",ylab="Hydraulic conductance", xlab="Pressure (-MPa)", lwd=1.5)
+% krmax21 = 16000000000
+% krmax22 = 8000000000
+% krmax23 = 4000000000
+% k1 = unlist(lapply(psiVec, hydraulics.vanGenuchtenConductance, krmax21, n2, alpha2))
+% k2 = unlist(lapply(psiVec, hydraulics.vanGenuchtenConductance, krmax22, n2, alpha2))
+% k3 = unlist(lapply(psiVec, hydraulics.vanGenuchtenConductance, krmax23, n2, alpha2))
+% lines(-psiVec, k1, lty=3, lwd=1.5, col="black")
+% lines(-psiVec, k2, lty=3, lwd=1.5, col="gray")
+% lines(-psiVec, k3, lty=3, lwd=1.5, col="red")
+% legend("topright", col=c("black","black","gray","red"), lty=c(1,3,3,3), lwd=1.5, 
+%        legend=c("xylem curve", paste("krmax=",krmax21,sep=""), paste("krmax=",krmax22,sep=""), paste("krmax=",krmax23,sep="")),
+%        bty="n", cex=0.8)
+% @
+% \end{center}
+% Decreasing root surface effectively decreases $k_{rmax}$ and makes rhizosphere conductance to become relevant for less dry soils. These differences in soil conductance have an effect on the loss function, which can be primarily xylem-limited if $k_{rmax}$ is large enough, but that becomes increasingly soil-limited for smaller $k_{rmax}$ values. This is illustrated in the following figure (assuming silty loam texture):
+% \begin{center}
+% <<fig=TRUE, width=4, height=3.5, echo=FALSE>>==
+% par(mar=c(4,4,1,1))
+% Ein2 = 4
+% psiVec = seq(-0.01, -5.0, by =-0.01)
+% LU1 = rep(NA, length(psiVec))
+% LR1 = rep(NA, length(psiVec))
+% PU1 = rep(NA, length(psiVec))
+% PR1 = rep(NA, length(psiVec))
+% G1 = rep(NA, length(psiVec))
+% LU2 = rep(NA, length(psiVec))
+% LR2 = rep(NA, length(psiVec))
+% PU2 = rep(NA, length(psiVec))
+% PR2 = rep(NA, length(psiVec))
+% G2 = rep(NA, length(psiVec))
+% LU3 = rep(NA, length(psiVec))
+% LR3 = rep(NA, length(psiVec))
+% PU3 = rep(NA, length(psiVec))
+% PR3 = rep(NA, length(psiVec))
+% G3 = rep(NA, length(psiVec))
+% for(i in 1:length(psiVec)) {
+%   rp1 =  hydraulics.regulatedPsiXylem(Ein2, psiVec[i], kstemmax, stemc,stemd)
+%   PU1[i] = rp1[1]
+%   PR1[i] = rp1[2]
+%   LU1[i] = rp1[3]
+%   LR1[i] = rp1[4]
+%   G1[i] = LR1[i]/LU1[i]
+% }
+% plot(-PR1, LR1, type="l", col="black", ylab="Transpiration rate", xlab = "Canopy pressure (-MPa)", xlim=c(0, 5), ylim=c(0,4), lwd=1.5, lty=1)
+% for(i in 1:length(psiVec)) {
+%   rp1 = hydraulics.regulatedPsiTwoElements(Ein2, psiVec[i], krmax21, kstemmax, n2, alpha2, stemc, stemd, dE = 0.1)
+%   PU1[i] = rp1[1]
+%   PR1[i] = rp1[2]
+%   LU1[i] = rp1[3]
+%   LR1[i] = rp1[4]
+%   G1[i] = LR1[i]/LU1[i]
+%   rp2 = hydraulics.regulatedPsiTwoElements(Ein2, psiVec[i], krmax22, kstemmax, n2, alpha2, stemc,stemd,dE = 0.1)
+%   PU2[i] = rp2[1]
+%   PR2[i] = rp2[2]
+%   LU2[i] = rp2[3]
+%   LR2[i] = rp2[4]
+%   G2[i] = LR2[i]/LU2[i]
+%   rp3 = hydraulics.regulatedPsiTwoElements(Ein2, psiVec[i], krmax23, kstemmax, n2, alpha2, stemc,stemd,dE = 0.1)
+%   PU3[i] = rp3[1]
+%   PR3[i] = rp3[2]
+%   LU3[i] = rp3[3]
+%   LR3[i] = rp3[4]
+%   G3[i] = LR3[i]/LU3[i]
+% }
+% lines(-PR1, LR1, col="black", lwd=1.5, lty=3)
+% lines(-PR2, LR2, col="gray", lwd=1.5, lty=3)
+% lines(-PR3, LR3, col="red", lwd=1.5, lty=3)
+% legend("topright", col=c("black", "black","gray","red"), lty=c(1,3,3,3), lwd=1.5,
+%        legend=c("xylem only", paste("krmax=",krmax21,sep=""), paste("krmax=",krmax22,sep=""), paste("krmax=",krmax23,sep="")),
+%        bty="n", cex=0.8)
+% @
+% \end{center}
+% Given the uncertainty in rhizosphere $k_r(\Psi)$ models in dry soil and in the area of absorving roots, Sperry and Love (2015) propose a simplifying assumption consisting in that root investment is just sufficient to approach the xylem limit across the $\Psi_{canopy}$ spectrum. Any greater root surface would be wasted for no water gain, and fewer roots would be a waste of investment in cavitation resistance.
+% 
+
+%' \section{Examples}
+%' \subsection{Constant $\Psi_{soil}$}
+%' In this example we illustrate the behavior of the supply-loss hydraulic theory using an  example where $\Psi_{soil}$ is constantly at -1.5 MPa and the water demand (i.e. potential evapotranspiration) changes from day to day during a year, all three soil textures are tested and plant parameters of the xylem vulnerability curve are $k_{xmax} = 8$, $c = 2$ and $d = 3$. Potential evapotranspiration and regulated transpiration rate (both are assumed to be referred to the same conducting area) are:
+%' \begin{center}
+%' <<fig=TRUE, width=7, height=3.5, echo=FALSE>>==
+%' data(examplemeteo)
+%' par(mar=c(4,4,1,1))
+%' psiSoil = -1.5
+%' E = examplemeteo$PET
+%' LU1 = rep(NA, length(E))
+%' LR1 = rep(NA, length(E))
+%' PU1 = rep(NA, length(E))
+%' PR1 = rep(NA, length(E))
+%' G1 = rep(NA, length(E))
+%'  LU2 = rep(NA, length(E))
+%'  LR2 = rep(NA, length(E))
+%'  PU2 = rep(NA, length(E))
+%'  PR2 = rep(NA, length(E))
+%'  G2 = rep(NA, length(E))
+%'  LU3 = rep(NA, length(E))
+%'  LR3 = rep(NA, length(E))
+%'  PU3 = rep(NA, length(E))
+%'  PR3 = rep(NA, length(E))
+%'  G3 = rep(NA, length(E))
+%'  for(i in 1:length(E)) {
+%'    rp1 = hydraulics.regulatedPsiTwoElements(E[i], psiSoil, krmax1, kxmax, n1, alpha1, c, d,dE)
+%'    PU1[i] = rp1[1]
+%'    PR1[i] = rp1[2]
+%'    LU1[i] = rp1[3]
+%'    LR1[i] = rp1[4]
+%'    G1[i] = LR1[i]/E[i]
+%'    if(E[i]==0) G1[i] = NA
+%'    rp2 = hydraulics.regulatedPsiTwoElements(E[i], psiSoil, krmax2, kxmax, n2, alpha2, c,d,dE)
+%'    PU2[i] = rp2[1]
+%'    PR2[i] = rp2[2]
+%'    LU2[i] = rp2[3]
+%'    LR2[i] = rp2[4]
+%'    G2[i] = LR2[i]/E[i]
+%'    if(E[i]==0) G2[i] = NA
+%'    rp3 = hydraulics.regulatedPsiTwoElements(E[i], psiSoil, krmax3, kxmax, n3, alpha3, c,d,dE)
+%'    PU3[i] = rp3[1]
+%'    PR3[i] = rp3[2]
+%'    LU3[i] = rp3[3]
+%'    LR3[i] = rp3[4]
+%'    G3[i] = LR3[i]/E[i]
+%'    if(E[i]==0) G3[i] = NA
+%'  }
+%' 
+%' plot(LR1, type="l", col="black", ylab="Transpiration rate", xlab = "DOY", ylim=c(0,8), lwd=1, lty=1)
+%' lines(examplemeteo$PET, lty=1, col="gray", lwd=1)
+%' lines(LR2, lty=2, col="black", lwd=1)
+%' lines(LR3, lty=3, col="black", lwd=1)
+%' legend("topleft", col=c("gray","black","black","black"), legend=c("PET", textures), lty=c(1,1,2,3), bty="n", cex=0.8)
+%' @
+%' \end{center}
+%' The supply-loss hydraulic theory also provides water pressure at the canopy end of the continuum. Here we plot both the unregulated and regulated values:
+%' \begin{center}
+%' <<fig=TRUE, width=7, height=3.5, echo=FALSE>>==
+%' par(mar=c(4,4,1,1))
+%' plot(PU1, type="l", col="black", ylab="Unregulated Psi_canopy", ylim=c(-10,0), xlab = "DOY", lwd=1, lty=1)
+%' lines(PU2, col="black", lty=2)
+%' lines(PU3, col="black", lty=3)
+%' legend("bottomleft", col="black", legend=textures, lty=c(1,2,3), bty="n", cex=0.8)
+%' @
+%' \end{center}
+%' \begin{center}
+%' <<fig=TRUE, width=7, height=3.5, echo=FALSE>>==
+%' par(mar=c(4,4,1,1))
+%' plot(PR1, type="l", col="black", ylab="Regulated Psi_canopy", ylim=c(-2.5,-1.5), xlab = "DOY", lwd=1, lty=1)
+%' lines(PR2, col="black", lty=2)
+%' lines(PR3, col="black", lty=3)
+%' legend("bottomleft", col="black", legend=textures, lty=c(1,2,3), bty="n", cex=0.8)
+%' @
+%' \end{center}
+%' Finally, we can also plot the relative canopy conductance as the ratio between water demand and regulated transpiration:
+%' \begin{center}
+%' <<fig=TRUE, width=7, height=3.5, echo=FALSE>>==
+%' par(mar=c(4,4,1,1))
+%' plot(G1, type="l", col="black", ylab="Relative G", ylim=c(0,1), xlab = "DOY", lwd=1, lty=1)
+%' lines(G2, col="black", lty=2)
+%' lines(G3, col="black", lty=3)
+%' legend("bottomleft", col="black", legend=textures, lty=c(1,2,3), bty="n", cex=0.8)
+%' @
+%' \end{center}
+%' \subsection{Simple bucket model}
+%' In this second example, we conduct a simplified soil water balance with precipitation as input and field capacity and soil potential dictated by texture:
+%' \begin{center}
+%' <<fig=TRUE, width=7, height=3.5, echo=FALSE>>==
+%' par(mar=c(4,4,1,1))
+%' E = examplemeteo$PET
+%' P = examplemeteo$Precipitation
+%' barplot(P, col="black", ylab="Precipitation", xlab = "DOY")
+%' @
+%' \end{center}
+%' 
+%' \begin{center}
+%' <<fig=TRUE, width=7, height=3.5, echo=FALSE>>==
+%' par(mar=c(4,4,1,1))
+%' sand1 = 65
+%' sand2 = 30
+%' sand3 = 10
+%' clay1 = 30
+%' clay2 = 10
+%' clay3 = 50
+%' FC1 = soil.psi2theta(clay1, sand1, -33)
+%' FC2 = soil.psi2theta(clay2, sand2, -33)
+%' FC3 = soil.psi2theta(clay3, sand3, -33)
+%' V1 = FC1*1000
+%' V2 = FC2*1000
+%' V3 = FC3*1000
+%' psiSoil1 = rep(NA, length(E))
+%' psiSoil2 = rep(NA, length(E))
+%' psiSoil3 = rep(NA, length(E))
+%' W1 = rep(1, length(E))
+%' W2 = rep(1, length(E))
+%' W3 = rep(1, length(E))
+%' LU1 = rep(NA, length(E))
+%' LR1 = rep(NA, length(E))
+%' PU1 = rep(NA, length(E))
+%' PR1 = rep(NA, length(E))
+%' G1 = rep(NA, length(E))
+%'  LU2 = rep(NA, length(E))
+%'  LR2 = rep(NA, length(E))
+%'  PU2 = rep(NA, length(E))
+%'  PR2 = rep(NA, length(E))
+%'  G2 = rep(NA, length(E))
+%'  LU3 = rep(NA, length(E))
+%'  LR3 = rep(NA, length(E))
+%'  PU3 = rep(NA, length(E))
+%'  PR3 = rep(NA, length(E))
+%'  G3 = rep(NA, length(E))
+%'  for(i in 1:length(E)) {
+%'    W1[i] = min((W1[i]*V1+P[i])/V1,1.0)
+%'    W2[i] = min((W2[i]*V2+P[i])/V2,1.0)
+%'    W3[i] = min((W3[i]*V3+P[i])/V3,1.0)
+%'    psiSoil1[i] = soil.theta2psi(clay1,sand1,W1[i]*FC1)/1000
+%'    psiSoil2[i] = soil.theta2psi(clay2,sand2,W2[i]*FC2)/1000
+%'    psiSoil3[i] = soil.theta2psi(clay3,sand3,W3[i]*FC3)/1000
+%'    rp1 = hydraulics.regulatedPsiTwoElements(E[i], psiSoil1[i], krmax1, kxmax, n1, alpha1, c, d,dE)
+%'    PU1[i] = rp1[1]
+%'    PR1[i] = rp1[2]
+%'    LU1[i] = rp1[3]
+%'    LR1[i] = rp1[4]
+%'    G1[i] = LR1[i]/E[i]
+%'    if(E[i]==0) G1[i] = NA
+%'    rp2 = hydraulics.regulatedPsiTwoElements(E[i], psiSoil2[i], krmax2, kxmax, n2, alpha2, c,d,dE)
+%'    PU2[i] = rp2[1]
+%'    PR2[i] = rp2[2]
+%'    LU2[i] = rp2[3]
+%'    LR2[i] = rp2[4]
+%'    G2[i] = LR2[i]/E[i]
+%'    if(E[i]==0) G2[i] = NA
+%'    rp3 = hydraulics.regulatedPsiTwoElements(E[i], psiSoil3[i], krmax3, kxmax, n3, alpha3, c,d,dE)
+%'    PU3[i] = rp3[1]
+%'    PR3[i] = rp3[2]
+%'    LU3[i] = rp3[3]
+%'    LR3[i] = rp3[4]
+%'    G3[i] = LR3[i]/E[i]
+%'    if(E[i]==0) G3[i] = NA
+%'    if(i<length(E)) {
+%'     W1[i+1] = min((W1[i]*V1-LR1[i])/V1,1.0)
+%'     W2[i+1] = min((W2[i]*V2-LR2[i])/V2,1.0)
+%'     W3[i+1] = min((W3[i]*V3-LR3[i])/V3,1.0)
+%'    }
+%'  }
+%' 
+%' plot(LR1, type="l", col="black", ylab="Transpiration rate", xlab = "DOY", ylim=c(0,8), lwd=1, lty=1)
+%' lines(examplemeteo$PET, lty=1, col="gray", lwd=1)
+%' lines(LR2, lty=2, col="black", lwd=1)
+%' lines(LR3, lty=3, col="black", lwd=1)
+%' legend("topleft", col=c("gray","black","black","black"), legend=c("PET", textures), lty=c(1,1,2,3), bty="n", cex=0.8)
+%' @
+%' \end{center}
+%' Variation of soil moisture relative to field capacity is:
+%' \begin{center}
+%' <<fig=TRUE, width=7, height=3.5, echo=FALSE>>==
+%' par(mar=c(4,4,1,1))
+%' plot(W1, type="l", col="black", ylab="W", ylim=c(0,1), xlab = "DOY", lwd=1, lty=1)
+%' lines(W2, col="black", lty=2)
+%' lines(W3, col="black", lty=3)
+%' legend("bottomleft", col="black", legend=textures, lty=c(1,2,3), bty="n", cex=0.8)
+%' @
+%' \end{center}
+%' 
+%' The soil water potential and regulated plant potential values are:
+%' \begin{center}
+%' <<fig=TRUE, width=7, height=3.5, echo=FALSE>>==
+%' par(mar=c(4,4,1,1))
+%' plot(psiSoil1, type="l", col="black", ylab="Psi_soil", ylim=c(-10,0), xlab = "DOY", lwd=1, lty=1)
+%' lines(psiSoil2, col="black", lty=2)
+%' lines(psiSoil3, col="black", lty=3)
+%' legend("bottomleft", col="black", legend=textures, lty=c(1,2,3), bty="n", cex=0.8)
+%' @
+%' \end{center}
+%' \begin{center}
+%' <<fig=TRUE, width=7, height=3.5, echo=FALSE>>==
+%' par(mar=c(4,4,1,1))
+%' plot(PR1, type="l", col="black", ylab="Regulated Psi_canopy", ylim=c(-4,-0), xlab = "DOY", lwd=1, lty=1)
+%' lines(PR2, col="black", lty=2)
+%' lines(PR3, col="black", lty=3)
+%' legend("bottomleft", col="black", legend=textures, lty=c(1,2,3), bty="n", cex=0.8)
+%' @
+%' \end{center}
+%' And the relative canopy conductance is:
+%' \begin{center}
+%' <<fig=TRUE, width=7, height=3.5, echo=FALSE>>==
+%' par(mar=c(4,4,1,1))
+%' plot(G1, type="l", col="black", ylab="Relative G", ylim=c(0,1), xlab = "DOY", lwd=1, lty=1)
+%' lines(G2, col="black", lty=2)
+%' lines(G3, col="black", lty=3)
+%' legend("bottomleft", col="black", legend=textures, lty=c(1,2,3), bty="n", cex=0.8)
+%' @
+%' \end{center}
+
+
+\end{document}

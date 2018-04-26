@@ -1,0 +1,187 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{natbib}
+\usepackage{authblk}
+\usepackage{hyperref}
+
+%\VignetteIndexEntry{Growth model tests}
+%\VignettePackage{medfate}
+
+\title{Growth model tests}
+\author[1,2]{Miquel De Cáceres}
+\affil[1]{Centre Tecnològic Forestal de Catalunya. Ctra. St. Llorenç de Morunys km 2, 25280, Solsona, Catalonia, Spain}
+\affil[2]{CREAF, Cerdanyola del Vallès, 08193, Spain}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\maketitle
+\tableofcontents
+
+<<echo=FALSE>>=
+options(width=67)
+library(medfate)
+
+#Load example daily meteorological data
+data(examplemeteo)
+
+#Load example plot plant data
+data(exampleforest)
+
+#Default species parameterization
+data(SpParamsMED)
+SpParamsMED$RGRmax=0.003
+
+control = defaultControl()
+control$storagePool="one"
+control$verbose = FALSE
+
+@
+\section{Forests}
+In this study the soil only has two layers only (0-300, 300-1000 mm), and we set rock fragment content to 30\% and 60\%, resulting in in a water holding capacity of 149 mm:
+<<>>=
+sp = defaultSoilParams(2)
+sp$rfc=c(30,60)
+soil(sp)
+@
+
+We consider two different forest stands. The first contains a single tree cohort:
+<<>>=
+forest1 = exampleforest
+forest1$treeData = forest1$treeData[1,]
+forest1$treeData$N = forest1$treeData$N*4
+forest1$shrubData = forest1$shrubData[-(1:4),]
+forest1$treeData$Z50 = 200
+forest1$treeData$Z95 = 1000
+forest1$treeData
+summary(forest1, SpParamsMED)
+@
+The second contains two cohorts of the same species, differing only in height and diameter:
+<<>>=
+forest2 = forest1
+forest2$treeData = as.data.frame(rbind(forest2$treeData, forest2$treeData))
+forest2$treeData$N = c(100,400)
+forest2$treeData$Height[2] = forest2$treeData$Height[1]/2
+forest2$treeData$DBH[2] = forest2$treeData$DBH[1]/1.3
+forest2$treeData
+summary(forest2, SpParamsMED)
+@
+
+The third contains four cohorts of the same species, differing only in height and diameter:
+<<>>=
+forest3 = forest2
+forest3$treeData = as.data.frame(rbind(forest3$treeData, forest3$treeData))
+forest3$treeData$N = c(12,30,100,400)
+forest3$treeData$Height[2] = forest3$treeData$Height[1]/1.5
+forest3$treeData$DBH[2] = forest3$treeData$DBH[1]/1.5
+forest3$treeData$Height[3] = forest3$treeData$Height[2]/1.5
+forest3$treeData$DBH[3] = forest3$treeData$DBH[2]/1.5
+forest3$treeData$Height[4] = forest3$treeData$Height[3]/1.5
+forest3$treeData$DBH[4] = forest3$treeData$DBH[4]/1.5
+forest3$treeData
+summary(forest3, SpParamsMED)
+@
+
+The proportion of fine roots in each layer is:
+<<>>=
+root.ldrDistribution(200,1000,c(300,700))
+@
+<<echo=FALSE>>=
+met1 = examplemeteo
+met2 = as.data.frame(rbind(examplemeteo,examplemeteo,examplemeteo,examplemeteo,examplemeteo,examplemeteo,examplemeteo,examplemeteo,examplemeteo,examplemeteo))
+met3 = as.data.frame(rbind(met2,met2,met2,met2,met2))
+plotfun<-function(S,x) {
+par(mar=c(4,4,1,1), mfrow=c(5,2))
+plot(S, "ET")
+plot(S, "Psi")
+matplot(S$PlantStress, type="l")
+matplot(S$PlantPhotosynthesis, type="l")
+matplot(S$PlantRespiration, type="l")
+matplot(S$PlantLAIlive, type="l")
+matplot(S$PlantSAgrowth, type="l")
+matplot(S$PlantSA, type="l")
+matplot(S$PlantCstorageFast, type="l")
+matplot(S$PlantCstorageSlow, type="l")
+print(x$above)
+print(sum((pi*(x$above$DBH/200)^2)*x$above$N))
+}
+@
+\section{One year}
+\subsection{Forest1}
+<<echo=FALSE, fig=TRUE, width=7, height=10>>=
+examplesoil1 = soil(sp)
+x1 = forest2growthInput(forest1,examplesoil1, SpParamsMED, control)
+S1<-growth(x1, examplesoil1, met1)
+plotfun(S1,x1)
+@
+\subsection{Forest2}
+<<echo=FALSE, fig=TRUE, width=7, height=10>>=
+examplesoil2 = soil(sp)
+x2 = forest2growthInput(forest2,examplesoil2, SpParamsMED, control)
+S2<-growth(x2, examplesoil2, met1)
+plotfun(S2,x2)
+@
+
+\subsection{Forest3}
+<<echo=FALSE, fig=TRUE, width=7, height=10>>=
+examplesoil3 = soil(sp)
+x3 = forest2growthInput(forest3,examplesoil3, SpParamsMED, control)
+S3<-growth(x3, examplesoil3, met1)
+plotfun(S3,x3)
+@
+
+\section{Ten years}
+\subsection{Forest1}
+<<echo=FALSE, fig=TRUE, width=7, height=10>>=
+examplesoil1 = soil(sp)
+x1 = forest2growthInput(forest1,examplesoil1, SpParamsMED, control)
+S1<-growth(x1, examplesoil1, met2)
+plotfun(S1,x1)
+@
+
+\subsection{Forest2}
+
+<<echo=FALSE, fig=TRUE, width=7, height=10>>=
+examplesoil2 = soil(sp)
+control$verbose = FALSE
+x2 = forest2growthInput(forest2,examplesoil2, SpParamsMED, control)
+S2<-growth(x2, examplesoil2, met2)
+plotfun(S2,x2)
+@
+
+
+\subsection{Forest3}
+<<echo=FALSE, fig=TRUE, width=7, height=10>>=
+examplesoil3 = soil(sp)
+x3 = forest2growthInput(forest3,examplesoil3, SpParamsMED, control)
+S3<-growth(x3, examplesoil3, met2)
+plotfun(S3,x3)
+@
+
+\section{One hundred years}
+\subsection{Forest1}
+<<echo=FALSE, fig=TRUE, width=7, height=10>>=
+examplesoil1 = soil(sp)
+x1 = forest2growthInput(forest1,examplesoil1, SpParamsMED, control)
+S1<-growth(x1, examplesoil1, met3)
+plotfun(S1,x1)
+@
+\subsection{Forest2}
+
+<<echo=FALSE, fig=TRUE, width=7, height=10>>=
+examplesoil2 = soil(sp)
+control$verbose = FALSE
+x2 = forest2growthInput(forest2,examplesoil2, SpParamsMED, control)
+S2<-growth(x2, examplesoil2, met3)
+plotfun(S2,x2)
+@
+
+\subsection{Forest3}
+<<echo=FALSE, fig=TRUE, width=7, height=10>>=
+examplesoil3 = soil(sp)
+x3 = forest2growthInput(forest3,examplesoil3, SpParamsMED, control)
+S3<-growth(x3, examplesoil3, met3)
+plotfun(S3,x3)
+@
+
+\end{document}

@@ -4,10 +4,6 @@
 \usepackage{authblk}
 \usepackage{hyperref}
 \usepackage{amsmath}
-
-%\VignetteIndexEntry{Soil water balance and plant drought stress}
-%\VignettePackage{medfate}
-
 \title{Simple model: Soil water balance and plant drought stress}
 \author[1,2]{Miquel De Cáceres}
 \author[1]{Víctor Granda}

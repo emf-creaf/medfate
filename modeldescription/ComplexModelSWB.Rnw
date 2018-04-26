@@ -4,11 +4,7 @@
 \usepackage{authblk}
 \usepackage{hyperref}
 \usepackage{amsmath}
-
-%\VignetteIndexEntry{Soil water balance and plant drought stress}
-%\VignettePackage{medfate}
-
-\title{Soil water balance and plant drought stress}
+\title{Complex model: Soil water balance and plant drought stress}
 \author[1,2]{Miquel De Cáceres}
 \affil[1]{Centre Tecnològic Forestal de Catalunya. Ctra. St. Llorenç de Morunys km 2, 25280, Solsona, Catalonia, Spain}
 \affil[2]{CREAF, Cerdanyola del Vallès, 08193, Spain}
@@ -416,9 +412,9 @@ TS_gravel = 20
 SS_gravel = 40
 RL_gravel = 95
 
-Theta_FC1=soil.psi2theta(TS_clay, TS_sand, -33) #in m3/m3
-Theta_FC2=soil.psi2theta(SS_clay, SS_sand, -33) #in m3/m3
-Theta_FC3=soil.psi2theta(RL_clay, RL_sand, -33) #in m3/m3
+Theta_FC1=soil.psi2thetaSX(TS_clay, TS_sand, -33) #in m3/m3
+Theta_FC2=soil.psi2thetaSX(SS_clay, SS_sand, -33) #in m3/m3
+Theta_FC3=soil.psi2thetaSX(RL_clay, RL_sand, -33) #in m3/m3
 pcTS_gravel = 1-(TS_gravel/100)
 pcSS_gravel = 1-(SS_gravel/100)
 pcRL_gravel = 1-(RL_gravel/100)
@@ -529,16 +525,6 @@ The simple transpiration model does not allow estimating a water potential drop 
 \end{equation}
 where $K_i$ is the average whole-plant relative conductance obtained from the scalar product of conductances and fine root proportions. 
 
-% <<>>=
-% psiSoil = c(-1.0, -1.5, -1.3)
-% v = c(0.5, 0.3, 0.2)
-% Psi_extract = -2.0
-% K_s = unlist(lapply(psiSoil, hydraulics.psi2K, Psi_extract, 3.0))
-% K = sum(K_s*v)
-% hydraulics.K2Psi(K, Psi_extract, 3.0)
-% hydraulics.averagePsi(psiSoil, v, 3.0, Psi_extract)
-% @
-
 \subsubsection{Irreversible cavitation and hydraulic disconnection}
 The water balance model is normally run assuming that although soil drought may reduce transpiration, embolized xylem conduits are automatically refilled when soil moisture recovers (in other words, cavitation is reversible). It is possible to simulate irreversible cavitation by setting \texttt{cavitationRefill = FALSE} (by default \texttt{cavitationRefill = TRUE}). This option causes the model to record the maximum value of drought stress:
 \begin{equation}
@@ -553,50 +539,6 @@ Another optional behavior consists in allowing the plant to disconnect from the 
 
 \subsection{Plant transpiration and photosynthesis: 'Complex' mode}
 If \texttt{transpirationMode = "Complex"}, the model carries out more complex calculations to determine plant transpiration and photosynthesis. The model determines transpiration and photosynthesis for each plant cohort separately as follows. First, it determines the hydraulic supply function depending on plant hydraulic characteristics and soil moisture status. Then, the model divides the day length into a number of subdaily steps and transpiration of the plant cohort is estimated for each of them following the framework of Sperry et al. (2016a), who suggest estimating stomatal conductance from the instantaneous maximization of profit, defined as the difference between photosynthesis gain and hydraulic cost (both normalized for comparability). Since the continuum representation implies several soil layers in parallel but joining at the root crown, the hydraulic submodel yields instantaneous water flow and carbon assimilation rates from (or to) each soil layers. Finally, the instantaneous transpiration and assimilation rates of each time step are scaled to the duration of the time step and to the leaf area of the plant cohort. The following provides details for these processes (see further details in vignette '\texttt{Hydraulics, stomatal conductance and photosynthesis}').
-
-% 
-% \subsubsection{Radiation balance}
-% The model conducts radiation balance at the stand scale. Daily net radiation $R_n$ (in $MJ\cdot m^{-2}\cdot day^{-1}$) is calculated using:
-% \begin{equation}
-% R_n = R_s\cdot (1 - \alpha) - R_{nl}
-% \end{equation}
-% where $R_s$ is the input solar radiation (in $MJ\cdot m^{-2}\cdot day^{-1}$), $\alpha = 0.08$ accounts for surface albedo, and $R_{nl}$ is the net longwave radiation, which depends on elevation, latitude, Julian day, temperature and relative humidity [Aspect should be taken into account!]. The following figure shows an example of radiation balance for a whole year for a site at 100 m elevation and 42ºN latitude (see 'meteoland' functions \texttt{radiation.outgoingLongwaveRadiation()} and \texttt{radiation.netRadiation()}):
-% \begin{center}
-% <<fig =TRUE, echo=FALSE, width=4, height =4>>=
-% data("examplemeteo")
-% R_s = examplemeteo$Radiation
-% tmin = examplemeteo$MinTemperature
-% tmax = examplemeteo$MaxTemperature
-% rhmin = examplemeteo$MinRelativeHumidity
-% rhmax = examplemeteo$MaxRelativeHumidity
-% dates = as.Date(row.names(examplemeteo))
-% years = as.numeric(format(dates,"%Y"))
-% months = as.numeric(format(dates,"%m"))
-% days = as.numeric(format(dates,"%d"))
-% J =rep(NA, length(years))
-% for(i in 1:length(years)) J[i] = radiation_julianDay(years[i],months[i],days[i])
-% R_nl = rep(0, length(J))
-% R_net = rep(0, length(J))
-% latrad = 42*(pi/180)
-% for(i in 1:length(J)) {
-% vpa = utils_averageDailyVP(tmin[i], tmax[i], rhmin[i], rhmax[i])
-% solarConstant = radiation_solarConstant(J[i])
-% delta = radiation_solarDeclination(J[i])
-% R_nl[i] = radiation_outgoingLongwaveRadiation(solarConstant,latrad, 100, 0,0, delta, vpa, tmin[i], tmax[i], R_s[i])
-% R_net[i] = radiation_netRadiation(solarConstant,latrad, 100,0,0, delta, vpa, tmin[i], tmax[i], R_s[i])
-% }
-% plot(dates, R_s, type="l", xlab="", ylab = "Daily radiation (MJ·m-2)", ylim=c(0,40))
-% lines(dates, R_nl, col="blue")
-% lines(dates, R_net, col="red")
-% legend("topleft", col=c("black","blue","red"), legend = c("Solar radiation", "Outgoing longwave radiation", "Net shortwave radiation"), bty="n", cex=0.8, lty=1)
-% @
-% \end{center}
-% 
-% Net radiation is then split into that absorbed by the canopy and that absorbed by the soil (both in $MJ\cdot m^{-2}\cdot day^{-1}$):
-% \begin{eqnarray}
-% R_{n,canopy} &=& R_{n}\cdot \sum_{i}{f_i} = R_{n} \cdot (1 - L^{SWR}_{ground})\\
-% R_{n,soil} &=& R_{n}\cdot (1 - \sum_{i}{f_i})  = R_{n} \cdot L^{SWR}_{ground}
-% \end{eqnarray}
 
 
 \subsubsection{Canopy water supply function}
@@ -631,7 +573,6 @@ Daily variations in diffuse and direct light are explained above. Diurnal temper
 % 
 % The left panel below illustrates the evolution of instantaneous radiation between sunrise and sunset (see function \texttt{biophysics.radiationDiurnalPattern()}) for the same a site as before (at 42ºN latitude) and $J = 210$. The right panel illustrates the corresponding evolution of air temperature (see function \texttt{biophysics.temperatureDiurnalPattern()}).
 % \begin{center}
-% <<echo = FALSE, fig=TRUE, width=7.5, height=4,>>=
 % par(mfrow=c(1,2))
 % data("examplemeteo")
 % R_s = examplemeteo$Radiation
@@ -644,7 +585,6 @@ Daily variations in diffuse and direct light are explained above. Diurnal temper
 % temp = lapply(t,biophysics.temperatureDiurnalPattern, tmin[210], tmax[210],tauday)
 % plot(t,r, type="l", ylab="Instantaneous radiation (W·m-2)", xlab="Seconds after sunrise")
 % plot(t,temp, type="l", ylab="Instantaneous temperature", xlab="Seconds after sunrise")
-% @
 % \end{center}
 
 
@@ -740,9 +680,9 @@ RunEvaporation<-function(Gsoil, Ksoil, d1,d2,d3, numDays = 15){
   PET = 100 #Not limited by PET
   Lground = 1
   
-  Theta_FC1=soil.psi2theta(TS_clay, TS_sand, -33) #in m3/m3
-  Theta_FC2=soil.psi2theta(SS_clay, SS_sand, -33) #in m3/m3
-  Theta_FC3=soil.psi2theta(RL_clay, RL_sand, -33) #in m3/m3
+  Theta_FC1=soil.psi2thetaSX(TS_clay, TS_sand, -33) #in m3/m3
+  Theta_FC2=soil.psi2thetaSX(SS_clay, SS_sand, -33) #in m3/m3
+  Theta_FC3=soil.psi2thetaSX(RL_clay, RL_sand, -33) #in m3/m3
   pcTS_gravel = 1-(TS_gravel/100)
   pcSS_gravel = 1-(SS_gravel/100)
   pcRL_gravel = 1-(RL_gravel/100)
@@ -812,46 +752,6 @@ legend("topleft", lty=rep(1:3,2), pch=c(1,1,1,2,2,2), legend=c("Gsoil = 1 Ksoil 
 \begin{center}
 \emph{Fig. 4}: Cumulative bare soil evaporation for different values of maximum evaporation rate $\gamma_{soil}$ and extinction coefficient $\kappa_{soil}$. Three soil layers (0 – 30 cm; 30 – 150 cm; 150 – 400 cm) are initialized at field capacity ($V_1 = 50 mm$; $V_2 = 201 mm$; $V_3 = 35 mm$). $PE_{soil}$ was assumed not to be limiting. When the extinction coefficient is smaller a higher proportion of the evaporated water is removed from the subsoil and less from the topsoil. This causes more water being available to calculate t in the next step.
 \end{center}
-
-\subsection{Landscape hydrological processes}
-To simulate runoff from one cell to the other, the approach of Ostendorf \& Reynolds (1993) is used, as in SIERRA (Mouillot et al. 2001). Water lateral transport depends on topography only. The model determines cell neigbours following the queen rule (up to eight neighbours per cell). The proportion of water runoff of cell $i$ will be an input to a neighbouring cell $j$ is:
-\begin{equation}
-q_{ij} = \frac{\Delta z_{ij}/L_{ij}}{\sum_{j}{\Delta z_{ij}/L_{ij}}}
-\end{equation}
-if $\Delta z_{ij} = z_i - z_j > 0$, that is, if the difference in elevation between the two cells is positive (i.e. if $z_j < z_i$). Otherwise there is no discharge from $i$ to $j$, i.e. $q_{ij} = 0$. $L_{ij}$ indicates the distance between cell $i$ and $j$ (which depends on cell size and on whether the neighbouring cell $j$ is diagonal to cell $i$). The sumatory of the denominator is done only for neighbours at lower elevation, so that $\sum_{i}{qij} = 1$. 
- 
-The table of $q_{ij}$ values is calculated at the beginning of simulations only. Every day, cells are processed in order from higher to lower elevation. After the daily water balance of a given cell $i$, water runoff $R_i$ is divided among the neighbouring cells situated at lower elevation. The runon of a neighbour $j$, $O_j$ is updated as:
-\begin{equation}
-O_j = O_j + R_i \cdot q_{ij}
-\end{equation}
-Note that a given cell $j$ can receive water discharge from more than one neighbour. $O_j$ values are set to zero at the beginning of each day.
-
-\section{Examples}
-\subsection{Model inputs}
-Soil parameters can be initialized to default values, for a given number of layers, using:
-<<>>=
-s = defaultSoilParams(3) #Default soil parameters for three layers
-print(s)
-@
-Soil input for function \texttt{swb()} is an object of class \texttt{soil} that is created using a function with the same name. Function \texttt{soil()} calculates water content at field capacity and initializes soil moisture to a given level:
-<<>>=
-examplesoil = soil(s, c(0.8, 0.5,0.5))
-print(examplesoil)
-@
-Functions \texttt{swbInput} and \texttt{forest2swbInput} are used to build input for the soil water balance model:
-<<>>=
-data(exampleforest)
-data(SpParamsMED)
-#Initialize control parameters
-control = defaultControl()
-forest2swbInput(exampleforest,examplesoil,SpParamsMED, control)
-@
-
-<<>>=
-control$transpirationMode = "Complex"
-forest2swbInput(exampleforest,examplesoil,SpParamsMED, control)
-@
-
 
 \section{References}
 \begin{itemize}
