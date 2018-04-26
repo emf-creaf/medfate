@@ -72,20 +72,17 @@ List swbDay1(List x, List soil, double tday, double pet, double rain, double er,
   //Control parameters
   List control = x["control"];
   bool cavitationRefill = control["cavitationRefill"];
+  String soilFunctions = control["soilFunctions"];
 
   
   
   //Soil input
-  NumericVector W = soil["W"];
-  NumericVector psiVec = psi(soil, "SX");
+  NumericVector W = soil["W"]; //Access to soil state variable
   NumericVector dVec = soil["dVec"];
-  NumericVector Theta_FC = thetaFC(soil, "SX");
   NumericVector macro = soil["macro"];
   NumericVector rfc = soil["rfc"];
-  NumericVector clay = soil["clay"];
-  NumericVector sand = soil["sand"];
-  NumericVector om = soil["om"];
-  NumericVector Water_FC = waterFC(soil);
+  NumericVector psiVec = psi(soil, soilFunctions);
+  NumericVector Water_FC = waterFC(soil, soilFunctions);
   int nlayers = W.size();
   
 
@@ -153,12 +150,12 @@ List swbDay1(List x, List soil, double tday, double pet, double rain, double er,
         //PROBLEM: THE effect of MACROPOROSITY SHOULD not be affected by layer subdivision
         Wn = W[l]*Water_FC[l] + VI*(1.0-macro[l]); //Update water volume
         VI = VI*macro[l] + std::max(Wn - Water_FC[l],0.0); //Update VI, adding the excess to the infiltrating water (saturated flow)
-        W[l] = std::min(std::max(0.0,Wn/Water_FC[l]),1.0); //Update theta
+        W[l] = std::min(std::max(0.0,Wn/Water_FC[l]),1.0); //Update theta (this modifies 'soil')
       } 
       DeepDrainage = VI; //Reset deep drainage
     }
   }
-  for(int l=0;l<nlayers;l++) psiVec[l] = theta2psiSaxton(clay[l], sand[l], W[l]*Theta_FC[l], om[l]);
+  psiVec = psi(soil,soilFunctions); //Update soil water potential
 
 
   //Proportion of transpiration that absorbed by each plant cohort (old version)
@@ -234,9 +231,8 @@ List swbDay1(List x, List soil, double tday, double pet, double rain, double er,
   }
   // Rcout<<Esoil<<" "<<  std::accumulate(EsoilVec.begin(),EsoilVec.end(),0.0)<<"\n";
 
-  //Apply decrease in soil layers
+  //Apply decrease in soil layers (psi will be updated next call)
   for(int l=0;l<nlayers;l++) W[l] =std::max(W[l]-(EplantVec[l]+EsoilVec[l])/Water_FC[l],0.0);
-
 
   double alpha = std::max(std::min(tday/20.0,1.0),0.0);
   //For comunication with growth and landscape water balance
@@ -273,6 +269,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   
   //Control parameters
   List control = x["control"];
+  String soilFunctions = control["soilFunctions"];
   List numericParams = control["numericParams"];
   double psiStep = numericParams["psiStep"];
   double psiMax = numericParams["psiMax"];
@@ -290,16 +287,15 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   double defaultWindSpeed = control["defaultWindSpeed"];
     
   //Soil input
-  NumericVector W = soil["W"];
-  NumericVector psi = soil["psi"];
+  NumericVector W = soil["W"]; //Access to soil state variable
   NumericVector dVec = soil["dVec"];
-  NumericVector Theta_FC = soil["Theta_FC"];
   NumericVector macro = soil["macro"];
   NumericVector rfc = soil["rfc"];
-  NumericVector clay = soil["clay"];
+  NumericVector psiVec = psi(soil, soilFunctions);
+  NumericVector Water_FC = waterFC(soil, soilFunctions);
+  NumericVector Theta_FC = thetaFC(soil, soilFunctions);
   NumericVector sand = soil["sand"];
-  NumericVector om = soil["om"];
-  NumericVector Water_FC = waterFC(soil);
+  NumericVector clay = soil["clay"];
   NumericVector Tsoil = soil["Temp"]; 
   int nlayers = W.size();
 
@@ -468,20 +464,14 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
     //Update topsoil layer
     for(int l=0;l<nlayers;l++) {
       if((dVec[l]>0) & (VI>0)) {
-        Wn = W[l]*Water_FC[l] + VI*(1.0-macro[l]); //Update water volume
+        Wn = W[l]*Water_FC[l] + VI*(1.0-macro[l]); //Update water volume (changes 'soil')
         VI = VI*macro[l] + std::max(Wn - Water_FC[l],0.0); //Update VI, adding the excess to the infiltrating water (saturated flow)
         W[l] = std::min(std::max(0.0,Wn/Water_FC[l]),1.0); //Update theta
       } 
       DeepDrainage = VI; //Reset deep drainage
     }
   }
-  for(int l=0;l<nlayers;l++) {
-    psi[l] = theta2psiSaxton(clay[l], sand[l], W[l]*Theta_FC[l], om[l]);
-    // Rcout<<psi[l]<<" ";
-  }
-  // Rcout<<"\n";
-
-  // Rcout<<rad<<" "<< solarElevation[0]<<" "<<SWR_direct[0]<<"\n";
+  psiVec = psi(soil, soilFunctions); //Update soil water potential
 
 
 
@@ -501,7 +491,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
     nlayerscon[c] = 0;
     for(int l=0;l<nlayers;l++) {
       if(V(c,l)>0.0) {
-        double pRoot = xylemConductance(psi[l], 1.0, VCroot_c[c], VCroot_d[c]); //Relative conductance in the root
+        double pRoot = xylemConductance(psiVec[l], 1.0, VCroot_c[c], VCroot_d[c]); //Relative conductance in the root
         layerConnected(c,l)= (pRoot>=pRootDisc[c]);
         if(layerConnected(c,l)) nlayerscon[c]=nlayerscon[c]+1;
       } else {
@@ -526,7 +516,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
         Vc[cnt] = V(c,l);
         VCroot_kmaxc[cnt] = VCroot_kmax(c,l);
         VGrhizo_kmaxc[cnt] = VGrhizo_kmax(c,l);
-        psic[cnt] = psi[l];
+        psic[cnt] = psiVec[l];
         VG_nc[cnt] = VG_n[l];
         VG_alphac[cnt] = VG_alpha[l];
         cnt++;
@@ -550,7 +540,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
 
   //Transpiration and photosynthesis
   NumericVector psiBk(nlayers);
-  for(int l=0;l<nlayers;l++) psiBk[l] = psi[l]; //Store initial soil water potential
+  for(int l=0;l<nlayers;l++) psiBk[l] = psiVec[l]; //Store initial soil water potential
   NumericVector PlantPsi(numCohorts);
   NumericMatrix K(numCohorts, nlayers);
   NumericVector Eplant(numCohorts);
@@ -738,9 +728,12 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
     double maxDif = 0;
     for(int l=0;l<nlayers;l++) {
       W[l] =std::min(std::max(W[l]-(EplantVecInstant[l]/Water_FC[l]),0.0),1.0);
-      psi[l] = theta2psiSaxton(clay[l], sand[l], W[l]*Theta_FC[l], om[l]);
-      maxDif = std::max(maxDif, std::abs(psi[l]-psiBk[l]));
     }
+    psiVec = psi(soil, soilFunctions);
+    for(int l=0;l<nlayers;l++) {
+      maxDif = std::max(maxDif, std::abs(psiVec[l]-psiBk[l]));
+    }
+    
     //Determine if supply functions need to be recalculated (maxDif > 0.1 MPa = 100 kPa)
     if(maxDif>0.1) {
       if(verbose) Rcout<<"R";
@@ -758,7 +751,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
             Vc[cnt] = V(c,l);
             VCroot_kmaxc[cnt] = VCroot_kmax(c,l);
             VGrhizo_kmaxc[cnt] = VGrhizo_kmax(c,l);
-            psic[cnt] = psi[l];
+            psic[cnt] = psiVec[l];
             VG_nc[cnt] = VG_n[l];
             VG_alphac[cnt] = VG_alpha[l];
             cnt++;
@@ -778,7 +771,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
                                                   psiCav,
                                                   minFlow, maxNsteps, psiStep, psiMax , ntrial, psiTol, ETol);
       }
-      for(int l=0;l<nlayers;l++) psiBk[l] = psi[l];//Reset backup psi
+      for(int l=0;l<nlayers;l++) psiBk[l] = psiVec[l];//Reset backup psi
     }
     
     
@@ -864,8 +857,8 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
     if(l<(nlayers-1)) EsoilVec[l] = Esoil*(exp(-Ksoil*cumAnt)-exp(-Ksoil*cumPost));
     else EsoilVec[l] = Esoil*exp(-Ksoil*cumAnt);
     W[l] =std::min(std::max(W[l]-(EsoilVec[l]/Water_FC[l]),0.0),1.0);
-    psi[l] = theta2psiSaxton(clay[l], sand[l], W[l]*Theta_FC[l], om[l]);
   }
+  psiVec = psi(soil, soilFunctions); //Update soil water potential
   
   //Copy LAIexpanded for output
   NumericVector LAIcohort(numCohorts);
@@ -897,7 +890,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
                                  _["LWR_SH"] = LWR_SH, _["LWR_SL"] = LWR_SL);
   List DB = List::create(_["Rain"] = rain,_["NetPrec"] = NetPrec, _["Runon"] = runon, _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
                          _["LAIcell"] = LAIcell, _["LAIcelldead"] = LAIcelldead, _["Cm"] = Cm, _["Lground"] = 1.0 - propCover);
-  List SB = List::create(_["EsoilVec"] = EsoilVec, _["EplantVec"] = EplantVec, _["psiVec"] = psi);
+  List SB = List::create(_["EsoilVec"] = EsoilVec, _["EplantVec"] = EplantVec, _["psiVec"] = psiVec);
   Einst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   PsiPlantinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   Aninst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
@@ -1103,7 +1096,7 @@ List swbgridDay(CharacterVector lct, List xList, List soilList,
 
 
 
-void checkswbInput(List x, List soil, String transpirationMode) {
+void checkswbInput(List x, List soil, String transpirationMode, String soilFunctions) {
   if(!x.containsElementNamed("above")) stop("above missing in swbInput");
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   if(!above.containsElementNamed("LAI_live")) stop("LAI_live missing in swbInput$above");
@@ -1147,17 +1140,26 @@ void checkswbInput(List x, List soil, String transpirationMode) {
   if(!soil.containsElementNamed("W")) stop("W missing in soil");
   if(!soil.containsElementNamed("dVec")) stop("dVec missing in soil");
   if(!soil.containsElementNamed("macro")) stop("macro missing in soil");
-  if(!soil.containsElementNamed("clay")) stop("clay missing in soil");
-  if(!soil.containsElementNamed("sand")) stop("sand missing in soil");
+  if(soilFunctions=="SX") {
+    if(!soil.containsElementNamed("clay")) stop("clay missing in soil");
+    if(!soil.containsElementNamed("sand")) stop("sand missing in soil");
+  }
+  if(soilFunctions=="VG") {
+    if(!soil.containsElementNamed("VG_n")) stop("VG_n missing in soil");
+    if(!soil.containsElementNamed("VG_alpha")) stop("VG_alpha missing in soil");
+    if(!soil.containsElementNamed("VG_theta_res")) stop("VG_theta_res missing in soil");
+    if(!soil.containsElementNamed("VG_theta_sat")) stop("VG_theta_sat missing in soil");
+  }
 }
 
 // [[Rcpp::export("swb")]]
 List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL) {
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
+  String soilFunctions = control["soilFunctions"];
   bool verbose = control["verbose"];
   
-  checkswbInput(x, soil, transpirationMode);
+  checkswbInput(x, soil, transpirationMode, soilFunctions);
 
   //Meteorological input    
   NumericVector MinTemperature, MaxTemperature;
@@ -1209,7 +1211,7 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
   //Soil input
   NumericVector W = soil["W"];
   int nlayers = W.size();
-  NumericVector Water_FC = waterFC(soil);
+  NumericVector Water_FC = waterFC(soil, soilFunctions);
 
   //Water balance output variables
   NumericVector Esoil(numDays);
@@ -1445,7 +1447,7 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
   DT.attr("row.names") = meteo.attr("row.names") ;
   List l;
   if(transpirationMode=="Simple") {
-    l = List::create(Named("control") = control,
+    l = List::create(Named("control") = clone(control),
                      Named("cohorts") = clone(cohorts),
                      Named("NumSoilLayers") = nlayers,
                      Named("DailyBalance")=DWB, 
@@ -1456,7 +1458,7 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
                      Named("PlantPsi") = PlantPsi, 
                      Named("PlantStress") = PlantStress);
   } else {
-    l = List::create(Named("control") = control,
+    l = List::create(Named("control") = clone(control),
                      Named("cohorts") = clone(cohorts),
                      Named("NumSoilLayers") = nlayers,
                      Named("DailyBalance")=DWB, 

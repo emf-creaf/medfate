@@ -7,6 +7,8 @@ __Version history__
 _Version 0.5.4, April 2018.
 1. New functions for pressure-volume curves
 2. Rmarkdown vignettes
+3. Added Van Genuchten pedotransfer functions
+4. New control parameter added (for soil functions)
 
 _Version 0.5.3, December 2017.
 1. Network representation of the continuum now includes a leaf segment

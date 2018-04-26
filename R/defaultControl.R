@@ -3,6 +3,7 @@ defaultControl<-function() {
     #For all
     verbose = TRUE,
     # swb
+    soilFunctions = "SX",
     transpirationMode = "Simple", #vs. "Complex"
     hydraulicCostFunction = 1, #vs. 2
     canopyMode = "sunshade", #vs. "multilayer"

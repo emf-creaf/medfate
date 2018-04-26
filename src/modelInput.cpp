@@ -37,7 +37,10 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
   NumericVector H = above["H"];
   NumericVector CR = above["CR"];
   String transpirationMode = control["transpirationMode"];
+  String soilFunctions = control["soilFunctions"]; 
+    
   if((transpirationMode!="Simple") & (transpirationMode!="Complex")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Simple' or 'Complex')");
+  if((soilFunctions!="SX") & (soilFunctions!="VG")) stop("Wrong soil functions ('soilFunctions' should be either 'SX' or 'VG')");
   double averageFracRhizosphereResistance = control["averageFracRhizosphereResistance"];
   String canopyMode = control["canopyMode"];
   
@@ -95,6 +98,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
     List below = List::create(_["V"] = V);
     List numericParams = control["numericParams"];
     List paramsControl = List::create(_["verbose"] =control["verbose"],
+                                      _["soilFunctions"] =soilFunctions, 
                                       _["transpirationMode"] =transpirationMode, 
                                       _["defaultWindSpeed"] = control["defaultWindSpeed"],
                                       _["cavitationRefill"] = control["cavitationRefill"]);
@@ -108,6 +112,10 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
                          _["paramsTransp"] = paramsTranspdf);
     
   } else if(transpirationMode =="Complex"){
+    if(soilFunctions=="SX") {
+      soilFunctions = "VG"; 
+      warning("Soil pedotransfer functions set to Van Genuchten ('VG').");
+    }
     CharacterVector GroupSP = SpParams["Group"];
     NumericVector leafwidthSP = SpParams["LeafWidth"];
     NumericVector HmedSP = SpParams["Hmed"]; //To correct conductivity
@@ -206,6 +214,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
     List numericParams = control["numericParams"];
     List paramsControl = List::create(_["verbose"] =control["verbose"],
                                       _["transpirationMode"] =transpirationMode, 
+                                      _["soilFunctions"] =soilFunctions, 
                                       _["Catm"] = control["Catm"],
                                       _["averageFracRhizosphereResistance"] = control["averageFracRhizosphereResistance"],
                                       _["canopyMode"] =canopyMode, 

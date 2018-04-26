@@ -17,6 +17,7 @@ The function returns a list with default parameters. Users can change those defa
 A list, with the following options:
 \itemize{
 \item{\code{verbose (=TRUE)}: Boolean flag to indicate console output during calculations.}
+\item{\code{soilFunctions (="SX")}: Pedotransfer and conductivity functions for soil, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).}
 \item{\code{transpirationMode (="Simple")}: Transpiration model. See \code{\link{swbInput}}.}
 \item{\code{hydraulicCostFunction (= 1)}: Variant of the hydraulic cost function used in the stomatal regulation model of Sperry & Love (2016). Values accepted are 1 (original cost function based on the derivative of supply function), 2 (leaf vulnerability curve).}
 \item{\code{canopyMode (="sunshade")}: Indicates how crowns should be described to calculate photosynthesis. Accepted values are \code{"sunshade"} (distinguishes photosynthesis in sun leaves from shade leaves) and \code{"multilayer"} (distinguishes photosynthesis of sun leaves and shade leaves in each canopy layer).}
