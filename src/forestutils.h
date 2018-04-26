@@ -6,6 +6,7 @@
 using namespace Rcpp;
 
 DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL);
+NumericMatrix forest2belowground(List x, List soil, DataFrame SpParams);
 
 NumericVector leafDevelopmentStatus(NumericVector Sgdd, double gdd);
 double leafDevelopmentStatus(double Sgdd, double gdd);

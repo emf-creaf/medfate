@@ -1,12 +1,12 @@
 ---
-title: "Using the simple water balance model"
+title: "Using the water balance model"
 author: "Miquel De Caceres"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
     toc: TRUE
 vignette: >
-  %\VignetteIndexEntry{Using the simple water balance model}
+  %\VignetteIndexEntry{Using the water balance model}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignettePackage{medfate}
   \usepackage[utf8]{inputenc}
@@ -18,11 +18,14 @@ library(medfate)
 ```
 
 ## Introduction
-## Preparing model inputs
+
+## Preparing model input
+
+### Soil data
 Soil parameters can be initialized to default values, for a given number of layers, using:
 
 ```{r}
-s = defaultSoilParams(3) #Default soil parameters for three layers
+s = defaultSoilParams(2) #Default soil parameters for three layers
 print(s)
 ```
 
@@ -30,25 +33,87 @@ Soil input for function `swb()` is an object of class `soil` that
 is created using a function with the same name. Function `soil()` calculates
 water content at field capacity and initializes soil moisture to a given level:
 ```{r}
-examplesoil = soil(s, c(0.8, 0.5,0.5))
+examplesoil = soil(s, c(0.8, 0.5))
 print(examplesoil)
+```
+
+```{r}
+names(examplesoil)
 ```
 Functions `swbInput()` and `forest2swbInput()` are used to build input
 for the soil water balance model:
 
+### Species parameters
+
+```{r}
+data("SpParamsMED")
+names(SpParamsMED)
+```
+
+### Forest plot data
+
+Models included in `medfate` were primarily designed to be ran on **forest inventory plots**. Thus, the vegetation is described using the set of woody plants (trees and shrubs) found in a sampled area. Specifically, objects of class `forest` are lists that contain several elements. Among them, the most important items are two data frames, `treeData` (for trees) and `shrubData` for shrubs:
 ```{r}
 data(exampleforest)
-data(SpParamsMED)
-#Initialize control parameters
+exampleforest
+```
+Trees are expected to be primarily described in terms of species, diameter (DBH) and height, whereas shrubs are described in terms of species, percent cover and mean height. 
+
+### Aboveground and belowground data tables
+Because the forest plot format is rather specific, simulation functions in medfate allow starting from two data frames, one for **aboveground** information and the other describing **belowground** (i.e. root distribution) information. Aboveground data frame that does not distinguish between trees and shrubs. It includes, for each plant cohort to be considered in rows, its species identity, height and leaf area index (LAI). While users can build their input data themselves, we use function `forest2aboveground()` on the object `exampleforest` to show how should the data look like:
+```{r}
+above = forest2aboveground(exampleforest, SpParamsMED)
+above
+```
+Columns `N`, `DBH` and `Cover` are required for simulating growth, but not for soil water balance, which only requires columns `SP`, `H` (in cm), `CR` (i.e. the crown ratio), `LAI_live`, `LAI_expanded` and `LAI_dead`. Here plant cohorts are given unique codes that tell us whether they correspond to trees or shrubs, but the user can use other row identifiers as long as they are unique. In practice, the user only needs to worry to calculate the values for `LAI_live`. `LAI_live` and `LAI_expanded` can contain the same LAI values, and `LAI_dead` is normally zero. This is so because models update `LAI_expanded` and `LAI_dead` according to the leaf phenology of species.
+
+Regarding belowground information, a matrix describing for each plant cohort, the proportion of fine roots in each soil layer. As before, we use function `forest2belowground()` on the object `exampleforest` to show how should the data look like:
+```{r}
+below = forest2belowground(exampleforest, examplesoil, SpParamsMED)
+below
+```
+For the tree data in the forest object, function `forest2belowground()` internally takes values of `Z50` and `Z95` and calls  function `root.ldrDistribution()` to estimate the distribution of fine roots according to the linear dose response model. For example the first row is:
+```{r}
+root.ldrDistribution(exampleforest$treeData$Z50[1], 
+                     exampleforest$treeData$Z95[1],
+                     examplesoil$dVec)
+```
+For shrubs, `medfate` assumes a conic distribution and calls function `root.conicDistribution()`. For example, the third row of `below` is calculated:
+```{r}
+root.conicDistribution(exampleforest$shrubData$Z[1], 
+                     examplesoil$dVec)
+```
+The user is free to build any numeric matrix for root distribution, as long as values in rows sum always one (i.e. we have proportions). Otherwise, functions `root.conicDistribution()` and `root.ldrDistribution()` can be used to calculate root distribution under specific assumptions.
+
+
+### Simulation control parameters
+
+```{r}
 control = defaultControl()
-x = forest2swbInput(exampleforest,examplesoil,SpParamsMED, control)
+control
+```
+
+### Soil water balance input object
+
+```{r}
+x = swbInput(above, below, examplesoil, SpParamsMED, control)
+```
+
+```{r}
 x
 ```
+
+
+### Meteorological forcing data
+
+```{r}
+data(examplemeteo)
+```
+
 
 ## Running the soil water balance model
 
 ```{r}
-data(examplemeteo)
 S = swb(x, examplesoil, examplemeteo)
 ```
 

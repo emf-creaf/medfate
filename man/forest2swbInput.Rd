@@ -1,6 +1,7 @@
 \encoding{UTF-8}
 \name{swbInput}
 \alias{forest2aboveground}
+\alias{forest2belowground}
 \alias{forest2growthInput}
 \alias{forest2swbInput}
 \alias{growthInput}
@@ -11,10 +12,11 @@ Input for simulation models
 }
 
 \description{
-Functions \code{forest2swbInput} and \code{forest2growthInput} take an object of class \code{\link{forest}} and calculate input data for functions \code{\link{swb}} and \code{\link{growth}}, respectively. Functions \code{swbInput} and \code{growthInput} does the same from input data. Function \code{forest2aboveground} calculates aboveground variables that may be used in \code{swbInput} and \code{growthInput} functions.
+Functions \code{forest2swbInput} and \code{forest2growthInput} take an object of class \code{\link{forest}} and calculate input data for functions \code{\link{swb}} and \code{\link{growth}}, respectively. Functions \code{swbInput} and \code{growthInput} does the same from input data. Function \code{forest2aboveground} calculates aboveground variables that may be used in \code{swbInput} and \code{growthInput} functions. Similarly, function \code{forest2belowground} calculates belowground root distribution that may be used in \code{swbInput} and \code{growthInput} functions.
 }
 \usage{
 forest2aboveground(x, SpParams, gdd = NA)
+forest2belowground(x, soil, SpParams)
 forest2growthInput(x, soil, SpParams, control)
 forest2swbInput(x, soil, SpParams, control)
 growthInput(above,  Z, V,  soil, SpParams, control)
@@ -118,24 +120,30 @@ data(exampleforest)
 #Default species parameterization
 data(SpParamsMED)
 
-#Aboveground parameters
-forest2aboveground(exampleforest, SpParamsMED)
+# Aboveground parameters
+above = forest2aboveground(exampleforest, SpParamsMED)
+above
 
-#Initialize soil with default soil params
+# Initialize soil with default soil params
 examplesoil = soil(defaultSoilParams())
 
-#Initialize control parameters
+# Belowground parameters
+below = forest2belowground(exampleforest, examplesoil, SpParamsMED)
+below
+
+# Initialize control parameters
 control = defaultControl()
 
-#Prepare swb input for simple hydraulic mode
-forest2swbInput(exampleforest,examplesoil,SpParamsMED, control)
+# Prepare swb input
+swbInput(above, below, examplesoil,SpParamsMED, control)
 
-#Prepare growth input for simple hydraulic mode
-forest2growthInput(exampleforest,examplesoil,SpParamsMED, control)
+# When starting from an object of class 'forest' the whole process
+# can be simplified:
+forest2swbInput(exampleforest, examplesoil, SpParamsMED, control)
 
 
-#Prepare input for Complex hydraulic mode
+# Prepare input for complex transpiration mode
 control$transpirationMode = "Complex"
-
 forest2swbInput(exampleforest,examplesoil,SpParamsMED, control)
+
 }

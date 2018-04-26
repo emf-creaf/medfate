@@ -209,6 +209,10 @@ forest2aboveground <- function(x, SpParams, gdd = NA_real_) {
     .Call('_medfate_forest2aboveground', PACKAGE = 'medfate', x, SpParams, gdd)
 }
 
+forest2belowground <- function(x, soil, SpParams) {
+    .Call('_medfate_forest2belowground', PACKAGE = 'medfate', x, soil, SpParams)
+}
+
 .fuelConditions <- function(airTemp, airHumidity, fuelRadiation, fuelWindSpeed) {
     .Call('_medfate_fuelConditions', PACKAGE = 'medfate', airTemp, airHumidity, fuelRadiation, fuelWindSpeed)
 }

@@ -2,6 +2,7 @@
 #include <Rcpp.h>
 #include <string.h>
 #include <stdio.h>
+#include "root.h"
 using namespace Rcpp;
 
 
@@ -980,4 +981,38 @@ DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL) {
     
   return(above);
   
+}
+
+
+// [[Rcpp::export("forest2belowground")]]
+NumericMatrix forest2belowground(List x, List soil, DataFrame SpParams) {
+  DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
+  DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
+  NumericVector d = soil["dVec"];
+  int ntree = treeData.nrows();
+  int nshrub = shrubData.nrows();
+  
+  int nlayers = d.size();
+  NumericMatrix V(ntree+nshrub,nlayers);
+  NumericVector treeZ50 = treeData["Z50"];
+  NumericVector treeZ95 = treeData["Z95"];
+  NumericVector shrubZ = shrubData["Z"];  
+  NumericVector Vi;
+  CharacterVector ln(nlayers);
+  for(int l=0;l<nlayers;l++){
+    char Result[16]; 
+    sprintf(Result, "%d", l+1);
+    ln[l] = Result;
+  }
+  
+  for(int i=0;i<ntree;i++) {
+    Vi = ldrRS_one(treeZ50[i], treeZ95[i],d);
+    V(i,_) = Vi;
+  }
+  for(int i=0;i<nshrub;i++) {
+    Vi = conicRS_one(shrubZ[i],d);
+    V(ntree+i,_) = Vi;
+  }
+  V.attr("dimnames") = List::create(cohortIDs(x, SpParams),ln);
+  return(V);
 }

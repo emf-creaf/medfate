@@ -696,6 +696,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// forest2belowground
+NumericMatrix forest2belowground(List x, List soil, DataFrame SpParams);
+RcppExport SEXP _medfate_forest2belowground(SEXP xSEXP, SEXP soilSEXP, SEXP SpParamsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
+    rcpp_result_gen = Rcpp::wrap(forest2belowground(x, soil, SpParams));
+    return rcpp_result_gen;
+END_RCPP
+}
 // fuelConditions
 NumericVector fuelConditions(double airTemp, double airHumidity, double fuelRadiation, double fuelWindSpeed);
 RcppExport SEXP _medfate_fuelConditions(SEXP airTempSEXP, SEXP airHumiditySEXP, SEXP fuelRadiationSEXP, SEXP fuelWindSpeedSEXP) {
@@ -2421,6 +2434,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_LAIdistribution", (DL_FUNC) &_medfate_LAIdistribution, 4},
     {"_medfate_LAIprofile", (DL_FUNC) &_medfate_LAIprofile, 4},
     {"_medfate_forest2aboveground", (DL_FUNC) &_medfate_forest2aboveground, 3},
+    {"_medfate_forest2belowground", (DL_FUNC) &_medfate_forest2belowground, 3},
     {"_medfate_fuelConditions", (DL_FUNC) &_medfate_fuelConditions, 4},
     {"_medfate_EMCdesorption", (DL_FUNC) &_medfate_EMCdesorption, 2},
     {"_medfate_EMCadsorption", (DL_FUNC) &_medfate_EMCadsorption, 2},

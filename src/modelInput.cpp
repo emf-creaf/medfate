@@ -256,26 +256,7 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
 
 // [[Rcpp::export("forest2swbInput")]]
 List forest2swbInput(List x, List soil, DataFrame SpParams, List control) {
-  DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
-  DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
-  NumericVector d = soil["dVec"];
-  int ntree = treeData.nrows();
-  int nshrub = shrubData.nrows();
-  
-  int nlayers = d.size();
-  NumericMatrix V(ntree+nshrub,nlayers);
-  NumericVector treeZ50 = treeData["Z50"];
-  NumericVector treeZ95 = treeData["Z95"];
-  NumericVector shrubZ = shrubData["Z"];  
-  NumericVector Vi;
-  for(int i=0;i<ntree;i++) {
-    Vi = ldrRS_one(treeZ50[i], treeZ95[i],d);
-    V(i,_) = Vi;
-  }
-  for(int i=0;i<nshrub;i++) {
-    Vi = conicRS_one(shrubZ[i],d);
-    V(ntree+i,_) = Vi;
-  }
+  NumericMatrix V = forest2belowground(x,soil, SpParams);
   DataFrame above = forest2aboveground(x, SpParams, NA_REAL);
   return(swbInput(above,  V, soil, SpParams, control));
 }
@@ -639,19 +620,14 @@ List forest2growthInput(List x, List soil, DataFrame SpParams, List control) {
   
   int nlayers = d.size();
   NumericVector Z(ntree+nshrub); //Rooting depth in cm
-  NumericMatrix V(ntree+nshrub,nlayers);
   NumericVector treeZ50 = treeData["Z50"];
   NumericVector treeZ95 = treeData["Z95"];
   NumericVector shrubZ = shrubData["Z"];  
-  NumericVector Vi;
+  NumericMatrix V = forest2belowground(x,soil, SpParams);
   for(int i=0;i<ntree;i++) {
-    Vi = ldrRS_one(treeZ50[i], treeZ95[i],d);
-    V(i,_) = Vi;
     Z[i] = treeZ95[i]/10.0;
   }
   for(int i=0;i<nshrub;i++) {
-    Vi = conicRS_one(shrubZ[i],d);
-    V(ntree+i,_) = Vi;
     Z[ntree+i] = shrubZ[i]/10.0; 
   }
   DataFrame above = forest2aboveground(x, SpParams, NA_REAL);
