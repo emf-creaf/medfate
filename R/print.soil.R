@@ -1,4 +1,4 @@
-print.soil<-function(x,...) {
+print.soil<-function(x, model="SX",...) {
   #Depth
   cat(paste("Soil depth (mm):", round(x$SoilDepth, digits=0),"\n"))
   #Soil parameters related to texture
@@ -6,7 +6,8 @@ print.soil<-function(x,...) {
   dini = 0;
   dfin = 0;
   ##Water content at field capacity
-  Water_FC = soil.waterFC(x)
+  Water_FC = soil.waterFC(x, model)
+  Theta_FC = soil.thetaFC(x, model)
   
   for(l in 1:nlayers) {
     dfin = dfin+x$dVec[l]
@@ -15,7 +16,7 @@ print.soil<-function(x,...) {
     cat(paste("\nLayer ",l," [",dini," to ",dfin,"mm ]",
               "\n    clay (%):", round(x$clay[l]),"silt (%):", round(silt), "sand (%):", round(x$sand[l]), "organic matter (%):", round(x$om[l]),
               "[", x$usda_Type[l],"]\n    Rock fragment content (%):", round(x$rfc[l]),"Macroporosity (%):", round(x$macro[l]*100),  
-              "\n    Theta FC (%):", round(100*x$Theta_FC[l]),"Vol. FC (mm):", round(Water_FC[l]), "Vol. current (mm):", round(x$W[l]*Water_FC[l]), 
+              "\n    Theta FC (%):", round(100*Theta_FC[l]),"Vol. FC (mm):", round(Water_FC[l]), "Vol. current (mm):", round(x$W[l]*Water_FC[l]), 
               "\n    Temperature (Celsius):", round(x$Temp[l],1),
               "\n"))
     dini = dini+x$dVec[l]

@@ -5,9 +5,15 @@
 #endif
 using namespace Rcpp;
 
-double theta2psi(double clay, double sand, double theta, double om = NA_REAL);
-double psi2theta(double clay, double sand, double psi, double om = NA_REAL);
-NumericVector waterFC(List soil);
+double theta2psiSaxton(double clay, double sand, double theta, double om = NA_REAL);
+double psi2thetaSaxton(double clay, double sand, double psi, double om = NA_REAL);
+double theta2psiVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double theta);
+double psi2thetaVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double psi);
+
+NumericVector waterFC(List soil, String model = "SX");
+NumericVector thetaFC(List soil, String model = "SX");
+NumericVector theta(List soil, String model="SX");
+NumericVector psi(List soil, String model="SX");
 
 String soilUSDAType(double clay, double sand);
 NumericVector vanGenuchtenParams(String soilType);

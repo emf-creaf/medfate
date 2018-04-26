@@ -77,9 +77,9 @@ List swbDay1(List x, List soil, double tday, double pet, double rain, double er,
   
   //Soil input
   NumericVector W = soil["W"];
-  NumericVector psi = soil["psi"];
+  NumericVector psiVec = psi(soil, "SX");
   NumericVector dVec = soil["dVec"];
-  NumericVector Theta_FC = soil["Theta_FC"];
+  NumericVector Theta_FC = thetaFC(soil, "SX");
   NumericVector macro = soil["macro"];
   NumericVector rfc = soil["rfc"];
   NumericVector clay = soil["clay"];
@@ -158,7 +158,7 @@ List swbDay1(List x, List soil, double tday, double pet, double rain, double er,
       DeepDrainage = VI; //Reset deep drainage
     }
   }
-  for(int l=0;l<nlayers;l++) psi[l] = theta2psi(clay[l], sand[l], W[l]*Theta_FC[l], om[l]);
+  for(int l=0;l<nlayers;l++) psiVec[l] = theta2psiSaxton(clay[l], sand[l], W[l]*Theta_FC[l], om[l]);
 
 
   //Proportion of transpiration that absorbed by each plant cohort (old version)
@@ -187,7 +187,7 @@ List swbDay1(List x, List soil, double tday, double pet, double rain, double er,
   NumericVector Kl, epc, Vl;
   double WeibullShape=3.0;
   for(int l=0;l<nlayers;l++) {
-    Kl = Psi2K(psi[l], Psi_Extract, WeibullShape);
+    Kl = Psi2K(psiVec[l], Psi_Extract, WeibullShape);
  
     //Limit Kl due to previous cavitation
     if(!cavitationRefill) for(int c=0;c<numCohorts;c++) Kl[c] = std::min(Kl[c], 1.0-pEmb[c]);
@@ -195,7 +195,7 @@ List swbDay1(List x, List soil, double tday, double pet, double rain, double er,
     Vl = V(_,l);
     epc = pmax(TmaxCoh*Kl*Vl,0.0);
     for(int c=0;c<numCohorts;c++) {
-      PsiRoot(c,l) = psi[l]; //Set initial guess of root potential to soil values
+      PsiRoot(c,l) = psiVec[l]; //Set initial guess of root potential to soil values
       //If relative conductance is smaller than the value for root disconnection
       //Set root potential to minimum value before disconnection and transpiration from that layer to zero
       if(Kl[c]<pRootDisc[c]) { 
@@ -252,7 +252,7 @@ List swbDay1(List x, List soil, double tday, double pet, double rain, double er,
   
   List DB = List::create(_["PET"] = pet, _["Rain"] = rain, _["NetPrec"] = NetPrec, _["Runon"] = runon, _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
                     _["LAIcell"] = LAIcell, _["LAIcelldead"] = LAIcelldead, _["Cm"] = Cm, _["Lground"] = LgroundPAR);
-  List SB = List::create(_["EsoilVec"] = EsoilVec, _["EplantVec"] = EplantVec, _["psiVec"] = psi);
+  List SB = List::create(_["EsoilVec"] = EsoilVec, _["EplantVec"] = EplantVec, _["psiVec"] = psiVec);
   Eplant.attr("names") = above.attr("row.names");
   PlantPsi.attr("names") = above.attr("row.names");
   DDS.attr("names") = above.attr("row.names");
@@ -476,7 +476,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
     }
   }
   for(int l=0;l<nlayers;l++) {
-    psi[l] = theta2psi(clay[l], sand[l], W[l]*Theta_FC[l], om[l]);
+    psi[l] = theta2psiSaxton(clay[l], sand[l], W[l]*Theta_FC[l], om[l]);
     // Rcout<<psi[l]<<" ";
   }
   // Rcout<<"\n";
@@ -738,7 +738,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
     double maxDif = 0;
     for(int l=0;l<nlayers;l++) {
       W[l] =std::min(std::max(W[l]-(EplantVecInstant[l]/Water_FC[l]),0.0),1.0);
-      psi[l] = theta2psi(clay[l], sand[l], W[l]*Theta_FC[l], om[l]);
+      psi[l] = theta2psiSaxton(clay[l], sand[l], W[l]*Theta_FC[l], om[l]);
       maxDif = std::max(maxDif, std::abs(psi[l]-psiBk[l]));
     }
     //Determine if supply functions need to be recalculated (maxDif > 0.1 MPa = 100 kPa)
@@ -864,7 +864,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
     if(l<(nlayers-1)) EsoilVec[l] = Esoil*(exp(-Ksoil*cumAnt)-exp(-Ksoil*cumPost));
     else EsoilVec[l] = Esoil*exp(-Ksoil*cumAnt);
     W[l] =std::min(std::max(W[l]-(EsoilVec[l]/Water_FC[l]),0.0),1.0);
-    psi[l] = theta2psi(clay[l], sand[l], W[l]*Theta_FC[l], om[l]);
+    psi[l] = theta2psiSaxton(clay[l], sand[l], W[l]*Theta_FC[l], om[l]);
   }
   
   //Copy LAIexpanded for output
@@ -1145,9 +1145,7 @@ void checkswbInput(List x, List soil, String transpirationMode) {
     if(!soil.containsElementNamed("VG_alpha")) stop("VG_alpha missing in soil");
   }
   if(!soil.containsElementNamed("W")) stop("W missing in soil");
-  if(!soil.containsElementNamed("psi")) stop("psi missing in soil");
   if(!soil.containsElementNamed("dVec")) stop("dVec missing in soil");
-  if(!soil.containsElementNamed("Theta_FC")) stop("Theta_FC missing in soil");
   if(!soil.containsElementNamed("macro")) stop("macro missing in soil");
   if(!soil.containsElementNamed("clay")) stop("clay missing in soil");
   if(!soil.containsElementNamed("sand")) stop("sand missing in soil");

@@ -7,10 +7,10 @@ using namespace Rcpp;
 using namespace std;
 
 double const maxPsi = -0.000001;
-
+double const cmhead2MPa = 0.00009804139; //Constant to transform cm head to MPa
 
 /**
- * Whole-plant conductance function
+ * Whole-plant conductance function (simple water balance model)
  */
 // [[Rcpp::export("hydraulics.psi2K")]]
 double Psi2K(double psi, double Psi_extract, double ws = 3.0) {
@@ -344,15 +344,13 @@ List supplyFunctionOneXylem(NumericVector psiSoil, NumericVector v,
                       Named("dEdP")=supplydEdpDef));
 
 }
+/**
+ * Van genuchten-mualem conductance equation (m = 1 - 1/n; l = 0.5)
+ */
 // [[Rcpp::export("hydraulics.vanGenuchtenConductance")]]
 double vanGenuchtenConductance(double psi, double krhizomax, double n, double alpha) {
   double v = 1.0/(pow(alpha*std::abs(psi),n)+1.0);
   return(krhizomax*pow(v,(n-1.0)/(2.0*n))*pow(pow((1.0-v),(n-1.0)/n)-1.0,2.0));
-//   double ah = alpha*abs(psi);
-//   double m = 1.0 - (1.0/n);
-//   double den = pow(1.0+pow(ah, n),m/2.0);
-//   double num = pow(1.0-pow(ah,n-1.0)*pow(1.0+pow(ah, n),-m),2.0);
-//   return(krhizomax*(num/den));
 }
 // [[Rcpp::export("hydraulics.E2psiVanGenuchten")]]
 double E2psiVanGenuchten(double E, double psiSoil, double krhizomax, double n, double alpha, double psiStep = -0.01, double psiMax = -10.0) {

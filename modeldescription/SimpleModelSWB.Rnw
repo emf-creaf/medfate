@@ -813,36 +813,6 @@ O_j = O_j + R_i \cdot q_{ij}
 Note that a given cell $j$ can receive water discharge from more than one
 neighbour. $O_j$ values are set to zero at the beginning of each day.
 
-\section{Examples}
-\subsection{Model inputs}
-Soil parameters can be initialized to default values, for a given number of layers, using:
-<<>>=
-s = defaultSoilParams(3) #Default soil parameters for three layers
-print(s)
-@
-Soil input for function \texttt{swb()} is an object of class \texttt{soil} that
-is created using a function with the same name. Function \texttt{soil()} calculates
-water content at field capacity and initializes soil moisture to a given level:
-<<>>=
-examplesoil = soil(s, c(0.8, 0.5,0.5))
-print(examplesoil)
-@
-Functions \texttt{swbInput} and \texttt{forest2swbInput} are used to build input
-for the soil water balance model:
-<<>>=
-data(exampleforest)
-data(SpParamsMED)
-#Initialize control parameters
-control = defaultControl()
-x = forest2swbInput(exampleforest,examplesoil,SpParamsMED, control)
-x
-@
-
-\subsection{Model run}
-<<>>=
-data(examplemeteo)
-S = swb(x, examplesoil, examplemeteo)
-@
 
 \section{References}
 \begin{itemize}

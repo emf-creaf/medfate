@@ -1900,9 +1900,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// theta2psi
-double theta2psi(double clay, double sand, double theta, double om);
-RcppExport SEXP _medfate_theta2psi(SEXP claySEXP, SEXP sandSEXP, SEXP thetaSEXP, SEXP omSEXP) {
+// theta2psiSaxton
+double theta2psiSaxton(double clay, double sand, double theta, double om);
+RcppExport SEXP _medfate_theta2psiSaxton(SEXP claySEXP, SEXP sandSEXP, SEXP thetaSEXP, SEXP omSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1910,13 +1910,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type sand(sandSEXP);
     Rcpp::traits::input_parameter< double >::type theta(thetaSEXP);
     Rcpp::traits::input_parameter< double >::type om(omSEXP);
-    rcpp_result_gen = Rcpp::wrap(theta2psi(clay, sand, theta, om));
+    rcpp_result_gen = Rcpp::wrap(theta2psiSaxton(clay, sand, theta, om));
     return rcpp_result_gen;
 END_RCPP
 }
-// psi2theta
-double psi2theta(double clay, double sand, double psi, double om);
-RcppExport SEXP _medfate_psi2theta(SEXP claySEXP, SEXP sandSEXP, SEXP psiSEXP, SEXP omSEXP) {
+// psi2thetaSaxton
+double psi2thetaSaxton(double clay, double sand, double psi, double om);
+RcppExport SEXP _medfate_psi2thetaSaxton(SEXP claySEXP, SEXP sandSEXP, SEXP psiSEXP, SEXP omSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1924,7 +1924,37 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type sand(sandSEXP);
     Rcpp::traits::input_parameter< double >::type psi(psiSEXP);
     Rcpp::traits::input_parameter< double >::type om(omSEXP);
-    rcpp_result_gen = Rcpp::wrap(psi2theta(clay, sand, psi, om));
+    rcpp_result_gen = Rcpp::wrap(psi2thetaSaxton(clay, sand, psi, om));
+    return rcpp_result_gen;
+END_RCPP
+}
+// psi2thetaVanGenuchten
+double psi2thetaVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double psi);
+RcppExport SEXP _medfate_psi2thetaVanGenuchten(SEXP nSEXP, SEXP alphaSEXP, SEXP theta_resSEXP, SEXP theta_satSEXP, SEXP psiSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type n(nSEXP);
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< double >::type theta_res(theta_resSEXP);
+    Rcpp::traits::input_parameter< double >::type theta_sat(theta_satSEXP);
+    Rcpp::traits::input_parameter< double >::type psi(psiSEXP);
+    rcpp_result_gen = Rcpp::wrap(psi2thetaVanGenuchten(n, alpha, theta_res, theta_sat, psi));
+    return rcpp_result_gen;
+END_RCPP
+}
+// theta2psiVanGenuchten
+double theta2psiVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double theta);
+RcppExport SEXP _medfate_theta2psiVanGenuchten(SEXP nSEXP, SEXP alphaSEXP, SEXP theta_resSEXP, SEXP theta_satSEXP, SEXP thetaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type n(nSEXP);
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< double >::type theta_res(theta_resSEXP);
+    Rcpp::traits::input_parameter< double >::type theta_sat(theta_satSEXP);
+    Rcpp::traits::input_parameter< double >::type theta(thetaSEXP);
+    rcpp_result_gen = Rcpp::wrap(theta2psiVanGenuchten(n, alpha, theta_res, theta_sat, theta));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2014,14 +2044,51 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// waterFC
-NumericVector waterFC(List soil);
-RcppExport SEXP _medfate_waterFC(SEXP soilSEXP) {
+// thetaFC
+NumericVector thetaFC(List soil, String model);
+RcppExport SEXP _medfate_thetaFC(SEXP soilSEXP, SEXP modelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
-    rcpp_result_gen = Rcpp::wrap(waterFC(soil));
+    Rcpp::traits::input_parameter< String >::type model(modelSEXP);
+    rcpp_result_gen = Rcpp::wrap(thetaFC(soil, model));
+    return rcpp_result_gen;
+END_RCPP
+}
+// waterFC
+NumericVector waterFC(List soil, String model);
+RcppExport SEXP _medfate_waterFC(SEXP soilSEXP, SEXP modelSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< String >::type model(modelSEXP);
+    rcpp_result_gen = Rcpp::wrap(waterFC(soil, model));
+    return rcpp_result_gen;
+END_RCPP
+}
+// theta
+NumericVector theta(List soil, String model);
+RcppExport SEXP _medfate_theta(SEXP soilSEXP, SEXP modelSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< String >::type model(modelSEXP);
+    rcpp_result_gen = Rcpp::wrap(theta(soil, model));
+    return rcpp_result_gen;
+END_RCPP
+}
+// psi
+NumericVector psi(List soil, String model);
+RcppExport SEXP _medfate_psi(SEXP soilSEXP, SEXP modelSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< String >::type model(modelSEXP);
+    rcpp_result_gen = Rcpp::wrap(psi(soil, model));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2427,8 +2494,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_ldrDistribution", (DL_FUNC) &_medfate_ldrDistribution, 3},
     {"_medfate_rootLengths", (DL_FUNC) &_medfate_rootLengths, 3},
     {"_medfate_xylemConductanceProportions", (DL_FUNC) &_medfate_xylemConductanceProportions, 3},
-    {"_medfate_theta2psi", (DL_FUNC) &_medfate_theta2psi, 4},
-    {"_medfate_psi2theta", (DL_FUNC) &_medfate_psi2theta, 4},
+    {"_medfate_theta2psiSaxton", (DL_FUNC) &_medfate_theta2psiSaxton, 4},
+    {"_medfate_psi2thetaSaxton", (DL_FUNC) &_medfate_psi2thetaSaxton, 4},
+    {"_medfate_psi2thetaVanGenuchten", (DL_FUNC) &_medfate_psi2thetaVanGenuchten, 5},
+    {"_medfate_theta2psiVanGenuchten", (DL_FUNC) &_medfate_theta2psiVanGenuchten, 5},
     {"_medfate_soilUSDAType", (DL_FUNC) &_medfate_soilUSDAType, 2},
     {"_medfate_vanGenuchtenParams", (DL_FUNC) &_medfate_vanGenuchtenParams, 1},
     {"_medfate_soilthermalconductivity", (DL_FUNC) &_medfate_soilthermalconductivity, 1},
@@ -2436,7 +2505,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_soilTemperatureGradient", (DL_FUNC) &_medfate_soilTemperatureGradient, 2},
     {"_medfate_soilTemperatureChange", (DL_FUNC) &_medfate_soilTemperatureChange, 7},
     {"_medfate_soil", (DL_FUNC) &_medfate_soil, 2},
-    {"_medfate_waterFC", (DL_FUNC) &_medfate_waterFC, 1},
+    {"_medfate_thetaFC", (DL_FUNC) &_medfate_thetaFC, 2},
+    {"_medfate_waterFC", (DL_FUNC) &_medfate_waterFC, 2},
+    {"_medfate_theta", (DL_FUNC) &_medfate_theta, 2},
+    {"_medfate_psi", (DL_FUNC) &_medfate_psi, 2},
     {"_medfate_er", (DL_FUNC) &_medfate_er, 3},
     {"_medfate_soilevaporation", (DL_FUNC) &_medfate_soilevaporation, 3},
     {"_medfate_infiltrationDay", (DL_FUNC) &_medfate_infiltrationDay, 2},

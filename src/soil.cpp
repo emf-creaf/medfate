@@ -11,11 +11,11 @@ const double capacitySilt = 1.19*pow(10.0,6.0); //kg·m-3
 const double capacityClay = 1.23*pow(10.0,6.0); //kg·m-3 
 
 /**
- * Returns Soil water potential (in MPa)
+ * Returns soil water potential (in MPa) according to Saxton's pedotransfer model
  * theta - soil water content (in % volume)
  */
-// [[Rcpp::export("soil.theta2psi")]]
-double theta2psi(double clay, double sand, double theta, double om = NA_REAL) {
+// [[Rcpp::export("soil.theta2psiSX")]]
+double theta2psiSaxton(double clay, double sand, double theta, double om = NA_REAL) {
   double A = NA_REAL;
   double B = NA_REAL;
   double psi = NA_REAL;
@@ -42,11 +42,11 @@ double theta2psi(double clay, double sand, double theta, double om = NA_REAL) {
   return(psi);
 }
 /**
- *  Returns water content (% volume)
+ *  Returns water content (% volume) according to Saxton's pedotransfer model
  *  psi - Soil water potential (in MPa)
  */
-// [[Rcpp::export("soil.psi2theta")]]
-double psi2theta(double clay, double sand, double psi, double om = NA_REAL) {
+// [[Rcpp::export("soil.psi2thetaSX")]]
+double psi2thetaSaxton(double clay, double sand, double psi, double om = NA_REAL) {
   double A = NA_REAL;
   double B = NA_REAL;
   double theta = NA_REAL;
@@ -73,6 +73,32 @@ double psi2theta(double clay, double sand, double psi, double om = NA_REAL) {
   return(theta);
 }
 
+/**
+ *  Returns water content (% volume) according to Van Genuchten's pedotransfer model (m = 1 - 1/n)
+ *  psi - Soil water potential (in MPa)
+ */
+// [[Rcpp::export("soil.psi2thetaVG")]]
+double psi2thetaVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double psi) {
+  double m = 1.0 - (1.0/n);
+  double T = pow(pow(alpha*std::abs(psi),n)+1.0,-m);
+  return(theta_res+T*(theta_sat-theta_res));
+}
+/**
+ *  Returns  soil water potential (in MPa) according to Van Genuchten's pedotransfer model (m = 1 - 1/n)
+ *  theta - soil water content (in % volume)
+ */
+// [[Rcpp::export("soil.theta2psiVG")]]
+double theta2psiVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double theta) {
+  double T = (theta-theta_res)/(theta_sat-theta_res); //content relative
+  double m = 1.0 - (1.0/n);
+  // double T = pow(pow(alpha*std::abs(psi),n)+1.0,-m);
+  double psi = -(1.0/alpha)*pow(pow(T,-1.0/m)-1.0,1.0/n);
+  if(psi < -40.0) psi = -40.0;
+  return(psi);
+}
+
+
+
 // [[Rcpp::export("soil.USDAType")]]
 String soilUSDAType(double clay, double sand) {
   double silt = 100 - clay - sand;
@@ -95,24 +121,33 @@ String soilUSDAType(double clay, double sand) {
 
 
 /* 
+ * Parameters for the Van Genuchten-Mualem equations, taken from:
  * Leij, F.J., Alves, W.J., Genuchten, M.T. Van, Williams, J.R., 1996. The UNSODA Unsaturated Soil Hydraulic Database User’s Manual Version 1.0.
+ * after Carsel, R.F., & Parrish, R.S. 1988. Developing joint probability distributions of soil water retention characteristics. Water Resources Research 24: 755–769.
+ * 
+ * Parameter 'alpha' was transformed from pressure in cm to pressure in MPa
  * Textural parameters (1 MPa = 0.00009804139432 cm)
+ * 
+ *  0 - alpha
+ *  1 - n
+ *  2 - residual volumetric water content
+ *  3 - saturated water content 
  */
 // [[Rcpp::export("soil.vanGenuchtenParams")]]
 NumericVector vanGenuchtenParams(String soilType) {
-  NumericVector vg(2,NA_REAL);
-  if(soilType=="Sand") {vg[0]=1478.967; vg[1]=2.68;}
-  else if(soilType=="Loamy sand") {vg[0]=1264.772; vg[1]=2.28;}
-  else if(soilType=="Sandy loam") {vg[0]=764.983; vg[1]=1.89;}
-  else if(soilType=="Loam") {vg[0]=367.1918; vg[1]=1.56;}
-  else if(soilType=="Silt") {vg[0]=163.1964; vg[1]=1.37;}
-  else if(soilType=="Silt loam") {vg[0]=203.9955; vg[1]=1.41;}
-  else if(soilType=="Sandy clay loam") {vg[0]=601.7866; vg[1]=1.48;}
-  else if(soilType=="Clay loam") {vg[0]=193.7957; vg[1]=1.31;}
-  else if(soilType=="Silty clay loam") {vg[0]=101.9977; vg[1]=1.23;}
-  else if(soilType=="Sandy clay") {vg[0]=275.3939; vg[1]=1.23;}
-  else if(soilType=="Silty clay") {vg[0]=50.99887; vg[1]=1.09;}
-  else if(soilType=="Clay") {vg[0]=81.59819; vg[1]=1.09;}
+  NumericVector vg(4,NA_REAL);
+  if(soilType=="Sand") {vg[0]=1478.967; vg[1]=2.68; vg[2] = 0.045; vg[3]=0.43;}
+  else if(soilType=="Loamy sand") {vg[0]=1264.772; vg[1]=2.28;vg[2] = 0.057; vg[3]=0.41;}
+  else if(soilType=="Sandy loam") {vg[0]=764.983; vg[1]=1.89; vg[2] = 0.065; vg[3]=0.41;}
+  else if(soilType=="Loam") {vg[0]=367.1918; vg[1]=1.56; vg[2] = 0.078; vg[3]=0.43;}
+  else if(soilType=="Silt") {vg[0]=163.1964; vg[1]=1.37; vg[2] = 0.034; vg[3]=0.46;}
+  else if(soilType=="Silt loam") {vg[0]=203.9955; vg[1]=1.41; vg[2] = 0.067; vg[3]=0.45;}
+  else if(soilType=="Sandy clay loam") {vg[0]=601.7866; vg[1]=1.48; vg[2] = 0.100; vg[3]=0.39;}
+  else if(soilType=="Clay loam") {vg[0]=193.7957; vg[1]=1.31; vg[2] = 0.095; vg[3]=0.41;}
+  else if(soilType=="Silty clay loam") {vg[0]=101.9977; vg[1]=1.23; vg[2] = 0.089; vg[3]=0.43;}
+  else if(soilType=="Sandy clay") {vg[0]=275.3939; vg[1]=1.23; vg[2] = 0.100; vg[3]=0.38;}
+  else if(soilType=="Silty clay") {vg[0]=50.99887; vg[1]=1.09; vg[2] = 0.070; vg[3]=0.36;}
+  else if(soilType=="Clay") {vg[0]=81.59819; vg[1]=1.09; vg[2] = 0.068; vg[3]=0.38;}
   return(vg);
 }
 
@@ -252,36 +287,109 @@ List soil(List SoilParams, NumericVector W = NumericVector::create(1.0)) {
   CharacterVector usda_Type(nlayers);
   NumericVector VG_alpha(nlayers);
   NumericVector VG_n(nlayers);
+  NumericVector VG_theta_res(nlayers);
+  NumericVector VG_theta_sat(nlayers);
   for(int l=0;l<nlayers;l++) {
-    Theta_FC[l] = psi2theta(clay[l], sand[l], -0.033, om[l]); //FC to -33 kPa = -0.033 MPa
+    // Theta_FC[l] = psi2thetaSaxton(clay[l], sand[l], -0.033, om[l]); //FC to -33 kPa = -0.033 MPa
     usda_Type[l] = soilUSDAType(clay[l],sand[l]);
-    psi[l] = theta2psi(clay[l], sand[l], W[l]*Theta_FC[l], om[l]);
+    // psi[l] = theta2psiSaxton(clay[l], sand[l], W[l]*Theta_FC[l], om[l]);
     NumericVector vgl = vanGenuchtenParams(usda_Type[l]);
     VG_alpha[l] = vgl[0];
     VG_n[l] = vgl[1];
+    VG_theta_res[l] = vgl[2];
+    VG_theta_sat[l] = vgl[3];
     SoilDepth +=dVec[l];
   }
   List l = List::create(_["SoilDepth"] = SoilDepth,
-                      _["W"] = W, _["psi"] = psi, _["Temp"] = temperature,
+                      // _["W"] = W, _["psi"] = psi, _["Temp"] = temperature,
+                      _["W"] = W, _["Temp"] = temperature,
                       _["Ksoil"] = SoilParams["Ksoil"], _["Gsoil"] = SoilParams["Gsoil"],
                       _["dVec"] = dVec,
                       _["sand"] = sand, _["clay"] = clay, _["om"] = om,
                       _["usda_Type"] = usda_Type,
                       _["VG_alpha"] = VG_alpha,_["VG_n"] = VG_n, 
-                      _["macro"] = macro, _["rfc"] = rfc,
-                      _["Theta_FC"] = Theta_FC);
+                      _["VG_theta_res"] = VG_theta_res,_["VG_theta_sat"] = VG_theta_sat, 
+                      _["macro"] = macro, _["rfc"] = rfc);
+                      // _["Theta_FC"] = Theta_FC);
   l.attr("class") = CharacterVector::create("soil","list");
   return(l);
 }
 
 
+/**
+ * Returns water content in volume per soil volume at field capacity, according to the given pedotransfer model
+ */
+// [[Rcpp::export("soil.thetaFC")]]
+NumericVector thetaFC(List soil, String model="SX") {
+  NumericVector SD = soil["dVec"];
+  int nlayers = SD.size();
+  NumericVector Theta_FC(nlayers);
+  if(model=="SX") {
+    NumericVector clay =soil["clay"];
+    NumericVector sand = soil["sand"];
+    NumericVector om = soil["om"];
+    for(int l=0;l<nlayers;l++) {
+      Theta_FC[l] = psi2thetaSaxton(clay[l], sand[l], -0.033, om[l]); //FC to -33 kPa = -0.033 MPa
+    }
+  } else if(model=="VG") {
+    NumericVector n =soil["VG_n"];
+    NumericVector alpha = soil["VG_alpha"];
+    NumericVector theta_res = soil["VG_theta_res"];
+    NumericVector theta_sat = soil["VG_theta_sat"];
+    for(int l=0;l<nlayers;l++) {
+      Theta_FC[l] = psi2thetaVanGenuchten(n[l],alpha[l],theta_res[l], theta_sat[l], -0.033); 
+    }
+  }
+  return(Theta_FC);
+}
+/**
+ * Returns water content in mm at field capacity, according to the given pedotransfer model
+ */
 // [[Rcpp::export("soil.waterFC")]]
-NumericVector waterFC(List soil) {
+NumericVector waterFC(List soil, String model="SX") {
   NumericVector dVec = soil["dVec"];
-  NumericVector Theta_FC = soil["Theta_FC"];
+  NumericVector Theta_FC = thetaFC(soil, model);
   NumericVector rfc = soil["rfc"];
   int nlayers = dVec.size();
   NumericVector Water_FC(nlayers);
   for(int i=0;i<nlayers;i++) Water_FC[i] = dVec[i]*Theta_FC[i]*(1.0-(rfc[i]/100.0));
   return(Water_FC);
+}
+
+/**
+ * Returns current water content (in prop. volume), according to the given pedotransfer model
+ */
+// [[Rcpp::export("soil.theta")]]
+NumericVector theta(List soil, String model="SX") {
+  NumericVector Theta_FC = thetaFC(soil, model);
+  NumericVector W = soil["W"];
+  NumericVector Theta = Theta_FC * W;
+  return(Theta);
+}
+
+/**
+ * Returns current water potential, according to the given pedotransfer model
+ */
+// [[Rcpp::export("soil.psi")]]
+NumericVector psi(List soil, String model="SX") {
+  NumericVector Theta = theta(soil, model);
+  int nlayers = Theta.size();
+  NumericVector psi(nlayers);
+  if(model=="SX") {
+    NumericVector clay =soil["clay"];
+    NumericVector sand = soil["sand"];
+    NumericVector om = soil["om"];
+    for(int l=0;l<nlayers;l++) {
+      psi[l] = theta2psiSaxton(clay[l], sand[l], Theta[l], om[l]);
+    }
+  } else if(model=="VG") {
+    NumericVector n =soil["VG_n"];
+    NumericVector alpha = soil["VG_alpha"];
+    NumericVector theta_res = soil["VG_theta_res"];
+    NumericVector theta_sat = soil["VG_theta_sat"];
+    for(int l=0;l<nlayers;l++) {
+      psi[l] = theta2psiVanGenuchten(n[l],alpha[l],theta_res[l], theta_sat[l], Theta[l]); 
+    }
+  }
+  return(psi);
 }
