@@ -1981,28 +1981,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// soilthermalconductivity
-NumericVector soilthermalconductivity(List soil);
-RcppExport SEXP _medfate_soilthermalconductivity(SEXP soilSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
-    rcpp_result_gen = Rcpp::wrap(soilthermalconductivity(soil));
-    return rcpp_result_gen;
-END_RCPP
-}
-// soilthermalcapacity
-NumericVector soilthermalcapacity(List soil);
-RcppExport SEXP _medfate_soilthermalcapacity(SEXP soilSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
-    rcpp_result_gen = Rcpp::wrap(soilthermalcapacity(soil));
-    return rcpp_result_gen;
-END_RCPP
-}
 // soilTemperatureGradient
 NumericVector soilTemperatureGradient(NumericVector dVec, NumericVector Temp);
 RcppExport SEXP _medfate_soilTemperatureGradient(SEXP dVecSEXP, SEXP TempSEXP) {
@@ -2089,6 +2067,30 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< String >::type model(modelSEXP);
     rcpp_result_gen = Rcpp::wrap(psi(soil, model));
+    return rcpp_result_gen;
+END_RCPP
+}
+// soilthermalcapacity
+NumericVector soilthermalcapacity(List soil, String model);
+RcppExport SEXP _medfate_soilthermalcapacity(SEXP soilSEXP, SEXP modelSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< String >::type model(modelSEXP);
+    rcpp_result_gen = Rcpp::wrap(soilthermalcapacity(soil, model));
+    return rcpp_result_gen;
+END_RCPP
+}
+// soilthermalconductivity
+NumericVector soilthermalconductivity(List soil, String model);
+RcppExport SEXP _medfate_soilthermalconductivity(SEXP soilSEXP, SEXP modelSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< String >::type model(modelSEXP);
+    rcpp_result_gen = Rcpp::wrap(soilthermalconductivity(soil, model));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2500,8 +2502,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_theta2psiVanGenuchten", (DL_FUNC) &_medfate_theta2psiVanGenuchten, 5},
     {"_medfate_soilUSDAType", (DL_FUNC) &_medfate_soilUSDAType, 2},
     {"_medfate_vanGenuchtenParams", (DL_FUNC) &_medfate_vanGenuchtenParams, 1},
-    {"_medfate_soilthermalconductivity", (DL_FUNC) &_medfate_soilthermalconductivity, 1},
-    {"_medfate_soilthermalcapacity", (DL_FUNC) &_medfate_soilthermalcapacity, 1},
     {"_medfate_soilTemperatureGradient", (DL_FUNC) &_medfate_soilTemperatureGradient, 2},
     {"_medfate_soilTemperatureChange", (DL_FUNC) &_medfate_soilTemperatureChange, 7},
     {"_medfate_soil", (DL_FUNC) &_medfate_soil, 2},
@@ -2509,6 +2509,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_waterFC", (DL_FUNC) &_medfate_waterFC, 2},
     {"_medfate_theta", (DL_FUNC) &_medfate_theta, 2},
     {"_medfate_psi", (DL_FUNC) &_medfate_psi, 2},
+    {"_medfate_soilthermalcapacity", (DL_FUNC) &_medfate_soilthermalcapacity, 2},
+    {"_medfate_soilthermalconductivity", (DL_FUNC) &_medfate_soilthermalconductivity, 2},
     {"_medfate_er", (DL_FUNC) &_medfate_er, 3},
     {"_medfate_soilevaporation", (DL_FUNC) &_medfate_soilevaporation, 3},
     {"_medfate_infiltrationDay", (DL_FUNC) &_medfate_infiltrationDay, 2},

@@ -11,14 +11,15 @@
 Functions \code{soil.thermalconductivity} and \code{soil.thermalcapacity} calculate thermal conductivity and thermal capacity for each soil layer, given its texture and water content. Functions \code{soil.temperaturegradient} and \code{soil.temperaturechange} are used to calculate soil temperature gradients (in ºC/m) and temporal temperature change (in ºC/s) given soil layer texture and water content (and possibly including heat flux from above).
 }
 \usage{
-soil.thermalconductivity(soil)
-soil.thermalcapacity(soil)
+soil.thermalconductivity(soil, model = "SX")
+soil.thermalcapacity(soil, model = "SX")
 soil.temperaturechange(dVec, Temp, sand, clay, W, Theta_FC, Gdown)
 soil.temperaturegradient(dVec, Temp)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{soil}{Soil object (returned by function \code{\link{soil}}).}
+  \item{model}{Either 'SX' or 'VG' for Saxton's or Van Genuchten's pedotransfer models.}
   \item{dVec}{Width of soil layers (in mm).}
   \item{Temp}{Temperature (in ºC) for each soil layer.}
   \item{clay}{Percentage of clay (in percent weight) for each layer.}

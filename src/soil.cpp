@@ -172,14 +172,6 @@ NumericVector layerthermalconductivity(NumericVector sand, NumericVector clay, N
   return(thermalCond);
 }
 
-// [[Rcpp::export("soil.thermalconductivity")]]
-NumericVector soilthermalconductivity(List soil) {
-  NumericVector sand = soil["sand"];
-  NumericVector clay = soil["clay"];
-  NumericVector W = soil["W"];
-  NumericVector Theta_FC = soil["Theta_FC"];
-  return(layerthermalconductivity(sand, clay, W, Theta_FC));
-}
 
 /**
  * Soil thermal capacity. Simplified from:
@@ -197,14 +189,6 @@ NumericVector layerthermalcapacity(NumericVector sand, NumericVector clay, Numer
   return(thermalCap);
 }
 
-// [[Rcpp::export("soil.thermalcapacity")]]
-NumericVector soilthermalcapacity(List soil) {
-  NumericVector sand = soil["sand"];
-  NumericVector clay = soil["clay"];
-  NumericVector W = soil["W"];
-  NumericVector Theta_FC = soil["Theta_FC"];
-  return(layerthermalcapacity(sand, clay, W, Theta_FC));
-}
 
 
 /**
@@ -392,4 +376,24 @@ NumericVector psi(List soil, String model="SX") {
     }
   }
   return(psi);
+}
+
+
+
+// [[Rcpp::export("soil.thermalcapacity")]]
+NumericVector soilthermalcapacity(List soil, String model = "SX") {
+  NumericVector sand = soil["sand"];
+  NumericVector clay = soil["clay"];
+  NumericVector W = soil["W"];
+  NumericVector Theta_FC = thetaFC(soil, model);
+  return(layerthermalcapacity(sand, clay, W, Theta_FC));
+}
+
+// [[Rcpp::export("soil.thermalconductivity")]]
+NumericVector soilthermalconductivity(List soil, String model = "SX") {
+  NumericVector sand = soil["sand"];
+  NumericVector clay = soil["clay"];
+  NumericVector W = soil["W"];
+  NumericVector Theta_FC = thetaFC(soil, model);
+  return(layerthermalconductivity(sand, clay, W, Theta_FC));
 }

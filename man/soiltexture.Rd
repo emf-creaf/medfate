@@ -2,24 +2,28 @@
 \name{soil texture and hydraulics}
 \alias{soil.psi2thetaSX}
 \alias{soil.psi2thetaVG}
+\alias{soil.psi}
 \alias{soil.theta2psiSX}
 \alias{soil.theta2psiVG}
 \alias{soil.thetaFC}
+\alias{soil.theta}
 \alias{soil.waterFC}
 \alias{soil.USDAType}
 \alias{soil.vanGenuchtenParams}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Soil texture and hydraulics}
 \description{
-Functions \code{soil.psi2thetaSX} and \code{soil.theta2psiSX} calculate water potentials (psi) and water contents (theta) using texture data the formulae of Saxton et al. (1986) or Saxton & Rawls (2006) depending on whether organic matter is available. Functions code{soil.psi2thetaVG} and \code{soil.theta2psiVG} to the same calculations as before, but using the Van Genuchten - Mualem equations (\enc{Wösten}{Wosten} & van Genuchten 1988). Function \code{soil.USDAType} returns the USDA type for a given texture. Function \code{soil.vanGenuchtenParams} gives parameters for van Genuchten's conductance function for a given texture type (Leij et al. 1996). Functions \code{soil.waterFC} and \code{soil.thetaFC} calculate the water volume (in mm or as percent volume) of each soil layer at field capacity, according to a given pedotransfer model. 
+Functions \code{soil.psi2thetaSX} and \code{soil.theta2psiSX} calculate water potentials (psi) and water contents (theta) using texture data the formulae of Saxton et al. (1986) or Saxton & Rawls (2006) depending on whether organic matter is available. Functions code{soil.psi2thetaVG} and \code{soil.theta2psiVG} to the same calculations as before, but using the Van Genuchten - Mualem equations (\enc{Wösten}{Wosten} & van Genuchten 1988). Function \code{soil.USDAType} returns the USDA type for a given texture. Function \code{soil.vanGenuchtenParams} gives parameters for van Genuchten's conductance function for a given texture type (Leij et al. 1996). Functions \code{soil.waterFC} and \code{soil.thetaFC} calculate the water volume (in mm or as percent volume) of each soil layer at field capacity, according to a given pedotransfer model. Functions \code{soil.psi} and \code{soil.theta} return the current water potential and water content of the soil object, according to a given pedotransfer model.
 }
 \usage{
 soil.psi2thetaSX(clay, sand, psi, om = NA)
-soil.theta2psiSX(clay, sand, theta, om = NA)
 soil.psi2thetaVG(n, alpha, theta_res, theta_sat, psi)
+soil.theta2psiSX(clay, sand, theta, om = NA)
 soil.theta2psiVG(n, alpha, theta_res, theta_sat, theta)
 soil.USDAType(clay, sand)
 soil.vanGenuchtenParams(soilType)
+soil.psi(soil, model="SX")
+soil.theta(soil, model="SX")
 soil.waterFC(soil, model="SX")
 soil.thetaFC(soil, model="SX")
 }
@@ -72,5 +76,3 @@ lines(-psi, lapply(as.list(psi), FUN=soil.psi2thetaVG, alpha=vg[1], n = vg[2],
 
 legend("topright", legend=c("Saxton", "Van Genuchten"), lty=c(1,2), bty="n")
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.

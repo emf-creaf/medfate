@@ -533,14 +533,6 @@ soil.vanGenuchtenParams <- function(soilType) {
     .Call('_medfate_vanGenuchtenParams', PACKAGE = 'medfate', soilType)
 }
 
-soil.thermalconductivity <- function(soil) {
-    .Call('_medfate_soilthermalconductivity', PACKAGE = 'medfate', soil)
-}
-
-soil.thermalcapacity <- function(soil) {
-    .Call('_medfate_soilthermalcapacity', PACKAGE = 'medfate', soil)
-}
-
 soil.temperaturegradient <- function(dVec, Temp) {
     .Call('_medfate_soilTemperatureGradient', PACKAGE = 'medfate', dVec, Temp)
 }
@@ -567,6 +559,14 @@ soil.theta <- function(soil, model = "SX") {
 
 soil.psi <- function(soil, model = "SX") {
     .Call('_medfate_psi', PACKAGE = 'medfate', soil, model)
+}
+
+soil.thermalcapacity <- function(soil, model = "SX") {
+    .Call('_medfate_soilthermalcapacity', PACKAGE = 'medfate', soil, model)
+}
+
+soil.thermalconductivity <- function(soil, model = "SX") {
+    .Call('_medfate_soilthermalconductivity', PACKAGE = 'medfate', soil, model)
 }
 
 .er <- function(DOY, ERconv = 0.05, ERsyn = 0.2) {
