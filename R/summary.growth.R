@@ -11,14 +11,10 @@ summary.growth<-function(object, freq="years", output="DailyBalance", FUN=sum, b
     OM = m1/lai1
     OM[lai1==0] = NA
   } 
+  if(ncol(OM)==length(date.factor) && nrow(OM)==1) OM = t(OM)
   
-  ncoh = ncol(OM)
-  M = data.frame(matrix(0,nrow=length(levels(date.factor)), ncol=ncol(OM)))
-  rownames(M)<-levels(date.factor)
-  colnames(M)<-names(OM)
-  for(c in 1:ncol(OM)){
-    M[,c] <-tapply(OM[,c], INDEX=date.factor,FUN=FUN)
-  }
-  if(sum(is.na(M[nrow(M),]))==ncol(M)) M = M[-nrow(M),] #Remove empty row
+  #Perform summary at the desired temporal scale
+  M <- apply(OM,2,tapply, INDEX=date.factor, FUN)
+  if(sum(is.na(M[nrow(M), drop=FALSE]))==ncol(M)) M = M[-nrow(M), drop=FALSE] #Remove empty row
   return(M)
 }

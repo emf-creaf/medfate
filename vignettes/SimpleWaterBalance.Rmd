@@ -265,7 +265,7 @@ summary(S, freq="months",FUN=mean, output="SoilWaterBalance")
 
 Parameter `output` is used to indicate the element of the `swb` object for which we desire summaries. Similarly, it is possible to calculate the average stress of plant cohorts by months:
 ```{r}
-format(summary(S, freq="months",FUN=mean, output="PlantStress"), dig=3, scientific = FALSE)
+summary(S, freq="months",FUN=mean, output="PlantStress")
 ```
 The `summary` function can be also used to aggregate the output by species. In this case, the values of plant cohorts belonging to the same species will be averaged using LAI values as weights. For example, we may average the daily drought stress across cohorts of the same species (here there is only one cohort by species, so this does not modify the output):
 ```{r}
