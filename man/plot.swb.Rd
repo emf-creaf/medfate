@@ -15,8 +15,8 @@ Function \code{plot} plots the results of the soil water balance model (see \cod
     xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL,...)
 \method{plot}{growth}(x, type="PET_Precipitation", yearAxis=FALSE, 
     xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL,...)
-\method{summary}{swb}(object, freq="years", output="DailyBalance", FUN=sum, ...)
-\method{summary}{growth}(object, freq="years", output="DailyBalance", FUN=sum, ...)
+\method{summary}{swb}(object, freq="years", output="DailyBalance", FUN=sum, bySpecies = FALSE, ...)
+\method{summary}{growth}(object, freq="years", output="DailyBalance", FUN=sum, bySpecies = FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -56,10 +56,11 @@ Function \code{plot} plots the results of the soil water balance model (see \cod
   \item{freq}{Frequency of summary statistics (see \code{\link{cut.Date}}).}
   \item{output}{The data table to be summarized. Accepted values are \code{"DailyBalance"}, \code{"PlantStress"}, \code{"PlantPsi"}, \code{"PlantTranspiration"}, \code{"PlantPhotosynthesis"}  and \code{"SoilWaterBalance"}, \code{"Temperature"} and \code{"EnergyBalance"}.}
   \item{FUN}{The function to summarize results (e.g., \code{sum}, \code{mean}, ...)}
+  \item{bySpecies}{Allows aggregating output by species, before calculating summaries.}
   \item{...}{Additional parameters for functions \code{plot} or \code{summary}.}
 }
 \references{
-De \enc{Cáceres}{Caceres} M, \enc{Martínez}{Martinez}-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L. (submitted) Coupling a water balance model with forest inventory data to evaluate plant drought stress at the regional level. Agricultural and Forest Meteorology.
+De \enc{Cáceres}{Caceres} M, \enc{Martínez}{Martinez}-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L. (2015) Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes. Agricultural and Forest Meteorology 213: 77-90 (doi:10.1016/j.agrformet.2015.06.012).
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
