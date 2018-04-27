@@ -213,7 +213,7 @@ List fuelLiveStratification(List object, DataFrame SpParams, double gdd = NA_REA
  * FCCS fuel definition
  */
 // [[Rcpp::export("fuel.FCCS")]]
-DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, DataFrame SpParams, double gdd = NA_REAL, 
+DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, DataFrame SpParams, NumericVector cohortFMC = R_NilValue, double gdd = NA_REAL, 
                    double heightProfileStep = 10.0, double maxHeightProfile = 5000, double bulkDensityThreshold = 0.05) {
   List liveStrat = fuelLiveStratification(object, SpParams, gdd, heightProfileStep, maxHeightProfile, bulkDensityThreshold);
   
@@ -338,6 +338,14 @@ DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, Dat
   else maxFMC[0] = NA_REAL;
   if(shrubLoading>0.0) maxFMC[1] = layerFuelAverageParameter(0.0, 200.0, cohMaxFMC, cohLoading, cohHeight, cohCR);
   else maxFMC[1] = NA_REAL;
+  
+  NumericVector actFMC(5,NA_REAL); //Actual FMC
+  if(!Rf_isNull(cohortFMC)) {
+    if(canopyLoading>0.0) actFMC[0] = layerFuelAverageParameter(200.0, 10000.0, cohortFMC, cohLoading, cohHeight, cohCR);
+    else actFMC[0] = NA_REAL;
+    if(shrubLoading>0.0) actFMC[1] = layerFuelAverageParameter(0.0, 200.0, cohortFMC, cohLoading, cohHeight, cohCR);
+    else actFMC[1] = NA_REAL;
+  }
   NumericVector RV(5,0.0); //Reactive volume (m3/m2)
   double wmaxli = 0.0;
   double rhoblitter = 0.0, SAVlitter = 0.0, wmaxlitter = 0.0, betarellitter = 0.0, etalitter = 0.0;
@@ -457,7 +465,8 @@ DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, Dat
                                                      _["etaF"] = etaF,
                                                      _["RV"] = RV,
                                                      _["MinFMC"] = minFMC,
-                                                     _["MaxFMC"] = maxFMC);
+                                                     _["MaxFMC"] = maxFMC,
+                                                     _["ActFMC"] = actFMC);
   FCCSProperties.attr("row.names") = CharacterVector::create("canopy","shrub", "herb", "woody","litter");
   return(FCCSProperties);
 }

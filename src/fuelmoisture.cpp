@@ -1,6 +1,7 @@
 #include <Rcpp.h>
 #include "hydraulics.h"
 #include "forestutils.h"
+#include "tissuemoisture.h"
 #include <meteoland.h>
 using namespace Rcpp;
 
@@ -140,27 +141,49 @@ double coarse100hday(double m0,
 }
 
 
+
 /**
- * Translates soil water balance results to fuel moisture content of plant cohorts.
- * For this, it translates whole-plant conductance to the average 'sensed' soil water potential 
- * of each cohort. Then a linear function is used to scale this water potential to a 
- * moisture content.
- */
-NumericVector cohortFuelMoistureContent(List swbDay, DataFrame swbInput, DataFrame SpParams, int WeibullShape=3) {
-  NumericVector SP = swbInput["SP"];
-  NumericVector Psi_Extract = swbInput["Psi_Extract"];
-  int numCohorts = SP.size();
-  
-  NumericVector cohortFMC(numCohorts);
-  NumericVector DDS = swbDay["DDS"]; //Daily drought stress
-  NumericVector psi = pmin(0.0, K2Psi(1.0 - DDS,  Psi_Extract, WeibullShape)); //Apparent soil water potential
-  NumericVector psimin = pmin(0.0, K2Psi(NumericVector(numCohorts, 0.1),  Psi_Extract, WeibullShape)); //Soil water potential corresponding to minimum moisture ( = 10% of conductance)
-  
- //Initialize other cohort-based variables
+* Translates soil water balance results to fuel moisture content of plant cohorts.
+* 
+*   swb - The output of soil water balance
+*   SpParams - A data frame with species parameters
+*/
+// [[Rcpp::export("fuel.cohortFineFMC")]]
+NumericMatrix cohortFineFuelMoistureContent(List swb, DataFrame SpParams) {
+  //Initialize other cohort-based variables
   NumericVector maxFMCSP = SpParams["maxFMC"];
-  NumericVector minFMCSP = SpParams["minFMC"];
+  NumericVector WoodDensSP = SpParams["WoodDens"];
+  NumericVector VCstem_cSP = SpParams["VCstem_c"];
+  NumericVector VCstem_dSP = SpParams["VCstem_d"];
+  NumericVector r635SP = SpParams["r635"];
+  NumericVector LeafPI0SP = SpParams["LeafPI0"];
+  NumericVector LeafEPSSP = SpParams["LeafEPS"];
+  NumericVector LeafAFSP = SpParams["LeafAF"];
+  NumericMatrix plantpsi = Rcpp::as<Rcpp::NumericMatrix>(swb["PlantPsi"]);
+  List l = plantpsi.attr("dimnames");
+  CharacterVector days = l[0];
+  CharacterVector cohNames = l[1];
+  int numDays = plantpsi.nrow();
+  int numCohorts = plantpsi.ncol();
+  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(swb["cohorts"]);
+  IntegerVector SP = Rcpp::as<Rcpp::IntegerVector>(cohorts["SP"]);
+  
+  NumericMatrix cohortFMC(numDays, numCohorts);
+  cohortFMC.attr("dimnames") = l;
   for(int c=0;c<numCohorts;c++) {
-    cohortFMC[c] = std::max(minFMCSP[SP[c]],maxFMCSP[SP[c]] + psi[c]*((minFMCSP[SP[c]]- maxFMCSP[SP[c]])/psimin[c]));
+    int sp = SP[c];
+    double leafpi0 = LeafPI0SP[sp];
+    double leafeps = LeafEPSSP[sp];
+    double leafaf = LeafAFSP[sp];
+    double maxFMC = maxFMCSP[sp];
+    double wd = WoodDensSP[sp];
+    double vc_c = VCstem_cSP[sp];
+    double vc_d = VCstem_dSP[sp];
+    double r635 = r635SP[sp];
+    for(int d=0;d<numDays;d++) {
+      cohortFMC(d,c) = maxFMC*fineFuelRelativeWaterContent(plantpsi(d,c), leafpi0, leafeps, leafaf,
+                                                    wd,vc_c,vc_d, r635);
+    }
   }
   return(cohortFMC);
 }

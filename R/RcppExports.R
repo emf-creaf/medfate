@@ -13,14 +13,6 @@ biophysics.leafTemperature <- function(absRad, airTemperature, u, E, leafWidth =
     .Call('_medfate_leafTemperature', PACKAGE = 'medfate', absRad, airTemperature, u, E, leafWidth)
 }
 
-biophysics.symplasticRelativeWaterContent <- function(psi, pi0, epsilon) {
-    .Call('_medfate_symplasticRelativeWaterContent', PACKAGE = 'medfate', psi, pi0, epsilon)
-}
-
-biophysics.leafRelativeWaterContent <- function(psi, pi0, epsilon, rwc_res) {
-    .Call('_medfate_leafRelativeWaterContent', PACKAGE = 'medfate', psi, pi0, epsilon, rwc_res)
-}
-
 fire.FCCS <- function(FCCSpropsSI, MliveSI = as.numeric( c(90, 90, 60)), MdeadSI = as.numeric( c(6, 6, 6, 6, 6)), slope = 0.0, windSpeedSI = 11.0) {
     .Call('_medfate_FCCSbehaviour', PACKAGE = 'medfate', FCCSpropsSI, MliveSI, MdeadSI, slope, windSpeedSI)
 }
@@ -229,6 +221,10 @@ forest2belowground <- function(x, soil, SpParams) {
     .Call('_medfate_EMCSimard', PACKAGE = 'medfate', fuelTemperature, fuelHumidity)
 }
 
+fuel.cohortFineFMC <- function(swb, SpParams) {
+    .Call('_medfate_cohortFineFuelMoistureContent', PACKAGE = 'medfate', swb, SpParams)
+}
+
 .woodyFuelProfile <- function(z, x, SpParams, gdd = NA_real_) {
     .Call('_medfate_woodyFuelProfile', PACKAGE = 'medfate', z, x, SpParams, gdd)
 }
@@ -261,8 +257,8 @@ fuel.Stratification <- function(object, SpParams, gdd = NA_real_, heightProfileS
     .Call('_medfate_fuelLiveStratification', PACKAGE = 'medfate', object, SpParams, gdd, heightProfileStep, maxHeightProfile, bulkDensityThreshold)
 }
 
-fuel.FCCS <- function(object, ShrubCover, CanopyCover, SpParams, gdd = NA_real_, heightProfileStep = 10.0, maxHeightProfile = 5000, bulkDensityThreshold = 0.05) {
-    .Call('_medfate_FCCSproperties', PACKAGE = 'medfate', object, ShrubCover, CanopyCover, SpParams, gdd, heightProfileStep, maxHeightProfile, bulkDensityThreshold)
+fuel.FCCS <- function(object, ShrubCover, CanopyCover, SpParams, cohortFMC = NULL, gdd = NA_real_, heightProfileStep = 10.0, maxHeightProfile = 5000, bulkDensityThreshold = 0.05) {
+    .Call('_medfate_FCCSproperties', PACKAGE = 'medfate', object, ShrubCover, CanopyCover, SpParams, cohortFMC, gdd, heightProfileStep, maxHeightProfile, bulkDensityThreshold)
 }
 
 .growth.defoliationFraction <- function(conc, threshold) {
@@ -607,6 +603,26 @@ swb.day <- function(x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind, lat
 
 swb <- function(x, soil, meteo, latitude = NA_real_, elevation = NA_real_, slope = NA_real_, aspect = NA_real_) {
     .Call('_medfate_swb', PACKAGE = 'medfate', x, soil, meteo, latitude, elevation, slope, aspect)
+}
+
+moisture.symplasticRWC <- function(psi, pi0, epsilon) {
+    .Call('_medfate_symplasticRelativeWaterContent', PACKAGE = 'medfate', psi, pi0, epsilon)
+}
+
+moisture.apoplasticRWC <- function(psi, c, d, cellWallFraction = 0.07) {
+    .Call('_medfate_apoplasticRelativeWaterContent', PACKAGE = 'medfate', psi, c, d, cellWallFraction)
+}
+
+moisture.leafRWC <- function(psi, pi0, epsilon, af) {
+    .Call('_medfate_leafRelativeWaterContent', PACKAGE = 'medfate', psi, pi0, epsilon, af)
+}
+
+moisture.branchRWC <- function(psi, wd, c, d, af = 0.80) {
+    .Call('_medfate_branchRelativeWaterContent', PACKAGE = 'medfate', psi, wd, c, d, af)
+}
+
+moisture.fineFuelRWC <- function(psi, leaf_pi0, leaf_eps, leaf_af, wd, c, d, r635) {
+    .Call('_medfate_fineFuelRelativeWaterContent', PACKAGE = 'medfate', psi, leaf_pi0, leaf_eps, leaf_af, wd, c, d, r635)
 }
 
 transp.profitMaximization <- function(supplyFunction, photosynthesisFunction, type, Gwmax, kleafmax = NA_real_) {

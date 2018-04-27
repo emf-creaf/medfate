@@ -4,6 +4,10 @@
 
 __Version history__
 
+_Version 0.5.5, April 2018.
+1. New functions for tissue moisture
+2. New function 'fuel.cohortFineFMC'
+
 _Version 0.5.4, April 2018.
 1. New functions for pressure-volume curves
 2. Rmarkdown vignettes
