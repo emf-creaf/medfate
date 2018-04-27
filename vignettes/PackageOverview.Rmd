@@ -17,10 +17,25 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Introduction
+```{r}
+library(medfate)
+```
 
 ## Data structures
 
-## Soil water balance and plant drought stress
+### Forest objects
+
+Models included in `medfate` were primarily designed to be ran on **forest inventory plots**. In this kind of data, the  vegetation of a sampled area is described in terms of woody plants (trees and shrubs) along with their size and species identity. Forest plots in `medfate` are assumed to be in a format that follows closely the Spanish forest inventory. Each forest plot is represented in an object of class `forest`, a list that contains several elements. Among them, the most important items are two data frames, `treeData` (for trees) and `shrubData` for shrubs:
+```{r}
+data(exampleforest)
+exampleforest
+```
+Trees are expected to be primarily described in terms of species, diameter (DBH) and height, whereas shrubs are described in terms of species, percent cover and mean height.
+
+### Spatial forest objects
+
+## Package models
+### Soil water balance and plant drought stress
 
 Eco-hydrological processes are fundamental for the simulation models included in the `medfate` package. Eco-hydrological processes can be divided into local and landscape processes. By local processes we refer to the soil water balance of forest stands. Processes affecting soil water content include rainfall, canopy interception, infiltration and runoff, percolation and deep drainage, soil evaporation and plant transpiration. In `medfate`, the soil water balance of a forest is primarily used to predict drought stress for living plants in it. Soil water balance can be studied for a single forest stand using function  `swb()` or for multiple stands distributed spatially using function `swbpoints()` or `swbgrid()`. When input data is in form of continuous spatial variation of forests over a landscape, the `medfate` package allows studying local soil water balance in combination with water discharge from one cell to the other (a landscape hydrological process). This is done using function `swbgrid()`. 
 
@@ -39,7 +54,7 @@ Function `swbgrid()` may be used to:
     ii) water transpired by plants
     iii) water exported via runoff or deep drainage into the water table and river streams.
 
-## Forest growth
+### Forest growth
 
 Changes in leaf area and plant growth are key to evaluate the influence of climatic conditions on forest structure and function. Processes affecting annual changes leaf area and plant size are those involved water and carbon balances, as well as those affecting growth directly. Processes influencing plant water balance include those affecting soil water content, such as rainfall, canopy interception, infiltration and runoff, percolation and deep drainage, soil evaporation and plant transpiration. Carbon balance arises from the relationship between plant photosynthesis and respiration, although carbon reserves play a role in the availabity of carbon for growth. Water and carbon balances are coupled through the regulation of transpiration done by stomata. Plant growth is affected by the availability of carbon (source limitation), but also by temperature and water status (sink limitation). 
 
@@ -49,9 +64,11 @@ Package `medfate` allows simulating plant growth of a set of cohorts (competing 
 2. Monitor or forecast temporal variation of plant drought stress in particular stands(for example to anticipate mortality events) taking into account processes determining plant growth.
 3. Monitor or forecast temporal variation of live fuel moisture and the amount of standing dead and live fuels in particular stands (for example to monitor wildfire risk).
 
-## Fuel properties and fire hazard
+### Fuel properties and fire hazard
 
-Vegetation functioning and dynamics have strong, but complex, effects on fire hazard. On one hand, growth and death of organs and individuals changes the amount of standing live and dead fuels, as well as downed dead fuels. On the other, day-to-day changes in soil and plant water content changes the physical properties of fuel, notably fuel moisture content. Package `medfate` provides functions to estimate fuel properties and potential fire behaviour in forest inventory plots. Specifically, function `fuel.Stratification()` provides a stratification of the stand into understory and canopy strata; and `fuel.FCCS()` calculates fuel characteristics from a `forest` object following an adaptation of the protocols described for the Fuel Characteristics Classification System (Prichard et al. 2013). In FCCS, fuelbed is divided into six strata, including canopy, shrub, herbaceous vegetation, dead woody materials, leaf litter and ground fuels. All except ground fuels are considered here. The intensity of burning depends on several factors, including topography, wind conditions, fuel structure and its moisture content, which is determined from antecedent and current meteorological conditions. A modification of the Rothermel's (1972) model is used to calculate the intensity of surface fire reaction (in $kW/m^2$) and the rate of fire spread (in $m/min$) of surface fires assuming a steady-state fire. Both quantities are dependent on fuel characteristics, windspeed and direction, and topographic slope and aspect. The model returns the following results: 
+Vegetation functioning and dynamics have strong, but complex, effects on fire hazard. On one hand, growth and death of organs and individuals changes the amount of standing live and dead fuels, as well as downed dead fuels. On the other, day-to-day changes in soil and plant water content changes the physical properties of fuel, notably fuel moisture content. Package `medfate` provides functions to estimate fuel properties and potential fire behaviour in forest inventory plots. Specifically, function `fuel.Stratification()` provides a stratification of the stand into understory and canopy strata; and `fuel.FCCS()` calculates fuel characteristics from a `forest` object following an adaptation of the protocols described for the Fuel Characteristics Classification System (Prichard et al. 2013). Function `fuel.cohortFineFMC()` allows obtaining daily fuel moisture content estimates corresponding to the water status of plants, as returned by function `swb()`.
+
+In FCCS, fuelbed is divided into six strata, including canopy, shrub, herbaceous vegetation, dead woody materials, leaf litter and ground fuels. All except ground fuels are considered here. The intensity of burning depends on several factors, including topography, wind conditions, fuel structure and its moisture content, which is determined from antecedent and current meteorological conditions. A modification of the Rothermel's (1972) model is used in function `fire.FCCS()` to calculate the intensity of surface fire reaction and the rate of fire spread of surface fires assuming a steady-state fire. Both quantities are dependent on fuel characteristics, windspeed and direction, and topographic slope and aspect. Fuel and fire behaviour functions allow obtaining the following: 
 
 1. Fuel characteristics by stratum.
 2. Surface fire behavior (i.e. reaction intensity, rate of spread, fireline intensity and flame length).

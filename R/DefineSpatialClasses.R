@@ -3,6 +3,9 @@ setClass("SpatialPointsForest", slots=list(forestlist="list",
                                            contains="SpatialPointsTopography")
 setClass("SpatialGridForest", slots=list(lct="character", forestlist="list", 
                                          soillist = "list"), contains="SpatialGridTopography")
+setClass("SpatialPixelsForest", slots=list(lct="character", forestlist="list", 
+                                         soillist = "list"), contains="SpatialPixelsTopography")
+
 setGeneric("spatialSoilSummary", valueClass ="Spatial", function(object, summaryFunction, ...){
   standardGeneric("spatialSoilSummary")
 })
