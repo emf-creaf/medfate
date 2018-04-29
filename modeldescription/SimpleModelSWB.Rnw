@@ -26,8 +26,7 @@ library(medfate)
 Soil water balance is calculated on a daily step basis for the input forest stand
 and for the period corresponding to input weather data. The model considers only
 the vertical spatial dimension of the stand and not the horizontal distribution of
-plants within it. In other words, the model is not spatially explicit. Still, the stand is divided into groups of plants (here referred to as `plant cohorts`) of different species, height and leaf area index ($LAI$). The soil water balance follows the design principles of SIERRA (Mouillot et al., 2001,
-Ruffault et al., 2014, 2013) and BILJOU (Granier et al., 2007, 1999), although
+plants within it. In other words, the model is not spatially explicit (i.e., plants do not interact for space explicitly). Still, the stand is divided into groups of plants, here referred to as `plant cohorts` of different species, height and leaf area index ($LAI$). Height and $LAI$ values determine competition for light. $LAI$ values also drive competition for water. The soil water balance follows the design principles of SIERRA (Mouillot et al., 2001, Ruffault et al., 2014, 2013) and BILJOU (Granier et al., 2007, 1999), although
 some features are taken from other models. Potential evapotranspiration ($PET$)
 is given as input and the model determines maximum canopy transpiration
 ($Tr_{\max}$) using an empirical relationship between the $LAI$ of the stand and
@@ -35,19 +34,18 @@ the ratio $Tr_{\max}/PET$ (Granier et al. 1999). Actual plant transpiration is
 calculated using a simple function depending on current soil moisture level and
 degree of shading.
 
-When lateral water transport is also considered the water inputs of the stand
-includes net precipitation but also runoff water from cells of its upper
-microwatershed, as done in SIERRA (Mouillot et al., 2001). 
+When lateral water transport is also considered the water inputs of the stand includes not only precipitation but also runoff water from cells of its upper microwatershed, as done in SIERRA (Mouillot et al., 2001). 
 
 \subsection{Process scheduling}
-Every day water balance is perfomed as follows. The model first updates leaf area
-values according to the phenology of species and calculates light extinction.
-After that, the model updates soil water content of soil layers in two steps:
-(1) it increases soil moisture due to precipitation, $P$, after accounting for
-canopy interception loss, $In$, surface runoff, $Ru$, and deep drainage, $Dd$;
-(2) it decreases water content due to bare soil evaporation, $Es$, and plant
+Every day water balance is perfomed as follows. The model first updates leaf area values according to the phenology of species and calculates light extinction. After that, the model updates soil water content of soil layers in two steps:
+\begin{enumerate}
+\item{It increases soil moisture due to precipitation, $P$, after accounting for
+canopy interception loss, $In$, surface runoff, $Ru$, and deep drainage, $Dd$;}
+\item{It decreases water content due to bare soil evaporation, $Es$, and plant
 transpiration, $Tr$. After updating soil layers, the model determines drought
-stress indez for each plant cohort. Daily variations in soil water content can be summarized as:
+stress index for each plant cohort.}
+\end{enumerate}
+Daily variations in soil water content can be summarized as:
   \begin{equation}
   \Delta{SWC} = P - In - Ru - Dd - Es -Tr
   \end{equation}
@@ -80,22 +78,8 @@ Soil can be described using between 1 and 5 soil layers. For each soil layer $s$
 
 Soil texture (i.e. percent of sand, silt and clay), bulk density and rock fragment content can differ between soil layers. Specifying a deep rocky layer is important because Mediterranean plants may extend their roots into cracks existing in the parent rock (Ruffault et al., 2013). 
 
-Relative soil moisture content is tracked at each layer $s$ using the pair of coupled state variables:
-\begin{itemize}
-\item{$\Psi_s$, the soil water potential (in MPa).}
-\item{$W = \theta(\Psi_s)/ \theta_{fc,s}$, the proportion of volumetric soil moisture in relation to field capacity $\theta_{fc,s}$}
-\end{itemize}
-Following Reynolds et al. (2000), volumetric soil moisture $\theta(\Psi_s)$ corresponding to a given water potential $\Psi_s$ (in MPa) is calculated using the pedotransfer functions of Saxton et al. (1986):
-\begin{equation}
-\theta(\Psi_s) = (\Psi_s/A_s)^{(1/B_s)}
-\end{equation}
-where
-$A_s = -0.1 \cdot e^{(- 4.396 - 0.0715 \cdot P_{clay,s} - 0.0004880\cdot P_{sand,s}^2 - 0.00004285 \cdot P_{sand,s}^2 \cdot P_{clay,s})}$
-and $B = - 3.140 - 0.00222 \cdot P_{clay,s}^2 - 0.00003484 \cdot P_{sand,s}^2 \cdot P_{clay,s}$. Here $P_{clay,s}$ and $P_{sand,s}$ are the percentage of clay and sand, respectively. Soil water holding capacity ($V_s$, in mm) in soil layer $s$ is defined as the volumetric water content at field capacity:
-\begin{equation}
-V_s = d_s\cdot ((100-P_{rocks,s})/100)\cdot\theta_{fc,s}
-\end{equation}
-where $d_s$ is the depth of the soil layer (in mm) and $P_{rocks,s}$ is the percentage of rock fragments. Soil initialization requires a list of soil parameters (see function \texttt{defaultSoilParams()}) that is is given as input to function \texttt{soil()}: 
+\subsubsection{Soil parameters}
+Soil initialization requires a list of soil parameters (see function \texttt{defaultSoilParams()}) that is is given as input to function \texttt{soil()}: 
 \begin{itemize}
 \item{$Z_{s}$ [\texttt{widths}]: Depth corresponding to each soil layer (in mm).}
 \item{$P_{clay,s}$ [\texttt{clay}]: Percentage of clay corresponding to each soil layer.}
@@ -115,6 +99,28 @@ soil evaporation.}
 
 For those users lacking soil information, package \texttt{medfate} provides a function to get the soil description from SoilGrids.org (see \texttt{soilgridsParams()}).
 
+\subsubsection{Water retention curves}
+Water retention curve of a soil layer $s$ is the relationship between the water content, $\theta_s$ (in m$^3 \cdot $m$^{-3}$ of soil), and the soil water potential, $\Psi_s$ (in MPa). This curve is characteristic for different types of soil, and is also called the soil moisture characteristic. Two types of water retention curves are offered for the water balance model:
+
+\begin{itemize}
+\item{\textbf{Saxton model}: Following Reynolds et al. (2000), volumetric soil moisture $\theta(\Psi_s)$ corresponding to a given water potential $\Psi_s$ (in MPa) is calculated using the pedotransfer functions of Saxton et al. (1986):
+\begin{equation}
+\theta(\Psi_s) = (\Psi_s/A_s)^{(1/B_s)}
+\end{equation}
+where
+$A_s = -0.1 \cdot e^{(- 4.396 - 0.0715 \cdot P_{clay,s} - 0.0004880\cdot P_{sand,s}^2 - 0.00004285 \cdot P_{sand,s}^2 \cdot P_{clay,s})}$
+and $B = - 3.140 - 0.00222 \cdot P_{clay,s}^2 - 0.00003484 \cdot P_{sand,s}^2 \cdot P_{clay,s}$. Here $P_{clay,s}$ and $P_{sand,s}$ are the percentage of clay and sand, respectively.}
+\item{\textbf{Van Genuchten model}: }
+\end{itemize}
+
+\subsubsection{Moisture state variable}
+Regardless of the chosen water retention curve, soil moisture content dynamics on each layer $s$ are tracked using $W = \theta(\Psi_s)/ \theta_{fc,s}$, the \textbf{proportion of volumetric soil moisture in relation to field capacity}, where field capacity, $\theta_{fc,s}$, is assumed to correspond to $\Psi_{fc} = -0.033$ MPa. Soils are not allowed to contain more water than dictated by their field capacity.
+
+Soil water holding capacity ($V_s$, in mm) in soil layer $s$ is defined as the volumetric water content at field capacity:
+\begin{equation}
+V_s = d_s\cdot ((100-P_{rocks,s})/100)\cdot\theta_{fc,s}
+\end{equation}
+where $d_s$ is the depth of the soil layer (in mm) and $P_{rocks,s}$ is the percentage of rock fragments.
 \subsection{Vegetation description}
 
 Vegetation in the stand is described using a set of plant cohorts, in an object
