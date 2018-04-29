@@ -13,7 +13,7 @@ Description of a forest patch.
 \usage{
 \method{summary}{forest}(object, SpParams, detailed=FALSE, ...) 
 \method{print}{summary.forest}(x, digits = getOption("digits"), ...)
-emptyforest(ID="", patchsize=10000)
+emptyforest(ID="", patchsize=10000, ntree = 0, nshrub = 0)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -56,15 +56,13 @@ emptyforest(ID="", patchsize=10000)
   \item{...}{Additional parameters for functions \code{\link{summary}} and \code{\link{print}}.}
   \item{ID}{An identifier of the forest stand (a string).}
   \item{patchsize}{The area of the forest stand, in square meters.}
+  \item{ntree, nshrub}{Number of tree and shrub cohorts, respectively.}
 }
 \details{
   Function \code{summary.forest} can be used to summarize a \code{forest} object in the console. Function \code{emptyforest} creates an empty \code{forest} object.
 }
 \value{
   Function \code{summary.forest} returns a data frame with the basal area and LAI of the forest, either expressed as totals or divided among life stages and species. Function \code{emptyforest} returns an empty \code{forest} object.
-}
-\references{
-De \enc{Cáceres}{Caceres} M, \enc{Martínez}{Martinez}-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L. (submitted) Coupling a water balance model with forest inventory data to evaluate plant drought stress at the regional level. Agricultural and Forest Meteorology.
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
