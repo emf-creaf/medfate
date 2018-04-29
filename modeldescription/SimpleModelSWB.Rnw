@@ -103,14 +103,16 @@ For those users lacking soil information, package \texttt{medfate} provides a fu
 Water retention curve of a soil layer $s$ is the relationship between the water content, $\theta_s$ (in m$^3 \cdot $m$^{-3}$ of soil), and the soil water potential, $\Psi_s$ (in MPa). This curve is characteristic for different types of soil, and is also called the soil moisture characteristic. Two types of water retention curves are offered for the water balance model:
 
 \begin{itemize}
-\item{\textbf{Saxton model}: Following Reynolds et al. (2000), volumetric soil moisture $\theta(\Psi_s)$ corresponding to a given water potential $\Psi_s$ (in MPa) is calculated using the pedotransfer functions of Saxton et al. (1986):
+\item{\textbf{Saxton model}: In this model, volumetric soil moisture $\theta(\Psi_s)$ corresponding to a given water potential $\Psi$ (in MPa) is calculated using:
 \begin{equation}
-\theta(\Psi_s) = (\Psi_s/A_s)^{(1/B_s)}
+\theta(\Psi) = (\Psi/A)^{(1/B)}
 \end{equation}
-where
-$A_s = -0.1 \cdot e^{(- 4.396 - 0.0715 \cdot P_{clay,s} - 0.0004880\cdot P_{sand,s}^2 - 0.00004285 \cdot P_{sand,s}^2 \cdot P_{clay,s})}$
-and $B = - 3.140 - 0.00222 \cdot P_{clay,s}^2 - 0.00003484 \cdot P_{sand,s}^2 \cdot P_{clay,s}$. Here $P_{clay,s}$ and $P_{sand,s}$ are the percentage of clay and sand, respectively.}
-\item{\textbf{Van Genuchten model}: }
+where $A$ and $B$ depend on the texture and, if available, organic matter in the soil layer. If organic matter is available, $A$ and $B$ are calculated $P_{clay}$, $P_{sand}$ and $OM$ following Saxton and Rawls (2006). Otherwise, they are calculated from $P_{clay}$ and $P_{sand}$ as indicated in Saxton et al. (1986).}
+\item{\textbf{Van Genuchten model}: The well known van Genuchten (1980) model is:
+\begin{equation}
+\theta(\Psi) = \theta_{res}+\frac{\theta_{sat}+\theta_{res}}{\left[1+ (\alpha \cdot \Psi)^n \right]^{1-1/n}}
+\end{equation}
+where $\theta(\psi)$ is the water retention, $\theta_{sat}$ is the saturated water content, $\theta_{res}$ is the residual water content, $\alpha$ is related to the inverse of the air entry pressure (and here has to be expressed in MPa$^{-1}$), and $n$ is a measure of the pore-size distribution. When initializing soil using function \texttt{soil()}, the parameters of the Van Genuchten model are estimated from texture, using the USDA texture classification and the parameters in Carsel and Parrish (1988), but they can be modified manually afterwards.}
 \end{itemize}
 
 \subsubsection{Moisture state variable}
@@ -209,6 +211,7 @@ Control parameters are a list of parameter values, initialized using function \t
 
 \begin{itemize}
 \item{\texttt{verbose [=TRUE]}: Whether extra console output is desired during simulations.}
+\item{\texttt{soilFunctions [= "SX"]}: Water retention curve model, either "SX" (for Saxton) or "VG" (for Van Genuchten).}
 \item{\texttt{transpirationMode [= "Simple"]}: Transpiration model, in this case "Simple".}
 \item{\texttt{defaultWindSpeed [= 5]}: Default value for wind speed when this is missing (only used for leaf fall).}
 \item{\texttt{cavitationRefill [= TRUE]}: If \texttt{FALSE} the model operates in a irreversible cavitation mode.}
@@ -798,6 +801,9 @@ neighbour. $O_j$ values are set to zero at the beginning of each day.
 
 \section{References}
 \begin{itemize}
+
+\item{Carsel, R.F., & Parrish, R.S. 1988. Developing joint probability distributions of soil water retention characteristics. Water Resources Research 24: 755–769.}
+
 \item{Collins, D.B.G., Bras, R.L., 2007. Plant rooting strategies in water-limited ecosystems. Water Resour. Res. 43, W06407. doi:10.1029/2006WR005541}
 
 \item{De Cáceres, M., Martínez-Vilalta, J., Coll, L., Llorens, P., Casals, P., Poyatos, R., Pausas, J.G., Brotons, L., 2015. Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes. Agric. For. Meteorol. 213, 77–90. doi:10.1016/j.agrformet.2015.06.012}
@@ -836,6 +842,8 @@ neighbour. $O_j$ values are set to zero at the beginning of each day.
 
 \item{Saxton, K.E., Rawls, W.J., Romberger, J.S., Papendick, R.I., 1986. Estimating generalized soil-water characteristics from texture. Soil Sci. Soc. Am. J. 50, 1031–1036.}
 
+\item{Saxton, K. E., Rawls, W. J. (2006). Soil water characteristic estimates by texture and organic matter for hydrologic solutions. Soil Science Society of America Journal, 70(5), 1569. https://doi.org/10.2136/sssaj2005.0117}
+
 \item{Schenk, H., Jackson, R., 2002. The global biogeography of roots. Ecol. Monogr. 72, 311–328.}
 
 \item{Sitch, S., Smith, B., Prentice, I.C., Arneth, a., Bondeau, a., Cramer, W., Kaplan, J.O., Levis, S., Lucht, W., Sykes, M.T., Thonicke, K., Venevsky, S., 2003. Evaluation of ecosystem dynamics, plant geography and terrestrial carbon cycling in the LPJ dynamic global vegetation model. Glob. Chang. Biol. 9, 161–185. doi:10.1046/j.1365-2486.2003.00569.x}
@@ -847,6 +855,8 @@ neighbour. $O_j$ values are set to zero at the beginning of each day.
 \item{Stolf, R., Thurler, Á., Oliveira, O., Bacchi, S., Reichardt, K., 2011. Method to estimate soil macroporosity and microporosity based on sand content and bulk density. Rev. Bras. Ciencias do Solo 35, 447–459.}
 
 \item{Watanabe, T., Mizutani, K., 1996. Model study on micrometeorological aspects of rainfall interception over an evergreen broad-leaved. Agric. For. Meteorol. 80, 195–214.}
+
+\item{Genuchten, M. Van. 1980. A closed-form equation for predicting the hydraulic conductivity of unsaturated soils. Soil Science Society of America Journal, 44, 892–898. Retrieved from https://dl.sciencesocieties.org/publications/sssaj/abstracts/44/5/SS0440050892}
 \end{itemize}
 
 \end{document}
