@@ -39,30 +39,30 @@ Soil input for function `swb()` is actually an object of class `soil` that is cr
 ```{r}
 examplesoil = soil(spar)
 ```
-The soil object is used to store the state of the soil, specifically its degree of moisture. If we inspect the elements of the soil object, we will see that `W` contains the state variable that represents moisture (the proportion of moisture relative to field capacity), which is normally initialized to 1.
+The soil object is used to store the moisture degree of each soil layer. If we inspect the elements of the soil object, we will see that `W` contains the state variable that represents moisture (i.e. the proportion of moisture relative to field capacity), which is normally initialized to 1 for each layer.
 ```{r}
 names(examplesoil)
 examplesoil$W
 ```
-The meaining of all elements in the soil object can be found in the help page for `soil`. It is important to remember that, unlike normal objects in R, any water balance simulation will modify the soil object, in the sense that the state of the soil at the end of the simulated process (i.e. `W`) will be stored. Hence, one can use the same object to simulate water balance sequentially and the final state of one simulation is the initial state of the next.
+The meaining of all elements in the soil object can be found in the help page for function `soil()`. It is important to remember that, unlike normal objects in R, any water balance simulation will modify the moisture values in soil object. That is, the state of the soil at the end of the simulated process (i.e. `W`) will be stored. Hence, one can use the same object to simulate water balance sequentially and the final state of one simulation is the initial state of the next.
 
 At any time, one can print the status of the soil object:
 ```{r}
 print(examplesoil, model = "SX")
 ```
-The actual moisture content of the soil depends on the pedotransfer functions used to calculate water content (mm = L/m2) or water potential (MPa) from the soil state variable that represents moisture . By default these functions follow Saxton equations, but the user may choose to follow Van Genuchten - Mualem equations, which will give different values for the same texture:
+The actual moisture content of the soil depends (mm or litres of water per square meter) on the water retention curve used to represent the relationship between soil volumetric water content ($\theta$; %) and soil water potential ($\Psi$; MPa). By default the Saxton equations as water retention curve, but the user may choose to follow Van Genuchten - Mualem equations, which will give different values for the same texture:
 ```{r}
 print(examplesoil, model="VG")
 ```
-The following figure illustrates the difference between the two pedotransfer models:
+The following figure illustrates the difference between the two water retention models (for the Van Genuchten parameters in `examplesoil`):
 ```{r pedotransfer, fig = TRUE, fig.width= 5, fig.height=4, fig.align= 'center', echo=TRUE}
 par(mar=c(4,4,1,1))
-# Plot Saxton's pedotransfer curve
+# Plot Saxton's retention curve
 psi = seq(-0.01, -2.0, by=-0.001)
 plot(-psi, lapply(as.list(psi), FUN=soil.psi2thetaSX, clay=25, sand=25), 
      type="l", ylim=c(0,0.5),ylab="Water content (prop. volume)", xlab = "Soil water potential (-MPa)")
 
-#Add Van Genuchten pedotransfer curve
+#Add Van Genuchten retention curve
 lines(-psi, lapply(as.list(psi), FUN=soil.psi2thetaVG, 
       alpha=examplesoil$VG_alpha[1], n = examplesoil$VG_n[1], 
       theta_res = examplesoil$VG_theta_res[1], 

@@ -137,6 +137,7 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
   
   //Control parameters
   List control = x["control"];
+  String soilFunctions = control["soilFunctions"];
   List numericParams = control["numericParams"];
   double psiStep = numericParams["psiStep"];
   double psiMax = numericParams["psiMax"];
@@ -158,15 +159,15 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
   
   //Soil input
   NumericVector W = soil["W"];
-  NumericVector psi = soil["psi"];
   NumericVector dVec = soil["dVec"];
-  NumericVector Theta_FC = soil["Theta_FC"];
+  NumericVector psiVec = psi(soil, soilFunctions);
+  NumericVector Water_FC = waterFC(soil, soilFunctions);
+  NumericVector Theta_FC = thetaFC(soil, soilFunctions);
   NumericVector macro = soil["macro"];
   NumericVector rfc = soil["rfc"];
   NumericVector clay = soil["clay"];
   NumericVector sand = soil["sand"];
   NumericVector om = soil["om"];
-  NumericVector Water_FC = waterFC(soil);
   int nlayers = W.size();
   
   //Vegetation input
@@ -304,7 +305,7 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
     int nlayersc = 0;
     for(int l=0;l<nlayers;l++) {
       if(V(c,l)>0.0) {
-        double pRoot = xylemConductance(psi[l], 1.0, VCroot_c[c], VCroot_d[c]); //Relative conductance in the root
+        double pRoot = xylemConductance(psiVec[l], 1.0, VCroot_c[c], VCroot_d[c]); //Relative conductance in the root
         layerConnected[l]= (pRoot>=pRootDisc[c]);
         if(layerConnected[l]) nlayersc++;
       }
@@ -322,7 +323,7 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
         Vc[cnt] = V(c,l);
         VCroot_kmaxc[cnt] = VCroot_kmax(c,l);
         VGrhizo_kmaxc[cnt] = VGrhizo_kmax(c,l);
-        psic[cnt] = psi[l];
+        psic[cnt] = psiVec[l];
         VG_nc[cnt] = VG_n[l];
         VG_alphac[cnt] = VG_alpha[l];
         cnt++;
