@@ -178,21 +178,19 @@ legend("bottomright", legend=c("Z50 = 100, Z95 = 200",
 \emph{Fig. 1}: Examples of root density profile according to a conic distribution (left) and the linear dose response model (right).
 \end{center}
 
-\subsubsection{Basic functional parameters}
-Functional attributes can be modified at the cohort level but are normally derived
-from species identity.
+\subsection{Vegetation functional parameters}
+Vegetation functional attributes are normally filled for each cohort by function \texttt{swbInput()} from species identity. However, different parameters can be specified for different cohort of the same species if desired. Basic functional parameters relate to light extinction, water interception and leaf phenology:
 \begin{itemize}
 \item{$k_{PAR,i}$ [\texttt{k}]: PAR extinction coefficient.}
 \item{$s_{water, i}$ [\texttt{g}]: Crown water storage capacity (i.e. depth of
-water that can be retained by leaves and branches) per LAI unit (in mm·LAI$^{-1}$).}
+water that can be retained by leaves and branches) per LAI unit (in mm H$_2$O·LAI$^{-1}$).}
 \item{$S_{GDD,i}$ [\texttt{Sgdd}]: Growth degree days corresponding to leave
 budburst (in degrees Celsius).}
 \end{itemize}
-
-\subsubsection{Transpiration parameters}
+A second set of parameters are related to plant transpiration and photosynthesis.
 \begin{itemize}
 \item{$\Psi_{extract,i}$ [\texttt{Psi\_extract}]: Soil water potential (in MPa) corresponding to 50\% of water extractive capacity.}
-\item{$WUE_{\max,i}$ [\texttt{WUE}]: Maximum water use efficiency (in g C · mm$^{-1}$).}
+\item{$WUE_{\max,i}$ [\texttt{WUE}]: Maximum water use efficiency (in g C · mm H$_2$O$^{-1}$).}
 \item{$K_{rootdisc,i}$ [\texttt{pRootDisc}]: Relative conductance of roots that leads to hydraulic disconnection from soil.}
 \end{itemize}
 
@@ -213,7 +211,7 @@ Control parameters are a list of parameter values, initialized using function \t
 \item{\texttt{verbose [=TRUE]}: Whether extra console output is desired during simulations.}
 \item{\texttt{soilFunctions [= "SX"]}: Water retention curve model, either "SX" (for Saxton) or "VG" (for Van Genuchten).}
 \item{\texttt{transpirationMode [= "Simple"]}: Transpiration model, in this case "Simple".}
-\item{\texttt{defaultWindSpeed [= 5]}: Default value for wind speed when this is missing (only used for leaf fall).}
+\item{\texttt{defaultWindSpeed [= 5]}: Default value for wind speed (in m·s$^{-1}$) when this is missing (only used for leaf fall).}
 \item{\texttt{cavitationRefill [= TRUE]}: If \texttt{FALSE} the model operates in a irreversible cavitation mode.}
 \end{itemize}
 
@@ -607,7 +605,7 @@ obtained averaging whole-plant relative conductance values:
 \Psi_{leaf,i}=K^{-1}(K_i) = K^{-1}\left(\sum_{s}{K_{i,s}\cdot v_{i,s}}\right)
 \end{equation}
 where $K_i$ is the average whole-plant relative conductance obtained from the
-scalar product of conductances and fine root proportions. 
+scalar product of conductances and fine root proportions and $K^{-1}$ is the inverse of the whole-plant conductance function (see function \texttt{hydraulics.K2Psi()}). 
 
 \subsubsection{Irreversible cavitation and hydraulic disconnection}
 The water balance model is normally run assuming that although soil drought may
@@ -802,7 +800,7 @@ neighbour. $O_j$ values are set to zero at the beginning of each day.
 \section{References}
 \begin{itemize}
 
-\item{Carsel, R.F., & Parrish, R.S. 1988. Developing joint probability distributions of soil water retention characteristics. Water Resources Research 24: 755–769.}
+\item{Carsel, R.F., and Parrish, R.S. 1988. Developing joint probability distributions of soil water retention characteristics. Water Resources Research 24: 755–769.}
 
 \item{Collins, D.B.G., Bras, R.L., 2007. Plant rooting strategies in water-limited ecosystems. Water Resour. Res. 43, W06407. doi:10.1029/2006WR005541}
 
