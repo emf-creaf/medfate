@@ -24,82 +24,146 @@ library(medfate)
 \subsection{Design principles}
 Soil water balance is calculated on a daily step basis for the input forest stand and for the period corresponding to input weather data. The model considers only the vertical spatial dimension of the stand, and not the horizontal distribution of plants within it. Still, the stand is divided into groups of plants (here referred to as `plant cohorts') of different species, height and leaf area index ($LAI$). 
 
-Plant transpiration can be modelled in two ways of different degree of complexity:
-\begin{itemize}
-\item{In the simple (but faster) model (i.e. \texttt{transpirationMode = "Simple"}), soil water balance follows the design principles of SIERRA (Mouillot et al., 2001; Ruffault et al., 2014, 2013) and BILJOU (Granier et al., 2007, 1999), although some features are taken from other models. Potential evapotranspiration ($PET$) is given as input and the model determines maximum canopy transpiration ($Tr_{\max}$) using an empirical relationship between the $LAI$ of the stand and the ratio $Tr_{\max}/PET$ (Granier et al. 1999). Actual plant transpiration is calculated using a simple function depending on current soil moisture level and degree of shading.}
-\item{In the complex (but slower) model (i.e. \texttt{transpirationMode = "Complex"}), the model determines regulation of leaf water conductance and actual transpiration involving detailed calculations of hydraulics and photosynthesis (Sperry \& Love 2015; Sperry et al. 2016). This level of complexity allow a more precise estimation of photosynthesis and hydraulic redistribution of water among soil layers.}
-\end{itemize}
+For plant transpiration, the model determines regulation of leaf water conductance and actual transpiration involving detailed calculations of hydraulics and photosynthesis (Sperry \& Love 2015; Sperry et al. 2016). This level of complexity allows a precise estimation of photosynthesis and hydraulic redistribution of water among soil layers.
 
-When lateral water transport is also considered the water inputs of the stand includes net precipitation but also runoff water from cells of its upper microwatershed, as done in SIERRA (Mouillot et al., 2001). 
+Radiation and energy balances are conducted at two scales: canopy/soil and leaf. One one hand the model keeps track of temperature variation of the air in the canopy (i.e. canopy energy balance) and in the soil (i.e. soil energy balance) as the result of energy exchanges between them and with the atmosphere. On the other, the model performs the energy balance at the leaf level to determine transpiration. At this scale, radiation inputs include shortwave radiation from the atmosphere absorbed by the leaf and absorbed longwave radiation coming from both the atmosphere and the canopy itself. Leaf temperature is determined assuming that the temperature of the air is that of the canopy. After performing stomatal regulation, the model upscales the transpiration flux at the canopy level and the corresponding latent heat is used to complete the calculation of the energy balance at the canopy level. Note that the latent heat fluxes from evaporation from the soil and of intercepted water are not included in the energy balance.
 
-\subsection{Process scheduling}
-Every day water balance is calculated as follows. The model first updates leaf area values according to the phenology of species and calculates light extinction. After that, the model updates soil water content of soil layers in two steps: (1) it increases soil moisture due to precipitation, $P$, after accounting for canopy interception loss, $In$, surface runoff, $Ru$, and deep drainage, $Dd$; (2) it decreases water content due to bare soil evaporation, $Es$, and plant transpiration, $Tr$. This second step is done differently depending on \texttt{transpirationMode}. After updating soil layers, the model determines drought stress index for each plant cohort, which again is done differently depending on \texttt{transpirationMode}. 
 
+\subsubsection{Water balance}
 Daily variations in soil water content can be summarized as: 
   \begin{equation}
   \Delta{SWC} = P - In - Ru - Dd - Es - Tr
   \end{equation}
-When landscape hydrological processes are not considered, daily water balance simulations can be done for cells independently (i.e., the whole simulation period can be done one cell before going to the next one). When lateral water transport is also considered, however, water balance of a given day is conducted for all cells before starting the next day. Moreover, a discharge parameter table is prepared at the beginning of the simulation, cells are processed in an order determined by elevation (i.e. cells at higher elevation are processed before cells at lower elevation) and the water balance of a given target cell is influenced by surface runon, $Ro$, coming from those neighboring cells that are at higher elevation. Daily variations in soil water content is then summarized as: 
-  \begin{equation}
-  \Delta{SWC} = P + Ro - In - Ru - Dd - Es - Tr
-  \end{equation}
+When landscape hydrological processes are not considered, daily water balance simulations can be done for cells independently (i.e., the whole simulation period can be done one cell before going to the next one). 
 
+\subsubsection{Energy balance}
+Energy balance equations are very similar to those of Best et al. (2011) for JULES. The canopy absorbs shortwave radiation from the atmosphere ($K_{abs,ca}$). It also absorbs longwave counterradiation from the atmosphere ($L_{abs,ca}$) and longwave radiation emmited from the soil ($L_{abs,cs}$). These inputs are counterbalanced by the longwave radiation emmited by the canopy ($L_{em,c}$) in both cases. Other energy fluxes considered are convective exchanges between the canopy and atmosphere ($H_{ca}$) and between the canopy and the soil ($H_{cs}$). Finally, energy is released to the atmosphere through latent heat ($LE_{c}$) produced via transpiration (so far, interception and soil evaporation are not included). The instantaneous energy balance equation for the canopy is thus:
+\begin{equation}
+  C_{c} \cdot \frac{\delta T_{c}}{\delta t} = K_{abs,ca} + (L_{abs,ca} - L_{em,c}) + (L_{abs,cs} - L_{em,c}) - LE_{c} - H_{ca} - H_{cs} 
+\end{equation}
+where $C_{c}$ is the canopy thermal capacitance. Like the canopy, the soil absorbs short- and longwave radiation from the atmosphere ($K_{abs,sa}$ and $L_{abs,sa}$). It also absorbs longwave radiation released by the canopy ($L_{abs,sc} = L_{em,c}$) and emmits longwave radiation ($L_{em,s}$). Note that $L_{abs,cs} \leq L_{em,s}$ because part of the radiation emmitted by the soil is sent to the atmosphere without being intercepted by the canopy. Finally, it also exchanges convective energy with the canopy ($H_{cs}$). The energy balance equation for the soil is:
+\begin{equation}
+  C_{s} \cdot \frac{\delta T_{s}}{\delta t} = K_{abs,sa} + L_{abs,sa} - L_{em,s} + L_{abs,sc} + H_{cs} 
+\end{equation}
+where $C_{s}$ is the soil thermal capacitance.
+
+\subsection{Process scheduling}
+Every day water balance is calculated as follows. The model first updates leaf area values according to the phenology of species and calculates light extinction. After that, the model updates soil water content of soil layers in two steps: (1) it increases soil moisture due to precipitation, $P$, after accounting for canopy interception loss, $In$, surface runoff, $Ru$, and deep drainage, $Dd$; (2) it decreases water content due to bare soil evaporation, $Es$, and plant transpiration, $Tr$. This second step is done differently depending on \texttt{transpirationMode}. After updating soil layers, the model determines drought stress index for each plant cohort, which again is done differently depending on \texttt{transpirationMode}. 
 
 \section{Model inputs}
 \subsection{Soil description}
+Soil can be described using between 1 and 5 soil layers. For each soil layer $s$ the following parameters are needed:
+\begin{itemize}
+\item{Soil layer width ($d_s$, in mm).}
+\item{Soil texture: percent of sand ($P_{sand,s}$), silt ($P_{silt,s}$) and clay ($P_{clay,s}$).}
+\item{Soil organic mater (optional).}
+\item{Macroporosity (percent of macropores).}
+\item{Percentage of rock fragment content ($P_{rocks,s}$).}
+\end{itemize}
 
-Soil is described using 1 to 5 soil layers, each layer having its width, texture, macroporosity and rock fragment content. Details of the soil description are given in '\textbf{Soil description and root system architecture}'. The following is a list of soil parameters needed (their R code names are shown in brackets):
+Soil texture (i.e. percent of sand, silt and clay), bulk density and rock fragment content can differ between soil layers. Specifying a deep rocky layer is important because Mediterranean plants may extend their roots into cracks existing in the parent rock (Ruffault et al., 2013). 
+
+\subsubsection{Soil parameters}
+Soil initialization requires a list of soil parameters (see function \texttt{defaultSoilParams()}) that is is given as input to function \texttt{soil()}: 
 \begin{itemize}
 \item{$Z_{s}$ [\texttt{widths}]: Depth corresponding to each soil layer (in mm).}
 \item{$P_{clay,s}$ [\texttt{clay}]: Percentage of clay corresponding to each soil layer.}
 \item{$P_{sand,s}$ [\texttt{sand}]: Percentage of sand corresponding to each soil layer.}
-\item{$P_{rocks,s}$ [\texttt{rfc}]: Percentage of rock fragments (>2 mm) corresponding to each soil layer.}
-\item{$P_{macro, s}$ [\texttt{macro}]: Percentage of macroporosity corresponding to each soil layers. Macroporosity values can be calculated for each soil layer from its percentage of sand and bulk density, using the equations given in Stolf et al. (2011).}
-\item{$\gamma_{soil}$ [\texttt{Gsoil}]: Maximum daily bare soil evaporation ($mm \cdot day^{-1}$).}
-\item{$\kappa_{soil}$ [\texttt{Ksoil}]: Exponential decay coefficient for bare soil evaporation.}
+\item{$P_{rocks,s}$ [\texttt{rfc}]: Percentage of rock fragments (>2 mm)
+corresponding to each soil layer.}
+\item{$P_{macro, s}$ [\texttt{macro}]: Percentage of macroporosity corresponding
+to each soil layers. Macroporosity values can be calculated for each soil layer
+from its percentage of sand and bulk density, using the equations given in Stolf
+et al. (2011).}
+\item{$OM$ [\texttt{om}]: Percentage of organic matter corresponding to each soil layer.}
+\item{$\gamma_{soil}$ [\texttt{Gsoil}]: Maximum daily bare soil evaporation
+(mm·day$^{-1}$).}
+\item{$\kappa_{soil}$ [\texttt{Ksoil}]: Exponential decay coefficient for bare
+soil evaporation.}
 \end{itemize}
+
+For those users lacking soil information, package \texttt{medfate} provides a function to get the soil description from SoilGrids.org (see \texttt{soilgridsParams()}).
+
+\subsubsection{Water retention curves}
+Water retention curve of a soil layer $s$ is the relationship between the water content, $\theta_s$ (in m$^3 \cdot $m$^{-3}$ of soil), and the soil water potential, $\Psi_s$ (in MPa). This curve is characteristic for different types of soil, and is also called the soil moisture characteristic. The well known equations of van Genuchten (1980) are used to model the water retention curve:
+\begin{equation}
+\theta(\Psi) = \theta_{res}+\frac{\theta_{sat}+\theta_{res}}{\left[1+ (\alpha \cdot \Psi)^n \right]^{1-1/n}}
+\end{equation}
+where $\theta(\psi)$ is the water retention, $\theta_{sat}$ is the saturated water content, $\theta_{res}$ is the residual water content, $\alpha$ is related to the inverse of the air entry pressure (and here has to be expressed in MPa$^{-1}$), and $n$ is a measure of the pore-size distribution. When initializing soil using function \texttt{soil()}, the parameters of the Van Genuchten model are estimated from texture, using the USDA texture classification and the parameters in Carsel and Parrish (1988), but they can be modified manually afterwards.
+
+\subsubsection{Soil state variables}
+Regardless of the chosen water retention curve, soil moisture content dynamics on each layer $s$ are tracked using $W = \theta(\Psi_s)/ \theta_{fc,s}$, the \textbf{proportion of volumetric soil moisture in relation to field capacity}, where field capacity, $\theta_{fc,s}$, is assumed to correspond to $\Psi_{fc} = -0.033$ MPa. Soils are not allowed to contain more water than dictated by their field capacity.
+
+Soil water holding capacity ($V_s$, in mm) in soil layer $s$ is defined as the volumetric water content at field capacity:
+\begin{equation}
+V_s = d_s\cdot ((100-P_{rocks,s})/100)\cdot\theta_{fc,s}
+\end{equation}
+where $d_s$ is the depth of the soil layer (in mm) and $P_{rocks,s}$ is the percentage of rock fragments.
 
 \subsection{Vegetation description}
 
 Vegetation in the stand is described using a set of plant cohorts, described in an object of class \texttt{swbInput}. Each plant cohort $i$ is primarily defined by its species identity ($SP_i$; with R name [\texttt{SP}]). 
 
 \subsubsection{Aboveground parameters}
-The aboveground structure of each cohort is defined using the following attributes:
+
+The aboveground structure if each cohort is defined using the following attributes:
 \begin{itemize}
 \item{$H_i$ [\texttt{H}]: Total tree or shrub height (in cm).}
-\item{$CR_i$ [\texttt{CR}]: Crown ratio (i.e. the ratio between crown length and total height).}
-\item{$LAI^{live}_i$ [\texttt{LAI\_live}]: (Maximum) leaf area index (one-side leaf area of plants in the cohort per surface area of the stand).}
-\item{$LAI^{dead}_i$ [\texttt{LAI\_dead}]: Dead leaf area index (one-side dead leaf area of plants in the cohort per surface area of the stand).}
+\item{$CR_i$ [\texttt{CR}]: Crown ratio (i.e. the ratio between crown length and
+total height).}
+\item{$LAI^{live}_i$ [\texttt{LAI\_live}]: (Maximum) leaf area index (one-side
+leaf area of plants in the cohort per surface area of the stand).}
+\item{$LAI^{dead}_i$ [\texttt{LAI\_dead}]: Dead leaf area index (one-side dead
+leaf area of plants in the cohort per surface area of the stand).}
+\item{$LAI^{\phi}_i$ [\texttt{LAI\_expanded}]: Current expanded leaf area index (one-side expanded
+leaf area of plants in the cohort per surface area of the stand).}
 \end{itemize}
-All vegetation characteristics stay constant during water balance simulations, although the actual expanded leaf area may vary is the species is winter deciduous.
+All vegetation characteristics stay constant during water balance simulations, although the actual expanded leaf area and dead leaf area may vary is the species is winter deciduous.
 
 \subsubsection{Belowground parameters}
-If \texttt{transpirationMode = "Simple"}, the root system of each plant cohorts is described using the proportion of fine roots in each soil layer.
+The root system of each plant cohorts is described using the proportion of fine
+roots in each soil layer:
 \begin{itemize}
 \item{$v_{i,s}$ [\texttt{V}]: The proportion of fine roots in each soil layer $s$.}
 \end{itemize}
-If \texttt{transpirationMode = "Complex"}, the root system of each plant cohorts is additionally described with the following conductance values for each soil layer.
-\begin{itemize}
-\item{$k_{rhizo,i,s}$ [\texttt{VGrhizo\_kmax}]: Maximum rhizosphere conductance values for each soil layer.}
-\item{$k_{root,i,s}$ [\texttt{VGroot\_kmax}]: Maximum root xylem conductance values for each soil layer.}
-\end{itemize}
 
-\subsubsection{Common functional parameters}
-Functional attributes can be modified at the cohort level but are normally derived from species identity. The following parameters are the same regardless of the transpiration mode.
+The rooting system of each cohort $i$ (i.e. the proportions $v_{i,s}$) can be defined assuming conic distribution of fine roots (see \texttt{root.conicDistribution()}). In this case, only rooting depth parameter is needed to determine fine root proportions. Alternatively, one can adopt the linear dose response model (Collins and Bras, 2007; Schenk and Jackson, 2002): 
+\begin{equation}
+Y_i(z)=\frac{1}{1+(z/Z_{50,i})^{c_i}}
+\end{equation}
+where $Y_i(z)$ is the cumulative fraction of fine root mass located between surface and depth $z$; $Z_{50,i}$ is the depth above which 50\% of the root mass is located; and $c_i$ is a shape parameter related to $Z_{50,i}$ and $Z_{95,i}$ as $c_i  = 2.94 / \ln(Z_{50,i} / Z_{95,i})$ (see \texttt{root.ldrDistribution()}). 
+
+\begin{center}
+<<fig=TRUE, width=7, height=4, echo=FALSE>>==
+par(mar=c(4,4,1,1), mfrow=c(1,2))
+P = root.conicDistribution(c(200,1500), rep(10,151))
+matplot(x=t(P)*10, y=seq(0,1500, by=10), type="l", xlim=c(0,2), ylim=c(1500,0), ylab = "Depth (mm)", 
+        xlab="Percentage of fine roots/mm")
+legend("bottomright", legend=c("Z = 200", 
+       "Z = 1500"), col=c("black","red"), lty=1:2, bty="n")
+P = root.ldrDistribution(c(100,500), c(200,1500), rep(10,151))
+matplot(x=t(P)*10, y=seq(0,1500, by=10), type="l", xlim=c(0,2), ylim=c(1500,0), ylab = "Depth (mm)", 
+        xlab="Percentage of fine roots/mm")
+legend("bottomright", legend=c("Z50 = 100, Z95 = 200", 
+       "Z50 = 200, Z95 = 1500"), col=c("black","red"), lty=1:2, bty="n")
+@
+\end{center}
+\begin{center}
+\emph{Fig. 1}: Examples of root density profile according to a conic distribution (left) and the linear dose response model (right).
+\end{center}
+
+\subsection{Vegetation functional parameters}
+Vegetation functional attributes are normally filled for each cohort by function \texttt{swbInput()} from species identity. However, different parameters can be specified for different cohort of the same species if desired. Basic functional parameters relate to light extinction, water interception and leaf phenology:
 \begin{itemize}
 \item{$k_{PAR,i}$ [\texttt{k}]: PAR extinction coefficient.}
-\item{$s_{water, i}$ [\texttt{g}]: Crown water storage capacity (i.e. depth of water that can be retained by leaves and branches) per LAI unit (in mm/LAI).}
-\item{$S_{GDD,i}$ [\texttt{Sgdd}]: Growth degree days corresponding to leave budburst (in degrees Celsius).}
+\item{$s_{water, i}$ [\texttt{g}]: Crown water storage capacity (i.e. depth of
+water that can be retained by leaves and branches) per LAI unit (in mm H$_2$O·LAI$^{-1}$).}
+\item{$S_{GDD,i}$ [\texttt{Sgdd}]: Growth degree days corresponding to leave
+budburst (in degrees Celsius).}
 \end{itemize}
 
-\subsubsection{Transpiration parameters}
-Transpiration parameters depend on the transpiration mode. If \texttt{transpirationMode = "Simple"}:
-\begin{itemize}
-\item{$\Psi_{extract,i}$ [\texttt{Psi\_extract}]: Soil water potential (in MPa) corresponding to 50\% of water extractive capacity.}
-\item{$WUE_{\max,i}$ [\texttt{WUE}]: Maximum water use efficiency (in g C · mm$^{-1}$).}
-\item{$P_{rootdisc,i}$ [\texttt{pRootDisc}]: Relative conductance of roots that leads to hydraulic disconnection from soil.}
-\end{itemize}
-If \texttt{transpirationMode = "Complex"} the following transpiration parameters are needed:
+A second set of plant functional parameters are related to plant transpiration and photosynthesis:
+
 \begin{itemize}
 \item{$g_{wmin,i}$ [\texttt{Gwmin}]: Minimum leaf water conductance (in mol·s-1·m-2).}
 \item{$g_{wmax,i}$ [\texttt{Gwmax}]: Maximum leaf water conductance (in mol·s-1·m-2).}
@@ -111,22 +175,15 @@ If \texttt{transpirationMode = "Complex"} the following transpiration parameters
 \item{$V298_{max,i}$ [\texttt{Vmax298}]: Maximum Rubisco carboxylation rate at 25ºC (in micromol CO2·s-1·m-2).}
 \item{$J298_{max,i}$ [\texttt{Jmax298}]: Maximum rate of electron transport at 25ºC (in micromol electrons·s-1·m-2).}
 \item{$P_{rootdisc,i}$ [\texttt{pRootDisc}]: Relative conductance of roots that leads to hydraulic disconnection from soil.}
+\item{$k_{rhizo,i,s}$ [\texttt{VGrhizo\_kmax}]: Maximum rhizosphere conductance values for each soil layer.}
+\item{$k_{root,i,s}$ [\texttt{VCroot\_kmax}]: Maximum root xylem conductance values for each soil layer.}
 \end{itemize}
-
 
 \subsection{Meteorological input}
-Weather input data must include variables calculated at the \textbf{daily} scale. The variables required depend on the potential evapotranspiration (PET) mode. The following input variables are required when \texttt{transpirationMode = "Simple"}: 
+Weather input data must include variables calculated at the \textbf{daily} scale. 
 \begin{itemize}
 \item{$J$ [\texttt{DOY}]: Day of the year.}
 \item{$P$ [\texttt{Precipitation}]: Precipitation (in L·m$^{-2}$ = mm of water).}
-\item{$T_{mean}$ [\texttt{MeanTemperature}]: Mean temperature (in $^{\circ} \mathrm{C}$).}
-\item{$PET$ [\texttt{PET}]: Potential evapotranspiration (in  L·m$^{-2}$ = mm of water).}
-\end{itemize}
-The following input variables are required if \texttt{transpirationMode = "Complex"}: 
-\begin{itemize}
-\item{$J$ [\texttt{DOY}]: Day of the year.}
-\item{$P$ [\texttt{Precipitation}]: Precipitation (in L·m$^{-2}$ = mm of water).}
-\item{$T_{mean}$ [\texttt{MeanTemperature}]: Mean temperature (in $^{\circ} \mathrm{C}$).}
 \item{$T_{min}$ [\texttt{MinTemperature}]: Minimum temperature (in $^{\circ} \mathrm{C}$).}
 \item{$T_{max}$ [\texttt{MaxTemperature}]: Maximum temperature (in $^{\circ} \mathrm{C}$).}
 \item{$RH_{min}$ [\texttt{MinRelativeHumidity}]: Minimum relative humidity (in percent).}
@@ -135,8 +192,27 @@ The following input variables are required if \texttt{transpirationMode = "Compl
 \item{$u$ [\texttt{WindSpeed}]: Wind speed (in m·s$^{-1}$).}
 \end{itemize}
 
+\subsection{Control parameters}
+Control parameters are a list of parameter values, initialized using function \texttt{defaultControl()}, that the user can modify to change the general behavior of the model. The control values relevant for the complex water balance model are:
+
+\begin{itemize}
+\item{\texttt{verbose [=TRUE]}: Whether extra console output is desired during simulations.}
+\item{\texttt{transpirationMode [= "Simple"]}: Transpiration model, in this case "Complex".}
+\item{\texttt{hydraulicCostFunction [= 1]}: Variant of the hydraulic cost function used in the stomatal regulation model of Sperry & Love (2016). Values accepted are 1 (original cost function based on the derivative of supply function), 2 (leaf vulnerability curve).}
+\item{\texttt{ndailysteps [=24]}: Number of daily substeps.}
+\item{\texttt{thermalCapacityLAI [= 1000000]}: Canopy thermal capacitance per LAI unit.}
+\item{\texttt{defaultWindSpeed [= 5]}: Default value for wind speed (in m·s$^{-1}$) when this is missing.}
+\item{\texttt{verticalLayerSize [= 100]}: The size of vertical layers (in cm) for photosynthesis calculation.}
+\item{\texttt{cavitationRefill [= TRUE]}: If \texttt{FALSE} the model operates in a irreversible cavitation mode.}
+\item{\texttt{taper [= TRUE]}: Whether taper of xylem conduits is accounted for when calculating aboveground stem conductance from xylem conductivity.}
+\item{\texttt{averageFracRhizosphereResistance [= 0.15]}: Fraction to total continuum (stem+root+rhizosphere) resistance that corresponds to rhizosphere (averaged across soil water potential values).}
+\item{\texttt{numericParams}: A list with params for numerical approximation routines.}
+\item{\texttt{Catm [=386]}: Atmospheric CO2 concentration (in micromol CO$_2$·mol$^{-1}$ = ppm).}
+\end{itemize}
+
 
 \section{Details of processes}
+
 \subsection{Leaf phenology}
 Given a base temperature ($T_{base} = 5^{\circ} \mathrm{C}$), the growth degree days ($GDD$) are zero for all those days where mean temperature $T_{mean}$ is below $T_{base}$ and start increasing when temperatures become warmer than this threshold. In other words, the $GDD$ function accumulates $\max(0.0, T_{mean} - T_{base})$ for all days previous to the current one. At the end of a year the cummulative value is set again to zero.
 Plant species can have either evergreen or winter deciduous phenology. Evergreen plants maintain constant leaf area over the year, whereas in deciduous plants leaf-phenological status is updated daily, represented by $\phi_i$, the fraction of maximum leaf area. Leaf area index (LAI) values of deciduous plants are adjusted for leaf phenology following (Prentice et al., 1993; Sitch et al., 2003):
@@ -154,149 +230,6 @@ If there are $c$ plant cohorts, the leaf area index of the whole stand, $LAI_{st
 LAI_{stand} = \sum_{i=1}^c{LAI_{i}^{all}}= \sum_{i=1}^c{LAI^{\phi}_{i}+LAI^{dead}_{i}}
 \end{equation}
 
-\subsection{Light extinction: 'Simple' mode}
-When using the 'Simple' transpiration mode, the proportion of photosynthetic active radiation (PAR) decreases with leaf area following thee Beer-Lambert’s light extinction equation. To calculate the proportion of PAR available for a given plant cohort one must accumulate the light extinction caused by cohorts whose crown is above that of the target cohort:
-\begin{equation}
-L^{PAR}_i=e^{-\sum_{h=1}^{c}{k_{PAR,h} \cdot LAI_{h}^{all} \cdot p_{ih}}}
-\end{equation}
-where $k_{PAR,h}$ is the PAR extinction coefficient of cohort $h$. Because plant cohorts may differ in height only slightly, leaf area is multiplied by $p_{ih}$, the proportion of the crown of cohort $h$ that overtops that of cohort $i$: 
-\begin{equation}
-p_{ih}=\max(0,\min(1,(H_h-H_i\cdot (1 - CR_i))/(H_h-H_h\cdot (1 - CR_h))))
-\end{equation}
-where $CR_i$ and $CR_h$ are the crown ratio of cohorts $i$ and $h$. In other terms, cohorts whose crown is completely above that of $i$ reduce the amount of light available more strongly by than cohorts that are only slightly taller. $L^{PAR}_{ground}$, the proportion of PAR that reaches the ground, is calculated as:
-\begin{equation}
-L^{PAR}_{ground}=e^{-\sum_{i=1}^{c}{k_{PAR,i} \cdot LAI_{i}^{all}}}
-\end{equation}
-
-The shortwave radiation (SWR; 400-3000 nm) energy absorbed by each plant cohort needs to be calculated to determine plant transpiration, and the radiation absorved by the soil is needed to calculate soil evaporation. Foliage absorbs a higher proportion of PAR than SWR; thus, the extinction coefficient is higher for PAR than for SWR. However, values for the ratio of extinction coefficients are rather constant. Following Friend et al. (1997) here it is assumed that the extinction coefficient for PAR is 1.35 times larger than that for SWR (i.e. $k_{SWR,i} = k_{PAR,i}/1.35$). 
-
-To calculate radiation absorption, where the vertical dimension of the plot is divided into 1 m deep layers, and the SWR absorbed is calculated for each plant cohort in each layer. Let $n$ be the number of canopy layers. The fraction of radiation incident on layer $j$ that is absorbed in the same layer is:
-\begin{equation}
-f_j=1 - e^{-\sum_{i=1}^{c}{k_{SWR,i} \cdot LAI_{i,j}^{all}}}
-\end{equation}
-where $LAI_{i,j}^{all} = LAI_{i,j}^{\phi}+LAI_{i,j}^{dead}$ is the leaf area index of cohort $i$ in layer $j$. Hence, the fraction transmitted is $(1-f_j)$. The fraction of radiation incident on layer $j$ that is absorbed by expanded leaves of plant cohort $i$ in that layer ($f_{ij}$) is calculated from the relative contribution of these leaves to the total absorption in the layer:
-\begin{equation}
-f_{ij} = f_j \cdot \frac{k_{SWR,i}\cdot LAI_{i,j}^{\phi}}{\sum_{h=1}^{c}{k_{SWR,h} \cdot LAI_{h,j}^{all}}}
-\end{equation}
-The fraction of canopy radiation absorbed by a plant cohort $i$ across all layers is found by adding the fraction absorbed in each layer:
-\begin{equation}
-f_i = \sum_{j=1}^{n}{f_{ij}\cdot \prod_{h>j}^{n}{(1-f_h)}}
-\end{equation}
-where for each layer the fraction of the radiation incident in the canopy that reaches the layer is found by multiplying the transmitted fractions across the layers above it. The proportion of (shortwave) net radiation absorbed by the ground is simply:
-\begin{equation}
-L^{SWR}_{ground} = 1 - \sum_{j}^{n}{f_j}
-\end{equation}
-
-\subsection{Light extinction: 'Complex' mode}
-When using the complex mode, the canopy is also divided into 1 m layers and the expanded and dead leaf area index of each cohort within each layer is determined. Furthermore, it is generally accepted that sunlit and shade leaves need to be treated separately (De Pury and Farquhar 1997). This separation is necessary because photosynthesis of shade leaves has an essentially linear response to irradiance, while photosynthesis of leaves in sunflecks is often light saturated and independent of irradiance.
-
-The average irradiance reaching the top of each canopy layer $j$ is calculated separately for direct beam and diffuse radiation:
-\begin{eqnarray}
-I_{beam,j} &=& (1 - \gamma) \cdot I_{beam} \cdot \exp\left[ \sum_{h=j+1}^{n}{\sum_{i}^{c}{-k_{b,i}\cdot \alpha_i^{0.5}\cdot LAI^{all}_{i,h}}}\right]\\
-I_{dif,j} &=& (1 - \gamma) \cdot I_{dif} \cdot \exp\left[ \sum_{h=j+1}^{n}{\sum_{i}^{c}{-k_{d,i}\cdot \alpha_i^{0.5}\cdot LAI^{all}_{i,h}}}\right]
-\end{eqnarray}
-where $I_{beam}$ and $I_{dif}$ are the direct and diffuse irrradiance at the top of the canopy, $\gamma$ is the leaf reflectance ($\gamma_{PAR} = 0.04$, $\gamma_{SWR} = 0.05$), $k_{b,i}$ is the extinction coefficient of cohort $i$ for direct light ($k_{b,i} = 0.8$), $k_{d,i}$ is the extinction coefficient of cohort $i$ for diffuse light (i.e. $k_{PAR}$ or $k_{SWR}$) and $\alpha_i$ is the absorbance coefficient ($\alpha_{i,PAR} = 0.9$, $\alpha_{i,SWR} = 0.7$).
-
-
-The proportion of sunlit leaves, i.e. leaves in a canopy layer that the direct light beams (sunflecks) reach is:
-\begin{equation}
-f_{SL, j}  = \exp\left( \sum_{k>j}^{n}{\sum_{i}^{c}{-k_{b,i} \cdot LAI^{all}_{i,k}}}\right) \cdot \exp\left( \sum_{i}^{c}{-k_{b,i} \cdot 0.5\cdot LAI^{all}_{i,j}}\right)
-\end{equation}
-As an example we will consider a canopy of one species of LAI = 2, divided into ten layers with constant leaf density.
-<<echo=FALSE>>=
-LAI = 2
-nlayer = 10
-LAIlayerlive = matrix(rep(LAI/nlayer,nlayer),nlayer,1)
-LAIlayermax = matrix(rep(LAI/nlayer,nlayer),nlayer,1)
-LAIlayerdead = matrix(0,nlayer,1)
-kb = 0.8
-kd_PAR = 0.5
-kd_SWR = kd_PAR/1.35
-alpha_PAR = 0.9
-gamma_PAR = 0.04
-gamma_SWR = 0.05
-alpha_SWR = 0.7
-@
-This canopy definition leads to a percentage of the above-canopy irradiance reaching each layer (Goudriaan 2016; Anten and Bastiaans 2016). Extinction of direct radiation also defines the proportion of leaves of each layer that are affected by sunflecks (i.e. the proportion of sunlit leaves).
-
-\begin{center}
-<<fig = TRUE, echo=FALSE, width=7, height=4>>=
-Ibfpar = light.layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayermax, kb, alpha_PAR)
-Idfpar = light.layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayermax, kd_PAR, alpha_PAR)
-Ibfswr = light.layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayermax, kb, alpha_SWR)
-Idfswr = light.layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayermax, kd_SWR, alpha_SWR)
-fsunlit = light.layerSunlitFraction(LAIlayerlive, LAIlayerdead, kb)
-SHarea = (1-fsunlit)*LAIlayerlive[,1] 
-SLarea = fsunlit*LAIlayerlive[,1] 
-
-par(mar=c(4,4,1,1), mfrow=c(1,2))
-plot(Ibfpar*100, 1:nlayer,type="l", ylab="Layer", xlab="Percentage of irradiance", xlim=c(0,100), ylim=c(1,nlayer), col="dark green")
-lines(Idfpar*100, 1:nlayer, col="dark green", lty=2)
-lines(Ibfswr*100, 1:nlayer, col="red")
-lines(Idfswr*100, 1:nlayer, col="red", lty=2)
-legend("topleft", legend=c("direct PAR","diffuse PAR",
-                           "direct SWR","diffuse SWR"), 
-       lty=c(1,2,1,2),
-       col=c("dark green", "dark green","red", "red"), bty="n")
-
-plot(fsunlit*100, 1:nlayer,type="l", ylab="Layer", xlab="Percentage of leaves", xlim=c(0,100), ylim=c(1,nlayer))
-lines((1-fsunlit)*100, 1:nlayer, lty=2)
-legend("bottom", legend=c("sunlit","shade"), lty=c(1,2), bty="n")
-@
-\end{center}
-
-The amount of absorved diffuse radiation per leaf area unit of cohort $i$ within a given canopy layer $j$ is calculated as:
-\begin{equation}
-I_{dif,i,j} = I_{dif,j} \cdot k_{d,i} \cdot \alpha_i^{0.5} \exp\left[ \sum_{h}^{c}{-k_{d,h}\cdot \alpha_h^{0.5}\cdot 0.5\cdot LAI^{all}_{h,j}}\right]
-\end{equation}
-
-The amount of absorved scattered beam radiation per leaf area unit of cohort $i$ within a given canopy layer $j$ is calculated as:
-\begin{equation}
-\begin{split}
-I_{sca,i,j}  = I_{b,j} \cdot k_{b,i} \left[ \alpha_i^{0.5}\cdot \exp \left( \sum_{h}^{c}{-k_{b,h}\cdot \alpha_h\cdot 0.5\cdot LAI^{all}_{h,i}}\right) \\  
--\frac{\alpha_i}{(1-\gamma)}\cdot \exp\left( \sum_{h}^{c}{-k_{b,h}\cdot 0.5\cdot LAI^{all}_{h,i}}\right)
-\end{split}
-\right]
-\end{equation}
-Finally, the direct radiation absorbed by a unit of sunlit leaf area of cohort $i$ in a canopy layer $j$ does not depend on the position of the canopy layer and is:
-\begin{equation}
-I_{dir,i,j} = I_{beam} \cdot \alpha_i \cdot 0.5/\sin{\beta}
-\end{equation}
-where $\beta$ is the solar elevation angle, which changes throughout the day. The amount of light absorbed by shaded/sunlit foliage of cohort $i$ in layer $j$ per leaf area unit ($I_{SH,i,j}$ and $I_{SL,i,j}$, respectively) is:
-\begin{eqnarray}
-I_{SH,i,j} &=& I_{dif,i,j} + I_{sca,i,j} \\
-I_{SL,i,j} &=& I_{dif,i,j} + I_{sca,i,j} + I_{dir,i,j}
-\end{eqnarray}
-The total amount of light absorbed by shaded/sunlit foliage of cohort $i$ per ground area unit is found by taking into account the proportion of sunlit foliage:
-\begin{eqnarray}
-\Phi_{SH,i,j} &=& I_{SH,i,j}\cdot (1 - f_{SL,j}) \cdot LAI^{\phi}_{i,j}\\
-\Phi_{SL,i,j} &=& I_{SL,i,j}\cdot f_{SL,j} \cdot LAI^{\phi}_{i,j}
-\end{eqnarray}
-
-Values of instantaneous direct and diffuse radiation above the canopy (i.e. $I_{beam}$ and $I_{dif}$) are calculated using the methods described in Spitters et al. (1986), which involve comparing daily global radiation with daily potential radiation. For example, for a flat terrain located at 42ºN latitude and 100 m.a.s.l, having 30 MJ·m$^{-2}$ of daily global radiation on the 2001/June/01, the hourly variation in diffuse and direct radiation would be:
-\begin{center}
-<<echo=FALSE, fig=TRUE, width=7, height=7>>=
-par(mar=c(4,4,1,1), mfrow=c(2,2))
-latrad = 0.73
-elevation = 100
-J = meteoland::radiation_julianDay(2001,6,1)
-gsc = meteoland::radiation_solarConstant(J)
-delta = meteoland::radiation_solarDeclination(J)
-a=meteoland::radiation_directDiffuseDay(gsc, latrad,delta, 30, TRUE, 100)
-se = a$SolarElevation*(180/pi)
-se[a$Rpot==0]=NA
-plot(a$SolarHour*12/pi, se, type="l", ylim=c(0,70), ylab="Solar elevation (º)", xlab="Solar hour")
-plot(a$SolarHour*12/pi, a$Rpot, type="l", ylab="Radiation (W·m-2)", xlab="Solar hour")
-lines(a$SolarHour*12/pi, a$Rg,  lty=2)
-legend("topleft", legend=c("Potential", "Global"), lty=c(1,2), bty="n")
-plot(a$SolarHour*12/pi, a$SWR_direct, type="l", ylab="SWR radiation (W·m-2)", xlab="Solar hour")
-lines(a$SolarHour*12/pi, a$SWR_diffuse,  lty=2)
-legend("topleft", legend=c("Direct", "Diffuse"), lty=c(1,2), bty="n")
-plot(a$SolarHour*12/pi, a$PAR_direct, type="l", ylab="PAR radiation (W·m-2)", xlab="Solar hour")
-lines(a$SolarHour*12/pi, a$PAR_diffuse,  lty=2)
-legend("topleft", legend=c("Direct", "Diffuse"), lty=c(1,2), bty="n")
-@
-\end{center}
 
 \subsection{Rainfall interception loss}
 Rainfall interception loss, $In$, is modelled following the Gash et al. (1995) analytical interception model for sparse canopies, where rain is assumed to fall in a single event during the day. First, the amount of rainfall needed to saturate the canopy is calculated: 
@@ -430,99 +363,170 @@ legend("topleft", bty="n", lty=1:5, legend=c(paste("d =", SoilDepth,"Vsoil =",ro
 \emph{Fig. 2}: Examples of infiltration/runoff calculation for different values of net rainfall and overall retention capacity (see function \texttt{swb.SoilInfiltration}), $V_{soil}$, calculated from different soil depths (topsoil+subsoil) and assuming that soil texture is 15\% clay and 25\% sand. Rock fragment content was 25\% and 40\% for the topsoil and subsoil, respectively.
 \end{center}
 
-\subsection{Plant transpiration and photosynthesis: 'Simple' mode}
-\subsubsection{PET and maximum canopy transpiration}
+After updating soil water content according to rainfall interception, infiltration and deep drainage, soil water potentials are recalculated following the water retention curves.
 
-If \texttt{transpirationMode = "Simple"}, potential evapotranspiration ($PET$; in $mm\cdot day^{-1}$; the amount of evaporation that would occur if a sufficient water source was available)  has to be calculated externally (e.g. Penman's formula). $PET$ is assumed to represent open water evaporation potential (like in Penman's formula). Maximum canopy transpiration $Tr_{\max}$ not only depends on $PET$ but also on the amount of transpirating surface. To estimate $Tr_{\max}$ we take the approach of Granier et al. (1999), where $Tr_{\max}/PET$ is a function of $LAI_{stand}$ – the cumulative leaf area of the forest stand –, according to the experimental equation:
-\begin{equation}
-\frac{Tr_{\max}}{PET}= -0.006\,LAI_{stand}^2+0.134\,LAI_{stand}+0.036
-\end{equation}
-This equation has already been adopted for Mediterranean biomes (Fyllas and Troumbis, 2009; Ruffault et al., 2013). 
+\subsection{Wind extinction profile}
+
+\subsection{Subdaily temperature and light variations}
+
+\subsubsection{Air temperature}
+Diurnal above-canopy air temperature ($T_a$) variations are modeled assuming a sinusoidal pattern with $T_a = T_{\min}$ at sunrise and $T_a = (T_{\min}+T_{\max})/2$ at sunset. Air temperature varies linearly between sunset and sunrise (McMurtrie et al. 1990).
+
+
+\subsubsection{Diffuse and direct radiation}
+Daily global radiation (in MJ·m$^{-2}$) is assumed to include both direct and diffuse shortwave radiation (SWR). Using latitude information and whether is a rainy day, this quantity is partitioned into instantaneous direct and diffuse SWR for different daily substeps. Values of instantaneous direct and diffuse SWR above the canopy (i.e. $I_{beam}$ and $I_{dif}$) are calculated using the methods described in Spitters et al. (1986), which involve comparing daily global radiation with daily potential radiation. For example, for a flat terrain located at 42ºN latitude and 100 m.a.s.l, having 30 MJ·m$^{-2}$ of daily global radiation on the 2001/June/01 in a clear day, the hourly variation in solar elevation, potential/global radiation and diffuse/direct light for PAR and SWR would be:
 \begin{center}
-<<fig=TRUE, width=4, height=4, echo=FALSE>>==
-par(mar=c(4,4,1,1))
-LAIc = seq(0,10, by=0.01)
-TmaxPET = -0.006*(LAIc^2) + 0.134*LAIc + 0.036
-plot(LAIc, TmaxPET, type="l", ylab="Tr_max/PET", xlab="LAIstand", ylim=c(0,1))
+<<echo=FALSE, fig=TRUE, width=7, height=7>>=
+par(mar=c(4,4,1,1), mfrow=c(2,2))
+latrad = 0.73
+elevation = 100
+clearday = TRUE
+J = meteoland::radiation_julianDay(2001,6,1)
+gsc = meteoland::radiation_solarConstant(J)
+delta = meteoland::radiation_solarDeclination(J)
+a=meteoland::radiation_directDiffuseDay(gsc, latrad,delta, 30, clearday, 100)
+se = a$SolarElevation*(180/pi)
+se[a$Rpot==0]=NA
+plot(a$SolarHour*12/pi, se, type="l", ylim=c(0,70), ylab="Solar elevation angle (º)", xlab="Solar hour")
+plot(a$SolarHour*12/pi, a$Rpot, type="l", ylab="Radiation (W·m-2)", xlab="Solar hour")
+lines(a$SolarHour*12/pi, a$Rg,  lty=2)
+legend("topleft", legend=c("Potential", "Global"), lty=c(1,2), bty="n")
+plot(a$SolarHour*12/pi, a$SWR_direct, type="l", ylab="SWR radiation (W·m-2)", xlab="Solar hour")
+lines(a$SolarHour*12/pi, a$SWR_diffuse,  lty=2)
+legend("topleft", legend=c("Direct", "Diffuse"), lty=c(1,2), bty="n")
+plot(a$SolarHour*12/pi, a$PAR_direct, type="l", ylab="PAR radiation (W·m-2)", xlab="Solar hour")
+lines(a$SolarHour*12/pi, a$PAR_diffuse,  lty=2)
+legend("topleft", legend=c("Direct", "Diffuse"), lty=c(1,2), bty="n")
 @
 \end{center}
-\begin{center}
-\emph{Fig. 3}: Experimental relationship between $Tr_{\max}/PET$ and $LAI_{stand}$.
-\end{center}
 
-The maximum transpiration for a given plant cohort $i$ is calculated as the portion of $Tr_{\max}$ defined by the fraction of total absorbed SWR that is due to cohort $i$:
+\subsubsection{Longwave radiation}
+Longwave radiation (LWR) coming from the atmosphere is calculated following Campbell \& Norman (1998):
 \begin{equation}
-Tr_{\max, i} = Tr_{\max} \cdot \frac{f_i}{\sum_{j}{f_j}}
+L_{a} = \epsilon_{a} \cdot \sigma \cdot (T_{a} + 273.16)^{4.0}
 \end{equation}
+where $T_{a}$ is air temperature, $\sigma = 5.67 \cdot 10^{-8.0}$  W·K$^{-4}$·m$^{-2}$ is the Stephan-Boltzmann constant and $\epsilon_{a}$ is the emmissivity of the atmosphere, calculated using:
+\begin{eqnarray}
+\epsilon_{a} &=& (1 - 0.84 \cdot c) \cdot \epsilon_{ac} + 0.84 \cdot c \\
+\epsilon_{ac} &=& 1.72 \cdot \left(\frac{vp_{day}}{T_{a} + 273.16} \right)^{1/7}
+\end{eqnarray}
+where $vp_{day}$ is the average daily vapor pressure (in kPa) and $c$ is the proportion of clouds. 
 
-\subsubsection{Actual plant transpiration}
-Actual plant transpiration depends on soil moisture and is calculated for each plant cohort and each soil layer separately. $Tr_{i,s}$ (mm·day$^{-1}$) represents the transpiration made by cohort $i$ from layer $s$. In \texttt{swb} actual plant transpiration is regulated by soil moisture and the resistance to water flow through the plant. For each plant cohort $i$ and soil layer $s$, the model first estimates the a whole-plant relative water conductance, $K_{i,s}$, which varies between 0 and 1 depending on $\Psi_{extract,i}$, the potential at which conductance is 50\% of maximum, and $\Psi_s$, the water potential in layer $s$ (see function \texttt{hydraulics.psi2K()}):
+
+\subsection{Light extinction}
+When using the complex mode, the canopy is divided into vertical layers (whose size is determined by the control parameter \texttt{verticalLayerSize}), and the expanded and dead leaf area index of each cohort within each layer is determined. Let $n$ be the number of canopy layers. And let $LAI_{i,j}^{all} = LAI_{i,j}^{\phi}+LAI_{i,j}^{dead}$ be the leaf area index of cohort $i$ in layer $j$. It is generally accepted that sunlit and shade leaves need to be treated separately (De Pury and Farquhar 1997). This separation is necessary because photosynthesis of shade leaves has an essentially linear response to irradiance, while photosynthesis of leaves in sunflecks is often light saturated and independent of irradiance.
+
+The average irradiance reaching the top of each canopy layer $j$ is calculated separately for direct beam and diffuse radiation:
+\begin{eqnarray}
+I_{beam,j} &=& (1 - \gamma) \cdot I_{beam} \cdot \exp\left[ \sum_{h=j+1}^{n}{\sum_{i}^{c}{-k_{b,i}\cdot \alpha_i^{0.5}\cdot LAI^{all}_{i,h}}}\right]\\
+I_{dif,j} &=& (1 - \gamma) \cdot I_{dif} \cdot \exp\left[ \sum_{h=j+1}^{n}{\sum_{i}^{c}{-k_{d,i}\cdot \alpha_i^{0.5}\cdot LAI^{all}_{i,h}}}\right]
+\end{eqnarray}
+where $I_{beam}$ and $I_{dif}$ are the direct and diffuse irrradiance at the top of the canopy, $\gamma$ is the leaf reflectance ($\gamma_{PAR} = 0.04$, $\gamma_{SWR} = 0.05$), $k_{b,i}$ is the extinction coefficient of cohort $i$ for direct light ($k_{b,i} = 0.8$), $k_{d,i}$ is the extinction coefficient of cohort $i$ for diffuse light (i.e. $k_{PAR}$ or $k_{SWR}$) and $\alpha_i$ is the absorbance coefficient ($\alpha_{i,PAR} = 0.9$, $\alpha_{i,SWR} = 0.7$).
+
+
+The proportion of sunlit leaves, i.e. leaves in a canopy layer that the direct light beams (sunflecks) reach is:
 \begin{equation}
-K_{i,s}=K_{i}(\Psi_s) = \exp \left \{\ln{(0.5)}\cdot \left[ \frac{\Psi_s}{\Psi_{extract,i}} \right] ^r \right \} 
+f_{SL, j}  = \exp\left( \sum_{k>j}^{n}{\sum_{i}^{c}{-k_{b,i} \cdot LAI^{all}_{i,k}}}\right) \cdot \exp\left( \sum_{i}^{c}{-k_{b,i} \cdot 0.5\cdot LAI^{all}_{i,j}}\right)
 \end{equation}
-where $r$ is an exponent that modulates the steepness of the decrease in relative conductance when soil potential becomes negative (by default, $r = 3$) and $\ln(0.5)$ is used to ensure that $K_{i}(\Psi_{extract,i}) = 0.5$ (Fig. 4).
+As an example we will consider a canopy of one species of LAI = 2, divided into ten layers with constant leaf density.
+<<echo=FALSE>>=
+LAI = 2
+nlayer = 10
+LAIlayerlive = matrix(rep(LAI/nlayer,nlayer),nlayer,1)
+LAIlayermax = matrix(rep(LAI/nlayer,nlayer),nlayer,1)
+LAIlayerdead = matrix(0,nlayer,1)
+kb = 0.8
+kd_PAR = 0.5
+kd_SWR = kd_PAR/1.35
+alpha_PAR = 0.9
+gamma_PAR = 0.04
+gamma_SWR = 0.05
+alpha_SWR = 0.7
+@
+This canopy definition leads to a percentage of the above-canopy irradiance reaching each layer (Goudriaan 2016; Anten and Bastiaans 2016). Extinction of direct radiation also defines the proportion of leaves of each layer that are affected by sunflecks (i.e. the proportion of sunlit leaves).
+
 \begin{center}
-<<fig=TRUE, width=4, height=4, echo=FALSE>>==
-par(mar=c(4,4,1,1))
-x = seq(-10, 0, by=0.01)
-plot(-x ,unlist(lapply(x,hydraulics.psi2K,-2.0,3.0)), type="l", ylab="K (relative conductance)", xlim=c(0,10), ylim=c(0,1),xlab="Soil water potential (-MPa)", frame=FALSE)
-lines(-x, unlist(lapply(x,hydraulics.psi2K,-3.0,3.0)), lty=2)
-lines(-x, unlist(lapply(x,hydraulics.psi2K,-4.0,3.0)), lty=3)
-lines(-x, unlist(lapply(x,hydraulics.psi2K,-5.0,3.0)), lty=4)
-legend("topright", lty=1:4, col=c(rep("black",4)), 
-       legend = paste("Psi_extract = ", c(-2.0,-3.0,-4.0, -5.0), "MPa"), bty="n", cex=0.8)
-abline(h=50, col="gray", lwd=2)
+<<fig = TRUE, echo=FALSE, width=7, height=4>>=
+Ibfpar = light.layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayermax, kb, alpha_PAR)
+Idfpar = light.layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayermax, kd_PAR, alpha_PAR)
+Ibfswr = light.layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayermax, kb, alpha_SWR)
+Idfswr = light.layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayermax, kd_SWR, alpha_SWR)
+fsunlit = light.layerSunlitFraction(LAIlayerlive, LAIlayerdead, kb)
+SHarea = (1-fsunlit)*LAIlayerlive[,1] 
+SLarea = fsunlit*LAIlayerlive[,1] 
+
+par(mar=c(4,4,1,1), mfrow=c(1,2))
+plot(Ibfpar*100, 1:nlayer,type="l", ylab="Layer", xlab="Percentage of irradiance", xlim=c(0,100), ylim=c(1,nlayer), col="dark green")
+lines(Idfpar*100, 1:nlayer, col="dark green", lty=2)
+lines(Ibfswr*100, 1:nlayer, col="red")
+lines(Idfswr*100, 1:nlayer, col="red", lty=2)
+legend("topleft", legend=c("direct PAR","diffuse PAR",
+                           "direct SWR","diffuse SWR"), 
+       lty=c(1,2,1,2),
+       col=c("dark green", "dark green","red", "red"), bty="n")
+
+plot(fsunlit*100, 1:nlayer,type="l", ylab="Layer", xlab="Percentage of leaves", xlim=c(0,100), ylim=c(1,nlayer))
+lines((1-fsunlit)*100, 1:nlayer, lty=2)
+legend("bottom", legend=c("sunlit","shade"), lty=c(1,2), bty="n")
 @
 \end{center}
+
+The amount of absorved diffuse radiation per leaf area unit of cohort $i$ within a given canopy layer $j$ is calculated as:
+\begin{equation}
+I_{dif,i,j} = I_{dif,j} \cdot k_{d,i} \cdot \alpha_i^{0.5} \exp\left[ \sum_{h}^{c}{-k_{d,h}\cdot \alpha_h^{0.5}\cdot 0.5\cdot LAI^{all}_{h,j}}\right]
+\end{equation}
+
+The amount of absorved scattered beam radiation per leaf area unit of cohort $i$ within a given canopy layer $j$ is calculated as:
+\begin{equation}
+\begin{split}
+I_{sca,i,j}  = I_{b,j} \cdot k_{b,i} \left[ \alpha_i^{0.5}\cdot \exp \left( \sum_{h}^{c}{-k_{b,h}\cdot \alpha_h\cdot 0.5\cdot LAI^{all}_{h,i}}\right) \\  
+-\frac{\alpha_i}{(1-\gamma)}\cdot \exp\left( \sum_{h}^{c}{-k_{b,h}\cdot 0.5\cdot LAI^{all}_{h,i}}\right)
+\end{split}
+\right]
+\end{equation}
+Finally, the direct radiation absorbed by a unit of sunlit leaf area of cohort $i$ in a canopy layer $j$ does not depend on the position of the canopy layer and is:
+\begin{equation}
+I_{dir,i,j} = I_{beam} \cdot \alpha_i \cdot 0.5/\sin{\beta}
+\end{equation}
+where $\beta$ is the solar elevation angle, which changes throughout the day. The amount of light absorbed by shaded/sunlit foliage of cohort $i$ in layer $j$ per leaf area unit ($I_{SH,i,j}$ and $I_{SL,i,j}$, respectively) is:
+\begin{eqnarray}
+I_{SH,i,j} &=& I_{dif,i,j} + I_{sca,i,j} \\
+I_{SL,i,j} &=& I_{dif,i,j} + I_{sca,i,j} + I_{dir,i,j}
+\end{eqnarray}
+The total amount of light absorbed by shaded/sunlit foliage of cohort $i$ per ground area unit is found by taking into account the proportion of sunlit foliage:
+\begin{eqnarray}
+\Phi_{SH,i,j} &=& I_{SH,i,j}\cdot (1 - f_{SL,j}) \cdot LAI^{\phi}_{i,j}\\
+\Phi_{SL,i,j} &=& I_{SL,i,j}\cdot f_{SL,j} \cdot LAI^{\phi}_{i,j}
+\end{eqnarray}
+
+Values of instantaneous direct and diffuse radiation above the canopy (i.e. $I_{beam}$ and $I_{dif}$) are calculated using the methods described in Spitters et al. (1986), which involve comparing daily global radiation with daily potential radiation. For example, for a flat terrain located at 42ºN latitude and 100 m.a.s.l, having 30 MJ·m$^{-2}$ of daily global radiation on the 2001/June/01, the hourly variation in diffuse and direct radiation would be:
 \begin{center}
-\emph{Fig. 4}: Whole-plant relative water conductance functions for different $\Psi_{extract,i}$ values ($r = 3$ in all cases).
+<<echo=FALSE, fig=TRUE, width=7, height=7>>=
+par(mar=c(4,4,1,1), mfrow=c(2,2))
+latrad = 0.73
+elevation = 100
+J = meteoland::radiation_julianDay(2001,6,1)
+gsc = meteoland::radiation_solarConstant(J)
+delta = meteoland::radiation_solarDeclination(J)
+a=meteoland::radiation_directDiffuseDay(gsc, latrad,delta, 30, TRUE, 100)
+se = a$SolarElevation*(180/pi)
+se[a$Rpot==0]=NA
+plot(a$SolarHour*12/pi, se, type="l", ylim=c(0,70), ylab="Solar elevation (º)", xlab="Solar hour")
+plot(a$SolarHour*12/pi, a$Rpot, type="l", ylab="Radiation (W·m-2)", xlab="Solar hour")
+lines(a$SolarHour*12/pi, a$Rg,  lty=2)
+legend("topleft", legend=c("Potential", "Global"), lty=c(1,2), bty="n")
+plot(a$SolarHour*12/pi, a$SWR_direct, type="l", ylab="SWR radiation (W·m-2)", xlab="Solar hour")
+lines(a$SolarHour*12/pi, a$SWR_diffuse,  lty=2)
+legend("topleft", legend=c("Direct", "Diffuse"), lty=c(1,2), bty="n")
+plot(a$SolarHour*12/pi, a$PAR_direct, type="l", ylab="PAR radiation (W·m-2)", xlab="Solar hour")
+lines(a$SolarHour*12/pi, a$PAR_diffuse,  lty=2)
+legend("topleft", legend=c("Direct", "Diffuse"), lty=c(1,2), bty="n")
+@
 \end{center}
 
-Actual transpiration of plant cohort $i$ from a given soil layer $s$, $Tr_{i,s}$, is defined as the product of (Mouillot et al., 2001): (i) the maximum transpiration of the plant cohort; (ii) the relative whole-plant conductance, $K_{i,s}$, corresponding to the species and water potential in layer $s$; (iii) the proportion of plant fine roots in layer $s$, $v_{i,s}$:
-\begin{equation}
-Tr_{i,s} =  Tr_{\max,i} \cdot K_{i,s} \cdot v_{i,s}
-\end{equation}
-The total amount of water transpired by plants, $Tr$ (in ), is the sum of $Tr_{i,s}$ values over all plant cohorts and soil layers:
-\begin{equation}
-Tr =\sum_{s}\sum_{i}{Tr_{i,s}}
-\end{equation}
-Assuming no water limitations (i.e. $K_{i,s} = 1$), we have that $Tr = Tr_{\max}$. Total stand transpiration will be lower than $Tr_{\max}$ if soil water potential in any layer is negative enough to cause a significant reduction in whole-plant conductance. At the plant level, the transpiration of a given plant cohort will be lower than that of others if: (1) the cohort is under the shade (it reduces $f_i$ and hence $Tr_{\max,i}$); (2) the cohort has a lower amount of leaf area (it reduces $f_i$ and hence $Tr_{\max,i}$); (3) the soil layers exploited by the cohort have more negative water potentials (it reduces $K_{i,s}$). 
 
-\subsubsection{Plant photosynthesis}
-Because it is useful for growth and forest dynamics, and for compatibility with the 'Complex' transpiration mode, the 'Simple' transpiration mode also calculates net assimilated carbon. Assuming a constant water use efficiency (WUE), photosynthesis for a given plant cohort $i$ (in g C · m$^{-2}$ · day$^{-1}$) is estimated as (Mouillot et al. 2001):
-\begin{equation}
-A_n = \alpha \cdot WUE_{\max} \cdot Tr_i
-\end{equation}
-where $Tr_i$ is the transpiration of plant cohort $i$, $WUE_{\max}$ is the maximum water use efficiency of the corresponding species (in g C · mm$^{-1}$) and $\alpha = T_{mean}/20$ is bounded between 0 and 1.
-
-\subsubsection{Plant drought stress and plant water potential}
-
-Similarly to Mouillot et al. (2002), daily drought stress of a given plant cohort $i$, $DDS_i$, is defined as the complement of relative whole-plant conductance and is aggregated across soil layers using the proportion of fine roots in each layer as weights:
-\begin{equation}
-DDS_i=\phi_i \cdot \sum_{s}{(1-K_{i,s})\cdot v_{i,s}}
-\end{equation}
-Leaf-phenological status is included to prevent winter deciduous plants from suffering drought stress during winter. Daily drought stress values can be later used to define drought stress indices for larger temporal scales, as presented in the main text.
-
-The simple transpiration model does not allow estimating a water potential drop from soil to the leaf. Moreover, in a multilayered soil it is difficult to know what would be the water potential of the plant. Despite these limitations, a gross surrogate of 'leaf water potential' ($\Psi_{leaf,i}$; in MPa) may be obtained averaging whole-plant relative conductance values:
-\begin{equation}
-\Psi_{leaf,i}=K^{-1}(K_i) = K^{-1}\left(\sum_{s}{K_{i,s}\cdot v_{i,s}}\right)
-\end{equation}
-where $K_i$ is the average whole-plant relative conductance obtained from the scalar product of conductances and fine root proportions. 
-
-\subsubsection{Irreversible cavitation and hydraulic disconnection}
-The water balance model is normally run assuming that although soil drought may reduce transpiration, embolized xylem conduits are automatically refilled when soil moisture recovers (in other words, cavitation is reversible). It is possible to simulate irreversible cavitation by setting \texttt{cavitationRefill = FALSE} (by default \texttt{cavitationRefill = TRUE}). This option causes the model to record the maximum value of drought stress:
-\begin{equation}
-P_{embolized,i}= \max \{P_{embolized,i}, DDS_i \}
-\end{equation}
-and then $K_{i,s}$ cannot be larger than the complement of this maximum drought stress:
-\begin{equation}
-K_{i,s} = \min \{K_{i}(\Psi_s), 1.0 - P_{embolized,i} \}
-\end{equation}
-
-Another optional behavior consists in allowing the plant to disconnect from the soil when its potential becomes too negative. This may be advantageous for a cavitation-sensitive plant that is competing for water with another plant with higher extraction capacity. Parameter $P_{rootdisc,i}$ can be used to specify the minimum relative conductance value that the plant will tolerate without disconnecting hydraulically from the soil (in normal simulations $P_{rootdisc,i} = 0$). If, after possibly accounting for irreversible cavitation, $K_{i,s}<P_{rootdisc,i}$ for a given soil layer, then the model assumes that transpiration from this soil layer is absent. Moreover, $K_{i,s}$ is assumed equal to $P_{rootdisc,i}$ for the sake of calculating plant water potential. 
-
-\subsection{Plant transpiration and photosynthesis: 'Complex' mode}
-If \texttt{transpirationMode = "Complex"}, the model carries out more complex calculations to determine plant transpiration and photosynthesis. The model determines transpiration and photosynthesis for each plant cohort separately as follows. First, it determines the hydraulic supply function depending on plant hydraulic characteristics and soil moisture status. Then, the model divides the day length into a number of subdaily steps and transpiration of the plant cohort is estimated for each of them following the framework of Sperry et al. (2016a), who suggest estimating stomatal conductance from the instantaneous maximization of profit, defined as the difference between photosynthesis gain and hydraulic cost (both normalized for comparability). Since the continuum representation implies several soil layers in parallel but joining at the root crown, the hydraulic submodel yields instantaneous water flow and carbon assimilation rates from (or to) each soil layers. Finally, the instantaneous transpiration and assimilation rates of each time step are scaled to the duration of the time step and to the leaf area of the plant cohort. The following provides details for these processes (see further details in vignette '\texttt{Hydraulics, stomatal conductance and photosynthesis}').
+\subsection{Plant transpiration and photosynthesis}
+The model carries out more complex calculations to determine plant transpiration and photosynthesis. It determines transpiration and photosynthesis for each plant cohort separately as follows. First, it determines the hydraulic supply function depending on plant hydraulic characteristics and soil moisture status. Then, the model divides the day length into a number of subdaily steps and transpiration of the plant cohort is estimated for each of them following the framework of Sperry et al. (2016a), who suggest estimating stomatal conductance from the instantaneous maximization of profit, defined as the difference between photosynthesis gain and hydraulic cost (both normalized for comparability). Since the continuum representation implies several soil layers in parallel but joining at the root crown, the hydraulic submodel yields instantaneous water flow and carbon assimilation rates from (or to) each soil layers. Finally, the instantaneous transpiration and assimilation rates of each time step are scaled to the duration of the time step and to the leaf area of the plant cohort. The following provides details for these processes (see further details in vignette '\texttt{Hydraulics, stomatal conductance and photosynthesis}').
 
 
 \subsubsection{Canopy water supply function}
@@ -612,6 +616,38 @@ P_{embolized,i}= \max \{P_{embolized,i}, DDS_i \}
 However, the way that previous cavitation levels are taken into account differs from the 'Simple' transpiration mode. In this mode, the stem xylem vulnerability curve is modified by specifying that the maximum conductance value is reduced and set to $k_{stem,i} \cdot (1.0 - P_{embolized,i})$. This effectively causes the supply function to reach lower flow values for the same water potential drop (see details in vignette '\texttt{Hydraulics, stomatal conductance and photosynthesis}').
 
 When running the model using the 'Complex' transpiration mode plants may be allowed to disconnect from the soil when its potential becomes too negative. Parameter $P_{rootdisc,i}$ can be used to specify the minimum relative conductance value that the plant will tolerate without disconnecting hydraulically from the soil (in normal simulations $P_{rootdisc,i} = 0$). Again, this affects the model in a way slightly different than when running the model in 'Simple' transpiration mode. Before building the supply function, the model checks if there are layers where the relative conductance of roots (i.e. $k_{root, i, s}(\Psi_{s})/k_{\max root, i, s}$) is lower than $P_{rootdisc,i}$. Those layers where this happens are not considered in the calculation of the supply function and do not contribute to transpiration or to the determination of plant water potentials. 
+
+\subsection{Canopy and soil energy balances}
+\subsubsection{Convective energy}
+Convective energy fluxes between atmosphere and the canopy ($H_{ca}$) and between the canopy and the soil ($H_{cs}$) are determined as follows:
+\begin{eqnarray}
+H_{ca} &=& \frac{\rho_{a} \cdot c_p}{r_{ca}}\cdot (T_{can} - T_a) \\
+H_{cs} &=& \frac{\rho_{c} \cdot c_p}{r_{cs}}\cdot (T_{can} - T_{soil})
+\end{eqnarray}
+where $\rho_{a}$ and $\rho_{c}$ are the air density above-canopy and inside-canopy, respectively, $c_{p} = 1013.86$ J·kg$^{-1}$·C$^{-1}$ is the specific heat capacity of the air. $r_{ca}$ and $r_{cs}$ are the atmosphere-canopy and canopy-soil aerodynamic resistances (in s·m$^{-1}$). These, in turn, are calculated using canopy height, total LAI and above-canopy and below-canopy wind speeds.
+
+\subsubsection{Latent heat}
+As mentioned above, the model only considers latent heat exchanged from plant transpiration, neglecting energy fluxes corresponding to evaporation from the soil and evaporation of rain intercepted by the canopy. After determining stomatal regulation and transpiration for each plant cohort, latent heat of transpiration is simply calculated as:
+\begin{equation}
+LE_{c} = \lambda_{T_{can}} \sum_{i}{E_i}
+\end{equation}
+where $\lambda_{T_{can}}$ is the latent heat of vaporization at temperature $T_{can}$ (in J·kg$^{-1}$) and $E_i$ is the instanteous transpiration flux calculated for cohort $i$.
+
+\subsubsection{Canopy capacitance and temperature changes}
+TO BE DONE
+\subsubsection{Soil temperature changes}
+Instantaneous soil temperature changes on each soil layer depend on the balance between incoming and outcoming energies ($G_k$ and $G_{k-1}$):
+\begin{equation}
+\frac{\delta T_{soil,k}}{\delta t} = \frac{G_k - G_{k-1}}{C_{soil,k} \cdot \Delta z_k}
+\end{equation}
+where $\Delta z_k$ is the soil width of layer $k$ and $C_{soil,k}$ is the thermal capacity of layer $k$, depending on soil moisture and texture (see function \texttt{soil.thermalcapacity}).
+
+Energy inflow to the first layer (i.e. $G_0$) is the result of the soil energy balance explained above, while energy transfers between layers (i.e. $G_k$) depend on the soil temperature gradient:
+\begin{eqnarray}
+G_0 &=& K_{abs,sa} + L_{abs,sa} - L_{em,s} + L_{abs,sc} + H_{cs}\\
+G_k &=& \lambda_{soil,k} \cdot \frac{\delta T_{soil,k}}{\delta z}
+\end{eqnarray}
+where $\lambda_{soil,k}$ is the thermal conductivity of layer $k$, depending on soil moisture and texture (see function \texttt{soil.thermalconductivity}). The gradient in the bottom layer is calculated assuming a temperature of the earth (at 10 m) of 15.5 Celsius.
 
 \subsection{Bare soil evaporation}
 Evaporation from the soil surface is the last component of the soil water balance to be calculated. There is a difference in the way that soil evaporative demand is calculated depending on the transpiration mode. If \texttt{transpirationMode = "Simple"}, potential evaporation from the soil ($PE_{soil}$; in $mm\cdot day^{-1}$) is defined as the product between $PET$ and $L^{SWR}_{ground}$, the proportion of SWR absorbed by the ground:
@@ -737,8 +773,29 @@ legend("topleft", lty=rep(1:3,2), pch=c(1,1,1,2,2,2), legend=c("Gsoil = 1 Ksoil 
 \emph{Fig. 4}: Cumulative bare soil evaporation for different values of maximum evaporation rate $\gamma_{soil}$ and extinction coefficient $\kappa_{soil}$. Three soil layers (0 – 30 cm; 30 – 150 cm; 150 – 400 cm) are initialized at field capacity ($V_1 = 50 mm$; $V_2 = 201 mm$; $V_3 = 35 mm$). $PE_{soil}$ was assumed not to be limiting. When the extinction coefficient is smaller a higher proportion of the evaporated water is removed from the subsoil and less from the topsoil. This causes more water being available to calculate t in the next step.
 \end{center}
 
+
+\section{Model output}
+Function \texttt{swb} returns a list object whose elements are data tables. Each table has dates as rows and has different output variables:
+\begin{itemize}
+\item{\texttt{"DailyBalance"}: Components of the climatic and soil daily water balance (i.e. net precipitation, infiltration, runoff, plant transpiration...).}
+\item{\texttt{"SoilWaterBalance"}: Daily variation of soil variables  (volume, moisture relative to field capacity, water potential) for soil layers.}
+\item{\texttt{"EnergyBalance"}: Components of the atmosphere-canopy-soil energy balance, including latent heat, convective heat, conduction heat and radiation exchanges.}
+\item{\texttt{"Temperature"}: Minimum and maximum daily temperatures of the atmosphere, soil and canopy components of the energy balance.}
+\item{\texttt{"PlantLAI"}: Daily leaf area index for each plant cohort.}
+\item{\texttt{"PlantAbsorvedSWR"}: Daily absorved shortwave radiation (in MJ) for each plant cohort.}
+\item{\texttt{"PlantAbsorvedLWR"}: Daily absorved longwave radiation (in MJ) for each plant cohort.}
+\item{\texttt{"PlantTranspiration"}: Daily transpiration (in mm) for each plant cohort.}
+\item{\texttt{"PlantPhotosynthesis"}: Daily net photosynthesis (in g C·m-2) for each plant cohort.}
+\item{\texttt{"PlantPsi"}: Daily water potential of each plant (in MPa).}
+\item{\texttt{"PlantStress"}: Daily stress level suffered by each plant cohort (related to plant water potential).}
+\end{itemize}
+
 \section{References}
 \begin{itemize}
+\item{Best, M.J., Pryor, M., & Clarck, D.B. 2011. The Joint UK Land Environment Simulator (JULES), Model description – Part 1: Energy and water fluxes. Geoscientific Model Development Discussions 4: 677–699.}
+
+\item{Campbell, G.S., \& Norman, J.M. 1998. An introduction to environmental biophysics. 2nd edition.}
+
 \item{Collins, D.B.G., Bras, R.L., 2007. Plant rooting strategies in water-limited ecosystems. Water Resour. Res. 43, W06407. doi:10.1029/2006WR005541}
 
 \item{De Cáceres, M., Martínez-Vilalta, J., Coll, L., Llorens, P., Casals, P., Poyatos, R., Pausas, J.G., Brotons, L., 2015. Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes. Agric. For. Meteorol. 213, 77–90. doi:10.1016/j.agrformet.2015.06.012}

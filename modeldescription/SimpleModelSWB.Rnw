@@ -148,7 +148,7 @@ All vegetation characteristics stay constant during water balance simulations, a
 \subsubsection{Belowground parameters}
 
 The root system of each plant cohorts is described using the proportion of fine
-roots in each soil layer.
+roots in each soil layer:
 \begin{itemize}
 \item{$v_{i,s}$ [\texttt{V}]: The proportion of fine roots in each soil layer $s$.}
 \end{itemize}
@@ -213,18 +213,6 @@ Control parameters are a list of parameter values, initialized using function \t
 \item{\texttt{transpirationMode [= "Simple"]}: Transpiration model, in this case "Simple".}
 \item{\texttt{defaultWindSpeed [= 5]}: Default value for wind speed (in m·s$^{-1}$) when this is missing (only used for leaf fall).}
 \item{\texttt{cavitationRefill [= TRUE]}: If \texttt{FALSE} the model operates in a irreversible cavitation mode.}
-\end{itemize}
-
-\subsection{Model output}
-Function \texttt{swb} returns a list object whose elements are data tables. Each table has dates as rows and has different output variables:
-\begin{itemize}
-\item{\texttt{"DailyBalance"}: Components of the climatic and soil daily water balance (i.e. net precipitation, infiltration, runoff, plant transpiration...).}
-\item{\texttt{"SoilWaterBalance"}: Daily variation of soil variables  (volume, moisture relative to field capacity, water potential) for soil layers.}
-\item{\texttt{"PlantLAI"}: Daily leaf area index for each plant cohort.}
-\item{\texttt{"PlantTranspiration"}: Daily transpiration (in mm) for each plant cohort.}
-\item{\texttt{"PlantPhotosynthesis"}: Daily net photosynthesis (in g C·m-2) for each plant cohort.}
-\item{\texttt{"PlantPsi"}: Daily water potential of each plant (in MPa).}
-\item{\texttt{"PlantStress"}: Daily stress level suffered by each plant cohort (relative whole-plant conductance).}
 \end{itemize}
 
 
@@ -797,6 +785,20 @@ Note that a given cell $j$ can receive water discharge from more than one
 neighbour. $O_j$ values are set to zero at the beginning of each day.
 
 
+
+\section{Model output}
+Function \texttt{swb} returns a list object whose elements are data tables. Each table has dates as rows and has different output variables:
+\begin{itemize}
+\item{\texttt{"DailyBalance"}: Components of the climatic and soil daily water balance (i.e. net precipitation, infiltration, runoff, plant transpiration...).}
+\item{\texttt{"SoilWaterBalance"}: Daily variation of soil variables  (volume, moisture relative to field capacity, water potential) for soil layers.}
+\item{\texttt{"PlantLAI"}: Daily leaf area index for each plant cohort.}
+\item{\texttt{"PlantTranspiration"}: Daily transpiration (in mm) for each plant cohort.}
+\item{\texttt{"PlantPhotosynthesis"}: Daily net photosynthesis (in g C·m-2) for each plant cohort.}
+\item{\texttt{"PlantPsi"}: Daily water potential of each plant (in MPa).}
+\item{\texttt{"PlantStress"}: Daily stress level suffered by each plant cohort (relative whole-plant conductance).}
+\end{itemize}
+
+
 \section{References}
 \begin{itemize}
 
@@ -854,7 +856,7 @@ neighbour. $O_j$ values are set to zero at the beginning of each day.
 
 \item{Watanabe, T., Mizutani, K., 1996. Model study on micrometeorological aspects of rainfall interception over an evergreen broad-leaved. Agric. For. Meteorol. 80, 195–214.}
 
-\item{Genuchten, M. Van. 1980. A closed-form equation for predicting the hydraulic conductivity of unsaturated soils. Soil Science Society of America Journal, 44, 892–898. Retrieved from https://dl.sciencesocieties.org/publications/sssaj/abstracts/44/5/SS0440050892}
+\item{Genuchten, M. Van. 1980. A closed-form equation for predicting the hydraulic conductivity of unsaturated soils. Soil Science Society of America Journal, 44, 892–898.}
 \end{itemize}
 
 \end{document}

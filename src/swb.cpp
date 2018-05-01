@@ -374,35 +374,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   if(rain >0.0) cloudcover = 1.0;
   bool clearday = (rain==0);
   
-  //Instantaneous direct and diffuse shorwave radiation
-  DataFrame ddd = meteoland::radiation_directDiffuseDay(solarConstant, latrad, delta,
-                                                        rad, clearday, ntimesteps);
-  NumericVector solarElevation = ddd["SolarElevation"]; //in radians
-  NumericVector solarHour = ddd["SolarHour"]; //in radians
-  NumericVector SWR_direct = ddd["SWR_direct"]; //in kW·m-2
-  NumericVector SWR_diffuse = ddd["SWR_diffuse"]; //in kW·m-2
-  NumericVector PAR_direct = ddd["PAR_direct"]; //in kW·m-2
-  NumericVector PAR_diffuse = ddd["PAR_diffuse"]; //in kW·m-2
-  
-  //Instantaneous air temperature (above canopy) and longwave radiation
-  NumericVector Tatm(ntimesteps), lwdr(ntimesteps), Tcan(ntimesteps, NA_REAL), Tsunrise(ntimesteps);
-  NumericVector LEcan_heat(ntimesteps), Hcan_heat(ntimesteps), LWRsoilcan(ntimesteps), LWRcanout(ntimesteps), Ebal(ntimesteps);
-  NumericVector LWRsoilout(ntimesteps), Ebalsoil(ntimesteps), Hcansoil(ntimesteps);
-  NumericMatrix Tsoil_mat(ntimesteps, nlayers);
-  //Daylength in seconds (assuming flat area because we want to model air temperature variation)
-  double tauday = meteoland::radiation_daylengthseconds(latrad,0.0,0.0, delta); 
-  for(int n=0;n<ntimesteps;n++) {
-    //From solar hour (radians) to seconds from sunrise
-    Tsunrise[n] = (solarHour[n]*43200.0/PI)+ (tauday/2.0) +(tstep/2.0); 
-    //Calculate instantaneous temperature and light conditions
-    Tatm[n] = temperatureDiurnalPattern(Tsunrise[n], tmin, tmax, tauday);
-    //Longwave sky diffuse radiation (W/m2)
-    lwdr[n] = meteoland::radiation_skyLongwaveRadiation(Tatm[n], vpatm, cloudcover);
-  }
-  Tcan[0] = canopyParams["Temp"]; //Take canopy temperature from previous day
-  Tsoil_mat(0,_) = Tsoil;
-
-  //Adjusted leaf area index
+  //1. Leaf Phenology: Adjusted leaf area index
   NumericVector Phe(numCohorts);
   double LAIcell = 0.0, LAIcelldead = 0.0, Cm = 0.0, canopyHeight = 0.0, LAIcellmax = 0.0;
   for(int c=0;c<numCohorts;c++) {
@@ -425,30 +397,8 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   NumericMatrix LAImd = LAIdistribution(z, LAIdead, H, CR); //Dead (standing) leaves
   NumericMatrix LAImx = LAIdistribution(z, LAIlive, H, CR); //Maximum leaf expansion
   
-
-  //Light extinction and absortion by time steps
-  List lightExtinctionAbsortion = instantaneousLightExtinctionAbsortion(LAIme, LAImd, LAImx,
-                                                                        kPAR, albedo,
-                                                                        ddd,  lwdr,
-                                                                        ntimesteps,  "sunshade", 0.1);
   
-  List abs_PAR_SL_list = lightExtinctionAbsortion["PAR_SL"];
-  List abs_SWR_SL_list = lightExtinctionAbsortion["SWR_SL"];
-  List abs_PAR_SH_list = lightExtinctionAbsortion["PAR_SH"];
-  List abs_SWR_SH_list = lightExtinctionAbsortion["SWR_SH"];
-  List abs_LWR_SL_list = lightExtinctionAbsortion["LWR_SL"];
-  List abs_LWR_SH_list = lightExtinctionAbsortion["LWR_SH"];
-  NumericVector fsunlit = lightExtinctionAbsortion["fsunlit"];
-  NumericVector abs_SWR_can = lightExtinctionAbsortion["SWR_can"];
-  NumericVector abs_SWR_soil = lightExtinctionAbsortion["SWR_soil"];
-  NumericVector abs_LWR_can = lightExtinctionAbsortion["LWR_can"];
-  NumericVector abs_LWR_soil = lightExtinctionAbsortion["LWR_soil"];
-  NumericVector emm_LWR_soil(ntimesteps,0.0);
-  // double kb = lightExtinctionAbsortion["kb"];  //Proportion of sunlit extinction coefficient
-  // double gbf = lightExtinctionAbsortion["gbf"]; //Ground fractions
-  // double gdf = lightExtinctionAbsortion["gdf"];
-  
-  //Hydrologic input
+  //2. Hydrologic input
   double NetPrec = 0.0, Infiltration= 0.0, Runoff= 0.0, DeepDrainage= 0.0;
   double propCover = 1.0-exp(-1.0*LAIcell);
   // double propCoverMax = 1.0-exp(-1.0*LAIcellmax);
@@ -472,6 +422,58 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
     }
   }
   psiVec = psi(soil, soilFunctions); //Update soil water potential
+  
+  //3a. Instantaneous direct and diffuse shorwave radiation
+  DataFrame ddd = meteoland::radiation_directDiffuseDay(solarConstant, latrad, delta,
+                                                        rad, clearday, ntimesteps);
+  NumericVector solarElevation = ddd["SolarElevation"]; //in radians
+  NumericVector solarHour = ddd["SolarHour"]; //in radians
+  NumericVector SWR_direct = ddd["SWR_direct"]; //in kW·m-2
+  NumericVector SWR_diffuse = ddd["SWR_diffuse"]; //in kW·m-2
+  NumericVector PAR_direct = ddd["PAR_direct"]; //in kW·m-2
+  NumericVector PAR_diffuse = ddd["PAR_diffuse"]; //in kW·m-2
+  
+  //3b. Instantaneous air temperature (above canopy) and longwave radiation
+  NumericVector Tatm(ntimesteps), lwdr(ntimesteps), Tcan(ntimesteps, NA_REAL), Tsunrise(ntimesteps);
+  NumericVector LEcan_heat(ntimesteps), Hcan_heat(ntimesteps), LWRsoilcan(ntimesteps), LWRcanout(ntimesteps), Ebal(ntimesteps);
+  NumericVector LWRsoilout(ntimesteps), Ebalsoil(ntimesteps), Hcansoil(ntimesteps);
+  NumericMatrix Tsoil_mat(ntimesteps, nlayers);
+  //Daylength in seconds (assuming flat area because we want to model air temperature variation)
+  double tauday = meteoland::radiation_daylengthseconds(latrad,0.0,0.0, delta); 
+  for(int n=0;n<ntimesteps;n++) {
+    //From solar hour (radians) to seconds from sunrise
+    Tsunrise[n] = (solarHour[n]*43200.0/PI)+ (tauday/2.0) +(tstep/2.0); 
+    //Calculate instantaneous temperature and light conditions
+    Tatm[n] = temperatureDiurnalPattern(Tsunrise[n], tmin, tmax, tauday);
+    //Longwave sky diffuse radiation (W/m2)
+    lwdr[n] = meteoland::radiation_skyLongwaveRadiation(Tatm[n], vpatm, cloudcover);
+  }
+  Tcan[0] = canopyParams["Temp"]; //Take canopy temperature from previous day
+  Tsoil_mat(0,_) = Tsoil;
+
+  
+
+  //Light extinction and absortion by time steps
+  List lightExtinctionAbsortion = instantaneousLightExtinctionAbsortion(LAIme, LAImd, LAImx,
+                                                                        kPAR, albedo,
+                                                                        ddd,  lwdr,
+                                                                        ntimesteps,  "sunshade", 0.1);
+  
+  List abs_PAR_SL_list = lightExtinctionAbsortion["PAR_SL"];
+  List abs_SWR_SL_list = lightExtinctionAbsortion["SWR_SL"];
+  List abs_PAR_SH_list = lightExtinctionAbsortion["PAR_SH"];
+  List abs_SWR_SH_list = lightExtinctionAbsortion["SWR_SH"];
+  List abs_LWR_SL_list = lightExtinctionAbsortion["LWR_SL"];
+  List abs_LWR_SH_list = lightExtinctionAbsortion["LWR_SH"];
+  NumericVector fsunlit = lightExtinctionAbsortion["fsunlit"];
+  NumericVector abs_SWR_can = lightExtinctionAbsortion["SWR_can"];
+  NumericVector abs_SWR_soil = lightExtinctionAbsortion["SWR_soil"];
+  NumericVector abs_LWR_can = lightExtinctionAbsortion["LWR_can"];
+  NumericVector abs_LWR_soil = lightExtinctionAbsortion["LWR_soil"];
+  NumericVector emm_LWR_soil(ntimesteps,0.0);
+  // double kb = lightExtinctionAbsortion["kb"];  //Proportion of sunlit extinction coefficient
+  // double gbf = lightExtinctionAbsortion["gbf"]; //Ground fractions
+  // double gdf = lightExtinctionAbsortion["gdf"];
 
 
 

@@ -49,7 +49,7 @@ Function \code{plot} plots the results of the soil water balance model (see \cod
     \item{\code{"SoilEnergyBalance"}:}{ Soil energy balance components (only for \code{transpirationMode = "Complex"}).}
    }
   }
-  \item{bySpecies}{Allows aggregating output by species, before calculating summaries or drawing plots.}
+  \item{bySpecies}{Allows aggregating output by species, before calculating summaries or drawing plots. Aggregation can involve a sum (as for plant lai or transpiration) or a LAI-weighted mean (as for plant stress or plant water potential).}
   \item{yearAxis}{A boolean to indicate whether the units of the x-axis are years (by default they are dates).}
   \item{xlim}{Range of values for x.}
   \item{ylim}{Range of values for y.}
