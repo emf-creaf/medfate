@@ -412,9 +412,11 @@ where $T_{a}$ is air temperature, $\sigma = 5.67 \cdot 10^{-8.0}$  W·K$^{-4}$·
 \end{eqnarray}
 where $vp_{day}$ is the average daily vapor pressure (in kPa) and $c$ is the proportion of clouds. 
 
+\subsection{Radiation balance}
+The following subsection detail the calculation of radiation components of the energy balance equations.
 
-\subsection{Light extinction}
-When using the complex mode, the canopy is divided into vertical layers (whose size is determined by the control parameter \texttt{verticalLayerSize}), and the expanded and dead leaf area index of each cohort within each layer is determined. Let $n$ be the number of canopy layers. And let $LAI_{i,j}^{all} = LAI_{i,j}^{\phi}+LAI_{i,j}^{dead}$ be the leaf area index of cohort $i$ in layer $j$. It is generally accepted that sunlit and shade leaves need to be treated separately (De Pury and Farquhar 1997). This separation is necessary because photosynthesis of shade leaves has an essentially linear response to irradiance, while photosynthesis of leaves in sunflecks is often light saturated and independent of irradiance.
+\subsubsection{Shortwave radiation absorbed by the canopy}
+The canopy is divided into vertical layers (whose size is determined by the control parameter \texttt{verticalLayerSize}), and the expanded and dead leaf area index of each cohort within each layer is determined. Let $n$ be the number of canopy layers. And let $LAI_{i,j}^{all} = LAI_{i,j}^{\phi}+LAI_{i,j}^{dead}$ be the leaf area index of cohort $i$ in layer $j$. Furthermore, it is generally accepted that sunlit and shade leaves need to be treated separately (De Pury and Farquhar 1997). This separation is necessary because photosynthesis of shade leaves has an essentially linear response to irradiance, while photosynthesis of leaves in sunflecks is often light saturated and independent of irradiance.
 
 The average irradiance reaching the top of each canopy layer $j$ is calculated separately for direct beam and diffuse radiation:
 \begin{eqnarray}
@@ -422,7 +424,6 @@ I_{beam,j} &=& (1 - \gamma) \cdot I_{beam} \cdot \exp\left[ \sum_{h=j+1}^{n}{\su
 I_{dif,j} &=& (1 - \gamma) \cdot I_{dif} \cdot \exp\left[ \sum_{h=j+1}^{n}{\sum_{i}^{c}{-k_{d,i}\cdot \alpha_i^{0.5}\cdot LAI^{all}_{i,h}}}\right]
 \end{eqnarray}
 where $I_{beam}$ and $I_{dif}$ are the direct and diffuse irrradiance at the top of the canopy, $\gamma$ is the leaf reflectance ($\gamma_{PAR} = 0.04$, $\gamma_{SWR} = 0.05$), $k_{b,i}$ is the extinction coefficient of cohort $i$ for direct light ($k_{b,i} = 0.8$), $k_{d,i}$ is the extinction coefficient of cohort $i$ for diffuse light (i.e. $k_{PAR}$ or $k_{SWR}$) and $\alpha_i$ is the absorbance coefficient ($\alpha_{i,PAR} = 0.9$, $\alpha_{i,SWR} = 0.7$).
-
 
 The proportion of sunlit leaves, i.e. leaves in a canopy layer that the direct light beams (sunflecks) reach is:
 \begin{equation}
@@ -444,6 +445,7 @@ gamma_SWR = 0.05
 alpha_SWR = 0.7
 @
 This canopy definition leads to a percentage of the above-canopy irradiance reaching each layer (Goudriaan 2016; Anten and Bastiaans 2016). Extinction of direct radiation also defines the proportion of leaves of each layer that are affected by sunflecks (i.e. the proportion of sunlit leaves).
+
 
 \begin{center}
 <<fig = TRUE, echo=FALSE, width=7, height=4>>=
@@ -476,14 +478,15 @@ The amount of absorved diffuse radiation per leaf area unit of cohort $i$ within
 I_{dif,i,j} = I_{dif,j} \cdot k_{d,i} \cdot \alpha_i^{0.5} \exp\left[ \sum_{h}^{c}{-k_{d,h}\cdot \alpha_h^{0.5}\cdot 0.5\cdot LAI^{all}_{h,j}}\right]
 \end{equation}
 
+
 The amount of absorved scattered beam radiation per leaf area unit of cohort $i$ within a given canopy layer $j$ is calculated as:
 \begin{equation}
-\begin{split}
-I_{sca,i,j}  = I_{b,j} \cdot k_{b,i} \left[ \alpha_i^{0.5}\cdot \exp \left( \sum_{h}^{c}{-k_{b,h}\cdot \alpha_h\cdot 0.5\cdot LAI^{all}_{h,i}}\right) \\  
--\frac{\alpha_i}{(1-\gamma)}\cdot \exp\left( \sum_{h}^{c}{-k_{b,h}\cdot 0.5\cdot LAI^{all}_{h,i}}\right)
-\end{split}
-\right]
+% \begin{split}
+I_{sca,i,j} = I_{b,j} \cdot k_{b,i} \left( \alpha_i^{0.5}\cdot \exp \left( \sum_{h}^{c}{-k_{b,h}\cdot \alpha_h\cdot 0.5\cdot LAI^{all}_{h,i}}\right) 
+-\frac{\alpha_i}{(1-\gamma)}\cdot \exp\left( \sum_{h}^{c}{-k_{b,h}\cdot 0.5\cdot LAI^{all}_{h,i}}\right) \right)
+% \end{split}
 \end{equation}
+
 Finally, the direct radiation absorbed by a unit of sunlit leaf area of cohort $i$ in a canopy layer $j$ does not depend on the position of the canopy layer and is:
 \begin{equation}
 I_{dir,i,j} = I_{beam} \cdot \alpha_i \cdot 0.5/\sin{\beta}
@@ -498,6 +501,7 @@ The total amount of light absorbed by shaded/sunlit foliage of cohort $i$ per gr
 \Phi_{SH,i,j} &=& I_{SH,i,j}\cdot (1 - f_{SL,j}) \cdot LAI^{\phi}_{i,j}\\
 \Phi_{SL,i,j} &=& I_{SL,i,j}\cdot f_{SL,j} \cdot LAI^{\phi}_{i,j}
 \end{eqnarray}
+
 
 Values of instantaneous direct and diffuse radiation above the canopy (i.e. $I_{beam}$ and $I_{dif}$) are calculated using the methods described in Spitters et al. (1986), which involve comparing daily global radiation with daily potential radiation. For example, for a flat terrain located at 42ºN latitude and 100 m.a.s.l, having 30 MJ·m$^{-2}$ of daily global radiation on the 2001/June/01, the hourly variation in diffuse and direct radiation would be:
 \begin{center}
@@ -524,6 +528,42 @@ legend("topleft", legend=c("Direct", "Diffuse"), lty=c(1,2), bty="n")
 @
 \end{center}
 
+\subsubsection{Shortwave radiation absorbed by the soil}
+The instantaneous shortwave radiation reaching the soil is calculated separately for direct beam and diffuse radiation:
+\begin{eqnarray}
+K_{beam, soil} &=&  K_{beam} \cdot \exp\left[ \sum_{h=j+1}^{n}{\sum_{i}^{c}{-k_{b,i}\cdot \alpha_i^{0.5} \cdot LAI^{all}_{i,h}}}\right]\\
+K_{dif, soil} &=& K_{dif} \cdot \exp\left[ \sum_{h=j+1}^{n}{\sum_{i}^{c}{-k_{d,i}\cdot LAI^{all}_{i,h}}}\right]
+\end{eqnarray}
+where $K_{beam}$ and $K_{dif}$ are the direct and diffuse irrradiance at the top of the canopy, $k_{b,i}$ is the extinction coefficient of cohort $i$ for direct light ($k_{b,i} = 0.8$) and $k_{d,i}$ is the extinction coefficient of cohort $i$ for diffuse SWR. From these, the SWR absorbed by the soil is found by:
+\begin{equation}
+K_{abs,sa} = (1 - \gamma_{SWR, soil})\cdot (K_{beam, soil} + K_{dif, soil})
+\end{equation}
+where $\gamma_{SWR, soil} = 0.10$ is the SWR reflectance (10\% albedo) of the soil. LWR is treated in the same way as diffuse SWR. The instantaneous LWR reaching the soil is:
+\begin{equation}
+L_{abs,sa} = (1 - \gamma_{LWR, soil})\cdot L_{a} \cdot \exp\left[ \sum_{h=j+1}^{n}{\sum_{i}^{c}{-k_{LWR}\cdot LAI^{all}_{i,h}}}\right]
+\end{equation}
+where $L_a$ is the atmosphere longwave irradiance, $k_{LWR} = 0.8$ is the extinction coefficient for LWR and $\gamma_{LWR, soil} = 0.05$ is LWR soil reflectance (5\% albedo) of the soil.
+
+\subsubsection{Longwave soil-canopy radiation exchange}
+Longwave radiation (LWR) emmited by a surface at the canopy temperature $T_{can}$ would be:
+\begin{equation}
+L_{em} = 0.95 \cdot \sigma \cdot (T_{can} + 273.16)^{4.0}
+\end{equation}
+where $0.95$ is emissivity and $\sigma = 5.67 \cdot 10^{-8.0}  Wm^{-2}$ is the Stephan-Boltzmann constant. However, the canopy may only partially cover the soil surface, so the value must be reduced by the proportion of the canopy layer actually exchanging energy. We take this as the proportion between atmospheric and absorbed LWR:
+\begin{eqnarray}
+p_{exch} &=& \frac{L_{abs,ca}}{L_a} \\
+L_{em, c} &=& p_{exch} \cdot L_{em}
+\end{eqnarray}
+$L_{em, c}$ is discounted twice from the canopy energy balance: as losses to the atmosphere and losses to the soil. 
+
+LWR emmited by the soil is calculated from the temperature of the first soil layer:
+\begin{equation}
+L_{em, s} = 0.95 \cdot \sigma \cdot (T_{soil} + 273.16)^{4.0}
+\end{equation}
+Again, the canopy only absorbs part of this radiation, the remaining going to the atmosphere:
+\begin{equation}
+L_{abs, cs} &=& p_{exch} \cdot L_{em,s}
+\end{equation}
 
 \subsection{Plant transpiration and photosynthesis}
 The model carries out more complex calculations to determine plant transpiration and photosynthesis. It determines transpiration and photosynthesis for each plant cohort separately as follows. First, it determines the hydraulic supply function depending on plant hydraulic characteristics and soil moisture status. Then, the model divides the day length into a number of subdaily steps and transpiration of the plant cohort is estimated for each of them following the framework of Sperry et al. (2016a), who suggest estimating stomatal conductance from the instantaneous maximization of profit, defined as the difference between photosynthesis gain and hydraulic cost (both normalized for comparability). Since the continuum representation implies several soil layers in parallel but joining at the root crown, the hydraulic submodel yields instantaneous water flow and carbon assimilation rates from (or to) each soil layers. Finally, the instantaneous transpiration and assimilation rates of each time step are scaled to the duration of the time step and to the leaf area of the plant cohort. The following provides details for these processes (see further details in vignette '\texttt{Hydraulics, stomatal conductance and photosynthesis}').
@@ -598,6 +638,7 @@ where $12.01017$ is the molar weight of carbon (in g). $A_{n, step}$ values of a
 A_{n,step} = \sum_{n=1}^{n_t} {A_{n,step}}
 \end{equation}
 
+
 \subsubsection{Plant drought stress and water potentials}
 Because the model determines optimum transpiration for each time step, this leads to a daily sequence of leaf water potential ($\Psi_{leaf,t}$) and root crown water potential ($\Psi_{rootcrown,t}$) values. The model chooses as the leaf water potential of the day for cohort $i$ ($\Psi_{leaf,i}$) the minimum of $\Psi_{leaf,t}$ values. Analogously, the model chooses as the root crown water potential of the day for cohort $i$ ($\Psi_{rootcrown,i}$) the minimum of $\Psi_{rootcrown,t}$ values. They represent water potential values that would occur at mid-day. Unlike under the simple transpiration mode, here there is no need to average water potentials under the Sperry transpiration mode, because the differences in potential of soil layers are already integrated in the hydraulic supply function. 
 
@@ -607,6 +648,23 @@ In order to have an estimate of daily drought stress for the plant cohort, the m
 DDS_i = \phi_i \cdot \left( 1.0 - \frac{k_{stem, i}(\Psi_{rootcrown,i})}{k_{\max stem, i}}\right) = \phi_i \cdot \left(1.0 - e^{-(\Psi_{rootcrown,i}/d_{stem})^{c_{stem}}}\right)
 \end{equation}
 where $\phi_i$ is the leaf phenological status. Note the use of $\Psi_{rootcrown,i}$ (and not $\Psi_{leaf,i}$) to determine drought stress index. Thus the model tracks the degree of conductance decrease at the beginning of the stem as a measure of drought stress. This choice makes daily drought stress values of the Simple and Complex transpiration modes more comparable (because leaf mid-day water potentials are usually much more negative than soil water potentials) and is a sensible choice if one wants to run the model in irreversible cavitation mode (see below).
+
+
+\subsubsection{Leaf energy balance}
+Leaf temperature ($T_{leaf}$; in Celsius) can be calculated for any given flow rate $E(\Psi_{leaf})$ using (Campbell and Norman 1998):
+\begin{equation}
+T_{leaf}(\Psi_{leaf}) = T_{can}+\frac{I_{abs}-\epsilon\cdot\sigma\cdot(T_{can}+273.15)^4-\lambda_v\cdot E(\Psi_{leaf})}{C_p\cdot(g_r+g_{Ha})}
+\end{equation}
+where $I_{abs}$ (in W·m$^{-2}$) is the instantaneous shortwave and longwave radiation absorbed per leaf area unit, $E(\Psi_{leaf})$ is the flow (converted to mol·s$^{-1}$·m$^{-2}$ per two-sided leaf area basis), $\epsilon$ is longwave radiation emissivity (0.97), $\sigma$ is the Stephan-Boltzman constant, $T_{can}$ is the canopy air temperature (in ºC; see '\texttt{Complex model: Radiation and energy balance}'), $C_p = 29.3$ J·mol$^{-1}$·ºC$^{-1}$ is the specific heat capacity of dry air at constant pressure and $\lambda_v$ is the latent heat of vaporization (in J·mol$^{-1}$):
+\begin{equation}
+\lambda_v = (2.5023\cdot 10^6-(2430.54\cdot T_{can}))\cdot 0.018
+\end{equation}
+Finally, $g_r$ and $g_{Ha}$ are the radiative and heat conductance values (in mol·m$^{-2}$·s$^{-1}$), respectively (Campbell and Norman 1998):
+\begin{eqnarray}
+g_r &=& \frac{4\cdot \epsilon \cdot \sigma \cdot (T_{can}+273.15)^3}{C_p} \\
+g_{Ha} &=& 0.189 \cdot (u/d)^{0.5}
+\end{eqnarray}
+where $u$ is wind speed (in m·s$^{-1}$), taken as the wind speed at mid-crown height, and $d$ is 0.72 times the leaf width (species parameter \texttt{LeafWidth} in $cm$). 
 
 \subsubsection{Irreversible cavitation and hydraulic disconnection}
 Like with the 'Simple' transpiration mode, the water balance model with 'Complex' transpiration mode is normally run assuming that although soil drought may reduce transpiration, embolized xylem conduits are automatically refilled when soil moisture recovers. When setting \texttt{cavitationRefill = FALSE} the model tracks the maximum value of drought stress as before:
@@ -650,11 +708,7 @@ G_k &=& \lambda_{soil,k} \cdot \frac{\delta T_{soil,k}}{\delta z}
 where $\lambda_{soil,k}$ is the thermal conductivity of layer $k$, depending on soil moisture and texture (see function \texttt{soil.thermalconductivity}). The gradient in the bottom layer is calculated assuming a temperature of the earth (at 10 m) of 15.5 Celsius.
 
 \subsection{Bare soil evaporation}
-Evaporation from the soil surface is the last component of the soil water balance to be calculated. There is a difference in the way that soil evaporative demand is calculated depending on the transpiration mode. If \texttt{transpirationMode = "Simple"}, potential evaporation from the soil ($PE_{soil}$; in $mm\cdot day^{-1}$) is defined as the product between $PET$ and $L^{SWR}_{ground}$, the proportion of SWR absorbed by the ground:
-\begin{equation}
-PE_{soil} =  PET\cdot L^{SWR}_{ground}
-\end{equation}
-If \texttt{transpirationMode = "Sperry"}, potential evaporation from the soil ($PE_{soil}$; in $mm\cdot day^{-1}$) is calculated using the Penman-Monteith combination equation:
+Evaporation from the soil surface is the last component of the soil water balance to be calculated. Soil evaporative demand, i.e. potential evaporation from the soil ($PE_{soil}$; in $mm\cdot day^{-1}$), is calculated using the Penman-Monteith combination equation:
 \begin{equation}
 PE_{soil} = \frac{1}{\lambda} \cdot \frac{\Delta \cdot R_{n,soil} + D \cdot (\rho \cdot C_p/r_a)}{\Delta + \gamma \cdot (1 + r_{soil}/r_a)}
 \end{equation}
