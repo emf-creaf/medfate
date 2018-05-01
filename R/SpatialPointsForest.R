@@ -34,6 +34,7 @@ SpatialPointsForest<-function(SFItreeData, SFIshrubData, SFIherbData=NULL, Spati
       soilParams$rfc = c(spl$TS_rfc, spl$SS_rfc)
       soilParams$Gsoil = spl$Gsoil
       soilParams$Ksoil = spl$Ksoil
+      soilParams$om = c(NA,NA)
       if(sum(is.na(soilParams))>0) soilParams = defaultSoilParams()
     } else {
       soilParams = defaultSoilParams()
