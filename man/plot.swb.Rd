@@ -11,8 +11,9 @@
 Function \code{plot} plots the results of the soil water balance model (see \code{\link{swb}}) or the forest growth model (see \code{\link{growth}}), whereas function \code{summary} summarizes the model's output in different temporal steps (i.e. weekly, annual, ...).
 }
 \usage{
-\method{plot}{swb}(x, type="PET_Precipitation", yearAxis=FALSE, 
-    xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL,...)
+\method{plot}{swb}(x, type="PET_Precipitation", bySpecies = FALSE,
+                   yearAxis=FALSE, xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL,
+                   add = FALSE, ...)
 \method{plot}{growth}(x, type="PET_Precipitation", yearAxis=FALSE, 
     xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL,...)
 \method{summary}{swb}(object, freq="years", output="DailyBalance", FUN=sum, bySpecies = FALSE, ...)
@@ -48,6 +49,7 @@ Function \code{plot} plots the results of the soil water balance model (see \cod
     \item{\code{"SoilEnergyBalance"}:}{ Soil energy balance components (only for \code{transpirationMode = "Complex"}).}
    }
   }
+  \item{bySpecies}{Allows aggregating output by species, before calculating summaries or drawing plots.}
   \item{yearAxis}{A boolean to indicate whether the units of the x-axis are years (by default they are dates).}
   \item{xlim}{Range of values for x.}
   \item{ylim}{Range of values for y.}
@@ -56,7 +58,6 @@ Function \code{plot} plots the results of the soil water balance model (see \cod
   \item{freq}{Frequency of summary statistics (see \code{\link{cut.Date}}).}
   \item{output}{The data table to be summarized. Accepted values are \code{"DailyBalance"}, \code{"PlantStress"}, \code{"PlantPsi"}, \code{"PlantTranspiration"}, \code{"PlantPhotosynthesis"}  and \code{"SoilWaterBalance"}, \code{"Temperature"} and \code{"EnergyBalance"}.}
   \item{FUN}{The function to summarize results (e.g., \code{sum}, \code{mean}, ...)}
-  \item{bySpecies}{Allows aggregating output by species, before calculating summaries.}
   \item{...}{Additional parameters for functions \code{plot} or \code{summary}.}
 }
 \references{

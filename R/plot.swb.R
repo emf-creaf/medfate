@@ -1,4 +1,6 @@
-plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, add=FALSE,...) {
+plot.swb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
+                   yearAxis=FALSE, xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, 
+                   add=FALSE, ...) {
   dates = as.Date(rownames(x$DailyBalance))
   transpMode = x$control$transpirationMode
   DailyBalance = x$DailyBalance
@@ -107,36 +109,62 @@ plot.swb<-function(x, type="PET_Precipitation", yearAxis=FALSE, xlim = NULL, yli
            legend=c("Total",paste("Layer", 1:nlayers)))
     
   } else if(type=="PlantLAI") {
+    OM = x$PlantLAI
+    if(bySpecies) {
+      OM = t(apply(OM,1, tapply, x$cohorts$Name, sum, na.rm=T))
+      cohortnames = colnames(OM)
+    } 
     if(is.null(ylab)) ylab = "Leaf Area Index (m2/m2)"
-    if(is.null(ylim)) ylim = c(0,max(x$PlantLAI))
-    matplot(dates, x$PlantLAI, ylim = ylim, lty=1:length(cohortnames), col = 1:length(cohortnames),
+    if(is.null(ylim)) ylim = c(0,max(OM, na.rm=TRUE))
+    matplot(dates, OM, ylim = ylim, lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", xlim=xlim,
             ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
     plotAxes()
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
            col = 1:length(cohortnames), bty="n")
   } else if(type=="PlantStress") {
+    OM = x$PlantStress
+    if(bySpecies) {
+      lai1 = t(apply(x$PlantLAI,1, tapply, x$cohorts$Name, sum))
+      m1 = t(apply(x$PlantLAI * OM,1, tapply, x$cohorts$Name, sum))
+      OM = m1/lai1
+      OM[lai1==0] = NA
+      cohortnames = colnames(OM)
+    } 
     if(is.null(ylab)) ylab = "Drought stress [0-1]"
     if(is.null(ylim)) ylim = c(0,1)
-    matplot(dates, x$PlantStress, lty=1:length(cohortnames), col = 1:length(cohortnames),
+    matplot(dates, OM, lty=1:length(cohortnames), col = 1:length(cohortnames),
             ylim = ylim, lwd=1, type="l", xlim=xlim,
             ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
     plotAxes()
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
            col = 1:length(cohortnames), bty="n")
   } else if(type=="PlantPsi") {
+    OM = x$PlantPsi
+    if(bySpecies) {
+      lai1 = t(apply(x$PlantLAI,1, tapply, x$cohorts$Name, sum, na.rm=T))
+      m1 = t(apply(x$PlantLAI * OM,1, tapply, x$cohorts$Name, sum, na.rm=T))
+      OM = m1/lai1
+      OM[lai1==0] = NA
+      cohortnames = colnames(OM)
+    } 
     if(is.null(ylab)) ylab = "Plant water potential (MPa)"
-    if(is.null(ylim)) ylim = c(min(x$PlantPsi),0)
-    matplot(dates, x$PlantPsi, ylim = ylim, lty=1:length(cohortnames), col = 1:length(cohortnames),
+    if(is.null(ylim)) ylim = c(min(OM, na.rm = TRUE),0)
+    matplot(dates, OM, ylim = ylim, lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", xlim=xlim,
             ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
     plotAxes()
     legend("bottomright", legend = cohortnames, lty=1:length(cohortnames), 
            col = 1:length(cohortnames), bty="n")
   } else if(type=="PlantTranspiration") {
+    OM = x$PlantTranspiration
+    if(bySpecies) {
+      OM = t(apply(OM,1, tapply, x$cohorts$Name, sum, na.rm=T))
+      cohortnames = colnames(OM)
+    } 
     if(is.null(ylab)) ylab = "Plant transpiration (mm)"
-    if(is.null(ylim)) ylim = c(0,max(x$PlantTranspiration))
-    matplot(dates, x$PlantTranspiration, ylim = ylim,
+    if(is.null(ylim)) ylim = c(0,max(OM, na.rm=T))
+    matplot(dates, OM, ylim = ylim,
             lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", xlim=xlim,
             ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)

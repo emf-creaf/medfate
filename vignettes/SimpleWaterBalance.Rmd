@@ -231,7 +231,7 @@ head(S$PlantPsi)
 ```
 
 
-### Plotting temporal dynamics
+### Plotting results
 
 Package `medfate` provides a simple `plot` function for objects of class `swb`. It can be used to show the meteorological input:
 ```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
@@ -276,3 +276,40 @@ Or we can combine the aggregation by species with a temporal aggregation (here m
 summary(S, freq="month", FUN = mean, output="PlantStress", bySpecies = TRUE)
 ```
 
+### Water balance for a set of forest stands
+
+So far, we used `swb()` to simulate soil water balance on a single stand. Package `medfate` offers the possibility to conduct simulations on a set of forest stands in one call, using function `swbpoints()`. This function takes an object of class `SpatialPointsForest` as input. We begin by loading an example dataset of 30 forest stands:
+
+```{r}
+data("exampleSPF")
+plot(exampleSPF)
+```
+
+As before, we need meteorological data, species parameters and control parameters (which will apply to all forest stands):
+
+```{r}
+data("examplemeteo")
+data("SpParamsMED")
+control = defaultControl()
+control$verbose = FALSE
+```
+
+The call to `swbpoints()` can be done as follows:
+```{r}
+res <- swbpoints(exampleSPF, SpParamsMED, examplemeteo, control = control)
+```
+
+For each forest stand described in the `SpatialPointsForest` object, function `swbpoints()` first calls `forest2swbInput()`, to generate the appropriate input, and then it calls `swb()`. The elements of the result of calling `swbpoints()` are:
+
+```{r}
+names(res)
+```
+
+where `sp` is object of class SpatialPoints with the spatial coordinates of forest stands. Vector `input` contains the `swbInput` corresponding to each forest stand, and vector `result` contains the output of `swb()` for each forest stand. This structure of the output of `swbpoints()` allows querying information for the simulation of any forest stand. For example, if we want a monthly summary of species transpiration for the stand '80013', we can use:
+
+```{r}
+summary(res$result$`80013`, freq="months",FUN=sum, 
+        output="PlantTranspiration", bySpecies = TRUE)
+```
+
+If one needs to save memory, it is possible with `swbpoints()` to generate summaries automatically after the simulation of soil water balance of each stand, and storing those summaries instead of all the output of `swb()`. 
