@@ -32,30 +32,32 @@ Simulation models in `medfate` require information on the physical attributes of
 spar = defaultSoilParams(2) #Default soil parameters for three layers
 print(spar)
 ```
-where `widths` are soil layer widths in mm; `clay` and `sand` are the percentage of clay and sand, in percent of dry weight, and `om` stands for organic matter. `macro` specifies the macroporosity of each layer and `rfc` the percentage of rock fragments. Finally, `Gsoil` and `Ksoil` are parameters needed for infiltration. 
+where `widths` are soil layer widths in mm; `clay` and `sand` are the percentage of clay and sand, in percent of dry weight, and `om` stands for organic matter. `macro` specifies the macroporosity of each layer and `rfc` the percentage of rock fragments. Finally, `Gsoil` and `Ksoil` are parameters needed to model water infiltration into the soil. 
 
 ### Soil input object
-Soil input for function `swb()` is actually an object of class `soil` that is created using a function with the same name:
+Soil input for water balance models is actually an object of class `soil` that is created using a function with the same name:
 ```{r}
 examplesoil = soil(spar)
 ```
-The soil object is used to store the moisture degree of each soil layer. If we inspect the elements of the soil object, we will see that `W` contains the state variable that represents moisture (i.e. the proportion of moisture relative to field capacity), which is normally initialized to 1 for each layer.
+The soil object contains both soil parameters and state variables. The elements of the soil object are:
 ```{r}
 names(examplesoil)
+```
+The meaining of all elements in the soil object can be found in the help page for function `soil()`. Importantly, the soil object is used to store the moisture degree of each soil layer. `W` is state variable that represents moisture (i.e. the proportion of moisture relative to field capacity), which is normally initialized to 1 for each layer.
+```{r}
 examplesoil$W
 ```
-The meaining of all elements in the soil object can be found in the help page for function `soil()`. It is important to remember that, unlike normal objects in R, any water balance simulation will modify the moisture values in soil object. That is, the state of the soil at the end of the simulated process (i.e. `W`) will be stored. Hence, one can use the same object to simulate water balance sequentially and the final state of one simulation is the initial state of the next.
+In the case of the complex soil water balance model, another state variable is the temperature of each soil layer. This is stored in element `Temp`, which has missing values by default:
+```{r}
+examplesoil$Temp
+```
+It is important to remember that, unlike normal objects in R, any water balance simulation will modify the moisture values in soil object. That is, the state of the soil at the end of the simulated process (i.e. `W` and `Temp`) will be stored. Hence, one can use the same object to simulate water balance sequentially and the final state of one simulation is the initial state of the next.
 
 At any time, one can print the status of the soil object:
 ```{r}
-print(examplesoil, model = "SX")
+print(examplesoil, model = "VG")
 ```
-The actual moisture content of the soil depends (mm or litres of water per square meter) on the water retention curve used to represent the relationship between soil volumetric water content ($\theta$; %) and soil water potential ($\Psi$; MPa). By default the Saxton equations as water retention curve, but the user may choose to follow Van Genuchten - Mualem equations, which will give different values for the same texture:
-```{r}
-print(examplesoil, model="VG")
-```
-
-Function `soil.psi2thetaVG()` (and its counterpart) can be used to calculate volumetric soil moisture from the water potential using according to the water retention curve.
+The actual moisture content of the soil depends (mm or litres of water per square meter) on the water retention curve used to represent the relationship between soil volumetric water content ($\theta$; %) and soil water potential ($\Psi$; MPa). As water retention curve, the complex model uses Van Genuchten - Mualem equations. This is why we wrote `model="VG"` above. Functions `soil.psi2thetaVG()` and `soil.theta2psiVG()` can be used to calculate volumetric soil moisture from the water potential, and conversely, according to the Van Genuchten water retention curve.
 
 ### Species data table
 
@@ -111,7 +113,7 @@ The user is free to build any numeric matrix for root distribution, as long as v
 
 ### Meteorological forcing data
 
-Soil water simulations require daily weather inputs. The weather variables that are required depend on the complexity of the soil water balance model we are using. In the simplest case, only mean temperature, precipitation and potential evapotranspiration is required, but the more complex simulation model also requires radiation, wind speed, min/max temparature and relative humitidy. Here we show an example of meteorological forcing data. 
+Soil water simulations require daily weather inputs. The weather variables that are required depend on the complexity of the soil water balance model we are using. The complex simulation model requires precipitation, radiation, wind speed, min/max temparature and relative humitidy. Here we show an example of meteorological forcing data. 
 ```{r}
 data(examplemeteo)
 head(examplemeteo)
@@ -125,20 +127,24 @@ Apart from data inputs, the behaviour of simulation models can be controlled usi
 ```{r}
 control = defaultControl()
 ```
-and to use the complex soil water balance model we must change the following option:
-
+The names of all control parameters are:
 ```{r}
-control$transpirationMode = "Complex"
-control
+names(control)
 ```
 
-Most of these parameters should normally be left to their default value. However, there are three that deserve explanation here: 
+Most of these parameters should normally be left to their default value. However, there are some that deserve explanation here: 
 
  1. Console output can be turned off by setting `verbose = FALSE`. 
- 2. The soil pedotransfer functions can be switched between Saxton's and Van Genuchten's using parameter `soilFunctions`. 
- 3. The complexity of the soil water balance calculations will be very different if we set `transpirationMode = "Complex"`. 
+ 2. The soil water retention curve can be switched between Saxton's and Van Genuchten's using parameter `soilFunctions`. 
+ 3. The complexity of the soil water balance calculations is controlled using `transpirationMode`. 
+ 4. The number of daily substeps is controlled via parameter `ndailysteps`.
  
-Most of the other options apply in the case of complex soil water balance only. 
+To use the complex soil water balance model we must change the values of `transpirationMode` (to switch from "Simple" to "Complex") and `soilFunctions` (to switch from Saxton's retention curve, "SX", to Van Genuchten's retention curve, "VG"):
+```{r}
+control$transpirationMode = "Complex"
+control$soilFunctions = "VG"
+```
+
 
 ### Soil water balance input object
 
@@ -146,23 +152,45 @@ A last step is needed before calling simulation functions. It consists in the co
 ```{r}
 x = swbInput(above, below, examplesoil, SpParamsMED, control)
 ```
-Different parameter variables will be drawn depending on the value of `transpirationMode`. For the simple model, relatively few parameters are needed. All the input information for forest data and species parameter values can be inspected by printing the input object.
-```{r}
-x
-```
-As with the soil input object, the `swbInput` object may be modified during simulations. In the case of soil water balance, these modifications are minimal, for example concerning `LAI_expanded`, but in the case of growth simulations the object is used to store the status of vegetation during and at the end of simulations. If one has a `forest` object, the `swbInput` object can be generated in directly from it, avoiding the need to explicitly build aboveground and belowground data frames:
+If one has a `forest` object, the `swbInput` object can be generated in directly from it, avoiding the need to explicitly build aboveground and belowground data frames:
 
 ```{r}
 x = forest2swbInput(exampleforest, examplesoil, SpParamsMED, control)
 ```
 
+All the input information for forest data and species parameter values can be inspected by printing different elements of the input object, which are: 
+```{r}
+names(x)
+```
+First, information about the cohort species is found in element `cohorts`  (i.e. code, species and name):
+```{r}
+x$cohorts
+```
+Element `canopy` contains state variables of the whole canopy, which include growth degree days and canopy temperature:
+```{r}
+x$canopy
+```
+Element `above` contains the aboveground structure data that we already know:
+```{r}
+x$above
+```
+As with the soil input object, the `swbInput` object may be modified during simulations. In the case of soil water balance, these modifications concern `LAI_expanded` and `LAI_dead` in element `above`, as well as canopy variables.
+
+Aboveground parameters related to plant transpiration can be seen in `paramsTransp`:
+```{r}
+x$paramsTransp
+```
+
+Belowground parameters can be seen in `below` and include root distribution as well as maximum root and rhizosphere conductances by soil layer:
+```{r}
+x$below
+```
 
 Finally, note that one can play with plant-specific parameters for soil water balance (instead of using species-level values) by modifying manually the parameter values in this object.
 
-
-
 ## Water balance for a single day
 
+### Running the model
 Soil water balance simulations will normally span periods of several months or years, but since the model operates at a daily and subdaily temporal scales, it is possible to perform soil water balance for one day only. This is done using function `swb.day()`. In the following code we select day 100 from the meteorological input data and perform soil water balance for that day only:
 ```{r}
 d = 100
@@ -173,36 +201,81 @@ sd1<-swb.day(x, examplesoil, rownames(examplemeteo)[d], d ,
              latitude = 41.82592, elevation = 100, 
              slope= 0, aspect = 0, rain = examplemeteo$Precipitation[d])
 ```
-Function `swb.day()` is most useful when working with the complex transpiration model. This is why so many meteorological variables are required. The output of `swb.day()` is a list with three elements:
+Function `swb.day()` is most useful when working with the complex transpiration model. The output of `swb.day()` is a list with five elements:
 ```{r}
 names(sd1)
 ```
 
-* **DailyBalance**: Contains the soil water balance flows of the day (precipitation, infiltration, transpiration, ...)
-* **SoilBalance**: Contains output values by soil layer (i.e. water evaporated from each soil layer, water transpired from each soil layer and the final soil water potential).
-* **Plants**: Contains output values by plant cohort (i.e. LAI values, transpiration, water potential, drought stress index, ...).
+Running soil water balance model changes the input objects. In particular, the soil moisture at the end of the simulation will be stored in the soil object:
+```{r}
+examplesoil$W
+```
+As it is the temperature of soil layers
+```{r}
+examplesoil$Temp
+```
+We can also see a change in the state variables of the canopy:
+```{r}
+x$canopy
+```
+
+### Water balance output
+
+**DailyBalance**: Contains the soil water balance flows of the day (precipitation, infiltration, transpiration, ...)
+```{r}
+sd1$DailyBalance
+```
+And **SoilBalance** contains water evaporated from each soil layer, water transpired from each soil layer and the final soil water potential:
+```{r}
+sd1$SoilBalance
+```
+
+
+### Soil and canopy energy balance
+**EnergyBalance** contains subdaily variation in atmosphere, canopy and soil temperatures, as well as canopy and soil energy balance components.
 
 ```{r}
-sd1
+names(sd1$EnergyBalance)
 ```
 
-### Plotting results
+Package `medfate` provides a `plot` function for objects of class `swb.day` that can be used to inspect the results of the simulation. We use this function to display subdaily dynamics in plant, soil and canopy variables. For example, we can use it to display temperature variations (only the temperature of the topmost soil layer is drawn):
 
-Package `medfate` provides a simple `plot` function for objects of class `swb`. It can be used to show the meteorological input:
 ```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
 par(mar=c(4,4,1,1))
-plot(sd1, type = "PlantTranspiration")
+plot(sd1, type = "Temperature")
 ```
+
+### Plant output
+
+**Plants** contains output values by plant cohort and subdaily time step. Many output variables can be inspected in this element.
+
+```{r}
+names(sd1$Plants)
+```
+With the following code, we use function `plot.swb.day()` to draw plots of daily variation per species of plant transpiration (L·m$^{-2}$), transpiration per leaf area (in L·m$^{-2}$·LAI$^{-1}$), net photosynthesis per leaf area (in g C·m$^{-2}$·LAI$^{-1}$), and plant water potential (in MPa):
+```{r, fig=TRUE, fig.align="center", fig.width=8, fig.height = 8}
+par(mar=c(4,4,1,1), mfrow=c(2,2))
+plot(sd1, type = "PlantTranspiration", bySpecies = T)
+plot(sd1, type = "LeafTranspiration", bySpecies = T)
+plot(sd1, type = "LeafPhotosynthesis", bySpecies = T)
+plot(sd1, type = "PlantPsi", bySpecies = T)
+```
+We can also use the same function to plot variations in temperature for sunlit and shade leaves (note that sunlit leaves of some species reach temperatures higher than the canopy):
+```{r, fig=TRUE, fig.align="center", fig.width=8, fig.height = 4}
+plot(sd1, type = "LeafTemperature", bySpecies=TRUE)
+```
+Or we can plot variations in stomatal conductance for sunlit and shade leaves:
+```{r, fig=TRUE, fig.align="center", fig.width=8, fig.height = 4}
+plot(sd1, type = "LeafStomatalConductance", bySpecies=TRUE)
+```
+
 
 ## Water balance for multiple days
 
-Most often, users will use function `swb()` to run the soil water balance model. This function requires the `swbInput` object, the `soil` object and the meteorological data frame:
+### Running the model
+Users will often use function `swb()` to run the soil water balance model for several days. This function requires the `swbInput` object, the `soil` object and the meteorological data frame:
 ```{r}
-S = swb(x, examplesoil, examplemeteo[150:170,], latitude = 41.82592, elevation = 100)
-```
-As mentioned above, running soil water balance model changes the input object. In particular, the soil moisture at the end of the simulation will be stored in the soil object:
-```{r}
-examplesoil$W
+S = swb(x, examplesoil, examplemeteo[140:170,], latitude = 41.82592, elevation = 100)
 ```
 Function `swb()` returns an object of class *swb*, actually a list:
 ```{r}
@@ -226,17 +299,19 @@ head(S$PlantPsi)
 ```
 
 
-### Plotting results
+### Plotting and summarizing results
 
-Package `medfate` provides a simple `plot` function for objects of class `swb`. It can be used to show the meteorological input. Additionally, it can also be used to draw plant variables, such as plant transpiration:
+Package `medfate` also provides a `plot` function for objects of class `swb`. It can be used to show the meteorological input. Additionally, it can also be used to draw soil and plant variables. In the code below we draw water fluxes, soil water potentials, plant transpiration and plant (mid-day) water potential:
 
-```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
-par(mar=c(4,4,1,1))
-plot(S, type="PlantTranspiration")
+```{r, fig=TRUE, fig.align="center", fig.width=8, fig.height = 8}
+par(mar=c(4,4,1,1), mfrow=c(2,2))
+plot(S, type="ET", bySpecies = TRUE)
+plot(S, type="Psi", bySpecies = TRUE)
+plot(S, type="PlantTranspiration", bySpecies = TRUE)
+plot(S, type="PlantPsi", bySpecies = TRUE)
 ```
 
-### Generating output summaries
-While the simulation model uses daily steps, users will normally be interested in outputs at larger time scales. The package provides a `summary` for objects of class `swb`. This function can be used to summarize the model's output at different temporal steps (i.e. weekly, annual, ...). For example, to obtain the average soil moisture and water potentials by months one can use:
+While the simulation model uses daily steps, users may be interested in outputs at larger time scales. The package provides a `summary` for objects of class `swb`. This function can be used to summarize the model's output at different temporal steps (i.e. weekly, annual, ...). For example, to obtain the average soil moisture and water potentials by months one can use:
 
 ```{r}
 summary(S, freq="months",FUN=mean, output="SoilWaterBalance")

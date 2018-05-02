@@ -5,7 +5,7 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Displays simulation results for one day}
 \description{
-Function \code{plot} plots the results of the soil water balance model (see \code{\link{swb.day}}).
+Function \code{plot} plots the results of the soil water balance model for one day (see \code{\link{swb.day}}).
 }
 \usage{
 \method{plot}{swb.day}(x, type="PlantPsi", bySpecies = FALSE, xlab = NULL, ylab = NULL, ...)
@@ -18,7 +18,7 @@ Function \code{plot} plots the results of the soil water balance model (see \cod
     \item{\code{"PlantTranspiration"}:}{ Plant cohort transpiration per ground area.}
     \item{\code{"LeafTranspiration"}:}{ Plant cohort transpiration per leaf area.}
     \item{\code{"PlantPhotosynthesis"}:}{ Plant cohort net photosynthesis per ground area.}
-    \item{\code{"LeafPlantPhotosynthesis"}:}{Net photosynthesis per leaf area.}
+    \item{\code{"LeafPhotosynthesis"}:}{Net photosynthesis per leaf area.}
     \item{\code{"PlantAbsorbedSWR"}:}{Cohort's absorbed short wave radiation per ground area  (differentiates sunlit and shade leaves).}
     \item{\code{"LeafAbsorbedSWR"}:}{Cohort's absorbed short wave radiation per leaf area (differentiates sunlit and shade leaves).}
     \item{\code{"LeafVPD"}:}{Leaf vapour pressure deficit (differentiates sunlit and shade leaves).}
