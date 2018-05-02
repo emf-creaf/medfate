@@ -423,7 +423,16 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   }
   psiVec = psi(soil, soilFunctions); //Update soil water potential
   
-  //3a. Instantaneous direct and diffuse shorwave radiation
+  
+  //3. Wind extinction profile
+  if(NumericVector::is_na(wind)) wind = defaultWindSpeed; //set to default if missing
+  NumericVector zWind;
+  zWind = windExtinctionCohort(H,CR, wind,LAIcell, canopyHeight);
+  double RAcan = aerodynamicResistance(canopyHeight,std::max(wind,1.0)); //Aerodynamic resistance to convective heat transfer
+  double wind2m = windSpeedMassmanExtinction(200.0, wind, LAIcell, canopyHeight);
+  double RAsoil = aerodynamicResistance(200.0, std::max(wind2m,1.0)); //Aerodynamic resistance to convective heat transfer from soil
+  
+  //4a. Instantaneous direct and diffuse shorwave radiation
   DataFrame ddd = meteoland::radiation_directDiffuseDay(solarConstant, latrad, delta,
                                                         rad, clearday, ntimesteps);
   NumericVector solarElevation = ddd["SolarElevation"]; //in radians
@@ -433,7 +442,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   NumericVector PAR_direct = ddd["PAR_direct"]; //in kW·m-2
   NumericVector PAR_diffuse = ddd["PAR_diffuse"]; //in kW·m-2
   
-  //3b. Instantaneous air temperature (above canopy) and longwave radiation
+  //4b. Instantaneous air temperature (above canopy) and longwave radiation
   NumericVector Tatm(ntimesteps), lwdr(ntimesteps), Tcan(ntimesteps, NA_REAL), Tsunrise(ntimesteps);
   NumericVector LEcan_heat(ntimesteps), Hcan_heat(ntimesteps), LWRsoilcan(ntimesteps), LWRcanout(ntimesteps), Ebal(ntimesteps);
   NumericVector LWRsoilout(ntimesteps), Ebalsoil(ntimesteps), Hcansoil(ntimesteps);
@@ -453,7 +462,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
 
   
 
-  //Light extinction and absortion by time steps
+  //4c. Light extinction and absortion by time steps
   List lightExtinctionAbsortion = instantaneousLightExtinctionAbsortion(LAIme, LAImd, LAImx,
                                                                         kPAR, albedo,
                                                                         ddd,  lwdr,
@@ -476,15 +485,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   // double gdf = lightExtinctionAbsortion["gdf"];
 
 
-
-  //Wind extinction profile
-  if(NumericVector::is_na(wind)) wind = defaultWindSpeed; //set to default if missing
-  NumericVector zWind;
-  zWind = windExtinctionCohort(H,CR, wind,LAIcell, canopyHeight);
-  double RAcan = aerodynamicResistance(canopyHeight,std::max(wind,1.0)); //Aerodynamic resistance to convective heat transfer
-  double wind2m = windSpeedMassmanExtinction(200.0, wind, LAIcell, canopyHeight);
-  double RAsoil = aerodynamicResistance(200.0, std::max(wind2m,1.0)); //Aerodynamic resistance to convective heat transfer from soil
-  
+ 
 
   //Hydraulics: determine layers where the plant is connected
   IntegerVector nlayerscon(numCohorts,0);
@@ -818,7 +819,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
     
   } //End of timestep loop
   
-  //Plant daily drought stress (from root collar mid-day water potential)
+  //4z. Plant daily drought stress (from root collar mid-day water potential)
   for(int c=0;c<numCohorts;c++) {
     if(nlayerscon[c]>0) {
       PlantPsi[c] = minPsiLeaf[c];
@@ -839,14 +840,13 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   }
   
   
-  //Potential soil evaporation
+  //5. Soil evaporation
   double Rnground = 0.0;
   for(int n=0;n<ntimesteps;n++) {
     Rnground += (abs_SWR_soil[n] + abs_LWR_soil[n] - emm_LWR_soil[n])*tstep; //kJ·m-2 accumulate net soil radiation balance
   }
   Rnground = std::max(0.0,Rnground)/pow(10.0,3.0); //from kJ·m-2 to MJ·m-2
   double PETsoil = meteoland::penmanmonteith(200.0, elevation, tmin, tmax, rhmin, rhmax, Rnground, wind);
-  //Evaporation from bare soil
   double Gsoil = soil["Gsoil"];
   double Ksoil = soil["Ksoil"];
   double Esoil = std::max(0.0,soilevaporation((Water_FC[0]*(1.0 - W[0])), PETsoil, Gsoil));
@@ -862,7 +862,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   }
   psiVec = psi(soil, soilFunctions); //Update soil water potential
   
-  //Copy LAIexpanded for output
+  //6. Copy LAIexpanded for output
   NumericVector LAIcohort(numCohorts);
   for(int c=0;c<numCohorts;c++) LAIcohort[c]= LAIphe[c];
   LAIcohort.attr("names") = above.attr("row.names");

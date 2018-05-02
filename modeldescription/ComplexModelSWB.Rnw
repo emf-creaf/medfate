@@ -22,22 +22,27 @@ library(medfate)
 
 \section{Model overview}
 \subsection{Design principles}
-Soil water balance is calculated on a daily step basis for the input forest stand and for the period corresponding to input weather data. The model considers only the vertical spatial dimension of the stand, and not the horizontal distribution of plants within it. Still, the stand is divided into groups of plants (here referred to as `plant cohorts') of different species, height and leaf area index ($LAI$). 
+The model performs soil water balance and energy balance for the input forest stand and for the period corresponding to input weather data. Soil water balance is calculated on a daily step basis for the input forest stand and for the period corresponding to input weather data. The model considers only the vertical spatial dimension of the stand, and not the horizontal distribution of plants within it. Still, the stand is divided into groups of plants (here referred to as `plant cohorts') of different species, height and leaf area index ($LAI$). As hydrological processes, the model includes water interception loss (Gash et al. 1995), plant transpiration and hydraulic redistribution, evaporation from soil (Ritchie 1972) and the partition between infiltration and runoff (Boughton 1989). Water exceeding soil water holding capacity is lost via deep drainage. For plant transpiration, the model determines subdaily regulation of leaf water conductance and actual transpiration involving detailed calculations of hydraulics and photosynthesis (Sperry et al. 2016). This level of complexity allows a precise estimation of photosynthesis and hydraulic redistribution of water among soil layers.
 
-For plant transpiration, the model determines regulation of leaf water conductance and actual transpiration involving detailed calculations of hydraulics and photosynthesis (Sperry \& Love 2015; Sperry et al. 2016). This level of complexity allows a precise estimation of photosynthesis and hydraulic redistribution of water among soil layers.
+Radiation and energy balances are conducted subdaily at two levels: canopy/soil and leaf. One one hand the model keeps track of temperature variation of the air in the canopy (i.e. canopy energy balance) and in the soil (i.e. soil energy balance) as the result of energy exchanges between them and with the atmosphere. These energy balance equations are very similar to those of Best et al. (2011) for model JULES.  On the other, the model performs the energy balance at the leaf level to determine transpiration (Sperry et al. 2016). At this scale, radiation inputs include shortwave radiation from the atmosphere absorbed by the leaf and absorbed longwave radiation coming from both the atmosphere and the canopy itself. Leaf temperature is determined assuming that the temperature of the air is that of the canopy. After performing stomatal regulation, the model upscales the transpiration flux at the canopy level and the corresponding latent heat is used to complete the calculation of the energy balance at the canopy level. Note that the latent heat fluxes from evaporation from the soil and of intercepted water are not currently included in the energy balance.
 
-Radiation and energy balances are conducted at two scales: canopy/soil and leaf. One one hand the model keeps track of temperature variation of the air in the canopy (i.e. canopy energy balance) and in the soil (i.e. soil energy balance) as the result of energy exchanges between them and with the atmosphere. On the other, the model performs the energy balance at the leaf level to determine transpiration. At this scale, radiation inputs include shortwave radiation from the atmosphere absorbed by the leaf and absorbed longwave radiation coming from both the atmosphere and the canopy itself. Leaf temperature is determined assuming that the temperature of the air is that of the canopy. After performing stomatal regulation, the model upscales the transpiration flux at the canopy level and the corresponding latent heat is used to complete the calculation of the energy balance at the canopy level. Note that the latent heat fluxes from evaporation from the soil and of intercepted water are not included in the energy balance.
+\subsection{State variables}
+The model has the following state variables:
+\begin{itemize}
+\item{Daily soil moisture content dynamics on each layer $s$ are tracked using $W = \theta(\Psi_s)/ \theta_{fc,s}$, the \textbf{proportion of volumetric soil moisture in relation to field capacity}, where field capacity, $\theta_{fc,s}$, is assumed to correspond to $\Psi_{fc} = -0.033$ MPa. Soils are not allowed to contain more water than dictated by their field capacity.}
+\item{The temperature of the canopy and of each soil layer ($T_c$ and $T_s$; both in ºC) are tracked for every subdaily step.}
+\item{If irreversible cavitation is activated, the model also tracks the maximum value of daily drought stress so far experienced.}
+\end{itemize}
 
-
-\subsubsection{Water balance}
+\subsection{Water balance}
 Daily variations in soil water content can be summarized as: 
   \begin{equation}
   \Delta{SWC} = P - In - Ru - Dd - Es - Tr
   \end{equation}
-When landscape hydrological processes are not considered, daily water balance simulations can be done for cells independently (i.e., the whole simulation period can be done one cell before going to the next one). 
+where $P$ is precipitation, $In$ is water evaporated after being intercepted by the canopy, $Ru$ is surface runoff, $Dd$ is deep drainage, $Es$ is evaporation from soil and $Tr$ is plant transpiration.
 
-\subsubsection{Energy balance}
-Energy balance equations are very similar to those of Best et al. (2011) for JULES. The canopy absorbs shortwave radiation from the atmosphere ($K_{abs,ca}$). It also absorbs longwave counterradiation from the atmosphere ($L_{abs,ca}$) and longwave radiation emmited from the soil ($L_{abs,cs}$). These inputs are counterbalanced by the longwave radiation emmited by the canopy ($L_{em,c}$) in both cases. Other energy fluxes considered are convective exchanges between the canopy and atmosphere ($H_{ca}$) and between the canopy and the soil ($H_{cs}$). Finally, energy is released to the atmosphere through latent heat ($LE_{c}$) produced via transpiration (so far, interception and soil evaporation are not included). The instantaneous energy balance equation for the canopy is thus:
+\subsection{Energy balance}
+The canopy absorbs shortwave radiation from the atmosphere ($K_{abs,ca}$). It also absorbs longwave counterradiation from the atmosphere ($L_{abs,ca}$) and longwave radiation emmited from the soil ($L_{abs,cs}$). These inputs are counterbalanced by the longwave radiation emmited by the canopy ($L_{em,c}$) in both cases. Other energy fluxes considered are convective exchanges between the canopy and atmosphere ($H_{ca}$) and between the canopy and the soil ($H_{cs}$). Finally, energy is released to the atmosphere through latent heat ($LE_{c}$) produced via transpiration (so far, interception and soil evaporation are not included). The instantaneous energy balance equation for the canopy is thus:
 \begin{equation}
   C_{c} \cdot \frac{\delta T_{c}}{\delta t} = K_{abs,ca} + (L_{abs,ca} - L_{em,c}) + (L_{abs,cs} - L_{em,c}) - LE_{c} - H_{ca} - H_{cs} 
 \end{equation}
@@ -47,8 +52,28 @@ where $C_{c}$ is the canopy thermal capacitance. Like the canopy, the soil absor
 \end{equation}
 where $C_{s}$ is the soil thermal capacitance.
 
+
 \subsection{Process scheduling}
-Every day water balance is calculated as follows. The model first updates leaf area values according to the phenology of species and calculates light extinction. After that, the model updates soil water content of soil layers in two steps: (1) it increases soil moisture due to precipitation, $P$, after accounting for canopy interception loss, $In$, surface runoff, $Ru$, and deep drainage, $Dd$; (2) it decreases water content due to bare soil evaporation, $Es$, and plant transpiration, $Tr$. This second step is done differently depending on \texttt{transpirationMode}. After updating soil layers, the model determines drought stress index for each plant cohort, which again is done differently depending on \texttt{transpirationMode}. 
+Every day the model performs the following actions: 
+\begin{enumerate}
+\item{Update leaf area values according to the phenology of species.}
+\item{Increase soil moisture due to precipitation after accounting for canopy interception loss, surface runoff and deep drainage.}
+\item{Determine subdaily temperature and direct/diffuse irradiance variations.}
+\item{Determine short- and longwave radiation absorved by the canopy and the soil at subdaily steps.}
+\item{Determine plant transpiration, photosynthesis and close soil/canopy energy balance at subdaily steps. This involves the following actions:
+  \begin{enumerate}
+  \item{Determine longwave radiation emmited by soil and canopy, according to their temperature.}
+  \item{Update the water supply function of each plant cohort, according to the hydraulic model and the current soil water potential.}
+  \item{Calculate leaf temperature and photosynthesis, for shade and sunlit leaves of each plant cohort, corresponding to each transpiration value of the supply function.}
+  \item{Determine stomatal conductance, transpiration and photosynthesis on shade and sunlit leaves of each plant cohort according to a profit maximization strategy.}
+  \item{Update soil moisture after scaling transpiration from leaf to canopy level.}
+  \item{Complete energy balance of the canopy and the soil (after translating plant transpiration to latent heat and calculating convective heat exchange for both the canopy and the soil). }
+  \end{enumerate}
+}
+\item{Determine drought stress index for each plant cohort.}
+\item{Decrease water content due to bare soil evaporation, closing the water balance.}
+\end{enumerate}
+
 
 \section{Model inputs}
 \subsection{Soil description}
@@ -91,8 +116,7 @@ Water retention curve of a soil layer $s$ is the relationship between the water 
 \end{equation}
 where $\theta(\psi)$ is the water retention, $\theta_{sat}$ is the saturated water content, $\theta_{res}$ is the residual water content, $\alpha$ is related to the inverse of the air entry pressure (and here has to be expressed in MPa$^{-1}$), and $n$ is a measure of the pore-size distribution. When initializing soil using function \texttt{soil()}, the parameters of the Van Genuchten model are estimated from texture, using the USDA texture classification and the parameters in Carsel and Parrish (1988), but they can be modified manually afterwards.
 
-\subsubsection{Soil state variables}
-Regardless of the chosen water retention curve, soil moisture content dynamics on each layer $s$ are tracked using $W = \theta(\Psi_s)/ \theta_{fc,s}$, the \textbf{proportion of volumetric soil moisture in relation to field capacity}, where field capacity, $\theta_{fc,s}$, is assumed to correspond to $\Psi_{fc} = -0.033$ MPa. Soils are not allowed to contain more water than dictated by their field capacity.
+\subsubsection{Water holding capacity}
 
 Soil water holding capacity ($V_s$, in mm) in soil layer $s$ is defined as the volumetric water content at field capacity:
 \begin{equation}

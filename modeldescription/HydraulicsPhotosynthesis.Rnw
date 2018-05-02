@@ -184,7 +184,7 @@ As an example, the following figure draws the pressure-volume curve for a tissue
 <<fig=TRUE, width=4, height=4, echo=FALSE>>==
 psi = seq(-10,0, by=0.1)
 rwc_s = rep(NA, length(psi))
-for(i in 1:length(psi)) rwc_s[i] = biophysics.symplasticRelativeWaterContent(psi[i],-3,12)
+for(i in 1:length(psi)) rwc_s[i] = moisture.symplasticRWC(psi[i],-3,12)
 plot(psi, rwc_s, type="l", xlab="Water potential (MPa)", ylab = "Symplasmic RWC")
 @
 
