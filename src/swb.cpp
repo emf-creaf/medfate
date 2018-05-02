@@ -302,6 +302,7 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   
 
   //Vegetation input
+  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   NumericVector LAIlive = Rcpp::as<Rcpp::NumericVector>(above["LAI_live"]);
   NumericVector LAIphe = Rcpp::as<Rcpp::NumericVector>(above["LAI_expanded"]);
@@ -907,7 +908,8 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
                              _["GWsunlitinst"] = GW_SL, _["GWshadeinst"] = GW_SH,
                              _["VPDsunlitinst"] = VPD_SL, _["VPDshadeinst"] = VPD_SH,
                              _["Tempsunlitinst"] = Temp_SL, _["Tempshadeinst"] = Temp_SH);
-  List l = List::create(_["DailyBalance"] = DB, _["SoilBalance"] = SB, _["Plants"] = Plants,
+  List l = List::create(_["cohorts"] = clone(cohorts),
+                        _["DailyBalance"] = DB, _["SoilBalance"] = SB, _["Plants"] = Plants,
                         _["EnergyBalance"] = EB);
   l.attr("class") = CharacterVector::create("swb.day","list");
   return(l);

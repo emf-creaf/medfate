@@ -8,7 +8,7 @@
 Function \code{plot} plots the results of the soil water balance model (see \code{\link{swb.day}}).
 }
 \usage{
-\method{plot}{swb.day}(x, type="PlantPsi", xlab = NULL, ylab = NULL, ...)
+\method{plot}{swb.day}(x, type="PlantPsi", bySpecies = FALSE, xlab = NULL, ylab = NULL, ...)
 }
 \arguments{
   \item{x, object}{An object of class \code{swb}}
@@ -29,9 +29,8 @@ Function \code{plot} plots the results of the soil water balance model (see \cod
     \item{\code{"SoilEnergyBalance"}:}{ Soil energy balance components.}
    }
   }
-}
-\references{
-De \enc{Cáceres}{Caceres} M, \enc{Martínez}{Martinez}-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L. (submitted) Coupling a water balance model with forest inventory data to evaluate plant drought stress at the regional level. Agricultural and Forest Meteorology.
+  \item{bySpecies}{Allows aggregating output by species, before drawing plots. Aggregation can involve a sum (as for plant lai or transpiration) or a LAI-weighted mean (as for plant stress or plant water potential).}
+
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya

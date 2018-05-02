@@ -8,6 +8,7 @@ _Version 0.5.5, April 2018.
 1. New functions for tissue moisture
 2. New function 'fuel.cohortFineFMC'
 3. New option 'bySpecies' to aggregate results by species in functions 'summary.swb' and 'summary.growth'
+4. New option 'bySpecies' to aggregate results by species in functions 'plot.swb' and 'plot.swb.day'
 
 _Version 0.5.4, April 2018.
 1. New functions for pressure-volume curves

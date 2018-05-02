@@ -1,4 +1,4 @@
-plot.swb.day<-function(x, type="PlantPsi", xlab = NULL, ylab = NULL, ...) {
+plot.swb.day<-function(x, type="PlantPsi", bySpecies = FALSE, xlab = NULL, ylab = NULL, ...) {
   DailyBalance = x$DailyBalance
   SoilWaterBalance = x$SoilWaterBalance
   if(!("EnergyBalance" %in% names(x))) stop("Plotting function available for transpirationMode = 'Complex' only.")
@@ -13,46 +13,93 @@ plot.swb.day<-function(x, type="PlantPsi", xlab = NULL, ylab = NULL, ...) {
   timesteps = as.numeric(colnames(x$Plants$PsiPlantinst))
   if(is.null(xlab)) xlab = "Time step"
   if(type=="PlantPsi") {
+    OM = Plants$PsiPlantinst
+    if(bySpecies) {
+      lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
+      OMlai = sweep(OM, 1, Plants$LAI, "*")
+      m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM = sweep(m1,1,lai1,"/")
+      cohortnames = rownames(OM)
+    } 
     if(is.null(ylab)) ylab = "Plant water potential (MPa)"
-    matplot(timesteps, t(Plants$PsiPlantinst), lty=1:length(cohortnames), col = 1:length(cohortnames),
+    matplot(timesteps, t(OM), lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", ylab=ylab, xlab=xlab, frame=FALSE, ...)
     legend("bottomright", legend = cohortnames, lty=1:length(cohortnames), 
            col = 1:length(cohortnames), bty="n")
   }
   else if(type=="PlantTranspiration") {
+    OM = Plants$Einst
+    if(bySpecies) {
+      OM = apply(OM,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      cohortnames = rownames(OM)
+    } 
     if(is.null(ylab)) ylab = "Plant transpiration"
-    matplot(timesteps, t(Plants$Einst), lty=1:length(cohortnames), col = 1:length(cohortnames),
+    matplot(timesteps, t(OM), lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", ylab=ylab, xlab=xlab, frame=FALSE, ...)
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
            col = 1:length(cohortnames), bty="n")
   }
   else if(type=="LeafTranspiration") {
+    OM = Plants$Einst
+    if(bySpecies) {
+      m1 = apply(OM,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
+      OM = sweep(m1,1,lai1,"/")
+      cohortnames = rownames(OM)
+    } else {
+      OM = sweep(OM,1,Plants$LAI,"/")
+    }
     if(is.null(ylab)) ylab = "Transpiration per leaf area"
-    matplot(timesteps, t(sweep(Plants$Einst,1,Plants$LAI,"/")), lty=1:length(cohortnames), col = 1:length(cohortnames),
+    matplot(timesteps, t(OM), lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", ylab=ylab, xlab=xlab, frame=FALSE, ...)
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
            col = 1:length(cohortnames), bty="n")
   }
   else if(type=="PlantPhotosynthesis") {
+    OM = Plants$Aninst
+    if(bySpecies) {
+      OM = apply(OM,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      cohortnames = rownames(OM)
+    } 
     if(is.null(ylab)) ylab = "Net photosynthesis"
-    matplot(timesteps, t(Plants$Aninst), lty=1:length(cohortnames), col = 1:length(cohortnames),
+    matplot(timesteps, t(OM), lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", ylab=ylab, xlab=xlab, frame=FALSE, ...)
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
            col = 1:length(cohortnames), bty="n")
   }
   else if(type=="LeafPhotosynthesis") {
+    OM = Plants$Aninst
+    if(bySpecies) {
+      m1 = apply(OM,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
+      OM = sweep(m1,1,lai1,"/")
+      cohortnames = rownames(OM)
+    } else {
+      OM = sweep(OM,1,Plants$LAI,"/")
+    }
     if(is.null(ylab)) ylab = "Net photosynthesis per leaf area"
-    matplot(timesteps, t(sweep(Plants$Aninst,1,Plants$LAI,"/")), lty=1:length(cohortnames), col = 1:length(cohortnames),
+    matplot(timesteps, t(OM), lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", ylab=ylab, xlab=xlab, frame=FALSE, ...)
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
            col = 1:length(cohortnames), bty="n")
   }
   else if(type=="PlantAbsorbedSWR") {
     old = par(mfrow=c(1,2), mar=c(5,5,3,1))
-    
-    matplot(timesteps, t(Plants$AbsRadinst$SWR_SL), lty=1:length(cohortnames), col = 1:length(cohortnames),
+    OM_SL = Plants$AbsRadinst$SWR_SL
+    OM_SH = Plants$AbsRadinst$SWR_SH
+    if(bySpecies) {
+      lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
+      OMlai = sweep(OM_SL, 1, Plants$LAI, "*")
+      m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM_SL = sweep(m1,1,lai1,"/")
+      OMlai = sweep(OM_SH, 1, Plants$LAI, "*")
+      m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM_SH = sweep(m1,1,lai1,"/")
+      cohortnames = rownames(OM_SL)
+    } 
+    matplot(timesteps, t(OM_SL), lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", ylab="Absorbed SWR sunlit (W·m-2)", xlab=xlab, frame=FALSE, ...)
-    matplot(timesteps, t(Plants$AbsRadinst$SWR_SH), lty=1:length(cohortnames), col = 1:length(cohortnames),
+    matplot(timesteps, t(OM_SH), lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", ylab="Absorbed SWR shade (W·m-2)", xlab=xlab, frame=FALSE, ...)
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
            col = 1:length(cohortnames), bty="n")
@@ -60,10 +107,23 @@ plot.swb.day<-function(x, type="PlantPsi", xlab = NULL, ylab = NULL, ...) {
   }
   else if(type=="LeafAbsorbedSWR") {
     old = par(mfrow=c(1,2), mar=c(5,5,3,1))
-    
-    matplot(timesteps, t(Plants$AbsRadinst$SWR_SL/Plants$LAIsunlit), lty=1:length(cohortnames), col = 1:length(cohortnames),
+    OM_SL = Plants$AbsRadinst$SWR_SL
+    OM_SH = Plants$AbsRadinst$SWR_SH
+    if(bySpecies) {
+      m1 = apply(OM_SL,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      lai1 = apply(Plants$LAIsunlit,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM_SL = m1/lai1
+      m1 = apply(OM_SH,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      lai1 = apply(Plants$LAIshade,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM_SH = m1/lai1
+      cohortnames = rownames(OM_SL)
+    } else {
+      OM_SL = OM_SL/Plants$LAIsunlit
+      OM_SH = OM_SH/Plants$LAIshade
+    }
+    matplot(timesteps, t(OM_SL), lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", ylab="Absorbed SWR sunlit per leaf (W·m-2)", xlab=xlab, frame=FALSE, ...)
-    matplot(timesteps, t(Plants$AbsRadinst$SWR_SH/Plants$LAIshade), lty=1:length(cohortnames), col = 1:length(cohortnames),
+    matplot(timesteps, t(OM_SH), lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", ylab="Absorbed SWR shade per leaf (W·m-2)", xlab=xlab, frame=FALSE, ...)
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
            col = 1:length(cohortnames), bty="n")
@@ -71,10 +131,21 @@ plot.swb.day<-function(x, type="PlantPsi", xlab = NULL, ylab = NULL, ...) {
   }
   else if(type=="LeafTemperature") {
     old = par(mfrow=c(1,2), mar=c(5,5,3,1))
-    
-    matplot(timesteps, t(Plants$Tempsunlitinst), lty=1:length(cohortnames), col = 1:length(cohortnames),
+    OM_SL = Plants$Tempsunlitinst
+    OM_SH = Plants$Tempshadeinst
+    if(bySpecies) {
+      lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
+      OMlai = sweep(OM_SL, 1, Plants$LAI, "*")
+      m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM_SL = sweep(m1,1,lai1,"/")
+      OMlai = sweep(OM_SH, 1, Plants$LAI, "*")
+      m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM_SH = sweep(m1,1,lai1,"/")
+      cohortnames = rownames(OM_SL)
+    } 
+    matplot(timesteps, t(OM_SL), lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", ylab="Leaf temperature sunlit (ºC)", xlab=xlab, frame=FALSE, ...)
-    matplot(timesteps, t(Plants$Tempshadeinst), lty=1:length(cohortnames), col = 1:length(cohortnames),
+    matplot(timesteps, t(OM_SH), lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", ylab="Leaf temperature shade (ºC)", xlab=xlab, frame=FALSE, ...)
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
            col = 1:length(cohortnames), bty="n")
@@ -82,10 +153,21 @@ plot.swb.day<-function(x, type="PlantPsi", xlab = NULL, ylab = NULL, ...) {
   }
   else if(type=="LeafVPD") {
     old = par(mfrow=c(1,2), mar=c(5,5,3,1))
-    
-    matplot(timesteps, t(Plants$VPDsunlitinst), lty=1:length(cohortnames), col = 1:length(cohortnames),
+    OM_SL = Plants$VPDsunlitinst
+    OM_SH = Plants$VPDshadeinst
+    if(bySpecies) {
+      lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
+      OMlai = sweep(OM_SL, 1, Plants$LAI, "*")
+      m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM_SL = sweep(m1,1,lai1,"/")
+      OMlai = sweep(OM_SH, 1, Plants$LAI, "*")
+      m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM_SH = sweep(m1,1,lai1,"/")
+      cohortnames = rownames(OM_SL)
+    } 
+    matplot(timesteps, t(OM_SL), lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", ylab="Vapour pressure deficit sunlit (kPa)", xlab=xlab, frame=FALSE, ...)
-    matplot(timesteps, t(Plants$VPDshadeinst), lty=1:length(cohortnames), col = 1:length(cohortnames),
+    matplot(timesteps, t(OM_SH), lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", ylab="Vapour pressure deficit shade (kPa)", xlab=xlab, frame=FALSE, ...)
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
            col = 1:length(cohortnames), bty="n")
@@ -93,10 +175,22 @@ plot.swb.day<-function(x, type="PlantPsi", xlab = NULL, ylab = NULL, ...) {
   }
   else if(type=="LeafStomatalConductance") {
     old = par(mfrow=c(1,2), mar=c(5,5,3,1))
+    OM_SL = Plants$GWsunlitinst
+    OM_SH = Plants$GWshadeinst
+    if(bySpecies) {
+      lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
+      OMlai = sweep(OM_SL, 1, Plants$LAI, "*")
+      m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM_SL = sweep(m1,1,lai1,"/")
+      OMlai = sweep(OM_SH, 1, Plants$LAI, "*")
+      m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM_SH = sweep(m1,1,lai1,"/")
+      cohortnames = rownames(OM_SL)
+    } 
     
-    matplot(timesteps, t(Plants$GWsunlitinst), lty=1:length(cohortnames), col = 1:length(cohortnames),
+    matplot(timesteps, t(OM_SL), lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", ylab="Stomatal conductance sunlit (mmol·m-2·s-1)", xlab=xlab, frame=FALSE, ...)
-    matplot(timesteps, t(Plants$GWshadeinst), lty=1:length(cohortnames), col = 1:length(cohortnames),
+    matplot(timesteps, t(OM_SH), lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", ylab="Stomatal conductance shade (mmol·m-2·s-1)", xlab=xlab, frame=FALSE, ...)
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
            col = 1:length(cohortnames), bty="n")
