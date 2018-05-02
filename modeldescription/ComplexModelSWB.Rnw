@@ -590,58 +590,39 @@ L_{abs, cs} &=& p_{exch} \cdot L_{em,s}
 \end{equation}
 
 \subsection{Plant transpiration and photosynthesis}
-The model carries out more complex calculations to determine plant transpiration and photosynthesis. It determines transpiration and photosynthesis for each plant cohort separately as follows. First, it determines the hydraulic supply function depending on plant hydraulic characteristics and soil moisture status. Then, the model divides the day length into a number of subdaily steps and transpiration of the plant cohort is estimated for each of them following the framework of Sperry et al. (2016a), who suggest estimating stomatal conductance from the instantaneous maximization of profit, defined as the difference between photosynthesis gain and hydraulic cost (both normalized for comparability). Since the continuum representation implies several soil layers in parallel but joining at the root crown, the hydraulic submodel yields instantaneous water flow and carbon assimilation rates from (or to) each soil layers. Finally, the instantaneous transpiration and assimilation rates of each time step are scaled to the duration of the time step and to the leaf area of the plant cohort. The following provides details for these processes (see further details in vignette '\texttt{Hydraulics, stomatal conductance and photosynthesis}').
+The model determines transpiration and photosynthesis for each plant cohort separately as follows. First, it updates the hydraulic supply function depending on plant hydraulic characteristics and soil moisture status. Then, transpiration of the plant cohort is estimated for each of them following the framework of Sperry et al. (2016a), who suggest estimating stomatal conductance from the instantaneous maximization of profit, defined as the difference between photosynthesis gain and hydraulic cost (both normalized for comparability). Since the continuum representation implies several soil layers in parallel but joining at the root crown, the hydraulic submodel yields instantaneous water flow and carbon assimilation rates from (or to) each soil layer. Finally, the instantaneous transpiration and assimilation rates of each time step are scaled to the duration of the time step and to the leaf area of the plant cohort. The following provides details for these processes (see further details in vignette '\texttt{Hydraulics, stomatal conductance and photosynthesis}').
 
 
-\subsubsection{Canopy water supply function}
-The supply-loss theory of plant hydraulics of Sperry and Love (2015) uses the physics of flow through soil and xylem to quantify how canopy water supply declines with drought and ceases by hydraulic failure. The theory can be applied to different networks representing the soil-plant continuum, but in our case the continuum is represented using a network of $(N \times 2 + 1)$ resistance elements, with soil being represented in $N$ different layers. For each soil layer there is a rhizosphere element in series with a root xylem element. The $N$ different layers are in parallel up to the root crown. From there there is a final stem xylem element up to the canopy.
+\subsubsection{Water supply function}
+The supply-loss theory of plant hydraulics of Sperry and Love (2015) uses the physics of flow through soil and xylem to quantify how canopy water supply declines with drought and ceases with hydraulic failure. The theory can be applied to different networks representing the soil-plant continuum, but in our case the continuum is represented using a network of $(N \times 2 + 2)$ resistance elements, with soil being represented in $N$ different layers. For each soil layer there is a rhizosphere element in series with a root xylem element. The $N$ different layers are in parallel up to the root crown. From there there is a stem xylem element and a final leaf element.
 
-The supply function describes the rate of water supply (i.e. flow) for transpiration ($E$) as a function of the pressure drop between the soil and the leaf, and incorporates both soil and xylem hydraulic constrains (Sperry and Love 2015, Sperry et al. 2016b). Assuming that maximum conductance values are in  mmol H$_2$O·s$^{-1}$·m$^{-2}$ per leaf area unit, transpiration rate ($E(\Psi_{leaf})$; in mmol H$_2$O·s$^{-1}$·m$^{-2}$ per leaf area unit) is a function of (mid-day) leaf water potential ($\Psi_{leaf}$; in MPa). The supply function for the whole continuum contains much information. The $\Psi$ intercept at $E=0$ represents the predawn canopy sap pressure which integrates the rooted soil moisture profile. As $E$ increments from zero, the disproportionately greater drop in $\Psi_{leaf}$ results from the loss of conductance. As the soil dries the differences in flow due to soil texture become more apparent. More details of the calculation of the supply function are given in vignette '\texttt{Hydraulics, stomatal conductance and photosynthesis}'.
+The \textbf{supply function} describes the rate of water supply (i.e. flow) for transpiration ($E$) as a function of the pressure drop between the soil and the leaf, and incorporates both soil, xylem and leaf hydraulic constrains (Sperry et al. 1998, Sperry and Love 2015, Sperry et al. 2016b). Assuming that maximum conductance values are in  mmol H$_2$O·s$^{-1}$·m$^{-2}$ per leaf area unit, transpiration rate ($E(\Psi_{leaf})$; in mmol H$_2$O·s$^{-1}$·m$^{-2}$ per leaf area unit) is a function of leaf water potential ($\Psi_{leaf}$; in MPa). The supply function for the whole continuum contains much information. The $\Psi$ intercept at $E=0$ represents the predawn canopy sap pressure which integrates the rooted soil moisture profile. As $E$ increments from zero, the disproportionately greater drop in $\Psi_{leaf}$ results from the loss of conductance. As the soil dries the differences in flow due to soil texture become more apparent. More details of the calculation of the supply function are given in vignette '\texttt{Hydraulics, stomatal conductance and photosynthesis}'.
 
+\subsubsection{Leaf energy balance}
+Leaf temperature ($T_{leaf}$; in Celsius) can be calculated for any given flow rate $E(\Psi_{leaf})$ using (Campbell and Norman 1998):
+\begin{equation}
+T_{leaf}(\Psi_{leaf}) = T_{can}+\frac{I_{abs}-\epsilon\cdot\sigma\cdot(T_{can}+273.15)^4-\lambda_v\cdot E(\Psi_{leaf})}{C_p\cdot(g_r+g_{Ha})}
+\end{equation}
+where $I_{abs}$ (in W·m$^{-2}$) is the instantaneous shortwave and longwave radiation absorbed per leaf area unit, $E(\Psi_{leaf})$ is the flow (converted to mol·s$^{-1}$·m$^{-2}$ per two-sided leaf area basis), $\epsilon$ is longwave radiation emissivity (0.97), $\sigma$ is the Stephan-Boltzman constant, $T_{can}$ is the canopy air temperature (in ºC; see '\texttt{Complex model: Radiation and energy balance}'), $C_p = 29.3$ J·mol$^{-1}$·ºC$^{-1}$ is the specific heat capacity of dry air at constant pressure and $\lambda_v$ is the latent heat of vaporization (in J·mol$^{-1}$):
+\begin{equation}
+\lambda_v = (2.5023\cdot 10^6-(2430.54\cdot T_{can}))\cdot 0.018
+\end{equation}
+Finally, $g_r$ and $g_{Ha}$ are the radiative and heat conductance values (in mol·m$^{-2}$·s$^{-1}$), respectively (Campbell and Norman 1998):
+\begin{eqnarray}
+g_r &=& \frac{4\cdot \epsilon \cdot \sigma \cdot (T_{can}+273.15)^3}{C_p} \\
+g_{Ha} &=& 0.189 \cdot (u/d)^{0.5}
+\end{eqnarray}
+where $u$ is wind speed (in m·s$^{-1}$), taken as the wind speed at mid-crown height, and $d$ is 0.72 times the leaf width (species parameter \texttt{LeafWidth} in $cm$). 
 
-\subsubsection{Leaf and canopy photosynthesis functions}
+\subsubsection{Leaf photosynthesis functions}
 
-Each water supply value implies an energy balance at the leaf level and a degree of stomatal openness, which ultimately leads to a particular value of leaf photosynthesis. At this point, the model has not decided the amount of water transpiraed. Therefore, it determines curves depending on canopy water potential for several parameters, as done for $E(\Psi_{leaf})$. More specifically, for each $\Psi_{leaf}$ value, the model calculates the corresponding leaf temperature ($T_{leaf}$; in ºC), leaf-to-air vapor pressure deficit ($VPD_{leaf}$; in kPa), leaf water vapor conductance ($g_{sw}$; in mol H$_2$O·s$^{-1}$·m$^{-2}$) and, finally the leaf gross and net (i.e. after accounting for autotrophic respiration) photosynthesis assimilation rates ($A_g$ and $A_n$; both in $\mu$mol CO$_2$·s$^{-1}$·m$^{-2}$). More details of the calculation of these functions are given in vignette '\texttt{Hydraulics, stomatal conductance and photosynthesis}'.
+Each water supply value implies an energy balance at the leaf level and a degree of stomatal openness, which ultimately leads to a particular value of leaf photosynthesis. At this point, the model has not decided the amount of water transpired. Therefore, it determines curves depending on leaf water potential for several parameters, as done for $E(\Psi_{leaf})$. More specifically, for each $\Psi_{leaf}$ value, the model calculates the corresponding leaf temperature ($T_{leaf}$; in ºC), leaf-to-air vapor pressure deficit ($VPD_{leaf}$; in kPa), leaf water vapor conductance ($g_{sw}$; in mol H$_2$O·s$^{-1}$·m$^{-2}$) and, finally the leaf gross and net (i.e. after accounting for autotrophic respiration) photosynthesis assimilation rates ($A_g$ and $A_n$; both in $\mu$mol CO$_2$·s$^{-1}$·m$^{-2}$). More details of the calculation of these functions are given in vignette '\texttt{Hydraulics, stomatal conductance and photosynthesis}'.
 
-Since the model deals with canopies and not single leaves, different parts of the crowns of plant cohorts may be in different canopy positions, which leads to differences in radiation and energy balance. Moreover radiation, energy balance and photosynthesis of leaves vary through the day. Therefore, while the supply function is calculated once per plant cohort, calculating photosynthesis at the canopy level requires dividing the day into $n_t$ time steps and the canopy into $c$ layers, while differentiating between \textbf{sunlit} and \textbf{shade} leaves. Canopy photosynthesis can be calculated in the model by determining leaf photosynthesis for each position in a multi-layer canopy (\texttt{canopyMode = "multilayer"}) or, more simply, by determining it for sunlit/shade leaves (\texttt{canopyMode = "sunshade"}) (De Pury and Farquhar 1997). For each time step, the leaf temperature, leaf VPD and leaf water vapor conductance functions are determined separately for the different leaves. However, a single photosynthesis (net or gross) function is determined aggregating leaf photosynthesis values.
-
-% 
-% The proportion of daily radiation that occurs any given instant $t$ between sunrise and sunset ($p_{rad}(t)$) is given by (Liu and Jordan 1960):
-% \begin{eqnarray}
-% w &=& w_s - (t/\tau_{day})\cdot (2 \cdot w_s) \\
-% p_{rad}(t) &=& \frac{\pi}{24\cdot 3600}\cdot (\cos(w)-\cos(w_s))/(\sin(w_s)-w_s \cdot \cos(w_s))
-% \end{eqnarray}
-% where $w_s$ is the sunrise solar hour (in radians), $w$ is the solar hour corresponding to $t$ after sunrise. The instantaneous net radiation absorved per leaf area unit of a plant cohort $i$ depends on the total daily net radiation ($R_n$), $p_{rad}(t)$, the proportion of absorved radiation due to cohort $i$ ($f_i$) and its leaf area index ($LAI_{i}^{\phi}$):
-% \begin{equation}
-% R_{n,i,t} = 10^6 \cdot \frac{R_n\cdot p_{rad}(t) \cdot f_i}{LAI_{i}^{\phi}}
-% \end{equation}
-% where $10^6$ is used to convert from MJ·day$^{-1}$ to W. The corresponding PAR incident instantaneous radiation ($I_{PAR,i}$), required to calculate photosynthesis, is given by:
-% \begin{equation}
-% I_{PAR,i} = 10^6 \cdot Rad \cdot 0.5 \cdot p_{rad}(t) \cdot L_i^{PAR}
-% \end{equation}
-% where it is assumed that half of the solar incident radiation corresponds to PAR, and $L_i^{PAR}$ is the proportion of PAR available to cohort $i$.
-
-Daily variations in diffuse and direct light are explained above. Diurnal temperature variations are modeled assuming a sinusoidal pattern with $T = T_{\min}$ at sunrise and $T = (T_{\min}+T_{\max})/2$ at sunset (McMurtrie et al. 1990). Other variables like wind speed and air vapor pressure are assumed constant during the day, although wind extinction through the canopy is included.
-% 
-% The left panel below illustrates the evolution of instantaneous radiation between sunrise and sunset (see function \texttt{biophysics.radiationDiurnalPattern()}) for the same a site as before (at 42ºN latitude) and $J = 210$. The right panel illustrates the corresponding evolution of air temperature (see function \texttt{biophysics.temperatureDiurnalPattern()}).
-% \begin{center}
-% par(mfrow=c(1,2))
-% data("examplemeteo")
-% R_s = examplemeteo$Radiation
-% tmin = examplemeteo$MinTemperature
-% tmax = examplemeteo$MaxTemperature
-% latrad = 42*(pi/180)
-% tauday = radiation_daylengthseconds(latrad,0,0,210)
-% t = 1:round(tauday)
-% r = R_s[210]*(10^6)*unlist(lapply(t,biophysics.radiationDiurnalPattern, tauday))
-% temp = lapply(t,biophysics.temperatureDiurnalPattern, tmin[210], tmax[210],tauday)
-% plot(t,r, type="l", ylab="Instantaneous radiation (W·m-2)", xlab="Seconds after sunrise")
-% plot(t,temp, type="l", ylab="Instantaneous temperature", xlab="Seconds after sunrise")
-% \end{center}
+Since the model deals with canopies and not single leaves, different parts of the crowns of plant cohorts may be in different canopy positions, which leads to differences in radiation and leaf energy balance. Moreover radiation, energy balance and photosynthesis of leaves vary through the day. Therefore, calculating photosynthesis at the canopy level requires dividing the canopy into $c$ layers, while differentiating between \textbf{sunlit} and \textbf{shade} leaves. Photosynthesis is calculated by separately for sunlit/shade leaves  (De Pury and Farquhar 1997). For each time step, the leaf temperature, leaf VPD and leaf water vapor conductance functions are determined separately for the different leaves.
 
 
 \subsubsection{Stomatal regulation}
-Plants must open their stomata to acquire CO$_2$ and perform photosynthesis, but doing so promotes water loss. This trade-off has resulted in a tight coordination between capacity to supply and transpire water (hydraulic conductance and diffusive conductance to water vapor) and the maximum capacity for photosynthesis (carboxylation rate and electron-transport rate). For modelling purposes, this carbon-for-water trade-off means that hydraulics, stomatal conductance, transpiration and photosynthesis need to be estimated simultaneously. Here we adopt the framework of Sperry et al. (2016a), who suggest estimating stomatal conductance from the instantaneous maximization of profit, defined as the difference between photosynthesis gain and hydraulic cost (both normalized for comparability).
+Plants must open their stomata to acquire CO$_2$ and perform photosynthesis, but doing so promotes water loss. This trade-off has resulted in a tight coordination between capacity to supply and transpire water (hydraulic conductance and diffusive conductance to water vapor) and the maximum capacity for photosynthesis (carboxylation rate and electron-transport rate). For modelling purposes, this carbon-for-water trade-off means that hydraulics, stomatal conductance, transpiration and photosynthesis need to be estimated simultaneously. Here we adopt the framework of Sperry et al. (2016), who suggest estimating stomatal conductance from the instantaneous maximization of profit, defined as the difference between photosynthesis gain and hydraulic cost (both normalized for comparability).
 
 Stomatal regulation and plant transpiration are determined for each time step separately. The model transforms the slope of the hydraulic supply function into a \textbf{cost function} and the cohort's gross photosynthesis function into a \textbf{gain function}. Then, it finds the $\Psi_{leaf}$ that maximizes the difference between gain and cost. This simultaneously determines $E$ and $A_n$ at the plant cohort level (and also $T_{leaf}$, $VPD_{leaf}$, $g_{sw}$ and $A_{n}$ for each sunlit/shade leaf in the canopy). The details of all these calculations can be found in vignette '\texttt{Hydraulics, stomatal conductance and photosynthesis}'.
 
@@ -673,22 +654,6 @@ DDS_i = \phi_i \cdot \left( 1.0 - \frac{k_{stem, i}(\Psi_{rootcrown,i})}{k_{\max
 \end{equation}
 where $\phi_i$ is the leaf phenological status. Note the use of $\Psi_{rootcrown,i}$ (and not $\Psi_{leaf,i}$) to determine drought stress index. Thus the model tracks the degree of conductance decrease at the beginning of the stem as a measure of drought stress. This choice makes daily drought stress values of the Simple and Complex transpiration modes more comparable (because leaf mid-day water potentials are usually much more negative than soil water potentials) and is a sensible choice if one wants to run the model in irreversible cavitation mode (see below).
 
-
-\subsubsection{Leaf energy balance}
-Leaf temperature ($T_{leaf}$; in Celsius) can be calculated for any given flow rate $E(\Psi_{leaf})$ using (Campbell and Norman 1998):
-\begin{equation}
-T_{leaf}(\Psi_{leaf}) = T_{can}+\frac{I_{abs}-\epsilon\cdot\sigma\cdot(T_{can}+273.15)^4-\lambda_v\cdot E(\Psi_{leaf})}{C_p\cdot(g_r+g_{Ha})}
-\end{equation}
-where $I_{abs}$ (in W·m$^{-2}$) is the instantaneous shortwave and longwave radiation absorbed per leaf area unit, $E(\Psi_{leaf})$ is the flow (converted to mol·s$^{-1}$·m$^{-2}$ per two-sided leaf area basis), $\epsilon$ is longwave radiation emissivity (0.97), $\sigma$ is the Stephan-Boltzman constant, $T_{can}$ is the canopy air temperature (in ºC; see '\texttt{Complex model: Radiation and energy balance}'), $C_p = 29.3$ J·mol$^{-1}$·ºC$^{-1}$ is the specific heat capacity of dry air at constant pressure and $\lambda_v$ is the latent heat of vaporization (in J·mol$^{-1}$):
-\begin{equation}
-\lambda_v = (2.5023\cdot 10^6-(2430.54\cdot T_{can}))\cdot 0.018
-\end{equation}
-Finally, $g_r$ and $g_{Ha}$ are the radiative and heat conductance values (in mol·m$^{-2}$·s$^{-1}$), respectively (Campbell and Norman 1998):
-\begin{eqnarray}
-g_r &=& \frac{4\cdot \epsilon \cdot \sigma \cdot (T_{can}+273.15)^3}{C_p} \\
-g_{Ha} &=& 0.189 \cdot (u/d)^{0.5}
-\end{eqnarray}
-where $u$ is wind speed (in m·s$^{-1}$), taken as the wind speed at mid-crown height, and $d$ is 0.72 times the leaf width (species parameter \texttt{LeafWidth} in $cm$). 
 
 \subsubsection{Irreversible cavitation and hydraulic disconnection}
 Like with the 'Simple' transpiration mode, the water balance model with 'Complex' transpiration mode is normally run assuming that although soil drought may reduce transpiration, embolized xylem conduits are automatically refilled when soil moisture recovers. When setting \texttt{cavitationRefill = FALSE} the model tracks the maximum value of drought stress as before:
@@ -916,7 +881,11 @@ Function \texttt{swb} returns a list object whose elements are data tables. Each
 
 \item{Sitch, S., Smith, B., Prentice, I.C., Arneth, a., Bondeau, a., Cramer, W., Kaplan, J.O., Levis, S., Lucht, W., Sykes, M.T., Thonicke, K., Venevsky, S., 2003. Evaluation of ecosystem dynamics, plant geography and terrestrial carbon cycling in the LPJ dynamic global vegetation model. Glob. Chang. Biol. 9, 161–185. doi:10.1046/j.1365-2486.2003.00569.x}
 
+\item{Sperry, J. S., F. R. Adler, G. S. Campbell, and J. P. Comstock. 1998. Limitation of plant water use by rhizosphere and xylem conductance: results from a model. Plant, Cell \& Environment 21:347–359.}
+
 \item{Sperry, J.S., Love, D.M., 2015. What plant hydraulics can tell us about responses to climate-change droughts. New Phytol. 207, 14–27. doi:10.1111/nph.13354}
+
+\item{Sperry, J. S., M. D. Venturas, W. R. L. Anderegg, M. Mencuccini, D. S. Mackay, Y. Wang, and D. M. Love. 2016. Predicting stomatal responses to the environment from the optimization of photosynthetic gain and hydraulic cost. Plant Cell and Environment.}
 
 \item{Spitters, C.J.T., Toussaint, H.A.J.M., Goudriaan, J. 1986. Separating the diffuse and direct components of global radiation and its implications for modeling canopy photosynthesis. I. Components of incoming radiation. Agricultural and Forest Meteorology, 38, 231–242.}
 
