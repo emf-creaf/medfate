@@ -133,8 +133,8 @@ String soilUSDAType(double clay, double sand) {
  *  2 - residual volumetric water content
  *  3 - saturated water content 
  */
-// [[Rcpp::export("soil.vanGenuchtenParams")]]
-NumericVector vanGenuchtenParams(String soilType) {
+// [[Rcpp::export("soil.vanGenuchtenParamsCarsel")]]
+NumericVector vanGenuchtenParamsCarsel(String soilType) {
   NumericVector vg(4,NA_REAL);
   if(soilType=="Sand") {vg[0]=1478.967; vg[1]=2.68; vg[2] = 0.045; vg[3]=0.43;}
   else if(soilType=="Loamy sand") {vg[0]=1264.772; vg[1]=2.28;vg[2] = 0.057; vg[3]=0.41;}
@@ -148,9 +148,41 @@ NumericVector vanGenuchtenParams(String soilType) {
   else if(soilType=="Sandy clay") {vg[0]=275.3939; vg[1]=1.23; vg[2] = 0.100; vg[3]=0.38;}
   else if(soilType=="Silty clay") {vg[0]=50.99887; vg[1]=1.09; vg[2] = 0.070; vg[3]=0.36;}
   else if(soilType=="Clay") {vg[0]=81.59819; vg[1]=1.09; vg[2] = 0.068; vg[3]=0.38;}
+  vg.attr("names") = CharacterVector::create("alpha", "n", "theta_res", "theta_sat");
   return(vg);
 }
 
+/* 
+ * Parameters for the Van Genuchten-Mualem equations, taken from:
+ * Tóth, B., Weynants, M., Nemes, A., Makó, A., Bilas, G., & Tóth, G. 2015. New generation of hydraulic pedotransfer functions for Europe. European Journal of Soil Science 66: 226–238.
+ * Parameter 'alpha' was transformed from pressure in cm to pressure in MPa
+ * Textural parameters (1 MPa = 0.00009804139432 cm)
+ * 
+ *  0 - alpha
+ *  1 - n
+ *  2 - residual volumetric water content
+ *  3 - saturated water content 
+ */
+// [[Rcpp::export("soil.vanGenuchtenParamsToth")]]
+NumericVector vanGenuchtenParamsToth(double clay, double sand, double om, double bd, bool topsoil) {
+  double silt = 100.0 - clay - sand;
+  double ts = 1.0;
+  if(!topsoil) ts = 0.0;
+  if(NumericVector::is_na(om)) om = 0.0;
+  NumericVector vg(4,NA_REAL);
+  //Theta_res
+  if(sand>=2.0) vg[2] = 0.041;
+  else vg[2] = 0.179;
+  //Theta_sat
+  vg[3] = 0.83080 - 0.28217*bd+0.0002728*clay + 0.000187*silt; 
+  //Alpha
+  vg[0] = (1.0/0.00009804139432)*pow(10.0,(-0.43348 - 0.41729*bd - 0.04762*om+0.21810*ts - 0.01582*clay - 0.01207*silt));
+  //N
+  vg[1] = 1.0 + pow(10.0, 0.22236 - 0.30189*bd - 0.05558*ts - 0.005306*clay - 0.003084*silt - 0.01072*om);
+  vg.attr("names") = CharacterVector::create("alpha", "n", "theta_res", "theta_sat");
+  return(vg);
+}
+  
 /**
  * Soil thermal conductivity 
  *
@@ -245,7 +277,7 @@ NumericVector soilTemperatureChange(NumericVector dVec, NumericVector Temp,
 }
 
 // [[Rcpp::export("soil")]]
-List soil(List SoilParams, NumericVector W = NumericVector::create(1.0)) {
+List soil(List SoilParams, String VG_PTF = "Carsel", NumericVector W = NumericVector::create(1.0)) {
   double SoilDepth = 0.0;
   NumericVector dVec = clone(as<NumericVector>(SoilParams["widths"]));
   int nlayers = dVec.size();
@@ -274,10 +306,18 @@ List soil(List SoilParams, NumericVector W = NumericVector::create(1.0)) {
   NumericVector VG_theta_res(nlayers);
   NumericVector VG_theta_sat(nlayers);
   for(int l=0;l<nlayers;l++) {
-    // Theta_FC[l] = psi2thetaSaxton(clay[l], sand[l], -0.033, om[l]); //FC to -33 kPa = -0.033 MPa
     usda_Type[l] = soilUSDAType(clay[l],sand[l]);
-    // psi[l] = theta2psiSaxton(clay[l], sand[l], W[l]*Theta_FC[l], om[l]);
-    NumericVector vgl = vanGenuchtenParams(usda_Type[l]);
+    NumericVector vgl;
+    if(VG_PTF=="Carsel") {
+      vgl = vanGenuchtenParamsCarsel(usda_Type[l]); 
+    } else if(VG_PTF=="Toth") {
+      if(!SoilParams.containsElementNamed("bd")) stop("bd missing in SoilParams");
+      NumericVector bd = as<NumericVector>(SoilParams["bd"]);
+      if(l==0) vgl = vanGenuchtenParamsToth(clay[l], sand[l], om[l], bd[l], TRUE);
+      else vgl = vanGenuchtenParamsToth(clay[l], sand[l], om[l], bd[l], FALSE);
+    } else {
+      stop("Wrong value for 'VG_PTF'");
+    }
     VG_alpha[l] = vgl[0];
     VG_n[l] = vgl[1];
     VG_theta_res[l] = vgl[2];
@@ -285,7 +325,6 @@ List soil(List SoilParams, NumericVector W = NumericVector::create(1.0)) {
     SoilDepth +=dVec[l];
   }
   List l = List::create(_["SoilDepth"] = SoilDepth,
-                      // _["W"] = W, _["psi"] = psi, _["Temp"] = temperature,
                       _["W"] = W, _["Temp"] = temperature,
                       _["Ksoil"] = SoilParams["Ksoil"], _["Gsoil"] = SoilParams["Gsoil"],
                       _["dVec"] = dVec,
@@ -294,7 +333,6 @@ List soil(List SoilParams, NumericVector W = NumericVector::create(1.0)) {
                       _["VG_alpha"] = VG_alpha,_["VG_n"] = VG_n, 
                       _["VG_theta_res"] = VG_theta_res,_["VG_theta_sat"] = VG_theta_sat, 
                       _["macro"] = macro, _["rfc"] = rfc);
-                      // _["Theta_FC"] = Theta_FC);
   l.attr("class") = CharacterVector::create("soil","list");
   return(l);
 }

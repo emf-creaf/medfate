@@ -19,8 +19,11 @@ NumericVector soilthermalconductivity(List soil, String model = "SX");
 NumericVector soilthermalcapacity(List soil, String model = "SX");
 
 String soilUSDAType(double clay, double sand);
-NumericVector vanGenuchtenParams(String soilType);
-List soil(List SoilParams, NumericVector W = NumericVector::create(1.0,1.0,1.0));
+
+NumericVector vanGenuchtenParamsCarsel(String soilType);
+NumericVector vanGenuchtenParamsToth(double clay, double sand, double om, double bd, bool topsoil);
+  
+List soil(List SoilParams, String VG_PTF = "Carsel", NumericVector W = NumericVector::create(1.0,1.0,1.0));
 
 NumericVector layerthermalconductivity(NumericVector sand, NumericVector clay, NumericVector W, NumericVector Theta_FC);
 NumericVector soilTemperatureChange(NumericVector dVec, NumericVector Temp,

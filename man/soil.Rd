@@ -9,19 +9,20 @@
 Initializes a soil object for its use in simulation functions.
 }
 \usage{
-soil(SoilParams, W = as.numeric(c(1)))
+soil(SoilParams, VG_PTF = "Carsel", W = as.numeric(c(1)))
 \method{print}{soil}(x, model="SX", ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{SoilParams}{A list of soil parameters (see \code{\link{defaultSoilParams}}).}
+  \item{VG_PTF}{Pedotransfer functions to obtain parameters for the van Genuchten-Mualem equations. Either \code{"Carsel"} or \code{"Toth"}}
   \item{W}{A numerical vector with the initial relative water content of each soil layer.}
   \item{x}{An object of class \code{soil}.}
   \item{model}{Either 'SX' or 'VG' for Saxton or Van Genuchten pedotransfer models.}
   \item{...}{Additional parameters to \code{print}.}
 }
 \details{
-Function \code{print} prompts a description of soil characteristics and status (water content) according to a pedotransfer model (either Saxton's or Van Genuchten's). Volume at field capacity is calculated assuming a soil water potential equal to -0.033 MPa. Parameter \code{Temp} is initialized as missing for all layers.
+Function \code{print} prompts a description of soil characteristics and status (water content) according to a water retention curve (either Saxton's or Van Genuchten's). Volume at field capacity is calculated assuming a soil water potential equal to -0.033 MPa. Parameter \code{Temp} is initialized as missing for all layers.
 }
 \value{
 An list of class \code{soil} with the following elements:
@@ -51,10 +52,10 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 # Initializes soil
 s = soil(defaultSoilParams())
 
-# Prints soil characteristics according to Saxton's pedotransfer functions
+# Prints soil characteristics according to Saxton's water retention curve
 print(s, model="SX")
 
-# Prints soil characteristics according to Van Genuchten's pedotransfer functions
+# Prints soil characteristics according to Van Genuchten's water retention curve
 print(s, model="VG")
 
 }

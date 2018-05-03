@@ -1969,14 +1969,29 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// vanGenuchtenParams
-NumericVector vanGenuchtenParams(String soilType);
-RcppExport SEXP _medfate_vanGenuchtenParams(SEXP soilTypeSEXP) {
+// vanGenuchtenParamsCarsel
+NumericVector vanGenuchtenParamsCarsel(String soilType);
+RcppExport SEXP _medfate_vanGenuchtenParamsCarsel(SEXP soilTypeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< String >::type soilType(soilTypeSEXP);
-    rcpp_result_gen = Rcpp::wrap(vanGenuchtenParams(soilType));
+    rcpp_result_gen = Rcpp::wrap(vanGenuchtenParamsCarsel(soilType));
+    return rcpp_result_gen;
+END_RCPP
+}
+// vanGenuchtenParamsToth
+NumericVector vanGenuchtenParamsToth(double clay, double sand, double om, double bd, bool topsoil);
+RcppExport SEXP _medfate_vanGenuchtenParamsToth(SEXP claySEXP, SEXP sandSEXP, SEXP omSEXP, SEXP bdSEXP, SEXP topsoilSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type clay(claySEXP);
+    Rcpp::traits::input_parameter< double >::type sand(sandSEXP);
+    Rcpp::traits::input_parameter< double >::type om(omSEXP);
+    Rcpp::traits::input_parameter< double >::type bd(bdSEXP);
+    Rcpp::traits::input_parameter< bool >::type topsoil(topsoilSEXP);
+    rcpp_result_gen = Rcpp::wrap(vanGenuchtenParamsToth(clay, sand, om, bd, topsoil));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2010,14 +2025,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // soil
-List soil(List SoilParams, NumericVector W);
-RcppExport SEXP _medfate_soil(SEXP SoilParamsSEXP, SEXP WSEXP) {
+List soil(List SoilParams, String VG_PTF, NumericVector W);
+RcppExport SEXP _medfate_soil(SEXP SoilParamsSEXP, SEXP VG_PTFSEXP, SEXP WSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type SoilParams(SoilParamsSEXP);
+    Rcpp::traits::input_parameter< String >::type VG_PTF(VG_PTFSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type W(WSEXP);
-    rcpp_result_gen = Rcpp::wrap(soil(SoilParams, W));
+    rcpp_result_gen = Rcpp::wrap(soil(SoilParams, VG_PTF, W));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2574,10 +2590,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_psi2thetaVanGenuchten", (DL_FUNC) &_medfate_psi2thetaVanGenuchten, 5},
     {"_medfate_theta2psiVanGenuchten", (DL_FUNC) &_medfate_theta2psiVanGenuchten, 5},
     {"_medfate_soilUSDAType", (DL_FUNC) &_medfate_soilUSDAType, 2},
-    {"_medfate_vanGenuchtenParams", (DL_FUNC) &_medfate_vanGenuchtenParams, 1},
+    {"_medfate_vanGenuchtenParamsCarsel", (DL_FUNC) &_medfate_vanGenuchtenParamsCarsel, 1},
+    {"_medfate_vanGenuchtenParamsToth", (DL_FUNC) &_medfate_vanGenuchtenParamsToth, 5},
     {"_medfate_soilTemperatureGradient", (DL_FUNC) &_medfate_soilTemperatureGradient, 2},
     {"_medfate_soilTemperatureChange", (DL_FUNC) &_medfate_soilTemperatureChange, 7},
-    {"_medfate_soil", (DL_FUNC) &_medfate_soil, 2},
+    {"_medfate_soil", (DL_FUNC) &_medfate_soil, 3},
     {"_medfate_thetaFC", (DL_FUNC) &_medfate_thetaFC, 2},
     {"_medfate_waterFC", (DL_FUNC) &_medfate_waterFC, 2},
     {"_medfate_theta", (DL_FUNC) &_medfate_theta, 2},

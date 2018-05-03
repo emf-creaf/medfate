@@ -20,9 +20,10 @@ The function returns a list with default parameters. Users can change those that
 A list with the following elements (and default values):
 \itemize{
 \item{\code{widths (= c(300,700,1000,2000)}: Width of soil layers (in mm).}
-\item{\code{clay (= 25)}: Clay percentage for each layer.}
-\item{\code{sand (= 25)}: Sand percentage for each layer.}
-\item{\code{om (= NA)}: Organic matter percentage for each layer.}
+\item{\code{clay (= 25)}: Clay percentage for each layer (in \%).}
+\item{\code{sand (= 25)}: Sand percentage for each layer (in \%).}
+\item{\code{om (= NA)}: Organic matter percentage for each layer (in \%).}
+\item{\code{bd (= NA)}: Bulk density for each layer (in g/cm3).}
 \item{\code{macro (= 0.1)}: Macroporosity for each layer.}
 \item{\code{rfc (= c(20,40,60,85))}: Percentage of rock fragment content for each layer.}
 \item{\code{Gsoil (= 0.5)}: Gamma parameter for infiltration.}

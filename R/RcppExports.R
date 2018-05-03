@@ -529,8 +529,12 @@ soil.USDAType <- function(clay, sand) {
     .Call('_medfate_soilUSDAType', PACKAGE = 'medfate', clay, sand)
 }
 
-soil.vanGenuchtenParams <- function(soilType) {
-    .Call('_medfate_vanGenuchtenParams', PACKAGE = 'medfate', soilType)
+soil.vanGenuchtenParamsCarsel <- function(soilType) {
+    .Call('_medfate_vanGenuchtenParamsCarsel', PACKAGE = 'medfate', soilType)
+}
+
+soil.vanGenuchtenParamsToth <- function(clay, sand, om, bd, topsoil) {
+    .Call('_medfate_vanGenuchtenParamsToth', PACKAGE = 'medfate', clay, sand, om, bd, topsoil)
 }
 
 soil.temperaturegradient <- function(dVec, Temp) {
@@ -541,8 +545,8 @@ soil.temperaturechange <- function(dVec, Temp, sand, clay, W, Theta_FC, Gdown) {
     .Call('_medfate_soilTemperatureChange', PACKAGE = 'medfate', dVec, Temp, sand, clay, W, Theta_FC, Gdown)
 }
 
-soil <- function(SoilParams, W = as.numeric( c(1.0))) {
-    .Call('_medfate_soil', PACKAGE = 'medfate', SoilParams, W)
+soil <- function(SoilParams, VG_PTF = "Carsel", W = as.numeric( c(1.0))) {
+    .Call('_medfate_soil', PACKAGE = 'medfate', SoilParams, VG_PTF, W)
 }
 
 soil.thetaFC <- function(soil, model = "SX") {

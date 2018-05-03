@@ -37,14 +37,14 @@ where `widths` are soil layer widths in mm; `clay` and `sand` are the percentage
 ### Soil input object
 Soil input for function `swb()` is actually an object of class `soil` that is created using a function with the same name:
 ```{r}
-examplesoil = soil(spar)
+examplesoil = soil(spar, VG_PTF = "Toth")
 ```
 The soil object is used to store the moisture degree of each soil layer. If we inspect the elements of the soil object, we will see that `W` contains the state variable that represents moisture (i.e. the proportion of moisture relative to field capacity), which is normally initialized to 1 for each layer.
 ```{r}
 names(examplesoil)
 examplesoil$W
 ```
-The meaining of all elements in the soil object can be found in the help page for function `soil()`. It is important to remember that, unlike normal objects in R, any water balance simulation will modify the moisture values in soil object. That is, the state of the soil at the end of the simulated process (i.e. `W`) will be stored. Hence, one can use the same object to simulate water balance sequentially and the final state of one simulation is the initial state of the next.
+The meaning of all elements in the soil object can be found in the help page for function `soil()`. It is important to remember that, unlike normal objects in R, any water balance simulation will modify the moisture values in soil object. That is, the state of the soil at the end of the simulated process (i.e. `W`) will be stored. Hence, one can use the same object to simulate water balance sequentially and the final state of one simulation is the initial state of the next.
 
 At any time, one can print the status of the soil object:
 ```{r}
@@ -55,7 +55,7 @@ The actual moisture content of the soil depends (mm or litres of water per squar
 print(examplesoil, model="VG")
 ```
 The following figure illustrates the difference between the two water retention models (for the Van Genuchten parameters in `examplesoil`):
-```{r pedotransfer, fig = TRUE, fig.width= 5, fig.height=4, fig.align= 'center', echo=TRUE}
+```{r, fig = TRUE, fig.width= 5, fig.height=4, fig.align= 'center', echo=TRUE}
 par(mar=c(4,4,1,1))
 # Plot Saxton's retention curve
 psi = seq(-0.01, -2.0, by=-0.001)
@@ -72,7 +72,7 @@ legend("topright", legend=c("Saxton", "Van Genuchten"), lty=c(1,2), bty="n")
 
 ```
 
-Functions `soil.psi2thetaSX()` and `soil.psi2thetaVG()` (and their counterparts) can be used to calculate volumetric soil moisture from the water potential using the two pedotransfer models. When simulating soil water balance, the user can choose among the two pedotransfer models (see control parameters below).
+Functions `soil.psi2thetaSX()` and `soil.psi2thetaVG()` (and their counterparts) can be used to calculate volumetric soil moisture from the water potential using the two models. When simulating soil water balance, the user can choose among the two models (see control parameters below).
 
 ### Species data table
 

@@ -53,6 +53,7 @@ soilgridsParams <- function(lat, long, depths = c(300, 500, 1200)) {
     clay = NA,
     sand = NA,
     om = NA,
+    bd= NA,
     macro = NA,
     rfc = NA,
     Gsoil = 0.5,
@@ -83,6 +84,7 @@ soilgridsParams <- function(lat, long, depths = c(300, 500, 1200)) {
       res[['sand']][[layer]] <- SNDPPT_layer
       res[['om']][[layer]] <- ORCDRC_layer
       res[['rfc']][[layer]] <- CRFVOL_layer
+      res[['bd']][[layer]]<-BLDFIE_layer
       res[['macro']][[layer]] <- 0.693 - 0.465*BLDFIE_layer + 0.212*SNDPPT_layer/100
     } else {
       # trapezoidal rule formula, vectorized
@@ -98,6 +100,7 @@ soilgridsParams <- function(lat, long, depths = c(300, 500, 1200)) {
       res[['sand']][[layer]] <- SNDPPT_res
       res[['om']][[layer]] <- ORCDRC_res
       res[['rfc']][[layer]] <- CRFVOL_res
+      res[['bd']][[layer]]<-BLDFIE_res
       res[['macro']][[layer]] <- 0.693 - 0.465*BLDFIE_res + 0.212*SNDPPT_res/100
     }
   }

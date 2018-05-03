@@ -4,6 +4,7 @@ defaultSoilParams<-function(n=4) {
     clay = rep(25,n),
     sand = rep(25,n),
     om = rep(NA,n),
+    bd = rep(1.5,n),
     macro = rep(0.1,n),
     rfc = c(20,40,60,75,90)[1:n],
     Gsoil= 0.5,
