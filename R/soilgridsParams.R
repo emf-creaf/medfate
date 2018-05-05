@@ -48,19 +48,17 @@ soilgridsParams <- function(lat, long, depths = c(300, 500, 1200)) {
   n_layers <- length(depths)
   
   # build the empty result object
-  res <- list(
+  res <- data.frame(
     widths = c(depths[1], depths[-1] - depths[-length(depths)]),
     clay = NA,
     sand = NA,
     om = NA,
     bd= NA,
     macro = NA,
-    rfc = NA,
-    Gsoil = 0.5,
-    Ksoil = 0.05,
-    soilgrids_Rhorizondepth = BDRICM, 
-    soilgrids_Rhorizonprob = BDRLOG,
-    soilgrids_absolutesoildepth = BDTICM 
+    rfc = NA
+    # soilgrids_Rhorizondepth = BDRICM, 
+    # soilgrids_Rhorizonprob = BDRLOG,
+    # soilgrids_absolutesoildepth = BDTICM 
   )
   
   # iterate by desired layer
@@ -80,12 +78,11 @@ soilgridsParams <- function(lat, long, depths = c(300, 500, 1200)) {
     
     # if only one value, res directly
     if (length(depths_layer) == 1) {
-      res[['clay']][[layer]] <- CLYPPT_layer
-      res[['sand']][[layer]] <- SNDPPT_layer
-      res[['om']][[layer]] <- ORCDRC_layer
-      res[['rfc']][[layer]] <- CRFVOL_layer
-      res[['bd']][[layer]]<-BLDFIE_layer
-      res[['macro']][[layer]] <- 0.693 - 0.465*BLDFIE_layer + 0.212*SNDPPT_layer/100
+      res[['clay']][layer] <- CLYPPT_layer
+      res[['sand']][layer] <- SNDPPT_layer
+      res[['om']][layer] <- ORCDRC_layer
+      res[['rfc']][layer] <- CRFVOL_layer
+      res[['bd']][layer]<-BLDFIE_layer
     } else {
       # trapezoidal rule formula, vectorized
       BLDFIE_res <- (sum((depths_layer[-1] - depths_layer[-length(depths_layer)])*(BLDFIE_layer[-1] + BLDFIE_layer[-length(BLDFIE_layer)]))) / (2*(depths_layer[length(depths_layer)] - depths_layer[1]))
@@ -96,12 +93,11 @@ soilgridsParams <- function(lat, long, depths = c(300, 500, 1200)) {
       ORCDRC_res <- (sum((depths_layer[-1] - depths_layer[-length(depths_layer)])*(ORCDRC_layer[-1] + ORCDRC_layer[-length(ORCDRC_layer)]))) / (2*(depths_layer[length(depths_layer)] - depths_layer[1]))
       
       # update res object
-      res[['clay']][[layer]] <- CLYPPT_res
-      res[['sand']][[layer]] <- SNDPPT_res
-      res[['om']][[layer]] <- ORCDRC_res
-      res[['rfc']][[layer]] <- CRFVOL_res
-      res[['bd']][[layer]]<-BLDFIE_res
-      res[['macro']][[layer]] <- 0.693 - 0.465*BLDFIE_res + 0.212*SNDPPT_res/100
+      res[['clay']][layer] <- CLYPPT_res
+      res[['sand']][layer] <- SNDPPT_res
+      res[['om']][layer] <- ORCDRC_res
+      res[['rfc']][layer] <- CRFVOL_res
+      res[['bd']][layer]<-BLDFIE_res
     }
   }
   message("Absolute depth to bedrock : ", BDTICM, " mm\nR horizon depth (up to 2m): ", BDRICM," mm")

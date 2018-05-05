@@ -2025,12 +2025,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // soil
-List soil(List SoilParams, String VG_PTF, NumericVector W);
+List soil(DataFrame SoilParams, String VG_PTF, NumericVector W);
 RcppExport SEXP _medfate_soil(SEXP SoilParamsSEXP, SEXP VG_PTFSEXP, SEXP WSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type SoilParams(SoilParamsSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type SoilParams(SoilParamsSEXP);
     Rcpp::traits::input_parameter< String >::type VG_PTF(VG_PTFSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type W(WSEXP);
     rcpp_result_gen = Rcpp::wrap(soil(SoilParams, VG_PTF, W));

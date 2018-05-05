@@ -277,7 +277,7 @@ NumericVector soilTemperatureChange(NumericVector dVec, NumericVector Temp,
 }
 
 // [[Rcpp::export("soil")]]
-List soil(List SoilParams, String VG_PTF = "Carsel", NumericVector W = NumericVector::create(1.0)) {
+List soil(DataFrame SoilParams, String VG_PTF = "Carsel", NumericVector W = NumericVector::create(1.0)) {
   double SoilDepth = 0.0;
   NumericVector dVec = clone(as<NumericVector>(SoilParams["widths"]));
   int nlayers = dVec.size();
@@ -289,17 +289,19 @@ List soil(List SoilParams, String VG_PTF = "Carsel", NumericVector W = NumericVe
   } else {
     W = clone(W);
   }
-  //Soil parameters related to texture
+  
+  //Soil parameters related to physical structure
   NumericVector clay = clone(as<NumericVector>(SoilParams["clay"]));
   NumericVector sand = clone(as<NumericVector>(SoilParams["sand"]));
   NumericVector om = clone(as<NumericVector>(SoilParams["om"]));
-  NumericVector macro = clone(as<NumericVector>(SoilParams["macro"]));
+  NumericVector bd = clone(as<NumericVector>(SoilParams["bd"]));
   NumericVector rfc = clone(as<NumericVector>(SoilParams["rfc"]));
 
 
+  //Parameters to be calculated and state variables
+  NumericVector macro(nlayers, NA_REAL);
   NumericVector temperature(nlayers, NA_REAL);
   NumericVector Theta_FC(nlayers);
-  NumericVector psi(nlayers);
   CharacterVector usda_Type(nlayers);
   NumericVector VG_alpha(nlayers);
   NumericVector VG_n(nlayers);
@@ -322,11 +324,15 @@ List soil(List SoilParams, String VG_PTF = "Carsel", NumericVector W = NumericVe
     VG_n[l] = vgl[1];
     VG_theta_res[l] = vgl[2];
     VG_theta_sat[l] = vgl[3];
+    // Stolf, R., Thurler, A., Oliveira, O., Bacchi, S., Reichardt, K., 2011. Method to estimate soil macroporosity and microporosity based on sand content and bulk density. Rev. Bras. Ciencias do Solo 35, 447–459.
+    macro[l] = 0.693 - 0.465*bd[l] + 0.212*(sand[l]/100.0);
     SoilDepth +=dVec[l];
   }
+  double Ksoil = 0.05;
+  double Gsoil = 0.5; //TO DO, implement pedotransfer functions for Gsoil
   List l = List::create(_["SoilDepth"] = SoilDepth,
                       _["W"] = W, _["Temp"] = temperature,
-                      _["Ksoil"] = SoilParams["Ksoil"], _["Gsoil"] = SoilParams["Gsoil"],
+                      _["Ksoil"] = Ksoil, _["Gsoil"] = Gsoil,
                       _["dVec"] = dVec,
                       _["sand"] = sand, _["clay"] = clay, _["om"] = om,
                       _["usda_Type"] = usda_Type,

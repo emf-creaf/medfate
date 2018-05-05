@@ -103,10 +103,6 @@ to each soil layers. Macroporosity values can be calculated for each soil layer
 from its percentage of sand and bulk density, using the equations given in Stolf
 et al. (2011).}
 \item{$OM$ [\texttt{om}]: Percentage of organic matter corresponding to each soil layer.}
-\item{$\gamma_{soil}$ [\texttt{Gsoil}]: Maximum daily bare soil evaporation
-(mm·day$^{-1}$).}
-\item{$\kappa_{soil}$ [\texttt{Ksoil}]: Exponential decay coefficient for bare
-soil evaporation.}
 \end{itemize}
 
 For those users lacking soil information, package \texttt{medfate} provides a function to get the soil description from SoilGrids.org (see \texttt{soilgridsParams()}).

@@ -5,7 +5,7 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Default soil parameters}
 \description{
-Creates a list with default soil parameters for model functions.
+Creates a data frame with default soil physical description for model functions.
 }
 \usage{
 defaultSoilParams(n = 4) 
@@ -14,20 +14,17 @@ defaultSoilParams(n = 4)
  \item{n}{An integer with the number of soil layers.}
 }
 \details{
-The function returns a list with default parameters. Users can change those that need to be set to other values and use the list as input for function \code{\link{soil}}.
+The function returns a data frame with default physical soil description, with soil layers in rows. Users can change those that need to be set to other values and use the list as input for function \code{\link{soil}}.
 }
 \value{
-A list with the following elements (and default values):
+A data frame with layers in rows and the following columns (and default values):
 \itemize{
 \item{\code{widths (= c(300,700,1000,2000)}: Width of soil layers (in mm).}
 \item{\code{clay (= 25)}: Clay percentage for each layer (in \%).}
 \item{\code{sand (= 25)}: Sand percentage for each layer (in \%).}
 \item{\code{om (= NA)}: Organic matter percentage for each layer (in \%).}
-\item{\code{bd (= NA)}: Bulk density for each layer (in g/cm3).}
-\item{\code{macro (= 0.1)}: Macroporosity for each layer.}
+\item{\code{bd (= 1.5)}: Bulk density for each layer (in g/cm3).}
 \item{\code{rfc (= c(20,40,60,85))}: Percentage of rock fragment content for each layer.}
-\item{\code{Gsoil (= 0.5)}: Gamma parameter for infiltration.}
-\item{\code{Ksoil (= 0.05)}: Kappa parameter for infiltration.}
 }
 }
 \author{
