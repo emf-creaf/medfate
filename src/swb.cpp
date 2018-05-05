@@ -1165,6 +1165,7 @@ void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER
   int nlayers = W.size();
   if(Rf_isNull(from) || from.size()==0) {
     can["gdd"] = 0.0;
+    can["Temp"] = NA_REAL;
     for(int i=0;i<nlayers;i++) {
       W[i] = 1.0; //Defaults to soil at field capacity
       Temp[i] = NA_REAL;
@@ -1180,6 +1181,7 @@ void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER
     DataFrame SWB = Rcpp::as<Rcpp::DataFrame>(from["SoilWaterBalance"]);
     NumericVector GDD = DWB["GDD"];
     can["gdd"] = GDD[day];
+    can["Temp"] = NA_REAL;
     for(int i=0;i<nlayers;i++) {
       W[i] = Rcpp::as<Rcpp::NumericVector>(SWB[i])[day];
       //TO DO: STORE/RECOVER SOIL LAYER TEMPERATURE?

@@ -10,6 +10,7 @@ double soilevaporation(double DEF,double PETs, double Gsoil);
 double infiltrationDay(double NetPrec, double Ssoil);
 
 void checkswbInput(List x, List soil, String transpirationMode);
+void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER);
 
 List swbDay1(List x, List soil, double tday, double pet, double rain, double er, double runon=0.0, bool verbose=false);
 List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
