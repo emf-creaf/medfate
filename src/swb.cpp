@@ -1169,6 +1169,10 @@ void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER
       W[i] = 1.0; //Defaults to soil at field capacity
       Temp[i] = NA_REAL;
     }
+    NumericVector pEmb = Rcpp::as<Rcpp::NumericVector>(x["ProportionCavitated"]);
+    for(int i=0;i<pEmb.size();i++) {
+      pEmb[i] = 0.0;
+    }
   } else {
     if(IntegerVector::is_na(day)) day = 0;
     else day = day-1; //Input will be 1 for first day
@@ -1181,9 +1185,10 @@ void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER
       //TO DO: STORE/RECOVER SOIL LAYER TEMPERATURE?
       Temp[i] = NA_REAL;
     }
+    NumericMatrix DS = Rcpp::as<Rcpp::NumericMatrix>(from["PlantStress"]);
     NumericVector pEmb = Rcpp::as<Rcpp::NumericVector>(x["ProportionCavitated"]);
     for(int i=0;i<pEmb.size();i++) {
-      pEmb[i] = 0.0;
+      pEmb[i] = DS(day,i);
     }
   }
   soil["W"] = W;
