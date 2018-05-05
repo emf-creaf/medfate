@@ -29,9 +29,10 @@ Radiation and energy balances are conducted subdaily at two levels: canopy/soil 
 \subsection{State variables}
 The model has the following state variables:
 \begin{itemize}
+\item{Cumulative growth degree days, $GDD$, are tracked by the model and determine leaf phenological status of winter deciduous species.}
 \item{Daily soil moisture content dynamics on each layer $s$ are tracked using $W = \theta(\Psi_s)/ \theta_{fc,s}$, the \textbf{proportion of volumetric soil moisture in relation to field capacity}, where field capacity, $\theta_{fc,s}$, is assumed to correspond to $\Psi_{fc} = -0.033$ MPa. Soils are not allowed to contain more water than dictated by their field capacity.}
 \item{The temperature of the canopy and of each soil layer ($T_c$ and $T_s$; both in ºC) are tracked for every subdaily step.}
-\item{If irreversible cavitation is activated, the model also tracks the maximum value of daily drought stress so far experienced.}
+\item{If irreversible cavitation is activated, the model also tracks $P_{embolized,i}$, the maximum value of daily drought stress so far experienced.}
 \end{itemize}
 
 \subsection{Water balance}

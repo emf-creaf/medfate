@@ -1181,6 +1181,10 @@ void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER
       //TO DO: STORE/RECOVER SOIL LAYER TEMPERATURE?
       Temp[i] = NA_REAL;
     }
+    NumericVector pEmb = Rcpp::as<Rcpp::NumericVector>(x["ProportionCavitated"]);
+    for(int i=0;i<pEmb.size();i++) {
+      pEmb[i] = 0.0;
+    }
   }
   soil["W"] = W;
   soil["Temp"] =Temp;

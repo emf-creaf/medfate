@@ -39,8 +39,9 @@ When lateral water transport is also considered the water inputs of the stand in
 \subsection{State variables}
 The model has the following state variables:
 \begin{itemize}
+\item{Cumulative growth degree days, $GDD$, are tracked by the model and determine leaf phenological status of winter deciduous species.}
 \item{Daily soil moisture content dynamics on each layer $s$ are tracked using $W = \theta(\Psi_s)/ \theta_{fc,s}$, the \textbf{proportion of volumetric soil moisture in relation to field capacity}, where field capacity, $\theta_{fc,s}$, is assumed to correspond to $\Psi_{fc} = -0.033$ MPa. Soils are not allowed to contain more water than dictated by their field capacity.}
-\item{If irreversible cavitation is activated, the model also tracks the maximum value of daily drought stress so far experienced.}
+\item{If irreversible cavitation is activated, the model also tracks $P_{embolized,i}$, the maximum value of daily drought stress so far experienced.}
 \end{itemize}
 
 \subsection{Water balance}
@@ -96,16 +97,18 @@ Soil initialization requires a list of soil parameters (see function \texttt{def
 \item{$Z_{s}$ [\texttt{widths}]: Depth corresponding to each soil layer (in mm).}
 \item{$P_{clay,s}$ [\texttt{clay}]: Percentage of clay corresponding to each soil layer.}
 \item{$P_{sand,s}$ [\texttt{sand}]: Percentage of sand corresponding to each soil layer.}
+\item{$BD_{s}$ [\texttt{bd}]: Bulk density (g/cm3) of each soil layer.}
 \item{$P_{rocks,s}$ [\texttt{rfc}]: Percentage of rock fragments (>2 mm)
 corresponding to each soil layer.}
+\item{$OM$ [\texttt{om}]: Percentage of organic matter corresponding to each soil layer.}
 \item{$P_{macro, s}$ [\texttt{macro}]: Percentage of macroporosity corresponding
 to each soil layers. Macroporosity values can be calculated for each soil layer
 from its percentage of sand and bulk density, using the equations given in Stolf
 et al. (2011).}
-\item{$OM$ [\texttt{om}]: Percentage of organic matter corresponding to each soil layer.}
 \end{itemize}
 
 For those users lacking soil information, package \texttt{medfate} provides a function to get the soil description from SoilGrids.org (see \texttt{soilgridsParams()}).
+
 
 \subsubsection{Water retention curves}
 Water retention curve of a soil layer $s$ is the relationship between the water content, $\theta_s$ (in m$^3 \cdot $m$^{-3}$ of soil), and the soil water potential, $\Psi_s$ (in MPa). This curve is characteristic for different types of soil, and is also called the soil moisture characteristic. Two types of water retention curves are offered for the water balance model:
