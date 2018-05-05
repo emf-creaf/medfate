@@ -2254,6 +2254,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// resetInputs
+void resetInputs(List x, List soil, List from, int day);
+RcppExport SEXP _medfate_resetInputs(SEXP xSEXP, SEXP soilSEXP, SEXP fromSEXP, SEXP daySEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< List >::type from(fromSEXP);
+    Rcpp::traits::input_parameter< int >::type day(daySEXP);
+    resetInputs(x, soil, from, day);
+    return R_NilValue;
+END_RCPP
+}
 // swb
 List swb(List x, List soil, DataFrame meteo, double latitude, double elevation, double slope, double aspect);
 RcppExport SEXP _medfate_swb(SEXP xSEXP, SEXP soilSEXP, SEXP meteoSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP) {
@@ -2609,6 +2622,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_swbDay2", (DL_FUNC) &_medfate_swbDay2, 18},
     {"_medfate_swbDay", (DL_FUNC) &_medfate_swbDay, 16},
     {"_medfate_swbgridDay", (DL_FUNC) &_medfate_swbgridDay, 11},
+    {"_medfate_resetInputs", (DL_FUNC) &_medfate_resetInputs, 4},
     {"_medfate_swb", (DL_FUNC) &_medfate_swb, 7},
     {"_medfate_symplasticRelativeWaterContent", (DL_FUNC) &_medfate_symplasticRelativeWaterContent, 3},
     {"_medfate_apoplasticRelativeWaterContent", (DL_FUNC) &_medfate_apoplasticRelativeWaterContent, 4},

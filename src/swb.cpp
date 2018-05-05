@@ -1156,6 +1156,36 @@ void checkswbInput(List x, List soil, String transpirationMode, String soilFunct
   }
 }
 
+//
+// [[Rcpp::export("swb.resetInputs")]]
+void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER) {
+  List can = x["canopy"];
+  NumericVector W = soil["W"];
+  NumericVector Temp = soil["Temp"];
+  int nlayers = W.size();
+  if(Rf_isNull(from) || from.size()==0) {
+    can["gdd"] = 0.0;
+    for(int i=0;i<nlayers;i++) {
+      W[i] = 1.0; //Defaults to soil at field capacity
+      Temp[i] = NA_REAL;
+    }
+  } else {
+    if(IntegerVector::is_na(day)) day = 0;
+    else day = day-1; //Input will be 1 for first day
+    DataFrame DWB = Rcpp::as<Rcpp::DataFrame>(from["DailyBalance"]);
+    DataFrame SWB = Rcpp::as<Rcpp::DataFrame>(from["SoilWaterBalance"]);
+    NumericVector GDD = DWB["GDD"];
+    can["gdd"] = GDD[day];
+    for(int i=0;i<nlayers;i++) {
+      W[i] = Rcpp::as<Rcpp::NumericVector>(SWB[i])[day];
+      //TO DO: STORE/RECOVER SOIL LAYER TEMPERATURE?
+      Temp[i] = NA_REAL;
+    }
+  }
+  soil["W"] = W;
+  soil["Temp"] =Temp;
+}
+
 // [[Rcpp::export("swb")]]
 List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL) {
   List control = x["control"];
@@ -1420,7 +1450,8 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
   if(verbose) Rcout<<"Building SWB and DWB output ...";
   
    Rcpp::DataFrame SWB = DataFrame::create(_["W"]=Wdays, _["ML"]=MLdays,_["MLTot"]=MLTot,_["psi"]=psidays);
-   Rcpp::DataFrame DWB = DataFrame::create(_["LAIcell"]=LAIcell, _["LAIcelldead"] = LAIcelldead,  _["Cm"]=Cm, _["Lground"] = Lground, _["PET"]=PET, 
+   Rcpp::DataFrame DWB = DataFrame::create(_["GDD"] = GDD,
+                                           _["LAIcell"]=LAIcell, _["LAIcelldead"] = LAIcelldead,  _["Cm"]=Cm, _["Lground"] = Lground, _["PET"]=PET, 
                                            _["Precipitation"] = Precipitation, _["NetPrec"]=NetPrec,_["Infiltration"]=Infiltration, _["Runoff"]=Runoff, _["DeepDrainage"]=DeepDrainage, 
                                            _["Etot"]=Etot,_["Esoil"]=Esoil,
                                            _["Eplanttot"]=Eplanttot,

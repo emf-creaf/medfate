@@ -605,6 +605,10 @@ swb.day <- function(x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind, lat
     .Call('_medfate_swbgridDay', PACKAGE = 'medfate', lct, xList, soilList, waterO, queenNeigh, waterQ, gddVec, petVec, rainVec, erVec, trackSpecies)
 }
 
+swb.resetInputs <- function(x, soil, from = NULL, day = NA_integer_) {
+    invisible(.Call('_medfate_resetInputs', PACKAGE = 'medfate', x, soil, from, day))
+}
+
 swb <- function(x, soil, meteo, latitude = NA_real_, elevation = NA_real_, slope = NA_real_, aspect = NA_real_) {
     .Call('_medfate_swb', PACKAGE = 'medfate', x, soil, meteo, latitude, elevation, slope, aspect)
 }

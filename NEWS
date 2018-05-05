@@ -4,6 +4,9 @@
 
 __Version history__
 
+_Version 0.5.6, May 2018.
+1. Growth degree days added as output of swb()
+
 _Version 0.5.5, April 2018.
 1. New functions for tissue moisture
 2. New function 'fuel.cohortFineFMC'

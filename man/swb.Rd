@@ -1,14 +1,16 @@
 \encoding{UTF-8}
 \name{swb}
 \alias{swb}
+\alias{swb.resetInputs}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Soil water balance}
 \description{
-Function \code{swb} is a soil water balance model that determines changes in soil moisture, soil water potentials and plant transpiration and drought stress at daily steps for a given forest stand during a period specified in the input climatic data. Additionally, the function also calculates plant net photosynthesis. Transpiration and photosynthesis processes are conducted with different level of detail depending on the transpiration mode.
+Function \code{swb()} is a soil water balance model that determines changes in soil moisture, soil water potentials and plant transpiration and drought stress at daily steps for a given forest stand during a period specified in the input climatic data. Additionally, the function also calculates plant net photosynthesis. Transpiration and photosynthesis processes are conducted with different level of detail depending on the transpiration mode.
 }
 \usage{
 swb(x, soil, meteo,  latitude = NA, elevation = NA, slope = NA, aspect = NA)
+swb.resetInputs(x, soil, from = NULL, day = NA)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -36,9 +38,11 @@ swb(x, soil, meteo,  latitude = NA, elevation = NA, slope = NA, aspect = NA)
   }
   \item{latitude}{Latitude (in degrees). Required when using the 'Complex' transpiration mode.}
   \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when using the 'Complex' transpiration mode.}
+  \item{from}{An object of class \code{swb} storing the results of a previous simulation, including values of state variables. If \code{from = NULL}, state variables are set to their defaults (i.e. soil moisture set to field capacity and cumulative growth degree days set to zero).}
+  \item{day}{An integer with the day from which state variable values stored in \code{from} should be copied. If missing, values are copied from the first day of stored values.}
 }
 \details{
-  Detailed model description is available in the vignettes section. The model using 'Simple' transpiration mode is described in De Caceres et al. (2015). Simulations using the 'Complex' transpiration mode are computationally much more expensive. 
+  Detailed model description is available in the vignettes section. The model using 'Simple' transpiration mode is described in De Caceres et al. (2015). Simulations using the 'Complex' transpiration mode are computationally much more expensive. Function \code{swb.resetInputs()} allows resetting state variables in \code{x} and \code{soil} to their defaults, or to copy values of state variables from a previous \code{swb()} simulation results stored in \code{from}.
 }
 \value{
   Function \code{swb} returns a list of class 'swb' with the following elements (both transpiration modes):
@@ -48,6 +52,7 @@ swb(x, soil, meteo,  latitude = NA, elevation = NA, slope = NA, aspect = NA)
   \item{\code{"NumSoilLayers"}: Number of soil layers.}
   \item{\code{"DailyBalance"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
   \itemize{
+  \item{\code{"GDD"}: Cumulative growth degree days.}
   \item{\code{"LAIcell"}: The LAI of the stand (accounting for leaf phenology) (in m2/m2).}
   \item{\code{"Cm"}: The water retention capacity of the stand (in mm) (accounting for leaf phenology).}
   \item{\code{"Lground"}: The proportion of light that reaches the ground (accounting for leaf phenology).}
@@ -90,7 +95,7 @@ De \enc{Cáceres}{Caceres} M, \enc{Martínez}{Martinez}-Vilalta J, Coll L, Llore
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 \note{
-Objects \code{x} and \code{soil} are modified during the simulation. Daily transpiration and photosynthesis values are stored in columns \code{Transpiration} and \code{Photosynthesis} of object \code{x}. Water content relative to field capacity (vector \code{W}) of \code{soil} is also modified.  
+State variables stored in objects \code{x} and \code{soil} are modified during the simulation. Use function \code{swb.resetInputs()} to reset state variables to defaults. Daily transpiration and photosynthesis values are stored in columns \code{Transpiration} and \code{Photosynthesis} of object \code{x}. Water content relative to field capacity (vector \code{W}) of \code{soil} is also modified.  
 }
 \seealso{
 \code{\link{swbInput}}, \code{\link{swb.day}}, \code{\link{plot.swb}},  \code{\link{swbpoints}}, \code{\link{swbgrid}}, 
