@@ -12,6 +12,8 @@ soilgridsParams <- function(lat, long, depths = c(300, 500, 1200)) {
                    'CLYPPT', 'SLTPPT', 'SNDPPT', 'ORCDRC')
   )
   
+  if(is.null(query)) stop("Could not create GSIF query!")
+  
   # data frame with retrieved values
   sg_description <- GSIF::over(query, coords_df)
   
@@ -56,9 +58,6 @@ soilgridsParams <- function(lat, long, depths = c(300, 500, 1200)) {
     bd= NA,
     macro = NA,
     rfc = NA
-    # soilgrids_Rhorizondepth = BDRICM, 
-    # soilgrids_Rhorizonprob = BDRLOG,
-    # soilgrids_absolutesoildepth = BDTICM 
   )
   
   # iterate by desired layer
@@ -100,6 +99,11 @@ soilgridsParams <- function(lat, long, depths = c(300, 500, 1200)) {
       res[['bd']][layer]<-BLDFIE_res
     }
   }
-  message("Absolute depth to bedrock : ", BDTICM, " mm\nR horizon depth (up to 2m): ", BDRICM," mm")
-  return(res)
+  # message("Absolute depth to bedrock : ", BDTICM, " mm\nR horizon depth (up to 2m): ", BDRICM," mm")
+  return(list(
+    soilparams = res,
+    soilgrids_Rhorizondepth = BDRICM,
+    soilgrids_Rhorizonprob = BDRLOG,
+    soilgrids_absolutesoildepth = BDTICM
+  ))
 }
