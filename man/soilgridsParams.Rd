@@ -39,6 +39,7 @@ A list with the following elements:
 
 \author{
 \enc{Víctor}{Victor} Granda, Centre Tecnologic Forestal de Catalunya
+
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 

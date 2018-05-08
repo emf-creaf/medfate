@@ -56,7 +56,6 @@ soilgridsParams <- function(lat, long, depths = c(300, 500, 1200)) {
     sand = NA,
     om = NA,
     bd= NA,
-    macro = NA,
     rfc = NA
   )
   
