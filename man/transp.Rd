@@ -1,21 +1,21 @@
 \encoding{UTF-8}
 \name{transp}
 \alias{transp.profitMaximization}
-\alias{transp.dayCanopyTranspiration}
-\alias{transp.dayCanopyTranspirationPlot}
+\alias{transp.stomatalRegulation}
+\alias{transp.stomatalRegulationPlot}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Transpiration submodel functions
 }
 \description{
-Set of high-level functions used in the calculation of stomatal conductance and transpiration. Function \code{transp.profitMaximization} calculates gain and cost functions, as well as profit maximization from supply and photosynthesis input functions. Function \code{transp.dayCanopyTranspiration} calculates profit maximization for all time steps in a day, starting from stand description, soil description and meteorological input. Function \code{transp.dayCanopyTranspirationPlot} produces a plot with the cohort supply functions against water potential and a plot with the cohort photosynthesis functions against water potential, both with the maximum profit values indicated.
+Set of high-level functions used in the calculation of stomatal conductance and transpiration. Function \code{transp.profitMaximization} calculates gain and cost functions, as well as profit maximization from supply and photosynthesis input functions. Function \code{transp.stomatalRegulation} calculates profit maximization for all time steps in a day, starting from stand description, soil description and meteorological input. Function \code{transp.stomatalRegulationPlot} produces a plot with the cohort supply functions against water potential and a plot with the cohort photosynthesis functions against water potential, both with the maximum profit values indicated.
 }
 \usage{
 transp.profitMaximization(supplyFunction, photosynthesisFunction, type, Gwmax, kstemmax = NA)
-transp.dayCanopyTranspiration(x, soil, meteo, day,
-                             latitude, elevation, slope = 0, aspect = 0)
-transp.dayCanopyTranspirationPlot(x, soil, meteo, day, timestep, 
-                                  latitude, elevation, slope=0, aspect=0)
+transp.stomatalRegulation(x, soil, meteo, day,
+                             latitude, elevation)
+transp.stomatalRegulationPlot(x, soil, meteo, day, timestep, 
+                              latitude, elevation)
 }
 
 %- maybe also 'usage' for other objects documented here.
@@ -43,7 +43,7 @@ transp.dayCanopyTranspirationPlot(x, soil, meteo, day, timestep,
   \item{day}{An integer to identify a day within \code{meteo}.}
   \item{timestep}{An integer between 1 and \code{ndailysteps} specified in \code{x} (see \code{\link{defaultControl}}).}
   \item{latitude}{Latitude (in degrees).}
-  \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North).}
+  \item{elevation}{Elevation above sea level (in m).}
 }
 \details{
 Details of the transpiration submodel are given in a vignette.
@@ -60,11 +60,11 @@ Values returned for each function are:
   \item{\code{iMaxProfit}: Index corresponding to maximum profit (starting from 0).}
 }
 }
-\item{\code{transp.dayCanopyTranspiration}: A list whose elements correspond to cohorts. Each element has the following subelements:
+\item{\code{transp.stomatalRegulation}: A list whose elements correspond to cohorts. Each element has the following subelements:
 \itemize{
   \item{\code{supply}: Supply function (see \code{\link{hydraulics.supplyFunctionNetwork}}).}
-  \item{\code{photo}: Cohort photosynthesis function for each time step (see \code{\link{photo.sunshadePhotosynthesisFunction}} or \code{\link{photo.multilayerPhotosynthesisFunction}}).}
-  \item{\code{PM}: Profit maximization for each time step (see \code{transp.profitMaximization}).}
+  \item{\code{photoSunlit, photoShade}: Photosynthesis function for sunlit and shade leaves and for each time step (see \code{\link{photo.leafPhotosynthesisFunction}}).}
+  \item{\code{PMSunlit, PMShade}: Profit maximization for sunlit and shade leaves and each time step (see \code{transp.profitMaximization}).}
 }
 }
 }
@@ -99,6 +99,6 @@ control$transpirationMode="Complex"
 #Initialize input
 x2 = forest2swbInput(exampleforest,examplesoil2, SpParamsMED, control)
 
-transp.dayCanopyTranspirationPlot(x2, examplesoil2, examplemeteo, day=100, timestep = 12,
-                                  latitude = 41.82592, elevation = 100)
+transp.stomatalRegulationPlot(x2, examplesoil2, examplemeteo, day=100, timestep = 12,
+                              latitude = 41.82592, elevation = 100)
 }

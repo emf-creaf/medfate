@@ -42,13 +42,18 @@ The soil input for function `swb()` is actually an object of class `soil` that i
 examplesoil = soil(spar, VG_PTF = "Toth")
 names(examplesoil)
 ```
-In addition to the physical soil description, this object contains soil parameters needed for soil water balance simulations. For example, `macro` specifies the macroporosity of each layer; `Gsoil` and `Ksoil` are parameters needed to model  infiltration of water into the soil. The meaning of all elements in the soil object can be found in the help page for function `soil()`.
+In addition to the physical soil description, this object contains soil parameters needed for soil water balance simulations. For example, `macro` specifies the macroporosity of each layer; `Gsoil` and `Ksoil` are parameters needed to model  infiltration of water into the soil. With  `VG_PTF = "Toth"`, we specify that van Genuchten parameters are estimated from texture using the pedotransfer functions of Toth et al (2015). The details of all elements in the soil object can be found in the help page for function `soil()`.
 
 The soil object is also used to store the moisture degree of each soil layer. In particular, `W` contains the state variable that represents moisture (i.e. the proportion of moisture relative to field capacity), which is normally initialized to 1 for each layer:
 ```{r}
 examplesoil$W
 ```
-It is important to remember that, unlike normal objects in R, any water balance simulation will modify the moisture values in soil object. That is, the state of the soil at the end of the simulated process (i.e. `W`) will be stored. Hence, one can use the same object to simulate water balance sequentially and the final state of one simulation is the initial state of the next.
+Analogously, `Temp` contains the temperature (in degrees) of soil layers, initialized to missing values:
+```{r}
+examplesoil$Temp
+```
+
+It is important to remember that, unlike normal objects in R, any water balance simulation will modify the values of state variables in soil object. That is, the state of the soil at the end of the simulated process (i.e. `W`) will be stored (the same for `Temp`). Hence, one can use the same object to simulate water balance sequentially and the final state of one simulation is the initial state of the next.
 
 #### Water retention curves
 At any time, one can print the status of the soil object using its `print` function:
@@ -59,7 +64,7 @@ The modelled moisture content of the soil depends on the **water retention curve
 ```{r}
 print(examplesoil, model="VG")
 ```
-While Saxton equations use texture and organic matter as inputs, the Van Genuchten-Mualem equations need other parameters, which are estimated using pedotransfer functions and their names start with `VG_` (two alternative options are provided in function `soil` to estimate Van Genuchten parameters). The following figure illustrates the difference between the two water retention models:
+While Saxton equations use texture and organic matter as inputs, the Van Genuchten-Mualem equations need other parameters, which are estimated using pedotransfer functions and their names start with `VG_`. The following figure illustrates the difference between the two water retention models:
 ```{r, fig = TRUE, fig.width= 5, fig.height=4, fig.align= 'center', echo=TRUE}
 par(mar=c(4,4,1,1))
 # Plot Saxton's retention curve
@@ -77,7 +82,7 @@ legend("topright", legend=c("Saxton", "Van Genuchten"), lty=c(1,2), bty="n")
 
 ```
 
-Functions `soil.psi2thetaSX()` and `soil.psi2thetaVG()` (and their counterparts) can be used to calculate volumetric soil moisture from the water potential using the two models. When simulating soil water balance, the user can choose among the two models (see control parameters below).
+Functions `soil.psi2thetaSX()` and `soil.psi2thetaVG()` (and their counterparts) can be used to calculate volumetric soil moisture from the water potential using the two models. When simulating soil water balance, the user can choose among the two models (see control parameters below). The soil water balance model described in this vignette uses the van Genuchten-Mualem equations for water retention curves and rhizosphere conductance.
 
 ### Species data table
 
@@ -210,6 +215,38 @@ x$below
 
 Finally, note that one can play with plant-specific parameters for soil water balance (instead of using species-level values) by modifying manually the parameter values in this object.
 
+
+
+## Static analysis of forest functioning
+
+Before using the soil water balance model, is important to understand its sub-model components. Package `medfate` provides many functions corresponding to sub-models (light extinction, hydraulics, transpiration, photosynthesis...). In addition, there are high-level plotting functions that allow examining several aspects of these processes.
+
+### Vulnerability curves
+Given a `swbInput` object, we can use function `hydraulics.vulnerabilityCurvePlot()` to inspect **vulnerability curves**, i.e. how hydraulic conductance changes with the water potential, for each plant cohort and each of the different elements of the soil-plant hydraulic network: rhizosphere, roots, stems and leaves:
+
+```{r, fig=TRUE, fig.align="center", fig.width=8, fig.height = 8}
+par(mar=c(4,4,1,1), mfrow=c(2,2))
+hydraulics.vulnerabilityCurvePlot(x, type="leaf")
+hydraulics.vulnerabilityCurvePlot(x, type="stem")
+hydraulics.vulnerabilityCurvePlot(x, type="root")
+hydraulics.vulnerabilityCurvePlot(x, examplesoil, type="rhizo")
+```
+Note that the last call to `hydraulics.vulnerabilityCurvePlot()` includes a `soil` object. This is because the van Genuchten parameters that define the vulnerability curve for the rhizosphere are stored in this object.
+
+### Supply functions
+
+The vulnerability curves conformng the hydraulic network are used in the model to build the **supply function**, which relates water flow (i.e. transpiration) with the drop of water potential along the continuum. The supply function contains not only these two variables, but also the water potential of intermediate nodes in the the hydraulic network. Function `hydraulics.supplyFunctionPlot()` can be used to inspect any of this variables:
+```{r, fig=TRUE, fig.align="center", fig.width=8, fig.height = 8}
+par(mar=c(4,4,1,1), mfrow=c(2,2))
+hydraulics.supplyFunctionPlot(x, examplesoil, type="E")
+hydraulics.supplyFunctionPlot(x, examplesoil, type="Elayers")
+hydraulics.supplyFunctionPlot(x, examplesoil, type="dEdP")
+hydraulics.supplyFunctionPlot(x, examplesoil, type="PsiStem")
+```
+All these calls need both a `swbInput` object and a `soil` object. The soil moisture state (i.e. its water potential) is the starting point for the calculation of the supply function.
+
+### Stomatal regulation and photosynthesis
+
 ## Water balance for a single day
 
 ### Running the model
@@ -277,7 +314,6 @@ Or we can plot variations in stomatal conductance for sunlit and shade leaves:
 ```{r, fig=TRUE, fig.align="center", fig.width=8, fig.height = 4}
 plot(sd1, type = "LeafStomatalConductance", bySpecies=TRUE)
 ```
-
 
 ## Water balance for multiple days
 

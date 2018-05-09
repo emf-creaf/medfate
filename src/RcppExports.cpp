@@ -2373,9 +2373,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// dayCanopyTranspiration
-List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day, double latitude, double elevation, double slope, double aspect);
-RcppExport SEXP _medfate_dayCanopyTranspiration(SEXP xSEXP, SEXP soilSEXP, SEXP meteoSEXP, SEXP daySEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP) {
+// stomatalRegulation
+List stomatalRegulation(List x, List soil, DataFrame meteo, int day, double latitude, double elevation);
+RcppExport SEXP _medfate_stomatalRegulation(SEXP xSEXP, SEXP soilSEXP, SEXP meteoSEXP, SEXP daySEXP, SEXP latitudeSEXP, SEXP elevationSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2385,9 +2385,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type day(daySEXP);
     Rcpp::traits::input_parameter< double >::type latitude(latitudeSEXP);
     Rcpp::traits::input_parameter< double >::type elevation(elevationSEXP);
-    Rcpp::traits::input_parameter< double >::type slope(slopeSEXP);
-    Rcpp::traits::input_parameter< double >::type aspect(aspectSEXP);
-    rcpp_result_gen = Rcpp::wrap(dayCanopyTranspiration(x, soil, meteo, day, latitude, elevation, slope, aspect));
+    rcpp_result_gen = Rcpp::wrap(stomatalRegulation(x, soil, meteo, day, latitude, elevation));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2630,7 +2628,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_branchRelativeWaterContent", (DL_FUNC) &_medfate_branchRelativeWaterContent, 5},
     {"_medfate_fineFuelRelativeWaterContent", (DL_FUNC) &_medfate_fineFuelRelativeWaterContent, 8},
     {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 5},
-    {"_medfate_dayCanopyTranspiration", (DL_FUNC) &_medfate_dayCanopyTranspiration, 8},
+    {"_medfate_stomatalRegulation", (DL_FUNC) &_medfate_stomatalRegulation, 6},
     {"_medfate_windSpeedAtCanopyHeight", (DL_FUNC) &_medfate_windSpeedAtCanopyHeight, 2},
     {"_medfate_unshelteredMidflameWindSpeed", (DL_FUNC) &_medfate_unshelteredMidflameWindSpeed, 2},
     {"_medfate_shelteredMidflameWindSpeed", (DL_FUNC) &_medfate_shelteredMidflameWindSpeed, 3},

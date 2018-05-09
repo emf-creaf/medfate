@@ -11,7 +11,7 @@
 #include <meteoland.h>
 using namespace Rcpp;
 
-const double SIGMA_W = 5.67*pow(10,-8.0);
+const double SIGMA_Wm2 = 5.67*pow(10,-8.0);
 
 List profitMaximization1(List supplyFunction, List photosynthesisFunction, double Gwmax) {
   NumericVector supplydEdp = supplyFunction["dEdP"];
@@ -104,9 +104,9 @@ List profitMaximization(List supplyFunction, List photosynthesisFunction, int ty
 }
 
 
-// [[Rcpp::export("transp.dayCanopyTranspiration")]]
-List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
-                            double latitude, double elevation, double slope = 0.0, double aspect = 0.0) {
+// [[Rcpp::export("transp.stomatalRegulation")]]
+List stomatalRegulation(List x, List soil, DataFrame meteo, int day,
+                        double latitude, double elevation) {
   
   //Extract meteo
   IntegerVector DOY = meteo["DOY"];
@@ -146,7 +146,6 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
   double psiTol = numericParams["psiTol"];
   double ETol = numericParams["ETol"];
   
-  String canopyMode = Rcpp::as<Rcpp::String>(control["canopyMode"]);
   bool cavitationRefill = control["cavitationRefill"];
   int ntimesteps = control["ndailysteps"];
   int hydraulicCostFunction = control["hydraulicCostFunction"];
@@ -199,6 +198,9 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
   NumericVector VCstem_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_kmax"]);
   NumericVector VCstem_c = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_c"]);
   NumericVector VCstem_d = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_d"]);
+  NumericVector VCleaf_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_kmax"]);
+  NumericVector VCleaf_c = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_c"]);
+  NumericVector VCleaf_d = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_d"]);
   NumericVector VCroot_c = paramsTransp["VCroot_c"];
   NumericVector VCroot_d = paramsTransp["VCroot_d"];
   NumericVector pRootDisc = Rcpp::as<Rcpp::NumericVector>(paramsTransp["pRootDisc"]);
@@ -215,11 +217,7 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
   int nz = ceil(canopyHeight/verticalLayerSize); //Number of vertical layers
   
   double latrad = latitude * (PI/180.0);
-  if(NumericVector::is_na(aspect)) aspect = 0.0;
-  double asprad = aspect * (PI/180.0);
-  if(NumericVector::is_na(slope)) slope = 0.0;
-  double slorad = slope * (PI/180.0);
-  
+
   NumericVector z(nz+1,0.0);
   NumericVector zmid(nz);
   for(int i=1;i<=nz;i++) {
@@ -232,14 +230,14 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
   
 
   //Day length (latitude in radians), atmospheric pressure, CO2 concentration
-  double tauday = meteoland::radiation_daylengthseconds(latrad,  slorad,asprad, delta); 
+  double tauday = meteoland::radiation_daylengthseconds(latrad,  0.0,0.0, delta); 
   double Patm = meteoland::utils_atmosphericPressure(elevation);
   double Catm = 386.0;
   //Step in seconds
   double tstep = 86400.0/((double) ntimesteps);
   
   //Daily average water vapor pressure
-  double vpa = meteoland::utils_averageDailyVP(tmin, tmax, rhmin,rhmax);
+  double vpatm = meteoland::utils_averageDailyVP(tmin, tmax, rhmin,rhmax);
   
   //Daily cloud cover
   double cloudcover = 0.0;
@@ -265,15 +263,16 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
     //Calculate instantaneous temperature and light conditions
     Tatm[n] = temperatureDiurnalPattern(t_sunrise, tmin, tmax, tauday);
     //Longwave sky diffuse radiation
-    lwdr[n] = meteoland::radiation_skyLongwaveRadiation(Tatm[n], vpa, cloudcover);
+    lwdr[n] = meteoland::radiation_skyLongwaveRadiation(Tatm[n], vpatm, cloudcover);
   }
   Tcan[0] = canopyParams["Temp"]; //Take canopy temperature from previous day
   
+
   //Light extinction and absortion by time steps
   List lightExtinctionAbsortion = instantaneousLightExtinctionAbsortion(LAIme, LAImd, LAImx,
                                                                         kPAR, albedo,
                                                                         ddd, lwdr,
-                                                                        ntimesteps,  canopyMode);
+                                                                        ntimesteps,  "sunshade", 0.1);
   List abs_PAR_SL_list = lightExtinctionAbsortion["PAR_SL"];
   List abs_PAR_SH_list = lightExtinctionAbsortion["PAR_SH"];
   List abs_SWR_SL_list = lightExtinctionAbsortion["SWR_SL"];
@@ -287,18 +286,13 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
   //Wind extinction profile
   NumericVector zWind;
   if(NumericVector::is_na(wind)) wind = 2.0; //Default wind speed when missing
-  if(canopyMode=="multilayer") {
-    zWind = windExtinctionProfile(zmid, wind, LAIcell, canopyHeight);
-  } else if(canopyMode=="sunshade"){
-    zWind = windExtinctionCohort(H,CR, wind,LAIcell, canopyHeight);
-  }
-
+  zWind = windExtinctionCohort(H,CR, wind,LAIcell, canopyHeight);
+  
   
   NumericVector Vc, VCroot_kmaxc, VGrhizo_kmaxc, psic, VG_nc,VG_alphac;
   
   List cohort_list(numCohorts);
   cohort_list.attr("names") = above.attr("row.names");
-  
   for(int c=0;c<numCohorts;c++) {
     //Determine to which layers is plant connected
     LogicalVector layerConnected(nlayers, false);
@@ -336,11 +330,12 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
       // Rcout<< c <<" "<<psiCav<<"\n";
     }
     double minFlow = 1000.0*(Gwmin[c]*(tmin+tmax)/2.0)/Patm;
-    List supplyNetwork = supplyFunctionNetwork(psic,
-                                          VGrhizo_kmaxc,VG_nc,VG_alphac,
-                                          VCroot_kmaxc, VCroot_c[c],VCroot_d[c],
-                                          VCstem_kmax[c], VCstem_c[c],VCstem_d[c], 
-                                          minFlow, psiCav, maxNsteps, psiStep, psiMax , ntrial, psiTol, ETol);
+    List supply = supplyFunctionNetwork(psic,
+                                        VGrhizo_kmaxc,VG_nc,VG_alphac,
+                                        VCroot_kmaxc, VCroot_c[c],VCroot_d[c],
+                                        VCstem_kmax[c], VCstem_c[c],VCstem_d[c], 
+                                        VCleaf_kmax[c], VCleaf_c[c],VCleaf_d[c], 
+                                        minFlow, psiCav, maxNsteps, psiStep, psiMax , ntrial, psiTol, ETol);
     
     NumericVector Vmax298layer(nz), Jmax298layer(nz);
     NumericVector SLarealayer(nz), SHarealayer(nz);
@@ -355,77 +350,66 @@ List dayCanopyTranspiration(List x, List soil, DataFrame meteo, int day,
       Vmax298layer[i] = Vmax298[c]*fn;
       Jmax298layer[i] = Jmax298[c]*fn;
     }
-    double Vmax298SL= 0.0,Vmax298SH= 0.0,Jmax298SL= 0.0,Jmax298SH= 0.0;
-    double SLarea = 0.0, SHarea = 0.0;
-    if(canopyMode=="sunshade"){
+
+    List photoSunlit(ntimesteps);
+    List photoShade(ntimesteps);
+    List PMSunlit(ntimesteps);
+    List PMShade(ntimesteps);
+
+    for(int n=0;n<ntimesteps;n++) {
+      
+      //Long-wave radiation due to canopy temperature
+      if(NumericVector::is_na(Tcan[n])) Tcan[n] = Tatm[n]; //If missing take above-canopy air temperature
+
+      //LWR emmited by the canopy, per ground area
+      double LWR_emmcan = 0.95*SIGMA_Wm2*pow(Tcan[n]+273.16,4.0);
+      
+      // Rcout<< n<< " sh "<<solarHour[n]<< " t_sr " << t_sunrise<< " Tatm "<<Tatm<<"\n";
+      NumericVector absPAR_SL = abs_PAR_SL_list[n];
+      NumericVector absPAR_SH = abs_PAR_SH_list[n];
+      NumericVector absSWR_SL = abs_SWR_SL_list[n];
+      NumericVector absSWR_SH = abs_SWR_SH_list[n];
+      NumericVector absLWR_SL = abs_LWR_SL_list[n];
+      NumericVector absLWR_SH = abs_LWR_SH_list[n];
+      
+      double Vmax298SL= 0.0,Vmax298SH= 0.0,Jmax298SL= 0.0,Jmax298SH= 0.0;
+      double LAI_SH = 0.0; 
+      double LAI_SL = 0.0;
       for(int i=0;i<nz;i++) {
-        SLarea +=SLarealayer[i];
-        SHarea +=SHarealayer[i];
+        LAI_SL +=SLarealayer[i];
+        LAI_SH +=SHarealayer[i];
         Vmax298SL +=Vmax298layer[i]*LAIme(i,c)*fsunlit[i];
         Jmax298SL +=Jmax298layer[i]*LAIme(i,c)*fsunlit[i];
         Vmax298SH +=Vmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
         Jmax298SH +=Jmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
       }
-    }
-    List photo(ntimesteps);
-    List PM(ntimesteps);
-    for(int n=0;n<ntimesteps;n++) {
-      
-      //Long-wave radiation due to canopy temperature
-      if(NumericVector::is_na(Tcan[n])) Tcan[n] = Tatm[n]; //If missing take above-canopy air temperature
-      double lwcan = SIGMA_W*pow(Tcan[n]+273.16,4.0);
-      
-      // Rcout<< n<< " sh "<<solarHour[n]<< " t_sr " << t_sunrise<< " Tatm "<<Tatm<<"\n";
-      if(canopyMode=="multilayer"){
-        //Retrieve Light extinction
-        NumericMatrix absPAR_SL = abs_PAR_SL_list[n];
-        NumericMatrix absPAR_SH = abs_PAR_SH_list[n];
-        NumericMatrix absSWR_SL = abs_SWR_SL_list[n];
-        NumericMatrix absSWR_SH = abs_SWR_SH_list[n];
-        NumericMatrix absLWR_SL = abs_LWR_SL_list[n];
-        NumericMatrix absLWR_SH = abs_LWR_SH_list[n];
-        for(int i=0;i<nz;i++) {
-          QSL[i] = irradianceToPhotonFlux(absPAR_SL(i,c));
-          QSH[i] = irradianceToPhotonFlux(absPAR_SH(i,c));
-          //Add short wave and long wave radiation
-          absRadSL[i] = absSWR_SL(i,c) + absLWR_SL(i,c) + SLarealayer[i]*0.97*lwcan;
-          absRadSH[i] = absSWR_SH(i,c)+ absLWR_SH(i,c) + SHarealayer[i]*0.97*lwcan;
-        }
-        photo[n] = multilayerPhotosynthesisFunction(supplyNetwork, Catm, Patm,Tcan[n], vpa, 
-                                                 SLarealayer, SHarealayer, 
-                                                 zWind, absRadSL, absRadSH, 
-                                                 QSL, QSH,
-                                                 Vmax298layer,Jmax298layer,
-                                                 Gwmin[c], Gwmax[c], leafWidth[c]);
-      } else if(canopyMode=="sunshade"){
-        //Retrieve Light extinction
-        NumericVector absPAR_SL = abs_PAR_SL_list[n];
-        NumericVector absPAR_SH = abs_PAR_SH_list[n];
-        NumericVector absSWR_SL = abs_SWR_SL_list[n];
-        NumericVector absSWR_SH = abs_SWR_SH_list[n];
-        NumericVector absLWR_SL = abs_LWR_SL_list[n];
-        NumericVector absLWR_SH = abs_LWR_SH_list[n];
-        // Rcout<< "cohort " << c << " step "<< n << " "<<absSWR_SL[c]<<" " << absLWR_SL[c] << " "<< absSWR_SH[c] << " "<< absLWR_SH[c]<<"\n";
-        photo[n] = sunshadePhotosynthesisFunction(supplyNetwork, Catm, Patm,Tcan[n], vpa, 
-                                                  SLarea, SHarea, 
-                                                  zWind[c], 
-                                                  absSWR_SL[c] + absLWR_SL[c] + SLarea*0.97*lwcan, 
-                                                  absSWR_SH[c] + absLWR_SH[c] + SHarea*0.97*lwcan, 
-                                               irradianceToPhotonFlux(absPAR_SL[c]), irradianceToPhotonFlux(absPAR_SH[c]),
-                                               Vmax298SL, Vmax298SH,
-                                               Jmax298SL, Jmax298SH,
-                                               Gwmin[c], Gwmax[c], leafWidth[c]);
-        // Rcout<<n<<", "<< c <<": "<<lwcan<< " "<<absSWR_SL[c]<<" "<< absLWR_SL[c] << " "<<SLarea*0.97*lwcan<< " "<<absSWR_SH[c]<<" "<< absLWR_SH[c] << " "<<SHarea*0.97*lwcan<<"\n";
-      }
+      //Photosynthesis function for sunlit and shade leaves
+      photoSunlit[n] = leafPhotosynthesisFunction(supply, Catm, Patm,Tcan[n], vpatm, 
+                                                    zWind[c], 
+                                                         absSWR_SL[c] + LWR_emmcan*LAI_SL, 
+                                                         irradianceToPhotonFlux(absPAR_SL[c]), 
+                                                         Vmax298SL, 
+                                                         Jmax298SL, 
+                                                         Gwmin[c], Gwmax[c], leafWidth[c], LAI_SL);
+      photoShade[n] = leafPhotosynthesisFunction(supply, Catm, Patm,Tcan[n], vpatm, 
+                                                   zWind[c], 
+                                                        absSWR_SH[c] + LWR_emmcan*LAI_SH, 
+                                                        irradianceToPhotonFlux(absPAR_SH[c]),
+                                                        Vmax298SH, 
+                                                        Jmax298SH, 
+                                                        Gwmin[c], Gwmax[c], leafWidth[c], LAI_SH);
 
       //Profit maximization
-      PM[n] = profitMaximization(supplyNetwork, photo[n],  hydraulicCostFunction, VCstem_kmax[c]);
-      
+      PMSunlit[n] = profitMaximization(supply, photoSunlit[n],  hydraulicCostFunction, Gwmax[c], VCstem_kmax[c]);
+      PMShade[n] = profitMaximization(supply, photoShade[n],  hydraulicCostFunction, Gwmax[c], VCstem_kmax[c]);
 
     }
-    cohort_list[c] = List::create(_["supply"]=supplyNetwork,
-                                  _["photo"]=photo,
-                                  _["PM"] = PM);
+
+    cohort_list[c] = List::create(_["supply"]=supply,
+                                  _["photoSunlit"]=photoSunlit,
+                                  _["photoShade"]=photoShade,
+                                  _["PMSunlit"] = PMSunlit,
+                                  _["PMShade"] = PMShade);
   }
   return(cohort_list);
 } 

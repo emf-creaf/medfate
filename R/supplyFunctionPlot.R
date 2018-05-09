@@ -119,7 +119,7 @@ hydraulics.supplyFunctionPlot<-function(x, soil, type="E") {
     for(i in 1:ncoh) {
       if(i==1) {
         matplot(-l[[i]]$PsiLeaf, l[[i]]$Elayers, type="l", lty=i, ylim=c(minE-0.1,maxE+0.1), xlim=c(0,-minPsi),
-             xlab = "Leaf pressure (-MPa)", ylab = expression(paste("Flow rate (mmol ",H[2],O,"·",s^{-1},"·",m^{-2},")")), col = col)
+             xlab = "Leaf pressure (-MPa)", ylab = expression(paste("Flow rate from/to layers (mmol ",H[2],O,"·",s^{-1},"·",m^{-2},")")), col = col)
       } else {
         matlines(-l[[i]]$PsiLeaf, l[[i]]$Elayers, lty=i, col = col)
       }
