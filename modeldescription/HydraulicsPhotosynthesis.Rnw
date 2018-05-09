@@ -108,22 +108,22 @@ The rhizosphere conductance function $k_{rh}(\Psi)$ is modeled as a van Genuchte
 k_{rh}(\Psi) &=& k_{rh,max} \cdot v^{(n-1)/(2\cdot n)} \cdot ((1-v)^{(n-1)/n}-1)^2 \\
 v &=& [(\alpha \Psi)^{n}+1]^{-1}
 \end{eqnarray}
-where $k_{rh,max}$ is the maximum rhizosphere conductance, and $n$ and $\alpha$ are texture-specific parameters (see Leij et al. 1996; Carsel \& Parrish 1988). These are automatically set by function \texttt{soil()} when initializing soil objects (see parameters \texttt{VG\_alpha} and \texttt{VG\_n} in the output of \texttt{soil()}), but we can use function \texttt{soil.vanGenuchtenParams()} to derive them from texture types:
+where $k_{rh,max}$ is the maximum rhizosphere conductance, and $n$ and $\alpha$ are texture-specific parameters (see Leij et al. 1996; Carsel \& Parrish 1988). These are automatically set by function \texttt{soil()} when initializing soil objects (see parameters \texttt{VG\_alpha} and \texttt{VG\_n} in the output of \texttt{soil()}), but we can use function \texttt{soil.vanGenuchtenParamsCarsel()} to derive them from texture types:
 <<>>=
 textures = c("Sandy loam","Silt loam", "Clay")
 #Textural parameters
 #Sandy clay loam 
-p1 = soil.vanGenuchtenParams(textures[1])
+p1 = soil.vanGenuchtenParamsCarsel(textures[1])
 p1
 alpha1 = p1[1]  
 n1 = p1[2]
 #Silt loam
-p2 = soil.vanGenuchtenParams(textures[2])
+p2 = soil.vanGenuchtenParamsCarsel(textures[2])
 p2
 alpha2 =  p2[1]
 n2 = p2[2]
 #Silty clay
-p3 = soil.vanGenuchtenParams(textures[3])
+p3 = soil.vanGenuchtenParamsCarsel(textures[3])
 p3
 alpha3 =  p3[1]
 n3 = p3[2]
