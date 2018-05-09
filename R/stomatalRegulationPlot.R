@@ -3,7 +3,7 @@ transp.stomatalRegulationPlot<-function(x, soil, meteo, day, timestep, latitude,
   dctr = transp.stomatalRegulation(x, soil, meteo, day, latitude, elevation)
   ncoh = length(dctr)
   
-  oldpar = par(mfrow = c(4,2))
+  oldpar = par(mfrow = c(5,2))
   
   l = vector("list", ncoh)
   phsunlit = vector("list", ncoh)
@@ -25,6 +25,8 @@ transp.stomatalRegulationPlot<-function(x, soil, meteo, day, timestep, latitude,
   maxTemp = -1000
   minVPD = 1000
   maxVPD = -1000
+  minGw = 1000
+  maxGw = -1000
   for(i in 1:ncoh) {
     maxE = max(maxE, max(l[[i]]$E, na.rm=T))
     if(sum(!is.na(phsunlit[[i]]$Photosynthesis))>0) maxA = max(maxA, max(phsunlit[[i]]$Photosynthesis, na.rm=T))
@@ -38,6 +40,10 @@ transp.stomatalRegulationPlot<-function(x, soil, meteo, day, timestep, latitude,
     minVPD = min(minVPD, min(phshade[[i]]$LeafVPD))
     maxVPD = max(maxVPD, max(phsunlit[[i]]$LeafVPD))
     maxVPD = max(maxVPD, max(phshade[[i]]$LeafVPD))
+    minGw = min(minGw, min(phsunlit[[i]]$WaterVaporConductance))
+    minGw = min(minGw, min(phshade[[i]]$WaterVaporConductance))
+    maxGw = max(maxGw, max(phsunlit[[i]]$WaterVaporConductance))
+    maxGw = max(maxGw, max(phshade[[i]]$WaterVaporConductance))
   }
   for(i in 1:ncoh) {
     if(i==1) {
@@ -73,6 +79,24 @@ transp.stomatalRegulationPlot<-function(x, soil, meteo, day, timestep, latitude,
            xlab = "Leaf pressure (-MPa)", ylab = "Photosynthesis (shade)")
     } else {
       lines(-l[[i]]$PsiLeaf, phshade[[i]]$Photosynthesis, lty=i)
+    }
+    abline(v = -l[[i]]$PsiLeaf[pmshade[[i]]$iMaxProfit+1], col="gray", lty=i, lwd=2)
+  }
+  for(i in 1:ncoh) {
+    if(i==1) {
+      plot(-l[[i]]$PsiLeaf, phsunlit[[i]]$WaterVaporConductance, type="l", xlim=c(0,-minPsi),
+           xlab = "Leaf pressure (-MPa)", ylim=c(minGw, maxGw), ylab = "Leaf stomatal conductance (sunlit)")
+    } else {
+      lines(-l[[i]]$PsiLeaf, phsunlit[[i]]$WaterVaporConductance, lty=i)
+    }
+    abline(v = -l[[i]]$PsiLeaf[pmsunlit[[i]]$iMaxProfit+1], col="orange", lty=i, lwd=2)
+  }
+  for(i in 1:ncoh) {
+    if(i==1) {
+      plot(-l[[i]]$PsiLeaf, phshade[[i]]$WaterVaporConductance, type="l", xlim=c(0,-minPsi),
+           xlab = "Leaf pressure (-MPa)", ylim=c(minGw, maxGw), ylab = "Leaf stomatal conductance (shade)")
+    } else {
+      lines(-l[[i]]$PsiLeaf, phshade[[i]]$WaterVaporConductance, lty=i)
     }
     abline(v = -l[[i]]$PsiLeaf[pmshade[[i]]$iMaxProfit+1], col="gray", lty=i, lwd=2)
   }
