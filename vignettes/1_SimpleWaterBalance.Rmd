@@ -248,24 +248,24 @@ head(S$PlantPsi)
 
 Package `medfate` provides a simple `plot` function for objects of class `swb`. It can be used to show the meteorological input:
 ```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
-par(mar=c(4,4,1,1))
+par(mar=c(5,5,1,1))
 plot(S, type = "PET_Precipitation")
 ```
 It is also useful to plot the dynamics of soil state variables by layer, such as the percentage of moisture in relation to field capacity:
 ```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
-par(mar=c(4,4,1,1))
+par(mar=c(5,5,1,1))
 plot(S, type="Theta")
 ```
 Or soil water potentials:
 ```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
-par(mar=c(4,4,1,1))
+par(mar=c(5,5,1,1))
 plot(S, type="Psi")
 ```
 
 Additionally, it can also be used to draw plant variables, such as plant transpiration:
 
 ```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
-par(mar=c(4,4,1,1))
+par(mar=c(5,5,1,1))
 plot(S, type="PlantTranspiration")
 ```
 
@@ -303,7 +303,7 @@ Snr = swb(x, examplesoil, examplemeteo)
 ```
 In this case no console output is produced during the simulation process. We can examine the effect of preventing cavitation refill in the plots of plant drought stress and plant transpiration:
 ```{r, fig=TRUE, fig.align="center", fig.width=8, fig.height = 4}
-par(mar=c(4,4,1,1), mfrow=c(1,2))
+par(mar=c(5,5,1,1), mfrow=c(1,2))
 plot(Snr, type="PlantStress")
 plot(Snr, type="PlantTranspiration")
 ```

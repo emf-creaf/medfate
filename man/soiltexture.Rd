@@ -66,7 +66,8 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 # Plot Saxton's water retention curve
 psi = seq(0, -6.0, by=-0.01)
 plot(-psi, lapply(as.list(psi), FUN=soil.psi2thetaSX, clay=40, sand=10, om = 1), 
-     type="l", ylim=c(0,0.6),ylab="Water content (prop. volume)", xlab = "Soil water potential (-MPa)")
+     type="l", ylim=c(0,0.6),ylab="Water content (prop. volume)", 
+     xlab = "Soil water potential (-MPa)")
 
 #Determine USDA soil texture type
 type = soil.USDAType(clay=40, sand=10)

@@ -55,6 +55,7 @@ Function \code{plot} plots the results of the soil water balance model (see \cod
   \item{ylim}{Range of values for y.}
   \item{xlab}{x-axis label.}
   \item{ylab}{y-axis label.}
+  \item{add}{Boolean flag to add new elements to the current plot.}
   \item{freq}{Frequency of summary statistics (see \code{\link{cut.Date}}).}
   \item{output}{The data table to be summarized. Accepted values are \code{"DailyBalance"}, \code{"PlantStress"}, \code{"PlantPsi"}, \code{"PlantTranspiration"}, \code{"PlantPhotosynthesis"}  and \code{"SoilWaterBalance"}, \code{"Temperature"} and \code{"EnergyBalance"}.}
   \item{FUN}{The function to summarize results (e.g., \code{sum}, \code{mean}, ...)}

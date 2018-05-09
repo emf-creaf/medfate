@@ -2,8 +2,7 @@ transp.stomatalRegulationPlot<-function(x, soil, meteo, day, timestep, latitude,
   
   dctr = transp.stomatalRegulation(x, soil, meteo, day, latitude, elevation)
   ncoh = length(dctr)
-  
-  oldpar = par(mfrow = c(5,2))
+  oldpar = par(mar=c(5,5,1,1), mfrow = c(5,2))
   
   l = vector("list", ncoh)
   phsunlit = vector("list", ncoh)
@@ -48,7 +47,8 @@ transp.stomatalRegulationPlot<-function(x, soil, meteo, day, timestep, latitude,
   for(i in 1:ncoh) {
     if(i==1) {
       plot(-l[[i]]$PsiLeaf, l[[i]]$E, type="l", ylim=c(0,maxE+0.1), xlim=c(0,-minPsi),
-           xlab = "Leaf pressure (-MPa)", ylab = "Flow rate (sunlit)")
+           xlab = "Leaf pressure (-MPa)", 
+           ylab = expression(paste("Flow rate sunlit "(mmol*H[2]*O%.%s^{-1}%.%m^{-2}))))
     } else {
       lines(-l[[i]]$PsiLeaf, l[[i]]$E, lty=i)
     }
@@ -58,7 +58,8 @@ transp.stomatalRegulationPlot<-function(x, soil, meteo, day, timestep, latitude,
   for(i in 1:ncoh) {
     if(i==1) {
       plot(-l[[i]]$PsiLeaf, l[[i]]$E, type="l", ylim=c(0,maxE+0.1), xlim=c(0,-minPsi),
-           xlab = "Leaf pressure (-MPa)", ylab = "Flow rate (shade)")
+           xlab = "Leaf pressure (-MPa)", 
+           ylab =expression(paste("Flow rate shade "(mmol*H[2]*O%.%s^{-1}%.%m^{-2}))))
     } else {
       lines(-l[[i]]$PsiLeaf, l[[i]]$E, lty=i)
     }
@@ -67,7 +68,8 @@ transp.stomatalRegulationPlot<-function(x, soil, meteo, day, timestep, latitude,
   for(i in 1:ncoh) {
     if(i==1) {
       plot(-l[[i]]$PsiLeaf, phsunlit[[i]]$Photosynthesis, type="l", ylim=c(0,maxA+0.1), xlim=c(0,-minPsi),
-           xlab = "Leaf pressure (-MPa)", ylab = "Photosynthesis (sunlit)")
+           xlab = "Leaf pressure (-MPa)", 
+           ylab = expression(paste("Photosynthesis sunlit  "(mu*mol*C%.%s^{-1}%.%m^{-2}))))
     } else {
       lines(-l[[i]]$PsiLeaf, phsunlit[[i]]$Photosynthesis, lty=i)
     }
@@ -76,7 +78,8 @@ transp.stomatalRegulationPlot<-function(x, soil, meteo, day, timestep, latitude,
   for(i in 1:ncoh) {
     if(i==1) {
       plot(-l[[i]]$PsiLeaf, phshade[[i]]$Photosynthesis, type="l", ylim=c(0,maxA+0.1), xlim=c(0,-minPsi),
-           xlab = "Leaf pressure (-MPa)", ylab = "Photosynthesis (shade)")
+           xlab = "Leaf pressure (-MPa)", 
+           ylab = expression(paste("Photosynthesis shade  "(mu*mol*C%.%s^{-1}%.%m^{-2}))))
     } else {
       lines(-l[[i]]$PsiLeaf, phshade[[i]]$Photosynthesis, lty=i)
     }
@@ -85,7 +88,8 @@ transp.stomatalRegulationPlot<-function(x, soil, meteo, day, timestep, latitude,
   for(i in 1:ncoh) {
     if(i==1) {
       plot(-l[[i]]$PsiLeaf, phsunlit[[i]]$WaterVaporConductance, type="l", xlim=c(0,-minPsi),
-           xlab = "Leaf pressure (-MPa)", ylim=c(minGw, maxGw), ylab = "Leaf stomatal conductance (sunlit)")
+           xlab = "Leaf pressure (-MPa)", ylim=c(minGw, maxGw), 
+           ylab = expression(paste("Leaf sunlit stomatal conductance "(mol*H[2]*O%.%s^{-1}%.%m^{-2}))))
     } else {
       lines(-l[[i]]$PsiLeaf, phsunlit[[i]]$WaterVaporConductance, lty=i)
     }
@@ -94,7 +98,8 @@ transp.stomatalRegulationPlot<-function(x, soil, meteo, day, timestep, latitude,
   for(i in 1:ncoh) {
     if(i==1) {
       plot(-l[[i]]$PsiLeaf, phshade[[i]]$WaterVaporConductance, type="l", xlim=c(0,-minPsi),
-           xlab = "Leaf pressure (-MPa)", ylim=c(minGw, maxGw), ylab = "Leaf stomatal conductance (shade)")
+           xlab = "Leaf pressure (-MPa)", ylim=c(minGw, maxGw), 
+           ylab = expression(paste("Leaf shade stomatal conductance "(mol*H[2]*O%.%s^{-1}%.%m^{-2}))))
     } else {
       lines(-l[[i]]$PsiLeaf, phshade[[i]]$WaterVaporConductance, lty=i)
     }
@@ -103,7 +108,8 @@ transp.stomatalRegulationPlot<-function(x, soil, meteo, day, timestep, latitude,
   for(i in 1:ncoh) {
     if(i==1) {
       plot(-l[[i]]$PsiLeaf, phsunlit[[i]]$LeafTemperature, type="l", xlim=c(0,-minPsi),
-           xlab = "Leaf pressure (-MPa)", ylim=c(minTemp, maxTemp), ylab = "Leaf temperature (sunlit)")
+           xlab = "Leaf pressure (-MPa)", ylim=c(minTemp, maxTemp), 
+           ylab = "Leaf sunlit temperature (degrees C)")
     } else {
       lines(-l[[i]]$PsiLeaf, phsunlit[[i]]$LeafTemperature, lty=i)
     }
@@ -112,7 +118,8 @@ transp.stomatalRegulationPlot<-function(x, soil, meteo, day, timestep, latitude,
   for(i in 1:ncoh) {
     if(i==1) {
       plot(-l[[i]]$PsiLeaf, phshade[[i]]$LeafTemperature, type="l", xlim=c(0,-minPsi),
-           xlab = "Leaf pressure (-MPa)", ylim=c(minTemp, maxTemp), ylab = "Leaf temperature (shade)")
+           xlab = "Leaf pressure (-MPa)", ylim=c(minTemp, maxTemp), 
+           ylab = "Leaf shade temperature (degrees C)")
     } else {
       lines(-l[[i]]$PsiLeaf, phshade[[i]]$LeafTemperature, lty=i)
     }
@@ -121,7 +128,8 @@ transp.stomatalRegulationPlot<-function(x, soil, meteo, day, timestep, latitude,
   for(i in 1:ncoh) {
     if(i==1) {
       plot(-l[[i]]$PsiLeaf, phsunlit[[i]]$LeafVPD, type="l", xlim=c(0,-minPsi),
-           xlab = "Leaf pressure (-MPa)", ylim=c(minVPD, maxVPD), ylab = "Leaf VPD (sunlit)")
+           xlab = "Leaf pressure (-MPa)", ylim=c(minVPD, maxVPD), 
+           ylab = "Leaf sunlit VPD (kPa)")
     } else {
       lines(-l[[i]]$PsiLeaf, phsunlit[[i]]$LeafVPD, lty=i)
     }
@@ -130,7 +138,8 @@ transp.stomatalRegulationPlot<-function(x, soil, meteo, day, timestep, latitude,
   for(i in 1:ncoh) {
     if(i==1) {
       plot(-l[[i]]$PsiLeaf, phshade[[i]]$LeafVPD, type="l", xlim=c(0,-minPsi),
-           xlab = "Leaf pressure (-MPa)", ylim=c(minVPD, maxVPD), ylab = "Leaf VPD (shade)")
+           xlab = "Leaf pressure (-MPa)", ylim=c(minVPD, maxVPD), 
+           ylab = "Leaf shade VPD (kPa)")
     } else {
       lines(-l[[i]]$PsiLeaf, phshade[[i]]$LeafVPD, lty=i)
     }

@@ -11,7 +11,8 @@
 Function \code{light.layerIrradianceFraction} calculates the fraction of above-canopy irradiance reaching each vegetation layer. Function \code{light.layerSunlitFraction} calculates the proportion of sunlit leaves in each vegetation layer. Function \code{light.cohortSunlitShadeAbsorbedRadiation} calculates the amount of radiation absorved by cohort and vegetation layers, while differentiating between sunlit and shade leaves.
 }
 \usage{
-light.layerIrradianceFraction(LAIme, LAImd, LAImx, k, alpha, trunkExtinctionFraction = 0.1)
+light.layerIrradianceFraction(LAIme, LAImd, LAImx, k, alpha, 
+                              trunkExtinctionFraction = 0.1)
 light.layerSunlitFraction(LAIme, LAImd, kb)
 light.cohortSunlitShadeAbsorbedRadiation(Ib0, Id0, Ibf, Idf, beta,
                                          LAIme, LAImd,

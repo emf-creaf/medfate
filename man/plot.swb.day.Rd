@@ -11,7 +11,7 @@ Function \code{plot} plots the results of the soil water balance model for one d
 \method{plot}{swb.day}(x, type="PlantPsi", bySpecies = FALSE, xlab = NULL, ylab = NULL, ...)
 }
 \arguments{
-  \item{x, object}{An object of class \code{swb}}
+  \item{x}{An object of class \code{swb}}
   \item{type}{The information to be plotted:
   \itemize{
     \item{\code{"PlantPsi"}:}{ Plant cohort water potential.}
@@ -30,6 +30,9 @@ Function \code{plot} plots the results of the soil water balance model for one d
    }
   }
   \item{bySpecies}{Allows aggregating output by species, before drawing plots. Aggregation can involve a sum (as for plant lai or transpiration) or a LAI-weighted mean (as for plant stress or plant water potential).}
+  \item{xlab}{x-axis label.}
+  \item{ylab}{y-axis label.}
+  \item{...}{Additional parameters for function \code{plot}.}
 
 }
 \author{

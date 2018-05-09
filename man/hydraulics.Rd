@@ -86,7 +86,8 @@ hydraulics.supplyFunctionNetwork(psiSoil,
                           ntrial = 10, psiTol = 0.0001, ETol = 1e-04)
 hydraulics.supplyFunctionPlot(x, soil, type = "E")   
 hydraulics.vulnerabilityCurvePlot(x, soil = NULL, type="leaf",  
-                                  psiVec =  seq(-0.1, -8.0, by =-0.01), relative = FALSE)   
+                                  psiVec =  seq(-0.1, -8.0, by =-0.01), 
+                                  relative = FALSE)   
 hydraulics.heightFactor(height, taper = TRUE)
 hydraulics.taperFactor(height)
 hydraulics.psiCrit(c, d)

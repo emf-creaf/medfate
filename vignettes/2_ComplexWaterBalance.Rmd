@@ -225,7 +225,7 @@ Before using the soil water balance model, is important to understand its sub-mo
 Given a `swbInput` object, we can use function `hydraulics.vulnerabilityCurvePlot()` to inspect **vulnerability curves**, i.e. how hydraulic conductance changes with the water potential, for each plant cohort and each of the different elements of the soil-plant hydraulic network: rhizosphere, roots, stems and leaves:
 
 ```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 7}
-par(mar=c(4,4,1,1), mfrow=c(2,2))
+par(mar=c(5,5,1,1), mfrow=c(2,2))
 hydraulics.vulnerabilityCurvePlot(x, type="leaf")
 hydraulics.vulnerabilityCurvePlot(x, type="stem")
 hydraulics.vulnerabilityCurvePlot(x, type="root")
@@ -238,7 +238,7 @@ Note that the last call to `hydraulics.vulnerabilityCurvePlot()` includes a `soi
 
 The vulnerability curves conformng the hydraulic network are used in the model to build the **supply function**, which relates water flow (i.e. transpiration) with the drop of water potential along the continuum. The supply function contains not only these two variables, but also the water potential of intermediate nodes in the the hydraulic network. Function `hydraulics.supplyFunctionPlot()` can be used to inspect any of this variables:
 ```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 7}
-par(mar=c(4,4,1,1), mfrow=c(2,2))
+par(mar=c(5,5,1,1), mfrow=c(2,2))
 hydraulics.supplyFunctionPlot(x, examplesoil, type="E")
 hydraulics.supplyFunctionPlot(x, examplesoil, type="Elayers")
 hydraulics.supplyFunctionPlot(x, examplesoil, type="dEdP")
@@ -251,7 +251,7 @@ Calls to `hydraulics.supplyFunctionPlot()` always need both a `swbInput` object 
 
 The soil water balance model determines stomatal conductance and transpiration separately for sunlit and shade leaves. Stomatal conductance is determined after building a photosynthesis function corresponding to the supply function and finding the value of stomatal conductance that maximizes carbon revenue while avoiding hydraulic damage. Given a meteorological input and a chosen moment in time (day and timestep), the R function `transp.stomatalRegulationPlot()` allows displaying the supply and photosynthesis curves for sunlit and shade leaves, along with an indication of the values corresponding to the chosen stomatal conductance:
 
-```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 18}
+```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 17}
 d = 100
 transp.stomatalRegulationPlot(x, examplesoil, examplemeteo, day = d, timestep=12,
                               latitude = 41.82592, elevation = 100)
@@ -311,19 +311,19 @@ Element `Plants` contains output values by plant cohort and subdaily time step. 
 names(sd1$Plants)
 ```
 With the following code, we use function `plot.swb.day()` to draw plots of daily variation per species of plant transpiration (L·m$^{-2}$), transpiration per leaf area (in L·m$^{-2}$·LAI$^{-1}$), net photosynthesis per leaf area (in g C·m$^{-2}$·LAI$^{-1}$), and plant water potential (in MPa):
-```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 7}
-par(mar=c(4,4,1,1), mfrow=c(2,2))
+```{r, fig=TRUE, fig.align="center", fig.width=7.5, fig.height = 7.5}
+par(mar=c(5,5,1,1), mfrow=c(2,2))
 plot(sd1, type = "PlantTranspiration", bySpecies = T)
 plot(sd1, type = "LeafTranspiration", bySpecies = T)
 plot(sd1, type = "LeafPhotosynthesis", bySpecies = T)
 plot(sd1, type = "PlantPsi", bySpecies = T)
 ```
 We can also use the same function to plot variations in temperature for sunlit and shade leaves (note that sunlit leaves of some species reach temperatures higher than the canopy):
-```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 3.5}
+```{r, fig=TRUE, fig.align="center", fig.width=7.5, fig.height = 4}
 plot(sd1, type = "LeafTemperature", bySpecies=TRUE)
 ```
 Or we can plot variations in stomatal conductance for sunlit and shade leaves:
-```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 3.5}
+```{r, fig=TRUE, fig.align="center", fig.width=7.5, fig.height = 4}
 plot(sd1, type = "LeafStomatalConductance", bySpecies=TRUE)
 ```
 
@@ -380,7 +380,7 @@ head(S$PlantPsi)
 Package `medfate` also provides a `plot` function for objects of class `swb`. It can be used to show the meteorological input. Additionally, it can also be used to draw soil and plant variables. In the code below we draw water fluxes, soil water potentials, plant transpiration and plant (mid-day) water potential:
 
 ```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 7}
-par(mar=c(4,4,1,1), mfrow=c(2,2))
+par(mar=c(5,5,1,1), mfrow=c(2,2))
 plot(S, type="ET", bySpecies = TRUE)
 plot(S, type="Psi", bySpecies = TRUE)
 plot(S, type="PlantTranspiration", bySpecies = TRUE)
@@ -425,7 +425,7 @@ sd1<-swb.day(x, examplesoil, rownames(examplemeteo)[d], d ,
 ```
 We use function `plot.swb.day()` to draw plots of daily variation per species of plant transpiration (L·m$^{-2}$), transpiration per leaf area (in L·m$^{-2}$·LAI$^{-1}$), net photosynthesis per leaf area (in g C·m$^{-2}$·LAI$^{-1}$), and plant water potential (in MPa):
 ```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 7}
-par(mar=c(4,4,1,1), mfrow=c(2,2))
+par(mar=c(5,5,1,1), mfrow=c(2,2))
 plot(sd1, type = "PlantTranspiration", bySpecies = T)
 plot(sd1, type = "LeafTranspiration", bySpecies = T)
 plot(sd1, type = "LeafPhotosynthesis", bySpecies = T)

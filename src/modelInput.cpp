@@ -618,7 +618,6 @@ List forest2growthInput(List x, List soil, DataFrame SpParams, List control) {
   int ntree = treeData.nrows();
   int nshrub = shrubData.nrows();
   
-  int nlayers = d.size();
   NumericVector Z(ntree+nshrub); //Rooting depth in cm
   NumericVector treeZ50 = treeData["Z50"];
   NumericVector treeZ95 = treeData["Z95"];

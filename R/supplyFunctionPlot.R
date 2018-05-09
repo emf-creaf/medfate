@@ -53,7 +53,9 @@ hydraulics.supplyFunctionPlot<-function(x, soil, type="E") {
     for(i in 1:ncoh) {
       if(i==1) {
         plot(-l[[i]]$PsiLeaf, l[[i]]$E, type="l", ylim=c(0,maxE+0.1), xlim=c(0,-minPsi),
-             xlab = "Leaf pressure (-MPa)", ylab = expression(paste("Flow rate (mmol ",H[2],O,"·",s^{-1},"·",m^{-2},")")), col=i)
+             xlab = "Leaf pressure (-MPa)", 
+             ylab = expression(paste("Flow rate    ",(mmolH[2]*O%.%s^{-1}%.%m^{-2}))), 
+             col=i)
       } else {
         lines(-l[[i]]$PsiLeaf, l[[i]]$E, lty=i, col=i)
       }
@@ -68,7 +70,9 @@ hydraulics.supplyFunctionPlot<-function(x, soil, type="E") {
     for(i in 1:ncoh) {
       if(i==1) {
         plot(-l[[i]]$PsiLeaf, l[[i]]$dEdP, type="l", ylim=c(0,maxdEdP+0.1), xlim=c(0,-minPsi),
-             xlab = "Leaf pressure (-MPa)", ylab = expression(paste("dE/dP (mmol ",H[2],O,"·",s^{-1},"·",m^{-2},"·",MPa^{-1},")")), col=i)
+             xlab = "Leaf pressure (-MPa)", 
+             ylab = expression(paste("dE/dP  ",(mmol*H[2]*O%.%s^{-1}%.%m^{-2}%.%MPa^{-1}))), 
+             col=i)
       } else {
         lines(-l[[i]]$PsiLeaf, l[[i]]$dEdP, lty=i, col=i)
       }
@@ -119,7 +123,9 @@ hydraulics.supplyFunctionPlot<-function(x, soil, type="E") {
     for(i in 1:ncoh) {
       if(i==1) {
         matplot(-l[[i]]$PsiLeaf, l[[i]]$Elayers, type="l", lty=i, ylim=c(minE-0.1,maxE+0.1), xlim=c(0,-minPsi),
-             xlab = "Leaf pressure (-MPa)", ylab = expression(paste("Flow rate from/to layers (mmol ",H[2],O,"·",s^{-1},"·",m^{-2},")")), col = col)
+             xlab = "Leaf pressure (-MPa)", 
+             ylab = expression(paste("Flow rate from/to layers   "(mmolH[2]*O%.%s^{-1}%.%m^{-2}))), 
+             col = col)
       } else {
         matlines(-l[[i]]$PsiLeaf, l[[i]]$Elayers, lty=i, col = col)
       }

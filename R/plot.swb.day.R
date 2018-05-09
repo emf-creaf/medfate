@@ -33,7 +33,7 @@ plot.swb.day<-function(x, type="PlantPsi", bySpecies = FALSE, xlab = NULL, ylab 
       OM = apply(OM,2, tapply, x$cohorts$Name, sum, na.rm=T)
       cohortnames = rownames(OM)
     } 
-    if(is.null(ylab)) ylab = "Plant transpiration"
+    if(is.null(ylab)) ylab = expression(paste("Plant transpiration   ",(L%.%m^{-2})))
     matplot(timesteps, t(OM), lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", ylab=ylab, xlab=xlab, frame=FALSE, ...)
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
@@ -49,7 +49,7 @@ plot.swb.day<-function(x, type="PlantPsi", bySpecies = FALSE, xlab = NULL, ylab 
     } else {
       OM = sweep(OM,1,Plants$LAI,"/")
     }
-    if(is.null(ylab)) ylab = "Transpiration per leaf area"
+    if(is.null(ylab)) ylab = expression(paste("Transpiration per leaf area   ",(L%.%m^{-2})))
     matplot(timesteps, t(OM), lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", ylab=ylab, xlab=xlab, frame=FALSE, ...)
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
@@ -61,7 +61,7 @@ plot.swb.day<-function(x, type="PlantPsi", bySpecies = FALSE, xlab = NULL, ylab 
       OM = apply(OM,2, tapply, x$cohorts$Name, sum, na.rm=T)
       cohortnames = rownames(OM)
     } 
-    if(is.null(ylab)) ylab = "Net photosynthesis"
+    if(is.null(ylab)) ylab = expression(paste("Net photosynthesis  ",(g*C%.%m^{-2})))
     matplot(timesteps, t(OM), lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", ylab=ylab, xlab=xlab, frame=FALSE, ...)
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
@@ -77,7 +77,7 @@ plot.swb.day<-function(x, type="PlantPsi", bySpecies = FALSE, xlab = NULL, ylab 
     } else {
       OM = sweep(OM,1,Plants$LAI,"/")
     }
-    if(is.null(ylab)) ylab = "Net photosynthesis per leaf area"
+    if(is.null(ylab)) ylab = expression(paste("Net photosynthesis per leaf area  ",(g*C%.%m^{-2})))
     matplot(timesteps, t(OM), lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", ylab=ylab, xlab=xlab, frame=FALSE, ...)
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
@@ -98,9 +98,11 @@ plot.swb.day<-function(x, type="PlantPsi", bySpecies = FALSE, xlab = NULL, ylab 
       cohortnames = rownames(OM_SL)
     } 
     matplot(timesteps, t(OM_SL), lty=1:length(cohortnames), col = 1:length(cohortnames),
-            lwd=1, type="l", ylab="Absorbed SWR sunlit (W·m-2)", xlab=xlab, frame=FALSE, ...)
+            lwd=1, type="l", ylab=expression(paste("Absorbed SWR sunlit    ",(W%.%m^{-2}))), 
+            xlab=xlab, frame=FALSE, ...)
     matplot(timesteps, t(OM_SH), lty=1:length(cohortnames), col = 1:length(cohortnames),
-            lwd=1, type="l", ylab="Absorbed SWR shade (W·m-2)", xlab=xlab, frame=FALSE, ...)
+            lwd=1, type="l", ylab=expression(paste("Absorbed SWR shade    ",(W%.%m^{-2}))), 
+            xlab=xlab, frame=FALSE, ...)
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
            col = 1:length(cohortnames), bty="n")
     par(old)
@@ -122,9 +124,11 @@ plot.swb.day<-function(x, type="PlantPsi", bySpecies = FALSE, xlab = NULL, ylab 
       OM_SH = OM_SH/Plants$LAIshade
     }
     matplot(timesteps, t(OM_SL), lty=1:length(cohortnames), col = 1:length(cohortnames),
-            lwd=1, type="l", ylab="Absorbed SWR sunlit per leaf (W·m-2)", xlab=xlab, frame=FALSE, ...)
+            lwd=1, type="l", ylab=expression(paste("Absorbed SWR sunlit per leaf   ",(W%.%m^{-2}))), 
+            xlab=xlab, frame=FALSE, ...)
     matplot(timesteps, t(OM_SH), lty=1:length(cohortnames), col = 1:length(cohortnames),
-            lwd=1, type="l", ylab="Absorbed SWR shade per leaf (W·m-2)", xlab=xlab, frame=FALSE, ...)
+            lwd=1, type="l", ylab=expression(paste("Absorbed SWR shade per leaf   ",(W%.%m^{-2}))), 
+            xlab=xlab, frame=FALSE, ...)
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
            col = 1:length(cohortnames), bty="n")
     par(old)
@@ -144,9 +148,9 @@ plot.swb.day<-function(x, type="PlantPsi", bySpecies = FALSE, xlab = NULL, ylab 
       cohortnames = rownames(OM_SL)
     } 
     matplot(timesteps, t(OM_SL), lty=1:length(cohortnames), col = 1:length(cohortnames),
-            lwd=1, type="l", ylab="Leaf temperature sunlit (ºC)", xlab=xlab, frame=FALSE, ...)
+            lwd=1, type="l", ylab="Leaf temperature sunlit (degrees C)", xlab=xlab, frame=FALSE, ...)
     matplot(timesteps, t(OM_SH), lty=1:length(cohortnames), col = 1:length(cohortnames),
-            lwd=1, type="l", ylab="Leaf temperature shade (ºC)", xlab=xlab, frame=FALSE, ...)
+            lwd=1, type="l", ylab="Leaf temperature shade (degrees C)", xlab=xlab, frame=FALSE, ...)
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
            col = 1:length(cohortnames), bty="n")
     par(old)
@@ -189,16 +193,18 @@ plot.swb.day<-function(x, type="PlantPsi", bySpecies = FALSE, xlab = NULL, ylab 
     } 
     
     matplot(timesteps, t(OM_SL), lty=1:length(cohortnames), col = 1:length(cohortnames),
-            lwd=1, type="l", ylab="Stomatal conductance sunlit (mmol·m-2·s-1)", xlab=xlab, frame=FALSE, ...)
+            lwd=1, type="l", ylab=expression(paste("Stomatal conductance sunlit   ", (mmol%.%m^{-2}%.%s^{-1}))), 
+            xlab=xlab, frame=FALSE, ...)
     matplot(timesteps, t(OM_SH), lty=1:length(cohortnames), col = 1:length(cohortnames),
-            lwd=1, type="l", ylab="Stomatal conductance shade (mmol·m-2·s-1)", xlab=xlab, frame=FALSE, ...)
+            lwd=1, type="l", ylab=expression(paste("Stomatal conductance shade   ", (mmol%.%m^{-2}%.%s^{-1}))), 
+            xlab=xlab, frame=FALSE, ...)
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
            col = 1:length(cohortnames), bty="n")
     par(old)
   }
   else if(type=="Temperature") {
     
-    if(is.null(ylab)) ylab = "Temperature (ºC)"
+    if(is.null(ylab)) ylab = "Temperature (degrees C)"
     plot(timesteps, EB$Temperature$Tatm, 
          ylim = c(min(c(EB$Temperature$Tatm,EB$Temperature$Tcan,EB$Temperature$Tsoil.1)),
                   max(c(EB$Temperature$Tatm,EB$Temperature$Tcan,EB$Temperature$Tsoil.1))),
@@ -213,7 +219,7 @@ plot.swb.day<-function(x, type="PlantPsi", bySpecies = FALSE, xlab = NULL, ylab 
            col = c("black", "red", "gray"), bty="n")
   } 
   else if(type=="CanopyEnergyBalance") {
-    if(is.null(ylab)) ylab = "W·m-2"    
+    if(is.null(ylab)) ylab = expression(W%.%m^{-2})     
     mxmn = max(abs(EB$CanopyEnergyBalance))    
     plot(timesteps, EB$CanopyEnergyBalance$Ebalcan, type="n", 
          ylab=ylab, xlab=xlab, ylim = c(-mxmn,mxmn),
@@ -232,7 +238,7 @@ plot.swb.day<-function(x, type="PlantPsi", bySpecies = FALSE, xlab = NULL, ylab 
                     "Convection can./atm.","Convection soil/can.", "Balance"),...)        
   }
   else if(type=="SoilEnergyBalance") {
-    if(is.null(ylab)) ylab = "W·m-2"    
+    if(is.null(ylab)) ylab = expression(W%.%m^{-2})    
     mxmn = max(abs(EB$SoilEnergyBalance))    
     plot(timesteps, EB$SoilEnergyBalance$Ebalsoil, type="n", 
          ylab=ylab, xlab=xlab, ylim = c(-mxmn,mxmn),

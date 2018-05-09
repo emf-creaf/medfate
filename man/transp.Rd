@@ -11,7 +11,8 @@ Transpiration submodel functions
 Set of high-level functions used in the calculation of stomatal conductance and transpiration. Function \code{transp.profitMaximization} calculates gain and cost functions, as well as profit maximization from supply and photosynthesis input functions. Function \code{transp.stomatalRegulation} calculates profit maximization for all time steps in a day, starting from stand description, soil description and meteorological input. Function \code{transp.stomatalRegulationPlot} produces a plot with the cohort supply functions against water potential and a plot with the cohort photosynthesis functions against water potential, both with the maximum profit values indicated.
 }
 \usage{
-transp.profitMaximization(supplyFunction, photosynthesisFunction, type, Gwmax, kstemmax = NA)
+transp.profitMaximization(supplyFunction, photosynthesisFunction, type, 
+                          Gwmax, kleafmax = NA)
 transp.stomatalRegulation(x, soil, meteo, day,
                              latitude, elevation)
 transp.stomatalRegulationPlot(x, soil, meteo, day, timestep, 
