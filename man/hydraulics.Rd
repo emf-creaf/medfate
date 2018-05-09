@@ -21,6 +21,7 @@
 \alias{hydraulics.supplyFunctionThreeElements}
 \alias{hydraulics.supplyFunctionNetwork}
 \alias{hydraulics.supplyFunctionPlot}
+\alias{hydraulics.vulnerabilityCurvePlot}
 \alias{hydraulics.heightFactor}
 \alias{hydraulics.taperFactor}
 \alias{hydraulics.vanGenuchtenConductance}
@@ -31,7 +32,7 @@
 Hydraulic submodel functions
 }
 \description{
-Set of functions used in the implementation of Sperry and Love's (2015) hydraulic model.
+Set of functions used in the implementation of plant hydraulics.
 }
 \usage{
 hydraulics.psi2K(psi, Psi_extract, ws = 3.0)
@@ -83,7 +84,9 @@ hydraulics.supplyFunctionNetwork(psiSoil,
                           psiCav = 0,
                           minFlow = 0, maxNsteps = 400, psiStep = -0.001, psiMax = -10.0, 
                           ntrial = 10, psiTol = 0.0001, ETol = 1e-04)
-hydraulics.supplyFunctionPlot(soil, x, type = "E")   
+hydraulics.supplyFunctionPlot(x, soil, type = "E")   
+hydraulics.vulnerabilityCurvePlot(x, soil = NULL, type="leaf",  
+                                  psiVec =  seq(-0.1, -8.0, by =-0.01), relative = FALSE)   
 hydraulics.heightFactor(height, taper = TRUE)
 hydraulics.taperFactor(height)
 hydraulics.psiCrit(c, d)
@@ -138,10 +141,12 @@ hydraulics.xylemPsi(kxylem, kxylemmax, c, d)
   \item{kxylem}{Xylem hydraulic conductance (defined as flow per surface unit and per pressure drop).}
   \item{x}{An object of class \code{\link{swbInput}}.}
   \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
-  \item{type}{Plot type (either \code{"E"}, \code{"Elayers"}, \code{"PsiRhizo"} or \code{"dEdP"}).}
+  \item{type}{Plot type. For \code{hydraulics.supplyFunctionPlot}, either \code{"E"}, \code{"Elayers"}, \code{"PsiStem"}, \code{"PsiRoot"}, \code{"PsiRhizo"} or \code{"dEdP"}). For \code{hydraulics.vulnerabilityCurvePlot}, either \code{"leaf"}, \code{"stem"}, \code{"root"}, or \code{"rhizosphere"}).}
+  \item{psiVec}{Vector of water potential values to evaluate for the vulnerability curve.}
+  \item{relative}{A flag to relativize vulnerability curves to the [0-1] interval.}
 }
 \details{
-Details of the hydraulic model are given in a vignette. Function \code{hydraulics.supplyFunctionPlot} draws a plot of the supply function for the given \code{soil} object and network properties of each plant cohort in \code{x}.
+Details of the hydraulic model are given in a vignette. Function \code{hydraulics.supplyFunctionPlot} draws a plot of the supply function for the given \code{soil} object and network properties of each plant cohort in \code{x}. Function \code{hydraulics.vulnerabilityCurvePlot} draws a plot of the vulnerability curves for the given \code{soil} object and network properties of each plant cohort in \code{x}.
 }
 \value{
 Values returned for each function are:

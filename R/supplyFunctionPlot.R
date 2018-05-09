@@ -1,5 +1,5 @@
 #Draws the supply function (E vs PlantPsi) for the current soil state and plant hydraulic parameters
-hydraulics.supplyFunctionPlot<-function(soil, x, type="E") {
+hydraulics.supplyFunctionPlot<-function(x, soil, type="E") {
   
   TYPES = c("E","dEdP","PsiStem","PsiRoot","PsiRhizo", "Elayers")
   type = match.arg(type,TYPES)  
