@@ -114,7 +114,7 @@ control = defaultControl()
 x = forest2growthInput(exampleforest,examplesoil, SpParamsMED, control)
 
 #Call simulation function
-S1<-growth(x, examplesoil, examplemeteo)
+G1<-growth(x, examplesoil, examplemeteo)
  
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

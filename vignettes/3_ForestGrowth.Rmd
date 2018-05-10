@@ -1,0 +1,313 @@
+---
+title: "3. Forest growth simulation"
+author: "Miquel De Caceres"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: TRUE
+vignette: >
+  %\VignetteIndexEntry{3. Forest growth simulation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignettePackage{medfate}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(medfate)
+```
+
+## About this vignette
+
+This document describes how to run a growth model of `medfate`. This document is meant to teach users to run the simulation model within R. All the details of the model design and formulation are given in a separate document that can be found on the website of the R package (http://vegmod.ctfc.cat/medfateweb). 
+
+## Preparing model inputs
+Any forest growth model needs information on climate, vegetation and soils of the forest stand to be simulated. Moreover, since models in `medfate` differentiate between species, information on species-specific model parameters is also needed. In this subsection we explain the different steps (including optional pathways) to prepare all the data needed to run function `growth()`.
+
+### Soils
+
+#### Required soil data
+Simulation models in `medfate` require information on the physical attributes of soil, namely soil depth, texture, bulk density and rock fragment content. Soil information needs to be entered as a data frame with soil layers in rows and physical attributes in columns. The model accepts different layer definitions (from one to five layers). Soil physical attributes can be initialized to default values, for a given number of layers, using function `defaultSoilParams()`:
+
+```{r}
+spar = defaultSoilParams(2)
+print(spar)
+```
+where `widths` are soil layer widths in mm; `clay` and `sand` are the percentage of clay and sand, in percent of dry weight, `om` stands for organic matter, `bd` is bulk density (in g·cm$^{-3}$) and `rfc` the percentage of rock fragments. Because soil properties vary strongly at fine spatial scales, ideally soil physical attributes should be measured on samples taken at the forest stand to be simulated. For those users lacking such data, soil properties modelled at larger scales are available via soilgrids.org (see function `soilgridsParams()`).
+
+#### Soil input object
+
+The soil input for function `growth()` is actually an object of class `soil` that is created using a function with the same name:
+```{r}
+examplesoil = soil(spar, VG_PTF = "Toth")
+names(examplesoil)
+```
+In addition to the physical soil description, this object contains soil parameters needed for soil water balance simulations. For example, `macro` specifies the macroporosity of each layer; `Gsoil` and `Ksoil` are parameters needed to model  infiltration of water into the soil. With  `VG_PTF = "Toth"`, we specify that van Genuchten parameters are estimated from texture using the pedotransfer functions of Toth et al (2015). The details of all elements in the soil object can be found in the help page for function `soil()`.
+
+The soil object is also used to store the moisture degree of each soil layer. In particular, `W` contains the state variable that represents moisture (i.e. the proportion of moisture relative to field capacity), which is normally initialized to 1 for each layer:
+```{r}
+examplesoil$W
+```
+Analogously, `Temp` contains the temperature (in degrees) of soil layers, initialized to missing values:
+```{r}
+examplesoil$Temp
+```
+
+It is important to remember that, unlike normal objects in R, any simulation will modify the values of state variables in soil object. That is, the state of the soil at the end of the simulated process (i.e. `W`) will be stored (the same for `Temp`). Hence, one can use the same object to simulate water balance sequentially and the final state of one simulation is the initial state of the next.
+
+#### Water retention curves
+At any time, one can print the status of the soil object using its `print` function:
+```{r}
+print(examplesoil, model = "SX")
+```
+The modelled moisture content of the soil depends on the **water retention curve** used to represent the relationship between soil volumetric water content ($\theta$; %) and soil water potential ($\Psi$; MPa). By default the Saxton equations are used as water retention curve, but the user may choose to follow Van Genuchten - Mualem equations, which will give different values for the same texture:
+```{r}
+print(examplesoil, model="VG")
+```
+While Saxton equations use texture and organic matter as inputs, the Van Genuchten-Mualem equations need other parameters, which are estimated using pedotransfer functions and their names start with `VG_`. The following figure illustrates the difference between the two water retention models:
+```{r, fig = TRUE, fig.width= 5, fig.height=4, fig.align= 'center', echo=TRUE}
+par(mar=c(4,4,1,1))
+# Plot Saxton's retention curve
+psi = seq(-0.01, -2.0, by=-0.001)
+plot(-psi, lapply(as.list(psi), FUN=soil.psi2thetaSX, clay=25, sand=25), 
+     type="l", ylim=c(0,0.5),ylab="Water content (prop. volume)", xlab = "Soil water potential (-MPa)")
+
+#Add Van Genuchten retention curve
+lines(-psi, lapply(as.list(psi), FUN=soil.psi2thetaVG, 
+      alpha=examplesoil$VG_alpha[1], n = examplesoil$VG_n[1], 
+      theta_res = examplesoil$VG_theta_res[1], 
+      theta_sat = examplesoil$VG_theta_sat[1]), lty=2) 
+
+legend("topright", legend=c("Saxton", "Van Genuchten"), lty=c(1,2), bty="n")
+
+```
+
+Functions `soil.psi2thetaSX()` and `soil.psi2thetaVG()` (and their counterparts) can be used to calculate volumetric soil moisture from the water potential using the two models. When simulating soil water balance, the user can choose among the two models (see control parameters below). The soil water balance model described in this vignette uses the van Genuchten-Mualem equations for water retention curves and rhizosphere conductance.
+
+### Species data table
+
+Simulation models in `medfate` require a data frame with species parameter values. The package provides a default data set of parameter values for 89 Mediterranean species (rows), resulting from bibliographic search, fit to empirical data or expert-based guesses:
+
+```{r}
+data("SpParamsMED")
+```
+
+These species commonly occur in the Spanish forest inventory of Catalonia, but may not be sufficient for other areas. A large number of parameters (columns) can be found in `SpParamsMED`:
+
+```{r}
+names(SpParamsMED)
+```
+
+Not all parameters are needed for all models. The user can find parameter definitions in the help page of this data set. However, to fully understand the role of parameters in the model, the user should read the details of model design and formulation (http://vegmod.ctfc.cat/medfateweb). 
+
+### Vegetation
+
+#### Forest plot data
+
+Models included in `medfate` were primarily designed to be ran on **forest inventory plots**. In this kind of data, the  vegetation of a sampled area is described in terms of woody plants (trees and shrubs) along with their size and species identity. Forest plots in `medfate` are assumed to be in a format that follows closely the Spanish forest inventory. Each forest plot is represented in an object of class `forest`, a list that contains several elements. Among them, the most important items are two data frames, `treeData` (for trees) and `shrubData` for shrubs:
+```{r}
+data(exampleforest)
+exampleforest
+```
+Trees are expected to be primarily described in terms of species, diameter (DBH) and height, whereas shrubs are described in terms of species, percent cover and mean height. 
+
+#### Aboveground and belowground data tables
+Because the forest plot format is rather specific, simulation functions in `medfate` allow starting in a more general way using two data frames, one with **aboveground** information (i.e. the leave area and size of plants) and the other with **belowground** information (i.e. root distribution). The aboveground data frame does not distinguish between trees and shrubs. It includes, for each plant cohort to be considered in rows, its *species identity*, *height* and *leaf area index* (LAI). While users can build their input data themselves, we use function `forest2aboveground()` on the object `exampleforest` to show how should the data look like:
+```{r}
+above = forest2aboveground(exampleforest, SpParamsMED)
+above
+```
+Note that the call to `forest2aboveground()` included species parameters, because species-specific values are needed to calculate leaf area from tree diameters or shrub cover. Columns `N`, `DBH` and `Cover` are required for simulating growth, but not for soil water balance, which only requires columns `SP`, `H` (in cm), `CR` (i.e. the crown ratio), `LAI_live`, `LAI_expanded` and `LAI_dead`. Here plant cohorts are given unique codes that tell us whether they correspond to trees or shrubs, but the user can use other row identifiers as long as they are unique. In practice, the user only needs to worry to calculate the values for `LAI_live`. `LAI_live` and `LAI_expanded` can contain the same LAI values, and `LAI_dead` is normally zero. This is so because models update `LAI_expanded` and `LAI_dead` according to the leaf phenology of species.
+
+Regarding **belowground** information, a matrix describing for each plant cohort, the proportion of fine roots in each soil layer. As before, we use function `forest2belowground()` on the object `exampleforest` to show how should the data look like:
+```{r}
+Z = c(exampleforest$treeData$Z95, exampleforest$shrubData$Z)
+Z
+below = forest2belowground(exampleforest, examplesoil, SpParamsMED)
+below
+```
+For the tree data in the forest object, function `forest2belowground()` internally takes values of `Z50` and `Z95` and calls  function `root.ldrDistribution()` to estimate the distribution of fine roots according to the linear dose response model. For example the first row is:
+```{r}
+root.ldrDistribution(exampleforest$treeData$Z50[1], 
+                     exampleforest$treeData$Z95[1],
+                     examplesoil$dVec)
+```
+For shrubs, `medfate` assumes a conic distribution and calls function `root.conicDistribution()`. For example, the third row of `below` is calculated:
+```{r}
+root.conicDistribution(exampleforest$shrubData$Z[1], 
+                     examplesoil$dVec)
+```
+The user is free to build any numeric matrix for root distribution, as long as values in rows sum always one (i.e. we have proportions). Otherwise, functions `root.conicDistribution()` and `root.ldrDistribution()` can be used to calculate root distribution under specific assumptions.
+
+
+### Meteorological forcing
+
+Soil water simulations require daily weather inputs. The weather variables that are required depend on the complexity of the soil water balance model we are using. The complex simulation model requires precipitation, radiation, wind speed, min/max temparature and relative humitidy. Here we show an example of meteorological forcing data. 
+```{r}
+data(examplemeteo)
+head(examplemeteo)
+```
+Simulation models in `medfate` have been designed to work along with data generated from package `meteoland`. The user is strongly recommended to resort to this package to obtain suitable weather input for soil water balance simulations.
+
+### Simulation control
+
+Apart from data inputs, the behaviour of simulation models can be controlled using a set of global parameters. The default parameterization is obtained using function `defaultControl()`:
+
+```{r}
+control = defaultControl()
+```
+The names of all control parameters are:
+```{r}
+names(control)
+```
+
+Most of these parameters should normally be left to their default value. However, there are some that deserve explanation here: 
+
+ 1. Console output can be turned off by setting `verbose = FALSE`. 
+ 2. The complexity of the soil water balance calculations is controlled using `transpirationMode`. 
+ 3. The consideration of a single (or two) carbon storage pool is controlled using `storagePool`.
+ 
+```{r}
+control$storagePool = "two"
+```
+
+
+### Growth input object
+
+A last step is needed before calling simulation functions. It consists in the compilation of all aboveground and belowground parameters and the specification of additional parameter values for each plant cohort, such as their light extinction coefficient or their response to drought. This is done by calling function `growthInput()` and taking species parameter values from species parameter data:
+```{r}
+x = growthInput(above, Z, below, examplesoil, SpParamsMED, control)
+```
+If one has a `forest` object, the `growthInput` object can be generated in directly from it, avoiding the need to explicitly build aboveground and belowground data frames:
+
+```{r}
+x = forest2growthInput(exampleforest, examplesoil, SpParamsMED, control)
+```
+
+All the input information for forest data and species parameter values can be inspected by printing different elements of the input object, which are: 
+```{r}
+names(x)
+```
+First, information about the cohort species is found in element `cohorts`  (i.e. code, species and name):
+```{r}
+x$cohorts
+```
+Element `canopy` contains state variables of the whole canopy, which include growth degree days and canopy temperature:
+```{r}
+x$canopy
+```
+Element `above` contains the aboveground structure data that we already know:
+```{r}
+x$above
+```
+As with the soil input object, the `growthInput` object may be modified during simulations. In the case of soil water balance, these modifications concern `LAI_expanded` and `LAI_dead` in element `above`, as well as canopy variables.
+
+Aboveground parameters related to plant transpiration can be seen in `paramsTransp`:
+```{r}
+x$paramsTransp
+```
+
+Belowground parameters can be seen in `below` and include root distribution as well as maximum root and rhizosphere conductances by soil layer:
+```{r}
+x$below
+```
+
+Parameters related to plant growth can be seen in `paramsGrowth` and `paramsAllometries`:
+```{r}
+x$paramsGrowth
+x$paramsAllometries
+```
+
+
+Finally, note that one can play with plant-specific parameters for growth simulation (instead of using species-level values) by modifying manually the parameter values in this object.
+
+
+
+### Growth simulation
+In this vignette we will use one year of example meteorological data with the following precipitation and temperature seasonal trends:
+```{r}
+G1<-growth(x, examplesoil, examplemeteo)
+
+```
+
+### Plotting results
+```{r, fig=TRUE, echo=FALSE, fig.width=7.5, fig.height=4}
+par(mar=c(4,4,1,4), mfrow=c(1,2))
+plot(G1, "PlantPhotosynthesis")
+plot(G1, "PlantTranspiration")
+```
+
+```{r, fig=TRUE, echo=FALSE, fig.width=7.5, fig.height=7}
+
+dates = as.Date(row.names(examplemeteo))
+par(mar=c(4,4,1,1), mfrow=c(2,2))
+plot(dates,G1$PlantPhotosynthesis[,1], type="l", xlab="",ylab="Photosynthesis per area (gC/m2)")
+lines(dates, G1$PlantPhotosynthesis[,2], lty=2)
+
+x1 = (G1$PlantPhotosynthesis[,1])/(x$above$N[1]/10000)#/G1$PlantLAIlive[,2]
+x2 = (G1$PlantPhotosynthesis[,2])/(x$above$N[2]/10000)#/G1$PlantLAIlive[,2]
+plot(dates,x1, type="l", xlab="",ylab="Photosynthesis per ind. (gC/ind)")
+lines(dates, x2, lty=2)
+abline(h=0, col="gray")
+
+plot(dates,G1$PlantTranspiration[,1], type="l", xlab="",ylab="Transpiration per area (mm/m2)")
+lines(dates, G1$PlantTranspiration[,2], lty=2)
+abline(h=0, col="gray")
+
+x1 = (G1$PlantTranspiration[,1])/(x$above$N[1]/10000)
+x2 = (G1$PlantTranspiration[,2])/(x$above$N[2]/10000)
+plot(dates,x1, type="l", xlab="",ylab="Transpiration per ind. (mm/ind)")
+lines(dates, x2, lty=2)
+abline(h=0, col="gray")
+```
+
+```{r, fig=TRUE, echo=FALSE, fig.width=7.5, fig.height=7}
+par(mar=c(4,4,1,4), mfrow=c(2,2))
+plot(dates,G1$PlantRespiration[,1], type="l", xlab="",ylab="Respiration per ground area (gC/m2)", ylim=c(0,2))
+lines(dates, G1$PlantRespiration[,2], lty=2)
+
+x1 = (G1$PlantRespiration[,1])/(x$above$N[1]/10000)#/G1$PlantLAIlive[,2]
+x2 = (G1$PlantRespiration[,2])/(x$above$N[2]/10000)#/G1$PlantLAIlive[,2]
+plot(dates,x1, type="l", xlab="",ylab="Respiration per individual (gC/ind)", ylim=c(0,35))
+lines(dates, x2, lty=2)
+abline(h=0, col="gray")
+
+plot(dates,G1$PlantPhotosynthesis[,1]-G1$PlantRespiration[,1], type="l", xlab="",ylab="Photosynthesis-Respiration per ground area (gC/m2)", ylim=c(-1,7))
+lines(dates, G1$PlantPhotosynthesis[,2]-G1$PlantRespiration[,2], lty=2)
+abline(h=0, col="gray")
+
+x1 = (G1$PlantPhotosynthesis[,1]-G1$PlantRespiration[,1])/(x$above$N[1]/10000)
+x2 = (G1$PlantPhotosynthesis[,2]-G1$PlantRespiration[,2])/(x$above$N[2]/10000)
+plot(dates,x1, type="l", xlab="",ylab="Photosynthesis-Respiration per individual (gC/ind)")
+lines(dates, x2, lty=2)
+abline(h=0, col="gray")
+```
+
+
+```{r, fig=TRUE, echo=FALSE, fig.width=5, fig.height=4}
+par(mar=c(4,4,1,4))
+plot(dates,100*G1$PlantSAgrowth[,1]/G1$PlantSA[,1], type="l", xlab="",ylab="Relative growth rate (cm2·cm-2)")
+lines(dates,100*G1$PlantSAgrowth[,2]/G1$PlantSA[,2],lty=2)
+# axis(4, at=c(0,4,8,12), labels=c(0,1,2,3))
+# mtext("Transpiration (mm)", 4, line=2)
+legend("topleft", lty=c(1,2), legend = c("Tree individuals","Shrub individuals"), bty="n")
+```
+
+
+```{r, fig=TRUE, echo=FALSE, fig.width=5, fig.height=4}
+par(mar=c(4,4,1,4))
+plot(dates,G1$PlantLAIlive[,1], type="l", xlab="",ylab="Live leaf area index (m2·m-2)", ylim=c(0,2.5))
+lines(dates,G1$PlantLAIlive[,2],lty=2)
+legend("topleft", lty=c(1,2), legend = c("Tree individuals","Shrub individuals"), bty="n")
+```
+```{r, fig=TRUE, echo=FALSE, fig.width=7.5, fig.height=3.5}
+par(mar=c(4,4,1,4), mfrow=c(1,2))
+plot(dates,100*G1$PlantCstorageFast[,1], type="l", ylab="Fast C pool (%)", xlab="", ylim=c(0,100))
+lines(dates,100*G1$PlantCstorageFast[,2], lty=2)
+legend("bottomleft", lty=c(1,2), legend = c("Tree individuals","Shrub individuals"), bty="n")
+plot(dates,100*G1$PlantCstorageSlow[,1], type="l", ylab="Slow C pool (%)", xlab="", ylim=c(0,100))
+lines(dates,100*G1$PlantCstorageSlow[,2], lty=2)
+legend("bottomleft", lty=c(1,2), legend = c("Tree individuals","Shrub individuals"), bty="n")
+
+```
+

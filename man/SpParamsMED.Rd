@@ -27,10 +27,14 @@ A data set of parameter values for Mediterranean species, resulting from bibliog
     \item{\code{a_cw}, \code{b_cw}}{Regression coefficients used to calculated crown width of trees.}
     \item{\code{TreeType}}{A factor with levels \code{Conifer}, \code{Deciduous}, \code{Evergreen} or \code{Shrub}}
     \item{\code{SLA}}{Specific leaf area (mm2/mg = m2/kg).}
+    \item{\code{LeafDensity}}{Density of leaf tissue (dry weight over volume).}
     \item{\code{r635}}{Ratio between the weight of leaves plus branches and the weight of leaves alone for branches of 6.35 mm.}
     \item{\code{pDead}}{Proportion of total fine fuels that are dead}
     \item{\code{maxFMC}}{Maximum fuel moisture (in percent of dry weight)}
     \item{\code{minFMC}}{Minimum fuel moisture (in percent of dry weight)}
+    \item{\code{LeafPI0}}{Osmotic potential at full turgor.}
+    \item{\code{LeafEPS}}{Modulus of elasticity (capacity of the cell wall to resist changes in volume in response to changes in turgor).}
+    \item{\code{LeafAF}}{Apoplastic fraction (proportion of water outside the living cells).}
     \item{\code{Cstoragepmax}}{Maximum storage capacity, expressed as the fraction of C per total respiratory of C.}
     \item{\code{LeafDuration}}{Leaf duration (in years).}
     \item{\code{LigninPercent}}{Percent of lignin+cutin over dry weight in leaves.}

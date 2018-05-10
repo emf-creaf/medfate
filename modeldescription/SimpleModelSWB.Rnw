@@ -90,18 +90,25 @@ Soil can be described using between 1 and 5 soil layers. For each soil layer $s$
 \item{$P_{rocks,s}$ [\texttt{rfc}]: Percentage of rock fragment content ($P_{rocks,s}$).}
 \end{itemize}
 
-Soil texture (i.e. percent of sand, silt and clay), bulk density and rock fragment content can differ between soil layers. Specifying a deep rocky layer is important because Mediterranean plants may extend their roots into cracks existing in the parent rock (Ruffault et al., 2013). 
+Soil texture (i.e. percent of sand, silt and clay), bulk density and rock fragment content can differ between soil layers. Specifying a deep rocky layer is important because Mediterranean plants may extend their roots into cracks existing in the parent rock (Ruffault et al., 2013). For those users lacking soil information, package \texttt{medfate} provides a function to get the soil description from SoilGrids.org (see help for \texttt{soilgridsParams()}).
 
 \subsubsection{Soil initialization}
 Soil initialization is needed to estimate soil hydrological parameters from the physical description. requires a list of soil parameters  that is is given as input to function \texttt{soil()}: 
 \begin{itemize}
 \item{$P_{macro, s}$ [\texttt{macro}]: Percentage of macroporosity corresponding
-to each soil layers. Macroporosity values can be calculated for each soil layer
-from its percentage of sand and bulk density, using the equations given in Stolf
-et al. (2011).}
+to each soil layers. Macroporosity values are calculated for each soil layer
+using the equations given in Stolf et al. (2011).}
+\item{$\gamma_{soil}$ [\texttt{Gsoil}]: The maximum daily evaporation from soil(mm·day$^{-1}$).}
+\item{$\gamma_{soil}$ [\texttt{Gsoil}]: The maximum daily evaporation from bare soil(mm·day$^{-1}$).}
+\item{$\kappa_{soil}$ [\texttt{Ksoil}]: Extinction parameter to regulate the amount of water extracted from each soil layer during bare soil evaporation.}
+\item{$n_{s}$, $\alpha_{s}$, $\theta_{sat,s}$,$\theta_{res,s}$ [\texttt{VG\_n}, \texttt{VG\_alpha}, \texttt{VG\_theta\_sat}, \texttt{VG\_theta\_res}]: Parameter of the Van Genuchten-Mualem equations.}
 \end{itemize}
+Parameters of the van Genuchten-Mualem model are estimated from the physical description of the soil using two kinds of pedotransfer functions (see help for \texttt{soil()}): 
+\begin{enumerate}
+\item{Using the USDA texture classification and the average texture class parameters given by Carsel and Parrish (1988).}
+\item{Directly from the soil texture, organic matter and bulk density, using the pedotransfer functions in Toth et al. (2015).}
+\end{enumerate}
 
-For those users lacking soil information, package \texttt{medfate} provides a function to get the soil description from SoilGrids.org (see \texttt{soilgridsParams()}).
 
 
 \subsubsection{Water retention curves}
@@ -120,7 +127,6 @@ where $A$ and $B$ depend on the texture and, if available, organic matter in the
 where $\theta(\psi)$ is the water retention, $\theta_{sat}$ is the saturated water content, $\theta_{res}$ is the residual water content, $\alpha$ is related to the inverse of the air entry pressure (and here has to be expressed in MPa$^{-1}$), and $n$ is a measure of the pore-size distribution. When initializing soil using function \texttt{soil()}, the parameters of the Van Genuchten model are estimated from texture, using the USDA texture classification and the parameters in Carsel and Parrish (1988), but they can be modified manually afterwards.}
 \end{itemize}
 
-\subsubsection{Water holding capacity}
 Soil water holding capacity ($V_s$, in mm) in soil layer $s$ is defined as the volumetric water content at field capacity:
 \begin{equation}
 V_s = d_s\cdot ((100-P_{rocks,s})/100)\cdot\theta_{fc,s}
@@ -860,7 +866,9 @@ Function \texttt{swb} returns a list object whose elements are data tables. Each
 
 \item{Watanabe, T., Mizutani, K., 1996. Model study on micrometeorological aspects of rainfall interception over an evergreen broad-leaved. Agric. For. Meteorol. 80, 195–214.}
 
-\item{Genuchten, M. Van. 1980. A closed-form equation for predicting the hydraulic conductivity of unsaturated soils. Soil Science Society of America Journal, 44, 892–898.}
+\item{van Genuchten, M. 1980. A closed-form equation for predicting the hydraulic conductivity of unsaturated soils. Soil Science Society of America Journal, 44, 892–898.}
+
+\item{Toth, B., Weynants, M., Nemes, A., Mako, A., Bilas, G., Toth, G. 2015. New generation of hydraulic pedotransfer functions for Europe. European Journal of Soil Science 66: 226–238.}
 \end{itemize}
 
 \end{document}

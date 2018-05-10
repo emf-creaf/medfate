@@ -14,7 +14,7 @@ Function \code{plot} plots the results of the soil water balance model (see \cod
 \method{plot}{swb}(x, type="PET_Precipitation", bySpecies = FALSE,
                    yearAxis=FALSE, xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL,
                    add = FALSE, ...)
-\method{plot}{growth}(x, type="PET_Precipitation", yearAxis=FALSE, 
+\method{plot}{growth}(x, type="PET_Precipitation", bySpecies = FALSE, yearAxis=FALSE, 
     xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL,...)
 \method{summary}{swb}(object, freq="years", output="DailyBalance", FUN=sum, bySpecies = FALSE, ...)
 \method{summary}{growth}(object, freq="years", output="DailyBalance", FUN=sum, bySpecies = FALSE, ...)

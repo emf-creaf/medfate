@@ -78,46 +78,43 @@ Every day the model performs the following actions:
 
 \section{Model inputs}
 \subsection{Soil description}
-Soil can be described using between 1 and 5 soil layers. For each soil layer $s$ the following parameters are needed:
+Soil can be described using between 1 and 5 soil layers. For each soil layer $s$ the following parameters are needed for each soil layer (see function \texttt{defaultSoilParams()}):
 \begin{itemize}
-\item{Soil layer width ($d_s$, in mm).}
-\item{Soil texture: percent of sand ($P_{sand,s}$), silt ($P_{silt,s}$) and clay ($P_{clay,s}$).}
-\item{Soil organic mater (optional).}
-\item{Macroporosity (percent of macropores).}
-\item{Percentage of rock fragment content ($P_{rocks,s}$).}
+\item{$Z_{s}$ [\texttt{widths}]: Soil layer width ($d_s$, in mm).}
+\item{$P_{clay,s}$ [\texttt{clay}]: Percent of clay.}
+\item{$P_{sand,s}$ [\texttt{sand}]: Percent of sand.}
+\item{$OM$ [\texttt{om}]: Percentage of organic mater per dry weight (can be missing).}
+\item{$BD_{s}$ [\texttt{bd}]: Bulk density (g/cm3) of each soil layer.}
+\item{$P_{rocks,s}$ [\texttt{rfc}]: Percentage of rock fragment content ($P_{rocks,s}$).}
 \end{itemize}
 
-Soil texture (i.e. percent of sand, silt and clay), bulk density and rock fragment content can differ between soil layers. Specifying a deep rocky layer is important because Mediterranean plants may extend their roots into cracks existing in the parent rock (Ruffault et al., 2013). 
+Soil texture (i.e. percent of sand, silt and clay), bulk density and rock fragment content can differ between soil layers. Specifying a deep rocky layer is important because Mediterranean plants may extend their roots into cracks existing in the parent rock (Ruffault et al., 2013). For those users lacking soil information, package \texttt{medfate} provides a function to get the soil description from SoilGrids.org (see help for \texttt{soilgridsParams()}).
 
-\subsubsection{Soil parameters}
-Soil initialization requires a list of soil parameters (see function \texttt{defaultSoilParams()}) that is is given as input to function \texttt{soil()}: 
+\subsubsection{Soil initialization}
+Soil initialization is needed to estimate soil hydrological parameters from the physical description. requires a list of soil parameters  that is is given as input to function \texttt{soil()}: 
 \begin{itemize}
-\item{$Z_{s}$ [\texttt{widths}]: Depth corresponding to each soil layer (in mm).}
-\item{$P_{clay,s}$ [\texttt{clay}]: Percentage of clay corresponding to each soil layer.}
-\item{$P_{sand,s}$ [\texttt{sand}]: Percentage of sand corresponding to each soil layer.}
-\item{$P_{rocks,s}$ [\texttt{rfc}]: Percentage of rock fragments (>2 mm)
-corresponding to each soil layer.}
 \item{$P_{macro, s}$ [\texttt{macro}]: Percentage of macroporosity corresponding
-to each soil layers. Macroporosity values can be calculated for each soil layer
-from its percentage of sand and bulk density, using the equations given in Stolf
-et al. (2011).}
-\item{$OM$ [\texttt{om}]: Percentage of organic matter corresponding to each soil layer.}
-\item{$\gamma_{soil}$ [\texttt{Gsoil}]: Maximum daily bare soil evaporation
-(mm·day$^{-1}$).}
-\item{$\kappa_{soil}$ [\texttt{Ksoil}]: Exponential decay coefficient for bare
-soil evaporation.}
+to each soil layers. Macroporosity values are calculated for each soil layer
+using the equations given in Stolf et al. (2011).}
+\item{$\gamma_{soil}$ [\texttt{Gsoil}]: The maximum daily evaporation from soil(mm·day$^{-1}$).}
+\item{$\gamma_{soil}$ [\texttt{Gsoil}]: The maximum daily evaporation from bare soil(mm·day$^{-1}$).}
+\item{$\kappa_{soil}$ [\texttt{Ksoil}]: Extinction parameter to regulate the amount of water extracted from each soil layer during bare soil evaporation.}
+\item{$n_{s}$, $\alpha_{s}$, $\theta_{sat,s}$,$\theta_{res,s}$ [\texttt{VG\_n}, \texttt{VG\_alpha}, \texttt{VG\_theta\_sat}, \texttt{VG\_theta\_res}]: Parameter of the Van Genuchten-Mualem equations.}
 \end{itemize}
+Parameters of the van Genuchten-Mualem model are estimated from the physical description of the soil using two kinds of pedotransfer functions (see help for \texttt{soil()}): 
+\begin{enumerate}
+\item{Using the USDA texture classification and the average texture class parameters given by Carsel and Parrish (1988).}
+\item{Directly from the soil texture, organic matter and bulk density, using the pedotransfer functions in Toth et al. (2015).}
+\end{enumerate}
 
-For those users lacking soil information, package \texttt{medfate} provides a function to get the soil description from SoilGrids.org (see \texttt{soilgridsParams()}).
+
 
 \subsubsection{Water retention curves}
 Water retention curve of a soil layer $s$ is the relationship between the water content, $\theta_s$ (in m$^3 \cdot $m$^{-3}$ of soil), and the soil water potential, $\Psi_s$ (in MPa). This curve is characteristic for different types of soil, and is also called the soil moisture characteristic. The well known equations of van Genuchten (1980) are used to model the water retention curve:
 \begin{equation}
 \theta(\Psi) = \theta_{res}+\frac{\theta_{sat}+\theta_{res}}{\left[1+ (\alpha \cdot \Psi)^n \right]^{1-1/n}}
 \end{equation}
-where $\theta(\psi)$ is the water retention, $\theta_{sat}$ is the saturated water content, $\theta_{res}$ is the residual water content, $\alpha$ is related to the inverse of the air entry pressure (and here has to be expressed in MPa$^{-1}$), and $n$ is a measure of the pore-size distribution. When initializing soil using function \texttt{soil()}, the parameters of the Van Genuchten model are estimated from texture, using the USDA texture classification and the parameters in Carsel and Parrish (1988), but they can be modified manually afterwards.
-
-\subsubsection{Water holding capacity}
+where $\theta(\psi)$ is the water retention, $\theta_{sat}$ is the saturated water content, $\theta_{res}$ is the residual water content, $\alpha$ is related to the inverse of the air entry pressure (and here has to be expressed in MPa$^{-1}$), and $n$ is a measure of the pore-size distribution. 
 
 Soil water holding capacity ($V_s$, in mm) in soil layer $s$ is defined as the volumetric water content at field capacity:
 \begin{equation}
@@ -893,6 +890,8 @@ Function \texttt{swb} returns a list object whose elements are data tables. Each
 \item{Stolf, R., Thurler, Á., Oliveira, O., Bacchi, S., Reichardt, K., 2011. Method to estimate soil macroporosity and microporosity based on sand content and bulk density. Rev. Bras. Ciencias do Solo 35, 447–459.}
 
 \item{Watanabe, T., Mizutani, K., 1996. Model study on micrometeorological aspects of rainfall interception over an evergreen broad-leaved. Agric. For. Meteorol. 80, 195–214.}
+
+\item{Toth, B., Weynants, M., Nemes, A., Mako, A., Bilas, G., & Toth, G. 2015. New generation of hydraulic pedotransfer functions for Europe. European Journal of Soil Science 66: 226–238.}
 \end{itemize}
 
 \end{document}

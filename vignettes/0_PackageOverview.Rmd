@@ -39,6 +39,8 @@ Trees are expected to be primarily described in terms of species, diameter (DBH)
 
 ### Spatial forest objects
 
+TO BE DONE
+
 ## Dynamic simulation functions
 ### Soil water balance and plant drought stress
 
@@ -71,8 +73,11 @@ Package `medfate` allows simulating plant growth of a set of cohorts (competing 
 
 ## Static functions
 ### Plant and forest attributes
+Package `medfate` include a number of functions to examine properties of the plants conforming the `forest` object, summary functions at the stand level or vertical profiles of several physical properties:
 
-TO BE DONE
+* **plant.* **: Cohort-level information (species name, id, leaf area, height...)
+* **forest.* **: Forest-level attributes (e.g. basal area)
+* **vprofile.* **: Vertical profiles (light, wind, fuel density, leaf area density).
 
 ### Fuel properties and fire hazard
 
@@ -91,9 +96,9 @@ Many of the functions included in `medfate` are internally called by simulation 
 * **biophysics.* **: Physical and biophysical utility functions.
 * **hydraulics.* **: Plant hydraulics.
 * **light.* **: Light extinction and absortion.
+* **moisture.* **: Live tissue moisture.
 * **photo.* **: Leaf photosynthesis.
 * **root.* **: Root distribution and conductance calculations.
 * **soil.* **: Soil hydraulics and thermodynamics.
 * **swb.* **: Soil water balance subprocesses (rainfall interception, soil evaporation, soil infiltration) and parameter optimization/calibration routines.
-* **transp.* **: Regulation of stomatal transpiration.
-* **vprofile.* **: Vertical profiles (light, wind, fuel density, leaf area density).
+* **transp.* **: Stomatal regulation and resulting transpiration/photosynthesis.
