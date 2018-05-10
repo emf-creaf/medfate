@@ -1,20 +1,28 @@
-medfate
+medfate - Mediterranean forest functioning
 ================
 
 ## Introduction
 
 Package `medfate` is designed to assist forest scientists to simulate
 forest functioning and dynamics, using cohort-based description of
-forest stands. The models are parameterized for species of the
-Mediterranean region (particularly for Catalonia, NE Spain), but forests
-with different composition could be modelled with different parameter
-sets.
+forest stands. The package provides functions to simulate the following
+processes:
+
+  - Soil water balance (De Cáceres et al. 2015)
+  - Plant hydraulics, transpiration and photosynthesis
+  - Plant growth
+
+The models are parameterized for species of the Mediterranean region
+(particularly for Catalonia, NE Spain), but forests with different
+composition could be modelled with different parameter sets.
 
 ## Package installation and documentation
 
 Package `medfate` can be found at [CRAN](https://cran.r-project.org/),
 but the version in this repository is very old. We recommend users to
-download the latest stable versions GitHub as follows:
+download and install the latest stable versions GitHub as follows
+(required packages `devtools` and `curl` should be installed/updated
+first):
 
 ``` r
 devtools::install_github("miquelcaceres/medfate")
