@@ -67,10 +67,6 @@ hydraulics.regulatedPsiTwoElements(Emax, psiSoil, krhizomax, kxylemmax, n, alpha
 
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{psi}{A scalar (or a vector, depending on the function) with water potential (in MPa).}
-  \item{K}{Whole-plant relative conductance (0-1).}
-  \item{Psi_extract}{Soil water potential (in MPa) corresponding to 50\% whole-plant relative conductance.}
-  \item{ws}{Exponent of the whole-plant relative conductance Weibull function.}
   \item{v}{Proportion of fine roots within each soil layer.}
   \item{krhizomax}{Maximum rhizosphere hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}
   \item{kxylemmax}{Maximum xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}
@@ -100,12 +96,9 @@ hydraulics.regulatedPsiTwoElements(Emax, psiSoil, krhizomax, kxylemmax, n, alpha
   \item{allowNegativeFlux}{A boolean to indicate wether negative flux (i.e. from plant to soil) is allowed.}
   \item{maxNsteps}{Maximum number of steps in the construction of supply functions.}
   \item{ntrial}{Maximum number of steps in Newton-Raphson optimization.}
-  \item{kxylem}{Xylem hydraulic conductance (defined as flow per surface unit and per pressure drop).}
   \item{x}{An object of class \code{\link{swbInput}}.}
   \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
   \item{type}{Plot type. For \code{hydraulics.supplyFunctionPlot}, either \code{"E"}, \code{"Elayers"}, \code{"PsiStem"}, \code{"PsiRoot"}, \code{"PsiRhizo"} or \code{"dEdP"}). For \code{hydraulics.vulnerabilityCurvePlot}, either \code{"leaf"}, \code{"stem"}, \code{"root"}, or \code{"rhizosphere"}).}
-  \item{psiVec}{Vector of water potential values to evaluate for the vulnerability curve.}
-  \item{relative}{A flag to relativize vulnerability curves to the [0-1] interval.}
 }
 \details{
 Details of the hydraulic model are given in a vignette. Function \code{hydraulics.supplyFunctionPlot} draws a plot of the supply function for the given \code{soil} object and network properties of each plant cohort in \code{x}. Function \code{hydraulics.vulnerabilityCurvePlot} draws a plot of the vulnerability curves for the given \code{soil} object and network properties of each plant cohort in \code{x}.

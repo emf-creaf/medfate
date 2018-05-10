@@ -36,7 +36,6 @@ hydraulics.taperFactorSavage(height)
 \arguments{
   \item{v}{Proportion of fine roots within each soil layer.}
   \item{krhizomax}{Maximum rhizosphere hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}
-  \item{kxylemmax}{Maximum xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}
   \item{kleafmax}{Maximum leaf hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}
   \item{kstemmax}{Maximum stem xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}
   \item{krootmax}{Maximum root xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}
@@ -53,6 +52,7 @@ hydraulics.taperFactorSavage(height)
   \item{angiosperm}{A boolean flag to indicate an angiosperm species.}
   \item{taper}{A boolean flag to indicate correction by taper of xylem conduits (Christoffersen et al. 2017).}
   \item{widths}{Soil layer depths (in mm).}
+  \item{depthWidthRatio}{Ratio between radius of the soil layer with the largest radius and maximum rooting depth.}
 }
 \details{
 Details of the hydraulic model are given in a vignette.

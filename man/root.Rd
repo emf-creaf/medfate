@@ -3,7 +3,7 @@
 \alias{root.ldrDistribution}
 \alias{root.conicDistribution}
 \alias{root.xylemConductanceProportions}
-
+\alias{root.rootLengths}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Distribution of fine roots}
 \description{
@@ -13,6 +13,7 @@ Functions to calculate the distribution of fine roots within the soil, given roo
 root.conicDistribution(Zcone, d)
 root.ldrDistribution(Z50, Z95, d)
 root.xylemConductanceProportions(v, d, depthWidthRatio = 1)
+root.rootLengths(v, d, depthWidthRatio = 1.0)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

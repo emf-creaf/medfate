@@ -37,32 +37,8 @@ hydraulics.xylemPsi(kxylem, kxylemmax, c, d)
   \item{v}{Proportion of fine roots within each soil layer.}
   \item{krhizomax}{Maximum rhizosphere hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}
   \item{kxylemmax}{Maximum xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}
-  \item{kleafmax}{Maximum leaf hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}
-  \item{kstemmax}{Maximum stem xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}
-  \item{krootmax}{Maximum root xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}
-  \item{E}{Flow per surface unit.}
-  \item{Emax}{Maximum flow per surface unit.}
-  \item{psiUpstream}{Water potential upstream (in MPa). In a one-component model corresponds to soil potential. In a two-component model corresponds to the potential inside the roots.}
-  \item{psiCav}{Minimum water potential (in MPa) experienced (for irreversible cavitation).}
-  \item{minFlow}{Minimum flow in supply function.}
-  \item{psiPlant}{Plant water potential (in MPa).}
-  \item{psiSoil}{Soil water potential (in MPa). A scalar or a vector depending on the function.}
-  \item{psiRhizo}{Soil water potential (in MPa) in the rhizosphere (root surface).}
-  \item{psiStep}{Water potential precision (in MPa).}
-  \item{psiTol}{Precision for water potential estimates (in MPa).}
-  \item{psiIni}{Vector of initial water potential values (in MPa).}
-  \item{psiMax}{Minimum (maximum in absolute value) water potential to be considered (in MPa).}
-  \item{dE}{Increment of flow per surface unit.}
-  \item{ETol}{Precision for water flow per surface unit.}
   \item{c, d}{Parameters of the Weibull function (generic xylem vulnerability curve).}
-  \item{rootc, rootd}{Parameters of the Weibull function for roots (root xylem vulnerability curve).}
-  \item{stemc, stemd}{Parameters of the Weibull function for stems (stem xylem vulnerability curve).}
-  \item{leafc, leafd}{Parameters of the Weibull function for leaves (leaf vulnerability curve).}
   \item{n, alpha}{Parameters of the Van Genuchten function (rhizosphere vulnerability curve).}
-  \item{nsoil, alphasoil}{Parameter vectors of the Van Genuchten function (rhizosphere vulnerability curve) with one value for each soil layer.}
-  \item{allowNegativeFlux}{A boolean to indicate wether negative flux (i.e. from plant to soil) is allowed.}
-  \item{maxNsteps}{Maximum number of steps in the construction of supply functions.}
-  \item{ntrial}{Maximum number of steps in Newton-Raphson optimization.}
   \item{kxylem}{Xylem hydraulic conductance (defined as flow per surface unit and per pressure drop).}
   \item{x}{An object of class \code{\link{swbInput}}.}
   \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
