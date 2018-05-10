@@ -160,7 +160,7 @@ for(i in 1:ndays) {
   examplesoil2 = soil(sp)
   
   sday1 = swb.day(x1, examplesoil1, date, doy, tmin, tmax,
-                  rhmin,rhmax,rad,wind, latitude,elevation,0,0,0)
+                  rhmin,rhmax,rad,wind, latitude,elevation,0)
   S1Eplanttot[i] = sum(sday1$EplantCoh)
   S1ELayer1[i] = sday1$EplantVec[1]
   S1ELayer2[i] = sday1$EplantVec[2]

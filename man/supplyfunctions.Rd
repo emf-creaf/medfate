@@ -1,9 +1,5 @@
 \encoding{UTF-8}
-\name{hydraulics}
-\alias{hydraulics.psi2K}
-\alias{hydraulics.K2Psi}
-\alias{hydraulics.averagePsi}
-\alias{hydraulics.averageRhizosphereResistancePercent}
+\name{supplyfunctions}
 \alias{hydraulics.E2psiXylem}
 \alias{hydraulics.E2psiTwoElements}
 \alias{hydraulics.E2psiVanGenuchten}
@@ -11,9 +7,6 @@
 \alias{hydraulics.Ecrit}
 \alias{hydraulics.EVanGenuchten}
 \alias{hydraulics.EXylem}
-\alias{hydraulics.findRhizosphereMaximumConductance}
-\alias{hydraulics.maximumStemHydraulicConductance}
-\alias{hydraulics.psiCrit}
 \alias{hydraulics.regulatedPsiXylem}
 \alias{hydraulics.regulatedPsiTwoElements}
 \alias{hydraulics.supplyFunctionOneXylem}
@@ -21,26 +14,14 @@
 \alias{hydraulics.supplyFunctionThreeElements}
 \alias{hydraulics.supplyFunctionNetwork}
 \alias{hydraulics.supplyFunctionPlot}
-\alias{hydraulics.vulnerabilityCurvePlot}
-\alias{hydraulics.heightFactor}
-\alias{hydraulics.taperFactor}
-\alias{hydraulics.vanGenuchtenConductance}
-\alias{hydraulics.xylemConductance}
-\alias{hydraulics.xylemPsi}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Hydraulic submodel functions
+Hydraulic supply functions
 }
 \description{
-Set of functions used in the implementation of plant hydraulics.
+Set of functions used in the implementation of hydraulic supply functions (Sperry \& Love 2015).
 }
 \usage{
-hydraulics.psi2K(psi, Psi_extract, ws = 3.0)
-hydraulics.K2Psi(K, Psi_extract, ws = 3.0)
-hydraulics.averagePsi(psi, v, c, d)
-hydraulics.averageRhizosphereResistancePercent(krhizomax, n, alpha,
-                                               krootmax, rootc, rootd,
-                                               kstemmax, stemc, stemd, psiStep = -0.01)
 hydraulics.E2psiXylem(E, psiUpstream, kxylemmax, c, d, psiCav = 0, psiStep = -0.01, 
                  psiMax = -10.0)
 hydraulics.E2psiVanGenuchten(E, psiSoil, krhizomax, n, alpha, 
@@ -60,12 +41,6 @@ hydraulics.EVanGenuchten(psiRhizo, psiSoil, krhizomax, n, alpha,
                          psiStep = -0.001, psiTol = 0.0001, allowNegativeFlux = TRUE)
 hydraulics.EXylem(psiPlant, psiUpstream, kxylemmax, c, d, allowNegativeFlux = TRUE, 
                   psiCav = 0)
-hydraulics.findRhizosphereMaximumConductance(averageResistancePercent, n, alpha,
-                                             krootmax, rootc, rootd,
-                                             kstemmax, stemc, stemd,
-                                             kleafmax, leafc, leafd)        
-hydraulics.maximumStemHydraulicConductance(xylemConductivity, Al2As, height, 
-                                           taper = FALSE)
 hydraulics.supplyFunctionOneXylem(psiSoil, v, 
                           kstemmax, stemc, stemd, psiCav = 0,
                           maxNsteps=200, psiStep = -0.001, psiMax = -10.0, dE=0.01)
@@ -85,18 +60,9 @@ hydraulics.supplyFunctionNetwork(psiSoil,
                           minFlow = 0, maxNsteps = 400, psiStep = -0.001, psiMax = -10.0, 
                           ntrial = 10, psiTol = 0.0001, ETol = 1e-04)
 hydraulics.supplyFunctionPlot(x, soil, type = "E")   
-hydraulics.vulnerabilityCurvePlot(x, soil = NULL, type="leaf",  
-                                  psiVec =  seq(-0.1, -8.0, by =-0.01), 
-                                  relative = FALSE)   
-hydraulics.heightFactor(height, taper = TRUE)
-hydraulics.taperFactor(height)
-hydraulics.psiCrit(c, d)
 hydraulics.regulatedPsiXylem(E, psiUpstream, kxylemmax, c, d, psiStep = -0.01)
 hydraulics.regulatedPsiTwoElements(Emax, psiSoil, krhizomax, kxylemmax, n, alpha, 
                                    c, d, dE = 0.1, psiMax = -10.0)
-hydraulics.vanGenuchtenConductance(psi, krhizomax, n, alpha)
-hydraulics.xylemConductance(psi, kxylemmax, c, d)
-hydraulics.xylemPsi(kxylem, kxylemmax, c, d)
 }
 
 %- maybe also 'usage' for other objects documented here.
@@ -132,11 +98,6 @@ hydraulics.xylemPsi(kxylem, kxylemmax, c, d)
   \item{n, alpha}{Parameters of the Van Genuchten function (rhizosphere vulnerability curve).}
   \item{nsoil, alphasoil}{Parameter vectors of the Van Genuchten function (rhizosphere vulnerability curve) with one value for each soil layer.}
   \item{allowNegativeFlux}{A boolean to indicate wether negative flux (i.e. from plant to soil) is allowed.}
-  \item{averageResistancePercent}{Average (across water potential values) resistance percent of the rhizosphere, with respect to total resistance (rhizosphere + root xylem + stem xylem).}
-  \item{xylemConductivity}{Xylem conductivity as flow per length of conduit and pressure drop (in kg·m-1·s-1·MPa-1).}
-  \item{Al2As}{Leaf area to sapwood area (in m2·m-2).}
-  \item{height}{Plant height (in cm).}
-  \item{taper}{A boolean flag to indicate correction by taper of xylem conduits (Christoffersen et al. 2017)}
   \item{maxNsteps}{Maximum number of steps in the construction of supply functions.}
   \item{ntrial}{Maximum number of steps in Newton-Raphson optimization.}
   \item{kxylem}{Xylem hydraulic conductance (defined as flow per surface unit and per pressure drop).}
@@ -152,10 +113,6 @@ Details of the hydraulic model are given in a vignette. Function \code{hydraulic
 \value{
 Values returned for each function are:
 \itemize{
-\item{\code{hydraulics.psi2K}: Whole-plant relative conductance (0-1).}
-\item{\code{hydraulics.K2Psi}: Soil water potential (in MPa) corresponding to the given whole-plant relative conductance value (inverse of \code{hydraulics.psi2K()}).}
-\item{\code{hydraulics.averagePsi}: The average water potential (in MPa) across soil layers.}
-\item{\code{hydraulics.averageRhizosphereResistancePercent}: The average percentage of resistance due to the rhizosphere, calculated across water potential values.}
 \item{\code{hydraulics.E2psiXylem}: The plant (leaf) water potential (in MPa) corresponding to the input flow, according to the xylem supply function and given an upstream (soil or root) water potential.}
 \item{\code{hydraulics.E2psiVanGenuchten}: The root water potential (in MPa) corresponding to the input flow, according to the rhizosphere supply function and given a soil water potential.}
 \item{\code{hydraulics.E2psiTwoElements}: The plant (leaf) water potential (in MPa) corresponding to the input flow, according to the rhizosphere and plant supply functions and given an input soil water potential.}
@@ -163,7 +120,6 @@ Values returned for each function are:
 \item{\code{hydraulics.Ecrit}: The critical flow according to the xylem supply function and given an input soil water potential.}
 \item{\code{hydraulics.EVanGenuchten}: The flow (integral of the vulnerability curve) according to the rhizosphere supply function and given an input drop in water potential (soil and rhizosphere).}
 \item{\code{hydraulics.EXylem}: The flow (integral of the vulnerability curve) according to the xylem supply function and given an input drop in water potential (rhizosphere and plant).}
-\item{\code{hydraulics.findRhizosphereMaximumConductance}: The maximum rhizosphere conductance value given an average rhizosphere resistance and the vulnerability curves of rhizosphere, root and stem elements.}
 \item{\code{hydraulics.supplyFunctionOneXylem}, \code{hydraulics.supplyFunctionTwoElements} and
 \code{hydraulics.supplyFunctionNetwork}: A list with different numeric vectors with information of the two-element supply function:
 \itemize{
@@ -177,28 +133,20 @@ Values returned for each function are:
 }
 }
 \item{\code{hydraulics.supplyFunctionPlot}: A (hidden) list with the result of calling \code{hydraulics.supplyFunctionNetwork} for each cohort. }
-\item{\code{hydraulics.psiCrit}: Critical water potential (in MPa) according to the xylem vulnerability curve. }
 \item{\code{hydraulics.regulatedPsiXylem}: Plant water potential after regulation (one-element loss function) given an input water potential.}
 \item{\code{hydraulics.regulatedPsiTwoElements}: Plant water potential after regulation (two-element loss function) given an input soil water potential.}
-\item{\code{hydraulics.vanGenuchtenConductance}: Rhizosphere conductance corresponding to an input water potential (soil vulnerability curve).}
-\item{\code{hydraulics.xylemConductance}: Xylem conductance (flow rate per pressure drop) corresponding to an input water potential (plant vulnerability curve).}
-\item{\code{hydraulics.xylemPsi}: Xylem water potential (in MPa) corresponding to an input xylem conductance (flow rate per pressure drop).}
-\item{\code{hydraulics.heightFactor}: Height factor to scale xylem hydraulic conductivity to stem hydraulic conductance as a function of height, according to Christoffersen et al. (2016).}
-\item{\code{hydraulics.taperFunction}: Taper factor according to Savage et al. (2010).}
 }
 }
 \references{
+Sperry, J. S., F. R. Adler, G. S. Campbell, and J. P. Comstock. 1998. Limitation of plant water use by rhizosphere and xylem conductance: results from a model. Plant, Cell \& Environment 21:347–359.
+
 Sperry, J. S., and D. M. Love. 2015. What plant hydraulics can tell us about responses to climate-change droughts. New Phytologist 207:14–27.
-
-Christoffersen, B. O., M. Gloor, S. Fauset, N. M. Fyllas, D. R. Galbraith, T. R. Baker, L. Rowland, R. A. Fisher, O. J. Binks, S. A. Sevanto, C. Xu, S. Jansen, B. Choat, M. Mencuccini, N. G. McDowell, and P. Meir. 2016. Linking hydraulic traits to tropical forest function in a size-structured and trait-driven model (TFS v.1-Hydro). Geoscientific Model Development Discussions 9: 4227–4255.
-
-Savage, V. M., L. P. Bentley, B. J. Enquist, J. S. Sperry, D. D. Smith, P. B. Reich, and E. I. von Allmen. 2010. Hydraulic trade-offs and space filling enable better predictions of vascular structure and function in plants. Proceedings of the National Academy of Sciences of the United States of America 107:22722–7.
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 \seealso{
-\code{\link{swb}}, \code{\link{soil}}
+\code{\link{hydraulics.psi2K}}, \code{\link{hydraulics.maximumStemHydraulicConductance}}, \code{\link{swb}}, \code{\link{soil}}
 }
 \examples{
 kstemmax = 4 # in mmol·m-2·s-1·MPa-1

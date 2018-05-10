@@ -1094,12 +1094,13 @@ double maximumStemHydraulicConductance(double xylemConductivity, double refheigh
  * xylemConductivity - Sapwood-specific conductivity of root xylem (in kg·m-1·s-1·MPa-1)
  * Al2As - Leaf area to sapwood area ratio (in m2·m-2)
  * v - proportion of fine roots in each soil layer
- * d - soil layer depths (in mm)
+ * widths - soil layer depths (in mm)
  */
 // [[Rcpp::export("hydraulics.maximumRootHydraulicConductance")]]
-double maximumRootHydraulicConductance(double xylemConductivity, double Al2As, NumericVector v, NumericVector d, double depthWidthRatio = 1.0){
-  NumericVector rl = rootLengths(v,d, depthWidthRatio);
-  NumericVector w = xylemConductanceProportions(v,d, depthWidthRatio);
+double maximumRootHydraulicConductance(double xylemConductivity, double Al2As, NumericVector v, 
+                                       NumericVector widths, double depthWidthRatio = 1.0){
+  NumericVector rl = rootLengths(v,widths, depthWidthRatio);
+  NumericVector w = xylemConductanceProportions(v,widths, depthWidthRatio);
   int nlayers = v.length();
   double kmax = 0.0;
   for(int i=0;i<nlayers;i++) kmax = kmax + w[i]*(1000.0/0.018)*(xylemConductivity/((rl[i]/1000.0)*Al2As));

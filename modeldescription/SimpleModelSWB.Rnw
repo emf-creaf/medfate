@@ -80,27 +80,21 @@ elevation.
 
 \section{Model inputs and outputs}
 \subsection{Soil description}
-Soil can be described using between 1 and 5 soil layers. For each soil layer $s$ the following parameters are needed:
+Soil can be described using between 1 and 5 soil layers. For each soil layer $s$ the following parameters are needed for each soil layer (see function \texttt{defaultSoilParams()}):
 \begin{itemize}
-\item{Soil layer width ($d_s$, in mm).}
-\item{Soil texture: percent of sand ($P_{sand,s}$), silt ($P_{silt,s}$) and clay ($P_{clay,s}$).}
-\item{Soil organic mater (optional).}
-\item{Macroporosity (percent of macropores).}
-\item{Percentage of rock fragment content ($P_{rocks,s}$).}
+\item{$Z_{s}$ [\texttt{widths}]: Soil layer width ($d_s$, in mm).}
+\item{$P_{clay,s}$ [\texttt{clay}]: Percent of clay.}
+\item{$P_{sand,s}$ [\texttt{sand}]: Percent of sand.}
+\item{$OM$ [\texttt{om}]: Percentage of organic mater per dry weight (can be missing).}
+\item{$BD_{s}$ [\texttt{bd}]: Bulk density (g/cm3) of each soil layer.}
+\item{$P_{rocks,s}$ [\texttt{rfc}]: Percentage of rock fragment content ($P_{rocks,s}$).}
 \end{itemize}
 
 Soil texture (i.e. percent of sand, silt and clay), bulk density and rock fragment content can differ between soil layers. Specifying a deep rocky layer is important because Mediterranean plants may extend their roots into cracks existing in the parent rock (Ruffault et al., 2013). 
 
-\subsubsection{Soil parameters}
-Soil initialization requires a list of soil parameters (see function \texttt{defaultSoilParams()}) that is is given as input to function \texttt{soil()}: 
+\subsubsection{Soil initialization}
+Soil initialization is needed to estimate soil hydrological parameters from the physical description. requires a list of soil parameters  that is is given as input to function \texttt{soil()}: 
 \begin{itemize}
-\item{$Z_{s}$ [\texttt{widths}]: Depth corresponding to each soil layer (in mm).}
-\item{$P_{clay,s}$ [\texttt{clay}]: Percentage of clay corresponding to each soil layer.}
-\item{$P_{sand,s}$ [\texttt{sand}]: Percentage of sand corresponding to each soil layer.}
-\item{$BD_{s}$ [\texttt{bd}]: Bulk density (g/cm3) of each soil layer.}
-\item{$P_{rocks,s}$ [\texttt{rfc}]: Percentage of rock fragments (>2 mm)
-corresponding to each soil layer.}
-\item{$OM$ [\texttt{om}]: Percentage of organic matter corresponding to each soil layer.}
 \item{$P_{macro, s}$ [\texttt{macro}]: Percentage of macroporosity corresponding
 to each soil layers. Macroporosity values can be calculated for each soil layer
 from its percentage of sand and bulk density, using the equations given in Stolf

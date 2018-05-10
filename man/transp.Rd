@@ -25,7 +25,7 @@ transp.stomatalRegulationPlot(x, soil, meteo, day, timestep,
   \item{photosynthesisFunction}{Function returned by \code{photo.photosynthesisFunction()}.}
   \item{type}{Optimization type (1,2 or 3).}
   \item{Gwmax}{Maximum stomatal conductance (mol·m-2·s-1).}
-  \item{kstemmax}{Maximum stem conductance (flow per pressure drop).}
+  \item{kleafmax}{Maximum leaf hydraulic conductance (flow per pressure drop).}
   \item{x}{An object of class \code{\link{swbInput}} built using the 'Complex' transpiration mode.}
   \item{soil}{An object of class \code{\link{soil}}.}
   \item{meteo}{A data frame with daily meteorological data series:

@@ -1400,17 +1400,17 @@ BEGIN_RCPP
 END_RCPP
 }
 // maximumRootHydraulicConductance
-double maximumRootHydraulicConductance(double xylemConductivity, double Al2As, NumericVector v, NumericVector d, double depthWidthRatio);
-RcppExport SEXP _medfate_maximumRootHydraulicConductance(SEXP xylemConductivitySEXP, SEXP Al2AsSEXP, SEXP vSEXP, SEXP dSEXP, SEXP depthWidthRatioSEXP) {
+double maximumRootHydraulicConductance(double xylemConductivity, double Al2As, NumericVector v, NumericVector widths, double depthWidthRatio);
+RcppExport SEXP _medfate_maximumRootHydraulicConductance(SEXP xylemConductivitySEXP, SEXP Al2AsSEXP, SEXP vSEXP, SEXP widthsSEXP, SEXP depthWidthRatioSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type xylemConductivity(xylemConductivitySEXP);
     Rcpp::traits::input_parameter< double >::type Al2As(Al2AsSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type v(vSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type widths(widthsSEXP);
     Rcpp::traits::input_parameter< double >::type depthWidthRatio(depthWidthRatioSEXP);
-    rcpp_result_gen = Rcpp::wrap(maximumRootHydraulicConductance(xylemConductivity, Al2As, v, d, depthWidthRatio));
+    rcpp_result_gen = Rcpp::wrap(maximumRootHydraulicConductance(xylemConductivity, Al2As, v, widths, depthWidthRatio));
     return rcpp_result_gen;
 END_RCPP
 }
