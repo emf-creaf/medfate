@@ -10,6 +10,7 @@ _Version 0.5.6, May 2018.
 3. New function 'hydraulics.vulnerabilityCurvePlot()'
 4. Reorganization of help for hydraulics.
 5. Documentation of tissue moisture functions.
+6. Update function 'plot.growth()'
 
 _Version 0.5.5, April 2018.
 1. New functions for tissue moisture

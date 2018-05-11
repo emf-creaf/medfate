@@ -31,7 +31,7 @@ Function \code{plot} plots the results of the soil water balance model (see \cod
     \item{\code{"Theta"}:}{ Soil relative water content.}
     \item{\code{"Vol"}:}{ Soil water volumetric content.}
     \item{\code{"LAI"}:}{ Expanded and dead leaf area index of the whole stand.}
-    \item{\code{"PlantLAI"}:}{ Plant cohort leaf area index.}
+    \item{\code{"PlantLAI"}:}{ Plant cohort leaf area index (expanded leaves).}
     \item{\code{"PlantStress"}:}{ Plant cohort average daily drought stress.}
     \item{\code{"PlantPsi"}:}{ Plant cohort water potential.}
     \item{\code{"PlantTranspiration"}:}{ Plant cohort transpiration.}
@@ -47,9 +47,20 @@ Function \code{plot} plots the results of the soil water balance model (see \cod
     \item{\code{"SoilTemperature"}:}{ Minimum/maximum/mean daily temperatures inside the first soil layer (only for \code{transpirationMode = "Complex"}).}
     \item{\code{"CanopyEnergyBalance"}:}{ Canopy energy balance components (only for \code{transpirationMode = "Complex"}).}
     \item{\code{"SoilEnergyBalance"}:}{ Soil energy balance components (only for \code{transpirationMode = "Complex"}).}
+    \item{\code{"PlantRespiration"}:}{ Plant cohort respiration (only for \code{plot.growth}).}
+    \item{\code{"PlantRespirationLeaf"}:}{ Plant cohort respiration per leaf area (only for \code{plot.growth}).}
+    \item{\code{"PlantCBalance"}:}{ Plant cohort carbon balance (only for \code{plot.growth}).}
+    \item{\code{"PlantCBalanceLeaf"}:}{ Plant cohort carbon balance per leaf area (only for \code{plot.growth}).}
+    \item{\code{"PlantCstorageFast"}:}{ Amount of fast-dynamics carbon reserves  (only for \code{plot.growth}).}
+    \item{\code{"PlantCstorageSlow"}:}{ Amount of slow-dynamics carbon reserves  (only for \code{plot.growth}).}
+    \item{\code{"PlantSA"}:}{ Amount of sapwood area in an individual  (only for \code{plot.growth}).}
+    \item{\code{"PlantSAgrowth"}:}{ Amount of newly-created sapwood area  (only for \code{plot.growth}).}
+    \item{\code{"PlantRelativeSAgrowth"}:}{ Amount of newly-created sapwood area per sapwood area (only for \code{plot.growth}).}
+    \item{\code{"PlantLAIlive"}:}{ Plant cohort leaf area index of live leaves (only for \code{plot.growth}).}
+    \item{\code{"PlantLAIdead"}:}{ Plant cohort leaf area index of dead leaves (only for \code{plot.growth}).}
    }
   }
-  \item{bySpecies}{Allows aggregating output by species, before calculating summaries or drawing plots. Aggregation can involve a sum (as for plant lai or transpiration) or a LAI-weighted mean (as for plant stress or plant water potential).}
+  \item{bySpecies}{Allows aggregating output by species, before calculating summaries or drawing plots (only has an effect with some values of \code{type}). Aggregation can involve a sum (as for plant lai or transpiration) or a LAI-weighted mean (as for plant stress or plant water potential).}
   \item{yearAxis}{A boolean to indicate whether the units of the x-axis are years (by default they are dates).}
   \item{xlim}{Range of values for x.}
   \item{ylim}{Range of values for y.}
