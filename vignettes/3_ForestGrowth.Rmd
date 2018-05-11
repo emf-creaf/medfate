@@ -196,11 +196,12 @@ Element `canopy` contains state variables of the whole canopy, which include gro
 ```{r}
 x$canopy
 ```
-Element `above` contains the aboveground structure data that we already know:
+Element `above` contains the aboveground structure data that we already know, but with additional columns that describe the estimated initial amount of sapwood area and carbon reserves (if required):
 ```{r}
 x$above
 ```
-As with the soil input object, the `growthInput` object may be modified during simulations. In the case of soil water balance, these modifications concern `LAI_expanded` and `LAI_dead` in element `above`, as well as canopy variables.
+
+As with the soil input object, the `growthInput` object will be modified during simulations. In the case of `growth()`, these modifications concern `SA`, `fastCstorage`, `slowCstorage`, `LAI_expanded` and `LAI_dead` in element `above`, as well as canopy variables.
 
 Aboveground parameters related to plant transpiration can be seen in `paramsTransp`:
 ```{r}
