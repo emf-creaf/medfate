@@ -195,7 +195,7 @@ In the case of leaves, their overall relative water content can be obtained from
 \begin{equation}
 RWC(\Psi_{leaf}) = a_{f,l} + RWC_{sym}(\Psi_{leaf}) \cdot (1 - a_{f,l})
 \end{equation}
-Following Martin-StPaul et al. (2017), we consider two different plant water reservoirs in the stem (Tyree & Yang 1990). The first is the apoplastic reservoir, consisting of inelastic xylem cells that release their water to the transpiration stream following embolism. As in Hölttä et al. (2009), we equate the relative water content of the apoplastic reservoir of the xylem to the proportion of maximum conductance in the vulnerability curve:
+Following Martin-StPaul et al. (2017), we consider two different plant water reservoirs in the stem (Tyree \& Yang 1990). The first is the apoplastic reservoir, consisting of inelastic xylem cells that release their water to the transpiration stream following embolism. As in Hölttä et al. (2009), we equate the relative water content of the apoplastic reservoir of the xylem to the proportion of maximum conductance in the vulnerability curve:
 \begin{equation}
 RWC_{apo}(\Psi_{stem}) = \frac{k_x(\Psi_{stem})}{k_{x,max}}
 \end{equation}
@@ -2339,17 +2339,17 @@ Profit maximization calculations for shade and sunlit leaves imply different amo
 \item{Christoffersen, B.O., Gloor, M., Fauset, S., Fyllas, N.M., Galbraith, D.R., Baker, T.R., Rowland, L., Fisher, R.A., Binks, O.J., Sevanto, S.A., Xu, C., Jansen, S., Choat, B., Mencuccini, M., McDowell, N.G., & Meir, P. 2016. Linking hydraulic traits to tropical forest function in a size-structured and trait-driven model (TFS v.1-Hydro). Geoscientific Model Development Discussions 0: 1–60.}
 \item{Collatz, G. J., J. T. Ball, C. Grivet, and J. A. Berry. 1991. Physiological and environmental regulation of stomatal conductance, photosynthesis and transpiration: a model that includes a laminar boundary layer. Agricultural and Forest Meteorology 54:107–136.}
 \item{De Pury, D.G.G. and Farquhar, G.D. 1997. Simple scaling of photosynthesis from leaves to canopies without the errors of big-leaf models. Plant, Cell and Environment, 20, 537–557.}
-\item{Fisher, R.A., Williams, M., Do Vale, L.R., Da Costa, A.L., & Meir, P. 2006. Evidence from Amazonian forests is consistent with a model of isohydric control of leaf water potential. Plant, Cell and Environment 29: 151–165.}
-\item{Hölttä, T., Cochard, H., Nikinmaa, E., & Mencuccini, M. 2009. Capacitive effect of cavitation in xylem conduits: Results from a dynamic model. Plant, Cell and Environment 32: 10–21.}
+\item{Fisher, R.A., Williams, M., Do Vale, L.R., Da Costa, A.L., Meir, P. 2006. Evidence from Amazonian forests is consistent with a model of isohydric control of leaf water potential. Plant, Cell and Environment 29: 151–165.}
+\item{Hölttä, T., Cochard, H., Nikinmaa, E., Mencuccini, M. 2009. Capacitive effect of cavitation in xylem conduits: Results from a dynamic model. Plant, Cell and Environment 32: 10–21.}
 \item{Medlyn, B. E., E. Dreyer, D. Ellsworth, M. Forstreuter, P. C. Harley, M. U. F. Kirschbaum, X. Le Roux, P. Montpied, J. Strassemeyer, A. Walcroft, K. Wang, and D. Loustau. 2002. Temperature response of parameters of a biochemically based model of photosynthesis. II. A review of experimental data. Plant, Cell and Environment 25:1167–1179.}
-\item{Magnani, F., Mencuccini, M., & Grace, J. 2000. Age-related decline in stand productivity: The role of structural acclimation under hydraulic constraints. Plant, Cell and Environment 23: 251–263.}
-\item{Martin-StPaul, N., Delzon, S., & Cochard, H. 2017. Plant resistance to drought depends on timely stomatal closure. Ecology Letters 20: 1437–1447.}
-\item{Olson, M.E., Anfodillo, T., Rosell, J.A., Petit, G., Crivellaro, A., Isnard, S., León-Gómez, C., Alvarado-Cárdenas, L.O., & Castorena, M. 2014. Universal hydraulics of the flowering plants: Vessel diameter scales with stem length across angiosperm lineages, habits and climates. Ecology Letters 17: 988–997.}
-\item{Sack, L., & Holbrook, N.M. 2006. Leaf Hydraulics. Annual Review of Plant Biology 57: 361–381.}
+\item{Magnani, F., Mencuccini, M.,  Grace, J. 2000. Age-related decline in stand productivity: The role of structural acclimation under hydraulic constraints. Plant, Cell and Environment 23: 251–263.}
+\item{Martin-StPaul, N., Delzon, S.,  Cochard, H. 2017. Plant resistance to drought depends on timely stomatal closure. Ecology Letters 20: 1437–1447.}
+\item{Olson, M.E., Anfodillo, T., Rosell, J.A., Petit, G., Crivellaro, A., Isnard, S., León-Gómez, C., Alvarado-Cárdenas, L.O.,  Castorena, M. 2014. Universal hydraulics of the flowering plants: Vessel diameter scales with stem length across angiosperm lineages, habits and climates. Ecology Letters 17: 988–997.}
+\item{Sack, L.,  Holbrook, N.M. 2006. Leaf Hydraulics. Annual Review of Plant Biology 57: 361–381.}
 \item{Sperry, J. S., F. R. Adler, G. S. Campbell, and J. P. Comstock. 1998. Limitation of plant water use by rhizosphere and xylem conductance: results from a model. Plant, Cell \& Environment 21:347–359.}
 \item{Sperry, J. S., and D. M. Love. 2015. What plant hydraulics can tell us about responses to climate-change droughts. New Phytologist 207:14–27.}
 \item{Sperry, J. S., Y. Wang, B. T. Wolfe, D. S. Mackay, W. R. L. Anderegg, N. G. McDowell, and W. T. Pockman. 2016a. Pragmatic hydraulic theory predicts stomatal responses to climatic water deficits. New Phytologist 212:577–589.}
 \item{Sperry, J. S., M. D. Venturas, W. R. L. Anderegg, M. Mencuccini, D. S. Mackay, Y. Wang, and D. M. Love. 2016b. Predicting stomatal responses to the environment from the optimization of photosynthetic gain and hydraulic cost. Plant Cell and Environment.}
-\item{Tyree, M.T., & Yang, S. 1990. Water-storage capacity of Thuja, Tsuga and Acer stems measured by dehydration isotherms - The contribution of capillary water and cavitation. Planta 182: 420–426.}
+\item{Tyree, M.T., Yang, S. 1990. Water-storage capacity of Thuja, Tsuga and Acer stems measured by dehydration isotherms - The contribution of capillary water and cavitation. Planta 182: 420–426.}
 \end{itemize}
 \end{document}
