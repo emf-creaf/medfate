@@ -18,6 +18,7 @@ A list, with the following options:
 \itemize{
 \item{\code{verbose (=TRUE)}: Boolean flag to indicate console output during calculations.}
 \item{\code{soilFunctions (="SX")}: Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).}
+\item{\code{snowpack (=TRUE)}: Boolean flag to indicate the simulation of snow accumulation and melting.}
 \item{\code{transpirationMode (="Simple")}: Transpiration model. See \code{\link{swbInput}}.}
 \item{\code{hydraulicCostFunction (= 1)}: Variant of the hydraulic cost function used in the stomatal regulation model of Sperry & Love (2016). Values accepted are 1 (original cost function based on the derivative of supply function), 2 (leaf vulnerability curve).}
 \item{\code{ndailysteps (= 24)}: Number of daily substeps.}

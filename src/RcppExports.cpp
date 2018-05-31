@@ -2025,15 +2025,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // soil
-List soil(DataFrame SoilParams, String VG_PTF, NumericVector W);
-RcppExport SEXP _medfate_soil(SEXP SoilParamsSEXP, SEXP VG_PTFSEXP, SEXP WSEXP) {
+List soil(DataFrame SoilParams, String VG_PTF, NumericVector W, double SWE);
+RcppExport SEXP _medfate_soil(SEXP SoilParamsSEXP, SEXP VG_PTFSEXP, SEXP WSEXP, SEXP SWESEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< DataFrame >::type SoilParams(SoilParamsSEXP);
     Rcpp::traits::input_parameter< String >::type VG_PTF(VG_PTFSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type W(WSEXP);
-    rcpp_result_gen = Rcpp::wrap(soil(SoilParams, VG_PTF, W));
+    Rcpp::traits::input_parameter< double >::type SWE(SWESEXP);
+    rcpp_result_gen = Rcpp::wrap(soil(SoilParams, VG_PTF, W, SWE));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2605,7 +2606,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_vanGenuchtenParamsToth", (DL_FUNC) &_medfate_vanGenuchtenParamsToth, 5},
     {"_medfate_soilTemperatureGradient", (DL_FUNC) &_medfate_soilTemperatureGradient, 2},
     {"_medfate_soilTemperatureChange", (DL_FUNC) &_medfate_soilTemperatureChange, 7},
-    {"_medfate_soil", (DL_FUNC) &_medfate_soil, 3},
+    {"_medfate_soil", (DL_FUNC) &_medfate_soil, 4},
     {"_medfate_thetaFC", (DL_FUNC) &_medfate_thetaFC, 2},
     {"_medfate_waterFC", (DL_FUNC) &_medfate_waterFC, 2},
     {"_medfate_theta", (DL_FUNC) &_medfate_theta, 2},

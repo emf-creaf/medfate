@@ -9,7 +9,7 @@
 Initializes soil parameters and state variables for its use in simulations.
 }
 \usage{
-soil(SoilParams, VG_PTF = "Carsel", W = as.numeric(c(1)))
+soil(SoilParams, VG_PTF = "Carsel", W = as.numeric(c(1)), SWE = 0)
 \method{print}{soil}(x, model="SX", ...)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -17,6 +17,7 @@ soil(SoilParams, VG_PTF = "Carsel", W = as.numeric(c(1)))
   \item{SoilParams}{A list of soil parameters (see \code{\link{defaultSoilParams}}).}
   \item{VG_PTF}{Pedotransfer functions to obtain parameters for the van Genuchten-Mualem equations. Either \code{"Carsel"} (Carsel & Parrish 1988) or \code{"Toth"} (Toth et al. 2015).}
   \item{W}{A numerical vector with the initial relative water content of each soil layer.}
+  \item{SWE}{Initial snow water equivalent of the snow pack on the soil surface (mm).}
   \item{x}{An object of class \code{soil}.}
   \item{model}{Either 'SX' or 'VG' for Saxton or Van Genuchten pedotransfer models.}
   \item{...}{Additional parameters to \code{print}.}

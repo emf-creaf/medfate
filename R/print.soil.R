@@ -22,5 +22,6 @@ print.soil<-function(x, model="SX",...) {
     dini = dini+x$dVec[l]
   }
   cat(paste("\nTotal soil water holding capacity (mm):", round(sum(Water_FC), digits=0),"\n"))  
-  cat(paste("\nTotal current Volume (mm):",round(sum(x$W*Water_FC), digits=0),"\n"))
+  cat(paste("\nTotal soil current Volume (mm):",round(sum(x$W*Water_FC), digits=0),"\n"))
+  cat(paste("\nSnow pack water equivalent (mm):",round(x$SWE, digits=0),"\n"))
 }

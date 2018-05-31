@@ -545,8 +545,8 @@ soil.temperaturechange <- function(dVec, Temp, sand, clay, W, Theta_FC, Gdown) {
     .Call('_medfate_soilTemperatureChange', PACKAGE = 'medfate', dVec, Temp, sand, clay, W, Theta_FC, Gdown)
 }
 
-soil <- function(SoilParams, VG_PTF = "Carsel", W = as.numeric( c(1.0))) {
-    .Call('_medfate_soil', PACKAGE = 'medfate', SoilParams, VG_PTF, W)
+soil <- function(SoilParams, VG_PTF = "Carsel", W = as.numeric( c(1.0)), SWE = 0.0) {
+    .Call('_medfate_soil', PACKAGE = 'medfate', SoilParams, VG_PTF, W, SWE)
 }
 
 soil.thetaFC <- function(soil, model = "SX") {
