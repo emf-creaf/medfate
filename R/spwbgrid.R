@@ -1,4 +1,4 @@
-swbgrid<-function(y, SpParams, meteo, dates, 
+spwbgrid<-function(y, SpParams, meteo, dates, 
                   summaryFreq = "years", trackSpecies = numeric(), 
                   control = defaultControl()) {
 
@@ -13,26 +13,26 @@ swbgrid<-function(y, SpParams, meteo, dates,
   nSummary = sum(table(date.factor)>0)
   
   #Print information area
-  cat("\n------------  swbgrid ------------\n")
+  cat("\n------------  spwbgrid ------------\n")
   cat(paste("Grid cells: ", nCells,", area: ", areaSpatialGrid(y)/10000," ha\n", sep=""))
   cat(paste("Number of days to simulate: ",nDays,"\n", sep=""))
   cat(paste("Number of summaries: ", nSummary,"\n\n", sep=""))
   
     
-  if(control$verbose) cat(paste("Preparing swb input"))
-  swbInputList = vector("list", nCells)
+  if(control$verbose) cat(paste("Preparing spwb input"))
+  spwbInputList = vector("list", nCells)
   for(i in 1:nCells) {
     yid = y@forestlist[[i]]
     soil = y@soillist[[i]]
     if((!is.na(yid)) && (!is.na(soil))) {             
-      xi = forest2swbInput(yid, soil, SpParams, control)
+      xi = forest2spwbInput(yid, soil, SpParams, control)
       if(!inherits(xi,"data.frame")) stop("not a data frame!")
-      swbInputList[[i]] = xi
+      spwbInputList[[i]] = xi
     }  else {
-      swbInputList[[i]] = NA
+      spwbInputList[[i]] = NA
     }
   }
-  cat(paste(" - number of cells with swbInput == NA: ", sum(is.na(swbInputList)),"\n\n", sep=""))
+  cat(paste(" - number of cells with spwbInput == NA: ", sum(is.na(spwbInputList)),"\n\n", sep=""))
   
 
   #Output matrices
@@ -82,7 +82,7 @@ swbgrid<-function(y, SpParams, meteo, dates,
     gridER = rep(.er(doy),nCells) #ER
     gridGDD = gridGDD + pmax(gridMeanTemperature - 5.0, 0.0) #Increase GDD
     if(doy>=365) gridGDD = rep(0, nCells) #Reset GDD 
-    df = .swbgridDay(y@lct, swbInputList, y@soillist, 
+    df = .spwbgridDay(y@lct, spwbInputList, y@soillist, 
                      y@waterO, y@queenNeigh, y@waterQ,
                      gridGDD, gridPET, gridPrecipitation, gridER, trackSpecies)      
     if(df.int[day]==ifactor) {
@@ -119,11 +119,11 @@ swbgrid<-function(y, SpParams, meteo, dates,
   W2mean[,ifactor] = W2mean[,ifactor]/nDays
   W3mean[,ifactor] = W3mean[,ifactor]/nDays
   DI[,ifactor,] = DI[,ifactor,]/nDays
-  cat("\n------------  swbgrid ------------\n")
+  cat("\n------------  spwbgrid ------------\n")
     
   l <- list(grid = y@grid, LandscapeBalance = LandscapeBalance, NetPrec = NetPrec, Runon = Runon, Runoff=Runoff, Infiltration=Infiltration, 
                     DeepDrainage = DeepDrainage, Esoil = Esoil, Eplant = Eplant, W1mean = W1mean,
                     W2mean = W2mean, W3mean = W3mean,  DI = DI, Transpiration = Transpiration)
-  class(l)<-c("swbgrid","list")
+  class(l)<-c("spwbgrid","list")
   return(l)
 }

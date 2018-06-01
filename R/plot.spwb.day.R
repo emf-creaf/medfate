@@ -1,4 +1,4 @@
-plot.swb.day<-function(x, type="PlantPsi", bySpecies = FALSE, xlab = NULL, ylab = NULL, ...) {
+plot.spwb.day<-function(x, type="PlantPsi", bySpecies = FALSE, xlab = NULL, ylab = NULL, ...) {
   DailyBalance = x$DailyBalance
   SoilWaterBalance = x$SoilWaterBalance
   if(!("EnergyBalance" %in% names(x))) stop("Plotting function available for transpirationMode = 'Complex' only.")

@@ -1,4 +1,4 @@
-plot.swbgrid<-function(x, type = "Runon", summaryIndex = 1, spIndex = NULL, ...) {
+plot.spwbgrid<-function(x, type = "Runon", summaryIndex = 1, spIndex = NULL, ...) {
   
   grid = x$grid
   y = x[[type]]

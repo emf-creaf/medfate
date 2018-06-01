@@ -1,27 +1,27 @@
 \encoding{UTF-8}
-\name{plot.swb}
-\alias{plot.swb}
+\name{plot.spwb}
+\alias{plot.spwb}
 \alias{plot.growth}
-\alias{summary.swb}
+\alias{summary.spwb}
 \alias{summary.growth}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Displays simulation results}
 \description{
-Function \code{plot} plots the results of the soil water balance model (see \code{\link{swb}}) or the forest growth model (see \code{\link{growth}}), whereas function \code{summary} summarizes the model's output in different temporal steps (i.e. weekly, annual, ...).
+Function \code{plot} plots the results of the soil water balance model (see \code{\link{spwb}}) or the forest growth model (see \code{\link{growth}}), whereas function \code{summary} summarizes the model's output in different temporal steps (i.e. weekly, annual, ...).
 }
 \usage{
-\method{plot}{swb}(x, type="PET_Precipitation", bySpecies = FALSE,
+\method{plot}{spwb}(x, type="PET_Precipitation", bySpecies = FALSE,
                    yearAxis=FALSE, xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL,
                    add = FALSE, ...)
 \method{plot}{growth}(x, type="PET_Precipitation", bySpecies = FALSE, yearAxis=FALSE, 
     xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL,...)
-\method{summary}{swb}(object, freq="years", output="DailyBalance", FUN=sum, bySpecies = FALSE, ...)
+\method{summary}{spwb}(object, freq="years", output="DailyBalance", FUN=sum, bySpecies = FALSE, ...)
 \method{summary}{growth}(object, freq="years", output="DailyBalance", FUN=sum, bySpecies = FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x, object}{An object of class \code{swb}}
+  \item{x, object}{An object of class \code{spwb}}
   \item{type}{The information to be plotted:
   \itemize{
     \item{\code{"PET_NetPrec"}:}{ Potential evapotranspiration and Net Precipitation.}
@@ -79,7 +79,7 @@ De \enc{Cáceres}{Caceres} M, \enc{Martínez}{Martinez}-Vilalta J, Coll L, Llore
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 \seealso{
- \code{\link{swb}}, \code{\link{swbpoints}}
+ \code{\link{spwb}}, \code{\link{spwbpoints}}
 }
 \examples{
 #Load example daily meteorological data
@@ -98,10 +98,10 @@ examplesoil = soil(defaultSoilParams(2))
 control = defaultControl()
 
 #Initialize input
-x = forest2swbInput(exampleforest,examplesoil, SpParamsMED, control)
+x = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 
 #Call simulation function
-S1<-swb(x, examplesoil, examplemeteo)
+S1<-spwb(x, examplesoil, examplemeteo)
         
 #Plot results
 plot(S1)

@@ -1,5 +1,5 @@
 #include <Rcpp.h>
-#include "swb.h"
+#include "spwb.h"
 #include "growth.h"
 #include "root.h"
 #include "forestutils.h"

@@ -1,17 +1,17 @@
 \encoding{UTF-8}
-\name{plot.swb.day}
-\alias{plot.swb.day}
+\name{plot.spwb.day}
+\alias{plot.spwb.day}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Displays simulation results for one day}
 \description{
-Function \code{plot} plots the results of the soil water balance model for one day (see \code{\link{swb.day}}).
+Function \code{plot} plots the results of the soil water balance model for one day (see \code{\link{spwb.day}}).
 }
 \usage{
-\method{plot}{swb.day}(x, type="PlantPsi", bySpecies = FALSE, xlab = NULL, ylab = NULL, ...)
+\method{plot}{spwb.day}(x, type="PlantPsi", bySpecies = FALSE, xlab = NULL, ylab = NULL, ...)
 }
 \arguments{
-  \item{x}{An object of class \code{swb}}
+  \item{x}{An object of class \code{spwb}}
   \item{type}{The information to be plotted:
   \itemize{
     \item{\code{"PlantPsi"}:}{ Plant cohort water potential.}
@@ -39,7 +39,7 @@ Function \code{plot} plots the results of the soil water balance model for one d
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 \seealso{
- \code{\link{swb.day}}, \code{\link{plot.swb}}
+ \code{\link{spwb.day}}, \code{\link{plot.spwb}}
 }
 \examples{
 #Load example daily meteorological data
@@ -63,9 +63,9 @@ examplesoil = soil(defaultSoilParams(2), W=c(0.5,0.5))
 control$transpirationMode="Complex"
 
 #Simulate one day only
-x2 = forest2swbInput(exampleforest,examplesoil, SpParamsMED, control)
+x2 = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 d = 100
-sd2<-swb.day(x2, examplesoil, rownames(examplemeteo)[d], d , 
+sd2<-spwb.day(x2, examplesoil, rownames(examplemeteo)[d], d , 
              examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
              examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
              examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 

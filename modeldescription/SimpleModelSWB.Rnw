@@ -27,12 +27,7 @@ The soil water balance model calculates temporal variations in soil moisture on 
 
 The model considers only the vertical spatial dimension of the stand and not the horizontal distribution of
 plants within it. In other words, the model is not spatially explicit (i.e., plants do not interact for space explicitly). Still, the stand is divided into groups of plants, here referred to as `plant cohorts` of different species, height and leaf area index ($LAI$). Height and $LAI$ values determine competition for light. $LAI$ values also drive competition for water. The soil water balance follows the design principles of SIERRA (Mouillot et al., 2001, Ruffault et al., 2014, 2013) and BILJOU (Granier et al., 2007, 1999), although
-some features are taken from other models. Potential evapotranspiration ($PET$)
-is given as input and the model determines maximum canopy transpiration
-($Tr_{\max}$) using an empirical relationship between the $LAI$ of the stand and
-the ratio $Tr_{\max}/PET$ (Granier et al. 1999). Actual plant transpiration is
-calculated using a simple function depending on current soil moisture level and
-degree of shading.
+some features are taken from other models (Kergoat 1998). Potential evapotranspiration ($PET$) is given as input and the model determines maximum canopy transpiration ($Tr_{\max}$) using an empirical relationship between the $LAI$ of the stand and the ratio $Tr_{\max}/PET$ (Granier et al. 1999). Actual plant transpiration is calculated using a simple function depending on current soil moisture level and degree of shading.
 
 When lateral water transport is also considered the water inputs of the stand includes not only precipitation but also runoff water from cells of its upper microwatershed, as done in SIERRA (Mouillot et al., 2001). 
 
@@ -41,29 +36,33 @@ The model has the following state variables:
 \begin{itemize}
 \item{Cumulative growth degree days, $GDD$, are tracked by the model and determine leaf phenological status of winter deciduous species.}
 \item{Daily soil moisture content dynamics on each layer $s$ are tracked using $W = \theta(\Psi_s)/ \theta_{fc,s}$, the \textbf{proportion of volumetric soil moisture in relation to field capacity}, where field capacity, $\theta_{fc,s}$, is assumed to correspond to $\Psi_{fc} = -0.033$ MPa. Soils are not allowed to contain more water than dictated by their field capacity.}
+\item{If snow pack is considered, the model also tracks $S_{snow}$, the snow water equivalent (in mm) of the snow pack storage over the surface.}
 \item{If irreversible cavitation is activated, the model also tracks $P_{embolized,i}$, the maximum value of daily drought stress so far experienced.}
 \end{itemize}
 
 \subsection{Water balance}
-Daily variations in soil water content can be summarized as:
+Daily variations in soil water content (mm) can be summarized as:
   \begin{equation}
-  \Delta{SWC} = P - In - Ru - Dd - Es -Tr
+  \Delta{SWC} = Pr + Sm - In - Ru - Dd - Es -Tr
   \end{equation}
-where $P$ is precipitation, $In$ is water evaporated after being intercepted by the canopy, $Ru$ is surface runoff, $Dd$ is deep drainage, $Es$ is evaporation from soil and $Tr$ is plant transpiration.
-When landscape hydrological processes are considered, daily variations in soil water content is then summarized as:
+where $Pr$ is precipitation as rainfall, $Sm$ is water from melting the snow pack (if considered), $In$ is water evaporated after being intercepted by the canopy, $Ru$ is surface runoff, $Dd$ is deep drainage, $Es$ is evaporation from soil and $Tr$ is plant transpiration. If snow pack is considered, its balance is the following:
   \begin{equation}
-  \Delta{SWC} = P + Ro - In - Ru - Dd - Es - Tr
+  \Delta{S_{snow}} = Ps - Sm
+  \end{equation}
+where $Ps$ is precipitation as snowfall and $Sm$ is snow melt. When landscape hydrological processes are considered, daily variations in soil water content is then summarized as:
+  \begin{equation}
+  \Delta{SWC} = Pr + Sm + Ro - In - Ru - Dd - Es - Tr
   \end{equation}
 where $Ro$ is surface runon water entering the cell from neighbouring cells at higher elevation. 
 
 \subsection{Process scheduling}
 Every day water balance is perfomed as follows. The model first updates leaf area values according to the phenology of species and calculates light extinction. After that, the model updates soil water content of soil layers in two steps:
 \begin{enumerate}
-\item{It increases soil moisture due to precipitation ($P$) after accounting for
-canopy interception loss ($In$), surface runoff ($Ru$) and deep drainage ($Dd$);}
-\item{It decreases water content due to bare soil evaporation ($Es$), and plant
-transpiration ($Tr$). After updating soil layers, the model determines drought
-stress index for each plant cohort.}
+\item{If snow dynamics are included, increase snow pack from snow precipitation ($Ps$) and decreases it from snow melting ($Sm$);}
+\item{Increase soil moisture due to rainfall ($Pr$) and (if included) snow melting ($Sm$), after accounting for canopy interception loss ($In$), surface runoff ($Ru$) and deep drainage ($Dd$);}
+\item{Decrease water content due to bare soil evaporation ($Es$), and plant
+transpiration ($Tr$).}
+\item{Determines drought stress index for each plant cohort.}
 \end{enumerate}
 
 When landscape hydrological processes are not considered, daily water balance
@@ -210,7 +209,8 @@ Weather input data must include variables calculated at the \textbf{daily} scale
 \item{$J$ [\texttt{DOY}]: Day of the year.}
 \item{$P$ [\texttt{Precipitation}]: Daily precipitation (in L·m$^{-2}$ = mm of water).}
 \item{$T_{mean}$ [\texttt{MeanTemperature}]: Mean daily temperature (in $^{\circ} \mathrm{C}$).}
-\item{$PET$ [\texttt{PET}]: Daily potential evapotranspiration (in  L·m$^{-2}$ = mm of water), ideally calculated using Penman's equation.}
+\item{$Rad$ [\texttt{Radiation}]: Solar radiation, after accounting for clouds (in MJ·m$^{-2}$), only necessary if \texttt{snowpack = TRUE}.}
+\item{$PET$ [\texttt{PET}]: Daily potential evapotranspiration (in  L·m$^{-2}$ = mm of water), preferably calculated using Penman's equation.}
 \end{itemize}
 Optionally, the user may specify values of wind speed ($u$, in m·s$^{-1}$, \texttt{WindSpeed}) that are used to control leaf fall in autumn.
 
@@ -220,6 +220,7 @@ Control parameters are a list of parameter values, initialized using function \t
 \begin{itemize}
 \item{\texttt{verbose [=TRUE]}: Whether extra console output is desired during simulations.}
 \item{\texttt{soilFunctions [= "SX"]}: Water retention curve model, either "SX" (for Saxton) or "VG" (for Van Genuchten).}
+\item{\texttt{snowpack [= TRUE]}:  Whether dynamics of snow pack are included.}
 \item{\texttt{transpirationMode [= "Simple"]}: Transpiration model, in this case "Simple".}
 \item{\texttt{defaultWindSpeed [= 5]}: Default value for wind speed (in m·s$^{-1}$) when this is missing (only used for leaf fall).}
 \item{\texttt{cavitationRefill [= TRUE]}: If \texttt{FALSE} the model operates in a irreversible cavitation mode.}
@@ -321,7 +322,7 @@ L^{SWR}_{ground} = 1 - \sum_{j}^{n}{f_j}
 \end{equation}
 
 \subsection{Rainfall interception loss}
-Rainfall interception loss, $In$, is modelled following the Gash et al. (1995)
+When snow dynamics are considered, precipitation occurs in form of rainfall if $T_{mean}> 0$. Otherwise, all precipitation is considered rainfall. Rainfall interception loss, $In$, is modelled following the Gash et al. (1995)
 analytical interception model for sparse canopies, where rain is assumed to fall
 in a single event during the day. First, the amount of rainfall needed to saturate
 the canopy is calculated: 
@@ -410,6 +411,14 @@ storage capacity), $E/R$ (ratio between evaporation and rainfall rates) and p
 (throughfall coefficient; $p = 1 - C$).
 \end{center}
 
+
+\subsection{Snow pack dynamics}
+Precipitation is considered be snow when $T_{mean}<0$. Interception of snow by the canopy is not considered, and all snow is assumed to accumulate in a single storage compartment $S_{snow}$. A very simple snow submodel is used for snow pack dynamics (accumulation and melt), taken from Kergoat (1998). When mean air temperature is above 0 Celsius $T_{mean}>0$, a simple energy budget relates snow melt (mm) to air temperature and soil-level radiation:
+\begin{equation}
+Sm = \frac{Rad\cdot L^{SWR}_{ground}\cdot (1-\alpha_{ice}) + \tau_{day} \cdot T_{mean} \cdot \rho \cdot C_p/r_{s}}{\lambda_{ice}}
+\end{equation}
+where $Rad$ is solar radiation (MJ·m$^{-2}$), $L^{SWR}_{ground}$ is the fraction of (short-wave) radiation reaching the ground, $\alpha_{ice} = 0.5$ is the albedo of snow, $\tau_{day} = 86400$ is the day duration in s, $\rho$ is the air density, $C_{p} = 1013.86 \cdot 10^{-6}$ MJ·kg$^{-1}$·C$^{-1}$ is the specific heat capacity of the air and $r_{s} = 100$ s·m$^{-1}$ is the soil aerodynamic resistance and $\lambda_{ice} = 0.33355$MJ·kg is the (latent) heat of fusion of snow.
+
 \subsection{Runoff, infiltration and percolation}
 Runoff, $Ru$ (in mm), is calculated using the USDA SCS curve number method, as
 in Boughton (1989):
@@ -419,8 +428,7 @@ Ru=\frac{(P_{net} - 0.2 \cdot V_{soil})^2}{(P_{net} - 0.8 \cdot V_{soil})}
 where $V_{soil}$ (in mm) is the overall soil water retention capacity (i.e. the
 sum of $V_s$ values for topsoil and subsoil).
 
-The amount of water infiltrating into the soil is $P_{net} - Ru$, where $Ru$ is
-the water lost by runoff (see function \texttt{swb.SoilInfiltration}). Following
+The amount of water infiltrating into the soil is $P_{net} + Sm - Ru$, where $Sm$ is snow melt (only if snow pack is considered) and $Ru$ is the water lost by runoff (see function \texttt{swb.SoilInfiltration}). Following
 Granier (1999), part of the water reaching one soil layer percolates quickly
 through the macropores. The remaining water is retained by the micropores refilling
 the current soil layer. When this soil layer reaches its field capacity the excess
@@ -831,6 +839,8 @@ Function \texttt{swb} returns a list object whose elements are data tables. Each
 \item{Granier, A., Reichstein, M., Bréda, N., Janssens, I.A., Falge, E., Ciais, P., Grünwald, T., Aubinet, M., Berbigier, P., Bernhofer, C., Buchmann, N., Facini, O., Grassi, G., Heinesch, B., Ilvesniemi, H., Keronen, P., Knohl, A., Köstner, B., Lagergren, F., Lindroth, A., Longdoz, B., Loustau, D., Mateus, J., Montagnani, L., Nys, C., Moors, E., Papale, D., Peiffer, M., Pilegaard, K., Pita, G., Pumpanen, J., Rambal, S., Rebmann, C., Rodrigues, A., Seufert, G., Tenhunen, J., Vesala, T., Wang, Q., 2007. Evidence for soil water control on carbon and water dynamics in European forests during the extremely dry year: 2003. Agric. For. Meteorol. 143, 123–145. doi:10.1016/j.agrformet.2006.12.004}
 
 \item{Jarvis, P., McNaughton, K., 1986. Stomatal control of transpiration: Scaling Up from leaf to region. Adv. Ecol. Res. 15, 1–49.}
+
+\item{Kergoat, L. 1998. A model for hydrological equilibrium of leaf area index on a global scale. Journal of Hydrology 212–213: 268–286.}
 
 \item{Linacre, E.T., 1968. Estimating the net-radiation flux. Agric. Meteorol. 93, 49–63.}
 

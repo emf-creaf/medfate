@@ -1,16 +1,16 @@
 \encoding{UTF-8}
-\name{swbprocesses}
-\alias{swb.SoilInfiltration}
-\alias{swb.SoilEvaporation}
+\name{spwbprocesses}
+\alias{spwb.SoilInfiltration}
+\alias{spwb.SoilEvaporation}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Soil infiltration and bare soil evaporation}
 \description{
-Function \code{swb.SoilInfiltration} calculates the amount of net precipitation that infiltrates into the topsoil, according to the USDA SCS curve number method (Boughton 1989). The remaining is assumed to be lost as surface runoff. Function \code{swb.SoilEvaporation} calculates the amount of evaporation from bare soil, following Ritchie (1972).
+Function \code{spwb.SoilInfiltration} calculates the amount of net precipitation that infiltrates into the topsoil, according to the USDA SCS curve number method (Boughton 1989). The remaining is assumed to be lost as surface runoff. Function \code{spwb.SoilEvaporation} calculates the amount of evaporation from bare soil, following Ritchie (1972).
 }
 \usage{
-swb.SoilInfiltration(NetPrec, Ssoil) 
-swb.SoilEvaporation(DEF,PETs, Gsoil)
+spwb.SoilInfiltration(NetPrec, Ssoil) 
+spwb.SoilEvaporation(DEF,PETs, Gsoil)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -24,7 +24,7 @@ swb.SoilEvaporation(DEF,PETs, Gsoil)
 See description of infiltration and soil evaporation processes in De Caceres et al. (submitted).
 }
 \value{
-Function \code{swb.SoilInfiltration} a vector of the same length as \code{NetPrec} containing the daily amount of water that infiltrates into the soil (in mm of water). Function \code{swb.SoilEvaporation} returns the amount of water evaporated from the soil.
+Function \code{spwb.SoilInfiltration} a vector of the same length as \code{NetPrec} containing the daily amount of water that infiltrates into the soil (in mm of water). Function \code{spwb.SoilEvaporation} returns the amount of water evaporated from the soil.
 }
 \references{
 Boughton (1989). A review of the USDA SCS curve number method. - Australian Journal of Soil Research 27: 511-523.
@@ -37,7 +37,7 @@ Ritchie (1972). Model for predicting evaporation from a row crop with incomplete
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 \seealso{
- \code{\link{swb}}
+ \code{\link{spwb}}
 }
 \examples{
 SoilDepth = c(200,400,800,1200,1500)
@@ -72,19 +72,19 @@ V = MaxVol1+MaxVol2+MaxVol3
 
 par(mar=c(5,5,1,1), mfrow=c(1,2))
 NP = seq(0,60, by=1)
-plot(NP,swb.SoilInfiltration(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
+plot(NP,spwb.SoilInfiltration(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
      ylab="Infiltration (mm)", xlab="Net rainfall (mm)", frame=FALSE)
-lines(NP,swb.SoilInfiltration(NP, V[2]), lty=2)
-lines(NP,swb.SoilInfiltration(NP, V[3]), lty=3)
-lines(NP,swb.SoilInfiltration(NP, V[4]), lty=4)
-lines(NP,swb.SoilInfiltration(NP, V[5]), lty=5)
+lines(NP,spwb.SoilInfiltration(NP, V[2]), lty=2)
+lines(NP,spwb.SoilInfiltration(NP, V[3]), lty=3)
+lines(NP,spwb.SoilInfiltration(NP, V[4]), lty=4)
+lines(NP,spwb.SoilInfiltration(NP, V[5]), lty=5)
 legend("topleft", bty="n", lty=1:5, legend=c(paste("d =", SoilDepth, "Vsoil =",round(V),"mm")))
-plot(NP,NP-swb.SoilInfiltration(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
+plot(NP,NP-spwb.SoilInfiltration(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
      ylab="Runoff (mm)", xlab="Net rainfall (mm)", frame=FALSE)
-lines(NP,NP-swb.SoilInfiltration(NP, V[2]), lty=2)
-lines(NP,NP-swb.SoilInfiltration(NP, V[3]), lty=3)
-lines(NP,NP-swb.SoilInfiltration(NP, V[4]), lty=4)
-lines(NP,NP-swb.SoilInfiltration(NP, V[5]), lty=5)
+lines(NP,NP-spwb.SoilInfiltration(NP, V[2]), lty=2)
+lines(NP,NP-spwb.SoilInfiltration(NP, V[3]), lty=3)
+lines(NP,NP-spwb.SoilInfiltration(NP, V[4]), lty=4)
+lines(NP,NP-spwb.SoilInfiltration(NP, V[5]), lty=5)
 legend("topleft", bty="n", lty=1:5, legend=c(paste("d =", SoilDepth,"Vsoil =",round(V),"mm")))
 
 

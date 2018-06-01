@@ -1,18 +1,18 @@
 \encoding{UTF-8}
-\name{swbgrid}
-\alias{swbgrid}
-\alias{plot.swbgrid}
+\name{spwbgrid}
+\alias{spwbgrid}
+\alias{plot.spwbgrid}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Soil water balance and lateral water discharge}
 \description{
-Function \code{swbgrid} conducts daily soil water balance over a grid of cells while incorporating water runoff from upperslope cells into the current cell.
+Function \code{spwbgrid} conducts daily soil water balance over a grid of cells while incorporating water runoff from upperslope cells into the current cell.
 }
 \usage{
-swbgrid(y, SpParams, meteo, dates, 
+spwbgrid(y, SpParams, meteo, dates, 
            summaryFreq = "years", trackSpecies = numeric(), 
            control = defaultControl())
-\method{plot}{swbgrid}(x, type = "Runon", summaryIndex = 1, spIndex = NULL, ...)
+\method{plot}{spwbgrid}(x, type = "Runon", summaryIndex = 1, spIndex = NULL, ...)
 }
 \arguments{
   \item{y}{An object of class \code{\link{SpatialGridForest-class}}.}
@@ -22,17 +22,17 @@ swbgrid(y, SpParams, meteo, dates,
   \item{summaryFreq}{Frequency in which summary layers will be produced (e.g. "years", "months", ...) (see \code{\link{cut.Date}}).}
   \item{trackSpecies}{An integer vector containing the indices of species for which transpiration and drought stress is to be tracked.}
   \item{control}{A list of control parameters (see \code{\link{defaultControl}}).}
-  \item{x}{An object of class \code{swbgrid}.}
+  \item{x}{An object of class \code{spwbgrid}.}
   \item{type}{Type of information to be drawn.}
   \item{summaryIndex}{The index of the summary to be ploted.}
   \item{spIndex}{The index of the species to be ploted (for some types).}
   \item{...}{Additional parameters to function \code{\link{spplot}}.}
 }
 \details{
-Function \code{swbgrid} requires daily meteorological data over a grid. The user may supply an object of class \code{\link{SpatialGridMeteorology}} (see package 'meteoland') or a data frame with information regarding where to read meteorological data.
+Function \code{spwbgrid} requires daily meteorological data over a grid. The user may supply an object of class \code{\link{SpatialGridMeteorology}} (see package 'meteoland') or a data frame with information regarding where to read meteorological data.
 }
 \value{
-A list of class 'swbgrid' with the following elements:
+A list of class 'spwbgrid' with the following elements:
 \itemize{
  \item{\code{grid}: The \code{\link{GridTopology}} object corresponding to the simulated area.}
  \item{\code{LandscapeBalance}: A data frame with as many rows as summary points and where columns are components of the water balance at the landscape level (i.e., precipitation, interception, soil evaporation, plant transpiration, ...).}
@@ -57,5 +57,5 @@ The same list contains two three-dimensional arrays (each with dimensions number
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya.
 }
 \seealso{
-\code{\link{swb}}, \code{\link{swbpoints}}, \code{\link{SpatialGridForest-class}}
+\code{\link{spwb}}, \code{\link{spwbpoints}}, \code{\link{SpatialGridForest-class}}
 }

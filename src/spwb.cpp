@@ -31,7 +31,7 @@ NumericVector er(IntegerVector DOY, double ERconv=0.05, double ERsyn = 0.2){
 }
 
 
-// [[Rcpp::export("swb.SoilEvaporation")]]
+// [[Rcpp::export("spwb.SoilEvaporation")]]
 double soilevaporation(double DEF,double PETs, double Gsoil){
   double t = pow(DEF/Gsoil, 2.0);
   double Esoil = 0.0;
@@ -65,9 +65,9 @@ double interceptionGashDay(double Precipitation, double Cm, double p, double ER=
 
 
 // Soil water balance with simple hydraulic model
-// [[Rcpp::export(".swbDay1")]]
-List swbDay1(List x, List soil, double tday, double pet, double rain, double er, double runon=0.0, 
-             bool verbose = false) {
+// [[Rcpp::export(".spwbDay1")]]
+List spwbDay1(List x, List soil, double tday, double pet, double rain, double er, double runon=0.0, 
+             double rad = NA_REAL, bool verbose = false) {
 
   //Control parameters
   List control = x["control"];
@@ -256,14 +256,14 @@ List swbDay1(List x, List soil, double tday, double pet, double rain, double er,
                              _["EplantCoh"] = Eplant, _["psiCoh"] = PlantPsi, _["DDS"] = DDS);
   List l = List::create(_["DailyBalance"] = DB, _["SoilBalance"] = SB,
                         _["Plants"] = Plants);
-  l.attr("class") = CharacterVector::create("swb.day","list");
+  l.attr("class") = CharacterVector::create("spwb.day","list");
   return(l);
 }
 
 
 // Soil water balance with Sperry hydraulic and stomatal conductance models
-// [[Rcpp::export(".swbDay2")]]
-List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
+// [[Rcpp::export(".spwbDay2")]]
+List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
              double latitude, double elevation, double slope, double aspect, double solarConstant, double delta, 
              double rain, double er, double runon=0.0, bool verbose = false) {
   
@@ -911,12 +911,12 @@ List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double r
   List l = List::create(_["cohorts"] = clone(cohorts),
                         _["DailyBalance"] = DB, _["SoilBalance"] = SB, _["Plants"] = Plants,
                         _["EnergyBalance"] = EB);
-  l.attr("class") = CharacterVector::create("swb.day","list");
+  l.attr("class") = CharacterVector::create("spwb.day","list");
   return(l);
 }
 
-// [[Rcpp::export("swb.day")]]
-List swbDay(List x, List soil, CharacterVector date, int doy, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
+// [[Rcpp::export("spwb.day")]]
+List spwbDay(List x, List soil, CharacterVector date, int doy, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
             double latitude, double elevation, double slope, double aspect,  
             double rain, double runon=0.0) {
   //Control parameters
@@ -967,11 +967,11 @@ List swbDay(List x, List soil, CharacterVector date, int doy, double tmin, doubl
 
   List s;
   if(transpirationMode=="Simple") {
-    s = swbDay1(x,soil, tday, pet, rain, er, runon, verbose);
+    s = spwbDay1(x,soil, tday, pet, rain, er, runon, verbose);
   } else {
     if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; 
     if(wind<0.5) wind = 0.5; //Minimum windspeed abovecanopy
-    s = swbDay2(x,soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect,
+    s = spwbDay2(x,soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect,
                 solarConstant, delta, rain, er, runon, verbose);
   }
   // Rcout<<"hola4\n";
@@ -1019,8 +1019,8 @@ NumericVector getTrackSpeciesDDS(NumericVector trackSpecies, NumericVector DDS, 
 }
 
 
-// [[Rcpp::export(".swbgridDay")]]
-List swbgridDay(CharacterVector lct, List xList, List soilList, 
+// [[Rcpp::export(".spwbgridDay")]]
+List spwbgridDay(CharacterVector lct, List xList, List soilList, 
                 IntegerVector waterO, List queenNeigh, List waterQ,
                 NumericVector gddVec, NumericVector petVec, NumericVector rainVec, 
                 NumericVector erVec, NumericVector trackSpecies) {
@@ -1038,7 +1038,7 @@ List swbgridDay(CharacterVector lct, List xList, List soilList,
       DataFrame x = Rcpp::as<Rcpp::DataFrame>(xList[iCell]);
       List soil = Rcpp::as<Rcpp::List>(soilList[iCell]);
       //Run daily soil water balance for the current cell
-      List res = swbDay1(x, soil, gddVec[iCell], petVec[iCell], rainVec[iCell], erVec[iCell], Runon[iCell]);
+      List res = spwbDay1(x, soil, gddVec[iCell], petVec[iCell], rainVec[iCell], erVec[iCell], Runon[iCell]);
       NetPrec[iCell] = res["NetPrec"];
       Runon[iCell] = res["Runon"];
       Infiltration[iCell] = res["Infiltration"];
@@ -1100,42 +1100,42 @@ List swbgridDay(CharacterVector lct, List xList, List soilList,
 
 
 
-void checkswbInput(List x, List soil, String transpirationMode, String soilFunctions) {
-  if(!x.containsElementNamed("above")) stop("above missing in swbInput");
+void checkspwbInput(List x, List soil, String transpirationMode, String soilFunctions) {
+  if(!x.containsElementNamed("above")) stop("above missing in spwbInput");
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
-  if(!above.containsElementNamed("LAI_live")) stop("LAI_live missing in swbInput$above");
-  if(!above.containsElementNamed("CR")) stop("CR missing in swbInput$above");
-  if(!above.containsElementNamed("H")) stop("H missing in swbInput$above");
+  if(!above.containsElementNamed("LAI_live")) stop("LAI_live missing in spwbInput$above");
+  if(!above.containsElementNamed("CR")) stop("CR missing in spwbInput$above");
+  if(!above.containsElementNamed("H")) stop("H missing in spwbInput$above");
   
-  if(!x.containsElementNamed("below")) stop("below missing in swbInput");
+  if(!x.containsElementNamed("below")) stop("below missing in spwbInput");
   List below = Rcpp::as<Rcpp::List>(x["below"]);
-  if(!below.containsElementNamed("V")) stop("V missing in swbInput$below");
+  if(!below.containsElementNamed("V")) stop("V missing in spwbInput$below");
   if(transpirationMode=="Complex"){
-    if(!below.containsElementNamed("VGrhizo_kmax")) stop("VGrhizo_kmax missing in swbInput$below");
-    if(!below.containsElementNamed("VCroot_kmax")) stop("VCroot_kmax missing in swbInput$below");
+    if(!below.containsElementNamed("VGrhizo_kmax")) stop("VGrhizo_kmax missing in spwbInput$below");
+    if(!below.containsElementNamed("VCroot_kmax")) stop("VCroot_kmax missing in spwbInput$below");
   }  
   
-  if(!x.containsElementNamed("paramsBase")) stop("paramsBase missing in swbInput");
+  if(!x.containsElementNamed("paramsBase")) stop("paramsBase missing in spwbInput");
   DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
-  if(!paramsBase.containsElementNamed("Sgdd")) stop("Sgdd missing in swbInput$paramsBase");
-  if(!paramsBase.containsElementNamed("k")) stop("k missing in swbInput$paramsBase");
-  if(!paramsBase.containsElementNamed("g")) stop("g missing in swbInput$paramsBase");
+  if(!paramsBase.containsElementNamed("Sgdd")) stop("Sgdd missing in spwbInput$paramsBase");
+  if(!paramsBase.containsElementNamed("k")) stop("k missing in spwbInput$paramsBase");
+  if(!paramsBase.containsElementNamed("g")) stop("g missing in spwbInput$paramsBase");
   
-  if(!x.containsElementNamed("paramsTransp")) stop("paramsTransp missing in swbInput");
+  if(!x.containsElementNamed("paramsTransp")) stop("paramsTransp missing in spwbInput");
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
-  if(!paramsTransp.containsElementNamed("pRootDisc")) stop("pRootDisc missing in swbInput$paramsTransp");
+  if(!paramsTransp.containsElementNamed("pRootDisc")) stop("pRootDisc missing in spwbInput$paramsTransp");
   if(transpirationMode=="Simple") {
-    if(!paramsTransp.containsElementNamed("Psi_Extract")) stop("Psi_Extract missing in swbInput$paramsTransp");
-    if(!paramsTransp.containsElementNamed("WUE")) stop("WUE missing in swbInput$paramsTransp");
+    if(!paramsTransp.containsElementNamed("Psi_Extract")) stop("Psi_Extract missing in spwbInput$paramsTransp");
+    if(!paramsTransp.containsElementNamed("WUE")) stop("WUE missing in spwbInput$paramsTransp");
   } else if(transpirationMode=="Complex") {
-    if(!paramsTransp.containsElementNamed("VCstem_kmax")) stop("VCstem_kmax missing in swbInput$paramsTransp");
-    if(!paramsTransp.containsElementNamed("VCstem_c")) stop("VCstem_c missing in swbInput$paramsTransp");
-    if(!paramsTransp.containsElementNamed("VCstem_d")) stop("VCstem_d missing in swbInput$paramsTransp");
-    if(!paramsTransp.containsElementNamed("VCroot_c")) stop("VCroot_c missing in swbInput$paramsTransp");
-    if(!paramsTransp.containsElementNamed("VCroot_d")) stop("VCroot_d missing in swbInput$paramsTransp");
-    if(!paramsTransp.containsElementNamed("Gwmax")) stop("Gwmax missing in swbInput$paramsTransp");
-    if(!paramsTransp.containsElementNamed("Vmax298")) stop("Vmax298 missing in swbInput$paramsTransp");
-    if(!paramsTransp.containsElementNamed("Jmax298")) stop("Jmax298 missing in swbInput$paramsTransp");
+    if(!paramsTransp.containsElementNamed("VCstem_kmax")) stop("VCstem_kmax missing in spwbInput$paramsTransp");
+    if(!paramsTransp.containsElementNamed("VCstem_c")) stop("VCstem_c missing in spwbInput$paramsTransp");
+    if(!paramsTransp.containsElementNamed("VCstem_d")) stop("VCstem_d missing in spwbInput$paramsTransp");
+    if(!paramsTransp.containsElementNamed("VCroot_c")) stop("VCroot_c missing in spwbInput$paramsTransp");
+    if(!paramsTransp.containsElementNamed("VCroot_d")) stop("VCroot_d missing in spwbInput$paramsTransp");
+    if(!paramsTransp.containsElementNamed("Gwmax")) stop("Gwmax missing in spwbInput$paramsTransp");
+    if(!paramsTransp.containsElementNamed("Vmax298")) stop("Vmax298 missing in spwbInput$paramsTransp");
+    if(!paramsTransp.containsElementNamed("Jmax298")) stop("Jmax298 missing in spwbInput$paramsTransp");
   }
   if(transpirationMode=="Complex") {
     if(!soil.containsElementNamed("VG_n")) stop("VG_n missing in soil");
@@ -1157,7 +1157,7 @@ void checkswbInput(List x, List soil, String transpirationMode, String soilFunct
 }
 
 //
-// [[Rcpp::export("swb.resetInputs")]]
+// [[Rcpp::export("spwb.resetInputs")]]
 void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER) {
   List can = x["canopy"];
   NumericVector W = soil["W"];
@@ -1197,14 +1197,14 @@ void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER
   soil["Temp"] =Temp;
 }
 
-// [[Rcpp::export("swb")]]
-List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL) {
+// [[Rcpp::export("spwb")]]
+List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL) {
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
   String soilFunctions = control["soilFunctions"];
   bool verbose = control["verbose"];
   
-  checkswbInput(x, soil, transpirationMode, soilFunctions);
+  checkspwbInput(x, soil, transpirationMode, soilFunctions);
 
   //Meteorological input    
   NumericVector MinTemperature, MaxTemperature;
@@ -1342,7 +1342,7 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
       
       //2. Water balance and photosynthesis
       if(transpirationMode=="Simple") {
-        s = swbDay1(x, soil, MeanTemperature[i], PET[i], Precipitation[i], ER[i], 0.0, false); //No Runon in simulations for a single cell
+        s = spwbDay1(x, soil, MeanTemperature[i], PET[i], Precipitation[i], ER[i], 0.0, false); //No Runon in simulations for a single cell
       } else if(transpirationMode=="Complex") {
         int ntimesteps = control["ndailysteps"];
         double tstep = 86400.0/((double) ntimesteps);
@@ -1350,7 +1350,7 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
         int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
         double delta = meteoland::radiation_solarDeclination(J);
         double solarConstant = meteoland::radiation_solarConstant(J);
-        s = swbDay2(x, soil, MinTemperature[i], MaxTemperature[i], 
+        s = spwbDay2(x, soil, MinTemperature[i], MaxTemperature[i], 
                          MinRelativeHumidity[i], MaxRelativeHumidity[i], Radiation[i], wind, 
                          latitude, elevation, slope, aspect, solarConstant, delta, Precipitation[i], ER[i], 0.0, verbose);
         List Plants = Rcpp::as<Rcpp::List>(s["Plants"]);
@@ -1519,7 +1519,7 @@ List swb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double e
                      Named("PlantPsi") = PlantPsi, 
                      Named("PlantStress") = PlantStress);
   }
-  l.attr("class") = CharacterVector::create("swb","list");
+  l.attr("class") = CharacterVector::create("spwb","list");
   if(verbose) Rcout<<"done.\n";
   return(l);
 }

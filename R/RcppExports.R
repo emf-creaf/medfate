@@ -577,7 +577,7 @@ soil.thermalconductivity <- function(soil, model = "SX") {
     .Call('_medfate_er', PACKAGE = 'medfate', DOY, ERconv, ERsyn)
 }
 
-swb.SoilEvaporation <- function(DEF, PETs, Gsoil) {
+spwb.SoilEvaporation <- function(DEF, PETs, Gsoil) {
     .Call('_medfate_soilevaporation', PACKAGE = 'medfate', DEF, PETs, Gsoil)
 }
 
@@ -589,28 +589,28 @@ swb.SoilEvaporation <- function(DEF, PETs, Gsoil) {
     .Call('_medfate_interceptionGashDay', PACKAGE = 'medfate', Precipitation, Cm, p, ER)
 }
 
-.swbDay1 <- function(x, soil, tday, pet, rain, er, runon = 0.0, verbose = FALSE) {
-    .Call('_medfate_swbDay1', PACKAGE = 'medfate', x, soil, tday, pet, rain, er, runon, verbose)
+.spwbDay1 <- function(x, soil, tday, pet, rain, er, runon = 0.0, rad = NA_real_, verbose = FALSE) {
+    .Call('_medfate_spwbDay1', PACKAGE = 'medfate', x, soil, tday, pet, rain, er, runon, rad, verbose)
 }
 
-.swbDay2 <- function(x, soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, solarConstant, delta, rain, er, runon = 0.0, verbose = FALSE) {
-    .Call('_medfate_swbDay2', PACKAGE = 'medfate', x, soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, solarConstant, delta, rain, er, runon, verbose)
+.spwbDay2 <- function(x, soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, solarConstant, delta, rain, er, runon = 0.0, verbose = FALSE) {
+    .Call('_medfate_spwbDay2', PACKAGE = 'medfate', x, soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, solarConstant, delta, rain, er, runon, verbose)
 }
 
-swb.day <- function(x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, rain, runon = 0.0) {
-    .Call('_medfate_swbDay', PACKAGE = 'medfate', x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, rain, runon)
+spwb.day <- function(x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, rain, runon = 0.0) {
+    .Call('_medfate_spwbDay', PACKAGE = 'medfate', x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, rain, runon)
 }
 
-.swbgridDay <- function(lct, xList, soilList, waterO, queenNeigh, waterQ, gddVec, petVec, rainVec, erVec, trackSpecies) {
-    .Call('_medfate_swbgridDay', PACKAGE = 'medfate', lct, xList, soilList, waterO, queenNeigh, waterQ, gddVec, petVec, rainVec, erVec, trackSpecies)
+.spwbgridDay <- function(lct, xList, soilList, waterO, queenNeigh, waterQ, gddVec, petVec, rainVec, erVec, trackSpecies) {
+    .Call('_medfate_spwbgridDay', PACKAGE = 'medfate', lct, xList, soilList, waterO, queenNeigh, waterQ, gddVec, petVec, rainVec, erVec, trackSpecies)
 }
 
-swb.resetInputs <- function(x, soil, from = NULL, day = NA_integer_) {
+spwb.resetInputs <- function(x, soil, from = NULL, day = NA_integer_) {
     invisible(.Call('_medfate_resetInputs', PACKAGE = 'medfate', x, soil, from, day))
 }
 
-swb <- function(x, soil, meteo, latitude = NA_real_, elevation = NA_real_, slope = NA_real_, aspect = NA_real_) {
-    .Call('_medfate_swb', PACKAGE = 'medfate', x, soil, meteo, latitude, elevation, slope, aspect)
+spwb <- function(x, soil, meteo, latitude = NA_real_, elevation = NA_real_, slope = NA_real_, aspect = NA_real_) {
+    .Call('_medfate_spwb', PACKAGE = 'medfate', x, soil, meteo, latitude, elevation, slope, aspect)
 }
 
 moisture.symplasticRWC <- function(psi, pi0, epsilon) {

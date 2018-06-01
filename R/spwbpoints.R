@@ -1,4 +1,4 @@
-swbpoints<-function(y, SpParams, meteo, control = defaultControl(), dates = NULL, summaryFunction=NULL, args=NULL) {
+spwbpoints<-function(y, SpParams, meteo, control = defaultControl(), dates = NULL, summaryFunction=NULL, args=NULL) {
   
   #Check input
   if(!inherits(meteo,"data.frame") && 
@@ -37,8 +37,8 @@ swbpoints<-function(y, SpParams, meteo, control = defaultControl(), dates = NULL
       yid = y@forestlist[[i]] 
       soil = y@soillist[[i]]
       cat(" - Soil water balance")
-      inputlist[[i]] = forest2swbInput(yid, soil, SpParams, control)
-      S<-swb(inputlist[[i]], soil, meteo=met, 
+      inputlist[[i]] = forest2spwbInput(yid, soil, SpParams, control)
+      S<-spwb(inputlist[[i]], soil, meteo=met, 
              latitude = latitude[i], elevation = y@data$elevation[i],
             slope = y@data$slope[i], aspect = y@data$aspect[i])      
       if(!is.null(summaryFunction)){
@@ -56,6 +56,6 @@ swbpoints<-function(y, SpParams, meteo, control = defaultControl(), dates = NULL
     }
   }
   l = list(sp = sp, input = inputlist, result = reslist)
-  class(l) = c("swbpoints","list")
+  class(l) = c("spwbpoints","list")
   return(l)
 }

@@ -1,4 +1,4 @@
-summary.swb<-function(object, freq="years", output="DailyBalance", FUN=sum, bySpecies = FALSE, ...){  
+summary.spwb<-function(object, freq="years", output="DailyBalance", FUN=sum, bySpecies = FALSE, ...){  
   dates = as.Date(rownames(object$DailyBalance))
   ndaysTotal = length(dates)
   date.factor = cut(dates, breaks=freq)

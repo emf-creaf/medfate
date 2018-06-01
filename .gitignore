@@ -8,6 +8,8 @@ src/*.dll
 .gitignore
 .Rbuildignore
 medfate.Rproj
+src-i386/*.*
+src-x64/*.*
 modeldescription/*.tex
 modeldescription/*.log
 modeldescription/*.pdf

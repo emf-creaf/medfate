@@ -1,11 +1,11 @@
 \encoding{UTF-8}
-\name{swb.ldrCalibration}
-\alias{swb.ldrCalibration}
+\name{spwb.ldrCalibration}
+\alias{spwb.ldrCalibration}
 
 \title{Calibration of root distribution}
 
-\description{The function \code{swb.ldrCalibration} calibrates the species root
-distribution within \code{\link{swb}}, given the arguments \code{x}, \code{meteo},
+\description{The function \code{spwb.ldrCalibration} calibrates the species root
+distribution within \code{\link{spwb}}, given the arguments \code{x}, \code{meteo},
 \code{soil}, \code{psi_crit}, \code{obs} and \code{calibVar}. This calibration
 is based on reference measured values. These reference measured values can be
 \code{Soil water content}, \code{Total tranpiration} or \code{Transpiration by
@@ -14,14 +14,14 @@ shrub calibration is done), expressed as parameters of the function
 \code{\link{root.ldrDistribution}}.}
 
 \usage{
-swb.ldrCalibration(x, soil, meteo, calibVar, obs,
+spwb.ldrCalibration(x, soil, meteo, calibVar, obs,
                    RZmin = 301, RZmax = 4000,
                    V1min = 0.01, V1max = 0.94, resolution = 20, heat_stop = 0, 
                    transformation = "identity", verbose = FALSE)
 }
 
 \arguments{
-  \item{x}{An object of class \code{\link{swbInput}}.}
+  \item{x}{An object of class \code{\link{spwbInput}}.}
   \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
   \item{meteo}{A data frame with daily meteorological data series. When using the 'Simple' transpiration mode the following columns are required:
    \itemize{
@@ -53,7 +53,7 @@ swb.ldrCalibration(x, soil, meteo, calibVar, obs,
 This function performs three different kinds of calibration, selecting those
 root distribution parameters that minimize the MAE between the predicted values
 and the measured values provided in \code{obs} argument. If \code{calibVar = "SWC"} different
-V1 values are tested running \code{\link{swb}} maintaining the total soil depth
+V1 values are tested running \code{\link{spwb}} maintaining the total soil depth
 provided in \code{x} and assuming that value is also the depth containing 95 percent of the
 roots. If \code{calibVar = "Eplanttot"} or \code{calibVar = 'Cohorts'} different 
 combinations of RZ and V1 values are tested for each tree cohort and the root
@@ -73,6 +73,6 @@ Antoine Cabon, Centre Tecnologic Forestal de Catalunya
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 \seealso{
- \code{\link{swb.ldrOptimization}} for when no measured data is available,
- \code{\link{swb}}, \code{\link{soil}}, \code{\link{root.ldrDistribution}}
+ \code{\link{spwb.ldrOptimization}} for when no measured data is available,
+ \code{\link{spwb}}, \code{\link{soil}}, \code{\link{root.ldrDistribution}}
 }

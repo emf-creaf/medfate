@@ -5,7 +5,7 @@
 #include "forestutils.h"
 #include "hydraulics.h"
 #include "soil.h"
-#include "swb.h"
+#include "spwb.h"
 #include <Rcpp.h>
 #include <meteoland.h>
 using namespace Rcpp;
@@ -96,7 +96,7 @@ void checkgrowthInput(List x, List soil, String transpirationMode, String soilFu
   
   if(!x.containsElementNamed("paramsTransp")) stop("paramsTransp missing in growthInput");
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
-  if(!paramsTransp.containsElementNamed("pRootDisc")) stop("pRootDisc missing in swbInput$paramsTransp");
+  if(!paramsTransp.containsElementNamed("pRootDisc")) stop("pRootDisc missing in growthInput$paramsTransp");
   if(transpirationMode=="Simple") {
     if(!paramsTransp.containsElementNamed("Psi_Extract")) stop("Psi_Extract missing in growthInput$paramsTransp");
     if(!paramsTransp.containsElementNamed("WUE")) stop("WUE missing in growthInput$paramsTransp");
@@ -307,13 +307,13 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
     
     //2. Water balance and photosynthesis
     if(transpirationMode=="Simple") {
-      s = swbDay1(x, soil, MeanTemperature[i], PET[i], Precipitation[i], ER[i], 0.0, false); //No Runon in simulations for a single cell
+      s = spwbDay1(x, soil, MeanTemperature[i], PET[i], Precipitation[i], ER[i], 0.0, false); //No Runon in simulations for a single cell
     } else if(transpirationMode=="Complex") {
       std::string c = as<std::string>(dateStrings[i]);
       int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
       double delta = meteoland::radiation_solarDeclination(J);
       double solarConstant = meteoland::radiation_solarConstant(J);
-      s = swbDay2(x, soil, MinTemperature[i], MaxTemperature[i], 
+      s = spwbDay2(x, soil, MinTemperature[i], MaxTemperature[i], 
                        MinRelativeHumidity[i], MaxRelativeHumidity[i], Radiation[i], WindSpeed[i], 
                        latitude, elevation, slope, aspect, solarConstant, delta, Precipitation[i], ER[i], 0.0, false);
       

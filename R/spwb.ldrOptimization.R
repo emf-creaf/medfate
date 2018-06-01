@@ -12,7 +12,7 @@
   function (y) uniroot((function (x) f(x) - y), lower = lower, upper = upper, extendInt = "yes")[1]
 }
 
-swb.ldrOptimization<-function(x, soil, meteo, psi_crit, opt_mode = 1,
+spwb.ldrOptimization<-function(x, soil, meteo, psi_crit, opt_mode = 1,
                               RZmin = 301, RZmax = 4000, V1min = 0.01, V1max = 0.94, resolution = 20, 
                               heat_stop = 0, transformation = "identity", explore_out = FALSE, verbose = FALSE) {
   
@@ -113,7 +113,7 @@ swb.ldrOptimization<-function(x, soil, meteo, psi_crit, opt_mode = 1,
       V[1:length(x_1sp$below$V),i,j] <- x_1sp$below$V
       
       # Run the model
-      swb <- swb(x = x_1sp, meteo = meteo, soil = s.)
+      spwb <- spwb(x = x_1sp, meteo = meteo, soil = s.)
       
       # Outputs
       years <- substr(as.Date(rownames(meteo)), start = 1, stop = 4)
@@ -123,10 +123,10 @@ swb.ldrOptimization<-function(x, soil, meteo, psi_crit, opt_mode = 1,
         # print(sum(is.na(f)))
         f
       }
-      PsiMin[sp,i,j] <- mean(aggregate(swb$PlantPsi[op_days], 
+      PsiMin[sp,i,j] <- mean(aggregate(spwb$PlantPsi[op_days], 
                                        by = list(years[op_days]),
                                        FUN = function(x) min(ma(x)))$x)
-      E[sp,i,j] <- mean(swb$PlantTranspiration[op_days])
+      E[sp,i,j] <- mean(spwb$PlantTranspiration[op_days])
       setTxtProgressBar(pb, row)
     }
     cat("\n")
@@ -190,9 +190,9 @@ swb.ldrOptimization<-function(x, soil, meteo, psi_crit, opt_mode = 1,
   return(optim)
 }
 
-# Function for plotting the outputs of swb.ldrOptimization
+# Function for plotting the outputs of spwb.ldrOptimization
 # works with the libraries ggplot2, reshape and viridis
-# x is the output of the function swb.ldrOptimization with explore_out = T
+# x is the output of the function spwb.ldrOptimization with explore_out = T
 # .plot.ldrOptimization <- function(x, SP = 1, raster_var = "E", contour_var = "E", special_breaks_var = "Psi",
 #                              legend_pos = c(1,1), xaxis_pos = "bottom", yaxis_pos = "left", special_breaks = 0, axis_trans = "identity"){
 #   

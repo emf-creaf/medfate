@@ -2162,9 +2162,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// swbDay1
-List swbDay1(List x, List soil, double tday, double pet, double rain, double er, double runon, bool verbose);
-RcppExport SEXP _medfate_swbDay1(SEXP xSEXP, SEXP soilSEXP, SEXP tdaySEXP, SEXP petSEXP, SEXP rainSEXP, SEXP erSEXP, SEXP runonSEXP, SEXP verboseSEXP) {
+// spwbDay1
+List spwbDay1(List x, List soil, double tday, double pet, double rain, double er, double runon, double rad, bool verbose);
+RcppExport SEXP _medfate_spwbDay1(SEXP xSEXP, SEXP soilSEXP, SEXP tdaySEXP, SEXP petSEXP, SEXP rainSEXP, SEXP erSEXP, SEXP runonSEXP, SEXP radSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2175,14 +2175,15 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type rain(rainSEXP);
     Rcpp::traits::input_parameter< double >::type er(erSEXP);
     Rcpp::traits::input_parameter< double >::type runon(runonSEXP);
+    Rcpp::traits::input_parameter< double >::type rad(radSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(swbDay1(x, soil, tday, pet, rain, er, runon, verbose));
+    rcpp_result_gen = Rcpp::wrap(spwbDay1(x, soil, tday, pet, rain, er, runon, rad, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
-// swbDay2
-List swbDay2(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, double latitude, double elevation, double slope, double aspect, double solarConstant, double delta, double rain, double er, double runon, bool verbose);
-RcppExport SEXP _medfate_swbDay2(SEXP xSEXP, SEXP soilSEXP, SEXP tminSEXP, SEXP tmaxSEXP, SEXP rhminSEXP, SEXP rhmaxSEXP, SEXP radSEXP, SEXP windSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP solarConstantSEXP, SEXP deltaSEXP, SEXP rainSEXP, SEXP erSEXP, SEXP runonSEXP, SEXP verboseSEXP) {
+// spwbDay2
+List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, double latitude, double elevation, double slope, double aspect, double solarConstant, double delta, double rain, double er, double runon, bool verbose);
+RcppExport SEXP _medfate_spwbDay2(SEXP xSEXP, SEXP soilSEXP, SEXP tminSEXP, SEXP tmaxSEXP, SEXP rhminSEXP, SEXP rhmaxSEXP, SEXP radSEXP, SEXP windSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP solarConstantSEXP, SEXP deltaSEXP, SEXP rainSEXP, SEXP erSEXP, SEXP runonSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2204,13 +2205,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type er(erSEXP);
     Rcpp::traits::input_parameter< double >::type runon(runonSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(swbDay2(x, soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, solarConstant, delta, rain, er, runon, verbose));
+    rcpp_result_gen = Rcpp::wrap(spwbDay2(x, soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, solarConstant, delta, rain, er, runon, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
-// swbDay
-List swbDay(List x, List soil, CharacterVector date, int doy, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, double latitude, double elevation, double slope, double aspect, double rain, double runon);
-RcppExport SEXP _medfate_swbDay(SEXP xSEXP, SEXP soilSEXP, SEXP dateSEXP, SEXP doySEXP, SEXP tminSEXP, SEXP tmaxSEXP, SEXP rhminSEXP, SEXP rhmaxSEXP, SEXP radSEXP, SEXP windSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP rainSEXP, SEXP runonSEXP) {
+// spwbDay
+List spwbDay(List x, List soil, CharacterVector date, int doy, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, double latitude, double elevation, double slope, double aspect, double rain, double runon);
+RcppExport SEXP _medfate_spwbDay(SEXP xSEXP, SEXP soilSEXP, SEXP dateSEXP, SEXP doySEXP, SEXP tminSEXP, SEXP tmaxSEXP, SEXP rhminSEXP, SEXP rhmaxSEXP, SEXP radSEXP, SEXP windSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP rainSEXP, SEXP runonSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2230,13 +2231,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type aspect(aspectSEXP);
     Rcpp::traits::input_parameter< double >::type rain(rainSEXP);
     Rcpp::traits::input_parameter< double >::type runon(runonSEXP);
-    rcpp_result_gen = Rcpp::wrap(swbDay(x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, rain, runon));
+    rcpp_result_gen = Rcpp::wrap(spwbDay(x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, rain, runon));
     return rcpp_result_gen;
 END_RCPP
 }
-// swbgridDay
-List swbgridDay(CharacterVector lct, List xList, List soilList, IntegerVector waterO, List queenNeigh, List waterQ, NumericVector gddVec, NumericVector petVec, NumericVector rainVec, NumericVector erVec, NumericVector trackSpecies);
-RcppExport SEXP _medfate_swbgridDay(SEXP lctSEXP, SEXP xListSEXP, SEXP soilListSEXP, SEXP waterOSEXP, SEXP queenNeighSEXP, SEXP waterQSEXP, SEXP gddVecSEXP, SEXP petVecSEXP, SEXP rainVecSEXP, SEXP erVecSEXP, SEXP trackSpeciesSEXP) {
+// spwbgridDay
+List spwbgridDay(CharacterVector lct, List xList, List soilList, IntegerVector waterO, List queenNeigh, List waterQ, NumericVector gddVec, NumericVector petVec, NumericVector rainVec, NumericVector erVec, NumericVector trackSpecies);
+RcppExport SEXP _medfate_spwbgridDay(SEXP lctSEXP, SEXP xListSEXP, SEXP soilListSEXP, SEXP waterOSEXP, SEXP queenNeighSEXP, SEXP waterQSEXP, SEXP gddVecSEXP, SEXP petVecSEXP, SEXP rainVecSEXP, SEXP erVecSEXP, SEXP trackSpeciesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2251,7 +2252,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type rainVec(rainVecSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type erVec(erVecSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type trackSpecies(trackSpeciesSEXP);
-    rcpp_result_gen = Rcpp::wrap(swbgridDay(lct, xList, soilList, waterO, queenNeigh, waterQ, gddVec, petVec, rainVec, erVec, trackSpecies));
+    rcpp_result_gen = Rcpp::wrap(spwbgridDay(lct, xList, soilList, waterO, queenNeigh, waterQ, gddVec, petVec, rainVec, erVec, trackSpecies));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2268,9 +2269,9 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
-// swb
-List swb(List x, List soil, DataFrame meteo, double latitude, double elevation, double slope, double aspect);
-RcppExport SEXP _medfate_swb(SEXP xSEXP, SEXP soilSEXP, SEXP meteoSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP) {
+// spwb
+List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation, double slope, double aspect);
+RcppExport SEXP _medfate_spwb(SEXP xSEXP, SEXP soilSEXP, SEXP meteoSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2281,7 +2282,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type elevation(elevationSEXP);
     Rcpp::traits::input_parameter< double >::type slope(slopeSEXP);
     Rcpp::traits::input_parameter< double >::type aspect(aspectSEXP);
-    rcpp_result_gen = Rcpp::wrap(swb(x, soil, meteo, latitude, elevation, slope, aspect));
+    rcpp_result_gen = Rcpp::wrap(spwb(x, soil, meteo, latitude, elevation, slope, aspect));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2469,6 +2470,12 @@ BEGIN_RCPP
 END_RCPP
 }
 
+RcppExport SEXP _medfate_swb(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP _medfate_swbDay(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP _medfate_swbDay1(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP _medfate_swbDay2(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+RcppExport SEXP _medfate_swbgridDay(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+
 static const R_CallMethodDef CallEntries[] = {
     {"_medfate_radiationDiurnalPattern", (DL_FUNC) &_medfate_radiationDiurnalPattern, 2},
     {"_medfate_temperatureDiurnalPattern", (DL_FUNC) &_medfate_temperatureDiurnalPattern, 4},
@@ -2617,12 +2624,12 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_soilevaporation", (DL_FUNC) &_medfate_soilevaporation, 3},
     {"_medfate_infiltrationDay", (DL_FUNC) &_medfate_infiltrationDay, 2},
     {"_medfate_interceptionGashDay", (DL_FUNC) &_medfate_interceptionGashDay, 4},
-    {"_medfate_swbDay1", (DL_FUNC) &_medfate_swbDay1, 8},
-    {"_medfate_swbDay2", (DL_FUNC) &_medfate_swbDay2, 18},
-    {"_medfate_swbDay", (DL_FUNC) &_medfate_swbDay, 16},
-    {"_medfate_swbgridDay", (DL_FUNC) &_medfate_swbgridDay, 11},
+    {"_medfate_spwbDay1", (DL_FUNC) &_medfate_spwbDay1, 9},
+    {"_medfate_spwbDay2", (DL_FUNC) &_medfate_spwbDay2, 18},
+    {"_medfate_spwbDay", (DL_FUNC) &_medfate_spwbDay, 16},
+    {"_medfate_spwbgridDay", (DL_FUNC) &_medfate_spwbgridDay, 11},
     {"_medfate_resetInputs", (DL_FUNC) &_medfate_resetInputs, 4},
-    {"_medfate_swb", (DL_FUNC) &_medfate_swb, 7},
+    {"_medfate_spwb", (DL_FUNC) &_medfate_spwb, 7},
     {"_medfate_symplasticRelativeWaterContent", (DL_FUNC) &_medfate_symplasticRelativeWaterContent, 3},
     {"_medfate_apoplasticRelativeWaterContent", (DL_FUNC) &_medfate_apoplasticRelativeWaterContent, 4},
     {"_medfate_leafRelativeWaterContent", (DL_FUNC) &_medfate_leafRelativeWaterContent, 4},
@@ -2636,6 +2643,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_windAdjustmentFactor", (DL_FUNC) &_medfate_windAdjustmentFactor, 4},
     {"_medfate_windSpeedAtHeightOverCanopy", (DL_FUNC) &_medfate_windSpeedAtHeightOverCanopy, 3},
     {"_medfate_windExtinctionProfile", (DL_FUNC) &_medfate_windExtinctionProfile, 4},
+    {"_medfate_swb",                                     (DL_FUNC) &_medfate_swb,                                      7},
+    {"_medfate_swbDay",                                  (DL_FUNC) &_medfate_swbDay,                                  16},
+    {"_medfate_swbDay1",                                 (DL_FUNC) &_medfate_swbDay1,                                  8},
+    {"_medfate_swbDay2",                                 (DL_FUNC) &_medfate_swbDay2,                                 18},
+    {"_medfate_swbgridDay",                              (DL_FUNC) &_medfate_swbgridDay,                              11},
     {NULL, NULL, 0}
 };
 

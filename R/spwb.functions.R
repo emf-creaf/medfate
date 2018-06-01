@@ -1,11 +1,11 @@
-swb.SoilInfiltration<-function(NetPrec, Ssoil){
+spwb.SoilInfiltration<-function(NetPrec, Ssoil){
   I = rep(0, length(NetPrec))
   sel = NetPrec>(0.2*Ssoil)
   I[sel] = NetPrec[sel]-((NetPrec[sel]-0.2*Ssoil)^2/(NetPrec[sel]+0.8*Ssoil))
   I[!sel] = NetPrec[!sel]
   return(I)
 }
-swb.RainInterception<-function(Rainfall, Cm, p, ER=0.05, method="Gash1995"){
+spwb.RainInterception<-function(Rainfall, Cm, p, ER=0.05, method="Gash1995"){
   METHODS <- c("Liu2001","Gash1995")
   method <- match.arg(method, METHODS)
   if(length(ER)==1) ER =rep(ER, length(Rainfall))

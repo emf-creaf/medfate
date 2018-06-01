@@ -1,4 +1,4 @@
-swb.ldrCalibration <- function(x, soil, meteo, calibVar, obs,
+spwb.ldrCalibration <- function(x, soil, meteo, calibVar, obs,
                                RZmin = 301, RZmax = 4000, V1min = 0.01,
                                V1max = 0.94, resolution = 20, heat_stop = 0,
                                transformation = "identity", verbose = FALSE) {
@@ -168,7 +168,7 @@ swb.ldrCalibration <- function(x, soil, meteo, calibVar, obs,
         )
         
         # Run the model
-        res_model <- swb(x = x_1sp, meteo = meteo, soil = soil)
+        res_model <- spwb(x = x_1sp, meteo = meteo, soil = soil)
         
         # calculate the MAE
         predicted <- res_model[['SoilWaterBalance']][['W.1']]*soil[["Theta_FC"]][[1]]
@@ -209,7 +209,7 @@ swb.ldrCalibration <- function(x, soil, meteo, calibVar, obs,
         )
         
         # Run the model
-        res_model <- swb(x = x_1sp, meteo = meteo, soil = s.)
+        res_model <- spwb(x = x_1sp, meteo = meteo, soil = s.)
         # build a data frame with transpiration values to compare to obs
         E_df <- data.frame(Eplanttot = res_model[["DailyBalance"]][["Eplanttot"]])
         E_df <- cbind(E_df, res_model[["PlantTranspiration"]])

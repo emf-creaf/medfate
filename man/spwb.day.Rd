@@ -1,19 +1,19 @@
 \encoding{UTF-8}
-\name{swb.day}
-\alias{swb.day}
+\name{spwb.day}
+\alias{spwb.day}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Soil water balance for a single day}
 \description{
-Function \code{swb.day} performs soil water balance for a single day.
+Function \code{spwb.day} performs soil water balance for a single day.
 }
 \usage{
-swb.day(x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind, 
+spwb.day(x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind, 
         latitude, elevation, slope, aspect, rain, runon = 0.0)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{An object of class \code{\link{swbInput}}.}
+  \item{x}{An object of class \code{\link{spwbInput}}.}
   \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
   \item{date}{Date as string "yyyy-mm-dd".}
   \item{doy}{Day of the year.}
@@ -30,7 +30,7 @@ swb.day(x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind,
   Detailed model description is available in the vignettes section. The model using 'Simple' transpiration mode is described in De Caceres et al. (2015). Simulations using the 'Complex' transpiration mode are computationally much more expensive. 
 }
 \value{
-An object of class \code{swb.day}:
+An object of class \code{spwb.day}:
 TO BE DONE
 }
 \references{
@@ -43,8 +43,8 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 Objects \code{x} and \code{soil} are modified during the simulation. Daily transpiration and photosynthesis values are stored in columns \code{Transpiration} and \code{Photosynthesis} of object \code{x}. Water content relative to field capacity (vector \code{W}) of \code{soil} is also modified.  
 }
 \seealso{
-\code{\link{swbInput}}, \code{\link{swb}},  \code{\link{swbpoints}}, \code{\link{swbgrid}}, 
-\code{\link{swb.ldrOptimization}}, \code{\link{forest}}
+\code{\link{spwbInput}}, \code{\link{spwb}},  \code{\link{spwbpoints}}, \code{\link{spwbgrid}}, 
+\code{\link{spwb.ldrOptimization}}, \code{\link{forest}}
 }
 \examples{
 #Load example daily meteorological data
@@ -65,9 +65,9 @@ examplesoil = soil(defaultSoilParams(2), W=c(0.5,0.5))
 
 
 #Simulate one day only
-x1 = forest2swbInput(exampleforest,examplesoil, SpParamsMED, control)
+x1 = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 d = 100
-sd1<-swb.day(x1, examplesoil, rownames(examplemeteo)[d], d , 
+sd1<-spwb.day(x1, examplesoil, rownames(examplemeteo)[d], d , 
              examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
              examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
              examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
@@ -78,9 +78,9 @@ sd1<-swb.day(x1, examplesoil, rownames(examplemeteo)[d], d ,
 control$transpirationMode="Complex"
 
 #Simulate one day only
-x2 = forest2swbInput(exampleforest,examplesoil, SpParamsMED, control)
+x2 = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 d = 100
-sd2<-swb.day(x2, examplesoil, rownames(examplemeteo)[d], d , 
+sd2<-spwb.day(x2, examplesoil, rownames(examplemeteo)[d], d , 
              examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
              examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
              examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
