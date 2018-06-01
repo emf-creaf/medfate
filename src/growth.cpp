@@ -315,7 +315,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
       double solarConstant = meteoland::radiation_solarConstant(J);
       s = spwbDay2(x, soil, MinTemperature[i], MaxTemperature[i], 
                        MinRelativeHumidity[i], MaxRelativeHumidity[i], Radiation[i], WindSpeed[i], 
-                       latitude, elevation, slope, aspect, solarConstant, delta, Precipitation[i], ER[i], 0.0, false);
+                       latitude, elevation, solarConstant, delta, Precipitation[i], ER[i], 0.0, false);
       
       PET[i] = s["PET"];
     }    

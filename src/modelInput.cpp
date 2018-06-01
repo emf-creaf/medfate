@@ -100,7 +100,8 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     List below = List::create(_["V"] = V);
     List numericParams = control["numericParams"];
     List paramsControl = List::create(_["verbose"] =control["verbose"],
-                                      _["soilFunctions"] =soilFunctions, 
+                                      _["soilFunctions"] =soilFunctions,
+                                      _["snowpack"] = control["snowpack"],
                                       _["transpirationMode"] =transpirationMode, 
                                       _["defaultWindSpeed"] = control["defaultWindSpeed"],
                                       _["cavitationRefill"] = control["cavitationRefill"]);
@@ -216,6 +217,7 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     List numericParams = control["numericParams"];
     List paramsControl = List::create(_["verbose"] =control["verbose"],
                                       _["transpirationMode"] =transpirationMode, 
+                                      _["snowpack"] = control["snowpack"],
                                       _["soilFunctions"] =soilFunctions, 
                                       _["Catm"] = control["Catm"],
                                       _["averageFracRhizosphereResistance"] = control["averageFracRhizosphereResistance"],
@@ -455,6 +457,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     List numericParams = control["numericParams"];
     List paramsControl = List::create(_["verbose"] =control["verbose"],
                                       _["soilFunctions"] =soilFunctions, 
+                                      _["snowpack"] = control["snowpack"],
                                       _["transpirationMode"] =transpirationMode, 
                                       _["cavitationRefill"] = control["cavitationRefill"],
                                       _["defaultWindSpeed"] = control["defaultWindSpeed"],
@@ -571,6 +574,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     List paramsControl = List::create(_["verbose"] =control["verbose"],
                                       _["transpirationMode"] =transpirationMode, 
                                       _["soilFunctions"] =soilFunctions, 
+                                      _["snowpack"] = control["snowpack"],
                                       _["Catm"] = control["Catm"],                                      
                                       _["averageFracRhizosphereResistance"] = control["averageFracRhizosphereResistance"],
                                       _["canopyMode"] = canopyMode,

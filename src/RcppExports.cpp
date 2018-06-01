@@ -2182,8 +2182,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // spwbDay2
-List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, double latitude, double elevation, double slope, double aspect, double solarConstant, double delta, double rain, double er, double runon, bool verbose);
-RcppExport SEXP _medfate_spwbDay2(SEXP xSEXP, SEXP soilSEXP, SEXP tminSEXP, SEXP tmaxSEXP, SEXP rhminSEXP, SEXP rhmaxSEXP, SEXP radSEXP, SEXP windSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP solarConstantSEXP, SEXP deltaSEXP, SEXP rainSEXP, SEXP erSEXP, SEXP runonSEXP, SEXP verboseSEXP) {
+List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, double latitude, double elevation, double solarConstant, double delta, double rain, double er, double runon, bool verbose);
+RcppExport SEXP _medfate_spwbDay2(SEXP xSEXP, SEXP soilSEXP, SEXP tminSEXP, SEXP tmaxSEXP, SEXP rhminSEXP, SEXP rhmaxSEXP, SEXP radSEXP, SEXP windSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP solarConstantSEXP, SEXP deltaSEXP, SEXP rainSEXP, SEXP erSEXP, SEXP runonSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2197,15 +2197,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type wind(windSEXP);
     Rcpp::traits::input_parameter< double >::type latitude(latitudeSEXP);
     Rcpp::traits::input_parameter< double >::type elevation(elevationSEXP);
-    Rcpp::traits::input_parameter< double >::type slope(slopeSEXP);
-    Rcpp::traits::input_parameter< double >::type aspect(aspectSEXP);
     Rcpp::traits::input_parameter< double >::type solarConstant(solarConstantSEXP);
     Rcpp::traits::input_parameter< double >::type delta(deltaSEXP);
     Rcpp::traits::input_parameter< double >::type rain(rainSEXP);
     Rcpp::traits::input_parameter< double >::type er(erSEXP);
     Rcpp::traits::input_parameter< double >::type runon(runonSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(spwbDay2(x, soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, solarConstant, delta, rain, er, runon, verbose));
+    rcpp_result_gen = Rcpp::wrap(spwbDay2(x, soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, solarConstant, delta, rain, er, runon, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2619,7 +2617,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_infiltrationDay", (DL_FUNC) &_medfate_infiltrationDay, 2},
     {"_medfate_interceptionGashDay", (DL_FUNC) &_medfate_interceptionGashDay, 4},
     {"_medfate_spwbDay1", (DL_FUNC) &_medfate_spwbDay1, 9},
-    {"_medfate_spwbDay2", (DL_FUNC) &_medfate_spwbDay2, 18},
+    {"_medfate_spwbDay2", (DL_FUNC) &_medfate_spwbDay2, 16},
     {"_medfate_spwbDay", (DL_FUNC) &_medfate_spwbDay, 16},
     {"_medfate_spwbgridDay", (DL_FUNC) &_medfate_spwbgridDay, 11},
     {"_medfate_resetInputs", (DL_FUNC) &_medfate_resetInputs, 4},

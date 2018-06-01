@@ -264,7 +264,7 @@ List spwbDay1(List x, List soil, double tday, double pet, double rain, double er
 // Soil water balance with Sperry hydraulic and stomatal conductance models
 // [[Rcpp::export(".spwbDay2")]]
 List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
-             double latitude, double elevation, double slope, double aspect, double solarConstant, double delta, 
+             double latitude, double elevation, double solarConstant, double delta, 
              double rain, double er, double runon=0.0, bool verbose = false) {
   
   //Control parameters
@@ -967,11 +967,11 @@ List spwbDay(List x, List soil, CharacterVector date, int doy, double tmin, doub
 
   List s;
   if(transpirationMode=="Simple") {
-    s = spwbDay1(x,soil, tday, pet, rain, er, runon, verbose);
+    s = spwbDay1(x,soil, tday, pet, rain, er, runon, rad, verbose);
   } else {
     if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; 
     if(wind<0.5) wind = 0.5; //Minimum windspeed abovecanopy
-    s = spwbDay2(x,soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect,
+    s = spwbDay2(x,soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation,
                 solarConstant, delta, rain, er, runon, verbose);
   }
   // Rcout<<"hola4\n";
@@ -1217,6 +1217,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   int numDays = Precipitation.size();
   if(transpirationMode=="Simple") {
     PET = meteo["PET"];
+    if(control["snowpack"]) Radiation = meteo["Radiation"];
   } else if(transpirationMode=="Complex") {
     if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
     if(NumericVector::is_na(elevation)) stop("Value for 'elevation' should not be missing.");
@@ -1342,7 +1343,8 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
       
       //2. Water balance and photosynthesis
       if(transpirationMode=="Simple") {
-        s = spwbDay1(x, soil, MeanTemperature[i], PET[i], Precipitation[i], ER[i], 0.0, false); //No Runon in simulations for a single cell
+        s = spwbDay1(x, soil, MeanTemperature[i], PET[i], Precipitation[i], ER[i], 0.0, 
+                     Radiation[i], false); //No Runon in simulations for a single cell
       } else if(transpirationMode=="Complex") {
         int ntimesteps = control["ndailysteps"];
         double tstep = 86400.0/((double) ntimesteps);
@@ -1352,7 +1354,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
         double solarConstant = meteoland::radiation_solarConstant(J);
         s = spwbDay2(x, soil, MinTemperature[i], MaxTemperature[i], 
                          MinRelativeHumidity[i], MaxRelativeHumidity[i], Radiation[i], wind, 
-                         latitude, elevation, slope, aspect, solarConstant, delta, Precipitation[i], ER[i], 0.0, verbose);
+                         latitude, elevation, solarConstant, delta, Precipitation[i], ER[i], 0.0, verbose);
         List Plants = Rcpp::as<Rcpp::List>(s["Plants"]);
         List AbsRadinst = Rcpp::as<Rcpp::List>(Plants["AbsRadinst"]);
         NumericMatrix SWR_SL = Rcpp::as<Rcpp::NumericMatrix>(AbsRadinst["SWR_SL"]);
