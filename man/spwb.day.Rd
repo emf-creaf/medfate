@@ -72,7 +72,7 @@ sd1<-spwb.day(x1, examplesoil, rownames(examplemeteo)[d], d ,
              examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
              examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
              latitude = 41.82592, elevation = 100, 
-             slope= 0, aspect = 0, rain = examplemeteo$Precipitation[d])
+             rain = examplemeteo$Precipitation[d])
 
 #Switch to 'Complex' transpiration mode
 control$transpirationMode="Complex"
@@ -85,7 +85,7 @@ sd2<-spwb.day(x2, examplesoil, rownames(examplemeteo)[d], d ,
              examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
              examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
              latitude = 41.82592, elevation = 100, 
-             slope= 0, aspect = 0, rain = examplemeteo$Precipitation[d])
+             rain = examplemeteo$Precipitation[d])
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

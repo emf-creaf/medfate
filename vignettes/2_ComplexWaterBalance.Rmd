@@ -173,7 +173,7 @@ control$soilFunctions = "VG"
 ```
 
 
-### Soil water balance input object
+### Water balance input object
 
 A last step is needed before calling simulation functions. It consists in the compilation of all aboveground and belowground parameters and the specification of additional parameter values for each plant cohort, such as their light extinction coefficient or their response to drought. This is done by calling function `spwbInput()` and taking species parameter values from species parameter data:
 ```{r}

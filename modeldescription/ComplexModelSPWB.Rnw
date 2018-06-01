@@ -4,7 +4,7 @@
 \usepackage{authblk}
 \usepackage{hyperref}
 \usepackage{amsmath}
-\title{Complex model: Soil water balance and plant drought stress}
+\title{Complex model: Water balance and plant drought stress}
 \author[1,2]{Miquel De Cáceres}
 \affil[1]{Centre Tecnològic Forestal de Catalunya. Ctra. St. Llorenç de Morunys km 2, 25280, Solsona, Catalonia, Spain}
 \affil[2]{CREAF, Cerdanyola del Vallès, 08193, Spain}
@@ -124,7 +124,7 @@ where $d_s$ is the depth of the soil layer (in mm) and $P_{rocks,s}$ is the perc
 
 \subsection{Vegetation description}
 
-Vegetation in the stand is described using a set of plant cohorts, described in an object of class \texttt{swbInput}. Each plant cohort $i$ is primarily defined by its species identity ($SP_i$; with R name [\texttt{SP}]). 
+Vegetation in the stand is described using a set of plant cohorts, described in an object of class \texttt{spwbInput}. Each plant cohort $i$ is primarily defined by its species identity ($SP_i$; with R name [\texttt{SP}]). 
 
 \subsubsection{Aboveground parameters}
 
@@ -175,7 +175,7 @@ legend("bottomright", legend=c("Z50 = 100, Z95 = 200",
 \end{center}
 
 \subsection{Vegetation functional parameters}
-Vegetation functional attributes are normally filled for each cohort by function \texttt{swbInput()} from species identity. However, different parameters can be specified for different cohort of the same species if desired. Basic functional parameters relate to light extinction, water interception and leaf phenology:
+Vegetation functional attributes are normally filled for each cohort by function \texttt{spwbInput()} from species identity. However, different parameters can be specified for different cohort of the same species if desired. Basic functional parameters relate to light extinction, water interception and leaf phenology:
 \begin{itemize}
 \item{$k_{PAR,i}$ [\texttt{k}]: PAR extinction coefficient.}
 \item{$s_{water, i}$ [\texttt{g}]: Crown water storage capacity (i.e. depth of
@@ -269,16 +269,16 @@ where $P$ is the daily gross precipitation (in mm). Net rainfall, $P_{net}$, is 
 \begin{equation}
 S=\sum_{i}{s_{water,i}\cdot LAI_{i}^{\phi}}
 \end{equation}
-where $s_{water,i}$ is the depth of water that can be retained by leaves and trunks of a  species $i$ per unit of leaf area index (mm·LAI$^{-1}$). To estimate the stand cover, $C$, we use the complement of the percentage of PAR that reaches the ground, i.e. $C = 1 - L^{PAR}_{ground}$  (Deguchi et al., 2006). Fig. 1 below shows examples of relative throughfall, calculated according to the interception model, under different situations (see function \texttt{swb.RainInterception}). 
+where $s_{water,i}$ is the depth of water that can be retained by leaves and trunks of a  species $i$ per unit of leaf area index (mm·LAI$^{-1}$). To estimate the stand cover, $C$, we use the complement of the percentage of PAR that reaches the ground, i.e. $C = 1 - L^{PAR}_{ground}$  (Deguchi et al., 2006). Fig. 1 below shows examples of relative throughfall, calculated according to the interception model, under different situations (see function \texttt{spwb.RainInterception}). 
 
 \begin{center}
 <<fig=TRUE, width=9, height=9, echo=FALSE>>=
 par(mfrow=c(2,2), mar=c(5,5,5,1))
 throughfallMatrixGash<-function(P = seq(1,50, by=1), Cm = seq(1,5, by=1), 
                                 ER = 0.08,p=0.8) {
-  m2<-P-swb.RainInterception(P,Cm[1],p,ER=ER)
+  m2<-P-spwb.RainInterception(P,Cm[1],p,ER=ER)
   for(i in 2:length(Cm)) {
-    m2<-rbind(m2,P-swb.RainInterception(P,Cm[i],p,ER=ER))
+    m2<-rbind(m2,P-spwb.RainInterception(P,Cm[i],p,ER=ER))
   }
   colnames(m2)<-P
   rownames(m2)<-Cm
@@ -327,7 +327,7 @@ Ru=\frac{(P_{net} - 0.2 \cdot V_{soil})^2}{(P_{net} - 0.8 \cdot V_{soil})}
 \end{equation}
 where $V_{soil}$ (in mm) is the overall soil water retention capacity (i.e. the sum of $V_s$ values for topsoil and subsoil).
 
-The amount of water infiltrating into the soil is $P_{net} - Ru$, where $Ru$ is the water lost by runoff (see function \texttt{swb.SoilInfiltration}). Following Granier (1999), part of the water reaching one soil layer percolates quickly through the macropores. The remaining water is retained by the micropores refilling the current soil layer. When this soil layer reaches its field capacity the excess of water percolates to the soil layer below. The water percolating from the lowest layer is considered deep drainage, $Dd$. 
+The amount of water infiltrating into the soil is $P_{net} - Ru$, where $Ru$ is the water lost by runoff (see function \texttt{spwb.SoilInfiltration}). Following Granier (1999), part of the water reaching one soil layer percolates quickly through the macropores. The remaining water is retained by the micropores refilling the current soil layer. When this soil layer reaches its field capacity the excess of water percolates to the soil layer below. The water percolating from the lowest layer is considered deep drainage, $Dd$. 
 \begin{center}
 <<fig=TRUE, width=8, height=4, echo=FALSE>>==
 par(mfrow=c(1,2), mar=c(5,5,5,1))
@@ -364,25 +364,25 @@ V = MaxVol1+MaxVol2+MaxVol3
 
 par(mar=c(5,5,1,1), mfrow=c(1,2))
 NP = seq(0,60, by=1)
-plot(NP,swb.SoilInfiltration(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
+plot(NP,spwb.SoilInfiltration(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
      ylab="Infiltration (mm)", xlab="Net rainfall (mm)", frame=FALSE)
-lines(NP,swb.SoilInfiltration(NP, V[2]), lty=2)
-lines(NP,swb.SoilInfiltration(NP, V[3]), lty=3)
-lines(NP,swb.SoilInfiltration(NP, V[4]), lty=4)
-lines(NP,swb.SoilInfiltration(NP, V[5]), lty=5)
+lines(NP,spwb.SoilInfiltration(NP, V[2]), lty=2)
+lines(NP,spwb.SoilInfiltration(NP, V[3]), lty=3)
+lines(NP,spwb.SoilInfiltration(NP, V[4]), lty=4)
+lines(NP,spwb.SoilInfiltration(NP, V[5]), lty=5)
 legend("topleft", bty="n", lty=1:5, legend=c(paste("d =", SoilDepth, "Vsoil =",round(V),"mm")))
-plot(NP,NP-swb.SoilInfiltration(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
+plot(NP,NP-spwb.SoilInfiltration(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
      ylab="Runoff (mm)", xlab="Net rainfall (mm)", frame=FALSE)
-lines(NP,NP-swb.SoilInfiltration(NP, V[2]), lty=2)
-lines(NP,NP-swb.SoilInfiltration(NP, V[3]), lty=3)
-lines(NP,NP-swb.SoilInfiltration(NP, V[4]), lty=4)
-lines(NP,NP-swb.SoilInfiltration(NP, V[5]), lty=5)
+lines(NP,NP-spwb.SoilInfiltration(NP, V[2]), lty=2)
+lines(NP,NP-spwb.SoilInfiltration(NP, V[3]), lty=3)
+lines(NP,NP-spwb.SoilInfiltration(NP, V[4]), lty=4)
+lines(NP,NP-spwb.SoilInfiltration(NP, V[5]), lty=5)
 legend("topleft", bty="n", lty=1:5, legend=c(paste("d =", SoilDepth,"Vsoil =",round(V),"mm")))
 @
 \end{center}
 
 \begin{center}
-\emph{Fig. 2}: Examples of infiltration/runoff calculation for different values of net rainfall and overall retention capacity (see function \texttt{swb.SoilInfiltration}), $V_{soil}$, calculated from different soil depths (topsoil+subsoil) and assuming that soil texture is 15\% clay and 25\% sand. Rock fragment content was 25\% and 40\% for the topsoil and subsoil, respectively.
+\emph{Fig. 2}: Examples of infiltration/runoff calculation for different values of net rainfall and overall retention capacity (see function \texttt{spwb.SoilInfiltration}), $V_{soil}$, calculated from different soil depths (topsoil+subsoil) and assuming that soil texture is 15\% clay and 25\% sand. Rock fragment content was 25\% and 40\% for the topsoil and subsoil, respectively.
 \end{center}
 
 After updating soil water content according to rainfall interception, infiltration and deep drainage, soil water potentials are recalculated following the water retention curves.
@@ -709,7 +709,7 @@ where $\gamma_{soil}$ is the maximum daily evaporation ($mm \cdot day^{-1}$). Th
 \begin{equation}
 SE_{soil} = \gamma_{soil} \cdot (\sqrt{t+1}-\sqrt{1})
 \end{equation}
-The amount of water evaporated from the soil, $E_{soil}$, is then calculated as the minimum between supply and demand (Federer, 1982), the latter being the product of PET and the proportion of light that reaches the ground (see function \texttt{swb.SoilEvaporation}): 
+The amount of water evaporated from the soil, $E_{soil}$, is then calculated as the minimum between supply and demand (Federer, 1982), the latter being the product of PET and the proportion of light that reaches the ground (see function \texttt{spwb.SoilEvaporation}): 
 \begin{equation}
 E_{soil} = \min(PE_{soil}, SE_{soil})
 \end{equation}
@@ -763,7 +763,7 @@ RunEvaporation<-function(Gsoil, Ksoil, d1,d2,d3, numDays = 15){
   t = rep(NA, numDays)
   for(i in 1:numDays){
     #Evaporation from bare soil
-    Esoil[i] = swb.SoilEvaporation(DEF=(MaxVol1*(1 - W1[i])), PETs = PET*Lground, Gsoil = Gsoil)
+    Esoil[i] = spwb.SoilEvaporation(DEF=(MaxVol1*(1 - W1[i])), PETs = PET*Lground, Gsoil = Gsoil)
     if(i==1) EsoilCum[i] = Esoil[i]
     else EsoilCum[i] = EsoilCum[i-1]+Esoil[i]
     #Exponential decay to divide bare soil evaporation among layers
@@ -816,7 +816,7 @@ legend("topleft", lty=rep(1:3,2), pch=c(1,1,1,2,2,2), legend=c("Gsoil = 1 Ksoil 
 
 
 \section{Model output}
-Function \texttt{swb} returns a list object whose elements are data tables. Each table has dates as rows and has different output variables:
+Function \texttt{spwb} returns a list object whose elements are data tables. Each table has dates as rows and has different output variables:
 \begin{itemize}
 \item{\texttt{"DailyBalance"}: Components of the climatic and soil daily water balance (i.e. net precipitation, infiltration, runoff, plant transpiration...).}
 \item{\texttt{"SoilWaterBalance"}: Daily variation of soil variables  (volume, moisture relative to field capacity, water potential) for soil layers.}
