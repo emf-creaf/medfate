@@ -22,7 +22,7 @@ library(medfate)
 This document describes how to run the soil water balance model described in De Cáceres et al. (2015) using package `medfate`. The document indicates how to prepare the inputs, use the simulation functions and inspect the outputs. All the details of the model design and formulation are given in a separate document that can be found on the website of the R package (http://vegmod.ctfc.cat/medfateweb). 
 
 ## Preparing model inputs
-Any forest water balance model needs information on **climate**, **vegetation** and **soils** of the forest stand to be simulated. Moreover, since the soil water balance in `medfate` differentiates between species,  **species-specific parameters** are also needed. In this subsection we explain the different steps (including optional pathways) to prepare all the data needed to run function `swb()`.
+Any forest water balance model needs information on **climate**, **vegetation** and **soils** of the forest stand to be simulated. Moreover, since the soil water balance in `medfate` differentiates between species,  **species-specific parameters** are also needed. In this subsection we explain the different steps (including optional pathways) to prepare all the data needed to run function `spwb()`.
 
 ### Soils
 
@@ -37,7 +37,7 @@ where `widths` are soil layer widths in mm; `clay` and `sand` are the percentage
 
 #### Soil input object
 
-The soil input for function `swb()` is actually an object of class `soil` that is created using a function with the same name:
+The soil input for function `spwb()` is actually an object of class `soil` that is created using a function with the same name:
 ```{r}
 examplesoil = soil(spar, VG_PTF = "Toth")
 names(examplesoil)
@@ -159,18 +159,18 @@ Most of these parameters should normally be left to their default value. However
 
 ### Soil water balance input object
 
-A last step is needed before calling simulation functions. It consists in the compilation of all aboveground and belowground parameters and the specification of additional parameter values for each plant cohort, such as their light extinction coefficient or their response to drought. This is done by calling function `swbInput()` and taking species parameter values from species parameter data:
+A last step is needed before calling simulation functions. It consists in the compilation of all aboveground and belowground parameters and the specification of additional parameter values for each plant cohort, such as their light extinction coefficient or their response to drought. This is done by calling function `spwbInput()` and taking species parameter values from species parameter data:
 ```{r}
-x = swbInput(above, below, examplesoil, SpParamsMED, control)
+x = spwbInput(above, below, examplesoil, SpParamsMED, control)
 ```
 Different parameter variables will be drawn depending on the value of `transpirationMode`. For the simple model, relatively few parameters are needed. All the input information for forest data and species parameter values can be inspected by printing the input object.
 ```{r}
 x
 ```
-As with the soil input object, the `swbInput` object may be modified during simulations. In the case of soil water balance, these modifications are minimal, for example concerning `LAI_expanded`, but in the case of growth simulations the object is used to store the status of vegetation during and at the end of simulations. If one has a `forest` object, the `swbInput` object can be generated in directly from it, avoiding the need to explicitly build aboveground and belowground data frames:
+As with the soil input object, the `spwbInput` object may be modified during simulations. In the case of soil water balance, these modifications are minimal, for example concerning `LAI_expanded`, but in the case of growth simulations the object is used to store the status of vegetation during and at the end of simulations. If one has a `forest` object, the `spwbInput` object can be generated in directly from it, avoiding the need to explicitly build aboveground and belowground data frames:
 
 ```{r}
-x = forest2swbInput(exampleforest, examplesoil, SpParamsMED, control)
+x = forest2spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 ```
 
 
@@ -182,17 +182,17 @@ Finally, note that one can play with plant-specific parameters for soil water ba
 
 ### Water balance for a single day
 
-Soil water balance simulations will normally span periods of several months or years, but since the model operates at a daily temporal scale, it is possible to perform soil water balance for one day only. This is done using function `swb.day()`. In the following code we select day 100 from the meteorological input data and perform soil water balance for that day only:
+Soil water balance simulations will normally span periods of several months or years, but since the model operates at a daily temporal scale, it is possible to perform soil water balance for one day only. This is done using function `spwb.day()`. In the following code we select day 100 from the meteorological input data and perform soil water balance for that day only:
 ```{r}
 d = 100
-sd1<-swb.day(x, examplesoil, rownames(examplemeteo)[d], d , 
+sd1<-spwb.day(x, examplesoil, rownames(examplemeteo)[d], d , 
              examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
              examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
              examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
              latitude = 41.82592, elevation = 100, 
              slope= 0, aspect = 0, rain = examplemeteo$Precipitation[d])
 ```
-Function `swb.day()` is most useful when working with the complex transpiration model. This is why so many meteorological variables are required. The output of `swb.day()` is a list with three elements:
+Function `spwb.day()` is most useful when working with the complex transpiration model. This is why so many meteorological variables are required. The output of `spwb.day()` is a list with three elements:
 ```{r}
 names(sd1)
 ```
@@ -207,26 +207,26 @@ sd1
 
 ### Water balance for multiple days
 
-Most often, users will use function `swb()` to run the soil water balance model. This function requires the `swbInput` object, the `soil` object and the meteorological data frame. However, function `swb.day()` modified the state variables of the input objects. In particular, the values of soil moisture and cumulative growth degree days are now:
+Most often, users will use function `spwb()` to run the soil water balance model. This function requires the `spwbInput` object, the `soil` object and the meteorological data frame. However, function `spwb.day()` modified the state variables of the input objects. In particular, the values of soil moisture and cumulative growth degree days are now:
 ```{r}
 examplesoil$W
 x$canopy$gdd
 ```
 We simply reset state variables to their default values so that new simulations are not affected by the end state of the previous simulation:
 ```{r}
-swb.resetInputs(x, examplesoil)
+spwb.resetInputs(x, examplesoil)
 examplesoil$W
 x$canopy$gdd
 ```
-Now we are ready to call function `swb()`:
+Now we are ready to call function `spwb()`:
 ```{r}
-S = swb(x, examplesoil, examplemeteo)
+S = spwb(x, examplesoil, examplemeteo)
 ```
-Function `swb()` returns an object of class with the same name, actually a list:
+Function `spwb()` returns an object of class with the same name, actually a list:
 ```{r}
 class(S)
 ```
-If we inspect its elements, we realize that the output is arranged differently than in `swb.day()`:
+If we inspect its elements, we realize that the output is arranged differently than in `spwb.day()`:
 ```{r}
 names(S)
 ```
@@ -246,7 +246,7 @@ head(S$PlantPsi)
 
 #### Plotting results
 
-Package `medfate` provides a simple `plot` function for objects of class `swb`. It can be used to show the meteorological input:
+Package `medfate` provides a simple `plot` function for objects of class `spwb`. It can be used to show the meteorological input:
 ```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
 par(mar=c(5,5,1,1))
 plot(S, type = "PET_Precipitation")
@@ -270,13 +270,13 @@ plot(S, type="PlantTranspiration")
 ```
 
 #### Generating output summaries
-While the simulation model uses daily steps, users will normally be interested in outputs at larger time scales. The package provides a `summary` for objects of class `swb`. This function can be used to summarize the model's output at different temporal steps (i.e. weekly, annual, ...). For example, to obtain the average soil moisture and water potentials by months one can use:
+While the simulation model uses daily steps, users will normally be interested in outputs at larger time scales. The package provides a `summary` for objects of class `spwb`. This function can be used to summarize the model's output at different temporal steps (i.e. weekly, annual, ...). For example, to obtain the average soil moisture and water potentials by months one can use:
 
 ```{r}
 summary(S, freq="months",FUN=mean, output="SoilWaterBalance")
 ```
 
-Parameter `output` is used to indicate the element of the `swb` object for which we desire summaries. Similarly, it is possible to calculate the average stress of plant cohorts by months:
+Parameter `output` is used to indicate the element of the `spwb` object for which we desire summaries. Similarly, it is possible to calculate the average stress of plant cohorts by months:
 ```{r}
 summary(S, freq="months",FUN=mean, output="PlantStress")
 ```
@@ -298,8 +298,8 @@ x$control$verbose = FALSE
 ```
 We re-run the water balance model after resetting state variables
 ```{r}
-swb.resetInputs(x, examplesoil)
-Snr = swb(x, examplesoil, examplemeteo) 
+spwb.resetInputs(x, examplesoil)
+Snr = spwb(x, examplesoil, examplemeteo) 
 ```
 In this case no console output is produced during the simulation process. We can examine the effect of preventing cavitation refill in the plots of plant drought stress and plant transpiration:
 ```{r, fig=TRUE, fig.align="center", fig.width=8, fig.height = 4}
@@ -311,7 +311,7 @@ plot(Snr, type="PlantTranspiration")
 
 ### Water balance for a set of forest stands
 
-So far, we used `swb()` to simulate soil water balance on a single stand. Package `medfate` offers the possibility to conduct simulations on a set of forest stands in one call, using function `swbpoints()`. This function takes an object of class `SpatialPointsForest` as input. We begin by loading an example dataset of 30 forest stands:
+So far, we used `spwb()` to simulate soil water balance on a single stand. Package `medfate` offers the possibility to conduct simulations on a set of forest stands in one call, using function `spwbpoints()`. This function takes an object of class `SpatialPointsForest` as input. We begin by loading an example dataset of 30 forest stands:
 
 ```{r}
 data("exampleSPF")
@@ -327,22 +327,22 @@ control = defaultControl()
 control$verbose = FALSE
 ```
 
-The call to `swbpoints()` can be done as follows:
+The call to `spwbpoints()` can be done as follows:
 ```{r}
-res <- swbpoints(exampleSPF, SpParamsMED, examplemeteo, control = control)
+res <- spwbpoints(exampleSPF, SpParamsMED, examplemeteo, control = control)
 ```
 
-For each forest stand described in the `SpatialPointsForest` object, function `swbpoints()` first calls `forest2swbInput()`, to generate the appropriate input, and then it calls `swb()`. The elements of the result of calling `swbpoints()` are:
+For each forest stand described in the `SpatialPointsForest` object, function `spwbpoints()` first calls `forest2spwbInput()`, to generate the appropriate input, and then it calls `spwb()`. The elements of the result of calling `spwbpoints()` are:
 
 ```{r}
 names(res)
 ```
 
-where `sp` is object of class SpatialPoints with the spatial coordinates of forest stands. Vector `input` contains the `swbInput` corresponding to each forest stand, and vector `result` contains the output of `swb()` for each forest stand. This structure of the output of `swbpoints()` allows querying information for the simulation of any forest stand. For example, if we want a monthly summary of species transpiration for the stand '80013', we can use:
+where `sp` is object of class SpatialPoints with the spatial coordinates of forest stands. Vector `input` contains the `spwbInput` corresponding to each forest stand, and vector `result` contains the output of `spwb()` for each forest stand. This structure of the output of `spwbpoints()` allows querying information for the simulation of any forest stand. For example, if we want a monthly summary of species transpiration for the stand '80013', we can use:
 
 ```{r}
 summary(res$result$`80013`, freq="months",FUN=sum, 
         output="PlantTranspiration", bySpecies = TRUE)
 ```
 
-If one needs to save memory, it is possible with `swbpoints()` to generate summaries automatically after the simulation of soil water balance of each stand, and storing those summaries instead of all the output of `swb()`. 
+If one needs to save memory, it is possible with `spwbpoints()` to generate summaries automatically after the simulation of soil water balance of each stand, and storing those summaries instead of all the output of `spwb()`. 

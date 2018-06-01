@@ -354,10 +354,10 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   
   
   double latrad = latitude * (PI/180.0);
-  if(NumericVector::is_na(aspect)) aspect = 0.0;
-  double asprad = aspect * (PI/180.0);
-  if(NumericVector::is_na(slope)) slope = 0.0;
-  double slorad = slope * (PI/180.0);
+  // if(NumericVector::is_na(aspect)) aspect = 0.0;
+  // double asprad = aspect * (PI/180.0);
+  // if(NumericVector::is_na(slope)) slope = 0.0;
+  // double slorad = slope * (PI/180.0);
 
   //Step in seconds
   double tstep = 86400.0/((double) ntimesteps);

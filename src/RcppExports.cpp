@@ -1600,9 +1600,9 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
-// swbInput
-List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, List control);
-RcppExport SEXP _medfate_swbInput(SEXP aboveSEXP, SEXP VSEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
+// spwbInput
+List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, List control);
+RcppExport SEXP _medfate_spwbInput(SEXP aboveSEXP, SEXP VSEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1611,13 +1611,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< List >::type control(controlSEXP);
-    rcpp_result_gen = Rcpp::wrap(swbInput(above, V, soil, SpParams, control));
+    rcpp_result_gen = Rcpp::wrap(spwbInput(above, V, soil, SpParams, control));
     return rcpp_result_gen;
 END_RCPP
 }
-// forest2swbInput
-List forest2swbInput(List x, List soil, DataFrame SpParams, List control);
-RcppExport SEXP _medfate_forest2swbInput(SEXP xSEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
+// forest2spwbInput
+List forest2spwbInput(List x, List soil, DataFrame SpParams, List control);
+RcppExport SEXP _medfate_forest2spwbInput(SEXP xSEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1625,7 +1625,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< List >::type control(controlSEXP);
-    rcpp_result_gen = Rcpp::wrap(forest2swbInput(x, soil, SpParams, control));
+    rcpp_result_gen = Rcpp::wrap(forest2spwbInput(x, soil, SpParams, control));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2470,12 +2470,6 @@ BEGIN_RCPP
 END_RCPP
 }
 
-RcppExport SEXP _medfate_swb(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
-RcppExport SEXP _medfate_swbDay(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
-RcppExport SEXP _medfate_swbDay1(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
-RcppExport SEXP _medfate_swbDay2(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
-RcppExport SEXP _medfate_swbgridDay(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
-
 static const R_CallMethodDef CallEntries[] = {
     {"_medfate_radiationDiurnalPattern", (DL_FUNC) &_medfate_radiationDiurnalPattern, 2},
     {"_medfate_temperatureDiurnalPattern", (DL_FUNC) &_medfate_temperatureDiurnalPattern, 4},
@@ -2585,8 +2579,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_layerSunlitFraction", (DL_FUNC) &_medfate_layerSunlitFraction, 3},
     {"_medfate_instantaneousLightExtinctionAbsortion", (DL_FUNC) &_medfate_instantaneousLightExtinctionAbsortion, 10},
     {"_medfate_checkSpeciesParameters", (DL_FUNC) &_medfate_checkSpeciesParameters, 2},
-    {"_medfate_swbInput", (DL_FUNC) &_medfate_swbInput, 5},
-    {"_medfate_forest2swbInput", (DL_FUNC) &_medfate_forest2swbInput, 4},
+    {"_medfate_spwbInput", (DL_FUNC) &_medfate_spwbInput, 5},
+    {"_medfate_forest2spwbInput", (DL_FUNC) &_medfate_forest2spwbInput, 4},
     {"_medfate_growthInput", (DL_FUNC) &_medfate_growthInput, 6},
     {"_medfate_forest2growthInput", (DL_FUNC) &_medfate_forest2growthInput, 4},
     {"_medfate_gdd", (DL_FUNC) &_medfate_gdd, 4},
@@ -2643,11 +2637,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_windAdjustmentFactor", (DL_FUNC) &_medfate_windAdjustmentFactor, 4},
     {"_medfate_windSpeedAtHeightOverCanopy", (DL_FUNC) &_medfate_windSpeedAtHeightOverCanopy, 3},
     {"_medfate_windExtinctionProfile", (DL_FUNC) &_medfate_windExtinctionProfile, 4},
-    {"_medfate_swb",                                     (DL_FUNC) &_medfate_swb,                                      7},
-    {"_medfate_swbDay",                                  (DL_FUNC) &_medfate_swbDay,                                  16},
-    {"_medfate_swbDay1",                                 (DL_FUNC) &_medfate_swbDay1,                                  8},
-    {"_medfate_swbDay2",                                 (DL_FUNC) &_medfate_swbDay2,                                 18},
-    {"_medfate_swbgridDay",                              (DL_FUNC) &_medfate_swbgridDay,                              11},
     {NULL, NULL, 0}
 };
 

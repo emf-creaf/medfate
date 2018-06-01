@@ -27,8 +27,8 @@ void checkSpeciesParameters(DataFrame SpParams, CharacterVector params) {
 /**
  *  Prepare Soil Water Balance input
  */
-// [[Rcpp::export("swbInput")]]
-List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, List control) {
+// [[Rcpp::export("spwbInput")]]
+List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, List control) {
   
   IntegerVector SP = above["SP"];
   NumericVector LAI_live = above["LAI_live"];
@@ -249,16 +249,16 @@ List swbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, L
   // input["WindSpeed"] = NumericVector(numCohorts, 0.0);
   // input["PAR"] = NumericVector(numCohorts, 0.0);
   // input["AbsorbedSWR"] = NumericVector(numCohorts, 0.0);
-  input.attr("class") = CharacterVector::create("swbInput","list");
+  input.attr("class") = CharacterVector::create("spwbInput","list");
   // df.attr("row.names") = seq(1,numCohorts);
   return(input);
 }
 
-// [[Rcpp::export("forest2swbInput")]]
-List forest2swbInput(List x, List soil, DataFrame SpParams, List control) {
+// [[Rcpp::export("forest2spwbInput")]]
+List forest2spwbInput(List x, List soil, DataFrame SpParams, List control) {
   NumericMatrix V = forest2belowground(x,soil, SpParams);
   DataFrame above = forest2aboveground(x, SpParams, NA_REAL);
-  return(swbInput(above,  V, soil, SpParams, control));
+  return(spwbInput(above,  V, soil, SpParams, control));
 }
 
 

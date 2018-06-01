@@ -44,16 +44,16 @@ TO BE DONE
 ## Dynamic simulation functions
 ### Soil water balance and plant drought stress
 
-Eco-hydrological processes are fundamental for the simulation models included in the `medfate` package. Eco-hydrological processes can be divided into local and landscape processes. By local processes we refer to the soil water balance of forest stands. Processes affecting soil water content include rainfall, canopy interception, infiltration and runoff, percolation and deep drainage, soil evaporation and plant transpiration. In `medfate`, the soil water balance of a forest is primarily used to predict drought stress for living plants in it. Soil water balance can be studied for a single forest stand using function  `swb()` or for multiple stands distributed spatially using function `swbpoints()` or `swbgrid()`. When input data is in form of continuous spatial variation of forests over a landscape, the `medfate` package allows studying local soil water balance in combination with water discharge from one cell to the other (a landscape hydrological process). This is done using function `swbgrid()`. 
+Eco-hydrological processes are fundamental for the simulation models included in the `medfate` package. Eco-hydrological processes can be divided into local and landscape processes. By local processes we refer to the soil water balance of forest stands. Processes affecting soil water content include rainfall, canopy interception, infiltration and runoff, percolation and deep drainage, soil evaporation and plant transpiration. In `medfate`, the soil water balance of a forest is primarily used to predict drought stress for living plants in it. Soil water balance can be studied for a single forest stand using function  `spwb()` or for multiple stands distributed spatially using function `spwbpoints()` or `spwbgrid()`. When input data is in form of continuous spatial variation of forests over a landscape, the `medfate` package allows studying local soil water balance in combination with water discharge from one cell to the other (a landscape hydrological process). This is done using function `spwbgrid()`. 
 
 
-Functions `swb()` and `swbpoints()`  may be used to:
+Functions `spwb()` and `spwbpoints()`  may be used to:
 
 1. Monitor or forecast temporal variation in soil water content in particular stands (for example to estimate mushroom yield).
 2. Monitor or forecast temporal variation of plant drought stress in particular stands (for example to anticipate mortality events).
 3. Monitor or forecast temporal variation of fuel moisture in particular stands (for example to monitor wildfire risk).
 
-Function `swbgrid()` may be used to:
+Function `spwbgrid()` may be used to:
 
 1. Determine areas where particular plant species have high vulnerability to suffer from drought stress.
 2. Partition the total rainfall in given area among: 
@@ -81,7 +81,7 @@ Package `medfate` include a number of functions to examine properties of the pla
 
 ### Fuel properties and fire hazard
 
-Vegetation functioning and dynamics have strong, but complex, effects on fire hazard. On one hand, growth and death of organs and individuals changes the amount of standing live and dead fuels, as well as downed dead fuels. On the other, day-to-day changes in soil and plant water content changes the physical properties of fuel, notably fuel moisture content. Package `medfate` provides functions to estimate fuel properties and potential fire behaviour in forest inventory plots. Specifically, function `fuel.Stratification()` provides a stratification of the stand into understory and canopy strata; and `fuel.FCCS()` calculates fuel characteristics from a `forest` object following an adaptation of the protocols described for the Fuel Characteristics Classification System (Prichard et al. 2013). Function `fuel.cohortFineFMC()` allows obtaining daily fuel moisture content estimates corresponding to the water status of plants, as returned by function `swb()`.
+Vegetation functioning and dynamics have strong, but complex, effects on fire hazard. On one hand, growth and death of organs and individuals changes the amount of standing live and dead fuels, as well as downed dead fuels. On the other, day-to-day changes in soil and plant water content changes the physical properties of fuel, notably fuel moisture content. Package `medfate` provides functions to estimate fuel properties and potential fire behaviour in forest inventory plots. Specifically, function `fuel.Stratification()` provides a stratification of the stand into understory and canopy strata; and `fuel.FCCS()` calculates fuel characteristics from a `forest` object following an adaptation of the protocols described for the Fuel Characteristics Classification System (Prichard et al. 2013). Function `fuel.cohortFineFMC()` allows obtaining daily fuel moisture content estimates corresponding to the water status of plants, as returned by function `spwb()`.
 
 In FCCS, fuelbed is divided into six strata, including canopy, shrub, herbaceous vegetation, dead woody materials, leaf litter and ground fuels. All except ground fuels are considered here. The intensity of burning depends on several factors, including topography, wind conditions, fuel structure and its moisture content, which is determined from antecedent and current meteorological conditions. A modification of the Rothermel's (1972) model is used in function `fire.FCCS()` to calculate the intensity of surface fire reaction and the rate of fire spread of surface fires assuming a steady-state fire. Both quantities are dependent on fuel characteristics, windspeed and direction, and topographic slope and aspect. Fuel and fire behaviour functions allow obtaining the following: 
 
@@ -100,5 +100,5 @@ Many of the functions included in `medfate` are internally called by simulation 
 * **photo.* **: Leaf photosynthesis.
 * **root.* **: Root distribution and conductance calculations.
 * **soil.* **: Soil hydraulics and thermodynamics.
-* **swb.* **: Soil water balance subprocesses (rainfall interception, soil evaporation, soil infiltration) and parameter optimization/calibration routines.
+* **spwb.* **: Soil water balance subprocesses (rainfall interception, soil evaporation, soil infiltration) and parameter optimization/calibration routines.
 * **transp.* **: Stomatal regulation and resulting transpiration/photosynthesis.

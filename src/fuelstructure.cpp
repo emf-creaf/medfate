@@ -1,6 +1,6 @@
 #include <numeric>
 #include <Rcpp.h>
-#include "swb.h"
+#include "spwb.h"
 #include "forestutils.h"
 #include "fuelmoisture.h"
 using namespace Rcpp;

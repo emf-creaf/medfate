@@ -433,12 +433,12 @@ light.instantaneousLightExtinctionAbsortion <- function(LAIme, LAImd, LAImx, kPA
     invisible(.Call('_medfate_checkSpeciesParameters', PACKAGE = 'medfate', SpParams, params))
 }
 
-swbInput <- function(above, V, soil, SpParams, control) {
-    .Call('_medfate_swbInput', PACKAGE = 'medfate', above, V, soil, SpParams, control)
+spwbInput <- function(above, V, soil, SpParams, control) {
+    .Call('_medfate_spwbInput', PACKAGE = 'medfate', above, V, soil, SpParams, control)
 }
 
-forest2swbInput <- function(x, soil, SpParams, control) {
-    .Call('_medfate_forest2swbInput', PACKAGE = 'medfate', x, soil, SpParams, control)
+forest2spwbInput <- function(x, soil, SpParams, control) {
+    .Call('_medfate_forest2spwbInput', PACKAGE = 'medfate', x, soil, SpParams, control)
 }
 
 growthInput <- function(above, Z, V, soil, SpParams, control) {
