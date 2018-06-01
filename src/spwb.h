@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 NumericVector er(IntegerVector DOY, double ERconv=0.05, double ERsyn = 0.2);
 double soilevaporation(double DEF,double PETs, double Gsoil);
-double infiltrationDay(double NetPrec, double Ssoil);
+double infiltrationDay(double input, double Ssoil);
 
 void checkspwbInput(List x, List soil, String transpirationMode);
 void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER);

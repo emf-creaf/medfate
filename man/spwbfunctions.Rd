@@ -6,15 +6,15 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Soil infiltration and bare soil evaporation}
 \description{
-Function \code{spwb.SoilInfiltration} calculates the amount of net precipitation that infiltrates into the topsoil, according to the USDA SCS curve number method (Boughton 1989). The remaining is assumed to be lost as surface runoff. Function \code{spwb.SoilEvaporation} calculates the amount of evaporation from bare soil, following Ritchie (1972).
+Function \code{spwb.SoilInfiltration} calculates the amount of water that infiltrates into the topsoil, according to the USDA SCS curve number method (Boughton 1989). The remaining is assumed to be lost as surface runoff. Function \code{spwb.SoilEvaporation} calculates the amount of evaporation from bare soil, following Ritchie (1972).
 }
 \usage{
-spwb.SoilInfiltration(NetPrec, Ssoil) 
+spwb.SoilInfiltration(input, Ssoil) 
 spwb.SoilEvaporation(DEF,PETs, Gsoil)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{NetPrec}{A numeric vector of (daily) net precipitation (in mm of water).}
+  \item{input}{A numeric vector of (daily) water input (in mm of water).}
   \item{Ssoil}{Soil water storage capacity (can be referred to topsoil) (in mm of water).}
   \item{DEF}{Water deficit in the (topsoil) layer.}
   \item{PETs}{Potential evapotranspiration at the soil surface.}
@@ -24,7 +24,7 @@ spwb.SoilEvaporation(DEF,PETs, Gsoil)
 See description of infiltration and soil evaporation processes in De Caceres et al. (submitted).
 }
 \value{
-Function \code{spwb.SoilInfiltration} a vector of the same length as \code{NetPrec} containing the daily amount of water that infiltrates into the soil (in mm of water). Function \code{spwb.SoilEvaporation} returns the amount of water evaporated from the soil.
+Function \code{spwb.SoilInfiltration} a vector of the same length as \code{input} containing the daily amount of water that infiltrates into the soil (in mm of water). Function \code{spwb.SoilEvaporation} returns the amount of water evaporated from the soil.
 }
 \references{
 Boughton (1989). A review of the USDA SCS curve number method. - Australian Journal of Soil Research 27: 511-523.

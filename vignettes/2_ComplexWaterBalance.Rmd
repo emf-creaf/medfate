@@ -269,7 +269,7 @@ sd1<-spwb.day(x, examplesoil, rownames(examplemeteo)[d], d ,
              examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
              examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
              latitude = 41.82592, elevation = 100, 
-             slope= 0, aspect = 0, rain = examplemeteo$Precipitation[d])
+             slope= 0, aspect = 0, prec = examplemeteo$Precipitation[d])
 ```
 
 The output of `spwb.day()` is a list with five elements:
@@ -421,7 +421,7 @@ sd1<-spwb.day(x, examplesoil, rownames(examplemeteo)[d], d ,
              examplemeteo$MaxRelativeHumidity[d], 
              examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
              latitude = 41.82592, elevation = 100, 
-             slope= 0, aspect = 0, rain = examplemeteo$Precipitation[d])
+             slope= 0, aspect = 0, prec = examplemeteo$Precipitation[d])
 ```
 We use function `plot.spwb.day()` to draw plots of daily variation per species of plant transpiration (L·m$^{-2}$), transpiration per leaf area (in L·m$^{-2}$·LAI$^{-1}$), net photosynthesis per leaf area (in g C·m$^{-2}$·LAI$^{-1}$), and plant water potential (in MPa):
 ```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 7}

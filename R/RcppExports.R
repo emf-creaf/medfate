@@ -581,8 +581,8 @@ spwb.SoilEvaporation <- function(DEF, PETs, Gsoil) {
     .Call('_medfate_soilevaporation', PACKAGE = 'medfate', DEF, PETs, Gsoil)
 }
 
-.infiltrationDay <- function(NetPrec, Ssoil) {
-    .Call('_medfate_infiltrationDay', PACKAGE = 'medfate', NetPrec, Ssoil)
+.infiltrationDay <- function(input, Ssoil) {
+    .Call('_medfate_infiltrationDay', PACKAGE = 'medfate', input, Ssoil)
 }
 
 .interceptionGashDay <- function(Precipitation, Cm, p, ER = 0.05) {

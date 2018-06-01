@@ -37,7 +37,7 @@ spwb.resetInputs(x, soil, from = NULL, day = NA)
     }
   }
   \item{latitude}{Latitude (in degrees). Required when using the 'Complex' transpiration mode.}
-  \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when using the 'Complex' transpiration mode.}
+  \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when using the 'Complex' transpiration mode. Elevation is also required for 'Simple' if snowpack dynamics are simulated.}
   \item{from}{An object of class \code{spwb} storing the results of a previous simulation, including values of state variables. If \code{from = NULL}, state variables are set to their defaults (i.e. soil moisture set to field capacity and cumulative growth degree days set to zero).}
   \item{day}{An integer with the day from which state variable values stored in \code{from} should be copied. If missing, values are copied from the first day of stored values.}
 }
@@ -57,8 +57,10 @@ spwb.resetInputs(x, soil, from = NULL, day = NA)
   \item{\code{"Cm"}: The water retention capacity of the stand (in mm) (accounting for leaf phenology).}
   \item{\code{"Lground"}: The proportion of light that reaches the ground (accounting for leaf phenology).}
   \item{\code{"PET"}: Potential evapotranspiration (in mm).}
-  \item{\code{"Rainfall"}: Input precipitation (in mm).}
-  \item{\code{"NetPrec"}: Net precipitation, after accounting for interception (in mm).}
+  \item{\code{"Precipitation"}: Input precipitation (in mm).}
+  \item{\code{"Rain"}: Precipitation as rain (in mm).}
+  \item{\code{"Snow"}: Precipitation as snow (in mm).}
+  \item{\code{"NetRain"}: Net rain, after accounting for interception (in mm).}
   \item{\code{"Infiltration"}: The amount of water infiltrating into the soil (in mm).}
   \item{\code{"Runoff"}: The amount of water exported via surface runoff (in mm).}
   \item{\code{"DeepDrainage"}: The amount of water exported via deep drainage (in mm).}
@@ -73,6 +75,7 @@ spwb.resetInputs(x, soil, from = NULL, day = NA)
   \item{\code{"ML.1"}, \code{...}, \code{"ML.k"}: Soil water volume in each soil layer (in L/m2).}
   \item{\code{"MLTot"}: Total soil water volume (in L/m2).}
   \item{\code{"psi.1"}, \code{...}, \code{"psi.k"}: Soil water potential in each soil layer (in MPa).}
+  \item{\code{"SWE"}: Snow water equivalent (mm) of the snow pack.}
   }
   \item{\code{"PlantLAI"}: A data frame with the daily leaf area index for each plant cohort. Days are in rows and plant cohorts are in columns.}
   \item{\code{"PlantTranspiration"}: A data frame with the amount of daily transpiration (in mm) for each plant cohort. Days are in rows and plant cohorts are in columns.}

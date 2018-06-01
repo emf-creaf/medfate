@@ -2137,14 +2137,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // infiltrationDay
-double infiltrationDay(double NetPrec, double Ssoil);
-RcppExport SEXP _medfate_infiltrationDay(SEXP NetPrecSEXP, SEXP SsoilSEXP) {
+double infiltrationDay(double input, double Ssoil);
+RcppExport SEXP _medfate_infiltrationDay(SEXP inputSEXP, SEXP SsoilSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type NetPrec(NetPrecSEXP);
+    Rcpp::traits::input_parameter< double >::type input(inputSEXP);
     Rcpp::traits::input_parameter< double >::type Ssoil(SsoilSEXP);
-    rcpp_result_gen = Rcpp::wrap(infiltrationDay(NetPrec, Ssoil));
+    rcpp_result_gen = Rcpp::wrap(infiltrationDay(input, Ssoil));
     return rcpp_result_gen;
 END_RCPP
 }

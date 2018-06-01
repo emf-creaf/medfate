@@ -24,20 +24,13 @@ SpatialPointsForest<-function(SFItreeData, SFIshrubData, SFIherbData=NULL, Spati
   if(control$verbose) cat(" - Initializing soils")
   soillist = vector("list",length(IDs))
   for(i in 1:length(IDs)) {
+    soilParams = defaultSoilParams(2)
     if(!is.null(SoilParamData)) {
       spl = as.list(SoilParamData[i,])
-      soilParams = list()
       soilParams$widths = c(300,spl$SoilDepth-300)
       soilParams$clay = c(spl$TS_clay, spl$SS_clay)
       soilParams$sand = c(spl$TS_sand, spl$SS_sand)
-      soilParams$macro = c(spl$TS_macro, spl$SS_macro)
       soilParams$rfc = c(spl$TS_rfc, spl$SS_rfc)
-      soilParams$Gsoil = spl$Gsoil
-      soilParams$Ksoil = spl$Ksoil
-      soilParams$om = c(NA,NA)
-      if(sum(is.na(soilParams))>0) soilParams = defaultSoilParams()
-    } else {
-      soilParams = defaultSoilParams()
     }
     soillist[[i]] = soil(soilParams)
   }

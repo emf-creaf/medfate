@@ -6,7 +6,7 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
   DailyBalance = x$DailyBalance
   SoilWaterBalance = x$SoilWaterBalance
   nlayers = x$NumSoilLayers
-  TYPES = c("PET_Precipitation","PET_NetPrec","ET","Psi","Theta","Vol", "Export", "LAI", 
+  TYPES = c("PET_Precipitation","PET_NetRain","Snow","ET","Psi","Theta","Vol", "Export", "LAI", 
             "PlantLAI",
             "PlantStress", "PlantPsi","PlantPhotosynthesis","PlantTranspiration",
             "PlantPhotosynthesisLeaf","PlantTranspirationLeaf")
@@ -39,23 +39,37 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     if(is.null(ylim)) ylim = c(0,mnp)
     barplot(DailyBalance$Precipitation[span], ylim=ylim, col="black",space=0, ylab=ylab, 
             xlab=xlab, axes=FALSE)
+    barplot(DailyBalance$Snow[span], col="red", add=TRUE)
     plotAxes()
     lines(1:length(span), DailyBalance$PET[span], col="gray")    
-    legend("topleft", bty="n", col=c("black","gray"),lty=c(1,1), lwd=2,
-           legend=c("Precipitation","PET"))
+    legend("topleft", bty="n", col=c("black","red", "gray"),lty=1, lwd=2,
+           legend=c("Precipitation","Snow", "PET"))
     
   } 
-  else if(type=="PET_NetPrec") {
+  else if(type=="PET_NetRain") {
     if(is.null(ylab)) ylab = expression(L%.%m^{-2})    
     if(!is.null(xlim)) span = xlim[1]:xlim[2]
     else span = 1:numDays
     if(is.null(ylim)) ylim = c(0,mnp)
-    barplot(DailyBalance$NetPrec[span], ylim=ylim, col="black",space=0, ylab=ylab, 
+    barplot(DailyBalance$NetRain[span], ylim=ylim, col="black",space=0, ylab=ylab, 
             xlab=xlab, axes=FALSE)
     plotAxes()
     lines(1:length(span), DailyBalance$PET[span], col="gray")    
     legend("topleft", bty="n", col=c("black","gray"),lty=c(1,1), lwd=2,
-           legend=c("NetPrec","PET"))        
+           legend=c("NetRain","PET"))        
+  } 
+  else if(type=="Snow") {
+    if(is.null(ylab)) ylab = expression(L%.%m^{-2})    
+    if(!is.null(xlim)) span = xlim[1]:xlim[2]
+    else span = 1:numDays
+    mnp = max(c(DailyBalance$Snow[span], SoilWaterBalance$SWE[span]))
+    if(is.null(ylim)) ylim = c(0,mnp)
+    barplot(DailyBalance$Snow[span], ylim=ylim, col="black",space=0, ylab=ylab, 
+            xlab=xlab, axes=FALSE)
+    plotAxes()
+    lines(1:length(span), SoilWaterBalance$SWE[span], col="red", lwd=1.5)    
+    legend("topleft", bty="n", col=c("black","red"),lty=c(1,1), lwd=2,
+           legend=c("Snow","Snowpack (SWE)"))        
   } 
   else if(type=="ET") {
     if(is.null(ylab)) ylab = expression(L%.%m^{-2})

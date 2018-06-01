@@ -39,12 +39,12 @@ double soilevaporation(double DEF,double PETs, double Gsoil){
   return(Esoil);
 }
 // [[Rcpp::export(".infiltrationDay")]]
-double infiltrationDay(double NetPrec, double Ssoil) {
+double infiltrationDay(double input, double Ssoil) {
   double I = 0;
-  if(NetPrec>0.2*Ssoil) {
-    I = NetPrec-(pow(NetPrec-0.2*Ssoil,2.0)/(NetPrec+0.8*Ssoil));
+  if(input>0.2*Ssoil) {
+    I = input-(pow(input-0.2*Ssoil,2.0)/(input+0.8*Ssoil));
   } else {
-    I = NetPrec;
+    I = input;
   }
   return(I);
 }
@@ -163,13 +163,13 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   }
   
   //Hydrologic input
-  double NetPrec = 0.0, Infiltration= 0.0, Runoff= 0.0, DeepDrainage= 0.0;
-  if(rain>0.0) NetPrec = rain - interceptionGashDay(rain,Cm,LgroundPAR,er);
-  if((NetPrec+runon+melt)>0.0) {
+  double NetRain = 0.0, Infiltration= 0.0, Runoff= 0.0, DeepDrainage= 0.0;
+  if(rain>0.0) NetRain = rain - interceptionGashDay(rain,Cm,LgroundPAR,er);
+  if((NetRain+runon+melt)>0.0) {
     //Interception
     //Net Runoff and infiltration
-    Infiltration = infiltrationDay(NetPrec+runon+melt, Water_FC[0]);
-    Runoff = (NetPrec+runon+melt) - Infiltration;
+    Infiltration = infiltrationDay(NetRain+runon+melt, Water_FC[0]);
+    Runoff = (NetRain+runon+melt) - Infiltration;
     //Input of the first soil layer is infiltration
     double VI = Infiltration;
     double Wn;
@@ -275,7 +275,7 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   for(int c=0;c<numCohorts;c++) LAIcohort[c]= LAIphe[c];
   LAIcohort.attr("names") = above.attr("row.names");
   
-  List DB = List::create(_["PET"] = pet, _["Rain"] = rain, _["Snow"] = snow, _["NetPrec"] = NetPrec, _["Runon"] = runon, _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
+  List DB = List::create(_["PET"] = pet, _["Rain"] = rain, _["Snow"] = snow, _["NetRain"] = NetRain, _["Runon"] = runon, _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
                     _["LAIcell"] = LAIcell, _["LAIcelldead"] = LAIcelldead, _["Cm"] = Cm, _["Lground"] = LgroundPAR);
   List SB = List::create(_["EsoilVec"] = EsoilVec, _["EplantVec"] = EplantVec, _["psiVec"] = psiVec);
   Eplant.attr("names") = above.attr("row.names");
@@ -430,15 +430,15 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   
   //2. Hydrologic input
   double rain = prec;
-  double NetPrec = 0.0, Infiltration= 0.0, Runoff= 0.0, DeepDrainage= 0.0;
+  double NetRain = 0.0, Infiltration= 0.0, Runoff= 0.0, DeepDrainage= 0.0;
   double propCover = 1.0-exp(-1.0*LAIcell);
   // double propCoverMax = 1.0-exp(-1.0*LAIcellmax);
   if(rain>0.0) {
     //Interception
-    NetPrec = rain - interceptionGashDay(rain,Cm,propCover,er);
+    NetRain = rain - interceptionGashDay(rain,Cm,propCover,er);
     //Net Runoff and infiltration
-    Infiltration = infiltrationDay(NetPrec+runon, Water_FC[0]);
-    Runoff = (NetPrec+runon) - Infiltration;
+    Infiltration = infiltrationDay(NetRain+runon, Water_FC[0]);
+    Runoff = (NetRain+runon) - Infiltration;
     //Input of the first soil layer is infiltration
     double VI = Infiltration;
     double Wn;
@@ -921,7 +921,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   LAI_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   List AbsRadinst = List::create(_["SWR_SH"] = SWR_SH, _["SWR_SL"]=SWR_SL,
                                  _["LWR_SH"] = LWR_SH, _["LWR_SL"] = LWR_SL);
-  List DB = List::create(_["Rain"] = rain,_["Snow"] = 0.0,_["NetPrec"] = NetPrec, _["Runon"] = runon, _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
+  List DB = List::create(_["Rain"] = rain,_["Snow"] = 0.0,_["NetRain"] = NetRain, _["Runon"] = runon, _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
                          _["LAIcell"] = LAIcell, _["LAIcelldead"] = LAIcelldead, _["Cm"] = Cm, _["Lground"] = 1.0 - propCover);
   List SB = List::create(_["EsoilVec"] = EsoilVec, _["EplantVec"] = EplantVec, _["psiVec"] = psiVec);
   Einst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
@@ -1056,7 +1056,7 @@ List spwbgridDay(CharacterVector lct, List xList, List soilList,
                 NumericVector erVec, NumericVector trackSpecies) {
   int nX = xList.size();
   int nTrackSpecies = trackSpecies.size();
-  NumericVector NetPrec(nX,NA_REAL), Runon(nX,0.0), Infiltration(nX,NA_REAL);
+  NumericVector NetRain(nX,NA_REAL), Runon(nX,0.0), Infiltration(nX,NA_REAL);
   NumericVector Runoff(nX,NA_REAL), DeepDrainage(nX,NA_REAL), W1(nX,NA_REAL), W2(nX,NA_REAL);
   NumericVector W3(nX,NA_REAL), Esoil(nX,NA_REAL), Eplant(nX,NA_REAL);
   NumericMatrix Transpiration(nX, nTrackSpecies), DDS(nX, nTrackSpecies);
@@ -1069,7 +1069,7 @@ List spwbgridDay(CharacterVector lct, List xList, List soilList,
       List soil = Rcpp::as<Rcpp::List>(soilList[iCell]);
       //Run daily soil water balance for the current cell
       List res = spwbDay1(x, soil, gddVec[iCell], petVec[iCell], rainVec[iCell], erVec[iCell], Runon[iCell]);
-      NetPrec[iCell] = res["NetPrec"];
+      NetRain[iCell] = res["NetRain"];
       Runon[iCell] = res["Runon"];
       Infiltration[iCell] = res["Infiltration"];
       Runoff[iCell] = res["Runoff"];
@@ -1118,7 +1118,7 @@ List spwbgridDay(CharacterVector lct, List xList, List soilList,
       runoffExport += Runon[iCell] + rainVec[iCell];
     }
   }
-  DataFrame waterBalance = DataFrame::create(_["NetPrec"] = NetPrec, _["Runon"] = Runon, _["Infiltration"] = Infiltration,
+  DataFrame waterBalance = DataFrame::create(_["NetRain"] = NetRain, _["Runon"] = Runon, _["Infiltration"] = Infiltration,
                                    _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
                                    _["W1"] = W1, _["W2"] = W2, _["W3"] = W3,
                                    _["Esoil"] = Esoil, _["Eplant"] = Eplant);
@@ -1297,7 +1297,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   NumericVector Runoff(numDays);
   NumericVector Rain(numDays);
   NumericVector Snow(numDays);
-  NumericVector NetPrec(numDays);
+  NumericVector NetRain(numDays);
   NumericVector Interception(numDays);
   NumericVector Infiltration(numDays);
   NumericVector DeepDrainage(numDays);
@@ -1442,8 +1442,8 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
       Runoff[i] = db["Runoff"];
       Rain[i] = db["Rain"];
       Snow[i] = db["Snow"];
-      NetPrec[i] = db["NetPrec"];
-      Interception[i] = Rain[i]-NetPrec[i];
+      NetRain[i] = db["NetRain"];
+      Interception[i] = Rain[i]-NetRain[i];
       
       List sb = s["SoilBalance"];
       NumericVector psi = sb["psiVec"];
@@ -1475,7 +1475,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   
   if(verbose) {
     double Precipitationsum = sum(Precipitation);
-    double NetPrecsum = sum(NetPrec);
+    double NetRainsum = sum(NetRain);
     double Interceptionsum = sum(Interception);
     double Esoilsum = sum(Esoil);
     double Runoffsum  = sum(Runoff);
@@ -1484,9 +1484,9 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
 
     double Eplantsum = sum(Eplanttot);
     
-    Rcout<<"Total Precipitation (mm) "  <<round(Precipitationsum) <<"\n";
+    Rcout<<"Precipitation (mm) "  <<round(Precipitationsum) <<"\n";
     Rcout<<"Rain (mm) "  <<round(sum(Rain)) <<" Snow (mm) "  <<round(sum(Snow)) <<"\n";
-    Rcout<<"Interception (mm) " << round(Interceptionsum)  <<" Net Prec (mm) " << round(NetPrecsum) <<"\n";
+    Rcout<<"Interception (mm) " << round(Interceptionsum)  <<" Net rainfall (mm) " << round(NetRainsum) <<"\n";
     Rcout<<"Infiltration (mm) " << round(Infiltrationsum)  <<
       " Runoff (mm) " << round(Runoffsum) <<
         " Deep drainage (mm) "  << round(DeepDrainagesum)  <<"\n";
@@ -1503,7 +1503,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
    Rcpp::DataFrame DWB = DataFrame::create(_["GDD"] = GDD,
                                            _["LAIcell"]=LAIcell, _["LAIcelldead"] = LAIcelldead,  _["Cm"]=Cm, _["Lground"] = Lground, _["PET"]=PET, 
                                            _["Precipitation"] = Precipitation, _["Rain"] = Rain, _["Snow"] = Snow,
-                                           _["NetPrec"]=NetPrec,_["Infiltration"]=Infiltration, _["Runoff"]=Runoff, _["DeepDrainage"]=DeepDrainage, 
+                                           _["NetRain"]=NetRain,_["Infiltration"]=Infiltration, _["Runoff"]=Runoff, _["DeepDrainage"]=DeepDrainage, 
                                            _["Etot"]=Etot,_["Esoil"]=Esoil,
                                            _["Eplanttot"]=Eplanttot,
                                            _["Eplant"]=Eplantdays);

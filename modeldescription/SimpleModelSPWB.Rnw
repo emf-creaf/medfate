@@ -59,7 +59,7 @@ where $Ro$ is surface runon water entering the cell from neighbouring cells at h
 Every day water balance is perfomed as follows. The model first updates leaf area values according to the phenology of species and calculates light extinction. After that, the model updates soil water content of soil layers in two steps:
 \begin{enumerate}
 \item{If snow dynamics are included, increase snow pack from snow precipitation ($Ps$) and decreases it from snow melting ($Sm$);}
-\item{Increase soil moisture due to rainfall ($Pr$) and (if included) snow melting ($Sm$), after accounting for canopy interception loss ($In$), surface runoff ($Ru$) and deep drainage ($Dd$);}
+\item{Increase soil moisture due to rainfall ($Pr$), runon ($Ro$) and (if considered) snow melting ($Sm$), after accounting for canopy interception loss ($In$), surface runoff ($Ru$) and deep drainage ($Dd$);}
 \item{Decrease water content due to bare soil evaporation ($Es$), and plant
 transpiration ($Tr$).}
 \item{Determines drought stress index for each plant cohort.}
@@ -321,6 +321,13 @@ ground is simply:
 L^{SWR}_{ground} = 1 - \sum_{j}^{n}{f_j}
 \end{equation}
 
+\subsection{Snow pack dynamics}
+Precipitation is considered be snow when $T_{mean}<0$. Interception of snow by the canopy is neglected, and all snow is assumed to accumulate in a single storage compartment $S_{snow}$ (i.e. there is no canopy storage). A very simple snow submodel is used for snow pack dynamics (accumulation and melt), taken from Kergoat (1998). When mean air temperature is above 0 Celsius $T_{mean}>0$, a simple energy budget relates snow melt, $Sm$ (mm), to air temperature and soil-level radiation:
+\begin{equation}
+Sm = \frac{Rad\cdot L^{SWR}_{ground}\cdot (1-\alpha_{ice}) + \tau_{day} \cdot T_{mean} \cdot \rho \cdot C_p/r_{s}}{\lambda_{ice}}
+\end{equation}
+where $Rad$ is solar radiation (MJ·m$^{-2}$), $L^{SWR}_{ground}$ is the fraction of (short-wave) radiation reaching the ground, $\alpha_{ice} = 0.9$ is the albedo of snow, $\tau_{day} = 86400$ is the day duration in s, $\rho$ is the air density (depending on temperature and elevation), $C_{p} = 1013.86 \cdot 10^{-6}$ MJ·kg$^{-1}$·C$^{-1}$ is the specific heat capacity of the air and $r_{s} = 100$ s·m$^{-1}$ is the snow aerodynamic resistance and $\lambda_{ice} = 0.33355$MJ·kg is the (latent) heat of fusion of snow.
+
 \subsection{Rainfall interception loss}
 When snow dynamics are considered, precipitation occurs in form of rainfall if $T_{mean}> 0$. Otherwise, all precipitation is considered rainfall. Rainfall interception loss, $In$, is modelled following the Gash et al. (1995)
 analytical interception model for sparse canopies, where rain is assumed to fall
@@ -341,7 +348,7 @@ The amount of water evaporated from interception, $I$ (mm), is calculated as:
 In = C\cdot P_G+C\cdot(E/R)\cdot(P-P_G) \: {if}\: P > P_G \\
 In = C\cdot P\: {if}\: P \leq P_G
 \end{eqnarray}
-where $P$ is the daily gross precipitation (in mm). Net rainfall, $P_{net}$, is
+where $P$ is the daily gross precipitation (in mm). Net rainfall, $Pr_{net}$, is
 calculated as the difference between gross rainfall and interception loss.
 Although interception models are normally applied to single-canopy stands, we
 apply the sparse Gash model to the whole stand (including shrubs). Moreover, in
@@ -412,24 +419,16 @@ storage capacity), $E/R$ (ratio between evaporation and rainfall rates) and p
 \end{center}
 
 
-\subsection{Snow pack dynamics}
-Precipitation is considered be snow when $T_{mean}<0$. Interception of snow by the canopy is not considered, and all snow is assumed to accumulate in a single storage compartment $S_{snow}$. A very simple snow submodel is used for snow pack dynamics (accumulation and melt), taken from Kergoat (1998). When mean air temperature is above 0 Celsius $T_{mean}>0$, a simple energy budget relates snow melt (mm) to air temperature and soil-level radiation:
-\begin{equation}
-Sm = \frac{Rad\cdot L^{SWR}_{ground}\cdot (1-\alpha_{ice}) + \tau_{day} \cdot T_{mean} \cdot \rho \cdot C_p/r_{s}}{\lambda_{ice}}
-\end{equation}
-where $Rad$ is solar radiation (MJ·m$^{-2}$), $L^{SWR}_{ground}$ is the fraction of (short-wave) radiation reaching the ground, $\alpha_{ice} = 0.5$ is the albedo of snow, $\tau_{day} = 86400$ is the day duration in s, $\rho$ is the air density, $C_{p} = 1013.86 \cdot 10^{-6}$ MJ·kg$^{-1}$·C$^{-1}$ is the specific heat capacity of the air and $r_{s} = 100$ s·m$^{-1}$ is the soil aerodynamic resistance and $\lambda_{ice} = 0.33355$MJ·kg is the (latent) heat of fusion of snow.
 
 \subsection{Runoff, infiltration and percolation}
-Runoff, $Ru$ (in mm), is calculated using the USDA SCS curve number method, as
-in Boughton (1989):
+The water that reaches the soil is the sum of net rainfall ($Pr_{net}$), runon ($Ro$) and melted snow ($Sm$). The amount of water infiltrating into the soil is $Pr_{net} + Sm + Ro - Ru$, where $Ru$ is the water lost by runoff (see function \texttt{spwb.SoilInfiltration}). Runoff (in mm), is calculated using the USDA SCS curve number method, as in Boughton (1989):
 \begin{equation}
-Ru=\frac{(P_{net} - 0.2 \cdot V_{soil})^2}{(P_{net} - 0.8 \cdot V_{soil})}
+Ru=\frac{(Pr_{net} + Ro + Sm - 0.2 \cdot V_{soil})^2}{(Pr_{net} + Ro + Sm - 0.8 \cdot V_{soil})}
 \end{equation}
 where $V_{soil}$ (in mm) is the overall soil water retention capacity (i.e. the
 sum of $V_s$ values for topsoil and subsoil).
 
-The amount of water infiltrating into the soil is $P_{net} + Sm - Ru$, where $Sm$ is snow melt (only if snow pack is considered) and $Ru$ is the water lost by runoff (see function \texttt{spwb.SoilInfiltration}). Following
-Granier (1999), part of the water reaching one soil layer percolates quickly
+Following Granier (1999), part of the water reaching one soil layer percolates quickly
 through the macropores. The remaining water is retained by the micropores refilling
 the current soil layer. When this soil layer reaches its field capacity the excess
 of water percolates to the soil layer below. The water percolating from the lowest

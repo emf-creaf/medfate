@@ -1,6 +1,6 @@
 plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE, 
                       yearAxis=FALSE, xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL,...) {
-  TYPES_SWB = c("PET_Precipitation","PET_NetPrec","ET","Psi","Theta","Vol", "LAI", "PlantLAI",
+  TYPES_SWB = c("PET_Precipitation","PET_NetRain", "Snow","ET","Psi","Theta","Vol", "LAI", "PlantLAI",
                 "PlantStress", "PlantPsi","PlantPhotosynthesis","PlantTranspiration",
                 "PlantPhotosynthesisLeaf","PlantTranspirationLeaf",
                 "Export")

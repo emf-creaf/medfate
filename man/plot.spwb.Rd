@@ -24,7 +24,9 @@ Function \code{plot} plots the results of the soil water balance model (see \cod
   \item{x, object}{An object of class \code{spwb}}
   \item{type}{The information to be plotted:
   \itemize{
-    \item{\code{"PET_NetPrec"}:}{ Potential evapotranspiration and Net Precipitation.}
+    \item{\code{"PET_Precipitation"}:}{ Potential evapotranspiration and Precipitation.}
+    \item{\code{"PET_NetRain"}:}{ Potential evapotranspiration and Net rainfall.}
+    \item{\code{"Snow"}:}{ Snow precipitation and snowpack dynamics.}
     \item{\code{"Export"}:}{ Water exported through deep drainage and surface runoff.}
     \item{\code{"ET"}:}{ Plant transpiration and soil evaporation.}
     \item{\code{"Psi"}:}{ Soil water potential.}
