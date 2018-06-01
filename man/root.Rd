@@ -39,7 +39,7 @@ Sperry, J. S., Y. Wang, B. T. Wolfe, D. S. Mackay, W. R. L. Anderegg, N. G. Mcdo
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 \seealso{
- \code{\link{swb}}, \code{\link{swb.ldrOptimization}}, \code{\link{forest2swbInput}}, \code{\link{soil}}
+ \code{\link{spwb}}, \code{\link{spwb.ldrOptimization}}, \code{\link{forest2spwbInput}}, \code{\link{soil}}
 }
 \examples{
 #Load example plot plant data

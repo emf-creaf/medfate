@@ -26,7 +26,7 @@ transp.stomatalRegulationPlot(x, soil, meteo, day, timestep,
   \item{type}{Optimization type (1,2 or 3).}
   \item{Gwmax}{Maximum stomatal conductance (mol·m-2·s-1).}
   \item{kleafmax}{Maximum leaf hydraulic conductance (flow per pressure drop).}
-  \item{x}{An object of class \code{\link{swbInput}} built using the 'Complex' transpiration mode.}
+  \item{x}{An object of class \code{\link{spwbInput}} built using the 'Complex' transpiration mode.}
   \item{soil}{An object of class \code{\link{soil}}.}
   \item{meteo}{A data frame with daily meteorological data series:
    \itemize{
@@ -77,7 +77,7 @@ Sperry, J. S., M. D. Venturas, W. R. L. Anderegg, M. Mencuccini, D. S. Mackay, Y
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 \seealso{
-\code{\link{hydraulics.supplyFunctionNetwork}}, \code{\link{biophysics.leafTemperature}}, \code{\link{photo.photosynthesis}}, \code{\link{swb}}
+\code{\link{hydraulics.supplyFunctionNetwork}}, \code{\link{biophysics.leafTemperature}}, \code{\link{photo.photosynthesis}}, \code{\link{spwb}}
 }
 \examples{
 #Load example daily meteorological data
@@ -98,7 +98,7 @@ control = defaultControl()
 control$transpirationMode="Complex"
 
 #Initialize input
-x2 = forest2swbInput(exampleforest,examplesoil2, SpParamsMED, control)
+x2 = forest2spwbInput(exampleforest,examplesoil2, SpParamsMED, control)
 
 transp.stomatalRegulationPlot(x2, examplesoil2, examplemeteo, day=100, timestep = 12,
                               latitude = 41.82592, elevation = 100)

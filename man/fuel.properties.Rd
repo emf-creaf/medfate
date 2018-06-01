@@ -18,7 +18,7 @@ fuel.Stratification(object, SpParams, gdd = NA,
 fuel.FCCS(object, ShrubCover, CanopyCover, SpParams, cohortFMC = NULL,
           gdd = NA, heightProfileStep = 10, maxHeightProfile = 5000, 
           bulkDensityThreshold = 0.05)
-fuel.cohortFineFMC(swb, SpParams)
+fuel.cohortFineFMC(spwb, SpParams)
 fuel.WindAdjustmentFactor(topShrubHeight, bottomCanopyHeight, topCanopyHeight,
                           canopyCover)
 }
@@ -33,7 +33,7 @@ fuel.WindAdjustmentFactor(topShrubHeight, bottomCanopyHeight, topCanopyHeight,
   \item{heightProfileStep}{Precision for the fuel bulk density profile.}
   \item{maxHeightProfile}{Maximum height for the fuel bulk density profile.}
   \item{bulkDensityThreshold}{Minimum fuel bulk density to delimit fuel strata.}
-  \item{swb}{Object returned by function \code{\link{swb}}.}
+  \item{spwb}{Object returned by function \code{\link{spwb}}.}
   \item{topShrubHeight}{Shrub stratum top height (in m).}
   \item{bottomCanopyHeight}{Canopy base height (in m).}
   \item{topCanopyHeight}{Canopy top height (in m).}
@@ -92,7 +92,7 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 
 \seealso{
-\code{\link{fire.FCCS}}, \code{\link{swb}}
+\code{\link{fire.FCCS}}, \code{\link{spwb}}
 }
 \examples{
 #Load example plot plant data

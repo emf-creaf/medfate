@@ -1,26 +1,26 @@
 \encoding{UTF-8}
-\name{swbInput}
+\name{spwbInput}
 \alias{forest2aboveground}
 \alias{forest2belowground}
 \alias{forest2growthInput}
-\alias{forest2swbInput}
+\alias{forest2spwbInput}
 \alias{growthInput}
-\alias{swbInput}
+\alias{spwbInput}
 
 \title{
 Input for simulation models
 }
 
 \description{
-Functions \code{forest2swbInput} and \code{forest2growthInput} take an object of class \code{\link{forest}} and calculate input data for functions \code{\link{swb}} and \code{\link{growth}}, respectively. Functions \code{swbInput} and \code{growthInput} does the same from input data. Function \code{forest2aboveground} calculates aboveground variables that may be used in \code{swbInput} and \code{growthInput} functions. Similarly, function \code{forest2belowground} calculates belowground root distribution that may be used in \code{swbInput} and \code{growthInput} functions.
+Functions \code{forest2spwbInput} and \code{forest2growthInput} take an object of class \code{\link{forest}} and calculate input data for functions \code{\link{spwb}} and \code{\link{growth}}, respectively. Functions \code{spwbInput} and \code{growthInput} does the same from input data. Function \code{forest2aboveground} calculates aboveground variables that may be used in \code{spwbInput} and \code{growthInput} functions. Similarly, function \code{forest2belowground} calculates belowground root distribution that may be used in \code{spwbInput} and \code{growthInput} functions.
 }
 \usage{
 forest2aboveground(x, SpParams, gdd = NA)
 forest2belowground(x, soil, SpParams)
 forest2growthInput(x, soil, SpParams, control)
-forest2swbInput(x, soil, SpParams, control)
+forest2spwbInput(x, soil, SpParams, control)
 growthInput(above,  Z, V,  soil, SpParams, control)
-swbInput(above,  V,  soil, SpParams, control)
+spwbInput(above,  V,  soil, SpParams, control)
 }
 \arguments{
   \item{x}{An object of class \code{\link{forest}}.}
@@ -28,13 +28,13 @@ swbInput(above,  V,  soil, SpParams, control)
   \item{gdd}{Growth degree days to account for leaf phenology effects (in Celsius). This should be left \code{NA} in most applications.}
   \item{soil}{An object of class \code{\link{soil}}.}
   \item{control}{A list with default control parameters (see \code{\link{defaultControl}}).}
-  \item{above}{A data frame with aboveground plant information (see the return value of \code{forest2aboveground} below). In the case of \code{swbInput} the variables should include \code{SP}, \code{LAI_live}, \code{LAI_dead}, \code{H} and \code{CR}.}
+  \item{above}{A data frame with aboveground plant information (see the return value of \code{forest2aboveground} below). In the case of \code{spwbInput} the variables should include \code{SP}, \code{LAI_live}, \code{LAI_dead}, \code{H} and \code{CR}.}
   \item{Z}{A numeric vector with cohort rooting depths (in cms).}
   \item{V}{A numeric matrix (with as many columns as soil layers and as many rows as the length as \code{SP}) containing the proportion of roots of each plant in each soil layer.}
   
 }
 \details{
-Functions \code{forest2swbInput} and \code{forest2abovegroundInput} extracts height and species identity from plant cohorts of \code{x}, and calculate leaf area index and crown ratio.\code{forest2swbInput} also calculates the distribution of fine roots across soil. Both \code{forest2swbInput} and \code{swbInput} find parameter values for each plant cohort according to the parameters of its species as specified in \code{SpParams}. If \code{control$transpirationMode = "Complex"} the functions also estimate the maximum conductance of rhizosphere, root xylem and stem xylem elements.
+Functions \code{forest2spwbInput} and \code{forest2abovegroundInput} extracts height and species identity from plant cohorts of \code{x}, and calculate leaf area index and crown ratio.\code{forest2spwbInput} also calculates the distribution of fine roots across soil. Both \code{forest2spwbInput} and \code{spwbInput} find parameter values for each plant cohort according to the parameters of its species as specified in \code{SpParams}. If \code{control$transpirationMode = "Complex"} the functions also estimate the maximum conductance of rhizosphere, root xylem and stem xylem elements.
 }
 \value{
 Function \code{forest2aboveground} returns a data frame with the following columns (rows are identified as specified by function \code{\link{plant.ID}}):
@@ -48,7 +48,7 @@ Function \code{forest2aboveground} returns a data frame with the following colum
   \item{\code{LAI_dead}: Dead leaf area index (m2/m2) (one-side leaf area relative to plot area).}
 }
 
-Functions \code{forest2swbInput} and \code{swbInput} return a list of class \code{swbInput} with the following elements (rows of data frames are identified as specified by function \code{\link{plant.ID}}):
+Functions \code{forest2spwbInput} and \code{spwbInput} return a list of class \code{spwbInput} with the following elements (rows of data frames are identified as specified by function \code{\link{plant.ID}}):
 \itemize{
   \item{\code{control}: List with control parameters (see \code{\link{defaultControl}}).}
   \item{\code{cohorts}: A data frame with cohort information, with columns \code{SP} and \code{Name}.}
@@ -89,7 +89,7 @@ Functions \code{forest2swbInput} and \code{swbInput} return a list of class \cod
   \item{\code{Transpiration}: Plant cohort transpiration of the current day (mm of water = L/m2; filled with zeroes before simulations).}
   \item{\code{Photosynthesis}: Plant cohort photosynthesis of the current day (g C/m2; filled with zeroes before simulations).}
 }
-Functions \code{forest2growthInput} and \code{growthInput} return a list of class \code{growthInput} with the same elements as \code{swbInput}, but with additional information. 
+Functions \code{forest2growthInput} and \code{growthInput} return a list of class \code{growthInput} with the same elements as \code{spwbInput}, but with additional information. 
 
 \itemize{
 \item{Element \code{above} includes the following additional columns:
@@ -111,7 +111,7 @@ Functions \code{forest2growthInput} and \code{growthInput} return a list of clas
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
-\seealso{\code{\link{swb}}, \code{\link{soil}},  \code{\link{forest}}, \code{\link{SpParamsMED}}, \code{\link{defaultSoilParams}}, \code{\link{plant.ID}}}
+\seealso{\code{\link{spwb}}, \code{\link{soil}},  \code{\link{forest}}, \code{\link{SpParamsMED}}, \code{\link{defaultSoilParams}}, \code{\link{plant.ID}}}
 
 \examples{
 #Load example plot plant data
@@ -134,16 +134,16 @@ below
 # Initialize control parameters
 control = defaultControl()
 
-# Prepare swb input
-swbInput(above, below, examplesoil,SpParamsMED, control)
+# Prepare spwb input
+spwbInput(above, below, examplesoil,SpParamsMED, control)
 
 # When starting from an object of class 'forest' the whole process
 # can be simplified:
-forest2swbInput(exampleforest, examplesoil, SpParamsMED, control)
+forest2spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 
 
 # Prepare input for complex transpiration mode
 control$transpirationMode = "Complex"
-forest2swbInput(exampleforest,examplesoil,SpParamsMED, control)
+forest2spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 
 }

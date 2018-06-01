@@ -57,7 +57,7 @@ Martin-StPaul, N., Delzon, S., Cochard, H. 2017. Plant resistance to drought dep
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 \seealso{
-\code{\link{hydraulics.psi2K}}, \code{\link{hydraulics.supplyFunctionPlot}}, \code{\link{swb}}, \code{\link{soil}}
+\code{\link{hydraulics.psi2K}}, \code{\link{hydraulics.supplyFunctionPlot}}, \code{\link{spwb}}, \code{\link{soil}}
 }
 \examples{
 psi = seq(-10,0, by=0.1)

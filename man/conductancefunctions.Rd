@@ -40,7 +40,7 @@ hydraulics.xylemPsi(kxylem, kxylemmax, c, d)
   \item{c, d}{Parameters of the Weibull function (generic xylem vulnerability curve).}
   \item{n, alpha}{Parameters of the Van Genuchten function (rhizosphere vulnerability curve).}
   \item{kxylem}{Xylem hydraulic conductance (defined as flow per surface unit and per pressure drop).}
-  \item{x}{An object of class \code{\link{swbInput}}.}
+  \item{x}{An object of class \code{\link{spwbInput}}.}
   \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
   \item{type}{Plot type. For \code{hydraulics.supplyFunctionPlot}, either \code{"E"}, \code{"Elayers"}, \code{"PsiStem"}, \code{"PsiRoot"}, \code{"PsiRhizo"} or \code{"dEdP"}). For \code{hydraulics.vulnerabilityCurvePlot}, either \code{"leaf"}, \code{"stem"}, \code{"root"}, or \code{"rhizosphere"}).}
   \item{psiVec}{Vector of water potential values to evaluate for the vulnerability curve.}
@@ -69,7 +69,7 @@ Sperry, J. S., and D. M. Love. 2015. What plant hydraulics can tell us about res
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 \seealso{
-\code{\link{hydraulics.supplyFunctionPlot}}, \code{\link{hydraulics.maximumStemHydraulicConductance}}, \code{\link{swb}}, \code{\link{soil}}
+\code{\link{hydraulics.supplyFunctionPlot}}, \code{\link{hydraulics.maximumStemHydraulicConductance}}, \code{\link{spwb}}, \code{\link{soil}}
 }
 \examples{
 kstemmax = 4 # in mmol·m-2·s-1·MPa-1

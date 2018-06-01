@@ -60,7 +60,7 @@ Anten, N.P.R., Bastiaans, L., 2016. The use of canopy models to analyze light co
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 \seealso{
- \code{\link{swb}}
+ \code{\link{spwb}}
 }
 \examples{
 LAI = 2

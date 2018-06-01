@@ -77,7 +77,7 @@ De \enc{Cáceres}{Caceres} M, \enc{Martínez}{Martinez}-Vilalta J, Coll L, Llore
 DGCN (2005). Tercer Inventario Forestal Nacional (1997-2007): Catalunya. Dirección General de Conservación de la Naturaleza, Ministerio de Medio Ambiente, Madrid.
 
 }
-\seealso{ \code{\link{swb}}}
+\seealso{ \code{\link{spwb}}}
 \examples{
 data(SpParamsMED)
 }

@@ -96,7 +96,7 @@ hydraulics.regulatedPsiTwoElements(Emax, psiSoil, krhizomax, kxylemmax, n, alpha
   \item{allowNegativeFlux}{A boolean to indicate wether negative flux (i.e. from plant to soil) is allowed.}
   \item{maxNsteps}{Maximum number of steps in the construction of supply functions.}
   \item{ntrial}{Maximum number of steps in Newton-Raphson optimization.}
-  \item{x}{An object of class \code{\link{swbInput}}.}
+  \item{x}{An object of class \code{\link{spwbInput}}.}
   \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
   \item{type}{Plot type. For \code{hydraulics.supplyFunctionPlot}, either \code{"E"}, \code{"Elayers"}, \code{"PsiStem"}, \code{"PsiRoot"}, \code{"PsiRhizo"} or \code{"dEdP"}). For \code{hydraulics.vulnerabilityCurvePlot}, either \code{"leaf"}, \code{"stem"}, \code{"root"}, or \code{"rhizosphere"}).}
 }
@@ -139,7 +139,7 @@ Sperry, J. S., and D. M. Love. 2015. What plant hydraulics can tell us about res
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 \seealso{
-\code{\link{hydraulics.psi2K}}, \code{\link{hydraulics.maximumStemHydraulicConductance}}, \code{\link{swb}}, \code{\link{soil}}
+\code{\link{hydraulics.psi2K}}, \code{\link{hydraulics.maximumStemHydraulicConductance}}, \code{\link{spwb}}, \code{\link{soil}}
 }
 \examples{
 kstemmax = 4 # in mmol·m-2·s-1·MPa-1

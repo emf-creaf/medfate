@@ -76,7 +76,7 @@ Olson, M.E., Anfodillo, T., Rosell, J.A., Petit, G., Crivellaro, A., Isnard, S.,
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 \seealso{
-\code{\link{hydraulics.psi2K}}, \code{\link{hydraulics.supplyFunctionPlot}}, \code{\link{swb}}, \code{\link{soil}}
+\code{\link{hydraulics.psi2K}}, \code{\link{hydraulics.supplyFunctionPlot}}, \code{\link{spwb}}, \code{\link{soil}}
 }
 \examples{
 kstemmax = 4 # in mmol·m-2·s-1·MPa-1

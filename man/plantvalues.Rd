@@ -84,7 +84,7 @@ A vector with values for each plant of the input \code{\link{forest}} object:
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 \seealso{
- \code{\link{swb}}, \code{\link{forest}}, \code{\link{summary.forest}}
+ \code{\link{spwb}}, \code{\link{forest}}, \code{\link{summary.forest}}
 }
 \examples{
 #Default species parameterization

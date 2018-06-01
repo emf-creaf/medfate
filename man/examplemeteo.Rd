@@ -28,7 +28,7 @@
 \source{
 Interpolated from weather station data (Spanish and Catalan meteorology agencies) using package 'meteoland'.
 }
-\seealso{ \code{\link{swb}}}
+\seealso{ \code{\link{spwb}}}
 \examples{
 data(examplemeteo)
 }

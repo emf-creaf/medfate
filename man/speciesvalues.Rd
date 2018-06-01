@@ -24,7 +24,7 @@ A vector with values for each species in \code{SpParams}:
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 \seealso{
- \code{\link{swb}}, \code{\link{forest}}, \code{\link{plant.BasalArea}}, \code{\link{summary.forest}}
+ \code{\link{spwb}}, \code{\link{forest}}, \code{\link{plant.BasalArea}}, \code{\link{summary.forest}}
 }
 \examples{
 #Default species parameterization
