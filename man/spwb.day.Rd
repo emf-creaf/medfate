@@ -3,9 +3,9 @@
 \alias{spwb.day}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{Soil water balance for a single day}
+\title{Soil-plant water balance for a single day}
 \description{
-Function \code{spwb.day} performs soil water balance for a single day.
+Function \code{spwb.day} performs water balance for a single day.
 }
 \usage{
 spwb.day(x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind, 
@@ -71,8 +71,8 @@ sd1<-spwb.day(x1, examplesoil, rownames(examplemeteo)[d], d ,
              examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
              examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
              examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
-             latitude = 41.82592, elevation = 100, 
-             rain = examplemeteo$Precipitation[d])
+             latitude = 41.82592, elevation = 100, slope=0, aspect=0,
+             prec = examplemeteo$Precipitation[d])
 
 #Switch to 'Complex' transpiration mode
 control$transpirationMode="Complex"
@@ -84,8 +84,8 @@ sd2<-spwb.day(x2, examplesoil, rownames(examplemeteo)[d], d ,
              examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
              examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
              examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
-             latitude = 41.82592, elevation = 100, 
-             rain = examplemeteo$Precipitation[d])
+             latitude = 41.82592, elevation = 100, slope=0, aspect=0,
+             prec = examplemeteo$Precipitation[d])
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

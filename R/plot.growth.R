@@ -12,7 +12,7 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
 
   if(type %in% TYPES_SWB) {
     x$PlantLAI = x$PlantLAIlive
-    plot.swb(x,type, bySpecies, yearAxis, xlim, ylim, xlab, ylab, ...)
+    plot.spwb(x,type, bySpecies, yearAxis, xlim, ylim, xlab, ylab, ...)
   } else {
     dates = as.Date(rownames(x$DailyBalance))
     transpMode = x$control$transpirationMode

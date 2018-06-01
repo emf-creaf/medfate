@@ -227,7 +227,7 @@ Finally, note that one can play with plant-specific parameters for growth simula
 ## Executing the growth model
 In this vignette we will use one year of example meteorological data with the following precipitation and temperature seasonal trends:
 ```{r}
-G1<-growth(x, examplesoil, examplemeteo)
+G1<-growth(x, examplesoil, examplemeteo, elevation = 100)
 
 ```
 

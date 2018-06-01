@@ -36,7 +36,7 @@ growth(x, soil, meteo,  latitude = NA, elevation = NA, slope = NA, aspect = NA)
     }
   }
   \item{latitude}{Latitude (in degrees). Required when \code{x$TranspirationMode = "Complex"}.}
-  \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when \code{x$TranspirationMode = "Complex"}.}
+  \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when \code{x$TranspirationMode = "Complex"}. Elevation is also required for 'Simple' if snowpack dynamics are simulated.}
 }
 \details{
   Detailed model description is available in the vignettes section. Simulations using the 'Complex' transpiration mode are computationally much more expensive than those using the simple transpiration mode. 
@@ -115,7 +115,7 @@ control = defaultControl()
 x = forest2growthInput(exampleforest,examplesoil, SpParamsMED, control)
 
 #Call simulation function
-G1<-growth(x, examplesoil, examplemeteo)
+G1<-growth(x, examplesoil, examplemeteo, elevation = 100)
  
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

@@ -142,6 +142,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   
   String storagePool = control["storagePool"];
   bool verbose = control["verbose"];
+  bool snowpack = control["snowpack"];
   bool cavitationRefill = control["cavitationRefill"];
   checkgrowthInput(x, soil, transpirationMode, soilFunctions);
   
@@ -163,6 +164,8 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   } else {
     PET = meteo["PET"];
     WindSpeed = meteo["WindSpeed"];
+    if(control["snowpack"]) Radiation = meteo["Radiation"];
+    if(snowpack) if(NumericVector::is_na(elevation)) stop("Value for 'elevation' should not be missing.");
   }
   
   CharacterVector dateStrings = meteo.attr("row.names");
@@ -270,7 +273,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   NumericVector Cm(numDays);
   NumericVector Lground(numDays);
   NumericVector Runoff(numDays);
-  NumericVector NetPrec(numDays);
+  NumericVector NetRain(numDays);
   NumericVector Interception(numDays);
   NumericVector Infiltration(numDays);
   NumericVector DeepDrainage(numDays);
@@ -307,7 +310,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
     
     //2. Water balance and photosynthesis
     if(transpirationMode=="Simple") {
-      s = spwbDay1(x, soil, MeanTemperature[i], PET[i], Precipitation[i], ER[i], 0.0, false); //No Runon in simulations for a single cell
+      s = spwbDay1(x, soil, MeanTemperature[i], PET[i], Precipitation[i], ER[i], 0.0, Radiation[i], elevation, false); //No Runon in simulations for a single cell
     } else if(transpirationMode=="Complex") {
       std::string c = as<std::string>(dateStrings[i]);
       int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
@@ -326,8 +329,8 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
     DeepDrainage[i] = db["DeepDrainage"];
     Infiltration[i] = db["Infiltration"];
     Runoff[i] = db["Runoff"];
-    NetPrec[i] = db["NetPrec"];
-    Interception[i] = Precipitation[i]-NetPrec[i];
+    NetRain[i] = db["NetRain"];
+    Interception[i] = Precipitation[i]-NetRain[i];
     
     List sb = s["SoilBalance"];
     NumericVector psi = sb["psiVec"];
@@ -536,7 +539,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   
   Rcpp::DataFrame SWB = DataFrame::create(_["W"]=Wdays, _["ML"]=MLdays,_["MLTot"]=MLTot,_["psi"]=psidays);
   Rcpp::DataFrame DWB = DataFrame::create(_["LAIcell"]=LAIcell, _["Cm"]=Cm, _["Lground"] = Lground, _["PET"]=PET, 
-                                          _["Precipitation"] = Precipitation, _["NetPrec"]=NetPrec,_["Infiltration"]=Infiltration, _["Runoff"]=Runoff, _["DeepDrainage"]=DeepDrainage, 
+                                          _["Precipitation"] = Precipitation, _["NetRain"]=NetRain,_["Infiltration"]=Infiltration, _["Runoff"]=Runoff, _["DeepDrainage"]=DeepDrainage, 
                                           _["Etot"]=Etot,_["Esoil"]=Esoil,
                                           _["Eplanttot"]=Eplanttot,
                                           _["Eplant"]=Eplantdays);

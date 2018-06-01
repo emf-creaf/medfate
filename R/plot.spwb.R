@@ -39,7 +39,7 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     if(is.null(ylim)) ylim = c(0,mnp)
     barplot(DailyBalance$Precipitation[span], ylim=ylim, col="black",space=0, ylab=ylab, 
             xlab=xlab, axes=FALSE)
-    barplot(DailyBalance$Snow[span], col="red", add=TRUE)
+    barplot(DailyBalance$Snow[span], col="red", border = "red", add=TRUE)
     plotAxes()
     lines(1:length(span), DailyBalance$PET[span], col="gray")    
     legend("topleft", bty="n", col=c("black","red", "gray"),lty=1, lwd=2,

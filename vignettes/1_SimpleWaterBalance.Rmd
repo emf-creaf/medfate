@@ -251,6 +251,11 @@ Package `medfate` provides a simple `plot` function for objects of class `spwb`.
 par(mar=c(5,5,1,1))
 plot(S, type = "PET_Precipitation")
 ```
+Since this simulations include snow dynamics, we can plot the water input in form of snow and the dynamics of the snowpack. 
+```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
+par(mar=c(5,5,1,1))
+plot(S, type = "Snow")
+```
 It is also useful to plot the dynamics of soil state variables by layer, such as the percentage of moisture in relation to field capacity:
 ```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
 par(mar=c(5,5,1,1))
