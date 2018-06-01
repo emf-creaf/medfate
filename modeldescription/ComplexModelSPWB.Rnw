@@ -4,7 +4,7 @@
 \usepackage{authblk}
 \usepackage{hyperref}
 \usepackage{amsmath}
-\title{Complex model: Water balance and plant drought stress}
+\title{Complex soil-plant water and energy balance model}
 \author[1,2]{Miquel De Cáceres}
 \affil[1]{Centre Tecnològic Forestal de Catalunya. Ctra. St. Llorenç de Morunys km 2, 25280, Solsona, Catalonia, Spain}
 \affil[2]{CREAF, Cerdanyola del Vallès, 08193, Spain}

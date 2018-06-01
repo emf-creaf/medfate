@@ -6,7 +6,7 @@ output:
   rmarkdown::html_vignette:
     toc: TRUE
 vignette: >
-  %\VignetteIndexEntry{2. Complex water balance simulation}
+  %\VignetteIndexEntry{2. Complex water and energy balance simulation}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignettePackage{medfate}
   \usepackage[utf8]{inputenc}
@@ -19,10 +19,10 @@ library(medfate)
 
 ## About this vignette
 
-This document describes how to run a soil water balance model that uses a rather complex approach for hydraulics and stomatal regulation. This document is meant to teach users to run the simulation model within R. All the details of the model design and formulation are given in a separate document that can be found on the website of the R package (http://vegmod.ctfc.cat/medfateweb). 
+This document describes how to run a water and energy balance model that uses a rather complex approach for hydraulics and stomatal regulation. This document is meant to teach users to run the simulation model within R. All the details of the model design and formulation are given in a separate document that can be found on the website of the R package (http://vegmod.ctfc.cat/medfateweb). 
 
 ## Preparing model inputs
-Any forest water balance model needs information on climate, vegetation and soils of the forest stand to be simulated. Moreover, since the soil water balance in `medfate` differentiates between species, information on species-specific model parameters is also needed. In this subsection we explain the different steps (including optional pathways) to prepare all the data needed to run function `spwb()`.
+Any water and energy balance model needs information on climate, vegetation and soils of the forest stand to be simulated. Moreover, since the soil water balance in `medfate` differentiates between species, information on species-specific model parameters is also needed. In this subsection we explain the different steps (including optional pathways) to prepare all the data needed to run function `spwb()`.
 
 ### Soils
 

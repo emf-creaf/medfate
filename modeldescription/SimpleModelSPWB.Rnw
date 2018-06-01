@@ -4,7 +4,7 @@
 \usepackage{authblk}
 \usepackage{hyperref}
 \usepackage{amsmath}
-\title{Simple model: Water balance and plant drought stress}
+\title{Simple soil-plant water balance model}
 \author[1,2]{Miquel De Cáceres}
 \author[1]{Víctor Granda}
 \affil[1]{Centre Tecnològic Forestal de Catalunya. Ctra. St. Llorenç de Morunys km 2, 25280, Solsona, Catalonia, Spain}
@@ -23,7 +23,7 @@ library(medfate)
 
 \section{Model overview}
 \subsection{Design principles}
-The soil water balance model calculates temporal variations in soil moisture on a daily step basis for the input forest stand and for the period corresponding to input weather data. 
+The water balance model calculates temporal variations in soil moisture on a daily step basis for the input forest stand and for the period corresponding to input weather data. 
 
 The model considers only the vertical spatial dimension of the stand and not the horizontal distribution of
 plants within it. In other words, the model is not spatially explicit (i.e., plants do not interact for space explicitly). Still, the stand is divided into groups of plants, here referred to as `plant cohorts` of different species, height and leaf area index ($LAI$). Height and $LAI$ values determine competition for light. $LAI$ values also drive competition for water. The soil water balance follows the design principles of SIERRA (Mouillot et al., 2001, Ruffault et al., 2014, 2013) and BILJOU (Granier et al., 2007, 1999), although

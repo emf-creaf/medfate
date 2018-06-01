@@ -66,11 +66,12 @@ double interceptionGashDay(double Precipitation, double Cm, double p, double ER=
 
 // Soil water balance with simple hydraulic model
 // [[Rcpp::export(".spwbDay1")]]
-List spwbDay1(List x, List soil, double tday, double pet, double rain, double er, double runon=0.0, 
-             double rad = NA_REAL, bool verbose = false) {
+List spwbDay1(List x, List soil, double tday, double pet, double prec, double er, double runon=0.0, 
+             double rad = NA_REAL, double elevation = NA_REAL, bool verbose = false) {
 
   //Control parameters
   List control = x["control"];
+  bool snowpack = control["snowpack"];
   bool cavitationRefill = control["cavitationRefill"];
   String soilFunctions = control["soilFunctions"];
 
@@ -83,6 +84,7 @@ List spwbDay1(List x, List soil, double tday, double pet, double rain, double er
   NumericVector rfc = soil["rfc"];
   NumericVector psiVec = psi(soil, soilFunctions);
   NumericVector Water_FC = waterFC(soil, soilFunctions);
+  double swe = soil["SWE"]; //snow pack
   int nlayers = W.size();
   
 
@@ -133,14 +135,41 @@ List spwbDay1(List x, List soil, double tday, double pet, double rain, double er
   double LgroundPAR = exp((-1)*s);
   double LgroundSWR = 1.0 - std::accumulate(CohASWRF.begin(),CohASWRF.end(),0.0);
   
+  //Snow pack dynamics
+  double snow = 0.0, rain=0.0;
+  double melt = 0.0;
+  if(snowpack) {
+    //Turn rain into snow and add it into the snow pack
+    if(tday < 0.0) { 
+      snow = prec; 
+      swe = swe + snow;
+    } else {
+      rain = prec;
+    }
+    //Apply snow melting
+    if(swe > 0.0) {
+      if(NumericVector::is_na(rad)) stop("Missing radiation data for snow melt!");
+      if(NumericVector::is_na(elevation)) stop("Missing elevation data for snow melt!");
+      double rho = meteoland::utils_airDensity(tday, meteoland::utils_atmosphericPressure(elevation));
+      double ten = (86400*std::max(0.0,tday)*rho*1013.86*pow(10,-6.0)/100.0);
+      double ren = (rad*LgroundSWR)*(0.1); //90% albedo of snow
+      melt = (ren+ten)/0.33355;
+      // Rcout<<" swe: "<< swe<<" temp: "<<ten<< " rad: "<< ren << " melt : "<< melt<<"\n";
+      swe = std::max(0.0, swe-melt);
+    }
+    soil["SWE"] = swe;
+  } else {
+    rain = prec;
+  }
+  
   //Hydrologic input
   double NetPrec = 0.0, Infiltration= 0.0, Runoff= 0.0, DeepDrainage= 0.0;
-  if(rain>0.0) {
+  if(rain>0.0) NetPrec = rain - interceptionGashDay(rain,Cm,LgroundPAR,er);
+  if((NetPrec+runon+melt)>0.0) {
     //Interception
-    NetPrec = rain - interceptionGashDay(rain,Cm,LgroundPAR,er);
     //Net Runoff and infiltration
-    Infiltration = infiltrationDay(NetPrec+runon, Water_FC[0]);
-    Runoff = (NetPrec+runon) - Infiltration;
+    Infiltration = infiltrationDay(NetPrec+runon+melt, Water_FC[0]);
+    Runoff = (NetPrec+runon+melt) - Infiltration;
     //Input of the first soil layer is infiltration
     double VI = Infiltration;
     double Wn;
@@ -246,7 +275,7 @@ List spwbDay1(List x, List soil, double tday, double pet, double rain, double er
   for(int c=0;c<numCohorts;c++) LAIcohort[c]= LAIphe[c];
   LAIcohort.attr("names") = above.attr("row.names");
   
-  List DB = List::create(_["PET"] = pet, _["Rain"] = rain, _["NetPrec"] = NetPrec, _["Runon"] = runon, _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
+  List DB = List::create(_["PET"] = pet, _["Rain"] = rain, _["Snow"] = snow, _["NetPrec"] = NetPrec, _["Runon"] = runon, _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
                     _["LAIcell"] = LAIcell, _["LAIcelldead"] = LAIcelldead, _["Cm"] = Cm, _["Lground"] = LgroundPAR);
   List SB = List::create(_["EsoilVec"] = EsoilVec, _["EplantVec"] = EplantVec, _["psiVec"] = psiVec);
   Eplant.attr("names") = above.attr("row.names");
@@ -265,7 +294,7 @@ List spwbDay1(List x, List soil, double tday, double pet, double rain, double er
 // [[Rcpp::export(".spwbDay2")]]
 List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
              double latitude, double elevation, double solarConstant, double delta, 
-             double rain, double er, double runon=0.0, bool verbose = false) {
+             double prec, double er, double runon=0.0, bool verbose = false) {
   
   //Control parameters
   List control = x["control"];
@@ -372,8 +401,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   
   //Daily cloud cover
   double cloudcover = 0.0;
-  if(rain >0.0) cloudcover = 1.0;
-  bool clearday = (rain==0);
+  if(prec >0.0) cloudcover = 1.0;
+  bool clearday = (prec==0);
   
   //1. Leaf Phenology: Adjusted leaf area index
   NumericVector Phe(numCohorts);
@@ -400,6 +429,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   
   
   //2. Hydrologic input
+  double rain = prec;
   double NetPrec = 0.0, Infiltration= 0.0, Runoff= 0.0, DeepDrainage= 0.0;
   double propCover = 1.0-exp(-1.0*LAIcell);
   // double propCoverMax = 1.0-exp(-1.0*LAIcellmax);
@@ -891,7 +921,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   LAI_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   List AbsRadinst = List::create(_["SWR_SH"] = SWR_SH, _["SWR_SL"]=SWR_SL,
                                  _["LWR_SH"] = LWR_SH, _["LWR_SL"] = LWR_SL);
-  List DB = List::create(_["Rain"] = rain,_["NetPrec"] = NetPrec, _["Runon"] = runon, _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
+  List DB = List::create(_["Rain"] = rain,_["Snow"] = 0.0,_["NetPrec"] = NetPrec, _["Runon"] = runon, _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
                          _["LAIcell"] = LAIcell, _["LAIcelldead"] = LAIcelldead, _["Cm"] = Cm, _["Lground"] = 1.0 - propCover);
   List SB = List::create(_["EsoilVec"] = EsoilVec, _["EplantVec"] = EplantVec, _["psiVec"] = psiVec);
   Einst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
@@ -918,7 +948,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
 // [[Rcpp::export("spwb.day")]]
 List spwbDay(List x, List soil, CharacterVector date, int doy, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
             double latitude, double elevation, double slope, double aspect,  
-            double rain, double runon=0.0) {
+            double prec, double runon=0.0) {
   //Control parameters
   List control = x["control"];
   bool verbose = control["verbose"];
@@ -967,12 +997,12 @@ List spwbDay(List x, List soil, CharacterVector date, int doy, double tmin, doub
 
   List s;
   if(transpirationMode=="Simple") {
-    s = spwbDay1(x,soil, tday, pet, rain, er, runon, rad, verbose);
+    s = spwbDay1(x,soil, tday, pet, prec, er, runon, rad, elevation, verbose);
   } else {
     if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; 
     if(wind<0.5) wind = 0.5; //Minimum windspeed abovecanopy
     s = spwbDay2(x,soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation,
-                solarConstant, delta, rain, er, runon, verbose);
+                solarConstant, delta, prec, er, runon, verbose);
   }
   // Rcout<<"hola4\n";
   return(s);
@@ -1265,6 +1295,8 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   NumericVector Cm(numDays);
   NumericVector Lground(numDays);
   NumericVector Runoff(numDays);
+  NumericVector Rain(numDays);
+  NumericVector Snow(numDays);
   NumericVector NetPrec(numDays);
   NumericVector Interception(numDays);
   NumericVector Infiltration(numDays);
@@ -1274,6 +1306,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   NumericMatrix psidays(numDays, nlayers);
   NumericMatrix MLdays(numDays, nlayers);
   NumericVector MLTot(numDays, 0.0);
+  NumericVector SWE(numDays, 0.0);
   
   //EnergyBalance output variables
   NumericVector Tatm_mean(numDays, NA_REAL);
@@ -1344,7 +1377,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
       //2. Water balance and photosynthesis
       if(transpirationMode=="Simple") {
         s = spwbDay1(x, soil, MeanTemperature[i], PET[i], Precipitation[i], ER[i], 0.0, 
-                     Radiation[i], false); //No Runon in simulations for a single cell
+                     Radiation[i], elevation, false); //No Runon in simulations for a single cell
       } else if(transpirationMode=="Complex") {
         int ntimesteps = control["ndailysteps"];
         double tstep = 86400.0/((double) ntimesteps);
@@ -1407,15 +1440,18 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
       DeepDrainage[i] = db["DeepDrainage"];
       Infiltration[i] = db["Infiltration"];
       Runoff[i] = db["Runoff"];
+      Rain[i] = db["Rain"];
+      Snow[i] = db["Snow"];
       NetPrec[i] = db["NetPrec"];
-      Interception[i] = Precipitation[i]-NetPrec[i];
+      Interception[i] = Rain[i]-NetPrec[i];
       
       List sb = s["SoilBalance"];
       NumericVector psi = sb["psiVec"];
       psidays(i,_) = psi;
       NumericVector EplantVec = sb["EplantVec"];
       Esoil[i] = sum(Rcpp::as<Rcpp::NumericVector>(sb["EsoilVec"]));
-      
+      SWE[i] = soil["SWE"];
+        
       List Plants = s["Plants"];
       NumericVector EplantCoh = Plants["EplantCoh"];
       Eplantdays(i,_) = EplantVec;
@@ -1449,6 +1485,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
     double Eplantsum = sum(Eplanttot);
     
     Rcout<<"Total Precipitation (mm) "  <<round(Precipitationsum) <<"\n";
+    Rcout<<"Rain (mm) "  <<round(sum(Rain)) <<" Snow (mm) "  <<round(sum(Snow)) <<"\n";
     Rcout<<"Interception (mm) " << round(Interceptionsum)  <<" Net Prec (mm) " << round(NetPrecsum) <<"\n";
     Rcout<<"Infiltration (mm) " << round(Infiltrationsum)  <<
       " Runoff (mm) " << round(Runoffsum) <<
@@ -1462,10 +1499,11 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   }
   if(verbose) Rcout<<"Building SWB and DWB output ...";
   
-   Rcpp::DataFrame SWB = DataFrame::create(_["W"]=Wdays, _["ML"]=MLdays,_["MLTot"]=MLTot,_["psi"]=psidays);
+   Rcpp::DataFrame SWB = DataFrame::create(_["W"]=Wdays, _["ML"]=MLdays,_["MLTot"]=MLTot,_["psi"]=psidays, _["SWE"] = SWE);
    Rcpp::DataFrame DWB = DataFrame::create(_["GDD"] = GDD,
                                            _["LAIcell"]=LAIcell, _["LAIcelldead"] = LAIcelldead,  _["Cm"]=Cm, _["Lground"] = Lground, _["PET"]=PET, 
-                                           _["Precipitation"] = Precipitation, _["NetPrec"]=NetPrec,_["Infiltration"]=Infiltration, _["Runoff"]=Runoff, _["DeepDrainage"]=DeepDrainage, 
+                                           _["Precipitation"] = Precipitation, _["Rain"] = Rain, _["Snow"] = Snow,
+                                           _["NetPrec"]=NetPrec,_["Infiltration"]=Infiltration, _["Runoff"]=Runoff, _["DeepDrainage"]=DeepDrainage, 
                                            _["Etot"]=Etot,_["Esoil"]=Esoil,
                                            _["Eplanttot"]=Eplanttot,
                                            _["Eplant"]=Eplantdays);
