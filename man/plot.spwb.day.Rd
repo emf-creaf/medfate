@@ -70,7 +70,7 @@ sd2<-spwb.day(x2, examplesoil, rownames(examplemeteo)[d], d ,
              examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
              examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
              latitude = 41.82592, elevation = 100, 
-             slope= 0, aspect = 0, rain = examplemeteo$Precipitation[d])
+             slope= 0, aspect = 0, prec = examplemeteo$Precipitation[d])
 
 #Display transpiration for subdaily steps
 plot(sd2, "PlantTranspiration")

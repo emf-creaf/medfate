@@ -103,7 +103,7 @@ control = defaultControl()
 x = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 
 #Call simulation function
-S1<-spwb(x, examplesoil, examplemeteo)
+S1<-spwb(x, examplesoil, examplemeteo, elevation = 100)
         
 #Plot results
 plot(S1)
