@@ -15,7 +15,7 @@ Function \code{fuel.Stratification} provides a stratification of the stand into 
 fuel.Stratification(object, SpParams, gdd = NA, 
                       heightProfileStep = 10.0, maxHeightProfile = 5000.0,
                       bulkDensityThreshold = 0.05)
-fuel.FCCS(object, ShrubCover, CanopyCover, SpParams, cohortFMC = NULL,
+fuel.FCCS(object, ShrubCover, CanopyCover, SpParams, cohortFMC = as.numeric(c()),
           gdd = NA, heightProfileStep = 10, maxHeightProfile = 5000, 
           bulkDensityThreshold = 0.05)
 fuel.cohortFineFMC(spwb, SpParams)

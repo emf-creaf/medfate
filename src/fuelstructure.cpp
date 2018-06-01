@@ -213,7 +213,7 @@ List fuelLiveStratification(List object, DataFrame SpParams, double gdd = NA_REA
  * FCCS fuel definition
  */
 // [[Rcpp::export("fuel.FCCS")]]
-DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, DataFrame SpParams, NumericVector cohortFMC = R_NilValue, double gdd = NA_REAL, 
+DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, DataFrame SpParams, NumericVector cohortFMC = NumericVector::create(), double gdd = NA_REAL, 
                    double heightProfileStep = 10.0, double maxHeightProfile = 5000, double bulkDensityThreshold = 0.05) {
   List liveStrat = fuelLiveStratification(object, SpParams, gdd, heightProfileStep, maxHeightProfile, bulkDensityThreshold);
   
@@ -340,7 +340,7 @@ DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, Dat
   else maxFMC[1] = NA_REAL;
   
   NumericVector actFMC(5,NA_REAL); //Actual FMC
-  if(!Rf_isNull(cohortFMC)) {
+  if(cohortFMC.size()==cohLoading.size()) {
     if(canopyLoading>0.0) actFMC[0] = layerFuelAverageParameter(200.0, 10000.0, cohortFMC, cohLoading, cohHeight, cohCR);
     else actFMC[0] = NA_REAL;
     if(shrubLoading>0.0) actFMC[1] = layerFuelAverageParameter(0.0, 200.0, cohortFMC, cohLoading, cohHeight, cohCR);

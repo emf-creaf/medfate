@@ -2,16 +2,19 @@
 \name{light}
 \alias{light.layerSunlitFraction}
 \alias{light.layerIrradianceFraction}
+\alias{light.layerIrradianceFractionBottomUp}
 \alias{light.cohortSunlitShadeAbsorbedRadiation}
 \alias{light.instantaneousLightExtinctionAbsortion}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Light extinction and absortion functions}
 \description{
-Function \code{light.layerIrradianceFraction} calculates the fraction of above-canopy irradiance reaching each vegetation layer. Function \code{light.layerSunlitFraction} calculates the proportion of sunlit leaves in each vegetation layer. Function \code{light.cohortSunlitShadeAbsorbedRadiation} calculates the amount of radiation absorved by cohort and vegetation layers, while differentiating between sunlit and shade leaves.
+Functions \code{light.layerIrradianceFraction} and \code{light.layerIrradianceFractionBottomUp} calculate the fraction of above-canopy irradiance (and the soil irradiance, respectively) reaching each vegetation layer. Function \code{light.layerSunlitFraction} calculates the proportion of sunlit leaves in each vegetation layer. Function \code{light.cohortSunlitShadeAbsorbedRadiation} calculates the amount of radiation absorved by cohort and vegetation layers, while differentiating between sunlit and shade leaves.
 }
 \usage{
 light.layerIrradianceFraction(LAIme, LAImd, LAImx, k, alpha, 
+                              trunkExtinctionFraction = 0.1)
+light.layerIrradianceFractionBottomUp(LAIme, LAImd, LAImx, k, alpha, 
                               trunkExtinctionFraction = 0.1)
 light.layerSunlitFraction(LAIme, LAImd, kb)
 light.cohortSunlitShadeAbsorbedRadiation(Ib0, Id0, Ibf, Idf, beta,
@@ -51,7 +54,7 @@ light.instantaneousLightExtinctionAbsortion(LAIme, LAImd, LAImx,
 Function codification adapted from Anten & Bastiaans (2016). Vegetation layers are assumed to be ordered from bottom to top.
 }
 \value{
-Functions \code{light.layerIrradianceFraction} and \code{light.layerSunlitFraction} return a numeric vector of length equal to the number of vegetation layers. Function \code{light.cohortSunlitShadeAbsorbedRadiation} returns a list with two elements (matrices): \code{I_sunlit} and \code{I_shade}.
+Functions \code{light.layerIrradianceFraction}, \code{light.layerIrradianceFractionBottomUp}  and \code{light.layerSunlitFraction} return a numeric vector of length equal to the number of vegetation layers. Function \code{light.cohortSunlitShadeAbsorbedRadiation} returns a list with two elements (matrices): \code{I_sunlit} and \code{I_shade}.
 }
 \references{
 Anten, N.P.R., Bastiaans, L., 2016. The use of canopy models to analyze light competition among plants, in: Hikosaka, K., Niinemets, U., Anten, N.P.R. (Eds.), Canopy Photosynthesis: From Basics to Application. Springer, pp. 379–398.
@@ -75,10 +78,10 @@ gamma_PAR = 0.04
 gamma_SWR = 0.05
 alpha_SWR = 0.7
 
-Ibfpar = light.layerIrradianceFraction(LAIlayerlive,LAIlayerdead,kb, alpha_PAR)
-Idfpar = light.layerIrradianceFraction(LAIlayerlive,LAIlayerdead,kd_PAR, alpha_PAR)
-Ibfswr = light.layerIrradianceFraction(LAIlayerlive,LAIlayerdead,kb, alpha_SWR)
-Idfswr = light.layerIrradianceFraction(LAIlayerlive,LAIlayerdead,kd_SWR, alpha_SWR)
+Ibfpar = light.layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayerlive,kb, alpha_PAR)
+Idfpar = light.layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayerlive,kd_PAR, alpha_PAR)
+Ibfswr = light.layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayerlive,kb, alpha_SWR)
+Idfswr = light.layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayerlive,kd_SWR, alpha_SWR)
 fsunlit = light.layerSunlitFraction(LAIlayerlive, LAIlayerdead, kb)
 SHarea = (1-fsunlit)*LAIlayerlive[,1] 
 SLarea = fsunlit*LAIlayerlive[,1] 

@@ -9,7 +9,7 @@ Function \code{spwb.day} performs water balance for a single day.
 }
 \usage{
 spwb.day(x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind, 
-        latitude, elevation, slope, aspect, rain, runon = 0.0)
+        latitude, elevation, slope, aspect, prec, runon = 0.0)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -21,7 +21,7 @@ spwb.day(x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind,
   \item{rhmin, rhmax}{Minimum and maximum relative humidity (in percent).}
   \item{rad}{Solar radiation (in MJ/m2/day).}
   \item{wind}{Wind speed (in m/s).}
-  \item{rain}{Precipitation (in mm).}
+  \item{prec}{Precipitation (in mm).}
   \item{runon}{Surface water amount running on the target area from upslope (in mm).}
   \item{latitude}{Latitude (in degrees). Required when using the 'Complex' transpiration mode.}
   \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when using the 'Complex' transpiration mode.}

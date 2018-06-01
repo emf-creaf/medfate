@@ -14,8 +14,9 @@ A data set of parameter values for Mediterranean species, resulting from bibliog
   \describe{
     \item{\code{Name}}{A factor with taxon names (mostly species names).}
     \item{\code{IFNcodes}}{A factor with levels corresponding to species codes in the Third Spanish forest inventory (DGCN 2005.)}
-    \item{\code{SpIndex}}{A numeric vector of the species index}
-    \item{\code{GrowthForm}}{A factor with levels \code{Shrub}, \code{Tree} and \code{Tree/Shrub}}
+    \item{\code{SpIndex}}{A numeric vector of the species index.}
+    \item{\code{Group}}{Either "Gymnosperm" or "Angiosperm".}
+    \item{\code{GrowthForm}}{A factor with levels \code{Shrub}, \code{Tree} and \code{Tree/Shrub}.}
     \item{\code{Hmed}}{Median plant height (in cm).}
     \item{\code{Hmax}}{Maximum plant height (in cm).}
     \item{\code{Zmax}}{Maximum rooting depth (in mm).}

@@ -145,11 +145,11 @@ double coarse100hday(double m0,
 /**
 * Translates soil water balance results to fuel moisture content of plant cohorts.
 * 
-*   swb - The output of soil water balance
+*   spwb - The output of soil water balance
 *   SpParams - A data frame with species parameters
 */
 // [[Rcpp::export("fuel.cohortFineFMC")]]
-NumericMatrix cohortFineFuelMoistureContent(List swb, DataFrame SpParams) {
+NumericMatrix cohortFineFuelMoistureContent(List spwb, DataFrame SpParams) {
   //Initialize other cohort-based variables
   NumericVector maxFMCSP = SpParams["maxFMC"];
   NumericVector WoodDensSP = SpParams["WoodDens"];
@@ -159,13 +159,13 @@ NumericMatrix cohortFineFuelMoistureContent(List swb, DataFrame SpParams) {
   NumericVector LeafPI0SP = SpParams["LeafPI0"];
   NumericVector LeafEPSSP = SpParams["LeafEPS"];
   NumericVector LeafAFSP = SpParams["LeafAF"];
-  NumericMatrix plantpsi = Rcpp::as<Rcpp::NumericMatrix>(swb["PlantPsi"]);
+  NumericMatrix plantpsi = Rcpp::as<Rcpp::NumericMatrix>(spwb["PlantPsi"]);
   List l = plantpsi.attr("dimnames");
   CharacterVector days = l[0];
   CharacterVector cohNames = l[1];
   int numDays = plantpsi.nrow();
   int numCohorts = plantpsi.ncol();
-  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(swb["cohorts"]);
+  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(spwb["cohorts"]);
   IntegerVector SP = Rcpp::as<Rcpp::IntegerVector>(cohorts["SP"]);
   
   NumericMatrix cohortFMC(numDays, numCohorts);

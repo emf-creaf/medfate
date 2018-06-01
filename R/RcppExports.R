@@ -221,8 +221,8 @@ forest2belowground <- function(x, soil, SpParams) {
     .Call('_medfate_EMCSimard', PACKAGE = 'medfate', fuelTemperature, fuelHumidity)
 }
 
-fuel.cohortFineFMC <- function(swb, SpParams) {
-    .Call('_medfate_cohortFineFuelMoistureContent', PACKAGE = 'medfate', swb, SpParams)
+fuel.cohortFineFMC <- function(spwb, SpParams) {
+    .Call('_medfate_cohortFineFuelMoistureContent', PACKAGE = 'medfate', spwb, SpParams)
 }
 
 .woodyFuelProfile <- function(z, x, SpParams, gdd = NA_real_) {
@@ -257,7 +257,7 @@ fuel.Stratification <- function(object, SpParams, gdd = NA_real_, heightProfileS
     .Call('_medfate_fuelLiveStratification', PACKAGE = 'medfate', object, SpParams, gdd, heightProfileStep, maxHeightProfile, bulkDensityThreshold)
 }
 
-fuel.FCCS <- function(object, ShrubCover, CanopyCover, SpParams, cohortFMC = NULL, gdd = NA_real_, heightProfileStep = 10.0, maxHeightProfile = 5000, bulkDensityThreshold = 0.05) {
+fuel.FCCS <- function(object, ShrubCover, CanopyCover, SpParams, cohortFMC = as.numeric( c()), gdd = NA_real_, heightProfileStep = 10.0, maxHeightProfile = 5000, bulkDensityThreshold = 0.05) {
     .Call('_medfate_FCCSproperties', PACKAGE = 'medfate', object, ShrubCover, CanopyCover, SpParams, cohortFMC, gdd, heightProfileStep, maxHeightProfile, bulkDensityThreshold)
 }
 

@@ -733,14 +733,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // cohortFineFuelMoistureContent
-NumericMatrix cohortFineFuelMoistureContent(List swb, DataFrame SpParams);
-RcppExport SEXP _medfate_cohortFineFuelMoistureContent(SEXP swbSEXP, SEXP SpParamsSEXP) {
+NumericMatrix cohortFineFuelMoistureContent(List spwb, DataFrame SpParams);
+RcppExport SEXP _medfate_cohortFineFuelMoistureContent(SEXP spwbSEXP, SEXP SpParamsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type swb(swbSEXP);
+    Rcpp::traits::input_parameter< List >::type spwb(spwbSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
-    rcpp_result_gen = Rcpp::wrap(cohortFineFuelMoistureContent(swb, SpParams));
+    rcpp_result_gen = Rcpp::wrap(cohortFineFuelMoistureContent(spwb, SpParams));
     return rcpp_result_gen;
 END_RCPP
 }
