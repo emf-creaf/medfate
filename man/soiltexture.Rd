@@ -74,7 +74,7 @@ type = soil.USDAType(clay=40, sand=10)
 type
 
 #Van Genuchten's params (bulk density = 1.3 g/cm)
-vg = soil.vanGenuchtenParamsToth(40,10,1,1.3,T)
+vg = soil.vanGenuchtenParamsToth(40,10,1,1.3,TRUE)
 vg
 
 #Add Van Genuchten water retention curve 
