@@ -1,6 +1,9 @@
 spwbpoints<-function(y, SpParams, meteo, control = defaultControl(), dates = NULL, summaryFunction=NULL, args=NULL) {
   
   #Check input
+  if(!inherits(y,"SpatialPointsLandscape")) 
+    stop("'y' has to be of class 'SpatialPointsLandscape'.")
+  
   if(!inherits(meteo,"data.frame") && 
      !inherits(meteo,"SpatialPointsMeteorology") && 
      !inherits(meteo,"SpatialPointsDataFrame")) 

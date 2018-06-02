@@ -1,45 +1,31 @@
 \encoding{UTF-8}
 \name{SpatialPointsLandscape}
 \alias{SpatialPointsLandscape}
+\alias{SpatialPixelsLandscape}
 \alias{SpatialGridLandscape}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Creates Spatial Forest Classes
+Creates Spatial Landscape Classes
 }
 \description{
-Functions to create spatial forest classes from Spanish Forest Inventory (SFI) data (see details). Internally, these functions make calls to \code{\link{extractSFIforest}}.
+Functions to initialize spatial landscape classes.
 }
 \usage{
-SpatialPointsLandscape(SFItreeData, SFIshrubData, SFIherbData = NULL,
-                    SpatialPointsIDs, elevation, slope, aspect, SpParams, 
-                    SoilParamData = NULL, SFIcodes=NULL, control = defaultControl())
-SpatialGridLandscape(landTopo, SFItreeData, SFIshrubData, SpatialPointsIDs, 
-                SpParams, SoilParamData = NULL, lctInput, 
-                forestLCTs, shrublandLCTs, grasslandLCTs, agricultureLCTs= numeric(0), 
-                rockLCTs= numeric(0), staticLCTs= numeric(0),
-                SFIcodes=NULL, FMcodes = NULL, control = defaultControl())
+SpatialPointsLandscape(spt, forestlist, soillist)
+SpatialPixelsLandscape(spxt, ltc, forestlist, soillist)
+SpatialGridLandscape(sgt, ltc, forestlist, soillist)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{landTopo}{An object of class \code{\link{SpatialGridTopography}}.}
-  \item{SFItreeData}{A data frame with measured tree data.}
-  \item{SFIshrubData}{A data frame with measured shrub data.}
-  \item{SFIherbData}{A data frame with percent cover and mean height of the herb layer.}
-  \item{SpatialPointsIDs}{An object of class \code{\link{SpatialPoints-class}} containing the coordinates of the forest plots. Coordinates must include row names corresponding to plot IDs.}
-  \item{elevation}{A numeric vector with elevation values (in m).}
-  \item{slope}{A numeric vector with slope values (in degrees).}
-  \item{aspect}{A numeric vector with aspect values (in degrees from North).}
-  \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
-  \item{SoilParamData}{A data frame with soil parameters for each forest stand. The rows must match \code{SpatialPointsIDs} or \code{SpatialGridIDs}, depending on the function called. If \code{NULL}, then the parameters given by \code{\link{defaultSoilParams}} are used.}
-  \item{SFIcodes}{A string vector (of length equal to the number of rows in \code{SpParams} of the SFI species codes that correspond to the model species codification. Each string may contain different coma-separated codes in order to merge SFI species into a single model species.}
-  \item{FMcodes}{A string vector with the fuel model code corresponding to each forest plot. Names of this string vector should be plot IDs.}
-  \item{control}{A list of control parameters (see \code{\link{defaultControl}}).}
-  \item{lctInput}{A character vector with the land cover type input for initialization of unsurveyed cells.}
-  \item{forestLCTs, shrublandLCTs, grasslandLCTs}{Integer vectors with the land cover types that are to be considered 'wildland' (i.e. forests, shrublands or grasslands). Initialization of forest and shrublands cells will make use of SFI plot data, but in shrublands only shrubs are used. Initialization of grasslands specifies an \code{\link{emptyforest}}.}
-  \item{agricultureLCTs, rockLCTs, staticLCTs}{Integer vectors with the land cover types that are to be considered 'agriculture', 'rock' (i.e. outcrops) or 'static' (i.e. urban, water masses). Agricultural areas are like grasslands, but they can never be vegetated with wildland. Rock cells allow surface water flow over them, but do not contain vegetation nor soil and cannot be burned. Static cells do not burn and water entering them does not flow to any other cell.}
+  \item{spt}{An object of class \code{\link{SpatialPointsTopography}}.}
+  \item{spxt}{An object of class \code{\link{SpatialPixelsTopography}}.}
+  \item{sgt}{An object of class \code{\link{SpatialGridTopography}}.}
+  \item{lct}{A character vector with the land cover type of each grid cell (values should be 'wildland', 'agriculture', 'rock' or 'static').}
+  \item{forestlist}{A list of objects of class 'forest' with the same number of elements as spatial points/pixels.}
+  \item{soillist}{A list of objects of class 'forest' with the same number of elements as spatial points/pixels.}
 }
 \value{
-An object of class \code{\link{SpatialPointsLandscape-class}} or \code{\link{SpatialGridLandscape-class}} depending on the function.
+An object of class \code{\link{SpatialPointsLandscape-class}}, \code{\link{SpatialPixelsLandscape-class}} or \code{\link{SpatialGridLandscape-class}} depending on the function.
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya

@@ -1,4 +1,4 @@
-SpatialPointsForest<-function(SFItreeData, SFIshrubData, SFIherbData=NULL, SpatialPointsIDs, 
+SFI2SPL<-function(SFItreeData, SFIshrubData, SFIherbData=NULL, SpatialPointsIDs, 
                               elevation, slope, aspect,
                               SpParams, SoilParamData = NULL, 
                               SFIcodes=NULL, 
@@ -36,7 +36,7 @@ SpatialPointsForest<-function(SFItreeData, SFIshrubData, SFIherbData=NULL, Spati
   }
   if(control$verbose) cat(" - done.\n")
   
-  sfp = new("SpatialPointsForest", 
+  sfp = new("SpatialPointsLandscape", 
           forestlist = forestlist, 
           soillist = soillist,
           data = data.frame(elevation = elevation, slope = slope, aspect = aspect),
