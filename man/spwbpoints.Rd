@@ -40,5 +40,26 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 \seealso{
 \code{\link{spwb}}, \code{\link{growth}}, \code{\link{SpatialPointsForest-class}}
 }
+\examples{
+# Load spatial points forest object
+data("exampleSPF")
+
+#Load meteorological data (the same will be used for all points)
+data("examplemeteo")
+
+#Load species parameters
+data("SpParamsMED")
+
+# Deactivate extra console output
+control = defaultControl()
+control$verbose = FALSE
+
+# Run simulation for each forest plot
+res <- spwbpoints(exampleSPF, SpParamsMED, examplemeteo, control = control)
+
+#Extract summaries for a given forest plot
+summary(res$result$`80013`, freq="months",FUN=sum, 
+        output="PlantStress", bySpecies = TRUE)
+}
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

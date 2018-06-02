@@ -151,9 +151,9 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
       if(NumericVector::is_na(rad)) stop("Missing radiation data for snow melt!");
       if(NumericVector::is_na(elevation)) stop("Missing elevation data for snow melt!");
       double rho = meteoland::utils_airDensity(tday, meteoland::utils_atmosphericPressure(elevation));
-      double ten = (86400*std::max(0.0,tday)*rho*1013.86*pow(10,-6.0)/100.0);
+      double ten = (86400*tday*rho*1013.86*pow(10,-6.0)/100.0); //ten can be negative if temperature is below zero
       double ren = (rad*LgroundSWR)*(0.1); //90% albedo of snow
-      melt = (ren+ten)/0.33355;
+      melt = std::max(0.0,(ren+ten)/0.33355); //Do not allow negative melting values
       // Rcout<<" swe: "<< swe<<" temp: "<<ten<< " rad: "<< ren << " melt : "<< melt<<"\n";
       swe = std::max(0.0, swe-melt);
     }
