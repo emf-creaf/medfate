@@ -1,4 +1,4 @@
-SpatialPixelsLandscape<-function(spxt, lct, forestlist, soillist) {
+SpatialPixelsLandscape<-function(spxt, lct, forestlist, soillist, verbose=TRUE) {
   #check input
   if(!inherits(spxt,"SpatialPixelsTopography")) 
     stop("'spxt' has to be of class 'SpatialPixelsTopography'.")
@@ -12,11 +12,11 @@ SpatialPixelsLandscape<-function(spxt, lct, forestlist, soillist) {
   coords = coordinates(grid)
   elevation = spxt@data$elevation
   
-  if(control$verbose==TRUE) cat(" - Queen neighbours")
+  if(verbose) cat(" - Queen neighbours")
   queenNeigh = cell2nb(grid@cells.dim[1],grid@cells.dim[2], type="queen")
   class(queenNeigh)<-"list"
   
-  if(control$verbose==TRUE) cat(" - Water discharge order")
+  if(verbose) cat(" - Water discharge order")
   waterOrder = order(elevation, decreasing=TRUE)
   waterQ = vector("list", length(queenNeigh))
   qfun<-function(xi, yi, zi, X, Y, Z) {
@@ -33,7 +33,7 @@ SpatialPixelsLandscape<-function(spxt, lct, forestlist, soillist) {
     waterQ[[i]] = qfun(xi = coords[i,1], yi=coords[i,2],zi = elevation[i],
                        X = coords[wne,1], Y = coords[wne,2], Z = elevation[wne])
   }  
-  if(control$verbose==TRUE) cat(" - done.\n")
+  if(verbose) cat(" - done.\n")
   
   
   spxl = new("SpatialPixelsLandscape",

@@ -39,4 +39,4 @@ DGCN (2005). Tercer Inventario Forestal Nacional (1997-2007): Catalunya. Direcci
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
-\seealso{\code{\link{SpatialPointsForest}}, \code{\link{forest}}}
+\seealso{\code{\link{SFI2SPL}}, \code{\link{forest}}}

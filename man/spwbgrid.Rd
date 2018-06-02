@@ -4,9 +4,9 @@
 \alias{plot.spwbgrid}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{Soil water balance and lateral water discharge}
+\title{Soil-plant water balance and lateral water discharge}
 \description{
-Function \code{spwbgrid} conducts daily soil water balance over a grid of cells while incorporating water runoff from upperslope cells into the current cell.
+Function \code{spwbgrid} conducts daily soil and plant water balance over a grid of cells while incorporating water runoff from upperslope cells into the current cell.
 }
 \usage{
 spwbgrid(y, SpParams, meteo, dates, 
@@ -15,7 +15,7 @@ spwbgrid(y, SpParams, meteo, dates,
 \method{plot}{spwbgrid}(x, type = "Runon", summaryIndex = 1, spIndex = NULL, ...)
 }
 \arguments{
-  \item{y}{An object of class \code{\link{SpatialGridForest-class}}.}
+  \item{y}{An object of class \code{\link{SpatialGridLandscape-class}}.}
   \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
   \item{meteo}{A \code{\link{SpatialGridMeteorology-class}} object or a data frame with two columns: 'dir' and 'filename, to indicate the path to the meteorological data.}
   \item{dates}{A \code{\link{Date}} object describing the days of the period to be modeled.}
@@ -57,5 +57,5 @@ The same list contains two three-dimensional arrays (each with dimensions number
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya.
 }
 \seealso{
-\code{\link{spwb}}, \code{\link{spwbpoints}}, \code{\link{SpatialGridForest-class}}
+\code{\link{spwb}}, \code{\link{spwbpoints}}, \code{\link{SpatialGridLandscape-class}}
 }

@@ -1,4 +1,4 @@
-SpatialGridLandscape<-function(sgt, lct, forestlist, soillist) {
+SpatialGridLandscape<-function(sgt, lct, forestlist, soillist, verbose=TRUE) {
   #check input
   if(!inherits(sgt,"SpatialGridTopography")) 
     stop("'sgt' has to be of class 'SpatialGridTopography'.")
@@ -12,11 +12,11 @@ SpatialGridLandscape<-function(sgt, lct, forestlist, soillist) {
   coords = coordinates(grid)
   elevation = sgt@data$elevation
   
-  if(control$verbose==TRUE) cat(" - Queen neighbours")
+  if(verbose) cat(" - Queen neighbours")
   queenNeigh = cell2nb(grid@cells.dim[1],grid@cells.dim[2], type="queen")
   class(queenNeigh)<-"list"
   
-  if(control$verbose==TRUE) cat(" - Water discharge order")
+  if(verbose) cat(" - Water discharge order")
   waterOrder = order(elevation, decreasing=TRUE)
   waterQ = vector("list", length(queenNeigh))
   qfun<-function(xi, yi, zi, X, Y, Z) {
@@ -33,7 +33,7 @@ SpatialGridLandscape<-function(sgt, lct, forestlist, soillist) {
     waterQ[[i]] = qfun(xi = coords[i,1], yi=coords[i,2],zi = elevation[i],
                        X = coords[wne,1], Y = coords[wne,2], Z = elevation[wne])
   }  
-  if(control$verbose==TRUE) cat(" - done.\n")
+  if(verbose) cat(" - done.\n")
   
   
   sgl = new("SpatialGridLandscape",
