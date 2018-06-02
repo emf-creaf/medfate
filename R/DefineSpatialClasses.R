@@ -1,15 +1,17 @@
-setClass("SpatialPointsForest", slots=list(forestlist="list", 
-                                           soillist = "list"), 
-                                           contains="SpatialPointsTopography")
-setClass("SpatialGridForest", slots=list(lct="character", forestlist="list", 
-                                         soillist = "list"), contains="SpatialGridTopography")
-setClass("SpatialPixelsForest", slots=list(lct="character", forestlist="list", 
-                                         soillist = "list"), contains="SpatialPixelsTopography")
+setClass("SpatialPointsLandscape", 
+         slots=list(forestlist="list", soillist = "list"), 
+         contains="SpatialPointsTopography")
+setClass("SpatialGridLandscape", 
+         slots=list(lct="character", forestlist="list", soillist = "list"), 
+         contains="SpatialGridTopography")
+setClass("SpatialPixelsLandscape", 
+         slots=list(lct="character", forestlist="list", soillist = "list"), 
+         contains="SpatialPixelsTopography")
 
 setGeneric("spatialSoilSummary", valueClass ="Spatial", function(object, summaryFunction, ...){
   standardGeneric("spatialSoilSummary")
 })
-setMethod("spatialSoilSummary", signature("SpatialPointsForest"), function(object, summaryFunction, ...) {
+setMethod("spatialSoilSummary", signature("SpatialPointsLandscape"), function(object, summaryFunction, ...) {
   l = object@soillist
   if(length(l)==0) return(NULL)
   firstNoNa = which(!unlist(lapply(l,is.na)))[1]
@@ -25,7 +27,7 @@ setMethod("spatialSoilSummary", signature("SpatialPointsForest"), function(objec
                                 proj4string=object@proj4string, 
                                 bbox = object@bbox))
 })
-setMethod("spatialSoilSummary", signature("SpatialGridForest"), function(object, summaryFunction, ...) {
+setMethod("spatialSoilSummary", signature("SpatialGridLandscape"), function(object, summaryFunction, ...) {
   l = object@soillist
   if(length(l)==0) return(NULL)
   firstNoNa = which(!unlist(lapply(l,is.na)))[1]
@@ -40,10 +42,12 @@ setMethod("spatialSoilSummary", signature("SpatialGridForest"), function(object,
   return(SpatialGridDataFrame(grid = object@grid, data = s, 
                               proj4string=object@proj4string))
 })
-setGeneric("spatialForestSummary", valueClass ="Spatial", function(object, summaryFunction, ...){
-  standardGeneric("spatialForestSummary")
+setGeneric("spatialForestSummary", valueClass ="Spatial", 
+           function(object, summaryFunction, ...){
+             standardGeneric("spatialForestSummary")
 })
-setMethod("spatialForestSummary", signature("SpatialPointsForest"), function(object, summaryFunction, ...) {
+setMethod("spatialForestSummary", signature("SpatialPointsLandscape"), 
+          function(object, summaryFunction, ...) {
   l = object@forestlist
   if(length(l)==0) return(NULL)
   firstNoNa = which(!unlist(lapply(l,is.na)))[1]
@@ -59,7 +63,8 @@ setMethod("spatialForestSummary", signature("SpatialPointsForest"), function(obj
                                 proj4string=object@proj4string, 
                                 bbox = object@bbox))
 })
-setMethod("spatialForestSummary", signature("SpatialGridForest"), function(object, summaryFunction, ...) {
+setMethod("spatialForestSummary", 
+          signature("SpatialGridLandscape"), function(object, summaryFunction, ...) {
   l = object@forestlist
   if(length(l)==0) return(NULL)
   firstNoNa = which(!unlist(lapply(l,is.na)))[1]
@@ -75,7 +80,7 @@ setMethod("spatialForestSummary", signature("SpatialGridForest"), function(objec
                                 proj4string=object@proj4string))
 })
 
-setMethod("[", signature("SpatialPointsForest"),definition =
+setMethod("[", signature("SpatialPointsLandscape"),definition =
             function (x, i, j, ..., drop = TRUE) 
             {
               if (!missing(j)) 
@@ -117,7 +122,8 @@ setMethod("[", signature("SpatialPointsForest"),definition =
 #                               data=data.frame(LCT=object@lct), 
 #                               proj4string=object@proj4string))
 # })
-setMethod("spplot", signature("SpatialGridForest"), function(obj, type = "lct", ...) {  
+setMethod("spplot", signature("SpatialGridLandscape"), 
+          function(obj, type = "lct", ...) {  
   if(type=="lct") {
     spplot(SpatialGridDataFrame(obj@grid, data.frame(lct = obj@lct)),...)
   }

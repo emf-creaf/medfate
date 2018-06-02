@@ -1,15 +1,15 @@
 \encoding{UTF-8}
-\name{SpatialGridForest-class}
+\name{SpatialGridLandscape-class}
 \Rdversion{1.1}
 \docType{class}
-\alias{SpatialGridForest-class}
+\alias{SpatialGridLandscape-class}
 
-\title{Class \code{"SpatialGridForest"}}
+\title{Class \code{"SpatialGridLandscape"}}
 \description{
-An S4 class that represents a set of forest stands located over a grid of coordinates.
+An S4 class that represents a landscape configuration over a grid of coordinates.
 }
 \section{Objects from the Class}{
-Objects can be created by calls of the form \code{new("SpatialGridForest", ...)}, or by calls to the function \code{\link{SpatialGridForest}}.
+Objects can be created by calls of the form \code{new("SpatialGridLandscape", ...)}, or by calls to the function \code{\link{SpatialGridLandscape}}.
 }
 \section{Slots}{
   \describe{
@@ -30,10 +30,10 @@ Class \code{"\linkS4class{Spatial}"}, by class "SpatialGrid", distance 4.
 }
 \section{Methods}{
   \describe{
-    \item{getLCTs}{\code{signature(object = "SpatialGridForest")}: returns a SpatialGridDataFrame with the land cover types of the landscape cells.}
-    \item{spatialForestSummary}{\code{signature(object = "SpatialGridForest")}: calculates a summary function for all forest stands and returns an object of class \code{\link{SpatialGridDataFrame-class}}. }
-    \item{spatialSoilSummary}{\code{signature(object = "SpatialGridForest")}: calculates a summary function for the soil of all stands and returns an object of class \code{\link{SpatialGridDataFrame-class}}. }
-    \item{spplot}{\code{signature(object = "SpatialGridForest")}: allows plotting maps of the landscape state.}
+    \item{getLCTs}{\code{signature(object = "SpatialGridLandscape")}: returns a SpatialGridDataFrame with the land cover types of the landscape cells.}
+    \item{spatialForestSummary}{\code{signature(object = "SpatialGridLandscape")}: calculates a summary function for all forest stands and returns an object of class \code{\link{SpatialGridDataFrame-class}}. }
+    \item{spatialSoilSummary}{\code{signature(object = "SpatialGridLandscape")}: calculates a summary function for the soil of all stands and returns an object of class \code{\link{SpatialGridDataFrame-class}}. }
+    \item{spplot}{\code{signature(object = "SpatialGridLandscape")}: allows plotting maps of the landscape state.}
 	 }
 }
 
@@ -42,10 +42,10 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 
 \seealso{
-\code{\link{SpatialGridTopography-class}}, \code{\link{SpatialPointsForest-class}}, \code{\link{spatialForestSummary}}, \code{\link{forest}}, \code{\link{soil}}
+\code{\link{SpatialGridTopography-class}}, \code{\link{SpatialPointsLandscape-class}}, \code{\link{spatialForestSummary}}, \code{\link{forest}}, \code{\link{soil}}
 }
 \examples{
 #Structure of the S4 object
-showClass("SpatialGridForest")
+showClass("SpatialGridLandscape")
 }
 \keyword{classes}

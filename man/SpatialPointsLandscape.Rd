@@ -1,7 +1,7 @@
 \encoding{UTF-8}
-\name{SpatialPointsForest}
-\alias{SpatialPointsForest}
-\alias{SpatialGridForest}
+\name{SpatialPointsLandscape}
+\alias{SpatialPointsLandscape}
+\alias{SpatialGridLandscape}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Creates Spatial Forest Classes
@@ -10,10 +10,10 @@ Creates Spatial Forest Classes
 Functions to create spatial forest classes from Spanish Forest Inventory (SFI) data (see details). Internally, these functions make calls to \code{\link{extractSFIforest}}.
 }
 \usage{
-SpatialPointsForest(SFItreeData, SFIshrubData, SFIherbData = NULL,
+SpatialPointsLandscape(SFItreeData, SFIshrubData, SFIherbData = NULL,
                     SpatialPointsIDs, elevation, slope, aspect, SpParams, 
                     SoilParamData = NULL, SFIcodes=NULL, control = defaultControl())
-SpatialGridForest(landTopo, SFItreeData, SFIshrubData, SpatialPointsIDs, 
+SpatialGridLandscape(landTopo, SFItreeData, SFIshrubData, SpatialPointsIDs, 
                 SpParams, SoilParamData = NULL, lctInput, 
                 forestLCTs, shrublandLCTs, grasslandLCTs, agricultureLCTs= numeric(0), 
                 rockLCTs= numeric(0), staticLCTs= numeric(0),
@@ -39,7 +39,7 @@ SpatialGridForest(landTopo, SFItreeData, SFIshrubData, SpatialPointsIDs,
   \item{agricultureLCTs, rockLCTs, staticLCTs}{Integer vectors with the land cover types that are to be considered 'agriculture', 'rock' (i.e. outcrops) or 'static' (i.e. urban, water masses). Agricultural areas are like grasslands, but they can never be vegetated with wildland. Rock cells allow surface water flow over them, but do not contain vegetation nor soil and cannot be burned. Static cells do not burn and water entering them does not flow to any other cell.}
 }
 \value{
-An object of class \code{\link{SpatialPointsForest-class}} or \code{\link{SpatialGridForest-class}} depending on the function.
+An object of class \code{\link{SpatialPointsLandscape-class}} or \code{\link{SpatialGridLandscape-class}} depending on the function.
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya

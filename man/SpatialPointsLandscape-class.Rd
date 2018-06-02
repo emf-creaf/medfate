@@ -1,16 +1,16 @@
 \encoding{UTF-8}
-\name{SpatialPointsForest-class}
+\name{SpatialPointsLandscape-class}
 \Rdversion{1.1}
 \docType{class}
-\alias{SpatialPointsForest-class}
-\alias{[,SpatialPointsForest,ANY,ANY,ANY-method}
+\alias{SpatialPointsLandscape-class}
+\alias{[,SpatialPointsLandscape,ANY,ANY,ANY-method}
 
-\title{Class \code{"SpatialPointsForest"}}
+\title{Class \code{"SpatialPointsLandscape"}}
 \description{
 An S4 class that represents a set of forest stands along with their spatial location
 }
 \section{Objects from the Class}{
-Objects can be created by calls of the form \code{new("SpatialPointsForest", ...)} or by calls to function \code{\link{SpatialPointsForest}}.
+Objects can be created by calls of the form \code{new("SpatialPointsLandscape", ...)} or by calls to function \code{\link{SpatialPointsLandscape}}.
 }
 \section{Slots}{
   \describe{
@@ -31,8 +31,8 @@ Class \code{"\linkS4class{Spatial}"}, by class "SpatialPoints", distance 4.
 \section{Methods}{
   \describe{
     \item{[}{\code{signature(x = "SpatialPointsTopography", i = "ANY", j = "ANY", drop = "ANY")}: subsets the points, the corresponding topography data, and the forest and soil lists; only rows (points can be subsetted.}
-    \item{spatialForestSummary}{\code{signature(object = "SpatialPointsForest")}: calculates a summary function for all forest stands and returns an object of class \code{\link{SpatialPointsDataFrame-class}}. }
-    \item{spatialSoilSummary}{\code{signature(object = "SpatialPointsForest")}: calculates a summary function for the soil of all stands and returns an object of class \code{\link{SpatialPointsDataFrame-class}}. }
+    \item{spatialForestSummary}{\code{signature(object = "SpatialPointsLandscape")}: calculates a summary function for all forest stands and returns an object of class \code{\link{SpatialPointsDataFrame-class}}. }
+    \item{spatialSoilSummary}{\code{signature(object = "SpatialPointsLandscape")}: calculates a summary function for the soil of all stands and returns an object of class \code{\link{SpatialPointsDataFrame-class}}. }
  }
 }
 
@@ -43,9 +43,9 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{SpatialPointsTopography}}, \code{\link{SpatialPointsForest}}, \code{\link{SpatialGridForest}}, \code{\link{spatialForestSummary}}, \code{\link{forest}}
+\code{\link{SpatialPointsTopography}}, \code{\link{SpatialPointsLandscape}}, \code{\link{SpatialGridLandscape}}, \code{\link{spatialForestSummary}}, \code{\link{forest}}
 }
 \examples{
-showClass("SpatialPointsForest")
+showClass("SpatialPointsLandscape")
 }
 \keyword{classes}

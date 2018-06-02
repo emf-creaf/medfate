@@ -1,15 +1,15 @@
 \encoding{UTF-8}
-\name{SpatialPixelsForest-class}
+\name{SpatialPixelsLandscape-class}
 \Rdversion{1.1}
 \docType{class}
-\alias{SpatialPixelsForest-class}
+\alias{SpatialPixelsLandscape-class}
 
-\title{Class \code{"SpatialPixelsForest"}}
+\title{Class \code{"SpatialPixelsLandscape"}}
 \description{
-An S4 class that represents a set of forest stands located over a grid of coordinates.
+An S4 class that represents a landscape configuration over an (incomplete) grid of coordinates.
 }
 \section{Objects from the Class}{
-Objects can be created by calls of the form \code{new("SpatialPixelsForest", ...)}.
+Objects can be created by calls of the form \code{new("SpatialPixelsLandscape", ...)}.
 }
 \section{Slots}{
   \describe{
@@ -32,10 +32,10 @@ Class \code{"\linkS4class{Spatial}"}, by class "SpatialPixelsTopography", distan
 }
 \section{Methods}{
   \describe{
-    \item{getLCTs}{\code{signature(object = "SpatialPixelsForest")}: returns a SpatialPixelsDataFrame with the land cover types of the landscape cells.}
-    \item{spatialForestSummary}{\code{signature(object = "SpatialPixelsForest")}: calculates a summary function for all forest stands and returns an object of class \code{\link{SpatialPixelsDataFrame-class}}. }
-    \item{spatialSoilSummary}{\code{signature(object = "SpatialPixelsForest")}: calculates a summary function for the soil of all stands and returns an object of class \code{\link{SpatialPixelsDataFrame-class}}. }
-    \item{spplot}{\code{signature(object = "SpatialPixelsForest")}: allows plotting maps of the landscape state.}
+    \item{getLCTs}{\code{signature(object = "SpatialPixelsLandscape")}: returns a SpatialPixelsDataFrame with the land cover types of the landscape cells.}
+    \item{spatialForestSummary}{\code{signature(object = "SpatialPixelsLandscape")}: calculates a summary function for all forest stands and returns an object of class \code{\link{SpatialPixelsDataFrame-class}}. }
+    \item{spatialSoilSummary}{\code{signature(object = "SpatialPixelsLandscape")}: calculates a summary function for the soil of all stands and returns an object of class \code{\link{SpatialPixelsDataFrame-class}}. }
+    \item{spplot}{\code{signature(object = "SpatialPixelsLandscape")}: allows plotting maps of the landscape state.}
 	 }
 }
 
@@ -44,10 +44,10 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 
 \seealso{
-\code{\link{SpatialPixelsTopography-class}}, \code{\link{SpatialPointsForest-class}}, \code{\link{spatialForestSummary}}, \code{\link{forest}}, \code{\link{soil}}
+\code{\link{SpatialPixelsTopography-class}}, \code{\link{SpatialPointsLandscape-class}}, \code{\link{spatialForestSummary}}, \code{\link{forest}}, \code{\link{soil}}
 }
 \examples{
 #Structure of the S4 object
-showClass("SpatialPixelsForest")
+showClass("SpatialPixelsLandscape")
 }
 \keyword{classes}
