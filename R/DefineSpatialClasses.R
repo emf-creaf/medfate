@@ -2,10 +2,14 @@ setClass("SpatialPointsLandscape",
          slots=list(forestlist="list", soillist = "list"), 
          contains="SpatialPointsTopography")
 setClass("SpatialGridLandscape", 
-         slots=list(lct="character", forestlist="list", soillist = "list"), 
+         slots=list(lct="character", forestlist="list", soillist = "list",
+                    waterOrder = "numeric", waterQ = "list", 
+                    queenNeigh = "list"), 
          contains="SpatialGridTopography")
 setClass("SpatialPixelsLandscape", 
-         slots=list(lct="character", forestlist="list", soillist = "list"), 
+         slots=list(lct="character", forestlist="list", soillist = "list",
+                    waterOrder = "numeric", waterQ = "list", 
+                    queenNeigh = "list"), 
          contains="SpatialPixelsTopography")
 
 setGeneric("spatialSoilSummary", valueClass ="Spatial", function(object, summaryFunction, ...){

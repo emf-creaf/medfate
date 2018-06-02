@@ -1,20 +1,19 @@
 \encoding{UTF-8}
-\name{SpatialPointsLandscape}
-\alias{SpatialPointsLandscape}
-\alias{SpatialPixelsLandscape}
-\alias{SpatialGridLandscape}
+\name{SFI2SPL}
+\alias{SFI2SPL}
+\alias{SFI2SGL}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Creates Spatial Landscape Classes
+Create Landscape Classes from SFI
 }
 \description{
 Functions to create spatial landscape classes from Spanish Forest Inventory (SFI) data (see details). Internally, these functions make calls to \code{\link{extractSFIforest}}.
 }
 \usage{
-SpatialPointsLandscape(SFItreeData, SFIshrubData, SFIherbData = NULL,
+SFI2SPL(SFItreeData, SFIshrubData, SFIherbData = NULL,
                     SpatialPointsIDs, elevation, slope, aspect, SpParams, 
                     SoilParamData = NULL, SFIcodes=NULL, control = defaultControl())
-SpatialGridLandscape(landTopo, SFItreeData, SFIshrubData, SpatialPointsIDs, 
+SFI2SGL(landTopo, SFItreeData, SFIshrubData, SpatialPointsIDs, 
                 SpParams, SoilParamData = NULL, lctInput, 
                 forestLCTs, shrublandLCTs, grasslandLCTs, agricultureLCTs= numeric(0), 
                 rockLCTs= numeric(0), staticLCTs= numeric(0),

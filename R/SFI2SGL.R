@@ -1,4 +1,4 @@
-SpatialGridForest<-function(landTopo, SFItreeData, SFIshrubData, 
+SFI2SGL<-function(landTopo, SFItreeData, SFIshrubData, 
                             SpatialPointsIDs, SpParams, SoilParamData = NULL, 
                             lctInput , forestLCTs, 
                             shrublandLCTs= numeric(0), grasslandLCTs= numeric(0), agricultureLCTs= numeric(0), rockLCTs= numeric(0), staticLCTs= numeric(0), 
