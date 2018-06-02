@@ -1,10 +1,12 @@
-spwbgrid<-function(y, SpParams, meteo, dates, 
+spwbgrid<-function(y, SpParams, meteo, dates, oneMeteoCell = FALSE,
                   summaryFreq = "years", trackSpecies = numeric(), 
                   control = defaultControl()) {
 
   if(!inherits(meteo,"SpatialGridMeteorology") && 
      !inherits(meteo,"data.frame")) 
     stop("'meteo' has to be of class 'SpatialGridMeteorology' or 'data.frame'.")
+ 
+  elevation = y@data$elevation
   
   date.factor = cut(dates, breaks=summaryFreq)
   df.int = as.numeric(date.factor)
@@ -26,7 +28,6 @@ spwbgrid<-function(y, SpParams, meteo, dates,
     soil = y@soillist[[i]]
     if((!is.na(yid)) && (!is.na(soil))) {             
       xi = forest2spwbInput(yid, soil, SpParams, control)
-      if(!inherits(xi,"data.frame")) stop("not a data frame!")
       spwbInputList[[i]] = xi
     }  else {
       spwbInputList[[i]] = NA
@@ -40,7 +41,7 @@ spwbgrid<-function(y, SpParams, meteo, dates,
   colnames(Runon) = levels(date.factor)[1:nSummary]
   Runoff = Runon
   Infiltration = Runon
-  NetPrec =Runon
+  NetRain =Runon
   DeepDrainage = Runon
   Esoil = Runon
   Eplant = Runon
@@ -71,24 +72,37 @@ spwbgrid<-function(y, SpParams, meteo, dates,
     doy = as.numeric(format(dates[day],"%j"))
     if(inherits(meteo,"SpatialGridMeteorology")) {
       ml = meteo@data[[i]]
+      gridMeanTemperature = as.numeric(ml["MeanTemperature"])
+      gridPET = as.numeric(ml["PET"])
+      gridPrecipitation = as.numeric(ml["Precipitation"])
+      gridRadiation = as.numeric(ml["Radiation"])
     } else {
-      f = paste(meteo$dir[i], meteo$filename[i],sep="/")
-      if(!file.exists(f)) stop(paste("Meteorology file '", f,"' does not exist!", sep=""))
-      ml = readmeteorologygrid(f)
+      if(!oneMeteoCell) { # Read meteo grid from file
+        f = paste(meteo$dir[i], meteo$filename[i],sep="/")
+        if(!file.exists(f)) stop(paste("Meteorology file '", f,"' does not exist!", sep=""))
+        ml = readmeteorologygrid(f)
+        gridMeanTemperature = as.numeric(ml["MeanTemperature"])
+        gridPET = as.numeric(ml["PET"])
+        gridPrecipitation = as.numeric(ml["Precipitation"])
+        gridRadiation = as.numeric(ml["Radiation"])
+      } else { # repeat values for all cells
+        gridMeanTemperature = rep(meteo[as.character(dates[day]),"MeanTemperature"], nCells)
+        gridPET = rep(meteo[as.character(dates[day]), "PET"], nCells)
+        gridPrecipitation = rep(meteo[as.character(dates[day]),"Precipitation"], nCells)
+        gridRadiation = rep(meteo[as.character(dates[day]), "Radiation"], nCells)
+      }
     }
-    gridMeanTemperature = as.numeric(ml["MeanTemperature"])
-    gridPET = as.numeric(ml["PET"])
-    gridPrecipitation = as.numeric(ml["Precipitation"])
     gridER = rep(.er(doy),nCells) #ER
     gridGDD = gridGDD + pmax(gridMeanTemperature - 5.0, 0.0) #Increase GDD
     if(doy>=365) gridGDD = rep(0, nCells) #Reset GDD 
     df = .spwbgridDay(y@lct, spwbInputList, y@soillist, 
-                     y@waterO, y@queenNeigh, y@waterQ,
-                     gridGDD, gridPET, gridPrecipitation, gridER, trackSpecies)      
+                     y@waterOrder, y@queenNeigh, y@waterQ,
+                     gridGDD, gridPET, gridPrecipitation, gridER, gridRadiation, elevation,
+                     trackSpecies)      
     if(df.int[day]==ifactor) {
       Runon[,ifactor] = Runon[,ifactor] + df$WaterBalance$Runon
       Runoff[,ifactor] = Runoff[,ifactor] + df$WaterBalance$Runoff
-      NetPrec[,ifactor] = NetPrec[,ifactor] + df$WaterBalance$NetPrec
+      NetRain[,ifactor] = NetRain[,ifactor] + df$WaterBalance$NetRain
       Infiltration[,ifactor] = Infiltration[,ifactor] + df$WaterBalance$Infiltration
       DeepDrainage[,ifactor] = DeepDrainage[,ifactor] + df$WaterBalance$DeepDrainage
       Esoil[,ifactor] = Esoil[,ifactor] + df$WaterBalance$Esoil
@@ -100,7 +114,7 @@ spwbgrid<-function(y, SpParams, meteo, dates,
       DI[,ifactor,] = DI[,ifactor,]+pmax((0.5-df$DDS)/0.5,0.0)
       #Landscape balance
       LandscapeBalance$Rainfall[ifactor]= LandscapeBalance$Rainfall[ifactor] + sum(gridPrecipitation)
-      LandscapeBalance$Interception[ifactor]= LandscapeBalance$Interception[ifactor] + (sum(gridPrecipitation)-sum(df$WaterBalance$NetPrec, na.rm=T))
+      LandscapeBalance$Interception[ifactor]= LandscapeBalance$Interception[ifactor] + (sum(gridPrecipitation)-sum(df$WaterBalance$NetRain, na.rm=T))
       LandscapeBalance$Runoff[ifactor] = LandscapeBalance$Runoff[ifactor] + df$RunoffExport
       LandscapeBalance$DeepDrainage[ifactor] = LandscapeBalance$DeepDrainage[ifactor] + sum(df$WaterBalance$DeepDrainage, na.rm=T)
       LandscapeBalance$Esoil[ifactor] = LandscapeBalance$Esoil[ifactor] + sum(df$WaterBalance$Esoil, na.rm=T)
@@ -121,7 +135,7 @@ spwbgrid<-function(y, SpParams, meteo, dates,
   DI[,ifactor,] = DI[,ifactor,]/nDays
   cat("\n------------  spwbgrid ------------\n")
     
-  l <- list(grid = y@grid, LandscapeBalance = LandscapeBalance, NetPrec = NetPrec, Runon = Runon, Runoff=Runoff, Infiltration=Infiltration, 
+  l <- list(grid = y@grid, LandscapeBalance = LandscapeBalance, NetRain = NetRain, Runon = Runon, Runoff=Runoff, Infiltration=Infiltration, 
                     DeepDrainage = DeepDrainage, Esoil = Esoil, Eplant = Eplant, W1mean = W1mean,
                     W2mean = W2mean, W3mean = W3mean,  DI = DI, Transpiration = Transpiration)
   class(l)<-c("spwbgrid","list")

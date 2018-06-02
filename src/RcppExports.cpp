@@ -2235,8 +2235,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // spwbgridDay
-List spwbgridDay(CharacterVector lct, List xList, List soilList, IntegerVector waterO, List queenNeigh, List waterQ, NumericVector gddVec, NumericVector petVec, NumericVector rainVec, NumericVector erVec, NumericVector trackSpecies);
-RcppExport SEXP _medfate_spwbgridDay(SEXP lctSEXP, SEXP xListSEXP, SEXP soilListSEXP, SEXP waterOSEXP, SEXP queenNeighSEXP, SEXP waterQSEXP, SEXP gddVecSEXP, SEXP petVecSEXP, SEXP rainVecSEXP, SEXP erVecSEXP, SEXP trackSpeciesSEXP) {
+List spwbgridDay(CharacterVector lct, List xList, List soilList, IntegerVector waterO, List queenNeigh, List waterQ, NumericVector gddVec, NumericVector petVec, NumericVector rainVec, NumericVector erVec, NumericVector radVec, NumericVector elevation, NumericVector trackSpecies);
+RcppExport SEXP _medfate_spwbgridDay(SEXP lctSEXP, SEXP xListSEXP, SEXP soilListSEXP, SEXP waterOSEXP, SEXP queenNeighSEXP, SEXP waterQSEXP, SEXP gddVecSEXP, SEXP petVecSEXP, SEXP rainVecSEXP, SEXP erVecSEXP, SEXP radVecSEXP, SEXP elevationSEXP, SEXP trackSpeciesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2250,8 +2250,10 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type petVec(petVecSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type rainVec(rainVecSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type erVec(erVecSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type radVec(radVecSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type elevation(elevationSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type trackSpecies(trackSpeciesSEXP);
-    rcpp_result_gen = Rcpp::wrap(spwbgridDay(lct, xList, soilList, waterO, queenNeigh, waterQ, gddVec, petVec, rainVec, erVec, trackSpecies));
+    rcpp_result_gen = Rcpp::wrap(spwbgridDay(lct, xList, soilList, waterO, queenNeigh, waterQ, gddVec, petVec, rainVec, erVec, radVec, elevation, trackSpecies));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2620,7 +2622,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_spwbDay1", (DL_FUNC) &_medfate_spwbDay1, 10},
     {"_medfate_spwbDay2", (DL_FUNC) &_medfate_spwbDay2, 16},
     {"_medfate_spwbDay", (DL_FUNC) &_medfate_spwbDay, 16},
-    {"_medfate_spwbgridDay", (DL_FUNC) &_medfate_spwbgridDay, 11},
+    {"_medfate_spwbgridDay", (DL_FUNC) &_medfate_spwbgridDay, 13},
     {"_medfate_resetInputs", (DL_FUNC) &_medfate_resetInputs, 4},
     {"_medfate_spwb", (DL_FUNC) &_medfate_spwb, 7},
     {"_medfate_symplasticRelativeWaterContent", (DL_FUNC) &_medfate_symplasticRelativeWaterContent, 3},

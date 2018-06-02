@@ -59,3 +59,23 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 \seealso{
 \code{\link{spwb}}, \code{\link{spwbpoints}}, \code{\link{SpatialGridLandscape-class}}
 }
+\examples{
+# Load spatial grid landscape object
+data("exampleSGL")
+
+#Load meteorological data (the same will be used for all points)
+data("examplemeteo")
+
+#Load species parameters
+data("SpParamsMED")
+
+# Deactivate extra console output
+control = defaultControl()
+control$verbose = FALSE
+
+# Run water balance simulation over the grid for three months
+dates = as.Date(row.names(examplemeteo))
+res <- spwbgrid(exampleSGL, SpParamsMED, examplemeteo, dates = dates[1:90], 
+                oneMeteoCell = TRUE, control = control, summaryFreq = "months")
+
+}

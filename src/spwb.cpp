@@ -1053,7 +1053,8 @@ NumericVector getTrackSpeciesDDS(NumericVector trackSpecies, NumericVector DDS, 
 List spwbgridDay(CharacterVector lct, List xList, List soilList, 
                 IntegerVector waterO, List queenNeigh, List waterQ,
                 NumericVector gddVec, NumericVector petVec, NumericVector rainVec, 
-                NumericVector erVec, NumericVector trackSpecies) {
+                NumericVector erVec, NumericVector radVec, NumericVector elevation,
+                NumericVector trackSpecies) {
   int nX = xList.size();
   int nTrackSpecies = trackSpecies.size();
   NumericVector NetRain(nX,NA_REAL), Runon(nX,0.0), Infiltration(nX,NA_REAL);
@@ -1064,19 +1065,23 @@ List spwbgridDay(CharacterVector lct, List xList, List soilList,
   for(int i=0;i<nX;i++) {
     //get next cell in order
     int iCell = waterO[i]-1; //Decrease index!!!!
-    if((lct[iCell]=="Wildland") || (lct[iCell]=="Agriculture") ) {
-      DataFrame x = Rcpp::as<Rcpp::DataFrame>(xList[iCell]);
+    if((lct[iCell]=="wildland") || (lct[iCell]=="agriculture") ) {
+      List x = Rcpp::as<Rcpp::List>(xList[iCell]);
       List soil = Rcpp::as<Rcpp::List>(soilList[iCell]);
       //Run daily soil water balance for the current cell
-      List res = spwbDay1(x, soil, gddVec[iCell], petVec[iCell], rainVec[iCell], erVec[iCell], Runon[iCell]);
-      NetRain[iCell] = res["NetRain"];
-      Runon[iCell] = res["Runon"];
-      Infiltration[iCell] = res["Infiltration"];
-      Runoff[iCell] = res["Runoff"];
-      DeepDrainage[iCell] = res["DeepDrainage"];
-      Esoil[iCell] = sum(Rcpp::as<Rcpp::NumericVector>(res["EsoilVec"]));
-      NumericVector EplantCoh = res["EplantCoh"];
-      NumericVector DDScell = res["DDS"];
+      List res = spwbDay1(x, soil, gddVec[iCell], petVec[iCell], rainVec[iCell], erVec[iCell], 
+                          Runon[iCell], radVec[iCell], elevation[iCell]);
+      List DB = res["DailyBalance"];
+      List SB = res["SoilBalance"];
+      List PL = res["Plants"];
+      NetRain[iCell] = DB["NetRain"];
+      Runon[iCell] = DB["Runon"];
+      Infiltration[iCell] = DB["Infiltration"];
+      Runoff[iCell] = DB["Runoff"];
+      DeepDrainage[iCell] = DB["DeepDrainage"];
+      Esoil[iCell] = sum(Rcpp::as<Rcpp::NumericVector>(SB["EsoilVec"]));
+      NumericVector EplantCoh = PL["EplantCoh"];
+      NumericVector DDScell = PL["DDS"];
       Eplant[iCell] = sum(EplantCoh);
       if(nTrackSpecies>0) {
         Transpiration(iCell,_) = getTrackSpeciesTranspiration(trackSpecies, EplantCoh, x);
@@ -1098,7 +1103,7 @@ List spwbgridDay(CharacterVector lct, List xList, List soilList,
           runoffExport += ri; //If no suitable neighbours add ri to landscape export via runoff
         }
       }
-    } else if(lct[iCell]=="Rock") {//all Precipitation becomes runoff if cell is rock outcrop
+    } else if(lct[iCell]=="rock") {//all Precipitation becomes runoff if cell is rock outcrop
       Runoff[iCell] =  Runon[iCell]+rainVec[iCell];
       double ri = Runoff[iCell];
       if(ri>0.0) {
@@ -1110,7 +1115,7 @@ List spwbgridDay(CharacterVector lct, List xList, List soilList,
           runoffExport += ri; //If no suitable neighbours add ri to landscape export via runoff
         }
       }
-    } else if(lct[iCell]=="Static") {
+    } else if(lct[iCell]=="static") {
       // static cells receive water from other cells or Precipitation
       // but do not export to the atmosphere contribute nor to other cells.
       // Hence, water balance over the landscape is achieved by
