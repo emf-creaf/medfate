@@ -319,8 +319,8 @@ plot(Snr, type="PlantTranspiration")
 So far, we used `spwb()` to simulate soil water balance on a single stand. Package `medfate` offers the possibility to conduct simulations on a set of forest stands in one call, using function `spwbpoints()`. This function takes an object of class `SpatialPointsForest` as input. We begin by loading an example dataset of 30 forest stands:
 
 ```{r}
-data("exampleSPF")
-plot(exampleSPF)
+data("exampleSPL")
+plot(exampleSPL)
 ```
 
 As before, we need meteorological data, species parameters and control parameters (which will apply to all forest stands):
@@ -334,7 +334,7 @@ control$verbose = FALSE
 
 The call to `spwbpoints()` can be done as follows:
 ```{r}
-res <- spwbpoints(exampleSPF, SpParamsMED, examplemeteo, control = control)
+res <- spwbpoints(exampleSPL, SpParamsMED, examplemeteo, control = control)
 ```
 
 For each forest stand described in the `SpatialPointsForest` object, function `spwbpoints()` first calls `forest2spwbInput()`, to generate the appropriate input, and then it calls `spwb()`. The elements of the result of calling `spwbpoints()` are:

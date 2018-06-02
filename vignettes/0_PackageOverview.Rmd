@@ -18,9 +18,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction
 
-Being able to anticipate the impact of global change on ecosystems is one of the major environmental challenges in contemporary societies. However, uncertainties in how ecological systems function and practical constraints in how to integrate available information prevent the development of robust and reliable predictive models. Despite the amount of knowledge accumulated about the functioning and dynamics of Mediterranean ecosystems, the scientists should make coordinate their efforts to address the challenge of integrating the different global change drivers in a modelling framework useful for research and applications.
+Being able to anticipate the impact of global change on ecosystems is one of the major environmental challenges in contemporary societies. However, uncertainties in how ecological systems function and practical constraints in how to integrate available information prevent the development of robust and reliable predictive models. Despite the amount of knowledge accumulated about the functioning and dynamics of Mediterranean forests, scientists should make coordinate their efforts to address the challenge of integrating the different global change drivers in a modelling framework useful for research and applications.
 
-The R package `medfate` has been designed to study the characteristics and simulate dynamics of Mediterranean forests. Fire and drought impacts are the main drivers covered by the package. Representation of vegetation is not spatially-explicit (i.e. trees or shrubs do not have explicit coordinates within plots). This simplified representation is chosen so that package functions can be easily applied to plot data from national forest inventories. Since the package intends to facilitate predictions of both structure and composition, the taxonomic identity of plants is stored, and parameter values need to be provided for each taxonomic entity (but the package could be used with functional groups). Although landscape-level processes will eventually included, the package currently offers simulation of local processes only.
+The R package `medfate` has been designed to study the characteristics and simulate dynamics of Mediterranean forests. Fire and drought impacts are the main drivers covered by the package. Representation of vegetation is not spatially-explicit (i.e. trees or shrubs do not have explicit coordinates within forest stands). This simplified representation is chosen so that package functions can be easily applied to forest plot data from national forest inventories. Since the package intends to facilitate predictions of both structure and composition, the taxonomic identity of plants is stored, and parameter values need to be provided for each taxonomic entity (but the package could be used with functional groups). Although landscape-level processes will eventually be included, the package currently offers simulation of local processes mostly.
 
 ```{r}
 library(medfate)
@@ -30,16 +30,19 @@ library(medfate)
 
 ### Forest objects
 
-Models included in `medfate` were primarily designed to be ran on **forest inventory plots**. In this kind of data, the  vegetation of a sampled area is described in terms of woody plants (trees and shrubs) along with their size and species identity. Forest plots in `medfate` are assumed to be in a format that follows closely the Spanish forest inventory. Each forest plot is represented in an object of class `forest`, a list that contains several elements. Among them, the most important items are two data frames, `treeData` (for trees) and `shrubData` for shrubs:
+Models included in `medfate` were primarily designed to be ran on **forest inventory plots**. In this kind of data, the  vegetation of a sampled area is primarily described in terms of woody plants (trees and shrubs) along with their size and species identity. Forest plots in `medfate` are assumed to be in a format that follows closely the Spanish national forest inventory. Each forest plot is represented in an object of class `forest`, a list that contains several elements. Among them, the most important items are two data frames, `treeData` (for trees) and `shrubData` for shrubs:
 ```{r}
 data(exampleforest)
 exampleforest
 ```
 Trees are expected to be primarily described in terms of species, diameter (DBH) and height, whereas shrubs are described in terms of species, percent cover and mean height.
 
-### Spatial forest objects
+### Spatial objects
+Package `medfate` offers three spatial classes that inherit fields from three corresponding classes in package `meteoland`:
 
-TO BE DONE
+* `SpatialPointsLandscape`
+* `SpatialPixelsLandscape`
+* `SpatialGridLandscape`
 
 ## Dynamic simulation functions
 ### Soil water balance and plant drought stress

@@ -15,7 +15,7 @@ growthpoints(y, SpParams, meteo, control = defaultControl(),
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{y}{An object of class \code{\link{SpatialPointsForest-class}}.}
+  \item{y}{An object of class \code{\link{SpatialPointsLandscape-class}}.}
   \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
   \item{meteo}{Meteorology data (see details).}
   \item{control}{A list of control parameters (see \code{\link{defaultControl}}).}
@@ -38,11 +38,11 @@ Functions \code{spwbpoints} and \code{growthpoints} return a list with the follo
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 \seealso{
-\code{\link{spwb}}, \code{\link{growth}}, \code{\link{SpatialPointsForest-class}}
+\code{\link{spwb}}, \code{\link{growth}}, \code{\link{SpatialPointsLandscape-class}}
 }
 \examples{
 # Load spatial points forest object
-data("exampleSPF")
+data("exampleSPL")
 
 #Load meteorological data (the same will be used for all points)
 data("examplemeteo")
@@ -55,7 +55,7 @@ control = defaultControl()
 control$verbose = FALSE
 
 # Run simulation for each forest plot
-res <- spwbpoints(exampleSPF, SpParamsMED, examplemeteo, control = control)
+res <- spwbpoints(exampleSPL, SpParamsMED, examplemeteo, control = control)
 
 #Extract summaries for a given forest plot
 summary(res$result$`80013`, freq="months",FUN=sum, 
