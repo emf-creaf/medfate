@@ -12,7 +12,7 @@ Description: Functions to simulate Mediterranean forest functioning and dynamics
 License: GPL (>= 2)
 LazyLoad: yes
 Depends: R (>= 3.4.0), sp, spdep, GSIF
-Imports: methods, meteoland (>= 0.6.8), Rcpp (>= 0.12.12)
+Imports: methods, meteoland (>= 0.7.1), Rcpp (>= 0.12.12)
 Suggests: knitr, rmarkdown, rjson
 LinkingTo: Rcpp, meteoland
 Encoding: UTF-8
