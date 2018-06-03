@@ -1052,14 +1052,14 @@ NumericVector getTrackSpeciesDDS(NumericVector trackSpecies, NumericVector DDS, 
 // [[Rcpp::export(".spwbgridDay")]]
 List spwbgridDay(CharacterVector lct, List xList, List soilList, 
                 IntegerVector waterO, List queenNeigh, List waterQ,
-                NumericVector gddVec, NumericVector petVec, NumericVector rainVec, 
+                NumericVector tdayVec, NumericVector petVec, NumericVector rainVec, 
                 NumericVector erVec, NumericVector radVec, NumericVector elevation,
                 NumericVector trackSpecies) {
   int nX = xList.size();
   int nTrackSpecies = trackSpecies.size();
-  NumericVector NetRain(nX,NA_REAL), Runon(nX,0.0), Infiltration(nX,NA_REAL);
-  NumericVector Runoff(nX,NA_REAL), DeepDrainage(nX,NA_REAL), W1(nX,NA_REAL), W2(nX,NA_REAL);
-  NumericVector W3(nX,NA_REAL), Esoil(nX,NA_REAL), Eplant(nX,NA_REAL);
+  NumericVector Rain(nX, NA_REAL), Snow(nX, NA_REAL), NetRain(nX,NA_REAL), Runon(nX,0.0), Infiltration(nX,NA_REAL);
+  NumericVector Runoff(nX,NA_REAL), DeepDrainage(nX,NA_REAL);
+  NumericVector Esoil(nX,NA_REAL), Eplant(nX,NA_REAL);
   NumericMatrix Transpiration(nX, nTrackSpecies), DDS(nX, nTrackSpecies);
   double runoffExport = 0.0;
   for(int i=0;i<nX;i++) {
@@ -1069,11 +1069,13 @@ List spwbgridDay(CharacterVector lct, List xList, List soilList,
       List x = Rcpp::as<Rcpp::List>(xList[iCell]);
       List soil = Rcpp::as<Rcpp::List>(soilList[iCell]);
       //Run daily soil water balance for the current cell
-      List res = spwbDay1(x, soil, gddVec[iCell], petVec[iCell], rainVec[iCell], erVec[iCell], 
+      List res = spwbDay1(x, soil, tdayVec[iCell], petVec[iCell], rainVec[iCell], erVec[iCell], 
                           Runon[iCell], radVec[iCell], elevation[iCell]);
       List DB = res["DailyBalance"];
       List SB = res["SoilBalance"];
       List PL = res["Plants"];
+      Snow[iCell] = DB["Snow"];
+      Rain[iCell] = DB["Rain"];
       NetRain[iCell] = DB["NetRain"];
       Runon[iCell] = DB["Runon"];
       Infiltration[iCell] = DB["Infiltration"];
@@ -1087,10 +1089,6 @@ List spwbgridDay(CharacterVector lct, List xList, List soilList,
         Transpiration(iCell,_) = getTrackSpeciesTranspiration(trackSpecies, EplantCoh, x);
         DDS(iCell,_) = getTrackSpeciesDDS(trackSpecies, DDScell, x);
       }
-      NumericVector W = soil["W"];
-      W1[iCell] = W[0];
-      W2[iCell] = W[1];
-      W3[iCell] = W[2];
 
       //Assign runoff to runon of neighbours
       double ri =  Runoff[iCell];
@@ -1123,9 +1121,8 @@ List spwbgridDay(CharacterVector lct, List xList, List soilList,
       runoffExport += Runon[iCell] + rainVec[iCell];
     }
   }
-  DataFrame waterBalance = DataFrame::create(_["NetRain"] = NetRain, _["Runon"] = Runon, _["Infiltration"] = Infiltration,
+  DataFrame waterBalance = DataFrame::create(_["Rain"] = Rain, _["Snow"] = Snow, _["NetRain"] = NetRain, _["Runon"] = Runon, _["Infiltration"] = Infiltration,
                                    _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
-                                   _["W1"] = W1, _["W2"] = W2, _["W3"] = W3,
                                    _["Esoil"] = Esoil, _["Eplant"] = Eplant);
   return(List::create(_["WaterBalance"] = waterBalance,
                       _["RunoffExport"] = runoffExport,

@@ -601,8 +601,8 @@ spwb.day <- function(x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind, la
     .Call('_medfate_spwbDay', PACKAGE = 'medfate', x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, runon)
 }
 
-.spwbgridDay <- function(lct, xList, soilList, waterO, queenNeigh, waterQ, gddVec, petVec, rainVec, erVec, radVec, elevation, trackSpecies) {
-    .Call('_medfate_spwbgridDay', PACKAGE = 'medfate', lct, xList, soilList, waterO, queenNeigh, waterQ, gddVec, petVec, rainVec, erVec, radVec, elevation, trackSpecies)
+.spwbgridDay <- function(lct, xList, soilList, waterO, queenNeigh, waterQ, tdayVec, petVec, rainVec, erVec, radVec, elevation, trackSpecies) {
+    .Call('_medfate_spwbgridDay', PACKAGE = 'medfate', lct, xList, soilList, waterO, queenNeigh, waterQ, tdayVec, petVec, rainVec, erVec, radVec, elevation, trackSpecies)
 }
 
 spwb.resetInputs <- function(x, soil, from = NULL, day = NA_integer_) {

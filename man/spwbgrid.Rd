@@ -29,17 +29,24 @@ spwbgrid(y, SpParams, meteo, dates,
   \item{...}{Additional parameters to function \code{\link{spplot}}.}
 }
 \details{
-Function \code{spwbgrid} requires daily meteorological data over a grid. The user may supply an object of class \code{\link{SpatialGridMeteorology}} (see package 'meteoland'), a data frame with information regarding where to read meteorological data or a data frame with meteorological data common for all cells of the grid.
+Function \code{spwbgrid} requires daily meteorological data over a grid. The user may supply: 
+\enumerate{
+\item{an object of class \code{\link{SpatialGridMeteorology}}.}
+\item{a data frame with information regarding where to read meteorological data.}
+\item{a data frame with meteorological data common for all cells of the grid.}
+}
 }
 \value{
 A list of class 'spwbgrid' with the following elements:
 \itemize{
  \item{\code{grid}: The \code{\link{GridTopology}} object corresponding to the simulated area.}
- \item{\code{LandscapeBalance}: A data frame with as many rows as summary points and where columns are components of the water balance at the landscape level (i.e., precipitation, interception, soil evaporation, plant transpiration, ...).}
+ \item{\code{LandscapeBalance}: A data frame with as many rows as summary points and where columns are components of the water balance at the landscape level (i.e., rain, snow, interception, infiltration, soil evaporation, plant transpiration, ...).}
 }
 Then, the following matrices are included (each with as many rows as cells and as many columns as summary points):
 \itemize{
-   \item{\code{NetRain}: Net rain, after accounting for interception (in mm).}
+   \item{\code{Rain}: Rainfall (in mm).}
+   \item{\code{Snow}: Snowfall (in mm).}
+   \item{\code{Interception}: Rainfall interception (in mm).}
    \item{\code{Infiltration}: The amount of water infiltrating into the soil (in mm).}
    \item{\code{Runon}: The amount of water imported from other cells via surface runoff (in mm).}
    \item{\code{Runoff}: The amount of water exported via surface runoff (in mm).}
@@ -74,6 +81,6 @@ control = defaultControl()
 control$verbose = FALSE
 
 # Run water balance simulation over the grid for three months
-res <- spwbgrid(exampleSGL, SpParamsMED, examplemeteo, 
+res <- spwbgrid(exampleSGL, SpParamsMED, examplemeteo[1:90,], 
                 control = control, summaryFreq = "months")
 }

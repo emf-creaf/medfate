@@ -57,14 +57,14 @@ spwbgrid<-function(y, SpParams, meteo, dates = NULL,
   colnames(Runon) = levels(date.factor)[1:nSummary]
   Runoff = Runon
   Infiltration = Runon
-  NetRain =Runon
+  Rain =Runon
+  Snow =Runon
+  Interception =Runon
   DeepDrainage = Runon
   Esoil = Runon
   Eplant = Runon
-  W1mean = Runon
-  W2mean = Runon
-  W3mean = Runon
-  LandscapeBalance = data.frame(Rainfall = rep(0, nSummary),
+  LandscapeBalance = data.frame(Snow = rep(0, nSummary),
+                                Rain = rep(0, nSummary),
                                 Interception = rep(0, nSummary),
                                 Esoil = rep(0,nSummary),
                                 Eplant = rep(0, nSummary),
@@ -81,8 +81,6 @@ spwbgrid<-function(y, SpParams, meteo, dates = NULL,
     Transpiration = NULL
   }
   
-  ifactor = 1
-  gridGDD = rep(0,nCells)
   for(day in 1:nDays) {
     cat(paste("Day #", day))
     i = which(datesMeteo == dates[day]) #date index in meteo data
@@ -110,51 +108,42 @@ spwbgrid<-function(y, SpParams, meteo, dates = NULL,
       }
     }
     gridER = rep(.er(doy),nCells) #ER
-    gridGDD = gridGDD + pmax(gridMeanTemperature - 5.0, 0.0) #Increase GDD
-    if(doy>=365) gridGDD = rep(0, nCells) #Reset GDD 
     df = .spwbgridDay(y@lct, spwbInputList, y@soillist, 
                      y@waterOrder, y@queenNeigh, y@waterQ,
-                     gridGDD, gridPET, gridPrecipitation, gridER, gridRadiation, elevation,
+                     gridMeanTemperature, gridPET, gridPrecipitation, gridER,
+                     gridRadiation, elevation,
                      trackSpecies)      
-    if(df.int[day]==ifactor) {
-      Runon[,ifactor] = Runon[,ifactor] + df$WaterBalance$Runon
-      Runoff[,ifactor] = Runoff[,ifactor] + df$WaterBalance$Runoff
-      NetRain[,ifactor] = NetRain[,ifactor] + df$WaterBalance$NetRain
-      Infiltration[,ifactor] = Infiltration[,ifactor] + df$WaterBalance$Infiltration
-      DeepDrainage[,ifactor] = DeepDrainage[,ifactor] + df$WaterBalance$DeepDrainage
-      Esoil[,ifactor] = Esoil[,ifactor] + df$WaterBalance$Esoil
-      Eplant[,ifactor] = Eplant[,ifactor] + df$WaterBalance$Eplant
-      W1mean[,ifactor] = W1mean[,ifactor] + df$WaterBalance$W1
-      W2mean[,ifactor] = W2mean[,ifactor] + df$WaterBalance$W2
-      W3mean[,ifactor] = W3mean[,ifactor] + df$WaterBalance$W3
-      Transpiration[,ifactor,] = Transpiration[,ifactor,]+df$Transpiration
-      DI[,ifactor,] = DI[,ifactor,]+pmax((0.5-df$DDS)/0.5,0.0)
-      #Landscape balance
-      LandscapeBalance$Rainfall[ifactor]= LandscapeBalance$Rainfall[ifactor] + sum(gridPrecipitation)
-      LandscapeBalance$Interception[ifactor]= LandscapeBalance$Interception[ifactor] + (sum(gridPrecipitation)-sum(df$WaterBalance$NetRain, na.rm=T))
-      LandscapeBalance$Runoff[ifactor] = LandscapeBalance$Runoff[ifactor] + df$RunoffExport
-      LandscapeBalance$DeepDrainage[ifactor] = LandscapeBalance$DeepDrainage[ifactor] + sum(df$WaterBalance$DeepDrainage, na.rm=T)
-      LandscapeBalance$Esoil[ifactor] = LandscapeBalance$Esoil[ifactor] + sum(df$WaterBalance$Esoil, na.rm=T)
-      LandscapeBalance$Eplant[ifactor] = LandscapeBalance$Eplant[ifactor] + sum(df$WaterBalance$Eplant, na.rm=T)
-    } else {
-      W1mean[,ifactor] = W1mean[,ifactor]/nDays
-      W2mean[,ifactor] = W2mean[,ifactor]/nDays
-      W3mean[,ifactor] = W3mean[,ifactor]/nDays
-      DI[,ifactor,] = DI[,ifactor,]/nDays
-      ifactor = ifactor+1
-    }
+    ifactor = df.int[day]
+    Runon[,ifactor] = Runon[,ifactor] + df$WaterBalance$Runon
+    Runoff[,ifactor] = Runoff[,ifactor] + df$WaterBalance$Runoff
+    Rain[,ifactor] = Rain[,ifactor] + df$WaterBalance$Rain
+    Snow[,ifactor] = Snow[,ifactor] + df$WaterBalance$Snow
+    Interception[,ifactor] = Interception[,ifactor] + (df$WaterBalance$Rain-df$WaterBalance$NetRain)
+    Infiltration[,ifactor] = Infiltration[,ifactor] + df$WaterBalance$Infiltration
+    DeepDrainage[,ifactor] = DeepDrainage[,ifactor] + df$WaterBalance$DeepDrainage
+    Esoil[,ifactor] = Esoil[,ifactor] + df$WaterBalance$Esoil
+    Eplant[,ifactor] = Eplant[,ifactor] + df$WaterBalance$Eplant
+    Transpiration[,ifactor,] = Transpiration[,ifactor,]+df$Transpiration
+    DI[,ifactor,] = DI[,ifactor,]+pmax((0.5-df$DDS)/0.5,0.0)
+    #Landscape balance
+    LandscapeBalance$Rain[ifactor]= LandscapeBalance$Rain[ifactor] + sum(df$WaterBalance$Rain, na.rm=T)
+    LandscapeBalance$Snow[ifactor]= LandscapeBalance$Snow[ifactor] + sum(df$WaterBalance$Snow, na.rm=T)
+    LandscapeBalance$Interception[ifactor]= LandscapeBalance$Interception[ifactor] + (sum(df$WaterBalance$Rain, na.rm=T)-sum(df$WaterBalance$NetRain, na.rm=T))
+    LandscapeBalance$Runoff[ifactor] = LandscapeBalance$Runoff[ifactor] + df$RunoffExport
+    LandscapeBalance$DeepDrainage[ifactor] = LandscapeBalance$DeepDrainage[ifactor] + sum(df$WaterBalance$DeepDrainage, na.rm=T)
+    LandscapeBalance$Esoil[ifactor] = LandscapeBalance$Esoil[ifactor] + sum(df$WaterBalance$Esoil, na.rm=T)
+    LandscapeBalance$Eplant[ifactor] = LandscapeBalance$Eplant[ifactor] + sum(df$WaterBalance$Eplant, na.rm=T)
     if(control$verbose) cat("\n")
   }
-  #Average last summary
-  W1mean[,ifactor] = W1mean[,ifactor]/nDays
-  W2mean[,ifactor] = W2mean[,ifactor]/nDays
-  W3mean[,ifactor] = W3mean[,ifactor]/nDays
-  DI[,ifactor,] = DI[,ifactor,]/nDays
+  #Average summaries
+  for(i in 1:length(levels(date.factor))) DI[,i,] = DI[,i,]/sum(df.int==i)
   cat("\n------------  spwbgrid ------------\n")
     
-  l <- list(grid = y@grid, LandscapeBalance = LandscapeBalance, NetRain = NetRain, Runon = Runon, Runoff=Runoff, Infiltration=Infiltration, 
-                    DeepDrainage = DeepDrainage, Esoil = Esoil, Eplant = Eplant, W1mean = W1mean,
-                    W2mean = W2mean, W3mean = W3mean,  DI = DI, Transpiration = Transpiration)
+  l <- list(grid = y@grid, LandscapeBalance = LandscapeBalance, 
+            Rain = Rain, Snow = Snow, Interception = Interception, Runon = Runon, Runoff=Runoff, 
+            Infiltration=Infiltration, DeepDrainage = DeepDrainage, 
+            Esoil = Esoil, Eplant = Eplant, 
+            DI = DI, Transpiration = Transpiration)
   class(l)<-c("spwbgrid","list")
   return(l)
 }

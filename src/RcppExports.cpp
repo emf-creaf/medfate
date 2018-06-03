@@ -2235,8 +2235,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // spwbgridDay
-List spwbgridDay(CharacterVector lct, List xList, List soilList, IntegerVector waterO, List queenNeigh, List waterQ, NumericVector gddVec, NumericVector petVec, NumericVector rainVec, NumericVector erVec, NumericVector radVec, NumericVector elevation, NumericVector trackSpecies);
-RcppExport SEXP _medfate_spwbgridDay(SEXP lctSEXP, SEXP xListSEXP, SEXP soilListSEXP, SEXP waterOSEXP, SEXP queenNeighSEXP, SEXP waterQSEXP, SEXP gddVecSEXP, SEXP petVecSEXP, SEXP rainVecSEXP, SEXP erVecSEXP, SEXP radVecSEXP, SEXP elevationSEXP, SEXP trackSpeciesSEXP) {
+List spwbgridDay(CharacterVector lct, List xList, List soilList, IntegerVector waterO, List queenNeigh, List waterQ, NumericVector tdayVec, NumericVector petVec, NumericVector rainVec, NumericVector erVec, NumericVector radVec, NumericVector elevation, NumericVector trackSpecies);
+RcppExport SEXP _medfate_spwbgridDay(SEXP lctSEXP, SEXP xListSEXP, SEXP soilListSEXP, SEXP waterOSEXP, SEXP queenNeighSEXP, SEXP waterQSEXP, SEXP tdayVecSEXP, SEXP petVecSEXP, SEXP rainVecSEXP, SEXP erVecSEXP, SEXP radVecSEXP, SEXP elevationSEXP, SEXP trackSpeciesSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2246,14 +2246,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< IntegerVector >::type waterO(waterOSEXP);
     Rcpp::traits::input_parameter< List >::type queenNeigh(queenNeighSEXP);
     Rcpp::traits::input_parameter< List >::type waterQ(waterQSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type gddVec(gddVecSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type tdayVec(tdayVecSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type petVec(petVecSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type rainVec(rainVecSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type erVec(erVecSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type radVec(radVecSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type elevation(elevationSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type trackSpecies(trackSpeciesSEXP);
-    rcpp_result_gen = Rcpp::wrap(spwbgridDay(lct, xList, soilList, waterO, queenNeigh, waterQ, gddVec, petVec, rainVec, erVec, radVec, elevation, trackSpecies));
+    rcpp_result_gen = Rcpp::wrap(spwbgridDay(lct, xList, soilList, waterO, queenNeigh, waterQ, tdayVec, petVec, rainVec, erVec, radVec, elevation, trackSpecies));
     return rcpp_result_gen;
 END_RCPP
 }
