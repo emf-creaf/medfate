@@ -1,13 +1,29 @@
-spwbgrid<-function(y, SpParams, meteo, dates, oneMeteoCell = FALSE,
+spwbgrid<-function(y, SpParams, meteo, dates = NULL,
                   summaryFreq = "years", trackSpecies = numeric(), 
                   control = defaultControl()) {
 
+  #check input
+  if(!inherits(y, "SpatialGridLandscape"))
+    stop("'y' has to be of class 'SpatialGridLandscape'.")
   if(!inherits(meteo,"SpatialGridMeteorology") && 
      !inherits(meteo,"data.frame")) 
     stop("'meteo' has to be of class 'SpatialGridMeteorology' or 'data.frame'.")
- 
+  if(!is.null(dates)) if(!inherits(dates, "Date")) stop("'dates' has to be of class 'Date'.")
+  
   elevation = y@data$elevation
   
+  if(inherits(meteo,"data.frame")) {
+    oneMeteoCell = ("MeanTemperature" %in% names(meteo))
+    datesMeteo = as.Date(row.names(meteo))
+  } else {
+    datesMeteo = meteo@dates
+  }
+  if(is.null(dates)) {
+    dates = datesMeteo
+  } else {
+    if(sum(dates %in% datesMeteo)<length(dates)) 
+      stop("Dates in 'dates' is nnot a subset of dates in 'meteo'.")
+  }
   date.factor = cut(dates, breaks=summaryFreq)
   df.int = as.numeric(date.factor)
   nDays = length(dates)
@@ -69,6 +85,7 @@ spwbgrid<-function(y, SpParams, meteo, dates, oneMeteoCell = FALSE,
   gridGDD = rep(0,nCells)
   for(day in 1:nDays) {
     cat(paste("Day #", day))
+    i = which(datesMeteo == dates[day]) #date index in meteo data
     doy = as.numeric(format(dates[day],"%j"))
     if(inherits(meteo,"SpatialGridMeteorology")) {
       ml = meteo@data[[i]]
@@ -86,10 +103,10 @@ spwbgrid<-function(y, SpParams, meteo, dates, oneMeteoCell = FALSE,
         gridPrecipitation = as.numeric(ml["Precipitation"])
         gridRadiation = as.numeric(ml["Radiation"])
       } else { # repeat values for all cells
-        gridMeanTemperature = rep(meteo[as.character(dates[day]),"MeanTemperature"], nCells)
-        gridPET = rep(meteo[as.character(dates[day]), "PET"], nCells)
-        gridPrecipitation = rep(meteo[as.character(dates[day]),"Precipitation"], nCells)
-        gridRadiation = rep(meteo[as.character(dates[day]), "Radiation"], nCells)
+        gridMeanTemperature = rep(meteo[i,"MeanTemperature"], nCells)
+        gridPET = rep(meteo[i, "PET"], nCells)
+        gridPrecipitation = rep(meteo[i,"Precipitation"], nCells)
+        gridRadiation = rep(meteo[i, "Radiation"], nCells)
       }
     }
     gridER = rep(.er(doy),nCells) #ER

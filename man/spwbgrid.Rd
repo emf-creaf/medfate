@@ -17,7 +17,7 @@ spwbgrid(y, SpParams, meteo, dates,
 \arguments{
   \item{y}{An object of class \code{\link{SpatialGridLandscape-class}}.}
   \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
-  \item{meteo}{A \code{\link{SpatialGridMeteorology-class}} object or a data frame with two columns: 'dir' and 'filename, to indicate the path to the meteorological data.}
+  \item{meteo}{A \code{\link{SpatialGridMeteorology-class}} object, a data frame with two columns: 'dir' and 'filename, to indicate the path to the meteorological data, or a data frame with meteorological data (the same for all cells).}
   \item{dates}{A \code{\link{Date}} object describing the days of the period to be modeled.}
   \item{summaryFreq}{Frequency in which summary layers will be produced (e.g. "years", "months", ...) (see \code{\link{cut.Date}}).}
   \item{trackSpecies}{An integer vector containing the indices of species for which transpiration and drought stress is to be tracked.}
@@ -29,7 +29,7 @@ spwbgrid(y, SpParams, meteo, dates,
   \item{...}{Additional parameters to function \code{\link{spplot}}.}
 }
 \details{
-Function \code{spwbgrid} requires daily meteorological data over a grid. The user may supply an object of class \code{\link{SpatialGridMeteorology}} (see package 'meteoland') or a data frame with information regarding where to read meteorological data.
+Function \code{spwbgrid} requires daily meteorological data over a grid. The user may supply an object of class \code{\link{SpatialGridMeteorology}} (see package 'meteoland'), a data frame with information regarding where to read meteorological data or a data frame with meteorological data common for all cells of the grid.
 }
 \value{
 A list of class 'spwbgrid' with the following elements:
@@ -39,7 +39,7 @@ A list of class 'spwbgrid' with the following elements:
 }
 Then, the following matrices are included (each with as many rows as cells and as many columns as summary points):
 \itemize{
-   \item{\code{NetPrec}: Net precipitation, after accounting for interception (in mm).}
+   \item{\code{NetRain}: Net rain, after accounting for interception (in mm).}
    \item{\code{Infiltration}: The amount of water infiltrating into the soil (in mm).}
    \item{\code{Runon}: The amount of water imported from other cells via surface runoff (in mm).}
    \item{\code{Runoff}: The amount of water exported via surface runoff (in mm).}
@@ -74,8 +74,6 @@ control = defaultControl()
 control$verbose = FALSE
 
 # Run water balance simulation over the grid for three months
-dates = as.Date(row.names(examplemeteo))
-res <- spwbgrid(exampleSGL, SpParamsMED, examplemeteo, dates = dates[1:90], 
-                oneMeteoCell = TRUE, control = control, summaryFreq = "months")
-
+res <- spwbgrid(exampleSGL, SpParamsMED, examplemeteo, 
+                control = control, summaryFreq = "months")
 }
