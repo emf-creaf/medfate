@@ -14,7 +14,8 @@
 
 spwb.ldrOptimization<-function(x, soil, meteo, psi_crit, opt_mode = 1,
                               RZmin = 301, RZmax = 4000, V1min = 0.01, V1max = 0.94, resolution = 20, 
-                              heat_stop = 0, transformation = "identity", explore_out = FALSE, verbose = FALSE) {
+                              heat_stop = 0, transformation = "identity", explore_out = FALSE, verbose = FALSE, 
+                              ...) {
   
   if(length(psi_crit)!= nrow(x$above)) stop("The length of 'psi_crit' must be equal to the number of cohorts in 'x'.")
   # define the days to keep in the analysis
@@ -113,7 +114,7 @@ spwb.ldrOptimization<-function(x, soil, meteo, psi_crit, opt_mode = 1,
       V[1:length(x_1sp$below$V),i,j] <- x_1sp$below$V
       
       # Run the model
-      spwb <- spwb(x = x_1sp, meteo = meteo, soil = s.)
+      spwb <- spwb(x = x_1sp, meteo = meteo, soil = s., ...)
       
       # Outputs
       years <- substr(as.Date(rownames(meteo)), start = 1, stop = 4)

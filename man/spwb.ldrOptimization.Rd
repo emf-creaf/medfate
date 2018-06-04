@@ -10,7 +10,7 @@
 spwb.ldrOptimization(x, soil, meteo, psi_crit, opt_mode = 1, RZmin = 301, RZmax = 4000, 
                     V1min = 0.01, V1max = 0.94, resolution = 20, heat_stop = 0, 
                     transformation = "identity", explore_out = FALSE, 
-                    verbose = FALSE)
+                    verbose = FALSE, ...)
 }
 
 \arguments{
@@ -35,6 +35,7 @@ spwb.ldrOptimization(x, soil, meteo, psi_crit, opt_mode = 1, RZmin = 301, RZmax 
   \item{heat_stop}{An integer defining the number of days during to discard from the calculation of the optimal root distribution. Usefull if the soil water content initialization is not certain}
   \item{explore_out}{A logical value. Are the values of average daily plant transpiration and minimum plant water potential to be returned?}
   \item{verbose}{A logical value. Print the internal messages of the function?}
+  \item{...}{Additional parameters to function \code{\link{spwb}}.}
 }
 \details{
 For each combination of the parameters RZ and V1 the function runs \code{spwb}, setting the total soil depth equal to RZ. The root proportion in each soil layer is derived from V1, the depth of the first soil layer (as defined in the argument \code{soil}) and RZ using the LDR root distribution model (Schenk and Jackson, 2002) and assuming that the depth containing 95 percent of the roots is equal to RZ. \code{psi_crit}, the species specific water potential inducing hydraulic failure, can be approached by the water potential inducing 50 percent of loss of conductance for the and gymnosperms and 88 percent for the angiosperms (Urli et al., 2013, Brodribb et al., 2010). Details of the hypothesis and limitations of the optimization method are given in Cabon et al. (under review).
