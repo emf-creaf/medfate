@@ -25,7 +25,7 @@ summary.spwb<-function(object, freq="years", output="DailyBalance", FUN=sum, byS
       lai1 = t(apply(object$PlantLAI,1, tapply, object$cohorts$Name, sum, na.rm=T))
       m1 = t(apply(object$PlantLAI * OM,1, tapply, object$cohorts$Name, sum, na.rm=T))
       OM = m1/lai1
-      OM[lai1==0] = NA
+      OM[lai1==0] = 0
     } 
   }
   else if(output=="PlantTranspiration") {
