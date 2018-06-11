@@ -8,7 +8,7 @@
 Function \code{spwb.day} performs water balance for a single day.
 }
 \usage{
-spwb.day(x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind, 
+spwb.day(x, soil, date, tmin, tmax, rhmin, rhmax, rad, wind, 
         latitude, elevation, slope, aspect, prec, runon = 0.0)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -16,7 +16,6 @@ spwb.day(x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind,
   \item{x}{An object of class \code{\link{spwbInput}}.}
   \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
   \item{date}{Date as string "yyyy-mm-dd".}
-  \item{doy}{Day of the year.}
   \item{tmin, tmax}{Minimum and maximum temperature (in degrees Celsius).}
   \item{rhmin, rhmax}{Minimum and maximum relative humidity (in percent).}
   \item{rad}{Solar radiation (in MJ/m2/day).}
@@ -66,8 +65,7 @@ examplesoil = soil(defaultSoilParams(2), W=c(0.5,0.5))
 
 #Simulate one day only
 x1 = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
-d = 100
-sd1<-spwb.day(x1, examplesoil, rownames(examplemeteo)[d], d , 
+sd1<-spwb.day(x1, examplesoil, rownames(examplemeteo)[d],  
              examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
              examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
              examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 

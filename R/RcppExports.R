@@ -597,8 +597,8 @@ spwb.SoilEvaporation <- function(DEF, PETs, Gsoil) {
     .Call('_medfate_spwbDay2', PACKAGE = 'medfate', x, soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, solarConstant, delta, prec, er, runon, verbose)
 }
 
-spwb.day <- function(x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, runon = 0.0) {
-    .Call('_medfate_spwbDay', PACKAGE = 'medfate', x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, runon)
+spwb.day <- function(x, soil, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, runon = 0.0) {
+    .Call('_medfate_spwbDay', PACKAGE = 'medfate', x, soil, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, runon)
 }
 
 .spwbgridDay <- function(lct, xList, soilList, waterO, queenNeigh, waterQ, tdayVec, petVec, rainVec, erVec, radVec, elevation, trackSpecies) {

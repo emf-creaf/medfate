@@ -2209,15 +2209,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // spwbDay
-List spwbDay(List x, List soil, CharacterVector date, int doy, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, double latitude, double elevation, double slope, double aspect, double prec, double runon);
-RcppExport SEXP _medfate_spwbDay(SEXP xSEXP, SEXP soilSEXP, SEXP dateSEXP, SEXP doySEXP, SEXP tminSEXP, SEXP tmaxSEXP, SEXP rhminSEXP, SEXP rhmaxSEXP, SEXP radSEXP, SEXP windSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP precSEXP, SEXP runonSEXP) {
+List spwbDay(List x, List soil, CharacterVector date, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, double latitude, double elevation, double slope, double aspect, double prec, double runon);
+RcppExport SEXP _medfate_spwbDay(SEXP xSEXP, SEXP soilSEXP, SEXP dateSEXP, SEXP tminSEXP, SEXP tmaxSEXP, SEXP rhminSEXP, SEXP rhmaxSEXP, SEXP radSEXP, SEXP windSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP precSEXP, SEXP runonSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< CharacterVector >::type date(dateSEXP);
-    Rcpp::traits::input_parameter< int >::type doy(doySEXP);
     Rcpp::traits::input_parameter< double >::type tmin(tminSEXP);
     Rcpp::traits::input_parameter< double >::type tmax(tmaxSEXP);
     Rcpp::traits::input_parameter< double >::type rhmin(rhminSEXP);
@@ -2230,7 +2229,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type aspect(aspectSEXP);
     Rcpp::traits::input_parameter< double >::type prec(precSEXP);
     Rcpp::traits::input_parameter< double >::type runon(runonSEXP);
-    rcpp_result_gen = Rcpp::wrap(spwbDay(x, soil, date, doy, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, runon));
+    rcpp_result_gen = Rcpp::wrap(spwbDay(x, soil, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, runon));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2621,7 +2620,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_interceptionGashDay", (DL_FUNC) &_medfate_interceptionGashDay, 4},
     {"_medfate_spwbDay1", (DL_FUNC) &_medfate_spwbDay1, 10},
     {"_medfate_spwbDay2", (DL_FUNC) &_medfate_spwbDay2, 16},
-    {"_medfate_spwbDay", (DL_FUNC) &_medfate_spwbDay, 16},
+    {"_medfate_spwbDay", (DL_FUNC) &_medfate_spwbDay, 15},
     {"_medfate_spwbgridDay", (DL_FUNC) &_medfate_spwbgridDay, 13},
     {"_medfate_resetInputs", (DL_FUNC) &_medfate_resetInputs, 4},
     {"_medfate_spwb", (DL_FUNC) &_medfate_spwb, 7},

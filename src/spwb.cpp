@@ -946,7 +946,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
 }
 
 // [[Rcpp::export("spwb.day")]]
-List spwbDay(List x, List soil, CharacterVector date, int doy, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
+List spwbDay(List x, List soil, CharacterVector date, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
             double latitude, double elevation, double slope, double aspect,  
             double prec, double runon=0.0) {
   //Control parameters
@@ -962,6 +962,11 @@ List spwbDay(List x, List soil, CharacterVector date, int doy, double tmin, doub
   double asprad = aspect * (PI/180.0);
   double slorad = slope * (PI/180.0);
   double pet = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
+
+  //Derive doy from date  
+  int J0101 = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),1,1);
+  int doy = J - J0101+1;
+
   NumericVector ER = er(IntegerVector::create(doy));
   double er = ER[0];
   
