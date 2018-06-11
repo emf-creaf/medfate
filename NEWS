@@ -11,6 +11,8 @@ _Version 0.6.0, June 2018.
 4. Changed names of spatial classes from 'Forest' to 'Landscape'
 5. Changed name of 'exampleSPF' to 'exampleSPL'.
 6. Function 'spwbgrid' functional again.
+7. Improved documentation of function 'spwb.day'
+8. 'DOY' no longer needed as column in meteorological input.
 
 _Version 0.5.6, May 2018.
 1. Growth degree days added as output of 'swb()'

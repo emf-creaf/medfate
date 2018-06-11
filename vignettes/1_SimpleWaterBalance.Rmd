@@ -185,7 +185,7 @@ Finally, note that one can play with plant-specific parameters for soil water ba
 Soil water balance simulations will normally span periods of several months or years, but since the model operates at a daily temporal scale, it is possible to perform soil water balance for one day only. This is done using function `spwb.day()`. In the following code we select day 100 from the meteorological input data and perform soil water balance for that day only:
 ```{r}
 d = 100
-sd1<-spwb.day(x, examplesoil, rownames(examplemeteo)[d], d , 
+sd1<-spwb.day(x, examplesoil, rownames(examplemeteo)[d],  
              examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
              examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
              examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 

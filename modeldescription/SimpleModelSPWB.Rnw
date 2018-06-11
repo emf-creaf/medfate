@@ -206,10 +206,9 @@ A second set of parameters are related to plant transpiration and photosynthesis
 \subsection{Metereological input}
 Weather input data must include variables calculated at the \textbf{daily} scale.
 \begin{itemize}
-\item{$J$ [\texttt{DOY}]: Day of the year.}
-\item{$P$ [\texttt{Precipitation}]: Daily precipitation (in L·m$^{-2}$ = mm of water).}
 \item{$T_{mean}$ [\texttt{MeanTemperature}]: Mean daily temperature (in $^{\circ} \mathrm{C}$).}
-\item{$Rad$ [\texttt{Radiation}]: Solar radiation, after accounting for clouds (in MJ·m$^{-2}$), only necessary if \texttt{snowpack = TRUE}.}
+\item{$Rad$ [\texttt{Radiation}]: Solar radiation, after accounting for clouds (in MJ·m$^{-2}$), only necessary if snow pack dynamics are simulated (i.e., if \texttt{snowpack = TRUE}).}
+\item{$P$ [\texttt{Precipitation}]: Daily precipitation (in L·m$^{-2}$ = mm of water).}
 \item{$PET$ [\texttt{PET}]: Daily potential evapotranspiration (in  L·m$^{-2}$ = mm of water), preferably calculated using Penman's equation.}
 \end{itemize}
 Optionally, the user may specify values of wind speed ($u$, in m·s$^{-1}$, \texttt{WindSpeed}) that are used to control leaf fall in autumn.

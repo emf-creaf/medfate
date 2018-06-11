@@ -204,12 +204,11 @@ A second set of plant functional parameters are related to plant transpiration a
 \subsection{Meteorological input}
 Weather input data must include variables calculated at the \textbf{daily} scale. 
 \begin{itemize}
-\item{$J$ [\texttt{DOY}]: Day of the year.}
-\item{$P$ [\texttt{Precipitation}]: Precipitation (in L·m$^{-2}$ = mm of water).}
 \item{$T_{min}$ [\texttt{MinTemperature}]: Minimum temperature (in $^{\circ} \mathrm{C}$).}
 \item{$T_{max}$ [\texttt{MaxTemperature}]: Maximum temperature (in $^{\circ} \mathrm{C}$).}
 \item{$RH_{min}$ [\texttt{MinRelativeHumidity}]: Minimum relative humidity (in percent).}
 \item{$RH_{max}$ [\texttt{MaxRelativeHumidity}]: Maximum relative humidity (in percent).}
+\item{$P$ [\texttt{Precipitation}]: Precipitation (in L·m$^{-2}$ = mm of water).}
 \item{$Rad$ [\texttt{Radiation}]: Solar radiation after accounting for clouds (in MJ·m$^{-2}$).}
 \item{$u$ [\texttt{WindSpeed}]: Wind speed (in m·s$^{-1}$).}
 \end{itemize}

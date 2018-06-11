@@ -15,6 +15,18 @@ using namespace Rcpp;
 const double SIGMA_Wm2 = 5.67*pow(10,-8.0);
 const double Cp_JKG = 1013.86; // J * kg^-1 * ºC^-1
 
+IntegerVector date2doy(CharacterVector dateStrings) {
+  IntegerVector doy(dateStrings.size());
+  //Derive doy from date  
+  for(int i=0;i<dateStrings.size();i++) {
+    std::string c = as<std::string>(dateStrings[i]);
+    int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
+    int J0101 = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),1,1);
+    doy[i] = J - J0101+1;
+  }
+  return(doy);
+}
+
 // [[Rcpp::export(".er")]]
 NumericVector er(IntegerVector DOY, double ERconv=0.05, double ERsyn = 0.2){
   int nDays = DOY.size();
@@ -89,6 +101,7 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   
 
   //Vegetation input
+  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   NumericVector LAIlive = Rcpp::as<Rcpp::NumericVector>(above["LAI_live"]);
   NumericVector LAIphe = Rcpp::as<Rcpp::NumericVector>(above["LAI_expanded"]);
@@ -283,7 +296,8 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   DDS.attr("names") = above.attr("row.names");
   List Plants = List::create(_["LAI"] = LAIcohort,
                              _["EplantCoh"] = Eplant, _["psiCoh"] = PlantPsi, _["DDS"] = DDS);
-  List l = List::create(_["DailyBalance"] = DB, _["SoilBalance"] = SB,
+  List l = List::create(_["cohorts"] = clone(cohorts),
+                        _["DailyBalance"] = DB, _["SoilBalance"] = SB,
                         _["Plants"] = Plants);
   l.attr("class") = CharacterVector::create("spwb.day","list");
   return(l);
@@ -939,8 +953,9 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                              _["VPDsunlitinst"] = VPD_SL, _["VPDshadeinst"] = VPD_SH,
                              _["Tempsunlitinst"] = Temp_SL, _["Tempshadeinst"] = Temp_SH);
   List l = List::create(_["cohorts"] = clone(cohorts),
-                        _["DailyBalance"] = DB, _["SoilBalance"] = SB, _["Plants"] = Plants,
-                        _["EnergyBalance"] = EB);
+                        _["DailyBalance"] = DB, _["SoilBalance"] = SB, 
+                        _["EnergyBalance"] = EB,
+                        _["Plants"] = Plants);
   l.attr("class") = CharacterVector::create("spwb.day","list");
   return(l);
 }
@@ -1248,7 +1263,6 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   NumericVector MinRelativeHumidity, MaxRelativeHumidity;
   NumericVector PET;
   NumericVector Radiation, WindSpeed;
-  IntegerVector DOY = meteo["DOY"];
   NumericVector Precipitation = meteo["Precipitation"];
   NumericVector MeanTemperature = meteo["MeanTemperature"];
   int numDays = Precipitation.size();
@@ -1267,6 +1281,8 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
     PET = NumericVector(numDays);
   }
   CharacterVector dateStrings = meteo.attr("row.names");
+  
+  IntegerVector DOY = date2doy(dateStrings);
   
   //Canpopy parameters
   List canopyParams = x["canopy"];

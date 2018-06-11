@@ -148,7 +148,6 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   
   NumericVector Precipitation = meteo["Precipitation"];
   NumericVector MeanTemperature = meteo["MeanTemperature"];
-  IntegerVector DOY = meteo["DOY"];
   NumericVector MinTemperature, MaxTemperature, MinRelativeHumidity, MaxRelativeHumidity, Radiation, WindSpeed, PET;
   int numDays = Precipitation.size();
   if(transpirationMode=="Complex") {
@@ -169,6 +168,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   }
   
   CharacterVector dateStrings = meteo.attr("row.names");
+  IntegerVector DOY = date2doy(dateStrings);
   
   NumericVector GDD = gdd(DOY, MeanTemperature, 5.0);
   NumericVector ER = er(DOY);

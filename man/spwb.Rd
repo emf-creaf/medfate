@@ -16,22 +16,21 @@ spwb.resetInputs(x, soil, from = NULL, day = NA)
 \arguments{
   \item{x}{An object of class \code{\link{spwbInput}}.}
   \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
-  \item{meteo}{A data frame with daily meteorological data series. When using the 'Simple' transpiration mode the following columns are required:
+  \item{meteo}{A data frame with daily meteorological data series. Row names of the data frame should correspond to date strings with format "yyyy-mm-dd" (see \code{\link{Date}}). When using the 'Simple' transpiration mode the following columns are required:
    \itemize{
-     \item{\code{DOY}: Day of the year.}
-     \item{\code{Precipitation}: Precipitation (in mm).}
      \item{\code{MeanTemperature}: Mean temperature (in degrees Celsius).}
+     \item{\code{Precipitation}: Precipitation (in mm).}
+     \item{\code{Radiation}: Solar radiation (in MJ/m2/day), required only if \code{snowpack = TRUE}.}
      \item{\code{PET}: Potential evapotranspiration (in mm).}
     }
   When using the 'Complex' transpiration mode the following columns are required:
    \itemize{
-     \item{\code{DOY}: Day of the year (Julian day).}
-     \item{\code{Precipitation}: Precipitation (in mm).}
      \item{\code{MeanTemperature}: Mean temperature (in degrees Celsius).}
      \item{\code{MinTemperature}: Minimum temperature (in degrees Celsius).}
      \item{\code{MaxTemperature}: Maximum temperature (in degrees Celsius).}
      \item{\code{MinRelativeHumidity}: Minimum relative humidity (in percent).}
      \item{\code{MaxRelativeHumidity}: Maximum relative humidity (in percent).}
+     \item{\code{Precipitation}: Precipitation (in mm).}
      \item{\code{Radiation}: Solar radiation (in MJ/m2/day).}
      \item{\code{WindSpeed}: Wind speed (in m/s). If not available, this column can be left with \code{NA} values.}
     }
@@ -81,7 +80,7 @@ spwb.resetInputs(x, soil, from = NULL, day = NA)
   \item{\code{"PlantTranspiration"}: A data frame with the amount of daily transpiration (in mm) for each plant cohort. Days are in rows and plant cohorts are in columns.}
   \item{\code{"PlantPhotosynthesis"}: A data frame with the amount of daily net photosynthesis (in g C·m-2) for each plant cohort. Days are in rows and plant cohorts are in columns.}
  \item{\code{"PlantPsi"}: A data frame with the average daily water potential of each plant (in MPa). Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
-  \item{\code{"PlantStress"}: A data frame with the amount of daily stress suffered by each plant cohort (relative whole-plant conductance). Days are in rows and plant cohorts are in columns.}
+  \item{\code{"PlantStress"}: A data frame with the amount of daily stress [0-1] suffered by each plant cohort (relative whole-plant conductance). Days are in rows and plant cohorts are in columns.}
   }
   If \code{transpirationMode=="Complex"} the list also includes the following elements:
  \itemize{

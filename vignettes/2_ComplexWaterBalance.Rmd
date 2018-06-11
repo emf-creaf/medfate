@@ -264,7 +264,7 @@ transp.stomatalRegulationPlot(x, examplesoil, examplemeteo, day = d, timestep=12
 ### Running the model
 Soil water balance simulations will normally span periods of several months or years, but since the model operates at a daily and subdaily temporal scales, it is possible to perform soil water balance for one day only. This is done using function `spwb.day()`. In the following code we select the same day as before from the meteorological input data and perform soil water balance for that day only:
 ```{r}
-sd1<-spwb.day(x, examplesoil, rownames(examplemeteo)[d], d , 
+sd1<-spwb.day(x, examplesoil, rownames(examplemeteo)[d],  
              examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
              examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
              examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
@@ -415,7 +415,7 @@ spwb.resetInputs(x, examplesoil, from = S, day = 4)
 Now we call function `spwb.day()` for day 144 of the year:
 ```{r}
 d = 144
-sd1<-spwb.day(x, examplesoil, rownames(examplemeteo)[d], d , 
+sd1<-spwb.day(x, examplesoil, rownames(examplemeteo)[d], 
              examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
              examplemeteo$MinRelativeHumidity[d], 
              examplemeteo$MaxRelativeHumidity[d], 
