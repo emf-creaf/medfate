@@ -15,17 +15,6 @@ using namespace Rcpp;
 const double SIGMA_Wm2 = 5.67*pow(10,-8.0);
 const double Cp_JKG = 1013.86; // J * kg^-1 * ºC^-1
 
-IntegerVector date2doy(CharacterVector dateStrings) {
-  IntegerVector doy(dateStrings.size());
-  //Derive doy from date  
-  for(int i=0;i<dateStrings.size();i++) {
-    std::string c = as<std::string>(dateStrings[i]);
-    int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
-    int J0101 = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),1,1);
-    doy[i] = J - J0101+1;
-  }
-  return(doy);
-}
 
 // [[Rcpp::export(".er")]]
 NumericVector er(IntegerVector DOY, double ERconv=0.05, double ERsyn = 0.2){

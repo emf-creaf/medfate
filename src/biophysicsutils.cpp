@@ -8,6 +8,21 @@ using namespace Rcpp;
 const double Cp_Jmol = 29.37152; // J * mol^-1 * ºC^-1
 const double SIGMA_W = 5.67*pow(10,-8.0); //Stefan-Boltzmann constant W * K^-4 * m^-2
 
+/**
+ * Transforms dates (yyyy-mm-dd) into day of the year (DOY)
+ */
+IntegerVector date2doy(CharacterVector dateStrings) {
+  IntegerVector doy(dateStrings.size());
+  //Derive doy from date  
+  for(int i=0;i<dateStrings.size();i++) {
+    std::string c = as<std::string>(dateStrings[i]);
+    int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
+    int J0101 = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),1,1);
+    doy[i] = J - J0101+1;
+  }
+  return(doy);
+}
+
 
 /**
  * Returns the proportion of daily radiation corresponding to the input time 

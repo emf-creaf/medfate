@@ -109,7 +109,6 @@ List stomatalRegulation(List x, List soil, DataFrame meteo, int day,
                         double latitude, double elevation) {
   
   //Extract meteo
-  IntegerVector DOY = meteo["DOY"];
   NumericVector Precipitation = meteo["Precipitation"];
   NumericVector MeanTemperature = meteo["MeanTemperature"];
   NumericVector MinTemperature = meteo["MinTemperature"];
@@ -118,7 +117,10 @@ List stomatalRegulation(List x, List soil, DataFrame meteo, int day,
   NumericVector MaxRelativeHumidity = meteo["MaxRelativeHumidity"];
   NumericVector Radiation = meteo["Radiation"];
   NumericVector WindSpeed = meteo["WindSpeed"];
+  
   CharacterVector dateStrings = meteo.attr("row.names");
+  IntegerVector DOY = date2doy(dateStrings);
+  
   NumericVector GDD = gdd(DOY, MeanTemperature, 5.0);
   
   

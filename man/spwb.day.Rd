@@ -106,6 +106,7 @@ examplesoil = soil(defaultSoilParams(2), W=c(0.5,0.5))
 
 #Simulate one day only
 x1 = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+d = 100
 sd1<-spwb.day(x1, examplesoil, rownames(examplemeteo)[d],  
              examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
              examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
