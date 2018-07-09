@@ -15,8 +15,8 @@ const double capacityClay = 1.23*pow(10.0,6.0); //kg·m-3
 /**
  *  Returns water content (% volume) at saturation according to Saxton's pedotransfer model
  */
-// [[Rcpp::export("soil.thetaSaturationSX")]]
-double thetaSaturationSaxton(double clay, double sand, double om = NA_REAL) {
+// [[Rcpp::export("soil.thetaSATSX")]]
+double thetaSATSaxton(double clay, double sand, double om = NA_REAL) {
   double theta_sat = NA_REAL;
   //If organic matter is missing use Saxton et al (1986)
   //Otherwise use Saxton & Rawls (2006)
@@ -50,7 +50,7 @@ double theta2psiSaxton(double clay, double sand, double theta, double om = NA_RE
     B = -3.140 - (0.00222*pow(clay,2.0)) - (0.00003484*pow(sand,2.0)*(clay));
     psi = A*pow(theta,B);
     if(psi > -0.01) { // If calculated psi > -10 KPa use linear part
-      double theta_sat = thetaSaturationSaxton(clay, sand, om);
+      double theta_sat = thetaSATSaxton(clay, sand, om);
       double psi_e = -0.1*(-0.108+(0.341*theta_sat));//air-entry tension in MPa
       double theta_10 = pow(-0.01/A, 1.0/B);//exp((2.302-log(A))/B);
       psi = -0.01 - ((theta-theta_10)*(-0.01 - psi_e)/(theta_sat - theta_10));
@@ -98,7 +98,7 @@ double psi2thetaSaxton(double clay, double sand, double psi, double om = NA_REAL
     if(psi< -0.01) {
       theta = pow(psi/A, 1.0/B);
     } else { //Linear part of the relationship (from -10 kPa to air entry tension)
-      double theta_sat = thetaSaturationSaxton(clay, sand, om);
+      double theta_sat = thetaSATSaxton(clay, sand, om);
       double psi_e = -0.1*(-0.108+(0.341*theta_sat));//air-entry tension in MPa
       double theta_10 = pow(-0.01/A, 1.0/B);//exp((2.302-log(A))/B);
       psi = std::min(psi,psi_e); //Truncate to air entry tension
@@ -430,6 +430,31 @@ NumericVector thetaFC(List soil, String model="SX") {
   }
   return(Theta_FC);
 }
+
+/**
+ * Returns water content in volume per soil volume at saturation, according to the given pedotransfer model
+ */
+// [[Rcpp::export("soil.thetaSAT")]]
+NumericVector thetaSAT(List soil, String model="SX") {
+  NumericVector SD = soil["dVec"];
+  int nlayers = SD.size();
+  NumericVector Theta_Sat(nlayers);
+  if(model=="SX") {
+    NumericVector clay =soil["clay"];
+    NumericVector sand = soil["sand"];
+    NumericVector om = soil["om"];
+    for(int l=0;l<nlayers;l++) {
+      Theta_Sat[l] = thetaSATSaxton(clay[l], sand[l], om[l]); 
+    }
+  } else if(model=="VG") {
+    NumericVector theta_sat = soil["VG_theta_sat"];
+    for(int l=0;l<nlayers;l++) {
+      Theta_Sat[l] = theta_sat[l]; 
+    }
+  }
+  return(Theta_Sat);
+}
+
 /**
  * Returns water content in mm at field capacity, according to the given pedotransfer model
  */
@@ -444,6 +469,19 @@ NumericVector waterFC(List soil, String model="SX") {
   return(Water_FC);
 }
 
+/**
+ * Returns water content in mm at saturation, according to the given pedotransfer model
+ */
+// [[Rcpp::export("soil.waterSAT")]]
+NumericVector waterSAT(List soil, String model="SX") {
+  NumericVector dVec = soil["dVec"];
+  NumericVector Theta_SAT = thetaSAT(soil, model);
+  NumericVector rfc = soil["rfc"];
+  int nlayers = dVec.size();
+  NumericVector Water_SAT(nlayers);
+  for(int i=0;i<nlayers;i++) Water_SAT[i] = dVec[i]*Theta_SAT[i]*(1.0-(rfc[i]/100.0));
+  return(Water_SAT);
+}
 /**
  * Returns current water content (in prop. volume), according to the given pedotransfer model
  */

@@ -509,8 +509,8 @@ root.xylemConductanceProportions <- function(v, d, depthWidthRatio = 1.0) {
     .Call('_medfate_xylemConductanceProportions', PACKAGE = 'medfate', v, d, depthWidthRatio)
 }
 
-soil.thetaSaturationSX <- function(clay, sand, om = NA_real_) {
-    .Call('_medfate_thetaSaturationSaxton', PACKAGE = 'medfate', clay, sand, om)
+soil.thetaSATSX <- function(clay, sand, om = NA_real_) {
+    .Call('_medfate_thetaSATSaxton', PACKAGE = 'medfate', clay, sand, om)
 }
 
 soil.theta2psiSX <- function(clay, sand, theta, om = NA_real_) {
@@ -557,8 +557,16 @@ soil.thetaFC <- function(soil, model = "SX") {
     .Call('_medfate_thetaFC', PACKAGE = 'medfate', soil, model)
 }
 
+soil.thetaSAT <- function(soil, model = "SX") {
+    .Call('_medfate_thetaSAT', PACKAGE = 'medfate', soil, model)
+}
+
 soil.waterFC <- function(soil, model = "SX") {
     .Call('_medfate_waterFC', PACKAGE = 'medfate', soil, model)
+}
+
+soil.waterSAT <- function(soil, model = "SX") {
+    .Call('_medfate_waterSAT', PACKAGE = 'medfate', soil, model)
 }
 
 soil.theta <- function(soil, model = "SX") {
