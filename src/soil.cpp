@@ -10,6 +10,30 @@ const double capacitySand = 1.25*pow(10.0,6.0); //kg·m-3
 const double capacitySilt = 1.19*pow(10.0,6.0); //kg·m-3 
 const double capacityClay = 1.23*pow(10.0,6.0); //kg·m-3 
 
+
+
+/**
+ *  Returns water content (% volume) at saturation according to Saxton's pedotransfer model
+ */
+// [[Rcpp::export("soil.thetaSaturationSX")]]
+double thetaSaturationSaxton(double clay, double sand, double om = NA_REAL) {
+  double theta_sat = NA_REAL;
+  //If organic matter is missing use Saxton et al (1986)
+  //Otherwise use Saxton & Rawls (2006)
+  if(NumericVector::is_na(om)) {
+    theta_sat = 0.332 - 7.251E-4*sand + 0.1276*log10(clay);
+  } else {
+    sand = sand/100.0;
+    clay = clay/100.0;
+    om = om/100.0;
+    double theta33t = (-0.251*sand) + (0.195*clay) + (0.011*om) + (0.006*(sand*om)) - (0.027*(clay*om)) + (0.452*(sand*clay)) + 0.299;
+    double theta33 = theta33t + (1.283*pow(theta33t,2.0) - 0.374 * theta33t - 0.015);
+    double theta_S33t = (0.278*sand) + (0.034*clay)+ (0.022*om) - (0.018*(sand*om)) - (0.027*(clay*om)) - (0.584*(sand*clay)) + 0.078;
+    double theta_S33 = theta_S33t + (0.636*theta_S33t-0.107);
+    theta_sat = theta33+theta_S33 - (0.097*sand) + 0.043;
+  }
+  return(theta_sat);
+}
 /**
  * Returns soil water potential (in MPa) according to Saxton's pedotransfer model
  * theta - soil water content (in % volume)
@@ -25,6 +49,13 @@ double theta2psiSaxton(double clay, double sand, double theta, double om = NA_RE
     A = -0.1 * exp(-4.396 - (0.0715*clay)-(0.0004880*pow(sand,2.0)) - (0.00004285*pow(sand,2.0)*clay));
     B = -3.140 - (0.00222*pow(clay,2.0)) - (0.00003484*pow(sand,2.0)*(clay));
     psi = A*pow(theta,B);
+    if(psi > -0.01) { // If calculated psi > -10 KPa use linear part
+      double theta_sat = thetaSaturationSaxton(clay, sand, om);
+      double psi_e = -0.1*(-0.108+(0.341*theta_sat));//air-entry tension in MPa
+      double theta_10 = pow(-0.01/A, 1.0/B);//exp((2.302-log(A))/B);
+      psi = -0.01 - ((theta-theta_10)*(-0.01 - psi_e)/(theta_sat - theta_10));
+      psi = std::min(psi,psi_e); //Truncate to air entry tension
+    }
   } else {
     sand = sand/100.0;
     clay = clay/100.0;
@@ -36,6 +67,15 @@ double theta2psiSaxton(double clay, double sand, double theta, double om = NA_RE
     B = 3.816712/(log(theta33)-log(theta1500)); //3.816712 = log(1500) - log(33)
     A = exp(3.496508 + B*log(theta33)); // 3.496508 = log(33)
     psi = -0.001*(A*pow(theta,-1.0*B));
+    if(psi > -0.033) { // If calculated psi > -33 KPa use linear part
+      double theta_S33t = (0.278*sand) + (0.034*clay)+ (0.022*om) - (0.018*(sand*om)) - (0.027*(clay*om)) - (0.584*(sand*clay)) + 0.078;
+      double theta_S33 = theta_S33t + (0.636*theta_S33t-0.107);
+      double theta_sat = theta33+theta_S33 - (0.097*sand) + 0.043;
+      double psi_et = -(21.67*sand) - (27.93*clay) - (81.97*theta_S33)+(71.12*(sand*theta_S33))+(8.29*(clay*theta_S33))+(14.05*(sand*clay))+27.16;
+      double psi_e = -0.001*(psi_et + ((0.02*pow(psi_et, 2.0)) - (0.113*psi_et) - 0.70));//air-entry tension in MPa
+      psi = -0.033 - ((theta-theta33)*(-0.033 - psi_e)/(theta_sat - theta33));
+      psi = std::min(psi,psi_e); //Truncate to air entry tension
+    }
   }
   if(psi < -40.0) psi = -40.0;
   if(theta==0.0) psi = -40.0;
@@ -52,10 +92,18 @@ double psi2thetaSaxton(double clay, double sand, double psi, double om = NA_REAL
   double theta = NA_REAL;
   //If organic matter is missing use Saxton et al (1986)
   //Otherwise use Saxton & Rawls (2006)
-  if(NumericVector::is_na(om)) {
+  if(NumericVector::is_na(om)) { // less than -10 kPa = -0.01 MPa
     A = -0.1 * exp(-4.396 - (0.0715*clay)-(0.0004880*pow(sand,2.0)) - (0.00004285*pow(sand,2.0)*clay));
     B = -3.140 - (0.00222*pow(clay,2.0)) - (0.00003484*pow(sand,2.0)*(clay));
-    theta = pow(psi/A, 1.0/B);
+    if(psi< -0.01) {
+      theta = pow(psi/A, 1.0/B);
+    } else { //Linear part of the relationship (from -10 kPa to air entry tension)
+      double theta_sat = thetaSaturationSaxton(clay, sand, om);
+      double psi_e = -0.1*(-0.108+(0.341*theta_sat));//air-entry tension in MPa
+      double theta_10 = pow(-0.01/A, 1.0/B);//exp((2.302-log(A))/B);
+      psi = std::min(psi,psi_e); //Truncate to air entry tension
+      theta = theta_10+(((-0.01-psi)*(theta_sat - theta_10))/(-0.01-psi_e));
+    }
   } else {
     sand = sand/100.0;
     clay = clay/100.0;
@@ -66,9 +114,19 @@ double psi2thetaSaxton(double clay, double sand, double psi, double om = NA_REAL
     double theta33 = theta33t + (1.283*pow(theta33t,2.0) - 0.374 * theta33t - 0.015);
     B = 3.816712/(log(theta33)-log(theta1500)); //3.816712 = log(1500) - log(33)
     A = exp(3.496508 + B*log(theta33)); // 3.496508 = log(33)
-    psi = psi*(-1000.0);
     // Rcout<<theta1500t<<" "<<theta1500<<" "<<theta33t<<" "<<theta33<<" "<< A<<" "<<B<<" "<< psi<<"\n";
-    theta = pow(psi/A, -1.0/B);
+    if(psi< -0.033) {
+      psi = psi*(-1000.0);
+      theta = pow(psi/A, -1.0/B);
+    } else {//Linear part of the relationship (from -10 kPa to air entry tension)
+      double theta_S33t = (0.278*sand) + (0.034*clay)+ (0.022*om) - (0.018*(sand*om)) - (0.027*(clay*om)) - (0.584*(sand*clay)) + 0.078;
+      double theta_S33 = theta_S33t + (0.636*theta_S33t-0.107);
+      double theta_sat = theta33+theta_S33 - (0.097*sand) + 0.043;
+      double psi_et = -(21.67*sand) - (27.93*clay) - (81.97*theta_S33)+(71.12*(sand*theta_S33))+(8.29*(clay*theta_S33))+(14.05*(sand*clay))+27.16;
+      double psi_e = -0.001*(psi_et + ((0.02*pow(psi_et, 2.0)) - (0.113*psi_et) - 0.70));//air-entry tension in MPa
+      psi = std::min(psi,psi_e); //Truncate to air entry tension
+      theta = theta33+(((-0.033-psi)*(theta_sat - theta33))/(-0.033-psi_e));
+    }
   }
   return(theta);
 }

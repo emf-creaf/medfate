@@ -1899,6 +1899,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// thetaSaturationSaxton
+double thetaSaturationSaxton(double clay, double sand, double om);
+RcppExport SEXP _medfate_thetaSaturationSaxton(SEXP claySEXP, SEXP sandSEXP, SEXP omSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type clay(claySEXP);
+    Rcpp::traits::input_parameter< double >::type sand(sandSEXP);
+    Rcpp::traits::input_parameter< double >::type om(omSEXP);
+    rcpp_result_gen = Rcpp::wrap(thetaSaturationSaxton(clay, sand, om));
+    return rcpp_result_gen;
+END_RCPP
+}
 // theta2psiSaxton
 double theta2psiSaxton(double clay, double sand, double theta, double om);
 RcppExport SEXP _medfate_theta2psiSaxton(SEXP claySEXP, SEXP sandSEXP, SEXP thetaSEXP, SEXP omSEXP) {
@@ -2598,6 +2611,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_ldrDistribution", (DL_FUNC) &_medfate_ldrDistribution, 3},
     {"_medfate_rootLengths", (DL_FUNC) &_medfate_rootLengths, 3},
     {"_medfate_xylemConductanceProportions", (DL_FUNC) &_medfate_xylemConductanceProportions, 3},
+    {"_medfate_thetaSaturationSaxton", (DL_FUNC) &_medfate_thetaSaturationSaxton, 3},
     {"_medfate_theta2psiSaxton", (DL_FUNC) &_medfate_theta2psiSaxton, 4},
     {"_medfate_psi2thetaSaxton", (DL_FUNC) &_medfate_psi2thetaSaxton, 4},
     {"_medfate_psi2thetaVanGenuchten", (DL_FUNC) &_medfate_psi2thetaVanGenuchten, 5},

@@ -63,7 +63,7 @@ While Saxton equations use texture and organic matter as inputs, the Van Genucht
 ```{r, fig = TRUE, fig.width= 5, fig.height=4, fig.align= 'center', echo=TRUE}
 par(mar=c(4,4,1,1))
 # Plot Saxton's retention curve
-psi = seq(-0.01, -2.0, by=-0.001)
+psi = seq(-0.001, -2.0, by=-0.001)
 plot(-psi, lapply(as.list(psi), FUN=soil.psi2thetaSX, clay=25, sand=25), 
      type="l", ylim=c(0,0.5),ylab="Water content (prop. volume)", xlab = "Soil water potential (-MPa)")
 
