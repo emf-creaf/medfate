@@ -2123,6 +2123,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// waterTableDepth
+double waterTableDepth(List soil, String model);
+RcppExport SEXP _medfate_waterTableDepth(SEXP soilSEXP, SEXP modelSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< String >::type model(modelSEXP);
+    rcpp_result_gen = Rcpp::wrap(waterTableDepth(soil, model));
+    return rcpp_result_gen;
+END_RCPP
+}
 // soilthermalcapacity
 NumericVector soilthermalcapacity(List soil, String model);
 RcppExport SEXP _medfate_soilthermalcapacity(SEXP soilSEXP, SEXP modelSEXP) {
@@ -2652,6 +2664,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_waterSAT", (DL_FUNC) &_medfate_waterSAT, 2},
     {"_medfate_theta", (DL_FUNC) &_medfate_theta, 2},
     {"_medfate_psi", (DL_FUNC) &_medfate_psi, 2},
+    {"_medfate_waterTableDepth", (DL_FUNC) &_medfate_waterTableDepth, 2},
     {"_medfate_soilthermalcapacity", (DL_FUNC) &_medfate_soilthermalcapacity, 2},
     {"_medfate_soilthermalconductivity", (DL_FUNC) &_medfate_soilthermalconductivity, 2},
     {"_medfate_er", (DL_FUNC) &_medfate_er, 3},

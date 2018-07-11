@@ -521,6 +521,23 @@ NumericVector psi(List soil, String model="SX") {
 }
 
 
+// [[Rcpp::export("soil.waterTableDepth")]]
+double waterTableDepth(List soil, String model = "SX") {
+  NumericVector dVec = soil["dVec"];
+  NumericVector W = soil["W"];
+  NumericVector Theta_FC = thetaFC(soil, model);
+  NumericVector Theta_SAT = thetaSAT(soil, model);
+  int nlayers = W.length();
+  double z = 0.0;
+  for(int l=0;l<nlayers;l++) {
+    if(W[l]>1.0) {
+      z = z + dVec[l]*(Theta_SAT[l]-Theta_FC[l]*W[l])/(Theta_SAT[l]-Theta_FC[l]);
+    } else {
+      z = z + dVec[l];
+    }
+  }
+  return(z);
+}
 
 // [[Rcpp::export("soil.thermalcapacity")]]
 NumericVector soilthermalcapacity(List soil, String model = "SX") {

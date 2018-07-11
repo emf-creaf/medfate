@@ -220,6 +220,7 @@ Control parameters are a list of parameter values, initialized using function \t
 \item{\texttt{verbose [=TRUE]}: Whether extra console output is desired during simulations.}
 \item{\texttt{soilFunctions [= "SX"]}: Water retention curve model, either "SX" (for Saxton) or "VG" (for Van Genuchten).}
 \item{\texttt{snowpack [= TRUE]}:  Whether dynamics of snow pack are included.}
+\item{\texttt{drainage [= TRUE]}:  Whether water exceeding the field capacity of the bottom layer is lost by deep drainage into a non-reachable compartment.}
 \item{\texttt{transpirationMode [= "Simple"]}: Transpiration model, in this case "Simple".}
 \item{\texttt{defaultWindSpeed [= 5]}: Default value for wind speed (in m·s$^{-1}$) when this is missing (only used for leaf fall).}
 \item{\texttt{cavitationRefill [= TRUE]}: If \texttt{FALSE} the model operates in a irreversible cavitation mode.}

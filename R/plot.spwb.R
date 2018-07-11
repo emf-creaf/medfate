@@ -6,7 +6,7 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
   DailyBalance = x$DailyBalance
   SoilWaterBalance = x$SoilWaterBalance
   nlayers = x$NumSoilLayers
-  TYPES = c("PET_Precipitation","PET_NetRain","Snow","ET","Psi","Theta","Vol", "Export", "LAI", 
+  TYPES = c("PET_Precipitation","PET_NetRain","Snow","ET","Psi","Theta","Vol", "Export", "LAI", "WTD",
             "PlantLAI",
             "PlantStress", "PlantPsi","PlantPhotosynthesis","PlantTranspiration",
             "PlantPhotosynthesisLeaf","PlantTranspirationLeaf")
@@ -90,6 +90,14 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     plotAxes()
     lines(dates, DailyBalance$LAIcelldead, lty=2)
   } 
+  else if(type=="WTD") {
+    if(is.null(ylab)) ylab = expression(paste("Water table depth  (mm)"))
+    if(is.null(ylim)) ylim = c(max(SoilWaterBalance$WTD),0)
+    plot(dates, SoilWaterBalance$WTD, ylim=ylim, type="l", ylab=ylab, 
+         xlab=xlab, xlim=xlim,frame=FALSE, col="black", axes=FALSE, lwd=1)
+    plotAxes()
+    lines(dates, SoilWaterBalance$WTD, lty=2)
+  } 
   else if(type=="Psi") {
     PsiM = SoilWaterBalance[,paste("psi",1:nlayers,sep=".")]
     if(is.null(ylab)) ylab = "Soil water potential (MPa)"    
@@ -105,7 +113,7 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
   else if(type=="Theta") {
     WM = SoilWaterBalance[,paste("W",1:nlayers,sep=".")]
     if(is.null(ylab)) ylab = "% field capacity"
-    if(is.null(ylim)) ylim = c(0,100)
+    if(is.null(ylim)) ylim = c(0,100*max(WM,na.rm = T))
     matplot(dates, WM*100, lwd=1.5,
             ylim=ylim, type="l", ylab=ylab, xlab=xlab, xlim=xlim,
             frame=FALSE, lty=c(1,2,3,4,5), col="black",axes=FALSE)

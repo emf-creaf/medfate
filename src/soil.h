@@ -10,10 +10,13 @@ double psi2thetaSaxton(double clay, double sand, double psi, double om = NA_REAL
 double theta2psiVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double theta);
 double psi2thetaVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double psi);
 
+NumericVector waterSAT(List soil, String model = "SX");
+NumericVector thetaSAT(List soil, String model = "SX");
 NumericVector waterFC(List soil, String model = "SX");
 NumericVector thetaFC(List soil, String model = "SX");
 NumericVector theta(List soil, String model="SX");
 NumericVector psi(List soil, String model="SX");
+double waterTableDepth(List soil, String model = "SX");
 
 NumericVector soilthermalconductivity(List soil, String model = "SX");
 NumericVector soilthermalcapacity(List soil, String model = "SX");

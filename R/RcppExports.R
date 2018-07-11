@@ -577,6 +577,10 @@ soil.psi <- function(soil, model = "SX") {
     .Call('_medfate_psi', PACKAGE = 'medfate', soil, model)
 }
 
+soil.waterTableDepth <- function(soil, model = "SX") {
+    .Call('_medfate_waterTableDepth', PACKAGE = 'medfate', soil, model)
+}
+
 soil.thermalcapacity <- function(soil, model = "SX") {
     .Call('_medfate_soilthermalcapacity', PACKAGE = 'medfate', soil, model)
 }

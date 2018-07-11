@@ -32,6 +32,7 @@ Function \code{plot} plots the results of the soil water balance model (see \cod
     \item{\code{"Psi"}:}{ Soil water potential.}
     \item{\code{"Theta"}:}{ Soil relative water content.}
     \item{\code{"Vol"}:}{ Soil water volumetric content.}
+    \item{\code{"WTD"}:}{ Water table depth.}
     \item{\code{"LAI"}:}{ Expanded and dead leaf area index of the whole stand.}
     \item{\code{"PlantLAI"}:}{ Plant cohort leaf area index (expanded leaves).}
     \item{\code{"PlantStress"}:}{ Plant cohort average daily drought stress.}

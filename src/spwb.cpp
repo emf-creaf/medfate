@@ -73,6 +73,7 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   //Control parameters
   List control = x["control"];
   bool snowpack = control["snowpack"];
+  bool drainage = control["drainage"];
   bool cavitationRefill = control["cavitationRefill"];
   String soilFunctions = control["soilFunctions"];
 
@@ -85,6 +86,7 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   NumericVector rfc = soil["rfc"];
   NumericVector psiVec = psi(soil, soilFunctions);
   NumericVector Water_FC = waterFC(soil, soilFunctions);
+  NumericVector Water_SAT = waterSAT(soil, soilFunctions);
   double swe = soil["SWE"]; //snow pack
   int nlayers = W.size();
   
@@ -181,9 +183,22 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
         //PROBLEM: THE effect of MACROPOROSITY SHOULD not be affected by layer subdivision
         Wn = W[l]*Water_FC[l] + VI*(1.0-macro[l]); //Update water volume
         VI = VI*macro[l] + std::max(Wn - Water_FC[l],0.0); //Update VI, adding the excess to the infiltrating water (saturated flow)
-        W[l] = std::min(std::max(0.0,Wn/Water_FC[l]),1.0); //Update theta (this modifies 'soil')
+        W[l] = std::max(0.0,std::min(Wn, Water_FC[l])/Water_FC[l]); //Update theta (this modifies 'soil')
       } 
-      DeepDrainage = VI; //Reset deep drainage
+    }
+    if(drainage) {//Set deep drainage
+      DeepDrainage = VI; 
+    } else { //Fill to saturation and upwards if needed
+      for(int l=(nlayers-1);l>=0;l--) {
+        if((dVec[l]>0) & (VI>0)) {
+          Wn = W[l]*Water_FC[l] + VI; //Update water volume
+          VI = std::max(Wn - Water_SAT[l],0.0); //Update VI, using the excess of water over saturation
+          W[l] = std::max(0.0,std::min(Wn, Water_SAT[l])/Water_FC[l]); //Update theta (this modifies 'soil') here no upper
+        }
+      }
+      if(VI>0) { //If soil is completely saturated increase Runoff
+        Runoff = Runoff + VI;
+      }
     }
   }
   psiVec = psi(soil,soilFunctions); //Update soil water potential
@@ -263,7 +278,7 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   // Rcout<<Esoil<<" "<<  std::accumulate(EsoilVec.begin(),EsoilVec.end(),0.0)<<"\n";
 
   //Apply decrease in soil layers (psi will be updated next call)
-  for(int l=0;l<nlayers;l++) W[l] =std::max(W[l]-(EplantVec[l]+EsoilVec[l])/Water_FC[l],0.0);
+  for(int l=0;l<nlayers;l++) W[l] = W[l] - ((EplantVec[l]+EsoilVec[l])/Water_FC[l]);
 
   double alpha = std::max(std::min(tday/20.0,1.0),0.0);
   //For comunication with growth and landscape water balance
@@ -301,6 +316,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   
   //Control parameters
   List control = x["control"];
+  bool drainage = control["drainage"];
   String soilFunctions = control["soilFunctions"];
   List numericParams = control["numericParams"];
   double psiStep = numericParams["psiStep"];
@@ -326,6 +342,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   NumericVector psiVec = psi(soil, soilFunctions);
   NumericVector Water_FC = waterFC(soil, soilFunctions);
   NumericVector Theta_FC = thetaFC(soil, soilFunctions);
+  NumericVector Water_SAT = waterSAT(soil, soilFunctions);
   NumericVector sand = soil["sand"];
   NumericVector clay = soil["clay"];
   NumericVector Tsoil = soil["Temp"]; 
@@ -448,11 +465,25 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
     //Update topsoil layer
     for(int l=0;l<nlayers;l++) {
       if((dVec[l]>0) & (VI>0)) {
-        Wn = W[l]*Water_FC[l] + VI*(1.0-macro[l]); //Update water volume (changes 'soil')
+        //PROBLEM: THE effect of MACROPOROSITY SHOULD not be affected by layer subdivision
+        Wn = W[l]*Water_FC[l] + VI*(1.0-macro[l]); //Update water volume
         VI = VI*macro[l] + std::max(Wn - Water_FC[l],0.0); //Update VI, adding the excess to the infiltrating water (saturated flow)
-        W[l] = std::min(std::max(0.0,Wn/Water_FC[l]),1.0); //Update theta
+        W[l] = std::max(0.0,std::min(Wn, Water_FC[l])/Water_FC[l]); //Update theta (this modifies 'soil')
       } 
-      DeepDrainage = VI; //Reset deep drainage
+    }
+    if(drainage) {//Set deep drainage
+      DeepDrainage = VI; 
+    } else { //Fill to saturation and upwards if needed
+      for(int l=(nlayers-1);l>=0;l--) {
+        if((dVec[l]>0) & (VI>0)) {
+          Wn = W[l]*Water_FC[l] + VI; //Update water volume
+          VI = std::max(Wn - Water_SAT[l],0.0); //Update VI, using the excess of water over saturation
+          W[l] = std::max(0.0,std::min(Wn, Water_SAT[l])/Water_FC[l]); //Update theta (this modifies 'soil') here no upper
+        }
+      }
+      if(VI>0) { //If soil is completely saturated increase Runoff
+        Runoff = Runoff + VI;
+      }
     }
   }
   psiVec = psi(soil, soilFunctions); //Update soil water potential
@@ -764,7 +795,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
     //Substract plant transpiration from soil moisture and calculate maximum difference in soil psi
     double maxDif = 0;
     for(int l=0;l<nlayers;l++) {
-      W[l] =std::min(std::max(W[l]-(EplantVecInstant[l]/Water_FC[l]),0.0),1.0);
+      W[l] = std::max(W[l]-(EplantVecInstant[l]/Water_FC[l]),0.0);
     }
     psiVec = psi(soil, soilFunctions);
     for(int l=0;l<nlayers;l++) {
@@ -892,7 +923,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
     cumPost = cumAnt+dVec[l];
     if(l<(nlayers-1)) EsoilVec[l] = Esoil*(exp(-Ksoil*cumAnt)-exp(-Ksoil*cumPost));
     else EsoilVec[l] = Esoil*exp(-Ksoil*cumAnt);
-    W[l] =std::min(std::max(W[l]-(EsoilVec[l]/Water_FC[l]),0.0),1.0);
+    W[l] = std::max(W[l]-(EsoilVec[l]/Water_FC[l]),0.0);
   }
   psiVec = psi(soil, soilFunctions); //Update soil water potential
   
@@ -1317,6 +1348,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   NumericMatrix Wdays(numDays, nlayers); //Soil moisture content in relation to field capacity
   NumericMatrix psidays(numDays, nlayers);
   NumericMatrix MLdays(numDays, nlayers);
+  NumericVector WaterTable(numDays, NA_REAL);
   NumericVector MLTot(numDays, 0.0);
   NumericVector SWE(numDays, 0.0);
   
@@ -1389,7 +1421,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
       //2. Water balance and photosynthesis
       if(transpirationMode=="Simple") {
         s = spwbDay1(x, soil, MeanTemperature[i], PET[i], Precipitation[i], ER[i], 0.0, 
-                     Radiation[i], elevation, false); //No Runon in simulations for a single cell
+                     Radiation[i], elevation, verbose); //No Runon in simulations for a single cell
       } else if(transpirationMode=="Complex") {
         int ntimesteps = control["ndailysteps"];
         double tstep = 86400.0/((double) ntimesteps);
@@ -1475,6 +1507,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
       Eplanttot[i] = sum(EplantCoh);
       
       if(i<(numDays-1)) Wdays(i+1,_) = W;
+      WaterTable[i] = waterTableDepth(soil, soilFunctions);
   }
   if(verbose) Rcout << "done\n";
   
@@ -1482,7 +1515,6 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
     MLdays(_,l) = Wdays(_,l)*Water_FC[l]; 
     MLTot = MLTot + MLdays(_,l);
   }
-
   NumericVector Etot = Eplanttot+Esoil;
   
   if(verbose) {
@@ -1511,7 +1543,9 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   }
   if(verbose) Rcout<<"Building SWB and DWB output ...";
   
-   Rcpp::DataFrame SWB = DataFrame::create(_["W"]=Wdays, _["ML"]=MLdays,_["MLTot"]=MLTot,_["psi"]=psidays, _["SWE"] = SWE);
+   Rcpp::DataFrame SWB = DataFrame::create(_["W"]=Wdays, _["ML"]=MLdays,_["MLTot"]=MLTot,
+                                           _["WTD"] = WaterTable,
+                                           _["psi"]=psidays, _["SWE"] = SWE);
    Rcpp::DataFrame DWB = DataFrame::create(_["GDD"] = GDD,
                                            _["LAIcell"]=LAIcell, _["LAIcelldead"] = LAIcelldead,  _["Cm"]=Cm, _["Lground"] = Lground, _["PET"]=PET, 
                                            _["Precipitation"] = Precipitation, _["Rain"] = Rain, _["Snow"] = Snow,
