@@ -1088,13 +1088,22 @@ NumericVector getTrackSpeciesDDS(NumericVector trackSpecies, NumericVector DDS, 
   return(DDSsp);
 }
 
+// [[Rcpp::export("order_test")]]
+IntegerVector order_vector(NumericVector x) {
+  if (is_true(any(duplicated(x)))) {
+    Rf_warning("There are duplicates in 'x'; order not guaranteed to match that of R's base::order");
+  }
+  NumericVector sorted = clone(x).sort();
+  return match(sorted, x);
+}
+
 
 // [[Rcpp::export(".spwbgridDay")]]
 List spwbgridDay(CharacterVector lct, List xList, List soilList, 
                 IntegerVector waterO, List queenNeigh, List waterQ,
                 NumericVector tdayVec, NumericVector petVec, NumericVector rainVec, 
                 NumericVector erVec, NumericVector radVec, NumericVector elevation,
-                NumericVector trackSpecies) {
+                NumericVector trackSpecies, double patchsize) {
   int nX = xList.size();
   int nTrackSpecies = trackSpecies.size();
   NumericVector Rain(nX, NA_REAL), Snow(nX, NA_REAL), NetRain(nX,NA_REAL), Runon(nX,0.0), Infiltration(nX,NA_REAL);
@@ -1102,6 +1111,82 @@ List spwbgridDay(CharacterVector lct, List xList, List soilList,
   NumericVector Esoil(nX,NA_REAL), Eplant(nX,NA_REAL);
   NumericMatrix Transpiration(nX, nTrackSpecies), DDS(nX, nTrackSpecies);
   double runoffExport = 0.0;
+  
+  //A. Subsurface fluxes
+  double cellArea = patchsize; //cell size in m2
+  double cellWidth = sqrt(patchsize); //cell width in m
+  double n = 3.0;
+  double K = 7.2; //7.2 m/day
+  //1. Calculate water table depth
+  NumericVector WTD(nX,NA_REAL); //Water table depth
+  NumericVector WaterTableElevation(nX,NA_REAL); //water table elevation (including cell elevation) in meters
+  for(int i=0;i<nX;i++){
+    if((lct[i]=="wildland") || (lct[i]=="agriculture") ) {
+      List x = Rcpp::as<Rcpp::List>(xList[i]);
+      List soil = Rcpp::as<Rcpp::List>(soilList[i]);
+      List control = x["control"];
+      WTD[i] = waterTableDepth(soil, control["soilFunctions"]);
+      WaterTableElevation[i] = elevation[i]-(WTD[i]/1000.0);
+    }
+  }
+  //2. Calculate inflow/outflow for each cell (in m3/day)
+  NumericVector inflow(nX, 0.0); 
+  NumericVector outflow(nX, 0.0); 
+  for(int i=0;i<nX;i++){
+    if((lct[i]=="wildland") || (lct[i]=="agriculture") ) {
+      List soil = Rcpp::as<Rcpp::List>(soilList[i]);
+      double D = soil["SoilDepth"]; //Soil depth in mm
+      if(WTD[i]<D) {
+        double T = ((K*D*0.001)/n)*pow(1.0-(WTD[i]/D),n); //Transmissivity in m2
+        IntegerVector ni = Rcpp::as<Rcpp::IntegerVector>(queenNeigh[i]);
+        //water table slope between target and neighbours
+        for(int j=0;j<ni.size();j++) {
+          double tanBeta = (WaterTableElevation[i]-WaterTableElevation[ni[j]-1])/cellWidth;
+          if(tanBeta>0.0) {
+            if((lct[ni[j]-1]=="wildland") || (lct[ni[j]-1]=="agriculture")) { //Only flows to other wildland or agriculture cells
+              double qn = tanBeta*T*cellWidth; //flow in m3
+              inflow[ni[j]-1] += qn;
+              outflow[i] += qn;
+            }
+          }
+        }
+      } 
+    }
+  }
+  //3. Apply changes in soil moisture to each cell 
+  for(int i=0;i<nX;i++){
+    if((lct[i]=="wildland") || (lct[i]=="agriculture") ) {
+      double deltaS = 1000.0*((inflow[i]-outflow[i])/cellArea); //change in moisture in mm (L/m2)
+      if(deltaS != 0.0) {
+        // Rcout<<deltaS<<"_";
+        List x = Rcpp::as<Rcpp::List>(xList[i]);
+        List soil = Rcpp::as<Rcpp::List>(soilList[i]);
+        NumericVector W = soil["W"]; //Access to soil state variable
+        NumericVector dVec = soil["dVec"];
+        NumericVector macro = soil["macro"];
+        NumericVector rfc = soil["rfc"];
+        List control = x["control"];
+        String soilFunctions = control["soilFunctions"];
+        NumericVector Water_FC = waterFC(soil, soilFunctions);
+        NumericVector Water_SAT = waterSAT(soil, soilFunctions);
+        int nlayers = dVec.length();
+        for(int l=(nlayers-1);l>=0;l--) {
+          if(dVec[l]>0) {
+            double Wn = W[l]*Water_FC[l] + deltaS; //Update water volume
+            deltaS = std::max(Wn - Water_SAT[l],0.0); //Update deltaS, using the excess of water over saturation
+            W[l] = std::max(0.0,std::min(Wn, Water_SAT[l])/Water_FC[l]); //Update theta (this modifies 'soil') here no upper
+          }
+        }
+        if(deltaS>0) { //If soil is completely saturated increase Runon (return flow) to be processed with vertical flows
+          Runon[i] += deltaS;
+        }
+        // Rcout<<WTD[i]<<"/"<<waterTableDepth(soil,soilFunctions)<<"\n";
+      }
+    }
+  }
+  Rcout<<"\n";
+  
+  //B. Vertical and surface fluxes
   for(int i=0;i<nX;i++) {
     //get next cell in order
     int iCell = waterO[i]-1; //Decrease index!!!!
@@ -1141,7 +1226,7 @@ List spwbgridDay(CharacterVector lct, List xList, List soilList,
           runoffExport += ri; //If no suitable neighbours add ri to landscape export via runoff
         }
       }
-    } else if(lct[iCell]=="rock") {//all Precipitation becomes runoff if cell is rock outcrop
+    } else if(lct[iCell]=="rock") {//all Precipitation becomes surface runoff if cell is rock outcrop
       Runoff[iCell] =  Runon[iCell]+rainVec[iCell];
       double ri = Runoff[iCell];
       if(ri>0.0) {
@@ -1157,10 +1242,12 @@ List spwbgridDay(CharacterVector lct, List xList, List soilList,
       // static cells receive water from other cells or Precipitation
       // but do not export to the atmosphere contribute nor to other cells.
       // Hence, water balance over the landscape is achieved by
-      // adding this water to the landscape export via runoff.
+      // adding this water to the landscape export via landscape runoff.
       runoffExport += Runon[iCell] + rainVec[iCell];
     }
   }
+
+    
   DataFrame waterBalance = DataFrame::create(_["Rain"] = Rain, _["Snow"] = Snow, _["NetRain"] = NetRain, _["Runon"] = Runon, _["Infiltration"] = Infiltration,
                                    _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
                                    _["Esoil"] = Esoil, _["Eplant"] = Eplant);

@@ -6,7 +6,8 @@ __Version history__
 _Version 0.6.1, July 2018.
 1. Saturated theta in Saxton model
 2. Water table depth added
-3. Boolen option 'drainage' added to soil water balance
+3. Boolean option 'drainage' added to soil water balance
+4. Added subsurface flow processes to spwbgrid
 
 _Version 0.6.0, June 2018.
 1. Function name 'swb' (and all related functions) changed to 'spwb'

@@ -36,11 +36,15 @@ spwbgrid<-function(y, SpParams, meteo, dates = NULL,
   cat(paste("Number of days to simulate: ",nDays,"\n", sep=""))
   cat(paste("Number of summaries: ", nSummary,"\n\n", sep=""))
   
-    
+  #Set control drainage to false
+  control$drainage = FALSE
+
   if(control$verbose) cat(paste("Preparing spwb input"))
   spwbInputList = vector("list", nCells)
+  patchsize = NA
   for(i in 1:nCells) {
     yid = y@forestlist[[i]]
+    patchsize = yid$patchsize
     soil = y@soillist[[i]]
     if((!is.na(yid)) && (!is.na(soil))) {             
       xi = forest2spwbInput(yid, soil, SpParams, control)
@@ -112,7 +116,7 @@ spwbgrid<-function(y, SpParams, meteo, dates = NULL,
                      y@waterOrder, y@queenNeigh, y@waterQ,
                      gridMeanTemperature, gridPET, gridPrecipitation, gridER,
                      gridRadiation, elevation,
-                     trackSpecies)      
+                     trackSpecies, patchsize)      
     ifactor = df.int[day]
     Runon[,ifactor] = Runon[,ifactor] + df$WaterBalance$Runon
     Runoff[,ifactor] = Runoff[,ifactor] + df$WaterBalance$Runoff

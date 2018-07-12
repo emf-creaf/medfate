@@ -424,18 +424,12 @@ storage capacity), $E/R$ (ratio between evaporation and rainfall rates) and p
 
 
 \subsection{Runoff, infiltration and percolation}
-The water that reaches the soil is the sum of net rainfall ($Pr_{net}$), runon ($Ro$) and melted snow ($Sm$). The amount of water infiltrating into the soil is $Pr_{net} + Sm + Ro - Ru$, where $Ru$ is the water lost by runoff (see function \texttt{spwb.SoilInfiltration}). Runoff (in mm), is calculated using the USDA SCS curve number method, as in Boughton (1989):
+The water that reaches the soil is the sum of net rainfall ($Pr_{net}$), runon ($Ro$) and melted snow ($Sm$). The amount of water infiltrating into the soil is $Pr_{net} + Sm + Ro - Ru$, where $Ru$ is the water lost by surface runoff (see function \texttt{spwb.SoilInfiltration}). Surface runoff (in mm), is calculated using the USDA SCS curve number method, as in Boughton (1989):
 \begin{equation}
 Ru=\frac{(Pr_{net} + Ro + Sm - 0.2 \cdot V_{soil})^2}{(Pr_{net} + Ro + Sm - 0.8 \cdot V_{soil})}
 \end{equation}
-where $V_{soil}$ (in mm) is the overall soil water retention capacity (i.e. the
-sum of $V_s$ values for topsoil and subsoil).
-
-Following Granier (1999), part of the water reaching one soil layer percolates quickly
-through the macropores. The remaining water is retained by the micropores refilling
-the current soil layer. When this soil layer reaches its field capacity the excess
-of water percolates to the soil layer below. The water percolating from the lowest
-layer is considered deep drainage, $Dd$. 
+where $V_{soil}$ (in mm) is the overall soil water retention capacity. Following Granier (1999), part of the water reaching one soil layer percolates quickly through the macropores. The remaining water is retained by the micropores refilling the current soil layer. When this soil layer reaches its field capacity the excess
+of water also percolates to the soil layer below. 
 \begin{center}
 <<fig=TRUE, width=8, height=4, echo=FALSE>>==
 par(mfrow=c(1,2), mar=c(5,5,5,1))
@@ -488,7 +482,6 @@ lines(NP,NP-spwb.SoilInfiltration(NP, V[5]), lty=5)
 legend("topleft", bty="n", lty=1:5, legend=c(paste("d =", SoilDepth,"Vsoil =",round(V),"mm")))
 @
 \end{center}
-
 \begin{center}
 \emph{Fig. 2}: Examples of infiltration/runoff calculation for different values
 of net rainfall and overall retention capacity (see function
@@ -496,6 +489,8 @@ of net rainfall and overall retention capacity (see function
 (topsoil+subsoil) and assuming that soil texture is 15\% clay and 25\% sand. Rock
 fragment content was 25\% and 40\% for the topsoil and subsoil, respectively.
 \end{center}
+
+In non-gridded model runs, and if \texttt{drainage = TRUE}, the water percolating from the lowest layer is considered deep drainage, $Dd$, and soil layers are never above field capacity. If \texttt{drainage = FALSE}, or in gridded model runs, the excess of water in the lowest soil layer is not lost via drainage, so that this layer (and those above) can be filled up to saturation. This additional filling is done starting from below, and when a given layer reaches saturation, the model adds the remaining water to the layer above. If all layers are filled to saturation, the remaining water is assumed to be infiltration excess and is added to the surface runoff. Water between field capacity and saturation will lead to subsurface flows in gridded simulations, whereas in non-gridded simulations it is assumed to be confined in the soil.
 
 \subsection{Plant transpiration and photosynthesis}
 \subsubsection{PET and maximum canopy transpiration}
