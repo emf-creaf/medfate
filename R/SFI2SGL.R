@@ -166,6 +166,8 @@ SFI2SGL<-function(landTopo, SFItreeData, SFIshrubData,
   if(control$verbose==TRUE) cat(" - Water discharge order")
   waterOrder = order(elevation, decreasing=TRUE)
   waterQ = vector("list", length(queenNeigh))
+  # Relative discharge from:
+  #         Ostendorf B, Reynolds JF (1993) Relationships between a terrain-based hydrologic model and patch-scale vegetation patterns in an arctic tundra landscape. Landsc Ecol 8:229–237. doi: 10.1007/BF00125130
   qfun<-function(xi, yi, zi, X, Y, Z) {
     n = length(X)
     Li = sqrt((X-xi)^2+(Y-yi)^2+(Z-zi)^2)

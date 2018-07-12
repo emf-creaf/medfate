@@ -29,13 +29,13 @@ The model considers only the vertical spatial dimension of the stand and not the
 plants within it. In other words, the model is not spatially explicit (i.e., plants do not interact for space explicitly). Still, the stand is divided into groups of plants, here referred to as `plant cohorts` of different species, height and leaf area index ($LAI$). Height and $LAI$ values determine competition for light. $LAI$ values also drive competition for water. The soil water balance follows the design principles of SIERRA (Mouillot et al., 2001, Ruffault et al., 2014, 2013) and BILJOU (Granier et al., 2007, 1999), although
 some features are taken from other models (Kergoat 1998). Potential evapotranspiration ($PET$) is given as input and the model determines maximum canopy transpiration ($Tr_{\max}$) using an empirical relationship between the $LAI$ of the stand and the ratio $Tr_{\max}/PET$ (Granier et al. 1999). Actual plant transpiration is calculated using a simple function depending on current soil moisture level and degree of shading.
 
-When lateral water transport is also considered the water inputs of the stand includes not only precipitation but also runoff water from cells of its upper microwatershed, as done in SIERRA (Mouillot et al., 2001). 
+In gridded simulations, lateral water transport between adjancent cells is also considered. Then, the surface water inputs of the stand include not only precipitation and snow melt but also overland surface flows from cells of its upper microwatershed, with routing following T-HYDRO (Ostendor \& Reynolds, 1993); and subsurface flows (and variations in water table depth) are modelled following the kinematic wave approach of DSHVM (Wigmosta et al. 1994).
 
 \subsection{State variables}
 The model has the following state variables:
 \begin{itemize}
 \item{Cumulative growth degree days, $GDD$, are tracked by the model and determine leaf phenological status of winter deciduous species.}
-\item{Daily soil moisture content dynamics on each layer $s$ are tracked using $W = \theta(\Psi_s)/ \theta_{fc,s}$, the \textbf{proportion of volumetric soil moisture in relation to field capacity}, where field capacity, $\theta_{fc,s}$, is assumed to correspond to $\Psi_{fc} = -0.033$ MPa. Soils are not allowed to contain more water than dictated by their field capacity.}
+\item{Daily soil moisture content dynamics on each layer $s$ are tracked using $W_s = \theta(\Psi_s)/ \theta_{fc,s}$, the \textbf{proportion of volumetric soil moisture in relation to field capacity}, where field capacity, $\theta_{fc,s}$, is assumed to correspond to $\Psi_{fc} = -0.033$ MPa.}
 \item{If snow pack is considered, the model also tracks $S_{snow}$, the snow water equivalent (in mm) of the snow pack storage over the surface.}
 \item{If irreversible cavitation is activated, the model also tracks $P_{embolized,i}$, the maximum value of daily drought stress so far experienced.}
 \end{itemize}
@@ -51,30 +51,26 @@ where $Pr$ is precipitation as rainfall, $Sm$ is water from melting the snow pac
   \end{equation}
 where $Ps$ is precipitation as snowfall and $Sm$ is snow melt. When landscape hydrological processes are considered, daily variations in soil water content is then summarized as:
   \begin{equation}
-  \Delta{SWC} = Pr + Sm + Ro - In - Ru - Dd - Es - Tr
+  \Delta{SWC} = Pr + Sm + Ro - In - Ru - Dd - Es - Tr + \Delta{S_{sub}}
   \end{equation}
-where $Ro$ is surface runon water entering the cell from neighbouring cells at higher elevation. 
+where $Ro$ is surface runon water entering the cell from neighbouring cells at higher elevation and $\Delta{S_{sub}}$ is the variation in water content derived from subsurface lateral processes. 
 
 \subsection{Process scheduling}
 Every day water balance is perfomed as follows. The model first updates leaf area values according to the phenology of species and calculates light extinction. After that, the model updates soil water content of soil layers in two steps:
 \begin{enumerate}
 \item{If snow dynamics are included, increase snow pack from snow precipitation ($Ps$) and decreases it from snow melting ($Sm$);}
-\item{Increase soil moisture due to rainfall ($Pr$), runon ($Ro$) and (if considered) snow melting ($Sm$), after accounting for canopy interception loss ($In$), surface runoff ($Ru$) and deep drainage ($Dd$);}
+\item{Increase soil moisture due to rainfall ($Pr$), surface runon ($Ro$) and snow melting ($Sm$), after accounting for canopy interception loss ($In$), surface runoff ($Ru$) and deep drainage ($Dd$);}
 \item{Decrease water content due to bare soil evaporation ($Es$), and plant
 transpiration ($Tr$).}
 \item{Determines drought stress index for each plant cohort.}
 \end{enumerate}
 
-When landscape hydrological processes are not considered, daily water balance
-simluations can be done for cells independently (i.e., the whole simulation
-period can be done one cell before going to the next one). When lateral water
-transport is also considered, however, water balance of a given day is conducted
-for all cells before starting the next day. Moreover, a discharge parameter table
-is prepared at the beginning of the simulation, cells are processed in an order
-determined by elevation (i.e. cells at higher elevation are processed before cells
-at lower elevation) and the water balance of a given target cell is influenced by
-surface runon ($Ro$) coming froom those neighboring cells that are at higher
-elevation. 
+In non-gridded model runs, daily water balance simluations can be done for stands independently (i.e., the whole simulation period can be done in one stand before going to the next one). In gridded simulations,  however, water balance of a given day is conducted for all cells before starting the next day. Moreover, surface flows and subsurface flows are dealt in separate steps:
+\begin{enumerate}
+\item{Vertical flows and overland lateral flows are simulated first. A relative discharge parameter table is prepared at the beginning of the simulation, and cells are processed in an order determined by elevation (i.e. cells at higher elevation are processed before cells at lower elevation) and the water balance of a given target cell is influenced by surface runon ($Ro$) coming froom those neighboring cells that are at higher elevation.}
+\item{Subsurface flows (i.e., flows leading to $\Delta{S_{sub}}$) are simulated at the end of the day. Cells are allowed to exchange subsurface water with their eight neighbours, depending on the water table slope in each direction, which may not exactly follow elevation differences.}
+\end{enumerate}
+ 
 
 
 \section{Model inputs and outputs}
@@ -114,11 +110,11 @@ Parameters of the van Genuchten-Mualem model are estimated from the physical des
 Water retention curve of a soil layer $s$ is the relationship between the water content, $\theta_s$ (in m$^3 \cdot $m$^{-3}$ of soil), and the soil water potential, $\Psi_s$ (in MPa). This curve is characteristic for different types of soil, and is also called the soil moisture characteristic. Two types of water retention curves are offered for the water balance model:
 
 \begin{itemize}
-\item{\textbf{Saxton model}: In this model, volumetric soil moisture $\theta(\Psi_s)$ corresponding to a given water potential $\Psi$ (in MPa) is calculated using:
+\item{\textbf{Saxton model}: In this model, volumetric soil moisture $\theta(\Psi_s)$ corresponding to a given water potential $\Psi$ (in MPa) below $\Psi_{fc}$ is calculated using:
 \begin{equation}
 \theta(\Psi) = (\Psi/A)^{(1/B)}
 \end{equation}
-where $A$ and $B$ depend on the texture and, if available, organic matter in the soil layer. If organic matter is available, $A$ and $B$ are calculated $P_{clay}$, $P_{sand}$ and $OM$ following Saxton and Rawls (2006). Otherwise, they are calculated from $P_{clay}$ and $P_{sand}$ as indicated in Saxton et al. (1986).}
+where $A$ and $B$ depend on the texture and, if available, organic matter in the soil layer. If organic matter is available, $A$ and $B$ are calculated $P_{clay}$, $P_{sand}$ and $OM$ following Saxton and Rawls (2006). Otherwise, they are calculated from $P_{clay}$ and $P_{sand}$ as indicated in Saxton et al. (1986). Volumetric changes between field capacity and saturation are modelled with a linear function.}
 \item{\textbf{Van Genuchten model}: The well known van Genuchten (1980) model is:
 \begin{equation}
 \theta(\Psi) = \theta_{res}+\frac{\theta_{sat}+\theta_{res}}{\left[1+ (\alpha \cdot \Psi)^n \right]^{1-1/n}}
@@ -126,11 +122,18 @@ where $A$ and $B$ depend on the texture and, if available, organic matter in the
 where $\theta(\psi)$ is the water retention, $\theta_{sat}$ is the saturated water content, $\theta_{res}$ is the residual water content, $\alpha$ is related to the inverse of the air entry pressure (and here has to be expressed in MPa$^{-1}$), and $n$ is a measure of the pore-size distribution. When initializing soil using function \texttt{soil()}, the parameters of the Van Genuchten model are estimated from texture, using the USDA texture classification and the parameters in Carsel and Parrish (1988), but they can be modified manually afterwards.}
 \end{itemize}
 
+\subsubsection{Water holding capacity and water table depth}
+
 Soil water holding capacity ($V_s$, in mm) in soil layer $s$ is defined as the volumetric water content at field capacity:
 \begin{equation}
 V_s = d_s\cdot ((100-P_{rocks,s})/100)\cdot\theta_{fc,s}
 \end{equation}
-where $d_s$ is the depth of the soil layer (in mm) and $P_{rocks,s}$ is the percentage of rock fragments. Thus, soil water holding capacity depends on the water retention curve used to determine $\theta_{fc} = \theta(-0.033)$.
+where $d_s$ is the depth of the soil layer (in mm) and $P_{rocks,s}$ is the percentage of rock fragments. Thus, soil water holding capacity depends on the water retention curve used to determine $\theta_{fc} = \theta(-0.033)$. Soil water content at saturation is calculated anagolously, but replacing $\theta_{fc,s}$ by $\theta_{sat,s}$.
+
+Water table depth ($WT$, in mm) equals soil depth when all soil layers are below field capacity. When some layers are between field capacity and saturation, water table depth is calculated as:
+\begin{equation}
+WT = \sum_{s}{d_s \cdot \min\left[1,(\theta_{sat,s} - \theta(\Psi_s))/(\theta_{sat,s}-\theta_{fc,s})\right]}
+\end{equation}
 
 \subsection{Vegetation description}
 
@@ -850,7 +853,9 @@ Function \texttt{spwb} returns a list object whose elements are data tables. Eac
 \item{Mouillot, F., Rambal, S., Joffre, R., 2002. Simulating climate change impacts on fire frequency and vegetation dynamics in a Mediterranean-type ecosystem. Glob. Chang. Biol. 8, 423–437.}
 
 \item{Mouillot, F., Rambal, S., Lavorel, S., 2001. A generic process-based SImulator for meditERRanean landscApes (SIERRA): design and validation exercises. For. Ecol. Manage. 147, 75–97. doi:10.1016/S0378-1127(00)00432-1}
+
 \item{Ostendorf, B., Reynolds, J.F., 1993. Relationships between a terrain-based hydrologic model and patch-scale vegetation patterns in an arctic tundra landscape. Landsc. Ecol. 8, 229–237. doi:10.1007/BF00125130}
+
 \item{Prentice, I.C., Sykes, M.T., Cramer, W., 1993. A simulation model for the transient effects of climate change on forest landscapes. Ecol. Modell. 65, 51–70. doi:10.1016/0304-3800(93)90126-D}
 
 \item{Reynolds, C.A., Jackson, T.J., Rawls, W.J., 2000. Estimating soil water-holding capacities by linking the Food and Agriculture Organization Soil map of the world with global pedon databases and continuous pedotransfer functions. Water Resour. Res. 36, 3653–3662. doi:10.1029/2000WR900130}
@@ -873,11 +878,13 @@ Function \texttt{spwb} returns a list object whose elements are data tables. Eac
 
 \item{Stolf, R., Thurler, Á., Oliveira, O., Bacchi, S., Reichardt, K., 2011. Method to estimate soil macroporosity and microporosity based on sand content and bulk density. Rev. Bras. Ciencias do Solo 35, 447–459.}
 
-\item{Watanabe, T., Mizutani, K., 1996. Model study on micrometeorological aspects of rainfall interception over an evergreen broad-leaved. Agric. For. Meteorol. 80, 195–214.}
-
 \item{van Genuchten, M. 1980. A closed-form equation for predicting the hydraulic conductivity of unsaturated soils. Soil Science Society of America Journal, 44, 892–898.}
 
 \item{Toth, B., Weynants, M., Nemes, A., Mako, A., Bilas, G., Toth, G. 2015. New generation of hydraulic pedotransfer functions for Europe. European Journal of Soil Science 66: 226–238.}
+
+\item{Watanabe, T., Mizutani, K., 1996. Model study on micrometeorological aspects of rainfall interception over an evergreen broad-leaved. Agric. For. Meteorol. 80, 195–214.}
+
+\item{Wigmosta M, Vail L, Lettenmaier D (1994) A distributed hydrology-vegetation model for complex terrain. Water Resour Res 30:1665–1679}
 \end{itemize}
 
 \end{document}
