@@ -773,33 +773,21 @@ This causes more water being available to calculate t in the next step.
 \end{center}
 
 \subsection{Landscape hydrological processes}
-To simulate runoff from one cell to the other, the approach of Ostendorf \& Reynolds
-(1993) is used, as in SIERRA (Mouillot et al. 2001). Water lateral transport depends
-on topography only. The model determines cell neigbours following the queen rule
-(up to eight neighbours per cell). The proportion of water runoff of cell $i$ will
-be an input to a neighbouring cell $j$ is:
+\subsubsection{Overland flows}
+To simulate surface runoff from one cell to the other, the approach of Ostendorf \& Reynolds
+(1993) is used, as in SIERRA (Mouillot et al. 2001). Overland  water lateral transport occurs instantaneously and depends on topography only. The model determines cell neigbours following the queen rule (up to eight neighbours per cell). The proportion of surface water runoff of cell $i$ that will be added to the infiltration input (runon) of a neighbouring cell $j$ is:
 \begin{equation}
 q_{ij} = \frac{\Delta z_{ij}/L_{ij}}{\sum_{j}{\Delta z_{ij}/L_{ij}}}
 \end{equation}
-if $\Delta z_{ij} = z_i - z_j > 0$, that is, if the difference in elevation between
-the two cells is positive (i.e. if $z_j < z_i$). Otherwise there is no discharge
-from $i$ to $j$, i.e. $q_{ij} = 0$. $L_{ij}$ indicates the distance between cell
-$i$ and $j$ (which depends on cell size and on whether the neighbouring cell $j$
-is diagonal to cell $i$). The sumatory of the denominator is done only for
-neighbours at lower elevation, so that $\sum_{i}{qij} = 1$. 
- 
-The table of $q_{ij}$ values is calculated at the beginning of simulations only.
-Every day, cells are processed in order from higher to lower elevation. After the
-daily water balance of a given cell $i$, water runoff $R_i$ is divided among the
-neighbouring cells situated at lower elevation. The runon of a neighbour $j$,
-$O_j$ is updated as:
+if $\Delta z_{ij} = z_i - z_j > 0$, that is, if the difference in elevation between the two cells is positive (i.e. if $z_j < z_i$). Otherwise there is no overland transport from $i$ to $j$, i.e. $q_{ij} = 0$. $L_{ij}$ indicates the distance between cell $i$ and $j$ (which depends on cell size and on whether the neighbouring cell $j$ is diagonal to cell $i$). The sumatory of the denominator is done only for neighbours at lower elevation, so that $\sum_{i}{qij} = 1$. The table of $q_{ij}$ values is calculated at the beginning of simulations only.
+
+Every day, cells are processed in order from higher to lower elevation. After the daily water balance of a given cell $i$, water runoff $R_i$ is divided among the neighbouring cells at lower elevation. The runon of a neighbour $j$, $O_j$ is updated as:
 \begin{equation}
 O_j = O_j + R_i \cdot q_{ij}
 \end{equation}
-Note that a given cell $j$ can receive water discharge from more than one
-neighbour. $O_j$ values are set to zero at the beginning of each day.
+Note that a given cell $j$ can receive overland flow from more than one neighbour. $O_j$ values are set to zero at the beginning of each day.
 
-
+\subsubsection{Subsurface flow}
 
 \section{Model output}
 Function \texttt{spwb} returns a list object whose elements are data tables. Each table has dates as rows and has different output variables:
