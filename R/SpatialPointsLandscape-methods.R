@@ -72,6 +72,7 @@ setMethod("spatialSoilSummary", signature("SpatialPointsLandscape"), function(ob
                                 proj4string=object@proj4string, 
                                 bbox = object@bbox))
 })
+
 print.SpatialPointsLandscape = function(x, ..., digits = getOption("digits")) {
   cat("Object of class SpatialPointsLandscape\n")
   cat(paste("Number of points:",length(x@forestlist),"\n"))
@@ -82,6 +83,7 @@ print.SpatialPointsLandscape = function(x, ..., digits = getOption("digits")) {
   cat(paste("Coordinates and topography:\n"))
   print(df, ..., digits = digits)
 }
+
 setMethod("show", "SpatialPointsLandscape", function(object) print.SpatialPointsLandscape(object))
 
 head.SpatialPointsLandscape <- function(x, n=6L, ...) {

@@ -14,6 +14,7 @@ importFrom("GSIF", "REST.SoilGrids","over")
 useDynLib(medfate)
 exportPattern("^[[:alpha:]]+")
 exportMethods("[", show)
+exportClasses(SpatialPointsLandscape, SpatialGridLandscape, SpatialPixelsLandscape)
 
 
 importFrom(Rcpp, evalCpp)
