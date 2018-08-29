@@ -3,6 +3,10 @@
 \Rdversion{1.1}
 \docType{class}
 \alias{SpatialPointsLandscape-class}
+\alias{show,SpatialPointsLandscape-method}
+\alias{head.SpatialPointsLandscape}
+\alias{tail.SpatialPointsLandscape}
+\alias{print.SpatialPointsLandscape}
 \alias{[,SpatialPointsLandscape,ANY,ANY,ANY-method}
 
 \title{Class \code{"SpatialPointsLandscape"}}
@@ -30,12 +34,24 @@ Class \code{"\linkS4class{Spatial}"}, by class "SpatialPoints", distance 4.
 }
 \section{Methods}{
   \describe{
-    \item{[}{\code{signature(x = "SpatialPointsTopography", i = "ANY", j = "ANY", drop = "ANY")}: subsets the points, the corresponding topography data, and the forest and soil lists; only rows (points can be subsetted.}
+    \item{[}{\code{signature(x = "SpatialPointsLandscape", i = "ANY", j = "ANY", drop = "ANY")}: subsets the points, the corresponding topography data, and the forest and soil lists; only rows (points can be subsetted.}
     \item{spatialForestSummary}{\code{signature(object = "SpatialPointsLandscape")}: calculates a summary function for all forest stands and returns an object of class \code{\link{SpatialPointsDataFrame-class}}. }
     \item{spatialSoilSummary}{\code{signature(object = "SpatialPointsLandscape")}: calculates a summary function for the soil of all stands and returns an object of class \code{\link{SpatialPointsDataFrame-class}}. }
  }
 }
 
+\usage{
+\method{print}{SpatialPointsLandscape}(x, ..., digits = getOption("digits"))
+\method{head}{SpatialPointsLandscape}(x, n=6L, ...)
+\method{tail}{SpatialPointsLandscape}(x, n=6L, ...)
+}
+
+\arguments{
+\item{x}{object of class Spatial}
+\item{n}{A single integer. If positive or zero, size for the resulting object. If negative, all but the n last/first number of elements of x.}
+\item{...}{Passed through.}
+\item{digits}{Minimal number of significant digits.}
+}
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }

@@ -11,8 +11,8 @@ Authors@R: c(
 Description: Functions to simulate Mediterranean forest functioning and dynamics using cohort-based description of vegetation.
 License: GPL (>= 2)
 LazyLoad: yes
-Depends: R (>= 3.4.0), sp, spdep
-Imports: GSIF, methods, meteoland (>= 0.7.1), Rcpp (>= 0.12.12)
+Depends: R (>= 3.4.0), sp
+Imports: spdep, GSIF, methods, meteoland (>= 0.7.1), Rcpp (>= 0.12.12)
 Suggests: knitr, rmarkdown, rjson
 LinkingTo: Rcpp, meteoland
 Encoding: UTF-8
