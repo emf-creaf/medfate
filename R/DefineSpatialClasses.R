@@ -15,22 +15,7 @@ setClass("SpatialPixelsLandscape",
 setGeneric("spatialSoilSummary", valueClass ="Spatial", function(object, summaryFunction, ...){
   standardGeneric("spatialSoilSummary")
 })
-setMethod("spatialSoilSummary", signature("SpatialPointsLandscape"), function(object, summaryFunction, ...) {
-  l = object@soillist
-  if(length(l)==0) return(NULL)
-  firstNoNa = which(!unlist(lapply(l,is.na)))[1]
-  s = do.call(summaryFunction, args=list(object=l[[firstNoNa]],...))
-  sm = data.frame(matrix(NA, nrow=length(l), ncol=length(s)))
-  colnames(sm) = names(s)
-  for(i in 1:length(l)) {
-    if(!is.na(l[[i]])) sm[i,] = do.call(summaryFunction, args=list(object=l[[i]],...))
-  }
-  rownames(sm) = rownames(object@coords)
-  s = sm
-  return(SpatialPointsDataFrame(coords=object@coords, data = s, 
-                                proj4string=object@proj4string, 
-                                bbox = object@bbox))
-})
+
 setMethod("spatialSoilSummary", signature("SpatialGridLandscape"), function(object, summaryFunction, ...) {
   l = object@soillist
   if(length(l)==0) return(NULL)
@@ -50,23 +35,7 @@ setGeneric("spatialForestSummary", valueClass ="Spatial",
            function(object, summaryFunction, ...){
              standardGeneric("spatialForestSummary")
 })
-setMethod("spatialForestSummary", signature("SpatialPointsLandscape"), 
-          function(object, summaryFunction, ...) {
-  l = object@forestlist
-  if(length(l)==0) return(NULL)
-  firstNoNa = which(!unlist(lapply(l,is.na)))[1]
-  s = unlist(do.call(summaryFunction, args=list(object=l[[firstNoNa]],...)))
-  sm = data.frame(matrix(NA, nrow=length(l), ncol=length(s)))
-  colnames(sm) = names(s)
-  for(i in 1:length(l)) {
-    if(!is.na(l[i])) sm[i,] = unlist(do.call(summaryFunction, args=list(object=l[[i]],...)))
-  }
-  rownames(sm) = rownames(object@coords)
-  s = sm
-  return(SpatialPointsDataFrame(coords=object@coords, data = s, 
-                                proj4string=object@proj4string, 
-                                bbox = object@bbox))
-})
+
 setMethod("spatialForestSummary", 
           signature("SpatialGridLandscape"), function(object, summaryFunction, ...) {
   l = object@forestlist
@@ -84,26 +53,7 @@ setMethod("spatialForestSummary",
                                 proj4string=object@proj4string))
 })
 
-setMethod("[", signature("SpatialPointsLandscape"),definition =
-            function (x, i, j, ..., drop = TRUE) 
-            {
-              if (!missing(j)) 
-                warning("j index ignored")
-              if (is.character(i)) 
-                i <- match(i, row.names(x))
-              else if (is(i, "Spatial")) 
-                i = !is.na(over(x, geometry(i)))
-              if (any(is.na(i))) 
-                stop("NAs not permitted in row index")
-              sp = as(x,"SpatialPoints")[i, , drop=drop]
-              x@coords = sp@coords
-              x@bbox = sp@bbox
-              x@forestlist = x@forestlist[i]
-              x@soillist = x@soillist[i]
-              x@data = x@data[i, , ..., drop = FALSE]
-              x
-            }
-)
+
 # setGeneric("getIDs", valueClass ="character", function(object){
 #   standardGeneric("getIDs")
 # })
