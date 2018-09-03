@@ -73,7 +73,7 @@ setMethod("spatialSoilSummary", signature("SpatialPointsLandscape"), function(ob
                                 bbox = object@bbox))
 })
 
-print.SpatialPointsLandscape = function(x, ..., digits = getOption("digits")) {
+.print.SpatialPointsLandscape = function(x, ..., digits = getOption("digits")) {
   cat("Object of class SpatialPointsLandscape\n")
   cat(paste("Number of points:",length(x@forestlist),"\n"))
   cc = substring(paste(as.data.frame(
@@ -83,20 +83,20 @@ print.SpatialPointsLandscape = function(x, ..., digits = getOption("digits")) {
   cat(paste("Coordinates and topography:\n"))
   print(df, ..., digits = digits)
 }
-setMethod("print", "SpatialPointsLandscape", function(x, ..., digits = getOption("digits")) print.SpatialPointsLandscape(x, ..., digits))
+setMethod("print", "SpatialPointsLandscape", function(x, ..., digits = getOption("digits")) .print.SpatialPointsLandscape(x, ..., digits))
 
-setMethod("show", "SpatialPointsLandscape", function(object) print.SpatialPointsLandscape(object))
+setMethod("show", "SpatialPointsLandscape", function(object) .print.SpatialPointsLandscape(object))
 
-head.SpatialPointsLandscape <- function(x, n=6L, ...) {
+.head.SpatialPointsLandscape <- function(x, n=6L, ...) {
   n <- min(n, length(x))
   ix <- sign(n)*seq(abs(n))
   x[ ix , , drop=FALSE]
 }
-setMethod("head", "SpatialPointsLandscape", function(x, n=6L, ...) head.SpatialPointsLandscape(x, n, ...))
+setMethod("head", "SpatialPointsLandscape", function(x, n=6L, ...) .head.SpatialPointsLandscape(x, n, ...))
 
-tail.SpatialPointsLandscape <- function(x, n=6L, ...) {
+.tail.SpatialPointsLandscape <- function(x, n=6L, ...) {
   n <- min(n, length(x))
   ix <- sign(n)*rev(seq(nrow(x), by=-1L, len=abs(n)))
   x[ ix , , drop=FALSE]
 }
-setMethod("tail", "SpatialPointsLandscape", function(x, n=6L, ...) tail.SpatialPointsLandscape(x, n, ...))
+setMethod("tail", "SpatialPointsLandscape", function(x, n=6L, ...) .tail.SpatialPointsLandscape(x, n, ...))

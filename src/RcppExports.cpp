@@ -2282,17 +2282,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// order_vector
-IntegerVector order_vector(NumericVector x);
-RcppExport SEXP _medfate_order_vector(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(order_vector(x));
-    return rcpp_result_gen;
-END_RCPP
-}
 // spwbgridDay
 List spwbgridDay(CharacterVector lct, List xList, List soilList, IntegerVector waterO, List queenNeigh, List waterQ, NumericVector tdayVec, NumericVector petVec, NumericVector rainVec, NumericVector erVec, NumericVector radVec, NumericVector elevation, NumericVector trackSpecies, double patchsize);
 RcppExport SEXP _medfate_spwbgridDay(SEXP lctSEXP, SEXP xListSEXP, SEXP soilListSEXP, SEXP waterOSEXP, SEXP queenNeighSEXP, SEXP waterQSEXP, SEXP tdayVecSEXP, SEXP petVecSEXP, SEXP rainVecSEXP, SEXP erVecSEXP, SEXP radVecSEXP, SEXP elevationSEXP, SEXP trackSpeciesSEXP, SEXP patchsizeSEXP) {
@@ -2686,7 +2675,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_spwbDay1", (DL_FUNC) &_medfate_spwbDay1, 10},
     {"_medfate_spwbDay2", (DL_FUNC) &_medfate_spwbDay2, 16},
     {"_medfate_spwbDay", (DL_FUNC) &_medfate_spwbDay, 15},
-    {"_medfate_order_vector", (DL_FUNC) &_medfate_order_vector, 1},
     {"_medfate_spwbgridDay", (DL_FUNC) &_medfate_spwbgridDay, 14},
     {"_medfate_resetInputs", (DL_FUNC) &_medfate_resetInputs, 4},
     {"_medfate_spwb", (DL_FUNC) &_medfate_spwb, 7},

@@ -4,3 +4,4 @@
 ^README.Rmd$
 ^modeltests/*$
 ^modeldescription/*$
+^inst/doc/*$

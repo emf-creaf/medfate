@@ -4,9 +4,9 @@
 \docType{class}
 \alias{SpatialPointsLandscape-class}
 \alias{show,SpatialPointsLandscape-method}
-\alias{head.SpatialPointsLandscape}
-\alias{tail.SpatialPointsLandscape}
-\alias{print.SpatialPointsLandscape}
+\alias{head,SpatialPointsLandscape-method}
+\alias{tail,SpatialPointsLandscape-method}
+\alias{print,SpatialPointsLandscape-method}
 \alias{[,SpatialPointsLandscape,ANY,ANY,ANY-method}
 
 \title{Class \code{"SpatialPointsLandscape"}}
@@ -40,11 +40,6 @@ Class \code{"\linkS4class{Spatial}"}, by class "SpatialPoints", distance 4.
  }
 }
 
-\usage{
-\method{print}{SpatialPointsLandscape}(x, ..., digits = getOption("digits"))
-\method{head}{SpatialPointsLandscape}(x, n=6L, ...)
-\method{tail}{SpatialPointsLandscape}(x, n=6L, ...)
-}
 
 \arguments{
 \item{x}{object of class Spatial}

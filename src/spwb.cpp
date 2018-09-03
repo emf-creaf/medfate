@@ -1088,7 +1088,6 @@ NumericVector getTrackSpeciesDDS(NumericVector trackSpecies, NumericVector DDS, 
   return(DDSsp);
 }
 
-// [[Rcpp::export("order_test")]]
 IntegerVector order_vector(NumericVector x) {
   if (is_true(any(duplicated(x)))) {
     Rf_warning("There are duplicates in 'x'; order not guaranteed to match that of R's base::order");

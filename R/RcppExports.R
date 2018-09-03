@@ -617,10 +617,6 @@ spwb.day <- function(x, soil, date, tmin, tmax, rhmin, rhmax, rad, wind, latitud
     .Call('_medfate_spwbDay', PACKAGE = 'medfate', x, soil, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, runon)
 }
 
-order_test <- function(x) {
-    .Call('_medfate_order_vector', PACKAGE = 'medfate', x)
-}
-
 .spwbgridDay <- function(lct, xList, soilList, waterO, queenNeigh, waterQ, tdayVec, petVec, rainVec, erVec, radVec, elevation, trackSpecies, patchsize) {
     .Call('_medfate_spwbgridDay', PACKAGE = 'medfate', lct, xList, soilList, waterO, queenNeigh, waterQ, tdayVec, petVec, rainVec, erVec, radVec, elevation, trackSpecies, patchsize)
 }
