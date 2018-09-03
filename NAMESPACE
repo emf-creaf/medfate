@@ -25,13 +25,22 @@ S3method(plot,spwbgrid)
 # S3method(plot,fb)
 # S3method(plot,fbpoints)
 
+<<<<<<< HEAD
 #S3method(head, SpatialPointsLandscape, head.SpatialPointsLandscape)
 #S3method(tail, SpatialPointsLandscape, tail.SpatialPointsLandscape)
 #S3method(print, SpatialPointsLandscape, print.SpatialPointsLandscape)
+=======
+# S3method(head, SpatialPointsLandscape, head.SpatialPointsLandscape)
+# S3method(tail, SpatialPointsLandscape, tail.SpatialPointsLandscape)
+>>>>>>> origin/devel
 
 S3method(summary, spwb)
 S3method(summary, growth)
 S3method(summary, forest)
 
+<<<<<<< HEAD
+=======
+# S3method(print, SpatialPointsLandscape, print.SpatialPointsLandscape)
+>>>>>>> origin/devel
 S3method(print, summary.forest)
 S3method(print, soil)

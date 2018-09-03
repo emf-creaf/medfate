@@ -4,7 +4,7 @@
 \docType{class}
 \alias{SpatialPointsLandscape-class}
 \alias{show,SpatialPointsLandscape-method}
-\alias{head,SpatialPointsLandscape-method}
+\alias{head, SpatialPointsLandscape-method}
 \alias{tail,SpatialPointsLandscape-method}
 \alias{print,SpatialPointsLandscape-method}
 \alias{[,SpatialPointsLandscape,ANY,ANY,ANY-method}
@@ -35,17 +35,13 @@ Class \code{"\linkS4class{Spatial}"}, by class "SpatialPoints", distance 4.
 \section{Methods}{
   \describe{
     \item{[}{\code{signature(x = "SpatialPointsLandscape", i = "ANY", j = "ANY", drop = "ANY")}: subsets the points, the corresponding topography data, and the forest and soil lists; only rows (points can be subsetted.}
+    \item{head}{\code{signature(x = "SpatialPointsLandscape", n = "numeric", ... = "ANY")}: returns the first n points of object x.}
+    \item{tail}{\code{signature(x = "SpatialPointsLandscape", n = "numeric", ... = "ANY")}: returns the last n points of object x.}
+    \item{print}{\code{signature(x = "SpatialPointsLandscape", ...= "ANY", digits = "numeric")}: prints object x.}
+    \item{show}{\code{signature(object = "SpatialPointsLandscape")}: prints object x.}
     \item{spatialForestSummary}{\code{signature(object = "SpatialPointsLandscape")}: calculates a summary function for all forest stands and returns an object of class \code{\link{SpatialPointsDataFrame-class}}. }
     \item{spatialSoilSummary}{\code{signature(object = "SpatialPointsLandscape")}: calculates a summary function for the soil of all stands and returns an object of class \code{\link{SpatialPointsDataFrame-class}}. }
  }
-}
-
-
-\arguments{
-\item{x}{object of class Spatial}
-\item{n}{A single integer. If positive or zero, size for the resulting object. If negative, all but the n last/first number of elements of x.}
-\item{...}{Passed through.}
-\item{digits}{Minimal number of significant digits.}
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
