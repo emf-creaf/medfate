@@ -21,7 +21,7 @@ DGCN (2005). Tercer Inventario Forestal Nacional (1997-2007): Catalunya. Direcci
 data(exampleSGL)
 
 #Inspect forest object corresponding to the first pixel
-exampleSPL@forestlist[[1]]
+exampleSGL@forestlist[[1]]
 
 }
 \keyword{datasets}

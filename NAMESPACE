@@ -13,7 +13,7 @@ importFrom("GSIF", "REST.SoilGrids","over")
 # Export all names
 useDynLib(medfate)
 exportPattern("^[[:alpha:]]+")
-exportMethods("[", show)
+exportMethods("[", show, head, tail)
 exportClasses(SpatialPointsLandscape, SpatialGridLandscape, SpatialPixelsLandscape)
 
 

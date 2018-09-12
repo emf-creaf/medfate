@@ -4,7 +4,7 @@
 \docType{class}
 \alias{SpatialPointsLandscape-class}
 \alias{show,SpatialPointsLandscape-method}
-\alias{head, SpatialPointsLandscape-method}
+\alias{head,SpatialPointsLandscape-method}
 \alias{tail,SpatialPointsLandscape-method}
 \alias{print,SpatialPointsLandscape-method}
 \alias{[,SpatialPointsLandscape,ANY,ANY,ANY-method}
