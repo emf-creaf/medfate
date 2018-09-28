@@ -1,5 +1,6 @@
 #include "Rcpp.h"
 #include "root.h"
+#include "tissuemoisture.h"
 #include <math.h>
 
 
@@ -230,6 +231,65 @@ double E2psiXylem(double E, double psiUpstream, double kxylemmax, double c, doub
     if(NumericVector::is_na(Eg)) return(NA_REAL);
   }
   return(psiPrev);
+}
+
+/* Calculates the downstream flow and water potential for a given an input (Eup) flow and water potentials at previous time step
+ * Eup- Input flow from upstream
+ * psiUp - Upstream water potential 
+ * psiUpPrev - Previous upstream water potential
+ * psiDownPrev - Previous downstream water potential
+ * tstep - Temporal step (in s)
+ */
+// [[Rcpp::export("hydraulics.E2psiXylemCapacitance")]]
+List E2psiXylemCapacitance(List xylemparams, double Eup, 
+                           double tstep,
+                           double psiUp, double psiDownPrev, 
+                           double psiCav = 0.0, 
+                           double psiMax = -10.0, double tolE = 0.0001) {
+  double c = xylemparams["c"];
+  double d = xylemparams["d"];
+  double kxylemmax = xylemparams["kmax"];
+  double Wmaxt = xylemparams["Wmaxt"];
+  double Wprev = Wmaxt*exp(-pow(psiDownPrev/d,c)); //Previous step water volume
+  // double psiDown = E2psiXylem(E, psiUp, kxylemmax, c, d, psiCav, -0.01, psiMax);
+  // double W = Wmaxt*exp(-pow(psiDown/d,c));
+  // double fCap = (W - Wprev)/tstep; //Capacitance effect
+  // return(List::create(_["psi"] = psiDown, _["Edown"] = E - fCap, _["Rate"] = fCap, _["Wprev"] = Wprev, _["W"] = W));
+  //Find root using bisection method
+  const int JMAX=40;
+  double x1 = psiMax;
+  double x2 = 0.0;
+  double xacc = tolE;
+  int j;
+  double dx,f,fmid,xmid,rtb;
+
+  //First function evaluation
+  double W = Wmaxt*exp(-pow(x1/d,c));
+  double fCap = (W - Wprev)/tstep; //Capacitance effect
+  double Edown = EXylem(x1,psiUp, kxylemmax, c, d, true, psiCav=psiCav); //Calculate downstream flow
+  f = Edown - Eup + fCap;
+  Rcout<<x1<< " "<<Edown<<" "<< fCap << " "<< f<<"\n";
+  //Evaluate at x2
+  W = Wmaxt*exp(-pow(x2/d,c));
+  fCap = (W - Wprev)/tstep; //Capacitance effect
+  Edown = EXylem(x2,psiUp, kxylemmax, c, d, true, psiCav=psiCav); //Calculate downstream flow
+  fmid = Edown - Eup + fCap;
+  Rcout<<x2<< " "<<Edown<<" "<< fCap << " "<< fmid<<"\n";
+  if (f*fmid >= 0.0) stop("Root must be bracketed for bisection in rtbis");
+  rtb = f < 0.0 ? (dx=x2-x1,x1) : (dx=x1-x2,x2);
+  for (j=0;j<JMAX;j++) {
+    xmid=rtb+(dx *= 0.5);
+    W = Wmaxt*exp(-pow(xmid/d,c));
+    fCap = (W - Wprev)/tstep; //water released effect
+    Edown = EXylem(xmid,psiUp, kxylemmax, c, d, true, psiCav=psiCav); //Calculate downstream flow
+    fmid = Edown - Eup + fCap;
+    if (fmid <= 0.0) rtb=xmid;
+    if (fabs(dx) < xacc || fmid == 0.0) {
+      return(List::create(_["E"] = Edown, _["psi"] = rtb, _["Rate"] = fCap, _["Wprev"] = Wprev, _["W"] = W));
+    }
+  }
+  stop("Too many bisections in rtbis");
+  return(List::create(_["E"] = NA_REAL, _["psi"] = NA_REAL, _["Rate"] = NA_REAL, _["W"] = NA_REAL));
 }
 
 // [[Rcpp::export("hydraulics.Ecrit")]]

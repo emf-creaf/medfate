@@ -309,6 +309,10 @@ hydraulics.E2psiXylem <- function(E, psiUpstream, kxylemmax, c, d, psiCav = 0.0,
     .Call('_medfate_E2psiXylem', PACKAGE = 'medfate', E, psiUpstream, kxylemmax, c, d, psiCav, psiStep, psiMax)
 }
 
+hydraulics.E2psiXylemCapacitance <- function(xylemparams, Eup, tstep, psiUp, psiDownPrev, psiCav = 0.0, psiMax = -10.0, tolE = 0.0001) {
+    .Call('_medfate_E2psiXylemCapacitance', PACKAGE = 'medfate', xylemparams, Eup, tstep, psiUp, psiDownPrev, psiCav, psiMax, tolE)
+}
+
 hydraulics.Ecrit <- function(psiUpstream, kxylemmax, c, d) {
     .Call('_medfate_Ecrit', PACKAGE = 'medfate', psiUpstream, kxylemmax, c, d)
 }
@@ -643,6 +647,10 @@ moisture.leafRWC <- function(psi, pi0, epsilon, af) {
 
 moisture.branchRWC <- function(psi, wd, c, d, af = 0.80) {
     .Call('_medfate_branchRelativeWaterContent', PACKAGE = 'medfate', psi, wd, c, d, af)
+}
+
+moisture.stemRWC <- function(psi, pi0, epsilon, c, d, af) {
+    .Call('_medfate_stemRelativeWaterContent', PACKAGE = 'medfate', psi, pi0, epsilon, c, d, af)
 }
 
 moisture.fineFuelRWC <- function(psi, leaf_pi0, leaf_eps, leaf_af, wd, c, d, r635) {

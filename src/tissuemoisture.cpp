@@ -80,6 +80,14 @@ double branchRelativeWaterContent(double psi, double wd, double c, double d, dou
   return(sym_rwc*(1.0-af)+apo_rwc*af);
 }
   
+// [[Rcpp::export("moisture.stemRWC")]]
+double stemRelativeWaterContent(double psi, double pi0, double epsilon, double c, double d, double af) {
+    double sym_rwc = symplasticRelativeWaterContent(psi, pi0, epsilon);
+    double apo_rwc = apoplasticRelativeWaterContent(psi, c, d);
+    return(sym_rwc*(1.0-af)+apo_rwc*af);
+  }
+
+  
 /**
  * Calculates fine fuel (i.e. leaves + small branches) moisture content content from water potential
  * 

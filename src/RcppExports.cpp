@@ -1057,6 +1057,24 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// E2psiXylemCapacitance
+List E2psiXylemCapacitance(List xylemparams, double Eup, double tstep, double psiUp, double psiDownPrev, double psiCav, double psiMax, double tolE);
+RcppExport SEXP _medfate_E2psiXylemCapacitance(SEXP xylemparamsSEXP, SEXP EupSEXP, SEXP tstepSEXP, SEXP psiUpSEXP, SEXP psiDownPrevSEXP, SEXP psiCavSEXP, SEXP psiMaxSEXP, SEXP tolESEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type xylemparams(xylemparamsSEXP);
+    Rcpp::traits::input_parameter< double >::type Eup(EupSEXP);
+    Rcpp::traits::input_parameter< double >::type tstep(tstepSEXP);
+    Rcpp::traits::input_parameter< double >::type psiUp(psiUpSEXP);
+    Rcpp::traits::input_parameter< double >::type psiDownPrev(psiDownPrevSEXP);
+    Rcpp::traits::input_parameter< double >::type psiCav(psiCavSEXP);
+    Rcpp::traits::input_parameter< double >::type psiMax(psiMaxSEXP);
+    Rcpp::traits::input_parameter< double >::type tolE(tolESEXP);
+    rcpp_result_gen = Rcpp::wrap(E2psiXylemCapacitance(xylemparams, Eup, tstep, psiUp, psiDownPrev, psiCav, psiMax, tolE));
+    return rcpp_result_gen;
+END_RCPP
+}
 // Ecrit
 double Ecrit(double psiUpstream, double kxylemmax, double c, double d);
 RcppExport SEXP _medfate_Ecrit(SEXP psiUpstreamSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP) {
@@ -2392,6 +2410,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// stemRelativeWaterContent
+double stemRelativeWaterContent(double psi, double pi0, double epsilon, double c, double d, double af);
+RcppExport SEXP _medfate_stemRelativeWaterContent(SEXP psiSEXP, SEXP pi0SEXP, SEXP epsilonSEXP, SEXP cSEXP, SEXP dSEXP, SEXP afSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type psi(psiSEXP);
+    Rcpp::traits::input_parameter< double >::type pi0(pi0SEXP);
+    Rcpp::traits::input_parameter< double >::type epsilon(epsilonSEXP);
+    Rcpp::traits::input_parameter< double >::type c(cSEXP);
+    Rcpp::traits::input_parameter< double >::type d(dSEXP);
+    Rcpp::traits::input_parameter< double >::type af(afSEXP);
+    rcpp_result_gen = Rcpp::wrap(stemRelativeWaterContent(psi, pi0, epsilon, c, d, af));
+    return rcpp_result_gen;
+END_RCPP
+}
 // fineFuelRelativeWaterContent
 double fineFuelRelativeWaterContent(double psi, double leaf_pi0, double leaf_eps, double leaf_af, double wd, double c, double d, double r635);
 RcppExport SEXP _medfate_fineFuelRelativeWaterContent(SEXP psiSEXP, SEXP leaf_pi0SEXP, SEXP leaf_epsSEXP, SEXP leaf_afSEXP, SEXP wdSEXP, SEXP cSEXP, SEXP dSEXP, SEXP r635SEXP) {
@@ -2598,6 +2632,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_EXylem", (DL_FUNC) &_medfate_EXylem, 7},
     {"_medfate_psiCrit", (DL_FUNC) &_medfate_psiCrit, 2},
     {"_medfate_E2psiXylem", (DL_FUNC) &_medfate_E2psiXylem, 8},
+    {"_medfate_E2psiXylemCapacitance", (DL_FUNC) &_medfate_E2psiXylemCapacitance, 8},
     {"_medfate_Ecrit", (DL_FUNC) &_medfate_Ecrit, 4},
     {"_medfate_regulatedPsiXylem", (DL_FUNC) &_medfate_regulatedPsiXylem, 6},
     {"_medfate_supplyFunctionOneXylem", (DL_FUNC) &_medfate_supplyFunctionOneXylem, 10},
@@ -2682,6 +2717,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_apoplasticRelativeWaterContent", (DL_FUNC) &_medfate_apoplasticRelativeWaterContent, 4},
     {"_medfate_leafRelativeWaterContent", (DL_FUNC) &_medfate_leafRelativeWaterContent, 4},
     {"_medfate_branchRelativeWaterContent", (DL_FUNC) &_medfate_branchRelativeWaterContent, 5},
+    {"_medfate_stemRelativeWaterContent", (DL_FUNC) &_medfate_stemRelativeWaterContent, 6},
     {"_medfate_fineFuelRelativeWaterContent", (DL_FUNC) &_medfate_fineFuelRelativeWaterContent, 8},
     {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 5},
     {"_medfate_stomatalRegulation", (DL_FUNC) &_medfate_stomatalRegulation, 6},
