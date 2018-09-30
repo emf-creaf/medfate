@@ -199,7 +199,7 @@ Following Martin-StPaul et al. (2017), we consider two different plant water res
 \begin{equation}
 RWC_{apo}(\Psi_{stem}) = \frac{k_x(\Psi_{stem})}{k_{x,max}}
 \end{equation}
-The second reservoir is formed by more elastic living cells in the stem and can potentially be a larger source of water during relatively high water potentials. This source can be described using the relative water content of the symplasm, as done for leaves. By knowing the proportion of apoplastic tissue in the stem, $a_{f,s}$, we can obtain the overall relative water content in the stem as:
+The second reservoir is formed by more elastic living cells in the stem (cambium, phloem and bark cells) and can potentially be a larger source of water during relatively high water potentials. This source can be described using the relative water content of the symplasm, as done for leaves. By knowing the proportion of apoplastic tissue in the stem, $a_{f,s}$, we can obtain the overall relative water content in the stem as:
 \begin{equation}
 RWC(\Psi_{stem}) = RWC_{apo}(\Psi_{stem}) \cdot a_{f,s} + RWC_{sym}(\Psi_{stem}) \cdot (1 - a_{f,s}) 
 \end{equation}

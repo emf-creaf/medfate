@@ -1058,8 +1058,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // E2psiXylemCapacitance
-List E2psiXylemCapacitance(List xylemparams, double Eup, double tstep, double psiUp, double psiDownPrev, double psiCav, double psiMax, double tolE);
-RcppExport SEXP _medfate_E2psiXylemCapacitance(SEXP xylemparamsSEXP, SEXP EupSEXP, SEXP tstepSEXP, SEXP psiUpSEXP, SEXP psiDownPrevSEXP, SEXP psiCavSEXP, SEXP psiMaxSEXP, SEXP tolESEXP) {
+List E2psiXylemCapacitance(List xylemparams, double Eup, double tstep, double psiUp, double psiStorage, double psiCav, double psiMax, double tolE);
+RcppExport SEXP _medfate_E2psiXylemCapacitance(SEXP xylemparamsSEXP, SEXP EupSEXP, SEXP tstepSEXP, SEXP psiUpSEXP, SEXP psiStorageSEXP, SEXP psiCavSEXP, SEXP psiMaxSEXP, SEXP tolESEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1067,11 +1067,11 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type Eup(EupSEXP);
     Rcpp::traits::input_parameter< double >::type tstep(tstepSEXP);
     Rcpp::traits::input_parameter< double >::type psiUp(psiUpSEXP);
-    Rcpp::traits::input_parameter< double >::type psiDownPrev(psiDownPrevSEXP);
+    Rcpp::traits::input_parameter< double >::type psiStorage(psiStorageSEXP);
     Rcpp::traits::input_parameter< double >::type psiCav(psiCavSEXP);
     Rcpp::traits::input_parameter< double >::type psiMax(psiMaxSEXP);
     Rcpp::traits::input_parameter< double >::type tolE(tolESEXP);
-    rcpp_result_gen = Rcpp::wrap(E2psiXylemCapacitance(xylemparams, Eup, tstep, psiUp, psiDownPrev, psiCav, psiMax, tolE));
+    rcpp_result_gen = Rcpp::wrap(E2psiXylemCapacitance(xylemparams, Eup, tstep, psiUp, psiStorage, psiCav, psiMax, tolE));
     return rcpp_result_gen;
 END_RCPP
 }

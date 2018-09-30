@@ -243,14 +243,14 @@ double E2psiXylem(double E, double psiUpstream, double kxylemmax, double c, doub
 // [[Rcpp::export("hydraulics.E2psiXylemCapacitance")]]
 List E2psiXylemCapacitance(List xylemparams, double Eup, 
                            double tstep,
-                           double psiUp, double psiDownPrev, 
+                           double psiUp, double psiStorage, 
                            double psiCav = 0.0, 
                            double psiMax = -10.0, double tolE = 0.0001) {
   double c = xylemparams["c"];
   double d = xylemparams["d"];
   double kxylemmax = xylemparams["kmax"];
   double Wmaxt = xylemparams["Wmaxt"];
-  double Wprev = Wmaxt*exp(-pow(psiDownPrev/d,c)); //Previous step water volume
+  double Wprev = Wmaxt*exp(-pow(psiStorage/d,c)); //Previous step water volume
   // double psiDown = E2psiXylem(E, psiUp, kxylemmax, c, d, psiCav, -0.01, psiMax);
   // double W = Wmaxt*exp(-pow(psiDown/d,c));
   // double fCap = (W - Wprev)/tstep; //Capacitance effect
