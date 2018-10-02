@@ -162,8 +162,10 @@ legend("topright", bty="n", legend=textures, lty=1:3, cex=0.8, lwd=1.5)
 \end{center}
 
 \subsection{Changes in water content}
-\subsubsection{Pressure-volume curves of the symplastic fraction}
-A pressure-volume curve of a tissue relates a water potential (normally $\Psi_{W}$; MPa) against relative water content ($RWC$; kgH$_2$O kg$^{-1}$H$_2$O at saturation) in drying tissues. Pressure-volume theory is usually applied to leaves (Bartlett et al. 2012), but it can also be applied to sapwood. For living cells, the relationship between $\Psi$ and $RWC$ of the symplasmic fraction ($RWC_{sym}$) is achieved by separating $\Psi_{W}$ into osmotic (solute) potential ($\Psi_{S}$) and the turgor potential ($\Psi_{P}$):
+\subsubsection{Pressure-volume curves}
+A pressure-volume curve of a tissue relates a water potential (normally $\Psi_{W}$; MPa) against relative water content ($RWC$; kgH$_2$O·kg$^{-1}$H$_2$O at saturation) in drying tissues. Pressure-volume theory is usually applied to leaves (Bartlett et al. 2012), but it can also be applied to other tissues such as sapwood or cambium cells. 
+
+For living cells, the relationship between $\Psi$ and $RWC$ of the symplasmic fraction ($RWC_{sym}$) is achieved by separating $\Psi_{W}$ into osmotic (solute) potential ($\Psi_{S}$) and the turgor potential ($\Psi_{P}$):
 \begin{equation}
 \Psi_{W} = \Psi_{S} + \Psi_{P}
 \end{equation}
@@ -190,29 +192,40 @@ plot(psi, rwc_s, type="l", xlab="Water potential (MPa)", ylab = "Symplasmic RWC"
 
 To calculate $RWC_{sym}$ from the water potential of a tissue, the previous equations need to be combined and, after isolating $RWC_{sym}$, a quadratic relationship is obtained. 
   
-\subsubsection{Water content in leaves and stem}
-In the case of leaves, their overall relative water content can be obtained from $\Psi_{leaf}$ by calculating  $RWC_{sym}(\Psi_{leaf})$ followed by assuming a constant apoplastic fraction $a_{f,l}$:
-\begin{equation}
-RWC(\Psi_{leaf}) = a_{f,l} + RWC_{sym}(\Psi_{leaf}) \cdot (1 - a_{f,l})
-\end{equation}
-Following Martin-StPaul et al. (2017), we consider two different plant water reservoirs in the stem (Tyree \& Yang 1990). The first is the apoplastic reservoir, consisting of inelastic xylem cells that release their water to the transpiration stream following embolism. As in Hölttä et al. (2009), we equate the relative water content of the apoplastic reservoir of the xylem to the proportion of maximum conductance in the vulnerability curve:
+Apoplastic reservoirs (e.g. sapwood) consist of inelastic cells that release their water to the transpiration stream following embolism. As in Hölttä et al. (2009), we equate the relative water content of the apoplastic reservoir of the xylem to the proportion of maximum conductance in the vulnerability curve:
 \begin{equation}
 RWC_{apo}(\Psi_{stem}) = \frac{k_x(\Psi_{stem})}{k_{x,max}} = e^{-((\Psi/d_{stem})^c_{stem})}
 \end{equation}
-The second reservoir is formed by more elastic living cells in the stem (cambium, phloem and bark cells) and can potentially be a larger source of water during relatively high water potentials. This source can be described using the relative water content of the symplasm, as done for leaves. By knowing the proportion of apoplastic tissue in the stem, $a_{f,s}$, we can obtain the overall relative water content in the stem as:
+
+<<fig=TRUE, width=4, height=4, echo=FALSE>>==
+psi = seq(-7,0, by=0.1)
+rwc_a = rep(NA, length(psi))
+for(i in 1:length(psi)) rwc_a[i] = moisture.apoplasticRWC(psi[i],stemc,stemd)
+plot(psi, rwc_a, type="l", xlab="Water potential (MPa)", ylab = "Apoplastic RWC")
+@
+
+
+\subsubsection{Water content in leaves and stem}
+The overall relative water content of leaves can be obtained from $\Psi_{leaf}$ by calculating  $RWC_{sym}(\Psi_{leaf})$ and $RWC_{apo}(\Psi_{leaf})$ followed by assuming a constant apoplastic fraction $a_{f,l}$:
 \begin{equation}
-RWC(\Psi_{stem}) = RWC_{apo}(\Psi_{stem}) \cdot a_{f,s} + RWC_{sym}(\Psi_{stem}) \cdot (1 - a_{f,s}) 
+RWC(\Psi_{leaf}) = RWC_{apo}(\Psi_{leaf}) \cdot a_{f,l} + RWC_{sym}(\Psi_{leaf}) \cdot (1 - a_{f,l})
+\end{equation}
+$RWC(\Psi_{leaf})$ is used in \texttt{medfate} to calculate live fuel moisture content, but relative water content of leaves does not intervene in dynamic hydraulic calculations.
+
+Following Martin-StPaul et al. (2017), we consider two sources of water in the stem (Tyree \& Yang 1990). The first comes from the xylem itself, which will release water due to cavitation and may  be refilled with water from adjacent living tissue (from the second source). If we know $RWC_{apo}(\Psi_{stem})$, we can calculate the amount (mass) of water per unit of sapwood tissue volume in the stem ($W_{xylem}$ in kgH$_2$O$\cdot$m$^{-3}$):
+\begin{equation}
+W_{sapwood}(\Psi_{stem}) = RWC_{apo}(\Psi_{stem}) \cdot \rho_{w} \cdot \Theta_{sat}
+\end{equation}
+where $\rho_{w}$ is the density of water (kgH$_2$O$\cdot$m$^{-3}$) and $\Theta_{sat}$ (m$^3$H$_2$O$\cdot$m$^{-3}$) is sapwood porosity, i.e. the maximum volumetric water content per volume of sapwood. If, in addition, we know $V_{sapwood}$ the volume of sapwood, then the amount of water that is stored in sapwood tissue: 
+\begin{equation}
+S_{sapwood}(\Psi_{stem}) = V_{sapwood} \cdot W_{sapwood}(\Psi_{stem})
 \end{equation}
 
-Once we know $RWC(\Psi_{stem})$ we can calculate the amount of water per unit of water storage tissue volume in the stem ($W_{tissue}$ in kgH$_2$O$\cdot$m$^{-3}$):
+The second source of water is formed by more elastic living cells in the stem (cambium, phloem and bark cells) and can potentially be a large source of water during relatively high water potentials. This source can be described using the relative water content of the symplasm. This storage compartment has its own water potential and exchanges water with the xylem according to the difference in water potential. The amount of water stored in this compartment at any time is:
 \begin{equation}
-W_{tissue}(\Psi_{stem}) = RWC(\Psi_{stem}) \cdot \rho_{w} \cdot \Theta_{sat}
+S_{storage}(\Psi_{storage}) = S_{max, storage} \cdot RWC_{sym}(\Psi_{storage}) \cdot \rho_{w}
 \end{equation}
-where $\rho_{w}$ is the density of water (kgH$_2$O$\cdot$m$^{-3}$) and $\Theta_{sat}$ (m$^3$H$_2$O$\cdot$m$^{-3}$) is tissue porosity, i.e. the maximum volumetric water content per volume of stem tissue. If, in addition, we know $V_{storage}$ the volume of storage tissue per leaf area, then the amount of water that is stored per leaf area will be: 
-\begin{equation}
-W_{leaf}(\Psi_{stem}) = V_{storage} \cdot W_{tissue}(\Psi_{stem})
-\end{equation}
-
+where $S_{max, storage}$ is the maximum storage capacity.
 
 \subsection{Supply functions}
 The supply function describes the rate of water supply (i.e. flow) for transpiration ($E$) as a function of pressure. The steady-state flow rate $E_i$ through each $i$ element of the continuum is related to the flow-induced drop in pressure across that element ($\Delta \Psi_i$) by the integral transform of the element's vulnerability curve $k_i(\Psi)$ (Sperry and Love 2015):
@@ -870,20 +883,19 @@ legend("topleft", legend=c("Layer 1", "Layer 2", "Layer 3"), bty="n", lty=c(1,2,
 \end{center}
 Note that the contribution of each soil layer depends on the soil conditions and the total amount of flow. for low total flow rates some layers may have negative flows if their potential is lower than others, indicating hydraulic redistribution of water among soil layers.
 
-\subsection{Stem storage compartments}
-Storage compartments contribute to sapflow dynamics by exchanging water with xylem. We will consider here a single symplastic storage compartment connected to the stem sapwood, assuming that this is the most important water storage compartment in the plant. Additionally, we track of changes in water volume within sapwood tissue itself. Considering this apoplastic compartment allows calculating the release of water when cavitation occurs and, conversely, simulate the process of refilling from the symplastic storage compartment.
-
-\subsubsection{Effect of storage compartments on flow}
-So far, we have been concerned with steady-state flows of a hydraulic network assuming no water storage compartments. Water potential at the upper end of the stem ($\Psi_{stem}$) was obtained integrating the stem xylem vulnerability curve, using $\Psi_{up,k}=\Psi_{rootcrown}$ and making the result equal to the input flow from the root system. If we consider the two storage compartments, the downstream instantaneous flow may not necessarily be equal to the flow entering the stem:
+\subsection{Hydraulics with plant water compartments}
+\subsubsection{Effects on the supply function}
+So far we have been concerned with the steady-state flow of a hydraulic network assuming there are no other sources of water than that of the soil. Water potential at the upper end of the stem ($\Psi_{stem}$) was obtained integrating the stem xylem vulnerability curve, using $\Psi_{up,k}=\Psi_{rootcrown}$ and making the result equal to the input flow from the root system. Now we will consider the effect of additional sources of water from stem tissues on the water supply function. From one time step to the next, the steady-state flow will dictate different values of $\Psi_{stem}$. This translates into changes in apoplastic water content in the sapwood and this source of water should be added to the transpirational stream. Additionally, the symplastic storage compartment contribute to sapflow dynamics by continuously exchanging water with xylem. If we consider the two sources, the downstream instantaneous flow may not necessarily be equal to the flow entering the stem:
 \begin{equation}
-E_{stem} = E_{root} - (\Delta{S_{apo}}/\Delta{t}) - (\Delta{S_{sym}}/\Delta{t})
+E_{stem} = E_{root} - (\Delta{S_{sapwood}}/\Delta{t}) - (\Delta{S_{storage}}/\Delta{t})
 \end{equation}
-where $E_{stem}$ is the stem outflow, $E_{root}$ is the input flow (from the root system) and $\Delta{S_{apo}}/\Delta{t}$ and  $\Delta{S_{sym}}/\Delta{t}$ is the change in water of the symplastic and apoplastic storage compartments. If $\Delta{S_{sym}}/\Delta{t}$ is negative, then there is a flow from the compartment to the xylem. Otherwise, flow is from the xylem to the storage compartment. $\Delta{S_{apo}}/\Delta{t}$ is a term to increase or decrease flow as a result of changes in stem water potential.
-
-Here we assume that the storage compartment has a common water potential $\Psi_{storage}$ and the flow between the compartment at any height of the stem depends on the difference in water potential between the compartment and the xylem:
-
+where $E_{stem}$ is the stem outflow, $E_{root}$ is the input flow (from the root system), $\Delta{S_{sapwood}}/\Delta{t}$ is the change in water of the apoplastic (sapwood) tissue and  $\Delta{S_{storage}}/\Delta{t}$ is the change in water of the symplastic storage compartment. The amount of apoplastic water to be added or subtracted from the input flow is simply calculated from changes in sapwood water derived from changes in the steady-state stem water potential between consecutive time steps:
 \begin{equation}
-\Delta{S_{sym}}/\Delta{t}7 = \int_{\Psi_{stem}}^{\Psi_{rootcrown}}{f_{storage}(\Psi) d\Psi}
+\frac{\Delta{S_{sapwood}}}{\Delta{t}} = \frac{S_{sapwood}(\Psi_{stem, t}) - S_{sapwood}(\Psi_{stem, t-1})}{\Delta{t}}
+\end{equation}
+If $\Delta{S_{storage}}/\Delta{t}$ is negative, then there is a flow from the storage compartment to the xylem. Otherwise, flow is from the xylem to the storage compartment. Here we assume that the storage compartment has a common water potential $\Psi_{storage}$ and the flow between the compartment at any height of the stem depends on the difference in water potential between the compartment and the xylem:
+\begin{equation}
+\frac{\Delta{S_{storage}}}{\Delta{t}} = \int_{\Psi_{stem}}^{\Psi_{rootcrown}}{f_{storage}(\Psi) d\Psi}
 \end{equation}
 where $f_{storage}$ is the exchange flow between xylem and storage compartment for a given $\Psi$ value of the xylem. Since exchange of water occurs along the cylinder surrounding stem xylem, the second integral has to be re-expressed as a function of height ($h$):
 \begin{equation}
