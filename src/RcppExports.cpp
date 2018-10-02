@@ -1058,20 +1058,18 @@ BEGIN_RCPP
 END_RCPP
 }
 // E2psiXylemCapacitance
-List E2psiXylemCapacitance(List xylemparams, double Eup, double tstep, double psiUp, double psiStorage, double psiCav, double psiMax, double tolE);
-RcppExport SEXP _medfate_E2psiXylemCapacitance(SEXP xylemparamsSEXP, SEXP EupSEXP, SEXP tstepSEXP, SEXP psiUpSEXP, SEXP psiStorageSEXP, SEXP psiCavSEXP, SEXP psiMaxSEXP, SEXP tolESEXP) {
+List E2psiXylemCapacitance(List xylemparams, double Eup, double psiUp, double psiStorage, double psiCav, double psiMax);
+RcppExport SEXP _medfate_E2psiXylemCapacitance(SEXP xylemparamsSEXP, SEXP EupSEXP, SEXP psiUpSEXP, SEXP psiStorageSEXP, SEXP psiCavSEXP, SEXP psiMaxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type xylemparams(xylemparamsSEXP);
     Rcpp::traits::input_parameter< double >::type Eup(EupSEXP);
-    Rcpp::traits::input_parameter< double >::type tstep(tstepSEXP);
     Rcpp::traits::input_parameter< double >::type psiUp(psiUpSEXP);
     Rcpp::traits::input_parameter< double >::type psiStorage(psiStorageSEXP);
     Rcpp::traits::input_parameter< double >::type psiCav(psiCavSEXP);
     Rcpp::traits::input_parameter< double >::type psiMax(psiMaxSEXP);
-    Rcpp::traits::input_parameter< double >::type tolE(tolESEXP);
-    rcpp_result_gen = Rcpp::wrap(E2psiXylemCapacitance(xylemparams, Eup, tstep, psiUp, psiStorage, psiCav, psiMax, tolE));
+    rcpp_result_gen = Rcpp::wrap(E2psiXylemCapacitance(xylemparams, Eup, psiUp, psiStorage, psiCav, psiMax));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2632,7 +2630,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_EXylem", (DL_FUNC) &_medfate_EXylem, 7},
     {"_medfate_psiCrit", (DL_FUNC) &_medfate_psiCrit, 2},
     {"_medfate_E2psiXylem", (DL_FUNC) &_medfate_E2psiXylem, 8},
-    {"_medfate_E2psiXylemCapacitance", (DL_FUNC) &_medfate_E2psiXylemCapacitance, 8},
+    {"_medfate_E2psiXylemCapacitance", (DL_FUNC) &_medfate_E2psiXylemCapacitance, 6},
     {"_medfate_Ecrit", (DL_FUNC) &_medfate_Ecrit, 4},
     {"_medfate_regulatedPsiXylem", (DL_FUNC) &_medfate_regulatedPsiXylem, 6},
     {"_medfate_supplyFunctionOneXylem", (DL_FUNC) &_medfate_supplyFunctionOneXylem, 10},
