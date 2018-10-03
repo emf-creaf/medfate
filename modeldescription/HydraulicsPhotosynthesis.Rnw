@@ -47,17 +47,17 @@ This document includes the design decisions taken to implement Sperry and Love (
 Each continuum element has a vulnerability curve that starts at maximum hydraulic conductance ($k_{max}$, flow rate per pressure drop) and monotonically declines as water pressure ($\Psi$) becomes more negative. Vulnerability curves form the basis of hydraulic calculations.
 
 \subsubsection{Xylem and leaf vulnerability curves}
-A xylem element is assigned a two-parameter Weibull function as the vulnerability curve $k_x(\Psi)$:
+Xylem tissues (roots and stem) are assigned a two-parameter Weibull function as the vulnerability curve $k_x(\Psi)$:
 \begin{equation}\label{eq:xylemvulnerability}
 k_x(\Psi) = k_{x,max}\cdot e^{-((\Psi/d)^c)}
 \end{equation}
-where $k_{x,max}$ is the xylem maximum hydraulic conductance (defined as flow per surface unit and per pressure drop), and $c$ and $d$ are species-specific parameters (see parameters \texttt{VCstem\_c} and \texttt{VCstem\_d} in \texttt{SpParamsMED}). Note that parameter $d$ is the water potential (in MPa) at which $k_{x}(\Psi)/k_{x,max} = e^{-1} = 0.367$. Parameter $c$ controls the shape of the vulnerability curve (‘exponential’ shape with no threshold has $c \leq 1$, sigmoidal threshold has $c > 1$). For example, we define the following parameter values for a stem xylem ($k_{s,max}$):
+where $k_{x,max}$ is the xylem maximum hydraulic conductance (defined as flow per surface unit and per pressure drop), and $c$ and $d$ are species-specific and tissue-specific parameters. Note that parameter $d$ is the water potential (in MPa) at which $k_{x}(\Psi)/k_{x,max} = e^{-1} = 0.367$. Parameter $c$ controls the shape of the vulnerability curve (‘exponential’ shape with no threshold has $c \leq 1$, sigmoidal threshold has $c > 1$). For example, we define the following parameter values for a stem xylem ($k_{s,max}$ and parameters of the vulnerability curve; see \texttt{VCstem\_c} and \texttt{VCstem\_d} in \texttt{SpParamsMED}):
 <<>>==
 kstemmax = 5.0 # in mmol·m-2·s-1·MPa-1
 stemc = 3 
 stemd = -3.0 # in MPa
 @
-For root xylem ($k_{r,max}$), we may assume a higher conductance (i.e. higher efficiency) but also higher vulnerability to cavitation (see parameters \texttt{VCroot\_c} and \texttt{VCroot\_d} in \texttt{SpParamsMED}):
+For root xylem ($k_{r,max}$), we may assume a higher conductance (i.e. higher efficiency) but also higher vulnerability to cavitation (see \texttt{VCroot\_c} and \texttt{VCroot\_d} in \texttt{SpParamsMED}):
 <<>>==
 krootmax = 6.6
 rootc = 2
@@ -74,7 +74,7 @@ The concept of vulnerability curve can be used to specify the relationship betwe
 \begin{equation}\label{eq:leafvulnerability}
 k_l(\Psi) = k_{l,max}\cdot e^{-((\Psi/d)^{c})}
 \end{equation}
-where $k_{l,max}$ is the leaf maximum hydraulic conductance (see parameter \texttt{VCleaf\_kmax} in \texttt{SpParamsMED}). Values defined below specify higher conductance for leaves but also slightly higher vulnerability (see parameters \texttt{VCleaf\_c} and \texttt{VCleaf\_d} in \texttt{SpParamsMED}):
+where $k_{l,max}$ is the leaf maximum hydraulic conductance (\texttt{VCleaf\_kmax} in \texttt{SpParamsMED}). Values defined below specify higher conductance for leaves but also slightly higher vulnerability (see parameters \texttt{VCleaf\_c} and \texttt{VCleaf\_d} in \texttt{SpParamsMED}):
 <<>>==
 kleafmax = 10
 leafc = 2
@@ -161,7 +161,7 @@ legend("topright", bty="n", legend=textures, lty=1:3, cex=0.8, lwd=1.5)
 @
 \end{center}
 
-\subsection{Changes in water content}
+\subsection{Water content of plant tissues}
 \subsubsection{Pressure-volume curves}
 A pressure-volume curve of a tissue relates a water potential (normally $\Psi_{W}$; MPa) against relative water content ($RWC$; kgH$_2$O·kg$^{-1}$H$_2$O at saturation) in drying tissues. Pressure-volume theory is usually applied to leaves (Bartlett et al. 2012), but it can also be applied to other tissues such as sapwood or cambium cells. 
 
@@ -206,26 +206,21 @@ plot(psi, rwc_a, type="l", xlab="Water potential (MPa)", ylab = "Apoplastic RWC"
 
 
 \subsubsection{Water content in leaves and stem}
-The overall relative water content of leaves can be obtained from $\Psi_{leaf}$ by calculating  $RWC_{sym}(\Psi_{leaf})$ and $RWC_{apo}(\Psi_{leaf})$ followed by assuming a constant apoplastic fraction $a_{f,l}$:
+The overall relative water content of leaves can be obtained from $\Psi_{leaf}$ by calculating  $RWC_{sym}(\Psi_{leaf})$ and $RWC_{apo}(\Psi_{leaf})$ followed by assuming a constant apoplastic fraction $f_{apo,l}$:
 \begin{equation}
-RWC(\Psi_{leaf}) = RWC_{apo}(\Psi_{leaf}) \cdot a_{f,l} + RWC_{sym}(\Psi_{leaf}) \cdot (1 - a_{f,l})
+RWC(\Psi_{leaf}) = RWC_{apo}(\Psi_{leaf}) \cdot a_{f,l} + RWC_{sym}(\Psi_{leaf}) \cdot (1 - f_{apo,l})
 \end{equation}
 $RWC(\Psi_{leaf})$ is used in \texttt{medfate} to calculate live fuel moisture content, but relative water content of leaves does not intervene in dynamic hydraulic calculations.
 
-Following Martin-StPaul et al. (2017), we consider two sources of water in the stem (Tyree \& Yang 1990). The first comes from the xylem itself, which will release water due to cavitation and may  be refilled with water from adjacent living tissue (from the second source). If we know $RWC_{apo}(\Psi_{stem})$, we can calculate the amount (mass) of water per unit of sapwood tissue volume in the stem ($W_{xylem}$ in kgH$_2$O$\cdot$m$^{-3}$):
+Following Martin-StPaul et al. (2017), we consider two sources of water in the stem xylem (Tyree \& Yang 1990). The first comes from the conduits (tracheids or vessels), which will release water due to cavitation and may be refilled with water from adjacent living tissue (from the second source). If we know $RWC_{apo}(\Psi_{stem})$, the relative water content in the xylem conduits, and $V_{sapwood}$ (in m$^3$), the volume of functional sapwood in the plant, then the amount of water that is stored in conduits is: 
 \begin{equation}
-W_{sapwood}(\Psi_{stem}) = RWC_{apo}(\Psi_{stem}) \cdot \rho_{w} \cdot \Theta_{sat}
+S_{apo}(\Psi_{stem}) = V_{sapwood} \cdot f_{apo, s} \cdot RWC_{apo}(\Psi_{stem}) \cdot \rho_{w}
 \end{equation}
-where $\rho_{w}$ is the density of water (kgH$_2$O$\cdot$m$^{-3}$) and $\Theta_{sat}$ (m$^3$H$_2$O$\cdot$m$^{-3}$) is sapwood porosity, i.e. the maximum volumetric water content per volume of sapwood. If, in addition, we know $V_{sapwood}$ the volume of sapwood, then the amount of water that is stored in sapwood tissue: 
+where $\rho_{w}$ is the density of water (kgH$_2$O$\cdot$m$^{-3}$) and $f_{apo,s}$ is the volume fraction of apoplastic tissue within sapwood. The second source of water is formed by more elastic living cells in the stem (i.e. parenchyma or rays) and can potentially be a large source of water during relatively high water potentials. This source can be described using the relative water content of a symplasmic tissue. This xylem storage compartment has its own water potential and exchanges water with the xylem conduits according to the difference in water potential. The amount of water stored in the symplastic compartment at any time is:
 \begin{equation}
-S_{sapwood}(\Psi_{stem}) = V_{sapwood} \cdot W_{sapwood}(\Psi_{stem})
+S_{sym}(\Psi_{sym}) = V_{sapwood} \cdot (1 - f_{apo, s}) \cdot RWC_{sym}(\Psi_{storage}) \cdot \rho_{w}
 \end{equation}
 
-The second source of water is formed by more elastic living cells in the stem (cambium, phloem and bark cells) and can potentially be a large source of water during relatively high water potentials. This source can be described using the relative water content of the symplasm. This storage compartment has its own water potential and exchanges water with the xylem according to the difference in water potential. The amount of water stored in this compartment at any time is:
-\begin{equation}
-S_{storage}(\Psi_{storage}) = S_{max, storage} \cdot RWC_{sym}(\Psi_{storage}) \cdot \rho_{w}
-\end{equation}
-where $S_{max, storage}$ is the maximum storage capacity.
 
 \subsection{Supply functions}
 The supply function describes the rate of water supply (i.e. flow) for transpiration ($E$) as a function of pressure. The steady-state flow rate $E_i$ through each $i$ element of the continuum is related to the flow-induced drop in pressure across that element ($\Delta \Psi_i$) by the integral transform of the element's vulnerability curve $k_i(\Psi)$ (Sperry and Love 2015):
@@ -2392,11 +2387,13 @@ Profit maximization calculations for shade and sunlit leaves imply different amo
 \section{Symbols}
 
 \begin{center}
-    \begin{tabular}{| l | l | p{8cm} |}
+    \begin{tabular}{| l | l | l | p{5cm} |}
     \hline
-    Symbol & Unit & Description \\ \hline
-    \Psi_{cav} & MPa & Minimum water potential experienced by xylem in previous steps (cavitation). \\ \hline
-    L & m·MPa$^{-1}$·s$^{-1}$ & Radial conductivity. \\ \hline
+    Symbol & Unit & Param. & Description \\ \hline
+    k_{s, max} & mmol·s$^{-1}$·m$^{-2}$·MPa$^{-1}$ &  & Maximum whole-stem conductance (per leaf area unit). \\ \hline
+    k_{r, max} & mmol·s$^{-1}$·m$^{-2}$·MPa$^{-1}$ &  & Maximum root conductance (per leaf area unit). \\ \hline
+    k_{l, max} & mmol·s$^{-1}$·m$^{-2}$·MPa$^{-1}$ &  & Maximum leaf conductance (per leaf area unit). \\ \hline
+    \Psi_{cav} & MPa & & Minimum water potential experienced by xylem in previous steps (cavitation). \\ \hline
     \end{tabular}
 \end{center}
 

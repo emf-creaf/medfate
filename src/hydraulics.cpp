@@ -269,18 +269,18 @@ List stemCapacitance(double E, double psiUpstream, List xylemParams,
   double kxsegmax = kxylemmax*((double) n);
   double Vsegmax = Vmax/((double) n);
   double Vprev;
-  double psiStem, psiStorage;
+  double psiPLC, psiStorage;
   //Initial values from root
   double Ein = E;
   double psiUp = psiUpstream;
   double psiStorageUp = psiUpstream;
   for(int i=0;i<n;i++) {
     //Transform PLC and RWC into water potential of storage compartments
-    psiStem = d*pow(-1.0*log(1.0-PLC[i]),1.0/c);
+    psiPLC = d*pow(-1.0*log(1.0-PLC[i]),1.0/c);
     psiStorage = -pi0 -epsilon*(1.0 - RWCstorage[i]);
     
     //Lateral/vertical flow
-    Vlat[i] =  tstep*klat*(psiStorage-psiStem);
+    Vlat[i] =  tstep*klat*(psiStorage-psiPLC);
     Vver[i] = tstep*ksto*(psiStorageUp-psiStorage);
     if(i==0) {
       Vver[i] = std::max(0.0, Vver[i]); //Do not allow flows towards the root 
@@ -288,7 +288,7 @@ List stemCapacitance(double E, double psiUpstream, List xylemParams,
     }
     
     //Store psi value before adding lateral flow
-    newPsiStem[i] = E2psiXylem2(Ein, psiUp, kxsegmax, c,d, psiStem, -0.001, -10.0);
+    newPsiStem[i] = E2psiXylem2(Ein, psiUp, kxsegmax, c,d, psiPLC, -0.001, -10.0);
 
     //Increase in flow due to new cavitation
     Vprev = Vsegmax*fapo*(1.0-PLC[i]);
