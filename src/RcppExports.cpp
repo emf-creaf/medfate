@@ -1057,6 +1057,40 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// E2psiXylem2
+double E2psiXylem2(double E, double psiUpstream, double kxylemmax, double c, double d, double psiCav, double psiStep, double psiMax);
+RcppExport SEXP _medfate_E2psiXylem2(SEXP ESEXP, SEXP psiUpstreamSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP, SEXP psiCavSEXP, SEXP psiStepSEXP, SEXP psiMaxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type E(ESEXP);
+    Rcpp::traits::input_parameter< double >::type psiUpstream(psiUpstreamSEXP);
+    Rcpp::traits::input_parameter< double >::type kxylemmax(kxylemmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type c(cSEXP);
+    Rcpp::traits::input_parameter< double >::type d(dSEXP);
+    Rcpp::traits::input_parameter< double >::type psiCav(psiCavSEXP);
+    Rcpp::traits::input_parameter< double >::type psiStep(psiStepSEXP);
+    Rcpp::traits::input_parameter< double >::type psiMax(psiMaxSEXP);
+    rcpp_result_gen = Rcpp::wrap(E2psiXylem2(E, psiUpstream, kxylemmax, c, d, psiCav, psiStep, psiMax));
+    return rcpp_result_gen;
+END_RCPP
+}
+// stemCapacitance
+List stemCapacitance(double E, double psiUpstream, List xylemParams, NumericVector PLC, NumericVector RWCstorage, double tstep);
+RcppExport SEXP _medfate_stemCapacitance(SEXP ESEXP, SEXP psiUpstreamSEXP, SEXP xylemParamsSEXP, SEXP PLCSEXP, SEXP RWCstorageSEXP, SEXP tstepSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type E(ESEXP);
+    Rcpp::traits::input_parameter< double >::type psiUpstream(psiUpstreamSEXP);
+    Rcpp::traits::input_parameter< List >::type xylemParams(xylemParamsSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type PLC(PLCSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type RWCstorage(RWCstorageSEXP);
+    Rcpp::traits::input_parameter< double >::type tstep(tstepSEXP);
+    rcpp_result_gen = Rcpp::wrap(stemCapacitance(E, psiUpstream, xylemParams, PLC, RWCstorage, tstep));
+    return rcpp_result_gen;
+END_RCPP
+}
 // E2psiXylemCapacitance
 List E2psiXylemCapacitance(List xylemparams, double Eup, double psiUp, double psiStorage, double psiCav, double psiMax);
 RcppExport SEXP _medfate_E2psiXylemCapacitance(SEXP xylemparamsSEXP, SEXP EupSEXP, SEXP psiUpSEXP, SEXP psiStorageSEXP, SEXP psiCavSEXP, SEXP psiMaxSEXP) {
@@ -2630,6 +2664,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_EXylem", (DL_FUNC) &_medfate_EXylem, 7},
     {"_medfate_psiCrit", (DL_FUNC) &_medfate_psiCrit, 2},
     {"_medfate_E2psiXylem", (DL_FUNC) &_medfate_E2psiXylem, 8},
+    {"_medfate_E2psiXylem2", (DL_FUNC) &_medfate_E2psiXylem2, 8},
+    {"_medfate_stemCapacitance", (DL_FUNC) &_medfate_stemCapacitance, 6},
     {"_medfate_E2psiXylemCapacitance", (DL_FUNC) &_medfate_E2psiXylemCapacitance, 6},
     {"_medfate_Ecrit", (DL_FUNC) &_medfate_Ecrit, 4},
     {"_medfate_regulatedPsiXylem", (DL_FUNC) &_medfate_regulatedPsiXylem, 6},

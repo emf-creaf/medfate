@@ -233,6 +233,90 @@ double E2psiXylem(double E, double psiUpstream, double kxylemmax, double c, doub
   return(psiPrev);
 }
 
+// [[Rcpp::export("hydraulics.E2psiXylem2")]]
+double E2psiXylem2(double E, double psiUpstream, double kxylemmax, double c, double d, double psiCav = 0.0, 
+                  double psiStep = -0.01, double psiMax = -10.0) {
+  if(E<0.0) stop("E has to be positive");
+  if(E==0) return(psiUpstream);
+  double psi = psiUpstream;
+  double Eg = 0.0;
+  double psiPrev = psi;
+  while(Eg<E) {
+    psiPrev = psi;
+    psi = psi + psiStep;
+    Eg = Eg + (-1.0*psiStep)*xylemConductance(std::min(psi, psiCav),kxylemmax, c, d);
+    if(psi<psiMax) return(NA_REAL);
+    if(NumericVector::is_na(Eg)) return(NA_REAL);
+  }
+  return(psiPrev);
+}
+
+// [[Rcpp::export("hydraulics.stemCapacitance")]]
+List stemCapacitance(double E, double psiUpstream, List xylemParams,
+                     NumericVector PLC, NumericVector RWCstorage, double tstep = 3600) {
+  double c = xylemParams["c"];
+  double d = xylemParams["d"];
+  double kxylemmax = xylemParams["kmax"];
+  double Vmax = xylemParams["Vmax"];
+  double fapo = xylemParams["fapo"];
+  double pi0 = xylemParams["pi0"];
+  double epsilon = xylemParams["epsilon"]; 
+  double klat = xylemParams["klat"];
+  double ksto = xylemParams["ksto"];
+  int n = PLC.size();
+  NumericVector newPLC(n),newRWCstorage(n), newPsiStem(n);
+  NumericVector Eout(n),Vlat(n), Vver(n), V(n);
+  double kxsegmax = kxylemmax*((double) n);
+  double Vsegmax = Vmax/((double) n);
+  double Vprev;
+  double psiStem, psiStorage;
+  //Initial values from root
+  double Ein = E;
+  double psiUp = psiUpstream;
+  double psiStorageUp = psiUpstream;
+  for(int i=0;i<n;i++) {
+    //Transform PLC and RWC into water potential of storage compartments
+    psiStem = d*pow(-1.0*log(1.0-PLC[i]),1.0/c);
+    psiStorage = -pi0 -epsilon*(1.0 - RWCstorage[i]);
+    
+    //Lateral/vertical flow
+    Vlat[i] =  tstep*klat*(psiStorage-psiStem);
+    Vver[i] = tstep*ksto*(psiStorageUp-psiStorage);
+    if(i==0) {
+      Vver[i] = std::max(0.0, Vver[i]); //Do not allow flows towards the root 
+      Ein = Ein - (Vver[i]/tstep); //Substract flow from root input
+    }
+    
+    //Store psi value before adding lateral flow
+    newPsiStem[i] = E2psiXylem2(Ein, psiUp, kxsegmax, c,d, psiStem, -0.001, -10.0);
+
+    //Increase in flow due to new cavitation
+    Vprev = Vsegmax*fapo*(1.0-PLC[i]);
+    V[i] = std::min(Vprev, Vsegmax*fapo*exp(-pow(newPsiStem[i]/d,c))); //Only allow decreases in volume (i.e. refilling cannot occur unless there is lateral flow)
+    Eout[i] = Ein - (V[i]-Vprev)/tstep;
+    
+      
+    //Update variables for next segment
+    psiUp = newPsiStem[i];
+    Ein = Eout[i];
+    psiStorageUp = psiStorage;
+  }
+  //Update compartments
+  for(int i=0;i<n;i++) {
+
+    V[i] = V[i] + Vlat[i];
+    if(V[i]>Vsegmax*fapo) {
+      double dif = Vsegmax*fapo - V[i];
+      V[i] = Vsegmax*fapo;
+      Vlat[i] = Vlat[i]-dif;
+    }
+    
+    newRWCstorage[i] = (Vsegmax*(1.0-fapo)*RWCstorage[i]-Vlat[i] + Vver[i])/(Vsegmax*(1.0-fapo));
+    newPLC[i] = 1.0- (V[i]/(Vsegmax*fapo));
+  }
+  return(List::create( _["Eout"] = Eout,_["newPsiStem"] = newPsiStem, _["newPLC"] = newPLC, _["newRWCstorage"] = newRWCstorage));
+}
+
 /* Calculates the downstream flow and water potential for a given an input (Eup) flow and water potentials at previous time step
  * Eup- Input flow from upstream
  * psiUp - Upstream water potential 

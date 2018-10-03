@@ -309,6 +309,14 @@ hydraulics.E2psiXylem <- function(E, psiUpstream, kxylemmax, c, d, psiCav = 0.0,
     .Call('_medfate_E2psiXylem', PACKAGE = 'medfate', E, psiUpstream, kxylemmax, c, d, psiCav, psiStep, psiMax)
 }
 
+hydraulics.E2psiXylem2 <- function(E, psiUpstream, kxylemmax, c, d, psiCav = 0.0, psiStep = -0.01, psiMax = -10.0) {
+    .Call('_medfate_E2psiXylem2', PACKAGE = 'medfate', E, psiUpstream, kxylemmax, c, d, psiCav, psiStep, psiMax)
+}
+
+hydraulics.stemCapacitance <- function(E, psiUpstream, xylemParams, PLC, RWCstorage, tstep = 3600) {
+    .Call('_medfate_stemCapacitance', PACKAGE = 'medfate', E, psiUpstream, xylemParams, PLC, RWCstorage, tstep)
+}
+
 hydraulics.E2psiXylemCapacitance <- function(xylemparams, Eup, psiUp, psiStorage, psiCav = 0.0, psiMax = -10.0) {
     .Call('_medfate_E2psiXylemCapacitance', PACKAGE = 'medfate', xylemparams, Eup, psiUp, psiStorage, psiCav, psiMax)
 }
