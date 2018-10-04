@@ -520,15 +520,16 @@ abline(v=-psiCav, col="gray", lwd=1.5)
 legend("topright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 @
 \end{center}
-\subsubsection{Supply function of a network}
-For simplicity, so far we considered supply functions of elements in series, but in fact \texttt{medfate} uses network of $(N \times 2 + 2)$ resistance elements to represent the soil-plant continuum, with soil being represented in $N$ different layers. For each soil layer there is a rhizosphere element in series with a root xylem element. The $N$ soil layers are in parallel up to the root crown. From there there are two final elements: the stem xylem and the leaf. 
 
-In an hydraulic network of $N$ rhizosphere components and root layers in parallel there are $N+1$ unknown pressures: the $N$ root surface pressures ($\Psi_{rootsurf,1},\dots,\Psi_{rootsurf,N}$) and the root crown pressure at the downstream junction for all root components ($\Psi_{rootcrown}$). The $N+1$ unknown pressures are solved, for each specified total flow value $E$, using multidimensional Newton-Raphson on a set of equations for steady-state flow (Sperry et al. 2016b):
+\subsubsection{Supply function of a root system}
+So far we considered supply functions of elements in series, but resistance elements will be in parallel if soil is represented using $N>1$ different layers. For each soil layer there is a rhizosphere element in series with a root xylem element. The $N$ soil layers are in parallel up to the root crown. 
+
+Network of $N$ rhizosphere components and root layers in parallel there are $N+1$ unknown pressures: the $N$ root surface pressures ($\Psi_{rootsurf,1},\dots,\Psi_{rootsurf,N}$) and the root crown pressure at the downstream junction for all root components ($\Psi_{rootcrown}$). The $N+1$ unknown pressures are solved, for each specified total flow value $E$, using multidimensional Newton-Raphson on a set of equations for steady-state flow (Sperry et al. 2016b):
 \begin{eqnarray}
    E_{k, rhizosphere}-E_{k,root} &=& 0 \\
    \sum_{k}^{n}{E_{k,root}}-E &=& 0
 \end{eqnarray}
-where $E_{k, rhizosphere}$ and $E_{k, root}$ are calculated using either van Genuchten or Weibull function as vulnerability curves, respectively. In the case of rhizosphere elements, $\Psi_{up,k}=\Psi_{soil,k}$ and in the case of root elements $\Psi_{up,k}=\Psi_{rootsurf,k}$. Solving the steady-state equations also provides values for flow across each of the parallel paths $E_{k, rhizosphere} = E_{k, root}$, which are useful to conduct water balance operations on each layer. Water potential at the upper end of the stem ($\Psi_{stem}$) is then obtained integrating the stem xylem vulnerability curve, using $\Psi_{up,k}=\Psi_{rootcrown}$ and assuming a steady-state flow $E$. Leaf water potential ($\Psi_{leaf}$) is obtained integrating the leaf vulnerability curve, using $\Psi_{up,k}=\Psi_{stem}$ and assuming a steady-state flow $E$.The whole supply function $E(\Psi_{leaf}$) is obtained repeating these operations from $E=0$ to a critical value $E_{crit}$. 
+where $E_{k, rhizosphere}$ and $E_{k, root}$ are calculated using either van Genuchten or Weibull function as vulnerability curves, respectively. In the case of rhizosphere elements, $\Psi_{up,k}=\Psi_{soil,k}$ and in the case of root elements $\Psi_{up,k}=\Psi_{rootsurf,k}$. Solving the steady-state equations also provides values for flow across each of the parallel paths $E_{k, rhizosphere} = E_{k, root}$, which are useful to conduct water balance operations on each layer. 
 
 As an example, we start by defining the water potential of three soil layers corresponding to four situations (analogously with the soil water potentials defined above): 
 <<>>==
@@ -565,7 +566,165 @@ krootmaxvec = krootmax*weights
 krootmaxvec
 @
 
-Having all these maximum conductances, we can now build the supply functions for each soil texture and starting from the different soil water potential configurations (see function \texttt{hydraulics.supplyFunctionNetwork()}): 
+
+
+Having all these maximum conductances, we can now build the supply functions for each soil texture and starting from the different soil water potential configurations (see function \texttt{hydraulics.supplyFunctionRootSystem()}): 
+\begin{center}
+<<fig=TRUE, width=8, height=4.5, echo=FALSE>>==
+par(mar=c(4,4,2,1), mfrow=c(1,2))
+psiMax = -7.0
+supplyNetwork11 = hydraulics.supplyFunctionRootSystem(psiSoilLayers1,
+                                  krhizomaxvec1,rep(n1,3),rep(alpha1,3),
+                                  krootmaxvec, rootc,rootd,
+                                  maxNsteps = 400, psiMax = psiMax)
+supplyNetwork12 = hydraulics.supplyFunctionRootSystem(psiSoilLayers2,
+                                  krhizomaxvec1,rep(n1,3),rep(alpha1,3),
+                                  krootmaxvec, rootc,rootd,
+                                  maxNsteps = 400, psiMax = psiMax)
+supplyNetwork13 = hydraulics.supplyFunctionRootSystem(psiSoilLayers3,
+                                  krhizomaxvec1,rep(n1,3),rep(alpha1,3),
+                                  krootmaxvec, rootc,rootd,
+                                  maxNsteps = 400, psiMax = psiMax)
+supplyNetwork14 = hydraulics.supplyFunctionRootSystem(psiSoilLayers4,
+                                  krhizomaxvec1,rep(n1,3),rep(alpha1,3),
+                                  krootmaxvec, rootc,rootd,
+                                  maxNsteps = 400, psiMax = psiMax)
+supplyNetwork21 = hydraulics.supplyFunctionRootSystem(psiSoilLayers1,
+                                  krhizomaxvec2,rep(n2,3),rep(alpha2,3),
+                                  krootmaxvec, rootc,rootd,
+                                  maxNsteps = 400, psiMax = psiMax)
+supplyNetwork22 = hydraulics.supplyFunctionRootSystem(psiSoilLayers2,
+                                  krhizomaxvec2,rep(n2,3),rep(alpha2,3),
+                                  krootmaxvec, rootc,rootd,
+                                  maxNsteps = 400, psiMax = psiMax)
+supplyNetwork23 = hydraulics.supplyFunctionRootSystem(psiSoilLayers3,
+                                  krhizomaxvec2,rep(n2,3),rep(alpha2,3),
+                                  krootmaxvec, rootc,rootd,
+                                  maxNsteps = 400, psiMax = psiMax)
+supplyNetwork24 = hydraulics.supplyFunctionRootSystem(psiSoilLayers4,
+                                  krhizomaxvec2,rep(n2,3),rep(alpha2,3),
+                                  krootmaxvec, rootc,rootd,
+                                  maxNsteps = 400, psiMax = psiMax)
+supplyNetwork31 = hydraulics.supplyFunctionRootSystem(psiSoilLayers1,
+                                  krhizomaxvec3,rep(n3,3),rep(alpha3,3),
+                                  krootmaxvec, rootc,rootd,
+                                  maxNsteps = 400, psiMax = psiMax)
+supplyNetwork32 = hydraulics.supplyFunctionRootSystem(psiSoilLayers2,
+                                  krhizomaxvec3,rep(n3,3),rep(alpha3,3),
+                                  krootmaxvec, rootc,rootd,
+                                  maxNsteps = 400, psiMax = psiMax)
+supplyNetwork33 = hydraulics.supplyFunctionRootSystem(psiSoilLayers3,
+                                  krhizomaxvec3,rep(n3,3),rep(alpha3,3),
+                                  krootmaxvec, rootc,rootd,
+                                  maxNsteps = 400, psiMax = psiMax)
+supplyNetwork34 = hydraulics.supplyFunctionRootSystem(psiSoilLayers4,
+                                  krhizomaxvec3,rep(n3,3),rep(alpha3,3),
+                                  krootmaxvec, rootc,rootd,
+                                  maxNsteps = 400, psiMax = psiMax)
+plot(-supplyNetwork11$PsiRoot, supplyNetwork11$E, type="l", col=col1, ylab="Flow rate  (mmol·m-2·s-1)", 
+     xlab = "Root crown pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,max(supplyNetwork11$E)), lwd=1, main  = "E")
+lines(-supplyNetwork12$PsiRoot, supplyNetwork12$E, lty=1, col=col2)
+lines(-supplyNetwork13$PsiRoot, supplyNetwork13$E, lty=1, col=col3)
+lines(-supplyNetwork14$PsiRoot, supplyNetwork14$E, lty=1, col=col4)
+lines(-supplyNetwork21$PsiRoot, supplyNetwork21$E, lty=2, col=col1)
+lines(-supplyNetwork22$PsiRoot, supplyNetwork22$E, lty=2, col=col2)
+lines(-supplyNetwork23$PsiRoot, supplyNetwork23$E, lty=2, col=col3)
+lines(-supplyNetwork24$PsiRoot, supplyNetwork24$E, lty=2, col=col4)
+lines(-supplyNetwork32$PsiRoot, supplyNetwork32$E, lty=3, col=col1)
+lines(-supplyNetwork32$PsiRoot, supplyNetwork32$E, lty=3, col=col2)
+lines(-supplyNetwork33$PsiRoot, supplyNetwork33$E, lty=3, col=col3)
+lines(-supplyNetwork34$PsiRoot, supplyNetwork34$E, lty=3, col=col4)
+legend("topleft", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
+
+plot(-supplyNetwork11$PsiRoot, supplyNetwork11$dEdP, type="l", col=col1, ylab="dE/dP  (mmol·m-2·s-1·MPa-1)", 
+     xlab = "Root crown pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,max(supplyNetwork11$dEdP)), lwd=1, main="dE/dP")
+lines(-supplyNetwork12$PsiRoot, supplyNetwork12$dEdP, lty=1, col=col2)
+lines(-supplyNetwork13$PsiRoot, supplyNetwork13$dEdP, lty=1, col=col3)
+lines(-supplyNetwork14$PsiRoot, supplyNetwork14$dEdP, lty=1, col=col4)
+lines(-supplyNetwork21$PsiRoot, supplyNetwork21$dEdP, lty=2, col=col1)
+lines(-supplyNetwork22$PsiRoot, supplyNetwork22$dEdP, lty=2, col=col2)
+lines(-supplyNetwork23$PsiRoot, supplyNetwork23$dEdP, lty=2, col=col3)
+lines(-supplyNetwork24$PsiRoot, supplyNetwork24$dEdP, lty=2, col=col4)
+lines(-supplyNetwork31$PsiRoot, supplyNetwork31$dEdP, lty=3, col=col1)
+lines(-supplyNetwork32$PsiRoot, supplyNetwork32$dEdP, lty=3, col=col2)
+lines(-supplyNetwork33$PsiRoot, supplyNetwork33$dEdP, lty=3, col=col3)
+lines(-supplyNetwork34$PsiRoot, supplyNetwork34$dEdP, lty=3, col=col4)
+legend("topright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
+@
+\end{center}
+The derivative of $dE/d\Psi_{leaf}$ for the supply function of the root system is obtained numerically. An advantage of working with elements in parallel is that we can know the water potentials in different points of the root system. Here we plot them for the results of silt loam texture and the first and last soil potential vectors defined above:
+\begin{center}
+<<fig=TRUE, width=8, height=10, echo=FALSE>>==
+par(mar=c(4,4,4,1), mfrow=c(2,2))
+plot(supplyNetwork21$E, -supplyNetwork21$PsiRoot, type="l", col="black", xlab="Total flow rate", 
+     ylab = "Pressure (-MPa)",  main="Soil potentials 1 (original)", ylim=c(0, 5), xlim=c(0,max(supplyNetwork21$E)), lwd=2)
+lines(supplyNetwork21$E,-supplyNetwork21$PsiRhizo[,1], lty=4, col="black", lwd=2)
+lines(supplyNetwork21$E,-supplyNetwork21$PsiRhizo[,2],  lty=4, col="red", lwd=2)
+lines(supplyNetwork21$E,-supplyNetwork21$PsiRhizo[,3], lty=4, col="blue", lwd=2)
+legend("topleft", bty="n", legend=c("Root crown", "Rhizo 1", "Rhizo 2", "Rhizo 3"), 
+       lwd=2, lty=c(1,2,3,4,4,4), col=c(rep("black",4), "red","blue"), cex=0.8)
+
+plot(supplyNetwork22$E, -supplyNetwork22$PsiRoot, type="l", col="black", xlab="Total flow rate", 
+     ylab = "Pressure (-MPa)",  main="Soil potentials 2 (original)", ylim=c(0, 5), xlim=c(0,max(supplyNetwork22$E)), lwd=2)
+lines(supplyNetwork22$E,-supplyNetwork22$PsiRhizo[,1], lty=4, col="black", lwd=2)
+lines(supplyNetwork22$E,-supplyNetwork22$PsiRhizo[,2],  lty=4, col="red", lwd=2)
+lines(supplyNetwork22$E,-supplyNetwork22$PsiRhizo[,3], lty=4, col="blue", lwd=2)
+legend("topleft", bty="n", legend=c("Root crown", "Rhizo 1", "Rhizo 2", "Rhizo 3"), 
+       lwd=2, lty=c(1,2,3,4,4,4), col=c(rep("black",4), "red","blue"), cex=0.8)
+
+plot(supplyNetwork23$E, -supplyNetwork23$PsiRoot, type="l", col="black", xlab="Total flow rate", 
+     ylab = "Pressure (-MPa)",  main="Soil potentials 3 (original)", ylim=c(0, 5), xlim=c(0,max(supplyNetwork23$E)), lwd=2)
+lines(supplyNetwork23$E,-supplyNetwork23$PsiRhizo[,1], lty=4, col="black", lwd=2)
+lines(supplyNetwork23$E,-supplyNetwork23$PsiRhizo[,2],  lty=4, col="red", lwd=2)
+lines(supplyNetwork23$E,-supplyNetwork23$PsiRhizo[,3], lty=4, col="blue", lwd=2)
+legend("topleft", bty="n", legend=c("Root crown", "Rhizo 1", "Rhizo 2", "Rhizo 3"), 
+       lwd=2, lty=c(1,2,3,4,4,4), col=c(rep("black",4), "red","blue"), cex=0.8)
+plot(supplyNetwork24$E, -supplyNetwork24$PsiRoot, type="l", col="black", xlab="Total flow rate", 
+     ylab = "Pressure (-MPa)",  main="Soil potentials 4 (original)", ylim=c(0, 5), xlim=c(0,max(supplyNetwork24$E)), lwd=2)
+lines(supplyNetwork24$E,-supplyNetwork24$PsiRhizo[,1], lty=4, col="black", lwd=2)
+lines(supplyNetwork24$E,-supplyNetwork24$PsiRhizo[,2],  lty=4, col="red", lwd=2)
+lines(supplyNetwork24$E,-supplyNetwork24$PsiRhizo[,3], lty=4, col="blue", lwd=2)
+legend("topleft", bty="n", legend=c("Root crown", "Rhizo 1", "Rhizo 2", "Rhizo 3"), 
+       lwd=2, lty=c(1,2,3,4,4,4), col=c(rep("black",4), "red","blue"), cex=0.8)
+
+@
+\end{center}
+Note that when soil is not dry (first situation) pressure drop in the rhizosphere is negligible, but not the pressure drop in the root xylem. For drier soils rhizosphere becomes more relevant. We can also plot the flow rates across each of the parallel paths (again corresponding to the results of silt loam texture and for the four soil potential vectors):
+\begin{center}
+<<fig=TRUE, width=6, height=7.0, echo=FALSE>>==
+par(mar=c(4,4,5,1), mfrow=c(2,2))
+plot(supplyNetwork21$E, supplyNetwork21$Elayers[,1], type="l", col="black", xlab="Total flow rate", 
+     ylab = "Path flow rate",  main="Soil potentials 1",  xlim=c(0, 4), ylim=c(-1,4), lwd=1)
+lines(supplyNetwork21$E, supplyNetwork21$Elayers[,2], lty=2)
+lines(supplyNetwork21$E, supplyNetwork21$Elayers[,3], lty=3)
+abline(h=0, col="gray")
+legend("topleft", legend=c("Layer 1", "Layer 2", "Layer 3"), bty="n", lty=c(1,2,3))
+plot(supplyNetwork22$E, supplyNetwork22$Elayers[,1], type="l", col="black", xlab="Total flow rate", 
+     ylab = "Path flow rate",  main="Soil potentials 2",  xlim=c(0, 2), ylim=c(-0.5,2), lwd=1)
+lines(supplyNetwork22$E, supplyNetwork22$Elayers[,2], lty=2)
+lines(supplyNetwork22$E, supplyNetwork22$Elayers[,3], lty=3)
+abline(h=0, col="gray")
+legend("topleft", legend=c("Layer 1", "Layer 2", "Layer 3"), bty="n", lty=c(1,2,3))
+plot(supplyNetwork23$E, supplyNetwork23$Elayers[,1], type="l", col="black", xlab="Total flow rate", 
+     ylab = "Path flow rate",  main="Soil potentials 3",  xlim=c(0, 0.4), ylim=c(-0.2,0.4), lwd=1)
+lines(supplyNetwork23$E, supplyNetwork23$Elayers[,2], lty=2)
+lines(supplyNetwork23$E, supplyNetwork23$Elayers[,3], lty=3)
+abline(h=0, col="gray")
+legend("topleft", legend=c("Layer 1", "Layer 2", "Layer 3"), bty="n", lty=c(1,2,3))
+plot(supplyNetwork24$E, supplyNetwork24$Elayers[,1], type="l", col="black", xlab="Total flow rate", 
+     ylab = "Path flow rate",  main="Soil potentials 4",  xlim=c(0, 0.05), ylim=c(-0.05,0.05), lwd=1)
+lines(supplyNetwork24$E, supplyNetwork24$Elayers[,2], lty=2)
+lines(supplyNetwork24$E, supplyNetwork24$Elayers[,3], lty=3)
+abline(h=0, col="gray")
+legend("topleft", legend=c("Layer 1", "Layer 2", "Layer 3"), bty="n", lty=c(1,2,3))
+@
+\end{center}
+Note that the contribution of each soil layer depends on the soil conditions and the total amount of flow. For a low total flow rate some layers may have negative flows if their potential is lower than others, which in a dynamic context will cause hydraulic redistribution of water among soil layers.
+
+\subsubsection{Supply function of the soil-plant continuum}
+We can use a network of $(N \times 2 + 2)$ resistance elements to represent the soil-plant continuum, with soil being represented in $N$ different layers. As before, the $N$ soil layers are in parallel up to the root crown. From there there are two final elements: the stem xylem and the leaf. After calculating flows and potentials in the root system, the water potential at the upper end of the stem ($\Psi_{stem}$) is obtained integrating the stem xylem vulnerability curve, using $\Psi_{up,k}=\Psi_{rootcrown}$ and assuming a steady-state flow $E$. Leaf water potential ($\Psi_{leaf}$) is obtained integrating the leaf vulnerability curve, using $\Psi_{up,k}=\Psi_{stem}$ and assuming a steady-state flow $E$.The whole supply function $E(\Psi_{leaf}$) is obtained repeating these operations from $E=0$ to a critical value $E_{crit}$. 
+
+The supply functions for each soil texture and starting from the different soil water potential configurations (see function \texttt{hydraulics.supplyFunctionNetwork()}): 
 \begin{center}
 <<fig=TRUE, width=8, height=3.5, echo=FALSE>>==
 par(mar=c(4,4,2,1), mfrow=c(1,2))
@@ -807,7 +966,7 @@ legend("topright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 @
 \end{center}
 
-Although it is computationally more expensive, an advantage of working with the network is that we can know the water potentials in different points of the continuum. Here we plot them for the results of silt loam texture and the first and last soil potential vectors defined above:
+As with the root system, we can know the water potentials in different points of the continuum. Here we plot them for the results of silt loam texture and the first and last soil potential vectors defined above:
 \begin{center}
 <<fig=TRUE, width=8, height=10, echo=FALSE>>==
 par(mar=c(4,4,4,1), mfrow=c(2,2))
@@ -851,39 +1010,6 @@ legend("topleft", bty="n", legend=c("Leaf","Stem","Root crown", "Rhizo 1", "Rhiz
 
 @
 \end{center}
-Note that when soil is not dry (first situation) pressure drop in the rhizosphere is negligible, but not the pressure drop in the root xylem. For drier soils rhizosphere becomes more relevant. 
-
-In a network with resistance elements in parallel, we can also know the flow rates across each of the parallel paths (again corresponding to the results of silt loam texture and for the four soil potential vectors):
-\begin{center}
-<<fig=TRUE, width=6, height=7.0, echo=FALSE>>==
-par(mar=c(4,4,5,1), mfrow=c(2,2))
-plot(supplyNetwork21$E, supplyNetwork21$Elayers[,1], type="l", col="black", xlab="Total flow rate", 
-     ylab = "Path flow rate",  main="Soil potentials 1",  xlim=c(0, 4), ylim=c(-1,4), lwd=1)
-lines(supplyNetwork21$E, supplyNetwork21$Elayers[,2], lty=2)
-lines(supplyNetwork21$E, supplyNetwork21$Elayers[,3], lty=3)
-abline(h=0, col="gray")
-legend("topleft", legend=c("Layer 1", "Layer 2", "Layer 3"), bty="n", lty=c(1,2,3))
-plot(supplyNetwork22$E, supplyNetwork22$Elayers[,1], type="l", col="black", xlab="Total flow rate", 
-     ylab = "Path flow rate",  main="Soil potentials 2",  xlim=c(0, 2), ylim=c(-0.5,2), lwd=1)
-lines(supplyNetwork22$E, supplyNetwork22$Elayers[,2], lty=2)
-lines(supplyNetwork22$E, supplyNetwork22$Elayers[,3], lty=3)
-abline(h=0, col="gray")
-legend("topleft", legend=c("Layer 1", "Layer 2", "Layer 3"), bty="n", lty=c(1,2,3))
-plot(supplyNetwork23$E, supplyNetwork23$Elayers[,1], type="l", col="black", xlab="Total flow rate", 
-     ylab = "Path flow rate",  main="Soil potentials 3",  xlim=c(0, 0.4), ylim=c(-0.2,0.4), lwd=1)
-lines(supplyNetwork23$E, supplyNetwork23$Elayers[,2], lty=2)
-lines(supplyNetwork23$E, supplyNetwork23$Elayers[,3], lty=3)
-abline(h=0, col="gray")
-legend("topleft", legend=c("Layer 1", "Layer 2", "Layer 3"), bty="n", lty=c(1,2,3))
-plot(supplyNetwork24$E, supplyNetwork24$Elayers[,1], type="l", col="black", xlab="Total flow rate", 
-     ylab = "Path flow rate",  main="Soil potentials 4",  xlim=c(0, 0.05), ylim=c(-0.05,0.05), lwd=1)
-lines(supplyNetwork24$E, supplyNetwork24$Elayers[,2], lty=2)
-lines(supplyNetwork24$E, supplyNetwork24$Elayers[,3], lty=3)
-abline(h=0, col="gray")
-legend("topleft", legend=c("Layer 1", "Layer 2", "Layer 3"), bty="n", lty=c(1,2,3))
-@
-\end{center}
-Note that the contribution of each soil layer depends on the soil conditions and the total amount of flow. for low total flow rates some layers may have negative flows if their potential is lower than others, indicating hydraulic redistribution of water among soil layers.
 
 \subsection{Hydraulics with plant water compartments}
 \subsubsection{Effects on the supply function}
