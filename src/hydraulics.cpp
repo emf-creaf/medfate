@@ -404,7 +404,7 @@ List E2psiRootSystem(double E, NumericVector psiSoil,
                   NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
                   NumericVector krootmax, double rootc, double rootd, 
                   NumericVector psiIni = NumericVector::create(0),
-                  double psiStep = -0.001, double psiMax = -10.0, int ntrial = 10, double psiTol = 0.0001, double ETol = 0.0001) {
+                  double psiStep = -0.0001, double psiMax = -10.0, int ntrial = 10, double psiTol = 0.0001, double ETol = 0.0001) {
   int nlayers = psiSoil.length();
   //Initialize
   NumericVector x(nlayers+1);
@@ -520,7 +520,7 @@ List E2psiNetwork(double E, NumericVector psiSoil,
                   double kleafmax, double leafc, double leafd,
                   NumericVector psiIni = NumericVector::create(0),
                   double psiCav = 0.0, //Minimum plant potential (cavitation)
-                  double psiStep = -0.001, double psiMax = -10.0, int ntrial = 10, double psiTol = 0.0001, double ETol = 0.0001) {
+                  double psiStep = -0.0001, double psiMax = -10.0, int ntrial = 10, double psiTol = 0.0001, double ETol = 0.0001) {
   
   List E2psiRS = E2psiRootSystem(E, psiSoil, 
                                  krhizomax, nsoil, alphasoil,
@@ -605,7 +605,12 @@ List E2psiXylemCapacitance(double E, double psiRootCrown,
     newPsiStem[i] = E2psiXylem(Ein, psiUp, kxsegmax, c,d, psiPLC, psiStep, psiMax);
     
     //Upwards symplastic flow
-    Fver2[i] = kstoseg*(psiStorage-newPsiStem[i]);
+    if(i==(n-1)) {
+      Fver2[i] = kstoseg*(psiStorage-newPsiStem[i]); 
+    } else {
+      double psiStorageDown = -pi0 -epsilon*(1.0 - RWCstorage[i+1]);
+      Fver2[i] = kstoseg*(psiStorage - psiStorageDown); 
+    }
     
     //Increase in flow due to new cavitation
     Vprev = Vsegmax*fapo*(1.0-PLC[i]);
@@ -979,7 +984,7 @@ List supplyFunctionThreeElements(double Emax, double psiSoil, double krhizomax, 
 List supplyFunctionRootSystem(NumericVector psiSoil, 
                            NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
                            NumericVector krootmax, double rootc, double rootd, 
-                           double minFlow = 0.0, int maxNsteps=400, double psiStep = -0.001, double psiMax = -10.0, 
+                           double minFlow = 0.0, int maxNsteps=400, double psiStep = -0.0001, double psiMax = -10.0, 
                            int ntrial = 10, double psiTol = 0.0001, double ETol = 0.0001) {
   int nlayers = psiSoil.size();
   int nnodes = nlayers+1; //Rhizosphere+rootcollar
@@ -1081,7 +1086,7 @@ List supplyFunctionNetwork(NumericVector psiSoil,
                            double kstemmax, double stemc, double stemd,
                            double kleafmax, double leafc, double leafd,
                            double psiCav = 0.0,
-                           double minFlow = 0.0, int maxNsteps=400, double psiStep = -0.001, double psiMax = -10.0, 
+                           double minFlow = 0.0, int maxNsteps=400, double psiStep = -0.0001, double psiMax = -10.0, 
                            int ntrial = 10, double psiTol = 0.0001, double ETol = 0.0001) {
   int nlayers = psiSoil.size();
   int nnodes = nlayers+3; //Rhizosphere+rootcollar+stem+leaf
@@ -1203,7 +1208,7 @@ List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootcr
                                double Vmax, double fapo, double pi0, double epsilon,
                                double klat, double ksto,
                                double tstep = 3600, 
-                               double psiStep = -0.001, double psiMax = -10.0) {
+                               double psiStep = -0.0001, double psiMax = -10.0) {
   int nnodes = PLC.size(); // stem nodes + leaf
   int maxNsteps = Erootcrown.size();
   NumericVector supplyE(maxNsteps);

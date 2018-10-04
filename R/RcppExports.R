@@ -329,11 +329,11 @@ hydraulics.E2psiTwoElements <- function(E, psiSoil, krhizomax, kxylemmax, n, alp
     .Call('_medfate_E2psiTwoElements', PACKAGE = 'medfate', E, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, psiCav, psiStep, psiMax)
 }
 
-hydraulics.E2psiRootSystem <- function(E, psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, psiIni = as.numeric( c(0)), psiStep = -0.001, psiMax = -10.0, ntrial = 10L, psiTol = 0.0001, ETol = 0.0001) {
+hydraulics.E2psiRootSystem <- function(E, psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, psiIni = as.numeric( c(0)), psiStep = -0.0001, psiMax = -10.0, ntrial = 10L, psiTol = 0.0001, ETol = 0.0001) {
     .Call('_medfate_E2psiRootSystem', PACKAGE = 'medfate', E, psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, psiIni, psiStep, psiMax, ntrial, psiTol, ETol)
 }
 
-hydraulics.E2psiNetwork <- function(E, psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiIni = as.numeric( c(0)), psiCav = 0.0, psiStep = -0.001, psiMax = -10.0, ntrial = 10L, psiTol = 0.0001, ETol = 0.0001) {
+hydraulics.E2psiNetwork <- function(E, psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiIni = as.numeric( c(0)), psiCav = 0.0, psiStep = -0.0001, psiMax = -10.0, ntrial = 10L, psiTol = 0.0001, ETol = 0.0001) {
     .Call('_medfate_E2psiNetwork', PACKAGE = 'medfate', E, psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiIni, psiCav, psiStep, psiMax, ntrial, psiTol, ETol)
 }
 
@@ -357,15 +357,15 @@ hydraulics.supplyFunctionThreeElements <- function(Emax, psiSoil, krhizomax, kxy
     .Call('_medfate_supplyFunctionThreeElements', PACKAGE = 'medfate', Emax, psiSoil, krhizomax, kxylemmax, kleafmax, n, alpha, stemc, stemd, leafc, leafd, psiCav, dE, psiMax)
 }
 
-hydraulics.supplyFunctionRootSystem <- function(psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, minFlow = 0.0, maxNsteps = 400L, psiStep = -0.001, psiMax = -10.0, ntrial = 10L, psiTol = 0.0001, ETol = 0.0001) {
+hydraulics.supplyFunctionRootSystem <- function(psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, minFlow = 0.0, maxNsteps = 400L, psiStep = -0.0001, psiMax = -10.0, ntrial = 10L, psiTol = 0.0001, ETol = 0.0001) {
     .Call('_medfate_supplyFunctionRootSystem', PACKAGE = 'medfate', psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, minFlow, maxNsteps, psiStep, psiMax, ntrial, psiTol, ETol)
 }
 
-hydraulics.supplyFunctionNetwork <- function(psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiCav = 0.0, minFlow = 0.0, maxNsteps = 400L, psiStep = -0.001, psiMax = -10.0, ntrial = 10L, psiTol = 0.0001, ETol = 0.0001) {
+hydraulics.supplyFunctionNetwork <- function(psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiCav = 0.0, minFlow = 0.0, maxNsteps = 400L, psiStep = -0.0001, psiMax = -10.0, ntrial = 10L, psiTol = 0.0001, ETol = 0.0001) {
     .Call('_medfate_supplyFunctionNetwork', PACKAGE = 'medfate', psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiCav, minFlow, maxNsteps, psiStep, psiMax, ntrial, psiTol, ETol)
 }
 
-hydraulics.supplyFunctionAboveGround <- function(Erootcrown, psiRootcrown, PLC, RWCstorage, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vmax, fapo, pi0, epsilon, klat, ksto, tstep = 3600, psiStep = -0.001, psiMax = -10.0) {
+hydraulics.supplyFunctionAboveGround <- function(Erootcrown, psiRootcrown, PLC, RWCstorage, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vmax, fapo, pi0, epsilon, klat, ksto, tstep = 3600, psiStep = -0.0001, psiMax = -10.0) {
     .Call('_medfate_supplyFunctionAboveground', PACKAGE = 'medfate', Erootcrown, psiRootcrown, PLC, RWCstorage, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vmax, fapo, pi0, epsilon, klat, ksto, tstep, psiStep, psiMax)
 }
 
