@@ -194,7 +194,7 @@ To calculate $RWC_{sym}$ from the water potential of a tissue, the previous equa
   
 Apoplastic reservoirs (e.g. sapwood) consist of inelastic cells that release their water to the transpiration stream following embolism. As in Hölttä et al. (2009), we equate the relative water content of the apoplastic reservoir of the xylem to the proportion of maximum conductance in the vulnerability curve:
 \begin{equation}
-RWC_{apo}(\Psi_{stem}) = \frac{k_x(\Psi_{stem})}{k_{x,max}} = e^{-((\Psi/d_{stem})^c_{stem})}
+RWC_{apo}(\Psi_{stem}) = \frac{k_x(\Psi_{stem})}{k_{x,max}} = e^{-((\Psi/d_{stem})^{c_{stem}})}
 \end{equation}
 
 <<fig=TRUE, width=4, height=4, echo=FALSE>>==
@@ -221,6 +221,13 @@ where $\rho_{w}$ is the density of water (kgH$_2$O$\cdot$m$^{-3}$) and $f_{apo,s
 S_{sym}(\Psi_{sym}) = V_{sapwood} \cdot (1 - f_{apo, s}) \cdot RWC_{sym}(\Psi_{storage}) \cdot \rho_{w}
 \end{equation}
 
+\subsubsection{Xylem apoplastic volume and PLC}
+
+We assume that the percentage of conductance loss (PLC) is related to the volume in xylem apoplastic tissue with respect to the maximum volume (Martin-StPaul et al. 2017), i.e.:
+\begin{equation}
+PLC_{xylem} = 1 - RWC_{apo}(\Psi_{stem})
+\end{equation}
+With this assumption one can relate decreases in water content in xylem conduits with changes in PLC. More importantly, one can invert RWC to find the stem water potential corresponding to the current degree of stem cavitation, to be used in integrals of the vulnerability curve.
 
 \subsection{Supply functions}
 The supply function describes the rate of water supply (i.e. flow) for transpiration ($E$) as a function of pressure. The steady-state flow rate $E_i$ through each $i$ element of the continuum is related to the flow-induced drop in pressure across that element ($\Delta \Psi_i$) by the integral transform of the element's vulnerability curve $k_i(\Psi)$ (Sperry and Love 2015):

@@ -217,85 +217,110 @@ double psiCrit(double c, double d) {
 
 // [[Rcpp::export("hydraulics.E2psiXylem")]]
 double E2psiXylem(double E, double psiUpstream, double kxylemmax, double c, double d, double psiCav = 0.0, 
-                  double psiStep = -0.01, double psiMax = -10.0) {
+                   double psiStep = -0.01, double psiMax = -10.0) {
   if(E<0.0) stop("E has to be positive");
   if(E==0) return(psiUpstream);
   double psi = psiUpstream;
+  double k = xylemConductance(std::min(psi, psiCav),kxylemmax, c, d);
   double Eg = 0.0;
   double psiPrev = psi;
+  double kprev = k;
   while(Eg<E) {
     psiPrev = psi;
+    kprev = k;
     psi = psi + psiStep;
-    Eg = EXylem(psi,psiUpstream, kxylemmax, c, d, true, psiCav=psiCav);
+    k = xylemConductance(std::min(psi, psiCav),kxylemmax, c, d);
+    Eg = Eg + (-1.0*psiStep)*((kprev+k)/2.0);
     if(psi<psiMax) return(NA_REAL);
     if(NumericVector::is_na(Eg)) return(NA_REAL);
   }
-  return(psiPrev);
+  return((psiPrev+psi)/2.0);
 }
+// double E2psiXylem(double E, double psiUpstream, double kxylemmax, double c, double d, double psiCav = 0.0,
+//                   double psiStep = -0.01, double psiMax = -10.0) {
+//   if(E<0.0) stop("E has to be positive");
+//   if(E==0) return(psiUpstream);
+//   double psi = psiUpstream;
+//   double Eg = 0.0;
+//   double psiPrev = psi;
+//   while(Eg<E) {
+//     psiPrev = psi;
+//     psi = psi + psiStep;
+//     Eg = EXylem(psi,psiUpstream, kxylemmax, c, d, true, psiCav=psiCav);
+//     if(psi<psiMax) return(psiMax);
+//     if(NumericVector::is_na(Eg)) return(NA_REAL);
+//   }
+//   return((psiPrev+psi)/2.0);
+// }
 
-// [[Rcpp::export("hydraulics.E2psiXylem2")]]
-double E2psiXylem2(double E, double psiUpstream, double kxylemmax, double c, double d, double psiCav = 0.0, 
-                  double psiStep = -0.01, double psiMax = -10.0) {
-  if(E<0.0) stop("E has to be positive");
-  if(E==0) return(psiUpstream);
-  double psi = psiUpstream;
-  double Eg = 0.0;
-  double psiPrev = psi;
-  while(Eg<E) {
-    psiPrev = psi;
-    psi = psi + psiStep;
-    Eg = Eg + (-1.0*psiStep)*xylemConductance(std::min(psi, psiCav),kxylemmax, c, d);
-    if(psi<psiMax) return(NA_REAL);
-    if(NumericVector::is_na(Eg)) return(NA_REAL);
-  }
-  return(psiPrev);
-}
 
-// [[Rcpp::export("hydraulics.stemCapacitance")]]
-List stemCapacitance(double E, double psiUpstream, List xylemParams,
-                     NumericVector PLC, NumericVector RWCstorage, double tstep = 3600) {
+/*
+ * E -  Flow rate from roots (mmol·s-1·m-2)
+ * psiUpstream - Root water potential (MPa)
+ * xylemParams - Stem xylem parameters
+ * PLC - Proportion of loss conductance [0-1]
+ * RWC - Relative water content [0-1]
+ * tstep - Time step (s)
+ */
+// [[Rcpp::export("hydraulics.E2psiXylemCapacitance")]]
+List E2psiXylemCapacitance(double E, double psiUpstream, List xylemParams,
+                     NumericVector PLC, NumericVector RWCstorage, double tstep = 3600, 
+                     double psiStep = -0.0001, double psiMax = -10.0) {
   double c = xylemParams["c"];
   double d = xylemParams["d"];
-  double kxylemmax = xylemParams["kmax"];
-  double Vmax = xylemParams["Vmax"];
+  double kxylemmax = xylemParams["kmax"]; //Assumed to be in mmol·s-1·MPa-1·m-2
+  double Vmax = xylemParams["Vmax"]; //Assummed to be in cubic meters per leaf area (m3·m-2)
   double fapo = xylemParams["fapo"];
   double pi0 = xylemParams["pi0"];
   double epsilon = xylemParams["epsilon"]; 
-  double klat = xylemParams["klat"];
-  double ksto = xylemParams["ksto"];
+  double klat = xylemParams["klat"]; //mmol·s-1·MPa-1
+  double ksto = xylemParams["ksto"]; //mmol·s-1·MPa-1
   int n = PLC.size();
   NumericVector newPLC(n),newRWCstorage(n), newPsiStem(n);
-  NumericVector Eout(n),Vlat(n), Vver(n), V(n);
+  NumericVector Eout(n),Flat(n), Fver1(n), Fver2(n), V(n);
   double kxsegmax = kxylemmax*((double) n);
+  double kstoseg = ksto*((double) n);
   double Vsegmax = Vmax/((double) n);
   double Vprev;
   double psiPLC, psiStorage;
   //Initial values from root
   double Ein = E;
+  double Einc = Ein;
   double psiUp = psiUpstream;
   double psiStorageUp = psiUpstream;
+  double m3tommol = 55555556.0;
   for(int i=0;i<n;i++) {
     //Transform PLC and RWC into water potential of storage compartments
     psiPLC = d*pow(-1.0*log(1.0-PLC[i]),1.0/c);
     psiStorage = -pi0 -epsilon*(1.0 - RWCstorage[i]);
     
-    //Lateral/vertical flow
-    Vlat[i] =  tstep*klat*(psiStorage-psiPLC);
-    Vver[i] = tstep*ksto*(psiStorageUp-psiStorage);
+    //Lateral flow
+    Flat[i] =  klat*(psiStorage-psiPLC);
+    
+    //Symplastic flow from below
+    Fver1[i] = kstoseg*(psiStorageUp-psiStorage);
+    
     if(i==0) {
-      Vver[i] = std::max(0.0, Vver[i]); //Do not allow flows towards the root 
-      Ein = Ein - (Vver[i]/tstep); //Substract flow from root input
+      if(Ein<Fver1[i]) Fver1[i] = Ein; //Do not substract more than input flow
+      Ein = Ein - Fver1[i]; //Substract or add flow from/to root input
+      Einc = Ein;
     }
     
     //Store psi value before adding lateral flow
-    newPsiStem[i] = E2psiXylem2(Ein, psiUp, kxsegmax, c,d, psiPLC, -0.001, -10.0);
-
+    newPsiStem[i] = E2psiXylem(Ein, psiUp, kxsegmax, c,d, psiPLC, psiStep, psiMax);
+    
+    //Upwards symplastic flow
+    Fver2[i] = kstoseg*(psiStorage-newPsiStem[i]);
+    
     //Increase in flow due to new cavitation
     Vprev = Vsegmax*fapo*(1.0-PLC[i]);
     V[i] = std::min(Vprev, Vsegmax*fapo*exp(-pow(newPsiStem[i]/d,c))); //Only allow decreases in volume (i.e. refilling cannot occur unless there is lateral flow)
-    Eout[i] = Ein - (V[i]-Vprev)/tstep;
+    Eout[i] = Ein - (m3tommol/tstep)*(V[i]-Vprev);
     
-      
+    if(i==(n-1)) {
+      Eout[i] = Eout[i] - Fver2[i];
+    }
+    
     //Update variables for next segment
     psiUp = newPsiStem[i];
     Ein = Eout[i];
@@ -303,88 +328,21 @@ List stemCapacitance(double E, double psiUpstream, List xylemParams,
   }
   //Update compartments
   for(int i=0;i<n;i++) {
-
-    V[i] = V[i] + Vlat[i];
-    if(V[i]>Vsegmax*fapo) {
-      double dif = Vsegmax*fapo - V[i];
+    //Apoplastic compartment
+    V[i] = V[i] + (tstep/m3tommol)*Flat[i];
+    if(V[i]>Vsegmax*fapo) { //Correct if flow is too high
+      double Vdif = Vsegmax*fapo - V[i];
       V[i] = Vsegmax*fapo;
-      Vlat[i] = Vlat[i]-dif;
+      Flat[i] = Flat[i]-(Vdif*(m3tommol/tstep));
     }
-    
-    newRWCstorage[i] = (Vsegmax*(1.0-fapo)*RWCstorage[i]-Vlat[i] + Vver[i])/(Vsegmax*(1.0-fapo));
     newPLC[i] = 1.0- (V[i]/(Vsegmax*fapo));
+    //Symplastic compartment
+    newRWCstorage[i] = (Vsegmax*(1.0-fapo)*RWCstorage[i] + (tstep/m3tommol)*(Fver1[i] - Fver2[i] - Flat[i]))/(Vsegmax*(1.0-fapo));
   }
-  return(List::create( _["Eout"] = Eout,_["newPsiStem"] = newPsiStem, _["newPLC"] = newPLC, _["newRWCstorage"] = newRWCstorage));
+  
+  return(List::create( _["Einc"] = Einc, _["Eout"] = Eout,_["newPsiStem"] = newPsiStem, _["newPLC"] = newPLC, _["newRWCstorage"] = newRWCstorage));
 }
 
-/* Calculates the downstream flow and water potential for a given an input (Eup) flow and water potentials at previous time step
- * Eup- Input flow from upstream
- * psiUp - Upstream water potential 
- * psiUpPrev - Previous upstream water potential
- * psiDownPrev - Previous downstream water potential
- * tstep - Temporal step (in s)
- */
-// [[Rcpp::export("hydraulics.E2psiXylemCapacitance")]]
-List E2psiXylemCapacitance(List xylemparams, double Eup, 
-                           double psiUp, double psiStorage, 
-                           double psiCav = 0.0, 
-                           double psiMax = -10.0) {
-  double c = xylemparams["c"];
-  double d = xylemparams["d"];
-  double kxylemmax = xylemparams["kmax"];
-  double Wmaxt = xylemparams["Wmaxt"];
-  
-  //Water potential drop according to input flow
-  double psiDown = E2psiXylem(Eup, psiUp, kxylemmax, c,d,psiCav, -0.01, psiMax);
-  
-  //Calculate flow from storage compartment
-  double fCap = Wmaxt*(0.5*(psiDown+psiUp) - psiStorage);
-  
-  //Calculate new psiCav after filling conduits from storage
-  double kcav = xylemConductance(psiCav, kxylemmax, c,d);
-  double refill = -1.0*(psiDown - psiStorage)*Wmaxt;
-  double psiCavNew = 0.0;
-  double ln = -1.0*log((kcav+refill)/kxylemmax);
-  if(ln>0.0) psiCavNew = d*pow(ln, 1.0/c);
-  return(List::create(_["psi"] = psiDown, _["Edown"] = Eup - fCap, _["Rate"] = fCap, _["psiCavNew"] = psiCavNew));
-  // double Wprev = Wmaxt*exp(-pow(psiStorage/d,c)); //Previous step water volume
-  // double psiDown = E2psiXylem(E, psiUp, kxylemmax, c, d, psiCav, -0.01, psiMax);
-  // double W = Wmaxt*exp(-pow(psiDown/d,c));
-  // double fCap = (W - Wprev)/tstep; //Capacitance effect
-  // return(List::create(_["psi"] = psiDown, _["Edown"] = E - fCap, _["Rate"] = fCap, _["Wprev"] = Wprev, _["W"] = W));
-  //Find root using bisection method
-  // const int JMAX=40;
-  // double x1 = psiMax;
-  // double x2 = 0.0;
-  // double xacc = tolE;
-  // int j;
-  // double dx,f,fmid,xmid,rtb;
-  // 
-  // //First function evaluation
-  // double fCap = Wmaxt*(0.5*(x1+psiUp) - psiStorage);
-  // double Edown = EXylem(x1,psiUp, kxylemmax, c, d, true, psiCav=psiCav); //Calculate downstream flow
-  // f = Edown - Eup + fCap;
-  // Rcout<<x1<< " "<<Edown<<" "<< fCap << " "<< f<<"\n";
-  // //Evaluate at x2
-  // fCap = Wmaxt*(0.5*(x2+psiUp) - psiStorage); //Capacitance effect
-  // Edown = EXylem(x2,psiUp, kxylemmax, c, d, true, psiCav=psiCav); //Calculate downstream flow
-  // fmid = Edown - Eup + fCap;
-  // Rcout<<x2<< " "<<Edown<<" "<< fCap << " "<< fmid<<"\n";
-  // if (f*fmid >= 0.0) stop("Root must be bracketed for bisection in rtbis");
-  // rtb = f < 0.0 ? (dx=x2-x1,x1) : (dx=x1-x2,x2);
-  // for (j=0;j<JMAX;j++) {
-  //   xmid=rtb+(dx *= 0.5);
-  //   fCap = Wmaxt*(0.5*(xmid+psiUp) - psiStorage); //water released effect
-  //   Edown = EXylem(xmid,psiUp, kxylemmax, c, d, true, psiCav=psiCav); //Calculate downstream flow
-  //   fmid = Edown - Eup + fCap;
-  //   if (fmid <= 0.0) rtb=xmid;
-  //   if (fabs(dx) < xacc || fmid == 0.0) {
-  //     return(List::create(_["Edown"] = Edown, _["psi"] = rtb, _["Rate"] = fCap));
-  //   }
-  // }
-  // stop("Too many bisections in rtbis");
-  // return(List::create(_["Edown"] = NA_REAL, _["psi"] = NA_REAL, _["Rate"] = NA_REAL));
-}
 
 // [[Rcpp::export("hydraulics.Ecrit")]]
 double Ecrit(double psiUpstream, double kxylemmax, double c, double d) {
@@ -872,6 +830,119 @@ void lubksb(NumericMatrix a, int n, IntegerVector indx, NumericVector b) {
     b[i] = sum/a(i,i);
   }
 }
+// [[Rcpp::export("hydraulics.E2psiRootSystem")]]
+List E2psiRootSystem(double E, NumericVector psiSoil, 
+                  NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
+                  NumericVector krootmax, double rootc, double rootd, 
+                  NumericVector psiIni = NumericVector::create(0),
+                  double psiStep = -0.001, double psiMax = -10.0, int ntrial = 10, double psiTol = 0.0001, double ETol = 0.0001) {
+  int nlayers = psiSoil.length();
+  //Initialize
+  NumericVector x(nlayers+1);
+  if(psiIni.size()==(nlayers+1)){
+    for(int l=0;l<(nlayers+1);l++) {
+      x[l] = psiIni[l];
+    }
+  } else{
+    double minPsi = -0.00001;
+    for(int l=0;l<nlayers;l++) {
+      x[l] =psiSoil[l];
+      minPsi = std::min(minPsi, psiSoil[l]);
+      // Rcout<<"("<<x[l]<<") ";
+    }
+    x[nlayers] = minPsi;
+    // Rcout<<"("<<x[nlayers]<<")\n";
+    
+  }
+  
+  //Flow across root xylem and rhizosphere elements
+  NumericVector Eroot(nlayers), Erhizo(nlayers);
+  
+  //Newton-Raphson algorithm
+  NumericVector p(nlayers+1), fvec(nlayers+1);
+  IntegerVector indx(nlayers+1);
+  NumericMatrix fjac(nlayers+1,nlayers+1);
+  for(int k=0;k<ntrial;k++) {
+    // Rcout<<"trial "<<k<<"\n";
+    //Calculate steady-state flow functions
+    double Esum = 0.0;
+    bool stop = false;
+    for(int l=0;l<nlayers;l++) {
+      Eroot[l] = EXylem(x[nlayers], x[l], krootmax[l], rootc, rootd);
+      // Rcout<<"("<<Eroot[l]<<"\n";
+      Erhizo[l] = EVanGenuchten(x[l], psiSoil[l], krhizomax[l], nsoil[l], alphasoil[l], psiStep, psiTol/1000.0);
+      fvec[l] = Erhizo[l] - Eroot[l];
+      // Rcout<<" Erhizo"<<l<<": "<< Erhizo[l]<<" Eroot"<<l<<": "<<Eroot[l]<<" fvec: "<<fvec[l]<<"\n";
+      // Rcout<<"der psi_l "<<d_psi_l<<"der Eroot psi_l "<<d_Eroot_psi_l<<"  der psi_root "<<d_psi_root<<"\n";
+      Esum +=Eroot[l];
+    }
+    fvec[nlayers] = Esum-E;
+    // Rcout<<"fvec_nlayers: "<<fvec[nlayers]<<"\n";
+    //Fill Jacobian
+    for(int l1=0;l1<nlayers;l1++) { //funcio
+      for(int l2=0;l2<nlayers;l2++) { //derivada
+        if(l1==l2) fjac(l1,l2) = -vanGenuchtenConductance(x[l2],krhizomax[l2], nsoil[l2], alphasoil[l2])-xylemConductance(x[l2], krootmax[l2], rootc, rootd);
+        else fjac(l1,l2) = 0.0;
+      }
+    }
+    fjac(nlayers,nlayers) = 0.0;
+    for(int l=0;l<nlayers;l++) { 
+      fjac(l,nlayers) = xylemConductance(x[nlayers], krootmax[l], rootc, rootd); //funcio l derivada psi_rootcrown
+      fjac(nlayers,l) = xylemConductance(x[l], krootmax[l], rootc, rootd);//funcio nlayers derivada psi_l
+      // funcio nlayers derivada psi_rootcrown
+      fjac(nlayers,nlayers) +=-xylemConductance(x[nlayers], krootmax[l], rootc, rootd);
+    }
+    // for(int l1=0;l1<=nlayers;l1++) { //funcio
+    //   for(int l2=0;l2<=nlayers;l2++) { //derivada
+    //     Rcout<<fjac(l1,l2)<<" ";
+    //   }
+    //   Rcout<<"\n";
+    // }
+    //Check function convergence
+    double errf = 0.0;
+    for(int fi=0;fi<=nlayers;fi++) errf += std::abs(fvec[fi]);
+    if(errf<=ETol) break;
+    //Right-hand side of linear equations
+    for(int fi=0;fi<=nlayers;fi++) p[fi] = -fvec[fi];
+    //Solve linear equations using LU decomposition
+    ludcmp(fjac,nlayers+1,indx);
+    lubksb(fjac,nlayers+1,indx,p);
+    //Check root convergence
+    double errx = 0.0;
+    for(int fi=0;fi<=nlayers;fi++) {
+      errx +=std::abs(p[fi]);
+      x[fi]+=p[fi];
+      x[fi] = std::min(0.0, x[fi]);
+      if(x[fi]<psiMax) {
+        x[fi] = NA_REAL;
+        stop = true;
+      }
+      // Rcout<<"("<<x[fi]<<") ";
+    }
+    // Rcout<<"\n";
+    if(errx<=psiTol) break;
+    else if(k==(ntrial-1)) { //Last trial and no convergence
+      for(int fi=0;fi<=nlayers;fi++) x[fi] = NA_REAL;
+      Rcout<<"LC";
+      stop = true;
+    }
+    if(stop) break;
+  }
+  
+  //Initialize and copy output
+  NumericVector psi(nlayers+3);
+  for(int l=0;l<=nlayers;l++) {
+    psi[l] = x[l];
+    // Rcout<<psi[l]<<" ";
+  }
+  for(int l=0;l<(nlayers-1);l++) {
+    Erhizo[l] = EVanGenuchten(x[l], psiSoil[l], krhizomax[l], nsoil[l], alphasoil[l], psiStep, psiTol/1000.0);
+    // Rcout<<Erhizo[l]<<" ";
+  }
+  return(List::create(Named("Psi") = psi, Named("E")=Erhizo));
+} 
+
+
 // [[Rcpp::export("hydraulics.E2psiNetwork")]]
 List E2psiNetwork(double E, NumericVector psiSoil, 
                   NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
