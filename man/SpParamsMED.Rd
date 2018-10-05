@@ -10,7 +10,7 @@ A data set of parameter values for Mediterranean species, resulting from bibliog
 }
 \usage{data("SpParamsMED")}
 \format{
-  A data frame with 89 observations (species) on the following 42 variables.
+  A data frame with 89 observations (species) on the following 71 variables.
   \describe{
     \item{\code{Name}}{A factor with taxon names (mostly species names).}
     \item{\code{IFNcodes}}{A factor with levels corresponding to species codes in the Third Spanish forest inventory (DGCN 2005.)}
@@ -33,9 +33,12 @@ A data set of parameter values for Mediterranean species, resulting from bibliog
     \item{\code{pDead}}{Proportion of total fine fuels that are dead}
     \item{\code{maxFMC}}{Maximum fuel moisture (in percent of dry weight)}
     \item{\code{minFMC}}{Minimum fuel moisture (in percent of dry weight)}
-    \item{\code{LeafPI0}}{Osmotic potential at full turgor.}
-    \item{\code{LeafEPS}}{Modulus of elasticity (capacity of the cell wall to resist changes in volume in response to changes in turgor).}
-    \item{\code{LeafAF}}{Apoplastic fraction (proportion of water outside the living cells).}
+    \item{\code{LeafPI0}}{Osmotic potential at full turgor of leaves (MPa).}
+    \item{\code{LeafEPS}}{Modulus of elasticity (capacity of the cell wall to resist changes in volume in response to changes in turgor) of leaves (MPa).}
+    \item{\code{LeafAF}}{Apoplastic fraction (proportion of water outside the living cells) in leaves.}
+    \item{\code{StemPI0}}{Osmotic potential at full turgor of symplastic xylem tissue (MPa).}
+    \item{\code{StemEPS}}{Modulus of elasticity (capacity of the cell wall to resist changes in volume in response to changes in turgor) of symplastic xylem tissue (Mpa).}
+    \item{\code{StemAF}}{Apoplastic fraction (proportion of water outside the living cells) in stem xylem.}
     \item{\code{Cstoragepmax}}{Maximum storage capacity, expressed as the fraction of C per total respiratory of C.}
     \item{\code{LeafDuration}}{Leaf duration (in years).}
     \item{\code{LigninPercent}}{Percent of lignin+cutin over dry weight in leaves.}

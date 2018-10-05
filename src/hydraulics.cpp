@@ -614,7 +614,8 @@ List E2psiXylemCapacitance(double E, double psiRootCrown,
     
     //Increase in flow due to new cavitation
     Vprev = Vsegmax*fapo*(1.0-PLC[i]);
-    V[i] = std::min(Vprev, Vsegmax*fapo*exp(-pow(newPsiStem[i]/d,c))); //Only allow decreases in volume (i.e. refilling cannot occur unless there is lateral flow)
+    double Vnew = Vsegmax*fapo*0.5*(exp(-pow(psiUp/d,c))+exp(-pow(newPsiStem[i]/d,c)));
+    V[i] = std::min(Vprev, Vnew); //Only allow decreases in volume (i.e. refilling cannot occur unless there is lateral flow)
     Eout[i] = Ein - (m3tommol/tstep)*(V[i]-Vprev);
     
     if(i==(n-1)) {
