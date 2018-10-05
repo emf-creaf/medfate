@@ -1064,9 +1064,9 @@ RWCstorage = rep(1,5)
 epsilon = 12
 pi0 = -3
 fapo = 0.8
-Vmax1 = 0.00001
-Vmax2 = 0.00005
-Vmax3 = 0.0001
+Vmax1 = 0.000125 # 2 m height
+Vmax2 = 0.000625
+Vmax3 = 0.00125 # 20 m height
 klat = 0.00
 ksto = 0.0001
 tstep = 3600
@@ -1454,9 +1454,17 @@ krmax*v1
 @
 
 
-\subsubsection{Storage compartments}
+\subsubsection{Plant water storage}
 
-Calculation of Vmax from H and Hv
+Calculation of Vmax [m3/m2] from H (m) and leaf area to sapwood area ratio (m2/m2):
+\begin{equation}
+V_{sapwood} = H \cdot H_v \cdot \Theta_{sapwood}
+\end{equation}
+where $H_v$ is the Huber value (m$^2$ of sapwood area per m$^2$ of leaf area) and $\Theta_{sapwood} is sapwood porosity (cm$^3$ of water per cm$^3$ of tissue), which can be derived from wood density ($W_{dens}):
+\begin{equation}
+\Theta_{sapwood} = 1 - (W_{dens} / 1.54)
+\end{equation}
+density of wood substance can be fixed to 1.54 g·cm$^{-3}$ (Dunlap 1914). For example, wood densities ranging from 0.443 to 1.000 g·cm$^{-3}$ result in sapwood porosity values between 0.35 and 0.71.
 
 \section{Leaf VPD, conductance to water vapor and photosynthesis}
 The water supply function specifies the flow rate, as per leaf area, for values of leaf water potential. If we know air temperature, air vapour pressure and the light conditions in which leaves are, we can be translate the supply function into a photosynthesis function (Sperry et al. 2016b). In a nutshell, $E$ from the supply function is used to calculate leaf temperature from an evaluation of the leaf energy balance. The diffusive conductances of the leaf to water and CO2 are obtained from water supply and water vapor deficit. The gross assimilation rate is then obtained from the diffusive conductance and a modelled curve between assimilation and leaf internal CO2 concentration. Gross assimilation is calculated, without subtracting autotrophic respiration, because the purpose is to represent the instantaneous gain of opening the stomata. Nevertheless autotrophic respiration is included when calculating leaf net photosynthesis. 
