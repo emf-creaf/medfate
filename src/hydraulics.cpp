@@ -568,6 +568,7 @@ List E2psiXylemCapacitance(double E, double psiRootCrown,
                            double kxylemmax, double c, double d, 
                            double Vmax, double fapo, double pi0, double epsilon,
                            double klat, double ksto,
+                           bool refill = false,
                            double tstep = 3600, 
                            double psiStep = -0.0001, double psiMax = -10.0) {
   int n = PLC.size();
@@ -615,7 +616,11 @@ List E2psiXylemCapacitance(double E, double psiRootCrown,
     //Increase in flow due to new cavitation
     Vprev = Vsegmax*fapo*(1.0-PLC[i]);
     double Vnew = Vsegmax*fapo*0.5*(exp(-pow(psiUp/d,c))+exp(-pow(newPsiStem[i]/d,c)));
-    V[i] = std::min(Vprev, Vnew); //Only allow decreases in volume (i.e. refilling cannot occur unless there is lateral flow)
+    if(refill) { // Allow refilling
+      V[i] = Vnew;      
+    } else { //Only allow decreases in volume (i.e. refilling cannot occur unless there is lateral flow)
+      V[i] = std::min(Vprev, Vnew); 
+    }
     Eout[i] = Ein - (m3tommol/tstep)*(V[i]-Vprev);
     
     if(i==(n-1)) {
@@ -667,6 +672,7 @@ List E2psiAboveGround(double E, double psiRootCrown,
                       double kleafmax, double leafc, double leafd,
                       double Vmax, double fapo, double pi0, double epsilon,
                       double klat, double ksto,
+                      bool refill = false,
                       double tstep = 3600, 
                       double psiStep = -0.0001, double psiMax = -10.0) {
   
@@ -675,6 +681,7 @@ List E2psiAboveGround(double E, double psiRootCrown,
                                         kstemmax, stemc,  stemd, 
                                         Vmax, fapo, pi0, epsilon,
                                         klat, ksto,
+                                        refill,
                                         tstep, 
                                         psiStep, psiMax);
   
@@ -1208,7 +1215,7 @@ List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootcr
                                double kleafmax, double leafc, double leafd,
                                double Vmax, double fapo, double pi0, double epsilon,
                                double klat, double ksto,
-                               double tstep = 3600, 
+                               bool refill = false, double tstep = 3600, 
                                double psiStep = -0.0001, double psiMax = -10.0) {
   int nnodes = PLC.size(); // stem nodes + leaf
   int maxNsteps = Erootcrown.size();
@@ -1230,7 +1237,7 @@ List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootcr
                                 kleafmax, leafc, leafd,
                                 Vmax, fapo, pi0, epsilon,
                                 klat, ksto,
-                                tstep, 
+                                refill, tstep, 
                                 psiStep, psiMax);
     NumericVector solNewPsiStem = sol["newPsiStem"];
     NumericVector solNewPLC = sol["newPLC"];
