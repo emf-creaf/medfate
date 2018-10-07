@@ -961,7 +961,7 @@ legend("topright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 
 As with the root system, we can know the water potentials in different points of the continuum. Here we plot them for the results of silt loam texture and the first and last soil potential vectors defined above:
 \begin{center}
-<<fig=TRUE, width=8, height=10, echo=FALSE>>==
+<<fig=TRUE, width=8, height=8, echo=FALSE>>==
 par(mar=c(4,4,4,1), mfrow=c(2,2))
 plot(supplyNetwork21$E, -supplyNetwork21$PsiLeaf, type="l", col="black", xlab="Total flow rate", 
      ylab = "Pressure (-MPa)",  main="Soil potentials 1 (original)", ylim=c(0, 5), xlim=c(0,max(supplyNetwork21$E)), lwd=2)
@@ -1023,19 +1023,19 @@ The supply function of a hydraulic network including stem segments and keeping t
 \item{Take the steady-state downstream water potential of the previous segment ($\Psi_{down,i-1}$, or $\Psi_{rootcrown}$ when processing the first segment) as upstream water potential ($\Psi_{up,i}$).}
 \item{Calculate the current water volume within the segment corresponding to the current level of embolism (PLC), and the corresponding $\Psi_{cav,i}$ by inverting $RWC_{apo,s}$.}
 \item{Calculate the drop in stem water potential (i.e., find $\Psi_{down,i}$) occurring within the segment, while including $\Psi_{cav,i}$ in the calculation of the segment vulnerability curve. Note that the maximum segment conductance is equal to the whole-stem conductance multiplied by the number of segments, because of the segmentation.}
-\item{Calculate the water volume within the segment, corresponding to the steady-state upstream and downstream water potential values: 
+\item{Calculate the water volume within the segment, corresponding to the new steady-state upstream and downstream water potential values: 
 \begin{equation}
 V_{i} = V_{sapwood,i} \cdot f_{apo, s} \cdot \frac{RWC_{apo,s}(\Psi_{up,i})+ RWC_{apo,s}(\Psi_{down,i})}{2}
 \end{equation}
-where $V_{sapwood,i}$ is the maximum water volume in segment $i$, i.e. the fraction of $V_{sapwood}$ depending on the number of segments.
+where $V_{sapwood,i}$ is the maximum water volume in segment $i$, i.e. the fraction of $V_{sapwood}$ depending on the number of segments. If conduit refilling is not permitted, the calculated volume cannot be larger than the initial volume.
 \item{Add the difference between the initial volume and the current volume (both volumes on a per leaf area basis), divided by the duration of the time step and expressed in mmol H$_2$O, to the value of $E$ for the next segment to be processed.}
 \end{enumerate}
 
 After all stem segments are processed, one can continue with the pressure drop due to the leaf resistance. We first define five segments, three values of $V_{sapwood}$, the initial level of PLC (0\%) for each segment, the fraction of sapwood corresponding to apoplastic tissue and the time step:
 <<>>=
-Vmax1 = 0.000125 # 2 m height
-Vmax2 = 0.000625
-Vmax3 = 0.00125 # 20 m height
+Vmax1 = 0.001 
+Vmax2 = 0.005
+Vmax3 = 0.01 
 nseg = 5
 PLC = rep(0, nseg)
 fapo = 0.8
@@ -1044,7 +1044,8 @@ tstep = 3600
 
 The following plot shows the supply function, i.e. downstream flow against downstream leaf pressure, for the unsegmented case (continuous line) and for a stem with the five segments and the three different values of $V_{sapwood}$ (function \texttt{supplyFunctionAboveground}, dashed and dotted lines):
 \begin{center}
-<<fig=TRUE, width=5, height=4.5, echo=FALSE>>==
+<<fig=TRUE, width=8, height=4, echo=FALSE>>==
+par(mar=c(4,4,2,1), mfrow=c(1,2))
 RWCstorage = rep(1,5)
 epsilon = 12
 pi0 = -3
@@ -1071,13 +1072,18 @@ supplyAG13 = hydraulics.supplyFunctionAboveGround(supplyRS11$E, supplyRS11$PsiRo
                                                   Vmax3, fapo, pi0, epsilon,
                                                   klat, ksto, F, tstep, psiStep = -0.0001)
 plot(-supplyNetwork11$PsiLeaf, supplyNetwork11$E, type="l", col=col1, ylab="Flow rate  (mmol·m-2·s-1)", 
-     xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,5), lwd=1)
+     xlab = "Leaf pressure (-MPa)",  xlim=c(0, 6), ylim=c(0,7), lwd=1)
 lines(-supplyAG11$PsiLeaf, supplyAG11$E, lty=2, col=col1)
 lines(-supplyAG12$PsiLeaf, supplyAG12$E, lty=3, col=col1)
 lines(-supplyAG13$PsiLeaf, supplyAG13$E, lty=4, col=col1)
+plot(-supplyNetwork11$PsiLeaf, supplyNetwork11$dEdP, type="l", col=col1, ylab="dEdP", 
+     xlab = "Leaf pressure (-MPa)",  xlim=c(0, 6), ylim =c(0, 3), lwd=1)
+lines(-supplyAG11$PsiLeaf, supplyAG11$dEdP, lty=2, col=col1)
+lines(-supplyAG12$PsiLeaf, supplyAG12$dEdP, lty=3, col=col1)
+lines(-supplyAG13$PsiLeaf, supplyAG13$dEdP, lty=4, col=col1)
 @
 \end{center}
-As expected, the larger the sapwood volume, the larger the effect of conduit cavitation on the downstream flow.
+As expected, the larger the sapwood volume, the larger the effect of conduit cavitation on the downstream flow. The observed initial increase in $dE_i/d\Psi$ may be due to the non-linear water release. In a dynamic context with sufficiently small time steps, the PLC from the previous time step should not be too different to the new PLC value, so that such increases should be rather small.
 
 
 \subsubsection{Symplastic storage compartment}
@@ -1426,6 +1432,15 @@ $\Theta_{sapwood}$ is sapwood porosity (cm$^3$ of water per cm$^3$ of tissue), w
 \Theta_{sapwood} = 1 - (\rho_{wood} / 1.54)
 \end{equation}
 where the density of wood substance can be assumed to be fixed and equal to 1.54 g·cm$^{-3}$ (Dunlap 1914). For example, wood densities ranging from 0.443 to 1.000 g·cm$^{-3}$ result in sapwood porosity values between 0.35 and 0.71. Parameters $\pi_{0,s}$ and $\epsilon_{s}$ for the pressure-volume of sapwood symplastic tissue and the apoplastic fraction in xylem $f_{apo, s}$, should be specified on a species basis.
+
+For example, let's calculate the stem water capacity per leaf area in a stem of a Q. ilex tree of 15 m height:
+<<>>==
+wd = 1.0
+Al2As = 2512 
+H = 1500 # 15 m
+Vsapwood = hydraulics.maximumStemWaterCapacity(Al2As, H, wd)
+Vsapwood
+@ 
 
 \section{Leaf VPD, conductance to water vapor and photosynthesis}
 The water supply function specifies the flow rate, as per leaf area, for values of leaf water potential. If we know air temperature, air vapour pressure and the light conditions in which leaves are, we can be translate the supply function into a photosynthesis function (Sperry et al. 2016b). In a nutshell, $E$ from the supply function is used to calculate leaf temperature from an evaluation of the leaf energy balance. The diffusive conductances of the leaf to water and CO2 are obtained from water supply and water vapor deficit. The gross assimilation rate is then obtained from the diffusive conductance and a modelled curve between assimilation and leaf internal CO2 concentration. Gross assimilation is calculated, without subtracting autotrophic respiration, because the purpose is to represent the instantaneous gain of opening the stomata. Nevertheless autotrophic respiration is included when calculating leaf net photosynthesis. 

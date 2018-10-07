@@ -405,6 +405,10 @@ hydraulics.maximumRootHydraulicConductance <- function(xylemConductivity, Al2As,
     .Call('_medfate_maximumRootHydraulicConductance', PACKAGE = 'medfate', xylemConductivity, Al2As, v, widths, depthWidthRatio)
 }
 
+hydraulics.maximumStemWaterCapacity <- function(Al2As, height, wd) {
+    .Call('_medfate_maximumStemWaterCapacity', PACKAGE = 'medfate', Al2As, height, wd)
+}
+
 .parcohort <- function(SP, H, CR, LAI, SpParams) {
     .Call('_medfate_parcohort', PACKAGE = 'medfate', SP, H, CR, LAI, SpParams)
 }

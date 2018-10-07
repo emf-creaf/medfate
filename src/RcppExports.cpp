@@ -1549,6 +1549,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// maximumStemWaterCapacity
+double maximumStemWaterCapacity(double Al2As, double height, double wd);
+RcppExport SEXP _medfate_maximumStemWaterCapacity(SEXP Al2AsSEXP, SEXP heightSEXP, SEXP wdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type Al2As(Al2AsSEXP);
+    Rcpp::traits::input_parameter< double >::type height(heightSEXP);
+    Rcpp::traits::input_parameter< double >::type wd(wdSEXP);
+    rcpp_result_gen = Rcpp::wrap(maximumStemWaterCapacity(Al2As, height, wd));
+    return rcpp_result_gen;
+END_RCPP
+}
 // parcohort
 NumericVector parcohort(IntegerVector SP, NumericVector H, NumericVector CR, NumericVector LAI, DataFrame SpParams);
 RcppExport SEXP _medfate_parcohort(SEXP SPSEXP, SEXP HSEXP, SEXP CRSEXP, SEXP LAISEXP, SEXP SpParamsSEXP) {
@@ -2773,6 +2786,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_referenceConductivityHeightFactor", (DL_FUNC) &_medfate_referenceConductivityHeightFactor, 2},
     {"_medfate_maximumStemHydraulicConductance", (DL_FUNC) &_medfate_maximumStemHydraulicConductance, 6},
     {"_medfate_maximumRootHydraulicConductance", (DL_FUNC) &_medfate_maximumRootHydraulicConductance, 5},
+    {"_medfate_maximumStemWaterCapacity", (DL_FUNC) &_medfate_maximumStemWaterCapacity, 3},
     {"_medfate_parcohort", (DL_FUNC) &_medfate_parcohort, 5},
     {"_medfate_parheight", (DL_FUNC) &_medfate_parheight, 6},
     {"_medfate_swrheight", (DL_FUNC) &_medfate_swrheight, 6},

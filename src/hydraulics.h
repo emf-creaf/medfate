@@ -19,6 +19,7 @@ double terminalConduitRadius(double height);
 double referenceConductivityHeightFactor(double refheight, double height);
 double maximumStemHydraulicConductance(double xylemConductivity, double refheight, double Al2As,  double height, bool angiosperm = true, bool taper = false);
 double maximumRootHydraulicConductance(double xylemConductivity, double Al2As, NumericVector v, NumericVector d, double depthWidthRatio = 1.0);
+double maximumStemWaterCapacity(double Al2As, double height, double wd);
 
 NumericVector regulatedPsiTwoElements(double Emax, double psiSoil, double krhizomax, double kxylemmax, double n, double alpha, double c, double d, double dE = 0.1, double psiMax = -10.0);
 
