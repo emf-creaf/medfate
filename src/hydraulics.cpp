@@ -1594,7 +1594,9 @@ double maximumRootHydraulicConductance(double xylemConductivity, double Al2As, N
   NumericVector w = xylemConductanceProportions(v,widths, depthWidthRatio);
   int nlayers = v.length();
   double kmax = 0.0;
-  for(int i=0;i<nlayers;i++) kmax = kmax + w[i]*(1000.0/0.018)*(xylemConductivity/((rl[i]/1000.0)*Al2As));
+  for(int i=0;i<nlayers;i++) {
+    if(rl[i]>0.0) kmax = kmax + w[i]*(1000.0/0.018)*(xylemConductivity/((rl[i]/1000.0)*Al2As)); 
+  }
   return(kmax); 
 }
 
