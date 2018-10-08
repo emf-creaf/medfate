@@ -157,10 +157,8 @@ NumericVector rootLengths(NumericVector v, NumericVector d, double depthWidthRat
   NumericVector r(nlayerseff), rl(nlayerseff);
   double maxr = 0.0;
   for(int i=0;i<nlayerseff;i++) {
-    if(d[i]>0.0) {
-      r[i] = sqrt(v[i]/(d[i]*PI));
-      maxr = std::max(r[i],maxr); 
-    }
+    r[i] = sqrt(v[i]/(d[i]*PI));
+    maxr = std::max(r[i],maxr); 
   }
   // Rcout<<maxr<<"\n";
   for(int i=0;i<nlayerseff;i++) {
