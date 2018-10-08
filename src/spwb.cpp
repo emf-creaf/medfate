@@ -629,6 +629,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   NumericMatrix Einst(numCohorts, ntimesteps);
   NumericMatrix Aninst(numCohorts, ntimesteps);
   NumericMatrix PsiPlantinst(numCohorts, ntimesteps);
+  NumericMatrix PsiRootinst(numCohorts, ntimesteps);
   NumericMatrix SWR_SL(numCohorts, ntimesteps);
   NumericMatrix SWR_SH(numCohorts, ntimesteps);
   NumericMatrix LWR_SL(numCohorts, ntimesteps);
@@ -820,7 +821,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
         minPsiLeaf[c] = std::min(minPsiLeaf[c],PsiLeafVec[iPM]);
         minPsiRoot[c] = std::min(minPsiRoot[c],psiRootcrown[iPM]);
         PsiPlantinst(c,n) = PsiLeafVec[iPM]; //Store instantaneous plant potential
-
+        PsiRootinst(c,n) = psiRootcrown[iPM]; //Store instantaneous root potential
+        
         //Copy transpiration from connected layers to transpiration from soil layers
         int cnt = 0;
         for(int l=0;l<nlayers;l++) {
@@ -1013,6 +1015,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   List SB = List::create(_["EsoilVec"] = EsoilVec, _["EplantVec"] = SoilWaterExtract, _["psiVec"] = psiVec);
   Einst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   PsiPlantinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  PsiRootinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   Aninst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   Eplant.attr("names") = above.attr("row.names");
   PlantPsi.attr("names") = above.attr("row.names");
@@ -1024,7 +1027,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                              _["DDS"] = PLCm, //Daily drought stress is the average day PLC
                              _["RWCs"] = RWCsm,
                              _["AbsRadinst"] = AbsRadinst, _["Einst"]=Einst, _["Aninst"]=Aninst,
-                             _["PsiPlantinst"] = PsiPlantinst, 
+                             _["PsiRootinst"] = PsiRootinst, _["PsiPlantinst"] = PsiPlantinst, 
                              _["GWsunlitinst"] = GW_SL, _["GWshadeinst"] = GW_SH,
                              _["VPDsunlitinst"] = VPD_SL, _["VPDshadeinst"] = VPD_SH,
                              _["Tempsunlitinst"] = Temp_SL, _["Tempshadeinst"] = Temp_SH,
