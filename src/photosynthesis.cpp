@@ -161,7 +161,7 @@ double fder(double x, double Q, double Ca, double Gc, double GT, double Km, doub
  * return units: micromol*s-1*m-2
  */
 // [[Rcpp::export("photo.photosynthesis")]]
-double photosynthesis(double Q, double Catm, double Gc, double leaf_temp, double Vmax298, double Jmax298, bool verbose=false) {
+double leafphotosynthesis(double Q, double Catm, double Gc, double leaf_temp, double Vmax298, double Jmax298, bool verbose=false) {
   //Corrections per leaf temperature
   double GT = gammaTemp(leaf_temp);
   double Km = KmTemp(leaf_temp, O2_conc);
@@ -197,7 +197,7 @@ List leafPhotosynthesisFunction(List supplyFunction, double Catm, double Patm, d
     leafVPD[i] = (meteoland::utils_saturationVP(std::max(0.0,leafTemp[i]))-vpa);
     Gw[i] = Patm*(fittedE[i]/1000.0)/leafVPD[i]; //Transform flow from mmol to mol
     Gw[i] = std::max(Gwmin, std::min(Gw[i], Gwmax));
-    Ag[i] = photosynthesis(Q, Catm, Gw[i]/1.6, std::max(0.0,leafTemp[i]), Vmax298, Jmax298);
+    Ag[i] = leafphotosynthesis(Q, Catm, Gw[i]/1.6, std::max(0.0,leafTemp[i]), Vmax298, Jmax298);
     An[i] = Ag[i] - 0.015*VmaxTemp(Vmax298, leafTemp[i]);
   }
   return(List::create(Named("LeafTemperature") = leafTemp,
@@ -257,7 +257,7 @@ List sunshadePhotosynthesisFunction(List supplyFunction, double Catm, double Pat
     Gw = std::max(Gwmin, std::min(Gw, Gwmax));
     Gw = Gw*SLarea; //From Gw per leaf area to Gw per ground area
     if(QSL>0.0) {
-      Agj = photosynthesis(QSL, Catm, Gw/1.6, leafT, Vmax298SL, Jmax298SL);//Call photosynthesis with aggregated values
+      Agj = leafphotosynthesis(QSL, Catm, Gw/1.6, leafT, Vmax298SL, Jmax298SL);//Call photosynthesis with aggregated values
       Anj = Agj - 0.015*VmaxTemp(Vmax298SL, leafT);
       Ag[i]+=Agj;
       An[i]+=Anj;
@@ -271,7 +271,7 @@ List sunshadePhotosynthesisFunction(List supplyFunction, double Catm, double Pat
     Gw = std::max(Gwmin, std::min(Gw, Gwmax));
     Gw = Gw*SHarea; //From Gw per leaf area to Gw per ground area
     if(QSH>0.0) {
-      Agj = photosynthesis(QSH, Catm, Gw/1.6, leafT, Vmax298SH, Jmax298SH); //Call photosynthesis with aggregated values
+      Agj = leafphotosynthesis(QSH, Catm, Gw/1.6, leafT, Vmax298SH, Jmax298SH); //Call photosynthesis with aggregated values
       Anj = Agj - 0.015*VmaxTemp(Vmax298SH, leafT);
       Ag[i]+=Agj;
       An[i]+=Anj;
@@ -308,7 +308,7 @@ List multilayerPhotosynthesisFunction(List supplyFunction, double Catm, double P
       Gw = Patm*(fittedE[i]/1000.0)/leafVPD;
       Gw = std::max(Gwmin, std::min(Gw, Gwmax));
       if(QSL[j]>0.0) {
-        Agj = photosynthesis(QSL[j], Catm, Gw/1.6, leafT, Vmax298[j], Jmax298[j]);
+        Agj = leafphotosynthesis(QSL[j], Catm, Gw/1.6, leafT, Vmax298[j], Jmax298[j]);
         Anj = Agj - 0.015*VmaxTemp(Vmax298[j], leafT);
         //From A per leaf area to A per ground area
         Ag[i]+=Agj*SLarea[j];
@@ -320,7 +320,7 @@ List multilayerPhotosynthesisFunction(List supplyFunction, double Catm, double P
       Gw = Patm*(fittedE[i]/1000.0)/leafVPD;
       Gw = std::max(Gwmin, std::min(Gw, Gwmax));
       if(QSH[j]>0.0) {
-        Agj = photosynthesis(QSH[j], Catm, Gw/1.6, leafT, Vmax298[j], Jmax298[j]);
+        Agj = leafphotosynthesis(QSH[j], Catm, Gw/1.6, leafT, Vmax298[j], Jmax298[j]);
         Anj = Agj - 0.015*VmaxTemp(Vmax298[j], leafT);
         Ag[i]+=Agj*SHarea[j];
         An[i]+=Anj*SHarea[j];

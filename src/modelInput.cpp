@@ -41,6 +41,7 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
   if((transpirationMode!="Simple") & (transpirationMode!="Complex")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Simple' or 'Complex')");
 
   int numStemSegments = control["nStemSegments"];
+  double kver = control["ksymver"];
   
   String soilFunctions = control["soilFunctions"]; 
   if((soilFunctions!="SX") & (soilFunctions!="VG")) stop("Wrong soil functions ('soilFunctions' should be either 'SX' or 'VG')");
@@ -151,6 +152,7 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     NumericVector VCstem_c(numCohorts), VCstem_d(numCohorts);
     NumericVector VCroot_c(numCohorts), VCroot_d(numCohorts);
     NumericVector StemPI0(numCohorts), StemEPS(numCohorts), StemAF(numCohorts);
+    NumericVector ksymver(numCohorts);
     NumericVector Vsapwood(numCohorts), WoodDens(numCohorts);
     NumericVector Vmax298(numCohorts), Jmax298(numCohorts);
     NumericVector dVec = soil["dVec"];
@@ -175,6 +177,7 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
       Vsapwood[c] = maximumStemWaterCapacity(Al2As[c], H[c], WoodDens[c]); 
       //Calculate stem maximum conductance (in mmol·m-2·s-1·MPa-1)
       VCstem_kmax[c]=maximumStemHydraulicConductance(xylem_kmax[c], HmedSP[SP[c]], Al2As[c],H[c], (GroupSP[SP[c]]=="Angiosperm"),control["taper"]); 
+      ksymver[c] = kver/(H[c]/100.0);
       VCstem_c[c]=VCstem_cSP[SP[c]];
       VCstem_d[c]=VCstem_dSP[SP[c]];
       VCroot_c[c]=VCroot_cSP[SP[c]];
@@ -222,8 +225,8 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     );
     paramsAnatomydf.attr("row.names") = above.attr("row.names");
     DataFrame paramsWaterStoragedf = DataFrame::create(
-      _["StemPI0"] = StemPI0, _["StemEPS"] = StemEPS, _["StemAF"] = StemAF, _["Vsapwood"] = Vsapwood
-    );
+      _["StemPI0"] = StemPI0, _["StemEPS"] = StemEPS, _["StemAF"] = StemAF, _["Vsapwood"] = Vsapwood,
+      _["ksymver"] = ksymver);
     paramsWaterStoragedf.attr("row.names") = above.attr("row.names");
     DataFrame paramsTranspdf = DataFrame::create(
       _["Gwmin"]=Gwmin, _["Gwmax"]=Gwmax,_["Vmax298"]=Vmax298,
@@ -248,6 +251,8 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
                                       _["verticalLayerSize"] = control["verticalLayerSize"],
                                       _["hydraulicCostFunction"] = control["hydraulicCostFunction"],
                                       _["cavitationRefill"] = control["cavitationRefill"],
+                                      _["ksymver"]= control["ksymver"],
+                                      _["klat"]= control["klat"],
                                       _["taper"] = control["taper"],
                                       _["thermalCapacityLAI"] = control["thermalCapacityLAI"],
                                       _["defaultWindSpeed"] = control["defaultWindSpeed"],

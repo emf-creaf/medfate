@@ -431,10 +431,11 @@ List E2psiRootSystem(double E, NumericVector psiSoil,
   NumericVector p(nlayers+1), fvec(nlayers+1);
   IntegerVector indx(nlayers+1);
   NumericMatrix fjac(nlayers+1,nlayers+1);
+  double Esum = 0.0;
   for(int k=0;k<ntrial;k++) {
     // Rcout<<"trial "<<k<<"\n";
     //Calculate steady-state flow functions
-    double Esum = 0.0;
+    Esum = 0.0;
     bool stop = false;
     for(int l=0;l<nlayers;l++) {
       Eroot[l] = EXylem(x[nlayers], x[l], krootmax[l], rootc, rootd);
@@ -504,10 +505,13 @@ List E2psiRootSystem(double E, NumericVector psiSoil,
     psi[l] = x[l];
     // Rcout<<psi[l]<<" ";
   }
+  //Calculate final flows
+  Esum = 0.0;
   for(int l=0;l<(nlayers-1);l++) {
     Erhizo[l] = EVanGenuchten(x[l], psiSoil[l], krhizomax[l], nsoil[l], alphasoil[l], psiStep, psiTol/1000.0);
-    // Rcout<<Erhizo[l]<<" ";
+    Esum += Erhizo[l];
   }
+  Erhizo[nlayers-1] = E - Esum; //Define as difference to match input
   return(List::create(Named("Psi") = psi, Named("E")=Erhizo));
 } 
 
@@ -598,13 +602,13 @@ List E2psiXylemCapacitance(double E, double psiRootCrown,
     
     if(i==0) {
       if(Ein<Fver1[i]) Fver1[i] = Ein; //Do not substract more than input flow
-      Ein = Ein - Fver1[i]; //Substract or add flow from/to root input
+      Ein = std::max(0.0, Ein - Fver1[i]); //Substract or add flow from/to root input
       Einc = Ein;
     }
     
     //Store psi value before adding lateral flow
     newPsiStem[i] = E2psiXylem(Ein, psiUp, kxsegmax, c,d, psiPLC, psiStep, psiMax);
-    
+
     //Upwards symplastic flow
     if(i==(n-1)) {
       Fver2[i] = kstoseg*(psiStorage-newPsiStem[i]); 
@@ -621,10 +625,16 @@ List E2psiXylemCapacitance(double E, double psiRootCrown,
     } else { //Only allow decreases in volume (i.e. refilling cannot occur unless there is lateral flow)
       V[i] = std::min(Vprev, Vnew); 
     }
-    Eout[i] = Ein - (m3tommol/tstep)*(V[i]-Vprev);
+    double Fabs = (m3tommol/tstep)*(V[i]-Vprev); //abs flow
+    if(Fabs>Ein) { //Avoid negative output flows
+      Fabs = Ein;
+      V[i] = Fabs*(tstep/m3tommol) + Vprev;
+    }
+    Eout[i] = Ein - Fabs;
     
     if(i==(n-1)) {
-      Eout[i] = Eout[i] - Fver2[i];
+      if(Fver2[i]>Eout[i]) Fver2[i] = Eout[i]; 
+      Eout[i] = std::max(0.0, Eout[i] - Fver2[i]);
     }
     
     //Update variables for next segment
@@ -649,6 +659,78 @@ List E2psiXylemCapacitance(double E, double psiRootCrown,
   return(List::create( _["Einc"] = Einc, _["Eout"] = Eout,_["newPsiStem"] = newPsiStem, _["newPLC"] = newPLC, _["newRWCstorage"] = newRWCstorage));
 }
 
+
+
+/*
+ * E -  Flow rate from roots (mmol·s-1·m-2)
+ * PLC - Proportion of loss conductance [0-1]
+ * RWC - Relative water content [0-1]
+ * kxylemmax - Whole-stem leaf-specific conductance in mmol·s-1·MPa-1·m-2
+ * c, d - parameters of the xylem VC
+ * pi0, epsilon - parameters of symplastic xylem tissue 
+ * klat - lateral conductance between symplastic and apoplastic tissue (mmol·s-1·MPa-1)
+ * ksto - whole-stem vertical symplastic conductance (mmol·s-1·MPa-1)
+ * Vmax - Maximum stem volum per leaf area in m ( = m3·m-2)
+ * tstep - Time step (s)
+ */
+// [[Rcpp::export("hydraulics.E2psiXylemCapacitanceDisconnected")]]
+List E2psiXylemCapacitanceDisconnected(double E,  
+                           NumericVector PLC, NumericVector RWCstorage, 
+                           double kxylemmax, double c, double d, 
+                           double Vmax, double fapo, double pi0, double epsilon,
+                           double klat, double ksto,
+                           double tstep = 3600) {
+  int n = PLC.size();
+  NumericVector newPLC(n, NA_REAL),newRWCstorage(n, NA_REAL);
+  NumericVector Flat(n, NA_REAL);
+  NumericVector Fversym1(n, NA_REAL), Fversym2(n, NA_REAL), V(n, NA_REAL);
+  double kxsegmax = kxylemmax*((double) n);
+  double kstoseg = ksto*((double) n);
+  double Vsegmax = Vmax/((double) n);
+  double psiPLC, psiStorage;
+  double m3tommol = 55555556.0;
+  //Calculate initial volumes, while substracting a fraction of output flow
+  for(int i=(n-1);i>=0;i--) {
+    V[i] = Vsegmax*fapo*(1.0-PLC[i]) - (tstep/m3tommol)*E/((double) n);
+    newPLC[i] = 1.0- (V[i]/(Vsegmax*fapo));
+    // Rcout<<V[i]<<" "<<newPLC[i]<<"\n";
+  }
+
+  //Calculate vertical and lateral flows among segments
+  for(int i=(n-1);i>=0;i--) {
+    psiPLC = d*pow(-1.0*log(1.0-newPLC[i]),1.0/c);
+    psiStorage = -pi0 -epsilon*(1.0 - RWCstorage[i]);
+    
+    //Lateral flow
+    Flat[i] =  klat*(psiStorage-psiPLC);
+    
+    //Upward flows
+    if(i==(n-1)) {
+      Fversym2[i] = 0.0; 
+    } else {
+      double psiStorageDown = -pi0 -epsilon*(1.0 - RWCstorage[i+1]);
+      Fversym2[i] = kstoseg*(psiStorage - psiStorageDown); 
+    }
+    
+    //Downward flows
+    if(i==0) {
+      Fversym1[i] = 0.0;
+    } else {
+      double psiStorageUp = -pi0 -epsilon*(1.0 - RWCstorage[i-1]);
+      Fversym1[i] = kstoseg*(psiStorageUp-psiStorage);
+    }
+  }
+  //Update compartments
+  for(int i=0;i<n;i++) {
+    //Apoplastic compartment
+    V[i] = V[i] + (tstep/m3tommol)*(Flat[i]);
+    newPLC[i] = 1.0- (V[i]/(Vsegmax*fapo));
+    //Symplastic compartment
+    newRWCstorage[i] = (Vsegmax*(1.0-fapo)*RWCstorage[i] + (tstep/m3tommol)*(Fversym1[i] - Fversym2[i] - Flat[i]))/(Vsegmax*(1.0-fapo));
+  }
+  
+  return(List::create(_["newPLC"] = newPLC, _["newRWCstorage"] = newRWCstorage));
+}
 
 /*
  * E -  Flow rate from roots (mmol·s-1·m-2)
@@ -988,8 +1070,8 @@ List supplyFunctionThreeElements(double Emax, double psiSoil, double krhizomax, 
                       Named("dEdP")=supplydEdp));
 }
 
-// [[Rcpp::export("hydraulics.supplyFunctionRootSystem")]]
-List supplyFunctionRootSystem(NumericVector psiSoil, 
+// [[Rcpp::export("hydraulics.supplyFunctionBelowground")]]
+List supplyFunctionBelowground(NumericVector psiSoil, 
                            NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
                            NumericVector krootmax, double rootc, double rootd, 
                            double minFlow = 0.0, int maxNsteps=400, double psiStep = -0.0001, double psiMax = -10.0, 

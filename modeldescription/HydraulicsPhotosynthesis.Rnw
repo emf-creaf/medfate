@@ -561,56 +561,56 @@ krootmaxvec
 
 
 
-Having all these maximum conductances, we can now build the supply functions for each soil texture and starting from the different soil water potential configurations (see function \texttt{hydraulics.supplyFunctionRootSystem()}): 
+Having all these maximum conductances, we can now build the supply functions for each soil texture and starting from the different soil water potential configurations (see function \texttt{hydraulics.supplyFunctionBelowground()}): 
 \begin{center}
 <<fig=TRUE, width=8, height=4.5, echo=FALSE>>==
 par(mar=c(4,4,2,1), mfrow=c(1,2))
 psiMax = -7.0
-supplyRS11 = hydraulics.supplyFunctionRootSystem(psiSoilLayers1,
+supplyRS11 = hydraulics.supplyFunctionBelowground(psiSoilLayers1,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
                                   maxNsteps = 400, psiMax = psiMax)
-supplyRS12 = hydraulics.supplyFunctionRootSystem(psiSoilLayers2,
+supplyRS12 = hydraulics.supplyFunctionBelowground(psiSoilLayers2,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
                                   maxNsteps = 400, psiMax = psiMax)
-supplyRS13 = hydraulics.supplyFunctionRootSystem(psiSoilLayers3,
+supplyRS13 = hydraulics.supplyFunctionBelowground(psiSoilLayers3,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
                                   maxNsteps = 400, psiMax = psiMax)
-supplyRS14 = hydraulics.supplyFunctionRootSystem(psiSoilLayers4,
+supplyRS14 = hydraulics.supplyFunctionBelowground(psiSoilLayers4,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
                                   maxNsteps = 400, psiMax = psiMax)
-supplyRS21 = hydraulics.supplyFunctionRootSystem(psiSoilLayers1,
+supplyRS21 = hydraulics.supplyFunctionBelowground(psiSoilLayers1,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
                                   maxNsteps = 400, psiMax = psiMax)
-supplyRS22 = hydraulics.supplyFunctionRootSystem(psiSoilLayers2,
+supplyRS22 = hydraulics.supplyFunctionBelowground(psiSoilLayers2,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
                                   maxNsteps = 400, psiMax = psiMax)
-supplyRS23 = hydraulics.supplyFunctionRootSystem(psiSoilLayers3,
+supplyRS23 = hydraulics.supplyFunctionBelowground(psiSoilLayers3,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
                                   maxNsteps = 400, psiMax = psiMax)
-supplyRS24 = hydraulics.supplyFunctionRootSystem(psiSoilLayers4,
+supplyRS24 = hydraulics.supplyFunctionBelowground(psiSoilLayers4,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
                                   maxNsteps = 400, psiMax = psiMax)
-supplyRS31 = hydraulics.supplyFunctionRootSystem(psiSoilLayers1,
+supplyRS31 = hydraulics.supplyFunctionBelowground(psiSoilLayers1,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   maxNsteps = 400, psiMax = psiMax)
-supplyRS32 = hydraulics.supplyFunctionRootSystem(psiSoilLayers2,
+supplyRS32 = hydraulics.supplyFunctionBelowground(psiSoilLayers2,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   maxNsteps = 400, psiMax = psiMax)
-supplyRS33 = hydraulics.supplyFunctionRootSystem(psiSoilLayers3,
+supplyRS33 = hydraulics.supplyFunctionBelowground(psiSoilLayers3,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   maxNsteps = 400, psiMax = psiMax)
-supplyRS34 = hydraulics.supplyFunctionRootSystem(psiSoilLayers4,
+supplyRS34 = hydraulics.supplyFunctionBelowground(psiSoilLayers4,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   maxNsteps = 400, psiMax = psiMax)
@@ -1007,16 +1007,17 @@ legend("topleft", bty="n", legend=c("Leaf","Stem","Root crown", "Rhizo 1", "Rhiz
 \subsection{Hydraulics with plant water compartments}
 So far we have been concerned with the steady-state flows assuming there are no other sources of water than that of the soil. Water potential at the upper end of the stem ($\Psi_{stem}$) was obtained integrating the stem xylem vulnerability curve, using $\Psi_{up,k}=\Psi_{rootcrown}$ and making the result equal to the input flow from the root system. Now we will consider the effect of additional sources of water from stem tissues on the water supply function and, more generally, in plant hydraulics.
 
-\begin{figure}[h!]
-\includegraphics[width=\textwidth]{hydraulics.jpg}
-\end{figure}
-
 \subsubsection{Effects of cavitation on the supply function}
 From one time step to the next, the steady-state flow will dictate different values of water potential along the stem. As water potentials decrease, cavitation may occur in the more distal parts of the stem, with the consequent loss of conductance. In order to track the decrease of sapwood conductance one has to consider segments within the stem. Within each sapwood segment, we assume that the proportion of conductance loss (PLC) in a given stem segment $i$ is related to the relative water content ($RWC$) in its conduit vessels (i.e. the water volume in conduit vessels with respect to the maximum water volume):
 \begin{equation}
 PLC_{i} = 1 - RWC_{apo,s}(\Psi_{cav,i})
 \end{equation}
 where $RWC_{apo,s}$ is the function of relative water content for apoplastic stem tissue. With this assumption one can relate changes in PLC derived from cavitation with decreases in water content in xylem conduits. For each segment $i$, when $PLC_i$ increases the associated change in water content is a source of water can be added to the transpirational stream (Martin-StPaul et al. 2017). More importantly, one can invert $RWC_{apo,s}$ for given segment $i$ to find its $\Psi_{cav,i}$, the water potential corresponding to the current degree of cavitation.
+
+
+\begin{figure}[h!]
+\includegraphics[width=\textwidth]{hydraulics_plc.jpg}
+\end{figure}
 
 The supply function of a hydraulic network including stem segments and keeping track of PLC works as follows. For any $E$ and $\Psi_{rootcrown}$ pair of values derived from the supply function of the root system, and given a time step, process all stem segments as follows: 
 \begin{enumerate}
@@ -1086,15 +1087,16 @@ lines(-supplyAG13$PsiLeaf, supplyAG13$dEdP, lty=4, col=col1)
 As expected, the larger the sapwood volume, the larger the effect of conduit cavitation on the downstream flow. The observed initial increase in $dE_i/d\Psi$ may be due to the non-linear water release. In a dynamic context with sufficiently small time steps, the PLC from the previous time step should not be too different to the new PLC value, so that such increases should be rather small.
 
 
-\subsubsection{Symplastic storage compartment}
- Additionally, the symplastic storage compartment contribute to sapflow dynamics by continuously exchanging water with xylem. If we consider the two sources, the downstream instantaneous flow may not necessarily be equal to the flow entering the stem:
-\begin{equation}
-E_{stem} = E_{root} - (\Delta{S_{sapwood}}/\Delta{t}) - (\Delta{S_{storage}}/\Delta{t})
-\end{equation}
-where $E_{stem}$ is the stem outflow, $E_{root}$ is the input flow (from the root system), $\Delta{S_{sapwood}}/\Delta{t}$ is the change in water of the apoplastic (sapwood) tissue and  $\Delta{S_{storage}}/\Delta{t}$ is the change in water of the symplastic storage compartment. The amount of apoplastic water to be added or subtracted from the input flow is simply calculated from changes in sapwood water derived from changes in the steady-state stem water potential between consecutive time steps:
-\begin{equation}
-\frac{\Delta{S_{sapwood}}}{\Delta{t}} = \frac{S_{sapwood}(\Psi_{stem, t}) - S_{sapwood}(\Psi_{stem, t-1})}{\Delta{t}}
-\end{equation}
+\subsubsection{Symplastic compartments}
+Stem symplastic storage compartments (e.g. xylem parenchyma) can contribute to sapflow dynamics by continuously exchanging water with xylem conduits. In \texttt{medfate}, there are many symplastic storage compartments as stem segments, and they can exchange water both vertically (between them and with the input and output flows of the stem) and laterally (potentially refilling xylem conduits). When lateral flows are inhibited xylem conduits are not refilled, but symplastic compartments can exchange water vertically, hence increase or decrease sapflow at the endpoints of the stem. hence, influence transpiration. If lateral 
+
+
+\begin{figure}[h!]
+\includegraphics[width=\textwidth]{hydraulics_full.jpg}
+\end{figure}
+
+Vertical flows
+
 If $\Delta{S_{storage}}/\Delta{t}$ is negative, then there is a flow from the storage compartment to the xylem. Otherwise, flow is from the xylem to the storage compartment. Here we assume that the storage compartment has a common water potential $\Psi_{storage}$ and the flow between the compartment at any height of the stem depends on the difference in water potential between the compartment and the xylem:
 \begin{equation}
 \frac{\Delta{S_{storage}}}{\Delta{t}} = \int_{\Psi_{stem}}^{\Psi_{rootcrown}}{f_{storage}(\Psi) d\Psi}
@@ -1115,6 +1117,10 @@ where $D_{int}$ is the internal radius separating sapwood from cambial cells, $L
 Note that the storage effect needs to be reexpressed in flow per leaf area unit, i.e. mmol·m$^{-2}$·s$^{-1}$.
 
 
+\subsubsection{Disconnection from the soil}
+\begin{figure}[h!]
+\includegraphics[width=\textwidth]{hydraulics_disc.jpg}
+\end{figure}
 
 \subsection{Parameterization of hydraulics}
 

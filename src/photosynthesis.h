@@ -5,6 +5,10 @@
 #endif
 using namespace Rcpp;
 
+double leafphotosynthesis(double Q, double Catm, double Gc, double leaf_temp, double Vmax298, double Jmax298, bool verbose=false);
+double VmaxTemp(double Vmax298, double leaf_temp);
+double JmaxTemp(double Jmax298, double leaf_temp);
+
 List leafPhotosynthesisFunction(List supplyFunction, double Catm, double Patm, double Tair, double vpa, double u, 
                             double absRad, double Q, double Vmax298, double Jmax298, double Gwmin, double Gwmax, 
                             double leafWidth = 1.0, double refLeafArea = 1.0, bool verbose = false);
@@ -23,3 +27,4 @@ List multilayerPhotosynthesisFunction(List supplyFunction, double Catm, double P
                                   NumericVector QSL, NumericVector QSH, 
                                   NumericVector Vmax298, NumericVector Jmax298, 
                                   double Gwmin, double Gwmax, double leafWidth = 1.0, bool verbose = false);
+
