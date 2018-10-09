@@ -399,7 +399,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   NumericVector Jmax298 = paramsTransp["Jmax298"];
   NumericVector ksymver = Rcpp::as<Rcpp::NumericVector>(paramsTransp["ksymver"]);
   NumericVector pRootDisc = Rcpp::as<Rcpp::NumericVector>(paramsTransp["pRootDisc"]);
-  
+
   //Water storage parameters
   DataFrame paramsWaterStorage = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
   NumericVector StemPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemPI0"]);
@@ -410,7 +410,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   NumericVector LeafEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafEPS"]);
   NumericVector LeafAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafAF"]);
   NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vleaf"]);
-  
+
   //Comunication with outside
   NumericVector transpiration = Rcpp::as<Rcpp::NumericVector>(x["Transpiration"]);
   NumericVector photosynthesis = Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
@@ -657,7 +657,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
     photosynthesis[c] = 0.0;
     transpiration[c] = 0.0;
   }
-  
+
   for(int n=0;n<ntimesteps;n++) { //Time loop
     //Long-wave radiation due to canopy temperature
     if(NumericVector::is_na(Tcan[n])) Tcan[n] = Tatm[n]; //If missing take above-canopy air temperature
@@ -720,6 +720,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
       double rwcsleaf = RWCsleafVEC[c];
         
       if(nlayerscon[c]>0) {//If the plant is connected to at least one layer build 
+
         List sBelow = supplyBelow[c];
         NumericVector Erootcrown = sBelow["E"];
         NumericVector psiRootcrown = sBelow["PsiRoot"];
