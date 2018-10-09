@@ -1038,12 +1038,14 @@ where $V_{sapwood,i}$ is the maximum water volume in segment $i$, i.e. the fract
 
 After all stem segments are processed, one can continue with the pressure drop due to the leaf resistance. We first define five segments, three values of $V_{sapwood}$, the initial level of PLC (0\%) for each segment, the fraction of sapwood corresponding to apoplastic tissue and the time step:
 <<>>=
-Vmax1 = 0.001 
-Vmax2 = 0.005
-Vmax3 = 0.01 
+Vleaf = 0.00001 
+Vsapwood1 = 0.0001 
+Vsapwood2 = 0.0005
+Vsapwood3 = 0.001 
 nseg = 5
-PLC = rep(0, nseg)
-fapo = 0.8
+PLCstem = rep(0, nseg)
+leaffapo = 0.15
+stemfapo = 0.8
 tstep = 3600
 @
 
@@ -1052,32 +1054,40 @@ The following plot shows the supply function, i.e. downstream flow against downs
 <<fig=TRUE, width=8, height=4, echo=FALSE>>==
 par(mar=c(4,4,2,1), mfrow=c(1,2))
 RWCstorage = rep(1,5)
-epsilon = 12
-pi0 = -3
+stemeps = 12
+stempi0 = -3
+leafeps = 10
+leafpi0 = -2
 klat = 0.0
 ksto = 0.0
 par(mar=c(4,4,2,1))
 psiMax = -7.0
 supplyAG11 = hydraulics.supplyFunctionAboveGround(supplyRS11$E, supplyRS11$PsiRoot,
-                                                  PLC, RWCstorage,
+                                                  PLCstem, RWCstorage,
+                                                  0.0, 1.0,
                                                   kstemmax, stemc, stemd,
                                                   kleafmax, leafc, leafd,
-                                                  Vmax1, fapo, pi0, epsilon,
+                                                  Vsapwood1, stemfapo, stempi0, stemeps,
+                                                  Vleaf, leaffapo, leafpi0, leafeps,
                                                   klat, ksto, F, tstep, psiStep = -0.0001)
 supplyAG12 = hydraulics.supplyFunctionAboveGround(supplyRS11$E, supplyRS11$PsiRoot,
-                                                  PLC, RWCstorage,
+                                                  PLCstem, RWCstorage,
+                                                  0.0, 1.0,
                                                   kstemmax, stemc, stemd,
                                                   kleafmax, leafc, leafd,
-                                                  Vmax2, fapo, pi0, epsilon,
+                                                  Vsapwood2, stemfapo, stempi0, stemeps,
+                                                  Vleaf, leaffapo, leafpi0, leafeps,
                                                   klat, ksto, F, tstep, psiStep = -0.0001)
 supplyAG13 = hydraulics.supplyFunctionAboveGround(supplyRS11$E, supplyRS11$PsiRoot,
-                                                  PLC, RWCstorage,
+                                                  PLCstem, RWCstorage,
+                                                  0.0, 1.0,
                                                   kstemmax, stemc, stemd,
                                                   kleafmax, leafc, leafd,
-                                                  Vmax3, fapo, pi0, epsilon,
+                                                  Vsapwood3, stemfapo, stempi0, stemeps,
+                                                  Vleaf, leaffapo, leafpi0, leafeps,
                                                   klat, ksto, F, tstep, psiStep = -0.0001)
 plot(-supplyNetwork11$PsiLeaf, supplyNetwork11$E, type="l", col=col1, ylab="Flow rate  (mmol·m-2·s-1)", 
-     xlab = "Leaf pressure (-MPa)",  xlim=c(0, 6), ylim=c(0,7), lwd=1)
+     xlab = "Leaf pressure (-MPa)",  xlim=c(0, 6), ylim=c(0,6), lwd=1)
 lines(-supplyAG11$PsiLeaf, supplyAG11$E, lty=2, col=col1)
 lines(-supplyAG12$PsiLeaf, supplyAG12$E, lty=3, col=col1)
 lines(-supplyAG13$PsiLeaf, supplyAG13$E, lty=4, col=col1)
@@ -1432,24 +1442,37 @@ krmax*v1
 @
 
 
-\subsubsection{Sapwood water storage capacity}
+\subsubsection{Water storage capacity}
 The water storage capacity of sapwood tissue per leaf area unit ($V_{sapwood}$; in m$^3$·m$^{-2}$) can be estimated as the product of stem height ($H$ in m) and Huber value ($H_v$; ratio of sapwood area to leaf area in m$^2$·m$^{-2}$):
 \begin{equation}
 V_{sapwood} = H \cdot H_v \cdot \Theta_{sapwood}
 \end{equation}
-$\Theta_{sapwood}$ is sapwood porosity (cm$^3$ of water per cm$^3$ of tissue), which can be estimated from wood density ($\rho_{wood}$; in g·cm$^{-3}$):
+$\Theta_{sapwood}$ is sapwood porosity (cm$^3$ of water per cm$^3$ of sapwood tissue), which can be estimated from wood density ($\rho_{wood}$; in g·cm$^{-3}$):
 \begin{equation}
 \Theta_{sapwood} = 1 - (\rho_{wood} / 1.54)
 \end{equation}
-where the density of wood substance can be assumed to be fixed and equal to 1.54 g·cm$^{-3}$ (Dunlap 1914). For example, wood densities ranging from 0.443 to 1.000 g·cm$^{-3}$ result in sapwood porosity values between 0.35 and 0.71. Parameters $\pi_{0,s}$ and $\epsilon_{s}$ for the pressure-volume of sapwood symplastic tissue and the apoplastic fraction in xylem $f_{apo, s}$, should be specified on a species basis.
+where the density of wood substance can be assumed to be fixed and equal to 1.54 g·cm$^{-3}$ (Dunlap 1914). For example, wood densities ranging from 0.443 to 1.000 g·cm$^{-3}$ result in sapwood porosity values between 0.35 and 0.71. 
 
-For example, let's calculate the stem water capacity per leaf area in a stem of a Q. ilex tree of 15 m height:
+Water storage capacity of leaf tissue per leaf area unit ($V_{leaf}$; in m$^3$·m$^{-2}$) can be estimated as the product of specific leaf area (SLA; in m$^2$·kg$^{-1}$) and leaf density ($\rho_{leaf}$; in g·cm$^{-3}$):
+\begin{equation}
+V_{leaf} = \frac{1}{SLA \cdot \rho_{leaf}} \cdot \Theta_{leaf}
+\end{equation}
+$\Theta_{leaf}$ is leaf porosity (cm$^3$ of water per cm$^3$ of leaf tissue), which can be estimated from leaf density:
+\begin{equation}
+\Theta_{leaf} = 1 - (\rho_{leaf} / 1.54)
+\end{equation}
+where the density of wood substance can be assumed to be fixed and equal to 1.54 g·cm$^{-3}$ (Dunlap 1914). 
+
+For example, let's calculate the stem and leaf water capacity for a Q. ilex tree of 15 m height:
 <<>>==
 wd = 1.0
 Al2As = 2512 
 H = 1500 # 15 m
-Vsapwood = hydraulics.maximumStemWaterCapacity(Al2As, H, wd)
-Vsapwood
+hydraulics.stemWaterCapacity(Al2As, H, wd)
+
+ld = 0.7
+SLA = 5.870 
+hydraulics.leafWaterCapacity(SLA, ld)
 @ 
 
 \section{Leaf VPD, conductance to water vapor and photosynthesis}

@@ -86,13 +86,16 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
   paramsBasedf.attr("row.names") = above.attr("row.names");
   
  
- NumericMatrix smat =  NumericMatrix(numCohorts, numStemSegments);
- std::fill(smat.begin(), smat.end(), 1.0);
- smat.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numStemSegments));
- NumericMatrix cmat =  NumericMatrix(numCohorts, numStemSegments);
- std::fill(cmat.begin(), cmat.end(), 0.0);
- cmat.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numStemSegments));
- 
+  NumericMatrix smat =  NumericMatrix(numCohorts, numStemSegments);
+  std::fill(smat.begin(), smat.end(), 1.0);
+  smat.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numStemSegments));
+  NumericMatrix cmat =  NumericMatrix(numCohorts, numStemSegments);
+  std::fill(cmat.begin(), cmat.end(), 0.0);
+  cmat.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numStemSegments));
+  NumericVector psiLeaf = NumericVector(numCohorts, 0.0);
+  psiLeaf.attr("names") = above.attr("row.names");
+  NumericVector rwcsleaf = NumericVector(numCohorts, 1.0);
+  rwcsleaf.attr("names") = above.attr("row.names");
   List input;
   if(transpirationMode=="Simple") {
     NumericVector WUESP = SpParams["WUE"];
@@ -135,6 +138,8 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     NumericVector leafwidthSP = SpParams["LeafWidth"];
     NumericVector HmedSP = SpParams["Hmed"]; //To correct conductivity
     NumericVector Al2AsSP = SpParams["Al2As"];
+    NumericVector SLASP = SpParams["SLA"];
+    NumericVector LeafDensSP = SpParams["LeafDensity"];
     NumericVector WoodDensSP = SpParams["WoodDens"];
     NumericVector GwminSP = SpParams["Gwmin"];
     NumericVector GwmaxSP = SpParams["Gwmax"];
@@ -154,10 +159,10 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     NumericVector VCroot_cSP = SpParams["VCroot_c"];
     NumericVector VCroot_dSP = SpParams["VCroot_d"];
     NumericVector Vmax298SP = SpParams["Vmax298"];
+    NumericVector pRootDiscSP = SpParams["pRootDisc"];
     NumericVector Gwmax(numCohorts), Gwmin(numCohorts);
     NumericVector VCleaf_kmax(numCohorts), xylem_kmax(numCohorts), rootxylem_kmax(numCohorts), Al2As(numCohorts);
     NumericVector VCroottot_kmax(numCohorts, 0.0), VCstem_kmax(numCohorts),leafwidth(numCohorts);
-    NumericVector pRootDiscSP = SpParams["pRootDisc"];
     NumericVector pRootDisc(numCohorts);
     NumericVector VCleaf_c(numCohorts), VCleaf_d(numCohorts);
     NumericVector VCstem_c(numCohorts), VCstem_d(numCohorts);
@@ -165,7 +170,8 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     NumericVector StemPI0(numCohorts), StemEPS(numCohorts), StemAF(numCohorts);
     NumericVector LeafPI0(numCohorts), LeafEPS(numCohorts), LeafAF(numCohorts);
     NumericVector ksymver(numCohorts);
-    NumericVector Vsapwood(numCohorts), Vleaf(numCohorts), WoodDens(numCohorts);
+    NumericVector Vsapwood(numCohorts), Vleaf(numCohorts);
+    NumericVector SLA(numCohorts), LeafDens(numCohorts), WoodDens(numCohorts);
     NumericVector Vmax298(numCohorts), Jmax298(numCohorts);
     NumericVector dVec = soil["dVec"];
     NumericVector VG_alpha = soil["VG_alpha"];
@@ -181,15 +187,18 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
       rootxylem_kmax[c] = rootxylem_kmaxSP[SP[c]];
       if(NumericVector::is_na(rootxylem_kmax[c])) rootxylem_kmax[c] = xylem_kmax[c];
       Al2As[c] = Al2AsSP[SP[c]];
+      SLA[c] = SLASP[SP[c]];
       WoodDens[c] = WoodDensSP[SP[c]];
+      LeafDens[c] = LeafDensSP[SP[c]];
       StemPI0[c] = StemPI0SP[SP[c]];
       StemEPS[c] = StemEPSSP[SP[c]];
       StemAF[c] = StemAFSP[SP[c]];
       LeafPI0[c] = LeafPI0SP[SP[c]];
       LeafEPS[c] = LeafEPSSP[SP[c]];
       LeafAF[c] = LeafAFSP[SP[c]];
-      //Calculate stem maximum capacity per leaf area (in m3·m-2)
-      Vsapwood[c] = maximumStemWaterCapacity(Al2As[c], H[c], WoodDens[c]); 
+      //Calculate stem and leaf capacity per leaf area (in m3·m-2)
+      Vsapwood[c] = stemWaterCapacity(Al2As[c], H[c], WoodDens[c]); 
+      Vleaf[c] = leafWaterCapacity(SLA[c], LeafDens[c]); 
       //Calculate stem maximum conductance (in mmol·m-2·s-1·MPa-1)
       VCstem_kmax[c]=maximumStemHydraulicConductance(xylem_kmax[c], HmedSP[SP[c]], Al2As[c],H[c], (GroupSP[SP[c]]=="Angiosperm"),control["taper"]); 
       ksymver[c] = kver/(H[c]/100.0);
@@ -233,26 +242,26 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
       
       //Initialize levels of cavitation (to avoid initial water release)
       double E = VCstem_kmax[c];
-      double psiUp = 0.0;
+      double psiUp = 0.0, psiDown = 0.0;
       for(int i=0;i<cmat.ncol();i++) {
-        double psiDown = E2psiXylem(E,psiUp, (VCstem_kmax[c]*((double) cmat.ncol())), VCstem_c[c], VCstem_d[c]);
+        psiDown = E2psiXylem(E,psiUp, (VCstem_kmax[c]*((double) cmat.ncol())), VCstem_c[c], VCstem_d[c]);
         cmat(c,i) = 1.0 - xylemConductance(psiDown, 1.0, VCstem_c[c], VCstem_d[c]); 
         psiUp = psiDown;
       }
-      
+      // psiDown = E2psiXylem(E,psiUp, VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c]);
+      // psiLeaf[c] = psiDown;
       Rcout<<"\n";
     }
     VGrhizo_kmax.attr("dimnames") = List::create(above.attr("row.names"), slnames);
     VCroot_kmax.attr("dimnames") = List::create(above.attr("row.names"), slnames);
     
     DataFrame paramsAnatomydf = DataFrame::create(
-      _["LeafWidth"] = leafwidth, _["Al2As"] = Al2As, _["WoodDens"] = WoodDens
+       _["Al2As"] = Al2As, _["SLA"] = SLA, _["LeafWidth"] = leafwidth, _["LeafDens"] = LeafDens, _["WoodDens"] = WoodDens
     );
     paramsAnatomydf.attr("row.names") = above.attr("row.names");
     DataFrame paramsWaterStoragedf = DataFrame::create(
       _["LeafPI0"] = LeafPI0, _["LeafEPS"] = LeafEPS, _["LeafAF"] = LeafAF, _["Vleaf"] = Vleaf,
-      _["StemPI0"] = StemPI0, _["StemEPS"] = StemEPS, _["StemAF"] = StemAF, _["Vsapwood"] = Vsapwood,
-      _["ksymver"] = ksymver);
+      _["StemPI0"] = StemPI0, _["StemEPS"] = StemEPS, _["StemAF"] = StemAF, _["Vsapwood"] = Vsapwood);
     paramsWaterStoragedf.attr("row.names") = above.attr("row.names");
     DataFrame paramsTranspdf = DataFrame::create(
       _["Gwmin"]=Gwmin, _["Gwmax"]=Gwmax,_["Vmax298"]=Vmax298,
@@ -260,6 +269,7 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
       _["VCleaf_kmax"]=VCleaf_kmax,_["VCleaf_c"]=VCleaf_c,_["VCleaf_d"]=VCleaf_d,
       _["VCstem_kmax"]=VCstem_kmax,_["VCstem_c"]=VCstem_c,_["VCstem_d"]=VCstem_d, 
       _["VCroot_kmax"] = VCroottot_kmax ,_["VCroot_c"]=VCroot_c,_["VCroot_d"]=VCroot_d,
+      _["ksymver"] = ksymver,
       _["pRootDisc"] = pRootDisc);
     paramsTranspdf.attr("row.names") = above.attr("row.names");
     List below = List::create(_["V"] = V,
@@ -301,8 +311,10 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
   NumericVector pvec =  NumericVector(numCohorts, 0.0);
   pvec.attr("names") = above.attr("row.names");
   input["Photosynthesis"] = pvec;
-  input["ProportionCavitated"] = cmat;
-  input["RWCstorage"] = smat;
+  input["PLCstem"] = cmat;
+  input["RWCsympstem"] = smat;
+  input["RWCsympleaf"] = rwcsleaf;
+  input["psiLeaf"] = psiLeaf;
   // input["WindSpeed"] = NumericVector(numCohorts, 0.0);
   // input["PAR"] = NumericVector(numCohorts, 0.0);
   // input["AbsorbedSWR"] = NumericVector(numCohorts, 0.0);

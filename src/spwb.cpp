@@ -397,6 +397,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   NumericVector VCroot_d = paramsTransp["VCroot_d"];
   NumericVector Vmax298 = paramsTransp["Vmax298"];
   NumericVector Jmax298 = paramsTransp["Jmax298"];
+  NumericVector ksymver = Rcpp::as<Rcpp::NumericVector>(paramsTransp["ksymver"]);
   NumericVector pRootDisc = Rcpp::as<Rcpp::NumericVector>(paramsTransp["pRootDisc"]);
   
   //Water storage parameters
@@ -405,13 +406,18 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   NumericVector StemEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemEPS"]);
   NumericVector StemAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemAF"]);
   NumericVector Vsapwood = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vsapwood"]);
-  NumericVector ksymver = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["ksymver"]);
-    
+  NumericVector LeafPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafPI0"]);
+  NumericVector LeafEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafEPS"]);
+  NumericVector LeafAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafAF"]);
+  NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vleaf"]);
+  
   //Comunication with outside
   NumericVector transpiration = Rcpp::as<Rcpp::NumericVector>(x["Transpiration"]);
   NumericVector photosynthesis = Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
-  NumericMatrix pEmbMAT = Rcpp::as<Rcpp::NumericMatrix>(x["ProportionCavitated"]);
-  NumericMatrix RWCsMAT = Rcpp::as<Rcpp::NumericMatrix>(x["RWCstorage"]);
+  NumericMatrix PLCstemMAT = Rcpp::as<Rcpp::NumericMatrix>(x["PLCstem"]);
+  NumericMatrix RWCsstemMAT = Rcpp::as<Rcpp::NumericMatrix>(x["RWCsympstem"]);
+  NumericVector RWCsleafVEC = Rcpp::as<Rcpp::NumericVector>(x["RWCsympleaf"]);
+  NumericVector psiLeafVEC = Rcpp::as<Rcpp::NumericVector>(x["psiLeaf"]);
   
   NumericVector VG_n = Rcpp::as<Rcpp::NumericVector>(soil["VG_n"]);
   NumericVector VG_alpha = Rcpp::as<Rcpp::NumericVector>(soil["VG_alpha"]);
@@ -708,9 +714,11 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
         Jmax298SH +=Jmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
       }
       
-      NumericVector PLCvec = pEmbMAT(c,_); //Get row
-      NumericVector RWCsvec = RWCsMAT(c,_);
-      
+      NumericVector PLCvec = PLCstemMAT(c,_); //Get row
+      NumericVector RWCsvec = RWCsstemMAT(c,_);
+      double psiLeaf = psiLeafVEC[c];
+      double rwcsleaf = RWCsleafVEC[c];
+        
       if(nlayerscon[c]>0) {//If the plant is connected to at least one layer build 
         List sBelow = supplyBelow[c];
         NumericVector Erootcrown = sBelow["E"];
@@ -718,18 +726,20 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
         NumericMatrix ElayersMat = sBelow["Elayers"];
         supplyAbove[c] = supplyFunctionAboveground(Erootcrown, psiRootcrown,
                                                    PLCvec, RWCsvec,
+                                                   psiLeaf, rwcsleaf,
                                            VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
                                            VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
                                            Vsapwood[c], StemAF[c], StemPI0[c], StemEPS[c],
+                                           Vleaf[c], LeafAF[c], LeafPI0[c], LeafEPS[c],
                                            klat, ksymver[c],
                                            cavitationRefill, tstep,
                                            psiStep, psiMax);
         List supply = supplyAbove[c];
         NumericVector fittedE = supply["E"];
-        NumericVector PsiLeafVec = supply["PsiLeaf"];
-        NumericMatrix newPLC = supply["PLC"];
-        NumericMatrix newRWCs = supply["RWC"];
-        
+        NumericVector newPsiLeafVec = supply["PsiLeaf"];
+        NumericMatrix newPLCstem = supply["PLCstem"];
+        NumericMatrix newRWCsympstem = supply["RWCsympstem"];
+        NumericVector newRWCsympleaf = supply["RWCsympleaf"];
         
 
         //Photosynthesis function for sunlit and shade leaves
@@ -804,23 +814,24 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
         Eplant[c] +=Einst(c,n);
         
         //Update symplastic storage and PLC
-        int nseg = newPLC.ncol();
+        psiLeafVEC[c] = newPsiLeafVec[iPM];
+        RWCsleafVEC[c] = newRWCsympleaf[iPM];
+        int nseg = newPLCstem.ncol();
         PLC(c,n) = 0.0;
         RWCs(c,n) = 0.0;
         for(int i=0;i<nseg;i++) {
-          // Rcout << newPLC(iPM,i)<<"\n";
-          pEmbMAT(c,i) = newPLC(iPM,i);
-          RWCsMAT(c,i) = newRWCs(iPM,i);
-          PLC(c,n) +=pEmbMAT(c,i);
-          RWCs(c,n) +=RWCsMAT(c,i);
+          PLCstemMAT(c,i) = newPLCstem(iPM,i);
+          RWCsstemMAT(c,i) = newRWCsympstem(iPM,i);
+          PLC(c,n) +=PLCstemMAT(c,i);
+          RWCs(c,n) +=RWCsstemMAT(c,i);
         }
         PLC(c,n) = PLC(c,n)/((double)nseg);
         RWCs(c,n) = RWCs(c,n)/((double)nseg);
         
         //Store the minimum water potential of the day (i.e. mid-day)
-        minPsiLeaf[c] = std::min(minPsiLeaf[c],PsiLeafVec[iPM]);
+        minPsiLeaf[c] = std::min(minPsiLeaf[c],newPsiLeafVec[iPM]);
         minPsiRoot[c] = std::min(minPsiRoot[c],psiRootcrown[iPM]);
-        PsiPlantinst(c,n) = PsiLeafVec[iPM]; //Store instantaneous plant potential
+        PsiPlantinst(c,n) = newPsiLeafVec[iPM]; //Store instantaneous leaf potential
         PsiRootinst(c,n) = psiRootcrown[iPM]; //Store instantaneous root potential
         
         //Copy transpiration from connected layers to transpiration from soil layers

@@ -742,19 +742,21 @@ List E2psiXylemCapacitanceDisconnected(double E, double psiLeaf,
  */
 // [[Rcpp::export("hydraulics.E2psiAboveground")]]
 List E2psiAboveGround(double E, double psiRootCrown,                           
-                      NumericVector PLC, NumericVector RWCstorage, 
+                      NumericVector PLCstem, NumericVector RWCsympstem, 
+                      double psiLeaf, double RWCsympleaf,
                       double kstemmax, double stemc, double stemd,
                       double kleafmax, double leafc, double leafd,
-                      double Vmax, double fapo, double pi0, double epsilon,
+                      double Vsapwood, double stemfapo, double stempi0, double stemeps,
+                      double Vleaf, double leaffapo, double leafpi0, double leafeps,
                       double klat, double ksto,
                       bool refill = false,
                       double tstep = 3600, 
                       double psiStep = -0.0001, double psiMax = -10.0) {
   
   List E2psiCap = E2psiXylemCapacitance(E, psiRootCrown, 
-                                        PLC, RWCstorage, 
+                                        PLCstem, RWCsympstem, 
                                         kstemmax, stemc,  stemd, 
-                                        Vmax, fapo, pi0, epsilon,
+                                        Vsapwood, stemfapo, stempi0, stemeps,
                                         klat, ksto,
                                         refill,
                                         tstep, 
@@ -763,15 +765,25 @@ List E2psiAboveGround(double E, double psiRootCrown,
   NumericVector newPsiStem = E2psiCap["newPsiStem"];
   NumericVector Eout = E2psiCap["Eout"];
   int n = newPsiStem.size();
-  double psiLeaf = E2psiXylem(Eout[n-1], newPsiStem[n-1], kleafmax, leafc, leafd, 0.0, psiStep, psiMax); 
-  double kterm = xylemConductance(psiLeaf, kleafmax, leafc, leafd);
+  double Vapoleafini = Vleaf*leaffapo*xylemConductance(psiLeaf, kleafmax, leafc, leafd);
+  double psiLeafSymp = symplasticWaterPotential(RWCsympleaf, leafpi0, leafeps);
+  double newPsiLeaf = E2psiXylem(Eout[n-1], newPsiStem[n-1], kleafmax, leafc, leafd, 0.0, psiStep, psiMax); 
+  double Vapoleaffin = Vleaf*leaffapo*xylemConductance(newPsiLeaf, kleafmax, leafc, leafd);
+  double m3tommol = 55555556.0;
+  double Fabs = (m3tommol/tstep)*(Vapoleaffin-Vapoleafini);
+  double Flat = klat*(psiLeafSymp - newPsiLeaf);
+  double Efin  = std::max(0.0, Eout[n-1] - Fabs + Flat);
+  double newRWCsympleaf = (Vleaf*(1.0-leaffapo)*RWCsympleaf + (tstep/m3tommol)*Flat)/(Vleaf*(1.0-leaffapo));
+  
+  double kterm = xylemConductance(newPsiLeaf, kleafmax, leafc, leafd);
   return(List::create( _["Einc"] = E2psiCap["Einc"], 
                        _["Eout"] = Eout,
-                       _["E"] = Eout[n-1],
-                       _["psiLeaf"] = psiLeaf,
+                       _["E"] = Efin,
+                       _["newPsiLeaf"] = newPsiLeaf,
                        _["newPsiStem"] = newPsiStem, 
-                       _["newPLC"] = E2psiCap["newPLC"], 
-                       _["newRWCstorage"] = E2psiCap["newRWCstorage"],
+                       _["newPLCstem"] = E2psiCap["newPLC"], 
+                       _["newRWCsympstem"] = E2psiCap["newRWCstorage"],
+                       _["newRWCsympleaf"] = newRWCsympleaf,
                        _["kterm"] = kterm));
 }
 
@@ -1285,44 +1297,50 @@ List supplyFunctionNetwork(NumericVector psiSoil,
 
 // [[Rcpp::export("hydraulics.supplyFunctionAboveGround")]]
 List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootcrown, 
-                               NumericVector PLC, NumericVector RWCstorage, 
+                               NumericVector PLCstem, NumericVector RWCsympstem, 
+                               double psiLeaf, double RWCsympleaf,
                                double kstemmax, double stemc, double stemd,
                                double kleafmax, double leafc, double leafd,
-                               double Vmax, double fapo, double pi0, double epsilon,
+                               double Vsapwood, double stemfapo, double stempi0, double stemeps,
+                               double Vleaf, double leaffapo, double leafpi0, double leafeps,
                                double klat, double ksto,
                                bool refill = false, double tstep = 3600, 
                                double psiStep = -0.0001, double psiMax = -10.0) {
-  int nnodes = PLC.size(); // stem nodes + leaf
+  int nnodes = PLCstem.size(); // stem nodes + leaf
   int maxNsteps = Erootcrown.size();
   NumericVector supplyE(maxNsteps);
   NumericVector supplydEdp(maxNsteps);
   NumericVector supplyPsiLeaf(maxNsteps);
+  NumericVector supplyRWCsympleaf(maxNsteps);
   NumericVector supplyKterm(maxNsteps);
   NumericMatrix supplyPsiStem(maxNsteps,nnodes);
-  NumericMatrix supplyPLC(maxNsteps,nnodes);
-  NumericMatrix supplyRWCstorage(maxNsteps,nnodes);
+  NumericMatrix supplyPLCstem(maxNsteps,nnodes);
+  NumericMatrix supplyRWCsympstem(maxNsteps,nnodes);
   
 
  
   int Nsteps = 0;
   for(int i=0;i<maxNsteps;i++) {
     List sol = E2psiAboveGround(Erootcrown[i], psiRootcrown[i],                           
-                                PLC, RWCstorage, 
+                                PLCstem, RWCsympstem, 
+                                psiLeaf, RWCsympleaf,
                                 kstemmax, stemc, stemd,
                                 kleafmax, leafc, leafd,
-                                Vmax, fapo, pi0, epsilon,
+                                Vsapwood, stemfapo, stempi0, stemeps,
+                                Vleaf, leaffapo, leafpi0, leafeps,
                                 klat, ksto,
                                 refill, tstep, 
                                 psiStep, psiMax);
     NumericVector solNewPsiStem = sol["newPsiStem"];
-    NumericVector solNewPLC = sol["newPLC"];
-    NumericVector solNewRWCstorage = sol["newRWCstorage"];
+    NumericVector solNewPLC = sol["newPLCstem"];
+    NumericVector solNewRWCsympstem = sol["newRWCsympstem"];
     for(int n=0;n<nnodes;n++) {
       supplyPsiStem(i,n) = solNewPsiStem[n]; 
-      supplyPLC(i,n) = solNewPLC[n]; 
-      supplyRWCstorage(i,n) = solNewRWCstorage[n]; 
+      supplyPLCstem(i,n) = solNewPLC[n]; 
+      supplyRWCsympstem(i,n) = solNewRWCsympstem[n]; 
     }
-    supplyPsiLeaf[i] = sol["psiLeaf"];
+    supplyRWCsympleaf[i] = sol["newRWCsympleaf"];
+    supplyPsiLeaf[i] = sol["newPsiLeaf"];
     if(NumericVector::is_na(supplyPsiLeaf[i])) {
       break; 
     } else {
@@ -1348,25 +1366,28 @@ List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootcr
   NumericVector supplyEDef(Nsteps);
   NumericVector supplydEdpDef(Nsteps);
   NumericVector supplyPsiLeafDef(Nsteps);
+  NumericVector supplyRWCsympleafDef(Nsteps);
   NumericMatrix supplyPsiStemDef(Nsteps,nnodes);
-  NumericMatrix supplyPLCDef(Nsteps,nnodes);
-  NumericMatrix supplyRWCstorageDef(Nsteps,nnodes);
+  NumericMatrix supplyPLCstemDef(Nsteps,nnodes);
+  NumericMatrix supplyRWCsympstemDef(Nsteps,nnodes);
   
   for(int i=0;i<Nsteps;i++) {
     supplyEDef[i] = supplyE[i];
     supplydEdpDef[i] = supplydEdp[i];
     supplyKtermDef[i] = supplyKterm[i];
     supplyPsiLeafDef[i] = supplyPsiLeaf[i];
+    supplyRWCsympleafDef[i]= supplyRWCsympleaf[i];
     for(int n=0;n<nnodes;n++) {
       supplyPsiStemDef(i,n) = supplyPsiStem(i,n); 
-      supplyPLCDef(i,n) = supplyPLC(i,n); 
-      supplyRWCstorageDef(i,n) = supplyRWCstorage(i,n); 
+      supplyPLCstemDef(i,n) = supplyPLCstem(i,n); 
+      supplyRWCsympstemDef(i,n) = supplyRWCsympstem(i,n); 
     }
   }
   
   return(List::create(Named("E") = supplyEDef,
-                      Named("PLC")=supplyPLCDef,
-                      Named("RWC")=supplyRWCstorageDef,
+                      Named("PLCstem")=supplyPLCstemDef,
+                      Named("RWCsympstem")=supplyRWCsympstemDef,
+                      Named("RWCsympleaf")=supplyRWCsympleafDef,
                       Named("PsiStem")=supplyPsiStemDef,
                       Named("PsiLeaf")=supplyPsiLeafDef,
                       Named("dEdP")=supplydEdpDef,
@@ -1595,13 +1616,25 @@ double maximumRootHydraulicConductance(double xylemConductivity, double Al2As, N
 
 
 /**
- * Calculate maximum capacity of stem per leaf area (in m3·m-2)
+ * Calculate capacity of stem per leaf area (in m3·m-2)
  * 
  * Al2As - Leaf area to sapwood area ratio (in m2·m-2)
  * height - plant height (in cm)
  * wd - wood density (in g·cm-3)
  */
-// [[Rcpp::export("hydraulics.maximumStemWaterCapacity")]]
-double maximumStemWaterCapacity(double Al2As, double height, double wd) {
+// [[Rcpp::export("hydraulics.stemWaterCapacity")]]
+double stemWaterCapacity(double Al2As, double height, double wd) {
   return((height/(Al2As*100.0))*(1.0- (wd/1.54)));
 }
+
+/**
+ * Calculate  capacity of leaves per leaf area (in m3·m-2)
+ * 
+ * SLA - Specific leaf area (in m2/kg)
+ * ld - leaf density (in g/cm3 = 1000 kg/m3)
+ */
+// [[Rcpp::export("hydraulics.leafWaterCapacity")]]
+double leafWaterCapacity(double SLA, double ld) {
+  return(1.0/(1000.0*ld*SLA))*(1.0- (ld/1.54));
+}
+
