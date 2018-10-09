@@ -52,8 +52,9 @@ List supplyFunctionBelowground(NumericVector psiSoil,
 double E2psiXylem(double E, double psiUpstream, double kxylemmax, double c, double d, double psiCav = 0.0, 
                   double psiStep = -0.01, double psiMax = -10.0);
 
-List E2psiXylemCapacitanceDisconnected(double E,  
+List E2psiXylemCapacitanceDisconnected(double E, double psiLeaf,  
                                        NumericVector PLC, NumericVector RWCstorage, 
+                                       double kleafmax,
                                        double kxylemmax, double c, double d, 
                                        double Vmax, double fapo, double pi0, double epsilon,
                                        double klat, double ksto,

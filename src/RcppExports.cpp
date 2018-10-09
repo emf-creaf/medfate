@@ -1224,14 +1224,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // E2psiXylemCapacitanceDisconnected
-List E2psiXylemCapacitanceDisconnected(double E, NumericVector PLC, NumericVector RWCstorage, double kxylemmax, double c, double d, double Vmax, double fapo, double pi0, double epsilon, double klat, double ksto, double tstep);
-RcppExport SEXP _medfate_E2psiXylemCapacitanceDisconnected(SEXP ESEXP, SEXP PLCSEXP, SEXP RWCstorageSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP, SEXP VmaxSEXP, SEXP fapoSEXP, SEXP pi0SEXP, SEXP epsilonSEXP, SEXP klatSEXP, SEXP kstoSEXP, SEXP tstepSEXP) {
+List E2psiXylemCapacitanceDisconnected(double E, double psiLeaf, NumericVector PLC, NumericVector RWCstorage, double kleafmax, double kxylemmax, double c, double d, double Vmax, double fapo, double pi0, double epsilon, double klat, double ksto, double tstep);
+RcppExport SEXP _medfate_E2psiXylemCapacitanceDisconnected(SEXP ESEXP, SEXP psiLeafSEXP, SEXP PLCSEXP, SEXP RWCstorageSEXP, SEXP kleafmaxSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP, SEXP VmaxSEXP, SEXP fapoSEXP, SEXP pi0SEXP, SEXP epsilonSEXP, SEXP klatSEXP, SEXP kstoSEXP, SEXP tstepSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type E(ESEXP);
+    Rcpp::traits::input_parameter< double >::type psiLeaf(psiLeafSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type PLC(PLCSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type RWCstorage(RWCstorageSEXP);
+    Rcpp::traits::input_parameter< double >::type kleafmax(kleafmaxSEXP);
     Rcpp::traits::input_parameter< double >::type kxylemmax(kxylemmaxSEXP);
     Rcpp::traits::input_parameter< double >::type c(cSEXP);
     Rcpp::traits::input_parameter< double >::type d(dSEXP);
@@ -1242,7 +1244,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type klat(klatSEXP);
     Rcpp::traits::input_parameter< double >::type ksto(kstoSEXP);
     Rcpp::traits::input_parameter< double >::type tstep(tstepSEXP);
-    rcpp_result_gen = Rcpp::wrap(E2psiXylemCapacitanceDisconnected(E, PLC, RWCstorage, kxylemmax, c, d, Vmax, fapo, pi0, epsilon, klat, ksto, tstep));
+    rcpp_result_gen = Rcpp::wrap(E2psiXylemCapacitanceDisconnected(E, psiLeaf, PLC, RWCstorage, kleafmax, kxylemmax, c, d, Vmax, fapo, pi0, epsilon, klat, ksto, tstep));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2520,6 +2522,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// symplasticWaterPotential
+double symplasticWaterPotential(double RWC, double pi0, double epsilon);
+RcppExport SEXP _medfate_symplasticWaterPotential(SEXP RWCSEXP, SEXP pi0SEXP, SEXP epsilonSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type RWC(RWCSEXP);
+    Rcpp::traits::input_parameter< double >::type pi0(pi0SEXP);
+    Rcpp::traits::input_parameter< double >::type epsilon(epsilonSEXP);
+    rcpp_result_gen = Rcpp::wrap(symplasticWaterPotential(RWC, pi0, epsilon));
+    return rcpp_result_gen;
+END_RCPP
+}
 // apoplasticRelativeWaterContent
 double apoplasticRelativeWaterContent(double psi, double c, double d, double cellWallFraction);
 RcppExport SEXP _medfate_apoplasticRelativeWaterContent(SEXP psiSEXP, SEXP cSEXP, SEXP dSEXP, SEXP cellWallFractionSEXP) {
@@ -2793,7 +2808,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_E2psiRootSystem", (DL_FUNC) &_medfate_E2psiRootSystem, 14},
     {"_medfate_E2psiNetwork", (DL_FUNC) &_medfate_E2psiNetwork, 21},
     {"_medfate_E2psiXylemCapacitance", (DL_FUNC) &_medfate_E2psiXylemCapacitance, 17},
-    {"_medfate_E2psiXylemCapacitanceDisconnected", (DL_FUNC) &_medfate_E2psiXylemCapacitanceDisconnected, 13},
+    {"_medfate_E2psiXylemCapacitanceDisconnected", (DL_FUNC) &_medfate_E2psiXylemCapacitanceDisconnected, 15},
     {"_medfate_E2psiAboveGround", (DL_FUNC) &_medfate_E2psiAboveGround, 20},
     {"_medfate_supplyFunctionOneXylem", (DL_FUNC) &_medfate_supplyFunctionOneXylem, 10},
     {"_medfate_supplyFunctionTwoElements", (DL_FUNC) &_medfate_supplyFunctionTwoElements, 11},
@@ -2873,6 +2888,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_resetInputs", (DL_FUNC) &_medfate_resetInputs, 4},
     {"_medfate_spwb", (DL_FUNC) &_medfate_spwb, 7},
     {"_medfate_symplasticRelativeWaterContent", (DL_FUNC) &_medfate_symplasticRelativeWaterContent, 3},
+    {"_medfate_symplasticWaterPotential", (DL_FUNC) &_medfate_symplasticWaterPotential, 3},
     {"_medfate_apoplasticRelativeWaterContent", (DL_FUNC) &_medfate_apoplasticRelativeWaterContent, 4},
     {"_medfate_leafRelativeWaterContent", (DL_FUNC) &_medfate_leafRelativeWaterContent, 4},
     {"_medfate_branchRelativeWaterContent", (DL_FUNC) &_medfate_branchRelativeWaterContent, 5},

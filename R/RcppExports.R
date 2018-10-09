@@ -341,8 +341,8 @@ hydraulics.E2psiXylemCapacitance <- function(E, psiRootCrown, PLC, RWCstorage, k
     .Call('_medfate_E2psiXylemCapacitance', PACKAGE = 'medfate', E, psiRootCrown, PLC, RWCstorage, kxylemmax, c, d, Vmax, fapo, pi0, epsilon, klat, ksto, refill, tstep, psiStep, psiMax)
 }
 
-hydraulics.E2psiXylemCapacitanceDisconnected <- function(E, PLC, RWCstorage, kxylemmax, c, d, Vmax, fapo, pi0, epsilon, klat, ksto, tstep = 3600) {
-    .Call('_medfate_E2psiXylemCapacitanceDisconnected', PACKAGE = 'medfate', E, PLC, RWCstorage, kxylemmax, c, d, Vmax, fapo, pi0, epsilon, klat, ksto, tstep)
+hydraulics.E2psiXylemCapacitanceDisconnected <- function(E, psiLeaf, PLC, RWCstorage, kleafmax, kxylemmax, c, d, Vmax, fapo, pi0, epsilon, klat, ksto, tstep = 3600) {
+    .Call('_medfate_E2psiXylemCapacitanceDisconnected', PACKAGE = 'medfate', E, psiLeaf, PLC, RWCstorage, kleafmax, kxylemmax, c, d, Vmax, fapo, pi0, epsilon, klat, ksto, tstep)
 }
 
 hydraulics.E2psiAboveground <- function(E, psiRootCrown, PLC, RWCstorage, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vmax, fapo, pi0, epsilon, klat, ksto, refill = FALSE, tstep = 3600, psiStep = -0.0001, psiMax = -10.0) {
@@ -659,6 +659,10 @@ spwb <- function(x, soil, meteo, latitude = NA_real_, elevation = NA_real_, slop
 
 moisture.symplasticRWC <- function(psi, pi0, epsilon) {
     .Call('_medfate_symplasticRelativeWaterContent', PACKAGE = 'medfate', psi, pi0, epsilon)
+}
+
+moisture.symplasticPsi <- function(RWC, pi0, epsilon) {
+    .Call('_medfate_symplasticWaterPotential', PACKAGE = 'medfate', RWC, pi0, epsilon)
 }
 
 moisture.apoplasticRWC <- function(psi, c, d, cellWallFraction = 0.07) {

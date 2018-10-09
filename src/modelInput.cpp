@@ -3,6 +3,7 @@
 #include "growth.h"
 #include "root.h"
 #include "forestutils.h"
+#include "tissuemoisture.h"
 #include "hydraulics.h"
 #include "stdlib.h"
 
@@ -85,6 +86,13 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
   paramsBasedf.attr("row.names") = above.attr("row.names");
   
  
+ NumericMatrix smat =  NumericMatrix(numCohorts, numStemSegments);
+ std::fill(smat.begin(), smat.end(), 1.0);
+ smat.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numStemSegments));
+ NumericMatrix cmat =  NumericMatrix(numCohorts, numStemSegments);
+ std::fill(cmat.begin(), cmat.end(), 0.0);
+ cmat.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numStemSegments));
+ 
   List input;
   if(transpirationMode=="Simple") {
     NumericVector WUESP = SpParams["WUE"];
@@ -136,6 +144,9 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     NumericVector VCleaf_dSP = SpParams["VCleaf_d"];
     NumericVector VCstem_cSP = SpParams["VCstem_c"];
     NumericVector VCstem_dSP = SpParams["VCstem_d"];
+    NumericVector LeafPI0SP = SpParams["LeafPI0"];
+    NumericVector LeafEPSSP = SpParams["LeafEPS"];
+    NumericVector LeafAFSP = SpParams["LeafAF"];
     NumericVector StemPI0SP = SpParams["StemPI0"];
     NumericVector StemEPSSP = SpParams["StemEPS"];
     NumericVector StemAFSP = SpParams["StemAF"];
@@ -152,8 +163,9 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     NumericVector VCstem_c(numCohorts), VCstem_d(numCohorts);
     NumericVector VCroot_c(numCohorts), VCroot_d(numCohorts);
     NumericVector StemPI0(numCohorts), StemEPS(numCohorts), StemAF(numCohorts);
+    NumericVector LeafPI0(numCohorts), LeafEPS(numCohorts), LeafAF(numCohorts);
     NumericVector ksymver(numCohorts);
-    NumericVector Vsapwood(numCohorts), WoodDens(numCohorts);
+    NumericVector Vsapwood(numCohorts), Vleaf(numCohorts), WoodDens(numCohorts);
     NumericVector Vmax298(numCohorts), Jmax298(numCohorts);
     NumericVector dVec = soil["dVec"];
     NumericVector VG_alpha = soil["VG_alpha"];
@@ -173,6 +185,9 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
       StemPI0[c] = StemPI0SP[SP[c]];
       StemEPS[c] = StemEPSSP[SP[c]];
       StemAF[c] = StemAFSP[SP[c]];
+      LeafPI0[c] = LeafPI0SP[SP[c]];
+      LeafEPS[c] = LeafEPSSP[SP[c]];
+      LeafAF[c] = LeafAFSP[SP[c]];
       //Calculate stem maximum capacity per leaf area (in m3·m-2)
       Vsapwood[c] = maximumStemWaterCapacity(Al2As[c], H[c], WoodDens[c]); 
       //Calculate stem maximum conductance (in mmol·m-2·s-1·MPa-1)
@@ -215,6 +230,16 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
                      VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c]);
         // Rcout<<VGrhizo_kmax(c,l)<<" ";
       }
+      
+      //Initialize levels of cavitation (to avoid initial water release)
+      double E = VCstem_kmax[c];
+      double psiUp = 0.0;
+      for(int i=0;i<cmat.ncol();i++) {
+        double psiDown = E2psiXylem(E,psiUp, (VCstem_kmax[c]*((double) cmat.ncol())), VCstem_c[c], VCstem_d[c]);
+        cmat(c,i) = 1.0 - xylemConductance(psiDown, 1.0, VCstem_c[c], VCstem_d[c]); 
+        psiUp = psiDown;
+      }
+      
       Rcout<<"\n";
     }
     VGrhizo_kmax.attr("dimnames") = List::create(above.attr("row.names"), slnames);
@@ -225,6 +250,7 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     );
     paramsAnatomydf.attr("row.names") = above.attr("row.names");
     DataFrame paramsWaterStoragedf = DataFrame::create(
+      _["LeafPI0"] = LeafPI0, _["LeafEPS"] = LeafEPS, _["LeafAF"] = LeafAF, _["Vleaf"] = Vleaf,
       _["StemPI0"] = StemPI0, _["StemEPS"] = StemEPS, _["StemAF"] = StemAF, _["Vsapwood"] = Vsapwood,
       _["ksymver"] = ksymver);
     paramsWaterStoragedf.attr("row.names") = above.attr("row.names");
@@ -275,12 +301,7 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
   NumericVector pvec =  NumericVector(numCohorts, 0.0);
   pvec.attr("names") = above.attr("row.names");
   input["Photosynthesis"] = pvec;
-  NumericVector cmat =  NumericMatrix(numCohorts, numStemSegments);
-  cmat.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numStemSegments));
   input["ProportionCavitated"] = cmat;
-  NumericVector smat =  NumericMatrix(numCohorts, numStemSegments);
-  std::fill(smat.begin(), smat.end(), 1.0);
-  smat.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numStemSegments));
   input["RWCstorage"] = smat;
   // input["WindSpeed"] = NumericVector(numCohorts, 0.0);
   // input["PAR"] = NumericVector(numCohorts, 0.0);

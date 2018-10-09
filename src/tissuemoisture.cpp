@@ -32,6 +32,12 @@ double symplasticRelativeWaterContent(double psi, double pi0, double epsilon) {
   return(rwc);
 }
 
+// [[Rcpp::export("moisture.symplasticPsi")]]
+double symplasticWaterPotential(double RWC, double pi0, double epsilon) {
+  double pt = std::max(0.0,-pi0 +(-1.0)*epsilon*(1.0 - RWC));
+  double ps = pi0/RWC;
+  return(pt+ps);
+}
 /**
  * Calculates apoplastic relative water content from water potential
  * 

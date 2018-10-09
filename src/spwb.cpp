@@ -872,32 +872,32 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
         //Add to daily plant cohort transpiration
         Eplant[c] +=Einst(c,n);
         
-        List sAb = E2psiXylemCapacitanceDisconnected(minFlow,
-                                             PLCvec, RWCsvec,
-                                             VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
-                                             Vsapwood[c], StemAF[c], StemPI0[c], StemEPS[c],
-                                             klat, ksymver[c],
-                                             tstep);
-        NumericVector newPLC = sAb["newPLC"];
-        NumericVector newRWCs = sAb["newRWCstorage"];
-        //Update symplastic storage and PLC
-        int nseg = newPLC.size();
-        PLC(c,n) = 0.0;
-        RWCs(c,n) = 0.0;
-        for(int i=0;i<nseg;i++) {
-           pEmbMAT(c,i) = newPLC[i];
-           RWCsMAT(c,i) = newRWCs[i];
-           PLC(c,n) +=pEmbMAT(c,i);
-           RWCs(c,n) +=RWCsMAT(c,i);
-        }
-        PLC(c,n) = PLC(c,n)/((double)nseg);
-        RWCs(c,n) = RWCs(c,n)/((double)nseg);
-
-        double psiStem = VCstem_d[c]*pow(-1.0*log(1.0-newPLC[nseg-1]),1.0/VCstem_c[c]); 
-        double psiLeaf = E2psiXylem(minFlow, psiStem, VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c]);
-        //Store the minimum water potential of the day (i.e. mid-day)
-        minPsiLeaf[c] = std::min(minPsiLeaf[c],psiLeaf);
-        PsiPlantinst(c,n) = psiLeaf; //Store instantaneous plant potential
+        // List sAb = E2psiXylemCapacitanceDisconnected(minFlow, psiLeaf
+        //                                      PLCvec, RWCsvec,
+        //                                      VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
+        //                                      Vsapwood[c], StemAF[c], StemPI0[c], StemEPS[c],
+        //                                      klat, ksymver[c],
+        //                                      tstep);
+        // NumericVector newPLC = sAb["newPLC"];
+        // NumericVector newRWCs = sAb["newRWCstorage"];
+        // //Update symplastic storage and PLC
+        // int nseg = newPLC.size();
+        // PLC(c,n) = 0.0;
+        // RWCs(c,n) = 0.0;
+        // for(int i=0;i<nseg;i++) {
+        //    pEmbMAT(c,i) = newPLC[i];
+        //    RWCsMAT(c,i) = newRWCs[i];
+        //    PLC(c,n) +=pEmbMAT(c,i);
+        //    RWCs(c,n) +=RWCsMAT(c,i);
+        // }
+        // PLC(c,n) = PLC(c,n)/((double)nseg);
+        // RWCs(c,n) = RWCs(c,n)/((double)nseg);
+        // 
+        // double psiStem = VCstem_d[c]*pow(-1.0*log(1.0-newPLC[nseg-1]),1.0/VCstem_c[c]); 
+        // double psiLeaf = E2psiXylem(minFlow, psiStem, VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c]);
+        // //Store the minimum water potential of the day (i.e. mid-day)
+        // minPsiLeaf[c] = std::min(minPsiLeaf[c],psiLeaf);
+        // PsiPlantinst(c,n) = psiLeaf; //Store instantaneous plant potential
 
       }
     } //End of cohort loop

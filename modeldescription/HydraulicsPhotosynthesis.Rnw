@@ -717,6 +717,10 @@ Note that the contribution of each soil layer depends on the soil conditions and
 \subsubsection{Supply function of the soil-plant continuum}
 We can use a network of $(N \times 2 + 2)$ resistance elements to represent the soil-plant continuum, with soil being represented in $N$ different layers. As before, the $N$ soil layers are in parallel up to the root crown. From there there are two final elements: the stem xylem and the leaf. After calculating flows and potentials in the root system, the water potential at the upper end of the stem ($\Psi_{stem}$) is obtained integrating the stem xylem vulnerability curve, using $\Psi_{up,k}=\Psi_{rootcrown}$ and assuming a steady-state flow $E$. Leaf water potential ($\Psi_{leaf}$) is obtained integrating the leaf vulnerability curve, using $\Psi_{up,k}=\Psi_{stem}$ and assuming a steady-state flow $E$.The whole supply function $E(\Psi_{leaf}$) is obtained repeating these operations from $E=0$ to a critical value $E_{crit}$. 
 
+\begin{figure}[h!]
+\includegraphics[width=\textwidth]{hydraulics_unsegmented.jpg}
+\end{figure}
+
 The supply functions for each soil texture and starting from the different soil water potential configurations (see function \texttt{hydraulics.supplyFunctionNetwork()}): 
 \begin{center}
 <<fig=TRUE, width=8, height=3.5, echo=FALSE>>==

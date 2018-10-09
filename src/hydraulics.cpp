@@ -577,7 +577,7 @@ List E2psiXylemCapacitance(double E, double psiRootCrown,
                            double psiStep = -0.0001, double psiMax = -10.0) {
   int n = PLC.size();
   NumericVector newPLC(n, NA_REAL),newRWCstorage(n, NA_REAL), newPsiStem(n, NA_REAL);
-  NumericVector Eout(n, NA_REAL),Flat(n, NA_REAL), Fver1(n, NA_REAL), Fver2(n, NA_REAL), V(n, NA_REAL);
+  NumericVector Eout(n, NA_REAL),Flat(n, NA_REAL), Fver1(n, 0.0), Fver2(n, 0.0), V(n, NA_REAL);
   double kxsegmax = kxylemmax*((double) n);
   double kstoseg = ksto*((double) n);
   double Vsegmax = Vmax/((double) n);
@@ -592,10 +592,8 @@ List E2psiXylemCapacitance(double E, double psiRootCrown,
   for(int i=0;i<n;i++) {
     //Transform PLC and RWC into water potential of storage compartments
     psiPLC = d*pow(-1.0*log(1.0-PLC[i]),1.0/c);
-    psiStorage = -pi0 -epsilon*(1.0 - RWCstorage[i]);
+    psiStorage = symplasticWaterPotential(RWCstorage[i], pi0, epsilon);
     
-    //Lateral flow
-    Flat[i] =  klat*(psiStorage-psiPLC);
     
     //Symplastic flow from below
     Fver1[i] = kstoseg*(psiStorageUp-psiStorage);
@@ -609,12 +607,14 @@ List E2psiXylemCapacitance(double E, double psiRootCrown,
     //Store psi value before adding lateral flow
     newPsiStem[i] = E2psiXylem(Ein, psiUp, kxsegmax, c,d, psiPLC, psiStep, psiMax);
 
+    //Lateral flow
+    Flat[i] =  klat*(psiStorage-newPsiStem[i]);
+    
+    
     //Upwards symplastic flow
-    if(i==(n-1)) {
-      Fver2[i] = kstoseg*(psiStorage-newPsiStem[i]); 
-    } else {
-      double psiStorageDown = -pi0 -epsilon*(1.0 - RWCstorage[i+1]);
-      Fver2[i] = kstoseg*(psiStorage - psiStorageDown); 
+    if(i<(n-1)) {
+      double psiStorageDown = symplasticWaterPotential(RWCstorage[i+1], pi0, epsilon);
+      Fver2[i] = kstoseg*(psiStorage - psiStorageDown);
     }
     
     //Increase in flow due to new cavitation
@@ -626,16 +626,13 @@ List E2psiXylemCapacitance(double E, double psiRootCrown,
       V[i] = std::min(Vprev, Vnew); 
     }
     double Fabs = (m3tommol/tstep)*(V[i]-Vprev); //abs flow
-    if(Fabs>Ein) { //Avoid negative output flows
-      Fabs = Ein;
-      V[i] = Fabs*(tstep/m3tommol) + Vprev;
-    }
-    Eout[i] = Ein - Fabs;
+    //Avoid negative output flows
+    Eout[i] = std::max(0.0, Ein - Fabs + Flat[i]);
     
-    if(i==(n-1)) {
-      if(Fver2[i]>Eout[i]) Fver2[i] = Eout[i]; 
-      Eout[i] = std::max(0.0, Eout[i] - Fver2[i]);
-    }
+    // if(i==(n-1)) {
+    //   if(Fver2[i]>Eout[i]) Fver2[i] = Eout[i]; 
+    //   Eout[i] = std::max(0.0, Eout[i] - Fver2[i]);
+    // }
     
     //Update variables for next segment
     psiUp = newPsiStem[i];
@@ -645,12 +642,12 @@ List E2psiXylemCapacitance(double E, double psiRootCrown,
   //Update compartments
   for(int i=0;i<n;i++) {
     //Apoplastic compartment
-    V[i] = V[i] + (tstep/m3tommol)*Flat[i];
-    if(V[i]>Vsegmax*fapo) { //Correct if flow is too high
-      double Vdif = Vsegmax*fapo - V[i];
-      V[i] = Vsegmax*fapo;
-      Flat[i] = Flat[i]-(Vdif*(m3tommol/tstep));
-    }
+    // V[i] = V[i] + (tstep/m3tommol)*Flat[i];
+    // if(V[i]>Vsegmax*fapo) { //Correct if flow is too high
+    //   double Vdif = Vsegmax*fapo - V[i];
+    //   V[i] = Vsegmax*fapo;
+    //   Flat[i] = Flat[i]-(Vdif*(m3tommol/tstep));
+    // }
     newPLC[i] = 1.0- (V[i]/(Vsegmax*fapo));
     //Symplastic compartment
     newRWCstorage[i] = (Vsegmax*(1.0-fapo)*RWCstorage[i] + (tstep/m3tommol)*(Fver1[i] - Fver2[i] - Flat[i]))/(Vsegmax*(1.0-fapo));
@@ -674,56 +671,52 @@ List E2psiXylemCapacitance(double E, double psiRootCrown,
  * tstep - Time step (s)
  */
 // [[Rcpp::export("hydraulics.E2psiXylemCapacitanceDisconnected")]]
-List E2psiXylemCapacitanceDisconnected(double E,  
+List E2psiXylemCapacitanceDisconnected(double E, double psiLeaf,  
                            NumericVector PLC, NumericVector RWCstorage, 
+                           double kleafmax,
                            double kxylemmax, double c, double d, 
                            double Vmax, double fapo, double pi0, double epsilon,
                            double klat, double ksto,
                            double tstep = 3600) {
   int n = PLC.size();
-  NumericVector newPLC(n, NA_REAL),newRWCstorage(n, NA_REAL);
+  NumericVector psiPLC(n, NA_REAL),psiStorage(n, NA_REAL), newPLC(n, NA_REAL),newRWCstorage(n, NA_REAL);
   NumericVector Flat(n, NA_REAL);
-  NumericVector Fversym1(n, NA_REAL), Fversym2(n, NA_REAL), V(n, NA_REAL);
+  NumericVector Fverapo1(n, 0.0), Fverapo2(n, 0.0), Fversym1(n, 0.0), Fversym2(n, 0.0), V(n, NA_REAL);
   double kxsegmax = kxylemmax*((double) n);
   double kstoseg = ksto*((double) n);
   double Vsegmax = Vmax/((double) n);
-  double psiPLC, psiStorage;
   double m3tommol = 55555556.0;
-  //Calculate initial volumes, while substracting a fraction of output flow
-  for(int i=(n-1);i>=0;i--) {
+  
+  //Calculate initial volumes and water potentials, while substracting a fraction of output flow
+  for(int i=0;i<n;i++) {
     V[i] = Vsegmax*fapo*(1.0-PLC[i]) - (tstep/m3tommol)*E/((double) n);
-    newPLC[i] = 1.0- (V[i]/(Vsegmax*fapo));
-    // Rcout<<V[i]<<" "<<newPLC[i]<<"\n";
+    psiPLC[i]=  d*pow(-1.0*log(1.0-PLC[i]),1.0/c);
+    psiStorage[i] = symplasticWaterPotential(RWCstorage[i+1], pi0, epsilon);
   }
 
   //Calculate vertical and lateral flows among segments
   for(int i=(n-1);i>=0;i--) {
-    psiPLC = d*pow(-1.0*log(1.0-newPLC[i]),1.0/c);
-    psiStorage = -pi0 -epsilon*(1.0 - RWCstorage[i]);
-    
+
     //Lateral flow
-    Flat[i] =  klat*(psiStorage-psiPLC);
+    Flat[i] =  klat*(psiStorage[i]-psiPLC[i]);
     
     //Upward flows
-    if(i==(n-1)) {
-      Fversym2[i] = 0.0; 
+    if(i<(n-1)) {
+      Fverapo2[i] = kxsegmax*(psiPLC[i]-psiPLC[i+1]);
+      Fversym2[i] = kstoseg*(psiStorage[i] - psiStorage[i+1]); 
     } else {
-      double psiStorageDown = -pi0 -epsilon*(1.0 - RWCstorage[i+1]);
-      Fversym2[i] = kstoseg*(psiStorage - psiStorageDown); 
+      Fverapo2[i] = kleafmax*(psiPLC[i]-psiLeaf);
     }
-    
     //Downward flows
-    if(i==0) {
-      Fversym1[i] = 0.0;
-    } else {
-      double psiStorageUp = -pi0 -epsilon*(1.0 - RWCstorage[i-1]);
-      Fversym1[i] = kstoseg*(psiStorageUp-psiStorage);
+    if(i>0) {
+      Fverapo1[i] = kxsegmax*(psiPLC[i-1]-psiPLC[i]);
+      Fversym1[i] = kstoseg*(psiStorage[i-1]-psiStorage[i]);
     }
   }
   //Update compartments
   for(int i=0;i<n;i++) {
     //Apoplastic compartment
-    V[i] = V[i] + (tstep/m3tommol)*(Flat[i]);
+    V[i] = V[i] + (tstep/m3tommol)*(Fverapo1[i] - Fverapo2[i] + Flat[i]);
     newPLC[i] = 1.0- (V[i]/(Vsegmax*fapo));
     //Symplastic compartment
     newRWCstorage[i] = (Vsegmax*(1.0-fapo)*RWCstorage[i] + (tstep/m3tommol)*(Fversym1[i] - Fversym2[i] - Flat[i]))/(Vsegmax*(1.0-fapo));
