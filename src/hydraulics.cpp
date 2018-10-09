@@ -773,8 +773,7 @@ List E2psiAboveGround(double E, double psiRootCrown,
   double Fabs = (m3tommol/tstep)*(Vapoleaffin-Vapoleafini);
   double Flat = klat*(psiLeafSymp - newPsiLeaf);
   double Efin  = std::max(0.0, Eout[n-1] - Fabs + Flat);
-  double newRWCsympleaf = (Vleaf*(1.0-leaffapo)*RWCsympleaf + (tstep/m3tommol)*Flat)/(Vleaf*(1.0-leaffapo));
-  
+  double newRWCsympleaf = (Vleaf*(1.0-leaffapo)*RWCsympleaf - (tstep/m3tommol)*Flat)/(Vleaf*(1.0-leaffapo));
   double kterm = xylemConductance(newPsiLeaf, kleafmax, leafc, leafd);
   return(List::create( _["Einc"] = E2psiCap["Einc"], 
                        _["Eout"] = Eout,
