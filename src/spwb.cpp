@@ -119,7 +119,7 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   //Communication vectors
   NumericVector transpiration = Rcpp::as<Rcpp::NumericVector>(x["Transpiration"]);
   NumericVector photosynthesis = Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
-  NumericVector pEmb = Rcpp::as<Rcpp::NumericVector>(x["ProportionCavitated"]);
+  NumericVector pEmb = Rcpp::as<Rcpp::NumericVector>(x["PLC"]);
   
 
 
@@ -290,19 +290,19 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   //Copy LAIexpanded for output
   NumericVector LAIcohort(numCohorts);
   for(int c=0;c<numCohorts;c++) LAIcohort[c]= LAIphe[c];
-  LAIcohort.attr("names") = above.attr("row.names");
   
-  List DB = List::create(_["PET"] = pet, _["Rain"] = rain, _["Snow"] = snow, _["NetRain"] = NetRain, _["Runon"] = runon, _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
-                    _["LAIcell"] = LAIcell, _["LAIcelldead"] = LAIcelldead, _["Cm"] = Cm, _["Lground"] = LgroundPAR);
-  List SB = List::create(_["EsoilVec"] = EsoilVec, _["EplantVec"] = EplantVec, _["psiVec"] = psiVec);
-  Eplant.attr("names") = above.attr("row.names");
-  PlantPsi.attr("names") = above.attr("row.names");
-  DDS.attr("names") = above.attr("row.names");
-  List Plants = List::create(_["LAI"] = LAIcohort,
-                             _["EplantCoh"] = Eplant, _["psiCoh"] = PlantPsi, _["DDS"] = DDS,
-                             _["RWCs"] = NumericVector(numCohorts, NA_REAL));
+  NumericVector DB = NumericVector::create(_["PET"] = pet, _["Rain"] = rain, _["Snow"] = snow, _["NetRain"] = NetRain, _["Runon"] = runon, 
+                                           _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
+                                           _["Esoil"] = sum(EsoilVec), _["Eplant"] = sum(EplantVec),
+                                           _["LAIcell"] = LAIcell, _["LAIcelldead"] = LAIcelldead, 
+                                           _["Cm"] = Cm, _["Lground"] = LgroundPAR);
+  DataFrame SB = DataFrame::create(_["Esoil"] = EsoilVec, _["Eplant"] = EplantVec, _["psi"] = psiVec);
+  DataFrame Plants = DataFrame::create(_["LAI"] = LAIcohort,
+                             _["E"] = Eplant, _["psi"] = PlantPsi, _["DDS"] = DDS);
+  Plants.attr("row.names") = above.attr("row.names");
   List l = List::create(_["cohorts"] = clone(cohorts),
-                        _["DailyBalance"] = DB, _["SoilBalance"] = SB,
+                        _["DailyBalance"] = DB, 
+                        _["Soil"] = SB,
                         _["Plants"] = Plants);
   l.attr("class") = CharacterVector::create("spwb.day","list");
   return(l);
@@ -590,9 +590,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
     if((nlayerscon[c]==0) & verbose) Rcout<<"D";
   }
 
-  //Hydraulics: build belowground and aboveground supply functions
+  //Hydraulics: build belowground supply functions
   List supplyBelow(numCohorts);
-  List supplyAbove(numCohorts);
   for(int c=0;c<numCohorts;c++) {
     // Copy values from connected layers
     NumericVector Vc = NumericVector(nlayerscon[c]);
@@ -635,6 +634,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   NumericMatrix Einst(numCohorts, ntimesteps);
   NumericMatrix Aninst(numCohorts, ntimesteps);
   NumericMatrix PsiPlantinst(numCohorts, ntimesteps);
+  NumericMatrix RWCsleafinst(numCohorts, ntimesteps);
+  NumericMatrix RWCssteminst(numCohorts, ntimesteps);
   NumericMatrix PsiRootinst(numCohorts, ntimesteps);
   NumericMatrix SWR_SL(numCohorts, ntimesteps);
   NumericMatrix SWR_SH(numCohorts, ntimesteps);
@@ -650,7 +651,6 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   NumericMatrix LAI_SL(numCohorts, ntimesteps);
   NumericVector minPsiLeaf(numCohorts,0.0), minPsiRoot(numCohorts,0.0); //Minimum potentials experienced
   NumericMatrix PLC(numCohorts, ntimesteps);
-  NumericMatrix RWCs(numCohorts, ntimesteps);
   NumericVector PLCm(numCohorts), RWCsm(numCohorts);
   
   for(int c=0;c<numCohorts;c++) {
@@ -658,6 +658,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
     transpiration[c] = 0.0;
   }
 
+  List supplyAbove;
   for(int n=0;n<ntimesteps;n++) { //Time loop
     //Long-wave radiation due to canopy temperature
     if(NumericVector::is_na(Tcan[n])) Tcan[n] = Tatm[n]; //If missing take above-canopy air temperature
@@ -725,9 +726,9 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
         NumericVector Erootcrown = sBelow["E"];
         NumericVector psiRootcrown = sBelow["PsiRoot"];
         NumericMatrix ElayersMat = sBelow["Elayers"];
-        supplyAbove[c] = supplyFunctionAboveground(Erootcrown, psiRootcrown,
-                                                   PLCvec, RWCsvec,
-                                                   psiLeaf, rwcsleaf,
+        supplyAbove = supplyFunctionAboveground(Erootcrown, psiRootcrown,
+                                           PLCvec, RWCsvec,
+                                           psiLeaf, rwcsleaf,
                                            VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
                                            VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
                                            Vsapwood[c], StemAF[c], StemPI0[c], StemEPS[c],
@@ -735,23 +736,22 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                                            klat, ksymver[c],
                                            cavitationRefill, tstep,
                                            psiStep, psiMax);
-        List supply = supplyAbove[c];
-        NumericVector fittedE = supply["E"];
-        NumericVector newPsiLeafVec = supply["PsiLeaf"];
-        NumericMatrix newPLCstem = supply["PLCstem"];
-        NumericMatrix newRWCsympstem = supply["RWCsympstem"];
-        NumericVector newRWCsympleaf = supply["RWCsympleaf"];
+        NumericVector fittedE = supplyAbove["E"];
+        NumericVector newPsiLeafVec = supplyAbove["PsiLeaf"];
+        NumericMatrix newPLCstem = supplyAbove["PLCstem"];
+        NumericMatrix newRWCsympstem = supplyAbove["RWCsympstem"];
+        NumericVector newRWCsympleaf = supplyAbove["RWCsympleaf"];
         
 
         //Photosynthesis function for sunlit and shade leaves
-        List photoSunlit = leafPhotosynthesisFunction(supply, Catm, Patm,Tcan[n], vpatm, 
+        List photoSunlit = leafPhotosynthesisFunction(supplyAbove, Catm, Patm,Tcan[n], vpatm, 
                                                  zWind[c], 
                                                  absSWR_SL[c] + LWR_emmcan*LAI_SL(c,n), 
                                                  irradianceToPhotonFlux(absPAR_SL[c]), 
                                                  Vmax298SL, 
                                                  Jmax298SL, 
                                                  Gwmin[c], Gwmax[c], leafWidth[c], LAI_SL(c,n));
-        List photoShade = leafPhotosynthesisFunction(supply, Catm, Patm,Tcan[n], vpatm, 
+        List photoShade = leafPhotosynthesisFunction(supplyAbove, Catm, Patm,Tcan[n], vpatm, 
                                                        zWind[c], 
                                                        absSWR_SH[c] + LWR_emmcan*LAI_SH(c,n), 
                                                        irradianceToPhotonFlux(absPAR_SH[c]),
@@ -769,8 +769,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
         NumericVector TempShade = photoShade["LeafTemperature"];
         
         //Profit maximization
-        List PMSunlit = profitMaximization(supply, photoSunlit,  hydraulicCostFunction, Gwmax[c], VCstem_kmax[c]);
-        List PMShade = profitMaximization(supply, photoShade,  hydraulicCostFunction, Gwmax[c], VCstem_kmax[c]);
+        List PMSunlit = profitMaximization(supplyAbove, photoSunlit,  hydraulicCostFunction, Gwmax[c], VCstem_kmax[c]);
+        List PMShade = profitMaximization(supplyAbove, photoShade,  hydraulicCostFunction, Gwmax[c], VCstem_kmax[c]);
         int iPMSunlit = PMSunlit["iMaxProfit"];
         int iPMShade = PMShade["iMaxProfit"];
         
@@ -819,19 +819,20 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
         RWCsleafVEC[c] = newRWCsympleaf[iPM];
         int nseg = newPLCstem.ncol();
         PLC(c,n) = 0.0;
-        RWCs(c,n) = 0.0;
+        RWCssteminst(c,n) = 0.0;
         for(int i=0;i<nseg;i++) {
           PLCstemMAT(c,i) = newPLCstem(iPM,i);
           RWCsstemMAT(c,i) = newRWCsympstem(iPM,i);
           PLC(c,n) +=PLCstemMAT(c,i);
-          RWCs(c,n) +=RWCsstemMAT(c,i);
+          RWCssteminst(c,n) +=RWCsstemMAT(c,i);
         }
         PLC(c,n) = PLC(c,n)/((double)nseg);
-        RWCs(c,n) = RWCs(c,n)/((double)nseg);
+        RWCssteminst(c,n) = RWCssteminst(c,n)/((double)nseg);
         
         //Store the minimum water potential of the day (i.e. mid-day)
         minPsiLeaf[c] = std::min(minPsiLeaf[c],newPsiLeafVec[iPM]);
         minPsiRoot[c] = std::min(minPsiRoot[c],psiRootcrown[iPM]);
+        RWCsleafinst(c,n) = newRWCsympleaf[iPM];
         PsiPlantinst(c,n) = newPsiLeafVec[iPM]; //Store instantaneous leaf potential
         PsiRootinst(c,n) = psiRootcrown[iPM]; //Store instantaneous root potential
         
@@ -968,7 +969,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
     PlantPsi[c] = minPsiLeaf[c];
     transpiration[c] = Eplant[c]; 
     PLCm[c] = sum(PLC(c,_))/((double)PLC.ncol());
-    RWCsm[c] = sum(RWCs(c,_))/((double)RWCs.ncol());
+    RWCsm[c] = sum(RWCssteminst(c,_))/((double)RWCssteminst.ncol());
   }
   
   
@@ -1033,17 +1034,20 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   PlantPsi.attr("names") = above.attr("row.names");
   PLCm.attr("names") = above.attr("row.names");
   RWCsm.attr("names") = above.attr("row.names");
+  List PlantsInst = List::create(_["AbsRadinst"] = AbsRadinst, _["Einst"]=Einst, _["Aninst"]=Aninst,
+                                _["PsiRootinst"] = PsiRootinst, _["PsiPlantinst"] = PsiPlantinst, 
+                                _["GWsunlitinst"] = GW_SL, _["GWshadeinst"] = GW_SH,
+                                _["VPDsunlitinst"] = VPD_SL, _["VPDshadeinst"] = VPD_SH,
+                                _["Tempsunlitinst"] = Temp_SL, _["Tempshadeinst"] = Temp_SH,
+                                _["PLCinst"] = PLC, 
+                                _["RWCsteminst"] = RWCssteminst,
+                                _["RWCleafinst"] = RWCsleafinst);
   List Plants = List::create(_["LAI"] = LAIcohort,
                              _["LAIsunlit"] = LAI_SL, _["LAIshade"] = LAI_SH, 
-                             _["EplantCoh"] = Eplant, _["psiCoh"] = PlantPsi, 
+                             _["EplantCoh"] = Eplant, 
+                             _["psiCoh"] = PlantPsi, 
                              _["DDS"] = PLCm, //Daily drought stress is the average day PLC
-                             _["RWCs"] = RWCsm,
-                             _["AbsRadinst"] = AbsRadinst, _["Einst"]=Einst, _["Aninst"]=Aninst,
-                             _["PsiRootinst"] = PsiRootinst, _["PsiPlantinst"] = PsiPlantinst, 
-                             _["GWsunlitinst"] = GW_SL, _["GWshadeinst"] = GW_SH,
-                             _["VPDsunlitinst"] = VPD_SL, _["VPDshadeinst"] = VPD_SH,
-                             _["Tempsunlitinst"] = Temp_SL, _["Tempshadeinst"] = Temp_SH,
-                             _["PLCinst"] = PLC, _["RWCsinst"] = RWCs);
+                             _["RWCs"] = RWCsm);
   List l = List::create(_["cohorts"] = clone(cohorts),
                         _["DailyBalance"] = DB, _["SoilBalance"] = SB, 
                         _["EnergyBalance"] = EB,

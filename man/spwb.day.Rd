@@ -33,8 +33,8 @@ An object (a list) of class \code{spwb.day} with the following elements:
 
 \itemize{
   \item{\code{"cohorts"}: A data frame with cohort information, copied from \code{\link{spwbInput}}.}
-  \item{\code{"DailyBalance"}: A list of water balance components (rain, snow, net rain, infiltration, ...) for the simulated day, equivalent to one row of 'DailyBalance' object given in \code{\link{spwb}}.}
-  \item{\code{"SoilBalance"}: A list of soil water balance components (water evaporated and transpirated from each soil layer) and the current soil water potential for each soil layer.}
+  \item{\code{"DailyBalance"}: A vector of water balance components (rain, snow, net rain, infiltration, ...) for the simulated day, equivalent to one row of 'DailyBalance' object given in \code{\link{spwb}}.}
+  \item{\code{"Soil"}: A data frame with results (water evaporated, water extracted from plants and current water potential) for each soil layer.}
   \item{\code{"EnergyBalance"}: When using the 'Complex' transpiration mode, the model performs energy balance of the stand and 'EnergyBalance' is a list with the following:
     \itemize{
       \item{\code{"Temperature"}: A data frame with the temperature of the atmosphere ('Tatm'), canopy ('Tcan') and soil ('Tsoil.1', 'Tsoil.2', ...) for each time step.}
@@ -42,11 +42,11 @@ An object (a list) of class \code{spwb.day} with the following elements:
       \item{\code{"SoilEnergyBalance"}: A data frame with the components of the soil energy balance (in W/m2) for each time step.}
     }  
   }
-  \item{\code{"Plants"}: A list of results for each plant cohort. When using the 'Simple' transpiration mode this includes:
+  \item{\code{"Plants"}: A data frame of results for each plant cohort. When using the 'Simple' transpiration mode this includes:
     \itemize{
       \item{\code{"LAI"}: Leaf area index of the plant cohort.}
-      \item{\code{"EplantCoh"}: Transpirated water (in mm) corresponding to each cohort.}
-      \item{\code{"psiCoh"}: Water potential (in MPa) of the plant cohort (average over soil layers).}
+      \item{\code{"E"}: Transpirated water (in mm) corresponding to each cohort.}
+      \item{\code{"psi"}: Water potential (in MPa) of the plant cohort (average over soil layers).}
       \item{\code{"DDS"}: Daily drought stress [0-1] (relative whole-plant conductance).}
     }
   When using the 'Complex' transpiration mode this includes:

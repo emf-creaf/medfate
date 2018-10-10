@@ -86,16 +86,7 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
   paramsBasedf.attr("row.names") = above.attr("row.names");
   
  
-  NumericMatrix smat =  NumericMatrix(numCohorts, numStemSegments);
-  std::fill(smat.begin(), smat.end(), 1.0);
-  smat.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numStemSegments));
-  NumericMatrix cmat =  NumericMatrix(numCohorts, numStemSegments);
-  std::fill(cmat.begin(), cmat.end(), 0.0);
-  cmat.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numStemSegments));
-  NumericVector psiLeaf = NumericVector(numCohorts, 0.0);
-  psiLeaf.attr("names") = above.attr("row.names");
-  NumericVector rwcsleaf = NumericVector(numCohorts, 1.0);
-  rwcsleaf.attr("names") = above.attr("row.names");
+
   List input;
   if(transpirationMode=="Simple") {
     NumericVector WUESP = SpParams["WUE"];
@@ -129,7 +120,24 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
                          _["paramsBase"] = paramsBasedf,
                          _["paramsTransp"] = paramsTranspdf);
     
+    NumericVector tvec =  NumericVector(numCohorts, 0.0);
+    tvec.attr("names") = above.attr("row.names");
+    input["Transpiration"] = tvec;
+    NumericVector pvec =  NumericVector(numCohorts, 0.0);
+    pvec.attr("names") = above.attr("row.names");
+    input["Photosynthesis"] = pvec;
+    input["PLC"] = NumericVector(numCohorts, 0.0);
   } else if(transpirationMode =="Complex"){
+    NumericMatrix smat =  NumericMatrix(numCohorts, numStemSegments);
+    std::fill(smat.begin(), smat.end(), 1.0);
+    smat.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numStemSegments));
+    NumericMatrix cmat =  NumericMatrix(numCohorts, numStemSegments);
+    std::fill(cmat.begin(), cmat.end(), 0.0);
+    cmat.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numStemSegments));
+    NumericVector psiLeaf = NumericVector(numCohorts, 0.0);
+    psiLeaf.attr("names") = above.attr("row.names");
+    NumericVector rwcsleaf = NumericVector(numCohorts, 1.0);
+    rwcsleaf.attr("names") = above.attr("row.names");
     if(soilFunctions=="SX") {
       soilFunctions = "VG"; 
       warning("Soil pedotransfer functions set to Van Genuchten ('VG').");
@@ -304,17 +312,19 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
                          _["paramsAnatomy"] = paramsAnatomydf,
                          _["paramsTransp"] = paramsTranspdf,
                          _["paramsWaterStorage"] = paramsWaterStoragedf);
+    
+    NumericVector tvec =  NumericVector(numCohorts, 0.0);
+    tvec.attr("names") = above.attr("row.names");
+    input["Transpiration"] = tvec;
+    NumericVector pvec =  NumericVector(numCohorts, 0.0);
+    pvec.attr("names") = above.attr("row.names");
+    input["Photosynthesis"] = pvec;
+    input["PLCstem"] = cmat;
+    input["RWCsympstem"] = smat;
+    input["RWCsympleaf"] = rwcsleaf;
+    input["psiLeaf"] = psiLeaf;
   }
-  NumericVector tvec =  NumericVector(numCohorts, 0.0);
-  tvec.attr("names") = above.attr("row.names");
-  input["Transpiration"] = tvec;
-  NumericVector pvec =  NumericVector(numCohorts, 0.0);
-  pvec.attr("names") = above.attr("row.names");
-  input["Photosynthesis"] = pvec;
-  input["PLCstem"] = cmat;
-  input["RWCsympstem"] = smat;
-  input["RWCsympleaf"] = rwcsleaf;
-  input["psiLeaf"] = psiLeaf;
+
   // input["WindSpeed"] = NumericVector(numCohorts, 0.0);
   // input["PAR"] = NumericVector(numCohorts, 0.0);
   // input["AbsorbedSWR"] = NumericVector(numCohorts, 0.0);
