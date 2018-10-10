@@ -33,8 +33,14 @@ An object (a list) of class \code{spwb.day} with the following elements:
 
 \itemize{
   \item{\code{"cohorts"}: A data frame with cohort information, copied from \code{\link{spwbInput}}.}
-  \item{\code{"DailyBalance"}: A vector of water balance components (rain, snow, net rain, infiltration, ...) for the simulated day, equivalent to one row of 'DailyBalance' object given in \code{\link{spwb}}.}
-  \item{\code{"Soil"}: A data frame with results (water evaporated, water extracted from plants and current water potential) for each soil layer.}
+  \item{\code{"WaterBalance"}: A vector of water balance components (rain, snow, net rain, infiltration, ...) for the simulated day, equivalent to one row of 'WaterBalance' object given in \code{\link{spwb}}.}
+  \item{\code{"Soil"}: A data frame with results for each soil layer:
+    \itemize{
+      \item{\code{"SoilEvaporation"}: Water evaporated from the soil surface (in mm).}
+      \item{\code{"PlantExtraction"}: Water extracted by plants from each soil layer (in mm).}
+      \item{\code{"psi"}: Soil water potential (in MPa).}
+    }
+  }
   \item{\code{"EnergyBalance"}: When using the 'Complex' transpiration mode, the model performs energy balance of the stand and 'EnergyBalance' is a list with the following:
     \itemize{
       \item{\code{"Temperature"}: A data frame with the temperature of the atmosphere ('Tatm'), canopy ('Tcan') and soil ('Tsoil.1', 'Tsoil.2', ...) for each time step.}
@@ -45,28 +51,35 @@ An object (a list) of class \code{spwb.day} with the following elements:
   \item{\code{"Plants"}: A data frame of results for each plant cohort. When using the 'Simple' transpiration mode this includes:
     \itemize{
       \item{\code{"LAI"}: Leaf area index of the plant cohort.}
-      \item{\code{"E"}: Transpirated water (in mm) corresponding to each cohort.}
+      \item{\code{"Transpiration"}: Transpirated water (in mm) corresponding to each cohort.}
       \item{\code{"psi"}: Water potential (in MPa) of the plant cohort (average over soil layers).}
       \item{\code{"DDS"}: Daily drought stress [0-1] (relative whole-plant conductance).}
     }
-  When using the 'Complex' transpiration mode this includes:
+  When using the 'Complex' transpiration mode \code{"DDS"} refers to the average proportion of stem cavitated conduits, \code{"psi"} refers to daily minimum (i.e. midday) water potential and the data frame \code{"Plants"} also includes columns:
     \itemize{
-      \item{\code{"LAI"}: Leaf area index of the plant cohort.}
+      \item{\code{"Extraction"}: Water extracted from the soil (in mm) for each cohort.}
+      \item{\code{"RWCstem"}: Relative water content of symplastic stem tissue.}
+      \item{\code{"RWCleaf"}: Relative water content of symplastic leaf tissue.}
+    }
+  }
+  \item{\code{"PlantsInst"}: A list with instantaneous (per time step) results for each plant cohort:
+    \itemize{
       \item{\code{"LAIsunlit"}: Leaf area index of sunlit leaves of the plant cohort.}
       \item{\code{"LAIshade"}: Leaf area index of shade leaves of the plant cohort.}
-      \item{\code{"EplantCoh"}: Transpirated water (in mm) corresponding to each cohort.}
-      \item{\code{"psiCoh"}: Water potential (in MPa) of the plant cohort (i.e. minimum leaf water potential).}
-      \item{\code{"DDS"}: Daily drought stress [0-1] (relative whole-plant conductance).}
-      \item{\code{"AbsRadinst"}: A list with four data frames containing the instantaneous absorved radiation for each plant cohort during each time step. The data frames are combinations of short-wave radiation (SWR) vs long-wave radiation (LWR) and sunlit leaves ('SL') vs. shade leaves ('SH').}
-      \item{\code{"Einst"}: A data frame containing the cumulative transpiration (mm) for each plant cohort during each time step. }
-      \item{\code{"Ainst"}: A data frame containing the cumulative net photosynthesis (gC/m2) for each plant cohort during each time step. }
-      \item{\code{"PsiPlantinst"}: A data frame containing instantaneous leaf water potential (in MPa) for each plant cohort during each time step. }
-      \item{\code{"GWsunlitinst"}: A data frame containing instantaneous stomatal conductance (in mmol/m2/s) for sunlit leaves each plant cohort during each time step. }
-      \item{\code{"GWshadeinst"}: A data frame containing instantaneous stomatal conductance (in mmol/m2/s) for shade leaves each plant cohort during each time step. }
-      \item{\code{"VPDsunlitinst"}: A data frame containing instantaneous vapour pressure deficit (in kPa) for sunlit leaves each plant cohort during each time step. }
-      \item{\code{"VPDshadeinst"}: A data frame containing instantaneous vapour pressure deficit (in kPa) for shade leaves each plant cohort during each time step. }
-      \item{\code{"Tempsunlitinst"}: A data frame containing instantaneous temperature (in degrees Celsius) for sunlit leaves each plant cohort during each time step. }
-      \item{\code{"Tempshadeinst"}: A data frame containing instantaneous temperature (in degrees Celsius) for shade leaves each plant cohort during each time step. }
+      \item{\code{"AbsRad"}: A list with four data frames containing the instantaneous absorved radiation for each plant cohort during each time step. The data frames are combinations of short-wave radiation (SWR) vs long-wave radiation (LWR) and sunlit leaves ('SL') vs. shade leaves ('SH').}
+      \item{\code{"E"}: A data frame containing the cumulative transpiration (mm) for each plant cohort during each time step. }
+      \item{\code{"An"}: A data frame containing the cumulative net photosynthesis (gC/m2) for each plant cohort during each time step. }
+      \item{\code{"GWsunlit"}: A data frame containing instantaneous stomatal conductance (in mmol/m2/s) for sunlit leaves each plant cohort during each time step. }
+      \item{\code{"GWshade"}: A data frame containing instantaneous stomatal conductance (in mmol/m2/s) for shade leaves each plant cohort during each time step. }
+      \item{\code{"VPDsunlit"}: A data frame containing vapour pressure deficit (in kPa) for sunlit leaves each plant cohort during each time step. }
+      \item{\code{"VPDshade"}: A data frame containing vapour pressure deficit (in kPa) for shade leaves each plant cohort during each time step. }
+      \item{\code{"Tempsunlit"}: A data frame containing temperature (in degrees Celsius) for sunlit leaves each plant cohort during each time step. }
+      \item{\code{"Tempshade"}: A data frame containing temperature (in degrees Celsius) for shade leaves each plant cohort during each time step. }
+      \item{\code{"PsiRoot"}: A data frame containing root crown water potential (in MPa) for each plant cohort during each time step.}
+      \item{\code{"PsiPlant"}: A data frame containing leaf water potential (in MPa) for each plant cohort during each time step. }
+      \item{\code{"PLCstem"}: A data frame containing the proportion loss of conductance [0-1] for each plant cohort during each time step. }
+      \item{\code{"RWCstem"}: A data frame containing the (average) relative water content of symplastic stem tissue [0-1] for each plant cohort during each time step. }
+      \item{\code{"RWCstem"}: A data frame containing the relative water content of symplastic leaf tissue [0-1] for each plant cohort during each time step. }
     }
   
   }
@@ -98,7 +111,6 @@ data(SpParamsMED)
 
 #Initialize control parameters
 control = defaultControl()
-control$ndailysteps = 24  
 
 #Initialize soil with default soil params (2 layers)
 examplesoil = soil(defaultSoilParams(2), W=c(0.5,0.5))
@@ -116,6 +128,7 @@ sd1<-spwb.day(x1, examplesoil, rownames(examplemeteo)[d],
 
 #Switch to 'Complex' transpiration mode
 control$transpirationMode="Complex"
+control$ndailysteps = 24  
 
 #Simulate one day only
 x2 = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)

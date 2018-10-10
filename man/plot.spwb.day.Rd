@@ -14,7 +14,11 @@ Function \code{plot} plots the results of the soil water balance model for one d
   \item{x}{An object of class \code{spwb}}
   \item{type}{The information to be plotted:
   \itemize{
-    \item{\code{"PlantPsi"}:}{ Plant cohort water potential.}
+    \item{\code{"LeafPsi"}:}{Leaf water potential.}
+    \item{\code{"RootPsi"}:}{Root crown water potential.}
+    \item{\code{"StemPLC"}:}{(Average) percentage of loss conductance in the stem conduits.}
+    \item{\code{"StemRWC"}:}{(Average) relative water content in the stem symplasm.}
+    \item{\code{"LeafRWC"}:}{Relative water content in the leaf symplasm.}
     \item{\code{"PlantTranspiration"}:}{ Plant cohort transpiration per ground area.}
     \item{\code{"LeafTranspiration"}:}{ Plant cohort transpiration per leaf area.}
     \item{\code{"PlantPhotosynthesis"}:}{ Plant cohort net photosynthesis per ground area.}

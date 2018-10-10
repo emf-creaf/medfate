@@ -293,15 +293,15 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   
   NumericVector DB = NumericVector::create(_["PET"] = pet, _["Rain"] = rain, _["Snow"] = snow, _["NetRain"] = NetRain, _["Runon"] = runon, 
                                            _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
-                                           _["Esoil"] = sum(EsoilVec), _["Eplant"] = sum(EplantVec),
+                                           _["SoilEvaporation"] = sum(EsoilVec), _["Transpiration"] = sum(EplantVec),
                                            _["LAIcell"] = LAIcell, _["LAIcelldead"] = LAIcelldead, 
                                            _["Cm"] = Cm, _["Lground"] = LgroundPAR);
-  DataFrame SB = DataFrame::create(_["Esoil"] = EsoilVec, _["Eplant"] = EplantVec, _["psi"] = psiVec);
+  DataFrame SB = DataFrame::create(_["SoilEvaporation"] = EsoilVec, _["PlantExtraction"] = EplantVec, _["psi"] = psiVec);
   DataFrame Plants = DataFrame::create(_["LAI"] = LAIcohort,
-                             _["E"] = Eplant, _["psi"] = PlantPsi, _["DDS"] = DDS);
+                             _["Transpiration"] = Eplant, _["psi"] = PlantPsi, _["DDS"] = DDS);
   Plants.attr("row.names") = above.attr("row.names");
   List l = List::create(_["cohorts"] = clone(cohorts),
-                        _["DailyBalance"] = DB, 
+                        _["WaterBalance"] = DB, 
                         _["Soil"] = SB,
                         _["Plants"] = Plants);
   l.attr("class") = CharacterVector::create("spwb.day","list");
@@ -575,10 +575,12 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
 
   //Hydraulics: determine layers where the plant is connected
   IntegerVector nlayerscon(numCohorts,0);
+  NumericMatrix SoilWaterExtract(numCohorts, nlayers);
   LogicalMatrix layerConnected(numCohorts, nlayers);
   for(int c=0;c<numCohorts;c++) {
     nlayerscon[c] = 0;
     for(int l=0;l<nlayers;l++) {
+      SoilWaterExtract(c,l) = 0.0;
       if(V(c,l)>0.0) {
         double pRoot = xylemConductance(psiVec[l], 1.0, VCroot_c[c], VCroot_d[c]); //Relative conductance in the root
         layerConnected(c,l)= (pRoot>=pRootDisc[c]);
@@ -628,7 +630,6 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   NumericVector PlantPsi(numCohorts);
   NumericMatrix K(numCohorts, nlayers);
   NumericVector Eplant(numCohorts);
-  NumericVector SoilWaterExtract(nlayers, 0.0);
   NumericMatrix Rninst(numCohorts,ntimesteps);
   NumericMatrix Qinst(numCohorts,ntimesteps);
   NumericMatrix Einst(numCohorts, ntimesteps);
@@ -651,7 +652,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   NumericMatrix LAI_SL(numCohorts, ntimesteps);
   NumericVector minPsiLeaf(numCohorts,0.0), minPsiRoot(numCohorts,0.0); //Minimum potentials experienced
   NumericMatrix PLC(numCohorts, ntimesteps);
-  NumericVector PLCm(numCohorts), RWCsm(numCohorts);
+  NumericVector PLCm(numCohorts), RWCsm(numCohorts), RWClm(numCohorts);
   
   for(int c=0;c<numCohorts;c++) {
     photosynthesis[c] = 0.0;
@@ -803,7 +804,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
         }
         // if(verbose) Rcout<<"iPMSunlit"<<iPMSunlit<<"iPMShade"<<iPMShade<<"iPM"<<iPM<<"\n";
         
-        //Scale transpiration to cohort level
+        //Scale water extracted from soil to cohort level
         NumericVector Esoilcn(nlayerscon[c],0.0);
         Einst(c,n) = Eaverage*0.001*0.01802*LAIphe[c]*tstep; //Scale from instantaneous flow to water volume in the time step
         for(int lc=0;lc<nlayerscon[c];lc++) {
@@ -840,7 +841,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
         int cnt = 0;
         for(int l=0;l<nlayers;l++) {
           if(layerConnected(c,l)) {
-            SoilWaterExtract[l] += Esoilcn[cnt]; //Add to cummulative transpiration from layers
+            SoilWaterExtract(c,l) += Esoilcn[cnt]; //Add to cummulative transpiration from layers
             cnt++;
           } 
         }
@@ -959,17 +960,22 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   } //End of timestep loop
   
   
-  //Substract plant transpiration from soil moisture and calculate maximum difference in soil psi
+  //Substract extracted water from soil moisture 
+  NumericVector SoilExtractVec(nlayers, 0.0);
   for(int l=0;l<nlayers;l++) {
-    W[l] = std::max(W[l]-(SoilWaterExtract[l]/Water_FC[l]),0.0);
+    SoilExtractVec[l] = sum(SoilWaterExtract(_,l));
+    W[l] = std::max(W[l]-(SoilExtractVec[l]/Water_FC[l]),0.0);
   }
   
   //4z. Plant daily drought stress (from root collar mid-day water potential)
+  NumericVector SoilExtractCoh(numCohorts,0.0);
   for(int c=0;c<numCohorts;c++) {
     PlantPsi[c] = minPsiLeaf[c];
+    SoilExtractCoh[c] =  sum(SoilWaterExtract(c,_));
     transpiration[c] = Eplant[c]; 
     PLCm[c] = sum(PLC(c,_))/((double)PLC.ncol());
     RWCsm[c] = sum(RWCssteminst(c,_))/((double)RWCssteminst.ncol());
+    RWClm[c] = sum(RWCsleafinst(c,_))/((double)RWCsleafinst.ncol());
   }
   
   
@@ -983,7 +989,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   double Gsoil = soil["Gsoil"];
   double Ksoil = soil["Ksoil"];
   double Esoil = std::max(0.0,soilevaporation((Water_FC[0]*(1.0 - W[0])), PETsoil, Gsoil));
-  NumericVector EsoilVec(nlayers,0.0);//Exponential decay to divide bare soil evaporation among layers
+  NumericVector EsoilVec(nlayers,0.0);
+  //Exponential decay to divide bare soil evaporation among layers
   for(int l=0;l<nlayers;l++) {
     double cumAnt = 0.0;
     double cumPost = 0.0;
@@ -1023,35 +1030,44 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   LAI_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   List AbsRadinst = List::create(_["SWR_SH"] = SWR_SH, _["SWR_SL"]=SWR_SL,
                                  _["LWR_SH"] = LWR_SH, _["LWR_SL"] = LWR_SL);
-  List DB = List::create(_["Rain"] = rain,_["Snow"] = 0.0,_["NetRain"] = NetRain, _["Runon"] = runon, _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
-                         _["LAIcell"] = LAIcell, _["LAIcelldead"] = LAIcelldead, _["Cm"] = Cm, _["Lground"] = 1.0 - propCover);
-  List SB = List::create(_["EsoilVec"] = EsoilVec, _["EplantVec"] = SoilWaterExtract, _["psiVec"] = psiVec);
+  NumericVector DB = NumericVector::create(_["Rain"] = rain,_["Snow"] = 0.0,_["NetRain"] = NetRain, _["Runon"] = runon, _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
+                                           _["SoilEvaporation"] = sum(EsoilVec), _["PlantExtraction"] = sum(SoilExtractVec), _["Transpiration"] = sum(Eplant),
+                                           _["LAIcell"] = LAIcell, _["LAIcelldead"] = LAIcelldead, _["Cm"] = Cm, _["Lground"] = 1.0 - propCover);
+  
+  DataFrame SB = DataFrame::create(_["SoilEvaporation"] = EsoilVec, 
+                                   _["PlantExtraction"] = SoilExtractVec, _["psi"] = psiVec);
+  
   Einst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   PsiPlantinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   PsiRootinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   Aninst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  Eplant.attr("names") = above.attr("row.names");
-  PlantPsi.attr("names") = above.attr("row.names");
-  PLCm.attr("names") = above.attr("row.names");
-  RWCsm.attr("names") = above.attr("row.names");
-  List PlantsInst = List::create(_["AbsRadinst"] = AbsRadinst, _["Einst"]=Einst, _["Aninst"]=Aninst,
-                                _["PsiRootinst"] = PsiRootinst, _["PsiPlantinst"] = PsiPlantinst, 
-                                _["GWsunlitinst"] = GW_SL, _["GWshadeinst"] = GW_SH,
-                                _["VPDsunlitinst"] = VPD_SL, _["VPDshadeinst"] = VPD_SH,
-                                _["Tempsunlitinst"] = Temp_SL, _["Tempshadeinst"] = Temp_SH,
-                                _["PLCinst"] = PLC, 
-                                _["RWCsteminst"] = RWCssteminst,
-                                _["RWCleafinst"] = RWCsleafinst);
-  List Plants = List::create(_["LAI"] = LAIcohort,
-                             _["LAIsunlit"] = LAI_SL, _["LAIshade"] = LAI_SH, 
-                             _["EplantCoh"] = Eplant, 
-                             _["psiCoh"] = PlantPsi, 
+  PLC.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  RWCsleafinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  RWCssteminst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  List PlantsInst = List::create(
+                                 _["LAIsunlit"] = LAI_SL, _["LAIshade"] = LAI_SH, 
+                                 _["AbsRad"] = AbsRadinst, _["E"]=Einst, _["An"]=Aninst,
+                                 _["GWsunlit"] = GW_SL, _["GWshade"] = GW_SH,
+                                 _["VPDsunlit"] = VPD_SL, _["VPDshade"] = VPD_SH,
+                                 _["Tempsunlit"] = Temp_SL, _["Tempshade"] = Temp_SH,
+                                 _["PsiRoot"] = PsiRootinst, _["PsiLeaf"] = PsiPlantinst, 
+                                 _["PLCstem"] = PLC, 
+                                 _["RWCstem"] = RWCssteminst,
+                                 _["RWCleaf"] = RWCsleafinst);
+  DataFrame Plants = DataFrame::create(_["LAI"] = LAIcohort,
+                             _["Extraction"] = SoilExtractCoh,
+                             _["Transpiration"] = Eplant, 
+                             _["psi"] = PlantPsi, 
                              _["DDS"] = PLCm, //Daily drought stress is the average day PLC
-                             _["RWCs"] = RWCsm);
+                             _["RWCstem"] = RWCsm,
+                             _["RWCleaf"] = RWClm);
+  Plants.attr("row.names") = above.attr("row.names");
   List l = List::create(_["cohorts"] = clone(cohorts),
-                        _["DailyBalance"] = DB, _["SoilBalance"] = SB, 
+                        _["WaterBalance"] = DB, 
                         _["EnergyBalance"] = EB,
-                        _["Plants"] = Plants);
+                        _["Soil"] = SB, 
+                        _["Plants"] = Plants,
+                        _["PlantsInst"] = PlantsInst);
   l.attr("class") = CharacterVector::create("spwb.day","list");
   return(l);
 }
