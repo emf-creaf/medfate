@@ -1144,7 +1144,7 @@ List supplyFunctionBelowground(NumericVector psiSoil,
       }
       dE = std::min(0.05,supplydEdp[i-1]*0.05);
       nsteps++; 
-      if(supplydEdp[i-1]<0.01*maxdEdp) break;
+      if((supplydEdp[i-1]<0.01*maxdEdp) & (i>5)) break;
     } else {
       break;
     }

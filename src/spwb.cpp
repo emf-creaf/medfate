@@ -614,13 +614,13 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
         cnt++;
       }
     }
-    double minFlow = std::max(0.0,1000.0*(Gwmin[c]*(tmin+tmax)/2.0)/Patm);
+    // double minFlow = std::max(0.0,1000.0*(Gwmin[c]*(tmin+tmax)/2.0)/Patm);
     // Rcout<<minFlow<<"\n";
     if(nlayerscon[c]>0) {
       supplyBelow[c] = supplyFunctionBelowground(psic,
                                                  VGrhizo_kmaxc,VG_nc,VG_alphac,
                                                  VCroot_kmaxc, VCroot_c[c],VCroot_d[c],
-                                                 minFlow, maxNsteps, psiStep, psiMax , ntrial, psiTol, ETol);
+                                                 0.0, maxNsteps, psiStep, psiMax , ntrial, psiTol, ETol);
     }
   }
 
@@ -795,7 +795,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
           //Find iPM for root flow corresponding to the root crown average flow
           double absDiff = 9999.9;
           int iPM = -1;
-          for(int k=0;k<Erootcrown.size();k++){
+          for(int k=0;k<fittedE.size();k++){ //Only check up to the size of fittedE
             double adk = std::abs(Erootcrown[k]-Ercaverage);
             if(adk<absDiff) {
               absDiff = adk;
@@ -814,7 +814,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
           //Add to daily plant cohort transpiration
           Eplant[c] +=Einst(c,n);
           
-          // if(verbose & (c==0)) Rcout<<c<<" " <<n<<" E rc size "<< Erootcrown.size()<< " E size"<< fittedE.size()<<" iPMSunlit"<<iPMSunlit<<"iPMShade"<<iPMShade<<"iPM"<<iPM<< "RWCleafini" << RWCsleafVEC[c] << " PsiLeafini"<< psiLeafVEC[c]<< " PsiLeaffin"<<newPsiLeafVec[iPM]<<" new PLC "<< newPLCstem(iPM,0)<<"\n";
+          if(verbose & (c==0)) Rcout<<c<<" " <<n<<" E rc size "<< Erootcrown.size()<< " E size"<< fittedE.size()<<" iPMSunlit"<<iPMSunlit<<"iPMShade"<<iPMShade<<"iPM"<<iPM<< "RWCleafini" << RWCsleafVEC[c] << " PsiLeafini"<< psiLeafVEC[c]<< " PsiLeaffin"<<newPsiLeafVec[iPM]<<" new PLC "<< newPLCstem(iPM,0)<<"\n";
           
           //Update symplastic storage and PLC
           psiLeafVEC[c] = newPsiLeafVec[iPM];
