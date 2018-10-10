@@ -765,15 +765,19 @@ List E2psiAboveGround(double E, double psiRootCrown,
   NumericVector newPsiStem = E2psiCap["newPsiStem"];
   NumericVector Eout = E2psiCap["Eout"];
   int n = newPsiStem.size();
+  // Rcout<<"Vini "<<psiLeaf <<"\n";
   double Vapoleafini = Vleaf*leaffapo*xylemConductance(psiLeaf, kleafmax, leafc, leafd);
   double psiLeafSymp = symplasticWaterPotential(RWCsympleaf, leafpi0, leafeps);
   double newPsiLeaf = E2psiXylem(Eout[n-1], newPsiStem[n-1], kleafmax, leafc, leafd, 0.0, psiStep, psiMax); 
+  // newPsiLeaf = std::min(0.0, newPsiLeaf);
+  // Rcout<<"Vfin\n";
   double Vapoleaffin = Vleaf*leaffapo*xylemConductance(newPsiLeaf, kleafmax, leafc, leafd);
   double m3tommol = 55555556.0;
   double Fabs = (m3tommol/tstep)*(Vapoleaffin-Vapoleafini);
   double Flat = klat*(psiLeafSymp - newPsiLeaf);
   double Efin  = std::max(0.0, Eout[n-1] - Fabs + Flat);
   double newRWCsympleaf = (Vleaf*(1.0-leaffapo)*RWCsympleaf - (tstep/m3tommol)*Flat)/(Vleaf*(1.0-leaffapo));
+  // newRWCsympleaf = std::min(1.0, newRWCsympleaf);
   double kterm = xylemConductance(newPsiLeaf, kleafmax, leafc, leafd);
   return(List::create( _["Einc"] = E2psiCap["Einc"], 
                        _["Eout"] = Eout,

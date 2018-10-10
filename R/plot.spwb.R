@@ -8,10 +8,10 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
   nlayers = x$NumSoilLayers
   TYPES = c("PET_Precipitation","PET_NetRain","Snow","Evapotranspiration","SoilPsi","SoilTheta","SoilVol", "Export", "LAI", "WTD",
             "PlantLAI",
-            "PlantStress", "PlantPsi","PlantPhotosynthesis","PlantTranspiration",
+            "PlantStress", "PlantPsi","PlantPhotosynthesis", "PlantTranspiration",
             "PlantPhotosynthesisLeaf","PlantTranspirationLeaf")
   if(transpMode=="Complex") {
-    TYPES = c(TYPES, "PlantStorage",
+    TYPES = c(TYPES, "LeafPsi","RootPsi","StemRWC", "LeafRWC", "PlantWaterBalance",
               "PlantAbsorbedSWR", "PlantAbsorbedSWRLeaf",
               "PlantAbsorbedLWR", "PlantAbsorbedLWRLeaf",
               "AirTemperature","SoilTemperature", "CanopyTemperature",
@@ -80,7 +80,15 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     lines(dates, WaterBalance$Transpiration, col="gray", lty=2, lwd=1.5)
     lines(dates, WaterBalance$SoilEvaporation, col="black", lty=3, lwd=1.5)
     legend("topleft", bty="n", col=c("black","gray","black"),lty=c(1,2,3), lwd=c(2,1.5,1.5),
-           legend=c("Total evapotranspiration","Plant transpiration","Bare soil evaporation"))
+           legend=c("Total evapotranspiration","Transpiration","Bare soil evaporation"))
+  } 
+  else if(type=="PlantWaterBalance") {
+    pwb = WaterBalance$PlantExtraction - WaterBalance$Transpiration
+    if(is.null(ylab)) ylab = expression(paste("Extraction - transpiration (",L%.%m^{-2},")"))
+    if(is.null(ylim)) ylim = c(min(pwb),max(pwb))
+    plot(dates, pwb, ylim=ylim, type="l", ylab=ylab, 
+         xlab=xlab, xlim=xlim,frame=FALSE, col="black", axes=FALSE, lwd=2)
+    plotAxes()
   } 
   else if(type=="LAI") {
     if(is.null(ylab)) ylab = expression(paste("Leaf Area Index   ",(m^{2}%.%m^{-2})))
@@ -180,8 +188,8 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
            col = 1:length(cohortnames), bty="n")
   } 
-  else if(type=="PlantStorage") {
-    OM = x$PlantStorage
+  else if(type=="StemRWC") {
+    OM = x$PlantRWCstem*100
     if(bySpecies) {
       lai1 = t(apply(x$PlantLAI,1, tapply, x$cohorts$Name, sum))
       m1 = t(apply(x$PlantLAI * OM,1, tapply, x$cohorts$Name, sum))
@@ -189,8 +197,26 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
       OM[lai1==0] = NA
       cohortnames = colnames(OM)
     } 
-    if(is.null(ylab)) ylab = "Relative water storage [0-1]"
-    if(is.null(ylim)) ylim = c(0,1)
+    if(is.null(ylab)) ylab = "Relative water content in stem symplasmic tissue [%]"
+    if(is.null(ylim)) ylim = c(min(OM),max(OM))
+    matplot(dates, OM, lty=1:length(cohortnames), col = 1:length(cohortnames),
+            ylim = ylim, lwd=1, type="l", xlim=xlim,
+            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
+    plotAxes()
+    legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
+           col = 1:length(cohortnames), bty="n")
+  } 
+  else if(type=="LeafRWC") {
+    OM = x$PlantRWCleaf*100
+    if(bySpecies) {
+      lai1 = t(apply(x$PlantLAI,1, tapply, x$cohorts$Name, sum))
+      m1 = t(apply(x$PlantLAI * OM,1, tapply, x$cohorts$Name, sum))
+      OM = m1/lai1
+      OM[lai1==0] = NA
+      cohortnames = colnames(OM)
+    } 
+    if(is.null(ylab)) ylab = "Relative water content in leaf symplasmic tissue [%]"
+    if(is.null(ylim)) ylim = c(min(OM),max(OM))
     matplot(dates, OM, lty=1:length(cohortnames), col = 1:length(cohortnames),
             ylim = ylim, lwd=1, type="l", xlim=xlim,
             ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
@@ -208,6 +234,42 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
       cohortnames = colnames(OM)
     } 
     if(is.null(ylab)) ylab = "Plant water potential (MPa)"
+    if(is.null(ylim)) ylim = c(min(OM, na.rm = TRUE),0)
+    matplot(dates, OM, ylim = ylim, lty=1:length(cohortnames), col = 1:length(cohortnames),
+            lwd=1, type="l", xlim=xlim,
+            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
+    plotAxes()
+    legend("bottomright", legend = cohortnames, lty=1:length(cohortnames), 
+           col = 1:length(cohortnames), bty="n")
+  } 
+  else if(type=="LeafPsi") {
+    OM = x$LeafPsi
+    if(bySpecies) {
+      lai1 = t(apply(x$PlantLAI,1, tapply, x$cohorts$Name, sum, na.rm=T))
+      m1 = t(apply(x$PlantLAI * OM,1, tapply, x$cohorts$Name, sum, na.rm=T))
+      OM = m1/lai1
+      OM[lai1==0] = NA
+      cohortnames = colnames(OM)
+    } 
+    if(is.null(ylab)) ylab = "Midday leaf water potential (MPa)"
+    if(is.null(ylim)) ylim = c(min(OM, na.rm = TRUE),0)
+    matplot(dates, OM, ylim = ylim, lty=1:length(cohortnames), col = 1:length(cohortnames),
+            lwd=1, type="l", xlim=xlim,
+            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
+    plotAxes()
+    legend("bottomright", legend = cohortnames, lty=1:length(cohortnames), 
+           col = 1:length(cohortnames), bty="n")
+  } 
+  else if(type=="RootPsi") {
+    OM = x$RootPsi
+    if(bySpecies) {
+      lai1 = t(apply(x$PlantLAI,1, tapply, x$cohorts$Name, sum, na.rm=T))
+      m1 = t(apply(x$PlantLAI * OM,1, tapply, x$cohorts$Name, sum, na.rm=T))
+      OM = m1/lai1
+      OM[lai1==0] = NA
+      cohortnames = colnames(OM)
+    } 
+    if(is.null(ylab)) ylab = "Midday root crown water potential (MPa)"
     if(is.null(ylim)) ylim = c(min(OM, na.rm = TRUE),0)
     matplot(dates, OM, ylim = ylim, lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", xlim=xlim,

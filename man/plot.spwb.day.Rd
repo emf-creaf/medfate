@@ -8,7 +8,7 @@
 Function \code{plot} plots the results of the soil water balance model for one day (see \code{\link{spwb.day}}).
 }
 \usage{
-\method{plot}{spwb.day}(x, type="PlantPsi", bySpecies = FALSE, xlab = NULL, ylab = NULL, ...)
+\method{plot}{spwb.day}(x, type="PlantTranspiration", bySpecies = FALSE, xlab = NULL, ylab = NULL, ...)
 }
 \arguments{
   \item{x}{An object of class \code{spwb}}
