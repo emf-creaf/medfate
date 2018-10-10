@@ -1,12 +1,12 @@
 plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
                    yearAxis=FALSE, xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, 
                    add=FALSE, ...) {
-  dates = as.Date(rownames(x$DailyBalance))
+  dates = as.Date(rownames(x$WaterBalance))
   transpMode = x$control$transpirationMode
-  DailyBalance = x$DailyBalance
-  SoilWaterBalance = x$SoilWaterBalance
+  WaterBalance = x$WaterBalance
+  Soil = x$Soil
   nlayers = x$NumSoilLayers
-  TYPES = c("PET_Precipitation","PET_NetRain","Snow","ET","Psi","Theta","Vol", "Export", "LAI", "WTD",
+  TYPES = c("PET_Precipitation","PET_NetRain","Snow","Evapotranspiration","SoilPsi","SoilTheta","SoilVol", "Export", "LAI", "WTD",
             "PlantLAI",
             "PlantStress", "PlantPsi","PlantPhotosynthesis","PlantTranspiration",
             "PlantPhotosynthesisLeaf","PlantTranspirationLeaf")
@@ -30,18 +30,18 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     }
     axis(2)    
   }
-  mnp = max(DailyBalance$Precipitation)
+  mnp = max(WaterBalance$Precipitation)
   if(is.null(xlab)) xlab = ifelse(yearAxis,"Year", "Date")  
   if(type=="PET_Precipitation") {
     if(is.null(ylab)) ylab = expression(L%.%m^{-2})
     if(!is.null(xlim)) span = xlim[1]:xlim[2]
     else span = 1:numDays
     if(is.null(ylim)) ylim = c(0,mnp)
-    barplot(DailyBalance$Precipitation[span], ylim=ylim, col="black",space=0, ylab=ylab, 
+    barplot(WaterBalance$Precipitation[span], ylim=ylim, col="black",space=0, ylab=ylab, 
             xlab=xlab, axes=FALSE)
-    barplot(DailyBalance$Snow[span], col="red", border = "red", add=TRUE)
+    barplot(WaterBalance$Snow[span], col="red", border = "red", add=TRUE)
     plotAxes()
-    lines(1:length(span), DailyBalance$PET[span], col="gray")    
+    lines(1:length(span), WaterBalance$PET[span], col="gray")    
     legend("topleft", bty="n", col=c("black","red", "gray"),lty=1, lwd=2,
            legend=c("Precipitation","Snow", "PET"))
     
@@ -51,10 +51,10 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     if(!is.null(xlim)) span = xlim[1]:xlim[2]
     else span = 1:numDays
     if(is.null(ylim)) ylim = c(0,mnp)
-    barplot(DailyBalance$NetRain[span], ylim=ylim, col="black",space=0, ylab=ylab, 
+    barplot(WaterBalance$NetRain[span], ylim=ylim, col="black",space=0, ylab=ylab, 
             xlab=xlab, axes=FALSE)
     plotAxes()
-    lines(1:length(span), DailyBalance$PET[span], col="gray")    
+    lines(1:length(span), WaterBalance$PET[span], col="gray")    
     legend("topleft", bty="n", col=c("black","gray"),lty=c(1,1), lwd=2,
            legend=c("NetRain","PET"))        
   } 
@@ -62,44 +62,44 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     if(is.null(ylab)) ylab = expression(L%.%m^{-2})    
     if(!is.null(xlim)) span = xlim[1]:xlim[2]
     else span = 1:numDays
-    mnp = max(c(DailyBalance$Snow[span], SoilWaterBalance$SWE[span]))
+    mnp = max(c(WaterBalance$Snow[span], Soil$SWE[span]))
     if(is.null(ylim)) ylim = c(0,mnp)
-    barplot(DailyBalance$Snow[span], ylim=ylim, col="black",space=0, ylab=ylab, 
+    barplot(WaterBalance$Snow[span], ylim=ylim, col="black",space=0, ylab=ylab, 
             xlab=xlab, axes=FALSE)
     plotAxes()
-    lines(1:length(span), SoilWaterBalance$SWE[span], col="red", lwd=1.5)    
+    lines(1:length(span), Soil$SWE[span], col="red", lwd=1.5)    
     legend("topleft", bty="n", col=c("black","red"),lty=c(1,1), lwd=2,
            legend=c("Snow","Snowpack (SWE)"))        
   } 
-  else if(type=="ET") {
+  else if(type=="Evapotranspiration") {
     if(is.null(ylab)) ylab = expression(L%.%m^{-2})
-    if(is.null(ylim)) ylim = c(0,max(DailyBalance$Etot))
-    plot(dates, DailyBalance$Etot, ylim=ylim, type="l", ylab=ylab, 
+    if(is.null(ylim)) ylim = c(0,max(WaterBalance$Evapotranspiration))
+    plot(dates, WaterBalance$Evapotranspiration, ylim=ylim, type="l", ylab=ylab, 
          xlab=xlab, xlim=xlim,frame=FALSE, col="black", axes=FALSE, lwd=2)
     plotAxes()
-    lines(dates, DailyBalance$Eplanttot, col="gray", lty=2, lwd=1.5)
-    lines(dates, DailyBalance$Esoil, col="black", lty=3, lwd=1.5)
+    lines(dates, WaterBalance$Transpiration, col="gray", lty=2, lwd=1.5)
+    lines(dates, WaterBalance$SoilEvaporation, col="black", lty=3, lwd=1.5)
     legend("topleft", bty="n", col=c("black","gray","black"),lty=c(1,2,3), lwd=c(2,1.5,1.5),
            legend=c("Total evapotranspiration","Plant transpiration","Bare soil evaporation"))
   } 
   else if(type=="LAI") {
     if(is.null(ylab)) ylab = expression(paste("Leaf Area Index   ",(m^{2}%.%m^{-2})))
-    if(is.null(ylim)) ylim = c(0,max(DailyBalance$LAIcell))
-    plot(dates, DailyBalance$LAIcell, ylim=ylim, type="l", ylab=ylab, 
+    if(is.null(ylim)) ylim = c(0,max(WaterBalance$LAIcell))
+    plot(dates, WaterBalance$LAIcell, ylim=ylim, type="l", ylab=ylab, 
          xlab=xlab, xlim=xlim,frame=FALSE, col="black", axes=FALSE, lwd=1)
     plotAxes()
-    lines(dates, DailyBalance$LAIcelldead, lty=2)
+    lines(dates, WaterBalance$LAIcelldead, lty=2)
   } 
   else if(type=="WTD") {
     if(is.null(ylab)) ylab = expression(paste("Water table depth  (mm)"))
-    if(is.null(ylim)) ylim = c(max(SoilWaterBalance$WTD),0)
-    plot(dates, SoilWaterBalance$WTD, ylim=ylim, type="l", ylab=ylab, 
+    if(is.null(ylim)) ylim = c(max(Soil$WTD),0)
+    plot(dates, Soil$WTD, ylim=ylim, type="l", ylab=ylab, 
          xlab=xlab, xlim=xlim,frame=FALSE, col="black", axes=FALSE, lwd=1)
     plotAxes()
-    lines(dates, SoilWaterBalance$WTD, lty=2)
+    lines(dates, Soil$WTD, lty=2)
   } 
-  else if(type=="Psi") {
-    PsiM = SoilWaterBalance[,paste("psi",1:nlayers,sep=".")]
+  else if(type=="SoilPsi") {
+    PsiM = Soil[,paste("psi",1:nlayers,sep=".")]
     if(is.null(ylab)) ylab = "Soil water potential (MPa)"    
     if(is.null(ylim)) ylim =c(min(PsiM),0)
     matplot(dates, PsiM, lwd=1.5,
@@ -110,9 +110,9 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
            legend=paste("Layer", 1:nlayers))
     
   } 
-  else if(type=="Theta") {
-    WM = SoilWaterBalance[,paste("W",1:nlayers,sep=".")]
-    if(is.null(ylab)) ylab = "% field capacity"
+  else if(type=="SoilTheta") {
+    WM = Soil[,paste("W",1:nlayers,sep=".")]
+    if(is.null(ylab)) ylab = "Soil moisture (% field capacity)"
     if(is.null(ylim)) ylim = c(0,100*max(WM,na.rm = T))
     matplot(dates, WM*100, lwd=1.5,
             ylim=ylim, type="l", ylab=ylab, xlab=xlab, xlim=xlim,
@@ -121,11 +121,11 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     legend("bottomleft", bty="n", col="black",lty=1:nlayers, lwd=1.5,
            legend=paste("Layer", 1:nlayers))
   } 
-  else if(type=="Vol") {
-    MLM= SoilWaterBalance[,paste("ML",1:nlayers,sep=".")]
-    MLTot = SoilWaterBalance$MLTot
+  else if(type=="SoilVol") {
+    MLM= Soil[,paste("ML",1:nlayers,sep=".")]
+    MLTot = Soil$MLTot
     if(is.null(ylim)) ylim =c(0,max(MLTot)*1.3)
-    if(is.null(ylab)) ylab = "mm soil water"
+    if(is.null(ylab)) ylab = "Soil water content (mm)"
     plot(dates, MLTot, ylim=ylim, lwd=2, type="l",xlim=xlim,
          ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
     plotAxes()
@@ -136,13 +136,13 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
   } 
   else if(type=="Export") {
     if(is.null(ylab)) ylab =  expression(L%.%m^{-2})    
-    mnp = max(DailyBalance$DeepDrainage+DailyBalance$Runoff)    
+    mnp = max(WaterBalance$DeepDrainage+WaterBalance$Runoff)    
     if(is.null(ylim)) ylim = c(0,mnp)
-    plot(dates, DailyBalance$DeepDrainage+DailyBalance$Runoff, ylim=ylim, col="black", type="l", 
+    plot(dates, WaterBalance$DeepDrainage+WaterBalance$Runoff, ylim=ylim, col="black", type="l", 
          ylab=ylab, xlab=xlab, xlim=xlim,
          frame=FALSE, axes=FALSE)
-    lines(dates, DailyBalance$DeepDrainage, col="blue")
-    lines(dates, DailyBalance$Runoff, col="red")
+    lines(dates, WaterBalance$DeepDrainage, col="blue")
+    lines(dates, WaterBalance$Runoff, col="red")
     plotAxes()
     legend("topright", bty="n", col=c("black","blue","red"),lty=c(1,1,1), lwd=c(1.5,1,1),
            legend=c("DD+R","Deep drainage (DD)","Runoff (R)"))        

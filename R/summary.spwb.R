@@ -1,9 +1,9 @@
-summary.spwb<-function(object, freq="years", output="DailyBalance", FUN=sum, bySpecies = FALSE, ...){  
-  dates = as.Date(rownames(object$DailyBalance))
+summary.spwb<-function(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, ...){  
+  dates = as.Date(rownames(object$WaterBalance))
   ndaysTotal = length(dates)
   date.factor = cut(dates, breaks=freq)
-  if(output=="DailyBalance") OM = object$DailyBalance
-  else if(output=="SoilWaterBalance") OM = object$SoilWaterBalance
+  if(output=="WaterBalance") OM = object$WaterBalance
+  else if(output=="Soil") OM = object$Soil
   else if(output=="TemperatureBalance") OM = object$TemperatureBalance
   else if(output=="PlantLAI") {
     OM = object$PlantLAI
