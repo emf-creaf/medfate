@@ -1655,7 +1655,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
         Tsoil_max[i] = max(Tsoil);
         Tsoil_mean[i] = sum(Tsoil)/((double) ntimesteps);
       }
-      List db = s["DailyBalance"];
+      List db = s["WaterBalance"];
       Lground[i] = db["Lground"];
       LAIcell[i] = db["LAIcell"];
       LAIcelldead[i] = db["LAIcelldead"];
@@ -1668,21 +1668,20 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
       NetRain[i] = db["NetRain"];
       Interception[i] = Rain[i]-NetRain[i];
       
-      List sb = s["SoilBalance"];
-      NumericVector psi = sb["psiVec"];
+      List sb = s["Soil"];
+      NumericVector psi = sb["psi"];
       psidays(i,_) = psi;
-      NumericVector EplantVec = sb["EplantVec"];
-      Esoil[i] = sum(Rcpp::as<Rcpp::NumericVector>(sb["EsoilVec"]));
+      NumericVector EplantVec = sb["PlantExtraction"];
+      Esoil[i] = sum(Rcpp::as<Rcpp::NumericVector>(sb["SoilEvaporation"]));
       SWE[i] = soil["SWE"];
         
       List Plants = s["Plants"];
-      NumericVector EplantCoh = Plants["EplantCoh"];
+      NumericVector EplantCoh = Plants["Transpiration"];
       Eplantdays(i,_) = EplantVec;
       PlantPhotosynthesis(i,_) = Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
       PlantTranspiration(i,_) = EplantCoh;
       PlantStress(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["DDS"]);
-      PlantStorage(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["RWCs"]);
-      PlantPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["psiCoh"]);
+      PlantPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["psi"]);
       EplantCohTot = EplantCohTot + EplantCoh;
       Eplanttot[i] = sum(EplantCoh);
       
@@ -1725,14 +1724,13 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   
    Rcpp::DataFrame SWB = DataFrame::create(_["W"]=Wdays, _["ML"]=MLdays,_["MLTot"]=MLTot,
                                            _["WTD"] = WaterTable,
-                                           _["psi"]=psidays, _["SWE"] = SWE);
+                                           _["psi"]=psidays, _["SWE"] = SWE, _["PlantExt"]=Eplantdays);
    Rcpp::DataFrame DWB = DataFrame::create(_["GDD"] = GDD,
                                            _["LAIcell"]=LAIcell, _["LAIcelldead"] = LAIcelldead,  _["Cm"]=Cm, _["Lground"] = Lground, _["PET"]=PET, 
                                            _["Precipitation"] = Precipitation, _["Rain"] = Rain, _["Snow"] = Snow,
                                            _["NetRain"]=NetRain,_["Infiltration"]=Infiltration, _["Runoff"]=Runoff, _["DeepDrainage"]=DeepDrainage, 
-                                           _["Etot"]=Etot,_["Esoil"]=Esoil,
-                                           _["Eplanttot"]=Eplanttot,
-                                           _["Eplant"]=Eplantdays);
+                                           _["Evapotranspiration"]=Etot,_["SoilEvaporation"]=Esoil,
+                                           _["Transpiration"]=Eplanttot);
   
    SWB.attr("row.names") = meteo.attr("row.names") ;
    DWB.attr("row.names") = meteo.attr("row.names") ;
@@ -1762,8 +1760,8 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
     l = List::create(Named("control") = clone(control),
                      Named("cohorts") = clone(cohorts),
                      Named("NumSoilLayers") = nlayers,
-                     Named("DailyBalance")=DWB, 
-                     Named("SoilWaterBalance")=SWB,
+                     Named("WaterBalance")=DWB, 
+                     Named("Soil")=SWB,
                      Named("PlantLAI") = PlantLAI,
                      Named("PlantTranspiration") = PlantTranspiration,
                      Named("PlantPhotosynthesis") = PlantPhotosynthesis,
