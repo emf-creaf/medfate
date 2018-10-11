@@ -572,6 +572,7 @@ List E2psiNetwork(double E, NumericVector psiSoil,
  */
 // [[Rcpp::export("hydraulics.E2psiXylemCapacitance")]]
 List E2psiXylemCapacitance(double E, double psiRootCrown, 
+                           NumericVector psiStemPrev,
                            NumericVector PLC, NumericVector RWCstorage, 
                            double kxylemmax, double c, double d, 
                            double Vmax, double fapo, double pi0, double epsilon,
@@ -579,7 +580,7 @@ List E2psiXylemCapacitance(double E, double psiRootCrown,
                            bool refill = false,
                            double tstep = 3600, 
                            double psiStep = -0.0001, double psiMax = -10.0) {
-  int n = PLC.size();
+  int n = psiStemPrev.size();
   NumericVector newPLC(n, NA_REAL),newRWCstorage(n, NA_REAL), newPsiStem(n, NA_REAL);
   NumericVector Eout(n, NA_REAL),Flat(n, NA_REAL), Fver1(n, 0.0), Fver2(n, 0.0), V(n, NA_REAL);
   double kxsegmax = kxylemmax*((double) n);
@@ -612,29 +613,26 @@ List E2psiXylemCapacitance(double E, double psiRootCrown,
     newPsiStem[i] = E2psiXylem(Ein, psiUp, kxsegmax, c,d, psiPLC, psiStep, psiMax);
 
     //Lateral flow
-    Flat[i] =  klat*(psiStorage-newPsiStem[i]);
-    
+    Flat[i] =  klat*(psiStorage - 0.5*(newPsiStem[i] + psiStemPrev[i]));
+
     
     //Upwards symplastic flow
     if(i<(n-1)) {
       double psiStorageDown = symplasticWaterPotential(RWCstorage[i+1], pi0, epsilon);
       Fver2[i] = kstoseg*(psiStorage - psiStorageDown);
+    } else {
+      Fver2[i] = 0.0;
     }
     
     //Increase in flow due to new cavitation
     double Fabs = 0.0;
     Vprev = Vsegmax*fapo*(1.0-PLC[i]);
     double Vnew = Vsegmax*fapo*0.5*(apoplasticRelativeWaterContent(psiUp,c,d)+apoplasticRelativeWaterContent(newPsiStem[i],c,d));
-    if(refill) { // Allow refilling
-      V[i] = Vnew;      
-    } else { //Only allow decreases in volume (i.e. refilling cannot occur unless there is lateral flow)
-      V[i] = std::min(Vprev, Vnew); 
-    }
+    //Only allow decreases in volume (i.e. refilling cannot occur unless there is lateral flow)
+    V[i] = std::min(Vprev, Vnew); 
     Fabs = (m3tommol/tstep)*(V[i]-Vprev); //abs flow
-    
     Eout[i] = Ein - Fabs + Flat[i];
     
-
     //Update variables for next segment
     psiUp = newPsiStem[i];
     Ein = Eout[i];
@@ -669,7 +667,8 @@ List E2psiXylemCapacitance(double E, double psiRootCrown,
  * tstep - Time step (s)
  */
 // [[Rcpp::export("hydraulics.E2psiAboveground")]]
-List E2psiAboveGround(double E, double psiRootCrown,                           
+List E2psiAboveGround(double E, double psiRootCrown,       
+                      NumericVector psiStemPrev,
                       NumericVector PLCstem, NumericVector RWCsympstem, 
                       double psiLeaf, double RWCsympleaf,
                       double kstemmax, double stemc, double stemd,
@@ -682,6 +681,7 @@ List E2psiAboveGround(double E, double psiRootCrown,
                       double psiStep = -0.0001, double psiMax = -10.0) {
   
   List E2psiCap = E2psiXylemCapacitance(E, psiRootCrown, 
+                                        psiStemPrev,
                                         PLCstem, RWCsympstem, 
                                         kstemmax, stemc,  stemd, 
                                         Vsapwood, stemfapo, stempi0, stemeps,
@@ -702,7 +702,7 @@ List E2psiAboveGround(double E, double psiRootCrown,
   double Vapoleaffin = Vleaf*leaffapo*apoplasticRelativeWaterContent(newPsiLeaf, leafc, leafd);
   double m3tommol = 55555556.0;
   double Fabs = (m3tommol/tstep)*(Vapoleaffin-Vapoleafini);
-  double Flat = klat*(psiLeafSymp - newPsiLeaf);
+  double Flat = klat*(psiLeafSymp - 0.5*(psiLeaf+newPsiLeaf));
   double Efin  = Eout[n-1] - Fabs + Flat;
   double newRWCsympleaf = (Vleaf*(1.0-leaffapo)*RWCsympleaf - (tstep/m3tommol)*Flat)/(Vleaf*(1.0-leaffapo));
   // newRWCsympleaf = std::min(1.0, newRWCsympleaf);
@@ -755,8 +755,8 @@ List E2psiAboveGroundDisconnected(double E,
   double Vleafssub = Vapoleafini;
     
 
-  double Vstemini = sum(VStem) + Vsegmax*(1.0-stemfapo)*sum(RWCsympstem);
-  double Vleafini = Vapoleafini + Vleaf*(1.0-leaffapo)*RWCsympleaf;
+  // double Vstemini = sum(VStem) + Vsegmax*(1.0-stemfapo)*sum(RWCsympstem);
+  // double Vleafini = Vapoleafini + Vleaf*(1.0-leaffapo)*RWCsympleaf;
   
   double Esub = E/((double) nSubSteps);
   double Esubfin = Esub;
@@ -822,13 +822,14 @@ List E2psiAboveGroundDisconnected(double E,
       psiStorageStem[i] = symplasticWaterPotential(RWCsympstem[i], stempi0, stemeps);
     }
   }
-  double Vstemfin = sum(VStem) + Vsegmax*(1.0-stemfapo)*sum(RWCsympstem);
-  double Vleaffin = Vleafssub + Vleaf*(1.0-leaffapo)*RWCsympleaf;
+  // double Vstemfin = sum(VStem) + Vsegmax*(1.0-stemfapo)*sum(RWCsympstem);
+  // double Vleaffin = Vleafssub + Vleaf*(1.0-leaffapo)*RWCsympleaf;
   // Rcout<<Vstemini<<" "<<Vstemfin<<"\n";
   // Rcout<<Vleafini<<" "<<Vleaffin<<"\n";
   
   return(List::create( _["E"] = E,
                        _["Efin"] = Efin,
+                       _["newPsiStem"] = psiPLCStem,
                        _["newPsiLeaf"] = psiLeaf,
                        _["newPLCStem"] = PLCstem, 
                        _["newRWCsympStem"] = RWCsympstem,
@@ -1345,6 +1346,7 @@ List supplyFunctionNetwork(NumericVector psiSoil,
 
 // [[Rcpp::export("hydraulics.supplyFunctionAboveGround")]]
 List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootcrown, 
+                               NumericVector psiStemPrev,
                                NumericVector PLCstem, NumericVector RWCsympstem, 
                                double psiLeaf, double RWCsympleaf,
                                double kstemmax, double stemc, double stemd,
@@ -1370,6 +1372,7 @@ List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootcr
   int Nsteps = 0;
   for(int i=0;i<maxNsteps;i++) {
     List sol = E2psiAboveGround(Erootcrown[i], psiRootcrown[i],                           
+                                psiStemPrev,
                                 PLCstem, RWCsympstem, 
                                 psiLeaf, RWCsympleaf,
                                 kstemmax, stemc, stemd,
@@ -1382,11 +1385,9 @@ List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootcr
     NumericVector solNewPsiStem = sol["newPsiStem"];
     NumericVector solNewPLC = sol["newPLCstem"];
     NumericVector solNewRWCsympstem = sol["newRWCsympstem"];
-    for(int n=0;n<nnodes;n++) {
-      supplyPsiStem(i,n) = solNewPsiStem[n]; 
-      supplyPLCstem(i,n) = solNewPLC[n]; 
-      supplyRWCsympstem(i,n) = solNewRWCsympstem[n]; 
-    }
+    supplyPsiStem(i,_) = solNewPsiStem; 
+    supplyPLCstem(i,_) = solNewPLC; 
+    supplyRWCsympstem(i,_) = solNewRWCsympstem; 
     supplyRWCsympleaf[i] = sol["newRWCsympleaf"];
     supplyPsiLeaf[i] = sol["newPsiLeaf"];
     if(NumericVector::is_na(supplyPsiLeaf[i])) {
@@ -1409,6 +1410,7 @@ List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootcr
   //Calculate last dEdP
   if(Nsteps>1) supplydEdp[Nsteps-1] = (supplyE[Nsteps-1]-supplyE[Nsteps-2])/std::abs(supplyPsiLeaf[Nsteps-1]-supplyPsiLeaf[Nsteps-2]);
   
+  // Rcout<<Nsteps;
   //Copy values tp nsteps
   NumericVector supplyKtermDef(Nsteps);
   NumericVector supplyEDef(Nsteps);
@@ -1425,11 +1427,9 @@ List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootcr
     supplyKtermDef[i] = supplyKterm[i];
     supplyPsiLeafDef[i] = supplyPsiLeaf[i];
     supplyRWCsympleafDef[i]= supplyRWCsympleaf[i];
-    for(int n=0;n<nnodes;n++) {
-      supplyPsiStemDef(i,n) = supplyPsiStem(i,n); 
-      supplyPLCstemDef(i,n) = supplyPLCstem(i,n); 
-      supplyRWCsympstemDef(i,n) = supplyRWCsympstem(i,n); 
-    }
+    supplyPsiStemDef(i,_) = supplyPsiStem(i,_); 
+    supplyPLCstemDef(i,_) = supplyPLCstem(i,_); 
+    supplyRWCsympstemDef(i,_) = supplyRWCsympstem(i,_); 
   }
   
   return(List::create(Named("E") = supplyEDef,

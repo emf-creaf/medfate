@@ -37,7 +37,8 @@ List supplyFunctionNetwork(NumericVector psiSoil,
                            double kleafmax, double leafc, double leafd,                           
                            double psiCav = 0.0,
                            double minFlow = 0.0, int maxNsteps=200, double psiStep = -0.001, double psiMax = -10.0, int ntrial = 10, double psiTol = 0.0001, double ETol = 0.001);
-List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootcrown, 
+List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootcrown,
+                               NumericVector psiStemPrev,
                                NumericVector PLCstem, NumericVector RWCsympstem, 
                                double psiLeaf, double RWCsympleaf,
                                double kstemmax, double stemc, double stemd,
@@ -67,6 +68,7 @@ List E2psiNetwork(double E, NumericVector psiSoil,
                   double psiStep = -0.001, double psiMax = -10.0, int ntrial = 10, double psiTol = 0.0001, double ETol = 0.001);
 
 List E2psiAboveGround(double E, double psiRootCrown,                           
+                      NumericVector psiStemPrev,
                       NumericVector PLCstem, NumericVector RWCsympstem, 
                       double psiLeaf, double RWCsympleaf,
                       double kstemmax, double stemc, double stemd,

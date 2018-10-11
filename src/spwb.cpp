@@ -415,6 +415,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   //Comunication with outside
   NumericVector transpiration = Rcpp::as<Rcpp::NumericVector>(x["Transpiration"]);
   NumericVector photosynthesis = Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
+  NumericMatrix psiStemMAT = Rcpp::as<Rcpp::NumericMatrix>(x["psiStem"]);
   NumericMatrix PLCstemMAT = Rcpp::as<Rcpp::NumericMatrix>(x["PLCstem"]);
   NumericMatrix RWCsstemMAT = Rcpp::as<Rcpp::NumericMatrix>(x["RWCsympstem"]);
   NumericVector RWCsleafVEC = Rcpp::as<Rcpp::NumericVector>(x["RWCsympleaf"]);
@@ -719,6 +720,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
       
       NumericVector PLCvec = PLCstemMAT(c,_); //Get row
       NumericVector RWCsvec = RWCsstemMAT(c,_);
+      NumericVector psiStemvec = psiStemMAT(c,_);
       double psiLeaf = psiLeafVEC[c];
       double rwcsleaf = RWCsleafVEC[c];
         
@@ -728,7 +730,10 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
         NumericVector Erootcrown = sBelow["E"];
         NumericVector psiRootcrown = sBelow["PsiRoot"];
         NumericMatrix ElayersMat = sBelow["Elayers"];
+        // Rcout<<c<<" "<<psiLeaf<< " "<<psiStemvec[0]<< " "<<rwcsleaf<< " "<<RWCsvec[0]<<"\n";
+        
         supplyAbove = supplyFunctionAboveground(Erootcrown, psiRootcrown,
+                                                psiStemvec,
                                            PLCvec, RWCsvec,
                                            psiLeaf, rwcsleaf,
                                            VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
@@ -740,6 +745,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                                            psiStep, psiMax);
         NumericVector fittedE = supplyAbove["E"];
         NumericVector newPsiLeafVec = supplyAbove["PsiLeaf"];
+        NumericMatrix newPsiStem = supplyAbove["PsiStem"];
         NumericMatrix newPLCstem = supplyAbove["PLCstem"];
         NumericMatrix newRWCsympstem = supplyAbove["RWCsympstem"];
         NumericVector newRWCsympleaf = supplyAbove["RWCsympleaf"];
@@ -834,14 +840,11 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
           int nseg = newPLCstem.ncol();
           PLC(c,n) = 0.0;
           RWCssteminst(c,n) = 0.0;
-          for(int i=0;i<nseg;i++) {
-            PLCstemMAT(c,i) = newPLCstem(iPM,i);
-            RWCsstemMAT(c,i) = newRWCsympstem(iPM,i);
-            PLC(c,n) +=PLCstemMAT(c,i);
-            RWCssteminst(c,n) +=RWCsstemMAT(c,i);
-          }
-          PLC(c,n) = PLC(c,n)/((double)nseg);
-          RWCssteminst(c,n) = RWCssteminst(c,n)/((double)nseg);
+          PLCstemMAT(c,_) = newPLCstem(iPM,_);
+          RWCsstemMAT(c,_) = newRWCsympstem(iPM,_);
+          psiStemMAT(c,_) = newPsiStem(iPM,_);
+          PLC(c,n) = sum(newPLCstem(iPM,_))/((double)nseg);
+          RWCssteminst(c,n) = sum(newRWCsympstem(iPM,_))/((double)nseg);
           
           //Store the minimum water potential of the day (i.e. mid-day)
           minPsiLeaf[c] = std::min(minPsiLeaf[c],newPsiLeafVec[iPM]);
@@ -912,17 +915,18 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                                                 klat, ksymver[c],
                                                 tstep, 1000);
       
+         NumericVector newPsiStem = sAb["newPsiStem"];
          NumericVector newPLCStem = sAb["newPLCStem"];
          NumericVector newRWCsympStem = sAb["newRWCsympStem"];
          
          //Update symplastic storage and PLC
          psiLeafVEC[c] = sAb["newPsiLeaf"];
          RWCsleafVEC[c] = sAb["newRWCsympLeaf"];
-         //Estimate of psiRoot = first stem segment
-         double psiRoot = apoplasticWaterPotential(1.0 - newPLCStem[0], VCstem_c[c], VCstem_d[c]);
+         double psiRoot = newPsiStem[0];//Estimate of psiRoot = first stem segment
          int nseg = newPLCStem.size();
          PLC(c,n) = 0.0;
          RWCssteminst(c,n) = 0.0;
+         psiStemMAT(c,_) = newPsiStem;
          PLCstemMAT(c,_) = newPLCStem;
          RWCsstemMAT(c,_) = newRWCsympStem;
          PLC(c,n) = sum(newPLCStem)/((double)nseg);

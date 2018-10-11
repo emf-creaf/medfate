@@ -322,7 +322,7 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
       cohortnames = colnames(df)
     } 
     if(is.null(ylab)) ylab = expression(paste("Plant photosynthesis   ",(g*C%.%m^{-2})))
-    if(is.null(ylim)) ylim = c(min(df),max(df))
+    if(is.null(ylim)) ylim = c(min(df, na.rm=T),max(df, na.rm=T))
     matplot(dates, df, ylim = ylim, 
             lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", xlim=xlim,

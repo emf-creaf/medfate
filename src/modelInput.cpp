@@ -128,12 +128,15 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     input["Photosynthesis"] = pvec;
     input["PLC"] = NumericVector(numCohorts, 0.0);
   } else if(transpirationMode =="Complex"){
-    NumericMatrix smat =  NumericMatrix(numCohorts, numStemSegments);
-    std::fill(smat.begin(), smat.end(), 1.0);
-    smat.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numStemSegments));
-    NumericMatrix cmat =  NumericMatrix(numCohorts, numStemSegments);
-    std::fill(cmat.begin(), cmat.end(), 0.0);
-    cmat.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numStemSegments));
+    NumericMatrix RWCstemmat =  NumericMatrix(numCohorts, numStemSegments);
+    std::fill(RWCstemmat.begin(), RWCstemmat.end(), 1.0);
+    RWCstemmat.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numStemSegments));
+    NumericMatrix PLCmat =  NumericMatrix(numCohorts, numStemSegments);
+    std::fill(PLCmat.begin(), PLCmat.end(), 0.0);
+    PLCmat.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numStemSegments));
+    NumericMatrix psiStemmat =  NumericMatrix(numCohorts, numStemSegments);
+    std::fill(psiStemmat.begin(), psiStemmat.end(), 0.0);
+    psiStemmat.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numStemSegments));
     NumericVector psiLeaf = NumericVector(numCohorts, 0.0);
     psiLeaf.attr("names") = above.attr("row.names");
     NumericVector rwcsleaf = NumericVector(numCohorts, 1.0);
@@ -251,9 +254,9 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
       //Initialize levels of cavitation (to avoid initial water release)
       double E = VCstem_kmax[c];
       double psiUp = 0.0, psiDown = 0.0;
-      for(int i=0;i<cmat.ncol();i++) {
-        psiDown = E2psiXylem(E,psiUp, (VCstem_kmax[c]*((double) cmat.ncol())), VCstem_c[c], VCstem_d[c]);
-        cmat(c,i) = 1.0 - xylemConductance(psiDown, 1.0, VCstem_c[c], VCstem_d[c]); 
+      for(int i=0;i<PLCmat.ncol();i++) {
+        psiDown = E2psiXylem(E,psiUp, (VCstem_kmax[c]*((double) PLCmat.ncol())), VCstem_c[c], VCstem_d[c]);
+        PLCmat(c,i) = 1.0 - xylemConductance(psiDown, 1.0, VCstem_c[c], VCstem_d[c]); 
         psiUp = psiDown;
       }
       // psiDown = E2psiXylem(E,psiUp, VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c]);
@@ -319,9 +322,10 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     NumericVector pvec =  NumericVector(numCohorts, 0.0);
     pvec.attr("names") = above.attr("row.names");
     input["Photosynthesis"] = pvec;
-    input["PLCstem"] = cmat;
-    input["RWCsympstem"] = smat;
+    input["PLCstem"] = PLCmat;
+    input["RWCsympstem"] = RWCstemmat;
     input["RWCsympleaf"] = rwcsleaf;
+    input["psiStem"] = psiStemmat;
     input["psiLeaf"] = psiLeaf;
   }
 

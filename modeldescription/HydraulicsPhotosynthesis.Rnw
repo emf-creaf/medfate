@@ -1043,6 +1043,7 @@ Vsapwood1 = 0.0001
 Vsapwood2 = 0.0005
 Vsapwood3 = 0.001 
 nseg = 5
+psiStem = rep(0,nseg)
 PLCstem = rep(0, nseg)
 leaffapo = 0.15
 stemfapo = 0.8
@@ -1063,6 +1064,7 @@ ksto = 0.0
 par(mar=c(4,4,2,1))
 psiMax = -7.0
 supplyAG11 = hydraulics.supplyFunctionAboveGround(supplyRS11$E, supplyRS11$PsiRoot,
+                                                  psiStem,
                                                   PLCstem, RWCstorage,
                                                   0.0, 1.0,
                                                   kstemmax, stemc, stemd,
@@ -1071,6 +1073,7 @@ supplyAG11 = hydraulics.supplyFunctionAboveGround(supplyRS11$E, supplyRS11$PsiRo
                                                   Vleaf, leaffapo, leafpi0, leafeps,
                                                   klat, ksto, F, tstep, psiStep = -0.0001)
 supplyAG12 = hydraulics.supplyFunctionAboveGround(supplyRS11$E, supplyRS11$PsiRoot,
+                                                  psiStem,
                                                   PLCstem, RWCstorage,
                                                   0.0, 1.0,
                                                   kstemmax, stemc, stemd,
@@ -1079,6 +1082,7 @@ supplyAG12 = hydraulics.supplyFunctionAboveGround(supplyRS11$E, supplyRS11$PsiRo
                                                   Vleaf, leaffapo, leafpi0, leafeps,
                                                   klat, ksto, F, tstep, psiStep = -0.0001)
 supplyAG13 = hydraulics.supplyFunctionAboveGround(supplyRS11$E, supplyRS11$PsiRoot,
+                                                  psiStem,
                                                   PLCstem, RWCstorage,
                                                   0.0, 1.0,
                                                   kstemmax, stemc, stemd,
