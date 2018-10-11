@@ -8,7 +8,7 @@ plot.spwb.day<-function(x, type="PlantTranspiration", bySpecies = FALSE, xlab = 
             "PlantTranspiration","PlantPhotosynthesis","PlantAbsorbedSWR",
             "LeafTranspiration","LeafPhotosynthesis", "LeafAbsorbedSWR",
             "LeafVPD","LeafStomatalConductance", "LeafTemperature",
-            "Temperature","CanopyEnergyBalance", "SoilEnergyBalance")
+            "Temperature","CanopyEnergyBalance", "SoilEnergyBalance", "PlantWaterBalance")
   type = match.arg(type,TYPES)  
   cohortnames = row.names(x$cohorts)
   timesteps = as.numeric(colnames(x$PlantsInst$PsiLeaf))
@@ -83,6 +83,21 @@ plot.spwb.day<-function(x, type="PlantTranspiration", bySpecies = FALSE, xlab = 
       cohortnames = rownames(OM)
     } 
     if(is.null(ylab)) ylab = "Leaf symplasm relative water content (%)"
+    matplot(timesteps, t(OM), lty=1:length(cohortnames), col = 1:length(cohortnames),
+            lwd=1, type="l", ylab=ylab, xlab=xlab, frame=FALSE, ...)
+    legend("bottomright", legend = cohortnames, lty=1:length(cohortnames), 
+           col = 1:length(cohortnames), bty="n")
+  }
+  else if(type=="PlantWaterBalance") {
+    OM = PlantsInst$PWB
+    if(bySpecies) {
+      lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
+      OMlai = sweep(OM, 1, Plants$LAI, "*")
+      m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM = sweep(m1,1,lai1,"/")
+      cohortnames = rownames(OM)
+    } 
+    if(is.null(ylab)) ylab =  expression(paste("Extraction - transpiration (",L%.%m^{-2},")"))
     matplot(timesteps, t(OM), lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", ylab=ylab, xlab=xlab, frame=FALSE, ...)
     legend("bottomright", legend = cohortnames, lty=1:length(cohortnames), 

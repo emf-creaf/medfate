@@ -2637,17 +2637,18 @@ BEGIN_RCPP
 END_RCPP
 }
 // profitMaximization
-List profitMaximization(List supplyFunction, List photosynthesisFunction, int type, double Gwmax, double kleafmax);
-RcppExport SEXP _medfate_profitMaximization(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP, SEXP typeSEXP, SEXP GwmaxSEXP, SEXP kleafmaxSEXP) {
+List profitMaximization(List supplyFunction, List photosynthesisFunction, int type, double Gwmin, double Gwmax, double kleafmax);
+RcppExport SEXP _medfate_profitMaximization(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP, SEXP typeSEXP, SEXP GwminSEXP, SEXP GwmaxSEXP, SEXP kleafmaxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type supplyFunction(supplyFunctionSEXP);
     Rcpp::traits::input_parameter< List >::type photosynthesisFunction(photosynthesisFunctionSEXP);
     Rcpp::traits::input_parameter< int >::type type(typeSEXP);
+    Rcpp::traits::input_parameter< double >::type Gwmin(GwminSEXP);
     Rcpp::traits::input_parameter< double >::type Gwmax(GwmaxSEXP);
     Rcpp::traits::input_parameter< double >::type kleafmax(kleafmaxSEXP);
-    rcpp_result_gen = Rcpp::wrap(profitMaximization(supplyFunction, photosynthesisFunction, type, Gwmax, kleafmax));
+    rcpp_result_gen = Rcpp::wrap(profitMaximization(supplyFunction, photosynthesisFunction, type, Gwmin, Gwmax, kleafmax));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2919,7 +2920,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_branchRelativeWaterContent", (DL_FUNC) &_medfate_branchRelativeWaterContent, 5},
     {"_medfate_stemRelativeWaterContent", (DL_FUNC) &_medfate_stemRelativeWaterContent, 6},
     {"_medfate_fineFuelRelativeWaterContent", (DL_FUNC) &_medfate_fineFuelRelativeWaterContent, 8},
-    {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 5},
+    {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 6},
     {"_medfate_stomatalRegulation", (DL_FUNC) &_medfate_stomatalRegulation, 6},
     {"_medfate_windSpeedAtCanopyHeight", (DL_FUNC) &_medfate_windSpeedAtCanopyHeight, 2},
     {"_medfate_unshelteredMidflameWindSpeed", (DL_FUNC) &_medfate_unshelteredMidflameWindSpeed, 2},

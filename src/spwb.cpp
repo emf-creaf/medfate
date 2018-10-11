@@ -637,6 +637,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   NumericMatrix RWCsleafinst(numCohorts, ntimesteps);
   NumericMatrix RWCssteminst(numCohorts, ntimesteps);
   NumericMatrix PsiRootinst(numCohorts, ntimesteps);
+  NumericMatrix PWBinst(numCohorts, ntimesteps);
   NumericMatrix SWR_SL(numCohorts, ntimesteps);
   NumericMatrix SWR_SH(numCohorts, ntimesteps);
   NumericMatrix LWR_SL(numCohorts, ntimesteps);
@@ -770,8 +771,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
           NumericVector TempShade = photoShade["LeafTemperature"];
           
           //Profit maximization
-          List PMSunlit = profitMaximization(supplyAbove, photoSunlit,  hydraulicCostFunction, Gwmax[c], VCstem_kmax[c]);
-          List PMShade = profitMaximization(supplyAbove, photoShade,  hydraulicCostFunction, Gwmax[c], VCstem_kmax[c]);
+          List PMSunlit = profitMaximization(supplyAbove, photoSunlit,  hydraulicCostFunction, Gwmin[c], Gwmax[c], VCstem_kmax[c]);
+          List PMShade = profitMaximization(supplyAbove, photoShade,  hydraulicCostFunction, Gwmin[c],Gwmax[c], VCstem_kmax[c]);
           int iPMSunlit = PMSunlit["iMaxProfit"];
           int iPMShade = PMShade["iMaxProfit"];
           
@@ -792,6 +793,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
           //Average rootcrown flow corresponding to sunlit and shade leaves
           double Ercaverage = (Erootcrown[iPMSunlit]*LAI_SL(c,n) + Erootcrown[iPMShade]*LAI_SH(c,n))/(LAI_SL(c,n) + LAI_SH(c,n));
           
+          
           //Find iPM for root flow corresponding to the root crown average flow
           double absDiff = 9999.9;
           int iPM = -1;
@@ -803,18 +805,27 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
             }
           }
           
+            
+          
+          //Scale from instantaneous flow to water volume in the time step
+          Einst(c,n) = Eaverage*0.001*0.01802*LAIphe[c]*tstep; 
           //Scale water extracted from soil to cohort level
           NumericVector Esoilcn(nlayerscon[c],0.0);
-          Einst(c,n) = Eaverage*0.001*0.01802*LAIphe[c]*tstep; //Scale from instantaneous flow to water volume in the time step
           for(int lc=0;lc<nlayerscon[c];lc++) {
             Esoilcn[lc] = ElayersMat(iPM,lc)*0.001*0.01802*LAIphe[c]*tstep; //Scale from flow to water volume in the time step
           }
           
+          //Balance between extraction and 
+          PWBinst(c,n) = sum(Esoilcn) - Einst(c,n);
           
           //Add to daily plant cohort transpiration
           Eplant[c] +=Einst(c,n);
           
-          if(verbose & (c==0)) Rcout<<c<<" " <<n<<" E rc size "<< Erootcrown.size()<< " E size"<< fittedE.size()<<" iPMSunlit"<<iPMSunlit<<"iPMShade"<<iPMShade<<"iPM"<<iPM<< "RWCleafini" << RWCsleafVEC[c] << " PsiLeafini"<< psiLeafVEC[c]<< " PsiLeaffin"<<newPsiLeafVec[iPM]<<" new PLC "<< newPLCstem(iPM,0)<<"\n";
+          // if(verbose) {
+          //   Rcout<<c<<" " <<n<<" E rc size "<< Erootcrown.size()<< " E size"<< fittedE.size()<<" iPMSunlit"<<iPMSunlit<<"iPMShade"<<iPMShade<<"iPM"<<iPM;
+          //   Rcout<< "RWCleafini"<< RWCsleafVEC[c] << " PsiLeafini"<<psiLeafVEC[c]<< " PsiLeaffin";
+          //   Rcout<<newPsiLeafVec[iPM]<<" new PLC "<< newPLCstem(iPM,0)<< " Einst" << Einst(c,n)<<"\n";
+          // }
           
           //Update symplastic storage and PLC
           psiLeafVEC[c] = newPsiLeafVec[iPM];
@@ -1047,6 +1058,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   PLC.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   RWCsleafinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   RWCssteminst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  PWBinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   List PlantsInst = List::create(
                                  _["LAIsunlit"] = LAI_SL, _["LAIshade"] = LAI_SH, 
                                  _["AbsRad"] = AbsRadinst, _["E"]=Einst, _["An"]=Aninst,
@@ -1056,7 +1068,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                                  _["PsiRoot"] = PsiRootinst, _["PsiLeaf"] = PsiPlantinst, 
                                  _["PLCstem"] = PLC, 
                                  _["RWCstem"] = RWCssteminst,
-                                 _["RWCleaf"] = RWCsleafinst);
+                                 _["RWCleaf"] = RWCsleafinst,
+                                 _["PWB"] = PWBinst);
   DataFrame Plants = DataFrame::create(_["LAI"] = LAIcohort,
                              _["Extraction"] = SoilExtractCoh,
                              _["Transpiration"] = Eplant, 

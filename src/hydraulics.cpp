@@ -167,10 +167,11 @@ double gammds ( double x, double p)
 
 // [[Rcpp::export("hydraulics.xylemConductance")]]
 double xylemConductance(double psi, double kxylemmax, double c, double d) {
-  if(psi>0.0) {
-    Rcout<< psi<<"\n";
-    stop("psi has to be negative"); 
-  } else if(psi==0.0) return(kxylemmax);
+  // if(psi>0.0) {
+  //   Rcout<< psi<<"\n";
+  //   stop("psi has to be negative"); 
+  // } else 
+  if(psi>=0.0) return(kxylemmax);
   return(kxylemmax*exp(-pow(psi/d,c)));
 }
 
@@ -259,18 +260,21 @@ double Ecrit(double psiUpstream, double kxylemmax, double c, double d) {
 
 
 
-
+/*
+ * Calculates drop in water potential along a segment with a given flow
+ */
 // [[Rcpp::export("hydraulics.E2psiXylem")]]
 double E2psiXylem(double E, double psiUpstream, double kxylemmax, double c, double d, double psiCav = 0.0, 
                    double psiStep = -0.01, double psiMax = -10.0) {
-  if(E<0.0) stop("E has to be positive");
+  // if(E<0.0) stop("E has to be positive");
   if(E==0) return(psiUpstream);
   double psi = psiUpstream;
   double k = xylemConductance(std::min(psi, psiCav),kxylemmax, c, d);
   double Eg = 0.0;
   double psiPrev = psi;
   double kprev = k;
-  while(Eg<E) {
+  if(E<0.0) psiStep = -psiStep;
+  while(std::abs(Eg)<std::abs(E)) {
     psiPrev = psi;
     kprev = k;
     psi = psi + psiStep;
@@ -600,7 +604,7 @@ List E2psiXylemCapacitance(double E, double psiRootCrown,
     
     if(i==0) {
       if(Ein<Fver1[i]) Fver1[i] = Ein; //Do not substract more than input flow
-      Ein = std::max(0.0, Ein - Fver1[i]); //Substract or add flow from/to root input
+      Ein = Ein - Fver1[i]; //Substract or add flow from/to root input
       Einc = Ein;
     }
     
@@ -618,6 +622,7 @@ List E2psiXylemCapacitance(double E, double psiRootCrown,
     }
     
     //Increase in flow due to new cavitation
+    double Fabs = 0.0;
     Vprev = Vsegmax*fapo*(1.0-PLC[i]);
     double Vnew = Vsegmax*fapo*0.5*(exp(-pow(psiUp/d,c))+exp(-pow(newPsiStem[i]/d,c)));
     if(refill) { // Allow refilling
@@ -625,15 +630,11 @@ List E2psiXylemCapacitance(double E, double psiRootCrown,
     } else { //Only allow decreases in volume (i.e. refilling cannot occur unless there is lateral flow)
       V[i] = std::min(Vprev, Vnew); 
     }
-    double Fabs = (m3tommol/tstep)*(V[i]-Vprev); //abs flow
-    //Avoid negative output flows
-    Eout[i] = std::max(0.0, Ein - Fabs + Flat[i]);
+    Fabs = (m3tommol/tstep)*(V[i]-Vprev); //abs flow
     
-    // if(i==(n-1)) {
-    //   if(Fver2[i]>Eout[i]) Fver2[i] = Eout[i]; 
-    //   Eout[i] = std::max(0.0, Eout[i] - Fver2[i]);
-    // }
+    Eout[i] = Ein - Fabs + Flat[i];
     
+
     //Update variables for next segment
     psiUp = newPsiStem[i];
     Ein = Eout[i];
@@ -641,13 +642,6 @@ List E2psiXylemCapacitance(double E, double psiRootCrown,
   }
   //Update compartments
   for(int i=0;i<n;i++) {
-    //Apoplastic compartment
-    // V[i] = V[i] + (tstep/m3tommol)*Flat[i];
-    // if(V[i]>Vsegmax*fapo) { //Correct if flow is too high
-    //   double Vdif = Vsegmax*fapo - V[i];
-    //   V[i] = Vsegmax*fapo;
-    //   Flat[i] = Flat[i]-(Vdif*(m3tommol/tstep));
-    // }
     newPLC[i] = 1.0- (V[i]/(Vsegmax*fapo));
     //Symplastic compartment
     newRWCstorage[i] = (Vsegmax*(1.0-fapo)*RWCstorage[i] + (tstep/m3tommol)*(Fver1[i] - Fver2[i] - Flat[i]))/(Vsegmax*(1.0-fapo));
@@ -775,7 +769,7 @@ List E2psiAboveGround(double E, double psiRootCrown,
   double m3tommol = 55555556.0;
   double Fabs = (m3tommol/tstep)*(Vapoleaffin-Vapoleafini);
   double Flat = klat*(psiLeafSymp - newPsiLeaf);
-  double Efin  = std::max(0.0, Eout[n-1] - Fabs + Flat);
+  double Efin  = Eout[n-1] - Fabs + Flat;
   double newRWCsympleaf = (Vleaf*(1.0-leaffapo)*RWCsympleaf - (tstep/m3tommol)*Flat)/(Vleaf*(1.0-leaffapo));
   // newRWCsympleaf = std::min(1.0, newRWCsympleaf);
   double kterm = xylemConductance(newPsiLeaf, kleafmax, leafc, leafd);

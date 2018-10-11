@@ -689,8 +689,8 @@ moisture.fineFuelRWC <- function(psi, leaf_pi0, leaf_eps, leaf_af, wd, c, d, r63
     .Call('_medfate_fineFuelRelativeWaterContent', PACKAGE = 'medfate', psi, leaf_pi0, leaf_eps, leaf_af, wd, c, d, r635)
 }
 
-transp.profitMaximization <- function(supplyFunction, photosynthesisFunction, type, Gwmax, kleafmax = NA_real_) {
-    .Call('_medfate_profitMaximization', PACKAGE = 'medfate', supplyFunction, photosynthesisFunction, type, Gwmax, kleafmax)
+transp.profitMaximization <- function(supplyFunction, photosynthesisFunction, type, Gwmin, Gwmax, kleafmax = NA_real_) {
+    .Call('_medfate_profitMaximization', PACKAGE = 'medfate', supplyFunction, photosynthesisFunction, type, Gwmin, Gwmax, kleafmax)
 }
 
 transp.stomatalRegulation <- function(x, soil, meteo, day, latitude, elevation) {

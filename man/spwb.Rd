@@ -129,12 +129,12 @@ S1<-spwb(x1, examplesoil, examplemeteo, elevation = 100)
 plot(S1)
 
 #Monthly summary (averages) of soil water balance
-summary(S1, freq="months",FUN=mean, output="SoilWaterBalance")
+summary(S1, freq="months",FUN=mean, output="Soil")
 
 
 
-#Initialize soil with default soil params (2 layers)
-examplesoil2 = soil(defaultSoilParams(2))
+#Initialize soil with default soil params (4 layers)
+examplesoil2 = soil(defaultSoilParams(4))
 
 #Switch to 'Complex' transpiration mode
 control$transpirationMode="Complex"

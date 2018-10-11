@@ -21,6 +21,7 @@ Function \code{plot} plots the results of the soil water balance model for one d
     \item{\code{"LeafRWC"}:}{Relative water content in the leaf symplasm.}
     \item{\code{"PlantTranspiration"}:}{ Plant cohort transpiration per ground area.}
     \item{\code{"LeafTranspiration"}:}{ Plant cohort transpiration per leaf area.}
+    \item{\code{"PlantWaterBalance"}:}{ Difference between water extraction from the soil and transpired water per ground area.}
     \item{\code{"PlantPhotosynthesis"}:}{ Plant cohort net photosynthesis per ground area.}
     \item{\code{"LeafPhotosynthesis"}:}{Net photosynthesis per leaf area.}
     \item{\code{"PlantAbsorbedSWR"}:}{Cohort's absorbed short wave radiation per ground area  (differentiates sunlit and shade leaves).}
