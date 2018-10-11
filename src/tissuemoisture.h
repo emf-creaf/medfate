@@ -7,7 +7,8 @@ using namespace Rcpp;
 
 double symplasticRelativeWaterContent(double psi, double pi0, double epsilon);
 double symplasticWaterPotential(double RWC, double pi0, double epsilon);
-double apoplasticRelativeWaterContent(double psi, double c, double d, double cellWallFraction = 0.07);
+double apoplasticRelativeWaterContent(double psi, double c, double d);
+double apoplasticWaterPotential(double RWC, double c, double d);
 double leafRelativeWaterContent(double psi, double pi0, double epsilon, double rwc_res);
 double branchRelativeWaterContent(double psi, double wd, double c, double d, double af = 0.80);
 double stemRelativeWaterContent(double psi, double pi0, double epsilon, double c, double d, double af);

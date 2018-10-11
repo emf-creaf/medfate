@@ -47,11 +47,15 @@ double symplasticWaterPotential(double RWC, double pi0, double epsilon) {
  *  Returns Apoplastic RWC as proportion of maximum hydration 
  */
 // [[Rcpp::export("moisture.apoplasticRWC")]]
-double apoplasticRelativeWaterContent(double psi, double c, double d, double cellWallFraction = 0.07) {
+double apoplasticRelativeWaterContent(double psi, double c, double d) {
   if(psi>=0.0) return(1.0);
-  return(cellWallFraction+(exp(-pow(psi/d,c))*(1.0 - cellWallFraction)));
+  return(exp(-pow(psi/d,c)));
 }
 
+// [[Rcpp::export("moisture.apoplasticPsi")]]
+double apoplasticWaterPotential(double RWC, double c, double d) {
+  return(d*pow(-1.0*log(RWC),1.0/c));
+}
 /**
  * Calculates leaf relative water content from leaf water potential
  * 

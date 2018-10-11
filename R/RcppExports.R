@@ -341,12 +341,12 @@ hydraulics.E2psiXylemCapacitance <- function(E, psiRootCrown, PLC, RWCstorage, k
     .Call('_medfate_E2psiXylemCapacitance', PACKAGE = 'medfate', E, psiRootCrown, PLC, RWCstorage, kxylemmax, c, d, Vmax, fapo, pi0, epsilon, klat, ksto, refill, tstep, psiStep, psiMax)
 }
 
-hydraulics.E2psiXylemCapacitanceDisconnected <- function(E, psiLeaf, PLC, RWCstorage, kleafmax, kxylemmax, c, d, Vmax, fapo, pi0, epsilon, klat, ksto, tstep = 3600) {
-    .Call('_medfate_E2psiXylemCapacitanceDisconnected', PACKAGE = 'medfate', E, psiLeaf, PLC, RWCstorage, kleafmax, kxylemmax, c, d, Vmax, fapo, pi0, epsilon, klat, ksto, tstep)
+hydraulics.E2psiAboveground <- function(E, psiRootCrown, PLCstem, RWCsympstem, psiLeaf, RWCsympleaf, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, klat, ksto, refill = FALSE, tstep = 3600.0, psiStep = -0.0001, psiMax = -10.0) {
+    .Call('_medfate_E2psiAboveGround', PACKAGE = 'medfate', E, psiRootCrown, PLCstem, RWCsympstem, psiLeaf, RWCsympleaf, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, klat, ksto, refill, tstep, psiStep, psiMax)
 }
 
-hydraulics.E2psiAboveground <- function(E, psiRootCrown, PLCstem, RWCsympstem, psiLeaf, RWCsympleaf, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, klat, ksto, refill = FALSE, tstep = 3600, psiStep = -0.0001, psiMax = -10.0) {
-    .Call('_medfate_E2psiAboveGround', PACKAGE = 'medfate', E, psiRootCrown, PLCstem, RWCsympstem, psiLeaf, RWCsympleaf, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, klat, ksto, refill, tstep, psiStep, psiMax)
+hydraulics.E2psiAbovegroundDisconnected <- function(E, PLCstem, RWCsympstem, psiLeaf, RWCsympleaf, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, klat, ksto, tstep = 3600.0, nSubSteps = 1000L) {
+    .Call('_medfate_E2psiAboveGroundDisconnected', PACKAGE = 'medfate', E, PLCstem, RWCsympstem, psiLeaf, RWCsympleaf, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, klat, ksto, tstep, nSubSteps)
 }
 
 hydraulics.supplyFunctionOneXylem <- function(psiSoil, v, kstemmax, stemc, stemd, psiCav = 0.0, maxNsteps = 200L, psiStep = -0.001, psiMax = -10.0, dE = 0.01) {
@@ -369,7 +369,7 @@ hydraulics.supplyFunctionNetwork <- function(psiSoil, krhizomax, nsoil, alphasoi
     .Call('_medfate_supplyFunctionNetwork', PACKAGE = 'medfate', psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiCav, minFlow, maxNsteps, psiStep, psiMax, ntrial, psiTol, ETol)
 }
 
-hydraulics.supplyFunctionAboveGround <- function(Erootcrown, psiRootcrown, PLCstem, RWCsympstem, psiLeaf, RWCsympleaf, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, klat, ksto, refill = FALSE, tstep = 3600, psiStep = -0.0001, psiMax = -10.0) {
+hydraulics.supplyFunctionAboveGround <- function(Erootcrown, psiRootcrown, PLCstem, RWCsympstem, psiLeaf, RWCsympleaf, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, klat, ksto, refill = FALSE, tstep = 3600.0, psiStep = -0.0001, psiMax = -10.0) {
     .Call('_medfate_supplyFunctionAboveground', PACKAGE = 'medfate', Erootcrown, psiRootcrown, PLCstem, RWCsympstem, psiLeaf, RWCsympleaf, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, klat, ksto, refill, tstep, psiStep, psiMax)
 }
 
@@ -669,8 +669,12 @@ moisture.symplasticPsi <- function(RWC, pi0, epsilon) {
     .Call('_medfate_symplasticWaterPotential', PACKAGE = 'medfate', RWC, pi0, epsilon)
 }
 
-moisture.apoplasticRWC <- function(psi, c, d, cellWallFraction = 0.07) {
-    .Call('_medfate_apoplasticRelativeWaterContent', PACKAGE = 'medfate', psi, c, d, cellWallFraction)
+moisture.apoplasticRWC <- function(psi, c, d) {
+    .Call('_medfate_apoplasticRelativeWaterContent', PACKAGE = 'medfate', psi, c, d)
+}
+
+moisture.apoplasticPsi <- function(RWC, c, d) {
+    .Call('_medfate_apoplasticWaterPotential', PACKAGE = 'medfate', RWC, c, d)
 }
 
 moisture.leafRWC <- function(psi, pi0, epsilon, af) {

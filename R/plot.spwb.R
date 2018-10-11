@@ -85,7 +85,7 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
   else if(type=="PlantWaterBalance") {
     pwb = WaterBalance$PlantExtraction - WaterBalance$Transpiration
     if(is.null(ylab)) ylab = expression(paste("Extraction - transpiration (",L%.%m^{-2},")"))
-    if(is.null(ylim)) ylim = c(min(pwb),max(pwb))
+    if(is.null(ylim)) ylim = c(min(pwb,na.rm=T),max(pwb,na.rm=T))
     plot(dates, pwb, ylim=ylim, type="l", ylab=ylab, 
          xlab=xlab, xlim=xlim,frame=FALSE, col="black", axes=FALSE, lwd=2)
     plotAxes()
