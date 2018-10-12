@@ -781,7 +781,7 @@ List E2psiAboveGround(double E, double psiRootCrown,
   }
     // newRWCsympleaf = std::min(1.0, newRWCsympleaf);
   double kterm = xylemConductance(psiLeaf, kleafmax, leafc, leafd);
-  return(List::create( _["E"] = Efin/((double)nSubSteps),
+  return(List::create( _["E"] = E,//Efin/((double)nSubSteps),
                        _["newPsiLeaf"] = psiLeaf,
                        _["newPsiStem"] = psiStem, 
                        _["newPLCstem"] = PLCstem, 

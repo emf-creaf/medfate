@@ -734,7 +734,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
         NumericVector Erootcrown = sBelow["E"];
         NumericVector psiRoot = sBelow["PsiRoot"];
         NumericMatrix ElayersMat = sBelow["Elayers"];
-        // Rcout<<c<<" "<<psiLeaf<< " "<<psiStemvec[0]<< " "<<rwcsleaf<< " "<<RWCsvec[0]<<"\n";
+        // Rcout<<c<<" E "<<EinstPrev<<" PR "<< psiRootPrev<<" PL "<<psiLeafPrev<< " PS "<<psiStemPrev[0]<< " "<<rwcsleafPrev<< " "<<RWCStemPrev[0]<<"\n";
         
         supplyAbove = supplyFunctionAboveground(Erootcrown, psiRoot,
                                                 EinstPrev, psiRootPrev, 
@@ -800,15 +800,13 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
           
           //Average flow from sunlit and shade leaves
           double Eaverage = (fittedE[iPMSunlit]*LAI_SL(c,n) + fittedE[iPMShade]*LAI_SH(c,n))/(LAI_SL(c,n) + LAI_SH(c,n));
-          //Average rootcrown flow corresponding to sunlit and shade leaves
-          double Ercaverage = (Erootcrown[iPMSunlit]*LAI_SL(c,n) + Erootcrown[iPMShade]*LAI_SH(c,n))/(LAI_SL(c,n) + LAI_SH(c,n));
-          
+
           
           //Find iPM for root flow corresponding to the root crown average flow
           double absDiff = 9999.9;
           int iPM = -1;
           for(int k=0;k<fittedE.size();k++){ //Only check up to the size of fittedE
-            double adk = std::abs(Erootcrown[k]-Ercaverage);
+            double adk = std::abs(fittedE[k]-Eaverage);
             if(adk<absDiff) {
               absDiff = adk;
               iPM = k;
@@ -841,7 +839,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
           psiRootVEC[c] = psiRoot[iPM]; 
           psiLeafVEC[c] = newPsiLeaf[iPM];
           RWCsleafVEC[c] = newRWCsympleaf[iPM];
-          EinstVEC[c] = Eaverage;
+          EinstVEC[c] = fittedE[iPM];
           int nseg = newPLCstem.ncol();
           PLC(c,n) = 0.0;
           RWCssteminst(c,n) = 0.0;
