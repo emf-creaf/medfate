@@ -137,6 +137,10 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     NumericMatrix psiStemmat =  NumericMatrix(numCohorts, numStemSegments);
     std::fill(psiStemmat.begin(), psiStemmat.end(), 0.0);
     psiStemmat.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numStemSegments));
+    NumericVector Einst = NumericVector(numCohorts, 0.0);
+    Einst.attr("names") = above.attr("row.names");
+    NumericVector psiRoot = NumericVector(numCohorts, 0.0);
+    psiRoot.attr("names") = above.attr("row.names");
     NumericVector psiLeaf = NumericVector(numCohorts, 0.0);
     psiLeaf.attr("names") = above.attr("row.names");
     NumericVector rwcsleaf = NumericVector(numCohorts, 1.0);
@@ -252,16 +256,16 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
       }
       
       //Initialize levels of cavitation (to avoid initial water release)
-      double E = VCstem_kmax[c];
-      double psiUp = 0.0, psiDown = 0.0;
-      for(int i=0;i<PLCmat.ncol();i++) {
-        psiDown = E2psiXylem(E,psiUp, (VCstem_kmax[c]*((double) PLCmat.ncol())), VCstem_c[c], VCstem_d[c]);
-        PLCmat(c,i) = 1.0 - xylemConductance(psiDown, 1.0, VCstem_c[c], VCstem_d[c]); 
-        psiUp = psiDown;
-      }
-      // psiDown = E2psiXylem(E,psiUp, VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c]);
-      // psiLeaf[c] = psiDown;
-      Rcout<<"\n";
+      // double E = VCstem_kmax[c];
+      // double psiUp = 0.0, psiDown = 0.0;
+      // for(int i=0;i<PLCmat.ncol();i++) {
+      //   psiDown = E2psiXylem(E,psiUp, (VCstem_kmax[c]*((double) PLCmat.ncol())), VCstem_c[c], VCstem_d[c]);
+      //   PLCmat(c,i) = 1.0 - xylemConductance(psiDown, 1.0, VCstem_c[c], VCstem_d[c]); 
+      //   psiUp = psiDown;
+      // }
+      // // psiDown = E2psiXylem(E,psiUp, VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c]);
+      // // psiLeaf[c] = psiDown;
+      // Rcout<<"\n";
     }
     VGrhizo_kmax.attr("dimnames") = List::create(above.attr("row.names"), slnames);
     VCroot_kmax.attr("dimnames") = List::create(above.attr("row.names"), slnames);
@@ -325,6 +329,8 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     input["PLCstem"] = PLCmat;
     input["RWCsympstem"] = RWCstemmat;
     input["RWCsympleaf"] = rwcsleaf;
+    input["Einst"] = Einst;
+    input["psiRoot"] = psiRoot;
     input["psiStem"] = psiStemmat;
     input["psiLeaf"] = psiLeaf;
   }

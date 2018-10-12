@@ -1038,11 +1038,13 @@ where $V_{sapwood,i}$ is the maximum water volume in segment $i$, i.e. the fract
 
 After all stem segments are processed, one can continue with the pressure drop due to the leaf resistance. We first define five segments, three values of $V_{sapwood}$, the initial level of PLC (0\%) for each segment, the fraction of sapwood corresponding to apoplastic tissue and the time step:
 <<>>=
-Vleaf = 0.00001 
-Vsapwood1 = 0.0001 
+Vleaf = 0.0001 
+Vsapwood1 = 0.001 
 Vsapwood2 = 0.0005
 Vsapwood3 = 0.001 
-nseg = 5
+nseg = 1
+EPrev = 3.0
+psiRootPrev = -1.0
 psiStem = rep(0,nseg)
 PLCstem = rep(0, nseg)
 leaffapo = 0.15
@@ -1054,42 +1056,42 @@ The following plot shows the supply function, i.e. downstream flow against downs
 \begin{center}
 <<fig=TRUE, width=8, height=4, echo=FALSE>>==
 par(mar=c(4,4,2,1), mfrow=c(1,2))
-RWCstorage = rep(1,5)
+RWCstorage = rep(1,nseg)
 stemeps = 12
 stempi0 = -3
 leafeps = 10
 leafpi0 = -2
-klat = 0.0
-ksto = 0.0
+klat = 0.001
+ksto = 0.001
 par(mar=c(4,4,2,1))
 psiMax = -7.0
 supplyAG11 = hydraulics.supplyFunctionAboveGround(supplyRS11$E, supplyRS11$PsiRoot,
-                                                  psiStem,
-                                                  PLCstem, RWCstorage,
+                                                  EPrev, psiRootPrev, 
+                                                  psiStem, PLCstem, RWCstorage,
                                                   0.0, 1.0,
                                                   kstemmax, stemc, stemd,
                                                   kleafmax, leafc, leafd,
                                                   Vsapwood1, stemfapo, stempi0, stemeps,
                                                   Vleaf, leaffapo, leafpi0, leafeps,
-                                                  klat, ksto, F, tstep, psiStep = -0.0001)
+                                                  klat, ksto, tstep, 1000)
 supplyAG12 = hydraulics.supplyFunctionAboveGround(supplyRS11$E, supplyRS11$PsiRoot,
-                                                  psiStem,
-                                                  PLCstem, RWCstorage,
+                                                  EPrev, psiRootPrev, 
+                                                  psiStem, PLCstem, RWCstorage,
                                                   0.0, 1.0,
                                                   kstemmax, stemc, stemd,
                                                   kleafmax, leafc, leafd,
                                                   Vsapwood2, stemfapo, stempi0, stemeps,
                                                   Vleaf, leaffapo, leafpi0, leafeps,
-                                                  klat, ksto, F, tstep, psiStep = -0.0001)
+                                                  klat, ksto, tstep, 1000)
 supplyAG13 = hydraulics.supplyFunctionAboveGround(supplyRS11$E, supplyRS11$PsiRoot,
-                                                  psiStem,
-                                                  PLCstem, RWCstorage,
+                                                  EPrev, psiRootPrev, 
+                                                  psiStem, PLCstem, RWCstorage,
                                                   0.0, 1.0,
                                                   kstemmax, stemc, stemd,
                                                   kleafmax, leafc, leafd,
                                                   Vsapwood3, stemfapo, stempi0, stemeps,
                                                   Vleaf, leaffapo, leafpi0, leafeps,
-                                                  klat, ksto, F, tstep, psiStep = -0.0001)
+                                                  klat, ksto, tstep, 1000)
 plot(-supplyNetwork11$PsiLeaf, supplyNetwork11$E, type="l", col=col1, ylab="Flow rate  (mmol·m-2·s-1)", 
      xlab = "Leaf pressure (-MPa)",  xlim=c(0, 6), ylim=c(0,6), lwd=1)
 lines(-supplyAG11$PsiLeaf, supplyAG11$E, lty=2, col=col1)

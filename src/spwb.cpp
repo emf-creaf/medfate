@@ -420,6 +420,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   NumericMatrix RWCsstemMAT = Rcpp::as<Rcpp::NumericMatrix>(x["RWCsympstem"]);
   NumericVector RWCsleafVEC = Rcpp::as<Rcpp::NumericVector>(x["RWCsympleaf"]);
   NumericVector psiLeafVEC = Rcpp::as<Rcpp::NumericVector>(x["psiLeaf"]);
+  NumericVector psiRootVEC = Rcpp::as<Rcpp::NumericVector>(x["psiRoot"]);
+  NumericVector EinstVEC = Rcpp::as<Rcpp::NumericVector>(x["Einst"]);
   
   NumericVector VG_n = Rcpp::as<Rcpp::NumericVector>(soil["VG_n"]);
   NumericVector VG_alpha = Rcpp::as<Rcpp::NumericVector>(soil["VG_alpha"]);
@@ -718,33 +720,34 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
         Jmax298SH +=Jmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
       }
       
-      NumericVector PLCvec = PLCstemMAT(c,_); //Get row
-      NumericVector RWCsvec = RWCsstemMAT(c,_);
-      NumericVector psiStemvec = psiStemMAT(c,_);
-      double psiLeaf = psiLeafVEC[c];
-      double rwcsleaf = RWCsleafVEC[c];
+      NumericVector PLCStemPrev = PLCstemMAT(c,_); //Get row
+      NumericVector RWCStemPrev = RWCsstemMAT(c,_);
+      NumericVector psiStemPrev = psiStemMAT(c,_);
+      double psiLeafPrev = psiLeafVEC[c];
+      double psiRootPrev = psiRootVEC[c];
+      double rwcsleafPrev = RWCsleafVEC[c];
+      double EinstPrev = EinstVEC[c];
         
       if(nlayerscon[c]>0) {//If the plant is connected to at least one layer build 
 
         List sBelow = supplyBelow[c];
         NumericVector Erootcrown = sBelow["E"];
-        NumericVector psiRootcrown = sBelow["PsiRoot"];
+        NumericVector psiRoot = sBelow["PsiRoot"];
         NumericMatrix ElayersMat = sBelow["Elayers"];
         // Rcout<<c<<" "<<psiLeaf<< " "<<psiStemvec[0]<< " "<<rwcsleaf<< " "<<RWCsvec[0]<<"\n";
         
-        supplyAbove = supplyFunctionAboveground(Erootcrown, psiRootcrown,
-                                                psiStemvec,
-                                           PLCvec, RWCsvec,
-                                           psiLeaf, rwcsleaf,
-                                           VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
-                                           VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
-                                           Vsapwood[c], StemAF[c], StemPI0[c], StemEPS[c],
-                                           Vleaf[c], LeafAF[c], LeafPI0[c], LeafEPS[c],
-                                           klat, ksymver[c],
-                                           cavitationRefill, tstep,
-                                           psiStep, psiMax);
+        supplyAbove = supplyFunctionAboveground(Erootcrown, psiRoot,
+                                                EinstPrev, psiRootPrev, 
+                                                psiStemPrev, PLCStemPrev, RWCStemPrev,
+                                                psiLeafPrev, rwcsleafPrev,
+                                                VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
+                                                VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
+                                                Vsapwood[c], StemAF[c], StemPI0[c], StemEPS[c],
+                                                Vleaf[c], LeafAF[c], LeafPI0[c], LeafEPS[c],
+                                                klat, ksymver[c],
+                                                tstep, 100);
         NumericVector fittedE = supplyAbove["E"];
-        NumericVector newPsiLeafVec = supplyAbove["PsiLeaf"];
+        NumericVector newPsiLeaf = supplyAbove["PsiLeaf"];
         NumericMatrix newPsiStem = supplyAbove["PsiStem"];
         NumericMatrix newPLCstem = supplyAbove["PLCstem"];
         NumericMatrix newRWCsympstem = supplyAbove["RWCsympstem"];
@@ -835,8 +838,10 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
           // }
           
           //Update symplastic storage and PLC
-          psiLeafVEC[c] = newPsiLeafVec[iPM];
+          psiRootVEC[c] = psiRoot[iPM]; 
+          psiLeafVEC[c] = newPsiLeaf[iPM];
           RWCsleafVEC[c] = newRWCsympleaf[iPM];
+          EinstVEC[c] = Eaverage;
           int nseg = newPLCstem.ncol();
           PLC(c,n) = 0.0;
           RWCssteminst(c,n) = 0.0;
@@ -847,11 +852,11 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
           RWCssteminst(c,n) = sum(newRWCsympstem(iPM,_))/((double)nseg);
           
           //Store the minimum water potential of the day (i.e. mid-day)
-          minPsiLeaf[c] = std::min(minPsiLeaf[c],newPsiLeafVec[iPM]);
-          minPsiRoot[c] = std::min(minPsiRoot[c],psiRootcrown[iPM]);
+          minPsiLeaf[c] = std::min(minPsiLeaf[c],newPsiLeaf[iPM]);
+          minPsiRoot[c] = std::min(minPsiRoot[c],psiRoot[iPM]);
           RWCsleafinst(c,n) = newRWCsympleaf[iPM];
-          PsiPlantinst(c,n) = newPsiLeafVec[iPM]; //Store instantaneous leaf potential
-          PsiRootinst(c,n) = psiRootcrown[iPM]; //Store instantaneous root potential
+          PsiPlantinst(c,n) = newPsiLeaf[iPM]; //Store instantaneous leaf potential
+          PsiRootinst(c,n) = psiRoot[iPM]; //Store instantaneous root potential
           
           //Copy transpiration from connected layers to transpiration from soil layers
           int cnt = 0;
@@ -906,8 +911,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
         Eplant[c] +=Einst(c,n);
         
         List sAb = E2psiAboveGroundDisconnected(minFlow, 
-                                                PLCvec, RWCsvec, 
-                                                psiLeaf, rwcsleaf,
+                                                PLCStemPrev, RWCStemPrev, 
+                                                psiLeafPrev, rwcsleafPrev,
                                                 VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
                                                 VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
                                                 Vsapwood[c], StemAF[c], StemPI0[c], StemEPS[c],
@@ -920,9 +925,10 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
          NumericVector newRWCsympStem = sAb["newRWCsympStem"];
          
          //Update symplastic storage and PLC
+         double psiRoot = newPsiStem[0];//Estimate of psiRoot = first stem segment
+         psiRootVEC[c] = psiRoot;
          psiLeafVEC[c] = sAb["newPsiLeaf"];
          RWCsleafVEC[c] = sAb["newRWCsympLeaf"];
-         double psiRoot = newPsiStem[0];//Estimate of psiRoot = first stem segment
          int nseg = newPLCStem.size();
          PLC(c,n) = 0.0;
          RWCssteminst(c,n) = 0.0;
@@ -934,10 +940,10 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
          
          //Store the minimum water potential of the day (i.e. mid-day)
          minPsiLeaf[c] = std::min(minPsiLeaf[c],psiLeafVEC[c]);
-         minPsiRoot[c] = std::min(minPsiRoot[c],psiRoot);
+         minPsiRoot[c] = std::min(minPsiRoot[c],psiRootVEC[c]);
          RWCsleafinst(c,n) = RWCsleafVEC[c];
          PsiPlantinst(c,n) = psiLeafVEC[c]; //Store instantaneous leaf potential
-         PsiRootinst(c,n) = psiRoot; //Store instantaneous root potential
+         PsiRootinst(c,n) = psiRootVEC[c]; //Store instantaneous root potential
       }
     } //End of cohort loop
     
