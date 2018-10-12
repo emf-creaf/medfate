@@ -736,7 +736,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
         NumericMatrix ElayersMat = sBelow["Elayers"];
         // Rcout<<c<<" E "<<EinstPrev<<" PR "<< psiRootPrev<<" PL "<<psiLeafPrev<< " PS "<<psiStemPrev[0]<< " "<<rwcsleafPrev<< " "<<RWCStemPrev[0]<<"\n";
         
-        supplyAbove = supplyFunctionAboveground(Erootcrown, psiRoot,
+        supplyAbove = supplyFunctionAbovegroundCapacitance(Erootcrown, psiRoot,
                                                 EinstPrev, psiRootPrev, 
                                                 psiStemPrev, PLCStemPrev, RWCStemPrev,
                                                 psiLeafPrev, rwcsleafPrev,
@@ -908,7 +908,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
         //Add to daily plant cohort transpiration
         Eplant[c] +=Einst(c,n);
         
-        List sAb = E2psiAboveGroundDisconnected(minFlow, 
+        List sAb = E2psiAbovegroundCapacitanceDisconnected(minFlow, 
                                                 PLCStemPrev, RWCStemPrev, 
                                                 psiLeafPrev, rwcsleafPrev,
                                                 VCstem_kmax[c], VCstem_c[c], VCstem_d[c],

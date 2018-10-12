@@ -1224,9 +1224,34 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// E2psiAboveGround
-List E2psiAboveGround(double E, double psiRootCrown, double EPrev, double psiRootCrownPrev, NumericVector psiStemPrev, NumericVector PLCstemPrev, NumericVector RWCsympstemPrev, double psiLeafPrev, double RWCsympleafPrev, double kstemmax, double stemc, double stemd, double kleafmax, double leafc, double leafd, double Vsapwood, double stemfapo, double stempi0, double stemeps, double Vleaf, double leaffapo, double leafpi0, double leafeps, double klat, double ksto, double tstep, int nSubSteps, double psiStep, double psiMax);
-RcppExport SEXP _medfate_E2psiAboveGround(SEXP ESEXP, SEXP psiRootCrownSEXP, SEXP EPrevSEXP, SEXP psiRootCrownPrevSEXP, SEXP psiStemPrevSEXP, SEXP PLCstemPrevSEXP, SEXP RWCsympstemPrevSEXP, SEXP psiLeafPrevSEXP, SEXP RWCsympleafPrevSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP kleafmaxSEXP, SEXP leafcSEXP, SEXP leafdSEXP, SEXP VsapwoodSEXP, SEXP stemfapoSEXP, SEXP stempi0SEXP, SEXP stemepsSEXP, SEXP VleafSEXP, SEXP leaffapoSEXP, SEXP leafpi0SEXP, SEXP leafepsSEXP, SEXP klatSEXP, SEXP kstoSEXP, SEXP tstepSEXP, SEXP nSubStepsSEXP, SEXP psiStepSEXP, SEXP psiMaxSEXP) {
+// E2psiAboveground
+List E2psiAboveground(double E, double psiRootCrown, double kstemmax, double stemc, double stemd, double kleafmax, double leafc, double leafd, int nStemSegments, double psiCav, double psiStep, double psiMax, int ntrial, double psiTol, double ETol);
+RcppExport SEXP _medfate_E2psiAboveground(SEXP ESEXP, SEXP psiRootCrownSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP kleafmaxSEXP, SEXP leafcSEXP, SEXP leafdSEXP, SEXP nStemSegmentsSEXP, SEXP psiCavSEXP, SEXP psiStepSEXP, SEXP psiMaxSEXP, SEXP ntrialSEXP, SEXP psiTolSEXP, SEXP ETolSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type E(ESEXP);
+    Rcpp::traits::input_parameter< double >::type psiRootCrown(psiRootCrownSEXP);
+    Rcpp::traits::input_parameter< double >::type kstemmax(kstemmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type stemc(stemcSEXP);
+    Rcpp::traits::input_parameter< double >::type stemd(stemdSEXP);
+    Rcpp::traits::input_parameter< double >::type kleafmax(kleafmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type leafc(leafcSEXP);
+    Rcpp::traits::input_parameter< double >::type leafd(leafdSEXP);
+    Rcpp::traits::input_parameter< int >::type nStemSegments(nStemSegmentsSEXP);
+    Rcpp::traits::input_parameter< double >::type psiCav(psiCavSEXP);
+    Rcpp::traits::input_parameter< double >::type psiStep(psiStepSEXP);
+    Rcpp::traits::input_parameter< double >::type psiMax(psiMaxSEXP);
+    Rcpp::traits::input_parameter< int >::type ntrial(ntrialSEXP);
+    Rcpp::traits::input_parameter< double >::type psiTol(psiTolSEXP);
+    Rcpp::traits::input_parameter< double >::type ETol(ETolSEXP);
+    rcpp_result_gen = Rcpp::wrap(E2psiAboveground(E, psiRootCrown, kstemmax, stemc, stemd, kleafmax, leafc, leafd, nStemSegments, psiCav, psiStep, psiMax, ntrial, psiTol, ETol));
+    return rcpp_result_gen;
+END_RCPP
+}
+// E2psiAbovegroundCapacitance
+List E2psiAbovegroundCapacitance(double E, double psiRootCrown, double EPrev, double psiRootCrownPrev, NumericVector psiStemPrev, NumericVector PLCstemPrev, NumericVector RWCsympstemPrev, double psiLeafPrev, double RWCsympleafPrev, double kstemmax, double stemc, double stemd, double kleafmax, double leafc, double leafd, double Vsapwood, double stemfapo, double stempi0, double stemeps, double Vleaf, double leaffapo, double leafpi0, double leafeps, double klat, double ksto, double tstep, int nSubSteps, double psiStep, double psiMax);
+RcppExport SEXP _medfate_E2psiAbovegroundCapacitance(SEXP ESEXP, SEXP psiRootCrownSEXP, SEXP EPrevSEXP, SEXP psiRootCrownPrevSEXP, SEXP psiStemPrevSEXP, SEXP PLCstemPrevSEXP, SEXP RWCsympstemPrevSEXP, SEXP psiLeafPrevSEXP, SEXP RWCsympleafPrevSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP kleafmaxSEXP, SEXP leafcSEXP, SEXP leafdSEXP, SEXP VsapwoodSEXP, SEXP stemfapoSEXP, SEXP stempi0SEXP, SEXP stemepsSEXP, SEXP VleafSEXP, SEXP leaffapoSEXP, SEXP leafpi0SEXP, SEXP leafepsSEXP, SEXP klatSEXP, SEXP kstoSEXP, SEXP tstepSEXP, SEXP nSubStepsSEXP, SEXP psiStepSEXP, SEXP psiMaxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1259,13 +1284,13 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type nSubSteps(nSubStepsSEXP);
     Rcpp::traits::input_parameter< double >::type psiStep(psiStepSEXP);
     Rcpp::traits::input_parameter< double >::type psiMax(psiMaxSEXP);
-    rcpp_result_gen = Rcpp::wrap(E2psiAboveGround(E, psiRootCrown, EPrev, psiRootCrownPrev, psiStemPrev, PLCstemPrev, RWCsympstemPrev, psiLeafPrev, RWCsympleafPrev, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, klat, ksto, tstep, nSubSteps, psiStep, psiMax));
+    rcpp_result_gen = Rcpp::wrap(E2psiAbovegroundCapacitance(E, psiRootCrown, EPrev, psiRootCrownPrev, psiStemPrev, PLCstemPrev, RWCsympstemPrev, psiLeafPrev, RWCsympleafPrev, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, klat, ksto, tstep, nSubSteps, psiStep, psiMax));
     return rcpp_result_gen;
 END_RCPP
 }
-// E2psiAboveGroundDisconnected
-List E2psiAboveGroundDisconnected(double E, NumericVector PLCstem, NumericVector RWCsympstem, double psiLeaf, double RWCsympleaf, double kstemmax, double stemc, double stemd, double kleafmax, double leafc, double leafd, double Vsapwood, double stemfapo, double stempi0, double stemeps, double Vleaf, double leaffapo, double leafpi0, double leafeps, double klat, double ksto, double tstep, int nSubSteps);
-RcppExport SEXP _medfate_E2psiAboveGroundDisconnected(SEXP ESEXP, SEXP PLCstemSEXP, SEXP RWCsympstemSEXP, SEXP psiLeafSEXP, SEXP RWCsympleafSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP kleafmaxSEXP, SEXP leafcSEXP, SEXP leafdSEXP, SEXP VsapwoodSEXP, SEXP stemfapoSEXP, SEXP stempi0SEXP, SEXP stemepsSEXP, SEXP VleafSEXP, SEXP leaffapoSEXP, SEXP leafpi0SEXP, SEXP leafepsSEXP, SEXP klatSEXP, SEXP kstoSEXP, SEXP tstepSEXP, SEXP nSubStepsSEXP) {
+// E2psiAbovegroundCapacitanceDisconnected
+List E2psiAbovegroundCapacitanceDisconnected(double E, NumericVector PLCstem, NumericVector RWCsympstem, double psiLeaf, double RWCsympleaf, double kstemmax, double stemc, double stemd, double kleafmax, double leafc, double leafd, double Vsapwood, double stemfapo, double stempi0, double stemeps, double Vleaf, double leaffapo, double leafpi0, double leafeps, double klat, double ksto, double tstep, int nSubSteps);
+RcppExport SEXP _medfate_E2psiAbovegroundCapacitanceDisconnected(SEXP ESEXP, SEXP PLCstemSEXP, SEXP RWCsympstemSEXP, SEXP psiLeafSEXP, SEXP RWCsympleafSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP kleafmaxSEXP, SEXP leafcSEXP, SEXP leafdSEXP, SEXP VsapwoodSEXP, SEXP stemfapoSEXP, SEXP stempi0SEXP, SEXP stemepsSEXP, SEXP VleafSEXP, SEXP leaffapoSEXP, SEXP leafpi0SEXP, SEXP leafepsSEXP, SEXP klatSEXP, SEXP kstoSEXP, SEXP tstepSEXP, SEXP nSubStepsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1292,7 +1317,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type ksto(kstoSEXP);
     Rcpp::traits::input_parameter< double >::type tstep(tstepSEXP);
     Rcpp::traits::input_parameter< int >::type nSubSteps(nSubStepsSEXP);
-    rcpp_result_gen = Rcpp::wrap(E2psiAboveGroundDisconnected(E, PLCstem, RWCsympstem, psiLeaf, RWCsympleaf, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, klat, ksto, tstep, nSubSteps));
+    rcpp_result_gen = Rcpp::wrap(E2psiAbovegroundCapacitanceDisconnected(E, PLCstem, RWCsympstem, psiLeaf, RWCsympleaf, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, klat, ksto, tstep, nSubSteps));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1417,8 +1442,30 @@ BEGIN_RCPP
 END_RCPP
 }
 // supplyFunctionAboveground
-List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootCrown, double EPrev, double psiRootCrownPrev, NumericVector psiStemPrev, NumericVector PLCstemPrev, NumericVector RWCsympstemPrev, double psiLeafPrev, double RWCsympleafPrev, double kstemmax, double stemc, double stemd, double kleafmax, double leafc, double leafd, double Vsapwood, double stemfapo, double stempi0, double stemeps, double Vleaf, double leaffapo, double leafpi0, double leafeps, double klat, double ksto, double tstep, int nSubSteps, double psiStep, double psiMax);
-RcppExport SEXP _medfate_supplyFunctionAboveground(SEXP ErootcrownSEXP, SEXP psiRootCrownSEXP, SEXP EPrevSEXP, SEXP psiRootCrownPrevSEXP, SEXP psiStemPrevSEXP, SEXP PLCstemPrevSEXP, SEXP RWCsympstemPrevSEXP, SEXP psiLeafPrevSEXP, SEXP RWCsympleafPrevSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP kleafmaxSEXP, SEXP leafcSEXP, SEXP leafdSEXP, SEXP VsapwoodSEXP, SEXP stemfapoSEXP, SEXP stempi0SEXP, SEXP stemepsSEXP, SEXP VleafSEXP, SEXP leaffapoSEXP, SEXP leafpi0SEXP, SEXP leafepsSEXP, SEXP klatSEXP, SEXP kstoSEXP, SEXP tstepSEXP, SEXP nSubStepsSEXP, SEXP psiStepSEXP, SEXP psiMaxSEXP) {
+List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootCrown, double kstemmax, double stemc, double stemd, double kleafmax, double leafc, double leafd, int nStemSegments, double psiCav, double psiStep, double psiMax);
+RcppExport SEXP _medfate_supplyFunctionAboveground(SEXP ErootcrownSEXP, SEXP psiRootCrownSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP kleafmaxSEXP, SEXP leafcSEXP, SEXP leafdSEXP, SEXP nStemSegmentsSEXP, SEXP psiCavSEXP, SEXP psiStepSEXP, SEXP psiMaxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type Erootcrown(ErootcrownSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type psiRootCrown(psiRootCrownSEXP);
+    Rcpp::traits::input_parameter< double >::type kstemmax(kstemmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type stemc(stemcSEXP);
+    Rcpp::traits::input_parameter< double >::type stemd(stemdSEXP);
+    Rcpp::traits::input_parameter< double >::type kleafmax(kleafmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type leafc(leafcSEXP);
+    Rcpp::traits::input_parameter< double >::type leafd(leafdSEXP);
+    Rcpp::traits::input_parameter< int >::type nStemSegments(nStemSegmentsSEXP);
+    Rcpp::traits::input_parameter< double >::type psiCav(psiCavSEXP);
+    Rcpp::traits::input_parameter< double >::type psiStep(psiStepSEXP);
+    Rcpp::traits::input_parameter< double >::type psiMax(psiMaxSEXP);
+    rcpp_result_gen = Rcpp::wrap(supplyFunctionAboveground(Erootcrown, psiRootCrown, kstemmax, stemc, stemd, kleafmax, leafc, leafd, nStemSegments, psiCav, psiStep, psiMax));
+    return rcpp_result_gen;
+END_RCPP
+}
+// supplyFunctionAbovegroundCapacitance
+List supplyFunctionAbovegroundCapacitance(NumericVector Erootcrown, NumericVector psiRootCrown, double EPrev, double psiRootCrownPrev, NumericVector psiStemPrev, NumericVector PLCstemPrev, NumericVector RWCsympstemPrev, double psiLeafPrev, double RWCsympleafPrev, double kstemmax, double stemc, double stemd, double kleafmax, double leafc, double leafd, double Vsapwood, double stemfapo, double stempi0, double stemeps, double Vleaf, double leaffapo, double leafpi0, double leafeps, double klat, double ksto, double tstep, int nSubSteps, double psiStep, double psiMax);
+RcppExport SEXP _medfate_supplyFunctionAbovegroundCapacitance(SEXP ErootcrownSEXP, SEXP psiRootCrownSEXP, SEXP EPrevSEXP, SEXP psiRootCrownPrevSEXP, SEXP psiStemPrevSEXP, SEXP PLCstemPrevSEXP, SEXP RWCsympstemPrevSEXP, SEXP psiLeafPrevSEXP, SEXP RWCsympleafPrevSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP kleafmaxSEXP, SEXP leafcSEXP, SEXP leafdSEXP, SEXP VsapwoodSEXP, SEXP stemfapoSEXP, SEXP stempi0SEXP, SEXP stemepsSEXP, SEXP VleafSEXP, SEXP leaffapoSEXP, SEXP leafpi0SEXP, SEXP leafepsSEXP, SEXP klatSEXP, SEXP kstoSEXP, SEXP tstepSEXP, SEXP nSubStepsSEXP, SEXP psiStepSEXP, SEXP psiMaxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1451,7 +1498,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type nSubSteps(nSubStepsSEXP);
     Rcpp::traits::input_parameter< double >::type psiStep(psiStepSEXP);
     Rcpp::traits::input_parameter< double >::type psiMax(psiMaxSEXP);
-    rcpp_result_gen = Rcpp::wrap(supplyFunctionAboveground(Erootcrown, psiRootCrown, EPrev, psiRootCrownPrev, psiStemPrev, PLCstemPrev, RWCsympstemPrev, psiLeafPrev, RWCsympleafPrev, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, klat, ksto, tstep, nSubSteps, psiStep, psiMax));
+    rcpp_result_gen = Rcpp::wrap(supplyFunctionAbovegroundCapacitance(Erootcrown, psiRootCrown, EPrev, psiRootCrownPrev, psiStemPrev, PLCstemPrev, RWCsympstemPrev, psiLeafPrev, RWCsympleafPrev, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, klat, ksto, tstep, nSubSteps, psiStep, psiMax));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2860,14 +2907,16 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_E2psiRootSystem", (DL_FUNC) &_medfate_E2psiRootSystem, 14},
     {"_medfate_E2psiNetwork", (DL_FUNC) &_medfate_E2psiNetwork, 21},
     {"_medfate_E2psiXylemCapacitance", (DL_FUNC) &_medfate_E2psiXylemCapacitance, 18},
-    {"_medfate_E2psiAboveGround", (DL_FUNC) &_medfate_E2psiAboveGround, 29},
-    {"_medfate_E2psiAboveGroundDisconnected", (DL_FUNC) &_medfate_E2psiAboveGroundDisconnected, 23},
+    {"_medfate_E2psiAboveground", (DL_FUNC) &_medfate_E2psiAboveground, 15},
+    {"_medfate_E2psiAbovegroundCapacitance", (DL_FUNC) &_medfate_E2psiAbovegroundCapacitance, 29},
+    {"_medfate_E2psiAbovegroundCapacitanceDisconnected", (DL_FUNC) &_medfate_E2psiAbovegroundCapacitanceDisconnected, 23},
     {"_medfate_supplyFunctionOneXylem", (DL_FUNC) &_medfate_supplyFunctionOneXylem, 10},
     {"_medfate_supplyFunctionTwoElements", (DL_FUNC) &_medfate_supplyFunctionTwoElements, 11},
     {"_medfate_supplyFunctionThreeElements", (DL_FUNC) &_medfate_supplyFunctionThreeElements, 14},
     {"_medfate_supplyFunctionBelowground", (DL_FUNC) &_medfate_supplyFunctionBelowground, 14},
     {"_medfate_supplyFunctionNetwork", (DL_FUNC) &_medfate_supplyFunctionNetwork, 21},
-    {"_medfate_supplyFunctionAboveground", (DL_FUNC) &_medfate_supplyFunctionAboveground, 29},
+    {"_medfate_supplyFunctionAboveground", (DL_FUNC) &_medfate_supplyFunctionAboveground, 12},
+    {"_medfate_supplyFunctionAbovegroundCapacitance", (DL_FUNC) &_medfate_supplyFunctionAbovegroundCapacitance, 29},
     {"_medfate_regulatedPsiXylem", (DL_FUNC) &_medfate_regulatedPsiXylem, 6},
     {"_medfate_regulatedPsiTwoElements", (DL_FUNC) &_medfate_regulatedPsiTwoElements, 10},
     {"_medfate_averageRhizosphereResistancePercent", (DL_FUNC) &_medfate_averageRhizosphereResistancePercent, 13},
