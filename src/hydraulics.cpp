@@ -283,7 +283,7 @@ double E2psiXylem(double E, double psiUpstream, double kxylemmax, double c, doub
     if(psi<psiMax) return(NA_REAL);
     if(NumericVector::is_na(Eg)) return(NA_REAL);
   }
-  return((psiPrev+psi)/2.0);
+  return(std::min(0.0,(psiPrev+psi)/2.0));
 }
 // double E2psiXylem(double E, double psiUpstream, double kxylemmax, double c, double d, double psiCav = 0.0,
 //                   double psiStep = -0.01, double psiMax = -10.0) {
@@ -787,7 +787,7 @@ List E2psiAbovegroundCapacitance(double E, double psiRootCrown,
   // Rcout<<E<< " "<<Edif<<"\n";
   // newRWCsympleaf = std::min(1.0, newRWCsympleaf);
   double kterm = xylemConductance(psiLeaf, kleafmax, leafc, leafd);
-  return(List::create( _["E"] = E,
+  return(List::create( _["E"] = E+Edif,
                        _["Edif"] = Edif,
                        _["newPsiLeaf"] = psiLeaf,
                        _["newPsiStem"] = psiStem, 

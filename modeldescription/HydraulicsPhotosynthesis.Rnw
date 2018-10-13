@@ -1038,10 +1038,10 @@ where $V_{sapwood,i}$ is the maximum water volume in segment $i$, i.e. the fract
 
 After all stem segments are processed, one can continue with the pressure drop due to the leaf resistance. We first define five segments, three values of $V_{sapwood}$, the initial level of PLC (0\%) for each segment, the fraction of sapwood corresponding to apoplastic tissue and the time step:
 <<>>=
-Vleaf = 0.00 
-Vsapwood1 = 0.000 
-Vsapwood2 = 0.000
-Vsapwood3 = 0.00 
+Vleaf = 0.0001 
+Vsapwood1 = 0.0001 
+Vsapwood2 = 0.0005
+Vsapwood3 = 0.001 
 nseg = 5
 EPrev = 0.0
 psiRootPrev = 0.0
@@ -1061,8 +1061,8 @@ stemeps = 12
 stempi0 = -3
 leafeps = 10
 leafpi0 = -2
-klat = 0.0
-ksto = 0.0
+klat = 0.001
+ksto = 0.001
 par(mar=c(4,4,2,1))
 psiMax = -7.0
 supplyAG10 = hydraulics.supplyFunctionAboveground(supplyRS11$E, supplyRS11$PsiRoot,
@@ -1079,36 +1079,36 @@ supplyAG11 = hydraulics.supplyFunctionAbovegroundCapacitance(supplyRS11$E, suppl
                                                   Vsapwood1, stemfapo, stempi0, stemeps,
                                                   Vleaf, leaffapo, leafpi0, leafeps,
                                                   klat, ksto, tstep, 100)
-# supplyAG12 = hydraulics.supplyFunctionAbovegroundCapacitance(supplyRS11$E, supplyRS11$PsiRoot,
-#                                                   EPrev, psiRootPrev, 
-#                                                   psiStem, PLCstem, RWCstorage,
-#                                                   0.0, 1.0,
-#                                                   kstemmax, stemc, stemd,
-#                                                   kleafmax, leafc, leafd,
-#                                                   Vsapwood2, stemfapo, stempi0, stemeps,
-#                                                   Vleaf, leaffapo, leafpi0, leafeps,
-#                                                   klat, ksto, tstep, 100)
-# supplyAG13 = hydraulics.supplyFunctionAbovegroundCapacitance(supplyRS11$E, supplyRS11$PsiRoot,
-#                                                   EPrev, psiRootPrev, 
-#                                                   psiStem, PLCstem, RWCstorage,
-#                                                   0.0, 1.0,
-#                                                   kstemmax, stemc, stemd,
-#                                                   kleafmax, leafc, leafd,
-#                                                   Vsapwood3, stemfapo, stempi0, stemeps,
-#                                                   Vleaf, leaffapo, leafpi0, leafeps,
-#                                                   klat, ksto, tstep, 100)
+supplyAG12 = hydraulics.supplyFunctionAbovegroundCapacitance(supplyRS11$E, supplyRS11$PsiRoot,
+                                                  EPrev, psiRootPrev,
+                                                  psiStem, PLCstem, RWCstorage,
+                                                  0.0, 1.0,
+                                                  kstemmax, stemc, stemd,
+                                                  kleafmax, leafc, leafd,
+                                                  Vsapwood2, stemfapo, stempi0, stemeps,
+                                                  Vleaf, leaffapo, leafpi0, leafeps,
+                                                  klat, ksto, tstep, 100)
+supplyAG13 = hydraulics.supplyFunctionAbovegroundCapacitance(supplyRS11$E, supplyRS11$PsiRoot,
+                                                  EPrev, psiRootPrev,
+                                                  psiStem, PLCstem, RWCstorage,
+                                                  0.0, 1.0,
+                                                  kstemmax, stemc, stemd,
+                                                  kleafmax, leafc, leafd,
+                                                  Vsapwood3, stemfapo, stempi0, stemeps,
+                                                  Vleaf, leaffapo, leafpi0, leafeps,
+                                                  klat, ksto, tstep, 100)
 plot(-supplyNetwork11$PsiLeaf, supplyNetwork11$E, type="l", col=col1, ylab="Flow rate  (mmol·m-2·s-1)", 
      xlab = "Leaf pressure (-MPa)",  xlim=c(0, 6), ylim=c(0,6), lwd=1.5)
 lines(-supplyAG10$PsiLeaf, supplyAG10$E, lty=1, col=col1)
 lines(-supplyAG11$PsiLeaf, supplyAG11$E, lty=2, col=col1)
-# lines(-supplyAG12$PsiLeaf, supplyAG12$E, lty=3, col=col1)
-# lines(-supplyAG13$PsiLeaf, supplyAG13$E, lty=4, col=col1)
+lines(-supplyAG12$PsiLeaf, supplyAG12$E, lty=3, col=col1)
+lines(-supplyAG13$PsiLeaf, supplyAG13$E, lty=4, col=col1)
 plot(-supplyNetwork11$PsiLeaf, supplyNetwork11$dEdP, type="l", col=col1, ylab="dEdP", 
      xlab = "Leaf pressure (-MPa)",  xlim=c(0, 6), ylim =c(0, 3), lwd=1.5)
 lines(-supplyAG10$PsiLeaf, supplyAG10$dEdP, lty=1, col=col1)
 lines(-supplyAG11$PsiLeaf, supplyAG11$dEdP, lty=2, col=col1)
-# lines(-supplyAG12$PsiLeaf, supplyAG12$dEdP, lty=3, col=col1)
-# lines(-supplyAG13$PsiLeaf, supplyAG13$dEdP, lty=4, col=col1)
+lines(-supplyAG12$PsiLeaf, supplyAG12$dEdP, lty=3, col=col1)
+lines(-supplyAG13$PsiLeaf, supplyAG13$dEdP, lty=4, col=col1)
 
 @
 \end{center}

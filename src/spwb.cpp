@@ -745,7 +745,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                                                 Vsapwood[c], StemAF[c], StemPI0[c], StemEPS[c],
                                                 Vleaf[c], LeafAF[c], LeafPI0[c], LeafEPS[c],
                                                 klat, ksymver[c],
-                                                tstep, 100);
+                                                tstep, 10, psiStep, psiMax);
         NumericVector fittedE = supplyAbove["E"];
         NumericVector newPsiLeaf = supplyAbove["PsiLeaf"];
         NumericMatrix newPsiStem = supplyAbove["PsiStem"];
@@ -802,8 +802,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
           double Eaverage = (fittedE[iPMSunlit]*LAI_SL(c,n) + fittedE[iPMShade]*LAI_SH(c,n))/(LAI_SL(c,n) + LAI_SH(c,n));
 
           
-          //Find iPM for root flow corresponding to the root crown average flow
-          double absDiff = 9999.9;
+          //Find iPM for  flow corresponding to the  average flow
+          double absDiff = 9999999.9;
           int iPM = -1;
           for(int k=0;k<fittedE.size();k++){ //Only check up to the size of fittedE
             double adk = std::abs(fittedE[k]-Eaverage);
@@ -812,7 +812,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
               iPM = k;
             }
           }
-          
+          // Rcout<<"_"<<iPM;
             
           
           //Scale from instantaneous flow to water volume in the time step
@@ -1615,7 +1615,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   NumericVector Eplanttot(numDays,0.0);
   List s;
   for(int i=0;i<numDays;i++) {
-      if(verbose) Rcout<<".";
+      if(verbose) Rcout<<"."<<i;
       canopyParams["gdd"] = GDD[i];
       double wind = WindSpeed[i];
       if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; //Default 1 m/s -> 10% of fall every day
