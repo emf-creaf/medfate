@@ -937,11 +937,11 @@ List supplyFunctionOneXylem(NumericVector psiSoil, NumericVector v,
   int nlayers = psiSoil.size();
   NumericVector supplyE(maxNsteps);
   NumericVector supplydEdp(maxNsteps);
-  NumericMatrix supplyElayers(maxNsteps,nlayers);
+  NumericMatrix supplyERhizo(maxNsteps,nlayers);
   NumericVector supplyPsi(maxNsteps);
   
   supplyE[0] = 0;
-  for(int l=0;l<nlayers;l++) supplyElayers[l] = 0.0;
+  for(int l=0;l<nlayers;l++) supplyERhizo[l] = 0.0;
   supplyPsi[0] = averagePsi(psiSoil, v, stemc, stemd);
   NumericVector Psilayers(nlayers);
   //Calculate initial slope
@@ -970,7 +970,7 @@ List supplyFunctionOneXylem(NumericVector psiSoil, NumericVector v,
     // Rcout<<"\n";
     supplyPsi[i] = averagePsi(Psilayers, v, stemc, stemd);
     for(int l=0;l<nlayers;l++) {
-      supplyElayers(i,l) = supplyE[i]*v[l];
+      supplyERhizo(i,l) = supplyE[i]*v[l];
     }
     
     if(!NumericVector::is_na(supplyPsi[i])) {
@@ -993,18 +993,18 @@ List supplyFunctionOneXylem(NumericVector psiSoil, NumericVector v,
   //Copy values tp nsteps
   NumericVector supplyEDef(nsteps);
   NumericVector supplydEdpDef(nsteps);
-  NumericMatrix supplyElayersDef(nsteps,nlayers);
+  NumericMatrix supplyERhizoDef(nsteps,nlayers);
   NumericVector supplyPsiPlant(nsteps);
   for(int i=0;i<nsteps;i++) {
     supplyEDef[i] = supplyE[i];
     supplydEdpDef[i] = supplydEdp[i];
     supplyPsiPlant[i] = supplyPsi[i];
     for(int l=0;l<nlayers;l++) {
-      supplyElayersDef(i,l) = supplyElayers(i,l);
+      supplyERhizoDef(i,l) = supplyERhizo(i,l);
     }
   }
   return(List::create(Named("E") = supplyEDef,
-                      Named("Elayers") = supplyElayersDef,
+                      Named("ERhizo") = supplyERhizoDef,
                       Named("PsiPlant")=supplyPsiPlant,
                       Named("dEdP")=supplydEdpDef));
   
@@ -1090,8 +1090,8 @@ List supplyFunctionTwoElements(double Emax, double psiSoil, double krhizomax, do
   }
   return(List::create(Named("E") = supplyE,
                       Named("FittedE") = supplyFittedE,
-                      Named("PsiRoot")=supplyPsiRoot, 
-                      Named("PsiPlant")=supplyPsiPlant,
+                      Named("psiRoot")=supplyPsiRoot, 
+                      Named("psiPlant")=supplyPsiPlant,
                       Named("dEdP")=supplydEdp));
 }
 
@@ -1212,9 +1212,9 @@ List supplyFunctionThreeElements(double Emax, double psiSoil, double krhizomax, 
   }
   return(List::create(Named("E") = supplyE,
                       Named("FittedE") = supplyFittedE,
-                      Named("PsiRoot")=supplyPsiRoot, 
-                      Named("PsiStem")=supplyPsiStem,
-                      Named("PsiLeaf")=supplyPsiLeaf,
+                      Named("psiRoot")=supplyPsiRoot, 
+                      Named("psiStem")=supplyPsiStem,
+                      Named("psiLeaf")=supplyPsiLeaf,
                       Named("dEdP")=supplydEdp));
 }
 
@@ -1227,7 +1227,7 @@ List supplyFunctionBelowground(NumericVector psiSoil,
   int nlayers = psiSoil.size();
   NumericVector supplyE(maxNsteps);
   NumericVector supplydEdp(maxNsteps);
-  NumericMatrix supplyElayers(maxNsteps,nlayers);
+  NumericMatrix supplyERhizo(maxNsteps,nlayers);
   NumericMatrix supplyPsiRhizo(maxNsteps,nlayers);
   NumericVector supplyPsiRoot(maxNsteps);
   List sol = E2psiBelowground(minFlow, psiSoil,
@@ -1237,7 +1237,7 @@ List supplyFunctionBelowground(NumericVector psiSoil,
                           psiStep, psiMax, ntrial,psiTol, ETol);
   NumericVector solERhizo =sol["ERhizo"];
   NumericVector solPsiRhizo = sol["psiRhizo"];
-  supplyElayers(0,_) = solERhizo;
+  supplyERhizo(0,_) = solERhizo;
   supplyPsiRhizo(0,_) = solPsiRhizo;
   supplyE[0] = sol["E"];
   supplyPsiRoot[0] = sol["psiRoot"];
@@ -1263,7 +1263,7 @@ List supplyFunctionBelowground(NumericVector psiSoil,
                        psiStep, psiMax, ntrial,psiTol, ETol);
     solERhizo =sol["ERhizo"];
     solPsiRhizo = sol["psiRhizo"];
-    supplyElayers(i,_) =  solERhizo;
+    supplyERhizo(i,_) =  solERhizo;
     supplyPsiRhizo(i,_) = solPsiRhizo;
     supplyPsiRoot[i] = sol["psiRoot"];
 
@@ -1287,18 +1287,18 @@ List supplyFunctionBelowground(NumericVector psiSoil,
   //Copy values tp nsteps
   NumericVector supplyEDef(nsteps);
   NumericVector supplydEdpDef(nsteps);
-  NumericMatrix supplyElayersDef(nsteps,nlayers);
+  NumericMatrix supplyERhizoDef(nsteps,nlayers);
   NumericMatrix supplyPsiRhizoDef(nsteps,nlayers);
   NumericVector supplyPsiRootDef(nsteps);
   for(int i=0;i<nsteps;i++) {
     supplyEDef[i] = supplyE[i];
     supplydEdpDef[i] = supplydEdp[i];
     supplyPsiRootDef[i] = supplyPsiRoot[i];
-    supplyElayersDef(i,_) = supplyElayers(i,_);
+    supplyERhizoDef(i,_) = supplyERhizo(i,_);
     supplyPsiRhizoDef(i,_) = supplyPsiRhizo(i,_);
   }
   return(List::create(Named("E") = supplyEDef,
-                      Named("Elayers") = supplyElayersDef,
+                      Named("ERhizo") = supplyERhizoDef,
                       Named("psiRhizo")=supplyPsiRhizoDef,
                       Named("psiRoot")=supplyPsiRootDef,
                       Named("dEdP")=supplydEdpDef));
@@ -1319,7 +1319,7 @@ List supplyFunctionNetwork(NumericVector psiSoil,
   int nStemSegments = PLCstem.size();
   NumericVector supplyE(maxNsteps);
   NumericVector supplydEdp(maxNsteps);
-  NumericMatrix supplyElayers(maxNsteps,nlayers);
+  NumericMatrix supplyERhizo(maxNsteps,nlayers);
   NumericMatrix supplyPsiRhizo(maxNsteps,nlayers);
   NumericVector supplyPsiRoot(maxNsteps);
   NumericMatrix supplyPsiStem(maxNsteps,nStemSegments);
@@ -1337,7 +1337,7 @@ List supplyFunctionNetwork(NumericVector psiSoil,
   NumericVector solERhizo = sol["ERhizo"];
   NumericVector solPsiRhizo = sol["psiRhizo"];
   NumericVector solPsiStem = sol["psiStem"];
-  supplyElayers(0,_) = solERhizo;
+  supplyERhizo(0,_) = solERhizo;
   supplyPsiRhizo(0,_) = solPsiRhizo;
   supplyPsiStem(0,_) = solPsiStem;
   supplyPsiLeaf[0] = sol["psiLeaf"];
@@ -1372,7 +1372,7 @@ List supplyFunctionNetwork(NumericVector psiSoil,
     solERhizo = sol["ERhizo"];
     solPsiRhizo = sol["psiRhizo"];
     solPsiStem = sol["psiStem"];
-    supplyElayers(i,_) = solERhizo;
+    supplyERhizo(i,_) = solERhizo;
     supplyPsiRhizo(i,_) = solPsiRhizo;
     supplyPsiStem(i,_) = solPsiStem;
     supplyPsiLeaf[i] = sol["psiLeaf"];
@@ -1399,7 +1399,7 @@ List supplyFunctionNetwork(NumericVector psiSoil,
   NumericVector supplyKtermDef(nsteps);
   NumericVector supplyEDef(nsteps);
   NumericVector supplydEdpDef(nsteps);
-  NumericMatrix supplyElayersDef(nsteps,nlayers);
+  NumericMatrix supplyERhizoDef(nsteps,nlayers);
   NumericMatrix supplyPsiRhizoDef(nsteps,nlayers);
   NumericMatrix supplyPsiStemDef(nsteps,nStemSegments);
   NumericVector supplyPsiLeafDef(nsteps);
@@ -1409,17 +1409,17 @@ List supplyFunctionNetwork(NumericVector psiSoil,
     supplydEdpDef[i] = supplydEdp[i];
     supplyKtermDef[i] = supplyKterm[i];
     supplyPsiRootDef[i] = supplyPsiRoot[i];
-    supplyElayersDef(i,_) = supplyElayers(i,_);
+    supplyERhizoDef(i,_) = supplyERhizo(i,_);
     supplyPsiRhizoDef(i,_) = supplyPsiRhizo(i,_);
     supplyPsiStemDef(i,_) = supplyPsiStem(i,_);
     supplyPsiLeafDef[i] = supplyPsiLeaf[i];
   }
   return(List::create(Named("E") = supplyEDef,
-                      Named("Elayers") = supplyElayersDef,
-                      Named("PsiRhizo")=supplyPsiRhizo,
-                      Named("PsiRoot")=supplyPsiRootDef,
-                      Named("PsiStem")=supplyPsiStemDef,
-                      Named("PsiLeaf")=supplyPsiLeafDef,
+                      Named("ERhizo") = supplyERhizoDef,
+                      Named("psiRhizo")=supplyPsiRhizoDef,
+                      Named("psiRoot")=supplyPsiRootDef,
+                      Named("psiStem")=supplyPsiStemDef,
+                      Named("psiLeaf")=supplyPsiLeafDef,
                       Named("dEdP")=supplydEdpDef,
                       Named("kterm") = supplyKtermDef));
   
@@ -1489,8 +1489,8 @@ List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootCr
   }
   
   return(List::create(Named("E") = supplyEDef,
-                      Named("PsiStem")=supplyPsiStemDef,
-                      Named("PsiLeaf")=supplyPsiLeafDef,
+                      Named("psiStem")=supplyPsiStemDef,
+                      Named("psiLeaf")=supplyPsiLeafDef,
                       Named("dEdP")=supplydEdpDef,
                       Named("kterm") = supplyKtermDef));
   

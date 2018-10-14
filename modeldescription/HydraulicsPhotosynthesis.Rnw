@@ -86,6 +86,7 @@ With these parameter values, the vulnerability curves for root, stem and leaf ar
 \begin{center}
 <<fig=TRUE, width=5, height=5, echo=FALSE>>==
 psiCav = -2.5
+plcCav = 1 - moisture.apoplasticRWC(psiCav, stemc, stemd)
 par(mar=c(4,4,1,1), mfrow=c(1,1))
 kleaf = unlist(lapply(psiVec, hydraulics.xylemConductance, kleafmax, leafc, leafd))
 kstem = unlist(lapply(psiVec, hydraulics.xylemConductance, kstemmax, stemc, stemd))
@@ -323,18 +324,18 @@ psi2E32 = hydraulics.supplyFunctionTwoElements(Emax, psiSoil2, krmax3, kstemmax,
 psi2E33 = hydraulics.supplyFunctionTwoElements(Emax, psiSoil3, krmax3, kstemmax, n3, alpha3, stemc,stemd, 0.0, dE)
 psi2E34 = hydraulics.supplyFunctionTwoElements(Emax, psiSoil4, krmax3, kstemmax, n3, alpha3, stemc,stemd, 0.0, dE)
 mm = max(psi2E11$FittedE)
-plot(-psi2E11$PsiPlant, psi2E11$FittedE, type="l", col=col1, ylab="Flow rate (mmol·m-2·s-1)", xlab = "Canopy pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,mm), lwd=1, main="original")
-lines(-psi2E12$PsiPlant, psi2E12$FittedE, lty=1, lwd=1, col=col2)
-lines(-psi2E13$PsiPlant, psi2E13$FittedE, lty=1, lwd=1, col=col3)
-lines(-psi2E14$PsiPlant, psi2E14$FittedE, lty=1, lwd=1, col=col4)
-lines(-psi2E21$PsiPlant, psi2E21$FittedE, lty=2, lwd=1, col=col1)
-lines(-psi2E22$PsiPlant, psi2E22$FittedE, lty=2, lwd=1, col=col2)
-lines(-psi2E23$PsiPlant, psi2E23$FittedE, lty=2, lwd=1, col=col3)
-lines(-psi2E24$PsiPlant, psi2E24$FittedE, lty=2, lwd=1, col=col4)
-lines(-psi2E31$PsiPlant, psi2E31$FittedE, lty=3, lwd=1, col=col1)
-lines(-psi2E32$PsiPlant, psi2E32$FittedE, lty=3, lwd=1, col=col2)
-lines(-psi2E33$PsiPlant, psi2E33$FittedE, lty=3, lwd=1, col=col3)
-lines(-psi2E34$PsiPlant, psi2E34$FittedE, lty=3, lwd=1, col=col4)
+plot(-psi2E11$psiPlant, psi2E11$FittedE, type="l", col=col1, ylab="Flow rate (mmol·m-2·s-1)", xlab = "Canopy pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,mm), lwd=1, main="original")
+lines(-psi2E12$psiPlant, psi2E12$FittedE, lty=1, lwd=1, col=col2)
+lines(-psi2E13$psiPlant, psi2E13$FittedE, lty=1, lwd=1, col=col3)
+lines(-psi2E14$psiPlant, psi2E14$FittedE, lty=1, lwd=1, col=col4)
+lines(-psi2E21$psiPlant, psi2E21$FittedE, lty=2, lwd=1, col=col1)
+lines(-psi2E22$psiPlant, psi2E22$FittedE, lty=2, lwd=1, col=col2)
+lines(-psi2E23$psiPlant, psi2E23$FittedE, lty=2, lwd=1, col=col3)
+lines(-psi2E24$psiPlant, psi2E24$FittedE, lty=2, lwd=1, col=col4)
+lines(-psi2E31$psiPlant, psi2E31$FittedE, lty=3, lwd=1, col=col1)
+lines(-psi2E32$psiPlant, psi2E32$FittedE, lty=3, lwd=1, col=col2)
+lines(-psi2E33$psiPlant, psi2E33$FittedE, lty=3, lwd=1, col=col3)
+lines(-psi2E34$psiPlant, psi2E34$FittedE, lty=3, lwd=1, col=col4)
 legend("topleft", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 
 psi2E11emb = hydraulics.supplyFunctionTwoElements(Emax, psiSoil1, krmax1, kstemmax, n1, alpha1, stemc,stemd,psiCav, dE)
@@ -350,18 +351,18 @@ psi2E32emb = hydraulics.supplyFunctionTwoElements(Emax, psiSoil2, krmax3, kstemm
 psi2E33emb = hydraulics.supplyFunctionTwoElements(Emax, psiSoil3, krmax3, kstemmax, n3, alpha3, stemc,stemd, psiCav, dE)
 psi2E34emb = hydraulics.supplyFunctionTwoElements(Emax, psiSoil4, krmax3, kstemmax, n3, alpha3, stemc,stemd, psiCav, dE)
 
-plot(-psi2E11emb$PsiPlant, psi2E11emb$FittedE, type="l", col=col1, ylab="Flow rate (mmol·m-2·s-1)", xlab = "Canopy pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,mm), lwd=1, main="after cavitation")
-lines(-psi2E12emb$PsiPlant, psi2E12$FittedE, lty=1, lwd=1, col=col2)
-lines(-psi2E13emb$PsiPlant, psi2E13$FittedE, lty=1, lwd=1, col=col3)
-lines(-psi2E14emb$PsiPlant, psi2E14emb$FittedE, lty=1, lwd=1, col=col4)
-lines(-psi2E21emb$PsiPlant, psi2E21emb$FittedE, lty=2, lwd=1, col=col1)
-lines(-psi2E22emb$PsiPlant, psi2E22emb$FittedE, lty=2, lwd=1, col=col2)
-lines(-psi2E23emb$PsiPlant, psi2E23emb$FittedE, lty=2, lwd=1, col=col3)
-lines(-psi2E24emb$PsiPlant, psi2E24emb$FittedE, lty=2, lwd=1, col=col4)
-lines(-psi2E31emb$PsiPlant, psi2E31emb$FittedE, lty=3, lwd=1, col=col1)
-lines(-psi2E32emb$PsiPlant, psi2E32emb$FittedE, lty=3, lwd=1, col=col2)
-lines(-psi2E33emb$PsiPlant, psi2E33emb$FittedE, lty=3, lwd=1, col=col3)
-lines(-psi2E34emb$PsiPlant, psi2E34emb$FittedE, lty=3, lwd=1, col=col4)
+plot(-psi2E11emb$psiPlant, psi2E11emb$FittedE, type="l", col=col1, ylab="Flow rate (mmol·m-2·s-1)", xlab = "Canopy pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,mm), lwd=1, main="after cavitation")
+lines(-psi2E12emb$psiPlant, psi2E12$FittedE, lty=1, lwd=1, col=col2)
+lines(-psi2E13emb$psiPlant, psi2E13$FittedE, lty=1, lwd=1, col=col3)
+lines(-psi2E14emb$psiPlant, psi2E14emb$FittedE, lty=1, lwd=1, col=col4)
+lines(-psi2E21emb$psiPlant, psi2E21emb$FittedE, lty=2, lwd=1, col=col1)
+lines(-psi2E22emb$psiPlant, psi2E22emb$FittedE, lty=2, lwd=1, col=col2)
+lines(-psi2E23emb$psiPlant, psi2E23emb$FittedE, lty=2, lwd=1, col=col3)
+lines(-psi2E24emb$psiPlant, psi2E24emb$FittedE, lty=2, lwd=1, col=col4)
+lines(-psi2E31emb$psiPlant, psi2E31emb$FittedE, lty=3, lwd=1, col=col1)
+lines(-psi2E32emb$psiPlant, psi2E32emb$FittedE, lty=3, lwd=1, col=col2)
+lines(-psi2E33emb$psiPlant, psi2E33emb$FittedE, lty=3, lwd=1, col=col3)
+lines(-psi2E34emb$psiPlant, psi2E34emb$FittedE, lty=3, lwd=1, col=col4)
 abline(v=-psiCav, col="gray", lwd=1.5)
 legend("topleft", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 
@@ -371,32 +372,32 @@ The supply function for the whole continuum contains much information. The $\Psi
 \begin{center}
 <<fig=TRUE, width=8, height=3.5, echo=FALSE>>==
 par(mar=c(4,4,2,1), mfrow=c(1,2))
-plot(-psi2E11$PsiPlant, psi2E11$dEdP, type="l", col=col1, ylab="dE/dP (mmol·m-2·s-1·MPa-1)", xlab = "Canopy pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,max(psi2E11$dEdP)), lwd=1 , main="original")
-lines(-psi2E12$PsiPlant, psi2E12$dEdP, lty=1, lwd=1, col=col2)
-lines(-psi2E13$PsiPlant, psi2E13$dEdP, lty=1, lwd=1, col=col3)
-lines(-psi2E14$PsiPlant, psi2E14$dEdP, lty=1, lwd=1, col=col4)
-lines(-psi2E21$PsiPlant, psi2E21$dEdP, lty=2, lwd=1, col=col1)
-lines(-psi2E22$PsiPlant, psi2E22$dEdP, lty=2, lwd=1, col=col2)
-lines(-psi2E23$PsiPlant, psi2E23$dEdP, lty=2, lwd=1, col=col3)
-lines(-psi2E24$PsiPlant, psi2E24$dEdP, lty=2, lwd=1, col=col4)
-lines(-psi2E31$PsiPlant, psi2E31$dEdP, lty=3, lwd=1, col=col1)
-lines(-psi2E32$PsiPlant, psi2E32$dEdP, lty=3, lwd=1, col=col2)
-lines(-psi2E33$PsiPlant, psi2E33$dEdP, lty=3, lwd=1, col=col3)
-lines(-psi2E34$PsiPlant, psi2E34$dEdP, lty=3, lwd=1, col=col4)
+plot(-psi2E11$psiPlant, psi2E11$dEdP, type="l", col=col1, ylab="dE/dP (mmol·m-2·s-1·MPa-1)", xlab = "Canopy pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,max(psi2E11$dEdP)), lwd=1 , main="original")
+lines(-psi2E12$psiPlant, psi2E12$dEdP, lty=1, lwd=1, col=col2)
+lines(-psi2E13$psiPlant, psi2E13$dEdP, lty=1, lwd=1, col=col3)
+lines(-psi2E14$psiPlant, psi2E14$dEdP, lty=1, lwd=1, col=col4)
+lines(-psi2E21$psiPlant, psi2E21$dEdP, lty=2, lwd=1, col=col1)
+lines(-psi2E22$psiPlant, psi2E22$dEdP, lty=2, lwd=1, col=col2)
+lines(-psi2E23$psiPlant, psi2E23$dEdP, lty=2, lwd=1, col=col3)
+lines(-psi2E24$psiPlant, psi2E24$dEdP, lty=2, lwd=1, col=col4)
+lines(-psi2E31$psiPlant, psi2E31$dEdP, lty=3, lwd=1, col=col1)
+lines(-psi2E32$psiPlant, psi2E32$dEdP, lty=3, lwd=1, col=col2)
+lines(-psi2E33$psiPlant, psi2E33$dEdP, lty=3, lwd=1, col=col3)
+lines(-psi2E34$psiPlant, psi2E34$dEdP, lty=3, lwd=1, col=col4)
 legend("topright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 
-plot(-psi2E11emb$PsiPlant, psi2E11emb$dEdP, type="l", col=col1, ylab="dE/dP (mmol·m-2·s-1·MPa-1)", xlab = "Canopy pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,max(psi2E11$dEdP)), lwd=1, main="after cavitation")
-lines(-psi2E12emb$PsiPlant, psi2E12emb$dEdP, lty=1, lwd=1, col=col2)
-lines(-psi2E13emb$PsiPlant, psi2E13emb$dEdP, lty=1, lwd=1, col=col3)
-lines(-psi2E14emb$PsiPlant, psi2E14emb$dEdP, lty=1, lwd=1, col=col4)
-lines(-psi2E21emb$PsiPlant, psi2E21emb$dEdP, lty=2, lwd=1, col=col1)
-lines(-psi2E22emb$PsiPlant, psi2E22emb$dEdP, lty=2, lwd=1, col=col2)
-lines(-psi2E23emb$PsiPlant, psi2E23emb$dEdP, lty=2, lwd=1, col=col3)
-lines(-psi2E24emb$PsiPlant, psi2E24emb$dEdP, lty=2, lwd=1, col=col4)
-lines(-psi2E31emb$PsiPlant, psi2E31emb$dEdP, lty=3, lwd=1, col=col1)
-lines(-psi2E32emb$PsiPlant, psi2E32emb$dEdP, lty=3, lwd=1, col=col2)
-lines(-psi2E33emb$PsiPlant, psi2E33emb$dEdP, lty=3, lwd=1, col=col3)
-lines(-psi2E34emb$PsiPlant, psi2E34emb$dEdP, lty=3, lwd=1, col=col4)
+plot(-psi2E11emb$psiPlant, psi2E11emb$dEdP, type="l", col=col1, ylab="dE/dP (mmol·m-2·s-1·MPa-1)", xlab = "Canopy pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,max(psi2E11$dEdP)), lwd=1, main="after cavitation")
+lines(-psi2E12emb$psiPlant, psi2E12emb$dEdP, lty=1, lwd=1, col=col2)
+lines(-psi2E13emb$psiPlant, psi2E13emb$dEdP, lty=1, lwd=1, col=col3)
+lines(-psi2E14emb$psiPlant, psi2E14emb$dEdP, lty=1, lwd=1, col=col4)
+lines(-psi2E21emb$psiPlant, psi2E21emb$dEdP, lty=2, lwd=1, col=col1)
+lines(-psi2E22emb$psiPlant, psi2E22emb$dEdP, lty=2, lwd=1, col=col2)
+lines(-psi2E23emb$psiPlant, psi2E23emb$dEdP, lty=2, lwd=1, col=col3)
+lines(-psi2E24emb$psiPlant, psi2E24emb$dEdP, lty=2, lwd=1, col=col4)
+lines(-psi2E31emb$psiPlant, psi2E31emb$dEdP, lty=3, lwd=1, col=col1)
+lines(-psi2E32emb$psiPlant, psi2E32emb$dEdP, lty=3, lwd=1, col=col2)
+lines(-psi2E33emb$psiPlant, psi2E33emb$dEdP, lty=3, lwd=1, col=col3)
+lines(-psi2E34emb$psiPlant, psi2E34emb$dEdP, lty=3, lwd=1, col=col4)
 abline(v=-psiCav, col="gray", lwd=1.5)
 legend("topright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 @
@@ -434,18 +435,18 @@ psi2E32 = hydraulics.supplyFunctionThreeElements(Emax, psiSoil2, krmax3, kstemma
 psi2E33 = hydraulics.supplyFunctionThreeElements(Emax, psiSoil3, krmax3, kstemmax, kleafmax,n3, alpha3, stemc,stemd, leafc,leafd, 0.0, dE)
 psi2E34 = hydraulics.supplyFunctionThreeElements(Emax, psiSoil4, krmax3, kstemmax, kleafmax,n3, alpha3, stemc,stemd, leafc,leafd, 0.0, dE)
 mm = max(psi2E11$FittedE)
-plot(-psi2E11$PsiLeaf, psi2E11$FittedE, type="l", col=col1, ylab="Flow rate (mmol·m-2·s-1)", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,mm), lwd=1, main="original")
-lines(-psi2E12$PsiLeaf, psi2E12$FittedE, lty=1, lwd=1, col=col2)
-lines(-psi2E13$PsiLeaf, psi2E13$FittedE, lty=1, lwd=1, col=col3)
-lines(-psi2E14$PsiLeaf, psi2E14$FittedE, lty=1, lwd=1, col=col4)
-lines(-psi2E21$PsiLeaf, psi2E21$FittedE, lty=2, lwd=1, col=col1)
-lines(-psi2E22$PsiLeaf, psi2E22$FittedE, lty=2, lwd=1, col=col2)
-lines(-psi2E23$PsiLeaf, psi2E23$FittedE, lty=2, lwd=1, col=col3)
-lines(-psi2E24$PsiLeaf, psi2E24$FittedE, lty=2, lwd=1, col=col4)
-lines(-psi2E31$PsiLeaf, psi2E31$FittedE, lty=3, lwd=1, col=col1)
-lines(-psi2E32$PsiLeaf, psi2E32$FittedE, lty=3, lwd=1, col=col2)
-lines(-psi2E33$PsiLeaf, psi2E33$FittedE, lty=3, lwd=1, col=col3)
-lines(-psi2E34$PsiLeaf, psi2E34$FittedE, lty=3, lwd=1, col=col4)
+plot(-psi2E11$psiLeaf, psi2E11$FittedE, type="l", col=col1, ylab="Flow rate (mmol·m-2·s-1)", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,mm), lwd=1, main="original")
+lines(-psi2E12$psiLeaf, psi2E12$FittedE, lty=1, lwd=1, col=col2)
+lines(-psi2E13$psiLeaf, psi2E13$FittedE, lty=1, lwd=1, col=col3)
+lines(-psi2E14$psiLeaf, psi2E14$FittedE, lty=1, lwd=1, col=col4)
+lines(-psi2E21$psiLeaf, psi2E21$FittedE, lty=2, lwd=1, col=col1)
+lines(-psi2E22$psiLeaf, psi2E22$FittedE, lty=2, lwd=1, col=col2)
+lines(-psi2E23$psiLeaf, psi2E23$FittedE, lty=2, lwd=1, col=col3)
+lines(-psi2E24$psiLeaf, psi2E24$FittedE, lty=2, lwd=1, col=col4)
+lines(-psi2E31$psiLeaf, psi2E31$FittedE, lty=3, lwd=1, col=col1)
+lines(-psi2E32$psiLeaf, psi2E32$FittedE, lty=3, lwd=1, col=col2)
+lines(-psi2E33$psiLeaf, psi2E33$FittedE, lty=3, lwd=1, col=col3)
+lines(-psi2E34$psiLeaf, psi2E34$FittedE, lty=3, lwd=1, col=col4)
 legend("topleft", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 
 psi2E11emb = hydraulics.supplyFunctionThreeElements(Emax, psiSoil1, krmax1, kstemmax, kleafmax,n1, alpha1, stemc,stemd, leafc,leafd,psiCav, dE)
@@ -461,18 +462,18 @@ psi2E32emb = hydraulics.supplyFunctionThreeElements(Emax, psiSoil2, krmax3, kste
 psi2E33emb = hydraulics.supplyFunctionThreeElements(Emax, psiSoil3, krmax3, kstemmax, kleafmax,n3, alpha3, stemc,stemd, leafc,leafd, psiCav, dE)
 psi2E34emb = hydraulics.supplyFunctionThreeElements(Emax, psiSoil4, krmax3, kstemmax, kleafmax,n3, alpha3, stemc,stemd, leafc,leafd, psiCav, dE)
 
-plot(-psi2E11emb$PsiLeaf, psi2E11emb$FittedE, type="l", col=col1, ylab="Flow rate (mmol·m-2·s-1)", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,mm), lwd=1, main="after cavitation")
-lines(-psi2E12emb$PsiLeaf, psi2E12$FittedE, lty=1, lwd=1, col=col2)
-lines(-psi2E13emb$PsiLeaf, psi2E13$FittedE, lty=1, lwd=1, col=col3)
-lines(-psi2E14emb$PsiLeaf, psi2E14emb$FittedE, lty=1, lwd=1, col=col4)
-lines(-psi2E21emb$PsiLeaf, psi2E21emb$FittedE, lty=2, lwd=1, col=col1)
-lines(-psi2E22emb$PsiLeaf, psi2E22emb$FittedE, lty=2, lwd=1, col=col2)
-lines(-psi2E23emb$PsiLeaf, psi2E23emb$FittedE, lty=2, lwd=1, col=col3)
-lines(-psi2E24emb$PsiLeaf, psi2E24emb$FittedE, lty=2, lwd=1, col=col4)
-lines(-psi2E31emb$PsiLeaf, psi2E31emb$FittedE, lty=3, lwd=1, col=col1)
-lines(-psi2E32emb$PsiLeaf, psi2E32emb$FittedE, lty=3, lwd=1, col=col2)
-lines(-psi2E33emb$PsiLeaf, psi2E33emb$FittedE, lty=3, lwd=1, col=col3)
-lines(-psi2E34emb$PsiLeaf, psi2E34emb$FittedE, lty=3, lwd=1, col=col4)
+plot(-psi2E11emb$psiLeaf, psi2E11emb$FittedE, type="l", col=col1, ylab="Flow rate (mmol·m-2·s-1)", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,mm), lwd=1, main="after cavitation")
+lines(-psi2E12emb$psiLeaf, psi2E12$FittedE, lty=1, lwd=1, col=col2)
+lines(-psi2E13emb$psiLeaf, psi2E13$FittedE, lty=1, lwd=1, col=col3)
+lines(-psi2E14emb$psiLeaf, psi2E14emb$FittedE, lty=1, lwd=1, col=col4)
+lines(-psi2E21emb$psiLeaf, psi2E21emb$FittedE, lty=2, lwd=1, col=col1)
+lines(-psi2E22emb$psiLeaf, psi2E22emb$FittedE, lty=2, lwd=1, col=col2)
+lines(-psi2E23emb$psiLeaf, psi2E23emb$FittedE, lty=2, lwd=1, col=col3)
+lines(-psi2E24emb$psiLeaf, psi2E24emb$FittedE, lty=2, lwd=1, col=col4)
+lines(-psi2E31emb$psiLeaf, psi2E31emb$FittedE, lty=3, lwd=1, col=col1)
+lines(-psi2E32emb$psiLeaf, psi2E32emb$FittedE, lty=3, lwd=1, col=col2)
+lines(-psi2E33emb$psiLeaf, psi2E33emb$FittedE, lty=3, lwd=1, col=col3)
+lines(-psi2E34emb$psiLeaf, psi2E34emb$FittedE, lty=3, lwd=1, col=col4)
 abline(v=-psiCav, col="gray", lwd=1.5)
 legend("topleft", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 
@@ -483,32 +484,32 @@ Note that overall conductance and the maximum flow of the supply function are sm
 \begin{center}
 <<fig=TRUE, width=8, height=3.5, echo=FALSE>>==
 par(mar=c(4,4,2,1), mfrow=c(1,2))
-plot(-psi2E11$PsiLeaf, psi2E11$dEdP, type="l", col=col1, ylab="dE/dP (mmol·m-2·s-1·MPa-1)", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,max(psi2E11$dEdP)), lwd=1 , main="original")
-lines(-psi2E12$PsiLeaf, psi2E12$dEdP, lty=1, lwd=1, col=col2)
-lines(-psi2E13$PsiLeaf, psi2E13$dEdP, lty=1, lwd=1, col=col3)
-lines(-psi2E14$PsiLeaf, psi2E14$dEdP, lty=1, lwd=1, col=col4)
-lines(-psi2E21$PsiLeaf, psi2E21$dEdP, lty=2, lwd=1, col=col1)
-lines(-psi2E22$PsiLeaf, psi2E22$dEdP, lty=2, lwd=1, col=col2)
-lines(-psi2E23$PsiLeaf, psi2E23$dEdP, lty=2, lwd=1, col=col3)
-lines(-psi2E24$PsiLeaf, psi2E24$dEdP, lty=2, lwd=1, col=col4)
-lines(-psi2E31$PsiLeaf, psi2E31$dEdP, lty=3, lwd=1, col=col1)
-lines(-psi2E32$PsiLeaf, psi2E32$dEdP, lty=3, lwd=1, col=col2)
-lines(-psi2E33$PsiLeaf, psi2E33$dEdP, lty=3, lwd=1, col=col3)
-lines(-psi2E34$PsiLeaf, psi2E34$dEdP, lty=3, lwd=1, col=col4)
+plot(-psi2E11$psiLeaf, psi2E11$dEdP, type="l", col=col1, ylab="dE/dP (mmol·m-2·s-1·MPa-1)", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,max(psi2E11$dEdP)), lwd=1 , main="original")
+lines(-psi2E12$psiLeaf, psi2E12$dEdP, lty=1, lwd=1, col=col2)
+lines(-psi2E13$psiLeaf, psi2E13$dEdP, lty=1, lwd=1, col=col3)
+lines(-psi2E14$psiLeaf, psi2E14$dEdP, lty=1, lwd=1, col=col4)
+lines(-psi2E21$psiLeaf, psi2E21$dEdP, lty=2, lwd=1, col=col1)
+lines(-psi2E22$psiLeaf, psi2E22$dEdP, lty=2, lwd=1, col=col2)
+lines(-psi2E23$psiLeaf, psi2E23$dEdP, lty=2, lwd=1, col=col3)
+lines(-psi2E24$psiLeaf, psi2E24$dEdP, lty=2, lwd=1, col=col4)
+lines(-psi2E31$psiLeaf, psi2E31$dEdP, lty=3, lwd=1, col=col1)
+lines(-psi2E32$psiLeaf, psi2E32$dEdP, lty=3, lwd=1, col=col2)
+lines(-psi2E33$psiLeaf, psi2E33$dEdP, lty=3, lwd=1, col=col3)
+lines(-psi2E34$psiLeaf, psi2E34$dEdP, lty=3, lwd=1, col=col4)
 legend("topright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 
-plot(-psi2E11emb$PsiLeaf, psi2E11emb$dEdP, type="l", col=col1, ylab="dE/dP (mmol·m-2·s-1·MPa-1)", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,max(psi2E11$dEdP)), lwd=1, main="after cavitation")
-lines(-psi2E12emb$PsiLeaf, psi2E12emb$dEdP, lty=1, lwd=1, col=col2)
-lines(-psi2E13emb$PsiLeaf, psi2E13emb$dEdP, lty=1, lwd=1, col=col3)
-lines(-psi2E14emb$PsiLeaf, psi2E14emb$dEdP, lty=1, lwd=1, col=col4)
-lines(-psi2E21emb$PsiLeaf, psi2E21emb$dEdP, lty=2, lwd=1, col=col1)
-lines(-psi2E22emb$PsiLeaf, psi2E22emb$dEdP, lty=2, lwd=1, col=col2)
-lines(-psi2E23emb$PsiLeaf, psi2E23emb$dEdP, lty=2, lwd=1, col=col3)
-lines(-psi2E24emb$PsiLeaf, psi2E24emb$dEdP, lty=2, lwd=1, col=col4)
-lines(-psi2E31emb$PsiLeaf, psi2E31emb$dEdP, lty=3, lwd=1, col=col1)
-lines(-psi2E32emb$PsiLeaf, psi2E32emb$dEdP, lty=3, lwd=1, col=col2)
-lines(-psi2E33emb$PsiLeaf, psi2E33emb$dEdP, lty=3, lwd=1, col=col3)
-lines(-psi2E34emb$PsiLeaf, psi2E34emb$dEdP, lty=3, lwd=1, col=col4)
+plot(-psi2E11emb$psiLeaf, psi2E11emb$dEdP, type="l", col=col1, ylab="dE/dP (mmol·m-2·s-1·MPa-1)", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,max(psi2E11$dEdP)), lwd=1, main="after cavitation")
+lines(-psi2E12emb$psiLeaf, psi2E12emb$dEdP, lty=1, lwd=1, col=col2)
+lines(-psi2E13emb$psiLeaf, psi2E13emb$dEdP, lty=1, lwd=1, col=col3)
+lines(-psi2E14emb$psiLeaf, psi2E14emb$dEdP, lty=1, lwd=1, col=col4)
+lines(-psi2E21emb$psiLeaf, psi2E21emb$dEdP, lty=2, lwd=1, col=col1)
+lines(-psi2E22emb$psiLeaf, psi2E22emb$dEdP, lty=2, lwd=1, col=col2)
+lines(-psi2E23emb$psiLeaf, psi2E23emb$dEdP, lty=2, lwd=1, col=col3)
+lines(-psi2E24emb$psiLeaf, psi2E24emb$dEdP, lty=2, lwd=1, col=col4)
+lines(-psi2E31emb$psiLeaf, psi2E31emb$dEdP, lty=3, lwd=1, col=col1)
+lines(-psi2E32emb$psiLeaf, psi2E32emb$dEdP, lty=3, lwd=1, col=col2)
+lines(-psi2E33emb$psiLeaf, psi2E33emb$dEdP, lty=3, lwd=1, col=col3)
+lines(-psi2E34emb$psiLeaf, psi2E34emb$dEdP, lty=3, lwd=1, col=col4)
 abline(v=-psiCav, col="gray", lwd=1.5)
 legend("topright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 @
@@ -614,34 +615,34 @@ supplyRS34 = hydraulics.supplyFunctionBelowground(psiSoilLayers4,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   maxNsteps = 400, psiMax = psiMax)
-plot(-supplyRS11$PsiRoot, supplyRS11$E, type="l", col=col1, ylab="Flow rate  (mmol·m-2·s-1)", 
+plot(-supplyRS11$psiRoot, supplyRS11$E, type="l", col=col1, ylab="Flow rate  (mmol·m-2·s-1)", 
      xlab = "Root crown pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,max(supplyRS11$E)), lwd=1, main  = "E")
-lines(-supplyRS12$PsiRoot, supplyRS12$E, lty=1, col=col2)
-lines(-supplyRS13$PsiRoot, supplyRS13$E, lty=1, col=col3)
-lines(-supplyRS14$PsiRoot, supplyRS14$E, lty=1, col=col4)
-lines(-supplyRS21$PsiRoot, supplyRS21$E, lty=2, col=col1)
-lines(-supplyRS22$PsiRoot, supplyRS22$E, lty=2, col=col2)
-lines(-supplyRS23$PsiRoot, supplyRS23$E, lty=2, col=col3)
-lines(-supplyRS24$PsiRoot, supplyRS24$E, lty=2, col=col4)
-lines(-supplyRS32$PsiRoot, supplyRS32$E, lty=3, col=col1)
-lines(-supplyRS32$PsiRoot, supplyRS32$E, lty=3, col=col2)
-lines(-supplyRS33$PsiRoot, supplyRS33$E, lty=3, col=col3)
-lines(-supplyRS34$PsiRoot, supplyRS34$E, lty=3, col=col4)
+lines(-supplyRS12$psiRoot, supplyRS12$E, lty=1, col=col2)
+lines(-supplyRS13$psiRoot, supplyRS13$E, lty=1, col=col3)
+lines(-supplyRS14$psiRoot, supplyRS14$E, lty=1, col=col4)
+lines(-supplyRS21$psiRoot, supplyRS21$E, lty=2, col=col1)
+lines(-supplyRS22$psiRoot, supplyRS22$E, lty=2, col=col2)
+lines(-supplyRS23$psiRoot, supplyRS23$E, lty=2, col=col3)
+lines(-supplyRS24$psiRoot, supplyRS24$E, lty=2, col=col4)
+lines(-supplyRS32$psiRoot, supplyRS32$E, lty=3, col=col1)
+lines(-supplyRS32$psiRoot, supplyRS32$E, lty=3, col=col2)
+lines(-supplyRS33$psiRoot, supplyRS33$E, lty=3, col=col3)
+lines(-supplyRS34$psiRoot, supplyRS34$E, lty=3, col=col4)
 legend("topleft", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 
-plot(-supplyRS11$PsiRoot, supplyRS11$dEdP, type="l", col=col1, ylab="dE/dP  (mmol·m-2·s-1·MPa-1)", 
+plot(-supplyRS11$psiRoot, supplyRS11$dEdP, type="l", col=col1, ylab="dE/dP  (mmol·m-2·s-1·MPa-1)", 
      xlab = "Root crown pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,max(supplyRS11$dEdP)), lwd=1, main="dE/dP")
-lines(-supplyRS12$PsiRoot, supplyRS12$dEdP, lty=1, col=col2)
-lines(-supplyRS13$PsiRoot, supplyRS13$dEdP, lty=1, col=col3)
-lines(-supplyRS14$PsiRoot, supplyRS14$dEdP, lty=1, col=col4)
-lines(-supplyRS21$PsiRoot, supplyRS21$dEdP, lty=2, col=col1)
-lines(-supplyRS22$PsiRoot, supplyRS22$dEdP, lty=2, col=col2)
-lines(-supplyRS23$PsiRoot, supplyRS23$dEdP, lty=2, col=col3)
-lines(-supplyRS24$PsiRoot, supplyRS24$dEdP, lty=2, col=col4)
-lines(-supplyRS31$PsiRoot, supplyRS31$dEdP, lty=3, col=col1)
-lines(-supplyRS32$PsiRoot, supplyRS32$dEdP, lty=3, col=col2)
-lines(-supplyRS33$PsiRoot, supplyRS33$dEdP, lty=3, col=col3)
-lines(-supplyRS34$PsiRoot, supplyRS34$dEdP, lty=3, col=col4)
+lines(-supplyRS12$psiRoot, supplyRS12$dEdP, lty=1, col=col2)
+lines(-supplyRS13$psiRoot, supplyRS13$dEdP, lty=1, col=col3)
+lines(-supplyRS14$psiRoot, supplyRS14$dEdP, lty=1, col=col4)
+lines(-supplyRS21$psiRoot, supplyRS21$dEdP, lty=2, col=col1)
+lines(-supplyRS22$psiRoot, supplyRS22$dEdP, lty=2, col=col2)
+lines(-supplyRS23$psiRoot, supplyRS23$dEdP, lty=2, col=col3)
+lines(-supplyRS24$psiRoot, supplyRS24$dEdP, lty=2, col=col4)
+lines(-supplyRS31$psiRoot, supplyRS31$dEdP, lty=3, col=col1)
+lines(-supplyRS32$psiRoot, supplyRS32$dEdP, lty=3, col=col2)
+lines(-supplyRS33$psiRoot, supplyRS33$dEdP, lty=3, col=col3)
+lines(-supplyRS34$psiRoot, supplyRS34$dEdP, lty=3, col=col4)
 legend("topright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 @
 \end{center}
@@ -649,34 +650,34 @@ The derivative of $dE/d\Psi_{leaf}$ for the supply function of the root system i
 \begin{center}
 <<fig=TRUE, width=8, height=10, echo=FALSE>>==
 par(mar=c(4,4,4,1), mfrow=c(2,2))
-plot(supplyRS21$E, -supplyRS21$PsiRoot, type="l", col="black", xlab="Total flow rate", 
+plot(supplyRS21$E, -supplyRS21$psiRoot, type="l", col="black", xlab="Total flow rate", 
      ylab = "Pressure (-MPa)",  main="Soil potentials 1 (original)", ylim=c(0, 5), xlim=c(0,max(supplyRS21$E)), lwd=2)
-lines(supplyRS21$E,-supplyRS21$PsiRhizo[,1], lty=4, col="black", lwd=2)
-lines(supplyRS21$E,-supplyRS21$PsiRhizo[,2],  lty=4, col="red", lwd=2)
-lines(supplyRS21$E,-supplyRS21$PsiRhizo[,3], lty=4, col="blue", lwd=2)
+lines(supplyRS21$E,-supplyRS21$psiRhizo[,1], lty=4, col="black", lwd=2)
+lines(supplyRS21$E,-supplyRS21$psiRhizo[,2],  lty=4, col="red", lwd=2)
+lines(supplyRS21$E,-supplyRS21$psiRhizo[,3], lty=4, col="blue", lwd=2)
 legend("topleft", bty="n", legend=c("Root crown", "Rhizo 1", "Rhizo 2", "Rhizo 3"), 
        lwd=2, lty=c(1,2,3,4,4,4), col=c(rep("black",4), "red","blue"), cex=0.8)
 
-plot(supplyRS22$E, -supplyRS22$PsiRoot, type="l", col="black", xlab="Total flow rate", 
+plot(supplyRS22$E, -supplyRS22$psiRoot, type="l", col="black", xlab="Total flow rate", 
      ylab = "Pressure (-MPa)",  main="Soil potentials 2 (original)", ylim=c(0, 5), xlim=c(0,max(supplyRS22$E)), lwd=2)
-lines(supplyRS22$E,-supplyRS22$PsiRhizo[,1], lty=4, col="black", lwd=2)
-lines(supplyRS22$E,-supplyRS22$PsiRhizo[,2],  lty=4, col="red", lwd=2)
-lines(supplyRS22$E,-supplyRS22$PsiRhizo[,3], lty=4, col="blue", lwd=2)
+lines(supplyRS22$E,-supplyRS22$psiRhizo[,1], lty=4, col="black", lwd=2)
+lines(supplyRS22$E,-supplyRS22$psiRhizo[,2],  lty=4, col="red", lwd=2)
+lines(supplyRS22$E,-supplyRS22$psiRhizo[,3], lty=4, col="blue", lwd=2)
 legend("topleft", bty="n", legend=c("Root crown", "Rhizo 1", "Rhizo 2", "Rhizo 3"), 
        lwd=2, lty=c(1,2,3,4,4,4), col=c(rep("black",4), "red","blue"), cex=0.8)
 
-plot(supplyRS23$E, -supplyRS23$PsiRoot, type="l", col="black", xlab="Total flow rate", 
+plot(supplyRS23$E, -supplyRS23$psiRoot, type="l", col="black", xlab="Total flow rate", 
      ylab = "Pressure (-MPa)",  main="Soil potentials 3 (original)", ylim=c(0, 5), xlim=c(0,max(supplyRS23$E)), lwd=2)
-lines(supplyRS23$E,-supplyRS23$PsiRhizo[,1], lty=4, col="black", lwd=2)
-lines(supplyRS23$E,-supplyRS23$PsiRhizo[,2],  lty=4, col="red", lwd=2)
-lines(supplyRS23$E,-supplyRS23$PsiRhizo[,3], lty=4, col="blue", lwd=2)
+lines(supplyRS23$E,-supplyRS23$psiRhizo[,1], lty=4, col="black", lwd=2)
+lines(supplyRS23$E,-supplyRS23$psiRhizo[,2],  lty=4, col="red", lwd=2)
+lines(supplyRS23$E,-supplyRS23$psiRhizo[,3], lty=4, col="blue", lwd=2)
 legend("topleft", bty="n", legend=c("Root crown", "Rhizo 1", "Rhizo 2", "Rhizo 3"), 
        lwd=2, lty=c(1,2,3,4,4,4), col=c(rep("black",4), "red","blue"), cex=0.8)
-plot(supplyRS24$E, -supplyRS24$PsiRoot, type="l", col="black", xlab="Total flow rate", 
+plot(supplyRS24$E, -supplyRS24$psiRoot, type="l", col="black", xlab="Total flow rate", 
      ylab = "Pressure (-MPa)",  main="Soil potentials 4 (original)", ylim=c(0, 5), xlim=c(0,max(supplyRS24$E)), lwd=2)
-lines(supplyRS24$E,-supplyRS24$PsiRhizo[,1], lty=4, col="black", lwd=2)
-lines(supplyRS24$E,-supplyRS24$PsiRhizo[,2],  lty=4, col="red", lwd=2)
-lines(supplyRS24$E,-supplyRS24$PsiRhizo[,3], lty=4, col="blue", lwd=2)
+lines(supplyRS24$E,-supplyRS24$psiRhizo[,1], lty=4, col="black", lwd=2)
+lines(supplyRS24$E,-supplyRS24$psiRhizo[,2],  lty=4, col="red", lwd=2)
+lines(supplyRS24$E,-supplyRS24$psiRhizo[,3], lty=4, col="blue", lwd=2)
 legend("topleft", bty="n", legend=c("Root crown", "Rhizo 1", "Rhizo 2", "Rhizo 3"), 
        lwd=2, lty=c(1,2,3,4,4,4), col=c(rep("black",4), "red","blue"), cex=0.8)
 
@@ -686,28 +687,28 @@ Note that when soil is not dry (first situation) pressure drop in the rhizospher
 \begin{center}
 <<fig=TRUE, width=6, height=7.0, echo=FALSE>>==
 par(mar=c(4,4,5,1), mfrow=c(2,2))
-plot(supplyRS21$E, supplyRS21$Elayers[,1], type="l", col="black", xlab="Total flow rate", 
+plot(supplyRS21$E, supplyRS21$ERhizo[,1], type="l", col="black", xlab="Total flow rate", 
      ylab = "Path flow rate",  main="Soil potentials 1",  xlim=c(0, 4), ylim=c(-1,4), lwd=1)
-lines(supplyRS21$E, supplyRS21$Elayers[,2], lty=2)
-lines(supplyRS21$E, supplyRS21$Elayers[,3], lty=3)
+lines(supplyRS21$E, supplyRS21$ERhizo[,2], lty=2)
+lines(supplyRS21$E, supplyRS21$ERhizo[,3], lty=3)
 abline(h=0, col="gray")
 legend("topleft", legend=c("Layer 1", "Layer 2", "Layer 3"), bty="n", lty=c(1,2,3))
-plot(supplyRS22$E, supplyRS22$Elayers[,1], type="l", col="black", xlab="Total flow rate", 
+plot(supplyRS22$E, supplyRS22$ERhizo[,1], type="l", col="black", xlab="Total flow rate", 
      ylab = "Path flow rate",  main="Soil potentials 2",  xlim=c(0, 2), ylim=c(-0.5,2), lwd=1)
-lines(supplyRS22$E, supplyRS22$Elayers[,2], lty=2)
-lines(supplyRS22$E, supplyRS22$Elayers[,3], lty=3)
+lines(supplyRS22$E, supplyRS22$ERhizo[,2], lty=2)
+lines(supplyRS22$E, supplyRS22$ERhizo[,3], lty=3)
 abline(h=0, col="gray")
 legend("topleft", legend=c("Layer 1", "Layer 2", "Layer 3"), bty="n", lty=c(1,2,3))
-plot(supplyRS23$E, supplyRS23$Elayers[,1], type="l", col="black", xlab="Total flow rate", 
+plot(supplyRS23$E, supplyRS23$ERhizo[,1], type="l", col="black", xlab="Total flow rate", 
      ylab = "Path flow rate",  main="Soil potentials 3",  xlim=c(0, 0.4), ylim=c(-0.2,0.4), lwd=1)
-lines(supplyRS23$E, supplyRS23$Elayers[,2], lty=2)
-lines(supplyRS23$E, supplyRS23$Elayers[,3], lty=3)
+lines(supplyRS23$E, supplyRS23$ERhizo[,2], lty=2)
+lines(supplyRS23$E, supplyRS23$ERhizo[,3], lty=3)
 abline(h=0, col="gray")
 legend("topleft", legend=c("Layer 1", "Layer 2", "Layer 3"), bty="n", lty=c(1,2,3))
-plot(supplyRS24$E, supplyRS24$Elayers[,1], type="l", col="black", xlab="Total flow rate", 
+plot(supplyRS24$E, supplyRS24$ERhizo[,1], type="l", col="black", xlab="Total flow rate", 
      ylab = "Path flow rate",  main="Soil potentials 4",  xlim=c(0, 0.05), ylim=c(-0.05,0.05), lwd=1)
-lines(supplyRS24$E, supplyRS24$Elayers[,2], lty=2)
-lines(supplyRS24$E, supplyRS24$Elayers[,3], lty=3)
+lines(supplyRS24$E, supplyRS24$ERhizo[,2], lty=2)
+lines(supplyRS24$E, supplyRS24$ERhizo[,3], lty=3)
 abline(h=0, col="gray")
 legend("topleft", legend=c("Layer 1", "Layer 2", "Layer 3"), bty="n", lty=c(1,2,3))
 @
@@ -731,98 +732,98 @@ supplyNetwork11 = hydraulics.supplyFunctionNetwork(psiSoilLayers1,
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
-                                  psiCav=0.0,
+                                  PLCstem =0.0,
                                   maxNsteps = 400, psiMax = psiMax)
 supplyNetwork12 = hydraulics.supplyFunctionNetwork(psiSoilLayers2,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
-                                  psiCav=0.0,
+                                  PLCstem=0.0,
                                   maxNsteps = 400, psiMax = psiMax)
 supplyNetwork13 = hydraulics.supplyFunctionNetwork(psiSoilLayers3,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
-                                  maxNsteps = 400, psiCav=0.0,
-                                  psiMax = psiMax)
+                                  PLCstem=0.0,
+                                  maxNsteps = 400, psiMax = psiMax)
 supplyNetwork14 = hydraulics.supplyFunctionNetwork(psiSoilLayers4,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
-                                  maxNsteps = 400, psiCav=0.0,
-                                  psiMax = psiMax)
+                                  PLCstem=0.0,
+                                  maxNsteps = 400, psiMax = psiMax)
 supplyNetwork21 = hydraulics.supplyFunctionNetwork(psiSoilLayers1,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
-                                  maxNsteps = 400, psiCav=0.0,
-                                  psiMax = psiMax)
+                                  PLCstem=0.0,
+                                  maxNsteps = 400, psiMax = psiMax)
 supplyNetwork22 = hydraulics.supplyFunctionNetwork(psiSoilLayers2,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
-                                  maxNsteps = 400, psiCav=0.0,
-                                  psiMax = psiMax)
+                                  PLCstem=0.0,
+                                  maxNsteps = 400, psiMax = psiMax)
 supplyNetwork23 = hydraulics.supplyFunctionNetwork(psiSoilLayers3,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
-                                  maxNsteps = 400, psiCav=0.0,
-                                  psiMax = psiMax)
+                                  PLCstem=0.0,
+                                  maxNsteps = 400, psiMax = psiMax)
 supplyNetwork24 = hydraulics.supplyFunctionNetwork(psiSoilLayers4,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
-                                  maxNsteps = 400, psiCav=0.0,
-                                  psiMax = psiMax)
+                                  PLCstem=0.0,
+                                  maxNsteps = 400, psiMax = psiMax)
 supplyNetwork31 = hydraulics.supplyFunctionNetwork(psiSoilLayers1,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
-                                  maxNsteps = 400, psiCav=0.0,
-                                  psiMax = psiMax)
+                                  PLCstem=0.0,
+                                  maxNsteps = 400, psiMax = psiMax)
 supplyNetwork32 = hydraulics.supplyFunctionNetwork(psiSoilLayers2,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
-                                  maxNsteps = 400, psiCav=0.0,
-                                  psiMax = psiMax)
+                                  PLCstem=0.0,
+                                  maxNsteps = 400, psiMax = psiMax)
 supplyNetwork33 = hydraulics.supplyFunctionNetwork(psiSoilLayers3,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
-                                  maxNsteps = 400, psiCav=0.0,
-                                  psiMax = psiMax)
+                                  PLCstem=0.0,
+                                  maxNsteps = 400, psiMax = psiMax)
 supplyNetwork34 = hydraulics.supplyFunctionNetwork(psiSoilLayers4,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
-                                  maxNsteps = 400, psiCav=0.0,
-                                  psiMax = psiMax)
-plot(-supplyNetwork11$PsiLeaf, supplyNetwork11$E, type="l", col=col1, ylab="Flow rate  (mmol·m-2·s-1)", 
+                                  PLCstem=0.0,
+                                  maxNsteps = 400, psiMax = psiMax)
+plot(-supplyNetwork11$psiLeaf, supplyNetwork11$E, type="l", col=col1, ylab="Flow rate  (mmol·m-2·s-1)", 
      xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,max(supplyNetwork11$E)), lwd=1, main="original")
-lines(-supplyNetwork12$PsiLeaf, supplyNetwork12$E, lty=1, col=col2)
-lines(-supplyNetwork13$PsiLeaf, supplyNetwork13$E, lty=1, col=col3)
-lines(-supplyNetwork14$PsiLeaf, supplyNetwork14$E, lty=1, col=col4)
-lines(-supplyNetwork21$PsiLeaf, supplyNetwork21$E, lty=2, col=col1)
-lines(-supplyNetwork22$PsiLeaf, supplyNetwork22$E, lty=2, col=col2)
-lines(-supplyNetwork23$PsiLeaf, supplyNetwork23$E, lty=2, col=col3)
-lines(-supplyNetwork24$PsiLeaf, supplyNetwork24$E, lty=2, col=col4)
-lines(-supplyNetwork32$PsiLeaf, supplyNetwork32$E, lty=3, col=col1)
-lines(-supplyNetwork32$PsiLeaf, supplyNetwork32$E, lty=3, col=col2)
-lines(-supplyNetwork33$PsiLeaf, supplyNetwork33$E, lty=3, col=col3)
-lines(-supplyNetwork34$PsiLeaf, supplyNetwork34$E, lty=3, col=col4)
+lines(-supplyNetwork12$psiLeaf, supplyNetwork12$E, lty=1, col=col2)
+lines(-supplyNetwork13$psiLeaf, supplyNetwork13$E, lty=1, col=col3)
+lines(-supplyNetwork14$psiLeaf, supplyNetwork14$E, lty=1, col=col4)
+lines(-supplyNetwork21$psiLeaf, supplyNetwork21$E, lty=2, col=col1)
+lines(-supplyNetwork22$psiLeaf, supplyNetwork22$E, lty=2, col=col2)
+lines(-supplyNetwork23$psiLeaf, supplyNetwork23$E, lty=2, col=col3)
+lines(-supplyNetwork24$psiLeaf, supplyNetwork24$E, lty=2, col=col4)
+lines(-supplyNetwork32$psiLeaf, supplyNetwork32$E, lty=3, col=col1)
+lines(-supplyNetwork32$psiLeaf, supplyNetwork32$E, lty=3, col=col2)
+lines(-supplyNetwork33$psiLeaf, supplyNetwork33$E, lty=3, col=col3)
+lines(-supplyNetwork34$psiLeaf, supplyNetwork34$E, lty=3, col=col4)
 legend("topleft", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 
 supplyNetwork11emb = hydraulics.supplyFunctionNetwork(psiSoilLayers1,
@@ -830,98 +831,98 @@ supplyNetwork11emb = hydraulics.supplyFunctionNetwork(psiSoilLayers1,
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
-                                  psiCav=psiCav,
+                                  PLCstem=plcCav,
                                   maxNsteps = 400, psiMax = psiMax)
 supplyNetwork12emb = hydraulics.supplyFunctionNetwork(psiSoilLayers2,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
-                                  maxNsteps = 400, psiCav=psiCav,
-                                  psiMax = psiMax)
+                                  PLCstem=plcCav,
+                                  maxNsteps = 400, psiMax = psiMax)
 supplyNetwork13emb = hydraulics.supplyFunctionNetwork(psiSoilLayers3,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
-                                  maxNsteps = 400, psiCav=psiCav,
-                                  psiMax = psiMax)
+                                  PLCstem=plcCav,
+                                  maxNsteps = 400, psiMax = psiMax)
 supplyNetwork14emb = hydraulics.supplyFunctionNetwork(psiSoilLayers4,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
-                                  maxNsteps = 400, psiCav=psiCav,
-                                  psiMax = psiMax)
+                                  PLCstem=plcCav,
+                                  maxNsteps = 400, psiMax = psiMax)
 supplyNetwork21emb = hydraulics.supplyFunctionNetwork(psiSoilLayers1,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
-                                  maxNsteps = 400, psiCav=psiCav,
-                                  psiMax = psiMax)
+                                  PLCstem=plcCav,
+                                  maxNsteps = 400, psiMax = psiMax)
 supplyNetwork22emb = hydraulics.supplyFunctionNetwork(psiSoilLayers2,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
-                                  maxNsteps = 400, psiCav=psiCav,
-                                  psiMax = psiMax)
+                                  PLCstem=plcCav,
+                                  maxNsteps = 400, psiMax = psiMax)
 supplyNetwork23emb = hydraulics.supplyFunctionNetwork(psiSoilLayers3,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
-                                  maxNsteps = 400, psiCav=psiCav,
-                                  psiMax = psiMax)
+                                  PLCstem=plcCav,
+                                  maxNsteps = 400, psiMax = psiMax)
 supplyNetwork24emb = hydraulics.supplyFunctionNetwork(psiSoilLayers4,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
-                                  maxNsteps = 400, psiCav=psiCav,
-                                  psiMax = psiMax)
+                                  PLCstem=plcCav,
+                                  maxNsteps = 400, psiMax = psiMax)
 supplyNetwork31emb = hydraulics.supplyFunctionNetwork(psiSoilLayers1,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
-                                  maxNsteps = 400, psiCav=psiCav,
-                                  psiMax = psiMax)
+                                  PLCstem=plcCav,
+                                  maxNsteps = 400, psiMax = psiMax)
 supplyNetwork32emb = hydraulics.supplyFunctionNetwork(psiSoilLayers2,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
-                                  maxNsteps = 400, psiCav=psiCav,
-                                  psiMax = psiMax)
+                                  PLCstem=plcCav,
+                                  maxNsteps = 400, psiMax = psiMax)
 supplyNetwork33emb = hydraulics.supplyFunctionNetwork(psiSoilLayers3,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
-                                  maxNsteps = 400, psiCav=psiCav,
-                                  psiMax = psiMax)
+                                  PLCstem=plcCav,
+                                  maxNsteps = 400, psiMax = psiMax)
 supplyNetwork34emb = hydraulics.supplyFunctionNetwork(psiSoilLayers4,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
-                                  maxNsteps = 400, psiCav=psiCav,
-                                  psiMax = psiMax)
-plot(-supplyNetwork11emb$PsiLeaf, supplyNetwork11emb$E, type="l", col=col1, ylab="Flow rate  (mmol·m-2·s-1)",
+                                  PLCstem=plcCav,
+                                  maxNsteps = 400, psiMax = psiMax)
+plot(-supplyNetwork11emb$psiLeaf, supplyNetwork11emb$E, type="l", col=col1, ylab="Flow rate  (mmol·m-2·s-1)",
      xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,max(supplyNetwork11$E)), lwd=1, main="after cavitation")
-lines(-supplyNetwork12emb$PsiLeaf, supplyNetwork12emb$E, lty=1, col=col2)
-lines(-supplyNetwork13emb$PsiLeaf, supplyNetwork13emb$E, lty=1, col=col3)
-lines(-supplyNetwork14emb$PsiLeaf, supplyNetwork14emb$E, lty=1, col=col4)
-lines(-supplyNetwork21emb$PsiLeaf, supplyNetwork21emb$E, lty=2, col=col1)
-lines(-supplyNetwork22emb$PsiLeaf, supplyNetwork22emb$E, lty=2, col=col2)
-lines(-supplyNetwork23emb$PsiLeaf, supplyNetwork23emb$E, lty=2, col=col3)
-lines(-supplyNetwork24emb$PsiLeaf, supplyNetwork24emb$E, lty=2, col=col4)
-lines(-supplyNetwork32emb$PsiLeaf, supplyNetwork32emb$E, lty=3, col=col1)
-lines(-supplyNetwork32emb$PsiLeaf, supplyNetwork32emb$E, lty=3, col=col2)
-lines(-supplyNetwork33emb$PsiLeaf, supplyNetwork33emb$E, lty=3, col=col3)
-lines(-supplyNetwork34emb$PsiLeaf, supplyNetwork34emb$E, lty=3, col=col4)
+lines(-supplyNetwork12emb$psiLeaf, supplyNetwork12emb$E, lty=1, col=col2)
+lines(-supplyNetwork13emb$psiLeaf, supplyNetwork13emb$E, lty=1, col=col3)
+lines(-supplyNetwork14emb$psiLeaf, supplyNetwork14emb$E, lty=1, col=col4)
+lines(-supplyNetwork21emb$psiLeaf, supplyNetwork21emb$E, lty=2, col=col1)
+lines(-supplyNetwork22emb$psiLeaf, supplyNetwork22emb$E, lty=2, col=col2)
+lines(-supplyNetwork23emb$psiLeaf, supplyNetwork23emb$E, lty=2, col=col3)
+lines(-supplyNetwork24emb$psiLeaf, supplyNetwork24emb$E, lty=2, col=col4)
+lines(-supplyNetwork32emb$psiLeaf, supplyNetwork32emb$E, lty=3, col=col1)
+lines(-supplyNetwork32emb$psiLeaf, supplyNetwork32emb$E, lty=3, col=col2)
+lines(-supplyNetwork33emb$psiLeaf, supplyNetwork33emb$E, lty=3, col=col3)
+lines(-supplyNetwork34emb$psiLeaf, supplyNetwork34emb$E, lty=3, col=col4)
 legend("topleft", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 abline(v=-psiCav, col="gray", lwd=1.5)
 @
@@ -930,34 +931,34 @@ As with the two-element representation of the soil-plant continuum, the derivati
 \begin{center}
 <<fig=TRUE, width=8, height=3.5, echo=FALSE>>==
 par(mar=c(4,4,2,1), mfrow=c(1,2))
-plot(-supplyNetwork11$PsiLeaf, supplyNetwork11$dEdP, type="l", col=col1, ylab="dE/dP  (mmol·m-2·s-1·MPa-1)", 
+plot(-supplyNetwork11$psiLeaf, supplyNetwork11$dEdP, type="l", col=col1, ylab="dE/dP  (mmol·m-2·s-1·MPa-1)", 
      xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,max(supplyNetwork11$dEdP)), lwd=1, main="original")
-lines(-supplyNetwork12$PsiLeaf, supplyNetwork12$dEdP, lty=1, col=col2)
-lines(-supplyNetwork13$PsiLeaf, supplyNetwork13$dEdP, lty=1, col=col3)
-lines(-supplyNetwork14$PsiLeaf, supplyNetwork14$dEdP, lty=1, col=col4)
-lines(-supplyNetwork21$PsiLeaf, supplyNetwork21$dEdP, lty=2, col=col1)
-lines(-supplyNetwork22$PsiLeaf, supplyNetwork22$dEdP, lty=2, col=col2)
-lines(-supplyNetwork23$PsiLeaf, supplyNetwork23$dEdP, lty=2, col=col3)
-lines(-supplyNetwork24$PsiLeaf, supplyNetwork24$dEdP, lty=2, col=col4)
-lines(-supplyNetwork31$PsiLeaf, supplyNetwork31$dEdP, lty=3, col=col1)
-lines(-supplyNetwork32$PsiLeaf, supplyNetwork32$dEdP, lty=3, col=col2)
-lines(-supplyNetwork33$PsiLeaf, supplyNetwork33$dEdP, lty=3, col=col3)
-lines(-supplyNetwork34$PsiLeaf, supplyNetwork34$dEdP, lty=3, col=col4)
+lines(-supplyNetwork12$psiLeaf, supplyNetwork12$dEdP, lty=1, col=col2)
+lines(-supplyNetwork13$psiLeaf, supplyNetwork13$dEdP, lty=1, col=col3)
+lines(-supplyNetwork14$psiLeaf, supplyNetwork14$dEdP, lty=1, col=col4)
+lines(-supplyNetwork21$psiLeaf, supplyNetwork21$dEdP, lty=2, col=col1)
+lines(-supplyNetwork22$psiLeaf, supplyNetwork22$dEdP, lty=2, col=col2)
+lines(-supplyNetwork23$psiLeaf, supplyNetwork23$dEdP, lty=2, col=col3)
+lines(-supplyNetwork24$psiLeaf, supplyNetwork24$dEdP, lty=2, col=col4)
+lines(-supplyNetwork31$psiLeaf, supplyNetwork31$dEdP, lty=3, col=col1)
+lines(-supplyNetwork32$psiLeaf, supplyNetwork32$dEdP, lty=3, col=col2)
+lines(-supplyNetwork33$psiLeaf, supplyNetwork33$dEdP, lty=3, col=col3)
+lines(-supplyNetwork34$psiLeaf, supplyNetwork34$dEdP, lty=3, col=col4)
 legend("topright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 
-plot(-supplyNetwork11emb$PsiLeaf, supplyNetwork11emb$dEdP, type="l", col=col1, ylab="dE/dP  (mmol·m-2·s-1·MPa-1)", 
+plot(-supplyNetwork11emb$psiLeaf, supplyNetwork11emb$dEdP, type="l", col=col1, ylab="dE/dP  (mmol·m-2·s-1·MPa-1)", 
      xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,max(supplyNetwork11$dEdP)), lwd=1, main="after cavitation")
-lines(-supplyNetwork12emb$PsiLeaf, supplyNetwork12emb$dEdP, lty=1, col=col2)
-lines(-supplyNetwork13emb$PsiLeaf, supplyNetwork13emb$dEdP, lty=1, col=col3)
-lines(-supplyNetwork14emb$PsiLeaf, supplyNetwork14emb$dEdP, lty=1, col=col4)
-lines(-supplyNetwork21emb$PsiLeaf, supplyNetwork21emb$dEdP, lty=2, col=col1)
-lines(-supplyNetwork22emb$PsiLeaf, supplyNetwork22emb$dEdP, lty=2, col=col2)
-lines(-supplyNetwork23emb$PsiLeaf, supplyNetwork23emb$dEdP, lty=2, col=col3)
-lines(-supplyNetwork24emb$PsiLeaf, supplyNetwork24emb$dEdP, lty=2, col=col4)
-lines(-supplyNetwork31emb$PsiLeaf, supplyNetwork31emb$dEdP, lty=3, col=col1)
-lines(-supplyNetwork32emb$PsiLeaf, supplyNetwork32emb$dEdP, lty=3, col=col2)
-lines(-supplyNetwork33emb$PsiLeaf, supplyNetwork33emb$dEdP, lty=3, col=col3)
-lines(-supplyNetwork34emb$PsiLeaf, supplyNetwork34emb$dEdP, lty=3, col=col4)
+lines(-supplyNetwork12emb$psiLeaf, supplyNetwork12emb$dEdP, lty=1, col=col2)
+lines(-supplyNetwork13emb$psiLeaf, supplyNetwork13emb$dEdP, lty=1, col=col3)
+lines(-supplyNetwork14emb$psiLeaf, supplyNetwork14emb$dEdP, lty=1, col=col4)
+lines(-supplyNetwork21emb$psiLeaf, supplyNetwork21emb$dEdP, lty=2, col=col1)
+lines(-supplyNetwork22emb$psiLeaf, supplyNetwork22emb$dEdP, lty=2, col=col2)
+lines(-supplyNetwork23emb$psiLeaf, supplyNetwork23emb$dEdP, lty=2, col=col3)
+lines(-supplyNetwork24emb$psiLeaf, supplyNetwork24emb$dEdP, lty=2, col=col4)
+lines(-supplyNetwork31emb$psiLeaf, supplyNetwork31emb$dEdP, lty=3, col=col1)
+lines(-supplyNetwork32emb$psiLeaf, supplyNetwork32emb$dEdP, lty=3, col=col2)
+lines(-supplyNetwork33emb$psiLeaf, supplyNetwork33emb$dEdP, lty=3, col=col3)
+lines(-supplyNetwork34emb$psiLeaf, supplyNetwork34emb$dEdP, lty=3, col=col4)
 abline(v=-psiCav, col="gray", lwd=1.5)
 legend("topright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 @
@@ -967,41 +968,41 @@ As with the root system, we can know the water potentials in different points of
 \begin{center}
 <<fig=TRUE, width=8, height=8, echo=FALSE>>==
 par(mar=c(4,4,4,1), mfrow=c(2,2))
-plot(supplyNetwork21$E, -supplyNetwork21$PsiLeaf, type="l", col="black", xlab="Total flow rate", 
+plot(supplyNetwork21$E, -supplyNetwork21$psiLeaf, type="l", col="black", xlab="Total flow rate", 
      ylab = "Pressure (-MPa)",  main="Soil potentials 1 (original)", ylim=c(0, 5), xlim=c(0,max(supplyNetwork21$E)), lwd=2)
-lines(supplyNetwork21$E,-supplyNetwork21$PsiStem, lty=2, lwd=2)
-lines(supplyNetwork21$E,-supplyNetwork21$PsiRoot, lty=3, lwd=2)
-lines(supplyNetwork21$E,-supplyNetwork21$PsiRhizo[,1], lty=4, col="black", lwd=2)
-lines(supplyNetwork21$E,-supplyNetwork21$PsiRhizo[,2],  lty=4, col="red", lwd=2)
-lines(supplyNetwork21$E,-supplyNetwork21$PsiRhizo[,3], lty=4, col="blue", lwd=2)
+lines(supplyNetwork21$E,-supplyNetwork21$psiStem[,1], lty=2, lwd=2)
+lines(supplyNetwork21$E,-supplyNetwork21$psiRoot, lty=3, lwd=2)
+lines(supplyNetwork21$E,-supplyNetwork21$psiRhizo[,1], lty=4, col="black", lwd=2)
+lines(supplyNetwork21$E,-supplyNetwork21$psiRhizo[,2],  lty=4, col="red", lwd=2)
+lines(supplyNetwork21$E,-supplyNetwork21$psiRhizo[,3], lty=4, col="blue", lwd=2)
 legend("topleft", bty="n", legend=c("Leaf","Stem","Root crown", "Rhizo 1", "Rhizo 2", "Rhizo 3"), 
        lwd=2, lty=c(1,2,3,4,4,4), col=c(rep("black",4), "red","blue"), cex=0.8)
-plot(supplyNetwork21emb$E, -supplyNetwork21emb$PsiLeaf, type="l", col="black", xlab="Total flow rate", 
+plot(supplyNetwork21emb$E, -supplyNetwork21emb$psiLeaf, type="l", col="black", xlab="Total flow rate", 
      ylab = "Pressure (-MPa)",  main="Soil potentials 1 (cavitation)", ylim=c(0, 5), xlim=c(0,max(supplyNetwork21$E)), lwd=2)
-lines(supplyNetwork21emb$E,-supplyNetwork21emb$PsiStem, lty=2)
-lines(supplyNetwork21emb$E,-supplyNetwork21emb$PsiRoot, lty=3)
-lines(supplyNetwork21emb$E,-supplyNetwork21emb$PsiRhizo[,1], lty=4, col="black", lwd=2)
-lines(supplyNetwork21emb$E,-supplyNetwork21emb$PsiRhizo[,2], lty=4, col="red", lwd=2)
-lines(supplyNetwork21emb$E,-supplyNetwork21emb$PsiRhizo[,3], lty=4, col="blue", lwd=2)
+lines(supplyNetwork21emb$E,-supplyNetwork21emb$psiStem[,1], lty=2)
+lines(supplyNetwork21emb$E,-supplyNetwork21emb$psiRoot, lty=3)
+lines(supplyNetwork21emb$E,-supplyNetwork21emb$psiRhizo[,1], lty=4, col="black", lwd=2)
+lines(supplyNetwork21emb$E,-supplyNetwork21emb$psiRhizo[,2], lty=4, col="red", lwd=2)
+lines(supplyNetwork21emb$E,-supplyNetwork21emb$psiRhizo[,3], lty=4, col="blue", lwd=2)
 legend("topleft", bty="n", legend=c("Leaf","Stem","Root crown", "Rhizo 1", "Rhizo 2", "Rhizo 3"), 
        lwd=2, lty=c(1,2,3,4,4,4), col=c(rep("black",4), "red","blue"), cex=0.8)
 
-plot(supplyNetwork24$E, -supplyNetwork24$PsiLeaf, type="l", col="black", xlab="Total flow rate", 
+plot(supplyNetwork24$E, -supplyNetwork24$psiLeaf, type="l", col="black", xlab="Total flow rate", 
      ylab = "Pressure (-MPa)",  main="Soil potentials 4 (original)", ylim=c(0, 5), xlim=c(0,max(supplyNetwork24$E)), lwd=2)
-lines(supplyNetwork24$E,-supplyNetwork24$PsiStem, lty=2, lwd=2)
-lines(supplyNetwork24$E,-supplyNetwork24$PsiRoot, lty=3, lwd=2)
-lines(supplyNetwork24$E,-supplyNetwork24$PsiRhizo[,1], lty=4, col="black", lwd=2)
-lines(supplyNetwork24$E,-supplyNetwork24$PsiRhizo[,2],  lty=4, col="red", lwd=2)
-lines(supplyNetwork24$E,-supplyNetwork24$PsiRhizo[,3], lty=4, col="blue", lwd=2)
+lines(supplyNetwork24$E,-supplyNetwork24$psiStem[,1], lty=2, lwd=2)
+lines(supplyNetwork24$E,-supplyNetwork24$psiRoot, lty=3, lwd=2)
+lines(supplyNetwork24$E,-supplyNetwork24$psiRhizo[,1], lty=4, col="black", lwd=2)
+lines(supplyNetwork24$E,-supplyNetwork24$psiRhizo[,2],  lty=4, col="red", lwd=2)
+lines(supplyNetwork24$E,-supplyNetwork24$psiRhizo[,3], lty=4, col="blue", lwd=2)
 legend("topleft", bty="n", legend=c("Leaf","Stem","Root crown", "Rhizo 1", "Rhizo 2", "Rhizo 3"), 
        lwd=2, lty=c(1,2,3,4,4,4), col=c(rep("black",4), "red","blue"), cex=0.8)
-plot(supplyNetwork24emb$E, -supplyNetwork24emb$PsiLeaf, type="l", col="black", xlab="Total flow rate", 
+plot(supplyNetwork24emb$E, -supplyNetwork24emb$psiLeaf, type="l", col="black", xlab="Total flow rate", 
      ylab = "Pressure (-MPa)",  main="Soil potentials 4 (cavitation)", ylim=c(0, 5), xlim=c(0,max(supplyNetwork24$E)), lwd=2)
-lines(supplyNetwork24emb$E,-supplyNetwork24emb$PsiStem, lty=2)
-lines(supplyNetwork24emb$E,-supplyNetwork24emb$PsiRoot, lty=3)
-lines(supplyNetwork24emb$E,-supplyNetwork24emb$PsiRhizo[,1], lty=4, col="black", lwd=2)
-lines(supplyNetwork24emb$E,-supplyNetwork24emb$PsiRhizo[,2], lty=4, col="red", lwd=2)
-lines(supplyNetwork24emb$E,-supplyNetwork24emb$PsiRhizo[,3], lty=4, col="blue", lwd=2)
+lines(supplyNetwork24emb$E,-supplyNetwork24emb$psiStem[,1], lty=2)
+lines(supplyNetwork24emb$E,-supplyNetwork24emb$psiRoot, lty=3)
+lines(supplyNetwork24emb$E,-supplyNetwork24emb$psiRhizo[,1], lty=4, col="black", lwd=2)
+lines(supplyNetwork24emb$E,-supplyNetwork24emb$psiRhizo[,2], lty=4, col="red", lwd=2)
+lines(supplyNetwork24emb$E,-supplyNetwork24emb$psiRhizo[,3], lty=4, col="blue", lwd=2)
 legend("topleft", bty="n", legend=c("Leaf","Stem","Root crown", "Rhizo 1", "Rhizo 2", "Rhizo 3"), 
        lwd=2, lty=c(1,2,3,4,4,4), col=c(rep("black",4), "red","blue"), cex=0.8)
 
@@ -1065,12 +1066,12 @@ klat = 0.001
 ksto = 0.001
 par(mar=c(4,4,2,1))
 psiMax = -7.0
-supplyAG10 = hydraulics.supplyFunctionAboveground(supplyRS11$E, supplyRS11$PsiRoot,
+supplyAG10 = hydraulics.supplyFunctionAboveground(supplyRS11$E, supplyRS11$psiRoot,
                                                   kstemmax, stemc, stemd,
                                                   kleafmax, leafc, leafd,
-                                                  nseg, 0.0)
+                                                  PLCstem)
 
-supplyAG11 = hydraulics.supplyFunctionAbovegroundCapacitance(supplyRS11$E, supplyRS11$PsiRoot,
+supplyAG11 = hydraulics.supplyFunctionAbovegroundCapacitance(supplyRS11$E, supplyRS11$psiRoot,
                                                   EPrev, psiRootPrev, 
                                                   psiStem, PLCstem, RWCstorage,
                                                   0.0, 1.0,
@@ -1079,7 +1080,7 @@ supplyAG11 = hydraulics.supplyFunctionAbovegroundCapacitance(supplyRS11$E, suppl
                                                   Vsapwood1, stemfapo, stempi0, stemeps,
                                                   Vleaf, leaffapo, leafpi0, leafeps,
                                                   klat, ksto, tstep, 100)
-supplyAG12 = hydraulics.supplyFunctionAbovegroundCapacitance(supplyRS11$E, supplyRS11$PsiRoot,
+supplyAG12 = hydraulics.supplyFunctionAbovegroundCapacitance(supplyRS11$E, supplyRS11$psiRoot,
                                                   EPrev, psiRootPrev,
                                                   psiStem, PLCstem, RWCstorage,
                                                   0.0, 1.0,
@@ -1088,7 +1089,7 @@ supplyAG12 = hydraulics.supplyFunctionAbovegroundCapacitance(supplyRS11$E, suppl
                                                   Vsapwood2, stemfapo, stempi0, stemeps,
                                                   Vleaf, leaffapo, leafpi0, leafeps,
                                                   klat, ksto, tstep, 100)
-supplyAG13 = hydraulics.supplyFunctionAbovegroundCapacitance(supplyRS11$E, supplyRS11$PsiRoot,
+supplyAG13 = hydraulics.supplyFunctionAbovegroundCapacitance(supplyRS11$E, supplyRS11$psiRoot,
                                                   EPrev, psiRootPrev,
                                                   psiStem, PLCstem, RWCstorage,
                                                   0.0, 1.0,
@@ -1097,19 +1098,18 @@ supplyAG13 = hydraulics.supplyFunctionAbovegroundCapacitance(supplyRS11$E, suppl
                                                   Vsapwood3, stemfapo, stempi0, stemeps,
                                                   Vleaf, leaffapo, leafpi0, leafeps,
                                                   klat, ksto, tstep, 100)
-plot(-supplyNetwork11$PsiLeaf, supplyNetwork11$E, type="l", col=col1, ylab="Flow rate  (mmol·m-2·s-1)", 
+plot(-supplyNetwork11$psiLeaf, supplyNetwork11$E, type="l", col=col1, ylab="Flow rate  (mmol·m-2·s-1)", 
      xlab = "Leaf pressure (-MPa)",  xlim=c(0, 6), ylim=c(0,6), lwd=1.5)
-lines(-supplyAG10$PsiLeaf, supplyAG10$E, lty=1, col=col1)
-lines(-supplyAG11$PsiLeaf, supplyAG11$E, lty=2, col=col1)
-lines(-supplyAG12$PsiLeaf, supplyAG12$E, lty=3, col=col1)
-lines(-supplyAG13$PsiLeaf, supplyAG13$E, lty=4, col=col1)
-plot(-supplyNetwork11$PsiLeaf, supplyNetwork11$dEdP, type="l", col=col1, ylab="dEdP", 
+lines(-supplyAG10$psiLeaf, supplyAG10$E, lty=1, col=col1)
+lines(-supplyAG11$psiLeaf, supplyAG11$E, lty=2, col=col1)
+lines(-supplyAG12$psiLeaf, supplyAG12$E, lty=3, col=col1)
+lines(-supplyAG13$psiLeaf, supplyAG13$E, lty=4, col=col1)
+plot(-supplyNetwork11$psiLeaf, supplyNetwork11$dEdP, type="l", col=col1, ylab="dEdP", 
      xlab = "Leaf pressure (-MPa)",  xlim=c(0, 6), ylim =c(0, 3), lwd=1.5)
-lines(-supplyAG10$PsiLeaf, supplyAG10$dEdP, lty=1, col=col1)
-lines(-supplyAG11$PsiLeaf, supplyAG11$dEdP, lty=2, col=col1)
-lines(-supplyAG12$PsiLeaf, supplyAG12$dEdP, lty=3, col=col1)
-lines(-supplyAG13$PsiLeaf, supplyAG13$dEdP, lty=4, col=col1)
-
+lines(-supplyAG10$psiLeaf, supplyAG10$dEdP, lty=1, col=col1)
+lines(-supplyAG11$psiLeaf, supplyAG11$dEdP, lty=2, col=col1)
+lines(-supplyAG12$psiLeaf, supplyAG12$dEdP, lty=3, col=col1)
+lines(-supplyAG13$psiLeaf, supplyAG13$dEdP, lty=4, col=col1)
 @
 \end{center}
 As expected, the larger the sapwood volume, the larger the effect of conduit cavitation on the downstream flow. The observed initial increase in $dE_i/d\Psi$ may be due to the non-linear water release. In a dynamic context with sufficiently small time steps, the PLC from the previous time step should not be too different to the new PLC value, so that such increases should be rather small.
@@ -1389,40 +1389,40 @@ for(i in 1:length(pres)) {
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc, leafd,
-                                  psiCav=psiCav,
+                                  PLCstem = plcCav,
                                   maxNsteps = 400, psiMax = psiMax)
   sfn2 = hydraulics.supplyFunctionNetwork(psiSoilLayers2,
                                   krhizomaxvec1,s$VG_n,s$VG_alpha,
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc, leafd,
-                                  psiCav=psiCav,
+                                  PLCstem = plcCav,
                                   maxNsteps = 400, psiMax = psiMax)
   sfn3 = hydraulics.supplyFunctionNetwork(psiSoilLayers3,
                                   krhizomaxvec1,s$VG_n,s$VG_alpha,
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc, leafd,
-                                  psiCav=psiCav,
+                                  PLCstem = plcCav,
                                   maxNsteps = 400, psiMax = psiMax)
   sfn4 = hydraulics.supplyFunctionNetwork(psiSoilLayers4,
                                   krhizomaxvec1,s$VG_n,s$VG_alpha,
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc, leafd,
-                                  psiCav=psiCav,
+                                  PLCstem = plcCav,
                                   maxNsteps = 400, psiMax = psiMax)
   if(i==1) {
-    plot(-sfn1$PsiLeaf, sfn1$E ,type="l", ylab="Flow rate  (mmol·m-2·s-1)", 
+    plot(-sfn1$psiLeaf, sfn1$E ,type="l", ylab="Flow rate  (mmol·m-2·s-1)", 
        xlab = "Leaf Pressure (-MPa)",  main="",  xlim=c(0, 7), ylim=c(0,max(sfn1$E)), lwd=1, col = col1)
-    lines(-sfn2$PsiLeaf, sfn2$E,lwd=1, lty=1, col = col2)
-    lines(-sfn3$PsiLeaf, sfn3$E,lwd=1, lty=1, col = col3)
-    lines(-sfn4$PsiLeaf, sfn4$E,lwd=1, lty=1, col = col4)
+    lines(-sfn2$psiLeaf, sfn2$E,lwd=1, lty=1, col = col2)
+    lines(-sfn3$psiLeaf, sfn3$E,lwd=1, lty=1, col = col3)
+    lines(-sfn4$psiLeaf, sfn4$E,lwd=1, lty=1, col = col4)
   } else {
-    lines(-sfn1$PsiLeaf, sfn1$E,lwd=1, lty=i, col = col1)
-    lines(-sfn2$PsiLeaf, sfn2$E,lwd=1, lty=i, col = col2)
-    lines(-sfn3$PsiLeaf, sfn3$E,lwd=1, lty=i, col = col3)
-    lines(-sfn4$PsiLeaf, sfn4$E,lwd=1, lty=i, col = col4)
+    lines(-sfn1$psiLeaf, sfn1$E,lwd=1, lty=i, col = col1)
+    lines(-sfn2$psiLeaf, sfn2$E,lwd=1, lty=i, col = col2)
+    lines(-sfn3$psiLeaf, sfn3$E,lwd=1, lty=i, col = col3)
+    lines(-sfn4$psiLeaf, sfn4$E,lwd=1, lty=i, col = col4)
   }  
 }
 abline(h=0, col="gray")
@@ -1551,58 +1551,58 @@ Let's now fix wind speed to 2 m/s. The application of the above equations to the
 <<fig=TRUE, width=8, height=4, echo=FALSE>>==
 u = 2 # m*s-1
 par(mar=c(4,4,2,1), mfrow=c(1,2))
-psi2A11 = photo.leafPhotosynthesisFunction(supplyNetwork11,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A12 = photo.leafPhotosynthesisFunction(supplyNetwork12,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A13 = photo.leafPhotosynthesisFunction(supplyNetwork13,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A14 = photo.leafPhotosynthesisFunction(supplyNetwork14,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A21 = photo.leafPhotosynthesisFunction(supplyNetwork21,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A22 = photo.leafPhotosynthesisFunction(supplyNetwork22,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A23 = photo.leafPhotosynthesisFunction(supplyNetwork23,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A24 = photo.leafPhotosynthesisFunction(supplyNetwork24,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A31 = photo.leafPhotosynthesisFunction(supplyNetwork31,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A32 = photo.leafPhotosynthesisFunction(supplyNetwork32,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A33 = photo.leafPhotosynthesisFunction(supplyNetwork33,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A34 = photo.leafPhotosynthesisFunction(supplyNetwork34,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A11 = photo.leafPhotosynthesisFunction(supplyNetwork11$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A12 = photo.leafPhotosynthesisFunction(supplyNetwork12$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A13 = photo.leafPhotosynthesisFunction(supplyNetwork13$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A14 = photo.leafPhotosynthesisFunction(supplyNetwork14$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A21 = photo.leafPhotosynthesisFunction(supplyNetwork21$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A22 = photo.leafPhotosynthesisFunction(supplyNetwork22$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A23 = photo.leafPhotosynthesisFunction(supplyNetwork23$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A24 = photo.leafPhotosynthesisFunction(supplyNetwork24$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A31 = photo.leafPhotosynthesisFunction(supplyNetwork31$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A32 = photo.leafPhotosynthesisFunction(supplyNetwork32$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A33 = photo.leafPhotosynthesisFunction(supplyNetwork33$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A34 = photo.leafPhotosynthesisFunction(supplyNetwork34$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
 
-psi2A11emb = photo.leafPhotosynthesisFunction(supplyNetwork11emb,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A12emb = photo.leafPhotosynthesisFunction(supplyNetwork12emb,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A13emb = photo.leafPhotosynthesisFunction(supplyNetwork13emb,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A14emb = photo.leafPhotosynthesisFunction(supplyNetwork14emb,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A21emb = photo.leafPhotosynthesisFunction(supplyNetwork21emb,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A22emb = photo.leafPhotosynthesisFunction(supplyNetwork22emb,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A23emb = photo.leafPhotosynthesisFunction(supplyNetwork23emb,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A24emb = photo.leafPhotosynthesisFunction(supplyNetwork24emb,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A31emb = photo.leafPhotosynthesisFunction(supplyNetwork31emb,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A32emb = photo.leafPhotosynthesisFunction(supplyNetwork32emb,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A33emb = photo.leafPhotosynthesisFunction(supplyNetwork33emb,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A34emb = photo.leafPhotosynthesisFunction(supplyNetwork34emb,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A11emb = photo.leafPhotosynthesisFunction(supplyNetwork11emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A12emb = photo.leafPhotosynthesisFunction(supplyNetwork12emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A13emb = photo.leafPhotosynthesisFunction(supplyNetwork13emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A14emb = photo.leafPhotosynthesisFunction(supplyNetwork14emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A21emb = photo.leafPhotosynthesisFunction(supplyNetwork21emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A22emb = photo.leafPhotosynthesisFunction(supplyNetwork22emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A23emb = photo.leafPhotosynthesisFunction(supplyNetwork23emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A24emb = photo.leafPhotosynthesisFunction(supplyNetwork24emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A31emb = photo.leafPhotosynthesisFunction(supplyNetwork31emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A32emb = photo.leafPhotosynthesisFunction(supplyNetwork32emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A33emb = photo.leafPhotosynthesisFunction(supplyNetwork33emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A34emb = photo.leafPhotosynthesisFunction(supplyNetwork34emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
 
-plot(-supplyNetwork11$PsiLeaf, psi2A11$LeafTemperature, type="l", col=col1, ylab="Leaf temperature (ºC)", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(26,27.5), lwd=1, main="original")
-lines(-supplyNetwork12$PsiLeaf,psi2A12$LeafTemperature, lty=1, lwd=1, col=col2)
-lines(-supplyNetwork13$PsiLeaf, psi2A13$LeafTemperature, lty=1, lwd=1, col=col3)
-lines(-supplyNetwork14$PsiLeaf, psi2A14$LeafTemperature, lty=1, lwd=1, col=col4)
-lines(-supplyNetwork21$PsiLeaf, psi2A21$LeafTemperature, lty=2, lwd=1, col=col1)
-lines(-supplyNetwork22$PsiLeaf, psi2A22$LeafTemperature, lty=2, lwd=1, col=col2)
-lines(-supplyNetwork23$PsiLeaf, psi2A23$LeafTemperature, lty=2, lwd=1, col=col3)
-lines(-supplyNetwork24$PsiLeaf, psi2A24$LeafTemperature, lty=2, lwd=1, col=col4)
-lines(-supplyNetwork31$PsiLeaf, psi2A31$LeafTemperature, lty=3, lwd=1, col=col1)
-lines(-supplyNetwork32$PsiLeaf, psi2A32$LeafTemperature, lty=3, lwd=1, col=col2)
-lines(-supplyNetwork33$PsiLeaf, psi2A33$LeafTemperature, lty=3, lwd=1, col=col3)
-lines(-supplyNetwork34$PsiLeaf, psi2A34$LeafTemperature, lty=3, lwd=1, col=col4)
+plot(-supplyNetwork11$psiLeaf, psi2A11$LeafTemperature, type="l", col=col1, ylab="Leaf temperature (ºC)", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(26,27.5), lwd=1, main="original")
+lines(-supplyNetwork12$psiLeaf,psi2A12$LeafTemperature, lty=1, lwd=1, col=col2)
+lines(-supplyNetwork13$psiLeaf, psi2A13$LeafTemperature, lty=1, lwd=1, col=col3)
+lines(-supplyNetwork14$psiLeaf, psi2A14$LeafTemperature, lty=1, lwd=1, col=col4)
+lines(-supplyNetwork21$psiLeaf, psi2A21$LeafTemperature, lty=2, lwd=1, col=col1)
+lines(-supplyNetwork22$psiLeaf, psi2A22$LeafTemperature, lty=2, lwd=1, col=col2)
+lines(-supplyNetwork23$psiLeaf, psi2A23$LeafTemperature, lty=2, lwd=1, col=col3)
+lines(-supplyNetwork24$psiLeaf, psi2A24$LeafTemperature, lty=2, lwd=1, col=col4)
+lines(-supplyNetwork31$psiLeaf, psi2A31$LeafTemperature, lty=3, lwd=1, col=col1)
+lines(-supplyNetwork32$psiLeaf, psi2A32$LeafTemperature, lty=3, lwd=1, col=col2)
+lines(-supplyNetwork33$psiLeaf, psi2A33$LeafTemperature, lty=3, lwd=1, col=col3)
+lines(-supplyNetwork34$psiLeaf, psi2A34$LeafTemperature, lty=3, lwd=1, col=col4)
 legend("bottomleft", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 
-plot(-supplyNetwork11emb$PsiLeaf, psi2A11emb$LeafTemperature, type="l", col=col1, ylab="Leaf temperature (ºC)", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(26,27.5), lwd=1, main="after cavitation")
-lines(-supplyNetwork12emb$PsiLeaf,psi2A12emb$LeafTemperature, lty=1, lwd=1, col=col2)
-lines(-supplyNetwork13emb$PsiLeaf, psi2A13emb$LeafTemperature, lty=1, lwd=1, col=col3)
-lines(-supplyNetwork14emb$PsiLeaf, psi2A14emb$LeafTemperature, lty=1, lwd=1, col=col4)
-lines(-supplyNetwork21emb$PsiLeaf, psi2A21emb$LeafTemperature, lty=2, lwd=1, col=col1)
-lines(-supplyNetwork22emb$PsiLeaf, psi2A22emb$LeafTemperature, lty=2, lwd=1, col=col2)
-lines(-supplyNetwork23emb$PsiLeaf, psi2A23emb$LeafTemperature, lty=2, lwd=1, col=col3)
-lines(-supplyNetwork24emb$PsiLeaf, psi2A24emb$LeafTemperature, lty=2, lwd=1, col=col4)
-lines(-supplyNetwork31emb$PsiLeaf, psi2A31emb$LeafTemperature, lty=3, lwd=1, col=col1)
-lines(-supplyNetwork32emb$PsiLeaf, psi2A32emb$LeafTemperature, lty=3, lwd=1, col=col2)
-lines(-supplyNetwork33emb$PsiLeaf, psi2A33emb$LeafTemperature, lty=3, lwd=1, col=col3)
-lines(-supplyNetwork34emb$PsiLeaf, psi2A34emb$LeafTemperature, lty=3, lwd=1, col=col4)
+plot(-supplyNetwork11emb$psiLeaf, psi2A11emb$LeafTemperature, type="l", col=col1, ylab="Leaf temperature (ºC)", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(26,27.5), lwd=1, main="after cavitation")
+lines(-supplyNetwork12emb$psiLeaf,psi2A12emb$LeafTemperature, lty=1, lwd=1, col=col2)
+lines(-supplyNetwork13emb$psiLeaf, psi2A13emb$LeafTemperature, lty=1, lwd=1, col=col3)
+lines(-supplyNetwork14emb$psiLeaf, psi2A14emb$LeafTemperature, lty=1, lwd=1, col=col4)
+lines(-supplyNetwork21emb$psiLeaf, psi2A21emb$LeafTemperature, lty=2, lwd=1, col=col1)
+lines(-supplyNetwork22emb$psiLeaf, psi2A22emb$LeafTemperature, lty=2, lwd=1, col=col2)
+lines(-supplyNetwork23emb$psiLeaf, psi2A23emb$LeafTemperature, lty=2, lwd=1, col=col3)
+lines(-supplyNetwork24emb$psiLeaf, psi2A24emb$LeafTemperature, lty=2, lwd=1, col=col4)
+lines(-supplyNetwork31emb$psiLeaf, psi2A31emb$LeafTemperature, lty=3, lwd=1, col=col1)
+lines(-supplyNetwork32emb$psiLeaf, psi2A32emb$LeafTemperature, lty=3, lwd=1, col=col2)
+lines(-supplyNetwork33emb$psiLeaf, psi2A33emb$LeafTemperature, lty=3, lwd=1, col=col3)
+lines(-supplyNetwork34emb$psiLeaf, psi2A34emb$LeafTemperature, lty=3, lwd=1, col=col4)
 abline(v=-psiCav, col="gray", lwd=1.5)
 legend("bottomleft", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 @
@@ -1622,32 +1622,32 @@ the application of the above equation to the $T_{leaf}(\Psi_{leaf})$ curves yiel
 \begin{center}
 <<fig=TRUE, width=8, height=3.5, echo=FALSE>>==
 par(mar=c(4,4,2,1), mfrow=c(1,2))
-plot(-supplyNetwork11$PsiLeaf, psi2A11$LeafVPD, type="l", col=col1, ylab="Leaf VPD (kPa)", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), lwd=1, ylim=c(1.4,1.72), main="original")
-lines(-supplyNetwork12$PsiLeaf,psi2A12$LeafVPD, lty=1, lwd=1, col=col2)
-lines(-supplyNetwork13$PsiLeaf, psi2A13$LeafVPD, lty=1, lwd=1, col=col3)
-lines(-supplyNetwork14$PsiLeaf, psi2A14$LeafVPD, lty=1, lwd=1, col=col4)
-lines(-supplyNetwork21$PsiLeaf, psi2A21$LeafVPD, lty=2, lwd=1, col=col1)
-lines(-supplyNetwork22$PsiLeaf, psi2A22$LeafVPD, lty=2, lwd=1, col=col2)
-lines(-supplyNetwork23$PsiLeaf, psi2A23$LeafVPD, lty=2, lwd=1, col=col3)
-lines(-supplyNetwork24$PsiLeaf, psi2A24$LeafVPD, lty=2, lwd=1, col=col4)
-lines(-supplyNetwork31$PsiLeaf, psi2A31$LeafVPD, lty=3, lwd=1, col=col1)
-lines(-supplyNetwork32$PsiLeaf, psi2A32$LeafVPD, lty=3, lwd=1, col=col2)
-lines(-supplyNetwork33$PsiLeaf, psi2A33$LeafVPD, lty=3, lwd=1, col=col3)
-lines(-supplyNetwork34$PsiLeaf, psi2A34$LeafVPD, lty=3, lwd=1, col=col4)
+plot(-supplyNetwork11$psiLeaf, psi2A11$LeafVPD, type="l", col=col1, ylab="Leaf VPD (kPa)", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), lwd=1, ylim=c(1.4,1.72), main="original")
+lines(-supplyNetwork12$psiLeaf,psi2A12$LeafVPD, lty=1, lwd=1, col=col2)
+lines(-supplyNetwork13$psiLeaf, psi2A13$LeafVPD, lty=1, lwd=1, col=col3)
+lines(-supplyNetwork14$psiLeaf, psi2A14$LeafVPD, lty=1, lwd=1, col=col4)
+lines(-supplyNetwork21$psiLeaf, psi2A21$LeafVPD, lty=2, lwd=1, col=col1)
+lines(-supplyNetwork22$psiLeaf, psi2A22$LeafVPD, lty=2, lwd=1, col=col2)
+lines(-supplyNetwork23$psiLeaf, psi2A23$LeafVPD, lty=2, lwd=1, col=col3)
+lines(-supplyNetwork24$psiLeaf, psi2A24$LeafVPD, lty=2, lwd=1, col=col4)
+lines(-supplyNetwork31$psiLeaf, psi2A31$LeafVPD, lty=3, lwd=1, col=col1)
+lines(-supplyNetwork32$psiLeaf, psi2A32$LeafVPD, lty=3, lwd=1, col=col2)
+lines(-supplyNetwork33$psiLeaf, psi2A33$LeafVPD, lty=3, lwd=1, col=col3)
+lines(-supplyNetwork34$psiLeaf, psi2A34$LeafVPD, lty=3, lwd=1, col=col4)
 legend("bottomleft", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 
-plot(-supplyNetwork11emb$PsiLeaf, psi2A11emb$LeafVPD, type="l", col=col1, ylab="Leaf VPD (kPa)", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), lwd=1, ylim=c(1.4,1.72), main="after cavitation")
-lines(-supplyNetwork12emb$PsiLeaf,psi2A12emb$LeafVPD, lty=1, lwd=1, col=col2)
-lines(-supplyNetwork13emb$PsiLeaf, psi2A13emb$LeafVPD, lty=1, lwd=1, col=col3)
-lines(-supplyNetwork14emb$PsiLeaf, psi2A14emb$LeafVPD, lty=1, lwd=1, col=col4)
-lines(-supplyNetwork21emb$PsiLeaf, psi2A21emb$LeafVPD, lty=2, lwd=1, col=col1)
-lines(-supplyNetwork22emb$PsiLeaf, psi2A22emb$LeafVPD, lty=2, lwd=1, col=col2)
-lines(-supplyNetwork23emb$PsiLeaf, psi2A23emb$LeafVPD, lty=2, lwd=1, col=col3)
-lines(-supplyNetwork24emb$PsiLeaf, psi2A24emb$LeafVPD, lty=2, lwd=1, col=col4)
-lines(-supplyNetwork31emb$PsiLeaf, psi2A31emb$LeafVPD, lty=3, lwd=1, col=col1)
-lines(-supplyNetwork32emb$PsiLeaf, psi2A32emb$LeafVPD, lty=3, lwd=1, col=col2)
-lines(-supplyNetwork33emb$PsiLeaf, psi2A33emb$LeafVPD, lty=3, lwd=1, col=col3)
-lines(-supplyNetwork34emb$PsiLeaf, psi2A34emb$LeafVPD, lty=3, lwd=1, col=col4)
+plot(-supplyNetwork11emb$psiLeaf, psi2A11emb$LeafVPD, type="l", col=col1, ylab="Leaf VPD (kPa)", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), lwd=1, ylim=c(1.4,1.72), main="after cavitation")
+lines(-supplyNetwork12emb$psiLeaf,psi2A12emb$LeafVPD, lty=1, lwd=1, col=col2)
+lines(-supplyNetwork13emb$psiLeaf, psi2A13emb$LeafVPD, lty=1, lwd=1, col=col3)
+lines(-supplyNetwork14emb$psiLeaf, psi2A14emb$LeafVPD, lty=1, lwd=1, col=col4)
+lines(-supplyNetwork21emb$psiLeaf, psi2A21emb$LeafVPD, lty=2, lwd=1, col=col1)
+lines(-supplyNetwork22emb$psiLeaf, psi2A22emb$LeafVPD, lty=2, lwd=1, col=col2)
+lines(-supplyNetwork23emb$psiLeaf, psi2A23emb$LeafVPD, lty=2, lwd=1, col=col3)
+lines(-supplyNetwork24emb$psiLeaf, psi2A24emb$LeafVPD, lty=2, lwd=1, col=col4)
+lines(-supplyNetwork31emb$psiLeaf, psi2A31emb$LeafVPD, lty=3, lwd=1, col=col1)
+lines(-supplyNetwork32emb$psiLeaf, psi2A32emb$LeafVPD, lty=3, lwd=1, col=col2)
+lines(-supplyNetwork33emb$psiLeaf, psi2A33emb$LeafVPD, lty=3, lwd=1, col=col3)
+lines(-supplyNetwork34emb$psiLeaf, psi2A34emb$LeafVPD, lty=3, lwd=1, col=col4)
 abline(v=-psiCav, col="gray", lwd=1.5)
 legend("bottomleft", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 @
@@ -1665,34 +1665,34 @@ the application of the equation for $g_{sw}$ to the $VPD_{leaf}(\Psi_{leaf})$ cu
 \begin{center}
 <<fig=TRUE, width=8, height=3.5, echo=FALSE>>==
 par(mar=c(4,4,2,1), mfrow=c(1,2))
-plot(-supplyNetwork11$PsiLeaf, psi2A11$WaterVaporConductance, type="l", col=col1, ylab="Gw", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,0.5), lwd=1, main="original")
-lines(-supplyNetwork12$PsiLeaf,psi2A12$WaterVaporConductance, lty=1, lwd=1, col=col2)
-lines(-supplyNetwork13$PsiLeaf, psi2A13$WaterVaporConductance, lty=1, lwd=1, col=col3)
-lines(-supplyNetwork14$PsiLeaf, psi2A14$WaterVaporConductance, lty=1, lwd=1, col=col4)
-lines(-supplyNetwork21$PsiLeaf, psi2A21$WaterVaporConductance, lty=2, lwd=1, col=col1)
-lines(-supplyNetwork22$PsiLeaf, psi2A22$WaterVaporConductance, lty=2, lwd=1, col=col2)
-lines(-supplyNetwork23$PsiLeaf, psi2A23$WaterVaporConductance, lty=2, lwd=1, col=col3)
-lines(-supplyNetwork24$PsiLeaf, psi2A24$WaterVaporConductance, lty=2, lwd=1, col=col4)
-lines(-supplyNetwork31$PsiLeaf, psi2A31$WaterVaporConductance, lty=3, lwd=1, col=col1)
-lines(-supplyNetwork32$PsiLeaf, psi2A32$WaterVaporConductance, lty=3, lwd=1, col=col2)
-lines(-supplyNetwork33$PsiLeaf, psi2A33$WaterVaporConductance, lty=3, lwd=1, col=col3)
-lines(-supplyNetwork34$PsiLeaf, psi2A34$WaterVaporConductance, lty=3, lwd=1, col=col4)
+plot(-supplyNetwork11$psiLeaf, psi2A11$WaterVaporConductance, type="l", col=col1, ylab="Gw", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,0.5), lwd=1, main="original")
+lines(-supplyNetwork12$psiLeaf,psi2A12$WaterVaporConductance, lty=1, lwd=1, col=col2)
+lines(-supplyNetwork13$psiLeaf, psi2A13$WaterVaporConductance, lty=1, lwd=1, col=col3)
+lines(-supplyNetwork14$psiLeaf, psi2A14$WaterVaporConductance, lty=1, lwd=1, col=col4)
+lines(-supplyNetwork21$psiLeaf, psi2A21$WaterVaporConductance, lty=2, lwd=1, col=col1)
+lines(-supplyNetwork22$psiLeaf, psi2A22$WaterVaporConductance, lty=2, lwd=1, col=col2)
+lines(-supplyNetwork23$psiLeaf, psi2A23$WaterVaporConductance, lty=2, lwd=1, col=col3)
+lines(-supplyNetwork24$psiLeaf, psi2A24$WaterVaporConductance, lty=2, lwd=1, col=col4)
+lines(-supplyNetwork31$psiLeaf, psi2A31$WaterVaporConductance, lty=3, lwd=1, col=col1)
+lines(-supplyNetwork32$psiLeaf, psi2A32$WaterVaporConductance, lty=3, lwd=1, col=col2)
+lines(-supplyNetwork33$psiLeaf, psi2A33$WaterVaporConductance, lty=3, lwd=1, col=col3)
+lines(-supplyNetwork34$psiLeaf, psi2A34$WaterVaporConductance, lty=3, lwd=1, col=col4)
 abline(h=Gmin, col="gray", lty=2, lwd=1.5)
 abline(h=Gmax, col="gray", lty=2, lwd=1.5)
 
 
-plot(-supplyNetwork11emb$PsiLeaf, psi2A11emb$WaterVaporConductance, type="l", col=col1, ylab="Gw", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,0.5), lwd=1, main="after cavitation")
-lines(-supplyNetwork12emb$PsiLeaf,psi2A12emb$WaterVaporConductance, lty=1, lwd=1, col=col2)
-lines(-supplyNetwork13emb$PsiLeaf, psi2A13emb$WaterVaporConductance, lty=1, lwd=1, col=col3)
-lines(-supplyNetwork14emb$PsiLeaf, psi2A14emb$WaterVaporConductance, lty=1, lwd=1, col=col4)
-lines(-supplyNetwork21emb$PsiLeaf, psi2A21emb$WaterVaporConductance, lty=2, lwd=1, col=col1)
-lines(-supplyNetwork22emb$PsiLeaf, psi2A22emb$WaterVaporConductance, lty=2, lwd=1, col=col2)
-lines(-supplyNetwork23emb$PsiLeaf, psi2A23emb$WaterVaporConductance, lty=2, lwd=1, col=col3)
-lines(-supplyNetwork24emb$PsiLeaf, psi2A24emb$WaterVaporConductance, lty=2, lwd=1, col=col4)
-lines(-supplyNetwork31emb$PsiLeaf, psi2A31emb$WaterVaporConductance, lty=3, lwd=1, col=col1)
-lines(-supplyNetwork32emb$PsiLeaf, psi2A32emb$WaterVaporConductance, lty=3, lwd=1, col=col2)
-lines(-supplyNetwork33emb$PsiLeaf, psi2A33emb$WaterVaporConductance, lty=3, lwd=1, col=col3)
-lines(-supplyNetwork34emb$PsiLeaf, psi2A34emb$WaterVaporConductance, lty=3, lwd=1, col=col4)
+plot(-supplyNetwork11emb$psiLeaf, psi2A11emb$WaterVaporConductance, type="l", col=col1, ylab="Gw", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,0.5), lwd=1, main="after cavitation")
+lines(-supplyNetwork12emb$psiLeaf,psi2A12emb$WaterVaporConductance, lty=1, lwd=1, col=col2)
+lines(-supplyNetwork13emb$psiLeaf, psi2A13emb$WaterVaporConductance, lty=1, lwd=1, col=col3)
+lines(-supplyNetwork14emb$psiLeaf, psi2A14emb$WaterVaporConductance, lty=1, lwd=1, col=col4)
+lines(-supplyNetwork21emb$psiLeaf, psi2A21emb$WaterVaporConductance, lty=2, lwd=1, col=col1)
+lines(-supplyNetwork22emb$psiLeaf, psi2A22emb$WaterVaporConductance, lty=2, lwd=1, col=col2)
+lines(-supplyNetwork23emb$psiLeaf, psi2A23emb$WaterVaporConductance, lty=2, lwd=1, col=col3)
+lines(-supplyNetwork24emb$psiLeaf, psi2A24emb$WaterVaporConductance, lty=2, lwd=1, col=col4)
+lines(-supplyNetwork31emb$psiLeaf, psi2A31emb$WaterVaporConductance, lty=3, lwd=1, col=col1)
+lines(-supplyNetwork32emb$psiLeaf, psi2A32emb$WaterVaporConductance, lty=3, lwd=1, col=col2)
+lines(-supplyNetwork33emb$psiLeaf, psi2A33emb$WaterVaporConductance, lty=3, lwd=1, col=col3)
+lines(-supplyNetwork34emb$psiLeaf, psi2A34emb$WaterVaporConductance, lty=3, lwd=1, col=col4)
 abline(v=-psiCav, col="gray", lwd=1.5)
 abline(h=Gmin, col="gray", lty=2, lwd=1.5)
 abline(h=Gmax, col="gray", lty=2, lwd=1.5)
@@ -1745,32 +1745,32 @@ one can obtain the following $A(\Psi_{leaf})$ curves from $T_{leaf}(\Psi_{leaf})
 \begin{center}
 <<fig=TRUE, width=8, height=3.5, echo=FALSE>>==
 par(mar=c(4,4,2,1), mfrow=c(1,2))
-plot(-supplyNetwork11$PsiLeaf, psi2A11$Photosynthesis, type="l", col=col1, ylab="Assimilation rate", xlab = "Leaf sap pressure (-MPa)",  xlim=c(0, 7), lwd=1, main="original")
-lines(-supplyNetwork12$PsiLeaf,psi2A12$Photosynthesis, lty=1, lwd=1, col=col2)
-lines(-supplyNetwork13$PsiLeaf, psi2A13$Photosynthesis, lty=1, lwd=1, col=col3)
-lines(-supplyNetwork14$PsiLeaf, psi2A14$Photosynthesis, lty=1, lwd=1, col=col4)
-lines(-supplyNetwork21$PsiLeaf, psi2A21$Photosynthesis, lty=2, lwd=1, col=col1)
-lines(-supplyNetwork22$PsiLeaf, psi2A22$Photosynthesis, lty=2, lwd=1, col=col2)
-lines(-supplyNetwork23$PsiLeaf, psi2A23$Photosynthesis, lty=2, lwd=1, col=col3)
-lines(-supplyNetwork24$PsiLeaf, psi2A24$Photosynthesis, lty=2, lwd=1, col=col4)
-lines(-supplyNetwork31$PsiLeaf, psi2A31$Photosynthesis, lty=3, lwd=1, col=col1)
-lines(-supplyNetwork32$PsiLeaf, psi2A32$Photosynthesis, lty=3, lwd=1, col=col2)
-lines(-supplyNetwork33$PsiLeaf, psi2A33$Photosynthesis, lty=3, lwd=1, col=col3)
-lines(-supplyNetwork34$PsiLeaf, psi2A34$Photosynthesis, lty=3, lwd=1, col=col4)
+plot(-supplyNetwork11$psiLeaf, psi2A11$Photosynthesis, type="l", col=col1, ylab="Assimilation rate", xlab = "Leaf sap pressure (-MPa)",  xlim=c(0, 7), lwd=1, main="original")
+lines(-supplyNetwork12$psiLeaf,psi2A12$Photosynthesis, lty=1, lwd=1, col=col2)
+lines(-supplyNetwork13$psiLeaf, psi2A13$Photosynthesis, lty=1, lwd=1, col=col3)
+lines(-supplyNetwork14$psiLeaf, psi2A14$Photosynthesis, lty=1, lwd=1, col=col4)
+lines(-supplyNetwork21$psiLeaf, psi2A21$Photosynthesis, lty=2, lwd=1, col=col1)
+lines(-supplyNetwork22$psiLeaf, psi2A22$Photosynthesis, lty=2, lwd=1, col=col2)
+lines(-supplyNetwork23$psiLeaf, psi2A23$Photosynthesis, lty=2, lwd=1, col=col3)
+lines(-supplyNetwork24$psiLeaf, psi2A24$Photosynthesis, lty=2, lwd=1, col=col4)
+lines(-supplyNetwork31$psiLeaf, psi2A31$Photosynthesis, lty=3, lwd=1, col=col1)
+lines(-supplyNetwork32$psiLeaf, psi2A32$Photosynthesis, lty=3, lwd=1, col=col2)
+lines(-supplyNetwork33$psiLeaf, psi2A33$Photosynthesis, lty=3, lwd=1, col=col3)
+lines(-supplyNetwork34$psiLeaf, psi2A34$Photosynthesis, lty=3, lwd=1, col=col4)
 legend("topright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 
-plot(-supplyNetwork11emb$PsiLeaf, psi2A11emb$Photosynthesis, type="l", col=col1, ylab="Assimilation rate", xlab = "Leaf sap pressure (-MPa)",  xlim=c(0, 7), lwd=1, main="after cavitation")
-lines(-supplyNetwork12emb$PsiLeaf,psi2A12emb$Photosynthesis, lty=1, lwd=1, col=col2)
-lines(-supplyNetwork13emb$PsiLeaf, psi2A13emb$Photosynthesis, lty=1, lwd=1, col=col3)
-lines(-supplyNetwork14emb$PsiLeaf, psi2A14emb$Photosynthesis, lty=1, lwd=1, col=col4)
-lines(-supplyNetwork21emb$PsiLeaf, psi2A21emb$Photosynthesis, lty=2, lwd=1, col=col1)
-lines(-supplyNetwork22emb$PsiLeaf, psi2A22emb$Photosynthesis, lty=2, lwd=1, col=col2)
-lines(-supplyNetwork23emb$PsiLeaf, psi2A23emb$Photosynthesis, lty=2, lwd=1, col=col3)
-lines(-supplyNetwork24emb$PsiLeaf, psi2A24emb$Photosynthesis, lty=2, lwd=1, col=col4)
-lines(-supplyNetwork31emb$PsiLeaf, psi2A31emb$Photosynthesis, lty=3, lwd=1, col=col1)
-lines(-supplyNetwork32emb$PsiLeaf, psi2A32emb$Photosynthesis, lty=3, lwd=1, col=col2)
-lines(-supplyNetwork33emb$PsiLeaf, psi2A33emb$Photosynthesis, lty=3, lwd=1, col=col3)
-lines(-supplyNetwork34emb$PsiLeaf, psi2A34emb$Photosynthesis, lty=3, lwd=1, col=col4)
+plot(-supplyNetwork11emb$psiLeaf, psi2A11emb$Photosynthesis, type="l", col=col1, ylab="Assimilation rate", xlab = "Leaf sap pressure (-MPa)",  xlim=c(0, 7), lwd=1, main="after cavitation")
+lines(-supplyNetwork12emb$psiLeaf,psi2A12emb$Photosynthesis, lty=1, lwd=1, col=col2)
+lines(-supplyNetwork13emb$psiLeaf, psi2A13emb$Photosynthesis, lty=1, lwd=1, col=col3)
+lines(-supplyNetwork14emb$psiLeaf, psi2A14emb$Photosynthesis, lty=1, lwd=1, col=col4)
+lines(-supplyNetwork21emb$psiLeaf, psi2A21emb$Photosynthesis, lty=2, lwd=1, col=col1)
+lines(-supplyNetwork22emb$psiLeaf, psi2A22emb$Photosynthesis, lty=2, lwd=1, col=col2)
+lines(-supplyNetwork23emb$psiLeaf, psi2A23emb$Photosynthesis, lty=2, lwd=1, col=col3)
+lines(-supplyNetwork24emb$psiLeaf, psi2A24emb$Photosynthesis, lty=2, lwd=1, col=col4)
+lines(-supplyNetwork31emb$psiLeaf, psi2A31emb$Photosynthesis, lty=3, lwd=1, col=col1)
+lines(-supplyNetwork32emb$psiLeaf, psi2A32emb$Photosynthesis, lty=3, lwd=1, col=col2)
+lines(-supplyNetwork33emb$psiLeaf, psi2A33emb$Photosynthesis, lty=3, lwd=1, col=col3)
+lines(-supplyNetwork34emb$psiLeaf, psi2A34emb$Photosynthesis, lty=3, lwd=1, col=col4)
 abline(v=-psiCav, col="gray", lwd=1.5)
 legend("topright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 @
@@ -1869,100 +1869,100 @@ Jmax298layer=Vmax298layer*1.67
 
 Multilayer canopy models allow evaluating leaf conditions, stomatal conductance and photosynthesis for different points of the canopy. However, this comes at high computational cost. While big-leaf canopy models are known to be unaccurate under some situations, sun-shade canopy models (De Pury and Farquhar 1997) provide estimates that are close to multiple layer models (Hikosaka 2016). Sun-shade models involve: (a) aggregating the leaf area of sunlit/shade leaves across layers; (b) aggregating the light absorbed by leaves of each kind across layers; and (c) aggregating maximum assimilation rates across layers, again separating sunlit and shade leaves. One then calls the photosynthesis model twice (i.e. once for shade leaves and once for sunlit leaves), using the aggregated maximum assimilation rates. Separating the two kinds of leaves acknowledges that they operate at different parts of the light-saturation curve. The following figure provides the canopy photosynthesis functions obtained, under different situations, using a full 10-layer canopy description (top), a sunshade canopy model (center) or a big-leaf model (bottom). These were generated using functions \texttt{photo.multilayerPhotosynthesisFunction()}, \texttt{photo.sunshadePhotosynthesisFunction()} and \texttt{photo.leafPhotosynthesisFunction()}, respectively. Note the coincidence between the multi-layer and the sun-shade models.
 <<echo=FALSE>>=
-psi2A11can = photo.multilayerPhotosynthesisFunction(supplyNetwork11,Catm, Patm,Tcan, vpa, 
+psi2A11can = photo.multilayerPhotosynthesisFunction(supplyNetwork11$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A12can = photo.multilayerPhotosynthesisFunction(supplyNetwork12,Catm, Patm,Tcan, vpa, 
+psi2A12can = photo.multilayerPhotosynthesisFunction(supplyNetwork12$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A13can = photo.multilayerPhotosynthesisFunction(supplyNetwork13,Catm, Patm,Tcan, vpa, 
+psi2A13can = photo.multilayerPhotosynthesisFunction(supplyNetwork13$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A14can = photo.multilayerPhotosynthesisFunction(supplyNetwork14,Catm, Patm,Tcan, vpa, 
+psi2A14can = photo.multilayerPhotosynthesisFunction(supplyNetwork14$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A21can = photo.multilayerPhotosynthesisFunction(supplyNetwork21,Catm, Patm,Tcan, vpa, 
+psi2A21can = photo.multilayerPhotosynthesisFunction(supplyNetwork21$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A22can = photo.multilayerPhotosynthesisFunction(supplyNetwork22,Catm, Patm,Tcan, vpa, 
+psi2A22can = photo.multilayerPhotosynthesisFunction(supplyNetwork22$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A23can = photo.multilayerPhotosynthesisFunction(supplyNetwork23,Catm, Patm,Tcan, vpa, 
+psi2A23can = photo.multilayerPhotosynthesisFunction(supplyNetwork23$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A24can = photo.multilayerPhotosynthesisFunction(supplyNetwork24,Catm, Patm,Tcan, vpa, 
+psi2A24can = photo.multilayerPhotosynthesisFunction(supplyNetwork24$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A31can = photo.multilayerPhotosynthesisFunction(supplyNetwork31,Catm, Patm,Tcan, vpa, 
+psi2A31can = photo.multilayerPhotosynthesisFunction(supplyNetwork31$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A32can = photo.multilayerPhotosynthesisFunction(supplyNetwork32,Catm, Patm,Tcan, vpa, 
+psi2A32can = photo.multilayerPhotosynthesisFunction(supplyNetwork32$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A33can = photo.multilayerPhotosynthesisFunction(supplyNetwork33,Catm, Patm,Tcan, vpa, 
+psi2A33can = photo.multilayerPhotosynthesisFunction(supplyNetwork33$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A34can = photo.multilayerPhotosynthesisFunction(supplyNetwork34,Catm, Patm,Tcan, vpa, 
+psi2A34can = photo.multilayerPhotosynthesisFunction(supplyNetwork34$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
 
-psi2A11canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork11emb,Catm, Patm,Tcan, vpa, 
+psi2A11canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork11emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A12canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork12emb,Catm, Patm,Tcan, vpa, 
+psi2A12canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork12emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A13canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork13emb,Catm, Patm,Tcan, vpa, 
+psi2A13canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork13emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A14canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork14emb,Catm, Patm,Tcan, vpa, 
+psi2A14canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork14emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A21canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork21emb,Catm, Patm,Tcan, vpa, 
+psi2A21canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork21emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A22canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork22emb,Catm, Patm,Tcan, vpa, 
+psi2A22canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork22emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A23canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork23emb,Catm, Patm,Tcan, vpa, 
+psi2A23canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork23emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A24canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork24emb,Catm, Patm,Tcan, vpa, 
+psi2A24canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork24emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A31canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork31emb,Catm, Patm,Tcan, vpa, 
+psi2A31canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork31emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A32canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork32emb,Catm, Patm,Tcan, vpa, 
+psi2A32canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork32emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A33canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork33emb,Catm, Patm,Tcan, vpa, 
+psi2A33canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork33emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A34canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork34emb,Catm, Patm,Tcan, vpa, 
+psi2A34canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork34emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
@@ -1980,99 +1980,99 @@ Vmax298SH= sum(Vmax298layer*LAIlayerlive[,1]*(1-fsunlit))
 Jmax298SH = sum(Jmax298layer*LAIlayerlive[,1]*(1-fsunlit))
 ulayer = ulayer[1]
 
-psi2A11ss = photo.sunshadePhotosynthesisFunction(supplyNetwork11,Catm, Patm,Tcan, vpa, 
+psi2A11ss = photo.sunshadePhotosynthesisFunction(supplyNetwork11$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A12ss = photo.sunshadePhotosynthesisFunction(supplyNetwork12,Catm, Patm,Tcan, vpa, 
+psi2A12ss = photo.sunshadePhotosynthesisFunction(supplyNetwork12$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A13ss = photo.sunshadePhotosynthesisFunction(supplyNetwork13,Catm, Patm,Tcan, vpa, 
+psi2A13ss = photo.sunshadePhotosynthesisFunction(supplyNetwork13$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A14ss = photo.sunshadePhotosynthesisFunction(supplyNetwork14,Catm, Patm,Tcan, vpa, 
+psi2A14ss = photo.sunshadePhotosynthesisFunction(supplyNetwork14$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A21ss = photo.sunshadePhotosynthesisFunction(supplyNetwork21,Catm, Patm,Tcan, vpa, 
+psi2A21ss = photo.sunshadePhotosynthesisFunction(supplyNetwork21$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A22ss = photo.sunshadePhotosynthesisFunction(supplyNetwork22,Catm, Patm,Tcan, vpa, 
+psi2A22ss = photo.sunshadePhotosynthesisFunction(supplyNetwork22$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A23ss = photo.sunshadePhotosynthesisFunction(supplyNetwork23,Catm, Patm,Tcan, vpa, 
+psi2A23ss = photo.sunshadePhotosynthesisFunction(supplyNetwork23$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A24ss = photo.sunshadePhotosynthesisFunction(supplyNetwork24,Catm, Patm,Tcan, vpa, 
+psi2A24ss = photo.sunshadePhotosynthesisFunction(supplyNetwork24$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A31ss = photo.sunshadePhotosynthesisFunction(supplyNetwork31,Catm, Patm,Tcan, vpa, 
+psi2A31ss = photo.sunshadePhotosynthesisFunction(supplyNetwork31$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A32ss = photo.sunshadePhotosynthesisFunction(supplyNetwork32,Catm, Patm,Tcan, vpa, 
+psi2A32ss = photo.sunshadePhotosynthesisFunction(supplyNetwork32$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A33ss = photo.sunshadePhotosynthesisFunction(supplyNetwork33,Catm, Patm,Tcan, vpa, 
+psi2A33ss = photo.sunshadePhotosynthesisFunction(supplyNetwork33$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A34ss = photo.sunshadePhotosynthesisFunction(supplyNetwork34,Catm, Patm,Tcan, vpa, 
+psi2A34ss = photo.sunshadePhotosynthesisFunction(supplyNetwork34$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A11ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork11emb,Catm, Patm,Tcan, vpa, 
+psi2A11ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork11emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A12ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork12emb,Catm, Patm,Tcan, vpa, 
+psi2A12ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork12emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A13ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork13emb,Catm, Patm,Tcan, vpa, 
+psi2A13ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork13emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A14ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork14emb,Catm, Patm,Tcan, vpa, 
+psi2A14ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork14emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A21ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork21emb,Catm, Patm,Tcan, vpa, 
+psi2A21ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork21emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A22ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork22emb,Catm, Patm,Tcan, vpa, 
+psi2A22ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork22emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A23ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork23emb,Catm, Patm,Tcan, vpa, 
+psi2A23ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork23emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A24ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork24emb,Catm, Patm,Tcan, vpa, 
+psi2A24ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork24emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A31ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork31emb,Catm, Patm,Tcan, vpa, 
+psi2A31ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork31emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A32ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork32emb,Catm, Patm,Tcan, vpa, 
+psi2A32ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork32emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A33ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork33emb,Catm, Patm,Tcan, vpa, 
+psi2A33ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork33emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A34ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork34emb,Catm, Patm,Tcan, vpa, 
+psi2A34ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork34emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
@@ -2083,142 +2083,142 @@ absRadBL = absRadSL+absRadSH
 Vmax298BL = Vmax298SL + Vmax298SH
 Jmax298BL = Jmax298SL + Jmax298SH
 Gmax = 2.0
-psi2A11bl = photo.leafPhotosynthesisFunction(supplyNetwork11,Catm, Patm,Tcan, vpa, ulayer,
+psi2A11bl = photo.leafPhotosynthesisFunction(supplyNetwork11$E,Catm, Patm,Tcan, vpa, ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A12bl = photo.leafPhotosynthesisFunction(supplyNetwork12,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A12bl = photo.leafPhotosynthesisFunction(supplyNetwork12$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A13bl = photo.leafPhotosynthesisFunction(supplyNetwork13,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A13bl = photo.leafPhotosynthesisFunction(supplyNetwork13$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A14bl = photo.leafPhotosynthesisFunction(supplyNetwork14,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A14bl = photo.leafPhotosynthesisFunction(supplyNetwork14$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A21bl = photo.leafPhotosynthesisFunction(supplyNetwork21,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A21bl = photo.leafPhotosynthesisFunction(supplyNetwork21$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A22bl = photo.leafPhotosynthesisFunction(supplyNetwork22,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A22bl = photo.leafPhotosynthesisFunction(supplyNetwork22$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A23bl = photo.leafPhotosynthesisFunction(supplyNetwork23,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A23bl = photo.leafPhotosynthesisFunction(supplyNetwork23$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A24bl = photo.leafPhotosynthesisFunction(supplyNetwork24,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A24bl = photo.leafPhotosynthesisFunction(supplyNetwork24$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A31bl = photo.leafPhotosynthesisFunction(supplyNetwork31,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A31bl = photo.leafPhotosynthesisFunction(supplyNetwork31$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A32bl = photo.leafPhotosynthesisFunction(supplyNetwork32,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A32bl = photo.leafPhotosynthesisFunction(supplyNetwork32$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A33bl = photo.leafPhotosynthesisFunction(supplyNetwork33,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A33bl = photo.leafPhotosynthesisFunction(supplyNetwork33$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A34bl = photo.leafPhotosynthesisFunction(supplyNetwork34,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A34bl = photo.leafPhotosynthesisFunction(supplyNetwork34$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
 
-psi2A11blemb = photo.leafPhotosynthesisFunction(supplyNetwork11emb,Catm, Patm,Tcan, vpa, ulayer,
+psi2A11blemb = photo.leafPhotosynthesisFunction(supplyNetwork11emb$E,Catm, Patm,Tcan, vpa, ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A12blemb = photo.leafPhotosynthesisFunction(supplyNetwork12emb,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A12blemb = photo.leafPhotosynthesisFunction(supplyNetwork12emb$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A13blemb = photo.leafPhotosynthesisFunction(supplyNetwork13emb,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A13blemb = photo.leafPhotosynthesisFunction(supplyNetwork13emb$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A14blemb = photo.leafPhotosynthesisFunction(supplyNetwork14emb,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A14blemb = photo.leafPhotosynthesisFunction(supplyNetwork14emb$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A21blemb = photo.leafPhotosynthesisFunction(supplyNetwork21emb,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A21blemb = photo.leafPhotosynthesisFunction(supplyNetwork21emb$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A22blemb = photo.leafPhotosynthesisFunction(supplyNetwork22emb,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A22blemb = photo.leafPhotosynthesisFunction(supplyNetwork22emb$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A23blemb = photo.leafPhotosynthesisFunction(supplyNetwork23emb,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A23blemb = photo.leafPhotosynthesisFunction(supplyNetwork23emb$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A24blemb = photo.leafPhotosynthesisFunction(supplyNetwork24emb,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A24blemb = photo.leafPhotosynthesisFunction(supplyNetwork24emb$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A31blemb = photo.leafPhotosynthesisFunction(supplyNetwork31emb,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A31blemb = photo.leafPhotosynthesisFunction(supplyNetwork31emb$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A32blemb = photo.leafPhotosynthesisFunction(supplyNetwork32emb,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A32blemb = photo.leafPhotosynthesisFunction(supplyNetwork32emb$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A33blemb = photo.leafPhotosynthesisFunction(supplyNetwork33emb,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A33blemb = photo.leafPhotosynthesisFunction(supplyNetwork33emb$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A34blemb = photo.leafPhotosynthesisFunction(supplyNetwork34emb,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A34blemb = photo.leafPhotosynthesisFunction(supplyNetwork34emb$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
 Gmax = 0.5
 @
 \begin{center}
 <<fig=TRUE, width=7, height=10, echo=FALSE>>==
 par(mar=c(4,4,2,1), mfrow=c(3,2))
-plot(-supplyNetwork11$PsiLeaf, psi2A11can$Photosynthesis, type="l", col=col1, ylab="Multilayer photosynthesis", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), lwd=1, main="original")
-lines(-supplyNetwork12$PsiLeaf,psi2A12can$Photosynthesis, lty=1, lwd=1, col=col2)
-lines(-supplyNetwork13$PsiLeaf, psi2A13can$Photosynthesis, lty=1, lwd=1, col=col3)
-lines(-supplyNetwork14$PsiLeaf, psi2A14can$Photosynthesis, lty=1, lwd=1, col=col4)
-lines(-supplyNetwork21$PsiLeaf, psi2A21can$Photosynthesis, lty=2, lwd=1, col=col1)
-lines(-supplyNetwork22$PsiLeaf, psi2A22can$Photosynthesis, lty=2, lwd=1, col=col2)
-lines(-supplyNetwork23$PsiLeaf, psi2A23can$Photosynthesis, lty=2, lwd=1, col=col3)
-lines(-supplyNetwork24$PsiLeaf, psi2A24can$Photosynthesis, lty=2, lwd=1, col=col4)
-lines(-supplyNetwork31$PsiLeaf, psi2A31can$Photosynthesis, lty=3, lwd=1, col=col1)
-lines(-supplyNetwork32$PsiLeaf, psi2A32can$Photosynthesis, lty=3, lwd=1, col=col2)
-lines(-supplyNetwork33$PsiLeaf, psi2A33can$Photosynthesis, lty=3, lwd=1, col=col3)
-lines(-supplyNetwork34$PsiLeaf, psi2A34can$Photosynthesis, lty=3, lwd=1, col=col4)
+plot(-supplyNetwork11$psiLeaf, psi2A11can$Photosynthesis, type="l", col=col1, ylab="Multilayer photosynthesis", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), lwd=1, main="original")
+lines(-supplyNetwork12$psiLeaf,psi2A12can$Photosynthesis, lty=1, lwd=1, col=col2)
+lines(-supplyNetwork13$psiLeaf, psi2A13can$Photosynthesis, lty=1, lwd=1, col=col3)
+lines(-supplyNetwork14$psiLeaf, psi2A14can$Photosynthesis, lty=1, lwd=1, col=col4)
+lines(-supplyNetwork21$psiLeaf, psi2A21can$Photosynthesis, lty=2, lwd=1, col=col1)
+lines(-supplyNetwork22$psiLeaf, psi2A22can$Photosynthesis, lty=2, lwd=1, col=col2)
+lines(-supplyNetwork23$psiLeaf, psi2A23can$Photosynthesis, lty=2, lwd=1, col=col3)
+lines(-supplyNetwork24$psiLeaf, psi2A24can$Photosynthesis, lty=2, lwd=1, col=col4)
+lines(-supplyNetwork31$psiLeaf, psi2A31can$Photosynthesis, lty=3, lwd=1, col=col1)
+lines(-supplyNetwork32$psiLeaf, psi2A32can$Photosynthesis, lty=3, lwd=1, col=col2)
+lines(-supplyNetwork33$psiLeaf, psi2A33can$Photosynthesis, lty=3, lwd=1, col=col3)
+lines(-supplyNetwork34$psiLeaf, psi2A34can$Photosynthesis, lty=3, lwd=1, col=col4)
 legend("bottomright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 
-plot(-supplyNetwork11emb$PsiLeaf, psi2A11canemb$Photosynthesis, type="l", col=col1, ylab="Multilayer photosynthesis", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), lwd=1, main="after cavitation")
-lines(-supplyNetwork12emb$PsiLeaf,psi2A12canemb$Photosynthesis, lty=1, lwd=1, col=col2)
-lines(-supplyNetwork13emb$PsiLeaf, psi2A13canemb$Photosynthesis, lty=1, lwd=1, col=col3)
-lines(-supplyNetwork14emb$PsiLeaf, psi2A14canemb$Photosynthesis, lty=1, lwd=1, col=col4)
-lines(-supplyNetwork21emb$PsiLeaf, psi2A21canemb$Photosynthesis, lty=2, lwd=1, col=col1)
-lines(-supplyNetwork22emb$PsiLeaf, psi2A22canemb$Photosynthesis, lty=2, lwd=1, col=col2)
-lines(-supplyNetwork23emb$PsiLeaf, psi2A23canemb$Photosynthesis, lty=2, lwd=1, col=col3)
-lines(-supplyNetwork24emb$PsiLeaf, psi2A24canemb$Photosynthesis, lty=2, lwd=1, col=col4)
-lines(-supplyNetwork31emb$PsiLeaf, psi2A31canemb$Photosynthesis, lty=3, lwd=1, col=col1)
-lines(-supplyNetwork32emb$PsiLeaf, psi2A32canemb$Photosynthesis, lty=3, lwd=1, col=col2)
-lines(-supplyNetwork33emb$PsiLeaf, psi2A33canemb$Photosynthesis, lty=3, lwd=1, col=col3)
-lines(-supplyNetwork34emb$PsiLeaf, psi2A34canemb$Photosynthesis, lty=3, lwd=1, col=col4)
+plot(-supplyNetwork11emb$psiLeaf, psi2A11canemb$Photosynthesis, type="l", col=col1, ylab="Multilayer photosynthesis", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), lwd=1, main="after cavitation")
+lines(-supplyNetwork12emb$psiLeaf,psi2A12canemb$Photosynthesis, lty=1, lwd=1, col=col2)
+lines(-supplyNetwork13emb$psiLeaf, psi2A13canemb$Photosynthesis, lty=1, lwd=1, col=col3)
+lines(-supplyNetwork14emb$psiLeaf, psi2A14canemb$Photosynthesis, lty=1, lwd=1, col=col4)
+lines(-supplyNetwork21emb$psiLeaf, psi2A21canemb$Photosynthesis, lty=2, lwd=1, col=col1)
+lines(-supplyNetwork22emb$psiLeaf, psi2A22canemb$Photosynthesis, lty=2, lwd=1, col=col2)
+lines(-supplyNetwork23emb$psiLeaf, psi2A23canemb$Photosynthesis, lty=2, lwd=1, col=col3)
+lines(-supplyNetwork24emb$psiLeaf, psi2A24canemb$Photosynthesis, lty=2, lwd=1, col=col4)
+lines(-supplyNetwork31emb$psiLeaf, psi2A31canemb$Photosynthesis, lty=3, lwd=1, col=col1)
+lines(-supplyNetwork32emb$psiLeaf, psi2A32canemb$Photosynthesis, lty=3, lwd=1, col=col2)
+lines(-supplyNetwork33emb$psiLeaf, psi2A33canemb$Photosynthesis, lty=3, lwd=1, col=col3)
+lines(-supplyNetwork34emb$psiLeaf, psi2A34canemb$Photosynthesis, lty=3, lwd=1, col=col4)
 legend("bottomright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 
-plot(-supplyNetwork11$PsiLeaf, psi2A11ss$Photosynthesis, type="l", col=col1, ylab="Sun-shade photosynthesis", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), lwd=1, main="original")
-lines(-supplyNetwork12$PsiLeaf,psi2A12ss$Photosynthesis, lty=1, lwd=1, col=col2)
-lines(-supplyNetwork13$PsiLeaf, psi2A13ss$Photosynthesis, lty=1, lwd=1, col=col3)
-lines(-supplyNetwork14$PsiLeaf, psi2A14ss$Photosynthesis, lty=1, lwd=1, col=col4)
-lines(-supplyNetwork21$PsiLeaf, psi2A21ss$Photosynthesis, lty=2, lwd=1, col=col1)
-lines(-supplyNetwork22$PsiLeaf, psi2A22ss$Photosynthesis, lty=2, lwd=1, col=col2)
-lines(-supplyNetwork23$PsiLeaf, psi2A23ss$Photosynthesis, lty=2, lwd=1, col=col3)
-lines(-supplyNetwork24$PsiLeaf, psi2A24ss$Photosynthesis, lty=2, lwd=1, col=col4)
-lines(-supplyNetwork31$PsiLeaf, psi2A31ss$Photosynthesis, lty=3, lwd=1, col=col1)
-lines(-supplyNetwork32$PsiLeaf, psi2A32ss$Photosynthesis, lty=3, lwd=1, col=col2)
-lines(-supplyNetwork33$PsiLeaf, psi2A33ss$Photosynthesis, lty=3, lwd=1, col=col3)
-lines(-supplyNetwork34$PsiLeaf, psi2A34ss$Photosynthesis, lty=3, lwd=1, col=col4)
+plot(-supplyNetwork11$psiLeaf, psi2A11ss$Photosynthesis, type="l", col=col1, ylab="Sun-shade photosynthesis", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), lwd=1, main="original")
+lines(-supplyNetwork12$psiLeaf,psi2A12ss$Photosynthesis, lty=1, lwd=1, col=col2)
+lines(-supplyNetwork13$psiLeaf, psi2A13ss$Photosynthesis, lty=1, lwd=1, col=col3)
+lines(-supplyNetwork14$psiLeaf, psi2A14ss$Photosynthesis, lty=1, lwd=1, col=col4)
+lines(-supplyNetwork21$psiLeaf, psi2A21ss$Photosynthesis, lty=2, lwd=1, col=col1)
+lines(-supplyNetwork22$psiLeaf, psi2A22ss$Photosynthesis, lty=2, lwd=1, col=col2)
+lines(-supplyNetwork23$psiLeaf, psi2A23ss$Photosynthesis, lty=2, lwd=1, col=col3)
+lines(-supplyNetwork24$psiLeaf, psi2A24ss$Photosynthesis, lty=2, lwd=1, col=col4)
+lines(-supplyNetwork31$psiLeaf, psi2A31ss$Photosynthesis, lty=3, lwd=1, col=col1)
+lines(-supplyNetwork32$psiLeaf, psi2A32ss$Photosynthesis, lty=3, lwd=1, col=col2)
+lines(-supplyNetwork33$psiLeaf, psi2A33ss$Photosynthesis, lty=3, lwd=1, col=col3)
+lines(-supplyNetwork34$psiLeaf, psi2A34ss$Photosynthesis, lty=3, lwd=1, col=col4)
 legend("bottomright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 
-plot(-supplyNetwork11emb$PsiLeaf, psi2A11ssemb$Photosynthesis, type="l", col=col1, ylab="Sun-shade photosynthesis", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), lwd=1, main="after cavitation")
-lines(-supplyNetwork12emb$PsiLeaf,psi2A12ssemb$Photosynthesis, lty=1, lwd=1, col=col2)
-lines(-supplyNetwork13emb$PsiLeaf, psi2A13ssemb$Photosynthesis, lty=1, lwd=1, col=col3)
-lines(-supplyNetwork14emb$PsiLeaf, psi2A14ssemb$Photosynthesis, lty=1, lwd=1, col=col4)
-lines(-supplyNetwork21emb$PsiLeaf, psi2A21ssemb$Photosynthesis, lty=2, lwd=1, col=col1)
-lines(-supplyNetwork22emb$PsiLeaf, psi2A22ssemb$Photosynthesis, lty=2, lwd=1, col=col2)
-lines(-supplyNetwork23emb$PsiLeaf, psi2A23ssemb$Photosynthesis, lty=2, lwd=1, col=col3)
-lines(-supplyNetwork24emb$PsiLeaf, psi2A24ssemb$Photosynthesis, lty=2, lwd=1, col=col4)
-lines(-supplyNetwork31emb$PsiLeaf, psi2A31ssemb$Photosynthesis, lty=3, lwd=1, col=col1)
-lines(-supplyNetwork32emb$PsiLeaf, psi2A32ssemb$Photosynthesis, lty=3, lwd=1, col=col2)
-lines(-supplyNetwork33emb$PsiLeaf, psi2A33ssemb$Photosynthesis, lty=3, lwd=1, col=col3)
-lines(-supplyNetwork34emb$PsiLeaf, psi2A34ssemb$Photosynthesis, lty=3, lwd=1, col=col4)
+plot(-supplyNetwork11emb$psiLeaf, psi2A11ssemb$Photosynthesis, type="l", col=col1, ylab="Sun-shade photosynthesis", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), lwd=1, main="after cavitation")
+lines(-supplyNetwork12emb$psiLeaf,psi2A12ssemb$Photosynthesis, lty=1, lwd=1, col=col2)
+lines(-supplyNetwork13emb$psiLeaf, psi2A13ssemb$Photosynthesis, lty=1, lwd=1, col=col3)
+lines(-supplyNetwork14emb$psiLeaf, psi2A14ssemb$Photosynthesis, lty=1, lwd=1, col=col4)
+lines(-supplyNetwork21emb$psiLeaf, psi2A21ssemb$Photosynthesis, lty=2, lwd=1, col=col1)
+lines(-supplyNetwork22emb$psiLeaf, psi2A22ssemb$Photosynthesis, lty=2, lwd=1, col=col2)
+lines(-supplyNetwork23emb$psiLeaf, psi2A23ssemb$Photosynthesis, lty=2, lwd=1, col=col3)
+lines(-supplyNetwork24emb$psiLeaf, psi2A24ssemb$Photosynthesis, lty=2, lwd=1, col=col4)
+lines(-supplyNetwork31emb$psiLeaf, psi2A31ssemb$Photosynthesis, lty=3, lwd=1, col=col1)
+lines(-supplyNetwork32emb$psiLeaf, psi2A32ssemb$Photosynthesis, lty=3, lwd=1, col=col2)
+lines(-supplyNetwork33emb$psiLeaf, psi2A33ssemb$Photosynthesis, lty=3, lwd=1, col=col3)
+lines(-supplyNetwork34emb$psiLeaf, psi2A34ssemb$Photosynthesis, lty=3, lwd=1, col=col4)
 legend("bottomright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 
-plot(-supplyNetwork11$PsiLeaf, psi2A11bl$Photosynthesis, type="l", col=col1, ylab="Big-leaf photosynthesis", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), lwd=1, main="original")
-lines(-supplyNetwork12$PsiLeaf,psi2A12bl$Photosynthesis, lty=1, lwd=1, col=col2)
-lines(-supplyNetwork13$PsiLeaf, psi2A13bl$Photosynthesis, lty=1, lwd=1, col=col3)
-lines(-supplyNetwork14$PsiLeaf, psi2A14bl$Photosynthesis, lty=1, lwd=1, col=col4)
-lines(-supplyNetwork21$PsiLeaf, psi2A21bl$Photosynthesis, lty=2, lwd=1, col=col1)
-lines(-supplyNetwork22$PsiLeaf, psi2A22bl$Photosynthesis, lty=2, lwd=1, col=col2)
-lines(-supplyNetwork23$PsiLeaf, psi2A23bl$Photosynthesis, lty=2, lwd=1, col=col3)
-lines(-supplyNetwork24$PsiLeaf, psi2A24bl$Photosynthesis, lty=2, lwd=1, col=col4)
-lines(-supplyNetwork31$PsiLeaf, psi2A31bl$Photosynthesis, lty=3, lwd=1, col=col1)
-lines(-supplyNetwork32$PsiLeaf, psi2A32bl$Photosynthesis, lty=3, lwd=1, col=col2)
-lines(-supplyNetwork33$PsiLeaf, psi2A33bl$Photosynthesis, lty=3, lwd=1, col=col3)
-lines(-supplyNetwork34$PsiLeaf, psi2A34bl$Photosynthesis, lty=3, lwd=1, col=col4)
+plot(-supplyNetwork11$psiLeaf, psi2A11bl$Photosynthesis, type="l", col=col1, ylab="Big-leaf photosynthesis", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), lwd=1, main="original")
+lines(-supplyNetwork12$psiLeaf,psi2A12bl$Photosynthesis, lty=1, lwd=1, col=col2)
+lines(-supplyNetwork13$psiLeaf, psi2A13bl$Photosynthesis, lty=1, lwd=1, col=col3)
+lines(-supplyNetwork14$psiLeaf, psi2A14bl$Photosynthesis, lty=1, lwd=1, col=col4)
+lines(-supplyNetwork21$psiLeaf, psi2A21bl$Photosynthesis, lty=2, lwd=1, col=col1)
+lines(-supplyNetwork22$psiLeaf, psi2A22bl$Photosynthesis, lty=2, lwd=1, col=col2)
+lines(-supplyNetwork23$psiLeaf, psi2A23bl$Photosynthesis, lty=2, lwd=1, col=col3)
+lines(-supplyNetwork24$psiLeaf, psi2A24bl$Photosynthesis, lty=2, lwd=1, col=col4)
+lines(-supplyNetwork31$psiLeaf, psi2A31bl$Photosynthesis, lty=3, lwd=1, col=col1)
+lines(-supplyNetwork32$psiLeaf, psi2A32bl$Photosynthesis, lty=3, lwd=1, col=col2)
+lines(-supplyNetwork33$psiLeaf, psi2A33bl$Photosynthesis, lty=3, lwd=1, col=col3)
+lines(-supplyNetwork34$psiLeaf, psi2A34bl$Photosynthesis, lty=3, lwd=1, col=col4)
 legend("bottomright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 
-plot(-supplyNetwork11emb$PsiLeaf, psi2A11blemb$Photosynthesis, type="l", col=col1, ylab="Big-leaf photosynthesis", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), lwd=1, main="after cavitation")
-lines(-supplyNetwork12emb$PsiLeaf,psi2A12blemb$Photosynthesis, lty=1, lwd=1, col=col2)
-lines(-supplyNetwork13emb$PsiLeaf, psi2A13blemb$Photosynthesis, lty=1, lwd=1, col=col3)
-lines(-supplyNetwork14emb$PsiLeaf, psi2A14blemb$Photosynthesis, lty=1, lwd=1, col=col4)
-lines(-supplyNetwork21emb$PsiLeaf, psi2A21blemb$Photosynthesis, lty=2, lwd=1, col=col1)
-lines(-supplyNetwork22emb$PsiLeaf, psi2A22blemb$Photosynthesis, lty=2, lwd=1, col=col2)
-lines(-supplyNetwork23emb$PsiLeaf, psi2A23blemb$Photosynthesis, lty=2, lwd=1, col=col3)
-lines(-supplyNetwork24emb$PsiLeaf, psi2A24blemb$Photosynthesis, lty=2, lwd=1, col=col4)
-lines(-supplyNetwork31emb$PsiLeaf, psi2A31blemb$Photosynthesis, lty=3, lwd=1, col=col1)
-lines(-supplyNetwork32emb$PsiLeaf, psi2A32blemb$Photosynthesis, lty=3, lwd=1, col=col2)
-lines(-supplyNetwork33emb$PsiLeaf, psi2A33blemb$Photosynthesis, lty=3, lwd=1, col=col3)
-lines(-supplyNetwork34emb$PsiLeaf, psi2A34blemb$Photosynthesis, lty=3, lwd=1, col=col4)
+plot(-supplyNetwork11emb$psiLeaf, psi2A11blemb$Photosynthesis, type="l", col=col1, ylab="Big-leaf photosynthesis", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), lwd=1, main="after cavitation")
+lines(-supplyNetwork12emb$psiLeaf,psi2A12blemb$Photosynthesis, lty=1, lwd=1, col=col2)
+lines(-supplyNetwork13emb$psiLeaf, psi2A13blemb$Photosynthesis, lty=1, lwd=1, col=col3)
+lines(-supplyNetwork14emb$psiLeaf, psi2A14blemb$Photosynthesis, lty=1, lwd=1, col=col4)
+lines(-supplyNetwork21emb$psiLeaf, psi2A21blemb$Photosynthesis, lty=2, lwd=1, col=col1)
+lines(-supplyNetwork22emb$psiLeaf, psi2A22blemb$Photosynthesis, lty=2, lwd=1, col=col2)
+lines(-supplyNetwork23emb$psiLeaf, psi2A23blemb$Photosynthesis, lty=2, lwd=1, col=col3)
+lines(-supplyNetwork24emb$psiLeaf, psi2A24blemb$Photosynthesis, lty=2, lwd=1, col=col4)
+lines(-supplyNetwork31emb$psiLeaf, psi2A31blemb$Photosynthesis, lty=3, lwd=1, col=col1)
+lines(-supplyNetwork32emb$psiLeaf, psi2A32blemb$Photosynthesis, lty=3, lwd=1, col=col2)
+lines(-supplyNetwork33emb$psiLeaf, psi2A33blemb$Photosynthesis, lty=3, lwd=1, col=col3)
+lines(-supplyNetwork34emb$psiLeaf, psi2A34blemb$Photosynthesis, lty=3, lwd=1, col=col4)
 legend("bottomright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 
 @
@@ -2297,63 +2297,63 @@ The type of cost function can be specified by the user by setting parameter \tex
 \begin{center}
 <<fig=TRUE, width=8, height=8, echo=FALSE>>==
 par(mar=c(4,4,3,1), mfrow=c(2,2))
-plot(-supplyNetwork11$PsiLeaf, PM11$Cost, type="l", col=col1, ylab="Cost function 1", xlab = "Leaf sap pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,1), lwd=1, main = "Cost 1 (original)")
-lines(-supplyNetwork12$PsiLeaf, PM12$Cost, lty=1, lwd=1, col=col2)
-lines(-supplyNetwork13$PsiLeaf, PM13$Cost, lty=1, lwd=1, col=col3)
-lines(-supplyNetwork14$PsiLeaf, PM14$Cost, lty=1, lwd=1, col=col4)
-lines(-supplyNetwork21$PsiLeaf, PM21$Cost, lty=2, lwd=1, col=col1)
-lines(-supplyNetwork22$PsiLeaf, PM22$Cost, lty=2, lwd=1, col=col2)
-lines(-supplyNetwork23$PsiLeaf, PM23$Cost, lty=2, lwd=1, col=col3)
-lines(-supplyNetwork24$PsiLeaf, PM24$Cost, lty=2, lwd=1, col=col4)
-lines(-supplyNetwork31$PsiLeaf, PM31$Cost, lty=3, lwd=1, col=col1)
-lines(-supplyNetwork32$PsiLeaf, PM32$Cost, lty=3, lwd=1, col=col2)
-lines(-supplyNetwork33$PsiLeaf, PM33$Cost, lty=3, lwd=1, col=col3)
-lines(-supplyNetwork34$PsiLeaf, PM34$Cost, lty=3, lwd=1, col=col4)
+plot(-supplyNetwork11$psiLeaf, PM11$Cost, type="l", col=col1, ylab="Cost function 1", xlab = "Leaf sap pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,1), lwd=1, main = "Cost 1 (original)")
+lines(-supplyNetwork12$psiLeaf, PM12$Cost, lty=1, lwd=1, col=col2)
+lines(-supplyNetwork13$psiLeaf, PM13$Cost, lty=1, lwd=1, col=col3)
+lines(-supplyNetwork14$psiLeaf, PM14$Cost, lty=1, lwd=1, col=col4)
+lines(-supplyNetwork21$psiLeaf, PM21$Cost, lty=2, lwd=1, col=col1)
+lines(-supplyNetwork22$psiLeaf, PM22$Cost, lty=2, lwd=1, col=col2)
+lines(-supplyNetwork23$psiLeaf, PM23$Cost, lty=2, lwd=1, col=col3)
+lines(-supplyNetwork24$psiLeaf, PM24$Cost, lty=2, lwd=1, col=col4)
+lines(-supplyNetwork31$psiLeaf, PM31$Cost, lty=3, lwd=1, col=col1)
+lines(-supplyNetwork32$psiLeaf, PM32$Cost, lty=3, lwd=1, col=col2)
+lines(-supplyNetwork33$psiLeaf, PM33$Cost, lty=3, lwd=1, col=col3)
+lines(-supplyNetwork34$psiLeaf, PM34$Cost, lty=3, lwd=1, col=col4)
 legend("topleft", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 
-plot(-supplyNetwork11emb$PsiLeaf, PM11emb$Cost, type="l", col=col1, ylab="Cost function", xlab = "Leaf sap pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,1), lwd=1, main = "Cost 1 (after cavitation)")
-lines(-supplyNetwork12emb$PsiLeaf, PM12emb$Cost, lty=1, lwd=1, col=col2)
-lines(-supplyNetwork13emb$PsiLeaf, PM13emb$Cost, lty=1, lwd=1, col=col3)
-lines(-supplyNetwork14emb$PsiLeaf, PM14emb$Cost, lty=1, lwd=1, col=col4)
-lines(-supplyNetwork21emb$PsiLeaf, PM21emb$Cost, lty=2, lwd=1, col=col1)
-lines(-supplyNetwork22emb$PsiLeaf, PM22emb$Cost, lty=2, lwd=1, col=col2)
-lines(-supplyNetwork23emb$PsiLeaf, PM23emb$Cost, lty=2, lwd=1, col=col3)
-lines(-supplyNetwork24emb$PsiLeaf, PM24emb$Cost, lty=2, lwd=1, col=col4)
-lines(-supplyNetwork31emb$PsiLeaf, PM31emb$Cost, lty=3, lwd=1, col=col1)
-lines(-supplyNetwork32emb$PsiLeaf, PM32emb$Cost, lty=3, lwd=1, col=col2)
-lines(-supplyNetwork33emb$PsiLeaf, PM33emb$Cost, lty=3, lwd=1, col=col3)
-lines(-supplyNetwork34emb$PsiLeaf, PM34emb$Cost, lty=3, lwd=1, col=col4)
+plot(-supplyNetwork11emb$psiLeaf, PM11emb$Cost, type="l", col=col1, ylab="Cost function", xlab = "Leaf sap pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,1), lwd=1, main = "Cost 1 (after cavitation)")
+lines(-supplyNetwork12emb$psiLeaf, PM12emb$Cost, lty=1, lwd=1, col=col2)
+lines(-supplyNetwork13emb$psiLeaf, PM13emb$Cost, lty=1, lwd=1, col=col3)
+lines(-supplyNetwork14emb$psiLeaf, PM14emb$Cost, lty=1, lwd=1, col=col4)
+lines(-supplyNetwork21emb$psiLeaf, PM21emb$Cost, lty=2, lwd=1, col=col1)
+lines(-supplyNetwork22emb$psiLeaf, PM22emb$Cost, lty=2, lwd=1, col=col2)
+lines(-supplyNetwork23emb$psiLeaf, PM23emb$Cost, lty=2, lwd=1, col=col3)
+lines(-supplyNetwork24emb$psiLeaf, PM24emb$Cost, lty=2, lwd=1, col=col4)
+lines(-supplyNetwork31emb$psiLeaf, PM31emb$Cost, lty=3, lwd=1, col=col1)
+lines(-supplyNetwork32emb$psiLeaf, PM32emb$Cost, lty=3, lwd=1, col=col2)
+lines(-supplyNetwork33emb$psiLeaf, PM33emb$Cost, lty=3, lwd=1, col=col3)
+lines(-supplyNetwork34emb$psiLeaf, PM34emb$Cost, lty=3, lwd=1, col=col4)
 abline(v=-psiCav, col="gray", lwd=1.5)
 legend("topleft", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 
 
 
-plot(-supplyNetwork11$PsiLeaf, PM11_s2$Cost, type="l", col=col1, ylab="Cost function 2", xlab = "Leaf sap pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,1), lwd=1, main = "Cost 2 (original)")
-lines(-supplyNetwork12$PsiLeaf, PM12_s2$Cost, lty=1, lwd=1, col=col2)
-lines(-supplyNetwork13$PsiLeaf, PM13_s2$Cost, lty=1, lwd=1, col=col3)
-lines(-supplyNetwork14$PsiLeaf, PM14_s2$Cost, lty=1, lwd=1, col=col4)
-lines(-supplyNetwork21$PsiLeaf, PM21_s2$Cost, lty=2, lwd=1, col=col1)
-lines(-supplyNetwork22$PsiLeaf, PM22_s2$Cost, lty=2, lwd=1, col=col2)
-lines(-supplyNetwork23$PsiLeaf, PM23_s2$Cost, lty=2, lwd=1, col=col3)
-lines(-supplyNetwork24$PsiLeaf, PM24_s2$Cost, lty=2, lwd=1, col=col4)
-lines(-supplyNetwork31$PsiLeaf, PM31_s2$Cost, lty=3, lwd=1, col=col1)
-lines(-supplyNetwork32$PsiLeaf, PM32_s2$Cost, lty=3, lwd=1, col=col2)
-lines(-supplyNetwork33$PsiLeaf, PM33_s2$Cost, lty=3, lwd=1, col=col3)
-lines(-supplyNetwork34$PsiLeaf, PM34_s2$Cost, lty=3, lwd=1, col=col4)
+plot(-supplyNetwork11$psiLeaf, PM11_s2$Cost, type="l", col=col1, ylab="Cost function 2", xlab = "Leaf sap pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,1), lwd=1, main = "Cost 2 (original)")
+lines(-supplyNetwork12$psiLeaf, PM12_s2$Cost, lty=1, lwd=1, col=col2)
+lines(-supplyNetwork13$psiLeaf, PM13_s2$Cost, lty=1, lwd=1, col=col3)
+lines(-supplyNetwork14$psiLeaf, PM14_s2$Cost, lty=1, lwd=1, col=col4)
+lines(-supplyNetwork21$psiLeaf, PM21_s2$Cost, lty=2, lwd=1, col=col1)
+lines(-supplyNetwork22$psiLeaf, PM22_s2$Cost, lty=2, lwd=1, col=col2)
+lines(-supplyNetwork23$psiLeaf, PM23_s2$Cost, lty=2, lwd=1, col=col3)
+lines(-supplyNetwork24$psiLeaf, PM24_s2$Cost, lty=2, lwd=1, col=col4)
+lines(-supplyNetwork31$psiLeaf, PM31_s2$Cost, lty=3, lwd=1, col=col1)
+lines(-supplyNetwork32$psiLeaf, PM32_s2$Cost, lty=3, lwd=1, col=col2)
+lines(-supplyNetwork33$psiLeaf, PM33_s2$Cost, lty=3, lwd=1, col=col3)
+lines(-supplyNetwork34$psiLeaf, PM34_s2$Cost, lty=3, lwd=1, col=col4)
 legend("topleft", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 
-plot(-supplyNetwork11emb$PsiLeaf, PM11emb_s2$Cost, type="l", col=col1, ylab="Cost function 2", xlab = "Leaf sap pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,1), lwd=1, main = "Cost 2 (after cavitation)")
-lines(-supplyNetwork12emb$PsiLeaf, PM12emb_s2$Cost, lty=1, lwd=1, col=col2)
-lines(-supplyNetwork13emb$PsiLeaf, PM13emb_s2$Cost, lty=1, lwd=1, col=col3)
-lines(-supplyNetwork14emb$PsiLeaf, PM14emb_s2$Cost, lty=1, lwd=1, col=col4)
-lines(-supplyNetwork21emb$PsiLeaf, PM21emb_s2$Cost, lty=2, lwd=1, col=col1)
-lines(-supplyNetwork22emb$PsiLeaf, PM22emb_s2$Cost, lty=2, lwd=1, col=col2)
-lines(-supplyNetwork23emb$PsiLeaf, PM23emb_s2$Cost, lty=2, lwd=1, col=col3)
-lines(-supplyNetwork24emb$PsiLeaf, PM24emb_s2$Cost, lty=2, lwd=1, col=col4)
-lines(-supplyNetwork31emb$PsiLeaf, PM31emb_s2$Cost, lty=3, lwd=1, col=col1)
-lines(-supplyNetwork32emb$PsiLeaf, PM32emb_s2$Cost, lty=3, lwd=1, col=col2)
-lines(-supplyNetwork33emb$PsiLeaf, PM33emb_s2$Cost, lty=3, lwd=1, col=col3)
-lines(-supplyNetwork34emb$PsiLeaf, PM34emb_s2$Cost, lty=3, lwd=1, col=col4)
+plot(-supplyNetwork11emb$psiLeaf, PM11emb_s2$Cost, type="l", col=col1, ylab="Cost function 2", xlab = "Leaf sap pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,1), lwd=1, main = "Cost 2 (after cavitation)")
+lines(-supplyNetwork12emb$psiLeaf, PM12emb_s2$Cost, lty=1, lwd=1, col=col2)
+lines(-supplyNetwork13emb$psiLeaf, PM13emb_s2$Cost, lty=1, lwd=1, col=col3)
+lines(-supplyNetwork14emb$psiLeaf, PM14emb_s2$Cost, lty=1, lwd=1, col=col4)
+lines(-supplyNetwork21emb$psiLeaf, PM21emb_s2$Cost, lty=2, lwd=1, col=col1)
+lines(-supplyNetwork22emb$psiLeaf, PM22emb_s2$Cost, lty=2, lwd=1, col=col2)
+lines(-supplyNetwork23emb$psiLeaf, PM23emb_s2$Cost, lty=2, lwd=1, col=col3)
+lines(-supplyNetwork24emb$psiLeaf, PM24emb_s2$Cost, lty=2, lwd=1, col=col4)
+lines(-supplyNetwork31emb$psiLeaf, PM31emb_s2$Cost, lty=3, lwd=1, col=col1)
+lines(-supplyNetwork32emb$psiLeaf, PM32emb_s2$Cost, lty=3, lwd=1, col=col2)
+lines(-supplyNetwork33emb$psiLeaf, PM33emb_s2$Cost, lty=3, lwd=1, col=col3)
+lines(-supplyNetwork34emb$psiLeaf, PM34emb_s2$Cost, lty=3, lwd=1, col=col4)
 abline(v=-psiCav, col="gray", lwd=1.5)
 legend("topleft", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 @
@@ -2367,33 +2367,33 @@ where $A_{max}$ is the instantaneous maximum assimilation rate estimated over th
 <<fig=TRUE, width=8, height=3.5, echo=FALSE>>==
 par(mar=c(4,4,3,1), mfrow=c(1,2))
 
-plot(-supplyNetwork11$PsiLeaf, PM11$Gain, type="l", col=col1, ylab="Gain function", xlab = "Canopy sap pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,1), lwd=1, main = "Gain (original)")
-lines(-supplyNetwork12$PsiLeaf, PM12$Gain, lty=1, lwd=1, col=col2)
-lines(-supplyNetwork13$PsiLeaf, PM13$Gain, lty=1, lwd=1, col=col3)
-lines(-supplyNetwork14$PsiLeaf, PM14$Gain, lty=1, lwd=1, col=col4)
-lines(-supplyNetwork21$PsiLeaf, PM21$Gain, lty=2, lwd=1, col=col1)
-lines(-supplyNetwork22$PsiLeaf, PM22$Gain, lty=2, lwd=1, col=col2)
-lines(-supplyNetwork23$PsiLeaf, PM23$Gain, lty=2, lwd=1, col=col3)
-lines(-supplyNetwork24$PsiLeaf, PM24$Gain, lty=2, lwd=1, col=col4)
-lines(-supplyNetwork31$PsiLeaf, PM31$Gain, lty=3, lwd=1, col=col1)
-lines(-supplyNetwork32$PsiLeaf, PM32$Gain, lty=3, lwd=1, col=col2)
-lines(-supplyNetwork33$PsiLeaf, PM33$Gain, lty=3, lwd=1, col=col3)
-lines(-supplyNetwork34$PsiLeaf, PM34$Gain, lty=3, lwd=1, col=col4)
+plot(-supplyNetwork11$psiLeaf, PM11$Gain, type="l", col=col1, ylab="Gain function", xlab = "Canopy sap pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,1), lwd=1, main = "Gain (original)")
+lines(-supplyNetwork12$psiLeaf, PM12$Gain, lty=1, lwd=1, col=col2)
+lines(-supplyNetwork13$psiLeaf, PM13$Gain, lty=1, lwd=1, col=col3)
+lines(-supplyNetwork14$psiLeaf, PM14$Gain, lty=1, lwd=1, col=col4)
+lines(-supplyNetwork21$psiLeaf, PM21$Gain, lty=2, lwd=1, col=col1)
+lines(-supplyNetwork22$psiLeaf, PM22$Gain, lty=2, lwd=1, col=col2)
+lines(-supplyNetwork23$psiLeaf, PM23$Gain, lty=2, lwd=1, col=col3)
+lines(-supplyNetwork24$psiLeaf, PM24$Gain, lty=2, lwd=1, col=col4)
+lines(-supplyNetwork31$psiLeaf, PM31$Gain, lty=3, lwd=1, col=col1)
+lines(-supplyNetwork32$psiLeaf, PM32$Gain, lty=3, lwd=1, col=col2)
+lines(-supplyNetwork33$psiLeaf, PM33$Gain, lty=3, lwd=1, col=col3)
+lines(-supplyNetwork34$psiLeaf, PM34$Gain, lty=3, lwd=1, col=col4)
 legend("bottomright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 
 
-plot(-supplyNetwork11emb$PsiLeaf, PM11emb$Gain, type="l", col=col1, ylab="Gain function", xlab = "Canopy sap pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,1), lwd=1, main = "Gain (after cavitation)")
-lines(-supplyNetwork12emb$PsiLeaf, PM12emb$Gain, lty=1, lwd=1, col=col2)
-lines(-supplyNetwork13emb$PsiLeaf, PM13emb$Gain, lty=1, lwd=1, col=col3)
-lines(-supplyNetwork14emb$PsiLeaf, PM14emb$Gain, lty=1, lwd=1, col=col4)
-lines(-supplyNetwork21emb$PsiLeaf, PM21emb$Gain, lty=2, lwd=1, col=col1)
-lines(-supplyNetwork22emb$PsiLeaf, PM22emb$Gain, lty=2, lwd=1, col=col2)
-lines(-supplyNetwork23emb$PsiLeaf, PM23emb$Gain, lty=2, lwd=1, col=col3)
-lines(-supplyNetwork24emb$PsiLeaf, PM24emb$Gain, lty=2, lwd=1, col=col4)
-lines(-supplyNetwork31emb$PsiLeaf, PM31emb$Gain, lty=3, lwd=1, col=col1)
-lines(-supplyNetwork32emb$PsiLeaf, PM32emb$Gain, lty=3, lwd=1, col=col2)
-lines(-supplyNetwork33emb$PsiLeaf, PM33emb$Gain, lty=3, lwd=1, col=col3)
-lines(-supplyNetwork34emb$PsiLeaf, PM34emb$Gain, lty=3, lwd=1, col=col4)
+plot(-supplyNetwork11emb$psiLeaf, PM11emb$Gain, type="l", col=col1, ylab="Gain function", xlab = "Canopy sap pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,1), lwd=1, main = "Gain (after cavitation)")
+lines(-supplyNetwork12emb$psiLeaf, PM12emb$Gain, lty=1, lwd=1, col=col2)
+lines(-supplyNetwork13emb$psiLeaf, PM13emb$Gain, lty=1, lwd=1, col=col3)
+lines(-supplyNetwork14emb$psiLeaf, PM14emb$Gain, lty=1, lwd=1, col=col4)
+lines(-supplyNetwork21emb$psiLeaf, PM21emb$Gain, lty=2, lwd=1, col=col1)
+lines(-supplyNetwork22emb$psiLeaf, PM22emb$Gain, lty=2, lwd=1, col=col2)
+lines(-supplyNetwork23emb$psiLeaf, PM23emb$Gain, lty=2, lwd=1, col=col3)
+lines(-supplyNetwork24emb$psiLeaf, PM24emb$Gain, lty=2, lwd=1, col=col4)
+lines(-supplyNetwork31emb$psiLeaf, PM31emb$Gain, lty=3, lwd=1, col=col1)
+lines(-supplyNetwork32emb$psiLeaf, PM32emb$Gain, lty=3, lwd=1, col=col2)
+lines(-supplyNetwork33emb$psiLeaf, PM33emb$Gain, lty=3, lwd=1, col=col3)
+lines(-supplyNetwork34emb$psiLeaf, PM34emb$Gain, lty=3, lwd=1, col=col4)
 abline(v=-psiCav, col="gray", lwd=1.5)
 legend("bottomright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 @
@@ -2409,159 +2409,159 @@ Once $\Psi_{leaf}$ that maximizes profit is determined, the values of the remain
 \begin{center}
 <<fig=TRUE, width=8, height=8, echo=FALSE>>==
 par(mar=c(4,4,2,1), mfrow=c(2,2))
-plot(-supplyNetwork11$PsiLeaf, PM11$Profit, type="l", col=col1, ylab="Profit 1", xlab = "Leaf sap pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,1), lwd=1, main="original")
-points(-supplyNetwork11$PsiLeaf[PM11$iMaxProfit+1],
+plot(-supplyNetwork11$psiLeaf, PM11$Profit, type="l", col=col1, ylab="Profit 1", xlab = "Leaf sap pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,1), lwd=1, main="original")
+points(-supplyNetwork11$psiLeaf[PM11$iMaxProfit+1],
          PM11$Profit[PM11$iMaxProfit+1], col=col1, pch = 0)
-lines(-supplyNetwork12$PsiLeaf, PM12$Profit, lty=1, lwd=1, col=col2)
-points(-supplyNetwork12$PsiLeaf[PM12$iMaxProfit+1],
+lines(-supplyNetwork12$psiLeaf, PM12$Profit, lty=1, lwd=1, col=col2)
+points(-supplyNetwork12$psiLeaf[PM12$iMaxProfit+1],
          PM12$Profit[PM12$iMaxProfit+1], col=col2, pch = 0)
-lines(-supplyNetwork13$PsiLeaf, PM13$Profit, lty=1, lwd=1, col=col3)
-points(-supplyNetwork13$PsiLeaf[PM13$iMaxProfit+1],
+lines(-supplyNetwork13$psiLeaf, PM13$Profit, lty=1, lwd=1, col=col3)
+points(-supplyNetwork13$psiLeaf[PM13$iMaxProfit+1],
          PM13$Profit[PM13$iMaxProfit+1], col=col3, pch = 0)
-lines(-supplyNetwork14$PsiLeaf, PM14$Profit, lty=1, lwd=1, col=col4)
-points(-supplyNetwork14$PsiLeaf[PM14$iMaxProfit+1],
+lines(-supplyNetwork14$psiLeaf, PM14$Profit, lty=1, lwd=1, col=col4)
+points(-supplyNetwork14$psiLeaf[PM14$iMaxProfit+1],
          PM14$Profit[PM14$iMaxProfit+1], col=col4, pch = 0)
-lines(-supplyNetwork21$PsiLeaf, PM21$Profit, lty=2, lwd=1, col=col1)
-points(-supplyNetwork21$PsiLeaf[PM21$iMaxProfit+1],
+lines(-supplyNetwork21$psiLeaf, PM21$Profit, lty=2, lwd=1, col=col1)
+points(-supplyNetwork21$psiLeaf[PM21$iMaxProfit+1],
          PM21$Profit[PM21$iMaxProfit+1], col=col1, pch = 0)
-lines(-supplyNetwork22$PsiLeaf, PM22$Profit, lty=2, lwd=1, col=col2)
-points(-supplyNetwork22$PsiLeaf[PM22$iMaxProfit+1],
+lines(-supplyNetwork22$psiLeaf, PM22$Profit, lty=2, lwd=1, col=col2)
+points(-supplyNetwork22$psiLeaf[PM22$iMaxProfit+1],
          PM22$Profit[PM22$iMaxProfit+1], col=col2, pch = 0)
-lines(-supplyNetwork23$PsiLeaf, PM23$Profit, lty=2, lwd=1, col=col3)
-points(-supplyNetwork23$PsiLeaf[PM23$iMaxProfit+1],
+lines(-supplyNetwork23$psiLeaf, PM23$Profit, lty=2, lwd=1, col=col3)
+points(-supplyNetwork23$psiLeaf[PM23$iMaxProfit+1],
          PM23$Profit[PM23$iMaxProfit+1], col=col3, pch = 0)
-lines(-supplyNetwork24$PsiLeaf, PM24$Profit, lty=2, lwd=1, col=col4)
-points(-supplyNetwork24$PsiLeaf[PM24$iMaxProfit+1],
+lines(-supplyNetwork24$psiLeaf, PM24$Profit, lty=2, lwd=1, col=col4)
+points(-supplyNetwork24$psiLeaf[PM24$iMaxProfit+1],
          PM24$Profit[PM24$iMaxProfit+1], col=col4, pch = 0)
-lines(-supplyNetwork31$PsiLeaf, PM31$Profit, lty=3, lwd=1, col=col1)
-points(-supplyNetwork31$PsiLeaf[PM31$iMaxProfit+1],
+lines(-supplyNetwork31$psiLeaf, PM31$Profit, lty=3, lwd=1, col=col1)
+points(-supplyNetwork31$psiLeaf[PM31$iMaxProfit+1],
          PM31$Profit[PM31$iMaxProfit+1], col=col1, pch = 0)
-lines(-supplyNetwork32$PsiLeaf, PM32$Profit, lty=3, lwd=1, col=col2)
-points(-supplyNetwork32$PsiLeaf[PM32$iMaxProfit+1],
+lines(-supplyNetwork32$psiLeaf, PM32$Profit, lty=3, lwd=1, col=col2)
+points(-supplyNetwork32$psiLeaf[PM32$iMaxProfit+1],
          PM32$Profit[PM32$iMaxProfit+1], col=col2, pch = 0)
-lines(-supplyNetwork33$PsiLeaf, PM33$Profit, lty=3, lwd=1, col=col3)
-points(-supplyNetwork33$PsiLeaf[PM33$iMaxProfit+1],
+lines(-supplyNetwork33$psiLeaf, PM33$Profit, lty=3, lwd=1, col=col3)
+points(-supplyNetwork33$psiLeaf[PM33$iMaxProfit+1],
          PM33$Profit[PM33$iMaxProfit+1], col=col3, pch = 0)
-lines(-supplyNetwork34$PsiLeaf, PM34$Profit, lty=3, lwd=1, col=col4)
-points(-supplyNetwork34$PsiLeaf[PM34$iMaxProfit+1],
+lines(-supplyNetwork34$psiLeaf, PM34$Profit, lty=3, lwd=1, col=col4)
+points(-supplyNetwork34$psiLeaf[PM34$iMaxProfit+1],
          PM34$Profit[PM34$iMaxProfit+1], col=col4, pch = 0)
 legend("topright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 abline(h=0,col="gray")
 
-plot(-supplyNetwork11emb$PsiLeaf, PM11emb$Profit, type="l", col=col1, ylab="Profit 1", xlab = "Leaf sap pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,1), lwd=1, main="after cavitation")
-points(-supplyNetwork11emb$PsiLeaf[PM11emb$iMaxProfit+1],
+plot(-supplyNetwork11emb$psiLeaf, PM11emb$Profit, type="l", col=col1, ylab="Profit 1", xlab = "Leaf sap pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,1), lwd=1, main="after cavitation")
+points(-supplyNetwork11emb$psiLeaf[PM11emb$iMaxProfit+1],
          PM11emb$Profit[PM11emb$iMaxProfit+1], col=col1, pch = 0)
-lines(-supplyNetwork12emb$PsiLeaf, PM12emb$Profit, lty=1, lwd=1, col=col2)
-points(-supplyNetwork12emb$PsiLeaf[PM12emb$iMaxProfit+1],
+lines(-supplyNetwork12emb$psiLeaf, PM12emb$Profit, lty=1, lwd=1, col=col2)
+points(-supplyNetwork12emb$psiLeaf[PM12emb$iMaxProfit+1],
          PM12emb$Profit[PM12emb$iMaxProfit+1], col=col2, pch = 0)
-lines(-supplyNetwork13emb$PsiLeaf, PM13emb$Profit, lty=1, lwd=1, col=col3)
-points(-supplyNetwork13emb$PsiLeaf[PM13emb$iMaxProfit+1],
+lines(-supplyNetwork13emb$psiLeaf, PM13emb$Profit, lty=1, lwd=1, col=col3)
+points(-supplyNetwork13emb$psiLeaf[PM13emb$iMaxProfit+1],
          PM13emb$Profit[PM13emb$iMaxProfit+1], col=col3, pch = 0)
-lines(-supplyNetwork14emb$PsiLeaf, PM14emb$Profit, lty=1, lwd=1, col=col4)
-points(-supplyNetwork14emb$PsiLeaf[PM14emb$iMaxProfit+1],
+lines(-supplyNetwork14emb$psiLeaf, PM14emb$Profit, lty=1, lwd=1, col=col4)
+points(-supplyNetwork14emb$psiLeaf[PM14emb$iMaxProfit+1],
          PM14emb$Profit[PM14emb$iMaxProfit+1], col=col4, pch = 0)
-lines(-supplyNetwork21emb$PsiLeaf, PM21emb$Profit, lty=2, lwd=1, col=col1)
-points(-supplyNetwork21emb$PsiLeaf[PM21emb$iMaxProfit+1],
+lines(-supplyNetwork21emb$psiLeaf, PM21emb$Profit, lty=2, lwd=1, col=col1)
+points(-supplyNetwork21emb$psiLeaf[PM21emb$iMaxProfit+1],
          PM21emb$Profit[PM21emb$iMaxProfit+1], col=col1, pch = 0)
-lines(-supplyNetwork22emb$PsiLeaf, PM22emb$Profit, lty=2, lwd=1, col=col2)
-points(-supplyNetwork22emb$PsiLeaf[PM22emb$iMaxProfit+1],
+lines(-supplyNetwork22emb$psiLeaf, PM22emb$Profit, lty=2, lwd=1, col=col2)
+points(-supplyNetwork22emb$psiLeaf[PM22emb$iMaxProfit+1],
          PM22emb$Profit[PM22emb$iMaxProfit+1], col=col2, pch = 0)
-lines(-supplyNetwork23emb$PsiLeaf, PM23emb$Profit, lty=2, lwd=1, col=col3)
-points(-supplyNetwork23emb$PsiLeaf[PM23emb$iMaxProfit+1],
+lines(-supplyNetwork23emb$psiLeaf, PM23emb$Profit, lty=2, lwd=1, col=col3)
+points(-supplyNetwork23emb$psiLeaf[PM23emb$iMaxProfit+1],
          PM23emb$Profit[PM23emb$iMaxProfit+1], col=col3, pch = 0)
-lines(-supplyNetwork24emb$PsiLeaf, PM24emb$Profit, lty=2, lwd=1, col=col4)
-points(-supplyNetwork24emb$PsiLeaf[PM24emb$iMaxProfit+1],
+lines(-supplyNetwork24emb$psiLeaf, PM24emb$Profit, lty=2, lwd=1, col=col4)
+points(-supplyNetwork24emb$psiLeaf[PM24emb$iMaxProfit+1],
          PM24emb$Profit[PM24emb$iMaxProfit+1], col=col4, pch = 0)
-lines(-supplyNetwork31emb$PsiLeaf, PM31emb$Profit, lty=3, lwd=1, col=col1)
-points(-supplyNetwork31emb$PsiLeaf[PM31emb$iMaxProfit+1],
+lines(-supplyNetwork31emb$psiLeaf, PM31emb$Profit, lty=3, lwd=1, col=col1)
+points(-supplyNetwork31emb$psiLeaf[PM31emb$iMaxProfit+1],
          PM31emb$Profit[PM31emb$iMaxProfit+1], col=col1, pch = 0)
-lines(-supplyNetwork32emb$PsiLeaf, PM32emb$Profit, lty=3, lwd=1, col=col2)
-points(-supplyNetwork32emb$PsiLeaf[PM32emb$iMaxProfit+1],
+lines(-supplyNetwork32emb$psiLeaf, PM32emb$Profit, lty=3, lwd=1, col=col2)
+points(-supplyNetwork32emb$psiLeaf[PM32emb$iMaxProfit+1],
          PM32emb$Profit[PM32emb$iMaxProfit+1], col=col2, pch = 0)
-lines(-supplyNetwork33emb$PsiLeaf, PM33emb$Profit, lty=3, lwd=1, col=col3)
-points(-supplyNetwork33emb$PsiLeaf[PM33emb$iMaxProfit+1],
+lines(-supplyNetwork33emb$psiLeaf, PM33emb$Profit, lty=3, lwd=1, col=col3)
+points(-supplyNetwork33emb$psiLeaf[PM33emb$iMaxProfit+1],
          PM33emb$Profit[PM33emb$iMaxProfit+1], col=col3, pch = 0)
-lines(-supplyNetwork34emb$PsiLeaf, PM34emb$Profit, lty=3, lwd=1, col=col4)
-points(-supplyNetwork34emb$PsiLeaf[PM34emb$iMaxProfit+1],
+lines(-supplyNetwork34emb$psiLeaf, PM34emb$Profit, lty=3, lwd=1, col=col4)
+points(-supplyNetwork34emb$psiLeaf[PM34emb$iMaxProfit+1],
          PM34emb$Profit[PM34emb$iMaxProfit+1], col=col4, pch = 0)
 legend("topright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 abline(h=0,col="gray")
 abline(v=-psiCav, col="gray", lwd=1.5)
 
-plot(-supplyNetwork11$PsiLeaf, PM11_s2$Profit, type="l", col=col1, ylab="Profit 2", xlab = "Leaf sap pressure (-MPa)",  xlim=c(0, 7), ylim=c(-1,1), lwd=1, main="original")
-points(-supplyNetwork11$PsiLeaf[PM11_s2$iMaxProfit+1],
+plot(-supplyNetwork11$psiLeaf, PM11_s2$Profit, type="l", col=col1, ylab="Profit 2", xlab = "Leaf sap pressure (-MPa)",  xlim=c(0, 7), ylim=c(-1,1), lwd=1, main="original")
+points(-supplyNetwork11$psiLeaf[PM11_s2$iMaxProfit+1],
          PM11_s2$Profit[PM11_s2$iMaxProfit+1], col=col1, pch = 0)
-lines(-supplyNetwork12$PsiLeaf, PM12_s2$Profit, lty=1, lwd=1, col=col2)
-points(-supplyNetwork12$PsiLeaf[PM12_s2$iMaxProfit+1],
+lines(-supplyNetwork12$psiLeaf, PM12_s2$Profit, lty=1, lwd=1, col=col2)
+points(-supplyNetwork12$psiLeaf[PM12_s2$iMaxProfit+1],
          PM12_s2$Profit[PM12_s2$iMaxProfit+1], col=col2, pch = 0)
-lines(-supplyNetwork13$PsiLeaf, PM13_s2$Profit, lty=1, lwd=1, col=col3)
-points(-supplyNetwork13$PsiLeaf[PM13_s2$iMaxProfit+1],
+lines(-supplyNetwork13$psiLeaf, PM13_s2$Profit, lty=1, lwd=1, col=col3)
+points(-supplyNetwork13$psiLeaf[PM13_s2$iMaxProfit+1],
          PM13_s2$Profit[PM13_s2$iMaxProfit+1], col=col3, pch = 0)
-lines(-supplyNetwork14$PsiLeaf, PM14_s2$Profit, lty=1, lwd=1, col=col4)
-points(-supplyNetwork14$PsiLeaf[PM14_s2$iMaxProfit+1],
+lines(-supplyNetwork14$psiLeaf, PM14_s2$Profit, lty=1, lwd=1, col=col4)
+points(-supplyNetwork14$psiLeaf[PM14_s2$iMaxProfit+1],
          PM14_s2$Profit[PM14_s2$iMaxProfit+1], col=col4, pch = 0)
-lines(-supplyNetwork21$PsiLeaf, PM21_s2$Profit, lty=2, lwd=1, col=col1)
-points(-supplyNetwork21$PsiLeaf[PM21_s2$iMaxProfit+1],
+lines(-supplyNetwork21$psiLeaf, PM21_s2$Profit, lty=2, lwd=1, col=col1)
+points(-supplyNetwork21$psiLeaf[PM21_s2$iMaxProfit+1],
          PM21_s2$Profit[PM21_s2$iMaxProfit+1], col=col1, pch = 0)
-lines(-supplyNetwork22$PsiLeaf, PM22_s2$Profit, lty=2, lwd=1, col=col2)
-points(-supplyNetwork22$PsiLeaf[PM22_s2$iMaxProfit+1],
+lines(-supplyNetwork22$psiLeaf, PM22_s2$Profit, lty=2, lwd=1, col=col2)
+points(-supplyNetwork22$psiLeaf[PM22_s2$iMaxProfit+1],
          PM22_s2$Profit[PM22_s2$iMaxProfit+1], col=col2, pch = 0)
-lines(-supplyNetwork23$PsiLeaf, PM23_s2$Profit, lty=2, lwd=1, col=col3)
-points(-supplyNetwork23$PsiLeaf[PM23_s2$iMaxProfit+1],
+lines(-supplyNetwork23$psiLeaf, PM23_s2$Profit, lty=2, lwd=1, col=col3)
+points(-supplyNetwork23$psiLeaf[PM23_s2$iMaxProfit+1],
          PM23_s2$Profit[PM23_s2$iMaxProfit+1], col=col3, pch = 0)
-lines(-supplyNetwork24$PsiLeaf, PM24_s2$Profit, lty=2, lwd=1, col=col4)
-points(-supplyNetwork24$PsiLeaf[PM24_s2$iMaxProfit+1],
+lines(-supplyNetwork24$psiLeaf, PM24_s2$Profit, lty=2, lwd=1, col=col4)
+points(-supplyNetwork24$psiLeaf[PM24_s2$iMaxProfit+1],
          PM24_s2$Profit[PM24_s2$iMaxProfit+1], col=col4, pch = 0)
-lines(-supplyNetwork31$PsiLeaf, PM31_s2$Profit, lty=3, lwd=1, col=col1)
-points(-supplyNetwork31$PsiLeaf[PM31_s2$iMaxProfit+1],
+lines(-supplyNetwork31$psiLeaf, PM31_s2$Profit, lty=3, lwd=1, col=col1)
+points(-supplyNetwork31$psiLeaf[PM31_s2$iMaxProfit+1],
          PM31_s2$Profit[PM31_s2$iMaxProfit+1], col=col1, pch = 0)
-lines(-supplyNetwork32$PsiLeaf, PM32_s2$Profit, lty=3, lwd=1, col=col2)
-points(-supplyNetwork32$PsiLeaf[PM32_s2$iMaxProfit+1],
+lines(-supplyNetwork32$psiLeaf, PM32_s2$Profit, lty=3, lwd=1, col=col2)
+points(-supplyNetwork32$psiLeaf[PM32_s2$iMaxProfit+1],
          PM32_s2$Profit[PM32_s2$iMaxProfit+1], col=col2, pch = 0)
-lines(-supplyNetwork33$PsiLeaf, PM33_s2$Profit, lty=3, lwd=1, col=col3)
-points(-supplyNetwork33$PsiLeaf[PM33_s2$iMaxProfit+1],
+lines(-supplyNetwork33$psiLeaf, PM33_s2$Profit, lty=3, lwd=1, col=col3)
+points(-supplyNetwork33$psiLeaf[PM33_s2$iMaxProfit+1],
          PM33_s2$Profit[PM33_s2$iMaxProfit+1], col=col3, pch = 0)
-lines(-supplyNetwork34$PsiLeaf, PM34_s2$Profit, lty=3, lwd=1, col=col4)
-points(-supplyNetwork34$PsiLeaf[PM34_s2$iMaxProfit+1],
+lines(-supplyNetwork34$psiLeaf, PM34_s2$Profit, lty=3, lwd=1, col=col4)
+points(-supplyNetwork34$psiLeaf[PM34_s2$iMaxProfit+1],
          PM34_s2$Profit[PM34_s2$iMaxProfit+1], col=col4, pch = 0)
 legend("topright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 abline(h=0,col="gray")
 
-plot(-supplyNetwork11emb$PsiLeaf, PM11emb_s2$Profit, type="l", col=col1, ylab="Profit 2", xlab = "Leaf sap pressure (-MPa)",  xlim=c(0, 7), ylim=c(-1,1), lwd=1, main="after cavitation")
-points(-supplyNetwork11emb$PsiLeaf[PM11emb_s2$iMaxProfit+1],
+plot(-supplyNetwork11emb$psiLeaf, PM11emb_s2$Profit, type="l", col=col1, ylab="Profit 2", xlab = "Leaf sap pressure (-MPa)",  xlim=c(0, 7), ylim=c(-1,1), lwd=1, main="after cavitation")
+points(-supplyNetwork11emb$psiLeaf[PM11emb_s2$iMaxProfit+1],
          PM11emb_s2$Profit[PM11emb_s2$iMaxProfit+1], col=col1, pch = 0)
-lines(-supplyNetwork12emb$PsiLeaf, PM12emb_s2$Profit, lty=1, lwd=1, col=col2)
-points(-supplyNetwork12emb$PsiLeaf[PM12emb_s2$iMaxProfit+1],
+lines(-supplyNetwork12emb$psiLeaf, PM12emb_s2$Profit, lty=1, lwd=1, col=col2)
+points(-supplyNetwork12emb$psiLeaf[PM12emb_s2$iMaxProfit+1],
          PM12emb_s2$Profit[PM12emb_s2$iMaxProfit+1], col=col2, pch = 0)
-lines(-supplyNetwork13emb$PsiLeaf, PM13emb_s2$Profit, lty=1, lwd=1, col=col3)
-points(-supplyNetwork13emb$PsiLeaf[PM13emb_s2$iMaxProfit+1],
+lines(-supplyNetwork13emb$psiLeaf, PM13emb_s2$Profit, lty=1, lwd=1, col=col3)
+points(-supplyNetwork13emb$psiLeaf[PM13emb_s2$iMaxProfit+1],
          PM13emb_s2$Profit[PM13emb_s2$iMaxProfit+1], col=col3, pch = 0)
-lines(-supplyNetwork14emb$PsiLeaf, PM14emb_s2$Profit, lty=1, lwd=1, col=col4)
-points(-supplyNetwork14emb$PsiLeaf[PM14emb_s2$iMaxProfit+1],
+lines(-supplyNetwork14emb$psiLeaf, PM14emb_s2$Profit, lty=1, lwd=1, col=col4)
+points(-supplyNetwork14emb$psiLeaf[PM14emb_s2$iMaxProfit+1],
          PM14emb_s2$Profit[PM14emb_s2$iMaxProfit+1], col=col4, pch = 0)
-lines(-supplyNetwork21emb$PsiLeaf, PM21emb_s2$Profit, lty=2, lwd=1, col=col1)
-points(-supplyNetwork21emb$PsiLeaf[PM21emb_s2$iMaxProfit+1],
+lines(-supplyNetwork21emb$psiLeaf, PM21emb_s2$Profit, lty=2, lwd=1, col=col1)
+points(-supplyNetwork21emb$psiLeaf[PM21emb_s2$iMaxProfit+1],
          PM21emb_s2$Profit[PM21emb_s2$iMaxProfit+1], col=col1, pch = 0)
-lines(-supplyNetwork22emb$PsiLeaf, PM22emb_s2$Profit, lty=2, lwd=1, col=col2)
-points(-supplyNetwork22emb$PsiLeaf[PM22emb_s2$iMaxProfit+1],
+lines(-supplyNetwork22emb$psiLeaf, PM22emb_s2$Profit, lty=2, lwd=1, col=col2)
+points(-supplyNetwork22emb$psiLeaf[PM22emb_s2$iMaxProfit+1],
          PM22emb_s2$Profit[PM22emb_s2$iMaxProfit+1], col=col2, pch = 0)
-lines(-supplyNetwork23emb$PsiLeaf, PM23emb_s2$Profit, lty=2, lwd=1, col=col3)
-points(-supplyNetwork23emb$PsiLeaf[PM23emb_s2$iMaxProfit+1],
+lines(-supplyNetwork23emb$psiLeaf, PM23emb_s2$Profit, lty=2, lwd=1, col=col3)
+points(-supplyNetwork23emb$psiLeaf[PM23emb_s2$iMaxProfit+1],
          PM23emb_s2$Profit[PM23emb_s2$iMaxProfit+1], col=col3, pch = 0)
-lines(-supplyNetwork24emb$PsiLeaf, PM24emb_s2$Profit, lty=2, lwd=1, col=col4)
-points(-supplyNetwork24emb$PsiLeaf[PM24emb_s2$iMaxProfit+1],
+lines(-supplyNetwork24emb$psiLeaf, PM24emb_s2$Profit, lty=2, lwd=1, col=col4)
+points(-supplyNetwork24emb$psiLeaf[PM24emb_s2$iMaxProfit+1],
          PM24emb_s2$Profit[PM24emb_s2$iMaxProfit+1], col=col4, pch = 0)
-lines(-supplyNetwork31emb$PsiLeaf, PM31emb_s2$Profit, lty=3, lwd=1, col=col1)
-points(-supplyNetwork31emb$PsiLeaf[PM31emb_s2$iMaxProfit+1],
+lines(-supplyNetwork31emb$psiLeaf, PM31emb_s2$Profit, lty=3, lwd=1, col=col1)
+points(-supplyNetwork31emb$psiLeaf[PM31emb_s2$iMaxProfit+1],
          PM31emb_s2$Profit[PM31emb_s2$iMaxProfit+1], col=col1, pch = 0)
-lines(-supplyNetwork32emb$PsiLeaf, PM32emb_s2$Profit, lty=3, lwd=1, col=col2)
-points(-supplyNetwork32emb$PsiLeaf[PM32emb_s2$iMaxProfit+1],
+lines(-supplyNetwork32emb$psiLeaf, PM32emb_s2$Profit, lty=3, lwd=1, col=col2)
+points(-supplyNetwork32emb$psiLeaf[PM32emb_s2$iMaxProfit+1],
          PM32emb_s2$Profit[PM32emb_s2$iMaxProfit+1], col=col2, pch = 0)
-lines(-supplyNetwork33emb$PsiLeaf, PM33emb_s2$Profit, lty=3, lwd=1, col=col3)
-points(-supplyNetwork33emb$PsiLeaf[PM33emb_s2$iMaxProfit+1],
+lines(-supplyNetwork33emb$psiLeaf, PM33emb_s2$Profit, lty=3, lwd=1, col=col3)
+points(-supplyNetwork33emb$psiLeaf[PM33emb_s2$iMaxProfit+1],
          PM33emb_s2$Profit[PM33emb_s2$iMaxProfit+1], col=col3, pch = 0)
-lines(-supplyNetwork34emb$PsiLeaf, PM34emb_s2$Profit, lty=3, lwd=1, col=col4)
-points(-supplyNetwork34emb$PsiLeaf[PM34emb_s2$iMaxProfit+1],
+lines(-supplyNetwork34emb$psiLeaf, PM34emb_s2$Profit, lty=3, lwd=1, col=col4)
+points(-supplyNetwork34emb$psiLeaf[PM34emb_s2$iMaxProfit+1],
          PM34emb_s2$Profit[PM34emb_s2$iMaxProfit+1], col=col4, pch = 0)
 legend("topright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 abline(h=0,col="gray")
@@ -2576,22 +2576,22 @@ Differences between profit functions can be more easily seen when plotting the c
 \begin{center}
 <<fig=TRUE, width=4, height=3.5, echo=FALSE>>==
 par(mar=c(4,4,2,1), mfrow=c(1,1))
-plot(-supplyNetwork11$PsiLeaf, supplyNetwork11$E, type="n", col=col1, ylab="Flow rate", xlab = "Leaf sap pressure (-MPa)",  xlim=c(0, 5), ylim=c(0,4), lwd=1, main="")
-p11 = c(-supplyNetwork11$PsiLeaf[PM11$iMaxProfit+1],
+plot(-supplyNetwork11$psiLeaf, supplyNetwork11$E, type="n", col=col1, ylab="Flow rate", xlab = "Leaf sap pressure (-MPa)",  xlim=c(0, 5), ylim=c(0,4), lwd=1, main="")
+p11 = c(-supplyNetwork11$psiLeaf[PM11$iMaxProfit+1],
          supplyNetwork11$E[PM11$iMaxProfit+1])
-p12 = c(-supplyNetwork12$PsiLeaf[PM12$iMaxProfit+1],
+p12 = c(-supplyNetwork12$psiLeaf[PM12$iMaxProfit+1],
          supplyNetwork12$E[PM12$iMaxProfit+1])
-p13 = c(-supplyNetwork13$PsiLeaf[PM13$iMaxProfit+1],
+p13 = c(-supplyNetwork13$psiLeaf[PM13$iMaxProfit+1],
          supplyNetwork13$E[PM13$iMaxProfit+1])
-p14=c(-supplyNetwork14$PsiLeaf[PM14$iMaxProfit+1],
+p14=c(-supplyNetwork14$psiLeaf[PM14$iMaxProfit+1],
          supplyNetwork14$E[PM14$iMaxProfit+1])
-p11_cav = c(-supplyNetwork11emb$PsiLeaf[PM11emb$iMaxProfit+1],
+p11_cav = c(-supplyNetwork11emb$psiLeaf[PM11emb$iMaxProfit+1],
          supplyNetwork11emb$E[PM11emb$iMaxProfit+1])
-p12_cav = c(-supplyNetwork12emb$PsiLeaf[PM12emb$iMaxProfit+1],
+p12_cav = c(-supplyNetwork12emb$psiLeaf[PM12emb$iMaxProfit+1],
          supplyNetwork12emb$E[PM12emb$iMaxProfit+1])
-p13_cav = c(-supplyNetwork13emb$PsiLeaf[PM13emb$iMaxProfit+1],
+p13_cav = c(-supplyNetwork13emb$psiLeaf[PM13emb$iMaxProfit+1],
          supplyNetwork13emb$E[PM13emb$iMaxProfit+1])
-p14_cav = c(-supplyNetwork14emb$PsiLeaf[PM14emb$iMaxProfit+1],
+p14_cav = c(-supplyNetwork14emb$psiLeaf[PM14emb$iMaxProfit+1],
          supplyNetwork14emb$E[PM14emb$iMaxProfit+1])
 points(rbind(p11,p12,p13,p14), col=c(col1, col2, col3,col4), pch = 0)
 points(rbind(p11_cav,p12_cav,p13_cav,p14_cav), col=c(col1, col2, col3,col4), pch = 15)
@@ -2600,21 +2600,21 @@ lines(rbind(p12,p12_cav), col=col2)
 lines(rbind(p13,p13_cav), col=col3)
 lines(rbind(p14,p14_cav), col=col4)
 
-p11_s2 = c(-supplyNetwork11$PsiLeaf[PM11_s2$iMaxProfit+1],
+p11_s2 = c(-supplyNetwork11$psiLeaf[PM11_s2$iMaxProfit+1],
          supplyNetwork11$E[PM11_s2$iMaxProfit+1])
-p12_s2 = c(-supplyNetwork12$PsiLeaf[PM12_s2$iMaxProfit+1],
+p12_s2 = c(-supplyNetwork12$psiLeaf[PM12_s2$iMaxProfit+1],
          supplyNetwork12$E[PM12_s2$iMaxProfit+1])
-p13_s2 = c(-supplyNetwork13$PsiLeaf[PM13_s2$iMaxProfit+1],
+p13_s2 = c(-supplyNetwork13$psiLeaf[PM13_s2$iMaxProfit+1],
          supplyNetwork13$E[PM13_s2$iMaxProfit+1])
-p14_s2 = c(-supplyNetwork14$PsiLeaf[PM14_s2$iMaxProfit+1],
+p14_s2 = c(-supplyNetwork14$psiLeaf[PM14_s2$iMaxProfit+1],
          supplyNetwork14$E[PM14_s2$iMaxProfit+1])
-p11_cav_s2 = c(-supplyNetwork11emb$PsiLeaf[PM11emb_s2$iMaxProfit+1],
+p11_cav_s2 = c(-supplyNetwork11emb$psiLeaf[PM11emb_s2$iMaxProfit+1],
          supplyNetwork11emb$E[PM11emb_s2$iMaxProfit+1])
-p12_cav_s2 = c(-supplyNetwork12emb$PsiLeaf[PM12emb_s2$iMaxProfit+1],
+p12_cav_s2 = c(-supplyNetwork12emb$psiLeaf[PM12emb_s2$iMaxProfit+1],
          supplyNetwork12emb$E[PM12emb_s2$iMaxProfit+1])
-p13_cav_s2 = c(-supplyNetwork13emb$PsiLeaf[PM13emb_s2$iMaxProfit+1],
+p13_cav_s2 = c(-supplyNetwork13emb$psiLeaf[PM13emb_s2$iMaxProfit+1],
          supplyNetwork13emb$E[PM13emb_s2$iMaxProfit+1])
-p14_cav_s2 = c(-supplyNetwork14emb$PsiLeaf[PM14emb_s2$iMaxProfit+1],
+p14_cav_s2 = c(-supplyNetwork14emb$psiLeaf[PM14emb_s2$iMaxProfit+1],
          supplyNetwork14emb$E[PM14emb_s2$iMaxProfit+1])
 points(rbind(p11_s2,p12_s2,p13_s2,p14_s2), col=c(col1, col2, col3,col4), pch = 1)
 points(rbind(p11_cav_s2,p12_cav_s2,p13_cav_s2,p14_cav_s2), col=c(col1, col2, col3,col4), pch = 19)
