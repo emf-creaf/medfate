@@ -597,7 +597,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   }
 
   //Hydraulics: build belowground supply functions
-  List supplyBelow(numCohorts);
+  List supply(numCohorts);
   for(int c=0;c<numCohorts;c++) {
     // Copy values from connected layers
     NumericVector Vc = NumericVector(nlayerscon[c]);
@@ -621,7 +621,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
     // double minFlow = std::max(0.0,1000.0*(Gwmin[c]*(tmin+tmax)/2.0)/Patm);
     // Rcout<<minFlow<<"\n";
     if(nlayerscon[c]>0) {
-      supplyBelow[c] = supplyFunctionBelowground(psic,
+      supply[c] = supplyFunctionNetwork(psic,
                                                  VGrhizo_kmaxc,VG_nc,VG_alphac,
                                                  VCroot_kmaxc, VCroot_c[c],VCroot_d[c],
                                                  0.0, maxNsteps, psiStep, psiMax , ntrial, psiTol, ETol);
