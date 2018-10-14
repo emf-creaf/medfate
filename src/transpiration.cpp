@@ -23,9 +23,9 @@ List profitMaximization(List supplyFunction, List photosynthesisFunction, int ty
   double maxdEdp = 0.0, mindEdp = 99999999.0;
   double Agmax = 0.0;
   //Find valid limits according to stomatal conductance
-  int ini = 0, fin = nsteps;
+  int ini = 0, fin = nsteps-1;
   while((Gw[ini]<=Gwmin) & (ini<nsteps)) ini +=1; 
-  while((Gw[fin-1]>=Gwmax) & (fin>0)) fin -=1; 
+  while((Gw[fin]>=Gwmax) & (fin>0)) fin -=1; 
   
   // Rcout<<ini<< " "<< fin<<"\n";
   for(int i=ini;i<fin;i++) {

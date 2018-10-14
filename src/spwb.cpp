@@ -790,7 +790,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
 
           
           //Find iPM for  flow corresponding to the  average flow
-          double absDiff = 9999999.9;
+          double absDiff = 99999999.9;
           int iPM = -1;
           for(int k=0;k<fittedE.size();k++){ //Only check up to the size of fittedE
             double adk = std::abs(fittedE[k]-Eaverage);
@@ -801,8 +801,10 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
           }
           
           //Calculate transpiration with capacitance effects
-
-          
+          if(iPM==-1) {
+            Rcout<<"\n iPM -1! Eaverage="<< Eaverage << " fittedE.size= "<< fittedE.size()<<" iPMSunlit="<< iPMSunlit<< " fittedE[iPMSunlit]="<<fittedE[iPMSunlit]<<" iPMShade="<<iPMShade<<" fittedE[iPMShade]="<<fittedE[iPMShade]<<"\n";
+            stop("");
+          }
           List E2psiAGCAP = E2psiAbovegroundCapacitance(Erootcrown[iPM], psiRoot[iPM],
                                                   EinstPrev, psiRootPrev,
                                                   psiStemPrev, PLCStemPrev, RWCStemPrev,
@@ -816,9 +818,12 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
 
           //Add difference due to capacitance effects
           double Edif = E2psiAGCAP["Edif"];
-          Rcout<<Edif<<"\n";
-          if(NumericVector::is_na(Edif)) stop("NA Edif");
-          Eaverage += Edif;
+          // Rcout<<Edif<<"\n";
+          if(NumericVector::is_na(Edif)) {
+            Rcout<<"NA!";
+          } else {
+            Eaverage = std::max(0.0, Eaverage+Edif); //Do not allow final negative E values
+          }
           
           //Scale water extracted from soil to cohort level
           NumericVector Esoilcn(nlayerscon[c],0.0);
@@ -838,16 +843,29 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
 
           //Update symplastic storage and PLC
           //Update storage and PLC
-          EinstVEC[c] = Eaverage;
           psiRootVEC[c] = psiRoot[iPM]; 
-          psiLeafVEC[c] = E2psiAGCAP["psiLeaf"];
-          RWCsleafVEC[c] = E2psiAGCAP["RWCsympleaf"];
-          NumericVector newPLCstem = E2psiAGCAP["PLCstem"];
-          NumericVector newRWCsympstem = E2psiAGCAP["RWCsympstem"];
-          NumericVector newPsiStem = E2psiAGCAP["psiStem"];
-          psiStemMAT(c,_) = newPsiStem;
-          PLCstemMAT(c,_) = newPLCstem;    
-          RWCsstemMAT(c,_) = newRWCsympstem;
+          EinstVEC[c] = Eaverage;
+          PLC(c,n) = NA_REAL;
+          RWCssteminst(c,n) = NA_REAL;
+          if(!NumericVector::is_na(Edif)) {
+            psiLeafVEC[c] = E2psiAGCAP["psiLeaf"];
+            RWCsleafVEC[c] = E2psiAGCAP["RWCsympleaf"];
+            NumericVector newPLCstem = E2psiAGCAP["PLCstem"];
+            NumericVector newRWCsympstem = E2psiAGCAP["RWCsympstem"];
+            NumericVector newPsiStem = E2psiAGCAP["psiStem"];
+            psiStemMAT(c,_) = newPsiStem;
+            PLCstemMAT(c,_) = newPLCstem;    
+            RWCsstemMAT(c,_) = newRWCsympstem;
+            int nseg = newPLCstem.size();
+            
+            PLC(c,n) = sum(newPLCstem)/((double)nseg);
+            RWCssteminst(c,n) = sum(newRWCsympstem)/((double)nseg);
+          } else {
+            NumericVector psiLeaf = sFunction["psiLeaf"];
+            psiLeafVEC[c] = psiLeaf[iPM];
+            NumericMatrix newPsiStem = sFunction["psiStem"];
+            psiStemMAT(c,_) = newPsiStem(iPM,_);
+          }
           
           // if(verbose) {
           //   Rcout<<c<<" " <<n<<" E rc size "<< Erootcrown.size()<< " E size"<< fittedE.size()<<" iPMSunlit"<<iPMSunlit<<"iPMShade"<<iPMShade<<"iPM"<<iPM;
@@ -855,12 +873,6 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
           //   Rcout<<newPsiLeafVec[iPM]<<" new PLC "<< newPLCstem(iPM,0)<< " Einst" << Einst(c,n)<<"\n";
           // }
           
-          int nseg = newPLCstem.size();
-          PLC(c,n) = 0.0;
-          RWCssteminst(c,n) = 0.0;
-
-          PLC(c,n) = sum(newPLCstem)/((double)nseg);
-          RWCssteminst(c,n) = sum(newRWCsympstem)/((double)nseg);
           
           //Store the minimum water potential of the day (i.e. mid-day)
           minPsiLeaf[c] = std::min(minPsiLeaf[c],psiLeafVEC[c]);
