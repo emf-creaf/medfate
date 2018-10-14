@@ -757,11 +757,11 @@ List E2psiAbovegroundCapacitance(double E, double psiRootCrown,
   double kterm = xylemConductance(psiLeaf, kleafmax, leafc, leafd);
   return(List::create( _["E"] = E+Edif,
                        _["Edif"] = Edif,
-                       _["newPsiLeaf"] = psiLeaf,
-                       _["newPsiStem"] = psiStem, 
-                       _["newPLCstem"] = PLCstem, 
-                       _["newRWCsympstem"] = RWCsympstem,
-                       _["newRWCsympleaf"] = RWCsympleaf,
+                       _["psiLeaf"] = psiLeaf,
+                       _["psiStem"] = psiStem, 
+                       _["PLCstem"] = PLCstem, 
+                       _["RWCsympstem"] = RWCsympstem,
+                       _["RWCsympleaf"] = RWCsympleaf,
                        _["kterm"] = kterm));
 }
 
@@ -1341,6 +1341,7 @@ List supplyFunctionNetwork(NumericVector psiSoil,
   supplyPsiRhizo(0,_) = solPsiRhizo;
   supplyPsiStem(0,_) = solPsiStem;
   supplyPsiLeaf[0] = sol["psiLeaf"];
+  supplyPsiRoot[0] = sol["psiRoot"];
   supplyKterm[0] = sol["kterm"];
   supplyE[0] = minFlow;
 
@@ -1376,6 +1377,7 @@ List supplyFunctionNetwork(NumericVector psiSoil,
     supplyPsiRhizo(i,_) = solPsiRhizo;
     supplyPsiStem(i,_) = solPsiStem;
     supplyPsiLeaf[i] = sol["psiLeaf"];
+    supplyPsiRoot[i] = sol["psiRoot"];
     supplyKterm[i] = sol["kterm"];
 
     if(!NumericVector::is_na(supplyPsiLeaf[i])) {
@@ -1535,14 +1537,14 @@ List supplyFunctionAbovegroundCapacitance(NumericVector Erootcrown, NumericVecto
                                 klat, ksto,
                                 tstep, nSubSteps,
                                 psiStep, psiMax);
-    NumericVector solNewPsiStem = sol["newPsiStem"];
-    NumericVector solNewPLC = sol["newPLCstem"];
-    NumericVector solNewRWCsympstem = sol["newRWCsympstem"];
+    NumericVector solNewPsiStem = sol["psiStem"];
+    NumericVector solNewPLC = sol["PLCstem"];
+    NumericVector solNewRWCsympstem = sol["RWCsympstem"];
     supplyPsiStem(i,_) = solNewPsiStem;
     supplyPLCstem(i,_) = solNewPLC;
     supplyRWCsympstem(i,_) = solNewRWCsympstem;
-    supplyRWCsympleaf[i] = sol["newRWCsympleaf"];
-    supplyPsiLeaf[i] = sol["newPsiLeaf"];
+    supplyRWCsympleaf[i] = sol["RWCsympleaf"];
+    supplyPsiLeaf[i] = sol["psiLeaf"];
     supplyEdif[i] = sol["Edif"];
     if(NumericVector::is_na(supplyPsiLeaf[i])) {
       break;

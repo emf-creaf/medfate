@@ -812,10 +812,12 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                                                   Vsapwood[c], StemAF[c], StemPI0[c], StemEPS[c],
                                                   Vleaf[c], LeafAF[c], LeafPI0[c], LeafEPS[c],
                                                   klat, ksymver[c],
-                                                  tstep, 10, psiStep, psiMax);
+                                                  tstep, 100, psiStep, psiMax);
 
           //Add difference due to capacitance effects
           double Edif = E2psiAGCAP["Edif"];
+          Rcout<<Edif<<"\n";
+          if(NumericVector::is_na(Edif)) stop("NA Edif");
           Eaverage += Edif;
           
           //Scale water extracted from soil to cohort level

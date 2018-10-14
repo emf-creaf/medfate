@@ -198,7 +198,7 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
       cohortnames = colnames(OM)
     } 
     if(is.null(ylab)) ylab = "Relative water content in stem symplasmic tissue [%]"
-    if(is.null(ylim)) ylim = c(min(OM),max(OM))
+    if(is.null(ylim)) ylim = c(min(OM, na.rm=T),max(OM, na.rm=T))
     matplot(dates, OM, lty=1:length(cohortnames), col = 1:length(cohortnames),
             ylim = ylim, lwd=1, type="l", xlim=xlim,
             ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
@@ -216,7 +216,7 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
       cohortnames = colnames(OM)
     } 
     if(is.null(ylab)) ylab = "Relative water content in leaf symplasmic tissue [%]"
-    if(is.null(ylim)) ylim = c(min(OM),max(OM))
+    if(is.null(ylim)) ylim = c(min(OM, na.rm=T),max(OM, na.rm=T))
     matplot(dates, OM, lty=1:length(cohortnames), col = 1:length(cohortnames),
             ylim = ylim, lwd=1, type="l", xlim=xlim,
             ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
