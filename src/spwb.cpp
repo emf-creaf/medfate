@@ -427,7 +427,6 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   NumericVector VG_n = Rcpp::as<Rcpp::NumericVector>(soil["VG_n"]);
   NumericVector VG_alpha = Rcpp::as<Rcpp::NumericVector>(soil["VG_alpha"]);
   
-  
   double latrad = latitude * (PI/180.0);
   // if(NumericVector::is_na(aspect)) aspect = 0.0;
   // double asprad = aspect * (PI/180.0);
