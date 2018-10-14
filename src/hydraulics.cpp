@@ -1314,7 +1314,7 @@ List supplyFunctionNetwork(NumericVector psiSoil,
                            double kleafmax, double leafc, double leafd,
                            NumericVector PLCstem,
                            double minFlow = 0.0, int maxNsteps=400, double psiStep = -0.0001, double psiMax = -10.0, 
-                           int ntrial = 10, double psiTol = 0.0001, double ETol = 0.0001) {
+                           int ntrial = 200, double psiTol = 0.0001, double ETol = 0.0001) {
   int nlayers = psiSoil.size();
   int nStemSegments = PLCstem.size();
   NumericVector supplyE(maxNsteps);
@@ -1358,7 +1358,7 @@ List supplyFunctionNetwork(NumericVector psiSoil,
   double maxdEdp = (ETol*2.0)/std::abs(psiLeafI - supplyPsiLeaf[0]);
 
   int nsteps = 1;
-  double dE = std::min(0.001,maxdEdp*0.05);
+  double dE = std::min(0.01,maxdEdp*0.05);
   for(int i=1;i<maxNsteps;i++) {
     // if(i==3) stop("kk");
     supplyE[i] = supplyE[i-1]+dE;
@@ -1388,8 +1388,7 @@ List supplyFunctionNetwork(NumericVector psiSoil,
         double d2 = (supplyE[i]-supplyE[i-1])/std::abs(supplyPsiLeaf[i] - supplyPsiLeaf[i-1]);
         supplydEdp[i-1] = (d1+d2)/2.0;
       }
-      if(supplyE[i]>0.01) dE = std::min(0.01,supplydEdp[i-1]*0.05);
-      else if(supplyE[i]>0.1) dE = std::min(0.05,supplydEdp[i-1]*0.05);
+      if(supplyE[i]>0.1) dE = std::min(0.05,supplydEdp[i-1]*0.05);
       nsteps++;
       if(supplydEdp[i-1]<0.01*maxdEdp) break;
     } else {

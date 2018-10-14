@@ -369,7 +369,7 @@ hydraulics.supplyFunctionBelowground <- function(psiSoil, krhizomax, nsoil, alph
     .Call('_medfate_supplyFunctionBelowground', PACKAGE = 'medfate', psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, minFlow, maxNsteps, psiStep, psiMax, ntrial, psiTol, ETol)
 }
 
-hydraulics.supplyFunctionNetwork <- function(psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem, minFlow = 0.0, maxNsteps = 400L, psiStep = -0.0001, psiMax = -10.0, ntrial = 10L, psiTol = 0.0001, ETol = 0.0001) {
+hydraulics.supplyFunctionNetwork <- function(psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem, minFlow = 0.0, maxNsteps = 400L, psiStep = -0.0001, psiMax = -10.0, ntrial = 200L, psiTol = 0.0001, ETol = 0.0001) {
     .Call('_medfate_supplyFunctionNetwork', PACKAGE = 'medfate', psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem, minFlow, maxNsteps, psiStep, psiMax, ntrial, psiTol, ETol)
 }
 
