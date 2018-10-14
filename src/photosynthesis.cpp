@@ -183,10 +183,9 @@ double leafphotosynthesis(double Q, double Catm, double Gc, double leaf_temp, do
 
 
 // [[Rcpp::export("photo.leafPhotosynthesisFunction")]]
-List leafPhotosynthesisFunction(List supplyFunction, double Catm, double Patm, double Tair, double vpa, double u, 
+List leafPhotosynthesisFunction(NumericVector fittedE, double Catm, double Patm, double Tair, double vpa, double u, 
                              double absRad, double Q, double Vmax298, double Jmax298, double Gwmin, double Gwmax, 
                              double leafWidth = 1.0, double refLeafArea = 1.0, bool verbose = false) {
-  NumericVector fittedE = supplyFunction["E"];
   int nsteps = fittedE.size();
   NumericVector leafTemp(nsteps);
   NumericVector leafVPD(nsteps);
@@ -231,14 +230,13 @@ List leafPhotosynthesisFunction(List supplyFunction, double Catm, double Patm, d
  */
 
 // [[Rcpp::export("photo.sunshadePhotosynthesisFunction")]]
-List sunshadePhotosynthesisFunction(List supplyFunction, double Catm, double Patm, double Tair, double vpa, 
+List sunshadePhotosynthesisFunction(NumericVector fittedE, double Catm, double Patm, double Tair, double vpa, 
                                   double SLarea, double SHarea,
                                   double u, double absRadSL, double absRadSH,
                                   double QSL, double QSH, 
                                   double Vmax298SL, double Vmax298SH, 
                                   double Jmax298SL, double Jmax298SH, 
                                   double Gwmin, double Gwmax, double leafWidth = 1.0, bool verbose = false) {
-  NumericVector fittedE = supplyFunction["E"];
   int nsteps = fittedE.size();
   NumericVector Ag(nsteps,0.0), An(nsteps,0.0);
   NumericVector leafTSL(nsteps,0.0), leafTSH(nsteps,0.0);
@@ -287,13 +285,12 @@ List sunshadePhotosynthesisFunction(List supplyFunction, double Catm, double Pat
 }
 
 // [[Rcpp::export("photo.multilayerPhotosynthesisFunction")]]
-List multilayerPhotosynthesisFunction(List supplyFunction, double Catm, double Patm, double Tair, double vpa, 
+List multilayerPhotosynthesisFunction(NumericVector fittedE, double Catm, double Patm, double Tair, double vpa, 
                                   NumericVector SLarea, NumericVector SHarea,
                                   NumericVector u, NumericVector absRadSL, NumericVector absRadSH,
                                   NumericVector QSL, NumericVector QSH, 
                                   NumericVector Vmax298, NumericVector Jmax298, 
                                   double Gwmin, double Gwmax, double leafWidth = 1.0, bool verbose = false) {
-  NumericVector fittedE = supplyFunction["E"];
   int nsteps = fittedE.size();
   int nlayers = SLarea.size();
   NumericVector Ag(nsteps,0.0), An(nsteps,0.0);

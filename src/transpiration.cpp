@@ -343,14 +343,15 @@ List stomatalRegulation(List x, List soil, DataFrame meteo, int day,
         Jmax298SH +=Jmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
       }
       //Photosynthesis function for sunlit and shade leaves
-      photoSunlit[n] = leafPhotosynthesisFunction(supply, Catm, Patm,Tcan[n], vpatm, 
+      NumericVector fittedE = supply["E"];
+      photoSunlit[n] = leafPhotosynthesisFunction(fittedE, Catm, Patm,Tcan[n], vpatm, 
                                                     zWind[c], 
                                                          absSWR_SL[c] + LWR_emmcan*LAI_SL, 
                                                          irradianceToPhotonFlux(absPAR_SL[c]), 
                                                          Vmax298SL, 
                                                          Jmax298SL, 
                                                          Gwmin[c], Gwmax[c], leafWidth[c], LAI_SL);
-      photoShade[n] = leafPhotosynthesisFunction(supply, Catm, Patm,Tcan[n], vpatm, 
+      photoShade[n] = leafPhotosynthesisFunction(fittedE, Catm, Patm,Tcan[n], vpatm, 
                                                    zWind[c], 
                                                         absSWR_SH[c] + LWR_emmcan*LAI_SH, 
                                                         irradianceToPhotonFlux(absPAR_SH[c]),

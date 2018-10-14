@@ -1593,8 +1593,8 @@ List supplyFunctionAbovegroundCapacitance(NumericVector Erootcrown, NumericVecto
                       Named("PLCstem")=supplyPLCstemDef,
                       Named("RWCsympstem")=supplyRWCsympstemDef,
                       Named("RWCsympleaf")=supplyRWCsympleafDef,
-                      Named("PsiStem")=supplyPsiStemDef,
-                      Named("PsiLeaf")=supplyPsiLeafDef,
+                      Named("psiStem")=supplyPsiStemDef,
+                      Named("psiLeaf")=supplyPsiLeafDef,
                       Named("dEdP")=supplydEdpDef,
                       Named("kterm") = supplyKtermDef));
 
