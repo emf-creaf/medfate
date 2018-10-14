@@ -329,6 +329,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   double ETol = numericParams["ETol"];
 
   bool cavitationRefill = control["cavitationRefill"];
+  bool capacitance = control["capacitance"];
   double klat = control["klat"];
   
   // String canopyMode = Rcpp::as<Rcpp::String>(control["canopyMode"]);
@@ -805,38 +806,28 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
             Rcout<<"\n iPM -1! Eaverage="<< Eaverage << " fittedE.size= "<< fittedE.size()<<" iPMSunlit="<< iPMSunlit<< " fittedE[iPMSunlit]="<<fittedE[iPMSunlit]<<" iPMShade="<<iPMShade<<" fittedE[iPMShade]="<<fittedE[iPMShade]<<"\n";
             stop("");
           }
-          List E2psiAGCAP = E2psiAbovegroundCapacitance(Erootcrown[iPM], psiRoot[iPM],
-                                                  EinstPrev, psiRootPrev,
-                                                  psiStemPrev, PLCStemPrev, RWCStemPrev,
-                                                  psiLeafPrev, rwcsleafPrev,
-                                                  VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
-                                                  VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
-                                                  Vsapwood[c], StemAF[c], StemPI0[c], StemEPS[c],
-                                                  Vleaf[c], LeafAF[c], LeafPI0[c], LeafEPS[c],
-                                                  klat, ksymver[c],
-                                                  tstep, 100, psiStep, psiMax);
-
-          //Add difference due to capacitance effects
-          double Edif = E2psiAGCAP["Edif"];
-          if(NumericVector::is_na(Edif)) {
+          List E2psiAGCAP = NULL;
+          double Edif = NA_REAL;
+          if(capacitance) {
             E2psiAGCAP = E2psiAbovegroundCapacitance(Erootcrown[iPM], psiRoot[iPM],
-                                                     EinstPrev, psiRootPrev,
-                                                     psiStemPrev, PLCStemPrev, RWCStemPrev,
-                                                     psiLeafPrev, rwcsleafPrev,
-                                                     VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
-                                                     VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
-                                                     Vsapwood[c], StemAF[c], StemPI0[c], StemEPS[c],
-                                                     Vleaf[c], LeafAF[c], LeafPI0[c], LeafEPS[c],
-                                                     klat, ksymver[c],
-                                                     tstep, 3600, psiStep, psiMax);
-
+                                                          EinstPrev, psiRootPrev,
+                                                          psiStemPrev, PLCStemPrev, RWCStemPrev,
+                                                          psiLeafPrev, rwcsleafPrev,
+                                                          VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
+                                                                                               VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
+                                                                                                                                    Vsapwood[c], StemAF[c], StemPI0[c], StemEPS[c],
+                                                                                                                                                                               Vleaf[c], LeafAF[c], LeafPI0[c], LeafEPS[c],
+                                                                                                                                                                                                                       klat, ksymver[c],
+                                                                                                                                                                                                                                    tstep, 100, psiStep, psiMax);
+            
+            //Add difference due to capacitance effects
             Edif = E2psiAGCAP["Edif"];
-          }
-          // Rcout<<Edif<<"\n";
-          if(NumericVector::is_na(Edif)) {
-            Rcout<<"NA!";
-          } else {
-            Eaverage = std::max(0.0, Eaverage+Edif); //Do not allow final negative E values
+            // Rcout<<Edif<<"\n";
+            if(NumericVector::is_na(Edif)) {
+              Rcout<<"NA!";
+            } else {
+              Eaverage = std::max(0.0, Eaverage+Edif); //Do not allow final negative E values
+            }
           }
           
           //Scale water extracted from soil to cohort level

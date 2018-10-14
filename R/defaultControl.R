@@ -8,12 +8,12 @@ defaultControl<-function() {
     drainage = TRUE,
     transpirationMode = "Simple", #vs. "Complex"
     hydraulicCostFunction = 1, #vs. 2
-    canopyMode = "sunshade", #vs. "multilayer"
     verticalLayerSize = 100,
     nStemSegments = 1,
+    capacitance = FALSE,
+    cavitationRefill = TRUE,
     ksymver = 0, # whole-stem symplastic vertical conductance
     klat = 0, # symplastic-apoplastic lateral conductance
-    cavitationRefill = TRUE,
     taper = TRUE,
     numericParams=list(maxNsteps = 400, psiStep = -0.001, psiMax = -10.0, ntrial = 200, psiTol = 0.0001, ETol = 0.0001),
     averageFracRhizosphereResistance = 0.15,

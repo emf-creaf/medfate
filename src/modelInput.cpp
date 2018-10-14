@@ -48,8 +48,7 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
   if((soilFunctions!="SX") & (soilFunctions!="VG")) stop("Wrong soil functions ('soilFunctions' should be either 'SX' or 'VG')");
   
   double averageFracRhizosphereResistance = control["averageFracRhizosphereResistance"];
-  String canopyMode = control["canopyMode"];
-  
+
   NumericVector albedoSP = SpParams["albedo"];
   NumericVector kSP = SpParams["k"];
   NumericVector gSP = SpParams["g"];
@@ -298,10 +297,10 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
                                       _["soilFunctions"] =soilFunctions, 
                                       _["Catm"] = control["Catm"],
                                       _["averageFracRhizosphereResistance"] = control["averageFracRhizosphereResistance"],
-                                      _["canopyMode"] =canopyMode, 
                                       _["verticalLayerSize"] = control["verticalLayerSize"],
                                       _["hydraulicCostFunction"] = control["hydraulicCostFunction"],
                                       _["cavitationRefill"] = control["cavitationRefill"],
+                                      _["capacitance"] = control["capacitance"],
                                       _["ksymver"]= control["ksymver"],
                                       _["klat"]= control["klat"],
                                       _["taper"] = control["taper"],
@@ -375,8 +374,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   
   String storagePool = control["storagePool"];
   if((storagePool!="none") & (storagePool!="one")& (storagePool!="two")) stop("Wrong storage pool ('storagePool' should be 'none', 'one' or 'two')");
-  String canopyMode = control["canopyMode"];
-  
+
   
   double averageFracRhizosphereResistance = control["averageFracRhizosphereResistance"];
   
@@ -666,7 +664,6 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                                       _["drainage"] = control["drainage"],
                                       _["Catm"] = control["Catm"],                                      
                                       _["averageFracRhizosphereResistance"] = control["averageFracRhizosphereResistance"],
-                                      _["canopyMode"] = canopyMode,
                                       _["verticalLayerSize"] = control["verticalLayerSize"],
                                       _["hydraulicCostFunction"] = control["hydraulicCostFunction"],
                                       _["taper"] = control["taper"],
