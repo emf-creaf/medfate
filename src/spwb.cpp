@@ -818,6 +818,20 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
 
           //Add difference due to capacitance effects
           double Edif = E2psiAGCAP["Edif"];
+          if(NumericVector::is_na(Edif)) {
+            E2psiAGCAP = E2psiAbovegroundCapacitance(Erootcrown[iPM], psiRoot[iPM],
+                                                     EinstPrev, psiRootPrev,
+                                                     psiStemPrev, PLCStemPrev, RWCStemPrev,
+                                                     psiLeafPrev, rwcsleafPrev,
+                                                     VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
+                                                     VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
+                                                     Vsapwood[c], StemAF[c], StemPI0[c], StemEPS[c],
+                                                     Vleaf[c], LeafAF[c], LeafPI0[c], LeafEPS[c],
+                                                     klat, ksymver[c],
+                                                     tstep, 3600, psiStep, psiMax);
+
+            Edif = E2psiAGCAP["Edif"];
+          }
           // Rcout<<Edif<<"\n";
           if(NumericVector::is_na(Edif)) {
             Rcout<<"NA!";

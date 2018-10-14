@@ -24,10 +24,9 @@ List profitMaximization(List supplyFunction, List photosynthesisFunction, int ty
   double Agmax = 0.0;
   //Find valid limits according to stomatal conductance
   int ini = 0, fin = nsteps-1;
-  while((Gw[ini]<=Gwmin) & (ini<nsteps)) ini +=1; 
-  while((Gw[fin]>=Gwmax) & (fin>0)) fin -=1; 
+  while((Gw[ini]<=Gwmin) & (ini<fin)) ini +=1; 
+  while((Gw[fin]>=Gwmax) & (fin>ini)) fin -=1; 
   
-  // Rcout<<ini<< " "<< fin<<"\n";
   for(int i=ini;i<fin;i++) {
     maxdEdp = std::max(maxdEdp, supplydEdp[i]);
     mindEdp =  std::min(mindEdp, supplydEdp[i]);
@@ -54,6 +53,7 @@ List profitMaximization(List supplyFunction, List photosynthesisFunction, int ty
       imaxprofit = i;
     }
   }
+  // Rcout<<ini<< " "<< fin<<" "<<imaxprofit<<"\n";
   return(List::create(Named("Cost") = cost,
                       Named("Gain") = gain,
                       Named("Profit") = profit,
