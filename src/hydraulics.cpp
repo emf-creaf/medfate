@@ -768,8 +768,8 @@ List E2psiAbovegroundCapacitance(double E, double psiRootCrown,
 
 // [[Rcpp::export("hydraulics.E2psiAbovegroundCapacitanceDisconnected")]]
 List E2psiAbovegroundCapacitanceDisconnected(double E,                           
-                      NumericVector PLCstem, NumericVector RWCsympstem, 
-                      double psiLeaf, double RWCsympleaf,
+                      NumericVector psiStemPrev, NumericVector PLCstemPrev, NumericVector RWCsympstemPrev, 
+                      double psiLeafPrev, double RWCsympleafPrev,
                       double kstemmax, double stemc, double stemd,
                       double kleafmax, double leafc, double leafd,
                       double Vsapwood, double stemfapo, double stempi0, double stemeps,
@@ -777,7 +777,7 @@ List E2psiAbovegroundCapacitanceDisconnected(double E,
                       double klat, double ksto,
                       double tstep = 3600.0, int nSubSteps = 1000) {
   
-  int n = PLCstem.size();
+  int n = PLCstemPrev.size();
   double kxsegmax = kstemmax*((double) n);
   double kstoseg = ksto*((double) n);
   double Vsegmax = Vsapwood/((double) n);
@@ -785,20 +785,24 @@ List E2psiAbovegroundCapacitanceDisconnected(double E,
   
 
   //Make copy of initial vectors
-  PLCstem = clone(PLCstem);
-  RWCsympstem = clone(RWCsympstem);
+  NumericVector PLCstem = clone(PLCstemPrev);
+  NumericVector RWCsympstem = clone(RWCsympstemPrev);
+  NumericVector psiStem = clone(psiStemPrev);
+  double psiLeaf = psiLeafPrev;
+  double RWCsympleaf = RWCsympleafPrev;
   
   //Calculate initial apoplastic volumes and water potentials
-  NumericVector VStem(n, NA_REAL);
+  NumericVector VStem(n, NA_REAL), VStemMax(n, NA_REAL);
   NumericVector psiPLCStem(n, NA_REAL),psiStorageStem(n, NA_REAL);
   double Vapoleafini = Vleaf*leaffapo*apoplasticRelativeWaterContent(psiLeaf, leafc, leafd);
   // Rcout<< "Initial leaf volume "<<Vapoleafini<<"\n";
   double psiLeafSymp = symplasticWaterPotential(RWCsympleaf, leafpi0, leafeps);
   for(int i=0;i<n;i++) {
-    VStem[i] = Vsegmax*stemfapo*(1.0-PLCstem[i]);
-    psiPLCStem[i]=  apoplasticWaterPotential(1.0-PLCstem[i], stemc, stemd);
+    VStemMax[i] = Vsegmax*stemfapo*(1.0-PLCstem[i]); //Maximum volume according to current cavitation
+    VStem[i]  = Vsegmax*stemfapo*(1.0-PLCstem[i])*apoplasticRelativeWaterContent(psiStem[i], stemc, stemd);//current volume
+    psiPLCStem[i] = apoplasticWaterPotential(1.0-PLCstem[i], stemc, stemd);
     psiStorageStem[i] = symplasticWaterPotential(RWCsympstem[i], stempi0, stemeps);
-    // Rcout<< VStem[i] << " "<<psiPLCStem[i] << " "<<psiStorageStem[i] <<"\n";
+    // Rcout<< "VStem "<<VStem[i] << " VstemMax "<<VStemMax[i]<<" psiPLC "<<psiPLCStem[i] <<"\n";
   }
   double Vleafssub = Vapoleafini;
     
@@ -806,13 +810,12 @@ List E2psiAbovegroundCapacitanceDisconnected(double E,
   // double Vstemini = sum(VStem) + Vsegmax*(1.0-stemfapo)*sum(RWCsympstem);
   // double Vleafini = Vapoleafini + Vleaf*(1.0-leaffapo)*RWCsympleaf;
   
-  double Esub = E/((double) nSubSteps);
-  double Esubfin = Esub;
-  double Efin = 0.0;
   double tstepsub = tstep/((double) nSubSteps);
+  NumericVector Esub(nSubSteps); //Flow every substep
   for(int s=0;s<nSubSteps;s++) {
+    Esub[s] = E;
     //Calculate vertical flow from stem to leaf (positive when leaf has more negative WP)
-    double FverStemLeaf = xylemConductance(psiLeaf, kleafmax, leafc, leafd)*(psiPLCStem[n-1]-psiLeaf);
+    double FverStemLeaf = xylemConductance(psiLeaf, kleafmax, leafc, leafd)*(psiStem[n-1]-psiLeaf);
     // Rcout<< "Vertical flow stem to leaf "<<FverStemLeaf<<"\n";
     //Calculate lateral symplastic flow (positive when symplasm has less negative WP)
     double FlatLeaf = klat*(psiLeafSymp - psiLeaf);
@@ -823,11 +826,11 @@ List E2psiAbovegroundCapacitanceDisconnected(double E,
     NumericVector Fverapo1(n, 0.0), Fverapo2(n, 0.0), Fversym1(n, 0.0), Fversym2(n, 0.0);
     for(int i=0;i<n;i++) {
       //Lateral flow
-      FlatStem[i] =  klat*(psiStorageStem[i]-psiPLCStem[i]);
+      FlatStem[i] =  klat*(psiStorageStem[i]-psiStem[i]);
       
       //Towards above
       if(i<(n-1)) {
-        Fverapo2[i] = xylemConductance(psiPLCStem[i], kxsegmax, stemc, stemd)*(psiPLCStem[i]-psiPLCStem[i+1]);
+        Fverapo2[i] = xylemConductance(std::min(psiStem[i], psiPLCStem[i]), kxsegmax, stemc, stemd)*(psiStem[i]-psiStem[i+1]);
         Fversym2[i] = kstoseg*(psiStorageStem[i] - psiStorageStem[i+1]); 
       } else {
         Fverapo2[i] = FverStemLeaf;
@@ -835,7 +838,7 @@ List E2psiAbovegroundCapacitanceDisconnected(double E,
       }
       //From below
       if(i>0) {
-        Fverapo1[i] = xylemConductance(psiPLCStem[i-1], kxsegmax, stemc, stemd)*(psiPLCStem[i-1]-psiPLCStem[i]);
+        Fverapo1[i] = xylemConductance(std::min(psiStem[i-1], psiPLCStem[i-1]), kxsegmax, stemc, stemd)*(psiStem[i-1]-psiStem[i]);
         Fversym1[i] = kstoseg*(psiStorageStem[i-1]-psiStorageStem[i]);
       } else {
         Fverapo1[i] = 0.0;
@@ -846,44 +849,44 @@ List E2psiAbovegroundCapacitanceDisconnected(double E,
     //Water balance leaf symplasm 
     RWCsympleaf = (Vleaf*(1.0-leaffapo)*RWCsympleaf - (tstepsub/m3tommol)*FlatLeaf)/(Vleaf*(1.0-leaffapo));
     psiLeafSymp = symplasticWaterPotential(RWCsympleaf, leafpi0, leafeps);
-    
-    //Water balance leaf apoplasm 
-    Vleafssub = Vleafssub + (tstepsub/m3tommol)*(FverStemLeaf + FlatLeaf - Esub);
-    // Rcout<< "Final leaf volume "<<Vapoleaffin<<"\n";
+
+    //Water balance leaf apoplasm
+    Vleafssub = Vleafssub + (tstepsub/m3tommol)*(FverStemLeaf + FlatLeaf - Esub[s]);
     if(Vleafssub > (Vleaf*leaffapo)) { //Add output flow to close balance
       double dif = Vleafssub - (Vleaf*leaffapo);
       // Rcout<< "Excess "<<dif<<"\n";
       Vleafssub = Vleaf*leaffapo;
-      Esubfin = Esubfin + dif*(m3tommol/tstepsub);
+      Esub[s] = Esub[s] + dif*(m3tommol/tstepsub);
     }
-    Efin += Esubfin; 
-    // Rcout<<newRVLeaf;
     psiLeaf = apoplasticWaterPotential(Vleafssub/(Vleaf*leaffapo), leafc, leafd);
-    
+
     //Update stem compartments
     for(int i=0;i<n;i++) {
       //Apoplastic compartment
       VStem[i] = VStem[i] + (tstepsub/m3tommol)*(Fverapo1[i] - Fverapo2[i] + FlatStem[i]);
-      // VStem[i] = std::max(0.0,std::min(VStem[i],Vsegmax*stemfapo));
-      PLCstem[i] = 1.0- (VStem[i]/(Vsegmax*stemfapo));
-      psiPLCStem[i]=  apoplasticWaterPotential(1.0-PLCstem[i], stemc, stemd);
+      // VStem[i] = std::max(0.0,std::min(VStem[i],VStemIni[i]));
+      psiStem[i]=  apoplasticWaterPotential((VStem[i]/VStemMax[i]), stemc, stemd);
+      // Rcout<< "VStem "<<VStem[i] << " psiStem "<<psiStem[i]<<"\n";
       //Symplastic compartment
       RWCsympstem[i] = (Vsegmax*(1.0-stemfapo)*RWCsympstem[i] + (tstepsub/m3tommol)*(Fversym1[i] - Fversym2[i] - FlatStem[i]))/(Vsegmax*(1.0-stemfapo));
       psiStorageStem[i] = symplasticWaterPotential(RWCsympstem[i], stempi0, stemeps);
     }
   }
-  // double Vstemfin = sum(VStem) + Vsegmax*(1.0-stemfapo)*sum(RWCsympstem);
-  // double Vleaffin = Vleafssub + Vleaf*(1.0-leaffapo)*RWCsympleaf;
-  // Rcout<<Vstemini<<" "<<Vstemfin<<"\n";
-  // Rcout<<Vleafini<<" "<<Vleaffin<<"\n";
+  //Final flow
+  double Efin = sum(Esub)/((double)nSubSteps); 
   
+  //Update PLCstem
+  for(int i=0;i<n;i++) {
+    PLCstem[i] = std::max(PLCstem[i], 1.0-(VStem[i]/VStemMax[i]));
+  }
+
   return(List::create( _["E"] = E,
                        _["Efin"] = Efin,
-                       _["newPsiStem"] = psiPLCStem,
-                       _["newPsiLeaf"] = psiLeaf,
-                       _["newPLCStem"] = PLCstem, 
-                       _["newRWCsympStem"] = RWCsympstem,
-                       _["newRWCsympLeaf"] = RWCsympleaf));
+                       _["psiStem"] = psiStem,
+                       _["psiLeaf"] = psiLeaf,
+                       _["PLCStem"] = PLCstem, 
+                       _["RWCsympStem"] = RWCsympstem,
+                       _["RWCsympLeaf"] = RWCsympleaf));
 }
 
 

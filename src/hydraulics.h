@@ -107,8 +107,8 @@ List E2psiAbovegroundCapacitance(double E, double psiRootCrown,
                                  double psiStep = -0.0001, double psiMax = -10.0);
 
 List E2psiAbovegroundCapacitanceDisconnected(double E,
-                                             NumericVector PLCstem, NumericVector RWCsympstem,
-                                             double psiLeaf, double RWCsympleaf,
+                                             NumericVector psiStemPrev, NumericVector PLCstemPrev, NumericVector RWCsympstemPrev,
+                                             double psiLeafPrev, double RWCsympleafPrev,
                                              double kstemmax, double stemc, double stemd,
                                              double kleafmax, double leafc, double leafd,
                                              double Vsapwood, double stemfapo, double stempi0, double stemeps,

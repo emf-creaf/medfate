@@ -809,15 +809,15 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
           double Edif = NA_REAL;
           if(capacitance) {
             E2psiAGCAP = E2psiAbovegroundCapacitance(Erootcrown[iPM], psiRoot[iPM],
-                                                          EinstPrev, psiRootPrev,
-                                                          psiStemPrev, PLCStemPrev, RWCStemPrev,
-                                                          psiLeafPrev, rwcsleafPrev,
-                                                          VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
-                                                                                               VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
-                                                                                                                                    Vsapwood[c], StemAF[c], StemPI0[c], StemEPS[c],
-                                                                                                                                                                               Vleaf[c], LeafAF[c], LeafPI0[c], LeafEPS[c],
-                                                                                                                                                                                                                       klat, ksymver[c],
-                                                                                                                                                                                                                                    tstep, 100, psiStep, psiMax);
+                                                     EinstPrev, psiRootPrev,
+                                                     psiStemPrev, PLCStemPrev, RWCStemPrev,
+                                                     psiLeafPrev, rwcsleafPrev,
+                                                     VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
+                                                     VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
+                                                     Vsapwood[c], StemAF[c], StemPI0[c], StemEPS[c],
+                                                     Vleaf[c], LeafAF[c], LeafPI0[c], LeafEPS[c],
+                                                     klat, ksymver[c],
+                                                     tstep, 100, psiStep, psiMax);
             
             //Add difference due to capacitance effects
             Edif = E2psiAGCAP["Edif"];
@@ -943,7 +943,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
         Eplant[c] +=Einst(c,n);
         
         List sAb = E2psiAbovegroundCapacitanceDisconnected(minFlow, 
-                                                PLCStemPrev, RWCStemPrev, 
+                                                psiStemPrev, PLCStemPrev, RWCStemPrev, 
                                                 psiLeafPrev, rwcsleafPrev,
                                                 VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
                                                 VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
@@ -952,15 +952,15 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                                                 klat, ksymver[c],
                                                 tstep, 1000);
       
-         NumericVector newPsiStem = sAb["newPsiStem"];
-         NumericVector newPLCStem = sAb["newPLCStem"];
-         NumericVector newRWCsympStem = sAb["newRWCsympStem"];
+         NumericVector newPsiStem = sAb["psiStem"];
+         NumericVector newPLCStem = sAb["PLCStem"];
+         NumericVector newRWCsympStem = sAb["RWCsympStem"];
          
          //Update symplastic storage and PLC
          double psiRoot = newPsiStem[0];//Estimate of psiRoot = first stem segment
          psiRootVEC[c] = psiRoot;
-         psiLeafVEC[c] = sAb["newPsiLeaf"];
-         RWCsleafVEC[c] = sAb["newRWCsympLeaf"];
+         psiLeafVEC[c] = sAb["psiLeaf"];
+         RWCsleafVEC[c] = sAb["RWCsympLeaf"];
          int nseg = newPLCStem.size();
          PLC(c,n) = 0.0;
          RWCssteminst(c,n) = 0.0;
