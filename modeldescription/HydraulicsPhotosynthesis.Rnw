@@ -1123,27 +1123,6 @@ Stem symplastic storage compartments (e.g. xylem parenchyma) can contribute to s
 \includegraphics[width=\textwidth]{hydraulics_full.jpg}
 \end{figure}
 
-Vertical flows
-
-If $\Delta{S_{storage}}/\Delta{t}$ is negative, then there is a flow from the storage compartment to the xylem. Otherwise, flow is from the xylem to the storage compartment. Here we assume that the storage compartment has a common water potential $\Psi_{storage}$ and the flow between the compartment at any height of the stem depends on the difference in water potential between the compartment and the xylem:
-\begin{equation}
-\frac{\Delta{S_{storage}}}{\Delta{t}} = \int_{\Psi_{stem}}^{\Psi_{rootcrown}}{f_{storage}(\Psi) d\Psi}
-\end{equation}
-where $f_{storage}$ is the exchange flow between xylem and storage compartment for a given $\Psi$ value of the xylem. Since exchange of water occurs along the cylinder surrounding stem xylem, the second integral has to be re-expressed as a function of height ($h$):
-\begin{equation}
-\int_{\Psi_{up}}^{\Psi_{down}}{f_{storage}(\Psi) d\Psi} = \int_{0}^{H}{f_{storage}(\Psi_h) dh}
-\end{equation}
-where the exchange flow at any height $h$ is:
-\begin{equation}
-f_{storage}(\Psi_h) = (\Psi_h - \Psi_{storage})\cdot 2 \pi \cdot D_{int} \cdot L
-\end{equation}
-where $D_{int}$ is the internal radius separating sapwood from cambial cells, $L$ is the radial conductivity (in m·MPa$^{-1}$·s$^{-1}$) and $H$ is the height of the stem (plant). If we assume a linear change of water potential along stem height, we obtain the following expression for the instantaneous (in m$^3$·s$^{-1}$) storage effect on flow:
-
-\begin{equation}
-\Delta{S}/\Delta{t} = 2 \pi \cdot D_{int} \cdot L \cdot H \cdot \left[ \frac{\Psi_{stem}-\Psi_{rootcrown}}{2} - \Psi_{storage}\right]}
-\end{equation}
-Note that the storage effect needs to be reexpressed in flow per leaf area unit, i.e. mmol·m$^{-2}$·s$^{-1}$.
-
 
 \subsubsection{Disconnection from the soil}
 \begin{figure}[h!]
