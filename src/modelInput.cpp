@@ -206,6 +206,9 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
       LeafDens[c] = LeafDensSP[SP[c]];
       StemPI0[c] = StemPI0SP[SP[c]];
       StemEPS[c] = StemEPSSP[SP[c]];
+      //From: Christoffersen, B.O., Gloor, M., Fauset, S., Fyllas, N.M., Galbraith, D.R., Baker, T.R., Rowland, L., Fisher, R.A., Binks, O.J., Sevanto, S.A., Xu, C., Jansen, S., Choat, B., Mencuccini, M., McDowell, N.G., & Meir, P. 2016. Linking hydraulic traits to tropical forest function in a size-structured and trait-driven model (TFS v.1-Hydro). Geoscientific Model Development Discussions 0: 1–60.
+      if(NumericVector::is_na(StemPI0[c])) StemPI0[c] = 0.52 - 4.16*WoodDens[c]; 
+      if(NumericVector::is_na(StemEPS[c])) StemEPS[c] = sqrt(1.02*exp(8.5*WoodDens[c])-2.89); 
       StemAF[c] = StemAFSP[SP[c]];
       LeafPI0[c] = LeafPI0SP[SP[c]];
       LeafEPS[c] = LeafEPSSP[SP[c]];

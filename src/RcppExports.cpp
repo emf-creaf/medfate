@@ -2564,15 +2564,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // symplasticRelativeWaterContent
-double symplasticRelativeWaterContent(double psi, double pi0, double epsilon);
-RcppExport SEXP _medfate_symplasticRelativeWaterContent(SEXP psiSEXP, SEXP pi0SEXP, SEXP epsilonSEXP) {
+double symplasticRelativeWaterContent(double psiSym, double pi0, double epsilon);
+RcppExport SEXP _medfate_symplasticRelativeWaterContent(SEXP psiSymSEXP, SEXP pi0SEXP, SEXP epsilonSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type psi(psiSEXP);
+    Rcpp::traits::input_parameter< double >::type psiSym(psiSymSEXP);
     Rcpp::traits::input_parameter< double >::type pi0(pi0SEXP);
     Rcpp::traits::input_parameter< double >::type epsilon(epsilonSEXP);
-    rcpp_result_gen = Rcpp::wrap(symplasticRelativeWaterContent(psi, pi0, epsilon));
+    rcpp_result_gen = Rcpp::wrap(symplasticRelativeWaterContent(psiSym, pi0, epsilon));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2590,15 +2590,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // apoplasticRelativeWaterContent
-double apoplasticRelativeWaterContent(double psi, double c, double d);
-RcppExport SEXP _medfate_apoplasticRelativeWaterContent(SEXP psiSEXP, SEXP cSEXP, SEXP dSEXP) {
+double apoplasticRelativeWaterContent(double psiApo, double c, double d);
+RcppExport SEXP _medfate_apoplasticRelativeWaterContent(SEXP psiApoSEXP, SEXP cSEXP, SEXP dSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type psi(psiSEXP);
+    Rcpp::traits::input_parameter< double >::type psiApo(psiApoSEXP);
     Rcpp::traits::input_parameter< double >::type c(cSEXP);
     Rcpp::traits::input_parameter< double >::type d(dSEXP);
-    rcpp_result_gen = Rcpp::wrap(apoplasticRelativeWaterContent(psi, c, d));
+    rcpp_result_gen = Rcpp::wrap(apoplasticRelativeWaterContent(psiApo, c, d));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2615,66 +2615,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// leafRelativeWaterContent
-double leafRelativeWaterContent(double psi, double pi0, double epsilon, double af);
-RcppExport SEXP _medfate_leafRelativeWaterContent(SEXP psiSEXP, SEXP pi0SEXP, SEXP epsilonSEXP, SEXP afSEXP) {
+// tissueRelativeWaterContent
+double tissueRelativeWaterContent(double psiSym, double pi0, double epsilon, double psiApo, double c, double d, double af);
+RcppExport SEXP _medfate_tissueRelativeWaterContent(SEXP psiSymSEXP, SEXP pi0SEXP, SEXP epsilonSEXP, SEXP psiApoSEXP, SEXP cSEXP, SEXP dSEXP, SEXP afSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type psi(psiSEXP);
+    Rcpp::traits::input_parameter< double >::type psiSym(psiSymSEXP);
     Rcpp::traits::input_parameter< double >::type pi0(pi0SEXP);
     Rcpp::traits::input_parameter< double >::type epsilon(epsilonSEXP);
-    Rcpp::traits::input_parameter< double >::type af(afSEXP);
-    rcpp_result_gen = Rcpp::wrap(leafRelativeWaterContent(psi, pi0, epsilon, af));
-    return rcpp_result_gen;
-END_RCPP
-}
-// branchRelativeWaterContent
-double branchRelativeWaterContent(double psi, double wd, double c, double d, double af);
-RcppExport SEXP _medfate_branchRelativeWaterContent(SEXP psiSEXP, SEXP wdSEXP, SEXP cSEXP, SEXP dSEXP, SEXP afSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type psi(psiSEXP);
-    Rcpp::traits::input_parameter< double >::type wd(wdSEXP);
+    Rcpp::traits::input_parameter< double >::type psiApo(psiApoSEXP);
     Rcpp::traits::input_parameter< double >::type c(cSEXP);
     Rcpp::traits::input_parameter< double >::type d(dSEXP);
     Rcpp::traits::input_parameter< double >::type af(afSEXP);
-    rcpp_result_gen = Rcpp::wrap(branchRelativeWaterContent(psi, wd, c, d, af));
-    return rcpp_result_gen;
-END_RCPP
-}
-// stemRelativeWaterContent
-double stemRelativeWaterContent(double psi, double pi0, double epsilon, double c, double d, double af);
-RcppExport SEXP _medfate_stemRelativeWaterContent(SEXP psiSEXP, SEXP pi0SEXP, SEXP epsilonSEXP, SEXP cSEXP, SEXP dSEXP, SEXP afSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type psi(psiSEXP);
-    Rcpp::traits::input_parameter< double >::type pi0(pi0SEXP);
-    Rcpp::traits::input_parameter< double >::type epsilon(epsilonSEXP);
-    Rcpp::traits::input_parameter< double >::type c(cSEXP);
-    Rcpp::traits::input_parameter< double >::type d(dSEXP);
-    Rcpp::traits::input_parameter< double >::type af(afSEXP);
-    rcpp_result_gen = Rcpp::wrap(stemRelativeWaterContent(psi, pi0, epsilon, c, d, af));
-    return rcpp_result_gen;
-END_RCPP
-}
-// fineFuelRelativeWaterContent
-double fineFuelRelativeWaterContent(double psi, double leaf_pi0, double leaf_eps, double leaf_af, double wd, double c, double d, double r635);
-RcppExport SEXP _medfate_fineFuelRelativeWaterContent(SEXP psiSEXP, SEXP leaf_pi0SEXP, SEXP leaf_epsSEXP, SEXP leaf_afSEXP, SEXP wdSEXP, SEXP cSEXP, SEXP dSEXP, SEXP r635SEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type psi(psiSEXP);
-    Rcpp::traits::input_parameter< double >::type leaf_pi0(leaf_pi0SEXP);
-    Rcpp::traits::input_parameter< double >::type leaf_eps(leaf_epsSEXP);
-    Rcpp::traits::input_parameter< double >::type leaf_af(leaf_afSEXP);
-    Rcpp::traits::input_parameter< double >::type wd(wdSEXP);
-    Rcpp::traits::input_parameter< double >::type c(cSEXP);
-    Rcpp::traits::input_parameter< double >::type d(dSEXP);
-    Rcpp::traits::input_parameter< double >::type r635(r635SEXP);
-    rcpp_result_gen = Rcpp::wrap(fineFuelRelativeWaterContent(psi, leaf_pi0, leaf_eps, leaf_af, wd, c, d, r635));
+    rcpp_result_gen = Rcpp::wrap(tissueRelativeWaterContent(psiSym, pi0, epsilon, psiApo, c, d, af));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2960,10 +2914,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_symplasticWaterPotential", (DL_FUNC) &_medfate_symplasticWaterPotential, 3},
     {"_medfate_apoplasticRelativeWaterContent", (DL_FUNC) &_medfate_apoplasticRelativeWaterContent, 3},
     {"_medfate_apoplasticWaterPotential", (DL_FUNC) &_medfate_apoplasticWaterPotential, 3},
-    {"_medfate_leafRelativeWaterContent", (DL_FUNC) &_medfate_leafRelativeWaterContent, 4},
-    {"_medfate_branchRelativeWaterContent", (DL_FUNC) &_medfate_branchRelativeWaterContent, 5},
-    {"_medfate_stemRelativeWaterContent", (DL_FUNC) &_medfate_stemRelativeWaterContent, 6},
-    {"_medfate_fineFuelRelativeWaterContent", (DL_FUNC) &_medfate_fineFuelRelativeWaterContent, 8},
+    {"_medfate_tissueRelativeWaterContent", (DL_FUNC) &_medfate_tissueRelativeWaterContent, 7},
     {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 6},
     {"_medfate_stomatalRegulation", (DL_FUNC) &_medfate_stomatalRegulation, 6},
     {"_medfate_windSpeedAtCanopyHeight", (DL_FUNC) &_medfate_windSpeedAtCanopyHeight, 2},

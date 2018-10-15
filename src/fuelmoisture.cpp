@@ -180,10 +180,10 @@ NumericMatrix cohortFineFuelMoistureContent(List spwb, DataFrame SpParams) {
     double vc_c = VCstem_cSP[sp];
     double vc_d = VCstem_dSP[sp];
     double r635 = r635SP[sp];
-    for(int d=0;d<numDays;d++) {
-      cohortFMC(d,c) = maxFMC*fineFuelRelativeWaterContent(plantpsi(d,c), leafpi0, leafeps, leafaf,
-                                                    wd,vc_c,vc_d, r635);
-    }
+    // for(int d=0;d<numDays;d++) {
+    //   cohortFMC(d,c) = maxFMC*fineFuelRelativeWaterContent(plantpsi(d,c), leafpi0, leafeps, leafaf,
+    //                                                 wd,vc_c,vc_d, r635);
+    // }
   }
   return(cohortFMC);
 }

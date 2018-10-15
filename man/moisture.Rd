@@ -1,37 +1,33 @@
 \encoding{UTF-8}
 \name{tissuemoisture}
 \alias{moisture.symplasticRWC}
+\alias{moisture.symplasticWaterPotential}
 \alias{moisture.apoplasticRWC}
-\alias{moisture.leafRWC}
-\alias{moisture.branchRWC}
-\alias{moisture.fineFuelRWC}
+\alias{moisture.apoplasticWaterPotential}
+\alias{moisture.segmentRWC}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Tissue moisture functions
 }
 \description{
-Set of functions used to calculate tissue moisture from water potential.
+Set of functions used to calculate tissue moisture from water potential and viceversa.
 }
 \usage{
-moisture.symplasticRWC(psi, pi0, epsilon)
-moisture.apoplasticRWC(psi, c, d, cellWallFraction = 0.07)
-moisture.leafRWC(psi, pi0, epsilon, af)
-moisture.branchRWC(psi, wd, c, d, af = 0.80)
-moisture.fineFuelRWC(psi, leaf_pi0, leaf_eps, leaf_af, 
-                     wd, c, d, r635)
+moisture.symplasticRWC(psiSym, pi0, epsilon)
+moisture.symplasticWaterPotential(RWC, pi0, epsilon)
+moisture.apoplasticRWC(psiApo, c, d)
+moisture.apoplasticWaterPotential(RWC, c, d)
+moisture.segmentRWC(psiSym, pi0, epsilon,
+                    psiApo, c, d, af)
 }
 
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{psi}{Tissue water potential (MPa).}
+  \item{psiSym, psiApo}{Symplastic or apoplastic water potential (MPa).}
   \item{pi0}{Full turgor osmotic potential (MPa).}
   \item{epsilon}{Bulk modulus of elasticity (MPa).}
   \item{c,d}{Parameters of the xylem vulnerability curve.}
-  \item{cellWallFraction}{Fraction of relative water content in the cell wall.}
-  \item{af}{Apoplastic fraction (proportion).}
-  \item{wd}{Wood density (g/cm3).}
-  \item{leaf_pi0, leaf_eps, leaf_af}{Full turgor osmotic potential, elasticity modulus and apoplastic fraction of leaf tissue.}
-  \item{r635}{Ratio of biomass of foliar + small branches (<6.35) to foliar biomass.}
+  \item{af}{Apoplastic fraction (proportion) in the segment (e.g. leaf or stem).}
 }
 \details{
 Details of the tissue moisture calculations are given in a vignette. 
@@ -39,11 +35,11 @@ Details of the tissue moisture calculations are given in a vignette.
 \value{
 Values returned for each function are:
 \itemize{
-\item{\code{moisture.symplasticRWC}: Relative water content of the symplastic fraction.}
-\item{\code{moisture.apoplasticRWC}: Relative water content of the apoplastic fraction.}
-\item{\code{moisture.leafRWC}: Leaf relative water content.}
-\item{\code{moisture.branchRWC}: Branch relative water content.}
-\item{\code{moisture.fineFuelRWC}: Fine fuel (i.e. leaves + small branches) relative water content.}
+\item{\code{moisture.symplasticRWC}: Relative water content [0-1] of the symplastic fraction.}
+\item{\code{moisture.apoplasticRWC}: Relative water content [0-1] of the apoplastic fraction.}
+\item{\code{moisture.symplasticWaterPotential}: Water potential (in MPa) of the symplastic fraction.}
+\item{\code{moisture.apoplasticWaterPotential}: Water potential (in MPa) of the apoplastic fraction.}
+\item{\code{moisture.segmentRWC}: Segment relative water content [0-1].}
 }
 }
 \references{

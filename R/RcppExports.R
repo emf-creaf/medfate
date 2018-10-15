@@ -665,36 +665,24 @@ spwb <- function(x, soil, meteo, latitude = NA_real_, elevation = NA_real_, slop
     .Call('_medfate_spwb', PACKAGE = 'medfate', x, soil, meteo, latitude, elevation, slope, aspect)
 }
 
-moisture.symplasticRWC <- function(psi, pi0, epsilon) {
-    .Call('_medfate_symplasticRelativeWaterContent', PACKAGE = 'medfate', psi, pi0, epsilon)
+moisture.symplasticRWC <- function(psiSym, pi0, epsilon) {
+    .Call('_medfate_symplasticRelativeWaterContent', PACKAGE = 'medfate', psiSym, pi0, epsilon)
 }
 
 moisture.symplasticPsi <- function(RWC, pi0, epsilon) {
     .Call('_medfate_symplasticWaterPotential', PACKAGE = 'medfate', RWC, pi0, epsilon)
 }
 
-moisture.apoplasticRWC <- function(psi, c, d) {
-    .Call('_medfate_apoplasticRelativeWaterContent', PACKAGE = 'medfate', psi, c, d)
+moisture.apoplasticRWC <- function(psiApo, c, d) {
+    .Call('_medfate_apoplasticRelativeWaterContent', PACKAGE = 'medfate', psiApo, c, d)
 }
 
 moisture.apoplasticPsi <- function(RWC, c, d) {
     .Call('_medfate_apoplasticWaterPotential', PACKAGE = 'medfate', RWC, c, d)
 }
 
-moisture.leafRWC <- function(psi, pi0, epsilon, af) {
-    .Call('_medfate_leafRelativeWaterContent', PACKAGE = 'medfate', psi, pi0, epsilon, af)
-}
-
-moisture.branchRWC <- function(psi, wd, c, d, af = 0.80) {
-    .Call('_medfate_branchRelativeWaterContent', PACKAGE = 'medfate', psi, wd, c, d, af)
-}
-
-moisture.stemRWC <- function(psi, pi0, epsilon, c, d, af) {
-    .Call('_medfate_stemRelativeWaterContent', PACKAGE = 'medfate', psi, pi0, epsilon, c, d, af)
-}
-
-moisture.fineFuelRWC <- function(psi, leaf_pi0, leaf_eps, leaf_af, wd, c, d, r635) {
-    .Call('_medfate_fineFuelRelativeWaterContent', PACKAGE = 'medfate', psi, leaf_pi0, leaf_eps, leaf_af, wd, c, d, r635)
+moisture.tissueRWC <- function(psiSym, pi0, epsilon, psiApo, c, d, af) {
+    .Call('_medfate_tissueRelativeWaterContent', PACKAGE = 'medfate', psiSym, pi0, epsilon, psiApo, c, d, af)
 }
 
 transp.profitMaximization <- function(supplyFunction, photosynthesisFunction, type, Gwmin, Gwmax, kleafmax = NA_real_) {

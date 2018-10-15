@@ -18,14 +18,14 @@ using namespace Rcpp;
 *  Returns symplastic RWC as proportion of maximum hydration 
 */
 // [[Rcpp::export("moisture.symplasticRWC")]]
-double symplasticRelativeWaterContent(double psi, double pi0, double epsilon) {
+double symplasticRelativeWaterContent(double psiSym, double pi0, double epsilon) {
   double psi_tl = (pi0*epsilon)/(pi0+epsilon);
   double rwc = 0;
-  if(psi< psi_tl) {
-    rwc = (-std::abs(pi0))/psi;
+  if(psiSym< psi_tl) {
+    rwc = (-std::abs(pi0))/psiSym;
   } else {
     double c = std::abs(pi0);
-    double b = psi+epsilon - c;
+    double b = psiSym+epsilon - c;
     double a = -epsilon;
     rwc = ((-b)-sqrt(pow(b,2.0)-4.0*a*c))/(2.0*a);
   }
@@ -47,9 +47,9 @@ double symplasticWaterPotential(double RWC, double pi0, double epsilon) {
  *  Returns Apoplastic RWC as proportion of maximum hydration 
  */
 // [[Rcpp::export("moisture.apoplasticRWC")]]
-double apoplasticRelativeWaterContent(double psi, double c, double d) {
-  if(psi>=0.0) return(1.0);
-  return(exp(-pow(psi/d,c)));
+double apoplasticRelativeWaterContent(double psiApo, double c, double d) {
+  if(psiApo>=0.0) return(1.0);
+  return(exp(-pow(psiApo/d,c)));
 }
 
 // [[Rcpp::export("moisture.apoplasticPsi")]]
@@ -63,39 +63,21 @@ double apoplasticWaterPotential(double RWC, double c, double d) {
  *  The determinants of leaf turgor loss point and prediction of drought tolerance of species and biomes: a global meta-analysis. 
  *  Ecology letters 15:393–405.
  *  
- *  psi - Leaf water potential (MPa)
+ *  psiApo - Apoplastic water potential (MPa)
  *  pi0 - Full turgor osmotic potential (MPa)
  *  epsilon - bulk modulus elasticity (MPa)
  *  af - Apoplastic fraction (proportion)
  *  
- *  Returns Leaf RWC as proportion of maximum hydration (= g H2O / g H2O sat = m3 H2O / m3 H2O sat)
+ *  Returns tissue RWC as proportion of maximum hydration (= g H2O / g H2O sat = m3 H2O / m3 H2O sat)
  */
-// [[Rcpp::export("moisture.leafRWC")]]
-double leafRelativeWaterContent(double psi, double pi0, double epsilon, double af) {
-  return((1.0-af)*symplasticRelativeWaterContent(psi,pi0,epsilon)+af);
-}
-
-/**
- * Calculates branch relative water content from leaf water potential
- * Assumes there is no heartwood (all tissue is either sapwood or living tissue)
- * 
- * Christoffersen, B.O., Gloor, M., Fauset, S., Fyllas, N.M., Galbraith, D.R., Baker, T.R., Rowland, L., Fisher, R.A., Binks, O.J., Sevanto, S.A., Xu, C., Jansen, S., Choat, B., Mencuccini, M., McDowell, N.G., & Meir, P. 2016. Linking hydraulic traits to tropical forest function in a size-structured and trait-driven model (TFS v.1-Hydro). Geoscientific Model Development Discussions 0: 1–60.
- */
-// [[Rcpp::export("moisture.branchRWC")]]
-double branchRelativeWaterContent(double psi, double wd, double c, double d, double af = 0.80) {
-  double pi0_sap = 0.52 - 4.16*wd;
-  double eps_sap = sqrt(1.02*exp(8.5*wd)-2.89);
-  double sym_rwc = symplasticRelativeWaterContent(psi, pi0_sap, eps_sap);
-  double apo_rwc = apoplasticRelativeWaterContent(psi, c, d);
+// [[Rcpp::export("moisture.tissueRWC")]]
+double tissueRelativeWaterContent(double psiSym, double pi0, double epsilon, 
+                                  double psiApo, double c, double d, 
+                                  double af) {
+  double sym_rwc = symplasticRelativeWaterContent(psiSym, pi0, epsilon);
+  double apo_rwc = apoplasticRelativeWaterContent(psiApo, c, d);
   return(sym_rwc*(1.0-af)+apo_rwc*af);
 }
-  
-// [[Rcpp::export("moisture.stemRWC")]]
-double stemRelativeWaterContent(double psi, double pi0, double epsilon, double c, double d, double af) {
-    double sym_rwc = symplasticRelativeWaterContent(psi, pi0, epsilon);
-    double apo_rwc = apoplasticRelativeWaterContent(psi, c, d);
-    return(sym_rwc*(1.0-af)+apo_rwc*af);
-  }
 
   
 /**
@@ -111,14 +93,13 @@ double stemRelativeWaterContent(double psi, double pi0, double epsilon, double c
  *  
  *  Returns Fine fuel moisture content as percentage of dry weight (= g H2O / g dry weight)
  */
-// [[Rcpp::export("moisture.fineFuelRWC")]]
-double fineFuelRelativeWaterContent(double psi, double leaf_pi0, double leaf_eps, double leaf_af, 
-                               double wd, double c, double d, double r635) {
-  double leafRWC = leafRelativeWaterContent(psi, leaf_pi0, leaf_eps, leaf_af);
-  double branchRWC = branchRelativeWaterContent(psi, wd, c, d, 0.8);
-  double leafProp = (1.0/r635);
-  return(leafRWC*leafProp + branchRWC*(1.0-leafProp));
-}
+// double fineFuelRelativeWaterContent(double psi, double leaf_pi0, double leaf_eps, double leaf_af, 
+//                                double wd, double c, double d, double r635) {
+//   double leafRWC = leafRelativeWaterContent(psi, leaf_pi0, leaf_eps, leaf_af);
+//   double branchRWC = branchRelativeWaterContent(psi, wd, c, d, 0.8);
+//   double leafProp = (1.0/r635);
+//   return(leafRWC*leafProp + branchRWC*(1.0-leafProp));
+// }
 
 
 
