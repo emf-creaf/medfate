@@ -133,11 +133,17 @@ summary(S1, freq="months",FUN=mean, output="Soil")
 
 
 
-#Initialize soil with default soil params (4 layers)
-examplesoil2 = soil(defaultSoilParams(4))
+#Initialize soil with default soil params (2 layers)
+examplesoil2 = soil(defaultSoilParams(2))
 
 #Switch to 'Complex' transpiration mode
 control$transpirationMode="Complex"
+control$ndailysteps = 24  
+
+#Allow capacitance effects
+control$capacitance = TRUE
+control$klat = 0.001
+control$ksymver = 0.001
 
 #Initialize input
 x2 = forest2spwbInput(exampleforest,examplesoil2, SpParamsMED, control)

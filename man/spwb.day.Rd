@@ -128,7 +128,12 @@ sd1<-spwb.day(x1, examplesoil, rownames(examplemeteo)[d],
 
 #Switch to 'Complex' transpiration mode
 control$transpirationMode="Complex"
-control$ndailysteps = 24  
+control$ndailysteps = 48  
+
+#Allow capacitance effects
+control$capacitance = TRUE
+control$klat = 0.001
+control$ksymver = 0.001
 
 #Simulate one day only
 x2 = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
