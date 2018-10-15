@@ -16,6 +16,7 @@ const double SIGMA_Wm2 = 5.67*pow(10,-8.0);
 // [[Rcpp::export("transp.profitMaximization")]]
 List profitMaximization(List supplyFunction, List photosynthesisFunction, int type, double Gwmin, double Gwmax, double kleafmax = NA_REAL) {
   NumericVector supplyKterm = supplyFunction["kterm"];
+  NumericVector supplyE = supplyFunction["E"];
   NumericVector supplydEdp = supplyFunction["dEdP"];
   NumericVector Ag = photosynthesisFunction["Photosynthesis"];
   NumericVector Gw = photosynthesisFunction["WaterVaporConductance"];
@@ -53,7 +54,7 @@ List profitMaximization(List supplyFunction, List photosynthesisFunction, int ty
       imaxprofit = i;
     }
   }
-  // Rcout<<ini<< " "<< fin<<" "<<imaxprofit<<"\n";
+  // Rcout<<ini<< " "<< fin<<" Gwmx= "<<Gwmax<<" Gwmin "<<Gwmin<<" iPM="<< imaxprofit<<" Eini=" <<supplyE[ini]<<" Efin=" <<supplyE[fin]<<" E[iPM]=" <<supplyE[imaxprofit]<<"\n";
   return(List::create(Named("Cost") = cost,
                       Named("Gain") = gain,
                       Named("Profit") = profit,

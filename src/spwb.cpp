@@ -869,6 +869,11 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
             psiLeafVEC[c] = psiLeaf[iPM];
             NumericMatrix newPsiStem = sFunction["psiStem"];
             psiStemMAT(c,_) = newPsiStem(iPM,_);
+            int nseg = psiStemMAT.ncol();
+            for(int i=0;i<nseg;i++) {
+              PLCstemMAT(c,i) = std::max(PLCstemMAT(c,i), 1.0 - apoplasticRelativeWaterContent(psiStemMAT(c,i), VCstem_c[c], VCstem_d[c]));
+            }
+            PLC(c,n) = sum(PLCstemMAT(c,_))/((double)nseg);
           }
           
           // if(verbose) {
