@@ -106,7 +106,6 @@ List stomatalRegulation(List x, List soil, DataFrame meteo, int day,
   double psiTol = numericParams["psiTol"];
   double ETol = numericParams["ETol"];
   
-  bool cavitationRefill = control["cavitationRefill"];
   int ntimesteps = control["ndailysteps"];
   int hydraulicCostFunction = control["hydraulicCostFunction"];
   double verticalLayerSize = control["verticalLayerSize"];
@@ -137,7 +136,9 @@ List stomatalRegulation(List x, List soil, DataFrame meteo, int day,
   NumericVector H = Rcpp::as<Rcpp::NumericVector>(above["H"]);
   NumericVector CR = Rcpp::as<Rcpp::NumericVector>(above["CR"]);
   int numCohorts = LAIlive.size();
-  NumericVector pEmb = Rcpp::as<Rcpp::NumericVector>(x["ProportionCavitated"]);
+  
+  
+  NumericMatrix PLCstemMAT = Rcpp::as<Rcpp::NumericMatrix>(x["PLCstem"]);
   
   //Canopy params
   List canopyParams = Rcpp::as<Rcpp::List>(x["canopy"]);
@@ -150,11 +151,14 @@ List stomatalRegulation(List x, List soil, DataFrame meteo, int day,
   NumericVector VG_n = Rcpp::as<Rcpp::NumericVector>(soil["VG_n"]);
   NumericVector VG_alpha = Rcpp::as<Rcpp::NumericVector>(soil["VG_alpha"]);
   
-  //Transpiration params
+  //Anatomy parameters
+  DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
+  NumericVector leafWidth = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["LeafWidth"]);
+  
+  //Transpiration parameters
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
-  NumericVector leafWidth = paramsTransp["LeafWidth"];
-  NumericVector Vmax298 = paramsTransp["Vmax298"];
-  NumericVector Jmax298 = paramsTransp["Jmax298"];
+  NumericVector Gwmin = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Gwmin"]);
+  NumericVector Gwmax = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Gwmax"]);
   NumericVector VCstem_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_kmax"]);
   NumericVector VCstem_c = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_c"]);
   NumericVector VCstem_d = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_d"]);
@@ -163,9 +167,10 @@ List stomatalRegulation(List x, List soil, DataFrame meteo, int day,
   NumericVector VCleaf_d = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_d"]);
   NumericVector VCroot_c = paramsTransp["VCroot_c"];
   NumericVector VCroot_d = paramsTransp["VCroot_d"];
+  NumericVector Vmax298 = paramsTransp["Vmax298"];
+  NumericVector Jmax298 = paramsTransp["Jmax298"];
+  NumericVector ksymver = Rcpp::as<Rcpp::NumericVector>(paramsTransp["ksymver"]);
   NumericVector pRootDisc = Rcpp::as<Rcpp::NumericVector>(paramsTransp["pRootDisc"]);
-  NumericVector Gwmin = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Gwmin"]);
-  NumericVector Gwmax = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Gwmax"]);
   
   
   //Leaf phenology and the adjusted leaf area index
@@ -284,18 +289,15 @@ List stomatalRegulation(List x, List soil, DataFrame meteo, int day,
       }
     }
     
-    double psiCav = 0.0;
-    if(!cavitationRefill) {
-      psiCav = xylemPsi(1.0-pEmb[c], 1.0, VCstem_c[c], VCstem_d[c]);//find water potential corresponding to this percentage of conductance loss
-      // Rcout<< c <<" "<<psiCav<<"\n";
-    }
     double minFlow = 1000.0*(Gwmin[c]*(tmin+tmax)/2.0)/Patm;
+    NumericVector PLCStemPrev = PLCstemMAT(c,_); //Get row
     List supply = supplyFunctionNetwork(psic,
                                         VGrhizo_kmaxc,VG_nc,VG_alphac,
                                         VCroot_kmaxc, VCroot_c[c],VCroot_d[c],
                                         VCstem_kmax[c], VCstem_c[c],VCstem_d[c], 
                                         VCleaf_kmax[c], VCleaf_c[c],VCleaf_d[c], 
-                                        minFlow, psiCav, maxNsteps, psiStep, psiMax , ntrial, psiTol, ETol);
+                                        PLCStemPrev,                                    
+                                        minFlow, maxNsteps, psiStep, psiMax , ntrial, psiTol, ETol);
     
     NumericVector Vmax298layer(nz), Jmax298layer(nz);
     NumericVector SLarealayer(nz), SHarealayer(nz);

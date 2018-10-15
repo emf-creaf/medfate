@@ -12,7 +12,7 @@ Set of high-level functions used in the calculation of stomatal conductance and 
 }
 \usage{
 transp.profitMaximization(supplyFunction, photosynthesisFunction, type, 
-                          Gwmax, kleafmax = NA)
+                          Gwmin, Gwmax, kleafmax = NA)
 transp.stomatalRegulation(x, soil, meteo, day,
                              latitude, elevation)
 transp.stomatalRegulationPlot(x, soil, meteo, day, timestep, 
@@ -24,7 +24,7 @@ transp.stomatalRegulationPlot(x, soil, meteo, day, timestep,
   \item{supplyFunction}{Water supply function (see \code{\link{hydraulics.supplyFunctionNetwork}}).}
   \item{photosynthesisFunction}{Function returned by \code{photo.photosynthesisFunction()}.}
   \item{type}{Optimization type (1,2 or 3).}
-  \item{Gwmax}{Maximum stomatal conductance (mol·m-2·s-1).}
+  \item{Gwmin, Gwmax}{Minimum and maximum stomatal conductance (mol·m-2·s-1).}
   \item{kleafmax}{Maximum leaf hydraulic conductance (flow per pressure drop).}
   \item{x}{An object of class \code{\link{spwbInput}} built using the 'Complex' transpiration mode.}
   \item{soil}{An object of class \code{\link{soil}}.}
