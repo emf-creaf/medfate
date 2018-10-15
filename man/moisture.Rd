@@ -5,6 +5,7 @@
 \alias{moisture.apoplasticRWC}
 \alias{moisture.apoplasticWaterPotential}
 \alias{moisture.segmentRWC}
+\alias{moisture.pressureVolumeCurvePlot}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Tissue moisture functions
@@ -19,6 +20,8 @@ moisture.apoplasticRWC(psiApo, c, d)
 moisture.apoplasticWaterPotential(RWC, c, d)
 moisture.segmentRWC(psiSym, pi0, epsilon,
                     psiApo, c, d, af)
+moisture.pressureVolumeCurvePlot(x, segment="leaf", 
+                    psiVec =  seq(-0.1, -8.0, by =-0.01))                    
 }
 
 %- maybe also 'usage' for other objects documented here.
@@ -28,6 +31,9 @@ moisture.segmentRWC(psiSym, pi0, epsilon,
   \item{epsilon}{Bulk modulus of elasticity (MPa).}
   \item{c,d}{Parameters of the xylem vulnerability curve.}
   \item{af}{Apoplastic fraction (proportion) in the segment (e.g. leaf or stem).}
+  \item{x}{An object of class \code{\link{spwbInput}}.}
+  \item{segment}{Curve to plot, either \code{"stem"}, \code{"leaf"} or \code{"both"}.}
+  \item{psiVec}{Vector of water potential values to evaluate for the pressure-volume curve.}
 }
 \details{
 Details of the tissue moisture calculations are given in a vignette. 

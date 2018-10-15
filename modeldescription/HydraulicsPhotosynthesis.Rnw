@@ -1435,7 +1435,7 @@ krmax*v1
 @
 
 
-\subsubsection{Water storage capacity}
+\subsubsection{Water storage}
 The water storage capacity of sapwood tissue per leaf area unit ($V_{sapwood}$; in m$^3$·m$^{-2}$) can be estimated as the product of stem height ($H$ in m) and Huber value ($H_v$; ratio of sapwood area to leaf area in m$^2$·m$^{-2}$):
 \begin{equation}
 V_{sapwood} = H \cdot H_v \cdot \Theta_{sapwood}
@@ -1467,6 +1467,15 @@ ld = 0.7
 SLA = 5.870 
 hydraulics.leafWaterCapacity(SLA, ld)
 @ 
+
+Stem PI0 and Stem EPS from wood density
+\begin{equation}
+\pi_{0,stem} = 0.52 - 4.16 \cdot \rho_{wood}
+\end{equation}
+
+\begin{equation}
+\epsilon_{stem} = \sqrt{1.02 \cdot e^{8.5\cdot \rho_{wood}}-2.89}
+\end{equation}
 
 \section{Leaf VPD, conductance to water vapor and photosynthesis}
 The water supply function specifies the flow rate, as per leaf area, for values of leaf water potential. If we know air temperature, air vapour pressure and the light conditions in which leaves are, we can be translate the supply function into a photosynthesis function (Sperry et al. 2016b). In a nutshell, $E$ from the supply function is used to calculate leaf temperature from an evaluation of the leaf energy balance. The diffusive conductances of the leaf to water and CO2 are obtained from water supply and water vapor deficit. The gross assimilation rate is then obtained from the diffusive conductance and a modelled curve between assimilation and leaf internal CO2 concentration. Gross assimilation is calculated, without subtracting autotrophic respiration, because the purpose is to represent the instantaneous gain of opening the stomata. Nevertheless autotrophic respiration is included when calculating leaf net photosynthesis. 
