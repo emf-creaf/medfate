@@ -14,7 +14,7 @@ using namespace Rcpp;
 const double SIGMA_Wm2 = 5.67*pow(10,-8.0);
 
 // [[Rcpp::export("transp.profitMaximization")]]
-List profitMaximization(List supplyFunction, List photosynthesisFunction, int type, double Gwmin, double Gwmax, double kleafmax = NA_REAL) {
+List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, int type, double Gwmin, double Gwmax, double kleafmax = NA_REAL) {
   NumericVector supplyKterm = supplyFunction["kterm"];
   NumericVector supplyE = supplyFunction["E"];
   NumericVector supplydEdp = supplyFunction["dEdP"];
@@ -313,8 +313,8 @@ List stomatalRegulation(List x, List soil, DataFrame meteo, int day,
       Jmax298layer[i] = Jmax298[c]*fn;
     }
 
-    List photoSunlit(ntimesteps);
-    List photoShade(ntimesteps);
+    DataFrame photoSunlit(ntimesteps);
+    DataFrame photoShade(ntimesteps);
     List PMSunlit(ntimesteps);
     List PMShade(ntimesteps);
 

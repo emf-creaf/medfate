@@ -25,15 +25,15 @@ photo.JmaxTemp(Jmax298, leaf_temp)
 photo.electronLimitedPhotosynthesis(Q, Ci, GT, Jmax)
 photo.rubiscoLimitedPhotosynthesis(Ci, GT, Km, Vmax)
 photo.photosynthesis(Q, Catm, Gc, leaf_temp, Vmax298, Jmax298, verbose = FALSE)
-photo.leafPhotosynthesisFunction(supplyFunction, Catm, Patm, Tair, vpa, u, 
+photo.leafPhotosynthesisFunction(E, Catm, Patm, Tair, vpa, u, 
                              absRad, Q, Vmax298, Jmax298, Gwmin, Gwmax,
                              leafWidth = 1.0, refLeafArea = 1, verbose = FALSE)
-photo.sunshadePhotosynthesisFunction(supplyFunction, Catm, Patm, Tair, vpa, 
+photo.sunshadePhotosynthesisFunction(E, Catm, Patm, Tair, vpa, 
                                      SLarea, SHarea, u, 
                                      absRadSL, absRadSH, QSL, QSH, 
                                      Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, 
                                      Gwmin, Gwmax, leafWidth = 1.0, verbose = FALSE)
-photo.multilayerPhotosynthesisFunction(supplyFunction, Catm, Patm, Tair, vpa, 
+photo.multilayerPhotosynthesisFunction(E, Catm, Patm, Tair, vpa, 
                                       SLarea, SHarea, u, 
                                       absRadSL, absRadSH, QSL, QSH, 
                                       Vmax298, Jmax298, Gwmin, Gwmax, leafWidth = 1.0, 
@@ -54,7 +54,7 @@ photo.multilayerPhotosynthesisFunction(supplyFunction, Catm, Patm, Tair, vpa,
   \item{Vmax}{Maximum Rubisco carboxylation rate per leaf area (micromol*s-1*m-2).}
   \item{Catm}{CO2 air concentration (micromol * mol-1).}
   \item{Gc}{CO2 leaf (stomatal) conductance (mol * s-1 * m-2).}
-  \item{supplyFunction}{Water supply function (see \code{\link{hydraulics.supplyFunctionNetwork}}).}
+  \item{E}{Transpiration flow rate per leaf area (mmol*s-1*m-2).}
   \item{Patm}{Atmospheric air pressure (in kPa).}
   \item{Tair}{Air temperature (in ºC).}
   \item{vpa}{Vapour pressure deficit (in kPa).}
@@ -81,7 +81,7 @@ Values returned for each function are:
 \item{\code{photo.electronLimitedPhotosynthesis}: Electron-limited photosynthesis (micromol*s-1*m-2) following Farquhar et al. (1980).}
 \item{\code{photo.rubiscoLimitedPhotosynthesis}: Rubisco-limited photosynthesis (micromol*s-1*m-2) following Farquhar et al. (1980).}
 \item{\code{photo.photosynthesis}: Calculates gross photosynthesis (micromol*s-1*m-2) following (Farquhar et al. (1980) and Collatz et al (1991).}
-\item{\code{photo.leafPhotosynthesisFunction}: Returns a list with the following elements:
+\item{\code{photo.leafPhotosynthesisFunction}: Returns a data frame with the following columns:
 \itemize{
   \item{\code{LeafTemperature}: Leaf temperature (ºC).}
   \item{\code{LeafVPD}: Leaf vapor pressure deficit (kPa).}
@@ -90,7 +90,7 @@ Values returned for each function are:
   \item{\code{NetPhotosynthesis}: Net photosynthesis, after discounting autotrophic respiration (micromol*s-1*m-2).}
   }
 }
-\item{\code{photo.sunshadePhotosynthesisFunction} and \code{photo.multilayerPhotosynthesisFunction}: Return a list with the following elements:
+\item{\code{photo.sunshadePhotosynthesisFunction} and \code{photo.multilayerPhotosynthesisFunction}: Return a data frame with the following columns:
 \itemize{
   \item{\code{Photosynthesis}: Gross photosynthesis (micromol*s-1*m-2).}
   \item{\code{NetPhotosynthesis}: Net photosynthesis, after discounting autotrophic respiration (micromol*s-1*m-2).}

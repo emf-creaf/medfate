@@ -743,14 +743,14 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
  
         if(fittedE.size()>0) {
           //Photosynthesis function for sunlit and shade leaves
-          List photoSunlit = leafPhotosynthesisFunction(fittedE, Catm, Patm,Tcan[n], vpatm, 
+          DataFrame photoSunlit = leafPhotosynthesisFunction(fittedE, Catm, Patm,Tcan[n], vpatm, 
                                                         zWind[c], 
                                                         absSWR_SL[c] + LWR_emmcan*LAI_SL(c,n), 
                                                         irradianceToPhotonFlux(absPAR_SL[c]), 
                                                         Vmax298SL, 
                                                         Jmax298SL, 
                                                         Gwmin[c], Gwmax[c], leafWidth[c], LAI_SL(c,n));
-          List photoShade = leafPhotosynthesisFunction(fittedE, Catm, Patm,Tcan[n], vpatm, 
+          DataFrame photoShade = leafPhotosynthesisFunction(fittedE, Catm, Patm,Tcan[n], vpatm, 
                                                        zWind[c], 
                                                        absSWR_SH[c] + LWR_emmcan*LAI_SH(c,n), 
                                                        irradianceToPhotonFlux(absPAR_SH[c]),

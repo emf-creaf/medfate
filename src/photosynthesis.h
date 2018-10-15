@@ -9,11 +9,11 @@ double leafphotosynthesis(double Q, double Catm, double Gc, double leaf_temp, do
 double VmaxTemp(double Vmax298, double leaf_temp);
 double JmaxTemp(double Jmax298, double leaf_temp);
 
-List leafPhotosynthesisFunction(NumericVector fittedE, double Catm, double Patm, double Tair, double vpa, double u, 
+DataFrame leafPhotosynthesisFunction(NumericVector E, double Catm, double Patm, double Tair, double vpa, double u, 
                             double absRad, double Q, double Vmax298, double Jmax298, double Gwmin, double Gwmax, 
                             double leafWidth = 1.0, double refLeafArea = 1.0, bool verbose = false);
 
-List sunshadePhotosynthesisFunction(NumericVector fittedE, double Catm, double Patm, double Tair, double vpa, 
+DataFrame sunshadePhotosynthesisFunction(NumericVector E, double Catm, double Patm, double Tair, double vpa, 
                                     double SLarea, double SHarea,
                                     double u, double absRadSL, double absRadSH,
                                     double QSL, double QSH, 
@@ -21,7 +21,7 @@ List sunshadePhotosynthesisFunction(NumericVector fittedE, double Catm, double P
                                     double Jmax298SL, double Jmax298SH, 
                                     double Gwmin, double Gwmax, double leafWidth = 1.0, bool verbose = false);
 
-List multilayerPhotosynthesisFunction(NumericVector fittedE, double Catm, double Patm, double Tair, double vpa, 
+DataFrame multilayerPhotosynthesisFunction(NumericVector E, double Catm, double Patm, double Tair, double vpa, 
                                   NumericVector SLarea, NumericVector SHarea,
                                   NumericVector u, NumericVector absRadSL, NumericVector absRadSH,
                                   NumericVector QSL, NumericVector QSH, 

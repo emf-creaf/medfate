@@ -183,23 +183,23 @@ double leafphotosynthesis(double Q, double Catm, double Gc, double leaf_temp, do
 
 
 // [[Rcpp::export("photo.leafPhotosynthesisFunction")]]
-List leafPhotosynthesisFunction(NumericVector fittedE, double Catm, double Patm, double Tair, double vpa, double u, 
+DataFrame leafPhotosynthesisFunction(NumericVector E, double Catm, double Patm, double Tair, double vpa, double u, 
                              double absRad, double Q, double Vmax298, double Jmax298, double Gwmin, double Gwmax, 
                              double leafWidth = 1.0, double refLeafArea = 1.0, bool verbose = false) {
-  int nsteps = fittedE.size();
+  int nsteps = E.size();
   NumericVector leafTemp(nsteps);
   NumericVector leafVPD(nsteps);
   NumericVector Gw(nsteps);
   NumericVector Ag(nsteps), An(nsteps);
   for(int i=0;i<nsteps;i++){
-    leafTemp[i] = leafTemperature(absRad/refLeafArea, Tair, u, fittedE[i], leafWidth);
+    leafTemp[i] = leafTemperature(absRad/refLeafArea, Tair, u, E[i], leafWidth);
     leafVPD[i] = std::max(0.0,meteoland::utils_saturationVP(std::max(0.0,leafTemp[i]))-vpa);
-    Gw[i] = Patm*(fittedE[i]/1000.0)/leafVPD[i]; //Transform flow from mmol to mol
+    Gw[i] = Patm*(E[i]/1000.0)/leafVPD[i]; //Transform flow from mmol to mol
     Gw[i] = std::max(Gwmin, std::min(Gw[i], Gwmax));
     Ag[i] = leafphotosynthesis(Q, Catm, Gw[i]/1.6, std::max(0.0,leafTemp[i]), Vmax298, Jmax298);
     An[i] = Ag[i] - 0.015*VmaxTemp(Vmax298, leafTemp[i]);
   }
-  return(List::create(Named("LeafTemperature") = leafTemp,
+  return(DataFrame::create(Named("LeafTemperature") = leafTemp,
                       Named("LeafVPD") = leafVPD,
                       Named("WaterVaporConductance") = Gw,
                       Named("Photosynthesis") = Ag,
@@ -230,14 +230,14 @@ List leafPhotosynthesisFunction(NumericVector fittedE, double Catm, double Patm,
  */
 
 // [[Rcpp::export("photo.sunshadePhotosynthesisFunction")]]
-List sunshadePhotosynthesisFunction(NumericVector fittedE, double Catm, double Patm, double Tair, double vpa, 
+DataFrame sunshadePhotosynthesisFunction(NumericVector E, double Catm, double Patm, double Tair, double vpa, 
                                   double SLarea, double SHarea,
                                   double u, double absRadSL, double absRadSH,
                                   double QSL, double QSH, 
                                   double Vmax298SL, double Vmax298SH, 
                                   double Jmax298SL, double Jmax298SH, 
                                   double Gwmin, double Gwmax, double leafWidth = 1.0, bool verbose = false) {
-  int nsteps = fittedE.size();
+  int nsteps = E.size();
   NumericVector Ag(nsteps,0.0), An(nsteps,0.0);
   NumericVector leafTSL(nsteps,0.0), leafTSH(nsteps,0.0);
   NumericVector leafVPDSL(nsteps,0.0), leafVPDSH(nsteps,0.0);
@@ -248,10 +248,10 @@ List sunshadePhotosynthesisFunction(NumericVector fittedE, double Catm, double P
     Ag[i]=0.0;
     An[i]=0.0;
     //From rad per ground area to rad per leaf area
-    leafT = leafTemperature(absRadSL/SLarea, Tair, u, fittedE[i], leafWidth);
+    leafT = leafTemperature(absRadSL/SLarea, Tair, u, E[i], leafWidth);
     leafTSL[i]= leafT;
     leafVPDSL[i] = std::max(0.0,meteoland::utils_saturationVP(leafT)-vpa);
-    Gw = Patm*(fittedE[i]/1000.0)/leafVPDSL[i];
+    Gw = Patm*(E[i]/1000.0)/leafVPDSL[i];
     Gw = std::max(Gwmin, std::min(Gw, Gwmax));
     Gw = Gw*SLarea; //From Gw per leaf area to Gw per ground area
     if(QSL>0.0) {
@@ -262,10 +262,10 @@ List sunshadePhotosynthesisFunction(NumericVector fittedE, double Catm, double P
     }
     //SHADE leaves
     //From rad per ground area to rad per leaf area
-    leafT = leafTemperature(absRadSH/SHarea, Tair, u, fittedE[i], leafWidth);
+    leafT = leafTemperature(absRadSH/SHarea, Tair, u, E[i], leafWidth);
     leafTSH[i]= leafT;
     leafVPDSH[i] = std::max(0.0,meteoland::utils_saturationVP(leafT)-vpa);
-    Gw = Patm*(fittedE[i]/1000.0)/leafVPDSH[i];
+    Gw = Patm*(E[i]/1000.0)/leafVPDSH[i];
     // Gw = std::max(Gwmin, std::min(Gw, Gwmax));
     Gw = Gw*SHarea; //From Gw per leaf area to Gw per ground area
     if(QSH>0.0) {
@@ -276,7 +276,7 @@ List sunshadePhotosynthesisFunction(NumericVector fittedE, double Catm, double P
     }
     
   }
-  return(List::create(Named("Photosynthesis") = Ag,
+  return(DataFrame::create(Named("Photosynthesis") = Ag,
                       Named("NetPhotosynthesis") = An,
                       Named("LeafTempSL") = leafTSL,
                       Named("LeafTempSH") = leafTSH,
@@ -285,13 +285,13 @@ List sunshadePhotosynthesisFunction(NumericVector fittedE, double Catm, double P
 }
 
 // [[Rcpp::export("photo.multilayerPhotosynthesisFunction")]]
-List multilayerPhotosynthesisFunction(NumericVector fittedE, double Catm, double Patm, double Tair, double vpa, 
+DataFrame multilayerPhotosynthesisFunction(NumericVector E, double Catm, double Patm, double Tair, double vpa, 
                                   NumericVector SLarea, NumericVector SHarea,
                                   NumericVector u, NumericVector absRadSL, NumericVector absRadSH,
                                   NumericVector QSL, NumericVector QSH, 
                                   NumericVector Vmax298, NumericVector Jmax298, 
                                   double Gwmin, double Gwmax, double leafWidth = 1.0, bool verbose = false) {
-  int nsteps = fittedE.size();
+  int nsteps = E.size();
   int nlayers = SLarea.size();
   NumericVector Ag(nsteps,0.0), An(nsteps,0.0);
   double leafT,leafVPD, Gw, Agj, Anj;
@@ -300,9 +300,9 @@ List multilayerPhotosynthesisFunction(NumericVector fittedE, double Catm, double
     An[i]=0.0;
     for(int j=0;j<nlayers;j++) {
       //Sunlit leaves
-      leafT = leafTemperature(absRadSL[j], Tair, u[j], fittedE[i], leafWidth);
+      leafT = leafTemperature(absRadSL[j], Tair, u[j], E[i], leafWidth);
       leafVPD = std::max(0.0,meteoland::utils_saturationVP(leafT)-vpa);
-      Gw = Patm*(fittedE[i]/1000.0)/leafVPD;
+      Gw = Patm*(E[i]/1000.0)/leafVPD;
       Gw = std::max(Gwmin, std::min(Gw, Gwmax));
       if(QSL[j]>0.0) {
         Agj = leafphotosynthesis(QSL[j], Catm, Gw/1.6, leafT, Vmax298[j], Jmax298[j]);
@@ -312,9 +312,9 @@ List multilayerPhotosynthesisFunction(NumericVector fittedE, double Catm, double
         An[i]+=Anj*SLarea[j];
       }
       //SHADE leaves
-      leafT = leafTemperature(absRadSH[j], Tair, u[j], fittedE[i], leafWidth);
+      leafT = leafTemperature(absRadSH[j], Tair, u[j], E[i], leafWidth);
       leafVPD = std::max(0.0,meteoland::utils_saturationVP(leafT)-vpa);
-      Gw = Patm*(fittedE[i]/1000.0)/leafVPD;
+      Gw = Patm*(E[i]/1000.0)/leafVPD;
       Gw = std::max(Gwmin, std::min(Gw, Gwmax));
       if(QSH[j]>0.0) {
         Agj = leafphotosynthesis(QSH[j], Catm, Gw/1.6, leafT, Vmax298[j], Jmax298[j]);
@@ -324,7 +324,7 @@ List multilayerPhotosynthesisFunction(NumericVector fittedE, double Catm, double
       }
     }
   }
-  return(List::create(Named("Photosynthesis") = Ag,
+  return(DataFrame::create(Named("Photosynthesis") = Ag,
                       Named("NetPhotosynthesis") = An));
 }
 

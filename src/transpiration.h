@@ -5,4 +5,4 @@
 #endif
 using namespace Rcpp;
 
-List profitMaximization(List supplyFunction, List photosynthesisFunction, int type, double Gwmin, double Gmax, double kleafmax = NA_REAL);
+List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, int type, double Gwmin, double Gmax, double kleafmax = NA_REAL);

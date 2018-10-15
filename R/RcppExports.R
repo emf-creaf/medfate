@@ -317,24 +317,20 @@ hydraulics.Ecrit <- function(psiUpstream, kxylemmax, c, d) {
     .Call('_medfate_Ecrit', PACKAGE = 'medfate', psiUpstream, kxylemmax, c, d)
 }
 
-hydraulics.E2psiXylem <- function(E, psiUpstream, kxylemmax, c, d, psiCav = 0.0, psiStep = -0.01, psiMax = -10.0) {
+hydraulics.E2psiXylem <- function(E, psiUpstream, kxylemmax, c, d, psiCav = 0.0, psiStep = -0.0001, psiMax = -10.0) {
     .Call('_medfate_E2psiXylem', PACKAGE = 'medfate', E, psiUpstream, kxylemmax, c, d, psiCav, psiStep, psiMax)
 }
 
-hydraulics.E2psiVanGenuchten <- function(E, psiSoil, krhizomax, n, alpha, psiStep = -0.01, psiMax = -10.0) {
+hydraulics.E2psiVanGenuchten <- function(E, psiSoil, krhizomax, n, alpha, psiStep = -0.0001, psiMax = -10.0) {
     .Call('_medfate_E2psiVanGenuchten', PACKAGE = 'medfate', E, psiSoil, krhizomax, n, alpha, psiStep, psiMax)
 }
 
-hydraulics.E2psiTwoElements <- function(E, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, psiCav = 0.0, psiStep = -0.001, psiMax = -10.0) {
+hydraulics.E2psiTwoElements <- function(E, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, psiCav = 0.0, psiStep = -0.0001, psiMax = -10.0) {
     .Call('_medfate_E2psiTwoElements', PACKAGE = 'medfate', E, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, psiCav, psiStep, psiMax)
 }
 
 hydraulics.E2psiBelowground <- function(E, psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, psiIni = as.numeric( c(0)), psiStep = -0.0001, psiMax = -10.0, ntrial = 10L, psiTol = 0.0001, ETol = 0.0001) {
     .Call('_medfate_E2psiBelowground', PACKAGE = 'medfate', E, psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, psiIni, psiStep, psiMax, ntrial, psiTol, ETol)
-}
-
-hydraulics.E2psiXylemCapacitance <- function(E, psiRootCrown, psiStemPrev, PLC, RWCstorage, kxylemmax, c, d, Vmax, fapo, pi0, epsilon, klat, ksto, refill = FALSE, tstep = 3600, psiStep = -0.0001, psiMax = -10.0) {
-    .Call('_medfate_E2psiXylemCapacitance', PACKAGE = 'medfate', E, psiRootCrown, psiStemPrev, PLC, RWCstorage, kxylemmax, c, d, Vmax, fapo, pi0, epsilon, klat, ksto, refill, tstep, psiStep, psiMax)
 }
 
 hydraulics.E2psiAboveground <- function(E, psiRootCrown, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem, psiStep = -0.0001, psiMax = -10.0) {
@@ -353,7 +349,7 @@ hydraulics.E2psiNetwork <- function(E, psiSoil, krhizomax, nsoil, alphasoil, kro
     .Call('_medfate_E2psiNetwork', PACKAGE = 'medfate', E, psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem, psiIni, psiStep, psiMax, ntrial, psiTol, ETol)
 }
 
-hydraulics.supplyFunctionOneXylem <- function(psiSoil, v, kstemmax, stemc, stemd, psiCav = 0.0, maxNsteps = 200L, psiStep = -0.001, psiMax = -10.0, dE = 0.01) {
+hydraulics.supplyFunctionOneXylem <- function(psiSoil, v, kstemmax, stemc, stemd, psiCav = 0.0, maxNsteps = 200L, psiStep = -0.0001, psiMax = -10.0, dE = 0.01) {
     .Call('_medfate_supplyFunctionOneXylem', PACKAGE = 'medfate', psiSoil, v, kstemmax, stemc, stemd, psiCav, maxNsteps, psiStep, psiMax, dE)
 }
 
@@ -369,16 +365,16 @@ hydraulics.supplyFunctionBelowground <- function(psiSoil, krhizomax, nsoil, alph
     .Call('_medfate_supplyFunctionBelowground', PACKAGE = 'medfate', psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, minFlow, maxNsteps, psiStep, psiMax, ntrial, psiTol, ETol)
 }
 
-hydraulics.supplyFunctionNetwork <- function(psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem, minFlow = 0.0, maxNsteps = 400L, psiStep = -0.0001, psiMax = -10.0, ntrial = 200L, psiTol = 0.0001, ETol = 0.0001) {
-    .Call('_medfate_supplyFunctionNetwork', PACKAGE = 'medfate', psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem, minFlow, maxNsteps, psiStep, psiMax, ntrial, psiTol, ETol)
-}
-
 hydraulics.supplyFunctionAboveground <- function(Erootcrown, psiRootCrown, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem, psiStep = -0.0001, psiMax = -10.0) {
     .Call('_medfate_supplyFunctionAboveground', PACKAGE = 'medfate', Erootcrown, psiRootCrown, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem, psiStep, psiMax)
 }
 
 hydraulics.supplyFunctionAbovegroundCapacitance <- function(Erootcrown, psiRootCrown, EPrev, psiRootCrownPrev, psiStemPrev, PLCstemPrev, RWCsympstemPrev, psiLeafPrev, RWCsympleafPrev, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, klat, ksto, tstep = 3600.0, nSubSteps = 1000L, psiStep = -0.0001, psiMax = -10.0) {
     .Call('_medfate_supplyFunctionAbovegroundCapacitance', PACKAGE = 'medfate', Erootcrown, psiRootCrown, EPrev, psiRootCrownPrev, psiStemPrev, PLCstemPrev, RWCsympstemPrev, psiLeafPrev, RWCsympleafPrev, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, klat, ksto, tstep, nSubSteps, psiStep, psiMax)
+}
+
+hydraulics.supplyFunctionNetwork <- function(psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem, minFlow = 0.0, maxNsteps = 400L, psiStep = -0.0001, psiMax = -10.0, ntrial = 200L, psiTol = 0.0001, ETol = 0.0001) {
+    .Call('_medfate_supplyFunctionNetwork', PACKAGE = 'medfate', psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem, minFlow, maxNsteps, psiStep, psiMax, ntrial, psiTol, ETol)
 }
 
 hydraulics.regulatedPsiXylem <- function(E, psiUpstream, kxylemmax, c, d, psiStep = -0.01) {
@@ -521,16 +517,16 @@ photo.photosynthesis <- function(Q, Catm, Gc, leaf_temp, Vmax298, Jmax298, verbo
     .Call('_medfate_leafphotosynthesis', PACKAGE = 'medfate', Q, Catm, Gc, leaf_temp, Vmax298, Jmax298, verbose)
 }
 
-photo.leafPhotosynthesisFunction <- function(fittedE, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, Gwmin, Gwmax, leafWidth = 1.0, refLeafArea = 1.0, verbose = FALSE) {
-    .Call('_medfate_leafPhotosynthesisFunction', PACKAGE = 'medfate', fittedE, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, Gwmin, Gwmax, leafWidth, refLeafArea, verbose)
+photo.leafPhotosynthesisFunction <- function(E, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, Gwmin, Gwmax, leafWidth = 1.0, refLeafArea = 1.0, verbose = FALSE) {
+    .Call('_medfate_leafPhotosynthesisFunction', PACKAGE = 'medfate', E, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, Gwmin, Gwmax, leafWidth, refLeafArea, verbose)
 }
 
-photo.sunshadePhotosynthesisFunction <- function(fittedE, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gwmin, Gwmax, leafWidth = 1.0, verbose = FALSE) {
-    .Call('_medfate_sunshadePhotosynthesisFunction', PACKAGE = 'medfate', fittedE, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gwmin, Gwmax, leafWidth, verbose)
+photo.sunshadePhotosynthesisFunction <- function(E, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gwmin, Gwmax, leafWidth = 1.0, verbose = FALSE) {
+    .Call('_medfate_sunshadePhotosynthesisFunction', PACKAGE = 'medfate', E, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gwmin, Gwmax, leafWidth, verbose)
 }
 
-photo.multilayerPhotosynthesisFunction <- function(fittedE, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298, Jmax298, Gwmin, Gwmax, leafWidth = 1.0, verbose = FALSE) {
-    .Call('_medfate_multilayerPhotosynthesisFunction', PACKAGE = 'medfate', fittedE, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298, Jmax298, Gwmin, Gwmax, leafWidth, verbose)
+photo.multilayerPhotosynthesisFunction <- function(E, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298, Jmax298, Gwmin, Gwmax, leafWidth = 1.0, verbose = FALSE) {
+    .Call('_medfate_multilayerPhotosynthesisFunction', PACKAGE = 'medfate', E, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298, Jmax298, Gwmin, Gwmax, leafWidth, verbose)
 }
 
 root.conicDistribution <- function(Zcone, d) {
