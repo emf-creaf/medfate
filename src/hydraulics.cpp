@@ -1150,7 +1150,7 @@ List supplyFunctionBelowground(NumericVector psiSoil,
   double maxdEdp = (ETol*2.0)/std::abs(psiRootI - supplyPsiRoot[0]);
 
   int nsteps = 1;
-  double dE = std::min(0.005,maxdEdp*0.05);
+  double dE = std::min(0.05,maxdEdp*0.05);
   for(int i=1;i<maxNsteps;i++) {
     // if(i==3) stop("kk");
     supplyE[i] = supplyE[i-1]+dE;
@@ -1433,7 +1433,7 @@ List supplyFunctionNetwork(NumericVector psiSoil,
   double maxdEdp = (ETol*2.0)/std::abs(psiLeafI - supplyPsiLeaf[0]);
   
   int nsteps = 1;
-  double dE = std::min(0.005,maxdEdp*0.05);
+  double dE = std::min(0.05,maxdEdp*0.05);
   for(int i=1;i<maxNsteps;i++) {
     // if(i==3) stop("kk");
     supplyE[i] = supplyE[i-1]+dE;
