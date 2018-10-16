@@ -79,27 +79,8 @@ double tissueRelativeWaterContent(double psiSym, double pi0, double epsilon,
   return(sym_rwc*(1.0-af)+apo_rwc*af);
 }
 
+// [[Rcpp::export("moisture.tissueFMC")]]
+double tissueFMC(double RWC, double density, double d0 = 1.54) {
+  return(100*RWC*((1.0/density) - (1.0/d0)));
+}
   
-/**
- * Calculates fine fuel (i.e. leaves + small branches) moisture content content from water potential
- * 
- *  psi - water potential (MPa)
- *  leaf_pi0 - Leaf full turgor osmotic potential (MPa)
- *  leaf_eps - Leaf bulk modulus elasticity (MPa)
- *  leaf_af - Leaf apoplastic fraction (proportion)
- *  wd - wood density (g/cm3)
- *  c,d - parameters of the vulnerability curve
- *  r635 - Ratio of biomass of foliar + small branches (<6.35) to foliar biomass
- *  
- *  Returns Fine fuel moisture content as percentage of dry weight (= g H2O / g dry weight)
- */
-// double fineFuelRelativeWaterContent(double psi, double leaf_pi0, double leaf_eps, double leaf_af, 
-//                                double wd, double c, double d, double r635) {
-//   double leafRWC = leafRelativeWaterContent(psi, leaf_pi0, leaf_eps, leaf_af);
-//   double branchRWC = branchRelativeWaterContent(psi, wd, c, d, 0.8);
-//   double leafProp = (1.0/r635);
-//   return(leafRWC*leafProp + branchRWC*(1.0-leafProp));
-// }
-
-
-

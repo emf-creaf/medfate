@@ -9,7 +9,7 @@
 Fuel stratification and fuel characteristics
 }
 \description{
-Function \code{fuel.Stratification} provides a stratification of the stand into understory and canopy strata. Function \code{fuel.FCCS} calculates fuel characteristics from a \code{forest} object following an adaptation of the protocols described for the Fuel Characteristics Classification System (Prichard et al. 2013). Function \code{fuel.WindAdjustmentFactor} determines the adjustment factor of wind for surface fires, according to Andrews (2012). Function \code{fuel.cohortFineFMC} calculates the fuel moisture content of twigs/leaves of each cohort, from the results of soil water balance.
+Function \code{fuel.Stratification} provides a stratification of the stand into understory and canopy strata. Function \code{fuel.FCCS} calculates fuel characteristics from a \code{forest} object following an adaptation of the protocols described for the Fuel Characteristics Classification System (Prichard et al. 2013). Function \code{fuel.WindAdjustmentFactor} determines the adjustment factor of wind for surface fires, according to Andrews (2012). Function \code{fuel.cohortFineFMC} calculates the fuel moisture content of leaves and twigs of each cohort, from the results of soil water balance.
 }
 \usage{
 fuel.Stratification(object, SpParams, gdd = NA, 
@@ -18,7 +18,7 @@ fuel.Stratification(object, SpParams, gdd = NA,
 fuel.FCCS(object, ShrubCover, CanopyCover, SpParams, cohortFMC = as.numeric(c()),
           gdd = NA, heightProfileStep = 10, maxHeightProfile = 5000, 
           bulkDensityThreshold = 0.05)
-fuel.cohortFineFMC(spwb, SpParams)
+fuel.cohortFineFMC(spwb, x)
 fuel.WindAdjustmentFactor(topShrubHeight, bottomCanopyHeight, topCanopyHeight,
                           canopyCover)
 }
@@ -38,6 +38,7 @@ fuel.WindAdjustmentFactor(topShrubHeight, bottomCanopyHeight, topCanopyHeight,
   \item{bottomCanopyHeight}{Canopy base height (in m).}
   \item{topCanopyHeight}{Canopy top height (in m).}
   \item{canopyCover}{Canopy percent cover.}
+  \item{x}{An object of class \code{\link{spwbInput}}.}
 }
 \details{
 Details are described in a vignette.
@@ -76,7 +77,7 @@ Function \code{fuel.Stratification} returns a list with the following items:
 \item{\code{canopyLAI}: Cumulated LAI of the canopy (i.e. leaf area comprised between canopy base and top heights).}
 }
 
-Function \code{fuel.cohortFineFMC} returns a numeric matrix with fuel moisture content values for each day (in rows) and plant cohort (in columns).
+Function \code{fuel.cohortFineFMC} returns a list with three matrices (for leaves, twigs and fine fuels). Each of them contains live moisture content values for each day (in rows) and plant cohort (in columns).
 
 Function \code{fuel.WindAdjustmentFactor} returns a value between 0 and 1.
 }

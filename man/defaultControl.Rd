@@ -22,7 +22,8 @@ A list, with the following options:
 \item{\code{drainage (=TRUE)}: Boolean flag to indicate the simulation of deep drainage (not used in \code{spwbgrid}).}
 \item{\code{transpirationMode (="Simple")}: Transpiration model. See \code{\link{spwbInput}}.}
 \item{\code{hydraulicCostFunction (= 1)}: Variant of the hydraulic cost function used in the stomatal regulation model of Sperry & Love (2016). Values accepted are 1 (original cost function based on the derivative of supply function), 2 (leaf vulnerability curve).}
-\item{\code{ndailysteps (= 24)}: Number of daily substeps.}
+\item{\code{ndailysteps (= 24)}: Number of steps into which each day is divided for determination of stomatal conductance, transpiration and photosynthesis (24 equals 1-hour intervals).}
+\item{\code{nsubsteps (= 100)}: Number of temporal substeps for the calculation of capacitance effects (\code{nsubsteps = 100} means substeps of 36 seconds if \code{ndailysteps = 24}).}
 \item{\code{canopyMode (="sunshade")}: Indicates how crowns should be described to calculate photosynthesis. Accepted values are \code{"sunshade"} (distinguishes photosynthesis in sun leaves from shade leaves) and \code{"multilayer"} (distinguishes photosynthesis of sun leaves and shade leaves in each canopy layer).}
 \item{\code{verticalLayerSize (= 100)}: The size of vertical layers (in cm) for photosynthesis calculation.}
 \item{\code{nStemSegments (= 1)}: Number of segments within the stem.}

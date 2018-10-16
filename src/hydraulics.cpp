@@ -779,9 +779,9 @@ List E2psiAbovegroundCapacitanceDisconnected(double E,
                        _["Efin"] = Efin,
                        _["psiStem"] = psiStem,
                        _["psiLeaf"] = psiLeaf,
-                       _["PLCStem"] = PLCstem, 
-                       _["RWCsympStem"] = RWCsympstem,
-                       _["RWCsympLeaf"] = RWCsympleaf));
+                       _["PLCstem"] = PLCstem, 
+                       _["RWCsympstem"] = RWCsympstem,
+                       _["RWCsympleaf"] = RWCsympleaf));
 }
 
 

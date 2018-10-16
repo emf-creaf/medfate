@@ -102,16 +102,9 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     DataFrame paramsTranspdf = DataFrame::create(_["Psi_Extract"]=Psi_Extract,_["WUE"] = WUE,  _["pRootDisc"] = pRootDisc);
     paramsTranspdf.attr("row.names") = above.attr("row.names");
     List below = List::create(_["V"] = V);
-    List numericParams = control["numericParams"];
-    List paramsControl = List::create(_["verbose"] =control["verbose"],
-                                      _["soilFunctions"] =soilFunctions,
-                                      _["snowpack"] = control["snowpack"],
-                                      _["drainage"] = control["drainage"],
-                                      _["transpirationMode"] =transpirationMode, 
-                                      _["defaultWindSpeed"] = control["defaultWindSpeed"],
-                                      _["cavitationRefill"] = control["cavitationRefill"]);
+
     List paramsCanopy = List::create(_["gdd"] = 0);
-    input = List::create(_["control"] =paramsControl,
+    input = List::create(_["control"] = clone(control),
                          _["canopy"] = paramsCanopy,
                          _["cohorts"] = cohortDescdf,
                          _["above"] = plantsdf,
@@ -153,6 +146,7 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     NumericVector HmedSP = SpParams["Hmed"]; //To correct conductivity
     NumericVector Al2AsSP = SpParams["Al2As"];
     NumericVector SLASP = SpParams["SLA"];
+    NumericVector r635SP = SpParams["r635"];
     NumericVector LeafDensSP = SpParams["LeafDensity"];
     NumericVector WoodDensSP = SpParams["WoodDens"];
     NumericVector GwminSP = SpParams["Gwmin"];
@@ -187,6 +181,7 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     NumericVector Vsapwood(numCohorts), Vleaf(numCohorts);
     NumericVector SLA(numCohorts), LeafDens(numCohorts), WoodDens(numCohorts);
     NumericVector Vmax298(numCohorts), Jmax298(numCohorts);
+    NumericVector r635(numCohorts);
     NumericVector dVec = soil["dVec"];
     NumericVector VG_alpha = soil["VG_alpha"];
     NumericVector VG_n = soil["VG_n"];
@@ -203,6 +198,7 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
       Al2As[c] = Al2AsSP[SP[c]];
       SLA[c] = SLASP[SP[c]];
       WoodDens[c] = WoodDensSP[SP[c]];
+      r635[c] = r635SP[SP[c]];
       LeafDens[c] = LeafDensSP[SP[c]];
       StemPI0[c] = StemPI0SP[SP[c]];
       StemEPS[c] = StemEPSSP[SP[c]];
@@ -279,7 +275,8 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     VCroot_kmax.attr("dimnames") = List::create(above.attr("row.names"), slnames);
     
     DataFrame paramsAnatomydf = DataFrame::create(
-       _["Al2As"] = Al2As, _["SLA"] = SLA, _["LeafWidth"] = leafwidth, _["LeafDens"] = LeafDens, _["WoodDens"] = WoodDens
+       _["Al2As"] = Al2As, _["SLA"] = SLA, _["LeafWidth"] = leafwidth, 
+       _["LeafDens"] = LeafDens, _["WoodDens"] = WoodDens, _["r635"] = r635
     );
     paramsAnatomydf.attr("row.names") = above.attr("row.names");
     DataFrame paramsWaterStoragedf = DataFrame::create(
@@ -298,27 +295,8 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     List below = List::create(_["V"] = V,
                               _["VGrhizo_kmax"] = VGrhizo_kmax,
                               _["VCroot_kmax"] = VCroot_kmax);
-    List numericParams = control["numericParams"];
-    List paramsControl = List::create(_["verbose"] =control["verbose"],
-                                      _["transpirationMode"] =transpirationMode, 
-                                      _["snowpack"] = control["snowpack"],
-                                      _["drainage"] = control["drainage"],
-                                      _["soilFunctions"] =soilFunctions, 
-                                      _["Catm"] = control["Catm"],
-                                      _["averageFracRhizosphereResistance"] = control["averageFracRhizosphereResistance"],
-                                      _["verticalLayerSize"] = control["verticalLayerSize"],
-                                      _["hydraulicCostFunction"] = control["hydraulicCostFunction"],
-                                      _["cavitationRefill"] = control["cavitationRefill"],
-                                      _["capacitance"] = control["capacitance"],
-                                      _["ksymver"]= control["ksymver"],
-                                      _["klat"]= control["klat"],
-                                      _["taper"] = control["taper"],
-                                      _["thermalCapacityLAI"] = control["thermalCapacityLAI"],
-                                      _["defaultWindSpeed"] = control["defaultWindSpeed"],
-                                      _["ndailysteps"] = control["ndailysteps"],
-                                      _["numericParams"] = clone(numericParams));
     List paramsCanopy = List::create(_["gdd"] = 0,_["Temp"] = NA_REAL);
-    input = List::create(_["control"] = paramsControl,
+    input = List::create(_["control"] = clone(control),
                          _["canopy"] = paramsCanopy,
                          _["cohorts"] = cohortDescdf,
                          _["above"] = plantsdf,

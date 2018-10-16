@@ -221,8 +221,8 @@ forest2belowground <- function(x, soil, SpParams) {
     .Call('_medfate_EMCSimard', PACKAGE = 'medfate', fuelTemperature, fuelHumidity)
 }
 
-fuel.cohortFineFMC <- function(spwb, SpParams) {
-    .Call('_medfate_cohortFineFuelMoistureContent', PACKAGE = 'medfate', spwb, SpParams)
+fuel.cohortFineFMC <- function(spwb, x) {
+    .Call('_medfate_cohortFineFuelMoistureContent', PACKAGE = 'medfate', spwb, x)
 }
 
 .woodyFuelProfile <- function(z, x, SpParams, gdd = NA_real_) {
@@ -683,6 +683,10 @@ moisture.apoplasticPsi <- function(RWC, c, d) {
 
 moisture.tissueRWC <- function(psiSym, pi0, epsilon, psiApo, c, d, af) {
     .Call('_medfate_tissueRelativeWaterContent', PACKAGE = 'medfate', psiSym, pi0, epsilon, psiApo, c, d, af)
+}
+
+moisture.tissueFMC <- function(RWC, density, d0 = 1.54) {
+    .Call('_medfate_tissueFMC', PACKAGE = 'medfate', RWC, density, d0)
 }
 
 transp.profitMaximization <- function(supplyFunction, photosynthesisFunction, type, Gwmin, Gwmax, kleafmax = NA_real_) {

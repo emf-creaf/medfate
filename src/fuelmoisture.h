@@ -16,7 +16,7 @@ double coarse100hday(double m0, double fuelTempMin, double fuelHumidityMax,
                      double numSunHours, double rainDuration);
 DataFrame deadFuelMoisture(NumericVector m0, NumericVector airTemp, NumericVector airHumidity, NumericVector fuelRadiation, NumericVector fuelWindSpeed, NumericVector effRain, NumericVector rainDuration);
 
-NumericVector cohortFineFuelMoistureContent(List swb, DataFrame SpParams);
+List cohortFineFuelMoistureContent(List swb, DataFrame SpParams);
 
 double canopyLiveFuelMoisture(double canopyBaseHeight, double canopyTopHeight, NumericVector cohortFMC, NumericVector cohortLoading, NumericVector H, NumericVector CR);
 double fuelbedLiveFuelMoisture(double fuelbedHeight, NumericVector cohortFMC, NumericVector cohortLoading, NumericVector H, NumericVector CR);

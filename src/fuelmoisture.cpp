@@ -146,46 +146,73 @@ double coarse100hday(double m0,
 * Translates soil water balance results to fuel moisture content of plant cohorts.
 * 
 *   spwb - The output of soil water balance
-*   SpParams - A data frame with species parameters
+*   x - The object of class spwbInput on which simulations were conducted
 */
 // [[Rcpp::export("fuel.cohortFineFMC")]]
-NumericMatrix cohortFineFuelMoistureContent(List spwb, DataFrame SpParams) {
-  //Initialize other cohort-based variables
-  NumericVector maxFMCSP = SpParams["maxFMC"];
-  NumericVector WoodDensSP = SpParams["WoodDens"];
-  NumericVector VCstem_cSP = SpParams["VCstem_c"];
-  NumericVector VCstem_dSP = SpParams["VCstem_d"];
-  NumericVector r635SP = SpParams["r635"];
-  NumericVector LeafPI0SP = SpParams["LeafPI0"];
-  NumericVector LeafEPSSP = SpParams["LeafEPS"];
-  NumericVector LeafAFSP = SpParams["LeafAF"];
-  NumericMatrix plantpsi = Rcpp::as<Rcpp::NumericMatrix>(spwb["PlantPsi"]);
-  List l = plantpsi.attr("dimnames");
+List cohortFineFuelMoistureContent(List spwb, List x) {
+  //Draw cohort-based variables
+  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
+  DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
+  DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
+  DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
+  
+  //Anatomy parameters
+  NumericVector r635 = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["r635"]);
+  NumericVector WoodDens = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["WoodDens"]);
+  NumericVector LeafDens = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["LeafDens"]);
+  
+  //Transpiration parameters
+  NumericVector VCstem_c = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_c"]);
+  NumericVector VCstem_d = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_d"]);
+  NumericVector VCleaf_c = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_c"]);
+  NumericVector VCleaf_d = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_d"]);
+  
+  //Water storage parameters
+  DataFrame paramsWaterStorage = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
+  NumericVector StemAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemAF"]);
+  NumericVector LeafAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafAF"]);
+
+
+  NumericMatrix psiapoleaf = Rcpp::as<Rcpp::NumericMatrix>(spwb["LeafPsi"]);
+  NumericMatrix PLCstem = Rcpp::as<Rcpp::NumericMatrix>(spwb["PlantStress"]);
+  NumericMatrix RWCsymleaf = Rcpp::as<Rcpp::NumericMatrix>(spwb["PlantRWCleaf"]);
+  NumericMatrix RWCsymstem = Rcpp::as<Rcpp::NumericMatrix>(spwb["PlantRWCstem"]);
+  List l = psiapoleaf.attr("dimnames");
   CharacterVector days = l[0];
   CharacterVector cohNames = l[1];
-  int numDays = plantpsi.nrow();
-  int numCohorts = plantpsi.ncol();
-  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(spwb["cohorts"]);
-  IntegerVector SP = Rcpp::as<Rcpp::IntegerVector>(cohorts["SP"]);
-  
-  NumericMatrix cohortFMC(numDays, numCohorts);
-  cohortFMC.attr("dimnames") = l;
+  int numDays = psiapoleaf.nrow();
+  int numCohorts = psiapoleaf.ncol();
+
+  NumericMatrix leafFMC(numDays, numCohorts);
+  NumericMatrix twigFMC(numDays, numCohorts);
+  NumericMatrix fineFMC(numDays, numCohorts);
+  leafFMC.attr("dimnames") = l;
+  twigFMC.attr("dimnames") = l;
+  fineFMC.attr("dimnames") = l;
   for(int c=0;c<numCohorts;c++) {
-    int sp = SP[c];
-    double leafpi0 = LeafPI0SP[sp];
-    double leafeps = LeafEPSSP[sp];
-    double leafaf = LeafAFSP[sp];
-    double maxFMC = maxFMCSP[sp];
-    double wd = WoodDensSP[sp];
-    double vc_c = VCstem_cSP[sp];
-    double vc_d = VCstem_dSP[sp];
-    double r635 = r635SP[sp];
-    // for(int d=0;d<numDays;d++) {
-    //   cohortFMC(d,c) = maxFMC*fineFuelRelativeWaterContent(plantpsi(d,c), leafpi0, leafeps, leafaf,
-    //                                                 wd,vc_c,vc_d, r635);
-    // }
+    double f_apo_leaf = LeafAF[c];
+    double f_apo_stem = StemAF[c];
+    double density_leaf = LeafDens[c];
+    double density_stem = WoodDens[c];
+    double leafc = VCleaf_c[c];
+    double leafd = VCleaf_d[c];
+    double stemc = VCstem_c[c];
+    double stemd = VCstem_d[c];
+    double p_leaves = 1.0/r635[c];
+    for(int d=0;d<numDays;d++) {
+      double rwc_apo_leaf = apoplasticRelativeWaterContent(psiapoleaf(d,c), leafc, leafd);
+      double rwc_sym_leaf = RWCsymleaf(d,c);
+      double rwc_leaf = rwc_apo_leaf*f_apo_leaf + rwc_sym_leaf*(1.0 - f_apo_leaf);
+      leafFMC(d,c) = tissueFMC(rwc_leaf, density_leaf);
+      double rwc_apo_stem = 1.0-PLCstem(d,c);
+      double rwc_sym_stem = RWCsymstem(d,c);
+      double rwc_stem = rwc_apo_stem*f_apo_stem + rwc_sym_stem*(1.0 - f_apo_stem);
+      twigFMC(d,c) = tissueFMC(rwc_stem, density_stem);
+      
+      fineFMC(d,c)  =leafFMC(d,c)*p_leaves + twigFMC(d,c)*(1.0 - p_leaves);
+    }
   }
-  return(cohortFMC);
+  return(List::create(Named("LeafFMC") = leafFMC, Named("TwigFMC") = twigFMC, Named("FineFMC") = fineFMC));
 }
 
 double layerLiveFuelMoisture(double minHeight, double maxHeight, NumericVector cohortFMC, NumericVector cohortLoading, NumericVector H, NumericVector CR) {

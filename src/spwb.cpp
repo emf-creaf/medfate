@@ -334,6 +334,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   
   // String canopyMode = Rcpp::as<Rcpp::String>(control["canopyMode"]);
   int ntimesteps = control["ndailysteps"];
+  int nsubsteps = control["nsubsteps"];
   int hydraulicCostFunction = control["hydraulicCostFunction"];
   double verticalLayerSize = control["verticalLayerSize"];
   double thermalCapacityLAI = control["thermalCapacityLAI"];
@@ -817,7 +818,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                                                      Vsapwood[c], StemAF[c], StemPI0[c], StemEPS[c],
                                                      Vleaf[c], LeafAF[c], LeafPI0[c], LeafEPS[c],
                                                      klat, ksymver[c],
-                                                     tstep, 100, psiStep, psiMax);
+                                                     tstep, nsubsteps, psiStep, psiMax);
             
             //Add difference due to capacitance effects
             Edif = E2psiAGCAP["Edif"];
@@ -862,8 +863,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
             RWCsstemMAT(c,_) = newRWCsympstem;
             int nseg = newPLCstem.size();
             
-            PLC(c,n) = sum(newPLCstem)/((double)nseg);
-            RWCssteminst(c,n) = sum(newRWCsympstem)/((double)nseg);
+            PLC(c,n) = newPLCstem[nseg-1]; //Store the PLC and RWCsym values of the distal-most segment
+            RWCssteminst(c,n) = newRWCsympstem[nseg-1];
           } else {
             NumericVector psiLeaf = sFunction["psiLeaf"];
             psiLeafVEC[c] = psiLeaf[iPM];
@@ -950,25 +951,25 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                                                 Vsapwood[c], StemAF[c], StemPI0[c], StemEPS[c],
                                                 Vleaf[c], LeafAF[c], LeafPI0[c], LeafEPS[c],
                                                 klat, ksymver[c],
-                                                tstep, 1000);
+                                                tstep, nsubsteps);
       
          NumericVector newPsiStem = sAb["psiStem"];
-         NumericVector newPLCStem = sAb["PLCStem"];
-         NumericVector newRWCsympStem = sAb["RWCsympStem"];
+         NumericVector newPLCstem = sAb["PLCstem"];
+         NumericVector newRWCsympstem = sAb["RWCsympstem"];
          
          //Update symplastic storage and PLC
          double psiRoot = newPsiStem[0];//Estimate of psiRoot = first stem segment
          psiRootVEC[c] = psiRoot;
          psiLeafVEC[c] = sAb["psiLeaf"];
-         RWCsleafVEC[c] = sAb["RWCsympLeaf"];
-         int nseg = newPLCStem.size();
+         RWCsleafVEC[c] = sAb["RWCsympleaf"];
+         int nseg = newPLCstem.size();
          PLC(c,n) = 0.0;
          RWCssteminst(c,n) = 0.0;
          psiStemMAT(c,_) = newPsiStem;
-         PLCstemMAT(c,_) = newPLCStem;
-         RWCsstemMAT(c,_) = newRWCsympStem;
-         PLC(c,n) = sum(newPLCStem)/((double)nseg);
-         RWCssteminst(c,n) = sum(newRWCsympStem)/((double)nseg);
+         PLCstemMAT(c,_) = newPLCstem;
+         RWCsstemMAT(c,_) = newRWCsympstem;
+         PLC(c,n) = newPLCstem[nseg-1]; //Store the PLC and RWCsym values of the distal-most segment
+         RWCssteminst(c,n) = newRWCsympstem[nseg-1];
          
          //Store the minimum water potential of the day (i.e. mid-day)
          minPsiLeaf[c] = std::min(minPsiLeaf[c],psiLeafVEC[c]);
