@@ -37,13 +37,16 @@ col4pale = "green"
 @
 
 \section{Introduction}
-The supply-loss theory of plant hydraulics, recently presented by Sperry and Love (2015) and tested in Sperry et al. (2016a), uses the physics of flow through soil and xylem to quantify how canopy water supply declines with drought and ceases by hydraulic failure. The theory builds on a previous hydraulic model (Sperry et al. 1998) and can be applied to different ways of representing the soil-plant continuum. In our case we considered a network of $(N \times 2 + 2)$ resistance elements, with soil being represented in $N$ different layers. For each soil layer there is a rhizosphere element in series with a root xylem element. The $N$ soil layers are in parallel up to the root crown. From there there are two final elements: the stem xylem and the leaf.
+
 
 In Sperry and Love (2015) and Sperry et al (2016a) stomatal regulation is modelled from purely hydraulic grounds. This approach ignores the role of stomata in regulating and responding to photosynthesis (i.e., there is no trade-off between water losses and carbon acquisition). Sperry et al (2016b) recently presented a cost-benefit approach where the hydraulic costs of opening the stomata (vulnerability to cavitation) are compared against photosynthetic gain. The complex soil water balance model of \texttt{medfate} implements this second stomatal regulation approach using descriptions of the continuum in a network as described above. 
 
-This document includes the design decisions taken to implement Sperry and Love (2015) supply functions and Sperry et al (2016a) stomatal regulation model in \texttt{medfate}, including the need to separate sunlit and shade leaves to scale photosynthesis and cost-benefit maximization to the plant level. Althougth the model implements a network representation of the soil-plant continuum, simpler one-element, two-element and three-element representations will be used in this document to facilitate understanding. We include a section devoted to explain how hydraulic parameters of the continuum are estimated from model inputs (i.e. tissue hydraulic properties). Finally, we include examples to illustrate the theory under different situations comprising different soil types, soil water potentials and with/without cavitated conduits.
+This document describes the design decisions taken to implement Sperry and Love (2015) supply functions and Sperry et al (2016a) stomatal regulation model in \texttt{medfate}, including details on how supply functions are calculated from vulnerability curves, the need to separate sunlit and shade leaves to scale photosynthesis and cost-benefit maximization to the plant level. We also include explanations regarding how plant water compartments are used to modulate transpiration and, more generally, how plant dessication is dealt with (Martin-StPaul et al. 2017). 
 
 \section{Plant hydraulics}
+
+The supply-loss theory of plant hydraulics, presented by Sperry and Love (2015) and tested in Sperry et al. (2016a), uses the physics of flow through soil and xylem to quantify how canopy water supply declines with drought and ceases by hydraulic failure. The theory builds on the  hydraulic model of Sperry et al. (1998) and can be applied to different segmentations of the soil-plant continuum. In our case we considered a network of $(N \times 2 + S + 2)$ resistance elements, with soil being represented in $N$ different layers and $S$ different stem segments. For each soil layer there is a rhizosphere element in series with a root xylem element. The $N$ soil layers are in parallel up to the root crown. From there there are $S$ stem xylem segments and a final leaf segment, all in series. Althougth the model implements this network representation of the soil-plant continuum, simpler one-element, two-element and three-element representations will be used in this document to facilitate understanding.
+
 \subsection{Vulnerability curves}
 Each continuum element has a vulnerability curve that starts at maximum hydraulic conductance ($k_{max}$, flow rate per pressure drop) and monotonically declines as water pressure ($\Psi$) becomes more negative. Vulnerability curves form the basis of hydraulic calculations.
 
@@ -1129,353 +1132,7 @@ Stem symplastic storage compartments (e.g. xylem parenchyma) can contribute to s
 \includegraphics[width=\textwidth]{hydraulics_disc.jpg}
 \end{figure}
 
-\subsection{Parameterization of hydraulics}
 
-\subsubsection{Vulnerability curves}
-Leaf and xylem vulnerability curves are often described using $\Psi_{50}$, the water potential at which hydraulic conductance is half of maximum. As noted above, parameter $d$ in eq. \ref{eq:xylemvulnerability} is the water potential $\Psi$ at which $k_{x}(\Psi)/k_{x,max} = e^{-1} = 0.367$ (and the same for eq. \ref{eq:leafvulnerability}). Hence, the two definitions do not match. Using the definition of $\Psi_{50}$ in eq. \ref{eq:xylemvulnerability} we have:
-\begin{equation}
-0.5 = e^{-((\Psi_{50}/d)^c)}
-\end{equation}
-from which we obtain that the value for parameter $d$ should be:
-\begin{equation}
-d = \frac{\Psi_{50}}{(-ln(0.5))^{1/c}}= \frac{\Psi_{50}}{0.69314^{1/c}}
-\end{equation}
-Hence, this operation should be used when specifying this parameter from $\Psi_{50}$. Vulnerability curves for root xylem are less common than for stem xylem. If these values are missing, functions \texttt{swbInput()} and \texttt{forest2swbInput()} will use for $c$ the same value as in stems, and for $d$ half the value of that of stems (Sperry et al. 2016a). If the values for leaves are missing, functions \texttt{swbInput()} and \texttt{forest2swbInput()} will use for $c$ the same value as in stems, and for $d$ 66\% of the value for stems.
-
-Rhizosphere conductance is regulated in the model using the van Genuchten function (eq. \ref{eq:rhizovulnerability}), and parameters $n$ and $\alpha$ for each soil layer were already available from soil initialization (i.e. function \texttt{soil()}):
-<<>>=
-s = soil(defaultSoilParams(3))
-s$VG_n
-s$VG_alpha
-@
-
-While leaf maximum hydraulic conductance ($k_{l, max}$, in mmol·m$^{-2}$·s$^{-1}$·MPa$^{-1}$) is often known for several species (if missing \texttt{medfate} assumes $k_{l, max}=6$ for conifers and $k_{l, max}=8$ for angiosperms [Sack \emph{et al.} 2006]), aboveground and belowground stem maximum conductance values at the plant level ($k_{s, max}$ and $k_{r, max}$) will not be normally available and the same for the rhizosphere ($k_{rh, max}$). \texttt{medfate} provides routines to estimate them from a minimum set of input parameters. The whole process of estimation of those parameters is done automatically in functions \texttt{swbInput()} and \texttt{forest2swbInput()}, with the user controlling the process through parameter \texttt{control} (see function \texttt{defaultControl()} for control parameter defaults). In the following we detail the calculations and present individual functions that perform partial calculations.
-
-\subsubsection{Stem xylem maximum conductance}
-Estimation of maximum stem conductance ($k_{s,max}$, in mmol·m$^{-2}$·s$^{-1}$·MPa$^{-1}$) is done by function \texttt{hydraulics.maximumStemHydraulicConductance()} and follows the work by Savage \emph{et al.} (2010), Olson \emph{et al.} (2014) and Christoffersen \emph{et al.} (2016). Calculations are based on tree height and two species-specific parameters: maximum sapwood reference conductivity ($K_{s,max,ref}$, in kg·m$^{-1}$·s$^{-1}$·MPa$^{-1}$;  see parameter \texttt{xylem\_kmax} in \texttt{SpParamsMED}) and the ratio of leaf area to sapwood area ($A_{l}/A_{s}$; \texttt{Al2As} in \texttt{SpParamsMED}), i.e. the inverse of the Huber value $H_v$.
-
-The reference value for maximum sapwood conductivity $K_{s,max,ref}$ is assumed to have been measured on a \emph{terminal branch} of a plant of known height $H_{ref}$. If our target plant is very different in height, the conduits of terminal branches will have different radius and hence conductivity. We correct the reference conductivity to the target plant height using the following empirical relationship, developed by Olson \emph{et al.} (2014) between tree height and diameter of conduits for angiosperms and the equation described by Christoffersen \emph{et al.} (2016):
-\begin{eqnarray}
-2 \cdot r_{int,H}&=& 10^{1.257+(0.24\cdot log_{10}(H))} \\
-2 \cdot r_{int,ref}&=&10^{1.257+(0.24\cdot log_{10}(H_{ref}))}\\
-K_{s,max,cor}&=&K_{s,max,ref}\cdot (r_{int,H}/r_{int,ref})^{2}
-\end{eqnarray}
-Where $r_{int,H}$ is the radius of conduits for a terminal branch of a tree of height $H$ and $r_{int,ref}$ is the corresponding radius for a tree of height $H_{ref}$ ($H$ and $H_{ref}$ are measured in m). The form of the empirical relationship by Olson \emph{et al.} (2014) is:
-
-<<fig=TRUE, width=5, height=5, echo=FALSE>>=
-rad <- numeric(length(50:5000))
-Hs <- 50:5000
-
-rad = 0.5*10^(1.257+ 0.24 * log10(Hs/100))
-
-plot(Hs/100, rad, type = 'l', xlab = 'H [m]',
-     ylab = 'Conduit radius (in micras)', log="x")
-@
-
-
-Let's consider an example for a \emph{Quercus ilex} target tree of 4m height and where species-specific conductivity $K_{s,max,ref} = 0.77$ is the apical value for trees of $H_{ref} = 6.6$ m (in \texttt{medfate}, values of $H_{ref}$ are taken from median height values; see parameter \texttt{Hmed} in \texttt{SpParamsMED}). The corrected conductivity  for a tree of height 4 m will be a bit lower than that of the reference height:
-<<>>=
-xylem_kmax = 0.77
-H = 400 # in cm
-Href = 660 # in cm
-f = hydraulics.referenceConductivityHeightFactor(Href, H);
-f
-xylem_kmax_cor = xylem_kmax * f
-xylem_kmax_cor
-@
-
-Once the reference conductivity is corrected, the maximum stem conductance without accounting for conduit taper is:
-\begin{equation}
-k_{s,max, notaper}=\frac{1000}{0.018} \frac{K_{s,max,cor}\cdot A_{s}}{H\cdot A_{l}}
-\end{equation}
-where $H$ is the tree height (here in m), $A_{s}$ is the sapwood area, $A_{l}$ is the leaf area and 1000/0.018 is a factor used to go from kg to mmol. The ratio $A_{l}/A_{s} = 1/H_v$ is a fixed species parameter in soil water balance calculations (see parameter \texttt{Al2As} in \texttt{SpParamsMED}), but becomes variable when simulating plant growth. Let's assume that \emph{Quercus ilex} the leaf to sapwood area ratio is $A_{l}/A_{s} = 2512$. The maximum (leaf-specific) stem conductance without taper ($k_{s, max, notaper}$) for the tree of 4 m height is then:
-
-<<>>==
-Al2As = 2512 
-
-kstemmax = hydraulics.maximumStemHydraulicConductance(xylem_kmax, 
-                  Href, Al2As, H, angiosperm = TRUE,taper = FALSE)
-kstemmax
-@ 
-
-In order to consider taper of xylem conduits we calculate the whole-tree conductance per unit leaf area ($k_{s, max, taper}$) as described in Christoffersen \emph{et al.} (2016):
-\begin{equation}
-k_{s, max, taper}=\frac{1000}{0.018} \cdot \frac{K_{s,max,pet}\cdot A_{s}}{H\cdot A_{l}}\cdot \chi_{tap:notap,ag}(H)
-\end{equation}
-where $K_{s,max,pet}$ is the conductivity at the petiole level and $\chi_{tap:notap,ag}(H)$ is the taper factor accounting for the decrease in the xylem conduits diameter with the height, from the petiole to base of the trunk, which mitigates the negative effects of height on the hydraulic safety. The conductivity at the petiole level is obtained from $K_{s,max,ref}$ using again:
-\begin{equation}
-K_{s,max,pet}&=&K_{s,max,ref}\cdot (r_{int, pet}/r_{int,ref})^{2}
-\end{equation}
-where $r_{int, pet}$ is the radius of the petiole in the model of Savage et al. (2010). Christofferset et al. (2016) use $r_{int, pet} = 10$ $\mu$m but we define it as the radius of apical conduits in a tree of 1 m height:
-<<>>=
-hydraulics.terminalConduitRadius(100.0)
-@
-$\chi_{tap:notap,ag}(H)$ is calculated as described in the Appendix 1 section of Christoffersen \emph{et al.} (2016) (see also Savage et al. 2010). The following figure shows the value of $\chi_{tap:notap,ag}$ for different heights:
-
-<<fig=TRUE, width=5, height=5, echo=FALSE>>=
-tapnotap <- numeric(length(10:5000))
-Hs <- 10:5000
-
-for(i in 1:length(Hs)) tapnotap[i] = hydraulics.taperFactorSavage(Hs[i])
-plot(Hs/100, tapnotap, type = 'l', xlab = 'H [m]',
-     ylab = 'Taper conductance factor', log="x")
-abline(v=1, col="gray", lty=2)
-abline(h=tapnotap[which(Hs==100)], col="gray", lty=2)
-@
-
-Note that, since $\chi_{tap:notap,ag}(1) = 3.82$ (indicated using grey dashed lines in the last figure), the equation of maximum conductance with taper would give a higher conductance than the equation without taper for a tree of 1 m height, which is supposed to have a conductance equal to conductivity. To solve this issue we define the taper factor as $\chi_{tap:notap,ag}(H)/\chi_{tap:notap,ag}(1)$:
-\begin{equation}
-k_{s, max, taper}=\frac{1000}{0.018} \cdot \frac{K_{s,max,pet}\cdot A_{s}}{H\cdot A_{l}}\cdot \frac{\chi_{tap:notap,ag}(H)}{\chi_{tap:notap,ag}(1)}
-\end{equation}
-The maximum stem conductance with taper ($k_{s, max, taper}$) of a \emph{Q. ilex} tree of 4 m height, calculated with this second equation, is:
-
-<<>>==
-kstemmax_tap = hydraulics.maximumStemHydraulicConductance(xylem_kmax, 
-                      Href, Al2As, H, angiosperm = TRUE, taper = TRUE)
-kstemmax_tap
-@ 
-
-The next two plots show the variation of $k_{s,max}$ for \emph{Quercus ilex} depending on the tree height and with/without considering taper of conduits. The plot on the right (both axes in log) show the slope of the dependency of conductance with height in both cases:
-
-<<fig=TRUE, width=10, height=5, echo=FALSE>>=
-par(mfrow=c(1,2))
-qi_with_tap <- numeric(length(50:5000))
-qi_no_tap <- qi_with_tap
-Hs <- 50:5000
-
-for (i in 1:length(Hs)) {
-  qi_with_tap[i] <- hydraulics.maximumStemHydraulicConductance(
-  xylem_kmax, Href, Al2As, Hs[i], angiosperm = TRUE, taper =TRUE
-)
-  qi_no_tap[i] <- hydraulics.maximumStemHydraulicConductance(
-  xylem_kmax, Href, Al2As, Hs[i], angiosperm = TRUE,taper = FALSE
-)
-}
-
-plot(Hs/100, qi_with_tap, type = 'l', xlab = 'H [m] (log)',
-     ylim = c(min(c(qi_with_tap,qi_no_tap)), max(c(qi_with_tap,qi_no_tap))),
-     ylab = 'Maximum stem conductance (mmol·m-2·s-1·MPa-1)', log="x", xlim=c(0.5,50))
-lines(Hs/100, qi_no_tap, lty = 2)
-legend('topright', legend = c('Taper', 'No taper'), lty = 1:2, bty="n")
-plot(Hs/100, qi_with_tap, type = 'l', xlab = 'H [m] (log)',
-     ylim = c(min(c(qi_with_tap,qi_no_tap)), max(c(qi_with_tap,qi_no_tap))),
-     ylab = 'Maximum stem conductance (mmol·m-2·s-1·MPa-1) (log)', log="xy", xlim=c(0.5,50))
-lines(Hs/100, qi_no_tap, lty = 2)
-legend('topright', legend = c('Taper', 'No taper'), lty = 1:2, bty="n")
-@
-
-
-
-\subsubsection{Root xylem maximum hydraulic conductance}
-To obtain maximum root xylem conductance ($k_{r, max}$, in mmol·m$^{-2}$·s$^{-1}$·MPa$^{-1}$), one option taken by Christoffersen et al. (2016) is to assume that minimum stem resistance (inverse of maximum conductance) represents a fixed proportion of the minimum total tree (stem+root) resistance. A value 0.625 (i.e. 62.5\%) suggested by these authors leads to maximum total tree conductance for our \emph{Q. ilex} tree being:
-<<>>==
-ktot = kstemmax*0.625
-ktot
-@
-and the maximum root xylem conductance would be therefore:
-<<>>==
-krootmax = 1/((1/ktot)-(1/kstemmax))
-krootmax
-@ 
-Now, we need to divide total maximum conductance of the root system xylem among soil layers we need weights inversely proportional to the length of transport distances (Sperry et al. 2016). Vertical transport lengths can be calculated from soil depths and radial spread can be calculated assuming cylinders with volume proportional to the proportions of fine root biomass. Let's assume a soil with three layers:
-<<>>==
-d = s$dVec
-d
-@
-The proportion of fine roots in each layer, assuming a linear dose response model, will be:
-<<>>==
-Z50 = 200
-Z95 = 1500
-v1 = root.ldrDistribution(Z50,Z95, d)
-v1
-@
-Having this information, the calculation of root length (i.e. the sum of vertical and radial lengths) to each layer ($L_j$) is done using function \texttt{root.rootLength()}:
-<<>>==
-rl = root.rootLengths(v1, d)
-rl
-@
-where lengths are in mm. The proportion of total root xylem conductance corresponding to each layer ($w_j$) is given by \texttt{root.xylemConductanceProportions()}:
-<<>>==
-w1 = root.xylemConductanceProportions(v1, d)
-w1
-@
-Xylem conductance proportions can be quite different than the fine root biomass proportions. This is because radial lengths are largest for the first top layers and vertical lengths are largest for the bottom layers. The maximum root xylem conductances of each layer will be the product of maximum total conductance of root xylem and weights:
-<<>>=
-w1*krootmax
-@
-In \texttt{medfate} we calculate maximum root xylem conductance using a reference root xylem conductivity value ($K_{r,max,ref}$):
-\begin{equation}
-k_{r,max}=\frac{1000}{0.018} \cdot \sum_{j}{\frac{w_j \cdot K_{r,max,ref}\cdot A_{s}}{L_j\cdot A_{l}}}
-\end{equation}
-where $w_j$ are root xylem conductance proportion of layer $j$ and $L_j$ is the root length (in m) to layer $j$. Note that here we use weights $w_j$ assuming they represent proportions of total sapwood area that come from each layer (i.e. the longer the path the larger the proportion of sapwood area). This calculation is made available by function \texttt{hydraulics.maximumRootHydraulicConductance()}. Let's consider the same \emph{Q. ilex} tree of 4m height as before. If we specify root xylem specific conductivity as $K_{r,max,ref} = K_{s,max,ref} =0.77$ we have:
-<<>>=
-rootxylem_kmax = 0.77
-krootmax = hydraulics.maximumRootHydraulicConductance(rootxylem_kmax, Al2As, 
-                                                      v1, d)
-krootmax
-@
-The maximum root xylem conductances of each layer would be:
-<<>>=
-krootmaxvec = w1*krootmax
-krootmaxvec
-@
-and the fraction of total xylem resistance due to stem would be:
-<<>>=
-(1/kstemmax)/((1/kstemmax)+(1/krootmax))
-@
-In contrast with the approach of Christoffersen \emph{et al.} (2016), in this approach the root maximum conductance depends root length and distribution, and is not a fixed fraction of stem maximum conductance. Assuming constant root length, then the proportion of total resistance due to the stem will increase with tree height (Magnani \emph{et al.} 2000):
-
-<<fig=TRUE, width=4.5, height=4.5, echo=FALSE>>=
-p_stem <- numeric(length(50:5000))
-Hs <- 50:5000
-
-for (i in 1:length(Hs)) {
-  ks <- hydraulics.maximumStemHydraulicConductance(xylem_kmax, Href, Al2As, Hs[i], taper = FALSE)
-  p_stem[i] = (1/ks)/((1/ks)+(1/krootmax))
-}
-
-plot(Hs/100, p_stem*100, type = 'l', xlab = 'H [m]', ylab = 'Percentage of total resistance due to stem', log="x", ylim=c(0,100),
-     xlim=c(0.5,50))
-abline(h=62.5, col="gray")
-@
-
-where the horizontal gray line indicates the value of 62.5\%. Of course rooting depth also increases with tree age, but young trees have higher root-to-shoot ratios than older ones. Hence, a root maximum conductance that is not fixed but increases with age seems a priori more realistic. Moreover, Christoffersen \emph{et al.} (2016) justify the value of 62.5\% from a study which quantified total aboveground and belowground resistance in tropical trees (Fisher \emph{et al.} 2006) under near-saturated (wet season) conditions, but values of belowground resistance reported in this study for wet conditions and trees of 30 m height are around 13\%, which equals to 87\% fraction of aboveground resistance. On the other hand, while rooting depths are limited by soil depth, lateral root length increases with age and, hence, the model could be made more realistic if this is taken into account and the curve above would probably saturate at lower percentages.
-
-\subsubsection{Rhizosphere maximum hydraulic conductance}
-Maximum rhizosphere conductance ($k_{rh, max}$, in mmol·m$^{-2}$·s$^{-1}$·MPa$^{-1}$) is difficult to measure directly, as it depends on the rhizosphere (i.e. fine root) surface in each soil layer, and will probably always be a parameter to be calibrated. Instead of trying to estimate rhizosphere surface from root architecture (Sperry \emph{et al.} 1998), we follow Sperry \emph{et al.} (2016) and determine the maximum rhizosphere conductance in each layer from an inputed 'average percentage rhizosphere resistance'. The percentage of continuum resistance corresponding to the rhizosphere is calculated from the vulnerability curves of stem, root and rhizosphere at the same water potential. The average resistance is found by evaluating the percentage for water potential values between 0 and $\Psi_{crit}$. The following figure illustrates how the supply function, for different soil water potentials, is affected by increasing values of the average percentage of rhizosphere resistance:
-
-<<fig=TRUE, width=4.5, height=4.5, echo=FALSE>>=
-krhizomaxvec1 = rep(0,3)
-pres = c(5,20,35,50)
-for(i in 1:length(pres)) {
-  krhizomaxvec1[1]= hydraulics.findRhizosphereMaximumConductance(pres[i], 
-                     s$VG_n[1],s$VG_alpha[1],
-                     krootmax, rootc,rootd, 
-                     kstemmax, stemc, stemd,
-                     kleafmax, leafc, leafd)
-  krhizomaxvec1[2]= hydraulics.findRhizosphereMaximumConductance(pres[i], 
-                     s$VG_n[2],s$VG_alpha[2],
-                     krootmax, rootc,rootd, 
-                     kstemmax, stemc, stemd,
-                     kleafmax, leafc, leafd)
-  krhizomaxvec1[3]= hydraulics.findRhizosphereMaximumConductance(pres[i], 
-                     s$VG_n[3],s$VG_alpha[3],
-                     krootmax, rootc,rootd, 
-                     kstemmax, stemc, stemd,
-                     kleafmax, leafc, leafd)
-  sfn1 = hydraulics.supplyFunctionNetwork(psiSoilLayers1,
-                                  krhizomaxvec1,s$VG_n,s$VG_alpha,
-                                  krootmaxvec, rootc,rootd,
-                                  kstemmax, stemc,stemd,
-                                  kleafmax, leafc, leafd,
-                                  PLCstem = plcCav,
-                                  maxNsteps = 400, psiMax = psiMax)
-  sfn2 = hydraulics.supplyFunctionNetwork(psiSoilLayers2,
-                                  krhizomaxvec1,s$VG_n,s$VG_alpha,
-                                  krootmaxvec, rootc,rootd,
-                                  kstemmax, stemc,stemd,
-                                  kleafmax, leafc, leafd,
-                                  PLCstem = plcCav,
-                                  maxNsteps = 400, psiMax = psiMax)
-  sfn3 = hydraulics.supplyFunctionNetwork(psiSoilLayers3,
-                                  krhizomaxvec1,s$VG_n,s$VG_alpha,
-                                  krootmaxvec, rootc,rootd,
-                                  kstemmax, stemc,stemd,
-                                  kleafmax, leafc, leafd,
-                                  PLCstem = plcCav,
-                                  maxNsteps = 400, psiMax = psiMax)
-  sfn4 = hydraulics.supplyFunctionNetwork(psiSoilLayers4,
-                                  krhizomaxvec1,s$VG_n,s$VG_alpha,
-                                  krootmaxvec, rootc,rootd,
-                                  kstemmax, stemc,stemd,
-                                  kleafmax, leafc, leafd,
-                                  PLCstem = plcCav,
-                                  maxNsteps = 400, psiMax = psiMax)
-  if(i==1) {
-    plot(-sfn1$psiLeaf, sfn1$E ,type="l", ylab="Flow rate  (mmol·m-2·s-1)", 
-       xlab = "Leaf Pressure (-MPa)",  main="",  xlim=c(0, 7), ylim=c(0,max(sfn1$E)), lwd=1, col = col1)
-    lines(-sfn2$psiLeaf, sfn2$E,lwd=1, lty=1, col = col2)
-    lines(-sfn3$psiLeaf, sfn3$E,lwd=1, lty=1, col = col3)
-    lines(-sfn4$psiLeaf, sfn4$E,lwd=1, lty=1, col = col4)
-  } else {
-    lines(-sfn1$psiLeaf, sfn1$E,lwd=1, lty=i, col = col1)
-    lines(-sfn2$psiLeaf, sfn2$E,lwd=1, lty=i, col = col2)
-    lines(-sfn3$psiLeaf, sfn3$E,lwd=1, lty=i, col = col3)
-    lines(-sfn4$psiLeaf, sfn4$E,lwd=1, lty=i, col = col4)
-  }  
-}
-abline(h=0, col="gray")
-legend("topright",legend=paste("av. resist ", pres), bty="n", lty=1:4, cex=0.8)
-@
-
-Sperry et al. (2016a) found average percentages of rhizosphere resistance around 67\%, but these exceptionally-high values were a consequence of using an unsegmented supply function (i.e. single vulnerability curve for roots and stem). If we specify a 15\% of average resistance in the rhizosphere (see parameter \texttt{averageFracRhizosphereResistance} in function \texttt{defaultControl()}), the maximum rhizosphere conductance values for the three layers are found calling:
-<<>>=
-krmax = rep(0,3) 
-krmax[1]= hydraulics.findRhizosphereMaximumConductance(15, 
-                     s$VG_n[1],s$VG_alpha[1],
-                     krootmax, rootc,rootd, 
-                     kstemmax, stemc, stemd,
-                     kleafmax, leafc, leafd)
-krmax[2] = hydraulics.findRhizosphereMaximumConductance(15, 
-                      s$VG_n[2],s$VG_alpha[2],
-                      krootmax, rootc,rootd, 
-                      kstemmax, stemc, stemd,
-                      kleafmax, leafc, leafd)
-krmax[3] = hydraulics.findRhizosphereMaximumConductance(15, 
-                      s$VG_n[3],s$VG_alpha[3],
-                      krootmax, rootc,rootd, 
-                      kstemmax, stemc, stemd,
-                      kleafmax, leafc, leafd)
-krmax
-
-@
-The values are the same because the texture of the three layers is the same in this case. If we take into account root distribution, actual maximum rhizosphere conductance values are:
-<<>>=
-krmax*v1
-@
-
-
-\subsubsection{Water storage}
-The water storage capacity of sapwood tissue per leaf area unit ($V_{sapwood}$; in m$^3$·m$^{-2}$) can be estimated as the product of stem height ($H$ in m) and Huber value ($H_v$; ratio of sapwood area to leaf area in m$^2$·m$^{-2}$):
-\begin{equation}
-V_{sapwood} = H \cdot H_v \cdot \Theta_{sapwood}
-\end{equation}
-$\Theta_{sapwood}$ is sapwood porosity (cm$^3$ of water per cm$^3$ of sapwood tissue), which can be estimated from wood density ($\rho_{wood}$; in g·cm$^{-3}$):
-\begin{equation}
-\Theta_{sapwood} = 1 - (\rho_{wood} / 1.54)
-\end{equation}
-where the density of wood substance can be assumed to be fixed and equal to 1.54 g·cm$^{-3}$ (Dunlap 1914). For example, wood densities ranging from 0.443 to 1.000 g·cm$^{-3}$ result in sapwood porosity values between 0.35 and 0.71. 
-
-Water storage capacity of leaf tissue per leaf area unit ($V_{leaf}$; in m$^3$·m$^{-2}$) can be estimated as the product of specific leaf area (SLA; in m$^2$·kg$^{-1}$) and leaf density ($\rho_{leaf}$; in g·cm$^{-3}$):
-\begin{equation}
-V_{leaf} = \frac{1}{SLA \cdot \rho_{leaf}} \cdot \Theta_{leaf}
-\end{equation}
-$\Theta_{leaf}$ is leaf porosity (cm$^3$ of water per cm$^3$ of leaf tissue), which can be estimated from leaf density:
-\begin{equation}
-\Theta_{leaf} = 1 - (\rho_{leaf} / 1.54)
-\end{equation}
-where the density of wood substance can be assumed to be fixed and equal to 1.54 g·cm$^{-3}$ (Dunlap 1914). 
-
-For example, let's calculate the stem and leaf water capacity for a Q. ilex tree of 15 m height:
-<<>>==
-wd = 1.0
-Al2As = 2512 
-H = 1500 # 15 m
-hydraulics.stemWaterCapacity(Al2As, H, wd)
-
-ld = 0.7
-SLA = 5.870 
-hydraulics.leafWaterCapacity(SLA, ld)
-@ 
-
-Stem PI0 and Stem EPS from wood density
-\begin{equation}
-\pi_{0,stem} = 0.52 - 4.16 \cdot \rho_{wood}
-\end{equation}
-
-\begin{equation}
-\epsilon_{stem} = \sqrt{1.02 \cdot e^{8.5\cdot \rho_{wood}}-2.89}
-\end{equation}
 
 \section{Leaf VPD, conductance to water vapor and photosynthesis}
 The water supply function specifies the flow rate, as per leaf area, for values of leaf water potential. If we know air temperature, air vapour pressure and the light conditions in which leaves are, we can be translate the supply function into a photosynthesis function (Sperry et al. 2016b). In a nutshell, $E$ from the supply function is used to calculate leaf temperature from an evaluation of the leaf energy balance. The diffusive conductances of the leaf to water and CO2 are obtained from water supply and water vapor deficit. The gross assimilation rate is then obtained from the diffusive conductance and a modelled curve between assimilation and leaf internal CO2 concentration. Gross assimilation is calculated, without subtracting autotrophic respiration, because the purpose is to represent the instantaneous gain of opening the stomata. Nevertheless autotrophic respiration is included when calculating leaf net photosynthesis. 
@@ -1687,9 +1344,9 @@ abline(h=Gmax, col="gray", lty=2, lwd=1.5)
 legend("topleft", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 @
 \end{center}
-Hence, larger values of transpiration require larger values of leaf water vapour conductance. In the previous figure we have indicated the thresholds of $g_{swmin}$ and $g_{swmax}$, the species-specific minimum and maximum water vapour conductances (i.e. conductances when stomata are fully closed and fully open, respectively; see parameters \texttt{Gwmin} and \texttt{Gmax} in \texttt{SpParamsMED}).
+Hence, larger values of transpiration require larger values of leaf water vapour conductance. In the previous figure we have indicated the thresholds of $g_{swmin}$ and $g_{swmax}$, the species-specific minimum and maximum water vapour conductances (i.e. conductances when stomata are fully closed and fully open, respectively; see parameters \texttt{Gwmin} and \texttt{Gwmax} in \texttt{SpParamsMED}).
 <<>>=
-Gmin = 0.00001;
+Gmin = 0.0045;
 Gmax = 0.3
 @
 $g_{sw}$ cannot exceed $g_{swmax}$ so that some flow rates may not be possible (see stomatal regulation below). However, $g_{swmax}$ should quickly become non-limiting as soil dries (i.e. reducing $E$) or $VPD_{leaf}$ increases (Sperry et al. 2016a). Minimum stomatal conductance is also used in \texttt{medfate} when building the supply function, as it specifies the minimum flow rates that will occur for completely-closed stomata, i.e. the minimum flow from which supply function is build.
@@ -2630,25 +2287,407 @@ where $LAI_{sunlit}$ and $LAI_{shade}$ are the cohorts LAI values for sunlit and
 \end{equation}
 Profit maximization calculations for shade and sunlit leaves imply different amount of water extracted from the soil layers and different plant water potentials. To overcome this issue, we must use the hydraulic supply function  to find the extraction flows from soil layers, the  water potential at the root crown and the 'average' water potential of the crown all corresponding to the average flow $E_{plant}$.
 
+\section{Parameterization}
+
+\subsection{Hydraulics}
+\subsubsection{Vulnerability curves}
+Leaf and xylem vulnerability curves are often described using $\Psi_{50}$, the water potential at which hydraulic conductance is half of maximum. As noted above, parameter $d$ in eq. \ref{eq:xylemvulnerability} is the water potential $\Psi$ at which $k_{x}(\Psi)/k_{x,max} = e^{-1} = 0.367$ (and the same for eq. \ref{eq:leafvulnerability}). Hence, the two definitions do not match. Using the definition of $\Psi_{50}$ in eq. \ref{eq:xylemvulnerability} we have:
+\begin{equation}
+0.5 = e^{-((\Psi_{50}/d)^c)}
+\end{equation}
+from which we obtain that the value for parameter $d$ should be:
+\begin{equation}
+d = \frac{\Psi_{50}}{(-ln(0.5))^{1/c}}= \frac{\Psi_{50}}{0.69314^{1/c}}
+\end{equation}
+Hence, this operation should be used when specifying this parameter from $\Psi_{50}$. Vulnerability curves for root xylem are less common than for stem xylem. If these values are missing, functions \texttt{swbInput()} and \texttt{forest2swbInput()} will use for $c$ the same value as in stems, and for $d$ half the value of that of stems (Sperry et al. 2016a). If the values for leaves are missing, functions \texttt{swbInput()} and \texttt{forest2swbInput()} will use for $c$ the same value as in stems, and for $d$ 66\% of the value for stems.
+
+Rhizosphere conductance is regulated in the model using the van Genuchten function (eq. \ref{eq:rhizovulnerability}), and parameters $n$ and $\alpha$ for each soil layer were already available from soil initialization (i.e. function \texttt{soil()}):
+<<>>=
+s = soil(defaultSoilParams(3))
+s$VG_n
+s$VG_alpha
+@
+
+Aboveground and belowground stem maximum conductance values at the plant level ($k_{s, max}$ and $k_{r, max}$) will not be normally available and the same for the rhizosphere ($k_{rh, max}$). \texttt{medfate} provides routines to estimate them from a minimum set of input parameters. The whole process of estimation of those parameters is done automatically in functions \texttt{swbInput()} and \texttt{forest2swbInput()}, with the user controlling the process through parameter \texttt{control} (see function \texttt{defaultControl()} for control parameter defaults). In the following we detail the calculations and present individual functions that perform partial calculations.
+
+\subsubsection{Leaf maximum conductance}
+Leaf maximum conductance ($k_{l, max}$, in mmol·m$^{-2}$·s$^{-1}$·MPa$^{-1}$) is an input parameter that should be provided for each species. When missing, leaf maximum hydraulic conductance is assumed $k_{l, max}=6$ for conifers and $k_{l, max}=8$ for angiosperms (Sack \emph{et al.} 2006).
+
+\subsubsection{Stem xylem maximum conductance}
+Estimation of maximum stem conductance ($k_{s,max}$, in mmol·m$^{-2}$·s$^{-1}$·MPa$^{-1}$) is done by function \texttt{hydraulics.maximumStemHydraulicConductance()} and follows the work by Savage \emph{et al.} (2010), Olson \emph{et al.} (2014) and Christoffersen \emph{et al.} (2016). Calculations are based on tree height and two species-specific parameters: maximum sapwood reference conductivity ($K_{s,max,ref}$, in kg·m$^{-1}$·s$^{-1}$·MPa$^{-1}$;  see parameter \texttt{xylem\_kmax} in \texttt{SpParamsMED}) and the ratio of leaf area to sapwood area ($A_{l}/A_{s}$; \texttt{Al2As} in \texttt{SpParamsMED}), i.e. the inverse of the Huber value $H_v$.
+
+The reference value for maximum sapwood conductivity $K_{s,max,ref}$ is assumed to have been measured on a \emph{terminal branch} of a plant of known height $H_{ref}$. If our target plant is very different in height, the conduits of terminal branches will have different radius and hence conductivity. We correct the reference conductivity to the target plant height using the following empirical relationship, developed by Olson \emph{et al.} (2014) between tree height and diameter of conduits for angiosperms and the equation described by Christoffersen \emph{et al.} (2016):
+\begin{eqnarray}
+2 \cdot r_{int,H}&=& 10^{1.257+(0.24\cdot log_{10}(H))} \\
+2 \cdot r_{int,ref}&=&10^{1.257+(0.24\cdot log_{10}(H_{ref}))}\\
+K_{s,max,cor}&=&K_{s,max,ref}\cdot (r_{int,H}/r_{int,ref})^{2}
+\end{eqnarray}
+Where $r_{int,H}$ is the radius of conduits for a terminal branch of a tree of height $H$ and $r_{int,ref}$ is the corresponding radius for a tree of height $H_{ref}$ ($H$ and $H_{ref}$ are measured in m). The form of the empirical relationship by Olson \emph{et al.} (2014) is:
+
+<<fig=TRUE, width=5, height=5, echo=FALSE>>=
+rad <- numeric(length(50:5000))
+Hs <- 50:5000
+
+rad = 0.5*10^(1.257+ 0.24 * log10(Hs/100))
+
+plot(Hs/100, rad, type = 'l', xlab = 'H [m]',
+     ylab = 'Conduit radius (in micras)', log="x")
+@
+
+
+Let's consider an example for a \emph{Quercus ilex} target tree of 4m height and where species-specific conductivity $K_{s,max,ref} = 0.77$ is the apical value for trees of $H_{ref} = 6.6$ m (in \texttt{medfate}, values of $H_{ref}$ are taken from median height values; see parameter \texttt{Hmed} in \texttt{SpParamsMED}). The corrected conductivity  for a tree of height 4 m will be a bit lower than that of the reference height:
+<<>>=
+xylem_kmax = 0.77
+H = 400 # in cm
+Href = 660 # in cm
+f = hydraulics.referenceConductivityHeightFactor(Href, H);
+f
+xylem_kmax_cor = xylem_kmax * f
+xylem_kmax_cor
+@
+
+Once the reference conductivity is corrected, the maximum stem conductance without accounting for conduit taper is:
+\begin{equation}
+k_{s,max, notaper}=\frac{1000}{0.018} \frac{K_{s,max,cor}\cdot A_{s}}{H\cdot A_{l}}
+\end{equation}
+where $H$ is the tree height (here in m), $A_{s}$ is the sapwood area, $A_{l}$ is the leaf area and 1000/0.018 is a factor used to go from kg to mmol. The ratio $A_{l}/A_{s} = 1/H_v$ is a fixed species parameter in soil water balance calculations (see parameter \texttt{Al2As} in \texttt{SpParamsMED}), but becomes variable when simulating plant growth. Let's assume that \emph{Quercus ilex} the leaf to sapwood area ratio is $A_{l}/A_{s} = 2512$. The maximum (leaf-specific) stem conductance without taper ($k_{s, max, notaper}$) for the tree of 4 m height is then:
+
+<<>>==
+Al2As = 2512 
+
+kstemmax = hydraulics.maximumStemHydraulicConductance(xylem_kmax, 
+                  Href, Al2As, H, angiosperm = TRUE,taper = FALSE)
+kstemmax
+@ 
+
+In order to consider taper of xylem conduits we calculate the whole-tree conductance per unit leaf area ($k_{s, max, taper}$) as described in Christoffersen \emph{et al.} (2016):
+\begin{equation}
+k_{s, max, taper}=\frac{1000}{0.018} \cdot \frac{K_{s,max,pet}\cdot A_{s}}{H\cdot A_{l}}\cdot \chi_{tap:notap,ag}(H)
+\end{equation}
+where $K_{s,max,pet}$ is the conductivity at the petiole level and $\chi_{tap:notap,ag}(H)$ is the taper factor accounting for the decrease in the xylem conduits diameter with the height, from the petiole to base of the trunk, which mitigates the negative effects of height on the hydraulic safety. The conductivity at the petiole level is obtained from $K_{s,max,ref}$ using again:
+\begin{equation}
+K_{s,max,pet} = K_{s,max,ref}\cdot (r_{int, pet}/r_{int,ref})^{2}
+\end{equation}
+where $r_{int, pet}$ is the radius of the petiole in the model of Savage et al. (2010). Christofferset et al. (2016) use $r_{int, pet} = 10$ $\mu$m but we define it as the radius of apical conduits in a tree of 1 m height:
+<<>>=
+hydraulics.terminalConduitRadius(100.0)
+@
+$\chi_{tap:notap,ag}(H)$ is calculated as described in the Appendix 1 section of Christoffersen \emph{et al.} (2016) (see also Savage et al. 2010). The following figure shows the value of $\chi_{tap:notap,ag}$ for different heights:
+
+<<fig=TRUE, width=5, height=5, echo=FALSE>>=
+tapnotap <- numeric(length(10:5000))
+Hs <- 10:5000
+
+for(i in 1:length(Hs)) tapnotap[i] = hydraulics.taperFactorSavage(Hs[i])
+plot(Hs/100, tapnotap, type = 'l', xlab = 'H [m]',
+     ylab = 'Taper conductance factor', log="x")
+abline(v=1, col="gray", lty=2)
+abline(h=tapnotap[which(Hs==100)], col="gray", lty=2)
+@
+
+Note that, since $\chi_{tap:notap,ag}(1) = 3.82$ (indicated using grey dashed lines in the last figure), the equation of maximum conductance with taper would give a higher conductance than the equation without taper for a tree of 1 m height, which is supposed to have a conductance equal to conductivity. To solve this issue we define the taper factor as $\chi_{tap:notap,ag}(H)/\chi_{tap:notap,ag}(1)$:
+\begin{equation}
+k_{s, max, taper}=\frac{1000}{0.018} \cdot \frac{K_{s,max,pet}\cdot A_{s}}{H\cdot A_{l}}\cdot \frac{\chi_{tap:notap,ag}(H)}{\chi_{tap:notap,ag}(1)}
+\end{equation}
+The maximum stem conductance with taper ($k_{s, max, taper}$) of a \emph{Q. ilex} tree of 4 m height, calculated with this second equation, is:
+
+<<>>==
+kstemmax_tap = hydraulics.maximumStemHydraulicConductance(xylem_kmax, 
+                      Href, Al2As, H, angiosperm = TRUE, taper = TRUE)
+kstemmax_tap
+@ 
+
+The next two plots show the variation of $k_{s,max}$ for \emph{Quercus ilex} depending on the tree height and with/without considering taper of conduits. The plot on the right (both axes in log) show the slope of the dependency of conductance with height in both cases:
+
+<<fig=TRUE, width=10, height=5, echo=FALSE>>=
+par(mfrow=c(1,2))
+qi_with_tap <- numeric(length(50:5000))
+qi_no_tap <- qi_with_tap
+Hs <- 50:5000
+
+for (i in 1:length(Hs)) {
+  qi_with_tap[i] <- hydraulics.maximumStemHydraulicConductance(
+  xylem_kmax, Href, Al2As, Hs[i], angiosperm = TRUE, taper =TRUE
+)
+  qi_no_tap[i] <- hydraulics.maximumStemHydraulicConductance(
+  xylem_kmax, Href, Al2As, Hs[i], angiosperm = TRUE,taper = FALSE
+)
+}
+
+plot(Hs/100, qi_with_tap, type = 'l', xlab = 'H [m] (log)',
+     ylim = c(min(c(qi_with_tap,qi_no_tap)), max(c(qi_with_tap,qi_no_tap))),
+     ylab = 'Maximum stem conductance (mmol·m-2·s-1·MPa-1)', log="x", xlim=c(0.5,50))
+lines(Hs/100, qi_no_tap, lty = 2)
+legend('topright', legend = c('Taper', 'No taper'), lty = 1:2, bty="n")
+plot(Hs/100, qi_with_tap, type = 'l', xlab = 'H [m] (log)',
+     ylim = c(min(c(qi_with_tap,qi_no_tap)), max(c(qi_with_tap,qi_no_tap))),
+     ylab = 'Maximum stem conductance (mmol·m-2·s-1·MPa-1) (log)', log="xy", xlim=c(0.5,50))
+lines(Hs/100, qi_no_tap, lty = 2)
+legend('topright', legend = c('Taper', 'No taper'), lty = 1:2, bty="n")
+@
+
+
+
+\subsubsection{Root xylem maximum hydraulic conductance}
+To obtain maximum root xylem conductance ($k_{r, max}$, in mmol·m$^{-2}$·s$^{-1}$·MPa$^{-1}$), one option taken by Christoffersen et al. (2016) is to assume that minimum stem resistance (inverse of maximum conductance) represents a fixed proportion of the minimum total tree (stem+root) resistance. A value 0.625 (i.e. 62.5\%) suggested by these authors leads to maximum total tree conductance for our \emph{Q. ilex} tree being:
+<<>>==
+ktot = kstemmax*0.625
+ktot
+@
+and the maximum root xylem conductance would be therefore:
+<<>>==
+krootmax = 1/((1/ktot)-(1/kstemmax))
+krootmax
+@ 
+Now, we need to divide total maximum conductance of the root system xylem among soil layers we need weights inversely proportional to the length of transport distances (Sperry et al. 2016). Vertical transport lengths can be calculated from soil depths and radial spread can be calculated assuming cylinders with volume proportional to the proportions of fine root biomass. Let's assume a soil with three layers:
+<<>>==
+d = s$dVec
+d
+@
+The proportion of fine roots in each layer, assuming a linear dose response model, will be:
+<<>>==
+Z50 = 200
+Z95 = 1500
+v1 = root.ldrDistribution(Z50,Z95, d)
+v1
+@
+Having this information, the calculation of root length (i.e. the sum of vertical and radial lengths) to each layer ($L_j$) is done using function \texttt{root.rootLength()}:
+<<>>==
+rl = root.rootLengths(v1, d)
+rl
+@
+where lengths are in mm. The proportion of total root xylem conductance corresponding to each layer ($w_j$) is given by \texttt{root.xylemConductanceProportions()}:
+<<>>==
+w1 = root.xylemConductanceProportions(v1, d)
+w1
+@
+Xylem conductance proportions can be quite different than the fine root biomass proportions. This is because radial lengths are largest for the first top layers and vertical lengths are largest for the bottom layers. The maximum root xylem conductances of each layer will be the product of maximum total conductance of root xylem and weights:
+<<>>=
+w1*krootmax
+@
+In \texttt{medfate} we calculate maximum root xylem conductance using a reference root xylem conductivity value ($K_{r,max,ref}$):
+\begin{equation}
+k_{r,max}=\frac{1000}{0.018} \cdot \sum_{j}{\frac{w_j \cdot K_{r,max,ref}\cdot A_{s}}{L_j\cdot A_{l}}}
+\end{equation}
+where $w_j$ are root xylem conductance proportion of layer $j$ and $L_j$ is the root length (in m) to layer $j$. Note that here we use weights $w_j$ assuming they represent proportions of total sapwood area that come from each layer (i.e. the longer the path the larger the proportion of sapwood area). This calculation is made available by function \texttt{hydraulics.maximumRootHydraulicConductance()}. Let's consider the same \emph{Q. ilex} tree of 4m height as before. If we specify root xylem specific conductivity as $K_{r,max,ref} = K_{s,max,ref} =0.77$ we have:
+<<>>=
+rootxylem_kmax = 0.77
+krootmax = hydraulics.maximumRootHydraulicConductance(rootxylem_kmax, Al2As, 
+                                                      v1, d)
+krootmax
+@
+The maximum root xylem conductances of each layer would be:
+<<>>=
+krootmaxvec = w1*krootmax
+krootmaxvec
+@
+and the fraction of total xylem resistance due to stem would be:
+<<>>=
+(1/kstemmax)/((1/kstemmax)+(1/krootmax))
+@
+In contrast with the approach of Christoffersen \emph{et al.} (2016), in this approach the root maximum conductance depends root length and distribution, and is not a fixed fraction of stem maximum conductance. Assuming constant root length, then the proportion of total resistance due to the stem will increase with tree height (Magnani \emph{et al.} 2000):
+
+<<fig=TRUE, width=4.5, height=4.5, echo=FALSE>>=
+p_stem <- numeric(length(50:5000))
+Hs <- 50:5000
+
+for (i in 1:length(Hs)) {
+  ks <- hydraulics.maximumStemHydraulicConductance(xylem_kmax, Href, Al2As, Hs[i], taper = FALSE)
+  p_stem[i] = (1/ks)/((1/ks)+(1/krootmax))
+}
+
+plot(Hs/100, p_stem*100, type = 'l', xlab = 'H [m]', ylab = 'Percentage of total resistance due to stem', log="x", ylim=c(0,100),
+     xlim=c(0.5,50))
+abline(h=62.5, col="gray")
+@
+
+where the horizontal gray line indicates the value of 62.5\%. Of course rooting depth also increases with tree age, but young trees have higher root-to-shoot ratios than older ones. Hence, a root maximum conductance that is not fixed but increases with age seems a priori more realistic. Moreover, Christoffersen \emph{et al.} (2016) justify the value of 62.5\% from a study which quantified total aboveground and belowground resistance in tropical trees (Fisher \emph{et al.} 2006) under near-saturated (wet season) conditions, but values of belowground resistance reported in this study for wet conditions and trees of 30 m height are around 13\%, which equals to 87\% fraction of aboveground resistance. On the other hand, while rooting depths are limited by soil depth, lateral root length increases with age and, hence, the model could be made more realistic if this is taken into account and the curve above would probably saturate at lower percentages.
+
+\subsubsection{Rhizosphere maximum hydraulic conductance}
+Maximum rhizosphere conductance ($k_{rh, max}$, in mmol·m$^{-2}$·s$^{-1}$·MPa$^{-1}$) is difficult to measure directly, as it depends on the rhizosphere (i.e. fine root) surface in each soil layer, and will probably always be a parameter to be calibrated. Instead of trying to estimate rhizosphere surface from root architecture (Sperry \emph{et al.} 1998), we follow Sperry \emph{et al.} (2016) and determine the maximum rhizosphere conductance in each layer from an inputed 'average percentage rhizosphere resistance'. The percentage of continuum resistance corresponding to the rhizosphere is calculated from the vulnerability curves of stem, root and rhizosphere at the same water potential. The average resistance is found by evaluating the percentage for water potential values between 0 and $\Psi_{crit}$. The following figure illustrates how the supply function, for different soil water potentials, is affected by increasing values of the average percentage of rhizosphere resistance:
+
+<<fig=TRUE, width=4.5, height=4.5, echo=FALSE>>=
+krhizomaxvec1 = rep(0,3)
+pres = c(5,20,35,50)
+for(i in 1:length(pres)) {
+  krhizomaxvec1[1]= hydraulics.findRhizosphereMaximumConductance(pres[i], 
+                     s$VG_n[1],s$VG_alpha[1],
+                     krootmax, rootc,rootd, 
+                     kstemmax, stemc, stemd,
+                     kleafmax, leafc, leafd)
+  krhizomaxvec1[2]= hydraulics.findRhizosphereMaximumConductance(pres[i], 
+                     s$VG_n[2],s$VG_alpha[2],
+                     krootmax, rootc,rootd, 
+                     kstemmax, stemc, stemd,
+                     kleafmax, leafc, leafd)
+  krhizomaxvec1[3]= hydraulics.findRhizosphereMaximumConductance(pres[i], 
+                     s$VG_n[3],s$VG_alpha[3],
+                     krootmax, rootc,rootd, 
+                     kstemmax, stemc, stemd,
+                     kleafmax, leafc, leafd)
+  sfn1 = hydraulics.supplyFunctionNetwork(psiSoilLayers1,
+                                  krhizomaxvec1,s$VG_n,s$VG_alpha,
+                                  krootmaxvec, rootc,rootd,
+                                  kstemmax, stemc,stemd,
+                                  kleafmax, leafc, leafd,
+                                  PLCstem = plcCav,
+                                  maxNsteps = 400, psiMax = psiMax)
+  sfn2 = hydraulics.supplyFunctionNetwork(psiSoilLayers2,
+                                  krhizomaxvec1,s$VG_n,s$VG_alpha,
+                                  krootmaxvec, rootc,rootd,
+                                  kstemmax, stemc,stemd,
+                                  kleafmax, leafc, leafd,
+                                  PLCstem = plcCav,
+                                  maxNsteps = 400, psiMax = psiMax)
+  sfn3 = hydraulics.supplyFunctionNetwork(psiSoilLayers3,
+                                  krhizomaxvec1,s$VG_n,s$VG_alpha,
+                                  krootmaxvec, rootc,rootd,
+                                  kstemmax, stemc,stemd,
+                                  kleafmax, leafc, leafd,
+                                  PLCstem = plcCav,
+                                  maxNsteps = 400, psiMax = psiMax)
+  sfn4 = hydraulics.supplyFunctionNetwork(psiSoilLayers4,
+                                  krhizomaxvec1,s$VG_n,s$VG_alpha,
+                                  krootmaxvec, rootc,rootd,
+                                  kstemmax, stemc,stemd,
+                                  kleafmax, leafc, leafd,
+                                  PLCstem = plcCav,
+                                  maxNsteps = 400, psiMax = psiMax)
+  if(i==1) {
+    plot(-sfn1$psiLeaf, sfn1$E ,type="l", ylab="Flow rate  (mmol·m-2·s-1)", 
+       xlab = "Leaf Pressure (-MPa)",  main="",  xlim=c(0, 7), ylim=c(0,max(sfn1$E)), lwd=1, col = col1)
+    lines(-sfn2$psiLeaf, sfn2$E,lwd=1, lty=1, col = col2)
+    lines(-sfn3$psiLeaf, sfn3$E,lwd=1, lty=1, col = col3)
+    lines(-sfn4$psiLeaf, sfn4$E,lwd=1, lty=1, col = col4)
+  } else {
+    lines(-sfn1$psiLeaf, sfn1$E,lwd=1, lty=i, col = col1)
+    lines(-sfn2$psiLeaf, sfn2$E,lwd=1, lty=i, col = col2)
+    lines(-sfn3$psiLeaf, sfn3$E,lwd=1, lty=i, col = col3)
+    lines(-sfn4$psiLeaf, sfn4$E,lwd=1, lty=i, col = col4)
+  }  
+}
+abline(h=0, col="gray")
+legend("topright",legend=paste("av. resist ", pres), bty="n", lty=1:4, cex=0.8)
+@
+
+Sperry et al. (2016a) found average percentages of rhizosphere resistance around 67\%, but these exceptionally-high values were a consequence of using an unsegmented supply function (i.e. single vulnerability curve for roots and stem). If we specify a 15\% of average resistance in the rhizosphere (see parameter \texttt{averageFracRhizosphereResistance} in function \texttt{defaultControl()}), the maximum rhizosphere conductance values for the three layers are found calling:
+<<>>=
+krmax = rep(0,3) 
+krmax[1]= hydraulics.findRhizosphereMaximumConductance(15, 
+                     s$VG_n[1],s$VG_alpha[1],
+                     krootmax, rootc,rootd, 
+                     kstemmax, stemc, stemd,
+                     kleafmax, leafc, leafd)
+krmax[2] = hydraulics.findRhizosphereMaximumConductance(15, 
+                      s$VG_n[2],s$VG_alpha[2],
+                      krootmax, rootc,rootd, 
+                      kstemmax, stemc, stemd,
+                      kleafmax, leafc, leafd)
+krmax[3] = hydraulics.findRhizosphereMaximumConductance(15, 
+                      s$VG_n[3],s$VG_alpha[3],
+                      krootmax, rootc,rootd, 
+                      kstemmax, stemc, stemd,
+                      kleafmax, leafc, leafd)
+krmax
+
+@
+The values are the same because the texture of the three layers is the same in this case. If we take into account root distribution, actual maximum rhizosphere conductance values are:
+<<>>=
+krmax*v1
+@
+
+\subsubsection{Pressure-volume curves}
+
+Parameters of the pressure-volume curve (i.e. $\pi_{0,stem}$ and $\epsilon_{stem}$ for stem symplastic tissue are required for each species. When missing, \texttt{medfate} estimates them from wood density following Christophersen et al (2016):
+\begin{equation}
+\pi_{0,stem} = 0.52 - 4.16 \cdot \rho_{wood}
+\end{equation}
+
+\begin{equation}
+\epsilon_{stem} = \sqrt{1.02 \cdot e^{8.5\cdot \rho_{wood}}-2.89}
+\end{equation}
+
+\subsubsection{Water storage capacity}
+The water storage capacity of sapwood tissue per leaf area unit ($V_{sapwood}$; in m$^3$·m$^{-2}$) can be estimated as the product of stem height ($H$ in m) and Huber value ($H_v$; ratio of sapwood area to leaf area in m$^2$·m$^{-2}$):
+\begin{equation}
+V_{sapwood} = H \cdot H_v \cdot \Theta_{sapwood}
+\end{equation}
+$\Theta_{sapwood}$ is sapwood porosity (cm$^3$ of water per cm$^3$ of sapwood tissue), which can be estimated from wood density ($\rho_{wood}$; in g·cm$^{-3}$):
+\begin{equation}
+\Theta_{sapwood} = 1 - (\rho_{wood} / 1.54)
+\end{equation}
+where the density of wood substance can be assumed to be fixed and equal to 1.54 g·cm$^{-3}$ (Dunlap 1914). For example, wood densities ranging from 0.443 to 1.000 g·cm$^{-3}$ result in sapwood porosity values between 0.35 and 0.71. 
+
+Water storage capacity of leaf tissue per leaf area unit ($V_{leaf}$; in m$^3$·m$^{-2}$) can be estimated as the product of specific leaf area (SLA; in m$^2$·kg$^{-1}$) and leaf density ($\rho_{leaf}$; in g·cm$^{-3}$):
+\begin{equation}
+V_{leaf} = \frac{1}{SLA \cdot \rho_{leaf}} \cdot \Theta_{leaf}
+\end{equation}
+$\Theta_{leaf}$ is leaf porosity (cm$^3$ of water per cm$^3$ of leaf tissue), which can be estimated from leaf density:
+\begin{equation}
+\Theta_{leaf} = 1 - (\rho_{leaf} / 1.54)
+\end{equation}
+where the density of wood substance can be assumed to be fixed and equal to 1.54 g·cm$^{-3}$ (Dunlap 1914). 
+
+For example, let's calculate the stem and leaf water capacity for a Q. ilex tree of 15 m height:
+<<>>==
+wd = 1.0
+Al2As = 2512 
+H = 1500 # 15 m
+hydraulics.stemWaterCapacity(Al2As, H, wd)
+
+ld = 0.7
+SLA = 5.870 
+hydraulics.leafWaterCapacity(SLA, ld)
+@ 
+
+
+\subsection{Stomatal regulation and photosynthesis}
+\subsubsection{Stomatal conductance}
+Maximum stomatal conductance ($g_{swmax}$) is an input parameter for each species. When species-specific values are missing, the following relation with maximum hydraulic conductance ($k_{l, max}$) is used (Mencuccini 2003):
+\begin{equation}
+g_{swmax} = e^{4.797 + 0.633\cdot \log(k_{l, max})}
+\end{equation}
+
+Species values for $g_{swmin}$ were taken from Duursma et al. (2018). Following the same authors, a value of $g_{swmin}$ = 0.0045 mol H$_2$O·s$^{-1}$·m$^{-2}$ is taken as default, when species-specific values are missing.
+
+\subsubsection{Photosynthesis}
+
+Rubisco's maximum carboxylation rate at 25ºC ($V_{max, 298}$, in $\mu$mol CO$_2$·s$^{-1}$·m$^{-2}$) is a required input parameter for each species (\texttt{Vmax298}). The maximum rate of electron transport at the same temperature ($J_{max, 298}$) is estimated from $V_{max, 298}$ using (Walker et al. 2014):
+
+\begin{equation}
+J_{max, 298} = e^{1.197 + 0.847\cdot \log(V_{max,298})}
+\end{equation}
 \section{Symbols}
 
+\subsection{Hydraulics}
 \begin{center}
     \begin{tabular}{| l | p{2cm} | l | p{5cm} |}
     \hline
     Symbol & Units & Param. & Description \\ \hline
-    k_{s, max} & mmol·s$^{-1}$ ·m$^{-2}$·MPa$^{-1}$ &  & Maximum whole-stem conductance (per leaf area unit). \\ \hline
-    k_{r, max} & mmol·s$^{-1}$ ·m$^{-2}$·MPa$^{-1}$ &  & Maximum root conductance (per leaf area unit). \\ \hline
-    k_{l, max} & mmol·s$^{-1}$ ·m$^{-2}$·MPa$^{-1}$ &  & Maximum leaf conductance (per leaf area unit). \\ \hline
-    H_v & m$^2$·m$^{-2}$ & 1/\texttt{Al2As} & Huber value (ratio of sapwood area to leaf area). \\ \hline
-    \Psi_{cav} & MPa & & Minimum water potential experienced by xylem in previous steps (cavitation). \\ \hline
+    $k_{s, max}$ & mmol·s$^{-1}$ ·m$^{-2}$·MPa$^{-1}$ &  & Maximum whole-stem conductance (per leaf area unit). \\ \hline
+    $k_{r, max}$ & mmol·s$^{-1}$ ·m$^{-2}$·MPa$^{-1}$ &  & Maximum root conductance (per leaf area unit). \\ \hline
+    $k_{l, max}$ & mmol·s$^{-1}$ ·m$^{-2}$·MPa$^{-1}$ & \texttt{VCleaf\_kmax} & Maximum leaf conductance (per leaf area unit). \\ \hline
+    $H_v$ & m$^2$·m$^{-2}$ & 1/\texttt{Al2As} & Huber value (ratio of sapwood area to leaf area). \\ \hline
+    $\Psi_{cav}$ & MPa & & Minimum water potential experienced by xylem in previous steps (cavitation). \\ \hline
     $RWC$ & [0-1] & & Relative water content. \\ \hline
-    \rho_{wood} & g·cm$^{-3}$ & \texttt{WoodDens} & Wood density. \\ \hline
-    \Theta_{sapwood} & m$^3$·m$^{-3}$ & & Sapwood porosity (volume of empty spaces over total volume). \\ \hline
-    V_{sapwood} & m$^3$·m$^{-2}$ & & Sapwood water capacity per leaf area unit. \\ \hline
+    $\rho_{wood}$ & g·cm$^{-3}$ & \texttt{WoodDens} & Wood density. \\ \hline
+    $\Theta_{sapwood}$ & m$^3$·m$^{-3}$ & & Sapwood porosity (volume of empty spaces over total volume). \\ \hline
+    $V_{sapwood}$ & m$^3$·m$^{-2}$ & & Sapwood water capacity per leaf area unit. \\ \hline
     \end{tabular}
 \end{center}
 
 
+\subsection{Stomatal regulation and photosynthesis}
+\begin{center}
+    \begin{tabular}{| l | p{2cm} | l | p{5cm} |}
+        \hline
+        Symbol & Units & Param. & Description \\ \hline
+        $g_{swmin}$ & mol H$_2$O·s$^{-1}$·m$^{-2}$ & \texttt{Gwmin} & Minimum stomatal conductance to water vapour.\\ \hline
+        $g_{swmax}$ & mol H$_2$O·s$^{-1}$·m$^{-2}$ & \texttt{Gwmax} & Maximum stomatal conductance to water vapour. \\ \hline
+        $J_{max, 298}$ & $\mu$mol electrons·m$^{-2}$·s$^{-1}$ & & Maximum rate of electron transport at 298K \\ \hline
+        $V_{max, 298}$ & $\mu$mol CO$_2$·s$^{-1}$·m$^{-2}$ & \texttt{Vmax298} & Rubisco's maximum carboxylation rate at 298K \\ \hline
+    \end{tabular}
+\end{center}
 \section{References}
 \begin{itemize}
 \item{Bartlett, M.K., Scoffoni, C., & Sack, L. 2012. The determinants of leaf turgor loss point and prediction of drought tolerance of species and biomes: a global meta-analysis. Ecology Letters 15: 393–405.}
@@ -2658,11 +2697,13 @@ Profit maximization calculations for shade and sunlit leaves imply different amo
 \item{Collatz, G. J., J. T. Ball, C. Grivet, and J. A. Berry. 1991. Physiological and environmental regulation of stomatal conductance, photosynthesis and transpiration: a model that includes a laminar boundary layer. Agricultural and Forest Meteorology 54:107–136.}
 \item{De Pury, D.G.G. and Farquhar, G.D. 1997. Simple scaling of photosynthesis from leaves to canopies without the errors of big-leaf models. Plant, Cell and Environment, 20, 537–557.}
 \item{Dunlap F (1914) Density of wood substance and porosity of wood. J Agric Res II(6):423–428.}
+\item{Duursma RA, Blackman CJ, Lopéz R, et al (2018) On the minimum leaf conductance: its role in models of plant water use, and ecological and environmental controls. New Phytol. doi: 10.1111/nph.15395}
 \item{Fisher, R.A., Williams, M., Do Vale, L.R., Da Costa, A.L., Meir, P. 2006. Evidence from Amazonian forests is consistent with a model of isohydric control of leaf water potential. Plant, Cell and Environment 29: 151–165.}
 \item{Hölttä, T., Cochard, H., Nikinmaa, E., Mencuccini, M. 2009. Capacitive effect of cavitation in xylem conduits: Results from a dynamic model. Plant, Cell and Environment 32: 10–21.}
 \item{Medlyn, B. E., E. Dreyer, D. Ellsworth, M. Forstreuter, P. C. Harley, M. U. F. Kirschbaum, X. Le Roux, P. Montpied, J. Strassemeyer, A. Walcroft, K. Wang, and D. Loustau. 2002. Temperature response of parameters of a biochemically based model of photosynthesis. II. A review of experimental data. Plant, Cell and Environment 25:1167–1179.}
 \item{Magnani, F., Mencuccini, M.,  Grace, J. 2000. Age-related decline in stand productivity: The role of structural acclimation under hydraulic constraints. Plant, Cell and Environment 23: 251–263.}
 \item{Martin-StPaul, N., Delzon, S.,  Cochard, H. 2017. Plant resistance to drought depends on timely stomatal closure. Ecology Letters 20: 1437–1447.}
+\item{Mencuccini M (2003) The ecological significance of long-distance water transport : short-term regulation , long-term acclimation and the hydraulic costs of stature across plant life forms. Plant Cell Environ 26:163–182.}
 \item{Olson, M.E., Anfodillo, T., Rosell, J.A., Petit, G., Crivellaro, A., Isnard, S., León-Gómez, C., Alvarado-Cárdenas, L.O.,  Castorena, M. 2014. Universal hydraulics of the flowering plants: Vessel diameter scales with stem length across angiosperm lineages, habits and climates. Ecology Letters 17: 988–997.}
 \item{Sack, L.,  Holbrook, N.M. 2006. Leaf Hydraulics. Annual Review of Plant Biology 57: 361–381.}
 \item{Sperry, J. S., F. R. Adler, G. S. Campbell, and J. P. Comstock. 1998. Limitation of plant water use by rhizosphere and xylem conductance: results from a model. Plant, Cell \& Environment 21:347–359.}
@@ -2671,5 +2712,6 @@ Profit maximization calculations for shade and sunlit leaves imply different amo
 \item{Sperry, J. S., M. D. Venturas, W. R. L. Anderegg, M. Mencuccini, D. S. Mackay, Y. Wang, and D. M. Love. 2016b. Predicting stomatal responses to the environment from the optimization of photosynthetic gain and hydraulic cost. Plant Cell and Environment.}
 \item{Steppe K, Lemeur R, Vanrolleghem A. 2005. A mathematical model linking tree sap flow dynamics to dialy stem diameter fluctuation and radial stem growth. Tree Physiol 26:257–273}
 \item{Tyree, M.T., Yang, S. 1990. Water-storage capacity of Thuja, Tsuga and Acer stems measured by dehydration isotherms - The contribution of capillary water and cavitation. Planta 182: 420–426.}
+\item{Walker AP, Beckerman AP, Gu L, et al (2014) The relationship of leaf photosynthetic traits - Vcmax and Jmax - to leaf nitrogen, leaf phosphorus, and specific leaf area: A meta-analysis and modeling study. Ecol Evol 4:3218–3235. doi: 10.1002/ece3.1173}
 \end{itemize}
 \end{document}

@@ -244,13 +244,16 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
       Gwmin[c] = GwminSP[SP[c]];
       //Duursma RA, Blackman CJ, Lopéz R, et al (2018) On the minimum leaf conductance: its role in models of plant water use, and ecological and environmental controls. New Phytol. doi: 10.1111/nph.15395
       if(NumericVector::is_na(Gwmin[c])) Gwmin[c] = 0.0049;
+      //Mencuccini M (2003) The ecological significance of long-distance water transport : short-term regulation , long-term acclimation and the hydraulic costs of stature across plant life forms. Plant Cell Environ 26:163–182
       Gwmax[c] = GwmaxSP[SP[c]];
+      if(NumericVector::is_na(Gwmax[c])) Gwmax[c] = 0.12115*pow(VCleaf_kmax[c], 0.633);
       // double VCroot_kmaxc = 1.0/((1.0/(VCstem_kmax[c]*fracTotalTreeResistance))-(1.0/VCstem_kmax[c]));
       double VCroot_kmaxc = maximumRootHydraulicConductance(rootxylem_kmax[c],Al2As[c], Vc, dVec);
       VCroot_kmax(c,_) = VCroot_kmaxc*xylemConductanceProportions(Vc,dVec);
       VCroottot_kmax[c] = sum(VCroot_kmax(c,_));
       Vmax298[c] =Vmax298SP[SP[c]];
-      Jmax298[c] = exp(1.197 + 0.847*log(Vmax298[c])); //Walker et al 2014
+      //Walker AP, Beckerman AP, Gu L, et al (2014) The relationship of leaf photosynthetic traits - Vcmax and Jmax - to leaf nitrogen, leaf phosphorus, and specific leaf area: A meta-analysis and modeling study. Ecol Evol 4:3218–3235. doi: 10.1002/ece3.1173
+      Jmax298[c] = exp(1.197 + 0.847*log(Vmax298[c])); 
       for(int l=0;l<nlayers;l++) {
         
         VGrhizo_kmax(c,l) = V(c,l)*findRhizosphereMaximumConductance(averageFracRhizosphereResistance*100.0, VG_n[l], VG_alpha[l],
