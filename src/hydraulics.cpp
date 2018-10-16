@@ -726,7 +726,7 @@ List E2psiAbovegroundCapacitanceDisconnected(double E,
     
     //Calculate vertical and lateral flows among stem segments
     NumericVector FlatStem(n, NA_REAL);
-    NumericVector Fverapo1(n, 0.0), Fverapo2(n, 0.0), Fversym1(n, 0.0), Fversym2(n, 0.0);
+    NumericVector Fverapo1(n, 0.0), Fverapo2(n, 0.0);//, Fversym1(n, 0.0), Fversym2(n, 0.0);
     for(int i=0;i<n;i++) {
       //Lateral flow
       FlatStem[i] =  klat*(psiStorageStem[i]-psiStem[i]);
@@ -734,18 +734,18 @@ List E2psiAbovegroundCapacitanceDisconnected(double E,
       //Towards above
       if(i<(n-1)) {
         Fverapo2[i] = xylemConductance(std::min(psiStem[i], psiPLCStem[i]), kxsegmax, stemc, stemd)*(psiStem[i]-psiStem[i+1]);
-        Fversym2[i] = kstoseg*(psiStorageStem[i] - psiStorageStem[i+1]); 
+        // Fversym2[i] = kstoseg*(psiStorageStem[i] - psiStorageStem[i+1]); 
       } else {
         Fverapo2[i] = FverStemLeaf;
-        Fversym2[i] = 0.0;
+        // Fversym2[i] = 0.0;
       }
       //From below
       if(i>0) {
         Fverapo1[i] = xylemConductance(std::min(psiStem[i-1], psiPLCStem[i-1]), kxsegmax, stemc, stemd)*(psiStem[i-1]-psiStem[i]);
-        Fversym1[i] = kstoseg*(psiStorageStem[i-1]-psiStorageStem[i]);
+        // Fversym1[i] = kstoseg*(psiStorageStem[i-1]-psiStorageStem[i]);
       } else {
         Fverapo1[i] = 0.0;
-        Fversym1[i] = 0.0;
+        // Fversym1[i] = 0.0;
       }
       // Rcout<< FlatStem[i] << " "<<Fverapo1[i] << " "<<Fverapo2[i] <<" "<<Fversym1[i] << " "<<Fversym2[i] <<"\n";
     }
@@ -771,7 +771,8 @@ List E2psiAbovegroundCapacitanceDisconnected(double E,
       psiStem[i]=  apoplasticWaterPotential((VStem[i]/VStemMax[i]), stemc, stemd);
       // Rcout<< "VStem "<<VStem[i] << " psiStem "<<psiStem[i]<<"\n";
       //Symplastic compartment
-      RWCsympstem[i] = (Vsegmax*(1.0-stemfapo)*RWCsympstem[i] + (tstepsub/m3tommol)*(Fversym1[i] - Fversym2[i] - FlatStem[i]))/(Vsegmax*(1.0-stemfapo));
+      // RWCsympstem[i] = (Vsegmax*(1.0-stemfapo)*RWCsympstem[i] + (tstepsub/m3tommol)*(Fversym1[i] - Fversym2[i] - FlatStem[i]))/(Vsegmax*(1.0-stemfapo));
+      RWCsympstem[i] = (Vsegmax*(1.0-stemfapo)*RWCsympstem[i] - (tstepsub/m3tommol)*(FlatStem[i]))/(Vsegmax*(1.0-stemfapo));
       psiStorageStem[i] = symplasticWaterPotential(RWCsympstem[i], stempi0, stemeps);
     }
   }

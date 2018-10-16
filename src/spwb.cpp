@@ -903,8 +903,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
           if(verbose) Rcout<<"NS!";
         }
       } else { // If not connected to any soil layer
-        //Flow (cuticular conductance)
-        double minFlow = std::max(0.0,1000.0*(Gwmin[c]*(tmin+tmax)/2.0)/Patm);
+        //Flow (cuticular conductance) TO BE IMPROVED (iterative procedure to find flow, VPD and leaf temperature given Gwmin)
+        double minFlow = std::max(0.0,1000.0*(Gwmin[c]*Tcan[n])/Patm);
         
         //Sunlit photosynthesis
         double absRadSL = absSWR_SL[c] + LWR_emmcan*LAI_SL(c,n);
