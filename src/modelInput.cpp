@@ -227,7 +227,8 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
       if(NumericVector::is_na(VCroot_c[c])) VCroot_c[c] = VCstem_c[c];
       if(NumericVector::is_na(VCroot_d[c])) VCroot_d[c] = VCstem_d[c]/2.0;
       VCleaf_kmax[c] = VCleaf_kmaxSP[SP[c]];
-      if(NumericVector::is_na(VCleaf_kmax[c])) { //Sack, L., & Holbrook, N.M. 2006. Leaf Hydraulics. Annual Review of Plant Biology 57: 361–381.
+      //Sack, L., & Holbrook, N.M. 2006. Leaf Hydraulics. Annual Review of Plant Biology 57: 361–381.
+      if(NumericVector::is_na(VCleaf_kmax[c])) { 
         if(GroupSP[SP[c]]=="Angiosperm") {
           VCleaf_kmax[c] = 8.0;
         } else {
@@ -241,6 +242,8 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
       if(NumericVector::is_na(VCleaf_d[c])) VCleaf_d[c] = VCstem_d[c]/1.5;
       pRootDisc[c]=pRootDiscSP[SP[c]];
       Gwmin[c] = GwminSP[SP[c]];
+      //Duursma RA, Blackman CJ, Lopéz R, et al (2018) On the minimum leaf conductance: its role in models of plant water use, and ecological and environmental controls. New Phytol. doi: 10.1111/nph.15395
+      if(NumericVector::is_na(Gwmin[c])) Gwmin[c] = 0.0049;
       Gwmax[c] = GwmaxSP[SP[c]];
       // double VCroot_kmaxc = 1.0/((1.0/(VCstem_kmax[c]*fracTotalTreeResistance))-(1.0/VCstem_kmax[c]));
       double VCroot_kmaxc = maximumRootHydraulicConductance(rootxylem_kmax[c],Al2As[c], Vc, dVec);
