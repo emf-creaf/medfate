@@ -25,9 +25,7 @@ List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, i
   double Agmax = 0.0;
   //Find valid limits according to stomatal conductance
   int ini = 0, fin = nsteps-1;
-  while((Gw[ini]<=Gwmin) & (ini<fin)) ini +=1; 
-  while((Gw[fin]>=Gwmax) & (fin>ini)) fin -=1; 
-  
+ 
   for(int i=ini;i<fin;i++) {
     maxdEdp = std::max(maxdEdp, supplydEdp[i]);
     mindEdp =  std::min(mindEdp, supplydEdp[i]);
@@ -45,6 +43,9 @@ List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, i
     gain[i] = Ag[i]/Agmax;
     profit[i] = gain[i]-cost[i];
   }
+  
+  while((Gw[ini]<=Gwmin) & (ini<fin)) ini +=1; 
+  while((Gw[fin]>=Gwmax) & (fin>ini)) fin -=1; 
   
   int imaxprofit=ini;
   double maxprofit=profit[ini];
