@@ -2585,6 +2585,7 @@ The values are the same because the texture of the three layers is the same in t
 krmax*v1
 @
 
+\subsection{Plant water compartments}
 \subsubsection{Pressure-volume curves}
 
 Parameters of the pressure-volume curve (i.e. $\pi_{0,stem}$ and $\epsilon_{stem}$ for stem symplastic tissue are required for each species. When missing, \texttt{medfate} estimates them from wood density following Christophersen et al (2016):
@@ -2596,7 +2597,7 @@ Parameters of the pressure-volume curve (i.e. $\pi_{0,stem}$ and $\epsilon_{stem
 \epsilon_{stem} = \sqrt{1.02 \cdot e^{8.5\cdot \rho_{wood}}-2.89}
 \end{equation}
 
-\subsection{Plant water storage capacity}
+\subsubsection{Plant water storage capacity}
 The water storage capacity of sapwood tissue per leaf area unit ($V_{sapwood}$; in m$^3$·m$^{-2}$) can be estimated as the product of stem height ($H$ in m) and Huber value ($H_v$; ratio of sapwood area to leaf area in m$^2$·m$^{-2}$):
 \begin{equation}
 V_{sapwood} = H \cdot H_v \cdot \Theta_{sapwood}
@@ -2687,7 +2688,7 @@ The following tables list all symbols used in this document, along with their un
 \end{center}
 
 
-\subsection{Plant water storage}
+\subsection{Plant water compartments}
 \begin{center}
     \begin{tabular}{| l | p{2cm} | l | p{5cm} |}
     \hline
