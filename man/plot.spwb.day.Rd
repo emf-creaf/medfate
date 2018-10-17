@@ -15,6 +15,7 @@ Function \code{plot} plots the results of the soil water balance model for one d
   \item{type}{The information to be plotted:
   \itemize{
     \item{\code{"LeafPsi"}:}{Leaf water potential.}
+    \item{\code{"StemPsi"}:}{(Upper) stem water potential.}
     \item{\code{"RootPsi"}:}{Root crown water potential.}
     \item{\code{"StemPLC"}:}{(Average) percentage of loss conductance in the stem conduits.}
     \item{\code{"StemRWC"}:}{(Average) relative water content in the stem symplasm.}

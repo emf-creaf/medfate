@@ -3,7 +3,7 @@ plot.spwb.day<-function(x, type="PlantTranspiration", bySpecies = FALSE, xlab = 
   EB = x$EnergyBalance
   Plants = x$Plants
   PlantsInst = x$PlantsInst
-  TYPES = c("LeafPsi","RootPsi",
+  TYPES = c("LeafPsi","RootPsi", "StemPsi",
             "StemPLC","StemRWC", "LeafRWC",
             "PlantTranspiration","PlantPhotosynthesis","PlantAbsorbedSWR",
             "LeafTranspiration","LeafPhotosynthesis", "LeafAbsorbedSWR",
@@ -23,6 +23,21 @@ plot.spwb.day<-function(x, type="PlantTranspiration", bySpecies = FALSE, xlab = 
       cohortnames = rownames(OM)
     } 
     if(is.null(ylab)) ylab = "Leaf water potential (MPa)"
+    matplot(timesteps, t(OM), lty=1:length(cohortnames), col = 1:length(cohortnames),
+            lwd=1, type="l", ylab=ylab, xlab=xlab, frame=FALSE, ...)
+    legend("bottomright", legend = cohortnames, lty=1:length(cohortnames), 
+           col = 1:length(cohortnames), bty="n")
+  }
+  else if(type=="StemPsi") {
+    OM = PlantsInst$PsiStem
+    if(bySpecies) {
+      lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
+      OMlai = sweep(OM, 1, Plants$LAI, "*")
+      m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM = sweep(m1,1,lai1,"/")
+      cohortnames = rownames(OM)
+    } 
+    if(is.null(ylab)) ylab = "(Upper) stem water potential (MPa)"
     matplot(timesteps, t(OM), lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", ylab=ylab, xlab=xlab, frame=FALSE, ...)
     legend("bottomright", legend = cohortnames, lty=1:length(cohortnames), 

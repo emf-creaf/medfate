@@ -642,7 +642,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   NumericMatrix Qinst(numCohorts,ntimesteps);
   NumericMatrix Einst(numCohorts, ntimesteps);
   NumericMatrix Aninst(numCohorts, ntimesteps);
-  NumericMatrix PsiPlantinst(numCohorts, ntimesteps);
+  NumericMatrix PsiLeafinst(numCohorts, ntimesteps);
+  NumericMatrix PsiSteminst(numCohorts, ntimesteps);
   NumericMatrix RWCsleafinst(numCohorts, ntimesteps);
   NumericMatrix RWCssteminst(numCohorts, ntimesteps);
   NumericMatrix PsiRootinst(numCohorts, ntimesteps);
@@ -659,7 +660,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   NumericMatrix Temp_SL(numCohorts, ntimesteps);
   NumericMatrix LAI_SH(numCohorts, ntimesteps);
   NumericMatrix LAI_SL(numCohorts, ntimesteps);
-  NumericVector minPsiLeaf(numCohorts,0.0), minPsiRoot(numCohorts,0.0); //Minimum potentials experienced
+  NumericVector minPsiLeaf(numCohorts,0.0), minPsiStem(numCohorts, 0.0), minPsiRoot(numCohorts,0.0); //Minimum potentials experienced
   NumericMatrix PLC(numCohorts, ntimesteps);
   NumericVector PLCm(numCohorts), RWCsm(numCohorts), RWClm(numCohorts);
   
@@ -862,7 +863,6 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
             PLCstemMAT(c,_) = newPLCstem;    
             RWCsstemMAT(c,_) = newRWCsympstem;
             int nseg = newPLCstem.size();
-            
             PLC(c,n) = newPLCstem[nseg-1]; //Store the PLC and RWCsym values of the distal-most segment
             RWCssteminst(c,n) = newRWCsympstem[nseg-1];
           } else {
@@ -884,12 +884,13 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
           // }
           
           
-          //Store the minimum water potential of the day (i.e. mid-day)
-          minPsiLeaf[c] = std::min(minPsiLeaf[c],psiLeafVEC[c]);
-          minPsiRoot[c] = std::min(minPsiRoot[c],psiRootVEC[c]);
+          //Store instantaneous leaf, stem and root potential
+          PsiLeafinst(c,n) = psiLeafVEC[c]; 
+          int nseg = psiStemMAT.ncol();
+          PsiSteminst(c,n) = psiStemMAT(c, nseg-1); 
+          PsiRootinst(c,n) = psiRootVEC[c]; 
+          //Store instantaneous leaf rwc
           RWCsleafinst(c,n) = RWCsleafVEC[c];
-          PsiPlantinst(c,n) = psiLeafVEC[c]; //Store instantaneous leaf potential
-          PsiRootinst(c,n) = psiRootVEC[c]; //Store instantaneous root potential
           
           //Copy transpiration from connected layers to transpiration from soil layers
           int cnt = 0;
@@ -971,13 +972,17 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
          PLC(c,n) = newPLCstem[nseg-1]; //Store the PLC and RWCsym values of the distal-most segment
          RWCssteminst(c,n) = newRWCsympstem[nseg-1];
          
-         //Store the minimum water potential of the day (i.e. mid-day)
-         minPsiLeaf[c] = std::min(minPsiLeaf[c],psiLeafVEC[c]);
-         minPsiRoot[c] = std::min(minPsiRoot[c],psiRootVEC[c]);
+         PsiSteminst(c,n) = psiStemMAT(c, nseg-1); 
          RWCsleafinst(c,n) = RWCsleafVEC[c];
-         PsiPlantinst(c,n) = psiLeafVEC[c]; //Store instantaneous leaf potential
+         PsiLeafinst(c,n) = psiLeafVEC[c]; //Store instantaneous leaf potential
          PsiRootinst(c,n) = psiRootVEC[c]; //Store instantaneous root potential
       }
+      
+      //Store the minimum water potential of the day (i.e. mid-day)
+      minPsiLeaf[c] = std::min(minPsiLeaf[c],PsiLeafinst(c,n));
+      minPsiStem[c] = std::min(minPsiStem[c],PsiSteminst(c,n));
+      minPsiRoot[c] = std::min(minPsiRoot[c],PsiRootinst(c,n));
+      
     } //End of cohort loop
     
 
@@ -1101,7 +1106,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                                    _["PlantExtraction"] = SoilExtractVec, _["psi"] = psiVec);
   
   Einst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  PsiPlantinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  PsiLeafinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  PsiSteminst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   PsiRootinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   Aninst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   PLC.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
@@ -1114,7 +1120,9 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                                  _["GWsunlit"] = GW_SL, _["GWshade"] = GW_SH,
                                  _["VPDsunlit"] = VPD_SL, _["VPDshade"] = VPD_SH,
                                  _["Tempsunlit"] = Temp_SL, _["Tempshade"] = Temp_SH,
-                                 _["PsiRoot"] = PsiRootinst, _["PsiLeaf"] = PsiPlantinst, 
+                                 _["PsiRoot"] = PsiRootinst, 
+                                 _["PsiStem"] = PsiSteminst, 
+                                 _["PsiLeaf"] = PsiLeafinst, 
                                  _["PLCstem"] = PLC, 
                                  _["RWCstem"] = RWCssteminst,
                                  _["RWCleaf"] = RWCsleafinst,
@@ -1123,6 +1131,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                              _["Extraction"] = SoilExtractCoh,
                              _["Transpiration"] = Eplant, 
                              _["LeafPsi"] = minPsiLeaf, 
+                             _["StemPsi"] = minPsiStem, 
                              _["RootPsi"] = minPsiRoot, 
                              _["DDS"] = PLCm, //Daily drought stress is the average day PLC
                              _["RWCstem"] = RWCsm,
@@ -1627,6 +1636,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   //Plant output variables
   NumericMatrix PlantPsi(numDays, numCohorts);
   NumericMatrix LeafPsi(numDays, numCohorts);
+  NumericMatrix StemPsi(numDays, numCohorts);
   NumericMatrix RootPsi(numDays, numCohorts);
   NumericMatrix PlantStress(numDays, numCohorts);
   NumericMatrix PlantRWCstem(numDays, numCohorts);
@@ -1761,6 +1771,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
       if(transpirationMode=="Complex") {
         LeafPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["LeafPsi"]);
         RootPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["RootPsi"]); 
+        StemPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["StemPsi"]); 
       } else {
         PlantPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["psi"]);
       }
@@ -1838,6 +1849,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   PlantRWCleaf.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   PlantPsi.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   LeafPsi.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
+  StemPsi.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   RootPsi.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   PlantPhotosynthesis.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   PlantAbsSWR.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
@@ -1879,6 +1891,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
                      Named("PlantTranspiration") = PlantTranspiration,
                      Named("PlantPhotosynthesis") = PlantPhotosynthesis,
                      Named("LeafPsi") = LeafPsi, 
+                     Named("StemPsi") = LeafPsi, 
                      Named("RootPsi") = RootPsi, 
                      Named("PlantStress") = PlantStress,
                      Named("PlantRWCstem") = PlantRWCstem,

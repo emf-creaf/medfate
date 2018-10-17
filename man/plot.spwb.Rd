@@ -29,14 +29,17 @@ Function \code{plot} plots the results of the soil water balance model (see \cod
     \item{\code{"Snow"}:}{ Snow precipitation and snowpack dynamics.}
     \item{\code{"Export"}:}{ Water exported through deep drainage and surface runoff.}
     \item{\code{"ET"}:}{ Plant transpiration and soil evaporation.}
-    \item{\code{"Psi"}:}{ Soil water potential.}
-    \item{\code{"Theta"}:}{ Soil relative water content.}
-    \item{\code{"Vol"}:}{ Soil water volumetric content.}
+    \item{\code{"SoilPsi"}:}{ Soil water potential.}
+    \item{\code{"SoilTheta"}:}{ Soil relative water content.}
+    \item{\code{"SoilVol"}:}{ Soil water volumetric content.}
     \item{\code{"WTD"}:}{ Water table depth.}
     \item{\code{"LAI"}:}{ Expanded and dead leaf area index of the whole stand.}
     \item{\code{"PlantLAI"}:}{ Plant cohort leaf area index (expanded leaves).}
     \item{\code{"PlantStress"}:}{ Plant cohort average daily drought stress.}
-    \item{\code{"PlantPsi"}:}{ Plant cohort water potential.}
+    \item{\code{"PlantPsi"}:}{ Plant cohort water potential (only for \code{transpirationMode = "Simple"}).}
+    \item{\code{"LeafPsi"}:}{ Midday leaf water potential (only for \code{transpirationMode = "Complex"}).}
+    \item{\code{"StemPsi"}:}{ Midday (upper) stem water potential (only for \code{transpirationMode = "Complex"}).}
+    \item{\code{"RootPsi"}:}{ Midday root crown water potential (only for \code{transpirationMode = "Complex"}).}
     \item{\code{"PlantTranspiration"}:}{ Plant cohort transpiration.}
     \item{\code{"PlantTranspirationLeaf"}:}{ Plant cohort transpiration per leaf area.}
     \item{\code{"PlantPhotosynthesis"}:}{ Plant cohort photosynthesis.}

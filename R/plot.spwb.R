@@ -11,7 +11,11 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
             "PlantStress", "PlantPsi","PlantPhotosynthesis", "PlantTranspiration",
             "PlantPhotosynthesisLeaf","PlantTranspirationLeaf")
   if(transpMode=="Complex") {
-    TYPES = c(TYPES, "LeafPsi","RootPsi","StemRWC", "LeafRWC", "PlantWaterBalance",
+    TYPES = c("PET_Precipitation","PET_NetRain","Snow","Evapotranspiration","SoilPsi","SoilTheta","SoilVol", "Export", "LAI", "WTD",
+              "PlantLAI",
+              "PlantStress", "PlantPhotosynthesis", "PlantTranspiration",
+              "PlantPhotosynthesisLeaf","PlantTranspirationLeaf", 
+              "LeafPsi","StemPsi","RootPsi","StemRWC", "LeafRWC", "PlantWaterBalance",
               "PlantAbsorbedSWR", "PlantAbsorbedSWRLeaf",
               "PlantAbsorbedLWR", "PlantAbsorbedLWRLeaf",
               "AirTemperature","SoilTemperature", "CanopyTemperature",
@@ -252,6 +256,24 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
       cohortnames = colnames(OM)
     } 
     if(is.null(ylab)) ylab = "Midday leaf water potential (MPa)"
+    if(is.null(ylim)) ylim = c(min(OM, na.rm = TRUE),0)
+    matplot(dates, OM, ylim = ylim, lty=1:length(cohortnames), col = 1:length(cohortnames),
+            lwd=1, type="l", xlim=xlim,
+            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
+    plotAxes()
+    legend("bottomright", legend = cohortnames, lty=1:length(cohortnames), 
+           col = 1:length(cohortnames), bty="n")
+  } 
+  else if(type=="StemPsi") {
+    OM = x$StemPsi
+    if(bySpecies) {
+      lai1 = t(apply(x$PlantLAI,1, tapply, x$cohorts$Name, sum, na.rm=T))
+      m1 = t(apply(x$PlantLAI * OM,1, tapply, x$cohorts$Name, sum, na.rm=T))
+      OM = m1/lai1
+      OM[lai1==0] = NA
+      cohortnames = colnames(OM)
+    } 
+    if(is.null(ylab)) ylab = "Midday (upper) stem water potential (MPa)"
     if(is.null(ylim)) ylim = c(min(OM, na.rm = TRUE),0)
     matplot(dates, OM, ylim = ylim, lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", xlim=xlim,
