@@ -126,26 +126,26 @@ sd1<-spwb.day(x1, examplesoil, rownames(examplemeteo)[d],
              latitude = 41.82592, elevation = 100, slope=0, aspect=0,
              prec = examplemeteo$Precipitation[d])
 
+#Initialize soil with default soil params (2 layers)
+examplesoil2 = soil(defaultSoilParams(2))
+
 #Switch to 'Complex' transpiration mode
 control$transpirationMode="Complex"
-control$ndailysteps = 48  
 
 #Allow capacitance effects
 control$capacitance = TRUE
-control$klat = 0.001
-control$ksymver = 0.001
 
 #Simulate one day only
-x2 = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+x2 = forest2spwbInput(exampleforest,examplesoil2, SpParamsMED, control)
 d = 100
-sd2<-spwb.day(x2, examplesoil, rownames(examplemeteo)[d],
+sd2<-spwb.day(x2, examplesoil2, rownames(examplemeteo)[d],
              examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
              examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
              examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
              latitude = 41.82592, elevation = 100, slope=0, aspect=0,
              prec = examplemeteo$Precipitation[d])
 
-#Plot plant water potential (see function 'plot.swb.day()')
+#Plot plant transpiration (see function 'plot.swb.day()')
 plot(sd2)
 
 }

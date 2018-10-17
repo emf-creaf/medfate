@@ -400,7 +400,6 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   NumericVector VCroot_d = paramsTransp["VCroot_d"];
   NumericVector Vmax298 = paramsTransp["Vmax298"];
   NumericVector Jmax298 = paramsTransp["Jmax298"];
-  NumericVector ksymver = Rcpp::as<Rcpp::NumericVector>(paramsTransp["ksymver"]);
   NumericVector pRootDisc = Rcpp::as<Rcpp::NumericVector>(paramsTransp["pRootDisc"]);
 
   //Water storage parameters
@@ -818,7 +817,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                                                      VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
                                                      Vsapwood[c], StemAF[c], StemPI0[c], StemEPS[c],
                                                      Vleaf[c], LeafAF[c], LeafPI0[c], LeafEPS[c],
-                                                     klat, ksymver[c],
+                                                     klat,
                                                      tstep, nsubsteps, psiStep, psiMax);
             
             //Add difference due to capacitance effects
@@ -905,7 +904,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
         }
       } else { // If not connected to any soil layer
         //Flow (cuticular conductance) TO BE IMPROVED (iterative procedure to find flow, VPD and leaf temperature given Gwmin)
-        double minFlow = std::max(0.0,1000.0*(Gwmin[c]*Tcan[n])/Patm);
+        double minFlow = std::max(0.0,1000.0*(Gwmin[c]*(meteoland::utils_saturationVP(std::max(0.0,Tcan[n]))-vpatm))/Patm);
         
         //Sunlit photosynthesis
         double absRadSL = absSWR_SL[c] + LWR_emmcan*LAI_SL(c,n);
@@ -951,8 +950,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                                                 VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
                                                 Vsapwood[c], StemAF[c], StemPI0[c], StemEPS[c],
                                                 Vleaf[c], LeafAF[c], LeafPI0[c], LeafEPS[c],
-                                                klat, ksymver[c],
-                                                tstep, nsubsteps);
+                                                klat, 
+                                                tstep);
       
          NumericVector newPsiStem = sAb["psiStem"];
          NumericVector newPLCstem = sAb["PLCstem"];

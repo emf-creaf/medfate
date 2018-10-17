@@ -68,7 +68,7 @@ List E2psiAbovegroundCapacitance(double E, double psiRootCrown,
                                  double kleafmax, double leafc, double leafd,
                                  double Vsapwood, double stemfapo, double stempi0, double stemeps,
                                  double Vleaf, double leaffapo, double leafpi0, double leafeps,
-                                 double klat, double ksto,
+                                 double klat,
                                  double tstep = 3600.0, int nSubSteps = 1000,
                                  double psiStep = -0.0001, double psiMax = -10.0);
 
@@ -79,8 +79,8 @@ List E2psiAbovegroundCapacitanceDisconnected(double E,
                                              double kleafmax, double leafc, double leafd,
                                              double Vsapwood, double stemfapo, double stempi0, double stemeps,
                                              double Vleaf, double leaffapo, double leafpi0, double leafeps,
-                                             double klat, double ksto,
-                                             double tstep = 3600.0, int nSubSteps = 1000);
+                                             double klat,
+                                             double tstep = 3600.0);
 
 List supplyFunctionNetwork(NumericVector psiSoil,
                            NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
@@ -105,7 +105,7 @@ List supplyFunctionAbovegroundCapacitance(NumericVector Erootcrown, NumericVecto
                                           double kleafmax, double leafc, double leafd,
                                           double Vsapwood, double stemfapo, double stempi0, double stemeps,
                                           double Vleaf, double leaffapo, double leafpi0, double leafeps,
-                                          double klat, double ksto,
+                                          double klat,
                                           double tstep = 3600.0, int nSubSteps = 1000,
                                           double psiStep = -0.0001, double psiMax = -10.0);
 
