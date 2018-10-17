@@ -2278,6 +2278,8 @@ Profit maximization calculations for shade and sunlit leaves imply different amo
 
 \section{Parameterization}
 
+\texttt{medfate} provides routines to estimate them from a minimum set of input parameters. The whole process of estimation of those parameters is done automatically in functions \texttt{swbInput()} and \texttt{forest2swbInput()}, with the user controlling the process through the species parameter table input (e.g., \texttt{SpParamsMED}) an object \texttt{control} (see function \texttt{defaultControl()} for control parameter defaults). In the following we detail the calculations and present individual functions that perform partial calculations.
+
 \subsection{Hydraulics}
 \subsubsection{Vulnerability curves}
 Leaf and xylem vulnerability curves are often described using $\Psi_{50}$, the water potential at which hydraulic conductance is half of maximum. As noted above, parameter $d$ in eq. \ref{eq:xylemvulnerability} is the water potential $\Psi$ at which $k_{x}(\Psi)/k_{x,max} = e^{-1} = 0.367$ (and the same for eq. \ref{eq:leafvulnerability}). Hence, the two definitions do not match. Using the definition of $\Psi_{50}$ in eq. \ref{eq:xylemvulnerability} we have:
@@ -2297,7 +2299,7 @@ s$VG_n
 s$VG_alpha
 @
 
-Aboveground and belowground stem maximum conductance values at the plant level ($k_{s, max}$ and $k_{r, max}$) will not be normally available and the same for the rhizosphere ($k_{rh, max}$). \texttt{medfate} provides routines to estimate them from a minimum set of input parameters. The whole process of estimation of those parameters is done automatically in functions \texttt{swbInput()} and \texttt{forest2swbInput()}, with the user controlling the process through parameter \texttt{control} (see function \texttt{defaultControl()} for control parameter defaults). In the following we detail the calculations and present individual functions that perform partial calculations.
+Aboveground and belowground stem maximum conductance values at the plant level ($k_{s, max}$ and $k_{r, max}$) will not be normally available and the same for the rhizosphere ($k_{rh, max}$). 
 
 \subsubsection{Leaf maximum conductance}
 Leaf maximum conductance ($k_{l, max}$, in mmol·m$^{-2}$·s$^{-1}$·MPa$^{-1}$) is an input parameter that should be provided for each species. When missing, leaf maximum hydraulic conductance is assumed $k_{l, max}=6$ for conifers and $k_{l, max}=8$ for angiosperms (Sack \emph{et al.} 2006).
@@ -2642,7 +2644,7 @@ Species values for $g_{swmin}$ were taken from Duursma et al. (2018). Following 
 
 \subsubsection{Photosynthesis}
 
-Rubisco's maximum carboxylation rate at 25ºC ($V_{max, 298}$, in $\mu$mol CO$_2$·s$^{-1}$·m$^{-2}$) is a required input parameter for each species (\texttt{Vmax298}). The maximum rate of electron transport at the same temperature ($J_{max, 298}$) is estimated from $V_{max, 298}$ using (Walker et al. 2014):
+Rubisco's maximum carboxylation rate at 25ºC ($V_{max, 298}$, in $\mu$mol CO$_2$·s$^{-1}$·m$^{-2}$) is a required input parameter for each species (\texttt{Vmax298}), and if its value is missing a default value of 100 $\mu$mol CO$_2$·s$^{-1}$·m$^{-2}$ is used. The maximum rate of electron transport at the same temperature ($J_{max, 298}$) can be provided by the user (\texttt{Jmax298}) but, if not, it is estimated from $V_{max, 298}$ using (Walker et al. 2014):
 
 \begin{equation}
 J_{max, 298} = e^{1.197 + 0.847\cdot \log(V_{max,298})}
@@ -2707,7 +2709,7 @@ The following tables list all symbols used in this document, along with their un
         Symbol & Units & Param. & Description \\ \hline
         $g_{swmin}$ & mol H$_2$O·s$^{-1}$·m$^{-2}$ & \texttt{Gwmin} & Minimum stomatal conductance to water vapour.\\ \hline
         $g_{swmax}$ & mol H$_2$O·s$^{-1}$·m$^{-2}$ & \texttt{Gwmax} & Maximum stomatal conductance to water vapour. \\ \hline
-        $J_{max, 298}$ & $\mu$mol electrons·m$^{-2}$·s$^{-1}$ & & Maximum rate of electron transport at 298K \\ \hline
+        $J_{max, 298}$ & $\mu$mol electrons·m$^{-2}$·s$^{-1}$ & \texttt{Jmax298} & Maximum rate of electron transport at 298K \\ \hline
         $V_{max, 298}$ & $\mu$mol CO$_2$·s$^{-1}$·m$^{-2}$ & \texttt{Vmax298} & Rubisco's maximum carboxylation rate at 298K \\ \hline
     \end{tabular}
 \end{center}

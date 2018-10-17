@@ -70,6 +70,7 @@ A data set of parameter values for Mediterranean species, resulting from bibliog
     \item{\code{VCroot_c}, \code{VCroot_d}}{Parameters of the root xylem vulnerability curve (\code{VCroot_d} in MPa).}
     \item{\code{LeafWidth}}{Leaf width (in cm).}
     \item{\code{Vmax298}}{Maximum Rubisco carboxilation rate at 25ºC (in micromol CO2·s-1·m-2).}
+    \item{\code{Jmax298}}{Maximum electron transport rate at 25ºC (in micromol electrons·s-1·m-2).}
   }
 }
 \details{

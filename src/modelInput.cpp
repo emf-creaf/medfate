@@ -167,6 +167,7 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     NumericVector VCroot_cSP = SpParams["VCroot_c"];
     NumericVector VCroot_dSP = SpParams["VCroot_d"];
     NumericVector Vmax298SP = SpParams["Vmax298"];
+    NumericVector Jmax298SP = SpParams["Jmax298"];
     NumericVector pRootDiscSP = SpParams["pRootDisc"];
     NumericVector Gwmax(numCohorts), Gwmin(numCohorts);
     NumericVector VCleaf_kmax(numCohorts), xylem_kmax(numCohorts), rootxylem_kmax(numCohorts), Al2As(numCohorts);
@@ -248,8 +249,11 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
       VCroot_kmax(c,_) = VCroot_kmaxc*xylemConductanceProportions(Vc,dVec);
       VCroottot_kmax[c] = sum(VCroot_kmax(c,_));
       Vmax298[c] =Vmax298SP[SP[c]];
+      //Default value of Vmax298 = 100.0
+      if(NumericVector::is_na(Vmax298[c])) Vmax298[c] = 100.0;
+      Jmax298[c] =Jmax298SP[SP[c]];
       //Walker AP, Beckerman AP, Gu L, et al (2014) The relationship of leaf photosynthetic traits - Vcmax and Jmax - to leaf nitrogen, leaf phosphorus, and specific leaf area: A meta-analysis and modeling study. Ecol Evol 4:3218–3235. doi: 10.1002/ece3.1173
-      Jmax298[c] = exp(1.197 + 0.847*log(Vmax298[c])); 
+      if(NumericVector::is_na(Jmax298[c])) Jmax298[c] = exp(1.197 + 0.847*log(Vmax298[c])); 
       for(int l=0;l<nlayers;l++) {
         
         VGrhizo_kmax(c,l) = V(c,l)*findRhizosphereMaximumConductance(averageFracRhizosphereResistance*100.0, VG_n[l], VG_alpha[l],
