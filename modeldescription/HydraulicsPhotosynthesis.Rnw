@@ -555,6 +555,11 @@ Network of $N$ rhizosphere components and root layers in parallel there are $N+1
 \end{eqnarray}
 where $E_{k, rhizosphere}$ and $E_{k, root}$ are calculated using either van Genuchten or Weibull function as vulnerability curves, respectively. In the case of rhizosphere elements, $\Psi_{up,k}=\Psi_{soil,k}$ and in the case of root elements $\Psi_{up,k}=\Psi_{rootsurf,k}$. Solving the steady-state equations also provides values for flow across each of the parallel paths $E_{k, rhizosphere} = E_{k, root}$, which are useful to conduct water balance operations on each layer. 
 
+
+\begin{figure}[h!]
+\includegraphics[width=\textwidth]{hydraulics_rs.jpg}
+\end{figure}
+
 As an example, we start by defining the water potential of three soil layers corresponding to four situations (analogously with the soil water potentials defined above): 
 <<>>==
  psiSoilLayers1 = c(-0.3,-0.2,-0.1)
@@ -1048,7 +1053,7 @@ In the previous section we described how the supply function of the network repr
 
 Most importantly, considering water compartments allows tracking leaf and stem (i.e. plant) \emph{dessication}, either when the plant is connected to the soil or when transpiration flow comes from the plant itself. When considering plant compartments, one could allow flow from compartments to affect the determination of stomatal conductance. However, since the supply function is concerned with instantaneous flows, the instantaneous change in water content of compartments is very small, and one may assume that the contribution of plant compartments to the overall \emph{shape} of the supply function, and hence to the determination of stomatal conductance, is negligible. We take this assumption here and assume that considering plant compartments does not change the determination of steady-state stomatal conductance (and hence the amount of water extracted from the soil) corresponding to any given subdaily step. Nevertheless, the \emph{total} amount of water transpired by plants between two consecutive time steps (e.g. during 1 hour or during a full day), will likely be affected by transient changes in plant water content. Therefore, changes in water compartments can be used to decide on the amount of water that should be added or removed for any given time step to the flow determined by steady-state calculations. Since photosynthesis is calculated according to steady-state calculations, the addition/subtraction of transpired water alters the instantaneous or subdaily assessment of water use efficiency, i.e. the ratio between photosynthesis and transpiration. However, at longer time scales (i.e for days or weeks) the effect should be negligible because most variations in plant water content occur at subdaily time scales and changes are slow at longer time scales.
 
-\subsubsection{Effects of water compartments on transpiration}
+\subsubsection{Effect of water compartments on transpiration}
 As mentioned when describing water content functions, we consider two sources of water in plant segments (Tyree \& Yang 1990). Symplastic storage compartments can contribute to sapflow dynamics by exchanging water with the apoplastic compartments, where it is assumed that the bulk of vertical flow occurs. In \texttt{medfate}, there are as stem symplastic storage compartments as stem segments and one leaf symplastic compartment. The instantaneous flow rate between symplastic and apoplastic compartments can be approximated using a lateral conductance $k_{lat}$ and the difference in water potentials. For the leaf we have:
 \begin{equation}
 F_{lat, l} = k_{lat} \cdot (\Psi_{sym, l} - \Psi_{apo,l})
@@ -1100,7 +1105,7 @@ E_{dif, t+1} = \frac{\sum_{t_m = 1}^{m}{E_{out, l, t_m}}}{m} - \frac{E_{t} + E_{
 where $E_{dif, t+1}$ is the (positive or negative) amount of flow that should be added to the steady state value $E_{t+1}$. Note that the described procedure could be used to define a supply function with capacitance effects for all values $E_{t+1}$ (see function \texttt{hydraulics.supplyFunctionAbovegroundCapacitance()}) but this would make the determination of stomatal regulation a very slow process. For this reason, we calculate stomatal regulation using the function without capacitance effects and perform the described algorithm once $E_{t+1}$ and the new steady state is known.
 
 
-\subsubsection{Disconnection from the soil}
+\subsubsection{Plant transpiration after disconnecting from the soil}
 
 In \texttt{medfate}, disconnection from a given soil layer occurs when its water potential is too low with respect to the root xylem vulnerability curve. The user can control this behaviour by specifying a $p_{root}$ threshold for relative conductance, and the plant will be disconnected from a soil layer if $k_{r}(\Psi_{soil})/k_{r,max} < p_{root}$. An interesting situation arises when a plant is disconnected from all soil layers. In this case, the steady-state calculations cannot be used to determine flows, so one is forced to use a full discrete time approximation, with compartments and flows indicated in the figure below.
 
@@ -2591,7 +2596,7 @@ Parameters of the pressure-volume curve (i.e. $\pi_{0,stem}$ and $\epsilon_{stem
 \epsilon_{stem} = \sqrt{1.02 \cdot e^{8.5\cdot \rho_{wood}}-2.89}
 \end{equation}
 
-\subsubsection{Water storage capacity}
+\subsection{Plant water storage capacity}
 The water storage capacity of sapwood tissue per leaf area unit ($V_{sapwood}$; in m$^3$·m$^{-2}$) can be estimated as the product of stem height ($H$ in m) and Huber value ($H_v$; ratio of sapwood area to leaf area in m$^2$·m$^{-2}$):
 \begin{equation}
 V_{sapwood} = H \cdot H_v \cdot \Theta_{sapwood}
@@ -2645,6 +2650,17 @@ J_{max, 298} = e^{1.197 + 0.847\cdot \log(V_{max,298})}
 
 The following tables list all symbols used in this document, along with their units and definition. When symbols are input parameters for \texttt{medfate}, the name of those parameters in data frame \texttt{SpParamsMED} is also indicated.
 
+\subsection{Anatomy}
+\begin{center}
+    \begin{tabular}{| l | p{2cm} | l | p{5cm} |}
+    \hline
+    Symbol & Units & Param. & Description \\ \hline
+    $H_v$ & m$^2$·m$^{-2}$ & 1/\texttt{Al2As} & Huber value (ratio of sapwood area to leaf area). \\ \hline
+    $\rho_{wood}$ & g·cm$^{-3}$ & \texttt{WoodDens} & Wood density. \\ \hline
+    $\Theta_{sapwood}$ & m$^3$·m$^{-3}$ & & Sapwood porosity (volume of empty spaces over total volume). \\ \hline
+    \end{tabular}
+\end{center}
+
 \subsection{Hydraulics}
 \begin{center}
     \begin{tabular}{| l | p{2cm} | l | p{5cm} |}
@@ -2654,7 +2670,6 @@ The following tables list all symbols used in this document, along with their un
     $k_{r, max}$ & mmol·s$^{-1}$ ·m$^{-2}$·MPa$^{-1}$ &  & Maximum root conductance (per leaf area unit). \\ \hline
     $k_{rh, max}$ & mmol·s$^{-1}$ ·m$^{-2}$·MPa$^{-1}$ &  & Maximum rhizosphere conductance (per leaf area unit). \\ \hline
     $k_{l, max}$ & mmol·s$^{-1}$ ·m$^{-2}$·MPa$^{-1}$ & \texttt{VCleaf\_kmax} & Maximum leaf conductance (per leaf area unit). \\ \hline
-    $H_v$ & m$^2$·m$^{-2}$ & 1/\texttt{Al2As} & Huber value (ratio of sapwood area to leaf area). \\ \hline
     $c_l$, $d_l$ & (unitless), MPa & \texttt{VCleaf\_c}, \texttt{VCleaf\_d} & Parameters of the vulnerability curve for leaves. \\ \hline
     $c_r$, $d_r$ & (unitless), MPa & \texttt{VCroot\_c}, \texttt{VCroot\_d} & Parameters of the vulnerability curve for root xylem. \\ \hline
     $c_s$, $d_s$ & (unitless), MPa & \texttt{VCstem\_c}, \texttt{VCstem\_d} & Parameters of the vulnerability curve for stem xylem. \\ \hline
@@ -2668,15 +2683,21 @@ The following tables list all symbols used in this document, along with their un
     $\Psi_{rootcrown}$ & MPa & & Water potential at the root crown. \\ \hline
     $\Psi_{stem}$ & MPa & & Water potential at the end (highest part) of the stem. \\ \hline
     $PLC$ & [0-1] & & Proportion of conductance loss in stem xylem tissue. \\ \hline
-    $RWC$ & [0-1] & & Relative water content. \\ \hline
-    $RWC_{sym}$ & [0-1] & & Relative water content in the symplasm fraction of a tissue. \\ \hline
-    $RWC_{apo}$ & [0-1] & & Relative water content in the apoplasm fraction of a tissue. \\ \hline
-    $\rho_{wood}$ & g·cm$^{-3}$ & \texttt{WoodDens} & Wood density. \\ \hline
-    $\Theta_{sapwood}$ & m$^3$·m$^{-3}$ & & Sapwood porosity (volume of empty spaces over total volume). \\ \hline
-    $V_{sapwood}$ & m$^3$·m$^{-2}$ & & Sapwood water capacity per leaf area unit. \\ \hline
     \end{tabular}
 \end{center}
 
+
+\subsection{Plant water storage}
+\begin{center}
+    \begin{tabular}{| l | p{2cm} | l | p{5cm} |}
+    \hline
+    Symbol & Units & Param. & Description \\ \hline
+    $RWC$ & [0-1] & & Relative water content. \\ \hline
+    $RWC_{sym}$ & [0-1] & & Relative water content in the symplasm fraction of a tissue. \\ \hline
+    $RWC_{apo}$ & [0-1] & & Relative water content in the apoplasm fraction of a tissue. \\ \hline
+    $V_{sapwood}$ & m$^3$·m$^{-2}$ & & Sapwood water capacity per leaf area unit. \\ \hline
+    \end{tabular}
+\end{center}
 
 \subsection{Stomatal regulation and photosynthesis}
 \begin{center}
@@ -2689,6 +2710,8 @@ The following tables list all symbols used in this document, along with their un
         $V_{max, 298}$ & $\mu$mol CO$_2$·s$^{-1}$·m$^{-2}$ & \texttt{Vmax298} & Rubisco's maximum carboxylation rate at 298K \\ \hline
     \end{tabular}
 \end{center}
+
+
 \section{References}
 \begin{itemize}
 \item{Bartlett, M.K., Scoffoni, C., & Sack, L. 2012. The determinants of leaf turgor loss point and prediction of drought tolerance of species and biomes: a global meta-analysis. Ecology Letters 15: 393–405.}
