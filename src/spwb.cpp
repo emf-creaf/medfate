@@ -1494,15 +1494,33 @@ void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER
       W[i] = 1.0; //Defaults to soil at field capacity
       Temp[i] = NA_REAL;
     }
-    NumericVector pEmb = Rcpp::as<Rcpp::NumericVector>(x["ProportionCavitated"]);
-    for(int i=0;i<pEmb.size();i++) {
-      pEmb[i] = 0.0;
+    NumericVector psiRoot = Rcpp::as<Rcpp::NumericVector>(x["psiRoot"]);
+    NumericMatrix psiStem = Rcpp::as<Rcpp::NumericMatrix>(x["psiStem"]);
+    NumericMatrix PLCstem = Rcpp::as<Rcpp::NumericMatrix>(x["PLCstem"]);
+    NumericMatrix RWCsympstem = Rcpp::as<Rcpp::NumericMatrix>(x["RWCsympstem"]);
+    NumericVector RWCsympleaf = Rcpp::as<Rcpp::NumericVector>(x["RWCsympleaf"]);
+    NumericVector psiLeaf = Rcpp::as<Rcpp::NumericVector>(x["psiLeaf"]);
+    NumericVector Einst = Rcpp::as<Rcpp::NumericVector>(x["Einst"]);
+    NumericVector Transpiration = Rcpp::as<Rcpp::NumericVector>(x["Transpiration"]);
+    NumericVector Photosynthesis = Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
+    for(int i=0;i<PLCstem.nrow();i++) {
+      Einst[i] = 0.0;
+      psiLeaf[i] = 0.0;
+      psiRoot[i] = 0.0;
+      RWCsympleaf[i] = 0.0;
+      Transpiration[i] = 0.0;
+      Photosynthesis[i] = 0.0;
+      for(int j=0;j<PLCstem.ncol();j++) {
+        psiStem(i,j) = 0.0;
+        PLCstem(i,j) = 0.0; 
+        RWCsympstem(i,j) = 1.0; 
+      }
     }
   } else {
     if(IntegerVector::is_na(day)) day = 0;
     else day = day-1; //Input will be 1 for first day
-    DataFrame DWB = Rcpp::as<Rcpp::DataFrame>(from["DailyBalance"]);
-    DataFrame SWB = Rcpp::as<Rcpp::DataFrame>(from["SoilWaterBalance"]);
+    DataFrame DWB = Rcpp::as<Rcpp::DataFrame>(from["WaterBalance"]);
+    DataFrame SWB = Rcpp::as<Rcpp::DataFrame>(from["Soil"]);
     NumericVector GDD = DWB["GDD"];
     can["gdd"] = GDD[day];
     can["Temp"] = NA_REAL;
@@ -1511,10 +1529,34 @@ void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER
       //TO DO: STORE/RECOVER SOIL LAYER TEMPERATURE?
       Temp[i] = NA_REAL;
     }
-    NumericMatrix DS = Rcpp::as<Rcpp::NumericMatrix>(from["PlantStress"]);
-    NumericVector pEmb = Rcpp::as<Rcpp::NumericVector>(x["ProportionCavitated"]);
-    for(int i=0;i<pEmb.size();i++) {
-      pEmb[i] = DS(day,i);
+    NumericMatrix fromPLC = Rcpp::as<Rcpp::NumericMatrix>(from["PlantStress"]);
+    NumericMatrix fromRootPsi = Rcpp::as<Rcpp::NumericMatrix>(from["RootPsi"]);
+    NumericMatrix fromLeafPsi = Rcpp::as<Rcpp::NumericMatrix>(from["LeafPsi"]);
+    NumericMatrix fromStemPsi = Rcpp::as<Rcpp::NumericMatrix>(from["StemPsi"]);
+    NumericMatrix fromRWCstem = Rcpp::as<Rcpp::NumericMatrix>(from["PlantRWCstem"]);
+    NumericMatrix fromRWCleaf = Rcpp::as<Rcpp::NumericMatrix>(from["PlantRWCleaf"]);
+    
+    NumericVector psiRoot = Rcpp::as<Rcpp::NumericVector>(x["psiRoot"]);
+    NumericMatrix psiStem = Rcpp::as<Rcpp::NumericMatrix>(x["psiStem"]);
+    NumericVector psiLeaf = Rcpp::as<Rcpp::NumericVector>(x["psiLeaf"]);
+    NumericMatrix PLCstem = Rcpp::as<Rcpp::NumericMatrix>(x["PLCstem"]);
+    NumericMatrix RWCsympstem = Rcpp::as<Rcpp::NumericMatrix>(x["RWCsympstem"]);
+    NumericVector RWCsympleaf = Rcpp::as<Rcpp::NumericVector>(x["RWCsympleaf"]);
+    NumericVector Einst = Rcpp::as<Rcpp::NumericVector>(x["Einst"]);
+    NumericVector Transpiration = Rcpp::as<Rcpp::NumericVector>(x["Transpiration"]);
+    NumericVector Photosynthesis = Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
+    for(int i=0;i<PLCstem.nrow();i++) {
+      Einst[i] = 0.0;
+      Transpiration[i] = 0.0;
+      Photosynthesis[i] = 0.0;
+      psiRoot[i] = fromRootPsi(day,i);
+      psiLeaf[i] = fromLeafPsi(day,i);
+      RWCsympleaf[i] = fromRWCleaf(day,i);
+      for(int j=0;j<PLCstem.ncol();j++) {
+        psiStem(i,j) = fromStemPsi(day,i);
+        PLCstem(i,j) = fromPLC(day,i); 
+        RWCsympstem(i,j) = fromRWCstem(day,i); 
+      }
     }
   }
   soil["W"] = W;

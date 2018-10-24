@@ -170,7 +170,6 @@ List stomatalRegulation(List x, List soil, DataFrame meteo, int day,
   NumericVector VCroot_d = paramsTransp["VCroot_d"];
   NumericVector Vmax298 = paramsTransp["Vmax298"];
   NumericVector Jmax298 = paramsTransp["Jmax298"];
-  NumericVector ksymver = Rcpp::as<Rcpp::NumericVector>(paramsTransp["ksymver"]);
   NumericVector pRootDisc = Rcpp::as<Rcpp::NumericVector>(paramsTransp["pRootDisc"]);
   
   
@@ -298,7 +297,9 @@ List stomatalRegulation(List x, List soil, DataFrame meteo, int day,
                                         VCstem_kmax[c], VCstem_c[c],VCstem_d[c], 
                                         VCleaf_kmax[c], VCleaf_c[c],VCleaf_d[c], 
                                         PLCStemPrev,                                    
-                                        minFlow, maxNsteps, psiStep, psiMax , ntrial, psiTol, ETol);
+                                        minFlow, maxNsteps, psiStep, psiMax, 
+                                        ntrial, psiTol, ETol);
+    NumericVector fittedE = supply["E"];
     
     NumericVector Vmax298layer(nz), Jmax298layer(nz);
     NumericVector SLarealayer(nz), SHarealayer(nz);
@@ -314,13 +315,13 @@ List stomatalRegulation(List x, List soil, DataFrame meteo, int day,
       Jmax298layer[i] = Jmax298[c]*fn;
     }
 
-    DataFrame photoSunlit(ntimesteps);
-    DataFrame photoShade(ntimesteps);
+    List photoSunlit(ntimesteps);
+    List photoShade(ntimesteps);
     List PMSunlit(ntimesteps);
     List PMShade(ntimesteps);
-
+    
     for(int n=0;n<ntimesteps;n++) {
-      
+
       //Long-wave radiation due to canopy temperature
       if(NumericVector::is_na(Tcan[n])) Tcan[n] = Tatm[n]; //If missing take above-canopy air temperature
 
@@ -346,16 +347,16 @@ List stomatalRegulation(List x, List soil, DataFrame meteo, int day,
         Vmax298SH +=Vmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
         Jmax298SH +=Jmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
       }
+
       //Photosynthesis function for sunlit and shade leaves
-      NumericVector fittedE = supply["E"];
-      photoSunlit[n] = leafPhotosynthesisFunction(fittedE, Catm, Patm,Tcan[n], vpatm, 
+      DataFrame psl = leafPhotosynthesisFunction(fittedE, Catm, Patm,Tcan[n], vpatm, 
                                                     zWind[c], 
                                                          absSWR_SL[c] + LWR_emmcan*LAI_SL, 
                                                          irradianceToPhotonFlux(absPAR_SL[c]), 
                                                          Vmax298SL, 
                                                          Jmax298SL, 
                                                          Gwmin[c], Gwmax[c], leafWidth[c], LAI_SL);
-      photoShade[n] = leafPhotosynthesisFunction(fittedE, Catm, Patm,Tcan[n], vpatm, 
+      DataFrame psh = leafPhotosynthesisFunction(fittedE, Catm, Patm,Tcan[n], vpatm, 
                                                    zWind[c], 
                                                         absSWR_SH[c] + LWR_emmcan*LAI_SH, 
                                                         irradianceToPhotonFlux(absPAR_SH[c]),
@@ -364,9 +365,11 @@ List stomatalRegulation(List x, List soil, DataFrame meteo, int day,
                                                         Gwmin[c], Gwmax[c], leafWidth[c], LAI_SH);
 
       //Profit maximization
-      PMSunlit[n] = profitMaximization(supply, photoSunlit[n],  hydraulicCostFunction, Gwmax[c], VCstem_kmax[c]);
-      PMShade[n] = profitMaximization(supply, photoShade[n],  hydraulicCostFunction, Gwmax[c], VCstem_kmax[c]);
+      PMSunlit[n] = profitMaximization(supply, psl,  hydraulicCostFunction, Gwmin[c],Gwmax[c], VCstem_kmax[c]);
+      PMShade[n] = profitMaximization(supply, psh,  hydraulicCostFunction, Gwmin[c],Gwmax[c], VCstem_kmax[c]);
 
+      photoSunlit[n] = psl;
+      photoShade[n] = psh;
     }
 
     cohort_list[c] = List::create(_["supply"]=supply,

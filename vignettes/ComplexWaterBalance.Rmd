@@ -240,9 +240,9 @@ The vulnerability curves conformng the hydraulic network are used in the model t
 ```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 7}
 par(mar=c(5,5,1,1), mfrow=c(2,2))
 hydraulics.supplyFunctionPlot(x, examplesoil, type="E")
-hydraulics.supplyFunctionPlot(x, examplesoil, type="Elayers")
+hydraulics.supplyFunctionPlot(x, examplesoil, type="ERhizo")
 hydraulics.supplyFunctionPlot(x, examplesoil, type="dEdP")
-hydraulics.supplyFunctionPlot(x, examplesoil, type="PsiStem")
+hydraulics.supplyFunctionPlot(x, examplesoil, type="psiStem")
 ```
 
 Calls to `hydraulics.supplyFunctionPlot()` always need both a `spwbInput` object and a `soil` object. The soil moisture state (i.e. its water potential) is the starting point for the calculation of the supply function, so different curves will be obtained for different values of soil moisture.
@@ -279,13 +279,13 @@ names(sd1)
 
 ### Water balance output
 
-Element `DailyBalance` contains the soil water balance flows of the day (precipitation, infiltration, transpiration, ...)
+Element `WaterBalance` contains the soil water balance flows of the day (precipitation, infiltration, transpiration, ...)
 ```{r}
-sd1$DailyBalance
+sd1$WaterBalance
 ```
-And `SoilBalance` contains water evaporated from each soil layer, water transpired from each soil layer and the final soil water potential:
+And `Soil` contains water evaporated from each soil layer, water transpired from each soil layer and the final soil water potential:
 ```{r}
-sd1$SoilBalance
+sd1$Soil
 ```
 
 
@@ -316,7 +316,7 @@ par(mar=c(5,5,1,1), mfrow=c(2,2))
 plot(sd1, type = "PlantTranspiration", bySpecies = T)
 plot(sd1, type = "LeafTranspiration", bySpecies = T)
 plot(sd1, type = "LeafPhotosynthesis", bySpecies = T)
-plot(sd1, type = "PlantPsi", bySpecies = T)
+plot(sd1, type = "LeafPsi", bySpecies = T)
 ```
 We can also use the same function to plot variations in temperature for sunlit and shade leaves (note that sunlit leaves of some species reach temperatures higher than the canopy):
 ```{r, fig=TRUE, fig.align="center", fig.width=7.5, fig.height = 4}
@@ -365,13 +365,13 @@ In particular, element `control` contains a copy of the input parameters that we
 ```{r}
 S$cohorts
 ```
-As before, `DailyBalance` contains water balance components, but in this case in form of a data frame with days in rows:
+As before, `WaterBalance` contains water balance components, but in this case in form of a data frame with days in rows:
 ```{r}
-head(S$DailyBalance)
+head(S$WaterBalance)
 ```
-Elements `PlantLAI`, `PlantStress`, `PlantPsi`, `PlantTranspiration` and `PlantPhotosynthesis` contain daily values by plant cohorts, for example plant water potentials are:
+Elements `PlantLAI`, `PlantStress`, `LeafPsi`, `PlantTranspiration` and `PlantPhotosynthesis` contain daily values by plant cohorts, for example plant water potentials are:
 ```{r}
-head(S$PlantPsi)
+head(S$LeafPsi)
 ```
 
 
@@ -381,16 +381,16 @@ Package `medfate` also provides a `plot` function for objects of class `spwb`. I
 
 ```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 7}
 par(mar=c(5,5,1,1), mfrow=c(2,2))
-plot(S, type="ET", bySpecies = TRUE)
-plot(S, type="Psi", bySpecies = TRUE)
+plot(S, type="Evapotranspiration", bySpecies = TRUE)
+plot(S, type="SoilPsi", bySpecies = TRUE)
 plot(S, type="PlantTranspiration", bySpecies = TRUE)
-plot(S, type="PlantPsi", bySpecies = TRUE)
+plot(S, type="LeafPsi", bySpecies = TRUE)
 ```
 
 While the simulation model uses daily steps, users may be interested in outputs at larger time scales. The package provides a `summary` for objects of class `spwb`. This function can be used to summarize the model's output at different temporal steps (i.e. weekly, annual, ...). For example, to obtain the average soil moisture and water potentials by months one can use:
 
 ```{r}
-summary(S, freq="months",FUN=mean, output="SoilWaterBalance")
+summary(S, freq="months",FUN=mean, output="Soil")
 ```
 
 Parameter `output` is used to indicate the element of the `spwb` object for which we desire summaries. Similarly, it is possible to calculate the average stress of plant cohorts by months:
@@ -429,6 +429,6 @@ par(mar=c(5,5,1,1), mfrow=c(2,2))
 plot(sd1, type = "PlantTranspiration", bySpecies = T)
 plot(sd1, type = "LeafTranspiration", bySpecies = T)
 plot(sd1, type = "LeafPhotosynthesis", bySpecies = T)
-plot(sd1, type = "PlantPsi", bySpecies = T)
+plot(sd1, type = "LeafPsi", bySpecies = T)
 ```
 
