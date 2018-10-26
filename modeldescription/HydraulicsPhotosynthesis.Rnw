@@ -301,35 +301,38 @@ abline(v=-psiCav, col="gray", lwd=1.5)
 \end{center}
 Right pane shows the supply functions that are obtained in the case of a cavitated xylem (i.e. without refilling), assuming that the minimum water potential experienced so far was -2.5 MPa. Note the linear part of the flow rate between $\Psi_{soil}$ and this limit.
 
-The supply function of the rhizosphere element relates the flow rate to the pressure inside the roots ($\Psi_{root}$). It is calculated by numerical integration of the van Genuchten function (see function \texttt{hydraulics.E2psiVanGenuchten()}). Here we draw the supply function for the rhizosphere starting at the four different values of bulk soil pressure ($\Psi_{soil}$) and for the same three texture types:
+The supply function of the rhizosphere element relates the flow rate to the pressure inside the roots ($\Psi_{root}$). It is calculated by numerical integration of the van Genuchten function (see function \texttt{hydraulics.EVanGenuchten()}), for which we use the analytical approximation of van Lier et al. (2009). Here we draw the supply function for the rhizosphere starting at the four different values of bulk soil pressure ($\Psi_{soil}$) and for the same three texture types:
 \begin{center}
 <<fig=TRUE, width=4, height=4, echo=FALSE>>==
 par(mar=c(4,4,1,1))
-Evec = seq(0, 2, by=0.01)
-psiVG11 = unlist(lapply(Evec, hydraulics.E2psiVanGenuchten, psiSoil1, krmax1, n1, alpha1))
-psiVG12 = unlist(lapply(Evec, hydraulics.E2psiVanGenuchten, psiSoil2, krmax1, n1, alpha1))
-psiVG13 = unlist(lapply(Evec, hydraulics.E2psiVanGenuchten, psiSoil3, krmax1, n1, alpha1))
-psiVG14 = unlist(lapply(Evec, hydraulics.E2psiVanGenuchten, psiSoil4, krmax1, n1, alpha1))
-psiVG21 = unlist(lapply(Evec, hydraulics.E2psiVanGenuchten, psiSoil1, krmax2, n2, alpha2))
-psiVG22 = unlist(lapply(Evec, hydraulics.E2psiVanGenuchten, psiSoil2, krmax2, n2, alpha2))
-psiVG23 = unlist(lapply(Evec, hydraulics.E2psiVanGenuchten, psiSoil3, krmax2, n2, alpha2))
-psiVG24 = unlist(lapply(Evec, hydraulics.E2psiVanGenuchten, psiSoil4, krmax2, n2, alpha2))
-psiVG31 = unlist(lapply(Evec, hydraulics.E2psiVanGenuchten, psiSoil1, krmax3, n3, alpha3))
-psiVG32 = unlist(lapply(Evec, hydraulics.E2psiVanGenuchten, psiSoil2, krmax3, n3, alpha3))
-psiVG33 = unlist(lapply(Evec, hydraulics.E2psiVanGenuchten, psiSoil3, krmax3, n3, alpha3))
-psiVG34 = unlist(lapply(Evec, hydraulics.E2psiVanGenuchten, psiSoil4, krmax3, n3, alpha3))
-plot(-psiVG11, Evec, type="l", ylab="Rhizosphere flow rate (mmol·m-2·s-1)", xlab = "Root pressure (-MPa)",  xlim=c(0, 7), col=col1)
-lines(-psiVG21, Evec, lty=2, lwd=1.5, col=col1)
-lines(-psiVG31, Evec, lty=3, lwd=1.5, col=col1)
-lines(-psiVG12, Evec, lty=1, lwd=1.5, col=col2)
-lines(-psiVG22, Evec, lty=2, lwd=1.5, col=col2)
-lines(-psiVG32, Evec, lty=3, lwd=1.5, col=col2)
-lines(-psiVG13, Evec, lty=1, lwd=1.5, col=col3)
-lines(-psiVG23, Evec, lty=2, lwd=1.5, col=col3)
-lines(-psiVG33, Evec, lty=3, lwd=1.5, col=col3)
-lines(-psiVG14, Evec, lty=1, lwd=1.5, col=col4)
-lines(-psiVG24, Evec, lty=2, lwd=1.5, col=col4)
-lines(-psiVG34, Evec, lty=3, lwd=1.5, col=col4)
+psiVec1 = psiSoil1+c(0,psiVec)
+psiVec2 = psiSoil2+c(0,psiVec)
+psiVec3 = psiSoil3+c(0,psiVec)
+psiVec4 = psiSoil4+c(0,psiVec)
+EVG11 = unlist(lapply(psiVec1, hydraulics.EVanGenuchten, psiSoil1, krmax1, n1, alpha1))
+EVG12 = unlist(lapply(psiVec2, hydraulics.EVanGenuchten, psiSoil2, krmax1, n1, alpha1))
+EVG13 = unlist(lapply(psiVec3, hydraulics.EVanGenuchten, psiSoil3, krmax1, n1, alpha1))
+EVG14 = unlist(lapply(psiVec4, hydraulics.EVanGenuchten, psiSoil4, krmax1, n1, alpha1))
+EVG21 = unlist(lapply(psiVec1, hydraulics.EVanGenuchten, psiSoil1, krmax2, n2, alpha2))
+EVG22 = unlist(lapply(psiVec2, hydraulics.EVanGenuchten, psiSoil2, krmax2, n2, alpha2))
+EVG23 = unlist(lapply(psiVec3, hydraulics.EVanGenuchten, psiSoil3, krmax2, n2, alpha2))
+EVG24 = unlist(lapply(psiVec4, hydraulics.EVanGenuchten, psiSoil4, krmax2, n2, alpha2))
+EVG31 = unlist(lapply(psiVec1, hydraulics.EVanGenuchten, psiSoil1, krmax3, n3, alpha3))
+EVG32 = unlist(lapply(psiVec2, hydraulics.EVanGenuchten, psiSoil2, krmax3, n3, alpha3))
+EVG33 = unlist(lapply(psiVec3, hydraulics.EVanGenuchten, psiSoil3, krmax3, n3, alpha3))
+EVG34 = unlist(lapply(psiVec4, hydraulics.EVanGenuchten, psiSoil4, krmax3, n3, alpha3))
+plot(-psiVec1, EVG11, type="l", ylab="Rhizosphere flow rate (mmol·m-2·s-1)", xlab = "Root pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,2), col=col1)
+lines(-psiVec1, EVG21, lty=2, lwd=1.5, col=col1)
+lines(-psiVec1, EVG31, lty=3, lwd=1.5, col=col1)
+lines(-psiVec2, EVG12, lty=1, lwd=1.5, col=col2)
+lines(-psiVec2, EVG22, lty=2, lwd=1.5, col=col2)
+lines(-psiVec2, EVG32, lty=3, lwd=1.5, col=col2)
+lines(-psiVec3, EVG13, lty=1, lwd=1.5, col=col3)
+lines(-psiVec3, EVG23, lty=2, lwd=1.5, col=col3)
+lines(-psiVec3, EVG33, lty=3, lwd=1.5, col=col3)
+lines(-psiVec4, EVG14, lty=1, lwd=1.5, col=col4)
+lines(-psiVec4, EVG24, lty=2, lwd=1.5, col=col4)
+lines(-psiVec4, EVG34, lty=3, lwd=1.5, col=col4)
 legend("topright", bty="n", legend=textures, lty=1:3, lwd=1.5, cex=0.8)
 @
 \end{center}
@@ -553,7 +556,7 @@ Network of $N$ rhizosphere components and root layers in parallel there are $N+1
    E_{k, rhizosphere}-E_{k,root} &=& 0 \\
    \sum_{k}^{n}{E_{k,root}}-E &=& 0
 \end{eqnarray}
-where $E_{k, rhizosphere}$ and $E_{k, root}$ are calculated using either van Genuchten or Weibull function as vulnerability curves, respectively. In the case of rhizosphere elements, $\Psi_{up,k}=\Psi_{soil,k}$ and in the case of root elements $\Psi_{up,k}=\Psi_{rootsurf,k}$. Solving the steady-state equations also provides values for flow across each of the parallel paths $E_{k, rhizosphere} = E_{k, root}$, which are useful to conduct water balance operations on each layer. 
+where $E_{k, rhizosphere}$ and $E_{k, root}$ are supply flows calculated using the integrals of either van Genuchten or Weibull function as vulnerability curves, respectively. In the case of rhizosphere elements, $\Psi_{up,k}=\Psi_{soil,k}$ and in the case of root elements $\Psi_{up,k}=\Psi_{rootsurf,k}$. Solving the steady-state equations also provides values for flow across each of the parallel paths $E_{k, rhizosphere} = E_{k, root}$, which are useful to conduct water balance operations on each layer. 
 
 
 \begin{figure}[h!]
@@ -681,7 +684,7 @@ lines(-supplyRS34$psiRoot, supplyRS34$dEdP, lty=3, col=col4)
 legend("topright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 @
 \end{center}
-The derivative of $dE/d\Psi_{leaf}$ for the supply function of the root system is obtained numerically. An advantage of working with elements in parallel is that we can know the water potentials in different points of the root system. Here we plot them for the results of silt loam texture and the first and last soil potential vectors defined above:
+The derivative of $dE/d\Psi_{rootcrown}$ for the supply function of the root system is obtained numerically. An advantage of working with elements in parallel is that we can know the water potentials in different points of the root system. Here we plot them for the results of silt loam texture and the first and last soil potential vectors defined above:
 \begin{center}
 <<fig=TRUE, width=8, height=10, echo=FALSE>>==
 par(mar=c(4,4,4,1), mfrow=c(2,2))
@@ -2739,6 +2742,7 @@ The following tables list all symbols used in this document, along with their un
 \item{Sperry, J. S., M. D. Venturas, W. R. L. Anderegg, M. Mencuccini, D. S. Mackay, Y. Wang, and D. M. Love. 2016b. Predicting stomatal responses to the environment from the optimization of photosynthetic gain and hydraulic cost. Plant Cell and Environment.}
 \item{Steppe K, Lemeur R, Vanrolleghem A. 2005. A mathematical model linking tree sap flow dynamics to dialy stem diameter fluctuation and radial stem growth. Tree Physiol 26:257–273}
 \item{Tyree, M.T., Yang, S. 1990. Water-storage capacity of Thuja, Tsuga and Acer stems measured by dehydration isotherms - The contribution of capillary water and cavitation. Planta 182: 420–426.}
+\item{Van Lier QDJ, Neto DD, Metselaar K (2009) Modeling of transpiration reduction in van genuchten-mualem type soils. Water Resour Res 45:1–9. doi: 10.1029/2008WR006938}
 \item{Walker AP, Beckerman AP, Gu L, et al (2014) The relationship of leaf photosynthetic traits - Vcmax and Jmax - to leaf nitrogen, leaf phosphorus, and specific leaf area: A meta-analysis and modeling study. Ecol Evol 4:3218–3235. doi: 10.1002/ece3.1173}
 \end{itemize}
 \end{document}

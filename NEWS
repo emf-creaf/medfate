@@ -6,6 +6,7 @@ __Version history__
 _Version 0.7.0, September 2018.
 1. Leaf and stem water compartments added
 2. Update of functions 'spwb.day' and 'plot.spwb.day'
+3. Analytical integral of the van Genuchten function
 
 _Version 0.6.2, September 2018.
 1. Adapt to Rcpp changes

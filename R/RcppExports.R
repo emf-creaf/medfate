@@ -309,8 +309,8 @@ hydraulics.EXylem <- function(psiPlant, psiUpstream, kxylemmax, c, d, allowNegat
     .Call('_medfate_EXylem', PACKAGE = 'medfate', psiPlant, psiUpstream, kxylemmax, c, d, allowNegativeFlux, psiCav)
 }
 
-hydraulics.EVanGenuchten <- function(psiRhizo, psiSoil, krhizomax, n, alpha, psiStep = -0.001, psiTol = 0.0001, allowNegativeFlux = TRUE) {
-    .Call('_medfate_EVanGenuchten', PACKAGE = 'medfate', psiRhizo, psiSoil, krhizomax, n, alpha, psiStep, psiTol, allowNegativeFlux)
+hydraulics.EVanGenuchten <- function(psiRhizo, psiSoil, krhizomax, n, alpha, l = 0.5) {
+    .Call('_medfate_EVanGenuchten', PACKAGE = 'medfate', psiRhizo, psiSoil, krhizomax, n, alpha, l)
 }
 
 hydraulics.Ecrit <- function(psiUpstream, kxylemmax, c, d) {

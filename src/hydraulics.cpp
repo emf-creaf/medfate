@@ -188,6 +188,7 @@ double psiCrit(double c, double d) {
 /**
  * Van genuchten-mualem conductance equation (m = 1 - 1/n; l = 0.5)
  */
+
 // [[Rcpp::export("hydraulics.vanGenuchtenConductance")]]
 double vanGenuchtenConductance(double psi, double krhizomax, double n, double alpha) {
   double v = 1.0/(pow(alpha*std::abs(psi),n)+1.0);
@@ -230,35 +231,62 @@ double EXylem(double psiPlant, double psiUpstream, double kxylemmax, double c, d
   return(Egamma(psiPlant, kxylemmax, c, d, psiCav)-Egamma(psiUpstream, kxylemmax, c,d, psiCav));
 }
 
-
+/**
+ * Analytical approximation to the integral of van genuchten model
+ * Van Lier QDJ, Neto DD, Metselaar K (2009) Modeling of transpiration reduction in van genuchten-mualem type soils. 
+ * Water Resour Res 45:1–9. doi: 10.1029/2008WR006938
+ */
 // [[Rcpp::export("hydraulics.EVanGenuchten")]]
-double EVanGenuchten(double psiRhizo, double psiSoil, double krhizomax, double n, double alpha, double psiStep = -0.001, double psiTol = 0.0001, bool allowNegativeFlux = true) {
-  if((psiRhizo>psiSoil) & !allowNegativeFlux) ::Rf_error("Downstream potential larger (less negative) than upstream potential");
-  bool reverse = false;
-  if(psiRhizo>psiSoil) reverse = true;
-  if(reverse) {
-    double tmp = psiSoil;
-    psiSoil = psiRhizo;
-    psiRhizo = tmp;
-  }
-  double psi = psiSoil;
-  double vg = vanGenuchtenConductance(psi, krhizomax, n, alpha);
-  double E = 0.0, vgPrev = vg;
-  psiStep = std::max(psiStep, (psiRhizo-psiSoil)/10.0); //Check that step is not too large
-  do {
-    psi = psi + psiStep;
-    if(psi>psiRhizo) {
-      vgPrev = vg;
-      vg = vanGenuchtenConductance(psi, krhizomax, n, alpha);
-      E += ((vg+vgPrev)/2.0)*std::abs(psiStep);
-    } else {
-      psi = psi - psiStep; //retrocedeix
-      psiStep = psiStep/2.0; //canvia pas
-    }
-  } while (std::abs(psi-psiRhizo)>psiTol);
-  if(reverse) E = -E;
-  return(E);
+double EVanGenuchten(double psiRhizo, double psiSoil, double krhizomax, double n, double alpha, double l = 0.5) {
+  double m = 1.0 - (1.0/n);
+  double thetaR = pow(1.0+pow(alpha*std::abs(psiRhizo),n),-1.0*m);
+  double thetaS = pow(1.0+pow(alpha*std::abs(psiSoil),n),-1.0*m);
+  double a1 = (1.0/m) + l + 1.0;
+  double a2 = (2.0/m) + l + 1.0;
+  double a3 = (3.0/m) + l + 1.0;
+  double phi = m*(l+1.0);
+  double B1 = ((1.0+phi)*(2.0 + m))/(3.0*(2.0+phi));
+  double B2 = ((2.0+phi)*(3.0 + m))/(4.0*(3.0+phi));
+  double B3 = ((1.0+phi)*(2.0 - m))/(3.0*(2.0+phi));
+  double B4 = ((2.0+phi)*(3.0 - m))/(4.0*(3.0+phi));
+  
+  double GammaR1 = (2.0*m*pow(thetaR, a1));
+  double GammaS1 = (2.0*m*pow(thetaS, a1));
+  double Gamma2 = ((1.0 + m)*B1 - (1.0-m)*B3);
+  double Gamma3 = ((1.0 + m)*B1*B2 - (1.0-m)*B3*B4);
+  double GammaR = GammaR1 + Gamma2*pow(thetaR, a2) + Gamma3*pow(thetaR, a3);
+  double GammaS = GammaS1 + Gamma2*pow(thetaS, a2) + Gamma3*pow(thetaS, a3);
+  double E = ((m*(1.0-m)*krhizomax)/(2.0*alpha*(phi+1)))*(GammaR - GammaS);
+  return(-E);
 }
+// Numerical integral
+// double EVanGenuchten(double psiRhizo, double psiSoil, double krhizomax, double n, double alpha, double psiStep = -0.001, double psiTol = 0.0001, bool allowNegativeFlux = true) {
+//   if((psiRhizo>psiSoil) & !allowNegativeFlux) ::Rf_error("Downstream potential larger (less negative) than upstream potential");
+//   bool reverse = false;
+//   if(psiRhizo>psiSoil) reverse = true;
+//   if(reverse) {
+//     double tmp = psiSoil;
+//     psiSoil = psiRhizo;
+//     psiRhizo = tmp;
+//   }
+//   double psi = psiSoil;
+//   double vg = vanGenuchtenConductance(psi, krhizomax, n, alpha);
+//   double E = 0.0, vgPrev = vg;
+//   psiStep = std::max(psiStep, (psiRhizo-psiSoil)/10.0); //Check that step is not too large
+//   do {
+//     psi = psi + psiStep;
+//     if(psi>psiRhizo) {
+//       vgPrev = vg;
+//       vg = vanGenuchtenConductance(psi, krhizomax, n, alpha);
+//       E += ((vg+vgPrev)/2.0)*std::abs(psiStep);
+//     } else {
+//       psi = psi - psiStep; //retrocedeix
+//       psiStep = psiStep/2.0; //canvia pas
+//     }
+//   } while (std::abs(psi-psiRhizo)>psiTol);
+//   if(reverse) E = -E;
+//   return(E);
+// }
 
 // [[Rcpp::export("hydraulics.Ecrit")]]
 double Ecrit(double psiUpstream, double kxylemmax, double c, double d) {
@@ -436,7 +464,7 @@ List E2psiBelowground(double E, NumericVector psiSoil,
     for(int l=0;l<nlayers;l++) {
       Eroot[l] = EXylem(x[nlayers], x[l], krootmax[l], rootc, rootd);
       // Rcout<<"("<<Eroot[l]<<"\n";
-      Erhizo[l] = EVanGenuchten(x[l], psiSoil[l], krhizomax[l], nsoil[l], alphasoil[l], psiStep, psiTol/1000.0);
+      Erhizo[l] = EVanGenuchten(x[l], psiSoil[l], krhizomax[l], nsoil[l], alphasoil[l]);
       fvec[l] = Erhizo[l] - Eroot[l];
       // Rcout<<" Erhizo"<<l<<": "<< Erhizo[l]<<" Eroot"<<l<<": "<<Eroot[l]<<" fvec: "<<fvec[l]<<"\n";
       // Rcout<<"der psi_l "<<d_psi_l<<"der Eroot psi_l "<<d_Eroot_psi_l<<"  der psi_root "<<d_psi_root<<"\n";
@@ -504,7 +532,7 @@ List E2psiBelowground(double E, NumericVector psiSoil,
   //Calculate final flows
   Esum = 0.0;
   for(int l=0;l<(nlayers-1);l++) {
-    Erhizo[l] = EVanGenuchten(x[l], psiSoil[l], krhizomax[l], nsoil[l], alphasoil[l], psiStep, psiTol/1000.0);
+    Erhizo[l] = EVanGenuchten(x[l], psiSoil[l], krhizomax[l], nsoil[l], alphasoil[l]);
     Esum += Erhizo[l];
   }
   Erhizo[nlayers-1] = E - Esum; //Define as difference to match input

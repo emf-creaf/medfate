@@ -1054,8 +1054,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // EVanGenuchten
-double EVanGenuchten(double psiRhizo, double psiSoil, double krhizomax, double n, double alpha, double psiStep, double psiTol, bool allowNegativeFlux);
-RcppExport SEXP _medfate_EVanGenuchten(SEXP psiRhizoSEXP, SEXP psiSoilSEXP, SEXP krhizomaxSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP psiStepSEXP, SEXP psiTolSEXP, SEXP allowNegativeFluxSEXP) {
+double EVanGenuchten(double psiRhizo, double psiSoil, double krhizomax, double n, double alpha, double l);
+RcppExport SEXP _medfate_EVanGenuchten(SEXP psiRhizoSEXP, SEXP psiSoilSEXP, SEXP krhizomaxSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP lSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1064,10 +1064,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type krhizomax(krhizomaxSEXP);
     Rcpp::traits::input_parameter< double >::type n(nSEXP);
     Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
-    Rcpp::traits::input_parameter< double >::type psiStep(psiStepSEXP);
-    Rcpp::traits::input_parameter< double >::type psiTol(psiTolSEXP);
-    Rcpp::traits::input_parameter< bool >::type allowNegativeFlux(allowNegativeFluxSEXP);
-    rcpp_result_gen = Rcpp::wrap(EVanGenuchten(psiRhizo, psiSoil, krhizomax, n, alpha, psiStep, psiTol, allowNegativeFlux));
+    Rcpp::traits::input_parameter< double >::type l(lSEXP);
+    rcpp_result_gen = Rcpp::wrap(EVanGenuchten(psiRhizo, psiSoil, krhizomax, n, alpha, l));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2830,7 +2828,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_vanGenuchtenConductance", (DL_FUNC) &_medfate_vanGenuchtenConductance, 4},
     {"_medfate_Egamma", (DL_FUNC) &_medfate_Egamma, 5},
     {"_medfate_EXylem", (DL_FUNC) &_medfate_EXylem, 7},
-    {"_medfate_EVanGenuchten", (DL_FUNC) &_medfate_EVanGenuchten, 8},
+    {"_medfate_EVanGenuchten", (DL_FUNC) &_medfate_EVanGenuchten, 6},
     {"_medfate_Ecrit", (DL_FUNC) &_medfate_Ecrit, 4},
     {"_medfate_E2psiXylem", (DL_FUNC) &_medfate_E2psiXylem, 8},
     {"_medfate_E2psiVanGenuchten", (DL_FUNC) &_medfate_E2psiVanGenuchten, 7},
