@@ -326,7 +326,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   double psiTol = numericParams["psiTol"];
   double ETol = numericParams["ETol"];
 
-  bool cavitationRefill = control["cavitationRefill"];
+  // bool cavitationRefill = control["cavitationRefill"];
   bool capacitance = control["capacitance"];
   double klat = control["klat"];
   
