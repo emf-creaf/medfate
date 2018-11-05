@@ -636,6 +636,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
       //                                         ntrial, psiTol, ETol); 
       //   
       // }
+    } else {
+      Rcout<<"D";
     }
   }
 
