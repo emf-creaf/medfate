@@ -314,7 +314,7 @@ List stomatalRegulation(List x, List soil, DataFrame meteo, int day,
                                         VCstem_kmax[c], VCstem_c[c],VCstem_d[c], 
                                         VCleaf_kmax[c], VCleaf_c[c],VCleaf_d[c], 
                                         PLCStemPrev,                                    
-                                        minFlow, maxNsteps, psiStep, psiMax, 
+                                        minFlow, maxNsteps,
                                         ntrial, psiTol, ETol);
     NumericVector fittedE = supply["E"];
     

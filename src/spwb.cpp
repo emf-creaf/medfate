@@ -629,7 +629,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                                           VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
                                           VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
                                           PLCStemPrev,
-                                          0.0, maxNsteps, psiStep, psiMax , ntrial, psiTol, ETol); 
+                                          0.0, maxNsteps, 
+                                          ntrial, psiTol, ETol); 
       // } else { //Calculate supply function for root system only
       //   supply[c] = supplyFunctionBelowground(psic,
       //                                         VGrhizo_kmaxc,VG_nc,VG_alphac,
@@ -768,7 +769,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                                                    VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
                                                    Vsapwood[c], StemAF[c], StemPI0[c], StemEPS[c],
                                                    Vleaf[c], LeafAF[c], LeafPI0[c], LeafEPS[c],
-                                                   tstep, psiStep, psiMax);
+                                                   tstep);
           fittedE = sFunction["E"];
         }
  

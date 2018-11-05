@@ -608,51 +608,51 @@ psiMax = -7.0
 supplyRS11 = hydraulics.supplyFunctionBelowground(psiSoilLayers1,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyRS12 = hydraulics.supplyFunctionBelowground(psiSoilLayers2,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyRS13 = hydraulics.supplyFunctionBelowground(psiSoilLayers3,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyRS14 = hydraulics.supplyFunctionBelowground(psiSoilLayers4,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyRS21 = hydraulics.supplyFunctionBelowground(psiSoilLayers1,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyRS22 = hydraulics.supplyFunctionBelowground(psiSoilLayers2,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyRS23 = hydraulics.supplyFunctionBelowground(psiSoilLayers3,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyRS24 = hydraulics.supplyFunctionBelowground(psiSoilLayers4,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyRS31 = hydraulics.supplyFunctionBelowground(psiSoilLayers1,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyRS32 = hydraulics.supplyFunctionBelowground(psiSoilLayers2,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyRS33 = hydraulics.supplyFunctionBelowground(psiSoilLayers3,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyRS34 = hydraulics.supplyFunctionBelowground(psiSoilLayers4,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 plot(-supplyRS11$psiRoot, supplyRS11$E, type="l", col=col1, ylab="Flow rate  (mmol·m-2·s-1)", 
      xlab = "Root crown pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,max(supplyRS11$E)), lwd=1, main  = "E")
 lines(-supplyRS12$psiRoot, supplyRS12$E, lty=1, col=col2)
@@ -773,84 +773,84 @@ supplyNetwork11 = hydraulics.supplyFunctionNetwork(psiSoilLayers1,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem =0.0,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyNetwork12 = hydraulics.supplyFunctionNetwork(psiSoilLayers2,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=0.0,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyNetwork13 = hydraulics.supplyFunctionNetwork(psiSoilLayers3,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=0.0,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyNetwork14 = hydraulics.supplyFunctionNetwork(psiSoilLayers4,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=0.0,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyNetwork21 = hydraulics.supplyFunctionNetwork(psiSoilLayers1,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=0.0,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyNetwork22 = hydraulics.supplyFunctionNetwork(psiSoilLayers2,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=0.0,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyNetwork23 = hydraulics.supplyFunctionNetwork(psiSoilLayers3,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=0.0,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyNetwork24 = hydraulics.supplyFunctionNetwork(psiSoilLayers4,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=0.0,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyNetwork31 = hydraulics.supplyFunctionNetwork(psiSoilLayers1,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=0.0,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyNetwork32 = hydraulics.supplyFunctionNetwork(psiSoilLayers2,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=0.0,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyNetwork33 = hydraulics.supplyFunctionNetwork(psiSoilLayers3,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=0.0,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyNetwork34 = hydraulics.supplyFunctionNetwork(psiSoilLayers4,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=0.0,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 plot(-supplyNetwork11$psiLeaf, supplyNetwork11$E, type="l", col=col1, ylab="Flow rate  (mmol·m-2·s-1)", 
      xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,max(supplyNetwork11$E)), lwd=1, main="original")
 lines(-supplyNetwork12$psiLeaf, supplyNetwork12$E, lty=1, col=col2)
@@ -872,84 +872,84 @@ supplyNetwork11emb = hydraulics.supplyFunctionNetwork(psiSoilLayers1,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=plcCav,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyNetwork12emb = hydraulics.supplyFunctionNetwork(psiSoilLayers2,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=plcCav,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyNetwork13emb = hydraulics.supplyFunctionNetwork(psiSoilLayers3,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=plcCav,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyNetwork14emb = hydraulics.supplyFunctionNetwork(psiSoilLayers4,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=plcCav,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyNetwork21emb = hydraulics.supplyFunctionNetwork(psiSoilLayers1,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=plcCav,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyNetwork22emb = hydraulics.supplyFunctionNetwork(psiSoilLayers2,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=plcCav,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyNetwork23emb = hydraulics.supplyFunctionNetwork(psiSoilLayers3,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=plcCav,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyNetwork24emb = hydraulics.supplyFunctionNetwork(psiSoilLayers4,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=plcCav,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyNetwork31emb = hydraulics.supplyFunctionNetwork(psiSoilLayers1,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=plcCav,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyNetwork32emb = hydraulics.supplyFunctionNetwork(psiSoilLayers2,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=plcCav,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyNetwork33emb = hydraulics.supplyFunctionNetwork(psiSoilLayers3,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=plcCav,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 supplyNetwork34emb = hydraulics.supplyFunctionNetwork(psiSoilLayers4,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=plcCav,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
 plot(-supplyNetwork11emb$psiLeaf, supplyNetwork11emb$E, type="l", col=col1, ylab="Flow rate  (mmol·m-2·s-1)",
      xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,max(supplyNetwork11$E)), lwd=1, main="after cavitation")
 lines(-supplyNetwork12emb$psiLeaf, supplyNetwork12emb$E, lty=1, col=col2)
@@ -1072,45 +1072,39 @@ par(mar=c(4,4,4,1), mfrow=c(2,2))
 supplyAG11 = hydraulics.supplyFunctionAboveground(supplyNetwork11$E, supplyNetwork11$psiRoot,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
-                                  PLCstem=0,
-                                  psiMax = psiMax)
+                                  PLCstem=0)
 supplyAG11Emb = hydraulics.supplyFunctionAboveground(supplyNetwork11$E, supplyNetwork11$psiRoot,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
-                                  PLCstem=plcCav,
-                                  psiMax = psiMax)
+                                  PLCstem=plcCav)
 supplyAG11Cap1 = hydraulics.supplyFunctionAbovegroundCap(supplyNetwork11$E, supplyNetwork11$psiRoot,
                                   psiStemPrev1, PLCstem=0,
                                   psiLeafPrev1,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   Vmaxstem, stemfapo, stempi0, stemeps,
-                                  Vmaxleaf, leaffapo, leafpi0, leafeps,
-                                  psiMax = psiMax)
+                                  Vmaxleaf, leaffapo, leafpi0, leafeps)
 supplyAG11Cap2 = hydraulics.supplyFunctionAbovegroundCap(supplyNetwork11$E, supplyNetwork11$psiRoot,
                                   psiStemPrev2, PLCstem=0,
                                   psiLeafPrev2,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   Vmaxstem, stemfapo, stempi0, stemeps,
-                                  Vmaxleaf, leaffapo, leafpi0, leafeps,
-                                  psiMax = psiMax)
+                                  Vmaxleaf, leaffapo, leafpi0, leafeps)
 supplyAG11Cap1Emb = hydraulics.supplyFunctionAbovegroundCap(supplyNetwork11$E, supplyNetwork11$psiRoot,
                                   psiStemPrev1, PLCstem=plcCav,
                                   psiLeafPrev1,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   Vmaxstem, stemfapo, stempi0, stemeps,
-                                  Vmaxleaf, leaffapo, leafpi0, leafeps,
-                                  psiMax = psiMax)
+                                  Vmaxleaf, leaffapo, leafpi0, leafeps)
 supplyAG11Cap2Emb = hydraulics.supplyFunctionAbovegroundCap(supplyNetwork11$E, supplyNetwork11$psiRoot,
                                   psiStemPrev2, PLCstem=plcCav,
                                   psiLeafPrev2,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   Vmaxstem, stemfapo, stempi0, stemeps,
-                                  Vmaxleaf, leaffapo, leafpi0, leafeps,
-                                  psiMax = psiMax)
+                                  Vmaxleaf, leaffapo, leafpi0, leafeps)
 plot(-supplyAG11$psiLeaf, supplyAG11$E, type="l", col=col1, ylab="Flow rate  (mmol·m-2·s-1)", 
      xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(-1,6), lwd=1, main="original")
 lines(-supplyAG11Cap1$psiLeaf, supplyAG11Cap1$E, lty=1, col=col2)
@@ -2606,28 +2600,28 @@ for(i in 1:length(pres)) {
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc, leafd,
                                   PLCstem = plcCav,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
   sfn2 = hydraulics.supplyFunctionNetwork(psiSoilLayers2,
                                   krhizomaxvec1,s$VG_n,s$VG_alpha,
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc, leafd,
                                   PLCstem = plcCav,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
   sfn3 = hydraulics.supplyFunctionNetwork(psiSoilLayers3,
                                   krhizomaxvec1,s$VG_n,s$VG_alpha,
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc, leafd,
                                   PLCstem = plcCav,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
   sfn4 = hydraulics.supplyFunctionNetwork(psiSoilLayers4,
                                   krhizomaxvec1,s$VG_n,s$VG_alpha,
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc, leafd,
                                   PLCstem = plcCav,
-                                  maxNsteps = 400, psiMax = psiMax)
+                                  maxNsteps = 400)
   if(i==1) {
     plot(-sfn1$psiLeaf, sfn1$E ,type="l", ylab="Flow rate  (mmol·m-2·s-1)", 
        xlab = "Leaf Pressure (-MPa)",  main="",  xlim=c(0, 7), ylim=c(0,max(sfn1$E)), lwd=1, col = col1)

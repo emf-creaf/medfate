@@ -224,6 +224,15 @@ double Egamma(double psi, double kxylemmax, double c, double d, double psiCav = 
 
 // [[Rcpp::export(".Egammainv")]]
 double Egammainv(double Eg, double kxylemmax, double c, double d, double psiCav = 0.0) {
+  if(psiCav<0.0) {
+    double Eq = xylemConductance(psiCav,kxylemmax,c,d)*(-psiCav);
+    if(Eg > Eq) {
+      double Ec = Egamma(psiCav, c, d, 0.0) - Eq;
+      Eg = Eg + Ec; 
+    } else {
+      return(-1.0*(Eg/xylemConductance(psiCav,kxylemmax,c,d)));
+    }
+  }
   double h = 1.0/c;
   double g = (-c/d)*(Eg/kxylemmax);
   double p = g/tgamma(h);
@@ -242,8 +251,8 @@ double EXylem(double psiPlant, double psiUpstream, double kxylemmax, double c, d
   return(Egamma(psiPlant, kxylemmax, c, d, psiCav)-Egamma(psiUpstream, kxylemmax, c,d, psiCav));
 }
 
-// [[Rcpp::export("hydraulics.E2psiXylem2")]]
-double E2psiXylem2(double E, double psiUpstream, double kxylemmax, double c, double d, double psiCav = 0.0) {
+// [[Rcpp::export("hydraulics.E2psiXylem")]]
+double E2psiXylem(double E, double psiUpstream, double kxylemmax, double c, double d, double psiCav = 0.0) {
   if(E==0) return(psiUpstream);
   double Eg = E + Egamma(psiUpstream, kxylemmax, c,d, psiCav);
   return(Egammainv(Eg, kxylemmax, c, d, psiCav));
@@ -316,28 +325,27 @@ double Ecrit(double psiUpstream, double kxylemmax, double c, double d) {
 /*
  * Calculates drop in water potential along a segment with a given flow
  */
-// [[Rcpp::export("hydraulics.E2psiXylem")]]
-double E2psiXylem(double E, double psiUpstream, double kxylemmax, double c, double d, double psiCav = 0.0, 
-                   double psiStep = -0.0001, double psiMax = -10.0) {
-  // if(E<0.0) stop("E has to be positive");
-  if(E==0) return(psiUpstream);
-  double psi = psiUpstream;
-  double k = xylemConductance(std::min(psi, psiCav),kxylemmax, c, d);
-  double Eg = 0.0;
-  double psiPrev = psi;
-  double kprev = k;
-  if(E<0.0) psiStep = -psiStep;
-  while(std::abs(Eg)<std::abs(E)) {
-    psiPrev = psi;
-    kprev = k;
-    psi = psi + psiStep;
-    k = xylemConductance(std::min(psi, psiCav),kxylemmax, c, d);
-    Eg = Eg + (-1.0*psiStep)*((kprev+k)/2.0);
-    if(psi<psiMax) return(NA_REAL);
-    if(NumericVector::is_na(Eg)) return(NA_REAL);
-  }
-  return(std::min(0.0,(psiPrev+psi)/2.0));
-}
+// double E2psiXylem(double E, double psiUpstream, double kxylemmax, double c, double d, double psiCav = 0.0, 
+//                    double psiStep = -0.0001, double psiMax = -10.0) {
+//   // if(E<0.0) stop("E has to be positive");
+//   if(E==0) return(psiUpstream);
+//   double psi = psiUpstream;
+//   double k = xylemConductance(std::min(psi, psiCav),kxylemmax, c, d);
+//   double Eg = 0.0;
+//   double psiPrev = psi;
+//   double kprev = k;
+//   if(E<0.0) psiStep = -psiStep;
+//   while(std::abs(Eg)<std::abs(E)) {
+//     psiPrev = psi;
+//     kprev = k;
+//     psi = psi + psiStep;
+//     k = xylemConductance(std::min(psi, psiCav),kxylemmax, c, d);
+//     Eg = Eg + (-1.0*psiStep)*((kprev+k)/2.0);
+//     if(psi<psiMax) return(NA_REAL);
+//     if(NumericVector::is_na(Eg)) return(NA_REAL);
+//   }
+//   return(std::min(0.0,(psiPrev+psi)/2.0));
+// }
 
 
 // [[Rcpp::export("hydraulics.Ecapacitance")]]
@@ -417,7 +425,7 @@ double E2psiTwoElements(double E, double psiSoil, double krhizomax, double kxyle
   if(E==0) return(psiSoil);
   double psiRoot = E2psiVanGenuchten(E, psiSoil, krhizomax, n, alpha, psiStep, psiMax);
   if(NumericVector::is_na(psiRoot)) return(NA_REAL);
-  return(E2psiXylem(E, psiRoot, kxylemmax, c, d, psiCav, psiStep, psiMax));
+  return(E2psiXylem(E, psiRoot, kxylemmax, c, d, psiCav));
 }
 
 
@@ -492,7 +500,7 @@ List E2psiBelowground(double E, NumericVector psiSoil,
                   NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
                   NumericVector krootmax, double rootc, double rootd, 
                   NumericVector psiIni = NumericVector::create(0),
-                  double psiStep = -0.0001, double psiMax = -10.0, int ntrial = 10, 
+                  int ntrial = 10, 
                   double psiTol = 0.0001, double ETol = 0.0001) {
   int nlayers = psiSoil.length();
   //Initialize
@@ -572,7 +580,7 @@ List E2psiBelowground(double E, NumericVector psiSoil,
       errx +=std::abs(p[fi]);
       x[fi]+=p[fi];
       x[fi] = std::min(0.0, x[fi]);
-      if(x[fi]<psiMax) {
+      if(x[fi]<-40.0) {
         x[fi] = NA_REAL;
         stop = true;
       }
@@ -610,18 +618,17 @@ List E2psiBelowground(double E, NumericVector psiSoil,
 List E2psiAboveground(double E, double psiRootCrown, 
                   double kstemmax, double stemc, double stemd,
                   double kleafmax, double leafc, double leafd,
-                  NumericVector PLCstem,
-                  double psiStep = -0.0001, double psiMax = -10.0) {
+                  NumericVector PLCstem) {
   int nStemSegments = PLCstem.size();
   NumericVector psiStem(nStemSegments, 0.0), psiPLCStem(nStemSegments, 0.0);
   double kxsegmax = kstemmax*((double) nStemSegments);
   double psiUp = psiRootCrown;
   for(int i=0;i<nStemSegments; i++) {
     psiPLCStem[i]=  apoplasticWaterPotential(1.0-PLCstem[i], stemc, stemd);
-    psiStem[i] = E2psiXylem(E, psiUp, kxsegmax, stemc, stemd, psiPLCStem[i], psiStep, psiMax); //Apliquem la fatiga per cavitacio a la caiguda de potencial a la tija 
+    psiStem[i] = E2psiXylem(E, psiUp, kxsegmax, stemc, stemd, psiPLCStem[i]); //Apliquem la fatiga per cavitacio a la caiguda de potencial a la tija 
     psiUp = psiStem[i];
   }  
-  double psiLeaf = E2psiXylem(E, psiStem[nStemSegments-1], kleafmax, leafc, leafd, 0.0, psiStep, psiMax); 
+  double psiLeaf = E2psiXylem(E, psiStem[nStemSegments-1], kleafmax, leafc, leafd, 0.0); 
   double kterm = xylemConductance(psiLeaf, kleafmax, leafc, leafd);
   return(List::create( Named("E")=E, Named("psiStem") =psiStem,Named("psiLeaf") =psiLeaf,Named("kterm") = kterm));
 }
@@ -634,8 +641,7 @@ List E2psiAbovegroundCap(double E, double psiRootCrown,
                       double kleafmax, double leafc, double leafd,
                       double Vsapwood, double stemfapo, double stempi0, double stemeps,
                       double Vleaf, double leaffapo, double leafpi0, double leafeps,
-                      double tstep = 3600.0,
-                      double psiStep = -0.0001, double psiMax = -10.0) {
+                      double tstep = 3600.0) {
   int nStemSegments = PLCstem.size();
   
   double Vsegmax = Vsapwood/((double) nStemSegments);
@@ -647,8 +653,7 @@ List E2psiAbovegroundCap(double E, double psiRootCrown,
   for(int i=0;i<nStemSegments; i++) {
     double psiCav = apoplasticWaterPotential(1.0-PLCstem[i], stemc, stemd);
     psiStem[i] = E2psiXylem(EUp, psiUp, 
-                            kxsegmax, stemc, stemd, psiCav,
-                            psiStep, psiMax);
+                            kxsegmax, stemc, stemd, psiCav);
     double Ecap = Ecapacitance(psiStem[i],psiStemPrev[i], PLCstem[i],
                                Vsegmax, stemfapo,stemc, stemd,
                                stempi0, stemeps,
@@ -659,8 +664,7 @@ List E2psiAbovegroundCap(double E, double psiRootCrown,
   }  
   
   double psiLeaf = E2psiXylem(EUp, psiUp, 
-                              kleafmax, leafc, leafd, 0.0,
-                              psiStep, psiMax);
+                              kleafmax, leafc, leafd, 0.0);
   double Ecap = Ecapacitance(psiLeaf,psiLeafPrev, 0.0,
                              Vleaf, leaffapo,leafc, leafd,
                              leafpi0, leafeps,
@@ -683,8 +687,7 @@ List E2psiAbovegroundCapacitance(double E, double psiRootCrown,
                       double Vsapwood, double stemfapo, double stempi0, double stemeps,
                       double Vleaf, double leaffapo, double leafpi0, double leafeps,
                       double klat,
-                      double tstep = 3600.0, int nSubSteps = 1000,
-                      double psiStep = -0.0001, double psiMax = -10.0) {
+                      double tstep = 3600.0, int nSubSteps = 1000) {
 
 
   
@@ -747,7 +750,7 @@ List E2psiAbovegroundCapacitance(double E, double psiRootCrown,
     for(int i=0;i<n;i++) {
       //Store previous WP and calculate new one
       double psiPrev = psiStem[i];
-      psiStem[i] = E2psiXylem(Ein, psiUp, kxsegmax, stemc,stemd, psiPLCStem[i], psiStep, psiMax);
+      psiStem[i] = E2psiXylem(Ein, psiUp, kxsegmax, stemc,stemd, psiPLCStem[i]);
       if(Vsegmax>0.0) {
         //Flow from change in volume in the stem apoplasm 
         double Fapostem = (m3tommol/tstep)*Vsegmax*stemfapo*(apoplasticRelativeWaterContent(psiPrev, stemc, stemd)-apoplasticRelativeWaterContent(psiStem[i], stemc, stemd)); 
@@ -769,7 +772,7 @@ List E2psiAbovegroundCapacitance(double E, double psiRootCrown,
     // Rcout<< "Lateral flow to leaf symplasm "<<FlatLeaf<<"\n";
     
     psiLeafPrev = psiLeaf;
-    psiLeaf = E2psiXylem(Ein, psiUp, kleafmax, leafc, leafd,0.0, psiStep, psiMax); //apoplasticWaterPotential(Vapoleaf/(Vleaf*leaffapo), leafc, leafd);
+    psiLeaf = E2psiXylem(Ein, psiUp, kleafmax, leafc, leafd,0.0); //apoplasticWaterPotential(Vapoleaf/(Vleaf*leaffapo), leafc, leafd);
     if(Vleaf>0.0) {
       //Flow from change in volume in the leaf apoplasm 
       double Fapoleaf = (m3tommol/tstep)*Vleaf*leaffapo*(apoplasticRelativeWaterContent(psiLeafPrev, leafc, leafd) - apoplasticRelativeWaterContent(psiLeaf, leafc, leafd));
@@ -953,7 +956,7 @@ List E2psiNetwork(double E, NumericVector psiSoil,
                   double kleafmax, double leafc, double leafd,
                   NumericVector PLCstem,
                   NumericVector psiIni = NumericVector::create(0),
-                  double psiStep = -0.0001, double psiMax = -10.0, int ntrial = 10, 
+                  int ntrial = 10, 
                   double psiTol = 0.0001, double ETol = 0.0001) {
   
   int nStemSegments = PLCstem.size();
@@ -961,7 +964,7 @@ List E2psiNetwork(double E, NumericVector psiSoil,
                                  krhizomax, nsoil, alphasoil,
                                  krootmax, rootc, rootd, 
                                  psiIni,
-                                 psiStep, psiMax, ntrial, psiTol, ETol);
+                                 ntrial, psiTol, ETol);
   
   //Copy output
   double psiRoot  = E2psiRS["psiRoot"];
@@ -976,8 +979,7 @@ List E2psiNetwork(double E, NumericVector psiSoil,
     List E2psiAG = E2psiAboveground(E, psiRoot, 
                                     kstemmax, stemc, stemd,
                                     kleafmax, leafc, leafd,
-                                    PLCstem,
-                                    psiStep, psiMax);
+                                    PLCstem);
     kterm = E2psiAG["kterm"];
     psiLeaf = E2psiAG["psiLeaf"];
     psiStem = E2psiAG["psiStem"];
@@ -1005,8 +1007,7 @@ List supplyFunctionOneXylem(NumericVector psiSoil, NumericVector v,
   //Calculate initial slope
   for(int l=0;l<nlayers;l++) {
     Psilayers[l] = E2psiXylem(dE, psiSoil[l], 
-                              kstemmax, stemc,stemd, psiCav, 
-                              psiStep, psiMax);
+                              kstemmax, stemc,stemd, psiCav);
     // Rcout<<Psilayers[l]<<" ";
   }
   Rcout<<"\n";
@@ -1021,8 +1022,7 @@ List supplyFunctionOneXylem(NumericVector psiSoil, NumericVector v,
     // Rcout<<supplyE[i]<<" ";
     for(int l=0;l<nlayers;l++) {
       Psilayers[l] = E2psiXylem(supplyE[i], psiSoil[l],
-                                kstemmax, stemc,stemd, psiCav, 
-                                psiStep, psiMax);
+                                kstemmax, stemc,stemd, psiCav);
       // Rcout<<Psilayers[l]<<" ";
     }
     // Rcout<<"\n";
@@ -1280,7 +1280,7 @@ List supplyFunctionThreeElements(double Emax, double psiSoil, double krhizomax, 
 List supplyFunctionBelowground(NumericVector psiSoil, 
                            NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
                            NumericVector krootmax, double rootc, double rootd, 
-                           double minFlow = 0.0, int maxNsteps=400, double psiStep = -0.0001, double psiMax = -10.0, 
+                           double minFlow = 0.0, int maxNsteps=400, 
                            int ntrial = 10, double psiTol = 0.0001, double ETol = 0.0001) {
   int nlayers = psiSoil.size();
   NumericVector supplyE(maxNsteps);
@@ -1292,7 +1292,7 @@ List supplyFunctionBelowground(NumericVector psiSoil,
                           krhizomax,  nsoil,  alphasoil,
                           krootmax,  rootc,  rootd,
                           NumericVector::create(0),
-                          psiStep, psiMax, ntrial,psiTol, ETol);
+                          ntrial,psiTol, ETol);
   NumericVector solERhizo =sol["ERhizo"];
   NumericVector solPsiRhizo = sol["psiRhizo"];
   supplyERhizo(0,_) = solERhizo;
@@ -1305,7 +1305,7 @@ List supplyFunctionBelowground(NumericVector psiSoil,
                            krhizomax,  nsoil,  alphasoil,
                            krootmax,  rootc,  rootd,
                            sol["x"],
-                           psiStep, psiMax, ntrial,psiTol, ETol);
+                           ntrial,psiTol, ETol);
   double psiRootI = solI["psiRoot"];
   double maxdEdp = (ETol*2.0)/std::abs(psiRootI - supplyPsiRoot[0]);
 
@@ -1318,7 +1318,7 @@ List supplyFunctionBelowground(NumericVector psiSoil,
                        krhizomax,  nsoil,  alphasoil,
                        krootmax,  rootc,  rootd,
                        sol["x"],
-                       psiStep, psiMax, ntrial,psiTol, ETol);
+                       ntrial,psiTol, ETol);
     solERhizo =sol["ERhizo"];
     solPsiRhizo = sol["psiRhizo"];
     supplyERhizo(i,_) =  solERhizo;
@@ -1369,8 +1369,7 @@ List supplyFunctionBelowground(NumericVector psiSoil,
 List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootCrown, 
                                double kstemmax, double stemc, double stemd,
                                double kleafmax, double leafc, double leafd,
-                               NumericVector PLCstem,
-                               double psiStep = -0.0001, double psiMax = -10.0) {
+                               NumericVector PLCstem) {
 
   int nStemSegments = PLCstem.size();
   int maxNsteps = Erootcrown.size();
@@ -1387,8 +1386,7 @@ List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootCr
     List sol = E2psiAboveground(Erootcrown[i], psiRootCrown[i],                        
                                 kstemmax, stemc, stemd,
                                 kleafmax, leafc, leafd,
-                                PLCstem, 
-                                psiStep, psiMax);
+                                PLCstem);
     NumericVector solPsiStem = sol["psiStem"];
     supplyPsiStem(i,_) = solPsiStem; 
     supplyPsiLeaf[i] = sol["psiLeaf"];
@@ -1444,8 +1442,7 @@ List supplyFunctionAbovegroundCap(NumericVector Erootcrown, NumericVector psiRoo
                                   double kleafmax, double leafc, double leafd,
                                   double Vsapwood, double stemfapo, double stempi0, double stemeps,
                                   double Vleaf, double leaffapo, double leafpi0, double leafeps,
-                                  double tstep = 3600.0,
-                                  double psiStep = -0.0001, double psiMax = -10.0) {
+                                  double tstep = 3600.0) {
   int nnodes = psiStemPrev.size(); // stem nodes + leaf
   int maxNsteps = Erootcrown.size();
   NumericVector supplydEdp(maxNsteps);
@@ -1465,8 +1462,7 @@ List supplyFunctionAbovegroundCap(NumericVector Erootcrown, NumericVector psiRoo
                                    kleafmax, leafc, leafd,
                                    Vsapwood, stemfapo, stempi0, stemeps,
                                    Vleaf, leaffapo, leafpi0, leafeps,
-                                   tstep, 
-                                   psiStep, psiMax);
+                                   tstep);
     NumericVector solEStem = sol["EStem"];
     NumericVector solNewPsiStem = sol["psiStem"];
     supplyPsiStem(i,_) = solNewPsiStem;
@@ -1530,8 +1526,7 @@ List supplyFunctionAbovegroundCapacitance(NumericVector Erootcrown, NumericVecto
                                double Vsapwood, double stemfapo, double stempi0, double stemeps,
                                double Vleaf, double leaffapo, double leafpi0, double leafeps,
                                double klat,
-                               double tstep = 3600.0, int nSubSteps = 1000,
-                               double psiStep = -0.0001, double psiMax = -10.0) {
+                               double tstep = 3600.0, int nSubSteps = 1000) {
   int nnodes = psiStemPrev.size(); // stem nodes + leaf
   int maxNsteps = Erootcrown.size();
   NumericVector supplyE(maxNsteps);
@@ -1557,8 +1552,7 @@ List supplyFunctionAbovegroundCapacitance(NumericVector Erootcrown, NumericVecto
                                 Vsapwood, stemfapo, stempi0, stemeps,
                                 Vleaf, leaffapo, leafpi0, leafeps,
                                 klat, 
-                                tstep, nSubSteps,
-                                psiStep, psiMax);
+                                tstep, nSubSteps);
     NumericVector solNewPsiStem = sol["psiStem"];
     NumericVector solNewPLC = sol["PLCstem"];
     NumericVector solNewRWCsympstem = sol["RWCsympstem"];
@@ -1632,7 +1626,7 @@ List supplyFunctionNetwork(NumericVector psiSoil,
                            double kstemmax, double stemc, double stemd,
                            double kleafmax, double leafc, double leafd,
                            NumericVector PLCstem,
-                           double minFlow = 0.0, int maxNsteps=400, double psiStep = -0.0001, double psiMax = -10.0, 
+                           double minFlow = 0.0, int maxNsteps=400, 
                            int ntrial = 200, double psiTol = 0.0001, double ETol = 0.0001) {
   int nlayers = psiSoil.size();
   int nStemSegments = PLCstem.size();
@@ -1652,7 +1646,7 @@ List supplyFunctionNetwork(NumericVector psiSoil,
                           kleafmax,  leafc,  leafd,
                           PLCstem,
                           NumericVector::create(0),
-                          psiStep, psiMax, ntrial,psiTol, ETol);
+                          ntrial,psiTol, ETol);
   NumericVector solERhizo = sol["ERhizo"];
   NumericVector solPsiRhizo = sol["psiRhizo"];
   NumericVector solPsiStem = sol["psiStem"];
@@ -1672,7 +1666,7 @@ List supplyFunctionNetwork(NumericVector psiSoil,
                            kleafmax,  leafc,  leafd,
                            PLCstem,
                            sol["x"],
-                              psiStep, psiMax, ntrial,psiTol, ETol);
+                           ntrial,psiTol, ETol);
   double psiLeafI = solI["psiLeaf"];
   double maxdEdp = (ETol*2.0)/std::abs(psiLeafI - supplyPsiLeaf[0]);
   
@@ -1688,7 +1682,7 @@ List supplyFunctionNetwork(NumericVector psiSoil,
                        kleafmax,  leafc,  leafd,
                        PLCstem,
                        sol["x"],
-                          psiStep, psiMax, ntrial,psiTol, ETol);
+                       ntrial,psiTol, ETol);
     solERhizo = sol["ERhizo"];
     solPsiRhizo = sol["psiRhizo"];
     solPsiStem = sol["psiStem"];
@@ -1750,7 +1744,7 @@ List supplyFunctionNetwork(NumericVector psiSoil,
 // [[Rcpp::export("hydraulics.regulatedPsiXylem")]]
 NumericVector regulatedPsiXylem(double E, double psiUpstream, double kxylemmax, double c, double d, double psiStep = -0.01) {
   //If Ein > Ecrit then set Ein to Ecrit
-  double psiUnregulated = E2psiXylem(E, psiUpstream, kxylemmax, c, d, 0.0, psiStep);
+  double psiUnregulated = E2psiXylem(E, psiUpstream, kxylemmax, c, d, 0.0);
   double Ec = Ecrit(psiUpstream, kxylemmax,c,d);
   double Ein = E;
   if(Ein > Ec) {
