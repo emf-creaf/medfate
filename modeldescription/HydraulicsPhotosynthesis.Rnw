@@ -1052,6 +1052,87 @@ legend("topleft", bty="n", legend=c("Leaf","Stem","Root crown", "Rhizo 1", "Rhiz
 \subsection{Hydraulics with water compartments}
 So far we have been concerned with \emph{steady-state} hydraulics while assuming there are no other sources of water than the soil. In this section we will consider the effect of additional sources of water from leaf and stem tissues on transpiration and, more generally, in plant physiology. 
 
+<<>>=
+Vmaxstem = 0.0005
+Vmaxleaf = 0.0001
+psiStemPrev1 = 0
+psiLeafPrev1 = 0
+psiStemPrev2 = -1.5
+psiLeafPrev2 = -1.5
+stempi0 = -3
+stemeps = 12
+leafpi0 = -3
+leafeps = 12
+stemfapo = 0.8
+leaffapo = 0.15
+@
+
+<<fig=TRUE, width=8, height=8, echo=FALSE>>=
+par(mar=c(4,4,4,1), mfrow=c(2,2))
+supplyAG11 = hydraulics.supplyFunctionAboveground(supplyNetwork11$E, supplyNetwork11$psiRoot,
+                                  kstemmax, stemc,stemd,
+                                  kleafmax, leafc,leafd,
+                                  PLCstem=0,
+                                  psiMax = psiMax)
+supplyAG11Emb = hydraulics.supplyFunctionAboveground(supplyNetwork11$E, supplyNetwork11$psiRoot,
+                                  kstemmax, stemc,stemd,
+                                  kleafmax, leafc,leafd,
+                                  PLCstem=plcCav,
+                                  psiMax = psiMax)
+supplyAG11Cap1 = hydraulics.supplyFunctionAbovegroundCap(supplyNetwork11$E, supplyNetwork11$psiRoot,
+                                  psiStemPrev1, PLCstem=0,
+                                  psiLeafPrev1,
+                                  kstemmax, stemc,stemd,
+                                  kleafmax, leafc,leafd,
+                                  Vmaxstem, stemfapo, stempi0, stemeps,
+                                  Vmaxleaf, leaffapo, leafpi0, leafeps,
+                                  psiMax = psiMax)
+supplyAG11Cap2 = hydraulics.supplyFunctionAbovegroundCap(supplyNetwork11$E, supplyNetwork11$psiRoot,
+                                  psiStemPrev2, PLCstem=0,
+                                  psiLeafPrev2,
+                                  kstemmax, stemc,stemd,
+                                  kleafmax, leafc,leafd,
+                                  Vmaxstem, stemfapo, stempi0, stemeps,
+                                  Vmaxleaf, leaffapo, leafpi0, leafeps,
+                                  psiMax = psiMax)
+supplyAG11Cap1Emb = hydraulics.supplyFunctionAbovegroundCap(supplyNetwork11$E, supplyNetwork11$psiRoot,
+                                  psiStemPrev1, PLCstem=plcCav,
+                                  psiLeafPrev1,
+                                  kstemmax, stemc,stemd,
+                                  kleafmax, leafc,leafd,
+                                  Vmaxstem, stemfapo, stempi0, stemeps,
+                                  Vmaxleaf, leaffapo, leafpi0, leafeps,
+                                  psiMax = psiMax)
+supplyAG11Cap2Emb = hydraulics.supplyFunctionAbovegroundCap(supplyNetwork11$E, supplyNetwork11$psiRoot,
+                                  psiStemPrev2, PLCstem=plcCav,
+                                  psiLeafPrev2,
+                                  kstemmax, stemc,stemd,
+                                  kleafmax, leafc,leafd,
+                                  Vmaxstem, stemfapo, stempi0, stemeps,
+                                  Vmaxleaf, leaffapo, leafpi0, leafeps,
+                                  psiMax = psiMax)
+plot(-supplyAG11$psiLeaf, supplyAG11$E, type="l", col=col1, ylab="Flow rate  (mmol·m-2·s-1)", 
+     xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(-1,6), lwd=1, main="original")
+lines(-supplyAG11Cap1$psiLeaf, supplyAG11Cap1$E, lty=1, col=col2)
+lines(-supplyAG11Cap2$psiLeaf, supplyAG11Cap2$E, lty=1, col=col3)
+legend("bottomright",  legend= c("No capacitance", "Psi_prev = 0 MPa", "Psi_prev = -1.5 MPa"),       col = c(col1, col2, col3), lty=1, bty="n", cex=0.7)
+plot(-supplyAG11Emb$psiLeaf, supplyAG11Emb$E, type="l", col=col1, ylab="Flow rate  (mmol·m-2·s-1)", 
+     xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(-1,6), lwd=1, main="cavitated")
+legend("bottomright",  legend= c("No capacitance", "Psi_prev = 0 MPa", "Psi_prev = -1.5 MPa"), col = c(col1, col2, col3), lty=1, bty="n", cex=0.7)
+lines(-supplyAG11Cap1Emb$psiLeaf, supplyAG11Cap1Emb$E, lty=1, col=col2)
+lines(-supplyAG11Cap2Emb$psiLeaf, supplyAG11Cap2Emb$E, lty=1, col=col3)
+
+plot(-supplyAG11$psiLeaf, supplyAG11$dEdP, type="l", col=col1, ylab="dE/dP  (mmol·m-2·s-1·MPa-1)",     xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,max(supplyAG11Cap1$dEdP)), lwd=1, main="original")
+legend("topright",  legend= c("No capacitance", "Psi_prev = 0 MPa", "Psi_prev = -1.5 MPa"), col = c(col1, col2, col3), lty=1, bty="n", cex=0.7)
+lines(-supplyAG11Cap1$psiLeaf, supplyAG11Cap1$dEdP, lty=1, col=col2)
+lines(-supplyAG11Cap2$psiLeaf, supplyAG11Cap2$dEdP, lty=1, col=col3)
+plot(-supplyAG11Emb$psiLeaf, supplyAG11Emb$dEdP, type="l", col=col1, ylab="dE/dP  (mmol·m-2·s-1·MPa-1)", 
+    xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,max(supplyAG11Cap1$dEdP)), lwd=1, main="cavitated")
+legend("topright",  legend= c("No capacitance", "Psi_prev = 0 MPa", "Psi_prev = -1.5 MPa"),col = c(col1, col2, col3), lty=1, bty="n", cex=0.7)
+lines(-supplyAG11Cap1Emb$psiLeaf, supplyAG11Cap1Emb$dEdP, lty=1, col=col2)
+lines(-supplyAG11Cap2Emb$psiLeaf, supplyAG11Cap2Emb$dEdP, lty=1, col=col3)
+@
+
 In the previous section we described how the supply function of the network representing the continuum is build for a given state of soil water potentials. This approach allows determining flows and water potential for \emph{steady-state} conditions. In a dynamic context one has to calculate the supply function for all values of $E$, then to determine stomatal conductance (see sections devoted to photosynthesis and stomatal regulation) and finally to decide on a specific value of $E$ and the corresponding steady-state configuration. Because light and temperature conditions change along the day, steady-state stomatal conductance and instantaneous $E$ values have to be determined for subdaily steps (e.g. 1-hour steps) and then flows need to be scaled and aggregated. At the end of the day, one may substract water from soil layers and recalculate the supply function for the next day. 
 
 Most importantly, considering water compartments allows tracking leaf and stem (i.e. plant) \emph{dessication}, either when the plant is connected to the soil or when transpiration flow comes from the plant itself. When considering plant compartments, one could allow flow from compartments to affect the determination of stomatal conductance. However, since the supply function is concerned with instantaneous flows, the instantaneous change in water content of compartments is very small, and one may assume that the contribution of plant compartments to the overall \emph{shape} of the supply function, and hence to the determination of stomatal conductance, is negligible. We take this assumption here and assume that considering plant compartments does not change the determination of steady-state stomatal conductance (and hence the amount of water extracted from the soil) corresponding to any given subdaily step. Nevertheless, the \emph{total} amount of water transpired by plants between two consecutive time steps (e.g. during 1 hour or during a full day), will likely be affected by transient changes in plant water content. Therefore, changes in water compartments can be used to decide on the amount of water that should be added or removed for any given time step to the flow determined by steady-state calculations. Since photosynthesis is calculated according to steady-state calculations, the addition/subtraction of transpired water alters the instantaneous or subdaily assessment of water use efficiency, i.e. the ratio between photosynthesis and transpiration. However, at longer time scales (i.e for days or weeks) the effect should be negligible because most variations in plant water content occur at subdaily time scales and changes are slow at longer time scales.
@@ -1873,9 +1954,9 @@ where $k_c(\Psi_{leaf}) = dE/d\Psi(\Psi_{leaf})$ is the slope of the supply func
 
 Alternatively, we considered a second cost function ($\theta_2(\Psi_{leaf})$) using the vulnerability curve of the leaf:
 \begin{eqnarray}
-\theta_2(\Psi_{leaf}) &=& \frac{k_{l, max}-k_l(\Psi_{leaf})}{k_{l,max}}\\
+\theta_2(\Psi_{leaf}) &=& \frac{k_{l, max}-k_l(\Psi_{leaf})}{k_{l,max} - k_{l,min}}\\
 \end{eqnarray}
-where $k_l$ is the leaf conductance function; and and $k_{l,max}$ is the maximum leaf conductance value. Using the leaf vulnerability curve for the cost function is grounded on the fact that stomatal regulation occurs at leaves, so that instantaneous regulation should respond to the loss of hydraulic conductance at this point, independently of what happens to the rest of the continuum. Hormonal signals from root to leaf are assumed to regulate stomatal aperture at longer time scales. Obviously, $\theta_2$ is the same before irreversible cavitation. The difference between them may be interpreted as the following. $\theta_2$ strictly follows the potential at the leaf level (and hence could be related to a loss of turgor). 
+where $k_l$ is the leaf conductance function; and $k_{l,min}$ and $k_{l,max}$ are the minimum and maximum leaf conductance values found in the supply function. Using the leaf vulnerability curve for the cost function is grounded on the fact that stomatal regulation occurs at leaves, so that instantaneous regulation should respond to the loss of hydraulic conductance at this point, independently of what happens to the rest of the continuum. Hormonal signals from root to leaf are assumed to regulate stomatal aperture at longer time scales. Obviously, $\theta_2$ is the same before irreversible cavitation. The difference between them may be interpreted as the following. $\theta_2$ strictly follows the potential at the leaf level (and hence could be related to a loss of turgor). 
 
 <<echo=FALSE>>==
 PM11 =transp.profitMaximization(supplyNetwork11, psi2A11, type=1, Gmin, Gmax)
@@ -2125,7 +2206,7 @@ legend("topright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 abline(h=0,col="gray")
 abline(v=-psiCav, col="gray", lwd=1.5)
 
-plot(-supplyNetwork11$psiLeaf, PM11_s2$Profit, type="l", col=col1, ylab="Profit 2", xlab = "Leaf sap pressure (-MPa)",  xlim=c(0, 7), ylim=c(-1,1), lwd=1, main="original")
+plot(-supplyNetwork11$psiLeaf, PM11_s2$Profit, type="l", col=col1, ylab="Profit 2", xlab = "Leaf sap pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,1), lwd=1, main="original")
 points(-supplyNetwork11$psiLeaf[PM11_s2$iMaxProfit+1],
          PM11_s2$Profit[PM11_s2$iMaxProfit+1], col=col1, pch = 0)
 lines(-supplyNetwork12$psiLeaf, PM12_s2$Profit, lty=1, lwd=1, col=col2)
@@ -2164,7 +2245,7 @@ points(-supplyNetwork34$psiLeaf[PM34_s2$iMaxProfit+1],
 legend("topright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 abline(h=0,col="gray")
 
-plot(-supplyNetwork11emb$psiLeaf, PM11emb_s2$Profit, type="l", col=col1, ylab="Profit 2", xlab = "Leaf sap pressure (-MPa)",  xlim=c(0, 7), ylim=c(-1,1), lwd=1, main="after cavitation")
+plot(-supplyNetwork11emb$psiLeaf, PM11emb_s2$Profit, type="l", col=col1, ylab="Profit 2", xlab = "Leaf sap pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,1), lwd=1, main="after cavitation")
 points(-supplyNetwork11emb$psiLeaf[PM11emb_s2$iMaxProfit+1],
          PM11emb_s2$Profit[PM11emb_s2$iMaxProfit+1], col=col1, pch = 0)
 lines(-supplyNetwork12emb$psiLeaf, PM12emb_s2$Profit, lty=1, lwd=1, col=col2)

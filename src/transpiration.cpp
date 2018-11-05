@@ -22,13 +22,23 @@ List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, i
   NumericVector Gw = photosynthesisFunction["WaterVaporConductance"];
   int nsteps = supplydEdp.size();
   double maxdEdp = 0.0, mindEdp = 99999999.0;
+  double maxKterm = 0.0, minKterm = 99999999.0;
   double Agmax = 0.0;
   //Find valid limits according to stomatal conductance
   int ini = 0, fin = nsteps-1;
  
+  // mindEdp = 0.0; 
+  // int imaxdEdp = 0;
+  // maxdEdp = supplydEdp[0];
   for(int i=ini;i<fin;i++) {
+    // if(supplydEdp[i] > maxdEdp) {
+    //   maxdEdp = supplydEdp[i];
+    //   imaxdEdp = i;
+    // }
+    mindEdp = std::min(mindEdp, supplydEdp[i]);
     maxdEdp = std::max(maxdEdp, supplydEdp[i]);
-    mindEdp =  std::min(mindEdp, supplydEdp[i]);
+    minKterm = std::min(minKterm, supplyKterm[i]);
+    maxKterm = std::max(maxKterm, supplyKterm[i]);
     Agmax = std::max(Agmax, Ag[i]);
   }
   //Evaluate profit for valid steps
@@ -36,9 +46,16 @@ List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, i
   NumericVector cost(nsteps, NA_REAL);
   NumericVector gain(nsteps, NA_REAL);
   for(int i=ini;i<fin;i++) {
-    if(type==1) cost[i] = (maxdEdp-supplydEdp[i])/(maxdEdp-mindEdp);
+    if(type==1) {
+      // if(i<imaxdEdp) {
+      //   cost[i]= 0.0; 
+      // } else {
+      //   cost[i] = std::max(0.0,(maxdEdp-supplydEdp[i])/(maxdEdp-mindEdp));  
+      // }
+      cost[i] = (maxdEdp-supplydEdp[i])/(maxdEdp-mindEdp);  
+    }
     else {
-      cost[i] = (kleafmax-supplyKterm[i])/(kleafmax-0.0);
+      cost[i] = (maxKterm-supplyKterm[i])/(maxKterm - minKterm);
     }
     gain[i] = Ag[i]/Agmax;
     profit[i] = gain[i]-cost[i];

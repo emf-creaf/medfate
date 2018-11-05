@@ -60,6 +60,15 @@ List E2psiAboveground(double E, double psiRootCrown,
                       NumericVector PLCstem,
                       double psiStep = -0.0001, double psiMax = -10.0);
 
+List supplyFunctionAbovegroundCap(NumericVector Erootcrown, NumericVector psiRootCrown,
+                                  NumericVector psiStemPrev, NumericVector PLCstemPrev,
+                                  double psiLeafPrev, 
+                                  double kstemmax, double stemc, double stemd,
+                                  double kleafmax, double leafc, double leafd,
+                                  double Vsapwood, double stemfapo, double stempi0, double stemeps,
+                                  double Vleaf, double leaffapo, double leafpi0, double leafeps,
+                                  double tstep = 3600.0,
+                                  double psiStep = -0.0001, double psiMax = -10.0);
 List E2psiAbovegroundCapacitance(double E, double psiRootCrown,
                                  double EPrev, double psiRootCrownPrev,
                                  NumericVector psiStemPrev, NumericVector PLCstemPrev, NumericVector RWCsympstemPrev,

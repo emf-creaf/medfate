@@ -622,13 +622,22 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
     // Rcout<<minFlow<<"\n";
     if(nlayerscon[c]>0) {
       NumericVector PLCStemPrev = PLCstemMAT(c,_); //Get row
-      supply[c] = supplyFunctionNetwork(psic,
-                                        VGrhizo_kmaxc,VG_nc,VG_alphac,
-                                        VCroot_kmaxc, VCroot_c[c],VCroot_d[c],
-                                        VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
-                                        VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
-                                        PLCStemPrev,
-                                        0.0, maxNsteps, psiStep, psiMax , ntrial, psiTol, ETol);
+      // if(!capacitance) {
+        supply[c] = supplyFunctionNetwork(psic,
+                                          VGrhizo_kmaxc,VG_nc,VG_alphac,
+                                          VCroot_kmaxc, VCroot_c[c],VCroot_d[c],
+                                          VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
+                                          VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
+                                          PLCStemPrev,
+                                          0.0, maxNsteps, psiStep, psiMax , ntrial, psiTol, ETol); 
+      // } else { //Calculate supply function for root system only
+      //   supply[c] = supplyFunctionBelowground(psic,
+      //                                         VGrhizo_kmaxc,VG_nc,VG_alphac,
+      //                                         VCroot_kmaxc, VCroot_c[c],VCroot_d[c],
+      //                                         0.0, maxNsteps, psiStep, psiMax, 
+      //                                         ntrial, psiTol, ETol); 
+      //   
+      // }
     }
   }
 
@@ -734,14 +743,36 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
       
       if(nlayerscon[c]>0) {//If the plant is connected to at least one layer build 
 
-        List sFunction = supply[c];
-        NumericVector Erootcrown = sFunction["E"];
-        NumericVector psiRoot = sFunction["psiRoot"];
-        NumericMatrix ElayersMat = sFunction["ERhizo"];
-        NumericVector fittedE = sFunction["E"];
+        List sFunction;
         // Rcout<<c<<" E "<<EinstPrev<<" PR "<< psiRootPrev<<" PL "<<psiLeafPrev<< " PS "<<psiStemPrev[0]<< " "<<rwcsleafPrev<< " "<<RWCStemPrev[0]<<"\n";
+        NumericVector Erootcrown;
+        NumericVector psiRoot;
+        NumericMatrix ElayersMat;
+        NumericVector fittedE;
         
+        if(!capacitance) {
+          sFunction = supply[c];
+          Erootcrown = sFunction["E"];
+          psiRoot = sFunction["psiRoot"];
+          ElayersMat = Rcpp::as<Rcpp::NumericMatrix>(sFunction["ERhizo"]);
+          fittedE = sFunction["E"];
+        } else {
+          List RSFunction = supply[c];
+          Erootcrown = RSFunction["E"];
+          psiRoot = RSFunction["psiRoot"];
+          ElayersMat = Rcpp::as<Rcpp::NumericMatrix>(RSFunction["ERhizo"]);
+          sFunction = supplyFunctionAbovegroundCap(Erootcrown, psiRoot,
+                                                   psiStemPrev, PLCStemPrev, 
+                                                   psiLeafPrev, 
+                                                   VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
+                                                   VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
+                                                   Vsapwood[c], StemAF[c], StemPI0[c], StemEPS[c],
+                                                   Vleaf[c], LeafAF[c], LeafPI0[c], LeafEPS[c],
+                                                   tstep, psiStep, psiMax);
+          fittedE = sFunction["E"];
+        }
  
+
         if(fittedE.size()>0) {
           //Photosynthesis function for sunlit and shade leaves
           DataFrame photoSunlit = leafPhotosynthesisFunction(fittedE, Catm, Patm,Tcan[n], vpatm, 
@@ -806,30 +837,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
             Rcout<<"\n iPM -1! Eaverage="<< Eaverage << " fittedE.size= "<< fittedE.size()<<" iPMSunlit="<< iPMSunlit<< " fittedE[iPMSunlit]="<<fittedE[iPMSunlit]<<" iPMShade="<<iPMShade<<" fittedE[iPMShade]="<<fittedE[iPMShade]<<"\n";
             stop("");
           }
-          List E2psiAGCAP = NULL;
-          double Edif = NA_REAL;
-          if(capacitance) {
-            E2psiAGCAP = E2psiAbovegroundCapacitance(Erootcrown[iPM], psiRoot[iPM],
-                                                     EinstPrev, psiRootPrev,
-                                                     psiStemPrev, PLCStemPrev, RWCStemPrev,
-                                                     psiLeafPrev, rwcsleafPrev,
-                                                     VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
-                                                     VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
-                                                     Vsapwood[c], StemAF[c], StemPI0[c], StemEPS[c],
-                                                     Vleaf[c], LeafAF[c], LeafPI0[c], LeafEPS[c],
-                                                     klat,
-                                                     tstep, nsubsteps, psiStep, psiMax);
-            
-            //Add difference due to capacitance effects
-            Edif = E2psiAGCAP["Edif"];
-            // Rcout<<Edif<<"\n";
-            if(NumericVector::is_na(Edif)) {
-              Rcout<<"NA!";
-            } else {
-              Eaverage = std::max(0.0, Eaverage+Edif); //Do not allow final negative E values
-            }
-          }
-          
+
           //Scale water extracted from soil to cohort level
           NumericVector Esoilcn(nlayerscon[c],0.0);
           for(int lc=0;lc<nlayerscon[c];lc++) {
@@ -852,29 +860,35 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
           EinstVEC[c] = Eaverage;
           PLC(c,n) = NA_REAL;
           RWCssteminst(c,n) = NA_REAL;
-          if(!NumericVector::is_na(Edif)) {
-            psiLeafVEC[c] = E2psiAGCAP["psiLeaf"];
-            RWCsleafVEC[c] = E2psiAGCAP["RWCsympleaf"];
-            NumericVector newPLCstem = E2psiAGCAP["PLCstem"];
-            NumericVector newRWCsympstem = E2psiAGCAP["RWCsympstem"];
-            NumericVector newPsiStem = E2psiAGCAP["psiStem"];
-            psiStemMAT(c,_) = newPsiStem;
-            PLCstemMAT(c,_) = newPLCstem;    
-            RWCsstemMAT(c,_) = newRWCsympstem;
-            int nseg = newPLCstem.size();
-            PLC(c,n) = newPLCstem[nseg-1]; //Store the PLC and RWCsym values of the distal-most segment
-            RWCssteminst(c,n) = newRWCsympstem[nseg-1];
-          } else {
-            NumericVector psiLeaf = sFunction["psiLeaf"];
-            psiLeafVEC[c] = psiLeaf[iPM];
-            NumericMatrix newPsiStem = sFunction["psiStem"];
-            psiStemMAT(c,_) = newPsiStem(iPM,_);
-            int nseg = psiStemMAT.ncol();
-            for(int i=0;i<nseg;i++) {
-              PLCstemMAT(c,i) = std::max(PLCstemMAT(c,i), 1.0 - apoplasticRelativeWaterContent(psiStemMAT(c,i), VCstem_c[c], VCstem_d[c]));
-            }
-            PLC(c,n) = sum(PLCstemMAT(c,_))/((double)nseg);
+          
+          NumericVector psiLeaf = sFunction["psiLeaf"];
+          NumericMatrix newPsiStem = sFunction["psiStem"];
+
+          psiLeafVEC[c] = psiLeaf[iPM];
+          RWCsleafVEC[c] = symplasticRelativeWaterContent(psiLeafVEC[c], LeafPI0[c], LeafEPS[c]);
+          psiStemMAT(c,_) = newPsiStem(iPM,_);
+          int nseg = psiStemMAT.ncol();
+          for(int i=0;i<nseg;i++) {
+            PLCstemMAT(c,i) = std::max(PLCstemMAT(c,i), 1.0 - apoplasticRelativeWaterContent(psiStemMAT(c,i), VCstem_c[c], VCstem_d[c]));
+            RWCsstemMAT(c,i) = symplasticRelativeWaterContent(psiStemMAT(c,i), StemPI0[c], StemEPS[c]);
           }
+          PLC(c,n) = sum(PLCstemMAT(c,_))/((double)nseg);
+          RWCssteminst(c,n) = RWCsstemMAT(c,nseg-1);
+          
+          // if(!NumericVector::is_na(Edif)) {
+          //   psiLeafVEC[c] = E2psiAGCAP["psiLeaf"];
+          //   RWCsleafVEC[c] = E2psiAGCAP["RWCsympleaf"];
+          //   NumericVector newPLCstem = E2psiAGCAP["PLCstem"];
+          //   NumericVector newRWCsympstem = E2psiAGCAP["RWCsympstem"];
+          //   NumericVector newPsiStem = E2psiAGCAP["psiStem"];
+          //   psiStemMAT(c,_) = newPsiStem;
+          //   PLCstemMAT(c,_) = newPLCstem;    
+          //   RWCsstemMAT(c,_) = newRWCsympstem;
+          //   int nseg = newPLCstem.size();
+          //   PLC(c,n) = newPLCstem[nseg-1]; //Store the PLC and RWCsym values of the distal-most segment
+          //   RWCssteminst(c,n) = newRWCsympstem[nseg-1];
+          // } else {
+          // }
           
           // if(verbose) {
           //   Rcout<<c<<" " <<n<<" E rc size "<< Erootcrown.size()<< " E size"<< fittedE.size()<<" iPMSunlit"<<iPMSunlit<<"iPMShade"<<iPMShade<<"iPM"<<iPM;
@@ -885,7 +899,6 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
           
           //Store instantaneous leaf, stem and root potential
           PsiLeafinst(c,n) = psiLeafVEC[c]; 
-          int nseg = psiStemMAT.ncol();
           PsiSteminst(c,n) = psiStemMAT(c, nseg-1); 
           PsiRootinst(c,n) = psiRootVEC[c]; 
           //Store instantaneous leaf rwc
