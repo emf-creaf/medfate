@@ -99,8 +99,7 @@ List supplyFunctionNetwork(NumericVector psiSoil,
 List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootCrown,
                                double kstemmax, double stemc, double stemd,
                                double kleafmax, double leafc, double leafd,
-                               NumericVector PLCstem,
-                               double psiStep = -0.0001, double psiMax = -10.0);
+                               NumericVector PLCstem);
 
 List supplyFunctionAbovegroundCapacitance(NumericVector Erootcrown, NumericVector psiRootCrown,
                                           double EPrev, double psiRootCrownPrev,

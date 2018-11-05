@@ -110,14 +110,14 @@ double gammds ( double x, double p)
   //
   if ( x <= 0.0 )
   {
-    stop("x <= 0.0 in gammds");
+    warning("x <= 0.0 in gammds");
     value = 0.0;
     return value;
   }
   
   if ( p <= 0.0 ) 
   {
-    stop("p <= 0.0 in gammds");
+    warning("p <= 0.0 in gammds");
     value = 0.0;
     return value;
   }
@@ -209,13 +209,15 @@ double Egamma(double psi, double kxylemmax, double c, double d, double psiCav = 
   else if(psi==0.0) return(0.0);
   double h = 1.0/c;
   double z = pow(psi/d,c);
-  double g = tgamma(h)*gammds(z,h); //Upper incomplete gamma, without the normalizing factor
+  NumericVector pq = incgam(h,z);
+  double g = tgamma(h)*pq[0]; //Upper incomplete gamma, without the normalizing factor
   double E = kxylemmax*(-d/c)*g;
   if(psiCav<0.0) { //Decrease E from 0 to psiCav (avoid recursiveness!)
     if(psiCav < psi) {
       E = xylemConductance(psiCav,kxylemmax,c,d)*(-psi); //square integral
     } else {
-      double Epsimin = kxylemmax*(-d/c)*exp(lgamma(h))*gammds(pow(psiCav/d,c),h);
+      NumericVector pq = incgam(h,pow(psiCav/d,c));
+      double Epsimin = kxylemmax*(-d/c)*tgamma(h)*pq[0];
       E = E - Epsimin + xylemConductance(psiCav,kxylemmax,c,d)*(-psiCav); //Remove part of the integral corresponding to psimin and add square integral
     }
   }
@@ -227,7 +229,7 @@ double Egammainv(double Eg, double kxylemmax, double c, double d, double psiCav 
   if(psiCav<0.0) {
     double Eq = xylemConductance(psiCav,kxylemmax,c,d)*(-psiCav);
     if(Eg > Eq) {
-      double Ec = Egamma(psiCav, c, d, 0.0) - Eq;
+      double Ec = Egamma(psiCav, kxylemmax, c, d) - Eq;
       Eg = Eg + Ec; 
     } else {
       return(-1.0*(Eg/xylemConductance(psiCav,kxylemmax,c,d)));
@@ -500,8 +502,7 @@ List E2psiBelowground(double E, NumericVector psiSoil,
                   NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
                   NumericVector krootmax, double rootc, double rootd, 
                   NumericVector psiIni = NumericVector::create(0),
-                  int ntrial = 10, 
-                  double psiTol = 0.0001, double ETol = 0.0001) {
+                  int ntrial = 10, double psiTol = 0.0001, double ETol = 0.0001) {
   int nlayers = psiSoil.length();
   //Initialize
   NumericVector x(nlayers+1);
@@ -535,7 +536,7 @@ List E2psiBelowground(double E, NumericVector psiSoil,
     Esum = 0.0;
     bool stop = false;
     for(int l=0;l<nlayers;l++) {
-      Eroot[l] = EXylem(x[nlayers], x[l], krootmax[l], rootc, rootd);
+      Eroot[l] = EXylem(x[nlayers], x[l], krootmax[l], rootc, rootd, true, 0.0);
       // Rcout<<"("<<Eroot[l]<<"\n";
       Erhizo[l] = EVanGenuchten(x[l], psiSoil[l], krhizomax[l], nsoil[l], alphasoil[l]);
       fvec[l] = Erhizo[l] - Eroot[l];
@@ -993,7 +994,7 @@ List E2psiNetwork(double E, NumericVector psiSoil,
 // [[Rcpp::export("hydraulics.supplyFunctionOneXylem")]]
 List supplyFunctionOneXylem(NumericVector psiSoil, NumericVector v,
                             double kstemmax, double stemc, double stemd, double psiCav = 0.0,
-                            int maxNsteps=200, double psiStep = -0.0001, double psiMax = -10.0, double dE=0.01) {
+                            int maxNsteps=200, double dE=0.01) {
   int nlayers = psiSoil.size();
   NumericVector supplyE(maxNsteps);
   NumericVector supplydEdp(maxNsteps);

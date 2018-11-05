@@ -34,8 +34,8 @@ hydraulics.supplyFunctionPlot<-function(x, soil, type="E") {
                                           VCstem_kmax[i], VCstem_c[i],VCstem_d[i], 
                                           VCleaf_kmax[i], VCleaf_c[i],VCleaf_d[i],
                                           PLCstem = PLCstem,
-                                          minFlow = 0.0, maxNsteps = numericParams$maxNsteps, psiStep = numericParams$psiStep, 
-                                          psiMax = numericParams$psiMax, ntrial = numericParams$ntrial,
+                                          minFlow = 0.0, maxNsteps = numericParams$maxNsteps, 
+                                          ntrial = numericParams$ntrial,
                                           psiTol = numericParams$psiTol, ETol = numericParams$ETol)
   }
   #Find minimum psi
