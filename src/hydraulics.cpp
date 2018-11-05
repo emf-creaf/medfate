@@ -54,7 +54,7 @@ double averagePsi(NumericVector psi, NumericVector v, double c, double d) {
   return(psires);
 }
 
-// [[Rcpp::export(".gammds")]]
+// [[Rcpp::export("gammds")]]
 double gammds ( double x, double p)
   
   //****************************************************************************80
@@ -208,7 +208,7 @@ double Egamma(double psi, double kxylemmax, double c, double d, double psiCav = 
   else if(psi==0.0) return(0.0);
   double h = 1.0/c;
   double z = pow(psi/d,c);
-  double g = exp(lgamma(h))*gammds(z,h); //Upper incomplete gamma, without the normalizing factor
+  double g = tgamma(h)*gammds(z,h); //Upper incomplete gamma, without the normalizing factor
   double E = kxylemmax*(-d/c)*g;
   if(psiCav<0.0) { //Decrease E from 0 to psiCav (avoid recursiveness!)
     if(psiCav < psi) {

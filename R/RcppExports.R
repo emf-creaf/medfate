@@ -281,7 +281,7 @@ hydraulics.averagePsi <- function(psi, v, c, d) {
     .Call('_medfate_averagePsi', PACKAGE = 'medfate', psi, v, c, d)
 }
 
-.gammds <- function(x, p) {
+gammds <- function(x, p) {
     .Call('_medfate_gammds', PACKAGE = 'medfate', x, p)
 }
 
@@ -431,6 +431,10 @@ hydraulics.stemWaterCapacity <- function(Al2As, height, wd) {
 
 hydraulics.leafWaterCapacity <- function(SLA, ld) {
     .Call('_medfate_leafWaterCapacity', PACKAGE = 'medfate', SLA, ld)
+}
+
+incgam <- function(a, x) {
+    .Call('_medfate_incgam', PACKAGE = 'medfate', a, x)
 }
 
 .parcohort <- function(SP, H, CR, LAI, SpParams) {
