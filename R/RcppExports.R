@@ -437,6 +437,10 @@ incgam <- function(a, x) {
     .Call('_medfate_incgam', PACKAGE = 'medfate', a, x)
 }
 
+invincgam <- function(a, p, q) {
+    .Call('_medfate_invincgam', PACKAGE = 'medfate', a, p, q)
+}
+
 .parcohort <- function(SP, H, CR, LAI, SpParams) {
     .Call('_medfate_parcohort', PACKAGE = 'medfate', SP, H, CR, LAI, SpParams)
 }
