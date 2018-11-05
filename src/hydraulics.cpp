@@ -1,6 +1,7 @@
 #include "Rcpp.h"
 #include "root.h"
 #include "tissuemoisture.h"
+#include "incgamma.h"
 #include <math.h>
 
 
@@ -221,6 +222,16 @@ double Egamma(double psi, double kxylemmax, double c, double d, double psiCav = 
   return(E);
 }
 
+// [[Rcpp::export(".Egammainv")]]
+double Egammainv(double Eg, double kxylemmax, double c, double d, double psiCav = 0.0) {
+  double h = 1.0/c;
+  double g = (-c/d)*(Eg/kxylemmax);
+  double p = g/tgamma(h);
+  double q = 1.0 - p;//Upper incomplete gamma, without the normalizing factor
+  double x = invincgam(h,p,q);
+  double psi = d*pow(x, 1.0/c);
+  return(psi);
+}
 
 /*
  * Integral of the xylem vulnerability curve
@@ -229,6 +240,13 @@ double Egamma(double psi, double kxylemmax, double c, double d, double psiCav = 
 double EXylem(double psiPlant, double psiUpstream, double kxylemmax, double c, double d, bool allowNegativeFlux = true, double psiCav = 0.0) {
   if((psiPlant > psiUpstream) & !allowNegativeFlux) ::Rf_error("Downstream potential larger (less negative) than upstream potential");
   return(Egamma(psiPlant, kxylemmax, c, d, psiCav)-Egamma(psiUpstream, kxylemmax, c,d, psiCav));
+}
+
+// [[Rcpp::export("hydraulics.E2psiXylem2")]]
+double E2psiXylem2(double E, double psiUpstream, double kxylemmax, double c, double d, double psiCav = 0.0) {
+  if(E==0) return(psiUpstream);
+  double Eg = E + Egamma(psiUpstream, kxylemmax, c,d, psiCav);
+  return(Egammainv(Eg, kxylemmax, c, d, psiCav));
 }
 
 /**

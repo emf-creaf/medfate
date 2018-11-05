@@ -305,8 +305,16 @@ hydraulics.vanGenuchtenConductance <- function(psi, krhizomax, n, alpha) {
     .Call('_medfate_Egamma', PACKAGE = 'medfate', psi, kxylemmax, c, d, psiCav)
 }
 
+.Egammainv <- function(Eg, kxylemmax, c, d, psiCav = 0.0) {
+    .Call('_medfate_Egammainv', PACKAGE = 'medfate', Eg, kxylemmax, c, d, psiCav)
+}
+
 hydraulics.EXylem <- function(psiPlant, psiUpstream, kxylemmax, c, d, allowNegativeFlux = TRUE, psiCav = 0.0) {
     .Call('_medfate_EXylem', PACKAGE = 'medfate', psiPlant, psiUpstream, kxylemmax, c, d, allowNegativeFlux, psiCav)
+}
+
+hydraulics.E2psiXylem2 <- function(E, psiUpstream, kxylemmax, c, d, psiCav = 0.0) {
+    .Call('_medfate_E2psiXylem2', PACKAGE = 'medfate', E, psiUpstream, kxylemmax, c, d, psiCav)
 }
 
 hydraulics.EVanGenuchten <- function(psiRhizo, psiSoil, krhizomax, n, alpha, l = 0.5) {

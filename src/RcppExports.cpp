@@ -1036,6 +1036,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// Egammainv
+double Egammainv(double Eg, double kxylemmax, double c, double d, double psiCav);
+RcppExport SEXP _medfate_Egammainv(SEXP EgSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP, SEXP psiCavSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type Eg(EgSEXP);
+    Rcpp::traits::input_parameter< double >::type kxylemmax(kxylemmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type c(cSEXP);
+    Rcpp::traits::input_parameter< double >::type d(dSEXP);
+    Rcpp::traits::input_parameter< double >::type psiCav(psiCavSEXP);
+    rcpp_result_gen = Rcpp::wrap(Egammainv(Eg, kxylemmax, c, d, psiCav));
+    return rcpp_result_gen;
+END_RCPP
+}
 // EXylem
 double EXylem(double psiPlant, double psiUpstream, double kxylemmax, double c, double d, bool allowNegativeFlux, double psiCav);
 RcppExport SEXP _medfate_EXylem(SEXP psiPlantSEXP, SEXP psiUpstreamSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP, SEXP allowNegativeFluxSEXP, SEXP psiCavSEXP) {
@@ -1050,6 +1065,22 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< bool >::type allowNegativeFlux(allowNegativeFluxSEXP);
     Rcpp::traits::input_parameter< double >::type psiCav(psiCavSEXP);
     rcpp_result_gen = Rcpp::wrap(EXylem(psiPlant, psiUpstream, kxylemmax, c, d, allowNegativeFlux, psiCav));
+    return rcpp_result_gen;
+END_RCPP
+}
+// E2psiXylem2
+double E2psiXylem2(double E, double psiUpstream, double kxylemmax, double c, double d, double psiCav);
+RcppExport SEXP _medfate_E2psiXylem2(SEXP ESEXP, SEXP psiUpstreamSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP, SEXP psiCavSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type E(ESEXP);
+    Rcpp::traits::input_parameter< double >::type psiUpstream(psiUpstreamSEXP);
+    Rcpp::traits::input_parameter< double >::type kxylemmax(kxylemmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type c(cSEXP);
+    Rcpp::traits::input_parameter< double >::type d(dSEXP);
+    Rcpp::traits::input_parameter< double >::type psiCav(psiCavSEXP);
+    rcpp_result_gen = Rcpp::wrap(E2psiXylem2(E, psiUpstream, kxylemmax, c, d, psiCav));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2936,7 +2967,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_psiCrit", (DL_FUNC) &_medfate_psiCrit, 2},
     {"_medfate_vanGenuchtenConductance", (DL_FUNC) &_medfate_vanGenuchtenConductance, 4},
     {"_medfate_Egamma", (DL_FUNC) &_medfate_Egamma, 5},
+    {"_medfate_Egammainv", (DL_FUNC) &_medfate_Egammainv, 5},
     {"_medfate_EXylem", (DL_FUNC) &_medfate_EXylem, 7},
+    {"_medfate_E2psiXylem2", (DL_FUNC) &_medfate_E2psiXylem2, 6},
     {"_medfate_EVanGenuchten", (DL_FUNC) &_medfate_EVanGenuchten, 6},
     {"_medfate_Ecrit", (DL_FUNC) &_medfate_Ecrit, 4},
     {"_medfate_E2psiXylem", (DL_FUNC) &_medfate_E2psiXylem, 8},
