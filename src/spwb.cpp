@@ -321,8 +321,6 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   bool drainage = control["drainage"];
   String soilFunctions = control["soilFunctions"];
   List numericParams = control["numericParams"];
-  double psiStep = numericParams["psiStep"];
-  double psiMax = numericParams["psiMax"];
   int ntrial = numericParams["ntrial"];
   int maxNsteps  = numericParams["maxNsteps"];
   double psiTol = numericParams["psiTol"];
@@ -334,7 +332,6 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   
   // String canopyMode = Rcpp::as<Rcpp::String>(control["canopyMode"]);
   int ntimesteps = control["ndailysteps"];
-  int nsubsteps = control["nsubsteps"];
   int hydraulicCostFunction = control["hydraulicCostFunction"];
   double verticalLayerSize = control["verticalLayerSize"];
   double thermalCapacityLAI = control["thermalCapacityLAI"];
@@ -738,10 +735,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
       NumericVector RWCStemPrev = RWCsstemMAT(c,_);
       NumericVector psiStemPrev = psiStemMAT(c,_);
       double psiLeafPrev = psiLeafVEC[c];
-      double psiRootPrev = psiRootVEC[c];
       double rwcsleafPrev = RWCsleafVEC[c];
-      double EinstPrev = EinstVEC[c];
-      
+
       if(nlayerscon[c]>0) {//If the plant is connected to at least one layer build 
 
         List sFunction;
