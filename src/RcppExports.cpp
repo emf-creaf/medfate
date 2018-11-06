@@ -955,18 +955,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// gammds
-double gammds(double x, double p);
-RcppExport SEXP _medfate_gammds(SEXP xSEXP, SEXP pSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type x(xSEXP);
-    Rcpp::traits::input_parameter< double >::type p(pSEXP);
-    rcpp_result_gen = Rcpp::wrap(gammds(x, p));
-    return rcpp_result_gen;
-END_RCPP
-}
 // xylemConductance
 double xylemConductance(double psi, double kxylemmax, double c, double d);
 RcppExport SEXP _medfate_xylemConductance(SEXP psiSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP) {
@@ -1732,6 +1720,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type p(pSEXP);
     Rcpp::traits::input_parameter< double >::type q(qSEXP);
     rcpp_result_gen = Rcpp::wrap(invincgam(a, p, q));
+    return rcpp_result_gen;
+END_RCPP
+}
+// gammds
+double gammds(double x, double p);
+RcppExport SEXP _medfate_gammds(SEXP xSEXP, SEXP pSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type p(pSEXP);
+    rcpp_result_gen = Rcpp::wrap(gammds(x, p));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2921,7 +2921,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_Psi2K", (DL_FUNC) &_medfate_Psi2K, 3},
     {"_medfate_K2Psi", (DL_FUNC) &_medfate_K2Psi, 3},
     {"_medfate_averagePsi", (DL_FUNC) &_medfate_averagePsi, 4},
-    {"_medfate_gammds", (DL_FUNC) &_medfate_gammds, 2},
     {"_medfate_xylemConductance", (DL_FUNC) &_medfate_xylemConductance, 4},
     {"_medfate_xylemPsi", (DL_FUNC) &_medfate_xylemPsi, 4},
     {"_medfate_psiCrit", (DL_FUNC) &_medfate_psiCrit, 2},
@@ -2962,6 +2961,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_leafWaterCapacity", (DL_FUNC) &_medfate_leafWaterCapacity, 2},
     {"_medfate_incgam", (DL_FUNC) &_medfate_incgam, 2},
     {"_medfate_invincgam", (DL_FUNC) &_medfate_invincgam, 3},
+    {"_medfate_gammds", (DL_FUNC) &_medfate_gammds, 2},
     {"_medfate_parcohort", (DL_FUNC) &_medfate_parcohort, 5},
     {"_medfate_parheight", (DL_FUNC) &_medfate_parheight, 6},
     {"_medfate_swrheight", (DL_FUNC) &_medfate_swrheight, 6},

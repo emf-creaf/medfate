@@ -281,10 +281,6 @@ hydraulics.averagePsi <- function(psi, v, c, d) {
     .Call('_medfate_averagePsi', PACKAGE = 'medfate', psi, v, c, d)
 }
 
-gammds <- function(x, p) {
-    .Call('_medfate_gammds', PACKAGE = 'medfate', x, p)
-}
-
 hydraulics.xylemConductance <- function(psi, kxylemmax, c, d) {
     .Call('_medfate_xylemConductance', PACKAGE = 'medfate', psi, kxylemmax, c, d)
 }
@@ -443,6 +439,10 @@ incgam <- function(a, x) {
 
 invincgam <- function(a, p, q) {
     .Call('_medfate_invincgam', PACKAGE = 'medfate', a, p, q)
+}
+
+.gammds <- function(x, p) {
+    .Call('_medfate_gammds', PACKAGE = 'medfate', x, p)
 }
 
 .parcohort <- function(SP, H, CR, LAI, SpParams) {
