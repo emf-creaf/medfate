@@ -53,32 +53,22 @@ List E2psiNetwork(double E, NumericVector psiSoil,
                   int ntrial = 10,
                   double psiTol = 0.0001, double ETol = 0.0001);
 
-List E2psiAboveground(double E, double psiRootCrown,
+List E2psiAboveground(double E, double psiRootCrown, 
                       double kstemmax, double stemc, double stemd,
                       double kleafmax, double leafc, double leafd,
                       NumericVector PLCstem);
 
-List supplyFunctionAbovegroundCap(NumericVector Erootcrown, NumericVector psiRootCrown,
-                                  NumericVector psiStemPrev, NumericVector PLCstemPrev,
-                                  double psiLeafPrev, 
-                                  double kstemmax, double stemc, double stemd,
-                                  double kleafmax, double leafc, double leafd,
-                                  double Vsapwood, double stemfapo, double stempi0, double stemeps,
-                                  double Vleaf, double leaffapo, double leafpi0, double leafeps,
-                                  double tstep = 3600.0);
-List E2psiAbovegroundCapacitance(double E, double psiRootCrown,
-                                 double EPrev, double psiRootCrownPrev,
-                                 NumericVector psiStemPrev, NumericVector PLCstemPrev, NumericVector RWCsympstemPrev,
-                                 double psiLeafPrev, double RWCsympleafPrev,
+List E2psiAbovegroundCapacitance(double E, double psiRootCrown, 
+                                 NumericVector psiStemPrev, NumericVector PLCstem,
+                                 double psiLeafPrev, 
                                  double kstemmax, double stemc, double stemd,
                                  double kleafmax, double leafc, double leafd,
                                  double Vsapwood, double stemfapo, double stempi0, double stemeps,
                                  double Vleaf, double leaffapo, double leafpi0, double leafeps,
-                                 double klat,
-                                 double tstep = 3600.0, int nSubSteps = 1000);
+                                 double tstep = 3600.0);
 
-List E2psiAbovegroundCapacitanceDisconnected(double E,
-                                             NumericVector psiStemPrev, NumericVector PLCstemPrev, NumericVector RWCsympstemPrev,
+List E2psiAbovegroundCapacitanceDisconnected(double E,                           
+                                             NumericVector psiStemPrev, NumericVector PLCstemPrev, NumericVector RWCsympstemPrev, 
                                              double psiLeafPrev, double RWCsympleafPrev,
                                              double kstemmax, double stemc, double stemd,
                                              double kleafmax, double leafc, double leafd,
@@ -87,30 +77,28 @@ List E2psiAbovegroundCapacitanceDisconnected(double E,
                                              double klat,
                                              double tstep = 3600.0);
 
-List supplyFunctionNetwork(NumericVector psiSoil,
+List supplyFunctionNetwork(NumericVector psiSoil, 
                            NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
-                           NumericVector krootmax, double rootc, double rootd,
+                           NumericVector krootmax, double rootc, double rootd, 
                            double kstemmax, double stemc, double stemd,
                            double kleafmax, double leafc, double leafd,
                            NumericVector PLCstem,
-                           double minFlow = 0.0, int maxNsteps=400,
-                           int ntrial = 10, double psiTol = 0.0001, double ETol = 0.0001);
+                           double minFlow = 0.0, int maxNsteps=400, 
+                           int ntrial = 200, double psiTol = 0.0001, double ETol = 0.0001);
 
-List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootCrown,
+List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootCrown, 
                                double kstemmax, double stemc, double stemd,
                                double kleafmax, double leafc, double leafd,
                                NumericVector PLCstem);
 
 List supplyFunctionAbovegroundCapacitance(NumericVector Erootcrown, NumericVector psiRootCrown,
-                                          double EPrev, double psiRootCrownPrev,
-                                          NumericVector psiStemPrev, NumericVector PLCstemPrev, NumericVector RWCsympstemPrev,
-                                          double psiLeafPrev, double RWCsympleafPrev,
+                                          NumericVector psiStemPrev, NumericVector PLCstemPrev,
+                                          double psiLeafPrev, 
                                           double kstemmax, double stemc, double stemd,
                                           double kleafmax, double leafc, double leafd,
                                           double Vsapwood, double stemfapo, double stempi0, double stemeps,
                                           double Vleaf, double leaffapo, double leafpi0, double leafeps,
-                                          double klat,
-                                          double tstep = 3600.0, int nSubSteps = 1000);
+                                          double tstep = 3600.0);
 
 
 List supplyFunctionBelowground(NumericVector psiSoil,

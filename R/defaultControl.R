@@ -15,11 +15,10 @@ defaultControl<-function() {
     # ksymver = 0, # whole-stem symplastic vertical conductance
     klat = 0.1, # symplastic-apoplastic lateral conductance
     taper = TRUE,
-    numericParams=list(maxNsteps = 400, psiStep = -0.0001, psiMax = -10.0, ntrial = 200, psiTol = 0.0001, ETol = 0.0001),
+    numericParams=list(maxNsteps = 400, ntrial = 200, psiTol = 0.0001, ETol = 0.0001),
     averageFracRhizosphereResistance = 0.15,
     Catm = 386,
     ndailysteps = 24,
-    nsubsteps = 100,
     thermalCapacityLAI = 1000000,
     defaultWindSpeed = 5,
     # growth

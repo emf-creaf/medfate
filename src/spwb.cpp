@@ -759,7 +759,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
           Erootcrown = RSFunction["E"];
           psiRoot = RSFunction["psiRoot"];
           ElayersMat = Rcpp::as<Rcpp::NumericMatrix>(RSFunction["ERhizo"]);
-          sFunction = supplyFunctionAbovegroundCap(Erootcrown, psiRoot,
+          sFunction = supplyFunctionAbovegroundCapacitance(Erootcrown, psiRoot,
                                                    psiStemPrev, PLCStemPrev, 
                                                    psiLeafPrev, 
                                                    VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
