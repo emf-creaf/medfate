@@ -1053,8 +1053,8 @@ legend("topleft", bty="n", legend=c("Leaf","Stem","Root crown", "Rhizo 1", "Rhiz
 So far we have been concerned with \emph{steady-state} hydraulics while assuming there are no other sources of water than the soil. In this section we will consider the effect of additional sources of water from leaf and stem tissues on transpiration and, more generally, in plant physiology. 
 
 <<>>=
-Vmaxstem = 0.0005
-Vmaxleaf = 0.0001
+Vmaxstem = 0.0003
+Vmaxleaf = 0.00001
 psiStemPrev1 = 0
 psiLeafPrev1 = 0
 psiStemPrev2 = -1.5
@@ -1069,62 +1069,68 @@ leaffapo = 0.15
 
 <<fig=TRUE, width=8, height=8, echo=FALSE>>=
 par(mar=c(4,4,4,1), mfrow=c(2,2))
-supplyAG11 = hydraulics.supplyFunctionAboveground(supplyNetwork11$E, supplyNetwork11$psiRoot,
-                                  kstemmax, stemc,stemd,
-                                  kleafmax, leafc,leafd,
-                                  PLCstem=0)
-supplyAG11Emb = hydraulics.supplyFunctionAboveground(supplyNetwork11$E, supplyNetwork11$psiRoot,
-                                  kstemmax, stemc,stemd,
-                                  kleafmax, leafc,leafd,
-                                  PLCstem=plcCav)
-supplyAG11Cap1 = hydraulics.supplyFunctionAbovegroundCap(supplyNetwork11$E, supplyNetwork11$psiRoot,
+supplyN11Cap1 = hydraulics.supplyFunctionNetworkCapacitance(
+                                  psiSoilLayers1,
                                   psiStemPrev1, PLCstem=0,
                                   psiLeafPrev1,
+                                  krhizomaxvec1,rep(n1,3),rep(alpha1,3),
+                                  krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   Vmaxstem, stemfapo, stempi0, stemeps,
                                   Vmaxleaf, leaffapo, leafpi0, leafeps)
-supplyAG11Cap2 = hydraulics.supplyFunctionAbovegroundCap(supplyNetwork11$E, supplyNetwork11$psiRoot,
+supplyN11Cap2 = hydraulics.supplyFunctionNetworkCapacitance(
+                                  psiSoilLayers1,
                                   psiStemPrev2, PLCstem=0,
                                   psiLeafPrev2,
+                                  krhizomaxvec1,rep(n1,3),rep(alpha1,3),
+                                  krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   Vmaxstem, stemfapo, stempi0, stemeps,
                                   Vmaxleaf, leaffapo, leafpi0, leafeps)
-supplyAG11Cap1Emb = hydraulics.supplyFunctionAbovegroundCap(supplyNetwork11$E, supplyNetwork11$psiRoot,
+
+supplyN11Cap1Emb = hydraulics.supplyFunctionNetworkCapacitance(
+                                  psiSoilLayers1,
                                   psiStemPrev1, PLCstem=plcCav,
                                   psiLeafPrev1,
+                                  krhizomaxvec1,rep(n1,3),rep(alpha1,3),
+                                  krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   Vmaxstem, stemfapo, stempi0, stemeps,
                                   Vmaxleaf, leaffapo, leafpi0, leafeps)
-supplyAG11Cap2Emb = hydraulics.supplyFunctionAbovegroundCap(supplyNetwork11$E, supplyNetwork11$psiRoot,
+supplyN11Cap2Emb = hydraulics.supplyFunctionNetworkCapacitance(
+                                  psiSoilLayers1,
                                   psiStemPrev2, PLCstem=plcCav,
                                   psiLeafPrev2,
+                                  krhizomaxvec1,rep(n1,3),rep(alpha1,3),
+                                  krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   Vmaxstem, stemfapo, stempi0, stemeps,
                                   Vmaxleaf, leaffapo, leafpi0, leafeps)
-plot(-supplyAG11$psiLeaf, supplyAG11$E, type="l", col=col1, ylab="Flow rate  (mmol·m-2·s-1)", 
-     xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(-1,6), lwd=1, main="original")
-lines(-supplyAG11Cap1$psiLeaf, supplyAG11Cap1$E, lty=1, col=col2)
-lines(-supplyAG11Cap2$psiLeaf, supplyAG11Cap2$E, lty=1, col=col3)
-legend("bottomright",  legend= c("No capacitance", "Psi_prev = 0 MPa", "Psi_prev = -1.5 MPa"),       col = c(col1, col2, col3), lty=1, bty="n", cex=0.7)
-plot(-supplyAG11Emb$psiLeaf, supplyAG11Emb$E, type="l", col=col1, ylab="Flow rate  (mmol·m-2·s-1)", 
-     xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(-1,6), lwd=1, main="cavitated")
-legend("bottomright",  legend= c("No capacitance", "Psi_prev = 0 MPa", "Psi_prev = -1.5 MPa"), col = c(col1, col2, col3), lty=1, bty="n", cex=0.7)
-lines(-supplyAG11Cap1Emb$psiLeaf, supplyAG11Cap1Emb$E, lty=1, col=col2)
-lines(-supplyAG11Cap2Emb$psiLeaf, supplyAG11Cap2Emb$E, lty=1, col=col3)
 
-plot(-supplyAG11$psiLeaf, supplyAG11$dEdP, type="l", col=col1, ylab="dE/dP  (mmol·m-2·s-1·MPa-1)",     xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,max(supplyAG11Cap1$dEdP)), lwd=1, main="original")
-legend("topright",  legend= c("No capacitance", "Psi_prev = 0 MPa", "Psi_prev = -1.5 MPa"), col = c(col1, col2, col3), lty=1, bty="n", cex=0.7)
-lines(-supplyAG11Cap1$psiLeaf, supplyAG11Cap1$dEdP, lty=1, col=col2)
-lines(-supplyAG11Cap2$psiLeaf, supplyAG11Cap2$dEdP, lty=1, col=col3)
-plot(-supplyAG11Emb$psiLeaf, supplyAG11Emb$dEdP, type="l", col=col1, ylab="dE/dP  (mmol·m-2·s-1·MPa-1)", 
-    xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,max(supplyAG11Cap1$dEdP)), lwd=1, main="cavitated")
-legend("topright",  legend= c("No capacitance", "Psi_prev = 0 MPa", "Psi_prev = -1.5 MPa"),col = c(col1, col2, col3), lty=1, bty="n", cex=0.7)
-lines(-supplyAG11Cap1Emb$psiLeaf, supplyAG11Cap1Emb$dEdP, lty=1, col=col2)
-lines(-supplyAG11Cap2Emb$psiLeaf, supplyAG11Cap2Emb$dEdP, lty=1, col=col3)
+plot(-supplyNetwork11$psiLeaf, supplyNetwork11$E, type="l", col=col1, ylab="Flow rate  (mmol·m-2·s-1)", 
+     xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(-1,6), lwd=1, main="original")
+lines(-supplyN11Cap1$psiLeaf, supplyN11Cap1$ELeaf, lty=1, col=col2)
+lines(-supplyN11Cap2$psiLeaf, supplyN11Cap2$ELeaf, lty=1, col=col3)
+legend("bottomright",  legend= c("No capacitance", "Psi_prev = 0 MPa", "Psi_prev = -1.5 MPa"),       col = c(col1, col2, col3), lty=1, bty="n")
+plot(-supplyNetwork11emb$psiLeaf, supplyNetwork11emb$E, type="l", col=col1, ylab="Flow rate  (mmol·m-2·s-1)", 
+     xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(-1,6), lwd=1, main="cavitated")
+legend("bottomright",  legend= c("No capacitance", "Psi_prev = 0 MPa", "Psi_prev = -1.5 MPa"), col = c(col1, col2, col3), lty=1, bty="n")
+lines(-supplyN11Cap1Emb$psiLeaf, supplyN11Cap1Emb$ELeaf, lty=1, col=col2)
+lines(-supplyN11Cap2Emb$psiLeaf, supplyN11Cap2Emb$ELeaf, lty=1, col=col3)
+
+plot(-supplyNetwork11$psiLeaf, supplyNetwork11$dEdP, type="l", col=col1, ylab="dE/dP  (mmol·m-2·s-1·MPa-1)",     xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,max(supplyN11Cap1$dEdP)), lwd=1, main="original")
+legend("topright",  legend= c("No capacitance", "Psi_prev = 0 MPa", "Psi_prev = -1.5 MPa"), col = c(col1, col2, col3), lty=1, bty="n")
+lines(-supplyN11Cap1$psiLeaf, supplyN11Cap1$dEdP, lty=1, col=col2)
+lines(-supplyN11Cap2$psiLeaf, supplyN11Cap2$dEdP, lty=1, col=col3)
+plot(-supplyNetwork11emb$psiLeaf, supplyNetwork11emb$dEdP, type="l", col=col1, ylab="dE/dP  (mmol·m-2·s-1·MPa-1)", 
+    xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,max(supplyN11Cap1$dEdP)), lwd=1, main="cavitated")
+legend("topright",  legend= c("No capacitance", "Psi_prev = 0 MPa", "Psi_prev = -1.5 MPa"),col = c(col1, col2, col3), lty=1, bty="n")
+lines(-supplyN11Cap1Emb$psiLeaf, supplyN11Cap1Emb$dEdP, lty=1, col=col2)
+lines(-supplyN11Cap2Emb$psiLeaf, supplyN11Cap2Emb$dEdP, lty=1, col=col3)
 @
 
 In the previous section we described how the supply function of the network representing the continuum is build for a given state of soil water potentials. This approach allows determining flows and water potential for \emph{steady-state} conditions. In a dynamic context one has to calculate the supply function for all values of $E$, then to determine stomatal conductance (see sections devoted to photosynthesis and stomatal regulation) and finally to decide on a specific value of $E$ and the corresponding steady-state configuration. Because light and temperature conditions change along the day, steady-state stomatal conductance and instantaneous $E$ values have to be determined for subdaily steps (e.g. 1-hour steps) and then flows need to be scaled and aggregated. At the end of the day, one may substract water from soil layers and recalculate the supply function for the next day. 

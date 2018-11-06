@@ -843,7 +843,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
           }
           
           //Scale from instantaneous flow to water volume in the time step
-          Einst(c,n) = Eaverage*0.001*0.01802*LAIphe[c]*tstep; 
+          Einst(c,n) = fittedE[iPM]*0.001*0.01802*LAIphe[c]*tstep; 
 
           //Balance between extraction and 
           PWBinst(c,n) = sum(Esoilcn) - Einst(c,n);

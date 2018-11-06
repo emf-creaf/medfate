@@ -139,9 +139,6 @@ examplesoil2 = soil(defaultSoilParams(2))
 #Switch to 'Complex' transpiration mode
 control$transpirationMode="Complex"
 
-#Allow capacitance effects
-control$capacitance = TRUE
-
 #Initialize input
 x2 = forest2spwbInput(exampleforest,examplesoil2, SpParamsMED, control)
 

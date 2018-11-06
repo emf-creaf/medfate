@@ -250,7 +250,9 @@ double Ecapacitance(double psi, double psiPrev, double PLCprev,
   double RWCprev = tissueRelativeWaterContent(psiPrev, pi0, eps,
                                               psiPrev, c, d,
                                               fapo);
-  double RWC = tissueRelativeWaterContent(psi, pi0, eps, psi, c, d,fapo);
+  double RWC = tissueRelativeWaterContent(psi, pi0, eps,
+                                          psi, c, d,
+                                          fapo);
   return(((m3tommol*V)/timestep)*(1.0-PLCprev)*(RWCprev-RWC));
 }
 
@@ -880,6 +882,58 @@ List E2psiNetwork(double E, NumericVector psiSoil,
                       Named("kterm") = kterm, Named("x") = E2psiRS["x"]));
 } 
 
+// [[Rcpp::export("hydraulics.E2psiNetworkCapacitance")]]
+List E2psiNetworkCapacitance(double E, NumericVector psiSoil, 
+                             NumericVector psiStemPrev, NumericVector PLCstem,
+                             double psiLeafPrev, 
+                             NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
+                             NumericVector krootmax, double rootc, double rootd, 
+                             double kstemmax, double stemc, double stemd,
+                             double kleafmax, double leafc, double leafd,
+                             double Vsapwood, double stemfapo, double stempi0, double stemeps,
+                             double Vleaf, double leaffapo, double leafpi0, double leafeps,
+                             double tstep = 3600.0,
+                             NumericVector psiIni = NumericVector::create(0),
+                             int ntrial = 10, double psiTol = 0.0001, double ETol = 0.0001) {
+  
+  int nStemSegments = PLCstem.size();
+  List E2psiRS = E2psiBelowground(E, psiSoil, 
+                                  krhizomax, nsoil, alphasoil,
+                                  krootmax, rootc, rootd, 
+                                  psiIni,
+                                  ntrial, psiTol, ETol);
+  
+  //Copy output
+  double psiRoot  = E2psiRS["psiRoot"];
+  NumericVector psiRhizo = E2psiRS["psiRhizo"];  
+  NumericVector ERhizo = E2psiRS["ERhizo"];  
+  
+  
+  NumericVector psiStem(nStemSegments, NA_REAL);
+  NumericVector EStem(nStemSegments, NA_REAL);
+  double psiLeaf = NA_REAL;
+  double kterm = NA_REAL;
+  double ELeaf = NA_REAL;
+  if(!NumericVector::is_na(psiRoot)) {
+    List E2psiAG = E2psiAbovegroundCapacitance(E, psiRoot, 
+                                               psiStemPrev, PLCstem,
+                                               psiLeafPrev,
+                                               kstemmax, stemc, stemd,
+                                               kleafmax, leafc, leafd,
+                                               Vsapwood, stemfapo, stempi0, stemeps,
+                                               Vleaf, leaffapo, leafpi0, leafeps,
+                                               tstep);
+    kterm = E2psiAG["kterm"];
+    psiLeaf = E2psiAG["psiLeaf"];
+    psiStem = E2psiAG["psiStem"];
+    EStem = E2psiAG["EStem"];
+    ELeaf = E2psiAG["ELeaf"];
+  } 
+  return(List::create(Named("EStem") = EStem, Named("ELeaf") = ELeaf,
+                      Named("ERhizo")=ERhizo, Named("psiRhizo") = psiRhizo, 
+                      Named("psiRoot") = psiRoot, Named("psiStem") = psiStem, Named("psiLeaf") = psiLeaf, 
+                      Named("kterm") = kterm, Named("x") = E2psiRS["x"]));
+} 
 
 // [[Rcpp::export("hydraulics.supplyFunctionOneXylem")]]
 List supplyFunctionOneXylem(NumericVector psiSoil, NumericVector v,
@@ -1172,7 +1226,8 @@ List supplyFunctionBelowground(NumericVector psiSoil,
                            NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
                            NumericVector krootmax, double rootc, double rootd, 
                            double minFlow = 0.0, int maxNsteps=400, 
-                           int ntrial = 10, double psiTol = 0.0001, double ETol = 0.0001) {
+                           int ntrial = 10, double psiTol = 0.0001, double ETol = 0.0001,
+                           double pCrit = 0.001) {
   int nlayers = psiSoil.size();
   NumericVector supplyE(maxNsteps);
   NumericVector supplydEdp(maxNsteps);
@@ -1226,7 +1281,7 @@ List supplyFunctionBelowground(NumericVector psiSoil,
       }
       if(supplyE[i]>0.1) dE = std::min(0.1,supplydEdp[i-1]*0.05);
       nsteps++;
-      if((supplydEdp[i-1]<0.01*maxdEdp) & (i>5)) break;
+      if((supplydEdp[i-1]<(pCrit*maxdEdp)) & (i>5)) break;
     } else {
       break;
     }
@@ -1517,7 +1572,8 @@ List supplyFunctionNetwork(NumericVector psiSoil,
                            double kleafmax, double leafc, double leafd,
                            NumericVector PLCstem,
                            double minFlow = 0.0, int maxNsteps=400, 
-                           int ntrial = 200, double psiTol = 0.0001, double ETol = 0.0001) {
+                           int ntrial = 200, double psiTol = 0.0001, double ETol = 0.0001,
+                           double pCrit = 0.001) {
   int nlayers = psiSoil.size();
   int nStemSegments = PLCstem.size();
   NumericVector supplyE(maxNsteps);
@@ -1593,7 +1649,7 @@ List supplyFunctionNetwork(NumericVector psiSoil,
       }
       if(supplyE[i]>0.1) dE = std::min(0.05,supplydEdp[i-1]*0.05);
       nsteps++;
-      if(supplydEdp[i-1]<0.01*maxdEdp) break;
+      if(supplydEdp[i-1]<(pCrit*maxdEdp)) break;
     } else {
       break;
     }
@@ -1630,6 +1686,163 @@ List supplyFunctionNetwork(NumericVector psiSoil,
                       Named("kterm") = supplyKtermDef));
   
 }
+
+// [[Rcpp::export("hydraulics.supplyFunctionNetworkCapacitance")]]
+List supplyFunctionNetworkCapacitance(NumericVector psiSoil, 
+                                      NumericVector psiStemPrev, NumericVector PLCstemPrev,
+                                      double psiLeafPrev, 
+                                      NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
+                                      NumericVector krootmax, double rootc, double rootd, 
+                                      double kstemmax, double stemc, double stemd,
+                                      double kleafmax, double leafc, double leafd,
+                                      double Vsapwood, double stemfapo, double stempi0, double stemeps,
+                                      double Vleaf, double leaffapo, double leafpi0, double leafeps,
+                                      double tstep = 3600.0,
+                                      double minFlow = 0.0, int maxNsteps=400, 
+                                      int ntrial = 200, double psiTol = 0.0001, double ETol = 0.0001,
+                                      double pCrit = 0.001) {
+  int nlayers = psiSoil.size();
+  int nStemSegments = PLCstemPrev.size();
+  NumericVector supplyE(maxNsteps);
+  NumericVector supplyELeaf(maxNsteps);
+  NumericVector supplydEdp(maxNsteps);
+  NumericMatrix supplyERhizo(maxNsteps,nlayers);
+  NumericMatrix supplyPsiRhizo(maxNsteps,nlayers);
+  NumericVector supplyPsiRoot(maxNsteps);
+  NumericMatrix supplyPsiStem(maxNsteps,nStemSegments);
+  NumericMatrix supplyEStem(maxNsteps,nStemSegments);
+  NumericVector supplyPsiLeaf(maxNsteps);
+  NumericVector supplyKterm(maxNsteps);
+  
+  supplyE[0] = minFlow;
+  List sol = E2psiNetworkCapacitance(minFlow, psiSoil,
+                                     psiStemPrev, PLCstemPrev,
+                                     psiLeafPrev,  
+                                     krhizomax,  nsoil,  alphasoil,
+                                     krootmax,  rootc,  rootd,
+                                     kstemmax,  stemc,  stemd,
+                                     kleafmax,  leafc,  leafd,
+                                     Vsapwood, stemfapo, stempi0, stemeps,
+                                     Vleaf, leaffapo, leafpi0, leafeps,
+                                     tstep,
+                                     NumericVector::create(0),
+                                     ntrial,psiTol, ETol);
+  NumericVector solERhizo = sol["ERhizo"];
+  NumericVector solPsiRhizo = sol["psiRhizo"];
+  NumericVector solPsiStem = sol["psiStem"];
+  NumericVector solEStem = sol["psiStem"];
+  supplyERhizo(0,_) = solERhizo;
+  supplyPsiRhizo(0,_) = solPsiRhizo;
+  supplyPsiStem(0,_) = solPsiStem;
+  supplyEStem(0,_) = solEStem;
+  supplyPsiLeaf[0] = sol["psiLeaf"];
+  supplyPsiRoot[0] = sol["psiRoot"];
+  supplyKterm[0] = sol["kterm"];
+  supplyELeaf[0] =sol["ELeaf"];
+  
+  //Calculate initial slope
+  List solI = E2psiNetworkCapacitance(minFlow+ETol*2.0, psiSoil,
+                                      psiStemPrev, PLCstemPrev,
+                                      psiLeafPrev,  
+                                      krhizomax,  nsoil,  alphasoil,
+                                      krootmax,  rootc,  rootd,
+                                      kstemmax,  stemc,  stemd,
+                                      kleafmax,  leafc,  leafd,
+                                      Vsapwood, stemfapo, stempi0, stemeps,
+                                      Vleaf, leaffapo, leafpi0, leafeps,
+                                      tstep,
+                                      sol["x"],
+                                      ntrial,psiTol, ETol);
+  double psiLeafI = solI["psiLeaf"];
+  double EI = solI["ELeaf"];
+  double maxdEdp = (EI - supplyELeaf[0])/std::abs(psiLeafI - supplyPsiLeaf[0]);
+  
+  int nsteps = 1;
+  double dE = std::min(0.05,maxdEdp*0.05);
+  for(int i=1;i<maxNsteps;i++) {
+    // if(i==3) stop("kk");
+    supplyE[i] = supplyE[i-1]+dE;
+    sol = E2psiNetworkCapacitance(supplyE[i], psiSoil,
+                                  psiStemPrev, PLCstemPrev,
+                                  psiLeafPrev,  
+                                  krhizomax,  nsoil,  alphasoil,
+                                  krootmax,  rootc,  rootd,
+                                  kstemmax,  stemc,  stemd,
+                                  kleafmax,  leafc,  leafd,
+                                  Vsapwood, stemfapo, stempi0, stemeps,
+                                  Vleaf, leaffapo, leafpi0, leafeps,
+                                  tstep,
+                                  sol["x"],
+                                  ntrial,psiTol, ETol);
+    supplyELeaf[i] = sol["ELeaf"];
+    solERhizo = sol["ERhizo"];
+    solPsiRhizo = sol["psiRhizo"];
+    solPsiStem = sol["psiStem"];
+    solEStem = sol["EStem"];
+    supplyERhizo(i,_) = solERhizo;
+    supplyPsiRhizo(i,_) = solPsiRhizo;
+    supplyPsiStem(i,_) = solPsiStem;
+    supplyEStem(i,_) = solEStem;
+    supplyPsiLeaf[i] = sol["psiLeaf"];
+    supplyPsiRoot[i] = sol["psiRoot"];
+    supplyKterm[i] = sol["kterm"];
+    
+    // Rcout<<supplyPsiLeaf[i]<<"\n";
+    if(!NumericVector::is_na(supplyPsiLeaf[i])) {
+      if(i==1) {
+        supplydEdp[0] = (supplyELeaf[1]-supplyELeaf[0])/std::abs(supplyPsiLeaf[1] - supplyPsiLeaf[0]);
+      } else {
+        double d1 = (supplyELeaf[i-1]-supplyELeaf[i-2])/std::abs(supplyPsiLeaf[i-1] - supplyPsiLeaf[i-2]);
+        double d2 = (supplyELeaf[i]-supplyELeaf[i-1])/std::abs(supplyPsiLeaf[i] - supplyPsiLeaf[i-1]);
+        supplydEdp[i-1] = (d1+d2)/2.0;
+      }
+      if(supplyELeaf[i]>0.1) dE = std::min(0.05,supplydEdp[i-1]*0.05);
+      nsteps++;
+      // Rcout<<supplydEdp[i-1]<<" "<<pCrit*maxdEdp<<" "<<maxNsteps<<"\n";
+      if(supplydEdp[i-1]<(pCrit*maxdEdp)) break;
+    } else {
+      break;
+    }
+  }
+  //Calculate last dEdP
+  if(nsteps>1) supplydEdp[nsteps-1] = (supplyELeaf[nsteps-1]-supplyELeaf[nsteps-2])/std::abs(supplyPsiLeaf[nsteps-1] - supplyPsiLeaf[nsteps-2]);
+  //Copy values tp nsteps
+  NumericVector supplyKtermDef(nsteps);
+  NumericVector supplyEDef(nsteps);
+  NumericVector supplyELeafDef(nsteps);
+  NumericVector supplydEdpDef(nsteps);
+  NumericMatrix supplyERhizoDef(nsteps,nlayers);
+  NumericMatrix supplyPsiRhizoDef(nsteps,nlayers);
+  NumericMatrix supplyEStemDef(nsteps,nStemSegments);
+  NumericMatrix supplyPsiStemDef(nsteps,nStemSegments);
+  NumericVector supplyPsiLeafDef(nsteps);
+  NumericVector supplyPsiRootDef(nsteps);
+  for(int i=0;i<nsteps;i++) {
+    if(NumericVector::is_na(supplyE[i])) stop("NA E in supplyFunctionNetwork");
+    supplyEDef[i] = supplyE[i];
+    supplyELeafDef[i] = supplyELeaf[i];
+    supplydEdpDef[i] = supplydEdp[i];
+    supplyKtermDef[i] = supplyKterm[i];
+    supplyPsiRootDef[i] = supplyPsiRoot[i];
+    supplyERhizoDef(i,_) = supplyERhizo(i,_);
+    supplyPsiRhizoDef(i,_) = supplyPsiRhizo(i,_);
+    supplyPsiStemDef(i,_) = supplyPsiStem(i,_);
+    supplyEStemDef(i,_) = supplyEStem(i,_);
+    supplyPsiLeafDef[i] = supplyPsiLeaf[i];
+  }
+  return(List::create(Named("E") = supplyEDef,
+                      Named("ELeaf") = supplyELeafDef,
+                      Named("EStem") = supplyEStemDef,
+                      Named("ERhizo") = supplyERhizoDef,
+                      Named("psiRhizo")=supplyPsiRhizoDef,
+                      Named("psiRoot")=supplyPsiRootDef,
+                      Named("psiStem")=supplyPsiStemDef,
+                      Named("psiLeaf")=supplyPsiLeafDef,
+                      Named("dEdP")=supplydEdpDef,
+                      Named("kterm") = supplyKtermDef));
+  
+}
+
 
 // [[Rcpp::export("hydraulics.regulatedPsiXylem")]]
 NumericVector regulatedPsiXylem(double E, double psiUpstream, double kxylemmax, double c, double d, double psiStep = -0.01) {
