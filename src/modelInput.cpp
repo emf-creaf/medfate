@@ -37,12 +37,12 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
   NumericVector LAI_dead = above["LAI_dead"];
   NumericVector H = above["H"];
   NumericVector CR = above["CR"];
-  
   String transpirationMode = control["transpirationMode"];
   if((transpirationMode!="Simple") & (transpirationMode!="Complex")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Simple' or 'Complex')");
 
   int numStemSegments = control["nStemSegments"];
-
+  bool capacitance = control["capacitance"];
+  
   String soilFunctions = control["soilFunctions"]; 
   if((soilFunctions!="SX") & (soilFunctions!="VG")) stop("Wrong soil functions ('soilFunctions' should be either 'SX' or 'VG')");
   
@@ -297,7 +297,12 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
                               _["VGrhizo_kmax"] = VGrhizo_kmax,
                               _["VCroot_kmax"] = VCroot_kmax);
     List paramsCanopy = List::create(_["gdd"] = 0,_["Temp"] = NA_REAL);
-    input = List::create(_["control"] = clone(control),
+    List ctl = clone(control);
+    if(capacitance) {
+      ctl["hydraulicCostFunction"] = 2;
+      warning("Hydraulic cost function set to '2'.");
+    }
+    input = List::create(_["control"] = ctl,
                          _["canopy"] = paramsCanopy,
                          _["cohorts"] = cohortDescdf,
                          _["above"] = plantsdf,
