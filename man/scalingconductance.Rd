@@ -7,6 +7,8 @@
 \alias{hydraulics.referenceConductivityHeightFactor}
 \alias{hydraulics.taperFactorSavage}
 \alias{hydraulics.terminalConduitRadius}
+\alias{hydraulics.stemWaterCapacity}
+\alias{hydraulics.leafWaterCapacity}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Scaling from conductivity to conductance
@@ -30,6 +32,8 @@ hydraulics.maximumStemHydraulicConductance(xylemConductivity, refheight, Al2As, 
 hydraulics.referenceConductivityHeightFactor(refheight, height)
 hydraulics.terminalConduitRadius(height)
 hydraulics.taperFactorSavage(height)
+hydraulicx.stemWaterCapacity(Al2As, height, wd)
+hydraulics.leafWaterCapacity(SLA, ld)
 }
 
 %- maybe also 'usage' for other objects documented here.

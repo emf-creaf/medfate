@@ -1,10 +1,11 @@
 \encoding{UTF-8}
 \name{tissuemoisture}
 \alias{moisture.symplasticRWC}
-\alias{moisture.symplasticWaterPotential}
+\alias{moisture.symplasticPsi}
 \alias{moisture.apoplasticRWC}
-\alias{moisture.apoplasticWaterPotential}
-\alias{moisture.segmentRWC}
+\alias{moisture.apoplasticPsi}
+\alias{moisture.tissueRWC}
+\alias{moisture.tissueFMC}
 \alias{moisture.pressureVolumeCurvePlot}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
@@ -15,11 +16,13 @@ Set of functions used to calculate tissue moisture from water potential and vice
 }
 \usage{
 moisture.symplasticRWC(psiSym, pi0, epsilon)
-moisture.symplasticWaterPotential(RWC, pi0, epsilon)
+moisture.symplasticPsi(RWC, pi0, epsilon)
 moisture.apoplasticRWC(psiApo, c, d)
-moisture.apoplasticWaterPotential(RWC, c, d)
-moisture.segmentRWC(psiSym, pi0, epsilon,
-                    psiApo, c, d, af)
+moisture.symplasticPsi(RWC, c, d)
+moisture.tissueRWC(psiSym, pi0, epsilon, 
+                   psiApo, c, d, 
+                   af)
+moisture.tissueFMC(RWC, density, d0 = 1.54)
 moisture.pressureVolumeCurvePlot(x, segment="leaf", 
                     psiVec =  seq(-0.1, -8.0, by =-0.01))                    
 }

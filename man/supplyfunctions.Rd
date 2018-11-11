@@ -2,9 +2,7 @@
 \name{supplyfunctions}
 \alias{hydraulics.EXylem}
 \alias{hydraulics.EVanGenuchten}
-\alias{hydraulics.Ecrit}
 \alias{hydraulics.Ecapacitance}
-\alias{hydraulics.psiCrit}
 \alias{hydraulics.E2psiXylem}
 \alias{hydraulics.E2psiVanGenuchten}
 \alias{hydraulics.E2psiTwoElements}
@@ -13,6 +11,7 @@
 \alias{hydraulics.E2psiAbovegroundCapacitance"}
 \alias{hydraulics.E2psiAbovegroundCapacitanceDisconnected}
 \alias{hydraulics.E2psiNetwork}
+\alias{hydraulics.E2psiNetworkCapacitance}
 \alias{hydraulics.supplyFunctionOneXylem}
 \alias{hydraulics.supplyFunctionTwoElements}
 \alias{hydraulics.supplyFunctionThreeElements}
@@ -20,6 +19,7 @@
 \alias{hydraulics.supplyFunctionAboveground}
 \alias{hydraulics.supplyFunctionAbovegroundCapacitance}
 \alias{hydraulics.supplyFunctionNetwork}
+\alias{hydraulics.supplyFunctionNetworkCapacitance}
 \alias{hydraulics.supplyFunctionPlot}
 \alias{hydraulics.regulatedPsiXylem}
 \alias{hydraulics.regulatedPsiTwoElements}
@@ -35,35 +35,34 @@ hydraulics.EXylem(psiPlant, psiUpstream,
                   kxylemmax, c, d, allowNegativeFlux = TRUE, 
                   psiCav = 0)
 hydraulics.EVanGenuchten(psiRhizo, psiSoil, krhizomax, 
-                         n, alpha, l = 0.5)
+                      n, alpha, l = 0.5)
 hydraulics.Ecapacitance(psi, psiPrev, PLCprev,
-                        V, fapo, c,  d, 
-                        pi0, eps,timestep)                         
+                      V, fapo, c,  d, 
+                      pi0, eps,timestep)                         
 hydraulics.Ecrit(psiUpstream, kxylemmax, c, d, pCrit = 0.001)
-hydraulics.psiCrit(c, d, pCrit = 0.001)
 hydraulics.E2psiXylem(E, psiUpstream, 
                       kxylemmax, c, d, psiCav = 0)
 hydraulics.E2psiVanGenuchten(E, psiSoil, krhizomax, n, alpha, 
-                             psiStep = -0.0001, psiMax = -10.0)
+                      psiStep = -0.0001, psiMax = -10.0)
 hydraulics.E2psiTwoElements(E, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, 
-                            psiCav = 0, psiStep = -1e-04, psiMax = -10.0)
+                      psiCav = 0, psiStep = -1e-04, psiMax = -10.0)
 hydraulics.E2psiBelowground(E, psiSoil, 
-                            krhizomax, nsoil, alphasoil,
-                            krootmax, rootc, rootd, 
-                            psiIni = as.numeric(c(0)),
-                            ntrial = 10, psiTol = 0.0001, ETol = 0.0001)
+                      krhizomax, nsoil, alphasoil,
+                      krootmax, rootc, rootd, 
+                      psiIni = as.numeric(c(0)),
+                      ntrial = 10, psiTol = 0.0001, ETol = 0.0001)
 hydraulics.E2psiAboveground(E, psiRootCrown, 
-                            kstemmax, stemc, stemd,
-                            kleafmax, leafc, leafd,
-                            PLCstem)  
+                      kstemmax, stemc, stemd,
+                      kleafmax, leafc, leafd,
+                      PLCstem)  
 hydraulics.E2psiAbovegroundCapacitance(E, psiRootCrown, 
-                            psiStemPrev, PLCstem,
-                            psiLeafPrev, 
-                            kstemmax, stemc, stemd,
-                            kleafmax, leafc, leafd,
-                            Vsapwood, stemfapo, stempi0, stemeps,
-                            Vleaf, leaffapo, leafpi0, leafeps,
-                            tstep)
+                      psiStemPrev, PLCstem,
+                      psiLeafPrev, 
+                      kstemmax, stemc, stemd,
+                      kleafmax, leafc, leafd,
+                      Vsapwood, stemfapo, stempi0, stemeps,
+                      Vleaf, leaffapo, leafpi0, leafeps,
+                      tstep)
 hydraulics.E2psiAbovegroundCapacitanceDisconnected(E,                           
                       psiStemPrev, PLCstemPrev, RWCsympstemPrev, 
                       psiLeafPrev, RWCsympleafPrev,
@@ -80,52 +79,51 @@ hydraulics.E2psiNetwork(E, psiSoil,
                   kleafmax, leafc, leafd,
                   PLCstem,
                   psiIni = as.numeric(c(0)),
-                  psiStep = -0.0001, psiMax = -10.0, ntrial = 10, 
+                  ntrial = 10, 
                   psiTol = 0.0001, ETol = 0.0001)
 
 
 hydraulics.supplyFunctionOneXylem(psiSoil, v, 
-                          kstemmax, stemc, stemd, psiCav = 0,
-                          maxNsteps=200, psiStep = -0.001, psiMax = -10.0, dE=0.01)
+                  kstemmax, stemc, stemd, psiCav = 0,
+                  maxNsteps=200, psiStep = -0.001, psiMax = -10.0, dE=0.01)
 hydraulics.supplyFunctionTwoElements(Emax, psiSoil, 
-                          krhizomax, kxylemmax, n, alpha, c, d, 
-                          psiCav = 0, dE = 0.1, psiMax = -10.0)
+                  krhizomax, kxylemmax, n, alpha, c, d, 
+                  psiCav = 0, dE = 0.1, psiMax = -10.0)
 hydraulics.supplyFunctionThreeElements(Emax, psiSoil, 
-                          krhizomax, kxylemmax, kleafmax,
-                          n, alpha, stemc, stemd, leafc, leafd,
-                          psiCav = 0, dE = 0.1, psiMax = -10.0)
+                  krhizomax, kxylemmax, kleafmax,
+                  n, alpha, stemc, stemd, leafc, leafd,
+                  psiCav = 0, dE = 0.1, psiMax = -10.0)
                           
                           
 hydraulics.supplyFunctionBelowground(psiSoil, 
-                           krhizomax, nsoil, alphasoil,
-                           krootmax, rootc, rootd, 
-                           minFlow = 0.0, maxNsteps=400, psiStep = -0.0001, psiMax = -10.0, 
-                           ntrial = 10, psiTol = 0.0001, ETol = 0.0001)
+                  krhizomax, nsoil, alphasoil,
+                  krootmax, rootc, rootd, 
+                  minFlow = 0.0, maxNsteps=400, psiStep = -0.0001, psiMax = -10.0, 
+                  ntrial = 10, psiTol = 0.0001, ETol = 0.0001)
 
 hydraulics.supplyFunctionAboveground(Erootcrown, psiRootCrown, 
-                               kstemmax, stemc, stemd,
-                               kleafmax, leafc, leafd,
-                               PLCstem,
-                               psiStep = -0.0001, psiMax = -10.0)
+                  kstemmax, stemc, stemd,
+                  kleafmax, leafc, leafd,
+                  PLCstem)
 
 hydraulics.supplyFunctionAbovegroundCapacitance(Erootcrown, psiRootCrown,
-                               EPrev, psiRootCrownPrev,
-                               psiStemPrev, PLCstemPrev, RWCsympstemPrev,
-                               psiLeafPrev, RWCsympleafPrev,
-                               kstemmax, stemc, stemd,
-                               kleafmax, leafc, leafd,
-                               Vsapwood, stemfapo, stempi0, stemeps,
-                               Vleaf, leaffapo, leafpi0, leafeps,
-                               tstep = 3600.0)
+                  EPrev, psiRootCrownPrev,
+                  psiStemPrev, PLCstemPrev, RWCsympstemPrev,
+                  psiLeafPrev, RWCsympleafPrev,
+                  kstemmax, stemc, stemd,
+                  kleafmax, leafc, leafd,
+                  Vsapwood, stemfapo, stempi0, stemeps,
+                  Vleaf, leaffapo, leafpi0, leafeps,
+                  tstep = 3600.0)
                                
 List supplyFunctionNetwork(psiSoil, 
-                           krhizomax, nsoil, alphasoil,
-                           krootmax, rootc, rootd, 
-                           kstemmax, stemc, stemd,
-                           kleafmax, leafc, leafd,
-                           PLCstem,
-                           minFlow = 0.0, maxNsteps=400,
-                           ntrial = 200, psiTol = 0.0001, ETol = 0.0001)
+                  krhizomax, nsoil, alphasoil,
+                  krootmax, rootc, rootd, 
+                  kstemmax, stemc, stemd,
+                  kleafmax, leafc, leafd,
+                  PLCstem,
+                  minFlow = 0.0, maxNsteps=400,
+                  ntrial = 200, psiTol = 0.0001, ETol = 0.0001)
                            
 hydraulics.supplyFunctionPlot(x, soil, type = "E")   
 hydraulics.regulatedPsiXylem(E, psiUpstream, kxylemmax, c, d, psiStep = -0.01)

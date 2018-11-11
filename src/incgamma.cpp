@@ -1093,7 +1093,7 @@ double qfraction(double a, double x, double dp){
 //   ENDIF
 //   END SUBROUTINE incgam
   
-// [[Rcpp::export("incgam")]]
+// [[Rcpp::export(".incgam")]]
 NumericVector incgam(double a, double x) {
   double lnx, p, q;
   if(x<dwarf) {
@@ -1720,7 +1720,7 @@ double eps3(double eta) {
 //     IF (n==15) ierr=-2
 //   xr=x
 //     END SUBROUTINE invincgam
-// [[Rcpp::export("invincgam")]]
+// [[Rcpp::export(".invincgam")]]
 double invincgam(double a, double p, double q) {
   double porq, s, dlnr, logr, r, a2, a3, a4, ap1, ap12, ap13, ap14;
   double ap2, ap22, x0, b, eta, L, L2, L3, L4;

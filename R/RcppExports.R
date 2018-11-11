@@ -433,11 +433,11 @@ hydraulics.leafWaterCapacity <- function(SLA, ld) {
     .Call('_medfate_leafWaterCapacity', PACKAGE = 'medfate', SLA, ld)
 }
 
-incgam <- function(a, x) {
+.incgam <- function(a, x) {
     .Call('_medfate_incgam', PACKAGE = 'medfate', a, x)
 }
 
-invincgam <- function(a, p, q) {
+.invincgam <- function(a, p, q) {
     .Call('_medfate_invincgam', PACKAGE = 'medfate', a, p, q)
 }
 

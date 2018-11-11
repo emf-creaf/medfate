@@ -22,7 +22,7 @@ hydraulics.averagePsi(psi, v, c, d)
 hydraulics.vulnerabilityCurvePlot(x, soil = NULL, type="leaf",  
                                   psiVec =  seq(-0.1, -8.0, by =-0.01), 
                                   relative = FALSE)   
-hydraulics.psiCrit(c, d)
+hydraulics.psiCrit(c, d, pCrit = 0.001)
 hydraulics.vanGenuchtenConductance(psi, krhizomax, n, alpha)
 hydraulics.xylemConductance(psi, kxylemmax, c, d)
 hydraulics.xylemPsi(kxylem, kxylemmax, c, d)
