@@ -3,6 +3,8 @@
 \alias{hydraulics.EXylem}
 \alias{hydraulics.EVanGenuchten}
 \alias{hydraulics.Ecrit}
+\alias{hydraulics.Ecapacitance}
+\alias{hydraulics.psiCrit}
 \alias{hydraulics.E2psiXylem}
 \alias{hydraulics.E2psiVanGenuchten}
 \alias{hydraulics.E2psiTwoElements}
@@ -29,40 +31,39 @@ Hydraulic supply functions
 Set of functions used in the implementation of hydraulic supply functions (Sperry \& Love 2015).
 }
 \usage{
-hydraulics.EXylem(psiPlant, psiUpstream, kxylemmax, c, d, allowNegativeFlux = TRUE, 
+hydraulics.EXylem(psiPlant, psiUpstream, 
+                  kxylemmax, c, d, allowNegativeFlux = TRUE, 
                   psiCav = 0)
-hydraulics.EVanGenuchten(psiRhizo, psiSoil, krhizomax, n, alpha, 
-                         psiStep = -0.0001, psiTol = 0.0001, allowNegativeFlux = TRUE)
-hydraulics.Ecrit(psiUpstream, kxylemmax, c, d)
-hydraulics.E2psiXylem(E, psiUpstream, kxylemmax, c, d, psiCav = 0, 
-                      psiStep = -0.0001, psiMax = -10.0)
+hydraulics.EVanGenuchten(psiRhizo, psiSoil, krhizomax, 
+                         n, alpha, l = 0.5)
+hydraulics.Ecapacitance(psi, psiPrev, PLCprev,
+                        V, fapo, c,  d, 
+                        pi0, eps,timestep)                         
+hydraulics.Ecrit(psiUpstream, kxylemmax, c, d, pCrit = 0.001)
+hydraulics.psiCrit(c, d, pCrit = 0.001)
+hydraulics.E2psiXylem(E, psiUpstream, 
+                      kxylemmax, c, d, psiCav = 0)
 hydraulics.E2psiVanGenuchten(E, psiSoil, krhizomax, n, alpha, 
                              psiStep = -0.0001, psiMax = -10.0)
 hydraulics.E2psiTwoElements(E, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, 
-                            psiCav = 0, psiStep = -0.001, psiMax = -10.0)
-
+                            psiCav = 0, psiStep = -1e-04, psiMax = -10.0)
 hydraulics.E2psiBelowground(E, psiSoil, 
                             krhizomax, nsoil, alphasoil,
                             krootmax, rootc, rootd, 
                             psiIni = as.numeric(c(0)),
-                            psiStep = -0.0001, psiMax = -10.0, ntrial = 10, 
-                            psiTol = 0.0001, ETol = 0.0001)
+                            ntrial = 10, psiTol = 0.0001, ETol = 0.0001)
 hydraulics.E2psiAboveground(E, psiRootCrown, 
                             kstemmax, stemc, stemd,
                             kleafmax, leafc, leafd,
-                            PLCstem,
-                            psiStep = -0.0001, psiMax = -10.0)  
-hydraulics.E2psiAbovegroundCapacitance(E, psiRootCrown,      
-                                       EPrev, psiRootCrownPrev,
-                                       psiStemPrev, PLCstemPrev, RWCsympstemPrev, 
-                                       psiLeafPrev, RWCsympleafPrev,
-                                       kstemmax, stemc, stemd,
-                                       kleafmax, leafc, leafd,
-                                       Vsapwood, stemfapo, stempi0, stemeps,
-                                       Vleaf, leaffapo, leafpi0, leafeps,
-                                       klat, ksto,
-                                       tstep = 3600.0, nSubSteps = 1000,
-                                       psiStep = -0.0001, psiMax = -10.0)
+                            PLCstem)  
+hydraulics.E2psiAbovegroundCapacitance(E, psiRootCrown, 
+                            psiStemPrev, PLCstem,
+                            psiLeafPrev, 
+                            kstemmax, stemc, stemd,
+                            kleafmax, leafc, leafd,
+                            Vsapwood, stemfapo, stempi0, stemeps,
+                            Vleaf, leaffapo, leafpi0, leafeps,
+                            tstep)
 hydraulics.E2psiAbovegroundCapacitanceDisconnected(E,                           
                       psiStemPrev, PLCstemPrev, RWCsympstemPrev, 
                       psiLeafPrev, RWCsympleafPrev,
@@ -115,9 +116,7 @@ hydraulics.supplyFunctionAbovegroundCapacitance(Erootcrown, psiRootCrown,
                                kleafmax, leafc, leafd,
                                Vsapwood, stemfapo, stempi0, stemeps,
                                Vleaf, leaffapo, leafpi0, leafeps,
-                               klat, ksto,
-                               tstep = 3600.0, nSubSteps = 1000,
-                               psiStep = -0.0001, psiMax = -10.0)
+                               tstep = 3600.0)
                                
 List supplyFunctionNetwork(psiSoil, 
                            krhizomax, nsoil, alphasoil,
@@ -125,7 +124,7 @@ List supplyFunctionNetwork(psiSoil,
                            kstemmax, stemc, stemd,
                            kleafmax, leafc, leafd,
                            PLCstem,
-                           minFlow = 0.0, maxNsteps=400, psiStep = -0.0001, psiMax = -10.0, 
+                           minFlow = 0.0, maxNsteps=400,
                            ntrial = 200, psiTol = 0.0001, ETol = 0.0001)
                            
 hydraulics.supplyFunctionPlot(x, soil, type = "E")   
@@ -160,7 +159,7 @@ hydraulics.regulatedPsiTwoElements(Emax, psiSoil, krhizomax, kxylemmax, n, alpha
   \item{rootc, rootd}{Parameters of the Weibull function for roots (root xylem vulnerability curve).}
   \item{stemc, stemd}{Parameters of the Weibull function for stems (stem xylem vulnerability curve).}
   \item{leafc, leafd}{Parameters of the Weibull function for leaves (leaf vulnerability curve).}
-  \item{n, alpha}{Parameters of the Van Genuchten function (rhizosphere vulnerability curve).}
+  \item{n, alpha, l}{Parameters of the Van Genuchten function (rhizosphere vulnerability curve).}
   \item{nsoil, alphasoil}{Parameter vectors of the Van Genuchten function (rhizosphere vulnerability curve) with one value for each soil layer.}
   \item{allowNegativeFlux}{A boolean to indicate wether negative flux (i.e. from plant to soil) is allowed.}
   \item{maxNsteps}{Maximum number of steps in the construction of supply functions.}
@@ -205,7 +204,7 @@ Sperry, J. S., F. R. Adler, G. S. Campbell, and J. P. Comstock. 1998. Limitation
 Sperry, J. S., and D. M. Love. 2015. What plant hydraulics can tell us about responses to climate-change droughts. New Phytologist 207:14–27.
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC, Catalonia, Spain
 }
 \seealso{
 \code{\link{hydraulics.psi2K}}, \code{\link{hydraulics.maximumStemHydraulicConductance}}, \code{\link{spwb}}, \code{\link{soil}}

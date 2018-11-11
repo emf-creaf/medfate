@@ -1,5 +1,5 @@
-summary.growth<-function(object, freq="years", output="DailyBalance", FUN=sum, bySpecies = FALSE, ...){  
-  dates = as.Date(rownames(object$DailyBalance))
+summary.growth<-function(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, ...){  
+  dates = as.Date(rownames(object$WaterBalance))
   ndaysTotal = length(dates)
   date.factor = cut(dates, breaks=freq)
   OM = object[[output]]

@@ -289,8 +289,8 @@ hydraulics.xylemPsi <- function(kxylem, kxylemmax, c, d) {
     .Call('_medfate_xylemPsi', PACKAGE = 'medfate', kxylem, kxylemmax, c, d)
 }
 
-hydraulics.psiCrit <- function(c, d) {
-    .Call('_medfate_psiCrit', PACKAGE = 'medfate', c, d)
+hydraulics.psiCrit <- function(c, d, pCrit = 0.001) {
+    .Call('_medfate_psiCrit', PACKAGE = 'medfate', c, d, pCrit)
 }
 
 hydraulics.vanGenuchtenConductance <- function(psi, krhizomax, n, alpha) {
@@ -317,8 +317,8 @@ hydraulics.EVanGenuchten <- function(psiRhizo, psiSoil, krhizomax, n, alpha, l =
     .Call('_medfate_EVanGenuchten', PACKAGE = 'medfate', psiRhizo, psiSoil, krhizomax, n, alpha, l)
 }
 
-hydraulics.Ecrit <- function(psiUpstream, kxylemmax, c, d) {
-    .Call('_medfate_Ecrit', PACKAGE = 'medfate', psiUpstream, kxylemmax, c, d)
+hydraulics.Ecrit <- function(psiUpstream, kxylemmax, c, d, pCrit = 0.001) {
+    .Call('_medfate_Ecrit', PACKAGE = 'medfate', psiUpstream, kxylemmax, c, d, pCrit)
 }
 
 hydraulics.Ecapacitance <- function(psi, psiPrev, PLCprev, V, fapo, c, d, pi0, eps, timestep) {

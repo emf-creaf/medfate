@@ -16,8 +16,8 @@ Function \code{plot} plots the results of the soil water balance model (see \cod
                    add = FALSE, ...)
 \method{plot}{growth}(x, type="PET_Precipitation", bySpecies = FALSE, yearAxis=FALSE, 
     xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL,...)
-\method{summary}{spwb}(object, freq="years", output="DailyBalance", FUN=sum, bySpecies = FALSE, ...)
-\method{summary}{growth}(object, freq="years", output="DailyBalance", FUN=sum, bySpecies = FALSE, ...)
+\method{summary}{spwb}(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, ...)
+\method{summary}{growth}(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -112,8 +112,8 @@ S1<-spwb(x, examplesoil, examplemeteo, elevation = 100)
 #Plot results
 plot(S1)
 
-#Monthly summary (averages) of soil water balance
-summary(S1, freq="months",FUN=mean, output="SoilWaterBalance")
+#Monthly summary (averages) of soil status
+summary(S1, freq="months",FUN=mean, output="Soil")
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

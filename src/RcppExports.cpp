@@ -984,14 +984,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // psiCrit
-double psiCrit(double c, double d);
-RcppExport SEXP _medfate_psiCrit(SEXP cSEXP, SEXP dSEXP) {
+double psiCrit(double c, double d, double pCrit);
+RcppExport SEXP _medfate_psiCrit(SEXP cSEXP, SEXP dSEXP, SEXP pCritSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type c(cSEXP);
     Rcpp::traits::input_parameter< double >::type d(dSEXP);
-    rcpp_result_gen = Rcpp::wrap(psiCrit(c, d));
+    Rcpp::traits::input_parameter< double >::type pCrit(pCritSEXP);
+    rcpp_result_gen = Rcpp::wrap(psiCrit(c, d, pCrit));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1089,8 +1090,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // Ecrit
-double Ecrit(double psiUpstream, double kxylemmax, double c, double d);
-RcppExport SEXP _medfate_Ecrit(SEXP psiUpstreamSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP) {
+double Ecrit(double psiUpstream, double kxylemmax, double c, double d, double pCrit);
+RcppExport SEXP _medfate_Ecrit(SEXP psiUpstreamSEXP, SEXP kxylemmaxSEXP, SEXP cSEXP, SEXP dSEXP, SEXP pCritSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1098,7 +1099,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type kxylemmax(kxylemmaxSEXP);
     Rcpp::traits::input_parameter< double >::type c(cSEXP);
     Rcpp::traits::input_parameter< double >::type d(dSEXP);
-    rcpp_result_gen = Rcpp::wrap(Ecrit(psiUpstream, kxylemmax, c, d));
+    Rcpp::traits::input_parameter< double >::type pCrit(pCritSEXP);
+    rcpp_result_gen = Rcpp::wrap(Ecrit(psiUpstream, kxylemmax, c, d, pCrit));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2934,14 +2936,14 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_averagePsi", (DL_FUNC) &_medfate_averagePsi, 4},
     {"_medfate_xylemConductance", (DL_FUNC) &_medfate_xylemConductance, 4},
     {"_medfate_xylemPsi", (DL_FUNC) &_medfate_xylemPsi, 4},
-    {"_medfate_psiCrit", (DL_FUNC) &_medfate_psiCrit, 2},
+    {"_medfate_psiCrit", (DL_FUNC) &_medfate_psiCrit, 3},
     {"_medfate_vanGenuchtenConductance", (DL_FUNC) &_medfate_vanGenuchtenConductance, 4},
     {"_medfate_Egamma", (DL_FUNC) &_medfate_Egamma, 5},
     {"_medfate_Egammainv", (DL_FUNC) &_medfate_Egammainv, 5},
     {"_medfate_EXylem", (DL_FUNC) &_medfate_EXylem, 7},
     {"_medfate_E2psiXylem", (DL_FUNC) &_medfate_E2psiXylem, 6},
     {"_medfate_EVanGenuchten", (DL_FUNC) &_medfate_EVanGenuchten, 6},
-    {"_medfate_Ecrit", (DL_FUNC) &_medfate_Ecrit, 4},
+    {"_medfate_Ecrit", (DL_FUNC) &_medfate_Ecrit, 5},
     {"_medfate_Ecapacitance", (DL_FUNC) &_medfate_Ecapacitance, 10},
     {"_medfate_E2psiVanGenuchten", (DL_FUNC) &_medfate_E2psiVanGenuchten, 7},
     {"_medfate_E2psiTwoElements", (DL_FUNC) &_medfate_E2psiTwoElements, 11},

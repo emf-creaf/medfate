@@ -73,8 +73,8 @@ double xylemPsi(double kxylem, double kxylemmax, double c, double d) {
 }
 
 // [[Rcpp::export("hydraulics.psiCrit")]]
-double psiCrit(double c, double d) {
-  return(d * pow(-log(0.01), 1.0/c));
+double psiCrit(double c, double d, double pCrit = 0.001) {
+  return(d * pow(-log(pCrit), 1.0/c));
 }
 
 /**
@@ -139,13 +139,16 @@ double Egammainv(double Eg, double kxylemmax, double c, double d, double psiCav 
  * Integral of the xylem vulnerability curve
  */
 // [[Rcpp::export("hydraulics.EXylem")]]
-double EXylem(double psiPlant, double psiUpstream, double kxylemmax, double c, double d, bool allowNegativeFlux = true, double psiCav = 0.0) {
+double EXylem(double psiPlant, double psiUpstream, 
+              double kxylemmax, double c, double d, 
+              bool allowNegativeFlux = true, double psiCav = 0.0) {
   if((psiPlant > psiUpstream) & !allowNegativeFlux) ::Rf_error("Downstream potential larger (less negative) than upstream potential");
   return(Egamma(psiPlant, kxylemmax, c, d, psiCav)-Egamma(psiUpstream, kxylemmax, c,d, psiCav));
 }
 
 // [[Rcpp::export("hydraulics.E2psiXylem")]]
-double E2psiXylem(double E, double psiUpstream, double kxylemmax, double c, double d, double psiCav = 0.0) {
+double E2psiXylem(double E, double psiUpstream, 
+                  double kxylemmax, double c, double d, double psiCav = 0.0) {
   if(E==0) return(psiUpstream);
   double Eg = E + Egamma(psiUpstream, kxylemmax, c,d, psiCav);
   return(Egammainv(Eg, kxylemmax, c, d, psiCav));
@@ -157,7 +160,8 @@ double E2psiXylem(double E, double psiUpstream, double kxylemmax, double c, doub
  * Water Resour Res 45:1–9. doi: 10.1029/2008WR006938
  */
 // [[Rcpp::export("hydraulics.EVanGenuchten")]]
-double EVanGenuchten(double psiRhizo, double psiSoil, double krhizomax, double n, double alpha, double l = 0.5) {
+double EVanGenuchten(double psiRhizo, double psiSoil, double krhizomax, 
+                     double n, double alpha, double l = 0.5) {
   double m = 1.0 - (1.0/n);
   double thetaR = pow(1.0+pow(alpha*std::abs(psiRhizo),n),-1.0*m);
   double thetaS = pow(1.0+pow(alpha*std::abs(psiSoil),n),-1.0*m);
@@ -209,8 +213,8 @@ double EVanGenuchten(double psiRhizo, double psiSoil, double krhizomax, double n
 // }
 
 // [[Rcpp::export("hydraulics.Ecrit")]]
-double Ecrit(double psiUpstream, double kxylemmax, double c, double d) {
-  return(EXylem(psiCrit(c,d), psiUpstream, kxylemmax, c, d));
+double Ecrit(double psiUpstream, double kxylemmax, double c, double d, double pCrit = 0.001) {
+  return(EXylem(psiCrit(c,d, pCrit), psiUpstream, kxylemmax, c, d));
 }
 
 
