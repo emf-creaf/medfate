@@ -259,12 +259,12 @@ plot(S, type = "Snow")
 It is also useful to plot the dynamics of soil state variables by layer, such as the percentage of moisture in relation to field capacity:
 ```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
 par(mar=c(5,5,1,1))
-plot(S, type="Theta")
+plot(S, type="SoilTheta")
 ```
 Or soil water potentials:
 ```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
 par(mar=c(5,5,1,1))
-plot(S, type="Psi")
+plot(S, type="SoilPsi")
 ```
 
 Additionally, it can also be used to draw plant variables, such as plant transpiration:
@@ -278,7 +278,7 @@ plot(S, type="PlantTranspiration")
 While the simulation model uses daily steps, users will normally be interested in outputs at larger time scales. The package provides a `summary` for objects of class `spwb`. This function can be used to summarize the model's output at different temporal steps (i.e. weekly, annual, ...). For example, to obtain the average soil moisture and water potentials by months one can use:
 
 ```{r}
-summary(S, freq="months",FUN=mean, output="SoilWaterBalance")
+summary(S, freq="months",FUN=mean, output="Soil")
 ```
 
 Parameter `output` is used to indicate the element of the `spwb` object for which we desire summaries. Similarly, it is possible to calculate the average stress of plant cohorts by months:
