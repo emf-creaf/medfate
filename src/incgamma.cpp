@@ -1886,9 +1886,9 @@ double invincgam(double a, double p, double q) {
     n=n+1; 
     x=x0;
   }
-  if(n==15) {
-    warning("The number of iterations in the Newton method reached the upper limit N=15."); 
-  }
+  // if(n==15) {
+  //   warning("The number of iterations in the Newton method reached the upper limit N=15."); 
+  // }
   return(x);
 }
 

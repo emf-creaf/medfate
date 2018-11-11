@@ -685,7 +685,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   input["Photosynthesis"] = pvec;
   NumericVector cvec =  NumericVector(numCohorts, 0.0);
   cvec.attr("names") = above.attr("row.names");
-  input["ProportionCavitated"] = cvec;
+  input["PLC"] = cvec;
   // input["WindSpeed"] = NumericVector(numCohorts, 0.0);
   // input["PAR"] = NumericVector(numCohorts, 0.0);
   // input["AbsorbedSWR"] = NumericVector(numCohorts, 0.0);

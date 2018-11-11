@@ -117,8 +117,6 @@ List stomatalRegulation(List x, List soil, DataFrame meteo, int day,
   List control = x["control"];
   String soilFunctions = control["soilFunctions"];
   List numericParams = control["numericParams"];
-  double psiStep = numericParams["psiStep"];
-  double psiMax = numericParams["psiMax"];
   int ntrial = numericParams["ntrial"];
   int maxNsteps  = numericParams["maxNsteps"];
   double psiTol = numericParams["psiTol"];

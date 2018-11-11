@@ -1867,23 +1867,23 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   if(verbose) Rcout<<"Building SPWB output ...";
   
    DataFrame SWB = DataFrame::create(_["W"]=Wdays, _["ML"]=MLdays,_["MLTot"]=MLTot,
-                                           _["WTD"] = WaterTable,
-                                           _["psi"]=psidays, _["SWE"] = SWE, _["PlantExt"]=Eplantdays);
+                                     _["WTD"] = WaterTable,
+                                     _["psi"]=psidays, _["SWE"] = SWE, _["PlantExt"]=Eplantdays);
    DataFrame DWB;
    if(transpirationMode=="Simple") {
      DWB = DataFrame::create(_["GDD"] = GDD,
                              _["LAIcell"]=LAIcell, _["LAIcelldead"] = LAIcelldead,  _["Cm"]=Cm, _["Lground"] = Lground, _["PET"]=PET, 
-                               _["Precipitation"] = Precipitation, _["Rain"] = Rain, _["Snow"] = Snow,
-                               _["NetRain"]=NetRain,_["Infiltration"]=Infiltration, _["Runoff"]=Runoff, _["DeepDrainage"]=DeepDrainage, 
-                                 _["Evapotranspiration"]=Evapotranspiration,_["SoilEvaporation"]=SoilEvaporation,
-                                 _["Transpiration"]=Transpiration);
+                             _["Precipitation"] = Precipitation, _["Rain"] = Rain, _["Snow"] = Snow,
+                             _["NetRain"]=NetRain,_["Infiltration"]=Infiltration, _["Runoff"]=Runoff, _["DeepDrainage"]=DeepDrainage, 
+                             _["Evapotranspiration"]=Evapotranspiration,_["SoilEvaporation"]=SoilEvaporation,
+                             _["Transpiration"]=Transpiration);
    } else {
      DWB = DataFrame::create(_["GDD"] = GDD,
                              _["LAIcell"]=LAIcell, _["LAIcelldead"] = LAIcelldead,  _["Cm"]=Cm, _["Lground"] = Lground, _["PET"]=PET, 
-                               _["Precipitation"] = Precipitation, _["Rain"] = Rain, _["Snow"] = Snow,
-                               _["NetRain"]=NetRain,_["Infiltration"]=Infiltration, _["Runoff"]=Runoff, _["DeepDrainage"]=DeepDrainage, 
-                                 _["Evapotranspiration"]=Evapotranspiration,_["SoilEvaporation"]=SoilEvaporation,
-                                 _["Transpiration"]=Transpiration, _["PlantExtraction"] = PlantExtraction);
+                             _["Precipitation"] = Precipitation, _["Rain"] = Rain, _["Snow"] = Snow,
+                             _["NetRain"]=NetRain,_["Infiltration"]=Infiltration, _["Runoff"]=Runoff, _["DeepDrainage"]=DeepDrainage, 
+                             _["Evapotranspiration"]=Evapotranspiration,_["SoilEvaporation"]=SoilEvaporation,
+                             _["Transpiration"]=Transpiration, _["PlantExtraction"] = PlantExtraction);
      
    }
   

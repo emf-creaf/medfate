@@ -14,10 +14,10 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     x$PlantLAI = x$PlantLAIlive
     plot.spwb(x,type, bySpecies, yearAxis, xlim, ylim, xlab, ylab, ...)
   } else {
-    dates = as.Date(rownames(x$DailyBalance))
+    dates = as.Date(rownames(x$WaterBalance))
     transpMode = x$control$transpirationMode
-    DailyBalance = x$DailyBalance
-    SoilWaterBalance = x$SoilWaterBalance
+    WaterBalance = x$WaterBalance
+    Soil = x$Soil
     nlayers = x$NumSoilLayers
     numDays = length(dates)
     numYears = round(numDays/365)

@@ -268,12 +268,14 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   NumericVector SAgrowthcum(numCohorts, 0.0);
   
   //Water balance output variables
-  NumericVector Esoil(numDays);
+  NumericVector SoilEvaporation(numDays);
   NumericVector LAIcell(numDays);
   NumericVector Cm(numDays);
   NumericVector Lground(numDays);
   NumericVector Runoff(numDays);
   NumericVector NetRain(numDays);
+  NumericVector Rain(numDays);
+  NumericVector Snow(numDays);
   NumericVector Interception(numDays);
   NumericVector Infiltration(numDays);
   NumericVector DeepDrainage(numDays);
@@ -281,7 +283,9 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   NumericMatrix Wdays(numDays, nlayers); //Soil moisture content in relation to field capacity
   NumericMatrix psidays(numDays, nlayers);
   NumericMatrix MLdays(numDays, nlayers);
+  NumericVector WaterTable(numDays, NA_REAL);
   NumericVector MLTot(numDays, 0.0);
+  NumericVector SWE(numDays, 0.0);
   
   Wdays(0,_) = W;
   
@@ -322,7 +326,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
       
       PET[i] = s["PET"];
     }    
-    List db = s["DailyBalance"];
+    List db = s["WaterBalance"];
     Lground[i] = db["Lground"];
     LAIcell[i] = db["LAIcell"];
     Cm[i] = db["Cm"];
@@ -330,23 +334,26 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
     Infiltration[i] = db["Infiltration"];
     Runoff[i] = db["Runoff"];
     NetRain[i] = db["NetRain"];
+    Rain[i] = db["Rain"];
+    Snow[i] = db["Snow"];
     Interception[i] = Precipitation[i]-NetRain[i];
     
-    List sb = s["SoilBalance"];
-    NumericVector psi = sb["psiVec"];
-    Esoil[i] = sum(Rcpp::as<Rcpp::NumericVector>(sb["EsoilVec"]));
+    List sb = s["Soil"];
+    NumericVector psi = sb["psi"];
+    SoilEvaporation[i] = sum(Rcpp::as<Rcpp::NumericVector>(sb["SoilEvaporation"]));
     psidays(i,_) = psi;
-    NumericVector EplantVec = sb["EplantVec"];
+    NumericVector EplantVec = sb["PlantExtraction"];
+    SWE[i] = soil["SWE"];
     
     List Plants = s["Plants"];
-    NumericVector EplantCoh = Plants["EplantCoh"];
+    NumericVector EplantCoh = Plants["Transpiration"];
     Eplantdays(i,_) = EplantVec;
     NumericVector An =  Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
-    NumericVector pEmb =  Rcpp::as<Rcpp::NumericVector>(x["ProportionCavitated"]);
+    NumericVector pEmb =  Rcpp::as<Rcpp::NumericVector>(x["PLC"]);
     PlantPhotosynthesis(i,_) = An;
     PlantTranspiration(i,_) = EplantCoh;
     PlantStress(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["DDS"]);
-    NumericVector psiCoh =  Rcpp::as<Rcpp::NumericVector>(Plants["psiCoh"]);;
+    NumericVector psiCoh =  Rcpp::as<Rcpp::NumericVector>(Plants["psi"]);;
     PlantPsi(i,_) = psiCoh;
     // PlantWindSpeed(i,_) = Rcpp::as<Rcpp::NumericVector>(x["WindSpeed"]);
     // PlantPAR(i,_) = Rcpp::as<Rcpp::NumericVector>(x["PAR"]);
@@ -514,17 +521,18 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
       }
     }
     if(i<(numDays-1)) Wdays(i+1,_) = W;
+    WaterTable[i] = waterTableDepth(soil, soilFunctions);
   }
   if(verbose) Rcout << "done\n";
   
-  NumericVector Eplanttot(numDays,0.0);
+  NumericVector Transpiration(numDays,0.0);
   for(int l=0;l<nlayers;l++) {
     MLdays(_,l) = Wdays(_,l)*Water_FC[l]; 
     MLTot = MLTot + MLdays(_,l);
-    Eplanttot = Eplanttot + Eplantdays(_,l);
+    Transpiration = Transpiration + Eplantdays(_,l);
   }
   
-  NumericVector Etot = Eplanttot+Esoil;
+  NumericVector Evapotranspiration = Transpiration+SoilEvaporation;
   
   if(verbose) {
     double Precipitationsum = sum(Precipitation);
@@ -537,12 +545,15 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
 
   if(verbose) Rcout<<"Building SWB and DWB output ...";
   
-  Rcpp::DataFrame SWB = DataFrame::create(_["W"]=Wdays, _["ML"]=MLdays,_["MLTot"]=MLTot,_["psi"]=psidays);
-  Rcpp::DataFrame DWB = DataFrame::create(_["LAIcell"]=LAIcell, _["Cm"]=Cm, _["Lground"] = Lground, _["PET"]=PET, 
-                                          _["Precipitation"] = Precipitation, _["NetRain"]=NetRain,_["Infiltration"]=Infiltration, _["Runoff"]=Runoff, _["DeepDrainage"]=DeepDrainage, 
-                                          _["Etot"]=Etot,_["Esoil"]=Esoil,
-                                          _["Eplanttot"]=Eplanttot,
-                                          _["Eplant"]=Eplantdays);
+  DataFrame SWB = DataFrame::create(_["W"]=Wdays, _["ML"]=MLdays,_["MLTot"]=MLTot,
+                                    _["WTD"] = WaterTable,
+                                    _["psi"]=psidays, _["SWE"] = SWE, _["PlantExt"]=Eplantdays);
+  Rcpp::DataFrame DWB = DataFrame::create(_["GDD"] = GDD,
+                                          _["LAIcell"]=LAIcell, _["Cm"]=Cm, _["Lground"] = Lground, _["PET"]=PET, 
+                                          _["Precipitation"] = Precipitation, _["Rain"] = Rain, _["Snow"] = Snow, 
+                                          _["NetRain"]=NetRain,_["Infiltration"]=Infiltration, _["Runoff"]=Runoff, _["DeepDrainage"]=DeepDrainage, 
+                                          _["Evapotranspiration"]=Evapotranspiration,_["SoilEvaporation"]=SoilEvaporation,
+                                          _["Transpiration"]=Transpiration);
   
   SWB.attr("row.names") = meteo.attr("row.names") ;
   DWB.attr("row.names") = meteo.attr("row.names") ;
@@ -563,8 +574,8 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   List l = List::create(Named("control") = control,
                         Named("cohorts") = clone(cohorts),
                         Named("NumSoilLayers") = nlayers,
-                        Named("DailyBalance")=DWB, 
-                        Named("SoilWaterBalance")=SWB,
+                        Named("WaterBalance")=DWB, 
+                        Named("Soil")=SWB,
                         Named("PlantTranspiration") = PlantTranspiration,
                         Named("PlantPhotosynthesis") = PlantPhotosynthesis,
                         Named("PlantRespiration") = PlantRespiration,
