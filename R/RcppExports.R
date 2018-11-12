@@ -497,12 +497,12 @@ spwbInput <- function(above, V, soil, SpParams, control) {
     .Call('_medfate_spwbInput', PACKAGE = 'medfate', above, V, soil, SpParams, control)
 }
 
-forest2spwbInput <- function(x, soil, SpParams, control) {
-    .Call('_medfate_forest2spwbInput', PACKAGE = 'medfate', x, soil, SpParams, control)
-}
-
 growthInput <- function(above, Z, V, soil, SpParams, control) {
     .Call('_medfate_growthInput', PACKAGE = 'medfate', above, Z, V, soil, SpParams, control)
+}
+
+forest2spwbInput <- function(x, soil, SpParams, control) {
+    .Call('_medfate_forest2spwbInput', PACKAGE = 'medfate', x, soil, SpParams, control)
 }
 
 forest2growthInput <- function(x, soil, SpParams, control) {
