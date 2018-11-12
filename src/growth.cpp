@@ -46,12 +46,10 @@ double temperatureGrowthFactor(double Tmean) {
 double turgorGrowthFactor(double psi, double psi_tlp) {
   return(std::max(0.0,1.0 - pow(exp((psi/psi_tlp)-1.0),5.0)));
 }
-
 double carbonGrowthFactor(double conc, double threshold) {
   double k =10.0;
   return(std::max(0.0,(1.0 - exp(k*(threshold-conc)))/(1.0 - exp(k*(-conc)))));
 }
-
 // [[Rcpp::export(".growth.defoliationFraction")]]
 double defoliationFraction(double conc, double threshold) {
   double k =-10.0;
@@ -87,13 +85,16 @@ void checkgrowthInput(List x, List soil, String transpirationMode, String soilFu
   
   if(!x.containsElementNamed("paramsGrowth")) stop("paramsGrowth missing in growthInput");
   DataFrame paramsGrowth = Rcpp::as<Rcpp::DataFrame>(x["paramsGrowth"]);
-  if(!paramsGrowth.containsElementNamed("SLA")) stop("SLA missing in growthInput$paramsGrowth");
-  if(!paramsGrowth.containsElementNamed("Al2As")) stop("Al2As missing in growthInput$paramsGrowth");
   if(!paramsGrowth.containsElementNamed("WoodC")) stop("WoodC missing in growthInput$paramsGrowth");
-  if(!paramsGrowth.containsElementNamed("WoodDens")) stop("WoodDens missing in growthInput$paramsGrowth");
-  // if(!paramsGrowth.containsElementNamed("Cstoragepmax")) stop("Cstoragepmax missing in growthInput$paramsGrowth");
+  if(!paramsGrowth.containsElementNamed("Cstoragepmax")) stop("Cstoragepmax missing in growthInput$paramsGrowth");
   if(!paramsGrowth.containsElementNamed("RGRmax")) stop("RGRmax missing in growthInput$paramsGrowth");
-  
+
+  if(!x.containsElementNamed("paramsAnatomy")) stop("paramsAnatomy missing in growthInput");
+  DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
+  if(!paramsAnatomy.containsElementNamed("SLA")) stop("SLA missing in paramsAnatomy$paramsGrowth");
+  if(!paramsAnatomy.containsElementNamed("Al2As")) stop("Al2As missing in paramsAnatomy$paramsGrowth");
+  if(!paramsAnatomy.containsElementNamed("WoodDens")) stop("WoodDens missing in paramsAnatomy$paramsGrowth");
+
   if(!x.containsElementNamed("paramsTransp")) stop("paramsTransp missing in growthInput");
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
   if(!paramsTransp.containsElementNamed("pRootDisc")) stop("pRootDisc missing in growthInput$paramsTransp");
@@ -144,6 +145,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   bool verbose = control["verbose"];
   bool snowpack = control["snowpack"];
   bool cavitationRefill = control["cavitationRefill"];
+  bool taper = control["taper"];
   checkgrowthInput(x, soil, transpirationMode, soilFunctions);
   
   NumericVector Precipitation = meteo["Precipitation"];
@@ -214,21 +216,22 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   
   int nlayers = W.size();
   
+  //Anatomy parameters
+  DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
+  NumericVector SLA = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["SLA"]);
+  NumericVector Al2As = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["Al2As"]);
+  NumericVector WoodDens = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["WoodDens"]);
   //Growth parameters
   DataFrame paramsGrowth = Rcpp::as<Rcpp::DataFrame>(x["paramsGrowth"]);
-  NumericVector SLA = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["SLA"]);
-  NumericVector Al2As = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["Al2As"]);
   NumericVector WoodC = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["WoodC"]);
-  NumericVector WoodDens = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["WoodDens"]);
   NumericVector RGRmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRmax"]);
-  NumericVector Cstoragepmax, slowCstorage_max(numCohorts), fastCstorage_max(numCohorts);
+  NumericVector Cstoragepmax= Rcpp::as<Rcpp::NumericVector>(paramsGrowth["Cstoragepmax"]);
+  NumericVector slowCstorage_max(numCohorts), fastCstorage_max(numCohorts);
   if(storagePool=="one") {
     fastCstorage = above["fastCstorage"];
-    Cstoragepmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["Cstoragepmax"]);
   } else if(storagePool=="two") {
     fastCstorage = above["fastCstorage"];
     slowCstorage = above["slowCstorage"];
-    Cstoragepmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["Cstoragepmax"]);
   }
   
   //Allometric parameters
@@ -250,13 +253,10 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   NumericVector fHDmin= paramsAllometries["fHDmin"];
   NumericVector fHDmax= paramsAllometries["fHDmax"];
   
-  //Water balance output variables
+  //Water Output variables
   NumericMatrix PlantPsi(numDays, numCohorts);
   NumericMatrix PlantStress(numDays, numCohorts);
   NumericMatrix PlantTranspiration(numDays, numCohorts);
-  // NumericMatrix PlantWindSpeed(numDays, numCohorts);
-  // NumericMatrix PlantPAR(numDays, numCohorts);
-  // NumericMatrix PlantAbsorbedSWR(numDays, numCohorts);
   NumericMatrix PlantRespiration(numDays, numCohorts);
   NumericMatrix PlantCstorageFast(numDays, numCohorts);
   NumericMatrix PlantCstorageSlow(numDays, numCohorts);
@@ -324,7 +324,6 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
                        MinRelativeHumidity[i], MaxRelativeHumidity[i], Radiation[i], WindSpeed[i], 
                        latitude, elevation, solarConstant, delta, Precipitation[i], ER[i], 0.0, false);
       
-      PET[i] = s["PET"];
     }    
     List db = s["WaterBalance"];
     Lground[i] = db["Lground"];
@@ -349,15 +348,16 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
     NumericVector EplantCoh = Plants["Transpiration"];
     Eplantdays(i,_) = EplantVec;
     NumericVector An =  Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
-    NumericVector pEmb =  Rcpp::as<Rcpp::NumericVector>(x["PLC"]);
     PlantPhotosynthesis(i,_) = An;
     PlantTranspiration(i,_) = EplantCoh;
     PlantStress(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["DDS"]);
-    NumericVector psiCoh =  Rcpp::as<Rcpp::NumericVector>(Plants["psi"]);;
+    NumericVector psiCoh;
+    if(transpirationMode=="Simple") {
+      psiCoh =  Rcpp::as<Rcpp::NumericVector>(Plants["psi"]);  
+    } else {
+      psiCoh =  Rcpp::as<Rcpp::NumericVector>(Plants["LeafPsi"]);  
+    }
     PlantPsi(i,_) = psiCoh;
-    // PlantWindSpeed(i,_) = Rcpp::as<Rcpp::NumericVector>(x["WindSpeed"]);
-    // PlantPAR(i,_) = Rcpp::as<Rcpp::NumericVector>(x["PAR"]);
-    // PlantAbsorbedSWR(i,_) = Rcpp::as<Rcpp::NumericVector>(x["AbsorbedSWR"]);
 
     //3. Carbon balance and growth
     double B_leaf_expanded, B_stem, B_fineroot;
@@ -411,8 +411,18 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
       if(storagePool != "none") {
         fastCstorage[j] = fastCstorage[j]-deltaSAgrowth*cost; //Remove construction costs from (fast) C pool
       }
-      if(!cavitationRefill) { //If we track cavitation update proportion of embolized conduits
-        pEmb[j] = pEmb[j]*((SA[j] - deltaSAturnover)/(SA[j] + deltaSAgrowth - deltaSAturnover));
+      if(transpirationMode=="Simple"){
+        if(!cavitationRefill) { //If we track cavitation update proportion of embolized conduits
+          NumericVector pEmb =  Rcpp::as<Rcpp::NumericVector>(x["PLC"]);
+          pEmb[j] = pEmb[j]*((SA[j] - deltaSAturnover)/(SA[j] + deltaSAgrowth - deltaSAturnover));
+        }
+      } else {
+        NumericMatrix PLCstem =  Rcpp::as<Rcpp::NumericMatrix>(x["PLCstem"]);
+        int nStemSegments = PLCstem.ncol();
+        for(int s=0;s<nStemSegments;s++) {
+          PLCstem(j,s) = PLCstem(j,s)*((SA[j] - deltaSAturnover)/(SA[j] + deltaSAgrowth - deltaSAturnover));
+        }
+        
       }
       SA[j] = SA[j] + deltaSAgrowth - deltaSAturnover; //Update sapwood area
       
@@ -456,7 +466,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
       //3.7 Update stem conductance (Complex mode)
       if(transpirationMode=="Complex") {
         double al2as = (LAI_expanded[j]/(N[j]/10000.0))/(SA[j]/10000.0);
-        VCstem_kmax[j]=maximumStemHydraulicConductance(xylem_Kmax[j], al2as,H[j], x["taper"]);
+        VCstem_kmax[j]=maximumStemHydraulicConductance(xylem_Kmax[j], al2as,H[j], taper);
         // Rcout<<Al2As[j]<<" "<< al2as<<" "<<VCstem_kmax[j]<<"\n";
       }
       
@@ -583,9 +593,6 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
                         Named("PlantCstorageSlow") = PlantCstorageSlow,
                         Named("PlantSAgrowth") = PlantSAgrowth,
                         Named("PlantSA")=PlantSA,
-                        // Named("PlantWindSpeed") = PlantWindSpeed,
-                        // Named("PlantPAR") = PlantPAR,
-                        // Named("PlantAbsorbedSWR") = PlantAbsorbedSWR,
                         Named("PlantPsi") = PlantPsi, 
                         Named("PlantStress") = PlantStress,
                         Named("PlantLAIdead") = PlantLAIdead,

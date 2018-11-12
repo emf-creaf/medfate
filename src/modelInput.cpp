@@ -623,6 +623,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                          _["above"] = plantsdf,
                          _["below"] = below,
                          _["paramsBase"] = paramsBasedf,
+                         _["paramsAnatomy"] = paramsAnatomydf,
                          _["paramsTransp"] = paramsTranspdf,
                          _["paramsGrowth"]= paramsGrowthdf,
                          _["paramsAllometries"] = paramsAllometriesdf);
