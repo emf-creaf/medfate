@@ -56,17 +56,17 @@ A data set of parameter values for Mediterranean species, resulting from bibliog
     \item{\code{Al2As}}{Leaf area to sapwood area ratio (in m2·m-2).}
     \item{\code{WUE}}{Water use efficiency for carbon assimilation (g C /mm water).}
     \item{\code{WoodC}}{Wood carbon content per dry weight (g C /g dry).}
-    \item{\code{WoodDens}}{Wood density (at 0 percent humidity!).}
+    \item{\code{WoodDensity}}{Wood density (at 0 percent humidity!).}
     \item{\code{RGRmax}}{Maximum relative growth rate (in basal area or sapwood area) (in cm2·cm-2).}
     \item{\code{Psi_Extract}}{Water potential corresponding to 50\% relative conductance (in MPa).}
-    \item{\code{pRootDisc}}{Relative conductance leading to hydraulic disconnection from soil.}
+    \item{\code{pRootDisc}}{Relative root conductance leading to hydraulic disconnection from a soil layer.}
     \item{\code{Gwmin}}{Minimum stomatal conductance to water vapor per leaf area unit (in mol·s-1·m-2).}
     \item{\code{Gwmax}}{Maximum stomatal conductance to water vapor per leaf area unit (in mol·s-1·m-2).}
     \item{\code{VCleaf_kmax}}{Leaf hydraulic conductance (in mmol H2O·s-1·m-2·MPa-1).}
     \item{\code{VCleaf_c}, \code{VCleaf_d}}{Parameters of the leaf vulnerability curve (\code{VCleaf_d} in MPa).}
-    \item{\code{xylem_kmax}}{Sapwood-specific hydraulic conductivity of stem xylem (in kg H2O·s-1·m-1·MPa-1).}
+    \item{\code{Kmax_stemxylem}}{Sapwood-specific hydraulic conductivity of stem xylem (in kg H2O·s-1·m-1·MPa-1).}
     \item{\code{VCstem_c}, \code{VCstem_d}}{Parameters of the stem xylem vulnerability curve (\code{VCstem_d} in MPa).}
-    \item{\code{rootxylem_kmax}}{Sapwood-specific hydraulic conductivity of root xylem (in kg H2O·s-1·m-1·MPa-1).}
+    \item{\code{Kmax_rootxylem}}{Sapwood-specific hydraulic conductivity of root xylem (in kg H2O·s-1·m-1·MPa-1).}
     \item{\code{VCroot_c}, \code{VCroot_d}}{Parameters of the root xylem vulnerability curve (\code{VCroot_d} in MPa).}
     \item{\code{LeafWidth}}{Leaf width (in cm).}
     \item{\code{Vmax298}}{Maximum Rubisco carboxilation rate at 25ºC (in micromol CO2·s-1·m-2).}

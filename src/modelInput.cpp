@@ -28,25 +28,25 @@ void checkSpeciesParameters(DataFrame SpParams, CharacterVector params) {
 DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams) {
   IntegerVector SP = above["SP"];
   int numCohorts = SP.size();
-  NumericVector Al2As(numCohorts), SLA(numCohorts), LeafDens(numCohorts), WoodDens(numCohorts);
+  NumericVector Al2As(numCohorts), SLA(numCohorts), LeafDensity(numCohorts), WoodDensity(numCohorts);
   NumericVector r635(numCohorts), leafwidth(numCohorts);
   NumericVector leafwidthSP = SpParams["LeafWidth"];
   NumericVector Al2AsSP = SpParams["Al2As"];
   NumericVector SLASP = SpParams["SLA"];
   NumericVector r635SP = SpParams["r635"];
-  NumericVector LeafDensSP = SpParams["LeafDensity"];
-  NumericVector WoodDensSP = SpParams["WoodDens"];
+  NumericVector LeafDensitySP = SpParams["LeafDensity"];
+  NumericVector WoodDensitySP = SpParams["WoodDensity"];
   for(int c=0;c<numCohorts;c++){
     leafwidth[c] = leafwidthSP[SP[c]];
     Al2As[c] = Al2AsSP[SP[c]];
     SLA[c] = SLASP[SP[c]];
-    WoodDens[c] = WoodDensSP[SP[c]];
+    WoodDensity[c] = WoodDensitySP[SP[c]];
     r635[c] = r635SP[SP[c]];
-    LeafDens[c] = LeafDensSP[SP[c]];
+    LeafDensity[c] = LeafDensitySP[SP[c]];
   }
   DataFrame paramsAnatomydf = DataFrame::create(
     _["Al2As"] = Al2As, _["SLA"] = SLA, _["LeafWidth"] = leafwidth, 
-    _["LeafDens"] = LeafDens, _["WoodDens"] = WoodDens, _["r635"] = r635
+    _["LeafDensity"] = LeafDensity, _["WoodDensity"] = WoodDensity, _["r635"] = r635
   );
   paramsAnatomydf.attr("row.names") = above.attr("row.names");
   return(paramsAnatomydf);
@@ -68,8 +68,8 @@ DataFrame paramsWaterStorage(DataFrame above, DataFrame SpParams,
   NumericVector LeafPI0(numCohorts), LeafEPS(numCohorts), LeafAF(numCohorts);
   NumericVector Vsapwood(numCohorts), Vleaf(numCohorts);
   
-  NumericVector WoodDens = paramsAnatomydf["WoodDens"];
-  NumericVector LeafDens = paramsAnatomydf["LeafDens"];
+  NumericVector WoodDensity = paramsAnatomydf["WoodDensity"];
+  NumericVector LeafDensity = paramsAnatomydf["LeafDensity"];
   NumericVector SLA = paramsAnatomydf["Al2As"];
   NumericVector Al2As = paramsAnatomydf["Al2As"];
   
@@ -77,16 +77,16 @@ DataFrame paramsWaterStorage(DataFrame above, DataFrame SpParams,
     StemPI0[c] = StemPI0SP[SP[c]];
     StemEPS[c] = StemEPSSP[SP[c]];
     //From: Christoffersen, B.O., Gloor, M., Fauset, S., Fyllas, N.M., Galbraith, D.R., Baker, T.R., Rowland, L., Fisher, R.A., Binks, O.J., Sevanto, S.A., Xu, C., Jansen, S., Choat, B., Mencuccini, M., McDowell, N.G., & Meir, P. 2016. Linking hydraulic traits to tropical forest function in a size-structured and trait-driven model (TFS v.1-Hydro). Geoscientific Model Development Discussions 0: 1–60.
-    if(NumericVector::is_na(StemPI0[c])) StemPI0[c] = 0.52 - 4.16*WoodDens[c]; 
-    if(NumericVector::is_na(StemEPS[c])) StemEPS[c] = sqrt(1.02*exp(8.5*WoodDens[c])-2.89); 
+    if(NumericVector::is_na(StemPI0[c])) StemPI0[c] = 0.52 - 4.16*WoodDensity[c]; 
+    if(NumericVector::is_na(StemEPS[c])) StemEPS[c] = sqrt(1.02*exp(8.5*WoodDensity[c])-2.89); 
     StemAF[c] = StemAFSP[SP[c]];
     LeafPI0[c] = LeafPI0SP[SP[c]];
     LeafEPS[c] = LeafEPSSP[SP[c]];
     LeafAF[c] = LeafAFSP[SP[c]];
     
     //Calculate stem and leaf capacity per leaf area (in m3·m-2)
-    Vsapwood[c] = stemWaterCapacity(Al2As[c], H[c], WoodDens[c]); 
-    Vleaf[c] = leafWaterCapacity(SLA[c], LeafDens[c]); 
+    Vsapwood[c] = stemWaterCapacity(Al2As[c], H[c], WoodDensity[c]); 
+    Vleaf[c] = leafWaterCapacity(SLA[c], LeafDensity[c]); 
   }
   DataFrame paramsWaterStoragedf = DataFrame::create(
     _["LeafPI0"] = LeafPI0, _["LeafEPS"] = LeafEPS, _["LeafAF"] = LeafAF, _["Vleaf"] = Vleaf,
@@ -110,12 +110,12 @@ DataFrame paramsTranspiration(DataFrame above, NumericMatrix V, List soil, DataF
   NumericVector GwminSP = SpParams["Gwmin"];
   NumericVector GwmaxSP = SpParams["Gwmax"];
   NumericVector VCleaf_kmaxSP = SpParams["VCleaf_kmax"];
-  NumericVector xylem_kmaxSP = SpParams["xylem_kmax"];
+  NumericVector Kmax_stemxylemSP = SpParams["Kmax_stemxylem"];
   NumericVector VCleaf_cSP = SpParams["VCleaf_c"];
   NumericVector VCleaf_dSP = SpParams["VCleaf_d"];
   NumericVector VCstem_cSP = SpParams["VCstem_c"];
   NumericVector VCstem_dSP = SpParams["VCstem_d"];
-  NumericVector rootxylem_kmaxSP = SpParams["rootxylem_kmax"];
+  NumericVector Kmax_rootxylemSP = SpParams["Kmax_rootxylem"];
   NumericVector VCroot_cSP = SpParams["VCroot_c"];
   NumericVector VCroot_dSP = SpParams["VCroot_d"];
   NumericVector Vmax298SP = SpParams["Vmax298"];
@@ -126,7 +126,7 @@ DataFrame paramsTranspiration(DataFrame above, NumericMatrix V, List soil, DataF
   
   NumericVector Vmax298(numCohorts), Jmax298(numCohorts);
   NumericVector Gwmax(numCohorts), Gwmin(numCohorts);
-  NumericVector VCleaf_kmax(numCohorts), xylem_kmax(numCohorts), rootxylem_kmax(numCohorts);
+  NumericVector VCleaf_kmax(numCohorts), Kmax_stemxylem(numCohorts), Kmax_rootxylem(numCohorts);
   NumericVector VCstem_kmax(numCohorts);
   NumericVector VCroottot_kmax(numCohorts, 0.0), VCroot_c(numCohorts), VCroot_d(numCohorts);
   NumericVector pRootDisc(numCohorts);
@@ -137,12 +137,12 @@ DataFrame paramsTranspiration(DataFrame above, NumericMatrix V, List soil, DataF
   for(int c=0;c<numCohorts;c++){
     Vc = V(c,_);
     
-    xylem_kmax[c] = xylem_kmaxSP[SP[c]];
-    rootxylem_kmax[c] = rootxylem_kmaxSP[SP[c]];
-    if(NumericVector::is_na(rootxylem_kmax[c])) rootxylem_kmax[c] = xylem_kmax[c];
+    Kmax_stemxylem[c] = Kmax_stemxylemSP[SP[c]];
+    Kmax_rootxylem[c] = Kmax_rootxylemSP[SP[c]];
+    if(NumericVector::is_na(Kmax_rootxylem[c])) Kmax_rootxylem[c] = Kmax_stemxylem[c];
     
     //Calculate stem maximum conductance (in mmol·m-2·s-1·MPa-1)
-    VCstem_kmax[c]=maximumStemHydraulicConductance(xylem_kmax[c], HmedSP[SP[c]], Al2As[c],H[c], (GroupSP[SP[c]]=="Angiosperm"),control["taper"]); 
+    VCstem_kmax[c]=maximumStemHydraulicConductance(Kmax_stemxylem[c], HmedSP[SP[c]], Al2As[c],H[c], (GroupSP[SP[c]]=="Angiosperm"),control["taper"]); 
     VCstem_c[c]=VCstem_cSP[SP[c]];
     VCstem_d[c]=VCstem_dSP[SP[c]];
     VCroot_c[c]=VCroot_cSP[SP[c]];
@@ -172,7 +172,7 @@ DataFrame paramsTranspiration(DataFrame above, NumericMatrix V, List soil, DataF
     Gwmax[c] = GwmaxSP[SP[c]];
     if(NumericVector::is_na(Gwmax[c])) Gwmax[c] = 0.12115*pow(VCleaf_kmax[c], 0.633);
     // double VCroot_kmaxc = 1.0/((1.0/(VCstem_kmax[c]*fracTotalTreeResistance))-(1.0/VCstem_kmax[c]));
-    double VCroot_kmaxc = maximumRootHydraulicConductance(rootxylem_kmax[c],Al2As[c], Vc, dVec);
+    double VCroot_kmaxc = maximumRootHydraulicConductance(Kmax_rootxylem[c],Al2As[c], Vc, dVec);
     VCroottot_kmax[c] = VCroot_kmaxc;
     Vmax298[c] =Vmax298SP[SP[c]];
     //Default value of Vmax298 = 100.0
@@ -185,7 +185,7 @@ DataFrame paramsTranspiration(DataFrame above, NumericMatrix V, List soil, DataF
   
   DataFrame paramsTranspdf = DataFrame::create(
     _["Gwmin"]=Gwmin, _["Gwmax"]=Gwmax,_["Vmax298"]=Vmax298,
-      _["Jmax298"]=Jmax298, _["xylem_Kmax"] = xylem_kmax, _["root_Kmax"] = rootxylem_kmax,
+      _["Jmax298"]=Jmax298, _["Kmax_stemxylem"] = Kmax_stemxylem, _["Kmax_rootxylem"] = Kmax_rootxylem,
         _["VCleaf_kmax"]=VCleaf_kmax,_["VCleaf_c"]=VCleaf_c,_["VCleaf_d"]=VCleaf_d,
         _["VCstem_kmax"]=VCstem_kmax,_["VCstem_c"]=VCstem_c,_["VCstem_d"]=VCstem_d, 
         _["VCroot_kmax"] = VCroottot_kmax ,_["VCroot_c"]=VCroot_c,_["VCroot_d"]=VCroot_d,
@@ -522,7 +522,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   
   
   DataFrame paramsAnatomydf = paramsAnatomy(above, SpParams);
-  NumericVector WoodDens = paramsAnatomydf["WoodDens"];
+  NumericVector WoodDensity = paramsAnatomydf["WoodDensity"];
   NumericVector SLA = paramsAnatomydf["Al2As"];
   NumericVector Al2As = paramsAnatomydf["Al2As"];
   
@@ -568,7 +568,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     NumericVector fastCstorage(numCohorts);
     for(int c=0;c<numCohorts;c++){
       NumericVector compartments = carbonCompartments(SA[c], LAI_expanded[c], H[c], 
-                                                      Z[c], N[c], SLA[c], WoodDens[c], WoodC[c]);
+                                                      Z[c], N[c], SLA[c], WoodDensity[c], WoodC[c]);
       fastCstorage[c] = 0.5*Cstoragepmax[c]*(compartments[0]+compartments[1]+compartments[2]);//Pool at 50%
     }
     plantsdf = DataFrame::create(_["SP"]=SP, _["N"]=N,_["DBH"]=DBH, _["Cover"] = Cover, _["H"]=H, _["CR"]=CR,
@@ -578,7 +578,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     NumericVector slowCstorage(numCohorts), fastCstorage(numCohorts);
     for(int c=0;c<numCohorts;c++){
       NumericVector compartments = carbonCompartments(SA[c], LAI_expanded[c], H[c], 
-                                                      Z[c], N[c], SLA[c], WoodDens[c], WoodC[c]);
+                                                      Z[c], N[c], SLA[c], WoodDensity[c], WoodC[c]);
       slowCstorage[c] = 0.5*(Cstoragepmax[c]-0.05)*(compartments[0]+compartments[1]+compartments[2]); //Slow pool at 50%
       fastCstorage[c] = 0.5*0.05*(compartments[0]+compartments[1]+compartments[2]); //Fast pool at 50%
     }

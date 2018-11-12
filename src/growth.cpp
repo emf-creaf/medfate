@@ -22,9 +22,9 @@ const double growthCarbonConcentrationThreshold = 0.5;
 
 const double dailySAturnoverProportion = 0.0001261398; //Equivalent to annual 4.5% 1-(1-0.045)^(1.0/365)
 
-NumericVector carbonCompartments(double SA, double LAI, double H, double Z, double N, double SLA, double WoodDens, double WoodC) {
+NumericVector carbonCompartments(double SA, double LAI, double H, double Z, double N, double SLA, double WoodDensity, double WoodC) {
   double B_leaf = leafCperDry*1000.0*(LAI/(N/10000.0))/SLA; //Biomass in g C · ind-1
-  double B_stem = WoodC*SA*(H+Z)*WoodDens;
+  double B_stem = WoodC*SA*(H+Z)*WoodDensity;
   double B_fineroot = B_leaf/2.5;
   return(NumericVector::create(B_leaf, B_stem, B_fineroot)); 
 }
@@ -93,7 +93,7 @@ void checkgrowthInput(List x, List soil, String transpirationMode, String soilFu
   DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
   if(!paramsAnatomy.containsElementNamed("SLA")) stop("SLA missing in paramsAnatomy$paramsGrowth");
   if(!paramsAnatomy.containsElementNamed("Al2As")) stop("Al2As missing in paramsAnatomy$paramsGrowth");
-  if(!paramsAnatomy.containsElementNamed("WoodDens")) stop("WoodDens missing in paramsAnatomy$paramsGrowth");
+  if(!paramsAnatomy.containsElementNamed("WoodDensity")) stop("WoodDensity missing in paramsAnatomy$paramsGrowth");
 
   if(!x.containsElementNamed("paramsTransp")) stop("paramsTransp missing in growthInput");
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
@@ -220,7 +220,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
   NumericVector SLA = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["SLA"]);
   NumericVector Al2As = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["Al2As"]);
-  NumericVector WoodDens = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["WoodDens"]);
+  NumericVector WoodDensity = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["WoodDensity"]);
   //Growth parameters
   DataFrame paramsGrowth = Rcpp::as<Rcpp::DataFrame>(x["paramsGrowth"]);
   NumericVector WoodC = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["WoodC"]);
@@ -363,7 +363,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
     double B_leaf_expanded, B_stem, B_fineroot;
     for(int j=0;j<numCohorts;j++){
       //3.1 Live biomass and maximum C pool capacity
-      NumericVector compartments = carbonCompartments(SA[j], LAI_expanded[j], H[j], Z[j], N[j], SLA[j], WoodDens[j], WoodC[j]);
+      NumericVector compartments = carbonCompartments(SA[j], LAI_expanded[j], H[j], Z[j], N[j], SLA[j], WoodDensity[j], WoodC[j]);
       B_leaf_expanded = compartments[0];
       B_stem = compartments[1];
       B_fineroot = compartments[2];
@@ -395,7 +395,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
       double deltaSAgrowth = 0.0;
       // if(f_turgor>0.0) { //Growth is possible
       double costLA = 0.1*leafCperDry*(Al2As[j]/SLA[j]); //Construction cost in g C·cm-2 of sapwood
-      double costSA = WoodC[j]*(H[j]+Z[j])*WoodDens[j];  //Construction cost in g C·cm-2 of sapwood
+      double costSA = WoodC[j]*(H[j]+Z[j])*WoodDensity[j];  //Construction cost in g C·cm-2 of sapwood
       double costFR = costLA/2.5;
       double cost = 1.3*(costLA+costSA+costFR);  //Construction cost in g C·cm-2 of sapwood (including 30% growth respiration)
       double deltaSAavailable = growthAvailableC/cost;

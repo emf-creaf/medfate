@@ -1057,39 +1057,43 @@ legend("topleft", bty="n", legend=c("Leaf","Stem","Root crown", "Rhizo 1", "Rhiz
 \subsubsection{Supply function with water compartments}
 So far we assumed there are no other sources of water than the soil. In this section we  consider the effect of additional water from leaf and stem tissues on the supply function. The supply function of a network representing the continuum is build for a given state of soil water potentials. This approach allows determining flows and water potential for \emph{steady-state} conditions. In a dynamic context one has to calculate the supply function for all values of $E$, then to determine stomatal conductance (see sections devoted to photosynthesis and stomatal regulation) and finally to decide on a specific value of $E$ and the corresponding steady-state configuration. Because light and temperature conditions change along the day, steady-state stomatal conductance and instantaneous $E$ values have to be determined for subdaily steps (e.g. 1-hour steps) and then flows need to be scaled and aggregated. At the end of the day, one may substract water from soil layers and recalculate the supply function for the next day.  
 
-When considering water compartments, plant transpiration can be larger or smaller than the water extracted from the soil. Moreover, the supply function of a given time step will be dependent on the status of storage comparments in the previous time step, because this determines how much water is added or removed to the stemflow due to the effect of water compartments. For any segment (either a stem segment or the leaf segment) the flow out of it, $E_{i,out}$, is not necessarily equal to the flow entering the segment, $E_{i, in}$. Thus, instead of eq. \ref{eq:generalsupply}, the equation govering the flow is:
+When considering water compartments, plant transpiration can be larger or smaller than the water extracted from the soil. Moreover, the supply function of a given time step will be dependent on the status of storage comparments in the previous time step, because this determines how much water is added or removed to the stemflow due to the effect of water compartments. For any segment (either a stem segment or the leaf segment) the flow out of it, $E_{i,out}$, is not necessarily equal to the flow entering the segment, $E_{i, in}$. Thus, instead of eq. \ref{eq:generalsupply}, the equation governing the flow is (Sperry et al. 1998; Steppe et al. 2005):
 \begin{equation}
 E_{i,out} = E_{i, in} - \frac{\Delta S_{i}}{\Delta t} = \int_{\Psi_{up}}^{\Psi_{down}}{k_i(\Psi) d\Psi} - \frac{\Delta S_{i}}{\Delta t}
 \end{equation}
-When building the supply function from the root crown to the leaf, one has to consider changes in storage water of the current segment before processing the next segment. Specifically, for every segment $i$ we take the current downstream water potential of the previous segment as upstream water potential (i.e.  $\Psi_{rootcrown, t}$ when processing the first stem segment, $\Psi_{i-1, t}$ when processing intermediate stem segments or $\Psi_{S, t}$) when processing the leaf segment). Then we calculate the steady-state drop in water potential (i.e., determine $\Psi_{i, t}$) corresponding to the input flow ($E_{i,in}$) using the inverse of the integral transform. If stem cavitation has occurred previously then $\Psi_{cav,i}$ will limit the maximum conductance. To determine $E_{i,out}$ we calculate the additional instantaneous flow due to changes in storage water volume ($\Delta S_{i}/\Delta t$) using:
-\begin{equation}
-\Delta S_{i} = S_i(\Psi_{i, t}) - S_i(\Psi_{i, t-1})
-\end{equation}
+
 
 
 \begin{figure}[h!]
 \includegraphics[width=\textwidth]{hydraulics_full.jpg}
 \end{figure}
 
+When building the supply function from the root crown to the leaf, one has to consider changes in storage water of the current segment before processing the next segment. Specifically, for every segment $i$ we take the current downstream water potential of the previous segment as upstream water potential (i.e.  $\Psi_{up} = \Psi_{rootcrown, t}$ when processing the first stem segment, $\Psi_{up} = \Psi_{i-1, t}$ when processing intermediate stem segments or $\Psi_{up} = \Psi_{S, t}$ when processing the leaf segment). Then we calculate the steady-state drop in water potential (i.e., determine $\Psi_{down} = \Psi_{i, t}$) corresponding to the input flow ($E_{i,in}$) using the inverse of the integral transform. If stem cavitation has occurred previously then $\Psi_{cav,i}$ will limit the maximum conductance. To determine $E_{i,out}$ we calculate the additional instantaneous flow due to changes in storage water volume ($\Delta S_{i}/\Delta t$) using:
+\begin{equation}
+\Delta S_{i} = S_i(\Psi_{i, t}) - S_i(\Psi_{i, t-1})
+\end{equation}
 
-The amount of water absorbed by or released from the storage compartment will depend on the properties of the apoplastic and symplastic tissues and the fraction of the segment that
+As mentioned when describing water content functions, we consider two sources of water in plant segments (Tyree \& Yang 1990). The amount of water absorbed by or released from the storage compartment will depend on the properties of the apoplastic and symplastic tissues and the fraction of the segment that corresponds to each kind of tissue. For example, let us take the following storage capacities, fractions of apoplastic tissue and parameters of the pressure-volume curves for symplastic tissue.
 
 <<>>=
-Vmaxstem = 0.0003
-Vmaxleaf = 0.00001
+Vmaxstem = 0.001005046
+Vmaxleaf = 0.0001327463
+stemfapo = 0.8
+leaffapo = 0.15
+stempi0 = -2
+stemeps = 16
+leafpi0 = -1.5
+leafeps = 8
+@
+
+The following figures show the change in supply function caused by stem and leaf water compartments, assuming a 1-hr time step and either 0 MPa or -1.5 MPa as previous water potential for all segments (see function \texttt{hydraulics.supplyFunctionNetworkCapacitance()}):
+
+\begin{center}
+<<fig=TRUE, width=8, height=8, echo=FALSE>>=
 psiStemPrev1 = 0
 psiLeafPrev1 = 0
 psiStemPrev2 = -1.5
 psiLeafPrev2 = -1.5
-stempi0 = -3
-stemeps = 12
-leafpi0 = -3
-leafeps = 12
-stemfapo = 0.8
-leaffapo = 0.15
-@
-
-<<fig=TRUE, width=8, height=8, echo=FALSE>>=
 par(mar=c(4,4,4,1), mfrow=c(2,2))
 supplyN11Cap1 = hydraulics.supplyFunctionNetworkCapacitance(
                                   psiSoilLayers1,
@@ -1144,17 +1148,19 @@ legend("bottomright",  legend= c("No capacitance", "Psi_prev = 0 MPa", "Psi_prev
 lines(-supplyN11Cap1Emb$psiLeaf, supplyN11Cap1Emb$ELeaf, lty=1, col=col2)
 lines(-supplyN11Cap2Emb$psiLeaf, supplyN11Cap2Emb$ELeaf, lty=1, col=col3)
 
-plot(-supplyNetwork11$psiLeaf, supplyNetwork11$dEdP, type="l", col=col1, ylab="dE/dP  (mmol·m-2·s-1·MPa-1)",     xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,max(supplyN11Cap1$dEdP)), lwd=1, main="original")
+plot(-supplyNetwork11$psiLeaf, supplyNetwork11$dEdP, type="l", col=col1, ylab="dE/dP  (mmol·m-2·s-1·MPa-1)",     xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,3), lwd=1, main="original")
 legend("topright",  legend= c("No capacitance", "Psi_prev = 0 MPa", "Psi_prev = -1.5 MPa"), col = c(col1, col2, col3), lty=1, bty="n")
 lines(-supplyN11Cap1$psiLeaf, supplyN11Cap1$dEdP, lty=1, col=col2)
 lines(-supplyN11Cap2$psiLeaf, supplyN11Cap2$dEdP, lty=1, col=col3)
 plot(-supplyNetwork11emb$psiLeaf, supplyNetwork11emb$dEdP, type="l", col=col1, ylab="dE/dP  (mmol·m-2·s-1·MPa-1)", 
-    xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,max(supplyN11Cap1$dEdP)), lwd=1, main="cavitated")
+    xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,3), lwd=1, main="cavitated")
 legend("topright",  legend= c("No capacitance", "Psi_prev = 0 MPa", "Psi_prev = -1.5 MPa"),col = c(col1, col2, col3), lty=1, bty="n")
 lines(-supplyN11Cap1Emb$psiLeaf, supplyN11Cap1Emb$dEdP, lty=1, col=col2)
 lines(-supplyN11Cap2Emb$psiLeaf, supplyN11Cap2Emb$dEdP, lty=1, col=col3)
 @
+\end{center}
 
+For the same water potential drop, the effect of the water compartment results in a larger transpiration flow. If the previous water potential is more negative than the root crown, negative flows may occur, because of the need to replenish the water compartment. Note, in addition, that $dE/d\Psi$ is no longer a non-increasing function of $\Psi$. This has important consequences for the definition of the cost function (see subsection 'Stomatal regulation'). In our opinion, the effect of water compartments on the transpiration flow are important for subdaily variations in transpiration but are less necessary for seasonal to multi-year simulations. However, we will come back to the importance of compartments for plants being disconnected from the soil.
 
 \section{Photosynthesis and stomatal regulation}
 \subsection{Leaf VPD, conductance to water vapor and photosynthesis}
@@ -2310,7 +2316,7 @@ where $LAI_{sunlit}$ and $LAI_{shade}$ are the cohorts LAI values for sunlit and
 \end{equation}
 Profit maximization calculations for shade and sunlit leaves imply different amount of water extracted from the soil layers and different plant water potentials. To overcome this issue, we must use the hydraulic supply function  to find the extraction flows from soil layers, the  water potential at the root crown and the 'average' water potential of the crown all corresponding to the average flow $E_{plant}$.
 
-\section{Plant transpiration and photosynthesis after disconnecting from the soil}
+\section{Transpiration and photosynthesis after soil disconnection}
 
 Considering water compartments allows tracking leaf and stem (i.e. plant) \emph{dessication}, either when the plant is connected to the soil or when transpiration flow comes from the plant itself. In \texttt{medfate}, disconnection from a given soil layer occurs when its water potential is too low with respect to the root xylem vulnerability curve. The user can control this behaviour by specifying a $p_{root}$ threshold for relative conductance, and the plant will be disconnected from a soil layer if $k_{r}(\Psi_{soil})/k_{r,max} < p_{root}$. An interesting situation arises when a plant is disconnected from all soil layers. In this case, the steady-state calculations cannot be used to determine flows, so one is forced to use a full discrete time approximation, with compartments and flows indicated in the figure below.
 
@@ -2329,27 +2335,13 @@ F_{S, l} = k_{l}(\Psi_{apo, l}) \cdot (\Psi_{apo, S} - \Psi_{apo, l})
 The flow from the leaf to the atmosphere is dictated by the minimum stomatal conductance and the vapour pressure deficit. For each time substep all flows are calculated and water content of compartments is updated. Then the equations of relative water content are inversed to find the water potentials for the next time substep.
 
 
-As mentioned when describing water content functions, we consider two sources of water in plant segments (Tyree \& Yang 1990). Symplastic storage compartments can contribute to sapflow dynamics by exchanging water with the apoplastic compartments, where it is assumed that the bulk of vertical flow occurs. In \texttt{medfate}, there are as stem symplastic storage compartments as stem segments and one leaf symplastic compartment. The instantaneous flow rate between symplastic and apoplastic compartments can be approximated using a lateral conductance $k_{lat}$ and the difference in water potentials. For the leaf we have:
+The instantaneous flow rate between symplastic and apoplastic compartments can be approximated using a lateral conductance $k_{lat}$ and the difference in water potentials. For the leaf we have:
 \begin{equation}
 F_{lat, l} = k_{lat} \cdot (\Psi_{sym, l} - \Psi_{apo,l})
 \end{equation}
 where $\Psi_{sym, l}$ is the water potential of the symplastic leaf compartment and $\Psi_{apo,l}$ is the water potential in the apoplastic leaf compartment. If $\Psi_{sym, l} > \Psi_l$ then the flow will be positive towards the leaf apoplasm and if $\Psi_{sym, l} < \Psi_l$ the flow will instead refill the leaf symplastic tissue. An analogous equation can be used to calculate the instantaneous lateral flow between symplastic and apoplastic compartments in any stem segment:
 \begin{equation}
 F_{lat, i} = k_{lat} \cdot (\Psi_{sym, i} - \Psi_{apo, i})
-\end{equation}
-
-The second source of water comes from the transient changes in water volume within apoplastic compartments (i.e. conduits) themselves, especially due to embolism formation. While in apoplastic leaf tissues changes in volume can occur in any direction, in the case of stem segments cavitation is non-reversible and the final volume at a given time step will determine $PLC$ of subsequent calculations (see below). The instantaneous flow rate due to changes in apoplastic water content (in either leaves or the stem) can be calculated using:
-\begin{equation}
-\frac{\Delta S_{apo}}{\Delta t} = \frac{S_{apo}(\Psi_{apo, t-1}) - S_{apo}(\Psi_{apo, t})}{\Delta t} 
-\end{equation}
-
-Transient water flow additions or removals occur between segments, as indicated in the figure below. Thus, the flow of one segment downstream is affected by the flow alterations occurring upstream. Knowing the two sources of water, the flow rate out of a given stem segment may be modified from the input flow as:
-\begin{equation}
-E_{out, i} = E_{in, i} + F_{lat, i} + \frac{\Delta S_{apo, i}}{\Delta t}
-\end{equation}
-and the same equation may be written for the leaf:
-\begin{equation}
-E_{out, l} = E_{in, l} + F_{lat, l} + \frac{\Delta S_{apo, l}}{\Delta t}
 \end{equation}
 
 \section{Parameterization}
@@ -2381,7 +2373,7 @@ Aboveground and belowground stem maximum conductance values at the plant level (
 Leaf maximum conductance ($k_{l, max}$, in mmol·m$^{-2}$·s$^{-1}$·MPa$^{-1}$) is an input parameter that should be provided for each species. When missing, leaf maximum hydraulic conductance is assumed $k_{l, max}=6$ for conifers and $k_{l, max}=8$ for angiosperms (Sack \emph{et al.} 2006).
 
 \subsubsection{Stem xylem maximum conductance}
-Estimation of maximum stem conductance ($k_{s,max}$, in mmol·m$^{-2}$·s$^{-1}$·MPa$^{-1}$) is done by function \texttt{hydraulics.maximumStemHydraulicConductance()} and follows the work by Savage \emph{et al.} (2010), Olson \emph{et al.} (2014) and Christoffersen \emph{et al.} (2016). Calculations are based on tree height and two species-specific parameters: maximum sapwood reference conductivity ($K_{s,max,ref}$, in kg·m$^{-1}$·s$^{-1}$·MPa$^{-1}$;  see parameter \texttt{xylem\_kmax} in \texttt{SpParamsMED}) and the ratio of leaf area to sapwood area ($A_{l}/A_{s}$; \texttt{Al2As} in \texttt{SpParamsMED}), i.e. the inverse of the Huber value $H_v$.
+Estimation of maximum stem conductance ($k_{s,max}$, in mmol·m$^{-2}$·s$^{-1}$·MPa$^{-1}$) is done by function \texttt{hydraulics.maximumStemHydraulicConductance()} and follows the work by Savage \emph{et al.} (2010), Olson \emph{et al.} (2014) and Christoffersen \emph{et al.} (2016). Calculations are based on tree height and two species-specific parameters: maximum sapwood reference conductivity ($K_{s,max,ref}$) and the ratio of leaf area to sapwood area ($A_{l}/A_{s}$; \texttt{Al2As} in \texttt{SpParamsMED}), i.e. the inverse of the Huber value $H_v$.
 
 The reference value for maximum sapwood conductivity $K_{s,max,ref}$ is assumed to have been measured on a \emph{terminal branch} of a plant of known height $H_{ref}$. If our target plant is very different in height, the conduits of terminal branches will have different radius and hence conductivity. We correct the reference conductivity to the target plant height using the following empirical relationship, developed by Olson \emph{et al.} (2014) between tree height and diameter of conduits for angiosperms and the equation described by Christoffersen \emph{et al.} (2016):
 \begin{eqnarray}
@@ -2536,7 +2528,7 @@ In \texttt{medfate} we calculate maximum root xylem conductance using a referenc
 \begin{equation}
 k_{r,max}=\frac{1000}{0.018} \cdot \sum_{j}{\frac{w_j \cdot K_{r,max,ref}\cdot A_{s}}{L_j\cdot A_{l}}}
 \end{equation}
-where $w_j$ are root xylem conductance proportion of layer $j$ and $L_j$ is the root length (in m) to layer $j$. Note that here we use weights $w_j$ assuming they represent proportions of total sapwood area that come from each layer (i.e. the longer the path the larger the proportion of sapwood area). This calculation is made available by function \texttt{hydraulics.maximumRootHydraulicConductance()}. Let's consider the same \emph{Q. ilex} tree of 4m height as before. If we specify root xylem specific conductivity as $K_{r,max,ref} = K_{s,max,ref} =0.77$ we have:
+where $w_j$ are root xylem conductance proportion of layer $j$ and $L_j$ is the root length (in m) to layer $j$. Note that here we use weights $w_j$ assuming they represent proportions of total sapwood area that come from each layer (i.e. the longer the path the larger the proportion of sapwood area). This calculation is made available by function \texttt{hydraulics.maximumRootHydraulicConductance()}. When $K_{r,max,ref}$ is missing, then we assume that $K_{r,max,ref} = $K_{x,max,ref}$. Let's consider the same \emph{Q. ilex} tree of 4m height as before. If we specify root xylem specific conductivity as $K_{r,max,ref} = K_{s,max,ref} =0.77$ we have:
 <<>>=
 rootxylem_kmax = 0.77
 krootmax = hydraulics.maximumRootHydraulicConductance(rootxylem_kmax, Al2As, 
@@ -2666,7 +2658,7 @@ krmax*v1
 \subsection{Plant water compartments}
 \subsubsection{Pressure-volume curves}
 
-Parameters of the pressure-volume curve (i.e. $\pi_{0,stem}$ and $\epsilon_{stem}$ for stem symplastic tissue are required for each species. When missing, \texttt{medfate} estimates them from wood density following Christophersen et al (2016):
+Parameters of the pressure-volume curve (i.e. $\pi_{0,stem}$ and $\epsilon_{stem}$) for leaf and stem symplastic tissue are required for each species. When parameters for stem tissue are missing, \texttt{medfate} estimates them from wood density following Christophersen et al (2016):
 \begin{equation}
 \pi_{0,stem} = 0.52 - 4.16 \cdot \rho_{wood}
 \end{equation}
@@ -2711,7 +2703,7 @@ hydraulics.leafWaterCapacity(SLA, ld)
 
 \subsection{Stomatal regulation and photosynthesis}
 \subsubsection{Stomatal conductance}
-Maximum stomatal conductance ($g_{swmax}$) is an input parameter for each species. When species-specific values are missing, the following relation with maximum hydraulic conductance ($k_{l, max}$) is used (Mencuccini 2003):
+Maximum stomatal conductance ($g_{swmax}$) is an input parameter for each species. When species-specific values are missing, the following relation with maximum leaf hydraulic conductance ($k_{l, max}$) is used (Mencuccini 2003):
 \begin{equation}
 g_{swmax} = e^{4.797 + 0.633\cdot \log(k_{l, max})}
 \end{equation}
@@ -2731,20 +2723,26 @@ The following tables list all symbols used in this document, along with their un
 
 \subsection{Anatomy}
 \begin{center}
-    \begin{tabular}{| l | p{2cm} | l | p{5cm} |}
+    \begin{tabular}{| l | p{2.5cm} |  p{2.5cm} | p{5cm} |}
     \hline
     Symbol & Units & Param. & Description \\ \hline
     $H_v$ & m$^2$·m$^{-2}$ & 1/\texttt{Al2As} & Huber value (ratio of sapwood area to leaf area). \\ \hline
-    $\rho_{wood}$ & g·cm$^{-3}$ & \texttt{WoodDens} & Wood density. \\ \hline
+    $d$ & cm$ & \texttt{LeafWidth} & Leaf width. \\ \hline
+    $SLA$ & m$^2$·kg$^{-1}$ & \texttt{SLA} & Specific leaf area. \\ \hline
+    $\rho_{leaf}$ & g·cm$^{-3}$ & \texttt{LeafDens} & Leaf tissue density. \\ \hline
+    $\rho_{wood}$ & g·cm$^{-3}$ & \texttt{WoodDens} & Wood tissue density. \\ \hline
     $\Theta_{sapwood}$ & m$^3$·m$^{-3}$ & & Sapwood porosity (volume of empty spaces over total volume). \\ \hline
+    $\Theta_{leaf}$ & m$^3$·m$^{-3}$ & & Leaf porosity (volume of empty spaces over total volume). \\ \hline
     \end{tabular}
 \end{center}
 
 \subsection{Hydraulics}
 \begin{center}
-    \begin{tabular}{| l | p{2cm} | l | p{5cm} |}
+    \begin{tabular}{| l | p{2.5cm} |  p{2.5cm} | p{5cm} |}
     \hline
     Symbol & Units & Param. & Description \\ \hline
+        $K_{s,max,ref}$ & kg·s$^{-1}$· m$^{-1}$·MPa$^{-1}$ & \texttt{Kmax\_stemxylem} & Maximum stem sapwood reference conductivity per leaf area unit. \\ \hline
+    $K_{r,max,ref}$ & kg·s$^{-1}$· m$^{-1}$·MPa$^{-1}$ & \texttt{Kmax\_rootxylem} & Maximum root sapwood reference conductivity per leaf area unit. \\ \hline
     $k_{s, max}$ & mmol·s$^{-1}$ ·m$^{-2}$·MPa$^{-1}$ &  & Maximum whole-stem conductance (per leaf area unit). \\ \hline
     $k_{r, max}$ & mmol·s$^{-1}$ ·m$^{-2}$·MPa$^{-1}$ &  & Maximum root conductance (per leaf area unit). \\ \hline
     $k_{rh, max}$ & mmol·s$^{-1}$ ·m$^{-2}$·MPa$^{-1}$ &  & Maximum rhizosphere conductance (per leaf area unit). \\ \hline
@@ -2762,25 +2760,32 @@ The following tables list all symbols used in this document, along with their un
     $\Psi_{rootcrown}$ & MPa & & Water potential at the root crown. \\ \hline
     $\Psi_{stem}$ & MPa & & Water potential at the end (highest part) of the stem. \\ \hline
     $PLC$ & [0-1] & & Proportion of conductance loss in stem xylem tissue. \\ \hline
+    $p_{root}$ & [0-1] & \texttt{pRootDisc} & Relative root conductance leading to hydraulic disconnection from a soil layer. \\ \hline
     \end{tabular}
 \end{center}
 
 
 \subsection{Plant water compartments}
 \begin{center}
-    \begin{tabular}{| l | p{2cm} | l | p{5cm} |}
+    \begin{tabular}{| l | p{2.5cm} | p{2.5cm} | p{5cm} |}
     \hline
     Symbol & Units & Param. & Description \\ \hline
+    $\epsilon_{leaf}$ & MPa & \texttt{LeafEPS} & Modulus of elasticity of leaves. \\ \hline
+    $\epsilon_{stem}$ & MPa & \texttt{StemEPS} & Modulus of elasticity of symplastic xylem tissue. \\ \hline
+    $\pi_{0,leaf}$ & MPa & \texttt{LeafPI0} & Osmotic potential at full turgor of leaves. \\ \hline
+    $\pi_{0,stem}$ & MPa & \texttt{StemPI0} & Osmotic potential at full turgor of symplastic xylem tissue. \\ \hline
     $RWC$ & [0-1] & & Relative water content. \\ \hline
     $RWC_{sym}$ & [0-1] & & Relative water content in the symplasm fraction of a tissue. \\ \hline
     $RWC_{apo}$ & [0-1] & & Relative water content in the apoplasm fraction of a tissue. \\ \hline
+    $V_{segment}$ & m$^3$·m$^{-2}$ & & Water capacity of a segment (leaf or stem). \\ \hline
+    $V_{leaf}$ & m$^3$·m$^{-2}$ & & Leaf water capacity per leaf area unit. \\ \hline
     $V_{sapwood}$ & m$^3$·m$^{-2}$ & & Sapwood water capacity per leaf area unit. \\ \hline
     \end{tabular}
 \end{center}
 
 \subsection{Stomatal regulation and photosynthesis}
 \begin{center}
-    \begin{tabular}{| l | p{2cm} | l | p{5cm} |}
+    \begin{tabular}{| l | p{2.5cm} |  p{2.5cm} | p{5cm} |}
         \hline
         Symbol & Units & Param. & Description \\ \hline
         $g_{swmin}$ & mol H$_2$O·s$^{-1}$·m$^{-2}$ & \texttt{Gwmin} & Minimum stomatal conductance to water vapour.\\ \hline
