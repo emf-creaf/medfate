@@ -244,6 +244,11 @@ where $\rho_{w}$ is the density of water (kgH$_2$O$\cdot$m$^{-3}$) and $f_{apo,s
 S_{sym}(\Psi_{sym}) = V_{segment} \cdot (1 - f_{apo}) \cdot RWC_{sym}(\Psi_{sym}) \cdot \rho_{w}
 \end{equation}
 
+Finally, if we consider that both apoplastic and symplastic tissues are at the same water potential, the water content in the segment will be:
+\begin{equation}
+S(\Psi) = V_{segment} \cdot (f_{apo} \cdot RWC_{apo}(\Psi) + (1 - f_{apo}) \cdot RWC_{sym}(\Psi)) \cdot \rho_{w}
+\end{equation}
+
 \subsubsection{Relative water content and cavitation}
 
 In \texttt{medfate} we assume that cavitation in stems is non-reversible. Within a given sapwood segment, we further assume that the proportion of conductance loss ($PLC$) is related to the relative water content ($RWC$) in its conduit vessels (i.e. the water volume in conduit vessels with respect to the maximum water volume):
@@ -255,7 +260,7 @@ where $RWC_{apo,s}$ is the function of relative water content for apoplastic ste
 
 \subsection{Supply functions}
 The supply function describes the rate of water supply (i.e. flow) for transpiration ($E$) as a function of pressure. The steady-state flow rate $E_i$ through each $i$ element of the continuum is related to the flow-induced drop in pressure across that element ($\Delta \Psi_i$) by the integral transform of the element's vulnerability curve $k_i(\Psi)$ (Sperry and Love 2015):
-\begin{equation}
+\begin{equation}\label{eq:generalsupply}
 E_i(\Delta \Psi_i) = \int_{\Psi_{up}}^{\Psi_{down}}{k_i(\Psi) d\Psi}
 \end{equation}
 where $\Psi_{up}$ and $\Psi_{down}$ are the upstream and downstream water potential values, respectively. The integral transform assumes infinite discretization of the flow path. The supply function can be defined for individual elements of the continuum or for the whole soil-plant continuum using different topologies. In the following subsections we illustrate the supply function for different cases.
@@ -401,9 +406,9 @@ legend("topleft", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 
 @
 \end{center}
-The supply function for the whole continuum contains much information. The $\Psi$ intercept at $E=0$ represents the predawn canopy sap pressure which integrates the rooted soil moisture profile. As $E$ increments from zero, the disproportionately greater drop in $\Psi_{canopy}$ results from the loss of conductance. As the soil dries the differences in flow due to soil texture become more apparent. The derivative of the whole continuum supply function, $dE/d\Psi$, is not equal to either of the vulnerability curves and it has to be obtained numerically. The derivative functions of the supply functions shown in the previous figure are:
+The supply function for the whole continuum contains much information. The $\Psi$ intercept at $E=0$ represents the predawn canopy sap pressure which integrates the rooted soil moisture profile. As $E$ increments from zero, the disproportionately greater drop in $\Psi_{canopy}$ results from the loss of conductance. As the soil dries the differences in flow due to soil texture become more apparent. The derivative of the whole continuum supply function, $dE/d\Psi$, is not equal to either of the vulnerability curves and it has to be obtained numerically. The derivative functions corresponding to the supply functions shown in the previous figure are:
 \begin{center}
-<<fig=TRUE, width=8, height=3.5, echo=FALSE>>==
+<<fig=TRUE, width=8, height=4.5, echo=FALSE>>==
 par(mar=c(4,4,2,1), mfrow=c(1,2))
 plot(-psi2E11$psiPlant, psi2E11$dEdP, type="l", col=col1, ylab="dE/dP (mmol·m-2·s-1·MPa-1)", xlab = "Canopy pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,max(psi2E11$dEdP)), lwd=1 , main="original")
 lines(-psi2E12$psiPlant, psi2E12$dEdP, lty=1, lwd=1, col=col2)
@@ -513,9 +518,9 @@ legend("topleft", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 @
 \end{center}
 
-Note that overall conductance and the maximum flow of the supply function are smaller in this case than in the representation using two elements in series. While the rhizosphere component only adds a significant resistance when the soil dries, considering the leaf segment (or a root xylem segment) increases the overall resistance of the continuum. Higher vulnerability of leaves also makes the curve to saturate for less negative soil water potentials. The derivative functions of the supply functions shown in the previous figure are (note the highest value being equal to the overall maximum conductance):
+Note that overall conductance and the maximum flow of the supply function are smaller in this case than in the representation using two elements in series. While the rhizosphere component only adds a significant resistance when the soil dries, considering the leaf segment (or a root xylem segment) increases the overall resistance of the continuum. Higher vulnerability of leaves also makes the curve to saturate for less negative soil water potentials. The derivative functions corresponding to the supply functions shown in the previous figure are (note the highest value being equal to the overall maximum conductance):
 \begin{center}
-<<fig=TRUE, width=8, height=3.5, echo=FALSE>>==
+<<fig=TRUE, width=8, height=4.5, echo=FALSE>>==
 par(mar=c(4,4,2,1), mfrow=c(1,2))
 plot(-psi2E11$psiLeaf, psi2E11$dEdP, type="l", col=col1, ylab="dE/dP (mmol·m-2·s-1·MPa-1)", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,max(psi2E11$dEdP)), lwd=1 , main="original")
 lines(-psi2E12$psiLeaf, psi2E12$dEdP, lty=1, lwd=1, col=col2)
@@ -684,7 +689,7 @@ lines(-supplyRS34$psiRoot, supplyRS34$dEdP, lty=3, col=col4)
 legend("topright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 @
 \end{center}
-The derivative of $dE/d\Psi_{rootcrown}$ for the supply function of the root system is obtained numerically. An advantage of working with elements in parallel is that we can know the water potentials in different points of the root system. Here we plot them for the results of silt loam texture and the first and last soil potential vectors defined above:
+The derivative of $dE/d\Psi_{rootcrown}$ for the supply function of the root system is again obtained numerically. Solving the previous system of equations provides the water potentials in different points of the root system. Here we plot them for the results of silt loam texture and the first and last soil potential vectors defined above:
 \begin{center}
 <<fig=TRUE, width=8, height=10, echo=FALSE>>==
 par(mar=c(4,4,4,1), mfrow=c(2,2))
@@ -1049,8 +1054,25 @@ legend("topleft", bty="n", legend=c("Leaf","Stem","Root crown", "Rhizo 1", "Rhiz
 @
 \end{center}
 
-\subsection{Hydraulics with water compartments}
-So far we have been concerned with \emph{steady-state} hydraulics while assuming there are no other sources of water than the soil. In this section we will consider the effect of additional sources of water from leaf and stem tissues on transpiration and, more generally, in plant physiology. 
+\subsubsection{Supply function with water compartments}
+So far we assumed there are no other sources of water than the soil. In this section we  consider the effect of additional water from leaf and stem tissues on the supply function. The supply function of a network representing the continuum is build for a given state of soil water potentials. This approach allows determining flows and water potential for \emph{steady-state} conditions. In a dynamic context one has to calculate the supply function for all values of $E$, then to determine stomatal conductance (see sections devoted to photosynthesis and stomatal regulation) and finally to decide on a specific value of $E$ and the corresponding steady-state configuration. Because light and temperature conditions change along the day, steady-state stomatal conductance and instantaneous $E$ values have to be determined for subdaily steps (e.g. 1-hour steps) and then flows need to be scaled and aggregated. At the end of the day, one may substract water from soil layers and recalculate the supply function for the next day.  
+
+When considering water compartments, plant transpiration can be larger or smaller than the water extracted from the soil. Moreover, the supply function of a given time step will be dependent on the status of storage comparments in the previous time step, because this determines how much water is added or removed to the stemflow due to the effect of water compartments. For any segment (either a stem segment or the leaf segment) the flow out of it, $E_{i,out}$, is not necessarily equal to the flow entering the segment, $E_{i, in}$. Thus, instead of eq. \ref{eq:generalsupply}, the equation govering the flow is:
+\begin{equation}
+E_{i,out} = E_{i, in} - \frac{\Delta S_{i}}{\Delta t} = \int_{\Psi_{up}}^{\Psi_{down}}{k_i(\Psi) d\Psi} - \frac{\Delta S_{i}}{\Delta t}
+\end{equation}
+When building the supply function from the root crown to the leaf, one has to consider changes in storage water of the current segment before processing the next segment. Specifically, for every segment $i$ we take the current downstream water potential of the previous segment as upstream water potential (i.e.  $\Psi_{rootcrown, t}$ when processing the first stem segment, $\Psi_{i-1, t}$ when processing intermediate stem segments or $\Psi_{S, t}$) when processing the leaf segment). Then we calculate the steady-state drop in water potential (i.e., determine $\Psi_{i, t}$) corresponding to the input flow ($E_{i,in}$) using the inverse of the integral transform. If stem cavitation has occurred previously then $\Psi_{cav,i}$ will limit the maximum conductance. To determine $E_{i,out}$ we calculate the additional instantaneous flow due to changes in storage water volume ($\Delta S_{i}/\Delta t$) using:
+\begin{equation}
+\Delta S_{i} = S_i(\Psi_{i, t}) - S_i(\Psi_{i, t-1})
+\end{equation}
+
+
+\begin{figure}[h!]
+\includegraphics[width=\textwidth]{hydraulics_full.jpg}
+\end{figure}
+
+
+The amount of water absorbed by or released from the storage compartment will depend on the properties of the apoplastic and symplastic tissues and the fraction of the segment that
 
 <<>>=
 Vmaxstem = 0.0003
@@ -1133,81 +1155,9 @@ lines(-supplyN11Cap1Emb$psiLeaf, supplyN11Cap1Emb$dEdP, lty=1, col=col2)
 lines(-supplyN11Cap2Emb$psiLeaf, supplyN11Cap2Emb$dEdP, lty=1, col=col3)
 @
 
-In the previous section we described how the supply function of the network representing the continuum is build for a given state of soil water potentials. This approach allows determining flows and water potential for \emph{steady-state} conditions. In a dynamic context one has to calculate the supply function for all values of $E$, then to determine stomatal conductance (see sections devoted to photosynthesis and stomatal regulation) and finally to decide on a specific value of $E$ and the corresponding steady-state configuration. Because light and temperature conditions change along the day, steady-state stomatal conductance and instantaneous $E$ values have to be determined for subdaily steps (e.g. 1-hour steps) and then flows need to be scaled and aggregated. At the end of the day, one may substract water from soil layers and recalculate the supply function for the next day. 
 
-Most importantly, considering water compartments allows tracking leaf and stem (i.e. plant) \emph{dessication}, either when the plant is connected to the soil or when transpiration flow comes from the plant itself. When considering plant compartments, one could allow flow from compartments to affect the determination of stomatal conductance. However, since the supply function is concerned with instantaneous flows, the instantaneous change in water content of compartments is very small, and one may assume that the contribution of plant compartments to the overall \emph{shape} of the supply function, and hence to the determination of stomatal conductance, is negligible. We take this assumption here and assume that considering plant compartments does not change the determination of steady-state stomatal conductance (and hence the amount of water extracted from the soil) corresponding to any given subdaily step. Nevertheless, the \emph{total} amount of water transpired by plants between two consecutive time steps (e.g. during 1 hour or during a full day), will likely be affected by transient changes in plant water content. Therefore, changes in water compartments can be used to decide on the amount of water that should be added or removed for any given time step to the flow determined by steady-state calculations. Since photosynthesis is calculated according to steady-state calculations, the addition/subtraction of transpired water alters the instantaneous or subdaily assessment of water use efficiency, i.e. the ratio between photosynthesis and transpiration. However, at longer time scales (i.e for days or weeks) the effect should be negligible because most variations in plant water content occur at subdaily time scales and changes are slow at longer time scales.
-
-\subsubsection{Effect of water compartments on transpiration}
-As mentioned when describing water content functions, we consider two sources of water in plant segments (Tyree \& Yang 1990). Symplastic storage compartments can contribute to sapflow dynamics by exchanging water with the apoplastic compartments, where it is assumed that the bulk of vertical flow occurs. In \texttt{medfate}, there are as stem symplastic storage compartments as stem segments and one leaf symplastic compartment. The instantaneous flow rate between symplastic and apoplastic compartments can be approximated using a lateral conductance $k_{lat}$ and the difference in water potentials. For the leaf we have:
-\begin{equation}
-F_{lat, l} = k_{lat} \cdot (\Psi_{sym, l} - \Psi_{apo,l})
-\end{equation}
-where $\Psi_{sym, l}$ is the water potential of the symplastic leaf compartment and $\Psi_{apo,l}$ is the water potential in the apoplastic leaf compartment. If $\Psi_{sym, l} > \Psi_l$ then the flow will be positive towards the leaf apoplasm and if $\Psi_{sym, l} < \Psi_l$ the flow will instead refill the leaf symplastic tissue. An analogous equation can be used to calculate the instantaneous lateral flow between symplastic and apoplastic compartments in any stem segment:
-\begin{equation}
-F_{lat, i} = k_{lat} \cdot (\Psi_{sym, i} - \Psi_{apo, i})
-\end{equation}
-
-The second source of water comes from the transient changes in water volume within apoplastic compartments (i.e. conduits) themselves, especially due to embolism formation. While in apoplastic leaf tissues changes in volume can occur in any direction, in the case of stem segments cavitation is non-reversible and the final volume at a given time step will determine $PLC$ of subsequent calculations (see below). The instantaneous flow rate due to changes in apoplastic water content (in either leaves or the stem) can be calculated using:
-\begin{equation}
-\frac{\Delta S_{apo}}{\Delta t} = \frac{S_{apo}(\Psi_{apo, t-1}) - S_{apo}(\Psi_{apo, t})}{\Delta t} 
-\end{equation}
-
-Transient water flow additions or removals occur between segments, as indicated in the figure below. Thus, the flow of one segment downstream is affected by the flow alterations occurring upstream. Knowing the two sources of water, the flow rate out of a given stem segment may be modified from the input flow as:
-\begin{equation}
-E_{out, i} = E_{in, i} + F_{lat, i} + \frac{\Delta S_{apo, i}}{\Delta t}
-\end{equation}
-and the same equation may be written for the leaf:
-\begin{equation}
-E_{out, l} = E_{in, l} + F_{lat, l} + \frac{\Delta S_{apo, l}}{\Delta t}
-\end{equation}
-
-\begin{figure}[h!]
-\includegraphics[width=\textwidth]{hydraulics_full.jpg}
-\end{figure}
-
-Now we go back to our goal, which is to determine the changes in transpiration occurring between consecutive steady-state configurations of the plant. At any time step $t$ the steady-state configuration consists in water potentials for the root crown, i.e. $\Psi_{rootcrown, t}$, and for all apoplastic and symplastic compartments, as well as the steady-state flow $E_t$. Then, in the time step $t+1$ we will have a new configuration. In particular, we will have values for $\Psi_{rootcrown, t+1}$ and $E_{t+1}$ as well as the new steady-state water potentials for stem and leaf apoplastic compartments (assuming no capacitance effects), but we do not know the water potential for symplastic compartments. In order to assess them we need to simulate lateral flows between symplastic and apoplastic compartments using a discrete time approximation with a time step much smaller than $\Delta t$. Let us define a new time step $\Delta t_m = \Delta t / m$ where $m$ is the number of substeps. Moreover, we assume that during $\Delta t$ (i.e during the $m$ substeps) the root water potential will linearly shift from $\Psi_{rootcrown, t}$ to $\Psi_{rootcrown, t+1}$ and the instantaneous flow will also linearly shift from $E_t$ to $E_{t+1}$. Considering this linear shifts allow us to go from one steady state to the next one while allowing symplastic compartments to respond.
-
-
-The calculation of transpiration flows with capacitance effect, as well as the symplastic water potentials for the new steady state consists in processing changes during all $t_m$ substeps as follows. Let $E_{t_m}$ and $\Psi_{rootcrown, t_m}$ be the flow from the roots and the root crown water potential at any given substep $t_m$, and let $\Psi_{apo, i, t_m -1}$, $\Psi_{sym, i, t_m -1}$, $\Psi_{apo, l, t_m -1}$ and $\Psi_{sym, l, t_m -1}$ be the water potentials from the previous substep $t_m - 1$: 
-\begin{enumerate}
-\item{Calculate $F_{lat, l}$ and $F_{lat, i}$ according to $t_m - 1$.}
-\item{For every stem segment $i$ and for the leaf segment:}
-  \begin{itemize}
-    \item{Take the steady-state downstream water potential of the previous segment as upstream water potential (i.e.  $\Psi_{rootcrown, t_m}$ when processing the first stem segment, $\Psi_{apo, i-1, t_m}$ when processing intermediate stem segments or $\Psi_{apo, S, t_m}$) when processing the leaf segment).}
-    \item{Calculate the steady-state drop in water potential (i.e., calculate $\Psi_{apo, i, t_m}$ or $\Psi_{apo, l, t_m}$) corresponding to $t_m$ using the integral transform equation. If stem cavitation has occurred previously then $\Psi_{cav,i}$ will limit the maximum conductance.}
-    \item{Calculate the instantaneous flow due to changes in apoplastic water volume ($\Delta S_{apo}/\Delta t$) corresponding to this steady state.}
-    \item{Add $\Delta S_{apo}/\Delta t$ and the corresponding lateral flow ($F_{lat, i}$ or $F_{lat, l}$) to the input flow of the next downstream segment.}
-    \item{Subtract the lateral flow from the water content of the symplastic comparment and update its corresponding water potential (i.e. $\Psi_{sym, i, t_m}$ or $\Psi_{sym, l, t_m}$).}
-  \end{itemize}
-\item{Store the instantaneous flow out of the leaf $E_{out, l, t_m}$.}
-\end{enumerate}
-
-Processing all $t_m$ substeps brings all water potentials from the $t$ to $t+1$, including the water potentials of the symplastic compartments. The new steady state may involve more negative water potentials in the stem (i.e. lower $RWC_{apo}$ values) and hence the degree of cavitation needs to be updated. Finally, we determine the average difference in flow due to the effect of water compartments by comparing the sum of instantaneous flows to the average flow that would be expected when going linearly from $E_{t}$ to $E_{t+1}$:
-\begin{equation}
-E_{dif, t+1} = \frac{\sum_{t_m = 1}^{m}{E_{out, l, t_m}}}{m} - \frac{E_{t} + E_{t+1}}{2}
-\end{equation}
-where $E_{dif, t+1}$ is the (positive or negative) amount of flow that should be added to the steady state value $E_{t+1}$. Note that the described procedure could be used to define a supply function with capacitance effects for all values $E_{t+1}$ (see function \texttt{hydraulics.supplyFunctionAbovegroundCapacitance()}) but this would make the determination of stomatal regulation a very slow process. For this reason, we calculate stomatal regulation using the function without capacitance effects and perform the described algorithm once $E_{t+1}$ and the new steady state is known.
-
-
-\subsubsection{Plant transpiration after disconnecting from the soil}
-
-In \texttt{medfate}, disconnection from a given soil layer occurs when its water potential is too low with respect to the root xylem vulnerability curve. The user can control this behaviour by specifying a $p_{root}$ threshold for relative conductance, and the plant will be disconnected from a soil layer if $k_{r}(\Psi_{soil})/k_{r,max} < p_{root}$. An interesting situation arises when a plant is disconnected from all soil layers. In this case, the steady-state calculations cannot be used to determine flows, so one is forced to use a full discrete time approximation, with compartments and flows indicated in the figure below.
-
-\begin{figure}[h!]
-\includegraphics[width=\textwidth]{hydraulics_disc.jpg}
-\end{figure}
-
-As before, each time step $\Delta t$ is divided into $m$ substeps and instantaneous lateral flows between symplastic and apoplastic compartments are calculated as before. In this case, however, one needs to calculate instantaneous flows between stem apoplastic compartments using:
-\begin{equation}
-F_{i, i+1} = k_{s}(\min(\Psi_{apo,i}, \Psi_{cav, i})) \cdot (\Psi_{apo, i} - \Psi_{apo, i+1})
-\end{equation}
-and between the last stem compartment and the leaf using:
-\begin{equation}
-F_{S, l} = k_{l}(\Psi_{apo, l}) \cdot (\Psi_{apo, S} - \Psi_{apo, l})
-\end{equation}
-The flow from the leaf to the atmosphere is dictated by the minimum stomatal conductance and the vapour pressure deficit. For each time substep all flows are calculated and water content of compartments is updated. Then the equations of relative water content are inversed to find the water potentials for the next time substep.
-
-\section{Leaf VPD, conductance to water vapor and photosynthesis}
+\section{Photosynthesis and stomatal regulation}
+\subsection{Leaf VPD, conductance to water vapor and photosynthesis}
 The water supply function specifies the flow rate, as per leaf area, for values of leaf water potential. If we know air temperature, air vapour pressure and the light conditions in which leaves are, we can be translate the supply function into a photosynthesis function (Sperry et al. 2016b). In a nutshell, $E$ from the supply function is used to calculate leaf temperature from an evaluation of the leaf energy balance. The diffusive conductances of the leaf to water and CO2 are obtained from water supply and water vapor deficit. The gross assimilation rate is then obtained from the diffusive conductance and a modelled curve between assimilation and leaf internal CO2 concentration. Gross assimilation is calculated, without subtracting autotrophic respiration, because the purpose is to represent the instantaneous gain of opening the stomata. Nevertheless autotrophic respiration is included when calculating leaf net photosynthesis. 
 <<echo=FALSE>>==
 Tmin = 15
@@ -1229,7 +1179,7 @@ Gmax = 0.3
 Rabs = 740 #W * m-2
 @
 
-\subsection{Leaf temperature and vapor pressure deficit}
+\subsubsection{Leaf temperature and vapor pressure deficit}
 Leaf temperature ($T_{leaf}$; in Celsius) can be calculated for any given flow rate $E(\Psi_{leaf})$ using (Campbell and Norman 1998):
 \begin{equation}
 T_{leaf}(\Psi_{leaf}) = T_{can}+\frac{I_{abs}-\epsilon\cdot\sigma\cdot(T_{can}+273.15)^4-\lambda_v\cdot E(\Psi_{leaf})}{C_p\cdot(g_r+g_{Ha})}
@@ -1372,7 +1322,7 @@ legend("bottomleft", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 \end{center}
 Since leaf saturated VP decreases when leaf temperature decreases, transpiration decreases leaf VPD as a result of decreasing leaf temperature.
 
-\subsection{Leaf conductance to water vapor}
+\subsubsection{Leaf conductance to water vapor}
 
 Leaf conductance to water vapor ($g_{sw}$; in mol H$_2$O·s$^{-1}$·m$^{-2}$) and to carbon dioxide ($g_{sc}$; in mol CO$_{2}$·s$^{-1}$ ·m$^{-2}$) are obtained for each value of $E$ (in mol·s$^{-1}$·m$^{-2}$) and $VPD_{leaf}$ using:
 \begin{eqnarray}
@@ -1424,7 +1374,7 @@ Gmax = 0.3
 @
 $g_{sw}$ cannot exceed $g_{swmax}$ so that some flow rates may not be possible (see stomatal regulation below). However, $g_{swmax}$ should quickly become non-limiting as soil dries (i.e. reducing $E$) or $VPD_{leaf}$ increases (Sperry et al. 2016a). Minimum stomatal conductance is also used in \texttt{medfate} when building the supply function, as it specifies the minimum flow rates that will occur for completely-closed stomata, i.e. the minimum flow from which supply function is build.
 
-\subsection{Leaf photosynthesis}
+\subsubsection{Leaf photosynthesis}
 Rubisco-limited photosynthesis rate $A_c$ (in $\mu$mol CO$_2$·s$^{-1}$·m$^{-2}$) is modelled using (Collatz et al. 1991, Medlyn et al 2002):
 \begin{equation}
 A_c=\frac{V_{max}\cdot (C_i- \Gamma*)}{C_i+K_c \cdot (1+ O_a/K_o)}
@@ -1497,7 +1447,7 @@ Finally, leaf net photosynthesis (i.e. accounting for autotrophic respiration) i
 \begin{equation}
 A_n = A - 0.015 \cdot V_{max}
 \end{equation}
-\subsection{Crown photosynthesis}
+\subsubsection{Crown photosynthesis}
 In the previous subsection we calculated photosynthesis at the leaf level. However, the function $A(\Psi_{leaf})$ can be calculated for a whole crown. Essentially we need to repeat the calculations of leaf temperature, leaf VPD, leaf gas conductance and photosynthesis for every leaf to be considered in the crown. Gross and net photosynthesis values can be then aggregated across the crown for each value of $\Psi_{leaf}$, so that the function $A(\Psi_{leaf})$ is obtained. Here we will consider a crown of one species divided into 10 layers, with constant leaf density:
 <<>>=
 LAI = 2
@@ -1942,10 +1892,10 @@ legend("bottomright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 @
 \end{center}
 
-\section{Stomatal regulation}
+\subsection{Stomatal regulation}
 Sperry et al (2016b) presented a cost-benefit approach where hydraulic costs of opening the stomata are compared against photosynthetic gain. Details of their approach, and two suggested variants, a given in the next two subsections. The final subsection explains how to scale stomatal regulation (and hence, transpiration and photosynthesis) from leaf to plant.
 
- \subsection{Cost and gain functions}
+ \subsubsection{Cost and gain functions}
 The hydraulic supply function is used to derive a transpirational \emph{cost function} $\theta_1(\Psi_{leaf})$ that reflects the increasing damage from cavitation and the greater difficulty of moving water along the continuum (Sperry et al. 2016b):
 \begin{equation}
 \theta_1(\Psi_{leaf}) = \frac{k_{c,max}-k_{c}(\Psi_{leaf})}{k_{c,max}-k_{crit}}
@@ -2117,7 +2067,7 @@ legend("bottomright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 @
 \end{center}
 
-\subsection{Profit maximization at the leaf level}
+\subsubsection{Profit maximization at the leaf level}
 According to Sperry et al (2016b), stomatal regulation can be effectively estimated by determining the maximum of the \emph{profit function} ($Profit(\Psi_{leaf})$), for which we consider three alternatives corresponding to the two cost functions:
 \begin{eqnarray}
 Profit_1(\Psi_{leaf}) &=& \beta(\Psi_{leaf})-\theta_1(\Psi_{leaf})\\
@@ -2348,7 +2298,7 @@ legend("topright", bty="n", col=c(col1,col2,col3,col4), lty=1, legend=c("P_soil 
 \end{center}
 In $Profit_1$ irreversible cavitation often brings, after soil rewetting, less conservative stomatal regulation that enables higher flow rates. This does not seem to happen in $Profit_2$, where despite irreversible cavitation leads to more negative water potentials, predicted flow rates after rewetting are not above those predicted before cavitation.
 
-\subsection{Scaling stomatal regulation to the plant level}
+\subsubsection{Scaling to the plant level}
 
 So far, we have considered stomatal regulation by at the leaf level only. At the plant level, the gain function could be build from the crown photosynthesis function $A(\Psi_{leaf})$ that we defined in subsection '\texttt{Crown photosynthesis}'. However, using the crown photosynthesis function would imply the assumption that the same stomatal aperture occurs in all leaves of the crown, independently of whether they are in shade or sunlit. A more realistic approach is to determine stomatal regulation by profit maximization for sunlit and shade leaves separately; and then determining the average photosynthesis and flow rate from the leaf area of each leaf type. The gain function and profit maximization calculations conducted for each leaf type yield instantaneous water potentials $\Psi_{sunlit}$ and $\Psi_{shade}$. They also yield flow values $E_{shade}$ and $E_{sunlit}$, in mmol H$_2$O·s$^{-1}$·m$^{-2}$ of leaf area unit. The average flow rate in mmol H$_2$O·s$^{-1}$·m$^{-2}$ per leaf area unit at the plant level is the weighed average:
 \begin{equation}
@@ -2359,6 +2309,48 @@ where $LAI_{sunlit}$ and $LAI_{shade}$ are the cohorts LAI values for sunlit and
  A_{n, plant} = \frac{A_{n,sunlit} \cdot LAI_{sunlit} + A_{n,shade} \cdot LAI_{shade}}{LAI_{sunlit} + LAI_{shade}}
 \end{equation}
 Profit maximization calculations for shade and sunlit leaves imply different amount of water extracted from the soil layers and different plant water potentials. To overcome this issue, we must use the hydraulic supply function  to find the extraction flows from soil layers, the  water potential at the root crown and the 'average' water potential of the crown all corresponding to the average flow $E_{plant}$.
+
+\section{Plant transpiration and photosynthesis after disconnecting from the soil}
+
+Considering water compartments allows tracking leaf and stem (i.e. plant) \emph{dessication}, either when the plant is connected to the soil or when transpiration flow comes from the plant itself. In \texttt{medfate}, disconnection from a given soil layer occurs when its water potential is too low with respect to the root xylem vulnerability curve. The user can control this behaviour by specifying a $p_{root}$ threshold for relative conductance, and the plant will be disconnected from a soil layer if $k_{r}(\Psi_{soil})/k_{r,max} < p_{root}$. An interesting situation arises when a plant is disconnected from all soil layers. In this case, the steady-state calculations cannot be used to determine flows, so one is forced to use a full discrete time approximation, with compartments and flows indicated in the figure below.
+
+\begin{figure}[h!]
+\includegraphics[width=\textwidth]{hydraulics_disc.jpg}
+\end{figure}
+
+As before, each time step $\Delta t$ is divided into $m$ substeps and instantaneous lateral flows between symplastic and apoplastic compartments are calculated as before. In this case, however, one needs to calculate instantaneous flows between stem apoplastic compartments using:
+\begin{equation}
+F_{i, i+1} = k_{s}(\min(\Psi_{apo,i}, \Psi_{cav, i})) \cdot (\Psi_{apo, i} - \Psi_{apo, i+1})
+\end{equation}
+and between the last stem compartment and the leaf using:
+\begin{equation}
+F_{S, l} = k_{l}(\Psi_{apo, l}) \cdot (\Psi_{apo, S} - \Psi_{apo, l})
+\end{equation}
+The flow from the leaf to the atmosphere is dictated by the minimum stomatal conductance and the vapour pressure deficit. For each time substep all flows are calculated and water content of compartments is updated. Then the equations of relative water content are inversed to find the water potentials for the next time substep.
+
+
+As mentioned when describing water content functions, we consider two sources of water in plant segments (Tyree \& Yang 1990). Symplastic storage compartments can contribute to sapflow dynamics by exchanging water with the apoplastic compartments, where it is assumed that the bulk of vertical flow occurs. In \texttt{medfate}, there are as stem symplastic storage compartments as stem segments and one leaf symplastic compartment. The instantaneous flow rate between symplastic and apoplastic compartments can be approximated using a lateral conductance $k_{lat}$ and the difference in water potentials. For the leaf we have:
+\begin{equation}
+F_{lat, l} = k_{lat} \cdot (\Psi_{sym, l} - \Psi_{apo,l})
+\end{equation}
+where $\Psi_{sym, l}$ is the water potential of the symplastic leaf compartment and $\Psi_{apo,l}$ is the water potential in the apoplastic leaf compartment. If $\Psi_{sym, l} > \Psi_l$ then the flow will be positive towards the leaf apoplasm and if $\Psi_{sym, l} < \Psi_l$ the flow will instead refill the leaf symplastic tissue. An analogous equation can be used to calculate the instantaneous lateral flow between symplastic and apoplastic compartments in any stem segment:
+\begin{equation}
+F_{lat, i} = k_{lat} \cdot (\Psi_{sym, i} - \Psi_{apo, i})
+\end{equation}
+
+The second source of water comes from the transient changes in water volume within apoplastic compartments (i.e. conduits) themselves, especially due to embolism formation. While in apoplastic leaf tissues changes in volume can occur in any direction, in the case of stem segments cavitation is non-reversible and the final volume at a given time step will determine $PLC$ of subsequent calculations (see below). The instantaneous flow rate due to changes in apoplastic water content (in either leaves or the stem) can be calculated using:
+\begin{equation}
+\frac{\Delta S_{apo}}{\Delta t} = \frac{S_{apo}(\Psi_{apo, t-1}) - S_{apo}(\Psi_{apo, t})}{\Delta t} 
+\end{equation}
+
+Transient water flow additions or removals occur between segments, as indicated in the figure below. Thus, the flow of one segment downstream is affected by the flow alterations occurring upstream. Knowing the two sources of water, the flow rate out of a given stem segment may be modified from the input flow as:
+\begin{equation}
+E_{out, i} = E_{in, i} + F_{lat, i} + \frac{\Delta S_{apo, i}}{\Delta t}
+\end{equation}
+and the same equation may be written for the leaf:
+\begin{equation}
+E_{out, l} = E_{in, l} + F_{lat, l} + \frac{\Delta S_{apo, l}}{\Delta t}
+\end{equation}
 
 \section{Parameterization}
 
