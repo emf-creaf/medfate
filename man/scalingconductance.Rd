@@ -32,7 +32,7 @@ hydraulics.maximumStemHydraulicConductance(xylemConductivity, refheight, Al2As, 
 hydraulics.referenceConductivityHeightFactor(refheight, height)
 hydraulics.terminalConduitRadius(height)
 hydraulics.taperFactorSavage(height)
-hydraulicx.stemWaterCapacity(Al2As, height, wd)
+hydraulics.stemWaterCapacity(Al2As, height, wd)
 hydraulics.leafWaterCapacity(SLA, ld)
 }
 
@@ -57,6 +57,9 @@ hydraulics.leafWaterCapacity(SLA, ld)
   \item{taper}{A boolean flag to indicate correction by taper of xylem conduits (Christoffersen et al. 2017).}
   \item{widths}{Soil layer depths (in mm).}
   \item{depthWidthRatio}{Ratio between radius of the soil layer with the largest radius and maximum rooting depth.}
+  \item{SLA}{Specific leaf area (mm2·mg-1).}
+  \item{wd}{Wood density (g·cm-3).}
+  \item{ld}{Leaf tissue density (g·cm-3).}
 }
 \details{
 Details of the hydraulic model are given in a vignette.

@@ -18,7 +18,7 @@ Set of functions used to calculate tissue moisture from water potential and vice
 moisture.symplasticRWC(psiSym, pi0, epsilon)
 moisture.symplasticPsi(RWC, pi0, epsilon)
 moisture.apoplasticRWC(psiApo, c, d)
-moisture.symplasticPsi(RWC, c, d)
+moisture.apoplasticPsi(RWC, c, d)
 moisture.tissueRWC(psiSym, pi0, epsilon, 
                    psiApo, c, d, 
                    af)
@@ -30,6 +30,7 @@ moisture.pressureVolumeCurvePlot(x, segment="leaf",
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{psiSym, psiApo}{Symplastic or apoplastic water potential (MPa).}
+  \item{RWC}{Relative water content [0-1].}
   \item{pi0}{Full turgor osmotic potential (MPa).}
   \item{epsilon}{Bulk modulus of elasticity (MPa).}
   \item{c,d}{Parameters of the xylem vulnerability curve.}
@@ -37,6 +38,8 @@ moisture.pressureVolumeCurvePlot(x, segment="leaf",
   \item{x}{An object of class \code{\link{spwbInput}}.}
   \item{segment}{Curve to plot, either \code{"stem"}, \code{"leaf"} or \code{"both"}.}
   \item{psiVec}{Vector of water potential values to evaluate for the pressure-volume curve.}
+  \item{density}{Tissue density (g·cm-1).}
+  \item{d0}{Matric density (g·cm-1).}
 }
 \details{
 Details of the tissue moisture calculations are given in a vignette. 

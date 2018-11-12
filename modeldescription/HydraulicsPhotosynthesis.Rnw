@@ -2696,7 +2696,7 @@ where the density of wood substance can be assumed to be fixed and equal to 1.54
 
 Water storage capacity of leaf tissue per leaf area unit ($V_{leaf}$; in m$^3$·m$^{-2}$) can be estimated as the product of specific leaf area (SLA; in m$^2$·kg$^{-1}$) and leaf density ($\rho_{leaf}$; in g·cm$^{-3}$):
 \begin{equation}
-V_{leaf} = \frac{1}{SLA \cdot \rho_{leaf}} \cdot \Theta_{leaf}
+V_{leaf} = \frac{10^{-3}}{SLA \cdot \rho_{leaf}} \cdot \Theta_{leaf}
 \end{equation}
 $\Theta_{leaf}$ is leaf porosity (cm$^3$ of water per cm$^3$ of leaf tissue), which can be estimated from leaf density:
 \begin{equation}

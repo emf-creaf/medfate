@@ -45,6 +45,7 @@ hydraulics.xylemPsi(kxylem, kxylemmax, c, d)
   \item{type}{Plot type. For \code{hydraulics.supplyFunctionPlot}, either \code{"E"}, \code{"Elayers"}, \code{"PsiStem"}, \code{"PsiRoot"}, \code{"PsiRhizo"} or \code{"dEdP"}). For \code{hydraulics.vulnerabilityCurvePlot}, either \code{"leaf"}, \code{"stem"}, \code{"root"}, or \code{"rhizosphere"}).}
   \item{psiVec}{Vector of water potential values to evaluate for the vulnerability curve.}
   \item{relative}{A flag to relativize vulnerability curves to the [0-1] interval.}
+  \item{pCrit}{Proportion of maximum conductance considered critical for hydraulic functioning.}
 }
 \details{
 Details of the hydraulic model are given in a vignette. Function \code{hydraulics.vulnerabilityCurvePlot} draws a plot of the vulnerability curves for the given \code{soil} object and network properties of each plant cohort in \code{x}.

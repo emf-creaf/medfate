@@ -1,14 +1,15 @@
 \encoding{UTF-8}
 \name{supplyfunctions}
+\alias{hydraulics.ECrit}
 \alias{hydraulics.EXylem}
 \alias{hydraulics.EVanGenuchten}
-\alias{hydraulics.Ecapacitance}
+\alias{hydraulics.ECapacitance}
 \alias{hydraulics.E2psiXylem}
 \alias{hydraulics.E2psiVanGenuchten}
 \alias{hydraulics.E2psiTwoElements}
 \alias{hydraulics.E2psiBelowground}
 \alias{hydraulics.E2psiAboveground}
-\alias{hydraulics.E2psiAbovegroundCapacitance"}
+\alias{hydraulics.E2psiAbovegroundCapacitance}
 \alias{hydraulics.E2psiAbovegroundCapacitanceDisconnected}
 \alias{hydraulics.E2psiNetwork}
 \alias{hydraulics.E2psiNetworkCapacitance}
@@ -36,10 +37,10 @@ hydraulics.EXylem(psiPlant, psiUpstream,
                   psiCav = 0)
 hydraulics.EVanGenuchten(psiRhizo, psiSoil, krhizomax, 
                       n, alpha, l = 0.5)
-hydraulics.Ecapacitance(psi, psiPrev, PLCprev,
+hydraulics.ECapacitance(psi, psiPrev, PLCprev,
                       V, fapo, c,  d, 
                       pi0, eps,timestep)                         
-hydraulics.Ecrit(psiUpstream, kxylemmax, c, d, pCrit = 0.001)
+hydraulics.ECrit(psiUpstream, kxylemmax, c, d, pCrit = 0.001)
 hydraulics.E2psiXylem(E, psiUpstream, 
                       kxylemmax, c, d, psiCav = 0)
 hydraulics.E2psiVanGenuchten(E, psiSoil, krhizomax, n, alpha, 
@@ -70,8 +71,8 @@ hydraulics.E2psiAbovegroundCapacitanceDisconnected(E,
                       kleafmax, leafc, leafd,
                       Vsapwood, stemfapo, stempi0, stemeps,
                       Vleaf, leaffapo, leafpi0, leafeps,
-                      klat, ksto,
-                      tstep = 3600.0, nSubSteps = 1000)                                       
+                      klat,
+                      tstep = 3600.0)                                       
 hydraulics.E2psiNetwork(E, psiSoil, 
                   krhizomax, nsoil, alphasoil,
                   krootmax, rootc, rootd, 
@@ -81,7 +82,18 @@ hydraulics.E2psiNetwork(E, psiSoil,
                   psiIni = as.numeric(c(0)),
                   ntrial = 10, 
                   psiTol = 0.0001, ETol = 0.0001)
-
+hydraulics.E2psiNetworkCapacitance(E, psiSoil, 
+                  psiStemPrev, PLCstem,
+                  psiLeafPrev, 
+                  krhizomax, nsoil, alphasoil,
+                  krootmax, rootc, rootd, 
+                  kstemmax, stemc, stemd,
+                  kleafmax, leafc, leafd,
+                  Vsapwood, stemfapo, stempi0, stemeps,
+                  Vleaf, leaffapo, leafpi0, leafeps,
+                  tstep = 3600.0,
+                  psiIni = NumericVector::create(0),
+                  ntrial = 10, psiTol = 0.0001, ETol = 0.0001)
 
 hydraulics.supplyFunctionOneXylem(psiSoil, v, 
                   kstemmax, stemc, stemd, psiCav = 0,
@@ -116,7 +128,7 @@ hydraulics.supplyFunctionAbovegroundCapacitance(Erootcrown, psiRootCrown,
                   Vleaf, leaffapo, leafpi0, leafeps,
                   tstep = 3600.0)
                                
-List supplyFunctionNetwork(psiSoil, 
+hydraulics.supplyFunctionNetwork(psiSoil, 
                   krhizomax, nsoil, alphasoil,
                   krootmax, rootc, rootd, 
                   kstemmax, stemc, stemd,

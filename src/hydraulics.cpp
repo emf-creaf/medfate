@@ -212,8 +212,8 @@ double EVanGenuchten(double psiRhizo, double psiSoil, double krhizomax,
 //   return(E);
 // }
 
-// [[Rcpp::export("hydraulics.Ecrit")]]
-double Ecrit(double psiUpstream, double kxylemmax, double c, double d, double pCrit = 0.001) {
+// [[Rcpp::export("hydraulics.ECrit")]]
+double ECrit(double psiUpstream, double kxylemmax, double c, double d, double pCrit = 0.001) {
   return(EXylem(psiCrit(c,d, pCrit), psiUpstream, kxylemmax, c, d));
 }
 
@@ -245,8 +245,8 @@ double Ecrit(double psiUpstream, double kxylemmax, double c, double d, double pC
 // }
 
 
-// [[Rcpp::export("hydraulics.Ecapacitance")]]
-double Ecapacitance(double psi, double psiPrev, double PLCprev,
+// [[Rcpp::export("hydraulics.ECapacitance")]]
+double ECapacitance(double psi, double psiPrev, double PLCprev,
                     double V, double fapo, double c, double d, 
                     double pi0, double eps,
                     double timestep) {
@@ -552,7 +552,7 @@ List E2psiAbovegroundCapacitance(double E, double psiRootCrown,
     double psiCav = apoplasticWaterPotential(1.0-PLCstem[i], stemc, stemd);
     psiStem[i] = E2psiXylem(EUp, psiUp, 
                             kxsegmax, stemc, stemd, psiCav);
-    double Ecap = Ecapacitance(psiStem[i],psiStemPrev[i], PLCstem[i],
+    double Ecap = ECapacitance(psiStem[i],psiStemPrev[i], PLCstem[i],
                                Vsegmax, stemfapo,stemc, stemd,
                                stempi0, stemeps,
                                tstep);                                   
@@ -563,7 +563,7 @@ List E2psiAbovegroundCapacitance(double E, double psiRootCrown,
   
   double psiLeaf = E2psiXylem(EUp, psiUp, 
                               kleafmax, leafc, leafd, 0.0);
-  double Ecap = Ecapacitance(psiLeaf,psiLeafPrev, 0.0,
+  double Ecap = ECapacitance(psiLeaf,psiLeafPrev, 0.0,
                              Vleaf, leaffapo,leafc, leafd,
                              leafpi0, leafeps,
                              tstep);             
@@ -1852,7 +1852,7 @@ List supplyFunctionNetworkCapacitance(NumericVector psiSoil,
 NumericVector regulatedPsiXylem(double E, double psiUpstream, double kxylemmax, double c, double d, double psiStep = -0.01) {
   //If Ein > Ecrit then set Ein to Ecrit
   double psiUnregulated = E2psiXylem(E, psiUpstream, kxylemmax, c, d, 0.0);
-  double Ec = Ecrit(psiUpstream, kxylemmax,c,d);
+  double Ec = ECrit(psiUpstream, kxylemmax,c,d);
   double Ein = E;
   if(Ein > Ec) {
     Ein = Ec;
