@@ -199,9 +199,9 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
 
   //Transpiration parameters
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
-  NumericVector xylem_kmax, VCstem_kmax, Psi_Extract, VCstem_c, VCstem_d;
+  NumericVector xylem_Kmax, VCstem_kmax, Psi_Extract, VCstem_c, VCstem_d;
   if(transpirationMode=="Complex") {
-    xylem_kmax = paramsTransp["xylem_kmax"];
+    xylem_Kmax = paramsTransp["xylem_Kmax"];
     VCstem_kmax = paramsTransp["VCstem_kmax"];
     VCstem_c = paramsTransp["VCstem_c"];
     VCstem_d = paramsTransp["VCstem_d"];
@@ -456,7 +456,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
       //3.7 Update stem conductance (Complex mode)
       if(transpirationMode=="Complex") {
         double al2as = (LAI_expanded[j]/(N[j]/10000.0))/(SA[j]/10000.0);
-        VCstem_kmax[j]=maximumStemHydraulicConductance(xylem_kmax[j], al2as,H[j], x["taper"]);
+        VCstem_kmax[j]=maximumStemHydraulicConductance(xylem_Kmax[j], al2as,H[j], x["taper"]);
         // Rcout<<Al2As[j]<<" "<< al2as<<" "<<VCstem_kmax[j]<<"\n";
       }
       
