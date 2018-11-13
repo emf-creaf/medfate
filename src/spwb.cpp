@@ -698,7 +698,6 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
     NumericVector absLWR_SL = abs_LWR_SL_list[n];
     NumericVector absLWR_SH = abs_LWR_SH_list[n];
     
-    NumericVector EplantVecInstant(nlayers,0.0); //Transpiration extracted from each layers, taking into account all cohorts 
     for(int c=0;c<numCohorts;c++) { //Plant cohort loop
       SWR_SL(c,n) = absSWR_SL[c];
       SWR_SH(c,n) = absSWR_SH[c];
@@ -996,7 +995,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
     double canLWRexchprop = abs_LWR_can[n]/lwdr[n];
     // Rcout<<canLWRexchprop<<"\n";
     //Latent heat (PROBLEM: does not include interception)
-    LEcan_heat[n] = pow(10.0,6.0)*meteoland::utils_latentHeatVaporisation(Tcan[n])*sum(EplantVecInstant)/tstep; 
+    LEcan_heat[n] = pow(10.0,6.0)*meteoland::utils_latentHeatVaporisation(Tcan[n])*sum(Einst(_,n))/tstep; 
     //Canopy longwave emmission
     LWRcanout[n] = LWR_emmcan*canLWRexchprop;
     //Canopy convective heat exchange
@@ -1721,7 +1720,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   NumericVector Eplanttot(numDays,0.0);
   List s;
   for(int i=0;i<numDays;i++) {
-      if(verbose) Rcout<<"."<<i;
+      if(verbose) Rcout<<".";//<<i;
       canopyParams["gdd"] = GDD[i];
       double wind = WindSpeed[i];
       if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; //Default 1 m/s -> 10% of fall every day

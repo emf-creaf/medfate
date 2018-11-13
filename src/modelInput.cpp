@@ -70,7 +70,7 @@ DataFrame paramsWaterStorage(DataFrame above, DataFrame SpParams,
   
   NumericVector WoodDensity = paramsAnatomydf["WoodDensity"];
   NumericVector LeafDensity = paramsAnatomydf["LeafDensity"];
-  NumericVector SLA = paramsAnatomydf["Al2As"];
+  NumericVector SLA = paramsAnatomydf["SLA"];
   NumericVector Al2As = paramsAnatomydf["Al2As"];
   
   for(int c=0;c<numCohorts;c++){
@@ -80,9 +80,14 @@ DataFrame paramsWaterStorage(DataFrame above, DataFrame SpParams,
     if(NumericVector::is_na(StemPI0[c])) StemPI0[c] = 0.52 - 4.16*WoodDensity[c]; 
     if(NumericVector::is_na(StemEPS[c])) StemEPS[c] = sqrt(1.02*exp(8.5*WoodDensity[c])-2.89); 
     StemAF[c] = StemAFSP[SP[c]];
+    if(NumericVector::is_na(StemAF[c])) StemAF[c] = 0.8;
     LeafPI0[c] = LeafPI0SP[SP[c]];
     LeafEPS[c] = LeafEPSSP[SP[c]];
     LeafAF[c] = LeafAFSP[SP[c]];
+    //From: Bartlett MK, Scoffoni C, Sack L (2012) The determinants of leaf turgor loss point and prediction of drought tolerance of species and biomes: a global meta-analysis. Ecol Lett 15:393–405. doi: 10.1111/j.1461-0248.2012.01751.x
+    if(NumericVector::is_na(LeafPI0[c])) LeafPI0[c] = -2.0; //Average values for Mediterranean climate species
+    if(NumericVector::is_na(LeafEPS[c])) LeafEPS[c] = 17.0;
+    if(NumericVector::is_na(LeafAF[c])) LeafAF[c] = 0.29;
     
     //Calculate stem and leaf capacity per leaf area (in m3·m-2)
     Vsapwood[c] = stemWaterCapacity(Al2As[c], H[c], WoodDensity[c]); 
