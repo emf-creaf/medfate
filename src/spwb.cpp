@@ -954,11 +954,9 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
          NumericVector newRWCsympstem = sAb["RWCsympstem"];
          
          //Update symplastic storage and PLC
-         double psiRoot = newPsiStem[0];//Estimate of psiRoot = first stem segment
-         psiRootVEC[c] = psiRoot;
+         psiRootVEC[c] = newPsiStem[0];//Estimate of psiRoot = first stem segment
          psiLeafVEC[c] = sAb["psiLeaf"];
          RWCsleafVEC[c] = sAb["RWCsympleaf"];
-         RWCsteminst(c,n) = 0.0;
          psiStemMAT(c,_) = newPsiStem;
          for(int i=0;i<nStemSegments;i++) {
            PLCstemMAT(c,i) = std::max(PLCstemMAT(c,i), 1.0 - apoplasticRelativeWaterContent(psiStemMAT(c,i), VCstem_c[c], VCstem_d[c]));
