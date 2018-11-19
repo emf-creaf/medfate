@@ -332,6 +332,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   // String canopyMode = Rcpp::as<Rcpp::String>(control["canopyMode"]);
   int ntimesteps = control["ndailysteps"];
   int hydraulicCostFunction = control["hydraulicCostFunction"];
+  int nStemSegments = control["nStemSegments"];
   double verticalLayerSize = control["verticalLayerSize"];
   double thermalCapacityLAI = control["thermalCapacityLAI"];
   double defaultWindSpeed = control["defaultWindSpeed"];
@@ -651,8 +652,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   NumericMatrix Aninst(numCohorts, ntimesteps);
   NumericMatrix PsiLeafinst(numCohorts, ntimesteps);
   NumericMatrix PsiSteminst(numCohorts, ntimesteps);
-  NumericMatrix RWCsleafinst(numCohorts, ntimesteps);
-  NumericMatrix RWCssteminst(numCohorts, ntimesteps);
+  NumericMatrix RWCleafinst(numCohorts, ntimesteps);
+  NumericMatrix RWCsteminst(numCohorts, ntimesteps);
   NumericMatrix PsiRootinst(numCohorts, ntimesteps);
   NumericMatrix PWBinst(numCohorts, ntimesteps);
   NumericMatrix SWR_SL(numCohorts, ntimesteps);
@@ -860,23 +861,15 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
           psiRootVEC[c] = psiRoot[iPM]; 
           EinstVEC[c] = fittedE[iPM];
           PLC(c,n) = NA_REAL;
-          RWCssteminst(c,n) = NA_REAL;
+          RWCsteminst(c,n) = NA_REAL;
           psiLeafVEC[c] = psiLeaf[iPM];
           RWCsleafVEC[c] = symplasticRelativeWaterContent(psiLeafVEC[c], LeafPI0[c], LeafEPS[c]);
           psiStemMAT(c,_) = newPsiStem(iPM,_);
-          int nseg = psiStemMAT.ncol();
-          for(int i=0;i<nseg;i++) {
+          for(int i=0;i<nStemSegments;i++) {
             PLCstemMAT(c,i) = std::max(PLCstemMAT(c,i), 1.0 - apoplasticRelativeWaterContent(psiStemMAT(c,i), VCstem_c[c], VCstem_d[c]));
             RWCsstemMAT(c,i) = symplasticRelativeWaterContent(psiStemMAT(c,i), StemPI0[c], StemEPS[c]);
           }
           
-          //Store (for output) instantaneous leaf, stem and root potential, plc and rwc values
-          PLC(c,n) = sum(PLCstemMAT(c,_))/((double)nseg);
-          RWCssteminst(c,n) = RWCsstemMAT(c,nseg-1);
-          PsiLeafinst(c,n) = psiLeafVEC[c]; 
-          PsiSteminst(c,n) = psiStemMAT(c, nseg-1); 
-          PsiRootinst(c,n) = psiRootVEC[c]; 
-          RWCsleafinst(c,n) = RWCsleafVEC[c];
           
           //Copy transpiration from connected layers to transpiration from soil layers
           int cnt = 0;
@@ -965,23 +958,23 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
          psiRootVEC[c] = psiRoot;
          psiLeafVEC[c] = sAb["psiLeaf"];
          RWCsleafVEC[c] = sAb["RWCsympleaf"];
-         int nseg = newRWCsympstem.size();
-         RWCssteminst(c,n) = 0.0;
+         RWCsteminst(c,n) = 0.0;
          psiStemMAT(c,_) = newPsiStem;
-         for(int i=0;i<nseg;i++) {
+         for(int i=0;i<nStemSegments;i++) {
            PLCstemMAT(c,i) = std::max(PLCstemMAT(c,i), 1.0 - apoplasticRelativeWaterContent(psiStemMAT(c,i), VCstem_c[c], VCstem_d[c]));
          }
          // Rcout<< "PLC "<< PLCstemMAT(c,0)<<"\n";
          RWCsstemMAT(c,_) = newRWCsympstem;
-         //Store the PLC and RWCsym values of the distal-most segment
-         PLC(c,n) = PLCstemMAT(c,nseg-1); 
-         RWCssteminst(c,n) = newRWCsympstem[nseg-1];
-         
-         PsiSteminst(c,n) = psiStemMAT(c, nseg-1); 
-         RWCsleafinst(c,n) = RWCsleafVEC[c];
-         PsiLeafinst(c,n) = psiLeafVEC[c]; //Store instantaneous leaf potential
-         PsiRootinst(c,n) = psiRootVEC[c]; //Store instantaneous root potential
       }
+
+      //Store (for output) instantaneous leaf, stem and root potential, plc and rwc values
+      PLC(c,n) = PLCstemMAT(c,nStemSegments-1);
+      RWCsteminst(c,n) = RWCsstemMAT(c,nStemSegments-1)*(1.0 - StemAF[c]) + (1.0- PLCstemMAT(c,nStemSegments-1))*StemAF[c];
+      RWCleafinst(c,n) = RWCsleafVEC[c]*(1.0 - LeafAF[c]) + apoplasticRelativeWaterContent(psiLeafVEC[c], VCleaf_c[c], VCleaf_d[c])*LeafAF[c];
+      PsiSteminst(c,n) = psiStemMAT(c, nStemSegments-1); 
+      
+      PsiLeafinst(c,n) = psiLeafVEC[c]; //Store instantaneous leaf potential
+      PsiRootinst(c,n) = psiRootVEC[c]; //Store instantaneous root potential
       
       //Store the minimum water potential of the day (i.e. mid-day)
       minPsiLeaf[c] = std::min(minPsiLeaf[c],PsiLeafinst(c,n));
@@ -1047,8 +1040,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
     SoilExtractCoh[c] =  sum(SoilWaterExtract(c,_));
     transpiration[c] = Eplant[c]; 
     PLCm[c] = sum(PLC(c,_))/((double)PLC.ncol());
-    RWCsm[c] = sum(RWCssteminst(c,_))/((double)RWCssteminst.ncol());
-    RWClm[c] = sum(RWCsleafinst(c,_))/((double)RWCsleafinst.ncol());
+    RWCsm[c] = sum(RWCsteminst(c,_))/((double)RWCsteminst.ncol());
+    RWClm[c] = sum(RWCleafinst(c,_))/((double)RWCleafinst.ncol());
   }
   
   
@@ -1116,8 +1109,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   PsiRootinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   Aninst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   PLC.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  RWCsleafinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  RWCssteminst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  RWCleafinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  RWCsteminst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   PWBinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   List PlantsInst = List::create(
                                  _["LAIsunlit"] = LAI_SL, _["LAIshade"] = LAI_SH, 
@@ -1129,8 +1122,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                                  _["PsiStem"] = PsiSteminst, 
                                  _["PsiLeaf"] = PsiLeafinst, 
                                  _["PLCstem"] = PLC, 
-                                 _["RWCstem"] = RWCssteminst,
-                                 _["RWCleaf"] = RWCsleafinst,
+                                 _["RWCstem"] = RWCsteminst,
+                                 _["RWCleaf"] = RWCleafinst,
                                  _["PWB"] = PWBinst);
   DataFrame Plants = DataFrame::create(_["LAI"] = LAIcohort,
                              _["Extraction"] = SoilExtractCoh,

@@ -82,7 +82,7 @@ plot.spwb.day<-function(x, type="PlantTranspiration", bySpecies = FALSE, xlab = 
       OM = sweep(m1,1,lai1,"/")
       cohortnames = rownames(OM)
     } 
-    if(is.null(ylab)) ylab = "Stem symplasm relative water content (%)"
+    if(is.null(ylab)) ylab = "Stem relative water content (%)"
     matplot(timesteps, t(OM), lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", ylab=ylab, xlab=xlab, frame=FALSE, ...)
     legend("bottomright", legend = cohortnames, lty=1:length(cohortnames), 
@@ -97,7 +97,7 @@ plot.spwb.day<-function(x, type="PlantTranspiration", bySpecies = FALSE, xlab = 
       OM = sweep(m1,1,lai1,"/")
       cohortnames = rownames(OM)
     } 
-    if(is.null(ylab)) ylab = "Leaf symplasm relative water content (%)"
+    if(is.null(ylab)) ylab = "Leaf relative water content (%)"
     matplot(timesteps, t(OM), lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", ylab=ylab, xlab=xlab, frame=FALSE, ...)
     legend("bottomright", legend = cohortnames, lty=1:length(cohortnames), 
