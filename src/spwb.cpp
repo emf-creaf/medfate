@@ -1358,8 +1358,8 @@ List spwbgridDay(CharacterVector lct, List xList, List soilList,
       //Run daily soil water balance for the current cell
       List res = spwbDay1(x, soil, tdayVec[iCell], petVec[iCell], rainVec[iCell], erVec[iCell], 
                           Runon[iCell], radVec[iCell], elevation[iCell]);
-      List DB = res["DailyBalance"];
-      List SB = res["SoilBalance"];
+      List DB = res["WaterBalance"];
+      List SB = res["Soil"];
       List PL = res["Plants"];
       Snow[iCell] = DB["Snow"];
       Rain[iCell] = DB["Rain"];
@@ -1368,8 +1368,8 @@ List spwbgridDay(CharacterVector lct, List xList, List soilList,
       Infiltration[iCell] = DB["Infiltration"];
       Runoff[iCell] = DB["Runoff"];
       DeepDrainage[iCell] = DB["DeepDrainage"];
-      Esoil[iCell] = sum(Rcpp::as<Rcpp::NumericVector>(SB["EsoilVec"]));
-      NumericVector EplantCoh = PL["EplantCoh"];
+      Esoil[iCell] = sum(Rcpp::as<Rcpp::NumericVector>(SB["SoilEvaporation"]));
+      NumericVector EplantCoh = Rcpp::as<Rcpp::NumericVector>(PL["Transpiration"]);
       NumericVector DDScell = PL["DDS"];
       Eplant[iCell] = sum(EplantCoh);
       if(nTrackSpecies>0) {
