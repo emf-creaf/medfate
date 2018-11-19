@@ -24,6 +24,7 @@ moisture.tissueRWC(psiSym, pi0, epsilon,
                    af)
 moisture.tissueFMC(RWC, density, d0 = 1.54)
 moisture.pressureVolumeCurvePlot(x, segment="leaf", 
+                    fraction = "all",
                     psiVec =  seq(-0.1, -8.0, by =-0.01))                    
 }
 
@@ -37,6 +38,7 @@ moisture.pressureVolumeCurvePlot(x, segment="leaf",
   \item{af}{Apoplastic fraction (proportion) in the segment (e.g. leaf or stem).}
   \item{x}{An object of class \code{\link{spwbInput}}.}
   \item{segment}{Curve to plot, either \code{"stem"}, \code{"leaf"} or \code{"both"}.}
+  \item{fraction}{ Tissue fraction, either \code{"symplastic"}, \code{"apoplastic"} or \code{"all"}.}
   \item{psiVec}{Vector of water potential values to evaluate for the pressure-volume curve.}
   \item{density}{Tissue density (g·cm-1).}
   \item{d0}{Matric density (g·cm-1).}

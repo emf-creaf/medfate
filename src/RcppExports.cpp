@@ -1234,14 +1234,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // E2psiAbovegroundCapacitanceDisconnected
-List E2psiAbovegroundCapacitanceDisconnected(double E, NumericVector psiStemPrev, NumericVector PLCstemPrev, NumericVector RWCsympstemPrev, double psiLeafPrev, double RWCsympleafPrev, double kstemmax, double stemc, double stemd, double kleafmax, double leafc, double leafd, double Vsapwood, double stemfapo, double stempi0, double stemeps, double Vleaf, double leaffapo, double leafpi0, double leafeps, double klat, double tstep);
-RcppExport SEXP _medfate_E2psiAbovegroundCapacitanceDisconnected(SEXP ESEXP, SEXP psiStemPrevSEXP, SEXP PLCstemPrevSEXP, SEXP RWCsympstemPrevSEXP, SEXP psiLeafPrevSEXP, SEXP RWCsympleafPrevSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP kleafmaxSEXP, SEXP leafcSEXP, SEXP leafdSEXP, SEXP VsapwoodSEXP, SEXP stemfapoSEXP, SEXP stempi0SEXP, SEXP stemepsSEXP, SEXP VleafSEXP, SEXP leaffapoSEXP, SEXP leafpi0SEXP, SEXP leafepsSEXP, SEXP klatSEXP, SEXP tstepSEXP) {
+List E2psiAbovegroundCapacitanceDisconnected(double E, NumericVector psiStemPrev, NumericVector PLCstem, NumericVector RWCsympstemPrev, double psiLeafPrev, double RWCsympleafPrev, double kstemmax, double stemc, double stemd, double kleafmax, double leafc, double leafd, double Vsapwood, double stemfapo, double stempi0, double stemeps, double Vleaf, double leaffapo, double leafpi0, double leafeps, double klat, double tstep);
+RcppExport SEXP _medfate_E2psiAbovegroundCapacitanceDisconnected(SEXP ESEXP, SEXP psiStemPrevSEXP, SEXP PLCstemSEXP, SEXP RWCsympstemPrevSEXP, SEXP psiLeafPrevSEXP, SEXP RWCsympleafPrevSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP kleafmaxSEXP, SEXP leafcSEXP, SEXP leafdSEXP, SEXP VsapwoodSEXP, SEXP stemfapoSEXP, SEXP stempi0SEXP, SEXP stemepsSEXP, SEXP VleafSEXP, SEXP leaffapoSEXP, SEXP leafpi0SEXP, SEXP leafepsSEXP, SEXP klatSEXP, SEXP tstepSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type E(ESEXP);
     Rcpp::traits::input_parameter< NumericVector >::type psiStemPrev(psiStemPrevSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type PLCstemPrev(PLCstemPrevSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type PLCstem(PLCstemSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type RWCsympstemPrev(RWCsympstemPrevSEXP);
     Rcpp::traits::input_parameter< double >::type psiLeafPrev(psiLeafPrevSEXP);
     Rcpp::traits::input_parameter< double >::type RWCsympleafPrev(RWCsympleafPrevSEXP);
@@ -1261,7 +1261,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type leafeps(leafepsSEXP);
     Rcpp::traits::input_parameter< double >::type klat(klatSEXP);
     Rcpp::traits::input_parameter< double >::type tstep(tstepSEXP);
-    rcpp_result_gen = Rcpp::wrap(E2psiAbovegroundCapacitanceDisconnected(E, psiStemPrev, PLCstemPrev, RWCsympstemPrev, psiLeafPrev, RWCsympleafPrev, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, klat, tstep));
+    rcpp_result_gen = Rcpp::wrap(E2psiAbovegroundCapacitanceDisconnected(E, psiStemPrev, PLCstem, RWCsympstemPrev, psiLeafPrev, RWCsympleafPrev, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, klat, tstep));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2723,8 +2723,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // tissueRelativeWaterContent
-double tissueRelativeWaterContent(double psiSym, double pi0, double epsilon, double psiApo, double c, double d, double af);
-RcppExport SEXP _medfate_tissueRelativeWaterContent(SEXP psiSymSEXP, SEXP pi0SEXP, SEXP epsilonSEXP, SEXP psiApoSEXP, SEXP cSEXP, SEXP dSEXP, SEXP afSEXP) {
+double tissueRelativeWaterContent(double psiSym, double pi0, double epsilon, double psiApo, double c, double d, double af, double femb);
+RcppExport SEXP _medfate_tissueRelativeWaterContent(SEXP psiSymSEXP, SEXP pi0SEXP, SEXP epsilonSEXP, SEXP psiApoSEXP, SEXP cSEXP, SEXP dSEXP, SEXP afSEXP, SEXP fembSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2735,7 +2735,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type c(cSEXP);
     Rcpp::traits::input_parameter< double >::type d(dSEXP);
     Rcpp::traits::input_parameter< double >::type af(afSEXP);
-    rcpp_result_gen = Rcpp::wrap(tissueRelativeWaterContent(psiSym, pi0, epsilon, psiApo, c, d, af));
+    Rcpp::traits::input_parameter< double >::type femb(fembSEXP);
+    rcpp_result_gen = Rcpp::wrap(tissueRelativeWaterContent(psiSym, pi0, epsilon, psiApo, c, d, af, femb));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -3040,7 +3041,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_symplasticWaterPotential", (DL_FUNC) &_medfate_symplasticWaterPotential, 3},
     {"_medfate_apoplasticRelativeWaterContent", (DL_FUNC) &_medfate_apoplasticRelativeWaterContent, 3},
     {"_medfate_apoplasticWaterPotential", (DL_FUNC) &_medfate_apoplasticWaterPotential, 3},
-    {"_medfate_tissueRelativeWaterContent", (DL_FUNC) &_medfate_tissueRelativeWaterContent, 7},
+    {"_medfate_tissueRelativeWaterContent", (DL_FUNC) &_medfate_tissueRelativeWaterContent, 8},
     {"_medfate_tissueFMC", (DL_FUNC) &_medfate_tissueFMC, 3},
     {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 6},
     {"_medfate_stomatalRegulation", (DL_FUNC) &_medfate_stomatalRegulation, 6},

@@ -15,4 +15,4 @@ double segmentRelativeWaterContent(double psiSym, double pi0, double epsilon,
 double tissueFMC(double RWC, double density, double d0 = 1.54);
 double tissueRelativeWaterContent(double psiSym, double pi0, double epsilon, 
                                   double psiApo, double c, double d, 
-                                  double af);
+                                  double af, double femb = 0.0);

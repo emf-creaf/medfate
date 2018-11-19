@@ -958,7 +958,6 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                                                 tstep);
       
          NumericVector newPsiStem = sAb["psiStem"];
-         NumericVector newPLCstem = sAb["PLCstem"];
          NumericVector newRWCsympstem = sAb["RWCsympstem"];
          
          //Update symplastic storage and PLC
@@ -966,13 +965,16 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
          psiRootVEC[c] = psiRoot;
          psiLeafVEC[c] = sAb["psiLeaf"];
          RWCsleafVEC[c] = sAb["RWCsympleaf"];
-         int nseg = newPLCstem.size();
-         PLC(c,n) = 0.0;
+         int nseg = newRWCsympstem.size();
          RWCssteminst(c,n) = 0.0;
          psiStemMAT(c,_) = newPsiStem;
-         PLCstemMAT(c,_) = newPLCstem;
+         for(int i=0;i<nseg;i++) {
+           PLCstemMAT(c,i) = std::max(PLCstemMAT(c,i), 1.0 - apoplasticRelativeWaterContent(psiStemMAT(c,i), VCstem_c[c], VCstem_d[c]));
+         }
+         // Rcout<< "PLC "<< PLCstemMAT(c,0)<<"\n";
          RWCsstemMAT(c,_) = newRWCsympstem;
-         PLC(c,n) = newPLCstem[nseg-1]; //Store the PLC and RWCsym values of the distal-most segment
+         //Store the PLC and RWCsym values of the distal-most segment
+         PLC(c,n) = PLCstemMAT(c,nseg-1); 
          RWCssteminst(c,n) = newRWCsympstem[nseg-1];
          
          PsiSteminst(c,n) = psiStemMAT(c, nseg-1); 

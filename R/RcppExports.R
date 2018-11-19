@@ -345,8 +345,8 @@ hydraulics.E2psiAbovegroundCapacitance <- function(E, psiRootCrown, psiStemPrev,
     .Call('_medfate_E2psiAbovegroundCapacitance', PACKAGE = 'medfate', E, psiRootCrown, psiStemPrev, PLCstem, psiLeafPrev, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, tstep)
 }
 
-hydraulics.E2psiAbovegroundCapacitanceDisconnected <- function(E, psiStemPrev, PLCstemPrev, RWCsympstemPrev, psiLeafPrev, RWCsympleafPrev, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, klat, tstep = 3600.0) {
-    .Call('_medfate_E2psiAbovegroundCapacitanceDisconnected', PACKAGE = 'medfate', E, psiStemPrev, PLCstemPrev, RWCsympstemPrev, psiLeafPrev, RWCsympleafPrev, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, klat, tstep)
+hydraulics.E2psiAbovegroundCapacitanceDisconnected <- function(E, psiStemPrev, PLCstem, RWCsympstemPrev, psiLeafPrev, RWCsympleafPrev, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, klat, tstep = 3600.0) {
+    .Call('_medfate_E2psiAbovegroundCapacitanceDisconnected', PACKAGE = 'medfate', E, psiStemPrev, PLCstem, RWCsympstemPrev, psiLeafPrev, RWCsympleafPrev, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, klat, tstep)
 }
 
 hydraulics.E2psiNetwork <- function(E, psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem, psiIni = as.numeric( c(0)), ntrial = 10L, psiTol = 0.0001, ETol = 0.0001) {
@@ -705,8 +705,8 @@ moisture.apoplasticPsi <- function(RWC, c, d) {
     .Call('_medfate_apoplasticWaterPotential', PACKAGE = 'medfate', RWC, c, d)
 }
 
-moisture.tissueRWC <- function(psiSym, pi0, epsilon, psiApo, c, d, af) {
-    .Call('_medfate_tissueRelativeWaterContent', PACKAGE = 'medfate', psiSym, pi0, epsilon, psiApo, c, d, af)
+moisture.tissueRWC <- function(psiSym, pi0, epsilon, psiApo, c, d, af, femb = 0.0) {
+    .Call('_medfate_tissueRelativeWaterContent', PACKAGE = 'medfate', psiSym, pi0, epsilon, psiApo, c, d, af, femb)
 }
 
 moisture.tissueFMC <- function(RWC, density, d0 = 1.54) {

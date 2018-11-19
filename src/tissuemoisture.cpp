@@ -67,15 +67,16 @@ double apoplasticWaterPotential(double RWC, double c, double d) {
  *  pi0 - Full turgor osmotic potential (MPa)
  *  epsilon - bulk modulus elasticity (MPa)
  *  af - Apoplastic fraction (proportion)
+ *  femb - Fraction of embolized conduits
  *  
  *  Returns tissue RWC as proportion of maximum hydration (= g H2O / g H2O sat = m3 H2O / m3 H2O sat)
  */
 // [[Rcpp::export("moisture.tissueRWC")]]
 double tissueRelativeWaterContent(double psiSym, double pi0, double epsilon, 
                                   double psiApo, double c, double d, 
-                                  double af) {
+                                  double af, double femb = 0.0) {
   double sym_rwc = symplasticRelativeWaterContent(psiSym, pi0, epsilon);
-  double apo_rwc = apoplasticRelativeWaterContent(psiApo, c, d);
+  double apo_rwc = std::min(1.0-femb, apoplasticRelativeWaterContent(psiApo, c, d)); //Water content cannot be higher than the fraction of non-embolized conduits
   return(sym_rwc*(1.0-af)+apo_rwc*af);
 }
 
