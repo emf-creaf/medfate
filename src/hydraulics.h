@@ -21,6 +21,8 @@ double referenceConductivityHeightFactor(double refheight, double height);
 double maximumStemHydraulicConductance(double xylemConductivity, double refheight, double Al2As,  double height, bool angiosperm = true, bool taper = false);
 double maximumRootHydraulicConductance(double xylemConductivity, double Al2As, NumericVector v, NumericVector d, double depthWidthRatio = 1.0);
 
+NumericVector psi2Weibull(double psi50, double psi88);
+
 double stemWaterCapacity(double Al2As, double height, double wd);
 double leafWaterCapacity(double SLA, double ld);
 

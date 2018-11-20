@@ -1902,6 +1902,17 @@ NumericVector regulatedPsiTwoElements(double Emax, double psiSoil, double krhizo
 
 
 
+// [[Rcpp::export("hydraulics.psi2Weibull")]]
+NumericVector psi2Weibull(double psi50, double psi88) {
+  double psiRatio = psi50/psi88;
+  double a = 0.3269156; // log(0.5)/log(0.12);
+  double c = log(a)/log(psiRatio);
+  double d = psi50/pow(0.6931472,1.0/c);
+  NumericVector par = NumericVector::create(c,d);
+  par.attr("names") = CharacterVector::create("c","d");
+  return(par);
+}
+
 /*
  * Parametrization of rhizosphere conductance
  */

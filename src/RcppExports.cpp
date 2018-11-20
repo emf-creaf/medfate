@@ -1576,6 +1576,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// psi2Weibull
+NumericVector psi2Weibull(double psi50, double psi88);
+RcppExport SEXP _medfate_psi2Weibull(SEXP psi50SEXP, SEXP psi88SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type psi50(psi50SEXP);
+    Rcpp::traits::input_parameter< double >::type psi88(psi88SEXP);
+    rcpp_result_gen = Rcpp::wrap(psi2Weibull(psi50, psi88));
+    return rcpp_result_gen;
+END_RCPP
+}
 // averageRhizosphereResistancePercent
 double averageRhizosphereResistancePercent(double krhizomax, double n, double alpha, double krootmax, double rootc, double rootd, double kstemmax, double stemc, double stemd, double kleafmax, double leafc, double leafd, double psiStep);
 RcppExport SEXP _medfate_averageRhizosphereResistancePercent(SEXP krhizomaxSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP krootmaxSEXP, SEXP rootcSEXP, SEXP rootdSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP kleafmaxSEXP, SEXP leafcSEXP, SEXP leafdSEXP, SEXP psiStepSEXP) {
@@ -2964,6 +2976,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_supplyFunctionNetworkCapacitance", (DL_FUNC) &_medfate_supplyFunctionNetworkCapacitance, 31},
     {"_medfate_regulatedPsiXylem", (DL_FUNC) &_medfate_regulatedPsiXylem, 6},
     {"_medfate_regulatedPsiTwoElements", (DL_FUNC) &_medfate_regulatedPsiTwoElements, 10},
+    {"_medfate_psi2Weibull", (DL_FUNC) &_medfate_psi2Weibull, 2},
     {"_medfate_averageRhizosphereResistancePercent", (DL_FUNC) &_medfate_averageRhizosphereResistancePercent, 13},
     {"_medfate_findRhizosphereMaximumConductance", (DL_FUNC) &_medfate_findRhizosphereMaximumConductance, 12},
     {"_medfate_taperFactorSavage", (DL_FUNC) &_medfate_taperFactorSavage, 1},

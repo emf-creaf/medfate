@@ -111,6 +111,8 @@ DataFrame paramsTranspiration(DataFrame above, NumericMatrix V, List soil, DataF
   NumericVector dVec = soil["dVec"];
   
   CharacterVector GroupSP = SpParams["Group"];
+  CharacterVector OrderSP = SpParams["Order"];
+  CharacterVector TreeTypeSP = SpParams["TreeType"];
   NumericVector HmedSP = SpParams["Hmed"]; //To correct conductivity
   NumericVector GwminSP = SpParams["Gwmin"];
   NumericVector GwmaxSP = SpParams["Gwmax"];
@@ -143,18 +145,68 @@ DataFrame paramsTranspiration(DataFrame above, NumericMatrix V, List soil, DataF
     Vc = V(c,_);
     
     Kmax_stemxylem[c] = Kmax_stemxylemSP[SP[c]];
+    if(NumericVector::is_na(Kmax_stemxylem[c])) {
+      // From: Maherali H, Pockman W, Jackson R (2004) Adaptive variation in the vulnerability of woody plants to xylem cavitation. Ecology 85:2184–2199
+      if(GroupSP[SP[c]]=="Angiosperm") {
+        if(TreeTypeSP[SP[c]]=="Shrub") {
+          Kmax_stemxylem[c] = 1.75; //Angiosperm evergreen shrub
+        } else if(TreeTypeSP[SP[c]]=="Deciduous") {
+          Kmax_stemxylem[c] = 1.58; //Angiosperm winter-deciduous tree
+        } else { 
+          Kmax_stemxylem[c] = 2.43; //Angiosperm evergreen tree
+        }
+      } else {
+        if(TreeTypeSP[SP[c]]=="Shrub") {
+          Kmax_stemxylem[c] = 0.24; //Gymnosperm shrub
+        } else {
+          Kmax_stemxylem[c] = 0.48; //Gymnosperm tree
+        }
+      }
+    }
     Kmax_rootxylem[c] = Kmax_rootxylemSP[SP[c]];
     if(NumericVector::is_na(Kmax_rootxylem[c])) Kmax_rootxylem[c] = Kmax_stemxylem[c];
     
     //Calculate stem maximum conductance (in mmol·m-2·s-1·MPa-1)
     VCstem_kmax[c]=maximumStemHydraulicConductance(Kmax_stemxylem[c], HmedSP[SP[c]], Al2As[c],H[c], (GroupSP[SP[c]]=="Angiosperm"),control["taper"]); 
+    
+    //Xylem vulnerability curve
     VCstem_c[c]=VCstem_cSP[SP[c]];
     VCstem_d[c]=VCstem_dSP[SP[c]];
+    if(NumericVector::is_na(VCstem_d[c])) {
+      double psi50 = NA_REAL;
+      // From: Maherali H, Pockman W, Jackson R (2004) Adaptive variation in the vulnerability of woody plants to xylem cavitation. Ecology 85:2184–2199
+      if(GroupSP[SP[c]]=="Angiosperm") {
+        if(TreeTypeSP[SP[c]]=="Shrub") {
+          psi50 = -5.09; //Angiosperm evergreen shrub
+        } else if(TreeTypeSP[SP[c]]=="Deciduous") {
+          psi50 = -2.34; //Angiosperm winter-deciduous tree
+        } else { 
+          psi50 = -1.51; //Angiosperm evergreen tree
+        }
+      } else {
+        if(TreeTypeSP[SP[c]]=="Shrub") {
+          psi50 = -8.95; //Gymnosperm shrub
+        } else {
+          psi50 = -4.17; //Gymnosperm tree
+        }
+      }
+      double psi88 = 1.2593*psi50 - 1.4264; //Regression using data from Choat et al. 2012
+      NumericVector par = psi2Weibull(psi50, psi88);
+      VCstem_c[c] = par["c"];
+      VCstem_d[c] = par["d"];
+    }
+    
     VCroot_c[c]=VCroot_cSP[SP[c]];
     VCroot_d[c]=VCroot_dSP[SP[c]];
     //Default vulnerability curve parameters if missing
-    if(NumericVector::is_na(VCroot_c[c])) VCroot_c[c] = VCstem_c[c];
-    if(NumericVector::is_na(VCroot_d[c])) VCroot_d[c] = VCstem_d[c]/2.0;
+    if(NumericVector::is_na(VCroot_d[c])) {
+      double psi50stem = VCstem_d[c]*pow(0.6931472,1.0/VCstem_c[c]);
+      double psi50root = 0.742*psi50stem + 0.4892; //Regression using data from Bartlett et al. 2016
+      double psi88root = 1.2593*psi50root - 1.4264; //Regression using data from Choat et al. 2012
+      NumericVector par = psi2Weibull(psi50root, psi88root);
+      VCroot_c[c] = par["c"];
+      VCroot_d[c] = par["d"];
+    }
     VCleaf_kmax[c] = VCleaf_kmaxSP[SP[c]];
     //Sack, L., & Holbrook, N.M. 2006. Leaf Hydraulics. Annual Review of Plant Biology 57: 361–381.
     if(NumericVector::is_na(VCleaf_kmax[c])) { 
@@ -172,7 +224,31 @@ DataFrame paramsTranspiration(DataFrame above, NumericMatrix V, List soil, DataF
     pRootDisc[c]=pRootDiscSP[SP[c]];
     Gwmin[c] = GwminSP[SP[c]];
     //Duursma RA, Blackman CJ, Lopéz R, et al (2018) On the minimum leaf conductance: its role in models of plant water use, and ecological and environmental controls. New Phytol. doi: 10.1111/nph.15395
-    if(NumericVector::is_na(Gwmin[c])) Gwmin[c] = 0.0049;
+    if(NumericVector::is_na(Gwmin[c])) {
+      if(OrderSP[SP[c]]=="Pinales") {
+        Gwmin[c] = 0.003;
+      } else if(OrderSP[SP[c]]=="Araucariales") {
+        Gwmin[c] = 0.003;
+      } else if(OrderSP[SP[c]]=="Ericales") {
+        Gwmin[c] = 0.004;
+      } else if(OrderSP[SP[c]]=="Fagales") {
+        Gwmin[c] = 0.0045;
+      } else if(OrderSP[SP[c]]=="Rosales") {
+        Gwmin[c] = 0.0045;
+      } else if(OrderSP[SP[c]]=="Cupressales") {
+        Gwmin[c] = 0.0045;
+      } else if(OrderSP[SP[c]]=="Lamiales") {
+        Gwmin[c] = 0.0055;
+      } else if(OrderSP[SP[c]]=="Fabales") {
+        Gwmin[c] = 0.0065;
+      } else if(OrderSP[SP[c]]=="Myrtales") {
+        Gwmin[c] = 0.0075;
+      } else if(OrderSP[SP[c]]=="Poales") {
+        Gwmin[c] = 0.0110;
+      } else {
+        Gwmin[c] = 0.0049;
+      }
+    }
     //Mencuccini M (2003) The ecological significance of long-distance water transport : short-term regulation , long-term acclimation and the hydraulic costs of stature across plant life forms. Plant Cell Environ 26:163–182
     Gwmax[c] = GwmaxSP[SP[c]];
     if(NumericVector::is_na(Gwmax[c])) Gwmax[c] = 0.12115*pow(VCleaf_kmax[c], 0.633);
