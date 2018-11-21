@@ -86,7 +86,7 @@ spwb.ldrOptimization<-function(x, soil, meteo, psi_crit, opt_mode = 1,
     x_1sp$paramsTransp <- x_1sp$paramsTransp[sp,] 
     x_1sp$Transpiration <- x_1sp$Transpiration[sp] 
     x_1sp$Photosynthesis <- x_1sp$Photosynthesis[sp] 
-    x_1sp$ProportionCavitated <- x_1sp$ProportionCavitated[sp] 
+    x_1sp$PLC <- x_1sp$PLC[sp] 
     x_1sp$control$verbose <- F
     
     pb <- txtProgressBar(max = nrow(cc), style = 3)
@@ -103,11 +103,19 @@ spwb.ldrOptimization<-function(x, soil, meteo, psi_crit, opt_mode = 1,
       s.$dVec <- s.$dVec[layersWithinRZ] # remove the layers not included
       nl <- length(s.$dVec) #new number of layers
       s.$dVec[nl] <- s.$dVec[nl]-dCum[nl]+RZ[j] # adjust the width of the last layer
-      s.$Water_FC[nl] = soil$Water_FC[nl]*(s.$dVec[nl]/soil$dVec[nl]) #Adjust volume of the last layer
+      # s.$Water_FC[nl] = soil$Water_FC[nl]*(s.$dVec[nl]/soil$dVec[nl]) #Adjust volume of the last layer
       # Adjust the other soil parameters to the new number of layers
-      for(k in 1:length(s.)){
-        if(length(s.[[k]]) > 1) s.[[k]] <- s.[[k]][1:nl]
-      }
+      s.[["sand"]] <- s.[["sand"]][1:nl]
+      s.[["clay"]] <- s.[["clay"]][1:nl]
+      s.[["om"]] <- s.[["om"]][1:nl]
+      s.[["rfc"]] <- s.[["rfc"]][1:nl]
+      s.[["macro"]] <- s.[["macro"]][1:nl]
+      s.[["W"]] <- s.[["W"]][1:nl]
+      s.[["Temp"]] <- s.[["Temp"]][1:nl]
+      s.[["VG_alpha"]] <- s.[["VG_alpha"]][1:nl]
+      s.[["VG_theta_res"]] <- s.[["VG_theta_res"]][1:nl]
+      s.[["VG_theta_sat"]] <- s.[["VG_theta_sat"]][1:nl]
+      s.[["usda_Type"]] <- s.[["usda_Type"]][1:nl]
       
       V[,i,j] <- 0
       x_1sp$below$V <- root.ldrDistribution(Z50 = Z50[i,j], Z95 = RZ[j], d=s.$dVec)
@@ -127,7 +135,7 @@ spwb.ldrOptimization<-function(x, soil, meteo, psi_crit, opt_mode = 1,
       PsiMin[sp,i,j] <- mean(aggregate(spwb$PlantPsi[op_days], 
                                        by = list(years[op_days]),
                                        FUN = function(x) min(ma(x)))$x)
-      E[sp,i,j] <- mean(spwb$PlantTranspiration[op_days])
+      E[sp,i,j] <- mean(spwb$PlantTranspiration[op_days], na.rm=T)
       setTxtProgressBar(pb, row)
     }
     cat("\n")

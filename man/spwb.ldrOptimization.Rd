@@ -25,7 +25,12 @@ spwb.ldrOptimization(x, soil, meteo, psi_crit, opt_mode = 1, RZmin = 301, RZmax 
     }
   }
   \item{psi_crit}{A numerical vector of length iqual to the number of species in the plot containing the species values of water potential inducing hydraulic failure (in MPa). Use \code{NA} values to skip optimization for particular plant cohorts.}
-  \item{opt_mode}{Optimization mode (\code{1} maximizes transpiration along the line of stress equal to \code{psi_crit}, \code{2} maximizes transpiration, subject to root construction constrains, among combinations with allowable stress).}
+  \item{opt_mode}{Optimization mode:
+    \itemize{
+       \item{\code{1} maximizes transpiration along the line of stress equal to \code{psi_crit} (Cabon et al. 2018).}
+       \item{\code{2} maximizes transpiration, subject to root construction constrains, among combinations with  stress according to \code{psi_crit}).}
+    }
+  }
   \item{RZmin}{The minimum value of RZ (the rooting depth) to be explored (in mm)}
   \item{RZmax}{The maximum value of RZ (the rooting depth) to be explored (in mm)}
   \item{V1min}{The minimum value of V1 (the root proportion in the first soil layer) to be explored}
@@ -46,7 +51,7 @@ If \code{explore_out = FALSE} returns a data frame with containing the species i
 \references{
 Brodribb, T.J., Bowman, D.J.M.S., Nichols, S., Delzon, S., Burlett, R., 2010. Xylem function and growth rate interact to determine recovery rates after exposure to extreme water deficit. New Phytol. 188, 533–542. doi:10.1111/j.1469-8137.2010.03393.x
 
-Cabon, A., \enc{Martínez-Vilalta}{Martinez-Vilalta}, J., Poyatos, R., \enc{Martínez de Aragón}{Martinez de Aragon}, J., De \enc{Cáceres}{Caceres}, M., Applying the eco-hydrological equilibrium hypothesis to estimate root ditribution in water-limited forests. Under review in Agric. For. Meteorol.
+Cabon, A., \enc{Martínez-Vilalta}{Martinez-Vilalta}, J., Poyatos, R., \enc{Martínez de Aragón}{Martinez de Aragon}, J., De \enc{Cáceres}{Caceres}, M. (2018) Applying the eco-hydrological equilibrium hypothesis to estimate root ditribution in water-limited forests. Ecohydrology 11: e2015.
 
 Eagleson, P.S., 1982. Ecological optimality in water-limited natural soil-vegetation systems: 1. Theory and hypothesis. Water Resour. Res. 18, 325–340. doi:10.1029/WR018i002p00325
 
@@ -84,7 +89,7 @@ control = defaultControl()
 x = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 
 #Run optimization
-spwb.ldrOptimization(x = x, soil = examplesoil, meteo = examplemeteo, psi_crit = c(-2,-3,-4,-4))
+spwb.ldrOptimization(x = x, soil = examplesoil, meteo = examplemeteo, psi_crit = c(-2,-3,-4), elevation = 100)
 }
 
 }
