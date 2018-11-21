@@ -39,6 +39,7 @@ DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams) {
   for(int c=0;c<numCohorts;c++){
     leafwidth[c] = leafwidthSP[SP[c]];
     Al2As[c] = Al2AsSP[SP[c]];
+    if(NumericVector::is_na(Al2As[c])) Al2As[c] = 2500.0; // = 4 cm2·m-2
     SLA[c] = SLASP[SP[c]];
     WoodDensity[c] = WoodDensitySP[SP[c]];
     r635[c] = r635SP[SP[c]];
