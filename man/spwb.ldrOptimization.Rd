@@ -4,7 +4,7 @@
 
 \title{Optimization of root distribution}
 
-\description{The function \code{spwb.ldrOptimization} optimizes the species root distribution within \code{spwb}, given the arguments \code{x}, \code{meteo}, \code{soil} and \code{psi_crit}. The optimization is based on the eco-hydrological equilibrium hypothesis (Eagleson, 1982), which is formulated here as the root distribution for which plant transpiration is maximized while the plant water potential is close to the species-defined critical value \code{psi_crit} (Cabon et al., under review). Returns the optimized root distribution for each species, expressed as parameters of the function \code{root.ldrDistribution}.}
+\description{The function \code{spwb.ldrOptimization} optimizes the species root distribution within \code{spwb}, given the arguments \code{x}, \code{meteo}, \code{soil} and \code{psi_crit}. The optimization is based on the eco-hydrological equilibrium hypothesis (Eagleson, 1982), which is formulated here as the root distribution for which plant transpiration is maximized while the plant water potential is close to the species-defined critical value \code{psi_crit} (Cabon et al.,2018). Returns the optimized root distribution for each species, expressed as parameters of the function \code{root.ldrDistribution}.}
 
 \usage{
 spwb.ldrOptimization(x, soil, meteo, psi_crit, opt_mode = 1, RZmin = 301, RZmax = 4000, 
