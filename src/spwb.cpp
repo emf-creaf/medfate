@@ -700,270 +700,274 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
     NumericVector absLWR_SH = abs_LWR_SH_list[n];
     
     for(int c=0;c<numCohorts;c++) { //Plant cohort loop
-      SWR_SL(c,n) = absSWR_SL[c];
-      SWR_SH(c,n) = absSWR_SH[c];
-      LWR_SL(c,n) = absLWR_SL[c];
-      LWR_SH(c,n) = absLWR_SH[c];
       
-      
-      //Constant properties through time steps
-      NumericVector Vmax298layer(nz), Jmax298layer(nz);
-      NumericVector SLarealayer(nz), SHarealayer(nz);
-      NumericVector QSH(nz), QSL(nz), absRadSL(nz), absRadSH(nz);
-      double sn =0.0;
-      for(int i=(nz-1);i>=0.0;i--) {
-        //Effect of nitrogen concentration decay through the canopy
-        double fn = exp(-0.713*(sn+LAIme(i,c)/2.0)/sum(LAIme(_,c)));
-        sn+=LAIme(i,c);
-        SLarealayer[i] = LAIme(i,c)*fsunlit[i];
-        SHarealayer[i] = LAIme(i,c)*(1.0-fsunlit[i]);
-        Vmax298layer[i] = Vmax298[c]*fn;
-        Jmax298layer[i] = Jmax298[c]*fn;
-      }
-      double Vmax298SL= 0.0,Vmax298SH= 0.0,Jmax298SL= 0.0,Jmax298SH= 0.0;
-      LAI_SH(c,n) = 0.0; 
-      LAI_SL(c,n) = 0.0;
-      for(int i=0;i<nz;i++) {
-        LAI_SL(c,n) +=SLarealayer[i];
-        LAI_SH(c,n) +=SHarealayer[i];
-        Vmax298SL +=Vmax298layer[i]*LAIme(i,c)*fsunlit[i];
-        Jmax298SL +=Jmax298layer[i]*LAIme(i,c)*fsunlit[i];
-        Vmax298SH +=Vmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
-        Jmax298SH +=Jmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
-      }
-      
-      NumericVector PLCStemPrev = PLCstemMAT(c,_);
-      NumericVector RWCStemPrev = RWCsstemMAT(c,_);
-      NumericVector psiStemPrev = psiStemMAT(c,_);
-      double psiLeafPrev = psiLeafVEC[c];
-      double rwcsleafPrev = RWCsleafVEC[c];
-
-      if(nlayerscon[c]>0) {//If the plant is connected to at least one layer build 
-
-        List sFunction;
-        // Rcout<<c<<" E "<<EinstPrev<<" PR "<< psiRootPrev<<" PL "<<psiLeafPrev<< " PS "<<psiStemPrev[0]<< " "<<rwcsleafPrev<< " "<<RWCStemPrev[0]<<"\n";
-        NumericVector Erootcrown;
-        NumericVector psiRoot;
-        NumericMatrix ElayersMat;
-        NumericVector fittedE;
-        NumericVector psiLeaf;
-        NumericMatrix newPsiStem;
+      if(LAIphe[c]>0.0) { //Process transpiration and photosynthesis only if there are some leaves
+        SWR_SL(c,n) = absSWR_SL[c];
+        SWR_SH(c,n) = absSWR_SH[c];
+        LWR_SL(c,n) = absLWR_SL[c];
+        LWR_SH(c,n) = absLWR_SH[c];
         
-        if(!capacitance) {
-          sFunction = supply[c];
-          Erootcrown = sFunction["E"];
-          psiRoot = sFunction["psiRoot"];
-          psiLeaf = sFunction["psiLeaf"];
-          newPsiStem = Rcpp::as<Rcpp::NumericMatrix>(sFunction["psiStem"]);
-          ElayersMat = Rcpp::as<Rcpp::NumericMatrix>(sFunction["ERhizo"]);
-          fittedE = sFunction["E"];
-        } else {
-          List RSFunction = supply[c];
-          Erootcrown = RSFunction["E"];
-          psiRoot = RSFunction["psiRoot"];
-          ElayersMat = Rcpp::as<Rcpp::NumericMatrix>(RSFunction["ERhizo"]);
-          sFunction = supplyFunctionAbovegroundCapacitance(Erootcrown, psiRoot,
-                                                   psiStemPrev, PLCStemPrev, 
-                                                   psiLeafPrev, 
-                                                   VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
-                                                   VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
-                                                   Vsapwood[c], StemAF[c], StemPI0[c], StemEPS[c],
-                                                   Vleaf[c], LeafAF[c], LeafPI0[c], LeafEPS[c],
-                                                   tstep);
-          fittedE = sFunction["E"];
-          psiLeaf = sFunction["psiLeaf"];
-          newPsiStem = Rcpp::as<Rcpp::NumericMatrix>(sFunction["psiStem"]);
+        
+        //Constant properties through time steps
+        NumericVector Vmax298layer(nz), Jmax298layer(nz);
+        NumericVector SLarealayer(nz), SHarealayer(nz);
+        NumericVector QSH(nz), QSL(nz), absRadSL(nz), absRadSH(nz);
+        double sn =0.0;
+        for(int i=(nz-1);i>=0.0;i--) {
+          //Effect of nitrogen concentration decay through the canopy
+          double fn = exp(-0.713*(sn+LAIme(i,c)/2.0)/sum(LAIme(_,c)));
+          sn+=LAIme(i,c);
+          SLarealayer[i] = LAIme(i,c)*fsunlit[i];
+          SHarealayer[i] = LAIme(i,c)*(1.0-fsunlit[i]);
+          Vmax298layer[i] = Vmax298[c]*fn;
+          Jmax298layer[i] = Jmax298[c]*fn;
         }
- 
-
-        if(fittedE.size()>0) {
-          //Photosynthesis function for sunlit and shade leaves
-          DataFrame photoSunlit = leafPhotosynthesisFunction(fittedE, Catm, Patm,Tcan[n], vpatm, 
-                                                        zWind[c], 
-                                                        absSWR_SL[c] + LWR_emmcan*LAI_SL(c,n), 
-                                                        irradianceToPhotonFlux(absPAR_SL[c]), 
-                                                        Vmax298SL, 
-                                                        Jmax298SL, 
-                                                        Gwmin[c], Gwmax[c], leafWidth[c], LAI_SL(c,n));
-          DataFrame photoShade = leafPhotosynthesisFunction(fittedE, Catm, Patm,Tcan[n], vpatm, 
-                                                       zWind[c], 
-                                                       absSWR_SH[c] + LWR_emmcan*LAI_SH(c,n), 
-                                                       irradianceToPhotonFlux(absPAR_SH[c]),
-                                                       Vmax298SH, 
-                                                       Jmax298SH, 
-                                                       Gwmin[c], Gwmax[c], leafWidth[c], LAI_SH(c,n));
+        double Vmax298SL= 0.0,Vmax298SH= 0.0,Jmax298SL= 0.0,Jmax298SH= 0.0;
+        LAI_SH(c,n) = 0.0; 
+        LAI_SL(c,n) = 0.0;
+        for(int i=0;i<nz;i++) {
+          LAI_SL(c,n) +=SLarealayer[i];
+          LAI_SH(c,n) +=SHarealayer[i];
+          Vmax298SL +=Vmax298layer[i]*LAIme(i,c)*fsunlit[i];
+          Jmax298SL +=Jmax298layer[i]*LAIme(i,c)*fsunlit[i];
+          Vmax298SH +=Vmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
+          Jmax298SH +=Jmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
+        }
+        
+        NumericVector PLCStemPrev = PLCstemMAT(c,_);
+        NumericVector RWCStemPrev = RWCsstemMAT(c,_);
+        NumericVector psiStemPrev = psiStemMAT(c,_);
+        double psiLeafPrev = psiLeafVEC[c];
+        double rwcsleafPrev = RWCsleafVEC[c];
+        
+        if(nlayerscon[c]>0) {//If the plant is connected to at least one layer build 
           
-          NumericVector AnSunlit = photoSunlit["NetPhotosynthesis"];
-          NumericVector AnShade = photoShade["NetPhotosynthesis"];
-          NumericVector GwSunlit = photoSunlit["WaterVaporConductance"];
-          NumericVector GwShade = photoShade["WaterVaporConductance"];
-          NumericVector VPDSunlit = photoSunlit["LeafVPD"];
-          NumericVector VPDShade = photoShade["LeafVPD"];
-          NumericVector TempSunlit = photoSunlit["LeafTemperature"];
-          NumericVector TempShade = photoShade["LeafTemperature"];
+          List sFunction;
+          // Rcout<<c<<" E "<<EinstPrev<<" PR "<< psiRootPrev<<" PL "<<psiLeafPrev<< " PS "<<psiStemPrev[0]<< " "<<rwcsleafPrev<< " "<<RWCStemPrev[0]<<"\n";
+          NumericVector Erootcrown;
+          NumericVector psiRoot;
+          NumericMatrix ElayersMat;
+          NumericVector fittedE;
+          NumericVector psiLeaf;
+          NumericMatrix newPsiStem;
           
-          //Profit maximization
-          List PMSunlit = profitMaximization(sFunction, photoSunlit,  hydraulicCostFunction, Gwmin[c], Gwmax[c], VCstem_kmax[c]);
-          List PMShade = profitMaximization(sFunction, photoShade,  hydraulicCostFunction, Gwmin[c],Gwmax[c], VCstem_kmax[c]);
-          int iPMSunlit = PMSunlit["iMaxProfit"];
-          int iPMShade = PMShade["iMaxProfit"];
+          if(!capacitance) {
+            sFunction = supply[c];
+            Erootcrown = sFunction["E"];
+            psiRoot = sFunction["psiRoot"];
+            psiLeaf = sFunction["psiLeaf"];
+            newPsiStem = Rcpp::as<Rcpp::NumericMatrix>(sFunction["psiStem"]);
+            ElayersMat = Rcpp::as<Rcpp::NumericMatrix>(sFunction["ERhizo"]);
+            fittedE = sFunction["E"];
+          } else {
+            List RSFunction = supply[c];
+            Erootcrown = RSFunction["E"];
+            psiRoot = RSFunction["psiRoot"];
+            ElayersMat = Rcpp::as<Rcpp::NumericMatrix>(RSFunction["ERhizo"]);
+            sFunction = supplyFunctionAbovegroundCapacitance(Erootcrown, psiRoot,
+                                                             psiStemPrev, PLCStemPrev, 
+                                                             psiLeafPrev, 
+                                                             VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
+                                                                                                  VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
+                                                                                                                                       Vsapwood[c], StemAF[c], StemPI0[c], StemEPS[c],
+                                                                                                                                                                                  Vleaf[c], LeafAF[c], LeafPI0[c], LeafEPS[c],
+                                                                                                                                                                                                                          tstep);
+            fittedE = sFunction["E"];
+            psiLeaf = sFunction["psiLeaf"];
+            newPsiStem = Rcpp::as<Rcpp::NumericMatrix>(sFunction["psiStem"]);
+          }
+          
+          
+          if(fittedE.size()>0) {
+            //Photosynthesis function for sunlit and shade leaves
+            DataFrame photoSunlit = leafPhotosynthesisFunction(fittedE, Catm, Patm,Tcan[n], vpatm, 
+                                                               zWind[c], 
+                                                                    absSWR_SL[c] + LWR_emmcan*LAI_SL(c,n), 
+                                                                    irradianceToPhotonFlux(absPAR_SL[c]), 
+                                                                    Vmax298SL, 
+                                                                    Jmax298SL, 
+                                                                    Gwmin[c], Gwmax[c], leafWidth[c], LAI_SL(c,n));
+            DataFrame photoShade = leafPhotosynthesisFunction(fittedE, Catm, Patm,Tcan[n], vpatm, 
+                                                              zWind[c], 
+                                                                   absSWR_SH[c] + LWR_emmcan*LAI_SH(c,n), 
+                                                                   irradianceToPhotonFlux(absPAR_SH[c]),
+                                                                   Vmax298SH, 
+                                                                   Jmax298SH, 
+                                                                   Gwmin[c], Gwmax[c], leafWidth[c], LAI_SH(c,n));
+            
+            NumericVector AnSunlit = photoSunlit["NetPhotosynthesis"];
+            NumericVector AnShade = photoShade["NetPhotosynthesis"];
+            NumericVector GwSunlit = photoSunlit["WaterVaporConductance"];
+            NumericVector GwShade = photoShade["WaterVaporConductance"];
+            NumericVector VPDSunlit = photoSunlit["LeafVPD"];
+            NumericVector VPDShade = photoShade["LeafVPD"];
+            NumericVector TempSunlit = photoSunlit["LeafTemperature"];
+            NumericVector TempShade = photoShade["LeafTemperature"];
+            
+            //Profit maximization
+            List PMSunlit = profitMaximization(sFunction, photoSunlit,  hydraulicCostFunction, Gwmin[c], Gwmax[c], VCstem_kmax[c]);
+            List PMShade = profitMaximization(sFunction, photoShade,  hydraulicCostFunction, Gwmin[c],Gwmax[c], VCstem_kmax[c]);
+            int iPMSunlit = PMSunlit["iMaxProfit"];
+            int iPMShade = PMShade["iMaxProfit"];
+            
+            //Get leaf status
+            GW_SH(c,n)= GwShade[iPMShade];
+            GW_SL(c,n)= GwSunlit[iPMSunlit];
+            VPD_SH(c,n)= VPDShade[iPMShade];
+            VPD_SL(c,n)= VPDSunlit[iPMSunlit];
+            Temp_SH(c,n)= TempShade[iPMShade];
+            Temp_SL(c,n)= TempSunlit[iPMSunlit];
+            
+            //Scale photosynthesis
+            Aninst(c,n) = AnSunlit[iPMSunlit]*LAI_SL(c,n) + AnShade[iPMShade]*LAI_SH(c,n);
+            photosynthesis[c] +=pow(10,-6)*12.01017*Aninst(c,n)*tstep; 
+            
+            //Average flow from sunlit and shade leaves
+            double Eaverage = (fittedE[iPMSunlit]*LAI_SL(c,n) + fittedE[iPMShade]*LAI_SH(c,n))/(LAI_SL(c,n) + LAI_SH(c,n));
+            
+            
+            //Find iPM for  flow corresponding to the  average flow
+            double absDiff = 99999999.9;
+            int iPM = -1;
+            for(int k=0;k<fittedE.size();k++){ //Only check up to the size of fittedE
+              double adk = std::abs(fittedE[k]-Eaverage);
+              if(adk<absDiff) {
+                absDiff = adk;
+                iPM = k;
+              }
+            }
+            
+            //Calculate transpiration with capacitance effects
+            if(iPM==-1) {
+              Rcout<<"\n iPM -1! Eaverage="<< Eaverage << " fittedE.size= "<< fittedE.size()<<" iPMSunlit="<< iPMSunlit<< " fittedE[iPMSunlit]="<<fittedE[iPMSunlit]<<" iPMShade="<<iPMShade<<" fittedE[iPMShade]="<<fittedE[iPMShade]<<"\n";
+              stop("");
+            }
+            
+            //Scale water extracted from soil to cohort level
+            NumericVector Esoilcn(nlayerscon[c],0.0);
+            for(int lc=0;lc<nlayerscon[c];lc++) {
+              Esoilcn[lc] = ElayersMat(iPM,lc)*0.001*0.01802*LAIphe[c]*tstep; //Scale from flow to water volume in the time step
+            }
+            
+            //Scale from instantaneous flow to water volume in the time step
+            Einst(c,n) = fittedE[iPM]*0.001*0.01802*LAIphe[c]*tstep; 
+            
+            //Balance between extraction and 
+            PWBinst(c,n) = sum(Esoilcn) - Einst(c,n);
+            
+            //Add to daily plant cohort transpiration
+            Eplant[c] +=Einst(c,n);
+            
+            
+            //Update symplastic storage and PLC
+            psiRootVEC[c] = psiRoot[iPM]; 
+            EinstVEC[c] = fittedE[iPM];
+            PLC(c,n) = NA_REAL;
+            RWCsteminst(c,n) = NA_REAL;
+            psiLeafVEC[c] = psiLeaf[iPM];
+            RWCsleafVEC[c] = symplasticRelativeWaterContent(psiLeafVEC[c], LeafPI0[c], LeafEPS[c]);
+            psiStemMAT(c,_) = newPsiStem(iPM,_);
+            for(int i=0;i<nStemSegments;i++) {
+              PLCstemMAT(c,i) = std::max(PLCstemMAT(c,i), 1.0 - apoplasticRelativeWaterContent(psiStemMAT(c,i), VCstem_c[c], VCstem_d[c]));
+              RWCsstemMAT(c,i) = symplasticRelativeWaterContent(psiStemMAT(c,i), StemPI0[c], StemEPS[c]);
+            }
+            
+            
+            //Copy transpiration from connected layers to transpiration from soil layers
+            int cnt = 0;
+            for(int l=0;l<nlayers;l++) {
+              if(layerConnected(c,l)) {
+                SoilWaterExtract(c,l) += Esoilcn[cnt]; //Add to cummulative transpiration from layers
+                cnt++;
+              } 
+            }
+          } else {
+            if(verbose) Rcout<<"NS!";
+          }
+        } else { // If not connected to any soil layer
+          
+          //Sunlit photosynthesis
+          double absRadSL = absSWR_SL[c] + LWR_emmcan*LAI_SL(c,n);
+          double QSL = irradianceToPhotonFlux(absPAR_SL[c]);
+          //Flow (cuticular conductance): iterative procedure to find flow, VPD and leaf temperature given Gwmin
+          double ESLbk = std::max(0.0,1000.0*(Gwmin[c]*(meteoland::utils_saturationVP(std::max(0.0,Tcan[n]))-vpatm))/Patm);
+          double leafTempSL = leafTemperature(absRadSL/ LAI_SL(c,n), Tcan[n], zWind[c], ESLbk, leafWidth[c]);
+          double leafVPDSL = (meteoland::utils_saturationVP(std::max(0.0,leafTempSL))-vpatm);
+          double ESL = std::max(0.0,1000.0*(Gwmin[c]*leafVPDSL)/Patm);
+          while(std::abs(ESL-ESLbk)> 0.000001) {
+            leafTempSL = leafTemperature(absRadSL/ LAI_SL(c,n), Tcan[n], zWind[c], ESL, leafWidth[c]);
+            leafVPDSL = meteoland::utils_saturationVP(std::max(0.0,leafTempSL))-vpatm;
+            ESLbk = ESL;
+            ESL = std::max(0.0,1000.0*(Gwmin[c]*leafVPDSL)/Patm);
+          }
+          double AgSL = leafphotosynthesis(QSL, Catm, Gwmin[c]/1.6, std::max(0.0,leafTempSL), Vmax298SL, Jmax298SL);
+          double AnSL = AgSL - 0.015*VmaxTemp(Vmax298SL, leafTempSL);
+          
+          //Shade photosynthesis
+          double absRadSH = absSWR_SH[c] + LWR_emmcan*LAI_SH(c,n);
+          double QSH = irradianceToPhotonFlux(absPAR_SH[c]);
+          //Flow (cuticular conductance): iterative procedure to find flow, VPD and leaf temperature given Gwmin
+          double ESHbk = std::max(0.0,1000.0*(Gwmin[c]*(meteoland::utils_saturationVP(std::max(0.0,Tcan[n]))-vpatm))/Patm);
+          double leafTempSH = leafTemperature(absRadSH/ LAI_SH(c,n), Tcan[n], zWind[c], ESHbk, leafWidth[c]);
+          double leafVPDSH = (meteoland::utils_saturationVP(std::max(0.0,leafTempSH))-vpatm);
+          double ESH = std::max(0.0,1000.0*(Gwmin[c]*leafVPDSH)/Patm);
+          while(std::abs(ESH-ESHbk)> 0.000001) {
+            leafTempSH = leafTemperature(absRadSH/ LAI_SH(c,n), Tcan[n], zWind[c], ESH, leafWidth[c]);
+            leafVPDSH = meteoland::utils_saturationVP(std::max(0.0,leafTempSH))-vpatm;
+            ESHbk = ESH;
+            ESH = std::max(0.0,1000.0*(Gwmin[c]*leafVPDSH)/Patm);
+          }
+          double AgSH = leafphotosynthesis(QSH, Catm, Gwmin[c]/1.6, std::max(0.0,leafTempSH), Vmax298SH, Jmax298SH);
+          double AnSH = AgSH - 0.015*VmaxTemp(Vmax298SH, leafTempSH);
+          
+          
+          //Average flow
+          double Eaverage = (ESL*LAI_SL(c,n) + ESH*LAI_SH(c,n))/(LAI_SL(c,n) + LAI_SH(c,n));
           
           //Get leaf status
-          GW_SH(c,n)= GwShade[iPMShade];
-          GW_SL(c,n)= GwSunlit[iPMSunlit];
-          VPD_SH(c,n)= VPDShade[iPMShade];
-          VPD_SL(c,n)= VPDSunlit[iPMSunlit];
-          Temp_SH(c,n)= TempShade[iPMShade];
-          Temp_SL(c,n)= TempSunlit[iPMSunlit];
+          GW_SH(c,n)= Gwmin[c];
+          GW_SL(c,n)= Gwmin[c];
+          VPD_SH(c,n)= leafVPDSH;
+          VPD_SL(c,n)= leafVPDSL;
+          Temp_SH(c,n)= leafTempSH;
+          Temp_SL(c,n)= leafVPDSL;
           
           //Scale photosynthesis
-          Aninst(c,n) = AnSunlit[iPMSunlit]*LAI_SL(c,n) + AnShade[iPMShade]*LAI_SH(c,n);
+          Aninst(c,n) = AnSL*LAI_SL(c,n) + AnSH*LAI_SH(c,n);
           photosynthesis[c] +=pow(10,-6)*12.01017*Aninst(c,n)*tstep; 
           
-          //Average flow from sunlit and shade leaves
-          double Eaverage = (fittedE[iPMSunlit]*LAI_SL(c,n) + fittedE[iPMShade]*LAI_SH(c,n))/(LAI_SL(c,n) + LAI_SH(c,n));
-
           
-          //Find iPM for  flow corresponding to the  average flow
-          double absDiff = 99999999.9;
-          int iPM = -1;
-          for(int k=0;k<fittedE.size();k++){ //Only check up to the size of fittedE
-            double adk = std::abs(fittedE[k]-Eaverage);
-            if(adk<absDiff) {
-              absDiff = adk;
-              iPM = k;
-            }
-          }
-          
-          //Calculate transpiration with capacitance effects
-          if(iPM==-1) {
-            Rcout<<"\n iPM -1! Eaverage="<< Eaverage << " fittedE.size= "<< fittedE.size()<<" iPMSunlit="<< iPMSunlit<< " fittedE[iPMSunlit]="<<fittedE[iPMSunlit]<<" iPMShade="<<iPMShade<<" fittedE[iPMShade]="<<fittedE[iPMShade]<<"\n";
-            stop("");
-          }
-
-          //Scale water extracted from soil to cohort level
-          NumericVector Esoilcn(nlayerscon[c],0.0);
-          for(int lc=0;lc<nlayerscon[c];lc++) {
-            Esoilcn[lc] = ElayersMat(iPM,lc)*0.001*0.01802*LAIphe[c]*tstep; //Scale from flow to water volume in the time step
-          }
-          
-          //Scale from instantaneous flow to water volume in the time step
-          Einst(c,n) = fittedE[iPM]*0.001*0.01802*LAIphe[c]*tstep; 
-
-          //Balance between extraction and 
-          PWBinst(c,n) = sum(Esoilcn) - Einst(c,n);
+          Einst(c,n) = Eaverage*0.001*0.01802*LAIphe[c]*tstep; //Scale from instantaneous flow to water volume in the time step
           
           //Add to daily plant cohort transpiration
           Eplant[c] +=Einst(c,n);
           
-
+          List sAb = E2psiAbovegroundCapacitanceDisconnected(Eaverage, 
+                                                             psiStemPrev, PLCStemPrev, RWCStemPrev, 
+                                                             psiLeafPrev, rwcsleafPrev,
+                                                             VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
+                                                                                                  VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
+                                                                                                                                       Vsapwood[c], StemAF[c], StemPI0[c], StemEPS[c],
+                                                                                                                                                                                  Vleaf[c], LeafAF[c], LeafPI0[c], LeafEPS[c],
+                                                                                                                                                                                                                          klat, 
+                                                                                                                                                                                                                          tstep);
+          
+          NumericVector newPsiStem = sAb["psiStem"];
+          NumericVector newRWCsympstem = sAb["RWCsympstem"];
+          
           //Update symplastic storage and PLC
-          psiRootVEC[c] = psiRoot[iPM]; 
-          EinstVEC[c] = fittedE[iPM];
-          PLC(c,n) = NA_REAL;
-          RWCsteminst(c,n) = NA_REAL;
-          psiLeafVEC[c] = psiLeaf[iPM];
-          RWCsleafVEC[c] = symplasticRelativeWaterContent(psiLeafVEC[c], LeafPI0[c], LeafEPS[c]);
-          psiStemMAT(c,_) = newPsiStem(iPM,_);
+          psiRootVEC[c] = newPsiStem[0];//Estimate of psiRoot = first stem segment
+          psiLeafVEC[c] = sAb["psiLeaf"];
+          RWCsleafVEC[c] = sAb["RWCsympleaf"];
+          psiStemMAT(c,_) = newPsiStem;
           for(int i=0;i<nStemSegments;i++) {
             PLCstemMAT(c,i) = std::max(PLCstemMAT(c,i), 1.0 - apoplasticRelativeWaterContent(psiStemMAT(c,i), VCstem_c[c], VCstem_d[c]));
-            RWCsstemMAT(c,i) = symplasticRelativeWaterContent(psiStemMAT(c,i), StemPI0[c], StemEPS[c]);
           }
-          
-          
-          //Copy transpiration from connected layers to transpiration from soil layers
-          int cnt = 0;
-          for(int l=0;l<nlayers;l++) {
-            if(layerConnected(c,l)) {
-              SoilWaterExtract(c,l) += Esoilcn[cnt]; //Add to cummulative transpiration from layers
-              cnt++;
-            } 
-          }
-        } else {
-          if(verbose) Rcout<<"NS!";
+          // Rcout<< "PLC "<< PLCstemMAT(c,0)<<"\n";
+          RWCsstemMAT(c,_) = newRWCsympstem;
         }
-      } else { // If not connected to any soil layer
-
-        //Sunlit photosynthesis
-        double absRadSL = absSWR_SL[c] + LWR_emmcan*LAI_SL(c,n);
-        double QSL = irradianceToPhotonFlux(absPAR_SL[c]);
-        //Flow (cuticular conductance): iterative procedure to find flow, VPD and leaf temperature given Gwmin
-        double ESLbk = std::max(0.0,1000.0*(Gwmin[c]*(meteoland::utils_saturationVP(std::max(0.0,Tcan[n]))-vpatm))/Patm);
-        double leafTempSL = leafTemperature(absRadSL/ LAI_SL(c,n), Tcan[n], zWind[c], ESLbk, leafWidth[c]);
-        double leafVPDSL = (meteoland::utils_saturationVP(std::max(0.0,leafTempSL))-vpatm);
-        double ESL = std::max(0.0,1000.0*(Gwmin[c]*leafVPDSL)/Patm);
-        while(std::abs(ESL-ESLbk)> 0.000001) {
-          leafTempSL = leafTemperature(absRadSL/ LAI_SL(c,n), Tcan[n], zWind[c], ESL, leafWidth[c]);
-          leafVPDSL = meteoland::utils_saturationVP(std::max(0.0,leafTempSL))-vpatm;
-          ESLbk = ESL;
-          ESL = std::max(0.0,1000.0*(Gwmin[c]*leafVPDSL)/Patm);
-        }
-        double AgSL = leafphotosynthesis(QSL, Catm, Gwmin[c]/1.6, std::max(0.0,leafTempSL), Vmax298SL, Jmax298SL);
-        double AnSL = AgSL - 0.015*VmaxTemp(Vmax298SL, leafTempSL);
-
-        //Shade photosynthesis
-        double absRadSH = absSWR_SH[c] + LWR_emmcan*LAI_SH(c,n);
-        double QSH = irradianceToPhotonFlux(absPAR_SH[c]);
-        //Flow (cuticular conductance): iterative procedure to find flow, VPD and leaf temperature given Gwmin
-        double ESHbk = std::max(0.0,1000.0*(Gwmin[c]*(meteoland::utils_saturationVP(std::max(0.0,Tcan[n]))-vpatm))/Patm);
-        double leafTempSH = leafTemperature(absRadSH/ LAI_SH(c,n), Tcan[n], zWind[c], ESHbk, leafWidth[c]);
-        double leafVPDSH = (meteoland::utils_saturationVP(std::max(0.0,leafTempSH))-vpatm);
-        double ESH = std::max(0.0,1000.0*(Gwmin[c]*leafVPDSH)/Patm);
-        while(std::abs(ESH-ESHbk)> 0.000001) {
-          leafTempSH = leafTemperature(absRadSH/ LAI_SH(c,n), Tcan[n], zWind[c], ESH, leafWidth[c]);
-          leafVPDSH = meteoland::utils_saturationVP(std::max(0.0,leafTempSH))-vpatm;
-          ESHbk = ESH;
-          ESH = std::max(0.0,1000.0*(Gwmin[c]*leafVPDSH)/Patm);
-        }
-        double AgSH = leafphotosynthesis(QSH, Catm, Gwmin[c]/1.6, std::max(0.0,leafTempSH), Vmax298SH, Jmax298SH);
-        double AnSH = AgSH - 0.015*VmaxTemp(Vmax298SH, leafTempSH);
-        
-
-        //Average flow
-        double Eaverage = (ESL*LAI_SL(c,n) + ESH*LAI_SH(c,n))/(LAI_SL(c,n) + LAI_SH(c,n));
-        
-        //Get leaf status
-        GW_SH(c,n)= Gwmin[c];
-        GW_SL(c,n)= Gwmin[c];
-        VPD_SH(c,n)= leafVPDSH;
-        VPD_SL(c,n)= leafVPDSL;
-        Temp_SH(c,n)= leafTempSH;
-        Temp_SL(c,n)= leafVPDSL;
-        
-        //Scale photosynthesis
-        Aninst(c,n) = AnSL*LAI_SL(c,n) + AnSH*LAI_SH(c,n);
-        photosynthesis[c] +=pow(10,-6)*12.01017*Aninst(c,n)*tstep; 
-        
-
-        Einst(c,n) = Eaverage*0.001*0.01802*LAIphe[c]*tstep; //Scale from instantaneous flow to water volume in the time step
-
-        //Add to daily plant cohort transpiration
-        Eplant[c] +=Einst(c,n);
-        
-        List sAb = E2psiAbovegroundCapacitanceDisconnected(Eaverage, 
-                                                psiStemPrev, PLCStemPrev, RWCStemPrev, 
-                                                psiLeafPrev, rwcsleafPrev,
-                                                VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
-                                                VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
-                                                Vsapwood[c], StemAF[c], StemPI0[c], StemEPS[c],
-                                                Vleaf[c], LeafAF[c], LeafPI0[c], LeafEPS[c],
-                                                klat, 
-                                                tstep);
-      
-         NumericVector newPsiStem = sAb["psiStem"];
-         NumericVector newRWCsympstem = sAb["RWCsympstem"];
-         
-         //Update symplastic storage and PLC
-         psiRootVEC[c] = newPsiStem[0];//Estimate of psiRoot = first stem segment
-         psiLeafVEC[c] = sAb["psiLeaf"];
-         RWCsleafVEC[c] = sAb["RWCsympleaf"];
-         psiStemMAT(c,_) = newPsiStem;
-         for(int i=0;i<nStemSegments;i++) {
-           PLCstemMAT(c,i) = std::max(PLCstemMAT(c,i), 1.0 - apoplasticRelativeWaterContent(psiStemMAT(c,i), VCstem_c[c], VCstem_d[c]));
-         }
-         // Rcout<< "PLC "<< PLCstemMAT(c,0)<<"\n";
-         RWCsstemMAT(c,_) = newRWCsympstem;
       }
+
 
       //Store (for output) instantaneous leaf, stem and root potential, plc and rwc values
       PLC(c,n) = PLCstemMAT(c,nStemSegments-1);
