@@ -150,7 +150,7 @@ DataFrame paramsTranspiration(DataFrame above, NumericMatrix V, List soil, DataF
       // From: Maherali H, Pockman W, Jackson R (2004) Adaptive variation in the vulnerability of woody plants to xylem cavitation. Ecology 85:2184–2199
       if(GroupSP[SP[c]]=="Angiosperm") {
         if(TreeTypeSP[SP[c]]=="Shrub") {
-          Kmax_stemxylem[c] = 1.75; //Angiosperm evergreen shrub
+          Kmax_stemxylem[c] = 1.55; //Angiosperm deciduous shrub
         } else if(TreeTypeSP[SP[c]]=="Deciduous") {
           Kmax_stemxylem[c] = 1.58; //Angiosperm winter-deciduous tree
         } else { 
