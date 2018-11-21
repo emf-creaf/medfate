@@ -27,8 +27,8 @@ spwb.ldrOptimization(x, soil, meteo, psi_crit, opt_mode = 1, RZmin = 301, RZmax 
   \item{psi_crit}{A numerical vector of length iqual to the number of species in the plot containing the species values of water potential inducing hydraulic failure (in MPa). Use \code{NA} values to skip optimization for particular plant cohorts.}
   \item{opt_mode}{Optimization mode:
     \itemize{
-       \item{\code{1} maximizes transpiration along the line of stress equal to \code{psi_crit} (Cabon et al. 2018).}
-       \item{\code{2} maximizes transpiration, subject to root construction constrains, among combinations with  stress according to \code{psi_crit}).}
+       \item{\code{opt_mode = 1} maximizes transpiration along the line of stress equal to \code{psi_crit} (Cabon et al. 2018).}
+       \item{\code{opt_mode = 2} maximizes transpiration, subject to root construction constrains, among combinations with  stress according to \code{psi_crit}).}
     }
   }
   \item{RZmin}{The minimum value of RZ (the rooting depth) to be explored (in mm)}
