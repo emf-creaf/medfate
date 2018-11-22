@@ -327,9 +327,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   double ETol = numericParams["ETol"];
 
   bool capacitance = control["capacitance"];
+  bool cavitationRefill = control["cavitationRefill"];
   double klat = control["klat"];
-  
-  // String canopyMode = Rcpp::as<Rcpp::String>(control["canopyMode"]);
   int ntimesteps = control["ndailysteps"];
   int hydraulicCostFunction = control["hydraulicCostFunction"];
   int nStemSegments = control["nStemSegments"];
@@ -868,7 +867,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
             RWCsleafVEC[c] = symplasticRelativeWaterContent(psiLeafVEC[c], LeafPI0[c], LeafEPS[c]);
             psiStemMAT(c,_) = newPsiStem(iPM,_);
             for(int i=0;i<nStemSegments;i++) {
-              PLCstemMAT(c,i) = std::max(PLCstemMAT(c,i), 1.0 - apoplasticRelativeWaterContent(psiStemMAT(c,i), VCstem_c[c], VCstem_d[c]));
+              if(!cavitationRefill) PLCstemMAT(c,i) = std::max(PLCstemMAT(c,i), 1.0 - apoplasticRelativeWaterContent(psiStemMAT(c,i), VCstem_c[c], VCstem_d[c]));
+              else PLCstemMAT(c,i) = 1.0 - apoplasticRelativeWaterContent(psiStemMAT(c,i), VCstem_c[c], VCstem_d[c]);
               RWCsstemMAT(c,i) = symplasticRelativeWaterContent(psiStemMAT(c,i), StemPI0[c], StemEPS[c]);
             }
             
@@ -961,7 +961,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
           RWCsleafVEC[c] = sAb["RWCsympleaf"];
           psiStemMAT(c,_) = newPsiStem;
           for(int i=0;i<nStemSegments;i++) {
-            PLCstemMAT(c,i) = std::max(PLCstemMAT(c,i), 1.0 - apoplasticRelativeWaterContent(psiStemMAT(c,i), VCstem_c[c], VCstem_d[c]));
+            if(!cavitationRefill) PLCstemMAT(c,i) = std::max(PLCstemMAT(c,i), 1.0 - apoplasticRelativeWaterContent(psiStemMAT(c,i), VCstem_c[c], VCstem_d[c]));
+            else PLCstemMAT(c,i) = 1.0 - apoplasticRelativeWaterContent(psiStemMAT(c,i), VCstem_c[c], VCstem_d[c]);
           }
           // Rcout<< "PLC "<< PLCstemMAT(c,0)<<"\n";
           RWCsstemMAT(c,_) = newRWCsympstem;
