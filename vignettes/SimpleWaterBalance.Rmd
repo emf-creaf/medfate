@@ -27,7 +27,7 @@ Any forest water balance model needs information on **climate**, **vegetation** 
 ### Soils
 
 #### Required soil data
-Simulation models in `medfate` require information on the physical attributes of soil, namely soil depth, texture, bulk density and rock fragment content. Soil information needs to be entered as a data frame with soil layers in rows and physical attributes in columns. The model accepts different layer definitions (from one to five layers). Soil physical attributes can be initialized to default values, for a given number of layers, using function `defaultSoilParams()`:
+Simulation models in `medfate` require information on the physical attributes of soil, namely soil depth, texture, bulk density and rock fragment content. Soil information needs to be entered as a `data frame` with soil layers in rows and physical attributes in columns. The model accepts one to five soil layers with arbitrary widths. Soil physical attributes can be initialized to default values, for a given number of layers, using function `defaultSoilParams()`:
 
 ```{r}
 spar = defaultSoilParams(2)
@@ -42,9 +42,9 @@ The soil input for function `spwb()` is actually an object of class `soil` that 
 examplesoil = soil(spar, VG_PTF = "Toth")
 names(examplesoil)
 ```
-In addition to the physical soil description, this object contains soil parameters needed for soil water balance simulations. For example, `macro` specifies the macroporosity of each layer; `Gsoil` and `Ksoil` are parameters needed to model  infiltration of water into the soil. The meaning of all elements in the soil object can be found in the help page for function `soil()`.
+In addition to the physical soil description, this object contains soil parameters needed for soil water balance simulations. For example, `macro` specifies the macroporosity of each layer; `Gsoil` and `Ksoil` are parameters needed to model the process of water infiltration into the soil. The meaning of all elements in the soil object can be found in the help page for function `soil()`.
 
-The soil object is also used to store the moisture degree of each soil layer. In particular, `W` contains the state variable that represents moisture (i.e. the proportion of moisture relative to field capacity), which is normally initialized to 1 for each layer:
+The soil object is also used to store the moisture degree of each soil layer. In particular, `W` contains the state variable that represents moisture content - the proportion of moisture **relative to field capacity** - which is normally initialized to 1 for each layer:
 ```{r}
 examplesoil$W
 ```
@@ -55,7 +55,7 @@ At any time, one can print the status of the soil object using its `print` funct
 ```{r}
 print(examplesoil, model = "SX")
 ```
-The modelled moisture content of the soil depends on the **water retention curve** used to represent the relationship between soil volumetric water content ($\theta$; %) and soil water potential ($\Psi$; MPa). By default the Saxton equations are used as water retention curve, but the user may choose to follow Van Genuchten - Mualem equations, which will give different values for the same texture:
+The modelled moisture content of the soil depends on the **water retention curve** used to represent the relationship between soil volumetric water content ($\theta$; %) and soil water potential ($\Psi$; MPa). By default the Saxton (`model = "SX"`) equations are used as water retention curve, but the user may choose to follow Van Genuchten - Mualem equations, which will give different values for the same texture:
 ```{r}
 print(examplesoil, model="VG")
 ```
