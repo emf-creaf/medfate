@@ -137,7 +137,7 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   }
   NumericVector CohASWRF = cohortAbsorbedSWRFraction(LAIphe,  LAIdead, H, CR, kPAR);
   NumericVector CohPAR = parcohortC(H, LAIphe, LAIdead, kPAR, CR)/100.0;
-  double LgroundPAR = exp((-1)*s);
+  double LgroundPAR = exp((-1.0)*s);
   double LgroundSWR = 1.0 - std::accumulate(CohASWRF.begin(),CohASWRF.end(),0.0);
   
   //Snow pack dynamics
@@ -447,12 +447,13 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   
   //1. Leaf Phenology: Adjusted leaf area index
   NumericVector Phe(numCohorts);
-  double LAIcell = 0.0, LAIcelldead = 0.0, Cm = 0.0, canopyHeight = 0.0, LAIcellmax = 0.0;
+  double s = 0.0, LAIcell = 0.0, LAIcelldead = 0.0, Cm = 0.0, canopyHeight = 0.0, LAIcellmax = 0.0;
   for(int c=0;c<numCohorts;c++) {
     Phe[c]=LAIphe[c]/LAIlive[c]; //Phenological status
     LAIcell += (LAIphe[c]+LAIdead[c]);
     LAIcelldead += LAIdead[c];
     LAIcellmax += LAIlive[c];
+    s += (kPAR[c]*(LAIphe[c]+LAIdead[c]));
     Cm += (LAIphe[c]+LAIdead[c])*gRainIntercept[c]; //LAI dead also counts on interception
     if(canopyHeight<H[c]) canopyHeight = H[c];
   }
@@ -472,11 +473,11 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   //2. Hydrologic input
   double rain = prec;
   double NetRain = 0.0, Infiltration= 0.0, Runoff= 0.0, DeepDrainage= 0.0;
-  double propCover = 1.0-exp(-1.0*LAIcell);
+  double LgroundPAR = exp((-1.0)*s);
   // double propCoverMax = 1.0-exp(-1.0*LAIcellmax);
   if(rain>0.0) {
     //Interception
-    NetRain = rain - interceptionGashDay(rain,Cm,propCover,er);
+    NetRain = rain - interceptionGashDay(rain,Cm,LgroundPAR,er);
     //Net Runoff and infiltration
     Infiltration = infiltrationDay(NetRain+runon, Water_FC[0]);
     Runoff = (NetRain+runon) - Infiltration;
@@ -1101,7 +1102,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                                  _["LWR_SH"] = LWR_SH, _["LWR_SL"] = LWR_SL);
   NumericVector DB = NumericVector::create(_["Rain"] = rain,_["Snow"] = 0.0,_["NetRain"] = NetRain, _["Runon"] = runon, _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
                                            _["SoilEvaporation"] = sum(EsoilVec), _["PlantExtraction"] = sum(SoilExtractVec), _["Transpiration"] = sum(Eplant),
-                                           _["LAIcell"] = LAIcell, _["LAIcelldead"] = LAIcelldead, _["Cm"] = Cm, _["Lground"] = 1.0 - propCover);
+                                           _["LAIcell"] = LAIcell, _["LAIcelldead"] = LAIcelldead, _["Cm"] = Cm, _["Lground"] = LgroundPAR);
   
   DataFrame SB = DataFrame::create(_["SoilEvaporation"] = EsoilVec, 
                                    _["PlantExtraction"] = SoilExtractVec, _["psi"] = psiVec);
