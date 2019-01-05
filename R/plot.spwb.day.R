@@ -5,6 +5,7 @@ plot.spwb.day<-function(x, type="PlantTranspiration", bySpecies = FALSE, xlab = 
   PlantsInst = x$PlantsInst
   TYPES = c("LeafPsi","RootPsi", "StemPsi",
             "StemPLC","StemRWC", "LeafRWC",
+            "SoilPlantConductance",
             "PlantTranspiration","PlantPhotosynthesis","PlantAbsorbedSWR",
             "LeafTranspiration","LeafPhotosynthesis", "LeafAbsorbedSWR",
             "LeafVPD","LeafStomatalConductance", "LeafTemperature",
@@ -101,6 +102,18 @@ plot.spwb.day<-function(x, type="PlantTranspiration", bySpecies = FALSE, xlab = 
     matplot(timesteps, t(OM), lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", ylab=ylab, xlab=xlab, frame=FALSE, ...)
     legend("bottomright", legend = cohortnames, lty=1:length(cohortnames), 
+           col = 1:length(cohortnames), bty="n")
+  }
+  else if(type=="SoilPlantConductance") {
+    OM = PlantsInst$dEdPinst
+    if(bySpecies) {
+      OM = apply(OM,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      cohortnames = rownames(OM)
+    } 
+    if(is.null(ylab)) ylab = expression(paste("Soil-plant conductance ",(mmol%.%m^{-2}%.%s^{-1})))
+    matplot(timesteps, t(OM), lty=1:length(cohortnames), col = 1:length(cohortnames),
+            lwd=1, type="l", ylab=ylab, xlab=xlab, frame=FALSE, ...)
+    legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
            col = 1:length(cohortnames), bty="n")
   }
   else if(type=="PlantWaterBalance") {

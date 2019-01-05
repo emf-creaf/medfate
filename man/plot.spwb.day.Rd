@@ -20,6 +20,7 @@ Function \code{plot} plots the results of the soil water balance model for one d
     \item{\code{"StemPLC"}:}{(Average) percentage of loss conductance in the stem conduits.}
     \item{\code{"StemRWC"}:}{(Average) relative water content in the stem symplasm.}
     \item{\code{"LeafRWC"}:}{Relative water content in the leaf symplasm.}
+    \item{\code{"SoilPlantConductance"}:}{Overall soil plant conductance (calculated as the derivative of the supply function).}
     \item{\code{"PlantTranspiration"}:}{ Plant cohort transpiration per ground area.}
     \item{\code{"LeafTranspiration"}:}{ Plant cohort transpiration per leaf area.}
     \item{\code{"PlantWaterBalance"}:}{ Difference between water extraction from the soil and transpired water per ground area.}

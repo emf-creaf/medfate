@@ -647,6 +647,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   NumericMatrix K(numCohorts, nlayers);
   NumericVector Eplant(numCohorts);
   NumericMatrix Rninst(numCohorts,ntimesteps);
+  NumericMatrix dEdPinst(numCohorts, ntimesteps);
   NumericMatrix Qinst(numCohorts,ntimesteps);
   NumericMatrix Einst(numCohorts, ntimesteps);
   NumericMatrix Aninst(numCohorts, ntimesteps);
@@ -671,6 +672,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   NumericVector minPsiLeaf(numCohorts,0.0), minPsiStem(numCohorts, 0.0), minPsiRoot(numCohorts,0.0); //Minimum potentials experienced
   NumericMatrix PLC(numCohorts, ntimesteps);
   NumericVector PLCm(numCohorts), RWCsm(numCohorts), RWClm(numCohorts);
+  NumericVector dEdPm(numCohorts);
   
   for(int c=0;c<numCohorts;c++) {
     photosynthesis[c] = 0.0;
@@ -747,7 +749,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
           NumericVector Erootcrown;
           NumericVector psiRoot;
           NumericMatrix ElayersMat;
-          NumericVector fittedE;
+          NumericVector fittedE, dEdP;
           NumericVector psiLeaf;
           NumericMatrix newPsiStem;
           
@@ -759,6 +761,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
             newPsiStem = Rcpp::as<Rcpp::NumericMatrix>(sFunction["psiStem"]);
             ElayersMat = Rcpp::as<Rcpp::NumericMatrix>(sFunction["ERhizo"]);
             fittedE = sFunction["E"];
+            dEdP = sFunction["dEdP"];
           } else {
             List RSFunction = supply[c];
             Erootcrown = RSFunction["E"];
@@ -773,6 +776,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                                                                                                                                                                                   Vleaf[c], LeafAF[c], LeafPI0[c], LeafEPS[c],
                                                                                                                                                                                                                           tstep);
             fittedE = sFunction["E"];
+            dEdP = sFunction["dEdP"];
             psiLeaf = sFunction["psiLeaf"];
             newPsiStem = Rcpp::as<Rcpp::NumericMatrix>(sFunction["psiStem"]);
           }
@@ -851,6 +855,9 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
             
             //Scale from instantaneous flow to water volume in the time step
             Einst(c,n) = fittedE[iPM]*0.001*0.01802*LAIphe[c]*tstep; 
+            
+            //Store instantaneous total conductance
+            dEdPinst(c,n) = dEdP[iPM];
             
             //Balance between extraction and 
             PWBinst(c,n) = sum(Esoilcn) - Einst(c,n);
@@ -940,6 +947,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
           
           Einst(c,n) = Eaverage*0.001*0.01802*LAIphe[c]*tstep; //Scale from instantaneous flow to water volume in the time step
           
+          
           //Add to daily plant cohort transpiration
           Eplant[c] +=Einst(c,n);
           
@@ -955,6 +963,9 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
           
           NumericVector newPsiStem = sAb["psiStem"];
           NumericVector newRWCsympstem = sAb["RWCsympstem"];
+          
+          //As it is disconnected, total conductance is equal to leaf hydraulic conductance
+          dEdPinst(c,n) = sAb["kleaf"];
           
           //Update symplastic storage and PLC
           psiRootVEC[c] = newPsiStem[0];//Estimate of psiRoot = first stem segment
@@ -1046,8 +1057,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
     PLCm[c] = sum(PLC(c,_))/((double)PLC.ncol());
     RWCsm[c] = sum(RWCsteminst(c,_))/((double)RWCsteminst.ncol());
     RWClm[c] = sum(RWCleafinst(c,_))/((double)RWCleafinst.ncol());
+    dEdPm[c] = sum(dEdPinst(c,_))/((double)dEdPinst.ncol());  
   }
-  
   
   //5. Soil evaporation
   double Rnground = 0.0;
@@ -1108,6 +1119,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                                    _["PlantExtraction"] = SoilExtractVec, _["psi"] = psiVec);
   
   Einst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  dEdPinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   PsiLeafinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   PsiSteminst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   PsiRootinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
@@ -1119,6 +1131,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   List PlantsInst = List::create(
                                  _["LAIsunlit"] = LAI_SL, _["LAIshade"] = LAI_SH, 
                                  _["AbsRad"] = AbsRadinst, _["E"]=Einst, _["An"]=Aninst,
+                                 _["dEdPinst"] = dEdPinst,
                                  _["GWsunlit"] = GW_SL, _["GWshade"] = GW_SH,
                                  _["VPDsunlit"] = VPD_SL, _["VPDshade"] = VPD_SH,
                                  _["Tempsunlit"] = Temp_SL, _["Tempshade"] = Temp_SH,
@@ -1135,6 +1148,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                              _["LeafPsi"] = minPsiLeaf, 
                              _["StemPsi"] = minPsiStem, 
                              _["RootPsi"] = minPsiRoot, 
+                             _["dEdP"] = dEdPm,//Average daily soilplant conductance
                              _["DDS"] = PLCm, //Daily drought stress is the average day PLC
                              _["RWCstem"] = RWCsm,
                              _["RWCleaf"] = RWClm);
@@ -1694,6 +1708,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   
   //Plant output variables
   NumericMatrix PlantPsi(numDays, numCohorts);
+  NumericMatrix dEdP(numDays, numCohorts);
   NumericMatrix LeafPsi(numDays, numCohorts);
   NumericMatrix StemPsi(numDays, numCohorts);
   NumericMatrix RootPsi(numDays, numCohorts);
@@ -1755,7 +1770,6 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
         List Plants = Rcpp::as<Rcpp::List>(s["Plants"]);
         List PlantsInst = Rcpp::as<Rcpp::List>(s["PlantsInst"]);
         List AbsRadinst = Rcpp::as<Rcpp::List>(PlantsInst["AbsRad"]);
-        
         
         NumericMatrix SWR_SL = Rcpp::as<Rcpp::NumericMatrix>(AbsRadinst["SWR_SL"]);
         NumericMatrix SWR_SH = Rcpp::as<Rcpp::NumericMatrix>(AbsRadinst["SWR_SH"]);
@@ -1831,6 +1845,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
         LeafPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["LeafPsi"]);
         RootPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["RootPsi"]); 
         StemPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["StemPsi"]); 
+        dEdP(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["dEdP"]); 
       } else {
         PlantPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["psi"]);
       }
@@ -1907,6 +1922,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   PlantRWCstem.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   PlantRWCleaf.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   PlantPsi.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
+  dEdP.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   LeafPsi.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   StemPsi.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   RootPsi.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
@@ -1949,6 +1965,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
                      Named("PlantAbsorbedLWR") =PlantAbsLWR,
                      Named("PlantTranspiration") = PlantTranspiration,
                      Named("PlantPhotosynthesis") = PlantPhotosynthesis,
+                     Named("dEdP") = dEdP,
                      Named("LeafPsi") = LeafPsi, 
                      Named("StemPsi") = LeafPsi, 
                      Named("RootPsi") = RootPsi, 

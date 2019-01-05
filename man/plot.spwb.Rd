@@ -35,6 +35,7 @@ Function \code{plot} plots the results of the soil water balance model (see \cod
     \item{\code{"WTD"}:}{ Water table depth.}
     \item{\code{"LAI"}:}{ Expanded and dead leaf area index of the whole stand.}
     \item{\code{"PlantLAI"}:}{ Plant cohort leaf area index (expanded leaves).}
+    \item{\code{"SoilPlantConductance"}:}{Average instantaneous overall soil plant conductance (calculated as the derivative of the supply function).}
     \item{\code{"PlantStress"}:}{ Plant cohort average daily drought stress.}
     \item{\code{"PlantPsi"}:}{ Plant cohort water potential (only for \code{transpirationMode = "Simple"}).}
     \item{\code{"LeafPsi"}:}{ Midday leaf water potential (only for \code{transpirationMode = "Complex"}).}
