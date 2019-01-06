@@ -1653,7 +1653,8 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   //Base parameters
   DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
   NumericVector Sgdd = paramsBase["Sgdd"];
-  
+
+
   //Soil input
   NumericVector W = soil["W"];
   int nlayers = W.size();
@@ -1947,10 +1948,10 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
                                      _["Tsoil_mean"] = Tsoil_mean, _["Tsoil_min"] = Tsoil_min, _["Tsoil_max"] = Tsoil_max);
   DEB.attr("row.names") = meteo.attr("row.names") ;
   DT.attr("row.names") = meteo.attr("row.names") ;
+  subdailyRes.attr("names") = meteo.attr("row.names") ;
   List l;
   if(transpirationMode=="Simple") {
-    l = List::create(Named("control") = clone(control),
-                     Named("cohorts") = clone(cohorts),
+    l = List::create(Named("Input") = clone(x),
                      Named("NumSoilLayers") = nlayers,
                      Named("WaterBalance")=DWB, 
                      Named("Soil")=SWB,
@@ -1958,10 +1959,10 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
                      Named("PlantTranspiration") = PlantTranspiration,
                      Named("PlantPhotosynthesis") = PlantPhotosynthesis,
                      Named("PlantPsi") = PlantPsi, 
-                     Named("PlantStress") = PlantStress);
+                     Named("PlantStress") = PlantStress,
+                     Named("subdaily") =  subdailyRes);
   } else {
-    l = List::create(Named("control") = clone(control),
-                     Named("cohorts") = clone(cohorts),
+    l = List::create(Named("Input") = clone(x),
                      Named("NumSoilLayers") = nlayers,
                      Named("WaterBalance")=DWB, 
                      Named("Soil")=SWB,
@@ -1978,11 +1979,8 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
                      Named("RootPsi") = RootPsi, 
                      Named("PlantStress") = PlantStress,
                      Named("PlantRWCstem") = PlantRWCstem,
-                     Named("PlantRWCleaf") = PlantRWCleaf);
-  }
-  if(subdailyResults) {
-    subdailyRes.attr("names") = meteo.attr("row.names") ;
-    l["subdaily"] = subdailyRes;
+                     Named("PlantRWCleaf") = PlantRWCleaf,
+                     Named("subdaily") =  subdailyRes);
   }
   l.attr("class") = CharacterVector::create("spwb","list");
   if(verbose) Rcout<<"done.\n";

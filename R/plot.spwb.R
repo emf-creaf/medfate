@@ -2,7 +2,7 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
                    yearAxis=FALSE, xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, 
                    add=FALSE, ...) {
   dates = as.Date(rownames(x$WaterBalance))
-  transpMode = x$control$transpirationMode
+  transpMode = x$Input$control$transpirationMode
   WaterBalance = x$WaterBalance
   Soil = x$Soil
   nlayers = x$NumSoilLayers
