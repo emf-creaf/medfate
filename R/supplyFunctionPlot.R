@@ -1,17 +1,17 @@
 #Draws the supply function (E vs PlantPsi) for the current soil state and plant hydraulic parameters
 hydraulics.supplyFunctionPlot<-function(x, soil, type="E") {
   
-  TYPES = c("E","dEdP","psiStem","psiRoot","psiRhizo", "ERhizo")
+  TYPES = c("E","dEdP","psiStem","psiRoot","psiRhizo", "ERhizo", "resistances")
   type = match.arg(type,TYPES)  
   
-  psic = soil.psi(soil, model="VG")
+  psiSoil = soil.psi(soil, model="VG")
   VG_nc = soil$VG_n
   VG_alphac = soil$VG_alpha
   cohortnames = row.names(x$cohorts)
   VCroot_kmax = x$below$VCroot_kmax
   VGrhizo_kmax = x$below$VGrhizo_kmax
   PLCstem = x$PLCstem
-  nlayer = length(psic)
+  nlayer = length(psiSoil)
   col = rainbow(nlayer, start = 0.8, end = 0.1)
   
   numericParams = x$control$numericParams
@@ -28,9 +28,14 @@ hydraulics.supplyFunctionPlot<-function(x, soil, type="E") {
   l = vector("list", ncoh)
   names(l) = cohortnames
   for(i in 1:ncoh) {
+    VGrhizo_kmaxc = VGrhizo_kmax[i,]
+    VCroot_kmaxc = VCroot_kmax[i,]
+    psic = psiSoil[VGrhizo_kmaxc>0]
+    VGrhizo_kmaxc = VGrhizo_kmaxc[VGrhizo_kmaxc>0]
+    VCroot_kmaxc = VCroot_kmaxc[VCroot_kmaxc>0]
     l[[i]] = hydraulics.supplyFunctionNetwork(psic,
-                                          VGrhizo_kmax[i,],VG_nc,VG_alphac,
-                                          VCroot_kmax[i,], VCroot_c[i],VCroot_d[i],
+                                          VGrhizo_kmaxc,VG_nc,VG_alphac,
+                                          VCroot_kmaxc, VCroot_c[i],VCroot_d[i],
                                           VCstem_kmax[i], VCstem_c[i],VCstem_d[i], 
                                           VCleaf_kmax[i], VCleaf_c[i],VCleaf_d[i],
                                           PLCstem = PLCstem,
@@ -151,6 +156,38 @@ hydraulics.supplyFunctionPlot<-function(x, soil, type="E") {
     abline(h=0, col="gray")
     legend("topleft", legend = cohortnames, lty=1:ncoh, bty="n")
     legend("topright", legend = paste("Layer", 1:nlayer), lty=1, col=col, bty="n")
+  }
+  else if(type=="resistances") {
+    for(i in 1:ncoh) {
+      nsteps = length(l[[i]]$E)
+      resmat = matrix(0, nrow=nsteps, ncol = 4)
+      for(j in 1:nsteps) {
+        rrow  = hydraulics.soilPlantResistances(psiSoil = psic,
+                                                      psiRhizo = l[[i]]$psiRhizo[j,],
+                                                      psiStem = l[[i]]$psiStem[j,],
+                                                      PLCstem = PLCstem,
+                                                      psiLeaf = l[[i]]$psiLeaf[j],
+                                                      VGrhizo_kmax[i,],VG_nc,VG_alphac,
+                                                      VCroot_kmax[i,], VCroot_c[i],VCroot_d[i],
+                                                      VCstem_kmax[i], VCstem_c[i],VCstem_d[i], 
+                                                      VCleaf_kmax[i], VCleaf_c[i],VCleaf_d[i])
+        resmat[j,] = 100*rrow/sum(rrow)
+      }
+      if(i==1) {
+        plot(-l[[i]]$psiLeaf, resmat[,1], type="l", ylim=c(0,100), xlim=c(0,-minPsi),
+             xlab = "Leaf pressure (-MPa)", 
+             ylab = expression(paste("Percent resistances")), 
+             col=i, lty=1)
+        lines(-l[[i]]$psiLeaf, resmat[,2], lty=2, col=i)
+        lines(-l[[i]]$psiLeaf, resmat[,3], lty=3, col=i)
+        lines(-l[[i]]$psiLeaf, resmat[,4], lty=4, col=i)
+      } else {
+        lines(-l[[i]]$psiLeaf, resmat[,1], lty=1, col=i)
+        lines(-l[[i]]$psiLeaf, resmat[,2], lty=2, col=i)
+        lines(-l[[i]]$psiLeaf, resmat[,3], lty=3, col=i)
+        lines(-l[[i]]$psiLeaf, resmat[,4], lty=4, col=i)
+      }
+    }
   }
   invisible(l)
 }

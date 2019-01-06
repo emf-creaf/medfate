@@ -401,6 +401,10 @@ hydraulics.psi2Weibull <- function(psi50, psi88) {
     .Call('_medfate_psi2Weibull', PACKAGE = 'medfate', psi50, psi88)
 }
 
+hydraulics.soilPlantResistances <- function(psiSoil, psiRhizo, psiStem, PLCstem, psiLeaf, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd) {
+    .Call('_medfate_soilPlantResistances', PACKAGE = 'medfate', psiSoil, psiRhizo, psiStem, PLCstem, psiLeaf, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd)
+}
+
 hydraulics.averageRhizosphereResistancePercent <- function(krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiStep = -0.01) {
     .Call('_medfate_averageRhizosphereResistancePercent', PACKAGE = 'medfate', krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiStep)
 }

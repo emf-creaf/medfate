@@ -1914,6 +1914,35 @@ NumericVector psi2Weibull(double psi50, double psi88) {
   return(par);
 }
 
+// [[Rcpp::export("hydraulics.soilPlantResistances")]]
+NumericVector soilPlantResistances(NumericVector psiSoil, NumericVector psiRhizo, 
+                                   NumericVector psiStem, NumericVector PLCstem,
+                                   double psiLeaf, 
+                                   NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
+                                   NumericVector krootmax, double rootc, double rootd, 
+                                   double kstemmax, double stemc, double stemd,
+                                   double kleafmax, double leafc, double leafd) {
+  int nlayers = psiSoil.length();
+  double krhizo = 0.0;
+  double kroot = 0.0;
+  for(int i=0;i<nlayers;i++) {
+    krhizo = krhizo + vanGenuchtenConductance(psiSoil[i], krhizomax[i], nsoil[i], alphasoil[i]);
+    kroot = kroot + xylemConductance(psiRhizo[i], krootmax[i], rootc, rootd);
+  }
+  double rrhizo = 1.0/krhizo;
+  double rroot = 1.0/kroot;
+  int nSegments = psiStem.length();
+  double rstem = 0.0;
+  double plcCond = NA_REAL;
+  for(int i=0;i<nlayers;i++) {
+    plcCond = (1.0-PLCstem[i])*kstemmax;
+    rstem = rstem + 1.0/std::min(plcCond, xylemConductance(psiStem[i], kstemmax, stemc, stemd));
+  }
+  double rleaf = 1.0/xylemConductance(psiLeaf, kleafmax, leafc, leafd);
+  NumericVector resistances = NumericVector::create(rrhizo, rroot, rstem, rleaf);
+  return(resistances);
+}
+
 /*
  * Parametrization of rhizosphere conductance
  */
