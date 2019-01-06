@@ -1601,6 +1601,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   String transpirationMode = control["transpirationMode"];
   String soilFunctions = control["soilFunctions"];
   bool verbose = control["verbose"];
+  bool subdailyResults = control["subdailyResults"];
   
   checkspwbInput(x, soil, transpirationMode, soilFunctions);
 
@@ -1658,6 +1659,9 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   int nlayers = W.size();
   NumericVector Water_FC = waterFC(soil, soilFunctions);
 
+  //Detailed subday results
+  List subdailyRes(numDays);
+    
   //Water balance output variables
   NumericVector LAIcell(numDays),LAIcelldead(numDays);
   NumericVector Cm(numDays);
@@ -1856,6 +1860,9 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
         PlantRWCleaf(i,_) = as<Rcpp::NumericVector>(Plants["RWCleaf"]); 
       }
       
+      if(subdailyResults) {
+        subdailyRes[i] = clone(s);
+      }
       if(i<(numDays-1)) Wdays(i+1,_) = W;
       WaterTable[i] = waterTableDepth(soil, soilFunctions);
   }
@@ -1972,6 +1979,10 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
                      Named("PlantStress") = PlantStress,
                      Named("PlantRWCstem") = PlantRWCstem,
                      Named("PlantRWCleaf") = PlantRWCleaf);
+  }
+  if(subdailyResults) {
+    subdailyRes.attr("names") = meteo.attr("row.names") ;
+    l["subdaily"] = subdailyRes;
   }
   l.attr("class") = CharacterVector::create("spwb","list");
   if(verbose) Rcout<<"done.\n";

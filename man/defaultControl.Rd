@@ -17,6 +17,7 @@ The function returns a list with default parameters. Users can change those defa
 A list, with the following options:
 \itemize{
 \item{\code{verbose (=TRUE)}: Boolean flag to indicate console output during calculations.}
+\item{\code{subdailyResults (=FALSE)}: Boolean flag to force subdaily results to be stored (as a list called 'subdaily' of \code{\link{spwb.day}} objects, one by simulated date) in calls to \code{\link{spwb}}.}
 \item{\code{soilFunctions (="SX")}: Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).}
 \item{\code{snowpack (=TRUE)}: Boolean flag to indicate the simulation of snow accumulation and melting.}
 \item{\code{drainage (=TRUE)}: Boolean flag to indicate the simulation of deep drainage (not used in \code{spwbgrid}).}

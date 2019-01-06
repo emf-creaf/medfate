@@ -2,6 +2,7 @@ defaultControl<-function() {
   return(list(
     #For all
     verbose = TRUE,
+    subdailyResults = FALSE,
     # swb
     soilFunctions = "SX",
     snowpack = TRUE,
