@@ -46,9 +46,8 @@ spwb.resetInputs(x, soil, from = NULL, day = NA)
 \value{
   Function \code{spwb} returns a list of class 'spwb' with the following elements (both transpiration modes):
   \itemize{
-  \item{\code{"control"}: Control parameters, copied from \code{\link{spwbInput}}.}
-  \item{\code{"cohorts"}: A data frame with cohort information, copied from \code{\link{spwbInput}}.}
-  \item{\code{"NumSoilLayers"}: Number of soil layers.}
+  \item{\code{"spwbInput"}: A copy of the object \code{x} of class \code{\link{spwbInput}} given as input.}
+  \item{\code{"soilInput"}: A copy of the object \code{soil} of class \code{\link{soil}} given as input.}
   \item{\code{"DailyBalance"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
   \itemize{
   \item{\code{"GDD"}: Cumulative growth degree days.}
@@ -81,11 +80,13 @@ spwb.resetInputs(x, soil, from = NULL, day = NA)
   \item{\code{"PlantPhotosynthesis"}: A data frame with the amount of daily net photosynthesis (in g C·m-2) for each plant cohort. Days are in rows and plant cohorts are in columns.}
  \item{\code{"PlantPsi"}: A data frame with the average daily water potential of each plant (in MPa). Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
   \item{\code{"PlantStress"}: A data frame with the amount of daily stress [0-1] suffered by each plant cohort (relative whole-plant conductance). Days are in rows and plant cohorts are in columns.}
+  \item{\code{"subdaily"}: A list of objects of class \code{\link{spwb.day}}, one per day simulated (only if required in \code{control} parameters, see \code{\link{defaultControl}}).}
   }
   If \code{transpirationMode=="Complex"} the list also includes the following elements:
  \itemize{
    \item{\code{"PlantAbsorbedSWR"}: A data frame with the daily SWR absorbed by each plant cohort. Days are in rows and plant cohorts are in columns.}
   \item{\code{"PlantAbsorbedLWR"}: A data frame with the daily LWR absorbed by each plant cohort. Days are in rows and plant cohorts are in columns.}
+  \item{\code{"dEdP"}: A data frame with mean daily values of soil-plant conductance (derivative of the supply function) for each plant cohort. Days are in rows and plant cohorts in columns.}
   \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy.}
  \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil.}
  }

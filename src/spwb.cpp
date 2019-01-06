@@ -418,6 +418,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   NumericVector RWCsleafVEC = Rcpp::as<Rcpp::NumericVector>(x["RWCsympleaf"]);
   NumericVector psiLeafVEC = Rcpp::as<Rcpp::NumericVector>(x["psiLeaf"]);
   NumericVector psiRootVEC = Rcpp::as<Rcpp::NumericVector>(x["psiRoot"]);
+  NumericMatrix psiRhizoMAT = Rcpp::as<Rcpp::NumericMatrix>(x["psiRhizo"]);
   NumericVector EinstVEC = Rcpp::as<Rcpp::NumericVector>(x["Einst"]);
   
   NumericVector VG_n = Rcpp::as<Rcpp::NumericVector>(soil["VG_n"]);
@@ -656,6 +657,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   NumericMatrix RWCleafinst(numCohorts, ntimesteps);
   NumericMatrix RWCsteminst(numCohorts, ntimesteps);
   NumericMatrix PsiRootinst(numCohorts, ntimesteps);
+  Cube PsiRhizoinst(numCohorts, );
   NumericMatrix PWBinst(numCohorts, ntimesteps);
   NumericMatrix SWR_SL(numCohorts, ntimesteps);
   NumericMatrix SWR_SH(numCohorts, ntimesteps);
@@ -990,12 +992,15 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
       
       PsiLeafinst(c,n) = psiLeafVEC[c]; //Store instantaneous leaf potential
       PsiRootinst(c,n) = psiRootVEC[c]; //Store instantaneous root potential
-      
+      PsiRhizoinst(c,n,_) = psiRhizoMAT(c,); //Store instantaneous rhizos potential
+        
       //Store the minimum water potential of the day (i.e. mid-day)
       minPsiLeaf[c] = std::min(minPsiLeaf[c],PsiLeafinst(c,n));
       minPsiStem[c] = std::min(minPsiStem[c],PsiSteminst(c,n));
       minPsiRoot[c] = std::min(minPsiRoot[c],PsiRootinst(c,n));
-      
+      for(int l=0;l<nlayers;l++) {
+        minPsiRhizo[c,l] = std::min(minPsiRoot[c,l],PsiRhizoinst(c,l,n));
+      }
     } //End of cohort loop
     
 
@@ -1123,6 +1128,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   PsiLeafinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   PsiSteminst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   PsiRootinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  PsiRhizoinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   Aninst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   PLC.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   RWCleafinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
@@ -1135,6 +1141,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                                  _["GWsunlit"] = GW_SL, _["GWshade"] = GW_SH,
                                  _["VPDsunlit"] = VPD_SL, _["VPDshade"] = VPD_SH,
                                  _["Tempsunlit"] = Temp_SL, _["Tempshade"] = Temp_SH,
+                                 _["PsiRhizo"] = PsiRhizoinst,
                                  _["PsiRoot"] = PsiRootinst, 
                                  _["PsiStem"] = PsiSteminst, 
                                  _["PsiLeaf"] = PsiLeafinst, 
@@ -1145,6 +1152,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   DataFrame Plants = DataFrame::create(_["LAI"] = LAIcohort,
                              _["Extraction"] = SoilExtractCoh,
                              _["Transpiration"] = Eplant, 
+                             _["RhizoPsi"] = minPsiRhizo,
                              _["LeafPsi"] = minPsiLeaf, 
                              _["StemPsi"] = minPsiStem, 
                              _["RootPsi"] = minPsiRoot, 
@@ -1602,9 +1610,12 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   String soilFunctions = control["soilFunctions"];
   bool verbose = control["verbose"];
   bool subdailyResults = control["subdailyResults"];
-  
   checkspwbInput(x, soil, transpirationMode, soilFunctions);
-
+  
+  //Store input
+  List spwbInput = clone(x);
+  List soilInput = clone(soil);
+    
   //Meteorological input    
   NumericVector MinTemperature, MaxTemperature;
   NumericVector MinRelativeHumidity, MaxRelativeHumidity;
@@ -1951,8 +1962,8 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   subdailyRes.attr("names") = meteo.attr("row.names") ;
   List l;
   if(transpirationMode=="Simple") {
-    l = List::create(Named("Input") = clone(x),
-                     Named("NumSoilLayers") = nlayers,
+    l = List::create(Named("spwbInput") = spwbInput,
+                     Named("soilInput") = soilInput,
                      Named("WaterBalance")=DWB, 
                      Named("Soil")=SWB,
                      Named("PlantLAI") = PlantLAI,
@@ -1962,8 +1973,8 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
                      Named("PlantStress") = PlantStress,
                      Named("subdaily") =  subdailyRes);
   } else {
-    l = List::create(Named("Input") = clone(x),
-                     Named("NumSoilLayers") = nlayers,
+    l = List::create(Named("spwbInput") = spwbInput,
+                     Named("soilInput") = soilInput,
                      Named("WaterBalance")=DWB, 
                      Named("Soil")=SWB,
                      Named("EnergyBalance")= DEB,

@@ -2,19 +2,20 @@ summary.spwb<-function(object, freq="years", output="WaterBalance", FUN=sum, byS
   dates = as.Date(rownames(object$WaterBalance))
   ndaysTotal = length(dates)
   date.factor = cut(dates, breaks=freq)
+  input = object$spwbInput
   if(output=="WaterBalance") OM = object$WaterBalance
   else if(output=="Soil") OM = object$Soil
   else if(output=="TemperatureBalance") OM = object$TemperatureBalance
   else if(output=="PlantLAI") {
     OM = object$PlantLAI
     if(bySpecies) {
-      OM = t(apply(OM,1, tapply, object$cohorts$Name, sum, na.rm=T))
+      OM = t(apply(OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
     } 
   } else if(output=="PlantPsi") {
     OM = object$PlantPsi
     if(bySpecies) {
-      lai1 = t(apply(object$PlantLAI,1, tapply, object$cohorts$Name, sum, na.rm=T))
-      m1 = t(apply(object$PlantLAI * OM,1, tapply, object$cohorts$Name, sum, na.rm=T))
+      lai1 = t(apply(object$PlantLAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
+      m1 = t(apply(object$PlantLAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
       OM = m1/lai1
       OM[lai1==0] = NA
     } 
@@ -22,8 +23,8 @@ summary.spwb<-function(object, freq="years", output="WaterBalance", FUN=sum, byS
   else if(output=="PlantStress") {
     OM = object$PlantStress
     if(bySpecies) {
-      lai1 = t(apply(object$PlantLAI,1, tapply, object$cohorts$Name, sum, na.rm=T))
-      m1 = t(apply(object$PlantLAI * OM,1, tapply, object$cohorts$Name, sum, na.rm=T))
+      lai1 = t(apply(object$PlantLAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
+      m1 = t(apply(object$PlantLAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
       OM = m1/lai1
       OM[lai1==0] = 0
     } 
@@ -31,13 +32,13 @@ summary.spwb<-function(object, freq="years", output="WaterBalance", FUN=sum, byS
   else if(output=="PlantTranspiration") {
     OM = object$PlantTranspiration
     if(bySpecies) {
-      OM = t(apply(OM,1, tapply, object$cohorts$Name, sum, na.rm=T))
+      OM = t(apply(OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
     } 
   }
   else if(output=="PlantPhotosynthesis") {
     OM = object$PlantPhotosynthesis
     if(bySpecies) {
-      OM = t(apply(OM,1, tapply, object$cohorts$Name, sum, na.rm=T))
+      OM = t(apply(OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
     } 
   }
 

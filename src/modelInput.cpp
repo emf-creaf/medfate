@@ -530,6 +530,9 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     psiStemmat.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numStemSegments));
     NumericVector Einst = NumericVector(numCohorts, 0.0);
     Einst.attr("names") = above.attr("row.names");
+    NumericMatrix psiRhizo =  NumericMatrix(numCohorts, nlayers);
+    psiRhizo.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
+    std::fill(psiRhizo.begin(), psiRhizo.end(), 0.0);
     NumericVector psiRoot = NumericVector(numCohorts, 0.0);
     psiRoot.attr("names") = above.attr("row.names");
     NumericVector psiLeaf = NumericVector(numCohorts, 0.0);
@@ -566,6 +569,7 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     input["RWCsympstem"] = RWCstemmat;
     input["RWCsympleaf"] = rwcsleaf;
     input["Einst"] = Einst;
+    input["psiRhizo"] = psiRhizo;
     input["psiRoot"] = psiRoot;
     input["psiStem"] = psiStemmat;
     input["psiLeaf"] = psiLeaf;
