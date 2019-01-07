@@ -10,6 +10,7 @@ _Version 0.7.1, January 2019.
 4. Subdaily results can be stored for spwb
 5. New function spwb.resistances to calculate and draw segment resistances for spwb simulation results.
 6. Cohort parameter search by SpIndex
+7. Gwmin set to zero when capacitance = FALSE
 
 _Version 0.7.0, September 2018.
 1. Leaf and stem water compartments added

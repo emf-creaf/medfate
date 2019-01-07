@@ -757,6 +757,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
           NumericVector psiLeaf;
           NumericMatrix newPsiStem;
           
+          double Gwminc = Gwmin[c];
+          
           if(!capacitance) {
             sFunction = supply[c];
             Erootcrown = sFunction["E"];
@@ -767,6 +769,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
             ElayersMat = Rcpp::as<Rcpp::NumericMatrix>(sFunction["ERhizo"]);
             fittedE = sFunction["E"];
             dEdP = sFunction["dEdP"];
+            //Set minimum conductance to zero to avoid large decreases in water potential to achieve a minimum flow 
+            Gwminc = 0.0; 
           } else {
             List RSFunction = supply[c];
             Erootcrown = RSFunction["E"];
@@ -777,10 +781,10 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                                                              psiStemPrev, PLCStemPrev, 
                                                              psiLeafPrev, 
                                                              VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
-                                                                                                  VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
-                                                                                                                                       Vsapwood[c], StemAF[c], StemPI0[c], StemEPS[c],
-                                                                                                                                                                                  Vleaf[c], LeafAF[c], LeafPI0[c], LeafEPS[c],
-                                                                                                                                                                                                                          tstep);
+                                                             VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
+                                                             Vsapwood[c], StemAF[c], StemPI0[c], StemEPS[c],
+                                                             Vleaf[c], LeafAF[c], LeafPI0[c], LeafEPS[c],
+                                                             tstep);
             fittedE = sFunction["E"];
             dEdP = sFunction["dEdP"];
             psiLeaf = sFunction["psiLeaf"];
@@ -792,18 +796,18 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
             //Photosynthesis function for sunlit and shade leaves
             DataFrame photoSunlit = leafPhotosynthesisFunction(fittedE, Catm, Patm,Tcan[n], vpatm, 
                                                                zWind[c], 
-                                                                    absSWR_SL[c] + LWR_emmcan*LAI_SL(c,n), 
-                                                                    irradianceToPhotonFlux(absPAR_SL[c]), 
-                                                                    Vmax298SL, 
-                                                                    Jmax298SL, 
-                                                                    Gwmin[c], Gwmax[c], leafWidth[c], LAI_SL(c,n));
+                                                               absSWR_SL[c] + LWR_emmcan*LAI_SL(c,n), 
+                                                               irradianceToPhotonFlux(absPAR_SL[c]), 
+                                                               Vmax298SL, 
+                                                               Jmax298SL, 
+                                                               Gwminc, Gwmax[c], leafWidth[c], LAI_SL(c,n));
             DataFrame photoShade = leafPhotosynthesisFunction(fittedE, Catm, Patm,Tcan[n], vpatm, 
                                                               zWind[c], 
-                                                                   absSWR_SH[c] + LWR_emmcan*LAI_SH(c,n), 
-                                                                   irradianceToPhotonFlux(absPAR_SH[c]),
-                                                                   Vmax298SH, 
-                                                                   Jmax298SH, 
-                                                                   Gwmin[c], Gwmax[c], leafWidth[c], LAI_SH(c,n));
+                                                              absSWR_SH[c] + LWR_emmcan*LAI_SH(c,n), 
+                                                              irradianceToPhotonFlux(absPAR_SH[c]),
+                                                              Vmax298SH, 
+                                                              Jmax298SH, 
+                                                              Gwminc, Gwmax[c], leafWidth[c], LAI_SH(c,n));
             
             NumericVector AnSunlit = photoSunlit["NetPhotosynthesis"];
             NumericVector AnShade = photoShade["NetPhotosynthesis"];
@@ -815,8 +819,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
             NumericVector TempShade = photoShade["LeafTemperature"];
             
             //Profit maximization
-            List PMSunlit = profitMaximization(sFunction, photoSunlit,  hydraulicCostFunction, Gwmin[c], Gwmax[c], VCstem_kmax[c]);
-            List PMShade = profitMaximization(sFunction, photoShade,  hydraulicCostFunction, Gwmin[c],Gwmax[c], VCstem_kmax[c]);
+            List PMSunlit = profitMaximization(sFunction, photoSunlit,  hydraulicCostFunction, Gwminc, Gwmax[c], VCstem_kmax[c]);
+            List PMShade = profitMaximization(sFunction, photoShade,  hydraulicCostFunction, Gwminc,Gwmax[c], VCstem_kmax[c]);
             int iPMSunlit = PMSunlit["iMaxProfit"];
             int iPMShade = PMShade["iMaxProfit"];
             
@@ -1924,7 +1928,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
     Rcout<<" Transpiration (mm) "  <<round(Transpirationsum) <<"\n";
     for(int l=0;l<nlayers;l++) Rcout << "W"<<(l+1)<<"f:"<< round(100*W[l])/100<<" ";
     Rcout<<"\n";
-    Rcout<<"Final volume: "<< round(MLTot[numDays-1])<<"\n\n";
+    Rcout<<"Final soil water content (mm): "<< round(MLTot[numDays-1])<<"\n\n";
     
   }
   if(verbose) Rcout<<"Building SPWB output ...";
