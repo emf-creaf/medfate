@@ -1918,7 +1918,7 @@ NumericVector psi2Weibull(double psi50, double psi88) {
 NumericVector soilPlantResistances(NumericVector psiSoil, NumericVector psiRhizo, 
                                    NumericVector psiStem, NumericVector PLCstem,
                                    double psiLeaf, 
-                                   NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
+                                   NumericVector krhizomax, NumericVector n, NumericVector alpha,
                                    NumericVector krootmax, double rootc, double rootd, 
                                    double kstemmax, double stemc, double stemd,
                                    double kleafmax, double leafc, double leafd) {
@@ -1926,7 +1926,7 @@ NumericVector soilPlantResistances(NumericVector psiSoil, NumericVector psiRhizo
   double krhizo = 0.0;
   double kroot = 0.0;
   for(int i=0;i<nlayers;i++) {
-    krhizo = krhizo + vanGenuchtenConductance(psiSoil[i], krhizomax[i], nsoil[i], alphasoil[i]);
+    krhizo = krhizo + vanGenuchtenConductance(psiSoil[i], krhizomax[i], n[i], alpha[i]);
     kroot = kroot + xylemConductance(psiRhizo[i], krootmax[i], rootc, rootd);
   }
   double rrhizo = 1.0/krhizo;

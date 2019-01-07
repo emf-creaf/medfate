@@ -1,5 +1,6 @@
 \encoding{UTF-8}
 \name{scalingconductance}
+\alias{hydraulics.soilPlantResistances}
 \alias{hydraulics.averageRhizosphereResistancePercent}
 \alias{hydraulics.findRhizosphereMaximumConductance}
 \alias{hydraulics.maximumStemHydraulicConductance}
@@ -17,6 +18,12 @@ Scaling from conductivity to conductance
 Functions used to scale from tissue conductivity to conductance of different elements of the continuum.
 }
 \usage{
+hydraulics.soilPlantResistances(psiSoil, psiRhizo, 
+                                psiStem, PLCstem, psiLeaf, 
+                                krhizomax, n, alpha,
+                                krootmax, rootc, rootd, 
+                                kstemmax, stemc, stemd,
+                                kleafmax, leafc, leafd)
 hydraulics.averageRhizosphereResistancePercent(krhizomax, n, alpha,
                                                krootmax, rootc, rootd,
                                                kstemmax, stemc, stemd, 

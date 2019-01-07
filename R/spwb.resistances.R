@@ -1,5 +1,9 @@
 spwb.resistances<-function(x, cohort = 1, relative = FALSE, draw = FALSE, cumulative = FALSE, yearAxis = FALSE,  xlab = NULL, ylab=NULL) {
   
+  if(x$spwbInput$control$transpirationMode!="Complex") {
+    stop("Resistances can only be calculated when transpirationMode = 'Complex'.")
+  }
+    
   VCroot_kmax = x$spwbInput$below$VCroot_kmax
   VGrhizo_kmax = x$spwbInput$below$VGrhizo_kmax
   VG_nc = x$soilInput$VG_n
@@ -72,7 +76,7 @@ spwb.resistances<-function(x, cohort = 1, relative = FALSE, draw = FALSE, cumula
       lines(dates, resdraw[,2], lty=2, lwd=1.5, col = cols[2])
       lines(dates, resdraw[,3], lty=3, lwd=1.5, col = cols[3])
       lines(dates, resdraw[,4], lty=4, lwd=1.5, col = cols[4])
-      legend("topright", legend = colnames(resdraw), lty=1:4, col = cols, lwd = 1.5, bty="n")
+      legend("topleft", legend = colnames(resdraw), lty=1:4, col = cols, lwd = 1.5, bty="n")
     } else {
       polygon(c(dates[1], dates, dates[length(dates)]),
               c(0, resdraw[,4], 0),
@@ -86,6 +90,7 @@ spwb.resistances<-function(x, cohort = 1, relative = FALSE, draw = FALSE, cumula
       polygon(c(dates[1], dates, dates[length(dates)]),
               c(0, resdraw[,1], 0),
               col = cols[1])
+      legend("topleft", legend = colnames(resdraw), col = cols, pch= 15, bty="n")
     }
     plotAxes()
     
