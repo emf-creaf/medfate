@@ -55,13 +55,17 @@ An object (a list) of class \code{spwb.day} with the following elements:
       \item{\code{"psi"}: Water potential (in MPa) of the plant cohort (average over soil layers).}
       \item{\code{"DDS"}: Daily drought stress [0-1] (relative whole-plant conductance).}
     }
-  When using the 'Complex' transpiration mode \code{"DDS"} refers to the average proportion of stem cavitated conduits, \code{"psi"} refers to daily minimum (i.e. midday) water potential and the data frame \code{"Plants"} also includes columns:
+  When using the 'Complex' transpiration mode \code{"DDS"} refers to the average proportion of stem cavitated conduits and the data frame \code{"Plants"} also includes columns:
     \itemize{
       \item{\code{"Extraction"}: Water extracted from the soil (in mm) for each cohort.}
+      \item{\code{"RootPsi"}: Minimum water potential (in MPa) at the root collar.}
+      \item{\code{"StemPsi"}: Minimum water potential (in MPa) at the stem.}
+      \item{\code{"LeafPsi"}: Minimum water potential (in MPa) at the leaf.}
       \item{\code{"RWCstem"}: Relative water content of symplastic stem tissue.}
       \item{\code{"RWCleaf"}: Relative water content of symplastic leaf tissue.}
     }
   }
+  \item{\code{"RhizoPsi"}: Minimum water potential (in MPa) inside roots, after crossing rhizosphere, per cohort and soil layer.}
   \item{\code{"PlantsInst"}: A list with instantaneous (per time step) results for each plant cohort:
     \itemize{
       \item{\code{"LAIsunlit"}: Leaf area index of sunlit leaves of the plant cohort.}

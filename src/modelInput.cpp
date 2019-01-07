@@ -442,6 +442,8 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
   if((soilFunctions!="SX") & (soilFunctions!="VG")) stop("Wrong soil functions ('soilFunctions' should be either 'SX' or 'VG')");
   
 
+  NumericVector W = soil["W"];
+  int nlayers = W.length();
   NumericVector albedoSP = SpParams["albedo"];
   NumericVector kSP = SpParams["k"];
   NumericVector gSP = SpParams["g"];

@@ -657,7 +657,6 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   NumericMatrix RWCleafinst(numCohorts, ntimesteps);
   NumericMatrix RWCsteminst(numCohorts, ntimesteps);
   NumericMatrix PsiRootinst(numCohorts, ntimesteps);
-  Cube PsiRhizoinst(numCohorts, );
   NumericMatrix PWBinst(numCohorts, ntimesteps);
   NumericMatrix SWR_SL(numCohorts, ntimesteps);
   NumericMatrix SWR_SH(numCohorts, ntimesteps);
@@ -672,6 +671,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   NumericMatrix LAI_SH(numCohorts, ntimesteps);
   NumericMatrix LAI_SL(numCohorts, ntimesteps);
   NumericVector minPsiLeaf(numCohorts,0.0), minPsiStem(numCohorts, 0.0), minPsiRoot(numCohorts,0.0); //Minimum potentials experienced
+  NumericMatrix minPsiRhizo(numCohorts, nlayers);
+  std::fill(minPsiRhizo.begin(), minPsiRhizo.end(), 0.0);
   NumericMatrix PLC(numCohorts, ntimesteps);
   NumericVector PLCm(numCohorts), RWCsm(numCohorts), RWClm(numCohorts);
   NumericVector dEdPm(numCohorts);
@@ -704,7 +705,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
     NumericVector absLWR_SH = abs_LWR_SH_list[n];
     
     for(int c=0;c<numCohorts;c++) { //Plant cohort loop
-      
+
       if(LAIphe[c]>0.0) { //Process transpiration and photosynthesis only if there are some leaves
         SWR_SL(c,n) = absSWR_SL[c];
         SWR_SH(c,n) = absSWR_SH[c];
@@ -750,6 +751,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
           // Rcout<<c<<" E "<<EinstPrev<<" PR "<< psiRootPrev<<" PL "<<psiLeafPrev<< " PS "<<psiStemPrev[0]<< " "<<rwcsleafPrev<< " "<<RWCStemPrev[0]<<"\n";
           NumericVector Erootcrown;
           NumericVector psiRoot;
+          NumericMatrix psiRhizo;
           NumericMatrix ElayersMat;
           NumericVector fittedE, dEdP;
           NumericVector psiLeaf;
@@ -759,6 +761,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
             sFunction = supply[c];
             Erootcrown = sFunction["E"];
             psiRoot = sFunction["psiRoot"];
+            psiRhizo = Rcpp::as<Rcpp::NumericMatrix>(sFunction["psiRhizo"]);
             psiLeaf = sFunction["psiLeaf"];
             newPsiStem = Rcpp::as<Rcpp::NumericMatrix>(sFunction["psiStem"]);
             ElayersMat = Rcpp::as<Rcpp::NumericMatrix>(sFunction["ERhizo"]);
@@ -768,6 +771,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
             List RSFunction = supply[c];
             Erootcrown = RSFunction["E"];
             psiRoot = RSFunction["psiRoot"];
+            psiRhizo = Rcpp::as<Rcpp::NumericMatrix>(RSFunction["psiRhizo"]);
             ElayersMat = Rcpp::as<Rcpp::NumericMatrix>(RSFunction["ERhizo"]);
             sFunction = supplyFunctionAbovegroundCapacitance(Erootcrown, psiRoot,
                                                              psiStemPrev, PLCStemPrev, 
@@ -883,12 +887,14 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
             }
             
             
-            //Copy transpiration from connected layers to transpiration from soil layers
-            int cnt = 0;
+            //Copy transpiration and from connected layers to transpiration from soil layers
+            //Copy psiRhizo and from connected layers to psiRhizo from soil layers
+            int cl = 0;
             for(int l=0;l<nlayers;l++) {
               if(layerConnected(c,l)) {
-                SoilWaterExtract(c,l) += Esoilcn[cnt]; //Add to cummulative transpiration from layers
-                cnt++;
+                psiRhizoMAT(c,l) = psiRhizo(iPM,cl);
+                SoilWaterExtract(c,l) += Esoilcn[cl]; //Add to cummulative transpiration from layers
+                cl++;
               } 
             }
           } else {
@@ -992,14 +998,13 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
       
       PsiLeafinst(c,n) = psiLeafVEC[c]; //Store instantaneous leaf potential
       PsiRootinst(c,n) = psiRootVEC[c]; //Store instantaneous root potential
-      PsiRhizoinst(c,n,_) = psiRhizoMAT(c,); //Store instantaneous rhizos potential
-        
+
       //Store the minimum water potential of the day (i.e. mid-day)
       minPsiLeaf[c] = std::min(minPsiLeaf[c],PsiLeafinst(c,n));
       minPsiStem[c] = std::min(minPsiStem[c],PsiSteminst(c,n));
       minPsiRoot[c] = std::min(minPsiRoot[c],PsiRootinst(c,n));
       for(int l=0;l<nlayers;l++) {
-        minPsiRhizo[c,l] = std::min(minPsiRoot[c,l],PsiRhizoinst(c,l,n));
+        minPsiRhizo(c,l) = std::min(minPsiRhizo(c,l),psiRhizoMAT(c,l));
       }
     } //End of cohort loop
     
@@ -1128,12 +1133,12 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   PsiLeafinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   PsiSteminst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   PsiRootinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  PsiRhizoinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   Aninst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   PLC.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   RWCleafinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   RWCsteminst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   PWBinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  minPsiRhizo.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
   List PlantsInst = List::create(
                                  _["LAIsunlit"] = LAI_SL, _["LAIshade"] = LAI_SH, 
                                  _["AbsRad"] = AbsRadinst, _["E"]=Einst, _["An"]=Aninst,
@@ -1141,7 +1146,6 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                                  _["GWsunlit"] = GW_SL, _["GWshade"] = GW_SH,
                                  _["VPDsunlit"] = VPD_SL, _["VPDshade"] = VPD_SH,
                                  _["Tempsunlit"] = Temp_SL, _["Tempshade"] = Temp_SH,
-                                 _["PsiRhizo"] = PsiRhizoinst,
                                  _["PsiRoot"] = PsiRootinst, 
                                  _["PsiStem"] = PsiSteminst, 
                                  _["PsiLeaf"] = PsiLeafinst, 
@@ -1152,10 +1156,9 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   DataFrame Plants = DataFrame::create(_["LAI"] = LAIcohort,
                              _["Extraction"] = SoilExtractCoh,
                              _["Transpiration"] = Eplant, 
-                             _["RhizoPsi"] = minPsiRhizo,
-                             _["LeafPsi"] = minPsiLeaf, 
-                             _["StemPsi"] = minPsiStem, 
                              _["RootPsi"] = minPsiRoot, 
+                             _["StemPsi"] = minPsiStem, 
+                             _["LeafPsi"] = minPsiLeaf, 
                              _["dEdP"] = dEdPm,//Average daily soilplant conductance
                              _["DDS"] = PLCm, //Daily drought stress is the average day PLC
                              _["RWCstem"] = RWCsm,
@@ -1165,6 +1168,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                         _["WaterBalance"] = DB, 
                         _["EnergyBalance"] = EB,
                         _["Soil"] = SB, 
+                        _["RhizoPsi"] = minPsiRhizo,
                         _["Plants"] = Plants,
                         _["PlantsInst"] = PlantsInst);
   l.attr("class") = CharacterVector::create("spwb.day","list");
@@ -1728,6 +1732,14 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   NumericMatrix LeafPsi(numDays, numCohorts);
   NumericMatrix StemPsi(numDays, numCohorts);
   NumericMatrix RootPsi(numDays, numCohorts);
+  List RhizoPsi(numCohorts);
+  for(int c=0;c<numCohorts;c++) {
+    NumericMatrix nm = NumericMatrix(numDays, nlayers);
+    nm.attr("dimnames") = List::create(meteo.attr("row.names"), seq(1,nlayers)) ;
+    RhizoPsi[c] = nm;
+  }
+  RhizoPsi.attr("names") = above.attr("row.names");
+  
   NumericMatrix PlantStress(numDays, numCohorts);
   NumericMatrix PlantRWCstem(numDays, numCohorts);
   NumericMatrix PlantRWCleaf(numDays, numCohorts);
@@ -1862,6 +1874,11 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
         RootPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["RootPsi"]); 
         StemPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["StemPsi"]); 
         dEdP(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["dEdP"]); 
+        NumericMatrix RhizoPsiStep = Rcpp::as<Rcpp::NumericMatrix>(s["RhizoPsi"]);
+        for(int c=0;c<numCohorts;c++) {
+          NumericMatrix nm = Rcpp::as<Rcpp::NumericMatrix>(RhizoPsi[c]);
+          nm(i,_) =  RhizoPsiStep(c,_);
+        }
       } else {
         PlantPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["psi"]);
       }
@@ -1988,6 +2005,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
                      Named("LeafPsi") = LeafPsi, 
                      Named("StemPsi") = LeafPsi, 
                      Named("RootPsi") = RootPsi, 
+                     Named("RhizoPsi") = RhizoPsi,
                      Named("PlantStress") = PlantStress,
                      Named("PlantRWCstem") = PlantRWCstem,
                      Named("PlantRWCleaf") = PlantRWCleaf,

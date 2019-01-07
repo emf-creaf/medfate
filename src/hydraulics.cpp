@@ -1931,12 +1931,13 @@ NumericVector soilPlantResistances(NumericVector psiSoil, NumericVector psiRhizo
   }
   double rrhizo = 1.0/krhizo;
   double rroot = 1.0/kroot;
-  int nSegments = psiStem.length();
+  int nStemSegments = psiStem.length();
+  double kxsegmax = kstemmax*((double) nStemSegments);
   double rstem = 0.0;
   double plcCond = NA_REAL;
-  for(int i=0;i<nlayers;i++) {
-    plcCond = (1.0-PLCstem[i])*kstemmax;
-    rstem = rstem + 1.0/std::min(plcCond, xylemConductance(psiStem[i], kstemmax, stemc, stemd));
+  for(int i=0;i<nStemSegments;i++) {
+    plcCond = (1.0-PLCstem[i]);
+    rstem = rstem + 1.0/(kxsegmax*std::min(plcCond, xylemConductance(psiStem[i], 1.0, stemc, stemd)));
   }
   double rleaf = 1.0/xylemConductance(psiLeaf, kleafmax, leafc, leafd);
   NumericVector resistances = NumericVector::create(rrhizo, rroot, rstem, rleaf);

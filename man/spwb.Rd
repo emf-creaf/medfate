@@ -89,6 +89,10 @@ spwb.resetInputs(x, soil, from = NULL, day = NA)
   \item{\code{"dEdP"}: A data frame with mean daily values of soil-plant conductance (derivative of the supply function) for each plant cohort. Days are in rows and plant cohorts in columns.}
   \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy.}
  \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil.}
+ \item{\code{"LeafPsi"}: A data frame with the minimum daily leaf water potential of each plant (in MPa). Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
+ \item{\code{"StemPsi"}: A data frame with the minimum daily stem water potential of each plant (in MPa). Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
+ \item{\code{"RootPsi"}: A data frame with the minimum daily root water potential of each plant (in MPa). Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
+ \item{\code{"RhizoPsi"}: A list of data frames (one per plant cohort) with the minimum daily root water potential of each plant (in MPa). In each data frame, days are in rows and layers are in columns.}
  }
 }
 \references{

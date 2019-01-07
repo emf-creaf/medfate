@@ -7,7 +7,6 @@ hydraulics.supplyFunctionPlot<-function(x, soil, type="E") {
   psiSoil = soil.psi(soil, model="VG")
   VG_nc = soil$VG_n
   VG_alphac = soil$VG_alpha
-  cohortnames = row.names(x$cohorts)
   VCroot_kmax = x$below$VCroot_kmax
   VGrhizo_kmax = x$below$VGrhizo_kmax
   PLCstem = x$PLCstem
@@ -24,7 +23,8 @@ hydraulics.supplyFunctionPlot<-function(x, soil, type="E") {
   VCleaf_kmax = x$paramsTransp$VCleaf_kmax
   VCleaf_c = x$paramsTransp$VCleaf_c
   VCleaf_d = x$paramsTransp$VCleaf_d
-  ncoh = nrow(x$above)
+  cohortnames = row.names(x$cohorts)
+  ncoh = length(cohortnames)
   l = vector("list", ncoh)
   names(l) = cohortnames
   for(i in 1:ncoh) {
