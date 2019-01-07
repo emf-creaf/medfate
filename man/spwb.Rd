@@ -48,7 +48,7 @@ spwb.resetInputs(x, soil, from = NULL, day = NA)
   \itemize{
   \item{\code{"spwbInput"}: A copy of the object \code{x} of class \code{\link{spwbInput}} given as input.}
   \item{\code{"soilInput"}: A copy of the object \code{soil} of class \code{\link{soil}} given as input.}
-  \item{\code{"DailyBalance"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
+  \item{\code{"WaterBalance"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
   \itemize{
   \item{\code{"GDD"}: Cumulative growth degree days.}
   \item{\code{"LAIcell"}: The LAI of the stand (accounting for leaf phenology) (in m2/m2).}
@@ -67,7 +67,7 @@ spwb.resetInputs(x, soil, from = NULL, day = NA)
   \item{\code{"Eplanttot"}: Plant transpiration (considering all soil layers) (in mm).}
   \item{\code{"Eplant.1"}, \code{...}, \code{"Eplant.k"}: Plant transpiration from each soil layer (in mm).}
   }
-  \item{\code{"SoilWaterBalance"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
+  \item{\code{"Soil"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
   \itemize{
   \item{\code{"W.1"}, \code{...}, \code{"W.k"}: Relative soil moisture content (relative to field capacity) in each soil layer.}
   \item{\code{"ML.1"}, \code{...}, \code{"ML.k"}: Soil water volume in each soil layer (in L/m2).}

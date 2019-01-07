@@ -43,9 +43,8 @@ growth(x, soil, meteo,  latitude = NA, elevation = NA, slope = NA, aspect = NA)
 \value{
   A list of class 'growth' with the following elements:
   \itemize{
-  \item{\code{"control"}: Control parameters, copied from \code{\link{growthInput}}.}
-  \item{\code{"cohorts"}: A data frame with cohort information, copied from \code{\link{growthInput}}.}
-  \item{\code{"NumSoilLayers"}: Number of soil layers.}
+  \item{\code{"spwbInput"}: A copy of the object \code{x} of class \code{\link{spwbInput}} given as input.}
+  \item{\code{"soilInput"}: A copy of the object \code{soil} of class \code{\link{soil}} given as input.}
   \item{\code{"WaterBalance"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
   \itemize{
   \item{\code{"LAIcell"}: The LAI of the stand (accounting for leaf phenology) (in m2/m2).}

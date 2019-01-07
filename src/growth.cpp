@@ -134,6 +134,10 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   //Control params
   List control = x["control"];  
   
+  //Store input
+  List spwbInput = clone(x);
+  List soilInput = clone(soil);
+  
   //Cohort info
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   NumericVector SP = cohorts["SP"];
@@ -581,9 +585,8 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   PlantLAIlive.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   
   if(verbose) Rcout<<"list ...";
-  List l = List::create(Named("control") = control,
-                        Named("cohorts") = clone(cohorts),
-                        Named("NumSoilLayers") = nlayers,
+  List l = List::create(Named("spwbInput") = spwbInput,
+                        Named("soilInput") = soilInput,
                         Named("WaterBalance")=DWB, 
                         Named("Soil")=SWB,
                         Named("PlantTranspiration") = PlantTranspiration,
