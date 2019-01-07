@@ -66,7 +66,7 @@ fire.Rothermel <- function(modeltype, wSI, sSI, delta, mx_dead, hSI, mSI, u, win
 }
 
 plant.Parameter <- function(x, SpParams, parName) {
-    .Call('_medfate_cohortParameter', PACKAGE = 'medfate', x, SpParams, parName)
+    .Call('_medfate_cohortNumericParameter', PACKAGE = 'medfate', x, SpParams, parName)
 }
 
 plant.CharacterParameter <- function(x, SpParams, parName) {

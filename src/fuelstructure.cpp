@@ -119,7 +119,7 @@ double layerLAI(double minHeight, double maxHeight, NumericVector cohortLAI, Num
 // [[Rcpp::export(".layerFuelAverageSpeciesParameter")]]
 double layerFuelAverageSpeciesParameter(String spParName, double minHeight, double maxHeight, List x, DataFrame SpParams, double gdd = NA_REAL) {
   NumericVector cohortLoading = cohortFuel(x, SpParams, gdd); //in kg/m2
-  NumericVector parValues = cohortParameter(x, SpParams, spParName);
+  NumericVector parValues = cohortNumericParameter(x, SpParams, spParName);
   NumericVector CR = cohortCrownRatio(x, SpParams);
   NumericVector H = cohortHeight(x);
   double num = 0.0, den = 0.0, cfl = 0.0;
@@ -132,6 +132,7 @@ double layerFuelAverageSpeciesParameter(String spParName, double minHeight, doub
   if(den>0) return(num/den);
   return(NA_REAL);
 }
+
 // [[Rcpp::export(".layerFuelAverageParameter")]]
 double layerFuelAverageParameter(double minHeight, double maxHeight, NumericVector cohortParameter, NumericVector cohortLoading, NumericVector H, NumericVector CR) {
   double num = 0.0, den = 0.0, cfl = 0.0;
@@ -223,14 +224,14 @@ DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, Dat
   NumericVector cohHeight = cohortHeight(object);
   NumericVector cohCL = cohortCrownLength(object, SpParams);
     
-  NumericVector cohParticleDensity = cohortParameter(object, SpParams, "ParticleDensity");
-  NumericVector cohSAV = cohortParameter(object, SpParams, "SAV");
-  NumericVector cohFlammability = cohortParameter(object, SpParams, "Flammability");
-  NumericVector cohHeatContent = cohortParameter(object, SpParams, "HeatContent");
+  NumericVector cohParticleDensity = cohortNumericParameter(object, SpParams, "ParticleDensity");
+  NumericVector cohSAV = cohortNumericParameter(object, SpParams, "SAV");
+  NumericVector cohFlammability = cohortNumericParameter(object, SpParams, "Flammability");
+  NumericVector cohHeatContent = cohortNumericParameter(object, SpParams, "HeatContent");
   NumericVector cohCR = cohortCrownRatio(object, SpParams);
-  NumericVector cohMinFMC = cohortParameter(object, SpParams, "minFMC");
-  NumericVector cohMaxFMC = cohortParameter(object, SpParams, "maxFMC");
-  NumericVector cohpDead = cohortParameter(object, SpParams, "pDead");
+  NumericVector cohMinFMC = cohortNumericParameter(object, SpParams, "minFMC");
+  NumericVector cohMaxFMC = cohortNumericParameter(object, SpParams, "maxFMC");
+  NumericVector cohpDead = cohortNumericParameter(object, SpParams, "pDead");
   CharacterVector leafLitterType = cohortCharacterParameter(object, SpParams, "LeafLitterFuelType");
 
   //Canopy limits and loading  
@@ -591,8 +592,8 @@ List fuelStructure(List object, DataFrame SpParams, DataFrame FuelModelParams, d
   }
   
   NumericVector cohortLoading = cohortFuel(object, SpParams, gdd);
-  NumericVector minFMC = cohortParameter(object, SpParams, "minFMC");
-  NumericVector maxFMC = cohortParameter(object, SpParams, "maxFMC");
+  NumericVector minFMC = cohortNumericParameter(object, SpParams, "minFMC");
+  NumericVector maxFMC = cohortNumericParameter(object, SpParams, "maxFMC");
   NumericVector CR = cohortCrownRatio(object, SpParams);
   NumericVector H = cohortHeight(object);
   
@@ -607,8 +608,8 @@ List fuelStructure(List object, DataFrame SpParams, DataFrame FuelModelParams, d
     }
     fbLoading[4] = fs["fuelBedWoodyBiomass"];
     fbHeight = fs["fuelbedHeight"];
-    NumericVector cohortSAV = cohortParameter(object, SpParams, "SAV");
-    NumericVector cohortHeatContent = cohortParameter(object, SpParams, "HeatContent");
+    NumericVector cohortSAV = cohortNumericParameter(object, SpParams, "SAV");
+    NumericVector cohortHeatContent = cohortNumericParameter(object, SpParams, "HeatContent");
     //Herbaceous fuel
     fbSurfaceToVolumeRatio[3] = 4921.0;
     fbHeatContent[3] = 18622;

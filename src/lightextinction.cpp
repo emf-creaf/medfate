@@ -171,7 +171,7 @@ NumericVector cohortAbsorbedSWRFraction(NumericVector z, List x, DataFrame SpPar
   int nlayer = LAIme.nrow();
   int ncoh = LAIme.ncol();
   for(int i=0;i<nlayer;i++) for(int j=0;j<ncoh;j++) LAImd(i,j)=0.0; 
-  NumericVector k = cohortParameter(x, SpParams, "k");
+  NumericVector k = cohortNumericParameter(x, SpParams, "k");
   NumericVector kSWR(k.size());
   for(int i=0;i<k.size();i++) kSWR[i] = k[i]/1.35;
   return(cohortAbsorbedSWRFraction(LAIme, LAImd, kSWR));

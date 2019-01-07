@@ -229,16 +229,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// cohortParameter
-NumericVector cohortParameter(List x, DataFrame SpParams, String parName);
-RcppExport SEXP _medfate_cohortParameter(SEXP xSEXP, SEXP SpParamsSEXP, SEXP parNameSEXP) {
+// cohortNumericParameter
+NumericVector cohortNumericParameter(List x, DataFrame SpParams, String parName);
+RcppExport SEXP _medfate_cohortNumericParameter(SEXP xSEXP, SEXP SpParamsSEXP, SEXP parNameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< String >::type parName(parNameSEXP);
-    rcpp_result_gen = Rcpp::wrap(cohortParameter(x, SpParams, parName));
+    rcpp_result_gen = Rcpp::wrap(cohortNumericParameter(x, SpParams, parName));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2920,7 +2920,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_fireBrandBurningTimeFromCanopyStructure", (DL_FUNC) &_medfate_fireBrandBurningTimeFromCanopyStructure, 1},
     {"_medfate_fireBrandFlameHeightFromCanopyStructure", (DL_FUNC) &_medfate_fireBrandFlameHeightFromCanopyStructure, 2},
     {"_medfate_criticalFirelineIntensity", (DL_FUNC) &_medfate_criticalFirelineIntensity, 2},
-    {"_medfate_cohortParameter", (DL_FUNC) &_medfate_cohortParameter, 3},
+    {"_medfate_cohortNumericParameter", (DL_FUNC) &_medfate_cohortNumericParameter, 3},
     {"_medfate_cohortCharacterParameter", (DL_FUNC) &_medfate_cohortCharacterParameter, 3},
     {"_medfate_cohortSpecies", (DL_FUNC) &_medfate_cohortSpecies, 1},
     {"_medfate_cohortSpeciesName", (DL_FUNC) &_medfate_cohortSpeciesName, 2},
