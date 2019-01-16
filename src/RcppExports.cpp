@@ -1764,6 +1764,58 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// er
+NumericVector er(IntegerVector DOY, double ERconv, double ERsyn);
+RcppExport SEXP _medfate_er(SEXP DOYSEXP, SEXP ERconvSEXP, SEXP ERsynSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type DOY(DOYSEXP);
+    Rcpp::traits::input_parameter< double >::type ERconv(ERconvSEXP);
+    Rcpp::traits::input_parameter< double >::type ERsyn(ERsynSEXP);
+    rcpp_result_gen = Rcpp::wrap(er(DOY, ERconv, ERsyn));
+    return rcpp_result_gen;
+END_RCPP
+}
+// soilevaporation
+double soilevaporation(double DEF, double PETs, double Gsoil);
+RcppExport SEXP _medfate_soilevaporation(SEXP DEFSEXP, SEXP PETsSEXP, SEXP GsoilSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type DEF(DEFSEXP);
+    Rcpp::traits::input_parameter< double >::type PETs(PETsSEXP);
+    Rcpp::traits::input_parameter< double >::type Gsoil(GsoilSEXP);
+    rcpp_result_gen = Rcpp::wrap(soilevaporation(DEF, PETs, Gsoil));
+    return rcpp_result_gen;
+END_RCPP
+}
+// infiltrationDay
+double infiltrationDay(double input, double Ssoil);
+RcppExport SEXP _medfate_infiltrationDay(SEXP inputSEXP, SEXP SsoilSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type input(inputSEXP);
+    Rcpp::traits::input_parameter< double >::type Ssoil(SsoilSEXP);
+    rcpp_result_gen = Rcpp::wrap(infiltrationDay(input, Ssoil));
+    return rcpp_result_gen;
+END_RCPP
+}
+// interceptionGashDay
+double interceptionGashDay(double Precipitation, double Cm, double p, double ER);
+RcppExport SEXP _medfate_interceptionGashDay(SEXP PrecipitationSEXP, SEXP CmSEXP, SEXP pSEXP, SEXP ERSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type Precipitation(PrecipitationSEXP);
+    Rcpp::traits::input_parameter< double >::type Cm(CmSEXP);
+    Rcpp::traits::input_parameter< double >::type p(pSEXP);
+    Rcpp::traits::input_parameter< double >::type ER(ERSEXP);
+    rcpp_result_gen = Rcpp::wrap(interceptionGashDay(Precipitation, Cm, p, ER));
+    return rcpp_result_gen;
+END_RCPP
+}
 // incgam
 NumericVector incgam(double a, double x);
 RcppExport SEXP _medfate_incgam(SEXP aSEXP, SEXP xSEXP) {
@@ -2546,58 +2598,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// er
-NumericVector er(IntegerVector DOY, double ERconv, double ERsyn);
-RcppExport SEXP _medfate_er(SEXP DOYSEXP, SEXP ERconvSEXP, SEXP ERsynSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type DOY(DOYSEXP);
-    Rcpp::traits::input_parameter< double >::type ERconv(ERconvSEXP);
-    Rcpp::traits::input_parameter< double >::type ERsyn(ERsynSEXP);
-    rcpp_result_gen = Rcpp::wrap(er(DOY, ERconv, ERsyn));
-    return rcpp_result_gen;
-END_RCPP
-}
-// soilevaporation
-double soilevaporation(double DEF, double PETs, double Gsoil);
-RcppExport SEXP _medfate_soilevaporation(SEXP DEFSEXP, SEXP PETsSEXP, SEXP GsoilSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type DEF(DEFSEXP);
-    Rcpp::traits::input_parameter< double >::type PETs(PETsSEXP);
-    Rcpp::traits::input_parameter< double >::type Gsoil(GsoilSEXP);
-    rcpp_result_gen = Rcpp::wrap(soilevaporation(DEF, PETs, Gsoil));
-    return rcpp_result_gen;
-END_RCPP
-}
-// infiltrationDay
-double infiltrationDay(double input, double Ssoil);
-RcppExport SEXP _medfate_infiltrationDay(SEXP inputSEXP, SEXP SsoilSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type input(inputSEXP);
-    Rcpp::traits::input_parameter< double >::type Ssoil(SsoilSEXP);
-    rcpp_result_gen = Rcpp::wrap(infiltrationDay(input, Ssoil));
-    return rcpp_result_gen;
-END_RCPP
-}
-// interceptionGashDay
-double interceptionGashDay(double Precipitation, double Cm, double p, double ER);
-RcppExport SEXP _medfate_interceptionGashDay(SEXP PrecipitationSEXP, SEXP CmSEXP, SEXP pSEXP, SEXP ERSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type Precipitation(PrecipitationSEXP);
-    Rcpp::traits::input_parameter< double >::type Cm(CmSEXP);
-    Rcpp::traits::input_parameter< double >::type p(pSEXP);
-    Rcpp::traits::input_parameter< double >::type ER(ERSEXP);
-    rcpp_result_gen = Rcpp::wrap(interceptionGashDay(Precipitation, Cm, p, ER));
-    return rcpp_result_gen;
-END_RCPP
-}
 // spwbDay1
 List spwbDay1(List x, List soil, double tday, double pet, double prec, double er, double runon, double rad, double elevation, bool verbose);
 RcppExport SEXP _medfate_spwbDay1(SEXP xSEXP, SEXP soilSEXP, SEXP tdaySEXP, SEXP petSEXP, SEXP precSEXP, SEXP erSEXP, SEXP runonSEXP, SEXP radSEXP, SEXP elevationSEXP, SEXP verboseSEXP) {
@@ -3029,6 +3029,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_maximumRootHydraulicConductance", (DL_FUNC) &_medfate_maximumRootHydraulicConductance, 5},
     {"_medfate_stemWaterCapacity", (DL_FUNC) &_medfate_stemWaterCapacity, 3},
     {"_medfate_leafWaterCapacity", (DL_FUNC) &_medfate_leafWaterCapacity, 2},
+    {"_medfate_er", (DL_FUNC) &_medfate_er, 3},
+    {"_medfate_soilevaporation", (DL_FUNC) &_medfate_soilevaporation, 3},
+    {"_medfate_infiltrationDay", (DL_FUNC) &_medfate_infiltrationDay, 2},
+    {"_medfate_interceptionGashDay", (DL_FUNC) &_medfate_interceptionGashDay, 4},
     {"_medfate_incgam", (DL_FUNC) &_medfate_incgam, 2},
     {"_medfate_invincgam", (DL_FUNC) &_medfate_invincgam, 3},
     {"_medfate_gammds", (DL_FUNC) &_medfate_gammds, 2},
@@ -3083,10 +3087,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_waterTableDepth", (DL_FUNC) &_medfate_waterTableDepth, 2},
     {"_medfate_soilthermalcapacity", (DL_FUNC) &_medfate_soilthermalcapacity, 2},
     {"_medfate_soilthermalconductivity", (DL_FUNC) &_medfate_soilthermalconductivity, 2},
-    {"_medfate_er", (DL_FUNC) &_medfate_er, 3},
-    {"_medfate_soilevaporation", (DL_FUNC) &_medfate_soilevaporation, 3},
-    {"_medfate_infiltrationDay", (DL_FUNC) &_medfate_infiltrationDay, 2},
-    {"_medfate_interceptionGashDay", (DL_FUNC) &_medfate_interceptionGashDay, 4},
     {"_medfate_spwbDay1", (DL_FUNC) &_medfate_spwbDay1, 10},
     {"_medfate_spwbDay2", (DL_FUNC) &_medfate_spwbDay2, 16},
     {"_medfate_spwbDay", (DL_FUNC) &_medfate_spwbDay, 15},

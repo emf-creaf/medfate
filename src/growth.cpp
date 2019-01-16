@@ -4,6 +4,7 @@
 #include "biophysicsutils.h"
 #include "forestutils.h"
 #include "hydraulics.h"
+#include "hydrology.h"
 #include "soil.h"
 #include "spwb.h"
 #include <Rcpp.h>

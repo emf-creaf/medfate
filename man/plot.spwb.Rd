@@ -45,6 +45,7 @@ Function \code{plot} plots the results of the soil water balance model (see \cod
     \item{\code{"PlantTranspirationLeaf"}:}{ Plant cohort transpiration per leaf area.}
     \item{\code{"PlantPhotosynthesis"}:}{ Plant cohort photosynthesis.}
     \item{\code{"PlantPhotosynthesisLeaf"}:}{ Plant cohort photosynthesis per leaf area.}
+    \item{\code{"PlantWUE"}:}{ Plant cohort daily water use efficiency (photosynthesis over transpiration).}
     \item{\code{"PlantAbsorbedSWR"}:}{ Plant cohort absorbed short wave radiation (only for \code{transpirationMode = "Complex"}).}
     \item{\code{"PlantAbsorbedSWRLeaf"}:}{ Plant cohort absorbed short wave radiation per leaf area (only for \code{transpirationMode = "Complex"}).}
     \item{\code{"PlantAbsorbedLWR"}:}{ Plant cohort absorbed long wave radiation (only for \code{transpirationMode = "Complex"}).}

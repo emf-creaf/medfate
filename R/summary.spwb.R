@@ -5,14 +5,19 @@ summary.spwb<-function(object, freq="years", output="WaterBalance", FUN=sum, byS
   input = object$spwbInput
   if(output=="WaterBalance") OM = object$WaterBalance
   else if(output=="Soil") OM = object$Soil
-  else if(output=="TemperatureBalance") OM = object$TemperatureBalance
+  else if(output=="EnergyBalance") OM = object$EnergyBalance
+  else if(output=="Temperature") OM = object$Temperature
   else if(output=="PlantLAI") {
     OM = object$PlantLAI
     if(bySpecies) {
       OM = t(apply(OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
     } 
-  } else if(output=="PlantPsi") {
-    OM = object$PlantPsi
+  } 
+  else if(output=="subdaily") {
+    stop("Cannot summarize subdaily output")
+  }
+  else {
+    OM = object[[output]]
     if(bySpecies) {
       lai1 = t(apply(object$PlantLAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
       m1 = t(apply(object$PlantLAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
@@ -20,32 +25,19 @@ summary.spwb<-function(object, freq="years", output="WaterBalance", FUN=sum, byS
       OM[lai1==0] = NA
     } 
   }
-  else if(output=="PlantStress") {
-    OM = object$PlantStress
-    if(bySpecies) {
-      lai1 = t(apply(object$PlantLAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      m1 = t(apply(object$PlantLAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      OM = m1/lai1
-      OM[lai1==0] = 0
-    } 
-  }
-  else if(output=="PlantTranspiration") {
-    OM = object$PlantTranspiration
-    if(bySpecies) {
-      OM = t(apply(OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
-    } 
-  }
-  else if(output=="PlantPhotosynthesis") {
-    OM = object$PlantPhotosynthesis
-    if(bySpecies) {
-      OM = t(apply(OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
-    } 
-  }
-
+  
   if(ncol(OM)==length(date.factor) && nrow(OM)==1) OM = t(OM)
   
   #Perform summary at the desired temporal scale
   M <- apply(OM,2,tapply, INDEX=date.factor, FUN)
-  if(sum(is.na(M[nrow(M), drop=FALSE]))==ncol(M)) M = M[-nrow(M), drop=FALSE] #Remove empty row
+  
+  if(is.vector(M)) {
+    M = t(as.matrix(M))
+    rownames(M) <- levels(date.factor)
+  }
+  # if(sum(is.na(M[nrow(M), drop=FALSE]))==ncol(M)) M = M[-nrow(M), drop=FALSE] #Remove empty row
+  ncases = table(date.factor)
+  M = M[ncases>0, ,drop = FALSE]
+  
   return(M)
 }

@@ -14,13 +14,13 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
   
   TYPES = c("PET_Precipitation","PET_NetRain","Snow","Evapotranspiration","SoilPsi","SoilTheta","SoilVol", "Export", "LAI", "WTD",
             "PlantLAI",
-            "PlantStress", "PlantPsi","PlantPhotosynthesis", "PlantTranspiration",
+            "PlantStress", "PlantPsi","PlantPhotosynthesis", "PlantTranspiration", "PlantWUE",
             "PlantPhotosynthesisLeaf","PlantTranspirationLeaf")
   if(transpMode=="Complex") {
     TYPES = c("PET_Precipitation","PET_NetRain","Snow","Evapotranspiration","SoilPsi","SoilTheta","SoilVol", "Export", "LAI", "WTD",
               "PlantLAI",
               "SoilPlantConductance","PlantStress", 
-              "PlantPhotosynthesis", "PlantTranspiration",
+              "PlantPhotosynthesis", "PlantTranspiration","PlantWUE",
               "PlantPhotosynthesisLeaf","PlantTranspirationLeaf", 
               "LeafPsi","StemPsi","RootPsi","StemPLC", "StemRWC", "LeafRWC", 
               "PlantWaterBalance",
@@ -415,6 +415,22 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
             lwd=1, type="l", xlim=xlim,
             ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
     plotAxes()     
+    legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
+           col = 1:length(cohortnames), bty="n")
+  } 
+  else if(type=="PlantWUE") {
+    OM = x$PlantPhotosynthesis/x$PlantTranspiration
+    if(bySpecies) {
+      OM = t(apply(OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
+      cohortnames = colnames(OM)
+    } 
+    if(is.null(ylab)) ylab = expression(paste("Plant daily WUE   ",(g*C%.%L^{-1})))
+    if(is.null(ylim)) ylim = c(min(OM, na.rm=T),max(OM, na.rm=T))
+    matplot(dates, OM, ylim = ylim,
+            lty=1:length(cohortnames), col = 1:length(cohortnames),
+            lwd=1, type="l", xlim=xlim,
+            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
+    plotAxes()      
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
            col = 1:length(cohortnames), bty="n")
   } 

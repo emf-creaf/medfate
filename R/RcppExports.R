@@ -445,6 +445,22 @@ hydraulics.leafWaterCapacity <- function(SLA, ld) {
     .Call('_medfate_leafWaterCapacity', PACKAGE = 'medfate', SLA, ld)
 }
 
+.er <- function(DOY, ERconv = 0.05, ERsyn = 0.2) {
+    .Call('_medfate_er', PACKAGE = 'medfate', DOY, ERconv, ERsyn)
+}
+
+hydrology.soilEvaporation <- function(DEF, PETs, Gsoil) {
+    .Call('_medfate_soilevaporation', PACKAGE = 'medfate', DEF, PETs, Gsoil)
+}
+
+.infiltrationDay <- function(input, Ssoil) {
+    .Call('_medfate_infiltrationDay', PACKAGE = 'medfate', input, Ssoil)
+}
+
+.interceptionGashDay <- function(Precipitation, Cm, p, ER = 0.05) {
+    .Call('_medfate_interceptionGashDay', PACKAGE = 'medfate', Precipitation, Cm, p, ER)
+}
+
 .incgam <- function(a, x) {
     .Call('_medfate_incgam', PACKAGE = 'medfate', a, x)
 }
@@ -659,22 +675,6 @@ soil.thermalcapacity <- function(soil, model = "SX") {
 
 soil.thermalconductivity <- function(soil, model = "SX") {
     .Call('_medfate_soilthermalconductivity', PACKAGE = 'medfate', soil, model)
-}
-
-.er <- function(DOY, ERconv = 0.05, ERsyn = 0.2) {
-    .Call('_medfate_er', PACKAGE = 'medfate', DOY, ERconv, ERsyn)
-}
-
-hydrology.soilEvaporation <- function(DEF, PETs, Gsoil) {
-    .Call('_medfate_soilevaporation', PACKAGE = 'medfate', DEF, PETs, Gsoil)
-}
-
-.infiltrationDay <- function(input, Ssoil) {
-    .Call('_medfate_infiltrationDay', PACKAGE = 'medfate', input, Ssoil)
-}
-
-.interceptionGashDay <- function(Precipitation, Cm, p, ER = 0.05) {
-    .Call('_medfate_interceptionGashDay', PACKAGE = 'medfate', Precipitation, Cm, p, ER)
 }
 
 .spwbDay1 <- function(x, soil, tday, pet, prec, er, runon = 0.0, rad = NA_real_, elevation = NA_real_, verbose = FALSE) {
