@@ -92,6 +92,21 @@ Package `medfate` allows simulating plant growth of a set of cohorts (competing 
 2. Monitor or forecast temporal variation of plant drought stress in particular stands(for example to anticipate mortality events) taking into account processes determining plant growth.
 3. Monitor or forecast temporal variation of live fuel moisture and the amount of standing dead and live fuels in particular stands (for example to monitor wildfire risk).
 
+### Sub-model functions
+
+Many of the functions included in `medfate` are internally called by simulation functions. Some of them are made available to the user, to facilitate understanding the different sub-models and to facilitate a more creative use of the package. Sub-model functions are grouped by *subject*, which is included in the name of the function. The different sub-model functions are (by subject):
+
+* **biophysics.* **: Physical and biophysical utility functions.
+* **hydraulics.* **: Plant hydraulics.
+* **hydrology.* **: Canopy and soil hydrology (rainfall interception, soil evaporation, soil infiltration).
+* **light.* **: Light extinction and absortion.
+* **moisture.* **: Live tissue moisture.
+* **photo.* **: Leaf photosynthesis.
+* **root.* **: Root distribution and conductance calculations.
+* **soil.* **: Soil hydraulics and thermodynamics.
+* **spwb.* **: Soil water balance parameter optimization/calibration routines.
+* **transp.* **: Stomatal regulation and resulting transpiration/photosynthesis.
+
 ## Static functions
 ### Plant and forest attributes
 Package `medfate` include a number of functions to examine properties of the plants conforming the `forest` object, summary functions at the stand level or vertical profiles of several physical properties:
@@ -111,15 +126,3 @@ In FCCS, fuelbed is divided into six strata, including canopy, shrub, herbaceous
 3. Crown fire behavior.
 4. Fire potential ratings of surface fire behavior and crown fire behavior.
 
-### Sub-model functions
-Many of the functions included in `medfate` are internally called by simulation functions. Some of them are made available to the user, to facilitate understanding the different sub-models and to facilitate a more creative use of the package. Sub-model functions are grouped by *subject*, which is included in the name of the function. The different sub-model functions are (by subject):
-
-* **biophysics.* **: Physical and biophysical utility functions.
-* **hydraulics.* **: Plant hydraulics.
-* **light.* **: Light extinction and absortion.
-* **moisture.* **: Live tissue moisture.
-* **photo.* **: Leaf photosynthesis.
-* **root.* **: Root distribution and conductance calculations.
-* **soil.* **: Soil hydraulics and thermodynamics.
-* **spwb.* **: Soil water balance subprocesses (rainfall interception, soil evaporation, soil infiltration) and parameter optimization/calibration routines.
-* **transp.* **: Stomatal regulation and resulting transpiration/photosynthesis.

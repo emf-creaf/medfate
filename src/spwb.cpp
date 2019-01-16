@@ -33,7 +33,7 @@ NumericVector er(IntegerVector DOY, double ERconv=0.05, double ERsyn = 0.2){
 }
 
 
-// [[Rcpp::export("spwb.SoilEvaporation")]]
+// [[Rcpp::export("hydrology.soilEvaporation")]]
 double soilevaporation(double DEF,double PETs, double Gsoil){
   double t = pow(DEF/Gsoil, 2.0);
   double Esoil = 0.0;

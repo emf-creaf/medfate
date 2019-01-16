@@ -1,14 +1,14 @@
 \encoding{UTF-8}
-\name{spwb.RainInterception}
-\alias{spwb.RainInterception}
+\name{hydrology.rainInterception}
+\alias{hydrology.rainInterception}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Rainfall interception}
 \description{
-Function \code{spwb.RainInterception} calculates the amount of rainfall intercepted daily by the canopy, given a rainfall and canopy characteristics. Two canopy interception models are currently available: the sparse Gash (1995) model and the Liu (2001) model. In both cases the current implementation assumes no trunk interception.
+Function \code{hydrology.rainInterception} calculates the amount of rainfall intercepted daily by the canopy, given a rainfall and canopy characteristics. Two canopy interception models are currently available: the sparse Gash (1995) model and the Liu (2001) model. In both cases the current implementation assumes no trunk interception.
 }
 \usage{
-spwb.RainInterception(Rainfall, Cm, p, ER=0.05, method="Gash1995") 
+hydrology.rainInterception(Rainfall, Cm, p, ER=0.05, method="Gash1995") 
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -40,9 +40,9 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 \examples{
 throughfallMatrixGash<-function(P = seq(1,50, by=1), Cm = seq(1,5, by=1), 
                                 ER = 0.08,p=0.8) {
-  m2<-P-spwb.RainInterception(P,Cm[1],p,ER=ER)
+  m2<- P - hydrology.rainInterception(P,Cm[1],p,ER=ER)
   for(i in 2:length(Cm)) {
-    m2<-rbind(m2,P-spwb.RainInterception(P,Cm[i],p,ER=ER))
+    m2<-rbind(m2,P-hydrology.rainInterception(P,Cm[i],p,ER=ER))
   }
   colnames(m2)<-P
   rownames(m2)<-Cm

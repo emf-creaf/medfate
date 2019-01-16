@@ -665,7 +665,7 @@ soil.thermalconductivity <- function(soil, model = "SX") {
     .Call('_medfate_er', PACKAGE = 'medfate', DOY, ERconv, ERsyn)
 }
 
-spwb.SoilEvaporation <- function(DEF, PETs, Gsoil) {
+hydrology.soilEvaporation <- function(DEF, PETs, Gsoil) {
     .Call('_medfate_soilevaporation', PACKAGE = 'medfate', DEF, PETs, Gsoil)
 }
 
