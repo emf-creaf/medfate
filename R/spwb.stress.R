@@ -31,8 +31,10 @@ spwb.stress<-function(x, index = "NDD", freq = "years", bySpecies = FALSE) {
       M <- apply(x$LeafPsi,2,tapply, INDEX=date.factor, wsi)
     }
   }
-  ncases = table(date.factor)
-  M = M[ncases>0, ,drop = FALSE]
+  if(is.vector(M)) {
+    M = t(as.matrix(M))
+    rownames(M) <- levels(date.factor)
+  }
   if(bySpecies) {
     cohlai = apply(x$PlantLAI,2,max, na.rm=T)
     cohsp = as.character(x$spwbInput$cohorts$Name)
@@ -40,5 +42,7 @@ spwb.stress<-function(x, index = "NDD", freq = "years", bySpecies = FALSE) {
     m1 = t(apply(sweep(M,2,cohlai,"*"),1,tapply, cohsp, sum, na.rm=T))
     M = sweep(m1,2,lai1,"/")
   }
+  ncases = table(date.factor)
+  M = M[ncases>0, ,drop = FALSE]
   return(M)
 }
