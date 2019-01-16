@@ -19,10 +19,11 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
   if(transpMode=="Complex") {
     TYPES = c("PET_Precipitation","PET_NetRain","Snow","Evapotranspiration","SoilPsi","SoilTheta","SoilVol", "Export", "LAI", "WTD",
               "PlantLAI",
-              "SoilPlantConductance",
-              "PlantStress", "PlantPhotosynthesis", "PlantTranspiration",
+              "SoilPlantConductance","PlantStress", 
+              "PlantPhotosynthesis", "PlantTranspiration",
               "PlantPhotosynthesisLeaf","PlantTranspirationLeaf", 
-              "LeafPsi","StemPsi","RootPsi","StemRWC", "LeafRWC", "PlantWaterBalance",
+              "LeafPsi","StemPsi","RootPsi","StemPLC", "StemRWC", "LeafRWC", 
+              "PlantWaterBalance",
               "PlantAbsorbedSWR", "PlantAbsorbedSWRLeaf",
               "PlantAbsorbedLWR", "PlantAbsorbedLWRLeaf",
               "AirTemperature","SoilTemperature", "CanopyTemperature",
@@ -217,8 +218,26 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
            col = 1:length(cohortnames), bty="n")
   } 
+  else if(type=="StemPLC") {
+    OM = x$StemPLC*100
+    if(bySpecies) {
+      lai1 = t(apply(x$PlantLAI,1, tapply, input$cohorts$Name, sum))
+      m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum))
+      OM = m1/lai1
+      OM[lai1==0] = NA
+      cohortnames = colnames(OM)
+    } 
+    if(is.null(ylab)) ylab = "Percent loss conductance in stem [%]"
+    if(is.null(ylim)) ylim = c(min(OM, na.rm=T),max(OM, na.rm=T))
+    matplot(dates, OM, lty=1:length(cohortnames), col = 1:length(cohortnames),
+            ylim = ylim, lwd=1, type="l", xlim=xlim,
+            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
+    plotAxes()
+    legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
+           col = 1:length(cohortnames), bty="n")
+  } 
   else if(type=="StemRWC") {
-    OM = x$PlantRWCstem*100
+    OM = x$StemRWC*100
     if(bySpecies) {
       lai1 = t(apply(x$PlantLAI,1, tapply, input$cohorts$Name, sum))
       m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum))
@@ -236,7 +255,7 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
            col = 1:length(cohortnames), bty="n")
   } 
   else if(type=="LeafRWC") {
-    OM = x$PlantRWCleaf*100
+    OM = x$LeafRWC*100
     if(bySpecies) {
       lai1 = t(apply(x$PlantLAI,1, tapply, input$cohorts$Name, sum))
       m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum))

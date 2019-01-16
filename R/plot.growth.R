@@ -15,10 +15,10 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     plot.spwb(x,type, bySpecies, yearAxis, xlim, ylim, xlab, ylab, ...)
   } else {
     dates = as.Date(rownames(x$WaterBalance))
-    transpMode = x$control$transpirationMode
+    transpMode = x$swpbInput$control$transpirationMode
     WaterBalance = x$WaterBalance
     Soil = x$Soil
-    nlayers = x$NumSoilLayers
+    nlayers = length(x$soilInput$W)
     numDays = length(dates)
     numYears = round(numDays/365)
     firstYear=as.numeric(format(dates[1],"%Y"))

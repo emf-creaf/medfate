@@ -1065,6 +1065,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   
   //4z. Plant daily drought stress (from root collar mid-day water potential)
   NumericVector SoilExtractCoh(numCohorts,0.0);
+  NumericVector DDS(numCohorts, 0.0);
   for(int c=0;c<numCohorts;c++) {
     SoilExtractCoh[c] =  sum(SoilWaterExtract(c,_));
     transpiration[c] = Eplant[c]; 
@@ -1072,6 +1073,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
     RWCsm[c] = sum(RWCsteminst(c,_))/((double)RWCsteminst.ncol());
     RWClm[c] = sum(RWCleafinst(c,_))/((double)RWCleafinst.ncol());
     dEdPm[c] = sum(dEdPinst(c,_))/((double)dEdPinst.ncol());  
+    double maxConductance = maximumSoilPlantConductance(VGrhizo_kmax(c,_), VCroot_kmax(c,_), VCstem_kmax[c], VCleaf_kmax[c]);
+    DDS[c] = Phe[c]*(1.0 - (dEdPm[c]/maxConductance));
   }
   
   //5. Soil evaporation
@@ -1162,11 +1165,12 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                              _["Transpiration"] = Eplant, 
                              _["RootPsi"] = minPsiRoot, 
                              _["StemPsi"] = minPsiStem, 
+                             _["StemPLC"] = PLCm, //Average daily stem PLC
                              _["LeafPsi"] = minPsiLeaf, 
                              _["dEdP"] = dEdPm,//Average daily soilplant conductance
-                             _["DDS"] = PLCm, //Daily drought stress is the average day PLC
-                             _["RWCstem"] = RWCsm,
-                             _["RWCleaf"] = RWClm);
+                             _["DDS"] = DDS, //Daily drought stress is the ratio of average soil plant conductance over its maximum value
+                             _["StemRWC"] = RWCsm,
+                             _["LeafRWC"] = RWClm);
   Plants.attr("row.names") = above.attr("row.names");
   List l = List::create(_["cohorts"] = clone(cohorts),
                         _["WaterBalance"] = DB, 
@@ -1581,8 +1585,8 @@ void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER
     NumericMatrix fromRootPsi = Rcpp::as<Rcpp::NumericMatrix>(from["RootPsi"]);
     NumericMatrix fromLeafPsi = Rcpp::as<Rcpp::NumericMatrix>(from["LeafPsi"]);
     NumericMatrix fromStemPsi = Rcpp::as<Rcpp::NumericMatrix>(from["StemPsi"]);
-    NumericMatrix fromRWCstem = Rcpp::as<Rcpp::NumericMatrix>(from["PlantRWCstem"]);
-    NumericMatrix fromRWCleaf = Rcpp::as<Rcpp::NumericMatrix>(from["PlantRWCleaf"]);
+    NumericMatrix fromRWCstem = Rcpp::as<Rcpp::NumericMatrix>(from["StemRWC"]);
+    NumericMatrix fromRWCleaf = Rcpp::as<Rcpp::NumericMatrix>(from["LeafRWC"]);
     
     NumericVector psiRoot = Rcpp::as<Rcpp::NumericVector>(x["psiRoot"]);
     NumericMatrix psiStem = Rcpp::as<Rcpp::NumericMatrix>(x["psiStem"]);
@@ -1736,6 +1740,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   NumericMatrix LeafPsi(numDays, numCohorts);
   NumericMatrix StemPsi(numDays, numCohorts);
   NumericMatrix RootPsi(numDays, numCohorts);
+  NumericMatrix StemPLC(numDays, numCohorts);
   List RhizoPsi(numCohorts);
   for(int c=0;c<numCohorts;c++) {
     NumericMatrix nm = NumericMatrix(numDays, nlayers);
@@ -1745,8 +1750,8 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   RhizoPsi.attr("names") = above.attr("row.names");
   
   NumericMatrix PlantStress(numDays, numCohorts);
-  NumericMatrix PlantRWCstem(numDays, numCohorts);
-  NumericMatrix PlantRWCleaf(numDays, numCohorts);
+  NumericMatrix StemRWC(numDays, numCohorts);
+  NumericMatrix LeafRWC(numDays, numCohorts);
   NumericMatrix PlantTranspiration(numDays, numCohorts);
   NumericMatrix PlantPhotosynthesis(numDays, numCohorts);
   NumericVector EplantCohTot(numCohorts, 0.0);
@@ -1877,6 +1882,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
         LeafPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["LeafPsi"]);
         RootPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["RootPsi"]); 
         StemPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["StemPsi"]); 
+        StemPLC(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["StemPLC"]); 
         dEdP(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["dEdP"]); 
         NumericMatrix RhizoPsiStep = Rcpp::as<Rcpp::NumericMatrix>(s["RhizoPsi"]);
         for(int c=0;c<numCohorts;c++) {
@@ -1889,8 +1895,8 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
       EplantCohTot = EplantCohTot + EplantCoh;
       Eplanttot[i] = sum(EplantCoh);
       if(transpirationMode=="Complex"){
-        PlantRWCstem(i,_) = as<Rcpp::NumericVector>(Plants["RWCstem"]);
-        PlantRWCleaf(i,_) = as<Rcpp::NumericVector>(Plants["RWCleaf"]); 
+        StemRWC(i,_) = as<Rcpp::NumericVector>(Plants["StemRWC"]);
+        LeafRWC(i,_) = as<Rcpp::NumericVector>(Plants["LeafRWC"]); 
       }
       
       if(subdailyResults) {
@@ -1959,8 +1965,8 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
 
   PlantTranspiration.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names"));
   PlantStress.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  PlantRWCstem.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  PlantRWCleaf.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
+  StemRWC.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
+  LeafRWC.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   PlantPsi.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   dEdP.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   LeafPsi.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
@@ -1994,26 +2000,51 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
                      Named("PlantStress") = PlantStress,
                      Named("subdaily") =  subdailyRes);
   } else {
-    l = List::create(Named("spwbInput") = spwbInput,
-                     Named("soilInput") = soilInput,
-                     Named("WaterBalance")=DWB, 
-                     Named("Soil")=SWB,
-                     Named("EnergyBalance")= DEB,
-                     Named("Temperature")= DT,
-                     Named("PlantLAI") = PlantLAI,
-                     Named("PlantAbsorbedSWR") =PlantAbsSWR,
-                     Named("PlantAbsorbedLWR") =PlantAbsLWR,
-                     Named("PlantTranspiration") = PlantTranspiration,
-                     Named("PlantPhotosynthesis") = PlantPhotosynthesis,
-                     Named("dEdP") = dEdP,
-                     Named("LeafPsi") = LeafPsi, 
-                     Named("StemPsi") = LeafPsi, 
-                     Named("RootPsi") = RootPsi, 
-                     Named("RhizoPsi") = RhizoPsi,
-                     Named("PlantStress") = PlantStress,
-                     Named("PlantRWCstem") = PlantRWCstem,
-                     Named("PlantRWCleaf") = PlantRWCleaf,
-                     Named("subdaily") =  subdailyRes);
+    CharacterVector ln = CharacterVector(21);
+    l = List(21);
+    l[0] = spwbInput;
+    ln[0] = "spwbInput";
+    l[1] = soilInput;
+    ln[1] = "soilInput";
+    l[2] = DWB;
+    ln[2] = "WaterBalance";
+    l[3] = SWB;
+    ln[3] = "Soil";
+    l[4] = DEB;
+    ln[4] = "EnergyBalance";
+    l[5] = DT;
+    ln[5] = "Temperature";
+    l[6] = PlantLAI;
+    ln[6] = "PlantLAI";
+    l[7] = PlantAbsSWR;
+    ln[7] = "PlantAbsorbedSWR";
+    l[8] = PlantAbsLWR;
+    ln[8] = "PlantAbsorbedLWR";
+    l[9] = PlantTranspiration;
+    ln[9] = "PlantTranspiration";
+    l[10] = PlantPhotosynthesis;
+    ln[10] = "PlantPhotosynthesis";
+    l[11] = dEdP;
+    ln[11] = "dEdP";
+    l[12] = LeafPsi;
+    ln[12] = "LeafPsi";
+    l[13] = LeafRWC;
+    ln[13] = "LeafRWC";
+    l[14] = StemPsi;
+    ln[14] = "StemPsi";
+    l[15] = StemPLC;
+    ln[15] = "StemPLC";
+    l[16] = StemRWC;
+    ln[16] = "StemRWC";
+    l[17] = RootPsi;
+    ln[17] = "RootPsi";
+    l[18] = RhizoPsi;
+    ln[18] = "RhizoPsi";
+    l[19] = PlantStress;
+    ln[19] = "PlantStress";
+    l[20] = subdailyRes;
+    ln[20] = "subdaily";
+    l.attr("names") = ln;
   }
   l.attr("class") = CharacterVector::create("spwb","list");
   if(verbose) Rcout<<"done.\n";

@@ -1914,6 +1914,24 @@ NumericVector psi2Weibull(double psi50, double psi88) {
   return(par);
 }
 
+// [[Rcpp::export("hydraulics.maximumSoilPlantConductance")]]
+double maximumSoilPlantConductance(NumericVector krhizomax, NumericVector krootmax, 
+                                   double kstemmax, double kleafmax) {
+  int nlayers = krhizomax.length();
+  double krhizo = 0.0;
+  double kroot = 0.0;
+  for(int i=0;i<nlayers;i++) {
+    krhizo = krhizo + krhizomax[i];
+    kroot = kroot + krootmax[i];
+  }
+  double rrhizo = 1.0/krhizo;
+  double rroot = 1.0/kroot;
+  double plcCond = NA_REAL;
+  double rstem = 1.0/kstemmax;
+  double rleaf = 1.0/kleafmax;
+  return(1.0/(rrhizo+rroot+rstem+rleaf));
+}
+
 // [[Rcpp::export("hydraulics.soilPlantResistances")]]
 NumericVector soilPlantResistances(NumericVector psiSoil, NumericVector psiRhizo, 
                                    NumericVector psiStem, NumericVector PLCstem,

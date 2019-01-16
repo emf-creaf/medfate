@@ -401,6 +401,10 @@ hydraulics.psi2Weibull <- function(psi50, psi88) {
     .Call('_medfate_psi2Weibull', PACKAGE = 'medfate', psi50, psi88)
 }
 
+hydraulics.maximumSoilPlantConductance <- function(krhizomax, krootmax, kstemmax, kleafmax) {
+    .Call('_medfate_maximumSoilPlantConductance', PACKAGE = 'medfate', krhizomax, krootmax, kstemmax, kleafmax)
+}
+
 hydraulics.soilPlantResistances <- function(psiSoil, psiRhizo, psiStem, PLCstem, psiLeaf, krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd) {
     .Call('_medfate_soilPlantResistances', PACKAGE = 'medfate', psiSoil, psiRhizo, psiStem, PLCstem, psiLeaf, krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd)
 }

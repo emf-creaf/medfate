@@ -1588,6 +1588,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// maximumSoilPlantConductance
+double maximumSoilPlantConductance(NumericVector krhizomax, NumericVector krootmax, double kstemmax, double kleafmax);
+RcppExport SEXP _medfate_maximumSoilPlantConductance(SEXP krhizomaxSEXP, SEXP krootmaxSEXP, SEXP kstemmaxSEXP, SEXP kleafmaxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type krhizomax(krhizomaxSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type krootmax(krootmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type kstemmax(kstemmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type kleafmax(kleafmaxSEXP);
+    rcpp_result_gen = Rcpp::wrap(maximumSoilPlantConductance(krhizomax, krootmax, kstemmax, kleafmax));
+    return rcpp_result_gen;
+END_RCPP
+}
 // soilPlantResistances
 NumericVector soilPlantResistances(NumericVector psiSoil, NumericVector psiRhizo, NumericVector psiStem, NumericVector PLCstem, double psiLeaf, NumericVector krhizomax, NumericVector n, NumericVector alpha, NumericVector krootmax, double rootc, double rootd, double kstemmax, double stemc, double stemd, double kleafmax, double leafc, double leafd);
 RcppExport SEXP _medfate_soilPlantResistances(SEXP psiSoilSEXP, SEXP psiRhizoSEXP, SEXP psiStemSEXP, SEXP PLCstemSEXP, SEXP psiLeafSEXP, SEXP krhizomaxSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP krootmaxSEXP, SEXP rootcSEXP, SEXP rootdSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP kleafmaxSEXP, SEXP leafcSEXP, SEXP leafdSEXP) {
@@ -3004,6 +3018,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_regulatedPsiXylem", (DL_FUNC) &_medfate_regulatedPsiXylem, 6},
     {"_medfate_regulatedPsiTwoElements", (DL_FUNC) &_medfate_regulatedPsiTwoElements, 10},
     {"_medfate_psi2Weibull", (DL_FUNC) &_medfate_psi2Weibull, 2},
+    {"_medfate_maximumSoilPlantConductance", (DL_FUNC) &_medfate_maximumSoilPlantConductance, 4},
     {"_medfate_soilPlantResistances", (DL_FUNC) &_medfate_soilPlantResistances, 17},
     {"_medfate_averageRhizosphereResistancePercent", (DL_FUNC) &_medfate_averageRhizosphereResistancePercent, 13},
     {"_medfate_findRhizosphereMaximumConductance", (DL_FUNC) &_medfate_findRhizosphereMaximumConductance, 12},

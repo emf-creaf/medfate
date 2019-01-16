@@ -28,6 +28,8 @@ double leafWaterCapacity(double SLA, double ld);
 
 NumericVector regulatedPsiTwoElements(double Emax, double psiSoil, double krhizomax, double kxylemmax, double n, double alpha, double c, double d, double dE = 0.1, double psiMax = -10.0);
 
+double maximumSoilPlantConductance(NumericVector krhizomax, NumericVector krootmax, 
+                                   double kstemmax, double kleafmax);
 double findRhizosphereMaximumConductance(double averageResistancePercent, double n, double alpha,
                                          double krootmax, double rootc, double rootd,
                                          double kstemmax, double stemc, double stemd,
