@@ -43,7 +43,11 @@ soilgridsParams <- function(lat, long, depths = c(300, 500, 1200)) {
   ORCDRC <- sg_description[1, paste0('ORCDRC.M.sl', 1:7)]/10 # from g/Kg to %
   
   # get the indexes of soilgrids layers based on user layers
-  depths_indexes <- vapply(depths, function(x) {which(x - def_depths <= 0)[1]},
+  depths_indexes <- vapply(depths, function(x) {
+                                i = which(x - def_depths <= 0)[1]
+                                if(is.na(i)) i = length(def_depths)
+                                return(i)
+                              },
                            numeric(1))
   
   # get the user layers number
@@ -63,7 +67,7 @@ soilgridsParams <- function(lat, long, depths = c(300, 500, 1200)) {
   for (layer in 1:n_layers) {
     
     # n_index (start of the soilgrids values subsetting)
-    n <- ifelse(layer == 1, 1, depths_indexes[layer - 1] + 1)
+    n <- ifelse(layer == 1, 1, min(depths_indexes[layer - 1] + 1, length(def_depths)))
     
     # subset the variables and def_depths values
     BLDFIE_layer <- as.numeric(BLDFIE[n:depths_indexes[layer]])
