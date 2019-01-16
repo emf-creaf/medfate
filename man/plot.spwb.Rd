@@ -21,7 +21,7 @@ Function \code{plot} plots the results of the soil water balance model (see \cod
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x, object}{An object of class \code{spwb}}
+  \item{x, object}{An object of class \code{spwb}.}
   \item{type}{The information to be plotted:
   \itemize{
     \item{\code{"PET_Precipitation"}:}{ Potential evapotranspiration and Precipitation.}
