@@ -250,7 +250,9 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
                                            _["SoilEvaporation"] = sum(EsoilVec), _["Transpiration"] = sum(EplantVec),
                                            _["LAIcell"] = LAIcell, _["LAIcelldead"] = LAIcelldead, 
                                            _["Cm"] = Cm, _["Lground"] = LgroundPAR);
-  DataFrame SB = DataFrame::create(_["SoilEvaporation"] = EsoilVec, _["PlantExtraction"] = EplantVec, _["psi"] = psiVec);
+  DataFrame SB = DataFrame::create(_["SoilEvaporation"] = EsoilVec, 
+                                   _["ExtractionBalance"] = EplantVec, 
+                                   _["psi"] = psiVec);
   DataFrame Plants = DataFrame::create(_["LAI"] = LAIcohort,
                              _["Transpiration"] = Eplant, _["psi"] = PlantPsi, _["DDS"] = DDS);
   Plants.attr("row.names") = above.attr("row.names");
