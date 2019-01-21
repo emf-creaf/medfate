@@ -531,6 +531,9 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   //Hydraulics: determine layers where the plant is connected
   IntegerVector nlayerscon(numCohorts,0);
   NumericMatrix SoilWaterExtract(numCohorts, nlayers);
+  NumericMatrix soilLayerExtractInst(nlayers, ntimesteps);
+  std::fill(soilLayerExtractInst.begin(), soilLayerExtractInst.end(), 0.0);
+  
   LogicalMatrix layerConnected(numCohorts, nlayers);
   for(int c=0;c<numCohorts;c++) {
     nlayerscon[c] = 0;
@@ -629,6 +632,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   NumericMatrix PLC(numCohorts, ntimesteps);
   NumericVector PLCm(numCohorts), RWCsm(numCohorts), RWClm(numCohorts);
   NumericVector dEdPm(numCohorts);
+  
   
   for(int c=0;c<numCohorts;c++) {
     photosynthesis[c] = 0.0;
@@ -851,6 +855,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
               if(layerConnected(c,l)) {
                 psiRhizoMAT(c,l) = psiRhizo(iPM,cl);
                 SoilWaterExtract(c,l) += Esoilcn[cl]; //Add to cummulative transpiration from layers
+                soilLayerExtractInst(l,n) += Esoilcn[cl];
                 cl++;
               } 
             }
@@ -1010,10 +1015,16 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   
   
   //Substract extracted water from soil moisture 
-  NumericVector SoilExtractVec(nlayers, 0.0);
+  NumericVector soilExtractionBalance(nlayers, 0.0);
+  NumericVector soilHydraulicInput(nlayers, 0.0); //Water that entered into the layer across all time steps
+  NumericVector soilHydraulicOutput(nlayers, 0.0);  //Water that left the layer across all time steps
   for(int l=0;l<nlayers;l++) {
-    SoilExtractVec[l] = sum(SoilWaterExtract(_,l));
-    W[l] = std::max(W[l]-(SoilExtractVec[l]/Water_FC[l]),0.0);
+    for(int n=0;n<ntimesteps;n++) {
+      soilHydraulicInput[l] += (-1.0)*std::min(soilLayerExtractInst(l,n),0.0);
+      soilHydraulicOutput[l] += std::max(soilLayerExtractInst(l,n),0.0);
+    }
+    soilExtractionBalance[l] = sum(SoilWaterExtract(_,l));
+    W[l] = std::max(W[l]-(soilExtractionBalance[l]/Water_FC[l]),0.0);
   }
   
   //4z. Plant daily drought stress (from root collar mid-day water potential)
@@ -1082,11 +1093,15 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   List AbsRadinst = List::create(_["SWR_SH"] = SWR_SH, _["SWR_SL"]=SWR_SL,
                                  _["LWR_SH"] = LWR_SH, _["LWR_SL"] = LWR_SL);
   NumericVector DB = NumericVector::create(_["Rain"] = rain,_["Snow"] = 0.0,_["NetRain"] = NetRain, _["Runon"] = runon, _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
-                                           _["SoilEvaporation"] = sum(EsoilVec), _["PlantExtraction"] = sum(SoilExtractVec), _["Transpiration"] = sum(Eplant),
+                                           _["SoilEvaporation"] = sum(EsoilVec), _["PlantExtraction"] = sum(soilExtractionBalance), _["Transpiration"] = sum(Eplant),
+                                           _["HydraulicRedistribution"] = sum(soilHydraulicInput),
                                            _["LAIcell"] = LAIcell, _["LAIcelldead"] = LAIcelldead, _["Cm"] = Cm, _["Lground"] = LgroundPAR);
   
   DataFrame SB = DataFrame::create(_["SoilEvaporation"] = EsoilVec, 
-                                   _["PlantExtraction"] = SoilExtractVec, _["psi"] = psiVec);
+                                   _["HydraulicInput"] = soilHydraulicInput, 
+                                   _["HydraulicOutput"] = soilHydraulicOutput, 
+                                   _["ExtractionBalance"] = soilExtractionBalance, 
+                                   _["psi"] = psiVec);
   
   Einst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   dEdPinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
@@ -1099,6 +1114,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   RWCsteminst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   PWBinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   minPsiRhizo.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
+  soilLayerExtractInst.attr("dimnames") = List::create(seq(1,nlayers), seq(1,ntimesteps));
+  List SoilInst = List::create(_["Extraction"] = soilLayerExtractInst);
   List PlantsInst = List::create(
                                  _["LAIsunlit"] = LAI_SL, _["LAIshade"] = LAI_SH, 
                                  _["AbsRad"] = AbsRadinst, _["E"]=Einst, _["An"]=Aninst,
@@ -1129,6 +1146,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                         _["WaterBalance"] = DB, 
                         _["EnergyBalance"] = EB,
                         _["Soil"] = SB, 
+                        _["SoilInst"] = SoilInst,
                         _["RhizoPsi"] = minPsiRhizo,
                         _["Plants"] = Plants,
                         _["PlantsInst"] = PlantsInst);
@@ -1653,8 +1671,10 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   NumericVector SoilEvaporation(numDays);
   NumericVector Transpiration(numDays);
   NumericVector PlantExtraction(numDays);
+  NumericVector HydraulicRedistribution(numDays, 0.0);
   
   NumericMatrix Eplantdays(numDays, nlayers);
+  NumericMatrix HydrIndays(numDays, nlayers);
   NumericMatrix Wdays(numDays, nlayers); //Soil moisture content in relation to field capacity
   NumericMatrix psidays(numDays, nlayers);
   NumericMatrix MLdays(numDays, nlayers);
@@ -1814,7 +1834,10 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
       Rain[i] = db["Rain"];
       Snow[i] = db["Snow"];
       NetRain[i] = db["NetRain"];
-      if(transpirationMode=="Complex") PlantExtraction[i] = db["PlantExtraction"];
+      if(transpirationMode=="Complex")  {
+        PlantExtraction[i] = db["PlantExtraction"];
+        HydraulicRedistribution[i] = db["HydraulicRedistribution"];
+      }
       Transpiration[i] = db["Transpiration"];
       SoilEvaporation[i] = db["SoilEvaporation"];
       Interception[i] = Rain[i]-NetRain[i];
@@ -1822,7 +1845,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
       List sb = s["Soil"];
       NumericVector psi = sb["psi"];
       psidays(i,_) = psi;
-      NumericVector EplantVec = sb["PlantExtraction"];
+      NumericVector EplantVec = sb["ExtractionBalance"];
       SWE[i] = soil["SWE"];
         
       List Plants = s["Plants"];
@@ -1832,6 +1855,8 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
       PlantTranspiration(i,_) = EplantCoh;
       PlantStress(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["DDS"]);
       if(transpirationMode=="Complex") {
+        NumericVector HydrInVec = sb["HydraulicInput"];
+        HydrIndays(i,_) = HydrInVec;
         LeafPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["LeafPsi"]);
         RootPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["RootPsi"]); 
         StemPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["StemPsi"]); 
@@ -1883,8 +1908,11 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
       " Runoff (mm) " << round(Runoffsum) <<
         " Deep drainage (mm) "  << round(DeepDrainagesum)  <<"\n";
     Rcout<<"Soil evaporation (mm) " << round(SoilEvaporationsum);
-    if(transpirationMode =="Complex") Rcout<<" Plant extraction from soil (mm) " << round(sum(PlantExtraction));
     Rcout<<" Transpiration (mm) "  <<round(Transpirationsum) <<"\n";
+    if(transpirationMode =="Complex") {
+      Rcout<<"Plant extraction from soil (mm) " << round(sum(PlantExtraction));
+      Rcout<<" Hydraulic redistribution (mm) " << round(sum(HydraulicRedistribution)) <<"\n";
+    }
     for(int l=0;l<nlayers;l++) Rcout << "W"<<(l+1)<<"f:"<< round(100*W[l])/100<<" ";
     Rcout<<"\n";
     Rcout<<"Final soil water content (mm): "<< round(MLTot[numDays-1])<<"\n\n";
@@ -1894,7 +1922,8 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   
    DataFrame SWB = DataFrame::create(_["W"]=Wdays, _["ML"]=MLdays,_["MLTot"]=MLTot,
                                      _["WTD"] = WaterTable,
-                                     _["psi"]=psidays, _["SWE"] = SWE, _["PlantExt"]=Eplantdays);
+                                     _["psi"]=psidays, _["SWE"] = SWE, _["PlantExt"]=Eplantdays,
+                                     _["HydraulicInput"] = HydrIndays);
    DataFrame DWB;
    if(transpirationMode=="Simple") {
      DWB = DataFrame::create(_["GDD"] = GDD,
@@ -1909,7 +1938,8 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
                              _["Precipitation"] = Precipitation, _["Rain"] = Rain, _["Snow"] = Snow,
                              _["NetRain"]=NetRain,_["Infiltration"]=Infiltration, _["Runoff"]=Runoff, _["DeepDrainage"]=DeepDrainage, 
                              _["Evapotranspiration"]=Evapotranspiration,_["SoilEvaporation"]=SoilEvaporation,
-                             _["Transpiration"]=Transpiration, _["PlantExtraction"] = PlantExtraction);
+                             _["Transpiration"]=Transpiration, _["PlantExtraction"] = PlantExtraction,
+                             _["HydraulicRedistribution"] = HydraulicRedistribution);
      
    }
   

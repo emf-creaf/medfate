@@ -13,11 +13,12 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
   transpMode = input$control$transpirationMode
   
   TYPES = c("PET_Precipitation","PET_NetRain","Snow","Evapotranspiration","SoilPsi","SoilTheta","SoilVol", "Export", "LAI", "WTD",
-            "PlantLAI",
+            "PlantExtraction","PlantLAI",
             "PlantStress", "PlantPsi","PlantPhotosynthesis", "PlantTranspiration", "PlantWUE",
             "PlantPhotosynthesisLeaf","PlantTranspirationLeaf")
   if(transpMode=="Complex") {
     TYPES = c("PET_Precipitation","PET_NetRain","Snow","Evapotranspiration","SoilPsi","SoilTheta","SoilVol", "Export", "LAI", "WTD",
+              "PlantExtraction","HydraulicRedistribution",
               "PlantLAI",
               "SoilPlantConductance","PlantStress", 
               "PlantPhotosynthesis", "PlantTranspiration","PlantWUE",
@@ -124,9 +125,9 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     if(is.null(ylim)) ylim =c(min(PsiM),0)
     matplot(dates, PsiM, lwd=1.5,
          ylim=ylim, type="l", ylab=ylab, xlab=xlab, xlim=xlim,
-         frame=FALSE, lty=c(1,2,3,4,5), col="black",axes=FALSE)
+         frame=FALSE, lty=c(1,2,3,4,5), col = 1:nlayers,axes=FALSE)
     plotAxes()
-    legend("bottomleft", bty="n", lty=c(1,2,3,4,5), col="black", lwd=1.5,
+    legend("bottomleft", bty="n", lty=c(1,2,3,4,5), col = 1:nlayers, lwd=1.5,
            legend=paste("Layer", 1:nlayers))
     
   } 
@@ -136,9 +137,9 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     if(is.null(ylim)) ylim = c(0,100*max(WM,na.rm = T))
     matplot(dates, WM*100, lwd=1.5,
             ylim=ylim, type="l", ylab=ylab, xlab=xlab, xlim=xlim,
-            frame=FALSE, lty=c(1,2,3,4,5), col="black",axes=FALSE)
+            frame=FALSE, lty=c(1,2,3,4,5), col = 1:nlayers,axes=FALSE)
     plotAxes()
-    legend("bottomleft", bty="n", col="black",lty=1:nlayers, lwd=1.5,
+    legend("bottomleft", bty="n", col = 1:nlayers,lty=1:nlayers, lwd=1.5,
            legend=paste("Layer", 1:nlayers))
   } 
   else if(type=="SoilVol") {
@@ -149,9 +150,34 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     plot(dates, MLTot, ylim=ylim, lwd=2, type="l",xlim=xlim,
          ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
     plotAxes()
-    matlines(dates, MLM, lty = 1:nlayers, col="black", lwd=1.5)
-    legend("topleft", bty="n", col="black",lty=c(1,1:nlayers), lwd=c(2,rep(1.5,5)),
+    matlines(dates, MLM, lty = 1:nlayers, col = 1:nlayers, lwd=1.5)
+    legend("topleft", bty="n", col = 1:nlayers,lty=c(1,1:nlayers), lwd=c(2,rep(1.5,5)),
            legend=c("Total",paste("Layer", 1:nlayers)))
+    
+  } 
+  else if(type=="PlantExtraction") {
+    extrBal = Soil[,paste("PlantExt",1:nlayers,sep=".")]
+    if(is.null(ylab)) ylab = "Extraction from soil layer (mm)"    
+    if(is.null(ylim)) ylim =c(min(extrBal), max(extrBal))
+    matplot(dates, extrBal, lwd=1.5,
+            ylim=ylim, type="l", ylab=ylab, xlab=xlab, xlim=xlim,
+            frame=FALSE, lty=c(1,2,3,4,5), col = 1:nlayers, axes=FALSE)
+    plotAxes()
+    abline(h=0, col="gray", lwd=1.5)
+    legend("topleft", bty="n", lty=c(1,2,3,4,5), col = 1:nlayers, lwd=1.5,
+           legend=paste("Layer", 1:nlayers))
+    
+  } 
+  else if(type=="HydraulicRedistribution") {
+    hydrIn = Soil[,paste("HydraulicInput",1:nlayers,sep=".")]
+    if(is.null(ylab)) ylab = "Hydraulic input (mm)"    
+    if(is.null(ylim)) ylim =c(0, max(hydrIn))
+    matplot(dates, hydrIn, lwd=1.5,
+            ylim=ylim, type="l", ylab=ylab, xlab=xlab, xlim=xlim,
+            frame=FALSE, lty=c(1,2,3,4,5), col = 1:nlayers, axes=FALSE)
+    plotAxes()
+    legend("topleft", bty="n", lty=c(1,2,3,4,5), col = 1:nlayers, lwd=1.5,
+           legend=paste("Layer", 1:nlayers))
     
   } 
   else if(type=="Export") {

@@ -3,6 +3,10 @@
 -------------------------------
 
 __Version history__
+
+_Version 0.7.2, January 2019.
+1. Accounting of hydraulic redistribution
+
 _Version 0.7.1, January 2019.
 1. Interception corrected in the complex model
 2. Etol set to 0.0000001
