@@ -46,41 +46,41 @@ spwb.resetInputs(x, soil, from = NULL, day = NA)
 \value{
   Function \code{spwb} returns a list of class 'spwb' with the following elements (both transpiration modes):
   \itemize{
-  \item{\code{"spwbInput"}: A copy of the object \code{x} of class \code{\link{spwbInput}} given as input.}
-  \item{\code{"soilInput"}: A copy of the object \code{soil} of class \code{\link{soil}} given as input.}
-  \item{\code{"WaterBalance"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
-  \itemize{
-  \item{\code{"GDD"}: Cumulative growth degree days.}
-  \item{\code{"LAIcell"}: The LAI of the stand (accounting for leaf phenology) (in m2/m2).}
-  \item{\code{"Cm"}: The water retention capacity of the stand (in mm) (accounting for leaf phenology).}
-  \item{\code{"Lground"}: The proportion of light that reaches the ground (accounting for leaf phenology).}
-  \item{\code{"PET"}: Potential evapotranspiration (in mm).}
-  \item{\code{"Precipitation"}: Input precipitation (in mm).}
-  \item{\code{"Rain"}: Precipitation as rain (in mm).}
-  \item{\code{"Snow"}: Precipitation as snow (in mm).}
-  \item{\code{"NetRain"}: Net rain, after accounting for interception (in mm).}
-  \item{\code{"Infiltration"}: The amount of water infiltrating into the soil (in mm).}
-  \item{\code{"Runoff"}: The amount of water exported via surface runoff (in mm).}
-  \item{\code{"DeepDrainage"}: The amount of water exported via deep drainage (in mm).}
-  \item{\code{"Etot"}: Evapotranspiration (in mm).}
-  \item{\code{"Esoil"}: Bare soil evaporation (in mm).}
-  \item{\code{"Eplanttot"}: Plant transpiration (considering all soil layers) (in mm).}
-  \item{\code{"Eplant.1"}, \code{...}, \code{"Eplant.k"}: Plant transpiration from each soil layer (in mm).}
-  }
-  \item{\code{"Soil"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
-  \itemize{
-  \item{\code{"W.1"}, \code{...}, \code{"W.k"}: Relative soil moisture content (relative to field capacity) in each soil layer.}
-  \item{\code{"ML.1"}, \code{...}, \code{"ML.k"}: Soil water volume in each soil layer (in L/m2).}
-  \item{\code{"MLTot"}: Total soil water volume (in L/m2).}
-  \item{\code{"psi.1"}, \code{...}, \code{"psi.k"}: Soil water potential in each soil layer (in MPa).}
-  \item{\code{"SWE"}: Snow water equivalent (mm) of the snow pack.}
-  }
-  \item{\code{"PlantLAI"}: A data frame with the daily leaf area index for each plant cohort. Days are in rows and plant cohorts are in columns.}
-  \item{\code{"PlantTranspiration"}: A data frame with the amount of daily transpiration (in mm) for each plant cohort. Days are in rows and plant cohorts are in columns.}
-  \item{\code{"PlantPhotosynthesis"}: A data frame with the amount of daily net photosynthesis (in g C·m-2) for each plant cohort. Days are in rows and plant cohorts are in columns.}
- \item{\code{"PlantPsi"}: A data frame with the average daily water potential of each plant (in MPa). Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
-  \item{\code{"PlantStress"}: A data frame with the amount of daily stress [0-1] suffered by each plant cohort (relative whole-plant conductance). Days are in rows and plant cohorts are in columns.}
-  \item{\code{"subdaily"}: A list of objects of class \code{\link{spwb.day}}, one per day simulated (only if required in \code{control} parameters, see \code{\link{defaultControl}}).}
+     \item{\code{"spwbInput"}: A copy of the object \code{x} of class \code{\link{spwbInput}} given as input.}
+     \item{\code{"soilInput"}: A copy of the object \code{soil} of class \code{\link{soil}} given as input.}
+     \item{\code{"WaterBalance"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
+       \itemize{
+          \item{\code{"GDD"}: Cumulative growth degree days.}
+          \item{\code{"LAIcell"}: The LAI of the stand (accounting for leaf phenology) (in m2/m2).}
+          \item{\code{"Cm"}: The water retention capacity of the stand (in mm) (accounting for leaf phenology).}
+          \item{\code{"Lground"}: The proportion of light that reaches the ground (accounting for leaf phenology).}
+          \item{\code{"PET"}: Potential evapotranspiration (in mm).}
+          \item{\code{"Precipitation"}: Input precipitation (in mm).}
+          \item{\code{"Rain"}: Precipitation as rain (in mm).}
+          \item{\code{"Snow"}: Precipitation as snow (in mm).}
+          \item{\code{"NetRain"}: Net rain, after accounting for interception (in mm).}
+          \item{\code{"Infiltration"}: The amount of water infiltrating into the soil (in mm).}
+          \item{\code{"Runoff"}: The amount of water exported via surface runoff (in mm).}
+          \item{\code{"DeepDrainage"}: The amount of water exported via deep drainage (in mm).}
+          \item{\code{"Evapotranspiration"}: Evapotranspiration (in mm).}
+          \item{\code{"SoilEvaporation"}: Bare soil evaporation (in mm).}
+          \item{\code{"Transpiration"}: Plant transpiration (considering all soil layers) (in mm).}
+      }
+    \item{\code{"Soil"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
+        \itemize{
+          \item{\code{"W.1"}, \code{...}, \code{"W.k"}: Relative soil moisture content (relative to field capacity) in each soil layer.}
+          \item{\code{"ML.1"}, \code{...}, \code{"ML.k"}: Soil water volume in each soil layer (in L/m2).}
+          \item{\code{"MLTot"}: Total soil water volume (in L/m2).}
+          \item{\code{"SWE"}: Snow water equivalent (mm) of the snow pack.}
+          \item{\code{"Eplant.1"}, \code{...}, \code{"Eplant.k"}: Plant transpiration from each soil layer (in mm).}
+          \item{\code{"psi.1"}, \code{...}, \code{"psi.k"}: Soil water potential in each soil layer (in MPa).}
+        }
+     \item{\code{"PlantLAI"}: A data frame with the daily leaf area index for each plant cohort. Days are in rows and plant cohorts are in columns.}
+     \item{\code{"PlantTranspiration"}: A data frame with the amount of daily transpiration (in mm) for each plant cohort. Days are in rows and plant cohorts are in columns.}
+     \item{\code{"PlantPhotosynthesis"}: A data frame with the amount of daily net photosynthesis (in g C·m-2) for each plant cohort. Days are in rows and plant cohorts are in columns.}
+     \item{\code{"PlantPsi"}: A data frame with the average daily water potential of each plant (in MPa). Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
+     \item{\code{"PlantStress"}: A data frame with the amount of daily stress [0-1] suffered by each plant cohort (relative whole-plant conductance). Days are in rows and plant cohorts are in columns.}
+     \item{\code{"subdaily"}: A list of objects of class \code{\link{spwb.day}}, one per day simulated (only if required in \code{control} parameters, see \code{\link{defaultControl}}).}
   }
   If \code{transpirationMode=="Complex"} the list also includes the following elements:
  \itemize{

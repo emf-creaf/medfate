@@ -28,10 +28,12 @@ Function \code{plot} plots the results of the soil water balance model (see \cod
     \item{\code{"PET_NetRain"}:}{ Potential evapotranspiration and Net rainfall.}
     \item{\code{"Snow"}:}{ Snow precipitation and snowpack dynamics.}
     \item{\code{"Export"}:}{ Water exported through deep drainage and surface runoff.}
-    \item{\code{"ET"}:}{ Plant transpiration and soil evaporation.}
+    \item{\code{"Evapotranspiration"}:}{ Plant transpiration and soil evaporation.}
     \item{\code{"SoilPsi"}:}{ Soil water potential.}
     \item{\code{"SoilTheta"}:}{ Soil relative water content.}
     \item{\code{"SoilVol"}:}{ Soil water volumetric content.}
+    \item{\code{"PlantExtraction"}:}{ Water extracted by plants from each soil layer.}
+    \item{\code{"HydraulicRedistribution"}:}{Water added to each soil layer coming from other soil layers, transported through the plant hydraulic network (only for \code{transpirationMode = "Complex"}).}
     \item{\code{"WTD"}:}{ Water table depth.}
     \item{\code{"LAI"}:}{ Expanded and dead leaf area index of the whole stand.}
     \item{\code{"PlantLAI"}:}{ Plant cohort leaf area index (expanded leaves).}
