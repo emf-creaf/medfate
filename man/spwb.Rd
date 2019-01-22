@@ -44,7 +44,7 @@ spwb.resetInputs(x, soil, from = NULL, day = NA)
   Detailed model description is available in the vignettes section. The model using 'Simple' transpiration mode is described in De Caceres et al. (2015). Simulations using the 'Complex' transpiration mode are computationally much more expensive. Function \code{spwb.resetInputs()} allows resetting state variables in \code{x} and \code{soil} to their defaults, or to copy values of state variables from a previous \code{spwb()} simulation results stored in \code{from}.
 }
 \value{
-  Function \code{spwb} returns a list of class 'spwb' with the following elements (both transpiration modes):
+  Function \code{spwb} returns a list of class 'spwb' with the following elements:
   \itemize{
      \item{\code{"spwbInput"}: A copy of the object \code{x} of class \code{\link{spwbInput}} given as input.}
      \item{\code{"soilInput"}: A copy of the object \code{soil} of class \code{\link{soil}} given as input.}
@@ -64,7 +64,10 @@ spwb.resetInputs(x, soil, from = NULL, day = NA)
           \item{\code{"DeepDrainage"}: The amount of water exported via deep drainage (in mm).}
           \item{\code{"Evapotranspiration"}: Evapotranspiration (in mm).}
           \item{\code{"SoilEvaporation"}: Bare soil evaporation (in mm).}
+          \item{\code{"PlantExtraction"}: Amount of water extracted from soil by plants (in mm) (can only be diferent from transpiration for \code{transpirationMode = "Complex"} when capacitance is considered).}
           \item{\code{"Transpiration"}: Plant transpiration (considering all soil layers) (in mm).}
+          \item{\code{"HydraulicRedistribution"}: Water redistributed among soil layers, transported through the plant hydraulic network (only for \code{transpirationMode = "Complex"}).}
+          
       }
     \item{\code{"Soil"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
         \itemize{
@@ -72,7 +75,8 @@ spwb.resetInputs(x, soil, from = NULL, day = NA)
           \item{\code{"ML.1"}, \code{...}, \code{"ML.k"}: Soil water volume in each soil layer (in L/m2).}
           \item{\code{"MLTot"}: Total soil water volume (in L/m2).}
           \item{\code{"SWE"}: Snow water equivalent (mm) of the snow pack.}
-          \item{\code{"Eplant.1"}, \code{...}, \code{"Eplant.k"}: Plant transpiration from each soil layer (in mm).}
+          \item{\code{"PlantExt.1"}, \code{...}, \code{"PlantExt.k"}: Plant extraction from each soil layer (in mm).}
+          \item{\code{"HydraulicInput.1"}, \code{...}, \code{"HydraulicInput.k"}: Water that entered the layer coming from other layers and transported via the plant hydraulic network (in mm) (only for \code{transpirationMode = "Complex"}).}
           \item{\code{"psi.1"}, \code{...}, \code{"psi.k"}: Soil water potential in each soil layer (in MPa).}
         }
      \item{\code{"PlantLAI"}: A data frame with the daily leaf area index for each plant cohort. Days are in rows and plant cohorts are in columns.}

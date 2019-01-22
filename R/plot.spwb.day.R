@@ -2,11 +2,12 @@ plot.spwb.day<-function(x, type="PlantTranspiration", bySpecies = FALSE, xlab = 
   if(!("EnergyBalance" %in% names(x))) stop("Plotting function available for transpirationMode = 'Complex' only.")
   EB = x$EnergyBalance
   Plants = x$Plants
+  SoilInst = x$SoilInst
   PlantsInst = x$PlantsInst
   TYPES = c("LeafPsi","RootPsi", "StemPsi",
             "StemPLC","StemRWC", "LeafRWC",
             "SoilPlantConductance",
-            "PlantTranspiration","PlantPhotosynthesis","PlantAbsorbedSWR",
+            "PlantExtraction","PlantTranspiration","PlantPhotosynthesis","PlantAbsorbedSWR",
             "LeafTranspiration","LeafPhotosynthesis", "LeafAbsorbedSWR",
             "LeafVPD","LeafStomatalConductance", "LeafTemperature",
             "Temperature","CanopyEnergyBalance", "SoilEnergyBalance", "PlantWaterBalance")
@@ -130,6 +131,15 @@ plot.spwb.day<-function(x, type="PlantTranspiration", bySpecies = FALSE, xlab = 
             lwd=1, type="l", ylab=ylab, xlab=xlab, frame=FALSE, ...)
     legend("bottomright", legend = cohortnames, lty=1:length(cohortnames), 
            col = 1:length(cohortnames), bty="n")
+  }
+  else if(type=="PlantExtraction") {
+    OM = SoilInst$Extraction
+    nlayers = nrow(OM)
+    if(is.null(ylab)) ylab = expression(paste("Extraction from soil layers   ",(L%.%m^{-2})))
+    matplot(timesteps, t(OM), lty=1:nlayers, col = 1:nlayers,
+            lwd=1, type="l", ylab=ylab, xlab=xlab, frame=FALSE, ...)
+    legend("topright", legend = paste("Layer", 1:nlayers), lty=1:nlayers, 
+           col = 1:nlayers, bty="n")
   }
   else if(type=="PlantTranspiration") {
     OM = PlantsInst$E

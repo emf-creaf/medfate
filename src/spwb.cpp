@@ -247,11 +247,11 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   
   NumericVector DB = NumericVector::create(_["PET"] = pet, _["Rain"] = rain, _["Snow"] = snow, _["NetRain"] = NetRain, _["Runon"] = runon, 
                                            _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
-                                           _["SoilEvaporation"] = sum(EsoilVec), _["Transpiration"] = sum(EplantVec),
+                                           _["SoilEvaporation"] = sum(EsoilVec), _["PlantExtraction"] = sum(EplantVec), _["Transpiration"] = sum(EplantVec),
                                            _["LAIcell"] = LAIcell, _["LAIcelldead"] = LAIcelldead, 
                                            _["Cm"] = Cm, _["Lground"] = LgroundPAR);
   DataFrame SB = DataFrame::create(_["SoilEvaporation"] = EsoilVec, 
-                                   _["ExtractionBalance"] = EplantVec, 
+                                   _["PlantExtraction"] = EplantVec, 
                                    _["psi"] = psiVec);
   DataFrame Plants = DataFrame::create(_["LAI"] = LAIcohort,
                              _["Transpiration"] = Eplant, _["psi"] = PlantPsi, _["DDS"] = DDS);
@@ -1102,7 +1102,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   DataFrame SB = DataFrame::create(_["SoilEvaporation"] = EsoilVec, 
                                    _["HydraulicInput"] = soilHydraulicInput, 
                                    _["HydraulicOutput"] = soilHydraulicOutput, 
-                                   _["ExtractionBalance"] = soilExtractionBalance, 
+                                   _["PlantExtraction"] = soilExtractionBalance, 
                                    _["psi"] = psiVec);
   
   Einst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
@@ -1836,8 +1836,8 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
       Rain[i] = db["Rain"];
       Snow[i] = db["Snow"];
       NetRain[i] = db["NetRain"];
+      PlantExtraction[i] = db["PlantExtraction"];
       if(transpirationMode=="Complex")  {
-        PlantExtraction[i] = db["PlantExtraction"];
         HydraulicRedistribution[i] = db["HydraulicRedistribution"];
       }
       Transpiration[i] = db["Transpiration"];
@@ -1847,7 +1847,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
       List sb = s["Soil"];
       NumericVector psi = sb["psi"];
       psidays(i,_) = psi;
-      NumericVector EplantVec = sb["ExtractionBalance"];
+      NumericVector EplantVec = sb["PlantExtraction"];
       SWE[i] = soil["SWE"];
         
       List Plants = s["Plants"];
@@ -1922,10 +1922,21 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   }
   if(verbose) Rcout<<"Building SPWB output ...";
   
-   DataFrame SWB = DataFrame::create(_["W"]=Wdays, _["ML"]=MLdays,_["MLTot"]=MLTot,
-                                     _["WTD"] = WaterTable,
-                                     _["psi"]=psidays, _["SWE"] = SWE, _["PlantExt"]=Eplantdays,
-                                     _["HydraulicInput"] = HydrIndays);
+   DataFrame SWB;
+   if(transpirationMode=="Simple") {
+     SWB = DataFrame::create(_["W"]=Wdays, _["ML"]=MLdays,_["MLTot"]=MLTot,
+                             _["WTD"] = WaterTable,
+                             _["SWE"] = SWE, 
+                             _["PlantExt"]=Eplantdays,
+                             _["psi"]=psidays); 
+   } else {
+     SWB = DataFrame::create(_["W"]=Wdays, _["ML"]=MLdays,_["MLTot"]=MLTot,
+                             _["WTD"] = WaterTable,
+                             _["SWE"] = SWE, 
+                             _["PlantExt"]=Eplantdays,
+                             _["HydraulicInput"] = HydrIndays,
+                             _["psi"]=psidays); 
+   }
    DataFrame DWB;
    if(transpirationMode=="Simple") {
      DWB = DataFrame::create(_["GDD"] = GDD,
@@ -1933,14 +1944,14 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
                              _["Precipitation"] = Precipitation, _["Rain"] = Rain, _["Snow"] = Snow,
                              _["NetRain"]=NetRain,_["Infiltration"]=Infiltration, _["Runoff"]=Runoff, _["DeepDrainage"]=DeepDrainage, 
                              _["Evapotranspiration"]=Evapotranspiration,_["SoilEvaporation"]=SoilEvaporation,
-                             _["Transpiration"]=Transpiration);
+                             _["PlantExtraction"] = PlantExtraction, _["Transpiration"]=Transpiration);
    } else {
      DWB = DataFrame::create(_["GDD"] = GDD,
                              _["LAIcell"]=LAIcell, _["LAIcelldead"] = LAIcelldead,  _["Cm"]=Cm, _["Lground"] = Lground, _["PET"]=PET, 
                              _["Precipitation"] = Precipitation, _["Rain"] = Rain, _["Snow"] = Snow,
                              _["NetRain"]=NetRain,_["Infiltration"]=Infiltration, _["Runoff"]=Runoff, _["DeepDrainage"]=DeepDrainage, 
                              _["Evapotranspiration"]=Evapotranspiration,_["SoilEvaporation"]=SoilEvaporation,
-                             _["Transpiration"]=Transpiration, _["PlantExtraction"] = PlantExtraction,
+                             _["PlantExtraction"] = PlantExtraction, _["Transpiration"]=Transpiration, 
                              _["HydraulicRedistribution"] = HydraulicRedistribution);
      
    }

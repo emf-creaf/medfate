@@ -37,6 +37,8 @@ An object (a list) of class \code{spwb.day} with the following elements:
   \item{\code{"Soil"}: A data frame with results for each soil layer:
     \itemize{
       \item{\code{"SoilEvaporation"}: Water evaporated from the soil surface (in mm).}
+      \item{\code{"HydraulicInput"}: Water entering each soil layer from other layers, transported via plant hydraulic network (in mm) (only for \code{transpirationMode = "Complex"}).}
+      \item{\code{"HydraulicOutput"}: Water leaving each soil layer (going to other layers or the transpiration stream) (in mm) (only for \code{transpirationMode = "Complex"}).}
       \item{\code{"PlantExtraction"}: Water extracted by plants from each soil layer (in mm).}
       \item{\code{"psi"}: Soil water potential (in MPa).}
     }

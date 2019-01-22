@@ -197,8 +197,8 @@ Function `spwb.day()` is most useful when working with the complex transpiration
 names(sd1)
 ```
 
-* **DailyBalance**: Contains the soil water balance flows (precipitation, infiltration, transpiration, ...)
-* **SoilBalance**: Contains output values by soil layer (i.e. water evaporated from each soil layer, water transpired from each soil layer and the final soil water potential).
+* **WaterBalance**: Contains the soil water balance flows (precipitation, infiltration, transpiration, ...)
+* **Soil**: Contains output values by soil layer (i.e. water evaporated from each soil layer, water transpired from each soil layer and the final soil water potential).
 * **Plants**: Contains output values by plant cohort (i.e. LAI values, transpiration, water potential, drought stress index, ...).
 
 ```{r}
@@ -230,13 +230,13 @@ If we inspect its elements, we realize that the output is arranged differently t
 ```{r}
 names(S)
 ```
-In particular, element `control` contains a copy of the input parameters that were used to run the model; and `cohorts` contains information about the plant cohorts (i.e. code, species and name):
+In particular, element `spwbInput` contains a copy of the input parameters that were used to run the model:
 ```{r}
-S$cohorts
+names(S$spwbInput)
 ```
-As before, `DailyBalance` contains water balance components, but in this case in form of a data frame with days in rows:
+As before, `WaterBalance` contains water balance components, but in this case in form of a data frame with days in rows:
 ```{r}
-head(S$DailyBalance)
+head(S$WaterBalance)
 ```
 Elements `PlantLAI`, `PlantStress`, `PlantPsi`, `PlantTranspiration` and `PlantPhotosynthesis` contain daily values by plant cohorts, for example plant water potentials are:
 ```{r}
