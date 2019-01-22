@@ -40,7 +40,7 @@ plant.EquilibriumSmallBranchLitter(x, SpParams,
 plant.FoliarBiomass(x, SpParams, gdd = NA)
 plant.Fuel(x, SpParams, gdd = NA, includeDead = TRUE)
 plant.Height(x)
-plant.ID(x, SpParams)
+plant.ID(x)
 plant.LAI(x, SpParams, gdd = NA)
 plant.Parameter(x, SpParams, parName)
 plant.Phytovolume(x, SpParams)

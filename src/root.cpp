@@ -117,6 +117,28 @@ NumericMatrix ldrDistribution(NumericVector Z50, NumericVector Z95, NumericVecto
   return(P);
 }
 
+// [[Rcpp::export(".rootDistribution")]]
+NumericMatrix rootDistribution(NumericVector z, List x) {
+  DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
+  DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
+  int ntree = treeData.nrows();
+  int nshrub = shrubData.nrows();
+  
+  NumericVector treeZ50 = Rcpp::as<Rcpp::NumericVector>(treeData["Z50"]);
+  NumericVector treeZ95 = Rcpp::as<Rcpp::NumericVector>(treeData["Z95"]);
+  NumericVector shrubZ =  Rcpp::as<Rcpp::NumericVector>( shrubData["Z"]);  
+  NumericMatrix rdtree = ldrDistribution(treeZ50, treeZ95, z);
+  NumericMatrix rdshrub = conicDistribution(shrubZ, z);
+  NumericMatrix rd = NumericMatrix(ntree+nshrub, z.length());
+  for(int i=0;i<ntree;i++) {
+    rd(i,_) = rdtree(i,_);
+  }
+  for(int i=0;i<nshrub;i++) {
+    rd(ntree+i,_) = rdshrub(i,_);
+  }
+  return(rd);
+}
+
 /**
  *  Root lengths
  * 

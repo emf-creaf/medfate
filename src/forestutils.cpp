@@ -114,7 +114,7 @@ CharacterVector cohortSpeciesName(List x, DataFrame SpParams) {
 }
 
 // [[Rcpp::export("plant.ID")]]
-CharacterVector cohortIDs(List x, DataFrame SpParams) {
+CharacterVector cohortIDs(List x) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
   DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
   int ntree = treeData.nrows();
@@ -989,7 +989,7 @@ DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL) {
   }
   DataFrame above = DataFrame::create(_["SP"]=SP, _["N"] = N,  _["DBH"] = DBH,_["Cover"] = Cover, _["H"]=H, _["CR"] = CR, 
                     _["LAI_live"]=LAI_live, _["LAI_expanded"] = LAI_expanded, _["LAI_dead"] = LAI_dead);
-  above.attr("row.names") = cohortIDs(x, SpParams); //Assign cohort IDs to row.names
+  above.attr("row.names") = cohortIDs(x); //Assign cohort IDs to row.names
     
   return(above);
   
@@ -1025,6 +1025,6 @@ NumericMatrix forest2belowground(List x, List soil, DataFrame SpParams) {
     Vi = conicRS_one(shrubZ[i],d);
     V(ntree+i,_) = Vi;
   }
-  V.attr("dimnames") = List::create(cohortIDs(x, SpParams),ln);
+  V.attr("dimnames") = List::create(cohortIDs(x),ln);
   return(V);
 }

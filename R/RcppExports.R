@@ -81,8 +81,8 @@ plant.SpeciesName <- function(x, SpParams) {
     .Call('_medfate_cohortSpeciesName', PACKAGE = 'medfate', x, SpParams)
 }
 
-plant.ID <- function(x, SpParams) {
-    .Call('_medfate_cohortIDs', PACKAGE = 'medfate', x, SpParams)
+plant.ID <- function(x) {
+    .Call('_medfate_cohortIDs', PACKAGE = 'medfate', x)
 }
 
 .treeBasalArea <- function(N, dbh) {
@@ -587,6 +587,10 @@ root.conicDistribution <- function(Zcone, d) {
 
 root.ldrDistribution <- function(Z50, Z95, d) {
     .Call('_medfate_ldrDistribution', PACKAGE = 'medfate', Z50, Z95, d)
+}
+
+.rootDistribution <- function(z, x) {
+    .Call('_medfate_rootDistribution', PACKAGE = 'medfate', z, x)
 }
 
 root.rootLengths <- function(v, d, depthWidthRatio = 1.0) {

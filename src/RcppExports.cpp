@@ -279,14 +279,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // cohortIDs
-CharacterVector cohortIDs(List x, DataFrame SpParams);
-RcppExport SEXP _medfate_cohortIDs(SEXP xSEXP, SEXP SpParamsSEXP) {
+CharacterVector cohortIDs(List x);
+RcppExport SEXP _medfate_cohortIDs(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
-    rcpp_result_gen = Rcpp::wrap(cohortIDs(x, SpParams));
+    rcpp_result_gen = Rcpp::wrap(cohortIDs(x));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2312,6 +2311,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// rootDistribution
+NumericMatrix rootDistribution(NumericVector z, List x);
+RcppExport SEXP _medfate_rootDistribution(SEXP zSEXP, SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type z(zSEXP);
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(rootDistribution(z, x));
+    return rcpp_result_gen;
+END_RCPP
+}
 // rootLengths
 NumericVector rootLengths(NumericVector v, NumericVector d, double depthWidthRatio);
 RcppExport SEXP _medfate_rootLengths(SEXP vSEXP, SEXP dSEXP, SEXP depthWidthRatioSEXP) {
@@ -2938,7 +2949,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_cohortCharacterParameter", (DL_FUNC) &_medfate_cohortCharacterParameter, 3},
     {"_medfate_cohortSpecies", (DL_FUNC) &_medfate_cohortSpecies, 1},
     {"_medfate_cohortSpeciesName", (DL_FUNC) &_medfate_cohortSpeciesName, 2},
-    {"_medfate_cohortIDs", (DL_FUNC) &_medfate_cohortIDs, 2},
+    {"_medfate_cohortIDs", (DL_FUNC) &_medfate_cohortIDs, 1},
     {"_medfate_treeBasalArea", (DL_FUNC) &_medfate_treeBasalArea, 2},
     {"_medfate_cohortBasalArea", (DL_FUNC) &_medfate_cohortBasalArea, 1},
     {"_medfate_speciesBasalArea", (DL_FUNC) &_medfate_speciesBasalArea, 2},
@@ -3065,6 +3076,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_multilayerPhotosynthesisFunction", (DL_FUNC) &_medfate_multilayerPhotosynthesisFunction, 18},
     {"_medfate_conicDistribution", (DL_FUNC) &_medfate_conicDistribution, 2},
     {"_medfate_ldrDistribution", (DL_FUNC) &_medfate_ldrDistribution, 3},
+    {"_medfate_rootDistribution", (DL_FUNC) &_medfate_rootDistribution, 2},
     {"_medfate_rootLengths", (DL_FUNC) &_medfate_rootLengths, 3},
     {"_medfate_xylemConductanceProportions", (DL_FUNC) &_medfate_xylemConductanceProportions, 3},
     {"_medfate_thetaSATSaxton", (DL_FUNC) &_medfate_thetaSATSaxton, 3},
