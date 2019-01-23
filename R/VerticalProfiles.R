@@ -7,7 +7,7 @@ vprofile.LeafAreaDensity<-function(x, SpParams, z = NULL, gdd = NA, byCohorts = 
       plot(lai, z[-1], type="l", xlab="Leaf area density (m2/m2)", ylab="Height (cm)")
     }
   } else {
-    cohortnames = plant.ID(x, SpParams)
+    cohortnames = plant.ID(x)
     lai = .LAIdistribution(z,x, SpParams, gdd)
     if(bySpecies) {
       spnames = plant.SpeciesName(x, SpParams)

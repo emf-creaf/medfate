@@ -8,6 +8,8 @@ _Version 0.7.2, January 2019.
 1. Accounting of hydraulic redistribution
 2. Update plotting functions
 3. New function vprofile.RootDistribution.
+4. New functions for water at wilting point (-1.5 MPa)
+5. Print extractable water of soil
 
 _Version 0.7.1, January 2019.
 1. Interception corrected in the complex model

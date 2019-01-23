@@ -2513,6 +2513,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// thetaWP
+NumericVector thetaWP(List soil, String model);
+RcppExport SEXP _medfate_thetaWP(SEXP soilSEXP, SEXP modelSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< String >::type model(modelSEXP);
+    rcpp_result_gen = Rcpp::wrap(thetaWP(soil, model));
+    return rcpp_result_gen;
+END_RCPP
+}
 // thetaSAT
 NumericVector thetaSAT(List soil, String model);
 RcppExport SEXP _medfate_thetaSAT(SEXP soilSEXP, SEXP modelSEXP) {
@@ -2546,6 +2558,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< String >::type model(modelSEXP);
     rcpp_result_gen = Rcpp::wrap(waterSAT(soil, model));
+    return rcpp_result_gen;
+END_RCPP
+}
+// waterWP
+NumericVector waterWP(List soil, String model);
+RcppExport SEXP _medfate_waterWP(SEXP soilSEXP, SEXP modelSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< String >::type model(modelSEXP);
+    rcpp_result_gen = Rcpp::wrap(waterWP(soil, model));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -3091,9 +3115,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_soilTemperatureChange", (DL_FUNC) &_medfate_soilTemperatureChange, 7},
     {"_medfate_soil", (DL_FUNC) &_medfate_soil, 4},
     {"_medfate_thetaFC", (DL_FUNC) &_medfate_thetaFC, 2},
+    {"_medfate_thetaWP", (DL_FUNC) &_medfate_thetaWP, 2},
     {"_medfate_thetaSAT", (DL_FUNC) &_medfate_thetaSAT, 2},
     {"_medfate_waterFC", (DL_FUNC) &_medfate_waterFC, 2},
     {"_medfate_waterSAT", (DL_FUNC) &_medfate_waterSAT, 2},
+    {"_medfate_waterWP", (DL_FUNC) &_medfate_waterWP, 2},
     {"_medfate_theta", (DL_FUNC) &_medfate_theta, 2},
     {"_medfate_psi", (DL_FUNC) &_medfate_psi, 2},
     {"_medfate_waterTableDepth", (DL_FUNC) &_medfate_waterTableDepth, 2},

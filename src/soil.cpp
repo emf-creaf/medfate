@@ -431,6 +431,34 @@ NumericVector thetaFC(List soil, String model="SX") {
   return(Theta_FC);
 }
 
+
+/**
+ * Returns water content in volume per soil volume at field capacity, according to the given pedotransfer model
+ */
+// [[Rcpp::export("soil.thetaWP")]]
+NumericVector thetaWP(List soil, String model="SX") {
+  NumericVector SD = soil["dVec"];
+  int nlayers = SD.size();
+  NumericVector Theta_WP(nlayers);
+  if(model=="SX") {
+    NumericVector clay =soil["clay"];
+    NumericVector sand = soil["sand"];
+    NumericVector om = soil["om"];
+    for(int l=0;l<nlayers;l++) {
+      Theta_WP[l] = psi2thetaSaxton(clay[l], sand[l], -1.5, om[l]); //FC to -33 kPa = -0.033 MPa
+    }
+  } else if(model=="VG") {
+    NumericVector n =soil["VG_n"];
+    NumericVector alpha = soil["VG_alpha"];
+    NumericVector theta_res = soil["VG_theta_res"];
+    NumericVector theta_sat = soil["VG_theta_sat"];
+    for(int l=0;l<nlayers;l++) {
+      Theta_WP[l] = psi2thetaVanGenuchten(n[l],alpha[l],theta_res[l], theta_sat[l], -1.5); 
+    }
+  }
+  return(Theta_WP);
+}
+
 /**
  * Returns water content in volume per soil volume at saturation, according to the given pedotransfer model
  */
@@ -482,6 +510,18 @@ NumericVector waterSAT(List soil, String model="SX") {
   for(int i=0;i<nlayers;i++) Water_SAT[i] = dVec[i]*Theta_SAT[i]*(1.0-(rfc[i]/100.0));
   return(Water_SAT);
 }
+
+// [[Rcpp::export("soil.waterWP")]]
+NumericVector waterWP(List soil, String model="SX") {
+  NumericVector dVec = soil["dVec"];
+  NumericVector Water_WP = thetaWP(soil, model);
+  NumericVector rfc = soil["rfc"];
+  int nlayers = dVec.size();
+  NumericVector Water_SAT(nlayers);
+  for(int i=0;i<nlayers;i++) Water_WP[i] = dVec[i]*Water_WP[i]*(1.0-(rfc[i]/100.0));
+  return(Water_WP);
+}
+
 /**
  * Returns current water content (in prop. volume), according to the given pedotransfer model
  */

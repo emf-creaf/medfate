@@ -649,6 +649,10 @@ soil.thetaFC <- function(soil, model = "SX") {
     .Call('_medfate_thetaFC', PACKAGE = 'medfate', soil, model)
 }
 
+soil.thetaWP <- function(soil, model = "SX") {
+    .Call('_medfate_thetaWP', PACKAGE = 'medfate', soil, model)
+}
+
 soil.thetaSAT <- function(soil, model = "SX") {
     .Call('_medfate_thetaSAT', PACKAGE = 'medfate', soil, model)
 }
@@ -659,6 +663,10 @@ soil.waterFC <- function(soil, model = "SX") {
 
 soil.waterSAT <- function(soil, model = "SX") {
     .Call('_medfate_waterSAT', PACKAGE = 'medfate', soil, model)
+}
+
+soil.waterWP <- function(soil, model = "SX") {
+    .Call('_medfate_waterWP', PACKAGE = 'medfate', soil, model)
 }
 
 soil.theta <- function(soil, model = "SX") {
