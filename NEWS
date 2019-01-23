@@ -10,6 +10,7 @@ _Version 0.7.2, January 2019.
 3. New function vprofile.RootDistribution.
 4. New functions for water at wilting point (-1.5 MPa)
 5. Print extractable water of soil
+6. Bug correction in photosynthesis (now done per leaf area basis)
 
 _Version 0.7.1, January 2019.
 1. Interception corrected in the complex model

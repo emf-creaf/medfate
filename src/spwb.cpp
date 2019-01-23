@@ -783,6 +783,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
             int iPMSunlit = PMSunlit["iMaxProfit"];
             int iPMShade = PMShade["iMaxProfit"];
             
+            // Rcout<<iPMSunlit<<" "<<iPMShade<<"\n";
             //Get leaf status
             GW_SH(c,n)= GwShade[iPMShade];
             GW_SL(c,n)= GwSunlit[iPMSunlit];
