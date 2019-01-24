@@ -1,10 +1,10 @@
 vprofile.LeafAreaDensity<-function(x, SpParams, z = NULL, gdd = NA, byCohorts = FALSE,
-                                   bySpecies = FALSE, draw = TRUE) {
+                                   bySpecies = FALSE, draw = TRUE, legend = TRUE) {
   if(is.null(z)) z = seq(0, ceiling(max(plant.Height(x))/100)*100 , by=10)
   if(!byCohorts) {
     lai = .LAIprofile(z,x, SpParams, gdd)
     if(draw) {
-      plot(lai, z[-1], type="l", xlab="Leaf area density (m2/m2)", ylab="Height (cm)")
+      plot(lai, z[-1], type="l", xlab="Leaf Area Density (m2/m3)", ylab="Height (cm)")
     }
   } else {
     cohortnames = plant.ID(x)
@@ -16,16 +16,18 @@ vprofile.LeafAreaDensity<-function(x, SpParams, z = NULL, gdd = NA, byCohorts = 
     } 
     
     matplot(lai, z[-1], 
-            type="l", xlab="Leaf area density (m2/m2)", 
+            type="l", xlab="Leaf Area Density (m2/m3)", 
             ylab="Height (cm)", lty=1:length(cohortnames), col = 1:length(cohortnames))
-    legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
+    if(legend) {
+      legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
            col = 1:length(cohortnames), bty="n")
+    }
   }
   if(draw) invisible(lai)
   else return(lai)
 }
 
-vprofile.RootDistribution<-function(x, d = NULL, draw = TRUE) {
+vprofile.RootDistribution<-function(x, SpParams, d = NULL, bySpecies = FALSE, draw = TRUE, legend = TRUE) {
   if(is.null(d)){
     zmax = ceiling(max(c(max(x$shrubData$Z), max(x$treeData$Z95)))/100)*100 
     d = rep(10,1+(zmax/10))
@@ -38,12 +40,19 @@ vprofile.RootDistribution<-function(x, d = NULL, draw = TRUE) {
   }
   cohortnames = plant.ID(x)
   rd = .rootDistribution(d,x)
+  if(bySpecies) {
+    spnames = plant.SpeciesName(x, SpParams)
+    rd = apply(rd,2, tapply, spnames, mean, na.rm=T)
+    cohortnames = rownames(rd)
+  } 
   matplot(t(rd)*10, z, 
           type="l", xlab="Percentage of fine roots/mm", 
           ylab="Depth (mm)", lty=1:length(cohortnames), col = 1:length(cohortnames),
           ylim=c(zmax,0))
-  legend("bottomright", legend = cohortnames, lty=1:length(cohortnames), 
+  if(legend) {
+    legend("bottomright", legend = cohortnames, lty=1:length(cohortnames), 
          col = 1:length(cohortnames), bty="n")
+  }
   if(draw) invisible(rd)
   else return(rd)
 }
