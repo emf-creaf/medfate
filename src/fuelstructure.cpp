@@ -47,8 +47,7 @@ const double broadleavedRPR = 10.31; //unitless
  * Returns the proportion of the crown (Hbc - H) that lies within given interval (zLow-zHigh)
  */
 double crownProportionInLayer(double zLow, double zHigh, double H, double Hbc) {
-  if((H-Hbc)>0) return((std::max(0.0, std::min(H, zHigh) - std::max(Hbc, zLow)))/(H-Hbc));
-  return(0.0);
+  return(leafAreaProportion(zLow, zHigh, Hbc, H));
 }
 /**
  * Returns the fuel loading (kg/m2) of the crown (Hbc - H) that lies within given interval (zLow-zHigh)

@@ -18,6 +18,8 @@ NumericVector cohortNumericParameter(IntegerVector SP, DataFrame SpParams, Strin
 CharacterVector cohortCharacterParameter(List x, DataFrame SpParams, String parName);
 CharacterVector cohortCharacterParameter(IntegerVector SP, DataFrame SpParams, String parName);
 
+double leafAreaProportion(double z1, double z2, double zmin, double zmax);
+
 NumericVector cohortHeight(List x);
 
 NumericVector cohortDensity(List x, DataFrame SpParams);

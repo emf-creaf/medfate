@@ -7,3 +7,4 @@ using namespace Rcpp;
 
 NumericVector incgam(double a, double x);
 double invincgam(double a, double p, double q);
+double errorfunction(double x, bool erfcc, bool expo);

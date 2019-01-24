@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "root.h"
+#include "incgamma.h"
 using namespace Rcpp;
 
 
@@ -16,6 +17,21 @@ int findRowIndex(int sp, DataFrame SpParams) {
   return(NA_INTEGER);
 }
 
+double leafAreaProportion(double z1, double z2, double zmin, double zmax) {
+  double mu = (zmax+zmin)/2.0;
+  double sd15 = (zmax-zmin)/2.0;
+  double sd = sd15/1.5;
+  z1 = std::max(z1, zmin);
+  z2 = std::max(z2, zmin);
+  z1 = std::min(z1, zmax);
+  z2 = std::min(z2, zmax);
+  double x1 = (z1-mu)/sd;
+  double x2 = (z2-mu)/sd;
+  double p1 = 0.5*(1.0+errorfunction(x1/sqrt(2.0), false, false));
+  double p2 = 0.5*(1.0+errorfunction(x2/sqrt(2.0), false, false));
+  double v = (p2-p1)/0.8663856; //truncated to -1.5 to 1.5
+  return(v);
+}
 /**
  * Phenology
  */
@@ -756,15 +772,16 @@ NumericVector cohortLAI(List x, DataFrame SpParams, double gdd = NA_REAL){
 NumericMatrix LAIdistribution(NumericVector z, NumericVector LAI, NumericVector H, NumericVector CR) {
   int nh = z.size();
   int ncoh = LAI.size();
-  double h1, h2;
+  // double h1, h2;
   NumericMatrix LAIdist(nh-1, ncoh);
   for(int ci=0;ci<ncoh;ci++) {
     double cbh = H[ci]*(1.0-CR[ci]);
-    double laih = LAI[ci]/(H[ci]-cbh);
+    // double laih = LAI[ci]/(H[ci]-cbh);
     for(int hi=0;hi<(nh-1);hi++) {
-      h1 = std::max(z[hi],cbh);
-      h2 = std::min(z[hi+1],H[ci]);
-      LAIdist(hi,ci) =laih*std::max(0.0, h2 - h1);
+      // h1 = std::max(z[hi],cbh);
+      // h2 = std::min(z[hi+1],H[ci]);
+      LAIdist(hi,ci) = LAI[ci]*leafAreaProportion(z[hi],z[hi+1], cbh,H[ci]);
+      // LAIdist(hi,ci) =laih*std::max(0.0, h2 - h1);
     }
   }
   return(LAIdist);
@@ -800,15 +817,15 @@ NumericMatrix LAIdistribution(NumericVector z, List x, DataFrame SpParams, doubl
 NumericVector LAIprofile(NumericVector z, NumericVector LAI, NumericVector H, NumericVector CR) {
   int nh = z.size();
   int ncoh = LAI.size();
-  double h1, h2;
+  // double h1, h2;
   NumericVector LAIprof(nh-1);
   for(int ci=0;ci<ncoh;ci++) {
     double cbh = H[ci]*(1.0-CR[ci]);
-    double laih = LAI[ci]/(H[ci]-cbh);
+    // double laih = LAI[ci]/(H[ci]-cbh);
     for(int hi=0;hi<(nh-1);hi++) {
-      h1 = std::max(z[hi],cbh);
-      h2 = std::min(z[hi+1],H[ci]);
-      LAIprof[hi] +=laih*std::max(0.0, h2 - h1);
+      // h1 = std::max(z[hi],cbh);
+      // h2 = std::min(z[hi+1],H[ci]);
+      LAIprof[hi] +=LAI[ci]*leafAreaProportion(z[hi],z[hi+1], cbh,H[ci]);
     }
   }
   return(LAIprof);

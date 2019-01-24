@@ -10,9 +10,11 @@ using namespace Rcpp;
 double availableLight(double h, NumericVector H, NumericVector LAI_expanded, NumericVector LAI_dead, NumericVector k, NumericVector CR) {
   double s= 0.0, p=0.0;
   for(int j=0; j< H.size(); j++) {
-    p = (H[j]-h)/(H[j]*CR[j]);
+    double cbh = H[j]*(1.0-CR[j]);
+    // p = (H[j]-h)/(H[j]*CR[j]);
+    p = leafAreaProportion(h, H[j], cbh, H[j]);
     if(p<0.0) p = 0.0;
-    else if(p>1) p=1.0;
+    else if(p>1.0) p=1.0;
     s = s + k[j]*p*(LAI_expanded[j]+LAI_dead[j]);
   }
   return(100*exp((-1)*s));

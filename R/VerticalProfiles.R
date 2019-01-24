@@ -1,14 +1,17 @@
 vprofile.LeafAreaDensity<-function(x, SpParams, z = NULL, gdd = NA, byCohorts = FALSE,
-                                   bySpecies = FALSE, draw = TRUE, legend = TRUE) {
+                                   bySpecies = FALSE, draw = TRUE, legend = TRUE, xlim = NULL) {
   if(is.null(z)) z = seq(0, ceiling(max(plant.Height(x))/100)*100 , by=10)
+  w = z[2:length(z)]- z[1:(length(z)-1)]
   if(!byCohorts) {
     lai = .LAIprofile(z,x, SpParams, gdd)
+    lai = 100*lai/w
     if(draw) {
-      plot(lai, z[-1], type="l", xlab="Leaf Area Density (m2/m3)", ylab="Height (cm)")
+      plot(lai, z[-1], type="l", xlab="Leaf Area Density (m2/m3)", ylab="Height (cm)", xlim = xlim)
     }
   } else {
     cohortnames = plant.ID(x)
     lai = .LAIdistribution(z,x, SpParams, gdd)
+    lai = 100*sweep(lai,1,w, "/")
     if(bySpecies) {
       spnames = plant.SpeciesName(x, SpParams)
       lai = t(apply(lai,1, tapply, spnames, sum, na.rm=T))
@@ -16,7 +19,7 @@ vprofile.LeafAreaDensity<-function(x, SpParams, z = NULL, gdd = NA, byCohorts = 
     } 
     
     matplot(lai, z[-1], 
-            type="l", xlab="Leaf Area Density (m2/m3)", 
+            type="l", xlab="Leaf Area Density (m2/m3)", xlim = xlim,
             ylab="Height (cm)", lty=1:length(cohortnames), col = 1:length(cohortnames))
     if(legend) {
       legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
@@ -27,7 +30,7 @@ vprofile.LeafAreaDensity<-function(x, SpParams, z = NULL, gdd = NA, byCohorts = 
   else return(lai)
 }
 
-vprofile.RootDistribution<-function(x, SpParams, d = NULL, bySpecies = FALSE, draw = TRUE, legend = TRUE) {
+vprofile.RootDistribution<-function(x, SpParams, d = NULL, bySpecies = FALSE, draw = TRUE, legend = TRUE, xlim = NULL) {
   if(is.null(d)){
     zmax = ceiling(max(c(max(x$shrubData$Z), max(x$treeData$Z95)))/100)*100 
     d = rep(10,1+(zmax/10))
@@ -45,10 +48,10 @@ vprofile.RootDistribution<-function(x, SpParams, d = NULL, bySpecies = FALSE, dr
     rd = apply(rd,2, tapply, spnames, mean, na.rm=T)
     cohortnames = rownames(rd)
   } 
-  matplot(t(rd)*10, z, 
-          type="l", xlab="Percentage of fine roots/mm", 
-          ylab="Depth (mm)", lty=1:length(cohortnames), col = 1:length(cohortnames),
-          ylim=c(zmax,0))
+  matplot(t(rd)*100, z/10, 
+          type="l", xlab="% of fine roots/cm", 
+          ylab="Depth (cm)", lty=1:length(cohortnames), col = 1:length(cohortnames),
+          ylim=c(zmax/10,0), xlim = xlim)
   if(legend) {
     legend("bottomright", legend = cohortnames, lty=1:length(cohortnames), 
          col = 1:length(cohortnames), bty="n")
