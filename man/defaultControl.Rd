@@ -27,8 +27,9 @@ A list, with the following options:
 \item{\code{canopyMode (="sunshade")}: Indicates how crowns should be described to calculate photosynthesis. Accepted values are \code{"sunshade"} (distinguishes photosynthesis in sun leaves from shade leaves) and \code{"multilayer"} (distinguishes photosynthesis of sun leaves and shade leaves in each canopy layer).}
 \item{\code{verticalLayerSize (= 100)}: The size of vertical layers (in cm) for photosynthesis calculation.}
 \item{\code{nStemSegments (= 1)}: Number of segments within the stem.}
-\item{\code{klat (= 0.1)}: Symplastic-apoplastic lateral conductance.}
+\item{\code{capacitance (=FALSE)}: Whether capacitance is considered in simulations.}
 \item{\code{cavitationRefill (= TRUE)}: Whether refilling of embolized conduits is activated.}
+\item{\code{klat (= 0.1)}: Symplastic-apoplastic lateral conductance.}
 \item{\code{taper (= TRUE)}: Whether taper of xylem conduits is accounted for when calculating aboveground stem conductance from xylem conductivity.}
 \item{\code{numericParams}: A list with the following elements:
 \itemize{
