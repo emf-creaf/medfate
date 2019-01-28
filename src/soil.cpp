@@ -383,7 +383,7 @@ List soil(DataFrame SoilParams, String VG_PTF = "Carsel", NumericVector W = Nume
     VG_theta_res[l] = vgl[2];
     VG_theta_sat[l] = vgl[3];
     // Stolf, R., Thurler, A., Oliveira, O., Bacchi, S., Reichardt, K., 2011. Method to estimate soil macroporosity and microporosity based on sand content and bulk density. Rev. Bras. Ciencias do Solo 35, 447–459.
-    macro[l] = 0.693 - 0.465*bd[l] + 0.212*(sand[l]/100.0);
+    macro[l] = std::max(0.0,0.693 - 0.465*bd[l] + 0.212*(sand[l]/100.0));
     SoilDepth +=dVec[l];
   }
   double Ksoil = 0.05;
