@@ -32,7 +32,9 @@ vprofile.LeafAreaDensity<-function(x, SpParams, z = NULL, gdd = NA, byCohorts = 
 
 vprofile.RootDistribution<-function(x, SpParams, d = NULL, bySpecies = FALSE, draw = TRUE, legend = TRUE, xlim = NULL) {
   if(is.null(d)){
-    zmax = ceiling(max(c(max(x$shrubData$Z), max(x$treeData$Z95)))/100)*100 
+    zmax = 0
+    if(nrow(x$shrubData)>0) zmax = max(zmax, ceiling(max(x$shrubData$Z95)/100)*100)
+    if(nrow(x$treeData)>0) zmax = max(zmax, ceiling(max(x$treeData$Z95)/100)*100)
     d = rep(10,1+(zmax/10))
     z = seq(0,zmax, by=10)
   } else {

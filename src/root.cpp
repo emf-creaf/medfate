@@ -126,9 +126,10 @@ NumericMatrix rootDistribution(NumericVector z, List x) {
   
   NumericVector treeZ50 = Rcpp::as<Rcpp::NumericVector>(treeData["Z50"]);
   NumericVector treeZ95 = Rcpp::as<Rcpp::NumericVector>(treeData["Z95"]);
-  NumericVector shrubZ =  Rcpp::as<Rcpp::NumericVector>( shrubData["Z"]);  
+  NumericVector shrubZ50 =  Rcpp::as<Rcpp::NumericVector>( shrubData["Z50"]);  
+  NumericVector shrubZ95 =  Rcpp::as<Rcpp::NumericVector>( shrubData["Z95"]);  
   NumericMatrix rdtree = ldrDistribution(treeZ50, treeZ95, z);
-  NumericMatrix rdshrub = conicDistribution(shrubZ, z);
+  NumericMatrix rdshrub = ldrDistribution(shrubZ50, shrubZ95, z);
   NumericMatrix rd = NumericMatrix(ntree+nshrub, z.length());
   for(int i=0;i<ntree;i++) {
     rd(i,_) = rdtree(i,_);
