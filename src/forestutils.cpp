@@ -1025,7 +1025,8 @@ NumericMatrix forest2belowground(List x, List soil, DataFrame SpParams) {
   NumericMatrix V(ntree+nshrub,nlayers);
   NumericVector treeZ50 = treeData["Z50"];
   NumericVector treeZ95 = treeData["Z95"];
-  NumericVector shrubZ = shrubData["Z"];  
+  NumericVector shrubZ50 = shrubData["Z50"];  
+  NumericVector shrubZ95 = shrubData["Z95"];  
   NumericVector Vi;
   CharacterVector ln(nlayers);
   for(int l=0;l<nlayers;l++){
@@ -1039,7 +1040,7 @@ NumericMatrix forest2belowground(List x, List soil, DataFrame SpParams) {
     V(i,_) = Vi;
   }
   for(int i=0;i<nshrub;i++) {
-    Vi = conicRS_one(shrubZ[i],d);
+    Vi = ldrRS_one(shrubZ50[i],shrubZ95[i],d);
     V(ntree+i,_) = Vi;
   }
   V.attr("dimnames") = List::create(cohortIDs(x),ln);

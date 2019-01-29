@@ -722,14 +722,15 @@ List forest2growthInput(List x, List soil, DataFrame SpParams, List control) {
   
   NumericVector treeZ50 = treeData["Z50"];
   NumericVector treeZ95 = treeData["Z95"];
-  NumericVector shrubZ = shrubData["Z"];  
+  NumericVector shrubZ50 = shrubData["Z50"];  
+  NumericVector shrubZ95 = shrubData["Z95"];  
   NumericMatrix V = forest2belowground(x,soil, SpParams);
   NumericVector Z(ntree+nshrub); //Rooting depth in cm
   for(int i=0;i<ntree;i++) {
     Z[i] = treeZ95[i]/10.0;
   }
   for(int i=0;i<nshrub;i++) {
-    Z[ntree+i] = shrubZ[i]/10.0; 
+    Z[ntree+i] = shrubZ95[i]/10.0; 
   }
   DataFrame above = forest2aboveground(x, SpParams, NA_REAL);
   return(growthInput(above,  Z, V, soil, SpParams, control));

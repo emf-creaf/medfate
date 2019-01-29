@@ -18,13 +18,15 @@ extractSFIforest<-function(SFItreeData, SFIshrubData, ID, SpParams,
   f$treeData$Z50 = rep(NA, nrow(f$treeData))
   f$treeData$Z95 = rep(NA, nrow(f$treeData))
   f$shrubData = data.frame(Species = yid$Species, Cover = as.numeric(yid$FCC), Height = yid$Ht)
-  f$shrubData$Z =rep(NA, nrow(f$shrubData))
+  f$shrubData$Z50 =rep(NA, nrow(f$shrubData))
+  f$shrubData$Z95 =rep(NA, nrow(f$shrubData))
   if(setDefaults) {
     f$treeData$Z95 = SpParams$Zmax[f$treeData$Species+1]
     f$treeData$Z95[is.na(f$treeData$Z95)] = 3000
     f$treeData$Z50 = f$treeData$Z95/4
-    f$shrubData$Z = SpParams$Zmax[f$shrubData$Species+1]
-    f$shrubData$Z[is.na(f$shrubData$Z)] = 1000
+    f$shrubData$Z95 = SpParams$Zmax[f$shrubData$Species+1]
+    f$shrubData$Z95[is.na(f$shrubData$Z95)] = 1000
+    f$shrubData$Z50 = f$shrubData$Z95/4
   }
   
   if(!is.null(SFIherbData)) {
