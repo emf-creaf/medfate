@@ -124,18 +124,13 @@ Regarding **belowground** information, a matrix describing for each plant cohort
 below = forest2belowground(exampleforest, examplesoil, SpParamsMED)
 below
 ```
-For the tree data in the forest object, function `forest2belowground()` internally takes values of `Z50` and `Z95` and calls  function `root.ldrDistribution()` to estimate the distribution of fine roots according to the linear dose response model. For example the first row is:
+Function `forest2belowground()` internally takes values of `Z50` and `Z95` and calls  function `root.ldrDistribution()` to estimate the distribution of fine roots according to the linear dose response model. For example the first row is:
 ```{r}
 root.ldrDistribution(exampleforest$treeData$Z50[1], 
                      exampleforest$treeData$Z95[1],
                      examplesoil$dVec)
 ```
-For shrubs, `medfate` assumes a conic distribution and calls function `root.conicDistribution()`. For example, the third row of `below` is calculated:
-```{r}
-root.conicDistribution(exampleforest$shrubData$Z[1], 
-                     examplesoil$dVec)
-```
-The user is free to build any numeric matrix for root distribution, as long as values in rows sum always one (i.e. we have proportions). Otherwise, functions `root.conicDistribution()` and `root.ldrDistribution()` can be used to calculate root distribution under specific assumptions.
+An analogous function `root.conicDistribution()` can be used to estimate fine root distribution according to a cone. The user is free to build any numeric matrix for root distribution, as long as values in rows sum always one (i.e. we have proportions). Otherwise, functions `root.conicDistribution()` and `root.ldrDistribution()` can be used to calculate root distribution under specific assumptions.
 
 
 ### Meteorological forcing
