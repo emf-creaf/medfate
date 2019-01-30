@@ -40,7 +40,11 @@ spwb.stress<-function(x, index = "NDD", freq = "years", bySpecies = FALSE) {
     cohsp = as.character(x$spwbInput$cohorts$Name)
     lai1 = tapply(cohlai, cohsp, sum, na.rm=T)
     m1 = t(apply(sweep(M,2,cohlai,"*"),1,tapply, cohsp, sum, na.rm=T))
+    if(length(lai1)==1) {
+      m1 = t(m1)
+    } 
     M = sweep(m1,2,lai1,"/")
+    colnames(M) = names(lai1)
   }
   ncases = table(date.factor)
   M = M[ncases>0, ,drop = FALSE]
