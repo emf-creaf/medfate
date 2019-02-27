@@ -23,7 +23,7 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
               "SoilPlantConductance","PlantStress", 
               "PlantPhotosynthesis", "PlantTranspiration","PlantWUE",
               "PlantPhotosynthesisLeaf","PlantTranspirationLeaf", 
-              "LeafPsi","StemPsi","RootPsi","StemPLC", "StemRWC", "LeafRWC", 
+              "LeafPsiMin", "LeafPsiMax","StemPsi","RootPsi","StemPLC", "StemRWC", "LeafRWC", 
               "PlantWaterBalance",
               "PlantAbsorbedSWR", "PlantAbsorbedSWRLeaf",
               "PlantAbsorbedLWR", "PlantAbsorbedLWRLeaf",
@@ -316,8 +316,8 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     legend("bottomright", legend = cohortnames, lty=1:length(cohortnames), 
            col = 1:length(cohortnames), bty="n")
   } 
-  else if(type=="LeafPsi") {
-    OM = x$LeafPsi
+  else if(type=="LeafPsiMin") {
+    OM = x$LeafPsiMin
     if(bySpecies) {
       lai1 = t(apply(x$PlantLAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
       m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
@@ -325,7 +325,25 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
       OM[lai1==0] = NA
       cohortnames = colnames(OM)
     } 
-    if(is.null(ylab)) ylab = "Midday leaf water potential (MPa)"
+    if(is.null(ylab)) ylab = "Minimum (midday) leaf water potential (MPa)"
+    if(is.null(ylim)) ylim = c(min(OM, na.rm = TRUE),0)
+    matplot(dates, OM, ylim = ylim, lty=1:length(cohortnames), col = 1:length(cohortnames),
+            lwd=1, type="l", xlim=xlim,
+            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
+    plotAxes()
+    legend("bottomright", legend = cohortnames, lty=1:length(cohortnames), 
+           col = 1:length(cohortnames), bty="n")
+  } 
+  else if(type=="LeafPsiMax") {
+    OM = x$LeafPsiMax
+    if(bySpecies) {
+      lai1 = t(apply(x$PlantLAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
+      m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
+      OM = m1/lai1
+      OM[lai1==0] = NA
+      cohortnames = colnames(OM)
+    } 
+    if(is.null(ylab)) ylab = "Maximum (predawn) leaf water potential (MPa)"
     if(is.null(ylim)) ylim = c(min(OM, na.rm = TRUE),0)
     matplot(dates, OM, ylim = ylim, lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", xlim=xlim,

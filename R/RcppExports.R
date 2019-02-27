@@ -621,6 +621,10 @@ soil.theta2psiVG <- function(n, alpha, theta_res, theta_sat, theta) {
     .Call('_medfate_theta2psiVanGenuchten', PACKAGE = 'medfate', n, alpha, theta_res, theta_sat, theta)
 }
 
+soil.infiltrationRepartition <- function(I, dVec, macro) {
+    .Call('_medfate_infiltrationRepartition', PACKAGE = 'medfate', I, dVec, macro)
+}
+
 soil.USDAType <- function(clay, sand) {
     .Call('_medfate_soilUSDAType', PACKAGE = 'medfate', clay, sand)
 }

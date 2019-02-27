@@ -128,30 +128,36 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
     //Net Runoff and infiltration
     Infiltration = infiltrationDay(NetRain+runon+melt, Water_FC[0]);
     Runoff = (NetRain+runon+melt) - Infiltration;
+    //Decide infiltration repartition among layers
+    NumericVector Ivec = infiltrationRepartition(Infiltration, dVec, macro);
     //Input of the first soil layer is infiltration
-    double VI = Infiltration;
+    double excess = 0.0;
     double Wn;
     //Update topsoil layer
     for(int l=0;l<nlayers;l++) {
-      if((dVec[l]>0) & (VI>0)) {
+      if((dVec[l]>0.0) & (Ivec[l]>0.0)) {
         //PROBLEM: THE effect of MACROPOROSITY SHOULD not be affected by layer subdivision
-        Wn = W[l]*Water_FC[l] + VI*(1.0-macro[l]); //Update water volume
-        VI = VI*macro[l] + std::max(Wn - Water_FC[l],0.0); //Update VI, adding the excess to the infiltrating water (saturated flow)
+        Wn = W[l]*Water_FC[l] + Ivec[l]; //Update water volume
+        if(l<(nlayers-1)) {
+          Ivec[l+1] = Ivec[l+1] + std::max(Wn - Water_FC[l],0.0); //update Ivec adding the excess to the infiltrating water (saturated flow)
+        } else {
+          excess = std::max(Wn - Water_FC[l],0.0); //Set excess of the bottom layer
+        }
         W[l] = std::max(0.0,std::min(Wn, Water_FC[l])/Water_FC[l]); //Update theta (this modifies 'soil')
       } 
     }
     if(drainage) {//Set deep drainage
-      DeepDrainage = VI; 
+      DeepDrainage = excess; 
     } else { //Fill to saturation and upwards if needed
       for(int l=(nlayers-1);l>=0;l--) {
-        if((dVec[l]>0) & (VI>0)) {
-          Wn = W[l]*Water_FC[l] + VI; //Update water volume
-          VI = std::max(Wn - Water_SAT[l],0.0); //Update VI, using the excess of water over saturation
+        if((dVec[l]>0.0) & (excess>0.0)) {
+          Wn = W[l]*Water_FC[l] + excess; //Update water volume
+          excess = std::max(Wn - Water_SAT[l],0.0); //Update excess, using the excess of water over saturation
           W[l] = std::max(0.0,std::min(Wn, Water_SAT[l])/Water_FC[l]); //Update theta (this modifies 'soil') here no upper
         }
       }
-      if(VI>0) { //If soil is completely saturated increase Runoff
-        Runoff = Runoff + VI;
+      if(excess>0.0) { //If soil is completely saturated increase Runoff
+        Runoff = Runoff + excess;
       }
     }
   }
@@ -437,33 +443,41 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
     //Net Runoff and infiltration
     Infiltration = infiltrationDay(NetRain+runon, Water_FC[0]);
     Runoff = (NetRain+runon) - Infiltration;
+    
+    //Decide infiltration repartition among layers
+    NumericVector Ivec = infiltrationRepartition(Infiltration, dVec, macro);
     //Input of the first soil layer is infiltration
-    double VI = Infiltration;
+    double excess = 0.0;
     double Wn;
     //Update topsoil layer
     for(int l=0;l<nlayers;l++) {
-      if((dVec[l]>0) & (VI>0)) {
+      if((dVec[l]>0.0) & (Ivec[l]>0.0)) {
         //PROBLEM: THE effect of MACROPOROSITY SHOULD not be affected by layer subdivision
-        Wn = W[l]*Water_FC[l] + VI*(1.0-macro[l]); //Update water volume
-        VI = VI*macro[l] + std::max(Wn - Water_FC[l],0.0); //Update VI, adding the excess to the infiltrating water (saturated flow)
+        Wn = W[l]*Water_FC[l] + Ivec[l]; //Update water volume
+        if(l<(nlayers-1)) {
+          Ivec[l+1] = Ivec[l+1] + std::max(Wn - Water_FC[l],0.0); //update Ivec adding the excess to the infiltrating water (saturated flow)
+        } else {
+          excess = std::max(Wn - Water_FC[l],0.0); //Set excess of the bottom layer
+        }
         W[l] = std::max(0.0,std::min(Wn, Water_FC[l])/Water_FC[l]); //Update theta (this modifies 'soil')
       } 
     }
     if(drainage) {//Set deep drainage
-      DeepDrainage = VI; 
+      DeepDrainage = excess; 
     } else { //Fill to saturation and upwards if needed
       for(int l=(nlayers-1);l>=0;l--) {
-        if((dVec[l]>0) & (VI>0)) {
-          Wn = W[l]*Water_FC[l] + VI; //Update water volume
-          VI = std::max(Wn - Water_SAT[l],0.0); //Update VI, using the excess of water over saturation
+        if((dVec[l]>0.0) & (excess>0.0)) {
+          Wn = W[l]*Water_FC[l] + excess; //Update water volume
+          excess = std::max(Wn - Water_SAT[l],0.0); //Update excess, using the excess of water over saturation
           W[l] = std::max(0.0,std::min(Wn, Water_SAT[l])/Water_FC[l]); //Update theta (this modifies 'soil') here no upper
         }
       }
-      if(VI>0) { //If soil is completely saturated increase Runoff
-        Runoff = Runoff + VI;
+      if(excess>0.0) { //If soil is completely saturated increase Runoff
+        Runoff = Runoff + excess;
       }
     }
   }
+  
   psiVec = psi(soil, soilFunctions); //Update soil water potential
   
   
@@ -628,7 +642,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   NumericMatrix Temp_SL(numCohorts, ntimesteps);
   NumericMatrix LAI_SH(numCohorts, ntimesteps);
   NumericMatrix LAI_SL(numCohorts, ntimesteps);
-  NumericVector minPsiLeaf(numCohorts,0.0), minPsiStem(numCohorts, 0.0), minPsiRoot(numCohorts,0.0); //Minimum potentials experienced
+  NumericVector minPsiLeaf(numCohorts,0.0), maxPsiLeaf(numCohorts,-99999.0), minPsiStem(numCohorts, 0.0), minPsiRoot(numCohorts,0.0); //Minimum potentials experienced
   NumericMatrix minPsiRhizo(numCohorts, nlayers);
   std::fill(minPsiRhizo.begin(), minPsiRhizo.end(), 0.0);
   NumericMatrix PLC(numCohorts, ntimesteps);
@@ -978,6 +992,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
 
       //Store the minimum water potential of the day (i.e. mid-day)
       minPsiLeaf[c] = std::min(minPsiLeaf[c],PsiLeafinst(c,n));
+      maxPsiLeaf[c] = std::max(maxPsiLeaf[c],PsiLeafinst(c,n));
       minPsiStem[c] = std::min(minPsiStem[c],PsiSteminst(c,n));
       minPsiRoot[c] = std::min(minPsiRoot[c],PsiRootinst(c,n));
       for(int l=0;l<nlayers;l++) {
@@ -1151,7 +1166,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                              _["RootPsi"] = minPsiRoot, 
                              _["StemPsi"] = minPsiStem, 
                              _["StemPLC"] = PLCm, //Average daily stem PLC
-                             _["LeafPsi"] = minPsiLeaf, 
+                             _["LeafPsiMin"] = minPsiLeaf, 
+                             _["LeafPsiMax"] = maxPsiLeaf, 
                              _["dEdP"] = dEdPm,//Average daily soilplant conductance
                              _["DDS"] = DDS, //Daily drought stress is the ratio of average soil plant conductance over its maximum value
                              _["StemRWC"] = RWCsm,
@@ -1725,7 +1741,8 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   //Plant output variables
   NumericMatrix PlantPsi(numDays, numCohorts);
   NumericMatrix dEdP(numDays, numCohorts);
-  NumericMatrix LeafPsi(numDays, numCohorts);
+  NumericMatrix LeafPsiMin(numDays, numCohorts);
+  NumericMatrix LeafPsiMax(numDays, numCohorts);
   NumericMatrix StemPsi(numDays, numCohorts);
   NumericMatrix RootPsi(numDays, numCohorts);
   NumericMatrix StemPLC(numDays, numCohorts);
@@ -1872,7 +1889,8 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
       if(transpirationMode=="Complex") {
         NumericVector HydrInVec = sb["HydraulicInput"];
         HydrIndays(i,_) = HydrInVec;
-        LeafPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["LeafPsi"]);
+        LeafPsiMin(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["LeafPsiMin"]);
+        LeafPsiMax(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["LeafPsiMax"]);
         RootPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["RootPsi"]); 
         StemPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["StemPsi"]); 
         StemPLC(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["StemPLC"]); 
@@ -1978,7 +1996,8 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   LeafRWC.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   PlantPsi.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   dEdP.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  LeafPsi.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
+  LeafPsiMin.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
+  LeafPsiMax.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   StemPsi.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   RootPsi.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   PlantPhotosynthesis.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
@@ -2009,8 +2028,8 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
                      Named("PlantStress") = PlantStress,
                      Named("subdaily") =  subdailyRes);
   } else {
-    CharacterVector ln = CharacterVector(21);
-    l = List(21);
+    CharacterVector ln = CharacterVector(22);
+    l = List(22);
     l[0] = spwbInput;
     ln[0] = "spwbInput";
     l[1] = soilInput;
@@ -2035,24 +2054,26 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
     ln[10] = "PlantPhotosynthesis";
     l[11] = dEdP;
     ln[11] = "dEdP";
-    l[12] = LeafPsi;
-    ln[12] = "LeafPsi";
-    l[13] = LeafRWC;
-    ln[13] = "LeafRWC";
-    l[14] = StemPsi;
-    ln[14] = "StemPsi";
-    l[15] = StemPLC;
-    ln[15] = "StemPLC";
-    l[16] = StemRWC;
-    ln[16] = "StemRWC";
-    l[17] = RootPsi;
-    ln[17] = "RootPsi";
-    l[18] = RhizoPsi;
-    ln[18] = "RhizoPsi";
-    l[19] = PlantStress;
-    ln[19] = "PlantStress";
-    l[20] = subdailyRes;
-    ln[20] = "subdaily";
+    l[12] = LeafPsiMin;
+    ln[12] = "LeafPsiMin";
+    l[13] = LeafPsiMax;
+    ln[13] = "LeafPsiMax";
+    l[14] = LeafRWC;
+    ln[14] = "LeafRWC";
+    l[15] = StemPsi;
+    ln[15] = "StemPsi";
+    l[16] = StemPLC;
+    ln[16] = "StemPLC";
+    l[17] = StemRWC;
+    ln[17] = "StemRWC";
+    l[18] = RootPsi;
+    ln[18] = "RootPsi";
+    l[19] = RhizoPsi;
+    ln[19] = "RhizoPsi";
+    l[20] = PlantStress;
+    ln[20] = "PlantStress";
+    l[21] = subdailyRes;
+    ln[21] = "subdaily";
     l.attr("names") = ln;
   }
   l.attr("class") = CharacterVector::create("spwb","list");
