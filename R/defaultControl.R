@@ -13,6 +13,7 @@ defaultControl<-function() {
     nStemSegments = 1,
     capacitance = FALSE,
     cavitationRefill = TRUE,
+    reverseFlowReduction = 0.5,
     # ksymver = 0, # whole-stem symplastic vertical conductance
     klat = 0.1, # symplastic-apoplastic lateral conductance
     taper = TRUE,

@@ -610,54 +610,67 @@ Having all these maximum conductances, we can now build the supply functions for
 <<fig=TRUE, width=8, height=4.5, echo=FALSE>>==
 par(mar=c(4,4,2,1), mfrow=c(1,2))
 psiMax = -7.0
+reversefr = 0.0
 supplyRS11 = hydraulics.supplyFunctionBelowground(psiSoilLayers1,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
-                                  maxNsteps = 400)
+                                  maxNsteps = 400,
+                                  reverseFlowReduction = reversefr)
 supplyRS12 = hydraulics.supplyFunctionBelowground(psiSoilLayers2,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
-                                  maxNsteps = 400)
+                                  maxNsteps = 400,
+                                  reverseFlowReduction = reversefr)
 supplyRS13 = hydraulics.supplyFunctionBelowground(psiSoilLayers3,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
-                                  maxNsteps = 400)
+                                  maxNsteps = 400,
+                                  reverseFlowReduction = reversefr)
 supplyRS14 = hydraulics.supplyFunctionBelowground(psiSoilLayers4,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
-                                  maxNsteps = 400)
+                                  maxNsteps = 400,
+                                  reverseFlowReduction = reversefr)
 supplyRS21 = hydraulics.supplyFunctionBelowground(psiSoilLayers1,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
-                                  maxNsteps = 400)
+                                  maxNsteps = 400,
+                                  reverseFlowReduction = reversefr)
 supplyRS22 = hydraulics.supplyFunctionBelowground(psiSoilLayers2,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
-                                  maxNsteps = 400)
+                                  maxNsteps = 400,
+                                  reverseFlowReduction = reversefr)
 supplyRS23 = hydraulics.supplyFunctionBelowground(psiSoilLayers3,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
-                                  maxNsteps = 400)
+                                  maxNsteps = 400,
+                                  reverseFlowReduction = reversefr)
 supplyRS24 = hydraulics.supplyFunctionBelowground(psiSoilLayers4,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
-                                  maxNsteps = 400)
+                                  maxNsteps = 400,
+                                  reverseFlowReduction = reversefr)
 supplyRS31 = hydraulics.supplyFunctionBelowground(psiSoilLayers1,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
-                                  maxNsteps = 400)
+                                  maxNsteps = 400,
+                                  reverseFlowReduction = reversefr)
 supplyRS32 = hydraulics.supplyFunctionBelowground(psiSoilLayers2,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
-                                  maxNsteps = 400)
+                                  maxNsteps = 400,
+                                  reverseFlowReduction = reversefr)
 supplyRS33 = hydraulics.supplyFunctionBelowground(psiSoilLayers3,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
-                                  maxNsteps = 400)
+                                  maxNsteps = 400,
+                                  reverseFlowReduction = reversefr)
 supplyRS34 = hydraulics.supplyFunctionBelowground(psiSoilLayers4,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
-                                  maxNsteps = 400)
+                                  maxNsteps = 400,
+                                  reverseFlowReduction = reversefr)
 plot(-supplyRS11$psiRoot, supplyRS11$E, type="l", col=col1, ylab="Flow rate  (mmol·m-2·s-1)", 
      xlab = "Root crown pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,max(supplyRS11$E)), lwd=1, main  = "E")
 lines(-supplyRS12$psiRoot, supplyRS12$E, lty=1, col=col2)

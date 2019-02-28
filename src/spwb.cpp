@@ -289,6 +289,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
 
   bool capacitance = control["capacitance"];
   bool cavitationRefill = control["cavitationRefill"];
+  double reverseFlowReduction = control["reverseFlowReduction"];
   double klat = control["klat"];
   int ntimesteps = control["ndailysteps"];
   int hydraulicCostFunction = control["hydraulicCostFunction"];
@@ -296,6 +297,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   double verticalLayerSize = control["verticalLayerSize"];
   double thermalCapacityLAI = control["thermalCapacityLAI"];
   double defaultWindSpeed = control["defaultWindSpeed"];
+  
     
   //Soil input
   NumericVector W = soil["W"]; //Access to soil state variable
@@ -600,7 +602,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                                           VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
                                           PLCStemPrev,
                                           0.0, maxNsteps, 
-                                          ntrial, psiTol, ETol); 
+                                          ntrial, psiTol, ETol,
+                                          0.001, reverseFlowReduction); 
       // } else { //Calculate supply function for root system only
       //   supply[c] = supplyFunctionBelowground(psic,
       //                                         VGrhizo_kmaxc,VG_nc,VG_alphac,

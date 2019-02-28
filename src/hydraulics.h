@@ -45,7 +45,8 @@ List E2psiBelowground(double E, NumericVector psiSoil,
                       NumericVector krootmax, double rootc, double rootd,
                       NumericVector psiIni = NumericVector::create(0),
                       int ntrial = 10,
-                      double psiTol = 0.0001, double ETol = 0.0001);
+                      double psiTol = 0.0001, double ETol = 0.0001,
+                      double reverseFlowReduction = 0.5);
 
 List E2psiAboveground(double E, double psiRootCrown, 
                       double kstemmax, double stemc, double stemd,
@@ -79,7 +80,8 @@ List E2psiNetwork(double E, NumericVector psiSoil,
                   NumericVector PLCstem,
                   NumericVector psiIni = NumericVector::create(0),
                   int ntrial = 10,
-                  double psiTol = 0.0001, double ETol = 0.0001);
+                  double psiTol = 0.0001, double ETol = 0.0001,
+                  double reverseFlowReduction = 0.5);
 
 List E2psiNetworkCapacitance(double E, NumericVector psiSoil, 
                              NumericVector psiStemPrev, NumericVector PLCstem,
@@ -93,7 +95,8 @@ List E2psiNetworkCapacitance(double E, NumericVector psiSoil,
                              double tstep = 3600.0,
                              NumericVector psiIni = NumericVector::create(0),
                              int ntrial = 10, 
-                             double psiTol = 0.0001, double ETol = 0.0001);
+                             double psiTol = 0.0001, double ETol = 0.0001,
+                             double reverseFlowReduction = 0.5);
 
 
 
@@ -117,7 +120,7 @@ List supplyFunctionBelowground(NumericVector psiSoil,
                               NumericVector krootmax, double rootc, double rootd,
                               double minFlow = 0.0, int maxNsteps=400,
                               int ntrial = 10, double psiTol = 0.0001, double ETol = 0.0001,
-                              double pCrit = 0.001);
+                              double pCrit = 0.001, double reverseFlowReduction = 0.5);
 
 
 List supplyFunctionNetwork(NumericVector psiSoil, 
@@ -128,7 +131,7 @@ List supplyFunctionNetwork(NumericVector psiSoil,
                            NumericVector PLCstem,
                            double minFlow = 0.0, int maxNsteps=400, 
                            int ntrial = 200, double psiTol = 0.0001, double ETol = 0.0001,
-                           double pCrit = 0.001);
+                           double pCrit = 0.001, double reverseFlowReduction = 0.5);
 
 List supplyFunctionNetworkCapacitance(NumericVector psiSoil, 
                                       NumericVector psiStemPrev, NumericVector PLCstemPrev,
@@ -142,4 +145,4 @@ List supplyFunctionNetworkCapacitance(NumericVector psiSoil,
                                       double tstep = 3600.0,
                                       double minFlow = 0.0, int maxNsteps=400, 
                                       int ntrial = 200, double psiTol = 0.0001, double ETol = 0.0001,
-                                      double pCrit = 0.001);
+                                      double pCrit = 0.001, double reverseFlowReduction = 0.5);

@@ -29,6 +29,7 @@ A list, with the following options:
 \item{\code{nStemSegments (= 1)}: Number of segments within the stem.}
 \item{\code{capacitance (=FALSE)}: Whether capacitance is considered in simulations.}
 \item{\code{cavitationRefill (= TRUE)}: Whether refilling of embolized conduits is activated.}
+\item{\code{reverseFlowReduction (= 0.5)}: Reduction of rhizosphere conductance when the flow is from root to soil, justified by the role of aquaporines. This allows decreasing the impact of hydraulic redistribution.}
 \item{\code{klat (= 0.1)}: Symplastic-apoplastic lateral conductance.}
 \item{\code{taper (= TRUE)}: Whether taper of xylem conduits is accounted for when calculating aboveground stem conductance from xylem conductivity.}
 \item{\code{numericParams}: A list with the following elements:
