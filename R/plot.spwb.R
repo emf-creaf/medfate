@@ -90,10 +90,11 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     plot(dates, WaterBalance$Evapotranspiration, ylim=ylim, type="l", ylab=ylab, 
          xlab=xlab, xlim=xlim,frame=FALSE, col="black", axes=FALSE, lwd=2)
     plotAxes()
-    lines(dates, WaterBalance$Transpiration, col="gray", lty=2, lwd=1.5)
-    lines(dates, WaterBalance$SoilEvaporation, col="black", lty=3, lwd=1.5)
-    legend("topleft", bty="n", col=c("black","gray","black"),lty=c(1,2,3), lwd=c(2,1.5,1.5),
-           legend=c("Total evapotranspiration","Transpiration","Bare soil evaporation"))
+    lines(dates, WaterBalance$Interception, col="blue", lty=1, lwd=1.5)
+    lines(dates, WaterBalance$Transpiration, col="olivedrab", lty=2, lwd=1.5)
+    lines(dates, WaterBalance$SoilEvaporation, col="brown", lty=3, lwd=1.5)
+    legend("topleft", bty="n", col=c("black","blue","olivedrab", "brown"),lty=c(1, 1,2,3), lwd=c(2,1.5, 1.5,1.5),
+           legend=c("Total evapotranspiration", "Interception evaporation", "Plant transpiration","Bare soil evaporation"))
   } 
   else if(type=="PlantWaterBalance") {
     pwb = WaterBalance$PlantExtraction - WaterBalance$Transpiration

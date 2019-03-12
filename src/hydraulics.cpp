@@ -393,9 +393,13 @@ void lubksb(NumericMatrix a, int n, IntegerVector indx, NumericVector b) {
   }
 }
 
-
-double reverseFlowReductionFunction(double reverseFlowReduction = 0.5) {
-  return((1.0-reverseFlowReduction));
+double reverseFlowReductionFunction(double psiSoil, double psiRhizo, double reverseFlowReduction = 0.5) {
+  double psiDiff = psiSoil - psiRhizo;
+  // double ini = 1.0;
+  // double fin = 1.0-reverseFlowReduction;
+  // return(fin + (ini-fin)/(1.0+exp(-psiDiff*50.0)));
+  if(psiDiff<0.0) return((1.0-reverseFlowReduction));
+  return(1.0);
 }
 
 // [[Rcpp::export("hydraulics.E2psiBelowground")]]
@@ -440,11 +444,7 @@ List E2psiBelowground(double E, NumericVector psiSoil,
     for(int l=0;l<nlayers;l++) {
       Eroot[l] = EXylem(x[nlayers], x[l], krootmax[l], rootc, rootd, true, 0.0);
       // Rcout<<"("<<Eroot[l]<<"\n";
-      if(x[l]<psiSoil[l]) {
-        Erhizo[l] = EVanGenuchten(x[l], psiSoil[l], krhizomax[l], nsoil[l], alphasoil[l]);
-      } else { //Reduce maximum rhizosphere conductance for reverse flow
-        Erhizo[l] = EVanGenuchten(x[l], psiSoil[l], reverseFlowReductionFunction(reverseFlowReduction)*krhizomax[l], nsoil[l], alphasoil[l]);
-      }
+      Erhizo[l] = reverseFlowReductionFunction(psiSoil[l], x[l], reverseFlowReduction)*EVanGenuchten(x[l], psiSoil[l], krhizomax[l], nsoil[l], alphasoil[l]);
       fvec[l] = Erhizo[l] - Eroot[l];
       // Rcout<<" Erhizo"<<l<<": "<< Erhizo[l]<<" Eroot"<<l<<": "<<Eroot[l]<<" fvec: "<<fvec[l]<<"\n";
       // Rcout<<"der psi_l "<<d_psi_l<<"der Eroot psi_l "<<d_Eroot_psi_l<<"  der psi_root "<<d_psi_root<<"\n";
@@ -456,11 +456,7 @@ List E2psiBelowground(double E, NumericVector psiSoil,
     for(int l1=0;l1<nlayers;l1++) { //funcio
       for(int l2=0;l2<nlayers;l2++) { //derivada
         if(l1==l2) {
-          if(x[l2]<psiSoil[l2]) {
-            fjac(l1,l2) = -vanGenuchtenConductance(x[l2],krhizomax[l2], nsoil[l2], alphasoil[l2])-xylemConductance(x[l2], krootmax[l2], rootc, rootd);  
-          } else {//Reduce maximum rhizosphere conductance for reverse flow
-            fjac(l1,l2) = -vanGenuchtenConductance(x[l2],reverseFlowReductionFunction(reverseFlowReduction)*krhizomax[l2], nsoil[l2], alphasoil[l2])-xylemConductance(x[l2], krootmax[l2], rootc, rootd);  
-          }
+          fjac(l1,l2) = -reverseFlowReductionFunction(psiSoil[l2],x[l2],reverseFlowReduction)*vanGenuchtenConductance(x[l2],krhizomax[l2], nsoil[l2], alphasoil[l2])-xylemConductance(x[l2], krootmax[l2], rootc, rootd);  
         }
         else fjac(l1,l2) = 0.0;
       }
@@ -502,8 +498,9 @@ List E2psiBelowground(double E, NumericVector psiSoil,
     // Rcout<<"\n";
     if(errx<=psiTol) break;
     else if(k==(ntrial-1)) { //Last trial and no convergence
-      for(int fi=0;fi<=nlayers;fi++) x[fi] = NA_REAL;
-      Rcout<<"LC";
+      //Keep previous values
+      //for(int fi=0;fi<=nlayers;fi++) x[fi] = NA_REAL;
+      // Rcout<<"LC";
       stop = true;
     }
     if(stop) break;
@@ -518,11 +515,7 @@ List E2psiBelowground(double E, NumericVector psiSoil,
   //Calculate final flows
   Esum = 0.0;
   for(int l=0;l<(nlayers-1);l++) {
-    if(x[l]<psiSoil[l]) {
-      Erhizo[l] = EVanGenuchten(x[l], psiSoil[l], krhizomax[l], nsoil[l], alphasoil[l]);
-    } else { //Reduce maximum rhizosphere conductance for reverse flow
-      Erhizo[l] = EVanGenuchten(x[l], psiSoil[l], reverseFlowReductionFunction(reverseFlowReduction)*krhizomax[l], nsoil[l], alphasoil[l]);
-    }
+    Erhizo[l] = reverseFlowReductionFunction(psiSoil[l], x[l], reverseFlowReduction)*EVanGenuchten(x[l], psiSoil[l], krhizomax[l], nsoil[l], alphasoil[l]);
     Esum += Erhizo[l];
   }
   Erhizo[nlayers-1] = E - Esum; //Define as difference to match input

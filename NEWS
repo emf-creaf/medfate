@@ -9,6 +9,7 @@ _Version 0.7.3, January 2019.
 2. Percolation of infiltrated water consistent with layer subdivision
 3. New function soil.infiltrationRepartition()
 4. Redistribution reduced by changing control parameter 'reverseFlowReduction'
+5. Adding interception to evapotranspiration
 
 _Version 0.7.2, January 2019.
 1. Accounting of hydraulic redistribution

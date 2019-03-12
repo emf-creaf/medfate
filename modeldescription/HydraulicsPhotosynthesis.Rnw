@@ -610,7 +610,7 @@ Having all these maximum conductances, we can now build the supply functions for
 <<fig=TRUE, width=8, height=4.5, echo=FALSE>>==
 par(mar=c(4,4,2,1), mfrow=c(1,2))
 psiMax = -7.0
-reversefr = 0.5
+reversefr = 0.95
 supplyRS11 = hydraulics.supplyFunctionBelowground(psiSoilLayers1,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
