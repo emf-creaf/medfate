@@ -1588,7 +1588,7 @@ void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER
     }
     NumericMatrix fromPLC = Rcpp::as<Rcpp::NumericMatrix>(from["PlantStress"]);
     NumericMatrix fromRootPsi = Rcpp::as<Rcpp::NumericMatrix>(from["RootPsi"]);
-    NumericMatrix fromLeafPsi = Rcpp::as<Rcpp::NumericMatrix>(from["LeafPsi"]);
+    NumericMatrix fromLeafPsiMin = Rcpp::as<Rcpp::NumericMatrix>(from["LeafPsiMin"]);
     NumericMatrix fromStemPsi = Rcpp::as<Rcpp::NumericMatrix>(from["StemPsi"]);
     NumericMatrix fromRWCstem = Rcpp::as<Rcpp::NumericMatrix>(from["StemRWC"]);
     NumericMatrix fromRWCleaf = Rcpp::as<Rcpp::NumericMatrix>(from["LeafRWC"]);
@@ -1607,7 +1607,7 @@ void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER
       Transpiration[i] = 0.0;
       Photosynthesis[i] = 0.0;
       psiRoot[i] = fromRootPsi(day,i);
-      psiLeaf[i] = fromLeafPsi(day,i);
+      psiLeaf[i] = fromLeafPsiMin(day,i);
       RWCsympleaf[i] = fromRWCleaf(day,i);
       for(int j=0;j<PLCstem.ncol();j++) {
         psiStem(i,j) = fromStemPsi(day,i);
