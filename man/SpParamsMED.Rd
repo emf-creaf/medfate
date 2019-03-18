@@ -16,9 +16,14 @@ A data set of parameter values for Mediterranean species, resulting from bibliog
     \item{\code{IFNcodes}}{A factor with levels corresponding to species codes in the Third Spanish forest inventory (DGCN 2005.)}
     \item{\code{SpIndex}}{A numeric vector of the species index.}
     \item{\code{Group}}{Either "Gymnosperm" or "Angiosperm".}
+    \item{\code{Order}}{Taxonomical order.}
+    \item{\code{Family}}{Taxonomical family.}
     \item{\code{GrowthForm}}{A factor with levels \code{Shrub}, \code{Tree} and \code{Tree/Shrub}.}
+    \item{\code{TreeType}}{A factor with levels \code{Conifer}, \code{Deciduous}, \code{Evergreen} or \code{Shrub}}
     \item{\code{Hmed}}{Median plant height (in cm).}
     \item{\code{Hmax}}{Maximum plant height (in cm).}
+    \item{\code{Z50}}{Rooting depth (in mm) corresponding to 50\% of fine roots.}
+    \item{\code{Z95}}{Rooting depth (in mm) corresponding to 95\% of fine roots.}
     \item{\code{Zmax}}{Maximum rooting depth (in mm).}
     \item{\code{a_ash}}{Regression coefficient relating the square of shrub height with shrub area.}
     \item{\code{a_bsh}, \code{b_bsh}}{Allometric coefficients relating phytovolume with dry weight of shrub individuals.}
@@ -26,7 +31,6 @@ A data set of parameter values for Mediterranean species, resulting from bibliog
     \item{\code{a_fbt}, \code{b_fbt}, \code{c_fbt}, \code{d_fbt}}{Regression coefficients used to calculate foliar biomass of an individual tree from its dbh and the cummulative basal area of larger trees.}
     \item{\code{a_cr}, \code{b_1cr}, \code{b_2cr}, \code{b_3cr}, \code{c_1cr}, \code{c_2cr}}{Regression coefficients used to calculate crown ratio of trees.}
     \item{\code{a_cw}, \code{b_cw}}{Regression coefficients used to calculated crown width of trees.}
-    \item{\code{TreeType}}{A factor with levels \code{Conifer}, \code{Deciduous}, \code{Evergreen} or \code{Shrub}}
     \item{\code{SLA}}{Specific leaf area (mm2/mg = m2/kg).}
     \item{\code{LeafDensity}}{Density of leaf tissue (dry weight over volume).}
     \item{\code{r635}}{Ratio between the weight of leaves plus branches and the weight of leaves alone for branches of 6.35 mm.}

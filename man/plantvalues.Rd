@@ -107,5 +107,5 @@ summary(exampleforest, SpParamsMED)
 
 plant.SpeciesName(exampleforest, SpParamsMED)
 
-plant.ID(exampleforest, SpParamsMED)
+plant.ID(exampleforest)
 }
