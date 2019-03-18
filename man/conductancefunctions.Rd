@@ -8,6 +8,7 @@
 \alias{hydraulics.vanGenuchtenConductance}
 \alias{hydraulics.xylemConductance}
 \alias{hydraulics.xylemPsi}
+\alias{hydraulics.psi2Weibull}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Hydraulic confuctance functions
@@ -26,6 +27,7 @@ hydraulics.psiCrit(c, d, pCrit = 0.001)
 hydraulics.vanGenuchtenConductance(psi, krhizomax, n, alpha)
 hydraulics.xylemConductance(psi, kxylemmax, c, d)
 hydraulics.xylemPsi(kxylem, kxylemmax, c, d)
+hydraulics.psi2Weibull(psi50, psi88)
 }
 
 %- maybe also 'usage' for other objects documented here.
@@ -46,6 +48,7 @@ hydraulics.xylemPsi(kxylem, kxylemmax, c, d)
   \item{psiVec}{Vector of water potential values to evaluate for the vulnerability curve.}
   \item{relative}{A flag to relativize vulnerability curves to the [0-1] interval.}
   \item{pCrit}{Proportion of maximum conductance considered critical for hydraulic functioning.}
+  \item{psi50, psi88}{Water potentials (in MPa) corresponding to 50\% and 88\% of percent loss of conductance.}
 }
 \details{
 Details of the hydraulic model are given in a vignette. Function \code{hydraulics.vulnerabilityCurvePlot} draws a plot of the vulnerability curves for the given \code{soil} object and network properties of each plant cohort in \code{x}.
@@ -59,6 +62,7 @@ Values returned for each function are:
 \item{\code{hydraulics.vanGenuchtenConductance}: Rhizosphere conductance corresponding to an input water potential (soil vulnerability curve).}
 \item{\code{hydraulics.xylemConductance}: Xylem conductance (flow rate per pressure drop) corresponding to an input water potential (plant vulnerability curve).}
 \item{\code{hydraulics.xylemPsi}: Xylem water potential (in MPa) corresponding to an input xylem conductance (flow rate per pressure drop).}
+\item{\code{hydraulics.psi2Weibull}: Parameters of the Weibull vulnerability curve that goes through the supplied psi50 and psi88 values.}
 }
 }
 \references{

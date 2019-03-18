@@ -1,5 +1,6 @@
 \encoding{UTF-8}
 \name{scalingconductance}
+\alias{hydraulics.maximumSoilPlantConductance}
 \alias{hydraulics.soilPlantResistances}
 \alias{hydraulics.averageRhizosphereResistancePercent}
 \alias{hydraulics.findRhizosphereMaximumConductance}
@@ -18,6 +19,8 @@ Scaling from conductivity to conductance
 Functions used to scale from tissue conductivity to conductance of different elements of the continuum.
 }
 \usage{
+hydraulics.maximumSoilPlantConductance(krhizomax, krootmax, 
+                                       kstemmax, kleafmax)
 hydraulics.soilPlantResistances(psiSoil, psiRhizo, 
                                 psiStem, PLCstem, psiLeaf, 
                                 krhizomax, n, alpha,
@@ -45,6 +48,11 @@ hydraulics.leafWaterCapacity(SLA, ld)
 
 %- maybe also 'usage' for other objects documented here.
 \arguments{
+  \item{psiSoil}{Soil water potential (in MPa). A scalar or a vector depending on the function.}
+  \item{psiRhizo}{Water potential (in MPa) in the rhizosphere (root surface).}
+  \item{psiStem}{Water potential (in MPa) in the stem.}
+  \item{psiLeaf}{Water potential (in MPa) in the leaf.}
+  \item{PLCstem}{Percent loss of conductance (in \%) in the stem.}
   \item{v}{Proportion of fine roots within each soil layer.}
   \item{krhizomax}{Maximum rhizosphere hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}
   \item{kleafmax}{Maximum leaf hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}
@@ -74,6 +82,7 @@ Details of the hydraulic model are given in a vignette.
 \value{
 Values returned for each function are:
 \itemize{
+\item{\code{hydraulics.maximumSoilPlantConductance}: The maximum soil-plant conductance, in the same units as the input segment conductances.}
 \item{\code{hydraulics.averageRhizosphereResistancePercent}: The average percentage of resistance due to the rhizosphere, calculated across water potential values.}
 \item{\code{hydraulics.findRhizosphereMaximumConductance}: The maximum rhizosphere conductance value given an average rhizosphere resistance and the vulnerability curves of rhizosphere, root and stem elements.}
 \item{\code{hydraulics.taperFactorSavage}: Taper factor according to Savage et al. (2010).}

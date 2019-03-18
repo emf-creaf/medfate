@@ -8,7 +8,8 @@ Soil-plant resistances
 Calculates and draws rhizosphere, root, stem and leaf resistances for simulation time steps
 }
 \usage{
-spwb.resistances(x, cohort = 1, relative = FALSE, draw = FALSE, cumulative = FALSE, yearAxis = FALSE, xlab = NULL, ylab = NULL)
+spwb.resistances(x, cohort = 1, relative = FALSE, draw = FALSE, 
+                 cumulative = FALSE, yearAxis = FALSE, xlab = NULL, ylab = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

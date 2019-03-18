@@ -1,4 +1,5 @@
-spwb.resistances<-function(x, cohort = 1, relative = FALSE, draw = FALSE, cumulative = FALSE, yearAxis = FALSE,  xlab = NULL, ylab=NULL) {
+spwb.resistances<-function(x, cohort = 1, relative = FALSE, draw = FALSE, 
+                           cumulative = FALSE, yearAxis = FALSE,  xlab = NULL, ylab=NULL) {
   
   if(x$spwbInput$control$transpirationMode!="Complex") {
     stop("Resistances can only be calculated when transpirationMode = 'Complex'.")
@@ -19,7 +20,7 @@ spwb.resistances<-function(x, cohort = 1, relative = FALSE, draw = FALSE, cumula
   VCleaf_c = paramsTransp$VCleaf_c
   VCleaf_d = paramsTransp$VCleaf_d
   
-  psiLeaf = x$LeafPsi
+  psiLeaf = x$LeafPsiMin
   psiStem = x$StemPsi
   psiRoot = x$RootPsi
   PLCstem = x$PlantStress
@@ -31,6 +32,19 @@ spwb.resistances<-function(x, cohort = 1, relative = FALSE, draw = FALSE, cumula
   if(nlayers>2) psiSoil = cbind(psiSoil, x$Soil$psi.3)
   if(nlayers>3) psiSoil = cbind(psiSoil, x$Soil$psi.4)
   if(nlayers>4) psiSoil = cbind(psiSoil, x$Soil$psi.5)
+  
+  dates = as.Date(rownames(x$WaterBalance))
+  numDays = length(dates)
+  numYears = round(numDays/365)
+  firstYear=as.numeric(format(dates[1],"%Y"))
+  plotAxes<-function(){
+    if(!yearAxis) axis.Date(1, dates)
+    else {
+      axis(1, at = (0:numYears)*365, labels=FALSE)
+      axis(1, at = -182+365*(1:numYears), tick = FALSE, line=FALSE, labels=firstYear:(firstYear+numYears-1))
+    }
+    axis(2)    
+  }
   
   nsteps = nrow(psiSoil)
   resmat = matrix(0, nrow=nsteps, ncol = 4)
@@ -58,14 +72,7 @@ spwb.resistances<-function(x, cohort = 1, relative = FALSE, draw = FALSE, cumula
       resdraw[,4] = resdraw[,3] + resdraw[,4]
     }
     dates = as.Date(rownames(x$WaterBalance))
-    plotAxes<-function(){
-      if(!yearAxis) axis.Date(1, dates)
-      else {
-        axis(1, at = (0:numYears)*365, labels=FALSE)
-        axis(1, at = -182+365*(1:numYears), tick = FALSE, line=FALSE, labels=firstYear:(firstYear+numYears-1))
-      }
-      axis(2)    
-    }
+
     if(is.null(xlab)) xlab = ifelse(yearAxis,"Year", "Date")  
     if(is.null(ylab)) ylab = ifelse(relative, "Relative resistances (%)", "Resistances")
     ylim = c(0, max(resdraw))

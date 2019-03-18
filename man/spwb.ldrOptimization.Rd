@@ -89,7 +89,8 @@ control = defaultControl()
 x = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 
 #Run optimization
-spwb.ldrOptimization(x = x, soil = examplesoil, meteo = examplemeteo, psi_crit = c(-2,-3,-4), elevation = 100)
+spwb.ldrOptimization(x = x, soil = examplesoil, meteo = examplemeteo, 
+                     psi_crit = c(-2,-3,-4), elevation = 100)
 }
 
 }

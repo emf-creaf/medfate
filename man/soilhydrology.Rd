@@ -11,6 +11,7 @@ Function \code{hydrology.soilInfiltration} calculates the amount of water that i
 \usage{
 hydrology.soilInfiltration(input, Ssoil) 
 hydrology.soilEvaporation(DEF,PETs, Gsoil)
+
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

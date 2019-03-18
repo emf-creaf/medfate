@@ -20,8 +20,6 @@ NumericVector theta(List soil, String model="SX");
 NumericVector psi(List soil, String model="SX");
 double waterTableDepth(List soil, String model = "SX");
 
-NumericVector infiltrationRepartition(double I, NumericVector dVec, NumericVector macro);
-
 NumericVector soilthermalconductivity(List soil, String model = "SX");
 NumericVector soilthermalcapacity(List soil, String model = "SX");
 

@@ -80,7 +80,8 @@ data("SpParamsMED")
 control = defaultControl()
 control$verbose = FALSE
 
-# Run water balance simulation over the grid for three months
-res <- spwbgrid(exampleSGL, SpParamsMED, examplemeteo[1:90,], 
+# Run water balance simulation over the grid for five days
+# (you can test longer periods)
+res <- spwbgrid(exampleSGL, SpParamsMED, examplemeteo[1:5,], 
                 control = control, summaryFreq = "months")
 }

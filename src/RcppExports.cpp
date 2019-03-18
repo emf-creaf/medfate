@@ -1807,6 +1807,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// infiltrationRepartition
+NumericVector infiltrationRepartition(double I, NumericVector dVec, NumericVector macro);
+RcppExport SEXP _medfate_infiltrationRepartition(SEXP ISEXP, SEXP dVecSEXP, SEXP macroSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type I(ISEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type dVec(dVecSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type macro(macroSEXP);
+    rcpp_result_gen = Rcpp::wrap(infiltrationRepartition(I, dVec, macro));
+    return rcpp_result_gen;
+END_RCPP
+}
 // interceptionGashDay
 double interceptionGashDay(double Precipitation, double Cm, double p, double ER);
 RcppExport SEXP _medfate_interceptionGashDay(SEXP PrecipitationSEXP, SEXP CmSEXP, SEXP pSEXP, SEXP ERSEXP) {
@@ -2423,19 +2436,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type theta_sat(theta_satSEXP);
     Rcpp::traits::input_parameter< double >::type theta(thetaSEXP);
     rcpp_result_gen = Rcpp::wrap(theta2psiVanGenuchten(n, alpha, theta_res, theta_sat, theta));
-    return rcpp_result_gen;
-END_RCPP
-}
-// infiltrationRepartition
-NumericVector infiltrationRepartition(double I, NumericVector dVec, NumericVector macro);
-RcppExport SEXP _medfate_infiltrationRepartition(SEXP ISEXP, SEXP dVecSEXP, SEXP macroSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type I(ISEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type dVec(dVecSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type macro(macroSEXP);
-    rcpp_result_gen = Rcpp::wrap(infiltrationRepartition(I, dVec, macro));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -3086,6 +3086,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_er", (DL_FUNC) &_medfate_er, 3},
     {"_medfate_soilevaporation", (DL_FUNC) &_medfate_soilevaporation, 3},
     {"_medfate_infiltrationDay", (DL_FUNC) &_medfate_infiltrationDay, 2},
+    {"_medfate_infiltrationRepartition", (DL_FUNC) &_medfate_infiltrationRepartition, 3},
     {"_medfate_interceptionGashDay", (DL_FUNC) &_medfate_interceptionGashDay, 4},
     {"_medfate_incgam", (DL_FUNC) &_medfate_incgam, 2},
     {"_medfate_invincgam", (DL_FUNC) &_medfate_invincgam, 3},
@@ -3127,7 +3128,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_psi2thetaSaxton", (DL_FUNC) &_medfate_psi2thetaSaxton, 4},
     {"_medfate_psi2thetaVanGenuchten", (DL_FUNC) &_medfate_psi2thetaVanGenuchten, 5},
     {"_medfate_theta2psiVanGenuchten", (DL_FUNC) &_medfate_theta2psiVanGenuchten, 5},
-    {"_medfate_infiltrationRepartition", (DL_FUNC) &_medfate_infiltrationRepartition, 3},
     {"_medfate_soilUSDAType", (DL_FUNC) &_medfate_soilUSDAType, 2},
     {"_medfate_vanGenuchtenParamsCarsel", (DL_FUNC) &_medfate_vanGenuchtenParamsCarsel, 1},
     {"_medfate_vanGenuchtenParamsToth", (DL_FUNC) &_medfate_vanGenuchtenParamsToth, 5},

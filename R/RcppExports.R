@@ -457,6 +457,10 @@ hydrology.soilEvaporation <- function(DEF, PETs, Gsoil) {
     .Call('_medfate_infiltrationDay', PACKAGE = 'medfate', input, Ssoil)
 }
 
+hydrology.infiltrationRepartition <- function(I, dVec, macro) {
+    .Call('_medfate_infiltrationRepartition', PACKAGE = 'medfate', I, dVec, macro)
+}
+
 .interceptionGashDay <- function(Precipitation, Cm, p, ER = 0.05) {
     .Call('_medfate_interceptionGashDay', PACKAGE = 'medfate', Precipitation, Cm, p, ER)
 }
@@ -619,10 +623,6 @@ soil.psi2thetaVG <- function(n, alpha, theta_res, theta_sat, psi) {
 
 soil.theta2psiVG <- function(n, alpha, theta_res, theta_sat, theta) {
     .Call('_medfate_theta2psiVanGenuchten', PACKAGE = 'medfate', n, alpha, theta_res, theta_sat, theta)
-}
-
-soil.infiltrationRepartition <- function(I, dVec, macro) {
-    .Call('_medfate_infiltrationRepartition', PACKAGE = 'medfate', I, dVec, macro)
 }
 
 soil.USDAType <- function(clay, sand) {

@@ -35,6 +35,27 @@ double infiltrationDay(double input, double Ssoil) {
   return(I);
 }
 
+/**
+ * Calculates infiltrated water that goes to each layer
+ */
+// [[Rcpp::export("hydrology.infiltrationRepartition")]]
+NumericVector infiltrationRepartition(double I, NumericVector dVec, NumericVector macro) {
+  int nlayers = dVec.length();
+  NumericVector Ivec = NumericVector(nlayers,0.0);
+  double macro_mean = sum(macro)/((double) nlayers);
+  double a = -0.01*pow(1.0-macro_mean,3.0);
+  double z1 = 0.0;
+  for(int i=0;i<nlayers;i++) {
+    if(i<(nlayers-1)) {
+      Ivec[i] = I*(exp(a*z1)-exp(a*(z1 + dVec[i])));
+    } else {
+      Ivec[i] = I*exp(a*z1);
+    }
+    z1 = z1 + dVec[i];
+  }
+  return(Ivec);
+}
+
 
 // [[Rcpp::export(".interceptionGashDay")]]
 double interceptionGashDay(double Precipitation, double Cm, double p, double ER=0.05) {
