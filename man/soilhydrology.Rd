@@ -2,6 +2,7 @@
 \name{hydrology.soilInfiltration}
 \alias{hydrology.soilInfiltration}
 \alias{hydrology.soilEvaporation}
+\alias{hydrology.infiltrationRepartition}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Soil infiltration and bare soil evaporation}
@@ -11,7 +12,7 @@ Function \code{hydrology.soilInfiltration} calculates the amount of water that i
 \usage{
 hydrology.soilInfiltration(input, Ssoil) 
 hydrology.soilEvaporation(DEF,PETs, Gsoil)
-
+hydrology.infiltrationRepartition(I, dVec, macro)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -20,12 +21,15 @@ hydrology.soilEvaporation(DEF,PETs, Gsoil)
   \item{DEF}{Water deficit in the (topsoil) layer.}
   \item{PETs}{Potential evapotranspiration at the soil surface.}
   \item{Gsoil}{Gamma parameter (maximum daily evaporation).}
+  \item{I}{Soil infiltration (in mm of water).}
+  \item{dVec}{Width of soil layers (in mm).}
+  \item{macro}{Macroporosity of soil layers (in \%).}
 }
 \details{
 See description of infiltration and soil evaporation processes in De Caceres et al. (submitted).
 }
 \value{
-Function \code{hydrology.soilInfiltration} a vector of the same length as \code{input} containing the daily amount of water that infiltrates into the soil (in mm of water). Function \code{hydrology.soilEvaporation} returns the amount of water evaporated from the soil.
+Function \code{hydrology.soilInfiltration} a vector of the same length as \code{input} containing the daily amount of water that infiltrates into the soil (in mm of water). Function \code{hydrology.soilEvaporation} returns the amount of water evaporated from the soil. Function \code{hydrology.infiltrationRepartition} estimates the amount of infiltrated water that reaches each soil layer.
 }
 \references{
 Boughton (1989). A review of the USDA SCS curve number method. - Australian Journal of Soil Research 27: 511-523.

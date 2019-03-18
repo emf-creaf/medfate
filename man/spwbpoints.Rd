@@ -54,11 +54,11 @@ data("SpParamsMED")
 control = defaultControl()
 control$verbose = FALSE
 
-# Run simulation for each forest plot
-res <- spwbpoints(exampleSPL, SpParamsMED, examplemeteo, control = control)
+# Run simulation for the first three forest plot
+res <- spwbpoints(exampleSPL[1:3], SpParamsMED, examplemeteo, control = control)
 
 #Extract summaries for a given forest plot
-summary(res$result$`80013`, freq="months",FUN=sum, 
+summary(res$result$`80001`, freq="months",FUN=sum, 
         output="PlantStress", bySpecies = TRUE)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

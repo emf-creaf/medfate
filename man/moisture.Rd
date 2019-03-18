@@ -21,7 +21,7 @@ moisture.apoplasticRWC(psiApo, c, d)
 moisture.apoplasticPsi(RWC, c, d)
 moisture.tissueRWC(psiSym, pi0, epsilon, 
                    psiApo, c, d, 
-                   af)
+                   af, femb = 0)
 moisture.tissueFMC(RWC, density, d0 = 1.54)
 moisture.pressureVolumeCurvePlot(x, segment="leaf", 
                     fraction = "all",
@@ -36,6 +36,7 @@ moisture.pressureVolumeCurvePlot(x, segment="leaf",
   \item{epsilon}{Bulk modulus of elasticity (MPa).}
   \item{c,d}{Parameters of the xylem vulnerability curve.}
   \item{af}{Apoplastic fraction (proportion) in the segment (e.g. leaf or stem).}
+  \item{femb}{Fraction of embolized conduits.}
   \item{x}{An object of class \code{\link{spwbInput}}.}
   \item{segment}{Curve to plot, either \code{"stem"}, \code{"leaf"} or \code{"both"}.}
   \item{fraction}{ Tissue fraction, either \code{"symplastic"}, \code{"apoplastic"} or \code{"all"}.}

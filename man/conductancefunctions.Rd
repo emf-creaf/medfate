@@ -22,7 +22,7 @@ hydraulics.K2Psi(K, Psi_extract, ws = 3.0)
 hydraulics.averagePsi(psi, v, c, d)
 hydraulics.vulnerabilityCurvePlot(x, soil = NULL, type="leaf",  
                                   psiVec =  seq(-0.1, -8.0, by =-0.01), 
-                                  relative = FALSE)   
+                                  relative = FALSE, draw = TRUE)   
 hydraulics.psiCrit(c, d, pCrit = 0.001)
 hydraulics.vanGenuchtenConductance(psi, krhizomax, n, alpha)
 hydraulics.xylemConductance(psi, kxylemmax, c, d)
@@ -47,6 +47,7 @@ hydraulics.psi2Weibull(psi50, psi88)
   \item{type}{Plot type. For \code{hydraulics.supplyFunctionPlot}, either \code{"E"}, \code{"Elayers"}, \code{"PsiStem"}, \code{"PsiRoot"}, \code{"PsiRhizo"} or \code{"dEdP"}). For \code{hydraulics.vulnerabilityCurvePlot}, either \code{"leaf"}, \code{"stem"}, \code{"root"}, or \code{"rhizosphere"}).}
   \item{psiVec}{Vector of water potential values to evaluate for the vulnerability curve.}
   \item{relative}{A flag to relativize vulnerability curves to the [0-1] interval.}
+  \item{draw}{A flag to indicate whether the vulnerability curve should be drawn or just returned.}
   \item{pCrit}{Proportion of maximum conductance considered critical for hydraulic functioning.}
   \item{psi50, psi88}{Water potentials (in MPa) corresponding to 50\% and 88\% of percent loss of conductance.}
 }
