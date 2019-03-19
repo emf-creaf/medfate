@@ -27,8 +27,8 @@ emptyforest(ID="", patchsize=10000, ntree = 0, nshrub = 0)
       \item{\code{Height}: Total height (in cm).}
       \item{\code{DBH}: Diameter at breast height (in cm).}
       \item{\code{N}: Density (number of individuals/cell).}
-      \item{\code{Z50}: Depth (in mm) corresponding to 50\% of roots.}
-      \item{\code{Z95}: Depth (in mm) corresponding to 95\% of roots.}
+      \item{\code{Z50}: Depth (in mm) corresponding to 50\% of fine roots.}
+      \item{\code{Z95}: Depth (in mm) corresponding to 95\% of fine roots.}
    }
   }
   \item{\code{shrubData}: A data frame of shrub cohorts (in rows) and the following columns:
@@ -36,7 +36,8 @@ emptyforest(ID="", patchsize=10000, ntree = 0, nshrub = 0)
       \item{\code{Species}: Non-negative integer for shrub species identity (i.e., 0,1,2,...).}
       \item{\code{Height}: Total height (in cm).}
       \item{\code{Cover}: Percent cover.}
-      \item{\code{Z}: Depth (in mm) of root system.}
+      \item{\code{Z50}: Depth (in mm) corresponding to 50\% of fine roots.}
+      \item{\code{Z95}: Depth (in mm) corresponding to 95\% of fine roots.}
    }
   }
   \item{\code{seedBank}: A data frame containing the abundance of seeds for each species (in rows) and the following columns:
