@@ -289,7 +289,6 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
 
   bool capacitance = control["capacitance"];
   bool cavitationRefill = control["cavitationRefill"];
-  double reverseFlowReduction = control["reverseFlowReduction"];
   double klat = control["klat"];
   int ntimesteps = control["ndailysteps"];
   int hydraulicCostFunction = control["hydraulicCostFunction"];
@@ -603,7 +602,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                                           PLCStemPrev,
                                           0.0, maxNsteps, 
                                           ntrial, psiTol, ETol,
-                                          0.001, reverseFlowReduction); 
+                                          0.001); 
       // } else { //Calculate supply function for root system only
       //   supply[c] = supplyFunctionBelowground(psic,
       //                                         VGrhizo_kmaxc,VG_nc,VG_alphac,

@@ -54,8 +54,9 @@ data("SpParamsMED")
 control = defaultControl()
 control$verbose = FALSE
 
-# Run simulation for the first three forest plot
-res <- spwbpoints(exampleSPL[1:3], SpParamsMED, examplemeteo, control = control)
+# Run simulation for the first two forest plots
+# (you can run the code without subsetting 'exampleSPL')
+res <- spwbpoints(exampleSPL[1:2], SpParamsMED, examplemeteo, control = control)
 
 #Extract summaries for a given forest plot
 summary(res$result$`80001`, freq="months",FUN=sum, 

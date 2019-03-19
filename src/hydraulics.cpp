@@ -393,22 +393,13 @@ void lubksb(NumericMatrix a, int n, IntegerVector indx, NumericVector b) {
   }
 }
 
-double reverseFlowReductionFunction(double psiSoil, double psiRhizo, double reverseFlowReduction = 0.5) {
-  double psiDiff = psiSoil - psiRhizo;
-  // double ini = 1.0;
-  // double fin = 1.0-reverseFlowReduction;
-  // return(fin + (ini-fin)/(1.0+exp(-psiDiff*50.0)));
-  if(psiDiff<0.0) return((1.0-reverseFlowReduction));
-  return(1.0);
-}
 
 // [[Rcpp::export("hydraulics.E2psiBelowground")]]
 List E2psiBelowground(double E, NumericVector psiSoil, 
                   NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
                   NumericVector krootmax, double rootc, double rootd, 
                   NumericVector psiIni = NumericVector::create(0),
-                  int ntrial = 10, double psiTol = 0.0001, double ETol = 0.0001,
-                  double reverseFlowReduction = 0.5) {
+                  int ntrial = 10, double psiTol = 0.0001, double ETol = 0.0001) {
   int nlayers = psiSoil.length();
   //Initialize
   NumericVector x(nlayers+1);
@@ -444,7 +435,7 @@ List E2psiBelowground(double E, NumericVector psiSoil,
     for(int l=0;l<nlayers;l++) {
       Eroot[l] = EXylem(x[nlayers], x[l], krootmax[l], rootc, rootd, true, 0.0);
       // Rcout<<"("<<Eroot[l]<<"\n";
-      Erhizo[l] = reverseFlowReductionFunction(psiSoil[l], x[l], reverseFlowReduction)*EVanGenuchten(x[l], psiSoil[l], krhizomax[l], nsoil[l], alphasoil[l]);
+      Erhizo[l] = EVanGenuchten(x[l], psiSoil[l], krhizomax[l], nsoil[l], alphasoil[l]);
       fvec[l] = Erhizo[l] - Eroot[l];
       // Rcout<<" Erhizo"<<l<<": "<< Erhizo[l]<<" Eroot"<<l<<": "<<Eroot[l]<<" fvec: "<<fvec[l]<<"\n";
       // Rcout<<"der psi_l "<<d_psi_l<<"der Eroot psi_l "<<d_Eroot_psi_l<<"  der psi_root "<<d_psi_root<<"\n";
@@ -456,7 +447,7 @@ List E2psiBelowground(double E, NumericVector psiSoil,
     for(int l1=0;l1<nlayers;l1++) { //funcio
       for(int l2=0;l2<nlayers;l2++) { //derivada
         if(l1==l2) {
-          fjac(l1,l2) = -reverseFlowReductionFunction(psiSoil[l2],x[l2],reverseFlowReduction)*vanGenuchtenConductance(x[l2],krhizomax[l2], nsoil[l2], alphasoil[l2])-xylemConductance(x[l2], krootmax[l2], rootc, rootd);  
+          fjac(l1,l2) = -vanGenuchtenConductance(x[l2],krhizomax[l2], nsoil[l2], alphasoil[l2])-xylemConductance(x[l2], krootmax[l2], rootc, rootd);  
         }
         else fjac(l1,l2) = 0.0;
       }
@@ -498,8 +489,7 @@ List E2psiBelowground(double E, NumericVector psiSoil,
     // Rcout<<"\n";
     if(errx<=psiTol) break;
     else if(k==(ntrial-1)) { //Last trial and no convergence
-      //Keep previous values
-      //for(int fi=0;fi<=nlayers;fi++) x[fi] = NA_REAL;
+      for(int fi=0;fi<=nlayers;fi++) x[fi] = NA_REAL;
       // Rcout<<"LC";
       stop = true;
     }
@@ -515,7 +505,7 @@ List E2psiBelowground(double E, NumericVector psiSoil,
   //Calculate final flows
   Esum = 0.0;
   for(int l=0;l<(nlayers-1);l++) {
-    Erhizo[l] = reverseFlowReductionFunction(psiSoil[l], x[l], reverseFlowReduction)*EVanGenuchten(x[l], psiSoil[l], krhizomax[l], nsoil[l], alphasoil[l]);
+    Erhizo[l] = EVanGenuchten(x[l], psiSoil[l], krhizomax[l], nsoil[l], alphasoil[l]);
     Esum += Erhizo[l];
   }
   Erhizo[nlayers-1] = E - Esum; //Define as difference to match input
@@ -854,16 +844,14 @@ List E2psiNetwork(double E, NumericVector psiSoil,
                   NumericVector PLCstem,
                   NumericVector psiIni = NumericVector::create(0),
                   int ntrial = 10, 
-                  double psiTol = 0.0001, double ETol = 0.0001,
-                  double reverseFlowReduction = 0.5) {
+                  double psiTol = 0.0001, double ETol = 0.0001) {
   
   int nStemSegments = PLCstem.size();
   List E2psiRS = E2psiBelowground(E, psiSoil, 
                                  krhizomax, nsoil, alphasoil,
                                  krootmax, rootc, rootd, 
                                  psiIni,
-                                 ntrial, psiTol, ETol,
-                                 reverseFlowReduction);
+                                 ntrial, psiTol, ETol);
   
   //Copy output
   double psiRoot  = E2psiRS["psiRoot"];
@@ -900,16 +888,14 @@ List E2psiNetworkCapacitance(double E, NumericVector psiSoil,
                              double Vleaf, double leaffapo, double leafpi0, double leafeps,
                              double tstep = 3600.0,
                              NumericVector psiIni = NumericVector::create(0),
-                             int ntrial = 10, double psiTol = 0.0001, double ETol = 0.0001,
-                             double reverseFlowReduction = 0.5) {
+                             int ntrial = 10, double psiTol = 0.0001, double ETol = 0.0001) {
   
   int nStemSegments = PLCstem.size();
   List E2psiRS = E2psiBelowground(E, psiSoil, 
                                   krhizomax, nsoil, alphasoil,
                                   krootmax, rootc, rootd, 
                                   psiIni,
-                                  ntrial, psiTol, ETol,
-                                  reverseFlowReduction);
+                                  ntrial, psiTol, ETol);
   
   //Copy output
   double psiRoot  = E2psiRS["psiRoot"];
@@ -1235,7 +1221,7 @@ List supplyFunctionBelowground(NumericVector psiSoil,
                            NumericVector krootmax, double rootc, double rootd, 
                            double minFlow = 0.0, int maxNsteps=400, 
                            int ntrial = 10, double psiTol = 0.0001, double ETol = 0.0001,
-                           double pCrit = 0.001, double reverseFlowReduction = 0.5) {
+                           double pCrit = 0.001) {
   int nlayers = psiSoil.size();
   NumericVector supplyE(maxNsteps);
   NumericVector supplydEdp(maxNsteps);
@@ -1246,8 +1232,7 @@ List supplyFunctionBelowground(NumericVector psiSoil,
                           krhizomax,  nsoil,  alphasoil,
                           krootmax,  rootc,  rootd,
                           NumericVector::create(0),
-                          ntrial,psiTol, ETol,
-                          reverseFlowReduction);
+                          ntrial,psiTol, ETol);
   NumericVector solERhizo =sol["ERhizo"];
   NumericVector solPsiRhizo = sol["psiRhizo"];
   supplyERhizo(0,_) = solERhizo;
@@ -1273,8 +1258,7 @@ List supplyFunctionBelowground(NumericVector psiSoil,
                        krhizomax,  nsoil,  alphasoil,
                        krootmax,  rootc,  rootd,
                        sol["x"],
-                       ntrial,psiTol, ETol,
-                       reverseFlowReduction);
+                       ntrial,psiTol, ETol);
     solERhizo =sol["ERhizo"];
     solPsiRhizo = sol["psiRhizo"];
     supplyERhizo(i,_) =  solERhizo;
@@ -1583,7 +1567,7 @@ List supplyFunctionNetwork(NumericVector psiSoil,
                            NumericVector PLCstem,
                            double minFlow = 0.0, int maxNsteps=400, 
                            int ntrial = 200, double psiTol = 0.0001, double ETol = 0.0001,
-                           double pCrit = 0.001, double reverseFlowReduction = 0.5) {
+                           double pCrit = 0.001) {
   int nlayers = psiSoil.size();
   int nStemSegments = PLCstem.size();
   NumericVector supplyE(maxNsteps);
@@ -1602,8 +1586,7 @@ List supplyFunctionNetwork(NumericVector psiSoil,
                           kleafmax,  leafc,  leafd,
                           PLCstem,
                           NumericVector::create(0),
-                          ntrial,psiTol, ETol,
-                          reverseFlowReduction);
+                          ntrial,psiTol, ETol);
   NumericVector solERhizo = sol["ERhizo"];
   NumericVector solPsiRhizo = sol["psiRhizo"];
   NumericVector solPsiStem = sol["psiStem"];
@@ -1623,8 +1606,7 @@ List supplyFunctionNetwork(NumericVector psiSoil,
                            kleafmax,  leafc,  leafd,
                            PLCstem,
                            sol["x"],
-                           ntrial,psiTol, ETol,
-                           reverseFlowReduction);
+                           ntrial,psiTol, ETol);
   double psiLeafI = solI["psiLeaf"];
   double maxdEdp = (ETol*2.0)/std::abs(psiLeafI - supplyPsiLeaf[0]);
   
@@ -1640,8 +1622,7 @@ List supplyFunctionNetwork(NumericVector psiSoil,
                        kleafmax,  leafc,  leafd,
                        PLCstem,
                        sol["x"],
-                       ntrial,psiTol, ETol,
-                       reverseFlowReduction);
+                       ntrial,psiTol, ETol);
     solERhizo = sol["ERhizo"];
     solPsiRhizo = sol["psiRhizo"];
     solPsiStem = sol["psiStem"];
@@ -1713,7 +1694,7 @@ List supplyFunctionNetworkCapacitance(NumericVector psiSoil,
                                       double tstep = 3600.0,
                                       double minFlow = 0.0, int maxNsteps=400, 
                                       int ntrial = 200, double psiTol = 0.0001, double ETol = 0.0001,
-                                      double pCrit = 0.001, double reverseFlowReduction=0.5) {
+                                      double pCrit = 0.001) {
   int nlayers = psiSoil.size();
   int nStemSegments = PLCstemPrev.size();
   NumericVector supplyE(maxNsteps);
@@ -1739,8 +1720,7 @@ List supplyFunctionNetworkCapacitance(NumericVector psiSoil,
                                      Vleaf, leaffapo, leafpi0, leafeps,
                                      tstep,
                                      NumericVector::create(0),
-                                     ntrial,psiTol, ETol,
-                                     reverseFlowReduction);
+                                     ntrial,psiTol, ETol);
   NumericVector solERhizo = sol["ERhizo"];
   NumericVector solPsiRhizo = sol["psiRhizo"];
   NumericVector solPsiStem = sol["psiStem"];
@@ -1766,8 +1746,7 @@ List supplyFunctionNetworkCapacitance(NumericVector psiSoil,
                                       Vleaf, leaffapo, leafpi0, leafeps,
                                       tstep,
                                       sol["x"],
-                                      ntrial,psiTol, ETol,
-                                      reverseFlowReduction);
+                                      ntrial,psiTol, ETol);
   double psiLeafI = solI["psiLeaf"];
   double EI = solI["ELeaf"];
   double maxdEdp = (EI - supplyELeaf[0])/std::abs(psiLeafI - supplyPsiLeaf[0]);
@@ -1788,8 +1767,7 @@ List supplyFunctionNetworkCapacitance(NumericVector psiSoil,
                                   Vleaf, leaffapo, leafpi0, leafeps,
                                   tstep,
                                   sol["x"],
-                                  ntrial,psiTol, ETol,
-                                  reverseFlowReduction);
+                                  ntrial,psiTol, ETol);
     supplyELeaf[i] = sol["ELeaf"];
     solERhizo = sol["ERhizo"];
     solPsiRhizo = sol["psiRhizo"];

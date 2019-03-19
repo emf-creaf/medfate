@@ -65,7 +65,7 @@ hydraulics.E2psiAbovegroundCapacitance(E, psiRootCrown,
                       Vleaf, leaffapo, leafpi0, leafeps,
                       tstep)
 hydraulics.E2psiAbovegroundCapacitanceDisconnected(E,                           
-                      psiStemPrev, PLCstemPrev, RWCsympstemPrev, 
+                      psiStemPrev, PLCstem, RWCsympstemPrev, 
                       psiLeafPrev, RWCsympleafPrev,
                       kstemmax, stemc, stemd,
                       kleafmax, leafc, leafd,
@@ -92,12 +92,12 @@ hydraulics.E2psiNetworkCapacitance(E, psiSoil,
                   Vsapwood, stemfapo, stempi0, stemeps,
                   Vleaf, leaffapo, leafpi0, leafeps,
                   tstep = 3600.0,
-                  psiIni = NumericVector::create(0),
+                  psiIni = as.numeric(c(0)),
                   ntrial = 10, psiTol = 0.0001, ETol = 0.0001)
 
 hydraulics.supplyFunctionOneXylem(psiSoil, v, 
                   kstemmax, stemc, stemd, psiCav = 0,
-                  maxNsteps=200, psiStep = -0.001, psiMax = -10.0, dE=0.01)
+                  maxNsteps=200, dE=0.01)
 hydraulics.supplyFunctionTwoElements(Emax, psiSoil, 
                   krhizomax, kxylemmax, n, alpha, c, d, 
                   psiCav = 0, dE = 0.1, psiMax = -10.0)
@@ -110,8 +110,8 @@ hydraulics.supplyFunctionThreeElements(Emax, psiSoil,
 hydraulics.supplyFunctionBelowground(psiSoil, 
                   krhizomax, nsoil, alphasoil,
                   krootmax, rootc, rootd, 
-                  minFlow = 0.0, maxNsteps=400, psiStep = -0.0001, psiMax = -10.0, 
-                  ntrial = 10, psiTol = 0.0001, ETol = 0.0001)
+                  minFlow = 0.0, maxNsteps=400,  
+                  ntrial = 10, psiTol = 0.0001, ETol = 0.0001, pCrit = 0.001)
 
 hydraulics.supplyFunctionAboveground(Erootcrown, psiRootCrown, 
                   kstemmax, stemc, stemd,
@@ -119,9 +119,8 @@ hydraulics.supplyFunctionAboveground(Erootcrown, psiRootCrown,
                   PLCstem)
 
 hydraulics.supplyFunctionAbovegroundCapacitance(Erootcrown, psiRootCrown,
-                  EPrev, psiRootCrownPrev,
-                  psiStemPrev, PLCstemPrev, RWCsympstemPrev,
-                  psiLeafPrev, RWCsympleafPrev,
+                  psiStemPrev, PLCstemPrev, 
+                  psiLeafPrev, 
                   kstemmax, stemc, stemd,
                   kleafmax, leafc, leafd,
                   Vsapwood, stemfapo, stempi0, stemeps,
@@ -133,9 +132,8 @@ hydraulics.supplyFunctionNetwork(psiSoil,
                   krootmax, rootc, rootd, 
                   kstemmax, stemc, stemd,
                   kleafmax, leafc, leafd,
-                  PLCstem,
-                  minFlow = 0.0, maxNsteps=400,
-                  ntrial = 200, psiTol = 0.0001, ETol = 0.0001)
+                  PLCstem, minFlow = 0.0, maxNsteps=400,
+                  ntrial = 200, psiTol = 0.0001, ETol = 0.0001, pCrit = 0.001)
                            
 hydraulics.supplyFunctionPlot(x, soil, draw = TRUE, type = "E")   
 hydraulics.regulatedPsiXylem(E, psiUpstream, kxylemmax, c, d, psiStep = -0.01)
@@ -151,18 +149,37 @@ hydraulics.regulatedPsiTwoElements(Emax, psiSoil, krhizomax, kxylemmax, n, alpha
   \item{kleafmax}{Maximum leaf hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}
   \item{kstemmax}{Maximum stem xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}
   \item{krootmax}{Maximum root xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}
+  \item{klat}{Lateral hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}
   \item{E}{Flow per surface unit.}
   \item{Emax}{Maximum flow per surface unit.}
+  \item{Erootcrown}{Flow per surface unit at the root crown.}
+  \item{psi}{Water potential (in MPa).}
+  \item{psiPrev}{Water potential (in MPa) in the previous time step.}
+  \item{psiStemPrev, psiLeafPrev}{Stem or leaf water potential (in MPa) in the previous time step.}
   \item{psiUpstream}{Water potential upstream (in MPa). In a one-component model corresponds to soil potential. In a two-component model corresponds to the potential inside the roots.}
   \item{psiCav}{Minimum water potential (in MPa) experienced (for irreversible cavitation).}
   \item{minFlow}{Minimum flow in supply function.}
   \item{psiPlant}{Plant water potential (in MPa).}
   \item{psiSoil}{Soil water potential (in MPa). A scalar or a vector depending on the function.}
   \item{psiRhizo}{Soil water potential (in MPa) in the rhizosphere (root surface).}
+  \item{psiRootCrown}{Soil water potential (in MPa) at the root crown.}
   \item{psiStep}{Water potential precision (in MPa).}
   \item{psiTol}{Precision for water potential estimates (in MPa).}
   \item{psiIni}{Vector of initial water potential values (in MPa).}
   \item{psiMax}{Minimum (maximum in absolute value) water potential to be considered (in MPa).}
+  \item{pCrit}{Critical water potential (in MPa).}
+  \item{PLCstem}{Proportion of loss conductance in the stem [0-1].}
+  \item{PLCprev}{Previous proportion of loss conductance [0-1].}
+  \item{PLCstemPrev}{Previous proportion of loss conductance [0-1] in the stem.}
+  \item{RWCsympstemPrev, RWCsympleafPrev}{Previous relative water content in the stem or leaf [0-1].}
+  \item{V}{Capacity of the compartment per leaf area (in L/m2).}
+  \item{Vleaf, Vsapwood}{Capacity of the compartment per leaf area (in L/m2) of leaves and sapwood.}
+  \item{fapo}{Apoplastic fraction (proportion) in the segment.}
+  \item{stemfapo, leaffapo}{Apoplastic fraction (proportion) in the leaf or stem.}
+  \item{pi0}{Full turgor osmotic potential (MPa).}
+  \item{stempi0,leafpi0}{Full turgor osmotic potential in the stem or the leaf (MPa).}
+  \item{eps}{Bulk modulus of elasticity (MPa).}
+  \item{stemeps,leafeps}{Bulk modulus of elasticity (MPa) in the stem or the leaf.}
   \item{dE}{Increment of flow per surface unit.}
   \item{ETol}{Precision for water flow per surface unit.}
   \item{c, d}{Parameters of the Weibull function (generic xylem vulnerability curve).}
@@ -178,6 +195,7 @@ hydraulics.regulatedPsiTwoElements(Emax, psiSoil, krhizomax, kxylemmax, n, alpha
   \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
   \item{type}{Plot type. For \code{hydraulics.supplyFunctionPlot}, either \code{"E"}, \code{"Elayers"}, \code{"PsiStem"}, \code{"PsiRoot"}, \code{"PsiRhizo"} or \code{"dEdP"}). For \code{hydraulics.vulnerabilityCurvePlot}, either \code{"leaf"}, \code{"stem"}, \code{"root"}, or \code{"rhizosphere"}).}
   \item{draw}{A flag to indicate whether the supply function should be drawn or just returned.}
+  \item{tstep, timestep}{Time step in seconds.}
 }
 \details{
 Details of the hydraulic model are given in a vignette. Function \code{hydraulics.supplyFunctionPlot} draws a plot of the supply function for the given \code{soil} object and network properties of each plant cohort in \code{x}. Function \code{hydraulics.vulnerabilityCurvePlot} draws a plot of the vulnerability curves for the given \code{soil} object and network properties of each plant cohort in \code{x}.
