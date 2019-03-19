@@ -19,10 +19,9 @@ composition could be modelled with different parameter sets.
 ## Package installation and documentation
 
 Package `medfate` can be found at [CRAN](https://cran.r-project.org/),
-but the version in this repository is very old. We recommend users to
-download and install the latest stable versions GitHub as follows
-(required packages `devtools` and `curl` should be installed/updated
-first):
+where it is updated every few months. Users can also download and
+install the latest stable versions GitHub as follows (required packages
+`devtools` and `curl` should be installed/updated first):
 
 ``` r
 devtools::install_github("miquelcaceres/medfate")
