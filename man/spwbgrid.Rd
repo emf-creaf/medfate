@@ -67,6 +67,7 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 \code{\link{spwb}}, \code{\link{spwbpoints}}, \code{\link{SpatialGridLandscape-class}}
 }
 \examples{
+\dontrun{
 # Load spatial grid landscape object
 data("exampleSGL")
 
@@ -84,4 +85,5 @@ control$verbose = FALSE
 # (you can test longer periods)
 res <- spwbgrid(exampleSGL, SpParamsMED, examplemeteo[1:5,], 
                 control = control, summaryFreq = "months")
+}
 }
