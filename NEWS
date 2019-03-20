@@ -5,6 +5,8 @@
 __Version history__
 
 _Version 0.7.4, April 2019.
+1. Fixing bugs for installation in all platforms
+2. Update docs
 
 _Version 0.7.3, March 2019.
 1. Shrub root system using LDR (Z50 and Z95)
