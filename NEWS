@@ -4,7 +4,7 @@
 
 __Version history__
 
-_Version 0.7.4, April 2019.
+_Version 0.7.4, March 2019.
 1. Fixing bugs for installation in all platforms
 2. Update docs
 
@@ -14,6 +14,7 @@ _Version 0.7.3, March 2019.
 3. New function soil.infiltrationRepartition()
 4. Adding interception to evapotranspiration
 5. Checked for CRAN
+
 
 _Version 0.7.2, February 2019.
 1. Accounting of hydraulic redistribution

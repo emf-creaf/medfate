@@ -41,6 +41,7 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 \code{\link{spwb}}, \code{\link{growth}}, \code{\link{SpatialPointsLandscape-class}}
 }
 \examples{
+\dontrun{
 # Load spatial points forest object
 data("exampleSPL")
 
@@ -56,11 +57,12 @@ control$verbose = FALSE
 
 # Run simulation for the first two forest plots
 # (you can run the code without subsetting 'exampleSPL')
-res <- spwbpoints(exampleSPL[1:2], SpParamsMED, examplemeteo, control = control)
+res <- spwbpoints(exampleSPL, SpParamsMED, examplemeteo, control = control)
 
 #Extract summaries for a given forest plot
 summary(res$result$`80001`, freq="months",FUN=sum, 
         output="PlantStress", bySpecies = TRUE)
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
