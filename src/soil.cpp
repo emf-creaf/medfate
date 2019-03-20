@@ -6,9 +6,9 @@ const double thermalConductivitySand = 1.57025; //W·m-1·K-1 From Dharssi et al
 const double thermalConductivitySilt = 1.57025; //W·m-1·K-1 From Dharssi et al. 2009
 const double thermalConductivityClay = 1.16025; //W·m-1·K-1 From Dharssi et al. 2009
 const double thermalConductivityAir = 0.025; //W·m-1·K-1 From Dharssi et al. 2009
-const double capacitySand = 1.25*pow(10.0,6.0); //kg·m-3 
-const double capacitySilt = 1.19*pow(10.0,6.0); //kg·m-3 
-const double capacityClay = 1.23*pow(10.0,6.0); //kg·m-3 
+const double capacitySand = 1.25*1e6; //kg·m-3 
+const double capacitySilt = 1.19*1e6; //kg·m-3 
+const double capacityClay = 1.23*1e6; //kg·m-3 
 
 
 
@@ -274,7 +274,7 @@ NumericVector layerthermalcapacity(NumericVector sand, NumericVector clay, Numer
   NumericVector thermalCap(nlayers,0.0);
   for(int l=0;l<nlayers;l++) {
     thermalCap[l] = ((sand[l]*capacitySand)+(clay[l]*capacityClay) + ((100.0-clay[l]-sand[l])*capacitySilt))/100.0;
-    thermalCap[l] = thermalCap[l] + 4.19*pow(10.0,3.0)*1000.0*Theta_FC[l]*W[l];//Add water
+    thermalCap[l] = thermalCap[l] + 4.19*1e3*1000.0*Theta_FC[l]*W[l];//Add water
   }
   return(thermalCap);
 }

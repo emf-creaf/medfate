@@ -521,7 +521,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
         if(NumericVector::is_na(DBH[j])) {
           double Wleaves = LAI_live[j]/((N[j]/10000)*SLA[j]);  //Calculates the biomass (dry weight) of leaves
           double PV = pow(Wleaves*r635[j]/Absh[j], 1.0/Bbsh[j]); //Calculates crown phytovolume (in m3)
-          H[j] = pow(pow(10,6.0)*PV/(Aash[j]*CR[j]), 1.0/3.0); //Updates shrub height
+          H[j] = pow(1e6*PV/(Aash[j]*CR[j]), 1.0/3.0); //Updates shrub height
           if(H[j]> Hmax[j]) { //Limit height (and update the former variables)
             H[j] = Hmax[j];
             PV = (Aash[j]*pow(H[j],2.0)/10000.0)*(H[j]/100.0)*CR[j];
@@ -531,7 +531,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
             LAI_dead[j] += prevLive - LAI_live[j]; //Increment dead LAI with the difference
             LAI_expanded[j] = LAI_live[j]*phe[j]; //Update expanded leaf area
           }
-          Cover[j] = (N[j]*Aash[j]*pow(H[j],2.0)/pow(10, 6.0)); //Updates shrub cover
+          Cover[j] = (N[j]*Aash[j]*pow(H[j],2.0)/1e6); //Updates shrub cover
         }
       }
     }

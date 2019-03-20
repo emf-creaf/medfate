@@ -6,7 +6,7 @@
 using namespace Rcpp;
 
 const double Cp_Jmol = 29.37152; // J * mol^-1 * ºC^-1
-const double SIGMA_W = 5.67*pow(10,-8.0); //Stefan-Boltzmann constant W * K^-4 * m^-2
+const double SIGMA_W = 5.67*1e-8; //Stefan-Boltzmann constant W * K^-4 * m^-2
 
 /**
  * Transforms dates (yyyy-mm-dd) into day of the year (DOY)
@@ -97,6 +97,6 @@ double leafTemperature(double absRad, double airTemperature, double u, double E,
  *  lambda - wavelength (in nm)
  */
 double irradianceToPhotonFlux(double I, double lambda = 546.6507) {
-  return(I*lambda*0.836*pow(10.0,-2.0));
+  return(I*lambda*0.836*1e-2);
 }
 

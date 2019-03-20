@@ -14,7 +14,7 @@
 #include <meteoland.h>
 using namespace Rcpp;
 
-const double SIGMA_Wm2 = 5.67*pow(10,-8.0);
+const double SIGMA_Wm2 = 5.67*1e-8;
 const double Cp_JKG = 1013.86; // J * kg^-1 * ºC^-1
 
 
@@ -109,7 +109,7 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
       if(NumericVector::is_na(rad)) stop("Missing radiation data for snow melt!");
       if(NumericVector::is_na(elevation)) stop("Missing elevation data for snow melt!");
       double rho = meteoland::utils_airDensity(tday, meteoland::utils_atmosphericPressure(elevation));
-      double ten = (86400*tday*rho*1013.86*pow(10,-6.0)/100.0); //ten can be negative if temperature is below zero
+      double ten = (86400*tday*rho*1013.86*1e-6/100.0); //ten can be negative if temperature is below zero
       double ren = (rad*LgroundSWR)*(0.1); //90% albedo of snow
       melt = std::max(0.0,(ren+ten)/0.33355); //Do not allow negative melting values
       // Rcout<<" swe: "<< swe<<" temp: "<<ten<< " rad: "<< ren << " melt : "<< melt<<"\n";
@@ -810,7 +810,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
             
             //Scale photosynthesis
             Aninst(c,n) = AnSunlit[iPMSunlit]*LAI_SL(c,n) + AnShade[iPMShade]*LAI_SH(c,n);
-            photosynthesis[c] +=pow(10,-6)*12.01017*Aninst(c,n)*tstep; 
+            photosynthesis[c] +=(1e-6)*12.01017*Aninst(c,n)*tstep; 
             
             //Average flow from sunlit and shade leaves
             double Eaverage = (fittedE[iPMSunlit]*LAI_SL(c,n) + fittedE[iPMShade]*LAI_SH(c,n))/(LAI_SL(c,n) + LAI_SH(c,n));
@@ -930,7 +930,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
             
             //Scale photosynthesis
             Aninst(c,n) = AnSL*LAI_SL(c,n) + AnSH*LAI_SH(c,n);
-            photosynthesis[c] +=pow(10,-6)*12.01017*Aninst(c,n)*tstep; 
+            photosynthesis[c] +=(1e-6)*12.01017*Aninst(c,n)*tstep; 
             
             
             Einst(c,n) = Eaverage*0.001*0.01802*LAIphe[c]*tstep; //Scale from instantaneous flow to water volume in the time step
@@ -1009,7 +1009,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
     double canLWRexchprop = abs_LWR_can[n]/lwdr[n];
     // Rcout<<canLWRexchprop<<"\n";
     //Latent heat (PROBLEM: does not include interception)
-    LEcan_heat[n] = pow(10.0,6.0)*meteoland::utils_latentHeatVaporisation(Tcan[n])*sum(Einst(_,n))/tstep; 
+    LEcan_heat[n] = (1e6)*meteoland::utils_latentHeatVaporisation(Tcan[n])*sum(Einst(_,n))/tstep; 
     //Canopy longwave emmission
     LWRcanout[n] = LWR_emmcan*canLWRexchprop;
     //Canopy convective heat exchange
@@ -1078,7 +1078,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   for(int n=0;n<ntimesteps;n++) {
     Rnground += (abs_SWR_soil[n] + abs_LWR_soil[n] - emm_LWR_soil[n])*tstep; //kJ·m-2 accumulate net soil radiation balance
   }
-  Rnground = std::max(0.0,Rnground)/pow(10.0,3.0); //from kJ·m-2 to MJ·m-2
+  Rnground = std::max(0.0,Rnground)/1e3; //from kJ·m-2 to MJ·m-2
   double PETsoil = meteoland::penmanmonteith(200.0, elevation, tmin, tmax, rhmin, rhmax, Rnground, wind);
   double Gsoil = soil["Gsoil"];
   double Ksoil = soil["Ksoil"];
@@ -1636,22 +1636,34 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   NumericVector MinTemperature, MaxTemperature;
   NumericVector MinRelativeHumidity, MaxRelativeHumidity;
   NumericVector PET;
-  NumericVector Radiation, WindSpeed;
+  NumericVector Radiation;
+  if(!meteo.containsElementNamed("Precipitation")) stop("Please include variable 'Precipitation' in weather input.");
   NumericVector Precipitation = meteo["Precipitation"];
-  NumericVector MeanTemperature = meteo["MeanTemperature"];
   int numDays = Precipitation.size();
+  if(!meteo.containsElementNamed("MeanTemperature")) stop("Please include variable 'MeanTemperature' in weather input.");
+  NumericVector MeanTemperature = meteo["MeanTemperature"];
+  NumericVector WindSpeed(numDays, NA_REAL);
+  if(meteo.containsElementNamed("WindSpeed")) WindSpeed = meteo["WindSpeed"];
   if(transpirationMode=="Simple") {
+    if(!meteo.containsElementNamed("PET")) stop("Please include variable 'PET' in weather input.");
     PET = meteo["PET"];
-    if(control["snowpack"]) Radiation = meteo["Radiation"];
+    if(control["snowpack"]) {
+      if(!meteo.containsElementNamed("Radiation")) stop("If 'snowpack = TRUE', variable 'Radiation' must be provided.");
+      else Radiation = meteo["Radiation"];
+    }
   } else if(transpirationMode=="Complex") {
     if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
     if(NumericVector::is_na(elevation)) stop("Value for 'elevation' should not be missing.");
+    if(!meteo.containsElementNamed("MinTemperature")) stop("Please include variable 'MinTemperature' in weather input.");
     MinTemperature = meteo["MinTemperature"];
+    if(!meteo.containsElementNamed("MaxTemperature")) stop("Please include variable 'MaxTemperature' in weather input.");
     MaxTemperature = meteo["MaxTemperature"];
+    if(!meteo.containsElementNamed("MinRelativeHumidity")) stop("Please include variable 'MinRelativeHumidity' in weather input.");
     MinRelativeHumidity = meteo["MinRelativeHumidity"];
+    if(!meteo.containsElementNamed("MaxRelativeHumidity")) stop("Please include variable 'MaxRelativeHumidity' in weather input.");
     MaxRelativeHumidity = meteo["MaxRelativeHumidity"];
+    if(!meteo.containsElementNamed("Radiation")) stop("Please include variable 'Radiation' in weather input.");
     Radiation = meteo["Radiation"];
-    WindSpeed = meteo["WindSpeed"];
     PET = NumericVector(numDays);
   }
   CharacterVector dateStrings = meteo.attr("row.names");

@@ -1095,13 +1095,13 @@ double qfraction(double a, double x, double dp){
   
 // [[Rcpp::export(".incgam")]]
 NumericVector incgam(double a, double x) {
-  double lnx, p, q;
+  double lnx, p = NA_REAL, q = NA_REAL;
+  double dp;
   if(x<dwarf) {
     lnx = log(dwarf);
   } else {
     lnx = log(x); 
   }
-  double dp;
   if(a>alfa(x)) {
     dp = dompart(a,x, false);
     if(dp<0.0) {

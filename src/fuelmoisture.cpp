@@ -196,8 +196,6 @@ List cohortFineFuelMoistureContent(List spwb, List x) {
     double density_stem = WoodDens[c];
     double leafc = VCleaf_c[c];
     double leafd = VCleaf_d[c];
-    double stemc = VCstem_c[c];
-    double stemd = VCstem_d[c];
     double p_leaves = 1.0/r635[c];
     for(int d=0;d<numDays;d++) {
       double rwc_apo_leaf = apoplasticRelativeWaterContent(psiapoleaf(d,c), leafc, leafd);

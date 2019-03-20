@@ -11,7 +11,7 @@
 #include <meteoland.h>
 using namespace Rcpp;
 
-const double SIGMA_Wm2 = 5.67*pow(10,-8.0);
+const double SIGMA_Wm2 = 5.67*1e-8;
 
 // [[Rcpp::export("transp.profitMaximization")]]
 List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, int type, double Gwmin, double Gwmax, double kleafmax = NA_REAL) {

@@ -18,10 +18,11 @@ composition could be modelled with different parameter sets.
 
 ## Package installation and documentation
 
-Package `medfate` can be found at [CRAN](https://cran.r-project.org/),
-where it is updated every few months. Users can also download and
-install the latest stable versions GitHub as follows (required packages
-`devtools` and `curl` should be installed/updated first):
+Package `medfate` can be found at
+[CRAN](https://CRAN.R-project.org/package=medfate), where it is updated
+every few months. Users can also download and install the latest stable
+versions GitHub as follows (required packages `devtools` and `curl`
+should be installed/updated first):
 
 ``` r
 devtools::install_github("miquelcaceres/medfate")

@@ -1928,7 +1928,6 @@ double maximumSoilPlantConductance(NumericVector krhizomax, NumericVector krootm
   }
   double rrhizo = 1.0/krhizo;
   double rroot = 1.0/kroot;
-  double plcCond = NA_REAL;
   double rstem = 1.0/kstemmax;
   double rleaf = 1.0/kleafmax;
   return(1.0/(rrhizo+rroot+rstem+rleaf));
