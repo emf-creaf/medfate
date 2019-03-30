@@ -13,20 +13,12 @@ importFrom("GSIF", "REST.SoilGrids","over")
 # Export all names
 useDynLib(medfate)
 exportPattern("^[[:alpha:]]+")
-exportMethods("[", show, head, tail)
-exportClasses(SpatialPointsLandscape, SpatialGridLandscape, SpatialPixelsLandscape)
 
 
 importFrom(Rcpp, evalCpp)
 S3method(plot,spwb)
 S3method(plot,spwb.day)
 S3method(plot,growth)
-S3method(plot,spwbgrid)
-# S3method(plot,fb)
-# S3method(plot,fbpoints)
-# S3method(head, SpatialPointsLandscape, head.SpatialPointsLandscape)
-# S3method(tail, SpatialPointsLandscape, tail.SpatialPointsLandscape)
-# S3method(print, SpatialPointsLandscape, print.SpatialPointsLandscape)
 
 S3method(summary, spwb)
 S3method(summary, growth)
