@@ -24,6 +24,111 @@ namespace medfate {
         }
     }
 
+    inline NumericVector _er(IntegerVector DOY, double ERconv = 0.05, double ERsyn = 0.2) {
+        typedef SEXP(*Ptr__er)(SEXP,SEXP,SEXP);
+        static Ptr__er p__er = NULL;
+        if (p__er == NULL) {
+            validateSignature("NumericVector(*_er)(IntegerVector,double,double)");
+            p__er = (Ptr__er)R_GetCCallable("medfate", "_medfate__er");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p__er(Shield<SEXP>(Rcpp::wrap(DOY)), Shield<SEXP>(Rcpp::wrap(ERconv)), Shield<SEXP>(Rcpp::wrap(ERsyn)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<NumericVector >(rcpp_result_gen);
+    }
+
+    inline double hydrology_soilEvaporation(double DEF, double PETs, double Gsoil) {
+        typedef SEXP(*Ptr_hydrology_soilEvaporation)(SEXP,SEXP,SEXP);
+        static Ptr_hydrology_soilEvaporation p_hydrology_soilEvaporation = NULL;
+        if (p_hydrology_soilEvaporation == NULL) {
+            validateSignature("double(*hydrology_soilEvaporation)(double,double,double)");
+            p_hydrology_soilEvaporation = (Ptr_hydrology_soilEvaporation)R_GetCCallable("medfate", "_medfate_hydrology_soilEvaporation");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p_hydrology_soilEvaporation(Shield<SEXP>(Rcpp::wrap(DEF)), Shield<SEXP>(Rcpp::wrap(PETs)), Shield<SEXP>(Rcpp::wrap(Gsoil)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<double >(rcpp_result_gen);
+    }
+
+    inline double _infiltrationDay(double input, double Ssoil) {
+        typedef SEXP(*Ptr__infiltrationDay)(SEXP,SEXP);
+        static Ptr__infiltrationDay p__infiltrationDay = NULL;
+        if (p__infiltrationDay == NULL) {
+            validateSignature("double(*_infiltrationDay)(double,double)");
+            p__infiltrationDay = (Ptr__infiltrationDay)R_GetCCallable("medfate", "_medfate__infiltrationDay");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p__infiltrationDay(Shield<SEXP>(Rcpp::wrap(input)), Shield<SEXP>(Rcpp::wrap(Ssoil)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<double >(rcpp_result_gen);
+    }
+
+    inline NumericVector hydrology_infiltrationRepartition(double I, NumericVector dVec, NumericVector macro) {
+        typedef SEXP(*Ptr_hydrology_infiltrationRepartition)(SEXP,SEXP,SEXP);
+        static Ptr_hydrology_infiltrationRepartition p_hydrology_infiltrationRepartition = NULL;
+        if (p_hydrology_infiltrationRepartition == NULL) {
+            validateSignature("NumericVector(*hydrology_infiltrationRepartition)(double,NumericVector,NumericVector)");
+            p_hydrology_infiltrationRepartition = (Ptr_hydrology_infiltrationRepartition)R_GetCCallable("medfate", "_medfate_hydrology_infiltrationRepartition");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p_hydrology_infiltrationRepartition(Shield<SEXP>(Rcpp::wrap(I)), Shield<SEXP>(Rcpp::wrap(dVec)), Shield<SEXP>(Rcpp::wrap(macro)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<NumericVector >(rcpp_result_gen);
+    }
+
+    inline double _interceptionGashDay(double Precipitation, double Cm, double p, double ER = 0.05) {
+        typedef SEXP(*Ptr__interceptionGashDay)(SEXP,SEXP,SEXP,SEXP);
+        static Ptr__interceptionGashDay p__interceptionGashDay = NULL;
+        if (p__interceptionGashDay == NULL) {
+            validateSignature("double(*_interceptionGashDay)(double,double,double,double)");
+            p__interceptionGashDay = (Ptr__interceptionGashDay)R_GetCCallable("medfate", "_medfate__interceptionGashDay");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p__interceptionGashDay(Shield<SEXP>(Rcpp::wrap(Precipitation)), Shield<SEXP>(Rcpp::wrap(Cm)), Shield<SEXP>(Rcpp::wrap(p)), Shield<SEXP>(Rcpp::wrap(ER)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<double >(rcpp_result_gen);
+    }
+
     inline double soil_thetaSATSX(double clay, double sand, double om = NA_REAL) {
         typedef SEXP(*Ptr_soil_thetaSATSX)(SEXP,SEXP,SEXP);
         static Ptr_soil_thetaSATSX p_soil_thetaSATSX = NULL;

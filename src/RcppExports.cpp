@@ -1768,68 +1768,183 @@ END_RCPP
 }
 // er
 NumericVector er(IntegerVector DOY, double ERconv, double ERsyn);
-RcppExport SEXP _medfate_er(SEXP DOYSEXP, SEXP ERconvSEXP, SEXP ERsynSEXP) {
+static SEXP _medfate_er_try(SEXP DOYSEXP, SEXP ERconvSEXP, SEXP ERsynSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< IntegerVector >::type DOY(DOYSEXP);
     Rcpp::traits::input_parameter< double >::type ERconv(ERconvSEXP);
     Rcpp::traits::input_parameter< double >::type ERsyn(ERsynSEXP);
     rcpp_result_gen = Rcpp::wrap(er(DOY, ERconv, ERsyn));
     return rcpp_result_gen;
-END_RCPP
+END_RCPP_RETURN_ERROR
+}
+RcppExport SEXP _medfate_er(SEXP DOYSEXP, SEXP ERconvSEXP, SEXP ERsynSEXP) {
+    SEXP rcpp_result_gen;
+    {
+        Rcpp::RNGScope rcpp_rngScope_gen;
+        rcpp_result_gen = PROTECT(_medfate_er_try(DOYSEXP, ERconvSEXP, ERsynSEXP));
+    }
+    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
+    if (rcpp_isInterrupt_gen) {
+        UNPROTECT(1);
+        Rf_onintr();
+    }
+    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
+    if (rcpp_isLongjump_gen) {
+        Rcpp::internal::resumeJump(rcpp_result_gen);
+    }
+    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
+    if (rcpp_isError_gen) {
+        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
+        UNPROTECT(1);
+        Rf_error(CHAR(rcpp_msgSEXP_gen));
+    }
+    UNPROTECT(1);
+    return rcpp_result_gen;
 }
 // soilevaporation
 double soilevaporation(double DEF, double PETs, double Gsoil);
-RcppExport SEXP _medfate_soilevaporation(SEXP DEFSEXP, SEXP PETsSEXP, SEXP GsoilSEXP) {
+static SEXP _medfate_soilevaporation_try(SEXP DEFSEXP, SEXP PETsSEXP, SEXP GsoilSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type DEF(DEFSEXP);
     Rcpp::traits::input_parameter< double >::type PETs(PETsSEXP);
     Rcpp::traits::input_parameter< double >::type Gsoil(GsoilSEXP);
     rcpp_result_gen = Rcpp::wrap(soilevaporation(DEF, PETs, Gsoil));
     return rcpp_result_gen;
-END_RCPP
+END_RCPP_RETURN_ERROR
+}
+RcppExport SEXP _medfate_soilevaporation(SEXP DEFSEXP, SEXP PETsSEXP, SEXP GsoilSEXP) {
+    SEXP rcpp_result_gen;
+    {
+        Rcpp::RNGScope rcpp_rngScope_gen;
+        rcpp_result_gen = PROTECT(_medfate_soilevaporation_try(DEFSEXP, PETsSEXP, GsoilSEXP));
+    }
+    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
+    if (rcpp_isInterrupt_gen) {
+        UNPROTECT(1);
+        Rf_onintr();
+    }
+    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
+    if (rcpp_isLongjump_gen) {
+        Rcpp::internal::resumeJump(rcpp_result_gen);
+    }
+    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
+    if (rcpp_isError_gen) {
+        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
+        UNPROTECT(1);
+        Rf_error(CHAR(rcpp_msgSEXP_gen));
+    }
+    UNPROTECT(1);
+    return rcpp_result_gen;
 }
 // infiltrationDay
 double infiltrationDay(double input, double Ssoil);
-RcppExport SEXP _medfate_infiltrationDay(SEXP inputSEXP, SEXP SsoilSEXP) {
+static SEXP _medfate_infiltrationDay_try(SEXP inputSEXP, SEXP SsoilSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type input(inputSEXP);
     Rcpp::traits::input_parameter< double >::type Ssoil(SsoilSEXP);
     rcpp_result_gen = Rcpp::wrap(infiltrationDay(input, Ssoil));
     return rcpp_result_gen;
-END_RCPP
+END_RCPP_RETURN_ERROR
+}
+RcppExport SEXP _medfate_infiltrationDay(SEXP inputSEXP, SEXP SsoilSEXP) {
+    SEXP rcpp_result_gen;
+    {
+        Rcpp::RNGScope rcpp_rngScope_gen;
+        rcpp_result_gen = PROTECT(_medfate_infiltrationDay_try(inputSEXP, SsoilSEXP));
+    }
+    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
+    if (rcpp_isInterrupt_gen) {
+        UNPROTECT(1);
+        Rf_onintr();
+    }
+    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
+    if (rcpp_isLongjump_gen) {
+        Rcpp::internal::resumeJump(rcpp_result_gen);
+    }
+    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
+    if (rcpp_isError_gen) {
+        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
+        UNPROTECT(1);
+        Rf_error(CHAR(rcpp_msgSEXP_gen));
+    }
+    UNPROTECT(1);
+    return rcpp_result_gen;
 }
 // infiltrationRepartition
 NumericVector infiltrationRepartition(double I, NumericVector dVec, NumericVector macro);
-RcppExport SEXP _medfate_infiltrationRepartition(SEXP ISEXP, SEXP dVecSEXP, SEXP macroSEXP) {
+static SEXP _medfate_infiltrationRepartition_try(SEXP ISEXP, SEXP dVecSEXP, SEXP macroSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type I(ISEXP);
     Rcpp::traits::input_parameter< NumericVector >::type dVec(dVecSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type macro(macroSEXP);
     rcpp_result_gen = Rcpp::wrap(infiltrationRepartition(I, dVec, macro));
     return rcpp_result_gen;
-END_RCPP
+END_RCPP_RETURN_ERROR
+}
+RcppExport SEXP _medfate_infiltrationRepartition(SEXP ISEXP, SEXP dVecSEXP, SEXP macroSEXP) {
+    SEXP rcpp_result_gen;
+    {
+        Rcpp::RNGScope rcpp_rngScope_gen;
+        rcpp_result_gen = PROTECT(_medfate_infiltrationRepartition_try(ISEXP, dVecSEXP, macroSEXP));
+    }
+    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
+    if (rcpp_isInterrupt_gen) {
+        UNPROTECT(1);
+        Rf_onintr();
+    }
+    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
+    if (rcpp_isLongjump_gen) {
+        Rcpp::internal::resumeJump(rcpp_result_gen);
+    }
+    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
+    if (rcpp_isError_gen) {
+        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
+        UNPROTECT(1);
+        Rf_error(CHAR(rcpp_msgSEXP_gen));
+    }
+    UNPROTECT(1);
+    return rcpp_result_gen;
 }
 // interceptionGashDay
 double interceptionGashDay(double Precipitation, double Cm, double p, double ER);
-RcppExport SEXP _medfate_interceptionGashDay(SEXP PrecipitationSEXP, SEXP CmSEXP, SEXP pSEXP, SEXP ERSEXP) {
+static SEXP _medfate_interceptionGashDay_try(SEXP PrecipitationSEXP, SEXP CmSEXP, SEXP pSEXP, SEXP ERSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type Precipitation(PrecipitationSEXP);
     Rcpp::traits::input_parameter< double >::type Cm(CmSEXP);
     Rcpp::traits::input_parameter< double >::type p(pSEXP);
     Rcpp::traits::input_parameter< double >::type ER(ERSEXP);
     rcpp_result_gen = Rcpp::wrap(interceptionGashDay(Precipitation, Cm, p, ER));
     return rcpp_result_gen;
-END_RCPP
+END_RCPP_RETURN_ERROR
+}
+RcppExport SEXP _medfate_interceptionGashDay(SEXP PrecipitationSEXP, SEXP CmSEXP, SEXP pSEXP, SEXP ERSEXP) {
+    SEXP rcpp_result_gen;
+    {
+        Rcpp::RNGScope rcpp_rngScope_gen;
+        rcpp_result_gen = PROTECT(_medfate_interceptionGashDay_try(PrecipitationSEXP, CmSEXP, pSEXP, ERSEXP));
+    }
+    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
+    if (rcpp_isInterrupt_gen) {
+        UNPROTECT(1);
+        Rf_onintr();
+    }
+    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
+    if (rcpp_isLongjump_gen) {
+        Rcpp::internal::resumeJump(rcpp_result_gen);
+    }
+    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
+    if (rcpp_isError_gen) {
+        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
+        UNPROTECT(1);
+        Rf_error(CHAR(rcpp_msgSEXP_gen));
+    }
+    UNPROTECT(1);
+    return rcpp_result_gen;
 }
 // incgam
 NumericVector incgam(double a, double x);
@@ -3641,6 +3756,11 @@ END_RCPP
 static int _medfate_RcppExport_validate(const char* sig) { 
     static std::set<std::string> signatures;
     if (signatures.empty()) {
+        signatures.insert("NumericVector(*.er)(IntegerVector,double,double)");
+        signatures.insert("double(*hydrology.soilEvaporation)(double,double,double)");
+        signatures.insert("double(*.infiltrationDay)(double,double)");
+        signatures.insert("NumericVector(*hydrology.infiltrationRepartition)(double,NumericVector,NumericVector)");
+        signatures.insert("double(*.interceptionGashDay)(double,double,double,double)");
         signatures.insert("double(*soil.thetaSATSX)(double,double,double)");
         signatures.insert("double(*soil.theta2psiSX)(double,double,double,double)");
         signatures.insert("double(*soil.psi2thetaSX)(double,double,double,double)");
@@ -3676,6 +3796,11 @@ static int _medfate_RcppExport_validate(const char* sig) {
 
 // registerCCallable (register entry points for exported C++ functions)
 RcppExport SEXP _medfate_RcppExport_registerCCallable() { 
+    R_RegisterCCallable("medfate", "_medfate_.er", (DL_FUNC)_medfate_er_try);
+    R_RegisterCCallable("medfate", "_medfate_hydrology.soilEvaporation", (DL_FUNC)_medfate_soilevaporation_try);
+    R_RegisterCCallable("medfate", "_medfate_.infiltrationDay", (DL_FUNC)_medfate_infiltrationDay_try);
+    R_RegisterCCallable("medfate", "_medfate_hydrology.infiltrationRepartition", (DL_FUNC)_medfate_infiltrationRepartition_try);
+    R_RegisterCCallable("medfate", "_medfate_.interceptionGashDay", (DL_FUNC)_medfate_interceptionGashDay_try);
     R_RegisterCCallable("medfate", "_medfate_soil.thetaSATSX", (DL_FUNC)_medfate_thetaSATSaxton_try);
     R_RegisterCCallable("medfate", "_medfate_soil.theta2psiSX", (DL_FUNC)_medfate_theta2psiSaxton_try);
     R_RegisterCCallable("medfate", "_medfate_soil.psi2thetaSX", (DL_FUNC)_medfate_psi2thetaSaxton_try);
