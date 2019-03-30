@@ -1,5 +1,3 @@
-# Default NAMESPACE created by R
-# Remove the previous line if you edit this file
 import(sp)
 import(spdep)
 import(methods)
@@ -10,8 +8,7 @@ importFrom("graphics", "axis", "abline", "barplot", "legend", "lines", "matplot"
            "matlines", "par", "polygon","axis.Date")
 importFrom("utils", "setTxtProgressBar", "txtProgressBar", "head", "tail")
 importFrom("GSIF", "REST.SoilGrids","over")
-# Export all names
-useDynLib(medfate)
+useDynLib(medfate, .registration = TRUE)
 exportPattern("^[[:alpha:]]+")
 
 

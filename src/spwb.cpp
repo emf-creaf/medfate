@@ -1,3 +1,5 @@
+// [[Rcpp::interfaces(r,cpp)]]
+
 #include <numeric>
 #include "lightextinction.h"
 #include "windextinction.h"
@@ -1256,6 +1258,7 @@ List spwbDay(List x, List soil, CharacterVector date, double tmin, double tmax, 
 }
 
   
+// [[Rcpp::export(".getTrackSpeciesTranspiration")]]
 NumericVector getTrackSpeciesTranspiration( NumericVector trackSpecies, NumericVector Eplant, DataFrame x) {
   int nTrackSpecies = trackSpecies.size();
   NumericVector Eplantsp(nTrackSpecies, 0.0);
@@ -1273,6 +1276,7 @@ NumericVector getTrackSpeciesTranspiration( NumericVector trackSpecies, NumericV
   return(Eplantsp);
 }
 
+// [[Rcpp::export(".getTrackSpeciesDDS")]]
 NumericVector getTrackSpeciesDDS(NumericVector trackSpecies, NumericVector DDS, DataFrame x) {
   int nTrackSpecies = trackSpecies.size();
   NumericVector DDSsp(nTrackSpecies, 0.0);
