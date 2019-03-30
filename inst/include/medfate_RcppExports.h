@@ -24,17 +24,17 @@ namespace medfate {
         }
     }
 
-    inline NumericVector _er(IntegerVector DOY, double ERconv = 0.05, double ERsyn = 0.2) {
-        typedef SEXP(*Ptr__er)(SEXP,SEXP,SEXP);
-        static Ptr__er p__er = NULL;
-        if (p__er == NULL) {
-            validateSignature("NumericVector(*_er)(IntegerVector,double,double)");
-            p__er = (Ptr__er)R_GetCCallable("medfate", "_medfate__er");
+    inline NumericVector hydrology_er(IntegerVector DOY, double ERconv = 0.05, double ERsyn = 0.2) {
+        typedef SEXP(*Ptr_hydrology_er)(SEXP,SEXP,SEXP);
+        static Ptr_hydrology_er p_hydrology_er = NULL;
+        if (p_hydrology_er == NULL) {
+            validateSignature("NumericVector(*hydrology_er)(IntegerVector,double,double)");
+            p_hydrology_er = (Ptr_hydrology_er)R_GetCCallable("medfate", "_medfate_hydrology_er");
         }
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p__er(Shield<SEXP>(Rcpp::wrap(DOY)), Shield<SEXP>(Rcpp::wrap(ERconv)), Shield<SEXP>(Rcpp::wrap(ERsyn)));
+            rcpp_result_gen = p_hydrology_er(Shield<SEXP>(Rcpp::wrap(DOY)), Shield<SEXP>(Rcpp::wrap(ERconv)), Shield<SEXP>(Rcpp::wrap(ERsyn)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();

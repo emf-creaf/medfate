@@ -3,7 +3,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-// [[Rcpp::export(".er")]]
+// [[Rcpp::export("hydrology.er")]]
 NumericVector er(IntegerVector DOY, double ERconv=0.05, double ERsyn = 0.2){
   int nDays = DOY.size();
   NumericVector ER=rep(0.0,nDays);

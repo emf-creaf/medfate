@@ -445,7 +445,7 @@ hydraulics.leafWaterCapacity <- function(SLA, ld) {
     .Call(`_medfate_leafWaterCapacity`, SLA, ld)
 }
 
-.er <- function(DOY, ERconv = 0.05, ERsyn = 0.2) {
+hydrology.er <- function(DOY, ERconv = 0.05, ERsyn = 0.2) {
     .Call(`_medfate_er`, DOY, ERconv, ERsyn)
 }
 

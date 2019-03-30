@@ -3756,7 +3756,7 @@ END_RCPP
 static int _medfate_RcppExport_validate(const char* sig) { 
     static std::set<std::string> signatures;
     if (signatures.empty()) {
-        signatures.insert("NumericVector(*.er)(IntegerVector,double,double)");
+        signatures.insert("NumericVector(*hydrology.er)(IntegerVector,double,double)");
         signatures.insert("double(*hydrology.soilEvaporation)(double,double,double)");
         signatures.insert("double(*.infiltrationDay)(double,double)");
         signatures.insert("NumericVector(*hydrology.infiltrationRepartition)(double,NumericVector,NumericVector)");
@@ -3796,7 +3796,7 @@ static int _medfate_RcppExport_validate(const char* sig) {
 
 // registerCCallable (register entry points for exported C++ functions)
 RcppExport SEXP _medfate_RcppExport_registerCCallable() { 
-    R_RegisterCCallable("medfate", "_medfate_.er", (DL_FUNC)_medfate_er_try);
+    R_RegisterCCallable("medfate", "_medfate_hydrology.er", (DL_FUNC)_medfate_er_try);
     R_RegisterCCallable("medfate", "_medfate_hydrology.soilEvaporation", (DL_FUNC)_medfate_soilevaporation_try);
     R_RegisterCCallable("medfate", "_medfate_.infiltrationDay", (DL_FUNC)_medfate_infiltrationDay_try);
     R_RegisterCCallable("medfate", "_medfate_hydrology.infiltrationRepartition", (DL_FUNC)_medfate_infiltrationRepartition_try);
