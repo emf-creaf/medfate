@@ -69,7 +69,7 @@ emptyforest(ID="", patchsize=10000, ntree = 0, nshrub = 0)
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 \seealso{
- \code{\link{exampleforest}}, \code{\link{extractSFIforest}}, \code{\link{soil}}, \code{\link{SFI2SPL}}
+ \code{\link{exampleforest}}, \code{\link{extractSFIforest}}, \code{\link{soil}}
 }
 \examples{
 data(exampleforest)

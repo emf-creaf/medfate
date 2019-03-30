@@ -104,7 +104,7 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 Objects \code{x} and \code{soil} are modified during the simulation. Daily transpiration and photosynthesis values are stored in columns \code{Transpiration} and \code{Photosynthesis} of object \code{x}. Water content relative to field capacity (vector \code{W}) of \code{soil} is also modified.  
 }
 \seealso{
-\code{\link{spwbInput}}, \code{\link{spwb}},  \code{\link{spwbpoints}}, \code{\link{spwbgrid}}, 
+\code{\link{spwbInput}}, \code{\link{spwb}},  
 \code{\link{spwb.ldrOptimization}}, \code{\link{forest}}
 }
 \examples{

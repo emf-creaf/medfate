@@ -50,5 +50,5 @@ A list, with the following options:
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 \seealso{
- \code{\link{spwbInput}}, \code{\link{spwb}}, \code{\link{spwbpoints}}
+ \code{\link{spwbInput}}, \code{\link{spwb}}
 }

@@ -89,7 +89,7 @@ De \enc{Cáceres}{Caceres} M, \enc{Martínez}{Martinez}-Vilalta J, Coll L, Llore
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 \seealso{
- \code{\link{spwb}}, \code{\link{spwbpoints}}
+ \code{\link{spwb}}
 }
 \examples{
 #Load example daily meteorological data

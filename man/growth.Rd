@@ -88,7 +88,7 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 Objects \code{x} and \code{soil} are modified during the simulation.   
 }
 \seealso{
-\code{\link{growthInput}}, \code{\link{growthpoints}}, \code{\link{forest}}
+\code{\link{growthInput}}, \code{\link{forest}}
 }
 \examples{
 #Load example daily meteorological data
