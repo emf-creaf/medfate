@@ -7,7 +7,7 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Soil-plant water balance for a single day}
 \description{
-Function \code{spwb_day} performs water balance for a single day.
+Function \code{spwb_day} performs water balance for a single day. The function calls to \code{spwb_daySimple} (simple water balance) or \code{spwb_dayComplex} (complex water balance) depending on the transpiration mode specified in \code{x}.  
 }
 \usage{
 spwb_day(x, soil, date, tmin, tmax, rhmin, rhmax, rad, wind, 
@@ -27,6 +27,8 @@ spwb_dayComplex(x, soil, tmin, tmax, rhmin, rhmax, rad, wind,
   \item{tday}{Average temperature (in degrees Celsius).}  
   \item{rhmin, rhmax}{Minimum and maximum relative humidity (in percent).}
   \item{rad}{Solar radiation (in MJ/m2/day).}
+  \item{pet}{Potential evapotranspiration (in mm).}
+  \item{er}{The ratio of evaporation rate to rainfall rate (see \code{\link{hydrology_er}}).}
   \item{wind}{Wind speed (in m/s).}
   \item{prec}{Precipitation (in mm).}
   \item{latitude}{Latitude (in degrees). Required when using the 'Complex' transpiration mode.}
@@ -54,21 +56,21 @@ An object (a list) of class \code{spwb_day} with the following elements:
       \item{\code{"psi"}: Soil water potential (in MPa).}
     }
   }
-  \item{\code{"EnergyBalance"}: When using the 'Complex' transpiration mode, the model performs energy balance of the stand and 'EnergyBalance' is a list with the following:
+  \item{\code{"EnergyBalance"}: When using the 'Complex' transpiration mode (or when calling \code{spwb_dayComplex}), the model performs energy balance of the stand and 'EnergyBalance' is a list with the following:
     \itemize{
       \item{\code{"Temperature"}: A data frame with the temperature of the atmosphere ('Tatm'), canopy ('Tcan') and soil ('Tsoil.1', 'Tsoil.2', ...) for each time step.}
       \item{\code{"CanopyEnergyBalance"}: A data frame with the components of the canopy energy balance (in W/m2) for each time step.}
       \item{\code{"SoilEnergyBalance"}: A data frame with the components of the soil energy balance (in W/m2) for each time step.}
     }  
   }
-  \item{\code{"Plants"}: A data frame of results for each plant cohort. When using the 'Simple' transpiration mode this includes:
+  \item{\code{"Plants"}: A data frame of results for each plant cohort. When using the 'Simple' transpiration mode (or when calling \code{spwb_daySimple}) this includes:
     \itemize{
       \item{\code{"LAI"}: Leaf area index of the plant cohort.}
       \item{\code{"Transpiration"}: Transpirated water (in mm) corresponding to each cohort.}
       \item{\code{"psi"}: Water potential (in MPa) of the plant cohort (average over soil layers).}
       \item{\code{"DDS"}: Daily drought stress [0-1] (relative whole-plant conductance).}
     }
-  When using the 'Complex' transpiration mode the data frame \code{"Plants"} also includes columns:
+  When using the 'Complex' transpiration mode (or when calling \code{spwb_dayComplex}) the data frame \code{"Plants"} also includes columns:
     \itemize{
       \item{\code{"Extraction"}: Water extracted from the soil (in mm) for each cohort.}
       \item{\code{"RootPsi"}: Minimum water potential (in MPa) at the root collar.}

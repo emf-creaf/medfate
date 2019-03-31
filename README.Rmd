@@ -20,7 +20,7 @@ The models are parameterized for species of the Mediterranean region (particular
 
 ## Package installation and documentation
 
-Package `medfate` can be found at [CRAN](https://CRAN.R-project.org/package=medfate), where it is updated every few months. Users can also download and install the latest stable versions GitHub as follows (required packages `devtools` and `curl` should be installed/updated first):
+Package `medfate` can be found at [CRAN](https://CRAN.R-project.org/package=medfate), where it is updated every few months. Users can also download and install the latest stable versions GitHub as follows (required package `devtools` should be installed/updated first):
 
 ```{r installation, eval = FALSE}
 devtools::install_github("miquelcaceres/medfate")
@@ -28,7 +28,8 @@ devtools::install_github("miquelcaceres/medfate")
 
 Documentation on the models included in `medfate` and how to run them using the package functions can be found at (http://vegmod.ctfc.cat/medfateweb). Additionally, users can have help to run package functions directly as package vignettes, by forcing their inclusion in installation: 
 ```{r installation vignettes, eval = FALSE}
-devtools::install_github("miquelcaceres/medfate", build_vignettes=TRUE)
+devtools::install_github("miquelcaceres/medfate", 
+                         build_opts = c("--no-resave-data", "--no-manual"))
 ```
 
 
