@@ -1,29 +1,29 @@
 \encoding{UTF-8}
 \name{supplyfunctions}
-\alias{hydraulics.ECrit}
-\alias{hydraulics.EXylem}
-\alias{hydraulics.EVanGenuchten}
-\alias{hydraulics.ECapacitance}
-\alias{hydraulics.E2psiXylem}
-\alias{hydraulics.E2psiVanGenuchten}
-\alias{hydraulics.E2psiTwoElements}
-\alias{hydraulics.E2psiBelowground}
-\alias{hydraulics.E2psiAboveground}
-\alias{hydraulics.E2psiAbovegroundCapacitance}
-\alias{hydraulics.E2psiAbovegroundCapacitanceDisconnected}
-\alias{hydraulics.E2psiNetwork}
-\alias{hydraulics.E2psiNetworkCapacitance}
-\alias{hydraulics.supplyFunctionOneXylem}
-\alias{hydraulics.supplyFunctionTwoElements}
-\alias{hydraulics.supplyFunctionThreeElements}
-\alias{hydraulics.supplyFunctionBelowground}
-\alias{hydraulics.supplyFunctionAboveground}
-\alias{hydraulics.supplyFunctionAbovegroundCapacitance}
-\alias{hydraulics.supplyFunctionNetwork}
-\alias{hydraulics.supplyFunctionNetworkCapacitance}
-\alias{hydraulics.supplyFunctionPlot}
-\alias{hydraulics.regulatedPsiXylem}
-\alias{hydraulics.regulatedPsiTwoElements}
+\alias{hydraulics_ECrit}
+\alias{hydraulics_EXylem}
+\alias{hydraulics_EVanGenuchten}
+\alias{hydraulics_ECapacitance}
+\alias{hydraulics_E2psiXylem}
+\alias{hydraulics_E2psiVanGenuchten}
+\alias{hydraulics_E2psiTwoElements}
+\alias{hydraulics_E2psiBelowground}
+\alias{hydraulics_E2psiAboveground}
+\alias{hydraulics_E2psiAbovegroundCapacitance}
+\alias{hydraulics_E2psiAbovegroundCapacitanceDisconnected}
+\alias{hydraulics_E2psiNetwork}
+\alias{hydraulics_E2psiNetworkCapacitance}
+\alias{hydraulics_supplyFunctionOneXylem}
+\alias{hydraulics_supplyFunctionTwoElements}
+\alias{hydraulics_supplyFunctionThreeElements}
+\alias{hydraulics_supplyFunctionBelowground}
+\alias{hydraulics_supplyFunctionAboveground}
+\alias{hydraulics_supplyFunctionAbovegroundCapacitance}
+\alias{hydraulics_supplyFunctionNetwork}
+\alias{hydraulics_supplyFunctionNetworkCapacitance}
+\alias{hydraulics_supplyFunctionPlot}
+\alias{hydraulics_regulatedPsiXylem}
+\alias{hydraulics_regulatedPsiTwoElements}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Hydraulic supply functions
@@ -32,31 +32,31 @@ Hydraulic supply functions
 Set of functions used in the implementation of hydraulic supply functions (Sperry \& Love 2015).
 }
 \usage{
-hydraulics.EXylem(psiPlant, psiUpstream, 
+hydraulics_EXylem(psiPlant, psiUpstream, 
                   kxylemmax, c, d, allowNegativeFlux = TRUE, 
                   psiCav = 0)
-hydraulics.EVanGenuchten(psiRhizo, psiSoil, krhizomax, 
+hydraulics_EVanGenuchten(psiRhizo, psiSoil, krhizomax, 
                       n, alpha, l = 0.5)
-hydraulics.ECapacitance(psi, psiPrev, PLCprev,
+hydraulics_ECapacitance(psi, psiPrev, PLCprev,
                       V, fapo, c,  d, 
                       pi0, eps,timestep)                         
-hydraulics.ECrit(psiUpstream, kxylemmax, c, d, pCrit = 0.001)
-hydraulics.E2psiXylem(E, psiUpstream, 
+hydraulics_ECrit(psiUpstream, kxylemmax, c, d, pCrit = 0.001)
+hydraulics_E2psiXylem(E, psiUpstream, 
                       kxylemmax, c, d, psiCav = 0)
-hydraulics.E2psiVanGenuchten(E, psiSoil, krhizomax, n, alpha, 
+hydraulics_E2psiVanGenuchten(E, psiSoil, krhizomax, n, alpha, 
                       psiStep = -0.0001, psiMax = -10.0)
-hydraulics.E2psiTwoElements(E, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, 
+hydraulics_E2psiTwoElements(E, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, 
                       psiCav = 0, psiStep = -1e-04, psiMax = -10.0)
-hydraulics.E2psiBelowground(E, psiSoil, 
+hydraulics_E2psiBelowground(E, psiSoil, 
                       krhizomax, nsoil, alphasoil,
                       krootmax, rootc, rootd, 
                       psiIni = as.numeric(c(0)),
                       ntrial = 10, psiTol = 0.0001, ETol = 0.0001)
-hydraulics.E2psiAboveground(E, psiRootCrown, 
+hydraulics_E2psiAboveground(E, psiRootCrown, 
                       kstemmax, stemc, stemd,
                       kleafmax, leafc, leafd,
                       PLCstem)  
-hydraulics.E2psiAbovegroundCapacitance(E, psiRootCrown, 
+hydraulics_E2psiAbovegroundCapacitance(E, psiRootCrown, 
                       psiStemPrev, PLCstem,
                       psiLeafPrev, 
                       kstemmax, stemc, stemd,
@@ -64,7 +64,7 @@ hydraulics.E2psiAbovegroundCapacitance(E, psiRootCrown,
                       Vsapwood, stemfapo, stempi0, stemeps,
                       Vleaf, leaffapo, leafpi0, leafeps,
                       tstep)
-hydraulics.E2psiAbovegroundCapacitanceDisconnected(E,                           
+hydraulics_E2psiAbovegroundCapacitanceDisconnected(E,                           
                       psiStemPrev, PLCstem, RWCsympstemPrev, 
                       psiLeafPrev, RWCsympleafPrev,
                       kstemmax, stemc, stemd,
@@ -73,7 +73,7 @@ hydraulics.E2psiAbovegroundCapacitanceDisconnected(E,
                       Vleaf, leaffapo, leafpi0, leafeps,
                       klat,
                       tstep = 3600.0)                                       
-hydraulics.E2psiNetwork(E, psiSoil, 
+hydraulics_E2psiNetwork(E, psiSoil, 
                   krhizomax, nsoil, alphasoil,
                   krootmax, rootc, rootd, 
                   kstemmax, stemc, stemd,
@@ -82,7 +82,7 @@ hydraulics.E2psiNetwork(E, psiSoil,
                   psiIni = as.numeric(c(0)),
                   ntrial = 10, 
                   psiTol = 0.0001, ETol = 0.0001)
-hydraulics.E2psiNetworkCapacitance(E, psiSoil, 
+hydraulics_E2psiNetworkCapacitance(E, psiSoil, 
                   psiStemPrev, PLCstem,
                   psiLeafPrev, 
                   krhizomax, nsoil, alphasoil,
@@ -95,30 +95,30 @@ hydraulics.E2psiNetworkCapacitance(E, psiSoil,
                   psiIni = as.numeric(c(0)),
                   ntrial = 10, psiTol = 0.0001, ETol = 0.0001)
 
-hydraulics.supplyFunctionOneXylem(psiSoil, v, 
+hydraulics_supplyFunctionOneXylem(psiSoil, v, 
                   kstemmax, stemc, stemd, psiCav = 0,
                   maxNsteps=200, dE=0.01)
-hydraulics.supplyFunctionTwoElements(Emax, psiSoil, 
+hydraulics_supplyFunctionTwoElements(Emax, psiSoil, 
                   krhizomax, kxylemmax, n, alpha, c, d, 
                   psiCav = 0, dE = 0.1, psiMax = -10.0)
-hydraulics.supplyFunctionThreeElements(Emax, psiSoil, 
+hydraulics_supplyFunctionThreeElements(Emax, psiSoil, 
                   krhizomax, kxylemmax, kleafmax,
                   n, alpha, stemc, stemd, leafc, leafd,
                   psiCav = 0, dE = 0.1, psiMax = -10.0)
                           
                           
-hydraulics.supplyFunctionBelowground(psiSoil, 
+hydraulics_supplyFunctionBelowground(psiSoil, 
                   krhizomax, nsoil, alphasoil,
                   krootmax, rootc, rootd, 
                   minFlow = 0.0, maxNsteps=400,  
                   ntrial = 10, psiTol = 0.0001, ETol = 0.0001, pCrit = 0.001)
 
-hydraulics.supplyFunctionAboveground(Erootcrown, psiRootCrown, 
+hydraulics_supplyFunctionAboveground(Erootcrown, psiRootCrown, 
                   kstemmax, stemc, stemd,
                   kleafmax, leafc, leafd,
                   PLCstem)
 
-hydraulics.supplyFunctionAbovegroundCapacitance(Erootcrown, psiRootCrown,
+hydraulics_supplyFunctionAbovegroundCapacitance(Erootcrown, psiRootCrown,
                   psiStemPrev, PLCstemPrev, 
                   psiLeafPrev, 
                   kstemmax, stemc, stemd,
@@ -127,7 +127,7 @@ hydraulics.supplyFunctionAbovegroundCapacitance(Erootcrown, psiRootCrown,
                   Vleaf, leaffapo, leafpi0, leafeps,
                   tstep = 3600.0)
                                
-hydraulics.supplyFunctionNetwork(psiSoil, 
+hydraulics_supplyFunctionNetwork(psiSoil, 
                   krhizomax, nsoil, alphasoil,
                   krootmax, rootc, rootd, 
                   kstemmax, stemc, stemd,
@@ -135,9 +135,9 @@ hydraulics.supplyFunctionNetwork(psiSoil,
                   PLCstem, minFlow = 0.0, maxNsteps=400,
                   ntrial = 200, psiTol = 0.0001, ETol = 0.0001, pCrit = 0.001)
                            
-hydraulics.supplyFunctionPlot(x, soil, draw = TRUE, type = "E")   
-hydraulics.regulatedPsiXylem(E, psiUpstream, kxylemmax, c, d, psiStep = -0.01)
-hydraulics.regulatedPsiTwoElements(Emax, psiSoil, krhizomax, kxylemmax, n, alpha, 
+hydraulics_supplyFunctionPlot(x, soil, draw = TRUE, type = "E")   
+hydraulics_regulatedPsiXylem(E, psiUpstream, kxylemmax, c, d, psiStep = -0.01)
+hydraulics_regulatedPsiTwoElements(Emax, psiSoil, krhizomax, kxylemmax, n, alpha, 
                                    c, d, dE = 0.1, psiMax = -10.0)
 }
 
@@ -193,38 +193,38 @@ hydraulics.regulatedPsiTwoElements(Emax, psiSoil, krhizomax, kxylemmax, n, alpha
   \item{ntrial}{Maximum number of steps in Newton-Raphson optimization.}
   \item{x}{An object of class \code{\link{spwbInput}}.}
   \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
-  \item{type}{Plot type. For \code{hydraulics.supplyFunctionPlot}, either \code{"E"}, \code{"Elayers"}, \code{"PsiStem"}, \code{"PsiRoot"}, \code{"PsiRhizo"} or \code{"dEdP"}). For \code{hydraulics.vulnerabilityCurvePlot}, either \code{"leaf"}, \code{"stem"}, \code{"root"}, or \code{"rhizosphere"}).}
+  \item{type}{Plot type. For \code{hydraulics_supplyFunctionPlot}, either \code{"E"}, \code{"Elayers"}, \code{"PsiStem"}, \code{"PsiRoot"}, \code{"PsiRhizo"} or \code{"dEdP"}). For \code{hydraulics_vulnerabilityCurvePlot}, either \code{"leaf"}, \code{"stem"}, \code{"root"}, or \code{"rhizosphere"}).}
   \item{draw}{A flag to indicate whether the supply function should be drawn or just returned.}
   \item{tstep, timestep}{Time step in seconds.}
 }
 \details{
-Details of the hydraulic model are given in a vignette. Function \code{hydraulics.supplyFunctionPlot} draws a plot of the supply function for the given \code{soil} object and network properties of each plant cohort in \code{x}. Function \code{hydraulics.vulnerabilityCurvePlot} draws a plot of the vulnerability curves for the given \code{soil} object and network properties of each plant cohort in \code{x}.
+Details of the hydraulic model are given in a vignette. Function \code{hydraulics_supplyFunctionPlot} draws a plot of the supply function for the given \code{soil} object and network properties of each plant cohort in \code{x}. Function \code{hydraulics_vulnerabilityCurvePlot} draws a plot of the vulnerability curves for the given \code{soil} object and network properties of each plant cohort in \code{x}.
 }
 \value{
 Values returned for each function are:
 \itemize{
-\item{\code{hydraulics.E2psiXylem}: The plant (leaf) water potential (in MPa) corresponding to the input flow, according to the xylem supply function and given an upstream (soil or root) water potential.}
-\item{\code{hydraulics.E2psiVanGenuchten}: The root water potential (in MPa) corresponding to the input flow, according to the rhizosphere supply function and given a soil water potential.}
-\item{\code{hydraulics.E2psiTwoElements}: The plant (leaf) water potential (in MPa) corresponding to the input flow, according to the rhizosphere and plant supply functions and given an input soil water potential.}
-\item{\code{hydraulics.E2psiNetwork}: The rhizosphere, root crown and plant (leaf water potential (in MPa) corresponding to the input flow, according to the vulnerability curves of rhizosphere, root and stem elements in a network.}
-\item{\code{hydraulics.Ecrit}: The critical flow according to the xylem supply function and given an input soil water potential.}
-\item{\code{hydraulics.EVanGenuchten}: The flow (integral of the vulnerability curve) according to the rhizosphere supply function and given an input drop in water potential (soil and rhizosphere).}
-\item{\code{hydraulics.EXylem}: The flow (integral of the vulnerability curve) according to the xylem supply function and given an input drop in water potential (rhizosphere and plant).}
-\item{\code{hydraulics.supplyFunctionOneXylem}, \code{hydraulics.supplyFunctionTwoElements} and
-\code{hydraulics.supplyFunctionNetwork}: A list with different numeric vectors with information of the two-element supply function:
+\item{\code{hydraulics_E2psiXylem}: The plant (leaf) water potential (in MPa) corresponding to the input flow, according to the xylem supply function and given an upstream (soil or root) water potential.}
+\item{\code{hydraulics_E2psiVanGenuchten}: The root water potential (in MPa) corresponding to the input flow, according to the rhizosphere supply function and given a soil water potential.}
+\item{\code{hydraulics_E2psiTwoElements}: The plant (leaf) water potential (in MPa) corresponding to the input flow, according to the rhizosphere and plant supply functions and given an input soil water potential.}
+\item{\code{hydraulics_E2psiNetwork}: The rhizosphere, root crown and plant (leaf water potential (in MPa) corresponding to the input flow, according to the vulnerability curves of rhizosphere, root and stem elements in a network.}
+\item{\code{hydraulics_Ecrit}: The critical flow according to the xylem supply function and given an input soil water potential.}
+\item{\code{hydraulics_EVanGenuchten}: The flow (integral of the vulnerability curve) according to the rhizosphere supply function and given an input drop in water potential (soil and rhizosphere).}
+\item{\code{hydraulics_EXylem}: The flow (integral of the vulnerability curve) according to the xylem supply function and given an input drop in water potential (rhizosphere and plant).}
+\item{\code{hydraulics_supplyFunctionOneXylem}, \code{hydraulics_supplyFunctionTwoElements} and
+\code{hydraulics_supplyFunctionNetwork}: A list with different numeric vectors with information of the two-element supply function:
 \itemize{
 \item{\code{E}: Flow values (supply values).}
-\item{\code{FittedE}: Fitted flow values (for \code{hydraulics.supplyFunctionTwoElements}).}
-\item{\code{Elayers}: Flow values across the roots of each soil layer (only for \code{hydraulics.supplyFunctionNetwork}).}
-\item{\code{PsiRhizo}: Water potential values at the root surface (only for \code{hydraulics.supplyFunctionNetwork}).}
-\item{\code{PsiRoot}: Water potential values inside the root crown (not for \code{hydraulics.supplyFunctionOneXylem}).}
+\item{\code{FittedE}: Fitted flow values (for \code{hydraulics_supplyFunctionTwoElements}).}
+\item{\code{Elayers}: Flow values across the roots of each soil layer (only for \code{hydraulics_supplyFunctionNetwork}).}
+\item{\code{PsiRhizo}: Water potential values at the root surface (only for \code{hydraulics_supplyFunctionNetwork}).}
+\item{\code{PsiRoot}: Water potential values inside the root crown (not for \code{hydraulics_supplyFunctionOneXylem}).}
 \item{\code{PsiPlant}: Water potential values at the canopy (leaf).}
 \item{\code{dEdP}: Derivatives of the supply function.}
 }
 }
-\item{\code{hydraulics.supplyFunctionPlot}: A (hidden) list with the result of calling \code{hydraulics.supplyFunctionNetwork} for each cohort. }
-\item{\code{hydraulics.regulatedPsiXylem}: Plant water potential after regulation (one-element loss function) given an input water potential.}
-\item{\code{hydraulics.regulatedPsiTwoElements}: Plant water potential after regulation (two-element loss function) given an input soil water potential.}
+\item{\code{hydraulics_supplyFunctionPlot}: A (hidden) list with the result of calling \code{hydraulics_supplyFunctionNetwork} for each cohort. }
+\item{\code{hydraulics_regulatedPsiXylem}: Plant water potential after regulation (one-element loss function) given an input water potential.}
+\item{\code{hydraulics_regulatedPsiTwoElements}: Plant water potential after regulation (two-element loss function) given an input soil water potential.}
 }
 }
 \references{
@@ -236,7 +236,7 @@ Sperry, J. S., and D. M. Love. 2015. What plant hydraulics can tell us about res
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC, Catalonia, Spain
 }
 \seealso{
-\code{\link{hydraulics.psi2K}}, \code{\link{hydraulics.maximumStemHydraulicConductance}}, \code{\link{spwb}}, \code{\link{soil}}
+\code{\link{hydraulics_psi2K}}, \code{\link{hydraulics_maximumStemHydraulicConductance}}, \code{\link{spwb}}, \code{\link{soil}}
 }
 \examples{
 kstemmax = 4 # in mmol·m-2·s-1·MPa-1
@@ -246,7 +246,7 @@ stemd = -4 # in MPa
 psiVec = seq(-0.1, -7.0, by =-0.01)
 
 #Vulnerability curve
-kstem = unlist(lapply(psiVec, hydraulics.xylemConductance, kstemmax, stemc, stemd))
+kstem = unlist(lapply(psiVec, hydraulics_xylemConductance, kstemmax, stemc, stemd))
 plot(-psiVec, kstem, type="l",ylab="Xylem conductance (mmol·m-2·s-1·MPa-1)", 
 xlab="Canopy pressure (-MPa)", lwd=1.5,ylim=c(0,kstemmax))
 }

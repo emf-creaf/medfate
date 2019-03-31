@@ -65,11 +65,11 @@ forest_basalArea <- function(x) {
     .Call(`_medfate_forestBasalArea`, x)
 }
 
-plant_Density <- function(x, SpParams) {
+plant_density <- function(x, SpParams) {
     .Call(`_medfate_cohortDensity`, x, SpParams)
 }
 
-plant_Height <- function(x) {
+plant_height <- function(x) {
     .Call(`_medfate_cohortHeight`, x)
 }
 

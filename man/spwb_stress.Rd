@@ -1,5 +1,5 @@
-\name{spwb.stress}
-\alias{spwb.stress}
+\name{spwb_stress}
+\alias{spwb_stress}
 \title{
 Drought stress indices
 }
@@ -7,7 +7,7 @@ Drought stress indices
 Allows calculating annual-based or monthly-based drought stress indices from \code{\link{spwb}} objects.
 }
 \usage{
-spwb.stress(x, index = "NDD", freq = "years", bySpecies = FALSE)
+spwb_stress(x, index = "NDD", freq = "years", bySpecies = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

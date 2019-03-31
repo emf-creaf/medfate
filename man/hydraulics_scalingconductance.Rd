@@ -1,16 +1,16 @@
 \encoding{UTF-8}
 \name{scalingconductance}
-\alias{hydraulics.maximumSoilPlantConductance}
-\alias{hydraulics.soilPlantResistances}
-\alias{hydraulics.averageRhizosphereResistancePercent}
-\alias{hydraulics.findRhizosphereMaximumConductance}
-\alias{hydraulics.maximumStemHydraulicConductance}
-\alias{hydraulics.maximumRootHydraulicConductance}
-\alias{hydraulics.referenceConductivityHeightFactor}
-\alias{hydraulics.taperFactorSavage}
-\alias{hydraulics.terminalConduitRadius}
-\alias{hydraulics.stemWaterCapacity}
-\alias{hydraulics.leafWaterCapacity}
+\alias{hydraulics_maximumSoilPlantConductance}
+\alias{hydraulics_soilPlantResistances}
+\alias{hydraulics_averageRhizosphereResistancePercent}
+\alias{hydraulics_findRhizosphereMaximumConductance}
+\alias{hydraulics_maximumStemHydraulicConductance}
+\alias{hydraulics_maximumRootHydraulicConductance}
+\alias{hydraulics_referenceConductivityHeightFactor}
+\alias{hydraulics_taperFactorSavage}
+\alias{hydraulics_terminalConduitRadius}
+\alias{hydraulics_stemWaterCapacity}
+\alias{hydraulics_leafWaterCapacity}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Scaling from conductivity to conductance
@@ -19,31 +19,31 @@ Scaling from conductivity to conductance
 Functions used to scale from tissue conductivity to conductance of different elements of the continuum.
 }
 \usage{
-hydraulics.maximumSoilPlantConductance(krhizomax, krootmax, 
+hydraulics_maximumSoilPlantConductance(krhizomax, krootmax, 
                                        kstemmax, kleafmax)
-hydraulics.soilPlantResistances(psiSoil, psiRhizo, 
+hydraulics_soilPlantResistances(psiSoil, psiRhizo, 
                                 psiStem, PLCstem, psiLeaf, 
                                 krhizomax, n, alpha,
                                 krootmax, rootc, rootd, 
                                 kstemmax, stemc, stemd,
                                 kleafmax, leafc, leafd)
-hydraulics.averageRhizosphereResistancePercent(krhizomax, n, alpha,
+hydraulics_averageRhizosphereResistancePercent(krhizomax, n, alpha,
                                                krootmax, rootc, rootd,
                                                kstemmax, stemc, stemd, 
                                                kleafmax, leafc, leafd, psiStep = -0.01)
-hydraulics.findRhizosphereMaximumConductance(averageResistancePercent, n, alpha,
+hydraulics_findRhizosphereMaximumConductance(averageResistancePercent, n, alpha,
                                              krootmax, rootc, rootd,
                                              kstemmax, stemc, stemd,
                                              kleafmax, leafc, leafd) 
-hydraulics.maximumRootHydraulicConductance(xylemConductivity, Al2As, 
+hydraulics_maximumRootHydraulicConductance(xylemConductivity, Al2As, 
                                            v, widths, depthWidthRatio = 1.0)
-hydraulics.maximumStemHydraulicConductance(xylemConductivity, refheight, Al2As, height, 
+hydraulics_maximumStemHydraulicConductance(xylemConductivity, refheight, Al2As, height, 
                                            angiosperm = TRUE, taper = FALSE)
-hydraulics.referenceConductivityHeightFactor(refheight, height)
-hydraulics.terminalConduitRadius(height)
-hydraulics.taperFactorSavage(height)
-hydraulics.stemWaterCapacity(Al2As, height, wd)
-hydraulics.leafWaterCapacity(SLA, ld)
+hydraulics_referenceConductivityHeightFactor(refheight, height)
+hydraulics_terminalConduitRadius(height)
+hydraulics_taperFactorSavage(height)
+hydraulics_stemWaterCapacity(Al2As, height, wd)
+hydraulics_leafWaterCapacity(SLA, ld)
 }
 
 %- maybe also 'usage' for other objects documented here.
@@ -82,10 +82,10 @@ Details of the hydraulic model are given in a vignette.
 \value{
 Values returned for each function are:
 \itemize{
-\item{\code{hydraulics.maximumSoilPlantConductance}: The maximum soil-plant conductance, in the same units as the input segment conductances.}
-\item{\code{hydraulics.averageRhizosphereResistancePercent}: The average percentage of resistance due to the rhizosphere, calculated across water potential values.}
-\item{\code{hydraulics.findRhizosphereMaximumConductance}: The maximum rhizosphere conductance value given an average rhizosphere resistance and the vulnerability curves of rhizosphere, root and stem elements.}
-\item{\code{hydraulics.taperFactorSavage}: Taper factor according to Savage et al. (2010).}
+\item{\code{hydraulics_maximumSoilPlantConductance}: The maximum soil-plant conductance, in the same units as the input segment conductances.}
+\item{\code{hydraulics_averageRhizosphereResistancePercent}: The average percentage of resistance due to the rhizosphere, calculated across water potential values.}
+\item{\code{hydraulics_findRhizosphereMaximumConductance}: The maximum rhizosphere conductance value given an average rhizosphere resistance and the vulnerability curves of rhizosphere, root and stem elements.}
+\item{\code{hydraulics_taperFactorSavage}: Taper factor according to Savage et al. (2010).}
 }
 }
 \references{
@@ -99,7 +99,7 @@ Olson, M.E., Anfodillo, T., Rosell, J.A., Petit, G., Crivellaro, A., Isnard, S.,
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 \seealso{
-\code{\link{hydraulics.psi2K}}, \code{\link{hydraulics.supplyFunctionPlot}}, \code{\link{spwb}}, \code{\link{soil}}
+\code{\link{hydraulics_psi2K}}, \code{\link{hydraulics_supplyFunctionPlot}}, \code{\link{spwb}}, \code{\link{soil}}
 }
 \examples{
 kstemmax = 4 # in mmol·m-2·s-1·MPa-1

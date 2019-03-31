@@ -1,6 +1,6 @@
 \encoding{UTF-8}
 \name{Species values}
-\alias{species.BasalArea}
+\alias{species_basalArea}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Species description functions}
@@ -8,7 +8,7 @@
 Functions to calculate attributes of a \code{\link{forest}} object by species.
 }
 \usage{
-species.BasalArea(x, SpParams)
+species_basalArea(x, SpParams)
 }
 \arguments{
   \item{x}{An object of class \code{\link{forest}}.}
@@ -17,14 +17,14 @@ species.BasalArea(x, SpParams)
 \value{
 A vector with values for each species in \code{SpParams}:
 \itemize{
-\item{\code{species.BasalArea}: Species basal area (m2/ha).}
+\item{\code{species_basalArea}: Species basal area (m2/ha).}
 }
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 \seealso{
- \code{\link{spwb}}, \code{\link{forest}}, \code{\link{plant.BasalArea}}, \code{\link{summary.forest}}
+ \code{\link{spwb}}, \code{\link{forest}}, \code{\link{plant_basalArea}}, \code{\link{summary.forest}}
 }
 \examples{
 #Default species parameterization
@@ -34,5 +34,5 @@ data(SpParamsMED)
 data(exampleforest)
 
 #Species basal area
-species.BasalArea(exampleforest, SpParamsMED)
+species_basalArea(exampleforest, SpParamsMED)
 }

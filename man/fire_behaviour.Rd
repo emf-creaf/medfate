@@ -19,7 +19,7 @@ fire_Rothermel(modeltype, wSI, sSI, delta, mx_dead,
                 
 }
 \arguments{
-  \item{FCCSpropsSI}{A data frame describing the properties of five fuel strata (canopy, shrub, herbs, dead woody and litter) returned by \code{\link{fuel.FCCS}}.}
+  \item{FCCSpropsSI}{A data frame describing the properties of five fuel strata (canopy, shrub, herbs, dead woody and litter) returned by \code{\link{fuel_FCCS}}.}
   \item{MliveSI}{Moisture of live fuels (in percent of dry weight) for canopy, shrub, and herb strata.}
   \item{MdeadSI}{Moisture of dead fuels (in percent of dry weight) for canopy, shrub, herb, woody and litter strata.}
   \item{slope}{Slope (in degrees).}
@@ -92,7 +92,7 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 Default moisture, slope and windspeed values are benchmark conditions used to calculate fire potentials (Sandberg et al. 2007) and map vulnerability to fire.
 }
 \seealso{
-\code{\link{fuel.FCCS}}
+\code{\link{fuel_FCCS}}
 }
 \examples{
 #Load example plot plant data
@@ -102,7 +102,7 @@ data(exampleforest)
 data(SpParamsMED)
 
 #Calculate fuel properties according to FCCS
-fccs = fuel.FCCS(exampleforest, 50,100, SpParamsMED)
+fccs = fuel_FCCS(exampleforest, 50,100, SpParamsMED)
 
 #Calculate fire behavior according to FCCS
 fire_FCCS(fccs)
@@ -111,11 +111,11 @@ fire_FCCS(fccs)
 data(SFM_metric)
 
 #Fuel stratification (returns heights in cm)
-fs = fuel.Stratification(exampleforest, SpParamsMED)
+fs = fuel_stratification(exampleforest, SpParamsMED)
 
 #Correct windspeed (transform heights to m)
 u = 11 #m/s
-umf = u*fuel.WindAdjustmentFactor(fs$surfaceLayerTopHeight/100, fs$canopyBaseHeight/100, 
+umf = u*fuel_windAdjustmentFactor(fs$surfaceLayerTopHeight/100, fs$canopyBaseHeight/100, 
                                   fs$canopyTopHeight/100, 60)
 
 #Call Rothermel function using fuel model 'A6'

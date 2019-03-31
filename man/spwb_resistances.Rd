@@ -1,5 +1,5 @@
-\name{spwb.resistances}
-\alias{spwb.resistances}
+\name{spwb_resistances}
+\alias{spwb_resistances}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Soil-plant resistances
@@ -8,7 +8,7 @@ Soil-plant resistances
 Calculates and draws rhizosphere, root, stem and leaf resistances for simulation time steps
 }
 \usage{
-spwb.resistances(x, cohort = 1, relative = FALSE, draw = FALSE, 
+spwb_resistances(x, cohort = 1, relative = FALSE, draw = FALSE, 
                  cumulative = FALSE, yearAxis = FALSE, xlab = NULL, ylab = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -34,7 +34,7 @@ A boolean to indicate whether the units of the x-axis are years (by default they
   \item{ylab}{y-axis label.}
 }
 \details{
-The function makes internal calls to \code{\link{hydraulics.soilPlantResistances}}.
+The function makes internal calls to \code{\link{hydraulics_soilPlantResistances}}.
 }
 \value{
 A data frame with dates in rows and resistance segments in columns (Rhizosphere, Root, Stem and Leaf). Values depend on whether \code{relative = TRUE} (percentages) or \code{relative = FALSE} (absolute resistance values). If \code{draw = TRUE} the calculated resistances are returned as an invisible object.

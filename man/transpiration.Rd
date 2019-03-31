@@ -1,28 +1,28 @@
 \encoding{UTF-8}
-\name{transp}
-\alias{transp.profitMaximization}
-\alias{transp.stomatalRegulation}
-\alias{transp.stomatalRegulationPlot}
+\name{transpiration}
+\alias{transp_profitMaximization}
+\alias{transp_stomatalRegulation}
+\alias{transp_stomatalRegulationPlot}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Transpiration submodel functions
 }
 \description{
-Set of high-level functions used in the calculation of stomatal conductance and transpiration. Function \code{transp.profitMaximization} calculates gain and cost functions, as well as profit maximization from supply and photosynthesis input functions. Function \code{transp.stomatalRegulation} calculates profit maximization for all time steps in a day, starting from stand description, soil description and meteorological input. Function \code{transp.stomatalRegulationPlot} produces a plot with the cohort supply functions against water potential and a plot with the cohort photosynthesis functions against water potential, both with the maximum profit values indicated.
+Set of high-level functions used in the calculation of stomatal conductance and transpiration. Function \code{transp_profitMaximization} calculates gain and cost functions, as well as profit maximization from supply and photosynthesis input functions. Function \code{transp_stomatalRegulation} calculates profit maximization for all time steps in a day, starting from stand description, soil description and meteorological input. Function \code{transp_stomatalRegulationPlot} produces a plot with the cohort supply functions against water potential and a plot with the cohort photosynthesis functions against water potential, both with the maximum profit values indicated.
 }
 \usage{
-transp.profitMaximization(supplyFunction, photosynthesisFunction, type, 
+transp_profitMaximization(supplyFunction, photosynthesisFunction, type, 
                           Gwmin, Gwmax, kleafmax = NA)
-transp.stomatalRegulation(x, soil, meteo, day,
+transp_stomatalRegulation(x, soil, meteo, day,
                              latitude, elevation)
-transp.stomatalRegulationPlot(x, soil, meteo, day, timestep, 
+transp_stomatalRegulationPlot(x, soil, meteo, day, timestep, 
                               latitude, elevation)
 }
 
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{supplyFunction}{Water supply function (see \code{\link{hydraulics.supplyFunctionNetwork}}).}
-  \item{photosynthesisFunction}{Function returned by \code{photo.photosynthesisFunction()}.}
+  \item{supplyFunction}{Water supply function (see \code{\link{hydraulics_supplyFunctionNetwork}}).}
+  \item{photosynthesisFunction}{Function returned by \code{photo_photosynthesisFunction()}.}
   \item{type}{Optimization type (1,2 or 3).}
   \item{Gwmin, Gwmax}{Minimum and maximum stomatal conductance (mol·m-2·s-1).}
   \item{kleafmax}{Maximum leaf hydraulic conductance (flow per pressure drop).}
@@ -53,7 +53,7 @@ Details of the transpiration submodel are given in a vignette.
 \value{
 Values returned for each function are:
 \itemize{
-\item{\code{transp.profitMaximization}: A list with the following elements:
+\item{\code{transp_profitMaximization}: A list with the following elements:
 \itemize{
   \item{\code{Cost}: Cost function [0-1].}
   \item{\code{Gain}: Gain function [0-1].}
@@ -61,11 +61,11 @@ Values returned for each function are:
   \item{\code{iMaxProfit}: Index corresponding to maximum profit (starting from 0).}
 }
 }
-\item{\code{transp.stomatalRegulation}: A list whose elements correspond to cohorts. Each element has the following subelements:
+\item{\code{transp_stomatalRegulation}: A list whose elements correspond to cohorts. Each element has the following subelements:
 \itemize{
-  \item{\code{supply}: Supply function (see \code{\link{hydraulics.supplyFunctionNetwork}}).}
-  \item{\code{photoSunlit, photoShade}: Photosynthesis function for sunlit and shade leaves and for each time step (see \code{\link{photo.leafPhotosynthesisFunction}}).}
-  \item{\code{PMSunlit, PMShade}: Profit maximization for sunlit and shade leaves and each time step (see \code{transp.profitMaximization}).}
+  \item{\code{supply}: Supply function (see \code{\link{hydraulics_supplyFunctionNetwork}}).}
+  \item{\code{photoSunlit, photoShade}: Photosynthesis function for sunlit and shade leaves and for each time step (see \code{\link{photo_leafPhotosynthesisFunction}}).}
+  \item{\code{PMSunlit, PMShade}: Profit maximization for sunlit and shade leaves and each time step (see \code{transp_profitMaximization}).}
 }
 }
 }
@@ -77,7 +77,7 @@ Sperry, J. S., M. D. Venturas, W. R. L. Anderegg, M. Mencuccini, D. S. Mackay, Y
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 \seealso{
-\code{\link{hydraulics.supplyFunctionNetwork}}, \code{\link{biophysics.leafTemperature}}, \code{\link{photo.photosynthesis}}, \code{\link{spwb}}
+\code{\link{hydraulics_supplyFunctionNetwork}}, \code{\link{biophysics_leafTemperature}}, \code{\link{photo_photosynthesis}}, \code{\link{spwb}}
 }
 \examples{
 #Load example daily meteorological data
@@ -100,6 +100,6 @@ control$transpirationMode="Complex"
 #Initialize input
 x2 = forest2spwbInput(exampleforest,examplesoil2, SpParamsMED, control)
 
-transp.stomatalRegulationPlot(x2, examplesoil2, examplemeteo, day=100, timestep = 12,
+transp_stomatalRegulationPlot(x2, examplesoil2, examplemeteo, day=100, timestep = 12,
                               latitude = 41.82592, elevation = 100)
 }

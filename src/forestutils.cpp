@@ -298,7 +298,7 @@ NumericVector shrubIndividualArea(IntegerVector SP, NumericVector Cover, Numeric
 /*
  * Cohort density in ind/ha
  */
-// [[Rcpp::export("plant_Density")]]
+// [[Rcpp::export("plant_density")]]
 NumericVector cohortDensity(List x, DataFrame SpParams) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
   DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
@@ -336,7 +336,7 @@ double maxCohortHeight(List x) {
   for(int i=0;i<nshrub;i++) if(shrubH[i]>=height) height += shrubH[i]; 
   return(height);
 }
-// [[Rcpp::export("plant_Height")]]
+// [[Rcpp::export("plant_height")]]
 NumericVector cohortHeight(List x) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
   DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);

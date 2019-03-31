@@ -37,10 +37,10 @@ spwbInput(above,  V,  soil, SpParams, control)
 Functions \code{forest2spwbInput} and \code{forest2abovegroundInput} extracts height and species identity from plant cohorts of \code{x}, and calculate leaf area index and crown ratio.\code{forest2spwbInput} also calculates the distribution of fine roots across soil. Both \code{forest2spwbInput} and \code{spwbInput} find parameter values for each plant cohort according to the parameters of its species as specified in \code{SpParams}. If \code{control$transpirationMode = "Complex"} the functions also estimate the maximum conductance of rhizosphere, root xylem and stem xylem elements.
 }
 \value{
-Function \code{forest2aboveground} returns a data frame with the following columns (rows are identified as specified by function \code{\link{plant.ID}}):
+Function \code{forest2aboveground} returns a data frame with the following columns (rows are identified as specified by function \code{\link{plant_ID}}):
 \itemize{
   \item{\code{SP}: Species identity (an integer) (first species is 0).}
-  \item{\code{N}: Cohort density (ind/ha) (see function \code{\link{plant.Density}}).}
+  \item{\code{N}: Cohort density (ind/ha) (see function \code{\link{plant_density}}).}
   \item{\code{DBH}: Tree diameter at breast height (cm).}
   \item{\code{H}: Plant total height (cm).}
   \item{\code{CR}: Crown ratio (crown length to total height) (between 0 and 1).}
@@ -48,7 +48,7 @@ Function \code{forest2aboveground} returns a data frame with the following colum
   \item{\code{LAI_dead}: Dead leaf area index (m2/m2) (one-side leaf area relative to plot area).}
 }
 
-Functions \code{forest2spwbInput} and \code{spwbInput} return a list of class \code{spwbInput} with the following elements (rows of data frames are identified as specified by function \code{\link{plant.ID}}):
+Functions \code{forest2spwbInput} and \code{spwbInput} return a list of class \code{spwbInput} with the following elements (rows of data frames are identified as specified by function \code{\link{plant_ID}}):
 \itemize{
   \item{\code{control}: List with control parameters (see \code{\link{defaultControl}}).}
   \item{\code{cohorts}: A data frame with cohort information, with columns \code{SP} and \code{Name}.}

@@ -9,7 +9,7 @@ Standard fuel models converted to metric system. Copied from package 'Rothermel'
 }
 \usage{data("SFM_metric")}
 \format{
-A data frame including standard fuel models as in Albini (1976) and Scott and Burgan (2005), to be used as input of \code{\link{fire.Rothermel}} function. All values converted to metric format.
+A data frame including standard fuel models as in Albini (1976) and Scott and Burgan (2005), to be used as input of \code{\link{fire_Rothermel}} function. All values converted to metric format.
   \describe{
     \item{\code{Fuel_Model_Type}}{A factor with levels \code{D} (for dynamic) or \code{S} (for static).}
     \item{\code{Load_1h}}{Loading of 1h fuel class [t/ha].}
@@ -37,7 +37,7 @@ Albini, F. A. (1976). Computer-based models of wildland fire behavior: A users' 
 Scott, J., & Burgan, R. E. (2005). A new set of standard fire behavior fuel models for use with Rothermel's surface fire spread model. Gen. Tech. Rep. RMRSGTR-153. Fort Collins, CO: US Department of Agriculture, Forest Service, Rocky Mountain Research Station.
 }
 \seealso{
- \code{\link{fire.Rothermel}}
+ \code{\link{fire_Rothermel}}
 }
 \examples{
 data(SFM_metric)

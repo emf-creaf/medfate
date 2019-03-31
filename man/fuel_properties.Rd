@@ -93,7 +93,7 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 
 \seealso{
-\code{\link{fire.FCCS}}, \code{\link{spwb}}
+\code{\link{fire_FCCS}}, \code{\link{spwb}}
 }
 \examples{
 #Load example plot plant data

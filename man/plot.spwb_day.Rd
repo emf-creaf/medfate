@@ -1,14 +1,14 @@
 \encoding{UTF-8}
-\name{plot.spwb.day}
-\alias{plot.spwb.day}
+\name{plot.spwb_day}
+\alias{plot.spwb_day}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Displays simulation results for one day}
 \description{
-Function \code{plot} plots the results of the soil water balance model for one day (see \code{\link{spwb.day}}).
+Function \code{plot} plots the results of the soil water balance model for one day (see \code{\link{spwb_day}}).
 }
 \usage{
-\method{plot}{spwb.day}(x, type="PlantTranspiration", bySpecies = FALSE, xlab = NULL, ylab = NULL, ...)
+\method{plot}{spwb_day}(x, type="PlantTranspiration", bySpecies = FALSE, xlab = NULL, ylab = NULL, ...)
 }
 \arguments{
   \item{x}{An object of class \code{spwb}}
@@ -47,7 +47,7 @@ Function \code{plot} plots the results of the soil water balance model for one d
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 \seealso{
- \code{\link{spwb.day}}, \code{\link{plot.spwb}}
+ \code{\link{spwb_day}}, \code{\link{plot.spwb}}
 }
 \examples{
 #Load example daily meteorological data
@@ -73,7 +73,7 @@ control$transpirationMode="Complex"
 #Simulate one day only
 x2 = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 d = 100
-sd2<-spwb.day(x2, examplesoil, rownames(examplemeteo)[d], 
+sd2<-spwb_day(x2, examplesoil, rownames(examplemeteo)[d], 
              examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
              examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
              examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
