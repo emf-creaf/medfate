@@ -101,7 +101,7 @@ summary.forest<-function(object, SpParams, detailed = FALSE, ...) {
         summaryBasalArea(object, SpParams),
         summaryLAI(object,SpParams),
         summaryFuel(object,SpParams))
-  s["Phytovolume"] = sum(plant.Phytovolume(object, SpParams),na.rm=TRUE)
+  s["Phytovolume"] = sum(plant_phytovolume(object, SpParams),na.rm=TRUE)
   class(s)<-c("summary.forest","numeric")
   return(s)
 }

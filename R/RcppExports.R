@@ -125,7 +125,7 @@ plant_phytovolume <- function(x, SpParams) {
     .Call(`_medfate_shrubFuel`, SP, Cover, H, CR, SpParams, gdd, includeDead)
 }
 
-plantfuel <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE) {
+plant_fuel <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE) {
     .Call(`_medfate_cohortFuel`, x, SpParams, gdd, includeDead)
 }
 

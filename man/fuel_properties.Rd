@@ -1,25 +1,25 @@
 \encoding{UTF-8}
-\name{fuel.properties}
-\alias{fuel.FCCS}
-\alias{fuel.cohortFineFMC}
-\alias{fuel.Stratification}
-\alias{fuel.WindAdjustmentFactor}
+\name{fuel_properties}
+\alias{fuel_FCCS}
+\alias{fuel_cohortFineFMC}
+\alias{fuel_stratification}
+\alias{fuel_windAdjustmentFactor}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Fuel stratification and fuel characteristics
 }
 \description{
-Function \code{fuel.Stratification} provides a stratification of the stand into understory and canopy strata. Function \code{fuel.FCCS} calculates fuel characteristics from a \code{forest} object following an adaptation of the protocols described for the Fuel Characteristics Classification System (Prichard et al. 2013). Function \code{fuel.WindAdjustmentFactor} determines the adjustment factor of wind for surface fires, according to Andrews (2012). Function \code{fuel.cohortFineFMC} calculates the fuel moisture content of leaves and twigs of each cohort, from the results of soil water balance.
+Function \code{fuel_stratification} provides a stratification of the stand into understory and canopy strata. Function \code{fuel_FCCS} calculates fuel characteristics from a \code{forest} object following an adaptation of the protocols described for the Fuel Characteristics Classification System (Prichard et al. 2013). Function \code{fuel_windAdjustmentFactor} determines the adjustment factor of wind for surface fires, according to Andrews (2012). Function \code{fuel_cohortFineFMC} calculates the fuel moisture content of leaves and twigs of each cohort, from the results of soil water balance.
 }
 \usage{
-fuel.Stratification(object, SpParams, gdd = NA, 
+fuel_stratification(object, SpParams, gdd = NA, 
                       heightProfileStep = 10.0, maxHeightProfile = 5000.0,
                       bulkDensityThreshold = 0.05)
-fuel.FCCS(object, ShrubCover, CanopyCover, SpParams, cohortFMC = as.numeric(c()),
+fuel_FCCS(object, ShrubCover, CanopyCover, SpParams, cohortFMC = as.numeric(c()),
           gdd = NA, heightProfileStep = 10, maxHeightProfile = 5000, 
           bulkDensityThreshold = 0.05)
-fuel.cohortFineFMC(spwb, x)
-fuel.WindAdjustmentFactor(topShrubHeight, bottomCanopyHeight, topCanopyHeight,
+fuel_cohortFineFMC(spwb, x)
+fuel_windAdjustmentFactor(topShrubHeight, bottomCanopyHeight, topCanopyHeight,
                           canopyCover)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -28,7 +28,7 @@ fuel.WindAdjustmentFactor(topShrubHeight, bottomCanopyHeight, topCanopyHeight,
   \item{ShrubCover}{Total shrub cover (in percent) of the stand.}
   \item{CanopyCover}{Total canopy cover (in percent) of the stand.}
   \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
-  \item{cohortFMC}{A numeric vector of (actual) fuel moisture content by cohort (e.g. taken from the result of \code{fuel.cohortFineFMC}).}
+  \item{cohortFMC}{A numeric vector of (actual) fuel moisture content by cohort (e.g. taken from the result of \code{fuel_cohortFineFMC}).}
   \item{gdd}{Growth degree-days.}
   \item{heightProfileStep}{Precision for the fuel bulk density profile.}
   \item{maxHeightProfile}{Maximum height for the fuel bulk density profile.}
@@ -44,7 +44,7 @@ fuel.WindAdjustmentFactor(topShrubHeight, bottomCanopyHeight, topCanopyHeight,
 Details are described in a vignette.
 }
 \value{
-Function \code{fuel.FCCS} returns a data frame with five rows corresponding to  fuel layers: \code{canopy}, \code{shrub}, \code{herb}, \code{woody} and \code{litter}. Columns correspond fuel properties:
+Function \code{fuel_FCCS} returns a data frame with five rows corresponding to  fuel layers: \code{canopy}, \code{shrub}, \code{herb}, \code{woody} and \code{litter}. Columns correspond fuel properties:
 \itemize{
 \item{\code{w}: Fine fuel loading (in kg/m2).}
 \item{\code{cover}: Percent cover.}
@@ -67,7 +67,7 @@ Function \code{fuel.FCCS} returns a data frame with five rows corresponding to  
 \item{\code{MaxFMC}: Maximum fuel moisture content (as percent over dry weight).}
 }
 
-Function \code{fuel.Stratification} returns a list with the following items:
+Function \code{fuel_stratification} returns a list with the following items:
 \itemize{
 \item{\code{surfaceLayerBaseHeight}: Base height of crowns of shrubs in the surface layer (in cm).}
 \item{\code{surfaceLayerTopHeight}: Top height of crowns of shrubs in the surface layer (in cm).}
@@ -77,9 +77,9 @@ Function \code{fuel.Stratification} returns a list with the following items:
 \item{\code{canopyLAI}: Cumulated LAI of the canopy (i.e. leaf area comprised between canopy base and top heights).}
 }
 
-Function \code{fuel.cohortFineFMC} returns a list with three matrices (for leaves, twigs and fine fuels). Each of them contains live moisture content values for each day (in rows) and plant cohort (in columns).
+Function \code{fuel_cohortFineFMC} returns a list with three matrices (for leaves, twigs and fine fuels). Each of them contains live moisture content values for each day (in rows) and plant cohort (in columns).
 
-Function \code{fuel.WindAdjustmentFactor} returns a value between 0 and 1.
+Function \code{fuel_windAdjustmentFactor} returns a value between 0 and 1.
 }
 \references{
 Andrews, P. L. 2012. Modeling wind adjustment factor and midflame wind speed for Rothermel’s surface fire spread model. USDA Forest Service - General Technical Report RMRS-GTR:1–39.
@@ -103,11 +103,11 @@ data(exampleforest)
 data(SpParamsMED)
 
 #Show stratification of fuels
-fuel.Stratification(exampleforest, SpParamsMED)
+fuel_stratification(exampleforest, SpParamsMED)
 
 #Calculate fuel properties according to FCCS
-fccs = fuel.FCCS(exampleforest, 50,100, SpParamsMED)
+fccs = fuel_FCCS(exampleforest, 50,100, SpParamsMED)
 fccs
 
-fuel.WindAdjustmentFactor(fccs$htc[2], fccs$hbc[1], fccs$htc[1], fccs$cover[1])
+fuel_windAdjustmentFactor(fccs$htc[2], fccs$hbc[1], fccs$htc[1], fccs$cover[1])
 }

@@ -1,20 +1,20 @@
 \encoding{UTF-8}
-\name{fire.behaviour}
-\alias{fire.Rothermel}
-\alias{fire.FCCS}
+\name{fire_behaviour}
+\alias{fire_Rothermel}
+\alias{fire_FCCS}
 \title{
 Fire behaviour functions
 }
 \description{
-Function \code{fire.FCCS()} implements a modification of the fire behavior models described for the Fuel Characteristics Classification System (FCCS) in Prichard et al. (2013). Function \code{fire.Rothermel()} implements Rothermel's (1972) fire behaviour model (modified from package 'Rothermel' (Giorgio Vacchiano, Davide Ascoli)).
+Function \code{fire_FCCS()} implements a modification of the fire behavior models described for the Fuel Characteristics Classification System (FCCS) in Prichard et al. (2013). Function \code{fire_Rothermel()} implements Rothermel's (1972) fire behaviour model (modified from package 'Rothermel' (Giorgio Vacchiano, Davide Ascoli)).
 
 
 }
 \usage{
-fire.FCCS(FCCSpropsSI, MliveSI = as.numeric(c(90, 90, 60)), 
+fire_FCCS(FCCSpropsSI, MliveSI = as.numeric(c(90, 90, 60)), 
           MdeadSI = as.numeric(c(6, 6, 6, 6, 6)), 
           slope = 0, windSpeedSI = 11)
-fire.Rothermel(modeltype, wSI, sSI, delta, mx_dead,
+fire_Rothermel(modeltype, wSI, sSI, delta, mx_dead,
                hSI, mSI, u, windDir, slope, aspect)
                 
 }
@@ -39,7 +39,7 @@ fire.Rothermel(modeltype, wSI, sSI, delta, mx_dead,
 Default moisture, slope and windspeed values are benchmark conditions used to calculate fire potentials (Sandberg et al. 2007) and map vulnerability to fire.
 }
 \value{
-Both functions return list with fire behavior variables. In the case of \code{fire.FCCS}, the function returns the variables in three blocks (lists \code{SurfaceFire}, \code{CrownFire} and \code{FirePotentials}), and the values are:
+Both functions return list with fire behavior variables. In the case of \code{fire_FCCS}, the function returns the variables in three blocks (lists \code{SurfaceFire}, \code{CrownFire} and \code{FirePotentials}), and the values are:
 \itemize{
 \item{\code{SurfaceFire$`midflame_WindSpeed [m/s]`}: Midflame wind speed in the surface fire.}
 \item{\code{SurfaceFire$phi_wind}: Spread rate modifier due to wind.}
@@ -105,7 +105,7 @@ data(SpParamsMED)
 fccs = fuel.FCCS(exampleforest, 50,100, SpParamsMED)
 
 #Calculate fire behavior according to FCCS
-fire.FCCS(fccs)
+fire_FCCS(fccs)
 
 #Load fuel model parameter data
 data(SFM_metric)
@@ -119,7 +119,7 @@ umf = u*fuel.WindAdjustmentFactor(fs$surfaceLayerTopHeight/100, fs$canopyBaseHei
                                   fs$canopyTopHeight/100, 60)
 
 #Call Rothermel function using fuel model 'A6'
-fire.Rothermel(modeltype="D", wSI = as.numeric(SFM_metric["A6",2:6]), 
+fire_Rothermel(modeltype="D", wSI = as.numeric(SFM_metric["A6",2:6]), 
                     sSI = as.numeric(SFM_metric["A6",7:11]), 
                     delta = as.numeric(SFM_metric["A6",12]),
                     mx_dead = as.numeric(SFM_metric["A6",13]),

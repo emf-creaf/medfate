@@ -1,12 +1,12 @@
 \encoding{UTF-8}
 \name{tissuemoisture}
-\alias{moisture.symplasticRWC}
-\alias{moisture.symplasticPsi}
-\alias{moisture.apoplasticRWC}
-\alias{moisture.apoplasticPsi}
-\alias{moisture.tissueRWC}
-\alias{moisture.tissueFMC}
-\alias{moisture.pressureVolumeCurvePlot}
+\alias{moisture_symplasticRWC}
+\alias{moisture_symplasticPsi}
+\alias{moisture_apoplasticRWC}
+\alias{moisture_apoplasticPsi}
+\alias{moisture_tissueRWC}
+\alias{moisture_tissueFMC}
+\alias{moisture_pressureVolumeCurvePlot}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Tissue moisture functions
@@ -15,15 +15,15 @@ Tissue moisture functions
 Set of functions used to calculate tissue moisture from water potential and viceversa.
 }
 \usage{
-moisture.symplasticRWC(psiSym, pi0, epsilon)
-moisture.symplasticPsi(RWC, pi0, epsilon)
-moisture.apoplasticRWC(psiApo, c, d)
-moisture.apoplasticPsi(RWC, c, d)
-moisture.tissueRWC(psiSym, pi0, epsilon, 
+moisture_symplasticRWC(psiSym, pi0, epsilon)
+moisture_symplasticPsi(RWC, pi0, epsilon)
+moisture_apoplasticRWC(psiApo, c, d)
+moisture_apoplasticPsi(RWC, c, d)
+moisture_tissueRWC(psiSym, pi0, epsilon, 
                    psiApo, c, d, 
                    af, femb = 0)
-moisture.tissueFMC(RWC, density, d0 = 1.54)
-moisture.pressureVolumeCurvePlot(x, segment="leaf", 
+moisture_tissueFMC(RWC, density, d0 = 1.54)
+moisture_pressureVolumeCurvePlot(x, segment="leaf", 
                     fraction = "all",
                     psiVec =  seq(-0.1, -8.0, by =-0.01))                    
 }
@@ -50,11 +50,11 @@ Details of the tissue moisture calculations are given in a vignette.
 \value{
 Values returned for each function are:
 \itemize{
-\item{\code{moisture.symplasticRWC}: Relative water content [0-1] of the symplastic fraction.}
-\item{\code{moisture.apoplasticRWC}: Relative water content [0-1] of the apoplastic fraction.}
-\item{\code{moisture.symplasticWaterPotential}: Water potential (in MPa) of the symplastic fraction.}
-\item{\code{moisture.apoplasticWaterPotential}: Water potential (in MPa) of the apoplastic fraction.}
-\item{\code{moisture.segmentRWC}: Segment relative water content [0-1].}
+\item{\code{moisture_symplasticRWC}: Relative water content [0-1] of the symplastic fraction.}
+\item{\code{moisture_apoplasticRWC}: Relative water content [0-1] of the apoplastic fraction.}
+\item{\code{moisture_symplasticWaterPotential}: Water potential (in MPa) of the symplastic fraction.}
+\item{\code{moisture_apoplasticWaterPotential}: Water potential (in MPa) of the apoplastic fraction.}
+\item{\code{moisture_segmentRWC}: Segment relative water content [0-1].}
 }
 }
 \references{
@@ -73,6 +73,6 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 \examples{
 psi = seq(-10,0, by=0.1)
 rwc_s = rep(NA, length(psi))
-for(i in 1:length(psi)) rwc_s[i] = moisture.symplasticRWC(psi[i],-3,12)
+for(i in 1:length(psi)) rwc_s[i] = moisture_symplasticRWC(psi[i],-3,12)
 plot(psi, rwc_s, type="l", xlab="Water potential (MPa)", ylab = "Symplasmic RWC")
 }

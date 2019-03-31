@@ -1,6 +1,6 @@
 \encoding{UTF-8}
 \name{Forest values}
-\alias{forest.BasalArea}
+\alias{forest_basalArea}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Forest description functions}
@@ -8,7 +8,7 @@
 Functions to calculate overall attributes of a \code{\link{forest}} object.
 }
 \usage{
-forest.BasalArea(x)
+forest_basalArea(x)
 }
 \arguments{
   \item{x}{An object of class \code{\link{forest}}.}
@@ -16,7 +16,7 @@ forest.BasalArea(x)
 \value{
 A vector with values for each cohort of the input \code{\link{forest}} object:
 \itemize{
-\item{\code{forest.BasalArea}: Total basal area (m2/ha).}
+\item{\code{forest_basalArea}: Total basal area (m2/ha).}
 }
 }
 \author{
@@ -33,5 +33,5 @@ data(SpParamsMED)
 data(exampleforest)
 
 #A short way to obtain total basal area
-forest.BasalArea(exampleforest)
+forest_basalArea(exampleforest)
 }

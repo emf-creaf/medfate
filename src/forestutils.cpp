@@ -670,7 +670,7 @@ NumericVector shrubFuel(IntegerVector SP, NumericVector Cover, NumericVector H, 
   }
   return(W);
 }
-// [[Rcpp::export("plantfuel")]]
+// [[Rcpp::export("plant_fuel")]]
 NumericVector cohortFuel(List x, DataFrame SpParams, double gdd = NA_REAL, bool includeDead = true){
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
   DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
