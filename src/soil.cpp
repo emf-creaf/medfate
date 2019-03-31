@@ -17,7 +17,7 @@ const double capacityClay = 1.23*1e6; //kg·m-3
 /**
  *  Returns water content (% volume) at saturation according to Saxton's pedotransfer model
  */
-// [[Rcpp::export("soil.thetaSATSX")]]
+// [[Rcpp::export("soil_thetaSATSX")]]
 double thetaSATSaxton(double clay, double sand, double om = NA_REAL) {
   double theta_sat = NA_REAL;
   //If organic matter is missing use Saxton et al (1986)
@@ -40,7 +40,7 @@ double thetaSATSaxton(double clay, double sand, double om = NA_REAL) {
  * Returns soil water potential (in MPa) according to Saxton's pedotransfer model
  * theta - soil water content (in % volume)
  */
-// [[Rcpp::export("soil.theta2psiSX")]]
+// [[Rcpp::export("soil_theta2psiSX")]]
 double theta2psiSaxton(double clay, double sand, double theta, double om = NA_REAL) {
   double A = NA_REAL;
   double B = NA_REAL;
@@ -87,7 +87,7 @@ double theta2psiSaxton(double clay, double sand, double theta, double om = NA_RE
  *  Returns water content (% volume) according to Saxton's pedotransfer model
  *  psi - Soil water potential (in MPa)
  */
-// [[Rcpp::export("soil.psi2thetaSX")]]
+// [[Rcpp::export("soil_psi2thetaSX")]]
 double psi2thetaSaxton(double clay, double sand, double psi, double om = NA_REAL) {
   double A = NA_REAL;
   double B = NA_REAL;
@@ -137,7 +137,7 @@ double psi2thetaSaxton(double clay, double sand, double psi, double om = NA_REAL
  *  Returns water content (% volume) according to Van Genuchten's pedotransfer model (m = 1 - 1/n)
  *  psi - Soil water potential (in MPa)
  */
-// [[Rcpp::export("soil.psi2thetaVG")]]
+// [[Rcpp::export("soil_psi2thetaVG")]]
 double psi2thetaVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double psi) {
   double m = 1.0 - (1.0/n);
   double T = pow(pow(alpha*std::abs(psi),n)+1.0,-m);
@@ -147,7 +147,7 @@ double psi2thetaVanGenuchten(double n, double alpha, double theta_res, double th
  *  Returns  soil water potential (in MPa) according to Van Genuchten's pedotransfer model (m = 1 - 1/n)
  *  theta - soil water content (in % volume)
  */
-// [[Rcpp::export("soil.theta2psiVG")]]
+// [[Rcpp::export("soil_theta2psiVG")]]
 double theta2psiVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double theta) {
   double T = (theta-theta_res)/(theta_sat-theta_res); //content relative
   double m = 1.0 - (1.0/n);
@@ -159,8 +159,8 @@ double theta2psiVanGenuchten(double n, double alpha, double theta_res, double th
 
 
 
-// [[Rcpp::export("soil.USDAType")]]
-String soilUSDAType(double clay, double sand) {
+// [[Rcpp::export("soil_USDAType")]]
+String USDAType(double clay, double sand) {
   double silt = 100 - clay - sand;
   if((silt+1.5*clay)<15) return("Sand");
   else if(((silt+1.5*clay)>=15) & ((silt + 2.0*clay)<30)) return("Loamy sand");
@@ -193,7 +193,7 @@ String soilUSDAType(double clay, double sand) {
  *  2 - residual volumetric water content
  *  3 - saturated water content 
  */
-// [[Rcpp::export("soil.vanGenuchtenParamsCarsel")]]
+// [[Rcpp::export("soil_vanGenuchtenParamsCarsel")]]
 NumericVector vanGenuchtenParamsCarsel(String soilType) {
   NumericVector vg(4,NA_REAL);
   if(soilType=="Sand") {vg[0]=1478.967; vg[1]=2.68; vg[2] = 0.045; vg[3]=0.43;}
@@ -223,7 +223,7 @@ NumericVector vanGenuchtenParamsCarsel(String soilType) {
  *  2 - residual volumetric water content
  *  3 - saturated water content 
  */
-// [[Rcpp::export("soil.vanGenuchtenParamsToth")]]
+// [[Rcpp::export("soil_vanGenuchtenParamsToth")]]
 NumericVector vanGenuchtenParamsToth(double clay, double sand, double om, double bd, bool topsoil) {
   double silt = 100.0 - clay - sand;
   double ts = 1.0;
@@ -249,7 +249,7 @@ NumericVector vanGenuchtenParamsToth(double clay, double sand, double om, double
  * Dharssi, I., Vidale, P.L., Verhoef, A., MacPherson, B., Jones, C., & Best, M. 2009. New soil physical properties implemented in the Unified Model at PS18. 9–12.
  * Best et al. 2011
  */
-NumericVector layerthermalconductivity(NumericVector sand, NumericVector clay, NumericVector W, NumericVector Theta_FC) {
+NumericVector layerThermalConductivity(NumericVector sand, NumericVector clay, NumericVector W, NumericVector Theta_FC) {
   int nlayers = sand.length();
   NumericVector thermalCond(nlayers,0.0);
   for(int l=0;l<nlayers;l++) {
@@ -271,7 +271,7 @@ NumericVector layerthermalconductivity(NumericVector sand, NumericVector clay, N
  *  returns - J·m-3·K-1
  * Cox, P.M., Betts, R.A., Bunton, C.B., Essery, R.L.H., Rowntree, P.R., & Smith, J. 1999. The impact of new land surface physics on the GCM simulation of climate and climate sensitivity. Climate Dynamics 15: 183–203.
  */
-NumericVector layerthermalcapacity(NumericVector sand, NumericVector clay, NumericVector W, NumericVector Theta_FC) {
+NumericVector layerThermalCapacity(NumericVector sand, NumericVector clay, NumericVector W, NumericVector Theta_FC) {
   int nlayers = sand.length();
   NumericVector thermalCap(nlayers,0.0);
   for(int l=0;l<nlayers;l++) {
@@ -300,8 +300,8 @@ NumericVector midpoints(NumericVector dVec) {
 /**
  * Soil temperature gradient (in ºC/m)
  */
-// [[Rcpp::export("soil.temperaturegradient")]]
-NumericVector soilTemperatureGradient(NumericVector dVec, NumericVector Temp) {
+// [[Rcpp::export("soil_temperatureGradient")]]
+NumericVector temperatureGradient(NumericVector dVec, NumericVector Temp) {
   NumericVector midZ = midpoints(dVec);
   int nlayers = Temp.length();
   NumericVector gradTemp(nlayers,0.0);
@@ -315,15 +315,15 @@ NumericVector soilTemperatureGradient(NumericVector dVec, NumericVector Temp) {
 }
 
 
-// [[Rcpp::export("soil.temperaturechange")]]
-NumericVector soilTemperatureChange(NumericVector dVec, NumericVector Temp,
+// [[Rcpp::export("soil_temperatureChange")]]
+NumericVector temperatureChange(NumericVector dVec, NumericVector Temp,
                                     NumericVector sand, NumericVector clay, 
                                     NumericVector W, NumericVector Theta_FC,
                                     double Gdown) {
-  NumericVector lambda = layerthermalconductivity(sand, clay, W, Theta_FC);
-  NumericVector Ca = layerthermalcapacity(sand, clay, W, Theta_FC);
+  NumericVector lambda = layerThermalConductivity(sand, clay, W, Theta_FC);
+  NumericVector Ca = layerThermalCapacity(sand, clay, W, Theta_FC);
   int nlayers = Temp.length();
-  NumericVector gradTemp = soilTemperatureGradient(dVec, Temp);
+  NumericVector gradTemp = temperatureGradient(dVec, Temp);
   NumericVector midZ = midpoints(dVec);
   double Gup = -Gdown; //Gdown > 0 when net flux is in the direction of soil
   double Gi;
@@ -368,7 +368,7 @@ List soil(DataFrame SoilParams, String VG_PTF = "Carsel", NumericVector W = Nume
   NumericVector VG_theta_res(nlayers);
   NumericVector VG_theta_sat(nlayers);
   for(int l=0;l<nlayers;l++) {
-    usda_Type[l] = soilUSDAType(clay[l],sand[l]);
+    usda_Type[l] = USDAType(clay[l],sand[l]);
     NumericVector vgl;
     if(VG_PTF=="Carsel") {
       vgl = vanGenuchtenParamsCarsel(usda_Type[l]); 
@@ -409,7 +409,7 @@ List soil(DataFrame SoilParams, String VG_PTF = "Carsel", NumericVector W = Nume
 /**
  * Returns water content in volume per soil volume at field capacity, according to the given pedotransfer model
  */
-// [[Rcpp::export("soil.thetaFC")]]
+// [[Rcpp::export("soil_thetaFC")]]
 NumericVector thetaFC(List soil, String model="SX") {
   NumericVector SD = soil["dVec"];
   int nlayers = SD.size();
@@ -437,7 +437,7 @@ NumericVector thetaFC(List soil, String model="SX") {
 /**
  * Returns water content in volume per soil volume at field capacity, according to the given pedotransfer model
  */
-// [[Rcpp::export("soil.thetaWP")]]
+// [[Rcpp::export("soil_thetaWP")]]
 NumericVector thetaWP(List soil, String model="SX") {
   NumericVector SD = soil["dVec"];
   int nlayers = SD.size();
@@ -464,7 +464,7 @@ NumericVector thetaWP(List soil, String model="SX") {
 /**
  * Returns water content in volume per soil volume at saturation, according to the given pedotransfer model
  */
-// [[Rcpp::export("soil.thetaSAT")]]
+// [[Rcpp::export("soil_thetaSAT")]]
 NumericVector thetaSAT(List soil, String model="SX") {
   NumericVector SD = soil["dVec"];
   int nlayers = SD.size();
@@ -488,7 +488,7 @@ NumericVector thetaSAT(List soil, String model="SX") {
 /**
  * Returns water content in mm at field capacity, according to the given pedotransfer model
  */
-// [[Rcpp::export("soil.waterFC")]]
+// [[Rcpp::export("soil_waterFC")]]
 NumericVector waterFC(List soil, String model="SX") {
   NumericVector dVec = soil["dVec"];
   NumericVector Theta_FC = thetaFC(soil, model);
@@ -502,7 +502,7 @@ NumericVector waterFC(List soil, String model="SX") {
 /**
  * Returns water content in mm at saturation, according to the given pedotransfer model
  */
-// [[Rcpp::export("soil.waterSAT")]]
+// [[Rcpp::export("soil_waterSAT")]]
 NumericVector waterSAT(List soil, String model="SX") {
   NumericVector dVec = soil["dVec"];
   NumericVector Theta_SAT = thetaSAT(soil, model);
@@ -513,7 +513,7 @@ NumericVector waterSAT(List soil, String model="SX") {
   return(Water_SAT);
 }
 
-// [[Rcpp::export("soil.waterWP")]]
+// [[Rcpp::export("soil_waterWP")]]
 NumericVector waterWP(List soil, String model="SX") {
   NumericVector dVec = soil["dVec"];
   NumericVector Water_WP = thetaWP(soil, model);
@@ -527,7 +527,7 @@ NumericVector waterWP(List soil, String model="SX") {
 /**
  * Returns current water content (in prop. volume), according to the given pedotransfer model
  */
-// [[Rcpp::export("soil.theta")]]
+// [[Rcpp::export("soil_theta")]]
 NumericVector theta(List soil, String model="SX") {
   NumericVector Theta_FC = thetaFC(soil, model);
   NumericVector W = soil["W"];
@@ -538,7 +538,7 @@ NumericVector theta(List soil, String model="SX") {
 /**
  * Returns current water potential, according to the given pedotransfer model
  */
-// [[Rcpp::export("soil.psi")]]
+// [[Rcpp::export("soil_psi")]]
 NumericVector psi(List soil, String model="SX") {
   NumericVector Theta = theta(soil, model);
   int nlayers = Theta.size();
@@ -563,7 +563,7 @@ NumericVector psi(List soil, String model="SX") {
 }
 
 
-// [[Rcpp::export("soil.waterTableDepth")]]
+// [[Rcpp::export("soil_waterTableDepth")]]
 double waterTableDepth(List soil, String model = "SX") {
   NumericVector dVec = soil["dVec"];
   NumericVector W = soil["W"];
@@ -581,20 +581,20 @@ double waterTableDepth(List soil, String model = "SX") {
   return(z);
 }
 
-// [[Rcpp::export("soil.thermalcapacity")]]
-NumericVector soilthermalcapacity(List soil, String model = "SX") {
+// [[Rcpp::export("soil_thermalCapacity")]]
+NumericVector thermalCapacity(List soil, String model = "SX") {
   NumericVector sand = soil["sand"];
   NumericVector clay = soil["clay"];
   NumericVector W = soil["W"];
   NumericVector Theta_FC = thetaFC(soil, model);
-  return(layerthermalcapacity(sand, clay, W, Theta_FC));
+  return(layerThermalCapacity(sand, clay, W, Theta_FC));
 }
 
-// [[Rcpp::export("soil.thermalconductivity")]]
-NumericVector soilthermalconductivity(List soil, String model = "SX") {
+// [[Rcpp::export("soil_thermalConductivity")]]
+NumericVector thermalConductivity(List soil, String model = "SX") {
   NumericVector sand = soil["sand"];
   NumericVector clay = soil["clay"];
   NumericVector W = soil["W"];
   NumericVector Theta_FC = thetaFC(soil, model);
-  return(layerthermalconductivity(sand, clay, W, Theta_FC));
+  return(layerThermalConductivity(sand, clay, W, Theta_FC));
 }

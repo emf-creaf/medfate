@@ -13,7 +13,7 @@ using namespace Rcpp;
 
 const double SIGMA_Wm2 = 5.67*1e-8;
 
-// [[Rcpp::export("transp.profitMaximization")]]
+// [[Rcpp::export("transp_profitMaximization")]]
 List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, int type, double Gwmin, double Gwmax, double kleafmax = NA_REAL) {
   NumericVector supplyKterm = supplyFunction["kterm"];
   NumericVector supplyE = supplyFunction["E"];
@@ -80,7 +80,7 @@ List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, i
 }
 
 
-// [[Rcpp::export("transp.stomatalRegulation")]]
+// [[Rcpp::export("transp_stomatalRegulation")]]
 List stomatalRegulation(List x, List soil, DataFrame meteo, int day,
                         double latitude, double elevation) {
   

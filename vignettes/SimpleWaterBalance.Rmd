@@ -64,11 +64,11 @@ While Saxton equations use texture and organic matter as inputs, the Van Genucht
 par(mar=c(4,4,1,1))
 # Plot Saxton's retention curve
 psi = seq(-0.001, -2.0, by=-0.001)
-plot(-psi, lapply(as.list(psi), FUN=soil.psi2thetaSX, clay=25, sand=25), 
+plot(-psi, lapply(as.list(psi), FUN=soil_psi2thetaSX, clay=25, sand=25), 
      type="l", ylim=c(0,0.5),ylab="Water content (prop. volume)", xlab = "Soil water potential (-MPa)")
 
 #Add Van Genuchten retention curve
-lines(-psi, lapply(as.list(psi), FUN=soil.psi2thetaVG, 
+lines(-psi, lapply(as.list(psi), FUN=soil_psi2thetaVG, 
       alpha=examplesoil$VG_alpha[1], n = examplesoil$VG_n[1], 
       theta_res = examplesoil$VG_theta_res[1], 
       theta_sat = examplesoil$VG_theta_sat[1]), lty=2) 
@@ -77,7 +77,7 @@ legend("topright", legend=c("Saxton", "Van Genuchten"), lty=c(1,2), bty="n")
 
 ```
 
-Functions `soil.psi2thetaSX()` and `soil.psi2thetaVG()` (and their counterparts) can be used to calculate volumetric soil moisture from the water potential using the two models. When simulating soil water balance, the user can choose among the two models (see control parameters below).
+Functions `soil_psi2thetaSX()` and `soil_psi2thetaVG()` (and their counterparts) can be used to calculate volumetric soil moisture from the water potential using the two models. When simulating soil water balance, the user can choose among the two models (see control parameters below).
 
 ### Species data
 
@@ -119,13 +119,13 @@ Regarding **belowground** information, a matrix describing for each plant cohort
 below = forest2belowground(exampleforest, examplesoil, SpParamsMED)
 below
 ```
-Function `forest2belowground()` internally takes values of `Z50` and `Z95` and calls  function `root.ldrDistribution()` to estimate the distribution of fine roots according to the linear dose response model. For example the first row is:
+Function `forest2belowground()` internally takes values of `Z50` and `Z95` and calls  function `root_ldrDistribution()` to estimate the distribution of fine roots according to the linear dose response model. For example the first row is:
 ```{r}
-root.ldrDistribution(exampleforest$treeData$Z50[1], 
+root_ldrDistribution(exampleforest$treeData$Z50[1], 
                      exampleforest$treeData$Z95[1],
                      examplesoil$dVec)
 ```
-An analogous function `root.conicDistribution()` can be used to estimate fine root distribution according to a cone. The user is free to build any numeric matrix for root distribution, as long as values in rows sum always one (i.e. we have proportions). Otherwise, functions `root.conicDistribution()` and `root.ldrDistribution()` can be used to calculate root distribution under specific assumptions.
+An analogous function `root_conicDistribution()` can be used to estimate fine root distribution according to a cone. The user is free to build any numeric matrix for root distribution, as long as values in rows sum always one (i.e. we have proportions). Otherwise, functions `root_conicDistribution()` and `root_ldrDistribution()` can be used to calculate root distribution under specific assumptions.
 
 
 ### Meteorological forcing
@@ -177,17 +177,17 @@ Finally, note that one can play with plant-specific parameters for soil water ba
 
 ### Water balance for a single day
 
-Soil water balance simulations will normally span periods of several months or years, but since the model operates at a daily temporal scale, it is possible to perform soil water balance for one day only. This is done using function `spwb.day()`. In the following code we select day 100 from the meteorological input data and perform soil water balance for that day only:
+Soil water balance simulations will normally span periods of several months or years, but since the model operates at a daily temporal scale, it is possible to perform soil water balance for one day only. This is done using function `spwb_day()`. In the following code we select day 100 from the meteorological input data and perform soil water balance for that day only:
 ```{r}
 d = 100
-sd1<-spwb.day(x, examplesoil, rownames(examplemeteo)[d],  
+sd1<-spwb_day(x, examplesoil, rownames(examplemeteo)[d],  
              examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
              examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
              examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
              latitude = 41.82592, elevation = 100, 
              slope= 0, aspect = 0, prec = examplemeteo$Precipitation[d])
 ```
-Function `spwb.day()` is most useful when working with the complex transpiration model. This is why so many meteorological variables are required. The output of `spwb.day()` is a list with three elements:
+Function `spwb_day()` is most useful when working with the complex transpiration model. This is why so many meteorological variables are required. The output of `spwb_day()` is a list with three elements:
 ```{r}
 names(sd1)
 ```
@@ -202,14 +202,14 @@ sd1
 
 ### Water balance for multiple days
 
-Most often, users will use function `spwb()` to run the soil water balance model. This function requires the `spwbInput` object, the `soil` object and the meteorological data frame. However, function `spwb.day()` modified the state variables of the input objects. In particular, the values of soil moisture and cumulative growth degree days are now:
+Most often, users will use function `spwb()` to run the soil water balance model. This function requires the `spwbInput` object, the `soil` object and the meteorological data frame. However, function `spwb_day()` modified the state variables of the input objects. In particular, the values of soil moisture and cumulative growth degree days are now:
 ```{r}
 examplesoil$W
 x$canopy$gdd
 ```
 We simply reset state variables to their default values so that new simulations are not affected by the end state of the previous simulation:
 ```{r}
-spwb.resetInputs(x, examplesoil)
+spwb_resetInputs(x, examplesoil)
 examplesoil$W
 x$canopy$gdd
 ```
@@ -221,7 +221,7 @@ Function `spwb()` returns an object of class with the same name, actually a list
 ```{r}
 class(S)
 ```
-If we inspect its elements, we realize that the output is arranged differently than in `spwb.day()`:
+If we inspect its elements, we realize that the output is arranged differently than in `spwb_day()`:
 ```{r}
 names(S)
 ```
@@ -298,7 +298,7 @@ x$control$verbose = FALSE
 ```
 We re-run the water balance model after resetting state variables
 ```{r}
-spwb.resetInputs(x, examplesoil)
+spwb_resetInputs(x, examplesoil)
 Snr = spwb(x, examplesoil, examplemeteo, elevation=100) 
 ```
 In this case no console output is produced during the simulation process. We can examine the effect of preventing cavitation refill in the plots of plant drought stress and plant transpiration:

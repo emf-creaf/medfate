@@ -158,7 +158,7 @@ double layerFuelAverageCrownLength(double minHeight, double maxHeight, NumericVe
   return(0.0);
 }
 
-// [[Rcpp::export("fuel.Stratification")]]
+// [[Rcpp::export("fuel_stratification")]]
 List fuelLiveStratification(List object, DataFrame SpParams, double gdd = NA_REAL, double heightProfileStep = 10.0, double maxHeightProfile = 5000.0,double bulkDensityThreshold = 0.05) {
   int numSteps = (int) (maxHeightProfile/heightProfileStep);
   NumericVector z(numSteps);
@@ -212,7 +212,7 @@ List fuelLiveStratification(List object, DataFrame SpParams, double gdd = NA_REA
 /**
  * FCCS fuel definition
  */
-// [[Rcpp::export("fuel.FCCS")]]
+// [[Rcpp::export("fuel_FCCS")]]
 DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, DataFrame SpParams, NumericVector cohortFMC = NumericVector::create(), double gdd = NA_REAL, 
                    double heightProfileStep = 10.0, double maxHeightProfile = 5000, double bulkDensityThreshold = 0.05) {
   List liveStrat = fuelLiveStratification(object, SpParams, gdd, heightProfileStep, maxHeightProfile, bulkDensityThreshold);

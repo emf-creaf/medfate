@@ -1,18 +1,18 @@
 \encoding{UTF-8}
-\name{hydrology.soilInfiltration}
-\alias{hydrology.soilInfiltration}
-\alias{hydrology.soilEvaporation}
-\alias{hydrology.infiltrationRepartition}
+\name{hydrology_soilInfiltration}
+\alias{hydrology_soilInfiltration}
+\alias{hydrology_soilEvaporation}
+\alias{hydrology_infiltrationRepartition}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Soil infiltration and bare soil evaporation}
 \description{
-Function \code{hydrology.soilInfiltration} calculates the amount of water that infiltrates into the topsoil, according to the USDA SCS curve number method (Boughton 1989). The remaining is assumed to be lost as surface runoff. Function \code{hydrology.soilEvaporation} calculates the amount of evaporation from bare soil, following Ritchie (1972).
+Function \code{hydrology_soilInfiltration} calculates the amount of water that infiltrates into the topsoil, according to the USDA SCS curve number method (Boughton 1989). The remaining is assumed to be lost as surface runoff. Function \code{hydrology_soilEvaporation} calculates the amount of evaporation from bare soil, following Ritchie (1972).
 }
 \usage{
-hydrology.soilInfiltration(input, Ssoil) 
-hydrology.soilEvaporation(DEF,PETs, Gsoil)
-hydrology.infiltrationRepartition(I, dVec, macro)
+hydrology_soilInfiltration(input, Ssoil) 
+hydrology_soilEvaporation(DEF,PETs, Gsoil)
+hydrology_infiltrationRepartition(I, dVec, macro)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -29,7 +29,7 @@ hydrology.infiltrationRepartition(I, dVec, macro)
 See description of infiltration and soil evaporation processes in De Caceres et al. (submitted).
 }
 \value{
-Function \code{hydrology.soilInfiltration} a vector of the same length as \code{input} containing the daily amount of water that infiltrates into the soil (in mm of water). Function \code{hydrology.soilEvaporation} returns the amount of water evaporated from the soil. Function \code{hydrology.infiltrationRepartition} estimates the amount of infiltrated water that reaches each soil layer.
+Function \code{hydrology_soilInfiltration} a vector of the same length as \code{input} containing the daily amount of water that infiltrates into the soil (in mm of water). Function \code{hydrology_soilEvaporation} returns the amount of water evaporated from the soil. Function \code{hydrology_infiltrationRepartition} estimates the amount of infiltrated water that reaches each soil layer.
 }
 \references{
 Boughton (1989). A review of the USDA SCS curve number method. - Australian Journal of Soil Research 27: 511-523.
@@ -77,20 +77,20 @@ V = MaxVol1+MaxVol2+MaxVol3
 
 par(mar=c(5,5,1,1), mfrow=c(1,2))
 NP = seq(0,60, by=1)
-plot(NP,hydrology.soilInfiltration(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
+plot(NP,hydrology_soilInfiltration(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
      ylab="Infiltration (mm)", xlab="Net rainfall (mm)", frame=FALSE)
-lines(NP,hydrology.soilInfiltration(NP, V[2]), lty=2)
-lines(NP,hydrology.soilInfiltration(NP, V[3]), lty=3)
-lines(NP,hydrology.soilInfiltration(NP, V[4]), lty=4)
-lines(NP,hydrology.soilInfiltration(NP, V[5]), lty=5)
+lines(NP,hydrology_soilInfiltration(NP, V[2]), lty=2)
+lines(NP,hydrology_soilInfiltration(NP, V[3]), lty=3)
+lines(NP,hydrology_soilInfiltration(NP, V[4]), lty=4)
+lines(NP,hydrology_soilInfiltration(NP, V[5]), lty=5)
 legend("topleft", bty="n", lty=1:5, 
        legend=c(paste("d =", SoilDepth, "Vsoil =",round(V),"mm")))
-plot(NP,NP-hydrology.soilInfiltration(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
+plot(NP,NP-hydrology_soilInfiltration(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
      ylab="Runoff (mm)", xlab="Net rainfall (mm)", frame=FALSE)
-lines(NP,NP-hydrology.soilInfiltration(NP, V[2]), lty=2)
-lines(NP,NP-hydrology.soilInfiltration(NP, V[3]), lty=3)
-lines(NP,NP-hydrology.soilInfiltration(NP, V[4]), lty=4)
-lines(NP,NP-hydrology.soilInfiltration(NP, V[5]), lty=5)
+lines(NP,NP-hydrology_soilInfiltration(NP, V[2]), lty=2)
+lines(NP,NP-hydrology_soilInfiltration(NP, V[3]), lty=3)
+lines(NP,NP-hydrology_soilInfiltration(NP, V[4]), lty=4)
+lines(NP,NP-hydrology_soilInfiltration(NP, V[5]), lty=5)
 legend("topleft", bty="n", lty=1:5, 
        legend=c(paste("d =", SoilDepth,"Vsoil =",round(V),"mm")))
 

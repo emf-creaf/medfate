@@ -22,7 +22,7 @@ const double Cp_JKG = 1013.86; // J * kg^-1 * ºC^-1
 
 
 // Soil water balance with simple hydraulic model
-// [[Rcpp::export(".spwbDay1")]]
+// [[Rcpp::export("spwb_daySimple")]]
 List spwbDay1(List x, List soil, double tday, double pet, double prec, double er, double runon=0.0, 
              double rad = NA_REAL, double elevation = NA_REAL, bool verbose = false) {
 
@@ -268,13 +268,13 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
                         _["WaterBalance"] = DB, 
                         _["Soil"] = SB,
                         _["Plants"] = Plants);
-  l.attr("class") = CharacterVector::create("spwb.day","list");
+  l.attr("class") = CharacterVector::create("spwb_day","list");
   return(l);
 }
 
 
 // Soil water balance with Sperry hydraulic and stomatal conductance models
-// [[Rcpp::export(".spwbDay2")]]
+// [[Rcpp::export("spwb_dayComplex")]]
 List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
              double latitude, double elevation, double solarConstant, double delta, 
              double prec, double er, double runon=0.0, bool verbose = false) {
@@ -1035,7 +1035,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
     //Soil energy balance
     Ebalsoil[n] = abs_SWR_soil[n] + abs_LWR_soil[n] + LWRcanout[n] + Hcansoil[n] - LWRsoilout[n]; //Here we use all energy escaping to atmosphere
     //Soil temperature changes
-    NumericVector soilTchange = soilTemperatureChange(dVec, Tsoil, sand, clay, W, Theta_FC, Ebalsoil[n]);
+    NumericVector soilTchange = temperatureChange(dVec, Tsoil, sand, clay, W, Theta_FC, Ebalsoil[n]);
     for(int l=0;l<nlayers;l++) Tsoil[l] = Tsoil[l] + (soilTchange[l]*tstep);
     if(n<(ntimesteps-1)) Tsoil_mat(n+1,_)= Tsoil;
 
@@ -1185,11 +1185,11 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                         _["RhizoPsi"] = minPsiRhizo,
                         _["Plants"] = Plants,
                         _["PlantsInst"] = PlantsInst);
-  l.attr("class") = CharacterVector::create("spwb.day","list");
+  l.attr("class") = CharacterVector::create("spwb_day","list");
   return(l);
 }
 
-// [[Rcpp::export("spwb.day")]]
+// [[Rcpp::export("spwb_day")]]
 List spwbDay(List x, List soil, CharacterVector date, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
             double latitude, double elevation, double slope, double aspect,  
             double prec, double runon=0.0) {
@@ -1258,46 +1258,6 @@ List spwbDay(List x, List soil, CharacterVector date, double tmin, double tmax, 
 }
 
   
-// [[Rcpp::export(".getTrackSpeciesTranspiration")]]
-NumericVector getTrackSpeciesTranspiration( NumericVector trackSpecies, NumericVector Eplant, DataFrame x) {
-  int nTrackSpecies = trackSpecies.size();
-  NumericVector Eplantsp(nTrackSpecies, 0.0);
-  NumericVector SP = x["SP"];
-  int nCoh = SP.size();
-  int ts;
-  for(int its =0;its<nTrackSpecies;its++) {
-    ts = trackSpecies[its];
-    for(int i=0;i<nCoh;i++) {
-      if(SP[i]==ts) {
-        Eplantsp[its] += Eplant[i];
-      }
-    }
-  }
-  return(Eplantsp);
-}
-
-// [[Rcpp::export(".getTrackSpeciesDDS")]]
-NumericVector getTrackSpeciesDDS(NumericVector trackSpecies, NumericVector DDS, DataFrame x) {
-  int nTrackSpecies = trackSpecies.size();
-  NumericVector DDSsp(nTrackSpecies, 0.0);
-  NumericVector LAI = x["LAI"];
-  NumericVector SP = x["SP"];
-  int nCoh = LAI.size();
-  int ts;
-  double laiSum;
-  for(int its =0;its<nTrackSpecies;its++) {
-    ts = trackSpecies[its];
-    laiSum = 0.0;
-    for(int i=0;i<nCoh;i++) {
-      if(SP[i]==ts) {
-        DDSsp[its] += DDS[i]*LAI[i];
-        laiSum +=LAI[i];
-      }
-    }
-    DDSsp = DDSsp/laiSum;
-  }
-  return(DDSsp);
-}
 
 IntegerVector order_vector(NumericVector x) {
   if (is_true(any(duplicated(x)))) {
@@ -1365,8 +1325,7 @@ void checkspwbInput(List x, List soil, String transpirationMode, String soilFunc
   }
 }
 
-//
-// [[Rcpp::export("spwb.resetInputs")]]
+// [[Rcpp::export("spwb_resetInputs")]]
 void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER) {
   List can = x["canopy"];
   NumericVector W = soil["W"];

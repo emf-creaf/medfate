@@ -51,7 +51,7 @@ double carbonGrowthFactor(double conc, double threshold) {
   double k =10.0;
   return(std::max(0.0,(1.0 - exp(k*(threshold-conc)))/(1.0 - exp(k*(-conc)))));
 }
-// [[Rcpp::export(".growth.defoliationFraction")]]
+// [[Rcpp::export(".growth_defoliationFraction")]]
 double defoliationFraction(double conc, double threshold) {
   double k =-10.0;
   return(std::max(0.0,(exp(k*conc)-exp(k*threshold))/(1.0-exp(k*threshold))));

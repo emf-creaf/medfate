@@ -6,12 +6,12 @@ print.soil<-function(x, model="SX",...) {
   dini = 0;
   dfin = 0;
   ##Water content at field capacity
-  Water_WP = soil.waterWP(x, model)
-  Theta_WP = soil.thetaWP(x, model)
-  Water_FC = soil.waterFC(x, model)
-  Theta_FC = soil.thetaFC(x, model)
-  Water_SAT = soil.waterSAT(x, model)
-  Theta_SAT = soil.thetaSAT(x, model)
+  Water_WP = soil_waterWP(x, model)
+  Theta_WP = soil_thetaWP(x, model)
+  Water_FC = soil_waterFC(x, model)
+  Theta_FC = soil_thetaFC(x, model)
+  Water_SAT = soil_waterSAT(x, model)
+  Theta_SAT = soil_thetaSAT(x, model)
   
   for(l in 1:nlayers) {
     dfin = dfin+x$dVec[l]
@@ -30,6 +30,6 @@ print.soil<-function(x, model="SX",...) {
   cat(paste("Total soil water holding capacity (mm):", round(sum(Water_FC), digits=0),"\n"))  
   cat(paste("Total soil extractable water (mm):", round(sum(Water_FC-Water_WP), digits=0),"\n"))  
   cat(paste("Total soil current Volume (mm):",round(sum(x$W*Water_FC), digits=0),"\n"))
-  cat(paste("Water table depth (mm):",round(soil.waterTableDepth(x, model), digits=0),"\n"))
+  cat(paste("Water table depth (mm):",round(soil_waterTableDepth(x, model), digits=0),"\n"))
   cat(paste("\nSnow pack water equivalent (mm):",round(x$SWE, digits=0),"\n"))
 }

@@ -1,20 +1,20 @@
 \encoding{UTF-8}
-\name{spwb.ldrCalibration}
-\alias{spwb.ldrCalibration}
+\name{spwb_ldrCalibration}
+\alias{spwb_ldrCalibration}
 
 \title{Calibration of root distribution}
 
-\description{The function \code{spwb.ldrCalibration} calibrates the species root
+\description{The function \code{spwb_ldrCalibration} calibrates the species root
 distribution within \code{\link{spwb}}, given the arguments \code{x}, \code{meteo},
 \code{soil}, \code{psi_crit}, \code{obs} and \code{calibVar}. This calibration
 is based on reference measured values. These reference measured values can be
 \code{Soil water content}, \code{Total tranpiration} or \code{Transpiration by
 cohort}. Return the calibrated root distribution for each tree species (no
 shrub calibration is done), expressed as parameters of the function
-\code{\link{root.ldrDistribution}}.}
+\code{\link{root_ldrDistribution}}.}
 
 \usage{
-spwb.ldrCalibration(x, soil, meteo, calibVar, obs,
+spwb_ldrCalibration(x, soil, meteo, calibVar, obs,
                    RZmin = 301, RZmax = 4000,
                    V1min = 0.01, V1max = 0.94, resolution = 20, heat_stop = 0, 
                    transformation = "identity", verbose = FALSE)
@@ -73,6 +73,6 @@ Antoine Cabon, Centre Tecnologic Forestal de Catalunya
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 \seealso{
- \code{\link{spwb.ldrOptimization}} for when no measured data is available,
- \code{\link{spwb}}, \code{\link{soil}}, \code{\link{root.ldrDistribution}}
+ \code{\link{spwb_ldrOptimization}} for when no measured data is available,
+ \code{\link{spwb}}, \code{\link{soil}}, \code{\link{root_ldrDistribution}}
 }

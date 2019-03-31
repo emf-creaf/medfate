@@ -69,11 +69,11 @@ While Saxton equations use texture and organic matter as inputs, the Van Genucht
 par(mar=c(4,4,1,1))
 # Plot Saxton's retention curve
 psi = seq(-0.01, -2.0, by=-0.001)
-plot(-psi, lapply(as.list(psi), FUN=soil.psi2thetaSX, clay=25, sand=25), 
+plot(-psi, lapply(as.list(psi), FUN=soil_psi2thetaSX, clay=25, sand=25), 
      type="l", ylim=c(0,0.5),ylab="Water content (prop. volume)", xlab = "Soil water potential (-MPa)")
 
 #Add Van Genuchten retention curve
-lines(-psi, lapply(as.list(psi), FUN=soil.psi2thetaVG, 
+lines(-psi, lapply(as.list(psi), FUN=soil_psi2thetaVG, 
       alpha=examplesoil$VG_alpha[1], n = examplesoil$VG_n[1], 
       theta_res = examplesoil$VG_theta_res[1], 
       theta_sat = examplesoil$VG_theta_sat[1]), lty=2) 
@@ -82,7 +82,7 @@ legend("topright", legend=c("Saxton", "Van Genuchten"), lty=c(1,2), bty="n")
 
 ```
 
-Functions `soil.psi2thetaSX()` and `soil.psi2thetaVG()` (and their counterparts) can be used to calculate volumetric soil moisture from the water potential using the two models. When simulating soil water balance, the user can choose among the two models (see control parameters below). The soil water balance model described in this vignette uses the van Genuchten-Mualem equations for water retention curves and rhizosphere conductance.
+Functions `soil_psi2thetaSX()` and `soil_psi2thetaVG()` (and their counterparts) can be used to calculate volumetric soil moisture from the water potential using the two models. When simulating soil water balance, the user can choose among the two models (see control parameters below). The soil water balance model described in this vignette uses the van Genuchten-Mualem equations for water retention curves and rhizosphere conductance.
 
 ### Species data table
 
@@ -126,13 +126,13 @@ Z
 below = forest2belowground(exampleforest, examplesoil, SpParamsMED)
 below
 ```
-Function `forest2belowground()` internally takes values of `Z50` and `Z95` and calls  function `root.ldrDistribution()` to estimate the distribution of fine roots according to the linear dose response model. For example the first row is:
+Function `forest2belowground()` internally takes values of `Z50` and `Z95` and calls  function `root_ldrDistribution()` to estimate the distribution of fine roots according to the linear dose response model. For example the first row is:
 ```{r}
-root.ldrDistribution(exampleforest$treeData$Z50[1], 
+root_ldrDistribution(exampleforest$treeData$Z50[1], 
                      exampleforest$treeData$Z95[1],
                      examplesoil$dVec)
 ```
-An analogous function `root.conicDistribution()` can be used to estimate fine root distribution according to a cone. The user is free to build any numeric matrix for root distribution, as long as values in rows sum always one (i.e. we have proportions). Otherwise, functions `root.conicDistribution()` and `root.ldrDistribution()` can be used to calculate root distribution under specific assumptions.
+An analogous function `root_conicDistribution()` can be used to estimate fine root distribution according to a cone. The user is free to build any numeric matrix for root distribution, as long as values in rows sum always one (i.e. we have proportions). Otherwise, functions `root_conicDistribution()` and `root_ldrDistribution()` can be used to calculate root distribution under specific assumptions.
 
 
 ### Meteorological forcing

@@ -23,13 +23,13 @@ const double lightResponseCurvature = 0.9;
  *  Oi - Oxigen concentration (mmol*mol-1)
  */
 //Compensation point (micromol * mol-1)
-// [[Rcpp::export("photo.GammaTemp")]]
+// [[Rcpp::export("photo_GammaTemp")]]
 double gammaTemp(double leaf_temp) {return(42.75*exp((37830*(leaf_temp-25.0))/(298.0*R_gas*(leaf_temp+273))));} 
 //Michaelis-Menten coefficients of Rubisco for Carbon (micromol * mol-1)
 double KcTemp(double leaf_temp) {return(404.9*exp((79430*(leaf_temp-25.0))/(298.0*R_gas*(leaf_temp+273))));}
 //Michaelis-Menten coefficients of Rubisco for Oxigen (mmol * mol-1)
 double KoTemp(double leaf_temp) {return(278.4*exp((36380*(leaf_temp-25.0))/(298.0*R_gas*(leaf_temp+273))));}
-// [[Rcpp::export("photo.KmTemp")]]
+// [[Rcpp::export("photo_KmTemp")]]
 double KmTemp(double leaf_temp, double Oi = 209.0) {
   double Kc = KcTemp(leaf_temp);
   double Ko = KoTemp(leaf_temp);  
@@ -48,7 +48,7 @@ double KmTemp(double leaf_temp, double Oi = 209.0) {
  *  leaf_temp - Leaf temperature (ºC)
  *  Vmax298 - maximum carboxylation rate at 298ºK (ie. 25 ºC) (micromol*s-1*m-2)
  */
-// [[Rcpp::export("photo.VmaxTemp")]]
+// [[Rcpp::export("photo_VmaxTemp")]]
 double VmaxTemp(double Vmax298, double leaf_temp) {
   double Ha = 73637.0; //Energy of activation J * mol-1
   double Hd = 149252.0; //Energy of deactivation J * mol-1
@@ -69,7 +69,7 @@ double VmaxTemp(double Vmax298, double leaf_temp) {
  *  leaf_temp - Leaf temperature (ºC)
  *  Jmax298 - maximum electron transport rate at 298ºK (ie. 25 ºC) (micromol*s-1*m-2)
  */
-// [[Rcpp::export("photo.JmaxTemp")]]
+// [[Rcpp::export("photo_JmaxTemp")]]
 double JmaxTemp(double Jmax298, double leaf_temp) {
   double Ha = 50300.0; //Energy of activation J * mol-1
   double Hd = 152044.0; //Energy of deactivation J * mol-1
@@ -89,7 +89,7 @@ double JmaxTemp(double Jmax298, double leaf_temp) {
  * 
  * return units: micromol*s-1*m-2
  */
-// [[Rcpp::export("photo.electronLimitedPhotosynthesis")]]
+// [[Rcpp::export("photo_electronLimitedPhotosynthesis")]]
 double electronLimitedPhotosynthesis(double Q, double Ci, double GT, double Jmax) {
   double J = ((quantumYield*Q+Jmax)-sqrt(pow(quantumYield*Q+Jmax, 2.0) - 4.0*lightResponseCurvature*quantumYield*Q*Jmax))/(2.0*lightResponseCurvature);
   return((J/4.0)*((Ci-GT)/(Ci+2.0*GT)));
@@ -109,7 +109,7 @@ double electronLimitedPhotosynthesisDerivative(double Q, double Ci, double GT, d
  * 
  * return units: micromol*s-1*m-2
  */
-// [[Rcpp::export("photo.rubiscoLimitedPhotosynthesis")]]
+// [[Rcpp::export("photo_rubiscoLimitedPhotosynthesis")]]
 double rubiscoLimitedPhotosynthesis(double Ci, double GT, double Km, double Vmax) {
   return(Vmax *(Ci-GT)/(Ci+Km));
 }
@@ -160,7 +160,7 @@ double fder(double x, double Q, double Ca, double Gc, double GT, double Km, doub
  * 
  * return units: micromol*s-1*m-2
  */
-// [[Rcpp::export("photo.photosynthesis")]]
+// [[Rcpp::export("photo_photosynthesis")]]
 double leafphotosynthesis(double Q, double Catm, double Gc, double leaf_temp, double Vmax298, double Jmax298, bool verbose=false) {
   //Corrections per leaf temperature
   double GT = gammaTemp(leaf_temp);
@@ -182,7 +182,7 @@ double leafphotosynthesis(double Q, double Catm, double Gc, double leaf_temp, do
 }
 
 
-// [[Rcpp::export("photo.leafPhotosynthesisFunction")]]
+// [[Rcpp::export("photo_leafPhotosynthesisFunction")]]
 DataFrame leafPhotosynthesisFunction(NumericVector E, double Catm, double Patm, double Tair, double vpa, double u, 
                              double absRad, double Q, double Vmax298, double Jmax298, double Gwmin, double Gwmax, 
                              double leafWidth = 1.0, double refLeafArea = 1.0, bool verbose = false) {
@@ -232,7 +232,7 @@ DataFrame leafPhotosynthesisFunction(NumericVector E, double Catm, double Patm, 
  * return units: micromol*s-1*m-2
  */
 
-// [[Rcpp::export("photo.sunshadePhotosynthesisFunction")]]
+// [[Rcpp::export("photo_sunshadePhotosynthesisFunction")]]
 DataFrame sunshadePhotosynthesisFunction(NumericVector E, double Catm, double Patm, double Tair, double vpa, 
                                   double SLarea, double SHarea,
                                   double u, double absRadSL, double absRadSH,
@@ -287,7 +287,7 @@ DataFrame sunshadePhotosynthesisFunction(NumericVector E, double Catm, double Pa
                       Named("LeafVPDSH") = leafVPDSH));
 }
 
-// [[Rcpp::export("photo.multilayerPhotosynthesisFunction")]]
+// [[Rcpp::export("photo_multilayerPhotosynthesisFunction")]]
 DataFrame multilayerPhotosynthesisFunction(NumericVector E, double Catm, double Patm, double Tair, double vpa, 
                                   NumericVector SLarea, NumericVector SHarea,
                                   NumericVector u, NumericVector absRadSL, NumericVector absRadSH,

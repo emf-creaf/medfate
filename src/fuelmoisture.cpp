@@ -148,7 +148,7 @@ double coarse100hday(double m0,
 *   spwb - The output of soil water balance
 *   x - The object of class spwbInput on which simulations were conducted
 */
-// [[Rcpp::export("fuel.cohortFineFMC")]]
+// [[Rcpp::export("fuel_cohortFineFMC")]]
 List cohortFineFuelMoistureContent(List spwb, List x) {
   //Draw cohort-based variables
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);

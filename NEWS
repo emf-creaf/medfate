@@ -4,8 +4,9 @@
 
 __Version history__
 
-_Version 0.7.5, April 2019.
+_Version 0.8.0, April 2019.
 1. Move spatial classes and methods to package 'medfateland'
+2. Implement underscores instead of dots to separate function groups and function names
 
 _Version 0.7.4, March 2019.
 1. Fixing bugs for installation in all platforms

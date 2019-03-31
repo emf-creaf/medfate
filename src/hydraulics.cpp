@@ -14,7 +14,7 @@ double const cmhead2MPa = 0.00009804139; //Constant to transform cm head to MPa
 /**
  * Whole-plant conductance function (simple water balance model)
  */
-// [[Rcpp::export("hydraulics.psi2K")]]
+// [[Rcpp::export("hydraulics_psi2K")]]
 double Psi2K(double psi, double Psi_extract, double ws = 3.0) {
   return(exp(-0.6931472*pow(std::abs(psi/Psi_extract),ws)));
 }
@@ -31,7 +31,7 @@ NumericVector Psi2K(double psi, NumericVector Psi_extract, double ws = 3.0) {
  * Inverse of the whole-plant conductance function. Used to obtain the 'average' soil water
  * potential perceived by each plant cohort.
  */
-// [[Rcpp::export("hydraulics.K2Psi")]]
+// [[Rcpp::export("hydraulics_K2Psi")]]
 double K2Psi(double K, double Psi_extract, double ws = 3.0) {
   double psi = Psi_extract*pow(log(K)/(-0.6931472),1.0/ws);
   if(psi>0.0) psi = -psi; //Usually psi_extr is a positive number
@@ -46,7 +46,7 @@ NumericVector K2Psi(NumericVector K, NumericVector Psi_extract, double ws = 3.0)
   return psi;
 }
 
-// [[Rcpp::export("hydraulics.averagePsi")]]
+// [[Rcpp::export("hydraulics_averagePsi")]]
 double averagePsi(NumericVector psi, NumericVector v, double c, double d) {
   int nlayers = psi.size();
   NumericVector K(nlayers);
@@ -57,7 +57,7 @@ double averagePsi(NumericVector psi, NumericVector v, double c, double d) {
 
 
 
-// [[Rcpp::export("hydraulics.xylemConductance")]]
+// [[Rcpp::export("hydraulics_xylemConductance")]]
 double xylemConductance(double psi, double kxylemmax, double c, double d) {
   // if(psi>0.0) {
   //   Rcout<< psi<<"\n";
@@ -67,12 +67,12 @@ double xylemConductance(double psi, double kxylemmax, double c, double d) {
   return(kxylemmax*exp(-pow(psi/d,c)));
 }
 
-// [[Rcpp::export("hydraulics.xylemPsi")]]
+// [[Rcpp::export("hydraulics_xylemPsi")]]
 double xylemPsi(double kxylem, double kxylemmax, double c, double d) {
   return(d*pow(-log(kxylem/kxylemmax),1.0/c));
 }
 
-// [[Rcpp::export("hydraulics.psiCrit")]]
+// [[Rcpp::export("hydraulics_psiCrit")]]
 double psiCrit(double c, double d, double pCrit = 0.001) {
   return(d * pow(-log(pCrit), 1.0/c));
 }
@@ -81,7 +81,7 @@ double psiCrit(double c, double d, double pCrit = 0.001) {
  * Van genuchten-mualem conductance equation (m = 1 - 1/n; l = 0.5)
  */
 
-// [[Rcpp::export("hydraulics.vanGenuchtenConductance")]]
+// [[Rcpp::export("hydraulics_vanGenuchtenConductance")]]
 double vanGenuchtenConductance(double psi, double krhizomax, double n, double alpha) {
   double v = 1.0/(pow(alpha*std::abs(psi),n)+1.0);
   return(krhizomax*pow(v,(n-1.0)/(2.0*n))*pow(pow((1.0-v),(n-1.0)/n)-1.0,2.0));
@@ -138,7 +138,7 @@ double Egammainv(double Eg, double kxylemmax, double c, double d, double psiCav 
 /*
  * Integral of the xylem vulnerability curve
  */
-// [[Rcpp::export("hydraulics.EXylem")]]
+// [[Rcpp::export("hydraulics_EXylem")]]
 double EXylem(double psiPlant, double psiUpstream, 
               double kxylemmax, double c, double d, 
               bool allowNegativeFlux = true, double psiCav = 0.0) {
@@ -146,7 +146,7 @@ double EXylem(double psiPlant, double psiUpstream,
   return(Egamma(psiPlant, kxylemmax, c, d, psiCav)-Egamma(psiUpstream, kxylemmax, c,d, psiCav));
 }
 
-// [[Rcpp::export("hydraulics.E2psiXylem")]]
+// [[Rcpp::export("hydraulics_E2psiXylem")]]
 double E2psiXylem(double E, double psiUpstream, 
                   double kxylemmax, double c, double d, double psiCav = 0.0) {
   if(E==0) return(psiUpstream);
@@ -159,7 +159,7 @@ double E2psiXylem(double E, double psiUpstream,
  * Van Lier QDJ, Neto DD, Metselaar K (2009) Modeling of transpiration reduction in van genuchten-mualem type soils. 
  * Water Resour Res 45:1–9. doi: 10.1029/2008WR006938
  */
-// [[Rcpp::export("hydraulics.EVanGenuchten")]]
+// [[Rcpp::export("hydraulics_EVanGenuchten")]]
 double EVanGenuchten(double psiRhizo, double psiSoil, double krhizomax, 
                      double n, double alpha, double l = 0.5) {
   double m = 1.0 - (1.0/n);
@@ -212,7 +212,7 @@ double EVanGenuchten(double psiRhizo, double psiSoil, double krhizomax,
 //   return(E);
 // }
 
-// [[Rcpp::export("hydraulics.ECrit")]]
+// [[Rcpp::export("hydraulics_ECrit")]]
 double ECrit(double psiUpstream, double kxylemmax, double c, double d, double pCrit = 0.001) {
   return(EXylem(psiCrit(c,d, pCrit), psiUpstream, kxylemmax, c, d));
 }
@@ -245,7 +245,7 @@ double ECrit(double psiUpstream, double kxylemmax, double c, double d, double pC
 // }
 
 
-// [[Rcpp::export("hydraulics.ECapacitance")]]
+// [[Rcpp::export("hydraulics_ECapacitance")]]
 double ECapacitance(double psi, double psiPrev, double PLCprev,
                     double V, double fapo, double c, double d, 
                     double pi0, double eps,
@@ -295,7 +295,7 @@ double ECapacitance(double psi, double psiPrev, double PLCprev,
 // }
 
 
-// [[Rcpp::export("hydraulics.E2psiVanGenuchten")]]
+// [[Rcpp::export("hydraulics_E2psiVanGenuchten")]]
 double E2psiVanGenuchten(double E, double psiSoil, double krhizomax, double n, double alpha, 
                          double psiStep = -0.0001, double psiMax = -10.0) {
   if(E<0.0) stop("E has to be positive");
@@ -317,7 +317,7 @@ double E2psiVanGenuchten(double E, double psiSoil, double krhizomax, double n, d
 }
 
 
-// [[Rcpp::export("hydraulics.E2psiTwoElements")]]
+// [[Rcpp::export("hydraulics_E2psiTwoElements")]]
 double E2psiTwoElements(double E, double psiSoil, double krhizomax, double kxylemmax, double n, double alpha, double c, double d, double psiCav = 0.0,
                         double psiStep = -0.0001, double psiMax = -10.0) {
   if(E<0.0) stop("E has to be positive");
@@ -394,7 +394,7 @@ void lubksb(NumericMatrix a, int n, IntegerVector indx, NumericVector b) {
 }
 
 
-// [[Rcpp::export("hydraulics.E2psiBelowground")]]
+// [[Rcpp::export("hydraulics_E2psiBelowground")]]
 List E2psiBelowground(double E, NumericVector psiSoil, 
                   NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
                   NumericVector krootmax, double rootc, double rootd, 
@@ -514,7 +514,7 @@ List E2psiBelowground(double E, NumericVector psiSoil,
 
 
 
-// [[Rcpp::export("hydraulics.E2psiAboveground")]]
+// [[Rcpp::export("hydraulics_E2psiAboveground")]]
 List E2psiAboveground(double E, double psiRootCrown, 
                   double kstemmax, double stemc, double stemd,
                   double kleafmax, double leafc, double leafd,
@@ -533,7 +533,7 @@ List E2psiAboveground(double E, double psiRootCrown,
   return(List::create( Named("E")=E, Named("psiStem") =psiStem,Named("psiLeaf") =psiLeaf,Named("kterm") = kterm));
 }
 
-// [[Rcpp::export("hydraulics.E2psiAbovegroundCapacitance")]]
+// [[Rcpp::export("hydraulics_E2psiAbovegroundCapacitance")]]
 List E2psiAbovegroundCapacitance(double E, double psiRootCrown, 
                          NumericVector psiStemPrev, NumericVector PLCstem,
                          double psiLeafPrev, 
@@ -711,7 +711,7 @@ List E2psiAbovegroundCapacitance(double E, double psiRootCrown,
 // }
 
 
-// [[Rcpp::export("hydraulics.E2psiAbovegroundCapacitanceDisconnected")]]
+// [[Rcpp::export("hydraulics_E2psiAbovegroundCapacitanceDisconnected")]]
 List E2psiAbovegroundCapacitanceDisconnected(double E,                           
                       NumericVector psiStemPrev, NumericVector PLCstem, NumericVector RWCsympstemPrev, 
                       double psiLeafPrev, double RWCsympleafPrev,
@@ -835,7 +835,7 @@ List E2psiAbovegroundCapacitanceDisconnected(double E,
 }
 
 
-// [[Rcpp::export("hydraulics.E2psiNetwork")]]
+// [[Rcpp::export("hydraulics_E2psiNetwork")]]
 List E2psiNetwork(double E, NumericVector psiSoil, 
                   NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
                   NumericVector krootmax, double rootc, double rootd, 
@@ -876,7 +876,7 @@ List E2psiNetwork(double E, NumericVector psiSoil,
                       Named("kterm") = kterm, Named("x") = E2psiRS["x"]));
 } 
 
-// [[Rcpp::export("hydraulics.E2psiNetworkCapacitance")]]
+// [[Rcpp::export("hydraulics_E2psiNetworkCapacitance")]]
 List E2psiNetworkCapacitance(double E, NumericVector psiSoil, 
                              NumericVector psiStemPrev, NumericVector PLCstem,
                              double psiLeafPrev, 
@@ -929,7 +929,7 @@ List E2psiNetworkCapacitance(double E, NumericVector psiSoil,
                       Named("kterm") = kterm, Named("x") = E2psiRS["x"]));
 } 
 
-// [[Rcpp::export("hydraulics.supplyFunctionOneXylem")]]
+// [[Rcpp::export("hydraulics_supplyFunctionOneXylem")]]
 List supplyFunctionOneXylem(NumericVector psiSoil, NumericVector v,
                             double kstemmax, double stemc, double stemd, double psiCav = 0.0,
                             int maxNsteps=200, double dE=0.01) {
@@ -1007,7 +1007,7 @@ List supplyFunctionOneXylem(NumericVector psiSoil, NumericVector v,
   
 }
 
-// [[Rcpp::export("hydraulics.supplyFunctionTwoElements")]]
+// [[Rcpp::export("hydraulics_supplyFunctionTwoElements")]]
 List supplyFunctionTwoElements(double Emax, double psiSoil, double krhizomax, double kxylemmax, double n, double alpha, double c, double d, 
                                double psiCav = 0.0, 
                                double dE = 0.1, double psiMax = -10.0) {
@@ -1092,7 +1092,7 @@ List supplyFunctionTwoElements(double Emax, double psiSoil, double krhizomax, do
                       Named("dEdP")=supplydEdp));
 }
 
-// [[Rcpp::export("hydraulics.supplyFunctionThreeElements")]]
+// [[Rcpp::export("hydraulics_supplyFunctionThreeElements")]]
 List supplyFunctionThreeElements(double Emax, double psiSoil, double krhizomax, double kxylemmax, double kleafmax, 
                                  double n, double alpha, 
                                  double stemc, double stemd, 
@@ -1215,7 +1215,7 @@ List supplyFunctionThreeElements(double Emax, double psiSoil, double krhizomax, 
                       Named("dEdP")=supplydEdp));
 }
 
-// [[Rcpp::export("hydraulics.supplyFunctionBelowground")]]
+// [[Rcpp::export("hydraulics_supplyFunctionBelowground")]]
 List supplyFunctionBelowground(NumericVector psiSoil, 
                            NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
                            NumericVector krootmax, double rootc, double rootd, 
@@ -1305,7 +1305,7 @@ List supplyFunctionBelowground(NumericVector psiSoil,
 
 
 
-// [[Rcpp::export("hydraulics.supplyFunctionAboveground")]]
+// [[Rcpp::export("hydraulics_supplyFunctionAboveground")]]
 List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootCrown, 
                                double kstemmax, double stemc, double stemd,
                                double kleafmax, double leafc, double leafd,
@@ -1374,7 +1374,7 @@ List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootCr
   
 }
 
-// [[Rcpp::export("hydraulics.supplyFunctionAbovegroundCapacitance")]]
+// [[Rcpp::export("hydraulics_supplyFunctionAbovegroundCapacitance")]]
 List supplyFunctionAbovegroundCapacitance(NumericVector Erootcrown, NumericVector psiRootCrown,
                                   NumericVector psiStemPrev, NumericVector PLCstemPrev,
                                   double psiLeafPrev, 
@@ -1558,7 +1558,7 @@ List supplyFunctionAbovegroundCapacitance(NumericVector Erootcrown, NumericVecto
 // }
 
 
-// [[Rcpp::export("hydraulics.supplyFunctionNetwork")]]
+// [[Rcpp::export("hydraulics_supplyFunctionNetwork")]]
 List supplyFunctionNetwork(NumericVector psiSoil, 
                            NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
                            NumericVector krootmax, double rootc, double rootd, 
@@ -1681,7 +1681,7 @@ List supplyFunctionNetwork(NumericVector psiSoil,
   
 }
 
-// [[Rcpp::export("hydraulics.supplyFunctionNetworkCapacitance")]]
+// [[Rcpp::export("hydraulics_supplyFunctionNetworkCapacitance")]]
 List supplyFunctionNetworkCapacitance(NumericVector psiSoil, 
                                       NumericVector psiStemPrev, NumericVector PLCstemPrev,
                                       double psiLeafPrev, 
@@ -1838,7 +1838,7 @@ List supplyFunctionNetworkCapacitance(NumericVector psiSoil,
 }
 
 
-// [[Rcpp::export("hydraulics.regulatedPsiXylem")]]
+// [[Rcpp::export("hydraulics_regulatedPsiXylem")]]
 NumericVector regulatedPsiXylem(double E, double psiUpstream, double kxylemmax, double c, double d, double psiStep = -0.01) {
   //If Ein > Ecrit then set Ein to Ecrit
   double psiUnregulated = E2psiXylem(E, psiUpstream, kxylemmax, c, d, 0.0);
@@ -1866,7 +1866,7 @@ NumericVector regulatedPsiXylem(double E, double psiUpstream, double kxylemmax, 
   return(NumericVector::create(psiUnregulated, psiRegulated, Ein, Efin, relativeConductance1, relativeConductance2));
 }
 
-// [[Rcpp::export("hydraulics.regulatedPsiTwoElements")]]
+// [[Rcpp::export("hydraulics_regulatedPsiTwoElements")]]
 NumericVector regulatedPsiTwoElements(double Emax, double psiSoil, double krhizomax, double kxylemmax, double n, double alpha, double c, double d, double dE = 0.1, double psiMax = -10.0) {
   List s = supplyFunctionTwoElements(Emax, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, 0.0, dE,psiMax);
   NumericVector supplyPsi = s["PsiPlant"];
@@ -1905,7 +1905,7 @@ NumericVector regulatedPsiTwoElements(double Emax, double psiSoil, double krhizo
 
 
 
-// [[Rcpp::export("hydraulics.psi2Weibull")]]
+// [[Rcpp::export("hydraulics_psi2Weibull")]]
 NumericVector psi2Weibull(double psi50, double psi88) {
   double psiRatio = psi50/psi88;
   double a = 0.3269156; // log(0.5)/log(0.12);
@@ -1916,7 +1916,7 @@ NumericVector psi2Weibull(double psi50, double psi88) {
   return(par);
 }
 
-// [[Rcpp::export("hydraulics.maximumSoilPlantConductance")]]
+// [[Rcpp::export("hydraulics_maximumSoilPlantConductance")]]
 double maximumSoilPlantConductance(NumericVector krhizomax, NumericVector krootmax, 
                                    double kstemmax, double kleafmax) {
   int nlayers = krhizomax.length();
@@ -1933,7 +1933,7 @@ double maximumSoilPlantConductance(NumericVector krhizomax, NumericVector krootm
   return(1.0/(rrhizo+rroot+rstem+rleaf));
 }
 
-// [[Rcpp::export("hydraulics.soilPlantResistances")]]
+// [[Rcpp::export("hydraulics_soilPlantResistances")]]
 NumericVector soilPlantResistances(NumericVector psiSoil, NumericVector psiRhizo, 
                                    NumericVector psiStem, NumericVector PLCstem,
                                    double psiLeaf, 
@@ -1979,7 +1979,7 @@ double rhizosphereResistancePercent(double psiSoil,
   return(100.0*(1.0/krhizo)/((1.0/kroot)+(1.0/kstem)+(1.0/kleaf)+(1.0/krhizo)));
 }
 
-// [[Rcpp::export("hydraulics.averageRhizosphereResistancePercent")]]
+// [[Rcpp::export("hydraulics_averageRhizosphereResistancePercent")]]
 double averageRhizosphereResistancePercent(double krhizomax, double n, double alpha,
                                            double krootmax, double rootc, double rootd,
                                            double kstemmax, double stemc, double stemd, 
@@ -1997,7 +1997,7 @@ double averageRhizosphereResistancePercent(double krhizomax, double n, double al
   return(sum/cnt);
 }
 
-// [[Rcpp::export("hydraulics.findRhizosphereMaximumConductance")]]
+// [[Rcpp::export("hydraulics_findRhizosphereMaximumConductance")]]
 double findRhizosphereMaximumConductance(double averageResistancePercent, double n, double alpha,
                                          double krootmax, double rootc, double rootd,
                                          double kstemmax, double stemc, double stemd,
@@ -2033,7 +2033,7 @@ double findRhizosphereMaximumConductance(double averageResistancePercent, double
  * height - Tree height in cm
  */
 
-// [[Rcpp::export("hydraulics.taperFactorSavage")]]
+// [[Rcpp::export("hydraulics_taperFactorSavage")]]
 double taperFactorSavage(double height) {
   double b_p0 = 1.32, b_p13 = 1.85; //normalizing constants (p = 1/3)
   double a_p0 = 7.20E-13, a_p13 = 6.67E-13;
@@ -2049,14 +2049,14 @@ double taperFactorSavage(double height) {
  *  
  *  height - plant height in cm
  */
-// [[Rcpp::export("hydraulics.terminalConduitRadius")]]
+// [[Rcpp::export("hydraulics_terminalConduitRadius")]]
 double terminalConduitRadius(double height) {
   double dh  = pow(10,1.257 +  0.24*log10(height/100.0));//Olson, M.E., Anfodillo, T., Rosell, J.A., Petit, G., Crivellaro, A., Isnard, S., León-Gómez, C., Alvarado-Cárdenas, L.O., & Castorena, M. 2014. Universal hydraulics of the flowering plants: Vessel diameter scales with stem length across angiosperm lineages, habits and climates. Ecology Letters 17: 988–997.
   return(dh/2.0);
 }
 
 
-// [[Rcpp::export("hydraulics.referenceConductivityHeightFactor")]]
+// [[Rcpp::export("hydraulics_referenceConductivityHeightFactor")]]
 double referenceConductivityHeightFactor(double refheight, double height) {
   double rhref  = terminalConduitRadius(refheight);
   double rh  = terminalConduitRadius(height);
@@ -2075,7 +2075,7 @@ double referenceConductivityHeightFactor(double refheight, double height) {
  * height - plant height (in cm)
  * taper - boolean to apply taper
  */
-// [[Rcpp::export("hydraulics.maximumStemHydraulicConductance")]]
+// [[Rcpp::export("hydraulics_maximumStemHydraulicConductance")]]
 double maximumStemHydraulicConductance(double xylemConductivity, double refheight, double Al2As, double height, 
                                        bool angiosperm = true, bool taper = false) {
   
@@ -2101,7 +2101,7 @@ double maximumStemHydraulicConductance(double xylemConductivity, double refheigh
  * v - proportion of fine roots in each soil layer
  * widths - soil layer depths (in mm)
  */
-// [[Rcpp::export("hydraulics.maximumRootHydraulicConductance")]]
+// [[Rcpp::export("hydraulics_maximumRootHydraulicConductance")]]
 double maximumRootHydraulicConductance(double xylemConductivity, double Al2As, NumericVector v, 
                                        NumericVector widths, double depthWidthRatio = 1.0){
   NumericVector rl = rootLengths(v,widths, depthWidthRatio);
@@ -2123,7 +2123,7 @@ double maximumRootHydraulicConductance(double xylemConductivity, double Al2As, N
  * wd - wood density (in g·cm-3)
  * http://www.fao.org/forestry/17109/en/
  */
-// [[Rcpp::export("hydraulics.stemWaterCapacity")]]
+// [[Rcpp::export("hydraulics_stemWaterCapacity")]]
 double stemWaterCapacity(double Al2As, double height, double wd) {
   return(0.48*(height/(Al2As*100.0))*(1.0- (wd/1.54)));
 }
@@ -2134,7 +2134,7 @@ double stemWaterCapacity(double Al2As, double height, double wd) {
  * SLA - Specific leaf area (in m2/kg)
  * ld - leaf density (in g/cm3 = 1000 kg/m3)
  */
-// [[Rcpp::export("hydraulics.leafWaterCapacity")]]
+// [[Rcpp::export("hydraulics_leafWaterCapacity")]]
 double leafWaterCapacity(double SLA, double ld) {
   return(1.0/(1000.0*ld*SLA))*(1.0- (ld/1.54));
 }

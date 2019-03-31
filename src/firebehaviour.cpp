@@ -6,7 +6,6 @@
 #include "forestutils.h"
 #include "fuelstructure.h"
 #include "fuelmoisture.h"
-#include "fireutils.h"
 #include "windextinction.h"
 #include <meteoland.h>
 using namespace Rcpp;
@@ -24,6 +23,30 @@ const double Mx_live_he = 1.20; //Moisture of extinction for live herb in propor
 const double BMU = 352.0; //Benchmark midflame windspeed (ft/min)
 const double VS = 900.0; //Vertical stack velocity (ft/min)
 const double B = 1.2; //Exponential response of wind coefficient to windspeed (Sandberg et al. 2007)
+
+
+/**
+ * Vector addition from polar coordinates (length, angles in radians)
+ * Angles are measured from the y-axis (north)
+ */
+NumericVector vectorAddition(NumericVector v1, NumericVector v2) {
+  //add coordinates
+  double x = v1[0]*sin(v1[1])+v2[0]*sin(v2[1]);
+  double y = v1[0]*cos(v1[1])+v2[0]*cos(v2[1]);
+  //  Rcout << x << " "<< y<<"\n";
+  return(NumericVector::create(sqrt(pow(x,2.0)+pow(y,2.0)), atan2(x, y)));
+}
+
+/**
+ * From van Wagner (1977) model
+ * CBH - crown base height (in m)
+ * M - Crown foliar moisture (in percent)
+ */
+// [[Rcpp::export(".criticalFirelineIntensity")]]
+double criticalFirelineIntensity(double CBH, double M) {
+  return(pow(0.010*(CBH)*(460.0+25.9*M),1.5));
+}
+
 /**
  * FCCS
  * 
@@ -38,7 +61,7 @@ const double B = 1.2; //Exponential response of wind coefficient to windspeed (S
  *  
  *  Strata indices:  0 - Canopy, 1 - Shrub, 2- Herb, 3 - Woody, 4 - Litter
  */
-// [[Rcpp::export("fire.FCCS")]]
+// [[Rcpp::export("fire_FCCS")]]
 List FCCSbehaviour(DataFrame FCCSpropsSI,
           NumericVector MliveSI = NumericVector::create(90, 90, 60), 
           NumericVector MdeadSI = NumericVector::create(6, 6, 6, 6, 6), 
@@ -350,7 +373,7 @@ List FCCSbehaviour(DataFrame FCCSpropsSI,
  *  aspect: aspect (in degrees from north)
  * 
  */
-// [[Rcpp::export("fire.Rothermel")]]
+// [[Rcpp::export("fire_Rothermel")]]
 List rothermel(String modeltype, NumericVector wSI, NumericVector sSI, double delta, double mx_dead,
                   NumericVector hSI, NumericVector mSI, double u, double windDir, double slope, double aspect) {
   //Rescale variables to units of rothermel model

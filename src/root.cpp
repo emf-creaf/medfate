@@ -89,7 +89,7 @@ NumericVector conicRS_one(double Zcone, NumericVector d){
   return(Vd);
 }
 
-// [[Rcpp::export("root.conicDistribution")]]
+// [[Rcpp::export("root_conicDistribution")]]
 NumericMatrix conicDistribution(NumericVector Zcone, NumericVector d) {
   int numCohorts = Zcone.size();
   NumericMatrix P(numCohorts,d.size());
@@ -105,7 +105,7 @@ NumericMatrix conicDistribution(NumericVector Zcone, NumericVector d) {
  * 
  * Schenk, H., Jackson, R., 2002. The global biogeography of roots. Ecol. Monogr. 72, 311–328.
  */
-// [[Rcpp::export("root.ldrDistribution")]]
+// [[Rcpp::export("root_ldrDistribution")]]
 NumericMatrix ldrDistribution(NumericVector Z50, NumericVector Z95, NumericVector d) {
   int numCohorts = Z50.size();
   NumericMatrix P(numCohorts,d.size());
@@ -152,7 +152,7 @@ NumericMatrix rootDistribution(NumericVector z, List x) {
  * Returs: root length in mm (same units as d)
  * 
  */
-// [[Rcpp::export("root.rootLengths")]]
+// [[Rcpp::export("root_rootLengths")]]
 NumericVector rootLengths(NumericVector v, NumericVector d, double depthWidthRatio = 1.0) {
   int nlayers = v.size();
   double maxRootDepth = 0.0;
@@ -208,7 +208,7 @@ NumericVector rootLengths(NumericVector v, NumericVector d, double depthWidthRat
  * New Phytologist 212:577–589.
  * 
  */
-// [[Rcpp::export("root.xylemConductanceProportions")]]
+// [[Rcpp::export("root_xylemConductanceProportions")]]
 NumericVector xylemConductanceProportions(NumericVector v, NumericVector d, double depthWidthRatio = 1.0) {
   int nlayers = v.size();
 

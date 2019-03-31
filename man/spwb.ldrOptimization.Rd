@@ -1,13 +1,13 @@
 \encoding{UTF-8}
-\name{spwb.ldrOptimization}
-\alias{spwb.ldrOptimization}
+\name{spwb_ldrOptimization}
+\alias{spwb_ldrOptimization}
 
 \title{Optimization of root distribution}
 
-\description{The function \code{spwb.ldrOptimization} optimizes the species root distribution within \code{spwb}, given the arguments \code{x}, \code{meteo}, \code{soil} and \code{psi_crit}. The optimization is based on the eco-hydrological equilibrium hypothesis (Eagleson, 1982), which is formulated here as the root distribution for which plant transpiration is maximized while the plant water potential is close to the species-defined critical value \code{psi_crit} (Cabon et al.,2018). Returns the optimized root distribution for each species, expressed as parameters of the function \code{root.ldrDistribution}.}
+\description{The function \code{spwb_ldrOptimization} optimizes the species root distribution within \code{spwb}, given the arguments \code{x}, \code{meteo}, \code{soil} and \code{psi_crit}. The optimization is based on the eco-hydrological equilibrium hypothesis (Eagleson, 1982), which is formulated here as the root distribution for which plant transpiration is maximized while the plant water potential is close to the species-defined critical value \code{psi_crit} (Cabon et al.,2018). Returns the optimized root distribution for each species, expressed as parameters of the function \code{root_ldrDistribution}.}
 
 \usage{
-spwb.ldrOptimization(x, soil, meteo, psi_crit, opt_mode = 1, RZmin = 301, RZmax = 4000, 
+spwb_ldrOptimization(x, soil, meteo, psi_crit, opt_mode = 1, RZmin = 301, RZmax = 4000, 
                     V1min = 0.01, V1max = 0.94, resolution = 20, heat_stop = 0, 
                     transformation = "identity", explore_out = FALSE, 
                     verbose = FALSE, ...)
@@ -46,7 +46,7 @@ spwb.ldrOptimization(x, soil, meteo, psi_crit, opt_mode = 1, RZmin = 301, RZmax 
 For each combination of the parameters RZ and V1 the function runs \code{spwb}, setting the total soil depth equal to RZ. The root proportion in each soil layer is derived from V1, the depth of the first soil layer (as defined in the argument \code{soil}) and RZ using the LDR root distribution model (Schenk and Jackson, 2002) and assuming that the depth containing 95 percent of the roots is equal to RZ. \code{psi_crit}, the species specific water potential inducing hydraulic failure, can be approached by the water potential inducing 50 percent of loss of conductance for the and gymnosperms and 88 percent for the angiosperms (Urli et al., 2013, Brodribb et al., 2010). Details of the hypothesis and limitations of the optimization method are given in Cabon et al. (under review).
 }
 \value{
-If \code{explore_out = FALSE} returns a data frame with containing the species index used in medfate, \code{psi_crit} and the otpimized values of V1 and the LDR parameters Z50 and Z95 (see \code{\link{root.ldrDistribution}}) and as many rows as the number of species. If \code{explore_out = TRUE} returns a list containing \code{optim}, the aforementioned data frame, and \code{explore_out}, a list containing two array with the values of average daily plant transpiration and the minimum plant water potential for each species and parameter combination.
+If \code{explore_out = FALSE} returns a data frame with containing the species index used in medfate, \code{psi_crit} and the otpimized values of V1 and the LDR parameters Z50 and Z95 (see \code{\link{root_ldrDistribution}}) and as many rows as the number of species. If \code{explore_out = TRUE} returns a list containing \code{optim}, the aforementioned data frame, and \code{explore_out}, a list containing two array with the values of average daily plant transpiration and the minimum plant water potential for each species and parameter combination.
 }
 \references{
 Brodribb, T.J., Bowman, D.J.M.S., Nichols, S., Delzon, S., Burlett, R., 2010. Xylem function and growth rate interact to determine recovery rates after exposure to extreme water deficit. New Phytol. 188, 533–542. doi:10.1111/j.1469-8137.2010.03393.x
@@ -65,7 +65,7 @@ Antoine Cabon, Centre Tecnologic Forestal de Catalunya
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 \seealso{
- \code{\link{spwb}}, \code{\link{soil}}, \code{\link{root.ldrDistribution}}
+ \code{\link{spwb}}, \code{\link{soil}}, \code{\link{root_ldrDistribution}}
 }
 
 \examples{
@@ -89,7 +89,7 @@ control = defaultControl()
 x = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 
 #Run optimization
-spwb.ldrOptimization(x = x, soil = examplesoil, meteo = examplemeteo, 
+spwb_ldrOptimization(x = x, soil = examplesoil, meteo = examplemeteo, 
                      psi_crit = c(-2,-3,-4), elevation = 100)
 }
 

@@ -33,7 +33,7 @@ IntegerVector date2doy(CharacterVector dateStrings) {
  * B. Y. H. Liu and R. C. Jordan, “The interrelationship and characteristic distribution of direct, diffuse and total solar radiation,” 
  * Solar Energy, vol. 4, no. 3, pp. 1–19, 1960. 
  */
-// [[Rcpp::export("biophysics.radiationDiurnalPattern")]]
+// [[Rcpp::export("biophysics_radiationDiurnalPattern")]]
 double radiationDiurnalPattern(double t, double daylength) {
   double ws = (daylength/3600.0)*(PI/24.0); //sunrise
   double w = ws - (t/daylength)*(ws*2.0);
@@ -51,7 +51,7 @@ double radiationDiurnalPattern(double t, double daylength) {
  * Modelling the yield of Pinus radiata on a site limited by water and nitrogen. 
  * Forest Ecology and Management 30:381–413.
  */
-// [[Rcpp::export("biophysics.temperatureDiurnalPattern")]]
+// [[Rcpp::export("biophysics_temperatureDiurnalPattern")]]
 double temperatureDiurnalPattern(double t, double tmin, double tmax, double daylength) {
   double temp;
   if((t<0) | (t>daylength)) {
@@ -78,7 +78,7 @@ double temperatureDiurnalPattern(double t, double tmin, double tmax, double dayl
  *  leafWidth - Leaf width (here in cm)
  *  u - wind speed above the leaf boundary layer (in m/s)
  */
-// [[Rcpp::export("biophysics.leafTemperature")]]
+// [[Rcpp::export("biophysics_leafTemperature")]]
 double leafTemperature(double absRad, double airTemperature, double u, double E,  double leafWidth = 1.0) {
   double lambda = meteoland::utils_latentHeatVaporisationMol(airTemperature);
   u = std::max(u, 0.1);//Force minimum wind speed to avoid excessive heating

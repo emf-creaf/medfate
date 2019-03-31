@@ -1,7 +1,7 @@
 \encoding{UTF-8}
 \name{spwb}
 \alias{spwb}
-\alias{spwb.resetInputs}
+\alias{spwb_resetInputs}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Soil-plant water balance}
@@ -10,7 +10,7 @@ Function \code{spwb()} is a water balance model that determines changes in soil 
 }
 \usage{
 spwb(x, soil, meteo,  latitude = NA, elevation = NA, slope = NA, aspect = NA)
-spwb.resetInputs(x, soil, from = NULL, day = NA)
+spwb_resetInputs(x, soil, from = NULL, day = NA)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -41,7 +41,7 @@ spwb.resetInputs(x, soil, from = NULL, day = NA)
   \item{day}{An integer with the day from which state variable values stored in \code{from} should be copied. If missing, values are copied from the first day of stored values.}
 }
 \details{
-  Detailed model description is available in the vignettes section. The model using 'Simple' transpiration mode is described in De Caceres et al. (2015). Simulations using the 'Complex' transpiration mode are computationally much more expensive. Function \code{spwb.resetInputs()} allows resetting state variables in \code{x} and \code{soil} to their defaults, or to copy values of state variables from a previous \code{spwb()} simulation results stored in \code{from}.
+  Detailed model description is available in the vignettes section. The model using 'Simple' transpiration mode is described in De Caceres et al. (2015). Simulations using the 'Complex' transpiration mode are computationally much more expensive. Function \code{spwb_resetInputs()} allows resetting state variables in \code{x} and \code{soil} to their defaults, or to copy values of state variables from a previous \code{spwb()} simulation results stored in \code{from}.
 }
 \value{
   Function \code{spwb} returns a list of class 'spwb' with the following elements:
@@ -84,7 +84,7 @@ spwb.resetInputs(x, soil, from = NULL, day = NA)
      \item{\code{"PlantPhotosynthesis"}: A data frame with the amount of daily net photosynthesis (in g C·m-2) for each plant cohort. Days are in rows and plant cohorts are in columns.}
      \item{\code{"PlantPsi"}: A data frame with the average daily water potential of each plant (in MPa). Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
      \item{\code{"PlantStress"}: A data frame with the amount of daily stress [0-1] suffered by each plant cohort (relative whole-plant conductance). Days are in rows and plant cohorts are in columns.}
-     \item{\code{"subdaily"}: A list of objects of class \code{\link{spwb.day}}, one per day simulated (only if required in \code{control} parameters, see \code{\link{defaultControl}}).}
+     \item{\code{"subdaily"}: A list of objects of class \code{\link{spwb_day}}, one per day simulated (only if required in \code{control} parameters, see \code{\link{defaultControl}}).}
   }
   If \code{transpirationMode=="Complex"} the list also includes the following elements:
  \itemize{
@@ -109,11 +109,11 @@ De \enc{Cáceres}{Caceres} M, \enc{Martínez}{Martinez}-Vilalta J, Coll L, Llore
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 \note{
-State variables stored in objects \code{x} and \code{soil} are modified during the simulation. Use function \code{spwb.resetInputs()} to reset state variables to defaults. Daily transpiration and photosynthesis values are stored in columns \code{Transpiration} and \code{Photosynthesis} of object \code{x}. Water content relative to field capacity (vector \code{W}) of \code{soil} is also modified.  
+State variables stored in objects \code{x} and \code{soil} are modified during the simulation. Use function \code{spwb_resetInputs()} to reset state variables to defaults. Daily transpiration and photosynthesis values are stored in columns \code{Transpiration} and \code{Photosynthesis} of object \code{x}. Water content relative to field capacity (vector \code{W}) of \code{soil} is also modified.  
 }
 \seealso{
-\code{\link{spwbInput}}, \code{\link{spwb.day}}, \code{\link{plot.spwb}},  
-\code{\link{spwb.ldrOptimization}}, \code{\link{forest}}
+\code{\link{spwbInput}}, \code{\link{spwb_day}}, \code{\link{plot.spwb}},  
+\code{\link{spwb_ldrOptimization}}, \code{\link{forest}}
 }
 \examples{
 #Load example daily meteorological data

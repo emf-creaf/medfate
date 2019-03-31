@@ -69,11 +69,11 @@ While Saxton equations use texture and organic matter as inputs, the Van Genucht
 par(mar=c(4,4,1,1))
 # Plot Saxton's retention curve
 psi = seq(-0.01, -2.0, by=-0.001)
-plot(-psi, lapply(as.list(psi), FUN=soil.psi2thetaSX, clay=25, sand=25), 
+plot(-psi, lapply(as.list(psi), FUN=soil_psi2thetaSX, clay=25, sand=25), 
      type="l", ylim=c(0,0.5),ylab="Water content (prop. volume)", xlab = "Soil water potential (-MPa)")
 
 #Add Van Genuchten retention curve
-lines(-psi, lapply(as.list(psi), FUN=soil.psi2thetaVG, 
+lines(-psi, lapply(as.list(psi), FUN=soil_psi2thetaVG, 
       alpha=examplesoil$VG_alpha[1], n = examplesoil$VG_n[1], 
       theta_res = examplesoil$VG_theta_res[1], 
       theta_sat = examplesoil$VG_theta_sat[1]), lty=2) 
@@ -82,7 +82,7 @@ legend("topright", legend=c("Saxton", "Van Genuchten"), lty=c(1,2), bty="n")
 
 ```
 
-Functions `soil.psi2thetaSX()` and `soil.psi2thetaVG()` (and their counterparts) can be used to calculate volumetric soil moisture from the water potential using the two models. When simulating soil water balance, the user can choose among the two models (see control parameters below). The soil water balance model described in this vignette uses the van Genuchten-Mualem equations for water retention curves and rhizosphere conductance.
+Functions `soil_psi2thetaSX()` and `soil_psi2thetaVG()` (and their counterparts) can be used to calculate volumetric soil moisture from the water potential using the two models. When simulating soil water balance, the user can choose among the two models (see control parameters below). The soil water balance model described in this vignette uses the van Genuchten-Mualem equations for water retention curves and rhizosphere conductance.
 
 ### Species data table
 
@@ -124,13 +124,13 @@ Regarding **belowground** information, a matrix describing for each plant cohort
 below = forest2belowground(exampleforest, examplesoil, SpParamsMED)
 below
 ```
-Function `forest2belowground()` internally takes values of `Z50` and `Z95` and calls  function `root.ldrDistribution()` to estimate the distribution of fine roots according to the linear dose response model. For example the first row is:
+Function `forest2belowground()` internally takes values of `Z50` and `Z95` and calls  function `root_ldrDistribution()` to estimate the distribution of fine roots according to the linear dose response model. For example the first row is:
 ```{r}
-root.ldrDistribution(exampleforest$treeData$Z50[1], 
+root_ldrDistribution(exampleforest$treeData$Z50[1], 
                      exampleforest$treeData$Z95[1],
                      examplesoil$dVec)
 ```
-An analogous function `root.conicDistribution()` can be used to estimate fine root distribution according to a cone. The user is free to build any numeric matrix for root distribution, as long as values in rows sum always one (i.e. we have proportions). Otherwise, functions `root.conicDistribution()` and `root.ldrDistribution()` can be used to calculate root distribution under specific assumptions.
+An analogous function `root_conicDistribution()` can be used to estimate fine root distribution according to a cone. The user is free to build any numeric matrix for root distribution, as long as values in rows sum always one (i.e. we have proportions). Otherwise, functions `root_conicDistribution()` and `root_ldrDistribution()` can be used to calculate root distribution under specific assumptions.
 
 
 ### Meteorological forcing
@@ -217,38 +217,38 @@ Finally, note that one can play with plant-specific parameters for soil water ba
 Before using the soil water balance model, is important to understand its sub-model components. Package `medfate` provides many functions corresponding to sub-models (light extinction, hydraulics, transpiration, photosynthesis...). In addition, there are high-level plotting functions that allow examining several aspects of these processes.
 
 ### Vulnerability curves
-Given a `spwbInput` object, we can use function `hydraulics.vulnerabilityCurvePlot()` to inspect **vulnerability curves**, i.e. how hydraulic conductance changes with the water potential, for each plant cohort and each of the different elements of the soil-plant hydraulic network: rhizosphere, roots, stems and leaves:
+Given a `spwbInput` object, we can use function `hydraulics_vulnerabilityCurvePlot()` to inspect **vulnerability curves**, i.e. how hydraulic conductance changes with the water potential, for each plant cohort and each of the different elements of the soil-plant hydraulic network: rhizosphere, roots, stems and leaves:
 
 ```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 7}
 par(mar=c(5,5,1,1), mfrow=c(2,2))
-hydraulics.vulnerabilityCurvePlot(x, type="leaf")
-hydraulics.vulnerabilityCurvePlot(x, type="stem")
-hydraulics.vulnerabilityCurvePlot(x, type="root")
-hydraulics.vulnerabilityCurvePlot(x, examplesoil, type="rhizo")
+hydraulics_vulnerabilityCurvePlot(x, type="leaf")
+hydraulics_vulnerabilityCurvePlot(x, type="stem")
+hydraulics_vulnerabilityCurvePlot(x, type="root")
+hydraulics_vulnerabilityCurvePlot(x, examplesoil, type="rhizo")
 ```
 
-Note that the last call to `hydraulics.vulnerabilityCurvePlot()` includes a `soil` object. This is because the van Genuchten parameters that define the vulnerability curve for the rhizosphere are stored in this object.
+Note that the last call to `hydraulics_vulnerabilityCurvePlot()` includes a `soil` object. This is because the van Genuchten parameters that define the vulnerability curve for the rhizosphere are stored in this object.
 
 ### Supply functions
 
-The vulnerability curves conformng the hydraulic network are used in the model to build the **supply function**, which relates water flow (i.e. transpiration) with the drop of water potential along the continuum. The supply function contains not only these two variables, but also the water potential of intermediate nodes in the the hydraulic network. Function `hydraulics.supplyFunctionPlot()` can be used to inspect any of this variables:
+The vulnerability curves conformng the hydraulic network are used in the model to build the **supply function**, which relates water flow (i.e. transpiration) with the drop of water potential along the continuum. The supply function contains not only these two variables, but also the water potential of intermediate nodes in the the hydraulic network. Function `hydraulics_supplyFunctionPlot()` can be used to inspect any of this variables:
 ```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 7}
 par(mar=c(5,5,1,1), mfrow=c(2,2))
-hydraulics.supplyFunctionPlot(x, examplesoil, type="E")
-hydraulics.supplyFunctionPlot(x, examplesoil, type="ERhizo")
-hydraulics.supplyFunctionPlot(x, examplesoil, type="dEdP")
-hydraulics.supplyFunctionPlot(x, examplesoil, type="psiStem")
+hydraulics_supplyFunctionPlot(x, examplesoil, type="E")
+hydraulics_supplyFunctionPlot(x, examplesoil, type="ERhizo")
+hydraulics_supplyFunctionPlot(x, examplesoil, type="dEdP")
+hydraulics_supplyFunctionPlot(x, examplesoil, type="psiStem")
 ```
 
-Calls to `hydraulics.supplyFunctionPlot()` always need both a `spwbInput` object and a `soil` object. The soil moisture state (i.e. its water potential) is the starting point for the calculation of the supply function, so different curves will be obtained for different values of soil moisture.
+Calls to `hydraulics_supplyFunctionPlot()` always need both a `spwbInput` object and a `soil` object. The soil moisture state (i.e. its water potential) is the starting point for the calculation of the supply function, so different curves will be obtained for different values of soil moisture.
 
 ### Stomatal regulation and photosynthesis
 
-The soil water balance model determines stomatal conductance and transpiration separately for sunlit and shade leaves. Stomatal conductance is determined after building a photosynthesis function corresponding to the supply function and finding the value of stomatal conductance that maximizes carbon revenue while avoiding hydraulic damage. Given a meteorological input and a chosen moment in time (day and timestep), the R function `transp.stomatalRegulationPlot()` allows displaying the supply and photosynthesis curves for sunlit and shade leaves, along with an indication of the values corresponding to the chosen stomatal conductance:
+The soil water balance model determines stomatal conductance and transpiration separately for sunlit and shade leaves. Stomatal conductance is determined after building a photosynthesis function corresponding to the supply function and finding the value of stomatal conductance that maximizes carbon revenue while avoiding hydraulic damage. Given a meteorological input and a chosen moment in time (day and timestep), the R function `transp_stomatalRegulationPlot()` allows displaying the supply and photosynthesis curves for sunlit and shade leaves, along with an indication of the values corresponding to the chosen stomatal conductance:
 
 ```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 17}
 d = 100
-transp.stomatalRegulationPlot(x, examplesoil, examplemeteo, day = d, timestep=12,
+transp_stomatalRegulationPlot(x, examplesoil, examplemeteo, day = d, timestep=12,
                               latitude = 41.82592, elevation = 100)
 ```
 
@@ -257,9 +257,9 @@ transp.stomatalRegulationPlot(x, examplesoil, examplemeteo, day = d, timestep=12
 ## Water balance for a single day
 
 ### Running the model
-Soil water balance simulations will normally span periods of several months or years, but since the model operates at a daily and subdaily temporal scales, it is possible to perform soil water balance for one day only. This is done using function `spwb.day()`. In the following code we select the same day as before from the meteorological input data and perform soil water balance for that day only:
+Soil water balance simulations will normally span periods of several months or years, but since the model operates at a daily and subdaily temporal scales, it is possible to perform soil water balance for one day only. This is done using function `spwb_day()`. In the following code we select the same day as before from the meteorological input data and perform soil water balance for that day only:
 ```{r}
-sd1<-spwb.day(x, examplesoil, rownames(examplemeteo)[d],  
+sd1<-spwb_day(x, examplesoil, rownames(examplemeteo)[d],  
              examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
              examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
              examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
@@ -267,7 +267,7 @@ sd1<-spwb.day(x, examplesoil, rownames(examplemeteo)[d],
              slope= 0, aspect = 0, prec = examplemeteo$Precipitation[d])
 ```
 
-The output of `spwb.day()` is a list with five elements:
+The output of `spwb_day()` is a list with five elements:
 ```{r}
 names(sd1)
 ```
@@ -291,7 +291,7 @@ Element `EnergyBalance` contains subdaily variation in atmosphere, canopy and so
 names(sd1$EnergyBalance)
 ```
 
-Package `medfate` provides a `plot` function for objects of class `spwb.day` that can be used to inspect the results of the simulation. We use this function to display subdaily dynamics in plant, soil and canopy variables. For example, we can use it to display temperature variations (only the temperature of the topmost soil layer is drawn):
+Package `medfate` provides a `plot` function for objects of class `spwb_day` that can be used to inspect the results of the simulation. We use this function to display subdaily dynamics in plant, soil and canopy variables. For example, we can use it to display temperature variations (only the temperature of the topmost soil layer is drawn):
 
 ```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 3.5}
 par(mar=c(4,4,1,1))
@@ -305,7 +305,7 @@ Element `Plants` contains output values by plant cohort and subdaily time step. 
 ```{r}
 names(sd1$Plants)
 ```
-With the following code, we use function `plot.spwb.day()` to draw plots of daily variation per species of plant transpiration (L·m$^{-2}$), transpiration per leaf area (in L·m$^{-2}$·LAI$^{-1}$), net photosynthesis per leaf area (in g C·m$^{-2}$·LAI$^{-1}$), and plant water potential (in MPa):
+With the following code, we use function `plot.spwb_day()` to draw plots of daily variation per species of plant transpiration (L·m$^{-2}$), transpiration per leaf area (in L·m$^{-2}$·LAI$^{-1}$), net photosynthesis per leaf area (in g C·m$^{-2}$·LAI$^{-1}$), and plant water potential (in MPa):
 ```{r, fig=TRUE, fig.align="center", fig.width=7.5, fig.height = 7.5}
 par(mar=c(5,5,1,1), mfrow=c(2,2))
 plot(sd1, type = "PlantTranspiration", bySpecies = T)
@@ -325,7 +325,7 @@ plot(sd1, type = "LeafStomatalConductance", bySpecies=TRUE)
 ## Water balance for multiple days
 
 ### Running the model
-Users will often use function `spwb()` to run the soil water balance model for several days. This function requires the `spwbInput` object, the `soil` object and the meteorological data frame. However, running `spwb.day()` modified the input objects. In particular, the soil moisture at the end of the simulation was:
+Users will often use function `spwb()` to run the soil water balance model for several days. This function requires the `spwbInput` object, the `soil` object and the meteorological data frame. However, running `spwb_day()` modified the input objects. In particular, the soil moisture at the end of the simulation was:
 ```{r}
 examplesoil$W
 ```
@@ -337,9 +337,9 @@ We can also see the current state of canopy variables:
 ```{r}
 x$canopy
 ```
-We simply use function `spwb.resetInputs()` to reset state variables to their default values, so that the new simulation is not affected by the end state of the previous simulation:
+We simply use function `spwb_resetInputs()` to reset state variables to their default values, so that the new simulation is not affected by the end state of the previous simulation:
 ```{r}
-spwb.resetInputs(x, examplesoil)
+spwb_resetInputs(x, examplesoil)
 examplesoil$W
 examplesoil$Temp
 x$canopy
@@ -352,7 +352,7 @@ Function `spwb()` returns an object of class *spwb*, actually a list:
 ```{r}
 class(S)
 ```
-If we inspect its elements, we realize that the output is arranged differently than in `spwb.day()`:
+If we inspect its elements, we realize that the output is arranged differently than in `spwb_day()`:
 ```{r}
 names(S)
 ```
@@ -405,12 +405,12 @@ summary(S, freq="month", FUN = mean, output="PlantStress", bySpecies = TRUE)
 
 Function `spwb()` does not store subdaily values in the output, because otherwise a lot of memory would be consumed. This has the drawback that, while subdaily steps are simulated, there is no trace of them. If we detect something unusual in the results at the daily scale, we may decide to inspect this in detail by re-running a particular day. Say we want to inspect day 5 of the previous simulation, which correspond to day 144 of the whole year. We start by setting the state variables to the end of the day before:
 ```{r}
-spwb.resetInputs(x, examplesoil, from = S, day = 4)
+spwb_resetInputs(x, examplesoil, from = S, day = 4)
 ```
-Now we call function `spwb.day()` for day 144 of the year:
+Now we call function `spwb_day()` for day 144 of the year:
 ```{r}
 d = 144
-sd1<-spwb.day(x, examplesoil, rownames(examplemeteo)[d], 
+sd1<-spwb_day(x, examplesoil, rownames(examplemeteo)[d], 
              examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
              examplemeteo$MinRelativeHumidity[d], 
              examplemeteo$MaxRelativeHumidity[d], 
@@ -418,7 +418,7 @@ sd1<-spwb.day(x, examplesoil, rownames(examplemeteo)[d],
              latitude = 41.82592, elevation = 100, 
              slope= 0, aspect = 0, prec = examplemeteo$Precipitation[d])
 ```
-We use function `plot.spwb.day()` to draw plots of daily variation per species of plant transpiration (L·m$^{-2}$), transpiration per leaf area (in L·m$^{-2}$·LAI$^{-1}$), net photosynthesis per leaf area (in g C·m$^{-2}$·LAI$^{-1}$), and plant water potential (in MPa):
+We use function `plot.spwb_day()` to draw plots of daily variation per species of plant transpiration (L·m$^{-2}$), transpiration per leaf area (in L·m$^{-2}$·LAI$^{-1}$), net photosynthesis per leaf area (in g C·m$^{-2}$·LAI$^{-1}$), and plant water potential (in MPa):
 ```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 7}
 par(mar=c(5,5,1,1), mfrow=c(2,2))
 plot(sd1, type = "PlantTranspiration", bySpecies = T)
