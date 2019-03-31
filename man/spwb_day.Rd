@@ -1,6 +1,8 @@
 \encoding{UTF-8}
 \name{spwb_day}
 \alias{spwb_day}
+\alias{spwb_daySimple}
+\alias{spwb_dayComplex}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Soil-plant water balance for a single day}
@@ -10,6 +12,11 @@ Function \code{spwb_day} performs water balance for a single day.
 \usage{
 spwb_day(x, soil, date, tmin, tmax, rhmin, rhmax, rad, wind, 
         latitude, elevation, slope, aspect, prec, runon = 0.0)
+spwb_daySimple(x, soil, tday, pet, prec, er, runon = 0.0, 
+               rad = NA, elevation = NA, verbose = FALSE)
+spwb_dayComplex(x, soil, tmin, tmax, rhmin, rhmax, rad, wind, 
+                latitude, elevation, solarConstant, delta, 
+                prec, er, runon = 0.0, verbose = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -17,13 +24,17 @@ spwb_day(x, soil, date, tmin, tmax, rhmin, rhmax, rad, wind,
   \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
   \item{date}{Date as string "yyyy-mm-dd".}
   \item{tmin, tmax}{Minimum and maximum temperature (in degrees Celsius).}
+  \item{tday}{Average temperature (in degrees Celsius).}  
   \item{rhmin, rhmax}{Minimum and maximum relative humidity (in percent).}
   \item{rad}{Solar radiation (in MJ/m2/day).}
   \item{wind}{Wind speed (in m/s).}
   \item{prec}{Precipitation (in mm).}
   \item{latitude}{Latitude (in degrees). Required when using the 'Complex' transpiration mode.}
   \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when using the 'Complex' transpiration mode.}
+  \item{solarConstant}{Solar constant (in kW·m-2) (see \code{\link{radiation_solarConstant}}).}
+  \item{delta}{Solar declination (in radians) (see \code{\link{radiation_solarDeclination}}).}
   \item{runon}{Surface water amount running on the target area from upslope (in mm).}
+  \item{verbose}{A flag to indicate console output.}
 }
 \details{
   Detailed model description is available in the vignettes section. The model using 'Simple' transpiration mode is described in De Caceres et al. (2015). Simulations using the 'Complex' transpiration mode are computationally much more expensive. 

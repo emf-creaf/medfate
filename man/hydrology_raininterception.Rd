@@ -1,6 +1,7 @@
 \encoding{UTF-8}
 \name{hydrology_rainInterception}
 \alias{hydrology_rainInterception}
+\alias{hydrology_er}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Rainfall interception}
@@ -9,6 +10,7 @@ Function \code{hydrology_rainInterception} calculates the amount of rainfall int
 }
 \usage{
 hydrology_rainInterception(Rainfall, Cm, p, ER=0.05, method="Gash1995") 
+hydrology_er(DOY, ERconv=0.05, ERsyn = 0.2)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -17,6 +19,8 @@ hydrology_rainInterception(Rainfall, Cm, p, ER=0.05, method="Gash1995")
   \item{p}{Proportion of throughfall (normally 1 - c, where c is the canopy cover).}
   \item{ER}{The ratio of evaporation rate to rainfall rate.}
   \item{method}{Rainfall interception method (either \code{"Gash1995"} or \code{Liu2001}).}
+  \item{DOY}{An integer vector of day of the year.}
+  \item{ERconv, ERsyn}{The ratio of evaporation rate to rainfall rate for convective storms and synoptic storms, respectively.}
 }
 \details{
 The function is prepared to accept both vectors or scalars for parameters \code{Cm}, \code{p} and \code{ER}. If they are supplied as vectors they should be of the same length as \code{Rainfall}.

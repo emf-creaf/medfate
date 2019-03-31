@@ -55,7 +55,7 @@ double shelteredMidflameWindSpeed(double wind20H, double crownFillProportion, do
  * canopyCover: canopy cover (%)
  * 
  */
-// [[Rcpp::export("fuel.windAdjustmentFactor")]]
+// [[Rcpp::export("fuel_windAdjustmentFactor")]]
 double windAdjustmentFactor(double topShrubHeight, double bottomCanopyHeight, double topCanopyHeight, double canopyCover){
   double crownFillProportion = ((topCanopyHeight-bottomCanopyHeight)/topCanopyHeight)*(canopyCover/300.0);
   if(NumericVector::is_na(topCanopyHeight)) crownFillProportion=0.0;
