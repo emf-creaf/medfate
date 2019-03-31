@@ -717,7 +717,7 @@ transp_stomatalRegulation <- function(x, soil, meteo, day, latitude, elevation) 
     .Call(`_medfate_shelteredMidflameWindSpeed`, wind20H, crownFillProportion, topCanopyHeight)
 }
 
-fuel.WindAdjustmentFactor <- function(topShrubHeight, bottomCanopyHeight, topCanopyHeight, canopyCover) {
+fuel.windAdjustmentFactor <- function(topShrubHeight, bottomCanopyHeight, topCanopyHeight, canopyCover) {
     .Call(`_medfate_windAdjustmentFactor`, topShrubHeight, bottomCanopyHeight, topCanopyHeight, canopyCover)
 }
 

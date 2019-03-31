@@ -82,7 +82,7 @@ vprofile_PARExtinction<-function(x, SpParams, z = NULL, gdd = NA, draw = TRUE) {
   else return(pep)
 }
 vprofile_SWRExtinction<-function(x, SpParams, z = NULL, gdd = NA, draw = TRUE) {
-  if(is.null(z)) z = seq(0, ceiling(max(plant_Height(x))/100)*100 , by=10)
+  if(is.null(z)) z = seq(0, ceiling(max(plant_height(x))/100)*100 , by=10)
   pep = .swrExtinctionProfile(z,x, SpParams, gdd)
   if(draw) {
     plot(pep, z, type="l", xlab="Percentage of SWR available", ylab="Height (cm)",

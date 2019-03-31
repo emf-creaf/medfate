@@ -56,7 +56,7 @@ spwb_ldrOptimization<-function(x, soil, meteo, psi_crit, opt_mode = 1,
   # mExplore[lower.tri(mExplore, diag = T)] <- F
   
   # Calculate Z50
-  Z50 <- .root.ldrZ50(V = array(V1,dim = dim(mExplore)), Z = array(Z1, dim = dim(mExplore)), Z95 = t(array(RZ, dim = dim(mExplore))))
+  Z50 <- .root_ldrZ50(V = array(V1,dim = dim(mExplore)), Z = array(Z1, dim = dim(mExplore)), Z95 = t(array(RZ, dim = dim(mExplore))))
   dimnames(Z50) <- dimnames(mExplore)
   # Prepare array for V 
   V <- array(dim = c(length(soil$dVec),length(V1), length(RZ)), 
@@ -118,7 +118,7 @@ spwb_ldrOptimization<-function(x, soil, meteo, psi_crit, opt_mode = 1,
       s.[["usda_Type"]] <- s.[["usda_Type"]][1:nl]
       
       V[,i,j] <- 0
-      x_1sp$below$V <- root.ldrDistribution(Z50 = Z50[i,j], Z95 = RZ[j], d=s.$dVec)
+      x_1sp$below$V <- root_ldrDistribution(Z50 = Z50[i,j], Z95 = RZ[j], d=s.$dVec)
       V[1:length(x_1sp$below$V),i,j] <- x_1sp$below$V
       
       # Run the model
