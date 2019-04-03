@@ -145,6 +145,7 @@ List stomatalRegulation(List x, List soil, DataFrame meteo, int day,
   int nlayers = W.size();
   
   //Vegetation input
+  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   NumericVector LAIlive = Rcpp::as<Rcpp::NumericVector>(above["LAI_live"]);
   NumericVector LAIphe = Rcpp::as<Rcpp::NumericVector>(above["LAI_expanded"]);
@@ -154,6 +155,8 @@ List stomatalRegulation(List x, List soil, DataFrame meteo, int day,
   int numCohorts = LAIlive.size();
   
   
+  NumericVector transpiration = Rcpp::as<Rcpp::NumericVector>(x["Transpiration"]);
+  NumericVector photosynthesis = Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
   NumericMatrix PLCstemMAT = Rcpp::as<Rcpp::NumericMatrix>(x["PLCstem"]);
   
   //Canopy params
@@ -261,6 +264,20 @@ List stomatalRegulation(List x, List soil, DataFrame meteo, int day,
   List abs_LWR_SH_list = lightExtinctionAbsortion["LWR_SH"];
   NumericVector fsunlit = lightExtinctionAbsortion["fsunlit"];
 
+  NumericMatrix Einst(numCohorts, ntimesteps);
+  NumericMatrix Aninst(numCohorts, ntimesteps);
+  NumericMatrix SWR_SL(numCohorts, ntimesteps);
+  NumericMatrix SWR_SH(numCohorts, ntimesteps);
+  NumericMatrix LWR_SL(numCohorts, ntimesteps);
+  NumericMatrix LWR_SH(numCohorts, ntimesteps);
+  NumericMatrix GW_SH(numCohorts, ntimesteps);
+  NumericMatrix GW_SL(numCohorts, ntimesteps);
+  NumericMatrix VPD_SH(numCohorts, ntimesteps);
+  NumericMatrix VPD_SL(numCohorts, ntimesteps);
+  NumericMatrix Temp_SH(numCohorts, ntimesteps);
+  NumericMatrix Temp_SL(numCohorts, ntimesteps);
+  NumericMatrix LAI_SH(numCohorts, ntimesteps);
+  NumericMatrix LAI_SL(numCohorts, ntimesteps);
   
 
   //Wind extinction profile
@@ -335,6 +352,10 @@ List stomatalRegulation(List x, List soil, DataFrame meteo, int day,
     List PMSunlit(ntimesteps);
     List PMShade(ntimesteps);
     
+    photosynthesis[c] = 0.0;
+    transpiration[c] = 0.0;
+    
+      
     for(int n=0;n<ntimesteps;n++) {
 
       //Long-wave radiation due to canopy temperature
@@ -352,46 +373,130 @@ List stomatalRegulation(List x, List soil, DataFrame meteo, int day,
       NumericVector absLWR_SH = abs_LWR_SH_list[n];
       
       double Vmax298SL= 0.0,Vmax298SH= 0.0,Jmax298SL= 0.0,Jmax298SH= 0.0;
-      double LAI_SH = 0.0; 
-      double LAI_SL = 0.0;
+      LAI_SH(c,n) = 0.0; 
+      LAI_SL(c,n) = 0.0;
       for(int i=0;i<nz;i++) {
-        LAI_SL +=SLarealayer[i];
-        LAI_SH +=SHarealayer[i];
+        LAI_SL(c,n) +=SLarealayer[i];
+        LAI_SH(c,n) +=SHarealayer[i];
         Vmax298SL +=Vmax298layer[i]*LAIme(i,c)*fsunlit[i];
         Jmax298SL +=Jmax298layer[i]*LAIme(i,c)*fsunlit[i];
         Vmax298SH +=Vmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
         Jmax298SH +=Jmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
       }
+      SWR_SL(c,n) = absSWR_SL[c];
+      SWR_SH(c,n) = absSWR_SH[c];
+      LWR_SL(c,n) = absLWR_SL[c];
+      LWR_SH(c,n) = absLWR_SH[c];
+      
 
       //Photosynthesis function for sunlit and shade leaves
       DataFrame psl = leafPhotosynthesisFunction(fittedE, Catm, Patm,Tcan[n], vpatm, 
                                                     zWind[c], 
-                                                         absSWR_SL[c] + LWR_emmcan*LAI_SL, 
+                                                         absSWR_SL[c] + LWR_emmcan*LAI_SL(c,n), 
                                                          irradianceToPhotonFlux(absPAR_SL[c]), 
                                                          Vmax298SL, 
                                                          Jmax298SL, 
-                                                         Gwmin[c], Gwmax[c], leafWidth[c], LAI_SL);
+                                                         Gwmin[c], Gwmax[c], leafWidth[c], LAI_SL(c,n));
       DataFrame psh = leafPhotosynthesisFunction(fittedE, Catm, Patm,Tcan[n], vpatm, 
                                                    zWind[c], 
-                                                        absSWR_SH[c] + LWR_emmcan*LAI_SH, 
+                                                        absSWR_SH[c] + LWR_emmcan*LAI_SH(c,n), 
                                                         irradianceToPhotonFlux(absPAR_SH[c]),
                                                         Vmax298SH, 
                                                         Jmax298SH, 
-                                                        Gwmin[c], Gwmax[c], leafWidth[c], LAI_SH);
+                                                        Gwmin[c], Gwmax[c], leafWidth[c], LAI_SH(c,n));
+
+      NumericVector AnSunlit = psl["NetPhotosynthesis"];
+      NumericVector AnShade = psh["NetPhotosynthesis"];
+      NumericVector GwSunlit = psl["WaterVaporConductance"];
+      NumericVector GwShade = psh["WaterVaporConductance"];
+      NumericVector VPDSunlit = psl["LeafVPD"];
+      NumericVector VPDShade = psh["LeafVPD"];
+      NumericVector TempSunlit = psl["LeafTemperature"];
+      NumericVector TempShade = psh["LeafTemperature"];
 
       //Profit maximization
-      PMSunlit[n] = profitMaximization(supply, psl,  hydraulicCostFunction, Gwmin[c],Gwmax[c], VCstem_kmax[c]);
-      PMShade[n] = profitMaximization(supply, psh,  hydraulicCostFunction, Gwmin[c],Gwmax[c], VCstem_kmax[c]);
+      List pmsl = profitMaximization(supply, psl,  hydraulicCostFunction, Gwmin[c],Gwmax[c], VCstem_kmax[c]);
+      List pmsh = profitMaximization(supply, psh,  hydraulicCostFunction, Gwmin[c],Gwmax[c], VCstem_kmax[c]);
 
+      PMSunlit[n] =pmsl;
+      PMShade[n] = pmsh;
       photoSunlit[n] = psl;
       photoShade[n] = psh;
+      
+      int iPMSunlit = pmsl["iMaxProfit"];
+      int iPMShade = pmsh["iMaxProfit"];
+      
+      GW_SH(c,n)= GwShade[iPMShade];
+      GW_SL(c,n)= GwSunlit[iPMSunlit];
+      VPD_SH(c,n)= VPDShade[iPMShade];
+      VPD_SL(c,n)= VPDSunlit[iPMSunlit];
+      Temp_SH(c,n)= TempShade[iPMShade];
+      Temp_SL(c,n)= TempSunlit[iPMSunlit];
+      
+      //Scale photosynthesis
+      Aninst(c,n) = AnSunlit[iPMSunlit]*LAI_SL(c,n) + AnShade[iPMShade]*LAI_SH(c,n);
+      photosynthesis[c] +=(1e-6)*12.01017*Aninst(c,n)*tstep; 
+      
+      //Average flow from sunlit and shade leaves
+      double Eaverage = (fittedE[iPMSunlit]*LAI_SL(c,n) + fittedE[iPMShade]*LAI_SH(c,n))/(LAI_SL(c,n) + LAI_SH(c,n));
+      
+      //Find iPM for  flow corresponding to the  average flow
+      double absDiff = 99999999.9;
+      int iPM = -1;
+      for(int k=0;k<fittedE.size();k++){ //Only check up to the size of fittedE
+        double adk = std::abs(fittedE[k]-Eaverage);
+        if(adk<absDiff) {
+          absDiff = adk;
+          iPM = k;
+        }
+      }
+      
+      //Calculate transpiration with capacitance effects
+      if(iPM==-1) {
+        Rcout<<"\n iPM -1! Eaverage="<< Eaverage << " fittedE.size= "<< fittedE.size()<<" iPMSunlit="<< iPMSunlit<< " fittedE[iPMSunlit]="<<fittedE[iPMSunlit]<<" iPMShade="<<iPMShade<<" fittedE[iPMShade]="<<fittedE[iPMShade]<<"\n";
+        stop("");
+      }
+      
+      //Scale from instantaneous flow to water volume in the time step
+      Einst(c,n) = fittedE[iPM]*0.001*0.01802*LAIphe[c]*tstep; 
+      transpiration[c] +=Einst(c,n);
     }
 
+    //for each cohort, table with time steps in rows and PM results in columns for sunlit and shade leaves
+    //table with cohorts in rows and daily PM results in columns, with units scaled by leaf area
     cohort_list[c] = List::create(_["supply"]=supply,
                                   _["photoSunlit"]=photoSunlit,
                                   _["photoShade"]=photoShade,
                                   _["PMSunlit"] = PMSunlit,
                                   _["PMShade"] = PMShade);
   }
-  return(cohort_list);
+  Rcout<<"done\n";
+  
+  SWR_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  SWR_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  LWR_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  LWR_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  GW_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  GW_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  Temp_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  Temp_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  VPD_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  VPD_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  LAI_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  LAI_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  
+  List AbsRadinst = List::create(_["SWR_SH"] = SWR_SH, _["SWR_SL"]=SWR_SL,
+                                 _["LWR_SH"] = LWR_SH, _["LWR_SL"] = LWR_SL);
+  
+  List PlantsInst = List::create(
+    _["LAIsunlit"] = LAI_SL, _["LAIshade"] = LAI_SH, 
+    _["AbsRad"] = AbsRadinst, _["E"]=Einst, _["An"]=Aninst,
+    _["GWsunlit"] = GW_SL, _["GWshade"] = GW_SH,
+    _["VPDsunlit"] = VPD_SL, _["VPDshade"] = VPD_SH,
+    _["Tempsunlit"] = Temp_SL, _["Tempshade"] = Temp_SH);
+  
+  List l = List::create(_["cohorts"] = clone(cohorts),
+                        _["PlantsInst"] = PlantsInst,
+                        _["CohortDetails"] = cohort_list);
+  return(l);
 } 
