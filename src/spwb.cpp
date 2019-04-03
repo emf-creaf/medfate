@@ -272,13 +272,6 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   return(l);
 }
 
-// Plant water balance with Sperry hydraulic and stomatal conductance models
-// [[Rcpp::export("pwb_dayComplex")]]
-List pwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
-              double latitude, double elevation, double solarConstant, double delta, 
-              double prec, double er, double runon=0.0, bool verbose = false) {
-  
-}
 
 // Soil water balance with Sperry hydraulic and stomatal conductance models
 // [[Rcpp::export("spwb_dayComplex")]]
