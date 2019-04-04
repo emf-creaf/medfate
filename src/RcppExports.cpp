@@ -3466,6 +3466,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// transpGranier
+List transpGranier(List x, NumericVector psiSoil, double tday, double pet);
+RcppExport SEXP _medfate_transpGranier(SEXP xSEXP, SEXP psiSoilSEXP, SEXP tdaySEXP, SEXP petSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type psiSoil(psiSoilSEXP);
+    Rcpp::traits::input_parameter< double >::type tday(tdaySEXP);
+    Rcpp::traits::input_parameter< double >::type pet(petSEXP);
+    rcpp_result_gen = Rcpp::wrap(transpGranier(x, psiSoil, tday, pet));
+    return rcpp_result_gen;
+END_RCPP
+}
 // windSpeedAtCanopyHeight
 double windSpeedAtCanopyHeight(double wind20H, double canopyHeight);
 RcppExport SEXP _medfate_windSpeedAtCanopyHeight(SEXP wind20HSEXP, SEXP canopyHeightSEXP) {
@@ -3800,6 +3814,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_tissueFMC", (DL_FUNC) &_medfate_tissueFMC, 3},
     {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 6},
     {"_medfate_stomatalRegulation", (DL_FUNC) &_medfate_stomatalRegulation, 6},
+    {"_medfate_transpGranier", (DL_FUNC) &_medfate_transpGranier, 4},
     {"_medfate_windSpeedAtCanopyHeight", (DL_FUNC) &_medfate_windSpeedAtCanopyHeight, 2},
     {"_medfate_unshelteredMidflameWindSpeed", (DL_FUNC) &_medfate_unshelteredMidflameWindSpeed, 2},
     {"_medfate_shelteredMidflameWindSpeed", (DL_FUNC) &_medfate_shelteredMidflameWindSpeed, 3},

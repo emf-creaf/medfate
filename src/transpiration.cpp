@@ -500,3 +500,123 @@ List stomatalRegulation(List x, List soil, DataFrame meteo, int day,
                         _["CohortDetails"] = cohort_list);
   return(l);
 } 
+
+// [[Rcpp::export("transp_Granier")]]
+List transpGranier(List x, NumericVector psiSoil, double tday, double pet) {
+  //Control parameters
+  List control = x["control"];
+  bool cavitationRefill = control["cavitationRefill"];
+  
+  //Vegetation input
+  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
+  DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
+  NumericVector LAIlive = Rcpp::as<Rcpp::NumericVector>(above["LAI_live"]);
+  NumericVector LAIphe = Rcpp::as<Rcpp::NumericVector>(above["LAI_expanded"]);
+  NumericVector LAIdead = Rcpp::as<Rcpp::NumericVector>(above["LAI_dead"]);
+  NumericVector H = Rcpp::as<Rcpp::NumericVector>(above["H"]);
+  NumericVector CR = Rcpp::as<Rcpp::NumericVector>(above["CR"]);
+  int numCohorts = LAIphe.size();
+  int nlayers = psiSoil.length();
+  
+  //Root distribution input
+  List below = Rcpp::as<Rcpp::List>(x["below"]);
+  NumericMatrix V = Rcpp::as<Rcpp::NumericMatrix>(below["V"]);
+  
+  //Parameters  
+  DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
+  NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsBase["k"]);
+  
+  DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
+  NumericVector Psi_Extract = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Psi_Extract"]);
+  NumericVector WUE = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE"]);
+  NumericVector pRootDisc = Rcpp::as<Rcpp::NumericVector>(paramsTransp["pRootDisc"]);
+  
+  //Communication vectors
+  NumericVector transpiration = Rcpp::as<Rcpp::NumericVector>(x["Transpiration"]);
+  NumericVector photosynthesis = Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
+  NumericVector pEmb = Rcpp::as<Rcpp::NumericVector>(x["PLC"]);
+  
+  
+  //Determine whether leaves are out (phenology) and the adjusted Leaf area
+  NumericVector Phe(numCohorts,0.0);
+  double s = 0.0, LAIcell = 0.0, LAIcelldead = 0.0, Cm = 0.0;
+  for(int c=0;c<numCohorts;c++) {
+    if(LAIlive[c]>0) Phe[c]=LAIphe[c]/LAIlive[c]; //Phenological status
+    else Phe[c]=0.0;
+    s += (kPAR[c]*(LAIphe[c]+LAIdead[c]));
+    LAIcell += LAIphe[c]+LAIdead[c];
+    LAIcelldead += LAIdead[c];
+  }
+  NumericVector CohASWRF = cohortAbsorbedSWRFraction(LAIphe,  LAIdead, H, CR, kPAR);
+  NumericVector CohPAR = parcohortC(H, LAIphe, LAIdead, kPAR, CR)/100.0;
+  double LgroundPAR = exp((-1.0)*s);
+  double LgroundSWR = 1.0 - std::accumulate(CohASWRF.begin(),CohASWRF.end(),0.0);
+  
+  //Apply fractions to potential evapotranspiration
+  //Maximum canopy transpiration
+  //    Tmax = PET[i]*(-0.006*pow(LAIcell[i],2.0)+0.134*LAIcell[i]+0.036); //From Granier (1999)
+  double Tmax = pet*(-0.006*pow(LAIcell,2.0)+0.134*LAIcell); //From Granier (1999)
+  
+  //Fraction of Tmax attributed to each plant cohort
+  double pabs = std::accumulate(CohASWRF.begin(),CohASWRF.end(),0.0);
+  NumericVector TmaxCoh(numCohorts,0.0);
+  if(pabs>0.0) TmaxCoh = Tmax*(CohASWRF/pabs);
+  
+  //Actual plant transpiration
+  NumericMatrix EplantCoh(numCohorts, nlayers);
+  NumericMatrix PsiRoot(numCohorts, nlayers);
+  NumericVector PlantPsi(numCohorts, NA_REAL);
+  NumericVector Eplant(numCohorts, 0.0);
+  NumericVector DDS(numCohorts, 0.0);
+  NumericVector Kl, epc, Vl;
+  double WeibullShape=3.0;
+  for(int l=0;l<nlayers;l++) {
+    Kl = Psi2K(psiSoil[l], Psi_Extract, WeibullShape);
+    
+    //Limit Kl due to previous cavitation
+    if(!cavitationRefill) for(int c=0;c<numCohorts;c++) Kl[c] = std::min(Kl[c], 1.0-pEmb[c]);
+    //Limit Kl to minimum value for root disconnection
+    Vl = V(_,l);
+    epc = pmax(TmaxCoh*Kl*Vl,0.0);
+    for(int c=0;c<numCohorts;c++) {
+      PsiRoot(c,l) = psiSoil[l]; //Set initial guess of root potential to soil values
+      //If relative conductance is smaller than the value for root disconnection
+      //Set root potential to minimum value before disconnection and transpiration from that layer to zero
+      if(Kl[c]<pRootDisc[c]) { 
+        PsiRoot(c,l) = K2Psi(pRootDisc[c],Psi_Extract[c],WeibullShape);
+        Kl[c] = pRootDisc[c]; //So that layer stress does not go below pRootDisc
+        epc[c] = 0.0; //Set transpiration from layer to zero
+      }
+    }
+    
+    EplantCoh(_,l) = epc;
+    Eplant = Eplant + epc;
+    DDS = DDS + Phe*(Vl*(1.0 - Kl)); //Add stress from the current layer
+  }
+  for(int c=0;c<numCohorts;c++) {
+    PlantPsi[c] = averagePsi(PsiRoot(c,_), V(c,_), WeibullShape, Psi_Extract[c]);
+    if(!cavitationRefill) {
+      pEmb[c] = std::max(DDS[c], pEmb[c]); //Track current embolism if no refill
+      DDS[c] = pEmb[c];
+    }
+  }
+  
+  double alpha = std::max(std::min(tday/20.0,1.0),0.0);
+  //For comunication with growth and landscape water balance
+  for(int c=0;c<numCohorts;c++) {
+    transpiration[c] = Eplant[c];
+    photosynthesis[c] = alpha*WUE[c]*transpiration[c];
+  }
+  
+  //Copy LAIexpanded for output
+  NumericVector LAIcohort(numCohorts);
+  for(int c=0;c<numCohorts;c++) LAIcohort[c]= LAIphe[c];
+  
+  DataFrame Plants = DataFrame::create(_["LAI"] = LAIcohort,
+                                       _["Transpiration"] = Eplant, _["psi"] = PlantPsi, _["DDS"] = DDS);
+  Plants.attr("row.names") = above.attr("row.names");
+  EplantCoh.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
+  List l = List::create(_["Plants"] = Plants,
+                        _["Uptake"] = EplantCoh);
+  return(l);
+}

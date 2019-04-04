@@ -30,11 +30,8 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   List control = x["control"];
   bool snowpack = control["snowpack"];
   bool drainage = control["drainage"];
-  bool cavitationRefill = control["cavitationRefill"];
   String soilFunctions = control["soilFunctions"];
 
-  
-  
   //Soil input
   NumericVector W = soil["W"]; //Access to soil state variable
   NumericVector dVec = soil["dVec"];
@@ -57,9 +54,6 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   NumericVector CR = Rcpp::as<Rcpp::NumericVector>(above["CR"]);
   int numCohorts = LAIphe.size();
 
-  //Root distribution input
-  List below = Rcpp::as<Rcpp::List>(x["below"]);
-  NumericMatrix V = Rcpp::as<Rcpp::NumericMatrix>(below["V"]);
 
   //Parameters  
   DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
@@ -67,17 +61,6 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsBase["k"]);
   NumericVector gRainIntercept = Rcpp::as<Rcpp::NumericVector>(paramsBase["g"]);
   
-  DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
-  NumericVector Psi_Extract = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Psi_Extract"]);
-  NumericVector WUE = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE"]);
-  NumericVector pRootDisc = Rcpp::as<Rcpp::NumericVector>(paramsTransp["pRootDisc"]);
-  
-  //Communication vectors
-  NumericVector transpiration = Rcpp::as<Rcpp::NumericVector>(x["Transpiration"]);
-  NumericVector photosynthesis = Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
-  NumericVector pEmb = Rcpp::as<Rcpp::NumericVector>(x["PLC"]);
-  
-
 
   //Determine whether leaves are out (phenology) and the adjusted Leaf area
   NumericVector Phe(numCohorts,0.0);
@@ -165,94 +148,36 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   }
   psiVec = psi(soil,soilFunctions); //Update soil water potential
 
-
-  //Proportion of transpiration that absorbed by each plant cohort (old version)
-  // NumericVector PP = CohLight*LAIphe;
-  // NumericVector f = PP/std::accumulate(PP.begin(),PP.end(),0.0); 
-  // if(LAIcell==0.0) f = rep(0.0,numCohorts); //Avoids NaN values
-
-  //Apply fractions to potential evapotranspiration
-  //Maximum canopy transpiration
-  //    Tmax = PET[i]*(-0.006*pow(LAIcell[i],2.0)+0.134*LAIcell[i]+0.036); //From Granier (1999)
-  double Tmax = pet*(-0.006*pow(LAIcell,2.0)+0.134*LAIcell); //From Granier (1999)
-  double PETsoil = pet*LgroundSWR;
-
-  //Fraction of Tmax attributed to each plant cohort
-  double pabs = std::accumulate(CohASWRF.begin(),CohASWRF.end(),0.0);
-  NumericVector TmaxCoh(numCohorts,0.0);
-  if(pabs>0.0) TmaxCoh = Tmax*(CohASWRF/pabs);
-
-  //Actual plant transpiration
-  NumericMatrix EplantCoh(numCohorts, nlayers);
-  NumericMatrix PsiRoot(numCohorts, nlayers);
-  NumericVector PlantPsi(numCohorts, NA_REAL);
-  NumericVector Eplant(numCohorts, 0.0);
-  NumericVector DDS(numCohorts, 0.0);
+  List transp = transpGranier(x, psiVec, tday, pet);
   NumericVector EplantVec(nlayers, 0.0);
-  NumericVector Kl, epc, Vl;
-  double WeibullShape=3.0;
-  for(int l=0;l<nlayers;l++) {
-    Kl = Psi2K(psiVec[l], Psi_Extract, WeibullShape);
- 
-    //Limit Kl due to previous cavitation
-    if(!cavitationRefill) for(int c=0;c<numCohorts;c++) Kl[c] = std::min(Kl[c], 1.0-pEmb[c]);
-    //Limit Kl to minimum value for root disconnection
-    Vl = V(_,l);
-    epc = pmax(TmaxCoh*Kl*Vl,0.0);
-    for(int c=0;c<numCohorts;c++) {
-      PsiRoot(c,l) = psiVec[l]; //Set initial guess of root potential to soil values
-      //If relative conductance is smaller than the value for root disconnection
-      //Set root potential to minimum value before disconnection and transpiration from that layer to zero
-      if(Kl[c]<pRootDisc[c]) { 
-        PsiRoot(c,l) = K2Psi(pRootDisc[c],Psi_Extract[c],WeibullShape);
-        Kl[c] = pRootDisc[c]; //So that layer stress does not go below pRootDisc
-        epc[c] = 0.0; //Set transpiration from layer to zero
-      }
-    }
-    
-    EplantCoh(_,l) = epc;
-    Eplant = Eplant + epc;
-    EplantVec[l] = std::accumulate(epc.begin(),epc.end(),0.0);
-    DDS = DDS + Phe*(Vl*(1.0 - Kl)); //Add stress from the current layer
-  }
-  for(int c=0;c<numCohorts;c++) {
-    PlantPsi[c] = averagePsi(PsiRoot(c,_), V(c,_), WeibullShape, Psi_Extract[c]);
-    if(!cavitationRefill) {
-      pEmb[c] = std::max(DDS[c], pEmb[c]); //Track current embolism if no refill
-      DDS[c] = pEmb[c];
-    }
-  }
-
-  //Evaporation from bare soil
-  double Gsoil = soil["Gsoil"];
-  double Ksoil = soil["Ksoil"];
-  double Esoil = soilevaporation((Water_FC[0]*(1.0 - W[0])), PETsoil, Gsoil);
-  NumericVector EsoilVec(nlayers,0.0);//Exponential decay to divide bare soil evaporation among layers
-  for(int l=0;l<nlayers;l++) {
-    double cumAnt = 0.0;
-    double cumPost = 0.0;
-    for(int l2=0;l2<l;l2++) cumAnt +=dVec[l2];
-    cumPost = cumAnt+dVec[l];
-    if(l<(nlayers-1)) EsoilVec[l] = Esoil*(exp(-Ksoil*cumAnt)-exp(-Ksoil*cumPost));
-    else EsoilVec[l] = Esoil*exp(-Ksoil*cumAnt);
-    
-  }
-  // Rcout<<Esoil<<" "<<  std::accumulate(EsoilVec.begin(),EsoilVec.end(),0.0)<<"\n";
-
-  //Apply decrease in soil layers (psi will be updated next call)
-  for(int l=0;l<nlayers;l++) W[l] = W[l] - ((EplantVec[l]+EsoilVec[l])/Water_FC[l]);
-
-  double alpha = std::max(std::min(tday/20.0,1.0),0.0);
-  //For comunication with growth and landscape water balance
-  for(int c=0;c<numCohorts;c++) {
-    transpiration[c] = Eplant[c];
-    photosynthesis[c] = alpha*WUE[c]*transpiration[c];
-  }
-
-  //Copy LAIexpanded for output
-  NumericVector LAIcohort(numCohorts);
-  for(int c=0;c<numCohorts;c++) LAIcohort[c]= LAIphe[c];
+  NumericMatrix EplantCoh = Rcpp::as<Rcpp::NumericMatrix>(transp["Uptake"]);
+  DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(transp["Plants"]);
   
+  NumericVector EsoilVec(nlayers,0.0);
+  //Evaporation from bare soil if there is no snow
+  if(swe == 0.0) {
+    double PETsoil = pet*LgroundSWR;
+    double Gsoil = soil["Gsoil"];
+    double Ksoil = soil["Ksoil"];
+    double Esoil = soilevaporation((Water_FC[0]*(1.0 - W[0])), PETsoil, Gsoil);
+    for(int l=0;l<nlayers;l++) {
+      double cumAnt = 0.0;
+      double cumPost = 0.0;
+      for(int l2=0;l2<l;l2++) cumAnt +=dVec[l2];
+      cumPost = cumAnt+dVec[l];
+      //Exponential decay to divide bare soil evaporation among layers
+      if(l<(nlayers-1)) EsoilVec[l] = Esoil*(exp(-Ksoil*cumAnt)-exp(-Ksoil*cumPost));
+      else EsoilVec[l] = Esoil*exp(-Ksoil*cumAnt);
+      
+    }
+    // Rcout<<Esoil<<" "<<  std::accumulate(EsoilVec.begin(),EsoilVec.end(),0.0)<<"\n";
+    //Apply decrease in soil layers (psi will be updated next call)
+    for(int l=0;l<nlayers;l++) {
+      EplantVec[l] = sum(EplantCoh(_,l));
+      W[l] = W[l] - ((EplantVec[l]+EsoilVec[l])/Water_FC[l]); 
+    }
+  }
+
   NumericVector DB = NumericVector::create(_["PET"] = pet, _["Rain"] = rain, _["Snow"] = snow, _["NetRain"] = NetRain, _["Runon"] = runon, 
                                            _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
                                            _["SoilEvaporation"] = sum(EsoilVec), _["PlantExtraction"] = sum(EplantVec), _["Transpiration"] = sum(EplantVec),
@@ -261,9 +186,6 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   DataFrame SB = DataFrame::create(_["SoilEvaporation"] = EsoilVec, 
                                    _["PlantExtraction"] = EplantVec, 
                                    _["psi"] = psiVec);
-  DataFrame Plants = DataFrame::create(_["LAI"] = LAIcohort,
-                             _["Transpiration"] = Eplant, _["psi"] = PlantPsi, _["DDS"] = DDS);
-  Plants.attr("row.names") = above.attr("row.names");
   List l = List::create(_["cohorts"] = clone(cohorts),
                         _["WaterBalance"] = DB, 
                         _["Soil"] = SB,
