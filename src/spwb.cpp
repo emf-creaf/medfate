@@ -74,7 +74,6 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
     Cm += (LAIphe[c]+LAIdead[c])*gRainIntercept[c]; //LAI dead also counts on interception
   }
   NumericVector CohASWRF = cohortAbsorbedSWRFraction(LAIphe,  LAIdead, H, CR, kPAR);
-  NumericVector CohPAR = parcohortC(H, LAIphe, LAIdead, kPAR, CR)/100.0;
   double LgroundPAR = exp((-1.0)*s);
   double LgroundSWR = 1.0 - std::accumulate(CohASWRF.begin(),CohASWRF.end(),0.0);
   
@@ -121,7 +120,6 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
     //Update topsoil layer
     for(int l=0;l<nlayers;l++) {
       if((dVec[l]>0.0) & (Ivec[l]>0.0)) {
-        //PROBLEM: THE effect of MACROPOROSITY SHOULD not be affected by layer subdivision
         Wn = W[l]*Water_FC[l] + Ivec[l]; //Update water volume
         if(l<(nlayers-1)) {
           Ivec[l+1] = Ivec[l+1] + std::max(Wn - Water_FC[l],0.0); //update Ivec adding the excess to the infiltrating water (saturated flow)
@@ -146,9 +144,8 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
       }
     }
   }
-  psiVec = psi(soil,soilFunctions); //Update soil water potential
 
-  List transp = transpGranier(x, psiVec, tday, pet);
+  List transp = transpGranier(x, soil, tday, pet);
   NumericVector EplantVec(nlayers, 0.0);
   NumericMatrix EplantCoh = Rcpp::as<Rcpp::NumericMatrix>(transp["Uptake"]);
   DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(transp["Plants"]);

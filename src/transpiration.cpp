@@ -502,10 +502,14 @@ List stomatalRegulation(List x, List soil, DataFrame meteo, int day,
 } 
 
 // [[Rcpp::export("transp_Granier")]]
-List transpGranier(List x, NumericVector psiSoil, double tday, double pet) {
+List transpGranier(List x, List soil, double tday, double pet) {
   //Control parameters
   List control = x["control"];
   bool cavitationRefill = control["cavitationRefill"];
+  String soilFunctions = control["soilFunctions"];
+  
+  //Soil input
+  NumericVector psiVec = psi(soil,soilFunctions); //Update soil water potential
   
   //Vegetation input
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
@@ -548,10 +552,7 @@ List transpGranier(List x, NumericVector psiSoil, double tday, double pet) {
     LAIcelldead += LAIdead[c];
   }
   NumericVector CohASWRF = cohortAbsorbedSWRFraction(LAIphe,  LAIdead, H, CR, kPAR);
-  NumericVector CohPAR = parcohortC(H, LAIphe, LAIdead, kPAR, CR)/100.0;
-  double LgroundPAR = exp((-1.0)*s);
-  double LgroundSWR = 1.0 - std::accumulate(CohASWRF.begin(),CohASWRF.end(),0.0);
-  
+
   //Apply fractions to potential evapotranspiration
   //Maximum canopy transpiration
   //    Tmax = PET[i]*(-0.006*pow(LAIcell[i],2.0)+0.134*LAIcell[i]+0.036); //From Granier (1999)

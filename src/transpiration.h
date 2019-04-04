@@ -6,4 +6,4 @@
 using namespace Rcpp;
 
 List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, int type, double Gwmin, double Gmax, double kleafmax = NA_REAL);
-List transpGranier(List x, NumericVector psiSoil, double tday, double pet);
+List transpGranier(List x, List soil, double tday, double pet);

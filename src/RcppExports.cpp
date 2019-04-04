@@ -3467,16 +3467,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // transpGranier
-List transpGranier(List x, NumericVector psiSoil, double tday, double pet);
-RcppExport SEXP _medfate_transpGranier(SEXP xSEXP, SEXP psiSoilSEXP, SEXP tdaySEXP, SEXP petSEXP) {
+List transpGranier(List x, List soil, double tday, double pet);
+RcppExport SEXP _medfate_transpGranier(SEXP xSEXP, SEXP soilSEXP, SEXP tdaySEXP, SEXP petSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type psiSoil(psiSoilSEXP);
+    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< double >::type tday(tdaySEXP);
     Rcpp::traits::input_parameter< double >::type pet(petSEXP);
-    rcpp_result_gen = Rcpp::wrap(transpGranier(x, psiSoil, tday, pet));
+    rcpp_result_gen = Rcpp::wrap(transpGranier(x, soil, tday, pet));
     return rcpp_result_gen;
 END_RCPP
 }

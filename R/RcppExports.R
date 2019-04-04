@@ -705,8 +705,8 @@ transp_stomatalRegulation <- function(x, soil, meteo, day, latitude, elevation) 
     .Call(`_medfate_stomatalRegulation`, x, soil, meteo, day, latitude, elevation)
 }
 
-transp_Granier <- function(x, psiSoil, tday, pet) {
-    .Call(`_medfate_transpGranier`, x, psiSoil, tday, pet)
+transp_Granier <- function(x, soil, tday, pet) {
+    .Call(`_medfate_transpGranier`, x, soil, tday, pet)
 }
 
 .windSpeedAtCanopyHeight <- function(wind20H, canopyHeight) {

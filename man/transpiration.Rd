@@ -3,6 +3,7 @@
 \alias{transp_profitMaximization}
 \alias{transp_stomatalRegulation}
 \alias{transp_stomatalRegulationPlot}
+\alias{transp_Granier}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Transpiration submodel functions
@@ -17,6 +18,7 @@ transp_stomatalRegulation(x, soil, meteo, day,
                              latitude, elevation)
 transp_stomatalRegulationPlot(x, soil, meteo, day, timestep, 
                               latitude, elevation)
+transp_Granier(x, psiSoil, tday, pet)                              
 }
 
 %- maybe also 'usage' for other objects documented here.
