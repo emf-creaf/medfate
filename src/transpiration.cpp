@@ -509,7 +509,7 @@ List transpGranier(List x, List soil, double tday, double pet) {
   String soilFunctions = control["soilFunctions"];
   
   //Soil input
-  NumericVector psiVec = psi(soil,soilFunctions); //Update soil water potential
+  NumericVector psiSoil = psi(soil,soilFunctions); //Update soil water potential
   
   //Vegetation input
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
