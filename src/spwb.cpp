@@ -147,7 +147,7 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
 
   List transp = transpGranier(x, soil, tday, pet);
   NumericVector EplantVec(nlayers, 0.0);
-  NumericMatrix EplantCoh = Rcpp::as<Rcpp::NumericMatrix>(transp["Uptake"]);
+  NumericMatrix EplantCoh = Rcpp::as<Rcpp::NumericMatrix>(transp["Extraction"]);
   DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(transp["Plants"]);
   
   NumericVector EsoilVec(nlayers,0.0);

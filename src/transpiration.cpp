@@ -618,6 +618,6 @@ List transpGranier(List x, List soil, double tday, double pet) {
   Plants.attr("row.names") = above.attr("row.names");
   EplantCoh.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
   List l = List::create(_["Plants"] = Plants,
-                        _["Uptake"] = EplantCoh);
+                        _["Extraction"] = EplantCoh);
   return(l);
 }

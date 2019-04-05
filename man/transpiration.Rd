@@ -18,7 +18,7 @@ transp_stomatalRegulation(x, soil, meteo, day,
                              latitude, elevation)
 transp_stomatalRegulationPlot(x, soil, meteo, day, timestep, 
                               latitude, elevation)
-transp_Granier(x, psiSoil, tday, pet)                              
+transp_Granier(x, soil, tday, pet)                              
 }
 
 %- maybe also 'usage' for other objects documented here.
@@ -76,7 +76,7 @@ Values returned for each function are:
 Sperry, J. S., M. D. Venturas, W. R. L. Anderegg, M. Mencuccini, D. S. Mackay, Y. Wang, and D. M. Love. 2016. Predicting stomatal responses to the environment from the optimization of photosynthetic gain and hydraulic cost. Plant Cell and Environment.
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 }
 \seealso{
 \code{\link{hydraulics_supplyFunctionNetwork}}, \code{\link{biophysics_leafTemperature}}, \code{\link{photo_photosynthesis}}, \code{\link{spwb}}
@@ -91,13 +91,28 @@ data(exampleforest)
 #Default species parameterization
 data(SpParamsMED)
 
+
 #Initialize soil with default soil params (2 layers)
-examplesoil2 = soil(defaultSoilParams(2))
+examplesoil = soil(defaultSoilParams(2))
 
 #Initialize control parameters
 control = defaultControl()
+
+#Initialize input
+x = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+
+# Transpiration according to Granier's model, plant water potential 
+# and plant stress for a given day
+transp_Granier(x, examplesoil, 
+               examplemeteo[1, "MeanTemperature"],
+               examplemeteo[1, "PET"])
+
+
 #Switch to 'Complex' transpiration mode
 control$transpirationMode="Complex"
+
+#Initialize soil with default soil params (2 layers)
+examplesoil2 = soil(defaultSoilParams(2))
 
 #Initialize input
 x2 = forest2spwbInput(exampleforest,examplesoil2, SpParamsMED, control)

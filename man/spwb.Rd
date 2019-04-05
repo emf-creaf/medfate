@@ -41,7 +41,7 @@ spwb_resetInputs(x, soil, from = NULL, day = NA)
   \item{day}{An integer with the day from which state variable values stored in \code{from} should be copied. If missing, values are copied from the first day of stored values.}
 }
 \details{
-  Detailed model description is available in the vignettes section. The model using 'Simple' transpiration mode is described in De Caceres et al. (2015). Simulations using the 'Complex' transpiration mode are computationally much more expensive. Function \code{spwb_resetInputs()} allows resetting state variables in \code{x} and \code{soil} to their defaults, or to copy values of state variables from a previous \code{spwb()} simulation results stored in \code{from}.
+  Detailed model description is available in the vignettes section. The model using 'Simple' transpiration mode is illustrated by function \code{\link{transp_Granier()}} and described in De Caceres et al. (2015). Simulations using the 'Complex' transpiration mode are computationally much more expensive. Function \code{spwb_resetInputs()} allows resetting state variables in \code{x} and \code{soil} to their defaults, or to copy values of state variables from a previous \code{spwb()} simulation results stored in \code{from}.
 }
 \value{
   Function \code{spwb} returns a list of class 'spwb' with the following elements:
