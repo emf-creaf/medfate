@@ -3179,8 +3179,8 @@ RcppExport SEXP _medfate_spwbDay1(SEXP xSEXP, SEXP soilSEXP, SEXP tdaySEXP, SEXP
     return rcpp_result_gen;
 }
 // spwbDay2
-List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, double latitude, double elevation, double solarConstant, double delta, double prec, double er, double runon, bool verbose);
-static SEXP _medfate_spwbDay2_try(SEXP xSEXP, SEXP soilSEXP, SEXP tminSEXP, SEXP tmaxSEXP, SEXP rhminSEXP, SEXP rhmaxSEXP, SEXP radSEXP, SEXP windSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP solarConstantSEXP, SEXP deltaSEXP, SEXP precSEXP, SEXP erSEXP, SEXP runonSEXP, SEXP verboseSEXP) {
+List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, double latitude, double elevation, double solarConstant, double delta, double prec, double pet, double er, double runon, bool verbose);
+static SEXP _medfate_spwbDay2_try(SEXP xSEXP, SEXP soilSEXP, SEXP tminSEXP, SEXP tmaxSEXP, SEXP rhminSEXP, SEXP rhmaxSEXP, SEXP radSEXP, SEXP windSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP solarConstantSEXP, SEXP deltaSEXP, SEXP precSEXP, SEXP petSEXP, SEXP erSEXP, SEXP runonSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
@@ -3196,18 +3196,19 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type solarConstant(solarConstantSEXP);
     Rcpp::traits::input_parameter< double >::type delta(deltaSEXP);
     Rcpp::traits::input_parameter< double >::type prec(precSEXP);
+    Rcpp::traits::input_parameter< double >::type pet(petSEXP);
     Rcpp::traits::input_parameter< double >::type er(erSEXP);
     Rcpp::traits::input_parameter< double >::type runon(runonSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(spwbDay2(x, soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, solarConstant, delta, prec, er, runon, verbose));
+    rcpp_result_gen = Rcpp::wrap(spwbDay2(x, soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, solarConstant, delta, prec, pet, er, runon, verbose));
     return rcpp_result_gen;
 END_RCPP_RETURN_ERROR
 }
-RcppExport SEXP _medfate_spwbDay2(SEXP xSEXP, SEXP soilSEXP, SEXP tminSEXP, SEXP tmaxSEXP, SEXP rhminSEXP, SEXP rhmaxSEXP, SEXP radSEXP, SEXP windSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP solarConstantSEXP, SEXP deltaSEXP, SEXP precSEXP, SEXP erSEXP, SEXP runonSEXP, SEXP verboseSEXP) {
+RcppExport SEXP _medfate_spwbDay2(SEXP xSEXP, SEXP soilSEXP, SEXP tminSEXP, SEXP tmaxSEXP, SEXP rhminSEXP, SEXP rhmaxSEXP, SEXP radSEXP, SEXP windSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP solarConstantSEXP, SEXP deltaSEXP, SEXP precSEXP, SEXP petSEXP, SEXP erSEXP, SEXP runonSEXP, SEXP verboseSEXP) {
     SEXP rcpp_result_gen;
     {
         Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_medfate_spwbDay2_try(xSEXP, soilSEXP, tminSEXP, tmaxSEXP, rhminSEXP, rhmaxSEXP, radSEXP, windSEXP, latitudeSEXP, elevationSEXP, solarConstantSEXP, deltaSEXP, precSEXP, erSEXP, runonSEXP, verboseSEXP));
+        rcpp_result_gen = PROTECT(_medfate_spwbDay2_try(xSEXP, soilSEXP, tminSEXP, tmaxSEXP, rhminSEXP, rhmaxSEXP, radSEXP, windSEXP, latitudeSEXP, elevationSEXP, solarConstantSEXP, deltaSEXP, precSEXP, petSEXP, erSEXP, runonSEXP, verboseSEXP));
     }
     Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
     if (rcpp_isInterrupt_gen) {
@@ -3591,7 +3592,7 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("NumericVector(*soil_thermalCapacity)(List,String)");
         signatures.insert("NumericVector(*soil_thermalConductivity)(List,String)");
         signatures.insert("List(*spwb_daySimple)(List,List,double,double,double,double,double,double,double,bool)");
-        signatures.insert("List(*spwb_dayComplex)(List,List,double,double,double,double,double,double,double,double,double,double,double,double,double,bool)");
+        signatures.insert("List(*spwb_dayComplex)(List,List,double,double,double,double,double,double,double,double,double,double,double,double,double,double,bool)");
         signatures.insert("List(*spwb_day)(List,List,CharacterVector,double,double,double,double,double,double,double,double,double,double,double,double)");
         signatures.insert("void(*spwb_resetInputs)(List,List,List,int)");
         signatures.insert("List(*spwb)(List,List,DataFrame,double,double,double,double)");
@@ -3802,7 +3803,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_thermalCapacity", (DL_FUNC) &_medfate_thermalCapacity, 2},
     {"_medfate_thermalConductivity", (DL_FUNC) &_medfate_thermalConductivity, 2},
     {"_medfate_spwbDay1", (DL_FUNC) &_medfate_spwbDay1, 10},
-    {"_medfate_spwbDay2", (DL_FUNC) &_medfate_spwbDay2, 16},
+    {"_medfate_spwbDay2", (DL_FUNC) &_medfate_spwbDay2, 17},
     {"_medfate_spwbDay", (DL_FUNC) &_medfate_spwbDay, 15},
     {"_medfate_resetInputs", (DL_FUNC) &_medfate_resetInputs, 4},
     {"_medfate_spwb", (DL_FUNC) &_medfate_spwb, 7},

@@ -612,17 +612,17 @@ namespace medfate {
         return Rcpp::as<List >(rcpp_result_gen);
     }
 
-    inline List spwb_dayComplex(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, double latitude, double elevation, double solarConstant, double delta, double prec, double er, double runon = 0.0, bool verbose = false) {
-        typedef SEXP(*Ptr_spwb_dayComplex)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
+    inline List spwb_dayComplex(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, double latitude, double elevation, double solarConstant, double delta, double prec, double pet, double er, double runon = 0.0, bool verbose = false) {
+        typedef SEXP(*Ptr_spwb_dayComplex)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_spwb_dayComplex p_spwb_dayComplex = NULL;
         if (p_spwb_dayComplex == NULL) {
-            validateSignature("List(*spwb_dayComplex)(List,List,double,double,double,double,double,double,double,double,double,double,double,double,double,bool)");
+            validateSignature("List(*spwb_dayComplex)(List,List,double,double,double,double,double,double,double,double,double,double,double,double,double,double,bool)");
             p_spwb_dayComplex = (Ptr_spwb_dayComplex)R_GetCCallable("medfate", "_medfate_spwb_dayComplex");
         }
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_spwb_dayComplex(Shield<SEXP>(Rcpp::wrap(x)), Shield<SEXP>(Rcpp::wrap(soil)), Shield<SEXP>(Rcpp::wrap(tmin)), Shield<SEXP>(Rcpp::wrap(tmax)), Shield<SEXP>(Rcpp::wrap(rhmin)), Shield<SEXP>(Rcpp::wrap(rhmax)), Shield<SEXP>(Rcpp::wrap(rad)), Shield<SEXP>(Rcpp::wrap(wind)), Shield<SEXP>(Rcpp::wrap(latitude)), Shield<SEXP>(Rcpp::wrap(elevation)), Shield<SEXP>(Rcpp::wrap(solarConstant)), Shield<SEXP>(Rcpp::wrap(delta)), Shield<SEXP>(Rcpp::wrap(prec)), Shield<SEXP>(Rcpp::wrap(er)), Shield<SEXP>(Rcpp::wrap(runon)), Shield<SEXP>(Rcpp::wrap(verbose)));
+            rcpp_result_gen = p_spwb_dayComplex(Shield<SEXP>(Rcpp::wrap(x)), Shield<SEXP>(Rcpp::wrap(soil)), Shield<SEXP>(Rcpp::wrap(tmin)), Shield<SEXP>(Rcpp::wrap(tmax)), Shield<SEXP>(Rcpp::wrap(rhmin)), Shield<SEXP>(Rcpp::wrap(rhmax)), Shield<SEXP>(Rcpp::wrap(rad)), Shield<SEXP>(Rcpp::wrap(wind)), Shield<SEXP>(Rcpp::wrap(latitude)), Shield<SEXP>(Rcpp::wrap(elevation)), Shield<SEXP>(Rcpp::wrap(solarConstant)), Shield<SEXP>(Rcpp::wrap(delta)), Shield<SEXP>(Rcpp::wrap(prec)), Shield<SEXP>(Rcpp::wrap(pet)), Shield<SEXP>(Rcpp::wrap(er)), Shield<SEXP>(Rcpp::wrap(runon)), Shield<SEXP>(Rcpp::wrap(verbose)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();

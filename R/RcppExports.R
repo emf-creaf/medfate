@@ -657,8 +657,8 @@ spwb_daySimple <- function(x, soil, tday, pet, prec, er, runon = 0.0, rad = NA_r
     .Call(`_medfate_spwbDay1`, x, soil, tday, pet, prec, er, runon, rad, elevation, verbose)
 }
 
-spwb_dayComplex <- function(x, soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, solarConstant, delta, prec, er, runon = 0.0, verbose = FALSE) {
-    .Call(`_medfate_spwbDay2`, x, soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, solarConstant, delta, prec, er, runon, verbose)
+spwb_dayComplex <- function(x, soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, solarConstant, delta, prec, pet, er, runon = 0.0, verbose = FALSE) {
+    .Call(`_medfate_spwbDay2`, x, soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, solarConstant, delta, prec, pet, er, runon, verbose)
 }
 
 spwb_day <- function(x, soil, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, runon = 0.0) {

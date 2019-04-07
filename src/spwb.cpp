@@ -16,9 +16,6 @@
 #include <meteoland.h>
 using namespace Rcpp;
 
-const double SIGMA_Wm2 = 5.67*1e-8;
-const double Cp_JKG = 1013.86; // J * kg^-1 * ºC^-1
-
 
 // Soil water balance with simple hydraulic model
 // [[Rcpp::export("spwb_daySimple")]]
@@ -71,9 +68,8 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
     LAIcelldead += LAIdead[c];
     Cm += (LAIphe[c]+LAIdead[c])*gRainIntercept[c]; //LAI dead also counts on interception
   }
-  NumericVector CohASWRF = cohortAbsorbedSWRFraction(LAIphe,  LAIdead, H, CR, kPAR);
   double LgroundPAR = exp((-1.0)*s);
-  double LgroundSWR = 1.0 - std::accumulate(CohASWRF.begin(),CohASWRF.end(),0.0);
+  double LgroundSWR = exp((-1.0)*s/1.35);
   
   //Snow pack dynamics
   double snow = 0.0, rain=0.0;
@@ -167,8 +163,7 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   NumericMatrix EplantCoh = Rcpp::as<Rcpp::NumericMatrix>(transp["Extraction"]);
   DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(transp["Plants"]);
   
-  // Rcout<<Esoil<<" "<<  std::accumulate(EsoilVec.begin(),EsoilVec.end(),0.0)<<"\n";
-  //Apply decrease in soil layers (psi will be updated next call)
+  //Apply decrease in soil layers 
   for(int l=0;l<nlayers;l++) {
     EplantVec[l] = sum(EplantCoh(_,l));
     W[l] = W[l] - ((EplantVec[l]+EsoilVec[l])/Water_FC[l]); 
@@ -197,7 +192,7 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
 // [[Rcpp::export("spwb_dayComplex")]]
 List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
              double latitude, double elevation, double solarConstant, double delta, 
-             double prec, double er, double runon=0.0, bool verbose = false) {
+             double prec, double pet, double er, double runon=0.0, bool verbose = false) {
   
   //Control parameters
   List control = x["control"];
@@ -248,9 +243,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
     s += (kPAR[c]*(LAIphe[c]+LAIdead[c]));
     Cm += (LAIphe[c]+LAIdead[c])*gRainIntercept[c]; //LAI dead also counts on interception
   }
-  NumericVector CohASWRF = cohortAbsorbedSWRFraction(LAIphe,  LAIdead, H, CR, kPAR);
   double LgroundPAR = exp((-1.0)*s);
-  double LgroundSWR = 1.0 - std::accumulate(CohASWRF.begin(),CohASWRF.end(),0.0);
+  double LgroundSWR = exp((-1.0)*s/1.35);
   
   //Hydrologic input
   double snow = 0.0, rain=0.0;
@@ -318,7 +312,26 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   }
   
   
-  //Canopy transpiration  
+  
+  //B.1 - Evaporation from bare soil if there is no snow
+  NumericVector EsoilVec(nlayers,0.0);
+  if(swe == 0.0) {
+    double PETsoil = pet*LgroundSWR;
+    double Gsoil = soil["Gsoil"];
+    double Ksoil = soil["Ksoil"];
+    double Esoil = soilevaporation((Water_FC[0]*(1.0 - W[0])), PETsoil, Gsoil);
+    for(int l=0;l<nlayers;l++) {
+      double cumAnt = 0.0;
+      double cumPost = 0.0;
+      for(int l2=0;l2<l;l2++) cumAnt +=dVec[l2];
+      cumPost = cumAnt+dVec[l];
+      //Exponential decay to divide bare soil evaporation among layers
+      if(l<(nlayers-1)) EsoilVec[l] = Esoil*(exp(-Ksoil*cumAnt)-exp(-Ksoil*cumPost));
+      else EsoilVec[l] = Esoil*exp(-Ksoil*cumAnt);
+    }
+  }
+  
+  //B.2 - Canopy transpiration  
   List transp = transpSperry(x, soil,tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, solarConstant,
                              delta, prec, verbose);
 
@@ -331,7 +344,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   List PlantsInst = Rcpp::as<Rcpp::List>(transp["PlantsInst"]);
   List EnergyBalance = Rcpp::as<Rcpp::List>(transp["EnergyBalance"]);
   
-  //Substract extracted water from soil moisture 
+  //B.3 - Substract evaporated and extracted water from soil moisture 
   NumericVector soilExtractionBalance(nlayers, 0.0);
   NumericVector soilHydraulicInput(nlayers, 0.0); //Water that entered into the layer across all time steps
   NumericVector soilHydraulicOutput(nlayers, 0.0);  //Water that left the layer across all time steps
@@ -341,40 +354,11 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
       soilHydraulicOutput[l] += std::max(soilLayerExtractInst(l,n),0.0);
     }
     soilExtractionBalance[l] = sum(soilLayerExtractInst(l,_));
-    W[l] = std::max(W[l]-(soilExtractionBalance[l]/Water_FC[l]),0.0);
-  }
-  //Evaporation from bare soil if there is no snow
-  NumericVector EsoilVec(nlayers,0.0);
-  if(swe == 0.0) {
-    
-    DataFrame SEBinst = Rcpp::as<Rcpp::DataFrame>(EnergyBalance["SoilEnergyBalance"]);
-    NumericVector abs_SWR_soil = SEBinst["SWRsoilin"];
-    NumericVector abs_LWR_soil = SEBinst["LWRsoilin"];
-    NumericVector  emm_LWR_soil = SEBinst["LWRsoilout"];
-
-    double Rnground = 0.0;
-    for(int n=0;n<ntimesteps;n++) {
-      Rnground += (abs_SWR_soil[n] + abs_LWR_soil[n] - emm_LWR_soil[n])*tstep; //kJ·m-2 accumulate net soil radiation balance
-    }
-    Rnground = std::max(0.0,Rnground)/1e3; //from kJ·m-2 to MJ·m-2
-    double PETsoil = meteoland::penmanmonteith(200.0, elevation, tmin, tmax, rhmin, rhmax, Rnground, wind);
-    double Gsoil = soil["Gsoil"];
-    double Ksoil = soil["Ksoil"];
-    double Esoil = soilevaporation((Water_FC[0]*(1.0 - W[0])), PETsoil, Gsoil);
-    for(int l=0;l<nlayers;l++) {
-      double cumAnt = 0.0;
-      double cumPost = 0.0;
-      for(int l2=0;l2<l;l2++) cumAnt +=dVec[l2];
-      cumPost = cumAnt+dVec[l];
-      //Exponential decay to divide bare soil evaporation among layers
-      if(l<(nlayers-1)) EsoilVec[l] = Esoil*(exp(-Ksoil*cumAnt)-exp(-Ksoil*cumPost));
-      else EsoilVec[l] = Esoil*exp(-Ksoil*cumAnt);
-      W[l] = std::max(W[l]-(EsoilVec[l]/Water_FC[l]),0.0);
-    }
+    W[l] = std::max(W[l]-((soilExtractionBalance[l]+EsoilVec[l])/Water_FC[l]),0.0);
   }
   NumericVector psiVec = psi(soil, soilFunctions); //Calculate current soil water potential for output
   
-  NumericVector DB = NumericVector::create(_["Rain"] = rain,_["Snow"] = 0.0,_["NetRain"] = NetRain, _["Runon"] = runon, _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
+  NumericVector DB = NumericVector::create(_["PET"] = pet,_["Rain"] = rain,_["Snow"] = snow,_["NetRain"] = NetRain, _["Runon"] = runon, _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
                                            _["SoilEvaporation"] = sum(EsoilVec), _["PlantExtraction"] = sum(soilExtractionBalance), _["Transpiration"] = sum(Eplant),
                                            _["HydraulicRedistribution"] = sum(soilHydraulicInput),
                                            _["LAIcell"] = LAIcell, _["LAIcelldead"] = LAIcelldead, _["Cm"] = Cm, _["Lground"] = LgroundPAR);
@@ -459,7 +443,7 @@ List spwbDay(List x, List soil, CharacterVector date, double tmin, double tmax, 
     if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; 
     if(wind<0.5) wind = 0.5; //Minimum windspeed abovecanopy
     s = spwbDay2(x,soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation,
-                solarConstant, delta, prec, er, runon, verbose);
+                solarConstant, delta, prec, pet, er, runon, verbose);
   }
   // Rcout<<"hola4\n";
   return(s);
@@ -646,7 +630,6 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   //Meteorological input    
   NumericVector MinTemperature, MaxTemperature;
   NumericVector MinRelativeHumidity, MaxRelativeHumidity;
-  NumericVector PET;
   NumericVector Radiation;
   if(!meteo.containsElementNamed("Precipitation")) stop("Please include variable 'Precipitation' in weather input.");
   NumericVector Precipitation = meteo["Precipitation"];
@@ -655,6 +638,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   NumericVector MeanTemperature = meteo["MeanTemperature"];
   NumericVector WindSpeed(numDays, NA_REAL);
   if(meteo.containsElementNamed("WindSpeed")) WindSpeed = meteo["WindSpeed"];
+  NumericVector PET = NumericVector(numDays,0.0);
   if(transpirationMode=="Simple") {
     if(!meteo.containsElementNamed("PET")) stop("Please include variable 'PET' in weather input.");
     PET = meteo["PET"];
@@ -675,7 +659,6 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
     MaxRelativeHumidity = meteo["MaxRelativeHumidity"];
     if(!meteo.containsElementNamed("Radiation")) stop("Please include variable 'Radiation' in weather input.");
     Radiation = meteo["Radiation"];
-    PET = NumericVector(numDays);
   }
   CharacterVector dateStrings = meteo.attr("row.names");
   
@@ -831,9 +814,19 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
         int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
         double delta = meteoland::radiation_solarDeclination(J);
         double solarConstant = meteoland::radiation_solarConstant(J);
-        s = spwbDay2(x, soil, MinTemperature[i], MaxTemperature[i], 
-                         MinRelativeHumidity[i], MaxRelativeHumidity[i], Radiation[i], wind, 
-                         latitude, elevation, solarConstant, delta, Precipitation[i], ER[i], 0.0, verbose);
+        double latrad = latitude * (PI/180.0);
+        double asprad = aspect * (PI/180.0);
+        double slorad = slope * (PI/180.0);
+        double tmin = MinTemperature[i];
+        double tmax = MaxTemperature[i];
+        double rhmin = MinRelativeHumidity[i];
+        double rhmax = MaxRelativeHumidity[i];
+        double rad = Radiation[i];
+        PET[i] = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
+        s = spwbDay2(x, soil, tmin, tmax, 
+                     rhmin, rhmax, rad, wind, 
+                     latitude, elevation, solarConstant, delta, Precipitation[i], PET[i], 
+                     ER[i], 0.0, verbose);
         List Plants = Rcpp::as<Rcpp::List>(s["Plants"]);
         List PlantsInst = Rcpp::as<Rcpp::List>(s["PlantsInst"]);
         List AbsRadinst = Rcpp::as<Rcpp::List>(PlantsInst["AbsRad"]);
