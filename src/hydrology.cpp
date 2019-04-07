@@ -29,7 +29,8 @@ double soilEvaporationDay(double DEF,double PETs, double Gsoil){
 }
 
 // [[Rcpp::export("hydrology_soilEvaporation")]]
-NumericVector soilEvaporation(List soil, String soilFunctions, double pet, double LgroundSWR) {
+NumericVector soilEvaporation(List soil, String soilFunctions, double pet, double LgroundSWR,
+                              bool modifySoil = true) {
   NumericVector W = soil["W"]; //Access to soil state variable
   NumericVector dVec = soil["dVec"];
   NumericVector Water_FC = waterFC(soil, soilFunctions);
@@ -49,10 +50,12 @@ NumericVector soilEvaporation(List soil, String soilFunctions, double pet, doubl
       //Exponential decay to divide bare soil evaporation among layers
       if(l<(nlayers-1)) EsoilVec[l] = Esoil*(exp(-Ksoil*cumAnt)-exp(-Ksoil*cumPost));
       else EsoilVec[l] = Esoil*exp(-Ksoil*cumAnt);
+      if(modifySoil) W[l] = W[l] - ((EsoilVec[l])/Water_FC[l]);
     }
   }
   return(EsoilVec);
 }
+
 // [[Rcpp::export(".hydrology_infiltrationDay")]]
 double infiltrationDay(double input, double Ssoil) {
   double I = 0;

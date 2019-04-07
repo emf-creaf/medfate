@@ -82,9 +82,9 @@ List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, i
 }
 
 
-List transpSperry(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
+List transpirationSperry(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
                   double latitude, double elevation, double solarConstant, double delta, double prec,
-                  bool verbose = false, int stepFunctions = NA_INTEGER) {
+                  bool verbose = false, int stepFunctions = NA_INTEGER, bool modifySoil = true) {
   //Control parameters
   List control = x["control"];
   String soilFunctions = control["soilFunctions"];
@@ -116,6 +116,7 @@ List transpSperry(List x, List soil, double tmin, double tmax, double rhmin, dou
   //Soil input
   NumericVector W = soil["W"]; //Access to soil state variable
   NumericVector dVec = soil["dVec"];
+  NumericVector Water_FC = waterFC(soil, soilFunctions);
   NumericVector Theta_FC = thetaFC(soil, soilFunctions);
   NumericVector VG_n = Rcpp::as<Rcpp::NumericVector>(soil["VG_n"]);
   NumericVector VG_alpha = Rcpp::as<Rcpp::NumericVector>(soil["VG_alpha"]);
@@ -809,6 +810,13 @@ List transpSperry(List x, List soil, double tmin, double tmax, double rhmin, dou
   }
   
   
+  //B.3 - Substract  extracted water from soil moisture 
+  if(modifySoil){
+    for(int l=0;l<nlayers;l++) {
+      W[l] = std::max(W[l]-(sum(soilLayerExtractInst(l,_))/Water_FC[l]),0.0);
+    } 
+  }
+  
   //6. Copy LAIexpanded for output
   NumericVector LAIcohort(numCohorts);
   for(int c=0;c<numCohorts;c++) LAIcohort[c]= LAIphe[c];
@@ -905,8 +913,8 @@ List transpSperry(List x, List soil, double tmin, double tmax, double rhmin, dou
 }
 
 // [[Rcpp::export("transp_Sperry")]]
-List transpSperry(List x, List soil, DataFrame meteo, int day,
-                        double latitude, double elevation, int stepFunctions = NA_INTEGER) {
+List transpirationSperry(List x, List soil, DataFrame meteo, int day,
+                        double latitude, double elevation, int stepFunctions = NA_INTEGER, bool modifySoil = true) {
   if(!meteo.containsElementNamed("MinTemperature")) stop("Please include variable 'MinTemperature' in weather input.");
   NumericVector MinTemperature = meteo["MinTemperature"];
   if(!meteo.containsElementNamed("MaxTemperature")) stop("Please include variable 'MaxTemperature' in weather input.");
@@ -936,21 +944,24 @@ List transpSperry(List x, List soil, DataFrame meteo, int day,
   double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
   double latrad = latitude * (PI/180.0);
 
-  return(transpSperry(x,soil, tmin, tmax, rhmin, rhmax, rad, wind, 
+  return(transpirationSperry(x,soil, tmin, tmax, rhmin, rhmax, rad, wind, 
                      latitude, elevation, solarConstant, delta, prec,
                      false, stepFunctions));
 } 
 
 
 // [[Rcpp::export("transp_Granier")]]
-List transpGranier(List x, List soil, double tday, double pet) {
+List transpirationGranier(List x, List soil, double tday, double pet, bool modifySoil = true) {
   //Control parameters
   List control = x["control"];
   bool cavitationRefill = control["cavitationRefill"];
   String soilFunctions = control["soilFunctions"];
   
   //Soil input
+  NumericVector W = soil["W"]; //Access to soil state variable
   NumericVector psiSoil = psi(soil,soilFunctions); //Update soil water potential
+  NumericVector Water_FC = waterFC(soil, soilFunctions);
+  int nlayers = W.size();
   
   //Vegetation input
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
@@ -961,8 +972,7 @@ List transpGranier(List x, List soil, double tday, double pet) {
   NumericVector H = Rcpp::as<Rcpp::NumericVector>(above["H"]);
   NumericVector CR = Rcpp::as<Rcpp::NumericVector>(above["CR"]);
   int numCohorts = LAIphe.size();
-  int nlayers = psiSoil.length();
-  
+
   //Root distribution input
   List below = Rcpp::as<Rcpp::List>(x["below"]);
   NumericMatrix V = Rcpp::as<Rcpp::NumericMatrix>(below["V"]);
@@ -1054,6 +1064,11 @@ List transpGranier(List x, List soil, double tday, double pet) {
   NumericVector LAIcohort(numCohorts);
   for(int c=0;c<numCohorts;c++) LAIcohort[c]= LAIphe[c];
   
+  if(modifySoil) {
+    for(int l=0;l<nlayers;l++) {
+      W[l] = W[l] - (sum(EplantCoh(_,l))/Water_FC[l]); 
+    }
+  }
   DataFrame Plants = DataFrame::create(_["LAI"] = LAIcohort,
                                        _["Transpiration"] = Eplant, _["psi"] = PlantPsi, _["DDS"] = DDS);
   Plants.attr("row.names") = above.attr("row.names");

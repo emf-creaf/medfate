@@ -1704,23 +1704,24 @@ RcppExport SEXP _medfate_soilEvaporationDay(SEXP DEFSEXP, SEXP PETsSEXP, SEXP Gs
     return rcpp_result_gen;
 }
 // soilEvaporation
-NumericVector soilEvaporation(List soil, String soilFunctions, double pet, double LgroundSWR);
-static SEXP _medfate_soilEvaporation_try(SEXP soilSEXP, SEXP soilFunctionsSEXP, SEXP petSEXP, SEXP LgroundSWRSEXP) {
+NumericVector soilEvaporation(List soil, String soilFunctions, double pet, double LgroundSWR, bool modifySoil);
+static SEXP _medfate_soilEvaporation_try(SEXP soilSEXP, SEXP soilFunctionsSEXP, SEXP petSEXP, SEXP LgroundSWRSEXP, SEXP modifySoilSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< String >::type soilFunctions(soilFunctionsSEXP);
     Rcpp::traits::input_parameter< double >::type pet(petSEXP);
     Rcpp::traits::input_parameter< double >::type LgroundSWR(LgroundSWRSEXP);
-    rcpp_result_gen = Rcpp::wrap(soilEvaporation(soil, soilFunctions, pet, LgroundSWR));
+    Rcpp::traits::input_parameter< bool >::type modifySoil(modifySoilSEXP);
+    rcpp_result_gen = Rcpp::wrap(soilEvaporation(soil, soilFunctions, pet, LgroundSWR, modifySoil));
     return rcpp_result_gen;
 END_RCPP_RETURN_ERROR
 }
-RcppExport SEXP _medfate_soilEvaporation(SEXP soilSEXP, SEXP soilFunctionsSEXP, SEXP petSEXP, SEXP LgroundSWRSEXP) {
+RcppExport SEXP _medfate_soilEvaporation(SEXP soilSEXP, SEXP soilFunctionsSEXP, SEXP petSEXP, SEXP LgroundSWRSEXP, SEXP modifySoilSEXP) {
     SEXP rcpp_result_gen;
     {
         Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_medfate_soilEvaporation_try(soilSEXP, soilFunctionsSEXP, petSEXP, LgroundSWRSEXP));
+        rcpp_result_gen = PROTECT(_medfate_soilEvaporation_try(soilSEXP, soilFunctionsSEXP, petSEXP, LgroundSWRSEXP, modifySoilSEXP));
     }
     Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
     if (rcpp_isInterrupt_gen) {
@@ -3534,9 +3535,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// transpSperry
-List transpSperry(List x, List soil, DataFrame meteo, int day, double latitude, double elevation, int stepFunctions);
-RcppExport SEXP _medfate_transpSperry(SEXP xSEXP, SEXP soilSEXP, SEXP meteoSEXP, SEXP daySEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP stepFunctionsSEXP) {
+// transpirationSperry
+List transpirationSperry(List x, List soil, DataFrame meteo, int day, double latitude, double elevation, int stepFunctions, bool modifySoil);
+RcppExport SEXP _medfate_transpirationSperry(SEXP xSEXP, SEXP soilSEXP, SEXP meteoSEXP, SEXP daySEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP stepFunctionsSEXP, SEXP modifySoilSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -3547,13 +3548,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type latitude(latitudeSEXP);
     Rcpp::traits::input_parameter< double >::type elevation(elevationSEXP);
     Rcpp::traits::input_parameter< int >::type stepFunctions(stepFunctionsSEXP);
-    rcpp_result_gen = Rcpp::wrap(transpSperry(x, soil, meteo, day, latitude, elevation, stepFunctions));
+    Rcpp::traits::input_parameter< bool >::type modifySoil(modifySoilSEXP);
+    rcpp_result_gen = Rcpp::wrap(transpirationSperry(x, soil, meteo, day, latitude, elevation, stepFunctions, modifySoil));
     return rcpp_result_gen;
 END_RCPP
 }
-// transpGranier
-List transpGranier(List x, List soil, double tday, double pet);
-RcppExport SEXP _medfate_transpGranier(SEXP xSEXP, SEXP soilSEXP, SEXP tdaySEXP, SEXP petSEXP) {
+// transpirationGranier
+List transpirationGranier(List x, List soil, double tday, double pet, bool modifySoil);
+RcppExport SEXP _medfate_transpirationGranier(SEXP xSEXP, SEXP soilSEXP, SEXP tdaySEXP, SEXP petSEXP, SEXP modifySoilSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -3561,7 +3563,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< double >::type tday(tdaySEXP);
     Rcpp::traits::input_parameter< double >::type pet(petSEXP);
-    rcpp_result_gen = Rcpp::wrap(transpGranier(x, soil, tday, pet));
+    Rcpp::traits::input_parameter< bool >::type modifySoil(modifySoilSEXP);
+    rcpp_result_gen = Rcpp::wrap(transpirationGranier(x, soil, tday, pet, modifySoil));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -3650,7 +3653,7 @@ static int _medfate_RcppExport_validate(const char* sig) {
     if (signatures.empty()) {
         signatures.insert("NumericVector(*hydrology_er)(IntegerVector,double,double)");
         signatures.insert("double(*hydrology_soilEvaporationDay)(double,double,double)");
-        signatures.insert("NumericVector(*hydrology_soilEvaporation)(List,String,double,double)");
+        signatures.insert("NumericVector(*hydrology_soilEvaporation)(List,String,double,double,bool)");
         signatures.insert("double(*.hydrology_infiltrationDay)(double,double)");
         signatures.insert("NumericVector(*hydrology_infiltrationRepartition)(double,NumericVector,NumericVector)");
         signatures.insert("double(*.hydrology_interceptionGashDay)(double,double,double,double)");
@@ -3830,7 +3833,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_leafWaterCapacity", (DL_FUNC) &_medfate_leafWaterCapacity, 2},
     {"_medfate_er", (DL_FUNC) &_medfate_er, 3},
     {"_medfate_soilEvaporationDay", (DL_FUNC) &_medfate_soilEvaporationDay, 3},
-    {"_medfate_soilEvaporation", (DL_FUNC) &_medfate_soilEvaporation, 4},
+    {"_medfate_soilEvaporation", (DL_FUNC) &_medfate_soilEvaporation, 5},
     {"_medfate_infiltrationDay", (DL_FUNC) &_medfate_infiltrationDay, 2},
     {"_medfate_infiltrationRepartition", (DL_FUNC) &_medfate_infiltrationRepartition, 3},
     {"_medfate_interceptionGashDay", (DL_FUNC) &_medfate_interceptionGashDay, 4},
@@ -3904,8 +3907,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_tissueRelativeWaterContent", (DL_FUNC) &_medfate_tissueRelativeWaterContent, 8},
     {"_medfate_tissueFMC", (DL_FUNC) &_medfate_tissueFMC, 3},
     {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 6},
-    {"_medfate_transpSperry", (DL_FUNC) &_medfate_transpSperry, 7},
-    {"_medfate_transpGranier", (DL_FUNC) &_medfate_transpGranier, 4},
+    {"_medfate_transpirationSperry", (DL_FUNC) &_medfate_transpirationSperry, 8},
+    {"_medfate_transpirationGranier", (DL_FUNC) &_medfate_transpirationGranier, 5},
     {"_medfate_windSpeedAtCanopyHeight", (DL_FUNC) &_medfate_windSpeedAtCanopyHeight, 2},
     {"_medfate_unshelteredMidflameWindSpeed", (DL_FUNC) &_medfate_unshelteredMidflameWindSpeed, 2},
     {"_medfate_shelteredMidflameWindSpeed", (DL_FUNC) &_medfate_shelteredMidflameWindSpeed, 3},

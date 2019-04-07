@@ -66,17 +66,17 @@ namespace medfate {
         return Rcpp::as<double >(rcpp_result_gen);
     }
 
-    inline NumericVector hydrology_soilEvaporation(List soil, String soilFunctions, double pet, double LgroundSWR) {
-        typedef SEXP(*Ptr_hydrology_soilEvaporation)(SEXP,SEXP,SEXP,SEXP);
+    inline NumericVector hydrology_soilEvaporation(List soil, String soilFunctions, double pet, double LgroundSWR, bool modifySoil = true) {
+        typedef SEXP(*Ptr_hydrology_soilEvaporation)(SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_hydrology_soilEvaporation p_hydrology_soilEvaporation = NULL;
         if (p_hydrology_soilEvaporation == NULL) {
-            validateSignature("NumericVector(*hydrology_soilEvaporation)(List,String,double,double)");
+            validateSignature("NumericVector(*hydrology_soilEvaporation)(List,String,double,double,bool)");
             p_hydrology_soilEvaporation = (Ptr_hydrology_soilEvaporation)R_GetCCallable("medfate", "_medfate_hydrology_soilEvaporation");
         }
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_hydrology_soilEvaporation(Shield<SEXP>(Rcpp::wrap(soil)), Shield<SEXP>(Rcpp::wrap(soilFunctions)), Shield<SEXP>(Rcpp::wrap(pet)), Shield<SEXP>(Rcpp::wrap(LgroundSWR)));
+            rcpp_result_gen = p_hydrology_soilEvaporation(Shield<SEXP>(Rcpp::wrap(soil)), Shield<SEXP>(Rcpp::wrap(soilFunctions)), Shield<SEXP>(Rcpp::wrap(pet)), Shield<SEXP>(Rcpp::wrap(LgroundSWR)), Shield<SEXP>(Rcpp::wrap(modifySoil)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();

@@ -29,8 +29,6 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
 
   //Soil input
   NumericVector W = soil["W"]; //Access to soil state variable
-  NumericVector dVec = soil["dVec"];
-  NumericVector Water_FC = waterFC(soil, soilFunctions);
   int nlayers = W.size();
   
 
@@ -73,19 +71,15 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
                                              snowpack, drainage);
 
   //Evaporation from bare soil if there is no snow
-  NumericVector EsoilVec = soilEvaporation(soil, soilFunctions, pet, LgroundSWR);
+  NumericVector EsoilVec = soilEvaporation(soil, soilFunctions, pet, LgroundSWR, true);
 
   //Canopy transpiration  
-  List transp = transpGranier(x, soil, tday, pet);
+  List transp = transpirationGranier(x, soil, tday, pet, true);
   NumericVector EplantVec(nlayers, 0.0);
   NumericMatrix EplantCoh = Rcpp::as<Rcpp::NumericMatrix>(transp["Extraction"]);
+  for(int l=0;l<nlayers;l++) EplantVec[l] = sum(EplantCoh(_,l));
   DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(transp["Plants"]);
   
-  //Apply decrease in soil layers 
-  for(int l=0;l<nlayers;l++) {
-    EplantVec[l] = sum(EplantCoh(_,l));
-    W[l] = W[l] - ((EplantVec[l]+EsoilVec[l])/Water_FC[l]); 
-  }
   NumericVector psiVec = psi(soil, soilFunctions); //Calculate current soil water potential for output
   
   NumericVector DB = NumericVector::create(_["PET"] = pet, _["Rain"] = hydroInputs["Rain"], _["Snow"] = hydroInputs["Snow"], _["NetRain"] = hydroInputs["Throughfall"], _["Runon"] = hydroInputs["Runon"], 
@@ -124,7 +118,6 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   
   //Soil input
   NumericVector W = soil["W"]; //Access to soil state variable
-  NumericVector Water_FC = waterFC(soil, soilFunctions);
   int nlayers = W.size();
 
   //Vegetation input
@@ -168,11 +161,11 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   
   
   //B.1 - Evaporation from bare soil if there is no snow
-  NumericVector EsoilVec = soilEvaporation(soil, soilFunctions, pet, LgroundSWR);
+  NumericVector EsoilVec = soilEvaporation(soil, soilFunctions, pet, LgroundSWR, true);
   
   //B.2 - Canopy transpiration  
-  List transp = transpSperry(x, soil,tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, solarConstant,
-                             delta, prec, verbose);
+  List transp = transpirationSperry(x, soil,tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, solarConstant,
+                             delta, prec, verbose, NA_INTEGER, true);
 
   
   NumericMatrix soilLayerExtractInst = Rcpp::as<Rcpp::NumericMatrix>(transp["ExtractionInst"]);
@@ -184,7 +177,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   List EnergyBalance = Rcpp::as<Rcpp::List>(transp["EnergyBalance"]);
   
   //B.3 - Substract evaporated and extracted water from soil moisture 
-  NumericVector soilExtractionBalance(nlayers, 0.0);
+  NumericVector EplantVec(nlayers, 0.0);
   NumericVector soilHydraulicInput(nlayers, 0.0); //Water that entered into the layer across all time steps
   NumericVector soilHydraulicOutput(nlayers, 0.0);  //Water that left the layer across all time steps
   for(int l=0;l<nlayers;l++) {
@@ -192,21 +185,20 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
       soilHydraulicInput[l] += (-1.0)*std::min(soilLayerExtractInst(l,n),0.0);
       soilHydraulicOutput[l] += std::max(soilLayerExtractInst(l,n),0.0);
     }
-    soilExtractionBalance[l] = sum(soilLayerExtractInst(l,_));
-    W[l] = std::max(W[l]-((soilExtractionBalance[l]+EsoilVec[l])/Water_FC[l]),0.0);
+    EplantVec[l] = sum(soilLayerExtractInst(l,_));
   }
   NumericVector psiVec = psi(soil, soilFunctions); //Calculate current soil water potential for output
   
   NumericVector DB = NumericVector::create(_["PET"] = pet,_["Rain"] = hydroInputs["Rain"],_["Snow"] = hydroInputs["Snow"],_["NetRain"] = hydroInputs["Throughfall"], 
                                            _["Runon"] = hydroInputs["Runon"], _["Infiltration"] = hydroInputs["Infiltration"], _["Runoff"] = hydroInputs["Runoff"], _["DeepDrainage"] = hydroInputs["DeepDrainage"],
-                                           _["SoilEvaporation"] = sum(EsoilVec), _["PlantExtraction"] = sum(soilExtractionBalance), _["Transpiration"] = sum(Eplant),
+                                           _["SoilEvaporation"] = sum(EsoilVec), _["PlantExtraction"] = sum(EplantVec), _["Transpiration"] = sum(Eplant),
                                            _["HydraulicRedistribution"] = sum(soilHydraulicInput),
                                            _["LAIcell"] = LAIcell, _["LAIcelldead"] = LAIcelldead, _["Cm"] = Cm, _["Lground"] = LgroundPAR);
   
   DataFrame SB = DataFrame::create(_["SoilEvaporation"] = EsoilVec, 
                                    _["HydraulicInput"] = soilHydraulicInput, 
                                    _["HydraulicOutput"] = soilHydraulicOutput, 
-                                   _["PlantExtraction"] = soilExtractionBalance, 
+                                   _["PlantExtraction"] = EplantVec, 
                                    _["psi"] = psiVec);
   
   List l = List::create(_["cohorts"] = clone(cohorts),

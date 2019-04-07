@@ -413,8 +413,8 @@ hydrology_soilEvaporationDay <- function(DEF, PETs, Gsoil) {
     .Call(`_medfate_soilEvaporationDay`, DEF, PETs, Gsoil)
 }
 
-hydrology_soilEvaporation <- function(soil, soilFunctions, pet, LgroundSWR) {
-    .Call(`_medfate_soilEvaporation`, soil, soilFunctions, pet, LgroundSWR)
+hydrology_soilEvaporation <- function(soil, soilFunctions, pet, LgroundSWR, modifySoil = TRUE) {
+    .Call(`_medfate_soilEvaporation`, soil, soilFunctions, pet, LgroundSWR, modifySoil)
 }
 
 .hydrology_infiltrationDay <- function(input, Ssoil) {
@@ -709,12 +709,12 @@ transp_profitMaximization <- function(supplyFunction, photosynthesisFunction, ty
     .Call(`_medfate_profitMaximization`, supplyFunction, photosynthesisFunction, type, Gwmin, Gwmax, kleafmax)
 }
 
-transp_Sperry <- function(x, soil, meteo, day, latitude, elevation, stepFunctions = NA_integer_) {
-    .Call(`_medfate_transpSperry`, x, soil, meteo, day, latitude, elevation, stepFunctions)
+transp_Sperry <- function(x, soil, meteo, day, latitude, elevation, stepFunctions = NA_integer_, modifySoil = TRUE) {
+    .Call(`_medfate_transpirationSperry`, x, soil, meteo, day, latitude, elevation, stepFunctions, modifySoil)
 }
 
-transp_Granier <- function(x, soil, tday, pet) {
-    .Call(`_medfate_transpGranier`, x, soil, tday, pet)
+transp_Granier <- function(x, soil, tday, pet, modifySoil = TRUE) {
+    .Call(`_medfate_transpirationGranier`, x, soil, tday, pet, modifySoil)
 }
 
 .windSpeedAtCanopyHeight <- function(wind20H, canopyHeight) {
