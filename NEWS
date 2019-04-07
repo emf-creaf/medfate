@@ -8,6 +8,7 @@ _Version 0.8.0, April 2019.
 1. Move spatial classes and methods to package 'medfateland'
 2. Implement underscores instead of dots to separate function groups and function names
 3. New function transp_Granier.
+4. Bug corrected in spwb.plot for snow plotting.
 
 _Version 0.7.4, March 2019.
 1. Fixing bugs for installation in all platforms

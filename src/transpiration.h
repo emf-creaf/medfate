@@ -9,4 +9,4 @@ List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, i
 List transpGranier(List x, List soil, double tday, double pet);
 List transpSperry(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
                   double latitude, double elevation, double solarConstant, double delta, double prec,
-                  bool verbose = false);
+                  bool verbose = false, int stepFunctions = NA_INTEGER);

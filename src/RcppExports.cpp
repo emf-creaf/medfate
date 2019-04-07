@@ -3452,8 +3452,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // transpSperry
-List transpSperry(List x, List soil, DataFrame meteo, int day, double latitude, double elevation);
-RcppExport SEXP _medfate_transpSperry(SEXP xSEXP, SEXP soilSEXP, SEXP meteoSEXP, SEXP daySEXP, SEXP latitudeSEXP, SEXP elevationSEXP) {
+List transpSperry(List x, List soil, DataFrame meteo, int day, double latitude, double elevation, int stepFunctions);
+RcppExport SEXP _medfate_transpSperry(SEXP xSEXP, SEXP soilSEXP, SEXP meteoSEXP, SEXP daySEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP stepFunctionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -3463,7 +3463,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type day(daySEXP);
     Rcpp::traits::input_parameter< double >::type latitude(latitudeSEXP);
     Rcpp::traits::input_parameter< double >::type elevation(elevationSEXP);
-    rcpp_result_gen = Rcpp::wrap(transpSperry(x, soil, meteo, day, latitude, elevation));
+    Rcpp::traits::input_parameter< int >::type stepFunctions(stepFunctionsSEXP);
+    rcpp_result_gen = Rcpp::wrap(transpSperry(x, soil, meteo, day, latitude, elevation, stepFunctions));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -3814,7 +3815,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_tissueRelativeWaterContent", (DL_FUNC) &_medfate_tissueRelativeWaterContent, 8},
     {"_medfate_tissueFMC", (DL_FUNC) &_medfate_tissueFMC, 3},
     {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 6},
-    {"_medfate_transpSperry", (DL_FUNC) &_medfate_transpSperry, 6},
+    {"_medfate_transpSperry", (DL_FUNC) &_medfate_transpSperry, 7},
     {"_medfate_transpGranier", (DL_FUNC) &_medfate_transpGranier, 4},
     {"_medfate_windSpeedAtCanopyHeight", (DL_FUNC) &_medfate_windSpeedAtCanopyHeight, 2},
     {"_medfate_unshelteredMidflameWindSpeed", (DL_FUNC) &_medfate_unshelteredMidflameWindSpeed, 2},

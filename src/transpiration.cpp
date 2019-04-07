@@ -84,7 +84,7 @@ List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, i
 
 List transpSperry(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
                   double latitude, double elevation, double solarConstant, double delta, double prec,
-                  bool verbose = false) {
+                  bool verbose = false, int stepFunctions = NA_INTEGER) {
   //Control parameters
   List control = x["control"];
   String soilFunctions = control["soilFunctions"];
@@ -315,6 +315,7 @@ List transpSperry(List x, List soil, double tmin, double tmax, double rhmin, dou
   
   //Hydraulics: build supply functions
   List supply(numCohorts);
+  supply.attr("names") = above.attr("row.names");
   for(int c=0;c<numCohorts;c++) {
     // Copy values from connected layers
     NumericVector Vc = NumericVector(nlayerscon[c]);
@@ -386,6 +387,15 @@ List transpSperry(List x, List soil, double tmin, double tmax, double rhmin, dou
   NumericMatrix PLC(numCohorts, ntimesteps);
   NumericVector PLCm(numCohorts), RWCsm(numCohorts), RWClm(numCohorts);
   NumericVector dEdPm(numCohorts);
+  
+  List outPhotoSunlit(numCohorts);
+  List outPhotoShade(numCohorts);
+  List outPMSunlit(numCohorts);
+  List outPMShade(numCohorts);
+  outPhotoSunlit.attr("names") = above.attr("row.names");
+  outPhotoShade.attr("names") = above.attr("row.names");
+  outPMSunlit.attr("names") = above.attr("row.names");
+  outPMShade.attr("names") = above.attr("row.names");
   
   for(int n=0;n<ntimesteps;n++) { //Time loop
     //Long-wave radiation due to canopy temperature
@@ -529,6 +539,15 @@ List transpSperry(List x, List soil, double tmin, double tmax, double rhmin, dou
             int iPMSunlit = PMSunlit["iMaxProfit"];
             int iPMShade = PMShade["iMaxProfit"];
             
+            //Store?
+            if(!IntegerVector::is_na(stepFunctions)) {
+              if(n==stepFunctions) {
+                outPhotoSunlit[c] = photoSunlit;
+                outPhotoShade[c] = photoShade;
+                outPMSunlit[c] = PMSunlit;
+                outPMShade[c] = PMShade;
+              }
+            }
             // Rcout<<iPMSunlit<<" "<<iPMShade<<"\n";
             //Get leaf status
             GW_SH(c,n)= GwShade[iPMShade];
@@ -859,18 +878,35 @@ List transpSperry(List x, List soil, double tmin, double tmax, double rhmin, dou
                                        _["LeafRWC"] = RWClm);
   Plants.attr("row.names") = above.attr("row.names");
   
-  List l = List::create(_["cohorts"] = clone(cohorts),
-                        _["EnergyBalance"] = EB,
-                        _["ExtractionInst"] = soilLayerExtractInst,
-                        _["RhizoPsi"] = minPsiRhizo,
-                        _["Plants"] = Plants,
-                        _["PlantsInst"] = PlantsInst);
+  List l;
+  if(!IntegerVector::is_na(stepFunctions)){
+    l = List::create(_["cohorts"] = clone(cohorts),
+                     _["EnergyBalance"] = EB,
+                     _["ExtractionInst"] = soilLayerExtractInst,
+                     _["RhizoPsi"] = minPsiRhizo,
+                     _["Plants"] = Plants,
+                     _["PlantsInst"] = PlantsInst,
+                     _["SupplyFunctions"] = supply,
+                     _["PhotoSunlitFunctions"] = outPhotoSunlit,
+                     _["PhotoShadeFunctions"] = outPhotoShade,
+                     _["PMSunlitFunctions"] = outPMSunlit,
+                     _["PMShadeFunctions"] = outPMShade);
+  } else {
+    l = List::create(_["cohorts"] = clone(cohorts),
+                     _["EnergyBalance"] = EB,
+                     _["ExtractionInst"] = soilLayerExtractInst,
+                     _["RhizoPsi"] = minPsiRhizo,
+                     _["Plants"] = Plants,
+                     _["PlantsInst"] = PlantsInst,
+                     _["SupplyFunctions"] = supply);
+    
+  }  
   return(l);
 }
 
 // [[Rcpp::export("transp_Sperry")]]
 List transpSperry(List x, List soil, DataFrame meteo, int day,
-                        double latitude, double elevation) {
+                        double latitude, double elevation, int stepFunctions = NA_INTEGER) {
   if(!meteo.containsElementNamed("MinTemperature")) stop("Please include variable 'MinTemperature' in weather input.");
   NumericVector MinTemperature = meteo["MinTemperature"];
   if(!meteo.containsElementNamed("MaxTemperature")) stop("Please include variable 'MaxTemperature' in weather input.");
@@ -902,7 +938,7 @@ List transpSperry(List x, List soil, DataFrame meteo, int day,
 
   return(transpSperry(x,soil, tmin, tmax, rhmin, rhmax, rad, wind, 
                      latitude, elevation, solarConstant, delta, prec,
-                     false));
+                     false, stepFunctions));
 } 
 
 

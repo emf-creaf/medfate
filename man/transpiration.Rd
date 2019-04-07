@@ -1,8 +1,8 @@
 \encoding{UTF-8}
 \name{transpiration}
 \alias{transp_profitMaximization}
-\alias{transp_stomatalRegulation}
 \alias{transp_stomatalRegulationPlot}
+\alias{transp_Sperry}
 \alias{transp_Granier}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
@@ -14,11 +14,11 @@ Set of high-level functions used in the calculation of stomatal conductance and 
 \usage{
 transp_profitMaximization(supplyFunction, photosynthesisFunction, type, 
                           Gwmin, Gwmax, kleafmax = NA)
-transp_stomatalRegulation(x, soil, meteo, day,
-                             latitude, elevation)
+transp_Granier(x, soil, tday, pet)                              
+transp_Sperry(x, soil, meteo, day,
+              latitude, elevation)
 transp_stomatalRegulationPlot(x, soil, meteo, day, timestep, 
                               latitude, elevation)
-transp_Granier(x, soil, tday, pet)                              
 }
 
 %- maybe also 'usage' for other objects documented here.

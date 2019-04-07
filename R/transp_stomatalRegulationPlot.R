@@ -1,22 +1,15 @@
 transp_stomatalRegulationPlot<-function(x, soil, meteo, day, timestep, latitude, elevation) {
   
-  dctr = transp_stomatalRegulation(x, soil, meteo, day, latitude, elevation)
-  ncoh = length(dctr)
+  dctr = transp_Sperry(x, soil, meteo, day, latitude, elevation, stepFunctions = timestep)
+  ncoh = length(dctr$SupplyFunctions)
   oldpar = par(mar=c(5,5,1,1), mfrow = c(5,2))
   
-  l = vector("list", ncoh)
-  phsunlit = vector("list", ncoh)
-  phshade = vector("list", ncoh)
-  pmsunlit = vector("list", ncoh)
-  pmshade = vector("list", ncoh)
+  l = dctr$SupplyFunctions
+  phsunlit = dctr$PhotoSunlitFunctions
+  phshade = dctr$PhotoShadeFunctions
+  pmsunlit = dctr$PMSunlitFunctions
+  pmshade = dctr$PMShadeFunctions
   
-  for(i in 1:ncoh) {
-    l[[i]] = dctr[[i]]$supply
-    phsunlit[[i]] = dctr[[i]]$photoSunlit[[timestep]]
-    phshade[[i]] = dctr[[i]]$photoShade[[timestep]]
-    pmsunlit[[i]] = dctr[[i]]$PMSunlit[[timestep]]
-    pmshade[[i]] = dctr[[i]]$PMShade[[timestep]]
-  }
   maxE = 0
   maxA = 0
   minPsi = 0
@@ -54,7 +47,7 @@ transp_stomatalRegulationPlot<-function(x, soil, meteo, day, timestep, latitude,
     }
     abline(v = -l[[i]]$psiLeaf[pmsunlit[[i]]$iMaxProfit+1], col="orange", lty=i, lwd=2)
   }
-  legend("topleft", legend = names(dctr), lty=1:length(dctr), bty = "n")
+  legend("topleft", legend = names(l), lty=1:ncoh, bty = "n")
   for(i in 1:ncoh) {
     if(i==1) {
       plot(-l[[i]]$psiLeaf, l[[i]]$E, type="l", ylim=c(0,maxE+0.1), xlim=c(0,-minPsi),

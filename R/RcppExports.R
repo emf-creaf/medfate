@@ -701,8 +701,8 @@ transp_profitMaximization <- function(supplyFunction, photosynthesisFunction, ty
     .Call(`_medfate_profitMaximization`, supplyFunction, photosynthesisFunction, type, Gwmin, Gwmax, kleafmax)
 }
 
-transp_Sperry <- function(x, soil, meteo, day, latitude, elevation) {
-    .Call(`_medfate_transpSperry`, x, soil, meteo, day, latitude, elevation)
+transp_Sperry <- function(x, soil, meteo, day, latitude, elevation, stepFunctions = NA_integer_) {
+    .Call(`_medfate_transpSperry`, x, soil, meteo, day, latitude, elevation, stepFunctions)
 }
 
 transp_Granier <- function(x, soil, tday, pet) {
