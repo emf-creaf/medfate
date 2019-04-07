@@ -409,8 +409,12 @@ hydrology_er <- function(DOY, ERconv = 0.05, ERsyn = 0.2) {
     .Call(`_medfate_er`, DOY, ERconv, ERsyn)
 }
 
-hydrology_soilEvaporation <- function(DEF, PETs, Gsoil) {
-    .Call(`_medfate_soilevaporation`, DEF, PETs, Gsoil)
+hydrology_soilEvaporationDay <- function(DEF, PETs, Gsoil) {
+    .Call(`_medfate_soilEvaporationDay`, DEF, PETs, Gsoil)
+}
+
+hydrology_soilEvaporation <- function(soil, soilFunctions, pet, LgroundSWR) {
+    .Call(`_medfate_soilEvaporation`, soil, soilFunctions, pet, LgroundSWR)
 }
 
 .hydrology_infiltrationDay <- function(input, Ssoil) {
@@ -423,6 +427,10 @@ hydrology_infiltrationRepartition <- function(I, dVec, macro) {
 
 .hydrology_interceptionGashDay <- function(Precipitation, Cm, p, ER = 0.05) {
     .Call(`_medfate_interceptionGashDay`, Precipitation, Cm, p, ER)
+}
+
+hydrology_verticalInputs <- function(soil, soilFunctions, prec, er, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, runon = 0.0, snowpack = TRUE, drainage = TRUE) {
+    .Call(`_medfate_verticalInputs`, soil, soilFunctions, prec, er, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, runon, snowpack, drainage)
 }
 
 .incgam <- function(a, x) {

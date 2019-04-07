@@ -165,21 +165,21 @@ roots in each soil layer:
 \item{$v_{i,s}$ [\texttt{V}]: The proportion of fine roots in each soil layer $s$.}
 \end{itemize}
 
-The rooting system of each cohort $i$ (i.e. the proportions $v_{i,s}$) can be defined assuming conic distribution of fine roots (see \texttt{root.conicDistribution()}). In this case, only rooting depth parameter is needed to determine fine root proportions. Alternatively, one can adopt the linear dose response model (Collins and Bras, 2007; Schenk and Jackson, 2002): 
+The rooting system of each cohort $i$ (i.e. the proportions $v_{i,s}$) can be defined assuming conic distribution of fine roots (see \texttt{root\_conicDistribution()}). In this case, only rooting depth parameter is needed to determine fine root proportions. Alternatively, one can adopt the linear dose response model (Collins and Bras, 2007; Schenk and Jackson, 2002): 
 \begin{equation}
 Y_i(z)=\frac{1}{1+(z/Z_{50,i})^{c_i}}
 \end{equation}
-where $Y_i(z)$ is the cumulative fraction of fine root mass located between surface and depth $z$; $Z_{50,i}$ is the depth above which 50\% of the root mass is located; and $c_i$ is a shape parameter related to $Z_{50,i}$ and $Z_{95,i}$ as $c_i  = 2.94 / \ln(Z_{50,i} / Z_{95,i})$ (see \texttt{root.ldrDistribution()}). 
+where $Y_i(z)$ is the cumulative fraction of fine root mass located between surface and depth $z$; $Z_{50,i}$ is the depth above which 50\% of the root mass is located; and $c_i$ is a shape parameter related to $Z_{50,i}$ and $Z_{95,i}$ as $c_i  = 2.94 / \ln(Z_{50,i} / Z_{95,i})$ (see \texttt{root\_ldrDistribution()}). 
 
 \begin{center}
 <<fig=TRUE, width=7, height=4, echo=FALSE>>==
 par(mar=c(4,4,1,1), mfrow=c(1,2))
-P = root.conicDistribution(c(200,1500), rep(10,151))
+P = root_conicDistribution(c(200,1500), rep(10,151))
 matplot(x=t(P)*10, y=seq(0,1500, by=10), type="l", xlim=c(0,2), ylim=c(1500,0), ylab = "Depth (mm)", 
         xlab="Percentage of fine roots/mm")
 legend("bottomright", legend=c("Z = 200", 
        "Z = 1500"), col=c("black","red"), lty=1:2, bty="n")
-P = root.ldrDistribution(c(100,500), c(200,1500), rep(10,151))
+P = root_ldrDistribution(c(100,500), c(200,1500), rep(10,151))
 matplot(x=t(P)*10, y=seq(0,1500, by=10), type="l", xlim=c(0,2), ylim=c(1500,0), ylab = "Depth (mm)", 
         xlab="Percentage of fine roots/mm")
 legend("bottomright", legend=c("Z50 = 100, Z95 = 200", 
@@ -366,16 +366,16 @@ trunks of a  species $i$ per unit of leaf area index (mm·LAI$^{-1}$). To estima
 the stand cover, $C$, we use the complement of the percentage of PAR that reaches
 the ground, i.e. $C = 1 - L^{PAR}_{ground}$  (Deguchi et al., 2006). Fig. 1 below
 shows examples of relative throughfall, calculated according to the interception
-model, under different situations (see function \texttt{hydrology.rainInterception}). 
+model, under different situations (see function \texttt{hydrology\_rainInterception}). 
 
 \begin{center}
 
 <<fig=TRUE, width=9, height=9, echo=FALSE>>=
 par(mfrow=c(2,2), mar=c(5,5,5,1))
 throughfallMatrixGash<-function(P = seq(1,50, by=1), Cm = seq(1,5, by=1), ER = 0.08,p=0.8) {
-  m2<-P-hydrology.rainInterception(P,Cm[1],p,ER=ER)
+  m2<-P-hydrology_rainInterception(P,Cm[1],p,ER=ER)
   for(i in 2:length(Cm)) {
-    m2<-rbind(m2,P-hydrology.rainInterception(P,Cm[i],p,ER=ER))
+    m2<-rbind(m2,P-hydrology_rainInterception(P,Cm[i],p,ER=ER))
   }
   colnames(m2)<-P
   rownames(m2)<-Cm
@@ -424,7 +424,7 @@ storage capacity), $E/R$ (ratio between evaporation and rainfall rates) and p
 
 
 \subsection{Runoff, infiltration and percolation}
-The water that reaches the soil is the sum of net rainfall ($Pr_{net}$), runon ($Ro$) and melted snow ($Sm$). The amount of water infiltrating into the soil is $Pr_{net} + Sm + Ro - Ru$, where $Ru$ is the water lost by surface runoff (see function \texttt{hydrology.soilInfiltration}). Surface runoff (in mm), is calculated using the USDA SCS curve number method, as in Boughton (1989):
+The water that reaches the soil is the sum of net rainfall ($Pr_{net}$), runon ($Ro$) and melted snow ($Sm$). The amount of water infiltrating into the soil is $Pr_{net} + Sm + Ro - Ru$, where $Ru$ is the water lost by surface runoff (see function \texttt{hydrology\_soilInfiltrationDay}). Surface runoff (in mm), is calculated using the USDA SCS curve number method, as in Boughton (1989):
 \begin{equation}
 Ru=\frac{(Pr_{net} + Ro + Sm - 0.2 \cdot V_{soil})^2}{(Pr_{net} + Ro + Sm - 0.8 \cdot V_{soil})}
 \end{equation}
@@ -453,9 +453,9 @@ TS_gravel = 20
 SS_gravel = 40
 RL_gravel = 95
 
-Theta_FC1=soil.psi2thetaSX(TS_clay, TS_sand, -33) #in m3/m3
-Theta_FC2=soil.psi2thetaSX(SS_clay, SS_sand, -33) #in m3/m3
-Theta_FC3=soil.psi2thetaSX(RL_clay, RL_sand, -33) #in m3/m3
+Theta_FC1=soil_psi2thetaSX(TS_clay, TS_sand, -33) #in m3/m3
+Theta_FC2=soil_psi2thetaSX(SS_clay, SS_sand, -33) #in m3/m3
+Theta_FC3=soil_psi2thetaSX(RL_clay, RL_sand, -33) #in m3/m3
 pcTS_gravel = 1-(TS_gravel/100)
 pcSS_gravel = 1-(SS_gravel/100)
 pcRL_gravel = 1-(RL_gravel/100)
@@ -466,26 +466,26 @@ V = MaxVol1+MaxVol2+MaxVol3
 
 par(mar=c(5,5,1,1), mfrow=c(1,2))
 NP = seq(0,60, by=1)
-plot(NP,hydrology.soilInfiltration(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
+plot(NP,hydrology_soilInfiltration(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
      ylab="Infiltration (mm)", xlab="Net rainfall (mm)", frame=FALSE)
-lines(NP,hydrology.soilInfiltration(NP, V[2]), lty=2)
-lines(NP,hydrology.soilInfiltration(NP, V[3]), lty=3)
-lines(NP,hydrology.soilInfiltration(NP, V[4]), lty=4)
-lines(NP,hydrology.soilInfiltration(NP, V[5]), lty=5)
+lines(NP,hydrology_soilInfiltration(NP, V[2]), lty=2)
+lines(NP,hydrology_soilInfiltration(NP, V[3]), lty=3)
+lines(NP,hydrology_soilInfiltration(NP, V[4]), lty=4)
+lines(NP,hydrology_soilInfiltration(NP, V[5]), lty=5)
 legend("topleft", bty="n", lty=1:5, legend=c(paste("d =", SoilDepth, "Vsoil =",round(V),"mm")))
-plot(NP,NP-hydrology.soilInfiltration(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
+plot(NP,NP-hydrology_soilInfiltration(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
      ylab="Runoff (mm)", xlab="Net rainfall (mm)", frame=FALSE)
-lines(NP,NP-hydrology.soilInfiltration(NP, V[2]), lty=2)
-lines(NP,NP-hydrology.soilInfiltration(NP, V[3]), lty=3)
-lines(NP,NP-hydrology.soilInfiltration(NP, V[4]), lty=4)
-lines(NP,NP-hydrology.soilInfiltration(NP, V[5]), lty=5)
+lines(NP,NP-hydrology_soilInfiltration(NP, V[2]), lty=2)
+lines(NP,NP-hydrology_soilInfiltration(NP, V[3]), lty=3)
+lines(NP,NP-hydrology_soilInfiltration(NP, V[4]), lty=4)
+lines(NP,NP-hydrology_soilInfiltration(NP, V[5]), lty=5)
 legend("topleft", bty="n", lty=1:5, legend=c(paste("d =", SoilDepth,"Vsoil =",round(V),"mm")))
 @
 \end{center}
 \begin{center}
 \emph{Fig. 2}: Examples of infiltration/runoff calculation for different values
 of net rainfall and overall retention capacity (see function
-\texttt{hydrology.soilInfiltration}), $V_{soil}$, calculated from different soil depths
+\texttt{hydrology\_soilInfiltration}), $V_{soil}$, calculated from different soil depths
 (topsoil+subsoil) and assuming that soil texture is 15\% clay and 25\% sand. Rock
 fragment content was 25\% and 40\% for the topsoil and subsoil, respectively.
 \end{center}
@@ -524,7 +524,7 @@ Tr_{\max, i} = Tr_{\max} \cdot \frac{f_i}{\sum_{j}{f_j}}
 Actual plant transpiration depends on soil moisture and is calculated for each
 plant cohort and each soil layer separately. $Tr_{i,s}$ (in mm·day$^{-1}$) represents
 the transpiration made by cohort $i$ from layer $s$. Actual plant transpiration from a given layer is regulated by soil moisture and the resistance to water flow through the plant. For each plant cohort $i$ and soil layer $s$, the model first
-estimates the a whole-plant relative water conductance, $K_{i,s}$, which varies between 0 and 1 depending on $\Psi_{extract,i}$, the potential at which conductance is 50\% of maximum, and $\Psi_s$, the water potential in layer $s$ (see function \texttt{hydraulics.psi2K()}):
+estimates the a whole-plant relative water conductance, $K_{i,s}$, which varies between 0 and 1 depending on $\Psi_{extract,i}$, the potential at which conductance is 50\% of maximum, and $\Psi_s$, the water potential in layer $s$ (see function \texttt{hydraulics\_psi2K()}):
 \begin{equation}
 K_{i,s}=K_{i}(\Psi_s) = \exp \left \{\ln{(0.5)}\cdot \left[ \frac{\Psi_s}{\Psi_{extract,i}} \right] ^r \right \} 
 \end{equation}
@@ -535,10 +535,10 @@ is used to ensure that $K_{i}(\Psi_{extract,i}) = 0.5$ (Fig. 4).
 <<fig=TRUE, width=4, height=4, echo=FALSE>>==
 par(mar=c(4,4,1,1))
 x = seq(-10, 0, by=0.01)
-plot(-x ,unlist(lapply(x,hydraulics.psi2K,-2.0,3.0)), type="l", ylab="K (relative conductance)", xlim=c(0,10), ylim=c(0,1),xlab="Soil water potential (-MPa)", frame=FALSE)
-lines(-x, unlist(lapply(x,hydraulics.psi2K,-3.0,3.0)), lty=2)
-lines(-x, unlist(lapply(x,hydraulics.psi2K,-4.0,3.0)), lty=3)
-lines(-x, unlist(lapply(x,hydraulics.psi2K,-5.0,3.0)), lty=4)
+plot(-x ,unlist(lapply(x,hydraulics_psi2K,-2.0,3.0)), type="l", ylab="K (relative conductance)", xlim=c(0,10), ylim=c(0,1),xlab="Soil water potential (-MPa)", frame=FALSE)
+lines(-x, unlist(lapply(x,hydraulics_psi2K,-3.0,3.0)), lty=2)
+lines(-x, unlist(lapply(x,hydraulics_psi2K,-4.0,3.0)), lty=3)
+lines(-x, unlist(lapply(x,hydraulics_psi2K,-5.0,3.0)), lty=4)
 legend("topright", lty=1:4, col=c(rep("black",4)), 
        legend = paste("Psi_extract = ", c(-2.0,-3.0,-4.0, -5.0), "MPa"), bty="n", cex=0.8)
 abline(h=50, col="gray", lwd=2)
@@ -608,7 +608,7 @@ obtained averaging whole-plant relative conductance values:
 \Psi_{leaf,i}=K^{-1}(K_i) = K^{-1}\left(\sum_{s}{K_{i,s}\cdot v_{i,s}}\right)
 \end{equation}
 where $K_i$ is the average whole-plant relative conductance obtained from the
-scalar product of conductances and fine root proportions and $K^{-1}$ is the inverse of the whole-plant conductance function (see function \texttt{hydraulics.K2Psi()}). 
+scalar product of conductances and fine root proportions and $K^{-1}$ is the inverse of the whole-plant conductance function (see function \texttt{hydraulics\_K2Psi()}). 
 
 \subsubsection{Irreversible cavitation and hydraulic disconnection}
 The water balance model is normally run assuming that although soil drought may
@@ -659,7 +659,7 @@ SE_{soil} = \gamma_{soil} \cdot (\sqrt{t+1}-\sqrt{1})
 The amount of water evaporated from the soil, $E_{soil}$, is then calculated as
 the minimum between supply and demand (Federer, 1982), the latter being the product
 of PET and the proportion of light that reaches the ground (see function
-\texttt{hydrology.soilEvaporation}): 
+\texttt{hydrology\_soilEvaporation}): 
 \begin{equation}
 E_{soil} = \min(PE_{soil}, SE_{soil})
 \end{equation}
@@ -693,9 +693,9 @@ RunEvaporation<-function(Gsoil, Ksoil, d1,d2,d3, numDays = 15){
   PET = 100 #Not limited by PET
   Lground = 1
   
-  Theta_FC1=soil.psi2thetaSX(TS_clay, TS_sand, -33) #in m3/m3
-  Theta_FC2=soil.psi2thetaSX(SS_clay, SS_sand, -33) #in m3/m3
-  Theta_FC3=soil.psi2thetaSX(RL_clay, RL_sand, -33) #in m3/m3
+  Theta_FC1=soil_psi2thetaSX(TS_clay, TS_sand, -33) #in m3/m3
+  Theta_FC2=soil_psi2thetaSX(SS_clay, SS_sand, -33) #in m3/m3
+  Theta_FC3=soil_psi2thetaSX(RL_clay, RL_sand, -33) #in m3/m3
   pcTS_gravel = 1-(TS_gravel/100)
   pcSS_gravel = 1-(SS_gravel/100)
   pcRL_gravel = 1-(RL_gravel/100)
@@ -715,7 +715,7 @@ RunEvaporation<-function(Gsoil, Ksoil, d1,d2,d3, numDays = 15){
   t = rep(NA, numDays)
   for(i in 1:numDays){
     #Evaporation from bare soil
-    Esoil[i] = hydrology.soilEvaporation(DEF=(MaxVol1*(1 - W1[i])), PETs = PET*Lground, Gsoil = Gsoil)
+    Esoil[i] = hydrology_soilEvaporationDay(DEF=(MaxVol1*(1 - W1[i])), PETs = PET*Lground, Gsoil = Gsoil)
     if(i==1) EsoilCum[i] = Esoil[i]
     else EsoilCum[i] = EsoilCum[i-1]+Esoil[i]
     #Exponential decay to divide bare soil evaporation among layers

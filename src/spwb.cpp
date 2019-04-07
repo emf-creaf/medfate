@@ -8,7 +8,6 @@
 #include "biophysicsutils.h"
 #include "forestutils.h"
 #include "photosynthesis.h"
-#include "tissuemoisture.h"
 #include "phenology.h"
 #include "transpiration.h"
 #include "soil.h"
@@ -31,11 +30,7 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   //Soil input
   NumericVector W = soil["W"]; //Access to soil state variable
   NumericVector dVec = soil["dVec"];
-  NumericVector macro = soil["macro"];
-  NumericVector rfc = soil["rfc"];
   NumericVector Water_FC = waterFC(soil, soilFunctions);
-  NumericVector Water_SAT = waterSAT(soil, soilFunctions);
-  double swe = soil["SWE"]; //snow pack
   int nlayers = W.size();
   
 
@@ -71,91 +66,14 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   double LgroundPAR = exp((-1.0)*s);
   double LgroundSWR = exp((-1.0)*s/1.35);
   
-  //Snow pack dynamics
-  double snow = 0.0, rain=0.0;
-  double melt = 0.0;
-  if(snowpack) {
-    //Turn rain into snow and add it into the snow pack
-    if(tday < 0.0) { 
-      snow = prec; 
-      swe = swe + snow;
-    } else {
-      rain = prec;
-    }
-    //Apply snow melting
-    if(swe > 0.0) {
-      if(NumericVector::is_na(rad)) stop("Missing radiation data for snow melt!");
-      if(NumericVector::is_na(elevation)) stop("Missing elevation data for snow melt!");
-      double rho = meteoland::utils_airDensity(tday, meteoland::utils_atmosphericPressure(elevation));
-      double ten = (86400*tday*rho*1013.86*1e-6/100.0); //ten can be negative if temperature is below zero
-      double ren = (rad*LgroundSWR)*(0.1); //90% albedo of snow
-      melt = std::max(0.0,(ren+ten)/0.33355); //Do not allow negative melting values
-      // Rcout<<" swe: "<< swe<<" temp: "<<ten<< " rad: "<< ren << " melt : "<< melt<<"\n";
-      swe = std::max(0.0, swe-melt);
-    }
-    soil["SWE"] = swe;
-  } else {
-    rain = prec;
-  }
-  
-  //Hydrologic input
-  double NetRain = 0.0, Infiltration= 0.0, Runoff= 0.0, DeepDrainage= 0.0;
-  if(rain>0.0) NetRain = rain - interceptionGashDay(rain,Cm,LgroundPAR,er);
-  if((NetRain+runon+melt)>0.0) {
-    //Interception
-    //Net Runoff and infiltration
-    Infiltration = infiltrationDay(NetRain+runon+melt, Water_FC[0]);
-    Runoff = (NetRain+runon+melt) - Infiltration;
-    //Decide infiltration repartition among layers
-    NumericVector Ivec = infiltrationRepartition(Infiltration, dVec, macro);
-    //Input of the first soil layer is infiltration
-    double excess = 0.0;
-    double Wn;
-    //Update topsoil layer
-    for(int l=0;l<nlayers;l++) {
-      if((dVec[l]>0.0) & (Ivec[l]>0.0)) {
-        Wn = W[l]*Water_FC[l] + Ivec[l]; //Update water volume
-        if(l<(nlayers-1)) {
-          Ivec[l+1] = Ivec[l+1] + std::max(Wn - Water_FC[l],0.0); //update Ivec adding the excess to the infiltrating water (saturated flow)
-        } else {
-          excess = std::max(Wn - Water_FC[l],0.0); //Set excess of the bottom layer
-        }
-        W[l] = std::max(0.0,std::min(Wn, Water_FC[l])/Water_FC[l]); //Update theta (this modifies 'soil')
-      } 
-    }
-    if(drainage) {//Set deep drainage
-      DeepDrainage = excess; 
-    } else { //Fill to saturation and upwards if needed
-      for(int l=(nlayers-1);l>=0;l--) {
-        if((dVec[l]>0.0) & (excess>0.0)) {
-          Wn = W[l]*Water_FC[l] + excess; //Update water volume
-          excess = std::max(Wn - Water_SAT[l],0.0); //Update excess, using the excess of water over saturation
-          W[l] = std::max(0.0,std::min(Wn, Water_SAT[l])/Water_FC[l]); //Update theta (this modifies 'soil') here no upper
-        }
-      }
-      if(excess>0.0) { //If soil is completely saturated increase Runoff
-        Runoff = Runoff + excess;
-      }
-    }
-  }
+  //Snow pack dynamics and hydrology input
+  NumericVector hydroInputs = verticalInputs(soil, soilFunctions, prec, er, tday, rad, elevation,
+                                             Cm, LgroundPAR, LgroundSWR, 
+                                             runon,
+                                             snowpack, drainage);
 
   //Evaporation from bare soil if there is no snow
-  NumericVector EsoilVec(nlayers,0.0);
-  if(swe == 0.0) {
-    double PETsoil = pet*LgroundSWR;
-    double Gsoil = soil["Gsoil"];
-    double Ksoil = soil["Ksoil"];
-    double Esoil = soilevaporation((Water_FC[0]*(1.0 - W[0])), PETsoil, Gsoil);
-    for(int l=0;l<nlayers;l++) {
-      double cumAnt = 0.0;
-      double cumPost = 0.0;
-      for(int l2=0;l2<l;l2++) cumAnt +=dVec[l2];
-      cumPost = cumAnt+dVec[l];
-      //Exponential decay to divide bare soil evaporation among layers
-      if(l<(nlayers-1)) EsoilVec[l] = Esoil*(exp(-Ksoil*cumAnt)-exp(-Ksoil*cumPost));
-      else EsoilVec[l] = Esoil*exp(-Ksoil*cumAnt);
-    }
-  }
+  NumericVector EsoilVec = soilEvaporation(soil, soilFunctions, pet, LgroundSWR);
 
   //Canopy transpiration  
   List transp = transpGranier(x, soil, tday, pet);
@@ -170,8 +88,8 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   }
   NumericVector psiVec = psi(soil, soilFunctions); //Calculate current soil water potential for output
   
-  NumericVector DB = NumericVector::create(_["PET"] = pet, _["Rain"] = rain, _["Snow"] = snow, _["NetRain"] = NetRain, _["Runon"] = runon, 
-                                           _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
+  NumericVector DB = NumericVector::create(_["PET"] = pet, _["Rain"] = hydroInputs["Rain"], _["Snow"] = hydroInputs["Snow"], _["NetRain"] = hydroInputs["Throughfall"], _["Runon"] = hydroInputs["Runon"], 
+                                           _["Infiltration"] = hydroInputs["Infiltration"], _["Runoff"] = hydroInputs["Runoff"], _["DeepDrainage"] = hydroInputs["DeepDrainage"],
                                            _["SoilEvaporation"] = sum(EsoilVec), _["PlantExtraction"] = sum(EplantVec), _["Transpiration"] = sum(EplantVec),
                                            _["LAIcell"] = LAIcell, _["LAIcelldead"] = LAIcelldead, 
                                            _["Cm"] = Cm, _["Lground"] = LgroundPAR);
@@ -206,12 +124,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   
   //Soil input
   NumericVector W = soil["W"]; //Access to soil state variable
-  NumericVector dVec = soil["dVec"];
-  NumericVector macro = soil["macro"];
-  NumericVector rfc = soil["rfc"];
   NumericVector Water_FC = waterFC(soil, soilFunctions);
-  NumericVector Water_SAT = waterSAT(soil, soilFunctions);
-  double swe = soil["SWE"]; //snow pack
   int nlayers = W.size();
 
   //Vegetation input
@@ -246,90 +159,16 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   double LgroundPAR = exp((-1.0)*s);
   double LgroundSWR = exp((-1.0)*s/1.35);
   
-  //Hydrologic input
-  double snow = 0.0, rain=0.0;
-  double melt = 0.0;
-  if(snowpack) {
-    //Turn rain into snow and add it into the snow pack
-    if(tday < 0.0) { 
-      snow = prec; 
-      swe = swe + snow;
-    } else {
-      rain = prec;
-    }
-  } else {
-    rain = prec;
-  }
-  if(swe>0.0) {
-    if(NumericVector::is_na(rad)) stop("Missing radiation data for snow melt!");
-    if(NumericVector::is_na(elevation)) stop("Missing elevation data for snow melt!");
-    double rho = meteoland::utils_airDensity(tday, meteoland::utils_atmosphericPressure(elevation));
-    double ten = (86400*tday*rho*1013.86*1e-6/100.0); //ten can be negative if temperature is below zero
-    double ren = (rad*LgroundSWR)*(0.1); //90% albedo of snow
-    melt = std::max(0.0,(ren+ten)/0.33355); //Do not allow negative melting values
-    // Rcout<<" swe: "<< swe<<" temp: "<<ten<< " rad: "<< ren << " melt : "<< melt<<"\n";
-    swe = std::max(0.0, swe-melt);
-    soil["SWE"] = swe;
-  }
-  double NetRain = 0.0, Infiltration= 0.0, Runoff= 0.0, DeepDrainage= 0.0;
-  if(rain>0.0) NetRain = rain - interceptionGashDay(rain,Cm,LgroundPAR,er);
-  if((NetRain+runon+melt)>0.0) {
-    //Interception
-    //Net Runoff and infiltration
-    Infiltration = infiltrationDay(NetRain+runon+melt, Water_FC[0]);
-    Runoff = (NetRain+runon+melt) - Infiltration;
-    //Decide infiltration repartition among layers
-    NumericVector Ivec = infiltrationRepartition(Infiltration, dVec, macro);
-    //Input of the first soil layer is infiltration
-    double excess = 0.0;
-    double Wn;
-    //Update topsoil layer
-    for(int l=0;l<nlayers;l++) {
-      if((dVec[l]>0.0) & (Ivec[l]>0.0)) {
-        Wn = W[l]*Water_FC[l] + Ivec[l]; //Update water volume
-        if(l<(nlayers-1)) {
-          Ivec[l+1] = Ivec[l+1] + std::max(Wn - Water_FC[l],0.0); //update Ivec adding the excess to the infiltrating water (saturated flow)
-        } else {
-          excess = std::max(Wn - Water_FC[l],0.0); //Set excess of the bottom layer
-        }
-        W[l] = std::max(0.0,std::min(Wn, Water_FC[l])/Water_FC[l]); //Update theta (this modifies 'soil')
-      } 
-    }
-    if(drainage) {//Set deep drainage
-      DeepDrainage = excess; 
-    } else { //Fill to saturation and upwards if needed
-      for(int l=(nlayers-1);l>=0;l--) {
-        if((dVec[l]>0.0) & (excess>0.0)) {
-          Wn = W[l]*Water_FC[l] + excess; //Update water volume
-          excess = std::max(Wn - Water_SAT[l],0.0); //Update excess, using the excess of water over saturation
-          W[l] = std::max(0.0,std::min(Wn, Water_SAT[l])/Water_FC[l]); //Update theta (this modifies 'soil') here no upper
-        }
-      }
-      if(excess>0.0) { //If soil is completely saturated increase Runoff
-        Runoff = Runoff + excess;
-      }
-    }
-  }
+  //Snow pack dynamics and hydrology input
+  NumericVector hydroInputs = verticalInputs(soil, soilFunctions, prec, er, tday, rad, elevation,
+                                             Cm, LgroundPAR, LgroundSWR, 
+                                             runon,
+                                             snowpack, drainage);
   
   
   
   //B.1 - Evaporation from bare soil if there is no snow
-  NumericVector EsoilVec(nlayers,0.0);
-  if(swe == 0.0) {
-    double PETsoil = pet*LgroundSWR;
-    double Gsoil = soil["Gsoil"];
-    double Ksoil = soil["Ksoil"];
-    double Esoil = soilevaporation((Water_FC[0]*(1.0 - W[0])), PETsoil, Gsoil);
-    for(int l=0;l<nlayers;l++) {
-      double cumAnt = 0.0;
-      double cumPost = 0.0;
-      for(int l2=0;l2<l;l2++) cumAnt +=dVec[l2];
-      cumPost = cumAnt+dVec[l];
-      //Exponential decay to divide bare soil evaporation among layers
-      if(l<(nlayers-1)) EsoilVec[l] = Esoil*(exp(-Ksoil*cumAnt)-exp(-Ksoil*cumPost));
-      else EsoilVec[l] = Esoil*exp(-Ksoil*cumAnt);
-    }
-  }
+  NumericVector EsoilVec = soilEvaporation(soil, soilFunctions, pet, LgroundSWR);
   
   //B.2 - Canopy transpiration  
   List transp = transpSperry(x, soil,tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, solarConstant,
@@ -358,7 +197,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   }
   NumericVector psiVec = psi(soil, soilFunctions); //Calculate current soil water potential for output
   
-  NumericVector DB = NumericVector::create(_["PET"] = pet,_["Rain"] = rain,_["Snow"] = snow,_["NetRain"] = NetRain, _["Runon"] = runon, _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage,
+  NumericVector DB = NumericVector::create(_["PET"] = pet,_["Rain"] = hydroInputs["Rain"],_["Snow"] = hydroInputs["Snow"],_["NetRain"] = hydroInputs["Throughfall"], 
+                                           _["Runon"] = hydroInputs["Runon"], _["Infiltration"] = hydroInputs["Infiltration"], _["Runoff"] = hydroInputs["Runoff"], _["DeepDrainage"] = hydroInputs["DeepDrainage"],
                                            _["SoilEvaporation"] = sum(EsoilVec), _["PlantExtraction"] = sum(soilExtractionBalance), _["Transpiration"] = sum(Eplant),
                                            _["HydraulicRedistribution"] = sum(soilHydraulicInput),
                                            _["LAIcell"] = LAIcell, _["LAIcelldead"] = LAIcelldead, _["Cm"] = Cm, _["Lground"] = LgroundPAR);

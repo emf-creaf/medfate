@@ -5,8 +5,14 @@
 #endif
 using namespace Rcpp;
 
-NumericVector er(IntegerVector DOY, double ERconv=0.05, double ERsyn = 0.2);
-double soilevaporation(double DEF,double PETs, double Gsoil);
+double soilEvaporationDay(double DEF,double PETs, double Gsoil);
 double infiltrationDay(double input, double Ssoil);
 double interceptionGashDay(double Precipitation, double Cm, double p, double ER=0.05);
+
+NumericVector er(IntegerVector DOY, double ERconv=0.05, double ERsyn = 0.2);
+NumericVector soilEvaporation(List soil, String soilFunctions, double pet, double LgroundSWR);
 NumericVector infiltrationRepartition(double I, NumericVector dVec, NumericVector macro);
+NumericVector verticalInputs(List soil, String soilFunctions, double prec, double er, double tday, double rad, double elevation,
+                             double Cm, double LgroundPAR, double LgroundSWR, 
+                             double runon = 0.0,
+                             bool snowpack = true, bool drainage = true);
