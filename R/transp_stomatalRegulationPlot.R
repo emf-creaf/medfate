@@ -1,6 +1,7 @@
 transp_stomatalRegulationPlot<-function(x, soil, meteo, day, timestep, latitude, elevation) {
   
-  dctr = transp_Sperry(x, soil, meteo, day, latitude, elevation, stepFunctions = timestep)
+  dctr = transp_transpirationSperry(x, soil, meteo, day, latitude, elevation, stepFunctions = timestep, 
+                                    modifyInput = FALSE)
   ncoh = length(dctr$SupplyFunctions)
   oldpar = par(mar=c(5,5,1,1), mfrow = c(5,2))
   

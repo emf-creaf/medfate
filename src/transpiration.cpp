@@ -84,7 +84,8 @@ List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, i
 
 List transpirationSperry(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
                   double latitude, double elevation, double solarConstant, double delta, double prec,
-                  bool verbose = false, int stepFunctions = NA_INTEGER, bool modifySoil = true) {
+                  double canopyEvaporation = 0.0, double snowMelt = 0.0, double soilEvaporation = 0.0,
+                  bool verbose = false, int stepFunctions = NA_INTEGER, bool modifyInput = true) {
   //Control parameters
   List control = x["control"];
   String soilFunctions = control["soilFunctions"];
@@ -253,7 +254,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   //4b. Instantaneous air temperature (above canopy) and longwave radiation
   NumericVector Tatm(ntimesteps), lwdr(ntimesteps), Tcan(ntimesteps, NA_REAL), Tsunrise(ntimesteps);
   NumericVector LEcan_heat(ntimesteps), Hcan_heat(ntimesteps), LWRsoilcan(ntimesteps), LWRcanout(ntimesteps), Ebal(ntimesteps);
-  NumericVector LWRsoilout(ntimesteps), Ebalsoil(ntimesteps), Hcansoil(ntimesteps);
+  NumericVector LWRsoilout(ntimesteps), Ebalsoil(ntimesteps), Hcansoil(ntimesteps), LEsoil_heat(ntimesteps);
   NumericMatrix Tsoil_mat(ntimesteps, nlayers);
   //Daylength in seconds (assuming flat area because we want to model air temperature variation)
   double tauday = meteoland::radiation_daylengthseconds(latrad,0.0,0.0, delta); 
@@ -287,6 +288,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   NumericVector abs_LWR_can = lightExtinctionAbsortion["LWR_can"];
   NumericVector abs_LWR_soil = lightExtinctionAbsortion["LWR_soil"];
   NumericVector emm_LWR_soil(ntimesteps,0.0);
+  
   // double kb = lightExtinctionAbsortion["kb"];  //Proportion of sunlit extinction coefficient
   // double gbf = lightExtinctionAbsortion["gbf"]; //Ground fractions
   // double gdf = lightExtinctionAbsortion["gdf"];
@@ -758,12 +760,22 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
     //Proportion of the canopy exchanging LWR radiation  as the fraction of incoming LWR
     double canLWRexchprop = abs_LWR_can[n]/lwdr[n];
     // Rcout<<canLWRexchprop<<"\n";
-    //Latent heat (PROBLEM: does not include interception)
-    LEcan_heat[n] = (1e6)*meteoland::utils_latentHeatVaporisation(Tcan[n])*sum(Einst(_,n))/tstep; 
+    //Latent heat (evaporation of intercepted + transpiration)
+    double canEvapStep = abs_SWR_can[n]*(canopyEvaporation/sum(abs_SWR_can));
+    double LEwat = (1e6)*meteoland::utils_latentHeatVaporisation(Tcan[n])*(sum(Einst(_,n)) + canEvapStep)/tstep;
+    LEcan_heat[n] = LEwat; 
     //Canopy longwave emmission
     LWRcanout[n] = LWR_emmcan*canLWRexchprop;
     //Canopy convective heat exchange
     Hcan_heat[n] = (meteoland::utils_airDensity(Tatm[n],Patm)*Cp_JKG*(Tcan[n]-Tatm[n]))/RAcan;
+    
+    //Soil latent heat (soil evaporation)
+    //Latent heat (snow fusion) as J/m2/s
+    double soilEvapStep = abs_SWR_soil[n]*(soilEvaporation/sum(abs_SWR_soil));
+    double LEsoilevap = (1e6)*meteoland::utils_latentHeatVaporisation(Tsoil[0])*soilEvapStep/tstep;
+    double snowMeltStep = abs_SWR_soil[n]*(snowMelt/sum(abs_SWR_soil));
+    double LEsnow = (1e6)*(snowMeltStep*0.33355)/tstep; // 0.33355 = latent heat of fusion
+    LEsoil_heat[n] = LEsoilevap + LEsnow;
     //Soil-canopy turbulent heat exchange
     Hcansoil[n] = (meteoland::utils_airDensity(Tcan[n],Patm)*Cp_JKG*(Tcan[n]-Tsoil[0]))/RAsoil;
     //Soil LWR emmission
@@ -781,7 +793,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
     if(n<(ntimesteps-1)) Tcan[n+1] = Tcannext;
     
     //Soil energy balance
-    Ebalsoil[n] = abs_SWR_soil[n] + abs_LWR_soil[n] + LWRcanout[n] + Hcansoil[n] - LWRsoilout[n]; //Here we use all energy escaping to atmosphere
+    Ebalsoil[n] = abs_SWR_soil[n] + abs_LWR_soil[n] + LWRcanout[n] + Hcansoil[n] - LEsoil_heat[n] - LWRsoilout[n]; //Here we use all energy escaping to atmosphere
     //Soil temperature changes
     NumericVector soilTchange = temperatureChange(dVec, Tsoil, sand, clay, W, Theta_FC, Ebalsoil[n]);
     for(int l=0;l<nlayers;l++) Tsoil[l] = Tsoil[l] + (soilTchange[l]*tstep);
@@ -811,7 +823,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   
   
   //B.3 - Substract  extracted water from soil moisture 
-  if(modifySoil){
+  if(modifyInput){
     for(int l=0;l<nlayers;l++) {
       W[l] = std::max(W[l]-(sum(soilLayerExtractInst(l,_))/Water_FC[l]),0.0);
     } 
@@ -826,10 +838,10 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
                                       _["Tatm"] = Tatm, _["Tcan"] = Tcan, _["Tsoil"] = Tsoil_mat);
   DataFrame CEBinst = DataFrame::create(_["SolarHour"] = solarHour, 
                                         _["SWRcanin"] = abs_SWR_can, _["LWRcanin"] = abs_LWR_can,_["LWRcanout"] = LWRcanout, _["RAcan"] = RAcan,
-                                          _["LEcan"] = LEcan_heat, _["Hcan"] = Hcan_heat, _["LWRsoilcan"] = LWRsoilcan, _["Ebalcan"] = Ebal);
+                                        _["LEcan"] = LEcan_heat, _["Hcan"] = Hcan_heat, _["LWRsoilcan"] = LWRsoilcan, _["Ebalcan"] = Ebal);
   DataFrame SEBinst = DataFrame::create(_["SolarHour"] = solarHour, 
-                                        _["Hcansoil"] = Hcansoil, _["SWRsoilin"] = abs_SWR_soil, _["LWRsoilin"] = abs_LWR_soil,  _["LWRsoilout"] = LWRsoilout,
-                                          _["Ebalsoil"] = Ebalsoil, _["RAsoil"] = RAsoil);
+                                        _["Hcansoil"] = Hcansoil, _["LEsoil"] = LEsoil_heat, _["SWRsoilin"] = abs_SWR_soil, _["LWRsoilin"] = abs_LWR_soil,  _["LWRsoilout"] = LWRsoilout,
+                                        _["Ebalsoil"] = Ebalsoil, _["RAsoil"] = RAsoil);
   List EB = List::create(_["Temperature"]=Tinst, _["CanopyEnergyBalance"] = CEBinst, _["SoilEnergyBalance"] = SEBinst);
   SWR_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   SWR_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
@@ -912,9 +924,11 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   return(l);
 }
 
-// [[Rcpp::export("transp_Sperry")]]
+// [[Rcpp::export("transp_transpirationSperry")]]
 List transpirationSperry(List x, List soil, DataFrame meteo, int day,
-                        double latitude, double elevation, int stepFunctions = NA_INTEGER, bool modifySoil = true) {
+                        double latitude, double elevation, 
+                        double canopyEvaporation = 0.0, double snowMelt = 0.0, double soilEvaporation = 0.0,
+                        int stepFunctions = NA_INTEGER, bool modifyInput = true) {
   if(!meteo.containsElementNamed("MinTemperature")) stop("Please include variable 'MinTemperature' in weather input.");
   NumericVector MinTemperature = meteo["MinTemperature"];
   if(!meteo.containsElementNamed("MaxTemperature")) stop("Please include variable 'MaxTemperature' in weather input.");
@@ -941,17 +955,15 @@ List transpirationSperry(List x, List soil, DataFrame meteo, int day,
   int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
   double delta = meteoland::radiation_solarDeclination(J);
   double solarConstant = meteoland::radiation_solarConstant(J);
-  double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
-  double latrad = latitude * (PI/180.0);
 
   return(transpirationSperry(x,soil, tmin, tmax, rhmin, rhmax, rad, wind, 
                      latitude, elevation, solarConstant, delta, prec,
-                     false, stepFunctions));
+                     canopyEvaporation, snowMelt, soilEvaporation,
+                     false, stepFunctions, modifyInput));
 } 
 
 
-// [[Rcpp::export("transp_Granier")]]
-List transpirationGranier(List x, List soil, double tday, double pet, bool modifySoil = true) {
+List transpirationGranier(List x, List soil, double tday, double pet, bool modifyInput = true) {
   //Control parameters
   List control = x["control"];
   bool cavitationRefill = control["cavitationRefill"];
@@ -989,12 +1001,12 @@ List transpirationGranier(List x, List soil, double tday, double pet, bool modif
   //Communication vectors
   NumericVector transpiration = Rcpp::as<Rcpp::NumericVector>(x["Transpiration"]);
   NumericVector photosynthesis = Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
-  NumericVector pEmb = Rcpp::as<Rcpp::NumericVector>(x["PLC"]);
+  NumericVector pEmb = clone(Rcpp::as<Rcpp::NumericVector>(x["PLC"]));
   
   
   //Determine whether leaves are out (phenology) and the adjusted Leaf area
   NumericVector Phe(numCohorts,0.0);
-  double s = 0.0, LAIcell = 0.0, LAIcelldead = 0.0, Cm = 0.0;
+  double s = 0.0, LAIcell = 0.0, LAIcelldead = 0.0;
   for(int c=0;c<numCohorts;c++) {
     if(LAIlive[c]>0) Phe[c]=LAIphe[c]/LAIlive[c]; //Phenological status
     else Phe[c]=0.0;
@@ -1055,16 +1067,20 @@ List transpirationGranier(List x, List soil, double tday, double pet, bool modif
   
   double alpha = std::max(std::min(tday/20.0,1.0),0.0);
   //For comunication with growth and landscape water balance
-  for(int c=0;c<numCohorts;c++) {
-    transpiration[c] = Eplant[c];
-    photosynthesis[c] = alpha*WUE[c]*transpiration[c];
+  
+  if(modifyInput) {
+    for(int c=0;c<numCohorts;c++) {
+      transpiration[c] = Eplant[c];
+      photosynthesis[c] = alpha*WUE[c]*transpiration[c];
+    }
+    x["PLC"] = pEmb;
   }
   
   //Copy LAIexpanded for output
   NumericVector LAIcohort(numCohorts);
   for(int c=0;c<numCohorts;c++) LAIcohort[c]= LAIphe[c];
   
-  if(modifySoil) {
+  if(modifyInput) {
     for(int l=0;l<nlayers;l++) {
       W[l] = W[l] - (sum(EplantCoh(_,l))/Water_FC[l]); 
     }
@@ -1077,3 +1093,17 @@ List transpirationGranier(List x, List soil, double tday, double pet, bool modif
                         _["Extraction"] = EplantCoh);
   return(l);
 }
+
+
+// [[Rcpp::export("transp_transpirationGranier")]]
+List transpirationGranier(List x, List soil, DataFrame meteo, int day,
+                          bool modifyInput = true) {
+  if(!meteo.containsElementNamed("MeanTemperature")) stop("Please include variable 'MeanTemperature' in weather input.");
+  NumericVector MeanTemperature = meteo["MeanTemperature"];
+  if(!meteo.containsElementNamed("PET")) stop("Please include variable 'PET' in weather input.");
+  NumericVector PET = meteo["PET"];
+  double pet = PET[day-1];
+  double tday = MeanTemperature[day-1];
+  return(transpirationGranier(x,soil, tday, pet, modifyInput));
+} 
+

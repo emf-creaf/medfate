@@ -28,7 +28,7 @@ spwb_dayComplex(x, soil, tmin, tmax, rhmin, rhmax, rad, wind,
   \item{rhmin, rhmax}{Minimum and maximum relative humidity (in percent).}
   \item{rad}{Solar radiation (in MJ/m2/day).}
   \item{pet}{Potential evapotranspiration (in mm).}
-  \item{er}{The ratio of evaporation rate to rainfall rate (see \code{\link{hydrology_er}}).}
+  \item{er}{The ratio of evaporation rate to rainfall rate (see \code{\link{hydrology_erFactor}}).}
   \item{wind}{Wind speed (in m/s).}
   \item{prec}{Precipitation (in mm).}
   \item{latitude}{Latitude (in degrees). Required when using the 'Complex' transpiration mode.}

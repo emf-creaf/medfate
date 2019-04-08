@@ -405,8 +405,8 @@ hydraulics_leafWaterCapacity <- function(SLA, ld) {
     .Call(`_medfate_leafWaterCapacity`, SLA, ld)
 }
 
-hydrology_er <- function(DOY, ERconv = 0.05, ERsyn = 0.2) {
-    .Call(`_medfate_er`, DOY, ERconv, ERsyn)
+hydrology_erFactor <- function(doy, pet, prec, Rconv = 5.6, Rsyn = 1.5) {
+    .Call(`_medfate_erFactor`, doy, pet, prec, Rconv, Rsyn)
 }
 
 hydrology_soilEvaporationDay <- function(DEF, PETs, Gsoil) {
@@ -429,8 +429,8 @@ hydrology_infiltrationRepartition <- function(I, dVec, macro) {
     .Call(`_medfate_interceptionGashDay`, Precipitation, Cm, p, ER)
 }
 
-hydrology_verticalInputs <- function(soil, soilFunctions, prec, er, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, runon = 0.0, snowpack = TRUE, drainage = TRUE) {
-    .Call(`_medfate_verticalInputs`, soil, soilFunctions, prec, er, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, runon, snowpack, drainage)
+hydrology_verticalInputs <- function(soil, soilFunctions, prec, er, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, runon = 0.0, snowpack = TRUE, drainage = TRUE, modifySoil = TRUE) {
+    .Call(`_medfate_verticalInputs`, soil, soilFunctions, prec, er, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, runon, snowpack, drainage, modifySoil)
 }
 
 .incgam <- function(a, x) {
@@ -709,12 +709,12 @@ transp_profitMaximization <- function(supplyFunction, photosynthesisFunction, ty
     .Call(`_medfate_profitMaximization`, supplyFunction, photosynthesisFunction, type, Gwmin, Gwmax, kleafmax)
 }
 
-transp_Sperry <- function(x, soil, meteo, day, latitude, elevation, stepFunctions = NA_integer_, modifySoil = TRUE) {
-    .Call(`_medfate_transpirationSperry`, x, soil, meteo, day, latitude, elevation, stepFunctions, modifySoil)
+transp_transpirationSperry <- function(x, soil, meteo, day, latitude, elevation, canopyEvaporation = 0.0, snowMelt = 0.0, soilEvaporation = 0.0, stepFunctions = NA_integer_, modifyInput = TRUE) {
+    .Call(`_medfate_transpirationSperry`, x, soil, meteo, day, latitude, elevation, canopyEvaporation, snowMelt, soilEvaporation, stepFunctions, modifyInput)
 }
 
-transp_Granier <- function(x, soil, tday, pet, modifySoil = TRUE) {
-    .Call(`_medfate_transpirationGranier`, x, soil, tday, pet, modifySoil)
+transp_transpirationGranier <- function(x, soil, meteo, day, modifyInput = TRUE) {
+    .Call(`_medfate_transpirationGranier`, x, soil, meteo, day, modifyInput)
 }
 
 .windSpeedAtCanopyHeight <- function(wind20H, canopyHeight) {

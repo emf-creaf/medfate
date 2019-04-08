@@ -178,7 +178,6 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   IntegerVector DOY = date2doy(dateStrings);
   
   NumericVector GDD = gdd(DOY, MeanTemperature, 5.0);
-  NumericVector ER = er(DOY);
 
   //Aboveground parameters  
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
@@ -303,14 +302,15 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   List s;
   for(int i=0;i<numDays;i++) {
     if(verbose) Rcout<<".";
-    double ws = WindSpeed[i];
-    if(NumericVector::is_na(ws)) ws = 1.0; //Default 1 m/s -> 10% of fall every day
+    double wind = WindSpeed[i];
+    if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; //Default 1 m/s -> 10% of fall every day
+    if(wind<0.5) wind = 0.5; //Minimum windspeed abovecanopy
     
     //1. Phenology and leaf fall
     x["gdd"] = GDD[i];
     NumericVector phe = leafDevelopmentStatus(Sgdd, GDD[i]);
     for(int j=0;j<numCohorts;j++) {
-      LAI_dead[j] *= exp(-1.0*(ws/10.0)); //Decrease dead leaf area according to wind speed
+      LAI_dead[j] *= exp(-1.0*(wind/10.0)); //Decrease dead leaf area according to wind speed
       double LAI_exp_prev=0.0;
       if(i>0) LAI_exp_prev= LAI_expanded[j]; //Store previous value
       LAI_expanded[j] = LAI_live[j]*phe[j]; //Update expanded leaf area (will decrease if LAI_live decreases)
@@ -319,17 +319,27 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
     
     //2. Water balance and photosynthesis
     if(transpirationMode=="Simple") {
-      s = spwbDay1(x, soil, MeanTemperature[i], PET[i], Precipitation[i], ER[i], 0.0, Radiation[i], elevation, false); //No Runon in simulations for a single cell
+      double er = erFactor(DOY[i], PET[i], Precipitation[i]);
+      s = spwbDay1(x, soil, MeanTemperature[i], PET[i], Precipitation[i], er, 0.0, Radiation[i], elevation, false); //No Runon in simulations for a single cell
     } else if(transpirationMode=="Complex") {
       std::string c = as<std::string>(dateStrings[i]);
       int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
       double delta = meteoland::radiation_solarDeclination(J);
       double solarConstant = meteoland::radiation_solarConstant(J);
-      s = spwbDay2(x, soil, MinTemperature[i], MaxTemperature[i], 
-                   MinRelativeHumidity[i], MaxRelativeHumidity[i], Radiation[i], WindSpeed[i], 
-                   latitude, elevation, solarConstant, delta, Precipitation[i], PET[i],
-                   ER[i], 0.0, false);
-      
+      double latrad = latitude * (PI/180.0);
+      double asprad = aspect * (PI/180.0);
+      double slorad = slope * (PI/180.0);
+      double tmin = MinTemperature[i];
+      double tmax = MaxTemperature[i];
+      double rhmin = MinRelativeHumidity[i];
+      double rhmax = MaxRelativeHumidity[i];
+      double rad = Radiation[i];
+      PET[i] = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
+      double er = erFactor(DOY[i], PET[i], Precipitation[i]);
+      s = spwbDay2(x, soil, tmin, tmax, 
+                   rhmin, rhmax, rad, wind, 
+                   latitude, elevation, solarConstant, delta, Precipitation[i], PET[i], 
+                   er, 0.0, verbose);
     }    
     List db = s["WaterBalance"];
     Lground[i] = db["Lground"];

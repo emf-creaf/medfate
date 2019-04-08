@@ -86,15 +86,17 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
   } 
   else if(type=="Evapotranspiration") {
     if(is.null(ylab)) ylab = expression(L%.%m^{-2})
-    if(is.null(ylim)) ylim = c(0,max(WaterBalance$Evapotranspiration))
+    if(is.null(ylim)) ylim = c(0,max(c(WaterBalance$PET,WaterBalance$Evapotranspiration), na.rm = T))
     plot(dates, WaterBalance$Evapotranspiration, ylim=ylim, type="l", ylab=ylab, 
          xlab=xlab, xlim=xlim,frame=FALSE, col="black", axes=FALSE, lwd=2)
     plotAxes()
+    lines(dates, WaterBalance$PET, col="red", lty=1, lwd=2)
     lines(dates, WaterBalance$Interception, col="blue", lty=1, lwd=1.5)
     lines(dates, WaterBalance$Transpiration, col="olivedrab", lty=2, lwd=1.5)
     lines(dates, WaterBalance$SoilEvaporation, col="brown", lty=3, lwd=1.5)
-    legend("topleft", bty="n", col=c("black","blue","olivedrab", "brown"),lty=c(1, 1,2,3), lwd=c(2,1.5, 1.5,1.5),
-           legend=c("Total evapotranspiration", "Interception evaporation", "Plant transpiration","Bare soil evaporation"))
+    legend("topleft", bty="n", col=c("black","blue","olivedrab", "brown", "red"),lty=c(1, 1,2,3, 1), lwd=c(2,1.5, 1.5,1.5,2),
+           legend=c("Total evapotranspiration", "Interception evaporation", "Plant transpiration","Bare soil evaporation",
+                    "Potential evapotranspiration"))
   } 
   else if(type=="PlantWaterBalance") {
     pwb = WaterBalance$PlantExtraction - WaterBalance$Transpiration
@@ -616,7 +618,7 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
   else if(type=="SoilEnergyBalance") {
     if(is.null(ylab)) ylab = expression(MJ%.%m^{-2})    
     mxin = max(c(x$EnergyBalance$SWRsoilin, x$EnergyBalance$LWRsoilin,x$EnergyBalance$LWRcanout,x$EnergyBalance$Hcansoil))    
-    mxout = max(c(x$EnergyBalance$LWRsoilout,-x$EnergyBalance$Hcansoil))    
+    mxout = max(c(x$EnergyBalance$LWRsoilout,x$EnergyBalance$LEsoil,-x$EnergyBalance$Hcansoil))    
     if(is.null(ylim)) ylim = c(-mxout,mxin)
     plot(dates, x$EnergyBalance$Ebalsoil, ylim=ylim, type="n", 
          ylab=ylab, xlab=xlab, xlim=xlim,
@@ -627,9 +629,10 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     lines(dates, x$EnergyBalance$SWRsoilin, col="red",...)
     lines(dates, x$EnergyBalance$LWRsoilin, col="brown",...)
     lines(dates, x$EnergyBalance$LWRcanout, col="orange",...)
+    lines(dates, -x$EnergyBalance$LEsoil, col="green",...)
     lines(dates, -x$EnergyBalance$LWRsoilout, col="blue",...)
     lines(dates, x$EnergyBalance$Hcansoil, col="gray",...)
-    legend("topright", bty="n", col=c("red","brown","orange", "blue", "gray", "black"), lty=1,
-           legend=c("SWR abs. from atm.","LWR abs. from atm.", "LWR abs. from canopy","LWR emmited", "Convection soil/can.", "Balance"),...)        
+    legend("topright", bty="n", col=c("red","brown","orange", "blue", "green", "gray", "black"), lty=1,
+           legend=c("SWR abs. from atm.","LWR abs. from atm.", "LWR abs. from canopy","LWR emmited","Latent heat (L)",  "Convection soil/can.", "Balance"),...)        
   }
 }

@@ -2,21 +2,21 @@
 \name{transpiration}
 \alias{transp_profitMaximization}
 \alias{transp_stomatalRegulationPlot}
-\alias{transp_Sperry}
-\alias{transp_Granier}
+\alias{transp_transpirationSperry}
+\alias{transp_transpirationGranier}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Transpiration submodel functions
 }
 \description{
-Set of high-level functions used in the calculation of stomatal conductance and transpiration. Function \code{transp_profitMaximization} calculates gain and cost functions, as well as profit maximization from supply and photosynthesis input functions. Function \code{transp_stomatalRegulation} calculates profit maximization for all time steps in a day, starting from stand description, soil description and meteorological input. Function \code{transp_stomatalRegulationPlot} produces a plot with the cohort supply functions against water potential and a plot with the cohort photosynthesis functions against water potential, both with the maximum profit values indicated.
+Set of high-level functions used in the calculation of stomatal conductance and transpiration. Function \code{transp_profitMaximization} calculates gain and cost functions, as well as profit maximization from supply and photosynthesis input functions. Function \code{transp_stomatalRegulationPlot} produces a plot with the cohort supply functions against water potential and a plot with the cohort photosynthesis functions against water potential, both with the maximum profit values indicated.
 }
 \usage{
 transp_profitMaximization(supplyFunction, photosynthesisFunction, type, 
                           Gwmin, Gwmax, kleafmax = NA)
-transp_Granier(x, soil, tday, pet)                              
-transp_Sperry(x, soil, meteo, day,
-              latitude, elevation)
+transp_transpirationGranier(x, soil, meteo, day, modifySoil = FALSE)                              
+transp_transpirationSperry(x, soil, meteo, day,
+                           latitude, elevation, modifySoil = FALSE)
 transp_stomatalRegulationPlot(x, soil, meteo, day, timestep, 
                               latitude, elevation)
 }
@@ -103,10 +103,7 @@ x = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 
 # Transpiration according to Granier's model, plant water potential 
 # and plant stress for a given day
-transp_Granier(x, examplesoil, 
-               examplemeteo[1, "MeanTemperature"],
-               examplemeteo[1, "PET"])
-
+transp_transpirationGranier(x, examplesoil, examplemeteo, 1, modifyInput = F)
 
 #Switch to 'Complex' transpiration mode
 control$transpirationMode="Complex"
@@ -116,6 +113,11 @@ examplesoil2 = soil(defaultSoilParams(2))
 
 #Initialize input
 x2 = forest2spwbInput(exampleforest,examplesoil2, SpParamsMED, control)
+
+# Transpiration according to Sperry's model, canopy energy balance
+# and plant stress for a given day
+transp_transpirationSperry(x2, examplesoil2, examplemeteo, 1, modifyInput = F)
+
 
 transp_stomatalRegulationPlot(x2, examplesoil2, examplemeteo, day=100, timestep = 12,
                               latitude = 41.82592, elevation = 100)

@@ -4,20 +4,20 @@
 #include "soil.h"
 #include <meteoland.h>
 using namespace Rcpp;
-
-// [[Rcpp::export("hydrology_er")]]
-NumericVector er(IntegerVector DOY, double ERconv=0.05, double ERsyn = 0.2){
-  int nDays = DOY.size();
-  NumericVector ER=rep(0.0,nDays);
-  for(int i=0;i<nDays;i++){
-    if((DOY[i]<=120)|(DOY[i]>=335)) {
-      ER[i] = ERsyn;
-    } else {
-      ER[i] = ERconv;
-    }
+//Old defaults
+//ERconv=0.05, ERsyn = 0.2
+//New defaults
+//Rconv = 5.6, Rsyn = 1.5
+// [[Rcpp::export("hydrology_erFactor")]]
+double erFactor(int doy, double pet, double prec, double Rconv = 5.6, double Rsyn = 1.5){
+  double Ri = 0.0; //mm/h
+  if((doy<=120)|(doy>=335)) {
+    Ri = std::max(prec/24.0,Rsyn);
+  } else {
+    Ri = std::max(prec/24.0,Rconv);
   }
-  return(ER);
-  
+  double Ei =pet/24.0;
+  return(Ei/Ri);
 }
 
 // [[Rcpp::export("hydrology_soilEvaporationDay")]]
@@ -106,9 +106,9 @@ double interceptionGashDay(double Precipitation, double Cm, double p, double ER=
 NumericVector verticalInputs(List soil, String soilFunctions, double prec, double er, double tday, double rad, double elevation,
                     double Cm, double LgroundPAR, double LgroundSWR, 
                     double runon = 0.0,
-                    bool snowpack = true, bool drainage = true) {
+                    bool snowpack = true, bool drainage = true, bool modifySoil = true) {
   //Soil input
-  NumericVector W = soil["W"]; //Access to soil state variable
+  NumericVector W = clone(Rcpp::as<Rcpp::NumericVector>(soil["W"])); //Access to soil state variable
   NumericVector dVec = soil["dVec"];
   NumericVector macro = soil["macro"];
   NumericVector rfc = soil["rfc"];
@@ -133,13 +133,12 @@ NumericVector verticalInputs(List soil, String soilFunctions, double prec, doubl
       if(NumericVector::is_na(rad)) stop("Missing radiation data for snow melt!");
       if(NumericVector::is_na(elevation)) stop("Missing elevation data for snow melt!");
       double rho = meteoland::utils_airDensity(tday, meteoland::utils_atmosphericPressure(elevation));
-      double ten = (86400*tday*rho*1013.86*1e-6/100.0); //ten can be negative if temperature is below zero
+      double ten = (86400.0*tday*rho*1013.86*1e-6/100.0); //ten can be negative if temperature is below zero
       double ren = (rad*LgroundSWR)*(0.1); //90% albedo of snow
       melt = std::max(0.0,(ren+ten)/0.33355); //Do not allow negative melting values
       // Rcout<<" swe: "<< swe<<" temp: "<<ten<< " rad: "<< ren << " melt : "<< melt<<"\n";
       swe = std::max(0.0, swe-melt);
     }
-    soil["SWE"] = swe;
   } else {
     rain = prec;
   }
@@ -185,9 +184,15 @@ NumericVector verticalInputs(List soil, String soilFunctions, double prec, doubl
       }
     }
   }
+  if(modifySoil) {
+    soil["SWE"] = swe;
+    soil["W"] = W;
+  }
   NumericVector DB = NumericVector::create(_["Rain"] = rain, _["Snow"] = snow,
                                            _["Interception"] = interception,
-                                           _["Throughfall"] = NetRain, _["Runon"] = runon, 
+                                           _["Throughfall"] = NetRain, 
+                                           _["Snowmelt"] = melt,
+                                           _["Runon"] = runon, 
                                            _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage);
   return(DB);
 }
