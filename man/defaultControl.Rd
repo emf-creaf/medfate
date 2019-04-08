@@ -20,7 +20,7 @@ A list, with the following options:
 \item{\code{subdailyResults (=FALSE)}: Boolean flag to force subdaily results to be stored (as a list called 'subdaily' of \code{\link{spwb_day}} objects, one by simulated date) in calls to \code{\link{spwb}}.}
 \item{\code{soilFunctions (="SX")}: Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).}
 \item{\code{snowpack (=TRUE)}: Boolean flag to indicate the simulation of snow accumulation and melting.}
-\item{\code{drainage (=TRUE)}: Boolean flag to indicate the simulation of deep drainage (not used in \code{spwbgrid}).}
+\item{\code{drainage (=TRUE)}: Boolean flag to indicate the simulation of deep drainage.}
 \item{\code{transpirationMode (="Simple")}: Transpiration model. See \code{\link{spwbInput}}.}
 \item{\code{hydraulicCostFunction (= 1)}: Variant of the hydraulic cost function used in the stomatal regulation model of Sperry & Love (2016). Values accepted are 1 (original cost function based on the derivative of supply function), 2 (leaf vulnerability curve).}
 \item{\code{ndailysteps (= 24)}: Number of steps into which each day is divided for determination of stomatal conductance, transpiration and photosynthesis (24 equals 1-hour intervals).}
