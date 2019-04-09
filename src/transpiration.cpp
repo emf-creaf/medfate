@@ -299,7 +299,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   NumericMatrix SoilWaterExtract(numCohorts, nlayers);
   NumericMatrix soilLayerExtractInst(nlayers, ntimesteps);
   std::fill(soilLayerExtractInst.begin(), soilLayerExtractInst.end(), 0.0);
-  
+
   LogicalMatrix layerConnected(numCohorts, nlayers);
   for(int c=0;c<numCohorts;c++) {
     nlayerscon[c] = 0;
@@ -825,7 +825,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   //B.3 - Substract  extracted water from soil moisture 
   if(modifyInput){
     for(int l=0;l<nlayers;l++) {
-      W[l] = std::max(W[l]-(sum(soilLayerExtractInst(l,_))/Water_FC[l]),0.0);
+      W[l] = std::max(W[l] - (sum(soilLayerExtractInst(l,_))/Water_FC[l]),0.0);
     } 
   }
   
@@ -902,6 +902,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   if(!IntegerVector::is_na(stepFunctions)){
     l = List::create(_["cohorts"] = clone(cohorts),
                      _["EnergyBalance"] = EB,
+                     _["Extraction"] = SoilWaterExtract,
                      _["ExtractionInst"] = soilLayerExtractInst,
                      _["RhizoPsi"] = minPsiRhizo,
                      _["Plants"] = Plants,
@@ -914,6 +915,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   } else {
     l = List::create(_["cohorts"] = clone(cohorts),
                      _["EnergyBalance"] = EB,
+                     _["Extraction"] = SoilWaterExtract,
                      _["ExtractionInst"] = soilLayerExtractInst,
                      _["RhizoPsi"] = minPsiRhizo,
                      _["Plants"] = Plants,

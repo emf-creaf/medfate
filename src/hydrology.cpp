@@ -20,8 +20,8 @@ double erFactor(int doy, double pet, double prec, double Rconv = 5.6, double Rsy
   return(Ei/Ri);
 }
 
-// [[Rcpp::export("hydrology_soilEvaporationDay")]]
-double soilEvaporationDay(double DEF,double PETs, double Gsoil){
+// [[Rcpp::export("hydrology_soilEvaporationAmount")]]
+double soilEvaporationAmount(double DEF,double PETs, double Gsoil){
   double t = pow(DEF/Gsoil, 2.0);
   double Esoil = 0.0;
   Esoil = std::min(Gsoil*(sqrt(t+1)-sqrt(t)), PETs);
@@ -41,7 +41,7 @@ NumericVector soilEvaporation(List soil, String soilFunctions, double pet, doubl
     double PETsoil = pet*LgroundSWR;
     double Gsoil = soil["Gsoil"];
     double Ksoil = soil["Ksoil"];
-    double Esoil = soilEvaporationDay((Water_FC[0]*(1.0 - W[0])), PETsoil, Gsoil);
+    double Esoil = soilEvaporationAmount((Water_FC[0]*(1.0 - W[0])), PETsoil, Gsoil);
     for(int l=0;l<nlayers;l++) {
       double cumAnt = 0.0;
       double cumPost = 0.0;
@@ -56,8 +56,8 @@ NumericVector soilEvaporation(List soil, String soilFunctions, double pet, doubl
   return(EsoilVec);
 }
 
-// [[Rcpp::export(".hydrology_infiltrationDay")]]
-double infiltrationDay(double input, double Ssoil) {
+// [[Rcpp::export(".hydrology_infiltrationAmount")]]
+double infiltrationAmount(double input, double Ssoil) {
   double I = 0;
   if(input>0.2*Ssoil) {
     I = input-(pow(input-0.2*Ssoil,2.0)/(input+0.8*Ssoil));
@@ -150,7 +150,7 @@ NumericVector verticalInputs(List soil, String soilFunctions, double prec, doubl
   if((NetRain+runon+melt)>0.0) {
     //Interception
     //Net Runoff and infiltration
-    Infiltration = infiltrationDay(NetRain+runon+melt, Water_FC[0]);
+    Infiltration = infiltrationAmount(NetRain+runon+melt, Water_FC[0]);
     Runoff = (NetRain+runon+melt) - Infiltration;
     //Decide infiltration repartition among layers
     NumericVector Ivec = infiltrationRepartition(Infiltration, dVec, macro);

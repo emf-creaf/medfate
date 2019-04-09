@@ -43,9 +43,9 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     }
     axis(2)    
   }
-  mnp = max(WaterBalance$Precipitation)
   if(is.null(xlab)) xlab = ifelse(yearAxis,"Year", "Date")  
   if(type=="PET_Precipitation") {
+    mnp = max(WaterBalance$Precipitation)
     if(is.null(ylab)) ylab = expression(L%.%m^{-2})
     if(!is.null(xlim)) span = xlim[1]:xlim[2]
     else span = 1:numDays
@@ -60,6 +60,7 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     
   } 
   else if(type=="PET_NetRain") {
+    mnp = max(WaterBalance$NetRain)
     if(is.null(ylab)) ylab = expression(L%.%m^{-2})    
     if(!is.null(xlim)) span = xlim[1]:xlim[2]
     else span = 1:numDays

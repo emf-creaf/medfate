@@ -1,20 +1,20 @@
 \encoding{UTF-8}
-\name{hydrology_soilInfiltration}
-\alias{hydrology_soilInfiltration}
+\name{soil hydrology}
+\alias{hydrology_infiltrationAmount}
+\alias{hydrology_soilEvaporationAmount}
 \alias{hydrology_soilEvaporation}
 \alias{hydrology_infiltrationRepartition}
 
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{Soil infiltration and bare soil evaporation}
 \description{
-Function \code{hydrology_soilInfiltration} calculates the amount of water that infiltrates into the topsoil, according to the USDA SCS curve number method (Boughton 1989). The remaining is assumed to be lost as surface runoff. Function \code{hydrology_soilEvaporation} calculates the amount of evaporation from bare soil, following Ritchie (1972).
+Function \code{hydrology_infiltrationAmount} calculates the amount of water that infiltrates into the topsoil, according to the USDA SCS curve number method (Boughton 1989). The remaining is assumed to be lost as surface runoff. Function \code{hydrology_soilEvaporationAmount} calculates the amount of evaporation from bare soil, following Ritchie (1972).
 }
 \usage{
-hydrology_soilInfiltration(input, Ssoil) 
-hydrology_soilEvaporation(DEF,PETs, Gsoil)
+hydrology_infiltrationAmount(input, Ssoil) 
 hydrology_infiltrationRepartition(I, dVec, macro)
+hydrology_soilEvaporationAmount(DEF,PETs, Gsoil)
+hydrology_soilEvaporation(soil, soilFunctions, pet, LgroundSWR, modifySoil = true)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{input}{A numeric vector of (daily) water input (in mm of water).}
   \item{Ssoil}{Soil water storage capacity (can be referred to topsoil) (in mm of water).}
@@ -24,25 +24,30 @@ hydrology_infiltrationRepartition(I, dVec, macro)
   \item{I}{Soil infiltration (in mm of water).}
   \item{dVec}{Width of soil layers (in mm).}
   \item{macro}{Macroporosity of soil layers (in \%).}
+  \item{soil}{An object of class \code{\link{soil}}.}
+  \item{soilFunctions}{Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).}
+  \item{pet}{Potential evapotranspiration for a given day (mm)}
+  \item{LgroundSWR}{Proportion of short-wave radiation (SWR) reaching the ground.}
+  \item{modifySoil}{Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.}
 }
 \details{
-See description of infiltration and soil evaporation processes in De Caceres et al. (submitted).
+See description of infiltration and soil evaporation processes in De Caceres et al. (2015).
 }
 \value{
-Function \code{hydrology_soilInfiltration} a vector of the same length as \code{input} containing the daily amount of water that infiltrates into the soil (in mm of water). Function \code{hydrology_soilEvaporation} returns the amount of water evaporated from the soil. Function \code{hydrology_infiltrationRepartition} estimates the amount of infiltrated water that reaches each soil layer.
+Function \code{hydrology_infiltrationAmount} a vector of the same length as \code{input} containing the daily amount of water that infiltrates into the soil (in mm of water). Function \code{hydrology_infiltrationRepartition} estimates the amount of infiltrated water that reaches each soil layer. Function \code{hydrology_soilEvaporationAmount} returns the amount of water evaporated from the soil. Function \code{hydrology_soilEvaporation} returns a vector of water evaporated from each soil layer.
 }
 \references{
 Boughton (1989). A review of the USDA SCS curve number method. - Australian Journal of Soil Research 27: 511-523.
 
-De \enc{Cáceres}{Caceres} M, \enc{Martínez}{Martinez}-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L. (submitted) Coupling a water balance model with forest inventory data to evaluate plant drought stress at the regional level. Agricultural and Forest Meteorology.
+De \enc{Cáceres}{Caceres} M, \enc{Martínez}{Martinez}-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L. (2015) Coupling a water balance model with forest inventory data to evaluate plant drought stress at the regional level. Agricultural and Forest Meteorology.
 
 Ritchie (1972). Model for predicting evaporation from a row crop with incomplete cover. - Water resources research.
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 }
 \seealso{
- \code{\link{spwb}}
+ \code{\link{spwb}}, \code{\link{hydrology_verticalInputs}}
 }
 \examples{
 SoilDepth = c(200,400,800,1200,1500)
@@ -77,24 +82,22 @@ V = MaxVol1+MaxVol2+MaxVol3
 
 par(mar=c(5,5,1,1), mfrow=c(1,2))
 NP = seq(0,60, by=1)
-plot(NP,hydrology_soilInfiltration(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
+plot(NP,hydrology_infiltrationAmount(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
      ylab="Infiltration (mm)", xlab="Net rainfall (mm)", frame=FALSE)
-lines(NP,hydrology_soilInfiltration(NP, V[2]), lty=2)
-lines(NP,hydrology_soilInfiltration(NP, V[3]), lty=3)
-lines(NP,hydrology_soilInfiltration(NP, V[4]), lty=4)
-lines(NP,hydrology_soilInfiltration(NP, V[5]), lty=5)
+lines(NP,hydrology_infiltrationAmount(NP, V[2]), lty=2)
+lines(NP,hydrology_infiltrationAmount(NP, V[3]), lty=3)
+lines(NP,hydrology_infiltrationAmount(NP, V[4]), lty=4)
+lines(NP,hydrology_infiltrationAmount(NP, V[5]), lty=5)
 legend("topleft", bty="n", lty=1:5, 
        legend=c(paste("d =", SoilDepth, "Vsoil =",round(V),"mm")))
-plot(NP,NP-hydrology_soilInfiltration(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
+plot(NP,NP-hydrology_infiltrationAmount(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
      ylab="Runoff (mm)", xlab="Net rainfall (mm)", frame=FALSE)
-lines(NP,NP-hydrology_soilInfiltration(NP, V[2]), lty=2)
-lines(NP,NP-hydrology_soilInfiltration(NP, V[3]), lty=3)
-lines(NP,NP-hydrology_soilInfiltration(NP, V[4]), lty=4)
-lines(NP,NP-hydrology_soilInfiltration(NP, V[5]), lty=5)
+lines(NP,NP-hydrology_infiltrationAmount(NP, V[2]), lty=2)
+lines(NP,NP-hydrology_infiltrationAmount(NP, V[3]), lty=3)
+lines(NP,NP-hydrology_infiltrationAmount(NP, V[4]), lty=4)
+lines(NP,NP-hydrology_infiltrationAmount(NP, V[5]), lty=5)
 legend("topleft", bty="n", lty=1:5, 
        legend=c(paste("d =", SoilDepth,"Vsoil =",round(V),"mm")))
 
 
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.

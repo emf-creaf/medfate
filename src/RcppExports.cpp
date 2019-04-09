@@ -1669,23 +1669,23 @@ RcppExport SEXP _medfate_erFactor(SEXP doySEXP, SEXP petSEXP, SEXP precSEXP, SEX
     UNPROTECT(1);
     return rcpp_result_gen;
 }
-// soilEvaporationDay
-double soilEvaporationDay(double DEF, double PETs, double Gsoil);
-static SEXP _medfate_soilEvaporationDay_try(SEXP DEFSEXP, SEXP PETsSEXP, SEXP GsoilSEXP) {
+// soilEvaporationAmount
+double soilEvaporationAmount(double DEF, double PETs, double Gsoil);
+static SEXP _medfate_soilEvaporationAmount_try(SEXP DEFSEXP, SEXP PETsSEXP, SEXP GsoilSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< double >::type DEF(DEFSEXP);
     Rcpp::traits::input_parameter< double >::type PETs(PETsSEXP);
     Rcpp::traits::input_parameter< double >::type Gsoil(GsoilSEXP);
-    rcpp_result_gen = Rcpp::wrap(soilEvaporationDay(DEF, PETs, Gsoil));
+    rcpp_result_gen = Rcpp::wrap(soilEvaporationAmount(DEF, PETs, Gsoil));
     return rcpp_result_gen;
 END_RCPP_RETURN_ERROR
 }
-RcppExport SEXP _medfate_soilEvaporationDay(SEXP DEFSEXP, SEXP PETsSEXP, SEXP GsoilSEXP) {
+RcppExport SEXP _medfate_soilEvaporationAmount(SEXP DEFSEXP, SEXP PETsSEXP, SEXP GsoilSEXP) {
     SEXP rcpp_result_gen;
     {
         Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_medfate_soilEvaporationDay_try(DEFSEXP, PETsSEXP, GsoilSEXP));
+        rcpp_result_gen = PROTECT(_medfate_soilEvaporationAmount_try(DEFSEXP, PETsSEXP, GsoilSEXP));
     }
     Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
     if (rcpp_isInterrupt_gen) {
@@ -1743,22 +1743,22 @@ RcppExport SEXP _medfate_soilEvaporation(SEXP soilSEXP, SEXP soilFunctionsSEXP, 
     UNPROTECT(1);
     return rcpp_result_gen;
 }
-// infiltrationDay
-double infiltrationDay(double input, double Ssoil);
-static SEXP _medfate_infiltrationDay_try(SEXP inputSEXP, SEXP SsoilSEXP) {
+// infiltrationAmount
+double infiltrationAmount(double input, double Ssoil);
+static SEXP _medfate_infiltrationAmount_try(SEXP inputSEXP, SEXP SsoilSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< double >::type input(inputSEXP);
     Rcpp::traits::input_parameter< double >::type Ssoil(SsoilSEXP);
-    rcpp_result_gen = Rcpp::wrap(infiltrationDay(input, Ssoil));
+    rcpp_result_gen = Rcpp::wrap(infiltrationAmount(input, Ssoil));
     return rcpp_result_gen;
 END_RCPP_RETURN_ERROR
 }
-RcppExport SEXP _medfate_infiltrationDay(SEXP inputSEXP, SEXP SsoilSEXP) {
+RcppExport SEXP _medfate_infiltrationAmount(SEXP inputSEXP, SEXP SsoilSEXP) {
     SEXP rcpp_result_gen;
     {
         Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_medfate_infiltrationDay_try(inputSEXP, SsoilSEXP));
+        rcpp_result_gen = PROTECT(_medfate_infiltrationAmount_try(inputSEXP, SsoilSEXP));
     }
     Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
     if (rcpp_isInterrupt_gen) {
@@ -3439,6 +3439,48 @@ RcppExport SEXP _medfate_spwb(SEXP xSEXP, SEXP soilSEXP, SEXP meteoSEXP, SEXP la
     UNPROTECT(1);
     return rcpp_result_gen;
 }
+// pwb
+List pwb(List x, List soil, DataFrame meteo, NumericMatrix W, double latitude, double elevation, NumericVector canopyEvaporation, NumericVector snowMelt, NumericVector soilEvaporation);
+static SEXP _medfate_pwb_try(SEXP xSEXP, SEXP soilSEXP, SEXP meteoSEXP, SEXP WSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP canopyEvaporationSEXP, SEXP snowMeltSEXP, SEXP soilEvaporationSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type meteo(meteoSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type W(WSEXP);
+    Rcpp::traits::input_parameter< double >::type latitude(latitudeSEXP);
+    Rcpp::traits::input_parameter< double >::type elevation(elevationSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type canopyEvaporation(canopyEvaporationSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type snowMelt(snowMeltSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type soilEvaporation(soilEvaporationSEXP);
+    rcpp_result_gen = Rcpp::wrap(pwb(x, soil, meteo, W, latitude, elevation, canopyEvaporation, snowMelt, soilEvaporation));
+    return rcpp_result_gen;
+END_RCPP_RETURN_ERROR
+}
+RcppExport SEXP _medfate_pwb(SEXP xSEXP, SEXP soilSEXP, SEXP meteoSEXP, SEXP WSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP canopyEvaporationSEXP, SEXP snowMeltSEXP, SEXP soilEvaporationSEXP) {
+    SEXP rcpp_result_gen;
+    {
+        Rcpp::RNGScope rcpp_rngScope_gen;
+        rcpp_result_gen = PROTECT(_medfate_pwb_try(xSEXP, soilSEXP, meteoSEXP, WSEXP, latitudeSEXP, elevationSEXP, canopyEvaporationSEXP, snowMeltSEXP, soilEvaporationSEXP));
+    }
+    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
+    if (rcpp_isInterrupt_gen) {
+        UNPROTECT(1);
+        Rf_onintr();
+    }
+    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
+    if (rcpp_isLongjump_gen) {
+        Rcpp::internal::resumeJump(rcpp_result_gen);
+    }
+    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
+    if (rcpp_isError_gen) {
+        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
+        UNPROTECT(1);
+        Rf_error(CHAR(rcpp_msgSEXP_gen));
+    }
+    UNPROTECT(1);
+    return rcpp_result_gen;
+}
 // symplasticRelativeWaterContent
 double symplasticRelativeWaterContent(double psiSym, double pi0, double epsilon);
 RcppExport SEXP _medfate_symplasticRelativeWaterContent(SEXP psiSymSEXP, SEXP pi0SEXP, SEXP epsilonSEXP) {
@@ -3658,9 +3700,9 @@ static int _medfate_RcppExport_validate(const char* sig) {
     static std::set<std::string> signatures;
     if (signatures.empty()) {
         signatures.insert("double(*hydrology_erFactor)(int,double,double,double,double)");
-        signatures.insert("double(*hydrology_soilEvaporationDay)(double,double,double)");
+        signatures.insert("double(*hydrology_soilEvaporationAmount)(double,double,double)");
         signatures.insert("NumericVector(*hydrology_soilEvaporation)(List,String,double,double,bool)");
-        signatures.insert("double(*.hydrology_infiltrationDay)(double,double)");
+        signatures.insert("double(*.hydrology_infiltrationAmount)(double,double)");
         signatures.insert("NumericVector(*hydrology_infiltrationRepartition)(double,NumericVector,NumericVector)");
         signatures.insert("double(*.hydrology_interceptionGashDay)(double,double,double,double)");
         signatures.insert("NumericVector(*hydrology_verticalInputs)(List,String,double,double,double,double,double,double,double,double,double,bool,bool,bool)");
@@ -3691,6 +3733,7 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("List(*spwb_day)(List,List,CharacterVector,double,double,double,double,double,double,double,double,double,double,double,double)");
         signatures.insert("void(*spwb_resetInputs)(List,List,List,int)");
         signatures.insert("List(*spwb)(List,List,DataFrame,double,double,double,double)");
+        signatures.insert("List(*pwb)(List,List,DataFrame,NumericMatrix,double,double,NumericVector,NumericVector,NumericVector)");
     }
     return signatures.find(sig) != signatures.end();
 }
@@ -3698,9 +3741,9 @@ static int _medfate_RcppExport_validate(const char* sig) {
 // registerCCallable (register entry points for exported C++ functions)
 RcppExport SEXP _medfate_RcppExport_registerCCallable() { 
     R_RegisterCCallable("medfate", "_medfate_hydrology_erFactor", (DL_FUNC)_medfate_erFactor_try);
-    R_RegisterCCallable("medfate", "_medfate_hydrology_soilEvaporationDay", (DL_FUNC)_medfate_soilEvaporationDay_try);
+    R_RegisterCCallable("medfate", "_medfate_hydrology_soilEvaporationAmount", (DL_FUNC)_medfate_soilEvaporationAmount_try);
     R_RegisterCCallable("medfate", "_medfate_hydrology_soilEvaporation", (DL_FUNC)_medfate_soilEvaporation_try);
-    R_RegisterCCallable("medfate", "_medfate_.hydrology_infiltrationDay", (DL_FUNC)_medfate_infiltrationDay_try);
+    R_RegisterCCallable("medfate", "_medfate_.hydrology_infiltrationAmount", (DL_FUNC)_medfate_infiltrationAmount_try);
     R_RegisterCCallable("medfate", "_medfate_hydrology_infiltrationRepartition", (DL_FUNC)_medfate_infiltrationRepartition_try);
     R_RegisterCCallable("medfate", "_medfate_.hydrology_interceptionGashDay", (DL_FUNC)_medfate_interceptionGashDay_try);
     R_RegisterCCallable("medfate", "_medfate_hydrology_verticalInputs", (DL_FUNC)_medfate_verticalInputs_try);
@@ -3731,6 +3774,7 @@ RcppExport SEXP _medfate_RcppExport_registerCCallable() {
     R_RegisterCCallable("medfate", "_medfate_spwb_day", (DL_FUNC)_medfate_spwbDay_try);
     R_RegisterCCallable("medfate", "_medfate_spwb_resetInputs", (DL_FUNC)_medfate_resetInputs_try);
     R_RegisterCCallable("medfate", "_medfate_spwb", (DL_FUNC)_medfate_spwb_try);
+    R_RegisterCCallable("medfate", "_medfate_pwb", (DL_FUNC)_medfate_pwb_try);
     R_RegisterCCallable("medfate", "_medfate_RcppExport_validate", (DL_FUNC)_medfate_RcppExport_validate);
     return R_NilValue;
 }
@@ -3838,9 +3882,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_stemWaterCapacity", (DL_FUNC) &_medfate_stemWaterCapacity, 3},
     {"_medfate_leafWaterCapacity", (DL_FUNC) &_medfate_leafWaterCapacity, 2},
     {"_medfate_erFactor", (DL_FUNC) &_medfate_erFactor, 5},
-    {"_medfate_soilEvaporationDay", (DL_FUNC) &_medfate_soilEvaporationDay, 3},
+    {"_medfate_soilEvaporationAmount", (DL_FUNC) &_medfate_soilEvaporationAmount, 3},
     {"_medfate_soilEvaporation", (DL_FUNC) &_medfate_soilEvaporation, 5},
-    {"_medfate_infiltrationDay", (DL_FUNC) &_medfate_infiltrationDay, 2},
+    {"_medfate_infiltrationAmount", (DL_FUNC) &_medfate_infiltrationAmount, 2},
     {"_medfate_infiltrationRepartition", (DL_FUNC) &_medfate_infiltrationRepartition, 3},
     {"_medfate_interceptionGashDay", (DL_FUNC) &_medfate_interceptionGashDay, 4},
     {"_medfate_verticalInputs", (DL_FUNC) &_medfate_verticalInputs, 14},
@@ -3906,6 +3950,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_spwbDay", (DL_FUNC) &_medfate_spwbDay, 15},
     {"_medfate_resetInputs", (DL_FUNC) &_medfate_resetInputs, 4},
     {"_medfate_spwb", (DL_FUNC) &_medfate_spwb, 7},
+    {"_medfate_pwb", (DL_FUNC) &_medfate_pwb, 9},
     {"_medfate_symplasticRelativeWaterContent", (DL_FUNC) &_medfate_symplasticRelativeWaterContent, 3},
     {"_medfate_symplasticWaterPotential", (DL_FUNC) &_medfate_symplasticWaterPotential, 3},
     {"_medfate_apoplasticRelativeWaterContent", (DL_FUNC) &_medfate_apoplasticRelativeWaterContent, 3},

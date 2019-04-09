@@ -409,16 +409,16 @@ hydrology_erFactor <- function(doy, pet, prec, Rconv = 5.6, Rsyn = 1.5) {
     .Call(`_medfate_erFactor`, doy, pet, prec, Rconv, Rsyn)
 }
 
-hydrology_soilEvaporationDay <- function(DEF, PETs, Gsoil) {
-    .Call(`_medfate_soilEvaporationDay`, DEF, PETs, Gsoil)
+hydrology_soilEvaporationAmount <- function(DEF, PETs, Gsoil) {
+    .Call(`_medfate_soilEvaporationAmount`, DEF, PETs, Gsoil)
 }
 
 hydrology_soilEvaporation <- function(soil, soilFunctions, pet, LgroundSWR, modifySoil = TRUE) {
     .Call(`_medfate_soilEvaporation`, soil, soilFunctions, pet, LgroundSWR, modifySoil)
 }
 
-.hydrology_infiltrationDay <- function(input, Ssoil) {
-    .Call(`_medfate_infiltrationDay`, input, Ssoil)
+.hydrology_infiltrationAmount <- function(input, Ssoil) {
+    .Call(`_medfate_infiltrationAmount`, input, Ssoil)
 }
 
 hydrology_infiltrationRepartition <- function(I, dVec, macro) {
@@ -679,6 +679,10 @@ spwb_resetInputs <- function(x, soil, from = NULL, day = NA_integer_) {
 
 spwb <- function(x, soil, meteo, latitude = NA_real_, elevation = NA_real_, slope = NA_real_, aspect = NA_real_) {
     .Call(`_medfate_spwb`, x, soil, meteo, latitude, elevation, slope, aspect)
+}
+
+pwb <- function(x, soil, meteo, W, latitude = NA_real_, elevation = NA_real_, canopyEvaporation = as.numeric( c(0)), snowMelt = as.numeric( c(0)), soilEvaporation = as.numeric( c(0))) {
+    .Call(`_medfate_pwb`, x, soil, meteo, W, latitude, elevation, canopyEvaporation, snowMelt, soilEvaporation)
 }
 
 moisture_symplasticRWC <- function(psiSym, pi0, epsilon) {
