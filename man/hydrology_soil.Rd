@@ -14,7 +14,7 @@ Function \code{hydrology_infiltrationAmount} calculates the amount of water that
 hydrology_infiltrationAmount(input, Ssoil) 
 hydrology_infiltrationRepartition(I, dVec, macro)
 hydrology_soilEvaporationAmount(DEF,PETs, Gsoil)
-hydrology_soilEvaporation(soil, soilFunctions, pet, LgroundSWR, modifySoil = true)
+hydrology_soilEvaporation(soil, soilFunctions, pet, LgroundSWR, modifySoil = TRUE)
 hydrology_snowMelt(tday, rad, LgroundSWR, elevation)
 }
 \arguments{
@@ -33,7 +33,6 @@ hydrology_snowMelt(tday, rad, LgroundSWR, elevation)
   \item{modifySoil}{Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.}
   \item{tday}{Average day temperature (ºC).}
   \item{rad}{Solar radiation (in MJ/m2/day).}
-  \item{LgroundSWR}{Proportion of short-wave radiation (SWR) reaching the ground.}
   \item{elevation}{Altitude above sea level (m).}
 }
 \details{

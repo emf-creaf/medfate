@@ -12,9 +12,9 @@ Function \code{spwb()} is a water balance model that determines changes in soil 
 \usage{
 spwb(x, soil, meteo,  latitude = NA, elevation = NA, slope = NA, aspect = NA)
 pwb(x, soil, meteo, W, latitude = NA, elevation = NA, 
-    canopyEvaporation = numeric(0), 
-    snowMelt = numeric(0), 
-    soilEvaporation = numeric(0))
+    canopyEvaporation = as.numeric(c(0)), 
+    snowMelt = as.numeric(c(0)), 
+    soilEvaporation = as.numeric(c(0)))
 spwb_resetInputs(x, soil, from = NULL, day = NA)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -45,6 +45,9 @@ spwb_resetInputs(x, soil, from = NULL, day = NA)
   \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when using the 'Sperry' transpiration mode. Elevation is also required for 'Granier' if snowpack dynamics are simulated.}
   \item{from}{An object of class \code{spwb} storing the results of a previous simulation, including values of state variables. If \code{from = NULL}, state variables are set to their defaults (i.e. soil moisture set to field capacity and cumulative growth degree days set to zero).}
   \item{day}{An integer with the day from which state variable values stored in \code{from} should be copied. If missing, values are copied from the first day of stored values.}
+  \item{canopyEvaporation}{A vector of daily canopy evaporation (from interception) values (mm). The length should match the number of rows in \code{meteo}.}
+  \item{soilEvaporation}{A vector of daily bare soil evaporation values (mm). The length should match the number of rows in \code{meteo}.}
+  \item{snowMelt}{A vector of daily snow melt values (mm). The length should match the number of rows in \code{meteo}.}
 }
 \details{
   Detailed model description is available in the vignettes section. The model using 'Granier' transpiration mode is illustrated by function \code{\link{transp_transpirationGranier}} and described in De Caceres et al. (2015). Simulations using the 'Sperry' transpiration mode are computationally much more expensive and are illustrated by function \code{\link{transp_transpirationSperry}}. Function \code{spwb_resetInputs()} allows resetting state variables in \code{x} and \code{soil} to their defaults, or to copy values of state variables from a previous \code{spwb()} simulation results stored in \code{from}.

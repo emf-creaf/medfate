@@ -1,26 +1,28 @@
 \encoding{UTF-8}
 \name{Forest values}
 \alias{forest_basalArea}
+\alias{forest_mergeTrees}
 
-%- Also NEED an '\alias' for EACH other topic documented here.
-\title{Forest description functions}
+\title{Forest utility functions}
 \description{
-Functions to calculate overall attributes of a \code{\link{forest}} object.
+Functions to manipulate or calculate overall attributes of a \code{\link{forest}} object.
 }
 \usage{
 forest_basalArea(x)
+forest_mergeTrees(x)
 }
 \arguments{
   \item{x}{An object of class \code{\link{forest}}.}
 }
 \value{
-A vector with values for each cohort of the input \code{\link{forest}} object:
+Depending on the function:
 \itemize{
 \item{\code{forest_basalArea}: Total basal area (m2/ha).}
+\item{\code{forest_mergeTrees}: Another \code{\link{forest}} object with merged trees.}
 }
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 }
 \seealso{
  \code{\link{spwb}}, \code{\link{forest}}, \code{\link{plant_basalArea}}, \code{\link{summary.forest}}

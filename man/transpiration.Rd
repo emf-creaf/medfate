@@ -14,9 +14,9 @@ Set of high-level functions used in the calculation of stomatal conductance and 
 \usage{
 transp_profitMaximization(supplyFunction, photosynthesisFunction, type, 
                           Gwmin, Gwmax, kleafmax = NA)
-transp_transpirationGranier(x, soil, meteo, day, modifySoil = FALSE)                              
+transp_transpirationGranier(x, soil, meteo, day, modifyInput = TRUE)
 transp_transpirationSperry(x, soil, meteo, day,
-                           latitude, elevation, modifySoil = FALSE)
+                           latitude, elevation, modifyInput = TRUE)
 transp_stomatalRegulationPlot(x, soil, meteo, day, timestep, 
                               latitude, elevation)
 }
@@ -28,7 +28,7 @@ transp_stomatalRegulationPlot(x, soil, meteo, day, timestep,
   \item{type}{Optimization type (1,2 or 3).}
   \item{Gwmin, Gwmax}{Minimum and maximum stomatal conductance (mol·m-2·s-1).}
   \item{kleafmax}{Maximum leaf hydraulic conductance (flow per pressure drop).}
-  \item{x}{An object of class \code{\link{spwbInput}} built using the 'Complex' transpiration mode.}
+  \item{x}{An object of class \code{\link{spwbInput}} built using the 'Sperry' transpiration mode.}
   \item{soil}{An object of class \code{\link{soil}}.}
   \item{meteo}{A data frame with daily meteorological data series:
    \itemize{
@@ -47,6 +47,7 @@ transp_stomatalRegulationPlot(x, soil, meteo, day, timestep,
   \item{timestep}{An integer between 1 and \code{ndailysteps} specified in \code{x} (see \code{\link{defaultControl}}).}
   \item{latitude}{Latitude (in degrees).}
   \item{elevation}{Elevation above sea level (in m).}
+  \item{modifyInput}{Boolean flag to indicate that the input \code{x} and \code{soil} objects are allowed to be modified during the simulation.}
 }
 \details{
 Details of the transpiration submodel are given in a vignette.
@@ -105,8 +106,8 @@ x = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 # and plant stress for a given day
 transp_transpirationGranier(x, examplesoil, examplemeteo, 1, modifyInput = F)
 
-#Switch to 'Complex' transpiration mode
-control$transpirationMode="Complex"
+#Switch to 'Sperry' transpiration mode
+control$transpirationMode="Sperry"
 
 #Initialize soil with default soil params (2 layers)
 examplesoil2 = soil(defaultSoilParams(2))
