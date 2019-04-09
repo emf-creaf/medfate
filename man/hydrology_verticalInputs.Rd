@@ -32,7 +32,7 @@ A named vector with the following elements, all in mm:
 \item{Rain}{Precipitation as rainfall.}
 \item{Snow}{Precipitation as snow.}
 \item{Interception}{Rainfall water intercepted by the canopy and evaporated.}
-\item{Throughfall}{Rainfall reaching the ground.}
+\item{NetRain}{Rainfall reaching the ground.}
 \item{Snowmelt}{Snow melted during the day, and added to the water infiltrated.}
 \item{Runon}{Surface water amount running on the target area from upslope.}
 \item{Infiltration}{Water infiltrated into the soil (i.e. throughfall + runon + snowmelt - runoff).}

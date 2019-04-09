@@ -83,7 +83,7 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   NumericVector psiVec = psi(soil, soilFunctions); //Calculate current soil water potential for output
   
   NumericVector DB = NumericVector::create(_["PET"] = pet, _["Rain"] = hydroInputs["Rain"], _["Snow"] = hydroInputs["Snow"], 
-                                           _["NetRain"] = hydroInputs["Throughfall"], _["Snowmelt"] = hydroInputs["Snowmelt"],
+                                           _["NetRain"] = hydroInputs["NetRain"], _["Snowmelt"] = hydroInputs["Snowmelt"],
                                            _["Runon"] = hydroInputs["Runon"], 
                                            _["Infiltration"] = hydroInputs["Infiltration"], _["Runoff"] = hydroInputs["Runoff"], _["DeepDrainage"] = hydroInputs["DeepDrainage"],
                                            _["SoilEvaporation"] = sum(EsoilVec), _["PlantExtraction"] = sum(EplantVec), _["Transpiration"] = sum(EplantVec),
@@ -190,7 +190,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   }
   NumericVector psiVec = psi(soil, soilFunctions); //Calculate current soil water potential for output
   
-  NumericVector DB = NumericVector::create(_["PET"] = pet,_["Rain"] = hydroInputs["Rain"],_["Snow"] = hydroInputs["Snow"],_["NetRain"] = hydroInputs["Throughfall"], _["Snowmelt"] = hydroInputs["Snowmelt"],
+  NumericVector DB = NumericVector::create(_["PET"] = pet,_["Rain"] = hydroInputs["Rain"],_["Snow"] = hydroInputs["Snow"],_["NetRain"] = hydroInputs["NetRain"], _["Snowmelt"] = hydroInputs["Snowmelt"],
                                            _["Runon"] = hydroInputs["Runon"], _["Infiltration"] = hydroInputs["Infiltration"], _["Runoff"] = hydroInputs["Runoff"], _["DeepDrainage"] = hydroInputs["DeepDrainage"],
                                            _["SoilEvaporation"] = sum(EsoilVec), _["PlantExtraction"] = sum(EplantVec), _["Transpiration"] = sum(Eplant),
                                            _["HydraulicRedistribution"] = sum(soilHydraulicInput),
@@ -532,6 +532,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   NumericVector Runoff(numDays);
   NumericVector Rain(numDays);
   NumericVector Snow(numDays);
+  NumericVector Snowmelt(numDays);
   NumericVector NetRain(numDays);
   NumericVector Interception(numDays);
   NumericVector Infiltration(numDays);
@@ -717,6 +718,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
       Runoff[i] = db["Runoff"];
       Rain[i] = db["Rain"];
       Snow[i] = db["Snow"];
+      Snowmelt[i] = db["Snowmelt"];
       NetRain[i] = db["NetRain"];
       PlantExtraction[i] = db["PlantExtraction"];
       if(transpirationMode=="Complex")  {
@@ -826,15 +828,15 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
    if(transpirationMode=="Simple") {
      DWB = DataFrame::create(_["GDD"] = GDD,
                              _["LAIcell"]=LAIcell, _["LAIcelldead"] = LAIcelldead,  _["Cm"]=Cm, _["Lground"] = Lground, _["PET"]=PET, 
-                             _["Precipitation"] = Precipitation, _["Rain"] = Rain, _["Snow"] = Snow,
-                             _["NetRain"]=NetRain,_["Infiltration"]=Infiltration, _["Runoff"]=Runoff, _["DeepDrainage"]=DeepDrainage, 
+                             _["Precipitation"] = Precipitation, _["Rain"] = Rain, _["Snow"] = Snow, 
+                             _["NetRain"]=NetRain, _["Snowmelt"] = Snowmelt, _["Infiltration"]=Infiltration, _["Runoff"]=Runoff, _["DeepDrainage"]=DeepDrainage, 
                              _["Evapotranspiration"]=Evapotranspiration,_["Interception"] = Interception, _["SoilEvaporation"]=SoilEvaporation,
                              _["PlantExtraction"] = PlantExtraction, _["Transpiration"]=Transpiration);
    } else {
      DWB = DataFrame::create(_["GDD"] = GDD,
                              _["LAIcell"]=LAIcell, _["LAIcelldead"] = LAIcelldead,  _["Cm"]=Cm, _["Lground"] = Lground, _["PET"]=PET, 
-                             _["Precipitation"] = Precipitation, _["Rain"] = Rain, _["Snow"] = Snow,
-                             _["NetRain"]=NetRain,_["Infiltration"]=Infiltration, _["Runoff"]=Runoff, _["DeepDrainage"]=DeepDrainage, 
+                             _["Precipitation"] = Precipitation, _["Rain"] = Rain, _["Snow"] = Snow, 
+                             _["NetRain"]=NetRain, _["Snowmelt"] = Snowmelt, _["Infiltration"]=Infiltration, _["Runoff"]=Runoff, _["DeepDrainage"]=DeepDrainage, 
                              _["Evapotranspiration"]=Evapotranspiration,_["Interception"] = Interception, _["SoilEvaporation"]=SoilEvaporation,
                              _["PlantExtraction"] = PlantExtraction, _["Transpiration"]=Transpiration, 
                              _["HydraulicRedistribution"] = HydraulicRedistribution);

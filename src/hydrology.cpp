@@ -142,9 +142,9 @@ NumericVector verticalInputs(List soil, String soilFunctions, double prec, doubl
     }
     //Apply snow melting
     if(swe > 0.0) {
-      melt = snowMelt(tday, rad, LgroundSWR, elevation);
+      melt = std::min(swe, snowMelt(tday, rad, LgroundSWR, elevation));
       // Rcout<<" swe: "<< swe<<" temp: "<<ten<< " rad: "<< ren << " melt : "<< melt<<"\n";
-      swe = std::max(0.0, swe-melt);
+      swe = swe-melt;
     }
   } else {
     rain = prec;
@@ -197,7 +197,7 @@ NumericVector verticalInputs(List soil, String soilFunctions, double prec, doubl
   }
   NumericVector DB = NumericVector::create(_["Rain"] = rain, _["Snow"] = snow,
                                            _["Interception"] = interception,
-                                           _["Throughfall"] = NetRain, 
+                                           _["NetRain"] = NetRain, 
                                            _["Snowmelt"] = melt,
                                            _["Runon"] = runon, 
                                            _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage);
