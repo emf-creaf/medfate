@@ -16,7 +16,9 @@ transp_profitMaximization(supplyFunction, photosynthesisFunction, type,
                           Gwmin, Gwmax, kleafmax = NA)
 transp_transpirationGranier(x, soil, meteo, day, modifyInput = TRUE)
 transp_transpirationSperry(x, soil, meteo, day,
-                           latitude, elevation, modifyInput = TRUE)
+                           latitude, elevation, 
+                           canopyEvaporation = 0, snowMelt = 0, soilEvaporation = 0, 
+                           stepFunctions = NA, modifyInput = TRUE)
 transp_stomatalRegulationPlot(x, soil, meteo, day, timestep, 
                               latitude, elevation)
 }
@@ -47,6 +49,10 @@ transp_stomatalRegulationPlot(x, soil, meteo, day, timestep,
   \item{timestep}{An integer between 1 and \code{ndailysteps} specified in \code{x} (see \code{\link{defaultControl}}).}
   \item{latitude}{Latitude (in degrees).}
   \item{elevation}{Elevation above sea level (in m).}
+  \item{canopyEvaporation}{Canopy evaporation (from interception) for \code{day} (mm).}
+  \item{soilEvaporation}{Bare soil evaporation for \code{day} (mm).}
+  \item{snowMelt}{Snow melt values  for \code{day} (mm).}
+  \item{stepFunctions}{An integer to indicate a simulation step for which photosynthesis and profit maximization functions are desired.}
   \item{modifyInput}{Boolean flag to indicate that the input \code{x} and \code{soil} objects are allowed to be modified during the simulation.}
 }
 \details{
@@ -104,7 +110,8 @@ x = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 
 # Transpiration according to Granier's model, plant water potential 
 # and plant stress for a given day
-transp_transpirationGranier(x, examplesoil, examplemeteo, 1, modifyInput = F)
+transp_transpirationGranier(x, examplesoil, examplemeteo, 1, 
+                            modifyInput = FALSE)
 
 #Switch to 'Sperry' transpiration mode
 control$transpirationMode="Sperry"
