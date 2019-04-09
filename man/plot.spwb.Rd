@@ -1,25 +1,29 @@
 \encoding{UTF-8}
 \name{plot.spwb}
 \alias{plot.spwb}
+\alias{plot.pwb}
 \alias{plot.growth}
+\alias{summary.pwb}
 \alias{summary.spwb}
 \alias{summary.growth}
 
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{Displays simulation results}
 \description{
-Function \code{plot} plots the results of the soil water balance model (see \code{\link{spwb}}) or the forest growth model (see \code{\link{growth}}), whereas function \code{summary} summarizes the model's output in different temporal steps (i.e. weekly, annual, ...).
+Function \code{plot} plots the results of the soil plant water balance model (see \code{\link{spwb}}), plant water balance model (see \code{\link{pwb}}) or the forest growth model (see \code{\link{growth}}), whereas function \code{summary} summarizes the model's output in different temporal steps (i.e. weekly, annual, ...).
 }
 \usage{
 \method{plot}{spwb}(x, type="PET_Precipitation", bySpecies = FALSE,
                    yearAxis=FALSE, xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL,
                    add = FALSE, ...)
+\method{plot}{pwb}(x, type="PlantTranspiration", bySpecies = FALSE,
+                   yearAxis=FALSE, xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL,
+                   add = FALSE, ...)                   
 \method{plot}{growth}(x, type="PET_Precipitation", bySpecies = FALSE, yearAxis=FALSE, 
     xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL,...)
+\method{summary}{pwb}(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, ...)
 \method{summary}{spwb}(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, ...)
 \method{summary}{growth}(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, ...)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x, object}{An object of class \code{spwb}.}
   \item{type}{The information to be plotted:
@@ -86,7 +90,7 @@ Function \code{plot} plots the results of the soil water balance model (see \cod
 De \enc{Cáceres}{Caceres} M, \enc{Martínez}{Martinez}-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L. (2015) Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes. Agricultural and Forest Meteorology 213: 77-90 (doi:10.1016/j.agrformet.2015.06.012).
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 }
 \seealso{
  \code{\link{spwb}}
@@ -120,5 +124,3 @@ plot(S1)
 summary(S1, freq="months",FUN=mean, output="Soil")
 
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.

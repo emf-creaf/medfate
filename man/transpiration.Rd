@@ -114,11 +114,7 @@ examplesoil2 = soil(defaultSoilParams(2))
 #Initialize input
 x2 = forest2spwbInput(exampleforest,examplesoil2, SpParamsMED, control)
 
-# Transpiration according to Sperry's model, canopy energy balance
-# and plant stress for a given day
-transp_transpirationSperry(x2, examplesoil2, examplemeteo, 1, modifyInput = F)
-
-
+# Stomatal regulation for the 12th time step at day 100
 transp_stomatalRegulationPlot(x2, examplesoil2, examplemeteo, day=100, timestep = 12,
                               latitude = 41.82592, elevation = 100)
 }

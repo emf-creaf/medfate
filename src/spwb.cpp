@@ -1362,7 +1362,7 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
     ln[21] = "subdaily";
     l.attr("names") = ln;
   }
-  l.attr("class") = CharacterVector::create("spwb","list");
+  l.attr("class") = CharacterVector::create("pwb","list");
   if(verbose) Rcout<<"done.\n";
   return(l);                    
 }

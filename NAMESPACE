@@ -13,10 +13,12 @@ exportPattern("^[[:alpha:]]+")
 
 
 importFrom(Rcpp, evalCpp)
+S3method(plot,pwb)
 S3method(plot,spwb)
 S3method(plot,spwb_day)
 S3method(plot,growth)
 
+S3method(summary, pwb)
 S3method(summary, spwb)
 S3method(summary, growth)
 S3method(summary, forest)

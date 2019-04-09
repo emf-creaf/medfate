@@ -41,3 +41,7 @@ summary.spwb<-function(object, freq="years", output="WaterBalance", FUN=sum, byS
   
   return(M)
 }
+
+summary.pwb<-function(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, ...){  
+  summary.spwb(object = object, freq = freq, output = output, FUN = FUN, bySpecies = bySpecies, ...)
+}

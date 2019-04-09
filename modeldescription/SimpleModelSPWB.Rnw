@@ -29,8 +29,6 @@ The model considers only the vertical spatial dimension of the stand and not the
 plants within it. In other words, the model is not spatially explicit (i.e., plants do not interact for space explicitly). Still, the stand is divided into groups of plants, here referred to as `plant cohorts` of different species, height and leaf area index ($LAI$). Height and $LAI$ values determine competition for light. $LAI$ values also drive competition for water. The soil water balance follows the design principles of SIERRA (Mouillot et al., 2001, Ruffault et al., 2014, 2013) and BILJOU (Granier et al., 2007, 1999), although
 some features are taken from other models (Kergoat 1998). Potential evapotranspiration ($PET$) is given as input and the model determines maximum canopy transpiration ($Tr_{\max}$) using an empirical relationship between the $LAI$ of the stand and the ratio $Tr_{\max}/PET$ (Granier et al. 1999). Actual plant transpiration is calculated using a simple function depending on current soil moisture level and degree of shading.
 
-In gridded simulations, lateral water transport between adjancent cells is also considered. Then, the surface water inputs of the stand include not only precipitation and snow melt but also overland surface flows from cells of its upper microwatershed, with routing following T-HYDRO (Ostendor \& Reynolds, 1993); and subsurface flows (and variations in water table depth) are modelled following the kinematic wave approach of DSHVM (Wigmosta et al. 1994).
-
 \subsection{State variables}
 The model has the following state variables:
 \begin{itemize}
@@ -49,29 +47,17 @@ where $Pr$ is precipitation as rainfall, $Sm$ is water from melting the snow pac
   \begin{equation}
   \Delta{S_{snow}} = Ps - Sm
   \end{equation}
-where $Ps$ is precipitation as snowfall and $Sm$ is snow melt. When landscape hydrological processes are considered, daily variations in soil water content is then summarized as:
-  \begin{equation}
-  \Delta{SWC} = Pr + Sm + Ro - In - Ru - Dd - Es - Tr + \Delta{S_{sub}}
-  \end{equation}
-where $Ro$ is surface runon water entering the cell from neighbouring cells at higher elevation and $\Delta{S_{sub}}$ is the variation in water content derived from subsurface lateral processes. 
+where $Ps$ is precipitation as snowfall and $Sm$ is snow melt.
 
 \subsection{Process scheduling}
-Every day water balance is perfomed as follows. The model first updates leaf area values according to the phenology of species and calculates light extinction. After that, the model updates soil water content of soil layers in two steps:
+Every day water balance is perfomed as follows. The model first updates leaf area values according to the phenology of species and calculates light extinction. After that, the model updates soil water content of soil layers in several steps:
 \begin{enumerate}
 \item{If snow dynamics are included, increase snow pack from snow precipitation ($Ps$) and decreases it from snow melting ($Sm$);}
 \item{Increase soil moisture due to rainfall ($Pr$), surface runon ($Ro$) and snow melting ($Sm$), after accounting for canopy interception loss ($In$), surface runoff ($Ru$) and deep drainage ($Dd$);}
-\item{Decrease water content due to bare soil evaporation ($Es$), and plant
-transpiration ($Tr$).}
+\item{Decrease water content due to bare soil evaporation ($Es$).}
+\item{Decrease water content due to plant transpiration ($Tr$).}
 \item{Determines drought stress index for each plant cohort.}
 \end{enumerate}
-
-In non-gridded model runs, daily water balance simluations can be done for stands independently (i.e., the whole simulation period can be done in one stand before going to the next one). In gridded simulations,  however, water balance of a given day is conducted for all cells before starting the next day. Moreover, surface flows and subsurface flows are dealt in separate steps:
-\begin{enumerate}
-\item{Vertical flows and overland lateral flows are simulated first. A relative discharge parameter table is prepared at the beginning of the simulation, and cells are processed in an order determined by elevation (i.e. cells at higher elevation are processed before cells at lower elevation) and the water balance of a given target cell is influenced by surface runon ($Ro$) coming froom those neighboring cells that are at higher elevation.}
-\item{Subsurface flows (i.e., flows leading to $\Delta{S_{sub}}$) are simulated at the end of the day. Cells are allowed to exchange subsurface water with their eight neighbours, depending on the water table slope in each direction, which may not exactly follow elevation differences.}
-\end{enumerate}
- 
-
 
 \section{Model inputs and outputs}
 \subsection{Soil description}
@@ -466,19 +452,19 @@ V = MaxVol1+MaxVol2+MaxVol3
 
 par(mar=c(5,5,1,1), mfrow=c(1,2))
 NP = seq(0,60, by=1)
-plot(NP,hydrology_soilInfiltration(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
+plot(NP,hydrology_infiltrationAmount(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
      ylab="Infiltration (mm)", xlab="Net rainfall (mm)", frame=FALSE)
-lines(NP,hydrology_soilInfiltration(NP, V[2]), lty=2)
-lines(NP,hydrology_soilInfiltration(NP, V[3]), lty=3)
-lines(NP,hydrology_soilInfiltration(NP, V[4]), lty=4)
-lines(NP,hydrology_soilInfiltration(NP, V[5]), lty=5)
+lines(NP,hydrology_infiltrationAmount(NP, V[2]), lty=2)
+lines(NP,hydrology_infiltrationAmount(NP, V[3]), lty=3)
+lines(NP,hydrology_infiltrationAmount(NP, V[4]), lty=4)
+lines(NP,hydrology_infiltrationAmount(NP, V[5]), lty=5)
 legend("topleft", bty="n", lty=1:5, legend=c(paste("d =", SoilDepth, "Vsoil =",round(V),"mm")))
-plot(NP,NP-hydrology_soilInfiltration(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
+plot(NP,NP-hydrology_infiltrationAmount(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
      ylab="Runoff (mm)", xlab="Net rainfall (mm)", frame=FALSE)
-lines(NP,NP-hydrology_soilInfiltration(NP, V[2]), lty=2)
-lines(NP,NP-hydrology_soilInfiltration(NP, V[3]), lty=3)
-lines(NP,NP-hydrology_soilInfiltration(NP, V[4]), lty=4)
-lines(NP,NP-hydrology_soilInfiltration(NP, V[5]), lty=5)
+lines(NP,NP-hydrology_infiltrationAmount(NP, V[2]), lty=2)
+lines(NP,NP-hydrology_infiltrationAmount(NP, V[3]), lty=3)
+lines(NP,NP-hydrology_infiltrationAmount(NP, V[4]), lty=4)
+lines(NP,NP-hydrology_infiltrationAmount(NP, V[5]), lty=5)
 legend("topleft", bty="n", lty=1:5, legend=c(paste("d =", SoilDepth,"Vsoil =",round(V),"mm")))
 @
 \end{center}
@@ -491,6 +477,142 @@ fragment content was 25\% and 40\% for the topsoil and subsoil, respectively.
 \end{center}
 
 In non-gridded model runs, and if \texttt{drainage = TRUE}, the water percolating from the lowest layer is considered deep drainage, $Dd$, and soil layers are never above field capacity. If \texttt{drainage = FALSE}, or in gridded model runs, the excess of water in the lowest soil layer is not lost via drainage, so that this layer (and those above) can be filled up to saturation. This additional filling is done starting from below, and when a given layer reaches saturation, the model adds the remaining water to the layer above. If all layers are filled to saturation, the remaining water is assumed to be infiltration excess and is added to the surface runoff. Water between field capacity and saturation will lead to subsurface flows in gridded simulations, whereas in non-gridded simulations it is assumed to be confined in the soil.
+
+\subsection{Bare soil evaporation}
+Evaporation from the soil surface is the last component of the soil water balance
+to be calculated. There is a difference in the way that soil evaporative demand
+is calculated depending on the transpiration mode. Potential evaporation from the soil ($PE_{soil}$; in $mm\cdot day^{-1}$) is defined as the product between $PET$ and $L^{SWR}_{ground}$, the proportion of SWR absorbed by the ground:
+\begin{equation}
+PE_{soil} =  PET\cdot L^{SWR}_{ground}
+\end{equation}
+
+Actual evaporation from the soil surface is modeled as in Mouillot et al. (2001), who
+followed Ritchie (1972).  First, the model determines the time needed to evaporate
+the current water deficit (difference between field capacity and current moisture)
+in the surface soil layer:
+\begin{equation}
+t = \left \{ \frac{V_1\cdot(1- W_1)}{\gamma_{soil}} \right \}
+\end{equation}
+where $\gamma_{soil}$ is the maximum daily evaporation (mm·day$^{-1}$). The
+calculated time is used to determine the ‘supplied’ evaporation, $SE_{soil}$:
+\begin{equation}
+SE_{soil} = \gamma_{soil} \cdot (\sqrt{t+1}-\sqrt{1})
+\end{equation}
+The amount of water evaporated from the soil, $E_{soil}$, is then calculated as
+the minimum between supply and demand (Federer, 1982), the latter being the product
+of PET and the proportion of light that reaches the ground (see function
+\texttt{hydrology\_soilEvaporation}): 
+\begin{equation}
+E_{soil} = \min(PE_{soil}, SE_{soil})
+\end{equation}
+Finally, $E_{soil}$ is distributed along the soil profile according to an
+exponential decay function with an extinction coefficient $\kappa_{soil}$
+(Mouillot et al., 2001).
+
+\begin{center}
+<<fig=TRUE, width=4, height=4, echo=FALSE>>==
+TS_clay=10
+TS_silt=65
+TS_sand=25
+TS_gravel=40
+SS_clay=10
+SS_silt=65
+SS_sand = 25
+SS_gravel=40
+TS_macro=0.25
+TS_micro = 0.75
+SS_macro=0.10
+SS_micro=0.90
+#Rock layer is like subsoil but with 95% of rocks
+RL_clay = SS_clay
+RL_sand = SS_sand
+RL_macro = SS_macro
+RL_micro = SS_micro
+RL_gravel = 95
+
+
+RunEvaporation<-function(Gsoil, Ksoil, d1,d2,d3, numDays = 15){
+  PET = 100 #Not limited by PET
+  Lground = 1
+  
+  Theta_FC1=soil_psi2thetaSX(TS_clay, TS_sand, -33) #in m3/m3
+  Theta_FC2=soil_psi2thetaSX(SS_clay, SS_sand, -33) #in m3/m3
+  Theta_FC3=soil_psi2thetaSX(RL_clay, RL_sand, -33) #in m3/m3
+  pcTS_gravel = 1-(TS_gravel/100)
+  pcSS_gravel = 1-(SS_gravel/100)
+  pcRL_gravel = 1-(RL_gravel/100)
+  MaxVol1 = (d1*Theta_FC1*pcTS_gravel)
+  MaxVol2 = (d2*Theta_FC2*pcSS_gravel)
+  MaxVol3 = (d3*Theta_FC3*pcRL_gravel)
+  Ssoil = MaxVol1 + MaxVol2 + MaxVol3
+
+  W1=rep(0, numDays)
+  W2=rep(0, numDays)
+  W3=rep(0, numDays)
+  W1[1] = 1
+  W2[1] = 1
+  W3[1] = 1
+  Esoil = rep(NA,numDays)
+  EsoilCum = rep(NA,numDays)
+  t = rep(NA, numDays)
+  for(i in 1:numDays){
+    #Evaporation from bare soil
+    Esoil[i] = hydrology_soilEvaporationAmount(DEF=(MaxVol1*(1 - W1[i])), PETs = PET*Lground, Gsoil = Gsoil)
+    if(i==1) EsoilCum[i] = Esoil[i]
+    else EsoilCum[i] = EsoilCum[i-1]+Esoil[i]
+    #Exponential decay to divide bare soil evaporation among layers
+    Esoil1 = Esoil[i]*(1-exp(-Ksoil*d1))
+    Esoil2 = Esoil[i]*(exp(-Ksoil*d1)-exp(-Ksoil*(d1+d2)))
+    Esoil3 = Esoil[i]*(exp(-Ksoil*(d1+d2)))
+    if(i<numDays){
+      W1[i+1] = max(W1[i]-(Esoil1)/MaxVol1,0)
+      W2[i+1] = max(min(W2[i]-(Esoil2)/MaxVol2,1),0)
+      W3[i+1] = max(min(W3[i]-(Esoil3)/MaxVol3,1),0)
+    }  
+  }
+  return(list(Esoil = Esoil, EsoilCum = EsoilCum))  
+}
+
+E11=RunEvaporation(Gsoil=1, Ksoil = 0.05, d1=300, d2=1200, d3= 2500)
+E12=RunEvaporation(Gsoil=2, Ksoil = 0.05, d1=300, d2=1200, d3= 2500)
+E13=RunEvaporation(Gsoil=3, Ksoil = 0.05, d1=300, d2=1200, d3= 2500)
+E21=RunEvaporation(Gsoil=1, Ksoil = 0.005, d1=300, d2=1200, d3= 2500)
+E22=RunEvaporation(Gsoil=2, Ksoil = 0.005, d1=300, d2=1200, d3= 2500)
+E23=RunEvaporation(Gsoil=3, Ksoil = 0.005, d1=300, d2=1200, d3= 2500)
+
+
+par(mar=c(4,4,1,1))
+plot(x=1:length(E11$EsoilCum), y=E11$EsoilCum, ylim=c(0,15), ylab="Cummulative soil evaporation (mm)", xlab="day", type="l", axes=FALSE)
+axis(1, at=1:length(E11$EsoilCum), cex.axis=0.7)
+axis(2)
+points(x=1:length(E11$EsoilCum), y=E11$EsoilCum, pch=1)
+lines(x=1:length(E12$EsoilCum), y=E12$EsoilCum, lty=2)
+points(x=1:length(E12$EsoilCum), y=E12$EsoilCum, pch=1)
+lines(x=1:length(E13$EsoilCum), y=E13$EsoilCum, lty=3)
+points(x=1:length(E13$EsoilCum), y=E13$EsoilCum, pch=1)
+lines(x=1:length(E21$EsoilCum), y=E21$EsoilCum, lty=1)
+points(x=1:length(E21$EsoilCum), y=E21$EsoilCum, pch=2)
+lines(x=1:length(E22$EsoilCum), y=E22$EsoilCum, lty=2)
+points(x=1:length(E22$EsoilCum), y=E22$EsoilCum, pch=2)
+lines(x=1:length(E23$EsoilCum), y=E23$EsoilCum, lty=3)
+points(x=1:length(E23$EsoilCum), y=E23$EsoilCum, pch=2)
+legend("topleft", lty=rep(1:3,2), pch=c(1,1,1,2,2,2), legend=c("Gsoil = 1 Ksoil = 0.05", 
+                                    "Gsoil = 2 Ksoil = 0.05", 
+                                    "Gsoil = 3 Ksoil = 0.05",
+                                    "Gsoil = 1 Ksoil = 0.005", 
+                                    "Gsoil = 2 Ksoil = 0.005", 
+                                    "Gsoil = 3 Ksoil = 0.005"), cex = 0.7, bty="n")
+@
+\end{center}
+\begin{center}
+\emph{Fig. 4}: Cumulative bare soil evaporation for different values of maximum
+evaporation rate $\gamma_{soil}$ and extinction coefficient $\kappa_{soil}$.
+Three soil layers (0 – 30 cm; 30 – 150 cm; 150 – 400 cm) are initialized at field
+capacity ($V_1 = 50 mm$; $V_2 = 201 mm$; $V_3 = 35 mm$). $PE_{soil}$ was assumed
+not to be limiting. When the extinction coefficient is smaller a higher proportion
+of the evaporated water is removed from the subsoil and less from the topsoil.
+This causes more water being available to calculate t in the next step.
+\end{center}
 
 \subsection{Plant transpiration and photosynthesis}
 \subsubsection{PET and maximum canopy transpiration}
@@ -636,158 +758,7 @@ layer is absent. Moreover, $K_{i,s}$ is assumed equal to $K_{rootdisc,i}$ for th
 sake of determining plant water potential. 
 
 
-\subsection{Bare soil evaporation}
-Evaporation from the soil surface is the last component of the soil water balance
-to be calculated. There is a difference in the way that soil evaporative demand
-is calculated depending on the transpiration mode. Potential evaporation from the soil ($PE_{soil}$; in $mm\cdot day^{-1}$) is defined as the product between $PET$ and $L^{SWR}_{ground}$, the proportion of SWR absorbed by the ground:
-\begin{equation}
-PE_{soil} =  PET\cdot L^{SWR}_{ground}
-\end{equation}
 
-Actual evaporation from the soil surface is modeled as in Mouillot et al. (2001), who
-followed Ritchie (1972).  First, the model determines the time needed to evaporate
-the current water deficit (difference between field capacity and current moisture)
-in the surface soil layer:
-\begin{equation}
-t = \left \{ \frac{V_1\cdot(1- W_1)}{\gamma_{soil}} \right \}
-\end{equation}
-where $\gamma_{soil}$ is the maximum daily evaporation (mm·day$^{-1}$). The
-calculated time is used to determine the ‘supplied’ evaporation, $SE_{soil}$:
-\begin{equation}
-SE_{soil} = \gamma_{soil} \cdot (\sqrt{t+1}-\sqrt{1})
-\end{equation}
-The amount of water evaporated from the soil, $E_{soil}$, is then calculated as
-the minimum between supply and demand (Federer, 1982), the latter being the product
-of PET and the proportion of light that reaches the ground (see function
-\texttt{hydrology\_soilEvaporation}): 
-\begin{equation}
-E_{soil} = \min(PE_{soil}, SE_{soil})
-\end{equation}
-Finally, $E_{soil}$ is distributed along the soil profile according to an
-exponential decay function with an extinction coefficient $\kappa_{soil}$
-(Mouillot et al., 2001).
-
-\begin{center}
-<<fig=TRUE, width=4, height=4, echo=FALSE>>==
-TS_clay=10
-TS_silt=65
-TS_sand=25
-TS_gravel=40
-SS_clay=10
-SS_silt=65
-SS_sand = 25
-SS_gravel=40
-TS_macro=0.25
-TS_micro = 0.75
-SS_macro=0.10
-SS_micro=0.90
-#Rock layer is like subsoil but with 95% of rocks
-RL_clay = SS_clay
-RL_sand = SS_sand
-RL_macro = SS_macro
-RL_micro = SS_micro
-RL_gravel = 95
-
-
-RunEvaporation<-function(Gsoil, Ksoil, d1,d2,d3, numDays = 15){
-  PET = 100 #Not limited by PET
-  Lground = 1
-  
-  Theta_FC1=soil_psi2thetaSX(TS_clay, TS_sand, -33) #in m3/m3
-  Theta_FC2=soil_psi2thetaSX(SS_clay, SS_sand, -33) #in m3/m3
-  Theta_FC3=soil_psi2thetaSX(RL_clay, RL_sand, -33) #in m3/m3
-  pcTS_gravel = 1-(TS_gravel/100)
-  pcSS_gravel = 1-(SS_gravel/100)
-  pcRL_gravel = 1-(RL_gravel/100)
-  MaxVol1 = (d1*Theta_FC1*pcTS_gravel)
-  MaxVol2 = (d2*Theta_FC2*pcSS_gravel)
-  MaxVol3 = (d3*Theta_FC3*pcRL_gravel)
-  Ssoil = MaxVol1 + MaxVol2 + MaxVol3
-
-  W1=rep(0, numDays)
-  W2=rep(0, numDays)
-  W3=rep(0, numDays)
-  W1[1] = 1
-  W2[1] = 1
-  W3[1] = 1
-  Esoil = rep(NA,numDays)
-  EsoilCum = rep(NA,numDays)
-  t = rep(NA, numDays)
-  for(i in 1:numDays){
-    #Evaporation from bare soil
-    Esoil[i] = hydrology_soilEvaporationDay(DEF=(MaxVol1*(1 - W1[i])), PETs = PET*Lground, Gsoil = Gsoil)
-    if(i==1) EsoilCum[i] = Esoil[i]
-    else EsoilCum[i] = EsoilCum[i-1]+Esoil[i]
-    #Exponential decay to divide bare soil evaporation among layers
-    Esoil1 = Esoil[i]*(1-exp(-Ksoil*d1))
-    Esoil2 = Esoil[i]*(exp(-Ksoil*d1)-exp(-Ksoil*(d1+d2)))
-    Esoil3 = Esoil[i]*(exp(-Ksoil*(d1+d2)))
-    if(i<numDays){
-      W1[i+1] = max(W1[i]-(Esoil1)/MaxVol1,0)
-      W2[i+1] = max(min(W2[i]-(Esoil2)/MaxVol2,1),0)
-      W3[i+1] = max(min(W3[i]-(Esoil3)/MaxVol3,1),0)
-    }  
-  }
-  return(list(Esoil = Esoil, EsoilCum = EsoilCum))  
-}
-
-E11=RunEvaporation(Gsoil=1, Ksoil = 0.05, d1=300, d2=1200, d3= 2500)
-E12=RunEvaporation(Gsoil=2, Ksoil = 0.05, d1=300, d2=1200, d3= 2500)
-E13=RunEvaporation(Gsoil=3, Ksoil = 0.05, d1=300, d2=1200, d3= 2500)
-E21=RunEvaporation(Gsoil=1, Ksoil = 0.005, d1=300, d2=1200, d3= 2500)
-E22=RunEvaporation(Gsoil=2, Ksoil = 0.005, d1=300, d2=1200, d3= 2500)
-E23=RunEvaporation(Gsoil=3, Ksoil = 0.005, d1=300, d2=1200, d3= 2500)
-
-
-par(mar=c(4,4,1,1))
-plot(x=1:length(E11$EsoilCum), y=E11$EsoilCum, ylim=c(0,15), ylab="Cummulative soil evaporation (mm)", xlab="day", type="l", axes=FALSE)
-axis(1, at=1:length(E11$EsoilCum), cex.axis=0.7)
-axis(2)
-points(x=1:length(E11$EsoilCum), y=E11$EsoilCum, pch=1)
-lines(x=1:length(E12$EsoilCum), y=E12$EsoilCum, lty=2)
-points(x=1:length(E12$EsoilCum), y=E12$EsoilCum, pch=1)
-lines(x=1:length(E13$EsoilCum), y=E13$EsoilCum, lty=3)
-points(x=1:length(E13$EsoilCum), y=E13$EsoilCum, pch=1)
-lines(x=1:length(E21$EsoilCum), y=E21$EsoilCum, lty=1)
-points(x=1:length(E21$EsoilCum), y=E21$EsoilCum, pch=2)
-lines(x=1:length(E22$EsoilCum), y=E22$EsoilCum, lty=2)
-points(x=1:length(E22$EsoilCum), y=E22$EsoilCum, pch=2)
-lines(x=1:length(E23$EsoilCum), y=E23$EsoilCum, lty=3)
-points(x=1:length(E23$EsoilCum), y=E23$EsoilCum, pch=2)
-legend("topleft", lty=rep(1:3,2), pch=c(1,1,1,2,2,2), legend=c("Gsoil = 1 Ksoil = 0.05", 
-                                    "Gsoil = 2 Ksoil = 0.05", 
-                                    "Gsoil = 3 Ksoil = 0.05",
-                                    "Gsoil = 1 Ksoil = 0.005", 
-                                    "Gsoil = 2 Ksoil = 0.005", 
-                                    "Gsoil = 3 Ksoil = 0.005"), cex = 0.7, bty="n")
-@
-\end{center}
-\begin{center}
-\emph{Fig. 4}: Cumulative bare soil evaporation for different values of maximum
-evaporation rate $\gamma_{soil}$ and extinction coefficient $\kappa_{soil}$.
-Three soil layers (0 – 30 cm; 30 – 150 cm; 150 – 400 cm) are initialized at field
-capacity ($V_1 = 50 mm$; $V_2 = 201 mm$; $V_3 = 35 mm$). $PE_{soil}$ was assumed
-not to be limiting. When the extinction coefficient is smaller a higher proportion
-of the evaporated water is removed from the subsoil and less from the topsoil.
-This causes more water being available to calculate t in the next step.
-\end{center}
-
-\subsection{Landscape hydrological processes}
-\subsubsection{Overland flows}
-To simulate surface runoff from one cell to the other, the approach of Ostendorf \& Reynolds
-(1993) is used, as in SIERRA (Mouillot et al. 2001). Overland  water lateral transport occurs instantaneously and depends on topography only. The model determines cell neigbours following the queen rule (up to eight neighbours per cell). The proportion of surface water runoff of cell $i$ that will be added to the infiltration input (runon) of a neighbouring cell $j$ is:
-\begin{equation}
-q_{ij} = \frac{\Delta z_{ij}/L_{ij}}{\sum_{j}{\Delta z_{ij}/L_{ij}}}
-\end{equation}
-if $\Delta z_{ij} = z_i - z_j > 0$, that is, if the difference in elevation between the two cells is positive (i.e. if $z_j < z_i$). Otherwise there is no overland transport from $i$ to $j$, i.e. $q_{ij} = 0$. $L_{ij}$ indicates the distance between cell $i$ and $j$ (which depends on cell size and on whether the neighbouring cell $j$ is diagonal to cell $i$). The sumatory of the denominator is done only for neighbours at lower elevation, so that $\sum_{i}{qij} = 1$. The table of $q_{ij}$ values is calculated at the beginning of simulations only.
-
-Every day, cells are processed in order from higher to lower elevation. After the daily water balance of a given cell $i$, water runoff $R_i$ is divided among the neighbouring cells at lower elevation. The runon of a neighbour $j$, $O_j$ is updated as:
-\begin{equation}
-O_j = O_j + R_i \cdot q_{ij}
-\end{equation}
-Note that a given cell $j$ can receive overland flow from more than one neighbour. $O_j$ values are set to zero at the beginning of each day.
-
-\subsubsection{Subsurface flow}
 
 \section{Model output}
 Function \texttt{spwb} returns a list object whose elements are data tables. Each table has dates as rows and has different output variables:

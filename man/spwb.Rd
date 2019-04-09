@@ -1,15 +1,20 @@
 \encoding{UTF-8}
 \name{spwb}
 \alias{spwb}
+\alias{pwb}
 \alias{spwb_resetInputs}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Soil-plant water balance}
 \description{
-Function \code{spwb()} is a water balance model that determines changes in soil moisture, soil water potentials and plant transpiration and drought stress at daily steps for a given forest stand during a period specified in the input climatic data. Additionally, the function also calculates plant net photosynthesis. Transpiration and photosynthesis processes are conducted with different level of detail depending on the transpiration mode.
+Function \code{spwb()} is a water balance model that determines changes in soil moisture, soil water potentials and plant transpiration and drought stress at daily steps for a given forest stand during a period specified in the input climatic data. Additionally, the function also calculates plant net photosynthesis. Function \code{pwb()} performs plant water balance only (i.e. soil moisture dynamics is an input) at daily steps for a given forest stand during a period specified in the input climatic data. On both simulation functions transpiration and photosynthesis processes are conducted with different level of detail depending on the transpiration mode.
 }
 \usage{
 spwb(x, soil, meteo,  latitude = NA, elevation = NA, slope = NA, aspect = NA)
+pwb(x, soil, meteo, W, latitude = NA, elevation = NA, 
+    canopyEvaporation = numeric(0), 
+    snowMelt = numeric(0), 
+    soilEvaporation = numeric(0))
 spwb_resetInputs(x, soil, from = NULL, day = NA)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -35,6 +40,7 @@ spwb_resetInputs(x, soil, from = NULL, day = NA)
      \item{\code{WindSpeed}: Wind speed (in m/s). If not available, this column can be left with \code{NA} values.}
     }
   }
+  \item{W}{A matrix with the same number of rows as \code{meteo} and as many columns as soil layers, containing the soil moisture of each layer as proportion of field capacity.}
   \item{latitude}{Latitude (in degrees). Required when using the 'Complex' transpiration mode.}
   \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when using the 'Complex' transpiration mode. Elevation is also required for 'Simple' if snowpack dynamics are simulated.}
   \item{from}{An object of class \code{spwb} storing the results of a previous simulation, including values of state variables. If \code{from = NULL}, state variables are set to their defaults (i.e. soil moisture set to field capacity and cumulative growth degree days set to zero).}
@@ -44,7 +50,7 @@ spwb_resetInputs(x, soil, from = NULL, day = NA)
   Detailed model description is available in the vignettes section. The model using 'Simple' transpiration mode is illustrated by function \code{\link{transp_transpirationGranier}} and described in De Caceres et al. (2015). Simulations using the 'Complex' transpiration mode are computationally much more expensive and are illustrated by function \code{\link{transp_transpirationSperry}}. Function \code{spwb_resetInputs()} allows resetting state variables in \code{x} and \code{soil} to their defaults, or to copy values of state variables from a previous \code{spwb()} simulation results stored in \code{from}.
 }
 \value{
-  Function \code{spwb} returns a list of class 'spwb' with the following elements:
+  Function \code{spwb} returns a list of class 'spwb' whereas Function \code{pwb} returns a list of class 'pwb'. There are many elements in common in these lists, so they are listed here together:
   \itemize{
      \item{\code{"spwbInput"}: A copy of the object \code{x} of class \code{\link{spwbInput}} given as input.}
      \item{\code{"soilInput"}: A copy of the object \code{soil} of class \code{\link{soil}} given as input.}
