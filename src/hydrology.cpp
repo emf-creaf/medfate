@@ -102,6 +102,18 @@ double interceptionGashDay(double Precipitation, double Cm, double p, double ER=
   return(I);
 }
 
+
+// [[Rcpp::export("hydrology_snowMelt")]]
+double snowMelt(double tday, double rad, double LgroundSWR, double elevation) {
+  if(NumericVector::is_na(rad)) stop("Missing radiation data for snow melt!");
+  if(NumericVector::is_na(elevation)) stop("Missing elevation data for snow melt!");
+  double rho = meteoland::utils_airDensity(tday, meteoland::utils_atmosphericPressure(elevation));
+  double ten = (86400.0*tday*rho*1013.86*1e-6/100.0); //ten can be negative if temperature is below zero
+  double ren = (rad*LgroundSWR)*(0.1); //90% albedo of snow
+  double melt = std::max(0.0,(ren+ten)/0.33355); //Do not allow negative melting values
+  return(melt);
+}
+
 // [[Rcpp::export("hydrology_verticalInputs")]]
 NumericVector verticalInputs(List soil, String soilFunctions, double prec, double er, double tday, double rad, double elevation,
                     double Cm, double LgroundPAR, double LgroundSWR, 
@@ -130,12 +142,7 @@ NumericVector verticalInputs(List soil, String soilFunctions, double prec, doubl
     }
     //Apply snow melting
     if(swe > 0.0) {
-      if(NumericVector::is_na(rad)) stop("Missing radiation data for snow melt!");
-      if(NumericVector::is_na(elevation)) stop("Missing elevation data for snow melt!");
-      double rho = meteoland::utils_airDensity(tday, meteoland::utils_atmosphericPressure(elevation));
-      double ten = (86400.0*tday*rho*1013.86*1e-6/100.0); //ten can be negative if temperature is below zero
-      double ren = (rad*LgroundSWR)*(0.1); //90% albedo of snow
-      melt = std::max(0.0,(ren+ten)/0.33355); //Do not allow negative melting values
+      melt = snowMelt(tday, rad, LgroundSWR, elevation);
       // Rcout<<" swe: "<< swe<<" temp: "<<ten<< " rad: "<< ren << " melt : "<< melt<<"\n";
       swe = std::max(0.0, swe-melt);
     }

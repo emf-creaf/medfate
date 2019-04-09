@@ -4,6 +4,7 @@
 \alias{hydrology_soilEvaporationAmount}
 \alias{hydrology_soilEvaporation}
 \alias{hydrology_infiltrationRepartition}
+\alias{hydrology_snowMelt}
 
 \title{Soil infiltration and bare soil evaporation}
 \description{
@@ -14,6 +15,7 @@ hydrology_infiltrationAmount(input, Ssoil)
 hydrology_infiltrationRepartition(I, dVec, macro)
 hydrology_soilEvaporationAmount(DEF,PETs, Gsoil)
 hydrology_soilEvaporation(soil, soilFunctions, pet, LgroundSWR, modifySoil = true)
+hydrology_snowMelt(tday, rad, LgroundSWR, elevation)
 }
 \arguments{
   \item{input}{A numeric vector of (daily) water input (in mm of water).}
@@ -29,6 +31,10 @@ hydrology_soilEvaporation(soil, soilFunctions, pet, LgroundSWR, modifySoil = tru
   \item{pet}{Potential evapotranspiration for a given day (mm)}
   \item{LgroundSWR}{Proportion of short-wave radiation (SWR) reaching the ground.}
   \item{modifySoil}{Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.}
+  \item{tday}{Average day temperature (ºC).}
+  \item{rad}{Solar radiation (in MJ/m2/day).}
+  \item{LgroundSWR}{Proportion of short-wave radiation (SWR) reaching the ground.}
+  \item{elevation}{Altitude above sea level (m).}
 }
 \details{
 See description of infiltration and soil evaporation processes in De Caceres et al. (2015).

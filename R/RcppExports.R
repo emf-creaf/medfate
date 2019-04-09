@@ -429,6 +429,10 @@ hydrology_infiltrationRepartition <- function(I, dVec, macro) {
     .Call(`_medfate_interceptionGashDay`, Precipitation, Cm, p, ER)
 }
 
+hydrology_snowMelt <- function(tday, rad, LgroundSWR, elevation) {
+    .Call(`_medfate_snowMelt`, tday, rad, LgroundSWR, elevation)
+}
+
 hydrology_verticalInputs <- function(soil, soilFunctions, prec, er, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, runon = 0.0, snowpack = TRUE, drainage = TRUE, modifySoil = TRUE) {
     .Call(`_medfate_verticalInputs`, soil, soilFunctions, prec, er, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, runon, snowpack, drainage, modifySoil)
 }

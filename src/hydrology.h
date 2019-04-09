@@ -15,6 +15,9 @@ NumericVector infiltrationRepartition(double I, NumericVector dVec, NumericVecto
 double interceptionGashDay(double Precipitation, double Cm, double p, double ER=0.05);
 
 double erFactor(int doy, double pet, double prec, double Rconv = 5.6, double Rsyn = 1.5);
+
+double snowMelt(double tday, double rad, double LgroundSWR, double elevation);
+
 NumericVector verticalInputs(List soil, String soilFunctions, double prec, double er, double tday, double rad, double elevation,
                              double Cm, double LgroundPAR, double LgroundSWR, 
                              double runon = 0.0,
