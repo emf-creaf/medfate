@@ -7,7 +7,7 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Soil-plant water balance for a single day}
 \description{
-Function \code{spwb_day} performs water balance for a single day. The function calls to \code{spwb_daySimple} (simple water balance) or \code{spwb_dayComplex} (complex water balance) depending on the transpiration mode specified in \code{x}.  
+Function \code{spwb_day} performs water balance for a single day. The function calls to \code{spwb_dayGranier} (simple water balance) or \code{spwb_dayComplex} (complex water balance) depending on the transpiration mode specified in \code{x}.  
 }
 \usage{
 spwb_day(x, soil, date, tmin, tmax, rhmin, rhmax, rad, wind, 
@@ -31,15 +31,15 @@ spwb_dayComplex(x, soil, tmin, tmax, rhmin, rhmax, rad, wind,
   \item{er}{The ratio of evaporation rate to rainfall rate (see \code{\link{hydrology_erFactor}}).}
   \item{wind}{Wind speed (in m/s).}
   \item{prec}{Precipitation (in mm).}
-  \item{latitude}{Latitude (in degrees). Required when using the 'Complex' transpiration mode.}
-  \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when using the 'Complex' transpiration mode.}
+  \item{latitude}{Latitude (in degrees). Required when using the 'Sperry' transpiration mode.}
+  \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when using the 'Sperry' transpiration mode.}
   \item{solarConstant}{Solar constant (in kW·m-2) (see \code{\link{radiation_solarConstant}}).}
   \item{delta}{Solar declination (in radians) (see \code{\link{radiation_solarDeclination}}).}
   \item{runon}{Surface water amount running on the target area from upslope (in mm).}
   \item{verbose}{A flag to indicate console output.}
 }
 \details{
-  Detailed model description is available in the vignettes section. The model using 'Simple' transpiration mode is described in De Caceres et al. (2015). Simulations using the 'Complex' transpiration mode are computationally much more expensive. 
+  Detailed model description is available in the vignettes section. The model using 'Simple' transpiration mode is described in De Caceres et al. (2015). Simulations using the 'Sperry' transpiration mode are computationally much more expensive. 
 }
 \value{
 An object (a list) of class \code{spwb_day} with the following elements:
@@ -50,13 +50,13 @@ An object (a list) of class \code{spwb_day} with the following elements:
   \item{\code{"Soil"}: A data frame with results for each soil layer:
     \itemize{
       \item{\code{"SoilEvaporation"}: Water evaporated from the soil surface (in mm).}
-      \item{\code{"HydraulicInput"}: Water entering each soil layer from other layers, transported via plant hydraulic network (in mm) (only for \code{transpirationMode = "Complex"}).}
-      \item{\code{"HydraulicOutput"}: Water leaving each soil layer (going to other layers or the transpiration stream) (in mm) (only for \code{transpirationMode = "Complex"}).}
+      \item{\code{"HydraulicInput"}: Water entering each soil layer from other layers, transported via plant hydraulic network (in mm) (only for \code{transpirationMode = "Sperry"}).}
+      \item{\code{"HydraulicOutput"}: Water leaving each soil layer (going to other layers or the transpiration stream) (in mm) (only for \code{transpirationMode = "Sperry"}).}
       \item{\code{"PlantExtraction"}: Water extracted by plants from each soil layer (in mm).}
       \item{\code{"psi"}: Soil water potential (in MPa).}
     }
   }
-  \item{\code{"EnergyBalance"}: When using the 'Complex' transpiration mode (or when calling \code{spwb_dayComplex}), the model performs energy balance of the stand and 'EnergyBalance' is a list with the following:
+  \item{\code{"EnergyBalance"}: When using the 'Sperry' transpiration mode (or when calling \code{spwb_dayComplex}), the model performs energy balance of the stand and 'EnergyBalance' is a list with the following:
     \itemize{
       \item{\code{"Temperature"}: A data frame with the temperature of the atmosphere ('Tatm'), canopy ('Tcan') and soil ('Tsoil.1', 'Tsoil.2', ...) for each time step.}
       \item{\code{"CanopyEnergyBalance"}: A data frame with the components of the canopy energy balance (in W/m2) for each time step.}
@@ -70,7 +70,7 @@ An object (a list) of class \code{spwb_day} with the following elements:
       \item{\code{"psi"}: Water potential (in MPa) of the plant cohort (average over soil layers).}
       \item{\code{"DDS"}: Daily drought stress [0-1] (relative whole-plant conductance).}
     }
-  When using the 'Complex' transpiration mode (or when calling \code{spwb_dayComplex}) the data frame \code{"Plants"} also includes columns:
+  When using the 'Sperry' transpiration mode (or when calling \code{spwb_daySperry}) the data frame \code{"Plants"} also includes columns:
     \itemize{
       \item{\code{"Extraction"}: Water extracted from the soil (in mm) for each cohort.}
       \item{\code{"RootPsi"}: Minimum water potential (in MPa) at the root collar.}
@@ -150,8 +150,8 @@ sd1<-spwb_day(x1, examplesoil, rownames(examplemeteo)[d],
 #Initialize soil with default soil params (2 layers)
 examplesoil2 = soil(defaultSoilParams(2))
 
-#Switch to 'Complex' transpiration mode
-control$transpirationMode="Complex"
+#Switch to 'Sperry' transpiration mode
+control$transpirationMode="Sperry"
 
 
 #Simulate one day only

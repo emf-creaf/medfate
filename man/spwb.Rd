@@ -21,14 +21,14 @@ spwb_resetInputs(x, soil, from = NULL, day = NA)
 \arguments{
   \item{x}{An object of class \code{\link{spwbInput}}.}
   \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
-  \item{meteo}{A data frame with daily meteorological data series. Row names of the data frame should correspond to date strings with format "yyyy-mm-dd" (see \code{\link{Date}}). When using the 'Simple' transpiration mode the following columns are required:
+  \item{meteo}{A data frame with daily meteorological data series. Row names of the data frame should correspond to date strings with format "yyyy-mm-dd" (see \code{\link{Date}}). When using the 'Granier' transpiration mode the following columns are required:
    \itemize{
      \item{\code{MeanTemperature}: Mean temperature (in degrees Celsius).}
      \item{\code{Precipitation}: Precipitation (in mm).}
      \item{\code{Radiation}: Solar radiation (in MJ/m2/day), required only if \code{snowpack = TRUE}.}
      \item{\code{PET}: Potential evapotranspiration (in mm).}
     }
-  When using the 'Complex' transpiration mode the following columns are required:
+  When using the 'Sperry' transpiration mode the following columns are required:
    \itemize{
      \item{\code{MeanTemperature}: Mean temperature (in degrees Celsius).}
      \item{\code{MinTemperature}: Minimum temperature (in degrees Celsius).}
@@ -41,13 +41,13 @@ spwb_resetInputs(x, soil, from = NULL, day = NA)
     }
   }
   \item{W}{A matrix with the same number of rows as \code{meteo} and as many columns as soil layers, containing the soil moisture of each layer as proportion of field capacity.}
-  \item{latitude}{Latitude (in degrees). Required when using the 'Complex' transpiration mode.}
-  \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when using the 'Complex' transpiration mode. Elevation is also required for 'Simple' if snowpack dynamics are simulated.}
+  \item{latitude}{Latitude (in degrees). Required when using the 'Sperry' transpiration mode.}
+  \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when using the 'Sperry' transpiration mode. Elevation is also required for 'Granier' if snowpack dynamics are simulated.}
   \item{from}{An object of class \code{spwb} storing the results of a previous simulation, including values of state variables. If \code{from = NULL}, state variables are set to their defaults (i.e. soil moisture set to field capacity and cumulative growth degree days set to zero).}
   \item{day}{An integer with the day from which state variable values stored in \code{from} should be copied. If missing, values are copied from the first day of stored values.}
 }
 \details{
-  Detailed model description is available in the vignettes section. The model using 'Simple' transpiration mode is illustrated by function \code{\link{transp_transpirationGranier}} and described in De Caceres et al. (2015). Simulations using the 'Complex' transpiration mode are computationally much more expensive and are illustrated by function \code{\link{transp_transpirationSperry}}. Function \code{spwb_resetInputs()} allows resetting state variables in \code{x} and \code{soil} to their defaults, or to copy values of state variables from a previous \code{spwb()} simulation results stored in \code{from}.
+  Detailed model description is available in the vignettes section. The model using 'Granier' transpiration mode is illustrated by function \code{\link{transp_transpirationGranier}} and described in De Caceres et al. (2015). Simulations using the 'Sperry' transpiration mode are computationally much more expensive and are illustrated by function \code{\link{transp_transpirationSperry}}. Function \code{spwb_resetInputs()} allows resetting state variables in \code{x} and \code{soil} to their defaults, or to copy values of state variables from a previous \code{spwb()} simulation results stored in \code{from}.
 }
 \value{
   Function \code{spwb} returns a list of class 'spwb' whereas Function \code{pwb} returns a list of class 'pwb'. There are many elements in common in these lists, so they are listed here together:
@@ -70,9 +70,9 @@ spwb_resetInputs(x, soil, from = NULL, day = NA)
           \item{\code{"DeepDrainage"}: The amount of water exported via deep drainage (in mm).}
           \item{\code{"Evapotranspiration"}: Evapotranspiration (in mm).}
           \item{\code{"SoilEvaporation"}: Bare soil evaporation (in mm).}
-          \item{\code{"PlantExtraction"}: Amount of water extracted from soil by plants (in mm) (can only be diferent from transpiration for \code{transpirationMode = "Complex"} when capacitance is considered).}
+          \item{\code{"PlantExtraction"}: Amount of water extracted from soil by plants (in mm) (can only be diferent from transpiration for \code{transpirationMode = "Sperry"} when capacitance is considered).}
           \item{\code{"Transpiration"}: Plant transpiration (considering all soil layers) (in mm).}
-          \item{\code{"HydraulicRedistribution"}: Water redistributed among soil layers, transported through the plant hydraulic network (only for \code{transpirationMode = "Complex"}).}
+          \item{\code{"HydraulicRedistribution"}: Water redistributed among soil layers, transported through the plant hydraulic network (only for \code{transpirationMode = "Sperry"}).}
           
       }
     \item{\code{"Soil"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
@@ -82,7 +82,7 @@ spwb_resetInputs(x, soil, from = NULL, day = NA)
           \item{\code{"MLTot"}: Total soil water volume (in L/m2).}
           \item{\code{"SWE"}: Snow water equivalent (mm) of the snow pack.}
           \item{\code{"PlantExt.1"}, \code{...}, \code{"PlantExt.k"}: Plant extraction from each soil layer (in mm).}
-          \item{\code{"HydraulicInput.1"}, \code{...}, \code{"HydraulicInput.k"}: Water that entered the layer coming from other layers and transported via the plant hydraulic network (in mm) (only for \code{transpirationMode = "Complex"}).}
+          \item{\code{"HydraulicInput.1"}, \code{...}, \code{"HydraulicInput.k"}: Water that entered the layer coming from other layers and transported via the plant hydraulic network (in mm) (only for \code{transpirationMode = "Sperry"}).}
           \item{\code{"psi.1"}, \code{...}, \code{"psi.k"}: Soil water potential in each soil layer (in MPa).}
         }
      \item{\code{"PlantLAI"}: A data frame with the daily leaf area index for each plant cohort. Days are in rows and plant cohorts are in columns.}
@@ -92,7 +92,7 @@ spwb_resetInputs(x, soil, from = NULL, day = NA)
      \item{\code{"PlantStress"}: A data frame with the amount of daily stress [0-1] suffered by each plant cohort (relative whole-plant conductance). Days are in rows and plant cohorts are in columns.}
      \item{\code{"subdaily"}: A list of objects of class \code{\link{spwb_day}}, one per day simulated (only if required in \code{control} parameters, see \code{\link{defaultControl}}).}
   }
-  If \code{transpirationMode=="Complex"} the list also includes the following elements:
+  If \code{transpirationMode=="Sperry"} the list also includes the following elements:
  \itemize{
    \item{\code{"PlantAbsorbedSWR"}: A data frame with the daily SWR absorbed by each plant cohort. Days are in rows and plant cohorts are in columns.}
   \item{\code{"PlantAbsorbedLWR"}: A data frame with the daily LWR absorbed by each plant cohort. Days are in rows and plant cohorts are in columns.}
@@ -154,8 +154,8 @@ summary(S1, freq="months",FUN=mean, output="Soil")
 #Initialize soil with default soil params (2 layers)
 examplesoil2 = soil(defaultSoilParams(2))
 
-#Switch to 'Complex' transpiration mode
-control$transpirationMode="Complex"
+#Switch to 'Sperry' transpiration mode
+control$transpirationMode="Sperry"
 
 #Initialize input
 x2 = forest2spwbInput(exampleforest,examplesoil2, SpParamsMED, control)

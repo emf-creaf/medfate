@@ -654,48 +654,6 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline List spwb_daySimple(List x, List soil, double tday, double pet, double prec, double er, double runon = 0.0, double rad = NA_REAL, double elevation = NA_REAL, bool verbose = false) {
-        typedef SEXP(*Ptr_spwb_daySimple)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
-        static Ptr_spwb_daySimple p_spwb_daySimple = NULL;
-        if (p_spwb_daySimple == NULL) {
-            validateSignature("List(*spwb_daySimple)(List,List,double,double,double,double,double,double,double,bool)");
-            p_spwb_daySimple = (Ptr_spwb_daySimple)R_GetCCallable("medfate", "_medfate_spwb_daySimple");
-        }
-        RObject rcpp_result_gen;
-        {
-            RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_spwb_daySimple(Shield<SEXP>(Rcpp::wrap(x)), Shield<SEXP>(Rcpp::wrap(soil)), Shield<SEXP>(Rcpp::wrap(tday)), Shield<SEXP>(Rcpp::wrap(pet)), Shield<SEXP>(Rcpp::wrap(prec)), Shield<SEXP>(Rcpp::wrap(er)), Shield<SEXP>(Rcpp::wrap(runon)), Shield<SEXP>(Rcpp::wrap(rad)), Shield<SEXP>(Rcpp::wrap(elevation)), Shield<SEXP>(Rcpp::wrap(verbose)));
-        }
-        if (rcpp_result_gen.inherits("interrupted-error"))
-            throw Rcpp::internal::InterruptedException();
-        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
-            throw Rcpp::LongjumpException(rcpp_result_gen);
-        if (rcpp_result_gen.inherits("try-error"))
-            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
-        return Rcpp::as<List >(rcpp_result_gen);
-    }
-
-    inline List spwb_dayComplex(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, double latitude, double elevation, double solarConstant, double delta, double prec, double pet, double er, double runon = 0.0, bool verbose = false) {
-        typedef SEXP(*Ptr_spwb_dayComplex)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
-        static Ptr_spwb_dayComplex p_spwb_dayComplex = NULL;
-        if (p_spwb_dayComplex == NULL) {
-            validateSignature("List(*spwb_dayComplex)(List,List,double,double,double,double,double,double,double,double,double,double,double,double,double,double,bool)");
-            p_spwb_dayComplex = (Ptr_spwb_dayComplex)R_GetCCallable("medfate", "_medfate_spwb_dayComplex");
-        }
-        RObject rcpp_result_gen;
-        {
-            RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_spwb_dayComplex(Shield<SEXP>(Rcpp::wrap(x)), Shield<SEXP>(Rcpp::wrap(soil)), Shield<SEXP>(Rcpp::wrap(tmin)), Shield<SEXP>(Rcpp::wrap(tmax)), Shield<SEXP>(Rcpp::wrap(rhmin)), Shield<SEXP>(Rcpp::wrap(rhmax)), Shield<SEXP>(Rcpp::wrap(rad)), Shield<SEXP>(Rcpp::wrap(wind)), Shield<SEXP>(Rcpp::wrap(latitude)), Shield<SEXP>(Rcpp::wrap(elevation)), Shield<SEXP>(Rcpp::wrap(solarConstant)), Shield<SEXP>(Rcpp::wrap(delta)), Shield<SEXP>(Rcpp::wrap(prec)), Shield<SEXP>(Rcpp::wrap(pet)), Shield<SEXP>(Rcpp::wrap(er)), Shield<SEXP>(Rcpp::wrap(runon)), Shield<SEXP>(Rcpp::wrap(verbose)));
-        }
-        if (rcpp_result_gen.inherits("interrupted-error"))
-            throw Rcpp::internal::InterruptedException();
-        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
-            throw Rcpp::LongjumpException(rcpp_result_gen);
-        if (rcpp_result_gen.inherits("try-error"))
-            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
-        return Rcpp::as<List >(rcpp_result_gen);
-    }
-
     inline List spwb_day(List x, List soil, CharacterVector date, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, double latitude, double elevation, double slope, double aspect, double prec, double runon = 0.0) {
         typedef SEXP(*Ptr_spwb_day)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_spwb_day p_spwb_day = NULL;

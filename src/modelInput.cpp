@@ -372,7 +372,7 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
   NumericVector H = above["H"];
   NumericVector CR = above["CR"];
   String transpirationMode = control["transpirationMode"];
-  if((transpirationMode!="Simple") & (transpirationMode!="Complex")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Simple' or 'Complex')");
+  if((transpirationMode!="Granier") & (transpirationMode!="Sperry")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Granier' or 'Sperry')");
 
   
   String soilFunctions = control["soilFunctions"]; 
@@ -410,7 +410,7 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
  
 
   List input;
-  if(transpirationMode=="Simple") {
+  if(transpirationMode=="Granier") {
     NumericVector WUE = cohortNumericParameter(SP, SpParams, "WUE");
     NumericVector Psi_Extract = cohortNumericParameter(SP, SpParams, "Psi_Extract");
     NumericVector pRootDisc = cohortNumericParameter(SP, SpParams, "pRootDisc");
@@ -434,7 +434,7 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     pvec.attr("names") = above.attr("row.names");
     input["Photosynthesis"] = pvec;
     input["PLC"] = NumericVector(numCohorts, 0.0);
-  } else if(transpirationMode =="Complex"){
+  } else if(transpirationMode =="Sperry"){
     int numStemSegments = control["nStemSegments"];
     bool capacitance = control["capacitance"];
     
@@ -523,7 +523,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   NumericVector CR = above["CR"];
   
   String transpirationMode = control["transpirationMode"];
-  if((transpirationMode!="Simple") & (transpirationMode!="Complex")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Simple' or 'Complex')");
+  if((transpirationMode!="Granier") & (transpirationMode!="Sperry")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Granier' or 'Sperry')");
 
   String soilFunctions = control["soilFunctions"]; 
   if((soilFunctions!="SX") & (soilFunctions!="VG")) stop("Wrong soil functions ('soilFunctions' should be either 'SX' or 'VG')");
@@ -603,7 +603,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   
 
   List input;
-  if(transpirationMode=="Simple") {
+  if(transpirationMode=="Granier") {
     NumericVector WUE = cohortNumericParameter(SP, SpParams, "WUE");
     NumericVector Psi_Extract = cohortNumericParameter(SP, SpParams, "Psi_Extract");
     NumericVector pRootDisc = cohortNumericParameter(SP, SpParams, "pRootDisc");
@@ -634,7 +634,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     cvec.attr("names") = above.attr("row.names");
     input["PLC"] = cvec;
 
-  } else if(transpirationMode =="Complex"){
+  } else if(transpirationMode =="Sperry"){
     int numStemSegments = control["nStemSegments"];
     bool capacitance = control["capacitance"];
 

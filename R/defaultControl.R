@@ -7,7 +7,7 @@ defaultControl<-function() {
     soilFunctions = "SX",
     snowpack = TRUE,
     drainage = TRUE,
-    transpirationMode = "Simple", #vs. "Complex"
+    transpirationMode = "Granier", #vs. "Sperry"
     hydraulicCostFunction = 1, #vs. 2
     verticalLayerSize = 100,
     nStemSegments = 1,

@@ -1,12 +1,12 @@
 ---
-title: "1. Simple water balance simulation"
+title: "1. Water balance simulation"
 author: "Miquel De Caceres"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
     toc: TRUE
 vignette: >
-  %\VignetteIndexEntry{1. Simple water balance simulation}
+  %\VignetteIndexEntry{1. Water balance simulation}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignettePackage{medfate}
   \usepackage[utf8]{inputenc}
@@ -149,7 +149,7 @@ Most of these parameters should normally be left to their default value. However
 
  1. Console output can be turned off by setting `verbose = FALSE`. 
  2. The soil water retention curves can be switched between Saxton's and Van Genuchten's using parameter `soilFunctions`. 
- 3. The complexity of the soil water balance calculations will be very different if we set `transpirationMode = "Complex"`. Most of the other options apply in the case of complex soil water balance only. 
+ 3. The complexity of the soil water balance calculations will be very different if we set `transpirationMode = "Sperry"`. Most of the other options apply in the case of complex soil water balance only. 
  4. Non-reversible cavitation can be forced by setting `cavitationRefill = FALSE`.
 
 ### Water balance input object

@@ -16,7 +16,7 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
             "PlantExtraction","PlantLAI",
             "PlantStress", "PlantPsi","PlantPhotosynthesis", "PlantTranspiration", "PlantWUE",
             "PlantPhotosynthesisLeaf","PlantTranspirationLeaf")
-  if(transpMode=="Complex") {
+  if(transpMode=="Sperry") {
     TYPES = c("PET_Precipitation","PET_NetRain","Snow","Evapotranspiration","SoilPsi","SoilTheta","SoilVol", "Export", "LAI", "WTD",
               "PlantExtraction","HydraulicRedistribution",
               "PlantLAI",
@@ -166,7 +166,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
             "PlantExtraction","PlantLAI",
             "PlantStress", "PlantPsi","PlantPhotosynthesis", "PlantTranspiration", "PlantWUE",
             "PlantPhotosynthesisLeaf","PlantTranspirationLeaf")
-  if(transpMode=="Complex") {
+  if(transpMode=="Sperry") {
     TYPES = c("SoilPsi","SoilTheta",
               "PlantExtraction","HydraulicRedistribution",
               "PlantLAI",

@@ -23,7 +23,7 @@ spwb_ldrCalibration(x, soil, meteo, calibVar, obs,
 \arguments{
   \item{x}{An object of class \code{\link{spwbInput}}.}
   \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
-  \item{meteo}{A data frame with daily meteorological data series. When using the 'Simple' transpiration mode the following columns are required:
+  \item{meteo}{A data frame with daily meteorological data series. When using the 'Granier' transpiration mode the following columns are required:
    \itemize{
      \item{\code{DOY}: Day of the year (Julian day).}
      \item{\code{Precipitation}: Precipitation (in mm).}
@@ -70,7 +70,7 @@ calibrated values for Z50, Z95 and V1 and the MAE value for that combination.
 
 Antoine Cabon, Centre Tecnologic Forestal de Catalunya
 
-Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 }
 \seealso{
  \code{\link{spwb_ldrOptimization}} for when no measured data is available,

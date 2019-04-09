@@ -161,9 +161,9 @@ Most of these parameters should normally be left to their default value. However
  3. The complexity of the soil water balance calculations is controlled using `transpirationMode`. 
  4. The number of daily substeps is controlled via parameter `ndailysteps`.
  
-To use the complex soil water balance model we must change the values of `transpirationMode` (to switch from "Simple" to "Complex") and `soilFunctions` (to switch from Saxton's retention curve, "SX", to Van Genuchten's retention curve, "VG"):
+To use the complex soil water balance model we must change the values of `transpirationMode` (to switch from "Granier" to "Sperry") and `soilFunctions` (to switch from Saxton's retention curve, "SX", to Van Genuchten's retention curve, "VG"):
 ```{r}
-control$transpirationMode = "Complex"
+control$transpirationMode = "Sperry"
 control$soilFunctions = "VG"
 ```
 

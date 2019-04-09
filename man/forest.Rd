@@ -66,7 +66,7 @@ emptyforest(ID="", patchsize=10000, ntree = 0, nshrub = 0)
   Function \code{summary.forest} returns a data frame with the basal area and LAI of the forest, either expressed as totals or divided among life stages and species. Function \code{emptyforest} returns an empty \code{forest} object.
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 }
 \seealso{
  \code{\link{exampleforest}}, \code{\link{extractSFIforest}}, \code{\link{soil}}
