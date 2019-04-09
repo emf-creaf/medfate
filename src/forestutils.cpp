@@ -964,7 +964,6 @@ int minDBHTreeCohort(List x, double excludeMin = 0.0) {
 
 
 
-
 // [[Rcpp::export("forest2aboveground")]]
 DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
