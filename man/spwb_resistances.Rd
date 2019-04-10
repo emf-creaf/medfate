@@ -1,6 +1,5 @@
 \name{spwb_resistances}
 \alias{spwb_resistances}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Soil-plant resistances
 }
@@ -11,10 +10,9 @@ Calculates and draws rhizosphere, root, stem and leaf resistances for simulation
 spwb_resistances(x, cohort = 1, relative = FALSE, draw = FALSE, 
                  cumulative = FALSE, yearAxis = FALSE, xlab = NULL, ylab = NULL)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
-An object of class \code{spwb}. The function only works with the result of simulations with \code{transpirationMode = "Complex".}
+An object of class \code{spwb}. The function only works with the result of simulations with \code{transpirationMode = "Sperry".}
 }
   \item{cohort}{
 An integer index indicating the cohort for which resistances are desired (by default the first cohort).
@@ -40,7 +38,7 @@ The function makes internal calls to \code{\link{hydraulics_soilPlantResistances
 A data frame with dates in rows and resistance segments in columns (Rhizosphere, Root, Stem and Leaf). Values depend on whether \code{relative = TRUE} (percentages) or \code{relative = FALSE} (absolute resistance values). If \code{draw = TRUE} the calculated resistances are returned as an invisible object.
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 }
 \seealso{
  \code{\link{spwb}}, \code{\link{plot.spwb}}

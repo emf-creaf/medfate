@@ -17,7 +17,6 @@ using namespace Rcpp;
 
 
 // Soil water balance with simple hydraulic model
-// [[Rcpp::export("spwb_daySimple")]]
 List spwbDay1(List x, List soil, double tday, double pet, double prec, double er, double runon=0.0, 
              double rad = NA_REAL, double elevation = NA_REAL, bool verbose = false) {
 
@@ -103,7 +102,6 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
 
 
 // Soil water balance with Sperry hydraulic and stomatal conductance models
-// [[Rcpp::export("spwb_dayComplex")]]
 List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
              double latitude, double elevation, double solarConstant, double delta, 
              double prec, double pet, double er, double runon=0.0, bool verbose = false) {
@@ -269,7 +267,7 @@ List spwbDay(List x, List soil, CharacterVector date, double tmin, double tmax, 
 
   double er = erFactor(doy, pet, prec);
   List s;
-  if(transpirationMode=="Simple") {
+  if(transpirationMode=="Granier") {
     s = spwbDay1(x,soil, tday, pet, prec, er, runon, rad, elevation, verbose);
   } else {
     if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; 
@@ -303,7 +301,7 @@ void checkspwbInput(List x, List soil, String transpirationMode, String soilFunc
   if(!x.containsElementNamed("below")) stop("below missing in spwbInput");
   List below = Rcpp::as<Rcpp::List>(x["below"]);
   if(!below.containsElementNamed("V")) stop("V missing in spwbInput$below");
-  if(transpirationMode=="Complex"){
+  if(transpirationMode=="Sperry"){
     if(!below.containsElementNamed("VGrhizo_kmax")) stop("VGrhizo_kmax missing in spwbInput$below");
     if(!below.containsElementNamed("VCroot_kmax")) stop("VCroot_kmax missing in spwbInput$below");
   }  
@@ -317,10 +315,10 @@ void checkspwbInput(List x, List soil, String transpirationMode, String soilFunc
   if(!x.containsElementNamed("paramsTransp")) stop("paramsTransp missing in spwbInput");
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
   if(!paramsTransp.containsElementNamed("pRootDisc")) stop("pRootDisc missing in spwbInput$paramsTransp");
-  if(transpirationMode=="Simple") {
+  if(transpirationMode=="Granier") {
     if(!paramsTransp.containsElementNamed("Psi_Extract")) stop("Psi_Extract missing in spwbInput$paramsTransp");
     if(!paramsTransp.containsElementNamed("WUE")) stop("WUE missing in spwbInput$paramsTransp");
-  } else if(transpirationMode=="Complex") {
+  } else if(transpirationMode=="Sperry") {
     if(!paramsTransp.containsElementNamed("VCstem_kmax")) stop("VCstem_kmax missing in spwbInput$paramsTransp");
     if(!paramsTransp.containsElementNamed("VCstem_c")) stop("VCstem_c missing in spwbInput$paramsTransp");
     if(!paramsTransp.containsElementNamed("VCstem_d")) stop("VCstem_d missing in spwbInput$paramsTransp");
@@ -330,7 +328,7 @@ void checkspwbInput(List x, List soil, String transpirationMode, String soilFunc
     if(!paramsTransp.containsElementNamed("Vmax298")) stop("Vmax298 missing in spwbInput$paramsTransp");
     if(!paramsTransp.containsElementNamed("Jmax298")) stop("Jmax298 missing in spwbInput$paramsTransp");
   }
-  if(transpirationMode=="Complex") {
+  if(transpirationMode=="Sperry") {
     if(!soil.containsElementNamed("VG_n")) stop("VG_n missing in soil");
     if(!soil.containsElementNamed("VG_alpha")) stop("VG_alpha missing in soil");
   }
@@ -365,7 +363,7 @@ void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER
       W[i] = 1.0; //Defaults to soil at field capacity
       Temp[i] = NA_REAL;
     }
-    if(transpirationMode=="Complex") {
+    if(transpirationMode=="Sperry") {
       NumericVector psiRoot = Rcpp::as<Rcpp::NumericVector>(x["psiRoot"]);
       NumericMatrix psiStem = Rcpp::as<Rcpp::NumericMatrix>(x["psiStem"]);
       NumericMatrix PLCstem = Rcpp::as<Rcpp::NumericMatrix>(x["PLCstem"]);
@@ -471,14 +469,14 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   NumericVector WindSpeed(numDays, NA_REAL);
   if(meteo.containsElementNamed("WindSpeed")) WindSpeed = meteo["WindSpeed"];
   NumericVector PET = NumericVector(numDays,0.0);
-  if(transpirationMode=="Simple") {
+  if(transpirationMode=="Granier") {
     if(!meteo.containsElementNamed("PET")) stop("Please include variable 'PET' in weather input.");
     PET = meteo["PET"];
     if(control["snowpack"]) {
       if(!meteo.containsElementNamed("Radiation")) stop("If 'snowpack = TRUE', variable 'Radiation' must be provided.");
       else Radiation = meteo["Radiation"];
     }
-  } else if(transpirationMode=="Complex") {
+  } else if(transpirationMode=="Sperry") {
     if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
     if(NumericVector::is_na(elevation)) stop("Value for 'elevation' should not be missing.");
     if(!meteo.containsElementNamed("MinTemperature")) stop("Please include variable 'MinTemperature' in weather input.");
@@ -636,11 +634,11 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
       
       
       //2. Water balance and photosynthesis
-      if(transpirationMode=="Simple") {
+      if(transpirationMode=="Granier") {
         double er = erFactor(DOY[i], PET[i], Precipitation[i]);
         s = spwbDay1(x, soil, MeanTemperature[i], PET[i], Precipitation[i], er, 0.0, 
                      Radiation[i], elevation, verbose); //No Runon in simulations for a single cell
-      } else if(transpirationMode=="Complex") {
+      } else if(transpirationMode=="Sperry") {
         int ntimesteps = control["ndailysteps"];
         double tstep = 86400.0/((double) ntimesteps);
         std::string c = as<std::string>(dateStrings[i]);
@@ -721,7 +719,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
       Snowmelt[i] = db["Snowmelt"];
       NetRain[i] = db["NetRain"];
       PlantExtraction[i] = db["PlantExtraction"];
-      if(transpirationMode=="Complex")  {
+      if(transpirationMode=="Sperry")  {
         HydraulicRedistribution[i] = db["HydraulicRedistribution"];
       }
       Transpiration[i] = db["Transpiration"];
@@ -740,7 +738,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
       PlantPhotosynthesis(i,_) = Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
       PlantTranspiration(i,_) = EplantCoh;
       PlantStress(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["DDS"]);
-      if(transpirationMode=="Complex") {
+      if(transpirationMode=="Sperry") {
         NumericVector HydrInVec = sb["HydraulicInput"];
         HydrIndays(i,_) = HydrInVec;
         LeafPsiMin(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["LeafPsiMin"]);
@@ -759,7 +757,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
       }
       EplantCohTot = EplantCohTot + EplantCoh;
       Eplanttot[i] = sum(EplantCoh);
-      if(transpirationMode=="Complex"){
+      if(transpirationMode=="Sperry"){
         StemRWC(i,_) = as<Rcpp::NumericVector>(Plants["StemRWC"]);
         LeafRWC(i,_) = as<Rcpp::NumericVector>(Plants["LeafRWC"]); 
       }
@@ -796,7 +794,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
         " Deep drainage (mm) "  << round(DeepDrainagesum)  <<"\n";
     Rcout<<"Soil evaporation (mm) " << round(SoilEvaporationsum);
     Rcout<<" Transpiration (mm) "  <<round(Transpirationsum) <<"\n";
-    if(transpirationMode =="Complex") {
+    if(transpirationMode =="Sperry") {
       Rcout<<"Plant extraction from soil (mm) " << round(sum(PlantExtraction));
       Rcout<<" Hydraulic redistribution (mm) " << round(sum(HydraulicRedistribution)) <<"\n";
     }
@@ -809,7 +807,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   if(verbose) Rcout<<"Building SPWB output ...";
   
    DataFrame SWB;
-   if(transpirationMode=="Simple") {
+   if(transpirationMode=="Granier") {
      SWB = DataFrame::create(_["W"]=Wdays, _["ML"]=MLdays,_["MLTot"]=MLTot,
                              _["WTD"] = WaterTable,
                              _["SWE"] = SWE, 
@@ -825,7 +823,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
    }
    SWB.attr("row.names") = meteo.attr("row.names") ;
    DataFrame DWB;
-   if(transpirationMode=="Simple") {
+   if(transpirationMode=="Granier") {
      DWB = DataFrame::create(_["GDD"] = GDD,
                              _["LAIcell"]=LAIcell, _["LAIcelldead"] = LAIcelldead,  _["Cm"]=Cm, _["Lground"] = Lground, _["PET"]=PET, 
                              _["Precipitation"] = Precipitation, _["Rain"] = Rain, _["Snow"] = Snow, 
@@ -870,7 +868,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   DT.attr("row.names") = meteo.attr("row.names") ;
   subdailyRes.attr("names") = meteo.attr("row.names") ;
   List l;
-  if(transpirationMode=="Simple") {
+  if(transpirationMode=="Granier") {
     l = List::create(Named("spwbInput") = spwbInput,
                      Named("soilInput") = soilInput,
                      Named("WaterBalance")=DWB, 
@@ -966,10 +964,10 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
   NumericVector WindSpeed(numDays, NA_REAL);
   if(meteo.containsElementNamed("WindSpeed")) WindSpeed = meteo["WindSpeed"];
   NumericVector PET = NumericVector(numDays,0.0);
-  if(transpirationMode=="Simple") {
+  if(transpirationMode=="Granier") {
     if(!meteo.containsElementNamed("PET")) stop("Please include variable 'PET' in weather input.");
     PET = meteo["PET"];
-  } else if(transpirationMode=="Complex") {
+  } else if(transpirationMode=="Sperry") {
     if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
     if(NumericVector::is_na(elevation)) stop("Value for 'elevation' should not be missing.");
     if(!meteo.containsElementNamed("MinTemperature")) stop("Please include variable 'MinTemperature' in weather input.");
@@ -1128,9 +1126,9 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
     double tstep = 86400.0/((double) ntimesteps);
     
     //2. transpiration and photosynthesis
-    if(transpirationMode=="Simple") {
+    if(transpirationMode=="Granier") {
       s = transpirationGranier(x, soil, MeanTemperature[i], PET[i], true);
-    } else if(transpirationMode=="Complex") {
+    } else if(transpirationMode=="Sperry") {
       std::string c = as<std::string>(dateStrings[i]);
       int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
       double delta = meteoland::radiation_solarDeclination(J);
@@ -1162,10 +1160,10 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
     PlantTranspiration(i,_) = EplantCoh;
     PlantStress(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["DDS"]);
     
-    if(transpirationMode=="Simple") {
+    if(transpirationMode=="Granier") {
       PlantPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["psi"]);
     }
-    else if(transpirationMode=="Complex")  {
+    else if(transpirationMode=="Sperry")  {
       NumericMatrix soilLayerExtractInst = s["ExtractionInst"];
       for(int l=0;l<nlayers;l++) {
         for(int n=0;n<ntimesteps;n++) {
@@ -1247,7 +1245,7 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
     double Transpirationsum = sum(Transpiration);
     
     Rcout<<" Transpiration (mm) "  <<round(Transpirationsum) <<"\n";
-    if(transpirationMode =="Complex") {
+    if(transpirationMode =="Sperry") {
       Rcout<<"Plant extraction from soil (mm) " << round(sum(PlantExtraction));
       Rcout<<" Hydraulic redistribution (mm) " << round(sum(HydraulicRedistribution)) <<"\n";
     }
@@ -1260,7 +1258,7 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
   
   
   DataFrame SWB;
-  if(transpirationMode=="Simple") {
+  if(transpirationMode=="Granier") {
     SWB = DataFrame::create(_["W"]=Wdays, _["PlantExt"]=Eplantdays, _["psi"]=psidays); 
   } else {
     SWB = DataFrame::create(_["W"]=Wdays, _["PlantExt"]=Eplantdays,
@@ -1270,7 +1268,7 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
   SWB.attr("row.names") = meteo.attr("row.names") ;
   
   DataFrame DWB;
-  if(transpirationMode=="Simple") {
+  if(transpirationMode=="Granier") {
     DWB = DataFrame::create(_["PlantExtraction"] = PlantExtraction, _["Transpiration"]=Transpiration);
   } else {
     DWB = DataFrame::create(_["PlantExtraction"] = PlantExtraction, _["Transpiration"]=Transpiration, 
@@ -1304,7 +1302,7 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
   DT.attr("row.names") = meteo.attr("row.names") ;
   subdailyRes.attr("names") = meteo.attr("row.names") ;
   List l;
-  if(transpirationMode=="Simple") {
+  if(transpirationMode=="Granier") {
     l = List::create(Named("spwbInput") = spwbInput,
                      Named("soilInput") = soilInput,
                      Named("WaterBalance")=DWB, 

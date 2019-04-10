@@ -12,7 +12,7 @@ Input for simulation models
 }
 
 \description{
-Functions \code{forest2spwbInput} and \code{forest2growthInput} take an object of class \code{\link{forest}} and calculate input data for functions \code{\link{spwb}} and \code{\link{growth}}, respectively. Functions \code{spwbInput} and \code{growthInput} does the same from input data. Function \code{forest2aboveground} calculates aboveground variables that may be used in \code{spwbInput} and \code{growthInput} functions. Similarly, function \code{forest2belowground} calculates belowground root distribution that may be used in \code{spwbInput} and \code{growthInput} functions.
+Functions \code{forest2spwbInput} and \code{forest2growthInput} take an object of class \code{\link{forest}} and calculate input data for functions \code{\link{spwb}}, \code{\link{pwb}} and \code{\link{growth}}, respectively. Functions \code{spwbInput} and \code{growthInput} does the same from input data. Function \code{forest2aboveground} calculates aboveground variables that may be used in \code{spwbInput} and \code{growthInput} functions. Similarly, function \code{forest2belowground} calculates belowground root distribution that may be used in \code{spwbInput} and \code{growthInput} functions.
 }
 \usage{
 forest2aboveground(x, SpParams, gdd = NA)
@@ -34,7 +34,7 @@ spwbInput(above,  V,  soil, SpParams, control)
   
 }
 \details{
-Functions \code{forest2spwbInput} and \code{forest2abovegroundInput} extracts height and species identity from plant cohorts of \code{x}, and calculate leaf area index and crown ratio.\code{forest2spwbInput} also calculates the distribution of fine roots across soil. Both \code{forest2spwbInput} and \code{spwbInput} find parameter values for each plant cohort according to the parameters of its species as specified in \code{SpParams}. If \code{control$transpirationMode = "Complex"} the functions also estimate the maximum conductance of rhizosphere, root xylem and stem xylem elements.
+Functions \code{forest2spwbInput} and \code{forest2abovegroundInput} extracts height and species identity from plant cohorts of \code{x}, and calculate leaf area index and crown ratio.\code{forest2spwbInput} also calculates the distribution of fine roots across soil. Both \code{forest2spwbInput} and \code{spwbInput} find parameter values for each plant cohort according to the parameters of its species as specified in \code{SpParams}. If \code{control$transpirationMode = "Sperry"} the functions also estimate the maximum conductance of rhizosphere, root xylem and stem xylem elements.
 }
 \value{
 Function \code{forest2aboveground} returns a data frame with the following columns (rows are identified as specified by function \code{\link{plant_ID}}):
@@ -53,11 +53,11 @@ Functions \code{forest2spwbInput} and \code{spwbInput} return a list of class \c
   \item{\code{control}: List with control parameters (see \code{\link{defaultControl}}).}
   \item{\code{cohorts}: A data frame with cohort information, with columns \code{SP} and \code{Name}.}
   \item{\code{above}: A data frame with columns  \code{H}, \code{CR} and \code{LAI} (see function \code{forest2aboveground}).}
-  \item{\code{below}: A list. If \code{control$transpirationMode = "Simple"} it contains a single element: 
+  \item{\code{below}: A list. If \code{control$transpirationMode = "Granier"} it contains a single element: 
      \itemize{
         \item{\code{V}: A matrix with the proportion of fine roots of each cohort (in rows) in each soil layer (in columns).}
      }
-     If \code{control$transpirationMode = "Complex"} there are the following additional elements:
+     If \code{control$transpirationMode = "Sperry"} there are the following additional elements:
      \itemize{
         \item{\code{VGrhizo_kmax}: A matrix with maximum rhizosphere conductance values of each cohort (in rows) in each soil layer (in columns).}
         \item{\code{VGroot_kmax}: A matrix with maximum root xylem conductance values of each cohort (in rows) in each soil layer (in columns).}
@@ -70,12 +70,12 @@ Functions \code{forest2spwbInput} and \code{spwbInput} return a list of class \c
        \item{\code{Sgdd}: Growth degree days needed for leaf budburst (for winter decideous species).}
      }
   }
-  \item{\code{paramsTransp}: A data frame with transpiration parameters. If \code{control$transpirationMode = "Simple"}, columns are:
+  \item{\code{paramsTransp}: A data frame with transpiration parameters. If \code{control$transpirationMode = "Granier"}, columns are:
     \itemize{
        \item{\code{Psi_Extract}: Water potential corresponding to 50\% relative conductance (in MPa).}
        \item{\code{WUE}: Water use efficiency for carbon assimilation (g C/mm water).} 
     }
-    If \code{control$transpirationMode = "Complex"} columns are:
+    If \code{control$transpirationMode = "Sperry"} columns are:
     \itemize{
        \item{\code{Gwmax}: Maximum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
        \item{\code{Vmax298}: Maximum Rubisco carboxilation rate at 25ºC (in micromol CO2·s-1·m-2).}
@@ -109,7 +109,7 @@ Functions \code{forest2growthInput} and \code{growthInput} return a list of clas
 
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 }
 \seealso{\code{\link{spwb}}, \code{\link{soil}},  \code{\link{forest}}, \code{\link{SpParamsMED}}, \code{\link{defaultSoilParams}}, \code{\link{plant_ID}}}
 
@@ -143,7 +143,7 @@ forest2spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 
 
 # Prepare input for complex transpiration mode
-control$transpirationMode = "Complex"
+control$transpirationMode = "Sperry"
 forest2spwbInput(exampleforest,examplesoil,SpParamsMED, control)
 
 }

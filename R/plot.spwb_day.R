@@ -1,5 +1,5 @@
 plot.spwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE, xlab = NULL, ylab = NULL, ...) {
-  if(!("EnergyBalance" %in% names(x))) stop("Plotting function available for transpirationMode = 'Complex' only.")
+  if(!("EnergyBalance" %in% names(x))) stop("Plotting function available for transpirationMode = 'Sperry' only.")
   EB = x$EnergyBalance
   Plants = x$Plants
   SoilInst = x$SoilInst

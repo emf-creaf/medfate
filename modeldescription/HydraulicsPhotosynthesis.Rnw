@@ -23,8 +23,6 @@
 <<echo=FALSE>>=
 options(width=67)
 library(medfate)
-library(MedfateValidation)
-data('newParams')
 
 col1 = "black"
 col2 = "red"
@@ -87,21 +85,21 @@ leafc = 2
 leafd = -2
 @
 
-With these parameter values, the vulnerability curves for root, stem and leaf are (see \texttt{hydraulics.xylemConductance()}):
+With these parameter values, the vulnerability curves for root, stem and leaf are (see \texttt{hydraulics\_xylemConductance()}):
 \begin{center}
 <<fig=TRUE, width=5, height=5, echo=FALSE>>==
 psiCav = -2.5
-plcCav = 1 - moisture.apoplasticRWC(psiCav, stemc, stemd)
+plcCav = 1 -moisture_apoplasticRWC(psiCav, stemc, stemd)
 par(mar=c(4,4,1,1), mfrow=c(1,1))
-kleaf = unlist(lapply(psiVec, hydraulics.xylemConductance, kleafmax, leafc, leafd))
-kstem = unlist(lapply(psiVec, hydraulics.xylemConductance, kstemmax, stemc, stemd))
-kroot = unlist(lapply(psiVec, hydraulics.xylemConductance, krootmax, rootc, rootd))
+kleaf = unlist(lapply(psiVec,hydraulics_xylemConductance, kleafmax, leafc, leafd))
+kstem = unlist(lapply(psiVec,hydraulics_xylemConductance, kstemmax, stemc, stemd))
+kroot = unlist(lapply(psiVec,hydraulics_xylemConductance, krootmax, rootc, rootd))
 plot(-psiVec, kstem, type="l",ylab="Xylem K (mmol·m-2·s-1·MPa-1)", xlab="Canopy pressure (-MPa)", 
      lwd=2,ylim=c(0,max(kstemmax, krootmax, kleafmax)))
 lines(-psiVec, kroot, lty=2, lwd=2)
 lines(-psiVec, kleaf, lty=3, lwd=2)
 # abline(v=-psiCav, col="gray", lwd=1.5)
-lines(x=c(0,-psiCav), y=rep(hydraulics.xylemConductance(psiCav, kstemmax, stemc, stemd),2), lty=4, lwd=2)
+lines(x=c(0,-psiCav), y=rep(hydraulics_xylemConductance(psiCav, kstemmax, stemc, stemd),2), lty=4, lwd=2)
 legend("topright", legend =c("leaf", "stem xylem (original)","stem xylem (cavitation)", "root xylem"), 
        lty=c(3,1,4,2), bty="n", cex=0.8, lwd=2)
 @
@@ -124,52 +122,52 @@ The rhizosphere conductance function $k_{rh}(\Psi)$ is modeled as a van Genuchte
 k_{rh}(\Psi) &=& k_{rh,max} \cdot v^{(n-1)/(2\cdot n)} \cdot ((1-v)^{(n-1)/n}-1)^2 \\
 v &=& [(\alpha \Psi)^{n}+1]^{-1}
 \end{eqnarray}
-where $k_{rh,max}$ is the maximum rhizosphere conductance, and $n$ and $\alpha$ are texture-specific parameters (see Leij et al. 1996; Carsel \& Parrish 1988). These are automatically set by function \texttt{soil()} when initializing soil objects (see parameters \texttt{VG\_alpha} and \texttt{VG\_n} in the output of \texttt{soil()}), but we can use function \texttt{soil.vanGenuchtenParamsCarsel()} to derive them from texture types:
+where $k_{rh,max}$ is the maximum rhizosphere conductance, and $n$ and $\alpha$ are texture-specific parameters (see Leij et al. 1996; Carsel \& Parrish 1988). These are automatically set by function \texttt{soil()} when initializing soil objects (see parameters \texttt{VG\_alpha} and \texttt{VG\_n} in the output of \texttt{soil()}), but we can use function \texttt{soil\_vanGenuchtenParamsCarsel()} to derive them from texture types:
 <<>>=
 textures = c("Sandy loam","Silt loam", "Clay")
 #Textural parameters
 #Sandy clay loam 
-p1 = soil.vanGenuchtenParamsCarsel(textures[1])
+p1 = soil_vanGenuchtenParamsCarsel(textures[1])
 p1
 alpha1 = p1[1]  
 n1 = p1[2]
 #Silt loam
-p2 = soil.vanGenuchtenParamsCarsel(textures[2])
+p2 = soil_vanGenuchtenParamsCarsel(textures[2])
 p2
 alpha2 =  p2[1]
 n2 = p2[2]
 #Silty clay
-p3 = soil.vanGenuchtenParamsCarsel(textures[3])
+p3 = soil_vanGenuchtenParamsCarsel(textures[3])
 p3
 alpha3 =  p3[1]
 n3 = p3[2]
 @
-We can estimate maximum rhizosphere conductance values assuming that they account for an average percentage of the resistance (e.g. 15\%) across the continuum (see functions \texttt{hydraulics.averageRhizosphereResistancePercent()} and \texttt{hydraulics.findRhizosphereMaximumConductance()}):
+We can estimate maximum rhizosphere conductance values assuming that they account for an average percentage of the resistance (e.g. 15\%) across the continuum (see functions \texttt{hydraulics\_averageRhizosphereResistancePercent()} and \texttt{hydraulics\_findRhizosphereMaximumConductance()}):
 <<>>=
 percentResistance = 15
 #Sandy clay loam 
-krmax1 = hydraulics.findRhizosphereMaximumConductance(percentResistance, 
+krmax1 =hydraulics_findRhizosphereMaximumConductance(percentResistance, 
                       n1,alpha1, krootmax, rootc,rootd, kstemmax, stemc, stemd,
                       kleafmax, leafc, leafd)
 krmax1
 #Silt loam
-krmax2 = hydraulics.findRhizosphereMaximumConductance(percentResistance, 
+krmax2 =hydraulics_findRhizosphereMaximumConductance(percentResistance, 
                       n2,alpha2, krootmax, rootc,rootd, kstemmax, stemc, stemd,
                       kleafmax, leafc, leafd)
 krmax2
 #Silty clay
-krmax3 = hydraulics.findRhizosphereMaximumConductance(percentResistance, 
+krmax3 =hydraulics_findRhizosphereMaximumConductance(percentResistance, 
                       n3,alpha3, krootmax, rootc,rootd, kstemmax, stemc, stemd,
                       kleafmax, leafc, leafd)
 krmax3
 @
-With these parameters, the resulting $k_{rh}(\Psi)$ functions can be displayed using the function \texttt{hydraulics.vanGenuchtenConductance()}:
+With these parameters, the resulting $k_{rh}(\Psi)$ functions can be displayed using the function \texttt{hydraulics\_vanGenuchtenConductance()}:
 \begin{center}
 <<fig=TRUE, width=4, height=3.5, echo=FALSE>>==
 par(mar=c(4,4,1,1), mfrow=c(1,1))
-k1 = unlist(lapply(psiVec, hydraulics.vanGenuchtenConductance, krmax1, n1, alpha1))
-k2 = unlist(lapply(psiVec, hydraulics.vanGenuchtenConductance, krmax2, n2, alpha2))
-k3 = unlist(lapply(psiVec, hydraulics.vanGenuchtenConductance, krmax3, n3, alpha3))
+k1 = unlist(lapply(psiVec,hydraulics_vanGenuchtenConductance, krmax1, n1, alpha1))
+k2 = unlist(lapply(psiVec,hydraulics_vanGenuchtenConductance, krmax2, n2, alpha2))
+k3 = unlist(lapply(psiVec,hydraulics_vanGenuchtenConductance, krmax3, n3, alpha3))
 plot(-psiVec, k1, type="l", col="black", ylab="Rhizosphere K (mmol·m-2·s-1·MPa-1)", xlab = "Soil hydraulic pressure (-MPa)",  xlim=c(0, max(-psiVec)), ylim=c(0, 100))
 lines(-psiVec, k2, lty=2, lwd=1.5)
 lines(-psiVec, k3, lty=3, lwd=1.5)
@@ -204,7 +202,7 @@ As an example, the following figure draws the pressure-volume curve for a tissue
 <<fig=TRUE, width=4, height=4, echo=FALSE>>==
 psi = seq(-10,0, by=0.1)
 rwc_s = rep(NA, length(psi))
-for(i in 1:length(psi)) rwc_s[i] = moisture.symplasticRWC(psi[i],-3,12)
+for(i in 1:length(psi)) rwc_s[i] =moisture_symplasticRWC(psi[i],-3,12)
 plot(psi, rwc_s, type="l", xlab="Water potential (MPa)", ylab = "Symplasmic RWC")
 @
 
@@ -218,7 +216,7 @@ RWC_{apo}(\Psi) = \frac{k(\Psi)}{k_{max}} = e^{-((\Psi/d)^{c})}
 <<fig=TRUE, width=4, height=4, echo=FALSE>>==
 psi = seq(-7,0, by=0.1)
 rwc_a = rep(NA, length(psi))
-for(i in 1:length(psi)) rwc_a[i] = moisture.apoplasticRWC(psi[i],stemc,stemd)
+for(i in 1:length(psi)) rwc_a[i] =moisture_apoplasticRWC(psi[i],stemc,stemd)
 plot(psi, rwc_a, type="l", xlab="Water potential (MPa)", ylab = "Apoplastic RWC")
 @
 
@@ -267,7 +265,7 @@ where $\Psi_{up}$ and $\Psi_{down}$ are the upstream and downstream water potent
 
 
 \subsubsection{Supply function for single elements}
-In the case of a single stem xylem element the supply function describes the flow rate as a function of canopy pressure ($\Psi_{canopy}$). It can be calculated by numerical integration or aproximated using an incomplete gamma function. The shape of the supply function starting at different root crown water potential values ($\Psi_{rootcrown}$) is (see function \texttt{hydraulics.EXylem()}):
+In the case of a single stem xylem element the supply function describes the flow rate as a function of canopy pressure ($\Psi_{canopy}$). It can be calculated by numerical integration or aproximated using an incomplete gamma function. The shape of the supply function starting at different root crown water potential values ($\Psi_{rootcrown}$) is (see function \texttt{hydraulics\_EXylem()}):
 \begin{center}
 <<fig=TRUE, width=8, height=3.5, echo=FALSE>>==
 par(mar=c(4,4,2,1), mfrow=c(1,2))
@@ -275,14 +273,14 @@ psiSoil1 = -0.1
 psiSoil2 = -1.0
 psiSoil3 = -2.0
 psiSoil4 = -3.0
-E1 = unlist(lapply(psiVec, hydraulics.EXylem, psiSoil1, kstemmax, stemc, stemd))
-E2 = unlist(lapply(psiVec, hydraulics.EXylem, psiSoil2, kstemmax, stemc, stemd))
-E3 = unlist(lapply(psiVec, hydraulics.EXylem, psiSoil3, kstemmax, stemc, stemd))
-E4 = unlist(lapply(psiVec, hydraulics.EXylem, psiSoil4, kstemmax, stemc, stemd))
-E1emb = unlist(lapply(psiVec, hydraulics.EXylem, psiSoil1, kstemmax, stemc, stemd, psiCav = psiCav))
-E2emb = unlist(lapply(psiVec, hydraulics.EXylem, psiSoil2, kstemmax, stemc, stemd, psiCav = psiCav))
-E3emb = unlist(lapply(psiVec, hydraulics.EXylem, psiSoil3, kstemmax, stemc, stemd, psiCav = psiCav))
-E4emb = unlist(lapply(psiVec, hydraulics.EXylem, psiSoil4, kstemmax, stemc, stemd, psiCav = psiCav))
+E1 = unlist(lapply(psiVec,hydraulics_EXylem, psiSoil1, kstemmax, stemc, stemd))
+E2 = unlist(lapply(psiVec,hydraulics_EXylem, psiSoil2, kstemmax, stemc, stemd))
+E3 = unlist(lapply(psiVec,hydraulics_EXylem, psiSoil3, kstemmax, stemc, stemd))
+E4 = unlist(lapply(psiVec,hydraulics_EXylem, psiSoil4, kstemmax, stemc, stemd))
+E1emb = unlist(lapply(psiVec,hydraulics_EXylem, psiSoil1, kstemmax, stemc, stemd, psiCav = psiCav))
+E2emb = unlist(lapply(psiVec,hydraulics_EXylem, psiSoil2, kstemmax, stemc, stemd, psiCav = psiCav))
+E3emb = unlist(lapply(psiVec,hydraulics_EXylem, psiSoil3, kstemmax, stemc, stemd, psiCav = psiCav))
+E4emb = unlist(lapply(psiVec,hydraulics_EXylem, psiSoil4, kstemmax, stemc, stemd, psiCav = psiCav))
 E1[E1<0] = NA
 E2[E2<0] = NA
 E3[E3<0] = NA
@@ -291,7 +289,7 @@ E1emb[E1emb<0] = NA
 E2emb[E2emb<0] = NA
 E3emb[E3emb<0] = NA
 E4emb[E4emb<0] = NA
-Psic = hydraulics.psiCrit(stemc,stemd)
+Psic =hydraulics_psiCrit(stemc,stemd)
 plot(-psiVec, E1, type="l", ylab="Xylem flow rate (mmol·m-2·s-1)", xlab="Canopy pressure (-MPa)", ylim=c(0,max(c(E1,E2,E3,E4), na.rm=TRUE)), lwd=1.5, col=col1, main="original")
 lines(-psiVec, E2, lty=1, lwd=1.5, col=col2)
 lines(-psiVec, E3, lty=1, lwd=1.5, col=col3)
@@ -306,7 +304,7 @@ abline(v=-psiCav, col="gray", lwd=1.5)
 \end{center}
 Right pane shows the supply functions that are obtained in the case of a cavitated xylem (i.e. without refilling), assuming that the minimum water potential experienced so far was -2.5 MPa. Note the linear part of the flow rate between $\Psi_{soil}$ and this limit.
 
-The supply function of the rhizosphere element relates the flow rate to the pressure inside the roots ($\Psi_{root}$). It is calculated by numerical integration of the van Genuchten function (see function \texttt{hydraulics.EVanGenuchten()}), for which we use the analytical approximation of van Lier et al. (2009). Here we draw the supply function for the rhizosphere starting at the four different values of bulk soil pressure ($\Psi_{soil}$) and for the same three texture types:
+The supply function of the rhizosphere element relates the flow rate to the pressure inside the roots ($\Psi_{root}$). It is calculated by numerical integration of the van Genuchten function (see function \texttt{hydraulics\_EVanGenuchten()}), for which we use the analytical approximation of van Lier et al. (2009). Here we draw the supply function for the rhizosphere starting at the four different values of bulk soil pressure ($\Psi_{soil}$) and for the same three texture types:
 \begin{center}
 <<fig=TRUE, width=4, height=4, echo=FALSE>>==
 par(mar=c(4,4,1,1))
@@ -314,18 +312,18 @@ psiVec1 = psiSoil1+c(0,psiVec)
 psiVec2 = psiSoil2+c(0,psiVec)
 psiVec3 = psiSoil3+c(0,psiVec)
 psiVec4 = psiSoil4+c(0,psiVec)
-EVG11 = unlist(lapply(psiVec1, hydraulics.EVanGenuchten, psiSoil1, krmax1, n1, alpha1))
-EVG12 = unlist(lapply(psiVec2, hydraulics.EVanGenuchten, psiSoil2, krmax1, n1, alpha1))
-EVG13 = unlist(lapply(psiVec3, hydraulics.EVanGenuchten, psiSoil3, krmax1, n1, alpha1))
-EVG14 = unlist(lapply(psiVec4, hydraulics.EVanGenuchten, psiSoil4, krmax1, n1, alpha1))
-EVG21 = unlist(lapply(psiVec1, hydraulics.EVanGenuchten, psiSoil1, krmax2, n2, alpha2))
-EVG22 = unlist(lapply(psiVec2, hydraulics.EVanGenuchten, psiSoil2, krmax2, n2, alpha2))
-EVG23 = unlist(lapply(psiVec3, hydraulics.EVanGenuchten, psiSoil3, krmax2, n2, alpha2))
-EVG24 = unlist(lapply(psiVec4, hydraulics.EVanGenuchten, psiSoil4, krmax2, n2, alpha2))
-EVG31 = unlist(lapply(psiVec1, hydraulics.EVanGenuchten, psiSoil1, krmax3, n3, alpha3))
-EVG32 = unlist(lapply(psiVec2, hydraulics.EVanGenuchten, psiSoil2, krmax3, n3, alpha3))
-EVG33 = unlist(lapply(psiVec3, hydraulics.EVanGenuchten, psiSoil3, krmax3, n3, alpha3))
-EVG34 = unlist(lapply(psiVec4, hydraulics.EVanGenuchten, psiSoil4, krmax3, n3, alpha3))
+EVG11 = unlist(lapply(psiVec1,hydraulics_EVanGenuchten, psiSoil1, krmax1, n1, alpha1))
+EVG12 = unlist(lapply(psiVec2,hydraulics_EVanGenuchten, psiSoil2, krmax1, n1, alpha1))
+EVG13 = unlist(lapply(psiVec3,hydraulics_EVanGenuchten, psiSoil3, krmax1, n1, alpha1))
+EVG14 = unlist(lapply(psiVec4,hydraulics_EVanGenuchten, psiSoil4, krmax1, n1, alpha1))
+EVG21 = unlist(lapply(psiVec1,hydraulics_EVanGenuchten, psiSoil1, krmax2, n2, alpha2))
+EVG22 = unlist(lapply(psiVec2,hydraulics_EVanGenuchten, psiSoil2, krmax2, n2, alpha2))
+EVG23 = unlist(lapply(psiVec3,hydraulics_EVanGenuchten, psiSoil3, krmax2, n2, alpha2))
+EVG24 = unlist(lapply(psiVec4, hydraulics_EVanGenuchten, psiSoil4, krmax2, n2, alpha2))
+EVG31 = unlist(lapply(psiVec1, hydraulics_EVanGenuchten, psiSoil1, krmax3, n3, alpha3))
+EVG32 = unlist(lapply(psiVec2, hydraulics_EVanGenuchten, psiSoil2, krmax3, n3, alpha3))
+EVG33 = unlist(lapply(psiVec3, hydraulics_EVanGenuchten, psiSoil3, krmax3, n3, alpha3))
+EVG34 = unlist(lapply(psiVec4, hydraulics_EVanGenuchten, psiSoil4, krmax3, n3, alpha3))
 plot(-psiVec1, EVG11, type="l", ylab="Rhizosphere flow rate (mmol·m-2·s-1)", xlab = "Root pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,2), col=col1)
 lines(-psiVec1, EVG21, lty=2, lwd=1.5, col=col1)
 lines(-psiVec1, EVG31, lty=3, lwd=1.5, col=col1)
@@ -344,23 +342,23 @@ legend("topright", bty="n", legend=textures, lty=1:3, lwd=1.5, cex=0.8)
 The nearly vertical lines indicate that for many values of $E_i$ the corresponding drop in water potential through the rhizosphere will be negligible. Only for increasingly negative soil water potential values the decrease in water potential through the rhizosphere becomes relevant. Both in the case of a xylem element or a rhyzosphere element the derivative $dE_i/d\Psi$ of the supply function is equal to the corresponding vulnerability curve.
 
 \subsubsection{Supply function of two elements in series}
-Let us describe the soil-plant continuum is represented using \emph{two} elements in series (rhizosphere + stem xylem). In this case, the supply function has to be calculated by sequentially using the previous supply functions. The $E_i$ is identical for each element and equal to the canopy $E$. Since $\Psi_{soil}$ is known, one first inverts the supply function of the rhizosphere to find $\Psi_{root}$ (see function \texttt{hydraulics.E2psiVanGenuchten()}) and then inverts the supply function of the xylem to find $\Psi_{canopy}$ (see function \texttt{hydraulics.E2psiXylem()}). The two operations can be summarized in a single supply function describing the potential rate of water supply for transpiration ($E$) as function of the canopy xylem pressure ($\Psi_{canopy}$), starting from different bulk soil ($\Psi_{soil}$) values (see function \texttt{hydraulics.supplyFunctionTwoElements()}): 
+Let us describe the soil-plant continuum is represented using \emph{two} elements in series (rhizosphere + stem xylem). In this case, the supply function has to be calculated by sequentially using the previous supply functions. The $E_i$ is identical for each element and equal to the canopy $E$. Since $\Psi_{soil}$ is known, one first inverts the supply function of the rhizosphere to find $\Psi_{root}$ (see function \texttt{hydraulics\_E2psiVanGenuchten()}) and then inverts the supply function of the xylem to find $\Psi_{canopy}$ (see function \texttt{hydraulics\_E2psiXylem()}). The two operations can be summarized in a single supply function describing the potential rate of water supply for transpiration ($E$) as function of the canopy xylem pressure ($\Psi_{canopy}$), starting from different bulk soil ($\Psi_{soil}$) values (see function \texttt{hydraulics\_supplyFunctionTwoElements()}): 
 
 \begin{center}
 <<fig=TRUE, width=8, height=4.5, echo=FALSE>>==
 par(mar=c(4,4,2,1), mfrow=c(1,2))
-psi2E11 = hydraulics.supplyFunctionTwoElements(Emax, psiSoil1, krmax1, kstemmax, n1, alpha1, stemc,stemd, 0.0, dE)
-psi2E12 = hydraulics.supplyFunctionTwoElements(Emax, psiSoil2, krmax1, kstemmax, n1, alpha1, stemc,stemd, 0.0, dE)
-psi2E13 = hydraulics.supplyFunctionTwoElements(Emax, psiSoil3, krmax1, kstemmax, n1, alpha1, stemc,stemd, 0.0, dE)
-psi2E14 = hydraulics.supplyFunctionTwoElements(Emax, psiSoil4, krmax1, kstemmax, n1, alpha1, stemc,stemd, 0.0, dE)
-psi2E21 = hydraulics.supplyFunctionTwoElements(Emax, psiSoil1, krmax2, kstemmax, n2, alpha2, stemc,stemd, 0.0, dE)
-psi2E22 = hydraulics.supplyFunctionTwoElements(Emax, psiSoil2, krmax2, kstemmax, n2, alpha2, stemc,stemd, 0.0, dE)
-psi2E23 = hydraulics.supplyFunctionTwoElements(Emax, psiSoil3, krmax2, kstemmax, n2, alpha2, stemc,stemd, 0.0, dE)
-psi2E24 = hydraulics.supplyFunctionTwoElements(Emax, psiSoil4, krmax2, kstemmax, n2, alpha2, stemc,stemd, 0.0, dE)
-psi2E31 = hydraulics.supplyFunctionTwoElements(Emax, psiSoil1, krmax3, kstemmax, n3, alpha3, stemc,stemd, 0.0, dE)
-psi2E32 = hydraulics.supplyFunctionTwoElements(Emax, psiSoil2, krmax3, kstemmax, n3, alpha3, stemc,stemd, 0.0, dE)
-psi2E33 = hydraulics.supplyFunctionTwoElements(Emax, psiSoil3, krmax3, kstemmax, n3, alpha3, stemc,stemd, 0.0, dE)
-psi2E34 = hydraulics.supplyFunctionTwoElements(Emax, psiSoil4, krmax3, kstemmax, n3, alpha3, stemc,stemd, 0.0, dE)
+psi2E11 = hydraulics_supplyFunctionTwoElements(Emax, psiSoil1, krmax1, kstemmax, n1, alpha1, stemc,stemd, 0.0, dE)
+psi2E12 = hydraulics_supplyFunctionTwoElements(Emax, psiSoil2, krmax1, kstemmax, n1, alpha1, stemc,stemd, 0.0, dE)
+psi2E13 = hydraulics_supplyFunctionTwoElements(Emax, psiSoil3, krmax1, kstemmax, n1, alpha1, stemc,stemd, 0.0, dE)
+psi2E14 = hydraulics_supplyFunctionTwoElements(Emax, psiSoil4, krmax1, kstemmax, n1, alpha1, stemc,stemd, 0.0, dE)
+psi2E21 = hydraulics_supplyFunctionTwoElements(Emax, psiSoil1, krmax2, kstemmax, n2, alpha2, stemc,stemd, 0.0, dE)
+psi2E22 = hydraulics_supplyFunctionTwoElements(Emax, psiSoil2, krmax2, kstemmax, n2, alpha2, stemc,stemd, 0.0, dE)
+psi2E23 = hydraulics_supplyFunctionTwoElements(Emax, psiSoil3, krmax2, kstemmax, n2, alpha2, stemc,stemd, 0.0, dE)
+psi2E24 = hydraulics_supplyFunctionTwoElements(Emax, psiSoil4, krmax2, kstemmax, n2, alpha2, stemc,stemd, 0.0, dE)
+psi2E31 = hydraulics_supplyFunctionTwoElements(Emax, psiSoil1, krmax3, kstemmax, n3, alpha3, stemc,stemd, 0.0, dE)
+psi2E32 = hydraulics_supplyFunctionTwoElements(Emax, psiSoil2, krmax3, kstemmax, n3, alpha3, stemc,stemd, 0.0, dE)
+psi2E33 = hydraulics_supplyFunctionTwoElements(Emax, psiSoil3, krmax3, kstemmax, n3, alpha3, stemc,stemd, 0.0, dE)
+psi2E34 = hydraulics_supplyFunctionTwoElements(Emax, psiSoil4, krmax3, kstemmax, n3, alpha3, stemc,stemd, 0.0, dE)
 mm = max(psi2E11$FittedE)
 plot(-psi2E11$psiPlant, psi2E11$FittedE, type="l", col=col1, ylab="Flow rate (mmol·m-2·s-1)", xlab = "Canopy pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,mm), lwd=1, main="original")
 lines(-psi2E12$psiPlant, psi2E12$FittedE, lty=1, lwd=1, col=col2)
@@ -376,18 +374,18 @@ lines(-psi2E33$psiPlant, psi2E33$FittedE, lty=3, lwd=1, col=col3)
 lines(-psi2E34$psiPlant, psi2E34$FittedE, lty=3, lwd=1, col=col4)
 legend("topleft", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 
-psi2E11emb = hydraulics.supplyFunctionTwoElements(Emax, psiSoil1, krmax1, kstemmax, n1, alpha1, stemc,stemd,psiCav, dE)
-psi2E12emb = hydraulics.supplyFunctionTwoElements(Emax, psiSoil2, krmax1, kstemmax, n1, alpha1, stemc,stemd, psiCav, dE)
-psi2E13emb = hydraulics.supplyFunctionTwoElements(Emax, psiSoil3, krmax1, kstemmax, n1, alpha1, stemc,stemd, psiCav, dE)
-psi2E14emb = hydraulics.supplyFunctionTwoElements(Emax, psiSoil4, krmax1, kstemmax, n1, alpha1, stemc,stemd, psiCav, dE)
-psi2E21emb = hydraulics.supplyFunctionTwoElements(Emax, psiSoil1, krmax2, kstemmax, n2, alpha2, stemc,stemd, psiCav, dE)
-psi2E22emb = hydraulics.supplyFunctionTwoElements(Emax, psiSoil2, krmax2, kstemmax, n2, alpha2, stemc,stemd, psiCav, dE)
-psi2E23emb = hydraulics.supplyFunctionTwoElements(Emax, psiSoil3, krmax2, kstemmax, n2, alpha2, stemc,stemd, psiCav, dE)
-psi2E24emb = hydraulics.supplyFunctionTwoElements(Emax, psiSoil4, krmax2, kstemmax, n2, alpha2, stemc,stemd, psiCav, dE)
-psi2E31emb = hydraulics.supplyFunctionTwoElements(Emax, psiSoil1, krmax3, kstemmax, n3, alpha3, stemc,stemd, psiCav, dE)
-psi2E32emb = hydraulics.supplyFunctionTwoElements(Emax, psiSoil2, krmax3, kstemmax, n3, alpha3, stemc,stemd, psiCav, dE)
-psi2E33emb = hydraulics.supplyFunctionTwoElements(Emax, psiSoil3, krmax3, kstemmax, n3, alpha3, stemc,stemd, psiCav, dE)
-psi2E34emb = hydraulics.supplyFunctionTwoElements(Emax, psiSoil4, krmax3, kstemmax, n3, alpha3, stemc,stemd, psiCav, dE)
+psi2E11emb = hydraulics_supplyFunctionTwoElements(Emax, psiSoil1, krmax1, kstemmax, n1, alpha1, stemc,stemd,psiCav, dE)
+psi2E12emb = hydraulics_supplyFunctionTwoElements(Emax, psiSoil2, krmax1, kstemmax, n1, alpha1, stemc,stemd, psiCav, dE)
+psi2E13emb = hydraulics_supplyFunctionTwoElements(Emax, psiSoil3, krmax1, kstemmax, n1, alpha1, stemc,stemd, psiCav, dE)
+psi2E14emb = hydraulics_supplyFunctionTwoElements(Emax, psiSoil4, krmax1, kstemmax, n1, alpha1, stemc,stemd, psiCav, dE)
+psi2E21emb = hydraulics_supplyFunctionTwoElements(Emax, psiSoil1, krmax2, kstemmax, n2, alpha2, stemc,stemd, psiCav, dE)
+psi2E22emb = hydraulics_supplyFunctionTwoElements(Emax, psiSoil2, krmax2, kstemmax, n2, alpha2, stemc,stemd, psiCav, dE)
+psi2E23emb = hydraulics_supplyFunctionTwoElements(Emax, psiSoil3, krmax2, kstemmax, n2, alpha2, stemc,stemd, psiCav, dE)
+psi2E24emb = hydraulics_supplyFunctionTwoElements(Emax, psiSoil4, krmax2, kstemmax, n2, alpha2, stemc,stemd, psiCav, dE)
+psi2E31emb = hydraulics_supplyFunctionTwoElements(Emax, psiSoil1, krmax3, kstemmax, n3, alpha3, stemc,stemd, psiCav, dE)
+psi2E32emb = hydraulics_supplyFunctionTwoElements(Emax, psiSoil2, krmax3, kstemmax, n3, alpha3, stemc,stemd, psiCav, dE)
+psi2E33emb = hydraulics_supplyFunctionTwoElements(Emax, psiSoil3, krmax3, kstemmax, n3, alpha3, stemc,stemd, psiCav, dE)
+psi2E34emb = hydraulics_supplyFunctionTwoElements(Emax, psiSoil4, krmax3, kstemmax, n3, alpha3, stemc,stemd, psiCav, dE)
 
 plot(-psi2E11emb$psiPlant, psi2E11emb$FittedE, type="l", col=col1, ylab="Flow rate (mmol·m-2·s-1)", xlab = "Canopy pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,mm), lwd=1, main="after cavitation")
 lines(-psi2E12emb$psiPlant, psi2E12$FittedE, lty=1, lwd=1, col=col2)
@@ -455,23 +453,23 @@ rvec = c(rstemmin,rleafmin)
 #Maximum overall conductance
 1/sum(rvec)
 @
-As before, the supply function has to be calculated by sequentially. The $E_i$ is identical for each element. Since $\Psi_{soil}$ is known, one first inverts the supply function of the rhizosphere to find $\Psi_{root}$ and then inverts the supply function of the xylem to find $\Psi_{stem}$. Finally, one inverts the supply function of the leaf element to find $\Psi_{leaf}$. As before, the three operations can be summarized in a single supply function describing the potential rate of water supply for transpiration ($E$) as function of the leaf pressure ($\Psi_{leaf}$), starting from different bulk soil ($\Psi_{soil}$) values (see function \texttt{hydraulics.supplyFunctionThreeElements()}):
+As before, the supply function has to be calculated by sequentially. The $E_i$ is identical for each element. Since $\Psi_{soil}$ is known, one first inverts the supply function of the rhizosphere to find $\Psi_{root}$ and then inverts the supply function of the xylem to find $\Psi_{stem}$. Finally, one inverts the supply function of the leaf element to find $\Psi_{leaf}$. As before, the three operations can be summarized in a single supply function describing the potential rate of water supply for transpiration ($E$) as function of the leaf pressure ($\Psi_{leaf}$), starting from different bulk soil ($\Psi_{soil}$) values (see function \texttt{hydraulics\_supplyFunctionThreeElements()}):
 
 \begin{center}
 <<fig=TRUE, width=8, height=4.5, echo=FALSE>>==
 par(mar=c(4,4,2,1), mfrow=c(1,2))
-psi2E11 = hydraulics.supplyFunctionThreeElements(Emax, psiSoil1, krmax1, kstemmax, kleafmax, n1, alpha1, stemc,stemd, leafc,leafd, 0.0, dE)
-psi2E12 = hydraulics.supplyFunctionThreeElements(Emax, psiSoil2, krmax1, kstemmax, kleafmax, n1, alpha1, stemc,stemd, leafc,leafd, 0.0, dE)
-psi2E13 = hydraulics.supplyFunctionThreeElements(Emax, psiSoil3, krmax1, kstemmax, kleafmax, n1, alpha1, stemc,stemd, leafc,leafd, 0.0, dE)
-psi2E14 = hydraulics.supplyFunctionThreeElements(Emax, psiSoil4, krmax1, kstemmax, kleafmax, n1, alpha1, stemc,stemd, leafc,leafd, 0.0, dE)
-psi2E21 = hydraulics.supplyFunctionThreeElements(Emax, psiSoil1, krmax2, kstemmax, kleafmax,n2, alpha2, stemc,stemd, leafc,leafd, 0.0, dE)
-psi2E22 = hydraulics.supplyFunctionThreeElements(Emax, psiSoil2, krmax2, kstemmax, kleafmax,n2, alpha2, stemc,stemd, leafc,leafd, 0.0, dE)
-psi2E23 = hydraulics.supplyFunctionThreeElements(Emax, psiSoil3, krmax2, kstemmax, kleafmax,n2, alpha2, stemc,stemd, leafc,leafd, 0.0, dE)
-psi2E24 = hydraulics.supplyFunctionThreeElements(Emax, psiSoil4, krmax2, kstemmax, kleafmax,n2, alpha2, stemc,stemd, leafc,leafd, 0.0, dE)
-psi2E31 = hydraulics.supplyFunctionThreeElements(Emax, psiSoil1, krmax3, kstemmax, kleafmax,n3, alpha3, stemc,stemd, leafc,leafd, 0.0, dE)
-psi2E32 = hydraulics.supplyFunctionThreeElements(Emax, psiSoil2, krmax3, kstemmax, kleafmax,n3, alpha3, stemc,stemd, leafc,leafd, 0.0, dE)
-psi2E33 = hydraulics.supplyFunctionThreeElements(Emax, psiSoil3, krmax3, kstemmax, kleafmax,n3, alpha3, stemc,stemd, leafc,leafd, 0.0, dE)
-psi2E34 = hydraulics.supplyFunctionThreeElements(Emax, psiSoil4, krmax3, kstemmax, kleafmax,n3, alpha3, stemc,stemd, leafc,leafd, 0.0, dE)
+psi2E11 = hydraulics_supplyFunctionThreeElements(Emax, psiSoil1, krmax1, kstemmax, kleafmax, n1, alpha1, stemc,stemd, leafc,leafd, 0.0, dE)
+psi2E12 = hydraulics_supplyFunctionThreeElements(Emax, psiSoil2, krmax1, kstemmax, kleafmax, n1, alpha1, stemc,stemd, leafc,leafd, 0.0, dE)
+psi2E13 = hydraulics_supplyFunctionThreeElements(Emax, psiSoil3, krmax1, kstemmax, kleafmax, n1, alpha1, stemc,stemd, leafc,leafd, 0.0, dE)
+psi2E14 = hydraulics_supplyFunctionThreeElements(Emax, psiSoil4, krmax1, kstemmax, kleafmax, n1, alpha1, stemc,stemd, leafc,leafd, 0.0, dE)
+psi2E21 = hydraulics_supplyFunctionThreeElements(Emax, psiSoil1, krmax2, kstemmax, kleafmax,n2, alpha2, stemc,stemd, leafc,leafd, 0.0, dE)
+psi2E22 = hydraulics_supplyFunctionThreeElements(Emax, psiSoil2, krmax2, kstemmax, kleafmax,n2, alpha2, stemc,stemd, leafc,leafd, 0.0, dE)
+psi2E23 = hydraulics_supplyFunctionThreeElements(Emax, psiSoil3, krmax2, kstemmax, kleafmax,n2, alpha2, stemc,stemd, leafc,leafd, 0.0, dE)
+psi2E24 = hydraulics_supplyFunctionThreeElements(Emax, psiSoil4, krmax2, kstemmax, kleafmax,n2, alpha2, stemc,stemd, leafc,leafd, 0.0, dE)
+psi2E31 = hydraulics_supplyFunctionThreeElements(Emax, psiSoil1, krmax3, kstemmax, kleafmax,n3, alpha3, stemc,stemd, leafc,leafd, 0.0, dE)
+psi2E32 = hydraulics_supplyFunctionThreeElements(Emax, psiSoil2, krmax3, kstemmax, kleafmax,n3, alpha3, stemc,stemd, leafc,leafd, 0.0, dE)
+psi2E33 = hydraulics_supplyFunctionThreeElements(Emax, psiSoil3, krmax3, kstemmax, kleafmax,n3, alpha3, stemc,stemd, leafc,leafd, 0.0, dE)
+psi2E34 = hydraulics_supplyFunctionThreeElements(Emax, psiSoil4, krmax3, kstemmax, kleafmax,n3, alpha3, stemc,stemd, leafc,leafd, 0.0, dE)
 mm = max(psi2E11$FittedE)
 plot(-psi2E11$psiLeaf, psi2E11$FittedE, type="l", col=col1, ylab="Flow rate (mmol·m-2·s-1)", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,mm), lwd=1, main="original")
 lines(-psi2E12$psiLeaf, psi2E12$FittedE, lty=1, lwd=1, col=col2)
@@ -487,18 +485,18 @@ lines(-psi2E33$psiLeaf, psi2E33$FittedE, lty=3, lwd=1, col=col3)
 lines(-psi2E34$psiLeaf, psi2E34$FittedE, lty=3, lwd=1, col=col4)
 legend("topleft", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 
-psi2E11emb = hydraulics.supplyFunctionThreeElements(Emax, psiSoil1, krmax1, kstemmax, kleafmax,n1, alpha1, stemc,stemd, leafc,leafd,psiCav, dE)
-psi2E12emb = hydraulics.supplyFunctionThreeElements(Emax, psiSoil2, krmax1, kstemmax, kleafmax,n1, alpha1, stemc,stemd, leafc,leafd, psiCav, dE)
-psi2E13emb = hydraulics.supplyFunctionThreeElements(Emax, psiSoil3, krmax1, kstemmax, kleafmax,n1, alpha1, stemc,stemd, leafc,leafd, psiCav, dE)
-psi2E14emb = hydraulics.supplyFunctionThreeElements(Emax, psiSoil4, krmax1, kstemmax, kleafmax,n1, alpha1, stemc,stemd, leafc,leafd, psiCav, dE)
-psi2E21emb = hydraulics.supplyFunctionThreeElements(Emax, psiSoil1, krmax2, kstemmax, kleafmax,n2, alpha2, stemc,stemd, leafc,leafd, psiCav, dE)
-psi2E22emb = hydraulics.supplyFunctionThreeElements(Emax, psiSoil2, krmax2, kstemmax, kleafmax,n2, alpha2, stemc,stemd, leafc,leafd, psiCav, dE)
-psi2E23emb = hydraulics.supplyFunctionThreeElements(Emax, psiSoil3, krmax2, kstemmax, kleafmax,n2, alpha2, stemc,stemd, leafc,leafd, psiCav, dE)
-psi2E24emb = hydraulics.supplyFunctionThreeElements(Emax, psiSoil4, krmax2, kstemmax, kleafmax,n2, alpha2, stemc,stemd, leafc,leafd, psiCav, dE)
-psi2E31emb = hydraulics.supplyFunctionThreeElements(Emax, psiSoil1, krmax3, kstemmax, kleafmax,n3, alpha3, stemc,stemd, leafc,leafd, psiCav, dE)
-psi2E32emb = hydraulics.supplyFunctionThreeElements(Emax, psiSoil2, krmax3, kstemmax, kleafmax,n3, alpha3, stemc,stemd, leafc,leafd, psiCav, dE)
-psi2E33emb = hydraulics.supplyFunctionThreeElements(Emax, psiSoil3, krmax3, kstemmax, kleafmax,n3, alpha3, stemc,stemd, leafc,leafd, psiCav, dE)
-psi2E34emb = hydraulics.supplyFunctionThreeElements(Emax, psiSoil4, krmax3, kstemmax, kleafmax,n3, alpha3, stemc,stemd, leafc,leafd, psiCav, dE)
+psi2E11emb = hydraulics_supplyFunctionThreeElements(Emax, psiSoil1, krmax1, kstemmax, kleafmax,n1, alpha1, stemc,stemd, leafc,leafd,psiCav, dE)
+psi2E12emb = hydraulics_supplyFunctionThreeElements(Emax, psiSoil2, krmax1, kstemmax, kleafmax,n1, alpha1, stemc,stemd, leafc,leafd, psiCav, dE)
+psi2E13emb = hydraulics_supplyFunctionThreeElements(Emax, psiSoil3, krmax1, kstemmax, kleafmax,n1, alpha1, stemc,stemd, leafc,leafd, psiCav, dE)
+psi2E14emb = hydraulics_supplyFunctionThreeElements(Emax, psiSoil4, krmax1, kstemmax, kleafmax,n1, alpha1, stemc,stemd, leafc,leafd, psiCav, dE)
+psi2E21emb = hydraulics_supplyFunctionThreeElements(Emax, psiSoil1, krmax2, kstemmax, kleafmax,n2, alpha2, stemc,stemd, leafc,leafd, psiCav, dE)
+psi2E22emb = hydraulics_supplyFunctionThreeElements(Emax, psiSoil2, krmax2, kstemmax, kleafmax,n2, alpha2, stemc,stemd, leafc,leafd, psiCav, dE)
+psi2E23emb = hydraulics_supplyFunctionThreeElements(Emax, psiSoil3, krmax2, kstemmax, kleafmax,n2, alpha2, stemc,stemd, leafc,leafd, psiCav, dE)
+psi2E24emb = hydraulics_supplyFunctionThreeElements(Emax, psiSoil4, krmax2, kstemmax, kleafmax,n2, alpha2, stemc,stemd, leafc,leafd, psiCav, dE)
+psi2E31emb = hydraulics_supplyFunctionThreeElements(Emax, psiSoil1, krmax3, kstemmax, kleafmax,n3, alpha3, stemc,stemd, leafc,leafd, psiCav, dE)
+psi2E32emb = hydraulics_supplyFunctionThreeElements(Emax, psiSoil2, krmax3, kstemmax, kleafmax,n3, alpha3, stemc,stemd, leafc,leafd, psiCav, dE)
+psi2E33emb = hydraulics_supplyFunctionThreeElements(Emax, psiSoil3, krmax3, kstemmax, kleafmax,n3, alpha3, stemc,stemd, leafc,leafd, psiCav, dE)
+psi2E34emb = hydraulics_supplyFunctionThreeElements(Emax, psiSoil4, krmax3, kstemmax, kleafmax,n3, alpha3, stemc,stemd, leafc,leafd, psiCav, dE)
 
 plot(-psi2E11emb$psiLeaf, psi2E11emb$FittedE, type="l", col=col1, ylab="Flow rate (mmol·m-2·s-1)", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,mm), lwd=1, main="after cavitation")
 lines(-psi2E12emb$psiLeaf, psi2E12$FittedE, lty=1, lwd=1, col=col2)
@@ -583,7 +581,7 @@ Now let $v_1$, $v_2$ and $v_3$ be the proportion of fine root biomass in each so
 <<>>=
 Z50 = 200 #Parameter of LDR root distribution
 Z95 = 1200 #Parameter of LDR root distribution
-v = root.ldrDistribution(Z50, Z95, d)
+v = root_ldrDistribution(Z50, Z95, d)
 v
 @
 In the case of the rhizosphere conductances, we can simply define them (for each soil texture type) as:
@@ -592,9 +590,9 @@ krhizomaxvec1 = krmax1*v
 krhizomaxvec2 = krmax2*v
 krhizomaxvec3 = krmax3*v
 @
-To divide maximum root xylem conductance among soil layers we need weights inversely proportional to the length of transport distances (Sperry et al. 2016b). Vertical transport lengths can be calculated from soil depths and radial spread can be calculated assuming cylinders with volume proportional to the proportions of fine root biomass. The whole process can be done using function \texttt{root.rootXylemConductanceProportions()}:
+To divide maximum root xylem conductance among soil layers we need weights inversely proportional to the length of transport distances (Sperry et al. 2016b). Vertical transport lengths can be calculated from soil depths and radial spread can be calculated assuming cylinders with volume proportional to the proportions of fine root biomass. The whole process can be done using function \texttt{root\_rootXylemConductanceProportions()}:
 <<>>==
-weights = root.xylemConductanceProportions(v, d)
+weights = root_xylemConductanceProportions(v, d)
 weights
 @
 Transport weights are quite different than the fine root biomass proportions. This is because radial lengths are largest for the first (top) layer and vertical lengths are largest for the third (bottom) layer. The root xylem conductances are (in this case they do not depend on soil texture):
@@ -605,56 +603,56 @@ krootmaxvec
 
 
 
-Having all these maximum conductances, we can now build the supply functions for each soil texture and starting from the different soil water potential configurations (see function \texttt{hydraulics.supplyFunctionBelowground()}): 
+Having all these maximum conductances, we can now build the supply functions for each soil texture and starting from the different soil water potential configurations (see function \texttt{hydraulics\_supplyFunctionBelowground()}): 
 \begin{center}
 <<fig=TRUE, width=8, height=4.5, echo=FALSE>>==
 par(mar=c(4,4,2,1), mfrow=c(1,2))
 psiMax = -7.0
-supplyRS11 = hydraulics.supplyFunctionBelowground(psiSoilLayers1,
+supplyRS11 = hydraulics_supplyFunctionBelowground(psiSoilLayers1,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
                                   maxNsteps = 400)
-supplyRS12 = hydraulics.supplyFunctionBelowground(psiSoilLayers2,
+supplyRS12 = hydraulics_supplyFunctionBelowground(psiSoilLayers2,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
                                   maxNsteps = 400)
-supplyRS13 = hydraulics.supplyFunctionBelowground(psiSoilLayers3,
+supplyRS13 = hydraulics_supplyFunctionBelowground(psiSoilLayers3,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
                                   maxNsteps = 400)
-supplyRS14 = hydraulics.supplyFunctionBelowground(psiSoilLayers4,
+supplyRS14 = hydraulics_supplyFunctionBelowground(psiSoilLayers4,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
                                   maxNsteps = 400)
-supplyRS21 = hydraulics.supplyFunctionBelowground(psiSoilLayers1,
+supplyRS21 = hydraulics_supplyFunctionBelowground(psiSoilLayers1,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
                                   maxNsteps = 400)
-supplyRS22 = hydraulics.supplyFunctionBelowground(psiSoilLayers2,
+supplyRS22 = hydraulics_supplyFunctionBelowground(psiSoilLayers2,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
                                   maxNsteps = 400)
-supplyRS23 = hydraulics.supplyFunctionBelowground(psiSoilLayers3,
+supplyRS23 = hydraulics_supplyFunctionBelowground(psiSoilLayers3,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
                                   maxNsteps = 400)
-supplyRS24 = hydraulics.supplyFunctionBelowground(psiSoilLayers4,
+supplyRS24 = hydraulics_supplyFunctionBelowground(psiSoilLayers4,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
                                   maxNsteps = 400)
-supplyRS31 = hydraulics.supplyFunctionBelowground(psiSoilLayers1,
+supplyRS31 = hydraulics_supplyFunctionBelowground(psiSoilLayers1,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   maxNsteps = 400)
-supplyRS32 = hydraulics.supplyFunctionBelowground(psiSoilLayers2,
+supplyRS32 = hydraulics_supplyFunctionBelowground(psiSoilLayers2,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   maxNsteps = 400)
-supplyRS33 = hydraulics.supplyFunctionBelowground(psiSoilLayers3,
+supplyRS33 = hydraulics_supplyFunctionBelowground(psiSoilLayers3,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   maxNsteps = 400)
-supplyRS34 = hydraulics.supplyFunctionBelowground(psiSoilLayers4,
+supplyRS34 = hydraulics_supplyFunctionBelowground(psiSoilLayers4,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   maxNsteps = 400)
@@ -767,89 +765,89 @@ To build the supply function for the network, we proceed by calculating water po
 \includegraphics[width=\textwidth]{hydraulics_nocap.jpg}
 \end{figure}
 
-The following figure shows network supply functions (with $S = 1$) for each soil texture and starting from the different soil water potential configurations (see function \texttt{hydraulics.supplyFunctionNetwork()}): 
+The following figure shows network supply functions (with $S = 1$) for each soil texture and starting from the different soil water potential configurations (see function \texttt{hydraulics\_supplyFunctionNetwork()}): 
 \begin{center}
 <<fig=TRUE, width=8, height=3.5, echo=FALSE>>==
 par(mar=c(4,4,2,1), mfrow=c(1,2))
 psiMax = -7.0
-supplyNetwork11 = hydraulics.supplyFunctionNetwork(psiSoilLayers1,
+supplyNetwork11 = hydraulics_supplyFunctionNetwork(psiSoilLayers1,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem =0.0,
                                   maxNsteps = 400)
-supplyNetwork12 = hydraulics.supplyFunctionNetwork(psiSoilLayers2,
+supplyNetwork12 = hydraulics_supplyFunctionNetwork(psiSoilLayers2,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=0.0,
                                   maxNsteps = 400)
-supplyNetwork13 = hydraulics.supplyFunctionNetwork(psiSoilLayers3,
+supplyNetwork13 = hydraulics_supplyFunctionNetwork(psiSoilLayers3,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=0.0,
                                   maxNsteps = 400)
-supplyNetwork14 = hydraulics.supplyFunctionNetwork(psiSoilLayers4,
+supplyNetwork14 = hydraulics_supplyFunctionNetwork(psiSoilLayers4,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=0.0,
                                   maxNsteps = 400)
-supplyNetwork21 = hydraulics.supplyFunctionNetwork(psiSoilLayers1,
+supplyNetwork21 = hydraulics_supplyFunctionNetwork(psiSoilLayers1,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=0.0,
                                   maxNsteps = 400)
-supplyNetwork22 = hydraulics.supplyFunctionNetwork(psiSoilLayers2,
+supplyNetwork22 = hydraulics_supplyFunctionNetwork(psiSoilLayers2,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=0.0,
                                   maxNsteps = 400)
-supplyNetwork23 = hydraulics.supplyFunctionNetwork(psiSoilLayers3,
+supplyNetwork23 = hydraulics_supplyFunctionNetwork(psiSoilLayers3,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=0.0,
                                   maxNsteps = 400)
-supplyNetwork24 = hydraulics.supplyFunctionNetwork(psiSoilLayers4,
+supplyNetwork24 = hydraulics_supplyFunctionNetwork(psiSoilLayers4,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=0.0,
                                   maxNsteps = 400)
-supplyNetwork31 = hydraulics.supplyFunctionNetwork(psiSoilLayers1,
+supplyNetwork31 = hydraulics_supplyFunctionNetwork(psiSoilLayers1,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=0.0,
                                   maxNsteps = 400)
-supplyNetwork32 = hydraulics.supplyFunctionNetwork(psiSoilLayers2,
+supplyNetwork32 = hydraulics_supplyFunctionNetwork(psiSoilLayers2,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=0.0,
                                   maxNsteps = 400)
-supplyNetwork33 = hydraulics.supplyFunctionNetwork(psiSoilLayers3,
+supplyNetwork33 = hydraulics_supplyFunctionNetwork(psiSoilLayers3,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=0.0,
                                   maxNsteps = 400)
-supplyNetwork34 = hydraulics.supplyFunctionNetwork(psiSoilLayers4,
+supplyNetwork34 = hydraulics_supplyFunctionNetwork(psiSoilLayers4,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
@@ -871,84 +869,84 @@ lines(-supplyNetwork33$psiLeaf, supplyNetwork33$E, lty=3, col=col3)
 lines(-supplyNetwork34$psiLeaf, supplyNetwork34$E, lty=3, col=col4)
 legend("topleft", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 
-supplyNetwork11emb = hydraulics.supplyFunctionNetwork(psiSoilLayers1,
+supplyNetwork11emb = hydraulics_supplyFunctionNetwork(psiSoilLayers1,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=plcCav,
                                   maxNsteps = 400)
-supplyNetwork12emb = hydraulics.supplyFunctionNetwork(psiSoilLayers2,
+supplyNetwork12emb = hydraulics_supplyFunctionNetwork(psiSoilLayers2,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=plcCav,
                                   maxNsteps = 400)
-supplyNetwork13emb = hydraulics.supplyFunctionNetwork(psiSoilLayers3,
+supplyNetwork13emb = hydraulics_supplyFunctionNetwork(psiSoilLayers3,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=plcCav,
                                   maxNsteps = 400)
-supplyNetwork14emb = hydraulics.supplyFunctionNetwork(psiSoilLayers4,
+supplyNetwork14emb = hydraulics_supplyFunctionNetwork(psiSoilLayers4,
                                   krhizomaxvec1,rep(n1,3),rep(alpha1,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=plcCav,
                                   maxNsteps = 400)
-supplyNetwork21emb = hydraulics.supplyFunctionNetwork(psiSoilLayers1,
+supplyNetwork21emb = hydraulics_supplyFunctionNetwork(psiSoilLayers1,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=plcCav,
                                   maxNsteps = 400)
-supplyNetwork22emb = hydraulics.supplyFunctionNetwork(psiSoilLayers2,
+supplyNetwork22emb = hydraulics_supplyFunctionNetwork(psiSoilLayers2,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=plcCav,
                                   maxNsteps = 400)
-supplyNetwork23emb = hydraulics.supplyFunctionNetwork(psiSoilLayers3,
+supplyNetwork23emb = hydraulics_supplyFunctionNetwork(psiSoilLayers3,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=plcCav,
                                   maxNsteps = 400)
-supplyNetwork24emb = hydraulics.supplyFunctionNetwork(psiSoilLayers4,
+supplyNetwork24emb = hydraulics_supplyFunctionNetwork(psiSoilLayers4,
                                   krhizomaxvec2,rep(n2,3),rep(alpha2,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=plcCav,
                                   maxNsteps = 400)
-supplyNetwork31emb = hydraulics.supplyFunctionNetwork(psiSoilLayers1,
+supplyNetwork31emb = hydraulics_supplyFunctionNetwork(psiSoilLayers1,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=plcCav,
                                   maxNsteps = 400)
-supplyNetwork32emb = hydraulics.supplyFunctionNetwork(psiSoilLayers2,
+supplyNetwork32emb = hydraulics_supplyFunctionNetwork(psiSoilLayers2,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=plcCav,
                                   maxNsteps = 400)
-supplyNetwork33emb = hydraulics.supplyFunctionNetwork(psiSoilLayers3,
+supplyNetwork33emb = hydraulics_supplyFunctionNetwork(psiSoilLayers3,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc,leafd,
                                   PLCstem=plcCav,
                                   maxNsteps = 400)
-supplyNetwork34emb = hydraulics.supplyFunctionNetwork(psiSoilLayers4,
+supplyNetwork34emb = hydraulics_supplyFunctionNetwork(psiSoilLayers4,
                                   krhizomaxvec3,rep(n3,3),rep(alpha3,3),
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
@@ -1086,7 +1084,7 @@ leafpi0 = -1.5
 leafeps = 8
 @
 
-The following figures show the change in supply function caused by stem and leaf water compartments, assuming a 1-hr time step and either 0 MPa or -1.5 MPa as previous water potential for all segments (see function \texttt{hydraulics.supplyFunctionNetworkCapacitance()}):
+The following figures show the change in supply function caused by stem and leaf water compartments, assuming a 1-hr time step and either 0 MPa or -1.5 MPa as previous water potential for all segments (see function \texttt{hydraulics\_supplyFunctionNetworkCapacitance()}):
 
 \begin{center}
 <<fig=TRUE, width=8, height=8, echo=FALSE>>=
@@ -1095,7 +1093,7 @@ psiLeafPrev1 = 0
 psiStemPrev2 = -1.5
 psiLeafPrev2 = -1.5
 par(mar=c(4,4,4,1), mfrow=c(2,2))
-supplyN11Cap1 = hydraulics.supplyFunctionNetworkCapacitance(
+supplyN11Cap1 = hydraulics_supplyFunctionNetworkCapacitance(
                                   psiSoilLayers1,
                                   psiStemPrev1, PLCstem=0,
                                   psiLeafPrev1,
@@ -1105,7 +1103,7 @@ supplyN11Cap1 = hydraulics.supplyFunctionNetworkCapacitance(
                                   kleafmax, leafc,leafd,
                                   Vmaxstem, stemfapo, stempi0, stemeps,
                                   Vmaxleaf, leaffapo, leafpi0, leafeps)
-supplyN11Cap2 = hydraulics.supplyFunctionNetworkCapacitance(
+supplyN11Cap2 = hydraulics_supplyFunctionNetworkCapacitance(
                                   psiSoilLayers1,
                                   psiStemPrev2, PLCstem=0,
                                   psiLeafPrev2,
@@ -1116,7 +1114,7 @@ supplyN11Cap2 = hydraulics.supplyFunctionNetworkCapacitance(
                                   Vmaxstem, stemfapo, stempi0, stemeps,
                                   Vmaxleaf, leaffapo, leafpi0, leafeps)
 
-supplyN11Cap1Emb = hydraulics.supplyFunctionNetworkCapacitance(
+supplyN11Cap1Emb = hydraulics_supplyFunctionNetworkCapacitance(
                                   psiSoilLayers1,
                                   psiStemPrev1, PLCstem=plcCav,
                                   psiLeafPrev1,
@@ -1126,7 +1124,7 @@ supplyN11Cap1Emb = hydraulics.supplyFunctionNetworkCapacitance(
                                   kleafmax, leafc,leafd,
                                   Vmaxstem, stemfapo, stempi0, stemeps,
                                   Vmaxleaf, leaffapo, leafpi0, leafeps)
-supplyN11Cap2Emb = hydraulics.supplyFunctionNetworkCapacitance(
+supplyN11Cap2Emb = hydraulics_supplyFunctionNetworkCapacitance(
                                   psiSoilLayers1,
                                   psiStemPrev2, PLCstem=plcCav,
                                   psiLeafPrev2,
@@ -1201,7 +1199,7 @@ g_{Ha} &=& 0.189 \cdot (u/d)^{0.5}
 \end{eqnarray}
 where $u$ is wind speed (in m·s$^{-1}$), taken as the wind speed at mid-crown height, and $d$ is 0.72 times the leaf width (species parameter \texttt{LeafWidth} in $cm$). 
 
-The following figures illustrate the value of $T_{leaf}$ for two leaf sizes and varying values of wind speed and flow rate, calculated for 24ºC canopy temperature and 740 W·m$^{-2}$ instantaneous absorved radiation (see function \texttt{biophysics.leafTemperature}):
+The following figures illustrate the value of $T_{leaf}$ for two leaf sizes and varying values of wind speed and flow rate, calculated for 24ºC canopy temperature and 740 W·m$^{-2}$ instantaneous absorved radiation (see function \texttt{biophysics\_leafTemperature}):
 
 \begin{center}
 <<echo=FALSE, fig=TRUE, width=8, height=4>>==
@@ -1212,8 +1210,8 @@ LT1 = matrix(0, nrow= length(uvec), ncol=length(E))
 LT2 = matrix(0, nrow= length(uvec), ncol=length(E))
 for(i in 1:length(uvec)) {
   for(j in 1:length(E)){
-    LT1[i,j] = biophysics.leafTemperature(Rabs,Tcan, uvec[i], E[j], 10.0)
-    LT2[i,j] = biophysics.leafTemperature(Rabs,Tcan, uvec[i], E[j], 0.1)
+    LT1[i,j] = biophysics_leafTemperature(Rabs,Tcan, uvec[i], E[j], 10.0)
+    LT2[i,j] = biophysics_leafTemperature(Rabs,Tcan, uvec[i], E[j], 0.1)
   }
 } 
 contour(x=uvec, y=E, z=LT1, xlab="Wind speed (m/s)", ylab="Flow rate (mmol·s-1·m-2)", main = "Wide leaf (10 cm) temperature (ºC)")
@@ -1225,31 +1223,31 @@ Let's now fix wind speed to 2 m/s. The application of the above equations to the
 <<fig=TRUE, width=8, height=4, echo=FALSE>>==
 u = 2 # m*s-1
 par(mar=c(4,4,2,1), mfrow=c(1,2))
-psi2A11 = photo.leafPhotosynthesisFunction(supplyNetwork11$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A12 = photo.leafPhotosynthesisFunction(supplyNetwork12$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A13 = photo.leafPhotosynthesisFunction(supplyNetwork13$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A14 = photo.leafPhotosynthesisFunction(supplyNetwork14$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A21 = photo.leafPhotosynthesisFunction(supplyNetwork21$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A22 = photo.leafPhotosynthesisFunction(supplyNetwork22$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A23 = photo.leafPhotosynthesisFunction(supplyNetwork23$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A24 = photo.leafPhotosynthesisFunction(supplyNetwork24$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A31 = photo.leafPhotosynthesisFunction(supplyNetwork31$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A32 = photo.leafPhotosynthesisFunction(supplyNetwork32$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A33 = photo.leafPhotosynthesisFunction(supplyNetwork33$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A34 = photo.leafPhotosynthesisFunction(supplyNetwork34$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A11 = photo_leafPhotosynthesisFunction(supplyNetwork11$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A12 = photo_leafPhotosynthesisFunction(supplyNetwork12$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A13 = photo_leafPhotosynthesisFunction(supplyNetwork13$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A14 = photo_leafPhotosynthesisFunction(supplyNetwork14$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A21 = photo_leafPhotosynthesisFunction(supplyNetwork21$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A22 = photo_leafPhotosynthesisFunction(supplyNetwork22$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A23 = photo_leafPhotosynthesisFunction(supplyNetwork23$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A24 = photo_leafPhotosynthesisFunction(supplyNetwork24$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A31 = photo_leafPhotosynthesisFunction(supplyNetwork31$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A32 = photo_leafPhotosynthesisFunction(supplyNetwork32$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A33 = photo_leafPhotosynthesisFunction(supplyNetwork33$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A34 = photo_leafPhotosynthesisFunction(supplyNetwork34$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
 
-psi2A11emb = photo.leafPhotosynthesisFunction(supplyNetwork11emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A12emb = photo.leafPhotosynthesisFunction(supplyNetwork12emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A13emb = photo.leafPhotosynthesisFunction(supplyNetwork13emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A14emb = photo.leafPhotosynthesisFunction(supplyNetwork14emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A21emb = photo.leafPhotosynthesisFunction(supplyNetwork21emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A22emb = photo.leafPhotosynthesisFunction(supplyNetwork22emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A23emb = photo.leafPhotosynthesisFunction(supplyNetwork23emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A24emb = photo.leafPhotosynthesisFunction(supplyNetwork24emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A31emb = photo.leafPhotosynthesisFunction(supplyNetwork31emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A32emb = photo.leafPhotosynthesisFunction(supplyNetwork32emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A33emb = photo.leafPhotosynthesisFunction(supplyNetwork33emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
-psi2A34emb = photo.leafPhotosynthesisFunction(supplyNetwork34emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A11emb = photo_leafPhotosynthesisFunction(supplyNetwork11emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A12emb = photo_leafPhotosynthesisFunction(supplyNetwork12emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A13emb = photo_leafPhotosynthesisFunction(supplyNetwork13emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A14emb = photo_leafPhotosynthesisFunction(supplyNetwork14emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A21emb = photo_leafPhotosynthesisFunction(supplyNetwork21emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A22emb = photo_leafPhotosynthesisFunction(supplyNetwork22emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A23emb = photo_leafPhotosynthesisFunction(supplyNetwork23emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A24emb = photo_leafPhotosynthesisFunction(supplyNetwork24emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A31emb = photo_leafPhotosynthesisFunction(supplyNetwork31emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A32emb = photo_leafPhotosynthesisFunction(supplyNetwork32emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A33emb = photo_leafPhotosynthesisFunction(supplyNetwork33emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A34emb = photo_leafPhotosynthesisFunction(supplyNetwork34emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
 
 plot(-supplyNetwork11$psiLeaf, psi2A11$LeafTemperature, type="l", col=col1, ylab="Leaf temperature (ºC)", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(26,27.5), lwd=1, main="original")
 lines(-supplyNetwork12$psiLeaf,psi2A12$LeafTemperature, lty=1, lwd=1, col=col2)
@@ -1473,11 +1471,11 @@ Many aspects may vary across the crown, including environmental conditions (such
 
 \begin{center}
 <<fig = TRUE, echo=FALSE, width=7, height=4>>=
-Ibfpar = light.layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayermax, kb, alpha_PAR)
-Idfpar = light.layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayermax, kd_PAR, alpha_PAR)
-Ibfswr = light.layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayermax, kb, alpha_SWR)
-Idfswr = light.layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayermax, kd_SWR, alpha_SWR)
-fsunlit = light.layerSunlitFraction(LAIlayerlive, LAIlayerdead, kb)
+Ibfpar = light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayermax, kb, alpha_PAR)
+Idfpar = light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayermax, kd_PAR, alpha_PAR)
+Ibfswr = light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayermax, kb, alpha_SWR)
+Idfswr = light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayermax, kd_SWR, alpha_SWR)
+fsunlit = light_layerSunlitFraction(LAIlayerlive, LAIlayerdead, kb)
 SHarea = (1-fsunlit)*LAIlayerlive[,1] 
 SLarea = fsunlit*LAIlayerlive[,1] 
 
@@ -1506,10 +1504,10 @@ PAR_diffuse = 150
 Solar elevation is the angle between the sun and the horizon (i.e. the complement of the zenith angle). Under these conditions, the amount of shortwave and PAR radiation absorbed per unit of leaf area at each canopy layer is (Anten and Bastiaans 2016):
 \begin{center}
 <<echo=FALSE, fig=TRUE, width=7, height=4>>=
-abs_PAR = light.cohortSunlitShadeAbsorbedRadiation(PAR_direct, PAR_diffuse,
+abs_PAR = light_cohortSunlitShadeAbsorbedRadiation(PAR_direct, PAR_diffuse,
                                              Ibfpar, Idfpar, beta = solarElevation, 
                                              LAIlayerlive, LAIlayerdead, kb, kd_PAR, alpha_PAR, gamma_PAR)
-abs_SWR = light.cohortSunlitShadeAbsorbedRadiation(SWR_direct, SWR_diffuse,
+abs_SWR = light_cohortSunlitShadeAbsorbedRadiation(SWR_direct, SWR_diffuse,
                                              Ibfswr, Idfswr, beta = solarElevation, 
                                              LAIlayerlive, LAIlayerdead, kb, kd_SWR, alpha_SWR, gamma_SWR)
 par(mar=c(4,4,1,1), mfrow=c(1,2))
@@ -1541,102 +1539,102 @@ Jmax298layer=Vmax298layer*1.67
 # plot(Vmax298layer, 1:nlayer,type="l", ylab="Layer", xlab="Maximum carboxylation rate", ylim=c(1,nlayer), col="red")
 @
 
-Multilayer canopy models allow evaluating leaf conditions, stomatal conductance and photosynthesis for different points of the canopy. However, this comes at high computational cost. While big-leaf canopy models are known to be unaccurate under some situations, sun-shade canopy models (De Pury and Farquhar 1997) provide estimates that are close to multiple layer models (Hikosaka 2016). Sun-shade models involve: (a) aggregating the leaf area of sunlit/shade leaves across layers; (b) aggregating the light absorbed by leaves of each kind across layers; and (c) aggregating maximum assimilation rates across layers, again separating sunlit and shade leaves. One then calls the photosynthesis model twice (i.e. once for shade leaves and once for sunlit leaves), using the aggregated maximum assimilation rates. Separating the two kinds of leaves acknowledges that they operate at different parts of the light-saturation curve. The following figure provides the canopy photosynthesis functions obtained, under different situations, using a full 10-layer canopy description (top), a sunshade canopy model (center) or a big-leaf model (bottom). These were generated using functions \texttt{photo.multilayerPhotosynthesisFunction()}, \texttt{photo.sunshadePhotosynthesisFunction()} and \texttt{photo.leafPhotosynthesisFunction()}, respectively. Note the coincidence between the multi-layer and the sun-shade models.
+Multilayer canopy models allow evaluating leaf conditions, stomatal conductance and photosynthesis for different points of the canopy. However, this comes at high computational cost. While big-leaf canopy models are known to be unaccurate under some situations, sun-shade canopy models (De Pury and Farquhar 1997) provide estimates that are close to multiple layer models (Hikosaka 2016). Sun-shade models involve: (a) aggregating the leaf area of sunlit/shade leaves across layers; (b) aggregating the light absorbed by leaves of each kind across layers; and (c) aggregating maximum assimilation rates across layers, again separating sunlit and shade leaves. One then calls the photosynthesis model twice (i.e. once for shade leaves and once for sunlit leaves), using the aggregated maximum assimilation rates. Separating the two kinds of leaves acknowledges that they operate at different parts of the light-saturation curve. The following figure provides the canopy photosynthesis functions obtained, under different situations, using a full 10-layer canopy description (top), a sunshade canopy model (center) or a big-leaf model (bottom). These were generated using functions \texttt{photo\_multilayerPhotosynthesisFunction()}, \texttt{photo\_sunshadePhotosynthesisFunction()} and \texttt{photo\_leafPhotosynthesisFunction()}, respectively. Note the coincidence between the multi-layer and the sun-shade models.
 <<echo=FALSE>>=
-psi2A11can = photo.multilayerPhotosynthesisFunction(supplyNetwork11$E,Catm, Patm,Tcan, vpa, 
+psi2A11can = photo_multilayerPhotosynthesisFunction(supplyNetwork11$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A12can = photo.multilayerPhotosynthesisFunction(supplyNetwork12$E,Catm, Patm,Tcan, vpa, 
+psi2A12can = photo_multilayerPhotosynthesisFunction(supplyNetwork12$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A13can = photo.multilayerPhotosynthesisFunction(supplyNetwork13$E,Catm, Patm,Tcan, vpa, 
+psi2A13can = photo_multilayerPhotosynthesisFunction(supplyNetwork13$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A14can = photo.multilayerPhotosynthesisFunction(supplyNetwork14$E,Catm, Patm,Tcan, vpa, 
+psi2A14can = photo_multilayerPhotosynthesisFunction(supplyNetwork14$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A21can = photo.multilayerPhotosynthesisFunction(supplyNetwork21$E,Catm, Patm,Tcan, vpa, 
+psi2A21can = photo_multilayerPhotosynthesisFunction(supplyNetwork21$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A22can = photo.multilayerPhotosynthesisFunction(supplyNetwork22$E,Catm, Patm,Tcan, vpa, 
+psi2A22can = photo_multilayerPhotosynthesisFunction(supplyNetwork22$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A23can = photo.multilayerPhotosynthesisFunction(supplyNetwork23$E,Catm, Patm,Tcan, vpa, 
+psi2A23can = photo_multilayerPhotosynthesisFunction(supplyNetwork23$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A24can = photo.multilayerPhotosynthesisFunction(supplyNetwork24$E,Catm, Patm,Tcan, vpa, 
+psi2A24can = photo_multilayerPhotosynthesisFunction(supplyNetwork24$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A31can = photo.multilayerPhotosynthesisFunction(supplyNetwork31$E,Catm, Patm,Tcan, vpa, 
+psi2A31can = photo_multilayerPhotosynthesisFunction(supplyNetwork31$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A32can = photo.multilayerPhotosynthesisFunction(supplyNetwork32$E,Catm, Patm,Tcan, vpa, 
+psi2A32can = photo_multilayerPhotosynthesisFunction(supplyNetwork32$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A33can = photo.multilayerPhotosynthesisFunction(supplyNetwork33$E,Catm, Patm,Tcan, vpa, 
+psi2A33can = photo_multilayerPhotosynthesisFunction(supplyNetwork33$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A34can = photo.multilayerPhotosynthesisFunction(supplyNetwork34$E,Catm, Patm,Tcan, vpa, 
+psi2A34can = photo_multilayerPhotosynthesisFunction(supplyNetwork34$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
 
-psi2A11canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork11emb$E,Catm, Patm,Tcan, vpa, 
+psi2A11canemb = photo_multilayerPhotosynthesisFunction(supplyNetwork11emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A12canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork12emb$E,Catm, Patm,Tcan, vpa, 
+psi2A12canemb = photo_multilayerPhotosynthesisFunction(supplyNetwork12emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A13canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork13emb$E,Catm, Patm,Tcan, vpa, 
+psi2A13canemb = photo_multilayerPhotosynthesisFunction(supplyNetwork13emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A14canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork14emb$E,Catm, Patm,Tcan, vpa, 
+psi2A14canemb = photo_multilayerPhotosynthesisFunction(supplyNetwork14emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A21canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork21emb$E,Catm, Patm,Tcan, vpa, 
+psi2A21canemb = photo_multilayerPhotosynthesisFunction(supplyNetwork21emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A22canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork22emb$E,Catm, Patm,Tcan, vpa, 
+psi2A22canemb = photo_multilayerPhotosynthesisFunction(supplyNetwork22emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A23canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork23emb$E,Catm, Patm,Tcan, vpa, 
+psi2A23canemb = photo_multilayerPhotosynthesisFunction(supplyNetwork23emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A24canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork24emb$E,Catm, Patm,Tcan, vpa, 
+psi2A24canemb = photo_multilayerPhotosynthesisFunction(supplyNetwork24emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A31canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork31emb$E,Catm, Patm,Tcan, vpa, 
+psi2A31canemb = photo_multilayerPhotosynthesisFunction(supplyNetwork31emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A32canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork32emb$E,Catm, Patm,Tcan, vpa, 
+psi2A32canemb = photo_multilayerPhotosynthesisFunction(supplyNetwork32emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A33canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork33emb$E,Catm, Patm,Tcan, vpa, 
+psi2A33canemb = photo_multilayerPhotosynthesisFunction(supplyNetwork33emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
-psi2A34canemb = photo.multilayerPhotosynthesisFunction(supplyNetwork34emb$E,Catm, Patm,Tcan, vpa, 
+psi2A34canemb = photo_multilayerPhotosynthesisFunction(supplyNetwork34emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298layer, Jmax298layer, Gmin, Gmax)
@@ -1654,99 +1652,99 @@ Vmax298SH= sum(Vmax298layer*LAIlayerlive[,1]*(1-fsunlit))
 Jmax298SH = sum(Jmax298layer*LAIlayerlive[,1]*(1-fsunlit))
 ulayer = ulayer[1]
 
-psi2A11ss = photo.sunshadePhotosynthesisFunction(supplyNetwork11$E,Catm, Patm,Tcan, vpa, 
+psi2A11ss = photo_sunshadePhotosynthesisFunction(supplyNetwork11$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A12ss = photo.sunshadePhotosynthesisFunction(supplyNetwork12$E,Catm, Patm,Tcan, vpa, 
+psi2A12ss = photo_sunshadePhotosynthesisFunction(supplyNetwork12$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A13ss = photo.sunshadePhotosynthesisFunction(supplyNetwork13$E,Catm, Patm,Tcan, vpa, 
+psi2A13ss = photo_sunshadePhotosynthesisFunction(supplyNetwork13$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A14ss = photo.sunshadePhotosynthesisFunction(supplyNetwork14$E,Catm, Patm,Tcan, vpa, 
+psi2A14ss = photo_sunshadePhotosynthesisFunction(supplyNetwork14$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A21ss = photo.sunshadePhotosynthesisFunction(supplyNetwork21$E,Catm, Patm,Tcan, vpa, 
+psi2A21ss = photo_sunshadePhotosynthesisFunction(supplyNetwork21$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A22ss = photo.sunshadePhotosynthesisFunction(supplyNetwork22$E,Catm, Patm,Tcan, vpa, 
+psi2A22ss = photo_sunshadePhotosynthesisFunction(supplyNetwork22$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A23ss = photo.sunshadePhotosynthesisFunction(supplyNetwork23$E,Catm, Patm,Tcan, vpa, 
+psi2A23ss = photo_sunshadePhotosynthesisFunction(supplyNetwork23$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A24ss = photo.sunshadePhotosynthesisFunction(supplyNetwork24$E,Catm, Patm,Tcan, vpa, 
+psi2A24ss = photo_sunshadePhotosynthesisFunction(supplyNetwork24$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A31ss = photo.sunshadePhotosynthesisFunction(supplyNetwork31$E,Catm, Patm,Tcan, vpa, 
+psi2A31ss = photo_sunshadePhotosynthesisFunction(supplyNetwork31$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A32ss = photo.sunshadePhotosynthesisFunction(supplyNetwork32$E,Catm, Patm,Tcan, vpa, 
+psi2A32ss = photo_sunshadePhotosynthesisFunction(supplyNetwork32$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A33ss = photo.sunshadePhotosynthesisFunction(supplyNetwork33$E,Catm, Patm,Tcan, vpa, 
+psi2A33ss = photo_sunshadePhotosynthesisFunction(supplyNetwork33$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A34ss = photo.sunshadePhotosynthesisFunction(supplyNetwork34$E,Catm, Patm,Tcan, vpa, 
+psi2A34ss = photo_sunshadePhotosynthesisFunction(supplyNetwork34$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A11ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork11emb$E,Catm, Patm,Tcan, vpa, 
+psi2A11ssemb = photo_sunshadePhotosynthesisFunction(supplyNetwork11emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A12ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork12emb$E,Catm, Patm,Tcan, vpa, 
+psi2A12ssemb = photo_sunshadePhotosynthesisFunction(supplyNetwork12emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A13ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork13emb$E,Catm, Patm,Tcan, vpa, 
+psi2A13ssemb = photo_sunshadePhotosynthesisFunction(supplyNetwork13emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A14ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork14emb$E,Catm, Patm,Tcan, vpa, 
+psi2A14ssemb = photo_sunshadePhotosynthesisFunction(supplyNetwork14emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A21ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork21emb$E,Catm, Patm,Tcan, vpa, 
+psi2A21ssemb = photo_sunshadePhotosynthesisFunction(supplyNetwork21emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A22ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork22emb$E,Catm, Patm,Tcan, vpa, 
+psi2A22ssemb = photo_sunshadePhotosynthesisFunction(supplyNetwork22emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A23ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork23emb$E,Catm, Patm,Tcan, vpa, 
+psi2A23ssemb = photo_sunshadePhotosynthesisFunction(supplyNetwork23emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A24ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork24emb$E,Catm, Patm,Tcan, vpa, 
+psi2A24ssemb = photo_sunshadePhotosynthesisFunction(supplyNetwork24emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A31ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork31emb$E,Catm, Patm,Tcan, vpa, 
+psi2A31ssemb = photo_sunshadePhotosynthesisFunction(supplyNetwork31emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A32ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork32emb$E,Catm, Patm,Tcan, vpa, 
+psi2A32ssemb = photo_sunshadePhotosynthesisFunction(supplyNetwork32emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A33ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork33emb$E,Catm, Patm,Tcan, vpa, 
+psi2A33ssemb = photo_sunshadePhotosynthesisFunction(supplyNetwork33emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
-psi2A34ssemb = photo.sunshadePhotosynthesisFunction(supplyNetwork34emb$E,Catm, Patm,Tcan, vpa, 
+psi2A34ssemb = photo_sunshadePhotosynthesisFunction(supplyNetwork34emb$E,Catm, Patm,Tcan, vpa, 
                                                 SLarea, SHarea, ulayer, 
                                                 absRadSL, absRadSH, QSL, QSH,
                                                 Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gmin, Gmax)
@@ -1757,54 +1755,54 @@ absRadBL = absRadSL+absRadSH
 Vmax298BL = Vmax298SL + Vmax298SH
 Jmax298BL = Jmax298SL + Jmax298SH
 Gmax = 2.0
-psi2A11bl = photo.leafPhotosynthesisFunction(supplyNetwork11$E,Catm, Patm,Tcan, vpa, ulayer,
+psi2A11bl = photo_leafPhotosynthesisFunction(supplyNetwork11$E,Catm, Patm,Tcan, vpa, ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A12bl = photo.leafPhotosynthesisFunction(supplyNetwork12$E,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A12bl = photo_leafPhotosynthesisFunction(supplyNetwork12$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A13bl = photo.leafPhotosynthesisFunction(supplyNetwork13$E,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A13bl = photo_leafPhotosynthesisFunction(supplyNetwork13$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A14bl = photo.leafPhotosynthesisFunction(supplyNetwork14$E,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A14bl = photo_leafPhotosynthesisFunction(supplyNetwork14$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A21bl = photo.leafPhotosynthesisFunction(supplyNetwork21$E,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A21bl = photo_leafPhotosynthesisFunction(supplyNetwork21$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A22bl = photo.leafPhotosynthesisFunction(supplyNetwork22$E,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A22bl = photo_leafPhotosynthesisFunction(supplyNetwork22$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A23bl = photo.leafPhotosynthesisFunction(supplyNetwork23$E,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A23bl = photo_leafPhotosynthesisFunction(supplyNetwork23$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A24bl = photo.leafPhotosynthesisFunction(supplyNetwork24$E,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A24bl = photo_leafPhotosynthesisFunction(supplyNetwork24$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A31bl = photo.leafPhotosynthesisFunction(supplyNetwork31$E,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A31bl = photo_leafPhotosynthesisFunction(supplyNetwork31$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A32bl = photo.leafPhotosynthesisFunction(supplyNetwork32$E,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A32bl = photo_leafPhotosynthesisFunction(supplyNetwork32$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A33bl = photo.leafPhotosynthesisFunction(supplyNetwork33$E,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A33bl = photo_leafPhotosynthesisFunction(supplyNetwork33$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A34bl = photo.leafPhotosynthesisFunction(supplyNetwork34$E,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A34bl = photo_leafPhotosynthesisFunction(supplyNetwork34$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
 
-psi2A11blemb = photo.leafPhotosynthesisFunction(supplyNetwork11emb$E,Catm, Patm,Tcan, vpa, ulayer,
+psi2A11blemb = photo_leafPhotosynthesisFunction(supplyNetwork11emb$E,Catm, Patm,Tcan, vpa, ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A12blemb = photo.leafPhotosynthesisFunction(supplyNetwork12emb$E,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A12blemb = photo_leafPhotosynthesisFunction(supplyNetwork12emb$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A13blemb = photo.leafPhotosynthesisFunction(supplyNetwork13emb$E,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A13blemb = photo_leafPhotosynthesisFunction(supplyNetwork13emb$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A14blemb = photo.leafPhotosynthesisFunction(supplyNetwork14emb$E,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A14blemb = photo_leafPhotosynthesisFunction(supplyNetwork14emb$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A21blemb = photo.leafPhotosynthesisFunction(supplyNetwork21emb$E,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A21blemb = photo_leafPhotosynthesisFunction(supplyNetwork21emb$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A22blemb = photo.leafPhotosynthesisFunction(supplyNetwork22emb$E,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A22blemb = photo_leafPhotosynthesisFunction(supplyNetwork22emb$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A23blemb = photo.leafPhotosynthesisFunction(supplyNetwork23emb$E,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A23blemb = photo_leafPhotosynthesisFunction(supplyNetwork23emb$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A24blemb = photo.leafPhotosynthesisFunction(supplyNetwork24emb$E,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A24blemb = photo_leafPhotosynthesisFunction(supplyNetwork24emb$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A31blemb = photo.leafPhotosynthesisFunction(supplyNetwork31emb$E,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A31blemb = photo_leafPhotosynthesisFunction(supplyNetwork31emb$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A32blemb = photo.leafPhotosynthesisFunction(supplyNetwork32emb$E,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A32blemb = photo_leafPhotosynthesisFunction(supplyNetwork32emb$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A33blemb = photo.leafPhotosynthesisFunction(supplyNetwork33emb$E,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A33blemb = photo_leafPhotosynthesisFunction(supplyNetwork33emb$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
-psi2A34blemb = photo.leafPhotosynthesisFunction(supplyNetwork34emb$E,Catm, Patm,Tcan, vpa,  ulayer,
+psi2A34blemb = photo_leafPhotosynthesisFunction(supplyNetwork34emb$E,Catm, Patm,Tcan, vpa,  ulayer,
                                              absRadBL,QBL,Vmax298BL, Jmax298BL, Gmin, Gmax, 1.0, BLarea)
 Gmax = 0.5
 @
@@ -1915,57 +1913,57 @@ Alternatively, we considered a second cost function ($\theta_2(\Psi_{leaf})$) us
 where $k_l$ is the leaf conductance function; and $k_{l,min}$ and $k_{l,max}$ are the minimum and maximum leaf conductance values found in the supply function. Using the leaf vulnerability curve for the cost function is grounded on the fact that stomatal regulation occurs at leaves, so that instantaneous regulation should respond to the loss of hydraulic conductance at this point, independently of what happens to the rest of the continuum. Hormonal signals from root to leaf are assumed to regulate stomatal aperture at longer time scales. Obviously, $\theta_2$ is the same before irreversible cavitation. The difference between them may be interpreted as the following. $\theta_2$ strictly follows the potential at the leaf level (and hence could be related to a loss of turgor). 
 
 <<echo=FALSE>>==
-PM11 =transp.profitMaximization(supplyNetwork11, psi2A11, type=1, Gmin, Gmax)
-PM12 =transp.profitMaximization(supplyNetwork12, psi2A12, type=1, Gmin, Gmax)
-PM13 =transp.profitMaximization(supplyNetwork13, psi2A13, type=1, Gmin, Gmax)
-PM14 =transp.profitMaximization(supplyNetwork14, psi2A14, type=1, Gmin, Gmax)
-PM21 =transp.profitMaximization(supplyNetwork21, psi2A21, type=1, Gmin, Gmax)
-PM22 =transp.profitMaximization(supplyNetwork22, psi2A22, type=1, Gmin, Gmax)
-PM23 =transp.profitMaximization(supplyNetwork23, psi2A23, type=1, Gmin, Gmax)
-PM24 =transp.profitMaximization(supplyNetwork24, psi2A24, type=1, Gmin, Gmax)
-PM31 =transp.profitMaximization(supplyNetwork31, psi2A31, type=1, Gmin, Gmax)
-PM32 =transp.profitMaximization(supplyNetwork32, psi2A32, type=1, Gmin, Gmax)
-PM33 =transp.profitMaximization(supplyNetwork33, psi2A33, type=1, Gmin, Gmax)
-PM34 =transp.profitMaximization(supplyNetwork34, psi2A34, type=1, Gmin, Gmax)
+PM11 =transp_profitMaximization(supplyNetwork11, psi2A11, type=1, Gmin, Gmax)
+PM12 =transp_profitMaximization(supplyNetwork12, psi2A12, type=1, Gmin, Gmax)
+PM13 =transp_profitMaximization(supplyNetwork13, psi2A13, type=1, Gmin, Gmax)
+PM14 =transp_profitMaximization(supplyNetwork14, psi2A14, type=1, Gmin, Gmax)
+PM21 =transp_profitMaximization(supplyNetwork21, psi2A21, type=1, Gmin, Gmax)
+PM22 =transp_profitMaximization(supplyNetwork22, psi2A22, type=1, Gmin, Gmax)
+PM23 =transp_profitMaximization(supplyNetwork23, psi2A23, type=1, Gmin, Gmax)
+PM24 =transp_profitMaximization(supplyNetwork24, psi2A24, type=1, Gmin, Gmax)
+PM31 =transp_profitMaximization(supplyNetwork31, psi2A31, type=1, Gmin, Gmax)
+PM32 =transp_profitMaximization(supplyNetwork32, psi2A32, type=1, Gmin, Gmax)
+PM33 =transp_profitMaximization(supplyNetwork33, psi2A33, type=1, Gmin, Gmax)
+PM34 =transp_profitMaximization(supplyNetwork34, psi2A34, type=1, Gmin, Gmax)
 
-PM11emb =transp.profitMaximization(supplyNetwork11emb, psi2A11emb, type=1, Gmin, Gmax)
-PM12emb =transp.profitMaximization(supplyNetwork12emb, psi2A12emb, type=1, Gmin, Gmax)
-PM13emb =transp.profitMaximization(supplyNetwork13emb, psi2A13emb, type=1, Gmin, Gmax)
-PM14emb =transp.profitMaximization(supplyNetwork14emb, psi2A14emb, type=1, Gmin, Gmax)
-PM21emb =transp.profitMaximization(supplyNetwork21emb, psi2A21emb, type=1, Gmin, Gmax)
-PM22emb =transp.profitMaximization(supplyNetwork22emb, psi2A22emb, type=1, Gmin, Gmax)
-PM23emb =transp.profitMaximization(supplyNetwork23emb, psi2A23emb, type=1, Gmin, Gmax)
-PM24emb =transp.profitMaximization(supplyNetwork24emb, psi2A24emb, type=1, Gmin, Gmax)
-PM31emb =transp.profitMaximization(supplyNetwork31emb, psi2A31emb, type=1, Gmin, Gmax)
-PM32emb =transp.profitMaximization(supplyNetwork32emb, psi2A32emb, type=1, Gmin, Gmax)
-PM33emb =transp.profitMaximization(supplyNetwork33emb, psi2A33emb, type=1, Gmin, Gmax)
-PM34emb =transp.profitMaximization(supplyNetwork34emb, psi2A34emb, type=1, Gmin, Gmax)
+PM11emb =transp_profitMaximization(supplyNetwork11emb, psi2A11emb, type=1, Gmin, Gmax)
+PM12emb =transp_profitMaximization(supplyNetwork12emb, psi2A12emb, type=1, Gmin, Gmax)
+PM13emb =transp_profitMaximization(supplyNetwork13emb, psi2A13emb, type=1, Gmin, Gmax)
+PM14emb =transp_profitMaximization(supplyNetwork14emb, psi2A14emb, type=1, Gmin, Gmax)
+PM21emb =transp_profitMaximization(supplyNetwork21emb, psi2A21emb, type=1, Gmin, Gmax)
+PM22emb =transp_profitMaximization(supplyNetwork22emb, psi2A22emb, type=1, Gmin, Gmax)
+PM23emb =transp_profitMaximization(supplyNetwork23emb, psi2A23emb, type=1, Gmin, Gmax)
+PM24emb =transp_profitMaximization(supplyNetwork24emb, psi2A24emb, type=1, Gmin, Gmax)
+PM31emb =transp_profitMaximization(supplyNetwork31emb, psi2A31emb, type=1, Gmin, Gmax)
+PM32emb =transp_profitMaximization(supplyNetwork32emb, psi2A32emb, type=1, Gmin, Gmax)
+PM33emb =transp_profitMaximization(supplyNetwork33emb, psi2A33emb, type=1, Gmin, Gmax)
+PM34emb =transp_profitMaximization(supplyNetwork34emb, psi2A34emb, type=1, Gmin, Gmax)
 
-PM11_s2 =transp.profitMaximization(supplyNetwork11, psi2A11, type=2, Gmin, Gmax, kleafmax)
-PM12_s2 =transp.profitMaximization(supplyNetwork12, psi2A12,type=2, Gmin, Gmax, kleafmax)
-PM13_s2 =transp.profitMaximization(supplyNetwork13, psi2A13, type=2, Gmin, Gmax, kleafmax)
-PM14_s2 =transp.profitMaximization(supplyNetwork14, psi2A14,type=2, Gmin, Gmax, kleafmax)
-PM21_s2 =transp.profitMaximization(supplyNetwork21, psi2A21,type=2, Gmin, Gmax, kleafmax)
-PM22_s2 =transp.profitMaximization(supplyNetwork22, psi2A22,type=2, Gmin, Gmax, kleafmax)
-PM23_s2 =transp.profitMaximization(supplyNetwork23, psi2A23,type=2, Gmin, Gmax, kleafmax)
-PM24_s2 =transp.profitMaximization(supplyNetwork24, psi2A24,type=2, Gmin, Gmax, kleafmax)
-PM31_s2 =transp.profitMaximization(supplyNetwork31, psi2A31, type=2, Gmin, Gmax, kleafmax)
-PM32_s2 =transp.profitMaximization(supplyNetwork32, psi2A32,type=2, Gmin, Gmax, kleafmax)
-PM33_s2 =transp.profitMaximization(supplyNetwork33, psi2A33, type=2, Gmin, Gmax, kleafmax)
-PM34_s2 =transp.profitMaximization(supplyNetwork34, psi2A34, type=2, Gmin, Gmax, kleafmax)
+PM11_s2 =transp_profitMaximization(supplyNetwork11, psi2A11, type=2, Gmin, Gmax, kleafmax)
+PM12_s2 =transp_profitMaximization(supplyNetwork12, psi2A12,type=2, Gmin, Gmax, kleafmax)
+PM13_s2 =transp_profitMaximization(supplyNetwork13, psi2A13, type=2, Gmin, Gmax, kleafmax)
+PM14_s2 =transp_profitMaximization(supplyNetwork14, psi2A14,type=2, Gmin, Gmax, kleafmax)
+PM21_s2 =transp_profitMaximization(supplyNetwork21, psi2A21,type=2, Gmin, Gmax, kleafmax)
+PM22_s2 =transp_profitMaximization(supplyNetwork22, psi2A22,type=2, Gmin, Gmax, kleafmax)
+PM23_s2 =transp_profitMaximization(supplyNetwork23, psi2A23,type=2, Gmin, Gmax, kleafmax)
+PM24_s2 =transp_profitMaximization(supplyNetwork24, psi2A24,type=2, Gmin, Gmax, kleafmax)
+PM31_s2 =transp_profitMaximization(supplyNetwork31, psi2A31, type=2, Gmin, Gmax, kleafmax)
+PM32_s2 =transp_profitMaximization(supplyNetwork32, psi2A32,type=2, Gmin, Gmax, kleafmax)
+PM33_s2 =transp_profitMaximization(supplyNetwork33, psi2A33, type=2, Gmin, Gmax, kleafmax)
+PM34_s2 =transp_profitMaximization(supplyNetwork34, psi2A34, type=2, Gmin, Gmax, kleafmax)
 
-PM11emb_s2 =transp.profitMaximization(supplyNetwork11emb, psi2A11emb, type=2, Gmin, Gmax, kleafmax)
-PM12emb_s2 =transp.profitMaximization(supplyNetwork12emb, psi2A12emb, type=2, Gmin, Gmax, kleafmax)
-PM13emb_s2 =transp.profitMaximization(supplyNetwork13emb, psi2A13emb, type=2, Gmin, Gmax, kleafmax)
-PM14emb_s2 =transp.profitMaximization(supplyNetwork14emb, psi2A14emb, type=2, Gmin, Gmax, kleafmax)
-PM21emb_s2 =transp.profitMaximization(supplyNetwork21emb, psi2A21emb, type=2, Gmin, Gmax, kleafmax)
-PM22emb_s2 =transp.profitMaximization(supplyNetwork22emb, psi2A22emb, type=2, Gmin, Gmax, kleafmax)
-PM23emb_s2 =transp.profitMaximization(supplyNetwork23emb, psi2A23emb, type=2, Gmin, Gmax, kleafmax)
-PM24emb_s2 =transp.profitMaximization(supplyNetwork24emb, psi2A24emb, type=2, Gmin, Gmax, kleafmax)
-PM31emb_s2 =transp.profitMaximization(supplyNetwork31emb, psi2A31emb, type=2, Gmin, Gmax, kleafmax)
-PM32emb_s2 =transp.profitMaximization(supplyNetwork32emb, psi2A32emb, type=2, Gmin, Gmax, kleafmax)
-PM33emb_s2 =transp.profitMaximization(supplyNetwork33emb, psi2A33emb, type=2, Gmin, Gmax, kleafmax)
-PM34emb_s2 =transp.profitMaximization(supplyNetwork34emb, psi2A34emb, type=2, Gmin, Gmax, kleafmax)
+PM11emb_s2 =transp_profitMaximization(supplyNetwork11emb, psi2A11emb, type=2, Gmin, Gmax, kleafmax)
+PM12emb_s2 =transp_profitMaximization(supplyNetwork12emb, psi2A12emb, type=2, Gmin, Gmax, kleafmax)
+PM13emb_s2 =transp_profitMaximization(supplyNetwork13emb, psi2A13emb, type=2, Gmin, Gmax, kleafmax)
+PM14emb_s2 =transp_profitMaximization(supplyNetwork14emb, psi2A14emb, type=2, Gmin, Gmax, kleafmax)
+PM21emb_s2 =transp_profitMaximization(supplyNetwork21emb, psi2A21emb, type=2, Gmin, Gmax, kleafmax)
+PM22emb_s2 =transp_profitMaximization(supplyNetwork22emb, psi2A22emb, type=2, Gmin, Gmax, kleafmax)
+PM23emb_s2 =transp_profitMaximization(supplyNetwork23emb, psi2A23emb, type=2, Gmin, Gmax, kleafmax)
+PM24emb_s2 =transp_profitMaximization(supplyNetwork24emb, psi2A24emb, type=2, Gmin, Gmax, kleafmax)
+PM31emb_s2 =transp_profitMaximization(supplyNetwork31emb, psi2A31emb, type=2, Gmin, Gmax, kleafmax)
+PM32emb_s2 =transp_profitMaximization(supplyNetwork32emb, psi2A32emb, type=2, Gmin, Gmax, kleafmax)
+PM33emb_s2 =transp_profitMaximization(supplyNetwork33emb, psi2A33emb, type=2, Gmin, Gmax, kleafmax)
+PM34emb_s2 =transp_profitMaximization(supplyNetwork34emb, psi2A34emb, type=2, Gmin, Gmax, kleafmax)
 @
 The type of cost function can be specified by the user by setting parameter \texttt{hydraulicCostFunction} (see function \texttt{defaultControl()}). The following figures illustrate the $\theta_1$ and $\theta_2$ curves corresponding to the supply functions:
 \begin{center}
@@ -2373,7 +2371,7 @@ Aboveground and belowground stem maximum conductance values at the plant level (
 Leaf maximum conductance ($k_{l, max}$, in mmol·m$^{-2}$·s$^{-1}$·MPa$^{-1}$) is an input parameter that should be provided for each species. When missing, leaf maximum hydraulic conductance is assumed $k_{l, max}=6$ for conifers and $k_{l, max}=8$ for angiosperms (Sack \emph{et al.} 2006).
 
 \subsubsection{Stem xylem maximum conductance}
-Estimation of maximum stem conductance ($k_{s,max}$, in mmol·m$^{-2}$·s$^{-1}$·MPa$^{-1}$) is done by function \texttt{hydraulics.maximumStemHydraulicConductance()} and follows the work by Savage \emph{et al.} (2010), Olson \emph{et al.} (2014) and Christoffersen \emph{et al.} (2016). Calculations are based on tree height and two species-specific parameters: maximum sapwood reference conductivity ($K_{s,max,ref}$) and the ratio of leaf area to sapwood area ($A_{l}/A_{s}$; \texttt{Al2As} in \texttt{SpParamsMED}), i.e. the inverse of the Huber value $H_v$.
+Estimation of maximum stem conductance ($k_{s,max}$, in mmol·m$^{-2}$·s$^{-1}$·MPa$^{-1}$) is done by function \texttt{hydraulics\_maximumStemHydraulicConductance()} and follows the work by Savage \emph{et al.} (2010), Olson \emph{et al.} (2014) and Christoffersen \emph{et al.} (2016). Calculations are based on tree height and two species-specific parameters: maximum sapwood reference conductivity ($K_{s,max,ref}$) and the ratio of leaf area to sapwood area ($A_{l}/A_{s}$; \texttt{Al2As} in \texttt{SpParamsMED}), i.e. the inverse of the Huber value $H_v$.
 
 The reference value for maximum sapwood conductivity $K_{s,max,ref}$ is assumed to have been measured on a \emph{terminal branch} of a plant of known height $H_{ref}$. If our target plant is very different in height, the conduits of terminal branches will have different radius and hence conductivity. We correct the reference conductivity to the target plant height using the following empirical relationship, developed by Olson \emph{et al.} (2014) between tree height and diameter of conduits for angiosperms and the equation described by Christoffersen \emph{et al.} (2016):
 \begin{eqnarray}
@@ -2399,7 +2397,7 @@ Let's consider an example for a \emph{Quercus ilex} target tree of 4m height and
 xylem_kmax = 0.77
 H = 400 # in cm
 Href = 660 # in cm
-f = hydraulics.referenceConductivityHeightFactor(Href, H);
+f = hydraulics_referenceConductivityHeightFactor(Href, H);
 f
 xylem_kmax_cor = xylem_kmax * f
 xylem_kmax_cor
@@ -2414,7 +2412,7 @@ where $H$ is the tree height (here in m), $A_{s}$ is the sapwood area, $A_{l}$ i
 <<>>==
 Al2As = 2512 
 
-kstemmax = hydraulics.maximumStemHydraulicConductance(xylem_kmax, 
+kstemmax = hydraulics_maximumStemHydraulicConductance(xylem_kmax, 
                   Href, Al2As, H, angiosperm = TRUE,taper = FALSE)
 kstemmax
 @ 
@@ -2429,7 +2427,7 @@ K_{s,max,pet} = K_{s,max,ref}\cdot (r_{int, pet}/r_{int,ref})^{2}
 \end{equation}
 where $r_{int, pet}$ is the radius of the petiole in the model of Savage et al. (2010). Christofferset et al. (2016) use $r_{int, pet} = 10$ $\mu$m but we define it as the radius of apical conduits in a tree of 1 m height:
 <<>>=
-hydraulics.terminalConduitRadius(100.0)
+hydraulics_terminalConduitRadius(100.0)
 @
 $\chi_{tap:notap,ag}(H)$ is calculated as described in the Appendix 1 section of Christoffersen \emph{et al.} (2016) (see also Savage et al. 2010). The following figure shows the value of $\chi_{tap:notap,ag}$ for different heights:
 
@@ -2437,7 +2435,7 @@ $\chi_{tap:notap,ag}(H)$ is calculated as described in the Appendix 1 section of
 tapnotap <- numeric(length(10:5000))
 Hs <- 10:5000
 
-for(i in 1:length(Hs)) tapnotap[i] = hydraulics.taperFactorSavage(Hs[i])
+for(i in 1:length(Hs)) tapnotap[i] = hydraulics_taperFactorSavage(Hs[i])
 plot(Hs/100, tapnotap, type = 'l', xlab = 'H [m]',
      ylab = 'Taper conductance factor', log="x")
 abline(v=1, col="gray", lty=2)
@@ -2451,7 +2449,7 @@ k_{s, max, taper}=\frac{1000}{0.018} \cdot \frac{K_{s,max,pet}\cdot A_{s}}{H\cdo
 The maximum stem conductance with taper ($k_{s, max, taper}$) of a \emph{Q. ilex} tree of 4 m height, calculated with this second equation, is:
 
 <<>>==
-kstemmax_tap = hydraulics.maximumStemHydraulicConductance(xylem_kmax, 
+kstemmax_tap = hydraulics_maximumStemHydraulicConductance(xylem_kmax, 
                       Href, Al2As, H, angiosperm = TRUE, taper = TRUE)
 kstemmax_tap
 @ 
@@ -2465,10 +2463,10 @@ qi_no_tap <- qi_with_tap
 Hs <- 50:5000
 
 for (i in 1:length(Hs)) {
-  qi_with_tap[i] <- hydraulics.maximumStemHydraulicConductance(
+  qi_with_tap[i] <- hydraulics_maximumStemHydraulicConductance(
   xylem_kmax, Href, Al2As, Hs[i], angiosperm = TRUE, taper =TRUE
 )
-  qi_no_tap[i] <- hydraulics.maximumStemHydraulicConductance(
+  qi_no_tap[i] <- hydraulics_maximumStemHydraulicConductance(
   xylem_kmax, Href, Al2As, Hs[i], angiosperm = TRUE,taper = FALSE
 )
 }
@@ -2507,17 +2505,17 @@ The proportion of fine roots in each layer, assuming a linear dose response mode
 <<>>==
 Z50 = 200
 Z95 = 1500
-v1 = root.ldrDistribution(Z50,Z95, d)
+v1 = root_ldrDistribution(Z50,Z95, d)
 v1
 @
-Having this information, the calculation of root length (i.e. the sum of vertical and radial lengths) to each layer ($L_j$) is done using function \texttt{root.rootLength()}:
+Having this information, the calculation of root length (i.e. the sum of vertical and radial lengths) to each layer ($L_j$) is done using function \texttt{root\_rootLength()}:
 <<>>==
-rl = root.rootLengths(v1, d)
+rl = root_rootLengths(v1, d)
 rl
 @
-where lengths are in mm. The proportion of total root xylem conductance corresponding to each layer ($w_j$) is given by \texttt{root.xylemConductanceProportions()}:
+where lengths are in mm. The proportion of total root xylem conductance corresponding to each layer ($w_j$) is given by \texttt{root\_xylemConductanceProportions()}:
 <<>>==
-w1 = root.xylemConductanceProportions(v1, d)
+w1 = root_xylemConductanceProportions(v1, d)
 w1
 @
 Xylem conductance proportions can be quite different than the fine root biomass proportions. This is because radial lengths are largest for the first top layers and vertical lengths are largest for the bottom layers. The maximum root xylem conductances of each layer will be the product of maximum total conductance of root xylem and weights:
@@ -2528,10 +2526,10 @@ In \texttt{medfate} we calculate maximum root xylem conductance using a referenc
 \begin{equation}
 k_{r,max}=\frac{1000}{0.018} \cdot \sum_{j}{\frac{w_j \cdot K_{r,max,ref}\cdot A_{s}}{L_j\cdot A_{l}}}
 \end{equation}
-where $w_j$ are root xylem conductance proportion of layer $j$ and $L_j$ is the root length (in m) to layer $j$. Note that here we use weights $w_j$ assuming they represent proportions of total sapwood area that come from each layer (i.e. the longer the path the larger the proportion of sapwood area). This calculation is made available by function \texttt{hydraulics.maximumRootHydraulicConductance()}. When $K_{r,max,ref}$ is missing, then we assume that $K_{r,max,ref} = $K_{x,max,ref}$. Let's consider the same \emph{Q. ilex} tree of 4m height as before. If we specify root xylem specific conductivity as $K_{r,max,ref} = K_{s,max,ref} =0.77$ we have:
+where $w_j$ are root xylem conductance proportion of layer $j$ and $L_j$ is the root length (in m) to layer $j$. Note that here we use weights $w_j$ assuming they represent proportions of total sapwood area that come from each layer (i.e. the longer the path the larger the proportion of sapwood area). This calculation is made available by function \texttt{hydraulics\_maximumRootHydraulicConductance()}. When $K_{r,max,ref}$ is missing, then we assume that $K_{r,max,ref} = $K_{x,max,ref}$. Let's consider the same \emph{Q. ilex} tree of 4m height as before. If we specify root xylem specific conductivity as $K_{r,max,ref} = K_{s,max,ref} =0.77$ we have:
 <<>>=
 rootxylem_kmax = 0.77
-krootmax = hydraulics.maximumRootHydraulicConductance(rootxylem_kmax, Al2As, 
+krootmax = hydraulics_maximumRootHydraulicConductance(rootxylem_kmax, Al2As, 
                                                       v1, d)
 krootmax
 @
@@ -2551,7 +2549,7 @@ p_stem <- numeric(length(50:5000))
 Hs <- 50:5000
 
 for (i in 1:length(Hs)) {
-  ks <- hydraulics.maximumStemHydraulicConductance(xylem_kmax, Href, Al2As, Hs[i], taper = FALSE)
+  ks <- hydraulics_maximumStemHydraulicConductance(xylem_kmax, Href, Al2As, Hs[i], taper = FALSE)
   p_stem[i] = (1/ks)/((1/ks)+(1/krootmax))
 }
 
@@ -2569,43 +2567,43 @@ Maximum rhizosphere conductance ($k_{rh, max}$, in mmol·m$^{-2}$·s$^{-1}$·MPa
 krhizomaxvec1 = rep(0,3)
 pres = c(5,20,35,50)
 for(i in 1:length(pres)) {
-  krhizomaxvec1[1]= hydraulics.findRhizosphereMaximumConductance(pres[i], 
+  krhizomaxvec1[1]= hydraulics_findRhizosphereMaximumConductance(pres[i], 
                      s$VG_n[1],s$VG_alpha[1],
                      krootmax, rootc,rootd, 
                      kstemmax, stemc, stemd,
                      kleafmax, leafc, leafd)
-  krhizomaxvec1[2]= hydraulics.findRhizosphereMaximumConductance(pres[i], 
+  krhizomaxvec1[2]= hydraulics_findRhizosphereMaximumConductance(pres[i], 
                      s$VG_n[2],s$VG_alpha[2],
                      krootmax, rootc,rootd, 
                      kstemmax, stemc, stemd,
                      kleafmax, leafc, leafd)
-  krhizomaxvec1[3]= hydraulics.findRhizosphereMaximumConductance(pres[i], 
+  krhizomaxvec1[3]= hydraulics_findRhizosphereMaximumConductance(pres[i], 
                      s$VG_n[3],s$VG_alpha[3],
                      krootmax, rootc,rootd, 
                      kstemmax, stemc, stemd,
                      kleafmax, leafc, leafd)
-  sfn1 = hydraulics.supplyFunctionNetwork(psiSoilLayers1,
+  sfn1 = hydraulics_supplyFunctionNetwork(psiSoilLayers1,
                                   krhizomaxvec1,s$VG_n,s$VG_alpha,
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc, leafd,
                                   PLCstem = plcCav,
                                   maxNsteps = 400)
-  sfn2 = hydraulics.supplyFunctionNetwork(psiSoilLayers2,
+  sfn2 = hydraulics_supplyFunctionNetwork(psiSoilLayers2,
                                   krhizomaxvec1,s$VG_n,s$VG_alpha,
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc, leafd,
                                   PLCstem = plcCav,
                                   maxNsteps = 400)
-  sfn3 = hydraulics.supplyFunctionNetwork(psiSoilLayers3,
+  sfn3 = hydraulics_supplyFunctionNetwork(psiSoilLayers3,
                                   krhizomaxvec1,s$VG_n,s$VG_alpha,
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
                                   kleafmax, leafc, leafd,
                                   PLCstem = plcCav,
                                   maxNsteps = 400)
-  sfn4 = hydraulics.supplyFunctionNetwork(psiSoilLayers4,
+  sfn4 = hydraulics_supplyFunctionNetwork(psiSoilLayers4,
                                   krhizomaxvec1,s$VG_n,s$VG_alpha,
                                   krootmaxvec, rootc,rootd,
                                   kstemmax, stemc,stemd,
@@ -2632,17 +2630,17 @@ legend("topright",legend=paste("av. resist ", pres), bty="n", lty=1:4, cex=0.8)
 Sperry et al. (2016a) found average percentages of rhizosphere resistance around 67\%, but these exceptionally-high values were a consequence of using an unsegmented supply function (i.e. single vulnerability curve for roots and stem). If we specify a 15\% of average resistance in the rhizosphere (see parameter \texttt{averageFracRhizosphereResistance} in function \texttt{defaultControl()}), the maximum rhizosphere conductance values for the three layers are found calling:
 <<>>=
 krmax = rep(0,3) 
-krmax[1]= hydraulics.findRhizosphereMaximumConductance(15, 
+krmax[1]= hydraulics_findRhizosphereMaximumConductance(15, 
                      s$VG_n[1],s$VG_alpha[1],
                      krootmax, rootc,rootd, 
                      kstemmax, stemc, stemd,
                      kleafmax, leafc, leafd)
-krmax[2] = hydraulics.findRhizosphereMaximumConductance(15, 
+krmax[2] = hydraulics_findRhizosphereMaximumConductance(15, 
                       s$VG_n[2],s$VG_alpha[2],
                       krootmax, rootc,rootd, 
                       kstemmax, stemc, stemd,
                       kleafmax, leafc, leafd)
-krmax[3] = hydraulics.findRhizosphereMaximumConductance(15, 
+krmax[3] = hydraulics_findRhizosphereMaximumConductance(15, 
                       s$VG_n[3],s$VG_alpha[3],
                       krootmax, rootc,rootd, 
                       kstemmax, stemc, stemd,
@@ -2693,11 +2691,11 @@ For example, let's calculate the stem and leaf water capacity for a Q. ilex tree
 wd = 1.0
 Al2As = 2512 
 H = 1500 # 15 m
-hydraulics.stemWaterCapacity(Al2As, H, wd)
+hydraulics_stemWaterCapacity(Al2As, H, wd)
 
 ld = 0.7
 SLA = 5.870 
-hydraulics.leafWaterCapacity(SLA, ld)
+hydraulics_leafWaterCapacity(SLA, ld)
 @ 
 
 

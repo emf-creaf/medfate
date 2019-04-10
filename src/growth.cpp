@@ -73,7 +73,7 @@ void checkgrowthInput(List x, List soil, String transpirationMode, String soilFu
   List below = Rcpp::as<Rcpp::List>(x["below"]);
   if(!below.containsElementNamed("Z")) stop("Z missing in growthInput$below");
   if(!below.containsElementNamed("V")) stop("V missing in growthInput$below");
-  if(transpirationMode=="Complex"){
+  if(transpirationMode=="Sperry"){
     if(!below.containsElementNamed("VGrhizo_kmax")) stop("VGrhizo_kmax missing in growthInput$below");
     if(!below.containsElementNamed("VCroot_kmax")) stop("VCroot_kmax missing in growthInput$below");
   }  
@@ -99,10 +99,10 @@ void checkgrowthInput(List x, List soil, String transpirationMode, String soilFu
   if(!x.containsElementNamed("paramsTransp")) stop("paramsTransp missing in growthInput");
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
   if(!paramsTransp.containsElementNamed("pRootDisc")) stop("pRootDisc missing in growthInput$paramsTransp");
-  if(transpirationMode=="Simple") {
+  if(transpirationMode=="Granier") {
     if(!paramsTransp.containsElementNamed("Psi_Extract")) stop("Psi_Extract missing in growthInput$paramsTransp");
     if(!paramsTransp.containsElementNamed("WUE")) stop("WUE missing in growthInput$paramsTransp");
-  } else if(transpirationMode=="Complex") {
+  } else if(transpirationMode=="Sperry") {
     if(!soil.containsElementNamed("VG_n")) stop("VG_n missing in soil");
     if(!soil.containsElementNamed("VG_alpha")) stop("VG_alpha missing in soil");
     
@@ -157,7 +157,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   NumericVector MeanTemperature = meteo["MeanTemperature"];
   NumericVector MinTemperature, MaxTemperature, MinRelativeHumidity, MaxRelativeHumidity, Radiation, WindSpeed, PET;
   int numDays = Precipitation.size();
-  if(transpirationMode=="Complex") {
+  if(transpirationMode=="Sperry") {
     if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
     if(NumericVector::is_na(elevation)) stop("Value for 'elevation' should not be missing.");
     MinTemperature = meteo["MinTemperature"];
@@ -206,12 +206,12 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   //Transpiration parameters
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
   NumericVector Kmax_stemxylem, VCstem_kmax, Psi_Extract, VCstem_c, VCstem_d;
-  if(transpirationMode=="Complex") {
+  if(transpirationMode=="Sperry") {
     Kmax_stemxylem = paramsTransp["Kmax_stemxylem"];
     VCstem_kmax = paramsTransp["VCstem_kmax"];
     VCstem_c = paramsTransp["VCstem_c"];
     VCstem_d = paramsTransp["VCstem_d"];
-  } else if(transpirationMode == "Simple"){
+  } else if(transpirationMode == "Granier"){
     Psi_Extract = paramsTransp["Psi_Extract"];
   }
 
@@ -318,10 +318,10 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
     }
     
     //2. Water balance and photosynthesis
-    if(transpirationMode=="Simple") {
+    if(transpirationMode=="Granier") {
       double er = erFactor(DOY[i], PET[i], Precipitation[i]);
       s = spwbDay1(x, soil, MeanTemperature[i], PET[i], Precipitation[i], er, 0.0, Radiation[i], elevation, false); //No Runon in simulations for a single cell
-    } else if(transpirationMode=="Complex") {
+    } else if(transpirationMode=="Sperry") {
       std::string c = as<std::string>(dateStrings[i]);
       int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
       double delta = meteoland::radiation_solarDeclination(J);
@@ -368,7 +368,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
     PlantTranspiration(i,_) = EplantCoh;
     PlantStress(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["DDS"]);
     NumericVector psiCoh;
-    if(transpirationMode=="Simple") {
+    if(transpirationMode=="Granier") {
       psiCoh =  Rcpp::as<Rcpp::NumericVector>(Plants["psi"]);  
     } else {
       psiCoh =  Rcpp::as<Rcpp::NumericVector>(Plants["LeafPsi"]);  
@@ -427,7 +427,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
       if(storagePool != "none") {
         fastCstorage[j] = fastCstorage[j]-deltaSAgrowth*cost; //Remove construction costs from (fast) C pool
       }
-      if(transpirationMode=="Simple"){
+      if(transpirationMode=="Granier"){
         if(!cavitationRefill) { //If we track cavitation update proportion of embolized conduits
           NumericVector pEmb =  Rcpp::as<Rcpp::NumericVector>(x["PLC"]);
           pEmb[j] = pEmb[j]*((SA[j] - deltaSAturnover)/(SA[j] + deltaSAgrowth - deltaSAturnover));
@@ -479,8 +479,8 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
       //Update expanded leaf area
       LAI_expanded[j] = LAI_live[j]*phe[j]; 
       
-      //3.7 Update stem conductance (Complex mode)
-      if(transpirationMode=="Complex") {
+      //3.7 Update stem conductance (Sperry mode)
+      if(transpirationMode=="Sperry") {
         double al2as = (LAI_expanded[j]/(N[j]/10000.0))/(SA[j]/10000.0);
         VCstem_kmax[j]=maximumStemHydraulicConductance(Kmax_stemxylem[j], al2as,H[j], taper);
         // Rcout<<Al2As[j]<<" "<< al2as<<" "<<VCstem_kmax[j]<<"\n";

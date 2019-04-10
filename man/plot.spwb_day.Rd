@@ -67,8 +67,8 @@ control$ndailysteps = 24
 examplesoil = soil(defaultSoilParams(2), W=c(0.5,0.5))
 
 
-#Switch to 'Complex' transpiration mode
-control$transpirationMode="Complex"
+#Switch to 'Sperry' transpiration mode
+control$transpirationMode="Sperry"
 
 #Simulate one day only
 x2 = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)

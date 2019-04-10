@@ -11,6 +11,7 @@ _Version 0.8.0, April 2019.
 4. Bug corrected in spwb.plot for snow plotting.
 5. New function 'pwb'.
 6. New function 'snowMelt'.
+7. Transpiration model changed to Granier and Sperry.
 
 _Version 0.7.4, March 2019.
 1. Fixing bugs for installation in all platforms

@@ -2,9 +2,9 @@
 \usepackage[utf8]{inputenc}
 \usepackage{natbib}
 \usepackage{authblk}
-\usepackage{hyperref}
+%\usepackage{hyperref}
 \usepackage{amsmath}
-\title{Simple soil-plant water balance model}
+\title{Soil-plant water balance model}
 \author[1,2]{Miquel De Cáceres}
 \author[1]{Víctor Granda}
 \affil[1]{Centre Tecnològic Forestal de Catalunya. Ctra. St. Llorenç de Morunys km 2, 25280, Solsona, Catalonia, Spain}
@@ -26,8 +26,7 @@ library(medfate)
 The water balance model calculates temporal variations in soil moisture on a daily step basis for the input forest stand and for the period corresponding to input weather data. 
 
 The model considers only the vertical spatial dimension of the stand and not the horizontal distribution of
-plants within it. In other words, the model is not spatially explicit (i.e., plants do not interact for space explicitly). Still, the stand is divided into groups of plants, here referred to as `plant cohorts` of different species, height and leaf area index ($LAI$). Height and $LAI$ values determine competition for light. $LAI$ values also drive competition for water. The soil water balance follows the design principles of SIERRA (Mouillot et al., 2001, Ruffault et al., 2014, 2013) and BILJOU (Granier et al., 2007, 1999), although
-some features are taken from other models (Kergoat 1998). Potential evapotranspiration ($PET$) is given as input and the model determines maximum canopy transpiration ($Tr_{\max}$) using an empirical relationship between the $LAI$ of the stand and the ratio $Tr_{\max}/PET$ (Granier et al. 1999). Actual plant transpiration is calculated using a simple function depending on current soil moisture level and degree of shading.
+plants within it. In other words, the model is not spatially explicit (i.e., plants do not interact for space explicitly). Still, the stand is divided into groups of plants, here referred to as `plant cohorts` of different species, height and leaf area index ($LAI$). Height and $LAI$ values determine competition for light. $LAI$ values also drive competition for water, along with root distribution. The soil water balance follows the design principles of SIERRA (Mouillot et al., 2001, Ruffault et al., 2014, 2013) and BILJOU (Granier et al., 2007, 1999), although some features are taken from other models (Kergoat 1998). Potential evapotranspiration ($PET$) is given as input and the model determines maximum canopy transpiration ($Tr_{\max}$) using an empirical relationship between the $LAI$ of the stand and the ratio $Tr_{\max}/PET$ (Granier et al. 1999). Actual plant transpiration is estimated using a simple function that depends on current soil moisture levels, root distribution and the degree of shading of the target plant cohort.
 
 \subsection{State variables}
 The model has the following state variables:
@@ -43,7 +42,7 @@ Daily variations in soil water content (mm) can be summarized as:
   \begin{equation}
   \Delta{SWC} = Pr + Sm - In - Ru - Dd - Es -Tr
   \end{equation}
-where $Pr$ is precipitation as rainfall, $Sm$ is water from melting the snow pack (if considered), $In$ is water evaporated after being intercepted by the canopy, $Ru$ is surface runoff, $Dd$ is deep drainage, $Es$ is evaporation from soil and $Tr$ is plant transpiration. If snow pack is considered, its balance is the following:
+where $Pr$ is precipitation as rainfall, $Sm$ is water from melting the snow pack (if considered), $In$ is water evaporated after being intercepted by the canopy, $Ru$ is surface runoff, $Dd$ is deep drainage, $Es$ is evaporation from soil and $Tr$ is plant transpiration. If snow pack is considered, its balance is defined as:
   \begin{equation}
   \Delta{S_{snow}} = Ps - Sm
   \end{equation}
@@ -76,11 +75,8 @@ Soil texture (i.e. percent of sand, silt and clay), bulk density and rock fragme
 \subsubsection{Soil initialization}
 Soil initialization is needed to estimate soil hydrological parameters from the physical description. requires a list of soil parameters  that is is given as input to function \texttt{soil()}: 
 \begin{itemize}
-\item{$P_{macro, s}$ [\texttt{macro}]: Percentage of macroporosity corresponding
-to each soil layers. Macroporosity values are calculated for each soil layer
-using the equations given in Stolf et al. (2011).}
+\item{$P_{macro, s}$ [\texttt{macro}]: Percentage of macroporosity corresponding to each soil layers. Macroporosity values are calculated for each soil layer using the equations given in Stolf et al. (2011).}
 \item{$\gamma_{soil}$ [\texttt{Gsoil}]: The maximum daily evaporation from soil(mm·day$^{-1}$).}
-\item{$\gamma_{soil}$ [\texttt{Gsoil}]: The maximum daily evaporation from bare soil(mm·day$^{-1}$).}
 \item{$\kappa_{soil}$ [\texttt{Ksoil}]: Extinction parameter to regulate the amount of water extracted from each soil layer during bare soil evaporation.}
 \item{$n_{s}$, $\alpha_{s}$, $\theta_{sat,s}$,$\theta_{res,s}$ [\texttt{VG\_n}, \texttt{VG\_alpha}, \texttt{VG\_theta\_sat}, \texttt{VG\_theta\_res}]: Parameter of the Van Genuchten-Mualem equations.}
 \end{itemize}
@@ -100,7 +96,7 @@ Water retention curve of a soil layer $s$ is the relationship between the water 
 \begin{equation}
 \theta(\Psi) = (\Psi/A)^{(1/B)}
 \end{equation}
-where $A$ and $B$ depend on the texture and, if available, organic matter in the soil layer. If organic matter is available, $A$ and $B$ are calculated $P_{clay}$, $P_{sand}$ and $OM$ following Saxton and Rawls (2006). Otherwise, they are calculated from $P_{clay}$ and $P_{sand}$ as indicated in Saxton et al. (1986). Volumetric changes between field capacity and saturation are modelled with a linear function.}
+where $A$ and $B$ depend on the texture and, if available, organic matter in the soil layer. If organic matter is available, $A$ and $B$ are calculated $P_{clay}$, $P_{sand}$ and $OM$ following Saxton and Rawls (2006). Otherwise, they are calculated from $P_{clay}$ and $P_{sand}$ as indicated in Saxton et al. (1986). Volumetric changes between field capacity and saturation are estimated using a linear function.}
 \item{\textbf{Van Genuchten model}: The well known van Genuchten (1980) model is:
 \begin{equation}
 \theta(\Psi) = \theta_{res}+\frac{\theta_{sat}+\theta_{res}}{\left[1+ (\alpha \cdot \Psi)^n \right]^{1-1/n}}
@@ -114,7 +110,7 @@ Soil water holding capacity ($V_s$, in mm) in soil layer $s$ is defined as the v
 \begin{equation}
 V_s = d_s\cdot ((100-P_{rocks,s})/100)\cdot\theta_{fc,s}
 \end{equation}
-where $d_s$ is the depth of the soil layer (in mm) and $P_{rocks,s}$ is the percentage of rock fragments. Thus, soil water holding capacity depends on the water retention curve used to determine $\theta_{fc} = \theta(-0.033)$. Soil water content at saturation is calculated anagolously, but replacing $\theta_{fc,s}$ by $\theta_{sat,s}$.
+where $d_s$ is the depth of the soil layer (in mm) and $P_{rocks,s}$ is the percentage of rock fragments. Thus, soil water holding capacity depends on the water retention curve used to determine $\theta_{fc} = \theta(-0.033)$. Soil water content at saturation is calculated anagolously, but replacing $\theta_{fc,s}$ by $\theta_{sat,s}$. Similarly water content at wilting point (-1.5 MPa) is calculated replacing $\theta_{fc,s}$ by $\theta_{wp,s}$ where $\theta_{wp} = \theta(-1.5)$. The difference between water content at field capacity and wilting point gives an estimate of the extractable water.
 
 Water table depth ($WT$, in mm) equals soil depth when all soil layers are below field capacity. When some layers are between field capacity and saturation, water table depth is calculated as:
 \begin{equation}
@@ -200,7 +196,7 @@ Weather input data must include variables calculated at the \textbf{daily} scale
 \item{$P$ [\texttt{Precipitation}]: Daily precipitation (in L·m$^{-2}$ = mm of water).}
 \item{$PET$ [\texttt{PET}]: Daily potential evapotranspiration (in  L·m$^{-2}$ = mm of water), preferably calculated using Penman's equation.}
 \end{itemize}
-Optionally, the user may specify values of wind speed ($u$, in m·s$^{-1}$, \texttt{WindSpeed}) that are used to control leaf fall in autumn.
+Optionally, the user may also specify values of wind speed ($u$, in m·s$^{-1}$, \texttt{WindSpeed}) that are used to control leaf fall in autumn.
 
 \subsection{Control parameters}
 Control parameters are a list of parameter values, initialized using function \texttt{defaultControl()}, that the user can modify to change the general behavior of the model. The control values relevant for the simple water balance model are:
@@ -210,7 +206,7 @@ Control parameters are a list of parameter values, initialized using function \t
 \item{\texttt{soilFunctions [= "SX"]}: Water retention curve model, either "SX" (for Saxton) or "VG" (for Van Genuchten).}
 \item{\texttt{snowpack [= TRUE]}:  Whether dynamics of snow pack are included.}
 \item{\texttt{drainage [= TRUE]}:  Whether water exceeding the field capacity of the bottom layer is lost by deep drainage into a non-reachable compartment.}
-\item{\texttt{transpirationMode [= "Simple"]}: Transpiration model, in this case "Simple".}
+\item{\texttt{transpirationMode [= "Granier"]}: Transpiration model, in this case "Granier".}
 \item{\texttt{defaultWindSpeed [= 5]}: Default value for wind speed (in m·s$^{-1}$) when this is missing (only used for leaf fall).}
 \item{\texttt{cavitationRefill [= TRUE]}: If \texttt{FALSE} the model operates in a irreversible cavitation mode.}
 \end{itemize}
@@ -311,26 +307,21 @@ L^{SWR}_{ground} = 1 - \sum_{j}^{n}{f_j}
 \end{equation}
 
 \subsection{Snow pack dynamics}
-Precipitation is considered be snow when $T_{mean}<0$. Interception of snow by the canopy is neglected, and all snow is assumed to accumulate in a single storage compartment $S_{snow}$ (i.e. there is no canopy storage). A very simple snow submodel is used for snow pack dynamics (accumulation and melt), taken from Kergoat (1998). When mean air temperature is above 0 Celsius $T_{mean}>0$, a simple energy budget relates snow melt, $Sm$ (mm), to air temperature and soil-level radiation:
+Precipitation is considered be snow when $T_{mean}<0$. Interception of snow by the canopy is neglected, and all snow is assumed to accumulate in a single storage compartment $S_{snow}$ over the soil (i.e. canopy snow storage capacity is neglected). A very simple snow submodel is used for snow pack dynamics (accumulation and melt), taken from Kergoat (1998). When mean air temperature is above 0 Celsius $T_{mean}>0$, a simple energy budget relates snow melt, $Sm$ (mm), to air temperature and soil-level radiation (see function \texttt{hydrology\_snowMelt}):
 \begin{equation}
 Sm = \frac{Rad\cdot L^{SWR}_{ground}\cdot (1-\alpha_{ice}) + \tau_{day} \cdot T_{mean} \cdot \rho \cdot C_p/r_{s}}{\lambda_{ice}}
 \end{equation}
 where $Rad$ is solar radiation (MJ·m$^{-2}$), $L^{SWR}_{ground}$ is the fraction of (short-wave) radiation reaching the ground, $\alpha_{ice} = 0.9$ is the albedo of snow, $\tau_{day} = 86400$ is the day duration in s, $\rho$ is the air density (depending on temperature and elevation), $C_{p} = 1013.86 \cdot 10^{-6}$ MJ·kg$^{-1}$·C$^{-1}$ is the specific heat capacity of the air and $r_{s} = 100$ s·m$^{-1}$ is the snow aerodynamic resistance and $\lambda_{ice} = 0.33355$MJ·kg is the (latent) heat of fusion of snow.
 
 \subsection{Rainfall interception loss}
-When snow dynamics are considered, precipitation occurs in form of rainfall if $T_{mean}> 0$. Otherwise, all precipitation is considered rainfall. Rainfall interception loss, $In$, is modelled following the Gash et al. (1995)
-analytical interception model for sparse canopies, where rain is assumed to fall
-in a single event during the day. First, the amount of rainfall needed to saturate
-the canopy is calculated: 
+When snow dynamics are considered, precipitation occurs in form of snow if $T_{mean} < 0$ and interception is not modelled. Otherwise, precipitation is considered rainfall and the interception model is applied. Rainfall interception loss, $In$, is modelled following the Gash et al. (1995) analytical interception model for sparse canopies, where rain is assumed to fall in a single event during the day. First, the amount of rainfall needed to saturate the canopy is calculated: 
 \begin{equation}
 P_G = - \frac{S/C}{(E/R)} \cdot \ln(1-(E/R))
 \end{equation}
 where $S$ is the canopy water storage capacity (in mm) –  i.e. the minimum amount
 of water needed to saturate the canopy –, $C$ is the canopy cover and $(E/R)$ is
 the ratio of evaporation rate to rainfall rate during the rainfall event.
-Simplifying assumptions are made to determine $(E/R)$. In De Cáceres et al. (2015)
-a value of 0.2 is used for all days between December and June, and a value of
-0.05 is used for the remaining months (Miralles et al. 2010).
+Simplifying assumptions are made to determine $(E/R)$. Values of the Evaporation-to-rainfall ratio are calculated from daily potential evapotranspiration and rainfall, while accounting for seasonal variation in rainfall intensity (mm/h). Minimum values for rainfall intensity are assumed for convective storms (5.6 mm/h) and synoptic storms (1.5 mm/h)  from Miralles et al. (2010). Synoptic storms are assumed between December and June, and convective storms are assumed for the remaining months, as typical in the Mediterranean Basin.
 
 The amount of water evaporated from interception, $I$ (mm), is calculated as:
 \begin{eqnarray}
@@ -410,11 +401,11 @@ storage capacity), $E/R$ (ratio between evaporation and rainfall rates) and p
 
 
 \subsection{Runoff, infiltration and percolation}
-The water that reaches the soil is the sum of net rainfall ($Pr_{net}$), runon ($Ro$) and melted snow ($Sm$). The amount of water infiltrating into the soil is $Pr_{net} + Sm + Ro - Ru$, where $Ru$ is the water lost by surface runoff (see function \texttt{hydrology\_soilInfiltrationDay}). Surface runoff (in mm), is calculated using the USDA SCS curve number method, as in Boughton (1989):
+The water that reaches the soil is the sum of net rainfall ($Pr_{net}$), runon ($Ro$) and melted snow ($Sm$). The amount of water infiltrating into the soil is $Pr_{net} + Sm + Ro - Ru$, where $Ru$ is the water lost by surface runoff (see function \texttt{hydrology\_infiltrationAmount}). Surface runoff (in mm), is calculated using the USDA SCS curve number method, as in Boughton (1989):
 \begin{equation}
 Ru=\frac{(Pr_{net} + Ro + Sm - 0.2 \cdot V_{soil})^2}{(Pr_{net} + Ro + Sm - 0.8 \cdot V_{soil})}
 \end{equation}
-where $V_{soil}$ (in mm) is the overall soil water retention capacity. Following Granier (1999), part of the water reaching one soil layer percolates quickly through the macropores. The remaining water is retained by the micropores refilling the current soil layer. When this soil layer reaches its field capacity the excess
+where $V_{soil}$ (in mm) is the overall soil water retention capacity. Following Granier (1999), part of the water reaching one soil layer percolates quickly through the macropores. The amount of water reaching each layer through macropores is modelled using an extinction function (see function \texttt{hydrology\_infiltrationRepartition}). The remaining water is retained by the micropores refilling the current soil layer. When this soil layer reaches its field capacity the excess
 of water also percolates to the soil layer below. 
 \begin{center}
 <<fig=TRUE, width=8, height=4, echo=FALSE>>==
@@ -470,13 +461,12 @@ legend("topleft", bty="n", lty=1:5, legend=c(paste("d =", SoilDepth,"Vsoil =",ro
 \end{center}
 \begin{center}
 \emph{Fig. 2}: Examples of infiltration/runoff calculation for different values
-of net rainfall and overall retention capacity (see function
-\texttt{hydrology\_soilInfiltration}), $V_{soil}$, calculated from different soil depths
+of net rainfall and overall retention capacity, $V_{soil}$, calculated from different soil depths
 (topsoil+subsoil) and assuming that soil texture is 15\% clay and 25\% sand. Rock
 fragment content was 25\% and 40\% for the topsoil and subsoil, respectively.
 \end{center}
 
-In non-gridded model runs, and if \texttt{drainage = TRUE}, the water percolating from the lowest layer is considered deep drainage, $Dd$, and soil layers are never above field capacity. If \texttt{drainage = FALSE}, or in gridded model runs, the excess of water in the lowest soil layer is not lost via drainage, so that this layer (and those above) can be filled up to saturation. This additional filling is done starting from below, and when a given layer reaches saturation, the model adds the remaining water to the layer above. If all layers are filled to saturation, the remaining water is assumed to be infiltration excess and is added to the surface runoff. Water between field capacity and saturation will lead to subsurface flows in gridded simulations, whereas in non-gridded simulations it is assumed to be confined in the soil.
+If \texttt{drainage = TRUE}, the water percolating from the lowest layer is considered deep drainage, $Dd$, and soil layers are never above field capacity. If \texttt{drainage = FALSE}, the excess of water in the lowest soil layer is not lost via drainage, so that this layer (and those above) can be filled up to saturation. This additional filling is done starting from below, and when a given layer reaches saturation, the model adds the remaining water to the layer above. If all layers are filled to saturation, the remaining water is assumed to be infiltration excess and is added to the surface runoff. 
 
 \subsection{Bare soil evaporation}
 Evaporation from the soil surface is the last component of the soil water balance
@@ -501,7 +491,7 @@ SE_{soil} = \gamma_{soil} \cdot (\sqrt{t+1}-\sqrt{1})
 The amount of water evaporated from the soil, $E_{soil}$, is then calculated as
 the minimum between supply and demand (Federer, 1982), the latter being the product
 of PET and the proportion of light that reaches the ground (see function
-\texttt{hydrology\_soilEvaporation}): 
+\texttt{hydrology\_soilEvaporationAmount}): 
 \begin{equation}
 E_{soil} = \min(PE_{soil}, SE_{soil})
 \end{equation}
@@ -696,10 +686,10 @@ cohort have more negative water potentials (it reduces $K_{i,s}$).
 
 \subsubsection{Plant photosynthesis}
 Because it is useful for growth and forest dynamics, and for compatibility with
-the 'Complex' transpiration mode, the 'Simple' transpiration mode also calculates
-net assimilated carbon. Assuming a constant water use efficiency (WUE),
+the 'Sperry' transpiration mode, the 'Granier' transpiration mode also calculates
+net assimilated carbon. Assuming a constant maximum water use efficiency (WUE),
 photosynthesis for a given plant cohort $i$ (in g C · m$^{-2}$ · day$^{-1}$) is
-estimated as (Mouillot et al. 2001):
+estimated as a function of transpiration (Mouillot et al. 2001):
 \begin{equation}
 A_n = \alpha \cdot WUE_{\max} \cdot Tr_i
 \end{equation}
@@ -721,10 +711,10 @@ suffering drought stress during winter. Daily drought stress values can be later
 used to define drought stress indices for larger temporal scales, as presented in
 the main text.
 
-The simple transpiration model does not allow estimating a water potential drop
+Granier's transpiration model does not allow estimating a water potential drop
 from soil to the leaf. Moreover, in a multilayered soil it is difficult to know
 what would be the water potential of the plant. Despite these limitations, a
-gross surrogate of 'leaf water potential' ($\Psi_{leaf,i}$; in MPa) may be
+gross surrogate of (pre-dawn) 'leaf water potential' ($\Psi_{leaf,i}$; in MPa) may be
 obtained averaging whole-plant relative conductance values:
 \begin{equation}
 \Psi_{leaf,i}=K^{-1}(K_i) = K^{-1}\left(\sum_{s}{K_{i,s}\cdot v_{i,s}}\right)
@@ -763,8 +753,8 @@ sake of determining plant water potential.
 \section{Model output}
 Function \texttt{spwb} returns a list object whose elements are data tables. Each table has dates as rows and has different output variables:
 \begin{itemize}
-\item{\texttt{"DailyBalance"}: Components of the climatic and soil daily water balance (i.e. net precipitation, infiltration, runoff, plant transpiration...).}
-\item{\texttt{"SoilWaterBalance"}: Daily variation of soil variables  (volume, moisture relative to field capacity, water potential) for soil layers.}
+\item{\texttt{"WaterBalance"}: Components of the climatic and soil daily water balance (i.e. net precipitation, infiltration, runoff, plant transpiration...).}
+\item{\texttt{"Soil"}: Daily variation of soil variables  (volume, moisture relative to field capacity, water potential) for soil layers.}
 \item{\texttt{"PlantLAI"}: Daily leaf area index for each plant cohort.}
 \item{\texttt{"PlantTranspiration"}: Daily transpiration (in mm) for each plant cohort.}
 \item{\texttt{"PlantPhotosynthesis"}: Daily net photosynthesis (in g C·m-2) for each plant cohort.}
