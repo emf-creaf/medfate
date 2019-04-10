@@ -150,7 +150,7 @@ DataFrame paramsTranspiration(DataFrame above, NumericMatrix V, List soil, DataF
     VCstem_kmax[c]=maximumStemHydraulicConductance(Kmax_stemxylem[c], Hmed[c], Al2As[c],H[c], (Group[c]=="Angiosperm"),control["taper"]); 
     
     //Xylem vulnerability curve
-    if(NumericVector::is_na(VCstem_d[c])) {
+    if(NumericVector::is_na(VCstem_d[c]) | NumericVector::is_na(VCstem_c[c])) {
       double psi50 = NA_REAL;
       // From: Maherali H, Pockman W, Jackson R (2004) Adaptive variation in the vulnerability of woody plants to xylem cavitation. Ecology 85:2184–2199
       if(Group[c]=="Angiosperm") {
@@ -170,18 +170,18 @@ DataFrame paramsTranspiration(DataFrame above, NumericMatrix V, List soil, DataF
       }
       double psi88 = 1.2593*psi50 - 1.4264; //Regression using data from Choat et al. 2012
       NumericVector par = psi2Weibull(psi50, psi88);
-      VCstem_c[c] = par["c"];
-      VCstem_d[c] = par["d"];
+      if(NumericVector::is_na(VCstem_c[c])) VCstem_c[c] = par["c"];
+      if(NumericVector::is_na(VCstem_d[c])) VCstem_d[c] = par["d"];
     }
     
     //Default vulnerability curve parameters if missing
-    if(NumericVector::is_na(VCroot_d[c])) {
+    if(NumericVector::is_na(VCroot_d[c]) | NumericVector::is_na(VCroot_c[c])) {
       double psi50stem = VCstem_d[c]*pow(0.6931472,1.0/VCstem_c[c]);
       double psi50root = 0.742*psi50stem + 0.4892; //Regression using data from Bartlett et al. 2016
       double psi88root = 1.2593*psi50root - 1.4264; //Regression using data from Choat et al. 2012
       NumericVector par = psi2Weibull(psi50root, psi88root);
-      VCroot_c[c] = par["c"];
-      VCroot_d[c] = par["d"];
+      if(NumericVector::is_na(VCroot_c[c])) VCroot_c[c] = par["c"];
+      if(NumericVector::is_na(VCroot_d[c])) VCroot_d[c] = par["d"];
     }
     //Sack, L., & Holbrook, N.M. 2006. Leaf Hydraulics. Annual Review of Plant Biology 57: 361–381.
     if(NumericVector::is_na(VCleaf_kmax[c])) { 
