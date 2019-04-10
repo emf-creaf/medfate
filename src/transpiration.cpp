@@ -916,9 +916,9 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
     l = List::create(_["cohorts"] = clone(cohorts),
                      _["EnergyBalance"] = EB,
                      _["Extraction"] = SoilWaterExtract,
-                     _["ExtractionInst"] = soilLayerExtractInst,
                      _["RhizoPsi"] = minPsiRhizo,
                      _["Plants"] = Plants,
+                     _["ExtractionInst"] = soilLayerExtractInst,
                      _["PlantsInst"] = PlantsInst,
                      _["SupplyFunctions"] = supply);
     
@@ -1091,7 +1091,8 @@ List transpirationGranier(List x, List soil, double tday, double pet, bool modif
                                        _["Transpiration"] = Eplant, _["psi"] = PlantPsi, _["DDS"] = DDS);
   Plants.attr("row.names") = above.attr("row.names");
   EplantCoh.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
-  List l = List::create(_["Plants"] = Plants,
+  List l = List::create(_["cohorts"] = clone(cohorts),
+                        _["Plants"] = Plants,
                         _["Extraction"] = EplantCoh);
   return(l);
 }

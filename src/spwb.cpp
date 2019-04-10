@@ -204,9 +204,9 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                         _["WaterBalance"] = DB, 
                         _["EnergyBalance"] = EnergyBalance,
                         _["Soil"] = SB, 
-                        _["ExtractionInst"] = soilLayerExtractInst,
                         _["RhizoPsi"] = RhizoPsi,
                         _["Plants"] = Plants,
+                        _["ExtractionInst"] = soilLayerExtractInst,
                         _["PlantsInst"] = PlantsInst);
   l.attr("class") = CharacterVector::create("spwb_day","list");
   return(l);
