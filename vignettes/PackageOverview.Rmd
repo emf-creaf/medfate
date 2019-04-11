@@ -81,6 +81,7 @@ Many of the functions included in `medfate` are internally called by simulation 
 * **hydrology_* **: Canopy and soil hydrology (rainfall interception, soil evaporation, soil infiltration).
 * **light_* **: Light extinction and absortion.
 * **moisture_* **: Live tissue moisture.
+* **pheno_* **: Leaf phenology.
 * **photo_* **: Leaf photosynthesis.
 * **root_* **: Root distribution and conductance calculations.
 * **soil_* **: Soil hydraulics and thermodynamics.
@@ -91,8 +92,9 @@ Many of the functions included in `medfate` are internally called by simulation 
 ### Plant and forest attributes
 Package `medfate` include a number of functions to examine properties of the plants conforming the `forest` object, summary functions at the stand level or vertical profiles of several physical properties:
 
-* **plant_* **: Cohort-level information (species name, id, leaf area, height...)
-* **forest_* **: Forest-level attributes (e.g. basal area)
+* **plant_* **: Cohort-level information (species name, id, leaf area, height...).
+* **species_* **: Cohort-level attributes aggregated by species (e.g. basal area).
+* **forest_* **: Forest-level attributes (e.g. basal area).
 * **vprofile_* **: Vertical profiles (light, wind, fuel density, leaf area density).
 
 ### Fuel properties and fire hazard

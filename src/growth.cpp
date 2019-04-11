@@ -177,8 +177,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   CharacterVector dateStrings = meteo.attr("row.names");
   IntegerVector DOY = date2doy(dateStrings);
   
-  NumericVector GDD = gdd(DOY, MeanTemperature, 5.0);
-
+ 
   //Aboveground parameters  
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   NumericVector DBH = above["DBH"];
@@ -197,6 +196,9 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   List below = Rcpp::as<Rcpp::List>(x["below"]);
   NumericVector Z = Rcpp::as<Rcpp::NumericVector>(below["Z"]);
 
+  //Canpopy parameters
+  List canopyParams = x["canopy"];
+  
   //Base parameters
   DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
   NumericVector Sgdd = paramsBase["Sgdd"];
@@ -272,6 +274,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   NumericVector SAgrowthcum(numCohorts, 0.0);
   
   //Water balance output variables
+  NumericVector GDD(numDays);
   NumericVector SoilEvaporation(numDays);
   NumericVector LAIcell(numDays);
   NumericVector Cm(numDays);
@@ -302,20 +305,16 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   List s;
   for(int i=0;i<numDays;i++) {
     if(verbose) Rcout<<".";
+    
     double wind = WindSpeed[i];
     if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; //Default 1 m/s -> 10% of fall every day
-    if(wind<0.5) wind = 0.5; //Minimum windspeed abovecanopy
+    if(wind<0.1) wind = 0.1; //Minimum windspeed abovecanopy
     
     //1. Phenology and leaf fall
-    x["gdd"] = GDD[i];
-    NumericVector phe = leafDevelopmentStatus(Sgdd, GDD[i]);
-    for(int j=0;j<numCohorts;j++) {
-      LAI_dead[j] *= exp(-1.0*(wind/10.0)); //Decrease dead leaf area according to wind speed
-      double LAI_exp_prev=0.0;
-      if(i>0) LAI_exp_prev= LAI_expanded[j]; //Store previous value
-      LAI_expanded[j] = LAI_live[j]*phe[j]; //Update expanded leaf area (will decrease if LAI_live decreases)
-      LAI_dead[j] += std::max(0.0, LAI_exp_prev-LAI_expanded[j]);//Check increase dead leaf area if expanded leaf area has decreased
-    }
+    updateLeaves(x, DOY[i], MeanTemperature[i], wind);
+    
+    //Store GDD
+    GDD[i] = canopyParams["gdd"];
     
     //2. Water balance and photosynthesis
     if(transpirationMode=="Granier") {
@@ -476,9 +475,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
         // Rcout<<defLAI<<" "<<LAI_live[j]<<"\n";
         LAI_live[j] = std::min(LAI_live[j], defLAI);
       }
-      //Update expanded leaf area
-      LAI_expanded[j] = LAI_live[j]*phe[j]; 
-      
+
       //3.7 Update stem conductance (Sperry mode)
       if(transpirationMode=="Sperry") {
         double al2as = (LAI_expanded[j]/(N[j]/10000.0))/(SA[j]/10000.0);
@@ -540,7 +537,6 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
             double prevLive = LAI_live[j];
             LAI_live[j] = Wleaves*((N[j]/10000)*SLA[j]); //Update LAI_live to the maximum
             LAI_dead[j] += prevLive - LAI_live[j]; //Increment dead LAI with the difference
-            LAI_expanded[j] = LAI_live[j]*phe[j]; //Update expanded leaf area
           }
           Cover[j] = (N[j]*Aash[j]*pow(H[j],2.0)/1e6); //Updates shrub cover
         }

@@ -13,6 +13,7 @@ _Version 0.8.0, April 2019.
 6. New function 'snowMelt'.
 7. Transpiration model changed to Granier and Sperry.
 8. PLC set to zero when DOY = 1
+9. New functions for leaf phenology
 
 _Version 0.7.4, March 2019.
 1. Fixing bugs for installation in all platforms
