@@ -2307,6 +2307,32 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// leafDevelopmentStatus
+NumericVector leafDevelopmentStatus(NumericVector Sgdd, double gdd);
+RcppExport SEXP _medfate_leafDevelopmentStatus(SEXP SgddSEXP, SEXP gddSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type Sgdd(SgddSEXP);
+    Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
+    rcpp_result_gen = Rcpp::wrap(leafDevelopmentStatus(Sgdd, gdd));
+    return rcpp_result_gen;
+END_RCPP
+}
+// updateLeaves
+void updateLeaves(List x, double doy, double tmean, double wind, double Tbase);
+RcppExport SEXP _medfate_updateLeaves(SEXP xSEXP, SEXP doySEXP, SEXP tmeanSEXP, SEXP windSEXP, SEXP TbaseSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type doy(doySEXP);
+    Rcpp::traits::input_parameter< double >::type tmean(tmeanSEXP);
+    Rcpp::traits::input_parameter< double >::type wind(windSEXP);
+    Rcpp::traits::input_parameter< double >::type Tbase(TbaseSEXP);
+    updateLeaves(x, doy, tmean, wind, Tbase);
+    return R_NilValue;
+END_RCPP
+}
 // gammaTemp
 double gammaTemp(double leaf_temp);
 RcppExport SEXP _medfate_gammaTemp(SEXP leaf_tempSEXP) {
@@ -3933,6 +3959,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_forest2spwbInput", (DL_FUNC) &_medfate_forest2spwbInput, 4},
     {"_medfate_forest2growthInput", (DL_FUNC) &_medfate_forest2growthInput, 4},
     {"_medfate_gdd", (DL_FUNC) &_medfate_gdd, 4},
+    {"_medfate_leafDevelopmentStatus", (DL_FUNC) &_medfate_leafDevelopmentStatus, 2},
+    {"_medfate_updateLeaves", (DL_FUNC) &_medfate_updateLeaves, 5},
     {"_medfate_gammaTemp", (DL_FUNC) &_medfate_gammaTemp, 1},
     {"_medfate_KmTemp", (DL_FUNC) &_medfate_KmTemp, 2},
     {"_medfate_VmaxTemp", (DL_FUNC) &_medfate_VmaxTemp, 2},

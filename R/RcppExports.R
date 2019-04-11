@@ -541,6 +541,14 @@ forest2growthInput <- function(x, soil, SpParams, control) {
     .Call(`_medfate_gdd`, DOY, Temp, Tbase, cum)
 }
 
+pheno_leafDevelopmentStatus <- function(Sgdd, gdd) {
+    .Call(`_medfate_leafDevelopmentStatus`, Sgdd, gdd)
+}
+
+pheno_updateLeaves <- function(x, doy, tmean, wind, Tbase = 5.0) {
+    invisible(.Call(`_medfate_updateLeaves`, x, doy, tmean, wind, Tbase))
+}
+
 photo_GammaTemp <- function(leaf_temp) {
     .Call(`_medfate_gammaTemp`, leaf_temp)
 }
