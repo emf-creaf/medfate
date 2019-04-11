@@ -613,8 +613,11 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
             RWCsleafVEC[c] = symplasticRelativeWaterContent(psiLeafVEC[c], LeafPI0[c], LeafEPS[c]);
             psiStemMAT(c,_) = newPsiStem(iPM,_);
             for(int i=0;i<nStemSegments;i++) {
-              if(!cavitationRefill) PLCstemMAT(c,i) = std::max(PLCstemMAT(c,i), 1.0 - apoplasticRelativeWaterContent(psiStemMAT(c,i), VCstem_c[c], VCstem_d[c]));
-              else PLCstemMAT(c,i) = 1.0 - apoplasticRelativeWaterContent(psiStemMAT(c,i), VCstem_c[c], VCstem_d[c]);
+              double psiPLC; // Store the PLC corresponding to the upstream water potential
+              if(i==0) psiPLC = psiRootVEC[c];
+              else psiPLC = psiStemMAT(c, i-1);
+              if(!cavitationRefill) PLCstemMAT(c,i) = std::max(PLCstemMAT(c,i), 1.0 - xylemConductance(psiPLC, 1.0, VCstem_c[c], VCstem_d[c]));
+              else PLCstemMAT(c,i) = 1.0 - xylemConductance(psiPLC, 1.0, VCstem_c[c], VCstem_d[c]);
               RWCsstemMAT(c,i) = symplasticRelativeWaterContent(psiStemMAT(c,i), StemPI0[c], StemEPS[c]);
             }
             

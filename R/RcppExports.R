@@ -25,6 +25,10 @@ fire_Rothermel <- function(modeltype, wSI, sSI, delta, mx_dead, hSI, mSI, u, win
     .Call(`_medfate_rothermel`, modeltype, wSI, sSI, delta, mx_dead, hSI, mSI, u, windDir, slope, aspect)
 }
 
+plant_ID <- function(x) {
+    .Call(`_medfate_cohortIDs`, x)
+}
+
 plant_parameter <- function(x, SpParams, parName) {
     .Call(`_medfate_cohortNumericParameter`, x, SpParams, parName)
 }
@@ -39,10 +43,6 @@ plant_species <- function(x) {
 
 plant_speciesName <- function(x, SpParams) {
     .Call(`_medfate_cohortSpeciesName`, x, SpParams)
-}
-
-plant_ID <- function(x) {
-    .Call(`_medfate_cohortIDs`, x)
 }
 
 .treeBasalArea <- function(N, dbh) {
@@ -67,6 +67,10 @@ forest_basalArea <- function(x) {
 
 plant_density <- function(x, SpParams) {
     .Call(`_medfate_cohortDensity`, x, SpParams)
+}
+
+species_density <- function(x, SpParams) {
+    .Call(`_medfate_speciesDensity`, x, SpParams)
 }
 
 plant_height <- function(x) {
@@ -101,6 +105,10 @@ plant_foliarBiomass <- function(x, SpParams, gdd = NA_real_) {
     .Call(`_medfate_cohortFoliarBiomass`, x, SpParams, gdd)
 }
 
+species_foliarBiomass <- function(x, SpParams, gdd = NA_real_) {
+    .Call(`_medfate_speciesFoliarBiomass`, x, SpParams, gdd)
+}
+
 .shrubCover <- function(x, excludeMinHeight = 0.0) {
     .Call(`_medfate_shrubCover`, x, excludeMinHeight)
 }
@@ -109,12 +117,20 @@ plant_cover <- function(x) {
     .Call(`_medfate_cohortCover`, x)
 }
 
+species_cover <- function(x, SpParams) {
+    .Call(`_medfate_speciesCover`, x, SpParams)
+}
+
 .shrubCrownPhytovolume <- function(SP, Cover, H, CR, SpParams) {
     .Call(`_medfate_shrubCrownPhytovolume`, SP, Cover, H, CR, SpParams)
 }
 
 plant_phytovolume <- function(x, SpParams) {
     .Call(`_medfate_cohortPhytovolume`, x, SpParams)
+}
+
+species_phytovolume <- function(x, SpParams) {
+    .Call(`_medfate_speciesPhytovolume`, x, SpParams)
 }
 
 .treeFuel <- function(SP, N, dbh, SpParams, gdd = NA_real_, includeDead = TRUE) {
@@ -127,6 +143,10 @@ plant_phytovolume <- function(x, SpParams) {
 
 plant_fuel <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE) {
     .Call(`_medfate_cohortFuel`, x, SpParams, gdd, includeDead)
+}
+
+species_fuel <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE) {
+    .Call(`_medfate_speciesFuel`, x, SpParams, gdd, includeDead)
 }
 
 plant_equilibriumLeafLitter <- function(x, SpParams, AET = 800) {
@@ -147,6 +167,10 @@ plant_equilibriumSmallBranchLitter <- function(x, SpParams, smallBranchDecomposi
 
 plant_LAI <- function(x, SpParams, gdd = NA_real_) {
     .Call(`_medfate_cohortLAI`, x, SpParams, gdd)
+}
+
+species_LAI <- function(x, SpParams, gdd = NA_real_) {
+    .Call(`_medfate_speciesLAI`, x, SpParams, gdd)
 }
 
 .LAIdistribution <- function(z, x, SpParams, gdd = NA_real_) {

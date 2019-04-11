@@ -17,3 +17,13 @@ NumericVector gdd(IntegerVector DOY, NumericVector Temp, double Tbase = 5.0, dou
   return(GDD);
 }
 
+double leafDevelopmentStatus(double Sgdd, double gdd) {
+  if(Sgdd>0.0) return(std::min(std::max(gdd/Sgdd,0.0),1.0));
+  return 1.0;
+}
+NumericVector leafDevelopmentStatus(NumericVector Sgdd, double gdd) {
+  NumericVector phe(Sgdd.size());
+  for(int i=0;i<Sgdd.size();i++) phe[i] = leafDevelopmentStatus(Sgdd[i], gdd);
+  return(phe);
+}
+

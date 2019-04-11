@@ -10,9 +10,6 @@ int findRowIndex(int sp, DataFrame SpParams);
 DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL);
 NumericMatrix forest2belowground(List x, List soil, DataFrame SpParams);
 
-NumericVector leafDevelopmentStatus(NumericVector Sgdd, double gdd);
-double leafDevelopmentStatus(double Sgdd, double gdd);
-
 NumericVector cohortNumericParameter(List x, DataFrame SpParams, String parName);
 NumericVector cohortNumericParameter(IntegerVector SP, DataFrame SpParams, String parName);
 CharacterVector cohortCharacterParameter(List x, DataFrame SpParams, String parName);

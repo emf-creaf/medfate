@@ -620,6 +620,16 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
       if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; //Default 1 m/s -> 10% of fall every day
       if(wind<0.5) wind = 0.5; //Minimum windspeed abovecanopy
       
+      //If DOY == 1 reset PLC (Growth assumed)
+      if(DOY[i]==1) {
+        if(transpirationMode=="Granier") {
+          NumericVector PLC = Rcpp::as<Rcpp::NumericVector>(x["PLC"]);
+          for(int j=0;j<PLC.length();j++) PLC[j] = 0.0;
+        } else {
+          NumericMatrix StemPLC = Rcpp::as<Rcpp::NumericMatrix>(x["PLCstem"]);
+          for(int j=0;j<StemPLC.nrow();j++) for(int k=0;k<StemPLC.ncol();k++)  StemPLC(j,k) = 0.0;
+        }
+      }
       
       //1. Phenology and leaf fall
       NumericVector phe = leafDevelopmentStatus(Sgdd, GDD[i]);
@@ -1110,6 +1120,18 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
     soil["W"] = W(i,_);
     Wdays(i,_) = W(i,_);
     psidays(i,_) = psi(soil, soilFunctions); //Get soil water potential
+      
+      //If DOY == 1 reset PLC (Growth assumed)
+      if(DOY[i]==1) {
+        if(transpirationMode=="Granier") {
+          NumericVector PLC = Rcpp::as<Rcpp::NumericVector>(x["PLC"]);
+          for(int j=0;j<PLC.length();j++) PLC[j] = 0.0;
+        } else {
+          NumericMatrix StemPLC = Rcpp::as<Rcpp::NumericMatrix>(x["PLCstem"]);
+          for(int j=0;j<StemPLC.nrow();j++) for(int k=0;k<StemPLC.ncol();k++)  StemPLC(j,k) = 0.0;
+        }
+      }
+      
       
     //1. Phenology and leaf fall
     NumericVector phe = leafDevelopmentStatus(Sgdd, GDD[i]);
