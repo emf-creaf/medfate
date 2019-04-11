@@ -1,3 +1,4 @@
+\encoding{UTF-8}
 \name{pheno_updateLeaves}
 \alias{pheno_updateLeaves}
 \alias{pheno_leafDevelopmentStatus}
@@ -24,7 +25,7 @@ pheno_updateLeaves(x, doy, tmean, wind, Tbase = 5)
 Function \code{pheno_leafDevelopmentStatus} returns a vector of values between 0 and 1.
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 }
 \note{
 Function \code{pheno_updateLeaves} modifies the object \code{x}.
