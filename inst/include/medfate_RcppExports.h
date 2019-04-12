@@ -716,7 +716,7 @@ namespace medfate {
         return Rcpp::as<List >(rcpp_result_gen);
     }
 
-    inline List pwb(List x, List soil, DataFrame meteo, NumericMatrix W, double latitude = NA_REAL, double elevation = NA_REAL, NumericVector canopyEvaporation = NumericVector::create(0), NumericVector snowMelt = NumericVector::create(0), NumericVector soilEvaporation = NumericVector::create(0)) {
+    inline List pwb(List x, List soil, DataFrame meteo, NumericMatrix W, double latitude = NA_REAL, double elevation = NA_REAL, NumericVector canopyEvaporation = NumericVector(0), NumericVector snowMelt = NumericVector(0), NumericVector soilEvaporation = NumericVector(0)) {
         typedef SEXP(*Ptr_pwb)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_pwb p_pwb = NULL;
         if (p_pwb == NULL) {

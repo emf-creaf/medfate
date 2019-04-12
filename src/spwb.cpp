@@ -906,9 +906,9 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
 // [[Rcpp::export("pwb")]]
 List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
             double latitude = NA_REAL, double elevation = NA_REAL, 
-            NumericVector canopyEvaporation = NumericVector::create(0), 
-            NumericVector snowMelt = NumericVector::create(0), 
-            NumericVector soilEvaporation = NumericVector::create(0)) {
+            NumericVector canopyEvaporation = NumericVector(0), 
+            NumericVector snowMelt = NumericVector(0), 
+            NumericVector soilEvaporation = NumericVector(0)) {
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
   String soilFunctions = control["soilFunctions"];

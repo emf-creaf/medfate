@@ -709,7 +709,7 @@ spwb <- function(x, soil, meteo, latitude = NA_real_, elevation = NA_real_, slop
     .Call(`_medfate_spwb`, x, soil, meteo, latitude, elevation, slope, aspect)
 }
 
-pwb <- function(x, soil, meteo, W, latitude = NA_real_, elevation = NA_real_, canopyEvaporation = as.numeric( c(0)), snowMelt = as.numeric( c(0)), soilEvaporation = as.numeric( c(0))) {
+pwb <- function(x, soil, meteo, W, latitude = NA_real_, elevation = NA_real_, canopyEvaporation = numeric(0), snowMelt = numeric(0), soilEvaporation = numeric(0)) {
     .Call(`_medfate_pwb`, x, soil, meteo, W, latitude, elevation, canopyEvaporation, snowMelt, soilEvaporation)
 }
 
