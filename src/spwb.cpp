@@ -207,7 +207,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                         _["RhizoPsi"] = RhizoPsi,
                         _["Plants"] = Plants,
                         _["ExtractionInst"] = soilLayerExtractInst,
-                        _["PlantsInst"] = PlantsInst);
+                        _["PlantsInst"] = PlantsInst,
+                        _["LightExtinction"] = transp["LightExtinction"]);
   l.attr("class") = CharacterVector::create("spwb_day","list");
   return(l);
 }
@@ -629,12 +630,13 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
                      er, 0.0, verbose);
         List Plants = Rcpp::as<Rcpp::List>(s["Plants"]);
         List PlantsInst = Rcpp::as<Rcpp::List>(s["PlantsInst"]);
-        List AbsRadinst = Rcpp::as<Rcpp::List>(PlantsInst["AbsRad"]);
+        List ShadeLeaves = Rcpp::as<Rcpp::List>(PlantsInst["ShadeLeaves"]);
+        List SunlitLeaves = Rcpp::as<Rcpp::List>(PlantsInst["SunlitLeaves"]);
         
-        NumericMatrix SWR_SL = Rcpp::as<Rcpp::NumericMatrix>(AbsRadinst["SWR_SL"]);
-        NumericMatrix SWR_SH = Rcpp::as<Rcpp::NumericMatrix>(AbsRadinst["SWR_SH"]);
-        NumericMatrix LWR_SL = Rcpp::as<Rcpp::NumericMatrix>(AbsRadinst["LWR_SL"]);
-        NumericMatrix LWR_SH = Rcpp::as<Rcpp::NumericMatrix>(AbsRadinst["LWR_SH"]);
+        NumericMatrix SWR_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitLeaves["Abs_SWR"]);
+        NumericMatrix SWR_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeLeaves["Abs_SWR"]);
+        NumericMatrix LWR_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitLeaves["Abs_LWR"]);
+        NumericMatrix LWR_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeLeaves["Abs_LWR"]);
         for(int j=0;j<numCohorts;j++) {
           for(int n=0;n<ntimesteps;n++){
             PlantAbsSWR(i,j) += 0.000001*(SWR_SL(j,n)+SWR_SH(j,n))*tstep;
@@ -1140,12 +1142,13 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
       HydraulicRedistribution[i] = sum(HydrInVec);
       
       List PlantsInst = Rcpp::as<Rcpp::List>(s["PlantsInst"]);
-      List AbsRadinst = Rcpp::as<Rcpp::List>(PlantsInst["AbsRad"]);
+      List ShadeLeaves = Rcpp::as<Rcpp::List>(PlantsInst["ShadeLeaves"]);
+      List SunlitLeaves = Rcpp::as<Rcpp::List>(PlantsInst["SunlitLeaves"]);
       
-      NumericMatrix SWR_SL = Rcpp::as<Rcpp::NumericMatrix>(AbsRadinst["SWR_SL"]);
-      NumericMatrix SWR_SH = Rcpp::as<Rcpp::NumericMatrix>(AbsRadinst["SWR_SH"]);
-      NumericMatrix LWR_SL = Rcpp::as<Rcpp::NumericMatrix>(AbsRadinst["LWR_SL"]);
-      NumericMatrix LWR_SH = Rcpp::as<Rcpp::NumericMatrix>(AbsRadinst["LWR_SH"]);
+      NumericMatrix SWR_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitLeaves["Abs_SWR"]);
+      NumericMatrix SWR_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeLeaves["Abs_SWR"]);
+      NumericMatrix LWR_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitLeaves["Abs_LWR"]);
+      NumericMatrix LWR_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeLeaves["Abs_LWR"]);
       for(int j=0;j<numCohorts;j++) {
         for(int n=0;n<ntimesteps;n++){
           PlantAbsSWR(i,j) += 0.000001*(SWR_SL(j,n)+SWR_SH(j,n))*tstep;

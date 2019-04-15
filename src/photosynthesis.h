@@ -5,7 +5,8 @@
 #endif
 using namespace Rcpp;
 
-double leafphotosynthesis(double Q, double Catm, double Gc, double leaf_temp, double Vmax298, double Jmax298, bool verbose=false);
+NumericVector leafphotosynthesis(double Q, double Catm, double Gc, double leaf_temp, double Vmax298, double Jmax298, bool verbose=false);
+
 double VmaxTemp(double Vmax298, double leaf_temp);
 double JmaxTemp(double Jmax298, double leaf_temp);
 

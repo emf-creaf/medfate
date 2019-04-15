@@ -372,6 +372,10 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   NumericMatrix RWCsteminst(numCohorts, ntimesteps);
   NumericMatrix PsiRootinst(numCohorts, ntimesteps);
   NumericMatrix PWBinst(numCohorts, ntimesteps);
+  NumericMatrix An_SL(numCohorts, ntimesteps);
+  NumericMatrix An_SH(numCohorts, ntimesteps);
+  NumericMatrix Ci_SL(numCohorts, ntimesteps);
+  NumericMatrix Ci_SH(numCohorts, ntimesteps);
   NumericMatrix SWR_SL(numCohorts, ntimesteps);
   NumericMatrix SWR_SH(numCohorts, ntimesteps);
   NumericMatrix LWR_SL(numCohorts, ntimesteps);
@@ -531,6 +535,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
             NumericVector AnShade = photoShade["NetPhotosynthesis"];
             NumericVector GwSunlit = photoSunlit["WaterVaporConductance"];
             NumericVector GwShade = photoShade["WaterVaporConductance"];
+            NumericVector CiSunlit = photoSunlit["Ci"];
+            NumericVector CiShade = photoShade["Ci"];
             NumericVector VPDSunlit = photoSunlit["LeafVPD"];
             NumericVector VPDShade = photoShade["LeafVPD"];
             NumericVector TempSunlit = photoSunlit["LeafTemperature"];
@@ -553,6 +559,10 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
             }
             // Rcout<<iPMSunlit<<" "<<iPMShade<<"\n";
             //Get leaf status
+            An_SH(c,n) = AnShade[iPMShade];
+            An_SL(c,n) = AnSunlit[iPMSunlit];
+            Ci_SH(c,n) = CiShade[iPMShade];
+            Ci_SL(c,n) = CiSunlit[iPMSunlit];
             GW_SH(c,n)= GwShade[iPMShade];
             GW_SL(c,n)= GwSunlit[iPMSunlit];
             VPD_SH(c,n)= VPDShade[iPMShade];
@@ -652,7 +662,9 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
               ESLbk = ESL;
               ESL = std::max(0.0,1000.0*(Gwmin[c]*leafVPDSL)/Patm);
             }
-            double AgSL = leafphotosynthesis(QSL, Catm, Gwmin[c]/1.6, std::max(0.0,leafTempSL), Vmax298SL, Jmax298SL);
+            NumericVector LP = leafphotosynthesis(QSL, Catm, Gwmin[c]/1.6, std::max(0.0,leafTempSL), Vmax298SL, Jmax298SL);
+            double CiSL = LP[0];
+            double AgSL = LP[1];
             double AnSL = AgSL - 0.015*VmaxTemp(Vmax298SL, leafTempSL);
             
             //Shade photosynthesis
@@ -669,13 +681,19 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
               ESHbk = ESH;
               ESH = std::max(0.0,1000.0*(Gwmin[c]*leafVPDSH)/Patm);
             }
-            double AgSH = leafphotosynthesis(QSH, Catm, Gwmin[c]/1.6, std::max(0.0,leafTempSH), Vmax298SH, Jmax298SH);
+            LP = leafphotosynthesis(QSH, Catm, Gwmin[c]/1.6, std::max(0.0,leafTempSH), Vmax298SH, Jmax298SH);
+            double CiSH = LP[0];
+            double AgSH = LP[1];
             double AnSH = AgSH - 0.015*VmaxTemp(Vmax298SH, leafTempSH);
             
             //Average flow
             double Eaverage = (ESL*LAI_SL(c,n) + ESH*LAI_SH(c,n))/(LAI_SL(c,n) + LAI_SH(c,n));
             
             //Get leaf status
+            An_SH(c,n) = AgSH;
+            An_SL(c,n) =AnSL;
+            Ci_SH(c,n) = CiSH;
+            Ci_SL(c,n) = CiSL;
             GW_SH(c,n)= Gwmin[c];
             GW_SL(c,n)= Gwmin[c];
             VPD_SH(c,n)= leafVPDSH;
@@ -846,10 +864,14 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
                                         _["Hcansoil"] = Hcansoil, _["LEsoil"] = LEsoil_heat, _["SWRsoilin"] = abs_SWR_soil, _["LWRsoilin"] = abs_LWR_soil,  _["LWRsoilout"] = LWRsoilout,
                                         _["Ebalsoil"] = Ebalsoil, _["RAsoil"] = RAsoil);
   List EB = List::create(_["Temperature"]=Tinst, _["CanopyEnergyBalance"] = CEBinst, _["SoilEnergyBalance"] = SEBinst);
+  An_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  An_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   SWR_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   SWR_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   LWR_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   LWR_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  Ci_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  Ci_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   GW_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   GW_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   Temp_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
@@ -858,9 +880,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   VPD_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   LAI_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   LAI_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  List AbsRadinst = List::create(_["SWR_SH"] = SWR_SH, _["SWR_SL"]=SWR_SL,
-                                 _["LWR_SH"] = LWR_SH, _["LWR_SL"] = LWR_SL);
-  
+
   Einst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   dEdPinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   PsiLeafinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
@@ -873,13 +893,30 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   PWBinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   minPsiRhizo.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
   soilLayerExtractInst.attr("dimnames") = List::create(seq(1,nlayers), seq(1,ntimesteps));
+  List ShadeInst = List::create(
+    _["LAI"] = LAI_SL, 
+    _["Abs_SWR"] = SWR_SH,
+    _["Abs_LWR"] = LWR_SH,
+    _["An"] = An_SH,
+    _["Ci"] = Ci_SH,
+    _["GW"] = GW_SH,
+    _["VPD"] = VPD_SH,
+    _["Temp"] = Temp_SH);
+  List SunlitInst = List::create(
+    _["LAI"] = LAI_SL, 
+    _["Abs_SWR"]=SWR_SL,
+    _["Abs_LWR"] = LWR_SL,
+    _["An"] = An_SL,
+    _["Ci"] = Ci_SL,
+    _["GW"] = GW_SL,
+    _["VPD"] = VPD_SL,
+    _["Temp"] = Temp_SL);
+  
   List PlantsInst = List::create(
-    _["LAIsunlit"] = LAI_SL, _["LAIshade"] = LAI_SH, 
-    _["AbsRad"] = AbsRadinst, _["E"]=Einst, _["An"]=Aninst,
+    _["E"]=Einst, _["An"]=Aninst,
+    _["SunlitLeaves"] = SunlitInst,
+    _["ShadeLeaves"] = ShadeInst,
     _["dEdPinst"] = dEdPinst,
-    _["GWsunlit"] = GW_SL, _["GWshade"] = GW_SH,
-    _["VPDsunlit"] = VPD_SL, _["VPDshade"] = VPD_SH,
-    _["Tempsunlit"] = Temp_SL, _["Tempshade"] = Temp_SH,
     _["PsiRoot"] = PsiRootinst, 
     _["PsiStem"] = PsiSteminst, 
     _["PsiLeaf"] = PsiLeafinst, 
@@ -910,6 +947,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
                      _["RhizoPsi"] = minPsiRhizo,
                      _["Plants"] = Plants,
                      _["PlantsInst"] = PlantsInst,
+                     _["LightExtinction"] = lightExtinctionAbsortion,
                      _["SupplyFunctions"] = supply,
                      _["PhotoSunlitFunctions"] = outPhotoSunlit,
                      _["PhotoShadeFunctions"] = outPhotoShade,
@@ -923,6 +961,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
                      _["Plants"] = Plants,
                      _["ExtractionInst"] = soilLayerExtractInst,
                      _["PlantsInst"] = PlantsInst,
+                     _["LightExtinction"] = lightExtinctionAbsortion,
                      _["SupplyFunctions"] = supply);
     
   }  

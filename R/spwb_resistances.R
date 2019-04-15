@@ -1,8 +1,8 @@
 spwb_resistances<-function(x, cohort = 1, relative = FALSE, draw = FALSE, 
                            cumulative = FALSE, yearAxis = FALSE,  xlab = NULL, ylab=NULL) {
   
-  if(x$spwbInput$control$transpirationMode!="Complex") {
-    stop("Resistances can only be calculated when transpirationMode = 'Complex'.")
+  if(x$spwbInput$control$transpirationMode!="Sperry") {
+    stop("Resistances can only be calculated when transpirationMode = 'Sperry'.")
   }
     
   VCroot_kmax = x$spwbInput$below$VCroot_kmax
