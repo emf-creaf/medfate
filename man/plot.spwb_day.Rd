@@ -25,13 +25,15 @@ Function \code{plot} plots the results of the soil water balance model for one d
     \item{\code{"PlantTranspiration"}:}{ Plant cohort transpiration per ground area.}
     \item{\code{"LeafTranspiration"}:}{ Plant cohort transpiration per leaf area.}
     \item{\code{"PlantWaterBalance"}:}{ Difference between water extraction from the soil and transpired water per ground area.}
-    \item{\code{"PlantPhotosynthesis"}:}{ Plant cohort net photosynthesis per ground area.}
-    \item{\code{"LeafPhotosynthesis"}:}{Net photosynthesis per leaf area.}
+    \item{\code{"PlantPhotosynthesis"}:}{ Plant cohort daily net photosynthesis per ground area.}
     \item{\code{"PlantAbsorbedSWR"}:}{Cohort's absorbed short wave radiation per ground area  (differentiates sunlit and shade leaves).}
+    \item{\code{"LeafPhotosynthesis"}:}{Instantaneous net photosynthesis per leaf area (differentiates sunlit and shade leaves).}
     \item{\code{"LeafAbsorbedSWR"}:}{Cohort's absorbed short wave radiation per leaf area (differentiates sunlit and shade leaves).}
     \item{\code{"LeafVPD"}:}{Leaf vapour pressure deficit (differentiates sunlit and shade leaves).}
-    \item{\code{"LeafStomatalConductance"}:}{Leaf stomatal conductance (differentiates sunlit and shade leaves).}
+    \item{\code{"LeafStomatalConductance"}:}{Leaf instantaneous stomatal conductance (differentiates sunlit and shade leaves).}
     \item{\code{"LeafTemperature"}:}{Leaf temperature (differentiates sunlit and shade leaves).}
+    \item{\code{"LeafCi"}:}{Leaf instantaneous intercellular CO2 concentration (differentiates sunlit and shade leaves).}
+    \item{\code{"LeafIntrinsicWUE"}:}{Leaf intrinsic water use efficiency, i.e. the ratio between instantanoeus photosynthesis and stomatal conductance (differentiates sunlit and shade leaves).}
     \item{\code{"Temperature"}:}{Above-canopy, inside-canopy and soil temperature.}
     \item{\code{"CanopyEnergyBalance"}:}{ Canopy energy balance components.}
     \item{\code{"SoilEnergyBalance"}:}{ Soil energy balance components.}
@@ -42,6 +44,9 @@ Function \code{plot} plots the results of the soil water balance model for one d
   \item{ylab}{y-axis label.}
   \item{...}{Additional parameters for function \code{plot}.}
 
+}
+\note{
+Only for soil plant water balance simulations using \code{transpirationMode = "Sperry"}. 
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
