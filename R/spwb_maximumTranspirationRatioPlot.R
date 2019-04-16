@@ -1,8 +1,37 @@
-spwb_maximumTranspirationRatioPlot<-function(x, soil,  meteo, latitude, elevation, ndays = 100, 
+spwb_maximumTranspirationRatioPlot<-function(x, soil,  meteo, latitude, elevation, slope, aspect,
+                                             ndays = 100, 
                                         LAI_seq = c(0.1,0.25, seq(0.5, 8, by=0.5))) {
-  meteo = meteo[meteo$Precipitation==0, ] #Exclude days with precipitation
-  meteo = meteo[!is.na(meteo$PET), ] #Exclude days without PET
-  PET = meteo$PET
+  
+  #Exclude days with precipitation
+  meteo = meteo[meteo$Precipitation==0, ] 
+  
+  #Calculate PET using penman
+  if("PET" %in% names(meteo)) meteo$PET = NULL
+  PET <- numeric(nrow(meteo))
+  
+  cat(paste0("\n Calculating PET...\n"))
+  for (i in 1:length(meteo[['MinTemperature']])) {
+    PET[i] <- meteoland::penman(
+      latrad = latitude*pi/180,
+      elevation = elevation,
+      slorad = slope*pi/180,
+      asprad = aspect*pi/180,
+      J = meteoland::radiation_dateStringToJulianDays(row.names(meteo)[i]),
+      Tmin = meteo[['MinTemperature']][i],
+      Tmax = meteo[['MaxTemperature']][i],
+      RHmin = meteo[['MinRelativeHumidity']][i],
+      RHmax = meteo[['MaxRelativeHumidity']][i],
+      R_s = meteo[['Radiation']][i],
+      u = meteo[['WindSpeed']][i],
+      z = 2
+    )
+  }
+  
+  #Exclude days without PET
+  meteo = meteo[!is.na(PET), ]
+  PET = PET[!is.na(PET)]
+  
+  #Subsample days from PET
   PET_cut = cut(PET,breaks = seq(0, max(PET), length.out = 20))
   nPET = table(PET_cut)
   PETw = as.numeric(1/nPET[PET_cut])
@@ -10,7 +39,7 @@ spwb_maximumTranspirationRatioPlot<-function(x, soil,  meteo, latitude, elevatio
   s = sample(1:nrow(meteo),ndays,replace = TRUE, prob = PETw)
   s = s[order(PET[s])]
   meteo = meteo[s,]
-  PET = meteo$PET
+  PET =PET[s]
   
   ncoh = nrow(x$above)
   ndays = nrow(meteo)

@@ -964,7 +964,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
                      _["LightExtinction"] = lightExtinctionAbsortion,
                      _["SupplyFunctions"] = supply);
     
-  }  
+  } 
+  l.attr("class") = CharacterVector::create("pwb_day","list");
   return(l);
 }
 

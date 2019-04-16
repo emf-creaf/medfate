@@ -96,22 +96,27 @@ Function \code{transp_transpirationGranier} and \code{transp_transpirationSperry
    \item{\code{"ExtractionInst"}: Water extracted by each plant cohort during each time step.}
    \item{\code{"PlantsInst"}: A list with instantaneous (per time step) results for each plant cohort:
     \itemize{
-      \item{\code{"LAIsunlit"}: Leaf area index of sunlit leaves of the plant cohort.}
-      \item{\code{"LAIshade"}: Leaf area index of shade leaves of the plant cohort.}
-      \item{\code{"AbsRad"}: A list with four data frames containing the instantaneous absorved radiation for each plant cohort during each time step. The data frames are combinations of short-wave radiation (SWR) vs long-wave radiation (LWR) and sunlit leaves ('SL') vs. shade leaves ('SH').}
-      \item{\code{"E"}: A data frame containing the cumulative transpiration (mm) for each plant cohort during each time step. }
-      \item{\code{"An"}: A data frame containing the cumulative net photosynthesis (gC/m2) for each plant cohort during each time step. }
-      \item{\code{"GWsunlit"}: A data frame containing instantaneous stomatal conductance (in mmol/m2/s) for sunlit leaves each plant cohort during each time step. }
-      \item{\code{"GWshade"}: A data frame containing instantaneous stomatal conductance (in mmol/m2/s) for shade leaves each plant cohort during each time step. }
-      \item{\code{"VPDsunlit"}: A data frame containing vapour pressure deficit (in kPa) for sunlit leaves each plant cohort during each time step. }
-      \item{\code{"VPDshade"}: A data frame containing vapour pressure deficit (in kPa) for shade leaves each plant cohort during each time step. }
-      \item{\code{"Tempsunlit"}: A data frame containing temperature (in degrees Celsius) for sunlit leaves each plant cohort during each time step. }
-      \item{\code{"Tempshade"}: A data frame containing temperature (in degrees Celsius) for shade leaves each plant cohort during each time step. }
-      \item{\code{"PsiRoot"}: A data frame containing root crown water potential (in MPa) for each plant cohort during each time step.}
-      \item{\code{"PsiPlant"}: A data frame containing leaf water potential (in MPa) for each plant cohort during each time step. }
-      \item{\code{"PLCstem"}: A data frame containing the proportion loss of conductance [0-1] for each plant cohort during each time step. }
-      \item{\code{"RWCstem"}: A data frame containing the (average) relative water content of symplastic stem tissue [0-1] for each plant cohort during each time step. }
-      \item{\code{"RWCstem"}: A data frame containing the relative water content of symplastic leaf tissue [0-1] for each plant cohort during each time step. }
+      \item{\code{"E"}: A data frame with the cumulative transpiration (mm) for each plant cohort during each time step. }
+      \item{\code{"An"}: A data frame with the cumulative net photosynthesis (gC/m2) for each plant cohort during each time step. }
+      \item{\code{"Sunlitleaves"} and \code{"ShadeLeaves"}: Lists with instantaneous (for each time step) results for sunlit leaves and shade leaves and the following items:
+        \itemize{
+            \item{\code{"LAI"}: Leaf area index of (sunlit or shade) leaves of the plant cohort.}
+            \item{\code{"Abs_SWR"}: A data frame with instantaneous absorbed short-wave radiation (SWR).} 
+            \item{\code{"Abs_LWR"}: A data frame with instantaneous absorbed long-wave radiation (LWR).} 
+            \item{\code{"An"}: A data frame with instantaneous net photosynthesis (in micromol/m2/s). }
+            \item{\code{"Ci"}: A data frame with instantaneous intercellular CO2 concentration (in ppm). }
+            \item{\code{"GW"}: A data frame with instantaneous stomatal conductance (in mmol/m2/s). }
+            \item{\code{"VPD"}: A data frame with instantaneous vapour pressure deficit (in kPa). }
+            \item{\code{"Temp"}: A data frame with leaf temperature (in degrees Celsius). }
+        }
+      }
+      \item{\code{"dEdPinst"}: A data frame with the slope of the plant supply function (an estimation of whole-plant conductance).}
+      \item{\code{"PsiRoot"}: A data frame with root crown water potential (in MPa) for each plant cohort during each time step.}
+      \item{\code{"PsiPlant"}: A data frame with leaf water potential (in MPa) for each plant cohort during each time step. }
+      \item{\code{"PLCstem"}: A data frame with the proportion loss of conductance [0-1] for each plant cohort during each time step. }
+      \item{\code{"RWCstem"}: A data frame with the (average) relative water content of symplastic stem tissue [0-1] for each plant cohort during each time step. }
+      \item{\code{"RWCstem"}: A data frame with the relative water content of symplastic leaf tissue [0-1] for each plant cohort during each time step. }
+      \item{\code{"PWB"}: A data frame with plant water balance (extraction - transpiration).}
     }
   }
   \item{\code{"SupplyFunctions"}: If \code{stepFunctions} is not missing, a list of supply functions, photosynthesis functions and profit maximization functions.}

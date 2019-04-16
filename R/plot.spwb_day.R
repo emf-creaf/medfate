@@ -1,8 +1,12 @@
 plot.spwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE, xlab = NULL, ylab = NULL, ...) {
+  plot.pwb_day(x, type, bySpecies, xlab, ylab,...)
+}
+
+
+plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE, xlab = NULL, ylab = NULL, ...) {
   if(!("EnergyBalance" %in% names(x))) stop("Plotting function available for transpirationMode = 'Sperry' only.")
   EB = x$EnergyBalance
   Plants = x$Plants
-  SoilInst = x$SoilInst
   PlantsInst = x$PlantsInst
   TYPES = c("LeafPsi","RootPsi", "StemPsi", 
             "StemPLC","StemRWC", "LeafRWC",
@@ -134,7 +138,7 @@ plot.spwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE, xlab = 
            col = 1:length(cohortnames), bty="n")
   }
   else if(type=="PlantExtraction") {
-    OM = SoilInst$Extraction
+    OM = x$ExtractionInst
     nlayers = nrow(OM)
     if(is.null(ylab)) ylab = expression(paste("Extraction from soil layers   ",(L%.%m^{-2})))
     matplot(timesteps, t(OM), lty=1:nlayers, col = 1:nlayers,
@@ -382,12 +386,12 @@ plot.spwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE, xlab = 
          ylim = c(min(c(EB$Temperature$Tatm,EB$Temperature$Tcan,EB$Temperature$Tsoil.1)),
                   max(c(EB$Temperature$Tatm,EB$Temperature$Tcan,EB$Temperature$Tsoil.1))),
          lty=1, col = "black",
-          type="l", ylab=ylab, xlab=xlab, frame=FALSE, ...)
+         type="l", ylab=ylab, xlab=xlab, frame=FALSE, ...)
     lines(timesteps, EB$Temperature$Tcan, col="red", lty=2)
     lines(timesteps, EB$Temperature$Tsoil.1, col="gray", lty=3)
     
     legend("topleft", legend = c("Above-canopy", "Inside canopy",
-                                  "Soil"), 
+                                 "Soil"), 
            lty=1:3, 
            col = c("black", "red", "gray"), bty="n")
   } 

@@ -14,6 +14,7 @@ exportPattern("^[[:alpha:]]+")
 
 importFrom(Rcpp, evalCpp)
 S3method(plot,pwb)
+S3method(plot,pwb_day)
 S3method(plot,spwb)
 S3method(plot,spwb_day)
 S3method(plot,growth)

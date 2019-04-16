@@ -1,17 +1,19 @@
 \encoding{UTF-8}
 \name{plot.spwb_day}
 \alias{plot.spwb_day}
+\alias{plot.pwb_day}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Displays simulation results for one day}
 \description{
-Function \code{plot} plots the results of the soil water balance model for one day (see \code{\link{spwb_day}}).
+Functions to plot the results of the soil water balance model for one day (see \code{\link{spwb_day}}) or the transpiration calculations with Sperry (see \code{\link{transp_transpirationSperry}}).
 }
 \usage{
 \method{plot}{spwb_day}(x, type="PlantTranspiration", bySpecies = FALSE, xlab = NULL, ylab = NULL, ...)
+\method{plot}{pwb_day}(x, type="PlantTranspiration", bySpecies = FALSE, xlab = NULL, ylab = NULL, ...)
 }
 \arguments{
-  \item{x}{An object of class \code{spwb}}
+  \item{x}{An object of class \code{spwb_day} or \code{pwb_day}.}
   \item{type}{The information to be plotted:
   \itemize{
     \item{\code{"LeafPsi"}:}{Leaf water potential.}
@@ -49,7 +51,7 @@ Function \code{plot} plots the results of the soil water balance model for one d
 Only for soil plant water balance simulations using \code{transpirationMode = "Sperry"}. 
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 }
 \seealso{
  \code{\link{spwb_day}}, \code{\link{plot.spwb}}
