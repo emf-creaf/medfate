@@ -220,6 +220,7 @@ List spwbDay(List x, List soil, CharacterVector date, double tmin, double tmax, 
   //Control parameters
   List control = x["control"];
   bool verbose = control["verbose"];
+  bool leafPhenology = control["leafPhenology"];
   String transpirationMode = control["transpirationMode"];
   std::string c = as<std::string>(date[0]);
   int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
@@ -238,7 +239,7 @@ List spwbDay(List x, List soil, CharacterVector date, double tmin, double tmax, 
   if(wind<0.1) wind = 0.1; //Minimum windspeed abovecanopy
   
   //Update phenology
-  updateLeaves(x, doy, tday, wind);
+  if(leafPhenology) updateLeaves(x, doy, tday, wind);
   
   double er = erFactor(doy, pet, prec);
   List s;
@@ -424,6 +425,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   String soilFunctions = control["soilFunctions"];
   bool verbose = control["verbose"];
   bool subdailyResults = control["subdailyResults"];
+  bool leafPhenology = control["leafPhenology"];
   checkspwbInput(x, soil, transpirationMode, soilFunctions);
   
   //Store input
@@ -595,7 +597,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
 
       
       //1. Phenology and leaf fall
-      updateLeaves(x, DOY[i], MeanTemperature[i], wind);
+      if(leafPhenology) updateLeaves(x, DOY[i], MeanTemperature[i], wind);
       
       //Store GDD
       GDD[i] = canopyParams["gdd"];
@@ -916,6 +918,7 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
   String soilFunctions = control["soilFunctions"];
   bool verbose = control["verbose"];
   bool subdailyResults = control["subdailyResults"];
+  bool leafPhenology = control["leafPhenology"];
   
   
   
@@ -1083,7 +1086,7 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
       
       
       //1. Phenology and leaf fall
-      updateLeaves(x, DOY[i], MeanTemperature[i], wind);
+      if(leafPhenology) updateLeaves(x, DOY[i], MeanTemperature[i], wind);
       
       //Store GDD
       GDD[i] = canopyParams["gdd"];

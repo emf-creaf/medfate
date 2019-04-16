@@ -93,6 +93,7 @@ DataFrame paramsTranspiration(DataFrame above, NumericMatrix V, List soil, DataF
   NumericVector H = above["H"];
   int numCohorts = SP.size();
   NumericVector Vc;
+  double fracRootResistance = control["fracRootResistance"];
   
   NumericVector dVec = soil["dVec"];
   
@@ -222,8 +223,16 @@ DataFrame paramsTranspiration(DataFrame above, NumericMatrix V, List soil, DataF
     }
     //Mencuccini M (2003) The ecological significance of long-distance water transport : short-term regulation , long-term acclimation and the hydraulic costs of stature across plant life forms. Plant Cell Environ 26:163–182
     if(NumericVector::is_na(Gwmax[c])) Gwmax[c] = 0.12115*pow(VCleaf_kmax[c], 0.633);
-    // double VCroot_kmaxc = 1.0/((1.0/(VCstem_kmax[c]*fracTotalTreeResistance))-(1.0/VCstem_kmax[c]));
-    double VCroot_kmaxc = maximumRootHydraulicConductance(Kmax_rootxylem[c],Al2As[c], Vc, dVec);
+    
+    double VCroot_kmaxc = NA_REAL;
+    if(NumericVector::is_na(fracRootResistance)) {
+      VCroot_kmaxc = maximumRootHydraulicConductance(Kmax_rootxylem[c],Al2As[c], Vc, dVec);
+    } else {
+      double rstem = (1.0/VCstem_kmax[c]);
+      double rleaf = (1.0/VCleaf_kmax[c]);
+      double rtot = (rstem+rleaf)/(1.0 - fracRootResistance);
+      VCroot_kmaxc = 1.0/(rtot - rstem - rleaf);
+    }
     VCroottot_kmax[c] = VCroot_kmaxc;
     //Default value of Vmax298 = 100.0
     if(NumericVector::is_na(Vmax298[c])) Vmax298[c] = 100.0;

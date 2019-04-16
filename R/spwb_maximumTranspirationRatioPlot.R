@@ -1,6 +1,6 @@
 spwb_maximumTranspirationRatioPlot<-function(x, soil,  meteo, latitude, elevation, slope, aspect,
                                              ndays = 100, 
-                                        LAI_seq = c(0.1,0.25, seq(0.5, 8, by=0.5))) {
+                                        LAI_seq = c(0.1,0.25, seq(0.5, 10, by=0.5))) {
   
   #Exclude days with precipitation
   meteo = meteo[meteo$Precipitation==0, ] 
@@ -59,6 +59,7 @@ spwb_maximumTranspirationRatioPlot<-function(x, soil,  meteo, latitude, elevatio
     s = soil
     xIni$control$cavitationRefill = TRUE
     xIni$control$verbose = FALSE
+    xIni$control$leafPhenology = FALSE
     Tmax = matrix(NA, nrow=ndays, ncol = nlai)  
     colnames(Tmax) = LAI_seq
     rownames(Tmax) = row.names(meteo)

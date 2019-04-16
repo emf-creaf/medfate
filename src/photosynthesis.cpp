@@ -248,6 +248,7 @@ DataFrame sunshadePhotosynthesisFunction(NumericVector E, double Catm, double Pa
                                   double Gwmin, double Gwmax, double leafWidth = 1.0, bool verbose = false) {
   int nsteps = E.size();
   NumericVector Ag(nsteps,0.0), An(nsteps,0.0);
+  NumericVector leafCiSL(nsteps,0.0), leafCiSH(nsteps,0.0);
   NumericVector leafTSL(nsteps,0.0), leafTSH(nsteps,0.0);
   NumericVector leafVPDSL(nsteps,0.0), leafVPDSH(nsteps,0.0);
   // Rcout<<"ws "<<u<<" tair "<< Tair<< " SLarea "<< SLarea << " SHarea "<< SHarea<< " absRadSL"<< absRadSL<< " absRadSH "<< absRadSH<< " QSL "<<QSL<<" QSH "<<QSH<<"\n";
@@ -265,6 +266,7 @@ DataFrame sunshadePhotosynthesisFunction(NumericVector E, double Catm, double Pa
     Gw = Gw*SLarea; //From Gw per leaf area to Gw per ground area
     if(QSL>0.0) {
       NumericVector LP = leafphotosynthesis(QSL, Catm, Gw/1.6, leafT, Vmax298SL, Jmax298SL);//Call photosynthesis with aggregated values
+      leafCiSL[i] = LP[0];
       Agj = LP[1];
       Anj = Agj - 0.015*VmaxTemp(Vmax298SL, leafT);
       Ag[i]+=Agj;
@@ -280,6 +282,7 @@ DataFrame sunshadePhotosynthesisFunction(NumericVector E, double Catm, double Pa
     Gw = Gw*SHarea; //From Gw per leaf area to Gw per ground area
     if(QSH>0.0) {
       NumericVector LP = leafphotosynthesis(QSH, Catm, Gw/1.6, leafT, Vmax298SH, Jmax298SH); //Call photosynthesis with aggregated values
+      leafCiSH[i] = LP[0];
       Agj = LP[1];
       Anj = Agj - 0.015*VmaxTemp(Vmax298SH, leafT);
       Ag[i]+=Agj;
@@ -289,6 +292,8 @@ DataFrame sunshadePhotosynthesisFunction(NumericVector E, double Catm, double Pa
   }
   return(DataFrame::create(Named("Photosynthesis") = Ag,
                       Named("NetPhotosynthesis") = An,
+                      Named("LeafCiSL") = leafCiSL,
+                      Named("LeafCiSH") = leafCiSH,
                       Named("LeafTempSL") = leafTSL,
                       Named("LeafTempSH") = leafTSH,
                       Named("LeafVPDSL") = leafVPDSL,
