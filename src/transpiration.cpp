@@ -912,7 +912,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   minPsiRhizo.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
   soilLayerExtractInst.attr("dimnames") = List::create(seq(1,nlayers), seq(1,ntimesteps));
   List ShadeInst = List::create(
-    _["LAI"] = LAI_SL, 
+    _["LAI"] = LAI_SH, 
     _["Abs_SWR"] = SWR_SH,
     _["Abs_LWR"] = LWR_SH,
     _["An"] = An_SH,

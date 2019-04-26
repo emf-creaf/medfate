@@ -75,7 +75,12 @@ Function \code{transp_transpirationGranier} and \code{transp_transpirationSperry
       \item{\code{"Extraction"}: Water extracted from the soil (in mm) for each cohort.}
       \item{\code{"RootPsi"}: Minimum water potential (in MPa) at the root collar.}
       \item{\code{"StemPsi"}: Minimum water potential (in MPa) at the stem.}
-      \item{\code{"LeafPsi"}: Minimum water potential (in MPa) at the leaf.}
+      \item{\code{"LeafPsiMin"}: Minimum (predawn) water potential (in MPa) at the leaf (representing an average leaf).}
+      \item{\code{"LeafPsiMax"}: Maximum (midday) water potential (in MPa) at the leaf (representing an average leaf).}
+      \item{\code{"LeafPsiMin_SL"}: Minimum (predawn) water potential (in MPa) at sunlit leaves.}
+      \item{\code{"LeafPsiMax_SL"}: Maximum (midday) water potential (in MPa) at sunlit leaves.}
+      \item{\code{"LeafPsiMin_SH"}: Minimum (predawn) water potential (in MPa) at shade leaves.}
+      \item{\code{"LeafPsiMax_SH"}: Maximum (midday) water potential (in MPa) at shade leaves.}
       \item{\code{"StemPLC"}: Proportion of conductance loss in stem.}
       \item{\code{"StemRWC"}: Relative water content of symplastic stem tissue.}
       \item{\code{"LeafRWC"}: Relative water content of symplastic leaf tissue.}
@@ -108,14 +113,16 @@ Function \code{transp_transpirationGranier} and \code{transp_transpirationSperry
             \item{\code{"GW"}: A data frame with instantaneous stomatal conductance (in mmol/m2/s). }
             \item{\code{"VPD"}: A data frame with instantaneous vapour pressure deficit (in kPa). }
             \item{\code{"Temp"}: A data frame with leaf temperature (in degrees Celsius). }
+            \item{\code{"Psi"}: A data frame with leaf water potential (in MPa). }
         }
       }
       \item{\code{"dEdPinst"}: A data frame with the slope of the plant supply function (an estimation of whole-plant conductance).}
       \item{\code{"PsiRoot"}: A data frame with root crown water potential (in MPa) for each plant cohort during each time step.}
-      \item{\code{"PsiPlant"}: A data frame with leaf water potential (in MPa) for each plant cohort during each time step. }
+      \item{\code{"PsiStem"}: A data frame with stem water potential (in MPa) for each plant cohort during each time step.}
+      \item{\code{"PsiLeaf"}: A data frame with leaf (average) water potential (in MPa) for each plant cohort during each time step. }
       \item{\code{"PLCstem"}: A data frame with the proportion loss of conductance [0-1] for each plant cohort during each time step. }
       \item{\code{"RWCstem"}: A data frame with the (average) relative water content of symplastic stem tissue [0-1] for each plant cohort during each time step. }
-      \item{\code{"RWCstem"}: A data frame with the relative water content of symplastic leaf tissue [0-1] for each plant cohort during each time step. }
+      \item{\code{"RWCleaf"}: A data frame with the relative water content of symplastic leaf tissue [0-1] for each plant cohort during each time step. }
       \item{\code{"PWB"}: A data frame with plant water balance (extraction - transpiration).}
     }
   }
