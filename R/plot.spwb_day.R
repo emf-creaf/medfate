@@ -8,7 +8,7 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE, xlab = N
   EB = x$EnergyBalance
   Plants = x$Plants
   PlantsInst = x$PlantsInst
-  TYPES = c("LeafPsi","RootPsi", "StemPsi", 
+  TYPES = c("LeafPsi","LeafPsiAverage","RootPsi", "StemPsi", 
             "StemPLC","StemRWC", "LeafRWC",
             "SoilPlantConductance",
             "PlantExtraction","PlantTranspiration","PlantPhotosynthesis","PlantAbsorbedSWR",
@@ -20,7 +20,7 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE, xlab = N
   cohortnames = row.names(x$cohorts)
   timesteps = as.numeric(colnames(x$PlantsInst$PsiLeaf))
   if(is.null(xlab)) xlab = "Time step"
-  if(type=="LeafPsi") {
+  if(type=="LeafPsiAverage") {
     OM = PlantsInst$PsiLeaf
     if(bySpecies) {
       lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
@@ -256,6 +256,28 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE, xlab = N
     matplot(timesteps, t(OM_SH), lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", ylab=expression(paste("Absorbed SWR shade per leaf   ",(W%.%m^{-2}))), 
             xlab=xlab, frame=FALSE, ...)
+    legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
+           col = 1:length(cohortnames), bty="n")
+    par(old)
+  }
+  else if(type=="LeafPsi") {
+    old = par(mfrow=c(1,2), mar=c(5,5,3,1))
+    OM_SL = PlantsInst$SunlitLeaves$Psi
+    OM_SH = PlantsInst$ShadeLeaves$Psi
+    if(bySpecies) {
+      lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
+      OMlai = sweep(OM_SL, 1, Plants$LAI, "*")
+      m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM_SL = sweep(m1,1,lai1,"/")
+      OMlai = sweep(OM_SH, 1, Plants$LAI, "*")
+      m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM_SH = sweep(m1,1,lai1,"/")
+      cohortnames = rownames(OM_SL)
+    } 
+    matplot(timesteps, t(OM_SL), lty=1:length(cohortnames), col = 1:length(cohortnames),
+            lwd=1, type="l", ylab="Leaf water potential sunlit (-MPa)", xlab=xlab, frame=FALSE, ...)
+    matplot(timesteps, t(OM_SH), lty=1:length(cohortnames), col = 1:length(cohortnames),
+            lwd=1, type="l", ylab="Leaf water potential shade (-MPa)", xlab=xlab, frame=FALSE, ...)
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
            col = 1:length(cohortnames), bty="n")
     par(old)

@@ -366,7 +366,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   NumericMatrix Qinst(numCohorts,ntimesteps);
   NumericMatrix Einst(numCohorts, ntimesteps);
   NumericMatrix Aninst(numCohorts, ntimesteps);
-  NumericMatrix PsiLeafinst(numCohorts, ntimesteps);
+  NumericMatrix PsiLeafinst(numCohorts, ntimesteps);  
   NumericMatrix PsiSteminst(numCohorts, ntimesteps);
   NumericMatrix RWCleafinst(numCohorts, ntimesteps);
   NumericMatrix RWCsteminst(numCohorts, ntimesteps);
@@ -374,6 +374,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   NumericMatrix PWBinst(numCohorts, ntimesteps);
   NumericMatrix An_SL(numCohorts, ntimesteps);
   NumericMatrix An_SH(numCohorts, ntimesteps);
+  NumericMatrix Psi_SL(numCohorts, ntimesteps);
+  NumericMatrix Psi_SH(numCohorts, ntimesteps);
   NumericMatrix Ci_SL(numCohorts, ntimesteps);
   NumericMatrix Ci_SH(numCohorts, ntimesteps);
   NumericMatrix SWR_SL(numCohorts, ntimesteps);
@@ -388,7 +390,10 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   NumericMatrix Temp_SL(numCohorts, ntimesteps);
   NumericMatrix LAI_SH(numCohorts, ntimesteps);
   NumericMatrix LAI_SL(numCohorts, ntimesteps);
-  NumericVector minPsiLeaf(numCohorts,0.0), maxPsiLeaf(numCohorts,-99999.0), minPsiStem(numCohorts, 0.0), minPsiRoot(numCohorts,0.0); //Minimum potentials experienced
+  NumericVector minPsiLeaf(numCohorts,0.0), maxPsiLeaf(numCohorts,-99999.0); 
+  NumericVector minPsiLeaf_SL(numCohorts,0.0), maxPsiLeaf_SL(numCohorts,-99999.0); 
+  NumericVector minPsiLeaf_SH(numCohorts,0.0), maxPsiLeaf_SH(numCohorts,-99999.0);
+  NumericVector minPsiStem(numCohorts, 0.0), minPsiRoot(numCohorts,0.0); //Minimum potentials experienced
   NumericMatrix minPsiRhizo(numCohorts, nlayers);
   std::fill(minPsiRhizo.begin(), minPsiRhizo.end(), 0.0);
   NumericMatrix PLC(numCohorts, ntimesteps);
@@ -559,6 +564,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
             }
             // Rcout<<iPMSunlit<<" "<<iPMShade<<"\n";
             //Get leaf status
+            Psi_SH(c,n) = psiLeaf[iPMShade];
+            Psi_SL(c,n) = psiLeaf[iPMSunlit];
             An_SH(c,n) = AnShade[iPMShade];
             An_SL(c,n) = AnSunlit[iPMSunlit];
             Ci_SH(c,n) = CiShade[iPMShade];
@@ -691,7 +698,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
             
             //Get leaf status
             An_SH(c,n) = AgSH;
-            An_SL(c,n) =AnSL;
+            An_SL(c,n) = AnSL;
             Ci_SH(c,n) = CiSH;
             Ci_SL(c,n) = CiSL;
             GW_SH(c,n)= Gwmin[c];
@@ -727,6 +734,9 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
             
             
             
+            //As it is disconnected, leaf and shade leaves have the same wp
+            Psi_SH(c,n) =  sAb["psiLeaf"];
+            Psi_SL(c,n) =  sAb["psiLeaf"];
             //As it is disconnected, total conductance is equal to leaf hydraulic conductance
             dEdPinst(c,n) = sAb["kleaf"];
             
@@ -742,6 +752,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
             // Rcout<< "PLC "<< PLCstemMAT(c,0)<<"\n";
             RWCsstemMAT(c,_) = newRWCsympstem;
           } else {
+            Psi_SH(c,n) = NA_REAL;
+            Psi_SL(c,n) = NA_REAL;
             GW_SH(c,n)= NA_REAL;
             GW_SL(c,n)= NA_REAL;
             VPD_SH(c,n)= NA_REAL;
@@ -762,10 +774,14 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
       RWCleafinst(c,n) = RWCsleafVEC[c]*(1.0 - LeafAF[c]) + apoplasticRelativeWaterContent(psiLeafVEC[c], VCleaf_c[c], VCleaf_d[c])*LeafAF[c];
       PsiSteminst(c,n) = psiStemMAT(c, nStemSegments-1); 
       
-      PsiLeafinst(c,n) = psiLeafVEC[c]; //Store instantaneous leaf potential
-      PsiRootinst(c,n) = psiRootVEC[c]; //Store instantaneous root potential
+      PsiLeafinst(c,n) = psiLeafVEC[c]; //Store instantaneous (average) leaf potential
+      PsiRootinst(c,n) = psiRootVEC[c]; //Store instantaneous root crown potential
       
       //Store the minimum water potential of the day (i.e. mid-day)
+      minPsiLeaf_SL[c] = std::min(minPsiLeaf_SL[c],Psi_SL(c,n));
+      minPsiLeaf_SH[c] = std::min(minPsiLeaf_SH[c],Psi_SH(c,n));
+      maxPsiLeaf_SL[c] = std::max(maxPsiLeaf_SL[c],Psi_SL(c,n));
+      maxPsiLeaf_SH[c] = std::max(maxPsiLeaf_SH[c],Psi_SH(c,n));
       minPsiLeaf[c] = std::min(minPsiLeaf[c],PsiLeafinst(c,n));
       maxPsiLeaf[c] = std::max(maxPsiLeaf[c],PsiLeafinst(c,n));
       minPsiStem[c] = std::min(minPsiStem[c],PsiSteminst(c,n));
@@ -864,6 +880,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
                                         _["Hcansoil"] = Hcansoil, _["LEsoil"] = LEsoil_heat, _["SWRsoilin"] = abs_SWR_soil, _["LWRsoilin"] = abs_LWR_soil,  _["LWRsoilout"] = LWRsoilout,
                                         _["Ebalsoil"] = Ebalsoil, _["RAsoil"] = RAsoil);
   List EB = List::create(_["Temperature"]=Tinst, _["CanopyEnergyBalance"] = CEBinst, _["SoilEnergyBalance"] = SEBinst);
+  Psi_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  Psi_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   An_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   An_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   SWR_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
@@ -901,7 +919,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
     _["Ci"] = Ci_SH,
     _["GW"] = GW_SH,
     _["VPD"] = VPD_SH,
-    _["Temp"] = Temp_SH);
+    _["Temp"] = Temp_SH,
+    _["Psi"] = Psi_SH);
   List SunlitInst = List::create(
     _["LAI"] = LAI_SL, 
     _["Abs_SWR"]=SWR_SL,
@@ -910,7 +929,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
     _["Ci"] = Ci_SL,
     _["GW"] = GW_SL,
     _["VPD"] = VPD_SL,
-    _["Temp"] = Temp_SL);
+    _["Temp"] = Temp_SL,
+    _["Psi"] = Psi_SL);
   
   List PlantsInst = List::create(
     _["E"]=Einst, _["An"]=Aninst,
@@ -918,8 +938,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
     _["ShadeLeaves"] = ShadeInst,
     _["dEdPinst"] = dEdPinst,
     _["PsiRoot"] = PsiRootinst, 
-    _["PsiStem"] = PsiSteminst, 
-    _["PsiLeaf"] = PsiLeafinst, 
+    _["PsiStem"] = PsiSteminst,
+    _["PsiLeaf"] = PsiLeafinst,
     _["PLCstem"] = PLC, 
     _["RWCstem"] = RWCsteminst,
     _["RWCleaf"] = RWCleafinst,
@@ -932,6 +952,10 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
                                        _["StemPLC"] = PLCm, //Average daily stem PLC
                                        _["LeafPsiMin"] = minPsiLeaf, 
                                        _["LeafPsiMax"] = maxPsiLeaf, 
+                                       _["LeafPsiMin_SL"] = minPsiLeaf_SL, 
+                                       _["LeafPsiMax_SL"] = maxPsiLeaf_SL, 
+                                       _["LeafPsiMin_SH"] = minPsiLeaf_SH, 
+                                       _["LeafPsiMax_SH"] = maxPsiLeaf_SH, 
                                        _["dEdP"] = dEdPm,//Average daily soilplant conductance
                                        _["DDS"] = DDS, //Daily drought stress is the ratio of average soil plant conductance over its maximum value
                                        _["StemRWC"] = RWCsm,
