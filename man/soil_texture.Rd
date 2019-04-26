@@ -17,6 +17,7 @@
 \alias{soil_vanGenuchtenParamsCarsel}
 \alias{soil_vanGenuchtenParamsToth}
 \alias{soil_waterTableDepth}
+\alias{soil_retentionCurvePlot}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Soil texture and hydraulics}
 \description{
@@ -40,6 +41,9 @@ soil_thetaWP(soil, model="SX")
 soil_thetaSAT(soil, model="SX")
 soil_thetaSATSX(clay, sand, om = NA)
 soil_waterTableDepth(soil, model="SX")
+soil_retentionCurvePlot(soil, model="SX", layer = 1, 
+                        psi = seq(0, -6.0, by=-0.01),
+                        relative = TRUE, to = "SAT", ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -54,6 +58,10 @@ soil_waterTableDepth(soil, model="SX")
   \item{soilType}{A string indicating the soil type.}
   \item{soil}{Soil object (returned by function \code{\link{soil}}).}
   \item{model}{Either 'SX' or 'VG' for Saxton's or Van Genuchten's water retention models.}
+  \item{layer}{Soil layer to be plotted.}
+  \item{relative}{Boolean flag to indicate that retention curve should be relative to field capacity or saturation.}
+  \item{to}{Either 'SAT' (saturation) or 'FC' (field capacity).}
+  \item{...}{Additional parameters passed to plot function.}
 }
 \value{
 Functions \code{soil_psi2thetaSX} and \code{soil_psi2thetaVG} return the soil water potential (in MPa) from soil volumetric water content, and functions \code{soil_theta2psiSX} and \code{soil_theta2psiVG} do the reverse calculation returning water potential in MPa. Function \code{soil_USDAType} returns a string. Function \code{soil_vanGenuchtenParamsToth} and \code{soil_vanGenuchtenParamsCarsel} return a vector with four parameter values (alpha, n, theta_res and theta_sat, where alpha is in MPa-1). Function \code{soil_waterTableDepth} returns water table depth in mm from surface.
