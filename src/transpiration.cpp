@@ -229,9 +229,9 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
     z[i] = z[i-1] + verticalLayerSize;
     zmid[i-1] = (verticalLayerSize/2.0) + verticalLayerSize*((double) (i-1));
   }
-  NumericMatrix LAIme = LAIdistribution(z, LAIphe, H, CR); //Expanded leaves
-  NumericMatrix LAImd = LAIdistribution(z, LAIdead, H, CR); //Dead (standing) leaves
-  NumericMatrix LAImx = LAIdistribution(z, LAIlive, H, CR); //Maximum leaf expansion
+  NumericMatrix LAIme = LAIdistributionVectors(z, LAIphe, H, CR); //Expanded leaves
+  NumericMatrix LAImd = LAIdistributionVectors(z, LAIdead, H, CR); //Dead (standing) leaves
+  NumericMatrix LAImx = LAIdistributionVectors(z, LAIlive, H, CR); //Maximum leaf expansion
   
   //3. Wind extinction profile
   if(NumericVector::is_na(wind)) wind = defaultWindSpeed; //set to default if missing

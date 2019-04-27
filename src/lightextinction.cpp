@@ -150,8 +150,8 @@ NumericVector cohortAbsorbedSWRFraction(NumericMatrix LAIme, NumericMatrix LAImd
 }
     
 NumericVector cohortAbsorbedSWRFraction(NumericVector z, NumericVector LAI_expanded, NumericVector LAI_dead, NumericVector H, NumericVector CR, NumericVector kPAR) {
-  NumericMatrix LAIme =  LAIdistribution(z, LAI_expanded, H, CR);
-  NumericMatrix LAImd =  LAIdistribution(z, LAI_dead, H, CR);
+  NumericMatrix LAIme =  LAIdistributionVectors(z, LAI_expanded, H, CR);
+  NumericMatrix LAImd =  LAIdistributionVectors(z, LAI_dead, H, CR);
   NumericVector kSWR(kPAR.size());
   for(int i=0;i<kPAR.size();i++) kSWR[i] = kPAR[i]/1.35;
   return(cohortAbsorbedSWRFraction(LAIme, LAImd, kSWR));
@@ -159,8 +159,8 @@ NumericVector cohortAbsorbedSWRFraction(NumericVector z, NumericVector LAI_expan
 NumericVector cohortAbsorbedSWRFraction(NumericVector LAI_expanded, NumericVector LAI_dead, NumericVector H, NumericVector CR, NumericVector kPAR) {
   NumericVector z(101); //50 m in 50-cm steps
   for(int i=0;i<101;i++) z[i] = i*50.0;
-  NumericMatrix LAIme =  LAIdistribution(z, LAI_expanded, H, CR);
-  NumericMatrix LAImd =  LAIdistribution(z, LAI_dead, H, CR);
+  NumericMatrix LAIme =  LAIdistributionVectors(z, LAI_expanded, H, CR);
+  NumericMatrix LAImd =  LAIdistributionVectors(z, LAI_dead, H, CR);
   NumericVector kSWR(kPAR.size());
   for(int i=0;i<kPAR.size();i++) kSWR[i] = kPAR[i]/1.35;
   return(cohortAbsorbedSWRFraction(LAIme, LAImd, kSWR));

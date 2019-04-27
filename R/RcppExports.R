@@ -173,8 +173,16 @@ species_LAI <- function(x, SpParams, gdd = NA_real_) {
     .Call(`_medfate_speciesLAI`, x, SpParams, gdd)
 }
 
+.LAIdistributionVectors <- function(z, LAI, H, CR) {
+    .Call(`_medfate_LAIdistributionVectors`, z, LAI, H, CR)
+}
+
 .LAIdistribution <- function(z, x, SpParams, gdd = NA_real_) {
     .Call(`_medfate_LAIdistribution`, z, x, SpParams, gdd)
+}
+
+.LAIprofileVectors <- function(z, LAI, H, CR) {
+    .Call(`_medfate_LAIprofileVectors`, z, LAI, H, CR)
 }
 
 .LAIprofile <- function(z, x, SpParams, gdd = NA_real_) {

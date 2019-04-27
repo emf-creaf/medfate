@@ -851,8 +851,8 @@ NumericVector speciesLAI(List x, DataFrame SpParams, double gdd = NA_REAL) {
 }
 
 
-
-NumericMatrix LAIdistribution(NumericVector z, NumericVector LAI, NumericVector H, NumericVector CR) {
+// [[Rcpp::export(".LAIdistributionVectors")]]
+NumericMatrix LAIdistributionVectors(NumericVector z, NumericVector LAI, NumericVector H, NumericVector CR) {
   int nh = z.size();
   int ncoh = LAI.size();
   // double h1, h2;
@@ -895,9 +895,10 @@ NumericMatrix LAIdistribution(NumericVector z, List x, DataFrame SpParams, doubl
   }
   NumericVector CR = cohortCrownRatio(x, SpParams);
 
-  return(LAIdistribution(z, LAI, H, CR));
+  return(LAIdistributionVectors(z, LAI, H, CR));
 }
-NumericVector LAIprofile(NumericVector z, NumericVector LAI, NumericVector H, NumericVector CR) {
+// [[Rcpp::export(".LAIprofileVectors")]]
+NumericVector LAIprofileVectors(NumericVector z, NumericVector LAI, NumericVector H, NumericVector CR) {
   int nh = z.size();
   int ncoh = LAI.size();
   // double h1, h2;
@@ -938,7 +939,7 @@ NumericVector LAIprofile(NumericVector z, List x, DataFrame SpParams, double gdd
     SP[ntree+i] = (int) shrubSP[i];
     H[ntree+i] = shrubH[i];
   }
-  return(LAIprofile(z, LAI, H, CR));
+  return(LAIprofileVectors(z, LAI, H, CR));
 }
 
 

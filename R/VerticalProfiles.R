@@ -1,19 +1,30 @@
-vprofile_leafAreaDensity<-function(x, SpParams, z = NULL, gdd = NA, byCohorts = FALSE,
+vprofile_leafAreaDensity<-function(x, SpParams = NULL, z = NULL, gdd = NA, byCohorts = FALSE,
                                    bySpecies = FALSE, draw = TRUE, legend = TRUE, xlim = NULL) {
-  if(is.null(z)) z = seq(0, ceiling(max(plant_height(x))/100)*100 , by=10)
+  if(!(class(x) %in% c("data.frame", "forest"))) stop("'x' should be of class 'forest' or 'data.frame'")
+  if(class(x)=="forest") {
+    if(is.null(SpParams)) stop("Please, provide 'SpParams' to calculate leaf area.")
+    spnames = plant_speciesName(x, SpParams)
+    x = forest2aboveground(x, SpParams, gdd)
+  } else {
+    if(any(!(c("LAI_expanded", "H", "CR", "SP") %in% names(x)))) {
+      stop("Data frame should contain columns 'SP', 'LAI_expanded', 'H' and 'CR'")
+    }
+    spnames = x$SP
+  }
+
+  if(is.null(z)) z = seq(0, ceiling(max(x$H)/100)*100 , by=10)
   w = z[2:length(z)]- z[1:(length(z)-1)]
   if(!byCohorts) {
-    lai = .LAIprofile(z,x, SpParams, gdd)
+    lai = .LAIprofileVectors(z, x$LAI_expanded, x$H, x$CR)
     lai = 100*lai/w
     if(draw) {
       plot(lai, z[-1], type="l", xlab="Leaf Area Density (m2/m3)", ylab="Height (cm)", xlim = xlim)
     }
   } else {
-    cohortnames = plant_ID(x)
-    lai = .LAIdistribution(z,x, SpParams, gdd)
+    cohortnames = row.names(x)
+    lai = .LAIdistributionVectors(z, x$LAI_expanded, x$H, x$CR)
     lai = 100*sweep(lai,1,w, "/")
     if(bySpecies) {
-      spnames = plant_speciesName(x, SpParams)
       lai = t(apply(lai,1, tapply, spnames, sum, na.rm=T))
       cohortnames = colnames(lai)
     } 

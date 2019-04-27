@@ -571,6 +571,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// LAIdistributionVectors
+NumericMatrix LAIdistributionVectors(NumericVector z, NumericVector LAI, NumericVector H, NumericVector CR);
+RcppExport SEXP _medfate_LAIdistributionVectors(SEXP zSEXP, SEXP LAISEXP, SEXP HSEXP, SEXP CRSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type z(zSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type LAI(LAISEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type H(HSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type CR(CRSEXP);
+    rcpp_result_gen = Rcpp::wrap(LAIdistributionVectors(z, LAI, H, CR));
+    return rcpp_result_gen;
+END_RCPP
+}
 // LAIdistribution
 NumericMatrix LAIdistribution(NumericVector z, List x, DataFrame SpParams, double gdd);
 RcppExport SEXP _medfate_LAIdistribution(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
@@ -582,6 +596,20 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
     rcpp_result_gen = Rcpp::wrap(LAIdistribution(z, x, SpParams, gdd));
+    return rcpp_result_gen;
+END_RCPP
+}
+// LAIprofileVectors
+NumericVector LAIprofileVectors(NumericVector z, NumericVector LAI, NumericVector H, NumericVector CR);
+RcppExport SEXP _medfate_LAIprofileVectors(SEXP zSEXP, SEXP LAISEXP, SEXP HSEXP, SEXP CRSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type z(zSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type LAI(LAISEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type H(HSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type CR(CRSEXP);
+    rcpp_result_gen = Rcpp::wrap(LAIprofileVectors(z, LAI, H, CR));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -3867,7 +3895,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_shrubLAI", (DL_FUNC) &_medfate_shrubLAI, 5},
     {"_medfate_cohortLAI", (DL_FUNC) &_medfate_cohortLAI, 3},
     {"_medfate_speciesLAI", (DL_FUNC) &_medfate_speciesLAI, 3},
+    {"_medfate_LAIdistributionVectors", (DL_FUNC) &_medfate_LAIdistributionVectors, 4},
     {"_medfate_LAIdistribution", (DL_FUNC) &_medfate_LAIdistribution, 4},
+    {"_medfate_LAIprofileVectors", (DL_FUNC) &_medfate_LAIprofileVectors, 4},
     {"_medfate_LAIprofile", (DL_FUNC) &_medfate_LAIprofile, 4},
     {"_medfate_forest2aboveground", (DL_FUNC) &_medfate_forest2aboveground, 3},
     {"_medfate_forest2belowground", (DL_FUNC) &_medfate_forest2belowground, 3},

@@ -1,12 +1,12 @@
 ---
-title: "1. Water balance simulation"
+title: "1. Introduction to water balance simulation"
 author: "Miquel De Caceres"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
     toc: TRUE
 vignette: >
-  %\VignetteIndexEntry{1. Water balance simulation}
+  %\VignetteIndexEntry{1. Introduction to water balance simulation}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignettePackage{medfate}
   \usepackage[utf8]{inputenc}
@@ -19,7 +19,7 @@ library(medfate)
 
 ## About this vignette
 
-This document describes how to run the soil water balance model described in De Cáceres et al. (2015) using package `medfate`. The document indicates how to prepare the inputs, use the simulation functions and inspect the outputs. All the details of the model design and formulation are given in a separate document that can be found on the website of the R package (http://vegmod.ctfc.cat/medfateweb). 
+The present document describes how to run the soil plant water balance model described in De Cáceres et al. (2015) using package `medfate`. The  document indicates how to prepare the inputs, use the simulation functions and inspect the outputs. All the details of the model design and formulation are given in a separate vignette that can be found on the website of the R package (http://vegmod.ctfc.cat/medfateweb). Because it introduces many basic features of package `medfate`, this document should be read before addressing advanced topics of water balance simulations or growth simulations.
 
 ## Preparing model inputs
 Any forest water balance model needs information on **climate**, **vegetation** and **soils** of the forest stand to be simulated. Moreover, since the soil water balance in `medfate` differentiates between species,  **species-specific parameters** are also needed. In this subsection we explain the different steps (including optional pathways) to prepare all the data needed to run function `spwb()`.
@@ -37,38 +37,44 @@ where `widths` are soil layer widths in mm; `clay` and `sand` are the percentage
 
 #### Soil input object
 
-The soil input for function `spwb()` is actually an object of class `soil` that is created using a function with the same name:
+The soil input for function `spwb()` is actually a list of class `soil` that is created using a function with the same name:
 ```{r}
-examplesoil = soil(spar, VG_PTF = "Toth")
+examplesoil = soil(spar)
+class(examplesoil)
+```
+
+The list contains the following elements:
+```{r}
 names(examplesoil)
 ```
 In addition to the physical soil description, this object contains soil parameters needed for soil water balance simulations. For example, `macro` specifies the macroporosity of each layer; `Gsoil` and `Ksoil` are parameters needed to model the process of water infiltration into the soil. The meaning of all elements in the soil object can be found in the help page for function `soil()`.
 
-The soil object is also used to store the moisture degree of each soil layer. In particular, `W` contains the state variable that represents moisture content - the proportion of moisture **relative to field capacity** - which is normally initialized to 1 for each layer:
+Importantly, the soil object is used to store the degree of moisture of each soil layer. In particular, element `W` contains the state variable that represents moisture content - the proportion of moisture **relative to field capacity** - which is normally initialized to 1 for each layer:
 ```{r}
 examplesoil$W
 ```
-It is important to remember that, unlike normal objects in R, any water balance simulation will modify the moisture values in soil object. That is, the state of the soil at the end of the simulated process (i.e. `W`) will be stored. Hence, one can use the same object to simulate water balance sequentially and the final state of one simulation is the initial state of the next.
+It is important to remember that, unlike normal objects in R, any water balance simulation will modify the moisture values in the input soil object. That is, the state of the soil at the end of the simulated process (i.e. `W`) will be stored. Hence, one can use the same object to simulate water balance sequentially and the final state of one simulation is the initial state of the next.
 
 #### Water retention curves
-At any time, one can print the status of the soil object using its `print` function:
+
+At any time, one can show the characteristics and status of the soil object using its `print` function:
 ```{r}
 print(examplesoil, model = "SX")
 ```
-The modelled moisture content of the soil depends on the **water retention curve** used to represent the relationship between soil volumetric water content ($\theta$; %) and soil water potential ($\Psi$; MPa). By default the Saxton (`model = "SX"`) equations are used as water retention curve, but the user may choose to follow Van Genuchten - Mualem equations, which will give different values for the same texture:
+The modelled moisture content of the soil depends on the **water retention curve** used to represent the relationship between soil volumetric water content ($\theta$; %) and soil water potential ($\Psi$; MPa). By default the Saxton (`model = "SX"`) equations are used to model the water retention curve, but the user may choose to follow Van Genuchten - Mualem equations, which will give slightly different values for the same texture:
 ```{r}
 print(examplesoil, model="VG")
 ```
 While Saxton equations use texture and organic matter as inputs, the Van Genuchten-Mualem equations need other parameters, which are estimated using pedotransfer functions and their names start with `VG_` (two alternative options are provided in function `soil` to estimate Van Genuchten parameters). The following code calls function `soil_retentionCurvePlot()` to illustrate the difference between the two water retention models in this soil:
 
-```{r, fig = TRUE, fig.width= 5, fig.height=4, fig.align= 'center', echo=TRUE}
+```{r, fig = TRUE, fig.width= 4, fig.height=3, fig.align= 'center', echo=TRUE}
 par(mar=c(4,4,1,1))
 soil_retentionCurvePlot(examplesoil, model="both")
 ```
 
 Low-level functions, such as `soil_psi2thetaSX()` and `soil_psi2thetaVG()` (and their counterparts `soil_theta2psiSX()` and `soil_theta2psiVG()`), can be used to calculate volumetric soil moisture from the water potential (and viceversa) using the two models. When simulating soil water balance, the user can choose among the two models (see `control` parameters below).
 
-### Species data
+### Species-specific parameters
 
 Simulation models in `medfate` require a data frame with species parameter values. The package provides a default data set of parameter values for 89 Mediterranean species (rows), resulting from bibliographic search, fit to empirical data or expert-based guesses:
 
@@ -95,13 +101,21 @@ exampleforest
 ```
 Trees are expected to be primarily described in terms of species, diameter (DBH) and height, whereas shrubs are described in terms of species, percent cover and mean height. 
 
-#### Aboveground and belowground data tables
+#### Aboveground and belowground data
 Because the forest plot format is rather specific, simulation functions in `medfate` allow starting in a more general way using two data frames, one with **aboveground** information (i.e. the leave area and size of plants) and the other with **belowground** information (i.e. root distribution). The aboveground data frame does not distinguish between trees and shrubs. It includes, for each plant cohort to be considered in rows, its *species identity*, *height* and *leaf area index* (LAI). While users can build their input data themselves, we use function `forest2aboveground()` on the object `exampleforest` to show how should the data look like:
 ```{r}
 above = forest2aboveground(exampleforest, SpParamsMED)
 above
 ```
 Note that the call to `forest2aboveground()` included species parameters, because species-specific values are needed to calculate leaf area from tree diameters or shrub cover. Columns `N`, `DBH` and `Cover` are required for simulating growth, but not for soil water balance, which only requires columns `SP`, `H` (in cm), `CR` (i.e. the crown ratio), `LAI_live`, `LAI_expanded` and `LAI_dead`. Here plant cohorts are given unique codes that tell us whether they correspond to trees or shrubs, but the user can use other row identifiers as long as they are unique. In practice, the user only needs to worry to calculate the values for `LAI_live`. `LAI_live` and `LAI_expanded` can contain the same LAI values, and `LAI_dead` is normally zero. This is so because models update `LAI_expanded` and `LAI_dead` according to the leaf phenology of species.
+
+Aboveground leaf area distribution (with or without distinguishing among cohorts) can be examined by calling function `vprofile_leafAreaDensity()`:
+
+```{r, fig = TRUE, fig.width= 7, fig.height=3, fig.align= 'center', echo=TRUE}
+par(mar=c(4,4,1,1), mfrow=c(1,2))
+vprofile_leafAreaDensity(above, byCohorts = F)
+vprofile_leafAreaDensity(above, byCohorts = T)
+```
 
 Regarding **belowground** information, a matrix describing for each plant cohort, the proportion of fine roots in each soil layer. As before, we use function `forest2belowground()` on the object `exampleforest` to show how should the data look like:
 ```{r}
@@ -115,6 +129,13 @@ root_ldrDistribution(exampleforest$treeData$Z50[1],
                      examplesoil$dVec)
 ```
 An analogous function `root_conicDistribution()` can be used to estimate fine root distribution according to a cone. The user is free to build any numeric matrix for root distribution, as long as values in rows sum always one (i.e. we have proportions). Otherwise, functions `root_conicDistribution()` and `root_ldrDistribution()` can be used to calculate root distribution under specific assumptions.
+
+Users can visually inspect the distribution of fine roots of `forest` objects by calling function `vprofile_rootDistribution()`:
+
+```{r, fig = TRUE, fig.width= 4, fig.height=3, fig.align= 'center', echo=TRUE}
+par(mar=c(4,4,1,1))
+vprofile_rootDistribution(exampleforest, SpParamsMED)
+```
 
 
 ### Meteorological forcing
@@ -228,37 +249,38 @@ head(S$PlantPsi)
 ```
 
 
-#### Plotting results
+## Inspecting model outputs
+### Plots
 
-Package `medfate` provides a simple `plot` function for objects of class `spwb`. It can be used to show the meteorological input:
-```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
-par(mar=c(5,5,1,1))
+Package `medfate` provides a simple `plot` function for objects of class `spwb`. It can be used to show meteorological inputs, snow dynamics, and different components of the water balance:
+```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 7}
+par(mar=c(4.5,4.5,1,1), mfrow=c(2,2))
 plot(S, type = "PET_Precipitation")
-```
-Since this simulations include snow dynamics, we can plot the water input in form of snow and the dynamics of the snowpack. 
-```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
-par(mar=c(5,5,1,1))
 plot(S, type = "Snow")
+plot(S, type = "Export")
+plot(S, type = "Evapotranspiration")
 ```
-It is also useful to plot the dynamics of soil state variables by layer, such as the percentage of moisture in relation to field capacity:
-```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
-par(mar=c(5,5,1,1))
+
+Function `plot` is also allows displaying soil moisture dynamics by layer, which can be done in four different ways (the first two only imply a change in axis units):
+```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 7}
+par(mar=c(4.5,4.5,1,1), mfrow= c(2,2))
+plot(S, type="SoilTheta")
 plot(S, type="SoilRWC")
-```
-Or soil water potentials:
-```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
-par(mar=c(5,5,1,1))
 plot(S, type="SoilPsi")
+plot(S, type="SoilVol")
 ```
 
-Additionally, it can also be used to draw plant variables, such as plant transpiration:
+Finally, the same function can also be used to draw the dynamics of plant variables by cohorts, such as transpiration, photosynthesis, water potential or drought stress:
 
-```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
-par(mar=c(5,5,1,1))
+```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 7}
+par(mar=c(4.5,4.5,1,1), mfrow=c(2,2))
 plot(S, type="PlantTranspiration")
+plot(S, type="PlantPhotosynthesis")
+plot(S, type="PlantPsi")
+plot(S, type="PlantStress")
 ```
 
-#### Generating output summaries
+### General summaries
 While the simulation model uses daily steps, users will normally be interested in outputs at larger time scales. The package provides a `summary` for objects of class `spwb`. This function can be used to summarize the model's output at different temporal steps (i.e. weekly, annual, ...). For example, to obtain the average soil moisture and water potentials by months one can use:
 
 ```{r}
@@ -278,21 +300,20 @@ Or we can combine the aggregation by species with a temporal aggregation (here m
 summary(S, freq="month", FUN = mean, output="PlantStress", bySpecies = TRUE)
 ```
 
-#### Water balance without cavitation refill
+### Specific output functions
+The package provides some functions to extract or transform specific outputs from soil plant water balance simulations. In particular, function `spwb_stress()` allows calculating several plant stress indices, such as the number of days with drought stress > 0.5 or the maximum drought stress:
 
-One of the simulation control parameters allows specifying that refilling of conduits does not occur after cavitation, so that plants cannot recover from drought stress. To simulate this behaviour we set `cavitationRefill = FALSE` (we also turn off console output): 
 ```{r}
-x$control$cavitationRefill = FALSE
-x$control$verbose = FALSE
+spwb_stress(S, index = "NDD", freq = "years")
+spwb_stress(S, index = "MDS", freq = "years")
 ```
-We re-run the water balance model after resetting state variables
+As the general summary function, `spwb_stress()` allows calculating stress indices at several temporal scales. For example the water stress index (integral of water potential values) can be calculated for every month:
 ```{r}
-spwb_resetInputs(x, examplesoil)
-Snr = spwb(x, examplesoil, examplemeteo, elevation=100) 
+spwb_stress(S, index = "WSI", freq = "months")
 ```
-In this case no console output is produced during the simulation process. We can examine the effect of preventing cavitation refill in the plots of plant drought stress and plant transpiration:
-```{r, fig=TRUE, fig.align="center", fig.width=8, fig.height = 4}
-par(mar=c(5,5,1,1), mfrow=c(1,2))
-plot(Snr, type="PlantStress")
-plot(Snr, type="PlantTranspiration")
+
+Another specific summary function is `spwb_waterUseEfficiency()`. This is most useful with advanced water and energy balance modeling, but for simple water balance it calculates the ratio between photosynthesis and transpiration at the desired scale:
+
+```{r}
+spwb_waterUseEfficiency(S, freq = "months")
 ```

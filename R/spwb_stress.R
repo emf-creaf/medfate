@@ -25,7 +25,7 @@ spwb_stress<-function(x, index = "NDD", freq = "years", bySpecies = FALSE) {
   } else if(index=="MDS") {
     M <- apply(x$PlantStress,2,tapply, INDEX=date.factor, function(x) {return(max(x, na.rm=T))})
   } else if(index=="WSI") {
-    if(transpMode=="Simple") {
+    if(transpMode=="Granier") {
       M <- apply(x$PlantPsi,2,tapply, INDEX=date.factor, wsi)
     } else {
       M <- apply(x$LeafPsi,2,tapply, INDEX=date.factor, wsi)
