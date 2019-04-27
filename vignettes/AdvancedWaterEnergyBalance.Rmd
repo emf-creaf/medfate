@@ -161,6 +161,7 @@ hydraulics_supplyFunctionPlot(x, examplesoil, type="psiStem")
 
 Calls to `hydraulics_supplyFunctionPlot()` always need both a `spwbInput` object and a `soil` object. The soil moisture state (i.e. its water potential) is the starting point for the calculation of the supply function, so different curves will be obtained for different values of soil moisture.
 
+
 ### Stomatal regulation and photosynthesis
 
 The soil water balance model determines stomatal conductance and transpiration separately for sunlit and shade leaves. Stomatal conductance is determined after building a photosynthesis function corresponding to the supply function and finding the value of stomatal conductance that maximizes carbon revenue while avoiding hydraulic damage. Given a meteorological input and a chosen moment in time (day and timestep), the R function `transp_stomatalRegulationPlot()` allows displaying the supply and photosynthesis curves for sunlit and shade leaves, along with an indication of the values corresponding to the chosen stomatal conductance:
@@ -172,6 +173,15 @@ transp_stomatalRegulationPlot(x, examplesoil, examplemeteo, day = d, timestep=12
 ```
 
 
+### Pressure volume curves
+
+```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 7}
+par(mar=c(4.5,4.5,1,1), mfrow=c(2,2))
+moisture_pressureVolumeCurvePlot(x, segment="leaf", fraction="symplastic")
+moisture_pressureVolumeCurvePlot(x, segment="leaf", fraction="apoplastic")
+moisture_pressureVolumeCurvePlot(x, segment="stem", fraction="symplastic")
+moisture_pressureVolumeCurvePlot(x, segment="stem", fraction="apoplastic")
+```
 
 ## Water balance for a single day
 
