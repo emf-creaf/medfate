@@ -8,7 +8,9 @@ Maximum transpiration vs. LAI
 Builds a curve of maximum transpiration (Tmax) over potential evapotranspiration (ETP) for increasing leaf area index (LAI) values.
 }
 \usage{
-spwb_maximumTranspirationRatioPlot(x, soil, meteo, latitude, elevation, slope, aspect, ndays = 100, LAI_seq = c(0.1, 0.25, seq(0.5, 10, by = 0.5)))
+spwb_maximumTranspirationRatioPlot(x, soil, meteo, latitude, elevation, slope, aspect, 
+                                   ndays = 100, 
+                                   LAI_seq = c(0.1, 0.25, seq(0.5, 10, by = 0.5)))
 }
 \arguments{
   \item{x}{An object of class \code{\link{spwbInput}}.}

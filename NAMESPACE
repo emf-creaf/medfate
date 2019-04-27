@@ -2,7 +2,7 @@ import(sp)
 import(spdep)
 import(methods)
 import(meteoland)
-importFrom("stats", "aggregate","filter","uniroot")
+importFrom("stats", "aggregate","filter","uniroot", "median")
 importFrom("grDevices", "rainbow")
 importFrom("graphics", "axis", "abline", "barplot", "legend", "lines", "matplot","mtext",
            "matlines", "par", "polygon","axis.Date")
