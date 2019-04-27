@@ -59,25 +59,14 @@ The modelled moisture content of the soil depends on the **water retention curve
 ```{r}
 print(examplesoil, model="VG")
 ```
-While Saxton equations use texture and organic matter as inputs, the Van Genuchten-Mualem equations need other parameters, which are estimated using pedotransfer functions and their names start with `VG_` (two alternative options are provided in function `soil` to estimate Van Genuchten parameters). The following figure illustrates the difference between the two water retention models:
+While Saxton equations use texture and organic matter as inputs, the Van Genuchten-Mualem equations need other parameters, which are estimated using pedotransfer functions and their names start with `VG_` (two alternative options are provided in function `soil` to estimate Van Genuchten parameters). The following code calls function `soil_retentionCurvePlot()` to illustrate the difference between the two water retention models in this soil:
+
 ```{r, fig = TRUE, fig.width= 5, fig.height=4, fig.align= 'center', echo=TRUE}
 par(mar=c(4,4,1,1))
-# Plot Saxton's retention curve
-psi = seq(-0.001, -2.0, by=-0.001)
-plot(-psi, lapply(as.list(psi), FUN=soil_psi2thetaSX, clay=25, sand=25), 
-     type="l", ylim=c(0,0.5),ylab="Water content (prop. volume)", xlab = "Soil water potential (-MPa)")
-
-#Add Van Genuchten retention curve
-lines(-psi, lapply(as.list(psi), FUN=soil_psi2thetaVG, 
-      alpha=examplesoil$VG_alpha[1], n = examplesoil$VG_n[1], 
-      theta_res = examplesoil$VG_theta_res[1], 
-      theta_sat = examplesoil$VG_theta_sat[1]), lty=2) 
-
-legend("topright", legend=c("Saxton", "Van Genuchten"), lty=c(1,2), bty="n")
-
+soil_retentionCurvePlot(examplesoil, model="both")
 ```
 
-Functions `soil_psi2thetaSX()` and `soil_psi2thetaVG()` (and their counterparts) can be used to calculate volumetric soil moisture from the water potential using the two models. When simulating soil water balance, the user can choose among the two models (see control parameters below).
+Low-level functions, such as `soil_psi2thetaSX()` and `soil_psi2thetaVG()` (and their counterparts `soil_theta2psiSX()` and `soil_theta2psiVG()`), can be used to calculate volumetric soil moisture from the water potential (and viceversa) using the two models. When simulating soil water balance, the user can choose among the two models (see `control` parameters below).
 
 ### Species data
 
@@ -254,7 +243,7 @@ plot(S, type = "Snow")
 It is also useful to plot the dynamics of soil state variables by layer, such as the percentage of moisture in relation to field capacity:
 ```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
 par(mar=c(5,5,1,1))
-plot(S, type="SoilTheta")
+plot(S, type="SoilRWC")
 ```
 Or soil water potentials:
 ```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}

@@ -57,7 +57,7 @@ soil_retentionCurvePlot(soil, model="SX", layer = 1,
   \item{topsoil}{A boolean flag to indicate topsoil layer.}
   \item{soilType}{A string indicating the soil type.}
   \item{soil}{Soil object (returned by function \code{\link{soil}}).}
-  \item{model}{Either 'SX' or 'VG' for Saxton's or Van Genuchten's water retention models.}
+  \item{model}{Either 'SX' or 'VG' for Saxton's or Van Genuchten's water retention models; or 'both' to plot both retention models.}
   \item{layer}{Soil layer to be plotted.}
   \item{relative}{Boolean flag to indicate that retention curve should be relative to field capacity or saturation.}
   \item{to}{Either 'SAT' (saturation) or 'FC' (field capacity).}
@@ -83,12 +83,6 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 \seealso{ \code{\link{soil}}}
 \examples{
 
-# Plot Saxton's water retention curve
-psi = seq(0, -6.0, by=-0.01)
-plot(-psi, lapply(as.list(psi), FUN=soil_psi2thetaSX, clay=40, sand=10, om = 1), 
-     type="l", ylim=c(0,0.6),ylab="Water content (prop. volume)", 
-     xlab = "Soil water potential (-MPa)")
-
 #Determine USDA soil texture type
 type = soil_USDAType(clay=40, sand=10)
 type
@@ -97,9 +91,10 @@ type
 vg = soil_vanGenuchtenParamsToth(40,10,1,1.3,TRUE)
 vg
 
-#Add Van Genuchten water retention curve 
-lines(-psi, lapply(as.list(psi), FUN=soil_psi2thetaVG, alpha=vg[1], n = vg[2], 
-      theta_res = vg[3], theta_sat = vg[4]), lty=2) 
+# Initialize soil object with default params
+s = soil(defaultSoilParams())
 
-legend("topright", legend=c("Saxton", "Van Genuchten"), lty=c(1,2), bty="n")
+# Plot Saxton's and Van Genuchten's water retention curves
+soil_retentionCurvePlot(s, model="both")
+
 }

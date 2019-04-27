@@ -9,7 +9,7 @@
 Initializes soil parameters and state variables for its use in simulations.
 }
 \usage{
-soil(SoilParams, VG_PTF = "Carsel", W = as.numeric(c(1)), SWE = 0)
+soil(SoilParams, VG_PTF = "Toth", W = as.numeric(c(1)), SWE = 0)
 \method{print}{soil}(x, model="SX", ...)
 }
 %- maybe also 'usage' for other objects documented here.

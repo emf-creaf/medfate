@@ -12,12 +12,16 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
   
   transpMode = input$control$transpirationMode
   
-  TYPES = c("PET_Precipitation","PET_NetRain","Snow","Evapotranspiration","SoilPsi","SoilTheta","SoilVol", "Export", "LAI", "WTD",
+  TYPES = c("PET_Precipitation","PET_NetRain","Snow","Evapotranspiration",
+            "SoilPsi","SoilTheta","SoilRWC","SoilVol", 
+            "Export", "LAI", "WTD",
             "PlantExtraction","PlantLAI",
             "PlantStress", "PlantPsi","PlantPhotosynthesis", "PlantTranspiration", "PlantWUE",
             "PlantPhotosynthesisLeaf","PlantTranspirationLeaf")
   if(transpMode=="Sperry") {
-    TYPES = c("PET_Precipitation","PET_NetRain","Snow","Evapotranspiration","SoilPsi","SoilTheta","SoilVol", "Export", "LAI", "WTD",
+    TYPES = c("PET_Precipitation","PET_NetRain","Snow","Evapotranspiration",
+              "SoilPsi","SoilTheta", "SoilRWC", "SoilVol", 
+              "Export", "LAI", "WTD",
               "PlantExtraction","HydraulicRedistribution",
               "PlantLAI",
               "SoilPlantConductance","PlantStress", 
@@ -122,10 +126,10 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     if(is.null(ylim)) ylim =c(0,max(MLTot)*1.3)
     if(is.null(ylab)) ylab = "Soil water content (mm)"
     plot(dates, MLTot, ylim=ylim, lwd=2, type="l",xlim=xlim,
-         ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
+         ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE, col="gray")
     plotAxes()
     matlines(dates, MLM, lty = 1:nlayers, col = 1:nlayers, lwd=1.5)
-    legend("topleft", bty="n", col = 1:nlayers,lty=c(1,1:nlayers), lwd=c(2,rep(1.5,5)),
+    legend("topleft", bty="n", col = c("gray",1:nlayers),lty=c(1,1:nlayers), lwd=c(2,rep(1.5,5)),
            legend=c("Total",paste("Layer", 1:nlayers)))
     
   } 
@@ -163,12 +167,12 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
   
   transpMode = input$control$transpirationMode
   
-  TYPES = c("SoilPsi","SoilTheta",
+  TYPES = c("SoilPsi","SoilTheta", "SoilRWC",
             "PlantExtraction","PlantLAI",
             "PlantStress", "PlantPsi","PlantPhotosynthesis", "PlantTranspiration", "PlantWUE",
             "PlantPhotosynthesisLeaf","PlantTranspirationLeaf")
   if(transpMode=="Sperry") {
-    TYPES = c("SoilPsi","SoilTheta",
+    TYPES = c("SoilPsi","SoilTheta", "SoilRWC",
               "PlantExtraction","HydraulicRedistribution",
               "PlantLAI",
               "SoilPlantConductance","PlantStress", 
@@ -217,6 +221,19 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     
   } 
   else if(type=="SoilTheta") {
+    WM = Soil[,paste("W",1:nlayers,sep=".")]
+    theta_FC = soil_thetaFC(soilInput, model = input$control$soilFunctions)
+    WM = sweep(WM, 2,theta_FC, "*")
+    if(is.null(ylab)) ylab = "Soil moisture (% volume)"
+    if(is.null(ylim)) ylim = c(0,100*max(WM,na.rm = T))
+    matplot(dates, WM*100, lwd=1.5,
+            ylim=ylim, type="l", ylab=ylab, xlab=xlab, xlim=xlim,
+            frame=FALSE, lty=c(1,2,3,4,5), col = 1:nlayers,axes=FALSE)
+    plotAxes()
+    legend("bottomleft", bty="n", col = 1:nlayers,lty=1:nlayers, lwd=1.5,
+           legend=paste("Layer", 1:nlayers))
+  } 
+  else if(type=="SoilRWC") {
     WM = Soil[,paste("W",1:nlayers,sep=".")]
     if(is.null(ylab)) ylab = "Soil moisture (% field capacity)"
     if(is.null(ylim)) ylim = c(0,100*max(WM,na.rm = T))

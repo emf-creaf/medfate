@@ -10,6 +10,7 @@ _Version 0.8.1, April 2019.
 3. Output of min/max water potential for sunlit and shade leaves.
 4. New function 'soil_waterRetentionPlot'
 5. New function 'spwb_waterUseEfficiency'
+6. Default Van Genuchten PTF set to 'Toth'
 
 _Version 0.8.0, April 2019.
 1. Move spatial classes and methods to package 'medfateland'

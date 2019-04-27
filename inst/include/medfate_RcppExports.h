@@ -402,7 +402,7 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline List soil(DataFrame SoilParams, String VG_PTF = "Carsel", NumericVector W = NumericVector::create(1.0), double SWE = 0.0) {
+    inline List soil(DataFrame SoilParams, String VG_PTF = "Toth", NumericVector W = NumericVector::create(1.0), double SWE = 0.0) {
         typedef SEXP(*Ptr_soil)(SEXP,SEXP,SEXP,SEXP);
         static Ptr_soil p_soil = NULL;
         if (p_soil == NULL) {

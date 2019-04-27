@@ -34,8 +34,9 @@ Function \code{plot} plots the results of the soil plant water balance model (se
     \item{\code{"Export"}:}{ Water exported through deep drainage and surface runoff.}
     \item{\code{"Evapotranspiration"}:}{ Plant transpiration and soil evaporation.}
     \item{\code{"SoilPsi"}:}{ Soil water potential.}
-    \item{\code{"SoilTheta"}:}{ Soil relative water content.}
-    \item{\code{"SoilVol"}:}{ Soil water volumetric content.}
+    \item{\code{"SoilRWC"}:}{ Soil relative water content (in percent of field capacity).}
+    \item{\code{"SoilTheta"}:}{ Soil moisture water content (in percent volume).}
+    \item{\code{"SoilVol"}:}{ Soil water volumetric content (in mm).}
     \item{\code{"PlantExtraction"}:}{ Water extracted by plants from each soil layer.}
     \item{\code{"HydraulicRedistribution"}:}{Water added to each soil layer coming from other soil layers, transported through the plant hydraulic network (only for \code{transpirationMode = "Complex"}).}
     \item{\code{"WTD"}:}{ Water table depth.}
