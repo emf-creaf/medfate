@@ -31,11 +31,11 @@ The soil input for function is actually an object of class `soil` that is create
 examplesoil = soil(defaultSoilParams(2))
 ```
 
-Advanced soil plant energy and water balance modelling requires considering the temperature of soil. Hence, `Temp` contains the temperature (in degrees) of soil layers, initialized to missing values:
+Advanced soil plant energy and water balance modelling requires considering the temperature of soil. Hence, `Temp` contains the temperature (in degrees) of soil layers:
 ```{r}
 examplesoil$Temp
 ```
-Moreover, Van Genuchten's model is used for water retention curves.
+Soil layer temperatures are initialized to missing values, so that at the first time step they will be set to atmospheric temperature. While simple water balance modeling can be run using either Saxton's or Van Genuchten's equations as water retention curves, Van Genuchten's model is forced for advanced modelling.
 
 ### Species data table
 
@@ -60,15 +60,15 @@ Models included in `medfate` were primarily designed to be ran on **forest inven
 data(exampleforest)
 exampleforest
 ```
-Trees are expected to be primarily described in terms of species, diameter (DBH) and height, whereas shrubs are described in terms of species, percent cover and mean height. 
 
 ### Meteorological forcing
 
-Advanced water and energy balance modeling requires daily precipitation, radiation, wind speed, min/max temparatures and relative humitidy as inputs. Here we show an example of meteorological forcing data. 
+Advanced water and energy balance modeling requires daily precipitation, radiation, wind speed, min/max temparatures and relative humitidy as inputs: 
 ```{r}
 data(examplemeteo)
 head(examplemeteo)
 ```
+
 Simulation models in `medfate` have been designed to work along with data generated from package `meteoland`. The user is strongly recommended to resort to this package to obtain suitable weather input for soil water balance simulations.
 
 ### Simulation control
@@ -94,32 +94,37 @@ A last step is needed before calling simulation functions. It consists in the co
 x = forest2spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 ```
 
-All the input information for forest data and species parameter values can be inspected by printing different elements of the input object, which are: 
-```{r}
-names(x)
-```
-First, information about the cohort species is found in element `cohorts`  (i.e. code, species and name):
+As with simple water balance, information about the cohort species is found in element `cohorts`  (i.e. code, species and name):
 ```{r}
 x$cohorts
 ```
+
 Element `canopy` contains state variables of the whole canopy, which include growth degree days and canopy temperature:
 ```{r}
 x$canopy
 ```
-Element `above` contains the aboveground structure data that we already know:
+Canopy temperature is a state variable (as soil temperature) needed for energy balance. As you may already known, element `above` contains the aboveground structure data that we already know:
 ```{r}
 x$above
 ```
-As with the soil input object, the `spwbInput` object may be modified during simulations. In the case of soil water balance, these modifications concern `LAI_expanded` and `LAI_dead` in element `above`, as well as canopy variables.
+The `spwbInput` object may be modified during simulations. In the case of soil water balance, these modifications concern `LAI_expanded` and `LAI_dead` in element `above`, as well as canopy variables.
 
-Aboveground parameters related to plant transpiration can be seen in `paramsTransp`:
+Belowground parameters can be seen in `below`, which in the case of advance water and energy balance include root distribution as well as maximum root and rhizosphere conductances by soil layer:
+```{r}
+x$below
+```
+
+The `spwbInput`object includes cohort parameter values for several aspects of plant anatomy and functioning. For example, plan anatomy is described in `paramsAnatomy`.
+```{r}
+x$paramsAnatomy
+```
+It also presents parameters related to plant transpiration can be seen in `paramsTransp`:
 ```{r}
 x$paramsTransp
 ```
-
-Belowground parameters can be seen in `below` and include root distribution as well as maximum root and rhizosphere conductances by soil layer:
+and parameters related to water storage of leaf and stem organs:
 ```{r}
-x$below
+x$paramsWaterStorage
 ```
 
 Finally, note that one can play with plant-specific parameters for soil water balance (instead of using species-level values) by modifying manually the parameter values in this object.
@@ -128,13 +133,13 @@ Finally, note that one can play with plant-specific parameters for soil water ba
 
 ## Static analysis of submodels
 
-Before using the soil water balance model, is important to understand its sub-model components. Package `medfate` provides many functions corresponding to sub-models (light extinction, hydraulics, transpiration, photosynthesis...). In addition, there are high-level plotting functions that allow examining several aspects of these processes.
+Before using the advanced water and energy balance model, is important to understand its sub-model components. Package `medfate` provides many functions corresponding to sub-models (light extinction, hydraulics, transpiration, photosynthesis...). In addition, there are high-level plotting functions that allow examining several aspects of these processes.
 
 ### Vulnerability curves
 Given a `spwbInput` object, we can use function `hydraulics_vulnerabilityCurvePlot()` to inspect **vulnerability curves**, i.e. how hydraulic conductance changes with the water potential, for each plant cohort and each of the different elements of the soil-plant hydraulic network: rhizosphere, roots, stems and leaves:
 
 ```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 7}
-par(mar=c(5,5,1,1), mfrow=c(2,2))
+par(mar=c(4.5,4.5,1,1), mfrow=c(2,2))
 hydraulics_vulnerabilityCurvePlot(x, type="leaf")
 hydraulics_vulnerabilityCurvePlot(x, type="stem")
 hydraulics_vulnerabilityCurvePlot(x, type="root")
@@ -147,7 +152,7 @@ Note that the last call to `hydraulics_vulnerabilityCurvePlot()` includes a `soi
 
 The vulnerability curves conformng the hydraulic network are used in the model to build the **supply function**, which relates water flow (i.e. transpiration) with the drop of water potential along the continuum. The supply function contains not only these two variables, but also the water potential of intermediate nodes in the the hydraulic network. Function `hydraulics_supplyFunctionPlot()` can be used to inspect any of this variables:
 ```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 7}
-par(mar=c(5,5,1,1), mfrow=c(2,2))
+par(mar=c(4.5,4.5,1,1), mfrow=c(2,2))
 hydraulics_supplyFunctionPlot(x, examplesoil, type="E")
 hydraulics_supplyFunctionPlot(x, examplesoil, type="ERhizo")
 hydraulics_supplyFunctionPlot(x, examplesoil, type="dEdP")
@@ -207,7 +212,7 @@ names(sd1$EnergyBalance)
 
 Package `medfate` provides a `plot` function for objects of class `spwb_day` that can be used to inspect the results of the simulation. We use this function to display subdaily dynamics in plant, soil and canopy variables. For example, we can use it to display temperature variations (only the temperature of the topmost soil layer is drawn):
 
-```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 3.5}
+```{r, fig=TRUE, fig.align="center", fig.width=4, fig.height = 3.5}
 par(mar=c(4,4,1,1))
 plot(sd1, type = "Temperature")
 ```
@@ -224,16 +229,33 @@ With the following code, we use function `plot.spwb_day()` to draw plots of dail
 par(mar=c(5,5,1,1), mfrow=c(2,2))
 plot(sd1, type = "PlantTranspiration", bySpecies = T)
 plot(sd1, type = "LeafTranspiration", bySpecies = T)
-plot(sd1, type = "LeafPhotosynthesis", bySpecies = T)
-plot(sd1, type = "LeafPsi", bySpecies = T)
+plot(sd1, type = "PlantPhotosynthesis", bySpecies = T)
+plot(sd1, type = "LeafPsiAverage", bySpecies = T)
 ```
 We can also use the same function to plot variations in temperature for sunlit and shade leaves (note that sunlit leaves of some species reach temperatures higher than the canopy):
 ```{r, fig=TRUE, fig.align="center", fig.width=7.5, fig.height = 4}
 plot(sd1, type = "LeafTemperature", bySpecies=TRUE)
 ```
 Or we can plot variations in stomatal conductance for sunlit and shade leaves:
-```{r, fig=TRUE, fig.align="center", fig.width=7.5, fig.height = 4}
+```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 4}
+plot(sd1, type = "LeafPhotosynthesis", bySpecies=TRUE)
+```
+
+```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 4}
 plot(sd1, type = "LeafStomatalConductance", bySpecies=TRUE)
+```
+
+Or we can plot variations in stomatal conductance for sunlit and shade leaves:
+```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 4}
+plot(sd1, type = "LeafPsi", bySpecies=TRUE)
+```
+
+```{r, fig=TRUE, fig.align="center", fig.width=7.5, fig.height = 4}
+plot(sd1, type = "LeafCi", bySpecies=TRUE)
+```
+
+```{r, fig=TRUE, fig.align="center", fig.width=7.5, fig.height = 4}
+plot(sd1, type = "LeafIntrinsicWUE", bySpecies=TRUE)
 ```
 
 ## Water balance for multiple days
@@ -262,11 +284,7 @@ Now we are ready to call function `spwb()`. In this example, we only simulate 61
 ```{r}
 S = spwb(x, examplesoil, examplemeteo[110:170,], latitude = 41.82592, elevation = 100)
 ```
-Function `spwb()` returns an object of class *spwb*, actually a list:
-```{r}
-class(S)
-```
-If we inspect its elements, we realize that the output is arranged differently than in `spwb_day()`:
+Function `spwb()` returns an object of class *spwb*. If we inspect its elements, we realize that the output is arranged differently than in `spwb_day()`:
 ```{r}
 names(S)
 ```
@@ -313,31 +331,5 @@ head(summary(S, freq="day", output="PlantStress", bySpecies = TRUE))
 Or we can combine the aggregation by species with a temporal aggregation (here monthly averages):
 ```{r}
 summary(S, freq="month", FUN = mean, output="PlantStress", bySpecies = TRUE)
-```
-
-### Focusing on particular days
-
-Function `spwb()` does not store subdaily values in the output, because otherwise a lot of memory would be consumed. This has the drawback that, while subdaily steps are simulated, there is no trace of them. If we detect something unusual in the results at the daily scale, we may decide to inspect this in detail by re-running a particular day. Say we want to inspect day 5 of the previous simulation, which correspond to day 144 of the whole year. We start by setting the state variables to the end of the day before:
-```{r}
-spwb_resetInputs(x, examplesoil, from = S, day = 4)
-```
-Now we call function `spwb_day()` for day 144 of the year:
-```{r}
-d = 144
-sd1<-spwb_day(x, examplesoil, rownames(examplemeteo)[d], 
-             examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
-             examplemeteo$MinRelativeHumidity[d], 
-             examplemeteo$MaxRelativeHumidity[d], 
-             examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
-             latitude = 41.82592, elevation = 100, 
-             slope= 0, aspect = 0, prec = examplemeteo$Precipitation[d])
-```
-We use function `plot.spwb_day()` to draw plots of daily variation per species of plant transpiration (L·m$^{-2}$), transpiration per leaf area (in L·m$^{-2}$·LAI$^{-1}$), net photosynthesis per leaf area (in g C·m$^{-2}$·LAI$^{-1}$), and plant water potential (in MPa):
-```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 7}
-par(mar=c(5,5,1,1), mfrow=c(2,2))
-plot(sd1, type = "PlantTranspiration", bySpecies = T)
-plot(sd1, type = "LeafTranspiration", bySpecies = T)
-plot(sd1, type = "LeafPhotosynthesis", bySpecies = T)
-plot(sd1, type = "LeafPsi", bySpecies = T)
 ```
 
