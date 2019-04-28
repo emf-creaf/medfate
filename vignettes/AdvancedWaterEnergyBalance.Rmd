@@ -88,13 +88,13 @@ control$soilFunctions = "VG"
 
 ### Water balance input object
 
-A last step is needed before calling simulation functions. It consists in the compilation of all aboveground and belowground parameters and the specification of additional parameter values for each plant cohort, such as their light extinction coefficient or their response to drought. If one has a `forest` object, the `spwbInput` object can be generated in directly from it:
+A last step is needed before running the simulation function, consisting in the compilation of parameters and the calculation of additional parameter values for each plant cohort. If one has a `forest` object, the `spwbInput` object can be generated in directly from it:
 
 ```{r}
 x = forest2spwbInput(exampleforest, examplesoil, SpParamsMED, control)
 ```
 
-As with simple water balance, information about the cohort species is found in element `cohorts`  (i.e. code, species and name):
+The `spwbInput` object for advanced water and energy balance is similar to that of simple water balance simulations, but contains more elements. Information about the cohort species is found in element `cohorts`  (i.e. code, species and name):
 ```{r}
 x$cohorts
 ```
@@ -107,36 +107,34 @@ Canopy temperature is a state variable (as soil temperature) needed for energy b
 ```{r}
 x$above
 ```
-The `spwbInput` object may be modified during simulations. In the case of soil water balance, these modifications concern `LAI_expanded` and `LAI_dead` in element `above`, as well as canopy variables.
 
 Belowground parameters can be seen in `below`, which in the case of advance water and energy balance include root distribution as well as maximum root and rhizosphere conductances by soil layer:
 ```{r}
 x$below
 ```
 
-The `spwbInput`object includes cohort parameter values for several aspects of plant anatomy and functioning. For example, plan anatomy is described in `paramsAnatomy`.
+The `spwbInput`object also includes cohort parameter values for several kinds of traits. For example, plant anatomy parameters are described in `paramsAnatomy`:
 ```{r}
 x$paramsAnatomy
 ```
-It also presents parameters related to plant transpiration can be seen in `paramsTransp`:
+Parameters related to plant transpiration and photosynthesis can be seen in `paramsTransp`:
 ```{r}
 x$paramsTransp
 ```
-and parameters related to water storage of leaf and stem organs:
+Finally, parameters related to pressure-volume curves and water storage capacity of leaf and stem organs are in `paramsWaterStorage`:
 ```{r}
 x$paramsWaterStorage
 ```
 
-Finally, note that one can play with plant-specific parameters for soil water balance (instead of using species-level values) by modifying manually the parameter values in this object.
-
+Finally, remember that one can play with plant-specific parameters for soil water balance (instead of using species-level values) by modifying manually the parameter values in this object.
 
 
 ## Static analysis of submodels
 
-Before using the advanced water and energy balance model, is important to understand its sub-model components. Package `medfate` provides many functions corresponding to sub-models (light extinction, hydraulics, transpiration, photosynthesis...). In addition, there are high-level plotting functions that allow examining several aspects of these processes.
+Before using the advanced water and energy balance model, is important to understand the parameters that influence the different sub-models. Package `medfate` provides low-level functions corresponding to sub-models (light extinction, hydraulics, transpiration, photosynthesis...). In addition, there are several high-level plotting functions that allow examining several aspects of these processes.
 
 ### Vulnerability curves
-Given a `spwbInput` object, we can use function `hydraulics_vulnerabilityCurvePlot()` to inspect **vulnerability curves**, i.e. how hydraulic conductance changes with the water potential, for each plant cohort and each of the different elements of the soil-plant hydraulic network: rhizosphere, roots, stems and leaves:
+Given a `spwbInput` object, we can use function `hydraulics_vulnerabilityCurvePlot()` to inspect **vulnerability curves** (i.e. how hydraulic conductance of a given segment changes with the water potential) for each plant cohort and each of the different segments of the soil-plant hydraulic network: rhizosphere, roots, stems and leaves:
 
 ```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 7}
 par(mar=c(4.5,4.5,1,1), mfrow=c(2,2))
@@ -146,11 +144,11 @@ hydraulics_vulnerabilityCurvePlot(x, type="root")
 hydraulics_vulnerabilityCurvePlot(x, examplesoil, type="rhizo")
 ```
 
-Note that the last call to `hydraulics_vulnerabilityCurvePlot()` includes a `soil` object. This is because the van Genuchten parameters that define the vulnerability curve for the rhizosphere are stored in this object.
+The maximum values and shape of vulnerability curves for leaves and stems are regulated by parameters in `paramsTransp`. Roots have vulnerability curve parameters in the same data frame, but maximum conductance values need to be specified for each soil layer and are given in `below$VCroot_kmax`. Note that the last call to `hydraulics_vulnerabilityCurvePlot()` includes a `soil` object. This is because the van Genuchten parameters that define the shape of the vulnerability curve for the rhizosphere are stored in this object. Maximum conductance values in the rhizosphere are given in `below$VGrhizo_kmax`.
 
 ### Supply functions
 
-The vulnerability curves conformng the hydraulic network are used in the model to build the **supply function**, which relates water flow (i.e. transpiration) with the drop of water potential along the continuum. The supply function contains not only these two variables, but also the water potential of intermediate nodes in the the hydraulic network. Function `hydraulics_supplyFunctionPlot()` can be used to inspect any of this variables:
+The vulnerability curves conformng the hydraulic network are used in the model to build the **supply function**, which relates water flow (i.e. transpiration) with the drop of water potential along the whole hydraulic pathway. The supply function contains not only these two variables, but also the water potential of intermediate nodes in the the hydraulic network. Function `hydraulics_supplyFunctionPlot()` can be used to inspect any of this variables:
 ```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 7}
 par(mar=c(4.5,4.5,1,1), mfrow=c(2,2))
 hydraulics_supplyFunctionPlot(x, examplesoil, type="E")
@@ -164,7 +162,7 @@ Calls to `hydraulics_supplyFunctionPlot()` always need both a `spwbInput` object
 
 ### Stomatal regulation and photosynthesis
 
-The soil water balance model determines stomatal conductance and transpiration separately for sunlit and shade leaves. Stomatal conductance is determined after building a photosynthesis function corresponding to the supply function and finding the value of stomatal conductance that maximizes carbon revenue while avoiding hydraulic damage. Given a meteorological input and a chosen moment in time (day and timestep), the R function `transp_stomatalRegulationPlot()` allows displaying the supply and photosynthesis curves for sunlit and shade leaves, along with an indication of the values corresponding to the chosen stomatal conductance:
+The soil water balance model determines stomatal conductance and transpiration separately for sunlit and shade leaves. Stomatal conductance is determined after building a photosynthesis function corresponding to the supply function and finding the value of stomatal conductance that maximizes carbon revenue while avoiding hydraulic damage (a profit-maximization approach). Given a meteorological and soil inputs and a chosen day and timestep, function `transp_stomatalRegulationPlot()` allows displaying the supply and photosynthesis curves for sunlit and shade leaves, along with an indication of the values corresponding to the chosen stomatal aperture:
 
 ```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 17}
 d = 100
@@ -196,7 +194,7 @@ sd1<-spwb_day(x, examplesoil, rownames(examplemeteo)[d],
              slope= 0, aspect = 0, prec = examplemeteo$Precipitation[d])
 ```
 
-The output of `spwb_day()` is a list with five elements:
+The output of `spwb_day()` is a list with several elements:
 ```{r}
 names(sd1)
 ```
@@ -227,6 +225,13 @@ par(mar=c(4,4,1,1))
 plot(sd1, type = "Temperature")
 ```
 
+
+```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 10}
+par(mar=c(4,4,1,1), mfrow=c(2,1))
+plot(sd1, type = "CanopyEnergyBalance")
+plot(sd1, type = "SoilEnergyBalance")
+```
+
 ### Plant output
 
 Element `Plants` contains output values by plant cohort and subdaily time step. Many output variables can be inspected in this element.
@@ -234,7 +239,7 @@ Element `Plants` contains output values by plant cohort and subdaily time step. 
 ```{r}
 names(sd1$Plants)
 ```
-With the following code, we use function `plot.spwb_day()` to draw plots of daily variation per species of plant transpiration (L·m$^{-2}$), transpiration per leaf area (in L·m$^{-2}$·LAI$^{-1}$), net photosynthesis per leaf area (in g C·m$^{-2}$·LAI$^{-1}$), and plant water potential (in MPa):
+With the following code, we use function `plot.spwb_day()` to draw plots of daily variation per species of plant transpiration (L·m$^{-2}$), transpiration per leaf area (in L·m$^{-2}$·LAI$^{-1}$), plant net photosynthesis (in g C·m$^{-2}$·LAI$^{-1}$), and plant water potential (in MPa):
 ```{r, fig=TRUE, fig.align="center", fig.width=7.5, fig.height = 7.5}
 par(mar=c(5,5,1,1), mfrow=c(2,2))
 plot(sd1, type = "PlantTranspiration", bySpecies = T)
