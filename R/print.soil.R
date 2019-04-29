@@ -12,6 +12,7 @@ print.soil<-function(x, model="SX",...) {
   Theta_FC = soil_thetaFC(x, model)
   Water_SAT = soil_waterSAT(x, model)
   Theta_SAT = soil_thetaSAT(x, model)
+  Water_EXTR = soil_waterExtractable(x,model)
   
   for(l in 1:nlayers) {
     dfin = dfin+x$dVec[l]
@@ -28,7 +29,7 @@ print.soil<-function(x, model="SX",...) {
   }
   cat(paste("\nTotal soil saturated capacity (mm):", round(sum(Water_SAT), digits=0),"\n"))  
   cat(paste("Total soil water holding capacity (mm):", round(sum(Water_FC), digits=0),"\n"))  
-  cat(paste("Total soil extractable water (mm):", round(sum(Water_FC-Water_WP), digits=0),"\n"))  
+  cat(paste("Total soil extractable water (mm):", round(sum(Water_EXTR), digits=0),"\n"))  
   cat(paste("Total soil current Volume (mm):",round(sum(x$W*Water_FC), digits=0),"\n"))
   cat(paste("Water table depth (mm):",round(soil_waterTableDepth(x, model), digits=0),"\n"))
   cat(paste("\nSnow pack water equivalent (mm):",round(x$SWE, digits=0),"\n"))

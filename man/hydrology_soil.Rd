@@ -8,7 +8,7 @@
 
 \title{Soil infiltration and bare soil evaporation}
 \description{
-Function \code{hydrology_infiltrationAmount} calculates the amount of water that infiltrates into the topsoil, according to the USDA SCS curve number method (Boughton 1989). The remaining is assumed to be lost as surface runoff. Function \code{hydrology_soilEvaporationAmount} calculates the amount of evaporation from bare soil, following Ritchie (1972).
+Function \code{hydrology_infiltrationAmount} calculates the amount of water that infiltrates into the topsoil, according to the USDA SCS curve number method (Boughton 1989). The remaining is assumed to be lost as surface runoff. Function \code{hydrology_soilEvaporationAmount} calculates the amount of evaporation from bare soil, following Ritchie (1972). Function \code{hydrology_snowMelt} calculates the maximum amount of snowmelt according to Kergoat (1998).
 }
 \usage{
 hydrology_infiltrationAmount(input, Ssoil) 
@@ -45,6 +45,8 @@ Function \code{hydrology_infiltrationAmount} a vector of the same length as \cod
 Boughton (1989). A review of the USDA SCS curve number method. - Australian Journal of Soil Research 27: 511-523.
 
 De \enc{Cáceres}{Caceres} M, \enc{Martínez}{Martinez}-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L. (2015) Coupling a water balance model with forest inventory data to evaluate plant drought stress at the regional level. Agricultural and Forest Meteorology.
+
+Kergoat L. (1998). A model for hydrological equilibrium of leaf area index on a global scale. Journal of Hydrology 212–213: 268–286.
 
 Ritchie (1972). Model for predicting evaporation from a row crop with incomplete cover. - Water resources research.
 }

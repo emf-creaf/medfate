@@ -12,6 +12,7 @@
 \alias{soil_theta}
 \alias{soil_waterFC}
 \alias{soil_waterWP}
+\alias{soil_waterExtractable}
 \alias{soil_waterSAT}
 \alias{soil_USDAType}
 \alias{soil_vanGenuchtenParamsCarsel}
@@ -36,6 +37,7 @@ soil_theta(soil, model="SX")
 soil_waterFC(soil, model="SX")
 soil_waterWP(soil, model="SX")
 soil_waterSAT(soil, model="SX")
+soil_waterExtractable(soil, model="SX", minPsi = -5.0)
 soil_thetaFC(soil, model="SX")
 soil_thetaWP(soil, model="SX")
 soil_thetaSAT(soil, model="SX")
@@ -61,6 +63,7 @@ soil_retentionCurvePlot(soil, model="SX", layer = 1,
   \item{layer}{Soil layer to be plotted.}
   \item{relative}{Boolean flag to indicate that retention curve should be relative to field capacity or saturation.}
   \item{to}{Either 'SAT' (saturation) or 'FC' (field capacity).}
+  \item{minPsi}{Minimum water potential (in MPa) to calculate the amount of extractable water.}
   \item{...}{Additional parameters passed to plot function.}
 }
 \value{

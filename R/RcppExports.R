@@ -685,6 +685,10 @@ soil_waterWP <- function(soil, model = "SX") {
     .Call(`_medfate_waterWP`, soil, model)
 }
 
+soil_waterExtractable <- function(soil, model = "SX", minPsi = -5.0) {
+    .Call(`_medfate_waterExtractable`, soil, model, minPsi)
+}
+
 soil_theta <- function(soil, model = "SX") {
     .Call(`_medfate_theta`, soil, model)
 }
