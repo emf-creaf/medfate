@@ -170,14 +170,17 @@ NumericVector leafphotosynthesis(double Q, double Catm, double Gc, double leaf_t
   double x,x1,e,fx,fx1;
   x1 = 0.0;//initial guess
   e = 0.001; // accuracy in micromol * mol-1
+  int cnt = 0;
+  int mxiter = 100;
   if(verbose) Rcout <<"x{i}"<<"    "<<"x{i+1}"<<"        "<<"|x{i+1}-x{i}|\n";                
   do {
     x=x1; /*make x equal to the last calculated value of                             x1*/
     fx=f(x, Q, Catm, Gc, GT, Km, Vmax, Jmax);            //simplifying f(x)to fx
     fx1=fder(x, Q, Catm, Gc, GT, Km, Vmax, Jmax);            //simplifying fprime(x) to fx1
     x1=x-(fx/fx1);/*calculate x{1} from x, fx and fx1*/ 
-    if(verbose) Rcout<<x<<"     "<<x1<<"           "<<abs(x1-x)<<"\n";        
-  } while (fabs(x1-x)>=e);
+    cnt++;
+    if(verbose) Rcout<<x<<"     "<<x1<<"           "<<std::abs(x1-x)<<"\n";        
+  } while ((std::abs(x1-x)>=e) & (cnt < mxiter));
   double A = photosynthesis_Ci(Q,x1,GT,Km,Vmax,Jmax);
   NumericVector res = NumericVector::create(x1, A);
   res.attr("names") = CharacterVector::create("Ci", "A");

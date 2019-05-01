@@ -1,6 +1,7 @@
 // [[Rcpp::interfaces(r,cpp)]]
 
 #include <numeric>
+#include <math.h>
 #include "lightextinction.h"
 #include "windextinction.h"
 #include "hydraulics.h"
@@ -616,7 +617,6 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
         s = spwbDay1(x, soil, MeanTemperature[i], PET[i], Precipitation[i], er, 0.0, 
                      Radiation[i], elevation, verbose); //No Runon in simulations for a single cell
       } else if(transpirationMode=="Sperry") {
-        Rcout<<i<<".";
         int ntimesteps = control["ndailysteps"];
         double tstep = 86400.0/((double) ntimesteps);
         std::string c = as<std::string>(dateStrings[i]);
