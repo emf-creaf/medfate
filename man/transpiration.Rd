@@ -16,7 +16,7 @@ transp_profitMaximization(supplyFunction, photosynthesisFunction, type,
                           Gwmin, Gwmax, kleafmax = NA)
 transp_transpirationGranier(x, soil, meteo, day, modifyInput = TRUE)
 transp_transpirationSperry(x, soil, meteo, day,
-                           latitude, elevation, 
+                           latitude, elevation, slope, aspect, 
                            canopyEvaporation = 0, snowMelt = 0, soilEvaporation = 0, 
                            stepFunctions = NA, modifyInput = TRUE)
 transp_stomatalRegulationPlot(x, soil, meteo, day, timestep, 
@@ -48,7 +48,7 @@ transp_stomatalRegulationPlot(x, soil, meteo, day, timestep,
   \item{day}{An integer to identify a day within \code{meteo}.}
   \item{timestep}{An integer between 1 and \code{ndailysteps} specified in \code{x} (see \code{\link{defaultControl}}).}
   \item{latitude}{Latitude (in degrees).}
-  \item{elevation}{Elevation above sea level (in m).}
+  \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). 
   \item{canopyEvaporation}{Canopy evaporation (from interception) for \code{day} (mm).}
   \item{soilEvaporation}{Bare soil evaporation for \code{day} (mm).}
   \item{snowMelt}{Snow melt values  for \code{day} (mm).}

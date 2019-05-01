@@ -395,27 +395,87 @@ Diurnal above-canopy air temperature ($T_a$) variations are modeled assuming a s
 
 
 \subsubsection{Diffuse and direct radiation}
-Daily global radiation (in MJ·m$^{-2}$) is assumed to include both direct and diffuse shortwave radiation (SWR). Using latitude information and whether is a rainy day, this quantity is partitioned into instantaneous direct and diffuse SWR for different daily substeps. Values of instantaneous direct and diffuse SWR above the canopy (i.e. $I_{beam}$ and $I_{dif}$) are calculated using the methods described in Spitters et al. (1986), which involve comparing daily global radiation with daily potential radiation. For example, for a flat terrain located at 42ºN latitude and 100 m.a.s.l, having 30 MJ·m$^{-2}$ of daily global radiation on the 2001/June/01 in a clear day, the hourly variation in solar elevation, potential/global radiation and diffuse/direct light for PAR and SWR would be:
+Daily global radiation (in MJ·m$^{-2}$) is assumed to include both direct and diffuse shortwave radiation (SWR). Using latitude information and whether is a rainy day, this quantity is partitioned into instantaneous direct and diffuse SWR and PAR for different daily substeps. Values of instantaneous direct and diffuse SWR and PAR above the canopy (i.e. $I_{beam}$ and $I_{dif}$) are calculated using the methods described in Spitters et al. (1986), which involve comparing daily global radiation with daily potential radiation. At this point is important to distinguish flat surfaces from slopes, which may not receive direct radiation. For example, for a flat terrain located at 42ºN latitude and 100 m.a.s.l, having 7.2 MJ·m$^{-2}$ of daily global radiation on the 2001/January/15 in a clear day, the hourly variation in solar elevation, potential/global radiation and diffuse/direct light for PAR and SWR would be:
 \begin{center}
-<<echo=FALSE, fig=TRUE, width=7, height=7>>=
+<<echo=FALSE, fig=TRUE, width=7, height=6>>=
 par(mar=c(4,4,1,1), mfrow=c(2,2))
 latrad = 0.73
+slorad = 0
+asprad = 0
 elevation = 100
 clearday = TRUE
-J = meteoland::radiation_julianDay(2001,6,1)
+J = meteoland::radiation_julianDay(2001,1,15)
 gsc = meteoland::radiation_solarConstant(J)
 delta = meteoland::radiation_solarDeclination(J)
-a=meteoland::radiation_directDiffuseDay(gsc, latrad,delta, 30, clearday, 100)
+diffTemp = 10
+diffTempMonth = diffTemp
+vpa = meteoland::utils_averageDailyVP(5,15,70,90)
+precipitation = 0
+rad = meteoland::radiation_solarRadiation(gsc, latrad, elevation, slorad, asprad,
+                                          delta, diffTemp, diffTempMonth, vpa,
+                                          precipitation)
+a=meteoland::radiation_directDiffuseDay(gsc, latrad, slorad, asprad, delta, rad, clearday, 100)
 se = a$SolarElevation*(180/pi)
 se[a$Rpot==0]=NA
 plot(a$SolarHour*12/pi, se, type="l", ylim=c(0,70), ylab="Solar elevation angle (º)", xlab="Solar hour")
-plot(a$SolarHour*12/pi, a$Rpot, type="l", ylab="Radiation (W·m-2)", xlab="Solar hour")
-lines(a$SolarHour*12/pi, a$Rg,  lty=2)
-legend("topleft", legend=c("Potential", "Global"), lty=c(1,2), bty="n")
-plot(a$SolarHour*12/pi, a$SWR_direct, type="l", ylab="SWR radiation (W·m-2)", xlab="Solar hour")
+plot(a$SolarHour*12/pi, a$Rpot, type="l", ylab="Radiation (W·m-2)", xlab="Solar hour", ylim=c(0,0.8))
+lines(a$SolarHour*12/pi, a$Rpot_flat,  lty=2)
+lines(a$SolarHour*12/pi, a$Rg,  lty=3)
+legend("topleft", legend=c("Potential", "Extraterrestrial", "Global"), lty=c(1,2,3), bty="n")
+plot(a$SolarHour*12/pi, a$SWR_direct, type="l", ylab="SWR radiation (W·m-2)", xlab="Solar hour", ylim=c(0,0.2))
 lines(a$SolarHour*12/pi, a$SWR_diffuse,  lty=2)
 legend("topleft", legend=c("Direct", "Diffuse"), lty=c(1,2), bty="n")
-plot(a$SolarHour*12/pi, a$PAR_direct, type="l", ylab="PAR radiation (W·m-2)", xlab="Solar hour")
+plot(a$SolarHour*12/pi, a$PAR_direct, type="l", ylab="PAR radiation (W·m-2)", xlab="Solar hour", ylim=c(0,0.1))
+lines(a$SolarHour*12/pi, a$PAR_diffuse,  lty=2)
+legend("topleft", legend=c("Direct", "Diffuse"), lty=c(1,2), bty="n")
+@
+\end{center}
+For a flat surface, the extraterrestrial radiation is the same that potential radiation, so that direct and diffuse light start and end at the same hours. If the same plot was on a north-facing slope of 10 degrees the daily global radiation would be 4.06 MJ·m$^{-2}$ and the extraterrestrial radiation is larger than potential (i.e., accounting for topography) radiation, which has been reduced because of the orientation of the slope:
+\begin{center}
+<<echo=FALSE, fig=TRUE, width=7, height=6>>=
+par(mar=c(4,4,1,1), mfrow=c(2,2))
+slorad = pi*10/180
+asprad = 0
+rad = meteoland::radiation_solarRadiation(gsc, latrad, elevation, slorad, asprad,
+                                          delta, diffTemp, diffTempMonth, vpa,
+                                          precipitation)
+a=meteoland::radiation_directDiffuseDay(gsc, latrad,slorad, asprad, delta, rad, clearday, 100)
+se = a$SolarElevation*(180/pi)
+se[a$Rpot_flat==0]=NA
+plot(a$SolarHour*12/pi, se, type="l", ylim=c(0,70), ylab="Solar elevation angle (º)", xlab="Solar hour")
+plot(a$SolarHour*12/pi, a$Rpot, type="l", ylab="Radiation (W·m-2)", xlab="Solar hour", ylim=c(0,0.8))
+lines(a$SolarHour*12/pi, a$Rpot_flat,  lty=2)
+lines(a$SolarHour*12/pi, a$Rg,  lty=3)
+legend("topleft", legend=c("Potential", "Extraterrestrial", "Global"), lty=c(1,2,3), bty="n")
+plot(a$SolarHour*12/pi, a$SWR_direct, type="l", ylab="SWR radiation (W·m-2)", xlab="Solar hour", ylim=c(0,0.2))
+lines(a$SolarHour*12/pi, a$SWR_diffuse,  lty=2)
+legend("topleft", legend=c("Direct", "Diffuse"), lty=c(1,2), bty="n")
+plot(a$SolarHour*12/pi, a$PAR_direct, type="l", ylab="PAR radiation (W·m-2)", xlab="Solar hour", ylim=c(0,0.1))
+lines(a$SolarHour*12/pi, a$PAR_diffuse,  lty=2)
+legend("topleft", legend=c("Direct", "Diffuse"), lty=c(1,2), bty="n")
+@
+\end{center}
+In this situation, diffuse light should follow extraterrestrial radiation hours whereas direct light should follow potential radiation hours. Finally, if the same plot was on a north-facing slope of 30 degrees the daily global radiation would be 1.96 MJ·m$^{-2}$ and potential radiation would be 0. In this situation all radiation should correspond to diffuse radiation:
+\begin{center}
+<<echo=FALSE, fig=TRUE, width=7, height=6>>=
+par(mar=c(4,4,1,1), mfrow=c(2,2))
+slorad = pi*30/180
+asprad = 0
+rad = meteoland::radiation_solarRadiation(gsc, latrad, elevation, slorad, asprad,
+                                          delta, diffTemp, diffTempMonth, vpa,
+                                          precipitation)
+a=meteoland::radiation_directDiffuseDay(gsc, latrad,slorad, asprad, delta, rad, clearday, 100)
+se = a$SolarElevation*(180/pi)
+se[a$Rpot_flat==0]=NA
+plot(a$SolarHour*12/pi, se, type="l", ylim=c(0,70), ylab="Solar elevation angle (º)", xlab="Solar hour")
+plot(a$SolarHour*12/pi, a$Rpot, type="l", ylab="Radiation (W·m-2)", xlab="Solar hour", ylim=c(0,0.8))
+lines(a$SolarHour*12/pi, a$Rpot_flat,  lty=2)
+lines(a$SolarHour*12/pi, a$Rg,  lty=3)
+legend("topleft", legend=c("Potential", "Extraterrestrial", "Global"), lty=c(1,2,3), bty="n")
+plot(a$SolarHour*12/pi, a$SWR_direct, type="l", ylab="SWR radiation (W·m-2)", xlab="Solar hour", ylim=c(0,0.2))
+lines(a$SolarHour*12/pi, a$SWR_diffuse,  lty=2)
+legend("topleft", legend=c("Direct", "Diffuse"), lty=c(1,2), bty="n")
+plot(a$SolarHour*12/pi, a$PAR_direct, type="l", ylab="PAR radiation (W·m-2)", xlab="Solar hour", ylim=c(0,0.1))
 lines(a$SolarHour*12/pi, a$PAR_diffuse,  lty=2)
 legend("topleft", legend=c("Direct", "Diffuse"), lty=c(1,2), bty="n")
 @
@@ -529,11 +589,13 @@ Values of instantaneous direct and diffuse radiation above the canopy (i.e. $I_{
 <<echo=FALSE, fig=TRUE, width=7, height=7>>=
 par(mar=c(4,4,1,1), mfrow=c(2,2))
 latrad = 0.73
+asprad = 0
+slorad = 0
 elevation = 100
 J = meteoland::radiation_julianDay(2001,6,1)
 gsc = meteoland::radiation_solarConstant(J)
 delta = meteoland::radiation_solarDeclination(J)
-a=meteoland::radiation_directDiffuseDay(gsc, latrad,delta, 30, TRUE, 100)
+a=meteoland::radiation_directDiffuseDay(gsc, latrad,slorad, asprad, delta, 30, TRUE, 100)
 se = a$SolarElevation*(180/pi)
 se[a$Rpot==0]=NA
 plot(a$SolarHour*12/pi, se, type="l", ylim=c(0,70), ylab="Solar elevation (º)", xlab="Solar hour")

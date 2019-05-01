@@ -83,7 +83,8 @@ List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, i
 
 
 List transpirationSperry(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
-                  double latitude, double elevation, double solarConstant, double delta, double prec,
+                  double latitude, double elevation, double slope, double aspect, 
+                  double solarConstant, double delta, double prec,
                   double canopyEvaporation = 0.0, double snowMelt = 0.0, double soilEvaporation = 0.0,
                   bool verbose = false, int stepFunctions = NA_INTEGER, bool modifyInput = true) {
   //Control parameters
@@ -189,11 +190,11 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   NumericMatrix psiRhizoMAT = Rcpp::as<Rcpp::NumericMatrix>(x["psiRhizo"]);
   NumericVector EinstVEC = Rcpp::as<Rcpp::NumericVector>(x["Einst"]);
   
+  if(NumericVector::is_na(aspect)) aspect = 0.0;
+  if(NumericVector::is_na(slope)) slope = 0.0;
   double latrad = latitude * (PI/180.0);
-  // if(NumericVector::is_na(aspect)) aspect = 0.0;
-  // double asprad = aspect * (PI/180.0);
-  // if(NumericVector::is_na(slope)) slope = 0.0;
-  // double slorad = slope * (PI/180.0);
+  double asprad = aspect * (PI/180.0);
+  double slorad = slope * (PI/180.0);
   
   //Step in seconds
   double tstep = 86400.0/((double) ntimesteps);
@@ -242,7 +243,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   double RAsoil = aerodynamicResistance(200.0, std::max(wind2m,1.0)); //Aerodynamic resistance to convective heat transfer from soil
   
   //4a. Instantaneous direct and diffuse shorwave radiation
-  DataFrame ddd = meteoland::radiation_directDiffuseDay(solarConstant, latrad, delta,
+  DataFrame ddd = meteoland::radiation_directDiffuseDay(solarConstant, latrad, slorad, asprad, delta,
                                                         rad, clearday, ntimesteps);
   NumericVector solarElevation = ddd["SolarElevation"]; //in radians
   NumericVector solarHour = ddd["SolarHour"]; //in radians
@@ -995,7 +996,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
 
 // [[Rcpp::export("transp_transpirationSperry")]]
 List transpirationSperry(List x, List soil, DataFrame meteo, int day,
-                        double latitude, double elevation, 
+                        double latitude, double elevation, double slope, double aspect,
                         double canopyEvaporation = 0.0, double snowMelt = 0.0, double soilEvaporation = 0.0,
                         int stepFunctions = NA_INTEGER, bool modifyInput = true) {
   if(!meteo.containsElementNamed("MinTemperature")) stop("Please include variable 'MinTemperature' in weather input.");
@@ -1026,7 +1027,8 @@ List transpirationSperry(List x, List soil, DataFrame meteo, int day,
   double solarConstant = meteoland::radiation_solarConstant(J);
 
   return(transpirationSperry(x,soil, tmin, tmax, rhmin, rhmax, rad, wind, 
-                     latitude, elevation, solarConstant, delta, prec,
+                     latitude, elevation, slope, aspect,
+                     solarConstant, delta, prec,
                      canopyEvaporation, snowMelt, soilEvaporation,
                      false, stepFunctions, modifyInput));
 } 

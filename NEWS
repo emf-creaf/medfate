@@ -3,6 +3,8 @@
 -------------------------------
 
 __Version history__
+_Version 0.8.2, May 2019.
+1. Modification of meteoland to better calculate direct/diffuse light on slopes
 
 _Version 0.8.1, April 2019.
 1. Export Ci from spwb_day.

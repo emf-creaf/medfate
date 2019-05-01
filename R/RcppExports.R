@@ -725,8 +725,8 @@ spwb <- function(x, soil, meteo, latitude = NA_real_, elevation = NA_real_, slop
     .Call(`_medfate_spwb`, x, soil, meteo, latitude, elevation, slope, aspect)
 }
 
-pwb <- function(x, soil, meteo, W, latitude = NA_real_, elevation = NA_real_, canopyEvaporation = numeric(0), snowMelt = numeric(0), soilEvaporation = numeric(0)) {
-    .Call(`_medfate_pwb`, x, soil, meteo, W, latitude, elevation, canopyEvaporation, snowMelt, soilEvaporation)
+pwb <- function(x, soil, meteo, W, latitude = NA_real_, elevation = NA_real_, slope = NA_real_, aspect = NA_real_, canopyEvaporation = numeric(0), snowMelt = numeric(0), soilEvaporation = numeric(0)) {
+    .Call(`_medfate_pwb`, x, soil, meteo, W, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation)
 }
 
 moisture_symplasticRWC <- function(psiSym, pi0, epsilon) {
@@ -757,8 +757,8 @@ transp_profitMaximization <- function(supplyFunction, photosynthesisFunction, ty
     .Call(`_medfate_profitMaximization`, supplyFunction, photosynthesisFunction, type, Gwmin, Gwmax, kleafmax)
 }
 
-transp_transpirationSperry <- function(x, soil, meteo, day, latitude, elevation, canopyEvaporation = 0.0, snowMelt = 0.0, soilEvaporation = 0.0, stepFunctions = NA_integer_, modifyInput = TRUE) {
-    .Call(`_medfate_transpirationSperry`, x, soil, meteo, day, latitude, elevation, canopyEvaporation, snowMelt, soilEvaporation, stepFunctions, modifyInput)
+transp_transpirationSperry <- function(x, soil, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation = 0.0, snowMelt = 0.0, soilEvaporation = 0.0, stepFunctions = NA_integer_, modifyInput = TRUE) {
+    .Call(`_medfate_transpirationSperry`, x, soil, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, stepFunctions, modifyInput)
 }
 
 transp_transpirationGranier <- function(x, soil, meteo, day, modifyInput = TRUE) {

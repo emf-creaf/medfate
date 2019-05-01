@@ -11,7 +11,7 @@ Function \code{spwb()} is a water balance model that determines changes in soil 
 }
 \usage{
 spwb(x, soil, meteo,  latitude = NA, elevation = NA, slope = NA, aspect = NA)
-pwb(x, soil, meteo, W, latitude = NA, elevation = NA, 
+pwb(x, soil, meteo, W, latitude = NA, elevation = NA, slope = NA, aspect = NA,
     canopyEvaporation = numeric(0), 
     snowMelt = numeric(0), 
     soilEvaporation = numeric(0))

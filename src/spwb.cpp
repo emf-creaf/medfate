@@ -103,7 +103,8 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
 
 // Soil water balance with Sperry hydraulic and stomatal conductance models
 List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
-             double latitude, double elevation, double solarConstant, double delta, 
+             double latitude, double elevation, double slope, double aspect,
+             double solarConstant, double delta, 
              double prec, double pet, double er, double runon=0.0, bool verbose = false) {
   
   //Control parameters
@@ -161,8 +162,9 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   NumericVector EsoilVec = soilEvaporation(soil, soilFunctions, pet, LgroundSWR, true);
   
   //B.2 - Canopy transpiration  
-  List transp = transpirationSperry(x, soil,tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, solarConstant,
-                                    delta, prec, 
+  List transp = transpirationSperry(x, soil,tmin, tmax, rhmin, rhmax, rad, wind, 
+                                    latitude, elevation, slope, aspect, 
+                                    solarConstant, delta, prec, 
                                     hydroInputs["Interception"], hydroInputs["Snowmelt"], sum(EsoilVec),
                                     verbose, NA_INTEGER, true);
 
@@ -246,8 +248,9 @@ List spwbDay(List x, List soil, CharacterVector date, double tmin, double tmax, 
   if(transpirationMode=="Granier") {
     s = spwbDay1(x,soil, tday, pet, prec, er, runon, rad, elevation, verbose);
   } else {
-    s = spwbDay2(x,soil, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation,
-                solarConstant, delta, prec, pet, er, runon, verbose);
+    s = spwbDay2(x,soil, tmin, tmax, rhmin, rhmax, rad, wind, 
+                 latitude, elevation, slope, aspect,
+                 solarConstant, delta, prec, pet, er, runon, verbose);
   }
   // Rcout<<"hola4\n";
   return(s);
@@ -631,7 +634,8 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
         double er = erFactor(DOY[i], PET[i], Precipitation[i]);
         s = spwbDay2(x, soil, tmin, tmax, 
                      rhmin, rhmax, rad, wind, 
-                     latitude, elevation, solarConstant, delta, Precipitation[i], PET[i], 
+                     latitude, elevation, slope, aspect,
+                     solarConstant, delta, Precipitation[i], PET[i], 
                      er, 0.0, verbose);
         List Plants = Rcpp::as<Rcpp::List>(s["Plants"]);
         List PlantsInst = Rcpp::as<Rcpp::List>(s["PlantsInst"]);
@@ -928,7 +932,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
 
 // [[Rcpp::export("pwb")]]
 List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
-            double latitude = NA_REAL, double elevation = NA_REAL, 
+            double latitude = NA_REAL, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL, 
             NumericVector canopyEvaporation = NumericVector(0), 
             NumericVector snowMelt = NumericVector(0), 
             NumericVector soilEvaporation = NumericVector(0)) {
@@ -1135,7 +1139,8 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
       double prec = Precipitation[i];
       
       s = transpirationSperry(x, soil, tmin, tmax, rhmin, rhmax, rad, wind, 
-                              latitude, elevation, solarConstant, delta, prec,
+                              latitude, elevation, slope, aspect,
+                              solarConstant, delta, prec,
                               canopyEvaporation[i], snowMelt[i], soilEvaporation[i],
                               verbose, NA_INTEGER, true);
       
