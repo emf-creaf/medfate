@@ -73,7 +73,7 @@ spwb_maximumTranspirationRatioPlot<-function(x, soil,  meteo, latitude, elevatio
       xlai$above$LAI_expanded = xlai$above$LAI_live
       spwb_resetInputs(xlai, s)
       W = matrix(1, nrow=ndays, ncol = length(s$W))
-      pwb_res[[j]] = pwb(xlai,s,meteo,W, latitude = latitude, elevation = elevation)
+      pwb_res[[j]] = pwb(xlai,s,meteo,W, latitude = latitude, elevation = elevation, slope = slope, aspect = aspect)
       Tmax[,j] = pwb_res[[j]]$WaterBalance$Transpiration
       setTxtProgressBar(pb, j)
     }

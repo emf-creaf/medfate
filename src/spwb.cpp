@@ -616,6 +616,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
         s = spwbDay1(x, soil, MeanTemperature[i], PET[i], Precipitation[i], er, 0.0, 
                      Radiation[i], elevation, verbose); //No Runon in simulations for a single cell
       } else if(transpirationMode=="Sperry") {
+        Rcout<<i<<".";
         int ntimesteps = control["ndailysteps"];
         double tstep = 86400.0/((double) ntimesteps);
         std::string c = as<std::string>(dateStrings[i]);
@@ -623,6 +624,8 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
         double delta = meteoland::radiation_solarDeclination(J);
         double solarConstant = meteoland::radiation_solarConstant(J);
         double latrad = latitude * (PI/180.0);
+        if(NumericVector::is_na(aspect)) aspect = 0.0;
+        if(NumericVector::is_na(slope)) slope = 0.0;
         double asprad = aspect * (PI/180.0);
         double slorad = slope * (PI/180.0);
         double tmin = MinTemperature[i];

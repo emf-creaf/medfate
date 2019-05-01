@@ -245,12 +245,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   //4a. Instantaneous direct and diffuse shorwave radiation
   DataFrame ddd = meteoland::radiation_directDiffuseDay(solarConstant, latrad, slorad, asprad, delta,
                                                         rad, clearday, ntimesteps);
-  NumericVector solarElevation = ddd["SolarElevation"]; //in radians
   NumericVector solarHour = ddd["SolarHour"]; //in radians
-  NumericVector SWR_direct = ddd["SWR_direct"]; //in kW·m-2
-  NumericVector SWR_diffuse = ddd["SWR_diffuse"]; //in kW·m-2
-  NumericVector PAR_direct = ddd["PAR_direct"]; //in kW·m-2
-  NumericVector PAR_diffuse = ddd["PAR_diffuse"]; //in kW·m-2
   
   //4b. Instantaneous air temperature (above canopy) and longwave radiation
   NumericVector Tatm(ntimesteps), lwdr(ntimesteps), Tcan(ntimesteps, NA_REAL), Tsunrise(ntimesteps);
@@ -258,6 +253,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   NumericVector LWRsoilout(ntimesteps), Ebalsoil(ntimesteps), Hcansoil(ntimesteps), LEsoil_heat(ntimesteps);
   NumericMatrix Tsoil_mat(ntimesteps, nlayers);
   //Daylength in seconds (assuming flat area because we want to model air temperature variation)
+  Rcout<<"B";
   double tauday = meteoland::radiation_daylengthseconds(latrad,0.0,0.0, delta); 
   for(int n=0;n<ntimesteps;n++) {
     //From solar hour (radians) to seconds from sunrise
@@ -411,6 +407,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   outPMShade.attr("names") = above.attr("row.names");
   
   for(int n=0;n<ntimesteps;n++) { //Time loop
+    Rcout<<"E"<<n;
     //Long-wave radiation due to canopy temperature
     if(NumericVector::is_na(Tcan[n])) Tcan[n] = Tatm[n]; //If missing take above-canopy air temperature
     if(NumericVector::is_na(Tsoil[0])) {//Initialize Soil temperature (to minimum air temperature) if missing
@@ -440,7 +437,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
         LWR_SL(c,n) = absLWR_SL[c];
         LWR_SH(c,n) = absLWR_SH[c];
         
-        
+
         //Constant properties through time steps
         NumericVector Vmax298layer(nz), Jmax298layer(nz);
         NumericVector SLarealayer(nz), SHarealayer(nz);
@@ -472,7 +469,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
         NumericVector psiStemPrev = psiStemMAT(c,_);
         double psiLeafPrev = psiLeafVEC[c];
         double rwcsleafPrev = RWCsleafVEC[c];
-        
+
         if(nlayerscon[c]>0) {//If the plant is connected to at least one layer build 
           
           List sFunction;
@@ -519,6 +516,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
             newPsiStem = Rcpp::as<Rcpp::NumericMatrix>(sFunction["psiStem"]);
           }
           
+          Rcout<<"c"<<c;
           
           if(fittedE.size()>0) {
             //Photosynthesis function for sunlit and shade leaves
@@ -547,6 +545,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
             NumericVector VPDShade = photoShade["LeafVPD"];
             NumericVector TempSunlit = photoSunlit["LeafTemperature"];
             NumericVector TempShade = photoShade["LeafTemperature"];
+            
+            Rcout<<"d"<<c;
             
             //Profit maximization
             List PMSunlit = profitMaximization(sFunction, photoSunlit,  hydraulicCostFunction, Gwminc, Gwmax[c], VCstem_kmax[c]);
@@ -793,7 +793,6 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
     } //End of cohort loop
     
     
-    
     //CANOPY AND SOIL ENERGY BALANCE
     //Proportion of the canopy exchanging LWR radiation  as the fraction of incoming LWR
     double canLWRexchprop = abs_LWR_can[n]/lwdr[n];
@@ -844,6 +843,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
     canopyParams["Temp"] = Tcannext;
     
   } //End of timestep loop
+  Rcout<<"F";
   
   //4z. Plant daily drought stress (from root collar mid-day water potential)
   NumericVector SoilExtractCoh(numCohorts,0.0);
