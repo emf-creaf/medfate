@@ -2,7 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{natbib}
 \usepackage{authblk}
-%\usepackage{hyperref}
+\usepackage{hyperref}
 \usepackage{amsmath}
 \title{Soil-plant water balance model}
 \author[1,2]{Miquel De Cáceres}

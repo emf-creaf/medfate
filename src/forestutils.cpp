@@ -844,6 +844,7 @@ NumericVector cohortLAI(List x, DataFrame SpParams, double gdd = NA_REAL){
   return(lai);
 }
 
+
 // [[Rcpp::export("species_LAI")]]
 NumericVector speciesLAI(List x, DataFrame SpParams, double gdd = NA_REAL) {
   NumericVector cl = cohortLAI(x, SpParams, gdd);

@@ -8,10 +8,10 @@
 %\VignetteIndexEntry{Hydraulics, stomatal conductance and photosynthesis}
 %\VignettePackage{medfate}
 
-\title{Complex model: Hydraulics, stomatal conductance and photosynthesis}
+\title{Hydraulics, stomatal conductance and photosynthesis}
 \author[1,2]{Miquel De Cáceres}
 \author[1]{Víctor Granda}
-\affil[1]{Centre Tecnològic Forestal de Catalunya. Ctra. St. Llorenç de Morunys km 2, 25280, Solsona, Catalonia, Spain}
+\affil[1]{Centre de Ciència i Tecnologia Forestal de Catalunya. Ctra. St. Llorenç de Morunys km 2, 25280, Solsona, Catalonia, Spain}
 \affil[2]{CREAF, Cerdanyola del Vallès, 08193, Spain}
 
 \begin{document}

@@ -2,6 +2,8 @@
 \name{hydrology_rainInterception}
 \alias{hydrology_rainInterception}
 \alias{hydrology_erFactor}
+\alias{hydrology_interceptionPlot}
+
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Rainfall interception}
@@ -11,6 +13,7 @@ Function \code{hydrology_rainInterception} calculates the amount of rainfall int
 \usage{
 hydrology_rainInterception(Rainfall, Cm, p, ER=0.05, method="Gash1995") 
 hydrology_erFactor(doy, pet, prec, Rconv = 5.6, Rsyn = 1.5)
+hydrology_interceptionPlot<-function(x, SpParams, ER = 0.05, gdd = NA, throughfall = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -23,6 +26,9 @@ hydrology_erFactor(doy, pet, prec, Rconv = 5.6, Rsyn = 1.5)
   \item{pet}{Potential evapotranspiration for a given day (mm).}
   \item{prec}{Precipitation for a given day (mm).}
   \item{Rconv, Rsyn}{Rainfall rate for convective storms and synoptic storms, respectively, in mm/h.}
+  \item{x}{An object of class \code{\link{spwbInput}}.}
+  \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}} and \code{\link{SpParamsMED}}).}
+  \item{throughfall}{Boolean flag to plot relative throughfall instead of percentage of intercepted rainfall.}
 }
 \details{
 Function \code{hydrology_rainInterception} can accept either vectors or scalars as parameters \code{Cm}, \code{p} and \code{ER}. If they are supplied as vectors they should be of the same length as \code{Rainfall}.
@@ -48,28 +54,14 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
  \code{\link{spwb}}
 }
 \examples{
-throughfallMatrixGash<-function(P = seq(1,50, by=1), Cm = seq(1,5, by=1), 
-                                ER = 0.08,p=0.8) {
-  m2<- P - hydrology_rainInterception(P,Cm[1],p,ER=ER)
-  for(i in 2:length(Cm)) {
-    m2<-rbind(m2,P-hydrology_rainInterception(P,Cm[i],p,ER=ER))
-  }
-  colnames(m2)<-P
-  rownames(m2)<-Cm
-  return(m2)
-}
+#Load example plot plant data
+data(exampleforest)
 
-Cm = c(0.5,seq(1,4, by=1))
-P = seq(1,50, by=1)
+#Default species parameterization
+data(SpParamsMED)
 
-m2 = throughfallMatrixGash(P=P, p=0.2, Cm=Cm,ER = 0.05)
-rt = sweep(m2,2,P,"/")*100
-matplot(t(rt), type="l", axes=TRUE, ylab="Relative throughfall (\%)", 
-        xlab="Gross rainfall (mm)", xlim=c(0,length(P)), 
-        lty=1:length(Cm), col="black", ylim=c(0,100))
-title(main="p = 0.2 E/R = 0.05")
-legend("bottomright",lty=1:length(Cm), legend=paste("Cm =",Cm), bty="n")
-
+#Draw rainfall interception for two values of the E/R ratio
+hydrology_interceptionPlot(exampleforest, SpParamsMED, ER = c(0.05, 0.2))
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

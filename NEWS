@@ -12,6 +12,7 @@ _Version 0.8.1, April 2019.
 5. New function 'spwb_waterUseEfficiency'
 6. Default Van Genuchten PTF set to 'Toth'
 7. New functions 'modifySpParams' and 'modifyCohortParams'.
+8. New function 'hydrology_interceptionPlot'
 
 _Version 0.8.0, April 2019.
 1. Move spatial classes and methods to package 'medfateland'
