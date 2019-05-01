@@ -532,6 +532,17 @@ NumericVector theta(List soil, String model="SX") {
   return(Theta);
 }
 
+// [[Rcpp::export("soil_water")]]
+NumericVector water(List soil, String model="SX") {
+  NumericVector dVec = soil["dVec"];
+  NumericVector Theta = theta(soil, model);
+  NumericVector rfc = soil["rfc"];
+  int nlayers = dVec.size();
+  NumericVector Water(nlayers);
+  for(int i=0;i<nlayers;i++) Water[i] = dVec[i]*Theta[i]*(1.0-(rfc[i]/100.0));
+  return(Water);
+}
+
 /**
  * Returns current water potential, according to the given pedotransfer model
  */

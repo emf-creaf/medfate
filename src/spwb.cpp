@@ -572,17 +572,16 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   
   NumericVector Wini = soil["W"];
   Wdays(0,_) = Wini;
-
+  NumericVector initialContent = water(soil, soilFunctions);
   if(verbose) {
-    for(int l=0;l<nlayers;l++) Rcout << "W"<<(l+1)<<"i:"<< round(100*Wini[l])/100<<" ";
-    Rcout<<"\n";
+    Rcout<<"Initial soil water content (mm): "<< sum(initialContent)<<"\n";
   }
 
-  if(verbose) Rcout << "Daily balance:";
+  if(verbose) Rcout << "Performing daily simulations ";
   NumericVector Eplanttot(numDays,0.0);
   List s;
   for(int i=0;i<numDays;i++) {
-      if(verbose) Rcout<<".";//<<i;
+      if(verbose & (i%10 == 0)) Rcout<<".";//<<i;
       
       double wind = WindSpeed[i];
       if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; //Default 1 m/s -> 10% of fall every day
@@ -749,7 +748,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
       if(i<(numDays-1)) Wdays(i+1,_) = as<Rcpp::NumericVector>(soil["W"]);
       WaterTable[i] = waterTableDepth(soil, soilFunctions);
   }
-  if(verbose) Rcout << "done\n";
+  if(verbose) Rcout << "done.\n";
   
   for(int l=0;l<nlayers;l++) {
     MLdays(_,l) = Wdays(_,l)*Water_FC[l]; 
@@ -758,6 +757,10 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   NumericVector Evapotranspiration = Transpiration+SoilEvaporation + Interception;
   
   if(verbose) {
+    NumericVector finalContent = water(soil, soilFunctions);
+    Rcout<<"Final soil water content (mm): "<< sum(finalContent)<<"\n";
+    Rcout<<"Change in soil water content (mm): "<< sum(finalContent) - sum(initialContent)<<"\n";
+
     double Precipitationsum = sum(Precipitation);
     double NetRainsum = sum(NetRain);
     double Interceptionsum = sum(Interception);
@@ -767,26 +770,23 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
     double DeepDrainagesum = sum(DeepDrainage);
     double Transpirationsum = sum(Transpiration);
     
-    Rcout<<"Precipitation (mm) "  <<round(Precipitationsum) <<"\n";
-    Rcout<<"Rain (mm) "  <<round(sum(Rain)) <<" Snow (mm) "  <<round(sum(Snow)) <<"\n";
-    Rcout<<"Interception (mm) " << round(Interceptionsum)  <<" Net rainfall (mm) " << round(NetRainsum) <<"\n";
-    Rcout<<"Infiltration (mm) " << round(Infiltrationsum)  <<
+    double wb = Precipitationsum - Interceptionsum - Runoffsum - DeepDrainagesum - SoilEvaporationsum - sum(PlantExtraction);
+    Rcout<<"Water balance result (mm): "<< wb<<"\n";
+    Rcout<<"Water balance components:\n";
+    Rcout<<"  Precipitation (mm) "  <<round(Precipitationsum) <<"\n";
+    Rcout<<"  Rain (mm) "  <<round(sum(Rain)) <<" Snow (mm) "  <<round(sum(Snow)) <<"\n";
+    Rcout<<"  Interception (mm) " << round(Interceptionsum)  <<" Net rainfall (mm) " << round(NetRainsum) <<"\n";
+    Rcout<<"  Infiltration (mm) " << round(Infiltrationsum)  <<
       " Runoff (mm) " << round(Runoffsum) <<
         " Deep drainage (mm) "  << round(DeepDrainagesum)  <<"\n";
-    Rcout<<"Soil evaporation (mm) " << round(SoilEvaporationsum);
+    Rcout<<"  Soil evaporation (mm) " << round(SoilEvaporationsum);
     Rcout<<" Transpiration (mm) "  <<round(Transpirationsum) <<"\n";
     if(transpirationMode =="Sperry") {
-      Rcout<<"Plant extraction from soil (mm) " << round(sum(PlantExtraction));
+      Rcout<<"  Plant extraction from soil (mm) " << round(sum(PlantExtraction));
       Rcout<<" Hydraulic redistribution (mm) " << round(sum(HydraulicRedistribution)) <<"\n";
     }
-    NumericVector Wfin = soil["W"];
-    for(int l=0;l<nlayers;l++) Rcout << "W"<<(l+1)<<"f:"<< round(100*Wfin[l])/100<<" ";
-    Rcout<<"\n";
-    Rcout<<"Final soil water content (mm): "<< round(MLTot[numDays-1])<<"\n\n";
-    
   }
-  if(verbose) Rcout<<"Building SPWB output ...";
-  
+
    DataFrame SWB;
    if(transpirationMode=="Granier") {
      SWB = DataFrame::create(_["W"]=Wdays, _["ML"]=MLdays,_["MLTot"]=MLTot,
@@ -922,7 +922,6 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
     l.attr("names") = ln;
   }
   l.attr("class") = CharacterVector::create("spwb","list");
-  if(verbose) Rcout<<"done.\n";
   return(l);
 }
 

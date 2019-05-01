@@ -693,6 +693,10 @@ soil_theta <- function(soil, model = "SX") {
     .Call(`_medfate_theta`, soil, model)
 }
 
+soil_water <- function(soil, model = "SX") {
+    .Call(`_medfate_water`, soil, model)
+}
+
 soil_psi <- function(soil, model = "SX") {
     .Call(`_medfate_psi`, soil, model)
 }

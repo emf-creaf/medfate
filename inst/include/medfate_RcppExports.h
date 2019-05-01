@@ -591,6 +591,27 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
+    inline NumericVector soil_water(List soil, String model = "SX") {
+        typedef SEXP(*Ptr_soil_water)(SEXP,SEXP);
+        static Ptr_soil_water p_soil_water = NULL;
+        if (p_soil_water == NULL) {
+            validateSignature("NumericVector(*soil_water)(List,String)");
+            p_soil_water = (Ptr_soil_water)R_GetCCallable("medfate", "_medfate_soil_water");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p_soil_water(Shield<SEXP>(Rcpp::wrap(soil)), Shield<SEXP>(Rcpp::wrap(model)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<NumericVector >(rcpp_result_gen);
+    }
+
     inline NumericVector soil_psi(List soil, String model = "SX") {
         typedef SEXP(*Ptr_soil_psi)(SEXP,SEXP);
         static Ptr_soil_psi p_soil_psi = NULL;

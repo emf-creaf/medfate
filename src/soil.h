@@ -16,6 +16,7 @@ NumericVector waterFC(List soil, String model = "SX");
 NumericVector thetaFC(List soil, String model = "SX");
 NumericVector waterWP(List soil, String model = "SX");
 NumericVector thetaWP(List soil, String model = "SX");
+NumericVector water(List soil, String model="SX");
 NumericVector theta(List soil, String model="SX");
 NumericVector psi(List soil, String model="SX");
 double waterTableDepth(List soil, String model = "SX");

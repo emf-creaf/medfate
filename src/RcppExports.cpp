@@ -3285,6 +3285,41 @@ RcppExport SEXP _medfate_theta(SEXP soilSEXP, SEXP modelSEXP) {
     UNPROTECT(1);
     return rcpp_result_gen;
 }
+// water
+NumericVector water(List soil, String model);
+static SEXP _medfate_water_try(SEXP soilSEXP, SEXP modelSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< String >::type model(modelSEXP);
+    rcpp_result_gen = Rcpp::wrap(water(soil, model));
+    return rcpp_result_gen;
+END_RCPP_RETURN_ERROR
+}
+RcppExport SEXP _medfate_water(SEXP soilSEXP, SEXP modelSEXP) {
+    SEXP rcpp_result_gen;
+    {
+        Rcpp::RNGScope rcpp_rngScope_gen;
+        rcpp_result_gen = PROTECT(_medfate_water_try(soilSEXP, modelSEXP));
+    }
+    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
+    if (rcpp_isInterrupt_gen) {
+        UNPROTECT(1);
+        Rf_onintr();
+    }
+    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
+    if (rcpp_isLongjump_gen) {
+        Rcpp::internal::resumeJump(rcpp_result_gen);
+    }
+    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
+    if (rcpp_isError_gen) {
+        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
+        UNPROTECT(1);
+        Rf_error(CHAR(rcpp_msgSEXP_gen));
+    }
+    UNPROTECT(1);
+    return rcpp_result_gen;
+}
 // psi
 NumericVector psi(List soil, String model);
 static SEXP _medfate_psi_try(SEXP soilSEXP, SEXP modelSEXP) {
@@ -3836,6 +3871,7 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("NumericVector(*soil_waterWP)(List,String)");
         signatures.insert("NumericVector(*soil_waterExtractable)(List,String,double)");
         signatures.insert("NumericVector(*soil_theta)(List,String)");
+        signatures.insert("NumericVector(*soil_water)(List,String)");
         signatures.insert("NumericVector(*soil_psi)(List,String)");
         signatures.insert("double(*soil_waterTableDepth)(List,String)");
         signatures.insert("NumericVector(*soil_thermalCapacity)(List,String)");
@@ -3877,6 +3913,7 @@ RcppExport SEXP _medfate_RcppExport_registerCCallable() {
     R_RegisterCCallable("medfate", "_medfate_soil_waterWP", (DL_FUNC)_medfate_waterWP_try);
     R_RegisterCCallable("medfate", "_medfate_soil_waterExtractable", (DL_FUNC)_medfate_waterExtractable_try);
     R_RegisterCCallable("medfate", "_medfate_soil_theta", (DL_FUNC)_medfate_theta_try);
+    R_RegisterCCallable("medfate", "_medfate_soil_water", (DL_FUNC)_medfate_water_try);
     R_RegisterCCallable("medfate", "_medfate_soil_psi", (DL_FUNC)_medfate_psi_try);
     R_RegisterCCallable("medfate", "_medfate_soil_waterTableDepth", (DL_FUNC)_medfate_waterTableDepth_try);
     R_RegisterCCallable("medfate", "_medfate_soil_thermalCapacity", (DL_FUNC)_medfate_thermalCapacity_try);
@@ -4063,6 +4100,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_waterWP", (DL_FUNC) &_medfate_waterWP, 2},
     {"_medfate_waterExtractable", (DL_FUNC) &_medfate_waterExtractable, 3},
     {"_medfate_theta", (DL_FUNC) &_medfate_theta, 2},
+    {"_medfate_water", (DL_FUNC) &_medfate_water, 2},
     {"_medfate_psi", (DL_FUNC) &_medfate_psi, 2},
     {"_medfate_waterTableDepth", (DL_FUNC) &_medfate_waterTableDepth, 2},
     {"_medfate_thermalCapacity", (DL_FUNC) &_medfate_thermalCapacity, 2},

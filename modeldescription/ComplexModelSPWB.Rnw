@@ -149,21 +149,21 @@ roots in each soil layer:
 \item{$v_{i,s}$ [\texttt{V}]: The proportion of fine roots in each soil layer $s$.}
 \end{itemize}
 
-The rooting system of each cohort $i$ (i.e. the proportions $v_{i,s}$) can be defined assuming conic distribution of fine roots (see \texttt{root.conicDistribution()}). In this case, only rooting depth parameter is needed to determine fine root proportions. Alternatively, one can adopt the linear dose response model (Collins and Bras, 2007; Schenk and Jackson, 2002): 
+The rooting system of each cohort $i$ (i.e. the proportions $v_{i,s}$) can be defined assuming conic distribution of fine roots (see \texttt{root\_conicDistribution()}). In this case, only rooting depth parameter is needed to determine fine root proportions. Alternatively, one can adopt the linear dose response model (Collins and Bras, 2007; Schenk and Jackson, 2002): 
 \begin{equation}
 Y_i(z)=\frac{1}{1+(z/Z_{50,i})^{c_i}}
 \end{equation}
-where $Y_i(z)$ is the cumulative fraction of fine root mass located between surface and depth $z$; $Z_{50,i}$ is the depth above which 50\% of the root mass is located; and $c_i$ is a shape parameter related to $Z_{50,i}$ and $Z_{95,i}$ as $c_i  = 2.94 / \ln(Z_{50,i} / Z_{95,i})$ (see \texttt{root.ldrDistribution()}). 
+where $Y_i(z)$ is the cumulative fraction of fine root mass located between surface and depth $z$; $Z_{50,i}$ is the depth above which 50\% of the root mass is located; and $c_i$ is a shape parameter related to $Z_{50,i}$ and $Z_{95,i}$ as $c_i  = 2.94 / \ln(Z_{50,i} / Z_{95,i})$ (see \texttt{root\_ldrDistribution()}). 
 
 \begin{center}
 <<fig=TRUE, width=7, height=4, echo=FALSE>>==
 par(mar=c(4,4,1,1), mfrow=c(1,2))
-P = root.conicDistribution(c(200,1500), rep(10,151))
+P = root_conicDistribution(c(200,1500), rep(10,151))
 matplot(x=t(P)*10, y=seq(0,1500, by=10), type="l", xlim=c(0,2), ylim=c(1500,0), ylab = "Depth (mm)", 
         xlab="Percentage of fine roots/mm")
 legend("bottomright", legend=c("Z = 200", 
        "Z = 1500"), col=c("black","red"), lty=1:2, bty="n")
-P = root.ldrDistribution(c(100,500), c(200,1500), rep(10,151))
+P = root_ldrDistribution(c(100,500), c(200,1500), rep(10,151))
 matplot(x=t(P)*10, y=seq(0,1500, by=10), type="l", xlim=c(0,2), ylim=c(1500,0), ylab = "Depth (mm)", 
         xlab="Percentage of fine roots/mm")
 legend("bottomright", legend=c("Z50 = 100, Z95 = 200", 
@@ -268,16 +268,16 @@ where $P$ is the daily gross precipitation (in mm). Net rainfall, $P_{net}$, is 
 \begin{equation}
 S=\sum_{i}{s_{water,i}\cdot LAI_{i}^{\phi}}
 \end{equation}
-where $s_{water,i}$ is the depth of water that can be retained by leaves and trunks of a  species $i$ per unit of leaf area index (mm·LAI$^{-1}$). To estimate the stand cover, $C$, we use the complement of the percentage of PAR that reaches the ground, i.e. $C = 1 - L^{PAR}_{ground}$  (Deguchi et al., 2006). Fig. 1 below shows examples of relative throughfall, calculated according to the interception model, under different situations (see function \texttt{hydrology.rainInterception}). 
+where $s_{water,i}$ is the depth of water that can be retained by leaves and trunks of a  species $i$ per unit of leaf area index (mm·LAI$^{-1}$). To estimate the stand cover, $C$, we use the complement of the percentage of PAR that reaches the ground, i.e. $C = 1 - L^{PAR}_{ground}$  (Deguchi et al., 2006). Fig. 1 below shows examples of relative throughfall, calculated according to the interception model, under different situations (see function \texttt{hydrology\_rainInterception}). 
 
 \begin{center}
 <<fig=TRUE, width=9, height=9, echo=FALSE>>=
 par(mfrow=c(2,2), mar=c(5,5,5,1))
 throughfallMatrixGash<-function(P = seq(1,50, by=1), Cm = seq(1,5, by=1), 
                                 ER = 0.08,p=0.8) {
-  m2<-P-hydrology.rainInterception(P,Cm[1],p,ER=ER)
+  m2<-P-hydrology_rainInterception(P,Cm[1],p,ER=ER)
   for(i in 2:length(Cm)) {
-    m2<-rbind(m2,P-hydrology.rainInterception(P,Cm[i],p,ER=ER))
+    m2<-rbind(m2,P-hydrology_rainInterception(P,Cm[i],p,ER=ER))
   }
   colnames(m2)<-P
   rownames(m2)<-Cm
@@ -326,7 +326,7 @@ Ru=\frac{(P_{net} - 0.2 \cdot V_{soil})^2}{(P_{net} - 0.8 \cdot V_{soil})}
 \end{equation}
 where $V_{soil}$ (in mm) is the overall soil water retention capacity (i.e. the sum of $V_s$ values for topsoil and subsoil).
 
-The amount of water infiltrating into the soil is $P_{net} - Ru$, where $Ru$ is the water lost by runoff (see function \texttt{hydrology.soilInfiltration}). Following Granier (1999), part of the water reaching one soil layer percolates quickly through the macropores. The remaining water is retained by the micropores refilling the current soil layer. When this soil layer reaches its field capacity the excess of water percolates to the soil layer below. The water percolating from the lowest layer is considered deep drainage, $Dd$. 
+The amount of water infiltrating into the soil is $P_{net} - Ru$, where $Ru$ is the water lost by runoff (see function \texttt{hydrology\_infiltrationAmount}). Following Granier (1999), part of the water reaching one soil layer percolates quickly through the macropores. The remaining water is retained by the micropores refilling the current soil layer. When this soil layer reaches its field capacity the excess of water percolates to the soil layer below. The water percolating from the lowest layer is considered deep drainage, $Dd$. 
 \begin{center}
 <<fig=TRUE, width=8, height=4, echo=FALSE>>==
 par(mfrow=c(1,2), mar=c(5,5,5,1))
@@ -350,9 +350,9 @@ TS_gravel = 20
 SS_gravel = 40
 RL_gravel = 95
 
-Theta_FC1=soil.psi2thetaSX(TS_clay, TS_sand, -33) #in m3/m3
-Theta_FC2=soil.psi2thetaSX(SS_clay, SS_sand, -33) #in m3/m3
-Theta_FC3=soil.psi2thetaSX(RL_clay, RL_sand, -33) #in m3/m3
+Theta_FC1=soil_psi2thetaSX(TS_clay, TS_sand, -33) #in m3/m3
+Theta_FC2=soil_psi2thetaSX(SS_clay, SS_sand, -33) #in m3/m3
+Theta_FC3=soil_psi2thetaSX(RL_clay, RL_sand, -33) #in m3/m3
 pcTS_gravel = 1-(TS_gravel/100)
 pcSS_gravel = 1-(SS_gravel/100)
 pcRL_gravel = 1-(RL_gravel/100)
@@ -363,25 +363,25 @@ V = MaxVol1+MaxVol2+MaxVol3
 
 par(mar=c(5,5,1,1), mfrow=c(1,2))
 NP = seq(0,60, by=1)
-plot(NP,hydrology.soilInfiltration(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
+plot(NP,hydrology_infiltrationAmount(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
      ylab="Infiltration (mm)", xlab="Net rainfall (mm)", frame=FALSE)
-lines(NP,hydrology.soilInfiltration(NP, V[2]), lty=2)
-lines(NP,hydrology.soilInfiltration(NP, V[3]), lty=3)
-lines(NP,hydrology.soilInfiltration(NP, V[4]), lty=4)
-lines(NP,hydrology.soilInfiltration(NP, V[5]), lty=5)
+lines(NP,hydrology_infiltrationAmount(NP, V[2]), lty=2)
+lines(NP,hydrology_infiltrationAmount(NP, V[3]), lty=3)
+lines(NP,hydrology_infiltrationAmount(NP, V[4]), lty=4)
+lines(NP,hydrology_infiltrationAmount(NP, V[5]), lty=5)
 legend("topleft", bty="n", lty=1:5, legend=c(paste("d =", SoilDepth, "Vsoil =",round(V),"mm")))
-plot(NP,NP-hydrology.soilInfiltration(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
+plot(NP,NP-hydrology_infiltrationAmount(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
      ylab="Runoff (mm)", xlab="Net rainfall (mm)", frame=FALSE)
-lines(NP,NP-hydrology.soilInfiltration(NP, V[2]), lty=2)
-lines(NP,NP-hydrology.soilInfiltration(NP, V[3]), lty=3)
-lines(NP,NP-hydrology.soilInfiltration(NP, V[4]), lty=4)
-lines(NP,NP-hydrology.soilInfiltration(NP, V[5]), lty=5)
+lines(NP,NP-hydrology_infiltrationAmount(NP, V[2]), lty=2)
+lines(NP,NP-hydrology_infiltrationAmount(NP, V[3]), lty=3)
+lines(NP,NP-hydrology_infiltrationAmount(NP, V[4]), lty=4)
+lines(NP,NP-hydrology_infiltrationAmount(NP, V[5]), lty=5)
 legend("topleft", bty="n", lty=1:5, legend=c(paste("d =", SoilDepth,"Vsoil =",round(V),"mm")))
 @
 \end{center}
 
 \begin{center}
-\emph{Fig. 2}: Examples of infiltration/runoff calculation for different values of net rainfall and overall retention capacity (see function \texttt{hydrology.soilInfiltration}), $V_{soil}$, calculated from different soil depths (topsoil+subsoil) and assuming that soil texture is 15\% clay and 25\% sand. Rock fragment content was 25\% and 40\% for the topsoil and subsoil, respectively.
+\emph{Fig. 2}: Examples of infiltration/runoff calculation for different values of net rainfall and overall retention capacity (see function \texttt{hydrology\_infiltrationAmount}), $V_{soil}$, calculated from different soil depths (topsoil+subsoil) and assuming that soil texture is 15\% clay and 25\% sand. Rock fragment content was 25\% and 40\% for the topsoil and subsoil, respectively.
 \end{center}
 
 After updating soil water content according to rainfall interception, infiltration and deep drainage, soil water potentials are recalculated following the water retention curves.
@@ -470,11 +470,11 @@ This canopy definition leads to a percentage of the above-canopy irradiance reac
 
 \begin{center}
 <<fig = TRUE, echo=FALSE, width=7, height=4>>=
-Ibfpar = light.layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayermax, kb, alpha_PAR)
-Idfpar = light.layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayermax, kd_PAR, alpha_PAR)
-Ibfswr = light.layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayermax, kb, alpha_SWR)
-Idfswr = light.layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayermax, kd_SWR, alpha_SWR)
-fsunlit = light.layerSunlitFraction(LAIlayerlive, LAIlayerdead, kb)
+Ibfpar = light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayermax, kb, alpha_PAR)
+Idfpar = light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayermax, kd_PAR, alpha_PAR)
+Ibfswr = light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayermax, kb, alpha_SWR)
+Idfswr = light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayermax, kd_SWR, alpha_SWR)
+fsunlit = light_layerSunlitFraction(LAIlayerlive, LAIlayerdead, kb)
 SHarea = (1-fsunlit)*LAIlayerlive[,1] 
 SLarea = fsunlit*LAIlayerlive[,1] 
 
@@ -684,14 +684,14 @@ Instantaneous soil temperature changes on each soil layer depend on the balance 
 \begin{equation}
 \frac{\delta T_{soil,k}}{\delta t} = \frac{G_k - G_{k-1}}{C_{soil,k} \cdot \Delta z_k}
 \end{equation}
-where $\Delta z_k$ is the soil width of layer $k$ and $C_{soil,k}$ is the thermal capacity of layer $k$, depending on soil moisture and texture (see function \texttt{soil.thermalcapacity}).
+where $\Delta z_k$ is the soil width of layer $k$ and $C_{soil,k}$ is the thermal capacity of layer $k$, depending on soil moisture and texture (see function \texttt{soil\_thermalcapacity}).
 
 Energy inflow to the first layer (i.e. $G_0$) is the result of the soil energy balance explained above, while energy transfers between layers (i.e. $G_k$) depend on the soil temperature gradient:
 \begin{eqnarray}
 G_0 &=& K_{abs,sa} + L_{abs,sa} - L_{em,s} + L_{abs,sc} + H_{cs}\\
 G_k &=& \lambda_{soil,k} \cdot \frac{\delta T_{soil,k}}{\delta z}
 \end{eqnarray}
-where $\lambda_{soil,k}$ is the thermal conductivity of layer $k$, depending on soil moisture and texture (see function \texttt{soil.thermalconductivity}). The gradient in the bottom layer is calculated assuming a temperature of the earth (at 10 m) of 15.5 Celsius.
+where $\lambda_{soil,k}$ is the thermal conductivity of layer $k$, depending on soil moisture and texture (see function \texttt{soil\_thermalconductivity}). The gradient in the bottom layer is calculated assuming a temperature of the earth (at 10 m) of 15.5 Celsius.
 
 \subsection{Bare soil evaporation}
 Evaporation from the soil surface is the last component of the soil water balance to be calculated. Soil evaporative demand, i.e. potential evaporation from the soil ($PE_{soil}$; in $mm\cdot day^{-1}$), is calculated using the Penman-Monteith combination equation:
@@ -708,7 +708,7 @@ where $\gamma_{soil}$ is the maximum daily evaporation ($mm \cdot day^{-1}$). Th
 \begin{equation}
 SE_{soil} = \gamma_{soil} \cdot (\sqrt{t+1}-\sqrt{1})
 \end{equation}
-The amount of water evaporated from the soil, $E_{soil}$, is then calculated as the minimum between supply and demand (Federer, 1982), the latter being the product of PET and the proportion of light that reaches the ground (see function \texttt{hydrology.soilEvaporation}): 
+The amount of water evaporated from the soil, $E_{soil}$, is then calculated as the minimum between supply and demand (Federer, 1982), the latter being the product of PET and the proportion of light that reaches the ground (see function \texttt{hydrology\_soilEvaporationAmount}): 
 \begin{equation}
 E_{soil} = \min(PE_{soil}, SE_{soil})
 \end{equation}
@@ -740,9 +740,9 @@ RunEvaporation<-function(Gsoil, Ksoil, d1,d2,d3, numDays = 15){
   PET = 100 #Not limited by PET
   Lground = 1
   
-  Theta_FC1=soil.psi2thetaSX(TS_clay, TS_sand, -33) #in m3/m3
-  Theta_FC2=soil.psi2thetaSX(SS_clay, SS_sand, -33) #in m3/m3
-  Theta_FC3=soil.psi2thetaSX(RL_clay, RL_sand, -33) #in m3/m3
+  Theta_FC1=soil_psi2thetaSX(TS_clay, TS_sand, -33) #in m3/m3
+  Theta_FC2=soil_psi2thetaSX(SS_clay, SS_sand, -33) #in m3/m3
+  Theta_FC3=soil_psi2thetaSX(RL_clay, RL_sand, -33) #in m3/m3
   pcTS_gravel = 1-(TS_gravel/100)
   pcSS_gravel = 1-(SS_gravel/100)
   pcRL_gravel = 1-(RL_gravel/100)
@@ -762,7 +762,7 @@ RunEvaporation<-function(Gsoil, Ksoil, d1,d2,d3, numDays = 15){
   t = rep(NA, numDays)
   for(i in 1:numDays){
     #Evaporation from bare soil
-    Esoil[i] = hydrology.soilEvaporation(DEF=(MaxVol1*(1 - W1[i])), PETs = PET*Lground, Gsoil = Gsoil)
+    Esoil[i] = hydrology_soilEvaporationAmount(DEF=(MaxVol1*(1 - W1[i])), PETs = PET*Lground, Gsoil = Gsoil)
     if(i==1) EsoilCum[i] = Esoil[i]
     else EsoilCum[i] = EsoilCum[i-1]+Esoil[i]
     #Exponential decay to divide bare soil evaporation among layers
