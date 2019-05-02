@@ -113,6 +113,8 @@ DataFrame paramsTranspiration(DataFrame above, NumericMatrix V, List soil, DataF
   NumericVector Kmax_rootxylem = cohortNumericParameter(SP, SpParams, "Kmax_rootxylem");
   NumericVector VCroot_c = cohortNumericParameter(SP, SpParams, "VCroot_c");
   NumericVector VCroot_d = cohortNumericParameter(SP, SpParams, "VCroot_d");
+  NumericVector SLA = cohortNumericParameter(SP, SpParams, "SLA");
+  NumericVector Narea = cohortNumericParameter(SP, SpParams, "Narea");
   NumericVector Vmax298 = cohortNumericParameter(SP, SpParams, "Vmax298");
   NumericVector Jmax298 = cohortNumericParameter(SP, SpParams, "Jmax298");
   NumericVector pRootDisc = cohortNumericParameter(SP, SpParams, "pRootDisc");
@@ -234,8 +236,17 @@ DataFrame paramsTranspiration(DataFrame above, NumericMatrix V, List soil, DataF
       VCroot_kmaxc = 1.0/(rtot - rstem - rleaf);
     }
     VCroottot_kmax[c] = VCroot_kmaxc;
-    //Default value of Vmax298 = 100.0
-    if(NumericVector::is_na(Vmax298[c])) Vmax298[c] = 100.0;
+    
+    if(NumericVector::is_na(Vmax298[c]))  {
+      if(!NumericVector::is_na(SLA[c]) & !NumericVector::is_na(Narea[c]))  {
+        //Walker AP, Beckerman AP, Gu L, et al (2014) The relationship of leaf photosynthetic traits - Vcmax and Jmax - to leaf nitrogen, leaf phosphorus, and specific leaf area: A meta-analysis and modeling study. Ecol Evol 4:3218–3235. doi: 10.1002/ece3.1173
+        double lnN = log(Narea[c]);
+        double lnSLA = log(SLA[c]/1000.0); //SLA in m2*g-1
+        Vmax298[c] = exp(1.993 + 2.555*lnN - 0.372*lnSLA + 0.422*lnN*lnSLA);
+      } else {
+        Vmax298[c] = 100.0; //Default value of Vmax298 = 100.0
+      }
+    }
     //Walker AP, Beckerman AP, Gu L, et al (2014) The relationship of leaf photosynthetic traits - Vcmax and Jmax - to leaf nitrogen, leaf phosphorus, and specific leaf area: A meta-analysis and modeling study. Ecol Evol 4:3218–3235. doi: 10.1002/ece3.1173
     if(NumericVector::is_na(Jmax298[c])) Jmax298[c] = exp(1.197 + 0.847*log(Vmax298[c])); 
     
