@@ -29,7 +29,7 @@ spwb_waterUseEfficiency<-function(x, type = "An/E", leaves = "average", freq="da
         iwueinst[iwueinst<0] = 0
         iWUEdays[i,] = rowSums(iwueinst*sl$An)/rowSums(sl$An) #Photosynthesis-weighted iWUE
       }
-      if(leaves =="shade") {
+      else if(leaves =="shade") {
         iwueinst = sh$An/sh$GW
         iwueinst[iwueinst<0] = 0
         iWUEdays[i,] = rowSums(iwueinst*sh$An)/rowSums(sh$An) #Photosynthesis-weighted iWUE
