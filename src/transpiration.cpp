@@ -285,6 +285,39 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   NumericVector abs_LWR_soil = lightExtinctionAbsortion["LWR_soil"];
   NumericVector emm_LWR_soil(ntimesteps,0.0);
   
+  NumericVector LAI_SL(numCohorts,0.0);
+  NumericVector LAI_SH(numCohorts,0.0);
+  NumericVector Vmax298SL(numCohorts,0.0);
+  NumericVector Vmax298SH(numCohorts,0.0);
+  NumericVector Jmax298SL(numCohorts,0.0);
+  NumericVector Jmax298SH(numCohorts,0.0);
+
+  for(int c=0;c<numCohorts;c++) {
+    // Rcout<<"cohort "<<c<<":\n";
+    //Constant properties through time steps
+    NumericVector Vmax298layer(nz), Jmax298layer(nz);
+    NumericVector SLarealayer(nz), SHarealayer(nz);
+    double sn =0.0;
+    for(int i=(nz-1);i>=0.0;i--) {
+      //Effect of nitrogen concentration decay through the canopy
+      double fn = exp(-0.713*(sn+LAIme(i,c)/2.0)/sum(LAIme(_,c)));
+      // Rcout<<" l"<<i<<" fsunlit: "<< fsunlit[i]<<" lai: "<< LAIme(i,c)<<" fn: "<< fn <<"\n";
+      sn+=LAIme(i,c);
+      SLarealayer[i] = LAIme(i,c)*fsunlit[i];
+      SHarealayer[i] = LAIme(i,c)*(1.0-fsunlit[i]);
+      Vmax298layer[i] = Vmax298[c]*fn;
+      Jmax298layer[i] = Jmax298[c]*fn;
+    }
+    for(int i=0;i<nz;i++) {
+      LAI_SL[c] +=SLarealayer[i];
+      LAI_SH[c] +=SHarealayer[i];
+      Vmax298SL[c] +=Vmax298layer[i]*LAIme(i,c)*fsunlit[i];
+      Jmax298SL[c] +=Jmax298layer[i]*LAIme(i,c)*fsunlit[i];
+      Vmax298SH[c] +=Vmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
+      Jmax298SH[c] +=Jmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
+    }
+    
+  }
   // double kb = lightExtinctionAbsortion["kb"];  //Proportion of sunlit extinction coefficient
   // double gbf = lightExtinctionAbsortion["gbf"]; //Ground fractions
   // double gdf = lightExtinctionAbsortion["gdf"];
@@ -384,8 +417,6 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   NumericMatrix VPD_SL(numCohorts, ntimesteps);
   NumericMatrix Temp_SH(numCohorts, ntimesteps);
   NumericMatrix Temp_SL(numCohorts, ntimesteps);
-  NumericMatrix LAI_SH(numCohorts, ntimesteps);
-  NumericMatrix LAI_SL(numCohorts, ntimesteps);
   NumericVector minPsiLeaf(numCohorts,0.0), maxPsiLeaf(numCohorts,-99999.0); 
   NumericVector minPsiLeaf_SL(numCohorts,0.0), maxPsiLeaf_SL(numCohorts,-99999.0); 
   NumericVector minPsiLeaf_SH(numCohorts,0.0), maxPsiLeaf_SH(numCohorts,-99999.0);
@@ -434,33 +465,6 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
         SWR_SH(c,n) = absSWR_SH[c];
         LWR_SL(c,n) = absLWR_SL[c];
         LWR_SH(c,n) = absLWR_SH[c];
-        
-
-        //Constant properties through time steps
-        NumericVector Vmax298layer(nz), Jmax298layer(nz);
-        NumericVector SLarealayer(nz), SHarealayer(nz);
-        NumericVector QSH(nz), QSL(nz), absRadSL(nz), absRadSH(nz);
-        double sn =0.0;
-        for(int i=(nz-1);i>=0.0;i--) {
-          //Effect of nitrogen concentration decay through the canopy
-          double fn = exp(-0.713*(sn+LAIme(i,c)/2.0)/sum(LAIme(_,c)));
-          sn+=LAIme(i,c);
-          SLarealayer[i] = LAIme(i,c)*fsunlit[i];
-          SHarealayer[i] = LAIme(i,c)*(1.0-fsunlit[i]);
-          Vmax298layer[i] = Vmax298[c]*fn;
-          Jmax298layer[i] = Jmax298[c]*fn;
-        }
-        double Vmax298SL= 0.0,Vmax298SH= 0.0,Jmax298SL= 0.0,Jmax298SH= 0.0;
-        LAI_SH(c,n) = 0.0; 
-        LAI_SL(c,n) = 0.0;
-        for(int i=0;i<nz;i++) {
-          LAI_SL(c,n) +=SLarealayer[i];
-          LAI_SH(c,n) +=SHarealayer[i];
-          Vmax298SL +=Vmax298layer[i]*LAIme(i,c)*fsunlit[i];
-          Jmax298SL +=Jmax298layer[i]*LAIme(i,c)*fsunlit[i];
-          Vmax298SH +=Vmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
-          Jmax298SH +=Jmax298layer[i]*LAIme(i,c)*(1.0-fsunlit[i]);
-        }
         
         NumericVector PLCStemPrev = PLCstemMAT(c,_);
         NumericVector RWCStemPrev = RWCsstemMAT(c,_);
@@ -519,18 +523,18 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
             //Photosynthesis function for sunlit and shade leaves
             DataFrame photoSunlit = leafPhotosynthesisFunction(fittedE, Catm, Patm,Tcan[n], vpatm, 
                                                                zWind[c], 
-                                                                    absSWR_SL[c] + LWR_emmcan*LAI_SL(c,n), 
+                                                                    absSWR_SL[c] + LWR_emmcan*LAI_SL[c], 
                                                                     irradianceToPhotonFlux(absPAR_SL[c]), 
-                                                                    Vmax298SL, 
-                                                                    Jmax298SL, 
-                                                                    Gwminc, Gwmax[c], leafWidth[c], LAI_SL(c,n));
+                                                                    Vmax298SL[c], 
+                                                                    Jmax298SL[c], 
+                                                                    Gwminc, Gwmax[c], leafWidth[c], LAI_SL[c]);
             DataFrame photoShade = leafPhotosynthesisFunction(fittedE, Catm, Patm,Tcan[n], vpatm, 
                                                               zWind[c], 
-                                                                   absSWR_SH[c] + LWR_emmcan*LAI_SH(c,n), 
+                                                                   absSWR_SH[c] + LWR_emmcan*LAI_SH[c], 
                                                                    irradianceToPhotonFlux(absPAR_SH[c]),
-                                                                   Vmax298SH, 
-                                                                   Jmax298SH, 
-                                                                   Gwminc, Gwmax[c], leafWidth[c], LAI_SH(c,n));
+                                                                   Vmax298SH[c], 
+                                                                   Jmax298SH[c], 
+                                                                   Gwminc, Gwmax[c], leafWidth[c], LAI_SH[c]);
             
             NumericVector AnSunlit = photoSunlit["NetPhotosynthesis"];
             NumericVector AnShade = photoShade["NetPhotosynthesis"];
@@ -575,11 +579,11 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
             Temp_SL(c,n)= TempSunlit[iPMSunlit];
             
             //Scale photosynthesis
-            Aninst(c,n) = AnSunlit[iPMSunlit]*LAI_SL(c,n) + AnShade[iPMShade]*LAI_SH(c,n);
+            Aninst(c,n) = AnSunlit[iPMSunlit]*LAI_SL[c] + AnShade[iPMShade]*LAI_SH[c];
             photosynthesis[c] +=(1e-6)*12.01017*Aninst(c,n)*tstep; 
             
             //Average flow from sunlit and shade leaves
-            double Eaverage = (fittedE[iPMSunlit]*LAI_SL(c,n) + fittedE[iPMShade]*LAI_SH(c,n))/(LAI_SL(c,n) + LAI_SH(c,n));
+            double Eaverage = (fittedE[iPMSunlit]*LAI_SL[c] + fittedE[iPMShade]*LAI_SH[c])/(LAI_SL[c] + LAI_SH[c]);
             
             
             //Find iPM for  flow corresponding to the  average flow
@@ -657,41 +661,41 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
             double QSL = irradianceToPhotonFlux(absPAR_SL[c]);
             //Flow (cuticular conductance): iterative procedure to find flow, VPD and leaf temperature given Gwmin
             double ESLbk = std::max(0.0,1000.0*(Gwmin[c]*(meteoland::utils_saturationVP(std::max(0.0,Tcan[n]))-vpatm))/Patm);
-            double leafTempSL = leafTemperature(absRadSL/ LAI_SL(c,n), Tcan[n], zWind[c], ESLbk, leafWidth[c]);
+            double leafTempSL = leafTemperature(absRadSL/ LAI_SL[c], Tcan[n], zWind[c], ESLbk, leafWidth[c]);
             double leafVPDSL = (meteoland::utils_saturationVP(std::max(0.0,leafTempSL))-vpatm);
             double ESL = std::max(0.0,1000.0*(Gwmin[c]*leafVPDSL)/Patm);
             while(std::abs(ESL-ESLbk)> 0.000001) {
-              leafTempSL = leafTemperature(absRadSL/ LAI_SL(c,n), Tcan[n], zWind[c], ESL, leafWidth[c]);
+              leafTempSL = leafTemperature(absRadSL/ LAI_SL[c], Tcan[n], zWind[c], ESL, leafWidth[c]);
               leafVPDSL = meteoland::utils_saturationVP(std::max(0.0,leafTempSL))-vpatm;
               ESLbk = ESL;
               ESL = std::max(0.0,1000.0*(Gwmin[c]*leafVPDSL)/Patm);
             }
-            NumericVector LP = leafphotosynthesis(QSL, Catm, Gwmin[c]/1.6, std::max(0.0,leafTempSL), Vmax298SL, Jmax298SL);
+            NumericVector LP = leafphotosynthesis(QSL, Catm, Gwmin[c]/1.6, std::max(0.0,leafTempSL), Vmax298SL[c], Jmax298SL[c]);
             double CiSL = LP[0];
             double AgSL = LP[1];
-            double AnSL = AgSL - 0.015*VmaxTemp(Vmax298SL, leafTempSL);
+            double AnSL = AgSL - 0.015*VmaxTemp(Vmax298SL[c]/LAI_SL[c], leafTempSL);
             
             //Shade photosynthesis
             double absRadSH = absSWR_SH[c] + LWR_emmcan*LAI_SH(c,n);
             double QSH = irradianceToPhotonFlux(absPAR_SH[c]);
             //Flow (cuticular conductance): iterative procedure to find flow, VPD and leaf temperature given Gwmin
             double ESHbk = std::max(0.0,1000.0*(Gwmin[c]*(meteoland::utils_saturationVP(std::max(0.0,Tcan[n]))-vpatm))/Patm);
-            double leafTempSH = leafTemperature(absRadSH/ LAI_SH(c,n), Tcan[n], zWind[c], ESHbk, leafWidth[c]);
+            double leafTempSH = leafTemperature(absRadSH/ LAI_SH[c], Tcan[n], zWind[c], ESHbk, leafWidth[c]);
             double leafVPDSH = (meteoland::utils_saturationVP(std::max(0.0,leafTempSH))-vpatm);
             double ESH = std::max(0.0,1000.0*(Gwmin[c]*leafVPDSH)/Patm);
             while(std::abs(ESH-ESHbk)> 0.000001) {
-              leafTempSH = leafTemperature(absRadSH/ LAI_SH(c,n), Tcan[n], zWind[c], ESH, leafWidth[c]);
+              leafTempSH = leafTemperature(absRadSH/ LAI_SH[c], Tcan[n], zWind[c], ESH, leafWidth[c]);
               leafVPDSH = meteoland::utils_saturationVP(std::max(0.0,leafTempSH))-vpatm;
               ESHbk = ESH;
               ESH = std::max(0.0,1000.0*(Gwmin[c]*leafVPDSH)/Patm);
             }
-            LP = leafphotosynthesis(QSH, Catm, Gwmin[c]/1.6, std::max(0.0,leafTempSH), Vmax298SH, Jmax298SH);
+            LP = leafphotosynthesis(QSH, Catm, Gwmin[c]/1.6, std::max(0.0,leafTempSH), Vmax298SH[c], Jmax298SH[c]);
             double CiSH = LP[0];
             double AgSH = LP[1];
-            double AnSH = AgSH - 0.015*VmaxTemp(Vmax298SH, leafTempSH);
+            double AnSH = AgSH - 0.015*VmaxTemp(Vmax298SH[c]/LAI_SH[c], leafTempSH);
             
             //Average flow
-            double Eaverage = (ESL*LAI_SL(c,n) + ESH*LAI_SH(c,n))/(LAI_SL(c,n) + LAI_SH(c,n));
+            double Eaverage = (ESL*LAI_SL[c] + ESH*LAI_SH[c])/(LAI_SL[c] + LAI_SH[c]);
             
             //Get leaf status
             An_SH(c,n) = AgSH;
@@ -706,7 +710,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
             Temp_SL(c,n)= leafVPDSL;
             
             //Scale photosynthesis
-            Aninst(c,n) = AnSL*LAI_SL(c,n) + AnSH*LAI_SH(c,n);
+            Aninst(c,n) = AnSL*LAI_SL[c] + AnSH*LAI_SH[c];
             photosynthesis[c] +=(1e-6)*12.01017*Aninst(c,n)*tstep; 
             
             
@@ -892,8 +896,6 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   Temp_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   VPD_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   VPD_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  LAI_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
-  LAI_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
 
   Einst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   dEdPinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
@@ -907,8 +909,26 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   PWBinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   minPsiRhizo.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
   soilLayerExtractInst.attr("dimnames") = List::create(seq(1,nlayers), seq(1,ntimesteps));
-  List ShadeInst = List::create(
+  for(int c=0;c<numCohorts;c++) {
+    Vmax298SL[c] = Vmax298SL[c]/LAI_SL[c];
+    Jmax298SL[c] = Jmax298SL[c]/LAI_SL[c];
+    Vmax298SH[c] = Vmax298SH[c]/LAI_SH[c];
+    Jmax298SH[c] = Jmax298SH[c]/LAI_SH[c];
+  }
+  DataFrame Sunlit = DataFrame::create(
+    _["LAI"] = LAI_SL, 
+    _["Vmax298"] = Vmax298SL,
+    _["Jmax298"] = Jmax298SL
+  );
+  DataFrame Shade = DataFrame::create(
     _["LAI"] = LAI_SH, 
+    _["Vmax298"] = Vmax298SH,
+    _["Jmax298"] = Jmax298SH
+  );
+  Sunlit.attr("row.names") = above.attr("row.names");
+  Shade.attr("row.names") = above.attr("row.names");
+  
+  List ShadeInst = List::create(
     _["Abs_SWR"] = SWR_SH,
     _["Abs_LWR"] = LWR_SH,
     _["An"] = An_SH,
@@ -918,7 +938,6 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
     _["Temp"] = Temp_SH,
     _["Psi"] = Psi_SH);
   List SunlitInst = List::create(
-    _["LAI"] = LAI_SL, 
     _["Abs_SWR"]=SWR_SL,
     _["Abs_LWR"] = LWR_SL,
     _["An"] = An_SL,
@@ -966,6 +985,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
                      _["ExtractionInst"] = soilLayerExtractInst,
                      _["RhizoPsi"] = minPsiRhizo,
                      _["Plants"] = Plants,
+                     _["SunlitLeaves"] = Sunlit,
+                     _["ShadeLeaves"] = Shade,
                      _["PlantsInst"] = PlantsInst,
                      _["LightExtinction"] = lightExtinctionAbsortion,
                      _["SupplyFunctions"] = supply,
@@ -979,6 +1000,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
                      _["Extraction"] = SoilWaterExtract,
                      _["RhizoPsi"] = minPsiRhizo,
                      _["Plants"] = Plants,
+                     _["SunlitLeaves"] = Sunlit,
+                     _["ShadeLeaves"] = Shade,
                      _["ExtractionInst"] = soilLayerExtractInst,
                      _["PlantsInst"] = PlantsInst,
                      _["LightExtinction"] = lightExtinctionAbsortion,

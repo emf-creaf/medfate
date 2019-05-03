@@ -240,15 +240,15 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE, xlab = N
     OM_SH = PlantsInst$ShadeLeaves$Abs_SWR
     if(bySpecies) {
       m1 = apply(OM_SL,2, tapply, x$cohorts$Name, sum, na.rm=T)
-      lai1 = apply(PlantsInst$SunlitLeaves$LAI,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      lai1 = apply(x$SunlitLeaves$LAI,2, tapply, x$cohorts$Name, sum, na.rm=T)
       OM_SL = m1/lai1
       m1 = apply(OM_SH,2, tapply, x$cohorts$Name, sum, na.rm=T)
-      lai1 = apply(PlantsInst$ShadeLeaves$LAI,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      lai1 = apply(x$ShadeLeaves$LAI,2, tapply, x$cohorts$Name, sum, na.rm=T)
       OM_SH = m1/lai1
       cohortnames = rownames(OM_SL)
     } else {
-      OM_SL = OM_SL/PlantsInst$SunlitLeaves$LAI
-      OM_SH = OM_SH/PlantsInst$ShadeLeaves$LAI
+      OM_SL = OM_SL/x$SunlitLeaves$LAI
+      OM_SH = OM_SH/x$ShadeLeaves$LAI
     }
     matplot(timesteps, t(OM_SL), lty=1:length(cohortnames), col = 1:length(cohortnames),
             lwd=1, type="l", ylab=expression(paste("Absorbed SWR sunlit per leaf   ",(W%.%m^{-2}))), 

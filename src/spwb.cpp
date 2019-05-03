@@ -209,6 +209,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                         _["Soil"] = SB, 
                         _["RhizoPsi"] = RhizoPsi,
                         _["Plants"] = Plants,
+                        _["SunlitLeaves"] = transp["SunlitLeaves"],
+                        _["ShadeLeaves"] = transp["ShadeLeaves"],
                         _["ExtractionInst"] = soilLayerExtractInst,
                         _["PlantsInst"] = PlantsInst,
                         _["LightExtinction"] = transp["LightExtinction"]);
