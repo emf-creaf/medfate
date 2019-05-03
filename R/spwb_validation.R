@@ -33,7 +33,6 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
     seld = rownames(measuredData) %in% d
     
     if(draw) {
-      par(mfrow=c(1,2), mar=c(4,4,1,1))
       ETmax = ceiling(max(c(ET1, ET2, measuredData$ETR[seld]), na.rm=T))
       plot(as.Date(d), ET2, type="l", ylim=c(0,ETmax), col="gray",
            xlab = "", ylab="ETR (mm)")
@@ -44,6 +43,9 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
            asp=1, xlim=c(0,ETmax), ylim=c(0,ETmax), pch=19, cex=0.4, col="gray")
       points(ET1, measuredData$ETR[seld], col="black", pch=19, cex=0.4)
       abline(a=0, b=1, col="black")
+      plot(wtMD[,1], frapue$measuredData$MD_T1_68[seld])
+      abline(a=0,b=1)
+      
     }
     df = as.data.frame(rbind(evalstats(measuredData$ETR[seld], ET1),
                        evalstats(measuredData$ETR[seld], ET2)))
@@ -111,6 +113,60 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
           message(paste0("Not enough observations for ", cohorts[i]))
         }
       }
+      return(df)
+    }
+  }
+  else if(type=="WP"){
+    wtMD = x$LeafPsiMin
+    wtPD = x$LeafPsiMax
+    d = rownames(wtMD)
+    spnames = x$spwbInput$cohorts$Name
+    allcohnames = row.names(x$spwbInput$cohorts)
+    seld = rownames(measuredData) %in% d
+    
+    if(!is.null(cohort)) {
+      pdcolumn = paste0("PD_", cohort)
+      mdcolumn = paste0("MD_", cohort)
+      pderrcolumn = paste0("PD_", cohort, "_err")
+      mderrcolumn = paste0("MD_", cohort, "_err")
+      icoh = which(allcohnames==cohort)
+      
+      PD_mod = wtPD[,icoh]
+      MD_mod = wtMD[,icoh]
+      PD_obs = measuredData[[pdcolumn]][seld]
+      MD_obs = measuredData[[mdcolumn]][seld]
+      PD_obs_err = measuredData[[pderrcolumn]][seld]
+      MD_obs_err = measuredData[[mderrcolumn]][seld]
+      wpmin = min(c(PD_mod, MD_mod, PD_obs, MD_obs), na.rm=T)
+      if(draw) {
+        par(mfrow=c(1,2), mar=c(4,4,4,1))
+        plot(as.Date(rownames(wtMD)), MD_mod, type="l", col="red", xlab="", ylab = "Leaf water potential (MPa)",
+             ylim = c(wpmin,0), main = paste0(cohort, " (", spnames[icoh],")"))
+        lines(as.Date(rownames(wtPD)), PD_mod, col="blue")
+        arrows(x0=as.Date(row.names(measuredData)[seld]), 
+               y0 = PD_obs, 
+               y1 = PD_obs+1.96*PD_obs_err, col="black", length = 0.01, angle=90)
+        arrows(x0=as.Date(row.names(measuredData)[seld]), 
+               y0 = PD_obs, 
+               y1 = PD_obs-1.96*PD_obs_err, col="black", length = 0.01, angle=90)
+        points(as.Date(row.names(measuredData)[seld]), PD_obs, col="blue", pch=19)
+        arrows(x0=as.Date(row.names(measuredData)[seld]), 
+               y0 = MD_obs, 
+               y1 = MD_obs+1.96*MD_obs_err, col="black", length = 0.01, angle=90)
+        arrows(x0=as.Date(row.names(measuredData)[seld]), 
+               y0 = MD_obs, 
+               y1 = MD_obs-1.96*MD_obs_err, col="black", length = 0.01, angle=90)
+        points(as.Date(row.names(measuredData)[seld]), MD_obs, col="red", pch=19)
+        plot(PD_obs, PD_mod, col="blue", cex = 0.5, 
+             xlab ="Modelled leaf water potential (MPa)", ylab="Measured leaf water potential (MPa)",
+             xlim = c(wpmin,0), ylim = c(wpmin,0), asp=1, pch=19)
+        points(MD_obs, PD_obs, col="red", cex=0.5, pch=19)
+        legend("bottomright", col=c("blue", "red"), pch=19, legend=c("Predawn", "Midday"), bty="n")
+        abline(a=0,b=1)
+      }
+      df = as.data.frame(rbind(evalstats(PD_obs, PD_mod),
+                               evalstats(MD_obs, MD_mod)))
+      row.names(df)<-c("Predawn potentials", "Midday potentials")
       return(df)
     }
   }
