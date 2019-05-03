@@ -157,10 +157,10 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
                y0 = MD_obs, 
                y1 = MD_obs-1.96*MD_obs_err, col="black", length = 0.01, angle=90)
         points(as.Date(row.names(measuredData)[seld]), MD_obs, col="red", pch=19)
-        plot(PD_obs, PD_mod, col="blue", cex = 0.5, 
+        plot(PD_mod, PD_obs, col="blue", cex = 0.5, 
              xlab ="Modelled leaf water potential (MPa)", ylab="Measured leaf water potential (MPa)",
              xlim = c(wpmin,0), ylim = c(wpmin,0), asp=1, pch=19)
-        points(MD_obs, PD_obs, col="red", cex=0.5, pch=19)
+        points(MD_mod, MD_obs, col="red", cex=0.5, pch=19)
         legend("bottomright", col=c("blue", "red"), pch=19, legend=c("Predawn", "Midday"), bty="n")
         abline(a=0,b=1)
       }
