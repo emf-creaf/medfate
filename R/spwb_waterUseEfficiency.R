@@ -22,8 +22,8 @@ spwb_waterUseEfficiency<-function(x, type = "An/E", leaves = "average", freq="da
     for(i in 1:ndays) {
       sl = sd[[i]]$PlantsInst$SunlitLeaves
       sh = sd[[i]]$PlantsInst$ShadeLeaves
-      sl_lai = sd[[i]]$PlantsInst$SunlitLeaves$LAI
-      sh_lai = sd[[i]]$PlantsInst$ShadeLeaves$LAI
+      sl_lai = sd[[i]]$SunlitLeaves$LAI
+      sh_lai = sd[[i]]$ShadeLeaves$LAI
       if(leaves =="sunlit") {
         iwueinst = sl$An/sl$GW
         iwueinst[iwueinst<0] = 0
