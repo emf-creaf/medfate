@@ -23,7 +23,7 @@ hydraulics_averagePsi(psi, v, c, d)
 hydraulics_vulnerabilityCurvePlot(x, soil = NULL, type="leaf",  
                                   psiVec =  seq(-0.1, -8.0, by =-0.01), 
                                   relative = FALSE, speciesNames = FALSE,
-                                  draw = TRUE)   
+                                  draw = TRUE, ylim = NULL, xlab = NULL, ylab=NULL)   
 hydraulics_psiCrit(c, d, pCrit = 0.001)
 hydraulics_vanGenuchtenConductance(psi, krhizomax, n, alpha)
 hydraulics_xylemConductance(psi, kxylemmax, c, d)
@@ -50,6 +50,7 @@ hydraulics_psi2Weibull(psi50, psi88)
   \item{relative}{A flag to relativize vulnerability curves to the [0-1] interval.}
   \item{speciesNames}{A flag to indicate the use of species names instead of cohort names in plots.}
   \item{draw}{A flag to indicate whether the vulnerability curve should be drawn or just returned.}
+  \item{ylim, xlab, ylab}{Graphical parameters to override function defaults.}
   \item{pCrit}{Proportion of maximum conductance considered critical for hydraulic functioning.}
   \item{psi50, psi88}{Water potentials (in MPa) corresponding to 50\% and 88\% of percent loss of conductance.}
 }

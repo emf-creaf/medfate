@@ -5,7 +5,7 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
     Bias <- mean(E, na.rm=T)
     MAE <- mean(abs(E), na.rm=T)
     R2<- cor(obs, pred, use="complete")^2
-    return(c(Bias= Bias, MAE = MAE, R2 = R2))
+    return(c(n = sum(!is.na(obs) & !is.na(pred)), Bias= Bias, MAE = MAE, R2 = R2))
   }
   if(type=="SWC") {
     sm = x$Soil
@@ -31,24 +31,25 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
     ET2 = x$WaterBalance$Evapotranspiration
     d = rownames(x$WaterBalance)
     seld = rownames(measuredData) %in% d
+    ETobs = measuredData$ETR[seld]
     
     if(draw) {
-      ETmax = ceiling(max(c(ET1, ET2, measuredData$ETR[seld]), na.rm=T))
+      par(mfrow=c(1,2), mar=c(4,4,1,1))
+      ETmax = ceiling(max(c(ET1, ET2, ETobs), na.rm=T))
       plot(as.Date(d), ET2, type="l", ylim=c(0,ETmax), col="gray",
            xlab = "", ylab="ETR (mm)")
       lines(as.Date(d), ET1, col="black")
-      lines(as.Date(row.names(measuredData))[seld], measuredData$ETR[seld], col="red")
+      lines(as.Date(row.names(measuredData))[seld], ETobs, col="red")
       legend("topright", legend = c("modelled Es+Tr", "modelled Es+Tr+In", "measured ETR"), col=c("black", "gray","red"), lty=1, bty="n")
-      plot(ET2, measuredData$ETR[seld], xlab="modelled ETR (mm)", ylab="measured ETR (mm)",
+      plot(ET2, ETobs, xlab="modelled ETR (mm)", ylab="measured ETR (mm)",
            asp=1, xlim=c(0,ETmax), ylim=c(0,ETmax), pch=19, cex=0.4, col="gray")
-      points(ET1, measuredData$ETR[seld], col="black", pch=19, cex=0.4)
+      points(ET1, ETobs, col="black", pch=19, cex=0.4)
       abline(a=0, b=1, col="black")
-      plot(wtMD[,1], frapue$measuredData$MD_T1_68[seld])
-      abline(a=0,b=1)
-      
+      abline(lm(ETobs~ ET1), col="black", lty=2)
+      abline(lm(ETobs~ ET2), col="gray", lty=2)
     }
-    df = as.data.frame(rbind(evalstats(measuredData$ETR[seld], ET1),
-                       evalstats(measuredData$ETR[seld], ET2)))
+    df = as.data.frame(rbind(evalstats(ETobs, ET1),
+                       evalstats(ETobs, ET2)))
     row.names(df)<-c("Es+Tr", "Es+Tr+In")
     return(df)
     
@@ -66,7 +67,7 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
       icoh = which(allcohnames==cohort)
       
       E_mod = pt[,icoh]/LAI[icoh]
-      E_obs = measuredData[[obscolumn]][seld]/LAI[icoh]
+      E_obs = measuredData[[obscolumn]][seld]
       Emax = max(c(E_mod, E_obs), na.rm=T)
       if(draw) {
         par(mfrow=c(1,2), mar=c(4,4,1,1))
@@ -78,6 +79,7 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
              xlab ="Modelled transpiration", ylab="Measured transpiration", 
              asp=1, xlim=c(0,Emax), ylim=c(0,Emax))
         abline(a=0, b=1)
+        abline(lm(E_obs~E_mod), col="gray", lty=2)
       }
       return(evalstats(E_obs, E_mod))
     } else {
@@ -86,7 +88,8 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
       cohorts = allcohnames[selc]
       spnames = spnames[selc]
       obscolumns = obscolumns[selc]
-      df = data.frame(Bias = rep(NA, length(cohorts)),
+      df = data.frame(n = rep(NA, length(cohorts)),
+                      Bias = rep(NA, length(cohorts)),
                       MAE = rep(NA, length(cohorts)),
                       R2 = rep(NA, length(cohorts)))
       row.names(df)<-cohorts
@@ -95,7 +98,7 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
         icoh = which(allcohnames==cohorts[i])
         obscolumn = obscolumns[i]
         E_mod = pt[,icoh]/LAI[icoh]
-        E_obs = measuredData[[obscolumn]][seld]/LAI[icoh]
+        E_obs = measuredData[[obscolumn]][seld]
         Emax = max(c(E_mod, E_obs), na.rm=T)
         if(sum(!is.na(E_obs))>0) {
           if(draw) {
@@ -104,11 +107,12 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
             lines(as.Date(row.names(measuredData))[seld], E_obs, col="red")
             legend("topright", legend =c("Measured", "Modelled"), lty=1, col=c("red", "black"), bty="n")
             plot(E_mod, E_obs, cex=0.5, pch = 19,
-                 xlab ="Modelled transpiration", ylab="Measured transpiration", 
+                 xlab ="Modelled transpiration per leaf area", ylab="Measured transpiration per leaf area", 
                  asp=1, xlim=c(0,Emax), ylim=c(0,Emax))
             abline(a=0, b=1)
+            abline(lm(E_obs~E_mod), col="gray", lty=2)
           }
-          df[i,] = evalstats(E_obs, E_mod)
+          df[i,] = evalstats(E_mod, E_obs)
         } else {
           message(paste0("Not enough observations for ", cohorts[i]))
         }
@@ -160,7 +164,9 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
         plot(PD_mod, PD_obs, col="blue", cex = 0.5, 
              xlab ="Modelled leaf water potential (MPa)", ylab="Measured leaf water potential (MPa)",
              xlim = c(wpmin,0), ylim = c(wpmin,0), asp=1, pch=19)
+        abline(lm(PD_obs~PD_mod), col="blue", lty=2)
         points(MD_mod, MD_obs, col="red", cex=0.5, pch=19)
+        abline(lm(MD_obs~MD_mod), col="red", lty=2)
         legend("bottomright", col=c("blue", "red"), pch=19, legend=c("Predawn", "Midday"), bty="n")
         abline(a=0,b=1)
       }

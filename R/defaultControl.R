@@ -23,7 +23,7 @@ defaultControl<-function() {
     Catm = 386,
     ndailysteps = 24,
     thermalCapacityLAI = 1000000,
-    defaultWindSpeed = 5,
+    defaultWindSpeed = 2.5, #m/s
     # growth
     storagePool = "none"
     
