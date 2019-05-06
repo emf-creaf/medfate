@@ -22,7 +22,8 @@ hydraulics_K2Psi(K, Psi_extract, ws = 3.0)
 hydraulics_averagePsi(psi, v, c, d)
 hydraulics_vulnerabilityCurvePlot(x, soil = NULL, type="leaf",  
                                   psiVec =  seq(-0.1, -8.0, by =-0.01), 
-                                  relative = FALSE, draw = TRUE)   
+                                  relative = FALSE, speciesNames = FALSE,
+                                  draw = TRUE)   
 hydraulics_psiCrit(c, d, pCrit = 0.001)
 hydraulics_vanGenuchtenConductance(psi, krhizomax, n, alpha)
 hydraulics_xylemConductance(psi, kxylemmax, c, d)
@@ -44,9 +45,10 @@ hydraulics_psi2Weibull(psi50, psi88)
   \item{kxylem}{Xylem hydraulic conductance (defined as flow per surface unit and per pressure drop).}
   \item{x}{An object of class \code{\link{spwbInput}}.}
   \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
-  \item{type}{Plot type. For \code{hydraulics_supplyFunctionPlot}, either \code{"E"}, \code{"Elayers"}, \code{"PsiStem"}, \code{"PsiRoot"}, \code{"PsiRhizo"} or \code{"dEdP"}). For \code{hydraulics_vulnerabilityCurvePlot}, either \code{"leaf"}, \code{"stem"}, \code{"root"}, or \code{"rhizosphere"}).}
+  \item{type}{Plot type. For \code{hydraulics_supplyFunctionPlot}, either \code{"E"}, \code{"Elayers"}, \code{"PsiStem"}, \code{"PsiRoot"}, \code{"PsiRhizo"} or \code{"dEdP"}). For \code{hydraulics_vulnerabilityCurvePlot}, either \code{"leaf"}, \code{"stem"}, \code{"root"}, \code{"rootlayer"} or \code{"rhizosphere"}).}
   \item{psiVec}{Vector of water potential values to evaluate for the vulnerability curve.}
   \item{relative}{A flag to relativize vulnerability curves to the [0-1] interval.}
+  \item{speciesNames}{A flag to indicate the use of species names instead of cohort names in plots.}
   \item{draw}{A flag to indicate whether the vulnerability curve should be drawn or just returned.}
   \item{pCrit}{Proportion of maximum conductance considered critical for hydraulic functioning.}
   \item{psi50, psi88}{Water potentials (in MPa) corresponding to 50\% and 88\% of percent loss of conductance.}
@@ -78,14 +80,35 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 \code{\link{hydraulics_supplyFunctionPlot}}, \code{\link{hydraulics_maximumStemHydraulicConductance}}, \code{\link{spwb}}, \code{\link{soil}}
 }
 \examples{
+
+#Manual display of vulnerability curve
 kstemmax = 4 # in mmol·m-2·s-1·MPa-1
 stemc = 3 
 stemd = -4 # in MPa
-
 psiVec = seq(-0.1, -7.0, by =-0.01)
-
-#Vulnerability curve
 kstem = unlist(lapply(psiVec, hydraulics_xylemConductance, kstemmax, stemc, stemd))
 plot(-psiVec, kstem, type="l",ylab="Xylem conductance (mmol·m-2·s-1·MPa-1)", 
 xlab="Canopy pressure (-MPa)", lwd=1.5,ylim=c(0,kstemmax))
+
+
+#Default species parameterization
+data(SpParamsMED)
+
+#Initialize soil with default soil params (2 layers)
+examplesoil = soil(defaultSoilParams(2)) 
+
+#Initialize control parameters
+control = defaultControl()
+
+#Switch to 'Sperry' transpiration mode
+control$transpirationMode="Sperry"
+
+#Initialize input
+x = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+
+#Leaf vulnerability curves
+hydraulics_vulnerabilityCurvePlot(x, type="leaf")
+
+#Stem vulnerability curves
+hydraulics_vulnerabilityCurvePlot(x, type="stem")
 }
