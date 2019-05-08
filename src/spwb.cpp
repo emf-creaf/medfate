@@ -1376,6 +1376,5 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
     l.attr("names") = ln;
   }
   l.attr("class") = CharacterVector::create("pwb","list");
-  if(verbose) Rcout<<"done.\n";
   return(l);                    
 }
