@@ -18,7 +18,7 @@ defaultControl<-function() {
     klat = 0.1, # symplastic-apoplastic lateral conductance
     taper = TRUE,
     numericParams=list(maxNsteps = 400, ntrial = 200, psiTol = 0.0001, ETol = 0.0000001),
-    fracRootResistance = 0.33,
+    fracRootResistance = 0.4,
     averageFracRhizosphereResistance = 0.15,
     Catm = 386,
     ndailysteps = 24,

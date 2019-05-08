@@ -1084,18 +1084,12 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
   NumericMatrix PlantLAI(numDays, numCohorts);
   
   
-  NumericVector Wini = W(0,_);
-  
-  if(verbose) {
-    for(int l=0;l<nlayers;l++) Rcout << "W"<<(l+1)<<"i:"<< round(100*Wini[l])/100<<" ";
-    Rcout<<"\n";
-  }
-  
-  if(verbose) Rcout << "Daily transpiration:";
+
+  if(verbose) Rcout << "Performing daily simulations ";
   NumericVector Eplanttot(numDays,0.0);
   List s;
   for(int i=0;i<numDays;i++) {
-    if(verbose) Rcout<<".";//<<i;
+    if(verbose & (i%10 == 0)) Rcout<<".";//<<i;
     double wind = WindSpeed[i];
     if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; //Default 1 m/s -> 10% of fall every day
     if(wind<0.1) wind = 0.1; //Minimum windspeed abovecanopy
@@ -1254,18 +1248,15 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
   if(verbose) {
     double Transpirationsum = sum(Transpiration);
     
-    Rcout<<" Transpiration (mm) "  <<round(Transpirationsum) <<"\n";
+    Rcout<<"Transpiration (mm) "  <<round(Transpirationsum);
     if(transpirationMode =="Sperry") {
-      Rcout<<"Plant extraction from soil (mm) " << round(sum(PlantExtraction));
+      Rcout<<" Plant extraction from soil (mm) " << round(sum(PlantExtraction));
       Rcout<<" Hydraulic redistribution (mm) " << round(sum(HydraulicRedistribution)) <<"\n";
+    } else {
+      Rcout <<"\n";
     }
-    NumericVector Wfin = soil["W"];
-    for(int l=0;l<nlayers;l++) Rcout << "W"<<(l+1)<<"f:"<< round(100*Wfin[l])/100<<" ";
-    Rcout<<"\n";
-    
   }
-  if(verbose) Rcout<<"Building SPWB output ...";
-  
+
   
   DataFrame SWB;
   if(transpirationMode=="Granier") {
