@@ -720,7 +720,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
       PlantLAI(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["LAI"]);
       NumericVector EplantCoh = Plants["Transpiration"];
       Eplantdays(i,_) = EplantVec;
-      PlantPhotosynthesis(i,_) = Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
+      PlantPhotosynthesis(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["Photosynthesis"]);
       PlantTranspiration(i,_) = EplantCoh;
       PlantStress(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["DDS"]);
       if(transpirationMode=="Sperry") {
@@ -1155,7 +1155,7 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
     PlantExtraction[i] = sum(SoilWaterExtract);
     Transpiration[i] = sum(EplantCoh);
     NumericVector HydrInVec(nlayers, 0.0);
-    PlantPhotosynthesis(i,_) = Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
+    PlantPhotosynthesis(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["Photosynthesis"]);
     PlantTranspiration(i,_) = EplantCoh;
     PlantStress(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["DDS"]);
     

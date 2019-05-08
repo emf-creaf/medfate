@@ -25,18 +25,20 @@ Functions to plot the results of the soil water balance model for one day (see \
     \item{\code{"SoilPlantConductance"}:}{Overall soil plant conductance (calculated as the derivative of the supply function).}
     \item{\code{"PlantExtraction"}:}{ Water extracted from each soil layer.}
     \item{\code{"PlantTranspiration"}:}{ Plant cohort transpiration per ground area.}
-    \item{\code{"LeafTranspiration"}:}{ Plant cohort transpiration per leaf area.}
-    \item{\code{"PlantWaterBalance"}:}{ Difference between water extraction from the soil and transpired water per ground area.}
+    \item{\code{"PlantTranspirationPerLeaf"}:}{ Plant cohort transpiration per leaf area.}
     \item{\code{"PlantPhotosynthesis"}:}{ Plant cohort daily net photosynthesis per ground area.}
-    \item{\code{"PlantAbsorbedSWR"}:}{Cohort's absorbed short wave radiation per ground area  (differentiates sunlit and shade leaves).}
-    \item{\code{"LeafPhotosynthesis"}:}{Instantaneous net photosynthesis per leaf area (differentiates sunlit and shade leaves).}
-    \item{\code{"LeafAbsorbedSWR"}:}{Cohort's absorbed short wave radiation per leaf area (differentiates sunlit and shade leaves).}
-    \item{\code{"LeafVPD"}:}{Leaf vapour pressure deficit (differentiates sunlit and shade leaves).}
-    \item{\code{"LeafStomatalConductance"}:}{Leaf instantaneous stomatal conductance (differentiates sunlit and shade leaves).}
-    \item{\code{"LeafTemperature"}:}{Leaf temperature (differentiates sunlit and shade leaves).}
-    \item{\code{"LeafCi"}:}{Leaf instantaneous intercellular CO2 concentration (differentiates sunlit and shade leaves).}
-    \item{\code{"LeafIntrinsicWUE"}:}{Leaf intrinsic water use efficiency, i.e. the ratio between instantanoeus photosynthesis and stomatal conductance (differentiates sunlit and shade leaves).}
-    \item{\code{"Temperature"}:}{Above-canopy, inside-canopy and soil temperature.}
+    \item{\code{"PlantPhotosynthesisPerLeaf"}:}{ Plant cohort daily net photosynthesis per leaf area.}
+    \item{\code{"PlantWaterBalance"}:}{ Difference between water extraction from the soil and transpired water per ground area.}
+    \item{\code{"PlantAbsorbedSWR"}:}{ Absorbed short wave radiation per ground area  (differentiates sunlit and shade leaves).}
+    \item{\code{"LeafTranspiration"}:}{ Instantaneous transpiration per leaf area (differentiates sunlit and shade leaves).}
+    \item{\code{"LeafPhotosynthesis"}:}{ Instantaneous net photosynthesis per leaf area (differentiates sunlit and shade leaves).}
+    \item{\code{"LeafAbsorbedSWR"}:}{ Absorbed short wave radiation per leaf area (differentiates sunlit and shade leaves).}
+    \item{\code{"LeafVPD"}:}{ Leaf vapour pressure deficit (differentiates sunlit and shade leaves).}
+    \item{\code{"LeafStomatalConductance"}:}{ Leaf stomatal conductance (differentiates sunlit and shade leaves).}
+    \item{\code{"LeafTemperature"}:}{ Leaf temperature (differentiates sunlit and shade leaves).}
+    \item{\code{"LeafCi"}:}{ Leaf intercellular CO2 concentration (differentiates sunlit and shade leaves).}
+    \item{\code{"LeafIntrinsicWUE"}:}{ Leaf intrinsic water use efficiency, i.e. the ratio between instantaneous photosynthesis and stomatal conductance (differentiates sunlit and shade leaves).}
+    \item{\code{"Temperature"}:}{ Above-canopy, inside-canopy and soil temperature.}
     \item{\code{"CanopyEnergyBalance"}:}{ Canopy energy balance components.}
     \item{\code{"SoilEnergyBalance"}:}{ Soil energy balance components.}
    }
@@ -90,5 +92,3 @@ sd2<-spwb_day(x2, examplesoil, rownames(examplemeteo)[d],
 #Display transpiration for subdaily steps
 plot(sd2, "PlantTranspiration")
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.

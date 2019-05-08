@@ -389,7 +389,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   NumericVector psiBk(nlayers);
   for(int l=0;l<nlayers;l++) psiBk[l] = psiVec[l]; //Store initial soil water potential
   NumericMatrix K(numCohorts, nlayers);
-  NumericVector Eplant(numCohorts);
+  NumericVector Eplant(numCohorts, 0.0), Anplant(numCohorts, 0.0);
   NumericMatrix Rninst(numCohorts,ntimesteps);
   NumericMatrix dEdPinst(numCohorts, ntimesteps);
   NumericMatrix Qinst(numCohorts,ntimesteps);
@@ -579,9 +579,9 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
             Temp_SL(c,n)= TempSunlit[iPMSunlit];
             
             //Scale photosynthesis
-            Aninst(c,n) = AnSunlit[iPMSunlit]*LAI_SL[c] + AnShade[iPMShade]*LAI_SH[c];
-            photosynthesis[c] +=(1e-6)*12.01017*Aninst(c,n)*tstep; 
-            
+            double Ansum = AnSunlit[iPMSunlit]*LAI_SL[c] + AnShade[iPMShade]*LAI_SH[c];
+            Aninst(c,n) = (1e-6)*12.01017*Ansum*tstep;
+
             //Average flow from sunlit and shade leaves
             double Eaverage = (fittedE[iPMSunlit]*LAI_SL[c] + fittedE[iPMShade]*LAI_SH[c])/(LAI_SL[c] + LAI_SH[c]);
             
@@ -620,6 +620,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
             
             //Add to daily plant cohort transpiration
             Eplant[c] +=Einst(c,n);
+            Anplant[c] +=Aninst(c,n);
             
             
             //Update symplastic storage and PLC
@@ -710,15 +711,15 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
             Temp_SL(c,n)= leafVPDSL;
             
             //Scale photosynthesis
-            Aninst(c,n) = AnSL*LAI_SL[c] + AnSH*LAI_SH[c];
-            photosynthesis[c] +=(1e-6)*12.01017*Aninst(c,n)*tstep; 
-            
-            
+            double Ansum = AnSL*LAI_SL[c] + AnSH*LAI_SH[c];
+            Aninst(c,n) =(1e-6)*12.01017*Ansum*tstep; 
+
             Einst(c,n) = Eaverage*0.001*0.01802*LAIphe[c]*tstep; //Scale from instantaneous flow to water volume in the time step
             
             
             //Add to daily plant cohort transpiration
             Eplant[c] +=Einst(c,n);
+            Anplant[c] +=Aninst(c,n);
             
             List sAb = E2psiAbovegroundCapacitanceDisconnected(Eaverage, 
                                                                psiStemPrev, PLCStemPrev, RWCStemPrev, 
@@ -850,6 +851,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   for(int c=0;c<numCohorts;c++) {
     SoilExtractCoh[c] =  sum(SoilWaterExtract(c,_));
     transpiration[c] = Eplant[c]; 
+    photosynthesis[c] = Anplant[c];
     PLCm[c] = sum(PLC(c,_))/((double)PLC.ncol());
     RWCsm[c] = sum(RWCsteminst(c,_))/((double)RWCsteminst.ncol());
     RWClm[c] = sum(RWCleafinst(c,_))/((double)RWCleafinst.ncol());
@@ -961,7 +963,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
     _["PWB"] = PWBinst);
   DataFrame Plants = DataFrame::create(_["LAI"] = LAIcohort,
                                        _["Extraction"] = SoilExtractCoh,
-                                       _["Transpiration"] = Eplant, 
+                                       _["Transpiration"] = Eplant,
+                                       _["Photosynthesis"] = Anplant,
                                        _["RootPsi"] = minPsiRoot, 
                                        _["StemPsi"] = minPsiStem, 
                                        _["StemPLC"] = PLCm, //Average daily stem PLC
@@ -1119,7 +1122,7 @@ List transpirationGranier(List x, List soil, double tday, double pet, bool modif
   NumericMatrix EplantCoh(numCohorts, nlayers);
   NumericMatrix PsiRoot(numCohorts, nlayers);
   NumericVector PlantPsi(numCohorts, NA_REAL);
-  NumericVector Eplant(numCohorts, 0.0);
+  NumericVector Eplant(numCohorts, 0.0), Anplant(numCohorts, 0.0);
   NumericVector DDS(numCohorts, 0.0);
   NumericVector Kl, epc, Vl;
   double WeibullShape=3.0;
@@ -1146,21 +1149,22 @@ List transpirationGranier(List x, List soil, double tday, double pet, bool modif
     Eplant = Eplant + epc;
     DDS = DDS + Phe*(Vl*(1.0 - Kl)); //Add stress from the current layer
   }
+  
+  double alpha = std::max(std::min(tday/20.0,1.0),0.0);
   for(int c=0;c<numCohorts;c++) {
     PlantPsi[c] = averagePsi(PsiRoot(c,_), V(c,_), WeibullShape, Psi_Extract[c]);
     if(!cavitationRefill) {
       pEmb[c] = std::max(DDS[c], pEmb[c]); //Track current embolism if no refill
       DDS[c] = pEmb[c];
     }
+    Anplant[c] = alpha*WUE[c]*Eplant[c];
   }
   
-  double alpha = std::max(std::min(tday/20.0,1.0),0.0);
-  //For comunication with growth and landscape water balance
   
   if(modifyInput) {
     for(int c=0;c<numCohorts;c++) {
       transpiration[c] = Eplant[c];
-      photosynthesis[c] = alpha*WUE[c]*transpiration[c];
+      photosynthesis[c] = Anplant[c];
     }
     x["PLC"] = pEmb;
   }
@@ -1175,7 +1179,9 @@ List transpirationGranier(List x, List soil, double tday, double pet, bool modif
     }
   }
   DataFrame Plants = DataFrame::create(_["LAI"] = LAIcohort,
-                                       _["Transpiration"] = Eplant, _["psi"] = PlantPsi, _["DDS"] = DDS);
+                                       _["Transpiration"] = Eplant, 
+                                       _["Photosynthesis"] = Anplant,
+                                       _["psi"] = PlantPsi, _["DDS"] = DDS);
   Plants.attr("row.names") = above.attr("row.names");
   EplantCoh.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
   List l = List::create(_["cohorts"] = clone(cohorts),
