@@ -38,30 +38,30 @@ Function \code{plot} plots the results of the soil plant water balance model (se
     \item{\code{"SoilTheta"}:}{ Soil moisture water content (in percent volume).}
     \item{\code{"SoilVol"}:}{ Soil water volumetric content (in mm).}
     \item{\code{"PlantExtraction"}:}{ Water extracted by plants from each soil layer.}
-    \item{\code{"HydraulicRedistribution"}:}{Water added to each soil layer coming from other soil layers, transported through the plant hydraulic network (only for \code{transpirationMode = "Complex"}).}
+    \item{\code{"HydraulicRedistribution"}:}{Water added to each soil layer coming from other soil layers, transported through the plant hydraulic network (only for \code{transpirationMode = "Sperry"}).}
     \item{\code{"WTD"}:}{ Water table depth.}
     \item{\code{"LAI"}:}{ Expanded and dead leaf area index of the whole stand.}
     \item{\code{"PlantLAI"}:}{ Plant cohort leaf area index (expanded leaves).}
     \item{\code{"SoilPlantConductance"}:}{Average instantaneous overall soil plant conductance (calculated as the derivative of the supply function).}
     \item{\code{"PlantStress"}:}{ Plant cohort average daily drought stress.}
-    \item{\code{"PlantPsi"}:}{ Plant cohort water potential (only for \code{transpirationMode = "Simple"}).}
-    \item{\code{"LeafPsi"}:}{ Midday leaf water potential (only for \code{transpirationMode = "Complex"}).}
-    \item{\code{"StemPsi"}:}{ Midday (upper) stem water potential (only for \code{transpirationMode = "Complex"}).}
-    \item{\code{"RootPsi"}:}{ Midday root crown water potential (only for \code{transpirationMode = "Complex"}).}
+    \item{\code{"PlantPsi"}:}{ Plant cohort water potential (only for \code{transpirationMode = "Granier"}).}
+    \item{\code{"LeafPsi"}:}{ Midday leaf water potential (only for \code{transpirationMode = "Sperry"}).}
+    \item{\code{"StemPsi"}:}{ Midday (upper) stem water potential (only for \code{transpirationMode = "Sperry"}).}
+    \item{\code{"RootPsi"}:}{ Midday root crown water potential (only for \code{transpirationMode = "Sperry"}).}
     \item{\code{"PlantTranspiration"}:}{ Plant cohort transpiration.}
-    \item{\code{"PlantTranspirationLeaf"}:}{ Plant cohort transpiration per leaf area.}
+    \item{\code{"PlantTranspirationPerLeaf"}:}{ Plant cohort transpiration per leaf area.}
     \item{\code{"PlantPhotosynthesis"}:}{ Plant cohort photosynthesis.}
-    \item{\code{"PlantPhotosynthesisLeaf"}:}{ Plant cohort photosynthesis per leaf area.}
+    \item{\code{"PlantPhotosynthesisPerLeaf"}:}{ Plant cohort photosynthesis per leaf area.}
     \item{\code{"PlantWUE"}:}{ Plant cohort daily water use efficiency (photosynthesis over transpiration).}
-    \item{\code{"PlantAbsorbedSWR"}:}{ Plant cohort absorbed short wave radiation (only for \code{transpirationMode = "Complex"}).}
-    \item{\code{"PlantAbsorbedSWRLeaf"}:}{ Plant cohort absorbed short wave radiation per leaf area (only for \code{transpirationMode = "Complex"}).}
-    \item{\code{"PlantAbsorbedLWR"}:}{ Plant cohort absorbed long wave radiation (only for \code{transpirationMode = "Complex"}).}
-    \item{\code{"PlantAbsorbedLWRLeaf"}:}{ Plant cohort absorbed long wave radiation per leaf area (only for \code{transpirationMode = "Complex"}).}
-    \item{\code{"AirTemperature"}:}{ Minimum/maximum/mean daily temperatures above canopy (only for \code{transpirationMode = "Complex"}).}
-    \item{\code{"CanopyTemperature"}:}{ Minimum/maximum/mean daily temperatures inside canopy (only for \code{transpirationMode = "Complex"}).}
-    \item{\code{"SoilTemperature"}:}{ Minimum/maximum/mean daily temperatures inside the first soil layer (only for \code{transpirationMode = "Complex"}).}
-    \item{\code{"CanopyEnergyBalance"}:}{ Canopy energy balance components (only for \code{transpirationMode = "Complex"}).}
-    \item{\code{"SoilEnergyBalance"}:}{ Soil energy balance components (only for \code{transpirationMode = "Complex"}).}
+    \item{\code{"PlantAbsorbedSWR"}:}{ Plant cohort absorbed short wave radiation (only for \code{transpirationMode = "Sperry"}).}
+    \item{\code{"PlantAbsorbedSWRPerLeaf"}:}{ Plant cohort absorbed short wave radiation per leaf area (only for \code{transpirationMode = "Sperry"}).}
+    \item{\code{"PlantAbsorbedLWR"}:}{ Plant cohort absorbed long wave radiation (only for \code{transpirationMode = "Sperry"}).}
+    \item{\code{"PlantAbsorbedLWRPerLeaf"}:}{ Plant cohort absorbed long wave radiation per leaf area (only for \code{transpirationMode = "Sperry"}).}
+    \item{\code{"AirTemperature"}:}{ Minimum/maximum/mean daily temperatures above canopy (only for \code{transpirationMode = "Sperry"}).}
+    \item{\code{"CanopyTemperature"}:}{ Minimum/maximum/mean daily temperatures inside canopy (only for \code{transpirationMode = "Sperry"}).}
+    \item{\code{"SoilTemperature"}:}{ Minimum/maximum/mean daily temperatures inside the first soil layer (only for \code{transpirationMode = "Sperry"}).}
+    \item{\code{"CanopyEnergyBalance"}:}{ Canopy energy balance components (only for \code{transpirationMode = "Sperry"}).}
+    \item{\code{"SoilEnergyBalance"}:}{ Soil energy balance components (only for \code{transpirationMode = "Sperry"}).}
     \item{\code{"PlantRespiration"}:}{ Plant cohort respiration (only for \code{plot.growth}).}
     \item{\code{"PlantRespirationLeaf"}:}{ Plant cohort respiration per leaf area (only for \code{plot.growth}).}
     \item{\code{"PlantCBalance"}:}{ Plant cohort carbon balance (only for \code{plot.growth}).}

@@ -17,7 +17,7 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
             "Export", "LAI", "WTD",
             "PlantExtraction","PlantLAI",
             "PlantStress", "PlantPsi","PlantPhotosynthesis", "PlantTranspiration", "PlantWUE",
-            "PlantPhotosynthesisLeaf","PlantTranspirationLeaf")
+            "PlantPhotosynthesisPerLeaf","PlantTranspirationPerLeaf")
   if(transpMode=="Sperry") {
     TYPES = c("PET_Precipitation","PET_NetRain","Snow","Evapotranspiration",
               "SoilPsi","SoilTheta", "SoilRWC", "SoilVol", 
@@ -26,12 +26,12 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
               "PlantLAI",
               "SoilPlantConductance","PlantStress", 
               "PlantPhotosynthesis", "PlantTranspiration","PlantWUE",
-              "PlantPhotosynthesisLeaf","PlantTranspirationLeaf", 
+              "PlantPhotosynthesisPerLeaf","PlantTranspirationPerLeaf", 
               "LeafPsiMin", "LeafPsiMax", "LeafPsiMin_SL", "LeafPsiMax_SL", "LeafPsiMin_SH", "LeafPsiMax_SH",
               "StemPsi","RootPsi","StemPLC", "StemRWC", "LeafRWC", 
               "PlantWaterBalance",
-              "PlantAbsorbedSWR", "PlantAbsorbedSWRLeaf",
-              "PlantAbsorbedLWR", "PlantAbsorbedLWRLeaf",
+              "PlantAbsorbedSWR", "PlantAbsorbedSWRPerLeaf",
+              "PlantAbsorbedLWR", "PlantAbsorbedLWRPerLeaf",
               "AirTemperature","SoilTemperature", "CanopyTemperature",
               "CanopyEnergyBalance", "SoilEnergyBalance")
   } 
@@ -170,19 +170,19 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
   TYPES = c("SoilPsi","SoilTheta", "SoilRWC",
             "PlantExtraction","PlantLAI",
             "PlantStress", "PlantPsi","PlantPhotosynthesis", "PlantTranspiration", "PlantWUE",
-            "PlantPhotosynthesisLeaf","PlantTranspirationLeaf")
+            "PlantPhotosynthesisPerLeaf","PlantTranspirationPerLeaf")
   if(transpMode=="Sperry") {
     TYPES = c("SoilPsi","SoilTheta", "SoilRWC",
               "PlantExtraction","HydraulicRedistribution",
               "PlantLAI",
               "SoilPlantConductance","PlantStress", 
               "PlantPhotosynthesis", "PlantTranspiration","PlantWUE",
-              "PlantPhotosynthesisLeaf","PlantTranspirationLeaf", 
+              "PlantPhotosynthesisPerLeaf","PlantTranspirationPerLeaf", 
               "LeafPsiMin", "LeafPsiMax", "LeafPsiMin_SL", "LeafPsiMax_SL", "LeafPsiMin_SH", "LeafPsiMax_SH",
               "StemPsi","RootPsi","StemPLC", "StemRWC", "LeafRWC", 
               "PlantWaterBalance",
-              "PlantAbsorbedSWR", "PlantAbsorbedSWRLeaf",
-              "PlantAbsorbedLWR", "PlantAbsorbedLWRLeaf",
+              "PlantAbsorbedSWR", "PlantAbsorbedSWRPerLeaf",
+              "PlantAbsorbedLWR", "PlantAbsorbedLWRPerLeaf",
               "AirTemperature","SoilTemperature", "CanopyTemperature",
               "CanopyEnergyBalance", "SoilEnergyBalance")
   } 
@@ -552,7 +552,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
            col = 1:length(cohortnames), bty="n")
   } 
-  else if(type=="PlantTranspirationLeaf") {
+  else if(type=="PlantTranspirationPerLeaf") {
     df = x$PlantTranspiration
     if(bySpecies) {
       m1 = apply(df,1, tapply, input$cohorts$Name, sum, na.rm=T)
@@ -589,7 +589,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
            col = 1:length(cohortnames), bty="n")
   } 
-  else if(type=="PlantPhotosynthesisLeaf") {
+  else if(type=="PlantPhotosynthesisPerLeaf") {
     df = x$PlantPhotosynthesis
     if(bySpecies) {
       m1 = apply(df,1, tapply, input$cohorts$Name, sum, na.rm=T)
@@ -642,7 +642,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
            col = 1:length(cohortnames), bty="n")
   } 
-  else if(type=="PlantAbsorbedSWRLeaf") {
+  else if(type=="PlantAbsorbedSWRPerLeaf") {
     df = x$PlantAbsorbedSWR
     if(bySpecies) {
       m1 = apply(df,1, tapply, input$cohorts$Name, sum, na.rm=T)
@@ -678,7 +678,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
            col = 1:length(cohortnames), bty="n")
   } 
-  else if(type=="PlantAbsorbedLWRLeaf") {
+  else if(type=="PlantAbsorbedLWRPerLeaf") {
     df = x$PlantAbsorbedLWR
     if(bySpecies) {
       m1 = apply(df,1, tapply, input$cohorts$Name, sum, na.rm=T)
