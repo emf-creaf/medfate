@@ -1,7 +1,7 @@
 vprofile_leafAreaDensity<-function(x, SpParams = NULL, z = NULL, gdd = NA, byCohorts = FALSE,
                                    bySpecies = FALSE, draw = TRUE, legend = TRUE, xlim = NULL) {
-  if(!(class(x) %in% c("data.frame", "forest"))) stop("'x' should be of class 'forest' or 'data.frame'")
-  if(class(x)=="forest") {
+  if(!(inherits(x,"data.frame") || inherits(x, "forest"))) stop("'x' should be of class 'forest' or 'data.frame'")
+  if(inherits(x, "forest")) {
     if(is.null(SpParams)) stop("Please, provide 'SpParams' to calculate leaf area.")
     spnames = plant_speciesName(x, SpParams)
     x = forest2aboveground(x, SpParams, gdd)
@@ -12,13 +12,18 @@ vprofile_leafAreaDensity<-function(x, SpParams = NULL, z = NULL, gdd = NA, byCoh
     spnames = x$SP
   }
 
-  if(is.null(z)) z = seq(0, ceiling(max(x$H)/100)*100 , by=10)
+  if(is.null(z)) z = seq(0, ceiling(max(x$H)/100)*100 +10, by=10)
   w = z[2:length(z)]- z[1:(length(z)-1)]
   if(!byCohorts) {
     lai = .LAIprofileVectors(z, x$LAI_expanded, x$H, x$CR)
     lai = 100*lai/w
     if(draw) {
-      plot(lai, z[-1], type="l", xlab="Leaf Area Density (m2/m3)", ylab="Height (cm)", xlim = xlim)
+      df = data.frame(lai = c(0,lai), z = z)
+      g<-ggplot(df, aes(x=lai, y=z))+
+        geom_path()+
+        xlab("Leaf Area Density (m2/m3)")+
+        ylab("Height (cm)")
+      if(!is.null(xlim)) g <- g + xlim(xlim)
     }
   } else {
     cohortnames = row.names(x)
@@ -28,16 +33,20 @@ vprofile_leafAreaDensity<-function(x, SpParams = NULL, z = NULL, gdd = NA, byCoh
       lai = t(apply(lai,1, tapply, spnames, sum, na.rm=T))
       cohortnames = colnames(lai)
     } 
-    
-    matplot(lai, z[-1], 
-            type="l", xlab="Leaf Area Density (m2/m3)", xlim = xlim,
-            ylab="Height (cm)", lty=1:length(cohortnames), col = 1:length(cohortnames))
-    if(legend) {
-      legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
-           col = 1:length(cohortnames), bty="n")
+    if(draw) {
+      lai = rbind(rep(0, ncol(lai)),lai)
+      df = data.frame(lai = as.vector(lai), z = z,
+                      Cohort = gl(length(cohortnames), nrow(lai), labels=cohortnames))
+      g<-ggplot(df, aes(x=lai, y=z))+
+        geom_path(aes(col=Cohort, linetype = Cohort))+
+        xlab("Leaf Area Density (m2/m3)")+
+        ylab("Height (cm)")+
+        scale_color_discrete(name="")+
+        scale_linetype_discrete(name="")
+      if(!is.null(xlim)) g <- g + xlim(xlim)
     }
   }
-  if(draw) invisible(lai)
+  if(draw) return(g)
   else return(lai)
 }
 

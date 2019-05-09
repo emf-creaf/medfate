@@ -13,7 +13,7 @@ License: GPL (>= 2)
 URL: http://vegmod.ctfc.cat/medfateweb
 LazyLoad: yes
 Depends: R (>= 3.4.0), sp
-Imports: spdep, GSIF, methods, meteoland (>= 0.7.1), Rcpp (>= 0.12.12)
+Imports: spdep, GSIF, ggplot2, methods, meteoland (>= 0.7.1), Rcpp (>= 0.12.12)
 Suggests: knitr, rmarkdown, rjson
 LinkingTo: Rcpp, meteoland
 Encoding: UTF-8
