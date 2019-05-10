@@ -142,30 +142,13 @@ spwb_waterUseEfficiency<-function(x, type = "Plant An/E", leaves = "average", fr
     return(res)
   } else {
     if(type=="Stand An/E") {
-      df = data.frame(WUE = res, Date = as.Date(names(res)))
-      g<-ggplot(df, aes(x = Date, y= WUE))+
-        geom_line()+
-        ylab("Stand An/E (gC/L)")
-        
+      g<-.single_dynamics(res, ylab = "Stand An/E (gC/L)")
     } 
     else if(type=="Plant An/E") {
-      df = data.frame(WUE = as.vector(res), Date = as.Date(rownames(res)),
-                      Cohort = gl(length(colnames(res)), nrow(res), labels=colnames(res)))
-      g<-ggplot(df, aes(x=Date, y=WUE))+
-        geom_path(aes(col=Cohort, linetype = Cohort))+
-        ylab("Plant An/E (gC/L)")+
-        scale_color_discrete(name="")+
-        scale_linetype_discrete(name="")
-      
+      g<-.multiple_dynamics(res, ylab = "Plant An/E (gC/L)")
     }
     else if(type %in% c("Leaf iWUE", "Leaf Ci")) {
-      df = data.frame(WUE = as.vector(res), Date = as.Date(rownames(res)),
-                      Cohort = gl(length(colnames(res)), nrow(res), labels=colnames(res)))
-      g<-ggplot(df, aes(x=Date, y=WUE))+
-        geom_path(aes(col=Cohort, linetype = Cohort))+
-        ylab(type)+
-        scale_color_discrete(name="")+
-        scale_linetype_discrete(name="")
+      g<-.multiple_dynamics(res, ylab = type)
     }
     return(g)
   }
