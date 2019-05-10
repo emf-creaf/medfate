@@ -15,6 +15,7 @@ vignette: >
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(medfate)
+library(ggplot2)
 ```
 
 ## About this vignette
@@ -321,9 +322,8 @@ head(S$LeafPsi)
 
 Package `medfate` also provides a `plot` function for objects of class `spwb`. It can be used to show the meteorological input. Additionally, it can also be used to draw soil and plant variables. In the code below we draw water fluxes, soil water potentials, plant transpiration and plant (mid-day) water potential:
 
-```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 7}
-par(mar=c(5,5,1,1), mfrow=c(2,2))
-plot(S, type="Evapotranspiration", bySpecies = TRUE)
+```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 3.5}
+plot(S, type="Evapotranspiration")
 plot(S, type="SoilPsi", bySpecies = TRUE)
 plot(S, type="PlantTranspiration", bySpecies = TRUE)
 plot(S, type="LeafPsiMin", bySpecies = TRUE)

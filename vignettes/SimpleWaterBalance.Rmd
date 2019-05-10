@@ -16,7 +16,6 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 library(medfate)
 library(ggplot2)
-library(cowplot)
 ```
 
 ## About this vignette
@@ -263,18 +262,16 @@ plot(S, type = "Evapotranspiration")
 ```
 
 Function `plot` is also allows displaying soil moisture dynamics by layer, which can be done in four different ways (the first two only imply a change in axis units):
-```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 11}
-g1<-plot(S, type="SoilTheta")
-g2<-plot(S, type="SoilRWC")
-g3<-plot(S, type="SoilPsi")
-g4<-plot(S, type="SoilVol")
-plot_grid(g1, g2, g3, g4, ncol=1)
+```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 4}
+plot(S, type="SoilTheta")
+plot(S, type="SoilRWC")
+plot(S, type="SoilPsi")
+plot(S, type="SoilVol")
 ```
 
 Finally, the same function can also be used to draw the dynamics of plant variables by cohorts, such as transpiration, photosynthesis, water potential or drought stress:
 
-```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 7}
-par(mar=c(4.5,4.5,1,1), mfrow=c(2,2))
+```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 4}
 plot(S, type="PlantTranspiration")
 plot(S, type="PlantPhotosynthesis")
 plot(S, type="PlantPsi")
