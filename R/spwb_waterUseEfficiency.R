@@ -1,9 +1,9 @@
-spwb_waterUseEfficiency<-function(x, type = "An/E", leaves = "average", freq="days") {
+spwb_waterUseEfficiency<-function(x, type = "Plant An/E", leaves = "average", freq="days") {
   if(!("spwb" %in% class(x)) && !("pwb" %in% class(x))) {
     stop("'x' should be of class 'spwb' or 'pwb'")
   }
-  type = match.arg(type, c("iWUE", "An/E", "Ci"))
-  if(type=="iWUE") {
+  type = match.arg(type, c("Leaf Ci", "Leaf iWUE", "Plant An/E", "Stand An/E"))
+  if(type=="Leaf iWUE") {
     if(x$spwbInput$control$transpirationMode != "Sperry") {
       stop("iWUE can only be calculated with transpirationMode = 'Sperry'")
     }
@@ -63,7 +63,7 @@ spwb_waterUseEfficiency<-function(x, type = "An/E", leaves = "average", freq="da
       return(M)
     }
   }
-  else if(type=="Ci") {
+  else if(type=="LeafCi") {
     if(x$spwbInput$control$transpirationMode != "Sperry") {
       stop("Ci can only be calculated with transpirationMode = 'Sperry'")
     }
@@ -120,13 +120,22 @@ spwb_waterUseEfficiency<-function(x, type = "An/E", leaves = "average", freq="da
       return(M)
     }
   }
-  else if(type =="An/E") {
+  else if(type =="Plant An/E") {
     if(freq=="days") {
       return(x$PlantPhotosynthesis/x$PlantTranspiration)
     } else {
       pt = summary(x, freq=freq, output="PlantTranspiration", FUN=sum, na.rm=T)
       pp = summary(x, freq=freq, output="PlantPhotosynthesis", FUN=sum, na.rm=T)
       return(pp/pt)
+    }
+  }
+  else if(type =="Stand An/E") {
+    if(freq=="days") {
+      return(rowSums(x$PlantPhotosynthesis)/rowSums(x$PlantTranspiration))
+    } else {
+      pt = summary(x, freq=freq, output="PlantTranspiration", FUN=sum, na.rm=T)
+      pp = summary(x, freq=freq, output="PlantPhotosynthesis", FUN=sum, na.rm=T)
+      return(rowSums(pp)/rowSums(pt))
     }
   }
 }
