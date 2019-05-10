@@ -1,4 +1,4 @@
-spwb_waterUseEfficiency<-function(x, type = "Plant An/E", leaves = "average", freq="days") {
+spwb_waterUseEfficiency<-function(x, type = "Plant An/E", leaves = "average", freq="days", draw = TRUE) {
   if(!("spwb" %in% class(x)) && !("pwb" %in% class(x))) {
     stop("'x' should be of class 'spwb' or 'pwb'")
   }
@@ -44,7 +44,7 @@ spwb_waterUseEfficiency<-function(x, type = "Plant An/E", leaves = "average", fr
       }
     }
     if(freq=="days") {
-      return(iWUEdays)
+      res = iWUEdays
     } else {
       
       date.factor = cut(dates, breaks=freq)
@@ -60,10 +60,10 @@ spwb_waterUseEfficiency<-function(x, type = "Plant An/E", leaves = "average", fr
       }
       ncases = table(date.factor)
       M = M[ncases>0, ,drop = FALSE]
-      return(M)
+      res = M
     }
   }
-  else if(type=="LeafCi") {
+  else if(type=="Leaf Ci") {
     if(x$spwbInput$control$transpirationMode != "Sperry") {
       stop("Ci can only be calculated with transpirationMode = 'Sperry'")
     }
@@ -101,7 +101,7 @@ spwb_waterUseEfficiency<-function(x, type = "Plant An/E", leaves = "average", fr
       }
     }
     if(freq=="days") {
-      return(Cidays)
+      res = Cidays
     } else {
       
       date.factor = cut(dates, breaks=freq)
@@ -117,25 +117,56 @@ spwb_waterUseEfficiency<-function(x, type = "Plant An/E", leaves = "average", fr
       }
       ncases = table(date.factor)
       M = M[ncases>0, ,drop = FALSE]
-      return(M)
+      res = M
     }
   }
   else if(type =="Plant An/E") {
     if(freq=="days") {
-      return(x$PlantPhotosynthesis/x$PlantTranspiration)
+      res = x$PlantPhotosynthesis/x$PlantTranspiration
     } else {
       pt = summary(x, freq=freq, output="PlantTranspiration", FUN=sum, na.rm=T)
       pp = summary(x, freq=freq, output="PlantPhotosynthesis", FUN=sum, na.rm=T)
-      return(pp/pt)
+      res = pp/pt
     }
   }
   else if(type =="Stand An/E") {
     if(freq=="days") {
-      return(rowSums(x$PlantPhotosynthesis)/rowSums(x$PlantTranspiration))
+      res = rowSums(x$PlantPhotosynthesis)/rowSums(x$PlantTranspiration)
     } else {
       pt = summary(x, freq=freq, output="PlantTranspiration", FUN=sum, na.rm=T)
       pp = summary(x, freq=freq, output="PlantPhotosynthesis", FUN=sum, na.rm=T)
-      return(rowSums(pp)/rowSums(pt))
+      res = rowSums(pp)/rowSums(pt)
     }
+  }
+  if(!draw) {
+    return(res)
+  } else {
+    if(type=="Stand An/E") {
+      df = data.frame(WUE = res, Date = as.Date(names(res)))
+      g<-ggplot(df, aes(x = Date, y= WUE))+
+        geom_line()+
+        ylab("Stand An/E (gC/L)")
+        
+    } 
+    else if(type=="Plant An/E") {
+      df = data.frame(WUE = as.vector(res), Date = as.Date(rownames(res)),
+                      Cohort = gl(length(colnames(res)), nrow(res), labels=colnames(res)))
+      g<-ggplot(df, aes(x=Date, y=WUE))+
+        geom_path(aes(col=Cohort, linetype = Cohort))+
+        ylab("Plant An/E (gC/L)")+
+        scale_color_discrete(name="")+
+        scale_linetype_discrete(name="")
+      
+    }
+    else if(type %in% c("Leaf iWUE", "Leaf Ci")) {
+      df = data.frame(WUE = as.vector(res), Date = as.Date(rownames(res)),
+                      Cohort = gl(length(colnames(res)), nrow(res), labels=colnames(res)))
+      g<-ggplot(df, aes(x=Date, y=WUE))+
+        geom_path(aes(col=Cohort, linetype = Cohort))+
+        ylab(type)+
+        scale_color_discrete(name="")+
+        scale_linetype_discrete(name="")
+    }
+    return(g)
   }
 }
