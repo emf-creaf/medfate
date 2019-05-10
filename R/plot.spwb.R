@@ -106,32 +106,13 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
   } 
   else if(type=="LAI") {
     if(is.null(ylab)) ylab = expression(paste("Leaf Area Index   ",(m^{2}%.%m^{-2})))
-    if(is.null(ylim)) ylim = c(0,max(WaterBalance$LAIcell))
-    plot(dates, WaterBalance$LAIcell, ylim=ylim, type="l", ylab=ylab, 
-         xlab=xlab, xlim=xlim,frame=FALSE, col="black", axes=FALSE, lwd=1)
-    plotAxes()
-    lines(dates, WaterBalance$LAIcelldead, lty=2)
+    return(.multiple_dynamics(as.matrix(WaterBalance[,c("LAIcell", "LAIcelldead")]), ylab = ylab, ylim = ylim))
   } 
   else if(type=="WTD") {
     if(is.null(ylab)) ylab = expression(paste("Water table depth  (mm)"))
-    if(is.null(ylim)) ylim = c(max(Soil$WTD),0)
-    plot(dates, Soil$WTD, ylim=ylim, type="l", ylab=ylab, 
-         xlab=xlab, xlim=xlim,frame=FALSE, col="black", axes=FALSE, lwd=1)
-    plotAxes()
-    lines(dates, Soil$WTD, lty=2)
-  } 
-  else if(type=="SoilVol") {
-    MLM= Soil[,paste("ML",1:nlayers,sep=".")]
-    MLTot = Soil$MLTot
-    if(is.null(ylim)) ylim =c(0,max(MLTot)*1.3)
-    if(is.null(ylab)) ylab = "Soil water content (mm)"
-    plot(dates, MLTot, ylim=ylim, lwd=2, type="l",xlim=xlim,
-         ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE, col="gray")
-    plotAxes()
-    matlines(dates, MLM, lty = 1:nlayers, col = 1:nlayers, lwd=1.5)
-    legend("topleft", bty="n", col = c("gray",1:nlayers),lty=c(1,1:nlayers), lwd=c(2,rep(1.5,5)),
-           legend=c("Total",paste("Layer", 1:nlayers)))
-    
+    xv = Soil$WTD
+    names(xv) = row.names(Soil)
+    return(.single_dynamics(xv, ylab = ylab, ylim = ylim))
   } 
   else if(type=="Export") {
     if(is.null(ylab)) ylab =  expression(L%.%m^{-2})    
@@ -145,6 +126,12 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     plotAxes()
     legend("topright", bty="n", col=c("black","blue","red"),lty=c(1,1,1), lwd=c(1.5,1,1),
            legend=c("DD+R","Deep drainage (DD)","Runoff (R)"))        
+  } 
+  else if(type=="SoilVol") {
+    if(is.null(ylab)) ylab = "Soil water content (mm)"
+    MLM = data.frame(Total = Soil$MLTot, Soil[,paste("ML",1:nlayers,sep=".")])
+    return(.multiple_dynamics(as.matrix(MLM), ylab = ylab, ylim = ylim,
+                              labels = c("Total", paste("Layer", 1:nlayers))))
   } 
   else {
     plot.pwb(x, type=type, bySpecies = bySpecies,
@@ -211,63 +198,36 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
   else if(type=="SoilPsi") {
     PsiM = Soil[,paste("psi",1:nlayers,sep=".")]
     if(is.null(ylab)) ylab = "Soil water potential (MPa)"    
-    if(is.null(ylim)) ylim =c(min(PsiM),0)
-    matplot(dates, PsiM, lwd=1.5,
-            ylim=ylim, type="l", ylab=ylab, xlab=xlab, xlim=xlim,
-            frame=FALSE, lty=c(1,2,3,4,5), col = 1:nlayers,axes=FALSE)
-    plotAxes()
-    legend("bottomleft", bty="n", lty=c(1,2,3,4,5), col = 1:nlayers, lwd=1.5,
-           legend=paste("Layer", 1:nlayers))
-    
+    return(.multiple_dynamics(as.matrix(PsiM), ylab = ylab, ylim = ylim,
+                              labels = paste("Layer", 1:nlayers)))
   } 
   else if(type=="SoilTheta") {
     WM = Soil[,paste("W",1:nlayers,sep=".")]
     theta_FC = soil_thetaFC(soilInput, model = input$control$soilFunctions)
-    WM = sweep(WM, 2,theta_FC, "*")
+    WM = 100*sweep(WM, 2,theta_FC, "*")
     if(is.null(ylab)) ylab = "Soil moisture (% volume)"
-    if(is.null(ylim)) ylim = c(0,100*max(WM,na.rm = T))
-    matplot(dates, WM*100, lwd=1.5,
-            ylim=ylim, type="l", ylab=ylab, xlab=xlab, xlim=xlim,
-            frame=FALSE, lty=c(1,2,3,4,5), col = 1:nlayers,axes=FALSE)
-    plotAxes()
-    legend("bottomleft", bty="n", col = 1:nlayers,lty=1:nlayers, lwd=1.5,
-           legend=paste("Layer", 1:nlayers))
+    return(.multiple_dynamics(as.matrix(WM), ylab = ylab, ylim = ylim,
+                              labels = paste("Layer", 1:nlayers)))
   } 
   else if(type=="SoilRWC") {
     WM = Soil[,paste("W",1:nlayers,sep=".")]
     if(is.null(ylab)) ylab = "Soil moisture (% field capacity)"
-    if(is.null(ylim)) ylim = c(0,100*max(WM,na.rm = T))
-    matplot(dates, WM*100, lwd=1.5,
-            ylim=ylim, type="l", ylab=ylab, xlab=xlab, xlim=xlim,
-            frame=FALSE, lty=c(1,2,3,4,5), col = 1:nlayers,axes=FALSE)
-    plotAxes()
-    legend("bottomleft", bty="n", col = 1:nlayers,lty=1:nlayers, lwd=1.5,
-           legend=paste("Layer", 1:nlayers))
+    return(.multiple_dynamics(as.matrix(WM), ylab = ylab, ylim = ylim,
+                              labels = paste("Layer", 1:nlayers)))
   } 
   else if(type=="PlantExtraction") {
     extrBal = Soil[,paste("PlantExt",1:nlayers,sep=".")]
     if(is.null(ylab)) ylab = "Extraction from soil layer (mm)"    
-    if(is.null(ylim)) ylim =c(min(extrBal), max(extrBal))
-    matplot(dates, extrBal, lwd=1.5,
-            ylim=ylim, type="l", ylab=ylab, xlab=xlab, xlim=xlim,
-            frame=FALSE, lty=c(1,2,3,4,5), col = 1:nlayers, axes=FALSE)
-    plotAxes()
-    abline(h=0, col="gray", lwd=1.5)
-    legend("topleft", bty="n", lty=c(1,2,3,4,5), col = 1:nlayers, lwd=1.5,
-           legend=paste("Layer", 1:nlayers))
-    
+    g<-.multiple_dynamics(as.matrix(extrBal), ylab = ylab, ylim = ylim,
+                              labels = paste("Layer", 1:nlayers))
+    g<-g+geom_abline(slope=0, intercept=0, col="gray")
+    return(g)
   } 
   else if(type=="HydraulicRedistribution") {
     hydrIn = Soil[,paste("HydraulicInput",1:nlayers,sep=".")]
     if(is.null(ylab)) ylab = "Hydraulic input (mm)"    
-    if(is.null(ylim)) ylim =c(0, max(hydrIn))
-    matplot(dates, hydrIn, lwd=1.5,
-            ylim=ylim, type="l", ylab=ylab, xlab=xlab, xlim=xlim,
-            frame=FALSE, lty=c(1,2,3,4,5), col = 1:nlayers, axes=FALSE)
-    plotAxes()
-    legend("topleft", bty="n", lty=c(1,2,3,4,5), col = 1:nlayers, lwd=1.5,
-           legend=paste("Layer", 1:nlayers))
-    
+    return(.multiple_dynamics(as.matrix(hydrIn), ylab = ylab, ylim = ylim,
+                              labels = paste("Layer", 1:nlayers)))
   } 
   else if(type=="PlantLAI") {
     OM = x$PlantLAI
@@ -276,13 +236,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       cohortnames = colnames(OM)
     } 
     if(is.null(ylab)) ylab = expression(paste("Leaf Area Index   ",(m^{2}%.%m^{-2})))
-    if(is.null(ylim)) ylim = c(0,max(OM, na.rm=TRUE))
-    matplot(dates, OM, ylim = ylim, lty=1:length(cohortnames), col = 1:length(cohortnames),
-            lwd=1, type="l", xlim=xlim,
-            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
-    plotAxes()
-    legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
-           col = 1:length(cohortnames), bty="n")
+    return(.multiple_dynamics(as.matrix(OM), ylab = ylab, ylim = ylim))
   } 
   else if(type=="SoilPlantConductance") {
     OM = x$dEdP
@@ -291,16 +245,9 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum))
       OM = m1/lai1
       OM[lai1==0] = NA
-      cohortnames = colnames(OM)
     } 
     if(is.null(ylab)) ylab = expression(paste("Average soil-plant conductance ",(mmol%.%m^{-2}%.%s^{-1})))
-    if(is.null(ylim)) ylim = c(min(OM, na.rm=T),max(OM, na.rm=T))
-    matplot(dates, OM, lty=1:length(cohortnames), col = 1:length(cohortnames),
-            ylim = ylim, lwd=1, type="l", xlim=xlim,
-            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
-    plotAxes()
-    legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
-           col = 1:length(cohortnames), bty="n")
+    return(.multiple_dynamics(as.matrix(OM), ylab = ylab, ylim = ylim))
   } 
   else if(type=="PlantStress") {
     OM = x$PlantStress
@@ -309,16 +256,10 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum))
       OM = m1/lai1
       OM[lai1==0] = NA
-      cohortnames = colnames(OM)
     } 
     if(is.null(ylab)) ylab = "Drought stress [0-1]"
     if(is.null(ylim)) ylim = c(0,1)
-    matplot(dates, OM, lty=1:length(cohortnames), col = 1:length(cohortnames),
-            ylim = ylim, lwd=1, type="l", xlim=xlim,
-            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
-    plotAxes()
-    legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
-           col = 1:length(cohortnames), bty="n")
+    return(.multiple_dynamics(as.matrix(OM), ylab = ylab, ylim = ylim))
   } 
   else if(type=="StemPLC") {
     OM = x$StemPLC*100
@@ -327,16 +268,9 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum))
       OM = m1/lai1
       OM[lai1==0] = NA
-      cohortnames = colnames(OM)
     } 
     if(is.null(ylab)) ylab = "Percent loss conductance in stem [%]"
-    if(is.null(ylim)) ylim = c(min(OM, na.rm=T),max(OM, na.rm=T))
-    matplot(dates, OM, lty=1:length(cohortnames), col = 1:length(cohortnames),
-            ylim = ylim, lwd=1, type="l", xlim=xlim,
-            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
-    plotAxes()
-    legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
-           col = 1:length(cohortnames), bty="n")
+    return(.multiple_dynamics(as.matrix(OM), ylab = ylab, ylim = ylim))
   } 
   else if(type=="StemRWC") {
     OM = x$StemRWC*100
@@ -345,16 +279,9 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum))
       OM = m1/lai1
       OM[lai1==0] = NA
-      cohortnames = colnames(OM)
     } 
     if(is.null(ylab)) ylab = "Relative water content in stem [%]"
-    if(is.null(ylim)) ylim = c(min(OM, na.rm=T),max(OM, na.rm=T))
-    matplot(dates, OM, lty=1:length(cohortnames), col = 1:length(cohortnames),
-            ylim = ylim, lwd=1, type="l", xlim=xlim,
-            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
-    plotAxes()
-    legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
-           col = 1:length(cohortnames), bty="n")
+    return(.multiple_dynamics(as.matrix(OM), ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafRWC") {
     OM = x$LeafRWC*100
@@ -363,16 +290,9 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum))
       OM = m1/lai1
       OM[lai1==0] = NA
-      cohortnames = colnames(OM)
     } 
     if(is.null(ylab)) ylab = "Relative water content in leaf [%]"
-    if(is.null(ylim)) ylim = c(min(OM, na.rm=T),max(OM, na.rm=T))
-    matplot(dates, OM, lty=1:length(cohortnames), col = 1:length(cohortnames),
-            ylim = ylim, lwd=1, type="l", xlim=xlim,
-            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
-    plotAxes()
-    legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
-           col = 1:length(cohortnames), bty="n")
+    return(.multiple_dynamics(as.matrix(OM), ylab = ylab, ylim = ylim))
   } 
   else if(type=="PlantPsi") {
     OM = x$PlantPsi
@@ -381,16 +301,9 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
       OM = m1/lai1
       OM[lai1==0] = NA
-      cohortnames = colnames(OM)
     } 
     if(is.null(ylab)) ylab = "Plant water potential (MPa)"
-    if(is.null(ylim)) ylim = c(min(OM, na.rm = TRUE),0)
-    matplot(dates, OM, ylim = ylim, lty=1:length(cohortnames), col = 1:length(cohortnames),
-            lwd=1, type="l", xlim=xlim,
-            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
-    plotAxes()
-    legend("bottomright", legend = cohortnames, lty=1:length(cohortnames), 
-           col = 1:length(cohortnames), bty="n")
+    return(.multiple_dynamics(as.matrix(OM), ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafPsiMin") {
     OM = x$LeafPsiMin
@@ -399,16 +312,9 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
       OM = m1/lai1
       OM[lai1==0] = NA
-      cohortnames = colnames(OM)
     } 
     if(is.null(ylab)) ylab = "Minimum (midday) leaf water potential (MPa)"
-    if(is.null(ylim)) ylim = c(min(OM, na.rm = TRUE),0)
-    matplot(dates, OM, ylim = ylim, lty=1:length(cohortnames), col = 1:length(cohortnames),
-            lwd=1, type="l", xlim=xlim,
-            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
-    plotAxes()
-    legend("bottomright", legend = cohortnames, lty=1:length(cohortnames), 
-           col = 1:length(cohortnames), bty="n")
+    return(.multiple_dynamics(as.matrix(OM), ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafPsiMax") {
     OM = x$LeafPsiMax
@@ -417,16 +323,9 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
       OM = m1/lai1
       OM[lai1==0] = NA
-      cohortnames = colnames(OM)
     } 
     if(is.null(ylab)) ylab = "Maximum (predawn) leaf water potential (MPa)"
-    if(is.null(ylim)) ylim = c(min(OM, na.rm = TRUE),0)
-    matplot(dates, OM, ylim = ylim, lty=1:length(cohortnames), col = 1:length(cohortnames),
-            lwd=1, type="l", xlim=xlim,
-            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
-    plotAxes()
-    legend("bottomright", legend = cohortnames, lty=1:length(cohortnames), 
-           col = 1:length(cohortnames), bty="n")
+    return(.multiple_dynamics(as.matrix(OM), ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafPsiMin_SL") {
     OM = x$LeafPsiMin_SL
@@ -435,16 +334,9 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
       OM = m1/lai1
       OM[lai1==0] = NA
-      cohortnames = colnames(OM)
     } 
     if(is.null(ylab)) ylab = "Minimum (midday) sunlit leaf water potential (MPa)"
-    if(is.null(ylim)) ylim = c(min(OM, na.rm = TRUE),0)
-    matplot(dates, OM, ylim = ylim, lty=1:length(cohortnames), col = 1:length(cohortnames),
-            lwd=1, type="l", xlim=xlim,
-            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
-    plotAxes()
-    legend("bottomright", legend = cohortnames, lty=1:length(cohortnames), 
-           col = 1:length(cohortnames), bty="n")
+    return(.multiple_dynamics(as.matrix(OM), ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafPsiMax_SL") {
     OM = x$LeafPsiMax_SL
@@ -453,16 +345,9 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
       OM = m1/lai1
       OM[lai1==0] = NA
-      cohortnames = colnames(OM)
     } 
     if(is.null(ylab)) ylab = "Maximum (predawn) sunlit leaf water potential (MPa)"
-    if(is.null(ylim)) ylim = c(min(OM, na.rm = TRUE),0)
-    matplot(dates, OM, ylim = ylim, lty=1:length(cohortnames), col = 1:length(cohortnames),
-            lwd=1, type="l", xlim=xlim,
-            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
-    plotAxes()
-    legend("bottomright", legend = cohortnames, lty=1:length(cohortnames), 
-           col = 1:length(cohortnames), bty="n")
+    return(.multiple_dynamics(as.matrix(OM), ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafPsiMin_SH") {
     OM = x$LeafPsiMin_SH
@@ -471,16 +356,9 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
       OM = m1/lai1
       OM[lai1==0] = NA
-      cohortnames = colnames(OM)
     } 
     if(is.null(ylab)) ylab = "Minimum (midday) shade leaf water potential (MPa)"
-    if(is.null(ylim)) ylim = c(min(OM, na.rm = TRUE),0)
-    matplot(dates, OM, ylim = ylim, lty=1:length(cohortnames), col = 1:length(cohortnames),
-            lwd=1, type="l", xlim=xlim,
-            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
-    plotAxes()
-    legend("bottomright", legend = cohortnames, lty=1:length(cohortnames), 
-           col = 1:length(cohortnames), bty="n")
+    return(.multiple_dynamics(as.matrix(OM), ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafPsiMax_SH") {
     OM = x$LeafPsiMax_SH
@@ -489,16 +367,9 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
       OM = m1/lai1
       OM[lai1==0] = NA
-      cohortnames = colnames(OM)
     } 
     if(is.null(ylab)) ylab = "Maximum (predawn) shade leaf water potential (MPa)"
-    if(is.null(ylim)) ylim = c(min(OM, na.rm = TRUE),0)
-    matplot(dates, OM, ylim = ylim, lty=1:length(cohortnames), col = 1:length(cohortnames),
-            lwd=1, type="l", xlim=xlim,
-            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
-    plotAxes()
-    legend("bottomright", legend = cohortnames, lty=1:length(cohortnames), 
-           col = 1:length(cohortnames), bty="n")
+    return(.multiple_dynamics(as.matrix(OM), ylab = ylab, ylim = ylim))
   }
   else if(type=="StemPsi") {
     OM = x$StemPsi
@@ -507,16 +378,9 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
       OM = m1/lai1
       OM[lai1==0] = NA
-      cohortnames = colnames(OM)
     } 
     if(is.null(ylab)) ylab = "Midday (upper) stem water potential (MPa)"
-    if(is.null(ylim)) ylim = c(min(OM, na.rm = TRUE),0)
-    matplot(dates, OM, ylim = ylim, lty=1:length(cohortnames), col = 1:length(cohortnames),
-            lwd=1, type="l", xlim=xlim,
-            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
-    plotAxes()
-    legend("bottomright", legend = cohortnames, lty=1:length(cohortnames), 
-           col = 1:length(cohortnames), bty="n")
+    return(.multiple_dynamics(as.matrix(OM), ylab = ylab, ylim = ylim))
   } 
   else if(type=="RootPsi") {
     OM = x$RootPsi
@@ -525,16 +389,9 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
       OM = m1/lai1
       OM[lai1==0] = NA
-      cohortnames = colnames(OM)
     } 
     if(is.null(ylab)) ylab = "Midday root crown water potential (MPa)"
-    if(is.null(ylim)) ylim = c(min(OM, na.rm = TRUE),0)
-    matplot(dates, OM, ylim = ylim, lty=1:length(cohortnames), col = 1:length(cohortnames),
-            lwd=1, type="l", xlim=xlim,
-            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
-    plotAxes()
-    legend("bottomright", legend = cohortnames, lty=1:length(cohortnames), 
-           col = 1:length(cohortnames), bty="n")
+    return(.multiple_dynamics(as.matrix(OM), ylab = ylab, ylim = ylim))
   } 
   else if(type=="PlantTranspiration") {
     OM = x$PlantTranspiration
@@ -543,14 +400,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       cohortnames = colnames(OM)
     } 
     if(is.null(ylab)) ylab = expression(paste("Plant transpiration   ",(L%.%m^{-2})))
-    if(is.null(ylim)) ylim = c(0,max(OM, na.rm=T))
-    matplot(dates, OM, ylim = ylim,
-            lty=1:length(cohortnames), col = 1:length(cohortnames),
-            lwd=1, type="l", xlim=xlim,
-            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
-    plotAxes()      
-    legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
-           col = 1:length(cohortnames), bty="n")
+    return(.multiple_dynamics(as.matrix(OM), ylab = ylab, ylim = ylim))
   } 
   else if(type=="PlantTranspirationPerLeaf") {
     df = x$PlantTranspiration
@@ -558,36 +408,20 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       m1 = apply(df,1, tapply, input$cohorts$Name, sum, na.rm=T)
       lai1 = apply(x$PlantLAI,1,tapply, input$cohorts$Name, sum, na.rm=T)
       df = t(m1/lai1)
-      cohortnames = colnames(df)
     } else {
       df = df/x$PlantLAI
       df[x$PlantLAI==0] = NA
     }
     if(is.null(ylab)) ylab = expression(paste("Plant transpiration per leaf area  ",(L%.%m^{-2})))
-    if(is.null(ylim)) ylim = c(0,max(df, na.rm=T))
-    matplot(dates, df, ylim = ylim, 
-            lty=1:length(cohortnames), col = 1:length(cohortnames),
-            lwd=1, type="l", xlim=xlim,
-            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
-    plotAxes()      
-    legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
-           col = 1:length(cohortnames), bty="n")
+    return(.multiple_dynamics(as.matrix(df), ylab = ylab, ylim = ylim))
   } 
   else if(type=="PlantPhotosynthesis") {
     df = x$PlantPhotosynthesis
     if(bySpecies) {
       df = t(apply(df,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      cohortnames = colnames(df)
     } 
     if(is.null(ylab)) ylab = expression(paste("Plant photosynthesis   ",(g*C%.%m^{-2})))
-    if(is.null(ylim)) ylim = c(min(df, na.rm=T),max(df, na.rm=T))
-    matplot(dates, df, ylim = ylim, 
-            lty=1:length(cohortnames), col = 1:length(cohortnames),
-            lwd=1, type="l", xlim=xlim,
-            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
-    plotAxes()     
-    legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
-           col = 1:length(cohortnames), bty="n")
+    return(.multiple_dynamics(as.matrix(df), ylab = ylab, ylim = ylim))
   } 
   else if(type=="PlantPhotosynthesisPerLeaf") {
     df = x$PlantPhotosynthesis
@@ -595,20 +429,12 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       m1 = apply(df,1, tapply, input$cohorts$Name, sum, na.rm=T)
       lai1 = apply(x$PlantLAI,1,tapply, input$cohorts$Name, sum, na.rm=T)
       df = t(m1/lai1)
-      cohortnames = colnames(df)
     } else {
       df = df/x$PlantLAI
       df[x$PlantLAI==0] = NA
     }
     if(is.null(ylab)) ylab = expression(paste("Plant photosynthesis per leaf area   ",(g*C%.%m^{-2})))
-    if(is.null(ylim)) ylim = c(min(df, na.rm=T),max(df, na.rm=T))
-    matplot(dates, df, ylim = ylim, 
-            lty=1:length(cohortnames), col = 1:length(cohortnames),
-            lwd=1, type="l", xlim=xlim,
-            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
-    plotAxes()     
-    legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
-           col = 1:length(cohortnames), bty="n")
+    return(.multiple_dynamics(as.matrix(df), ylab = ylab, ylim = ylim))
   } 
   else if(type=="PlantWUE") {
     OM = x$PlantPhotosynthesis/x$PlantTranspiration
@@ -617,30 +443,15 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       cohortnames = colnames(OM)
     } 
     if(is.null(ylab)) ylab = expression(paste("Plant daily WUE   ",(g*C%.%L^{-1})))
-    if(is.null(ylim)) ylim = c(min(OM, na.rm=T),max(OM, na.rm=T))
-    matplot(dates, OM, ylim = ylim,
-            lty=1:length(cohortnames), col = 1:length(cohortnames),
-            lwd=1, type="l", xlim=xlim,
-            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
-    plotAxes()      
-    legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
-           col = 1:length(cohortnames), bty="n")
+    return(.multiple_dynamics(as.matrix(OM), ylab = ylab, ylim = ylim))
   } 
   else if(type=="PlantAbsorbedSWR") {
     df = x$PlantAbsorbedSWR
     if(bySpecies) {
       df = t(apply(df,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      cohortnames = colnames(df)
     } 
     if(is.null(ylab)) ylab = expression(paste("Plant absorbed SWR  ",(MJ%.%m^{-2})))
-    if(is.null(ylim)) ylim = c(0,max(df))
-    matplot(dates, df, 
-            lty=1:length(cohortnames), col = 1:length(cohortnames), 
-            ylim = ylim, lwd=1, type="l", xlim=xlim,
-            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
-    plotAxes()     
-    legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
-           col = 1:length(cohortnames), bty="n")
+    return(.multiple_dynamics(as.matrix(df), ylab = ylab, ylim = ylim))
   } 
   else if(type=="PlantAbsorbedSWRPerLeaf") {
     df = x$PlantAbsorbedSWR
@@ -648,35 +459,20 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       m1 = apply(df,1, tapply, input$cohorts$Name, sum, na.rm=T)
       lai1 = apply(x$PlantLAI,1,tapply, input$cohorts$Name, sum, na.rm=T)
       df = t(m1/lai1)
-      cohortnames = colnames(df)
     } else {
       df = df/x$PlantLAI
       df[x$PlantLAI==0] = NA
     }
     if(is.null(ylab)) ylab = expression(paste("Plant absorbed SWR per leaf area  ",(MJ%.%m^{-2})))
-    if(is.null(ylim)) ylim = c(min(df, na.rm=T),max(df, na.rm=T))
-    matplot(dates, df, ylim = ylim, lwd=1, type="l", 
-            lty=1:length(cohortnames), col = 1:length(cohortnames),xlim=xlim,
-            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
-    plotAxes()     
-    legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
-           col = 1:length(cohortnames), bty="n")
+    return(.multiple_dynamics(as.matrix(df), ylab = ylab, ylim = ylim))
   } 
   else if(type=="PlantAbsorbedLWR") {
     df = x$PlantAbsorbedLWR
     if(bySpecies) {
       df = t(apply(df,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      cohortnames = colnames(df)
     } 
     if(is.null(ylab)) ylab = expression(paste("Plant absorbed LWR  ",(MJ%.%m^{-2})))
-    if(is.null(ylim)) ylim = c(0,max(df))
-    matplot(dates, df, ylim = ylim, 
-            lty=1:length(cohortnames), col = 1:length(cohortnames),
-            lwd=1, type="l", xlim=xlim,
-            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
-    plotAxes()     
-    legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
-           col = 1:length(cohortnames), bty="n")
+    return(.multiple_dynamics(as.matrix(df), ylab = ylab, ylim = ylim))
   } 
   else if(type=="PlantAbsorbedLWRPerLeaf") {
     df = x$PlantAbsorbedLWR
@@ -684,20 +480,12 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       m1 = apply(df,1, tapply, input$cohorts$Name, sum, na.rm=T)
       lai1 = apply(x$PlantLAI,1,tapply, input$cohorts$Name, sum, na.rm=T)
       df = t(m1/lai1)
-      cohortnames = colnames(df)
     } else {
       df = df/x$PlantLAI
       df[x$PlantLAI==0] = NA
     }
     if(is.null(ylab)) ylab = expression(paste("Plant absorbed LWR per leaf area  ",(MJ%.%m^{-2})))
-    if(is.null(ylim)) ylim = c(min(df, na.rm=T),max(df, na.rm=T))
-    matplot(dates, df, ylim = ylim, 
-            lty=1:length(cohortnames), col = 1:length(cohortnames),
-            lwd=1, type="l", xlim=xlim,
-            ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE)
-    plotAxes()     
-    legend("topright", legend = cohortnames, lty=1:length(cohortnames), 
-           col = 1:length(cohortnames), bty="n")
+    return(.multiple_dynamics(as.matrix(df), ylab = ylab, ylim = ylim))
   } 
   else if(type=="AirTemperature") {
     if(is.null(ylab)) ylab = "Above-canopy temperature (Celsius)"

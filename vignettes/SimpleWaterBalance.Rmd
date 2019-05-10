@@ -15,6 +15,8 @@ vignette: >
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(medfate)
+library(ggplot2)
+library(cowplot)
 ```
 
 ## About this vignette
@@ -111,8 +113,7 @@ Note that the call to `forest2aboveground()` included species parameters, becaus
 
 Aboveground leaf area distribution (with or without distinguishing among cohorts) can be examined by calling function `vprofile_leafAreaDensity()`:
 
-```{r, fig = TRUE, fig.width= 7, fig.height=3, fig.align= 'center', echo=TRUE}
-par(mar=c(4,4,1,1), mfrow=c(1,2))
+```{r, fig = TRUE, fig.width= 4, fig.height=3, fig.align= 'center', echo=TRUE}
 vprofile_leafAreaDensity(above, byCohorts = F)
 vprofile_leafAreaDensity(above, byCohorts = T)
 ```
@@ -262,12 +263,12 @@ plot(S, type = "Evapotranspiration")
 ```
 
 Function `plot` is also allows displaying soil moisture dynamics by layer, which can be done in four different ways (the first two only imply a change in axis units):
-```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 7}
-par(mar=c(4.5,4.5,1,1), mfrow= c(2,2))
-plot(S, type="SoilTheta")
-plot(S, type="SoilRWC")
-plot(S, type="SoilPsi")
-plot(S, type="SoilVol")
+```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 11}
+g1<-plot(S, type="SoilTheta")
+g2<-plot(S, type="SoilRWC")
+g3<-plot(S, type="SoilPsi")
+g4<-plot(S, type="SoilVol")
+plot_grid(g1, g2, g3, g4, ncol=1)
 ```
 
 Finally, the same function can also be used to draw the dynamics of plant variables by cohorts, such as transpiration, photosynthesis, water potential or drought stress:
@@ -315,5 +316,5 @@ spwb_stress(S, index = "WSI", freq = "months")
 Another specific summary function is `spwb_waterUseEfficiency()`. This is most useful with advanced water and energy balance modeling, but for simple water balance it calculates the ratio between photosynthesis and transpiration at the desired scale:
 
 ```{r}
-spwb_waterUseEfficiency(S, freq = "months")
+spwb_waterUseEfficiency(S, type = "Stand An/E", freq = "months", draw=FALSE)
 ```
