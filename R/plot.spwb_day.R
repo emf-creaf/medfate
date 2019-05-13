@@ -339,8 +339,8 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE, xlab = N
     df[["LWR abs. from atm."]] = EB$SoilEnergyBalance$LWRsoilin
     df[["LWR abs. from canopy"]] = EB$CanopyEnergyBalance$LWRcanout
     df[["LWR emmited"]] = -EB$SoilEnergyBalance$LWRsoilout
-    df[["Convection soil/can."]] = -EB$SoilEnergyBalance$LEsoil
-    df[["Latent heat"]] = EB$SoilEnergyBalance$Hcansoil
+    df[["Convection soil/can."]] = EB$SoilEnergyBalance$Hcansoil
+    df[["Latent heat"]] = -EB$SoilEnergyBalance$LEsoil
     g<-.multiple_subday_dynamics(as.matrix(df), ylab=ylab)
     
     # legend("topright", bty="n", col=c("red","brown","orange", "blue", "gray", "black"), lty=1,

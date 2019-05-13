@@ -221,47 +221,57 @@ names(sd1$EnergyBalance)
 
 Package `medfate` provides a `plot` function for objects of class `spwb_day` that can be used to inspect the results of the simulation. We use this function to display subdaily dynamics in plant, soil and canopy variables. For example, we can use it to display temperature variations (only the temperature of the topmost soil layer is drawn):
 
-```{r, fig=TRUE, fig.align="center", fig.width=4, fig.height = 3.5}
-par(mar=c(4,4,1,1))
+```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
 plot(sd1, type = "Temperature")
-```
-
-
-```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 10}
-par(mar=c(4,4,1,1), mfrow=c(2,1))
 plot(sd1, type = "CanopyEnergyBalance")
 plot(sd1, type = "SoilEnergyBalance")
 ```
 
 ### Plant output
 
-Element `Plants` contains output values by plant cohort and subdaily time step. Many output variables can be inspected in this element.
+Element `Plants` contains output values by plant cohort. Several output variables can be inspected in this element.
 
 ```{r}
-names(sd1$Plants)
+sd1$Plants
 ```
-With the following code, we use function `plot.spwb_day()` to draw plots of daily variation per species of plant transpiration (L·m$^{-2}$), transpiration per leaf area (in L·m$^{-2}$·LAI$^{-1}$), plant net photosynthesis (in g C·m$^{-2}$·LAI$^{-1}$), and plant water potential (in MPa):
-```{r, fig=TRUE, fig.align="center", fig.width=7.5, fig.height = 7.5}
-par(mar=c(5,5,1,1), mfrow=c(2,2))
+While `Plants` contains one value per cohort and variable that summarizes the whole simulated day, information by disaggregated by time step can be accessed in `PlantsInst`. Moreover, we can use function `plot.spwb_day()` to draw plots of sub-daily variation per species of plant transpiration per ground area (L·m$^{-2}$), transpiration per leaf area (also in L·m$^{-2}$), plant net photosynthesis (in g C·m$^{-2}$), and plant water potential (in MPa):
+```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
 plot(sd1, type = "PlantTranspiration", bySpecies = T)
-plot(sd1, type = "LeafTranspiration", bySpecies = T)
+plot(sd1, type = "PlantTranspirationPerLeaf", bySpecies = T)
 plot(sd1, type = "PlantPhotosynthesis", bySpecies = T)
 plot(sd1, type = "LeafPsiAverage", bySpecies = T)
 ```
-We can also use the same function to plot variations in temperature for sunlit and shade leaves (note that sunlit leaves of some species reach temperatures higher than the canopy):
-```{r, fig=TRUE, fig.align="center", fig.width=7.5, fig.height = 4}
+
+### Output for sunlit and shade leaves
+The model distinguishes between sunlit and shade leaves for stomatal regulation. Static properties of sunlit and shade leaves, for each cohort, can be accessed via:
+
+```{r}
+sd1$SunlitLeaves
+sd1$ShadeLeaves
+```
+
+Instantaneous values are also stored for sunlit and shade leaves. We can also use the `plot` function for objects of class `spwb_day` to draw instantaneous variations in temperature for sunlit and shade leaves:
+```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 4}
 plot(sd1, type = "LeafTemperature", bySpecies=TRUE)
 ```
-Or we can plot variations in stomatal conductance for sunlit and shade leaves:
+
+Note that sunlit leaves of some species reach temperatures higher than the canopy. We can also plot variations in instantaneous net photosynthesis rates:
 ```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 4}
 plot(sd1, type = "LeafPhotosynthesis", bySpecies=TRUE)
 ```
+
+Or variations in stomatal conductance:
 
 ```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 4}
 plot(sd1, type = "LeafStomatalConductance", bySpecies=TRUE)
 ```
 
-Or we can plot variations in stomatal conductance for sunlit and shade leaves:
+Or variations in vapour pressure deficit:
+```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 4}
+plot(sd1, type = "LeafVPD", bySpecies=TRUE)
+```
+
+Or variations in leaf water potential:
 ```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 4}
 plot(sd1, type = "LeafPsi", bySpecies=TRUE)
 ```

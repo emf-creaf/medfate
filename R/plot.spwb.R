@@ -78,31 +78,34 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
            legend=c("NetRain","PET"))        
   } 
   else if(type=="Snow") {
-    if(is.null(ylab)) ylab = expression(L%.%m^{-2})    
-    if(!is.null(xlim)) span = xlim[1]:xlim[2]
-    else span = 1:numDays
-    mnp = max(c(WaterBalance$Snow[span], Soil$SWE[span]))
-    if(is.null(ylim)) ylim = c(0,mnp)
-    barplot(WaterBalance$Snow[span], ylim=ylim, col="black",space=0, ylab=ylab, 
-            xlab=xlab, axes=FALSE)
-    plotAxes()
-    lines(1:length(span), Soil$SWE[span], col="red", lwd=1.5)    
-    legend("topleft", bty="n", col=c("black","red"),lty=c(1,1), lwd=2,
-           legend=c("Snow","Snowpack (SWE)"))        
+    if(is.null(ylab)) ylab = expression(L%.%m^{-2})  
+    df = data.frame(row.names=row.names(x$WaterBalance))
+    df[["Snow"]] = x$WaterBalance$Snow
+    df[["Snowpack"]] = x$Soil$SWE
+    df[["Date"]] = as.Date(row.names(x$WaterBalance))
+    g<-ggplot(df)+
+      geom_area( aes(x=Date, y=Snow), col = "black", fill="black")+
+      geom_path(aes(x=Date, y=Snowpack), col="red")+
+      ylab(ylab)+
+      scale_colour_manual(name="Hola", values=c("Snow" = "black", "Snowpack" = "red"))
+    return(g)
+    # mnp = max(c(WaterBalance$Snow[span], Soil$SWE[span]))
+    # if(is.null(ylim)) ylim = c(0,mnp)
+    # barplot(WaterBalance$Snow[span], ylim=ylim, col="black",space=0, ylab=ylab, 
+    #         xlab=xlab, axes=FALSE)
+    # plotAxes()
+    # lines(1:length(span), Soil$SWE[span], col="red", lwd=1.5)    
+    # legend("topleft", bty="n", col=c("black","red"),lty=c(1,1), lwd=2,
+    #        legend=c("Snow","Snowpack (SWE)"))        
   } 
   else if(type=="Evapotranspiration") {
     if(is.null(ylab)) ylab = expression(L%.%m^{-2})
-    if(is.null(ylim)) ylim = c(0,max(c(WaterBalance$PET,WaterBalance$Evapotranspiration), na.rm = T))
-    plot(dates, WaterBalance$Evapotranspiration, ylim=ylim, type="l", ylab=ylab, 
-         xlab=xlab, xlim=xlim,frame=FALSE, col="black", axes=FALSE, lwd=2)
-    plotAxes()
-    lines(dates, WaterBalance$PET, col="red", lty=1, lwd=2)
-    lines(dates, WaterBalance$Interception, col="blue", lty=1, lwd=1.5)
-    lines(dates, WaterBalance$Transpiration, col="olivedrab", lty=2, lwd=1.5)
-    lines(dates, WaterBalance$SoilEvaporation, col="brown", lty=3, lwd=1.5)
-    legend("topleft", bty="n", col=c("black","blue","olivedrab", "brown", "red"),lty=c(1, 1,2,3, 1), lwd=c(2,1.5, 1.5,1.5,2),
-           legend=c("Total evapotranspiration", "Interception evaporation", "Plant transpiration","Bare soil evaporation",
-                    "Potential evapotranspiration"))
+    df = data.frame(row.names=row.names(x$WaterBalance))
+    df[["Total evapotranspiration"]] = x$WaterBalance$Evapotranspiration
+    df[["Interception evaporation"]] = x$WaterBalance$Interception
+    df[["Plant transpiration"]] = x$WaterBalance$Transpiration
+    df[["Bare soil evaporation"]] = x$WaterBalance$SoilEvaporation
+    return(.multiple_dynamics(as.matrix(df), ylab=ylab, ylim = ylim))
   } 
   else if(type=="LAI") {
     if(is.null(ylab)) ylab = expression(paste("Leaf Area Index   ",(m^{2}%.%m^{-2})))
@@ -489,83 +492,73 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
   } 
   else if(type=="AirTemperature") {
     if(is.null(ylab)) ylab = "Above-canopy temperature (Celsius)"
-    if(is.null(ylim)) ylim = c(min(x$Temperature$Tatm_min),max(x$Temperature$Tatm_max))
-    if(!add) {
-      plot(dates, x$Temperature$Tatm_mean, ylim = ylim, type="l", xlim=xlim,
-           ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE, ...)
-      plotAxes()   
-    } else {
-      lines(dates, x$Temperature$Tatm_min, col="black", ...)
-    }
-    lines(dates, x$Temperature$Tatm_min, col="blue", ...)
-    lines(dates, x$Temperature$Tatm_max, col="red", ...)
+    df = data.frame(row.names=row.names(x$Temperature))
+    df[["Mean"]] = x$Temperature$Tatm_mean
+    df[["Minimum"]] = x$Temperature$Tatm_min
+    df[["Maximum"]] = x$Temperature$Tatm_max
+    return(.multiple_dynamics(as.matrix(df), ylab=ylab, ylim = ylim))
   } 
   else if(type=="CanopyTemperature") {
     if(is.null(ylab)) ylab = "Canopy temperature (Celsius)"
-    if(is.null(ylim)) ylim = c(min(x$Temperature$Tcan_min),max(x$Temperature$Tcan_max))
-    if(!add) {
-      plot(dates, x$Temperature$Tcan_mean, ylim = ylim, type="l", xlim=xlim,
-           ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE, ...)
-      plotAxes()   
-    } else {
-      lines(dates, x$Temperature$Tcan_mean, col="black", ...)
-    }
-    lines(dates, x$Temperature$Tcan_min, col="blue", ...)
-    lines(dates, x$Temperature$Tcan_max, col="red", ...)
+    df = data.frame(row.names=row.names(x$Temperature))
+    df[["Mean"]] = x$Temperature$Tcan_mean
+    df[["Minimum"]] = x$Temperature$Tcan_min
+    df[["Maximum"]] = x$Temperature$Tcan_max
+    return(.multiple_dynamics(as.matrix(df), ylab=ylab, ylim = ylim))
   } 
   else if(type=="SoilTemperature") {
     if(is.null(ylab)) ylab = "Soil temperature (Celsius)"
-    if(is.null(ylim)) ylim = c(min(x$Temperature$Tsoil_min),max(x$Temperature$Tsoil_max))
-    if(!add) {
-      plot(dates, x$Temperature$Tsoil_mean, ylim = ylim, type="l", xlim=xlim,
-           ylab=ylab, xlab=xlab, frame=FALSE, axes=FALSE, ...)
-      plotAxes()   
-    } else {
-      lines(dates, x$Temperature$Tsoil_mean, col="black", ...)
-    }
-    lines(dates, x$Temperature$Tsoil_min, col="blue", ...)
-    lines(dates, x$Temperature$Tsoil_max, col="red", ...)
+    df = data.frame(row.names=row.names(x$Temperature))
+    df[["Mean"]] = x$Temperature$Tsoil_mean
+    df[["Minimum"]] = x$Temperature$Tsoil_min
+    df[["Maximum"]] = x$Temperature$Tsoil_max
+    return(.multiple_dynamics(as.matrix(df), ylab=ylab, ylim = ylim))
   } 
   else if(type=="CanopyEnergyBalance") {
     if(is.null(ylab)) ylab = expression(MJ%.%m^{-2})    
-    mxin = max(c(x$EnergyBalance$SWRcanin,x$EnergyBalance$LWRcanin,x$EnergyBalance$LWRsoilcan,-x$EnergyBalance$LEcan,-x$EnergyBalance$Hcan))    
-    mxout = max(c(x$EnergyBalance$LWRcanout,x$EnergyBalance$LEcan,x$EnergyBalance$Hcan))    
-    if(is.null(ylim)) ylim = c(-mxout,mxin)
-    plot(dates, x$EnergyBalance$Ebalcan, ylim=ylim, type="n", 
-         ylab=ylab, xlab=xlab, xlim=xlim,
-         frame=FALSE, axes=FALSE,...)
-    plotAxes()
-    abline(h=0, col="black", lwd=1.5)
-    lines(dates, x$EnergyBalance$Ebalcan, col="black",...)
-    lines(dates, x$EnergyBalance$SWRcanin, col="red",...)
-    lines(dates, x$EnergyBalance$LWRcanin, col="brown",...)
-    lines(dates, -x$EnergyBalance$LWRcanout, col="blue",...)
-    lines(dates, x$EnergyBalance$LWRsoilcan, col="orange",...)
-    lines(dates, -x$EnergyBalance$LEcan, col="green",...)
-    lines(dates, -x$EnergyBalance$Hcan, col="gray",...)
-    lines(dates, -x$EnergyBalance$Hcansoil, col="dark gray",...)
-    legend("topright", bty="n", col=c("red","brown","orange", "blue","green", "gray", "dark gray", "black"), lty=1,
-           legend=c("SWR abs. from atm.","LWR abs. from atm.","LWR abs. from soil","LWR emmited", "Latent heat (L)",
-                    "Convection can./atm.","Convection soil/can.", "Balance"),...)        
+    df = data.frame(row.names=row.names(x$EnergyBalance))
+    df[["Balance"]] = x$EnergyBalance$Ebalcan
+    df[["SWR abs. from atm."]] = x$EnergyBalance$SWRcanin 
+    df[["LWR abs. from atm."]] = x$EnergyBalance$LWRcanin
+    df[["LWR abs. from soil"]] = x$EnergyBalance$LWRsoilcan
+    df[["LWR emmited"]] = -x$EnergyBalance$LWRcanout
+    df[["Latent heat"]] = -x$EnergyBalance$LEcan
+    df[["Convection can./atm."]] = -x$EnergyBalance$Hcan
+    df[["Convection soil/can."]] = -x$EnergyBalance$Hcansoil
+    g<-.multiple_dynamics(as.matrix(df), ylab=ylab, ylim = ylim)
+    return(g)
+    # lines(dates, x$EnergyBalance$Ebalcan, col="black",...)
+    # lines(dates, x$EnergyBalance$SWRcanin, col="red",...)
+    # lines(dates, x$EnergyBalance$LWRcanin, col="brown",...)
+    # lines(dates, -x$EnergyBalance$LWRcanout, col="blue",...)
+    # lines(dates, x$EnergyBalance$LWRsoilcan, col="orange",...)
+    # lines(dates, -x$EnergyBalance$LEcan, col="green",...)
+    # lines(dates, -x$EnergyBalance$Hcan, col="gray",...)
+    # lines(dates, -x$EnergyBalance$Hcansoil, col="dark gray",...)
+    # legend("topright", bty="n", col=c("red","brown","orange", "blue","green", "gray", "dark gray", "black"), lty=1,
+    #        legend=c("SWR abs. from atm.","LWR abs. from atm.","LWR abs. from soil","LWR emmited", "Latent heat (L)",
+    #                 "Convection can./atm.","Convection soil/can.", "Balance"),...)        
   } 
   else if(type=="SoilEnergyBalance") {
     if(is.null(ylab)) ylab = expression(MJ%.%m^{-2})    
-    mxin = max(c(x$EnergyBalance$SWRsoilin, x$EnergyBalance$LWRsoilin,x$EnergyBalance$LWRcanout,x$EnergyBalance$Hcansoil))    
-    mxout = max(c(x$EnergyBalance$LWRsoilout,x$EnergyBalance$LEsoil,-x$EnergyBalance$Hcansoil))    
-    if(is.null(ylim)) ylim = c(-mxout,mxin)
-    plot(dates, x$EnergyBalance$Ebalsoil, ylim=ylim, type="n", 
-         ylab=ylab, xlab=xlab, xlim=xlim,
-         frame=FALSE, axes=FALSE,...)
-    plotAxes()
-    abline(h=0, col="black", lwd=1.5)
-    lines(dates, x$EnergyBalance$Ebalsoil, col="black",...)
-    lines(dates, x$EnergyBalance$SWRsoilin, col="red",...)
-    lines(dates, x$EnergyBalance$LWRsoilin, col="brown",...)
-    lines(dates, x$EnergyBalance$LWRcanout, col="orange",...)
-    lines(dates, -x$EnergyBalance$LEsoil, col="green",...)
-    lines(dates, -x$EnergyBalance$LWRsoilout, col="blue",...)
-    lines(dates, x$EnergyBalance$Hcansoil, col="gray",...)
-    legend("topright", bty="n", col=c("red","brown","orange", "blue", "green", "gray", "black"), lty=1,
-           legend=c("SWR abs. from atm.","LWR abs. from atm.", "LWR abs. from canopy","LWR emmited","Latent heat (L)",  "Convection soil/can.", "Balance"),...)        
+    df = data.frame(row.names=row.names(x$EnergyBalance))
+    df[["Balance"]] = x$EnergyBalance$Ebalsoil
+    df[["SWR abs. from atm."]] = x$EnergyBalance$SWRsoilin
+    df[["LWR abs. from atm."]] = x$EnergyBalance$LWRsoilin
+    df[["LWR abs. from canopy"]] = x$EnergyBalance$LWRcanout
+    df[["LWR emmited"]] = -x$EnergyBalance$LWRsoilout
+    df[["Convection soil/can."]] = x$EnergyBalance$Hcansoil
+    df[["Latent heat"]] = -x$EnergyBalance$LEsoil
+    g<-.multiple_dynamics(as.matrix(df), ylab=ylab, ylim = ylim)
+    return(g)
+    # lines(dates, x$EnergyBalance$Ebalsoil, col="black",...)
+    # lines(dates, x$EnergyBalance$SWRsoilin, col="red",...)
+    # lines(dates, x$EnergyBalance$LWRsoilin, col="brown",...)
+    # lines(dates, x$EnergyBalance$LWRcanout, col="orange",...)
+    # lines(dates, -x$EnergyBalance$LEsoil, col="green",...)
+    # lines(dates, -x$EnergyBalance$LWRsoilout, col="blue",...)
+    # lines(dates, x$EnergyBalance$Hcansoil, col="gray",...)
+    # legend("topright", bty="n", col=c("red","brown","orange", "blue", "green", "gray", "black"), lty=1,
+    #        legend=c("SWR abs. from atm.","LWR abs. from atm.", "LWR abs. from canopy","LWR emmited","Latent heat (L)",  "Convection soil/can.", "Balance"),...)        
   }
 }
