@@ -6,6 +6,7 @@
     geom_line(aes(col=Cohort, linetype = Cohort))+
     scale_color_discrete(name="")+
     scale_linetype_discrete(name="")+
+    theme_bw()+
     xlab(xlab)
   if(!is.null(ylim)) g <- g+ylim(ylim)
   if(!is.null(ylab)) g <- g+ylab(ylab)
@@ -18,6 +19,7 @@
     geom_line()+
     scale_color_discrete(name="")+
     scale_linetype_discrete(name="")+
+    theme_bw()+
     xlab(xlab)
   if(!is.null(ylim)) g <- g+ylim(ylim)
   if(!is.null(ylab)) g <- g+ylab(ylab)
@@ -30,6 +32,7 @@
     geom_line()+
     scale_color_discrete(name="")+
     scale_linetype_discrete(name="")+
+    theme_bw()+
     xlab(xlab)
   if(!is.null(ylim)) g <- g+ylim(ylim)
   if(!is.null(ylab)) g <- g+ylab(ylab)
@@ -44,6 +47,7 @@
     geom_line(aes(col=Cohort, linetype = Cohort))+
     scale_color_discrete(name="")+
     scale_linetype_discrete(name="")+
+    theme_bw()+
     xlab(xlab)
   if(!is.null(ylim)) g <- g+ylim(ylim)
   if(!is.null(ylab)) g <- g+ylab(ylab)
@@ -65,6 +69,7 @@
     facet_wrap(vars(LeafType), ncol=2)+
     scale_color_discrete(name="")+
     scale_linetype_discrete(name="")+
+    theme_bw()+
     xlab(xlab)
   if(!is.null(ylim)) g <- g+ylim(ylim)
   if(!is.null(ylab)) g <- g+ylab(ylab)

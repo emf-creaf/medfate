@@ -22,7 +22,8 @@ vprofile_leafAreaDensity<-function(x, SpParams = NULL, z = NULL, gdd = NA, byCoh
       g<-ggplot(df, aes(x=lai, y=z))+
         geom_path()+
         xlab("Leaf Area Density (m2/m3)")+
-        ylab("Height (cm)")
+        ylab("Height (cm)")+
+        theme_bw()
       if(!is.null(xlim)) g <- g + xlim(xlim)
     }
   } else {
@@ -42,7 +43,8 @@ vprofile_leafAreaDensity<-function(x, SpParams = NULL, z = NULL, gdd = NA, byCoh
         xlab("Leaf Area Density (m2/m3)")+
         ylab("Height (cm)")+
         scale_color_discrete(name="")+
-        scale_linetype_discrete(name="")
+        scale_linetype_discrete(name="")+
+        theme_bw()
       if(!is.null(xlim)) g <- g + xlim(xlim)
     }
   }

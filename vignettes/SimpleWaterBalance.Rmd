@@ -253,11 +253,13 @@ head(S$PlantPsi)
 ### Plots
 
 Package `medfate` provides a simple `plot` function for objects of class `spwb`. It can be used to show meteorological inputs, snow dynamics, and different components of the water balance:
-```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 7}
-par(mar=c(4.5,4.5,1,1), mfrow=c(2,2))
+```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 3.5}
 plot(S, type = "PET_Precipitation")
 plot(S, type = "Snow")
 plot(S, type = "Export")
+```
+
+```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 3.5}
 plot(S, type = "Evapotranspiration")
 ```
 
