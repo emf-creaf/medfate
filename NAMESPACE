@@ -8,6 +8,9 @@ importFrom("graphics", "axis", "abline", "barplot", "legend", "lines", "matplot"
            "matlines", "par", "polygon","axis.Date")
 importFrom("utils", "setTxtProgressBar", "txtProgressBar", "head", "tail")
 importFrom("GSIF", "REST.SoilGrids","over")
+importFrom("ggplot2", "ggplot", "geom_line", "geom_path", 
+           "scale_color_discrete", "aes", "scale_linetype_discrete",
+           "xlim", "ylim", "xlab", "ylab", "facet_wrap", "vars")
 useDynLib(medfate, .registration = TRUE)
 exportPattern("^[[:alpha:]]+")
 

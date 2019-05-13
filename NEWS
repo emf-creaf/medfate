@@ -7,6 +7,7 @@ _Version 0.8.2, May 2019.
 1. Modification of meteoland to better calculate direct/diffuse light on slopes
 2. Added Narea parameter to facilitate estimation of Vmax298
 3. New function 'spwb_validation'.
+4. Plot functions using ggplot
 
 _Version 0.8.1, April 2019.
 1. Export Ci from spwb_day.
