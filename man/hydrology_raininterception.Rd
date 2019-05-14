@@ -13,7 +13,7 @@ Function \code{hydrology_rainInterception} calculates the amount of rainfall int
 \usage{
 hydrology_rainInterception(Rainfall, Cm, p, ER=0.05, method="Gash1995") 
 hydrology_erFactor(doy, pet, prec, Rconv = 5.6, Rsyn = 1.5)
-hydrology_interceptionPlot<-function(x, SpParams, ER = 0.05, gdd = NA, throughfall = FALSE)
+hydrology_interceptionPlot(x, SpParams, ER = 0.05, gdd = NA, throughfall = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

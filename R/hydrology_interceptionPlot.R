@@ -11,27 +11,33 @@ hydrology_interceptionPlot<-function(x, SpParams, ER = 0.05, gdd = NA, throughfa
   
   m2<-precipitation-hydrology_rainInterception(precipitation, Cm,p,ER=ER[1])
   rt = 100*m2/precipitation
-  if(throughfall) {
-    plot(precipitation,rt, type="l", axes=TRUE, ylab="Relative throughfall (%)", 
-          xlab="Gross rainfall (mm)",  
-          lty=1:length(Cm), col="black", ylim=c(0,100))
-  } else {
-    plot(precipitation,100-rt, type="l", axes=TRUE, ylab="Percentage of intercepted rainfall (%)", 
-         xlab="Gross rainfall (mm)",  
-         lty=1:length(Cm), col="black", ylim=c(0,100))
-  }
-  
+  er = rep(ER[1], length(rt))
   if(length(ER)>1) {
     for(i in 2:length(ER)) {
       m2<-precipitation-hydrology_rainInterception(precipitation, Cm,p,ER=ER[i])
-      rt = 100*m2/precipitation
-      if(throughfall) {
-        lines(precipitation, rt, lty=i)
-      } else {
-        lines(precipitation, 100-rt, lty=i)
-      }
+      rt2 = 100*m2/precipitation
+      rt = c(rt, rt2)
+      er = c(er, rep(ER[i], length(rt2)))
     }
-    if(throughfall) legend("bottomright",lty=1:length(ER), legend=paste("ER =",ER), bty="n")
-    else legend("topright",lty=1:length(ER), legend=paste("ER =",ER), bty="n")
   }
+  if(!throughfall) {
+    rt = 100 - rt
+    ylab="Percentage of intercepted rainfall (%)"
+  } else {
+    ylab="Relative throughfall (%)"
+  }
+  xlab="Gross rainfall (mm)"
+  ylim=c(0,100)
+  df = data.frame(P = precipitation, RT = rt, ER = paste0("ER = ",er))
+  g<-ggplot(df, aes(x=P, y=RT))+
+    xlab(xlab)+ylab(ylab)+ylim(ylim)+
+    theme_bw()
+  if(length(ER)==1) {
+    g<-g + geom_path()
+  } else {
+    g<-g + geom_path(aes(col=ER, linetype=ER))+
+      scale_color_discrete(name="")+
+      scale_linetype_discrete(name="")
+  }
+  return(g)
 }
