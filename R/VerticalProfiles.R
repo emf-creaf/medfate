@@ -1,5 +1,5 @@
 vprofile_leafAreaDensity<-function(x, SpParams = NULL, z = NULL, gdd = NA, byCohorts = FALSE,
-                                   bySpecies = FALSE, draw = TRUE, legend = TRUE, xlim = NULL) {
+                                   bySpecies = FALSE, draw = TRUE, xlim = NULL) {
   if(!(inherits(x,"data.frame") || inherits(x, "forest"))) stop("'x' should be of class 'forest' or 'data.frame'")
   if(inherits(x, "forest")) {
     if(is.null(SpParams)) stop("Please, provide 'SpParams' to calculate leaf area.")
