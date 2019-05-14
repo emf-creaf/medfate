@@ -217,10 +217,9 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
     Psi_Extract = paramsTransp["Psi_Extract"];
   }
 
-  NumericVector Water_FC = waterFC(soil);
-  NumericVector W = soil["W"];
-  
-  int nlayers = W.size();
+  //Soil input
+  NumericVector Water_FC = waterFC(soil, soilFunctions);
+  int nlayers = Water_FC.size();
   
   //Anatomy parameters
   DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
@@ -294,17 +293,13 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   NumericVector MLTot(numDays, 0.0);
   NumericVector SWE(numDays, 0.0);
   
-  Wdays(0,_) = W;
-  
-  if(verbose) {
-    for(int l=0;l<nlayers;l++) Rcout << "W"<<(l+1)<<"i:"<< round(100*W[l])/100<<" ";
-    Rcout<<"\n";
-  }
-  
-  if(verbose) Rcout << "Daily growth:";
+  NumericVector Wini = soil["W"];
+  Wdays(0,_) = Wini;
+
+  if(verbose) Rcout << "Performing daily simulations ";
   List s;
   for(int i=0;i<numDays;i++) {
-    if(verbose) Rcout<<".";
+    if(verbose & (i%10 == 0)) Rcout<<".";//<<i;
     
     double wind = WindSpeed[i];
     if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; //Default 1 m/s -> 10% of fall every day
@@ -542,10 +537,10 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
         }
       }
     }
-    if(i<(numDays-1)) Wdays(i+1,_) = W;
+    if(i<(numDays-1))  Wdays(i+1,_) = as<Rcpp::NumericVector>(soil["W"]);
     WaterTable[i] = waterTableDepth(soil, soilFunctions);
   }
-  if(verbose) Rcout << "done\n";
+  if(verbose) Rcout << "done.\n";
   
   NumericVector Transpiration(numDays,0.0);
   for(int l=0;l<nlayers;l++) {
@@ -556,20 +551,10 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   
   NumericVector Evapotranspiration = Transpiration+SoilEvaporation;
   
-  if(verbose) {
-    double Precipitationsum = sum(Precipitation);
 
-    Rcout<<"Total Precipitation (mm) "  <<round(Precipitationsum) <<"\n";
-    for(int l=0;l<nlayers;l++) Rcout << "W"<<(l+1)<<"f:"<< round(100*W[l])/100<<" ";
-    Rcout<<"\n";
-
-  }
-
-  if(verbose) Rcout<<"Building SWB and DWB output ...";
-  
   DataFrame SWB = DataFrame::create(_["W"]=Wdays, _["ML"]=MLdays,_["MLTot"]=MLTot,
                                     _["WTD"] = WaterTable,
-                                    _["psi"]=psidays, _["SWE"] = SWE, _["PlantExt"]=Eplantdays);
+                                    _["SWE"] = SWE, _["PlantExt"]=Eplantdays, _["psi"]=psidays);
   Rcpp::DataFrame DWB = DataFrame::create(_["GDD"] = GDD,
                                           _["LAIcell"]=LAIcell, _["Cm"]=Cm, _["Lground"] = Lground, _["PET"]=PET, 
                                           _["Precipitation"] = Precipitation, _["Rain"] = Rain, _["Snow"] = Snow, 
@@ -579,20 +564,19 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   
   SWB.attr("row.names") = meteo.attr("row.names") ;
   DWB.attr("row.names") = meteo.attr("row.names") ;
-  if(verbose) Rcout<<"plant output ...";
-  
+
   PlantTranspiration.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
   PlantPhotosynthesis.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   PlantRespiration.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   PlantCstorageFast.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   PlantCstorageSlow.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
+  PlantSA.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   PlantSAgrowth.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   PlantPsi.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   PlantStress.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   PlantLAIdead.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   PlantLAIlive.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   
-  if(verbose) Rcout<<"list ...";
   List l = List::create(Named("spwbInput") = spwbInput,
                         Named("soilInput") = soilInput,
                         Named("WaterBalance")=DWB, 
@@ -609,6 +593,5 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
                         Named("PlantLAIdead") = PlantLAIdead,
                         Named("PlantLAIlive") = PlantLAIlive);
   l.attr("class") = CharacterVector::create("growth","list");
-  if(verbose) Rcout<<"done.\n";
   return(l);
 }

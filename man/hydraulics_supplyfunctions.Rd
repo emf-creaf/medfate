@@ -135,7 +135,8 @@ hydraulics_supplyFunctionNetwork(psiSoil,
                   PLCstem, minFlow = 0.0, maxNsteps=400,
                   ntrial = 200, psiTol = 0.0001, ETol = 0.0001, pCrit = 0.001)
                            
-hydraulics_supplyFunctionPlot(x, soil, draw = TRUE, type = "E")   
+hydraulics_supplyFunctionPlot(x, soil, draw = TRUE, type = "E",
+                              speciesNames = FALSE, ylim=NULL)   
 hydraulics_regulatedPsiXylem(E, psiUpstream, kxylemmax, c, d, psiStep = -0.01)
 hydraulics_regulatedPsiTwoElements(Emax, psiSoil, krhizomax, kxylemmax, n, alpha, 
                                    c, d, dE = 0.1, psiMax = -10.0)
@@ -195,6 +196,8 @@ hydraulics_regulatedPsiTwoElements(Emax, psiSoil, krhizomax, kxylemmax, n, alpha
   \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
   \item{type}{Plot type. For \code{hydraulics_supplyFunctionPlot}, either \code{"E"}, \code{"Elayers"}, \code{"PsiStem"}, \code{"PsiRoot"}, \code{"PsiRhizo"} or \code{"dEdP"}). For \code{hydraulics_vulnerabilityCurvePlot}, either \code{"leaf"}, \code{"stem"}, \code{"root"}, or \code{"rhizosphere"}).}
   \item{draw}{A flag to indicate whether the supply function should be drawn or just returned.}
+  \item{speciesNames}{A flag to indicate the use of species names instead of cohort names in plots.}
+  \item{ylim}{Graphical parameter to override function defaults.}
   \item{tstep, timestep}{Time step in seconds.}
 }
 \details{
@@ -233,7 +236,7 @@ Sperry, J. S., F. R. Adler, G. S. Campbell, and J. P. Comstock. 1998. Limitation
 Sperry, J. S., and D. M. Love. 2015. What plant hydraulics can tell us about responses to climate-change droughts. New Phytologist 207:14–27.
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC, Catalonia, Spain
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC.
 }
 \seealso{
 \code{\link{hydraulics_psi2K}}, \code{\link{hydraulics_maximumStemHydraulicConductance}}, \code{\link{spwb}}, \code{\link{soil}}

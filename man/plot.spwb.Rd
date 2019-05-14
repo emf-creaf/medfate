@@ -13,13 +13,11 @@ Function \code{plot} plots the results of the soil plant water balance model (se
 }
 \usage{
 \method{plot}{spwb}(x, type="PET_Precipitation", bySpecies = FALSE,
-                   yearAxis=FALSE, xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL,
-                   add = FALSE, ...)
+                    xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, ...)
 \method{plot}{pwb}(x, type="PlantTranspiration", bySpecies = FALSE,
-                   yearAxis=FALSE, xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL,
-                   add = FALSE, ...)                   
-\method{plot}{growth}(x, type="PET_Precipitation", bySpecies = FALSE, yearAxis=FALSE, 
-    xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL,...)
+                   xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, ...)                   
+\method{plot}{growth}(x, type="PET_Precipitation", bySpecies = FALSE, 
+                      xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, ...)
 \method{summary}{pwb}(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, ...)
 \method{summary}{spwb}(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, ...)
 \method{summary}{growth}(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, ...)
@@ -63,9 +61,9 @@ Function \code{plot} plots the results of the soil plant water balance model (se
     \item{\code{"CanopyEnergyBalance"}:}{ Canopy energy balance components (only for \code{transpirationMode = "Sperry"}).}
     \item{\code{"SoilEnergyBalance"}:}{ Soil energy balance components (only for \code{transpirationMode = "Sperry"}).}
     \item{\code{"PlantRespiration"}:}{ Plant cohort respiration (only for \code{plot.growth}).}
-    \item{\code{"PlantRespirationLeaf"}:}{ Plant cohort respiration per leaf area (only for \code{plot.growth}).}
+    \item{\code{"PlantRespirationPerLeaf"}:}{ Plant cohort respiration per leaf area (only for \code{plot.growth}).}
     \item{\code{"PlantCBalance"}:}{ Plant cohort carbon balance (only for \code{plot.growth}).}
-    \item{\code{"PlantCBalanceLeaf"}:}{ Plant cohort carbon balance per leaf area (only for \code{plot.growth}).}
+    \item{\code{"PlantCBalancePerLeaf"}:}{ Plant cohort carbon balance per leaf area (only for \code{plot.growth}).}
     \item{\code{"PlantCstorageFast"}:}{ Amount of fast-dynamics carbon reserves  (only for \code{plot.growth}).}
     \item{\code{"PlantCstorageSlow"}:}{ Amount of slow-dynamics carbon reserves  (only for \code{plot.growth}).}
     \item{\code{"PlantSA"}:}{ Amount of sapwood area in an individual  (only for \code{plot.growth}).}
@@ -76,16 +74,14 @@ Function \code{plot} plots the results of the soil plant water balance model (se
    }
   }
   \item{bySpecies}{Allows aggregating output by species, before calculating summaries or drawing plots (only has an effect with some values of \code{type}). Aggregation can involve a sum (as for plant lai or transpiration) or a LAI-weighted mean (as for plant stress or plant water potential).}
-  \item{yearAxis}{A boolean to indicate whether the units of the x-axis are years (by default they are dates).}
   \item{xlim}{Range of values for x.}
   \item{ylim}{Range of values for y.}
   \item{xlab}{x-axis label.}
   \item{ylab}{y-axis label.}
-  \item{add}{Boolean flag to add new elements to the current plot.}
   \item{freq}{Frequency of summary statistics (see \code{\link{cut.Date}}).}
   \item{output}{The data table to be summarized. Accepted values are \code{"DailyBalance"}, \code{"PlantStress"}, \code{"PlantPsi"}, \code{"PlantTranspiration"}, \code{"PlantPhotosynthesis"}  and \code{"SoilWaterBalance"}, \code{"Temperature"} and \code{"EnergyBalance"}.}
   \item{FUN}{The function to summarize results (e.g., \code{sum}, \code{mean}, ...)}
-  \item{...}{Additional parameters for functions \code{plot} or \code{summary}.}
+  \item{...}{Additional parameters for function \code{plot} or \code{summary}.}
 }
 \references{
 De \enc{Cáceres}{Caceres} M, \enc{Martínez}{Martinez}-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L. (2015) Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes. Agricultural and Forest Meteorology 213: 77-90 (doi:10.1016/j.agrformet.2015.06.012).

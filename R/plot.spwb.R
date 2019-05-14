@@ -1,6 +1,5 @@
 plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
-                   yearAxis=FALSE, xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, 
-                   add=FALSE, ...) {
+                    xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, ...) {
   dates = as.Date(rownames(x$WaterBalance))
   
   input = x$spwbInput
@@ -36,18 +35,6 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
               "CanopyEnergyBalance", "SoilEnergyBalance")
   } 
   type = match.arg(type,TYPES)  
-  # numDays = length(dates)
-  # numYears = round(numDays/365)
-  # firstYear=as.numeric(format(dates[1],"%Y"))
-  cohortnames = colnames(x$PlantTranspiration)
-  # plotAxes<-function(){
-  #   if(!yearAxis) axis.Date(1, dates)
-  #   else {
-  #     axis(1, at = (0:numYears)*365, labels=FALSE)
-  #     axis(1, at = -182+365*(1:numYears), tick = FALSE, line=FALSE, labels=firstYear:(firstYear+numYears-1))
-  #   }
-  #   axis(2)    
-  # }
   if(is.null(xlab)) xlab = ""
   if(type=="PET_Precipitation") {
     if(is.null(ylab)) ylab = expression(L%.%m^{-2})
@@ -140,14 +127,12 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
   } 
   else {
     plot.pwb(x, type=type, bySpecies = bySpecies,
-             yearAxis=yearAxis, xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, 
-             add=add, ...)
+             xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, ...)
   }
 }
 
 plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
-                   yearAxis=FALSE, xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, 
-                   add=FALSE, ...) {
+                   xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, ...) {
   dates = as.Date(rownames(x$WaterBalance))
   
   input = x$spwbInput
@@ -179,7 +164,6 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
               "CanopyEnergyBalance", "SoilEnergyBalance")
   } 
   type = match.arg(type,TYPES)  
-  cohortnames = colnames(x$PlantTranspiration)
   if(is.null(xlab)) xlab = ""  
   if(type=="PlantWaterBalance") {
     pwb = WaterBalance$PlantExtraction - WaterBalance$Transpiration
@@ -225,7 +209,6 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     OM = x$PlantLAI
     if(bySpecies) {
       OM = t(apply(OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      cohortnames = colnames(OM)
     } 
     if(is.null(ylab)) ylab = expression(paste("Leaf Area Index   ",(m^{2}%.%m^{-2})))
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
@@ -389,7 +372,6 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     OM = x$PlantTranspiration
     if(bySpecies) {
       OM = t(apply(OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      cohortnames = colnames(OM)
     } 
     if(is.null(ylab)) ylab = expression(paste("Plant transpiration   ",(L%.%m^{-2})))
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
@@ -432,7 +414,6 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     OM = x$PlantPhotosynthesis/x$PlantTranspiration
     if(bySpecies) {
       OM = t(apply(OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      cohortnames = colnames(OM)
     } 
     if(is.null(ylab)) ylab = expression(paste("Plant daily WUE   ",(g*C%.%L^{-1})))
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))

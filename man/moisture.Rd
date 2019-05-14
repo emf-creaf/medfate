@@ -7,7 +7,6 @@
 \alias{moisture_tissueRWC}
 \alias{moisture_tissueFMC}
 \alias{moisture_pressureVolumeCurvePlot}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Tissue moisture functions
 }
@@ -25,7 +24,7 @@ moisture_tissueRWC(psiSym, pi0, epsilon,
 moisture_tissueFMC(RWC, density, d0 = 1.54)
 moisture_pressureVolumeCurvePlot(x, segment="leaf", 
                     fraction = "all",
-                    psiVec =  seq(-0.1, -8.0, by =-0.01))                    
+                    psiVec =  seq(-0.1, -8.0, by =-0.01), speciesNames = FALSE)                    
 }
 
 %- maybe also 'usage' for other objects documented here.
@@ -38,9 +37,10 @@ moisture_pressureVolumeCurvePlot(x, segment="leaf",
   \item{af}{Apoplastic fraction (proportion) in the segment (e.g. leaf or stem).}
   \item{femb}{Fraction of embolized conduits.}
   \item{x}{An object of class \code{\link{spwbInput}}.}
-  \item{segment}{Curve to plot, either \code{"stem"}, \code{"leaf"} or \code{"both"}.}
+  \item{segment}{Segment whose relative water content curve to plot, either \code{"stem"} or \code{"leaf"}.}
   \item{fraction}{ Tissue fraction, either \code{"symplastic"}, \code{"apoplastic"} or \code{"all"}.}
   \item{psiVec}{Vector of water potential values to evaluate for the pressure-volume curve.}
+  \item{speciesNames}{A flag to indicate the use of species names instead of cohort names in plots.}
   \item{density}{Tissue density (g·cm-1).}
   \item{d0}{Matric density (g·cm-1).}
 }
@@ -65,7 +65,7 @@ Bartlett, M.K., Scoffoni, C., Sack, L. 2012. The determinants of leaf turgor los
 Martin-StPaul, N., Delzon, S., Cochard, H. 2017. Plant resistance to drought depends on timely stomatal closure. Ecology Letters 20: 1437–1447.
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 }
 \seealso{
 \code{\link{hydraulics_psi2K}}, \code{\link{hydraulics_supplyFunctionPlot}}, \code{\link{spwb}}, \code{\link{soil}}

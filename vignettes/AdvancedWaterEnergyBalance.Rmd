@@ -171,8 +171,7 @@ transp_stomatalRegulationPlot(x, examplesoil, examplemeteo, day = d, timestep=12
 
 ### Pressure volume curves
 
-```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 7}
-par(mar=c(4.5,4.5,1,1), mfrow=c(2,2))
+```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 3.5}
 moisture_pressureVolumeCurvePlot(x, segment="leaf", fraction="symplastic")
 moisture_pressureVolumeCurvePlot(x, segment="leaf", fraction="apoplastic")
 moisture_pressureVolumeCurvePlot(x, segment="stem", fraction="symplastic")
