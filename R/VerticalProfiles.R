@@ -78,47 +78,72 @@ vprofile_rootDistribution<-function(x, SpParams, d = NULL, bySpecies = FALSE, dr
   } else return(rd)
 }
 
-vprofile_fuelBulkDensity<-function(x, SpParams, z = NULL, gdd = NA, draw = TRUE) {
-  if(is.null(z)) z = seq(0, ceiling(max(plant_height(x))/100)*100 , by=10)
+vprofile_fuelBulkDensity<-function(x, SpParams, z = NULL, gdd = NA,draw = TRUE,
+                                   xlim = NULL) {
+  if(is.null(z)) z = seq(0, ceiling(max(plant_height(x))/100)*100 +10, by=10)
   wfp = .woodyFuelProfile(z,x, SpParams, gdd)
+  df = data.frame(BD = c(0,wfp), Z = z)
   if(draw) {
-    plot(wfp, z[-1], type="l", xlab="Bulk density (kg/m3)", ylab="Height (cm)")
+    g<-ggplot(df, aes(x=BD, y=Z))+
+      geom_path()+
+      xlab("Bulk density (kg/m3)")+
+      ylab("Height (cm)")+
+      theme_bw()
+    if(!is.null(xlim)) g <- g + xlim(xlim)
   }
-  if(draw) invisible(wfp)
+  if(draw) return(g)
   else return(wfp)
 }
-vprofile_PARExtinction<-function(x, SpParams, z = NULL, gdd = NA, draw = TRUE) {
-  if(is.null(z)) z = seq(0, ceiling(max(plant_height(x))/100)*100 , by=10)
+vprofile_PARExtinction<-function(x, SpParams, z = NULL, gdd = NA, draw = TRUE,
+                                 xlim = c(0,100)) {
+  if(is.null(z)) z = seq(0, ceiling(max(plant_height(x))/100)*100 +10, by=10,)
   pep = .parExtinctionProfile(z,x, SpParams, gdd)
+  df = data.frame(PEP = pep, Z = z)
   if(draw) {
-    plot(pep, z, type="l", xlab="Percentage of PAR available", ylab="Height (cm)",
-         xlim =c(0,100))
+    g<-ggplot(df, aes(x=PEP, y=Z))+
+      geom_path()+
+      xlab("Percentage of PAR available (%)")+
+      ylab("Height (cm)")+
+      theme_bw()
+    if(!is.null(xlim)) g <- g + xlim(xlim)
   }
-  if(draw) invisible(pep)
+  if(draw) return(g)
   else return(pep)
 }
-vprofile_SWRExtinction<-function(x, SpParams, z = NULL, gdd = NA, draw = TRUE) {
-  if(is.null(z)) z = seq(0, ceiling(max(plant_height(x))/100)*100 , by=10)
-  pep = .swrExtinctionProfile(z,x, SpParams, gdd)
+vprofile_SWRExtinction<-function(x, SpParams, z = NULL, gdd = NA, draw = TRUE,
+                                 xlim = c(0,100)) {
+  if(is.null(z)) z = seq(0, ceiling(max(plant_height(x))/100)*100 +10, by=10)
+  swr = .swrExtinctionProfile(z,x, SpParams, gdd)
+  df = data.frame(SWR = swr, Z = z)
   if(draw) {
-    plot(pep, z, type="l", xlab="Percentage of SWR available", ylab="Height (cm)",
-         xlim =c(0,100))
+    g<-ggplot(df, aes(x=SWR, y=Z))+
+      geom_path()+
+      xlab("Percentage of SWR available (%)")+
+      ylab("Height (cm)")+
+      theme_bw()
+    if(!is.null(xlim)) g <- g + xlim(xlim)
   }
-  if(draw) invisible(pep)
+  if(draw) return(g)
   else return(pep)
 }
-vprofile_windExtinction<-function(x, SpParams, wind20H, z = NULL, gdd = NA, draw = TRUE) {
-  if(is.null(z)) z = seq(0, ceiling(max(plant_height(x))/100)*100 , by=10)
-  fls = fuel_stratification(x, SpParams, gdd);
-  LAIc = fls$canopyLAI;
-  canopyHeight = fls$canopyTopHeight;
-  wep = .windExtinctionProfile(z, wind20H, LAIc, canopyHeight);
+vprofile_windExtinction<-function(x, SpParams, wind20H, z = NULL, gdd = NA, draw = TRUE,
+                                  xlim = NULL) {
+  if(is.null(z)) z = seq(0, ceiling(max(plant_height(x))/100)*100 +10, by=10)
+  fls = fuel_stratification(x, SpParams, gdd)
+  LAIc = fls$canopyLAI
+  canopyHeight = fls$canopyTopHeight
+  wep = .windExtinctionProfile(z, wind20H, LAIc, canopyHeight)
+  df = data.frame(WS = wep, Z = z)
   if(draw) {
-    plot(wep, z, type="l", xlab="Wind speed (m/s)", ylab="Height (cm)",
-         xlim=c(0,max(wep)))
-    abline(v=wind20H, col="gray", lty=2)
-    abline(h=canopyHeight, col="gray", lty=2)
+    g<-ggplot(df, aes(x=WS, y=Z))+
+      geom_path()+
+      xlab("Wind speed (m/s)")+
+      ylab("Height (cm)")+
+      geom_hline(yintercept=canopyHeight, col="gray", linetype="dashed")+
+      geom_vline(xintercept=wind20H, col="gray", linetype="dashed")+
+      theme_bw()
+    if(!is.null(xlim)) g <- g + xlim(xlim)
   }
-  if(draw) invisible(wep)
+  if(draw) return(g)
   else return(wep)
 }

@@ -18,10 +18,14 @@ vprofile_leafAreaDensity(x, SpParams = NULL, z = NULL, gdd = NA,
                          legend = TRUE, xlim = NULL)
 vprofile_rootDistribution(x, SpParams, d = NULL,  bySpecies = FALSE, draw = TRUE, 
                           xlim = NULL)
-vprofile_fuelBulkDensity(x, SpParams, z = NULL, gdd = NA, draw = TRUE)
-vprofile_PARExtinction(x, SpParams, z = NULL, gdd = NA, draw = TRUE)
-vprofile_SWRExtinction(x, SpParams, z = NULL, gdd = NA, draw = TRUE)
-vprofile_windExtinction(x, SpParams, wind20H, z = NULL,  gdd = NA, draw = TRUE)
+vprofile_fuelBulkDensity(x, SpParams, z = NULL, gdd = NA, draw = TRUE, 
+                         xlim = NULL)
+vprofile_PARExtinction(x, SpParams, z = NULL, gdd = NA, draw = TRUE,
+                       xlim = c(0,100))
+vprofile_SWRExtinction(x, SpParams, z = NULL, gdd = NA, draw = TRUE,
+                       xlim = c(0,100))
+vprofile_windExtinction(x, SpParams, wind20H, z = NULL,  gdd = NA, draw = TRUE,
+                        xlim = NULL)
 }
 \arguments{
   \item{x}{An object of class \code{\link{forest}}}
