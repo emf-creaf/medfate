@@ -17,7 +17,7 @@ vprofile_leafAreaDensity(x, SpParams = NULL, z = NULL, gdd = NA,
                          byCohorts = FALSE, bySpecies = FALSE, draw = TRUE, 
                          legend = TRUE, xlim = NULL)
 vprofile_rootDistribution(x, SpParams, d = NULL,  bySpecies = FALSE, draw = TRUE, 
-                          legend = TRUE, xlim = NULL)
+                          xlim = NULL)
 vprofile_fuelBulkDensity(x, SpParams, z = NULL, gdd = NA, draw = TRUE)
 vprofile_PARExtinction(x, SpParams, z = NULL, gdd = NA, draw = TRUE)
 vprofile_SWRExtinction(x, SpParams, z = NULL, gdd = NA, draw = TRUE)

@@ -44,62 +44,48 @@ hydraulics_supplyFunctionPlot<-function(x, soil, draw = TRUE, type="E") {
                                           psiTol = numericParams$psiTol, ETol = numericParams$ETol)
   }
   if(draw) {
-    #Find minimum psi
     minPsi = 0
+    psi = numeric(0)
+    E = numeric(0)
+    dEdP = numeric(0)
+    psiStem = numeric(0)
+    cohort = character(0)
+    xlab = "Leaf pressure (-MPa)"
     for(i in 1:ncoh) {
       minPsi = min(minPsi, min(l[[i]]$psiLeaf, na.rm = T))
+      psi = c(psi, -l[[i]]$psiLeaf)
+      psiStem = c(psiStem, -l[[i]]$psiStem[,1])
+      dEdP = c(dEdP, l[[i]]$dEdP)
+      E = c(E, l[[i]]$E)
+      cohort = c(cohort, rep(cohortnames[i], length(l[[i]]$E)))
     }
-    minPsi = max(minPsi, -40)
+    df = data.frame(psi = psi, E = E, dEdP = dEdP, cohort = cohort)
     if(type=="E") {
-      maxE = 0
-      for(i in 1:ncoh) {
-        maxE = max(maxE, max(l[[i]]$E, na.rm=T))
-      }
-      for(i in 1:ncoh) {
-        if(i==1) {
-          plot(-l[[i]]$psiLeaf, l[[i]]$E, type="l", ylim=c(0,maxE+0.1), xlim=c(0,-minPsi),
-               xlab = "Leaf pressure (-MPa)", 
-               ylab = expression(paste("Flow rate    ",(mmolH[2]*O%.%s^{-1}%.%m^{-2}))), 
-               col=i)
-        } else {
-          lines(-l[[i]]$psiLeaf, l[[i]]$E, lty=i, col=i)
-        }
-      }
-      legend("topleft", legend = cohortnames, lty=1:ncoh, col = 1:ncoh, bty="n")
+      ylab = expression(paste("Flow rate    ",(mmolH[2]*O%.%s^{-1}%.%m^{-2})))
+      g<-ggplot(df, aes(x = psi, y=E))+
+        geom_path(aes(col=cohort, linetype=cohort))+
+        scale_color_discrete(name="")+
+        scale_linetype_discrete(name="")
+      g<-g+xlab(xlab)+ylab(ylab)+theme_bw()
+      return(g)
     } 
     else if(type=="dEdP") {
-      maxdEdP = 0
-      for(i in 1:ncoh) {
-        maxdEdP = max(maxdEdP, max(l[[i]]$dEdP, na.rm=T))
-      }
-      for(i in 1:ncoh) {
-        if(i==1) {
-          plot(-l[[i]]$psiLeaf, l[[i]]$dEdP, type="l", ylim=c(0,maxdEdP+0.1), xlim=c(0,-minPsi),
-               xlab = "Leaf pressure (-MPa)", 
-               ylab = expression(paste("dE/dP  ",(mmol*H[2]*O%.%s^{-1}%.%m^{-2}%.%MPa^{-1}))), 
-               col=i)
-        } else {
-          lines(-l[[i]]$psiLeaf, l[[i]]$dEdP, lty=i, col=i)
-        }
-      }
-      legend("topright", legend = cohortnames, lty=1:ncoh, col = 1:ncoh, bty="n")
+      ylab = expression(paste("dE/dP  ",(mmol*H[2]*O%.%s^{-1}%.%m^{-2}%.%MPa^{-1})))
+      g<-ggplot(df, aes(x = psi, y=dEdP))+
+        geom_path(aes(col=cohort, linetype=cohort))+
+        scale_color_discrete(name="")+
+        scale_linetype_discrete(name="")
+      g<-g+xlab(xlab)+ylab(ylab)+theme_bw()
+      return(g)
     }
     else if(type=="psiStem") {
-      minE = 0
-      for(i in 1:ncoh) {
-        minE = min(minE, min(l[[i]]$psiStem[,1], na.rm=T))
-      }
-      for(i in 1:ncoh) {
-        if(i==1) {
-          plot(-l[[i]]$psiLeaf, -l[[i]]$psiStem[,1], type="l", ylim=c(0,-minE+0.1), xlim=c(0,-minPsi),
-               xlab = "Leaf pressure (-MPa)", ylab = "Stem pressure (-MPa)", col=i)
-        } else {
-          lines(-l[[i]]$psiLeaf, -l[[i]]$psiStem[,1], lty=i, col=i)
-        }
-      }
-      abline(h=0, col="gray")
-      abline(a=0, b=1, col="gray")
-      legend("topleft", legend = cohortnames, lty=1:ncoh, col = 1:ncoh, bty="n")
+      ylab = "Stem pressure (-MPa)"
+      g<-ggplot(df, aes(x = psi, y=psiStem))+
+        geom_path(aes(col=cohort, linetype=cohort))+
+        scale_color_discrete(name="")+
+        scale_linetype_discrete(name="")
+      g<-g+xlab(xlab)+ylab(ylab)+theme_bw()
+      return(g)
     }
     else if(type=="psiRoot") {
       minE = 0
@@ -191,7 +177,6 @@ hydraulics_supplyFunctionPlot<-function(x, soil, draw = TRUE, type="E") {
       }
     }
   }
-
   if(draw) invisible(l)
   else return(l)
 }

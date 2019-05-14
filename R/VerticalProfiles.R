@@ -52,7 +52,7 @@ vprofile_leafAreaDensity<-function(x, SpParams = NULL, z = NULL, gdd = NA, byCoh
   else return(lai)
 }
 
-vprofile_rootDistribution<-function(x, SpParams, d = NULL, bySpecies = FALSE, draw = TRUE, legend = TRUE, xlim = NULL) {
+vprofile_rootDistribution<-function(x, SpParams, d = NULL, bySpecies = FALSE, draw = TRUE, xlim = NULL) {
   if(is.null(d)){
     zmax = 0
     if(nrow(x$shrubData)>0) zmax = max(zmax, ceiling(max(x$shrubData$Z95)/100)*100)
@@ -72,15 +72,6 @@ vprofile_rootDistribution<-function(x, SpParams, d = NULL, bySpecies = FALSE, dr
     spnames = plant_speciesName(x, SpParams)
     rd = apply(rd,2, tapply, spnames, mean, na.rm=T)
   } 
-  # 
-  # matplot(t(rd)*100, z/10, 
-  #         type="l", xlab="% of fine roots/cm", 
-  #         ylab="Depth (cm)", lty=1:length(cohortnames), col = 1:length(cohortnames),
-  #         ylim=c(zmax/10,0), xlim = xlim)
-  # if(legend) {
-  #   legend("bottomright", legend = cohortnames, lty=1:length(cohortnames), 
-  #        col = 1:length(cohortnames), bty="n")
-  # }
   if(draw) {
     return(.multiple_x(x=t(rd)*100, y=z/10, xlab="% of fine roots/cm",
                        ylab="Depth (cm)", ylim=c(zmax/10,0), xlim = xlim))

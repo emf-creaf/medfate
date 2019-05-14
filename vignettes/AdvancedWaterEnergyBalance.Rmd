@@ -15,7 +15,6 @@ vignette: >
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(medfate)
-library(ggplot2)
 ```
 
 ## About this vignette
@@ -137,8 +136,7 @@ Before using the advanced water and energy balance model, is important to unders
 ### Vulnerability curves
 Given a `spwbInput` object, we can use function `hydraulics_vulnerabilityCurvePlot()` to inspect **vulnerability curves** (i.e. how hydraulic conductance of a given segment changes with the water potential) for each plant cohort and each of the different segments of the soil-plant hydraulic network: rhizosphere, roots, stems and leaves:
 
-```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 7}
-par(mar=c(4.5,4.5,1,1), mfrow=c(2,2))
+```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 3.5}
 hydraulics_vulnerabilityCurvePlot(x, type="leaf")
 hydraulics_vulnerabilityCurvePlot(x, type="stem")
 hydraulics_vulnerabilityCurvePlot(x, type="root")
@@ -150,8 +148,7 @@ The maximum values and shape of vulnerability curves for leaves and stems are re
 ### Supply functions
 
 The vulnerability curves conformng the hydraulic network are used in the model to build the **supply function**, which relates water flow (i.e. transpiration) with the drop of water potential along the whole hydraulic pathway. The supply function contains not only these two variables, but also the water potential of intermediate nodes in the the hydraulic network. Function `hydraulics_supplyFunctionPlot()` can be used to inspect any of this variables:
-```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 7}
-par(mar=c(4.5,4.5,1,1), mfrow=c(2,2))
+```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 3.5}
 hydraulics_supplyFunctionPlot(x, examplesoil, type="E")
 hydraulics_supplyFunctionPlot(x, examplesoil, type="ERhizo")
 hydraulics_supplyFunctionPlot(x, examplesoil, type="dEdP")
