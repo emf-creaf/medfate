@@ -6,10 +6,12 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
                   "PlantExtraction","PlantLAI",
                   "PlantStress", "PlantPsi","PlantPhotosynthesis", "PlantTranspiration", "PlantWUE",
                   "PlantPhotosynthesisPerLeaf","PlantTranspirationPerLeaf")
-  TYPES = c(TYPES_SWB, "PlantRespiration", "PlantRespirationPerLeaf", "PlantCBalance", "PlantCBalancePerLeaf",
+  TYPES = c(TYPES_SWB, "PlantRespiration", "PlantRespirationPerLeaf", "PlantRespirationPerIndividual",
+            "PlantCBalance", "PlantCBalancePerLeaf","PlantCBalancePerIndividual",
             "PlantCstorageFast", "PlantCstorageSlow", "PlantSAgrowth", "PlantRelativeSAgrowth", "PlantSA",
             "PlantLAIlive","PlantLAIdead")
 
+  input = x$spwbInput
   type = match.arg(type,TYPES)  
 
   if(type %in% TYPES_SWB) {
@@ -20,7 +22,7 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     if(type=="PlantRespiration") {
       OM = x$PlantRespiration
       if(bySpecies) {
-        OM = t(apply(OM,1, tapply, x$cohorts$Name, sum, na.rm=T))
+        OM = t(apply(OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
       } 
       if(is.null(ylab)) ylab = expression(paste("Plant respiration ",(g*C%.%m^{-2})))
       return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
@@ -28,14 +30,26 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     else if(type=="PlantRespirationPerLeaf") {
       OM = x$PlantRespiration
       if(bySpecies) {
-        m1 = apply(OM,1, tapply, x$cohorts$Name, sum, na.rm=T)
-        lai1 = apply(x$PlantLAIlive,1,tapply, x$cohorts$Name, sum, na.rm=T)
+        m1 = apply(OM,1, tapply, input$cohorts$Name, sum, na.rm=T)
+        lai1 = apply(x$PlantLAIlive,1,tapply, input$cohorts$Name, sum, na.rm=T)
         OM = t(m1/lai1)
       } else {
         OM = OM/x$PlantLAIlive
         OM[x$PlantLAIlive==0] = NA
       }
       if(is.null(ylab)) ylab = expression(paste("Plant respiration per leaf area ",(g*C%.%m^{-2})))
+      return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
+    } 
+    else if(type=="PlantRespirationPerIndividual") {
+      OM = x$PlantRespiration
+      if(bySpecies) {
+        m1 = t(apply(OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
+        dens = as.numeric(tapply(input$above$N/10000, input$cohorts$Name, sum, na.rm=T))
+        OM = sweep(m1, 2, dens, "/")
+      } else {
+        OM = sweep(OM, 2, input$above$N/10000, "/")
+      }
+      if(is.null(ylab)) ylab = expression(paste("Plant respiration per individual ",(g*C%.%ind^{-1})))
       return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
     } 
     else if(type=="PlantCBalance") {
@@ -59,6 +73,20 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
         OM[x$PlantLAIlive==0] = NA
       }
       if(is.null(ylab)) ylab = expression(paste("Plant C balance per leaf area ",(g*C%.%m^{-2})))
+      g<-.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim)+
+        geom_hline(yintercept = 0, col="gray")
+      return(g)
+    }
+    else if(type=="PlantCBalancePerIndividual") {
+      OM = (x$PlantPhotosynthesis-x$PlantRespiration)
+      if(bySpecies) {
+        m1 = t(apply(OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
+        dens = as.numeric(tapply(input$above$N/10000, input$cohorts$Name, sum, na.rm=T))
+        OM = sweep(m1, 2, dens, "/")
+      } else {
+        OM = sweep(OM, 2, input$above$N/10000, "/")
+      }
+      if(is.null(ylab)) ylab = expression(paste("Plant C balance per individual ",(g*C%.%ind^{-1})))
       g<-.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim)+
         geom_hline(yintercept = 0, col="gray")
       return(g)

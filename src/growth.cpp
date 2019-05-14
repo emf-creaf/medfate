@@ -357,7 +357,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
     List Plants = s["Plants"];
     NumericVector EplantCoh = Plants["Transpiration"];
     Eplantdays(i,_) = EplantVec;
-    NumericVector An =  Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
+    NumericVector An =  Rcpp::as<Rcpp::NumericVector>(Plants["Photosynthesis"]);
     PlantPhotosynthesis(i,_) = An;
     PlantTranspiration(i,_) = EplantCoh;
     PlantStress(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["DDS"]);
@@ -365,7 +365,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
     if(transpirationMode=="Granier") {
       psiCoh =  Rcpp::as<Rcpp::NumericVector>(Plants["psi"]);  
     } else {
-      psiCoh =  Rcpp::as<Rcpp::NumericVector>(Plants["LeafPsi"]);  
+      psiCoh =  clone(Rcpp::as<Rcpp::NumericVector>(x["psiLeaf"]));  
     }
     PlantPsi(i,_) = psiCoh;
 
@@ -549,7 +549,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
     Transpiration = Transpiration + Eplantdays(_,l);
   }
   
-  NumericVector Evapotranspiration = Transpiration+SoilEvaporation;
+  NumericVector Evapotranspiration = Transpiration+SoilEvaporation + Interception;
   
 
   DataFrame SWB = DataFrame::create(_["W"]=Wdays, _["ML"]=MLdays,_["MLTot"]=MLTot,

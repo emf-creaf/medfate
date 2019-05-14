@@ -556,6 +556,8 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   if((storagePool!="none") & (storagePool!="one")& (storagePool!="two")) stop("Wrong storage pool ('storagePool' should be 'none', 'one' or 'two')");
 
   
+  NumericVector W = soil["W"];
+  int nlayers = W.length();
   
   DataFrame paramsAnatomydf = paramsAnatomy(above, SpParams);
   NumericVector WoodDensity = paramsAnatomydf["WoodDensity"];
@@ -684,6 +686,8 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     psiRoot.attr("names") = above.attr("row.names");
     NumericVector psiLeaf = NumericVector(numCohorts, 0.0);
     psiLeaf.attr("names") = above.attr("row.names");
+    NumericMatrix psiRhizo =  NumericMatrix(numCohorts, nlayers);
+    psiRhizo.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
     NumericVector rwcsleaf = NumericVector(numCohorts, 1.0);
     rwcsleaf.attr("names") = above.attr("row.names");
     if(soilFunctions=="SX") {
@@ -718,6 +722,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     input["RWCsympstem"] = RWCstemmat;
     input["RWCsympleaf"] = rwcsleaf;
     input["Einst"] = Einst;
+    input["psiRhizo"] = psiRhizo;
     input["psiRoot"] = psiRoot;
     input["psiStem"] = psiStemmat;
     input["psiLeaf"] = psiLeaf;

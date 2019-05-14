@@ -62,8 +62,10 @@ Function \code{plot} plots the results of the soil plant water balance model (se
     \item{\code{"SoilEnergyBalance"}:}{ Soil energy balance components (only for \code{transpirationMode = "Sperry"}).}
     \item{\code{"PlantRespiration"}:}{ Plant cohort respiration (only for \code{plot.growth}).}
     \item{\code{"PlantRespirationPerLeaf"}:}{ Plant cohort respiration per leaf area (only for \code{plot.growth}).}
+    \item{\code{"PlantRespirationPerIndividual"}:}{ Respiration per individual (only for \code{plot.growth}).}
     \item{\code{"PlantCBalance"}:}{ Plant cohort carbon balance (only for \code{plot.growth}).}
     \item{\code{"PlantCBalancePerLeaf"}:}{ Plant cohort carbon balance per leaf area (only for \code{plot.growth}).}
+    \item{\code{"PlantCBalancePerIndividual"}:}{ Carbon balance per individual (only for \code{plot.growth}).}
     \item{\code{"PlantCstorageFast"}:}{ Amount of fast-dynamics carbon reserves  (only for \code{plot.growth}).}
     \item{\code{"PlantCstorageSlow"}:}{ Amount of slow-dynamics carbon reserves  (only for \code{plot.growth}).}
     \item{\code{"PlantSA"}:}{ Amount of sapwood area in an individual  (only for \code{plot.growth}).}
