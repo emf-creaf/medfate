@@ -1,6 +1,6 @@
 soil_retentionCurvePlot<-function(soil, model="SX", layer = 1, 
                                   psi = seq(0, -6.0, by=-0.01),
-                                  relative = TRUE, to = "SAT", ...) {
+                                  relative = TRUE, to = "SAT") {
   model = match.arg(model, c("SX", "VG", "both"))
   to = match.arg(to, c("SAT", "FC"))
   y_sx = unlist(lapply(as.list(psi), FUN=soil_psi2thetaSX, 
@@ -22,41 +22,31 @@ soil_retentionCurvePlot<-function(soil, model="SX", layer = 1,
     }
     y_sx = 100*(y_sx/tfc_sx[layer])
     y_vg = 100*(y_vg/tfc_vg[layer])
-    if(model=="SX") {
-      plot(-psi, y_sx, 
-           type="l",ylab=paste0("Moisture content (",toString,")"), 
-           xlab = "Soil water potential (-MPa)", ...)
-    }
-    else if(model=="VG") {
-      plot(-psi, y_vg, 
-           type="l",ylab=paste0("Moisture content (",toString,")"), 
-           xlab = "Soil water potential (-MPa)", ...)
-    }
-    else {
-      plot(-psi, y_sx, lty=1,
-           type="l",ylab=paste0("Moisture content (",toString,")"), 
-           xlab = "Soil water potential (-MPa)", ...)
-      lines(-psi, y_vg, lty=2)
-      legend("topright", legend=c("Saxton", "Van Genuchten"), lty=c(1,2), bty="n")
-    }
-    
+    ylab=paste0("Moisture content (",toString,")")
   } else {
-    if(model=="SX") {
-      plot(-psi, y_sx, 
-           type="l",ylab="Moisture content (% volume)", 
-           xlab = "Soil water potential (-MPa)", ...)
-    }
-    else if(model=="VG") {
-      plot(-psi, y_vg, 
-           type="l",ylab="Moisture content (% volume)", 
-           xlab = "Soil water potential (-MPa)", ...)
-    }
-    else {
-      plot(-psi, y_sx, 
-           type="l",ylab="Moisture content (% volume)", 
-           xlab = "Soil water potential (-MPa)", ...)
-      lines(-psi, y_vg, lty=2)
-      legend("topright", legend=c("Saxton", "Van Genuchten"), lty=c(1,2), bty="n")
-    }
+    ylab="Moisture content (% volume)"
+  }
+  df = data.frame(SX = y_sx, VG = y_vg, psi = -psi)
+  xlab = "Soil water potential (-MPa)"
+  g<-ggplot(df, aes(x=psi))  
+  if(model=="SX") {
+    g<-g+ geom_path(aes(y=SX), col="black")+
+       ylab(ylab)+ xlab(xlab)+
+       theme_bw()
+    return(g)
+  }
+  else if(model=="VG") {
+    g<-g+ geom_path(aes(y=VG), col="black")+
+      ylab(ylab)+ xlab(xlab)+
+      theme_bw()
+    return(g)  
+  } 
+  else {
+    g<-g+ geom_path(aes(y=SX, linetype ="Saxton"), col="black")+
+      geom_path(aes(y=VG, linetype ="Van Genuchten"), col="black")+
+      scale_linetype_manual(name="", values=c("solid", "dashed"))+
+      ylab(ylab)+ xlab(xlab)+
+      theme_bw()
+    return(g)  
   }
 }

@@ -8,8 +8,10 @@ importFrom("graphics", "axis", "abline", "barplot", "legend", "lines", "matplot"
            "matlines", "par", "polygon","axis.Date")
 importFrom("utils", "setTxtProgressBar", "txtProgressBar", "head", "tail")
 importFrom("GSIF", "REST.SoilGrids","over")
-importFrom("ggplot2", "ggplot", "geom_line", "geom_path", 
-           "scale_color_discrete", "aes", "scale_linetype_discrete",
+importFrom("ggplot2", "ggplot", "aes", 
+           "geom_line", "geom_path", "geom_area",
+           "scale_color_manual", "scale_fill_manual","scale_color_discrete", 
+           "scale_linetype_discrete", "scale_linetype_manual",
            "xlim", "ylim", "xlab", "ylab", "facet_wrap", "vars",
            "theme_bw")
 useDynLib(medfate, .registration = TRUE)

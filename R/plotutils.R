@@ -1,3 +1,33 @@
+.multiple_x<-function(x, y, xlab = "", ylab=NULL, xlim = NULL, ylim = NULL, labels = NULL) {
+  if(is.null(labels)) labels = colnames(x)
+  df = data.frame(X = as.vector(x), Y = y,
+                  Cohort = gl(length(colnames(x)), nrow(x), labels=labels))
+  g<-ggplot(df, aes(x=X, y=Y))+
+    geom_path(aes(col=Cohort, linetype = Cohort))+
+    scale_color_discrete(name="")+
+    scale_linetype_discrete(name="")+
+    theme_bw()+
+    xlab(xlab)
+  if(!is.null(ylim)) g <- g+ylim(ylim)
+  if(!is.null(xlim)) g <- g+xlim(xlim)
+  if(!is.null(ylab)) g <- g+ylab(ylab)
+  return(g)
+}
+.multiple_y<-function(x, y, xlab = "", ylab=NULL, ylim = NULL, labels = NULL) {
+  if(is.null(labels)) labels = colnames(y)
+  df = data.frame(Y = as.vector(y), X = x,
+                  Cohort = gl(length(colnames(y)), nrow(y), labels=labels))
+  g<-ggplot(df, aes(x=X, y=Y))+
+    geom_path(aes(col=Cohort, linetype = Cohort))+
+    scale_color_discrete(name="")+
+    scale_linetype_discrete(name="")+
+    theme_bw()+
+    xlab(xlab)
+  if(!is.null(ylim)) g <- g+ylim(ylim)
+  if(!is.null(ylab)) g <- g+ylab(ylab)
+  return(g)
+}
+
 .multiple_dynamics<-function(x, xlab = "", ylab=NULL, ylim = NULL, labels = NULL) {
   if(is.null(labels)) labels = colnames(x)
   df = data.frame(Y = as.vector(x), Date = as.Date(rownames(x)),

@@ -67,21 +67,24 @@ vprofile_rootDistribution<-function(x, SpParams, d = NULL, bySpecies = FALSE, dr
   }
   cohortnames = plant_ID(x)
   rd = .rootDistribution(d,x)
+  rownames(rd) = cohortnames
   if(bySpecies) {
     spnames = plant_speciesName(x, SpParams)
     rd = apply(rd,2, tapply, spnames, mean, na.rm=T)
-    cohortnames = rownames(rd)
   } 
-  matplot(t(rd)*100, z/10, 
-          type="l", xlab="% of fine roots/cm", 
-          ylab="Depth (cm)", lty=1:length(cohortnames), col = 1:length(cohortnames),
-          ylim=c(zmax/10,0), xlim = xlim)
-  if(legend) {
-    legend("bottomright", legend = cohortnames, lty=1:length(cohortnames), 
-         col = 1:length(cohortnames), bty="n")
-  }
-  if(draw) invisible(rd)
-  else return(rd)
+  # 
+  # matplot(t(rd)*100, z/10, 
+  #         type="l", xlab="% of fine roots/cm", 
+  #         ylab="Depth (cm)", lty=1:length(cohortnames), col = 1:length(cohortnames),
+  #         ylim=c(zmax/10,0), xlim = xlim)
+  # if(legend) {
+  #   legend("bottomright", legend = cohortnames, lty=1:length(cohortnames), 
+  #        col = 1:length(cohortnames), bty="n")
+  # }
+  if(draw) {
+    return(.multiple_x(x=t(rd)*100, y=z/10, xlab="% of fine roots/cm",
+                       ylab="Depth (cm)", ylim=c(zmax/10,0), xlim = xlim))
+  } else return(rd)
 }
 
 vprofile_fuelBulkDensity<-function(x, SpParams, z = NULL, gdd = NA, draw = TRUE) {

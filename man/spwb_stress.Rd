@@ -7,7 +7,7 @@ Drought stress indices
 Allows calculating annual-based or monthly-based drought stress indices from \code{\link{spwb}} objects.
 }
 \usage{
-spwb_stress(x, index = "NDD", freq = "years", bySpecies = FALSE)
+spwb_stress(x, index = "NDD", freq = "years", bySpecies = FALSE, draw = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -15,6 +15,7 @@ spwb_stress(x, index = "NDD", freq = "years", bySpecies = FALSE)
   \item{index}{A string with the index to be calculated, either \code{"DI"}, \code{"NDD"}, \code{"ADS"}, \code{"MDS"} or \code{"WSI"} (see details).}
   \item{freq}{Frequency of stress statistics (see \code{\link{cut.Date}}). Normally, either \code{"years"} or \code{"months"} for yearly-based or monthly-based indices.}
   \item{bySpecies}{Allows aggregating output by species.}
+  \item{draw}{A boolean flag to indicate that a plot should be returned.}
 }
 \details{
 The currently available drought stress indices are:
@@ -27,7 +28,7 @@ The currently available drought stress indices are:
   }
 }
 \value{
-A data frame with periods (e.g., years or months) in rows and plant cohorts (or species) in columns. Values are the calculated stress index.
+A data frame with periods (e.g., years or months) in rows and plant cohorts (or species) in columns. Values are the calculated stress index. If \code{draw=TRUE} a ggplot is returned instead.
 }
 \references{
 De \enc{Cáceres}{Caceres} M, \enc{Martínez}{Martinez}-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L. (2015) Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes. Agricultural and Forest Meteorology 213: 77-90 (doi:10.1016/j.agrformet.2015.06.012).

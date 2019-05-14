@@ -1,4 +1,4 @@
-spwb_stress<-function(x, index = "NDD", freq = "years", bySpecies = FALSE) {
+spwb_stress<-function(x, index = "NDD", freq = "years", bySpecies = FALSE, draw = TRUE) {
   index = match.arg(index,c("NDD","DI", "ADS", "MDS","WSI"))  
   dates = as.Date(rownames(x$PlantStress))
   ndaysTotal = length(dates)
@@ -48,5 +48,24 @@ spwb_stress<-function(x, index = "NDD", freq = "years", bySpecies = FALSE) {
   }
   ncases = table(date.factor)
   M = M[ncases>0, ,drop = FALSE]
-  return(M)
+  if(draw) {
+    if(index=="NDD") {
+      g<-.multiple_dynamics(M, ylab = "Number of days with DS > 0.5")
+    }
+    else if(index=="DI") {
+      g<-.multiple_dynamics(M, ylab = "Average drought stress over 0.5")
+    }
+    else if(index=="ADS") {
+      g<-.multiple_dynamics(M, ylab = "Average drought stress")
+    }
+    else if(index=="MDS") {
+      g<-.multiple_dynamics(M, ylab = "Maximum drought stress")
+    }
+    else if(index=="WSI") {
+      g<-.multiple_dynamics(M, ylab = "Water stress integral")
+    }
+    return(g)
+  } else {
+    return(M)
+  }
 }
