@@ -1,5 +1,5 @@
 spwb_resistances<-function(x, cohort = 1, relative = FALSE, draw = FALSE, 
-                           cumulative = FALSE, yearAxis = FALSE,  xlab = NULL, ylab=NULL) {
+                           cumulative = FALSE, xlab = NULL, ylab=NULL) {
   
   if(x$spwbInput$control$transpirationMode!="Sperry") {
     stop("Resistances can only be calculated when transpirationMode = 'Sperry'.")
@@ -33,19 +33,6 @@ spwb_resistances<-function(x, cohort = 1, relative = FALSE, draw = FALSE,
   if(nlayers>3) psiSoil = cbind(psiSoil, x$Soil$psi.4)
   if(nlayers>4) psiSoil = cbind(psiSoil, x$Soil$psi.5)
   
-  dates = as.Date(rownames(x$WaterBalance))
-  numDays = length(dates)
-  numYears = round(numDays/365)
-  firstYear=as.numeric(format(dates[1],"%Y"))
-  plotAxes<-function(){
-    if(!yearAxis) axis.Date(1, dates)
-    else {
-      axis(1, at = (0:numYears)*365, labels=FALSE)
-      axis(1, at = -182+365*(1:numYears), tick = FALSE, line=FALSE, labels=firstYear:(firstYear+numYears-1))
-    }
-    axis(2)    
-  }
-  
   nsteps = nrow(psiSoil)
   resmat = matrix(0, nrow=nsteps, ncol = 4)
   rownames(resmat) = rownames(psiStem)
@@ -64,44 +51,31 @@ spwb_resistances<-function(x, cohort = 1, relative = FALSE, draw = FALSE,
     else resmat[j,] = rrow
   }
   if(draw) {
-    cols = c("black", "red", "green", "blue")
-    resdraw = resmat
-    if(cumulative) {
-      resdraw[,2] = resdraw[,1] + resdraw[,2]
-      resdraw[,3] = resdraw[,2] + resdraw[,3]
-      resdraw[,4] = resdraw[,3] + resdraw[,4]
-    }
-    dates = as.Date(rownames(x$WaterBalance))
-
-    if(is.null(xlab)) xlab = ifelse(yearAxis,"Year", "Date")  
     if(is.null(ylab)) ylab = ifelse(relative, "Relative resistances (%)", "Resistances")
-    ylim = c(0, max(resdraw))
-    plot(dates, ylim = ylim, resdraw[,1], type="n", ylab=ylab, 
-         xlab=xlab, frame=FALSE, axes=FALSE)
+    if(is.null(xlab)) xlab = ""
     if(!cumulative) {
-      lines(dates, resdraw[,1], lty=1, lwd=1.5, col = cols[1])
-      lines(dates, resdraw[,2], lty=2, lwd=1.5, col = cols[2])
-      lines(dates, resdraw[,3], lty=3, lwd=1.5, col = cols[3])
-      lines(dates, resdraw[,4], lty=4, lwd=1.5, col = cols[4])
-      legend("topleft", legend = colnames(resdraw), lty=1:4, col = cols, lwd = 1.5, bty="n")
+      g<-.multiple_dynamics(resmat, ylab=ylab, xlab = xlab)
     } else {
-      polygon(c(dates[1], dates, dates[length(dates)]),
-              c(0, resdraw[,4], 0),
-              col = cols[4])
-      polygon(c(dates[1], dates, dates[length(dates)]),
-              c(0, resdraw[,3], 0),
-              col = cols[3])
-      polygon(c(dates[1], dates, dates[length(dates)]),
-              c(0, resdraw[,2], 0),
-              col = cols[2])
-      polygon(c(dates[1], dates, dates[length(dates)]),
-              c(0, resdraw[,1], 0),
-              col = cols[1])
-      legend("topleft", legend = colnames(resdraw), col = cols, pch= 15, bty="n")
+      rescum = resmat
+      rescum[,2] = rescum[,1] + rescum[,2]
+      rescum[,3] = rescum[,2] + rescum[,3]
+      rescum[,4] = rescum[,3] + rescum[,4]
+      
+      df = as.data.frame(rescum)
+      df$Date =  as.Date(rownames(x$WaterBalance))
+      g<-ggplot(df, aes(x = df$Date))+
+        geom_area(aes(y=df$Leaf, fill = "4"))+
+        geom_area(aes(y=df$Stem, fill = "3"))+
+        geom_area(aes(y=df$Root, fill = "2"))+
+        geom_area(aes(y=df$Rhizosphere, fill="1"))+
+        scale_fill_manual(name="", values=c("1" = "black", "2"="red",
+                                            "3" = "green", "4" = "blue"),
+                          labels = c("Rhizosphere", "Root", "Stem", "Leaf"))+
+        xlab(xlab)+ylab(ylab)+
+        theme_bw()
     }
-    plotAxes()
-    
+    return(g)
+  } else {
+    return(resmat)
   }
-  if(draw) invisible(resmat)
-  else return(resmat)
 }
