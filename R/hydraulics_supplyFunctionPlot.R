@@ -1,5 +1,5 @@
 #Draws the supply function (E vs PlantPsi) for the current soil state and plant hydraulic parameters
-hydraulics_supplyFunctionPlot<-function(x, soil, draw = TRUE, type="E") {
+hydraulics_supplyFunctionPlot<-function(x, soil, draw = TRUE, type="E", speciesNames = FALSE, ylim=NULL) {
   
   TYPES = c("E","dEdP","psiStem","psiRoot","psiRhizo", "ERhizo", "resistances")
   type = match.arg(type,TYPES)  
@@ -24,6 +24,8 @@ hydraulics_supplyFunctionPlot<-function(x, soil, draw = TRUE, type="E") {
   VCleaf_c = x$paramsTransp$VCleaf_c
   VCleaf_d = x$paramsTransp$VCleaf_d
   cohortnames = row.names(x$cohorts)
+  if(speciesNames) cohortnames = as.character(x$cohorts$Name)
+  
   ncoh = length(cohortnames)
   l = vector("list", ncoh)
   names(l) = cohortnames
@@ -61,21 +63,23 @@ hydraulics_supplyFunctionPlot<-function(x, soil, draw = TRUE, type="E") {
     }
     df = data.frame(psi = psi, E = E, dEdP = dEdP, cohort = cohort)
     if(type=="E") {
-      ylab = expression(paste("Flow rate    ",(mmolH[2]*O%.%s^{-1}%.%m^{-2})))
+      ylab = expression(paste("Flow rate    ",(mmol%.%s^{-1}%.%m^{-2})))
       g<-ggplot(df, aes(x = psi, y=E))+
         geom_path(aes(col=cohort, linetype=cohort))+
         scale_color_discrete(name="")+
         scale_linetype_discrete(name="")
       g<-g+xlab(xlab)+ylab(ylab)+theme_bw()
+      if(!is.null(ylim)) g<-g+ylim(ylim)
       return(g)
     } 
     else if(type=="dEdP") {
-      ylab = expression(paste("dE/dP  ",(mmol*H[2]*O%.%s^{-1}%.%m^{-2}%.%MPa^{-1})))
+      ylab = expression(paste("dE/dP  ",(mmol%.%s^{-1}%.%m^{-2}%.%MPa^{-1})))
       g<-ggplot(df, aes(x = psi, y=dEdP))+
         geom_path(aes(col=cohort, linetype=cohort))+
         scale_color_discrete(name="")+
         scale_linetype_discrete(name="")
       g<-g+xlab(xlab)+ylab(ylab)+theme_bw()
+      if(!is.null(ylim)) g<-g+ylim(ylim)
       return(g)
     }
     else if(type=="psiStem") {
@@ -85,6 +89,7 @@ hydraulics_supplyFunctionPlot<-function(x, soil, draw = TRUE, type="E") {
         scale_color_discrete(name="")+
         scale_linetype_discrete(name="")
       g<-g+xlab(xlab)+ylab(ylab)+theme_bw()
+      if(!is.null(ylim)) g<-g+ylim(ylim)
       return(g)
     }
     else if(type=="psiRoot") {

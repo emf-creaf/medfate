@@ -96,13 +96,13 @@ vprofile_fuelBulkDensity<-function(x, SpParams, z = NULL, gdd = NA,draw = TRUE,
 }
 vprofile_PARExtinction<-function(x, SpParams, z = NULL, gdd = NA, draw = TRUE,
                                  xlim = c(0,100)) {
-  if(is.null(z)) z = seq(0, ceiling(max(plant_height(x))/100)*100 +10, by=10,)
+  if(is.null(z)) z = seq(0, ceiling(max(plant_height(x))/100)*100 +10, by=10)
   pep = .parExtinctionProfile(z,x, SpParams, gdd)
   df = data.frame(PEP = pep, Z = z)
   if(draw) {
     g<-ggplot(df, aes(x=PEP, y=Z))+
       geom_path()+
-      xlab("Percentage of PAR available (%)")+
+      xlab("Available PAR (%)")+
       ylab("Height (cm)")+
       theme_bw()
     if(!is.null(xlim)) g <- g + xlim(xlim)
@@ -118,7 +118,7 @@ vprofile_SWRExtinction<-function(x, SpParams, z = NULL, gdd = NA, draw = TRUE,
   if(draw) {
     g<-ggplot(df, aes(x=SWR, y=Z))+
       geom_path()+
-      xlab("Percentage of SWR available (%)")+
+      xlab("Available SWR (%)")+
       ylab("Height (cm)")+
       theme_bw()
     if(!is.null(xlim)) g <- g + xlim(xlim)
