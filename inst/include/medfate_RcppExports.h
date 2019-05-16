@@ -108,17 +108,17 @@ namespace medfate {
         return Rcpp::as<double >(rcpp_result_gen);
     }
 
-    inline NumericVector hydrology_infiltrationRepartition(double I, NumericVector dVec, NumericVector macro) {
-        typedef SEXP(*Ptr_hydrology_infiltrationRepartition)(SEXP,SEXP,SEXP);
+    inline NumericVector hydrology_infiltrationRepartition(double I, NumericVector dVec, NumericVector macro, double a = -0.005, double b = 3.0) {
+        typedef SEXP(*Ptr_hydrology_infiltrationRepartition)(SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_hydrology_infiltrationRepartition p_hydrology_infiltrationRepartition = NULL;
         if (p_hydrology_infiltrationRepartition == NULL) {
-            validateSignature("NumericVector(*hydrology_infiltrationRepartition)(double,NumericVector,NumericVector)");
+            validateSignature("NumericVector(*hydrology_infiltrationRepartition)(double,NumericVector,NumericVector,double,double)");
             p_hydrology_infiltrationRepartition = (Ptr_hydrology_infiltrationRepartition)R_GetCCallable("medfate", "_medfate_hydrology_infiltrationRepartition");
         }
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_hydrology_infiltrationRepartition(Shield<SEXP>(Rcpp::wrap(I)), Shield<SEXP>(Rcpp::wrap(dVec)), Shield<SEXP>(Rcpp::wrap(macro)));
+            rcpp_result_gen = p_hydrology_infiltrationRepartition(Shield<SEXP>(Rcpp::wrap(I)), Shield<SEXP>(Rcpp::wrap(dVec)), Shield<SEXP>(Rcpp::wrap(macro)), Shield<SEXP>(Rcpp::wrap(a)), Shield<SEXP>(Rcpp::wrap(b)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();

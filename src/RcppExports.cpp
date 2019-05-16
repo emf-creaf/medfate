@@ -1883,22 +1883,24 @@ RcppExport SEXP _medfate_infiltrationAmount(SEXP inputSEXP, SEXP SsoilSEXP) {
     return rcpp_result_gen;
 }
 // infiltrationRepartition
-NumericVector infiltrationRepartition(double I, NumericVector dVec, NumericVector macro);
-static SEXP _medfate_infiltrationRepartition_try(SEXP ISEXP, SEXP dVecSEXP, SEXP macroSEXP) {
+NumericVector infiltrationRepartition(double I, NumericVector dVec, NumericVector macro, double a, double b);
+static SEXP _medfate_infiltrationRepartition_try(SEXP ISEXP, SEXP dVecSEXP, SEXP macroSEXP, SEXP aSEXP, SEXP bSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< double >::type I(ISEXP);
     Rcpp::traits::input_parameter< NumericVector >::type dVec(dVecSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type macro(macroSEXP);
-    rcpp_result_gen = Rcpp::wrap(infiltrationRepartition(I, dVec, macro));
+    Rcpp::traits::input_parameter< double >::type a(aSEXP);
+    Rcpp::traits::input_parameter< double >::type b(bSEXP);
+    rcpp_result_gen = Rcpp::wrap(infiltrationRepartition(I, dVec, macro, a, b));
     return rcpp_result_gen;
 END_RCPP_RETURN_ERROR
 }
-RcppExport SEXP _medfate_infiltrationRepartition(SEXP ISEXP, SEXP dVecSEXP, SEXP macroSEXP) {
+RcppExport SEXP _medfate_infiltrationRepartition(SEXP ISEXP, SEXP dVecSEXP, SEXP macroSEXP, SEXP aSEXP, SEXP bSEXP) {
     SEXP rcpp_result_gen;
     {
         Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_medfate_infiltrationRepartition_try(ISEXP, dVecSEXP, macroSEXP));
+        rcpp_result_gen = PROTECT(_medfate_infiltrationRepartition_try(ISEXP, dVecSEXP, macroSEXP, aSEXP, bSEXP));
     }
     Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
     if (rcpp_isInterrupt_gen) {
@@ -3852,7 +3854,7 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("double(*hydrology_soilEvaporationAmount)(double,double,double)");
         signatures.insert("NumericVector(*hydrology_soilEvaporation)(List,String,double,double,bool)");
         signatures.insert("double(*.hydrology_infiltrationAmount)(double,double)");
-        signatures.insert("NumericVector(*hydrology_infiltrationRepartition)(double,NumericVector,NumericVector)");
+        signatures.insert("NumericVector(*hydrology_infiltrationRepartition)(double,NumericVector,NumericVector,double,double)");
         signatures.insert("double(*.hydrology_interceptionGashDay)(double,double,double,double)");
         signatures.insert("double(*hydrology_snowMelt)(double,double,double,double)");
         signatures.insert("NumericVector(*hydrology_verticalInputs)(List,String,double,double,double,double,double,double,double,double,double,bool,bool,bool)");
@@ -4044,7 +4046,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_soilEvaporationAmount", (DL_FUNC) &_medfate_soilEvaporationAmount, 3},
     {"_medfate_soilEvaporation", (DL_FUNC) &_medfate_soilEvaporation, 5},
     {"_medfate_infiltrationAmount", (DL_FUNC) &_medfate_infiltrationAmount, 2},
-    {"_medfate_infiltrationRepartition", (DL_FUNC) &_medfate_infiltrationRepartition, 3},
+    {"_medfate_infiltrationRepartition", (DL_FUNC) &_medfate_infiltrationRepartition, 5},
     {"_medfate_interceptionGashDay", (DL_FUNC) &_medfate_interceptionGashDay, 4},
     {"_medfate_snowMelt", (DL_FUNC) &_medfate_snowMelt, 4},
     {"_medfate_verticalInputs", (DL_FUNC) &_medfate_verticalInputs, 14},

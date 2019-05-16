@@ -1,4 +1,5 @@
-spwb_waterUseEfficiency<-function(x, type = "Plant An/E", leaves = "average", freq="days", draw = TRUE) {
+spwb_waterUseEfficiency<-function(x, type = "Plant An/E", leaves = "average", freq="days", draw = TRUE,
+                                  ylim=NULL) {
   if(!("spwb" %in% class(x)) && !("pwb" %in% class(x))) {
     stop("'x' should be of class 'spwb' or 'pwb'")
   }
@@ -142,13 +143,19 @@ spwb_waterUseEfficiency<-function(x, type = "Plant An/E", leaves = "average", fr
     return(res)
   } else {
     if(type=="Stand An/E") {
-      g<-.single_dynamics(res, ylab = "Stand An/E (gC/L)")
+      g<-.single_dynamics(res, ylab = "Stand An/E (gC/L)", ylim = ylim)
     } 
     else if(type=="Plant An/E") {
-      g<-.multiple_dynamics(res, ylab = "Plant An/E (gC/L)")
+      g<-.multiple_dynamics(res, ylab = "Plant An/E (gC/L)", ylim = ylim)
     }
     else if(type %in% c("Leaf iWUE", "Leaf Ci")) {
-      g<-.multiple_dynamics(res, ylab = type)
+      if(type=="Leaf iWUE" && leaves == "sunlit") ylab = expression(paste("Sunlit leaf iWUE  (",mu%.%mol%.%mol^{-1},")"))
+      if(type=="Leaf iWUE" && leaves == "shade") ylab = expression(paste("Shade leaf iWUE  (",mu%.%mol%.%mol^{-1},")"))
+      if(type=="Leaf iWUE" && leaves == "average") ylab = expression(paste("Average leaf iWUE  (",mu%.%mol%.%mol^{-1},")"))
+      if(type=="Leaf Ci" && leaves == "sunlit") ylab = expression(paste("Sunlit leaf Ci  ",(ppm)))
+      if(type=="Leaf Ci" && leaves == "shade") ylab = expression(paste("Shade leaf Ci  ",(ppm)))
+      if(type=="Leaf Ci" && leaves == "average") ylab = expression(paste("Average leaf Ci  ",(ppm)))
+      g<-.multiple_dynamics(res, ylab = ylab, ylim = ylim)
     }
     return(g)
   }

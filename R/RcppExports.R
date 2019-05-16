@@ -453,8 +453,8 @@ hydrology_soilEvaporation <- function(soil, soilFunctions, pet, LgroundSWR, modi
     .Call(`_medfate_infiltrationAmount`, input, Ssoil)
 }
 
-hydrology_infiltrationRepartition <- function(I, dVec, macro) {
-    .Call(`_medfate_infiltrationRepartition`, I, dVec, macro)
+hydrology_infiltrationRepartition <- function(I, dVec, macro, a = -0.005, b = 3.0) {
+    .Call(`_medfate_infiltrationRepartition`, I, dVec, macro, a, b)
 }
 
 .hydrology_interceptionGashDay <- function(Precipitation, Cm, p, ER = 0.05) {

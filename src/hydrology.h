@@ -10,7 +10,8 @@ NumericVector soilEvaporation(List soil, String soilFunctions, double pet, doubl
                               bool modifySoil = true);
 
 double infiltrationAmount(double input, double Ssoil);
-NumericVector infiltrationRepartition(double I, NumericVector dVec, NumericVector macro);
+NumericVector infiltrationRepartition(double I, NumericVector dVec, NumericVector macro, 
+                                      double a = -0.005, double b = 3.0);
 
 double interceptionGashDay(double Precipitation, double Cm, double p, double ER=0.05);
 

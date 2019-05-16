@@ -71,19 +71,23 @@ double infiltrationAmount(double input, double Ssoil) {
  * Calculates infiltrated water that goes to each layer
  */
 // [[Rcpp::export("hydrology_infiltrationRepartition")]]
-NumericVector infiltrationRepartition(double I, NumericVector dVec, NumericVector macro) {
+NumericVector infiltrationRepartition(double I, NumericVector dVec, NumericVector macro, 
+                                      double a = -0.005, double b = 3.0) {
   int nlayers = dVec.length();
+  NumericVector Pvec = NumericVector(nlayers,0.0);
   NumericVector Ivec = NumericVector(nlayers,0.0);
-  double macro_mean = sum(macro)/((double) nlayers);
-  double a = -0.01*pow(1.0-macro_mean,3.0);
   double z1 = 0.0;
+  double p1 = 1.0;
   for(int i=0;i<nlayers;i++) {
+    double ai = a*pow(1.0-macro[i],b);
     if(i<(nlayers-1)) {
-      Ivec[i] = I*(exp(a*z1)-exp(a*(z1 + dVec[i])));
+      Pvec[i] = p1*(1.0-exp(ai*dVec[i]));
     } else {
-      Ivec[i] = I*exp(a*z1);
+      Pvec[i] = p1;
     }
+    p1 = p1*exp(ai*dVec[i]);
     z1 = z1 + dVec[i];
+    Ivec[i] = I*Pvec[i];
   }
   return(Ivec);
 }

@@ -9,7 +9,7 @@ Calculates water use efficiency (WUE), at different temporal scales, from soil p
 }
 \usage{
 spwb_waterUseEfficiency(x, type = "Plant An/E", leaves = "average", freq = "days", 
-                        draw = TRUE)
+                        draw = TRUE, ylim = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -25,6 +25,7 @@ spwb_waterUseEfficiency(x, type = "Plant An/E", leaves = "average", freq = "days
   \item{leaves}{Either \code{"sunlit"}, \code{"shade"} or \code{"average"}. Refers to the WUE of different leaf types or the average (with weights according to the LAI of sunlit and shade leaves). Only relevant for \code{type = "iWUE"}. }
   \item{freq}{Frequency of summary statistics (see \code{\link{cut.Date}}).}
   \item{draw}{A boolean flag to indicate that a plot should be returned.}
+  \item{ylim}{Range of values for y.}
 }
 \details{
 Temporal aggregation of WUE values is done differently depending on the value of \code{type}. For \code{type = "Plant An/E"} and \code{type = "Stand An/E"} sums or daily photosynthesis and transpiration are first calculated at the desired temporal scale and the ratio is calculated afterwards. For \code{type = "Leaf iWUE"} intrinsic WUE values are first calculated at the daily scale (as averages of instantaneous An/gs ratios weighted by An) and then they are aggregated to the desired scale by calculating weighted averages, where weights are given by daily photosynthesis.
