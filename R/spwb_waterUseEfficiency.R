@@ -25,23 +25,25 @@ spwb_waterUseEfficiency<-function(x, type = "Plant An/E", leaves = "average", fr
       sh = sd[[i]]$PlantsInst$ShadeLeaves
       sl_lai = sd[[i]]$SunlitLeaves$LAI
       sh_lai = sd[[i]]$ShadeLeaves$LAI
+      an_sl = pmax(0.0,sl$An, na.rm=T)
+      an_sh = pmax(0.0,sh$An, na.rm=T)
       if(leaves =="sunlit") {
-        iwueinst = sl$An/sl$GW
+        iwueinst = an_sl/sl$GW
         iwueinst[iwueinst<0] = 0
-        iWUEdays[i,] = rowSums(iwueinst*sl$An, na.rm=T)/rowSums(sl$An, na.rm=T) #Photosynthesis-weighted iWUE
+        iWUEdays[i,] = rowSums(iwueinst*an_sl, na.rm=T)/rowSums(an_sl, na.rm=T) #Photosynthesis-weighted iWUE
       }
       else if(leaves =="shade") {
-        iwueinst = sh$An/sh$GW
+        iwueinst = an_sh/sh$GW
         iwueinst[iwueinst<0] = 0
-        iWUEdays[i,] = rowSums(iwueinst*sh$An, na.rm=T)/rowSums(sh$An, na.rm=T) #Photosynthesis-weighted iWUE
+        iWUEdays[i,] = rowSums(iwueinst*an_sh, na.rm=T)/rowSums(an_sh, na.rm=T) #Photosynthesis-weighted iWUE
       }
       else {
-        iwueinst_sl = sl$An/sl$GW
-        iwueinst_sh = sh$An/sh$GW
+        iwueinst_sl = an_sl/sl$GW
+        iwueinst_sh = an_sh/sh$GW
         iwueinst = ((iwueinst_sl*sl_lai) + (iwueinst_sh*sh_lai))/(sl_lai+sh_lai)
         iwueinst[iwueinst<0] = 0
-        An_tot = sh$An+sl$An
-        iWUEdays[i,] = rowSums(iwueinst*An_tot, na.rm=T)/rowSums(An_tot, na.rm=T) #Photosynthesis-weighted iWUE
+        an_tot = an_sl + an_sh
+        iWUEdays[i,] = rowSums(iwueinst*an_tot, na.rm=T)/rowSums(an_tot, na.rm=T) #Photosynthesis-weighted iWUE
       }
     }
     if(freq=="days") {
@@ -50,7 +52,7 @@ spwb_waterUseEfficiency<-function(x, type = "Plant An/E", leaves = "average", fr
       
       date.factor = cut(dates, breaks=freq)
       
-      Andays = x$PlantPhotosynthesis
+      Andays = pmax(x$PlantPhotosynthesis,0, na.rm=T)
       #Perform summary at the desired temporal scale (weighted average of iWUE with An as weights)
       sumiWUEAn <- apply(iWUEdays*Andays,2,tapply, INDEX=date.factor, sum, na.rm=T)
       sumAn <- apply(Andays,2,tapply, INDEX=date.factor, sum, na.rm=T)
@@ -85,20 +87,22 @@ spwb_waterUseEfficiency<-function(x, type = "Plant An/E", leaves = "average", fr
       sh = sd[[i]]$PlantsInst$ShadeLeaves
       sl_lai = sd[[i]]$SunlitLeaves$LAI
       sh_lai = sd[[i]]$ShadeLeaves$LAI
+      an_sl = pmax(0.0,sl$An, na.rm=T)
+      an_sh = pmax(0.0,sh$An, na.rm=T)
       if(leaves =="sunlit") {
         ciinst = sl$Ci
-        Cidays[i,] = rowSums(ciinst*sl$An, na.rm=T)/rowSums(sl$An, na.rm=T) #Photosynthesis-weighted iWUE
+        Cidays[i,] = rowSums(ciinst*an_sl, na.rm=T)/rowSums(an_sl, na.rm=T) #Photosynthesis-weighted iWUE
       }
       else if(leaves =="shade") {
         ciinst = sh$Ci
-        Cidays[i,] = rowSums(ciinst*sh$An, na.rm=T)/rowSums(sh$An, na.rm=T) #Photosynthesis-weighted iWUE
+        Cidays[i,] = rowSums(ciinst*an_sh, na.rm=T)/rowSums(an_sh, na.rm=T) #Photosynthesis-weighted iWUE
       }
       else {
         ciinst_sl = sl$Ci
         ciinst_sh = sh$Ci
         ciinst = ((ciinst_sl*sl_lai) + (ciinst_sh*sh_lai))/(sl_lai+sh_lai)
-        An_tot = sh$An+sl$An
-        Cidays[i,] = rowSums(ciinst*An_tot, na.rm=T)/rowSums(An_tot, na.rm=T) #Photosynthesis-weighted iWUE
+        an_tot = an_sh+an_sl
+        Cidays[i,] = rowSums(ciinst*an_tot, na.rm=T)/rowSums(an_tot, na.rm=T) #Photosynthesis-weighted iWUE
       }
     }
     if(freq=="days") {
@@ -107,7 +111,7 @@ spwb_waterUseEfficiency<-function(x, type = "Plant An/E", leaves = "average", fr
       
       date.factor = cut(dates, breaks=freq)
       
-      Andays = x$PlantPhotosynthesis
+      Andays = pmax(x$PlantPhotosynthesis,0.0, na.rm=T)
       #Perform summary at the desired temporal scale (weighted average of iWUE with An as weights)
       sumCiAn <- apply(Cidays*Andays,2,tapply, INDEX=date.factor, sum, na.rm=T)
       sumAn <- apply(Andays,2,tapply, INDEX=date.factor, sum, na.rm=T)
@@ -122,6 +126,8 @@ spwb_waterUseEfficiency<-function(x, type = "Plant An/E", leaves = "average", fr
     }
   }
   else if(type =="Plant An/E") {
+    x$PlantPhotosynthesis = pmax(0, x$PlantPhotosynthesis)
+    x$PlantTranspiration = pmax(0, x$PlantTranspiration)
     if(freq=="days") {
       res = x$PlantPhotosynthesis/x$PlantTranspiration
     } else {
@@ -131,12 +137,14 @@ spwb_waterUseEfficiency<-function(x, type = "Plant An/E", leaves = "average", fr
     }
   }
   else if(type =="Stand An/E") {
+    x$PlantPhotosynthesis = pmax(0, x$PlantPhotosynthesis)
+    x$PlantTranspiration = pmax(0, x$PlantTranspiration)
     if(freq=="days") {
-      res = rowSums(x$PlantPhotosynthesis)/rowSums(x$PlantTranspiration)
+      res = rowSums(x$PlantPhotosynthesis, na.rm=T)/rowSums(x$PlantTranspiration, na.rm=T)
     } else {
       pt = summary(x, freq=freq, output="PlantTranspiration", FUN=sum, na.rm=T)
       pp = summary(x, freq=freq, output="PlantPhotosynthesis", FUN=sum, na.rm=T)
-      res = rowSums(pp)/rowSums(pt)
+      res = rowSums(pp, na.rm=T)/rowSums(pt, na.rm=T)
     }
   }
   if(!draw) {
