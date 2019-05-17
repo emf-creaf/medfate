@@ -577,7 +577,12 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   PlantLAIdead.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   PlantLAIlive.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   
-  List l = List::create(Named("spwbInput") = spwbInput,
+  NumericVector topo = NumericVector::create(elevation, slope, aspect);
+  topo.attr("names") = CharacterVector::create("elevation", "slope", "aspect");
+  
+  List l = List::create(Named("latitude") = latitude,
+                        Named("topography") = topo,
+                        Named("spwbInput") = spwbInput,
                         Named("soilInput") = soilInput,
                         Named("WaterBalance")=DWB, 
                         Named("Soil")=SWB,

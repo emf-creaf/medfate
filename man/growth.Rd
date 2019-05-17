@@ -43,6 +43,8 @@ growth(x, soil, meteo,  latitude = NA, elevation = NA, slope = NA, aspect = NA)
 \value{
   A list of class 'growth' with the following elements:
   \itemize{
+  \item{\code{"latitude"}: Latitude (in degrees) given as input.} 
+  \item{\code{"topography"}: Vector with elevation, slope and aspect given as input.} 
   \item{\code{"spwbInput"}: A copy of the object \code{x} of class \code{\link{spwbInput}} given as input.}
   \item{\code{"soilInput"}: A copy of the object \code{soil} of class \code{\link{soil}} given as input.}
   \item{\code{"WaterBalance"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}

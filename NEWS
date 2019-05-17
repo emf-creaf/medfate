@@ -9,6 +9,8 @@ _Version 0.8.2, May 2019.
 3. New function 'spwb_validation'.
 4. Plot functions using ggplot.
 5. Improvement of infiltration repartition for varying macroporosity.
+6. Input values for latitude and topography stored in the result of simulations.
+7. Wind for each cohort stored in the result of transp_transpirationSperry and spwb_day.
 
 _Version 0.8.1, April 2019.
 1. Export Ci from spwb_day.

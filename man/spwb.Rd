@@ -55,8 +55,10 @@ spwb_resetInputs(x, soil, from = NULL, day = NA)
 \value{
   Function \code{spwb} returns a list of class 'spwb' whereas Function \code{pwb} returns a list of class 'pwb'. There are many elements in common in these lists, so they are listed here together:
   \itemize{
-     \item{\code{"spwbInput"}: A copy of the object \code{x} of class \code{\link{spwbInput}} given as input.}
-     \item{\code{"soilInput"}: A copy of the object \code{soil} of class \code{\link{soil}} given as input.}
+     \item{\code{"latitude"}: Latitude (in degrees) given as input.} 
+     \item{\code{"topography"}: Vector with elevation, slope and aspect given as input.} 
+     \item{\code{"spwbInput"}: An (unmodified) copy of the object \code{x} of class \code{\link{spwbInput}} given as input  (note that \code{x} is modified by the simulation function).}
+     \item{\code{"soilInput"}: An (unmodified) copy of the object \code{soil} of class \code{\link{soil}} given as input (note that \code{soil} is modified by the simulation function).}
      \item{\code{"WaterBalance"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
        \itemize{
           \item{\code{"GDD"}: Cumulative growth degree days.}
@@ -158,7 +160,7 @@ plot(S1)
 summary(S1, freq="months",FUN=mean, output="Soil")
 
 
-
+\dontrun{
 #Initialize soil with default soil params (2 layers)
 examplesoil2 = soil(defaultSoilParams(2))
 
@@ -168,7 +170,17 @@ control$transpirationMode="Sperry"
 #Initialize input
 x2 = forest2spwbInput(exampleforest,examplesoil2, SpParamsMED, control)
 
-#Call simulation function (5 days)
-S2<-spwb(x2, examplesoil2, examplemeteo[100:105,], latitude = 41.82592, elevation = 100)
+#Call simulation function (11 days)
+d = 100:110
+S2<-spwb(x2, examplesoil2, examplemeteo[d,], latitude = 41.82592, elevation = 100)
+
+# Run the model with 'Sperry' transpiration mode using the water balance of 
+# simulated with the 'Granier' model
+P2<-pwb(x2, examplesoil2, examplemeteo[d,], latitude = 41.82592, elevation = 100, 
+        W = as.matrix(S1$Soil[d, c("W.1", "W.2")]),
+        canopyEvaporation = S1$WaterBalance$Interception[d],
+        snowMelt = S1$WaterBalance$Snowmelt[d],
+        soilEvaporation = S1$WaterBalance$SoilEvaporation[d])
+}
 
 }

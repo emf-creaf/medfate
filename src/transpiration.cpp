@@ -238,6 +238,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   if(NumericVector::is_na(wind)) wind = defaultWindSpeed; //set to default if missing
   NumericVector zWind;
   zWind = windExtinctionCohort(H,CR, wind,LAIcell, canopyHeight);
+  zWind.attr("names") = above.attr("row.names");
   double RAcan = aerodynamicResistance(canopyHeight,std::max(wind,1.0)); //Aerodynamic resistance to convective heat transfer
   double wind2m = windSpeedMassmanExtinction(200.0, wind, LAIcell, canopyHeight);
   double RAsoil = aerodynamicResistance(200.0, std::max(wind2m,1.0)); //Aerodynamic resistance to convective heat transfer from soil
@@ -992,6 +993,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
                      _["ShadeLeaves"] = Shade,
                      _["PlantsInst"] = PlantsInst,
                      _["LightExtinction"] = lightExtinctionAbsortion,
+                     _["WindExtinction"] = zWind,
                      _["SupplyFunctions"] = supply,
                      _["PhotoSunlitFunctions"] = outPhotoSunlit,
                      _["PhotoShadeFunctions"] = outPhotoShade,
@@ -1008,6 +1010,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
                      _["ExtractionInst"] = soilLayerExtractInst,
                      _["PlantsInst"] = PlantsInst,
                      _["LightExtinction"] = lightExtinctionAbsortion,
+                     _["WindExtinction"] = zWind,
                      _["SupplyFunctions"] = supply);
     
   } 
