@@ -194,6 +194,7 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
           geom_pointrange(aes(x = Dates, y = MD_obs, ymin = MD_obs_lower, ymax = MD_obs_upper,col="Midday",linetype="Midday"))+
           scale_color_manual(name="", values=c("Predawn"="blue", "Midday"= "red"))+
           scale_linetype_manual(name="", values=c("Predawn"="dashed", "Midday"= "solid"))+
+          labs(title=paste0(cohort , " (",spnames[icoh],")"))+
           xlab("")+
           ylab("Leaf water potential (MPa)")+
           theme_bw()
@@ -205,6 +206,7 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
           geom_smooth(aes(x = PD_mod, y = PD_obs, col="Predawn"), method="lm", se = FALSE, linetype="dashed")+
           geom_smooth(aes(x = MD_mod, y = MD_obs, col="Midday"), method="lm", se = FALSE, linetype="dashed")+
           scale_color_manual(name="", values=c("Predawn"="blue", "Midday"= "red"))+
+          labs(title=paste0(cohort , " (",spnames[icoh],")"))+
           xlab("Modelled leaf water potential (MPa)")+
           ylab("Measured leaf water potential (MPa)")+
           theme_bw()
