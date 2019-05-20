@@ -9,7 +9,8 @@ importFrom("graphics", "axis", "abline", "barplot", "legend", "lines", "matplot"
 importFrom("utils", "setTxtProgressBar", "txtProgressBar", "head", "tail")
 importFrom("GSIF", "REST.SoilGrids","over")
 importFrom("ggplot2", "ggplot", "aes", 
-           "geom_line", "geom_path", "geom_area", "geom_hline", "geom_vline",
+           "geom_line", "geom_path", "geom_area", "geom_abline", "geom_hline", 
+           "geom_vline", "geom_point", "geom_smooth",
            "scale_color_manual", "scale_fill_manual","scale_color_discrete", 
            "scale_linetype_discrete", "scale_linetype_manual",
            "xlim", "ylim", "xlab", "ylab", "facet_wrap", "vars",
