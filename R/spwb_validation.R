@@ -1,16 +1,17 @@
 spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRUE,
                           plotType = "dynamics") {
-  scatterplot<-function(df, xlab="", ylab="") {
+  scatterplot<-function(df, xlab="", ylab="", title=NULL) {
     g<-ggplot(df, aes(x=Modelled, y = Observed))+
-      geom_point()+
+      geom_point(cex=0.5)+
       geom_abline(intercept=0, slope=1, col="black")+
       geom_smooth(method="lm", se = FALSE, col="gray", linetype="dashed")+
       xlab(xlab)+
       ylab(ylab)+
       theme_bw()
+    if(!is.null(title)) g<-g+labs(title=title)
     return(g)
   }
-  dynamicsplot<-function(df, xlab="", ylab="") {
+  dynamicsplot<-function(df, xlab="", ylab="", title=NULL) {
     g<-ggplot(df, aes(x=Dates))+
       geom_path(aes(y=Observed, col="Observed"))+
       geom_path(aes(y=Modelled, col="Modelled"))+
@@ -18,6 +19,7 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
       ylab(ylab)+
       scale_color_manual(name="", values=c("Observed"="black", "Modelled"= "red"))+
       theme_bw()
+    if(!is.null(title)) g<-g+labs(title=title)
     return(g)
   }
   evalstats<-function(obs, pred) {
@@ -41,7 +43,9 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
     if(!("SWC" %in% names(measuredData))) stop(paste0("Column 'SWC' not found in measured data frame."))
     seld = rownames(measuredData) %in% d
     df$Observed[d %in% rownames(measuredData)] = measuredData$SWC[seld]
-  
+    
+    eval_res = evalstats(df$Observed, df$Modelled)
+    
     if(draw) {
       if(plotType=="dynamics") {
         g<-dynamicsplot(df, ylab = "Soil moisture (% vol)")
@@ -49,11 +53,7 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
         g<-scatterplot(df, xlab  = "Modelled soil moisture (% vol)",
                        ylab = "Measured soil moisture (% vol)")
       }
-      print(evalstats(df$Observed, df$Modelled))
-      return(g)
-    } else{
-      print(evalstats(df$Observed, df$Modelled))
-    }
+    } 
   } 
   else if(type=="SWC_scaled") {
     sm = x$Soil
@@ -67,6 +67,8 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
     q_obs = quantile(measuredData$SWC[seld], p=c(0.05,0.95), na.rm=T)
     df$Observed[d %in% rownames(measuredData)] =(measuredData$SWC[seld]-q_obs[1])/(q_obs[2]-q_obs[1])
     
+    eval_res = evalstats(df$Observed, df$Modelled)
+    
     if(draw) {
       if(plotType=="dynamics") {
         g<-dynamicsplot(df, ylab = "Soil moisture (scaled)")
@@ -75,10 +77,6 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
                        ylab = "Measured soil moisture (scaled)")
 
       }
-      print(evalstats(df$Observed, df$Modelled))
-      return(g)
-    } else{
-      print(evalstats(df$Observed, df$Modelled))
     }
   } 
   else if(type=="E") {
@@ -101,52 +99,61 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
     if(!(obscolumn %in% names(measuredData))) stop(paste0("Column '", obscolumn, "' not found in measured data frame."))
     df$Observed[d %in% rownames(measuredData)] = measuredData[[obscolumn]][rownames(measuredData) %in% d] 
     
+    eval_res = evalstats(df$Observed, df$Modelled)
+    
     if(draw) {
       if(plotType=="dynamics") {
-        g<-dynamicsplot(df, ylab = "Transpiration per leaf area (mm/day)")
+        g<-dynamicsplot(df, ylab = "Transpiration per leaf area (mm/day)", 
+                        title=paste0(cohort , " (",spnames[icoh],")"))
       } else {
         g<-scatterplot(df, 
                        xlab = "Modelled transpiration per leaf area (mm/day)",
-                       ylab = "Measured transpiration per leaf area (mm/day)")
+                       ylab = "Measured transpiration per leaf area (mm/day)", 
+                       title=paste0(cohort , " (",spnames[icoh],")"))
       }
-      print(evalstats(df$Observed, df$Modelled))
-      return(g)
-    } else{
-      return(evalstats(df$Observed, df$Modelled))
     }
   }
   else if(type=="ETR") {
     ET1 = x$WaterBalance$SoilEvaporation+x$WaterBalance$Transpiration
     ET2 = x$WaterBalance$Evapotranspiration
     d = rownames(x$WaterBalance)
-    seld = rownames(measuredData) %in% d
-    ETobs = measuredData$ETR[seld]
+    df = data.frame(ETobs = NA, ET1 = ET1, ET2 = ET2, Dates = as.Date(d))
+    
+    if(!("ETR" %in% names(measuredData))) stop(paste0("Column 'ETR' not found in measured data frame."))
+    df$ETobs[d %in% rownames(measuredData)] = measuredData$ETR[rownames(measuredData) %in% d]
     
     if(draw) {
-      par(mfrow=c(1,2), mar=c(4,4,1,1))
-      ETmax = ceiling(max(c(ET1, ET2, ETobs), na.rm=T))
-      plot(as.Date(d), ET2, type="l", ylim=c(0,ETmax), col="gray",
-           xlab = "", ylab="ETR (mm)")
-      lines(as.Date(d), ET1, col="black")
-      lines(as.Date(row.names(measuredData))[seld], ETobs, col="red")
-      legend("topright", legend = c("modelled Es+Tr", "modelled Es+Tr+In", "measured ETR"), col=c("black", "gray","red"), lty=1, bty="n")
-      plot(ET2, ETobs, xlab="modelled ETR (mm)", ylab="measured ETR (mm)",
-           asp=1, xlim=c(0,ETmax), ylim=c(0,ETmax), pch=19, cex=0.4, col="gray")
-      points(ET1, ETobs, col="black", pch=19, cex=0.4)
-      abline(a=0, b=1, col="black")
-      abline(lm(ETobs~ ET1), col="black", lty=2)
-      abline(lm(ETobs~ ET2), col="gray", lty=2)
+      if(plotType=="dynamics") {
+        g<-ggplot(df, aes(x=Dates))+
+          geom_path(aes(y=ETobs, col="Measured ETR"))+
+          geom_path(aes(y=ET1, col="Modelled Es+Tr"))+
+          geom_path(aes(y=ET2, col="Modelled Es+Tr+In"))+
+          xlab("")+
+          ylab("ETR (mm)")+
+          scale_color_manual(name="", values=c("Measured ETR"="red", 
+                                               "Modelled Es+Tr" = "black",
+                                               "Modelled Es+Tr+In"= "gray"))+
+          theme_bw()
+      } else {
+        g<-ggplot(df, aes(y = ETobs))+
+          geom_abline(intercept=0, slope=1, col="black")+
+          geom_point(aes(x = ET1), col="black", cex=0.5)+
+          geom_point(aes(x = ET2), col="gray", cex=0.5)+
+          geom_smooth(aes(x = ET1), method="lm", se = FALSE, col="black", linetype="dashed")+
+          geom_smooth(aes(x = ET2), method="lm", se = FALSE, col="gray", linetype="dashed")+
+          xlab("Modelled ETR (mm)")+
+          ylab("Measured ETR (mm)")+
+          theme_bw()
+      }
     }
-    df = as.data.frame(rbind(evalstats(ETobs, ET1),
-                       evalstats(ETobs, ET2)))
-    row.names(df)<-c("Es+Tr", "Es+Tr+In")
-    return(df)
-    
+    eval_res = as.data.frame(rbind(evalstats(df$ETobs, df$ET1),
+                       evalstats(df$ETobs, df$ET2)))
+    row.names(eval_res)<-c("Es+Tr", "Es+Tr+In")
   }
-  else if(type=="E") {
-    pt = x$PlantTranspiration
-    d = rownames(pt)
-    LAI = x$spwbInput$above$LAI_live
+  else if(type=="WP"){
+    wtMD = x$LeafPsiMin
+    wtPD = x$LeafPsiMax
+    d = rownames(wtMD)
     spnames = x$spwbInput$cohorts$Name
     allcohnames = row.names(x$spwbInput$cohorts)
     
@@ -157,80 +164,61 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
     } else {
       icoh = which(allcohnames==cohort)
     }
-    df <- data.frame(Observed = NA, Modelled = pt[,icoh]/LAI[icoh], Dates = as.Date(d))
-    ## Fill observed values
-    obscolumn = paste0("E_", cohort)
-    if(!(obscolumn %in% names(measuredData))) stop(paste0("Column '", obscolumn, "' not found in measured data frame."))
-    df$Observed[d %in% rownames(measuredData)] = measuredData[[obscolumn]][rownames(measuredData) %in% d] 
+    pdcolumn = paste0("PD_", cohort)
+    mdcolumn = paste0("MD_", cohort)
+    pderrcolumn = paste0("PD_", cohort, "_err")
+    mderrcolumn = paste0("MD_", cohort, "_err")
+    icoh = which(allcohnames==cohort)
+    
+    df = data.frame(PD_obs = NA, MD_obs = NA, PD_obs_lower = NA, PD_obs_upper = NA, MD_obs_lower = NA, MD_obs_upper = NA,
+                    PD_mod = wtPD[,icoh], MD_mod = wtMD[,icoh], Dates = as.Date(d))
+    
+    seld = rownames(measuredData) %in% d
+    if(pdcolumn %in% names(measuredData))  df$PD_obs[d %in% rownames(measuredData)] = measuredData[[pdcolumn]][seld]
+    if(mdcolumn %in% names(measuredData))  df$MD_obs[d %in% rownames(measuredData)] = measuredData[[mdcolumn]][seld]
+    if(pderrcolumn %in% names(measuredData))  {
+      df$PD_obs_lower[d %in% rownames(measuredData)] = df$PD_obs[d %in% rownames(measuredData)] - 1.96*measuredData[[pderrcolumn]][seld]
+      df$PD_obs_upper[d %in% rownames(measuredData)] = df$PD_obs[d %in% rownames(measuredData)] + 1.96*measuredData[[pderrcolumn]][seld]
+    }
+    if(mderrcolumn %in% names(measuredData))  {
+      df$MD_obs_lower[d %in% rownames(measuredData)] = df$MD_obs[d %in% rownames(measuredData)] - 1.96*measuredData[[mderrcolumn]][seld]
+      df$MD_obs_upper[d %in% rownames(measuredData)] = df$MD_obs[d %in% rownames(measuredData)] + 1.96*measuredData[[mderrcolumn]][seld]
+    }
     
     if(draw) {
-      if(plotType=="dynamics") {
-        g<-dynamicsplot(df, ylab = "Transpiration per leaf area (mm/day)")
+      if(plotType=="dynamics"){
+        g<-ggplot(df)+
+          geom_path(aes(x=Dates, y=PD_mod, col="Predawn", linetype="Predawn"))+
+          geom_path(aes(x=Dates, y=MD_mod, col="Midday", linetype="Midday"))+
+          geom_pointrange(aes(x = Dates, y = PD_obs, ymin = PD_obs_lower, ymax = PD_obs_upper, col="Predawn", linetype="Predawn"))+
+          geom_pointrange(aes(x = Dates, y = MD_obs, ymin = MD_obs_lower, ymax = MD_obs_upper,col="Midday",linetype="Midday"))+
+          scale_color_manual(name="", values=c("Predawn"="blue", "Midday"= "red"))+
+          scale_linetype_manual(name="", values=c("Predawn"="dashed", "Midday"= "solid"))+
+          xlab("")+
+          ylab("Leaf water potential (MPa)")+
+          theme_bw()
       } else {
-        g<-scatterplot(df, 
-                       xlab = "Modelled transpiration per leaf area (mm/day)",
-                       ylab = "Measured transpiration per leaf area (mm/day)")
+        g<-ggplot(df)+
+          geom_abline(intercept=0, slope=1, col="black")+
+          geom_pointrange(aes(x = PD_mod, y = PD_obs, ymin = PD_obs_lower, ymax = PD_obs_upper, col="Predawn"))+
+          geom_pointrange(aes(x = MD_mod, y = MD_obs, ymin = MD_obs_lower, ymax = MD_obs_upper,col="Midday"))+
+          geom_smooth(aes(x = PD_mod, y = PD_obs, col="Predawn"), method="lm", se = FALSE, linetype="dashed")+
+          geom_smooth(aes(x = MD_mod, y = MD_obs, col="Midday"), method="lm", se = FALSE, linetype="dashed")+
+          scale_color_manual(name="", values=c("Predawn"="blue", "Midday"= "red"))+
+          xlab("Modelled leaf water potential (MPa)")+
+          ylab("Measured leaf water potential (MPa)")+
+          theme_bw()
       }
-      print(evalstats(df$Observed, df$Modelled))
-      return(g)
-    } else{
-      return(evalstats(df$Observed, df$Modelled))
     }
+    eval_res = as.data.frame(rbind(evalstats(df$PD_obs, df$PD_mod),
+                                   evalstats(df$MD_obs, df$MD_mod)))
+    row.names(eval_res)<-c("Predawn potentials", "Midday potentials")
   }
-  else if(type=="WP"){
-    wtMD = x$LeafPsiMin
-    wtPD = x$LeafPsiMax
-    d = rownames(wtMD)
-    spnames = x$spwbInput$cohorts$Name
-    allcohnames = row.names(x$spwbInput$cohorts)
-    seld = rownames(measuredData) %in% d
-    
-    if(!is.null(cohort)) {
-      pdcolumn = paste0("PD_", cohort)
-      mdcolumn = paste0("MD_", cohort)
-      pderrcolumn = paste0("PD_", cohort, "_err")
-      mderrcolumn = paste0("MD_", cohort, "_err")
-      icoh = which(allcohnames==cohort)
-      
-      PD_mod = wtPD[,icoh]
-      MD_mod = wtMD[,icoh]
-      PD_obs = measuredData[[pdcolumn]][seld]
-      MD_obs = measuredData[[mdcolumn]][seld]
-      PD_obs_err = measuredData[[pderrcolumn]][seld]
-      MD_obs_err = measuredData[[mderrcolumn]][seld]
-      wpmin = min(c(PD_mod, MD_mod, PD_obs, MD_obs), na.rm=T)
-      if(draw) {
-        par(mfrow=c(1,2), mar=c(4,4,4,1))
-        plot(as.Date(rownames(wtMD)), MD_mod, type="l", col="red", xlab="", ylab = "Leaf water potential (MPa)",
-             ylim = c(wpmin,0), main = paste0(cohort, " (", spnames[icoh],")"))
-        lines(as.Date(rownames(wtPD)), PD_mod, col="blue")
-        arrows(x0=as.Date(row.names(measuredData)[seld]), 
-               y0 = PD_obs, 
-               y1 = PD_obs+1.96*PD_obs_err, col="black", length = 0.01, angle=90)
-        arrows(x0=as.Date(row.names(measuredData)[seld]), 
-               y0 = PD_obs, 
-               y1 = PD_obs-1.96*PD_obs_err, col="black", length = 0.01, angle=90)
-        points(as.Date(row.names(measuredData)[seld]), PD_obs, col="blue", pch=19)
-        arrows(x0=as.Date(row.names(measuredData)[seld]), 
-               y0 = MD_obs, 
-               y1 = MD_obs+1.96*MD_obs_err, col="black", length = 0.01, angle=90)
-        arrows(x0=as.Date(row.names(measuredData)[seld]), 
-               y0 = MD_obs, 
-               y1 = MD_obs-1.96*MD_obs_err, col="black", length = 0.01, angle=90)
-        points(as.Date(row.names(measuredData)[seld]), MD_obs, col="red", pch=19)
-        plot(PD_mod, PD_obs, col="blue", cex = 0.5, 
-             xlab ="Modelled leaf water potential (MPa)", ylab="Measured leaf water potential (MPa)",
-             xlim = c(wpmin,0), ylim = c(wpmin,0), asp=1, pch=19)
-        abline(lm(PD_obs~PD_mod), col="blue", lty=2)
-        points(MD_mod, MD_obs, col="red", cex=0.5, pch=19)
-        abline(lm(MD_obs~MD_mod), col="red", lty=2)
-        legend("bottomright", col=c("blue", "red"), pch=19, legend=c("Predawn", "Midday"), bty="n")
-        abline(a=0,b=1)
-      }
-      df = as.data.frame(rbind(evalstats(PD_obs, PD_mod),
-                               evalstats(MD_obs, MD_mod)))
-      row.names(df)<-c("Predawn potentials", "Midday potentials")
-      return(df)
-    }
+  
+  if(draw) {
+    print(eval_res)
+    return(g)
+  } else{
+    return(eval_res)
   }
 }
