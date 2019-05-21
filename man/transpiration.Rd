@@ -20,7 +20,8 @@ transp_transpirationSperry(x, soil, meteo, day,
                            canopyEvaporation = 0, snowMelt = 0, soilEvaporation = 0, 
                            stepFunctions = NA, modifyInput = TRUE)
 transp_stomatalRegulationPlot(x, soil, meteo, day, timestep, 
-                              latitude, elevation, slope = NA, aspect = NA)
+                              latitude, elevation, slope = NA, aspect = NA,
+                              type="E")
 }
 
 %- maybe also 'usage' for other objects documented here.
@@ -53,6 +54,7 @@ transp_stomatalRegulationPlot(x, soil, meteo, day, timestep,
   \item{soilEvaporation}{Bare soil evaporation for \code{day} (mm).}
   \item{snowMelt}{Snow melt values  for \code{day} (mm).}
   \item{stepFunctions}{An integer to indicate a simulation step for which photosynthesis and profit maximization functions are desired.}
+  \item{type}{Plot type, either \code{"E"} (transpiration flow), \code{"An"} (net photosynthesis), \code{"Gw"} (stomatal conductance), \code{"T"} (temperature) or \code{"VPD"} (vapour pressure deficit).}
   \item{modifyInput}{Boolean flag to indicate that the input \code{x} and \code{soil} objects are allowed to be modified during the simulation.}
 }
 \details{
@@ -185,7 +187,7 @@ examplesoil2 = soil(defaultSoilParams(2))
 #Initialize input
 x2 = forest2spwbInput(exampleforest,examplesoil2, SpParamsMED, control)
 
-# Stomatal regulation for the 12th time step at day 100
+# Stomatal VPD curve and chosen value for the 12th time step at day 100
 transp_stomatalRegulationPlot(x2, examplesoil2, examplemeteo, day=100, timestep = 12,
-                              latitude = 41.82592, elevation = 100)
+                              latitude = 41.82592, elevation = 100, type="VPD")
 }

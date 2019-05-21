@@ -194,7 +194,7 @@ hydraulics_regulatedPsiTwoElements(Emax, psiSoil, krhizomax, kxylemmax, n, alpha
   \item{ntrial}{Maximum number of steps in Newton-Raphson optimization.}
   \item{x}{An object of class \code{\link{spwbInput}}.}
   \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
-  \item{type}{Plot type. For \code{hydraulics_supplyFunctionPlot}, either \code{"E"}, \code{"ERhizo"}, \code{"psiStem"}, \code{"psiRoot"}, \code{"psiRhizo"} or \code{"dEdP"}). For \code{hydraulics_vulnerabilityCurvePlot}, either \code{"leaf"}, \code{"stem"}, \code{"root"}, or \code{"rhizosphere"}).}
+  \item{type}{Plot type for \code{hydraulics_supplyFunctionPlot}, either \code{"E"}, \code{"ERhizo"}, \code{"psiStem"}, \code{"psiRoot"}, \code{"psiRhizo"} or \code{"dEdP"}).}
   \item{draw}{A flag to indicate whether the supply function should be drawn or just returned.}
   \item{speciesNames}{A flag to indicate the use of species names instead of cohort names in plots.}
   \item{ylim}{Graphical parameter to override function defaults.}
@@ -225,7 +225,7 @@ Values returned for each function are:
 \item{\code{dEdP}: Derivatives of the supply function.}
 }
 }
-\item{\code{hydraulics_supplyFunctionPlot}: A (hidden) list with the result of calling \code{hydraulics_supplyFunctionNetwork} for each cohort. }
+\item{\code{hydraulics_supplyFunctionPlot}: If \code{draw = FALSE} a list with the result of calling \code{hydraulics_supplyFunctionNetwork} for each cohort. }
 \item{\code{hydraulics_regulatedPsiXylem}: Plant water potential after regulation (one-element loss function) given an input water potential.}
 \item{\code{hydraulics_regulatedPsiTwoElements}: Plant water potential after regulation (two-element loss function) given an input soil water potential.}
 }

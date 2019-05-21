@@ -45,7 +45,7 @@ hydraulics_psi2Weibull(psi50, psi88)
   \item{kxylem}{Xylem hydraulic conductance (defined as flow per surface unit and per pressure drop).}
   \item{x}{An object of class \code{\link{spwbInput}}.}
   \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
-  \item{type}{Plot type. For \code{hydraulics_supplyFunctionPlot}, either \code{"E"}, \code{"Elayers"}, \code{"PsiStem"}, \code{"PsiRoot"}, \code{"PsiRhizo"} or \code{"dEdP"}). For \code{hydraulics_vulnerabilityCurvePlot}, either \code{"leaf"}, \code{"stem"}, \code{"root"}, \code{"rootlayer"} or \code{"rhizosphere"}).}
+  \item{type}{Plot type for \code{hydraulics_vulnerabilityCurvePlot}, either \code{"leaf"}, \code{"stem"}, \code{"root"}, \code{"rootlayer"} or \code{"rhizosphere"}).}
   \item{psiVec}{Vector of water potential values to evaluate for the vulnerability curve.}
   \item{relative}{A flag to relativize vulnerability curves to the [0-1] interval.}
   \item{speciesNames}{A flag to indicate the use of species names instead of cohort names in plots.}

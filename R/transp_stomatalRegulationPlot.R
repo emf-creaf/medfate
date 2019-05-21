@@ -1,144 +1,94 @@
-transp_stomatalRegulationPlot<-function(x, soil, meteo, day, timestep, latitude, elevation, slope = NA, aspect = NA) {
-  
+transp_stomatalRegulationPlot<-function(x, soil, meteo, day, timestep, latitude, elevation, slope = NA, aspect = NA,
+                                        type = "E") {
+  type = match.arg(type, c("E","An" , "Gw", "T", "VPD"))
   dctr = transp_transpirationSperry(x, soil, meteo, day, latitude, elevation, slope, aspect,
                                     stepFunctions = timestep, 
                                     modifyInput = FALSE)
   ncoh = length(dctr$SupplyFunctions)
-  oldpar = par(mar=c(5,5,1,1), mfrow = c(5,2))
-  
+
   l = dctr$SupplyFunctions
+  cohnames = names(l)
   phsunlit = dctr$PhotoSunlitFunctions
   phshade = dctr$PhotoShadeFunctions
   pmsunlit = dctr$PMSunlitFunctions
   pmshade = dctr$PMShadeFunctions
   
-  maxE = 0
-  maxA = 0
-  minPsi = 0
-  minTemp = 1000
-  maxTemp = -1000
-  minVPD = 1000
-  maxVPD = -1000
-  minGw = 1000
-  maxGw = -1000
+  psi = numeric(0)
+  E = numeric(0)
+  An_sunlit = numeric(0)
+  An_shade = numeric(0)
+  Gw_sunlit = numeric(0)
+  Gw_shade = numeric(0)
+  Temp_sunlit = numeric(0)
+  Temp_shade = numeric(0)
+  VPD_sunlit = numeric(0)
+  VPD_shade = numeric(0)
+  cohorts = character(0)
+  PM_sunlit = logical(0)
+  PM_shade = logical(0)
   for(i in 1:ncoh) {
-    maxE = max(maxE, max(l[[i]]$E, na.rm=T))
-    if(sum(!is.na(phsunlit[[i]]$Photosynthesis))>0) maxA = max(maxA, max(phsunlit[[i]]$Photosynthesis, na.rm=T))
-    if(sum(!is.na(phshade[[i]]$Photosynthesis))>0) maxA = max(maxA, max(phshade[[i]]$Photosynthesis, na.rm=T))
-    minPsi = min(minPsi, min(l[[i]]$psiLeaf))
-    minTemp = min(minTemp, min(phsunlit[[i]]$LeafTemperature))
-    minTemp = min(minTemp, min(phshade[[i]]$LeafTemperature))
-    maxTemp = max(maxTemp, max(phsunlit[[i]]$LeafTemperature))
-    maxTemp = max(maxTemp, max(phshade[[i]]$LeafTemperature))
-    minVPD = min(minVPD, min(phsunlit[[i]]$LeafVPD))
-    minVPD = min(minVPD, min(phshade[[i]]$LeafVPD))
-    maxVPD = max(maxVPD, max(phsunlit[[i]]$LeafVPD))
-    maxVPD = max(maxVPD, max(phshade[[i]]$LeafVPD))
-    minGw = min(minGw, min(phsunlit[[i]]$WaterVaporConductance))
-    minGw = min(minGw, min(phshade[[i]]$WaterVaporConductance))
-    maxGw = max(maxGw, max(phsunlit[[i]]$WaterVaporConductance))
-    maxGw = max(maxGw, max(phshade[[i]]$WaterVaporConductance))
+    psi = c(psi, -l[[i]]$psiLeaf)
+    E = c(E, l[[i]]$E)
+    An_sunlit = c(An_sunlit, phsunlit[[i]]$Photosynthesis)
+    An_shade = c(An_shade, phshade[[i]]$Photosynthesis)
+    Gw_sunlit = c(Gw_sunlit, phsunlit[[i]]$WaterVaporConductance)
+    Gw_shade = c(Gw_shade, phshade[[i]]$WaterVaporConductance)
+    Temp_sunlit = c(Temp_sunlit, phsunlit[[i]]$LeafTemperature)
+    Temp_shade = c(Temp_shade, phshade[[i]]$LeafTemperature)
+    VPD_sunlit = c(VPD_sunlit, phsunlit[[i]]$LeafVPD)
+    VPD_shade = c(VPD_shade, phshade[[i]]$LeafVPD)
+    PMsli = rep(F, length(l[[i]]$psiLeaf))
+    PMshi = rep(F, length(l[[i]]$psiLeaf))
+    PMsli[pmsunlit[[i]]$iMaxProfit+1] = T
+    PMshi[pmshade[[i]]$iMaxProfit+1] = T
+    PM_sunlit = c(PM_sunlit, PMsli)
+    PM_shade = c(PM_shade, PMshi)
+    cohorts = c(cohorts, rep(cohnames[i], length(l[[i]]$psiLeaf)))
   }
-  for(i in 1:ncoh) {
-    if(i==1) {
-      plot(-l[[i]]$psiLeaf, l[[i]]$E, type="l", ylim=c(0,maxE+0.1), xlim=c(0,-minPsi),
-           xlab = "Leaf pressure (-MPa)", 
-           ylab = expression(paste("Flow rate sunlit "(mmol*H[2]*O%.%s^{-1}%.%m^{-2}))))
-    } else {
-      lines(-l[[i]]$psiLeaf, l[[i]]$E, lty=i)
-    }
-    abline(v = -l[[i]]$psiLeaf[pmsunlit[[i]]$iMaxProfit+1], col="orange", lty=i, lwd=2)
-  }
-  legend("topleft", legend = names(l), lty=1:ncoh, bty = "n")
-  for(i in 1:ncoh) {
-    if(i==1) {
-      plot(-l[[i]]$psiLeaf, l[[i]]$E, type="l", ylim=c(0,maxE+0.1), xlim=c(0,-minPsi),
-           xlab = "Leaf pressure (-MPa)", 
-           ylab =expression(paste("Flow rate shade "(mmol*H[2]*O%.%s^{-1}%.%m^{-2}))))
-    } else {
-      lines(-l[[i]]$psiLeaf, l[[i]]$E, lty=i)
-    }
-    abline(v = -l[[i]]$psiLeaf[pmshade[[i]]$iMaxProfit+1], col="gray", lty=i, lwd=2)
-  }
-  for(i in 1:ncoh) {
-    if(i==1) {
-      plot(-l[[i]]$psiLeaf, phsunlit[[i]]$Photosynthesis, type="l", ylim=c(0,maxA+0.1), xlim=c(0,-minPsi),
-           xlab = "Leaf pressure (-MPa)", 
-           ylab = expression(paste("Photosynthesis sunlit  "(mu*mol*C%.%s^{-1}%.%m^{-2}))))
-    } else {
-      lines(-l[[i]]$psiLeaf, phsunlit[[i]]$Photosynthesis, lty=i)
-    }
-    abline(v = -l[[i]]$psiLeaf[pmsunlit[[i]]$iMaxProfit+1], col="orange", lty=i, lwd=2)
-  }
-  for(i in 1:ncoh) {
-    if(i==1) {
-      plot(-l[[i]]$psiLeaf, phshade[[i]]$Photosynthesis, type="l", ylim=c(0,maxA+0.1), xlim=c(0,-minPsi),
-           xlab = "Leaf pressure (-MPa)", 
-           ylab = expression(paste("Photosynthesis shade  "(mu*mol*C%.%s^{-1}%.%m^{-2}))))
-    } else {
-      lines(-l[[i]]$psiLeaf, phshade[[i]]$Photosynthesis, lty=i)
-    }
-    abline(v = -l[[i]]$psiLeaf[pmshade[[i]]$iMaxProfit+1], col="gray", lty=i, lwd=2)
-  }
-  for(i in 1:ncoh) {
-    if(i==1) {
-      plot(-l[[i]]$psiLeaf, phsunlit[[i]]$WaterVaporConductance, type="l", xlim=c(0,-minPsi),
-           xlab = "Leaf pressure (-MPa)", ylim=c(minGw, maxGw), 
-           ylab = expression(paste("Leaf sunlit stomatal conductance "(mol*H[2]*O%.%s^{-1}%.%m^{-2}))))
-    } else {
-      lines(-l[[i]]$psiLeaf, phsunlit[[i]]$WaterVaporConductance, lty=i)
-    }
-    abline(v = -l[[i]]$psiLeaf[pmsunlit[[i]]$iMaxProfit+1], col="orange", lty=i, lwd=2)
-  }
-  for(i in 1:ncoh) {
-    if(i==1) {
-      plot(-l[[i]]$psiLeaf, phshade[[i]]$WaterVaporConductance, type="l", xlim=c(0,-minPsi),
-           xlab = "Leaf pressure (-MPa)", ylim=c(minGw, maxGw), 
-           ylab = expression(paste("Leaf shade stomatal conductance "(mol*H[2]*O%.%s^{-1}%.%m^{-2}))))
-    } else {
-      lines(-l[[i]]$psiLeaf, phshade[[i]]$WaterVaporConductance, lty=i)
-    }
-    abline(v = -l[[i]]$psiLeaf[pmshade[[i]]$iMaxProfit+1], col="gray", lty=i, lwd=2)
-  }
-  for(i in 1:ncoh) {
-    if(i==1) {
-      plot(-l[[i]]$psiLeaf, phsunlit[[i]]$LeafTemperature, type="l", xlim=c(0,-minPsi),
-           xlab = "Leaf pressure (-MPa)", ylim=c(minTemp, maxTemp), 
-           ylab = "Leaf sunlit temperature (degrees C)")
-    } else {
-      lines(-l[[i]]$psiLeaf, phsunlit[[i]]$LeafTemperature, lty=i)
-    }
-    abline(v = -l[[i]]$psiLeaf[pmsunlit[[i]]$iMaxProfit+1], col="orange", lty=i, lwd=2)
-  }
-  for(i in 1:ncoh) {
-    if(i==1) {
-      plot(-l[[i]]$psiLeaf, phshade[[i]]$LeafTemperature, type="l", xlim=c(0,-minPsi),
-           xlab = "Leaf pressure (-MPa)", ylim=c(minTemp, maxTemp), 
-           ylab = "Leaf shade temperature (degrees C)")
-    } else {
-      lines(-l[[i]]$psiLeaf, phshade[[i]]$LeafTemperature, lty=i)
-    }
-    abline(v = -l[[i]]$psiLeaf[pmshade[[i]]$iMaxProfit+1], col="gray", lty=i, lwd=2)
-  }
-  for(i in 1:ncoh) {
-    if(i==1) {
-      plot(-l[[i]]$psiLeaf, phsunlit[[i]]$LeafVPD, type="l", xlim=c(0,-minPsi),
-           xlab = "Leaf pressure (-MPa)", ylim=c(minVPD, maxVPD), 
-           ylab = "Leaf sunlit VPD (kPa)")
-    } else {
-      lines(-l[[i]]$psiLeaf, phsunlit[[i]]$LeafVPD, lty=i)
-    }
-    abline(v = -l[[i]]$psiLeaf[pmsunlit[[i]]$iMaxProfit+1], col="orange", lty=i, lwd=2)
-  }
-  for(i in 1:ncoh) {
-    if(i==1) {
-      plot(-l[[i]]$psiLeaf, phshade[[i]]$LeafVPD, type="l", xlim=c(0,-minPsi),
-           xlab = "Leaf pressure (-MPa)", ylim=c(minVPD, maxVPD), 
-           ylab = "Leaf shade VPD (kPa)")
-    } else {
-      lines(-l[[i]]$psiLeaf, phshade[[i]]$LeafVPD, lty=i)
-    }
-    abline(v = -l[[i]]$psiLeaf[pmshade[[i]]$iMaxProfit+1], col="gray", lty=i, lwd=2)
-  }
-  par(oldpar)
+  df_sunlit = data.frame(psi = psi, E = E, 
+                         An = An_sunlit, Gw = Gw_sunlit,
+                         Temp = Temp_sunlit, VPD = VPD_sunlit, 
+                         PM = PM_sunlit,
+                         cohort = cohorts, leaf = "sunlit", 
+                         stringsAsFactors = F)
+  df_shade = data.frame(psi = psi, E = E, 
+                        An = An_shade, Gw = Gw_shade,
+                        Temp = Temp_shade, VPD = VPD_shade, 
+                        PM = PM_shade,
+                        cohort = cohorts, leaf = "shade",
+                        stringsAsFactors = F)
+  df = rbind(df_sunlit, df_shade)
+  df$leaf = factor(df$leaf, levels = c("sunlit", "shade"))
+  df_PM = df[df$PM,]
+  g<-ggplot(df, aes(x=psi))+
+    xlab("Leaf pressure (-MPa)")+
+    facet_wrap(~leaf)+
+    theme_bw()
+  if(type=="E") {
+    g<- g + geom_path(aes(y = E, col = cohort))+
+      geom_point(data = df_PM, aes(y=E, col = cohort))+
+      ylab(expression(paste("Flow rate "(mmol%.%s^{-1}%.%m^{-2}))))
+  } 
+  else if(type=="An") {
+    g<- g + geom_path(aes(y = An, col = cohort))+
+      geom_point(data = df_PM, aes(y=An, col = cohort))+
+      ylab(expression(paste("Photosynthesis "(mu*mol*C%.%s^{-1}%.%m^{-2}))))
+  } 
+  else if(type=="Gw") {
+    g<- g + geom_path(aes(y = Gw, col = cohort))+
+      geom_point(data = df_PM, aes(y=Gw, col = cohort))+
+      ylab(expression(paste("Stomatal conductance "(mol%.%s^{-1}%.%m^{-2}))))
+  } 
+  else if(type=="T") {
+    g<- g + geom_path(aes(y = Temp, col = cohort))+
+      geom_point(data = df_PM, aes(y=Temp, col = cohort))+
+      ylab("Temperature (degrees C)")
+  } 
+  else if(type=="VPD") {
+    g<- g + geom_path(aes(y = VPD, col = cohort))+
+      geom_point(data = df_PM, aes(y=VPD, col = cohort))+
+      ylab("Vapour pressure deficit (kPa)")
+  } 
+  g <- g + scale_color_discrete(name="")
+  return(g)
 }
