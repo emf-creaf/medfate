@@ -1,7 +1,7 @@
 #Draws the supply function (E vs PlantPsi) for the current soil state and plant hydraulic parameters
 hydraulics_supplyFunctionPlot<-function(x, soil, draw = TRUE, type="E", speciesNames = FALSE, ylim=NULL) {
   
-  TYPES = c("E","dEdP","psiStem","psiRoot","psiRhizo", "ERhizo", "resistances")
+  TYPES = c("E","dEdP","psiStem","psiRoot","psiRhizo", "ERhizo")
   type = match.arg(type,TYPES)  
   
   psiSoil = soil_psi(soil, model="VG")
@@ -51,17 +51,30 @@ hydraulics_supplyFunctionPlot<-function(x, soil, draw = TRUE, type="E", speciesN
     E = numeric(0)
     dEdP = numeric(0)
     psiStem = numeric(0)
+    psiRoot = numeric(0)
     cohort = character(0)
     xlab = "Leaf pressure (-MPa)"
     for(i in 1:ncoh) {
       minPsi = min(minPsi, min(l[[i]]$psiLeaf, na.rm = T))
       psi = c(psi, -l[[i]]$psiLeaf)
       psiStem = c(psiStem, -l[[i]]$psiStem[,1])
+      psiRoot = c(psiRoot, -l[[i]]$psiRoot)
       dEdP = c(dEdP, l[[i]]$dEdP)
       E = c(E, l[[i]]$E)
-      cohort = c(cohort, rep(cohortnames[i], length(l[[i]]$E)))
+      ci = rep(cohortnames[i], length(l[[i]]$E))
+      cohort = c(cohort, ci)
+      Eri = as.vector(l[[i]]$ERhizo)
+      Psiri = as.vector(-l[[i]]$psiRhizo)
+      Li = gl(n=ncol(l[[i]]$ERhizo), k=nrow(l[[i]]$ERhizo), labels = paste0("Layer ", 1:ncol(l[[i]]$ERhizo)))
+      dfi = data.frame(Psi = rep(-l[[i]]$psiLeaf, ncol(l[[i]]$ERhizo)), 
+                       PsiRhizo = Psiri, ERhizo = Eri, layer = Li, cohort = ci)         
+      if(!exists("dfRhizo")) {
+        dfRhizo  = dfi
+      } else {
+        dfRhizo = rbind(dfRhizo, dfi)
+      }
     }
-    df = data.frame(psi = psi, E = E, dEdP = dEdP, cohort = cohort)
+    df = data.frame(psi = psi, psiStem = psiStem, psiRoot = psiRoot, E = E, dEdP = dEdP, cohort = cohort)
     if(type=="E") {
       ylab = expression(paste("Flow rate    ",(mmol%.%s^{-1}%.%m^{-2})))
       g<-ggplot(df, aes(x = psi, y=E))+
@@ -93,95 +106,68 @@ hydraulics_supplyFunctionPlot<-function(x, soil, draw = TRUE, type="E", speciesN
       return(g)
     }
     else if(type=="psiRoot") {
-      minE = 0
-      for(i in 1:ncoh) {
-        minE = min(minE, min(l[[i]]$psiRoot, na.rm=T))
-      }
-      for(i in 1:ncoh) {
-        if(i==1) {
-          plot(-l[[i]]$psiLeaf, -l[[i]]$psiRoot, type="l", ylim=c(0,-minE+0.1), xlim=c(0,-minPsi),
-               xlab = "Leaf pressure (-MPa)", ylab = "Root pressure (-MPa)", col=i)
-        } else {
-          lines(-l[[i]]$psiLeaf, -l[[i]]$psiRoot, lty=i, col=i)
-        }
-      }
-      abline(h=0, col="gray")
-      abline(a=0, b=1, col="gray")
-      legend("topleft", legend = cohortnames, lty=1:ncoh, col = 1:ncoh, bty="n")
+      ylab = "Root crown pressure (-MPa)"
+      g<-ggplot(df, aes(x = psi, y=psiRoot))+
+        geom_path(aes(col=cohort, linetype=cohort))+
+        scale_color_discrete(name="")+
+        scale_linetype_discrete(name="")
+      g<-g+xlab(xlab)+ylab(ylab)+theme_bw()
+      if(!is.null(ylim)) g<-g+ylim(ylim)
+      return(g)
     }
     else if(type=="ERhizo") {
-      minE = 0
-      maxE = 0
-      for(i in 1:ncoh) {
-        maxE = max(maxE, max(l[[i]]$ERhizo, na.rm=T))
-        minE = min(minE, min(l[[i]]$ERhizo, na.rm=T))
-      }
-      for(i in 1:ncoh) {
-        if(i==1) {
-          matplot(-l[[i]]$psiLeaf, l[[i]]$ERhizo, type="l", lty=i, ylim=c(minE-0.1,maxE+0.1), xlim=c(0,-minPsi),
-                  xlab = "Leaf pressure (-MPa)", 
-                  ylab = expression(paste("Flow rate from/to layers   "(mmolH[2]*O%.%s^{-1}%.%m^{-2}))), 
-                  col = col)
-        } else {
-          matlines(-l[[i]]$psiLeaf, l[[i]]$ERhizo, lty=i, col = col)
-        }
-      }
-      abline(h=0, col="gray")
-      legend("topleft", legend = cohortnames, lty=1:ncoh, bty="n")
-      legend("left", legend = paste("Layer", 1:nlayer), lty=1, col=col, bty="n")
+      ylab = expression(paste("Flow rate from/to layers "(mmol%.%s^{-1}%.%m^{-2})))
+      g<-ggplot(dfRhizo, aes(x = Psi, y=ERhizo))+
+        geom_path(aes(col=cohort, linetype=layer))+
+        scale_color_discrete(name="")+
+        scale_linetype_discrete(name="")+
+        geom_hline(yintercept=0, col="gray")
+      g<-g+xlab(xlab)+ylab(ylab)+theme_bw()
+      if(!is.null(ylim)) g<-g+ylim(ylim)
+      return(g)
     }
     else if(type=="psiRhizo") {
-      minE = 0
-      minPsi = 0
-      for(i in 1:ncoh) {
-        minE = min(minE, min(l[[i]]$psiRhizo, na.rm=T))
-        minPsi = min(minPsi, min(l[[i]]$psiLeaf))
-      }
-      for(i in 1:ncoh) {
-        if(i==1) {
-          matplot(-l[[i]]$psiLeaf, -l[[i]]$psiRhizo, type="l", lty=i, ylim=c(0,-minE+0.1), xlim=c(0,-minPsi),
-                  xlab = "Leaf pressure (-MPa)", ylab = "Rhizosphere pressure (-MPa)", col = col)
-        } else {
-          matlines(-l[[i]]$psiLeaf, -l[[i]]$psiRhizo, lty=i, col = col)
-        }
-      }
-      abline(h=0, col="gray")
-      legend("topleft", legend = cohortnames, lty=1:ncoh, bty="n")
-      legend("topright", legend = paste("Layer", 1:nlayer), lty=1, col=col, bty="n")
+      ylab = "Rhizosphere pressure (-MPa)"
+      g<-ggplot(dfRhizo, aes(x = Psi, y=PsiRhizo))+
+        geom_path(aes(col=cohort, linetype=layer))+
+        scale_color_discrete(name="")+
+        scale_linetype_discrete(name="")
+      g<-g+xlab(xlab)+ylab(ylab)+theme_bw()
+      if(!is.null(ylim)) g<-g+ylim(ylim)
+      return(g)
     }
-    else if(type=="resistances") {
-      for(i in 1:ncoh) {
-        nsteps = length(l[[i]]$E)
-        resmat = matrix(0, nrow=nsteps, ncol = 4)
-        for(j in 1:nsteps) {
-          rrow  = hydraulics_soilPlantResistances(psiSoil = psic,
-                                                  psiRhizo = l[[i]]$psiRhizo[j,],
-                                                  psiStem = l[[i]]$psiStem[j,],
-                                                  PLCstem = PLCstem,
-                                                  psiLeaf = l[[i]]$psiLeaf[j],
-                                                  VGrhizo_kmax[i,],VG_nc,VG_alphac,
-                                                  VCroot_kmax[i,], VCroot_c[i],VCroot_d[i],
-                                                  VCstem_kmax[i], VCstem_c[i],VCstem_d[i], 
-                                                  VCleaf_kmax[i], VCleaf_c[i],VCleaf_d[i])
-          resmat[j,] = 100*rrow/sum(rrow)
-        }
-        if(i==1) {
-          plot(-l[[i]]$psiLeaf, resmat[,1], type="l", ylim=c(0,100), xlim=c(0,-minPsi),
-               xlab = "Leaf pressure (-MPa)", 
-               ylab = expression(paste("Percent resistances")), 
-               col=i, lty=1)
-          lines(-l[[i]]$psiLeaf, resmat[,2], lty=2, col=i)
-          lines(-l[[i]]$psiLeaf, resmat[,3], lty=3, col=i)
-          lines(-l[[i]]$psiLeaf, resmat[,4], lty=4, col=i)
-        } else {
-          lines(-l[[i]]$psiLeaf, resmat[,1], lty=1, col=i)
-          lines(-l[[i]]$psiLeaf, resmat[,2], lty=2, col=i)
-          lines(-l[[i]]$psiLeaf, resmat[,3], lty=3, col=i)
-          lines(-l[[i]]$psiLeaf, resmat[,4], lty=4, col=i)
-        }
-      }
-    }
+    # else if(type=="resistances") {
+    #   for(i in 1:ncoh) {
+    #     nsteps = length(l[[i]]$E)
+    #     resmat = matrix(0, nrow=nsteps, ncol = 4)
+    #     for(j in 1:nsteps) {
+    #       rrow  = hydraulics_soilPlantResistances(psiSoil = psic,
+    #                                               psiRhizo = l[[i]]$psiRhizo[j,],
+    #                                               psiStem = l[[i]]$psiStem[j,],
+    #                                               PLCstem = PLCstem,
+    #                                               psiLeaf = l[[i]]$psiLeaf[j],
+    #                                               VGrhizo_kmax[i,],VG_nc,VG_alphac,
+    #                                               VCroot_kmax[i,], VCroot_c[i],VCroot_d[i],
+    #                                               VCstem_kmax[i], VCstem_c[i],VCstem_d[i], 
+    #                                               VCleaf_kmax[i], VCleaf_c[i],VCleaf_d[i])
+    #       resmat[j,] = 100*rrow/sum(rrow)
+    #     }
+    #     if(i==1) {
+    #       plot(-l[[i]]$psiLeaf, resmat[,1], type="l", ylim=c(0,100), xlim=c(0,-minPsi),
+    #            xlab = "Leaf pressure (-MPa)", 
+    #            ylab = expression(paste("Percent resistances")), 
+    #            col=i, lty=1)
+    #       lines(-l[[i]]$psiLeaf, resmat[,2], lty=2, col=i)
+    #       lines(-l[[i]]$psiLeaf, resmat[,3], lty=3, col=i)
+    #       lines(-l[[i]]$psiLeaf, resmat[,4], lty=4, col=i)
+    #     } else {
+    #       lines(-l[[i]]$psiLeaf, resmat[,1], lty=1, col=i)
+    #       lines(-l[[i]]$psiLeaf, resmat[,2], lty=2, col=i)
+    #       lines(-l[[i]]$psiLeaf, resmat[,3], lty=3, col=i)
+    #       lines(-l[[i]]$psiLeaf, resmat[,4], lty=4, col=i)
+    #     }
+    #   }
+    # }
   }
-  if(draw) invisible(l)
-  else return(l)
+  return(l)
 }
