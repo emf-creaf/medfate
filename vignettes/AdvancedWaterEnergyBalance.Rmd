@@ -162,10 +162,18 @@ Calls to `hydraulics_supplyFunctionPlot()` always need both a `spwbInput` object
 
 The soil water balance model determines stomatal conductance and transpiration separately for sunlit and shade leaves. Stomatal conductance is determined after building a photosynthesis function corresponding to the supply function and finding the value of stomatal conductance that maximizes carbon revenue while avoiding hydraulic damage (a profit-maximization approach). Given a meteorological and soil inputs and a chosen day and timestep, function `transp_stomatalRegulationPlot()` allows displaying the supply and photosynthesis curves for sunlit and shade leaves, along with an indication of the values corresponding to the chosen stomatal aperture:
 
-```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 17}
+```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 3.5}
 d = 100
 transp_stomatalRegulationPlot(x, examplesoil, examplemeteo, day = d, timestep=12,
-                              latitude = 41.82592, elevation = 100)
+                              latitude = 41.82592, elevation = 100, type="E")
+transp_stomatalRegulationPlot(x, examplesoil, examplemeteo, day = d, timestep=12,
+                              latitude = 41.82592, elevation = 100, type="An")
+transp_stomatalRegulationPlot(x, examplesoil, examplemeteo, day = d, timestep=12,
+                              latitude = 41.82592, elevation = 100, type="Gw")
+transp_stomatalRegulationPlot(x, examplesoil, examplemeteo, day = d, timestep=12,
+                              latitude = 41.82592, elevation = 100, type="T")
+transp_stomatalRegulationPlot(x, examplesoil, examplemeteo, day = d, timestep=12,
+                              latitude = 41.82592, elevation = 100, type="VPD")
 ```
 
 
