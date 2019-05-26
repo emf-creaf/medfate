@@ -1,0 +1,83 @@
+---
+title: "SimpleModelSPWB"
+author: "Miquel De Cáceres"
+date: "`r Sys.Date()`"
+output:
+  pdf_document:
+    toc: yes
+  html_document:
+    df_print: paged
+    toc: yes
+fontsize: 11pt
+documentclass: article
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Model overview
+
+## Design principles
+
+The water balance model calculates temporal variations in soil moisture on a daily step basis for the input forest stand and for the period corresponding to input weather data. 
+
+The model considers only the vertical spatial dimension of the stand and not the horizontal distribution of
+plants within it. In other words, the model is not spatially explicit (i.e., plants do not interact for space explicitly). Still, the stand is divided into groups of plants, here referred to as *plant cohorts* of different species, height and leaf area index ($LAI$). Height and $LAI$ values determine competition for light. $LAI$ values also drive competition for water, along with root distribution. The soil water balance follows the design principles of SIERRA (Mouillot et al., 2001, Ruffault et al., 2014, 2013) and BILJOU (Granier et al., 2007, 1999), although some features are taken from other models (Kergoat 1998). Potential evapotranspiration ($PET$) is given as input and the model determines maximum canopy transpiration ($Tr_{\max}$) using an empirical relationship between the $LAI$ of the stand and the ratio $Tr_{\max}/PET$ (Granier et al. 1999). Actual plant transpiration is estimated using a function that depends on current soil moisture levels, species-specific drought resistance, fine root distribution and the degree of shading of the target plant cohort.
+
+
+## State variables
+The model has the following state variables:
+
++ Cumulative growth degree days, $GDD$, are tracked by the model and determine leaf phenological status of winter deciduous species.
++ Daily soil moisture content dynamics on each layer $s$ are tracked using $W_s = \theta(\Psi_s)/ \theta_{fc,s}$, the **proportion of volumetric soil moisture in relation to field capacity**, where field capacity, $\theta_{fc,s}$, is assumed to correspond to $\Psi_{fc} = -0.033$ MPa. Note that $W_s$ values larger than one are possible if the soil is between field capacity and saturation (which can happen if deep drainage is not allowed).
++ If snow accumulation/melting is considered, the model tracks $S_{snow}$, the snow water equivalent (in mm) of the snow pack storage over the surface.
++ If irreversible cavitation is activated, the model tracks $P_{embolized,i}$, the maximum value of daily drought stress so far experienced.
+
+
+## Water balance
+Daily variations in soil water content (mm) can be summarized as:
+
+$$\Delta{SWC} = Pr + Sm - In - Ru - Dd - Es -Tr$$
+
+where $Pr$ is precipitation as rainfall, $Sm$ is water from melting the snow pack (if considered), $In$ is the interception loss (i.e., water evaporated after being intercepted by the canopy), $Ru$ is surface runoff, $Dd$ is deep drainage (i.e. water percolated to layers beyond soil depth), $Es$ is evaporation from soil and $Tr$ is plant transpiration. If snow dynamics are considered, the water balance of the snow pack is defined as:
+
+$$\Delta{S_{snow}} = Ps - Sm$$
+
+where $Ps$ is precipitation as snowfall and $Sm$ is snow melt.
+
+## Process scheduling
+
+Every day water balance is perfomed as follows. The model first updates leaf area values according to the phenology of species and calculates light extinction. After that, the model updates soil water content of soil layers in several steps:
+
++ If snow dynamics are included, increase snow pack from snow precipitation ($Ps$) and decreases it from snow melting ($Sm$);
++ Increase soil moisture due to rainfall ($Pr$), surface runon ($Ro$) and snow melting ($Sm$), after accounting for interception loss ($In$), surface runoff ($Ru$) and deep drainage ($Dd$);
++ Decrease water content due to bare soil evaporation ($Es$).
++ Determine transpiration, photosynthesis and drought stress for each plant cohort.
++ Decrease water content due to plant transpiration ($Tr$).
+
+# Model inputs and outputs
+
+## Soil description
+
+Soil can be described using between 1 and 5 soil layers. For each soil layer $s$ the following physical parameters are needed for each soil layer (see function `defaultSoilParams()`):
+
++ $Z_{s}$ [`widths`]: Soil layer width ($d_s$, in mm).
++ $P_{clay,s}$ [`clay`]: Percent of clay.
++ $P_{sand,s}$ [`sand`]: Percent of sand.
++ $OM$ [`om`]: Percentage of organic mater per dry weight (can be missing).
++ $BD_{s}$ [`bd`]: Bulk density (g/cm3) of each soil layer.
++ $P_{rocks,s}$ [`rfc`]: Percentage of rock fragment content ($P_{rocks,s}$).
+
+Soil texture (i.e. percent of sand, silt and clay), bulk density and rock fragment content can differ between soil layers. Specifying a deep rocky layer is important because Mediterranean plants may extend their roots into cracks existing in the parent rock (Ruffault et al., 2013). For those users lacking soil information, package **medfate** provides a function to get soil information from SoilGrids.org (see function `soilgridsParams()`).
+
+## Water retention curves
+
+Water retention curve of a soil layer $s$ is the relationship between the water content, $\theta_s$ (in $m^3 \cdot m^{-3}$ of soil, excluding rock fragments), and the soil water potential, $\Psi_s$ (in MPa). This curve is characteristic for different types of soil, and is also called the soil moisture characteristic curve. Two water retention curve models are provided:
+
+1. *Saxton model*: In this model, volumetric soil moisture $\theta(\Psi_s)$ corresponding to a given water potential $\Psi$ (in MPa) below $\Psi_{fc}$ is calculated using: 
+$$\theta(\Psi) = (\Psi/A)^{(1/B)}$$ 
+where $A$ and $B$ depend on the texture and, if available, organic matter in the soil layer. If organic matter is available, $A$ and $B$ are calculated $P_{clay}$, $P_{sand}$ and $OM$ following Saxton and Rawls (2006).Otherwise, they are calculated from $P_{clay}$ and $P_{sand}$ as indicated in Saxton et al. (1986). Volumetric changes between field capacity and saturation are estimated using a linear function.
+2. *Van Genuchten model*: The well known van Genuchten (1980) model is:
+$$\theta(\Psi) = \theta_{res}+\frac{\theta_{sat}-\theta_{res}}{\left[1+ (\alpha \cdot \Psi)^n \right]^{1-1/n}}$$
+where $\theta(\psi)$ is the water retention, $\theta_{sat}$ is the saturated water content, $\theta_{res}$ is the residual water content, $\alpha$ is related to the inverse of the air entry pressure (and here has to be expressed in MPa$^{-1}$), and $n$ is a measure of the pore-size distribution.
