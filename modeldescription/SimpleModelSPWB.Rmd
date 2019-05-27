@@ -204,6 +204,16 @@ Control parameters are a list of parameter values, initialized using function `d
 + `defaultWindSpeed [= 5]`: Default value for wind speed (in $m \cdot s^{-1}$) when this is missing (only used for leaf fall).
 + `cavitationRefill [= TRUE]`: If `FALSE` the model operates in a irreversible cavitation mode.
 
+## Model output
+Function `spwb` returns a list object whose elements are data tables. Each table has dates as rows and has different output variables:
+
++ `WaterBalance`: Components of the climatic and soil daily water balance (i.e. net precipitation, infiltration, runoff, plant transpiration...).
++ `Soil`: Daily variation of soil variables  (volume, moisture relative to field capacity, water potential) for soil layers.
++ `PlantLAI`: Daily leaf area index for each plant cohort.
++ `PlantTranspiration`: Daily transpiration (in mm) for each plant cohort.
++ `PlantPhotosynthesis`: Daily net photosynthesis (in g C·m-2) for each plant cohort.
++ `PlantPsi`: Daily water potential of each plant (in MPa).
++ `PlantStress`: Daily stress level suffered by each plant cohort (relative whole-plant conductance).
 
 # Details of processes
 
