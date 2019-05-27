@@ -12,11 +12,9 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
     return(g)
   }
   dynamicsplot<-function(df, xlab="", ylab="", title=NULL) {
-    Observed = df$Observed
-    Modelled = df$Modelled
-    g<-ggplot(df, aes(x=Dates))+
-      geom_path(aes(y=Observed, col="Observed"))+
-      geom_path(aes(y=Modelled, col="Modelled"))+
+    g<-ggplot(df, aes_string(x="Dates"))+
+      geom_path(aes_(y=~Observed, col="Observed"))+
+      geom_path(aes_(y=~Modelled, col="Modelled"))+
       xlab(xlab)+
       ylab(ylab)+
       scale_color_manual(name="", values=c("Observed"="black", "Modelled"= "red"))+
