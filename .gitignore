@@ -15,6 +15,8 @@ modeldescription/*.log
 modeldescription/*.pdf
 modeldescription/*.gz
 modeldescription/*.toc
+modeldescription/_book/*
+modeldescription/_bookdown_files/*
 modeltests/*.tex
 modeltests/*.log
 modeltests/*.pdf
