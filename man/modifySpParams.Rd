@@ -13,6 +13,7 @@ modifySpParams(SpParams, customParams, subsetSpecies = TRUE)
 modifyCohortParams(x, customParams)
 }
 \arguments{
+  \item{x}{A model input object of class \code{\link{spwbInput}}.}
   \item{SpParams}{A species parameter data frame, typically \code{\link{SpParamsMED}}.}
   \item{customParams}{A data frame with new parameter values (see details).}
   \item{subsetSpecies}{A flag to indicate that the only species mentioned in \code{customParams} should be returned.}

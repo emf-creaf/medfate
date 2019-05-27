@@ -2,19 +2,14 @@ import(sp)
 import(spdep)
 import(methods)
 import(meteoland)
-importFrom("stats", "aggregate","filter","uniroot", "median")
+import(ggplot2)
+importFrom("stats", "aggregate","filter","uniroot", "median",
+           "cor","quantile")
 importFrom("grDevices", "rainbow")
 importFrom("graphics", "axis", "abline", "barplot", "legend", "lines", "matplot","mtext",
            "matlines", "par", "polygon","axis.Date")
 importFrom("utils", "setTxtProgressBar", "txtProgressBar", "head", "tail")
 importFrom("GSIF", "REST.SoilGrids","over")
-importFrom("ggplot2", "ggplot", "aes", 
-           "geom_line", "geom_path", "geom_area", "geom_abline", "geom_hline", 
-           "geom_vline", "geom_point", "geom_pointrange",  "geom_smooth",
-           "scale_color_manual", "scale_fill_manual","scale_color_discrete", 
-           "scale_linetype_discrete", "scale_linetype_manual",
-           "labs", "xlim", "ylim", "xlab", "ylab", "facet_wrap", "vars",
-           "theme_bw")
 useDynLib(medfate, .registration = TRUE)
 exportPattern("^[[:alpha:]]+")
 

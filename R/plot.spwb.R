@@ -121,7 +121,8 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
   } 
   else if(type=="SoilVol") {
     if(is.null(ylab)) ylab = "Soil water content (mm)"
-    MLM = data.frame(Total = Soil$MLTot, Soil[,paste("ML",1:nlayers,sep=".")])
+    MLM = data.frame("Total" = Soil$MLTot, 
+                     Soil[,paste("ML",1:nlayers,sep=".")])
     return(.multiple_dynamics(as.matrix(MLM), ylab = ylab, ylim = ylim,
                               xlab=xlab, labels = c("Total", paste("Layer", 1:nlayers))))
   } 

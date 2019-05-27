@@ -92,6 +92,8 @@ plot(-psiVec, kstem, type="l",ylab="Xylem conductance (mmol·m-2·s-1·MPa-1)",
 xlab="Canopy pressure (-MPa)", lwd=1.5,ylim=c(0,kstemmax))
 
 
+#Load example dataset
+data(exampleforest)
 #Default species parameterization
 data(SpParamsMED)
 

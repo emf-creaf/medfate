@@ -28,6 +28,7 @@ hydrology_interceptionPlot(x, SpParams, ER = 0.05, gdd = NA, throughfall = FALSE
   \item{Rconv, Rsyn}{Rainfall rate for convective storms and synoptic storms, respectively, in mm/h.}
   \item{x}{An object of class \code{\link{spwbInput}}.}
   \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}} and \code{\link{SpParamsMED}}).}
+  \item{gdd}{Growth degree days (in Celsius).}
   \item{throughfall}{Boolean flag to plot relative throughfall instead of percentage of intercepted rainfall.}
 }
 \details{

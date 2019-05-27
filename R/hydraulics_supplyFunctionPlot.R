@@ -66,15 +66,21 @@ hydraulics_supplyFunctionPlot<-function(x, soil, draw = TRUE, type="E", speciesN
       Eri = as.vector(l[[i]]$ERhizo)
       Psiri = as.vector(-l[[i]]$psiRhizo)
       Li = gl(n=ncol(l[[i]]$ERhizo), k=nrow(l[[i]]$ERhizo), labels = paste0("Layer ", 1:ncol(l[[i]]$ERhizo)))
-      dfi = data.frame(Psi = rep(-l[[i]]$psiLeaf, ncol(l[[i]]$ERhizo)), 
-                       PsiRhizo = Psiri, ERhizo = Eri, layer = Li, cohort = ci)         
+      dfi = data.frame("Psi" = rep(-l[[i]]$psiLeaf, ncol(l[[i]]$ERhizo)), 
+                       "PsiRhizo" = Psiri, 
+                       "ERhizo" = Eri, 
+                       "layer" = Li, "cohort" = ci)         
       if(!exists("dfRhizo")) {
         dfRhizo  = dfi
       } else {
         dfRhizo = rbind(dfRhizo, dfi)
       }
     }
-    df = data.frame(psi = psi, psiStem = psiStem, psiRoot = psiRoot, E = E, dEdP = dEdP, cohort = cohort)
+    df = data.frame("psi" = psi, 
+                    "psiStem" = psiStem, 
+                    "psiRoot" = psiRoot, 
+                    "E" = E, "dEdP" = dEdP, 
+                    "cohort" = cohort)
     if(type=="E") {
       ylab = expression(paste("Flow rate    ",(mmol%.%s^{-1}%.%m^{-2})))
       g<-ggplot(df, aes(x = psi, y=E))+

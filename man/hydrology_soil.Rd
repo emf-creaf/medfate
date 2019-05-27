@@ -12,7 +12,7 @@ Function \code{hydrology_infiltrationAmount} calculates the amount of water that
 }
 \usage{
 hydrology_infiltrationAmount(input, Ssoil) 
-hydrology_infiltrationRepartition(I, dVec, macro)
+hydrology_infiltrationRepartition(I, dVec, macro, a = -0.005, b = 3)
 hydrology_soilEvaporationAmount(DEF,PETs, Gsoil)
 hydrology_soilEvaporation(soil, soilFunctions, pet, LgroundSWR, modifySoil = TRUE)
 hydrology_snowMelt(tday, rad, LgroundSWR, elevation)
@@ -34,6 +34,7 @@ hydrology_snowMelt(tday, rad, LgroundSWR, elevation)
   \item{tday}{Average day temperature (ºC).}
   \item{rad}{Solar radiation (in MJ/m2/day).}
   \item{elevation}{Altitude above sea level (m).}
+  \item{a,b}{Parameters of the extinction function used for water infitration.}
 }
 \details{
 See description of infiltration and soil evaporation processes in De Caceres et al. (2015).

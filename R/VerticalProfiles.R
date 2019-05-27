@@ -133,7 +133,7 @@ vprofile_windExtinction<-function(x, SpParams, wind20H, z = NULL, gdd = NA, draw
   LAIc = fls$canopyLAI
   canopyHeight = fls$canopyTopHeight
   wep = .windExtinctionProfile(z, wind20H, LAIc, canopyHeight)
-  df = data.frame(WS = wep, Z = z)
+  df = data.frame("WS" = wep, "Z" = z)
   if(draw) {
     g<-ggplot(df, aes(x=WS, y=Z))+
       geom_path()+

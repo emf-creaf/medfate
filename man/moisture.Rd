@@ -24,7 +24,8 @@ moisture_tissueRWC(psiSym, pi0, epsilon,
 moisture_tissueFMC(RWC, density, d0 = 1.54)
 moisture_pressureVolumeCurvePlot(x, segment="leaf", 
                     fraction = "all",
-                    psiVec =  seq(-0.1, -8.0, by =-0.01), speciesNames = FALSE)                    
+                    psiVec =  seq(-0.1, -8.0, by =-0.01),
+                    speciesNames = FALSE)                    
 }
 
 %- maybe also 'usage' for other objects documented here.
