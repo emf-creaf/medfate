@@ -10,7 +10,6 @@ src/*.dll
 medfate.Rproj
 src-i386/*.*
 src-x64/*.*
-modeldescription/*.tex
 modeldescription/*.log
 modeldescription/*.pdf
 modeldescription/*.gz
