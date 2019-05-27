@@ -1,0 +1,94 @@
+# Advanced soil-plant water balance
+
+## Design principles
+
+The model performs soil water balance and energy balance for the input forest stand and for the period corresponding to input weather data. Soil water balance is calculated on a daily step basis for the input forest stand and for the period corresponding to input weather data. The model considers only the vertical spatial dimension of the stand, and not the horizontal distribution of plants within it. Still, the stand is divided into groups of plants (here referred to as `plant cohorts') of different species, height and leaf area index ($LAI$). As hydrological processes, the model includes water interception loss (Gash et al. 1995), plant transpiration and hydraulic redistribution, evaporation from soil (Ritchie 1972) and the partition between infiltration and runoff (Boughton 1989). Water exceeding soil water holding capacity is lost via deep drainage. For plant transpiration, the model determines subdaily regulation of leaf water conductance and actual transpiration involving detailed calculations of hydraulics and photosynthesis (Sperry et al. 2016). This level of complexity allows a precise estimation of photosynthesis and hydraulic redistribution of water among soil layers.
+
+
+Radiation and energy balances are conducted subdaily at two levels: canopy/soil and leaf. One one hand the model keeps track of temperature variation of the air in the canopy (i.e. canopy energy balance) and in the soil (i.e. soil energy balance) as the result of energy exchanges between them and with the atmosphere. These energy balance equations are very similar to those of Best et al. (2011) for model JULES.  On the other, the model performs the energy balance at the leaf level to determine transpiration (Sperry et al. 2016). At this scale, radiation inputs include shortwave radiation from the atmosphere absorbed by the leaf and absorbed longwave radiation coming from both the atmosphere and the canopy itself. Leaf temperature is determined assuming that the temperature of the air is that of the canopy. After performing stomatal regulation, the model upscales the transpiration flux at the canopy level and the corresponding latent heat is used to complete the calculation of the energy balance at the canopy level. Note that the latent heat fluxes from evaporation from the soil and of intercepted water are not currently included in the energy balance.
+
+## State variables
+
+The model has the following state variables:
++ Cumulative growth degree days, $GDD$, are tracked by the model and determine leaf phenological status of winter deciduous species.
++ Daily soil moisture content dynamics on each layer $s$ are tracked using $W = \theta(\Psi_s)/ \theta_{fc,s}$, the $proportion of volumetric soil moisture in relation to field capacity$, where field capacity, $\theta_{fc,s}$, is assumed to correspond to $\Psi_{fc} = -0.033$ MPa. Soils are not allowed to contain more water than dictated by their field capacity.
++ The temperature of the canopy and of each soil layer ($T_c$ and $T_s$; both in ºC) are tracked for every subdaily step.
++ If irreversible cavitation is activated, the model also tracks $P_{embolized,i}$, the maximum value of daily drought stress so far experienced.
+
+## Water balance
+Daily variations in soil water content (mm) can be summarized as:
+
+\begin{equation}
+\Delta{SWC} = Pr + Sm - In - Ru - Dd - Es -Tr
+\end{equation}
+
+where $Pr$ is precipitation as rainfall, $Sm$ is water from melting the snow pack (if considered), $In$ is the interception loss (i.e., water evaporated after being intercepted by the canopy), $Ru$ is surface runoff, $Dd$ is deep drainage (i.e. water percolated to layers beyond soil depth), $Es$ is evaporation from soil and $Tr$ is plant transpiration. If snow dynamics are considered, the water balance of the snow pack is defined as:
+
+\begin{equation}
+\Delta{S_{snow}} = Ps - Sm
+\end{equation}
+
+where $Ps$ is precipitation as snowfall and $Sm$ is snow melt.
+
+## Energy balance
+The canopy absorbs shortwave radiation from the atmosphere ($K_{abs,ca}$). It also absorbs longwave counterradiation from the atmosphere ($L_{abs,ca}$) and longwave radiation emmited from the soil ($L_{abs,cs}$). These inputs are counterbalanced by the longwave radiation emmited by the canopy ($L_{em,c}$) in both cases. Other energy fluxes considered are convective exchanges between the canopy and atmosphere ($H_{ca}$) and between the canopy and the soil ($H_{cs}$). Finally, energy is released to the atmosphere through latent heat ($LE_{c}$) produced via transpiration (so far, interception and soil evaporation are not included). The instantaneous energy balance equation for the canopy is thus:
+\begin{equation}
+  C_{c} \cdot \frac{\delta T_{c}}{\delta t} = K_{abs,ca} + (L_{abs,ca} - L_{em,c}) + (L_{abs,cs} - L_{em,c}) - LE_{c} - H_{ca} - H_{cs} 
+\end{equation}
+where $C_{c}$ is the canopy thermal capacitance. Like the canopy, the soil absorbs short- and longwave radiation from the atmosphere ($K_{abs,sa}$ and $L_{abs,sa}$). It also absorbs longwave radiation released by the canopy ($L_{abs,sc} = L_{em,c}$) and emmits longwave radiation ($L_{em,s}$). Note that $L_{abs,cs} \leq L_{em,s}$ because part of the radiation emmitted by the soil is sent to the atmosphere without being intercepted by the canopy. Finally, it also exchanges convective energy with the canopy ($H_{cs}$). The energy balance equation for the soil is:
+\begin{equation}
+  C_{s} \cdot \frac{\delta T_{s}}{\delta t} = K_{abs,sa} + L_{abs,sa} - L_{em,s} + L_{abs,sc} + H_{cs} 
+\end{equation}
+where $C_{s}$ is the soil thermal capacitance.
+
+## Process scheduling
+
+Every day the model performs the following actions: 
+
+* Update leaf area values according to the phenology of species.
+* Increase soil moisture due to precipitation after accounting for canopy interception loss, surface runoff and deep drainage.
+* Determine subdaily temperature and direct/diffuse irradiance variations.
+* Determine short- and longwave radiation absorved by the canopy and the soil at subdaily steps.
+* Determine plant transpiration, photosynthesis and close soil/canopy energy balance at subdaily steps. This involves the following actions:
+  + Determine longwave radiation emmited by soil and canopy, according to their temperature.
+  + Update the water supply function of each plant cohort, according to the hydraulic model and the current soil water potential.
+  + Calculate leaf temperature and photosynthesis, for shade and sunlit leaves of each plant cohort, corresponding to each transpiration value of the supply function.
+  + Determine stomatal conductance, transpiration and photosynthesis on shade and sunlit leaves of each plant cohort according to a profit maximization strategy.
+  + Update soil moisture after scaling transpiration from leaf to canopy level.
+  + Complete energy balance of the canopy and the soil (after translating plant transpiration to latent heat and calculating convective heat exchange for both the canopy and the soil). 
+* Determine drought stress index for each plant cohort.
+* Decrease water content due to bare soil evaporation, closing the water balance.
+
+
+## Metereological input
+Weather input data must include variables calculated at the **daily** scale.
+
++ $T_{mean}$ [`MeanTemperature`]: Mean daily temperature (in $^{\circ} \mathrm{C}$).
++ $Rad$ [`Radiation`]: Solar radiation, after accounting for clouds (in $MJ \cdot m^{-2}$), only necessary if snow pack dynamics are simulated (i.e., if \texttt{snowpack = TRUE}).
++ $P$ [`Precipitation`]: Daily precipitation (in $L \cdot m^{-2}$ = mm of water).
++ $PET$ [`PET`]: Daily potential evapotranspiration (in  $L \cdot m^{-2}$ = mm of water), preferably calculated using Penman's equation.
+
+Optionally, the user may also specify values of wind speed ($u$, in m·s$^{-1}$, `WindSpeed`) that are used to control leaf fall in autumn. We recommend meteorological input to be generated using package **meteoland** [@DeCaceres2018].
+
+
+## Control parameters
+Control parameters are a list of parameter values, initialized using function `defaultControl()`, that the user can modify to change the general behavior of the model. The control values relevant for the simple water balance model are:
+
++ `verbose [=TRUE]`: Whether extra console output is desired during simulations.
++ `soilFunctions [= "SX"]`: Water retention curve model, either "SX" (for Saxton) or "VG" (for Van Genuchten).
++ `snowpack [= TRUE]`:  Whether dynamics of snow pack are included.
++ `drainage [= TRUE]`:  Whether water exceeding the field capacity of the bottom layer is lost by deep drainage into a non-reachable compartment.
++ `transpirationMode [= "Granier"]`: Transpiration model, in this case "Granier".
++ `defaultWindSpeed [= 5]`: Default value for wind speed (in $m \cdot s^{-1}$) when this is missing (only used for leaf fall).
++ `cavitationRefill [= TRUE]`: If `FALSE` the model operates in a irreversible cavitation mode.
+
+## Model output
+Function `spwb` returns a list object whose elements are data tables. Each table has dates as rows and has different output variables:
+
++ `WaterBalance`: Components of the climatic and soil daily water balance (i.e. net precipitation, infiltration, runoff, plant transpiration...).
++ `Soil`: Daily variation of soil variables  (volume, moisture relative to field capacity, water potential) for soil layers.
++ `PlantLAI`: Daily leaf area index for each plant cohort.
++ `PlantTranspiration`: Daily transpiration (in mm) for each plant cohort.
++ `PlantPhotosynthesis`: Daily net photosynthesis (in g C·m-2) for each plant cohort.
++ `PlantPsi`: Daily water potential of each plant (in MPa).
++ `PlantStress`: Daily stress level suffered by each plant cohort (relative whole-plant conductance).

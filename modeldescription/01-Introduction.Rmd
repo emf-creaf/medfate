@@ -1,6 +1,22 @@
+# (PART) Preliminaries {-}
+
 # Introduction {#intro}
 
-You can label chapter and section titles using `{#label}` after them, e.g., we can reference Chapter \@ref(intro). If you do not manually label them, there will be automatic labels anyway, e.g., Chapter \@ref(methods).
+## Package installation
+
+
+The **medfate** package can be installed from CRAN or Github:
+
+```{r eval=FALSE}
+install.packages("medfate")
+# or the development version
+# devtools::install_github("miquelcaceres/medfate")
+```
+
+
+## Description
+
+You can label chapter and section titles using `{#label}` after them, e.g., we can reference Chapter \@ref(intro). If you do not manually label them, there will be automatic labels anyways.
 
 Figures and tables with captions will be placed in `figure` and `table` environments, respectively.
 
@@ -18,4 +34,3 @@ knitr::kable(
 )
 ```
 
-You can write citations, too. For example, we are using the **bookdown** package [@R-bookdown] in this sample book, which was built on top of R Markdown and **knitr** [@xie2015].

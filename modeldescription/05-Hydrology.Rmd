@@ -1,0 +1,274 @@
+# (PART) Details of processes {-}
+
+# Hydrology
+
+## Snow pack dynamics
+
+Precipitation is considered be snow when $T_{mean}<0$. Interception of snow by the canopy is neglected, and all snow is assumed to accumulate in a single storage compartment $S_{snow}$ over the soil (i.e. canopy snow storage capacity is neglected). A very simple snow submodel is used for snow pack dynamics (accumulation and melt), taken from @Kergoat1998. When mean air temperature is above 0 Celsius $T_{mean}>0$, a simple energy budget relates snow melt, $Sm$ (mm), to air temperature and soil-level radiation (see function \texttt{hydrology\_snowMelt}):
+\begin{equation}
+Sm = \frac{Rad\cdot L^{SWR}_{ground}\cdot (1-\alpha_{ice}) + \tau_{day} \cdot T_{mean} \cdot \rho \cdot C_p/r_{s}}{\lambda_{ice}}
+\end{equation}
+where $Rad$ is solar radiation (MJ·m$^{-2}$), $L^{SWR}_{ground}$ is the fraction of (short-wave) radiation reaching the ground, $\alpha_{ice} = 0.9$ is the albedo of snow, $\tau_{day} = 86400$ is the day duration in s, $\rho$ is the air density (depending on temperature and elevation), $C_{p} = 1013.86 \cdot 10^{-6}$ MJ·kg$^{-1}$·C$^{-1}$ is the specific heat capacity of the air and $r_{s} = 100$ s·m$^{-1}$ is the snow aerodynamic resistance and $\lambda_{ice} = 0.33355$MJ·kg is the (latent) heat of fusion of snow.
+
+## Rainfall interception loss
+
+Interception loss is only modelled for water precipitation (i.e. snow interception is not modelled). Rainfall interception loss, $In$, is estimated using the @Gash1995 analytical interception model for sparse canopies, where rain is assumed to fall in a single event during the day. First, the amount of rainfall needed to saturate the canopy is calculated: 
+\begin{equation}
+P_G = - \frac{S/C}{(E/R)} \cdot \ln(1-(E/R))
+\end{equation}
+where $S$ is the canopy water storage capacity (in mm) –  i.e. the minimum amount
+of water needed to saturate the canopy –, $C$ is the canopy cover and $(E/R)$ is
+the ratio of evaporation rate to rainfall rate during the rainfall event.
+Simplifying assumptions are made to determine $(E/R)$. Values of the Evaporation-to-rainfall ratio are calculated from daily potential evapotranspiration and rainfall, while accounting for seasonal variation in rainfall intensity (mm/h). Minimum values for rainfall intensity are assumed for convective storms (5.6 mm/h) and synoptic storms (1.5 mm/h) from @Miralles2010. Synoptic storms are assumed between December and June, and convective storms are assumed for the remaining months, as typical in the Mediterranean Basin.
+
+The amount of water evaporated from interception, $I$ (mm), is calculated as:
+\begin{eqnarray}
+In = C\cdot P_G+C\cdot(E/R)\cdot(P-P_G) \: {if}\: P > P_G \\
+In = C\cdot P\: {if}\: P \leq P_G
+\end{eqnarray}
+where $P$ is the daily gross precipitation (in mm). Net rainfall, $Pr_{net}$, is
+calculated as the difference between gross rainfall and interception loss.
+Although interception models are normally applied to single-canopy stands, we
+apply the sparse Gash model to the whole stand (including shrubs). Moreover, in
+our implementation stem interception is lumped with canopy interception, so that
+$S$ represents both. Following @Watanabe1996 we estimate $S$, the
+canopy water storage capacity, from adjusted LAI values:
+\begin{equation}
+S=\sum_{i}{s_{water,i}\cdot LAI_{i}^{\phi}}
+\end{equation}
+where $s_{water,i}$ is the depth of water that can be retained by leaves and
+trunks of a  species $i$ per unit of leaf area index (mm·LAI$^{-1}$). To estimate
+the stand cover, $C$, we use the complement of the percentage of PAR that reaches
+the ground, i.e. $C = 1 - L^{PAR}_{ground}$ [@Deguchi2006]. Fig. 1 below
+shows examples of relative throughfall, calculated according to the interception
+model, under different situations (see function `hydrology_rainInterception()`). 
+
+```{r, echo=FALSE, fig.width=7, fig.height=7,  fig.cap="Examples of canopy interception with different S (canopy water storage capacity), E/R (ratio between evaporation and rainfall rates) and p (throughfall coefficient; p = 1 - C)"}
+par(mfrow=c(2,2), mar=c(5,5,5,1))
+throughfallMatrixGash<-function(P = seq(1,50, by=1), Cm = seq(1,5, by=1), ER = 0.08,p=0.8) {
+  m2<-P-hydrology_rainInterception(P,Cm[1],p,ER=ER)
+  for(i in 2:length(Cm)) {
+    m2<-rbind(m2,P-hydrology_rainInterception(P,Cm[i],p,ER=ER))
+  }
+  colnames(m2)<-P
+  rownames(m2)<-Cm
+  return(m2)
+}
+
+Cm = c(0.5,seq(1,4, by=1))
+P = seq(1,50, by=1)
+
+m2 = throughfallMatrixGash(P=P, p=0.2, Cm=Cm,ER = 0.05)
+rt = sweep(m2,2,P,"/")*100
+matplot(t(rt), type="l", axes=TRUE, ylab="Relative throughfall (%)", 
+        xlab="Gross rainfall (mm)", xlim=c(0,length(P)), 
+        lty=1:length(Cm), col="black", ylim=c(0,100))
+title(main="p = 0.2 E/R = 0.05")
+m2 = throughfallMatrixGash(P=P, p=0.8, Cm=Cm,ER = 0.05)
+rt = sweep(m2,2,P,"/")*100
+matplot(t(rt), type="l", axes=TRUE, ylab="Relative throughfall (%)", 
+        xlab="Gross rainfall (mm)", xlim=c(0,length(P)), 
+        lty=1:length(Cm), col="black", ylim=c(0,100))
+title(main="p = 0.8 E/R = 0.05")
+m2 = throughfallMatrixGash(P=P, p=0.2, Cm=Cm,ER = 0.2)
+rt = sweep(m2,2,P,"/")*100
+matplot(t(rt), type="l", axes=TRUE, ylab="Relative throughfall (%)", 
+        xlab="Gross rainfall (mm)", xlim=c(0,length(P)), 
+        lty=1:length(Cm), col="black", ylim=c(0,100))
+title(main="p = 0.2 E/R = 0.2")
+m2 = throughfallMatrixGash(P=P, p=0.8, Cm=Cm,ER = 0.2)
+rt = sweep(m2,2,P,"/")*100
+matplot(t(rt), type="l", axes=TRUE, ylab="Relative throughfall (%)", 
+        xlab="Gross rainfall (mm)", xlim=c(0,length(P)), 
+        lty=1:length(Cm), col="black", ylim=c(0,100))
+title(main="p = 0.8 E/R = 0.2")
+
+legend("bottomright",lty=1:length(Cm), legend=paste("S =",Cm), bty="n")
+```
+
+
+
+## Runoff, infiltration and percolation
+
+The water that reaches the soil is the sum of net rainfall ($Pr_{net}$), runon ($Ro$) and melted snow ($Sm$). The amount of water infiltrating into the soil is $Pr_{net} + Sm + Ro - Ru$, where $Ru$ is the water lost by surface runoff (see function \texttt{hydrology\_infiltrationAmount}). Surface runoff (in mm), is calculated using the USDA SCS curve number method, as in @Boughton1989:
+\begin{equation}
+Ru=\frac{(Pr_{net} + Ro + Sm - 0.2 \cdot V_{soil})^2}{(Pr_{net} + Ro + Sm - 0.8 \cdot V_{soil})}
+\end{equation}
+where $V_{soil}$ (in mm) is the overall soil water retention capacity. Following @Granier1999, part of the water reaching one soil layer percolates quickly through the macropores. The amount of water reaching each layer through macropores is modelled using an extinction function (see function `hydrology_infiltrationRepartition`). The remaining water is retained by the micropores refilling the current soil layer. When this soil layer reaches its field capacity the excess of water also percolates to the soil layer below. 
+
+```{r, fig.width=8, fig.height=4, echo=FALSE, fig.cap="Examples of infiltration/runoff calculation for different values of net rainfall and overall retention capacity, $V_{soil}$, calculated from different soil depths (topsoil+subsoil) and assuming that soil texture is 15% clay and 25% sand. Rock fragment content was 25% and 40% for the topsoil and subsoil, respectively."}
+par(mfrow=c(1,2), mar=c(5,5,5,1))
+
+SoilDepth = c(200,400,800,1200,1500)
+
+#TOPSOIL LAYERS
+d1 = pmin(SoilDepth, 300) #<300
+#SUBSOIL LAYERS
+d2 = pmax(0, pmin(SoilDepth-300,1200)) #300-1500 mm
+#ROCK LAYER
+d3 = 4000-(d1+d2) #From SoilDepth down to 4.0 m
+
+TS_clay = 15
+TS_sand = 25
+SS_clay = 15
+SS_sand = 25
+RL_clay = 15
+RL_sand = 25
+TS_gravel = 20
+SS_gravel = 40
+RL_gravel = 95
+
+Theta_FC1=soil_psi2thetaSX(TS_clay, TS_sand, -33) #in m3/m3
+Theta_FC2=soil_psi2thetaSX(SS_clay, SS_sand, -33) #in m3/m3
+Theta_FC3=soil_psi2thetaSX(RL_clay, RL_sand, -33) #in m3/m3
+pcTS_gravel = 1-(TS_gravel/100)
+pcSS_gravel = 1-(SS_gravel/100)
+pcRL_gravel = 1-(RL_gravel/100)
+MaxVol1 = (d1*Theta_FC1*pcTS_gravel)
+MaxVol2 = (d2*Theta_FC2*pcSS_gravel)
+MaxVol3 = (d3*Theta_FC3*pcRL_gravel)
+V = MaxVol1+MaxVol2+MaxVol3
+
+par(mar=c(5,5,1,1), mfrow=c(1,2))
+NP = seq(0,60, by=1)
+plot(NP,hydrology_infiltrationAmount(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
+     ylab="Infiltration (mm)", xlab="Net rainfall (mm)", frame=FALSE)
+lines(NP,hydrology_infiltrationAmount(NP, V[2]), lty=2)
+lines(NP,hydrology_infiltrationAmount(NP, V[3]), lty=3)
+lines(NP,hydrology_infiltrationAmount(NP, V[4]), lty=4)
+lines(NP,hydrology_infiltrationAmount(NP, V[5]), lty=5)
+legend("topleft", bty="n", lty=1:5, legend=c(paste("d =", SoilDepth, "Vsoil =",round(V),"mm")))
+plot(NP,NP-hydrology_infiltrationAmount(NP, V[1]), type="l", xlim=c(0,60), ylim=c(0,60), 
+     ylab="Runoff (mm)", xlab="Net rainfall (mm)", frame=FALSE)
+lines(NP,NP-hydrology_infiltrationAmount(NP, V[2]), lty=2)
+lines(NP,NP-hydrology_infiltrationAmount(NP, V[3]), lty=3)
+lines(NP,NP-hydrology_infiltrationAmount(NP, V[4]), lty=4)
+lines(NP,NP-hydrology_infiltrationAmount(NP, V[5]), lty=5)
+legend("topleft", bty="n", lty=1:5, legend=c(paste("d =", SoilDepth,"Vsoil =",round(V),"mm")))
+```
+
+If `drainage = TRUE`, the water percolating from the lowest layer is considered deep drainage, $Dd$, and soil layers are never above field capacity. If `drainage = FALSE`, the excess of water in the lowest soil layer is not lost via drainage, so that this layer (and those above) can be filled up to saturation. This additional filling is done starting from below, and when a given layer reaches saturation, the model adds the remaining water to the layer above. If all layers are filled to saturation, the remaining water is assumed to be infiltration excess and is added to the surface runoff. 
+
+## Bare soil evaporation
+Evaporation from the soil surface is the last component of the soil water balance to be calculated. There is a difference in the way that soil evaporative demand is calculated depending on the transpiration mode. Potential evaporation from the soil ($PE_{soil}$; in $mm\cdot day^{-1}$) is defined as the product between $PET$ and $L^{SWR}_{ground}$, the proportion of SWR absorbed by the ground:
+\begin{equation}
+PE_{soil} =  PET\cdot L^{SWR}_{ground}
+\end{equation}
+
+Actual evaporation from the soil surface is modeled as in @Mouillot2001, who
+followed @Ritchie1972.  First, the model determines the time needed to evaporate
+the current water deficit (difference between field capacity and current moisture)
+in the surface soil layer:
+\begin{equation}
+t = \left \{ \frac{V_1\cdot(1- W_1)}{\gamma_{soil}} \right \}
+\end{equation}
+where $\gamma_{soil}$ is the maximum daily evaporation (mm·day$^{-1}$). The
+calculated time is used to determine the ‘supplied’ evaporation, $SE_{soil}$:
+\begin{equation}
+SE_{soil} = \gamma_{soil} \cdot (\sqrt{t+1}-\sqrt{1})
+\end{equation}
+The amount of water evaporated from the soil, $E_{soil}$, is then calculated as
+the minimum between supply and demand [@Federer1982], the latter being the product
+of PET and the proportion of light that reaches the ground (see function `hydrology_soilEvaporationAmount`): 
+
+\begin{equation}
+E_{soil} = \min(PE_{soil}, SE_{soil})
+\end{equation}
+
+Finally, $E_{soil}$ is distributed along the soil profile according to an exponential decay function with an extinction coefficient $\kappa_{soil}$ [@Mouillot2001].
+
+```{r, fig.width=4, fig.height=4, echo=FALSE, fig.cap="Cumulative bare soil evaporation for different values of maximum evaporation rate and extinction coefficient. Three soil layers (0 – 30 cm; 30 – 150 cm; 150 – 400 cm) are initialized at field capacity ($V_1 = 50 mm$; $V_2 = 201 mm$; $V_3 = 35 mm$). $PE_{soil}$ was assumed not to be limiting. When the extinction coefficient is smaller a higher proportion of the evaporated water is removed from the subsoil and less from the topsoil. This causes more water being available to calculate t in the next step."}
+
+TS_clay=10
+TS_silt=65
+TS_sand=25
+TS_gravel=40
+SS_clay=10
+SS_silt=65
+SS_sand = 25
+SS_gravel=40
+TS_macro=0.25
+TS_micro = 0.75
+SS_macro=0.10
+SS_micro=0.90
+#Rock layer is like subsoil but with 95% of rocks
+RL_clay = SS_clay
+RL_sand = SS_sand
+RL_macro = SS_macro
+RL_micro = SS_micro
+RL_gravel = 95
+
+
+RunEvaporation<-function(Gsoil, Ksoil, d1,d2,d3, numDays = 15){
+  PET = 100 #Not limited by PET
+  Lground = 1
+  
+  Theta_FC1=soil_psi2thetaSX(TS_clay, TS_sand, -33) #in m3/m3
+  Theta_FC2=soil_psi2thetaSX(SS_clay, SS_sand, -33) #in m3/m3
+  Theta_FC3=soil_psi2thetaSX(RL_clay, RL_sand, -33) #in m3/m3
+  pcTS_gravel = 1-(TS_gravel/100)
+  pcSS_gravel = 1-(SS_gravel/100)
+  pcRL_gravel = 1-(RL_gravel/100)
+  MaxVol1 = (d1*Theta_FC1*pcTS_gravel)
+  MaxVol2 = (d2*Theta_FC2*pcSS_gravel)
+  MaxVol3 = (d3*Theta_FC3*pcRL_gravel)
+  Ssoil = MaxVol1 + MaxVol2 + MaxVol3
+
+  W1=rep(0, numDays)
+  W2=rep(0, numDays)
+  W3=rep(0, numDays)
+  W1[1] = 1
+  W2[1] = 1
+  W3[1] = 1
+  Esoil = rep(NA,numDays)
+  EsoilCum = rep(NA,numDays)
+  t = rep(NA, numDays)
+  for(i in 1:numDays){
+    #Evaporation from bare soil
+    Esoil[i] = hydrology_soilEvaporationAmount(DEF=(MaxVol1*(1 - W1[i])), PETs = PET*Lground, Gsoil = Gsoil)
+    if(i==1) EsoilCum[i] = Esoil[i]
+    else EsoilCum[i] = EsoilCum[i-1]+Esoil[i]
+    #Exponential decay to divide bare soil evaporation among layers
+    Esoil1 = Esoil[i]*(1-exp(-Ksoil*d1))
+    Esoil2 = Esoil[i]*(exp(-Ksoil*d1)-exp(-Ksoil*(d1+d2)))
+    Esoil3 = Esoil[i]*(exp(-Ksoil*(d1+d2)))
+    if(i<numDays){
+      W1[i+1] = max(W1[i]-(Esoil1)/MaxVol1,0)
+      W2[i+1] = max(min(W2[i]-(Esoil2)/MaxVol2,1),0)
+      W3[i+1] = max(min(W3[i]-(Esoil3)/MaxVol3,1),0)
+    }  
+  }
+  return(list(Esoil = Esoil, EsoilCum = EsoilCum))  
+}
+
+E11=RunEvaporation(Gsoil=1, Ksoil = 0.05, d1=300, d2=1200, d3= 2500)
+E12=RunEvaporation(Gsoil=2, Ksoil = 0.05, d1=300, d2=1200, d3= 2500)
+E13=RunEvaporation(Gsoil=3, Ksoil = 0.05, d1=300, d2=1200, d3= 2500)
+E21=RunEvaporation(Gsoil=1, Ksoil = 0.005, d1=300, d2=1200, d3= 2500)
+E22=RunEvaporation(Gsoil=2, Ksoil = 0.005, d1=300, d2=1200, d3= 2500)
+E23=RunEvaporation(Gsoil=3, Ksoil = 0.005, d1=300, d2=1200, d3= 2500)
+
+
+par(mar=c(4,4,1,1))
+plot(x=1:length(E11$EsoilCum), y=E11$EsoilCum, ylim=c(0,15), ylab="Cummulative soil evaporation (mm)", xlab="day", type="l", axes=FALSE)
+axis(1, at=1:length(E11$EsoilCum), cex.axis=0.7)
+axis(2)
+points(x=1:length(E11$EsoilCum), y=E11$EsoilCum, pch=1)
+lines(x=1:length(E12$EsoilCum), y=E12$EsoilCum, lty=2)
+points(x=1:length(E12$EsoilCum), y=E12$EsoilCum, pch=1)
+lines(x=1:length(E13$EsoilCum), y=E13$EsoilCum, lty=3)
+points(x=1:length(E13$EsoilCum), y=E13$EsoilCum, pch=1)
+lines(x=1:length(E21$EsoilCum), y=E21$EsoilCum, lty=1)
+points(x=1:length(E21$EsoilCum), y=E21$EsoilCum, pch=2)
+lines(x=1:length(E22$EsoilCum), y=E22$EsoilCum, lty=2)
+points(x=1:length(E22$EsoilCum), y=E22$EsoilCum, pch=2)
+lines(x=1:length(E23$EsoilCum), y=E23$EsoilCum, lty=3)
+points(x=1:length(E23$EsoilCum), y=E23$EsoilCum, pch=2)
+legend("topleft", lty=rep(1:3,2), pch=c(1,1,1,2,2,2), legend=c("Gsoil = 1 Ksoil = 0.05", 
+                                    "Gsoil = 2 Ksoil = 0.05", 
+                                    "Gsoil = 3 Ksoil = 0.05",
+                                    "Gsoil = 1 Ksoil = 0.005", 
+                                    "Gsoil = 2 Ksoil = 0.005", 
+                                    "Gsoil = 3 Ksoil = 0.005"), cex = 0.7, bty="n")
+```
+

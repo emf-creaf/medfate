@@ -1,5 +1,9 @@
 # Model inputs
 
+```{r load medfate, include=FALSE}
+library(medfate)
+```
+
 
 ## Soil description
 
