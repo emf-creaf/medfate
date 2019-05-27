@@ -3,9 +3,10 @@ title: "Soil-plant water balance model"
 author: 
   - name: "Miquel De Caceres"
     affiliation: 
-    - &CTFC "Centre de Ciencia i Tecnologia Forestal de Catalunya. Ctra. St. Llorenç de Morunys km 2, 25280, Solsona, Catalonia, Spain"
+    - &CTFC "CTFC. Ctra. St. Llorenç de Morunys km 2, 25280, Solsona, Catalonia, Spain"
+    - &CREAF "CREAF, Cerdanyola del Vallès, 08193, Spain"
   - name: "Victor Granda"
-    affiliation: *CTFC
+    affiliation: *CREAF
 date: "`r Sys.Date()`"
 output:
   pdf_document:
