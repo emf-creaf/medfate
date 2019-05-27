@@ -15,7 +15,9 @@ The model has the following state variables:
 + The temperature of the canopy and of each soil layer ($T_c$ and $T_s$; both in ºC) are tracked for every subdaily step.
 + If irreversible cavitation is activated, the model also tracks $P_{embolized,i}$, the maximum value of daily drought stress so far experienced.
 
-## Water balance
+## Water and energy balances
+
+### Water balance
 Daily variations in soil water content (mm) can be summarized as:
 
 \begin{equation}
@@ -30,7 +32,7 @@ where $Pr$ is precipitation as rainfall, $Sm$ is water from melting the snow pac
 
 where $Ps$ is precipitation as snowfall and $Sm$ is snow melt.
 
-## Energy balance
+### Energy balance
 The canopy absorbs shortwave radiation from the atmosphere ($K_{abs,ca}$). It also absorbs longwave counterradiation from the atmosphere ($L_{abs,ca}$) and longwave radiation emmited from the soil ($L_{abs,cs}$). These inputs are counterbalanced by the longwave radiation emmited by the canopy ($L_{em,c}$) in both cases. Other energy fluxes considered are convective exchanges between the canopy and atmosphere ($H_{ca}$) and between the canopy and the soil ($H_{cs}$). Finally, energy is released to the atmosphere through latent heat ($LE_{c}$) produced via transpiration (so far, interception and soil evaporation are not included). The instantaneous energy balance equation for the canopy is thus:
 \begin{equation}
   C_{c} \cdot \frac{\delta T_{c}}{\delta t} = K_{abs,ca} + (L_{abs,ca} - L_{em,c}) + (L_{abs,cs} - L_{em,c}) - LE_{c} - H_{ca} - H_{cs} 
@@ -59,8 +61,8 @@ Every day the model performs the following actions:
   * Determine drought stress index for each plant cohort.
   * Decrease water content due to bare soil evaporation, closing the water balance.
 
-
-## Metereological input
+## Model input
+### Metereological input
 Weather input data must include variables calculated at the **daily** scale.
 
 + $T_{min}$ [`MinTemperature`]: Minimum temperature (in $^{\circ} \mathrm{C}$).
@@ -74,7 +76,7 @@ Weather input data must include variables calculated at the **daily** scale.
 We recommend meteorological input to be generated using package **meteoland** [@DeCaceres2018].
 
 
-## Control parameters
+### Control parameters
 Control parameters are a list of parameter values, initialized using function `defaultControl()`, that the user can modify to change the general behavior of the model. The control values relevant for the advanced water balance model are:
 
 + `verbose [=TRUE]`: Whether extra console output is desired during simulations.
@@ -93,11 +95,37 @@ Control parameters are a list of parameter values, initialized using function `d
 + `numericParams`: A list with params for numerical approximation routines.
 + `Catm [=386]`: Atmospheric CO2 concentration (in micromol $CO_2 \cdot mol^{-1}$ = ppm).
 
+
+### Species parameters
+Vegetation functional attributes are normally filled for each cohort by function \texttt{spwbInput()} from species identity. However, different parameters can be specified for different cohort of the same species if desired. Basic functional parameters relate to light extinction, water interception and leaf phenology:
+
++ $k_{PAR,i}$ [`k`]: PAR extinction coefficient.
++ $s_{water, i}$ [`g`]: Crown water storage capacity (i.e. depth of
+water that can be retained by leaves and branches) per LAI unit (in $mmH_2O·LAI^{-1}$).
++ $S_{GDD,i}$ [`Sgdd`]: Growth degree days corresponding to leave
+budburst (in degrees Celsius).
+
+A second set of plant functional parameters are related to plant transpiration and photosynthesis:
+
++ $g_{wmin,i}$ [`Gwmin`]: Minimum leaf water conductance (in $mol·s^{-1}·m^{-2}$).
++ $g_{wmax,i}$ [`Gwmax`]: Maximum leaf water conductance (in $mol·s^{-1}·m^{-2}$).
++ $k_{rhizo,i,s}$ [`VGrhizo_kmax`]: Maximum hydraulic conductance of the rhizosphere for each soil layer.
++ $k_{\max root,i,s}$ [`VCroot_kmax`]: Maximum hydraulic conductance of the root xylem for each soil layer.
++ $c_{root,i}$ and $d_{root,i}$ [`VCroot_c` and `VCroot_c`]: Parameters of the root xylem vulnerability curve.
++ $k_{\max stem,i}$ [`VCstem_kmax`]: Maximum hydraulic conductance of the stem xylem.
++ $c_{stem,i}$ and $d_{stem,i}$ [`VCstem_c` and `VCstem_c`]: Parameters of the stem xylem vulnerability curve.
++ $V298_{max,i}$ [`Vmax298`]: Maximum Rubisco carboxylation rate at 25ºC (in $\mu mol CO_2·s^{-1}·m^{-2}$).
++ $J298_{max,i}$ [`Jmax298`]: Maximum rate of electron transport at 25ºC (in $\mu mol e ·s^{-1}·m^{-2}$).}
++ $P_{rootdisc,i}$ [`pRootDisc`]: Relative conductance of roots that leads to hydraulic disconnection from soil.
++ $k_{rhizo,i,s}$ [`VGrhizo_kmax`]: Maximum rhizosphere conductance values for each soil layer.
++ $k_{root,i,s}$ [`VCroot_kmax`]: Maximum root xylem conductance values for each soil layer.
+
 ## Model output
-Function `spwb` returns a list object whose elements are data tables. Each table has dates as rows and has different output variables:
+Function `spwb` with `transpirationMode = "Sperry"` returns a list object whose elements are data tables. Each table has dates as rows and has different output variables:
 
 + `WaterBalance`: Components of the climatic and soil daily water balance (i.e. net precipitation, infiltration, runoff, plant transpiration...).
 + `Soil`: Daily variation of soil variables  (volume, moisture relative to field capacity, water potential) for soil layers.
++ `EnergyBalance`: Components of the atmosphere-canopy-soil energy balance, including latent heat, convective heat, conduction heat and radiation exchanges.
 + `PlantLAI`: Daily leaf area index for each plant cohort.
 + `PlantTranspiration`: Daily transpiration (in mm) for each plant cohort.
 + `PlantPhotosynthesis`: Daily net photosynthesis (in g C·m-2) for each plant cohort.

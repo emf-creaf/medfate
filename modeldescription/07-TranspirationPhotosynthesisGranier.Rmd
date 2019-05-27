@@ -1,4 +1,4 @@
-# Plant transpiration and photosynthesis under Granier's model
+# Plant transpiration and photosynthesis under Granier's model {#transpirationgranier}
 
 ## PET and maximum canopy transpiration
 

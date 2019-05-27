@@ -2,7 +2,7 @@
 
 # Hydrology
 
-## Snow pack dynamics
+## Snow pack dynamics {#snowpack}
 
 Precipitation is considered be snow when $T_{mean}<0$. Interception of snow by the canopy is neglected, and all snow is assumed to accumulate in a single storage compartment $S_{snow}$ over the soil (i.e. canopy snow storage capacity is neglected). A very simple snow submodel is used for snow pack dynamics (accumulation and melt), taken from @Kergoat1998. When mean air temperature is above 0 Celsius $T_{mean}>0$, a simple energy budget relates snow melt, $Sm$ (mm), to air temperature and soil-level radiation (see function \texttt{hydrology\_snowMelt}):
 \begin{equation}
@@ -10,7 +10,7 @@ Sm = \frac{Rad\cdot L^{SWR}_{ground}\cdot (1-\alpha_{ice}) + \tau_{day} \cdot T_
 \end{equation}
 where $Rad$ is solar radiation (MJ·m$^{-2}$), $L^{SWR}_{ground}$ is the fraction of (short-wave) radiation reaching the ground, $\alpha_{ice} = 0.9$ is the albedo of snow, $\tau_{day} = 86400$ is the day duration in s, $\rho$ is the air density (depending on temperature and elevation), $C_{p} = 1013.86 \cdot 10^{-6}$ MJ·kg$^{-1}$·C$^{-1}$ is the specific heat capacity of the air and $r_{s} = 100$ s·m$^{-1}$ is the snow aerodynamic resistance and $\lambda_{ice} = 0.33355$MJ·kg is the (latent) heat of fusion of snow.
 
-## Rainfall interception loss
+## Rainfall interception loss {#interception}
 
 Interception loss is only modelled for water precipitation (i.e. snow interception is not modelled). Rainfall interception loss, $In$, is estimated using the @Gash1995 analytical interception model for sparse canopies, where rain is assumed to fall in a single event during the day. First, the amount of rainfall needed to saturate the canopy is calculated: 
 \begin{equation}
@@ -88,7 +88,7 @@ legend("bottomright",lty=1:length(Cm), legend=paste("S =",Cm), bty="n")
 
 
 
-## Runoff, infiltration and percolation
+## Runoff, infiltration and percolation {#runoff}
 
 The water that reaches the soil is the sum of net rainfall ($Pr_{net}$), runon ($Ro$) and melted snow ($Sm$). The amount of water infiltrating into the soil is $Pr_{net} + Sm + Ro - Ru$, where $Ru$ is the water lost by surface runoff (see function \texttt{hydrology\_infiltrationAmount}). Surface runoff (in mm), is calculated using the USDA SCS curve number method, as in @Boughton1989:
 \begin{equation}

@@ -4,7 +4,6 @@
 
 ## Package installation
 
-
 The **medfate** package can be installed from CRAN or Github:
 
 ```{r eval=FALSE}

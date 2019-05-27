@@ -1,6 +1,6 @@
 # (PART) Simulation models {-}
 
-# Simple soil-plant water balance
+# Basic soil-plant water balance
 
 ## Design principles
 
@@ -38,13 +38,13 @@ where $Ps$ is precipitation as snowfall and $Sm$ is snow melt.
 
 Every day water balance is perfomed as follows. The model first updates leaf area values according to the phenology of species and calculates light extinction. After that, the model updates soil water content of soil layers in several steps:
 
-+ If snow dynamics are included, increase snow pack from snow precipitation ($Ps$) and decreases it from snow melting ($Sm$);
-+ Increase soil moisture due to rainfall ($Pr$), surface runon ($Ro$) and snow melting ($Sm$), after accounting for interception loss ($In$), surface runoff ($Ru$) and deep drainage ($Dd$);
++ If snow dynamics are included, increase snow pack from snow precipitation ($Ps$) and decreases it from snow melting ($Sm$) (section \@ref(snowpack))
++ Increase soil moisture due to rainfall ($Pr$), surface runon ($Ro$) and snow melting ($Sm$), after accounting for interception loss ($In$), surface runoff ($Ru$) and deep drainage ($Dd$)  (sections \@ref(interception) and \@ref(runoff))
 + Decrease water content due to bare soil evaporation ($Es$).
-+ Determine transpiration, photosynthesis and drought stress for each plant cohort.
-+ Decrease water content due to plant transpiration ($Tr$).
++ Determine transpiration, photosynthesis and drought stress for each plant cohort (section \@ref(transpirationgranier)) and decrease water content due to plant transpiration ($Tr$).
 
-## Metereological input
+## Model input
+### Metereological input
 Weather input data must include variables calculated at the **daily** scale.
 
 + $T_{mean}$ [`MeanTemperature`]: Mean daily temperature (in $^{\circ} \mathrm{C}$).
@@ -55,7 +55,7 @@ Weather input data must include variables calculated at the **daily** scale.
 Optionally, the user may also specify values of wind speed ($u$, in m·s$^{-1}$, `WindSpeed`) that are used to control leaf fall in autumn. We recommend meteorological input to be generated using package **meteoland** [@DeCaceres2018].
 
 
-## Control parameters
+### Control parameters
 Control parameters are a list of parameter values, initialized using function `defaultControl()`, that the user can modify to change the general behavior of the model. The control values relevant for the simple water balance model are:
 
 + `verbose [=TRUE]`: Whether extra console output is desired during simulations.
