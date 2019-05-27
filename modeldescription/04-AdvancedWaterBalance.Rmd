@@ -11,7 +11,7 @@ Radiation and energy balances are conducted subdaily at two levels: canopy/soil 
 
 The model has the following state variables:
 + Cumulative growth degree days, $GDD$, are tracked by the model and determine leaf phenological status of winter deciduous species.
-+ Daily soil moisture content dynamics on each layer $s$ are tracked using $W = \theta(\Psi_s)/ \theta_{fc,s}$, the $proportion of volumetric soil moisture in relation to field capacity$, where field capacity, $\theta_{fc,s}$, is assumed to correspond to $\Psi_{fc} = -0.033$ MPa. Soils are not allowed to contain more water than dictated by their field capacity.
++ Daily soil moisture content dynamics on each layer $s$ are tracked using $W = \theta(\Psi_s)/ \theta_{fc,s}$, the **proportion of volumetric soil moisture in relation to field capacity**, where field capacity, $\theta_{fc,s}$, is assumed to correspond to $\Psi_{fc} = -0.033$ MPa. Soils are not allowed to contain more water than dictated by their field capacity.
 + The temperature of the canopy and of each soil layer ($T_c$ and $T_s$; both in ºC) are tracked for every subdaily step.
 + If irreversible cavitation is activated, the model also tracks $P_{embolized,i}$, the maximum value of daily drought stress so far experienced.
 
@@ -45,42 +45,53 @@ where $C_{s}$ is the soil thermal capacitance.
 
 Every day the model performs the following actions: 
 
-* Update leaf area values according to the phenology of species.
-* Increase soil moisture due to precipitation after accounting for canopy interception loss, surface runoff and deep drainage.
-* Determine subdaily temperature and direct/diffuse irradiance variations.
-* Determine short- and longwave radiation absorved by the canopy and the soil at subdaily steps.
-* Determine plant transpiration, photosynthesis and close soil/canopy energy balance at subdaily steps. This involves the following actions:
-  + Determine longwave radiation emmited by soil and canopy, according to their temperature.
-  + Update the water supply function of each plant cohort, according to the hydraulic model and the current soil water potential.
-  + Calculate leaf temperature and photosynthesis, for shade and sunlit leaves of each plant cohort, corresponding to each transpiration value of the supply function.
-  + Determine stomatal conductance, transpiration and photosynthesis on shade and sunlit leaves of each plant cohort according to a profit maximization strategy.
-  + Update soil moisture after scaling transpiration from leaf to canopy level.
-  + Complete energy balance of the canopy and the soil (after translating plant transpiration to latent heat and calculating convective heat exchange for both the canopy and the soil). 
-* Determine drought stress index for each plant cohort.
-* Decrease water content due to bare soil evaporation, closing the water balance.
+  * Update leaf area values according to the phenology of species.
+  * Increase soil moisture due to precipitation after accounting for canopy interception loss, surface runoff and deep drainage.
+  * Determine subdaily temperature and direct/diffuse irradiance variations.
+  * Determine short- and longwave radiation absorved by the canopy and the soil at subdaily steps.
+  * Determine plant transpiration, photosynthesis and close soil/canopy energy balance at subdaily steps. This involves the following sub-actions:
+    + Determine longwave radiation emmited by soil and canopy, according to their temperature.
+    + Update the water supply function of each plant cohort, according to the hydraulic model and the current soil water potential.
+    + Calculate leaf temperature and photosynthesis, for shade and sunlit leaves of each plant cohort, corresponding to each transpiration value of the supply function.
+    + Determine stomatal conductance, transpiration and photosynthesis on shade and sunlit leaves of each plant cohort according to a profit maximization strategy.
+    + Update soil moisture after scaling transpiration from leaf to canopy level.
+    + Complete energy balance of the canopy and the soil (after translating plant transpiration to latent heat and calculating convective heat exchange for both the canopy and the soil). 
+  * Determine drought stress index for each plant cohort.
+  * Decrease water content due to bare soil evaporation, closing the water balance.
 
 
 ## Metereological input
 Weather input data must include variables calculated at the **daily** scale.
 
-+ $T_{mean}$ [`MeanTemperature`]: Mean daily temperature (in $^{\circ} \mathrm{C}$).
-+ $Rad$ [`Radiation`]: Solar radiation, after accounting for clouds (in $MJ \cdot m^{-2}$), only necessary if snow pack dynamics are simulated (i.e., if \texttt{snowpack = TRUE}).
-+ $P$ [`Precipitation`]: Daily precipitation (in $L \cdot m^{-2}$ = mm of water).
-+ $PET$ [`PET`]: Daily potential evapotranspiration (in  $L \cdot m^{-2}$ = mm of water), preferably calculated using Penman's equation.
++ $T_{min}$ [`MinTemperature`]: Minimum temperature (in $^{\circ} \mathrm{C}$).
++ $T_{max}$ [`MaxTemperature`]: Maximum temperature (in $^{\circ} \mathrm{C}$).
++ $RH_{min}$ [`MinRelativeHumidity`]: Minimum relative humidity (in percent).
++ $RH_{max}$ [`MaxRelativeHumidity`]: Maximum relative humidity (in percent).
++ $P$ [`Precipitation`]: Precipitation (in L·m$^{-2}$ = mm of water).
++ $Rad$ [`Radiation`]: Solar radiation after accounting for clouds (in MJ·m$^{-2}$).
++ $u$ [`WindSpeed`]: Wind speed (in m·s$^{-1}$).
 
-Optionally, the user may also specify values of wind speed ($u$, in m·s$^{-1}$, `WindSpeed`) that are used to control leaf fall in autumn. We recommend meteorological input to be generated using package **meteoland** [@DeCaceres2018].
+We recommend meteorological input to be generated using package **meteoland** [@DeCaceres2018].
 
 
 ## Control parameters
-Control parameters are a list of parameter values, initialized using function `defaultControl()`, that the user can modify to change the general behavior of the model. The control values relevant for the simple water balance model are:
+Control parameters are a list of parameter values, initialized using function `defaultControl()`, that the user can modify to change the general behavior of the model. The control values relevant for the advanced water balance model are:
 
 + `verbose [=TRUE]`: Whether extra console output is desired during simulations.
 + `soilFunctions [= "SX"]`: Water retention curve model, either "SX" (for Saxton) or "VG" (for Van Genuchten).
 + `snowpack [= TRUE]`:  Whether dynamics of snow pack are included.
 + `drainage [= TRUE]`:  Whether water exceeding the field capacity of the bottom layer is lost by deep drainage into a non-reachable compartment.
-+ `transpirationMode [= "Granier"]`: Transpiration model, in this case "Granier".
++ `transpirationMode [= "Granier"]`: Transpiration model, in this case should be "Sperry".
 + `defaultWindSpeed [= 5]`: Default value for wind speed (in $m \cdot s^{-1}$) when this is missing (only used for leaf fall).
++ `hydraulicCostFunction [= 1]`: Variant of the hydraulic cost function used in the stomatal regulation model of Sperry & Love (2016). Values accepted are 1 (original cost function based on the derivative of supply function), 2 (leaf vulnerability curve).
++ `ndailysteps [=24]`: Number of daily substeps.
++ `thermalCapacityLAI [= 1000000]`: Canopy thermal capacitance per LAI unit.
++ `verticalLayerSize [= 100]`: The size of vertical layers (in cm) for photosynthesis calculation.
 + `cavitationRefill [= TRUE]`: If `FALSE` the model operates in a irreversible cavitation mode.
++ `taper [= TRUE]`: Whether taper of xylem conduits is accounted for when calculating aboveground stem conductance from xylem conductivity.
++ `averageFracRhizosphereResistance [= 0.15]`: Fraction to total continuum (stem+root+rhizosphere) resistance that corresponds to rhizosphere (averaged across soil water potential values).
++ `numericParams`: A list with params for numerical approximation routines.
++ `Catm [=386]`: Atmospheric CO2 concentration (in micromol $CO_2 \cdot mol^{-1}$ = ppm).
 
 ## Model output
 Function `spwb` returns a list object whose elements are data tables. Each table has dates as rows and has different output variables:
