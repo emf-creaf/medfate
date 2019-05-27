@@ -44,6 +44,9 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     df[["Precipitation"]] = x$WaterBalance$Precipitation
     df[["Snow"]] = x$WaterBalance$Snow
     df[["Date"]] = as.Date(row.names(x$WaterBalance))
+    Date = df$Date
+    Snow = df$Snow
+    Precipitation = df$Precipitation
     g<-ggplot(df)+
       geom_area(aes(x=Date, y=Precipitation, fill="Precipitation"))+
       geom_area(aes(x=Date, y=Snow, fill="Snow"))+
@@ -60,6 +63,9 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     df[["PET"]] = x$WaterBalance$PET
     df[["NetRain"]] = x$WaterBalance$NetRain
     df[["Date"]] = as.Date(row.names(x$WaterBalance))
+    Date = df$Date
+    PET = df$PET
+    NetRain = df$NetRain
     g<-ggplot(df)+
       geom_area( aes(x=Date, y=NetRain, fill="NetRain"))+
       geom_path(aes(x=Date, y=PET, col="PET"))+
@@ -75,6 +81,9 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     df[["Snow"]] = x$WaterBalance$Snow
     df[["Snowpack"]] = x$Soil$SWE
     df[["Date"]] = as.Date(row.names(x$WaterBalance))
+    Date = df$Date
+    Snow = df$Swow
+    Snowpack = df$Snowpack
     g<-ggplot(df)+
       geom_area( aes(x=Date, y=Snow, fill="Snow"))+
       geom_path(aes(x=Date, y=Snowpack, col="Snowpack"))+
@@ -110,6 +119,10 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     df[["DeepDrainage"]] = x$WaterBalance$DeepDrainage
     df[["Runoff"]] = x$WaterBalance$Runoff 
     df[["Date"]]= as.Date(row.names(x$WaterBalance))
+    Date = df$Date
+    Export = df$Export
+    DeepDrainage = df$DeepDrainage
+    Runoff = df$Runoff
     g<-ggplot(df)+
       geom_line( aes(x=Date, y=Export, col="Export"))+
       geom_line( aes(x=Date, y=DeepDrainage, col="Deep drainage"))+

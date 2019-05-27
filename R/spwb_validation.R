@@ -1,7 +1,7 @@
 spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRUE,
                           plotType = "dynamics") {
   scatterplot<-function(df, xlab="", ylab="", title=NULL) {
-    g<-ggplot(df, aes(x=Modelled, y = Observed))+
+    g<-ggplot(df, aes_string(x="Modelled", y = "Observed"))+
       geom_point(cex=0.5)+
       geom_abline(intercept=0, slope=1, col="black")+
       geom_smooth(method="lm", se = FALSE, col="gray", linetype="dashed")+
@@ -12,6 +12,8 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
     return(g)
   }
   dynamicsplot<-function(df, xlab="", ylab="", title=NULL) {
+    Observed = df$Observed
+    Modelled = df$Modelled
     g<-ggplot(df, aes(x=Dates))+
       geom_path(aes(y=Observed, col="Observed"))+
       geom_path(aes(y=Modelled, col="Modelled"))+
@@ -121,10 +123,10 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
     
     if(!("ETR" %in% names(measuredData))) stop(paste0("Column 'ETR' not found in measured data frame."))
     df$ETobs[d %in% rownames(measuredData)] = measuredData$ETR[rownames(measuredData) %in% d]
-    
+    ETobs = df$ETobs
     if(draw) {
       if(plotType=="dynamics") {
-        g<-ggplot(df, aes(x=Dates))+
+        g<-ggplot(df, aes_string(x="Dates"))+
           geom_path(aes(y=ETobs, col="Measured ETR"))+
           geom_path(aes(y=ET1, col="Modelled Es+Tr"))+
           geom_path(aes(y=ET2, col="Modelled Es+Tr+In"))+
@@ -135,12 +137,12 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
                                                "Modelled Es+Tr+In"= "gray"))+
           theme_bw()
       } else {
-        g<-ggplot(df, aes(y = ETobs))+
+        g<-ggplot(df, aes_string(y = "ETobs"))+
           geom_abline(intercept=0, slope=1, col="black")+
-          geom_point(aes(x = ET1), col="black", cex=0.5)+
-          geom_point(aes(x = ET2), col="gray", cex=0.5)+
-          geom_smooth(aes(x = ET1), method="lm", se = FALSE, col="black", linetype="dashed")+
-          geom_smooth(aes(x = ET2), method="lm", se = FALSE, col="gray", linetype="dashed")+
+          geom_point(aes_string(x = "ET1"), col="black", cex=0.5)+
+          geom_point(aes_string(x = "ET2"), col="gray", cex=0.5)+
+          geom_smooth(aes_string(x = "ET1"), method="lm", se = FALSE, col="black", linetype="dashed")+
+          geom_smooth(aes_string(x = "ET2"), method="lm", se = FALSE, col="gray", linetype="dashed")+
           xlab("Modelled ETR (mm)")+
           ylab("Measured ETR (mm)")+
           theme_bw()
@@ -188,10 +190,10 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
     if(draw) {
       if(plotType=="dynamics"){
         g<-ggplot(df)+
-          geom_path(aes(x=Dates, y=PD_mod, col="Predawn", linetype="Predawn"))+
-          geom_path(aes(x=Dates, y=MD_mod, col="Midday", linetype="Midday"))+
-          geom_pointrange(aes(x = Dates, y = PD_obs, ymin = PD_obs_lower, ymax = PD_obs_upper, col="Predawn", linetype="Predawn"))+
-          geom_pointrange(aes(x = Dates, y = MD_obs, ymin = MD_obs_lower, ymax = MD_obs_upper,col="Midday",linetype="Midday"))+
+          geom_path(aes_(x=~Dates, y=~PD_mod, col="Predawn", linetype="Predawn"))+
+          geom_path(aes_(x=~Dates, y=~MD_mod, col="Midday", linetype="Midday"))+
+          geom_pointrange(aes_(x = ~Dates, y = ~PD_obs, ymin = ~PD_obs_lower, ymax = ~PD_obs_upper, col="Predawn", linetype="Predawn"))+
+          geom_pointrange(aes_(x = ~Dates, y = ~MD_obs, ymin = ~MD_obs_lower, ymax = ~MD_obs_upper, col="Midday",linetype="Midday"))+
           scale_color_manual(name="", values=c("Predawn"="blue", "Midday"= "red"))+
           scale_linetype_manual(name="", values=c("Predawn"="dashed", "Midday"= "solid"))+
           labs(title=paste0(cohort , " (",spnames[icoh],")"))+
@@ -201,10 +203,10 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
       } else {
         g<-ggplot(df)+
           geom_abline(intercept=0, slope=1, col="black")+
-          geom_pointrange(aes(x = PD_mod, y = PD_obs, ymin = PD_obs_lower, ymax = PD_obs_upper, col="Predawn"))+
-          geom_pointrange(aes(x = MD_mod, y = MD_obs, ymin = MD_obs_lower, ymax = MD_obs_upper,col="Midday"))+
-          geom_smooth(aes(x = PD_mod, y = PD_obs, col="Predawn"), method="lm", se = FALSE, linetype="dashed")+
-          geom_smooth(aes(x = MD_mod, y = MD_obs, col="Midday"), method="lm", se = FALSE, linetype="dashed")+
+          geom_pointrange(aes_(x = ~PD_mod, y = ~PD_obs, ymin = ~PD_obs_lower, ymax = ~PD_obs_upper, col="Predawn"))+
+          geom_pointrange(aes_(x = ~MD_mod, y = ~MD_obs, ymin = ~MD_obs_lower, ymax = ~MD_obs_upper,col="Midday"))+
+          geom_smooth(aes_(x = ~PD_mod, y = ~PD_obs, col="Predawn"), method="lm", se = FALSE, linetype="dashed")+
+          geom_smooth(aes_(x = ~MD_mod, y = ~MD_obs, col="Midday"), method="lm", se = FALSE, linetype="dashed")+
           scale_color_manual(name="", values=c("Predawn"="blue", "Midday"= "red"))+
           labs(title=paste0(cohort , " (",spnames[icoh],")"))+
           xlab("Modelled leaf water potential (MPa)")+

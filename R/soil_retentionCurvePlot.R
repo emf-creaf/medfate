@@ -28,20 +28,22 @@ soil_retentionCurvePlot<-function(soil, model="SX", layer = 1,
   }
   df = data.frame(SX = y_sx, VG = y_vg, psi = -psi)
   xlab = "Soil water potential (-MPa)"
-  g<-ggplot(df, aes(x=psi))  
+  g<-ggplot(df, aes_string(x="psi"))  
   if(model=="SX") {
-    g<-g+ geom_path(aes(y=SX), col="black")+
+    g<-g+ geom_path(aes_string(y="SX"), col="black")+
        ylab(ylab)+ xlab(xlab)+
        theme_bw()
     return(g)
   }
   else if(model=="VG") {
-    g<-g+ geom_path(aes(y=VG), col="black")+
+    g<-g+ geom_path(aes_string(y="VG"), col="black")+
       ylab(ylab)+ xlab(xlab)+
       theme_bw()
     return(g)  
   } 
   else {
+    SX = df$SX
+    VG = df$VG
     g<-g+ geom_path(aes(y=SX, linetype ="Saxton"), col="black")+
       geom_path(aes(y=VG, linetype ="Van Genuchten"), col="black")+
       scale_linetype_manual(name="", values=c("solid", "dashed"))+

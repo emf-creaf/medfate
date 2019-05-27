@@ -83,8 +83,9 @@ hydraulics_supplyFunctionPlot<-function(x, soil, draw = TRUE, type="E", speciesN
                     "cohort" = cohort)
     if(type=="E") {
       ylab = expression(paste("Flow rate    ",(mmol%.%s^{-1}%.%m^{-2})))
-      g<-ggplot(df, aes(x = psi, y=E))+
-        geom_path(aes(col=cohort, linetype=cohort))+
+      g<-ggplot(df, aes_string(x = "psi", y="E"))+
+        geom_path(aes_string(col="cohort", 
+                             linetype="cohort"))+
         scale_color_discrete(name="")+
         scale_linetype_discrete(name="")
       g<-g+xlab(xlab)+ylab(ylab)+theme_bw()
@@ -93,8 +94,8 @@ hydraulics_supplyFunctionPlot<-function(x, soil, draw = TRUE, type="E", speciesN
     } 
     else if(type=="dEdP") {
       ylab = expression(paste("dE/dP  ",(mmol%.%s^{-1}%.%m^{-2}%.%MPa^{-1})))
-      g<-ggplot(df, aes(x = psi, y=dEdP))+
-        geom_path(aes(col=cohort, linetype=cohort))+
+      g<-ggplot(df, aes_string(x = "psi", y="dEdP"))+
+        geom_path(aes_string(col="cohort", linetype="cohort"))+
         scale_color_discrete(name="")+
         scale_linetype_discrete(name="")
       g<-g+xlab(xlab)+ylab(ylab)+theme_bw()
@@ -103,8 +104,8 @@ hydraulics_supplyFunctionPlot<-function(x, soil, draw = TRUE, type="E", speciesN
     }
     else if(type=="psiStem") {
       ylab = "Stem pressure (-MPa)"
-      g<-ggplot(df, aes(x = psi, y=psiStem))+
-        geom_path(aes(col=cohort, linetype=cohort))+
+      g<-ggplot(df, aes_string(x = "psi", y="psiStem"))+
+        geom_path(aes_string(col="cohort", linetype="cohort"))+
         scale_color_discrete(name="")+
         scale_linetype_discrete(name="")
       g<-g+xlab(xlab)+ylab(ylab)+theme_bw()
@@ -113,8 +114,8 @@ hydraulics_supplyFunctionPlot<-function(x, soil, draw = TRUE, type="E", speciesN
     }
     else if(type=="psiRoot") {
       ylab = "Root crown pressure (-MPa)"
-      g<-ggplot(df, aes(x = psi, y=psiRoot))+
-        geom_path(aes(col=cohort, linetype=cohort))+
+      g<-ggplot(df, aes_string(x = "psi", y="psiRoot"))+
+        geom_path(aes_string(col="cohort", linetype="cohort"))+
         scale_color_discrete(name="")+
         scale_linetype_discrete(name="")
       g<-g+xlab(xlab)+ylab(ylab)+theme_bw()
@@ -123,8 +124,8 @@ hydraulics_supplyFunctionPlot<-function(x, soil, draw = TRUE, type="E", speciesN
     }
     else if(type=="ERhizo") {
       ylab = expression(paste("Flow rate from/to layers "(mmol%.%s^{-1}%.%m^{-2})))
-      g<-ggplot(dfRhizo, aes(x = Psi, y=ERhizo))+
-        geom_path(aes(col=cohort, linetype=layer))+
+      g<-ggplot(dfRhizo, aes_string(x = "Psi", y="ERhizo"))+
+        geom_path(aes_string(col="cohort", linetype="layer"))+
         scale_color_discrete(name="")+
         scale_linetype_discrete(name="")+
         geom_hline(yintercept=0, col="gray")
@@ -134,8 +135,8 @@ hydraulics_supplyFunctionPlot<-function(x, soil, draw = TRUE, type="E", speciesN
     }
     else if(type=="psiRhizo") {
       ylab = "Rhizosphere pressure (-MPa)"
-      g<-ggplot(dfRhizo, aes(x = Psi, y=PsiRhizo))+
-        geom_path(aes(col=cohort, linetype=layer))+
+      g<-ggplot(dfRhizo, aes_string(x = "Psi", y="PsiRhizo"))+
+        geom_path(aes_string(col="cohort", linetype="layer"))+
         scale_color_discrete(name="")+
         scale_linetype_discrete(name="")
       g<-g+xlab(xlab)+ylab(ylab)+theme_bw()

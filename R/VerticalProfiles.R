@@ -18,8 +18,8 @@ vprofile_leafAreaDensity<-function(x, SpParams = NULL, z = NULL, gdd = NA, byCoh
     lai = .LAIprofileVectors(z, x$LAI_expanded, x$H, x$CR)
     lai = 100*lai/w
     if(draw) {
-      df = data.frame(lai = c(0,lai), z = z)
-      g<-ggplot(df, aes(x=lai, y=z))+
+      df = data.frame("lai" = c(0,lai), "z" = z)
+      g<-ggplot(df, aes_string(x="lai", y="z"))+
         geom_path()+
         xlab("Leaf Area Density (m2/m3)")+
         ylab("Height (cm)")+
@@ -36,10 +36,10 @@ vprofile_leafAreaDensity<-function(x, SpParams = NULL, z = NULL, gdd = NA, byCoh
     } 
     if(draw) {
       lai = rbind(rep(0, ncol(lai)),lai)
-      df = data.frame(lai = as.vector(lai), z = z,
-                      Cohort = gl(length(cohortnames), nrow(lai), labels=cohortnames))
-      g<-ggplot(df, aes(x=lai, y=z))+
-        geom_path(aes(col=Cohort, linetype = Cohort))+
+      df = data.frame("lai" = as.vector(lai), "z" = z,
+                      "Cohort" = gl(length(cohortnames), nrow(lai), labels=cohortnames))
+      g<-ggplot(df, aes_string(x="lai", y="z"))+
+        geom_path(aes_string(col="Cohort", linetype = "Cohort"))+
         xlab("Leaf Area Density (m2/m3)")+
         ylab("Height (cm)")+
         scale_color_discrete(name="")+
@@ -82,9 +82,9 @@ vprofile_fuelBulkDensity<-function(x, SpParams, z = NULL, gdd = NA,draw = TRUE,
                                    xlim = NULL) {
   if(is.null(z)) z = seq(0, ceiling(max(plant_height(x))/100)*100 +10, by=10)
   wfp = .woodyFuelProfile(z,x, SpParams, gdd)
-  df = data.frame(BD = c(0,wfp), Z = z)
+  df = data.frame("BD" = c(0,wfp), "Z" = z)
   if(draw) {
-    g<-ggplot(df, aes(x=BD, y=Z))+
+    g<-ggplot(df, aes_string(x="BD", y="Z"))+
       geom_path()+
       xlab("Bulk density (kg/m3)")+
       ylab("Height (cm)")+
@@ -98,9 +98,9 @@ vprofile_PARExtinction<-function(x, SpParams, z = NULL, gdd = NA, draw = TRUE,
                                  xlim = c(0,100)) {
   if(is.null(z)) z = seq(0, ceiling(max(plant_height(x))/100)*100 +10, by=10)
   pep = .parExtinctionProfile(z,x, SpParams, gdd)
-  df = data.frame(PEP = pep, Z = z)
+  df = data.frame("PEP" = pep, "Z" = z)
   if(draw) {
-    g<-ggplot(df, aes(x=PEP, y=Z))+
+    g<-ggplot(df, aes_string(x="PEP", y="Z"))+
       geom_path()+
       xlab("Available PAR (%)")+
       ylab("Height (cm)")+
@@ -114,9 +114,9 @@ vprofile_SWRExtinction<-function(x, SpParams, z = NULL, gdd = NA, draw = TRUE,
                                  xlim = c(0,100)) {
   if(is.null(z)) z = seq(0, ceiling(max(plant_height(x))/100)*100 +10, by=10)
   swr = .swrExtinctionProfile(z,x, SpParams, gdd)
-  df = data.frame(SWR = swr, Z = z)
+  df = data.frame("SWR" = swr, "Z" = z)
   if(draw) {
-    g<-ggplot(df, aes(x=SWR, y=Z))+
+    g<-ggplot(df, aes_string(x="SWR", y="Z"))+
       geom_path()+
       xlab("Available SWR (%)")+
       ylab("Height (cm)")+
@@ -124,7 +124,7 @@ vprofile_SWRExtinction<-function(x, SpParams, z = NULL, gdd = NA, draw = TRUE,
     if(!is.null(xlim)) g <- g + xlim(xlim)
   }
   if(draw) return(g)
-  else return(pep)
+  else return(swr)
 }
 vprofile_windExtinction<-function(x, SpParams, wind20H, z = NULL, gdd = NA, draw = TRUE,
                                   xlim = NULL) {
@@ -135,7 +135,7 @@ vprofile_windExtinction<-function(x, SpParams, wind20H, z = NULL, gdd = NA, draw
   wep = .windExtinctionProfile(z, wind20H, LAIc, canopyHeight)
   df = data.frame("WS" = wep, "Z" = z)
   if(draw) {
-    g<-ggplot(df, aes(x=WS, y=Z))+
+    g<-ggplot(df, aes_string(x="WS", y="Z"))+
       geom_path()+
       xlab("Wind speed (m/s)")+
       ylab("Height (cm)")+
