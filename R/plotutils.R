@@ -103,7 +103,7 @@
   df = as.data.frame(rbind(df_sl, df_sh), stringsAsFactors = F)
   df$LeafType = factor(df$LeafType, levels =c("Sunlit","Shade"))
   g<-ggplot(df, aes_string(x="TimeStep", y="Y"))+
-    geom_line(aes(col="Cohort", linetype = "Cohort"))+
+    geom_line(aes_string(col="Cohort", linetype = "Cohort"))+
     facet_wrap(~LeafType, ncol=2)+
     scale_color_discrete(name="")+
     scale_linetype_discrete(name="")+
