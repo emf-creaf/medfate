@@ -1,6 +1,11 @@
 ---
 title: "Soil-plant water balance model"
-author: "Miquel De Cáceres"
+author: 
+  - name: "Miquel De Caceres"
+    affiliation: 
+    - &CTFC "Centre de Ciencia i Tecnologia Forestal de Catalunya. Ctra. St. Llorenç de Morunys km 2, 25280, Solsona, Catalonia, Spain"
+  - name: "Victor Granda"
+    affiliation: *CTFC
 date: "`r Sys.Date()`"
 output:
   pdf_document:
@@ -76,7 +81,7 @@ Soil can be described using between 1 and 5 soil layers. For each soil layer $s$
 + $BD_{s}$ [`bd`]: Bulk density (g/cm3) of each soil layer.
 + $P_{rocks,s}$ [`rfc`]: Percentage of rock fragment content ($P_{rocks,s}$).
 
-Soil texture (i.e. percent of sand, silt and clay), bulk density and rock fragment content can differ between soil layers. Specifying a deep rocky layer is important because Mediterranean plants may extend their roots into cracks existing in the parent rock (Ruffault et al., 2013). For those users lacking soil information, package **medfate** provides a function to get soil information from SoilGrids.org (see function `soilgridsParams()`).
+Soil texture (i.e. percent of sand, silt and clay), bulk density and rock fragment content can differ between soil layers. Specifying a deep rocky layer is important because Mediterranean plants may extend their roots into cracks existing in the parent rock [@Ruffault2013]. For those users lacking soil information, package **medfate** provides a function to get soil information from [SoilGrids.org](https://soilgrids.org/) (see function `soilgridsParams()`).
 
 ### Water retention curves
 
@@ -84,8 +89,8 @@ Water retention curve of a soil layer $s$ is the relationship between the water 
 
 1. *Saxton model*: In this model, volumetric soil moisture $\theta(\Psi_s)$ corresponding to a given water potential $\Psi$ (in MPa) below $\Psi_{fc}$ is calculated using: 
 \begin{equation}\theta(\Psi) = (\Psi/A)^{(1/B)}\end{equation}
-where $A$ and $B$ depend on the texture and, if available, organic matter in the soil layer. If organic matter is available, $A$ and $B$ are calculated $P_{clay}$, $P_{sand}$ and $OM$ following Saxton and Rawls (2006).Otherwise, they are calculated from $P_{clay}$ and $P_{sand}$ as indicated in Saxton et al. (1986). Volumetric changes between field capacity and saturation are estimated using a linear function.
-2. *Van Genuchten model*: The well known van Genuchten (1980) model is:
+where $A$ and $B$ depend on the texture and, if available, organic matter in the soil layer. If organic matter is available, $A$ and $B$ are calculated $P_{clay}$, $P_{sand}$ and $OM$ following @Saxton2006. Otherwise, they are calculated from $P_{clay}$ and $P_{sand}$ as indicated in @Saxton1986. Volumetric changes between field capacity and saturation are estimated using a linear function.
+2. *Van Genuchten model*: The well known van Genuchten [@-Genuchten1980] model is:
 \begin{equation}\theta(\Psi) = \theta_{res}+\frac{\theta_{sat}-\theta_{res}}{\left[1+ (\alpha \cdot \Psi)^n \right]^{1-1/n}}\end{equation}
 where $\theta(\psi)$ is the water retention, $\theta_{sat}$ is the saturated water content, $\theta_{res}$ is the residual water content, $\alpha$ is related to the inverse of the air entry pressure (and here has to be expressed in MPa$^{-1}$), and $n$ is a measure of the pore-size distribution.
 
@@ -219,17 +224,7 @@ Function `spwb` returns a list object whose elements are data tables. Each table
 
 ## Leaf phenology and leaf fall
 
-Given a base temperature ($T_{base} = 5^{\circ} \mathrm{C}$), the growth degree
-days ($GDD$) are zero for all those days where mean temperature $T_{mean}$ is below
-$T_{base}$ and start increasing when temperatures become warmer than this threshold.
-In other words, the $GDD$ function accumulates $\max(0.0, T_{mean} - T_{base})$
-for all days previous to the current one. At the end of a year the cummulative
-value is set again to zero.
-Plant species can have either evergreen or winter-deciduous phenology. Evergreen
-plants maintain constant leaf area over the year, whereas in deciduous plants
-leaf-phenological status is updated daily, represented by $\phi_i$, the fraction
-of maximum leaf area. Leaf area index (LAI) values of deciduous plants are adjusted
-for leaf phenology following (Prentice et al., 1993; Sitch et al., 2003):
+Given a base temperature ($T_{base} = 5^{\circ} \mathrm{C}$), the growth degree days ($GDD$) are zero for all those days where mean temperature $T_{mean}$ is below $T_{base}$ and start increasing when temperatures become warmer than this threshold. In other words, the $GDD$ function accumulates $\max(0.0, T_{mean} - T_{base})$ for all days previous to the current one. At the end of a year the cummulative value is set again to zero. Plant species can have either evergreen or winter-deciduous phenology. Evergreen plants maintain constant leaf area over the year, whereas in deciduous plants leaf-phenological status is updated daily, represented by $\phi_i$, the fraction of maximum leaf area. Leaf area index (LAI) values of deciduous plants are adjusted for leaf phenology following [@Prentice1993; @Sitch2003]:
 
 \begin{equation}
 LAI_{i}^{\phi}=LAI^{live}_i\,\cdot\phi_i
@@ -238,8 +233,7 @@ LAI_{i}^{\phi}=LAI^{live}_i\,\cdot\phi_i
 Budburst occurs when daily temperature exceeds $T_{base}$ and $\phi_i$ increases
 linearly from 0 to 1 as function of the degree days above $T_{base}$, until a the
 value $S_{GDD,i}$ is reached (i.e. until $GDD > S_{GDD,i}$). In autumn, $\phi_i$
-drops to 0 when average daily temperature falls again below $T_{base}$ (Sitch
-et al., 2003). The drop of $\phi_i$ causes live expanded leaves to become dead leaves. To avoid a sudden decrease of leaf area, dead leaves are kept in the canopy and they are reduced daily using a negative exponential function of wind speed:
+drops to 0 when average daily temperature falls again below $T_{base}$ [@Sitch2003]. The drop of $\phi_i$ causes live expanded leaves to become dead leaves. To avoid a sudden decrease of leaf area, dead leaves are kept in the canopy and they are reduced daily using a negative exponential function of wind speed:
 \begin{equation}
 LAI^{dead}_i=LAI^{dead}_i\,\cdot e^{- u/10}
 \end{equation}
@@ -281,7 +275,7 @@ needs to be calculated to determine plant transpiration, and the radiation absor
 by the soil is needed to calculate soil evaporation. Foliage absorbs a higher
 proportion of PAR than SWR; thus, the extinction coefficient is higher for PAR
 than for SWR. However, values for the ratio of extinction coefficients are rather
-constant. Following Friend et al. (1997) here it is assumed that the extinction
+constant. Following Friend et al. [-@Friend1997] here it is assumed that the extinction
 coefficient for PAR is 1.35 times larger than that for SWR (i.e.
 $k_{SWR,i} = k_{PAR,i}/1.35$). 
 
@@ -315,7 +309,7 @@ L^{SWR}_{ground} = 1 - \sum_{j}^{n}{f_j}
 
 
 \subsection{Snow pack dynamics}
-Precipitation is considered be snow when $T_{mean}<0$. Interception of snow by the canopy is neglected, and all snow is assumed to accumulate in a single storage compartment $S_{snow}$ over the soil (i.e. canopy snow storage capacity is neglected). A very simple snow submodel is used for snow pack dynamics (accumulation and melt), taken from Kergoat (1998). When mean air temperature is above 0 Celsius $T_{mean}>0$, a simple energy budget relates snow melt, $Sm$ (mm), to air temperature and soil-level radiation (see function \texttt{hydrology\_snowMelt}):
+Precipitation is considered be snow when $T_{mean}<0$. Interception of snow by the canopy is neglected, and all snow is assumed to accumulate in a single storage compartment $S_{snow}$ over the soil (i.e. canopy snow storage capacity is neglected). A very simple snow submodel is used for snow pack dynamics (accumulation and melt), taken from @Kergoat1998. When mean air temperature is above 0 Celsius $T_{mean}>0$, a simple energy budget relates snow melt, $Sm$ (mm), to air temperature and soil-level radiation (see function \texttt{hydrology\_snowMelt}):
 \begin{equation}
 Sm = \frac{Rad\cdot L^{SWR}_{ground}\cdot (1-\alpha_{ice}) + \tau_{day} \cdot T_{mean} \cdot \rho \cdot C_p/r_{s}}{\lambda_{ice}}
 \end{equation}
@@ -401,7 +395,7 @@ legend("bottomright",lty=1:length(Cm), legend=paste("S =",Cm), bty="n")
 
 ## Runoff, infiltration and percolation
 
-The water that reaches the soil is the sum of net rainfall ($Pr_{net}$), runon ($Ro$) and melted snow ($Sm$). The amount of water infiltrating into the soil is $Pr_{net} + Sm + Ro - Ru$, where $Ru$ is the water lost by surface runoff (see function \texttt{hydrology\_infiltrationAmount}). Surface runoff (in mm), is calculated using the USDA SCS curve number method, as in Boughton (1989):
+The water that reaches the soil is the sum of net rainfall ($Pr_{net}$), runon ($Ro$) and melted snow ($Sm$). The amount of water infiltrating into the soil is $Pr_{net} + Sm + Ro - Ru$, where $Ru$ is the water lost by surface runoff (see function \texttt{hydrology\_infiltrationAmount}). Surface runoff (in mm), is calculated using the USDA SCS curve number method, as in @Boughton1989:
 \begin{equation}
 Ru=\frac{(Pr_{net} + Ro + Sm - 0.2 \cdot V_{soil})^2}{(Pr_{net} + Ro + Sm - 0.8 \cdot V_{soil})}
 \end{equation}
@@ -466,8 +460,8 @@ Evaporation from the soil surface is the last component of the soil water balanc
 PE_{soil} =  PET\cdot L^{SWR}_{ground}
 \end{equation}
 
-Actual evaporation from the soil surface is modeled as in Mouillot et al. (2001), who
-followed Ritchie (1972).  First, the model determines the time needed to evaporate
+Actual evaporation from the soil surface is modeled as in @Mouillot2001, who
+followed @Ritchie1972.  First, the model determines the time needed to evaporate
 the current water deficit (difference between field capacity and current moisture)
 in the surface soil layer:
 \begin{equation}
@@ -479,7 +473,7 @@ calculated time is used to determine the ‘supplied’ evaporation, $SE_{soil}$
 SE_{soil} = \gamma_{soil} \cdot (\sqrt{t+1}-\sqrt{1})
 \end{equation}
 The amount of water evaporated from the soil, $E_{soil}$, is then calculated as
-the minimum between supply and demand (Federer, 1982), the latter being the product
+the minimum between supply and demand [@Federer1982], the latter being the product
 of PET and the proportion of light that reaches the ground (see function `hydrology_soilEvaporationAmount`): 
 
 \begin{equation}
