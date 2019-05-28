@@ -1,3 +1,385 @@
 # (PART) Static modules {-}
 
+```{r, echo = FALSE}
+data("SpParamsMED")
+data(exampleforest)
+```
+
 # Fuel characteristics and fire behaviour
+
+## Purpose
+
+Functions `fuel_FCCS()` and `fire_FCCS()` allow calculating potential fire behaviour for forest inventory plots. Formulation of fuel characteristics and fire behaviour is an adaptation of the Fuel Characteristics Classification System [FCCS; @Prichard2013]. In FCCS, fuelbed is divided into six strata, including canopy, shrub, herbaceous vegetation, dead woody materials, leaf litter and ground fuels. All except ground fuels are considered here. The intensity of burning depends on several factors, including topography, wind conditions, fuel structure and its moisture content, which is determined from antecedent and current meteorological conditions.  A modification of the Rothermel's [-@Rothermel1972] model is used to calculate the intensity of surface fire reaction (in $kW/m^2$) and the rate of fire spread (in $m/min$) of surface fires assuming a steady-state fire. Both quantities are dependent on fuel characteristics, windspeed and direction, and topographic slope and aspect. The model returns the following results: (1) Fuel characteristics by stratum; (2) Surface fire behavior (i.e. reaction intensity, rate of spread, fireline intensity and flame length); (3) Crown fire behavior; (4) Fire potential ratings of surface fire behavior and crown fire behavior.
+
+## Input data
+
+### Forest inventory plot data
+The input data for tree cohorts are:
+
++ $SP_i$: Species identity}
++ $DBH_i$: Diameter at breast height (in cm) of the representative tree.
++ $H_i$: Height (in cm) of the representative tree.
++ $N_i$: Cohort density (in $ind.\cdot ha^{-1}$).
+
+The input data for shrub cohorts are:
+
++ $SP_i$: Species identity
++ $C_i$: Plant cover (in percent).
++ $H_i$: Mean plant height (in cm).
+
+Cohorts are not distinguished for the herbaceous stratum, and the variables needed are:
+
++ $C_{he}$: Herbaceous cover (in percent).
++ $H_{he}$: Mean herb height (in cm).
+
+Finally, the model also requires the percent cover of trees in the canopy ($C_{ca}$). This is easily available from forest inventory data, but could also be derived from the description of tree cohorts.
+
+### Other inputs
+Other inputs may be given by expert opinion or they may be calculated from another model. Specifically, for each plant cohort (and for any day of application) the fire behaviour model requires:
++ $P_{dead,i}$: Proportion of the plant that is dead.
++ $M_i$: Foliar moisture value (in percent of dry weight).
+
+Analogously, the same variables are needed for the herbaceous stratum.
++ $P_{dead,he}$: Proportion of herb fuels that respond to humidity changes as 1-h dead fuels.
++ $M_{live,he}$: Foliar moisture value of live herb fuels (in percent of dry weight).
+
+The model also needs the following input parameters:
+
++ $M_{dead}$: the moisture of 1-h dead fuels (in percent of dry weight).
++ $U$: Midflame windspeed (in $m\cdot s^{-1}$).
++ $S$: Slope (in percent).
+
+
+## Fuel characteristics
+
+### Cohort fuel loading
+Here we consider as burnable fuels foliage and branches up to 6.35 mm = 0.25 in in diameter. The same consideration applies to both trees and shrubs. 
+
+#### Tree cohorts
+
+Foliar biomass for a single tree of cohort $i$ ($FB_{tree,i}$; in $kg$) is calculated using:
+\begin{equation}
+FB_{tree,i} = a_{fbt} \cdot DBH_{i}^{b_{fbt}}\cdot e^{c_{fbt}\cdot BAL_i} \cdot DBH_{i}^{d_{fbt} \cdot BA_{sup}}
+\end{equation}
+where $DBH_{i}$ is the diameter of the tree (in $cm$), $BAL_i$ is the cummulative basal area ($m^2\cdot ha^{-1}$) of trees having a larger diameter, and $a_{fbt}$, $b_{fbt}$, $c_{fbt}$ and $c_{fbt}$ are species-specific regression coefficients. The foliar biomass of the whole tree cohort ($FB_{i}$; in $kg\cdot m^{-2}$) is obtained multiplying tree foliar biomass by tree density  ($N_{i}$; in $ind.\cdot ha^{-1}$):
+\begin{equation}
+FB_{i} = FB_{tree,i}\cdot (N_{i}/10000)
+\end{equation}
+Fine fuel loading for the tree cohort ($W_{i}$; in $kg\cdot m^{-2}$), including its leaves and branches with diameter up to 6.35 mm = 0.25 in, is then calculated using:
+\begin{equation}
+W_{i} = r_{6.35}(SP_i)\cdot FB_{i}
+\end{equation}
+where $r_{6.35}(SP_i)$ is the ratio between the weight of leaves plus branches and the weight of leaves alone for branches of 6.35 mm in diameter for the species of cohort $i$. The biomass corresponding to branches of less than < 6.35 mm ($SBB_{i}$, also in $kg\cdot m^{-2}$) is obtained by subtraction: 
+\begin{equation}
+SBB_{i} = (r_{6.35}(SP_i)-1)\cdot FB_{i}
+\end{equation}
+Whereas $W_{i}$ is the cohort loading variable influencing fire behavior, $FB_{i}$ and $SBB_{i}$ are cohort variables used to estimate fine dead woody and leaf litter loadings.
+
+#### Shrub cohorts
+To calculate the fuel loading of a shrub cohort (including both leaves and stems up to 6.35mm), we first determine $A_{sh,i}$, the area (in $cm^2$) occupied by one average individual of height $H_{i}$ (in $cm$), using the quadratic relationship: 
+\begin{equation}
+A_{sh,i} = a_{ash} \cdot H_{i}^2
+\end{equation}
+where $a_{ash}$ is a species-specific parameter. The model then estimates the dry weight of leaves and branches up to 6.35mm in diameter ($B_{sh,i}$, in kg) of this average individual, using an allometric relationship with shrub crown phytovolume assuming a cylinder (in $cm^3$):
+\begin{equation}
+B_{sh,i} = a_{bsh} \cdot (A_{sh,i}\cdot H_{i}\cdot cr(SP_i))^{b_{bsh}}
+\end{equation}
+where $a_{bsh}$ and $b_{bsh}$ are species-specific parameters and $cr(SP_i)$ is a species-specific crown ratio (a proportion between 0 and 1, the ratio between crown length and total height). Shrub density ($N_{i}$; in $ind.\cdot m^{-2}$) can be grossly estimated from percent cover ($C_{i}$, in percent) and $A_{sh,i}$ (in $cm^{-2}$):
+\begin{equation}
+N_{i} = \frac{C_{i}/100}{A_{sh,i}/10000}
+\end{equation}
+The fine fuel loading of a shrub cohort $W_{i}$, in $kg \cdot m^{-2}$) is simply the product of $B_{sh,i}$ ($kg$ of dry weight) and $N_{i}$:
+\begin{equation}
+W_{i} =  B_{sh,i}\cdot N_{i}
+\end{equation}
+Our procedure differs from @Prichard2013 because they calculate first total biomass of the shrub species and then consider the percentage of total weight that corresponds to leaves and small branches. Foliar biomass and small branch biomass (both in $kg \cdot m^{-2}$) can be obtained using the species-specific ratio $r_{6.35}(SP_i)$:
+\begin{eqnarray}
+FB_{i} &=&  W_{i}/r_{6.35}(SP_i)\\
+SBB_{i} &=& W_{i} - FB_{i}
+\end{eqnarray}
+If not known, $r_{6.35}(SP_i)$ can be set to a default value of 2 (equivalent to %50 of weight corresponding to leaves).
+
+### Vertical structure of fuels
+#### Strata definition
+The Fuel Characteristics Classification System (FCCS) on which this document is based, defines six fuel strata [@Prichard2013]:
+
++ *Canopy*: Trees, snags and ladder fuels.
++ *Shrubs*: Primary and secondary layers.
++ *Non-woody vegetation (herbs)*: grasses, sedges, rushes and forbs.
++ *Woody fuels*: All downed and dead wood, sound wood, rotten wood and stumps.
++ *Litter-lichen-moss*: Lichen, litter and moss layers.
++ *Ground fuels*: Duff, basal accumulation and squirrel middens.
+
+Shrubs, herbs and woody fuels are constitute the **upper surface fuels**, whereas herbs and woody fuels alone consitute the **lower surface fuels**. FCCS summarizes and calculates characteristics for each fuelbed stratum and layer. Our model estimates fuel loading and characteristics for canopy, shrub, non-woody vegetation, as well as fine (1h) woody fuels and litter fuels. Larger woody fuels (10h or 100h) could be considered if information about forest management actions is available. Ground fuels are not included here.
+
+#### Vertical distribution of tree and shrub fuels
+For all tree or shrub cohorts fuels are assumed to be homogeneously distributed between the crown base height and the total height ($H_i$). Crown base height ($H_{b,i}$; in cm) is defined as the height corresponding to the first living branch expressed as a fraction of total height. It is calculated from the crown ratio ($CR$; a proportion between 0 and 1), i.e. the ratio between crown length and total height:
+\begin{equation}
+H_{b,i} = H_{i} \cdot (1 - CR_i)
+(\#eq:CrownHeight)
+\end{equation}
+In the case of shrubs the crown ratio is simply equal by a species-specific parameter: $CR_i =  cr(SP_i)$. In the case of trees, the crown ratio is modelled as a function of tree size and stand competition, following a modification of the logistic equation of @Hasenauer1996:
+\begin{equation}
+CR_i = \frac{1}{1+e^{-(a_{cr}+b_{1cr}\cdot HD +b_{2cr} \cdot (H_i/100)+b_{3cr} \cdot DBH_i^2+c_{1cr} \cdot BAL_i + c_{2cr} \cdot ln(CCF))}}
+\end{equation}
+where $HD = H_i/(100\cdot DBH_i)$ is the height to diameter ratio (in $m\cdot cm^{-1}$), $H_i$ is the tree height, $DBH_i$ is the diameter, $CCF$ is the crown competition factor and $a_{cr}$, $b_{1cr}$, $b_{2cr}$, $b_{3cr}$, $c_{1cr}$ and $c_{2cr}$ are species-specific parameters. The crown competition factor is in turn calculated using [@Krajicek1961]:
+\begin{equation}
+CCF = \sum_{i}{N_i \cdot MCA_i}= \sum_{i}{N_i \cdot \pi \cdot (CW_i/2)^2/100}
+\end{equation}
+where $N_i$ is the tree density, $MCA_i$ is the maximum crown area (in percent of unit area) and $CW_i$ is the crown width (in m) assuming an open-grown tree, estimated from an allometric relationship with tree diameter:
+\begin{equation}
+CW_i = a_{cw}\cdot BDH_i^{b_{cw}} 
+\end{equation}
+where again $a_{cw}$ and $b_{cw}$ are species-specific parameters. 
+
+The loading of a cohort that occurs within a given height interval of limits $H_1$ and $H_2$ is calculated as:
+\begin{equation}
+W_i(H_1, H_2) = W_i\cdot p_i(H_1, H_2)
+\end{equation}
+where $p_i(H_1, H_2)$ is the proportion of the crown of cohort $i$ that corresponds to the height interval $(H_1, H_2)$:
+\begin{equation}
+p_i(H_1, H_2) = \frac{\max(0, \min(H_i, H_2) - \max(H_{b,i}, H_1))}{H_{i}-H_{b,i}}
+\end{equation}
+
+### Fuel bulk density profile
+Knowing at which height fuels are placed, the **fuel bulk density profile**  [@Reinhardt2006] is defined for any given interval $(H_1, H_2)$ as the bulk density ($kg/m^3$) of fine  fuels corresponding to that interval:
+\begin{equation}
+BDP(H_1, H_2) = \frac{\sum_{i} W_i(H_1, H_2)}{H_2-H_1}
+\end{equation}
+Canopy bulk density normally ranges between 0 and 0.4 $kg/m^3$ [@Scott2002]. @Sando1972 arbitrarily defined canopy base height as the lower vertical 0.3-m section with a weight greater than $0.01124 kg/m^3$. A user-defined threshold $t_{BDP}$ (in $kg/m^3$) in 0.1-m sections is used to differentiate the surface fuelbed from canopy fuels. Using this threshold the model calculates the following three heights [@Reinhardt2006]:
+
++ *Shrub stratum base height*, $H_{sb}$ (in $cm$): the minimum height between 0 and 2 m where fuel bulk density is larger than $t_{BDP}$.
++ *Shrub stratum top height*, $H_{st}$ (in $cm$): the maximum height between 0 and 2 m where fuel bulk density larger than $t_{BDP}$. With this definition $h_{s}$ cannot be higher than 2 m (corresponding to fuel model 4 in Anderson 1982).
++ *Canopy base height*, $H_{cb}$  (in $cm$): In terms of its consequences to crown fire initiation, canopy base height can be defined as the lowest height above the ground at which there is sufficient canopy fuel to propagate fire vertically through the canopy. It is calculated as the minimum height over $H_st$ when the bulk density starts again to be larger than $t_{BDP}$.
++ *Canopy top height*, $H_{ct}$ (in $cm$): the maximum height where bulk density is larger than $t_{BDP}$.
++ *Canopy gap*, $H_{gap}$ (in $cm$): the difference between $H_{cb}$ and $H_{st}$. The canopy gap is used to calculate crown initiation potential.
+
+The following figure illustrates the definition and analysis of the fuel bulk density profile for a given forest stand. Following @Mitsopoulos2007, a threshold $t_{BDP} = 0.04$ has been used to determine shrub and canopy heights.
+```{r, echo=FALSE, fig.width=4, fig.height=4, fig.align='center'}
+vprofile_fuelBulkDensity(exampleforest, SpParamsMED, z = seq(0,1000, by=1))
+# fs = fuel.Stratification(exampleforest,SpParamsMED, bulkDensityThreshold = 0.04)
+# abline(v=0.04, col="red", lty=2)
+# abline(h=fs$surfaceLayerBaseHeight, col="gray", lty=3, lwd=1.5)
+# abline(h=fs$surfaceLayerTopHeight, col="gray", lty=3, lwd=1.5)
+# abline(h=fs$canopyBaseHeight, col="gray", lty=3, lwd=1.5)
+# abline(h=fs$canopyTopHeight, col="gray", lty=3, lwd=1.5)
+```
+
+
+### Fuel loading ($w$) and fuel depth ($\delta$)
+#### Canopy stratum
+Canopy loading (in $kg\cdot m^{-2}$) is the sum of (tree and shrub) cohort loadings above 2 m (i.e. 200 cm):
+\begin{equation}
+w_{ca} = \sum_{i}w_{i,ca} =\sum_{i}{W_i(200, \infty})
+\end{equation}
+where $w_{i,ca}$ is the canopy stratum loading of cohort $i$. Canopy depth (in $m$) is defined as the average of tree (or shrub) crown lengths above 2 m, weighted by the loadings of cohorts in the canopy:
+\begin{equation}
+\delta_{ca} = \frac{1}{100}\cdot\frac{\sum_{i}{w_{i,ca}\cdot (H_i - H_{b,i})\cdot p_{i,ca} }}{\sum_{i}{w_{i,ca}}}
+\end{equation}
+where the proportion of a tree (or shrub) cohort in the canopy stratum is $p_{i,ca}=p_{i}(200,\infty)$.
+
+#### Shrub stratum
+Shrub loading (in $kg\cdot m^{-2}$) is the sum of (tree and shrub) cohort loadings between the ground and 2 m (i.e. 200 cm):
+\begin{equation}
+w_{sh} = \sum_{i}w_{i,sh} =\sum_{i}W_i(0, 200)
+\end{equation}
+where $w_{i,sh}$ is the shrub stratum loading of cohort $i$. The depth of the shrub stratum (in $m$) is defined as the average of tree (or shrub) crown lengths below 2 m, weighted by the loadings of cohorts in the shrub stratum:
+\begin{equation}
+\delta_{sh} = \frac{1}{100}\cdot \frac{\sum_{i}{w_{i,sh}\cdot (H_i - H_{b,i})\cdot p_{i,sh} }}{\sum_{i}{w_{i,sh}}}
+\end{equation}
+where the proportion of a shrub (or tree) cohort in the shrub stratum is $p_{i,sh}=p_{i}(0,200)$.
+
+
+#### Non-woody stratum
+Herb percent cover and average herb height are transformed into herbaceous loading ($kg\cdot m^{-2}$) using (ref piropinos): 
+\begin{equation}
+w_{he} = 0.014 \cdot C_{he} \cdot (H_{he}/100)
+\end{equation}
+The depth of the herbaceous stratum (in $m$) is simply the mean height of herbs:
+\begin{equation}
+\delta_{he} = H_{he}/100
+\end{equation}
+
+#### Woody and litter strata
+In FCCS [@Prichard2013], woody surface loading includes several fuel sizes. However, when calculating surface fire behavior $w_{wo}$ includes 100% of 1h fuels, 25% of 10h fuels and 12.5% of 100h fuels, which represents the material available for flaming combustion. Obtaining loading estimates for 10h- and 100h-fuels is very difficult without field fuel sampling. However, we might estimate 1h woody fuels and leaf litter from standing biomass of small branches (< 6.35mm) and leaves for trees and shrubs. Hence, our treatment of surface woody fuels includes only fine (1h) fuels.
+
+Assuming a continuous input of litter, the variation in accumulated litter is described by a simple differential equation [@Birk1980]:
+\begin{equation}
+\frac{\mathrm{d}X}{\mathrm{d}t} = L - k\cdot X
+\end{equation}
+where $k$ is the decay constant, $L$ is the rate of litterfall and $X$ is the litter mass accumulated in the forest floor. Assuming that litter mass has reached a steady state, $X$ can be estimated as the ratio between $L$ and $k$. If litterfall is estimated as the total foliar biomass divided by leaf duration, the amount of steady state leaf litter corresponding to each tree and srhub cohort can be estimated using:
+\begin{equation}
+w_{li, i} = \frac{FB_i}{LD(SP_i) \cdot k_i}
+\end{equation}
+where $FB_i$ is the foliar biomass of cohort $i$, $LD(SP_i)$ is the species-specific average leaf duration (in years) and $k_i$ is the rate of decay of leaves of cohort $i$, which is given by the regreession model of Meentemeyer (1978):
+\begin{equation}
+k_i = (-0.5365+0.00241\cdot AET) - (-0.01586+0.000056\cdot AET) \cdot LI(SP_i) 
+\end{equation}
+where $LI(SP_i)$ is the species-specific percentage of lignin content in leaves and AET is actual evapotranspiration (default $AET = 1000 mm$). Litter loadings are summed for four litter types (short pine needles, long pine needles, other conifers, broadleaves). In the case of fine dead woody materials (small fallen branches), loading of small branches is taken as woody litter and it is assumed that small branch litterfall occurs at the same time as leaf litterfall (i.e. according to leaf duration):
+\begin{equation}
+w_{wo} = \sum_{i}{w_{wo, i}} = \sum_{i}{\frac{SBB_i}{LD(SP_i)\cdot k_{wo}} }
+\end{equation}
+where $k_{wo} = 0.95 y^{-1}$ is a constant rate of decomposition for small branches.
+
+In FCCS, the depth of woody and LLM strata are inputs. In our case the depth of the woody and litter strata are estimated from the corresponding fuel loadings:
+\begin{eqnarray}
+\delta_{wo} &= w_{wo}/\rho_{b, wo}\\
+\delta_{li} &= w_{li}/\rho_{b, li}
+\end{eqnarray}
+where $\rho_{b, wo}$, $\rho_{b, li}$ are the woody and litter bulk density (in $kg\cdot m^{-3}$), respectively. Litter bulk density $\rho_{b,li}$ is calculated as a weighted average of litter types:
+\begin{equation}
+ \rho_{b,li} = \frac{\sum_{k}{ \rho_{b,k}\cdot w_{li,k}}}{\sum_{k} {\cdot w_{li,k}}}
+\end{equation}
+where $k$ indicates litter type. The bulk density for litter types are [@Prichard2013; Table 1]: 
+\begin{eqnarray}
+\rho_{b,shortneedlepine} &= \rho_{b,longneedlepine} = \rho_{b,otherconifer}= 1.65 lb\cdot ft^{-3} = 26.43 kg\cdot m^{-3}\\
+\rho_{b,hardwood} &= 0.83 lb\cdot ft^{-3} = 13.30  kg\cdot m^{-3}
+\end{eqnarray}
+
+
+### Other fuel characteristics
+All the following characteristics are calculated in metric units (although British units are indicated to qualify specific values for compatibility).
+
+#### Particle density ($\rho_{p}$)
+Particle density is the ratio of dry weight over volume for fuel particles (in $kg\cdot m^{-3}$). When species have different values, particle density averages for shrub and canopy strata can be obtained as:
+\begin{eqnarray}
+\rho_{p, sh} &= \frac{\sum_{i}{w_{i,sh} \cdot \rho_p(SP_i)}}{\sum_{i}{w_{i,sh}}}\\
+\rho_{p, ca} &= \frac{\sum_{i}{w_{i,ca} \cdot \rho_p(SP_i)}}{\sum_{i}{w_{i,ca}}}
+\end{eqnarray}
+where $\rho_p(SP_i)$ is the species-specific particle density. $\rho_{p, he}$, $\rho_{p, wo}$ and $\rho_{p, li}$ are all set to a default value $\rho_{p} = 400 kg\cdot m^{-3}= 25 lb\cdot ft^{-3}$ [@Prichard2013]. 
+
+#### Particle volume ($PV$)
+Particle volume is defined as the volume of particles per surface area (in $m^3\cdot m^{-2}$). Is calculated as dry weight loading divided by particle density. If species have different particle density values, the particle volume for canopy ($PV_{ca}$) and shrub($PV_{sh}$) strata can be calculated using:
+\begin{eqnarray}
+PV_{ca} &= \sum_{i}{PV_{i,ca}} = \sum_{i}{w_{i,ca}/\rho_{p}(SP_i)}\\
+PV_{sh} &= \sum_{i}{PV_{i,sh}} = \sum_{i}{w_{i,sh}/\rho_{p}(SP_i)}
+\end{eqnarray}
+where $PV_{i,ca}$ and $PV_{i,sh}$ are the particle volume of cohort $i$ in the canopy and shrub strata, respectively. The particle volume for woody and herb strata are simply:
+\begin{eqnarray}
+PV_{wo} &= w_{wo}/\rho_{p,wo}\\
+PV_{he} &= w_{he}/\rho_{p,he}
+\end{eqnarray}
+The particle volume for the litter stratum is the sum of particle volume of litter components:
+\begin{equation}
+PV_{li} = \sum_{i}{PV_{li,k}} = \sum_{i}{w_{li,k}/\rho_{p, li}}
+\end{equation}
+
+#### Packing ratio ($\beta$)
+The proportion of fuelbed stratum volume occupied by fuel particles is an important factor to predict fire behavior. At low packing ratios (low particle density) fire intensity is limited by excessive heat loss. At high packing ratios (high particle density), lack of oxygen limits combustion. The packing ratios for the canopy and shrub stratum ($\beta_{ca}$ and $\beta_{sh}$; dimensionless) are given by:
+\begin{eqnarray}\@ref(eq:packingratioshrub)
+\beta _{ca} &= \frac{PV_{ca}}{\delta_{ca}}\\
+\beta _{sh} &= \frac{PV_{sh}}{\delta_{sh}}
+\end{eqnarray}
+where $w_{i,ca}$ and $w_{i,sh}$ are the contribution of cohort $i$ to canopy and shrub strata loading (in $kg\cdot m^{-2}$), respectively, and $\rho_p(SP_i)$ is the particle density (in $kg\cdot m^{-3}$) of fuels in cohort $i$. The packing ratio for the herbaceous, woody and litter strata are:
+\begin{eqnarray}
+\beta _{he} &= \frac{PV_{he}}{\delta_{he}}\\
+\beta _{wo} &= \frac{PV_{wo}}{\delta_{wo}}= \frac{\rho_{b,wo}}{\rho_{p,wo}}\\
+\beta _{li} &= \frac{PV_{li}}{\delta_{li}}= \frac{\rho_{b,li}}{\rho_{p,li}}
+\end{eqnarray}
+Note that the packing ratio expressions for woody and litter strata as a ratio of bulk and particle density arises as a consequence of how fuel depth and particle volume are estimated.
+
+#### Surface-area-to-volume ratio ($\sigma$)
+The surface-area-to-volume ratio (in $m^2\cdot m^{-3}$) for the canopy or shrub strata are calculated using weighted averages:
+\begin{eqnarray}
+\sigma_{ca} &= \frac{\sum_{i}{w_{i,ca} \cdot \sigma(SP_i)}}{\sum_{i}{w_{i,ca}}}\\
+\sigma_{sh} &= \frac{\sum_{i}{w_{i,sh} \cdot \sigma(SP_i)}}{\sum_{i}{w_{i,sh}}}
+\end{eqnarray}
+where $w_{i,ca}$ and $w_{i,sh}$ are the contribution of cohort $i$ to canopy and shrub strata loading (in $kg\cdot m^{-2}$), respectively, and $\sigma(SP_i)$ is the species-specific surface-area-to-volume ratio. The surface-area-to-volume ratio of herbs is assumed constant $\sigma_{he} = 11483 m^2\cdot m^{-3} = 3500 ft^2\cdot ft^{-3} $ and that of small (1-h) woody fuels is $\sigma_{wo} = 1601.05 m^2\cdot m^{-3} = 488 ft^2\cdot ft^{-3} $. The surface-area-to-volume ratio for the litter stratum is:
+\begin{equation}
+\sigma_{li} = \frac{\sum_{k}{w_{li,k} \cdot \sigma_{k}}}{\sum_{k}{w_{li,k}}}
+\end{equation}
+and the surface-area-to-volume ratio for litter types are:
+\begin{eqnarray}
+\sigma_{shortneedlepine} &= 6562 m^{2}\cdot m^{-3}= 2000 ft^{2}\cdot ft^{-3}\\
+\sigma_{longneedlepine} &= 4921 m^{2}\cdot m^{-3}= 1500 ft^{2}\cdot ft^{-3}\\
+\sigma_{otherconifer} &= 8202 m^{2}\cdot m^{-3}= 2500 ft^{2}\cdot ft^{-3}\\
+\sigma_{hardwood} &= 8202 m^{2}\cdot m^{-3}= 2500 ft^{2}\cdot ft^{-3}
+\end{eqnarray}
+
+#### Fuel area index (FAI)
+The fuel area index (FAI) is the total fuel surface area per unit of ground area (unitless). It is analogous to leave area index (LAI), and it is used to calculate FCCS fire potentials [@Schaaf2007]. For shrub and canopy strata, FAI is calculated as:
+\begin{eqnarray}
+FAI_{ca} &= \sum_{i}{FAI_{i, ca}} = \sum_{i}{PV_{i,ca} \cdot\sigma(SP_i)}\\
+FAI_{sh} &= \sum_{i}{FAI_{i, sh}}= \sum_{i}{PV_{i,sh} \cdot \sigma(SP_i)}
+\end{eqnarray}
+where $FAI_{i, ca}$ and $FAI_{i, sh}$ are the FAI of cohort $i$ in the canopy and shrub strata, respectively. The FAI of herbs and woody strata are given by:
+\begin{eqnarray}
+FAI_{he} &= PV_{he} \cdot \sigma_{he}\\
+FAI_{wo} &= PV_{wo} \cdot \sigma_{wo}
+\end{eqnarray}
+For the litter layer, FAI is calculated as a sum of FAI for litter components:
+\begin{equation}
+FAI_{li} = \sum_{k}{FAI_{li,k}} = \sum_{k}{PV_{li,k} \cdot \sigma_{k}}
+\end{equation}
+
+#### Moisture ($M$)
+Live foliar moisture (in percent of dry weight) is also averaged across cohorts composing the shrub or canopy strata:
+\begin{eqnarray}
+M_{live, sh} &= \frac{\sum_{i}{w_{i,sh} \cdot M_i}}{\sum_{i}{w_{i,sh}}} \\
+M_{live, ca} &= \frac{\sum_{i}{w_{i,ca} \cdot M_i}}{\sum_{i}{w_{i,ca}}}
+\end{eqnarray}
+Live foliar moisture of herb stratum ($M_{live, he}$) is an input. The moisture of dead plant in the canopy and shrub layers ($M_{dead, ca}$ and $M_{dead, sh}$), the moisture of dead herbs ($M_{dead, he}$), as well as that of litter ($M_{li}$) and woody ($M_{wo}$) strata are all assumed equal to the moisture of 1-h dead fuels, which is an input of the model.
+
+#### Proportion of dead fuel ($P_{dead}$)
+Woody and litter strata are dead fuels, but for canopy, shrub and herb strata the proportion of fuels that are dead are variable. The proportion of dead fuels in the herbaceous stratum ($P_{dead,he}$) is an input of the model, but for the shrub and canopy strata these are calculated from the proportion of dead fuels in each cohort:
+\begin{eqnarray}
+P_{dead,sh} &= \frac{\sum_{i}{w_{i,sh} \cdot P_{dead,i}}}{\sum_{i}{w_{i,sh}}} \\
+P_{dead, ca} &= \frac{\sum_{i}{w_{i,ca} \cdot P_{dead,i}}}{\sum_{i}{w_{i,ca}}}
+\end{eqnarray}
+
+#### Low heat content ($h$)
+The low fuel heat content of each surface fuel stratum (in $kJ\cdot kg^{-1}$) is used for the calculation of reaction intensity. Heat content values are adjusted for live foliar moisture content in canopy, shrub and herb strata; and are left to the default value for woody and litter strata:
+\begin{eqnarray}
+h_{ca} &=& h_{ca, def} - (M_{live, ca}/100)\cdot V \\
+h_{sh} &=& h_{sh, def} - (M_{live, sh}/100)\cdot V \\
+h_{he} &=& h_{def} - (M_{live, he}/100)\cdot V \\
+h_{wo} &=& h_{li} = h_{def}
+\end{eqnarray}
+where $h_{def} = 18608 kJ\cdot kg^{-1} = 8000 Btu\cdot lb^{-1} $ is the default low heat content value for herbs, woody and litter strata, and $V = 2596 kJ\cdot kg^{-1} = 1116 Btu\cdot lb$ is the latent heat of vaporisation of water. The default low heat of contents for the canopy and shrub strata ($h_{ca, def}$ and $h_{sh, def}$) are calculated as a weighted average across cohorts:
+\begin{eqnarray}
+h_{ca, def} &=& \frac{\sum_{i}{w_{i,ca} \cdot h(SP_i)}}{\sum_{i}{w_{i,ca}}}\\
+h_{sh, def} &=& \frac{\sum_{i}{w_{i,sh} \cdot h(SP_i)}}{\sum_{i}{w_{i,sh}}}
+\end{eqnarray}
+where $h(SP_i)$ is a species-specific low heat content value.
+
+#### Flammability index ($\eta_{F}$)
+Flammability index ($\eta_{F} \in [1, 2]$) is a multiplier of reaction efficiency based on expert opinion applied to species that burn with more intensity than others, resulting from differences in fuel chemistry. Flammability index of canopy and shrub strata are the result of averaging the flammability of cohorts using loading as weights:
+\begin{eqnarray}
+\eta_{F, ca} &= \frac{\sum_{i}{w_{i,ca} \cdot \eta_{F}(SP_i)}}{\sum_{i}{w_{i,ca}}}\\
+\eta_{F, sh} &= \frac{\sum_{i}{w_{i,sh} \cdot \eta_{F}(SP_i)}}{\sum_{i}{w_{i,sh}}}
+\end{eqnarray}
+where $\eta_{F}(SP_i)$ is a species-specific flammability value. Flamability index for other strata are set to default values: 
+\begin{eqnarray}
+\eta_{F, he} &= \eta_{F, li} = 1.5 \\
+\eta_{F, wo} &= 1.0
+\end{eqnarray}
+
+#### Reactive volume ($RV$)
+The volume per surface unit ($m^3\cdot m^{-2}$) that would be involved in flaming combustion. 
+\begin{eqnarray}
+RV_{sh} &=& w_{shrub}/\rho_{p, sh}\\
+RV_{he} &=& w_{he}/\rho_{p, he}\\
+RV_{wo} &=& w_{wo}/\rho_{p, wo}\\
+RV_{li} &=& \min(w_{li}, w_{\max,li})/\rho_{p, li}
+\end{eqnarray}
+In the case of litter, the flame loading is limited by $w_{\max,li}$, the maximum loading that would be consumed in the flaming stage of combustion, calculated as a weighted average of litter types:
+\begin{equation}
+ w_{\max,li} = \frac{\sum_{k}{ w_{\max,k}\cdot w_{li,k}}}{\sum_{k} {\cdot w_{li,k}}}
+\end{equation}
+where $k$ indicates litter type. The maximum combustion loadings for litter types are [@Prichard2013; Table 2]: 
+\begin{eqnarray}
+w_{\max,shortneedlepine} &=& w_{\max,otherconifer} = 0.3248 kg \cdot m^{-2} = 2900 lb\cdot ac^{-1} \\
+w_{\max,longneedlepine} &=& 0.6496 kg \cdot m^{-2}= 5800 lb\cdot ac^{-1} \\
+w_{\max,hardwood} &=& 0.3472 kg \cdot m^{-2}= 3100 lb\cdot ac^{-1} 
+\end{eqnarray}
+
+### Unit conversion of fuel characteristics
+FCCS calculations employ empirical equations that were derived in British units system. Hence, all the fuel characteristics and model inputs that are in metric units have to be translated into British units prior to fire behaviour calculations:
+
++ Loading: $1 kg\cdot m^{-2} = 0.204918 lb\cdot ft^{-2}$
++ Depths: $1m = 3.2808399ft$
++ Particle density and bulk density: $1 kg\cdot m^{-3} = 0.06242796 lb\cdot ft^{-3}$
++ Particle volume and reactive volume: $1 m^{3}\cdot m^{-2} = 3.2808399 ft^{3}\cdot ft^{-2}$
++ Surface-to-area-volume ratio: $1 m^{2}\cdot m^{-3} = 0.3048 ft^{2}\cdot ft^{-3}$
++ Heat content: $1kJ\cdot kg^{-1} = 0.429922614 Btu\cdot lb^{-1}$
++ Wind speed: $1 m \cdot s^{-1} = 2.23693629 mph$
