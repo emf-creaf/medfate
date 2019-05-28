@@ -1,18 +1,19 @@
-# (APPENDIX) Symbols {-}
+# (APPENDIX) Appendices {-}
+
+# Symbols
 The following tables list all symbols used in this document, along with their units and definition. When symbols are input parameters for \texttt{medfate}, the name of those parameters in data frame \texttt{SpParamsMED} is also indicated.
 
 ## Anatomy 
 
-| Symbol | Units | R      | Description |
-|--------|-------|--------|-------------|
+| Symbol | Units | R param | Description                        |
+|--------|-------|---------|------------------------------------|
 | $H_v$  | $m^2·m^{-2}$ | `1/Al2As` | Huber value (ratio of sapwood area to leaf area) |
 |  $d$   | $cm$  | `LeafWidth` | Leaf width |
 | $SLA$  | $m^2·kg^{-1}$ | `SLA` | Specific leaf area |
-
-    $\rho_{leaf}$ & g·cm$^{-3}$ & \texttt{LeafDens} & Leaf tissue density. \\ \hline
-    $\rho_{wood}$ & g·cm$^{-3}$ & \texttt{WoodDens} & Wood tissue density. \\ \hline
-    $\Theta_{sapwood}$ & m$^3$·m$^{-3}$ & & Sapwood porosity (volume of empty spaces over total volume). \\ \hline
-    $\Theta_{leaf}$ & m$^3$·m$^{-3}$ & & Leaf porosity (volume of empty spaces over total volume). \\ \hline
+| $\rho_{leaf}$ | $g·cm^{-3}$ | `LeafDens` | Leaf tissue density |
+| $\rho_{wood}$ | $g·cm^{-3}$ | `WoodDens` | Wood tissue density |
+| $\Theta_{sapwood}$ | $m^3·m^{-3}$ | | Sapwood porosity (volume of empty spaces over total volume) |
+| $\Theta_{leaf}$ | $m^3·m^{-3}$ | | Leaf porosity (volume of empty spaces over total volume) |
 
 
 ## Plant hydraulics
