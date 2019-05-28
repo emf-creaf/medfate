@@ -299,7 +299,7 @@ The surface-area-to-volume ratio (in $m^2\cdot m^{-3}$) for the canopy or shrub 
 \sigma_{ca} &= \frac{\sum_{i}{w_{i,ca} \cdot \sigma(SP_i)}}{\sum_{i}{w_{i,ca}}}\\
 \sigma_{sh} &= \frac{\sum_{i}{w_{i,sh} \cdot \sigma(SP_i)}}{\sum_{i}{w_{i,sh}}}
 \end{eqnarray}
-where $w_{i,ca}$ and $w_{i,sh}$ are the contribution of cohort $i$ to canopy and shrub strata loading (in $kg\cdot m^{-2}$), respectively, and $\sigma(SP_i)$ is the species-specific surface-area-to-volume ratio. The surface-area-to-volume ratio of herbs is assumed constant $\sigma_{he} = 11483 m^2\cdot m^{-3} = 3500 ft^2\cdot ft^{-3} $ and that of small (1-h) woody fuels is $\sigma_{wo} = 1601.05 m^2\cdot m^{-3} = 488 ft^2\cdot ft^{-3} $. The surface-area-to-volume ratio for the litter stratum is:
+where $w_{i,ca}$ and $w_{i,sh}$ are the contribution of cohort $i$ to canopy and shrub strata loading (in $kg\cdot m^{-2}$), respectively, and $\sigma(SP_i)$ is the species-specific surface-area-to-volume ratio. The surface-area-to-volume ratio of herbs is assumed constant $\sigma_{he} = 11483 m^2\cdot m^{-3} = 3500 ft^2\cdot ft^{-3}$ and that of small (1-h) woody fuels is $\sigma_{wo} = 1601.05 m^2\cdot m^{-3} = 488 ft^2\cdot ft^{-3}$. The surface-area-to-volume ratio for the litter stratum is:
 \begin{equation}
 \sigma_{li} = \frac{\sum_{k}{w_{li,k} \cdot \sigma_{k}}}{\sum_{k}{w_{li,k}}}
 \end{equation}
@@ -350,7 +350,7 @@ h_{sh} &=& h_{sh, def} - (M_{live, sh}/100)\cdot V \\
 h_{he} &=& h_{def} - (M_{live, he}/100)\cdot V \\
 h_{wo} &=& h_{li} = h_{def}
 \end{eqnarray}
-where $h_{def} = 18608 kJ\cdot kg^{-1} = 8000 Btu\cdot lb^{-1} $ is the default low heat content value for herbs, woody and litter strata, and $V = 2596 kJ\cdot kg^{-1} = 1116 Btu\cdot lb$ is the latent heat of vaporisation of water. The default low heat of contents for the canopy and shrub strata ($h_{ca, def}$ and $h_{sh, def}$) are calculated as a weighted average across cohorts:
+where $h_{def} = 18608 kJ\cdot kg^{-1} = 8000 Btu\cdot lb^{-1}$ is the default low heat content value for herbs, woody and litter strata, and $V = 2596 kJ\cdot kg^{-1} = 1116 Btu\cdot lb$ is the latent heat of vaporisation of water. The default low heat of contents for the canopy and shrub strata ($h_{ca, def}$ and $h_{sh, def}$) are calculated as a weighted average across cohorts:
 \begin{eqnarray}
 h_{ca, def} &=& \frac{\sum_{i}{w_{i,ca} \cdot h(SP_i)}}{\sum_{i}{w_{i,ca}}}\\
 h_{sh, def} &=& \frac{\sum_{i}{w_{i,sh} \cdot h(SP_i)}}{\sum_{i}{w_{i,sh}}}
