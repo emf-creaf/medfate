@@ -1,0 +1,56 @@
+# Update of structural variables
+
+Unlike functional variables, structural variables are updated for simplicity once a year only (or before the end of the simulated period). 
+
+## Tree diameter, height and crown ratio
+In the case of tree cohorts, the cumulated new sapwood area ($\sum{SA_{growth}}$) is translated to an increment in DBH ($\Delta DBH$, in cm) following:
+\begin{equation}
+\Delta DBH = 2 \cdot \sqrt{(DBH/2)^2+(\sum{SA_{growth}}/\pi)} - DBH
+\end{equation}
+Furthermore, the model assumes that increments in height are linearly related to increments in diameter through a function $f_{HD}$ (Lindner et al. 1997):
+
+\begin{equation}
+\Delta H = f_{HD} \cdot \Delta DBH
+\end{equation}
+Hence, $f_{HD}$ represents the height increment (in cm) per each cm of diameter increment. It was customary in forest gap models to prevent height from being larger than a species-specific value $H_{\max}$, so that beyond some point trees only grew in size by increasing their diameter. Moreover, light conditions influence growth in height with trees living under the shade of others generally showing larger increases in height than trees living in open conditions. Hence, our formulation for $f_{HD}$ is [@Lindner1997; @Rasche2012]:
+\begin{equation}
+f_{HD} = \left[f_{HD,\min} \cdot L + f_{HD,\max} \cdot (1-L) \right] \cdot \left( 1 - \frac{H-137}{H_{\max} - 137} \right)
+\end{equation}
+where $f_{HD,\min}$ would be the height-diameter ratio for a tree of 137 cm height growing in full light and $f_{HD,\max}$ would be the same ratio for a tree of the same height growing in the shadow. This formulation seems slightly easier to calibrate than that presented in @Rasche2012. $H_{\max}$ could be dependent on environmental conditions, but we skip this here, because environmental conditions already affect growth rate and carbon balance.
+
+After updating tree diameter ($DBH$) and tree height ($H$), the model updates tree crown ratio ($CR$) by applying allometric relationships that take into account tree size and competition (see details in vignette XX).
+
+## Shrub height and cover
+Since shrub structural variables are height and cover, shrub growth is done in a way somewhat different from trees. Shrubs are often multi-stemmed (some trees also are), so that increases in sapwood area are not easily related to diameter growth. Since leaf biomass is related to sapwood area, one may model shrub growth assuming an allometric relationship between phytovolume of individual shrub crowns and photosynthetic biomass. This strategy entails that shrubs may grow or shrink in size depending on their C balance, in the same way that tree crowns would become denser or sparser depending on their C balance. Hence, shrubs can be understood as crowns in the floor.
+
+Starting from live leaf area ($m^2·m^{-2}$) we can calculate the foliar weight per shrub individual (in $kg · ind^{-1}$):
+\begin{equation}
+W_{leaves} = \frac{LAI^{live}} {(N/10000) \cdot SLA}
+\end{equation}
+An allometric relationship relating the biomass of leaves plus small branches and crown phytovolume ($PV$; in $m^3·ind^{-1}$) can be drawn from fuel calculations:
+\begin{equation}
+W_{leaves+branches} = W_{leaves} \cdot r_{6.35}  = a_{bsh} \cdot PV^{b_{bsh}}
+\end{equation}
+where $a_{bsh}$ and $b_{bsh}$ are allometric relationships and $r_{6.35}$ is a species-specific ratio relating the dry weight of leaves plus small branches to the dry weight of leaves. Inverting this relationship we obtain an expression of shrub crown phytovolume:
+\begin{equation}
+PV = \left[\frac{W_{leaves} \cdot r_{6.35}}{a_{bsh}}\right]^{1/b_{bsh}}
+\end{equation}
+Phytovolume is defined as the volume occupied by the shrub crown, i.e.:
+\begin{equation}
+PV =  (A_{sh}/10000) \cdot (H/100) \cdot CR
+\end{equation}
+where $A_{sh}$ is the area of a single shrub individual (in $cm^2$). If we use the following quadratic relationship between $A_{sh}$ and $H$:
+\begin{equation}
+A_{sh} = a_{ash} \cdot H^2
+\end{equation}
+we can calculate shrub height from phytovolume using:
+\begin{equation}
+H = \left[\frac{10^6 \cdot PV}{a_{ash} \cdot CR}\right]^{1/3}
+\end{equation}
+Finally, the new value for shrub cover (in percent) can be obtained from $H$ and $N$ (in ind·ha$^{-1}$):
+\begin{equation}
+Cover = 100 \cdot (N/10000) \cdot (A_{sh}/10000) = \frac{N \cdot a_{ash} \cdot H^2}{10^6}
+\end{equation}
+Note that crown ratio for shrubs is assumed constant in the model. Like for trees, shrub height is limited to a maximum height $H_{\max}$. However, unlike trees, shrubs are not allowed to continue growing once this maximum size is attained. When the estimated height is over the maximum value, the exceeding amount of live leaf area is allocated to dead live area.
+
+

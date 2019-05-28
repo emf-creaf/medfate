@@ -1,0 +1,55 @@
+# Plant compartments, respiration and carbon balance
+
+## Biomass compartments
+
+Biomass of leaves, sapwood and fine roots is needed in the model to estimate respiratory costs (and, if needed, the size of the C storage pools). Respiratory leaf biomass per individual ($B_{leaf}$; $g C·ind^{-1}$) is the result of dividing live expanded leaf area by $SLA$ ($kg dry·m^{-2}$), the specific leaf area coefficient of the species, and multypling by a carbon conversion factor (0.3 $gC·g dry^{-1}$):
+\begin{equation}
+B_{leaf} = 0.3 \cdot 1000 \cdot LA^{\phi} / SLA
+\end{equation}
+where $LA^{\phi} = 10000 \cdot LAI^{\phi} / N$ is the expanded leaf area per individual (in m$^2$) and factor 1000 is used to convert from kg to g. Hence, only expanded leaf area has respiratory cost (i.e. winter resistance buds do not) and counts for C storage purposes. 
+
+Respiratory sapwood biomass per individual ($B_{stem}$; $g C·ind^{-1}$) represents the sapwood biomass of stems (including trunks and branches) and coarse roots. It is defined as the product of sapwood area ($SA$; in $cm^2$) per individual times the sum of height ($H$; in cm) and rooting depth ($Z$; cm), transformed to carbon biomass using species-specific parameters of wood C density  ($W_{dens}$; $g dry·cm^{-3}$) and carbon content ($W_{C}$; $g C · g dry^{-1}$):
+\begin{equation}
+B_{stem} = SA\cdot (H + Z) \cdot W_{dens} \cdot W_{C}
+\end{equation}
+
+Finally, the biomass of fine roots per individual ($B_{root}$; g C·ind$^{-1}$) is simply assumed proportional to expanded leaf biomass per individual:
+\begin{equation}
+B_{root} = B_{leaf}/2.5
+\end{equation}
+where 2.5 is a ratio between leaf biomass and fine root biomass. Hence, fine-root maintenance respiration costs are also influenced by leaf-phenological status [@Sitch2003]. 
+
+## Maximum capacity of C pools
+If carbon pools are considered, their maximum capacity is updated at this point. If there is a single (fast) carbon pool, its maximum storage capacity per individual ($C_{fast,\max}$; $g C·ind^{-1}$) is defined proportional to the total living biomass (i.e., easily accessed C sources like sugars are assumed to be stored in all living parts of the plant):
+\begin{equation}
+C_{fast,\max} = C_{p,\max} \cdot (B_{leaf} + B_{stem} + B_{root})
+\end{equation}
+where $C_{p,\max}$ is the amount of C storage per plant respiratory C weight. If two carbon pools are considered, their maximum capacity is updated assuming that the fast pool corresponds to 5% of plant respiratory weight, and the slow pool corresponds to the remaining:
+\begin{eqnarray}
+C_{fast,\max} &=& 0.05 \cdot (B_{leaf} + B_{stem} + B_{root})\\
+C_{slow,\max} &=& \max \left(C_{slow,\max},\, (C_{p, \max}-0.05) \cdot (B_{leaf} + B_{stem} + B_{root})\right)
+\end{eqnarray}
+Note the maximum function for the slow C pool, which ensures that the size of the slow pool will not decrease if there is a decrease in leaf area. Thus, while the slow C pool is still calculated in relation to the total living biomass, it is assumed to be primarily found in long-lasting organs (stem, roots, lignotubers, ...).
+
+## Maintenance respiration and C balance
+Individual daily maintenance respiration ($R^{ind}$; in $g C·ind^{-1}$) is calculated for each of the three compartments (leaves, alive vascular tissues (stem and coarse roots), and fine roots) (Mouillot et al. 2001).  The model uses a $Q_{10}$ relationship with temperature, which means that for every 10ºC change in temperature there is a $Q_{10}$ factor change in respiration. Baseline respiration rates ($r_{leaf}$, $r_{stem}$ and $r_{root}$ for leaves, vascular tissues and fine roots, respectively; in $gC·gC^{-1}$) are not species-specific and all refer to 20ºC:
+\begin{eqnarray}
+R_{leaf} &=& B_{leaf} \cdot r_{leaf} \cdot Q_{10}^{(T_{mean}-20)/10} \\
+R_{stem} &=& B_{stem} \cdot r_{stem} \cdot Q_{10}^{(T_{mean}-20)/10} \\
+R_{root} &=& B_{root} \cdot r_{root} \cdot Q_{10}^{(T_{mean}-20)/10} \\
+R^{ind} &=& R_{leaf}+R_{stem}+R_{root}
+\end{eqnarray}
+where $T_{mean}$ is the average daily temperature (in ºC). Note that the output of `growth()` regarding respiration is actually the result of scaling $R^{ind}$ to the cohort level ($R^{coh}$ in $g C · m^{-2} · day^{-1}$), for comparability with photosynthesis and transpiration:
+\begin{equation}
+R^{coh} =  R^{ind} \cdot N / 10000
+\end{equation}
+If no carbon pools are considered, the carbon available for growth is simply the difference between individual's net photosynthesis and maintenance respiration:
+\begin{equation}
+C_{available} = \max(0,\, A_n^{ind} -  R^{ind})
+\end{equation}
+whereas if carbon pools are considered, the fast C pool is updated with the result of adding photosynthesis and subtracting respiration; and the resulting pool size sets the amount of C available for growth:
+\begin{eqnarray}
+C_{fast} &=& \max(0,\,C_{fast} + A_n^{ind} -  R^{ind})\\
+C_{available} &=& C_{fast}
+\end{eqnarray}
+
