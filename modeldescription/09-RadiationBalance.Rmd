@@ -2,7 +2,7 @@
 The following subsection detail the calculation of radiation components of the energy balance equations.
 
 ## Shortwave radiation absorbed by the canopy
-The canopy is divided into vertical layers (whose size is determined by the control parameter \texttt{verticalLayerSize}), and the expanded and dead leaf area index of each cohort within each layer is determined. Let $n$ be the number of canopy layers. And let $LAI_{i,j}^{all} = LAI_{i,j}^{\phi}+LAI_{i,j}^{dead}$ be the leaf area index of cohort $i$ in layer $j$. Furthermore, it is generally accepted that sunlit and shade leaves need to be treated separately (De Pury and Farquhar 1997). This separation is necessary because photosynthesis of shade leaves has an essentially linear response to irradiance, while photosynthesis of leaves in sunflecks is often light saturated and independent of irradiance.
+The canopy is divided into vertical layers (whose size is determined by the control parameter \texttt{verticalLayerSize}), and the expanded and dead leaf area index of each cohort within each layer is determined. Let $n$ be the number of canopy layers. And let $LAI_{i,j}^{all} = LAI_{i,j}^{\phi}+LAI_{i,j}^{dead}$ be the leaf area index of cohort $i$ in layer $j$. Furthermore, it is generally accepted that sunlit and shade leaves need to be treated separately [@DePury1997]. This separation is necessary because photosynthesis of shade leaves has an essentially linear response to irradiance, while photosynthesis of leaves in sunflecks is often light saturated and independent of irradiance.
 
 The average irradiance reaching the top of each canopy layer $j$ is calculated separately for direct beam and diffuse radiation:
 \begin{eqnarray}
@@ -32,7 +32,7 @@ gamma_SWR = 0.05
 alpha_SWR = 0.7
 ```
 
-This canopy definition leads to a percentage of the above-canopy irradiance reaching each layer (Goudriaan 2016; Anten and Bastiaans 2016). Extinction of direct radiation also defines the proportion of leaves of each layer that are affected by sunflecks (i.e. the proportion of sunlit leaves).
+This canopy definition leads to a percentage of the above-canopy irradiance reaching each layer [@Anten2016]. Extinction of direct radiation also defines the proportion of leaves of each layer that are affected by sunflecks (i.e. the proportion of sunlit leaves).
 
 ```{r, fig.height=4, fig.width=8, echo=FALSE}
 Ibfpar = light_layerIrradianceFraction(LAIlayerlive,LAIlayerdead,LAIlayermax, kb, alpha_PAR)
@@ -97,11 +97,11 @@ where $K_{beam}$ and $K_{dif}$ are the direct and diffuse irrradiance at the top
 \begin{equation}
 K_{abs,sa} = (1 - \gamma_{SWR, soil})\cdot (K_{beam, soil} + K_{dif, soil})
 \end{equation}
-where $\gamma_{SWR, soil} = 0.10$ is the SWR reflectance (10\% albedo) of the soil. LWR is treated in the same way as diffuse SWR. The instantaneous LWR reaching the soil is:
+where $\gamma_{SWR, soil} = 0.10$ is the SWR reflectance (10% albedo) of the soil. LWR is treated in the same way as diffuse SWR. The instantaneous LWR reaching the soil is:
 \begin{equation}
 L_{abs,sa} = (1 - \gamma_{LWR, soil})\cdot L_{a} \cdot \exp\left[ \sum_{h=j+1}^{n}{\sum_{i}^{c}{-k_{LWR}\cdot LAI^{all}_{i,h}}}\right]
 \end{equation}
-where $L_a$ is the atmosphere longwave irradiance, $k_{LWR} = 0.8$ is the extinction coefficient for LWR and $\gamma_{LWR, soil} = 0.05$ is LWR soil reflectance (5\% albedo) of the soil.
+where $L_a$ is the atmosphere longwave irradiance, $k_{LWR} = 0.8$ is the extinction coefficient for LWR and $\gamma_{LWR, soil} = 0.05$ is LWR soil reflectance (5% albedo) of the soil.
 
 ## Longwave soil-canopy radiation exchange
 Longwave radiation (LWR) emmited by a surface at the canopy temperature $T_{can}$ would be:
