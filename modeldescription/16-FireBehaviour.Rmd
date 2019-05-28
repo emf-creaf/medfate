@@ -1,0 +1,3 @@
+# (PART) Static modules {-}
+
+# Fuel characteristics and fire behaviour

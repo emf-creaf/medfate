@@ -753,7 +753,7 @@ legend("bottomright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 
 ### Cost and gain functions
 
-The hydraulic supply function is used to derive a transpirational *cost function* $\theta_1(\Psi_{leaf})$ that reflects the increasing damage from cavitation and the greater difficulty of moving water along the continuum [@Sperry2016b]:
+The hydraulic supply function is used to derive a transpirational *cost function* $\theta_1(\Psi_{leaf})$ that reflects the increasing damage from cavitation and the greater difficulty of moving water along the continuum [@Sperry2016a]:
 \begin{equation}
 \theta_1(\Psi_{leaf}) = \frac{k_{c,max}-k_{c}(\Psi_{leaf})}{k_{c,max}-k_{crit}}
 \end{equation}
