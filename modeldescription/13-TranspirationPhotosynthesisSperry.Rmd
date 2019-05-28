@@ -1,4 +1,4 @@
-# Plant transpiration and photosynthesis
+# Transpiration and photosynthesis under Sperry's model {#transpirationsperry}
 
 The model determines transpiration and photosynthesis for each plant cohort separately as follows. First, it updates the hydraulic supply function depending on plant hydraulic characteristics and soil moisture status. Then, transpiration of the plant cohort is estimated for each of them following the framework of @Sperry2016, who suggest estimating stomatal conductance from the instantaneous maximization of profit, defined as the difference between photosynthesis gain and hydraulic cost (both normalized for comparability). Since the continuum representation implies several soil layers in parallel but joining at the root crown, the hydraulic submodel yields instantaneous water flow and carbon assimilation rates from (or to) each soil layer. Finally, the instantaneous transpiration and assimilation rates of each time step are scaled to the duration of the time step and to the leaf area of the plant cohort. The following provides details for these processes (see further details in Appendices).
 

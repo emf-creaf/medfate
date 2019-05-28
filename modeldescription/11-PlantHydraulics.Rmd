@@ -141,3 +141,84 @@ lines(-psiVec, k3, lty=3, lwd=1.5)
 legend("topright", bty="n", legend=textures, lty=1:3, cex=0.8, lwd=1.5)
 ```
 
+
+## Water content of plant tissues
+
+In **medfate** the water content of leaves and stems is tracked explicitly. Following @Martin-StPaul2017, we consider two sources of water in plant segments [@Tyree1990]. The first comes from the conduits (tracheids or vessels), which will release water due to cavitation and may be refilled with water from adjacent living tissue. The second source of water is formed by more elastic living cells (i.e. parenchyma) and can potentially be a large source of water during relatively high water potentials. This source can be described using the relative water content of a symplasmic tissue. This storage compartment has its own water potential and exchanges water with the xylem conduits according to the difference in water potential.
+
+### Pressure-volume curves
+A pressure-volume curve of a tissue relates a water potential against relative water content ($RWC$; $kg H_2O·kg^{-1}H_2O$ at saturation) in drying tissues. Pressure-volume theory is usually applied to leaves [@Bartlett2012], but it can also be applied to other tissues such as sapwood or cambium cells. 
+
+For living cells, the relationship between $\Psi$ and $RWC$ of the symplasmic fraction ($RWC_{sym}$) is achieved by separating $\Psi$ into osmotic (solute) potential ($\Psi_{S}$) and the turgor potential ($\Psi_{P}$):
+\begin{equation}
+\Psi = \Psi_{S} + \Psi_{P}
+\end{equation}
+The relationship for $\Psi_{P}$ is:
+\begin{equation}
+\Psi_{P} = -\pi_0 -\epsilon\cdot (1.0 - RWC_{sym})
+\end{equation}
+where $\pi_0$ (MPa) is the osmotic potential at full turgor (i.e. when $RWC_{sym} = 1$), and $\epsilon$ is the modulus of elasticity (i.e. the slope of the relationship). Assuming constant solute content, the relationship for $\Psi_{S}$ is:
+\begin{equation}
+\Psi_{S} = \frac{-\pi_0}{RWC_{sym}} 
+\end{equation}
+When $\Psi \leq \Psi_{tlp}$, the water potential at turgor loss point, then $\Psi_{P} = 0$ and $\Psi = \Psi_{S}$. If $\Psi > \Psi_{tlp}$ then the two components are needed. The water potential at turgor loss point ($\Psi_{tlp}$) can be found by [@Bartlett2012]:
+\begin{equation}
+\Psi_{tlp} = \frac{\pi_0 \cdot \epsilon}{\pi_0 + \epsilon}
+\end{equation}
+As an example, the following figure draws the pressure-volume curve for a tissue with $\epsilon = 12$ and $\pi_0 = -3.0$MPa:
+```{r, fig.width=4, fig.height=4, echo=FALSE, fig.align="center"}
+psi = seq(-10,0, by=0.1)
+rwc_s = rep(NA, length(psi))
+for(i in 1:length(psi)) rwc_s[i] =moisture_symplasticRWC(psi[i],-3,12)
+plot(psi, rwc_s, type="l", xlab="Water potential (MPa)", ylab = "Symplasmic RWC")
+```
+
+To calculate $RWC_{sym}$ from the water potential of a tissue, the previous equations need to be combined and, after isolating $RWC_{sym}$, a quadratic relationship is obtained. 
+  
+Apoplastic reservoirs (e.g. sapwood) consist of inelastic cells that release their water to the transpiration stream following embolism. As in @Holtta2009, we equate the relative water content of the apoplastic reservoir of a segment (leaves or stem) to the proportion of maximum conductance in the vulnerability curve:
+\begin{equation}
+RWC_{apo}(\Psi) = \frac{k(\Psi)}{k_{max}} = e^{-((\Psi/d)^{c})}
+\end{equation}
+
+```{r, fig.width=4, fig.height=4, echo=FALSE, fig.align="center"}
+psi = seq(-7,0, by=0.1)
+rwc_a = rep(NA, length(psi))
+for(i in 1:length(psi)) rwc_a[i] =moisture_apoplasticRWC(psi[i],stemc,stemd)
+plot(psi, rwc_a, type="l", xlab="Water potential (MPa)", ylab = "Apoplastic RWC")
+```
+
+
+The average relative water content in a given compartment ($RWC$) can be obtained from $\Psi_{sym}$ and $\Psi_{apo}$ by calculating  $RWC_{sym}(\Psi_{sym})$ and $RWC_{apo}(\Psi_{apo})$ followed by assuming a constant apoplastic fraction $f_{apo}$:
+\begin{equation}
+RWC = RWC_{apo}(\Psi_{apo}) \cdot f_{apo} + RWC_{sym}(\Psi_{sym}) \cdot (1 - f_{apo})
+\end{equation}
+
+### Water content and live fuel moisture content
+
+Pressure-volume curves are useful to determine the moisture content of live fuel elements (leaves and twigs). Given an average relative water content of a water compartment, its live fuel moisture content ($LFMC$ in $g H_2O·g^{-1}$ of dry tissue) can be calculated using:
+\begin{equation}
+LFMC = RWC \cdot \Theta \cdot \frac{\rho_{H_2O}}{\rho} = RWC \cdot LFMC_{max}
+\end{equation}
+where $\Theta$ is the tissue porosity ($cm^3$ of water per $cm^3$ of tissue), $\rho$ is the density of the tissue and $\rho_{H_2O}$ is the density of water.
+
+If we know $RWC_{apo}(\Psi_{apo})$, the relative water content in conduits, and $V_{segment}$ (in $m^3$), the volume of conducting tissue (sapwood) in the segment, then the mass of water that is stored in conduits is: 
+\begin{equation}
+S_{apo}(\Psi_{apo}) = V_{segment} \cdot f_{apo} \cdot RWC_{apo}(\Psi_{apo}) \cdot \rho_{w}
+\end{equation}
+where $\rho_{w}$ is the density of water ($kgH_2O\cdotm^{-3}$) and $f_{apo,s}$ is the volume fraction of apoplastic tissue within sapwood. Similarly, the amount of water stored in the symplastic tissue of the segment at any time is:
+\begin{equation}
+S_{sym}(\Psi_{sym}) = V_{segment} \cdot (1 - f_{apo}) \cdot RWC_{sym}(\Psi_{sym}) \cdot \rho_{w}
+\end{equation}
+
+Finally, if we consider that both apoplastic and symplastic tissues are at the same water potential, the water content in the segment will be:
+\begin{equation}
+S(\Psi) = V_{segment} \cdot (f_{apo} \cdot RWC_{apo}(\Psi) + (1 - f_{apo}) \cdot RWC_{sym}(\Psi)) \cdot \rho_{w}
+\end{equation}
+
+### Relative water content and cavitation
+
+In **medfate** we assume that cavitation in stems is non-reversible. Within a given sapwood segment, we further assume that the proportion of conductance loss ($PLC$) is related to the relative water content ($RWC$) in its conduit vessels (i.e. the water volume in conduit vessels with respect to the maximum water volume):
+\begin{equation}
+PLC(\Psi_{cav}) = 1 - RWC_{apo}(\Psi_{cav})
+\end{equation}
+where $RWC_{apo,s}$ is the function of relative water content for apoplastic stem tissue. With this assumption one can relate changes in PLC derived from cavitation with decreases in water content in xylem conduits. When $PLC$ increases the associated change in water content is a source of water can be added to the transpirational stream [@Martin-StPaul2017]. 

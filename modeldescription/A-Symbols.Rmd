@@ -1,7 +1,8 @@
 # (APPENDIX) Appendices {-}
 
 # Symbols
-The following tables list all symbols used in this document, along with their units and definition. When symbols are input parameters for \texttt{medfate}, the name of those parameters in data frame \texttt{SpParamsMED} is also indicated.
+
+The following tables list all symbols used in this document, along with their units and definition. When symbols are input parameters for **medfate** model functions, the name of those parameters in data frame `SpParamsMED` is also indicated.
 
 ## Anatomy 
 
