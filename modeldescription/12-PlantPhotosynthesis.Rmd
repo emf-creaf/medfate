@@ -32,18 +32,18 @@ Leaf temperature ($T_{leaf}$; in Celsius) can be calculated for any given flow r
 \begin{equation}
 T_{leaf}(\Psi_{leaf}) = T_{can}+\frac{I_{abs}-\epsilon\cdot\sigma\cdot(T_{can}+273.15)^4-\lambda_v\cdot E(\Psi_{leaf})}{C_p\cdot(g_r+g_{Ha})}
 \end{equation}
-where $I_{abs}$ (in $W·m^{-2}$) is the instantaneous shortwave and longwave radiation absorbed per leaf area unit, $E(\Psi_{leaf})$ is the flow (converted to $mol·s^{-1}·m^{-2}$ per two-sided leaf area basis), $\epsilon$ is longwave radiation emissivity (0.97), $\sigma$ is the Stephan-Boltzman constant, $T_{can}$ is the canopy air temperature (in ºC; see Radiation and energy balance), $C_p$ = 29.3 $J·mol^{-1}·ºC^{-1}$ is the specific heat capacity of dry air at constant pressure and $\lambda_v$ is the latent heat of vaporization (in $J·mol^{-1}$):
+where $I_{abs}$ (in $W \cdot m^{-2}$) is the instantaneous shortwave and longwave radiation absorbed per leaf area unit, $E(\Psi_{leaf})$ is the flow (converted to $mol \cdot s^{-1} \cdot m^{-2}$ per two-sided leaf area basis), $\epsilon$ is longwave radiation emissivity (0.97), $\sigma$ is the Stephan-Boltzman constant, $T_{can}$ is the canopy air temperature (in ºC; see Radiation and energy balance), $C_p$ = 29.3 $J \cdot mol^{-1} \cdot ºC^{-1}$ is the specific heat capacity of dry air at constant pressure and $\lambda_v$ is the latent heat of vaporization (in $J \cdot mol^{-1}$):
 \begin{equation}
 \lambda_v = (2.5023\cdot 10^6-(2430.54\cdot T_{can}))\cdot 0.018
 \end{equation}
-Finally, $g_r$ and $g_{Ha}$ are the radiative and heat conductance values (in $mol·m^{-2}·s^{-1}$), respectively [@Campbell1998]:
+Finally, $g_r$ and $g_{Ha}$ are the radiative and heat conductance values (in $mol \cdot m^{-2} \cdot s^{-1}$), respectively [@Campbell1998]:
 \begin{eqnarray}
 g_r &=& \frac{4\cdot \epsilon \cdot \sigma \cdot (T_{can}+273.15)^3}{C_p} \\
 g_{Ha} &=& 0.189 \cdot (u/d)^{0.5}
 \end{eqnarray}
-where $u$ is wind speed (in $m·s^{-1}$), taken as the wind speed at mid-crown height, and $d$ is 0.72 times the leaf width (species parameter `LeafWidth` in $cm$). 
+where $u$ is wind speed (in $m \cdot s^{-1}$), taken as the wind speed at mid-crown height, and $d$ is 0.72 times the leaf width (species parameter `LeafWidth` in $cm$). 
 
-The following figures illustrate the value of $T_{leaf}$ for two leaf sizes and varying values of wind speed and flow rate, calculated for 24ºC canopy temperature and 740 $W·m^{-2}$ instantaneous absorved radiation (see function `biophysics_leafTemperature`):
+The following figures illustrate the value of $T_{leaf}$ for two leaf sizes and varying values of wind speed and flow rate, calculated for 24ºC canopy temperature and 740 $W \cdot m^{-2}$ instantaneous absorved radiation (see function `biophysics_leafTemperature`):
 ```{r, echo=FALSE, fig.width=8, fig.height=4, fig.align="center"}
 par(mar=c(4,4,2,1), mfrow=c(1,2))
 uvec = seq(0.1, 5, by=0.1)
@@ -172,7 +172,7 @@ Since leaf saturated VP decreases when leaf temperature decreases, transpiration
 
 ### Leaf conductance to water vapor
 
-Leaf conductance to water vapor ($g_{sw}$; in $mol H_2O·s^{-1}·m^{-2}$) and to carbon dioxide ($g_{sc}$; in mol $CO_{2}·s^{-1}·m^{-2}$) are obtained for each value of $E$ (in $mol·s^{-1}·m^{-2}$) and $VPD_{leaf}$ using:
+Leaf conductance to water vapor ($g_{sw}$; in $mol H_2O \cdot s^{-1} \cdot m^{-2}$) and to carbon dioxide ($g_{sc}$; in mol $CO_{2} \cdot s^{-1} \cdot m^{-2}$) are obtained for each value of $E$ (in $mol \cdot s^{-1} \cdot m^{-2}$) and $VPD_{leaf}$ using:
 \begin{eqnarray}
 g_{sw} &=& E \cdot \frac{P_{atm}}{VPD_{leaf}}\\
 g_{sc} &=& g_{sw}/1.6
@@ -224,26 +224,26 @@ Gmax = 0.3
 $g_{sw}$ cannot exceed $g_{swmax}$ so that some flow rates may not be possible (see stomatal regulation below). However, $g_{swmax}$ should quickly become non-limiting as soil dries (i.e. reducing $E$) or $VPD_{leaf}$ increases [@Sperry2016]. Minimum stomatal conductance is also used in **medfate** when building the supply function, as it specifies the minimum flow rates that will occur for completely-closed stomata, i.e. the minimum flow from which supply function is build.
 
 ### Leaf photosynthesis
-Rubisco-limited photosynthesis rate $A_c$ (in $\mu mol CO_2·s^{-1}·m^{-2}$) is modelled using [@Collatz1991; @Medlyn2002]:
+Rubisco-limited photosynthesis rate $A_c$ (in $\mu mol CO_2 \cdot s^{-1} \cdot m^{-2}$) is modelled using [@Collatz1991; @Medlyn2002]:
 \begin{equation}
 A_c=\frac{V_{max}\cdot (C_i- \Gamma*)}{C_i+K_c \cdot (1+ O_a/K_o)}
 \end{equation}
-where $V_{max}$ is Rubisco's maximum carboxylation rate (in $\mu mol CO_2·s^{-1}·m^{-2}$), $C_i$ is the internal carbon dioxide concentration (in $\mu mol·mol^{-1}$), $\Gamma*$ is the compensation point (in $\mu mol·mol^{-1}$), $K_c$ (in $\mu mol·mol^{-1}$) and $K_o$ (in $mmol·mol^{-1}$) are Michaelis-Menten constants for carboxylation and oxygenation, respectively, and $O_a$ is the atmospheric oxygen concentration (i.e. 209 $mmol·mol^{-1}$). $\Gamma*$, $K_c$ and $K_o$ depend on leaf temperature ($T_{leaf}$, in Celsius) [@Bernacchi2001]:
+where $V_{max}$ is Rubisco's maximum carboxylation rate (in $\mu mol CO_2 \cdot s^{-1} \cdot m^{-2}$), $C_i$ is the internal carbon dioxide concentration (in $\mu mol \cdot mol^{-1}$), $\Gamma*$ is the compensation point (in $\mu mol \cdot mol^{-1}$), $K_c$ (in $\mu mol \cdot mol^{-1}$) and $K_o$ (in $mmol \cdot mol^{-1}$) are Michaelis-Menten constants for carboxylation and oxygenation, respectively, and $O_a$ is the atmospheric oxygen concentration (i.e. 209 $mmol \cdot mol^{-1}$). $\Gamma*$, $K_c$ and $K_o$ depend on leaf temperature ($T_{leaf}$, in Celsius) [@Bernacchi2001]:
 \begin{eqnarray}
 \Gamma* &=& 42.75\cdot e^{\frac{37830\cdot (T_{leaf}-25)}{298\cdot R \cdot (T_{leaf}-273)}}\\
 K_c &=& 404.9\cdot e^{\frac{79430\cdot (T_{leaf}-25)}{298\cdot R \cdot (T_{leaf}-273)}}\\
 K_o &=& 278.4\cdot e^{\frac{36380\cdot (T_{leaf}-25)}{298\cdot R \cdot (T_{leaf}-273)}}
 \end{eqnarray}
-Electron transport-limited photosynthesis $A_e$ (in $\mu mol CO_2·s^{-1}·m^{-2}$) was obtained from @Medlyn2002:
+Electron transport-limited photosynthesis $A_e$ (in $\mu mol CO_2 \cdot s^{-1} \cdot m^{-2}$) was obtained from @Medlyn2002:
 \begin{eqnarray}
 A_e &=& \frac{J}{4}\cdot \frac{C_i-\Gamma*}{C_i+2\cdot \Gamma*} \\
 J &=& \frac{(\alpha\cdot Q + J_{max})-\sqrt{(\alpha\cdot Q + J_{max})^2-4.0\cdot c \cdot \alpha \cdot Q \cdot J_{max}}}{2\cdot c}
 \end{eqnarray}
-where $\alpha$ is the quantum yield of electron transport (0.3 $mol electrons·mol photons^{-1}$), $Q$ is the PAR photon flux density ($\mu mol photons·m^{-2}·s^{-1}$), which is calculated from leaf irradiance ($I_{par}$; in $W·m^{-2}$):
+where $\alpha$ is the quantum yield of electron transport (0.3 $mol electrons \cdot mol photons^{-1}$), $Q$ is the PAR photon flux density ($\mu mol photons \cdot m^{-2} \cdot s^{-1}$), which is calculated from leaf irradiance ($I_{par}$; in $W \cdot m^{-2}$):
 \begin{equation}
 Q = I_{par}\cdot 546 \cdot 0.836\cdot 10^{-2}
 \end{equation}
-$J_{max}$ and $J$ are the maximum and actual rate of electron transport (both in $\mu mol electrons·m^{-2}·s^{-1}$) and $c=0.9$ defines the curvature of the light-response curve. The gross assimilation rate $A$ at a given $C_i$ is the minimum of $A_e$ and $A_c$. To obtain a smooth $A$-vs-$C_i$ curve we used [@Collatz1991]:
+$J_{max}$ and $J$ are the maximum and actual rate of electron transport (both in $\mu mol electrons \cdot m^{-2} \cdot s^{-1}$) and $c=0.9$ defines the curvature of the light-response curve. The gross assimilation rate $A$ at a given $C_i$ is the minimum of $A_e$ and $A_c$. To obtain a smooth $A$-vs-$C_i$ curve we used [@Collatz1991]:
 \begin{equation}
 A = \frac{(A_c+A_e)-\sqrt{(A_c+A_e)^2-4.0\cdot c'\cdot A_e\cdot A_c}}{2\cdot c'}
 \end{equation}
@@ -251,7 +251,7 @@ where $c'=0.98$ is a curvature factor. The temperature dependence of $J_{max}$ a
 \begin{equation}
 A = g_{sc} \cdot (C_{atm}-C_i)
 \end{equation}
-where $C_{atm}$ is the atmospheric $CO_{2}$ concentration (in $\mu mol·mol^{-1}$; see parameter \texttt{Catm} in function `defaultControl()`). Combining the two equations for $A$ and finding the root of the resulting equation using Newton-Raphson method allows determining $C_i$ and therefore $A$. Thus, after defining PAR photon flux density, atmosphere $CO_{2}$ concentration and maximum rate parameters:
+where $C_{atm}$ is the atmospheric $CO_{2}$ concentration (in $\mu mol \cdot mol^{-1}$; see parameter \texttt{Catm} in function `defaultControl()`). Combining the two equations for $A$ and finding the root of the resulting equation using Newton-Raphson method allows determining $C_i$ and therefore $A$. Thus, after defining PAR photon flux density, atmosphere $CO_{2}$ concentration and maximum rate parameters:
 ```{r}
 Q = 2000
 Catm = 386
@@ -1159,7 +1159,7 @@ In $Profit_1$ irreversible cavitation often brings, after soil rewetting, less c
 
 ### Scaling to the plant level
 
-So far, we have considered stomatal regulation by at the leaf level only. At the plant level, the gain function could be build from the crown photosynthesis function $A(\Psi_{leaf})$ that we defined in subsection 'Crown photosynthesis'. However, using the crown photosynthesis function would imply the assumption that the same stomatal aperture occurs in all leaves of the crown, independently of whether they are in shade or sunlit. A more realistic approach is to determine stomatal regulation by profit maximization for sunlit and shade leaves separately; and then determining the average photosynthesis and flow rate from the leaf area of each leaf type. The gain function and profit maximization calculations conducted for each leaf type yield instantaneous water potentials $\Psi_{sunlit}$ and $\Psi_{shade}$. They also yield flow values $E_{shade}$ and $E_{sunlit}$, in $mmol H_2O·s^{-1}·m^{-2}$ of leaf area unit. The average flow rate in $mmol H_2O·s^{-1}·m^{-2}$ per leaf area unit at the plant level is the weighed average:
+So far, we have considered stomatal regulation by at the leaf level only. At the plant level, the gain function could be build from the crown photosynthesis function $A(\Psi_{leaf})$ that we defined in subsection 'Crown photosynthesis'. However, using the crown photosynthesis function would imply the assumption that the same stomatal aperture occurs in all leaves of the crown, independently of whether they are in shade or sunlit. A more realistic approach is to determine stomatal regulation by profit maximization for sunlit and shade leaves separately; and then determining the average photosynthesis and flow rate from the leaf area of each leaf type. The gain function and profit maximization calculations conducted for each leaf type yield instantaneous water potentials $\Psi_{sunlit}$ and $\Psi_{shade}$. They also yield flow values $E_{shade}$ and $E_{sunlit}$, in $mmol H_2O \cdot s^{-1} \cdot m^{-2}$ of leaf area unit. The average flow rate in $mmol H_2O \cdot s^{-1} \cdot m^{-2}$ per leaf area unit at the plant level is the weighed average:
 \begin{equation}
  E_{plant} = \frac{E_{sunlit} \cdot LAI_{sunlit} + E_{shade} \cdot LAI_{shade}}{LAI_{sunlit} + LAI_{shade}}
 \end{equation}

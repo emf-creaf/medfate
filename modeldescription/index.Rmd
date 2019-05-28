@@ -9,3 +9,7 @@ biblio-style: apalike
 link-citations: yes
 description: "This is a reference book for models implemented in package medfate."
 ---
+```{r, include=FALSE}
+options(tinytex.verbose = TRUE) #For debugging
+library(medfate)
+```

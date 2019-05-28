@@ -20,8 +20,9 @@ Each continuum element has a vulnerability curve that starts at maximum hydrauli
 
 ### Xylem vulnerability curves
 Xylem tissues are assigned a two-parameter Weibull function as the vulnerability curve $k(\Psi)$:
-\begin{equation}\label{eq:xylemvulnerability}
+\begin{equation}
 k(\Psi) = k_{max}\cdot e^{-((\Psi/d)^c)}
+(\#eq:xylemvulnerability)
 \end{equation}
 where $k_{max}$ is the maximum hydraulic conductance (defined as flow per leaf surface unit and per pressure drop), and $c$ and $d$ are species-specific and tissue-specific parameters. Note that parameter $d$ is the water potential (in MPa) at which $k(\Psi)/k_{max} = e^{-1} = 0.367$. Parameter $c$ controls the shape of the vulnerability curve (‘exponential’ shape with no threshold has $c \leq 1$, sigmoidal threshold has $c > 1$). 
 
@@ -47,8 +48,9 @@ psiVec = seq(-0.1, -7.0, by =-0.01)
 ```
 
 The concept of vulnerability curve can be used to specify the relationship between pressure and conductance in any portion of the flow path. Leaf vulnerability curve $k_l(\Psi)$ can be modelled using the same equation as for xylem:
-\begin{equation}\label{eq:leafvulnerability}
+\begin{equation}
 k_l(\Psi) = k_{l,max}\cdot e^{-((\Psi/d_l)^{c_l})}
+(\#eq:leafvulnerability)
 \end{equation}
 where $k_{l,max}$ is the leaf maximum hydraulic conductance. Values defined below specify higher conductance for leaves but also slightly higher vulnerability:
 ```{r}
@@ -158,7 +160,7 @@ legend("topright", bty="n", legend=textures, lty=1:3, cex=0.8, lwd=1.5)
 In **medfate** the water content of leaves and stems is tracked explicitly. Following @Martin-StPaul2017, we consider two sources of water in plant segments [@Tyree1990]. The first comes from the conduits (tracheids or vessels), which will release water due to cavitation and may be refilled with water from adjacent living tissue. The second source of water is formed by more elastic living cells (i.e. parenchyma) and can potentially be a large source of water during relatively high water potentials. This source can be described using the relative water content of a symplasmic tissue. This storage compartment has its own water potential and exchanges water with the xylem conduits according to the difference in water potential.
 
 ### Pressure-volume curves
-A pressure-volume curve of a tissue relates a water potential against relative water content ($RWC$; $kg H_2O·kg^{-1}H_2O$ at saturation) in drying tissues. Pressure-volume theory is usually applied to leaves [@Bartlett2012], but it can also be applied to other tissues such as sapwood or cambium cells. 
+A pressure-volume curve of a tissue relates a water potential against relative water content ($RWC$; $kg H_2O \cdot kg^{-1}H_2O$ at saturation) in drying tissues. Pressure-volume theory is usually applied to leaves [@Bartlett2012], but it can also be applied to other tissues such as sapwood or cambium cells. 
 
 For living cells, the relationship between $\Psi$ and $RWC$ of the symplasmic fraction ($RWC_{sym}$) is achieved by separating $\Psi$ into osmotic (solute) potential ($\Psi_{S}$) and the turgor potential ($\Psi_{P}$):
 \begin{equation}
@@ -206,7 +208,7 @@ RWC = RWC_{apo}(\Psi_{apo}) \cdot f_{apo} + RWC_{sym}(\Psi_{sym}) \cdot (1 - f_{
 
 ### Water content and live fuel moisture content
 
-Pressure-volume curves are useful to determine the moisture content of live fuel elements (leaves and twigs). Given an average relative water content of a water compartment, its live fuel moisture content ($LFMC$ in $g H_2O·g^{-1}$ of dry tissue) can be calculated using:
+Pressure-volume curves are useful to determine the moisture content of live fuel elements (leaves and twigs). Given an average relative water content of a water compartment, its live fuel moisture content ($LFMC$ in $g H_2O \cdot g^{-1}$ of dry tissue) can be calculated using:
 \begin{equation}
 LFMC = RWC \cdot \Theta \cdot \frac{\rho_{H_2O}}{\rho} = RWC \cdot LFMC_{max}
 \end{equation}
@@ -216,7 +218,7 @@ If we know $RWC_{apo}(\Psi_{apo})$, the relative water content in conduits, and 
 \begin{equation}
 S_{apo}(\Psi_{apo}) = V_{segment} \cdot f_{apo} \cdot RWC_{apo}(\Psi_{apo}) \cdot \rho_{w}
 \end{equation}
-where $\rho_{w}$ is the density of water ($kgH_2O\cdotm^{-3}$) and $f_{apo,s}$ is the volume fraction of apoplastic tissue within sapwood. Similarly, the amount of water stored in the symplastic tissue of the segment at any time is:
+where $\rho_{w}$ is the density of water ($kgH_2O \cdot m^{-3}$) and $f_{apo,s}$ is the volume fraction of apoplastic tissue within sapwood. Similarly, the amount of water stored in the symplastic tissue of the segment at any time is:
 \begin{equation}
 S_{sym}(\Psi_{sym}) = V_{segment} \cdot (1 - f_{apo}) \cdot RWC_{sym}(\Psi_{sym}) \cdot \rho_{w}
 \end{equation}
@@ -738,7 +740,7 @@ Note that the contribution of each soil layer depends on the soil conditions and
 
 
 ### Supply function of the soil-plant continuum
-We can use a network of $(N \times 2 + $S$ + 1)$ resistance elements to represent the soil-plant continuum, with soil being represented in $N$ different layers. As before, the $N$ soil layers are in parallel up to the root crown and each soil layer requires at least a rhizosphere and a root segment. From the root crown there are $S$ stem xylem elements (normally $S = 1$) in series and a final leaf element. The whole hydraulic network is illustrated in the figure below.
+We can use a network of $(N \times 2 + S + 1)$ resistance elements to represent the soil-plant continuum, with soil being represented in $N$ different layers. As before, the $N$ soil layers are in parallel up to the root crown and each soil layer requires at least a rhizosphere and a root segment. From the root crown there are $S$ stem xylem elements (normally $S = 1$) in series and a final leaf element. The whole hydraulic network is illustrated in the figure below.
 
 To build the supply function for the network, we proceed by calculating water potentials in the network for each value of flow. For any given $E$ value we start by calculating flows and potentials within the root system. After that, and assuming $S = 1$, the water potential at the upper end of the stem ($\Psi_{stem}$) is obtained using the inverse of the stem supply function and setting $\Psi_{up,k}=\Psi_{rootcrown}$. If $S > 1$, this is done for each of the stem segments (thus obtaining $\Psi_{stem, 1}$, $\Psi_{stem, 2}$, ... $\Psi_{stem, S}$), while using a maximum conductance for segments equal to $k_{max,s}$ times $S$. Leaf water potential ($\Psi_{leaf}$) is finaly obtained using the inverse of the leaf supply function and setting $\Psi_{up,k}=\Psi_{stem, S}$ and assuming a steady-state flow $E$. The whole supply function $E(\Psi_{leaf}$) is obtained repeating these operations from $E=0$ to a critical value $E_{crit}$. 
 ```{r, out.width='80%', fig.align="center", fig.cap="Schematic representation of hydraulics in a whole-plant network", echo=FALSE}

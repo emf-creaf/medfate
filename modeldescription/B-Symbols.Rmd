@@ -7,25 +7,25 @@ The following tables list all symbols used in this document, along with their un
 
 | Symbol | Units | R param | Description                        |
 |--------|-------|---------|------------------------------------|
-| $H_v$  | $m^2·m^{-2}$ | `1/Al2As` | Huber value (ratio of sapwood area to leaf area) |
+| $H_v$  | $m^2 \cdot m^{-2}$ | `1/Al2As` | Huber value (ratio of sapwood area to leaf area) |
 |  $d$   | $cm$  | `LeafWidth` | Leaf width |
-| $SLA$  | $m^2·kg^{-1}$ | `SLA` | Specific leaf area |
-| $\rho_{leaf}$ | $g·cm^{-3}$ | `LeafDens` | Leaf tissue density |
-| $\rho_{wood}$ | $g·cm^{-3}$ | `WoodDens` | Wood tissue density |
-| $\Theta_{sapwood}$ | $m^3·m^{-3}$ | | Sapwood porosity (volume of empty spaces over total volume) |
-| $\Theta_{leaf}$ | $m^3·m^{-3}$ | | Leaf porosity (volume of empty spaces over total volume) |
+| $SLA$  | $m^2 \cdot kg^{-1}$ | `SLA` | Specific leaf area |
+| $\rho_{leaf}$ | $g \cdot cm^{-3}$ | `LeafDens` | Leaf tissue density |
+| $\rho_{wood}$ | $g \cdot cm^{-3}$ | `WoodDens` | Wood tissue density |
+| $\Theta_{sapwood}$ | $m^3 \cdot m^{-3}$ | | Sapwood porosity (volume of empty spaces over total volume) |
+| $\Theta_{leaf}$ | $m^3 \cdot m^{-3}$ | | Leaf porosity (volume of empty spaces over total volume) |
 
 
 ## Plant hydraulics
 
 | Symbol | Units | R param | Description                        |
 |--------|-------|---------|------------------------------------|
-| $K_{s,max,ref}$ | $kg·s^{-1}·m^{-1}·MPa^{-1}$ | `Kmax_stemxylem` | Maximum stem sapwood reference conductivity per leaf area unit |
-| $K_{r,max,ref}$ | $kg·s^{-1}·m^{-1}·MPa^{-1}$ | `Kmax_rootxylem` | Maximum root sapwood reference conductivity per leaf area unit |
-| $k_{s, max}$ | $mmol·s^{-1}·m^{-2}·MPa^{-1}$ |  | Maximum whole-stem conductance (per leaf area unit) |
-| $k_{r, max}$ | $mmol·s^{-1}·m^{-2}·MPa^{-1}$ |  | Maximum root conductance (per leaf area unit) |
-| $k_{rh, max}$ | $mmol·s^{-1}·m^{-2}·MPa^{-1}$ |  | Maximum rhizosphere conductance (per leaf area unit) |
-| $k_{l, max}$ | $mmol·s^{-1}·m^{-2}·MPa^{-1}$ | `VCleaf_kmax` | Maximum leaf conductance (per leaf area unit) |
+| $K_{s,max,ref}$ | $kg \cdot s^{-1} \cdot m^{-1} \cdot MPa^{-1}$ | `Kmax_stemxylem` | Maximum stem sapwood reference conductivity per leaf area unit |
+| $K_{r,max,ref}$ | $kg \cdot s^{-1} \cdot m^{-1} \cdot MPa^{-1}$ | `Kmax_rootxylem` | Maximum root sapwood reference conductivity per leaf area unit |
+| $k_{s, max}$ | $mmol \cdot s^{-1} \cdot m^{-2} \cdot MPa^{-1}$ |  | Maximum whole-stem conductance (per leaf area unit) |
+| $k_{r, max}$ | $mmol \cdot s^{-1} \cdot m^{-2} \cdot MPa^{-1}$ |  | Maximum root conductance (per leaf area unit) |
+| $k_{rh, max}$ | $mmol \cdot s^{-1} \cdot m^{-2} \cdot MPa^{-1}$ |  | Maximum rhizosphere conductance (per leaf area unit) |
+| $k_{l, max}$ | $mmol \cdot s^{-1} \cdot m^{-2} \cdot MPa^{-1}$ | `VCleaf_kmax` | Maximum leaf conductance (per leaf area unit) |
 | $c_l$, $d_l$ | (unitless), MPa | `VCleaf_c`, `VCleaf_d` | Parameters of the vulnerability curve for leaves |
 | $c_r$, $d_r$ | (unitless), MPa | `VCroot_c`, `VCroot_d` | Parameters of the vulnerability curve for root xylem |
 | $c_s$, $d_s$ | (unitless), MPa | `VCstem_c`, `VCstem_d` | Parameters of the vulnerability curve for stem xylem |
@@ -53,14 +53,14 @@ The following tables list all symbols used in this document, along with their un
 | $RWC$ | [0-1] | | Relative water content |
 | $RWC_{sym}$ | [0-1] | | Relative water content in the symplasm fraction of a tissue |
 | $RWC_{apo}$ | [0-1] | | Relative water content in the apoplasm fraction of a tissue |
-| $V_{segment}$ | $m^3·m^{-2}$ | | Water capacity of a segment (leaf or stem) |
-| $V_{leaf}$ | $m^3·m^{-2}$ | | Leaf water capacity per leaf area unit |
-| $V_{sapwood}$ | $m^3·m^{-2}$ | | Sapwood water capacity per leaf area unit |
+| $V_{segment}$ | $m^3 \cdot m^{-2}$ | | Water capacity of a segment (leaf or stem) |
+| $V_{leaf}$ | $m^3 \cdot m^{-2}$ | | Leaf water capacity per leaf area unit |
+| $V_{sapwood}$ | $m^3 \cdot m^{-2}$ | | Sapwood water capacity per leaf area unit |
 
 ## Stomatal regulation and photosynthesis
 | Symbol | Units | R param | Description                        |
 |--------|-------|---------|------------------------------------|
-| $g_{swmin}$ | $mol H_2O·s^{-1}·m^{-2}$ | `Gwmin` | Minimum stomatal conductance to water vapour |
-| $g_{swmax}$ | $mol H_2O·s^{-1}·m^{-2}$ | `Gwmax` | Maximum stomatal conductance to water vapour |
-| $J_{max, 298}$ | $\mu mol electrons·m^{-2}·s^{-1}$ | `Jmax298` | Maximum rate of electron transport at 298K |
-| $V_{max, 298}$ | $\mu mol CO_2·s^{-1}·m^{-2}$ | `Vmax298` | Rubisco's maximum carboxylation rate at 298K |
+| $g_{swmin}$ | $mol H_2O \cdot s^{-1} \cdot m^{-2}$ | `Gwmin` | Minimum stomatal conductance to water vapour |
+| $g_{swmax}$ | $mol H_2O \cdot s^{-1} \cdot m^{-2}$ | `Gwmax` | Maximum stomatal conductance to water vapour |
+| $J_{max, 298}$ | $\mu mol electrons \cdot m^{-2} \cdot s^{-1}$ | `Jmax298` | Maximum rate of electron transport at 298K |
+| $V_{max, 298}$ | $\mu mol CO_2 \cdot s^{-1} \cdot m^{-2}$ | `Vmax298` | Rubisco's maximum carboxylation rate at 298K |
