@@ -745,8 +745,9 @@ where $R_{crown}$ is the rate of spread (in $ft \cdot min^{-1}$) of the crown fi
 
 ## Unit conversion of outputs
 The following factors are used to express fire behavior outputs to metric units:
-+ *Fire spread rates*: $1 ft\cdot min^{-1} = 0.3048 m\cdot min^{-1}$
-+ *Flame length*: $1 ft = 0.3048 m$
-+ *Reaction intensity*: $1 Btu\cdot ft^{-2} \cdot min^{-1} = 11.3484 kJ \cdot m^{-2}\cdot min^{-1}$
-+ *Heat sink*: $1 Btu\cdot ft^{-3} = 37.2589458 kJ \cdot m^{-3}$
-+ *Fireline intensity*: $1 Btu\cdot ft^{-1} \cdot min^{-1} = 0.0576911555  kW\cdot m^{-1}$
+
+  + *Fire spread rates*: $1 ft\cdot min^{-1} = 0.3048 m\cdot min^{-1}$
+  + *Flame length*: $1 ft = 0.3048 m$
+  + *Reaction intensity*: $1 Btu\cdot ft^{-2} \cdot min^{-1} = 11.3484 kJ \cdot m^{-2}\cdot min^{-1}$
+  + *Heat sink*: $1 Btu\cdot ft^{-3} = 37.2589458 kJ \cdot m^{-3}$
+  + *Fireline intensity*: $1 Btu\cdot ft^{-1} \cdot min^{-1} = 0.0576911555  kW\cdot m^{-1}$
