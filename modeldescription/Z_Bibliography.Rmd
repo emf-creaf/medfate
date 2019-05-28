@@ -1,1 +1,1 @@
-`r if (knitr::is_html_output()) '# Bibliography'`
+`r if (knitr::is_html_output()) '# Bibliography {-}'`

@@ -1,2 +1,298 @@
 # Plant photosynthesis and stomatal regulation
 
+## Leaf energy balance, gas exchange and photosynthesis
+
+### Leaf VPD, conductance to water vapor and photosynthesis
+
+The water supply function specifies the flow rate, as per leaf area, for values of leaf water potential. If we know air temperature, air vapour pressure and the light conditions in which leaves are, we can be translate the supply function into a photosynthesis function [@Sperry2016]. In a nutshell, $E$ from the supply function is used to calculate leaf temperature from an evaluation of the leaf energy balance. The diffusive conductances of the leaf to water and CO_2 are obtained from water supply and water vapor deficit. The gross assimilation rate is then obtained from the diffusive conductance and a modelled curve between assimilation and leaf internal CO2 concentration. Gross assimilation is calculated, without subtracting autotrophic respiration, because the purpose is to represent the instantaneous gain of opening the stomata. Nevertheless autotrophic respiration is included when calculating leaf net photosynthesis. 
+```{r}
+Tmin = 15
+Tmax = 30
+RHmin = 60
+RHmax = 75
+Tcan = meteoland::utils_averageDaylightTemperature(Tmin, Tmax)
+vpa = meteoland::utils_averageDailyVP(Tmin, Tmax, RHmin, RHmax)
+Patm = meteoland::utils_atmosphericPressure(100)
+
+Q = 2000
+Catm = 386
+
+Vmax298 = 100
+Jmax298 = 1.67*Vmax298
+Gmin = 0.00001;
+Gmax = 0.3
+
+Rabs = 740 #W * m-2
+```
+
+
+### Leaf temperature and vapor pressure deficit
+
+Leaf temperature ($T_{leaf}$; in Celsius) can be calculated for any given flow rate $E(\Psi_{leaf})$ using [@Campbell1998]:
+\begin{equation}
+T_{leaf}(\Psi_{leaf}) = T_{can}+\frac{I_{abs}-\epsilon\cdot\sigma\cdot(T_{can}+273.15)^4-\lambda_v\cdot E(\Psi_{leaf})}{C_p\cdot(g_r+g_{Ha})}
+\end{equation}
+where $I_{abs}$ (in $W·m^{-2}$) is the instantaneous shortwave and longwave radiation absorbed per leaf area unit, $E(\Psi_{leaf})$ is the flow (converted to $mol·s^{-1}·m^{-2}$ per two-sided leaf area basis), $\epsilon$ is longwave radiation emissivity (0.97), $\sigma$ is the Stephan-Boltzman constant, $T_{can}$ is the canopy air temperature (in ºC; see Radiation and energy balance), $C_p$ = 29.3 $J·mol^{-1}·ºC^{-1}$ is the specific heat capacity of dry air at constant pressure and $\lambda_v$ is the latent heat of vaporization (in $J·mol^{-1}$):
+\begin{equation}
+\lambda_v = (2.5023\cdot 10^6-(2430.54\cdot T_{can}))\cdot 0.018
+\end{equation}
+Finally, $g_r$ and $g_{Ha}$ are the radiative and heat conductance values (in $mol·m^{-2}·s^{-1}$), respectively [@Campbell1998]:
+\begin{eqnarray}
+g_r &=& \frac{4\cdot \epsilon \cdot \sigma \cdot (T_{can}+273.15)^3}{C_p} \\
+g_{Ha} &=& 0.189 \cdot (u/d)^{0.5}
+\end{eqnarray}
+where $u$ is wind speed (in $m·s^{-1}$), taken as the wind speed at mid-crown height, and $d$ is 0.72 times the leaf width (species parameter `LeafWidth` in $cm$). 
+
+The following figures illustrate the value of $T_{leaf}$ for two leaf sizes and varying values of wind speed and flow rate, calculated for 24ºC canopy temperature and 740 $W·m^{-2}$ instantaneous absorved radiation (see function `biophysics_leafTemperature`):
+```{r, echo=FALSE, fig.width=8, fig.height=4, fig.align="center"}
+par(mar=c(4,4,2,1), mfrow=c(1,2))
+uvec = seq(0.1, 5, by=0.1)
+E = seq(0, 8, by=0.1)
+LT1 = matrix(0, nrow= length(uvec), ncol=length(E))
+LT2 = matrix(0, nrow= length(uvec), ncol=length(E))
+for(i in 1:length(uvec)) {
+  for(j in 1:length(E)){
+    LT1[i,j] = biophysics_leafTemperature(Rabs,Tcan, uvec[i], E[j], 10.0)
+    LT2[i,j] = biophysics_leafTemperature(Rabs,Tcan, uvec[i], E[j], 0.1)
+  }
+} 
+contour(x=uvec, y=E, z=LT1, xlab="Wind speed (m/s)", ylab="Flow rate (mmol·s-1·m-2)", main = "Wide leaf (10 cm) temperature (ºC)")
+contour(x=uvec, y=E, z=LT2, xlab="Wind speed (m/s)", ylab="Flow rate (mmol·s-1·m-2)", main = "Narrow leaf (0.1 cm) temperature (ºC)")
+```
+
+Let's now fix wind speed to 2 m/s. The application of the above equations to the $E(\Psi_{leaf})$ curves corresponding to the complete hydraulic network yields the following $T_{leaf}(\Psi_{leaf})$ curves:
+
+```{r, echo=FALSE, fig.width=8, fig.height=4, fig.align="center"}
+u = 2 # m*s-1
+par(mar=c(4,4,2,1), mfrow=c(1,2))
+psi2A11 = photo_leafPhotosynthesisFunction(supplyNetwork11$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A12 = photo_leafPhotosynthesisFunction(supplyNetwork12$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A13 = photo_leafPhotosynthesisFunction(supplyNetwork13$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A14 = photo_leafPhotosynthesisFunction(supplyNetwork14$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A21 = photo_leafPhotosynthesisFunction(supplyNetwork21$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A22 = photo_leafPhotosynthesisFunction(supplyNetwork22$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A23 = photo_leafPhotosynthesisFunction(supplyNetwork23$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A24 = photo_leafPhotosynthesisFunction(supplyNetwork24$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A31 = photo_leafPhotosynthesisFunction(supplyNetwork31$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A32 = photo_leafPhotosynthesisFunction(supplyNetwork32$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A33 = photo_leafPhotosynthesisFunction(supplyNetwork33$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A34 = photo_leafPhotosynthesisFunction(supplyNetwork34$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+
+psi2A11emb = photo_leafPhotosynthesisFunction(supplyNetwork11emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A12emb = photo_leafPhotosynthesisFunction(supplyNetwork12emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A13emb = photo_leafPhotosynthesisFunction(supplyNetwork13emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A14emb = photo_leafPhotosynthesisFunction(supplyNetwork14emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A21emb = photo_leafPhotosynthesisFunction(supplyNetwork21emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A22emb = photo_leafPhotosynthesisFunction(supplyNetwork22emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A23emb = photo_leafPhotosynthesisFunction(supplyNetwork23emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A24emb = photo_leafPhotosynthesisFunction(supplyNetwork24emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A31emb = photo_leafPhotosynthesisFunction(supplyNetwork31emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A32emb = photo_leafPhotosynthesisFunction(supplyNetwork32emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A33emb = photo_leafPhotosynthesisFunction(supplyNetwork33emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+psi2A34emb = photo_leafPhotosynthesisFunction(supplyNetwork34emb$E,Catm, Patm,Tcan, vpa, u, Rabs, Q, Vmax298, Jmax298, Gmin, Gmax)
+
+plot(-supplyNetwork11$psiLeaf, psi2A11$LeafTemperature, type="l", col=col1, ylab="Leaf temperature (ºC)", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(26,27.5), lwd=1, main="original")
+lines(-supplyNetwork12$psiLeaf,psi2A12$LeafTemperature, lty=1, lwd=1, col=col2)
+lines(-supplyNetwork13$psiLeaf, psi2A13$LeafTemperature, lty=1, lwd=1, col=col3)
+lines(-supplyNetwork14$psiLeaf, psi2A14$LeafTemperature, lty=1, lwd=1, col=col4)
+lines(-supplyNetwork21$psiLeaf, psi2A21$LeafTemperature, lty=2, lwd=1, col=col1)
+lines(-supplyNetwork22$psiLeaf, psi2A22$LeafTemperature, lty=2, lwd=1, col=col2)
+lines(-supplyNetwork23$psiLeaf, psi2A23$LeafTemperature, lty=2, lwd=1, col=col3)
+lines(-supplyNetwork24$psiLeaf, psi2A24$LeafTemperature, lty=2, lwd=1, col=col4)
+lines(-supplyNetwork31$psiLeaf, psi2A31$LeafTemperature, lty=3, lwd=1, col=col1)
+lines(-supplyNetwork32$psiLeaf, psi2A32$LeafTemperature, lty=3, lwd=1, col=col2)
+lines(-supplyNetwork33$psiLeaf, psi2A33$LeafTemperature, lty=3, lwd=1, col=col3)
+lines(-supplyNetwork34$psiLeaf, psi2A34$LeafTemperature, lty=3, lwd=1, col=col4)
+legend("bottomleft", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
+
+plot(-supplyNetwork11emb$psiLeaf, psi2A11emb$LeafTemperature, type="l", col=col1, ylab="Leaf temperature (ºC)", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(26,27.5), lwd=1, main="after cavitation")
+lines(-supplyNetwork12emb$psiLeaf,psi2A12emb$LeafTemperature, lty=1, lwd=1, col=col2)
+lines(-supplyNetwork13emb$psiLeaf, psi2A13emb$LeafTemperature, lty=1, lwd=1, col=col3)
+lines(-supplyNetwork14emb$psiLeaf, psi2A14emb$LeafTemperature, lty=1, lwd=1, col=col4)
+lines(-supplyNetwork21emb$psiLeaf, psi2A21emb$LeafTemperature, lty=2, lwd=1, col=col1)
+lines(-supplyNetwork22emb$psiLeaf, psi2A22emb$LeafTemperature, lty=2, lwd=1, col=col2)
+lines(-supplyNetwork23emb$psiLeaf, psi2A23emb$LeafTemperature, lty=2, lwd=1, col=col3)
+lines(-supplyNetwork24emb$psiLeaf, psi2A24emb$LeafTemperature, lty=2, lwd=1, col=col4)
+lines(-supplyNetwork31emb$psiLeaf, psi2A31emb$LeafTemperature, lty=3, lwd=1, col=col1)
+lines(-supplyNetwork32emb$psiLeaf, psi2A32emb$LeafTemperature, lty=3, lwd=1, col=col2)
+lines(-supplyNetwork33emb$psiLeaf, psi2A33emb$LeafTemperature, lty=3, lwd=1, col=col3)
+lines(-supplyNetwork34emb$psiLeaf, psi2A34emb$LeafTemperature, lty=3, lwd=1, col=col4)
+abline(v=-psiCav, col="gray", lwd=1.5)
+legend("bottomleft", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
+```
+
+Thus, transpiration decreases leaf temperature (whereas radiation increases it and wind speed makes it more similar to air temperature). Vapor pressure deficit in the leaf ($VPD_{leaf}$, in kPa) is calculated as:
+\begin{equation}
+VPD_{leaf} = VP(T_{leaf})-vp_{day}
+\end{equation}
+Where $vp_{day}$ is the average daily vapor pressure and $VP(T)$ is a function giving the saturated vapor pressure for temperature $T$. Let us assume the following values of relative humidity, yielding an average $vp_{day}$:
+```{r}
+RHmin = 60
+RHmax = 75
+vpa = utils_averageDailyVP(Tmin, Tmax, RHmin, RHmax)
+vpa
+```
+
+the application of the above equation to the $T_{leaf}(\Psi_{leaf})$ curves yields the following $VPD_{leaf}(\Psi_{leaf})$ curves:
+
+```{r, echo=FALSE, fig.width=8, fig.height=3.5, fig.align="center"}
+par(mar=c(4,4,2,1), mfrow=c(1,2))
+plot(-supplyNetwork11$psiLeaf, psi2A11$LeafVPD, type="l", col=col1, ylab="Leaf VPD (kPa)", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), lwd=1, ylim=c(1.4,1.72), main="original")
+lines(-supplyNetwork12$psiLeaf,psi2A12$LeafVPD, lty=1, lwd=1, col=col2)
+lines(-supplyNetwork13$psiLeaf, psi2A13$LeafVPD, lty=1, lwd=1, col=col3)
+lines(-supplyNetwork14$psiLeaf, psi2A14$LeafVPD, lty=1, lwd=1, col=col4)
+lines(-supplyNetwork21$psiLeaf, psi2A21$LeafVPD, lty=2, lwd=1, col=col1)
+lines(-supplyNetwork22$psiLeaf, psi2A22$LeafVPD, lty=2, lwd=1, col=col2)
+lines(-supplyNetwork23$psiLeaf, psi2A23$LeafVPD, lty=2, lwd=1, col=col3)
+lines(-supplyNetwork24$psiLeaf, psi2A24$LeafVPD, lty=2, lwd=1, col=col4)
+lines(-supplyNetwork31$psiLeaf, psi2A31$LeafVPD, lty=3, lwd=1, col=col1)
+lines(-supplyNetwork32$psiLeaf, psi2A32$LeafVPD, lty=3, lwd=1, col=col2)
+lines(-supplyNetwork33$psiLeaf, psi2A33$LeafVPD, lty=3, lwd=1, col=col3)
+lines(-supplyNetwork34$psiLeaf, psi2A34$LeafVPD, lty=3, lwd=1, col=col4)
+legend("bottomleft", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
+
+plot(-supplyNetwork11emb$psiLeaf, psi2A11emb$LeafVPD, type="l", col=col1, ylab="Leaf VPD (kPa)", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), lwd=1, ylim=c(1.4,1.72), main="after cavitation")
+lines(-supplyNetwork12emb$psiLeaf,psi2A12emb$LeafVPD, lty=1, lwd=1, col=col2)
+lines(-supplyNetwork13emb$psiLeaf, psi2A13emb$LeafVPD, lty=1, lwd=1, col=col3)
+lines(-supplyNetwork14emb$psiLeaf, psi2A14emb$LeafVPD, lty=1, lwd=1, col=col4)
+lines(-supplyNetwork21emb$psiLeaf, psi2A21emb$LeafVPD, lty=2, lwd=1, col=col1)
+lines(-supplyNetwork22emb$psiLeaf, psi2A22emb$LeafVPD, lty=2, lwd=1, col=col2)
+lines(-supplyNetwork23emb$psiLeaf, psi2A23emb$LeafVPD, lty=2, lwd=1, col=col3)
+lines(-supplyNetwork24emb$psiLeaf, psi2A24emb$LeafVPD, lty=2, lwd=1, col=col4)
+lines(-supplyNetwork31emb$psiLeaf, psi2A31emb$LeafVPD, lty=3, lwd=1, col=col1)
+lines(-supplyNetwork32emb$psiLeaf, psi2A32emb$LeafVPD, lty=3, lwd=1, col=col2)
+lines(-supplyNetwork33emb$psiLeaf, psi2A33emb$LeafVPD, lty=3, lwd=1, col=col3)
+lines(-supplyNetwork34emb$psiLeaf, psi2A34emb$LeafVPD, lty=3, lwd=1, col=col4)
+abline(v=-psiCav, col="gray", lwd=1.5)
+legend("bottomleft", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
+```
+
+Since leaf saturated VP decreases when leaf temperature decreases, transpiration decreases leaf VPD as a result of decreasing leaf temperature.
+
+
+### Leaf conductance to water vapor
+
+Leaf conductance to water vapor ($g_{sw}$; in $mol H_2O·s^{-1}·m^{-2}$) and to carbon dioxide ($g_{sc}$; in mol $CO_{2}·s^{-1}·m^{-2}$) are obtained for each value of $E$ (in $mol·s^{-1}·m^{-2}$) and $VPD_{leaf}$ using:
+\begin{eqnarray}
+g_{sw} &=& E \cdot \frac{P_{atm}}{VPD_{leaf}}\\
+g_{sc} &=& g_{sw}/1.6
+\end{eqnarray}
+the application of the equation for $g_{sw}$ to the $VPD_{leaf}(\Psi_{leaf})$ curves yields the following $g_{sw}(\Psi_{leaf})$ curves:
+
+```{r, echo=FALSE, fig.width=8, fig.height=3.5, fig.align="center"}
+par(mar=c(4,4,2,1), mfrow=c(1,2))
+plot(-supplyNetwork11$psiLeaf, psi2A11$WaterVaporConductance, type="l", col=col1, ylab="Gw", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,0.5), lwd=1, main="original")
+lines(-supplyNetwork12$psiLeaf,psi2A12$WaterVaporConductance, lty=1, lwd=1, col=col2)
+lines(-supplyNetwork13$psiLeaf, psi2A13$WaterVaporConductance, lty=1, lwd=1, col=col3)
+lines(-supplyNetwork14$psiLeaf, psi2A14$WaterVaporConductance, lty=1, lwd=1, col=col4)
+lines(-supplyNetwork21$psiLeaf, psi2A21$WaterVaporConductance, lty=2, lwd=1, col=col1)
+lines(-supplyNetwork22$psiLeaf, psi2A22$WaterVaporConductance, lty=2, lwd=1, col=col2)
+lines(-supplyNetwork23$psiLeaf, psi2A23$WaterVaporConductance, lty=2, lwd=1, col=col3)
+lines(-supplyNetwork24$psiLeaf, psi2A24$WaterVaporConductance, lty=2, lwd=1, col=col4)
+lines(-supplyNetwork31$psiLeaf, psi2A31$WaterVaporConductance, lty=3, lwd=1, col=col1)
+lines(-supplyNetwork32$psiLeaf, psi2A32$WaterVaporConductance, lty=3, lwd=1, col=col2)
+lines(-supplyNetwork33$psiLeaf, psi2A33$WaterVaporConductance, lty=3, lwd=1, col=col3)
+lines(-supplyNetwork34$psiLeaf, psi2A34$WaterVaporConductance, lty=3, lwd=1, col=col4)
+abline(h=Gmin, col="gray", lty=2, lwd=1.5)
+abline(h=Gmax, col="gray", lty=2, lwd=1.5)
+
+
+plot(-supplyNetwork11emb$psiLeaf, psi2A11emb$WaterVaporConductance, type="l", col=col1, ylab="Gw", xlab = "Leaf pressure (-MPa)",  xlim=c(0, 7), ylim=c(0,0.5), lwd=1, main="after cavitation")
+lines(-supplyNetwork12emb$psiLeaf,psi2A12emb$WaterVaporConductance, lty=1, lwd=1, col=col2)
+lines(-supplyNetwork13emb$psiLeaf, psi2A13emb$WaterVaporConductance, lty=1, lwd=1, col=col3)
+lines(-supplyNetwork14emb$psiLeaf, psi2A14emb$WaterVaporConductance, lty=1, lwd=1, col=col4)
+lines(-supplyNetwork21emb$psiLeaf, psi2A21emb$WaterVaporConductance, lty=2, lwd=1, col=col1)
+lines(-supplyNetwork22emb$psiLeaf, psi2A22emb$WaterVaporConductance, lty=2, lwd=1, col=col2)
+lines(-supplyNetwork23emb$psiLeaf, psi2A23emb$WaterVaporConductance, lty=2, lwd=1, col=col3)
+lines(-supplyNetwork24emb$psiLeaf, psi2A24emb$WaterVaporConductance, lty=2, lwd=1, col=col4)
+lines(-supplyNetwork31emb$psiLeaf, psi2A31emb$WaterVaporConductance, lty=3, lwd=1, col=col1)
+lines(-supplyNetwork32emb$psiLeaf, psi2A32emb$WaterVaporConductance, lty=3, lwd=1, col=col2)
+lines(-supplyNetwork33emb$psiLeaf, psi2A33emb$WaterVaporConductance, lty=3, lwd=1, col=col3)
+lines(-supplyNetwork34emb$psiLeaf, psi2A34emb$WaterVaporConductance, lty=3, lwd=1, col=col4)
+abline(v=-psiCav, col="gray", lwd=1.5)
+abline(h=Gmin, col="gray", lty=2, lwd=1.5)
+abline(h=Gmax, col="gray", lty=2, lwd=1.5)
+legend("topleft", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
+```
+
+Hence, larger values of transpiration require larger values of leaf water vapour conductance. In the previous figure we have indicated the thresholds of $g_{swmin}$ and $g_{swmax}$, the species-specific minimum and maximum water vapour conductances (i.e. conductances when stomata are fully closed and fully open, respectively; see parameters `Gwmin` and `Gwmax` in `SpParamsMED`).
+```{r}
+Gmin = 0.0045;
+Gmax = 0.3
+```
+
+$g_{sw}$ cannot exceed $g_{swmax}$ so that some flow rates may not be possible (see stomatal regulation below). However, $g_{swmax}$ should quickly become non-limiting as soil dries (i.e. reducing $E$) or $VPD_{leaf}$ increases [@Sperry2016]. Minimum stomatal conductance is also used in **medfate** when building the supply function, as it specifies the minimum flow rates that will occur for completely-closed stomata, i.e. the minimum flow from which supply function is build.
+
+### Leaf photosynthesis
+Rubisco-limited photosynthesis rate $A_c$ (in $\mu mol CO_2·s^{-1}·m^{-2}$) is modelled using (Collatz et al. 1991, Medlyn et al 2002):
+\begin{equation}
+A_c=\frac{V_{max}\cdot (C_i- \Gamma*)}{C_i+K_c \cdot (1+ O_a/K_o)}
+\end{equation}
+where $V_{max}$ is Rubisco's maximum carboxylation rate (in $\mu$mol CO$_2$·s$^{-1}$·m$^{-2}$), $C_i$ is the internal carbon dioxide concentration (in $\mu$mol·mol$^{-1}$), $\Gamma*$ is the compensation point (in $\mu$mol·mol$^{-1}$), $K_c$ (in $\mu$mol·mol$^{-1}$) and $K_o$ (in mmol·mol$^{-1}$) are Michaelis-Menten constants for carboxylation and oxygenation, respectively, and $O_a$ is the atmospheric oxygen concentration (i.e. 209 mmol·mol$^{-1}$). $\Gamma*$, $K_c$ and $K_o$ depend on leaf temperature ($T_{leaf}$, in Celsius) (Bernacchi et al. 2001):
+\begin{eqnarray}
+\Gamma* &=& 42.75\cdot e^{\frac{37830\cdot (T_{leaf}-25)}{298\cdot R \cdot (T_{leaf}-273)}}\\
+K_c &=& 404.9\cdot e^{\frac{79430\cdot (T_{leaf}-25)}{298\cdot R \cdot (T_{leaf}-273)}}\\
+K_o &=& 278.4\cdot e^{\frac{36380\cdot (T_{leaf}-25)}{298\cdot R \cdot (T_{leaf}-273)}}
+\end{eqnarray}
+Electron transport-limited photosynthesis $A_e$ (in $\mu$mol CO$_2$·s$^{-1}$·m$^{-2}$) was obtained from Medlyn et al. (2002):
+\begin{eqnarray}
+A_e &=& \frac{J}{4}\cdot \frac{C_i-\Gamma*}{C_i+2\cdot \Gamma*} \\
+J &=& \frac{(\alpha\cdot Q + J_{max})-\sqrt{(\alpha\cdot Q + J_{max})^2-4.0\cdot c \cdot \alpha \cdot Q \cdot J_{max}}}{2\cdot c}
+\end{eqnarray}
+where $\alpha$ is the quantum yield of electron transport (0.3 mol electrons·mol photons$^{-1}$), $Q$ is the PAR photon flux density ($\mu$mol photons·m$^{-2}$·s$^{-1}$), which is calculated from leaf irradiance ($I_{par}$; in W·m$^{-2}$):
+\begin{equation}
+Q = I_{par}\cdot 546 \cdot 0.836\cdot 10^{-2}
+\end{equation}
+$J_{max}$ and $J$ are the maximum and actual rate of electron transport (both in $\mu$mol electrons·m$^{-2}$·s$^{-1}$) and $c=0.9$ defines the curvature of the light-response curve. The gross assimilation rate $A$ at a given $C_i$ is the minimum of $A_e$ and $A_c$. To obtain a smooth $A$-vs-$C_i$ curve we used (Collatz et al. 1991):
+\begin{equation}
+A = \frac{(A_c+A_e)-\sqrt{(A_c+A_e)^2-4.0\cdot c'\cdot A_e\cdot A_c}}{2\cdot c'}
+\end{equation}
+where $c'=0.98$ is a curvature factor. The temperature dependence of $J_{max}$ and $V_{max}$ relative to 25ºC was modelled using Leuning (2002) (his eq. 1 with parameters from his Table 2). The internal CO$_2$ concentration, $C_i$, needs to be known to calculate $A$ using the previous equations. Sperry et al. (2016b) use a second equation for $A$ which uses $g_{cs}$:
+\begin{equation}
+A = g_{sc} \cdot (C_{atm}-C_i)
+\end{equation}
+where $C_{atm}$ is the atmospheric CO$_2$ concentration (in $\mu$mol·mol$^{-1}$; see parameter \texttt{Catm} in function \texttt{defaultControl()}). Combining the two equations for $A$ and finding the root of the resulting equation using Newton-Raphson method allows determining $C_i$ and therefore $A$. Thus, after defining PAR photon flux density, atmosphere CO$_2$ concentration and maximum rate parameters:
+<<>>==
+Q = 2000
+Catm = 386
+Vmax298 = 100
+Jmax298 = 1.67*Vmax298
+@
+one can obtain the following $A(\Psi_{leaf})$ curves from $T_{leaf}(\Psi_{leaf})$ and $g_{sc}(\Psi_{leaf})$:
+\begin{center}
+<<fig=TRUE, width=8, height=3.5, echo=FALSE>>==
+par(mar=c(4,4,2,1), mfrow=c(1,2))
+plot(-supplyNetwork11$psiLeaf, psi2A11$Photosynthesis, type="l", col=col1, ylab="Assimilation rate", xlab = "Leaf sap pressure (-MPa)",  xlim=c(0, 7), lwd=1, main="original")
+lines(-supplyNetwork12$psiLeaf,psi2A12$Photosynthesis, lty=1, lwd=1, col=col2)
+lines(-supplyNetwork13$psiLeaf, psi2A13$Photosynthesis, lty=1, lwd=1, col=col3)
+lines(-supplyNetwork14$psiLeaf, psi2A14$Photosynthesis, lty=1, lwd=1, col=col4)
+lines(-supplyNetwork21$psiLeaf, psi2A21$Photosynthesis, lty=2, lwd=1, col=col1)
+lines(-supplyNetwork22$psiLeaf, psi2A22$Photosynthesis, lty=2, lwd=1, col=col2)
+lines(-supplyNetwork23$psiLeaf, psi2A23$Photosynthesis, lty=2, lwd=1, col=col3)
+lines(-supplyNetwork24$psiLeaf, psi2A24$Photosynthesis, lty=2, lwd=1, col=col4)
+lines(-supplyNetwork31$psiLeaf, psi2A31$Photosynthesis, lty=3, lwd=1, col=col1)
+lines(-supplyNetwork32$psiLeaf, psi2A32$Photosynthesis, lty=3, lwd=1, col=col2)
+lines(-supplyNetwork33$psiLeaf, psi2A33$Photosynthesis, lty=3, lwd=1, col=col3)
+lines(-supplyNetwork34$psiLeaf, psi2A34$Photosynthesis, lty=3, lwd=1, col=col4)
+legend("topright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
+
+plot(-supplyNetwork11emb$psiLeaf, psi2A11emb$Photosynthesis, type="l", col=col1, ylab="Assimilation rate", xlab = "Leaf sap pressure (-MPa)",  xlim=c(0, 7), lwd=1, main="after cavitation")
+lines(-supplyNetwork12emb$psiLeaf,psi2A12emb$Photosynthesis, lty=1, lwd=1, col=col2)
+lines(-supplyNetwork13emb$psiLeaf, psi2A13emb$Photosynthesis, lty=1, lwd=1, col=col3)
+lines(-supplyNetwork14emb$psiLeaf, psi2A14emb$Photosynthesis, lty=1, lwd=1, col=col4)
+lines(-supplyNetwork21emb$psiLeaf, psi2A21emb$Photosynthesis, lty=2, lwd=1, col=col1)
+lines(-supplyNetwork22emb$psiLeaf, psi2A22emb$Photosynthesis, lty=2, lwd=1, col=col2)
+lines(-supplyNetwork23emb$psiLeaf, psi2A23emb$Photosynthesis, lty=2, lwd=1, col=col3)
+lines(-supplyNetwork24emb$psiLeaf, psi2A24emb$Photosynthesis, lty=2, lwd=1, col=col4)
+lines(-supplyNetwork31emb$psiLeaf, psi2A31emb$Photosynthesis, lty=3, lwd=1, col=col1)
+lines(-supplyNetwork32emb$psiLeaf, psi2A32emb$Photosynthesis, lty=3, lwd=1, col=col2)
+lines(-supplyNetwork33emb$psiLeaf, psi2A33emb$Photosynthesis, lty=3, lwd=1, col=col3)
+lines(-supplyNetwork34emb$psiLeaf, psi2A34emb$Photosynthesis, lty=3, lwd=1, col=col4)
+abline(v=-psiCav, col="gray", lwd=1.5)
+legend("topright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
+@
+\end{center}
+Finally, leaf net photosynthesis (i.e. accounting for autotrophic respiration) is calculated as:
+\begin{equation}
+A_n = A - 0.015 \cdot V_{max}
+\end{equation}
