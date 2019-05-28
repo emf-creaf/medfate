@@ -39,52 +39,48 @@ where $N$ is the density of individuals per hectare.
 
 ### Vegetation state variables and parameters
 
-Vegetation in the stand is described using a set of plant cohorts, described in an object of class \texttt{growthInput}. This function assembles all parameters needed for the simulation of a given stand in a single list. Model parameters are grouped by category.  Regarding physical aboveground description of the stand, each plant cohort is defined by its species identity ($SP$; with R name [\texttt{SP}]). In addition, each cohort needs to be defined regarding the following state variables:
+Vegetation in the stand is described using a set of plant cohorts, described in an object of class `growthInput`. This function assembles all parameters needed for the simulation of a given stand in a single list. Model parameters are grouped by category.  Regarding physical aboveground description of the stand, each plant cohort is defined by its species identity ($SP$; with R name [`SP`]). In addition, each cohort needs to be defined regarding the following state variables:
 
-\begin{itemize}
-\item{$N$ [\texttt{N}]: The density of individuals (in ind · ha$^{-1}$).}
-\item{$DBH$ [\texttt{DBH}]: Tree diameter at breast height (in cm).}
-\item{$Cover$ [\texttt{Cover}]: Shrub percent cover (in \%).}
-\item{$H$ [\texttt{H}]: Total tree or shrub height (in cm).}
-\item{$CR$ [\texttt{CR}]: Crown ratio (i.e. the ratio between crown length and total height).}
-\item{$LAI^{live}$ [\texttt{LAI\_live}]: Live leaf area index (one-side live leaf area of plants in the cohort per surface area of the stand) (in m$^2$·m$^{-2}$).}
-\item{$LAI^{\phi}$ [\texttt{LAI\_expanded}]: Expanded leaf area index (one-side expanded leaf area of plants in the cohort per surface area of the stand) (in m$^2$·m$^{-2}$).}
-\item{$LAI^{dead}$ [\texttt{LAI\_dead}]: Dead leaf area index (one-side dead leaf area of plants in the cohort per surface area of the stand) (in m$^2$·m$^{-2}$).}
-\item{$LAI^{predrought}$ [\texttt{LAI\_predrought}]: Live leaf area index before the current drought started (one-side dead leaf area of plants in the cohort per surface area of the stand) (in m$^2$·m$^{-2}$).}
-\item{$SA$ [\texttt{SA}]: Area of functional sapwood per individual (in cm$^2$·ind$^{-1}$).}
-\item{$C_{fast}$ [\texttt{fastCstorage}]: Amount of C in the fast carbon storage pool (in g C·ind$^{-1}$).}
-\item{$C_{slow}$ [\texttt{slowCstorage}]: Amount of C in the slow carbon storage pool (in g C·ind$^{-1}$).}
-\end{itemize}
++ $N$ [`N`]: The density of individuals (in $ind · ha^{-1}$).
++ $DBH$ [`DBH`]: Tree diameter at breast height (in cm).
++ $Cover$ [`Cover`]: Shrub percent cover (in %).
++ $H$ [`H`]: Total tree or shrub height (in cm).}
++ $CR$ [`CR`]: Crown ratio (i.e. the ratio between crown length and total height).}
++ $LAI^{live}$ [`LAI_live`]: Live leaf area index (one-side live leaf area of plants in the cohort per surface area of the stand) (in m$^2$·m$^{-2}$).}
++ $LAI^{\phi}$ [`LAI_expanded`]: Expanded leaf area index (one-side expanded leaf area of plants in the cohort per surface area of the stand) (in m$^2$·m$^{-2}$).}
++ $LAI^{dead}$ [`LAI_dead`]: Dead leaf area index (one-side dead leaf area of plants in the cohort per surface area of the stand) (in m$^2$·m$^{-2}$).}
++ $LAI^{predrought}$ [`LAI_predrought`]: Live leaf area index before the current drought started (one-side dead leaf area of plants in the cohort per surface area of the stand) (in m$^2$·m$^{-2}$).}
++ $SA$ [`SA`]: Area of functional sapwood per individual (in cm$^2$·ind$^{-1}$).}
++ $C_{fast}$ [`fastCstorage`]: Amount of C in the fast carbon storage pool (in g C·ind$^{-1}$).}
++ $C_{slow}$ [`slowCstorage`]: Amount of C in the slow carbon storage pool (in g C·ind$^{-1}$).}
 
 Excepting $SP$ (species identity) and $N$ (density), the remaining aboveground state variables are modified during growth simulations. Belowground parameters are the following:
-\begin{itemize}
-\item{$Z$ [\texttt{Z}]: The rooting depth (in cm).}
-\item{$V$ [\texttt{V}]: A matrix with the proportion of fine roots in each soil layer.}
-\end{itemize}
-Additional belowground variables are included if \texttt{transpirationMode = "Complex"}. These, and the parameters needed for water balance calculations are described in vignette '\textbf{Soil description and root system architecture}'. 
+
++ $Z$ [`Z`]: The rooting depth (in cm).}
++ $V$ [`V`]: A matrix with the proportion of fine roots in each soil layer.}
+
+Additional belowground variables are included if `transpirationMode = "Complex"}. These, and the parameters needed for water balance calculations are described in vignette '\textbf{Soil description and root system architecture}'. 
 
 The following physiological parameters are needed for growth calculations:
-\begin{itemize}
-\item{$SLA$ [\texttt{SLA}]: Specific leaf area (m$^2$·kg$^{-1}$).}
-\item{$Hv$ [\texttt{Al2As}]: Huber value. Leaf area to sapwood area ratio (in m$^2$·m$^{-2}$).}
-\item{$W_{dens}$ [\texttt{WoodDens}]: Wood density (at 0\% humidity) (in g·cm$^{-3}$).}
-\item{$W_{C}$ [\texttt{WoodC}]: Wood carbon content in relation to dry weight (in g·g$^{-1}$).}
-\item{$C_{p,\max}$ [\texttt{Cstoragepmax}]: Maximum storage capacity, expressed as C per total respiratory C (in gC·gC$^{-1}$).}
-\item{$RGR_{\max}$ [\texttt{RGRmax}]: Maximum daily relative growth rate (in sapwood area basis) (in cm$^2$·cm$^{-2}$).}
-\end{itemize}
+
++ $SLA$ [`SLA`]: Specific leaf area (m$^2$·kg$^{-1}$).
++ $Hv$ [`Al2As`]: Huber value. Leaf area to sapwood area ratio (in m$^2$·m$^{-2}$).}
++ $W_{dens}$ [`WoodDens`]: Wood density (at 0\% humidity) (in g·cm$^{-3}$).}
++ $W_{C}$ [`WoodC`]: Wood carbon content in relation to dry weight (in g·g$^{-1}$).}
++ $C_{p,\max}$ [`Cstoragepmax`]: Maximum storage capacity, expressed as C per total respiratory C (in gC·gC$^{-1}$).
++ $RGR_{\max}$ [`RGRmax`]: Maximum daily relative growth rate (in sapwood area basis) (in cm$^2$·cm$^{-2}$).
 
 Another set of parameters is needed to transform changes in sapwood area and leaf area to changes in the structural variables such as tree height, tree crown ratio or shrub cover:
-\begin{itemize}
-\item{$H_{\max}$ [\texttt{Hmax}]: Maximum plant height (in cm).}
-\item{$f_{HD,\min}$, $f_{HD,\max}$ [\texttt{fHDmin}, \texttt{fHDmax}]: Minimum and maximum values of the height-diameter ratio (in cm·cm$^{-1}$).}
-\item{$Z_{\max}$ [\texttt{Zmax}]: Maximum rooting depth (in mm).}
-\item{$a_{ash}$ [\texttt{Aash}]: Regression coefficient for the quadratic relationship between shrub height and shrub area.}
-\item{$a_{bsh}$, $b_{bsh}$ [\texttt{Absh}, \texttt{Bbsh}]: Allometric coefficients relating crown phytovolume with dry weight of shrub individuals.}
-\item{$CR$ [\texttt{cr}]: Ratio between crown length and total height (constant value for shrubs).}
-\item{$r_{6.35}$ [\texttt{r635}]: Ratio between the dry weight of leaves plus branches and the dry weight of leaves alone for branches of 6.35 mm of diameter.}
-\item{$a_{cr}$, $b_{1cr}$, $b_{2cr}$, $b_{3cr}$, $c_{1cr}$, $c_{2cr}$ [\texttt{B1cr}, \texttt{B2cr}, \texttt{B3cr}, \texttt{C1cr}, \texttt{C2cr}]: Regression coefficients used to update the crown ratio of trees.}
-\item{$a_{cw}$, $b_{cw}$ [\texttt{Acw}, \texttt{Bcw}]: Regression coefficients used to calculate the crown width of trees (as intermediary step to obtain the crown ratio).}
-\end{itemize}
+
++ $H_{\max}$ [`Hmax`]: Maximum plant height (in cm).
++ $f_{HD,\min}$, $f_{HD,\max}$ [`fHDmin}, `fHDmax`]: Minimum and maximum values of the height-diameter ratio (in cm·cm$^{-1}$).
++ $Z_{\max}$ [`Zmax`]: Maximum rooting depth (in mm).
++ $a_{ash}$ [`Aash`]: Regression coefficient for the quadratic relationship between shrub height and shrub area.
++ $a_{bsh}$, $b_{bsh}$ [`Absh`, `Bbsh`]: Allometric coefficients relating crown phytovolume with dry weight of shrub individuals.
++ $CR$ [`cr`]: Ratio between crown length and total height (constant value for shrubs).
++ $r_{6.35}$ [`r635`]: Ratio between the dry weight of leaves plus branches and the dry weight of leaves alone for branches of 6.35 mm of diameter.
++ $a_{cr}$, $b_{1cr}$, $b_{2cr}$, $b_{3cr}$, $c_{1cr}$, $c_{2cr}$ [`B1cr`, `B2cr`, `B3cr`, `C1cr`, `C2cr`]: Regression coefficients used to update the crown ratio of trees.
++ $a_{cw}$, $b_{cw}$ [`Acw`, `Bcw`]: Regression coefficients used to calculate the crown width of trees (as intermediary step to obtain the crown ratio).
 
 ### Metereological input
 
