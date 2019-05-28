@@ -17,60 +17,50 @@ The following tables list all symbols used in this document, along with their un
 
 
 ## Plant hydraulics
-\begin{center}
-    \begin{tabular}{| l | p{2.5cm} |  p{2.5cm} | p{5cm} |}
-    \hline
-    Symbol & Units & Param. & Description \\ \hline
-        $K_{s,max,ref}$ & kg·s$^{-1}$· m$^{-1}$·MPa$^{-1}$ & \texttt{Kmax\_stemxylem} & Maximum stem sapwood reference conductivity per leaf area unit. \\ \hline
-    $K_{r,max,ref}$ & kg·s$^{-1}$· m$^{-1}$·MPa$^{-1}$ & \texttt{Kmax\_rootxylem} & Maximum root sapwood reference conductivity per leaf area unit. \\ \hline
-    $k_{s, max}$ & mmol·s$^{-1}$ ·m$^{-2}$·MPa$^{-1}$ &  & Maximum whole-stem conductance (per leaf area unit). \\ \hline
-    $k_{r, max}$ & mmol·s$^{-1}$ ·m$^{-2}$·MPa$^{-1}$ &  & Maximum root conductance (per leaf area unit). \\ \hline
-    $k_{rh, max}$ & mmol·s$^{-1}$ ·m$^{-2}$·MPa$^{-1}$ &  & Maximum rhizosphere conductance (per leaf area unit). \\ \hline
-    $k_{l, max}$ & mmol·s$^{-1}$ ·m$^{-2}$·MPa$^{-1}$ & \texttt{VCleaf\_kmax} & Maximum leaf conductance (per leaf area unit). \\ \hline
-    $c_l$, $d_l$ & (unitless), MPa & \texttt{VCleaf\_c}, \texttt{VCleaf\_d} & Parameters of the vulnerability curve for leaves. \\ \hline
-    $c_r$, $d_r$ & (unitless), MPa & \texttt{VCroot\_c}, \texttt{VCroot\_d} & Parameters of the vulnerability curve for root xylem. \\ \hline
-    $c_s$, $d_s$ & (unitless), MPa & \texttt{VCstem\_c}, \texttt{VCstem\_d} & Parameters of the vulnerability curve for stem xylem. \\ \hline
-    $n$, $\alpha$ & & & Texture-specific parameters of the van Genuchten equation. \\ \hline
-    $\Psi$ & MPa & & Water potential in a given water compartment. \\ \hline
-    $\Psi_P$ & MPa & & Turgor water potential in a given water compartment.  \\ \hline
-    $\Psi_S$ & MPa & & Osmotic (solute) water potential in a given water compartment.  \\ \hline
-    $\Psi_{cav}$ & MPa & & Minimum water potential experienced by xylem in previous steps (cavitation). \\ \hline
-    $\Psi_{canopy}$ & MPa & & Canopy water potential. \\ \hline
-    $\Psi_{leaf}$ & MPa & & Leaf water potential. \\ \hline
-    $\Psi_{rootcrown}$ & MPa & & Water potential at the root crown. \\ \hline
-    $\Psi_{stem}$ & MPa & & Water potential at the end (highest part) of the stem. \\ \hline
-    $PLC$ & [0-1] & & Proportion of conductance loss in stem xylem tissue. \\ \hline
-    $p_{root}$ & [0-1] & \texttt{pRootDisc} & Relative root conductance leading to hydraulic disconnection from a soil layer. \\ \hline
-    \end{tabular}
-\end{center}
+
+| Symbol | Units | R param | Description                        |
+|--------|-------|---------|------------------------------------|
+| $K_{s,max,ref}$ | $kg·s^{-1}·m^{-1}·MPa^{-1}$ | `Kmax_stemxylem` | Maximum stem sapwood reference conductivity per leaf area unit |
+| $K_{r,max,ref}$ | $kg·s^{-1}·m^{-1}·MPa^{-1}$ | `Kmax_rootxylem` | Maximum root sapwood reference conductivity per leaf area unit |
+| $k_{s, max}$ | $mmol·s^{-1}·m^{-2}·MPa^{-1}$ |  | Maximum whole-stem conductance (per leaf area unit) |
+| $k_{r, max}$ | $mmol·s^{-1}·m^{-2}·MPa^{-1}$ |  | Maximum root conductance (per leaf area unit) |
+| $k_{rh, max}$ | $mmol·s^{-1}·m^{-2}·MPa^{-1}$ |  | Maximum rhizosphere conductance (per leaf area unit) |
+| $k_{l, max}$ | $mmol·s^{-1}·m^{-2}·MPa^{-1}$ | `VCleaf_kmax` | Maximum leaf conductance (per leaf area unit) |
+| $c_l$, $d_l$ | (unitless), MPa | `VCleaf_c`, `VCleaf_d` | Parameters of the vulnerability curve for leaves |
+| $c_r$, $d_r$ | (unitless), MPa | `VCroot_c`, `VCroot_d` | Parameters of the vulnerability curve for root xylem |
+| $c_s$, $d_s$ | (unitless), MPa | `VCstem_c`, `VCstem_d` | Parameters of the vulnerability curve for stem xylem |
+| $n$, $\alpha$ | | | Texture-specific parameters of the van Genuchten equation |
+| $\Psi$ | MPa | | Water potential in a given water compartment |
+| $\Psi_P$ | MPa | | Turgor water potential in a given water compartment |
+| $\Psi_S$ | MPa | | Osmotic (solute) water potential in a given water compartment |
+| $\Psi_{cav}$ | MPa | | Minimum water potential experienced by xylem in previous steps (cavitation) |
+| $\Psi_{canopy}$ | MPa | | Canopy water potential |
+| $\Psi_{leaf}$ | MPa | | Leaf water potential |
+| $\Psi_{rootcrown}$ | MPa | | Water potential at the root crown |
+| $\Psi_{stem}$ | MPa | | Water potential at the end (highest part) of the stem |
+| $PLC$ | [0-1] | | Proportion of conductance loss in stem xylem tissue |
+| $p_{root}$ | [0-1] | `pRootDisc` | Relative root conductance leading to hydraulic disconnection from a soil layer |
+
 
 
 ## Plant water compartments
-\begin{center}
-    \begin{tabular}{| l | p{2.5cm} | p{2.5cm} | p{5cm} |}
-    \hline
-    Symbol & Units & Param. & Description \\ \hline
-    $\epsilon_{leaf}$ & MPa & \texttt{LeafEPS} & Modulus of elasticity of leaves. \\ \hline
-    $\epsilon_{stem}$ & MPa & \texttt{StemEPS} & Modulus of elasticity of symplastic xylem tissue. \\ \hline
-    $\pi_{0,leaf}$ & MPa & \texttt{LeafPI0} & Osmotic potential at full turgor of leaves. \\ \hline
-    $\pi_{0,stem}$ & MPa & \texttt{StemPI0} & Osmotic potential at full turgor of symplastic xylem tissue. \\ \hline
-    $RWC$ & [0-1] & & Relative water content. \\ \hline
-    $RWC_{sym}$ & [0-1] & & Relative water content in the symplasm fraction of a tissue. \\ \hline
-    $RWC_{apo}$ & [0-1] & & Relative water content in the apoplasm fraction of a tissue. \\ \hline
-    $V_{segment}$ & m$^3$·m$^{-2}$ & & Water capacity of a segment (leaf or stem). \\ \hline
-    $V_{leaf}$ & m$^3$·m$^{-2}$ & & Leaf water capacity per leaf area unit. \\ \hline
-    $V_{sapwood}$ & m$^3$·m$^{-2}$ & & Sapwood water capacity per leaf area unit. \\ \hline
-    \end{tabular}
-\end{center}
+| Symbol | Units | R param | Description                        |
+|--------|-------|---------|------------------------------------|
+| $\epsilon_{leaf}$ | MPa | `LeafEPS` | Modulus of elasticity of leaves |
+| $\epsilon_{stem}$ | MPa | `StemEPS` | Modulus of elasticity of symplastic xylem tissue |
+| $\pi_{0,leaf}$ | MPa | `LeafPI0` | Osmotic potential at full turgor of leaves |
+| $\pi_{0,stem}$ | MPa | `StemPI0` | Osmotic potential at full turgor of symplastic xylem tissue |
+| $RWC$ | [0-1] | | Relative water content |
+| $RWC_{sym}$ | [0-1] | | Relative water content in the symplasm fraction of a tissue |
+| $RWC_{apo}$ | [0-1] | | Relative water content in the apoplasm fraction of a tissue |
+| $V_{segment}$ | $m^3·m^{-2}$ | | Water capacity of a segment (leaf or stem) |
+| $V_{leaf}$ | $m^3·m^{-2}$ | | Leaf water capacity per leaf area unit |
+| $V_{sapwood}$ | $m^3·m^{-2}$ | | Sapwood water capacity per leaf area unit |
 
 ## Stomatal regulation and photosynthesis
-\begin{center}
-    \begin{tabular}{| l | p{2.5cm} |  p{2.5cm} | p{5cm} |}
-        \hline
-        Symbol & Units & Param. & Description \\ \hline
-        $g_{swmin}$ & mol H$_2$O·s$^{-1}$·m$^{-2}$ & \texttt{Gwmin} & Minimum stomatal conductance to water vapour.\\ \hline
-        $g_{swmax}$ & mol H$_2$O·s$^{-1}$·m$^{-2}$ & \texttt{Gwmax} & Maximum stomatal conductance to water vapour. \\ \hline
-        $J_{max, 298}$ & $\mu$mol electrons·m$^{-2}$·s$^{-1}$ & \texttt{Jmax298} & Maximum rate of electron transport at 298K \\ \hline
-        $V_{max, 298}$ & $\mu$mol CO$_2$·s$^{-1}$·m$^{-2}$ & \texttt{Vmax298} & Rubisco's maximum carboxylation rate at 298K \\ \hline
-    \end{tabular}
-\end{center}
+| Symbol | Units | R param | Description                        |
+|--------|-------|---------|------------------------------------|
+| $g_{swmin}$ | $mol H_2O·s^{-1}·m^{-2}$ | `Gwmin` | Minimum stomatal conductance to water vapour |
+| $g_{swmax}$ | $mol H_2O·s^{-1}·m^{-2}$ | `Gwmax` | Maximum stomatal conductance to water vapour |
+| $J_{max, 298}$ | $\mu mol electrons·m^{-2}·s^{-1}$ | `Jmax298` | Maximum rate of electron transport at 298K |
+| $V_{max, 298}$ | $\mu mol CO_2·s^{-1}·m^{-2}$ | `Vmax298` | Rubisco's maximum carboxylation rate at 298K |
