@@ -1,5 +1,3 @@
-# (PART) Details of processes {-}
-
 # Hydrology
 
 ## Snow pack dynamics {#snowpack}

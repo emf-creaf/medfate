@@ -1,6 +1,6 @@
-# (PART) Simulation models {-}
+# (PART) Basic water balance modelling {-}
 
-# Basic soil-plant water balance
+# Basic water balance model
 
 ## Design principles
 

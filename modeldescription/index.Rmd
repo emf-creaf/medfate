@@ -4,7 +4,7 @@ author: "Miquel De Cáceres"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 documentclass: book
-bibliography: [book.bib]
+bibliography: [medfatebook.bib]
 biblio-style: apalike
 link-citations: yes
 description: "This is a reference book for models implemented in package medfate."
