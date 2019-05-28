@@ -74,3 +74,32 @@ P_{embolized,i}= \max \{P_{embolized,i}, DDS_i \}
 However, the way that previous cavitation levels are taken into account differs from the 'Simple' transpiration mode. In this mode, the stem xylem vulnerability curve is modified by specifying that the maximum conductance value is reduced and set to $k_{stem,i} \cdot (1.0 - P_{embolized,i})$. This effectively causes the supply function to reach lower flow values for the same water potential drop (see details in Appendices).
 
 When running the model using the 'Complex' transpiration mode plants may be allowed to disconnect from the soil when its potential becomes too negative. Parameter $P_{rootdisc,i}$ can be used to specify the minimum relative conductance value that the plant will tolerate without disconnecting hydraulically from the soil (in normal simulations $P_{rootdisc,i} = 0$). Again, this affects the model in a way slightly different than when running the model in 'Simple' transpiration mode. Before building the supply function, the model checks if there are layers where the relative conductance of roots (i.e. $k_{root, i, s}(\Psi_{s})/k_{\max root, i, s}$) is lower than $P_{rootdisc,i}$. Those layers where this happens are not considered in the calculation of the supply function and do not contribute to transpiration or to the determination of plant water potentials. 
+
+
+## Transpiration and photosynthesis after soil disconnection
+
+Considering water compartments allows tracking leaf and stem (i.e. plant) *dessication*, either when the plant is connected to the soil or when transpiration flow comes from the plant itself. In **medfate**, disconnection from a given soil layer occurs when its water potential is too low with respect to the root xylem vulnerability curve. The user can control this behaviour by specifying a $p_{root}$ threshold for relative conductance, and the plant will be disconnected from a soil layer if $k_{r}(\Psi_{soil})/k_{r,max} < p_{root}$. An interesting situation arises when a plant is disconnected from all soil layers. In this case, the steady-state calculations cannot be used to determine flows, so one is forced to use a full discrete time approximation, with compartments and flows indicated in the figure below.
+
+```{r, out.width='80%', fig.align="center", fig.cap="Schematic representation of hydraulics in a whole-plant network after disconnection from soil", echo=FALSE}
+knitr::include_graphics("hydraulics_disc.jpg")
+```
+
+As before, each time step $\Delta t$ is divided into $m$ substeps and instantaneous lateral flows between symplastic and apoplastic compartments are calculated as before. In this case, however, one needs to calculate instantaneous flows between stem apoplastic compartments using:
+\begin{equation}
+F_{i, i+1} = k_{s}(\min(\Psi_{apo,i}, \Psi_{cav, i})) \cdot (\Psi_{apo, i} - \Psi_{apo, i+1})
+\end{equation}
+and between the last stem compartment and the leaf using:
+\begin{equation}
+F_{S, l} = k_{l}(\Psi_{apo, l}) \cdot (\Psi_{apo, S} - \Psi_{apo, l})
+\end{equation}
+The flow from the leaf to the atmosphere is dictated by the minimum stomatal conductance and the vapour pressure deficit. For each time substep all flows are calculated and water content of compartments is updated. Then the equations of relative water content are inversed to find the water potentials for the next time substep.
+
+
+The instantaneous flow rate between symplastic and apoplastic compartments can be approximated using a lateral conductance $k_{lat}$ and the difference in water potentials. For the leaf we have:
+\begin{equation}
+F_{lat, l} = k_{lat} \cdot (\Psi_{sym, l} - \Psi_{apo,l})
+\end{equation}
+where $\Psi_{sym, l}$ is the water potential of the symplastic leaf compartment and $\Psi_{apo,l}$ is the water potential in the apoplastic leaf compartment. If $\Psi_{sym, l} > \Psi_l$ then the flow will be positive towards the leaf apoplasm and if $\Psi_{sym, l} < \Psi_l$ the flow will instead refill the leaf symplastic tissue. An analogous equation can be used to calculate the instantaneous lateral flow between symplastic and apoplastic compartments in any stem segment:
+\begin{equation}
+F_{lat, i} = k_{lat} \cdot (\Psi_{sym, i} - \Psi_{apo, i})
+\end{equation}
