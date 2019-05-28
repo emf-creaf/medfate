@@ -322,3 +322,66 @@ The values are the same because the texture of the three layers is the same in t
 krmax*v1
 ```
 
+### Pressure-volume curves
+
+Parameters of the pressure-volume curve (i.e. $\pi_{0,stem}$ and $\epsilon_{stem}$) for leaf and stem symplastic tissue are required for each species. When parameters for stem tissue are missing, **medfate** estimates them from wood density following @Christoffersen2016:
+\begin{equation}
+\pi_{0,stem} = 0.52 - 4.16 \cdot \rho_{wood}
+\end{equation}
+
+\begin{equation}
+\epsilon_{stem} = \sqrt{1.02 \cdot e^{8.5\cdot \rho_{wood}}-2.89}
+\end{equation}
+
+### Plant water storage capacity
+The water storage capacity of sapwood tissue per leaf area unit ($V_{sapwood}$; in $m^3·m^{-2}$) can be estimated as the product of stem height ($H$ in m) and Huber value ($H_v$; ratio of sapwood area to leaf area in $m^2·m^{-2}$) times a factor to account for the non-cylindrical shape (http://www.fao.org/forestry/17109/en/):
+\begin{equation}
+V_{sapwood} = 0.48 \cdot H \cdot H_v \cdot \Theta_{sapwood}
+\end{equation}
+$\Theta_{sapwood}$ is sapwood porosity ($cm^3$ of water per $cm^3$ of sapwood tissue), which can be estimated from wood density ($\rho_{wood}$; in $g·cm^{-3}$):
+\begin{equation}
+\Theta_{sapwood} = 1 - (\rho_{wood} / 1.54)
+\end{equation}
+where the density of wood substance can be assumed to be fixed and equal to 1.54 $g·cm^{-3}$ [@Dunlap1914]. For example, wood densities ranging from 0.443 to 1.000 $g·cm^{-3}$ result in sapwood porosity values between 0.35 and 0.71. 
+
+Water storage capacity of leaf tissue per leaf area unit ($V_{leaf}$; in $m^3·m^{-2}$) can be estimated as the product of specific leaf area (SLA; in $m^2·kg^{-1}$) and leaf density ($\rho_{leaf}$; in $g·cm^{-3}$):
+\begin{equation}
+V_{leaf} = \frac{10^{-3}}{SLA \cdot \rho_{leaf}} \cdot \Theta_{leaf}
+\end{equation}
+$\Theta_{leaf}$ is leaf porosity ($cm^3$ of water per $cm^3$ of leaf tissue), which can be estimated from leaf density:
+\begin{equation}
+\Theta_{leaf} = 1 - (\rho_{leaf} / 1.54)
+\end{equation}
+where the density of wood substance can be assumed to be fixed and equal to 1.54 $g·cm^{-3}$ (Dunlap 1914). 
+
+For example, let's calculate the stem and leaf water capacity for a Q. ilex tree of 15 m height:
+```{r}
+wd = 1.0
+Al2As = 2512 
+H = 1500 # 15 m
+hydraulics_stemWaterCapacity(Al2As, H, wd)
+
+ld = 0.7
+SLA = 5.870 
+hydraulics_leafWaterCapacity(SLA, ld)
+```
+
+
+## Stomatal regulation and photosynthesis
+
+### Stomatal conductance
+Maximum stomatal conductance ($g_{swmax}$) is an input parameter for each species. When species-specific values are missing, the following relation with maximum leaf hydraulic conductance ($k_{l, max}$) is used [@Mencuccini2003]:
+\begin{equation}
+g_{swmax} = e^{4.797 + 0.633\cdot \log(k_{l, max})}
+\end{equation}
+
+Species values for $g_{swmin}$ were taken from @Duursma2018. Following the same authors, a value of $g_{swmin}$ = 0.0045 $mol H_2O·s^{-1}·m^{-2}$ is taken as default, when species-specific values are missing.
+
+### Photosynthesis
+
+Rubisco's maximum carboxylation rate at 25ºC ($V_{max, 298}$, in $\mu$mol CO$_2$·s$^{-1}$·m$^{-2}$) is a required input parameter for each species (`Vmax298`), and if its value is missing a default value of 100 $\mu mol CO_2·s^{-1}·m^{-2}$ is used. The maximum rate of electron transport at the same temperature ($J_{max, 298}$) can be provided by the user (`Jmax298`) but, if not, it is estimated from $V_{max, 298}$ using @Walker2014:
+
+\begin{equation}
+J_{max, 298} = e^{1.197 + 0.847\cdot \log(V_{max,298})}
+\end{equation}
+
