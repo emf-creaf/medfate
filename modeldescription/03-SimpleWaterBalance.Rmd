@@ -4,7 +4,7 @@
 
 ## Design principles
 
-The water balance model calculates temporal variations in soil moisture on a daily step basis for the input forest stand and for the period corresponding to input weather data. 
+The water balance model described in @DeCaceres2015 calculates temporal variations in soil moisture on a daily step basis for the input forest stand and for the period corresponding to input weather data. 
 
 The model considers only the vertical spatial dimension of the stand and not the horizontal distribution of
 plants within it. In other words, the model is not spatially explicit (i.e., plants do not interact for space explicitly). Still, the stand is divided into groups of plants, here referred to as *plant cohorts* of different species, height and leaf area index ($LAI$). Height and $LAI$ values determine competition for light. $LAI$ values also drive competition for water, along with root distribution. The soil water balance follows the design principles of SIERRA [@Mouillot2001;@Ruffault2014;@Ruffault2013] and BILJOU [@Granier1999;-@Granier2007], although some features are taken from other models [@Kergoat1998]. Potential evapotranspiration ($PET$) is given as input and the model determines maximum canopy transpiration ($Tr_{\max}$) using an empirical relationship between the $LAI$ of the stand and the ratio $Tr_{\max}/PET$ [@Granier1999]. Actual plant transpiration is estimated using a function that depends on current soil moisture levels, species-specific drought resistance, fine root distribution and the degree of shading of the target plant cohort.
