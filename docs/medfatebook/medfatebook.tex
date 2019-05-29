@@ -141,6 +141,16 @@
 \setcounter{tocdepth}{1}
 \tableofcontents
 }
+\hypertarget{preface}{%
+\chapter*{Preface}\label{preface}}
+\addcontentsline{toc}{chapter}{Preface}
+
+This is a reference book for the models implemented in the R package \textbf{medfate}. This package provides functions for the simulation of functioning and dynamics of Mediterranean forests.
+
+\begin{center}\includegraphics[width=0.2\linewidth]{LOGO_Group} \end{center}
+
+The online version of this book is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+
 \hypertarget{part-preliminaries}{%
 \part{Preliminaries}\label{part-preliminaries}}
 
@@ -541,8 +551,8 @@ where \(Y_i(z)\) is the cumulative fraction of fine root mass located between su
 
 \begin{figure}
 \centering
-\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-3-1.pdf}
-\caption{\label{fig:unnamed-chunk-3}Examples of root density profile according to a conic distribution (left) and the linear dose response model (right).}
+\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-4-1.pdf}
+\caption{\label{fig:unnamed-chunk-4}Examples of root density profile according to a conic distribution (left) and the linear dose response model (right).}
 \end{figure}
 
 \hypertarget{meteoinput}{%
@@ -916,8 +926,8 @@ model, under different situations (see function \texttt{hydrology\_rainIntercept
 
 \begin{figure}
 \centering
-\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-4-1.pdf}
-\caption{\label{fig:unnamed-chunk-4}Examples of canopy interception with different S (canopy water storage capacity), E/R (ratio between evaporation and rainfall rates) and p (throughfall coefficient; p = 1 - C)}
+\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-5-1.pdf}
+\caption{\label{fig:unnamed-chunk-5}Examples of canopy interception with different S (canopy water storage capacity), E/R (ratio between evaporation and rainfall rates) and p (throughfall coefficient; p = 1 - C)}
 \end{figure}
 
 \hypertarget{runoff}{%
@@ -931,8 +941,8 @@ where \(V_{soil}\) (in mm) is the overall soil water retention capacity. Followi
 
 \begin{figure}
 \centering
-\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-5-1.pdf}
-\caption{\label{fig:unnamed-chunk-5}Examples of infiltration/runoff calculation for different values of net rainfall and overall retention capacity, \(V_{soil}\), calculated from different soil depths (topsoil+subsoil) and assuming that soil texture is 15\% clay and 25\% sand. Rock fragment content was 25\% and 40\% for the topsoil and subsoil, respectively.}
+\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-6-1.pdf}
+\caption{\label{fig:unnamed-chunk-6}Examples of infiltration/runoff calculation for different values of net rainfall and overall retention capacity, \(V_{soil}\), calculated from different soil depths (topsoil+subsoil) and assuming that soil texture is 15\% clay and 25\% sand. Rock fragment content was 25\% and 40\% for the topsoil and subsoil, respectively.}
 \end{figure}
 
 If \texttt{drainage\ =\ TRUE}, the water percolating from the lowest layer is considered deep drainage, \(Dd\), and soil layers are never above field capacity. If \texttt{drainage\ =\ FALSE}, the excess of water in the lowest soil layer is not lost via drainage, so that this layer (and those above) can be filled up to saturation. This additional filling is done starting from below, and when a given layer reaches saturation, the model adds the remaining water to the layer above. If all layers are filled to saturation, the remaining water is assumed to be infiltration excess and is added to the surface runoff.
@@ -969,8 +979,8 @@ Finally, \(E_{soil}\) is distributed along the soil profile according to an expo
 
 \begin{figure}
 \centering
-\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-6-1.pdf}
-\caption{\label{fig:unnamed-chunk-6}Cumulative bare soil evaporation for different values of maximum evaporation rate and extinction coefficient. Three soil layers (0 -- 30 cm; 30 -- 150 cm; 150 -- 400 cm) are initialized at field capacity (\(V_1 = 50 mm\); \(V_2 = 201 mm\); \(V_3 = 35 mm\)). \(PE_{soil}\) was assumed not to be limiting. When the extinction coefficient is smaller a higher proportion of the evaporated water is removed from the subsoil and less from the topsoil. This causes more water being available to calculate t in the next step.}
+\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-7-1.pdf}
+\caption{\label{fig:unnamed-chunk-7}Cumulative bare soil evaporation for different values of maximum evaporation rate and extinction coefficient. Three soil layers (0 -- 30 cm; 30 -- 150 cm; 150 -- 400 cm) are initialized at field capacity (\(V_1 = 50 mm\); \(V_2 = 201 mm\); \(V_3 = 35 mm\)). \(PE_{soil}\) was assumed not to be limiting. When the extinction coefficient is smaller a higher proportion of the evaporated water is removed from the subsoil and less from the topsoil. This causes more water being available to calculate t in the next step.}
 \end{figure}
 
 \hypertarget{transpirationgranier}{%
@@ -988,11 +998,11 @@ Troumbis, 2009; Ruffault et al., 2013).
 
 \begin{figure}
 
-{\centering \includegraphics{medfatebook_files/figure-latex/unnamed-chunk-7-1} 
+{\centering \includegraphics{medfatebook_files/figure-latex/unnamed-chunk-8-1} 
 
 }
 
-\caption{Empirical relationship between $Tr_max/PET$ and $LAI_{stand}$}\label{fig:unnamed-chunk-7}
+\caption{Empirical relationship between $Tr_max/PET$ and $LAI_{stand}$}\label{fig:unnamed-chunk-8}
 \end{figure}
 
 The maximum transpiration for a given plant cohort \(i\) is calculated as the
@@ -1015,11 +1025,11 @@ is used to ensure that \(K_{i}(\Psi_{extract,i}) = 0.5\) (Fig. 4).
 
 \begin{figure}
 
-{\centering \includegraphics{medfatebook_files/figure-latex/unnamed-chunk-8-1} 
+{\centering \includegraphics{medfatebook_files/figure-latex/unnamed-chunk-9-1} 
 
 }
 
-\caption{Whole-plant relative water conductance functions for different water potential values ($r = 3$ in all cases).}\label{fig:unnamed-chunk-8}
+\caption{Whole-plant relative water conductance functions for different water potential values ($r = 3$ in all cases).}\label{fig:unnamed-chunk-9}
 \end{figure}
 
 Actual transpiration of plant cohort \(i\) from a given soil layer \(s\), \(Tr_{i,s}\),
@@ -1378,7 +1388,7 @@ As an example we will consider a canopy of one species of LAI = 2, divided into 
 
 This canopy definition leads to a percentage of the above-canopy irradiance reaching each layer \citep{Anten2016}. Extinction of direct radiation also defines the proportion of leaves of each layer that are affected by sunflecks (i.e.~the proportion of sunlit leaves).
 
-\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-10-1.pdf}
+\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-11-1.pdf}
 
 The amount of absorved diffuse radiation per leaf area unit of cohort \(i\) within a given canopy layer \(j\) is calculated as:
 \begin{equation}
@@ -1560,7 +1570,7 @@ where \(k_{l,max}\) is the leaf maximum hydraulic conductance. Values defined be
 
 With these parameter values, the vulnerability curves for root, stem and leaf are (see \texttt{hydraulics\_xylemConductance()}):
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-16-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-17-1} \end{center}
 
 The dotted line between 0 and \(\Psi_{cav} = -2.5\) MPa indicates the modification of the stem xylem vulnerability curve when cavitation has occurred (i.e., previous embolism limits a the maximum conductance value), as indicated in \citet{Sperry2016}. The corresponding proportion of conductance loss can be found using the stem vulnerability curve:
 \begin{equation}
@@ -1689,7 +1699,7 @@ We can estimate maximum rhizosphere conductance values assuming that they accoun
 
 With these parameters, the resulting \(k_{rh}(\Psi)\) functions can be displayed using the function \texttt{hydraulics\_vanGenuchtenConductance()}:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-20-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-21-1} \end{center}
 
 \hypertarget{water-content-of-plant-tissues}{%
 \section{Water content of plant tissues}\label{water-content-of-plant-tissues}}
@@ -1719,7 +1729,7 @@ When \(\Psi \leq \Psi_{tlp}\), the water potential at turgor loss point, then \(
 \end{equation}
 As an example, the following figure draws the pressure-volume curve for a tissue with \(\epsilon = 12\) and \(\pi_0 = -3.0\)MPa:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-21-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-22-1} \end{center}
 
 To calculate \(RWC_{sym}\) from the water potential of a tissue, the previous equations need to be combined and, after isolating \(RWC_{sym}\), a quadratic relationship is obtained.
 
@@ -1728,7 +1738,7 @@ Apoplastic reservoirs (e.g.~sapwood) consist of inelastic cells that release the
 RWC_{apo}(\Psi) = \frac{k(\Psi)}{k_{max}} = e^{-((\Psi/d)^{c})}
 \end{equation}
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-22-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-23-1} \end{center}
 
 The average relative water content in a given compartment (\(RWC\)) can be obtained from \(\Psi_{sym}\) and \(\Psi_{apo}\) by calculating \(RWC_{sym}(\Psi_{sym})\) and \(RWC_{apo}(\Psi_{apo})\) followed by assuming a constant apoplastic fraction \(f_{apo}\):
 \begin{equation}
@@ -1782,13 +1792,13 @@ where \(\Psi_{up}\) and \(\Psi_{down}\) are the upstream and downstream water po
 
 In the case of a single stem xylem element the supply function describes the flow rate as a function of canopy pressure (\(\Psi_{canopy}\)). It can be calculated by numerical integration or aproximated using an incomplete gamma function. The shape of the supply function starting at different root crown water potential values (\(\Psi_{rootcrown}\)) is (see function \texttt{hydraulics\_EXylem()}):
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-23-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-24-1} \end{center}
 
 Right pane shows the supply functions that are obtained in the case of a cavitated xylem (i.e.~without refilling), assuming that the minimum water potential experienced so far was -2.5 MPa. Note the linear part of the flow rate between \(\Psi_{soil}\) and this limit.
 
 The supply function of the rhizosphere element relates the flow rate to the pressure inside the roots (\(\Psi_{root}\)). It is calculated by numerical integration of the van Genuchten function (see function \texttt{hydraulics\_EVanGenuchten()}), for which we use the analytical approximation of \citet{VanLier2009}. Here we draw the supply function for the rhizosphere starting at the four different values of bulk soil pressure (\(\Psi_{soil}\)) and for the same three texture types:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-24-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-25-1} \end{center}
 
 The nearly vertical lines indicate that for many values of \(E_i\) the corresponding drop in water potential through the rhizosphere will be negligible. Only for increasingly negative soil water potential values the decrease in water potential through the rhizosphere becomes relevant. Both in the case of a xylem element or a rhyzosphere element the derivative \(dE_i/d\Psi\) of the supply function is equal to the corresponding vulnerability curve.
 
@@ -1797,11 +1807,11 @@ The nearly vertical lines indicate that for many values of \(E_i\) the correspon
 
 Let us describe the soil-plant continuum is represented using \emph{two} elements in series (rhizosphere + stem xylem). In this case, the supply function has to be calculated by sequentially using the previous supply functions. The \(E_i\) is identical for each element and equal to the canopy \(E\). Since \(\Psi_{soil}\) is known, one first inverts the supply function of the rhizosphere to find \(\Psi_{root}\) (see function \texttt{hydraulics\_E2psiVanGenuchten()}) and then inverts the supply function of the xylem to find \(\Psi_{canopy}\) (see function \texttt{hydraulics\_E2psiXylem()}). The two operations can be summarized in a single supply function describing the potential rate of water supply for transpiration (\(E\)) as function of the canopy xylem pressure (\(\Psi_{canopy}\)), starting from different bulk soil (\(\Psi_{soil}\)) values (see function \texttt{hydraulics\textbackslash{}\_supplyFunctionTwoElements()}):
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-25-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-26-1} \end{center}
 
 The supply function for the whole continuum contains much information. The \(\Psi\) intercept at \(E=0\) represents the predawn canopy sap pressure which integrates the rooted soil moisture profile. As \(E\) increments from zero, the disproportionately greater drop in \(\Psi_{canopy}\) results from the loss of conductance. As the soil dries the differences in flow due to soil texture become more apparent. The derivative of the whole continuum supply function, \(dE/d\Psi\), is not equal to either of the vulnerability curves and it has to be obtained numerically. The derivative functions corresponding to the supply functions shown in the previous figure are:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-26-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-27-1} \end{center}
 
 The derivative \(dE/d\Psi_{canopy}\) is the conductance if the entire continuum was exposed to \(\Psi_{canopy}\) \citep{Sperry2015}. It corresponds to the local loss of hydraulic conductance at the downstream end of the flow path. It falls towards zero for asymptotic critical values (\(E_{crit}\)). For a cavitated system \(dE/d\Psi_{canopy}\) can be rather flat, in accordance with the close to linear part of the supply function.
 
@@ -1838,11 +1848,11 @@ If the soil-plant continuum is represented using \emph{three} elements in series
 
 As before, the supply function has to be calculated by sequentially. The \(E_i\) is identical for each element. Since \(\Psi_{soil}\) is known, one first inverts the supply function of the rhizosphere to find \(\Psi_{root}\) and then inverts the supply function of the xylem to find \(\Psi_{stem}\). Finally, one inverts the supply function of the leaf element to find \(\Psi_{leaf}\). As before, the three operations can be summarized in a single supply function describing the potential rate of water supply for transpiration (\(E\)) as function of the leaf pressure (\(\Psi_{leaf}\)), starting from different bulk soil (\(\Psi_{soil}\)) values (see function \texttt{hydraulics\_supplyFunctionThreeElements()}):
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-28-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-29-1} \end{center}
 
 Note that overall conductance and the maximum flow of the supply function are smaller in this case than in the representation using two elements in series. While the rhizosphere component only adds a significant resistance when the soil dries, considering the leaf segment (or a root xylem segment) increases the overall resistance of the continuum. Higher vulnerability of leaves also makes the curve to saturate for less negative soil water potentials. The derivative functions corresponding to the supply functions shown in the previous figure are (note the highest value being equal to the overall maximum conductance):
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-29-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-30-1} \end{center}
 
 \hypertarget{supply-function-of-a-root-system}{%
 \subsection{Supply function of a root system}\label{supply-function-of-a-root-system}}
@@ -1862,7 +1872,7 @@ where \(E_{k, rhizosphere}\) and \(E_{k, root}\) are supply flows calculated usi
 
 }
 
-\caption{Schematic representation of hydraulics in a root network}\label{fig:unnamed-chunk-30}
+\caption{Schematic representation of hydraulics in a root network}\label{fig:unnamed-chunk-31}
 \end{figure}
 
 As an example, we start by defining the water potential of three soil layers corresponding to four situations (analogously with the soil water potentials defined above):
@@ -1938,15 +1948,15 @@ Transport weights are quite different than the fine root biomass proportions. Th
 
 Having all these maximum conductances, we can now build the supply functions for each soil texture and starting from the different soil water potential configurations (see function \texttt{hydraulics\_supplyFunctionBelowground()}):
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-37-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-38-1} \end{center}
 
 The derivative of \(dE/d\Psi_{rootcrown}\) for the supply function of the root system is again obtained numerically. Solving the previous system of equations provides the water potentials in different points of the root system. Here we plot them for the results of silt loam texture and the first and last soil potential vectors defined above:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-38-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-39-1} \end{center}
 
 Note that when soil is not dry (first situation) pressure drop in the rhizosphere is negligible, but not the pressure drop in the root xylem. For drier soils rhizosphere becomes more relevant. We can also plot the flow rates across each of the parallel paths (again corresponding to the results of silt loam texture and for the four soil potential vectors):
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-39-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-40-1} \end{center}
 
 Note that the contribution of each soil layer depends on the soil conditions and the total amount of flow. For a low total flow rate some layers may have negative flows if their potential is lower than others, which in a dynamic context will cause hydraulic redistribution of water among soil layers.
 
@@ -1963,20 +1973,20 @@ To build the supply function for the network, we proceed by calculating water po
 
 }
 
-\caption{Schematic representation of hydraulics in a whole-plant network}\label{fig:unnamed-chunk-40}
+\caption{Schematic representation of hydraulics in a whole-plant network}\label{fig:unnamed-chunk-41}
 \end{figure}
 
 The following figure shows network supply functions (with \(S = 1\)) for each soil texture and starting from the different soil water potential configurations (see function \texttt{hydraulics\_supplyFunctionNetwork()}):
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-41-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-42-1} \end{center}
 
 As with previous representations of the soil-plant continuum, the derivative of \(dE/d\Psi_{leaf}\) for the network topology is obtained numerically:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-42-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-43-1} \end{center}
 
 As with the root system, we can know the water potentials in different points of the continuum. Here we plot them for the results of silt loam texture and the first and last soil potential vectors defined above:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-43-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-44-1} \end{center}
 
 \hypertarget{supply-function-with-water-compartments}{%
 \subsection{Supply function with water compartments}\label{supply-function-with-water-compartments}}
@@ -1994,7 +2004,7 @@ E_{i,out} = E_{i, in} - \frac{\Delta S_{i}}{\Delta t} = \int_{\Psi_{up}}^{\Psi_{
 
 }
 
-\caption{Schematic representation of hydraulics in a whole-plant network with water compartments}\label{fig:unnamed-chunk-44}
+\caption{Schematic representation of hydraulics in a whole-plant network with water compartments}\label{fig:unnamed-chunk-45}
 \end{figure}
 
 When building the supply function from the root crown to the leaf, one has to consider changes in storage water of the current segment before processing the next segment. Specifically, for every segment \(i\) we take the current downstream water potential of the previous segment as upstream water potential (i.e. \(\Psi_{up} = \Psi_{rootcrown, t}\) when processing the first stem segment, \(\Psi_{up} = \Psi_{i-1, t}\) when processing intermediate stem segments or \(\Psi_{up} = \Psi_{S, t}\) when processing the leaf segment). Then we calculate the steady-state drop in water potential (i.e., determine \(\Psi_{down} = \Psi_{i, t}\)) corresponding to the input flow (\(E_{i,in}\)) using the inverse of the integral transform. If stem cavitation has occurred previously then \(\Psi_{cav,i}\) will limit the maximum conductance. To determine \(E_{i,out}\) we calculate the additional instantaneous flow due to changes in storage water volume (\(\Delta S_{i}/\Delta t\)) using:
@@ -2019,7 +2029,7 @@ As mentioned when describing water content functions, we consider two sources of
 
 The following figures show the change in supply function caused by stem and leaf water compartments, assuming a 1-hr time step and either 0 MPa or -1.5 MPa as previous water potential for all segments (see function \texttt{hydraulics\_supplyFunctionNetworkCapacitance()}):
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-46-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-47-1} \end{center}
 
 For the same water potential drop, the effect of the water compartment results in a larger transpiration flow. If the previous water potential is more negative than the root crown, negative flows may occur, because of the need to replenish the water compartment. Note, in addition, that \(dE/d\Psi\) is no longer a non-increasing function of \(\Psi\). This has important consequences for the definition of the cost function (see subsection `Stomatal regulation'). In our opinion, the effect of water compartments on the transpiration flow are important for subdaily variations in transpiration but are less necessary for seasonal to multi-year simulations. However, we will come back to the importance of compartments for plants being disconnected from the soil.
 
@@ -2076,11 +2086,11 @@ where \(u\) is wind speed (in \(m \cdot s^{-1}\)), taken as the wind speed at mi
 
 The following figures illustrate the value of \(T_{leaf}\) for two leaf sizes and varying values of wind speed and flow rate, calculated for 24ºC canopy temperature and 740 \(W \cdot m^{-2}\) instantaneous absorved radiation (see function \texttt{biophysics\_leafTemperature}):
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-48-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-49-1} \end{center}
 
 Let's now fix wind speed to 2 m/s. The application of the above equations to the \(E(\Psi_{leaf})\) curves corresponding to the complete hydraulic network yields the following \(T_{leaf}(\Psi_{leaf})\) curves:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-49-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-50-1} \end{center}
 
 Thus, transpiration decreases leaf temperature (whereas radiation increases it and wind speed makes it more similar to air temperature). Vapor pressure deficit in the leaf (\(VPD_{leaf}\), in kPa) is calculated as:
 \begin{equation}
@@ -2103,7 +2113,7 @@ Where \(vp_{day}\) is the average daily vapor pressure and \(VP(T)\) is a functi
 
 the application of the above equation to the \(T_{leaf}(\Psi_{leaf})\) curves yields the following \(VPD_{leaf}(\Psi_{leaf})\) curves:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-51-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-52-1} \end{center}
 
 Since leaf saturated VP decreases when leaf temperature decreases, transpiration decreases leaf VPD as a result of decreasing leaf temperature.
 
@@ -2117,7 +2127,7 @@ g_{sc} &=& g_{sw}/1.6
 \end{eqnarray}
 the application of the equation for \(g_{sw}\) to the \(VPD_{leaf}(\Psi_{leaf})\) curves yields the following \(g_{sw}(\Psi_{leaf})\) curves:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-52-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-53-1} \end{center}
 
 Hence, larger values of transpiration require larger values of leaf water vapour conductance. In the previous figure we have indicated the thresholds of \(g_{swmin}\) and \(g_{swmax}\), the species-specific minimum and maximum water vapour conductances (i.e.~conductances when stomata are fully closed and fully open, respectively; see parameters \texttt{Gwmin} and \texttt{Gwmax} in \texttt{SpParamsMED}).
 
@@ -2173,7 +2183,7 @@ where \(C_{atm}\) is the atmospheric \(CO_{2}\) concentration (in \(\mu mol \cdo
 
 one can obtain the following \(A(\Psi_{leaf})\) curves from \(T_{leaf}(\Psi_{leaf})\) and \(g_{sc}(\Psi_{leaf})\):
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-55-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-56-1} \end{center}
 
 Finally, leaf net photosynthesis (i.e.~accounting for autotrophic respiration) is calculated as:
 \begin{equation}
@@ -2204,7 +2214,7 @@ In the previous subsection we calculated photosynthesis at the leaf level. Howev
 
 Many aspects may vary across the crown, including environmental conditions (such as direct/diffuse light or wind speed) and photosynthesis parameters (e.g. \texttt{Vmax298}). The previous crown definition and light parameters lead to a percentage of the above-canopy irradiance reaching each layer \citep{Anten2016}. Furthermore, it is generally accepted that sunlit and shade leaves need to be treated separately \citep{DePury1997}.Extinction of direct radiation also defines the proportion of leaves of each layer that are affected by direct light beams (i.e.~the proportion of sunlit leaves).
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-57-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-58-1} \end{center}
 
 For simplicity, here we will assume constant windspeed in all layers:
 
@@ -2228,7 +2238,7 @@ Regarding incoming light, we assume the following direct and diffuse irradiance 
 
 Solar elevation is the angle between the sun and the horizon (i.e.~the complement of the zenith angle). Under these conditions, the amount of shortwave and PAR radiation absorbed per unit of leaf area at each canopy layer is \citep{Anten2016}:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-60-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-61-1} \end{center}
 
 Following \citet{DePury1997}, we further assume that maximum assimilation rates are highest for leaves at the top of the canopy and there is a exponential decrease from there towards the bottom, where maximum rates are 50\% of those at the top:
 \begin{equation}
@@ -2238,7 +2248,7 @@ where \(L_i\) is the cumulative LAI value at a given canopy layer \(i\) and \(LA
 
 Multilayer canopy models allow evaluating leaf conditions, stomatal conductance and photosynthesis for different points of the canopy. However, this comes at high computational cost. While big-leaf canopy models are known to be unaccurate under some situations, sun-shade canopy models \citep{DePury1997} provide estimates that are close to multiple layer models \citep{Hikosaka2016}. Sun-shade models involve: (a) aggregating the leaf area of sunlit/shade leaves across layers; (b) aggregating the light absorbed by leaves of each kind across layers; and (c) aggregating maximum assimilation rates across layers, again separating sunlit and shade leaves. One then calls the photosynthesis model twice (i.e.~once for shade leaves and once for sunlit leaves), using the aggregated maximum assimilation rates. Separating the two kinds of leaves acknowledges that they operate at different parts of the light-saturation curve. The following figure provides the canopy photosynthesis functions obtained, under different situations, using a full 10-layer canopy description (top), a sunshade canopy model (center) or a big-leaf model (bottom). These were generated using functions \texttt{photo\_multilayerPhotosynthesisFunction()}, \texttt{photo\_sunshadePhotosynthesisFunction()} and \texttt{photo\_leafPhotosynthesisFunction()}, respectively. Note the coincidence between the multi-layer and the sun-shade models.
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-63-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-64-1} \end{center}
 
 \hypertarget{stomatal-regulation}{%
 \section{Stomatal regulation}\label{stomatal-regulation}}
@@ -2262,7 +2272,7 @@ where \(k_l\) is the leaf conductance function; and \(k_{l,min}\) and \(k_{l,max
 
 The type of cost function can be specified by the user by setting parameter \texttt{hydraulicCostFunction} (see function \texttt{defaultControl()}). The following figures illustrate the \(\theta_1\) and \(\theta_2\) curves corresponding to the supply functions:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-65-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-66-1} \end{center}
 
 The normalized photosynthetic \emph{gain function} \(\beta(\Psi_{leaf})\) reflects the actual assimilation rate with respect to the maximum:
 \begin{equation}
@@ -2270,7 +2280,7 @@ The normalized photosynthetic \emph{gain function} \(\beta(\Psi_{leaf})\) reflec
 \end{equation}
 where \(A_{max}\) is the instantaneous maximum assimilation rate estimated over the full \(\Psi_{leaf}\) range. The following figures illustrate the \(\theta(\Psi_{leaf})\) and \(\beta(\Psi_{leaf})\) curves corresponding to the supply and assimilation functions:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-66-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-67-1} \end{center}
 
 \hypertarget{profit-maximization-at-the-leaf-level}{%
 \subsection{Profit maximization at the leaf level}\label{profit-maximization-at-the-leaf-level}}
@@ -2283,13 +2293,13 @@ Profit_2(\Psi_{leaf}) &=& \beta(\Psi_{leaf})-\theta_2(\Psi_{leaf})\\
 Once \(\Psi_{leaf}\) that maximizes profit is determined, the values of the remaining variables are also determined. At this point, it may happen that \(g_{sw}(\Psi_{leaf})\) is lower than the minimum (i.e.~cuticular) water vapor conductance (\(g_{swmin}\)) or larger than the maximum water vapor conductance (\(g_{swmax}\)). These thresholds need to be taken into account when determining the maximum of the profit function. The following figures illustrate the \(Profit_1(\Psi_{leaf})\) and \(Profit_2(\Psi_{leaf})\) curves of corresponding to the previous cost and gain curves:
 \textbackslash{}begin\{center\}
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-67-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-68-1} \end{center}
 
 Squares in the previous figures indicate the maximum profit points in each situation. In the case of non-cavitated system (left panels), the drier the soil, the closer is the maximum profit \(\Psi_{leaf}\) to soil water potential as one would expect intuitively. This occurs for all three profit functions. Unlike \(\theta_1\) which is different for each soil texture (and soil potential), \(\theta_2\) is the same for all soil textures. As a result, the regulation points do not differ much among textures in \(Profit_2\) and \(Profit_3\) because the only difference is in the gain function. For a system with xylem cavitation (right panel), the maximum \(Profit_1\) curves behave strangely. In particular may get a more negative value for \(\Psi_{canopy}\) for wet soils than for dry soils. This effect does not occur when using \(Profit_2\). \(Profit_2\) brings plant water potentials to more negative values after cavitation. Although cavitation did not change the \(\theta_2\) function, the supply function is flatter and this affects the gain function, making it increase less steeply with lower potentials.
 
 Differences between profit functions can be more easily seen when plotting the change from original (uncavitated) regulation to the cavitated one, in terms of both canopy sap pressure and flow rate:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-68-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-69-1} \end{center}
 
 In \(Profit_1\) irreversible cavitation often brings, after soil rewetting, less conservative stomatal regulation that enables higher flow rates. This does not seem to happen in \(Profit_2\), where despite irreversible cavitation leads to more negative water potentials, predicted flow rates after rewetting are not above those predicted before cavitation.
 
@@ -2402,7 +2412,7 @@ Considering water compartments allows tracking leaf and stem (i.e.~plant) \emph{
 
 }
 
-\caption{Schematic representation of hydraulics in a whole-plant network after disconnection from soil}\label{fig:unnamed-chunk-69}
+\caption{Schematic representation of hydraulics in a whole-plant network after disconnection from soil}\label{fig:unnamed-chunk-70}
 \end{figure}
 
 As before, each time step \(\Delta t\) is divided into \(m\) substeps and instantaneous lateral flows between symplastic and apoplastic compartments are calculated as before. In this case, however, one needs to calculate instantaneous flows between stem apoplastic compartments using:
@@ -2649,7 +2659,7 @@ f_{turgor}(\Psi_{leaf}) = 1 - \left[e^{(\Psi_{leaf}/\Psi_{tlp})-1}\right]^5
 \end{equation}
 where \(f_{turgor}(\Psi_{leaf})=0\) if \(\Psi_{leaf} > \Psi_{tlp}\). The following figure illustrates the function for \(\Psi_{tlp}=-1.5\) MPa:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-70-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-71-1} \end{center}
 
 If \(f_{turgor}(\Psi_{leaf})>0\) growth is applied, but there can be leaf area losses from sapwood turnover, whereas if \(f_{turgor}(\Psi_{leaf}) = 0\) growth does not occur and cavitation is possible. The following two subsection detail the behavior of the growth model in each case.
 
@@ -2675,7 +2685,7 @@ Several sink limitations may occur. One is the turgor limitation, which is repre
 f_{conc} = \frac{1}{1+\exp \left(-5 \cdot \frac{(C_{fast}/C_{fast, \max})-0.5}{0.5}\right)}
 \end{equation}
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-71-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-72-1} \end{center}
 
 Obviously, if carbon pools are not considered \(f_{conc} = 1\).
 
@@ -2685,7 +2695,7 @@ f_{temp}(T) = \frac{(T-T_{low}) \cdot (T_{high}-T)}{(T_{opt}-T_{low}) \cdot (T_{
 \end{equation}
 where \(0 \leq f_{temp}(T) \leq 1\), \(T_{low}\) and \(T_{high}\) minimum and maximum temperature values for growth and \(T_{opt}\) is the optimum growth temperature.
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-72-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-73-1} \end{center}
 
 The rate of daily increase in sapwood area taking into account sink limitations is (\(\Delta SA_{sink}\); \(cm^2\)):
 \begin{equation}
@@ -2744,7 +2754,7 @@ If two carbon pools are considered then carbon can be transferred from one to th
 r_{transf} = 0.1 \cdot \frac{2}{1+\exp \left(-5 \cdot \frac{(C_{fast}/C_{fast, \max})-0.5}{0.5}\right)}-1
 \end{equation}
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-73-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-74-1} \end{center}
 
 where \(0.1\) indicates that the maximum daily transfer rate is 10\% of the source C pool size. If \(r_{transf}<0\) then \(-r_{transf} \cdot C_{slow, \max}\) g of carbon are taken from the slow C pool and 90\% of this amount is added into the fast C pool (the remaining 10\% is assumed to be the transfer cost). Similarly, if \(r_{transf}>0\) then \(r_{transf} \cdot C_{fast, \max}\) g of carbon are taken from the fast C pool and 90\% of this amount is added into the slow C pool (again, the remaining 10\% is assumed to be the transfer cost). The amounts of C transferred are also limited by the amount that would be needed to fill the sink pool (i.e., if the sink pool is already full, no carbon is transferred).
 
@@ -2955,7 +2965,7 @@ Leaf area of any plant cohort is assumed to be distributed vertically following 
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-75-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-76-1} \end{center}
 
 This density profile determines the extinction rates of light and wind through the forest canopy.
 
@@ -3150,7 +3160,7 @@ Canopy bulk density normally ranges between 0 and 0.4 \(kg/m^3\) \citep{Scott200
 
 The following figure illustrates the definition and analysis of the fuel bulk density profile for a given forest stand. Following \citet{Mitsopoulos2007}, a threshold \(t_{BDP} = 0.04\) has been used to determine shrub and canopy heights.
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-77-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-78-1} \end{center}
 
 \hypertarget{fuel-loading-w-and-fuel-depth-delta}{%
 \subsection{\texorpdfstring{Fuel loading (\(w\)) and fuel depth (\(\delta\))}{Fuel loading (w) and fuel depth (\textbackslash{}delta)}}\label{fuel-loading-w-and-fuel-depth-delta}}
@@ -3873,7 +3883,7 @@ K_{s,max,cor}&=&K_{s,max,ref}\cdot (r_{int,H}/r_{int,ref})^{2}
 \end{eqnarray}
 Where \(r_{int,H}\) is the radius of conduits for a terminal branch of a tree of height \(H\) and \(r_{int,ref}\) is the corresponding radius for a tree of height \(H_{ref}\) (\(H\) and \(H_{ref}\) are measured in m). The form of the empirical relationship by \citet{Olson2014} is:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-79-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-80-1} \end{center}
 
 Let's consider an example for a \emph{Quercus ilex} target tree of 4m height and where species-specific conductivity \(K_{s,max,ref} = 0.77\) is the apical value for trees of \(H_{ref} = 6.6\) m (in \texttt{medfate}, values of \(H_{ref}\) are taken from median height values; see parameter \texttt{Hmed} in \texttt{SpParamsMED}). The corrected conductivity for a tree of height 4 m will be a bit lower than that of the reference height:
 
@@ -3944,7 +3954,7 @@ where \(r_{int, pet}\) is the radius of the petiole in the model of \citet{Savag
 
 \(\chi_{tap:notap,ag}(H)\) is calculated as described in the Appendix 1 section of \citet{Christoffersen2016} (see also \citet{Savage2010}). The following figure shows the value of \(\chi_{tap:notap,ag}\) for different heights:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-83-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-84-1} \end{center}
 
 Note that, since \(\chi_{tap:notap,ag}(1) = 3.82\) (indicated using grey dashed lines in the last figure), the equation of maximum conductance with taper would give a higher conductance than the equation without taper for a tree of 1 m height, which is supposed to have a conductance equal to conductivity. To solve this issue we define the taper factor as \(\chi_{tap:notap,ag}(H)/\chi_{tap:notap,ag}(1)\):
 \begin{equation}
@@ -3966,7 +3976,7 @@ The maximum stem conductance with taper (\(k_{s, max, taper}\)) of a \emph{Q. il
 
 The next two plots show the variation of \(k_{s,max}\) for \emph{Q. ilex} depending on the tree height and with/without considering taper of conduits. The plot on the right (both axes in log) show the slope of the dependency of conductance with height in both cases:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-85-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-86-1} \end{center}
 
 \hypertarget{root-xylem-maximum-hydraulic-conductance}{%
 \subsection{Root xylem maximum hydraulic conductance}\label{root-xylem-maximum-hydraulic-conductance}}
@@ -4110,7 +4120,7 @@ and the fraction of total xylem resistance due to stem would be:
 
 In contrast with the approach of \citet{Christoffersen2016}, in this approach the root maximum conductance depends root length and distribution, and is not a fixed fraction of stem maximum conductance. Assuming constant root length, then the proportion of total resistance due to the stem will increase with tree height \citep{Magnani2000}:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-96-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-97-1} \end{center}
 
 where the horizontal gray line indicates the value of 62.5\%. Of course rooting depth also increases with tree age, but young trees have higher root-to-shoot ratios than older ones. Hence, a root maximum conductance that is not fixed but increases with age seems a priori more realistic. Moreover, \citet{Christoffersen2016} justify the value of 62.5\% from a study which quantified total aboveground and belowground resistance in tropical trees \citep{Fisher2006} under near-saturated (wet season) conditions, but values of belowground resistance reported in this study for wet conditions and trees of 30 m height are around 13\%, which equals to 87\% fraction of aboveground resistance. On the other hand, while rooting depths are limited by soil depth, lateral root length increases with age and, hence, the model could be made more realistic if this is taken into account and the curve above would probably saturate at lower percentages.
 
@@ -4119,7 +4129,7 @@ where the horizontal gray line indicates the value of 62.5\%. Of course rooting 
 
 Maximum rhizosphere conductance (\(k_{rh, max}\), in \(mmol \cdot m^{-2} \cdot s^{-1} \cdot MPa^{-1}\)) is difficult to measure directly, as it depends on the rhizosphere (i.e.~fine root) surface in each soil layer, and will probably always be a parameter to be calibrated. Instead of trying to estimate rhizosphere surface from root architecture \citep{Sperry1998}, we follow \citet{Sperry2016a} and determine the maximum rhizosphere conductance in each layer from an inputed `average percentage rhizosphere resistance'. The percentage of continuum resistance corresponding to the rhizosphere is calculated from the vulnerability curves of stem, root and rhizosphere at the same water potential. The average resistance is found by evaluating the percentage for water potential values between 0 and \(\Psi_{crit}\). The following figure illustrates how the supply function, for different soil water potentials, is affected by increasing values of the average percentage of rhizosphere resistance:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-97-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-98-1} \end{center}
 
 \citet{Sperry2016a} found average percentages of rhizosphere resistance around 67\%, but these exceptionally-high values were probably a consequence of using an unsegmented supply function (i.e.~single vulnerability curve for roots, stem and leaves). If we specify a 15\% of average resistance in the rhizosphere (see parameter \texttt{averageFracRhizosphereResistance} in function \texttt{defaultControl()}), the maximum rhizosphere conductance values for the three layers are found calling:
 
