@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 14 Forest growth model | The medfate reference book</title>
+  <meta name="description" content="This is a reference book for models implemented in package medfate." />
+  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 14 Forest growth model | The medfate reference book" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This is a reference book for models implemented in package medfate." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 14 Forest growth model | The medfate reference book" />
+  
+  <meta name="twitter:description" content="This is a reference book for models implemented in package medfate." />
+  
+
+<meta name="author" content="Miquel De Cáceres" />
+
+
+<meta name="date" content="2019-05-29" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="transpirationsperry.html">
+<link rel="next" href="plant-compartments-respiration-and-carbon-balance.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceLine, a.sourceLine { display: inline-block; min-height: 1.25em; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; }
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+div.sourceLine, a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource div.sourceLine, .numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource div.sourceLine::before, .numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em; }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; color: #aaaaaa;  padding-left: 4px; }
+@media screen {
+a.sourceLine::before { text-decoration: underline; color: initial; }
+}
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.bn { color: #40a070; } /* BaseN */
+code span.fl { color: #40a070; } /* Float */
+code span.ch { color: #4070a0; } /* Char */
+code span.st { color: #4070a0; } /* String */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.ot { color: #007020; } /* Other */
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.fu { color: #06287e; } /* Function */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code span.cn { color: #880000; } /* Constant */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.im { } /* Import */
+code span.va { color: #19177c; } /* Variable */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.op { color: #666666; } /* Operator */
+code span.bu { } /* BuiltIn */
+code span.ex { } /* Extension */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.at { color: #7d9029; } /* Attribute */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">The medfate book</a></li>
+
+<li class="divider"></li>
+<li class="part"><span><b>I Preliminaries</b></span></li>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#package-installation"><i class="fa fa-check"></i><b>1.1</b> Package installation</a></li>
+<li class="chapter" data-level="1.2" data-path="intro.html"><a href="intro.html#description"><i class="fa fa-check"></i><b>1.2</b> Description</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="model-inputs.html"><a href="model-inputs.html"><i class="fa fa-check"></i><b>2</b> Model inputs</a><ul>
+<li class="chapter" data-level="2.1" data-path="model-inputs.html"><a href="model-inputs.html#soil-description"><i class="fa fa-check"></i><b>2.1</b> Soil description</a><ul>
+<li class="chapter" data-level="2.1.1" data-path="model-inputs.html"><a href="model-inputs.html#water-retention-curves"><i class="fa fa-check"></i><b>2.1.1</b> Water retention curves</a></li>
+<li class="chapter" data-level="2.1.2" data-path="model-inputs.html"><a href="model-inputs.html#soil-initialization"><i class="fa fa-check"></i><b>2.1.2</b> Soil initialization</a></li>
+<li class="chapter" data-level="2.1.3" data-path="model-inputs.html"><a href="model-inputs.html#water-holding-capacity-and-water-table-depth"><i class="fa fa-check"></i><b>2.1.3</b> Water holding capacity and water table depth</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="model-inputs.html"><a href="model-inputs.html#vegetation-description"><i class="fa fa-check"></i><b>2.2</b> Vegetation description</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="model-inputs.html"><a href="model-inputs.html#aboveground-parameters"><i class="fa fa-check"></i><b>2.2.1</b> Aboveground parameters</a></li>
+<li class="chapter" data-level="2.2.2" data-path="model-inputs.html"><a href="model-inputs.html#belowground-parameters"><i class="fa fa-check"></i><b>2.2.2</b> Belowground parameters</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>II Basic water balance modelling</b></span></li>
+<li class="chapter" data-level="3" data-path="basic-water-balance-model.html"><a href="basic-water-balance-model.html"><i class="fa fa-check"></i><b>3</b> Basic water balance model</a><ul>
+<li class="chapter" data-level="3.1" data-path="basic-water-balance-model.html"><a href="basic-water-balance-model.html#design-principles"><i class="fa fa-check"></i><b>3.1</b> Design principles</a></li>
+<li class="chapter" data-level="3.2" data-path="basic-water-balance-model.html"><a href="basic-water-balance-model.html#state-variables"><i class="fa fa-check"></i><b>3.2</b> State variables</a></li>
+<li class="chapter" data-level="3.3" data-path="basic-water-balance-model.html"><a href="basic-water-balance-model.html#water-balance"><i class="fa fa-check"></i><b>3.3</b> Water balance</a></li>
+<li class="chapter" data-level="3.4" data-path="basic-water-balance-model.html"><a href="basic-water-balance-model.html#process-scheduling"><i class="fa fa-check"></i><b>3.4</b> Process scheduling</a></li>
+<li class="chapter" data-level="3.5" data-path="basic-water-balance-model.html"><a href="basic-water-balance-model.html#model-input"><i class="fa fa-check"></i><b>3.5</b> Model input</a><ul>
+<li class="chapter" data-level="3.5.1" data-path="basic-water-balance-model.html"><a href="basic-water-balance-model.html#metereological-input"><i class="fa fa-check"></i><b>3.5.1</b> Metereological input</a></li>
+<li class="chapter" data-level="3.5.2" data-path="basic-water-balance-model.html"><a href="basic-water-balance-model.html#control-parameters"><i class="fa fa-check"></i><b>3.5.2</b> Control parameters</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6" data-path="basic-water-balance-model.html"><a href="basic-water-balance-model.html#model-output"><i class="fa fa-check"></i><b>3.6</b> Model output</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="hydrology.html"><a href="hydrology.html"><i class="fa fa-check"></i><b>4</b> Hydrology</a><ul>
+<li class="chapter" data-level="4.1" data-path="hydrology.html"><a href="hydrology.html#snowpack"><i class="fa fa-check"></i><b>4.1</b> Snow pack dynamics</a></li>
+<li class="chapter" data-level="4.2" data-path="hydrology.html"><a href="hydrology.html#interception"><i class="fa fa-check"></i><b>4.2</b> Rainfall interception loss</a></li>
+<li class="chapter" data-level="4.3" data-path="hydrology.html"><a href="hydrology.html#runoff"><i class="fa fa-check"></i><b>4.3</b> Runoff, infiltration and percolation</a></li>
+<li class="chapter" data-level="4.4" data-path="hydrology.html"><a href="hydrology.html#bare-soil-evaporation"><i class="fa fa-check"></i><b>4.4</b> Bare soil evaporation</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="leaf-phenology-and-light-extinction.html"><a href="leaf-phenology-and-light-extinction.html"><i class="fa fa-check"></i><b>5</b> Leaf phenology and light extinction</a><ul>
+<li class="chapter" data-level="5.1" data-path="leaf-phenology-and-light-extinction.html"><a href="leaf-phenology-and-light-extinction.html#leaf-phenology-and-leaf-fall"><i class="fa fa-check"></i><b>5.1</b> Leaf phenology and leaf fall</a></li>
+<li class="chapter" data-level="5.2" data-path="leaf-phenology-and-light-extinction.html"><a href="leaf-phenology-and-light-extinction.html#light-extinction"><i class="fa fa-check"></i><b>5.2</b> Light extinction</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="transpirationgranier.html"><a href="transpirationgranier.html"><i class="fa fa-check"></i><b>6</b> Transpiration and photosynthesis under Granier’s model</a><ul>
+<li class="chapter" data-level="6.1" data-path="transpirationgranier.html"><a href="transpirationgranier.html#pet-and-maximum-canopy-transpiration"><i class="fa fa-check"></i><b>6.1</b> PET and maximum canopy transpiration</a></li>
+<li class="chapter" data-level="6.2" data-path="transpirationgranier.html"><a href="transpirationgranier.html#actual-plant-transpiration"><i class="fa fa-check"></i><b>6.2</b> Actual plant transpiration</a></li>
+<li class="chapter" data-level="6.3" data-path="transpirationgranier.html"><a href="transpirationgranier.html#plant-photosynthesis"><i class="fa fa-check"></i><b>6.3</b> Plant photosynthesis</a></li>
+<li class="chapter" data-level="6.4" data-path="transpirationgranier.html"><a href="transpirationgranier.html#irreversible-cavitation-and-hydraulic-disconnection"><i class="fa fa-check"></i><b>6.4</b> Irreversible cavitation and hydraulic disconnection</a></li>
+</ul></li>
+<li class="part"><span><b>III Advanced water balance modelling</b></span></li>
+<li class="chapter" data-level="7" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html"><i class="fa fa-check"></i><b>7</b> Advanced water balance model</a><ul>
+<li class="chapter" data-level="7.1" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#design-principles-1"><i class="fa fa-check"></i><b>7.1</b> Design principles</a></li>
+<li class="chapter" data-level="7.2" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#state-variables-1"><i class="fa fa-check"></i><b>7.2</b> State variables</a></li>
+<li class="chapter" data-level="7.3" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#water-and-energy-balances"><i class="fa fa-check"></i><b>7.3</b> Water and energy balances</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#water-balance-1"><i class="fa fa-check"></i><b>7.3.1</b> Water balance</a></li>
+<li class="chapter" data-level="7.3.2" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#energy-balance"><i class="fa fa-check"></i><b>7.3.2</b> Energy balance</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#process-scheduling-1"><i class="fa fa-check"></i><b>7.4</b> Process scheduling</a></li>
+<li class="chapter" data-level="7.5" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#model-input-1"><i class="fa fa-check"></i><b>7.5</b> Model input</a><ul>
+<li class="chapter" data-level="7.5.1" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#metereological-input-1"><i class="fa fa-check"></i><b>7.5.1</b> Metereological input</a></li>
+<li class="chapter" data-level="7.5.2" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#control-parameters-1"><i class="fa fa-check"></i><b>7.5.2</b> Control parameters</a></li>
+<li class="chapter" data-level="7.5.3" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#species-parameters"><i class="fa fa-check"></i><b>7.5.3</b> Species parameters</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#model-output-1"><i class="fa fa-check"></i><b>7.6</b> Model output</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="subdaily-temperature-and-light-variations.html"><a href="subdaily-temperature-and-light-variations.html"><i class="fa fa-check"></i><b>8</b> Subdaily temperature and light variations</a><ul>
+<li class="chapter" data-level="8.1" data-path="subdaily-temperature-and-light-variations.html"><a href="subdaily-temperature-and-light-variations.html#air-temperature"><i class="fa fa-check"></i><b>8.1</b> Air temperature</a></li>
+<li class="chapter" data-level="8.2" data-path="subdaily-temperature-and-light-variations.html"><a href="subdaily-temperature-and-light-variations.html#diffuse-and-direct-radiation"><i class="fa fa-check"></i><b>8.2</b> Diffuse and direct radiation</a></li>
+<li class="chapter" data-level="8.3" data-path="subdaily-temperature-and-light-variations.html"><a href="subdaily-temperature-and-light-variations.html#longwave-radiation"><i class="fa fa-check"></i><b>8.3</b> Longwave radiation</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="radiation-balance.html"><a href="radiation-balance.html"><i class="fa fa-check"></i><b>9</b> Radiation balance</a><ul>
+<li class="chapter" data-level="9.1" data-path="radiation-balance.html"><a href="radiation-balance.html#shortwave-radiation-absorbed-by-the-canopy"><i class="fa fa-check"></i><b>9.1</b> Shortwave radiation absorbed by the canopy</a></li>
+<li class="chapter" data-level="9.2" data-path="radiation-balance.html"><a href="radiation-balance.html#shortwave-radiation-absorbed-by-the-soil"><i class="fa fa-check"></i><b>9.2</b> Shortwave radiation absorbed by the soil</a></li>
+<li class="chapter" data-level="9.3" data-path="radiation-balance.html"><a href="radiation-balance.html#longwave-soil-canopy-radiation-exchange"><i class="fa fa-check"></i><b>9.3</b> Longwave soil-canopy radiation exchange</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="canopy-and-soil-energy-balances.html"><a href="canopy-and-soil-energy-balances.html"><i class="fa fa-check"></i><b>10</b> Canopy and soil energy balances</a><ul>
+<li class="chapter" data-level="10.1" data-path="canopy-and-soil-energy-balances.html"><a href="canopy-and-soil-energy-balances.html#convective-energy"><i class="fa fa-check"></i><b>10.1</b> Convective energy</a></li>
+<li class="chapter" data-level="10.2" data-path="canopy-and-soil-energy-balances.html"><a href="canopy-and-soil-energy-balances.html#latent-heat"><i class="fa fa-check"></i><b>10.2</b> Latent heat</a></li>
+<li class="chapter" data-level="10.3" data-path="canopy-and-soil-energy-balances.html"><a href="canopy-and-soil-energy-balances.html#canopy-capacitance-and-temperature-changes"><i class="fa fa-check"></i><b>10.3</b> Canopy capacitance and temperature changes</a></li>
+<li class="chapter" data-level="10.4" data-path="canopy-and-soil-energy-balances.html"><a href="canopy-and-soil-energy-balances.html#soil-temperature-changes"><i class="fa fa-check"></i><b>10.4</b> Soil temperature changes</a></li>
+<li class="chapter" data-level="10.5" data-path="canopy-and-soil-energy-balances.html"><a href="canopy-and-soil-energy-balances.html#bare-soil-evaporation-1"><i class="fa fa-check"></i><b>10.5</b> Bare soil evaporation</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="plant-hydraulics.html"><a href="plant-hydraulics.html"><i class="fa fa-check"></i><b>11</b> Plant hydraulics</a><ul>
+<li class="chapter" data-level="11.1" data-path="plant-hydraulics.html"><a href="plant-hydraulics.html#vulnerability-curves"><i class="fa fa-check"></i><b>11.1</b> Vulnerability curves</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="plant-hydraulics.html"><a href="plant-hydraulics.html#xylem-vulnerability-curves"><i class="fa fa-check"></i><b>11.1.1</b> Xylem vulnerability curves</a></li>
+<li class="chapter" data-level="11.1.2" data-path="plant-hydraulics.html"><a href="plant-hydraulics.html#rhizosphere-vulnerability-curve"><i class="fa fa-check"></i><b>11.1.2</b> Rhizosphere vulnerability curve</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="plant-hydraulics.html"><a href="plant-hydraulics.html#water-content-of-plant-tissues"><i class="fa fa-check"></i><b>11.2</b> Water content of plant tissues</a><ul>
+<li class="chapter" data-level="11.2.1" data-path="plant-hydraulics.html"><a href="plant-hydraulics.html#pressure-volume-curves"><i class="fa fa-check"></i><b>11.2.1</b> Pressure-volume curves</a></li>
+<li class="chapter" data-level="11.2.2" data-path="plant-hydraulics.html"><a href="plant-hydraulics.html#water-content-and-live-fuel-moisture-content"><i class="fa fa-check"></i><b>11.2.2</b> Water content and live fuel moisture content</a></li>
+<li class="chapter" data-level="11.2.3" data-path="plant-hydraulics.html"><a href="plant-hydraulics.html#relative-water-content-and-cavitation"><i class="fa fa-check"></i><b>11.2.3</b> Relative water content and cavitation</a></li>
+</ul></li>
+<li class="chapter" data-level="11.3" data-path="plant-hydraulics.html"><a href="plant-hydraulics.html#supply-functions"><i class="fa fa-check"></i><b>11.3</b> Supply functions</a><ul>
+<li class="chapter" data-level="11.3.1" data-path="plant-hydraulics.html"><a href="plant-hydraulics.html#supply-function-for-single-elements"><i class="fa fa-check"></i><b>11.3.1</b> Supply function for single elements</a></li>
+<li class="chapter" data-level="11.3.2" data-path="plant-hydraulics.html"><a href="plant-hydraulics.html#supply-function-of-two-elements-in-series"><i class="fa fa-check"></i><b>11.3.2</b> Supply function of two elements in series</a></li>
+<li class="chapter" data-level="11.3.3" data-path="plant-hydraulics.html"><a href="plant-hydraulics.html#supply-function-of-three-elements-in-series"><i class="fa fa-check"></i><b>11.3.3</b> Supply function of three elements in series</a></li>
+<li class="chapter" data-level="11.3.4" data-path="plant-hydraulics.html"><a href="plant-hydraulics.html#supply-function-of-a-root-system"><i class="fa fa-check"></i><b>11.3.4</b> Supply function of a root system</a></li>
+<li class="chapter" data-level="11.3.5" data-path="plant-hydraulics.html"><a href="plant-hydraulics.html#supply-function-of-the-soil-plant-continuum"><i class="fa fa-check"></i><b>11.3.5</b> Supply function of the soil-plant continuum</a></li>
+<li class="chapter" data-level="11.3.6" data-path="plant-hydraulics.html"><a href="plant-hydraulics.html#supply-function-with-water-compartments"><i class="fa fa-check"></i><b>11.3.6</b> Supply function with water compartments</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html"><i class="fa fa-check"></i><b>12</b> Plant photosynthesis and stomatal regulation</a><ul>
+<li class="chapter" data-level="12.1" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html#leaf-energy-balance-gas-exchange-and-photosynthesis"><i class="fa fa-check"></i><b>12.1</b> Leaf energy balance, gas exchange and photosynthesis</a><ul>
+<li class="chapter" data-level="12.1.1" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html#leaf-vpd-conductance-to-water-vapor-and-photosynthesis"><i class="fa fa-check"></i><b>12.1.1</b> Leaf VPD, conductance to water vapor and photosynthesis</a></li>
+<li class="chapter" data-level="12.1.2" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html#leaf-temperature-and-vapor-pressure-deficit"><i class="fa fa-check"></i><b>12.1.2</b> Leaf temperature and vapor pressure deficit</a></li>
+<li class="chapter" data-level="12.1.3" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html#leaf-conductance-to-water-vapor"><i class="fa fa-check"></i><b>12.1.3</b> Leaf conductance to water vapor</a></li>
+<li class="chapter" data-level="12.1.4" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html#leaf-photosynthesis"><i class="fa fa-check"></i><b>12.1.4</b> Leaf photosynthesis</a></li>
+</ul></li>
+<li class="chapter" data-level="12.2" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html#crown-photosynthesis"><i class="fa fa-check"></i><b>12.2</b> Crown photosynthesis</a></li>
+<li class="chapter" data-level="12.3" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html#stomatal-regulation"><i class="fa fa-check"></i><b>12.3</b> Stomatal regulation</a><ul>
+<li class="chapter" data-level="12.3.1" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html#cost-and-gain-functions"><i class="fa fa-check"></i><b>12.3.1</b> Cost and gain functions</a></li>
+<li class="chapter" data-level="12.3.2" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html#profit-maximization-at-the-leaf-level"><i class="fa fa-check"></i><b>12.3.2</b> Profit maximization at the leaf level</a></li>
+<li class="chapter" data-level="12.3.3" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html#scaling-to-the-plant-level"><i class="fa fa-check"></i><b>12.3.3</b> Scaling to the plant level</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="transpirationsperry.html"><a href="transpirationsperry.html"><i class="fa fa-check"></i><b>13</b> Transpiration and photosynthesis under Sperry’s model</a><ul>
+<li class="chapter" data-level="13.1" data-path="transpirationsperry.html"><a href="transpirationsperry.html#water-supply-function"><i class="fa fa-check"></i><b>13.1</b> Water supply function</a></li>
+<li class="chapter" data-level="13.2" data-path="transpirationsperry.html"><a href="transpirationsperry.html#leaf-energy-balance"><i class="fa fa-check"></i><b>13.2</b> Leaf energy balance</a></li>
+<li class="chapter" data-level="13.3" data-path="transpirationsperry.html"><a href="transpirationsperry.html#leaf-photosynthesis-functions"><i class="fa fa-check"></i><b>13.3</b> Leaf photosynthesis functions</a></li>
+<li class="chapter" data-level="13.4" data-path="transpirationsperry.html"><a href="transpirationsperry.html#stomatal-regulation-1"><i class="fa fa-check"></i><b>13.4</b> Stomatal regulation</a></li>
+<li class="chapter" data-level="13.5" data-path="transpirationsperry.html"><a href="transpirationsperry.html#plant-drought-stress-and-water-potentials"><i class="fa fa-check"></i><b>13.5</b> Plant drought stress and water potentials</a></li>
+<li class="chapter" data-level="13.6" data-path="transpirationsperry.html"><a href="transpirationsperry.html#irreversible-cavitation-and-hydraulic-disconnection-1"><i class="fa fa-check"></i><b>13.6</b> Irreversible cavitation and hydraulic disconnection</a></li>
+<li class="chapter" data-level="13.7" data-path="transpirationsperry.html"><a href="transpirationsperry.html#transpiration-and-photosynthesis-after-soil-disconnection"><i class="fa fa-check"></i><b>13.7</b> Transpiration and photosynthesis after soil disconnection</a></li>
+</ul></li>
+<li class="part"><span><b>IV Forest growth modelling</b></span></li>
+<li class="chapter" data-level="14" data-path="forest-growth-model.html"><a href="forest-growth-model.html"><i class="fa fa-check"></i><b>14</b> Forest growth model</a><ul>
+<li class="chapter" data-level="14.1" data-path="forest-growth-model.html"><a href="forest-growth-model.html#design-principles-2"><i class="fa fa-check"></i><b>14.1</b> Design principles</a></li>
+<li class="chapter" data-level="14.2" data-path="forest-growth-model.html"><a href="forest-growth-model.html#state-variables-2"><i class="fa fa-check"></i><b>14.2</b> State variables</a></li>
+<li class="chapter" data-level="14.3" data-path="forest-growth-model.html"><a href="forest-growth-model.html#process-scheduling-2"><i class="fa fa-check"></i><b>14.3</b> Process scheduling</a><ul>
+<li class="chapter" data-level="14.3.1" data-path="forest-growth-model.html"><a href="forest-growth-model.html#water-balance-plant-transpiration-and-photosynthesis"><i class="fa fa-check"></i><b>14.3.1</b> Water balance, plant transpiration and photosynthesis</a></li>
+</ul></li>
+<li class="chapter" data-level="14.4" data-path="forest-growth-model.html"><a href="forest-growth-model.html#model-input-2"><i class="fa fa-check"></i><b>14.4</b> Model input</a><ul>
+<li class="chapter" data-level="14.4.1" data-path="forest-growth-model.html"><a href="forest-growth-model.html#vegetation-state-variables-and-parameters"><i class="fa fa-check"></i><b>14.4.1</b> Vegetation state variables and parameters</a></li>
+<li class="chapter" data-level="14.4.2" data-path="forest-growth-model.html"><a href="forest-growth-model.html#metereological-input-2"><i class="fa fa-check"></i><b>14.4.2</b> Metereological input</a></li>
+</ul></li>
+<li class="chapter" data-level="14.5" data-path="forest-growth-model.html"><a href="forest-growth-model.html#model-output-2"><i class="fa fa-check"></i><b>14.5</b> Model output</a></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="plant-compartments-respiration-and-carbon-balance.html"><a href="plant-compartments-respiration-and-carbon-balance.html"><i class="fa fa-check"></i><b>15</b> Plant compartments, respiration and carbon balance</a><ul>
+<li class="chapter" data-level="15.1" data-path="plant-compartments-respiration-and-carbon-balance.html"><a href="plant-compartments-respiration-and-carbon-balance.html#biomass-compartments"><i class="fa fa-check"></i><b>15.1</b> Biomass compartments</a></li>
+<li class="chapter" data-level="15.2" data-path="plant-compartments-respiration-and-carbon-balance.html"><a href="plant-compartments-respiration-and-carbon-balance.html#maximum-capacity-of-c-pools"><i class="fa fa-check"></i><b>15.2</b> Maximum capacity of C pools</a></li>
+<li class="chapter" data-level="15.3" data-path="plant-compartments-respiration-and-carbon-balance.html"><a href="plant-compartments-respiration-and-carbon-balance.html#maintenance-respiration-and-c-balance"><i class="fa fa-check"></i><b>15.3</b> Maintenance respiration and C balance</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="sapwood-conversion-to-heartwood-embolism-and-growth.html"><a href="sapwood-conversion-to-heartwood-embolism-and-growth.html"><i class="fa fa-check"></i><b>16</b> Sapwood conversion to heartwood, embolism and growth</a><ul>
+<li class="chapter" data-level="16.1" data-path="sapwood-conversion-to-heartwood-embolism-and-growth.html"><a href="sapwood-conversion-to-heartwood-embolism-and-growth.html#sapwood-conversion-to-heartwood-embolism-and-growth-1"><i class="fa fa-check"></i><b>16.1</b> Sapwood conversion to heartwood, embolism and growth</a></li>
+<li class="chapter" data-level="16.2" data-path="sapwood-conversion-to-heartwood-embolism-and-growth.html"><a href="sapwood-conversion-to-heartwood-embolism-and-growth.html#growth-and-turnover-during-non-drought-periods"><i class="fa fa-check"></i><b>16.2</b> Growth and turnover during non-drought periods</a></li>
+<li class="chapter" data-level="16.3" data-path="sapwood-conversion-to-heartwood-embolism-and-growth.html"><a href="sapwood-conversion-to-heartwood-embolism-and-growth.html#leaf-area-losses-during-drought-periods"><i class="fa fa-check"></i><b>16.3</b> Leaf area losses during drought-periods</a></li>
+<li class="chapter" data-level="16.4" data-path="sapwood-conversion-to-heartwood-embolism-and-growth.html"><a href="sapwood-conversion-to-heartwood-embolism-and-growth.html#transfer-between-carbon-pools"><i class="fa fa-check"></i><b>16.4</b> Transfer between carbon pools</a></li>
+<li class="chapter" data-level="16.5" data-path="sapwood-conversion-to-heartwood-embolism-and-growth.html"><a href="sapwood-conversion-to-heartwood-embolism-and-growth.html#update-of-maximum-stem-conductance"><i class="fa fa-check"></i><b>16.5</b> Update of maximum stem conductance</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="update-of-structural-variables.html"><a href="update-of-structural-variables.html"><i class="fa fa-check"></i><b>17</b> Update of structural variables</a><ul>
+<li class="chapter" data-level="17.1" data-path="update-of-structural-variables.html"><a href="update-of-structural-variables.html#tree-diameter-height-and-crown-ratio"><i class="fa fa-check"></i><b>17.1</b> Tree diameter, height and crown ratio</a></li>
+<li class="chapter" data-level="17.2" data-path="update-of-structural-variables.html"><a href="update-of-structural-variables.html#shrub-height-and-cover"><i class="fa fa-check"></i><b>17.2</b> Shrub height and cover</a></li>
+</ul></li>
+<li class="part"><span><b>V Static modules</b></span></li>
+<li class="chapter" data-level="18" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html"><i class="fa fa-check"></i><b>18</b> Fuel characteristics and fire behaviour</a><ul>
+<li class="chapter" data-level="18.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#purpose"><i class="fa fa-check"></i><b>18.1</b> Purpose</a></li>
+<li class="chapter" data-level="18.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#input-data"><i class="fa fa-check"></i><b>18.2</b> Input data</a><ul>
+<li class="chapter" data-level="18.2.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#forest-inventory-plot-data"><i class="fa fa-check"></i><b>18.2.1</b> Forest inventory plot data</a></li>
+<li class="chapter" data-level="18.2.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#species-specific-parameters"><i class="fa fa-check"></i><b>18.2.2</b> Species-specific parameters</a></li>
+<li class="chapter" data-level="18.2.3" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#other-inputs"><i class="fa fa-check"></i><b>18.2.3</b> Other inputs</a></li>
+</ul></li>
+<li class="chapter" data-level="18.3" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#fuel-characteristics"><i class="fa fa-check"></i><b>18.3</b> Fuel characteristics</a><ul>
+<li class="chapter" data-level="18.3.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#cohort-fuel-loading"><i class="fa fa-check"></i><b>18.3.1</b> Cohort fuel loading</a></li>
+<li class="chapter" data-level="18.3.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#vertical-structure-of-fuels"><i class="fa fa-check"></i><b>18.3.2</b> Vertical structure of fuels</a></li>
+<li class="chapter" data-level="18.3.3" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#fuel-bulk-density-profile"><i class="fa fa-check"></i><b>18.3.3</b> Fuel bulk density profile</a></li>
+<li class="chapter" data-level="18.3.4" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#fuel-loading-w-and-fuel-depth-delta"><i class="fa fa-check"></i><b>18.3.4</b> Fuel loading (<span class="math inline">\(w\)</span>) and fuel depth (<span class="math inline">\(\delta\)</span>)</a></li>
+<li class="chapter" data-level="18.3.5" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#other-fuel-characteristics"><i class="fa fa-check"></i><b>18.3.5</b> Other fuel characteristics</a></li>
+<li class="chapter" data-level="18.3.6" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#unit-conversion-of-fuel-characteristics"><i class="fa fa-check"></i><b>18.3.6</b> Unit conversion of fuel characteristics</a></li>
+</ul></li>
+<li class="chapter" data-level="18.4" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#surface-fire-behavior"><i class="fa fa-check"></i><b>18.4</b> Surface fire behavior</a><ul>
+<li class="chapter" data-level="18.4.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#surface-rate-of-spread-r"><i class="fa fa-check"></i><b>18.4.1</b> Surface rate of spread (<span class="math inline">\(R\)</span>)</a></li>
+<li class="chapter" data-level="18.4.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#heat-sink-q"><i class="fa fa-check"></i><b>18.4.2</b> Heat sink (<span class="math inline">\(q\)</span>)</a></li>
+<li class="chapter" data-level="18.4.3" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#fireline-intensity-i_b-and-flame-length-fl"><i class="fa fa-check"></i><b>18.4.3</b> Fireline intensity (<span class="math inline">\(I_B\)</span>) and flame length (<span class="math inline">\(FL\)</span>)</a></li>
+</ul></li>
+<li class="chapter" data-level="18.5" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#crown-fire-behavior"><i class="fa fa-check"></i><b>18.5</b> Crown fire behavior</a><ul>
+<li class="chapter" data-level="18.5.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#canopy-reaction-intensity-i_r-ca"><i class="fa fa-check"></i><b>18.5.1</b> Canopy reaction intensity (<span class="math inline">\(I_{R, ca}\)</span>)</a></li>
+<li class="chapter" data-level="18.5.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#canopy-heat-sink-q_ca"><i class="fa fa-check"></i><b>18.5.2</b> Canopy heat sink (<span class="math inline">\(q_{ca}\)</span>)</a></li>
+<li class="chapter" data-level="18.5.3" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#fireline-intensity-i_bcrown-and-flame-length-fl_crown"><i class="fa fa-check"></i><b>18.5.3</b> Fireline intensity (<span class="math inline">\(I_{B,crown}\)</span>) and flame length (<span class="math inline">\(FL_{crown}\)</span>)</a></li>
+</ul></li>
+<li class="chapter" data-level="18.6" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#fire-potentials"><i class="fa fa-check"></i><b>18.6</b> Fire potentials</a><ul>
+<li class="chapter" data-level="18.6.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#surface-fire-behavior-potentials"><i class="fa fa-check"></i><b>18.6.1</b> Surface fire behavior potentials</a></li>
+<li class="chapter" data-level="18.6.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#crown-fire-behavior-potentials"><i class="fa fa-check"></i><b>18.6.2</b> Crown fire behavior potentials</a></li>
+</ul></li>
+<li class="chapter" data-level="18.7" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#unit-conversion-of-outputs"><i class="fa fa-check"></i><b>18.7</b> Unit conversion of outputs</a></li>
+</ul></li>
+<li class="appendix"><span><b>Appendices</b></span></li>
+<li class="chapter" data-level="A" data-path="model-parametrization.html"><a href="model-parametrization.html"><i class="fa fa-check"></i><b>A</b> Model parametrization</a><ul>
+<li class="chapter" data-level="A.1" data-path="model-parametrization.html"><a href="model-parametrization.html#plant-hydraulics-1"><i class="fa fa-check"></i><b>A.1</b> Plant Hydraulics</a><ul>
+<li class="chapter" data-level="A.1.1" data-path="model-parametrization.html"><a href="model-parametrization.html#vulnerability-curves-1"><i class="fa fa-check"></i><b>A.1.1</b> Vulnerability curves</a></li>
+<li class="chapter" data-level="A.1.2" data-path="model-parametrization.html"><a href="model-parametrization.html#leaf-maximum-conductance"><i class="fa fa-check"></i><b>A.1.2</b> Leaf maximum conductance</a></li>
+<li class="chapter" data-level="A.1.3" data-path="model-parametrization.html"><a href="model-parametrization.html#stem-xylem-maximum-conductance"><i class="fa fa-check"></i><b>A.1.3</b> Stem xylem maximum conductance</a></li>
+<li class="chapter" data-level="A.1.4" data-path="model-parametrization.html"><a href="model-parametrization.html#root-xylem-maximum-hydraulic-conductance"><i class="fa fa-check"></i><b>A.1.4</b> Root xylem maximum hydraulic conductance</a></li>
+<li class="chapter" data-level="A.1.5" data-path="model-parametrization.html"><a href="model-parametrization.html#rhizosphere-maximum-hydraulic-conductance"><i class="fa fa-check"></i><b>A.1.5</b> Rhizosphere maximum hydraulic conductance</a></li>
+<li class="chapter" data-level="A.1.6" data-path="model-parametrization.html"><a href="model-parametrization.html#pressure-volume-curves-1"><i class="fa fa-check"></i><b>A.1.6</b> Pressure-volume curves</a></li>
+<li class="chapter" data-level="A.1.7" data-path="model-parametrization.html"><a href="model-parametrization.html#plant-water-storage-capacity"><i class="fa fa-check"></i><b>A.1.7</b> Plant water storage capacity</a></li>
+</ul></li>
+<li class="chapter" data-level="A.2" data-path="model-parametrization.html"><a href="model-parametrization.html#stomatal-regulation-and-photosynthesis"><i class="fa fa-check"></i><b>A.2</b> Stomatal regulation and photosynthesis</a><ul>
+<li class="chapter" data-level="A.2.1" data-path="model-parametrization.html"><a href="model-parametrization.html#stomatal-conductance"><i class="fa fa-check"></i><b>A.2.1</b> Stomatal conductance</a></li>
+<li class="chapter" data-level="A.2.2" data-path="model-parametrization.html"><a href="model-parametrization.html#photosynthesis"><i class="fa fa-check"></i><b>A.2.2</b> Photosynthesis</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="B" data-path="symbols.html"><a href="symbols.html"><i class="fa fa-check"></i><b>B</b> Symbols</a><ul>
+<li class="chapter" data-level="B.1" data-path="symbols.html"><a href="symbols.html#anatomy"><i class="fa fa-check"></i><b>B.1</b> Anatomy</a></li>
+<li class="chapter" data-level="B.2" data-path="symbols.html"><a href="symbols.html#plant-hydraulics-2"><i class="fa fa-check"></i><b>B.2</b> Plant hydraulics</a></li>
+<li class="chapter" data-level="B.3" data-path="symbols.html"><a href="symbols.html#plant-water-compartments"><i class="fa fa-check"></i><b>B.3</b> Plant water compartments</a></li>
+<li class="chapter" data-level="B.4" data-path="symbols.html"><a href="symbols.html#stomatal-regulation-and-photosynthesis-1"><i class="fa fa-check"></i><b>B.4</b> Stomatal regulation and photosynthesis</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="bibliography.html"><a href="bibliography.html"><i class="fa fa-check"></i>Bibliography</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">The medfate reference book</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="forest-growth-model" class="section level1">
+<h1><span class="header-section-number">Chapter 14</span> Forest growth model</h1>
+<div id="design-principles-2" class="section level2">
+<h2><span class="header-section-number">14.1</span> Design principles</h2>
+<p>The physical structure of the stand is represented in one (vertical) dimension. Height (or depth) is the only dimension that matters (i.e. the coordinates of plants are not explicit). The model is cohort-based, meaning that similar plant individuals are represented using a single entity with average properties (e.g. tree height or diameter) and a density variable is used to scale from individual level to the cohort level. Processes are implemented either at the cohort-level (water balance and photosynthesis) or at the individual level (carbon balance and growth). The model has been designed to be executed on forest inventory plots, but it can be run on other kind of vegetation (e.g. shrublands or crops) provided vegetation is described using the appropriate variables (i.e. diameter and height for trees, percent cover and height for shrubs). The model tries to reproduce the physiological processes that modulate leaf area changes and plant growth rates. Nevertheless, since the model does not implement all processes that may affect growth (such as nutrient availability), maximum growth rates and maximum plant sizes are constrained from user inputs, to ensure that model can be more easily calibrated and validated with observations. Consequently, we believe the model is suited to study variations of plant growth derived from environmental conditions and competition for light and water.</p>
+<p>Leaf area of each plant cohort is divided between live (wether in resistance buds or unfolded leaves) and dead (standing dead trees). Expanded leaf area corresponds to the portion of live leaf area that is unfolded at any given moment through the leaf phenological cycle. Leaf area density of individuals is considered constant across the crown. Sapwood area of individuals is another important state variable. The Pipe model <span class="citation">(Shinozaki et al. <a href="#ref-Shinozaki1964">1964</a>)</span> is adopted to link increments of leaf area, sapwood area and fine root biomass. Ratios of leaf area to sapwood area (Huber value) can vary within species, due to environmental conditions <span class="citation">(Mencuccini and Grace <a href="#ref-Mencuccini1995">1995</a>)</span>. The model assumes a constant, species-specific Huber value, but allows deviations from the pipe model caused by drought-related leaf area reductions.</p>
+<p>Water fluxes, soil water balance and plant photosynthesis processes follow the design of the soil water balance model and this part of the model design will not be repeated here. Plant respiration is calculated at the individual level, by estimating the respiration of leaves, stem and fine root compartments. While fine root respiration is proportional to leaf respiration, and hence to expanded leaf area, stem respiration depends on plant size.</p>
+<p>Growth is determined taking into account environmental limitations on both source (i.e. carbon assimilation) and sink (i.e. carbon investment on plant tissue expansion) <span class="citation">(Fatichi, Leuzinger, and Körner <a href="#ref-Fatichi2014">2014</a>; Guillemot et al. <a href="#ref-Guillemot2015">2015</a>; Körner <a href="#ref-Korner2015">2015</a>)</span>. With respect to carbon availability for growth, the model offers three alternatives. In the first one, carbon available for growth is simply the daily difference between net photosynthesis and maintenance respiration (i.e. no carbon storage). The second alternatives involves a single (fast) carbon storage pool that allows decoupling assimilation from growth. Finally, the third alternative involves two carbon storage pools (‘fast’ and ‘slow’) with a transfer rate between them <span class="citation">(Richardson et al. <a href="#ref-Richardson2013">2013</a>; Dietze et al. <a href="#ref-Dietze2014">2014</a>)</span>, which we assume to be regulated by the need to maintain, as much as possible, a minimum amount of carbon in the fast pool (i.e. for metabolic and osmotic purposes). In the second and third modes, maximum overall C storage capacity is proportional to plant size.</p>
+<p>The LPG model <span class="citation">(Sitch et al. <a href="#ref-Sitch2003">2003</a>)</span> applies different turnover rates for different tissues, but then tries to satisfy the pipe model <span class="citation">(Shinozaki et al. <a href="#ref-Shinozaki1964">1964</a>)</span> by allocating C where it is more limiting. Instead, we assume that baseline leaf and fine root turnover rates are linearly related to conversion from sapwood to heartwood. Similarly to 3-PG <span class="citation">(Landsberg and Waring <a href="#ref-Landsberg1997">1997</a>)</span> we assume that the turnover rate is smallest for young plants, and it increases up to a maximum value. The model assumes that plants cannot suffer from cavitation if the leaf water potential is large enough for growth to occur (i.e. if cell turgidity is large enough for cell elongation). Similarly, it also assumes that growth stops before cavitation starts during drought events. When sapwood area reduction occurs, this not only reduces leaf area, but also decreases the amount of fast C reserves available for future growth. Thus it is assumed that parts of the plant are effectively disconnected.</p>
+<p>Tree structural variables are updated as in forest gap models <span class="citation">(Lindner, Sievänen, and Pretzsch <a href="#ref-Lindner1997">1997</a>)</span>.</p>
+</div>
+<div id="state-variables-2" class="section level2">
+<h2><span class="header-section-number">14.2</span> State variables</h2>
+</div>
+<div id="process-scheduling-2" class="section level2">
+<h2><span class="header-section-number">14.3</span> Process scheduling</h2>
+<p>Every day the growth model first updates the expanded leaf area of living plants according to the phenology of species and the day of the year. Then the model performs soil water balance, transpiration and photosynthesis calculations by calling the soil water balance submodel. After dealing with water fluxes and photosynthesis, the model determines the amount of respiratory biomass, the maximum storage value per individual and maintenance respiration at the individual level. The comparison between photosynthesis and respiration leads to an amount of carbon available for growth (if no carbon pools are considered) or a change in the amount of fast carbon storage pool (if one or two carbon pools are considered). After that, the model determines variations in sapwood area, dead leaf area and live leaf area, which can originate due to conversion from sapwood to heartwood, growth or drought-induced cavitation. If two carbon storage pools are considered, at the end of the day the model determines the direction and amount of carbon transfer between them. Once a year (or by the end of the simulated period) the model translates sapwood area growth into structural variables (i.e., plant height, tree DBH, tree crown ratio and shrub cover).</p>
+<div id="water-balance-plant-transpiration-and-photosynthesis" class="section level3">
+<h3><span class="header-section-number">14.3.1</span> Water balance, plant transpiration and photosynthesis</h3>
+<p>The growth model calls the soil water balance model as a submodel to perform soil water balance and photosynthesis calculations. We only summarize the steps here. The submodel first increases soil moisture due to precipitation, accounting for canopy interception loss, surface runoff and deep drainage. To calculate water losses due to transpiration, the submodel acts differently depending on whether transpiration mode is set to ‘Granier’ or ‘Sperry’. Generally speaking, though, the submodel determines stomatal conductance of each plant cohort according to the environmental conditions (i.e. light, leaf temperature, water vapor deficit and soil moisture) and this leads to an estimation of transpiration and net photosynthesis. The submodel then decreases water content due to bare soil evaporation, and plant transpiration, which completes the daily water balance.</p>
+<p>Among other outputs, the soil water balance submodel provides values of leaf water potential <span class="math inline">\(\Psi_{leaf}\)</span> (in MPa) and net photosynthesis calculated at the plant cohort level, <span class="math inline">\(A_n^{coh}\)</span> (in <span class="math inline">\(g C · m^{-2} · day^{-1}\)</span>). <span class="math inline">\(\Psi_{leaf}\)</span> is used in the growth model to modulate drought effects on growth and leaf area losses (see below), whereas <span class="math inline">\(A_n\)</span> is obviously needed to determine carbon balance and growth. Since carbon balance is calculated at the individual level, <span class="math inline">\(A_n^{coh}\)</span> needs to be scaled to net photosynthesis per individual (in <span class="math inline">\(g C · ind^{-1} · day^{-1}\)</span>) using:
+<span class="math display">\[\begin{equation}
+A_{n}^{ind} = 10000 \cdot A_n^{coh} / N
+\end{equation}\]</span>
+where <span class="math inline">\(N\)</span> is the density of individuals per hectare.</p>
+</div>
+</div>
+<div id="model-input-2" class="section level2">
+<h2><span class="header-section-number">14.4</span> Model input</h2>
+<div id="vegetation-state-variables-and-parameters" class="section level3">
+<h3><span class="header-section-number">14.4.1</span> Vegetation state variables and parameters</h3>
+<p>Vegetation in the stand is described using a set of plant cohorts, described in an object of class <code>growthInput</code>. This function assembles all parameters needed for the simulation of a given stand in a single list. Model parameters are grouped by category. Regarding physical aboveground description of the stand, each plant cohort is defined by its species identity (<span class="math inline">\(SP\)</span>; with R name [<code>SP</code>]). In addition, each cohort needs to be defined regarding the following state variables:</p>
+<ul>
+<li><span class="math inline">\(N\)</span> [<code>N</code>]: The density of individuals (in <span class="math inline">\(ind · ha^{-1}\)</span>).</li>
+<li><span class="math inline">\(DBH\)</span> [<code>DBH</code>]: Tree diameter at breast height (in cm).</li>
+<li><span class="math inline">\(Cover\)</span> [<code>Cover</code>]: Shrub percent cover (in %).</li>
+<li><span class="math inline">\(H\)</span> [<code>H</code>]: Total tree or shrub height (in cm).}</li>
+<li><span class="math inline">\(CR\)</span> [<code>CR</code>]: Crown ratio (i.e. the ratio between crown length and total height).}</li>
+<li><span class="math inline">\(LAI^{live}\)</span> [<code>LAI_live</code>]: Live leaf area index (one-side live leaf area of plants in the cohort per surface area of the stand) (in m<span class="math inline">\(^2\)</span>·m<span class="math inline">\(^{-2}\)</span>).}</li>
+<li><span class="math inline">\(LAI^{\phi}\)</span> [<code>LAI_expanded</code>]: Expanded leaf area index (one-side expanded leaf area of plants in the cohort per surface area of the stand) (in m<span class="math inline">\(^2\)</span>·m<span class="math inline">\(^{-2}\)</span>).}</li>
+<li><span class="math inline">\(LAI^{dead}\)</span> [<code>LAI_dead</code>]: Dead leaf area index (one-side dead leaf area of plants in the cohort per surface area of the stand) (in m<span class="math inline">\(^2\)</span>·m<span class="math inline">\(^{-2}\)</span>).}</li>
+<li><span class="math inline">\(LAI^{predrought}\)</span> [<code>LAI_predrought</code>]: Live leaf area index before the current drought started (one-side dead leaf area of plants in the cohort per surface area of the stand) (in m<span class="math inline">\(^2\)</span>·m<span class="math inline">\(^{-2}\)</span>).}</li>
+<li><span class="math inline">\(SA\)</span> [<code>SA</code>]: Area of functional sapwood per individual (in cm<span class="math inline">\(^2\)</span>·ind<span class="math inline">\(^{-1}\)</span>).}</li>
+<li><span class="math inline">\(C_{fast}\)</span> [<code>fastCstorage</code>]: Amount of C in the fast carbon storage pool (in g C·ind<span class="math inline">\(^{-1}\)</span>).}</li>
+<li><span class="math inline">\(C_{slow}\)</span> [<code>slowCstorage</code>]: Amount of C in the slow carbon storage pool (in g C·ind<span class="math inline">\(^{-1}\)</span>).}</li>
+</ul>
+<p>Excepting <span class="math inline">\(SP\)</span> (species identity) and <span class="math inline">\(N\)</span> (density), the remaining aboveground state variables are modified during growth simulations. Belowground parameters are the following:</p>
+<ul>
+<li><span class="math inline">\(Z\)</span> [<code>Z</code>]: The rooting depth (in cm).}</li>
+<li><span class="math inline">\(V\)</span> [<code>V</code>]: A matrix with the proportion of fine roots in each soil layer.}</li>
+</ul>
+<p>Additional belowground variables are included if `transpirationMode = “Complex”}. These, and the parameters needed for water balance calculations are described in vignette ‘’.</p>
+<p>The following physiological parameters are needed for growth calculations:</p>
+<ul>
+<li><span class="math inline">\(SLA\)</span> [<code>SLA</code>]: Specific leaf area (m<span class="math inline">\(^2\)</span>·kg<span class="math inline">\(^{-1}\)</span>).</li>
+<li><span class="math inline">\(Hv\)</span> [<code>Al2As</code>]: Huber value. Leaf area to sapwood area ratio (in m<span class="math inline">\(^2\)</span>·m<span class="math inline">\(^{-2}\)</span>).}</li>
+<li><span class="math inline">\(W_{dens}\)</span> [<code>WoodDens</code>]: Wood density (at 0% humidity) (in g·cm<span class="math inline">\(^{-3}\)</span>).}</li>
+<li><span class="math inline">\(W_{C}\)</span> [<code>WoodC</code>]: Wood carbon content in relation to dry weight (in g·g<span class="math inline">\(^{-1}\)</span>).}</li>
+<li><span class="math inline">\(C_{p,\max}\)</span> [<code>Cstoragepmax</code>]: Maximum storage capacity, expressed as C per total respiratory C (in gC·gC<span class="math inline">\(^{-1}\)</span>).</li>
+<li><span class="math inline">\(RGR_{\max}\)</span> [<code>RGRmax</code>]: Maximum daily relative growth rate (in sapwood area basis) (in cm<span class="math inline">\(^2\)</span>·cm<span class="math inline">\(^{-2}\)</span>).</li>
+</ul>
+<p>Another set of parameters is needed to transform changes in sapwood area and leaf area to changes in the structural variables such as tree height, tree crown ratio or shrub cover:</p>
+<ul>
+<li><span class="math inline">\(H_{\max}\)</span> [<code>Hmax</code>]: Maximum plant height (in cm).</li>
+<li><span class="math inline">\(f_{HD,\min}\)</span>, <span class="math inline">\(f_{HD,\max}\)</span> [<code>fHDmin},</code>fHDmax`]: Minimum and maximum values of the height-diameter ratio (in cm·cm<span class="math inline">\(^{-1}\)</span>).</li>
+<li><span class="math inline">\(Z_{\max}\)</span> [<code>Zmax</code>]: Maximum rooting depth (in mm).</li>
+<li><span class="math inline">\(a_{ash}\)</span> [<code>Aash</code>]: Regression coefficient for the quadratic relationship between shrub height and shrub area.</li>
+<li><span class="math inline">\(a_{bsh}\)</span>, <span class="math inline">\(b_{bsh}\)</span> [<code>Absh</code>, <code>Bbsh</code>]: Allometric coefficients relating crown phytovolume with dry weight of shrub individuals.</li>
+<li><span class="math inline">\(CR\)</span> [<code>cr</code>]: Ratio between crown length and total height (constant value for shrubs).</li>
+<li><span class="math inline">\(r_{6.35}\)</span> [<code>r635</code>]: Ratio between the dry weight of leaves plus branches and the dry weight of leaves alone for branches of 6.35 mm of diameter.</li>
+<li><span class="math inline">\(a_{cr}\)</span>, <span class="math inline">\(b_{1cr}\)</span>, <span class="math inline">\(b_{2cr}\)</span>, <span class="math inline">\(b_{3cr}\)</span>, <span class="math inline">\(c_{1cr}\)</span>, <span class="math inline">\(c_{2cr}\)</span> [<code>B1cr</code>, <code>B2cr</code>, <code>B3cr</code>, <code>C1cr</code>, <code>C2cr</code>]: Regression coefficients used to update the crown ratio of trees.</li>
+<li><span class="math inline">\(a_{cw}\)</span>, <span class="math inline">\(b_{cw}\)</span> [<code>Acw</code>, <code>Bcw</code>]: Regression coefficients used to calculate the crown width of trees (as intermediary step to obtain the crown ratio).</li>
+</ul>
+</div>
+<div id="metereological-input-2" class="section level3">
+<h3><span class="header-section-number">14.4.2</span> Metereological input</h3>
+<p>Weather input data must include variables calculated at the <strong>daily</strong> scale. The variables required by function <code>growth()</code> depend on the transpiration mode, similarly to function <code>spwb()</code>. We recommend meteorological input to be generated using package <strong>meteoland</strong> <span class="citation">(De Cáceres et al. <a href="#ref-DeCaceres2018">2018</a>)</span>.</p>
+</div>
+</div>
+<div id="model-output-2" class="section level2">
+<h2><span class="header-section-number">14.5</span> Model output</h2>
+
+</div>
+</div>
+<h3>Bibliography</h3>
+<div id="refs" class="references">
+<div id="ref-DeCaceres2018">
+<p>De Cáceres, Miquel, Nicolas Martin-StPaul, Marco Turco, Antoine Cabon, and Victor Granda. 2018. “Estimating daily meteorological data and downscaling climate models over landscapes.” <em>Environmental Modelling &amp; Software</em> 108 (August). Elsevier:186–96. <a href="https://doi.org/10.1016/j.envsoft.2018.08.003" class="uri">https://doi.org/10.1016/j.envsoft.2018.08.003</a>.</p>
+</div>
+<div id="ref-Dietze2014">
+<p>Dietze, Michael C, Anna Sala, Mariah S Carbone, Claudia I Czimczik, Joshua A Mantooth, Andrew D Richardson, and Rodrigo Vargas. 2014. “Nonstructural Carbon in Woody Plants.” <em>Annual Review of Plant Biology</em> 65 (1):667–87. <a href="https://doi.org/10.1146/annurev-arplant-050213-040054" class="uri">https://doi.org/10.1146/annurev-arplant-050213-040054</a>.</p>
+</div>
+<div id="ref-Fatichi2014">
+<p>Fatichi, Simone, Sebastian Leuzinger, and Christian Körner. 2014. “Moving beyond photosynthesis: From carbon source to sink-driven vegetation modeling.” <em>New Phytologist</em> 201 (4):1086–95. <a href="https://doi.org/10.1111/nph.12614" class="uri">https://doi.org/10.1111/nph.12614</a>.</p>
+</div>
+<div id="ref-Guillemot2015">
+<p>Guillemot, J., N. K. Martin-Stpaul, E. Dufrêne, C. François, K. Soudani, J. M. Ourcival, and N. Delpierre. 2015. “The dynamic of the annual carbon allocation to wood in European tree species is consistent with a combined source-sink limitation of growth: Implications for modelling.” <em>Biogeosciences</em> 12 (9):2773–90. <a href="https://doi.org/10.5194/bg-12-2773-2015" class="uri">https://doi.org/10.5194/bg-12-2773-2015</a>.</p>
+</div>
+<div id="ref-Korner2015">
+<p>Körner, Christian. 2015. “Paradigm shift in plant growth control.” <em>Current Opinion in Plant Biology</em> 25:107–14. <a href="https://doi.org/10.1016/j.pbi.2015.05.003" class="uri">https://doi.org/10.1016/j.pbi.2015.05.003</a>.</p>
+</div>
+<div id="ref-Landsberg1997">
+<p>Landsberg, J.J., and R.H. Waring. 1997. “A generalised model of forest productivity using simplified concepts of radiation-use efficiency, carbon balance and partitioning.” <em>Forest Ecology and Management</em> 95 (3):209–28. <a href="https://doi.org/10.1016/S0378-1127(97)00026-1" class="uri">https://doi.org/10.1016/S0378-1127(97)00026-1</a>.</p>
+</div>
+<div id="ref-Lindner1997">
+<p>Lindner, Marcus, Risto Sievänen, and Hans Pretzsch. 1997. “Improving the simulation of stand structure in a forest gap model.” <em>Forest Ecology and Management</em> 95 (2):183–95. <a href="https://doi.org/10.1016/S0378-1127(96)03967-9" class="uri">https://doi.org/10.1016/S0378-1127(96)03967-9</a>.</p>
+</div>
+<div id="ref-Mencuccini1995">
+<p>Mencuccini, Maurizio, and John Grace. 1995. “Climate influences the leaf area/sapwood area ratio in Scots pine.” <em>Tree Physiology</em> 15 (1):1–10. <a href="https://doi.org/10.1093/treephys/15.1.1" class="uri">https://doi.org/10.1093/treephys/15.1.1</a>.</p>
+</div>
+<div id="ref-Richardson2013">
+<p>Richardson, Andrew D., Mariah S. Carbone, Trevor F. Keenan, Claudia I. Czimczik, David Y. Hollinger, Paula Murakami, Paul G. Schaberg, and Xiaomei Xu. 2013. “Seasonal dynamics and age of stemwood nonstructural carbohydrates in temperate forest trees.” <em>New Phytologist</em> 197 (3):850–61. <a href="https://doi.org/10.1111/nph.12042" class="uri">https://doi.org/10.1111/nph.12042</a>.</p>
+</div>
+<div id="ref-Shinozaki1964">
+<p>Shinozaki, K, K Yoda, K Hozumi, and T Kira. 1964. “A quantitative analysis of plant form - the pipe model theory. I. Basic analysis.” <em>Japanese Journal of Ecology</em> 14:97–105.</p>
+</div>
+<div id="ref-Sitch2003">
+<p>Sitch, S., B. Smith, I. C. Prentice, a. Arneth, a. Bondeau, W. Cramer, J. O. Kaplan, et al. 2003. “Evaluation of ecosystem dynamics, plant geography and terrestrial carbon cycling in the LPJ dynamic global vegetation model.” <em>Global Change Biology</em> 9 (2):161–85. <a href="https://doi.org/10.1046/j.1365-2486.2003.00569.x" class="uri">https://doi.org/10.1046/j.1365-2486.2003.00569.x</a>.</p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="transpirationsperry.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="plant-compartments-respiration-and-carbon-balance.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["modeldescription.pdf", "modeldescription.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
