@@ -21,7 +21,7 @@ Water retention curve of a soil layer $s$ is the relationship between the water 
 
 1. *Saxton model*: In this model, volumetric soil moisture $\theta(\Psi_s)$ corresponding to a given water potential $\Psi$ (in MPa) below $\Psi_{fc}$ is calculated using: 
 \begin{equation}\theta(\Psi) = (\Psi/A)^{(1/B)}\end{equation}
-where $A$ and $B$ depend on the texture and, if available, organic matter in the soil layer. If organic matter is available, $A$ and $B$ are calculated $P_{clay}$, $P_{sand}$ and $OM$ following @Saxton2006. Otherwise, they are calculated from $P_{clay}$ and $P_{sand}$ as indicated in @Saxton1986. Volumetric changes between field capacity and saturation are estimated using a linear function.
+where $A$ and $B$ depend on the texture and, if available, organic matter in the soil layer. If organic matter is available, $A$ and $B$ are calculated from $P_{clay}$, $P_{sand}$ and $OM$ following @Saxton2006. Otherwise, they are calculated from $P_{clay}$ and $P_{sand}$ as indicated in @Saxton1986. Volumetric changes between field capacity and saturation are estimated using a linear function.
 2. *Van Genuchten model*: The well known van Genuchten [-@Genuchten1980] model is:
 \begin{equation}\theta(\Psi) = \theta_{res}+\frac{\theta_{sat}-\theta_{res}}{\left[1+ (\alpha \cdot \Psi)^n \right]^{1-1/n}}\end{equation}
 where $\theta(\psi)$ is the water retention, $\theta_{sat}$ is the saturated water content, $\theta_{res}$ is the residual water content, $\alpha$ is related to the inverse of the air entry pressure (and here has to be expressed in $MPa^{-1}$), and $n$ is a measure of the pore-size distribution.

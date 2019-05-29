@@ -32,3 +32,7 @@ devtools::install_github("miquelcaceres/medfate",
 ## How to use this book
 
 This is a reference book for simulation and static models included in **medfate**. Hands-on user guides can be found as package vignettes included in its distribution. The manual is intended to reflect **version `r packageVersion("medfate")`**. Our purpose is to continuously update this reference with package updates, so that users can know about the models they are using at the time when functions are run. As the manual will keep package updates, after model applications users should store the PDF version of the reference manual to be sure it matches the version the package reported in the application (e.g. report or article).
+
+In this book we use `code` to indicate R code or to refer to variable names within R. When relevant, we give the correspondence between mathematical symbols and variable names within R. 
+
+The following chapter describes the soil, vegetation and meteorology inputs that apply to all models. After that, the book presents each simulation model using a set of chapters. The first chapter introduces the model and the remaining describe the details of formulations by processes. Those process formulations that are common to more than one model (like hydrology) are described only once.
