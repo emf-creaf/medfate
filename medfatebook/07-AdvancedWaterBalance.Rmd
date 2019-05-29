@@ -64,29 +64,20 @@ Every day the model performs the following actions:
   * Decrease water content due to bare soil evaporation, closing the water balance.
 
 ## Model input
-### Metereological input
-Weather input data must include variables calculated at the **daily** scale.
 
-+ $T_{min}$ [`MinTemperature`]: Minimum temperature (in $^{\circ} \mathrm{C}$).
-+ $T_{max}$ [`MaxTemperature`]: Maximum temperature (in $^{\circ} \mathrm{C}$).
-+ $RH_{min}$ [`MinRelativeHumidity`]: Minimum relative humidity (in percent).
-+ $RH_{max}$ [`MaxRelativeHumidity`]: Maximum relative humidity (in percent).
-+ $P$ [`Precipitation`]: Precipitation (in L·m$^{-2}$ = mm of water).
-+ $Rad$ [`Radiation`]: Solar radiation after accounting for clouds (in MJ·m$^{-2}$).
-+ $u$ [`WindSpeed`]: Wind speed (in m·s$^{-1}$).
-
-We recommend meteorological input to be generated using package **meteoland** [@DeCaceres2018].
-
+### Meteorological input
+The minimum weather variables required to run the model are min/max temperatures ($T_{min}$ and $T_{max}$), min/max relative humidity ($RH_{min}$ and $RH_{max}$), precipitation ($P$) and solar radiation ($Rad$). Wind speed ($u$) is also needed for the model, but the user ma introduce missing values if not available (then, a default value will be used). Definitions and units of these variables are given in section \@ref(meteoinput).
 
 ### Control parameters
-Control parameters are a list of parameter values, initialized using function `defaultControl()`, that the user can modify to change the general behavior of the model. The control values relevant for the advanced water balance model are:
+The control values relevant for the advanced water balance model are:
 
 + `verbose [=TRUE]`: Whether extra console output is desired during simulations.
 + `soilFunctions [= "SX"]`: Water retention curve model, either "SX" (for Saxton) or "VG" (for Van Genuchten).
++ `leafPhenology [= TRUE]`:  Whether leaf phenology is simulated.
 + `snowpack [= TRUE]`:  Whether dynamics of snow pack are included.
 + `drainage [= TRUE]`:  Whether water exceeding the field capacity of the bottom layer is lost by deep drainage into a non-reachable compartment.
 + `transpirationMode [= "Granier"]`: Transpiration model, in this case should be "Sperry".
-+ `defaultWindSpeed [= 5]`: Default value for wind speed (in $m \cdot s^{-1}$) when this is missing (only used for leaf fall).
++ `defaultWindSpeed [= 2.5]`: Default value for wind speed (in $m \cdot s^{-1}$) when this is missing (only used for leaf fall).
 + `hydraulicCostFunction [= 1]`: Variant of the hydraulic cost function used in the stomatal regulation model of @Sperry2016. Values accepted are 1 (original cost function based on the derivative of supply function), 2 (leaf vulnerability curve).
 + `ndailysteps [=24]`: Number of daily substeps.
 + `thermalCapacityLAI [= 1000000]`: Canopy thermal capacitance per LAI unit.

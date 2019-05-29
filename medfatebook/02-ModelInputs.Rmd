@@ -105,3 +105,25 @@ matplot(x=t(P)*10, y=seq(0,1500, by=10), type="l", xlim=c(0,2), ylim=c(1500,0), 
 legend("bottomright", legend=c("Z50 = 100, Z95 = 200", 
        "Z50 = 200, Z95 = 1500"), col=c("black","red"), lty=1:2, bty="n")
 ```
+
+
+## Metereological input {#meteoinput}
+Weather input data must include variables calculated at the **daily** scale. Data should be arranged in a data frame with days in rows and variables in columns. The following table indicates the symbols, units, definitions and the variable name in R.
+
+| Symbol | Units | R param | Description                        |
+|--------|-------|---------|------------------------------------|
+| $T_{mean}$ | $^{\circ} \mathrm{C}$ | `MeanTemperature` | Mean temperature |
+| $T_{min}$ | $^{\circ} \mathrm{C}$ | `MinTemperature` | Minimum temperature |
+| $T_{max}$ | $^{\circ} \mathrm{C}$ | `MaxTemperature` | Maximum temperature |
+| $RH_{min}$ | % | `MinRelativeHumidity` | Minimum relative humidity |
+| $RH_{max}$ | % | `MaxRelativeHumidity` | Maximum relative humidity |
+| $P$ | $L \cdot m^{-2} = mm$ | `Precipitation` | Precipitation |
+| $PET$ | $L \cdot m^{-2} = mm$ | `PET` | Potential evapotranspiration, preferably calculated using Penman's equation |
+| $Rad$ | $MJ \cdot m^{-2}$ | `Radiation` | Solar radiation after accounting for clouds |
+| $u$ | $m \cdot s^{-1}$ | `WindSpeed` | Wind speed |
+
+Not all models require all weather variables, this will be indicated in the corresponding model chapters. For convenience, we recommend meteorological input to be generated using package **meteoland** [@DeCaceres2018].
+
+
+## Control parameters
+Control parameters are a list of parameter values, initialized using function `defaultControl()`, that the user can modify to change the general behavior of model functions. 

@@ -46,18 +46,11 @@ Every day water balance is perfomed as follows. The model first updates leaf are
 
 ## Model input
 ### Metereological input
-Weather input data must include variables calculated at the **daily** scale.
-
-+ $T_{mean}$ [`MeanTemperature`]: Mean daily temperature (in $^{\circ} \mathrm{C}$).
-+ $Rad$ [`Radiation`]: Solar radiation, after accounting for clouds (in $MJ \cdot m^{-2}$), only necessary if snow pack dynamics are simulated.
-+ $P$ [`Precipitation`]: Daily precipitation (in $L \cdot m^{-2}$ = mm of water).
-+ $PET$ [`PET`]: Daily potential evapotranspiration (in  $L \cdot m^{-2}$ = mm of water), preferably calculated using Penman's equation.
-
-Optionally, the user may also specify values of wind speed ($u$, in m·s$^{-1}$, `WindSpeed`) that are used to control leaf fall in autumn. We recommend meteorological input to be generated using package **meteoland** [@DeCaceres2018].
+The minimum weather variables required to run the model are mean temperature ($T_{mean}$), precipitation ($P$) and potential evapotranspiration ($PET$). Solar radiation ($Rad$) is required if snow pack dynamics have to be simulated. Optionally, the user may also specify values of wind speed ($u$) that are used to control leaf fall in autumn. Definitions and units of these variables are given in section \@ref(meteoinput).
 
 
 ### Control parameters
-Control parameters are a list of parameter values, initialized using function `defaultControl()`, that the user can modify to change the general behavior of the model. The control values relevant for the simple water balance model are:
+The control values relevant for the simple water balance model are:
 
 + `verbose [=TRUE]`: Whether extra console output is desired during simulations.
 + `soilFunctions [= "SX"]`: Water retention curve model, either "SX" (for Saxton) or "VG" (for Van Genuchten).
