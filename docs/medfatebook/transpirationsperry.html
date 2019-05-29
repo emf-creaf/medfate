@@ -118,6 +118,7 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <li><a href="./intro.html">The medfate book</a></li>
 
 <li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
 <li class="part"><span><b>I Preliminaries</b></span></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
 <li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#purpose"><i class="fa fa-check"></i><b>1.1</b> Purpose</a></li>
@@ -440,7 +441,7 @@ However, the way that previous cavitation levels are taken into account differs 
 <div id="transpiration-and-photosynthesis-after-soil-disconnection" class="section level2">
 <h2><span class="header-section-number">13.7</span> Transpiration and photosynthesis after soil disconnection</h2>
 <p>Considering water compartments allows tracking leaf and stem (i.e. plant) <em>dessication</em>, either when the plant is connected to the soil or when transpiration flow comes from the plant itself. In <strong>medfate</strong>, disconnection from a given soil layer occurs when its water potential is too low with respect to the root xylem vulnerability curve. The user can control this behaviour by specifying a <span class="math inline">\(p_{root}\)</span> threshold for relative conductance, and the plant will be disconnected from a soil layer if <span class="math inline">\(k_{r}(\Psi_{soil})/k_{r,max} &lt; p_{root}\)</span>. An interesting situation arises when a plant is disconnected from all soil layers. In this case, the steady-state calculations cannot be used to determine flows, so one is forced to use a full discrete time approximation, with compartments and flows indicated in the figure below.</p>
-<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-69"></span>
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-70"></span>
 <img src="hydraulics_disc.jpg" alt="Schematic representation of hydraulics in a whole-plant network after disconnection from soil" width="80%" />
 <p class="caption">
 Figure 13.1: Schematic representation of hydraulics in a whole-plant network after disconnection from soil

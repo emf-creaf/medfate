@@ -118,6 +118,7 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <li><a href="./intro.html">The medfate book</a></li>
 
 <li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
 <li class="part"><span><b>I Preliminaries</b></span></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
 <li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#purpose"><i class="fa fa-check"></i><b>1.1</b> Purpose</a></li>
@@ -390,7 +391,7 @@ Before applying either growth or cavitation the model determines the extent to w
 f_{turgor}(\Psi_{leaf}) = 1 - \left[e^{(\Psi_{leaf}/\Psi_{tlp})-1}\right]^5
 \end{equation}\]</span>
 where <span class="math inline">\(f_{turgor}(\Psi_{leaf})=0\)</span> if <span class="math inline">\(\Psi_{leaf} &gt; \Psi_{tlp}\)</span>. The following figure illustrates the function for <span class="math inline">\(\Psi_{tlp}=-1.5\)</span> MPa:
-<img src="medfatebook_files/figure-html/unnamed-chunk-70-1.png" width="384" style="display: block; margin: auto;" /></p>
+<img src="medfatebook_files/figure-html/unnamed-chunk-71-1.png" width="384" style="display: block; margin: auto;" /></p>
 <p>If <span class="math inline">\(f_{turgor}(\Psi_{leaf})&gt;0\)</span> growth is applied, but there can be leaf area losses from sapwood turnover, whereas if <span class="math inline">\(f_{turgor}(\Psi_{leaf}) = 0\)</span> growth does not occur and cavitation is possible. The following two subsection detail the behavior of the growth model in each case.</p>
 </div>
 <div id="growth-and-turnover-during-non-drought-periods" class="section level2">
@@ -411,14 +412,14 @@ where 0.1 is needed to express <span class="math inline">\(C_{cost,leaf}\)</span
 <span class="math display">\[\begin{equation}
 f_{conc} = \frac{1}{1+\exp \left(-5 \cdot \frac{(C_{fast}/C_{fast, \max})-0.5}{0.5}\right)}
 \end{equation}\]</span></p>
-<p><img src="medfatebook_files/figure-html/unnamed-chunk-71-1.png" width="384" style="display: block; margin: auto;" /></p>
+<p><img src="medfatebook_files/figure-html/unnamed-chunk-72-1.png" width="384" style="display: block; margin: auto;" /></p>
 <p>Obviously, if carbon pools are not considered <span class="math inline">\(f_{conc} = 1\)</span>.</p>
 <p>Growth modulation due to temperature is incorporated through <span class="math inline">\(f_{temp}(T_{mean})\)</span>, using a truncated parabolic function as in Poyatos et al. (2007):
 <span class="math display">\[\begin{equation}
 f_{temp}(T) = \frac{(T-T_{low}) \cdot (T_{high}-T)}{(T_{opt}-T_{low}) \cdot (T_{high}-T_{opt})}
 \end{equation}\]</span>
 where <span class="math inline">\(0 \leq f_{temp}(T) \leq 1\)</span>, <span class="math inline">\(T_{low}\)</span> and <span class="math inline">\(T_{high}\)</span> minimum and maximum temperature values for growth and <span class="math inline">\(T_{opt}\)</span> is the optimum growth temperature.</p>
-<p><img src="medfatebook_files/figure-html/unnamed-chunk-72-1.png" width="384" style="display: block; margin: auto;" /></p>
+<p><img src="medfatebook_files/figure-html/unnamed-chunk-73-1.png" width="384" style="display: block; margin: auto;" /></p>
 <p>The rate of daily increase in sapwood area taking into account sink limitations is (<span class="math inline">\(\Delta SA_{sink}\)</span>; <span class="math inline">\(cm^2\)</span>):
 <span class="math display">\[\begin{equation}
 \Delta SA_{sink} = RGR_{\max} \cdot SA \cdot f_{turgor}(\Psi_{leaf}) \cdot f_{conc} \cdot f_{temp}(T_{mean})
@@ -470,7 +471,7 @@ and expanded leaf area (<span class="math inline">\(LAI^{\phi}\)</span>) and dea
 <span class="math display">\[\begin{equation}
 r_{transf} = 0.1 \cdot \frac{2}{1+\exp \left(-5 \cdot \frac{(C_{fast}/C_{fast, \max})-0.5}{0.5}\right)}-1
 \end{equation}\]</span></p>
-<p><img src="medfatebook_files/figure-html/unnamed-chunk-73-1.png" width="384" style="display: block; margin: auto;" /></p>
+<p><img src="medfatebook_files/figure-html/unnamed-chunk-74-1.png" width="384" style="display: block; margin: auto;" /></p>
 <p>where <span class="math inline">\(0.1\)</span> indicates that the maximum daily transfer rate is 10% of the source C pool size. If <span class="math inline">\(r_{transf}&lt;0\)</span> then <span class="math inline">\(-r_{transf} \cdot C_{slow, \max}\)</span> g of carbon are taken from the slow C pool and 90% of this amount is added into the fast C pool (the remaining 10% is assumed to be the transfer cost). Similarly, if <span class="math inline">\(r_{transf}&gt;0\)</span> then <span class="math inline">\(r_{transf} \cdot C_{fast, \max}\)</span> g of carbon are taken from the fast C pool and 90% of this amount is added into the slow C pool (again, the remaining 10% is assumed to be the transfer cost). The amounts of C transferred are also limited by the amount that would be needed to fill the sink pool (i.e., if the sink pool is already full, no carbon is transferred).</p>
 </div>
 <div id="update-of-maximum-stem-conductance" class="section level2">
