@@ -277,7 +277,10 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 </ul></li>
 <li class="part"><span><b>V Static modules</b></span></li>
 <li class="chapter" data-level="18" data-path="leaf-biomass-leaf-area-and-vertical-profiles.html"><a href="leaf-biomass-leaf-area-and-vertical-profiles.html"><i class="fa fa-check"></i><b>18</b> Leaf biomass, leaf area and vertical profiles</a><ul>
-<li class="chapter" data-level="18.1" data-path="leaf-biomass-leaf-area-and-vertical-profiles.html"><a href="leaf-biomass-leaf-area-and-vertical-profiles.html#species-parameters-1"><i class="fa fa-check"></i><b>18.1</b> Species parameters</a></li>
+<li class="chapter" data-level="18.1" data-path="leaf-biomass-leaf-area-and-vertical-profiles.html"><a href="leaf-biomass-leaf-area-and-vertical-profiles.html#input-data"><i class="fa fa-check"></i><b>18.1</b> Input data</a><ul>
+<li class="chapter" data-level="18.1.1" data-path="leaf-biomass-leaf-area-and-vertical-profiles.html"><a href="leaf-biomass-leaf-area-and-vertical-profiles.html#forest-inventory-data"><i class="fa fa-check"></i><b>18.1.1</b> Forest inventory data</a></li>
+<li class="chapter" data-level="18.1.2" data-path="leaf-biomass-leaf-area-and-vertical-profiles.html"><a href="leaf-biomass-leaf-area-and-vertical-profiles.html#allometric-species-specific-parameters"><i class="fa fa-check"></i><b>18.1.2</b> Allometric species-specific parameters</a></li>
+</ul></li>
 <li class="chapter" data-level="18.2" data-path="leaf-biomass-leaf-area-and-vertical-profiles.html"><a href="leaf-biomass-leaf-area-and-vertical-profiles.html#leaf-biomass-and-area"><i class="fa fa-check"></i><b>18.2</b> Leaf biomass and area</a><ul>
 <li class="chapter" data-level="18.2.1" data-path="leaf-biomass-leaf-area-and-vertical-profiles.html"><a href="leaf-biomass-leaf-area-and-vertical-profiles.html#leaf-biomass-for-tree-cohorts"><i class="fa fa-check"></i><b>18.2.1</b> Leaf biomass for tree cohorts</a></li>
 <li class="chapter" data-level="18.2.2" data-path="leaf-biomass-leaf-area-and-vertical-profiles.html"><a href="leaf-biomass-leaf-area-and-vertical-profiles.html#leaf-biomass-for-shrub-cohorts"><i class="fa fa-check"></i><b>18.2.2</b> Leaf biomass for shrub cohorts</a></li>
@@ -289,7 +292,7 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 </ul></li>
 <li class="chapter" data-level="19" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html"><i class="fa fa-check"></i><b>19</b> Fuel characteristics and fire behaviour</a><ul>
 <li class="chapter" data-level="19.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#purpose"><i class="fa fa-check"></i><b>19.1</b> Purpose</a></li>
-<li class="chapter" data-level="19.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#input-data"><i class="fa fa-check"></i><b>19.2</b> Input data</a><ul>
+<li class="chapter" data-level="19.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#input-data-1"><i class="fa fa-check"></i><b>19.2</b> Input data</a><ul>
 <li class="chapter" data-level="19.2.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#forest-inventory-plot-data"><i class="fa fa-check"></i><b>19.2.1</b> Forest inventory plot data</a></li>
 <li class="chapter" data-level="19.2.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#species-specific-parameters"><i class="fa fa-check"></i><b>19.2.2</b> Species-specific parameters</a></li>
 <li class="chapter" data-level="19.2.3" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#other-inputs"><i class="fa fa-check"></i><b>19.2.3</b> Other inputs</a></li>
@@ -366,14 +369,33 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
             <section class="normal" id="section-">
 <div id="leaf-biomass-leaf-area-and-vertical-profiles" class="section level1">
 <h1><span class="header-section-number">Chapter 18</span> Leaf biomass, leaf area and vertical profiles</h1>
-<div id="species-parameters-1" class="section level2">
-<h2><span class="header-section-number">18.1</span> Species parameters</h2>
+<div id="input-data" class="section level2">
+<h2><span class="header-section-number">18.1</span> Input data</h2>
+<div id="forest-inventory-data" class="section level3">
+<h3><span class="header-section-number">18.1.1</span> Forest inventory data</h3>
+<p>The input data for tree cohorts are:</p>
 <ul>
-<li><span class="math inline">\(cr(SP_i)\)</span>: [<code>cr</code>]: Ratio between crown length and total height for shrubs.</li>
+<li><span class="math inline">\(SP_i\)</span>: Species identity}</li>
+<li><span class="math inline">\(DBH_i\)</span>: Diameter at breast height (in cm) of the representative tree.</li>
+<li><span class="math inline">\(H_i\)</span>: Height (in cm) of the representative tree.</li>
+<li><span class="math inline">\(N_i\)</span>: Cohort density (in <span class="math inline">\(ind.\cdot ha^{-1}\)</span>).</li>
+</ul>
+<p>The input data for shrub cohorts are:</p>
+<ul>
+<li><span class="math inline">\(SP_i\)</span>: Species identity</li>
+<li><span class="math inline">\(C_i\)</span>: Plant cover (in percent).</li>
+<li><span class="math inline">\(H_i\)</span>: Mean plant height (in cm).</li>
+</ul>
+</div>
+<div id="allometric-species-specific-parameters" class="section level3">
+<h3><span class="header-section-number">18.1.2</span> Allometric species-specific parameters</h3>
+<ul>
 <li><span class="math inline">\(a_{fbt}, b_{fbt}, c_{fbt}, d_{fbt}\)</span> [<code>a_fbt</code>, <code>b_fbt</code>, <code>c_fbt</code>, <code>d_fbt</code>]: Regression coefficients used to calculate foliar biomass of an individual tree from its <span class="math inline">\(DBH\)</span> and the cummulative basal area of larger trees.</li>
 <li><span class="math inline">\(a_{ash}\)</span> [<code>a_ash</code>]: Regression coefficient relating the square of shrub height with shrub area.</li>
 <li><span class="math inline">\(a_{bsh}\)</span> and <span class="math inline">\(b_{bsh}\)</span> [<code>a_bsh</code>, <code>b_bsh</code>]: Allometric coefficients relating phytovolume with dry weight of shrub individuals.</li>
+<li><span class="math inline">\(cr(SP_i)\)</span>: [<code>cr</code>]: Ratio between crown length and total height for shrubs.</li>
 </ul>
+</div>
 </div>
 <div id="leaf-biomass-and-area" class="section level2">
 <h2><span class="header-section-number">18.2</span> Leaf biomass and area</h2>

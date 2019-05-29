@@ -147,9 +147,14 @@
 \hypertarget{intro}{%
 \chapter{Introduction}\label{intro}}
 
+\hypertarget{purpose}{%
+\section{Purpose}\label{purpose}}
+
 Being able to anticipate the impact of global change on ecosystems is one of the major environmental challenges in contemporary societies. However, uncertainties in how ecological systems function and practical constraints in how to integrate available information prevent the development of robust and reliable predictive models. Despite the amount of knowledge accumulated about the functioning and dynamics of Mediterranean forests, scientists should make coordinate their efforts to address the challenge of integrating the different global change drivers in a modelling framework useful for research and applications.
 
-The R package \texttt{medfate} has been designed to study the characteristics and simulate dynamics of Mediterranean forests. Fire and drought impacts are the main drivers covered by the package. Representation of vegetation is not spatially-explicit (i.e.~trees or shrubs do not have explicit coordinates within forest stands). This simplified representation is chosen so that package functions can be easily applied to forest plot data from national forest inventories. Since the package intends to facilitate predictions of not only forest functioning but also forest structure and composition, the taxonomic identity of plants is stored, and parameter values need to be provided for each taxonomic entity (but the package could be used with functional groups).
+The R package \textbf{medfate} has been designed to simulate the functioning and dynamics of Mediterranean forest stands at temporal scales from days to years. Fire and drought impacts are the main subjects covered by the package. Eco-hydrological processes are fundamental for the simulation models included in the package. In particular, the package allows the simulation of water balance of soils and plants within forest stands. It also allows simulating plant growth of a set of cohorts competing for light and water within a forest stand. Finally, the package also includes functions to relate the amount of plant biomass and the relative water content of plant tissues to live fuel moisture content, hence, fire hazard.
+
+The version of the reference manual that you are reading is intended to reflect \textbf{version 0.8.2} of the package.
 
 \hypertarget{package-installation}{%
 \section{Package installation}\label{package-installation}}
@@ -179,10 +184,109 @@ When installing from GitHub, may need to force the installation of package vigne
 \end{Highlighting}
 \end{Shaded}
 
+\hypertarget{package-functions}{%
+\section{Package functions}\label{package-functions}}
+
+\hypertarget{dynamic-simulation-functions}{%
+\subsection{Dynamic simulation functions}\label{dynamic-simulation-functions}}
+
+Soil water balance can be studied for a given forest stand using function \texttt{spwb()}, with the following purposes:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Monitor or forecast temporal variation in soil water content in particular stands (for example to estimate mushroom yield).
+\item
+  Monitor or forecast temporal variation of plant drought stress in particular stands (for example to anticipate mortality events).
+\item
+  Monitor or forecast temporal variation of fuel moisture in particular stands (for example to monitor wildfire risk).
+\end{enumerate}
+
+Changes in leaf area and plant growth are key to evaluate the influence of climatic conditions on forest structure and function. Function \texttt{growth()} allows simulating growth of a set of plant cohorts competing for light and water in a given forest stand, with the following purposes:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Monitor or forecast temporal variation in water fluxes and soil water content in forest stands (for example to estimate regulation ecosystem services) taking into account processes determining leaf area changes and plant growth.
+\item
+  Monitor or forecast temporal variation of plant size (i.e.~growth) in forest stands.
+\item
+  Monitor or forecast temporal variation of live fuel moisture and the amount of standing dead and live fuels in forest stands (for example to monitor wildfire risk).
+\end{enumerate}
+
+\hypertarget{sub-model-functions}{%
+\subsection{Sub-model functions}\label{sub-model-functions}}
+
+Many of the functions included in \textbf{medfate} are internally called by simulation functions. Some of them are made available to the user, to facilitate understanding the different sub-models and to facilitate a more creative use of the package. Sub-model functions are grouped by \emph{subject}, which is included in the name of the function. The different sub-model functions are (by subject):
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{biophysics\_*}: Physical and biophysical utility functions.
+\item
+  \texttt{hydraulics\_*}: Plant hydraulics.
+\item
+  \texttt{hydrology\_*}: Canopy and soil hydrology (rainfall interception, soil evaporation, soil infiltration).
+\item
+  \texttt{light\_*}: Light extinction and absortion.
+\item
+  \texttt{moisture\_*}: Live tissue moisture.
+\item
+  \texttt{pheno\_*}: Leaf phenology.
+\item
+  \texttt{photo\_*}: Leaf photosynthesis.
+\item
+  \texttt{root\_*}: Root distribution and conductance calculations.
+\item
+  \texttt{soil\_*}: Soil hydraulics and thermodynamics.
+\item
+  \texttt{spwb\_*}: Soil water balance parameter optimization/calibration routines.
+\item
+  \texttt{transp\_*}: Stomatal regulation and resulting transpiration/photosynthesis.
+\end{itemize}
+
+\hypertarget{static-functions}{%
+\subsection{Static functions}\label{static-functions}}
+
+Package \textbf{medfate} include a number of functions to examine properties of the plants conforming forests, summary functions at the stand level or vertical profiles of several physical properties:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{plant\_*}: Cohort-level information (species name, id, leaf area, height\ldots{}).
+\item
+  \texttt{species\_*}: Cohort-level attributes aggregated by species (e.g.~basal area).
+\item
+  \texttt{forest\_*}: Forest-level attributes (e.g.~basal area).
+\item
+  \texttt{vprofile\_*}: Vertical profiles (light, wind, fuel density, leaf area density).
+\end{itemize}
+
+Vegetation functioning and dynamics have strong, but complex, effects on fire hazard. On one hand, growth and death of organs and individuals changes the amount of standing live and dead fuels, as well as downed dead fuels. On the other, day-to-day changes in soil and plant water content changes the physical properties of fuel, notably fuel moisture content. Package \textbf{medfate} provides functions to estimate fuel properties and potential fire behaviour in forest inventory plots. Specifically, function \texttt{fuel\_stratification()} provides a stratification of the stand into understory and canopy strata; and \texttt{fuel\_FCCS()} calculates fuel characteristics. Function \texttt{fuel\_cohortFineFMC()} allows obtaining daily fuel moisture content estimates corresponding to the water status of plants, as returned by function \texttt{spwb()}. A fire behaviour model is implemented in function \texttt{fire\_FCCS()} to calculate the intensity of surface fire reaction and the rate of fire spread of surface fires assuming a steady-state fire. Fuel and fire behaviour functions allow obtaining the following:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Fuel characteristics by stratum.
+\item
+  Surface fire behavior (i.e.~reaction intensity, rate of spread, fireline intensity and flame length).
+\item
+  Crown fire behavior.
+\item
+  Fire potential ratings of surface fire behavior and crown fire behavior.
+\end{enumerate}
+
 \hypertarget{how-to-use-this-book}{%
 \section{How to use this book}\label{how-to-use-this-book}}
 
-This is a reference book for simulation and static models included in \textbf{medfate}. Hands-on user guides can be found as package vignettes included in its distribution. The manual is intended to reflect \textbf{version 0.8.2}. Our purpose is to continuously update this reference with package updates, so that users can know about the models they are using at the time when functions are run. As the manual will keep package updates, after model applications users should store the PDF version of the reference manual to be sure it matches the version the package reported in the application (e.g.~report or article).
+This is a \emph{reference book} for simulation and static models included in \textbf{medfate}. Hands-on user guides to run simulation functions and static functions can be found as \emph{package vignettes} within the package. Our aim is to continuously update the reference book along with package developments, so that users have detailed information about the models at the time functions are run. As the manual will follow package updates, after a given model application users should store a \textbf{PDF version} of the reference manual to be sure it matches the version the package reported in their application report or article.
+
+The following chapter describes the soil, vegetation and meteorology inputs that apply to all models. After that, the book presents each simulation model using a set of chapters. The first chapter introduces the model and the remaining describe the details of formulations by processes. Those process formulations that are common to more than one model (like hydrology) are described only once. Static models and their functions are presented grouped at the end of the book, before the appendices.
+
+In this book we use \texttt{code} or \texttt{variablename} to indicate R code or to refer to variable names within R, and \texttt{functionname()} to refer to a package function. When relevant, we will indicate the correspondence between mathematical symbols, their units and variable names within R.
 
 \hypertarget{model-inputs}{%
 \chapter{Model inputs}\label{model-inputs}}
@@ -190,12 +294,15 @@ This is a reference book for simulation and static models included in \textbf{me
 \hypertarget{soil-description}{%
 \section{Soil description}\label{soil-description}}
 
-Soil can be described using between 1 and 5 soil layers. For each soil layer \(s\) the following physical parameters are needed for each soil layer (see function \texttt{defaultSoilParams()}):
+\hypertarget{soil-physical-description}{%
+\subsection{Soil physical description}\label{soil-physical-description}}
+
+Soil texture (i.e.~percent of sand, silt and clay), bulk density and rock fragment content can differ between soil layers. Specifying a deep rocky layer is important because Mediterranean plants may extend their roots into cracks existing in the parent rock \citep{Ruffault2013}. In \textbf{medfate}, soils can be described using between 1 and 5 soil layers. For each soil layer \(s\) the following physical parameters are needed:
 
 \begin{itemize}
 \tightlist
 \item
-  \(Z_{s}\) {[}\texttt{widths}{]}: Soil layer width (\(d_s\), in mm).
+  \(d_{s}\) {[}\texttt{widths}{]}: Soil layer width (in mm).
 \item
   \(P_{clay,s}\) {[}\texttt{clay}{]}: Percent of clay.
 \item
@@ -203,17 +310,17 @@ Soil can be described using between 1 and 5 soil layers. For each soil layer \(s
 \item
   \(OM\) {[}\texttt{om}{]}: Percentage of organic mater per dry weight (can be missing).
 \item
-  \(BD_{s}\) {[}\texttt{bd}{]}: Bulk density (g/cm3) of each soil layer.
+  \(BD_{s}\) {[}\texttt{bd}{]}: Bulk density (in g/cm3) of each soil layer.
 \item
-  \(P_{rocks,s}\) {[}\texttt{rfc}{]}: Percentage of rock fragment content (\(P_{rocks,s}\)).
+  \(P_{rocks,s}\) {[}\texttt{rfc}{]}: Percentage of rock fragment content (\%).
 \end{itemize}
 
-Soil texture (i.e.~percent of sand, silt and clay), bulk density and rock fragment content can differ between soil layers. Specifying a deep rocky layer is important because Mediterranean plants may extend their roots into cracks existing in the parent rock \citep{Ruffault2013}. For those users lacking soil information, package \textbf{medfate} provides a function to get soil information from \href{https://soilgrids.org/}{SoilGrids.org} (see function \texttt{soilgridsParams()}).
+Input data should be arranged in a data frame with soil layers in rows and variables in columns (see function \texttt{defaultSoilParams()}). The package provides a function to get soil information from \href{https://soilgrids.org/}{SoilGrids.org} (see function \texttt{soilgridsParams()}) that can be helpful to those users lacking soil measurements corresponding to their target forest stands.
 
 \hypertarget{water-retention-curves}{%
 \subsection{Water retention curves}\label{water-retention-curves}}
 
-Water retention curve of a soil layer \(s\) is the relationship between the water content, \(\theta_s\) (in \(m^3 \cdot m^{-3}\) of soil, excluding rock fragments), and the soil water potential, \(\Psi_s\) (in MPa). This curve is characteristic for different types of soil, and is also called the soil moisture characteristic curve. Two water retention curve models are provided:
+Water retention curve of a soil layer \(s\) is the relationship between volumetric soil moisture, \(\theta_s\) (in \(m^3 \cdot m^{-3}\) of soil, excluding rock fragments), and the soil water potential, \(\Psi_s\) (in MPa). This curve is characteristic for different types of soil, and is also called the \emph{soil moisture characteristic curve}. Two water retention curve models are available in the package:
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -221,11 +328,11 @@ Water retention curve of a soil layer \(s\) is the relationship between the wate
 \item
   \emph{Saxton model}: In this model, volumetric soil moisture \(\theta(\Psi_s)\) corresponding to a given water potential \(\Psi\) (in MPa) below \(\Psi_{fc}\) is calculated using:
   \begin{equation}\theta(\Psi) = (\Psi/A)^{(1/B)}\end{equation}
-  where \(A\) and \(B\) depend on the texture and, if available, organic matter in the soil layer. If organic matter is available, \(A\) and \(B\) are calculated \(P_{clay}\), \(P_{sand}\) and \(OM\) following \citet{Saxton2006}. Otherwise, they are calculated from \(P_{clay}\) and \(P_{sand}\) as indicated in \citet{Saxton1986}. Volumetric changes between field capacity and saturation are estimated using a linear function.
+  where \(A\) and \(B\) depend on the texture and, if available, organic matter in the soil layer. If organic matter is available, \(A\) and \(B\) are calculated from \(P_{clay}\), \(P_{sand}\) and \(OM\) following \citet{Saxton2006}. Otherwise, they are calculated from \(P_{clay}\) and \(P_{sand}\) as indicated in \citet{Saxton1986}. Volumetric changes between field capacity and saturation are estimated using a linear function.
 \item
-  \emph{Van Genuchten model}: The well known van Genuchten {[}@-Genuchten1980{]} model is:
+  \emph{Van Genuchten model}: The well known van Genuchten \citeyearpar{Genuchten1980} model is:
   \begin{equation}\theta(\Psi) = \theta_{res}+\frac{\theta_{sat}-\theta_{res}}{\left[1+ (\alpha \cdot \Psi)^n \right]^{1-1/n}}\end{equation}
-  where \(\theta(\psi)\) is the water retention, \(\theta_{sat}\) is the saturated water content, \(\theta_{res}\) is the residual water content, \(\alpha\) is related to the inverse of the air entry pressure (and here has to be expressed in MPa\(^{-1}\)), and \(n\) is a measure of the pore-size distribution.
+  where \(\theta(\psi)\) is the water retention, \(\theta_{sat}\) is the saturated water content, \(\theta_{res}\) is the residual water content, \(\alpha\) is related to the inverse of the air entry pressure (and here has to be expressed in \(MPa^{-1}\)), and \(n\) is a measure of the pore-size distribution.
 \end{enumerate}
 
 \hypertarget{soil-initialization}{%
@@ -242,7 +349,7 @@ Soil initialization is needed to estimate soil hydrological parameters from its 
 \item
   \(\kappa_{soil}\) {[}\texttt{Ksoil}{]}: Extinction parameter to regulate the amount of water extracted from each soil layer during bare soil evaporation.
 \item
-  \(n_{s}\), \(\alpha_{s}\), \(\theta_{sat,s}\),\(\theta_{res,s}\) {[}\texttt{VG\_n}, \texttt{VG\_alpha}, \texttt{VG\_theta\_sat}, \texttt{VG\_theta\_res}{]}: Parameter of the Van Genuchten-Mualem equations.
+  \(n_{s}\), \(\alpha_{s}\), \(\theta_{sat,s}\),\(\theta_{res,s}\) {[}\texttt{VG\_n}, \texttt{VG\_alpha}, \texttt{VG\_theta\_sat}, \texttt{VG\_theta\_res}{]}: Parameters of the Van Genuchten-Mualem equations.
 \end{itemize}
 
 Parameters of the van Genuchten-Mualem model are estimated from the physical description of the soil using two kinds of pedotransfer functions (see help for \texttt{soil()}):
@@ -255,6 +362,8 @@ Parameters of the van Genuchten-Mualem model are estimated from the physical des
 \item
   Directly from the soil texture, organic matter and bulk density, using the pedotransfer functions in \citet{Toth2015}.
 \end{enumerate}
+
+Users can also edit the \texttt{soil} object manually to provide user-defined parameters of the Van Genuchten retention curve.
 
 \hypertarget{water-holding-capacity-and-water-table-depth}{%
 \subsection{Water holding capacity and water table depth}\label{water-holding-capacity-and-water-table-depth}}
@@ -273,6 +382,8 @@ WT = \sum_{s}{d_s \cdot \min\left[1,(\theta_{sat,s} - \theta(\Psi_s))/(\theta_{s
 \hypertarget{vegetation-description}{%
 \section{Vegetation description}\label{vegetation-description}}
 
+Representation of vegetation is not spatially-explicit in \textbf{medfate} (i.e.~trees or shrubs do not have explicit coordinates within forest stands). However, differences in tree or shrub size (i.e.~height) are explicitly taken into account. The taxonomic identity of plants is also considered, and parameter values need to be provided for each taxonomic entity (but the package could be used with functional groups). This representation is chosen so that package functions can be easily applied to forest plot data, for example from national forest inventories.
+
 Vegetation in the stand is described using a set of plant cohorts, in an object
 of class \texttt{spwbInput}. Each plant cohort \(i\) is primarly defined by its
 species identity (\(SP_i\); with R name {[}\texttt{SP}{]}).
@@ -280,27 +391,135 @@ species identity (\(SP_i\); with R name {[}\texttt{SP}{]}).
 \hypertarget{aboveground-parameters}{%
 \subsection{Aboveground parameters}\label{aboveground-parameters}}
 
-The aboveground structure if each cohort is defined using the following attributes:
+The aboveground structure if each cohort is defined using a set attributes defined in the following table, where columns \textbf{spwb} and \textbf{growth} indicate whether attributes are required by functions \texttt{spwb()} and \texttt{growth()}, respectively:
 
-\begin{itemize}
-\tightlist
-\item
-  \(H_i\) {[}\texttt{H}{]}: Total tree or shrub height (in cm).
-\item
-  \(CR_i\) {[}\texttt{CR}{]}: Crown ratio (i.e.~the ratio between crown length and
-  total height).
-\item
-  \(LAI^{live}_i\) {[}\texttt{LAI\_live}{]}: (Maximum) leaf area index (one-side
-  leaf area of plants in the cohort per surface area of the stand).
-\item
-  \(LAI^{dead}_i\) {[}\texttt{LAI\_dead}{]}: Dead leaf area index (one-side dead
-  leaf area of plants in the cohort per surface area of the stand).
-\item
-  \(LAI^{\phi}_i\) {[}\texttt{LAI\_expanded}{]}: Current expanded leaf area index (one-side expanded
-  leaf area of plants in the cohort per surface area of the stand).
-\end{itemize}
+\begin{longtable}[]{@{}llllll@{}}
+\toprule
+\begin{minipage}[b]{0.10\columnwidth}\raggedright
+Symbol\strut
+\end{minipage} & \begin{minipage}[b]{0.09\columnwidth}\raggedright
+Units\strut
+\end{minipage} & \begin{minipage}[b]{0.06\columnwidth}\raggedright
+R\strut
+\end{minipage} & \begin{minipage}[b]{0.43\columnwidth}\raggedright
+Description\strut
+\end{minipage} & \begin{minipage}[b]{0.07\columnwidth}\raggedright
+spwb\strut
+\end{minipage} & \begin{minipage}[b]{0.07\columnwidth}\raggedright
+growth\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.10\columnwidth}\raggedright
+\(H_i\)\strut
+\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+\(cm\)\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright
+\texttt{H}\strut
+\end{minipage} & \begin{minipage}[t]{0.43\columnwidth}\raggedright
+Total tree or shrub height\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+Y\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+Y\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.10\columnwidth}\raggedright
+\(CR_i\)\strut
+\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright
+\texttt{CR}\strut
+\end{minipage} & \begin{minipage}[t]{0.43\columnwidth}\raggedright
+Crown ratio (i.e.~ratio between crown length and total height)\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+Y\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+Y\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.10\columnwidth}\raggedright
+\(N\)\strut
+\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+\(ind · ha^{-1}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright
+\texttt{N}\strut
+\end{minipage} & \begin{minipage}[t]{0.43\columnwidth}\raggedright
+The density of tree individuals\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+N\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+Y\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.10\columnwidth}\raggedright
+\(DBH\)\strut
+\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+\(cm\)\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright
+\texttt{DBH}\strut
+\end{minipage} & \begin{minipage}[t]{0.43\columnwidth}\raggedright
+Tree diameter at breast height\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+N\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+Y\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.10\columnwidth}\raggedright
+\(Cover\)\strut
+\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+\%\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright
+\texttt{Cover}\strut
+\end{minipage} & \begin{minipage}[t]{0.43\columnwidth}\raggedright
+Shrub percent cover\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+N\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+Y\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.10\columnwidth}\raggedright
+\(LAI^{live}_i\)\strut
+\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+\(m^2 \cdot m^{-2}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright
+\texttt{LAI\_live}\strut
+\end{minipage} & \begin{minipage}[t]{0.43\columnwidth}\raggedright
+(Maximum) leaf area index\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+Y\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+Y\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.10\columnwidth}\raggedright
+\(LAI^{dead}_i\)\strut
+\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+\(m^2 \cdot m^{-2}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright
+\texttt{LAI\_dead}\strut
+\end{minipage} & \begin{minipage}[t]{0.43\columnwidth}\raggedright
+Dead leaf area index\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+Y\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+Y\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.10\columnwidth}\raggedright
+\(LAI^{\phi}_i\)\strut
+\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright
+\(m^2 \cdot m^{-2}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright
+\texttt{LAI\_expanded}\strut
+\end{minipage} & \begin{minipage}[t]{0.43\columnwidth}\raggedright
+Current expanded leaf area index\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+Y\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright
+Y\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
 
-All vegetation characteristics stay constant during water balance simulations, although the actual expanded leaf area and dead leaf area may vary is the species is winter deciduous.
+Height values refer to average height of individuals included in the cohort, and the same for crown ratio and \(DBH\). \(LAI\) variables refer to one-side leaf area of plants in the cohort per surface area of the stand. While plant height is relatively easy to measure, it is normally quite hard to estimate leaf area indices for stands and species. Package \textbf{medfate} provides some utilities to provide estimates crown ratio and \(LAI\) from forest inventory data (e.g.~heights, DBH and density for measured trees), using allometric relationships calibrated for catalonia (see chapter \ref{leafbiomass}).
+
+Vegetation characteristics stay constant during simulations using function \texttt{spwb()}, although the actual expanded leaf area and dead leaf area may vary is the species is winter deciduous. Function \texttt{growth()} can modify any of the vegetation attributes.
 
 \hypertarget{belowground-parameters}{%
 \subsection{Belowground parameters}\label{belowground-parameters}}
@@ -311,7 +530,7 @@ roots in each soil layer:
 \begin{itemize}
 \tightlist
 \item
-  \(v_{i,s}\) {[}\texttt{V}{]}: The proportion of fine roots in each soil layer \(s\).
+  \(v_{i,s}\) {[}\texttt{V{[}i,s{]}}{]}: The proportion of fine roots in each soil layer \(s\).
 \end{itemize}
 
 The rooting system of each cohort \(i\) (i.e.~the proportions \(v_{i,s}\)) can be defined assuming conic distribution of fine roots (see \texttt{root\_conicDistribution()}). In this case, only rooting depth parameter is needed to determine fine root proportions. Alternatively, one can adopt the linear dose response model (Collins and Bras, 2007; Schenk and Jackson, 2002):
@@ -325,6 +544,115 @@ where \(Y_i(z)\) is the cumulative fraction of fine root mass located between su
 \includegraphics{medfatebook_files/figure-latex/unnamed-chunk-3-1.pdf}
 \caption{\label{fig:unnamed-chunk-3}Examples of root density profile according to a conic distribution (left) and the linear dose response model (right).}
 \end{figure}
+
+\hypertarget{meteoinput}{%
+\section{Metereological input}\label{meteoinput}}
+
+Weather input data must include variables calculated at the \textbf{daily} scale. Data should be arranged in a data frame with days in rows and variables in columns. The following table indicates the symbols, units, definitions and the variable name in R.
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+\begin{minipage}[b]{0.11\columnwidth}\raggedright
+Symbol\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\raggedright
+Units\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\raggedright
+R param\strut
+\end{minipage} & \begin{minipage}[b]{0.45\columnwidth}\raggedright
+Description\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(T_{mean}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+\(^{\circ} \mathrm{C}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\texttt{MeanTemperature}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Mean temperature\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(T_{min}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+\(^{\circ} \mathrm{C}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\texttt{MinTemperature}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Minimum temperature\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(T_{max}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+\(^{\circ} \mathrm{C}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\texttt{MaxTemperature}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Maximum temperature\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(RH_{min}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+\%\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\texttt{MinRelativeHumidity}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Minimum relative humidity\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(RH_{max}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+\%\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\texttt{MaxRelativeHumidity}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Maximum relative humidity\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(P\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+\(L \cdot m^{-2} = mm\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\texttt{Precipitation}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Precipitation\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(PET\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+\(L \cdot m^{-2} = mm\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\texttt{PET}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Potential evapotranspiration, preferably calculated using Penman's equation\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(Rad\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+\(MJ \cdot m^{-2}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\texttt{Radiation}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Solar radiation after accounting for clouds\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(u\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+\(m \cdot s^{-1}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\texttt{WindSpeed}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Wind speed\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+Not all models require all weather variables, this will be indicated in the corresponding model chapters. For convenience, we recommend meteorological input to be generated using package \textbf{meteoland} \citep{DeCaceres2018}.
+
+\hypertarget{control-parameters}{%
+\section{Control parameters}\label{control-parameters}}
+
+Control parameters are a list of parameter values, initialized using function \texttt{defaultControl()}, that the user can modify to change the general behavior of model functions. Not all control parameters are relevant to all model functions
 
 \hypertarget{part-basic-water-balance-modelling}{%
 \part{Basic water balance modelling}\label{part-basic-water-balance-modelling}}
@@ -382,13 +710,15 @@ Every day water balance is perfomed as follows. The model first updates leaf are
 \begin{itemize}
 \tightlist
 \item
-  If snow dynamics are included, increase snow pack from snow precipitation (\(Ps\)) and decreases it from snow melting (\(Sm\)) (section \ref{snowpack})
+  Update leaf area values according to the phenology of species (section \ref{leafphenology}).
+\item
+  If snow dynamics are included, increase snow pack from snow precipitation (\(Ps\)) and decreases it from snow melting (\(Sm\)) (section \ref{snowpack}).
 \item
   Increase soil moisture due to rainfall (\(Pr\)), surface runon (\(Ro\)) and snow melting (\(Sm\)), after accounting for interception loss (\(In\)), surface runoff (\(Ru\)) and deep drainage (\(Dd\)) (sections \ref{interception} and \ref{runoff})
 \item
-  Decrease water content due to bare soil evaporation (\(Es\)).
+  Decrease water content due to bare soil evaporation (\(Es\)) (section \ref{soilevaporation}).
 \item
-  Determine transpiration, photosynthesis and drought stress for each plant cohort (section \ref{transpirationgranier}) and decrease water content due to plant transpiration (\(Tr\)).
+  Determine transpiration, photosynthesis and drought stress for each plant cohort and decrease water content due to plant transpiration (\(Tr\)) (chapter \ref{transpirationgranier}).
 \end{itemize}
 
 \hypertarget{model-input}{%
@@ -397,26 +727,12 @@ Every day water balance is perfomed as follows. The model first updates leaf are
 \hypertarget{metereological-input}{%
 \subsection{Metereological input}\label{metereological-input}}
 
-Weather input data must include variables calculated at the \textbf{daily} scale.
+The minimum weather variables required to run the model are mean temperature (\(T_{mean}\)), precipitation (\(P\)) and potential evapotranspiration (\(PET\)). Solar radiation (\(Rad\)) is required if snow pack dynamics have to be simulated. Optionally, the user may also specify values of wind speed (\(u\)) that are used to control leaf fall in autumn. Definitions and units of these variables are given in section \ref{meteoinput}.
 
-\begin{itemize}
-\tightlist
-\item
-  \(T_{mean}\) {[}\texttt{MeanTemperature}{]}: Mean daily temperature (in \(^{\circ} \mathrm{C}\)).
-\item
-  \(Rad\) {[}\texttt{Radiation}{]}: Solar radiation, after accounting for clouds (in \(MJ \cdot m^{-2}\)), only necessary if snow pack dynamics are simulated (i.e., if \texttt{snowpack = TRUE}).
-\item
-  \(P\) {[}\texttt{Precipitation}{]}: Daily precipitation (in \(L \cdot m^{-2}\) = mm of water).
-\item
-  \(PET\) {[}\texttt{PET}{]}: Daily potential evapotranspiration (in \(L \cdot m^{-2}\) = mm of water), preferably calculated using Penman's equation.
-\end{itemize}
+\hypertarget{control-parameters-1}{%
+\subsection{Control parameters}\label{control-parameters-1}}
 
-Optionally, the user may also specify values of wind speed (\(u\), in m·s\(^{-1}\), \texttt{WindSpeed}) that are used to control leaf fall in autumn. We recommend meteorological input to be generated using package \textbf{meteoland} \citep{DeCaceres2018}.
-
-\hypertarget{control-parameters}{%
-\subsection{Control parameters}\label{control-parameters}}
-
-Control parameters are a list of parameter values, initialized using function \texttt{defaultControl()}, that the user can modify to change the general behavior of the model. The control values relevant for the simple water balance model are:
+The control values relevant for the simple water balance model are:
 
 \begin{itemize}
 \tightlist
@@ -425,13 +741,15 @@ Control parameters are a list of parameter values, initialized using function \t
 \item
   \texttt{soilFunctions\ {[}=\ "SX"{]}}: Water retention curve model, either ``SX'' (for Saxton) or ``VG'' (for Van Genuchten).
 \item
+  \texttt{leafPhenology\ {[}=\ TRUE{]}}: Whether leaf phenology is simulated.
+\item
   \texttt{snowpack\ {[}=\ TRUE{]}}: Whether dynamics of snow pack are included.
 \item
   \texttt{drainage\ {[}=\ TRUE{]}}: Whether water exceeding the field capacity of the bottom layer is lost by deep drainage into a non-reachable compartment.
 \item
   \texttt{transpirationMode\ {[}=\ "Granier"{]}}: Transpiration model, in this case ``Granier''.
 \item
-  \texttt{defaultWindSpeed\ {[}=\ 5{]}}: Default value for wind speed (in \(m \cdot s^{-1}\)) when this is missing (only used for leaf fall).
+  \texttt{defaultWindSpeed\ {[}=\ 2.5{]}}: Default value for wind speed (in \(m \cdot s^{-1}\)) when this is missing (only used for leaf fall).
 \item
   \texttt{cavitationRefill\ {[}=\ TRUE{]}}: If \texttt{FALSE} the model operates in a irreversible cavitation mode.
 \end{itemize}
@@ -452,123 +770,18 @@ Function \texttt{spwb} returns a list object whose elements are data tables. Eac
 \item
   \texttt{PlantTranspiration}: Daily transpiration (in mm) for each plant cohort.
 \item
-  \texttt{PlantPhotosynthesis}: Daily net photosynthesis (in g C·m-2) for each plant cohort.
+  \texttt{PlantPhotosynthesis}: Daily net photosynthesis (in \(g C \cdot m^{-2}\)) for each plant cohort.
 \item
   \texttt{PlantPsi}: Daily water potential of each plant (in MPa).
 \item
   \texttt{PlantStress}: Daily stress level suffered by each plant cohort (relative whole-plant conductance).
 \end{itemize}
 
-\hypertarget{hydrology}{%
-\chapter{Hydrology}\label{hydrology}}
-
-\hypertarget{snowpack}{%
-\section{Snow pack dynamics}\label{snowpack}}
-
-Precipitation is considered be snow when \(T_{mean}<0\). Interception of snow by the canopy is neglected, and all snow is assumed to accumulate in a single storage compartment \(S_{snow}\) over the soil (i.e.~canopy snow storage capacity is neglected). A very simple snow submodel is used for snow pack dynamics (accumulation and melt), taken from \citet{Kergoat1998}. When mean air temperature is above 0 Celsius \(T_{mean}>0\), a simple energy budget relates snow melt, \(Sm\) (mm), to air temperature and soil-level radiation (see function \texttt{hydrology\_snowMelt}):
-\begin{equation}
-Sm = \frac{Rad\cdot L^{SWR}_{ground}\cdot (1-\alpha_{ice}) + \tau_{day} \cdot T_{mean} \cdot \rho \cdot C_p/r_{s}}{\lambda_{ice}}
-\end{equation}
-where \(Rad\) is solar radiation (MJ·m\(^{-2}\)), \(L^{SWR}_{ground}\) is the fraction of (short-wave) radiation reaching the ground, \(\alpha_{ice} = 0.9\) is the albedo of snow, \(\tau_{day} = 86400\) is the day duration in s, \(\rho\) is the air density (depending on temperature and elevation), \(C_{p} = 1013.86 \cdot 10^{-6}\) MJ·kg\(^{-1}\)·C\(^{-1}\) is the specific heat capacity of the air and \(r_{s} = 100\) s·m\(^{-1}\) is the snow aerodynamic resistance and \(\lambda_{ice} = 0.33355\)MJ·kg is the (latent) heat of fusion of snow.
-
-\hypertarget{interception}{%
-\section{Rainfall interception loss}\label{interception}}
-
-Interception loss is only modelled for water precipitation (i.e.~snow interception is not modelled). Rainfall interception loss, \(In\), is estimated using the \citet{Gash1995} analytical interception model for sparse canopies, where rain is assumed to fall in a single event during the day. First, the amount of rainfall needed to saturate the canopy is calculated:
-\begin{equation}
-P_G = - \frac{S/C}{(E/R)} \cdot \ln(1-(E/R))
-\end{equation}
-where \(S\) is the canopy water storage capacity (in mm) -- i.e.~the minimum amount
-of water needed to saturate the canopy --, \(C\) is the canopy cover and \((E/R)\) is
-the ratio of evaporation rate to rainfall rate during the rainfall event.
-Simplifying assumptions are made to determine \((E/R)\). Values of the Evaporation-to-rainfall ratio are calculated from daily potential evapotranspiration and rainfall, while accounting for seasonal variation in rainfall intensity (mm/h). Minimum values for rainfall intensity are assumed for convective storms (5.6 mm/h) and synoptic storms (1.5 mm/h) from \citet{Miralles2010}. Synoptic storms are assumed between December and June, and convective storms are assumed for the remaining months, as typical in the Mediterranean Basin.
-
-The amount of water evaporated from interception, \(I\) (mm), is calculated as:
-\begin{eqnarray}
-In = C\cdot P_G+C\cdot(E/R)\cdot(P-P_G) \: {if}\: P > P_G \\
-In = C\cdot P\: {if}\: P \leq P_G
-\end{eqnarray}
-where \(P\) is the daily gross precipitation (in mm). Net rainfall, \(Pr_{net}\), is
-calculated as the difference between gross rainfall and interception loss.
-Although interception models are normally applied to single-canopy stands, we
-apply the sparse Gash model to the whole stand (including shrubs). Moreover, in
-our implementation stem interception is lumped with canopy interception, so that
-\(S\) represents both. Following \citet{Watanabe1996} we estimate \(S\), the
-canopy water storage capacity, from adjusted LAI values:
-\begin{equation}
-S=\sum_{i}{s_{water,i}\cdot LAI_{i}^{\phi}}
-\end{equation}
-where \(s_{water,i}\) is the depth of water that can be retained by leaves and
-trunks of a species \(i\) per unit of leaf area index (mm·LAI\(^{-1}\)). To estimate
-the stand cover, \(C\), we use the complement of the percentage of PAR that reaches
-the ground, i.e. \(C = 1 - L^{PAR}_{ground}\) \citep{Deguchi2006}. Fig. 1 below
-shows examples of relative throughfall, calculated according to the interception
-model, under different situations (see function \texttt{hydrology\_rainInterception()}).
-
-\begin{figure}
-\centering
-\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-4-1.pdf}
-\caption{\label{fig:unnamed-chunk-4}Examples of canopy interception with different S (canopy water storage capacity), E/R (ratio between evaporation and rainfall rates) and p (throughfall coefficient; p = 1 - C)}
-\end{figure}
-
-\hypertarget{runoff}{%
-\section{Runoff, infiltration and percolation}\label{runoff}}
-
-The water that reaches the soil is the sum of net rainfall (\(Pr_{net}\)), runon (\(Ro\)) and melted snow (\(Sm\)). The amount of water infiltrating into the soil is \(Pr_{net} + Sm + Ro - Ru\), where \(Ru\) is the water lost by surface runoff (see function \texttt{hydrology\_infiltrationAmount}). Surface runoff (in mm), is calculated using the USDA SCS curve number method, as in \citet{Boughton1989}:
-\begin{equation}
-Ru=\frac{(Pr_{net} + Ro + Sm - 0.2 \cdot V_{soil})^2}{(Pr_{net} + Ro + Sm - 0.8 \cdot V_{soil})}
-\end{equation}
-where \(V_{soil}\) (in mm) is the overall soil water retention capacity. Following \citet{Granier1999}, part of the water reaching one soil layer percolates quickly through the macropores. The amount of water reaching each layer through macropores is modelled using an extinction function (see function \texttt{hydrology\_infiltrationRepartition}). The remaining water is retained by the micropores refilling the current soil layer. When this soil layer reaches its field capacity the excess of water also percolates to the soil layer below.
-
-\begin{figure}
-\centering
-\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-5-1.pdf}
-\caption{\label{fig:unnamed-chunk-5}Examples of infiltration/runoff calculation for different values of net rainfall and overall retention capacity, \(V_{soil}\), calculated from different soil depths (topsoil+subsoil) and assuming that soil texture is 15\% clay and 25\% sand. Rock fragment content was 25\% and 40\% for the topsoil and subsoil, respectively.}
-\end{figure}
-
-If \texttt{drainage\ =\ TRUE}, the water percolating from the lowest layer is considered deep drainage, \(Dd\), and soil layers are never above field capacity. If \texttt{drainage\ =\ FALSE}, the excess of water in the lowest soil layer is not lost via drainage, so that this layer (and those above) can be filled up to saturation. This additional filling is done starting from below, and when a given layer reaches saturation, the model adds the remaining water to the layer above. If all layers are filled to saturation, the remaining water is assumed to be infiltration excess and is added to the surface runoff.
-
-\hypertarget{bare-soil-evaporation}{%
-\section{Bare soil evaporation}\label{bare-soil-evaporation}}
-
-Evaporation from the soil surface is the last component of the soil water balance to be calculated. There is a difference in the way that soil evaporative demand is calculated depending on the transpiration mode. Potential evaporation from the soil (\(PE_{soil}\); in \(mm\cdot day^{-1}\)) is defined as the product between \(PET\) and \(L^{SWR}_{ground}\), the proportion of SWR absorbed by the ground:
-\begin{equation}
-PE_{soil} =  PET\cdot L^{SWR}_{ground}
-\end{equation}
-
-Actual evaporation from the soil surface is modeled as in \citet{Mouillot2001}, who
-followed \citet{Ritchie1972}. First, the model determines the time needed to evaporate
-the current water deficit (difference between field capacity and current moisture)
-in the surface soil layer:
-\begin{equation}
-t = \left \{ \frac{V_1\cdot(1- W_1)}{\gamma_{soil}} \right \}
-\end{equation}
-where \(\gamma_{soil}\) is the maximum daily evaporation (mm·day\(^{-1}\)). The
-calculated time is used to determine the `supplied' evaporation, \(SE_{soil}\):
-\begin{equation}
-SE_{soil} = \gamma_{soil} \cdot (\sqrt{t+1}-\sqrt{1})
-\end{equation}
-The amount of water evaporated from the soil, \(E_{soil}\), is then calculated as
-the minimum between supply and demand \citep{Federer1982}, the latter being the product
-of PET and the proportion of light that reaches the ground (see function \texttt{hydrology\_soilEvaporationAmount}):
-
-\begin{equation}
-E_{soil} = \min(PE_{soil}, SE_{soil})
-\end{equation}
-
-Finally, \(E_{soil}\) is distributed along the soil profile according to an exponential decay function with an extinction coefficient \(\kappa_{soil}\) \citep{Mouillot2001}.
-
-\begin{figure}
-\centering
-\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-6-1.pdf}
-\caption{\label{fig:unnamed-chunk-6}Cumulative bare soil evaporation for different values of maximum evaporation rate and extinction coefficient. Three soil layers (0 -- 30 cm; 30 -- 150 cm; 150 -- 400 cm) are initialized at field capacity (\(V_1 = 50 mm\); \(V_2 = 201 mm\); \(V_3 = 35 mm\)). \(PE_{soil}\) was assumed not to be limiting. When the extinction coefficient is smaller a higher proportion of the evaporated water is removed from the subsoil and less from the topsoil. This causes more water being available to calculate t in the next step.}
-\end{figure}
-
 \hypertarget{leaf-phenology-and-light-extinction}{%
 \chapter{Leaf phenology and light extinction}\label{leaf-phenology-and-light-extinction}}
 
-\hypertarget{leaf-phenology-and-leaf-fall}{%
-\section{Leaf phenology and leaf fall}\label{leaf-phenology-and-leaf-fall}}
+\hypertarget{leafphenology}{%
+\section{Leaf phenology and leaf fall}\label{leafphenology}}
 
 Given a base temperature (\(T_{base} = 5^{\circ} \mathrm{C}\)), the growth degree days (\(GDD\)) are zero for all those days where mean temperature \(T_{mean}\) is below \(T_{base}\) and start increasing when temperatures become warmer than this threshold. In other words, the \(GDD\) function accumulates \(\max(0.0, T_{mean} - T_{base})\) for all days previous to the current one. At the end of a year the cummulative value is set again to zero. Plant species can have either evergreen or winter-deciduous phenology. Evergreen plants maintain constant leaf area over the year, whereas in deciduous plants leaf-phenological status is updated daily, represented by \(\phi_i\), the fraction of maximum leaf area. Leaf area index (LAI) values of deciduous plants are adjusted for leaf phenology following \citep{Prentice1993, Sitch2003}:
 
@@ -654,6 +867,111 @@ ground is simply:
 \begin{equation}
 L^{SWR}_{ground} = 1 - \sum_{j}^{n}{f_j}
 \end{equation}
+
+\hypertarget{hydrology}{%
+\chapter{Hydrology}\label{hydrology}}
+
+\hypertarget{snowpack}{%
+\section{Snow pack dynamics}\label{snowpack}}
+
+Precipitation is considered be snow when \(T_{mean}<0\). Interception of snow by the canopy is neglected, and all snow is assumed to accumulate in a single storage compartment \(S_{snow}\) over the soil (i.e.~canopy snow storage capacity is neglected). A very simple snow submodel is used for snow pack dynamics (accumulation and melt), taken from \citet{Kergoat1998}. When mean air temperature is above 0 Celsius \(T_{mean}>0\), a simple energy budget relates snow melt, \(Sm\) (mm), to air temperature and soil-level radiation (see function \texttt{hydrology\_snowMelt}):
+\begin{equation}
+Sm = \frac{Rad\cdot L^{SWR}_{ground}\cdot (1-\alpha_{ice}) + \tau_{day} \cdot T_{mean} \cdot \rho \cdot C_p/r_{s}}{\lambda_{ice}}
+\end{equation}
+where \(Rad\) is solar radiation (MJ·m\(^{-2}\)), \(L^{SWR}_{ground}\) is the fraction of (short-wave) radiation reaching the ground, \(\alpha_{ice} = 0.9\) is the albedo of snow, \(\tau_{day} = 86400\) is the day duration in s, \(\rho\) is the air density (depending on temperature and elevation), \(C_{p} = 1013.86 \cdot 10^{-6}\) MJ·kg\(^{-1}\)·C\(^{-1}\) is the specific heat capacity of the air and \(r_{s} = 100\) s·m\(^{-1}\) is the snow aerodynamic resistance and \(\lambda_{ice} = 0.33355\)MJ·kg is the (latent) heat of fusion of snow.
+
+\hypertarget{interception}{%
+\section{Rainfall interception loss}\label{interception}}
+
+Interception loss is only modelled for water precipitation (i.e.~snow interception is not modelled). Rainfall interception loss, \(In\), is estimated using the \citet{Gash1995} analytical interception model for sparse canopies, where rain is assumed to fall in a single event during the day. First, the amount of rainfall needed to saturate the canopy is calculated:
+\begin{equation}
+P_G = - \frac{S/C}{(E/R)} \cdot \ln(1-(E/R))
+\end{equation}
+where \(S\) is the canopy water storage capacity (in mm) -- i.e.~the minimum amount
+of water needed to saturate the canopy --, \(C\) is the canopy cover and \((E/R)\) is
+the ratio of evaporation rate to rainfall rate during the rainfall event.
+Simplifying assumptions are made to determine \((E/R)\). Values of the Evaporation-to-rainfall ratio are calculated from daily potential evapotranspiration and rainfall, while accounting for seasonal variation in rainfall intensity (mm/h). Minimum values for rainfall intensity are assumed for convective storms (5.6 mm/h) and synoptic storms (1.5 mm/h) from \citet{Miralles2010}. Synoptic storms are assumed between December and June, and convective storms are assumed for the remaining months, as typical in the Mediterranean Basin.
+
+The amount of water evaporated from interception, \(I\) (mm), is calculated as:
+\begin{eqnarray}
+In = C\cdot P_G+C\cdot(E/R)\cdot(P-P_G) \: {if}\: P > P_G \\
+In = C\cdot P\: {if}\: P \leq P_G
+\end{eqnarray}
+where \(P\) is the daily gross precipitation (in mm). Net rainfall, \(Pr_{net}\), is
+calculated as the difference between gross rainfall and interception loss.
+Although interception models are normally applied to single-canopy stands, we
+apply the sparse Gash model to the whole stand (including shrubs). Moreover, in
+our implementation stem interception is lumped with canopy interception, so that
+\(S\) represents both. Following \citet{Watanabe1996} we estimate \(S\), the
+canopy water storage capacity, from adjusted LAI values:
+\begin{equation}
+S=\sum_{i}{s_{water,i}\cdot LAI_{i}^{\phi}}
+\end{equation}
+where \(s_{water,i}\) is the depth of water that can be retained by leaves and
+trunks of a species \(i\) per unit of leaf area index (mm·LAI\(^{-1}\)). To estimate
+the stand cover, \(C\), we use the complement of the percentage of PAR that reaches
+the ground, i.e. \(C = 1 - L^{PAR}_{ground}\) \citep{Deguchi2006}. Fig. 1 below
+shows examples of relative throughfall, calculated according to the interception
+model, under different situations (see function \texttt{hydrology\_rainInterception()}).
+
+\begin{figure}
+\centering
+\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-4-1.pdf}
+\caption{\label{fig:unnamed-chunk-4}Examples of canopy interception with different S (canopy water storage capacity), E/R (ratio between evaporation and rainfall rates) and p (throughfall coefficient; p = 1 - C)}
+\end{figure}
+
+\hypertarget{runoff}{%
+\section{Runoff, infiltration and percolation}\label{runoff}}
+
+The water that reaches the soil is the sum of net rainfall (\(Pr_{net}\)), runon (\(Ro\)) and melted snow (\(Sm\)). The amount of water infiltrating into the soil is \(Pr_{net} + Sm + Ro - Ru\), where \(Ru\) is the water lost by surface runoff (see function \texttt{hydrology\_infiltrationAmount}). Surface runoff (in mm), is calculated using the USDA SCS curve number method, as in \citet{Boughton1989}:
+\begin{equation}
+Ru=\frac{(Pr_{net} + Ro + Sm - 0.2 \cdot V_{soil})^2}{(Pr_{net} + Ro + Sm - 0.8 \cdot V_{soil})}
+\end{equation}
+where \(V_{soil}\) (in mm) is the overall soil water retention capacity. Following \citet{Granier1999}, part of the water reaching one soil layer percolates quickly through the macropores. The amount of water reaching each layer through macropores is modelled using an extinction function (see function \texttt{hydrology\_infiltrationRepartition}). The remaining water is retained by the micropores refilling the current soil layer. When this soil layer reaches its field capacity the excess of water also percolates to the soil layer below.
+
+\begin{figure}
+\centering
+\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-5-1.pdf}
+\caption{\label{fig:unnamed-chunk-5}Examples of infiltration/runoff calculation for different values of net rainfall and overall retention capacity, \(V_{soil}\), calculated from different soil depths (topsoil+subsoil) and assuming that soil texture is 15\% clay and 25\% sand. Rock fragment content was 25\% and 40\% for the topsoil and subsoil, respectively.}
+\end{figure}
+
+If \texttt{drainage\ =\ TRUE}, the water percolating from the lowest layer is considered deep drainage, \(Dd\), and soil layers are never above field capacity. If \texttt{drainage\ =\ FALSE}, the excess of water in the lowest soil layer is not lost via drainage, so that this layer (and those above) can be filled up to saturation. This additional filling is done starting from below, and when a given layer reaches saturation, the model adds the remaining water to the layer above. If all layers are filled to saturation, the remaining water is assumed to be infiltration excess and is added to the surface runoff.
+
+\hypertarget{soilevaporation}{%
+\section{Bare soil evaporation}\label{soilevaporation}}
+
+Evaporation from the soil surface is the last component of the soil water balance to be calculated. There is a difference in the way that soil evaporative demand is calculated depending on the transpiration mode. Potential evaporation from the soil (\(PE_{soil}\); in \(mm\cdot day^{-1}\)) is defined as the product between \(PET\) and \(L^{SWR}_{ground}\), the proportion of SWR absorbed by the ground:
+\begin{equation}
+PE_{soil} =  PET\cdot L^{SWR}_{ground}
+\end{equation}
+
+Actual evaporation from the soil surface is modeled as in \citet{Mouillot2001}, who
+followed \citet{Ritchie1972}. First, the model determines the time needed to evaporate
+the current water deficit (difference between field capacity and current moisture)
+in the surface soil layer:
+\begin{equation}
+t = \left \{ \frac{V_1\cdot(1- W_1)}{\gamma_{soil}} \right \}
+\end{equation}
+where \(\gamma_{soil}\) is the maximum daily evaporation (mm·day\(^{-1}\)). The
+calculated time is used to determine the `supplied' evaporation, \(SE_{soil}\):
+\begin{equation}
+SE_{soil} = \gamma_{soil} \cdot (\sqrt{t+1}-\sqrt{1})
+\end{equation}
+The amount of water evaporated from the soil, \(E_{soil}\), is then calculated as
+the minimum between supply and demand \citep{Federer1982}, the latter being the product
+of PET and the proportion of light that reaches the ground (see function \texttt{hydrology\_soilEvaporationAmount}):
+
+\begin{equation}
+E_{soil} = \min(PE_{soil}, SE_{soil})
+\end{equation}
+
+Finally, \(E_{soil}\) is distributed along the soil profile according to an exponential decay function with an extinction coefficient \(\kappa_{soil}\) \citep{Mouillot2001}.
+
+\begin{figure}
+\centering
+\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-6-1.pdf}
+\caption{\label{fig:unnamed-chunk-6}Cumulative bare soil evaporation for different values of maximum evaporation rate and extinction coefficient. Three soil layers (0 -- 30 cm; 30 -- 150 cm; 150 -- 400 cm) are initialized at field capacity (\(V_1 = 50 mm\); \(V_2 = 201 mm\); \(V_3 = 35 mm\)). \(PE_{soil}\) was assumed not to be limiting. When the extinction coefficient is smaller a higher proportion of the evaporated water is removed from the subsoil and less from the topsoil. This causes more water being available to calculate t in the next step.}
+\end{figure}
 
 \hypertarget{transpirationgranier}{%
 \chapter{Transpiration and photosynthesis under Granier's model}\label{transpirationgranier}}
@@ -890,35 +1208,15 @@ Every day the model performs the following actions:
 \hypertarget{model-input-1}{%
 \section{Model input}\label{model-input-1}}
 
-\hypertarget{metereological-input-1}{%
-\subsection{Metereological input}\label{metereological-input-1}}
+\hypertarget{meteorological-input}{%
+\subsection{Meteorological input}\label{meteorological-input}}
 
-Weather input data must include variables calculated at the \textbf{daily} scale.
+The minimum weather variables required to run the model are min/max temperatures (\(T_{min}\) and \(T_{max}\)), min/max relative humidity (\(RH_{min}\) and \(RH_{max}\)), precipitation (\(P\)) and solar radiation (\(Rad\)). Wind speed (\(u\)) is also needed for the model, but the user ma introduce missing values if not available (then, a default value will be used). Definitions and units of these variables are given in section \ref{meteoinput}.
 
-\begin{itemize}
-\tightlist
-\item
-  \(T_{min}\) {[}\texttt{MinTemperature}{]}: Minimum temperature (in \(^{\circ} \mathrm{C}\)).
-\item
-  \(T_{max}\) {[}\texttt{MaxTemperature}{]}: Maximum temperature (in \(^{\circ} \mathrm{C}\)).
-\item
-  \(RH_{min}\) {[}\texttt{MinRelativeHumidity}{]}: Minimum relative humidity (in percent).
-\item
-  \(RH_{max}\) {[}\texttt{MaxRelativeHumidity}{]}: Maximum relative humidity (in percent).
-\item
-  \(P\) {[}\texttt{Precipitation}{]}: Precipitation (in L·m\(^{-2}\) = mm of water).
-\item
-  \(Rad\) {[}\texttt{Radiation}{]}: Solar radiation after accounting for clouds (in MJ·m\(^{-2}\)).
-\item
-  \(u\) {[}\texttt{WindSpeed}{]}: Wind speed (in m·s\(^{-1}\)).
-\end{itemize}
+\hypertarget{control-parameters-2}{%
+\subsection{Control parameters}\label{control-parameters-2}}
 
-We recommend meteorological input to be generated using package \textbf{meteoland} \citep{DeCaceres2018}.
-
-\hypertarget{control-parameters-1}{%
-\subsection{Control parameters}\label{control-parameters-1}}
-
-Control parameters are a list of parameter values, initialized using function \texttt{defaultControl()}, that the user can modify to change the general behavior of the model. The control values relevant for the advanced water balance model are:
+The control values relevant for the advanced water balance model are:
 
 \begin{itemize}
 \tightlist
@@ -927,13 +1225,15 @@ Control parameters are a list of parameter values, initialized using function \t
 \item
   \texttt{soilFunctions\ {[}=\ "SX"{]}}: Water retention curve model, either ``SX'' (for Saxton) or ``VG'' (for Van Genuchten).
 \item
+  \texttt{leafPhenology\ {[}=\ TRUE{]}}: Whether leaf phenology is simulated.
+\item
   \texttt{snowpack\ {[}=\ TRUE{]}}: Whether dynamics of snow pack are included.
 \item
   \texttt{drainage\ {[}=\ TRUE{]}}: Whether water exceeding the field capacity of the bottom layer is lost by deep drainage into a non-reachable compartment.
 \item
   \texttt{transpirationMode\ {[}=\ "Granier"{]}}: Transpiration model, in this case should be ``Sperry''.
 \item
-  \texttt{defaultWindSpeed\ {[}=\ 5{]}}: Default value for wind speed (in \(m \cdot s^{-1}\)) when this is missing (only used for leaf fall).
+  \texttt{defaultWindSpeed\ {[}=\ 2.5{]}}: Default value for wind speed (in \(m \cdot s^{-1}\)) when this is missing (only used for leaf fall).
 \item
   \texttt{hydraulicCostFunction\ {[}=\ 1{]}}: Variant of the hydraulic cost function used in the stomatal regulation model of \citet{Sperry2016}. Values accepted are 1 (original cost function based on the derivative of supply function), 2 (leaf vulnerability curve).
 \item
@@ -1194,8 +1494,8 @@ G_k &=& \lambda_{soil,k} \cdot \frac{\delta T_{soil,k}}{\delta z}
 \end{eqnarray}
 where \(\lambda_{soil,k}\) is the thermal conductivity of layer \(k\), depending on soil moisture and texture (see function \texttt{soil\_thermalconductivity}). The gradient in the bottom layer is calculated assuming a temperature of the earth (at 10 m) of 15.5 Celsius.
 
-\hypertarget{bare-soil-evaporation-1}{%
-\section{Bare soil evaporation}\label{bare-soil-evaporation-1}}
+\hypertarget{bare-soil-evaporation}{%
+\section{Bare soil evaporation}\label{bare-soil-evaporation}}
 
 Evaporation from the soil surface is the last component of the soil water balance to be calculated. Soil evaporative demand, i.e.~potential evaporation from the soil (\(PE_{soil}\); in \(mm\cdot day^{-1}\)), is calculated using the Penman-Monteith combination equation:
 \begin{equation}
@@ -2254,8 +2554,8 @@ Another set of parameters is needed to transform changes in sapwood area and lea
   \(a_{cw}\), \(b_{cw}\) {[}\texttt{Acw}, \texttt{Bcw}{]}: Regression coefficients used to calculate the crown width of trees (as intermediary step to obtain the crown ratio).
 \end{itemize}
 
-\hypertarget{metereological-input-2}{%
-\subsection{Metereological input}\label{metereological-input-2}}
+\hypertarget{metereological-input-1}{%
+\subsection{Metereological input}\label{metereological-input-1}}
 
 Weather input data must include variables calculated at the \textbf{daily} scale. The variables required by function \texttt{growth()} depend on the transpiration mode, similarly to function \texttt{spwb()}. We recommend meteorological input to be generated using package \textbf{meteoland} \citep{DeCaceres2018}.
 
@@ -2521,16 +2821,154 @@ Note that crown ratio for shrubs is assumed constant in the model. Like for tree
 \hypertarget{part-static-modules}{%
 \part{Static modules}\label{part-static-modules}}
 
-\hypertarget{fuel-characteristics-and-fire-behaviour}{%
-\chapter{Fuel characteristics and fire behaviour}\label{fuel-characteristics-and-fire-behaviour}}
-
-\hypertarget{purpose}{%
-\section{Purpose}\label{purpose}}
-
-Functions \texttt{fuel\_FCCS()} and \texttt{fire\_FCCS()} allow calculating potential fire behaviour for forest inventory plots. Formulation of fuel characteristics and fire behaviour is an adaptation of the Fuel Characteristics Classification System \citep[FCCS;][]{Prichard2013}. In FCCS, fuelbed is divided into six strata, including canopy, shrub, herbaceous vegetation, dead woody materials, leaf litter and ground fuels. All except ground fuels are considered here. The intensity of burning depends on several factors, including topography, wind conditions, fuel structure and its moisture content, which is determined from antecedent and current meteorological conditions. A modification of the Rothermel's \citeyearpar{Rothermel1972} model is used to calculate the intensity of surface fire reaction (in \(kW/m^2\)) and the rate of fire spread (in \(m/min\)) of surface fires assuming a steady-state fire. Both quantities are dependent on fuel characteristics, windspeed and direction, and topographic slope and aspect. The model returns the following results: (1) Fuel characteristics by stratum; (2) Surface fire behavior (i.e.~reaction intensity, rate of spread, fireline intensity and flame length); (3) Crown fire behavior; (4) Fire potential ratings of surface fire behavior and crown fire behavior.
+\hypertarget{leafbiomass}{%
+\chapter{Leaf biomass, leaf area and vertical profiles}\label{leafbiomass}}
 
 \hypertarget{input-data}{%
 \section{Input data}\label{input-data}}
+
+\hypertarget{forest-inventory-data}{%
+\subsection{Forest inventory data}\label{forest-inventory-data}}
+
+The input data for tree cohorts are:
+
+\begin{itemize}
+\tightlist
+\item
+  \(SP_i\): Species identity\}
+\item
+  \(DBH_i\): Diameter at breast height (in cm) of the representative tree.
+\item
+  \(H_i\): Height (in cm) of the representative tree.
+\item
+  \(N_i\): Cohort density (in \(ind.\cdot ha^{-1}\)).
+\end{itemize}
+
+The input data for shrub cohorts are:
+
+\begin{itemize}
+\tightlist
+\item
+  \(SP_i\): Species identity
+\item
+  \(C_i\): Plant cover (in percent).
+\item
+  \(H_i\): Mean plant height (in cm).
+\end{itemize}
+
+\hypertarget{allometric-species-specific-parameters}{%
+\subsection{Allometric species-specific parameters}\label{allometric-species-specific-parameters}}
+
+\begin{itemize}
+\tightlist
+\item
+  \(a_{fbt}, b_{fbt}, c_{fbt}, d_{fbt}\) {[}\texttt{a\_fbt}, \texttt{b\_fbt}, \texttt{c\_fbt}, \texttt{d\_fbt}{]}: Regression coefficients used to calculate foliar biomass of an individual tree from its \(DBH\) and the cummulative basal area of larger trees.
+\item
+  \(a_{ash}\) {[}\texttt{a\_ash}{]}: Regression coefficient relating the square of shrub height with shrub area.
+\item
+  \(a_{bsh}\) and \(b_{bsh}\) {[}\texttt{a\_bsh}, \texttt{b\_bsh}{]}: Allometric coefficients relating phytovolume with dry weight of shrub individuals.
+\item
+  \(cr(SP_i)\): {[}\texttt{cr}{]}: Ratio between crown length and total height for shrubs.
+\end{itemize}
+
+\hypertarget{leaf-biomass-and-area}{%
+\section{Leaf biomass and area}\label{leaf-biomass-and-area}}
+
+\hypertarget{leaf-biomass-for-tree-cohorts}{%
+\subsection{Leaf biomass for tree cohorts}\label{leaf-biomass-for-tree-cohorts}}
+
+Foliar biomass for a single tree of cohort \(i\) (\(FB_{tree,i}\); in \(kg\)) is calculated using:
+\begin{equation}
+FB_{tree,i} = a_{fbt} \cdot DBH_{i}^{b_{fbt}}\cdot e^{c_{fbt}\cdot BAL_i} \cdot DBH_{i}^{d_{fbt} \cdot BA_{sup}}
+\label{eq:onetreefoliarbiomass}
+\end{equation}
+where \(DBH_{i}\) is the diameter of the tree (in \(cm\)), \(BAL_i\) is the cummulative basal area (\(m^2\cdot ha^{-1}\)) of trees having a larger diameter, and \(a_{fbt}\), \(b_{fbt}\), \(c_{fbt}\) and \(c_{fbt}\) are species-specific regression coefficients. The foliar biomass of the whole tree cohort (\(FB_{i}\); in \(kg\cdot m^{-2}\)) is obtained multiplying tree foliar biomass by tree density (\(N_{i}\); in \(ind.\cdot ha^{-1}\)):
+\begin{equation}
+FB_{i} = FB_{tree,i}\cdot (N_{i}/10000)
+\label{eq:treefoliarbiomass}
+\end{equation}
+
+\hypertarget{leaf-biomass-for-shrub-cohorts}{%
+\subsection{Leaf biomass for shrub cohorts}\label{leaf-biomass-for-shrub-cohorts}}
+
+To calculate the leaf biomass of a shrub cohort, we first determine \(A_{sh,i}\), the area (in \(cm^2\)) occupied by one average individual of height \(H_{i}\) (in \(cm\)), using the quadratic relationship:
+\begin{equation}
+A_{sh,i} = a_{ash} \cdot H_{i}^2
+\end{equation}
+where \(a_{ash}\) is a species-specific parameter. The model then estimates the dry weight of leaves and branches up to 6.35mm in diameter (\(B_{sh,i}\), in kg) of this average individual (i.e.~fine fuel biomass), using an allometric relationship with shrub crown phytovolume assuming a cylinder (in \(cm^3\)):
+\begin{equation}
+B_{sh,i} = a_{bsh} \cdot (A_{sh,i}\cdot H_{i}\cdot cr(SP_i))^{b_{bsh}}
+\end{equation}
+where \(a_{bsh}\) and \(b_{bsh}\) are species-specific parameters and \(cr(SP_i)\) is a species-specific crown ratio (a proportion between 0 and 1, the ratio between crown length and total height). Shrub density (\(N_{i}\); in \(ind.\cdot m^{-2}\)) can be grossly estimated from percent cover (\(C_{i}\), in percent) and \(A_{sh,i}\) (in \(cm^{-2}\)):
+\begin{equation}
+N_{i} = \frac{C_{i}/100}{A_{sh,i}/10000}
+\end{equation}
+The fine fuel biomass of a shrub cohort (\(W_{i}\), in \(kg \cdot m^{-2}\)) is simply the product of \(B_{sh,i}\) (\(kg\) of dry weight) and \(N_{i}\):
+\begin{equation}
+W_{i} =  B_{sh,i}\cdot N_{i}
+\label{eq:shrubloading}
+\end{equation}
+Foliar biomass (in \(kg \cdot m^{-2}\)) can be obtained using the species-specific ratio \(r_{6.35}(SP_i)\):
+\begin{equation}
+FB_{i} =  W_{i}/r_{6.35}(SP_i)\\
+\label{eq:shrubfoliarbiomass}
+\end{equation}
+If not known, \(r_{6.35}(SP_i)\) can be set to a default value of 2 (equivalent to \%50 of weight corresponding to leaves).
+
+\hypertarget{leaf-area}{%
+\subsection{Leaf area}\label{leaf-area}}
+
+\hypertarget{vertical-distribution-of-leaves}{%
+\section{Vertical distribution of leaves}\label{vertical-distribution-of-leaves}}
+
+\hypertarget{crownbaseheight}{%
+\subsection{Crown base height}\label{crownbaseheight}}
+
+Crown base height (\(H_{b,i}\); in cm) is defined as the height corresponding to the first living branch expressed as a fraction of total height. It is calculated from the crown ratio (\(CR\); a proportion between 0 and 1), i.e.~the ratio between crown length and total height:
+\begin{equation}
+H_{b,i} = H_{i} \cdot (1 - CR_i)
+\label{eq:CrownHeight}
+\end{equation}
+In the case of shrubs the crown ratio is simply equal by a species-specific parameter: \(CR_i = cr(SP_i)\). In the case of trees, the crown ratio is modelled as a function of tree size and stand competition, following a modification of the logistic equation of \citet{Hasenauer1996}:
+\begin{equation}
+CR_i = \frac{1}{1+e^{-(a_{cr}+b_{1cr}\cdot HD +b_{2cr} \cdot (H_i/100)+b_{3cr} \cdot DBH_i^2+c_{1cr} \cdot BAL_i + c_{2cr} \cdot ln(CCF))}}
+\label{eq:treecrownratio}
+\end{equation}
+where \(HD = H_i/(100\cdot DBH_i)\) is the height to diameter ratio (in \(m\cdot cm^{-1}\)), \(H_i\) is the tree height, \(DBH_i\) is the diameter, \(CCF\) is the crown competition factor and \(a_{cr}\), \(b_{1cr}\), \(b_{2cr}\), \(b_{3cr}\), \(c_{1cr}\) and \(c_{2cr}\) are species-specific parameters. The crown competition factor is in turn calculated using \citep{Krajicek1961}:
+\begin{equation}
+CCF = \sum_{i}{N_i \cdot MCA_i}= \sum_{i}{N_i \cdot \pi \cdot (CW_i/2)^2/100}
+\end{equation}
+where \(N_i\) is the tree density, \(MCA_i\) is the maximum crown area (in percent of unit area) and \(CW_i\) is the crown width (in m) assuming an open-grown tree, estimated from an allometric relationship with tree diameter:
+\begin{equation}
+CW_i = a_{cw}\cdot BDH_i^{b_{cw}} 
+\end{equation}
+where again \(a_{cw}\) and \(b_{cw}\) are species-specific parameters.
+
+\hypertarget{ladprofile}{%
+\subsection{Leaf area density profile}\label{ladprofile}}
+
+Leaf area of any plant cohort is assumed to be distributed vertically following a truncated Gaussian function whose standardized values -1.5 and 1.5 correspond to crown base height and total plant height, respectively. The following figure illustrates the leaf area density profile for an example forest stand.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{vprofile_leafAreaDensity}\NormalTok{(exampleforest, SpParamsMED, }\DataTypeTok{z =} \KeywordTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1000}\NormalTok{, }\DataTypeTok{by=}\DecValTok{1}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-75-1} \end{center}
+
+This density profile determines the extinction rates of light and wind through the forest canopy.
+
+\hypertarget{fuel-characteristics-and-fire-behaviour}{%
+\chapter{Fuel characteristics and fire behaviour}\label{fuel-characteristics-and-fire-behaviour}}
+
+\hypertarget{purpose-1}{%
+\section{Purpose}\label{purpose-1}}
+
+Functions \texttt{fuel\_FCCS()} and \texttt{fire\_FCCS()} allow calculating potential fire behaviour for forest inventory plots. Formulation of fuel characteristics and fire behaviour is an adaptation of the Fuel Characteristics Classification System \citep[FCCS;][]{Prichard2013}. In FCCS, fuelbed is divided into six strata, including canopy, shrub, herbaceous vegetation, dead woody materials, leaf litter and ground fuels. All except ground fuels are considered here. The intensity of burning depends on several factors, including topography, wind conditions, fuel structure and its moisture content, which is determined from antecedent and current meteorological conditions. A modification of the Rothermel's \citeyearpar{Rothermel1972} model is used to calculate the intensity of surface fire reaction (in \(kW/m^2\)) and the rate of fire spread (in \(m/min\)) of surface fires assuming a steady-state fire. Both quantities are dependent on fuel characteristics, windspeed and direction, and topographic slope and aspect. The model returns the following results: (1) Fuel characteristics by stratum; (2) Surface fire behavior (i.e.~reaction intensity, rate of spread, fireline intensity and flame length); (3) Crown fire behavior; (4) Fire potential ratings of surface fire behavior and crown fire behavior.
+
+\hypertarget{input-data-1}{%
+\section{Input data}\label{input-data-1}}
 
 \hypertarget{forest-inventory-plot-data}{%
 \subsection{Forest inventory plot data}\label{forest-inventory-plot-data}}
@@ -2579,14 +3017,6 @@ Finally, the model also requires the percent cover of trees in the canopy (\(C_{
 \begin{itemize}
 \tightlist
 \item
-  \(cr(SP_i)\): {[}\texttt{cr}{]}: Ratio between crown length and total height for shrubs.
-\item
-  \(a_{fbt}, b_{fbt}, c_{fbt}, d_{fbt}\) {[}\texttt{a\_fbt}, \texttt{b\_fbt}, \texttt{c\_fbt}, \texttt{d\_fbt}{]}: Regression coefficients used to calculate foliar biomass of an individual tree from its \(DBH\) and the cummulative basal area of larger trees.
-\item
-  \(a_{ash}\) {[}\texttt{a\_ash}{]}: Regression coefficient relating the square of shrub height with shrub area.
-\item
-  \(a_{bsh}\) and \(b_{bsh}\) {[}\texttt{a\_bsh}, \texttt{b\_bsh}{]}: Allometric coefficients relating phytovolume with dry weight of shrub individuals.
-\item
   \(r_{6.35}(SP_i)\) {[}\texttt{r635}{]}: Ratio between the weight of leaves plus branches and the weight of leaves alone for branches of 6.35 mm.
 \item
   \(\rho_p(SP_i)\) {[}\texttt{PD}{]}: Particle density.
@@ -2606,12 +3036,24 @@ Finally, the model also requires the percent cover of trees in the canopy (\(C_{
 \subsection{Other inputs}\label{other-inputs}}
 
 Other inputs may be given by expert opinion or they may be calculated from another model. Specifically, for each plant cohort (and for any day of application) the fire behaviour model requires:
-+ \(P_{dead,i}\): Proportion of the plant that is dead.
-+ \(M_i\): Foliar moisture value (in percent of dry weight).
+
+\begin{itemize}
+\tightlist
+\item
+  \(P_{dead,i}\): Proportion of the plant that is dead.
+\item
+  \(M_i\): Foliar moisture value (in percent of dry weight).
+\end{itemize}
 
 Analogously, the same variables are needed for the herbaceous stratum.
-+ \(P_{dead,he}\): Proportion of herb fuels that respond to humidity changes as 1-h dead fuels.
-+ \(M_{live,he}\): Foliar moisture value of live herb fuels (in percent of dry weight).
+
+\begin{itemize}
+\tightlist
+\item
+  \(P_{dead,he}\): Proportion of herb fuels that respond to humidity changes as 1-h dead fuels.
+\item
+  \(M_{live,he}\): Foliar moisture value of live herb fuels (in percent of dry weight).
+\end{itemize}
 
 The model also needs the following input parameters:
 
@@ -2628,63 +3070,8 @@ The model also needs the following input parameters:
 \hypertarget{fuel-characteristics}{%
 \section{Fuel characteristics}\label{fuel-characteristics}}
 
-\hypertarget{cohort-fuel-loading}{%
-\subsection{Cohort fuel loading}\label{cohort-fuel-loading}}
-
-Here we consider as burnable fuels foliage and branches up to 6.35 mm = 0.25 in in diameter. The same consideration applies to both trees and shrubs.
-
-\hypertarget{tree-cohorts}{%
-\subsubsection{Tree cohorts}\label{tree-cohorts}}
-
-Foliar biomass for a single tree of cohort \(i\) (\(FB_{tree,i}\); in \(kg\)) is calculated using:
-\begin{equation}
-FB_{tree,i} = a_{fbt} \cdot DBH_{i}^{b_{fbt}}\cdot e^{c_{fbt}\cdot BAL_i} \cdot DBH_{i}^{d_{fbt} \cdot BA_{sup}}
-\end{equation}
-where \(DBH_{i}\) is the diameter of the tree (in \(cm\)), \(BAL_i\) is the cummulative basal area (\(m^2\cdot ha^{-1}\)) of trees having a larger diameter, and \(a_{fbt}\), \(b_{fbt}\), \(c_{fbt}\) and \(c_{fbt}\) are species-specific regression coefficients. The foliar biomass of the whole tree cohort (\(FB_{i}\); in \(kg\cdot m^{-2}\)) is obtained multiplying tree foliar biomass by tree density (\(N_{i}\); in \(ind.\cdot ha^{-1}\)):
-\begin{equation}
-FB_{i} = FB_{tree,i}\cdot (N_{i}/10000)
-\end{equation}
-Fine fuel loading for the tree cohort (\(W_{i}\); in \(kg\cdot m^{-2}\)), including its leaves and branches with diameter up to 6.35 mm = 0.25 in, is then calculated using:
-\begin{equation}
-W_{i} = r_{6.35}(SP_i)\cdot FB_{i}
-\end{equation}
-where \(r_{6.35}(SP_i)\) is the ratio between the weight of leaves plus branches and the weight of leaves alone for branches of 6.35 mm in diameter for the species of cohort \(i\). The biomass corresponding to branches of less than \textless{} 6.35 mm (\(SBB_{i}\), also in \(kg\cdot m^{-2}\)) is obtained by subtraction:
-\begin{equation}
-SBB_{i} = (r_{6.35}(SP_i)-1)\cdot FB_{i}
-\end{equation}
-Whereas \(W_{i}\) is the cohort loading variable influencing fire behavior, \(FB_{i}\) and \(SBB_{i}\) are cohort variables used to estimate fine dead woody and leaf litter loadings.
-
-\hypertarget{shrub-cohorts}{%
-\subsubsection{Shrub cohorts}\label{shrub-cohorts}}
-
-To calculate the fuel loading of a shrub cohort (including both leaves and stems up to 6.35mm), we first determine \(A_{sh,i}\), the area (in \(cm^2\)) occupied by one average individual of height \(H_{i}\) (in \(cm\)), using the quadratic relationship:
-\begin{equation}
-A_{sh,i} = a_{ash} \cdot H_{i}^2
-\end{equation}
-where \(a_{ash}\) is a species-specific parameter. The model then estimates the dry weight of leaves and branches up to 6.35mm in diameter (\(B_{sh,i}\), in kg) of this average individual, using an allometric relationship with shrub crown phytovolume assuming a cylinder (in \(cm^3\)):
-\begin{equation}
-B_{sh,i} = a_{bsh} \cdot (A_{sh,i}\cdot H_{i}\cdot cr(SP_i))^{b_{bsh}}
-\end{equation}
-where \(a_{bsh}\) and \(b_{bsh}\) are species-specific parameters and \(cr(SP_i)\) is a species-specific crown ratio (a proportion between 0 and 1, the ratio between crown length and total height). Shrub density (\(N_{i}\); in \(ind.\cdot m^{-2}\)) can be grossly estimated from percent cover (\(C_{i}\), in percent) and \(A_{sh,i}\) (in \(cm^{-2}\)):
-\begin{equation}
-N_{i} = \frac{C_{i}/100}{A_{sh,i}/10000}
-\end{equation}
-The fine fuel loading of a shrub cohort \(W_{i}\), in \(kg \cdot m^{-2}\)) is simply the product of \(B_{sh,i}\) (\(kg\) of dry weight) and \(N_{i}\):
-\begin{equation}
-W_{i} =  B_{sh,i}\cdot N_{i}
-\end{equation}
-Our procedure differs from \citet{Prichard2013} because they calculate first total biomass of the shrub species and then consider the percentage of total weight that corresponds to leaves and small branches. Foliar biomass and small branch biomass (both in \(kg \cdot m^{-2}\)) can be obtained using the species-specific ratio \(r_{6.35}(SP_i)\):
-\begin{eqnarray}
-FB_{i} &=&  W_{i}/r_{6.35}(SP_i)\\
-SBB_{i} &=& W_{i} - FB_{i}
-\end{eqnarray}
-If not known, \(r_{6.35}(SP_i)\) can be set to a default value of 2 (equivalent to \%50 of weight corresponding to leaves).
-
-\hypertarget{vertical-structure-of-fuels}{%
-\subsection{Vertical structure of fuels}\label{vertical-structure-of-fuels}}
-
-\hypertarget{strata-definition}{%
-\subsubsection{Strata definition}\label{strata-definition}}
+\hypertarget{fuel-strata}{%
+\subsection{Fuel strata}\label{fuel-strata}}
 
 The Fuel Characteristics Classification System (FCCS) on which this document is based, defines six fuel strata \citep{Prichard2013}:
 
@@ -2706,29 +3093,30 @@ The Fuel Characteristics Classification System (FCCS) on which this document is 
 
 Shrubs, herbs and woody fuels are constitute the \textbf{upper surface fuels}, whereas herbs and woody fuels alone consitute the \textbf{lower surface fuels}. FCCS summarizes and calculates characteristics for each fuelbed stratum and layer. Our model estimates fuel loading and characteristics for canopy, shrub, non-woody vegetation, as well as fine (1h) woody fuels and litter fuels. Larger woody fuels (10h or 100h) could be considered if information about forest management actions is available. Ground fuels are not included here.
 
-\hypertarget{vertical-distribution-of-tree-and-shrub-fuels}{%
-\subsubsection{Vertical distribution of tree and shrub fuels}\label{vertical-distribution-of-tree-and-shrub-fuels}}
+\hypertarget{cohort-fuel-loading}{%
+\subsection{Cohort fuel loading}\label{cohort-fuel-loading}}
 
-For all tree or shrub cohorts fuels are assumed to be homogeneously distributed between the crown base height and the total height (\(H_i\)). Crown base height (\(H_{b,i}\); in cm) is defined as the height corresponding to the first living branch expressed as a fraction of total height. It is calculated from the crown ratio (\(CR\); a proportion between 0 and 1), i.e.~the ratio between crown length and total height:
-\begin{equation}
-H_{b,i} = H_{i} \cdot (1 - CR_i)
-\label{eq:CrownHeight}
-\end{equation}
-In the case of shrubs the crown ratio is simply equal by a species-specific parameter: \(CR_i = cr(SP_i)\). In the case of trees, the crown ratio is modelled as a function of tree size and stand competition, following a modification of the logistic equation of \citet{Hasenauer1996}:
-\begin{equation}
-CR_i = \frac{1}{1+e^{-(a_{cr}+b_{1cr}\cdot HD +b_{2cr} \cdot (H_i/100)+b_{3cr} \cdot DBH_i^2+c_{1cr} \cdot BAL_i + c_{2cr} \cdot ln(CCF))}}
-\end{equation}
-where \(HD = H_i/(100\cdot DBH_i)\) is the height to diameter ratio (in \(m\cdot cm^{-1}\)), \(H_i\) is the tree height, \(DBH_i\) is the diameter, \(CCF\) is the crown competition factor and \(a_{cr}\), \(b_{1cr}\), \(b_{2cr}\), \(b_{3cr}\), \(c_{1cr}\) and \(c_{2cr}\) are species-specific parameters. The crown competition factor is in turn calculated using \citep{Krajicek1961}:
-\begin{equation}
-CCF = \sum_{i}{N_i \cdot MCA_i}= \sum_{i}{N_i \cdot \pi \cdot (CW_i/2)^2/100}
-\end{equation}
-where \(N_i\) is the tree density, \(MCA_i\) is the maximum crown area (in percent of unit area) and \(CW_i\) is the crown width (in m) assuming an open-grown tree, estimated from an allometric relationship with tree diameter:
-\begin{equation}
-CW_i = a_{cw}\cdot BDH_i^{b_{cw}} 
-\end{equation}
-where again \(a_{cw}\) and \(b_{cw}\) are species-specific parameters.
+Here we consider as burnable fuels foliage and branches up to 6.35 mm = 0.25 in in diameter. The same consideration applies to both trees and shrubs.
 
-The loading of a cohort that occurs within a given height interval of limits \(H_1\) and \(H_2\) is calculated as:
+Fine fuel loading for a tree cohort (\(W_{i}\); in \(kg\cdot m^{-2}\)), including its leaves and branches with diameter up to 6.35 mm = 0.25 in, is calculated from foliar biomass (\(FB_{i}\), see eq. \eqref{eq:treefoliarbiomass}) using:
+\begin{equation}
+W_{i} = r_{6.35}(SP_i)\cdot FB_{i}
+\end{equation}
+where \(r_{6.35}(SP_i)\) is the ratio between the weight of leaves plus branches and the weight of leaves alone for branches of 6.35 mm in diameter for the species of cohort \(i\). The biomass corresponding to branches of less than \textless{} 6.35 mm (\(SBB_{i}\), also in \(kg\cdot m^{-2}\)) is obtained by subtraction:
+\begin{equation}
+SBB_{i} = (r_{6.35}(SP_i)-1)\cdot FB_{i}
+\end{equation}
+Whereas \(W_{i}\) is the cohort loading variable influencing fire behavior, \(FB_{i}\) and \(SBB_{i}\) are cohort variables used to estimate fine dead woody and leaf litter loadings.
+
+Our procedure to estimate shrub fuel loading differs from \citet{Prichard2013} because they calculate first total biomass of the shrub species and then consider the percentage of total weight that corresponds to leaves and small branches. In our case, we estimate fine fuel loading (\(W_{i}\), in \(kg \cdot m^{-2}\)) and foliar biomass (\(FB_i\), in \(kg \cdot m^{-2}\)) of shrubs from eqs. \eqref{eq:shrubloading} and \eqref{eq:shrubfoliarbiomass}. Biomass of small branches (in \(kg \cdot m^{-2}\)) can be obtained from :
+\begin{equation}
+SBB_{i} = W_{i} - FB_{i}
+\end{equation}
+
+\hypertarget{vertical-distribution-of-cohort-fuels}{%
+\subsection{Vertical distribution of cohort fuels}\label{vertical-distribution-of-cohort-fuels}}
+
+For all tree or shrub cohorts fuels are assumed to be homogeneously distributed between the crown base height (\(H_{b,i}\); in cm) and the total height (\(H_i\)). Crown base height of trees is calculated as explained in \ref{crownbaseheight}. The loading of a cohort that occurs within a given height interval of limits \(H_1\) and \(H_2\) is calculated as:
 \begin{equation}
 W_i(H_1, H_2) = W_i\cdot p_i(H_1, H_2)
 \end{equation}
@@ -2762,7 +3150,7 @@ Canopy bulk density normally ranges between 0 and 0.4 \(kg/m^3\) \citep{Scott200
 
 The following figure illustrates the definition and analysis of the fuel bulk density profile for a given forest stand. Following \citet{Mitsopoulos2007}, a threshold \(t_{BDP} = 0.04\) has been used to determine shrub and canopy heights.
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-75-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-77-1} \end{center}
 
 \hypertarget{fuel-loading-w-and-fuel-depth-delta}{%
 \subsection{\texorpdfstring{Fuel loading (\(w\)) and fuel depth (\(\delta\))}{Fuel loading (w) and fuel depth (\textbackslash{}delta)}}\label{fuel-loading-w-and-fuel-depth-delta}}
@@ -3485,7 +3873,7 @@ K_{s,max,cor}&=&K_{s,max,ref}\cdot (r_{int,H}/r_{int,ref})^{2}
 \end{eqnarray}
 Where \(r_{int,H}\) is the radius of conduits for a terminal branch of a tree of height \(H\) and \(r_{int,ref}\) is the corresponding radius for a tree of height \(H_{ref}\) (\(H\) and \(H_{ref}\) are measured in m). The form of the empirical relationship by \citet{Olson2014} is:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-77-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-79-1} \end{center}
 
 Let's consider an example for a \emph{Quercus ilex} target tree of 4m height and where species-specific conductivity \(K_{s,max,ref} = 0.77\) is the apical value for trees of \(H_{ref} = 6.6\) m (in \texttt{medfate}, values of \(H_{ref}\) are taken from median height values; see parameter \texttt{Hmed} in \texttt{SpParamsMED}). The corrected conductivity for a tree of height 4 m will be a bit lower than that of the reference height:
 
@@ -3556,7 +3944,7 @@ where \(r_{int, pet}\) is the radius of the petiole in the model of \citet{Savag
 
 \(\chi_{tap:notap,ag}(H)\) is calculated as described in the Appendix 1 section of \citet{Christoffersen2016} (see also \citet{Savage2010}). The following figure shows the value of \(\chi_{tap:notap,ag}\) for different heights:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-81-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-83-1} \end{center}
 
 Note that, since \(\chi_{tap:notap,ag}(1) = 3.82\) (indicated using grey dashed lines in the last figure), the equation of maximum conductance with taper would give a higher conductance than the equation without taper for a tree of 1 m height, which is supposed to have a conductance equal to conductivity. To solve this issue we define the taper factor as \(\chi_{tap:notap,ag}(H)/\chi_{tap:notap,ag}(1)\):
 \begin{equation}
@@ -3578,7 +3966,7 @@ The maximum stem conductance with taper (\(k_{s, max, taper}\)) of a \emph{Q. il
 
 The next two plots show the variation of \(k_{s,max}\) for \emph{Q. ilex} depending on the tree height and with/without considering taper of conduits. The plot on the right (both axes in log) show the slope of the dependency of conductance with height in both cases:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-83-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-85-1} \end{center}
 
 \hypertarget{root-xylem-maximum-hydraulic-conductance}{%
 \subsection{Root xylem maximum hydraulic conductance}\label{root-xylem-maximum-hydraulic-conductance}}
@@ -3722,7 +4110,7 @@ and the fraction of total xylem resistance due to stem would be:
 
 In contrast with the approach of \citet{Christoffersen2016}, in this approach the root maximum conductance depends root length and distribution, and is not a fixed fraction of stem maximum conductance. Assuming constant root length, then the proportion of total resistance due to the stem will increase with tree height \citep{Magnani2000}:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-94-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-96-1} \end{center}
 
 where the horizontal gray line indicates the value of 62.5\%. Of course rooting depth also increases with tree age, but young trees have higher root-to-shoot ratios than older ones. Hence, a root maximum conductance that is not fixed but increases with age seems a priori more realistic. Moreover, \citet{Christoffersen2016} justify the value of 62.5\% from a study which quantified total aboveground and belowground resistance in tropical trees \citep{Fisher2006} under near-saturated (wet season) conditions, but values of belowground resistance reported in this study for wet conditions and trees of 30 m height are around 13\%, which equals to 87\% fraction of aboveground resistance. On the other hand, while rooting depths are limited by soil depth, lateral root length increases with age and, hence, the model could be made more realistic if this is taken into account and the curve above would probably saturate at lower percentages.
 
@@ -3731,7 +4119,7 @@ where the horizontal gray line indicates the value of 62.5\%. Of course rooting 
 
 Maximum rhizosphere conductance (\(k_{rh, max}\), in \(mmol \cdot m^{-2} \cdot s^{-1} \cdot MPa^{-1}\)) is difficult to measure directly, as it depends on the rhizosphere (i.e.~fine root) surface in each soil layer, and will probably always be a parameter to be calibrated. Instead of trying to estimate rhizosphere surface from root architecture \citep{Sperry1998}, we follow \citet{Sperry2016a} and determine the maximum rhizosphere conductance in each layer from an inputed `average percentage rhizosphere resistance'. The percentage of continuum resistance corresponding to the rhizosphere is calculated from the vulnerability curves of stem, root and rhizosphere at the same water potential. The average resistance is found by evaluating the percentage for water potential values between 0 and \(\Psi_{crit}\). The following figure illustrates how the supply function, for different soil water potentials, is affected by increasing values of the average percentage of rhizosphere resistance:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-95-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-97-1} \end{center}
 
 \citet{Sperry2016a} found average percentages of rhizosphere resistance around 67\%, but these exceptionally-high values were probably a consequence of using an unsegmented supply function (i.e.~single vulnerability curve for roots, stem and leaves). If we specify a 15\% of average resistance in the rhizosphere (see parameter \texttt{averageFracRhizosphereResistance} in function \texttt{defaultControl()}), the maximum rhizosphere conductance values for the three layers are found calling:
 
@@ -3861,7 +4249,315 @@ J_{max, 298} = e^{1.197 + 0.847\cdot \log(V_{max,298})}
 \hypertarget{symbols}{%
 \chapter{Symbols}\label{symbols}}
 
-The following tables list all symbols used in this document, along with their units and definition. When symbols are input parameters for \textbf{medfate} model functions, the name of those parameters in data frame \texttt{SpParamsMED} is also indicated.
+The following tables list all symbols used in this document, along with their units and definition. When symbols are input for \textbf{medfate} model functions, the R name of those parameters in the package (either in data frame \texttt{SpParamsMED}, soil input data frame, or the output of functions such as \texttt{spwbInput()}) is also indicated.
+
+\hypertarget{soils}{%
+\section{Soils}\label{soils}}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+\begin{minipage}[b]{0.11\columnwidth}\raggedright
+Symbol\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\raggedright
+Units\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\raggedright
+R param\strut
+\end{minipage} & \begin{minipage}[b]{0.45\columnwidth}\raggedright
+Description\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(d_{s}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+mm\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\texttt{widths}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Soil layer width in soil layer \(s\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(P_{clay,s}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+\%\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\texttt{clay}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Percent of clay in soil layer \(s\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(P_{sand,s}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+\%\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\texttt{sand}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Percent of sand in soil layer \(s\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(OM\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+\%\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\texttt{om}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Percentage of organic mater per dry weight\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(BD_{s}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+\(g\cdot cm^{-3}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\texttt{bd}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Bulk density in soil layer \(s\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(P_{rocks,s}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+\%\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\texttt{rfc}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Percentage of rock fragment content in soil layer \(s\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(\theta_s\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+\(m^3 \cdot m^{-3}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Volumetric moisture in soil layer \(s\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(\Psi_s\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+MPa\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Water potential in soil layer \(s\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(\Psi_{fc}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+MPa\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Water potential at field capacity\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(A\), \(B\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Parameters of the Saxton pedotransfer functions\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(\theta_{sat}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+\(m^3 \cdot m^{-3}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\texttt{VG\_theta\_sat}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Volumetric moisture at saturation\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(\theta_{fc}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+\(m^3 \cdot m^{-3}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Volumetric moisture at field capacity (-0.033 MPa)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(\theta_{wp}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+\(m^3 \cdot m^{-3}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Volumetric moisture at wilting point (-1.5 MPa)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(\theta_{res}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+\(m^3 \cdot m^{-3}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\texttt{VG\_theta\_res}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Residual volumetric moisture\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(n\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\texttt{VG\_n}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Parameter of the Van Genuchten \citeyearpar{Genuchten1980} model\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(\alpha\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\texttt{VG\_alpha}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Parameter of the Van Genuchten \citeyearpar{Genuchten1980} model\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(P_{macro, s}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+\%\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\texttt{macro}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Percentage of macroporosity corresponding to each soil layers.\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(\gamma_{soil}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+\(mm \cdot day^{-1}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\texttt{Gsoil}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+The maximum daily evaporation from soil\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(\kappa_{soil}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\texttt{Ksoil}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Extinction parameter to regulate the amount of water evaporated from each soil layer\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(WT\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+mm\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Water table depth\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(W_{s}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+{[}0-1{]}\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\texttt{W}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Proportion of volumetric moisture in relation to field capacity in soil layer \(s\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(S_{snow}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+mm\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\texttt{SWE}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Snow water equivalent of the snow pack storage over the soil surface\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\hypertarget{vegetation}{%
+\section{Vegetation}\label{vegetation}}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+\begin{minipage}[b]{0.11\columnwidth}\raggedright
+Symbol\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\raggedright
+Units\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\raggedright
+R param\strut
+\end{minipage} & \begin{minipage}[b]{0.45\columnwidth}\raggedright
+Description\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(H_i\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+cm\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\texttt{H}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Total tree or shrub height of cohort \(i\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(CR_i\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\texttt{CR}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Crown ratio (i.e.~the ratio between crown length and total height) of cohort \(i\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(LAI^{live}_i\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\texttt{LAI\_live}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+(Maximum) leaf area index (one-side leaf area per surface area of the stand) of cohort \(i\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(LAI^{dead}_i\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\texttt{LAI\_dead}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Dead leaf area index (one-side dead leaf area per surface area of the stand) of cohort \(i\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(LAI^{\phi}_i\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\texttt{LAI\_expanded}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Current expanded leaf area index (one-side expanded leaf area per surface area of the stand) of cohort \(i\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(v_{i,s}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+{[}0-1{]}\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\texttt{V{[}i,s{]}}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+The proportion of fine roots of cohort \(i\) in soil layer \(s\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(Z_{50,i}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+mm\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\texttt{Z50}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Depth above which 50\% of the fine root mass of cohort \(i\) is located\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright
+\(Z_{95,i}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright
+mm\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright
+\texttt{Z95}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright
+Depth above which 95\% of the fine root mass of cohort \(i\) is located\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
 
 \hypertarget{anatomy}{%
 \section{Anatomy}\label{anatomy}}

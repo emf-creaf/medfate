@@ -68,19 +68,22 @@ species identity ($SP_i$; with R name [`SP`]).
 
 ### Aboveground parameters
 
-The aboveground structure if each cohort is defined using the following attributes:
+The aboveground structure if each cohort is defined using a set attributes defined in the following table, where columns **spwb** and **growth** indicate whether attributes are required by functions `spwb()` and `growth()`, respectively:
 
-+ $H_i$ [`H`]: Total tree or shrub height (in cm).
-+ $CR_i$ [`CR`]: Crown ratio (i.e. the ratio between crown length and
-total height).
-+ $LAI^{live}_i$ [`LAI_live`]: (Maximum) leaf area index (one-side
-leaf area of plants in the cohort per surface area of the stand).
-+ $LAI^{dead}_i$ [`LAI_dead`]: Dead leaf area index (one-side dead
-leaf area of plants in the cohort per surface area of the stand).
-+ $LAI^{\phi}_i$ [`LAI_expanded`]: Current expanded leaf area index (one-side expanded
-leaf area of plants in the cohort per surface area of the stand).
+| Symbol | Units | R  | Description                        | spwb | growth |
+|--------|-------|----| ------------------------------------|-----|-----|
+| $H_i$  | $cm$  | `H` | Total tree or shrub height |  Y  |  Y  |
+| $CR_i$ |       | `CR`| Crown ratio (i.e. ratio between crown length and total height) | Y | Y |
+| $N$ | $ind · ha^{-1}$ | `N` | The density of tree individuals | N | Y |
+| $DBH$ | $cm$ | `DBH` | Tree diameter at breast height | N | Y |
+| $Cover$ | % | `Cover` | Shrub percent cover | N | Y |
+| $LAI^{live}_i$ | $m^2 \cdot m^{-2}$ | `LAI_live` | (Maximum) leaf area index | Y | Y |
+| $LAI^{dead}_i$ | $m^2 \cdot m^{-2}$ | `LAI_dead` | Dead leaf area index | Y | Y |
+| $LAI^{\phi}_i$ | $m^2 \cdot m^{-2}$ | `LAI_expanded` | Current expanded leaf area index | Y | Y |
 
-All vegetation characteristics stay constant during water balance simulations, although the actual expanded leaf area and dead leaf area may vary is the species is winter deciduous.
+Height values refer to average height of individuals included in the cohort, and the same for crown ratio and $DBH$. $LAI$ variables refer to one-side leaf area of plants in the cohort per surface area of the stand. While plant height is relatively easy to measure, it is normally quite hard to estimate leaf area indices for stands and species. Package **medfate** provides some utilities to provide estimates crown ratio and $LAI$ from forest inventory data (e.g. heights, DBH and density for measured trees), using allometric relationships calibrated for catalonia (see chapter \@ref(leafbiomass)).
+
+Vegetation characteristics stay constant during simulations using function `spwb()`, although the actual expanded leaf area and dead leaf area may vary is the species is winter deciduous. Function `growth()` can modify any of the vegetation attributes.
 
 
 ### Belowground parameters

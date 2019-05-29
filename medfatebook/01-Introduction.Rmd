@@ -2,7 +2,7 @@
 
 # Introduction {#intro}
 
-## What does **medfate** do?
+## Purpose
 
 Being able to anticipate the impact of global change on ecosystems is one of the major environmental challenges in contemporary societies. However, uncertainties in how ecological systems function and practical constraints in how to integrate available information prevent the development of robust and reliable predictive models. Despite the amount of knowledge accumulated about the functioning and dynamics of Mediterranean forests, scientists should make coordinate their efforts to address the challenge of integrating the different global change drivers in a modelling framework useful for research and applications.
 

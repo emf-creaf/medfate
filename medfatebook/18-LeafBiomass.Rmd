@@ -5,15 +5,32 @@ data("SpParamsMED")
 data(exampleforest)
 ```
 
-# Leaf biomass, leaf area and vertical profiles
+# Leaf biomass, leaf area and vertical profiles {#leafbiomass}
+
+## Input data
+
+### Forest inventory data
+
+The input data for tree cohorts are:
+
++ $SP_i$: Species identity}
++ $DBH_i$: Diameter at breast height (in cm) of the representative tree.
++ $H_i$: Height (in cm) of the representative tree.
++ $N_i$: Cohort density (in $ind.\cdot ha^{-1}$).
+
+The input data for shrub cohorts are:
+
++ $SP_i$: Species identity
++ $C_i$: Plant cover (in percent).
++ $H_i$: Mean plant height (in cm).
 
 
-## Species parameters
+### Allometric species-specific parameters
 
-+ $cr(SP_i)$: [`cr`]: Ratio between crown length and total height for shrubs.
 + $a_{fbt}, b_{fbt}, c_{fbt}, d_{fbt}$ [`a_fbt`, `b_fbt`, `c_fbt`, `d_fbt`]: Regression coefficients used to calculate foliar biomass of an individual tree from its $DBH$ and the cummulative basal area of larger trees.
 + $a_{ash}$ [`a_ash`]: Regression coefficient relating the square of shrub height with shrub area.
 + $a_{bsh}$ and $b_{bsh}$ [`a_bsh`, `b_bsh`]: Allometric coefficients relating phytovolume with dry weight of shrub individuals.
++ $cr(SP_i)$: [`cr`]: Ratio between crown length and total height for shrubs.
 
 ## Leaf biomass and area
 
@@ -81,4 +98,11 @@ CW_i = a_{cw}\cdot BDH_i^{b_{cw}}
 \end{equation}
 where again $a_{cw}$ and $b_{cw}$ are species-specific parameters. 
 
+### Leaf area density profile {#ladprofile}
 
+Leaf area of any plant cohort is assumed to be distributed vertically following a truncated Gaussian function whose standardized values -1.5 and 1.5 correspond to crown base height and total plant height, respectively. The following figure illustrates the leaf area density profile for an example forest stand. 
+```{r, fig.width=4, fig.height=4, fig.align='center'}
+vprofile_leafAreaDensity(exampleforest, SpParamsMED, z = seq(0,1000, by=1))
+```
+
+This density profile determines the extinction rates of light and wind through the forest canopy.
