@@ -384,9 +384,9 @@ g_{Ha} &amp;=&amp; 0.189 \cdot (u/d)^{0.5}
 \end{eqnarray}\]</span>
 where <span class="math inline">\(u\)</span> is wind speed (in <span class="math inline">\(m \cdot s^{-1}\)</span>), taken as the wind speed at mid-crown height, and <span class="math inline">\(d\)</span> is 0.72 times the leaf width (species parameter <code>LeafWidth</code> in <span class="math inline">\(cm\)</span>).</p>
 <p>The following figures illustrate the value of <span class="math inline">\(T_{leaf}\)</span> for two leaf sizes and varying values of wind speed and flow rate, calculated for 24ºC canopy temperature and 740 <span class="math inline">\(W \cdot m^{-2}\)</span> instantaneous absorved radiation (see function <code>biophysics_leafTemperature</code>):
-<img src="modeldescription_files/figure-html/unnamed-chunk-48-1.png" width="768" style="display: block; margin: auto;" /></p>
+<img src="medfatebook_files/figure-html/unnamed-chunk-48-1.png" width="768" style="display: block; margin: auto;" /></p>
 <p>Let’s now fix wind speed to 2 m/s. The application of the above equations to the <span class="math inline">\(E(\Psi_{leaf})\)</span> curves corresponding to the complete hydraulic network yields the following <span class="math inline">\(T_{leaf}(\Psi_{leaf})\)</span> curves:</p>
-<p><img src="modeldescription_files/figure-html/unnamed-chunk-49-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="medfatebook_files/figure-html/unnamed-chunk-49-1.png" width="768" style="display: block; margin: auto;" /></p>
 <p>Thus, transpiration decreases leaf temperature (whereas radiation increases it and wind speed makes it more similar to air temperature). Vapor pressure deficit in the leaf (<span class="math inline">\(VPD_{leaf}\)</span>, in kPa) is calculated as:
 <span class="math display">\[\begin{equation}
 VPD_{leaf} = VP(T_{leaf})-vp_{day}
@@ -398,7 +398,7 @@ Where <span class="math inline">\(vp_{day}\)</span> is the average daily vapor p
 <div class="sourceLine" id="cb35-4" data-line-number="4">vpa</div></code></pre>
 <pre><code>## [1] 1.912181</code></pre>
 <p>the application of the above equation to the <span class="math inline">\(T_{leaf}(\Psi_{leaf})\)</span> curves yields the following <span class="math inline">\(VPD_{leaf}(\Psi_{leaf})\)</span> curves:</p>
-<p><img src="modeldescription_files/figure-html/unnamed-chunk-51-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="medfatebook_files/figure-html/unnamed-chunk-51-1.png" width="768" style="display: block; margin: auto;" /></p>
 <p>Since leaf saturated VP decreases when leaf temperature decreases, transpiration decreases leaf VPD as a result of decreasing leaf temperature.</p>
 </div>
 <div id="leaf-conductance-to-water-vapor" class="section level3">
@@ -409,7 +409,7 @@ g_{sw} &amp;=&amp; E \cdot \frac{P_{atm}}{VPD_{leaf}}\\
 g_{sc} &amp;=&amp; g_{sw}/1.6
 \end{eqnarray}\]</span>
 the application of the equation for <span class="math inline">\(g_{sw}\)</span> to the <span class="math inline">\(VPD_{leaf}(\Psi_{leaf})\)</span> curves yields the following <span class="math inline">\(g_{sw}(\Psi_{leaf})\)</span> curves:</p>
-<p><img src="modeldescription_files/figure-html/unnamed-chunk-52-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="medfatebook_files/figure-html/unnamed-chunk-52-1.png" width="768" style="display: block; margin: auto;" /></p>
 <p>Hence, larger values of transpiration require larger values of leaf water vapour conductance. In the previous figure we have indicated the thresholds of <span class="math inline">\(g_{swmin}\)</span> and <span class="math inline">\(g_{swmax}\)</span>, the species-specific minimum and maximum water vapour conductances (i.e. conductances when stomata are fully closed and fully open, respectively; see parameters <code>Gwmin</code> and <code>Gwmax</code> in <code>SpParamsMED</code>).</p>
 <pre class="sourceCode r" id="cb37"><code class="sourceCode r"><div class="sourceLine" id="cb37-1" data-line-number="1">Gmin =<span class="st"> </span><span class="fl">0.0045</span>;</div>
 <div class="sourceLine" id="cb37-2" data-line-number="2">Gmax =<span class="st"> </span><span class="fl">0.3</span></div></code></pre>
@@ -450,7 +450,7 @@ where <span class="math inline">\(C_{atm}\)</span> is the atmospheric <span clas
 <div class="sourceLine" id="cb38-3" data-line-number="3">Vmax298 =<span class="st"> </span><span class="dv">100</span></div>
 <div class="sourceLine" id="cb38-4" data-line-number="4">Jmax298 =<span class="st"> </span><span class="fl">1.67</span><span class="op">*</span>Vmax298</div></code></pre>
 <p>one can obtain the following <span class="math inline">\(A(\Psi_{leaf})\)</span> curves from <span class="math inline">\(T_{leaf}(\Psi_{leaf})\)</span> and <span class="math inline">\(g_{sc}(\Psi_{leaf})\)</span>:</p>
-<p><img src="modeldescription_files/figure-html/unnamed-chunk-55-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="medfatebook_files/figure-html/unnamed-chunk-55-1.png" width="768" style="display: block; margin: auto;" /></p>
 <p>Finally, leaf net photosynthesis (i.e. accounting for autotrophic respiration) is calculated as:
 <span class="math display">\[\begin{equation}
 A_n = A - 0.015 \cdot V_{max}
@@ -473,7 +473,7 @@ A_n = A - 0.015 \cdot V_{max}
 <div class="sourceLine" id="cb39-11" data-line-number="11">gamma_SWR =<span class="st"> </span><span class="fl">0.05</span></div>
 <div class="sourceLine" id="cb39-12" data-line-number="12">alpha_SWR =<span class="st"> </span><span class="fl">0.7</span></div></code></pre>
 <p>Many aspects may vary across the crown, including environmental conditions (such as direct/diffuse light or wind speed) and photosynthesis parameters (e.g. <code>Vmax298</code>). The previous crown definition and light parameters lead to a percentage of the above-canopy irradiance reaching each layer <span class="citation">(Anten and Bastiaans <a href="#ref-Anten2016">2016</a>)</span>. Furthermore, it is generally accepted that sunlit and shade leaves need to be treated separately <span class="citation">(De Pury and Farquhar <a href="#ref-DePury1997">1997</a>)</span>.Extinction of direct radiation also defines the proportion of leaves of each layer that are affected by direct light beams (i.e. the proportion of sunlit leaves).</p>
-<p><img src="modeldescription_files/figure-html/unnamed-chunk-57-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="medfatebook_files/figure-html/unnamed-chunk-57-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>For simplicity, here we will assume constant windspeed in all layers:</p>
 <pre class="sourceCode r" id="cb40"><code class="sourceCode r"><div class="sourceLine" id="cb40-1" data-line-number="1">ulayer =<span class="st"> </span><span class="kw">rep</span>(<span class="dv">2</span>, <span class="dv">10</span>)</div></code></pre>
 <p>Regarding incoming light, we assume the following direct and diffuse irradiance at the top of the canopy:</p>
@@ -483,14 +483,14 @@ A_n = A - 0.015 \cdot V_{max}
 <div class="sourceLine" id="cb41-4" data-line-number="4">PAR_direct =<span class="st"> </span><span class="dv">550</span></div>
 <div class="sourceLine" id="cb41-5" data-line-number="5">PAR_diffuse =<span class="st"> </span><span class="dv">150</span></div></code></pre>
 <p>Solar elevation is the angle between the sun and the horizon (i.e. the complement of the zenith angle). Under these conditions, the amount of shortwave and PAR radiation absorbed per unit of leaf area at each canopy layer is <span class="citation">(Anten and Bastiaans <a href="#ref-Anten2016">2016</a>)</span>:</p>
-<p><img src="modeldescription_files/figure-html/unnamed-chunk-60-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="medfatebook_files/figure-html/unnamed-chunk-60-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Following <span class="citation">De Pury and Farquhar (<a href="#ref-DePury1997">1997</a>)</span>, we further assume that maximum assimilation rates are highest for leaves at the top of the canopy and there is a exponential decrease from there towards the bottom, where maximum rates are 50% of those at the top:
 <span class="math display">\[\begin{equation}
 V_{max,298}(L_i) =V_{max,298}\cdot exp(-0.713\cdot L_i/LAIc)   
 \end{equation}\]</span>
 where <span class="math inline">\(L_i\)</span> is the cumulative LAI value at a given canopy layer <span class="math inline">\(i\)</span> and <span class="math inline">\(LAIc\)</span> is the canopy LAI.</p>
 <p>Multilayer canopy models allow evaluating leaf conditions, stomatal conductance and photosynthesis for different points of the canopy. However, this comes at high computational cost. While big-leaf canopy models are known to be unaccurate under some situations, sun-shade canopy models <span class="citation">(De Pury and Farquhar <a href="#ref-DePury1997">1997</a>)</span> provide estimates that are close to multiple layer models <span class="citation">(Hikosaka, Kumagai, and Ito <a href="#ref-Hikosaka2016">2016</a>)</span>. Sun-shade models involve: (a) aggregating the leaf area of sunlit/shade leaves across layers; (b) aggregating the light absorbed by leaves of each kind across layers; and (c) aggregating maximum assimilation rates across layers, again separating sunlit and shade leaves. One then calls the photosynthesis model twice (i.e. once for shade leaves and once for sunlit leaves), using the aggregated maximum assimilation rates. Separating the two kinds of leaves acknowledges that they operate at different parts of the light-saturation curve. The following figure provides the canopy photosynthesis functions obtained, under different situations, using a full 10-layer canopy description (top), a sunshade canopy model (center) or a big-leaf model (bottom). These were generated using functions <code>photo_multilayerPhotosynthesisFunction()</code>, <code>photo_sunshadePhotosynthesisFunction()</code> and <code>photo_leafPhotosynthesisFunction()</code>, respectively. Note the coincidence between the multi-layer and the sun-shade models.</p>
-<p><img src="modeldescription_files/figure-html/unnamed-chunk-63-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="medfatebook_files/figure-html/unnamed-chunk-63-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="stomatal-regulation" class="section level2">
 <h2><span class="header-section-number">12.3</span> Stomatal regulation</h2>
@@ -508,13 +508,13 @@ where <span class="math inline">\(k_c(\Psi_{leaf}) = dE/d\Psi(\Psi_{leaf})\)</sp
 \end{eqnarray}\]</span>
 where <span class="math inline">\(k_l\)</span> is the leaf conductance function; and <span class="math inline">\(k_{l,min}\)</span> and <span class="math inline">\(k_{l,max}\)</span> are the minimum and maximum leaf conductance values found in the supply function. Using the leaf vulnerability curve for the cost function is grounded on the fact that stomatal regulation occurs at leaves, so that instantaneous regulation should respond to the loss of hydraulic conductance at this point, independently of what happens to the rest of the continuum. Hormonal signals from root to leaf are assumed to regulate stomatal aperture at longer time scales. Obviously, <span class="math inline">\(\theta_2\)</span> is the same before irreversible cavitation. The difference between them may be interpreted as the following. <span class="math inline">\(\theta_2\)</span> strictly follows the potential at the leaf level (and hence could be related to a loss of turgor).</p>
 <p>The type of cost function can be specified by the user by setting parameter <code>hydraulicCostFunction</code> (see function <code>defaultControl()</code>). The following figures illustrate the <span class="math inline">\(\theta_1\)</span> and <span class="math inline">\(\theta_2\)</span> curves corresponding to the supply functions:</p>
-<p><img src="modeldescription_files/figure-html/unnamed-chunk-65-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="medfatebook_files/figure-html/unnamed-chunk-65-1.png" width="768" style="display: block; margin: auto;" /></p>
 <p>The normalized photosynthetic <em>gain function</em> <span class="math inline">\(\beta(\Psi_{leaf})\)</span> reflects the actual assimilation rate with respect to the maximum:
 <span class="math display">\[\begin{equation}
 \beta(\Psi_{leaf}) = \frac{A(\Psi_{leaf})}{A_{max}}
 \end{equation}\]</span>
 where <span class="math inline">\(A_{max}\)</span> is the instantaneous maximum assimilation rate estimated over the full <span class="math inline">\(\Psi_{leaf}\)</span> range. The following figures illustrate the <span class="math inline">\(\theta(\Psi_{leaf})\)</span> and <span class="math inline">\(\beta(\Psi_{leaf})\)</span> curves corresponding to the supply and assimilation functions:</p>
-<p><img src="modeldescription_files/figure-html/unnamed-chunk-66-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="medfatebook_files/figure-html/unnamed-chunk-66-1.png" width="768" style="display: block; margin: auto;" /></p>
 </div>
 <div id="profit-maximization-at-the-leaf-level" class="section level3">
 <h3><span class="header-section-number">12.3.2</span> Profit maximization at the leaf level</h3>
@@ -525,10 +525,10 @@ Profit_2(\Psi_{leaf}) &amp;=&amp; \beta(\Psi_{leaf})-\theta_2(\Psi_{leaf})\\
 \end{eqnarray}\]</span>
 Once <span class="math inline">\(\Psi_{leaf}\)</span> that maximizes profit is determined, the values of the remaining variables are also determined. At this point, it may happen that <span class="math inline">\(g_{sw}(\Psi_{leaf})\)</span> is lower than the minimum (i.e. cuticular) water vapor conductance (<span class="math inline">\(g_{swmin}\)</span>) or larger than the maximum water vapor conductance (<span class="math inline">\(g_{swmax}\)</span>). These thresholds need to be taken into account when determining the maximum of the profit function. The following figures illustrate the <span class="math inline">\(Profit_1(\Psi_{leaf})\)</span> and <span class="math inline">\(Profit_2(\Psi_{leaf})\)</span> curves of corresponding to the previous cost and gain curves:
 \begin{center}</p>
-<p><img src="modeldescription_files/figure-html/unnamed-chunk-67-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="medfatebook_files/figure-html/unnamed-chunk-67-1.png" width="768" style="display: block; margin: auto;" /></p>
 <p>Squares in the previous figures indicate the maximum profit points in each situation. In the case of non-cavitated system (left panels), the drier the soil, the closer is the maximum profit <span class="math inline">\(\Psi_{leaf}\)</span> to soil water potential as one would expect intuitively. This occurs for all three profit functions. Unlike <span class="math inline">\(\theta_1\)</span> which is different for each soil texture (and soil potential), <span class="math inline">\(\theta_2\)</span> is the same for all soil textures. As a result, the regulation points do not differ much among textures in <span class="math inline">\(Profit_2\)</span> and <span class="math inline">\(Profit_3\)</span> because the only difference is in the gain function. For a system with xylem cavitation (right panel), the maximum <span class="math inline">\(Profit_1\)</span> curves behave strangely. In particular may get a more negative value for <span class="math inline">\(\Psi_{canopy}\)</span> for wet soils than for dry soils. This effect does not occur when using <span class="math inline">\(Profit_2\)</span>. <span class="math inline">\(Profit_2\)</span> brings plant water potentials to more negative values after cavitation. Although cavitation did not change the <span class="math inline">\(\theta_2\)</span> function, the supply function is flatter and this affects the gain function, making it increase less steeply with lower potentials.</p>
 <p>Differences between profit functions can be more easily seen when plotting the change from original (uncavitated) regulation to the cavitated one, in terms of both canopy sap pressure and flow rate:
-<img src="modeldescription_files/figure-html/unnamed-chunk-68-1.png" width="384" style="display: block; margin: auto;" /></p>
+<img src="medfatebook_files/figure-html/unnamed-chunk-68-1.png" width="384" style="display: block; margin: auto;" /></p>
 <p>In <span class="math inline">\(Profit_1\)</span> irreversible cavitation often brings, after soil rewetting, less conservative stomatal regulation that enables higher flow rates. This does not seem to happen in <span class="math inline">\(Profit_2\)</span>, where despite irreversible cavitation leads to more negative water potentials, predicted flow rates after rewetting are not above those predicted before cavitation.</p>
 </div>
 <div id="scaling-to-the-plant-level" class="section level3">
@@ -622,7 +622,7 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": ["modeldescription.pdf", "modeldescription.epub"],
+"download": ["medfatebook.pdf", "medfatebook.epub"],
 "toc": {
 "collapse": "subsection"
 }

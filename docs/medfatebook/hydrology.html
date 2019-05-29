@@ -384,7 +384,7 @@ the ground, i.e. <span class="math inline">\(C = 1 - L^{PAR}_{ground}\)</span> <
 shows examples of relative throughfall, calculated according to the interception
 model, under different situations (see function <code>hydrology_rainInterception()</code>).</p>
 <div class="figure"><span id="fig:unnamed-chunk-4"></span>
-<img src="modeldescription_files/figure-html/unnamed-chunk-4-1.png" alt="Examples of canopy interception with different S (canopy water storage capacity), E/R (ratio between evaporation and rainfall rates) and p (throughfall coefficient; p = 1 - C)" width="672" />
+<img src="medfatebook_files/figure-html/unnamed-chunk-4-1.png" alt="Examples of canopy interception with different S (canopy water storage capacity), E/R (ratio between evaporation and rainfall rates) and p (throughfall coefficient; p = 1 - C)" width="672" />
 <p class="caption">
 Figure 4.1: Examples of canopy interception with different S (canopy water storage capacity), E/R (ratio between evaporation and rainfall rates) and p (throughfall coefficient; p = 1 - C)
 </p>
@@ -398,7 +398,7 @@ Ru=\frac{(Pr_{net} + Ro + Sm - 0.2 \cdot V_{soil})^2}{(Pr_{net} + Ro + Sm - 0.8 
 \end{equation}\]</span>
 where <span class="math inline">\(V_{soil}\)</span> (in mm) is the overall soil water retention capacity. Following <span class="citation">Granier et al. (<a href="#ref-Granier1999">1999</a>)</span>, part of the water reaching one soil layer percolates quickly through the macropores. The amount of water reaching each layer through macropores is modelled using an extinction function (see function <code>hydrology_infiltrationRepartition</code>). The remaining water is retained by the micropores refilling the current soil layer. When this soil layer reaches its field capacity the excess of water also percolates to the soil layer below.</p>
 <div class="figure"><span id="fig:unnamed-chunk-5"></span>
-<img src="modeldescription_files/figure-html/unnamed-chunk-5-1.png" alt="Examples of infiltration/runoff calculation for different values of net rainfall and overall retention capacity, $V_{soil}$, calculated from different soil depths (topsoil+subsoil) and assuming that soil texture is 15% clay and 25% sand. Rock fragment content was 25% and 40% for the topsoil and subsoil, respectively." width="768" />
+<img src="medfatebook_files/figure-html/unnamed-chunk-5-1.png" alt="Examples of infiltration/runoff calculation for different values of net rainfall and overall retention capacity, $V_{soil}$, calculated from different soil depths (topsoil+subsoil) and assuming that soil texture is 15% clay and 25% sand. Rock fragment content was 25% and 40% for the topsoil and subsoil, respectively." width="768" />
 <p class="caption">
 Figure 4.2: Examples of infiltration/runoff calculation for different values of net rainfall and overall retention capacity, <span class="math inline">\(V_{soil}\)</span>, calculated from different soil depths (topsoil+subsoil) and assuming that soil texture is 15% clay and 25% sand. Rock fragment content was 25% and 40% for the topsoil and subsoil, respectively.
 </p>
@@ -431,7 +431,7 @@ E_{soil} = \min(PE_{soil}, SE_{soil})
 \end{equation}\]</span>
 <p>Finally, <span class="math inline">\(E_{soil}\)</span> is distributed along the soil profile according to an exponential decay function with an extinction coefficient <span class="math inline">\(\kappa_{soil}\)</span> <span class="citation">(Mouillot, Rambal, and Lavorel <a href="#ref-Mouillot2001">2001</a>)</span>.</p>
 <div class="figure"><span id="fig:unnamed-chunk-6"></span>
-<img src="modeldescription_files/figure-html/unnamed-chunk-6-1.png" alt="Cumulative bare soil evaporation for different values of maximum evaporation rate and extinction coefficient. Three soil layers (0 – 30 cm; 30 – 150 cm; 150 – 400 cm) are initialized at field capacity ($V_1 = 50 mm$; $V_2 = 201 mm$; $V_3 = 35 mm$). $PE_{soil}$ was assumed not to be limiting. When the extinction coefficient is smaller a higher proportion of the evaporated water is removed from the subsoil and less from the topsoil. This causes more water being available to calculate t in the next step." width="384" />
+<img src="medfatebook_files/figure-html/unnamed-chunk-6-1.png" alt="Cumulative bare soil evaporation for different values of maximum evaporation rate and extinction coefficient. Three soil layers (0 – 30 cm; 30 – 150 cm; 150 – 400 cm) are initialized at field capacity ($V_1 = 50 mm$; $V_2 = 201 mm$; $V_3 = 35 mm$). $PE_{soil}$ was assumed not to be limiting. When the extinction coefficient is smaller a higher proportion of the evaporated water is removed from the subsoil and less from the topsoil. This causes more water being available to calculate t in the next step." width="384" />
 <p class="caption">
 Figure 4.3: Cumulative bare soil evaporation for different values of maximum evaporation rate and extinction coefficient. Three soil layers (0 – 30 cm; 30 – 150 cm; 150 – 400 cm) are initialized at field capacity (<span class="math inline">\(V_1 = 50 mm\)</span>; <span class="math inline">\(V_2 = 201 mm\)</span>; <span class="math inline">\(V_3 = 35 mm\)</span>). <span class="math inline">\(PE_{soil}\)</span> was assumed not to be limiting. When the extinction coefficient is smaller a higher proportion of the evaporated water is removed from the subsoil and less from the topsoil. This causes more water being available to calculate t in the next step.
 </p>
@@ -515,7 +515,7 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": ["modeldescription.pdf", "modeldescription.epub"],
+"download": ["medfatebook.pdf", "medfatebook.epub"],
 "toc": {
 "collapse": "subsection"
 }

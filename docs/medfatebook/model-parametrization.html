@@ -380,7 +380,7 @@ Hence, this operation should be used when specifying this parameter from <span c
 K_{s,max,cor}&amp;=&amp;K_{s,max,ref}\cdot (r_{int,H}/r_{int,ref})^{2}
 \end{eqnarray}\]</span>
 Where <span class="math inline">\(r_{int,H}\)</span> is the radius of conduits for a terminal branch of a tree of height <span class="math inline">\(H\)</span> and <span class="math inline">\(r_{int,ref}\)</span> is the corresponding radius for a tree of height <span class="math inline">\(H_{ref}\)</span> (<span class="math inline">\(H\)</span> and <span class="math inline">\(H_{ref}\)</span> are measured in m). The form of the empirical relationship by <span class="citation">Olson et al. (<a href="#ref-Olson2014">2014</a>)</span> is:</p>
-<p><img src="modeldescription_files/figure-html/unnamed-chunk-77-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="medfatebook_files/figure-html/unnamed-chunk-77-1.png" width="480" style="display: block; margin: auto;" /></p>
 <p>Let’s consider an example for a <em>Quercus ilex</em> target tree of 4m height and where species-specific conductivity <span class="math inline">\(K_{s,max,ref} = 0.77\)</span> is the apical value for trees of <span class="math inline">\(H_{ref} = 6.6\)</span> m (in , values of <span class="math inline">\(H_{ref}\)</span> are taken from median height values; see parameter <code>Hmed</code> in <code>SpParamsMED</code>). The corrected conductivity for a tree of height 4 m will be a bit lower than that of the reference height:</p>
 <pre class="sourceCode r" id="cb46"><code class="sourceCode r"><div class="sourceLine" id="cb46-1" data-line-number="1">xylem_kmax =<span class="st"> </span><span class="fl">0.77</span></div>
 <div class="sourceLine" id="cb46-2" data-line-number="2">H =<span class="st"> </span><span class="dv">400</span> <span class="co"># in cm</span></div>
@@ -414,7 +414,7 @@ where <span class="math inline">\(r_{int, pet}\)</span> is the radius of the pet
 <pre class="sourceCode r" id="cb52"><code class="sourceCode r"><div class="sourceLine" id="cb52-1" data-line-number="1"><span class="kw">hydraulics_terminalConduitRadius</span>(<span class="fl">100.0</span>)</div></code></pre>
 <pre><code>## [1] 9.035871</code></pre>
 <p><span class="math inline">\(\chi_{tap:notap,ag}(H)\)</span> is calculated as described in the Appendix 1 section of <span class="citation">Christoffersen et al. (<a href="#ref-Christoffersen2016">2016</a>)</span> (see also <span class="citation">Savage et al. (<a href="#ref-Savage2010">2010</a>)</span>). The following figure shows the value of <span class="math inline">\(\chi_{tap:notap,ag}\)</span> for different heights:</p>
-<p><img src="modeldescription_files/figure-html/unnamed-chunk-81-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p><img src="medfatebook_files/figure-html/unnamed-chunk-81-1.png" width="480" style="display: block; margin: auto;" /></p>
 <p>Note that, since <span class="math inline">\(\chi_{tap:notap,ag}(1) = 3.82\)</span> (indicated using grey dashed lines in the last figure), the equation of maximum conductance with taper would give a higher conductance than the equation without taper for a tree of 1 m height, which is supposed to have a conductance equal to conductivity. To solve this issue we define the taper factor as <span class="math inline">\(\chi_{tap:notap,ag}(H)/\chi_{tap:notap,ag}(1)\)</span>:
 <span class="math display">\[\begin{equation}
 k_{s, max, taper}=\frac{1000}{0.018} \cdot \frac{K_{s,max,pet}\cdot A_{s}}{H\cdot A_{l}}\cdot \frac{\chi_{tap:notap,ag}(H)}{\chi_{tap:notap,ag}(1)}
@@ -425,7 +425,7 @@ The maximum stem conductance with taper (<span class="math inline">\(k_{s, max, 
 <div class="sourceLine" id="cb54-3" data-line-number="3">kstemmax_tap</div></code></pre>
 <pre><code>## [1] 4.764396</code></pre>
 <p>The next two plots show the variation of <span class="math inline">\(k_{s,max}\)</span> for <em>Q. ilex</em> depending on the tree height and with/without considering taper of conduits. The plot on the right (both axes in log) show the slope of the dependency of conductance with height in both cases:</p>
-<p><img src="modeldescription_files/figure-html/unnamed-chunk-83-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p><img src="medfatebook_files/figure-html/unnamed-chunk-83-1.png" width="960" style="display: block; margin: auto;" /></p>
 </div>
 <div id="root-xylem-maximum-hydraulic-conductance" class="section level3">
 <h3><span class="header-section-number">A.1.4</span> Root xylem maximum hydraulic conductance</h3>
@@ -477,13 +477,13 @@ where <span class="math inline">\(w_j\)</span> are root xylem conductance propor
 <pre class="sourceCode r" id="cb74"><code class="sourceCode r"><div class="sourceLine" id="cb74-1" data-line-number="1">(<span class="dv">1</span><span class="op">/</span>kstemmax)<span class="op">/</span>((<span class="dv">1</span><span class="op">/</span>kstemmax)<span class="op">+</span>(<span class="dv">1</span><span class="op">/</span>krootmax))</div></code></pre>
 <pre><code>## [1] 0.7447818</code></pre>
 <p>In contrast with the approach of <span class="citation">Christoffersen et al. (<a href="#ref-Christoffersen2016">2016</a>)</span>, in this approach the root maximum conductance depends root length and distribution, and is not a fixed fraction of stem maximum conductance. Assuming constant root length, then the proportion of total resistance due to the stem will increase with tree height <span class="citation">(Magnani, Mencuccini, and Grace <a href="#ref-Magnani2000">2000</a>)</span>:</p>
-<p><img src="modeldescription_files/figure-html/unnamed-chunk-94-1.png" width="432" style="display: block; margin: auto;" /></p>
+<p><img src="medfatebook_files/figure-html/unnamed-chunk-94-1.png" width="432" style="display: block; margin: auto;" /></p>
 <p>where the horizontal gray line indicates the value of 62.5%. Of course rooting depth also increases with tree age, but young trees have higher root-to-shoot ratios than older ones. Hence, a root maximum conductance that is not fixed but increases with age seems a priori more realistic. Moreover, <span class="citation">Christoffersen et al. (<a href="#ref-Christoffersen2016">2016</a>)</span> justify the value of 62.5% from a study which quantified total aboveground and belowground resistance in tropical trees <span class="citation">(Fisher et al. <a href="#ref-Fisher2006">2006</a>)</span> under near-saturated (wet season) conditions, but values of belowground resistance reported in this study for wet conditions and trees of 30 m height are around 13%, which equals to 87% fraction of aboveground resistance. On the other hand, while rooting depths are limited by soil depth, lateral root length increases with age and, hence, the model could be made more realistic if this is taken into account and the curve above would probably saturate at lower percentages.</p>
 </div>
 <div id="rhizosphere-maximum-hydraulic-conductance" class="section level3">
 <h3><span class="header-section-number">A.1.5</span> Rhizosphere maximum hydraulic conductance</h3>
 <p>Maximum rhizosphere conductance (<span class="math inline">\(k_{rh, max}\)</span>, in <span class="math inline">\(mmol \cdot m^{-2} \cdot s^{-1} \cdot MPa^{-1}\)</span>) is difficult to measure directly, as it depends on the rhizosphere (i.e. fine root) surface in each soil layer, and will probably always be a parameter to be calibrated. Instead of trying to estimate rhizosphere surface from root architecture <span class="citation">(Sperry et al. <a href="#ref-Sperry1998">1998</a>)</span>, we follow <span class="citation">J. S. Sperry, Wang, et al. (<a href="#ref-Sperry2016a">2016</a>)</span> and determine the maximum rhizosphere conductance in each layer from an inputed ‘average percentage rhizosphere resistance’. The percentage of continuum resistance corresponding to the rhizosphere is calculated from the vulnerability curves of stem, root and rhizosphere at the same water potential. The average resistance is found by evaluating the percentage for water potential values between 0 and <span class="math inline">\(\Psi_{crit}\)</span>. The following figure illustrates how the supply function, for different soil water potentials, is affected by increasing values of the average percentage of rhizosphere resistance:</p>
-<p><img src="modeldescription_files/figure-html/unnamed-chunk-95-1.png" width="432" style="display: block; margin: auto;" /></p>
+<p><img src="medfatebook_files/figure-html/unnamed-chunk-95-1.png" width="432" style="display: block; margin: auto;" /></p>
 <p><span class="citation">J. S. Sperry, Wang, et al. (<a href="#ref-Sperry2016a">2016</a>)</span> found average percentages of rhizosphere resistance around 67%, but these exceptionally-high values were probably a consequence of using an unsegmented supply function (i.e. single vulnerability curve for roots, stem and leaves). If we specify a 15% of average resistance in the rhizosphere (see parameter <code>averageFracRhizosphereResistance</code> in function <code>defaultControl()</code>), the maximum rhizosphere conductance values for the three layers are found calling:</p>
 <pre class="sourceCode r" id="cb76"><code class="sourceCode r"><div class="sourceLine" id="cb76-1" data-line-number="1">krmax =<span class="st"> </span><span class="kw">rep</span>(<span class="dv">0</span>,<span class="dv">3</span>) </div>
 <div class="sourceLine" id="cb76-2" data-line-number="2">krmax[<span class="dv">1</span>]=<span class="st"> </span><span class="kw">hydraulics_findRhizosphereMaximumConductance</span>(<span class="dv">15</span>, </div>
@@ -655,7 +655,7 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": ["modeldescription.pdf", "modeldescription.epub"],
+"download": ["medfatebook.pdf", "medfatebook.epub"],
 "toc": {
 "collapse": "subsection"
 }

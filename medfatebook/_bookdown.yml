@@ -1,4 +1,4 @@
-book_filename: "modeldescription"
+book_filename: "medfatebook"
 delete_merged_file: true
 output_dir: "../docs/medfatebook"
 language:
