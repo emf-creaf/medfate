@@ -1,6 +1,6 @@
 book_filename: "modeldescription"
 delete_merged_file: true
-output_dir: "../docs"
+output_dir: "../docs/medfatebook"
 language:
   ui:
     chapter_name: "Chapter "
