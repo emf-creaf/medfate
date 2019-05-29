@@ -21,7 +21,6 @@
   <meta name="twitter:description" content="This is a reference book for models implemented in package medfate." />
   
 
-<meta name="author" content="Miquel De Cáceres" />
 
 
 <meta name="date" content="2019-05-29" />
@@ -122,7 +121,7 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <li class="part"><span><b>I Preliminaries</b></span></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
 <li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#package-installation"><i class="fa fa-check"></i><b>1.1</b> Package installation</a></li>
-<li class="chapter" data-level="1.2" data-path="intro.html"><a href="intro.html#description"><i class="fa fa-check"></i><b>1.2</b> Description</a></li>
+<li class="chapter" data-level="1.2" data-path="intro.html"><a href="intro.html#how-to-use-this-book"><i class="fa fa-check"></i><b>1.2</b> How to use this book</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="model-inputs.html"><a href="model-inputs.html"><i class="fa fa-check"></i><b>2</b> Model inputs</a><ul>
 <li class="chapter" data-level="2.1" data-path="model-inputs.html"><a href="model-inputs.html#soil-description"><i class="fa fa-check"></i><b>2.1</b> Soil description</a><ul>
@@ -345,20 +344,28 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <div id="header">
 <h1 class="title">The medfate reference book</h1>
 <p class="author"><em>Miquel De Cáceres</em></p>
+<address class="author_afil">
+Forest Science and Technology Center of Catalonia (CTFC)<br><a class="author_email" href="mailto:#"><a href="mailto:miquelcaceres@gmail.com">miquelcaceres@gmail.com</a></a>
+</address>
 <p class="date"><em>2019-05-29</em></p>
 </div>
 <div id="intro" class="section level1">
 <h1><span class="header-section-number">Chapter 1</span> Introduction</h1>
+<p>Being able to anticipate the impact of global change on ecosystems is one of the major environmental challenges in contemporary societies. However, uncertainties in how ecological systems function and practical constraints in how to integrate available information prevent the development of robust and reliable predictive models. Despite the amount of knowledge accumulated about the functioning and dynamics of Mediterranean forests, scientists should make coordinate their efforts to address the challenge of integrating the different global change drivers in a modelling framework useful for research and applications.</p>
+<p>The R package <code>medfate</code> has been designed to study the characteristics and simulate dynamics of Mediterranean forests. Fire and drought impacts are the main drivers covered by the package. Representation of vegetation is not spatially-explicit (i.e. trees or shrubs do not have explicit coordinates within forest stands). This simplified representation is chosen so that package functions can be easily applied to forest plot data from national forest inventories. Since the package intends to facilitate predictions of not only forest functioning but also forest structure and composition, the taxonomic identity of plants is stored, and parameter values need to be provided for each taxonomic entity (but the package could be used with functional groups).</p>
 <div id="package-installation" class="section level2">
 <h2><span class="header-section-number">1.1</span> Package installation</h2>
-<p>The <strong>medfate</strong> package can be installed from CRAN or Github:</p>
-<pre class="sourceCode r" id="cb1"><code class="sourceCode r"><div class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">install.packages</span>(<span class="st">&quot;medfate&quot;</span>)</div>
-<div class="sourceLine" id="cb1-2" data-line-number="2"><span class="co"># or the development version</span></div>
-<div class="sourceLine" id="cb1-3" data-line-number="3">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;miquelcaceres/medfate&quot;</span>)</div></code></pre>
+<p>Package <strong>medfate</strong> can be found at <a href="https://CRAN.R-project.org/package=medfate">CRAN</a>, where it is updated every few months. Hence, it can be installed using:</p>
+<pre class="sourceCode r" id="cb1"><code class="sourceCode r"><div class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">install.packages</span>(<span class="st">&quot;medfate&quot;</span>)</div></code></pre>
+<p>Users can also download and install the latest stable versions GitHub as follows (required package <code>devtools</code> should be installed/updated first):</p>
+<pre class="sourceCode r" id="cb2"><code class="sourceCode r"><div class="sourceLine" id="cb2-1" data-line-number="1">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;miquelcaceres/medfate&quot;</span>)</div></code></pre>
+<p>When installing from GitHub, may need to force the installation of package vignettes, by using:</p>
+<pre class="sourceCode r" id="cb3"><code class="sourceCode r"><div class="sourceLine" id="cb3-1" data-line-number="1">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;miquelcaceres/medfate&quot;</span>, </div>
+<div class="sourceLine" id="cb3-2" data-line-number="2">                         <span class="dt">build_opts =</span> <span class="kw">c</span>(<span class="st">&quot;--no-resave-data&quot;</span>, <span class="st">&quot;--no-manual&quot;</span>))</div></code></pre>
 </div>
-<div id="description" class="section level2">
-<h2><span class="header-section-number">1.2</span> Description</h2>
-<p>TO BE DONE</p>
+<div id="how-to-use-this-book" class="section level2">
+<h2><span class="header-section-number">1.2</span> How to use this book</h2>
+<p>This is a reference book for simulation and static models included in <strong>medfate</strong>. Hands-on user guides can be found as package vignettes included in its distribution. The manual is intended to reflect <strong>version 0.8.2</strong>. Our purpose is to continuously update this reference with package updates, so that users can know about the models they are using at the time when functions are run. As the manual will keep package updates, after model applications users should store the PDF version of the reference manual to be sure it matches the version the package reported in the application (e.g. report or article).</p>
 
 </div>
 </div>

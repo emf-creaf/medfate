@@ -24,7 +24,6 @@
 \usepackage{hyperref}
 \hypersetup{unicode=true,
             pdftitle={The medfate reference book},
-            pdfauthor={Miquel De Cáceres},
             pdfborder={0 0 0},
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
@@ -119,7 +118,7 @@
   \title{The medfate reference book}
     \pretitle{\vspace{\droptitle}\centering\huge}
   \posttitle{\par}
-    \author{Miquel De Cáceres}
+    \author{true}
     \preauthor{\centering\large\emph}
   \postauthor{\par}
       \predate{\centering\large\emph}
@@ -148,23 +147,42 @@
 \hypertarget{intro}{%
 \chapter{Introduction}\label{intro}}
 
+Being able to anticipate the impact of global change on ecosystems is one of the major environmental challenges in contemporary societies. However, uncertainties in how ecological systems function and practical constraints in how to integrate available information prevent the development of robust and reliable predictive models. Despite the amount of knowledge accumulated about the functioning and dynamics of Mediterranean forests, scientists should make coordinate their efforts to address the challenge of integrating the different global change drivers in a modelling framework useful for research and applications.
+
+The R package \texttt{medfate} has been designed to study the characteristics and simulate dynamics of Mediterranean forests. Fire and drought impacts are the main drivers covered by the package. Representation of vegetation is not spatially-explicit (i.e.~trees or shrubs do not have explicit coordinates within forest stands). This simplified representation is chosen so that package functions can be easily applied to forest plot data from national forest inventories. Since the package intends to facilitate predictions of not only forest functioning but also forest structure and composition, the taxonomic identity of plants is stored, and parameter values need to be provided for each taxonomic entity (but the package could be used with functional groups).
+
 \hypertarget{package-installation}{%
 \section{Package installation}\label{package-installation}}
 
-The \textbf{medfate} package can be installed from CRAN or Github:
+Package \textbf{medfate} can be found at \href{https://CRAN.R-project.org/package=medfate}{CRAN}, where it is updated every few months. Hence, it can be installed using:
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{install.packages}\NormalTok{(}\StringTok{"medfate"}\NormalTok{)}
-\CommentTok{# or the development version}
+\end{Highlighting}
+\end{Shaded}
+
+Users can also download and install the latest stable versions GitHub as follows (required package \texttt{devtools} should be installed/updated first):
+
+\begin{Shaded}
+\begin{Highlighting}[]
 \NormalTok{devtools}\OperatorTok{::}\KeywordTok{install_github}\NormalTok{(}\StringTok{"miquelcaceres/medfate"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{description}{%
-\section{Description}\label{description}}
+When installing from GitHub, may need to force the installation of package vignettes, by using:
 
-TO BE DONE
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{devtools}\OperatorTok{::}\KeywordTok{install_github}\NormalTok{(}\StringTok{"miquelcaceres/medfate"}\NormalTok{, }
+                         \DataTypeTok{build_opts =} \KeywordTok{c}\NormalTok{(}\StringTok{"--no-resave-data"}\NormalTok{, }\StringTok{"--no-manual"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{how-to-use-this-book}{%
+\section{How to use this book}\label{how-to-use-this-book}}
+
+This is a reference book for simulation and static models included in \textbf{medfate}. Hands-on user guides can be found as package vignettes included in its distribution. The manual is intended to reflect \textbf{version 0.8.2}. Our purpose is to continuously update this reference with package updates, so that users can know about the models they are using at the time when functions are run. As the manual will keep package updates, after model applications users should store the PDF version of the reference manual to be sure it matches the version the package reported in the application (e.g.~report or article).
 
 \hypertarget{model-inputs}{%
 \chapter{Model inputs}\label{model-inputs}}

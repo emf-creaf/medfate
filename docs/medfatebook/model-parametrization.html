@@ -21,7 +21,6 @@
   <meta name="twitter:description" content="This is a reference book for models implemented in package medfate." />
   
 
-<meta name="author" content="Miquel De Cáceres" />
 
 
 <meta name="date" content="2019-05-29" />
@@ -122,7 +121,7 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <li class="part"><span><b>I Preliminaries</b></span></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
 <li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#package-installation"><i class="fa fa-check"></i><b>1.1</b> Package installation</a></li>
-<li class="chapter" data-level="1.2" data-path="intro.html"><a href="intro.html#description"><i class="fa fa-check"></i><b>1.2</b> Description</a></li>
+<li class="chapter" data-level="1.2" data-path="intro.html"><a href="intro.html#how-to-use-this-book"><i class="fa fa-check"></i><b>1.2</b> How to use this book</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="model-inputs.html"><a href="model-inputs.html"><i class="fa fa-check"></i><b>2</b> Model inputs</a><ul>
 <li class="chapter" data-level="2.1" data-path="model-inputs.html"><a href="model-inputs.html#soil-description"><i class="fa fa-check"></i><b>2.1</b> Soil description</a><ul>
@@ -359,10 +358,10 @@ d = \frac{\Psi_{50}}{(-ln(0.5))^{1/c}}= \frac{\Psi_{50}}{0.69314^{1/c}}
 \end{equation}\]</span>
 Hence, this operation should be used when specifying this parameter from <span class="math inline">\(\Psi_{50}\)</span>. Vulnerability curves for root xylem are less common than for stem xylem. If these values are missing, functions <code>spwbInput()</code> and <code>forest2spwbInput()</code> will use for <span class="math inline">\(c\)</span> the same value as in stems, and for <span class="math inline">\(d\)</span> half the value of that of stems <span class="citation">(J. S. Sperry, Venturas, et al. <a href="#ref-Sperry2016">2016</a>)</span>. If the values for leaves are missing, initialization functions will use for <span class="math inline">\(c\)</span> the same value as in stems, and for <span class="math inline">\(d\)</span> 66% of the value for stems.</p>
 <p>Rhizosphere conductance is regulated in the model using the van Genuchten function given in eq. <a href="plant-hydraulics.html#eq:rhizovulnerability">(11.3)</a>, and parameters <span class="math inline">\(n\)</span> and <span class="math inline">\(\alpha\)</span> for each soil layer were already available from soil initialization (i.e. function <code>soil()</code>):</p>
-<pre class="sourceCode r" id="cb42"><code class="sourceCode r"><div class="sourceLine" id="cb42-1" data-line-number="1">s =<span class="st"> </span><span class="kw">soil</span>(<span class="kw">defaultSoilParams</span>(<span class="dv">3</span>))</div>
-<div class="sourceLine" id="cb42-2" data-line-number="2">s<span class="op">$</span>VG_n</div></code></pre>
+<pre class="sourceCode r" id="cb44"><code class="sourceCode r"><div class="sourceLine" id="cb44-1" data-line-number="1">s =<span class="st"> </span><span class="kw">soil</span>(<span class="kw">defaultSoilParams</span>(<span class="dv">3</span>))</div>
+<div class="sourceLine" id="cb44-2" data-line-number="2">s<span class="op">$</span>VG_n</div></code></pre>
 <pre><code>## [1] 1.267359 1.303861 1.303861</code></pre>
-<pre class="sourceCode r" id="cb44"><code class="sourceCode r"><div class="sourceLine" id="cb44-1" data-line-number="1">s<span class="op">$</span>VG_alpha</div></code></pre>
+<pre class="sourceCode r" id="cb46"><code class="sourceCode r"><div class="sourceLine" id="cb46-1" data-line-number="1">s<span class="op">$</span>VG_alpha</div></code></pre>
 <pre><code>## [1] 147.32468  89.16112  89.16112</code></pre>
 <p>Aboveground and belowground stem maximum conductance values at the plant level (<span class="math inline">\(k_{s, max}\)</span> and <span class="math inline">\(k_{r, max}\)</span>) will not be normally available and the same for the rhizosphere (<span class="math inline">\(k_{rh, max}\)</span>).</p>
 </div>
@@ -382,25 +381,25 @@ K_{s,max,cor}&amp;=&amp;K_{s,max,ref}\cdot (r_{int,H}/r_{int,ref})^{2}
 Where <span class="math inline">\(r_{int,H}\)</span> is the radius of conduits for a terminal branch of a tree of height <span class="math inline">\(H\)</span> and <span class="math inline">\(r_{int,ref}\)</span> is the corresponding radius for a tree of height <span class="math inline">\(H_{ref}\)</span> (<span class="math inline">\(H\)</span> and <span class="math inline">\(H_{ref}\)</span> are measured in m). The form of the empirical relationship by <span class="citation">Olson et al. (<a href="#ref-Olson2014">2014</a>)</span> is:</p>
 <p><img src="medfatebook_files/figure-html/unnamed-chunk-77-1.png" width="480" style="display: block; margin: auto;" /></p>
 <p>Let’s consider an example for a <em>Quercus ilex</em> target tree of 4m height and where species-specific conductivity <span class="math inline">\(K_{s,max,ref} = 0.77\)</span> is the apical value for trees of <span class="math inline">\(H_{ref} = 6.6\)</span> m (in , values of <span class="math inline">\(H_{ref}\)</span> are taken from median height values; see parameter <code>Hmed</code> in <code>SpParamsMED</code>). The corrected conductivity for a tree of height 4 m will be a bit lower than that of the reference height:</p>
-<pre class="sourceCode r" id="cb46"><code class="sourceCode r"><div class="sourceLine" id="cb46-1" data-line-number="1">xylem_kmax =<span class="st"> </span><span class="fl">0.77</span></div>
-<div class="sourceLine" id="cb46-2" data-line-number="2">H =<span class="st"> </span><span class="dv">400</span> <span class="co"># in cm</span></div>
-<div class="sourceLine" id="cb46-3" data-line-number="3">Href =<span class="st"> </span><span class="dv">660</span> <span class="co"># in cm</span></div>
-<div class="sourceLine" id="cb46-4" data-line-number="4">f =<span class="st"> </span><span class="kw">hydraulics_referenceConductivityHeightFactor</span>(Href, H);</div>
-<div class="sourceLine" id="cb46-5" data-line-number="5">f</div></code></pre>
+<pre class="sourceCode r" id="cb48"><code class="sourceCode r"><div class="sourceLine" id="cb48-1" data-line-number="1">xylem_kmax =<span class="st"> </span><span class="fl">0.77</span></div>
+<div class="sourceLine" id="cb48-2" data-line-number="2">H =<span class="st"> </span><span class="dv">400</span> <span class="co"># in cm</span></div>
+<div class="sourceLine" id="cb48-3" data-line-number="3">Href =<span class="st"> </span><span class="dv">660</span> <span class="co"># in cm</span></div>
+<div class="sourceLine" id="cb48-4" data-line-number="4">f =<span class="st"> </span><span class="kw">hydraulics_referenceConductivityHeightFactor</span>(Href, H);</div>
+<div class="sourceLine" id="cb48-5" data-line-number="5">f</div></code></pre>
 <pre><code>## [1] 0.7863352</code></pre>
-<pre class="sourceCode r" id="cb48"><code class="sourceCode r"><div class="sourceLine" id="cb48-1" data-line-number="1">xylem_kmax_cor =<span class="st"> </span>xylem_kmax <span class="op">*</span><span class="st"> </span>f</div>
-<div class="sourceLine" id="cb48-2" data-line-number="2">xylem_kmax_cor</div></code></pre>
+<pre class="sourceCode r" id="cb50"><code class="sourceCode r"><div class="sourceLine" id="cb50-1" data-line-number="1">xylem_kmax_cor =<span class="st"> </span>xylem_kmax <span class="op">*</span><span class="st"> </span>f</div>
+<div class="sourceLine" id="cb50-2" data-line-number="2">xylem_kmax_cor</div></code></pre>
 <pre><code>## [1] 0.6054781</code></pre>
 <p>Once the reference conductivity is corrected, the maximum stem conductance without accounting for conduit taper is:
 <span class="math display">\[\begin{equation}
 k_{s,max, notaper}=\frac{1000}{0.018} \frac{K_{s,max,cor}\cdot A_{s}}{H\cdot A_{l}}
 \end{equation}\]</span>
 where <span class="math inline">\(H\)</span> is the tree height (here in m), <span class="math inline">\(A_{s}\)</span> is the sapwood area, <span class="math inline">\(A_{l}\)</span> is the leaf area and 1000/0.018 is a factor used to go from kg to mmol. The ratio <span class="math inline">\(A_{l}/A_{s} = 1/H_v\)</span> is a fixed species parameter in soil water balance calculations (see parameter <code>Al2As</code>), but becomes variable when simulating plant growth. Let’s assume that <em>Quercus ilex</em> the leaf to sapwood area ratio is <span class="math inline">\(A_{l}/A_{s} = 2512\)</span>. The maximum (leaf-specific) stem conductance without taper (<span class="math inline">\(k_{s, max, notaper}\)</span>) for the tree of 4 m height is then:</p>
-<pre class="sourceCode r" id="cb50"><code class="sourceCode r"><div class="sourceLine" id="cb50-1" data-line-number="1">Al2As =<span class="st"> </span><span class="dv">2512</span> </div>
-<div class="sourceLine" id="cb50-2" data-line-number="2"></div>
-<div class="sourceLine" id="cb50-3" data-line-number="3">kstemmax =<span class="st"> </span><span class="kw">hydraulics_maximumStemHydraulicConductance</span>(xylem_kmax, </div>
-<div class="sourceLine" id="cb50-4" data-line-number="4">                  Href, Al2As, H, <span class="dt">angiosperm =</span> <span class="ot">TRUE</span>,<span class="dt">taper =</span> <span class="ot">FALSE</span>)</div>
-<div class="sourceLine" id="cb50-5" data-line-number="5">kstemmax</div></code></pre>
+<pre class="sourceCode r" id="cb52"><code class="sourceCode r"><div class="sourceLine" id="cb52-1" data-line-number="1">Al2As =<span class="st"> </span><span class="dv">2512</span> </div>
+<div class="sourceLine" id="cb52-2" data-line-number="2"></div>
+<div class="sourceLine" id="cb52-3" data-line-number="3">kstemmax =<span class="st"> </span><span class="kw">hydraulics_maximumStemHydraulicConductance</span>(xylem_kmax, </div>
+<div class="sourceLine" id="cb52-4" data-line-number="4">                  Href, Al2As, H, <span class="dt">angiosperm =</span> <span class="ot">TRUE</span>,<span class="dt">taper =</span> <span class="ot">FALSE</span>)</div>
+<div class="sourceLine" id="cb52-5" data-line-number="5">kstemmax</div></code></pre>
 <pre><code>## [1] 3.347698</code></pre>
 <p>In order to consider taper of xylem conduits we calculate the whole-tree conductance per unit leaf area (<span class="math inline">\(k_{s, max, taper}\)</span>) as described in <span class="citation">Christoffersen et al. (<a href="#ref-Christoffersen2016">2016</a>)</span>:
 <span class="math display">\[\begin{equation}
@@ -411,7 +410,7 @@ where <span class="math inline">\(K_{s,max,pet}\)</span> is the conductivity at 
 K_{s,max,pet} = K_{s,max,ref}\cdot (r_{int, pet}/r_{int,ref})^{2}
 \end{equation}\]</span>
 where <span class="math inline">\(r_{int, pet}\)</span> is the radius of the petiole in the model of <span class="citation">Savage et al. (<a href="#ref-Savage2010">2010</a>)</span>. <span class="citation">Christoffersen et al. (<a href="#ref-Christoffersen2016">2016</a>)</span> use <span class="math inline">\(r_{int, pet} = 10\)</span> <span class="math inline">\(\mu m\)</span> but we define it as the radius of apical conduits in a tree of 1 m height:</p>
-<pre class="sourceCode r" id="cb52"><code class="sourceCode r"><div class="sourceLine" id="cb52-1" data-line-number="1"><span class="kw">hydraulics_terminalConduitRadius</span>(<span class="fl">100.0</span>)</div></code></pre>
+<pre class="sourceCode r" id="cb54"><code class="sourceCode r"><div class="sourceLine" id="cb54-1" data-line-number="1"><span class="kw">hydraulics_terminalConduitRadius</span>(<span class="fl">100.0</span>)</div></code></pre>
 <pre><code>## [1] 9.035871</code></pre>
 <p><span class="math inline">\(\chi_{tap:notap,ag}(H)\)</span> is calculated as described in the Appendix 1 section of <span class="citation">Christoffersen et al. (<a href="#ref-Christoffersen2016">2016</a>)</span> (see also <span class="citation">Savage et al. (<a href="#ref-Savage2010">2010</a>)</span>). The following figure shows the value of <span class="math inline">\(\chi_{tap:notap,ag}\)</span> for different heights:</p>
 <p><img src="medfatebook_files/figure-html/unnamed-chunk-81-1.png" width="480" style="display: block; margin: auto;" /></p>
@@ -420,9 +419,9 @@ where <span class="math inline">\(r_{int, pet}\)</span> is the radius of the pet
 k_{s, max, taper}=\frac{1000}{0.018} \cdot \frac{K_{s,max,pet}\cdot A_{s}}{H\cdot A_{l}}\cdot \frac{\chi_{tap:notap,ag}(H)}{\chi_{tap:notap,ag}(1)}
 \end{equation}\]</span>
 The maximum stem conductance with taper (<span class="math inline">\(k_{s, max, taper}\)</span>) of a <em>Q. ilex</em> tree of 4 m height, calculated with this second equation, is:</p>
-<pre class="sourceCode r" id="cb54"><code class="sourceCode r"><div class="sourceLine" id="cb54-1" data-line-number="1">kstemmax_tap =<span class="st"> </span><span class="kw">hydraulics_maximumStemHydraulicConductance</span>(xylem_kmax, </div>
-<div class="sourceLine" id="cb54-2" data-line-number="2">                      Href, Al2As, H, <span class="dt">angiosperm =</span> <span class="ot">TRUE</span>, <span class="dt">taper =</span> <span class="ot">TRUE</span>)</div>
-<div class="sourceLine" id="cb54-3" data-line-number="3">kstemmax_tap</div></code></pre>
+<pre class="sourceCode r" id="cb56"><code class="sourceCode r"><div class="sourceLine" id="cb56-1" data-line-number="1">kstemmax_tap =<span class="st"> </span><span class="kw">hydraulics_maximumStemHydraulicConductance</span>(xylem_kmax, </div>
+<div class="sourceLine" id="cb56-2" data-line-number="2">                      Href, Al2As, H, <span class="dt">angiosperm =</span> <span class="ot">TRUE</span>, <span class="dt">taper =</span> <span class="ot">TRUE</span>)</div>
+<div class="sourceLine" id="cb56-3" data-line-number="3">kstemmax_tap</div></code></pre>
 <pre><code>## [1] 4.764396</code></pre>
 <p>The next two plots show the variation of <span class="math inline">\(k_{s,max}\)</span> for <em>Q. ilex</em> depending on the tree height and with/without considering taper of conduits. The plot on the right (both axes in log) show the slope of the dependency of conductance with height in both cases:</p>
 <p><img src="medfatebook_files/figure-html/unnamed-chunk-83-1.png" width="960" style="display: block; margin: auto;" /></p>
@@ -430,51 +429,51 @@ The maximum stem conductance with taper (<span class="math inline">\(k_{s, max, 
 <div id="root-xylem-maximum-hydraulic-conductance" class="section level3">
 <h3><span class="header-section-number">A.1.4</span> Root xylem maximum hydraulic conductance</h3>
 <p>To obtain maximum root xylem conductance (<span class="math inline">\(k_{r, max}\)</span>, in <span class="math inline">\(mmol \cdot m^{-2} \cdot s^{-1} \cdot MPa^{-1}\)</span>), one option taken by <span class="citation">Christoffersen et al. (<a href="#ref-Christoffersen2016">2016</a>)</span> is to assume that minimum stem resistance (inverse of maximum conductance) represents a fixed proportion of the minimum total tree (stem+root) resistance. A value 0.625 (i.e. 62.5%) suggested by these authors leads to maximum total tree conductance for our <em>Q. ilex</em> tree being:</p>
-<pre class="sourceCode r" id="cb56"><code class="sourceCode r"><div class="sourceLine" id="cb56-1" data-line-number="1">ktot =<span class="st"> </span>kstemmax<span class="op">*</span><span class="fl">0.625</span></div>
-<div class="sourceLine" id="cb56-2" data-line-number="2">ktot</div></code></pre>
+<pre class="sourceCode r" id="cb58"><code class="sourceCode r"><div class="sourceLine" id="cb58-1" data-line-number="1">ktot =<span class="st"> </span>kstemmax<span class="op">*</span><span class="fl">0.625</span></div>
+<div class="sourceLine" id="cb58-2" data-line-number="2">ktot</div></code></pre>
 <pre><code>## [1] 2.092311</code></pre>
 <p>and the maximum root xylem conductance would be therefore:</p>
-<pre class="sourceCode r" id="cb58"><code class="sourceCode r"><div class="sourceLine" id="cb58-1" data-line-number="1">krootmax =<span class="st"> </span><span class="dv">1</span><span class="op">/</span>((<span class="dv">1</span><span class="op">/</span>ktot)<span class="op">-</span>(<span class="dv">1</span><span class="op">/</span>kstemmax))</div>
-<div class="sourceLine" id="cb58-2" data-line-number="2">krootmax</div></code></pre>
+<pre class="sourceCode r" id="cb60"><code class="sourceCode r"><div class="sourceLine" id="cb60-1" data-line-number="1">krootmax =<span class="st"> </span><span class="dv">1</span><span class="op">/</span>((<span class="dv">1</span><span class="op">/</span>ktot)<span class="op">-</span>(<span class="dv">1</span><span class="op">/</span>kstemmax))</div>
+<div class="sourceLine" id="cb60-2" data-line-number="2">krootmax</div></code></pre>
 <pre><code>## [1] 5.579497</code></pre>
 <p>Now, we need to divide total maximum conductance of the root system xylem among soil layers we need weights inversely proportional to the length of transport distances <span class="citation">(J. S. Sperry, Venturas, et al. <a href="#ref-Sperry2016">2016</a>)</span>. Vertical transport lengths can be calculated from soil depths and radial spread can be calculated assuming cylinders with volume proportional to the proportions of fine root biomass. Let’s assume a soil with three layers:</p>
-<pre class="sourceCode r" id="cb60"><code class="sourceCode r"><div class="sourceLine" id="cb60-1" data-line-number="1">d =<span class="st"> </span>s<span class="op">$</span>dVec</div>
-<div class="sourceLine" id="cb60-2" data-line-number="2">d</div></code></pre>
+<pre class="sourceCode r" id="cb62"><code class="sourceCode r"><div class="sourceLine" id="cb62-1" data-line-number="1">d =<span class="st"> </span>s<span class="op">$</span>dVec</div>
+<div class="sourceLine" id="cb62-2" data-line-number="2">d</div></code></pre>
 <pre><code>## [1]  300  700 1000</code></pre>
 <p>The proportion of fine roots in each layer, assuming a linear dose response model, will be:</p>
-<pre class="sourceCode r" id="cb62"><code class="sourceCode r"><div class="sourceLine" id="cb62-1" data-line-number="1">Z50 =<span class="st"> </span><span class="dv">200</span></div>
-<div class="sourceLine" id="cb62-2" data-line-number="2">Z95 =<span class="st"> </span><span class="dv">1500</span></div>
-<div class="sourceLine" id="cb62-3" data-line-number="3">v1 =<span class="st"> </span><span class="kw">root_ldrDistribution</span>(Z50,Z95, d)</div>
-<div class="sourceLine" id="cb62-4" data-line-number="4">v1</div></code></pre>
+<pre class="sourceCode r" id="cb64"><code class="sourceCode r"><div class="sourceLine" id="cb64-1" data-line-number="1">Z50 =<span class="st"> </span><span class="dv">200</span></div>
+<div class="sourceLine" id="cb64-2" data-line-number="2">Z95 =<span class="st"> </span><span class="dv">1500</span></div>
+<div class="sourceLine" id="cb64-3" data-line-number="3">v1 =<span class="st"> </span><span class="kw">root_ldrDistribution</span>(Z50,Z95, d)</div>
+<div class="sourceLine" id="cb64-4" data-line-number="4">v1</div></code></pre>
 <pre><code>##           [,1]      [,2]       [,3]
 ## [1,] 0.6661036 0.2784153 0.05548106</code></pre>
 <p>Having this information, the calculation of root length (i.e. the sum of vertical and radial lengths) to each layer (<span class="math inline">\(L_j\)</span>) is done using function <code>root_rootLength()</code>:</p>
-<pre class="sourceCode r" id="cb64"><code class="sourceCode r"><div class="sourceLine" id="cb64-1" data-line-number="1">rl =<span class="st"> </span><span class="kw">root_rootLengths</span>(v1, d)</div>
-<div class="sourceLine" id="cb64-2" data-line-number="2">rl</div></code></pre>
+<pre class="sourceCode r" id="cb66"><code class="sourceCode r"><div class="sourceLine" id="cb66-1" data-line-number="1">rl =<span class="st"> </span><span class="kw">root_rootLengths</span>(v1, d)</div>
+<div class="sourceLine" id="cb66-2" data-line-number="2">rl</div></code></pre>
 <pre><code>## [1] 2150.000 1496.481 1816.149</code></pre>
 <p>where lengths are in mm. The proportion of total root xylem conductance corresponding to each layer (<span class="math inline">\(w_j\)</span>) is given by <code>root_xylemConductanceProportions()</code>:</p>
-<pre class="sourceCode r" id="cb66"><code class="sourceCode r"><div class="sourceLine" id="cb66-1" data-line-number="1">w1 =<span class="st"> </span><span class="kw">root_xylemConductanceProportions</span>(v1, d)</div>
-<div class="sourceLine" id="cb66-2" data-line-number="2">w1</div></code></pre>
+<pre class="sourceCode r" id="cb68"><code class="sourceCode r"><div class="sourceLine" id="cb68-1" data-line-number="1">w1 =<span class="st"> </span><span class="kw">root_xylemConductanceProportions</span>(v1, d)</div>
+<div class="sourceLine" id="cb68-2" data-line-number="2">w1</div></code></pre>
 <pre><code>## [1] 0.2762029 0.3968217 0.3269754</code></pre>
 <p>Xylem conductance proportions can be quite different than the fine root biomass proportions. This is because radial lengths are largest for the first top layers and vertical lengths are largest for the bottom layers. The maximum root xylem conductances of each layer will be the product of maximum total conductance of root xylem and weights:</p>
-<pre class="sourceCode r" id="cb68"><code class="sourceCode r"><div class="sourceLine" id="cb68-1" data-line-number="1">w1<span class="op">*</span>krootmax</div></code></pre>
+<pre class="sourceCode r" id="cb70"><code class="sourceCode r"><div class="sourceLine" id="cb70-1" data-line-number="1">w1<span class="op">*</span>krootmax</div></code></pre>
 <pre><code>## [1] 1.541073 2.214065 1.824358</code></pre>
 <p>In <strong>medfate</strong> we calculate maximum root xylem conductance using a reference root xylem conductivity value (<span class="math inline">\(K_{r,max,ref}\)</span>):
 <span class="math display">\[\begin{equation}
 k_{r,max}=\frac{1000}{0.018} \cdot \sum_{j}{\frac{w_j \cdot K_{r,max,ref}\cdot A_{s}}{L_j\cdot A_{l}}}
 \end{equation}\]</span>
 where <span class="math inline">\(w_j\)</span> are root xylem conductance proportion of layer <span class="math inline">\(j\)</span> and <span class="math inline">\(L_j\)</span> is the root length (in m) to layer <span class="math inline">\(j\)</span>. Note that here we use weights <span class="math inline">\(w_j\)</span> assuming they represent proportions of total sapwood area that come from each layer (i.e. the longer the path the larger the proportion of sapwood area). This calculation is made available by function <code>hydraulics_maximumRootHydraulicConductance()</code>. When <span class="math inline">\(K_{r,max,ref}\)</span> is missing, then we assume that <span class="math inline">\(K_{r,max,ref} = K_{x,max,ref}\)</span>. Let’s consider the same <em>Q. ilex</em> tree of 4m height as before. If we specify root xylem specific conductivity as <span class="math inline">\(K_{r,max,ref} = K_{s,max,ref} =0.77\)</span> we have:</p>
-<pre class="sourceCode r" id="cb70"><code class="sourceCode r"><div class="sourceLine" id="cb70-1" data-line-number="1">rootxylem_kmax =<span class="st"> </span><span class="fl">0.77</span></div>
-<div class="sourceLine" id="cb70-2" data-line-number="2">krootmax =<span class="st"> </span><span class="kw">hydraulics_maximumRootHydraulicConductance</span>(rootxylem_kmax, Al2As, </div>
-<div class="sourceLine" id="cb70-3" data-line-number="3">                                                      v1, d)</div>
-<div class="sourceLine" id="cb70-4" data-line-number="4">krootmax</div></code></pre>
+<pre class="sourceCode r" id="cb72"><code class="sourceCode r"><div class="sourceLine" id="cb72-1" data-line-number="1">rootxylem_kmax =<span class="st"> </span><span class="fl">0.77</span></div>
+<div class="sourceLine" id="cb72-2" data-line-number="2">krootmax =<span class="st"> </span><span class="kw">hydraulics_maximumRootHydraulicConductance</span>(rootxylem_kmax, Al2As, </div>
+<div class="sourceLine" id="cb72-3" data-line-number="3">                                                      v1, d)</div>
+<div class="sourceLine" id="cb72-4" data-line-number="4">krootmax</div></code></pre>
 <pre><code>## [1] 9.769308</code></pre>
 <p>The maximum root xylem conductances of each layer would be:</p>
-<pre class="sourceCode r" id="cb72"><code class="sourceCode r"><div class="sourceLine" id="cb72-1" data-line-number="1">krootmaxvec =<span class="st"> </span>w1<span class="op">*</span>krootmax</div>
-<div class="sourceLine" id="cb72-2" data-line-number="2">krootmaxvec</div></code></pre>
+<pre class="sourceCode r" id="cb74"><code class="sourceCode r"><div class="sourceLine" id="cb74-1" data-line-number="1">krootmaxvec =<span class="st"> </span>w1<span class="op">*</span>krootmax</div>
+<div class="sourceLine" id="cb74-2" data-line-number="2">krootmaxvec</div></code></pre>
 <pre><code>## [1] 2.698311 3.876673 3.194324</code></pre>
 <p>and the fraction of total xylem resistance due to stem would be:</p>
-<pre class="sourceCode r" id="cb74"><code class="sourceCode r"><div class="sourceLine" id="cb74-1" data-line-number="1">(<span class="dv">1</span><span class="op">/</span>kstemmax)<span class="op">/</span>((<span class="dv">1</span><span class="op">/</span>kstemmax)<span class="op">+</span>(<span class="dv">1</span><span class="op">/</span>krootmax))</div></code></pre>
+<pre class="sourceCode r" id="cb76"><code class="sourceCode r"><div class="sourceLine" id="cb76-1" data-line-number="1">(<span class="dv">1</span><span class="op">/</span>kstemmax)<span class="op">/</span>((<span class="dv">1</span><span class="op">/</span>kstemmax)<span class="op">+</span>(<span class="dv">1</span><span class="op">/</span>krootmax))</div></code></pre>
 <pre><code>## [1] 0.7447818</code></pre>
 <p>In contrast with the approach of <span class="citation">Christoffersen et al. (<a href="#ref-Christoffersen2016">2016</a>)</span>, in this approach the root maximum conductance depends root length and distribution, and is not a fixed fraction of stem maximum conductance. Assuming constant root length, then the proportion of total resistance due to the stem will increase with tree height <span class="citation">(Magnani, Mencuccini, and Grace <a href="#ref-Magnani2000">2000</a>)</span>:</p>
 <p><img src="medfatebook_files/figure-html/unnamed-chunk-94-1.png" width="432" style="display: block; margin: auto;" /></p>
@@ -485,26 +484,26 @@ where <span class="math inline">\(w_j\)</span> are root xylem conductance propor
 <p>Maximum rhizosphere conductance (<span class="math inline">\(k_{rh, max}\)</span>, in <span class="math inline">\(mmol \cdot m^{-2} \cdot s^{-1} \cdot MPa^{-1}\)</span>) is difficult to measure directly, as it depends on the rhizosphere (i.e. fine root) surface in each soil layer, and will probably always be a parameter to be calibrated. Instead of trying to estimate rhizosphere surface from root architecture <span class="citation">(Sperry et al. <a href="#ref-Sperry1998">1998</a>)</span>, we follow <span class="citation">J. S. Sperry, Wang, et al. (<a href="#ref-Sperry2016a">2016</a>)</span> and determine the maximum rhizosphere conductance in each layer from an inputed ‘average percentage rhizosphere resistance’. The percentage of continuum resistance corresponding to the rhizosphere is calculated from the vulnerability curves of stem, root and rhizosphere at the same water potential. The average resistance is found by evaluating the percentage for water potential values between 0 and <span class="math inline">\(\Psi_{crit}\)</span>. The following figure illustrates how the supply function, for different soil water potentials, is affected by increasing values of the average percentage of rhizosphere resistance:</p>
 <p><img src="medfatebook_files/figure-html/unnamed-chunk-95-1.png" width="432" style="display: block; margin: auto;" /></p>
 <p><span class="citation">J. S. Sperry, Wang, et al. (<a href="#ref-Sperry2016a">2016</a>)</span> found average percentages of rhizosphere resistance around 67%, but these exceptionally-high values were probably a consequence of using an unsegmented supply function (i.e. single vulnerability curve for roots, stem and leaves). If we specify a 15% of average resistance in the rhizosphere (see parameter <code>averageFracRhizosphereResistance</code> in function <code>defaultControl()</code>), the maximum rhizosphere conductance values for the three layers are found calling:</p>
-<pre class="sourceCode r" id="cb76"><code class="sourceCode r"><div class="sourceLine" id="cb76-1" data-line-number="1">krmax =<span class="st"> </span><span class="kw">rep</span>(<span class="dv">0</span>,<span class="dv">3</span>) </div>
-<div class="sourceLine" id="cb76-2" data-line-number="2">krmax[<span class="dv">1</span>]=<span class="st"> </span><span class="kw">hydraulics_findRhizosphereMaximumConductance</span>(<span class="dv">15</span>, </div>
-<div class="sourceLine" id="cb76-3" data-line-number="3">                     s<span class="op">$</span>VG_n[<span class="dv">1</span>],s<span class="op">$</span>VG_alpha[<span class="dv">1</span>],</div>
-<div class="sourceLine" id="cb76-4" data-line-number="4">                     krootmax, rootc,rootd, </div>
-<div class="sourceLine" id="cb76-5" data-line-number="5">                     kstemmax, stemc, stemd,</div>
-<div class="sourceLine" id="cb76-6" data-line-number="6">                     kleafmax, leafc, leafd)</div>
-<div class="sourceLine" id="cb76-7" data-line-number="7">krmax[<span class="dv">2</span>] =<span class="st"> </span><span class="kw">hydraulics_findRhizosphereMaximumConductance</span>(<span class="dv">15</span>, </div>
-<div class="sourceLine" id="cb76-8" data-line-number="8">                      s<span class="op">$</span>VG_n[<span class="dv">2</span>],s<span class="op">$</span>VG_alpha[<span class="dv">2</span>],</div>
-<div class="sourceLine" id="cb76-9" data-line-number="9">                      krootmax, rootc,rootd, </div>
-<div class="sourceLine" id="cb76-10" data-line-number="10">                      kstemmax, stemc, stemd,</div>
-<div class="sourceLine" id="cb76-11" data-line-number="11">                      kleafmax, leafc, leafd)</div>
-<div class="sourceLine" id="cb76-12" data-line-number="12">krmax[<span class="dv">3</span>] =<span class="st"> </span><span class="kw">hydraulics_findRhizosphereMaximumConductance</span>(<span class="dv">15</span>, </div>
-<div class="sourceLine" id="cb76-13" data-line-number="13">                      s<span class="op">$</span>VG_n[<span class="dv">3</span>],s<span class="op">$</span>VG_alpha[<span class="dv">3</span>],</div>
-<div class="sourceLine" id="cb76-14" data-line-number="14">                      krootmax, rootc,rootd, </div>
-<div class="sourceLine" id="cb76-15" data-line-number="15">                      kstemmax, stemc, stemd,</div>
-<div class="sourceLine" id="cb76-16" data-line-number="16">                      kleafmax, leafc, leafd)</div>
-<div class="sourceLine" id="cb76-17" data-line-number="17">krmax</div></code></pre>
+<pre class="sourceCode r" id="cb78"><code class="sourceCode r"><div class="sourceLine" id="cb78-1" data-line-number="1">krmax =<span class="st"> </span><span class="kw">rep</span>(<span class="dv">0</span>,<span class="dv">3</span>) </div>
+<div class="sourceLine" id="cb78-2" data-line-number="2">krmax[<span class="dv">1</span>]=<span class="st"> </span><span class="kw">hydraulics_findRhizosphereMaximumConductance</span>(<span class="dv">15</span>, </div>
+<div class="sourceLine" id="cb78-3" data-line-number="3">                     s<span class="op">$</span>VG_n[<span class="dv">1</span>],s<span class="op">$</span>VG_alpha[<span class="dv">1</span>],</div>
+<div class="sourceLine" id="cb78-4" data-line-number="4">                     krootmax, rootc,rootd, </div>
+<div class="sourceLine" id="cb78-5" data-line-number="5">                     kstemmax, stemc, stemd,</div>
+<div class="sourceLine" id="cb78-6" data-line-number="6">                     kleafmax, leafc, leafd)</div>
+<div class="sourceLine" id="cb78-7" data-line-number="7">krmax[<span class="dv">2</span>] =<span class="st"> </span><span class="kw">hydraulics_findRhizosphereMaximumConductance</span>(<span class="dv">15</span>, </div>
+<div class="sourceLine" id="cb78-8" data-line-number="8">                      s<span class="op">$</span>VG_n[<span class="dv">2</span>],s<span class="op">$</span>VG_alpha[<span class="dv">2</span>],</div>
+<div class="sourceLine" id="cb78-9" data-line-number="9">                      krootmax, rootc,rootd, </div>
+<div class="sourceLine" id="cb78-10" data-line-number="10">                      kstemmax, stemc, stemd,</div>
+<div class="sourceLine" id="cb78-11" data-line-number="11">                      kleafmax, leafc, leafd)</div>
+<div class="sourceLine" id="cb78-12" data-line-number="12">krmax[<span class="dv">3</span>] =<span class="st"> </span><span class="kw">hydraulics_findRhizosphereMaximumConductance</span>(<span class="dv">15</span>, </div>
+<div class="sourceLine" id="cb78-13" data-line-number="13">                      s<span class="op">$</span>VG_n[<span class="dv">3</span>],s<span class="op">$</span>VG_alpha[<span class="dv">3</span>],</div>
+<div class="sourceLine" id="cb78-14" data-line-number="14">                      krootmax, rootc,rootd, </div>
+<div class="sourceLine" id="cb78-15" data-line-number="15">                      kstemmax, stemc, stemd,</div>
+<div class="sourceLine" id="cb78-16" data-line-number="16">                      kleafmax, leafc, leafd)</div>
+<div class="sourceLine" id="cb78-17" data-line-number="17">krmax</div></code></pre>
 <pre><code>## [1] 276438796  97039144  97039144</code></pre>
 <p>The values are the same because the texture of the three layers is the same in this case. If we take into account root distribution, actual maximum rhizosphere conductance values are:</p>
-<pre class="sourceCode r" id="cb78"><code class="sourceCode r"><div class="sourceLine" id="cb78-1" data-line-number="1">krmax<span class="op">*</span>v1</div></code></pre>
+<pre class="sourceCode r" id="cb80"><code class="sourceCode r"><div class="sourceLine" id="cb80-1" data-line-number="1">krmax<span class="op">*</span>v1</div></code></pre>
 <pre><code>##           [,1]     [,2]    [,3]
 ## [1,] 184136883 27017184 5383835</code></pre>
 </div>
@@ -539,14 +538,14 @@ V_{leaf} = \frac{10^{-3}}{SLA \cdot \rho_{leaf}} \cdot \Theta_{leaf}
 \end{equation}\]</span>
 where the density of wood substance can be assumed to be fixed and equal to 1.54 <span class="math inline">\(g \cdot cm^{-3}\)</span> (Dunlap 1914).</p>
 <p>For example, let’s calculate the stem and leaf water capacity for a Q. ilex tree of 15 m height:</p>
-<pre class="sourceCode r" id="cb80"><code class="sourceCode r"><div class="sourceLine" id="cb80-1" data-line-number="1">wd =<span class="st"> </span><span class="fl">1.0</span></div>
-<div class="sourceLine" id="cb80-2" data-line-number="2">Al2As =<span class="st"> </span><span class="dv">2512</span> </div>
-<div class="sourceLine" id="cb80-3" data-line-number="3">H =<span class="st"> </span><span class="dv">1500</span> <span class="co"># 15 m</span></div>
-<div class="sourceLine" id="cb80-4" data-line-number="4"><span class="kw">hydraulics_stemWaterCapacity</span>(Al2As, H, wd)</div></code></pre>
+<pre class="sourceCode r" id="cb82"><code class="sourceCode r"><div class="sourceLine" id="cb82-1" data-line-number="1">wd =<span class="st"> </span><span class="fl">1.0</span></div>
+<div class="sourceLine" id="cb82-2" data-line-number="2">Al2As =<span class="st"> </span><span class="dv">2512</span> </div>
+<div class="sourceLine" id="cb82-3" data-line-number="3">H =<span class="st"> </span><span class="dv">1500</span> <span class="co"># 15 m</span></div>
+<div class="sourceLine" id="cb82-4" data-line-number="4"><span class="kw">hydraulics_stemWaterCapacity</span>(Al2As, H, wd)</div></code></pre>
 <pre><code>## [1] 0.001005046</code></pre>
-<pre class="sourceCode r" id="cb82"><code class="sourceCode r"><div class="sourceLine" id="cb82-1" data-line-number="1">ld =<span class="st"> </span><span class="fl">0.7</span></div>
-<div class="sourceLine" id="cb82-2" data-line-number="2">SLA =<span class="st"> </span><span class="fl">5.870</span> </div>
-<div class="sourceLine" id="cb82-3" data-line-number="3"><span class="kw">hydraulics_leafWaterCapacity</span>(SLA, ld)</div></code></pre>
+<pre class="sourceCode r" id="cb84"><code class="sourceCode r"><div class="sourceLine" id="cb84-1" data-line-number="1">ld =<span class="st"> </span><span class="fl">0.7</span></div>
+<div class="sourceLine" id="cb84-2" data-line-number="2">SLA =<span class="st"> </span><span class="fl">5.870</span> </div>
+<div class="sourceLine" id="cb84-3" data-line-number="3"><span class="kw">hydraulics_leafWaterCapacity</span>(SLA, ld)</div></code></pre>
 <pre><code>## [1] 0.0001327463</code></pre>
 </div>
 </div>

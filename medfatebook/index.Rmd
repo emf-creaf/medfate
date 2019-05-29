@@ -1,6 +1,9 @@
 --- 
 title: "The medfate reference book"
-author: "Miquel De Cáceres"
+author: 
+  name: "Miquel De Cáceres"
+  affiliation: "Forest Science and Technology Center of Catalonia (CTFC)"
+  email: "miquelcaceres@gmail.com"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 documentclass: book

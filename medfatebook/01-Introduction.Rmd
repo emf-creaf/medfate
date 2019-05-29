@@ -2,17 +2,33 @@
 
 # Introduction {#intro}
 
+
+Being able to anticipate the impact of global change on ecosystems is one of the major environmental challenges in contemporary societies. However, uncertainties in how ecological systems function and practical constraints in how to integrate available information prevent the development of robust and reliable predictive models. Despite the amount of knowledge accumulated about the functioning and dynamics of Mediterranean forests, scientists should make coordinate their efforts to address the challenge of integrating the different global change drivers in a modelling framework useful for research and applications.
+
+The R package `medfate` has been designed to study the characteristics and simulate dynamics of Mediterranean forests. Fire and drought impacts are the main drivers covered by the package. Representation of vegetation is not spatially-explicit (i.e. trees or shrubs do not have explicit coordinates within forest stands). This simplified representation is chosen so that package functions can be easily applied to forest plot data from national forest inventories. Since the package intends to facilitate predictions of not only forest functioning but also forest structure and composition, the taxonomic identity of plants is stored, and parameter values need to be provided for each taxonomic entity (but the package could be used with functional groups). 
+
+
 ## Package installation
 
-The **medfate** package can be installed from CRAN or Github:
-
+Package **medfate** can be found at [CRAN](https://CRAN.R-project.org/package=medfate), where it is updated every few months. Hence, it can be installed using:
 ```{r eval=FALSE}
 install.packages("medfate")
-# or the development version
+```
+
+Users can also download and install the latest stable versions GitHub as follows (required package `devtools` should be installed/updated first):
+
+```{r installation, eval = FALSE}
 devtools::install_github("miquelcaceres/medfate")
 ```
 
+When installing from GitHub, may need to force the installation of package vignettes, by using: 
 
-## Description
+```{r installation vignettes, eval = FALSE}
+devtools::install_github("miquelcaceres/medfate", 
+                         build_opts = c("--no-resave-data", "--no-manual"))
+```
 
-TO BE DONE
+
+## How to use this book
+
+This is a reference book for simulation and static models included in **medfate**. Hands-on user guides can be found as package vignettes included in its distribution. The manual is intended to reflect **version `r packageVersion("medfate")`**. Our purpose is to continuously update this reference with package updates, so that users can know about the models they are using at the time when functions are run. As the manual will keep package updates, after model applications users should store the PDF version of the reference manual to be sure it matches the version the package reported in the application (e.g. report or article).
