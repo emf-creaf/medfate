@@ -10,7 +10,7 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.path = "README-")
 
 ## Introduction
 
-Package `medfate` is designed to assist forest scientists to simulate forest functioning and dynamics, using cohort-based description of forest stands. The package provides functions to simulate the following processes:
+Package **medfate** is designed to assist forest scientists to simulate forest functioning and dynamics, using cohort-based description of forest stands. The package provides functions to simulate the following processes:
 
 + Soil water balance (De Cáceres et al. 2015)
 + Plant hydraulics, transpiration and photosynthesis
@@ -18,20 +18,25 @@ Package `medfate` is designed to assist forest scientists to simulate forest fun
 
 The models are parameterized for species of the Mediterranean region (particularly for Catalonia, NE Spain), but forests with different composition could be modelled with different parameter sets.
 
-## Package installation and documentation
+## Package installation
 
-Package `medfate` can be found at [CRAN](https://CRAN.R-project.org/package=medfate), where it is updated every few months. Users can also download and install the latest stable versions GitHub as follows (required package `devtools` should be installed/updated first):
+Package **medfate** can be found at [CRAN](https://CRAN.R-project.org/package=medfate), where it is updated every few months. Users can also download and install the latest stable versions GitHub as follows (required package `devtools` should be installed/updated first):
 
 ```{r installation, eval = FALSE}
 devtools::install_github("miquelcaceres/medfate")
 ```
 
-Documentation on the models included in `medfate` and how to run them using the package functions can be found at (http://vegmod.ctfc.cat/medfateweb). Additionally, users can have help to run package functions directly as package vignettes, by forcing their inclusion in installation: 
+Additionally, users can have help to run package functions directly as package vignettes, by forcing their inclusion in installation: 
 ```{r installation vignettes, eval = FALSE}
 devtools::install_github("miquelcaceres/medfate", 
                          build_opts = c("--no-resave-data", "--no-manual"))
 ```
 
+## Documentation
+
+The package includes a number of vignettes that illustrate how to run simulation models in **medfate**. Full documentation on the design and formulation of medfate models can be found in the [medfate reference book](https://miquelcaceres.github.io/medfate/medfatebook/intro.html).
+
+Additional documentation on the models included in the package and how to run them using the package functions can be found at the package website (http://vegmod.ctfc.cat/medfateweb).
 
 ## References
 

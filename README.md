@@ -1,34 +1,57 @@
 medfate - Mediterranean forest functioning
 ================
 
-Introduction
-------------
+## Introduction
 
-Package `medfate` is designed to assist forest scientists to simulate forest functioning and dynamics, using cohort-based description of forest stands. The package provides functions to simulate the following processes:
+Package **medfate** is designed to assist forest scientists to simulate
+forest functioning and dynamics, using cohort-based description of
+forest stands. The package provides functions to simulate the following
+processes:
 
--   Soil water balance (De Cáceres et al. 2015)
--   Plant hydraulics, transpiration and photosynthesis
--   Plant growth
+  - Soil water balance (De Cáceres et al. 2015)
+  - Plant hydraulics, transpiration and photosynthesis
+  - Plant growth
 
-The models are parameterized for species of the Mediterranean region (particularly for Catalonia, NE Spain), but forests with different composition could be modelled with different parameter sets.
+The models are parameterized for species of the Mediterranean region
+(particularly for Catalonia, NE Spain), but forests with different
+composition could be modelled with different parameter sets.
 
-Package installation and documentation
---------------------------------------
+## Package installation
 
-Package `medfate` can be found at [CRAN](https://CRAN.R-project.org/package=medfate), where it is updated every few months. Users can also download and install the latest stable versions GitHub as follows (required package `devtools` should be installed/updated first):
+Package **medfate** can be found at
+[CRAN](https://CRAN.R-project.org/package=medfate), where it is updated
+every few months. Users can also download and install the latest stable
+versions GitHub as follows (required package `devtools` should be
+installed/updated first):
 
 ``` r
 devtools::install_github("miquelcaceres/medfate")
 ```
 
-Documentation on the models included in `medfate` and how to run them using the package functions can be found at (<http://vegmod.ctfc.cat/medfateweb>). Additionally, users can have help to run package functions directly as package vignettes, by forcing their inclusion in installation:
+Additionally, users can have help to run package functions directly as
+package vignettes, by forcing their inclusion in installation:
 
 ``` r
 devtools::install_github("miquelcaceres/medfate", 
                          build_opts = c("--no-resave-data", "--no-manual"))
 ```
 
-References
-----------
+## Documentation
 
--   De Cáceres M, Martínez-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L. (2015) Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes. Agricultural and Forest Meteorology 213: 77-90 (<doi:10.1016/j.agrformet.2015.06.012>).
+The package includes a number of vignettes that illustrate how to run
+simulation models in **medfate**. Full documentation on the design and
+formulation of medfate models can be found in the [medfate reference
+book](https://miquelcaceres.github.io/medfate/medfatebook/intro.html).
+
+Additional documentation on the models included in the package and how
+to run them using the package functions can be found at the package
+website (<http://vegmod.ctfc.cat/medfateweb>).
+
+## References
+
+  - De Cáceres M, Martínez-Vilalta J, Coll L, Llorens P, Casals P,
+    Poyatos R, Pausas JG, Brotons L. (2015) Coupling a water balance
+    model with forest inventory data to predict drought stress: the role
+    of forest structural changes vs. climate changes. Agricultural and
+    Forest Meteorology 213: 77-90
+    (<doi:10.1016/j.agrformet.2015.06.012>).

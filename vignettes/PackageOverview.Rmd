@@ -22,9 +22,12 @@ Being able to anticipate the impact of global change on ecosystems is one of the
 
 The R package `medfate` has been designed to study the characteristics and simulate dynamics of Mediterranean forests. Fire and drought impacts are the main drivers covered by the package. Representation of vegetation is not spatially-explicit (i.e. trees or shrubs do not have explicit coordinates within forest stands). This simplified representation is chosen so that package functions can be easily applied to forest plot data from national forest inventories. Since the package intends to facilitate predictions of not only forest functioning but also forest structure and composition, the taxonomic identity of plants is stored, and parameter values need to be provided for each taxonomic entity (but the package could be used with functional groups). 
 
-```{r}
+```{r, echo=TRUE, include=FALSE}
 library(medfate)
 ```
+
+
+Package vignettes only cover how to run models using the package functions. Complete documentation on the design and formulation of medfate models can be found in the [medfate reference book](https://miquelcaceres.github.io/medfate/medfatebook/intro.html).
 
 ## Data structures
 
