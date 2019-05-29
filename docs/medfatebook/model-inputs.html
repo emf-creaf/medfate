@@ -48,6 +48,59 @@
 
 
 
+<style type="text/css">
+div.sourceLine, a.sourceLine { display: inline-block; min-height: 1.25em; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; }
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+div.sourceLine, a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource div.sourceLine, .numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource div.sourceLine::before, .numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em; }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; color: #aaaaaa;  padding-left: 4px; }
+@media screen {
+a.sourceLine::before { text-decoration: underline; color: initial; }
+}
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.bn { color: #40a070; } /* BaseN */
+code span.fl { color: #40a070; } /* Float */
+code span.ch { color: #4070a0; } /* Char */
+code span.st { color: #4070a0; } /* String */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.ot { color: #007020; } /* Other */
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.fu { color: #06287e; } /* Function */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code span.cn { color: #880000; } /* Constant */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.im { } /* Import */
+code span.va { color: #19177c; } /* Variable */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.op { color: #666666; } /* Operator */
+code span.bu { } /* BuiltIn */
+code span.ex { } /* Extension */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.at { color: #7d9029; } /* Attribute */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -223,36 +276,48 @@
 <li class="chapter" data-level="17.2" data-path="update-of-structural-variables.html"><a href="update-of-structural-variables.html#shrub-height-and-cover"><i class="fa fa-check"></i><b>17.2</b> Shrub height and cover</a></li>
 </ul></li>
 <li class="part"><span><b>V Static modules</b></span></li>
-<li class="chapter" data-level="18" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html"><i class="fa fa-check"></i><b>18</b> Fuel characteristics and fire behaviour</a><ul>
-<li class="chapter" data-level="18.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#purpose"><i class="fa fa-check"></i><b>18.1</b> Purpose</a></li>
-<li class="chapter" data-level="18.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#input-data"><i class="fa fa-check"></i><b>18.2</b> Input data</a><ul>
-<li class="chapter" data-level="18.2.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#forest-inventory-plot-data"><i class="fa fa-check"></i><b>18.2.1</b> Forest inventory plot data</a></li>
-<li class="chapter" data-level="18.2.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#species-specific-parameters"><i class="fa fa-check"></i><b>18.2.2</b> Species-specific parameters</a></li>
-<li class="chapter" data-level="18.2.3" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#other-inputs"><i class="fa fa-check"></i><b>18.2.3</b> Other inputs</a></li>
+<li class="chapter" data-level="18" data-path="leaf-biomass-leaf-area-and-vertical-profiles.html"><a href="leaf-biomass-leaf-area-and-vertical-profiles.html"><i class="fa fa-check"></i><b>18</b> Leaf biomass, leaf area and vertical profiles</a><ul>
+<li class="chapter" data-level="18.1" data-path="leaf-biomass-leaf-area-and-vertical-profiles.html"><a href="leaf-biomass-leaf-area-and-vertical-profiles.html#species-parameters-1"><i class="fa fa-check"></i><b>18.1</b> Species parameters</a></li>
+<li class="chapter" data-level="18.2" data-path="leaf-biomass-leaf-area-and-vertical-profiles.html"><a href="leaf-biomass-leaf-area-and-vertical-profiles.html#leaf-biomass-and-area"><i class="fa fa-check"></i><b>18.2</b> Leaf biomass and area</a><ul>
+<li class="chapter" data-level="18.2.1" data-path="leaf-biomass-leaf-area-and-vertical-profiles.html"><a href="leaf-biomass-leaf-area-and-vertical-profiles.html#leaf-biomass-for-tree-cohorts"><i class="fa fa-check"></i><b>18.2.1</b> Leaf biomass for tree cohorts</a></li>
+<li class="chapter" data-level="18.2.2" data-path="leaf-biomass-leaf-area-and-vertical-profiles.html"><a href="leaf-biomass-leaf-area-and-vertical-profiles.html#leaf-biomass-for-shrub-cohorts"><i class="fa fa-check"></i><b>18.2.2</b> Leaf biomass for shrub cohorts</a></li>
+<li class="chapter" data-level="18.2.3" data-path="leaf-biomass-leaf-area-and-vertical-profiles.html"><a href="leaf-biomass-leaf-area-and-vertical-profiles.html#leaf-area"><i class="fa fa-check"></i><b>18.2.3</b> Leaf area</a></li>
 </ul></li>
-<li class="chapter" data-level="18.3" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#fuel-characteristics"><i class="fa fa-check"></i><b>18.3</b> Fuel characteristics</a><ul>
-<li class="chapter" data-level="18.3.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#cohort-fuel-loading"><i class="fa fa-check"></i><b>18.3.1</b> Cohort fuel loading</a></li>
-<li class="chapter" data-level="18.3.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#vertical-structure-of-fuels"><i class="fa fa-check"></i><b>18.3.2</b> Vertical structure of fuels</a></li>
-<li class="chapter" data-level="18.3.3" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#fuel-bulk-density-profile"><i class="fa fa-check"></i><b>18.3.3</b> Fuel bulk density profile</a></li>
-<li class="chapter" data-level="18.3.4" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#fuel-loading-w-and-fuel-depth-delta"><i class="fa fa-check"></i><b>18.3.4</b> Fuel loading (<span class="math inline">\(w\)</span>) and fuel depth (<span class="math inline">\(\delta\)</span>)</a></li>
-<li class="chapter" data-level="18.3.5" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#other-fuel-characteristics"><i class="fa fa-check"></i><b>18.3.5</b> Other fuel characteristics</a></li>
-<li class="chapter" data-level="18.3.6" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#unit-conversion-of-fuel-characteristics"><i class="fa fa-check"></i><b>18.3.6</b> Unit conversion of fuel characteristics</a></li>
+<li class="chapter" data-level="18.3" data-path="leaf-biomass-leaf-area-and-vertical-profiles.html"><a href="leaf-biomass-leaf-area-and-vertical-profiles.html#vertical-distribution-of-leaves"><i class="fa fa-check"></i><b>18.3</b> Vertical distribution of leaves</a><ul>
+<li class="chapter" data-level="18.3.1" data-path="leaf-biomass-leaf-area-and-vertical-profiles.html"><a href="leaf-biomass-leaf-area-and-vertical-profiles.html#crownbaseheight"><i class="fa fa-check"></i><b>18.3.1</b> Crown base height</a></li>
 </ul></li>
-<li class="chapter" data-level="18.4" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#surface-fire-behavior"><i class="fa fa-check"></i><b>18.4</b> Surface fire behavior</a><ul>
-<li class="chapter" data-level="18.4.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#surface-rate-of-spread-r"><i class="fa fa-check"></i><b>18.4.1</b> Surface rate of spread (<span class="math inline">\(R\)</span>)</a></li>
-<li class="chapter" data-level="18.4.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#heat-sink-q"><i class="fa fa-check"></i><b>18.4.2</b> Heat sink (<span class="math inline">\(q\)</span>)</a></li>
-<li class="chapter" data-level="18.4.3" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#fireline-intensity-i_b-and-flame-length-fl"><i class="fa fa-check"></i><b>18.4.3</b> Fireline intensity (<span class="math inline">\(I_B\)</span>) and flame length (<span class="math inline">\(FL\)</span>)</a></li>
 </ul></li>
-<li class="chapter" data-level="18.5" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#crown-fire-behavior"><i class="fa fa-check"></i><b>18.5</b> Crown fire behavior</a><ul>
-<li class="chapter" data-level="18.5.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#canopy-reaction-intensity-i_r-ca"><i class="fa fa-check"></i><b>18.5.1</b> Canopy reaction intensity (<span class="math inline">\(I_{R, ca}\)</span>)</a></li>
-<li class="chapter" data-level="18.5.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#canopy-heat-sink-q_ca"><i class="fa fa-check"></i><b>18.5.2</b> Canopy heat sink (<span class="math inline">\(q_{ca}\)</span>)</a></li>
-<li class="chapter" data-level="18.5.3" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#fireline-intensity-i_bcrown-and-flame-length-fl_crown"><i class="fa fa-check"></i><b>18.5.3</b> Fireline intensity (<span class="math inline">\(I_{B,crown}\)</span>) and flame length (<span class="math inline">\(FL_{crown}\)</span>)</a></li>
+<li class="chapter" data-level="19" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html"><i class="fa fa-check"></i><b>19</b> Fuel characteristics and fire behaviour</a><ul>
+<li class="chapter" data-level="19.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#purpose"><i class="fa fa-check"></i><b>19.1</b> Purpose</a></li>
+<li class="chapter" data-level="19.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#input-data"><i class="fa fa-check"></i><b>19.2</b> Input data</a><ul>
+<li class="chapter" data-level="19.2.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#forest-inventory-plot-data"><i class="fa fa-check"></i><b>19.2.1</b> Forest inventory plot data</a></li>
+<li class="chapter" data-level="19.2.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#species-specific-parameters"><i class="fa fa-check"></i><b>19.2.2</b> Species-specific parameters</a></li>
+<li class="chapter" data-level="19.2.3" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#other-inputs"><i class="fa fa-check"></i><b>19.2.3</b> Other inputs</a></li>
 </ul></li>
-<li class="chapter" data-level="18.6" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#fire-potentials"><i class="fa fa-check"></i><b>18.6</b> Fire potentials</a><ul>
-<li class="chapter" data-level="18.6.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#surface-fire-behavior-potentials"><i class="fa fa-check"></i><b>18.6.1</b> Surface fire behavior potentials</a></li>
-<li class="chapter" data-level="18.6.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#crown-fire-behavior-potentials"><i class="fa fa-check"></i><b>18.6.2</b> Crown fire behavior potentials</a></li>
+<li class="chapter" data-level="19.3" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#fuel-characteristics"><i class="fa fa-check"></i><b>19.3</b> Fuel characteristics</a><ul>
+<li class="chapter" data-level="19.3.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#fuel-strata"><i class="fa fa-check"></i><b>19.3.1</b> Fuel strata</a></li>
+<li class="chapter" data-level="19.3.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#cohort-fuel-loading"><i class="fa fa-check"></i><b>19.3.2</b> Cohort fuel loading</a></li>
+<li class="chapter" data-level="19.3.3" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#vertical-distribution-of-cohort-fuels"><i class="fa fa-check"></i><b>19.3.3</b> Vertical distribution of cohort fuels</a></li>
+<li class="chapter" data-level="19.3.4" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#fuel-bulk-density-profile"><i class="fa fa-check"></i><b>19.3.4</b> Fuel bulk density profile</a></li>
+<li class="chapter" data-level="19.3.5" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#fuel-loading-w-and-fuel-depth-delta"><i class="fa fa-check"></i><b>19.3.5</b> Fuel loading (<span class="math inline">\(w\)</span>) and fuel depth (<span class="math inline">\(\delta\)</span>)</a></li>
+<li class="chapter" data-level="19.3.6" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#other-fuel-characteristics"><i class="fa fa-check"></i><b>19.3.6</b> Other fuel characteristics</a></li>
+<li class="chapter" data-level="19.3.7" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#unit-conversion-of-fuel-characteristics"><i class="fa fa-check"></i><b>19.3.7</b> Unit conversion of fuel characteristics</a></li>
 </ul></li>
-<li class="chapter" data-level="18.7" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#unit-conversion-of-outputs"><i class="fa fa-check"></i><b>18.7</b> Unit conversion of outputs</a></li>
+<li class="chapter" data-level="19.4" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#surface-fire-behavior"><i class="fa fa-check"></i><b>19.4</b> Surface fire behavior</a><ul>
+<li class="chapter" data-level="19.4.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#surface-rate-of-spread-r"><i class="fa fa-check"></i><b>19.4.1</b> Surface rate of spread (<span class="math inline">\(R\)</span>)</a></li>
+<li class="chapter" data-level="19.4.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#heat-sink-q"><i class="fa fa-check"></i><b>19.4.2</b> Heat sink (<span class="math inline">\(q\)</span>)</a></li>
+<li class="chapter" data-level="19.4.3" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#fireline-intensity-i_b-and-flame-length-fl"><i class="fa fa-check"></i><b>19.4.3</b> Fireline intensity (<span class="math inline">\(I_B\)</span>) and flame length (<span class="math inline">\(FL\)</span>)</a></li>
+</ul></li>
+<li class="chapter" data-level="19.5" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#crown-fire-behavior"><i class="fa fa-check"></i><b>19.5</b> Crown fire behavior</a><ul>
+<li class="chapter" data-level="19.5.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#canopy-reaction-intensity-i_r-ca"><i class="fa fa-check"></i><b>19.5.1</b> Canopy reaction intensity (<span class="math inline">\(I_{R, ca}\)</span>)</a></li>
+<li class="chapter" data-level="19.5.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#canopy-heat-sink-q_ca"><i class="fa fa-check"></i><b>19.5.2</b> Canopy heat sink (<span class="math inline">\(q_{ca}\)</span>)</a></li>
+<li class="chapter" data-level="19.5.3" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#fireline-intensity-i_bcrown-and-flame-length-fl_crown"><i class="fa fa-check"></i><b>19.5.3</b> Fireline intensity (<span class="math inline">\(I_{B,crown}\)</span>) and flame length (<span class="math inline">\(FL_{crown}\)</span>)</a></li>
+</ul></li>
+<li class="chapter" data-level="19.6" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#fire-potentials"><i class="fa fa-check"></i><b>19.6</b> Fire potentials</a><ul>
+<li class="chapter" data-level="19.6.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#surface-fire-behavior-potentials"><i class="fa fa-check"></i><b>19.6.1</b> Surface fire behavior potentials</a></li>
+<li class="chapter" data-level="19.6.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#crown-fire-behavior-potentials"><i class="fa fa-check"></i><b>19.6.2</b> Crown fire behavior potentials</a></li>
+</ul></li>
+<li class="chapter" data-level="19.7" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#unit-conversion-of-outputs"><i class="fa fa-check"></i><b>19.7</b> Unit conversion of outputs</a></li>
 </ul></li>
 <li class="appendix"><span><b>Appendices</b></span></li>
 <li class="chapter" data-level="A" data-path="model-parametrization.html"><a href="model-parametrization.html"><i class="fa fa-check"></i><b>A</b> Model parametrization</a><ul>
@@ -322,7 +387,7 @@
 <ol style="list-style-type: decimal">
 <li><em>Saxton model</em>: In this model, volumetric soil moisture <span class="math inline">\(\theta(\Psi_s)\)</span> corresponding to a given water potential <span class="math inline">\(\Psi\)</span> (in MPa) below <span class="math inline">\(\Psi_{fc}\)</span> is calculated using:
 <span class="math display">\[\begin{equation}\theta(\Psi) = (\Psi/A)^{(1/B)}\end{equation}\]</span>
-where <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> depend on the texture and, if available, organic matter in the soil layer. If organic matter is available, <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> are calculated from <span class="math inline">\(P_{clay}\)</span>, <span class="math inline">\(P_{sand}\)</span> and <span class="math inline">\(OM\)</span> following <span class="citation">K. E. Saxton and Rawls (<a href="#ref-Saxton2006">2006</a>)</span>. Otherwise, they are calculated from <span class="math inline">\(P_{clay}\)</span> and <span class="math inline">\(P_{sand}\)</span> as indicated in <span class="citation">K. Saxton et al. (<a href="#ref-Saxton1986">1986</a>)</span>. Volumetric changes between field capacity and saturation are estimated using a linear function.</li>
+where <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> depend on the texture and, if available, organic matter in the soil layer. If organic matter is available, <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> are calculated from <span class="math inline">\(P_{clay}\)</span>, <span class="math inline">\(P_{sand}\)</span> and <span class="math inline">\(OM\)</span> following <span class="citation">Saxton and Rawls (<a href="#ref-Saxton2006">2006</a>)</span>. Otherwise, they are calculated from <span class="math inline">\(P_{clay}\)</span> and <span class="math inline">\(P_{sand}\)</span> as indicated in <span class="citation">Saxton et al. (<a href="#ref-Saxton1986">1986</a>)</span>. Volumetric changes between field capacity and saturation are estimated using a linear function.</li>
 <li><em>Van Genuchten model</em>: The well known van Genuchten <span class="citation">(<a href="#ref-Genuchten1980">1980</a>)</span> model is:
 <span class="math display">\[\begin{equation}\theta(\Psi) = \theta_{res}+\frac{\theta_{sat}-\theta_{res}}{\left[1+ (\alpha \cdot \Psi)^n \right]^{1-1/n}}\end{equation}\]</span>
 where <span class="math inline">\(\theta(\psi)\)</span> is the water retention, <span class="math inline">\(\theta_{sat}\)</span> is the saturated water content, <span class="math inline">\(\theta_{res}\)</span> is the residual water content, <span class="math inline">\(\alpha\)</span> is related to the inverse of the air entry pressure (and here has to be expressed in <span class="math inline">\(MPa^{-1}\)</span>), and <span class="math inline">\(n\)</span> is a measure of the pore-size distribution.</li>
@@ -340,7 +405,7 @@ where <span class="math inline">\(\theta(\psi)\)</span> is the water retention, 
 <p>Parameters of the van Genuchten-Mualem model are estimated from the physical description of the soil using two kinds of pedotransfer functions (see help for <code>soil()</code>):</p>
 <ol style="list-style-type: decimal">
 <li>Using the USDA texture classification and the average texture class parameters given by <span class="citation">Carsel and Parrish (<a href="#ref-Carsel1988">1988</a>)</span>.</li>
-<li>Directly from the soil texture, organic matter and bulk density, using the pedotransfer functions in <span class="citation">B. Tóth et al. (<a href="#ref-Toth2015">2015</a>)</span>.</li>
+<li>Directly from the soil texture, organic matter and bulk density, using the pedotransfer functions in <span class="citation">Tóth et al. (<a href="#ref-Toth2015">2015</a>)</span>.</li>
 </ol>
 <p>Users can also edit the <code>soil</code> object manually to provide user-defined parameters of the Van Genuchten retention curve.</p>
 </div>
@@ -391,8 +456,8 @@ roots in each soil layer:</p>
 Y_i(z)=\frac{1}{1+(z/Z_{50,i})^{c_i}}
 \end{equation}\]</span>
 where <span class="math inline">\(Y_i(z)\)</span> is the cumulative fraction of fine root mass located between surface and depth <span class="math inline">\(z\)</span>; <span class="math inline">\(Z_{50,i}\)</span> is the depth above which 50% of the root mass is located; and <span class="math inline">\(c_i\)</span> is a shape parameter related to <span class="math inline">\(Z_{50,i}\)</span> and <span class="math inline">\(Z_{95,i}\)</span> as <span class="math inline">\(c_i = 2.94 / \ln(Z_{50,i} / Z_{95,i})\)</span> (see <code>root_ldrDistribution()</code>).</p>
-<div class="figure"><span id="fig:unnamed-chunk-2"></span>
-<img src="medfatebook_files/figure-html/unnamed-chunk-2-1.png" alt="Examples of root density profile according to a conic distribution (left) and the linear dose response model (right)." width="672" />
+<div class="figure"><span id="fig:unnamed-chunk-3"></span>
+<img src="medfatebook_files/figure-html/unnamed-chunk-3-1.png" alt="Examples of root density profile according to a conic distribution (left) and the linear dose response model (right)." width="672" />
 <p class="caption">
 Figure 2.1: Examples of root density profile according to a conic distribution (left) and the linear dose response model (right).
 </p>

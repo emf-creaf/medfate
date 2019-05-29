@@ -1,0 +1,84 @@
+# (PART) Static modules {-}
+
+```{r, echo = FALSE}
+data("SpParamsMED")
+data(exampleforest)
+```
+
+# Leaf biomass, leaf area and vertical profiles
+
+
+## Species parameters
+
++ $cr(SP_i)$: [`cr`]: Ratio between crown length and total height for shrubs.
++ $a_{fbt}, b_{fbt}, c_{fbt}, d_{fbt}$ [`a_fbt`, `b_fbt`, `c_fbt`, `d_fbt`]: Regression coefficients used to calculate foliar biomass of an individual tree from its $DBH$ and the cummulative basal area of larger trees.
++ $a_{ash}$ [`a_ash`]: Regression coefficient relating the square of shrub height with shrub area.
++ $a_{bsh}$ and $b_{bsh}$ [`a_bsh`, `b_bsh`]: Allometric coefficients relating phytovolume with dry weight of shrub individuals.
+
+## Leaf biomass and area
+
+### Leaf biomass for tree cohorts
+
+Foliar biomass for a single tree of cohort $i$ ($FB_{tree,i}$; in $kg$) is calculated using:
+\begin{equation}
+FB_{tree,i} = a_{fbt} \cdot DBH_{i}^{b_{fbt}}\cdot e^{c_{fbt}\cdot BAL_i} \cdot DBH_{i}^{d_{fbt} \cdot BA_{sup}}
+(\#eq:onetreefoliarbiomass)
+\end{equation}
+where $DBH_{i}$ is the diameter of the tree (in $cm$), $BAL_i$ is the cummulative basal area ($m^2\cdot ha^{-1}$) of trees having a larger diameter, and $a_{fbt}$, $b_{fbt}$, $c_{fbt}$ and $c_{fbt}$ are species-specific regression coefficients. The foliar biomass of the whole tree cohort ($FB_{i}$; in $kg\cdot m^{-2}$) is obtained multiplying tree foliar biomass by tree density  ($N_{i}$; in $ind.\cdot ha^{-1}$):
+\begin{equation}
+FB_{i} = FB_{tree,i}\cdot (N_{i}/10000)
+(\#eq:treefoliarbiomass)
+\end{equation}
+
+### Leaf biomass for shrub cohorts
+To calculate the leaf biomass of a shrub cohort, we first determine $A_{sh,i}$, the area (in $cm^2$) occupied by one average individual of height $H_{i}$ (in $cm$), using the quadratic relationship: 
+\begin{equation}
+A_{sh,i} = a_{ash} \cdot H_{i}^2
+\end{equation}
+where $a_{ash}$ is a species-specific parameter. The model then estimates the dry weight of leaves and branches up to 6.35mm in diameter ($B_{sh,i}$, in kg) of this average individual (i.e. fine fuel biomass), using an allometric relationship with shrub crown phytovolume assuming a cylinder (in $cm^3$):
+\begin{equation}
+B_{sh,i} = a_{bsh} \cdot (A_{sh,i}\cdot H_{i}\cdot cr(SP_i))^{b_{bsh}}
+\end{equation}
+where $a_{bsh}$ and $b_{bsh}$ are species-specific parameters and $cr(SP_i)$ is a species-specific crown ratio (a proportion between 0 and 1, the ratio between crown length and total height). Shrub density ($N_{i}$; in $ind.\cdot m^{-2}$) can be grossly estimated from percent cover ($C_{i}$, in percent) and $A_{sh,i}$ (in $cm^{-2}$):
+\begin{equation}
+N_{i} = \frac{C_{i}/100}{A_{sh,i}/10000}
+\end{equation}
+The fine fuel biomass of a shrub cohort ($W_{i}$, in $kg \cdot m^{-2}$) is simply the product of $B_{sh,i}$ ($kg$ of dry weight) and $N_{i}$:
+\begin{equation}
+W_{i} =  B_{sh,i}\cdot N_{i}
+(\#eq:shrubloading)
+\end{equation}
+Foliar biomass (in $kg \cdot m^{-2}$) can be obtained using the species-specific ratio $r_{6.35}(SP_i)$:
+\begin{equation}
+FB_{i} =  W_{i}/r_{6.35}(SP_i)\\
+(\#eq:shrubfoliarbiomass)
+\end{equation}
+If not known, $r_{6.35}(SP_i)$ can be set to a default value of 2 (equivalent to %50 of weight corresponding to leaves).
+
+### Leaf area
+
+## Vertical distribution of leaves
+
+### Crown base height {#crownbaseheight}
+
+Crown base height ($H_{b,i}$; in cm) is defined as the height corresponding to the first living branch expressed as a fraction of total height. It is calculated from the crown ratio ($CR$; a proportion between 0 and 1), i.e. the ratio between crown length and total height:
+\begin{equation}
+H_{b,i} = H_{i} \cdot (1 - CR_i)
+(\#eq:CrownHeight)
+\end{equation}
+In the case of shrubs the crown ratio is simply equal by a species-specific parameter: $CR_i =  cr(SP_i)$. In the case of trees, the crown ratio is modelled as a function of tree size and stand competition, following a modification of the logistic equation of @Hasenauer1996:
+\begin{equation}
+CR_i = \frac{1}{1+e^{-(a_{cr}+b_{1cr}\cdot HD +b_{2cr} \cdot (H_i/100)+b_{3cr} \cdot DBH_i^2+c_{1cr} \cdot BAL_i + c_{2cr} \cdot ln(CCF))}}
+(\#eq:treecrownratio)
+\end{equation}
+where $HD = H_i/(100\cdot DBH_i)$ is the height to diameter ratio (in $m\cdot cm^{-1}$), $H_i$ is the tree height, $DBH_i$ is the diameter, $CCF$ is the crown competition factor and $a_{cr}$, $b_{1cr}$, $b_{2cr}$, $b_{3cr}$, $c_{1cr}$ and $c_{2cr}$ are species-specific parameters. The crown competition factor is in turn calculated using [@Krajicek1961]:
+\begin{equation}
+CCF = \sum_{i}{N_i \cdot MCA_i}= \sum_{i}{N_i \cdot \pi \cdot (CW_i/2)^2/100}
+\end{equation}
+where $N_i$ is the tree density, $MCA_i$ is the maximum crown area (in percent of unit area) and $CW_i$ is the crown width (in m) assuming an open-grown tree, estimated from an allometric relationship with tree diameter:
+\begin{equation}
+CW_i = a_{cw}\cdot BDH_i^{b_{cw}} 
+\end{equation}
+where again $a_{cw}$ and $b_{cw}$ are species-specific parameters. 
+
+
