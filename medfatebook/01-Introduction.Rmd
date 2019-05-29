@@ -29,10 +29,59 @@ devtools::install_github("miquelcaceres/medfate",
 ```
 
 
+## Package functions
+
+### Dynamic simulation functions
+
+Eco-hydrological processes are fundamental for the simulation models included in the `medfate` package. Soil water balance can be studied for a single forest stand using function  `spwb()`. Function `spwb()` may be used to:
+
+1. Monitor or forecast temporal variation in soil water content in particular stands (for example to estimate mushroom yield).
+2. Monitor or forecast temporal variation of plant drought stress in particular stands (for example to anticipate mortality events).
+3. Monitor or forecast temporal variation of fuel moisture in particular stands (for example to monitor wildfire risk).
+
+Changes in leaf area and plant growth are key to evaluate the influence of climatic conditions on forest structure and function. Package `medfate` allows simulating plant growth of a set of cohorts (competing for light and water) in a single forest stand using function `growth()`. Function `growth()` may be used to:
+
+1. Monitor or forecast temporal variation in water fluxes and soil water content in particular stands (for example to estimate regulation ecosystem services) taking into account processes determining plant growth.
+2. Monitor or forecast temporal variation of plant drought stress in particular stands(for example to anticipate mortality events) taking into account processes determining plant growth.
+3. Monitor or forecast temporal variation of live fuel moisture and the amount of standing dead and live fuels in particular stands (for example to monitor wildfire risk).
+
+### Sub-model functions
+
+Many of the functions included in `medfate` are internally called by simulation functions. Some of them are made available to the user, to facilitate understanding the different sub-models and to facilitate a more creative use of the package. Sub-model functions are grouped by *subject*, which is included in the name of the function. The different sub-model functions are (by subject):
+
+* `biophysics_*`: Physical and biophysical utility functions.
+* `hydraulics_*`: Plant hydraulics.
+* `hydrology_*`: Canopy and soil hydrology (rainfall interception, soil evaporation, soil infiltration).
+* `light_*`: Light extinction and absortion.
+* `moisture_*`: Live tissue moisture.
+* `pheno_*`: Leaf phenology.
+* `photo_*`: Leaf photosynthesis.
+* `root_*`: Root distribution and conductance calculations.
+* `soil_*`: Soil hydraulics and thermodynamics.
+* `spwb_*`: Soil water balance parameter optimization/calibration routines.
+* `transp_*`: Stomatal regulation and resulting transpiration/photosynthesis.
+
+### Static functions
+
+Package `medfate` include a number of functions to examine properties of the plants conforming forests, summary functions at the stand level or vertical profiles of several physical properties:
+
+* `plant_*`: Cohort-level information (species name, id, leaf area, height...).
+* `species_*`: Cohort-level attributes aggregated by species (e.g. basal area).
+* `forest_*`: Forest-level attributes (e.g. basal area).
+* `vprofile_*`: Vertical profiles (light, wind, fuel density, leaf area density).
+
+Vegetation functioning and dynamics have strong, but complex, effects on fire hazard. On one hand, growth and death of organs and individuals changes the amount of standing live and dead fuels, as well as downed dead fuels. On the other, day-to-day changes in soil and plant water content changes the physical properties of fuel, notably fuel moisture content. Package `medfate` provides functions to estimate fuel properties and potential fire behaviour in forest inventory plots. Specifically, function `fuel_stratification()` provides a stratification of the stand into understory and canopy strata; and `fuel_FCCS()` calculates fuel characteristics. Function `fuel_cohortFineFMC()` allows obtaining daily fuel moisture content estimates corresponding to the water status of plants, as returned by function `spwb()`. A fire behaviour model is implemented in function `fire_FCCS()` to calculate the intensity of surface fire reaction and the rate of fire spread of surface fires assuming a steady-state fire. Fuel and fire behaviour functions allow obtaining the following: 
+
+1. Fuel characteristics by stratum.
+2. Surface fire behavior (i.e. reaction intensity, rate of spread, fireline intensity and flame length).
+3. Crown fire behavior.
+4. Fire potential ratings of surface fire behavior and crown fire behavior.
+
 ## How to use this book
 
-This is a reference book for simulation and static models included in **medfate**. Hands-on user guides can be found as package vignettes included in its distribution. The manual is intended to reflect **version `r packageVersion("medfate")`**. Our purpose is to continuously update this reference with package updates, so that users can know about the models they are using at the time when functions are run. As the manual will keep package updates, after model applications users should store the PDF version of the reference manual to be sure it matches the version the package reported in the application (e.g. report or article).
+This is a reference book for simulation and static models included in **medfate**. Hands-on user guides to run simulation functions and static functions can be found as package **vignettes** included in its distribution. The manual is intended to reflect **version `r packageVersion("medfate")`**. Our purpose is to continuously update this reference with package updates, so that users can know about the models they are using at the time when functions are run. As the manual will keep package updates, after model applications users should store the PDF version of the reference manual to be sure it matches the version the package reported in the application (e.g. report or article).
 
-In this book we use `code` to indicate R code or to refer to variable names within R. When relevant, we give the correspondence between mathematical symbols and variable names within R. 
+The following chapter describes the soil, vegetation and meteorology inputs that apply to all models. After that, the book presents each simulation model using a set of chapters. The first chapter introduces the model and the remaining describe the details of formulations by processes. Those process formulations that are common to more than one model (like hydrology) are described only once. Static models and their functions are presented grouped at the end of the book, before the appendices.
 
-The following chapter describes the soil, vegetation and meteorology inputs that apply to all models. After that, the book presents each simulation model using a set of chapters. The first chapter introduces the model and the remaining describe the details of formulations by processes. Those process formulations that are common to more than one model (like hydrology) are described only once.
+
+In this book we use `code` to indicate R code or to refer to variable names within R, and `function()` to refer to a package function. When relevant, we will indicate the correspondence between mathematical symbols, their units and variable names within R. 

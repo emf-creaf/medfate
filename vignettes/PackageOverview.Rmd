@@ -79,26 +79,27 @@ Package `medfate` allows simulating plant growth of a set of cohorts (competing 
 
 Many of the functions included in `medfate` are internally called by simulation functions. Some of them are made available to the user, to facilitate understanding the different sub-models and to facilitate a more creative use of the package. Sub-model functions are grouped by *subject*, which is included in the name of the function. The different sub-model functions are (by subject):
 
-* **biophysics_* **: Physical and biophysical utility functions.
-* **hydraulics_* **: Plant hydraulics.
-* **hydrology_* **: Canopy and soil hydrology (rainfall interception, soil evaporation, soil infiltration).
-* **light_* **: Light extinction and absortion.
-* **moisture_* **: Live tissue moisture.
-* **pheno_* **: Leaf phenology.
-* **photo_* **: Leaf photosynthesis.
-* **root_* **: Root distribution and conductance calculations.
-* **soil_* **: Soil hydraulics and thermodynamics.
-* **spwb_* **: Soil water balance parameter optimization/calibration routines.
-* **transp_* **: Stomatal regulation and resulting transpiration/photosynthesis.
+
+* `biophysics_*`: Physical and biophysical utility functions.
+* `hydraulics_*`: Plant hydraulics.
+* `hydrology_*`: Canopy and soil hydrology (rainfall interception, soil evaporation, soil infiltration).
+* `light_*`: Light extinction and absortion.
+* `moisture_*`: Live tissue moisture.
+* `pheno_*`: Leaf phenology.
+* `photo_*`: Leaf photosynthesis.
+* `root_*`: Root distribution and conductance calculations.
+* `soil_*`: Soil hydraulics and thermodynamics.
+* `spwb_*`: Soil water balance parameter optimization/calibration routines.
+* `transp_*`: Stomatal regulation and resulting transpiration/photosynthesis.
 
 ## Static functions
 ### Plant and forest attributes
 Package `medfate` include a number of functions to examine properties of the plants conforming the `forest` object, summary functions at the stand level or vertical profiles of several physical properties:
 
-* **plant_* **: Cohort-level information (species name, id, leaf area, height...).
-* **species_* **: Cohort-level attributes aggregated by species (e.g. basal area).
-* **forest_* **: Forest-level attributes (e.g. basal area).
-* **vprofile_* **: Vertical profiles (light, wind, fuel density, leaf area density).
+* `plant_*`: Cohort-level information (species name, id, leaf area, height...).
+* `species_*`: Cohort-level attributes aggregated by species (e.g. basal area).
+* `forest_*`: Forest-level attributes (e.g. basal area).
+* `vprofile_*`: Vertical profiles (light, wind, fuel density, leaf area density).
 
 ### Fuel properties and fire hazard
 

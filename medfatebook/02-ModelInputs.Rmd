@@ -126,4 +126,4 @@ Not all models require all weather variables, this will be indicated in the corr
 
 
 ## Control parameters
-Control parameters are a list of parameter values, initialized using function `defaultControl()`, that the user can modify to change the general behavior of model functions. 
+Control parameters are a list of parameter values, initialized using function `defaultControl()`, that the user can modify to change the general behavior of model functions. Not all control parameters are relevant to all model functions
