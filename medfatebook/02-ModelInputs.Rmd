@@ -6,12 +6,12 @@
 
 Soil can be described using between 1 and 5 soil layers. For each soil layer $s$ the following physical parameters are needed for each soil layer (see function `defaultSoilParams()`):
 
-+ $Z_{s}$ [`widths`]: Soil layer width ($d_s$, in mm).
++ $d_{s}$ [`widths`]: Soil layer width (in mm).
 + $P_{clay,s}$ [`clay`]: Percent of clay.
 + $P_{sand,s}$ [`sand`]: Percent of sand.
 + $OM$ [`om`]: Percentage of organic mater per dry weight (can be missing).
-+ $BD_{s}$ [`bd`]: Bulk density (g/cm3) of each soil layer.
-+ $P_{rocks,s}$ [`rfc`]: Percentage of rock fragment content ($P_{rocks,s}$).
++ $BD_{s}$ [`bd`]: Bulk density (in g/cm3) of each soil layer.
++ $P_{rocks,s}$ [`rfc`]: Percentage of rock fragment content (%).
 
 Soil texture (i.e. percent of sand, silt and clay), bulk density and rock fragment content can differ between soil layers. Specifying a deep rocky layer is important because Mediterranean plants may extend their roots into cracks existing in the parent rock [@Ruffault2013]. For those users lacking soil information, package **medfate** provides a function to get soil information from [SoilGrids.org](https://soilgrids.org/) (see function `soilgridsParams()`).
 
@@ -22,9 +22,9 @@ Water retention curve of a soil layer $s$ is the relationship between the water 
 1. *Saxton model*: In this model, volumetric soil moisture $\theta(\Psi_s)$ corresponding to a given water potential $\Psi$ (in MPa) below $\Psi_{fc}$ is calculated using: 
 \begin{equation}\theta(\Psi) = (\Psi/A)^{(1/B)}\end{equation}
 where $A$ and $B$ depend on the texture and, if available, organic matter in the soil layer. If organic matter is available, $A$ and $B$ are calculated $P_{clay}$, $P_{sand}$ and $OM$ following @Saxton2006. Otherwise, they are calculated from $P_{clay}$ and $P_{sand}$ as indicated in @Saxton1986. Volumetric changes between field capacity and saturation are estimated using a linear function.
-2. *Van Genuchten model*: The well known van Genuchten [@-Genuchten1980] model is:
+2. *Van Genuchten model*: The well known van Genuchten [-@Genuchten1980] model is:
 \begin{equation}\theta(\Psi) = \theta_{res}+\frac{\theta_{sat}-\theta_{res}}{\left[1+ (\alpha \cdot \Psi)^n \right]^{1-1/n}}\end{equation}
-where $\theta(\psi)$ is the water retention, $\theta_{sat}$ is the saturated water content, $\theta_{res}$ is the residual water content, $\alpha$ is related to the inverse of the air entry pressure (and here has to be expressed in MPa$^{-1}$), and $n$ is a measure of the pore-size distribution.
+where $\theta(\psi)$ is the water retention, $\theta_{sat}$ is the saturated water content, $\theta_{res}$ is the residual water content, $\alpha$ is related to the inverse of the air entry pressure (and here has to be expressed in $MPa^{-1}$), and $n$ is a measure of the pore-size distribution.
 
 
 ### Soil initialization
@@ -33,7 +33,7 @@ Soil initialization is needed to estimate soil hydrological parameters from its 
 + $P_{macro, s}$ [`macro`]: Percentage of macroporosity corresponding to each soil layers. Macroporosity values are calculated for each soil layer using the equations given in @Stolf2011.
 + $\gamma_{soil}$ [`Gsoil`]: The maximum daily evaporation from soil($mm \cdot day^{-1}$).
 + $\kappa_{soil}$ [`Ksoil`]: Extinction parameter to regulate the amount of water extracted from each soil layer during bare soil evaporation.
-+ $n_{s}$, $\alpha_{s}$, $\theta_{sat,s}$,$\theta_{res,s}$ [`VG_n`, `VG_alpha`, `VG_theta_sat`, `VG_theta_res`]: Parameter of the Van Genuchten-Mualem equations.
++ $n_{s}$, $\alpha_{s}$, $\theta_{sat,s}$,$\theta_{res,s}$ [`VG_n`, `VG_alpha`, `VG_theta_sat`, `VG_theta_res`]: Parameters of the Van Genuchten-Mualem equations.
 
 Parameters of the van Genuchten-Mualem model are estimated from the physical description of the soil using two kinds of pedotransfer functions (see help for `soil()`): 
 
@@ -84,13 +84,13 @@ All vegetation characteristics stay constant during water balance simulations, a
 The root system of each plant cohorts is described using the proportion of fine
 roots in each soil layer:
 
-+ $v_{i,s}$ [`V`]: The proportion of fine roots in each soil layer $s$.
++ $v_{i,s}$ [`V[i,s]`]: The proportion of fine roots in each soil layer $s$.
 
 The rooting system of each cohort $i$ (i.e. the proportions $v_{i,s}$) can be defined assuming conic distribution of fine roots (see `root_conicDistribution()`). In this case, only rooting depth parameter is needed to determine fine root proportions. Alternatively, one can adopt the linear dose response model (Collins and Bras, 2007; Schenk and Jackson, 2002): 
 \begin{equation}
 Y_i(z)=\frac{1}{1+(z/Z_{50,i})^{c_i}}
 \end{equation}
-where $Y_i(z)$ is the cumulative fraction of fine root mass located between surface and depth $z$; $Z_{50,i}$ is the depth above which 50\% of the root mass is located; and $c_i$ is a shape parameter related to $Z_{50,i}$ and $Z_{95,i}$ as $c_i  = 2.94 / \ln(Z_{50,i} / Z_{95,i})$ (see `root_ldrDistribution()`). 
+where $Y_i(z)$ is the cumulative fraction of fine root mass located between surface and depth $z$; $Z_{50,i}$ is the depth above which 50% of the root mass is located; and $c_i$ is a shape parameter related to $Z_{50,i}$ and $Z_{95,i}$ as $c_i  = 2.94 / \ln(Z_{50,i} / Z_{95,i})$ (see `root_ldrDistribution()`). 
 
 ```{r, echo = FALSE, fig.width=7, fig.height=4, fig.cap = "Examples of root density profile according to a conic distribution (left) and the linear dose response model (right)."}
 par(mar=c(4,4,1,1), mfrow=c(1,2))

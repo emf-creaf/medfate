@@ -1,7 +1,48 @@
 
 # Symbols
 
-The following tables list all symbols used in this document, along with their units and definition. When symbols are input parameters for **medfate** model functions, the name of those parameters in data frame `SpParamsMED` is also indicated.
+The following tables list all symbols used in this document, along with their units and definition. When symbols are input for **medfate** model functions, the R name of those parameters in the package (either in data frame `SpParamsMED`, soil input data frame, or the output of functions such as `spwbInput()`) is also indicated. 
+
+## Soils
+
+| Symbol | Units | R param | Description                        |
+|--------|-------|---------|------------------------------------|
+| $d_{s}$ | mm | `widths` | Soil layer width in soil layer $s$ |
+| $P_{clay,s}$ | % | `clay`|  Percent of clay in soil layer $s$ |
+| $P_{sand,s}$ | % | `sand` | Percent of sand in soil layer $s$ |
+| $OM$ | % | `om` | Percentage of organic mater per dry weight |
+| $BD_{s}$ | $g\cdot cm^{-3}$ | `bd` | Bulk density in soil layer $s$ |
+| $P_{rocks,s}$ | % | `rfc` | Percentage of rock fragment content in soil layer $s$ |
+| $\theta_s$ | $m^3 \cdot m^{-3}$ | | Volumetric moisture in soil layer $s$ |
+| $\Psi_s$ | MPa | | Water potential in soil layer $s$ |
+| $\Psi_{fc}$ | MPa | | Water potential at field capacity |
+| $A$, $B$ | | | Parameters of the Saxton pedotransfer functions |
+| $\theta_{sat}$ |$m^3 \cdot m^{-3}$ | `VG_theta_sat`| Volumetric moisture at saturation |
+| $\theta_{fc}$ |$m^3 \cdot m^{-3}$ |  | Volumetric moisture at field capacity (-0.033 MPa) |
+| $\theta_{wp}$ |$m^3 \cdot m^{-3}$ |  | Volumetric moisture at wilting point (-1.5 MPa) |
+| $\theta_{res}$ |$m^3 \cdot m^{-3}$ | `VG_theta_res` | Residual volumetric moisture |
+| $n$ | | `VG_n` | Parameter of the Van Genuchten [-@Genuchten1980] model |
+| $\alpha$ | | `VG_alpha`| Parameter of the Van Genuchten [-@Genuchten1980] model |
+| $P_{macro, s}$ | % | `macro` | Percentage of macroporosity corresponding to each soil layers. |
+| $\gamma_{soil}$ | $mm \cdot day^{-1}$ | `Gsoil` | The maximum daily evaporation from soil |
+| $\kappa_{soil}$ | | `Ksoil` | Extinction parameter to regulate the amount of water evaporated from each soil layer |
+| $WT$ | mm | | Water table depth |
+| $W_{s}$ | [0-1] |`W` | Proportion of volumetric moisture in relation to field capacity in soil layer $s$ |
+| $S_{snow}$ | mm |`SWE` | Snow water equivalent of the snow pack storage over the soil surface |
+
+
+## Vegetation
+
+| Symbol | Units | R param | Description                        |
+|--------|-------|---------|------------------------------------|
+| $H_i$ | cm | `H` | Total tree or shrub height of cohort $i$ |
+| $CR_i$ | | `CR` | Crown ratio (i.e. the ratio between crown length and total height) of cohort $i$ |
+| $LAI^{live}_i$ | | `LAI_live` | (Maximum) leaf area index (one-side leaf area per surface area of the stand) of cohort $i$ |
+| $LAI^{dead}_i$ | | `LAI_dead` | Dead leaf area index (one-side dead leaf area per surface area of the stand) of cohort $i$ |
+| $LAI^{\phi}_i$ | | `LAI_expanded` | Current expanded leaf area index (one-side expanded leaf area per surface area of the stand) of cohort $i$ |
+| $v_{i,s}$ | [0-1] | `V[i,s]` | The proportion of fine roots of cohort $i$ in soil layer $s$ |
+| $Z_{50,i}$ | mm | `Z50` | Depth above which 50% of the fine root mass of cohort $i$ is located |
+| $Z_{95,i}$ | mm | `Z95` | Depth above which 95% of the fine root mass of cohort $i$ is located |
 
 ## Anatomy 
 

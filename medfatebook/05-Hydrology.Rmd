@@ -147,7 +147,7 @@ legend("topleft", bty="n", lty=1:5, legend=c(paste("d =", SoilDepth,"Vsoil =",ro
 
 If `drainage = TRUE`, the water percolating from the lowest layer is considered deep drainage, $Dd$, and soil layers are never above field capacity. If `drainage = FALSE`, the excess of water in the lowest soil layer is not lost via drainage, so that this layer (and those above) can be filled up to saturation. This additional filling is done starting from below, and when a given layer reaches saturation, the model adds the remaining water to the layer above. If all layers are filled to saturation, the remaining water is assumed to be infiltration excess and is added to the surface runoff. 
 
-## Bare soil evaporation
+## Bare soil evaporation {#soilevaporation}
 Evaporation from the soil surface is the last component of the soil water balance to be calculated. There is a difference in the way that soil evaporative demand is calculated depending on the transpiration mode. Potential evaporation from the soil ($PE_{soil}$; in $mm\cdot day^{-1}$) is defined as the product between $PET$ and $L^{SWR}_{ground}$, the proportion of SWR absorbed by the ground:
 \begin{equation}
 PE_{soil} =  PET\cdot L^{SWR}_{ground}

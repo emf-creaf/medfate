@@ -38,17 +38,18 @@ where $Ps$ is precipitation as snowfall and $Sm$ is snow melt.
 
 Every day water balance is perfomed as follows. The model first updates leaf area values according to the phenology of species and calculates light extinction. After that, the model updates soil water content of soil layers in several steps:
 
-+ If snow dynamics are included, increase snow pack from snow precipitation ($Ps$) and decreases it from snow melting ($Sm$) (section \@ref(snowpack))
++ Update leaf area values according to the phenology of species (section \@ref(leafphenology)).
++ If snow dynamics are included, increase snow pack from snow precipitation ($Ps$) and decreases it from snow melting ($Sm$) (section \@ref(snowpack)).
 + Increase soil moisture due to rainfall ($Pr$), surface runon ($Ro$) and snow melting ($Sm$), after accounting for interception loss ($In$), surface runoff ($Ru$) and deep drainage ($Dd$)  (sections \@ref(interception) and \@ref(runoff))
-+ Decrease water content due to bare soil evaporation ($Es$).
-+ Determine transpiration, photosynthesis and drought stress for each plant cohort (section \@ref(transpirationgranier)) and decrease water content due to plant transpiration ($Tr$).
++ Decrease water content due to bare soil evaporation ($Es$) (section \@ref(soilevaporation)).
++ Determine transpiration, photosynthesis and drought stress for each plant cohort  and decrease water content due to plant transpiration ($Tr$) (chapter \@ref(transpirationgranier)).
 
 ## Model input
 ### Metereological input
 Weather input data must include variables calculated at the **daily** scale.
 
 + $T_{mean}$ [`MeanTemperature`]: Mean daily temperature (in $^{\circ} \mathrm{C}$).
-+ $Rad$ [`Radiation`]: Solar radiation, after accounting for clouds (in $MJ \cdot m^{-2}$), only necessary if snow pack dynamics are simulated (i.e., if \texttt{snowpack = TRUE}).
++ $Rad$ [`Radiation`]: Solar radiation, after accounting for clouds (in $MJ \cdot m^{-2}$), only necessary if snow pack dynamics are simulated.
 + $P$ [`Precipitation`]: Daily precipitation (in $L \cdot m^{-2}$ = mm of water).
 + $PET$ [`PET`]: Daily potential evapotranspiration (in  $L \cdot m^{-2}$ = mm of water), preferably calculated using Penman's equation.
 
@@ -60,10 +61,11 @@ Control parameters are a list of parameter values, initialized using function `d
 
 + `verbose [=TRUE]`: Whether extra console output is desired during simulations.
 + `soilFunctions [= "SX"]`: Water retention curve model, either "SX" (for Saxton) or "VG" (for Van Genuchten).
++ `leafPhenology [= TRUE]`:  Whether leaf phenology is simulated.
 + `snowpack [= TRUE]`:  Whether dynamics of snow pack are included.
 + `drainage [= TRUE]`:  Whether water exceeding the field capacity of the bottom layer is lost by deep drainage into a non-reachable compartment.
 + `transpirationMode [= "Granier"]`: Transpiration model, in this case "Granier".
-+ `defaultWindSpeed [= 5]`: Default value for wind speed (in $m \cdot s^{-1}$) when this is missing (only used for leaf fall).
++ `defaultWindSpeed [= 2.5]`: Default value for wind speed (in $m \cdot s^{-1}$) when this is missing (only used for leaf fall).
 + `cavitationRefill [= TRUE]`: If `FALSE` the model operates in a irreversible cavitation mode.
 
 ## Model output
@@ -73,6 +75,6 @@ Function `spwb` returns a list object whose elements are data tables. Each table
 + `Soil`: Daily variation of soil variables  (volume, moisture relative to field capacity, water potential) for soil layers.
 + `PlantLAI`: Daily leaf area index for each plant cohort.
 + `PlantTranspiration`: Daily transpiration (in mm) for each plant cohort.
-+ `PlantPhotosynthesis`: Daily net photosynthesis (in g C·m-2) for each plant cohort.
++ `PlantPhotosynthesis`: Daily net photosynthesis (in $g C \cdot m^{-2}$) for each plant cohort.
 + `PlantPsi`: Daily water potential of each plant (in MPa).
 + `PlantStress`: Daily stress level suffered by each plant cohort (relative whole-plant conductance).

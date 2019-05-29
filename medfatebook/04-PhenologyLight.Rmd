@@ -1,7 +1,7 @@
 # Leaf phenology and light extinction
 
 
-## Leaf phenology and leaf fall
+## Leaf phenology and leaf fall {#leafphenology}
 
 Given a base temperature ($T_{base} = 5^{\circ} \mathrm{C}$), the growth degree days ($GDD$) are zero for all those days where mean temperature $T_{mean}$ is below $T_{base}$ and start increasing when temperatures become warmer than this threshold. In other words, the $GDD$ function accumulates $\max(0.0, T_{mean} - T_{base})$ for all days previous to the current one. At the end of a year the cummulative value is set again to zero. Plant species can have either evergreen or winter-deciduous phenology. Evergreen plants maintain constant leaf area over the year, whereas in deciduous plants leaf-phenological status is updated daily, represented by $\phi_i$, the fraction of maximum leaf area. Leaf area index (LAI) values of deciduous plants are adjusted for leaf phenology following [@Prentice1993; @Sitch2003]:
 
