@@ -4,7 +4,9 @@
 
 ## Soil description
 
-Soil can be described using between 1 and 5 soil layers. For each soil layer $s$ the following physical parameters are needed for each soil layer (see function `defaultSoilParams()`):
+### Soil physical description
+
+Soil texture (i.e. percent of sand, silt and clay), bulk density and rock fragment content can differ between soil layers. Specifying a deep rocky layer is important because Mediterranean plants may extend their roots into cracks existing in the parent rock [@Ruffault2013]. In **medfate**,  soils can be described using between 1 and 5 soil layers. For each soil layer $s$ the following physical parameters are needed:
 
 + $d_{s}$ [`widths`]: Soil layer width (in mm).
 + $P_{clay,s}$ [`clay`]: Percent of clay.
@@ -13,11 +15,11 @@ Soil can be described using between 1 and 5 soil layers. For each soil layer $s$
 + $BD_{s}$ [`bd`]: Bulk density (in g/cm3) of each soil layer.
 + $P_{rocks,s}$ [`rfc`]: Percentage of rock fragment content (%).
 
-Soil texture (i.e. percent of sand, silt and clay), bulk density and rock fragment content can differ between soil layers. Specifying a deep rocky layer is important because Mediterranean plants may extend their roots into cracks existing in the parent rock [@Ruffault2013]. For those users lacking soil information, package **medfate** provides a function to get soil information from [SoilGrids.org](https://soilgrids.org/) (see function `soilgridsParams()`).
+Input data should be arranged in a data frame with soil layers in rows and variables in columns (see function `defaultSoilParams()`). The package provides a function to get soil information from [SoilGrids.org](https://soilgrids.org/) (see function `soilgridsParams()`) that can be helpful to those users lacking soil measurements corresponding to their target forest stands.
 
 ### Water retention curves
 
-Water retention curve of a soil layer $s$ is the relationship between the water content, $\theta_s$ (in $m^3 \cdot m^{-3}$ of soil, excluding rock fragments), and the soil water potential, $\Psi_s$ (in MPa). This curve is characteristic for different types of soil, and is also called the soil moisture characteristic curve. Two water retention curve models are provided:
+Water retention curve of a soil layer $s$ is the relationship between volumetric soil moisture, $\theta_s$ (in $m^3 \cdot m^{-3}$ of soil, excluding rock fragments), and the soil water potential, $\Psi_s$ (in MPa). This curve is characteristic for different types of soil, and is also called the *soil moisture characteristic curve*. Two water retention curve models are available in the package:
 
 1. *Saxton model*: In this model, volumetric soil moisture $\theta(\Psi_s)$ corresponding to a given water potential $\Psi$ (in MPa) below $\Psi_{fc}$ is calculated using: 
 \begin{equation}\theta(\Psi) = (\Psi/A)^{(1/B)}\end{equation}
@@ -40,7 +42,7 @@ Parameters of the van Genuchten-Mualem model are estimated from the physical des
 1. Using the USDA texture classification and the average texture class parameters given by @Carsel1988.
 2. Directly from the soil texture, organic matter and bulk density, using the pedotransfer functions in @Toth2015.
 
-
+Users can also edit the `soil` object manually to provide user-defined parameters of the Van Genuchten retention curve.
 
 ### Water holding capacity and water table depth
 
@@ -57,6 +59,8 @@ WT = \sum_{s}{d_s \cdot \min\left[1,(\theta_{sat,s} - \theta(\Psi_s))/(\theta_{s
 
 
 ## Vegetation description
+
+Representation of vegetation is not spatially-explicit in **medfate** (i.e. trees or shrubs do not have explicit coordinates within forest stands). However, differences in tree or shrub size (i.e. height) are explicitly taken into account. The taxonomic identity of plants is also considered, and parameter values need to be provided for each taxonomic entity (but the package could be used with functional groups). This representation is chosen so that package functions can be easily applied to forest plot data, for example from national forest inventories. 
 
 Vegetation in the stand is described using a set of plant cohorts, in an object
 of class `spwbInput`. Each plant cohort $i$ is primarly defined by its

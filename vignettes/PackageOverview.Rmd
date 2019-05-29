@@ -59,7 +59,7 @@ In addition to the physical soil description, this object contains soil paramete
 ## Dynamic simulation functions
 ### Water balance and plant drought stress
 
-Eco-hydrological processes are fundamental for the simulation models included in the `medfate` package. Eco-hydrological processes can be divided into local and landscape processes. By local processes we refer to the water balance of soils and plants within forest stands. Processes affecting soil water content include rainfall, canopy interception, infiltration and runoff, percolation and deep drainage, soil evaporation and plant transpiration. In `medfate`, the soil water balance of a forest is primarily used to predict drought stress for living plants in it. Soil water balance can be studied for a single forest stand using function  `spwb()`. Function `spwb()` may be used to:
+Eco-hydrological processes are fundamental for the simulation models included in the `medfate` package. In particular, the package allows the simulation of water balance of soils and plants within forest stands. Processes affecting soil water content include rainfall, canopy interception, infiltration and runoff, percolation and deep drainage, soil evaporation and plant transpiration. In `medfate`, the soil water balance of a forest is primarily used to predict drought stress for living plants in it. Soil water balance can be studied for a single forest stand using function  `spwb()`. Function `spwb()` may be used to:
 
 1. Monitor or forecast temporal variation in soil water content in particular stands (for example to estimate mushroom yield).
 2. Monitor or forecast temporal variation of plant drought stress in particular stands (for example to anticipate mortality events).

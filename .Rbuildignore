@@ -4,5 +4,5 @@
 ^README.md$
 ^README.Rmd$
 ^modeltests/*$
-^modeldescription/*$
+^medfatebook/*$
 ^docs/*$

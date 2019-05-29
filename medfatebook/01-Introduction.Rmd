@@ -2,11 +2,11 @@
 
 # Introduction {#intro}
 
+## What does **medfate** do?
 
 Being able to anticipate the impact of global change on ecosystems is one of the major environmental challenges in contemporary societies. However, uncertainties in how ecological systems function and practical constraints in how to integrate available information prevent the development of robust and reliable predictive models. Despite the amount of knowledge accumulated about the functioning and dynamics of Mediterranean forests, scientists should make coordinate their efforts to address the challenge of integrating the different global change drivers in a modelling framework useful for research and applications.
 
-The R package **medfate** has been designed to study the characteristics and simulate dynamics of Mediterranean forests. Fire and drought impacts are the main drivers covered by the package. Representation of vegetation is not spatially-explicit (i.e. trees or shrubs do not have explicit coordinates within forest stands). This simplified representation is chosen so that package functions can be easily applied to forest plot data from national forest inventories. Since the package intends to facilitate predictions of not only forest functioning but also forest structure and composition, the taxonomic identity of plants is stored, and parameter values need to be provided for each taxonomic entity (but the package could be used with functional groups). 
-
+The R package **medfate** has been designed to simulate the functioning and dynamics of Mediterranean forest stands at temporal scales from days to years. Fire and drought impacts are the main subjects covered by the package. Eco-hydrological processes are fundamental for the simulation models included in the package. In particular, the package allows the simulation of water balance of soils and plants within forest stands. It also allows simulating plant growth of a set of cohorts competing for light and water within a forest stand. Finally, the package also includes functions to relate the amount of plant biomass and the relative water content of plant tissues to live fuel moisture content, hence, fire hazard.
 
 The version of the reference manual that you are reading is intended to reflect **version `r packageVersion("medfate")`** of the package.
 
@@ -35,17 +35,17 @@ devtools::install_github("miquelcaceres/medfate",
 
 ### Dynamic simulation functions
 
-Eco-hydrological processes are fundamental for the simulation models included in the **medfate** package. Soil water balance can be studied for a single forest stand using function  `spwb()`. Function `spwb()` may be used to:
+Soil water balance can be studied for a given forest stand using function `spwb()`, with the following purposes:
 
 1. Monitor or forecast temporal variation in soil water content in particular stands (for example to estimate mushroom yield).
 2. Monitor or forecast temporal variation of plant drought stress in particular stands (for example to anticipate mortality events).
 3. Monitor or forecast temporal variation of fuel moisture in particular stands (for example to monitor wildfire risk).
 
-Changes in leaf area and plant growth are key to evaluate the influence of climatic conditions on forest structure and function. Package **medfate** allows simulating plant growth of a set of cohorts (competing for light and water) in a single forest stand using function `growth()`. Function `growth()` may be used to:
+Changes in leaf area and plant growth are key to evaluate the influence of climatic conditions on forest structure and function. Function `growth()` allows simulating  growth of a set of plant cohorts competing for light and water in a given forest stand, with the following purposes:
 
-1. Monitor or forecast temporal variation in water fluxes and soil water content in particular stands (for example to estimate regulation ecosystem services) taking into account processes determining plant growth.
-2. Monitor or forecast temporal variation of plant drought stress in particular stands(for example to anticipate mortality events) taking into account processes determining plant growth.
-3. Monitor or forecast temporal variation of live fuel moisture and the amount of standing dead and live fuels in particular stands (for example to monitor wildfire risk).
+1. Monitor or forecast temporal variation in water fluxes and soil water content in forest stands (for example to estimate regulation ecosystem services) taking into account processes determining leaf area changes and plant growth.
+2. Monitor or forecast temporal variation of plant size (i.e. growth) in forest stands.
+3. Monitor or forecast temporal variation of live fuel moisture and the amount of standing dead and live fuels in forest stands (for example to monitor wildfire risk).
 
 ### Sub-model functions
 
@@ -81,7 +81,7 @@ Vegetation functioning and dynamics have strong, but complex, effects on fire ha
 
 ## How to use this book
 
-This is a reference book for simulation and static models included in **medfate**. Hands-on user guides to run simulation functions and static functions can be found as package **vignettes** included in its distribution. Our purpose is to continuously update this reference with package updates, so that users can know about the models they are using at the time when functions are run. As the manual will keep package updates, after model applications users should store a **PDF version** of the reference manual to be sure it matches the version the package reported in the application (e.g. report or article).
+This is a *reference book* for simulation and static models included in **medfate**. Hands-on user guides to run simulation functions and static functions can be found as *package vignettes* within the package. Our aim is to continuously update the reference book along with package developments, so that users have detailed information about the models at the time functions are run. As the manual will follow package updates, after a given model application users should store a **PDF version** of the reference manual to be sure it matches the version the package reported in their application report or article.
 
 The following chapter describes the soil, vegetation and meteorology inputs that apply to all models. After that, the book presents each simulation model using a set of chapters. The first chapter introduces the model and the remaining describe the details of formulations by processes. Those process formulations that are common to more than one model (like hydrology) are described only once. Static models and their functions are presented grouped at the end of the book, before the appendices.
 
