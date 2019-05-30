@@ -34,9 +34,11 @@ devtools::install_github("miquelcaceres/medfate",
 
 ## Documentation
 
-The package includes a number of vignettes that illustrate how to run simulation models in **medfate**. Full documentation on the design and formulation of medfate models can be found in the [medfate reference book](https://miquelcaceres.github.io/medfate/medfatebook/intro.html).
+The package installation includes a number of *vignettes* that illustrate how to run simulation models in **medfate**. Vignettes and documentation of package functions can also be read at the  [GitHub pages site](https://miquelcaceres.github.io/medfate/) of the package.
 
-Additional documentation on the models included in the package and how to run them using the package functions can be found at the package website (http://vegmod.ctfc.cat/medfateweb).
+The [medfate reference book](https://miquelcaceres.github.io/medfate/medfatebook/) provides full documentation regarding the design and formulation of models included in the package.
+
+An interactive example application showing the behaviour of the water balance model can be found at http://vegmod.ctfc.cat/medfateweb.
 
 ## References
 
