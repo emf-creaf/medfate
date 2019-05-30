@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.3</span>
       </span>
     </div>
 
@@ -87,7 +87,7 @@
 <a href="#introduction" class="anchor"></a>Introduction</h2>
 <p>Package <strong>medfate</strong> is designed to assist forest scientists to simulate forest functioning and dynamics, using cohort-based description of forest stands. The package provides functions to simulate the following processes:</p>
 <ul>
-<li>Soil water balance (De Cáceres et al. 2015)</li>
+<li>Soil water balance (De Cáceres et al. 2015)</li>
 <li>Plant hydraulics, transpiration and photosynthesis</li>
 <li>Plant growth</li>
 </ul>
@@ -97,16 +97,17 @@
 <h2 class="hasAnchor">
 <a href="#package-installation" class="anchor"></a>Package installation</h2>
 <p>Package <strong>medfate</strong> can be found at <a href="https://CRAN.R-project.org/package=medfate">CRAN</a>, where it is updated every few months. Users can also download and install the latest stable versions GitHub as follows (required package <code>devtools</code> should be installed/updated first):</p>
-<pre class="sourceCode r" id="cb1"><code class="sourceCode r"><div class="sourceLine" id="cb1-1" data-line-number="1">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"miquelcaceres/medfate"</span>)</div></code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"miquelcaceres/medfate"</span>)</code></pre></div>
 <p>Additionally, users can have help to run package functions directly as package vignettes, by forcing their inclusion in installation:</p>
-<pre class="sourceCode r" id="cb2"><code class="sourceCode r"><div class="sourceLine" id="cb2-1" data-line-number="1">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"miquelcaceres/medfate"</span>, </div>
-<div class="sourceLine" id="cb2-2" data-line-number="2">                         <span class="dt">build_opts =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"--no-resave-data"</span>, <span class="st">"--no-manual"</span>))</div></code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"miquelcaceres/medfate"</span>, 
+                         <span class="dt">build_opts =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"--no-resave-data"</span>, <span class="st">"--no-manual"</span>))</code></pre></div>
 </div>
 <div id="documentation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#documentation" class="anchor"></a>Documentation</h2>
-<p>The package includes a number of vignettes that illustrate how to run simulation models in <strong>medfate</strong>. Full documentation on the design and formulation of medfate models can be found in the <a href="https://miquelcaceres.github.io/medfate/medfatebook/intro.html">medfate reference book</a>.</p>
-<p>Additional documentation on the models included in the package and how to run them using the package functions can be found at the package website (<a href="http://vegmod.ctfc.cat/medfateweb" class="uri">http://vegmod.ctfc.cat/medfateweb</a>).</p>
+<p>The package installation includes a number of <em>vignettes</em> that illustrate how to run simulation models in <strong>medfate</strong>. Vignettes and documentation of package functions can also be read at the <a href="https://miquelcaceres.github.io/medfate/">GitHub pages site</a> of the package.</p>
+<p>The <a href="https://miquelcaceres.github.io/medfate/medfatebook/">medfate reference book</a> provides full documentation regarding the design and formulation of models included in the package.</p>
+<p>An interactive example application showing the behaviour of the water balance model can be found at <a href="http://vegmod.ctfc.cat/medfateweb" class="uri">http://vegmod.ctfc.cat/medfateweb</a>.</p>
 </div>
 <div id="references" class="section level2">
 <h2 class="hasAnchor">
