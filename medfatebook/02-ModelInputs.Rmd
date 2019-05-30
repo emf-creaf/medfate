@@ -1,58 +1,75 @@
 # Model inputs
 
-
+Data input for process-based models of forest functioning and dynamics can be described using three broad categories. First, a description of the target **vegetation** is needed, at a level of detail appropriate for the model design. This includes not only species composition and/or structure, but also functional parameters of the plants. Second, most often **soil** information is required, specially if underground resources (i.e. water and/or nutrients) are important for the processes included in the model. While soil and vegetation features are sometimes considered static parameters in model simulations, **meteorology** is most often a dynamic input which defines the temporal variation of environmental conditions in which biological processes occur. This chapter describes the requirements of **medfate** package with respect to each of these three kinds of input. The last section describes additional parameters that are used to control the behaviour of simulation functions.
 
 ## Soil description
 
-### Soil physical description
+Soils can be described in **medfate** using between 1 and 5 soil layers. The number and size of layers may reflect changes in soil properties, but also can be chosen to reflect different plant rooting depths. The physical properties of the soil are needed to estimate its hydraulic properties. Most soil properties are considered static parameters in simulations, except those that depend on soil water balance (e.g. soil moisture content, soil water potential and soil conductivity) and soil temperature, if the soil energy balance is considered in simulations.
 
-Soil texture (i.e. percent of sand, silt and clay), bulk density and rock fragment content can differ between soil layers. Specifying a deep rocky layer is important because Mediterranean plants may extend their roots into cracks existing in the parent rock [@Ruffault2013]. In **medfate**,  soils can be described using between 1 and 5 soil layers. For each soil layer $s$ the following physical parameters are needed:
+### Physical properties
 
-+ $d_{s}$ [`widths`]: Soil layer width (in mm).
-+ $P_{clay,s}$ [`clay`]: Percent of clay.
-+ $P_{sand,s}$ [`sand`]: Percent of sand.
-+ $OM$ [`om`]: Percentage of organic mater per dry weight (can be missing).
-+ $BD_{s}$ [`bd`]: Bulk density (in g/cm3) of each soil layer.
-+ $P_{rocks,s}$ [`rfc`]: Percentage of rock fragment content (%).
+Physical soil properties, like soil texture (i.e. percent of sand, silt and clay), bulk density or rock fragment content, can differ between soil layers, and this has important consequences for water retention capacity and soil hydraulics. In addition, specifying a deep rocky layer may be important in some biomes like the Mediterranean one, because plants often extend their roots into cracks existing in the parent rock [@Ruffault2013]. For each soil layer $s$ the following physical parameters are needed:
 
-Input data should be arranged in a data frame with soil layers in rows and variables in columns (see function `defaultSoilParams()`). The package provides a function to get soil information from [SoilGrids.org](https://soilgrids.org/) (see function `soilgridsParams()`) that can be helpful to those users lacking soil measurements corresponding to their target forest stands.
+| Symbol | Units | R  | Description                         | 
+|--------|-------|----| ------------------------------------|
+| $d_{s}$ | $mm$ | `widths` | Soil layer width |
+| $P_{clay,s}$ | % | `clay` | Percent of clay (within soil particles)  |
+| $P_{sand,s}$ | % | `sand` | Percent of sand (within soil particles) |
+| $OM$ | % | `om` | Percentage of organic mater per dry weight (can be missing) |
+| $BD_{s}$ | $g \cdot cm^{-3}$ |`bd` | Bulk density |
+| $P_{rocks,s}$ | % | `rfc` | Rock fragment content as percent per soil volume |
+
+*Soil depth* is defined as the sum of soil layer widths. If possible, soil physical properties should be measured in soil profiles conducted at the target forest plot. Soil input data should be arranged in a `data.frame` with soil layers in rows and physical variables in columns (see function `defaultSoilParams()`). The package includes function `soilgridsParams()` to fetch soil information from [SoilGrids.org](https://soilgrids.org/), a global soil database currently providing soil data at 250m scale. This can be helpful to users lacking local soil measurements, but the uncertainty of SoilGrids estimates can be high for some areas and soil properties, especially soil depth and rock fragment content.
 
 ### Water retention curves
 
-Water retention curve of a soil layer $s$ is the relationship between volumetric soil moisture, $\theta_s$ (in $m^3 \cdot m^{-3}$ of soil, excluding rock fragments), and the soil water potential, $\Psi_s$ (in MPa). This curve is characteristic for different types of soil, and is also called the *soil moisture characteristic curve*. Two water retention curve models are available in the package:
+The water retention curve of a soil is the relationship between volumetric soil moisture ($\theta$, in $m^3 \cdot m^{-3}$ of soil, excluding rock fragments) and the soil water potential ($\Psi$, in MPa). This curve is characteristic for different types of soil, and is also called the *soil moisture characteristic curve*. Two water retention curve models are available in **medfate**:
 
-1. *Saxton model*: In this model, volumetric soil moisture $\theta(\Psi_s)$ corresponding to a given water potential $\Psi$ (in MPa) below $\Psi_{fc}$ is calculated using: 
+1. *Saxton model*: In this model, volumetric soil moisture $\theta(\Psi)$ corresponding to a given water potential $\Psi$ (in MPa) below $\Psi_{fc}$ is calculated using: 
 \begin{equation}\theta(\Psi) = (\Psi/A)^{(1/B)}\end{equation}
-where $A$ and $B$ depend on the texture and, if available, organic matter in the soil layer. If organic matter is available, $A$ and $B$ are calculated from $P_{clay}$, $P_{sand}$ and $OM$ following @Saxton2006. Otherwise, they are calculated from $P_{clay}$ and $P_{sand}$ as indicated in @Saxton1986. Volumetric changes between field capacity and saturation are estimated using a linear function.
+where $A$ and $B$ depend on the texture and, if available, organic matter in the soil. If organic matter is available, $A$ and $B$ are calculated from $P_{clay}$, $P_{sand}$ and $OM$ following @Saxton2006. Otherwise, they are calculated from $P_{clay}$ and $P_{sand}$ as indicated in @Saxton1986. Volumetric changes between field capacity and saturation are estimated using a linear function.
 2. *Van Genuchten model*: The well known van Genuchten [-@Genuchten1980] model is:
 \begin{equation}\theta(\Psi) = \theta_{res}+\frac{\theta_{sat}-\theta_{res}}{\left[1+ (\alpha \cdot \Psi)^n \right]^{1-1/n}}\end{equation}
-where $\theta(\psi)$ is the water retention, $\theta_{sat}$ is the saturated water content, $\theta_{res}$ is the residual water content, $\alpha$ is related to the inverse of the air entry pressure (and here has to be expressed in $MPa^{-1}$), and $n$ is a measure of the pore-size distribution.
-
+where $\theta(\psi)$ is the water retention, $\theta_{sat}$ is the saturated water content, $\theta_{res}$ is the residual water content, $\alpha$ is related to the inverse of the air entry pressure, and $n$ is a measure of the pore-size distribution.
 
 ### Soil initialization
-Soil initialization is needed to estimate soil hydrological parameters from its physical description. Initialization is done using function `soil()`, which adds the following information to the physical soil description: 
+Soil initialization is needed to estimate soil hydrological parameters for each soil layer $s$ from their physical attributes. Initialization is done using function `soil()`, which adds the following information to the physical soil description: 
 
-+ $P_{macro, s}$ [`macro`]: Percentage of macroporosity corresponding to each soil layers. Macroporosity values are calculated for each soil layer using the equations given in @Stolf2011.
-+ $\gamma_{soil}$ [`Gsoil`]: The maximum daily evaporation from soil($mm \cdot day^{-1}$).
-+ $\kappa_{soil}$ [`Ksoil`]: Extinction parameter to regulate the amount of water extracted from each soil layer during bare soil evaporation.
-+ $n_{s}$, $\alpha_{s}$, $\theta_{sat,s}$,$\theta_{res,s}$ [`VG_n`, `VG_alpha`, `VG_theta_sat`, `VG_theta_res`]: Parameters of the Van Genuchten-Mualem equations.
+| Symbol | Units | R  | Description                               | 
+|--------|-------|----| ------------------------------------------|
+| $P_{macro, s}$ | % | `macro` | Percentage of macroporosity corresponding to each soil layers | 
+| $\gamma_{soil}$ | $mm \cdot day^{-1}$ | `Gsoil` | The maximum daily evaporation rate from soil |
+| $\kappa_{soil}$ |  | `Ksoil` | Extinction parameter to regulate the amount of water extracted from each soil layer when simulating evaporation from bare soil |
+| $\theta_{sat, s}$ |$m^3 \cdot m^{-3}$ | `VG_theta_sat`| Volumetric moisture at saturation |
+| $\theta_{res, s}$ |$m^3 \cdot m^{-3}$ | `VG_theta_res` | Residual volumetric moisture |
+| $n_s$ | | `VG_n` | Parameter of the Van Genuchten [-@Genuchten1980] model |
+| $\alpha_s$ | $MPa^{-1}$ | `VG_alpha`| Parameter of the Van Genuchten [-@Genuchten1980] model |
 
-Parameters of the van Genuchten-Mualem model are estimated from the physical description of the soil using two kinds of pedotransfer functions (see help for `soil()`): 
+Macroporosity values are calculated using the equations given in @Stolf2011, while $\gamma_{soil}$ and $\kappa_{soil}$ are derived from texture. Parameters of the van Genuchten model (including are estimated from the physical description of the soil using one of two pedotransfer functions (see help for `soil()`): 
 
 1. Using the USDA texture classification and the average texture class parameters given by @Carsel1988.
 2. Directly from the soil texture, organic matter and bulk density, using the pedotransfer functions in @Toth2015.
 
-Users can also edit the `soil` object manually to provide user-defined parameters of the Van Genuchten retention curve.
+Users can also edit the `soil` object manually, for example to provide specific parameters of the Van Genuchten retention curve calibrated from soil samples.
 
-### Water holding capacity and water table depth
+### Water content and water table depth
 
-Soil water holding capacity ($V_s$, in mm) in soil layer $s$ is defined as the volumetric water content at field capacity:
+The *water content* ($V_s$ in mm) of a soil layer $s$ is calculated from its water potential and water retention curve using:
 \begin{equation}
-V_s = d_s\cdot ((100-P_{rocks,s})/100)\cdot\theta_{fc,s}
+V_s(\Psi) = d_s\cdot ((100-P_{rocks,s})/100)\cdot\theta_{s}(\Psi)
 \end{equation}
-where $d_s$ is the depth of the soil layer (in mm) and $P_{rocks,s}$ is the percentage of rock fragments. Thus, soil water holding capacity depends on the water retention curve used to determine $\theta_{fc} = \theta(-0.033)$. Soil water content at saturation is calculated anagolously, but replacing $\theta_{fc,s}$ by $\theta_{sat,s}$. Similarly water content at wilting point (-1.5 MPa) is calculated replacing $\theta_{fc,s}$ by $\theta_{wp,s}$ where $\theta_{wp} = \theta(-1.5)$. The amount of extractable water is difference between water content at field capacity and a the water content at a minimum water potential, which can be set at wilting point or lower values (by default at -5 MPa).
+where $d_s$ is the depth of the soil layer (in mm) and $P_{rocks,s}$ is the percentage of rock fragments. Besides this general formula, a number of contents are important to remember. 
 
-Water table depth ($WT$, in mm) equals soil depth when all soil layers are below field capacity. When some layers are between field capacity and saturation, water table depth is calculated as:
+  + *Water holding capacity* ($V_{fc, s}$, in mm) of the soil layer $s$ is defined as the volumetric water content at field capacity, i.e. -0.033 MPa:
+\begin{equation}
+V_{fc,s} = V_{s}(-0.033) = d_s\cdot ((100-P_{rocks,s})/100)\cdot\theta_{fc,s}
+\end{equation}
+where $\theta_{fc,s} = \theta_s(-0.033)$. 
+  + *Water content at saturation* is calculated anagolously, but replacing $\theta_{fc,s}$ by $\theta_{sat, s} = \theta_s(0)$. 
+  + *Water content at wilting point* (-1.5 MPa) is calculated replacing $\theta_{fc,s}$ by $\theta_{wp,s} = \theta_s(-1.5)$. 
+  + The *amount of extractable water* is the difference between water content at field capacity and a the water content at a conventional minimum water potential, which can be set at wilting point or lower values (by default at -5 MPa in **medfate**).
+
+The depth of water table is the depth of saturated soil. In medfate, *water table depth* ($WT$, in mm) equals soil depth when all soil layers are below field capacity. When some layers are between field capacity and saturation, water table depth is calculated as:
 \begin{equation}
 WT = \sum_{s}{d_s \cdot \min\left[1,(\theta_{sat,s} - \theta(\Psi_s))/(\theta_{sat,s}-\theta_{fc,s})\right]}
 \end{equation}

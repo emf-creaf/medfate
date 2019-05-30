@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 7 Advanced water balance model | The medfate reference book</title>
   <meta name="description" content="This is a reference book for models implemented in package medfate." />
-  <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 7 Advanced water balance model | The medfate reference book" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 
 
 
-<meta name="date" content="2019-05-29" />
+<meta name="date" content="2019-05-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -49,57 +49,41 @@
 
 
 <style type="text/css">
-div.sourceLine, a.sourceLine { display: inline-block; min-height: 1.25em; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; }
-@media print {
-code.sourceCode { white-space: pre-wrap; }
-div.sourceLine, a.sourceLine { text-indent: -1em; padding-left: 1em; }
-}
-pre.numberSource div.sourceLine, .numberSource a.sourceLine
-  { position: relative; }
-pre.numberSource div.sourceLine::before, .numberSource a.sourceLine::before
-  { content: attr(data-line-number);
-    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em; }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; color: #aaaaaa;  padding-left: 4px; }
-@media screen {
-a.sourceLine::before { text-decoration: underline; color: initial; }
-}
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.bn { color: #40a070; } /* BaseN */
-code span.fl { color: #40a070; } /* Float */
-code span.ch { color: #4070a0; } /* Char */
-code span.st { color: #4070a0; } /* String */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.ot { color: #007020; } /* Other */
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.fu { color: #06287e; } /* Function */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code span.cn { color: #880000; } /* Constant */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.im { } /* Import */
-code span.va { color: #19177c; } /* Variable */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.op { color: #666666; } /* Operator */
-code span.bu { } /* BuiltIn */
-code span.ex { } /* Extension */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.at { color: #7d9029; } /* Attribute */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -132,10 +116,10 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 </ul></li>
 <li class="chapter" data-level="2" data-path="model-inputs.html"><a href="model-inputs.html"><i class="fa fa-check"></i><b>2</b> Model inputs</a><ul>
 <li class="chapter" data-level="2.1" data-path="model-inputs.html"><a href="model-inputs.html#soil-description"><i class="fa fa-check"></i><b>2.1</b> Soil description</a><ul>
-<li class="chapter" data-level="2.1.1" data-path="model-inputs.html"><a href="model-inputs.html#soil-physical-description"><i class="fa fa-check"></i><b>2.1.1</b> Soil physical description</a></li>
+<li class="chapter" data-level="2.1.1" data-path="model-inputs.html"><a href="model-inputs.html#physical-properties"><i class="fa fa-check"></i><b>2.1.1</b> Physical properties</a></li>
 <li class="chapter" data-level="2.1.2" data-path="model-inputs.html"><a href="model-inputs.html#water-retention-curves"><i class="fa fa-check"></i><b>2.1.2</b> Water retention curves</a></li>
 <li class="chapter" data-level="2.1.3" data-path="model-inputs.html"><a href="model-inputs.html#soil-initialization"><i class="fa fa-check"></i><b>2.1.3</b> Soil initialization</a></li>
-<li class="chapter" data-level="2.1.4" data-path="model-inputs.html"><a href="model-inputs.html#water-holding-capacity-and-water-table-depth"><i class="fa fa-check"></i><b>2.1.4</b> Water holding capacity and water table depth</a></li>
+<li class="chapter" data-level="2.1.4" data-path="model-inputs.html"><a href="model-inputs.html#water-content-and-water-table-depth"><i class="fa fa-check"></i><b>2.1.4</b> Water content and water table depth</a></li>
 </ul></li>
 <li class="chapter" data-level="2.2" data-path="model-inputs.html"><a href="model-inputs.html#vegetation-description"><i class="fa fa-check"></i><b>2.2</b> Vegetation description</a><ul>
 <li class="chapter" data-level="2.2.1" data-path="model-inputs.html"><a href="model-inputs.html#aboveground-parameters"><i class="fa fa-check"></i><b>2.2.1</b> Aboveground parameters</a></li>
@@ -378,11 +362,7 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 </div>
 <div id="state-variables-1" class="section level2">
 <h2><span class="header-section-number">7.2</span> State variables</h2>
-<p>The model has the following state variables:
-+ Cumulative growth degree days, <span class="math inline">\(GDD\)</span>, are tracked by the model and determine leaf phenological status of winter deciduous species.
-+ Daily soil moisture content dynamics on each layer <span class="math inline">\(s\)</span> are tracked using <span class="math inline">\(W = \theta(\Psi_s)/ \theta_{fc,s}\)</span>, the <strong>proportion of volumetric soil moisture in relation to field capacity</strong>, where field capacity, <span class="math inline">\(\theta_{fc,s}\)</span>, is assumed to correspond to <span class="math inline">\(\Psi_{fc} = -0.033\)</span> MPa. Soils are not allowed to contain more water than dictated by their field capacity.
-+ The temperature of the canopy and of each soil layer (<span class="math inline">\(T_c\)</span> and <span class="math inline">\(T_s\)</span>; both in ºC) are tracked for every subdaily step.
-+ If irreversible cavitation is activated, the model also tracks <span class="math inline">\(P_{embolized,i}\)</span>, the maximum value of daily drought stress so far experienced.</p>
+<p>The model has the following state variables: + Cumulative growth degree days, <span class="math inline">\(GDD\)</span>, are tracked by the model and determine leaf phenological status of winter deciduous species. + Daily soil moisture content dynamics on each layer <span class="math inline">\(s\)</span> are tracked using <span class="math inline">\(W = \theta(\Psi_s)/ \theta_{fc,s}\)</span>, the <strong>proportion of volumetric soil moisture in relation to field capacity</strong>, where field capacity, <span class="math inline">\(\theta_{fc,s}\)</span>, is assumed to correspond to <span class="math inline">\(\Psi_{fc} = -0.033\)</span> MPa. Soils are not allowed to contain more water than dictated by their field capacity. + The temperature of the canopy and of each soil layer (<span class="math inline">\(T_c\)</span> and <span class="math inline">\(T_s\)</span>; both in ºC) are tracked for every subdaily step. + If irreversible cavitation is activated, the model also tracks <span class="math inline">\(P_{embolized,i}\)</span>, the maximum value of daily drought stress so far experienced.</p>
 </div>
 <div id="water-and-energy-balances" class="section level2">
 <h2><span class="header-section-number">7.3</span> Water and energy balances</h2>
@@ -400,7 +380,7 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 </div>
 <div id="energy-balance" class="section level3">
 <h3><span class="header-section-number">7.3.2</span> Energy balance</h3>
-<p>The canopy absorbs shortwave radiation from the atmosphere (<span class="math inline">\(K_{abs,ca}\)</span>). It also absorbs longwave counterradiation from the atmosphere (<span class="math inline">\(L_{abs,ca}\)</span>) and longwave radiation emmited from the soil (<span class="math inline">\(L_{abs,cs}\)</span>). These inputs are counterbalanced by the longwave radiation emmited by the canopy (<span class="math inline">\(L_{em,c}\)</span>) in both cases. Other energy fluxes considered are convective exchanges between the canopy and atmosphere (<span class="math inline">\(H_{ca}\)</span>) and between the canopy and the soil (<span class="math inline">\(H_{cs}\)</span>). Finally, energy is released to the atmosphere through latent heat (<span class="math inline">\(LE_{c}\)</span>) produced via transpiration (so far, interception and soil evaporation are not included). The instantaneous energy balance equation for the canopy is thus:
+The canopy absorbs shortwave radiation from the atmosphere (<span class="math inline">\(K_{abs,ca}\)</span>). It also absorbs longwave counterradiation from the atmosphere (<span class="math inline">\(L_{abs,ca}\)</span>) and longwave radiation emmited from the soil (<span class="math inline">\(L_{abs,cs}\)</span>). These inputs are counterbalanced by the longwave radiation emmited by the canopy (<span class="math inline">\(L_{em,c}\)</span>) in both cases. Other energy fluxes considered are convective exchanges between the canopy and atmosphere (<span class="math inline">\(H_{ca}\)</span>) and between the canopy and the soil (<span class="math inline">\(H_{cs}\)</span>). Finally, energy is released to the atmosphere through latent heat (<span class="math inline">\(LE_{c}\)</span>) produced via transpiration (so far, interception and soil evaporation are not included). The instantaneous energy balance equation for the canopy is thus:
 <span class="math display">\[\begin{equation}
   C_{c} \cdot \frac{\delta T_{c}}{\delta t} = K_{abs,ca} + (L_{abs,ca} - L_{em,c}) + (L_{abs,cs} - L_{em,c}) - LE_{c} - H_{ca} - H_{cs} 
 \end{equation}\]</span>
@@ -408,7 +388,7 @@ where <span class="math inline">\(C_{c}\)</span> is the canopy thermal capacitan
 <span class="math display">\[\begin{equation}
   C_{s} \cdot \frac{\delta T_{s}}{\delta t} = K_{abs,sa} + L_{abs,sa} - L_{em,s} + L_{abs,sc} + H_{cs} 
 \end{equation}\]</span>
-where <span class="math inline">\(C_{s}\)</span> is the soil thermal capacitance.</p>
+<p>where <span class="math inline">\(C_{s}\)</span> is the soil thermal capacitance.</p>
 </div>
 </div>
 <div id="process-scheduling-1" class="section level2">
@@ -465,10 +445,8 @@ where <span class="math inline">\(C_{s}\)</span> is the soil thermal capacitance
 <p>Vegetation functional attributes are normally filled for each cohort by function  from species identity. However, different parameters can be specified for different cohort of the same species if desired. Basic functional parameters relate to light extinction, water interception and leaf phenology:</p>
 <ul>
 <li><span class="math inline">\(k_{PAR,i}\)</span> [<code>k</code>]: PAR extinction coefficient.</li>
-<li><span class="math inline">\(s_{water, i}\)</span> [<code>g</code>]: Crown water storage capacity (i.e. depth of
-water that can be retained by leaves and branches) per LAI unit (in <span class="math inline">\(mmH_2O·LAI^{-1}\)</span>).</li>
-<li><span class="math inline">\(S_{GDD,i}\)</span> [<code>Sgdd</code>]: Growth degree days corresponding to leave
-budburst (in degrees Celsius).</li>
+<li><span class="math inline">\(s_{water, i}\)</span> [<code>g</code>]: Crown water storage capacity (i.e. depth of water that can be retained by leaves and branches) per LAI unit (in <span class="math inline">\(mmH_2O·LAI^{-1}\)</span>).</li>
+<li><span class="math inline">\(S_{GDD,i}\)</span> [<code>Sgdd</code>]: Growth degree days corresponding to leave budburst (in degrees Celsius).</li>
 </ul>
 <p>A second set of plant functional parameters are related to plant transpiration and photosynthesis:</p>
 <ul>
@@ -506,19 +484,19 @@ budburst (in degrees Celsius).</li>
 <h3>Bibliography</h3>
 <div id="refs" class="references">
 <div id="ref-Best2011">
-<p>Best, M.J., M. Pryor, and D.B. Clarck. 2011. “The Joint UK Land Environment Simulator (JULES), Model description – Part 1: Energy and water fluxes.” <em>Geoscientific Model Development Discussions</em> 4 (1):677–99. <a href="https://doi.org/10.5194/gmd-4-677-2011" class="uri">https://doi.org/10.5194/gmd-4-677-2011</a>.</p>
+<p>Best, M.J., M. Pryor, and D.B. Clarck. 2011. “The Joint UK Land Environment Simulator (JULES), Model description – Part 1: Energy and water fluxes.” <em>Geoscientific Model Development Discussions</em> 4 (1): 677–99. doi:<a href="https://doi.org/10.5194/gmd-4-677-2011">10.5194/gmd-4-677-2011</a>.</p>
 </div>
 <div id="ref-Boughton1989">
-<p>Boughton, WC. 1989. “A review of the USDA SCS curve number method.” <em>Australian Journal of Soil Research</em> 27:511–23. <a href="http://www.publish.csiro.au/?paper=SR9890511" class="uri">http://www.publish.csiro.au/?paper=SR9890511</a>.</p>
+<p>Boughton, WC. 1989. “A review of the USDA SCS curve number method.” <em>Australian Journal of Soil Research</em> 27: 511–23. <a href="http://www.publish.csiro.au/?paper=SR9890511" class="uri">http://www.publish.csiro.au/?paper=SR9890511</a>.</p>
 </div>
 <div id="ref-Gash1995">
-<p>Gash, JHC, CR Lloyd, and G Lachaud. 1995. “Estimating sparse forest rainfall interception with an analytical model.” <em>Journal of Hydrology</em> 170 (79-86). <a href="https://doi.org/10.1016/0022-1694(95)02697-N" class="uri">https://doi.org/10.1016/0022-1694(95)02697-N</a>.</p>
+<p>Gash, JHC, CR Lloyd, and G Lachaud. 1995. “Estimating sparse forest rainfall interception with an analytical model.” <em>Journal of Hydrology</em> 170 (79-86). doi:<a href="https://doi.org/10.1016/0022-1694(95)02697-N">10.1016/0022-1694(95)02697-N</a>.</p>
 </div>
 <div id="ref-Ritchie1972">
-<p>Ritchie, JT. 1972. “Model for predicting evaporation from a row crop with incomplete cover.” <em>Water Resources Research</em> 8:1204–13. <a href="http://onlinelibrary.wiley.com/doi/10.1029/WR008i005p01204/full" class="uri">http://onlinelibrary.wiley.com/doi/10.1029/WR008i005p01204/full</a>.</p>
+<p>Ritchie, JT. 1972. “Model for predicting evaporation from a row crop with incomplete cover.” <em>Water Resources Research</em> 8: 1204–13. <a href="http://onlinelibrary.wiley.com/doi/10.1029/WR008i005p01204/full" class="uri">http://onlinelibrary.wiley.com/doi/10.1029/WR008i005p01204/full</a>.</p>
 </div>
 <div id="ref-Sperry2016">
-<p>Sperry, John S., Martin D. Venturas, William R. L. Anderegg, Maurizio Mencuccini, D. S. Mackay, YuJie Wang, and David M Love. 2016. “Predicting stomatal responses to the environment from the optimization of photosynthetic gain and hydraulic cost.” <em>Plant Cell and Environment</em> 40 (6):816–30. <a href="https://doi.org/10.1111/pce.12852" class="uri">https://doi.org/10.1111/pce.12852</a>.</p>
+<p>Sperry, John S., Martin D. Venturas, William R. L. Anderegg, Maurizio Mencuccini, D. S. Mackay, YuJie Wang, and David M Love. 2016. “Predicting stomatal responses to the environment from the optimization of photosynthetic gain and hydraulic cost.” <em>Plant Cell and Environment</em> 40 (6): 816–30. doi:<a href="https://doi.org/10.1111/pce.12852">10.1111/pce.12852</a>.</p>
 </div>
 </div>
             </section>
@@ -577,7 +555,7 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "true";
+    var src = "";
     if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');

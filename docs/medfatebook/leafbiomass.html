@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 18 Leaf biomass, leaf area and vertical profiles | The medfate reference book</title>
   <meta name="description" content="This is a reference book for models implemented in package medfate." />
-  <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 18 Leaf biomass, leaf area and vertical profiles | The medfate reference book" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 
 
 
-<meta name="date" content="2019-05-29" />
+<meta name="date" content="2019-05-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -49,57 +49,41 @@
 
 
 <style type="text/css">
-div.sourceLine, a.sourceLine { display: inline-block; min-height: 1.25em; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; }
-@media print {
-code.sourceCode { white-space: pre-wrap; }
-div.sourceLine, a.sourceLine { text-indent: -1em; padding-left: 1em; }
-}
-pre.numberSource div.sourceLine, .numberSource a.sourceLine
-  { position: relative; }
-pre.numberSource div.sourceLine::before, .numberSource a.sourceLine::before
-  { content: attr(data-line-number);
-    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em; }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; color: #aaaaaa;  padding-left: 4px; }
-@media screen {
-a.sourceLine::before { text-decoration: underline; color: initial; }
-}
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.bn { color: #40a070; } /* BaseN */
-code span.fl { color: #40a070; } /* Float */
-code span.ch { color: #4070a0; } /* Char */
-code span.st { color: #4070a0; } /* String */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.ot { color: #007020; } /* Other */
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.fu { color: #06287e; } /* Function */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code span.cn { color: #880000; } /* Constant */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.im { } /* Import */
-code span.va { color: #19177c; } /* Variable */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.op { color: #666666; } /* Operator */
-code span.bu { } /* BuiltIn */
-code span.ex { } /* Extension */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.at { color: #7d9029; } /* Attribute */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -132,10 +116,10 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 </ul></li>
 <li class="chapter" data-level="2" data-path="model-inputs.html"><a href="model-inputs.html"><i class="fa fa-check"></i><b>2</b> Model inputs</a><ul>
 <li class="chapter" data-level="2.1" data-path="model-inputs.html"><a href="model-inputs.html#soil-description"><i class="fa fa-check"></i><b>2.1</b> Soil description</a><ul>
-<li class="chapter" data-level="2.1.1" data-path="model-inputs.html"><a href="model-inputs.html#soil-physical-description"><i class="fa fa-check"></i><b>2.1.1</b> Soil physical description</a></li>
+<li class="chapter" data-level="2.1.1" data-path="model-inputs.html"><a href="model-inputs.html#physical-properties"><i class="fa fa-check"></i><b>2.1.1</b> Physical properties</a></li>
 <li class="chapter" data-level="2.1.2" data-path="model-inputs.html"><a href="model-inputs.html#water-retention-curves"><i class="fa fa-check"></i><b>2.1.2</b> Water retention curves</a></li>
 <li class="chapter" data-level="2.1.3" data-path="model-inputs.html"><a href="model-inputs.html#soil-initialization"><i class="fa fa-check"></i><b>2.1.3</b> Soil initialization</a></li>
-<li class="chapter" data-level="2.1.4" data-path="model-inputs.html"><a href="model-inputs.html#water-holding-capacity-and-water-table-depth"><i class="fa fa-check"></i><b>2.1.4</b> Water holding capacity and water table depth</a></li>
+<li class="chapter" data-level="2.1.4" data-path="model-inputs.html"><a href="model-inputs.html#water-content-and-water-table-depth"><i class="fa fa-check"></i><b>2.1.4</b> Water content and water table depth</a></li>
 </ul></li>
 <li class="chapter" data-level="2.2" data-path="model-inputs.html"><a href="model-inputs.html#vegetation-description"><i class="fa fa-check"></i><b>2.2</b> Vegetation description</a><ul>
 <li class="chapter" data-level="2.2.1" data-path="model-inputs.html"><a href="model-inputs.html#aboveground-parameters"><i class="fa fa-check"></i><b>2.2.1</b> Aboveground parameters</a></li>
@@ -403,7 +387,7 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <h2><span class="header-section-number">18.2</span> Leaf biomass and area</h2>
 <div id="leaf-biomass-for-tree-cohorts" class="section level3">
 <h3><span class="header-section-number">18.2.1</span> Leaf biomass for tree cohorts</h3>
-<p>Foliar biomass for a single tree of cohort <span class="math inline">\(i\)</span> (<span class="math inline">\(FB_{tree,i}\)</span>; in <span class="math inline">\(kg\)</span>) is calculated using:
+Foliar biomass for a single tree of cohort <span class="math inline">\(i\)</span> (<span class="math inline">\(FB_{tree,i}\)</span>; in <span class="math inline">\(kg\)</span>) is calculated using:
 <span class="math display" id="eq:onetreefoliarbiomass">\[\begin{equation}
 FB_{tree,i} = a_{fbt} \cdot DBH_{i}^{b_{fbt}}\cdot e^{c_{fbt}\cdot BAL_i} \cdot DBH_{i}^{d_{fbt} \cdot BA_{sup}}
 \tag{18.1}
@@ -412,11 +396,11 @@ where <span class="math inline">\(DBH_{i}\)</span> is the diameter of the tree (
 <span class="math display" id="eq:treefoliarbiomass">\[\begin{equation}
 FB_{i} = FB_{tree,i}\cdot (N_{i}/10000)
 \tag{18.2}
-\end{equation}\]</span></p>
+\end{equation}\]</span>
 </div>
 <div id="leaf-biomass-for-shrub-cohorts" class="section level3">
 <h3><span class="header-section-number">18.2.2</span> Leaf biomass for shrub cohorts</h3>
-<p>To calculate the leaf biomass of a shrub cohort, we first determine <span class="math inline">\(A_{sh,i}\)</span>, the area (in <span class="math inline">\(cm^2\)</span>) occupied by one average individual of height <span class="math inline">\(H_{i}\)</span> (in <span class="math inline">\(cm\)</span>), using the quadratic relationship:
+To calculate the leaf biomass of a shrub cohort, we first determine <span class="math inline">\(A_{sh,i}\)</span>, the area (in <span class="math inline">\(cm^2\)</span>) occupied by one average individual of height <span class="math inline">\(H_{i}\)</span> (in <span class="math inline">\(cm\)</span>), using the quadratic relationship:
 <span class="math display">\[\begin{equation}
 A_{sh,i} = a_{ash} \cdot H_{i}^2
 \end{equation}\]</span>
@@ -438,7 +422,7 @@ Foliar biomass (in <span class="math inline">\(kg \cdot m^{-2}\)</span>) can be 
 FB_{i} =  W_{i}/r_{6.35}(SP_i)\\
 \tag{18.4}
 \end{equation}\]</span>
-If not known, <span class="math inline">\(r_{6.35}(SP_i)\)</span> can be set to a default value of 2 (equivalent to %50 of weight corresponding to leaves).</p>
+<p>If not known, <span class="math inline">\(r_{6.35}(SP_i)\)</span> can be set to a default value of 2 (equivalent to %50 of weight corresponding to leaves).</p>
 </div>
 <div id="leaf-area" class="section level3">
 <h3><span class="header-section-number">18.2.3</span> Leaf area</h3>
@@ -448,7 +432,7 @@ If not known, <span class="math inline">\(r_{6.35}(SP_i)\)</span> can be set to 
 <h2><span class="header-section-number">18.3</span> Vertical distribution of leaves</h2>
 <div id="crownbaseheight" class="section level3">
 <h3><span class="header-section-number">18.3.1</span> Crown base height</h3>
-<p>Crown base height (<span class="math inline">\(H_{b,i}\)</span>; in cm) is defined as the height corresponding to the first living branch expressed as a fraction of total height. It is calculated from the crown ratio (<span class="math inline">\(CR\)</span>; a proportion between 0 and 1), i.e. the ratio between crown length and total height:
+Crown base height (<span class="math inline">\(H_{b,i}\)</span>; in cm) is defined as the height corresponding to the first living branch expressed as a fraction of total height. It is calculated from the crown ratio (<span class="math inline">\(CR\)</span>; a proportion between 0 and 1), i.e. the ratio between crown length and total height:
 <span class="math display" id="eq:CrownHeight">\[\begin{equation}
 H_{b,i} = H_{i} \cdot (1 - CR_i)
 \tag{18.5}
@@ -466,12 +450,12 @@ where <span class="math inline">\(N_i\)</span> is the tree density, <span class=
 <span class="math display">\[\begin{equation}
 CW_i = a_{cw}\cdot BDH_i^{b_{cw}} 
 \end{equation}\]</span>
-where again <span class="math inline">\(a_{cw}\)</span> and <span class="math inline">\(b_{cw}\)</span> are species-specific parameters.</p>
+<p>where again <span class="math inline">\(a_{cw}\)</span> and <span class="math inline">\(b_{cw}\)</span> are species-specific parameters.</p>
 </div>
 <div id="ladprofile" class="section level3">
 <h3><span class="header-section-number">18.3.2</span> Leaf area density profile</h3>
 <p>Leaf area of any plant cohort is assumed to be distributed vertically following a truncated Gaussian function whose standardized values -1.5 and 1.5 correspond to crown base height and total plant height, respectively. The following figure illustrates the leaf area density profile for an example forest stand.</p>
-<pre class="sourceCode r" id="cb44"><code class="sourceCode r"><div class="sourceLine" id="cb44-1" data-line-number="1"><span class="kw">vprofile_leafAreaDensity</span>(exampleforest, SpParamsMED, <span class="dt">z =</span> <span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">1000</span>, <span class="dt">by=</span><span class="dv">1</span>))</div></code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">vprofile_leafAreaDensity</span>(exampleforest, SpParamsMED, <span class="dt">z =</span> <span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">1000</span>, <span class="dt">by=</span><span class="dv">1</span>))</code></pre></div>
 <p><img src="medfatebook_files/figure-html/unnamed-chunk-76-1.png" width="384" style="display: block; margin: auto;" /></p>
 <p>This density profile determines the extinction rates of light and wind through the forest canopy.</p>
 
@@ -481,10 +465,10 @@ where again <span class="math inline">\(a_{cw}\)</span> and <span class="math in
 <h3>Bibliography</h3>
 <div id="refs" class="references">
 <div id="ref-Hasenauer1996">
-<p>Hasenauer, Hubert, and Robert A. Monserud. 1996. “A crown ratio model for Austrian Forests.” <em>Forest Ecology and Management</em> 84 (1-3):49–60. <a href="https://doi.org/10.1016/0378-1127(96)03768-1" class="uri">https://doi.org/10.1016/0378-1127(96)03768-1</a>.</p>
+<p>Hasenauer, Hubert, and Robert A. Monserud. 1996. “A crown ratio model for Austrian Forests.” <em>Forest Ecology and Management</em> 84 (1-3): 49–60. doi:<a href="https://doi.org/10.1016/0378-1127(96)03768-1">10.1016/0378-1127(96)03768-1</a>.</p>
 </div>
 <div id="ref-Krajicek1961">
-<p>Krajicek, Je, Ka Brinkman, and Sf Gingrich. 1961. “Crown competition-a measure of density.” <em>Forest Science</em> 7 (1):35–42.</p>
+<p>Krajicek, Je, Ka Brinkman, and Sf Gingrich. 1961. “Crown competition-a measure of density.” <em>Forest Science</em> 7 (1): 35–42.</p>
 </div>
 </div>
             </section>
@@ -543,7 +527,7 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "true";
+    var src = "";
     if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');
