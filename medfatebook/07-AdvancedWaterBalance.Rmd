@@ -20,10 +20,10 @@ The model has the following state variables:
 ## Water and energy balances
 
 ### Water balance
-Daily variations in soil water content (mm) can be summarized as:
+Daily variations in soil water content ($\Delta{V_{soil}}$ in $mm$) can be summarized as:
 
 \begin{equation}
-\Delta{SWC} = Pr + Sm - In - Ru - Dd - Es -Tr
+\Delta{V_{soil}} = Pr + Sm - In - Ru - Dd - Es -Tr
 \end{equation}
 
 where $Pr$ is precipitation as rainfall, $Sm$ is water from melting the snow pack (if considered), $In$ is the interception loss (i.e., water evaporated after being intercepted by the canopy), $Ru$ is surface runoff, $Dd$ is deep drainage (i.e. water percolated to layers beyond soil depth), $Es$ is evaporation from soil and $Tr$ is plant transpiration. If snow dynamics are considered, the water balance of the snow pack is defined as:

@@ -1,9 +1,9 @@
-# Leaf phenology and light extinction
+# Leaf phenology and light extinction {#leafphenologylight}
 
 
-## Leaf phenology and leaf fall {#leafphenology}
+## Leaf phenology and leaf fall 
 
-Given a base temperature ($T_{base} = 5^{\circ} \mathrm{C}$), the growth degree days ($GDD$) are zero for all those days where mean temperature $T_{mean}$ is below $T_{base}$ and start increasing when temperatures become warmer than this threshold. In other words, the $GDD$ function accumulates $\max(0.0, T_{mean} - T_{base})$ for all days previous to the current one. At the end of a year the cummulative value is set again to zero. Plant species can have either evergreen or winter-deciduous phenology. Evergreen plants maintain constant leaf area over the year, whereas in deciduous plants leaf-phenological status is updated daily, represented by $\phi_i$, the fraction of maximum leaf area. Leaf area index (LAI) values of deciduous plants are adjusted for leaf phenology following [@Prentice1993; @Sitch2003]:
+Given a base temperature ($T_{base} = 5^{\circ} \mathrm{C}$), the growth degree days ($GDD$) are zero for all those days where mean temperature $T_{mean}$ is below $T_{base}$ and start increasing when temperatures become warmer than this threshold. In other words, the $GDD$ function accumulates $\max(0.0, T_{mean} - T_{base})$ for all days previous to the current one. At the end of a year the cummulative value is set again to zero. Plant species can have either *evergreen* or *winter-deciduous* phenology. Evergreen plants maintain constant leaf area over the year, whereas in deciduous plants leaf-phenological status is updated daily, represented by $\phi_i$, the fraction of maximum leaf area. Leaf area index (LAI) values of deciduous plants are adjusted for leaf phenology following [@Prentice1993; @Sitch2003]:
 
 \begin{equation}
 LAI_{i}^{\phi}=LAI^{live}_i\,\cdot\phi_i
@@ -16,7 +16,7 @@ drops to 0 when average daily temperature falls again below $T_{base}$ [@Sitch20
 \begin{equation}
 LAI^{dead}_i=LAI^{dead}_i\,\cdot e^{- u/10}
 \end{equation}
-where $u$ is wind speed in (m·s$^{-1}$).
+where $u$ is wind speed in ($m \cdot s^{-1}$).
 
 After updating the leaf area of each cohort, the model updates the total leaf area of the stand. To simplify the notation, let us call $LAI^{all}_{i}$ the sum of dead and live expanded leaves of a cohort $i$:
 \begin{equation}
@@ -25,7 +25,7 @@ LAI^{all}_{i} = LAI^{\phi}_{i}+LAI^{dead}_{i}
 If there are $c$ plant cohorts, the leaf area index of the whole stand, $LAI_{stand}$
 is then:
 \begin{equation}
-LAI_{stand} = \sum_{i=1}^c{LAI_{i}^{all}}= \sum_{i=1}^c{LAI^{\phi}_{i}+LAI^{dead}_{i}}
+LAI_{stand} = \sum_{i=1}^c{LAI_{i}^{all}}
 \end{equation}
 
 Although simulations will normally start in winter and $GDD$ will be zero at the beginning, the user can specify a starting non-zero value for $GDD$ in the object created by function \texttt{spwbInput()}.

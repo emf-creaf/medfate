@@ -4,26 +4,26 @@
 
 ## Design principles
 
-The water balance model described in @DeCaceres2015 calculates temporal variations in soil moisture on a daily step basis for the input forest stand and for the period corresponding to input weather data. 
+The water balance model described in @DeCaceres2015 simulates temporal variation in soil moisture on a daily step basis for a given forest stand and for the period corresponding to input weather data. 
 
 The model considers only the vertical spatial dimension of the stand and not the horizontal distribution of
-plants within it. In other words, the model is not spatially explicit (i.e., plants do not interact for space explicitly). Still, the stand is divided into groups of plants, here referred to as *plant cohorts* of different species, height and leaf area index ($LAI$). Height and $LAI$ values determine competition for light. $LAI$ values also drive competition for water, along with root distribution. The soil water balance follows the design principles of SIERRA [@Mouillot2001;@Ruffault2014;@Ruffault2013] and BILJOU [@Granier1999;-@Granier2007], although some features are taken from other models [@Kergoat1998]. Potential evapotranspiration ($PET$) is given as input and the model determines maximum canopy transpiration ($Tr_{\max}$) using an empirical relationship between the $LAI$ of the stand and the ratio $Tr_{\max}/PET$ [@Granier1999]. Actual plant transpiration is estimated using a function that depends on current soil moisture levels, species-specific drought resistance, fine root distribution and the degree of shading of the target plant cohort.
+plants within it. In other words, the model is not spatially explicit (i.e., plants do not interact for space explicitly). Still, the stand is divided into groups of plants, here referred to as *plant cohorts* of different species, height and leaf area index ($LAI$). Height and $LAI$ values determine competition for light. $LAI$ values also drive competition for water, along with root distribution. The soil water balance follows the design principles of SIERRA [@Mouillot2001;@Ruffault2014;@Ruffault2013] and BILJOU [@Granier1999;-@Granier2007], although some features are taken from other models [@Kergoat1998]. Potential evapotranspiration ($PET$) is a required input and the model determines maximum canopy transpiration ($Tr_{\max}$) using an empirical relationship between the $LAI$ of the stand and the ratio $Tr_{\max}/PET$ [@Granier1999]. Actual plant transpiration is estimated using a function that depends on current soil moisture levels, cohort-specific drought resistance, fine root distribution and the degree of shading of the target plant cohort.
 
 
 ## State variables
-The model has the following state variables:
+The following are state variables in the model:
 
 + Cumulative growth degree days, $GDD$, are tracked by the model and determine leaf phenological status of winter deciduous species.
-+ Daily soil moisture content dynamics on each layer $s$ are tracked using $W_s = \theta(\Psi_s)/ \theta_{fc,s}$, the **proportion of volumetric soil moisture in relation to field capacity**, where field capacity, $\theta_{fc,s}$, is assumed to correspond to $\Psi_{fc} = -0.033$ MPa. Note that $W_s$ values larger than one are possible if the soil is between field capacity and saturation (which can happen if deep drainage is not allowed).
++ Daily soil moisture content dynamics on each layer $s$ are tracked using $W_s = \theta_s(\Psi)/ \theta_{fc,s}$, the **proportion of volumetric soil moisture in relation to field capacity**, where field capacity, $\theta_{fc,s}$, is assumed to correspond to $\Psi_{fc} = -0.033$ MPa. Note that $W_s$ values larger than one are possible if the soil is between field capacity and saturation (which can happen if deep drainage is not allowed).
 + If snow accumulation/melting is considered, the model tracks $S_{snow}$, the snow water equivalent (in mm) of the snow pack storage over the surface.
 + If irreversible cavitation is activated, the model tracks $P_{embolized,i}$, the maximum value of daily drought stress so far experienced.
 
 
 ## Water balance
-Daily variations in soil water content (mm) can be summarized as:
+Daily variations in soil water content ($\Delta{V_{soil}}$ in $mm$) can be summarized as:
 
 \begin{equation}
-\Delta{SWC} = Pr + Sm - In - Ru - Dd - Es -Tr
+\Delta{V_{soil}} = Pr + Sm - In - Ru - Dd - Es -Tr
 \end{equation}
 
 where $Pr$ is precipitation as rainfall, $Sm$ is water from melting the snow pack (if considered), $In$ is the interception loss (i.e., water evaporated after being intercepted by the canopy), $Ru$ is surface runoff, $Dd$ is deep drainage (i.e. water percolated to layers beyond soil depth), $Es$ is evaporation from soil and $Tr$ is plant transpiration. If snow dynamics are considered, the water balance of the snow pack is defined as:
@@ -36,17 +36,19 @@ where $Ps$ is precipitation as snowfall and $Sm$ is snow melt.
 
 ## Process scheduling
 
-Every day water balance is perfomed as follows. The model first updates leaf area values according to the phenology of species and calculates light extinction. After that, the model updates soil water content of soil layers in several steps:
+Every day, water balance is simuilated in the following several steps:
 
-+ Update leaf area values according to the phenology of species (section \@ref(leafphenology)).
++ Update leaf area values according to the phenology of species and recalculate light extinction (chapter \@ref(leafphenologylight)).
 + If snow dynamics are included, increase snow pack from snow precipitation ($Ps$) and decreases it from snow melting ($Sm$) (section \@ref(snowpack)).
 + Increase soil moisture due to rainfall ($Pr$), surface runon ($Ro$) and snow melting ($Sm$), after accounting for interception loss ($In$), surface runoff ($Ru$) and deep drainage ($Dd$)  (sections \@ref(interception) and \@ref(runoff))
 + Decrease water content due to bare soil evaporation ($Es$) (section \@ref(soilevaporation)).
 + Determine transpiration, photosynthesis and drought stress for each plant cohort  and decrease water content due to plant transpiration ($Tr$) (chapter \@ref(transpirationgranier)).
 
+Details of the formulation of each of these processes are provided within the referred chapters and sections.
+
 ## Model input
 ### Metereological input
-The minimum weather variables required to run the model are mean temperature ($T_{mean}$), precipitation ($P$) and potential evapotranspiration ($PET$). Solar radiation ($Rad$) is required if snow pack dynamics have to be simulated. Optionally, the user may also specify values of wind speed ($u$) that are used to control leaf fall in autumn. Definitions and units of these variables are given in section \@ref(meteoinput).
+The minimum weather variables required to run the model are mean temperature ($T_{mean}$), precipitation ($P$) and potential evapotranspiration ($PET$). Solar radiation ($Rad$) is required if snow pack dynamics have to be simulated. Additionally, the user may also specify values of wind speed ($u$) that are used to control leaf fall in autumn. Definitions and units of these variables are given in section \@ref(meteoinput).
 
 
 ### Control parameters
@@ -65,9 +67,11 @@ The control values relevant for the simple water balance model are:
 Function `spwb` returns a list object whose elements are data tables. Each table has dates as rows and has different output variables:
 
 + `WaterBalance`: Components of the climatic and soil daily water balance (i.e. net precipitation, infiltration, runoff, plant transpiration...).
-+ `Soil`: Daily variation of soil variables  (volume, moisture relative to field capacity, water potential) for soil layers.
-+ `PlantLAI`: Daily leaf area index for each plant cohort.
-+ `PlantTranspiration`: Daily transpiration (in mm) for each plant cohort.
++ `Soil`: Daily variation of soil variables  (volume, moisture relative to field capacity, water potential) for each soil layer.
++ `PlantLAI`: Daily values leaf area index for each plant cohort.
++ `PlantTranspiration`: Daily transpiration (in $mm$) for each plant cohort.
 + `PlantPhotosynthesis`: Daily net photosynthesis (in $g C \cdot m^{-2}$) for each plant cohort.
 + `PlantPsi`: Daily water potential of each plant (in MPa).
 + `PlantStress`: Daily stress level suffered by each plant cohort (relative whole-plant conductance).
+
+The output of simulations can be inspected using specific `plot` and `summary` functions (see the corresponding package *vignette*).

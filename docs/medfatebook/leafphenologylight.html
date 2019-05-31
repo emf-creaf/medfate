@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 18 Leaf biomass, leaf area and vertical profiles | The medfate reference book</title>
+  <title>Chapter 4 Leaf phenology and light extinction | The medfate reference book</title>
   <meta name="description" content="This is a reference book for models implemented in package medfate." />
   <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 18 Leaf biomass, leaf area and vertical profiles | The medfate reference book" />
+  <meta property="og:title" content="Chapter 4 Leaf phenology and light extinction | The medfate reference book" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 18 Leaf biomass, leaf area and vertical profiles | The medfate reference book" />
+  <meta name="twitter:title" content="Chapter 4 Leaf phenology and light extinction | The medfate reference book" />
   
   <meta name="twitter:description" content="This is a reference book for models implemented in package medfate." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="update-of-structural-variables.html">
-<link rel="next" href="fuel-characteristics-and-fire-behaviour.html">
+<link rel="prev" href="basicwaterbalance.html">
+<link rel="next" href="hydrology.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -48,59 +48,6 @@
 
 
 
-<style type="text/css">
-div.sourceLine, a.sourceLine { display: inline-block; min-height: 1.25em; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; }
-@media print {
-code.sourceCode { white-space: pre-wrap; }
-div.sourceLine, a.sourceLine { text-indent: -1em; padding-left: 1em; }
-}
-pre.numberSource div.sourceLine, .numberSource a.sourceLine
-  { position: relative; }
-pre.numberSource div.sourceLine::before, .numberSource a.sourceLine::before
-  { content: attr(data-line-number);
-    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em; }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; color: #aaaaaa;  padding-left: 4px; }
-@media screen {
-a.sourceLine::before { text-decoration: underline; color: initial; }
-}
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.bn { color: #40a070; } /* BaseN */
-code span.fl { color: #40a070; } /* Float */
-code span.ch { color: #4070a0; } /* Char */
-code span.st { color: #4070a0; } /* String */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.ot { color: #007020; } /* Other */
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.fu { color: #06287e; } /* Function */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code span.cn { color: #880000; } /* Constant */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.im { } /* Import */
-code span.va { color: #19177c; } /* Variable */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.op { color: #666666; } /* Operator */
-code span.bu { } /* BuiltIn */
-code span.ex { } /* Extension */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.at { color: #7d9029; } /* Attribute */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -371,122 +318,100 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="leafbiomass" class="section level1">
-<h1><span class="header-section-number">Chapter 18</span> Leaf biomass, leaf area and vertical profiles</h1>
-<div id="input-data" class="section level2">
-<h2><span class="header-section-number">18.1</span> Input data</h2>
-<div id="forest-inventory-data" class="section level3">
-<h3><span class="header-section-number">18.1.1</span> Forest inventory data</h3>
-<p>The input data for tree cohorts are:</p>
-<ul>
-<li><span class="math inline">\(SP_i\)</span>: Species identity}</li>
-<li><span class="math inline">\(DBH_i\)</span>: Diameter at breast height (in cm) of the representative tree.</li>
-<li><span class="math inline">\(H_i\)</span>: Height (in cm) of the representative tree.</li>
-<li><span class="math inline">\(N_i\)</span>: Cohort density (in <span class="math inline">\(ind.\cdot ha^{-1}\)</span>).</li>
-</ul>
-<p>The input data for shrub cohorts are:</p>
-<ul>
-<li><span class="math inline">\(SP_i\)</span>: Species identity</li>
-<li><span class="math inline">\(C_i\)</span>: Plant cover (in percent).</li>
-<li><span class="math inline">\(H_i\)</span>: Mean plant height (in cm).</li>
-</ul>
-</div>
-<div id="allometric-species-specific-parameters" class="section level3">
-<h3><span class="header-section-number">18.1.2</span> Allometric species-specific parameters</h3>
-<ul>
-<li><span class="math inline">\(a_{fbt}, b_{fbt}, c_{fbt}, d_{fbt}\)</span> [<code>a_fbt</code>, <code>b_fbt</code>, <code>c_fbt</code>, <code>d_fbt</code>]: Regression coefficients used to calculate foliar biomass of an individual tree from its <span class="math inline">\(DBH\)</span> and the cummulative basal area of larger trees.</li>
-<li><span class="math inline">\(a_{ash}\)</span> [<code>a_ash</code>]: Regression coefficient relating the square of shrub height with shrub area.</li>
-<li><span class="math inline">\(a_{bsh}\)</span> and <span class="math inline">\(b_{bsh}\)</span> [<code>a_bsh</code>, <code>b_bsh</code>]: Allometric coefficients relating phytovolume with dry weight of shrub individuals.</li>
-<li><span class="math inline">\(cr(SP_i)\)</span>: [<code>cr</code>]: Ratio between crown length and total height for shrubs.</li>
-</ul>
-</div>
-</div>
-<div id="leaf-biomass-and-area" class="section level2">
-<h2><span class="header-section-number">18.2</span> Leaf biomass and area</h2>
-<div id="leaf-biomass-for-tree-cohorts" class="section level3">
-<h3><span class="header-section-number">18.2.1</span> Leaf biomass for tree cohorts</h3>
-<p>Foliar biomass for a single tree of cohort <span class="math inline">\(i\)</span> (<span class="math inline">\(FB_{tree,i}\)</span>; in <span class="math inline">\(kg\)</span>) is calculated using:
-<span class="math display" id="eq:onetreefoliarbiomass">\[\begin{equation}
-FB_{tree,i} = a_{fbt} \cdot DBH_{i}^{b_{fbt}}\cdot e^{c_{fbt}\cdot BAL_i} \cdot DBH_{i}^{d_{fbt} \cdot BA_{sup}}
-\tag{18.1}
+<div id="leafphenologylight" class="section level1">
+<h1><span class="header-section-number">Chapter 4</span> Leaf phenology and light extinction</h1>
+<div id="leaf-phenology-and-leaf-fall" class="section level2">
+<h2><span class="header-section-number">4.1</span> Leaf phenology and leaf fall</h2>
+<p>Given a base temperature (<span class="math inline">\(T_{base} = 5^{\circ} \mathrm{C}\)</span>), the growth degree days (<span class="math inline">\(GDD\)</span>) are zero for all those days where mean temperature <span class="math inline">\(T_{mean}\)</span> is below <span class="math inline">\(T_{base}\)</span> and start increasing when temperatures become warmer than this threshold. In other words, the <span class="math inline">\(GDD\)</span> function accumulates <span class="math inline">\(\max(0.0, T_{mean} - T_{base})\)</span> for all days previous to the current one. At the end of a year the cummulative value is set again to zero. Plant species can have either <em>evergreen</em> or <em>winter-deciduous</em> phenology. Evergreen plants maintain constant leaf area over the year, whereas in deciduous plants leaf-phenological status is updated daily, represented by <span class="math inline">\(\phi_i\)</span>, the fraction of maximum leaf area. Leaf area index (LAI) values of deciduous plants are adjusted for leaf phenology following <span class="citation">(I. C. Prentice, Sykes, and Cramer <a href="#ref-Prentice1993">1993</a>; Sitch et al. <a href="#ref-Sitch2003">2003</a>)</span>:</p>
+<span class="math display">\[\begin{equation}
+LAI_{i}^{\phi}=LAI^{live}_i\,\cdot\phi_i
 \end{equation}\]</span>
-where <span class="math inline">\(DBH_{i}\)</span> is the diameter of the tree (in <span class="math inline">\(cm\)</span>), <span class="math inline">\(BAL_i\)</span> is the cummulative basal area (<span class="math inline">\(m^2\cdot ha^{-1}\)</span>) of trees having a larger diameter, and <span class="math inline">\(a_{fbt}\)</span>, <span class="math inline">\(b_{fbt}\)</span>, <span class="math inline">\(c_{fbt}\)</span> and <span class="math inline">\(c_{fbt}\)</span> are species-specific regression coefficients. The foliar biomass of the whole tree cohort (<span class="math inline">\(FB_{i}\)</span>; in <span class="math inline">\(kg\cdot m^{-2}\)</span>) is obtained multiplying tree foliar biomass by tree density (<span class="math inline">\(N_{i}\)</span>; in <span class="math inline">\(ind.\cdot ha^{-1}\)</span>):
-<span class="math display" id="eq:treefoliarbiomass">\[\begin{equation}
-FB_{i} = FB_{tree,i}\cdot (N_{i}/10000)
-\tag{18.2}
+<p>Budburst occurs when daily temperature exceeds <span class="math inline">\(T_{base}\)</span> and <span class="math inline">\(\phi_i\)</span> increases
+linearly from 0 to 1 as function of the degree days above <span class="math inline">\(T_{base}\)</span>, until a the
+value <span class="math inline">\(S_{GDD,i}\)</span> is reached (i.e. until <span class="math inline">\(GDD &gt; S_{GDD,i}\)</span>). In autumn, <span class="math inline">\(\phi_i\)</span>
+drops to 0 when average daily temperature falls again below <span class="math inline">\(T_{base}\)</span> <span class="citation">(Sitch et al. <a href="#ref-Sitch2003">2003</a>)</span>. The drop of <span class="math inline">\(\phi_i\)</span> causes live expanded leaves to become dead leaves. To avoid a sudden decrease of leaf area, dead leaves are kept in the canopy and they are reduced daily using a negative exponential function of wind speed:
+<span class="math display">\[\begin{equation}
+LAI^{dead}_i=LAI^{dead}_i\,\cdot e^{- u/10}
+\end{equation}\]</span>
+where <span class="math inline">\(u\)</span> is wind speed in (<span class="math inline">\(m \cdot s^{-1}\)</span>).</p>
+<p>After updating the leaf area of each cohort, the model updates the total leaf area of the stand. To simplify the notation, let us call <span class="math inline">\(LAI^{all}_{i}\)</span> the sum of dead and live expanded leaves of a cohort <span class="math inline">\(i\)</span>:
+<span class="math display">\[\begin{equation}
+LAI^{all}_{i} = LAI^{\phi}_{i}+LAI^{dead}_{i}
+\end{equation}\]</span>
+If there are <span class="math inline">\(c\)</span> plant cohorts, the leaf area index of the whole stand, <span class="math inline">\(LAI_{stand}\)</span>
+is then:
+<span class="math display">\[\begin{equation}
+LAI_{stand} = \sum_{i=1}^c{LAI_{i}^{all}}
 \end{equation}\]</span></p>
+<p>Although simulations will normally start in winter and <span class="math inline">\(GDD\)</span> will be zero at the beginning, the user can specify a starting non-zero value for <span class="math inline">\(GDD\)</span> in the object created by function .</p>
 </div>
-<div id="leaf-biomass-for-shrub-cohorts" class="section level3">
-<h3><span class="header-section-number">18.2.2</span> Leaf biomass for shrub cohorts</h3>
-<p>To calculate the leaf biomass of a shrub cohort, we first determine <span class="math inline">\(A_{sh,i}\)</span>, the area (in <span class="math inline">\(cm^2\)</span>) occupied by one average individual of height <span class="math inline">\(H_{i}\)</span> (in <span class="math inline">\(cm\)</span>), using the quadratic relationship:
+<div id="light-extinction" class="section level2">
+<h2><span class="header-section-number">4.2</span> Light extinction</h2>
+<p>The proportion of photosynthetic active radiation (PAR) decreases with leaf area following thee Beer-Lambert’s light extinction equation. To calculate the proportion of PAR available for a given plant cohort one must accumulate the light extinction caused by cohorts whose crown is above that of the target cohort:
 <span class="math display">\[\begin{equation}
-A_{sh,i} = a_{ash} \cdot H_{i}^2
+L^{PAR}_i=e^{-\sum_{h=1}^{c}{k_{PAR,h} \cdot LAI_{h}^{all} \cdot p_{ih}}}
 \end{equation}\]</span>
-where <span class="math inline">\(a_{ash}\)</span> is a species-specific parameter. The model then estimates the dry weight of leaves and branches up to 6.35mm in diameter (<span class="math inline">\(B_{sh,i}\)</span>, in kg) of this average individual (i.e. fine fuel biomass), using an allometric relationship with shrub crown phytovolume assuming a cylinder (in <span class="math inline">\(cm^3\)</span>):
+where <span class="math inline">\(k_{PAR,h}\)</span> is the PAR extinction coefficient of cohort <span class="math inline">\(h\)</span>. Because plant
+cohorts may differ in height only slightly, leaf area is multiplied by <span class="math inline">\(p_{ih}\)</span>,
+the proportion of the crown of cohort <span class="math inline">\(h\)</span> that overtops that of cohort <span class="math inline">\(i\)</span>:
 <span class="math display">\[\begin{equation}
-B_{sh,i} = a_{bsh} \cdot (A_{sh,i}\cdot H_{i}\cdot cr(SP_i))^{b_{bsh}}
+p_{ih}=\max(0,\min(1,(H_h-H_i\cdot (1 - CR_i))/(H_h-H_h\cdot (1 - CR_h))))
 \end{equation}\]</span>
-where <span class="math inline">\(a_{bsh}\)</span> and <span class="math inline">\(b_{bsh}\)</span> are species-specific parameters and <span class="math inline">\(cr(SP_i)\)</span> is a species-specific crown ratio (a proportion between 0 and 1, the ratio between crown length and total height). Shrub density (<span class="math inline">\(N_{i}\)</span>; in <span class="math inline">\(ind.\cdot m^{-2}\)</span>) can be grossly estimated from percent cover (<span class="math inline">\(C_{i}\)</span>, in percent) and <span class="math inline">\(A_{sh,i}\)</span> (in <span class="math inline">\(cm^{-2}\)</span>):
+where <span class="math inline">\(CR_i\)</span> and <span class="math inline">\(CR_h\)</span> are the crown ratio of cohorts <span class="math inline">\(i\)</span> and <span class="math inline">\(h\)</span>. In other terms,
+cohorts whose crown is completely above that of <span class="math inline">\(i\)</span> reduce the amount of light
+available more strongly by than cohorts that are only slightly taller.
+<span class="math inline">\(L^{PAR}_{ground}\)</span>, the proportion of PAR that reaches the ground, is calculated as:
 <span class="math display">\[\begin{equation}
-N_{i} = \frac{C_{i}/100}{A_{sh,i}/10000}
-\end{equation}\]</span>
-The fine fuel biomass of a shrub cohort (<span class="math inline">\(W_{i}\)</span>, in <span class="math inline">\(kg \cdot m^{-2}\)</span>) is simply the product of <span class="math inline">\(B_{sh,i}\)</span> (<span class="math inline">\(kg\)</span> of dry weight) and <span class="math inline">\(N_{i}\)</span>:
-<span class="math display" id="eq:shrubloading">\[\begin{equation}
-W_{i} =  B_{sh,i}\cdot N_{i}
-\tag{18.3}
-\end{equation}\]</span>
-Foliar biomass (in <span class="math inline">\(kg \cdot m^{-2}\)</span>) can be obtained using the species-specific ratio <span class="math inline">\(r_{6.35}(SP_i)\)</span>:
-<span class="math display" id="eq:shrubfoliarbiomass">\[\begin{equation}
-FB_{i} =  W_{i}/r_{6.35}(SP_i)\\
-\tag{18.4}
-\end{equation}\]</span>
-If not known, <span class="math inline">\(r_{6.35}(SP_i)\)</span> can be set to a default value of 2 (equivalent to %50 of weight corresponding to leaves).</p>
-</div>
-<div id="leaf-area" class="section level3">
-<h3><span class="header-section-number">18.2.3</span> Leaf area</h3>
-</div>
-</div>
-<div id="vertical-distribution-of-leaves" class="section level2">
-<h2><span class="header-section-number">18.3</span> Vertical distribution of leaves</h2>
-<div id="crownbaseheight" class="section level3">
-<h3><span class="header-section-number">18.3.1</span> Crown base height</h3>
-<p>Crown base height (<span class="math inline">\(H_{b,i}\)</span>; in cm) is defined as the height corresponding to the first living branch expressed as a fraction of total height. It is calculated from the crown ratio (<span class="math inline">\(CR\)</span>; a proportion between 0 and 1), i.e. the ratio between crown length and total height:
-<span class="math display" id="eq:CrownHeight">\[\begin{equation}
-H_{b,i} = H_{i} \cdot (1 - CR_i)
-\tag{18.5}
-\end{equation}\]</span>
-In the case of shrubs the crown ratio is simply equal by a species-specific parameter: <span class="math inline">\(CR_i = cr(SP_i)\)</span>. In the case of trees, the crown ratio is modelled as a function of tree size and stand competition, following a modification of the logistic equation of <span class="citation">Hasenauer and Monserud (<a href="#ref-Hasenauer1996">1996</a>)</span>:
-<span class="math display" id="eq:treecrownratio">\[\begin{equation}
-CR_i = \frac{1}{1+e^{-(a_{cr}+b_{1cr}\cdot HD +b_{2cr} \cdot (H_i/100)+b_{3cr} \cdot DBH_i^2+c_{1cr} \cdot BAL_i + c_{2cr} \cdot ln(CCF))}}
-\tag{18.6}
-\end{equation}\]</span>
-where <span class="math inline">\(HD = H_i/(100\cdot DBH_i)\)</span> is the height to diameter ratio (in <span class="math inline">\(m\cdot cm^{-1}\)</span>), <span class="math inline">\(H_i\)</span> is the tree height, <span class="math inline">\(DBH_i\)</span> is the diameter, <span class="math inline">\(CCF\)</span> is the crown competition factor and <span class="math inline">\(a_{cr}\)</span>, <span class="math inline">\(b_{1cr}\)</span>, <span class="math inline">\(b_{2cr}\)</span>, <span class="math inline">\(b_{3cr}\)</span>, <span class="math inline">\(c_{1cr}\)</span> and <span class="math inline">\(c_{2cr}\)</span> are species-specific parameters. The crown competition factor is in turn calculated using <span class="citation">(Krajicek, Brinkman, and Gingrich <a href="#ref-Krajicek1961">1961</a>)</span>:
+L^{PAR}_{ground}=e^{-\sum_{i=1}^{c}{k_{PAR,i} \cdot LAI_{i}^{all}}}
+\end{equation}\]</span></p>
+<p>The shortwave radiation (SWR; 400-3000 nm) energy absorbed by each plant cohort
+needs to be calculated to determine plant transpiration, and the radiation absorbed
+by the soil is needed to calculate soil evaporation. Foliage absorbs a higher
+proportion of PAR than SWR; thus, the extinction coefficient is higher for PAR
+than for SWR. However, values for the ratio of extinction coefficients are rather
+constant. Following Friend et al. <span class="citation">(<a href="#ref-Friend1997">1997</a>)</span> here it is assumed that the extinction
+coefficient for PAR is 1.35 times larger than that for SWR (i.e.
+<span class="math inline">\(k_{SWR,i} = k_{PAR,i}/1.35\)</span>).</p>
+<p>To calculate radiation absorption, where the vertical dimension of the plot is
+divided into 1 m deep layers, and the SWR absorbed is calculated for each plant
+cohort in each layer. Let <span class="math inline">\(n\)</span> be the number of canopy layers. The fraction of
+radiation incident on layer <span class="math inline">\(j\)</span> that is absorbed in the same layer is:
 <span class="math display">\[\begin{equation}
-CCF = \sum_{i}{N_i \cdot MCA_i}= \sum_{i}{N_i \cdot \pi \cdot (CW_i/2)^2/100}
+f_j=1 - e^{-\sum_{i=1}^{c}{k_{SWR,i} \cdot LAI_{i,j}^{all}}}
 \end{equation}\]</span>
-where <span class="math inline">\(N_i\)</span> is the tree density, <span class="math inline">\(MCA_i\)</span> is the maximum crown area (in percent of unit area) and <span class="math inline">\(CW_i\)</span> is the crown width (in m) assuming an open-grown tree, estimated from an allometric relationship with tree diameter:
+where <span class="math inline">\(LAI_{i,j}^{all} = LAI_{i,j}^{\phi}+LAI_{i,j}^{dead}\)</span> is the leaf area
+index of cohort <span class="math inline">\(i\)</span> in layer <span class="math inline">\(j\)</span>. Hence, the fraction transmitted is <span class="math inline">\((1-f_j)\)</span>.
+The fraction of radiation incident on layer <span class="math inline">\(j\)</span> that is absorbed by expanded leaves
+of plant cohort <span class="math inline">\(i\)</span> in that layer (<span class="math inline">\(f_{ij}\)</span>) is calculated from the relative
+contribution of these leaves to the total absorption in the layer:
 <span class="math display">\[\begin{equation}
-CW_i = a_{cw}\cdot BDH_i^{b_{cw}} 
+f_{ij} = f_j \cdot \frac{k_{SWR,i}\cdot LAI_{i,j}^{\phi}}{\sum_{h=1}^{c}{k_{SWR,h} \cdot LAI_{h,j}^{all}}}
 \end{equation}\]</span>
-where again <span class="math inline">\(a_{cw}\)</span> and <span class="math inline">\(b_{cw}\)</span> are species-specific parameters.</p>
-</div>
-<div id="ladprofile" class="section level3">
-<h3><span class="header-section-number">18.3.2</span> Leaf area density profile</h3>
-<p>Leaf area of any plant cohort is assumed to be distributed vertically following a truncated Gaussian function whose standardized values -1.5 and 1.5 correspond to crown base height and total plant height, respectively. The following figure illustrates the leaf area density profile for an example forest stand.</p>
-<pre class="sourceCode r" id="cb46"><code class="sourceCode r"><div class="sourceLine" id="cb46-1" data-line-number="1"><span class="kw">vprofile_leafAreaDensity</span>(exampleforest, SpParamsMED, <span class="dt">z =</span> <span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">1000</span>, <span class="dt">by=</span><span class="dv">1</span>))</div></code></pre>
-<p><img src="medfatebook_files/figure-html/unnamed-chunk-76-1.png" width="384" style="display: block; margin: auto;" /></p>
-<p>This density profile determines the extinction rates of light and wind through the forest canopy.</p>
+The fraction of canopy radiation absorbed by a plant cohort <span class="math inline">\(i\)</span> across all layers
+is found by adding the fraction absorbed in each layer:
+<span class="math display">\[\begin{equation}
+f_i = \sum_{j=1}^{n}{f_{ij}\cdot \prod_{h&gt;j}^{n}{(1-f_h)}}
+\end{equation}\]</span>
+where for each layer the fraction of the radiation incident in the canopy that
+reaches the layer is found by multiplying the transmitted fractions across the
+layers above it. The proportion of (shortwave) net radiation absorbed by the
+ground is simply:
+<span class="math display">\[\begin{equation}
+L^{SWR}_{ground} = 1 - \sum_{j}^{n}{f_j}
+\end{equation}\]</span></p>
 
-</div>
 </div>
 </div>
 <h3>Bibliography</h3>
 <div id="refs" class="references">
-<div id="ref-Hasenauer1996">
-<p>Hasenauer, Hubert, and Robert A. Monserud. 1996. “A crown ratio model for Austrian Forests.” <em>Forest Ecology and Management</em> 84 (1-3):49–60. <a href="https://doi.org/10.1016/0378-1127(96)03768-1" class="uri">https://doi.org/10.1016/0378-1127(96)03768-1</a>.</p>
+<div id="ref-Friend1997">
+<p>Friend, A D, A K Stevens, R G Knox, and M G R Cannell. 1997. “A process-based, terrestrial biosphere model of ecosystem dynamics (Hybrid v3.0).” <em>Ecological Modelling</em> 95:249–87. <a href="https://doi.org/10.1016/S0304-3800(96)00034-8" class="uri">https://doi.org/10.1016/S0304-3800(96)00034-8</a>.</p>
 </div>
-<div id="ref-Krajicek1961">
-<p>Krajicek, Je, Ka Brinkman, and Sf Gingrich. 1961. “Crown competition-a measure of density.” <em>Forest Science</em> 7 (1):35–42.</p>
+<div id="ref-Prentice1993">
+<p>Prentice, I. Colin, Martin T. Sykes, and Wolfgang Cramer. 1993. “A simulation model for the transient effects of climate change on forest landscapes.” <em>Ecological Modelling</em> 65 (1-2):51–70. <a href="https://doi.org/10.1016/0304-3800(93)90126-D" class="uri">https://doi.org/10.1016/0304-3800(93)90126-D</a>.</p>
+</div>
+<div id="ref-Sitch2003">
+<p>Sitch, S., B. Smith, I. C. Prentice, a. Arneth, a. Bondeau, W. Cramer, J. O. Kaplan, et al. 2003. “Evaluation of ecosystem dynamics, plant geography and terrestrial carbon cycling in the LPJ dynamic global vegetation model.” <em>Global Change Biology</em> 9 (2):161–85. <a href="https://doi.org/10.1046/j.1365-2486.2003.00569.x" class="uri">https://doi.org/10.1046/j.1365-2486.2003.00569.x</a>.</p>
 </div>
 </div>
             </section>
@@ -494,8 +419,8 @@ where again <span class="math inline">\(a_{cw}\)</span> and <span class="math in
           </div>
         </div>
       </div>
-<a href="update-of-structural-variables.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="fuel-characteristics-and-fire-behaviour.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="basicwaterbalance.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="hydrology.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

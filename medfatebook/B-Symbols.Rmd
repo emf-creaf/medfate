@@ -7,7 +7,7 @@ The following tables list all symbols used in this document, along with their un
 
 | Symbol | Units | R param | Description                        |
 |--------|-------|---------|------------------------------------|
-| $d_{s}$ | mm | `widths` | Soil layer width in soil layer $s$ |
+| $d_{s}$ | $mm$ | `widths` | Soil layer width in soil layer $s$ |
 | $P_{clay,s}$ | % | `clay`|  Percent of clay in soil layer $s$ |
 | $P_{sand,s}$ | % | `sand` | Percent of sand in soil layer $s$ |
 | $OM$ | % | `om` | Percentage of organic mater per dry weight |
@@ -26,9 +26,10 @@ The following tables list all symbols used in this document, along with their un
 | $P_{macro, s}$ | % | `macro` | Percentage of macroporosity corresponding to each soil layers. |
 | $\gamma_{soil}$ | $mm \cdot day^{-1}$ | `Gsoil` | The maximum daily evaporation from soil |
 | $\kappa_{soil}$ | | `Ksoil` | Extinction parameter to regulate the amount of water evaporated from each soil layer |
-| $WT$ | mm | | Water table depth |
+| $WT$ | $mm$ | | Water table depth |
+| $V_{s}$ | $mm$ | | Water content in soil layer $s$ |
 | $W_{s}$ | [0-1] |`W` | Proportion of volumetric moisture in relation to field capacity in soil layer $s$ |
-| $S_{snow}$ | mm |`SWE` | Snow water equivalent of the snow pack storage over the soil surface |
+| $S_{snow}$ | $mm$ |`SWE` | Snow water equivalent of the snow pack storage over the soil surface |
 
 
 ## Vegetation
@@ -44,6 +45,8 @@ The following tables list all symbols used in this document, along with their un
 | $LAI^{live}_i$ | $m^2 \cdot m^{-2}$ | `LAI_live` | (Maximum) leaf area index (one-side leaf area per surface area of the stand) of cohort $i$ |
 | $LAI^{dead}_i$ | $m^2 \cdot m^{-2}$ | `LAI_dead` | Dead leaf area index (one-side dead leaf area per surface area of the stand) of cohort $i$ |
 | $LAI^{\phi}_i$ | $m^2 \cdot m^{-2}$ | `LAI_expanded` | Current expanded leaf area index (one-side expanded leaf area per surface area of the stand) of cohort $i$ |
+| $LAI^{all}_{i}$ | $m^2 \cdot m^{-2}$ | | Total leaf area index (live or dead) of cohort $i$ |
+| $LAI_{stand}$ | $m^2 \cdot m^{-2}$ | | Total leaf area index (live or dead) of the stand |
 | $v_{i,s}$ | [0-1] | `V[i,s]` | The proportion of fine roots of cohort $i$ in soil layer $s$ |
 | $Z_{50,i}$ | mm | `Z50` | Depth above which 50% of the fine root mass of cohort $i$ is located |
 | $Z_{95,i}$ | mm | `Z95` | Depth above which 95% of the fine root mass of cohort $i$ is located |
@@ -63,6 +66,7 @@ The following tables list all symbols used in this document, along with their un
 | $PET$ | $L \cdot m^{-2} = mm$ | `PET` | Potential evapotranspiration, preferably calculated using Penman's equation |
 | $Rad$ | $MJ \cdot m^{-2}$ | `Radiation` | Solar radiation after accounting for clouds |
 | $u$ | $m \cdot s^{-1}$ | `WindSpeed` | Wind speed |
+| $GDD$ | $^{\circ} \mathrm{C}$ | `GDD` | Growth degree days. |
 
 ## Anatomy 
 
