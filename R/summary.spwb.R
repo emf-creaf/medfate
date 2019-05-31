@@ -5,6 +5,7 @@ summary.spwb<-function(object, freq="years", output="WaterBalance", FUN=sum, byS
   input = object$spwbInput
   if(output=="WaterBalance") OM = object$WaterBalance
   else if(output=="Soil") OM = object$Soil
+  else if(output=="Stand") OM = object$Stand
   else if(output=="EnergyBalance") OM = object$EnergyBalance
   else if(output=="Temperature") OM = object$Temperature
   else if(output=="PlantLAI") {

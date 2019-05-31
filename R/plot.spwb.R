@@ -7,6 +7,7 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
   
   WaterBalance = x$WaterBalance
   Soil = x$Soil
+  Stand = x$Stand
   nlayers = length(soilInput$W)
   
   transpMode = input$control$transpirationMode
@@ -104,7 +105,7 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
   } 
   else if(type=="LAI") {
     if(is.null(ylab)) ylab = expression(paste("Leaf Area Index   ",(m^{2}%.%m^{-2})))
-    return(.multiple_dynamics(as.matrix(WaterBalance[,c("LAIcell", "LAIcelldead")]), ylab = ylab, ylim = ylim))
+    return(.multiple_dynamics(as.matrix(Stand[,c("LAIcell", "LAIcelldead")]), ylab = ylab, ylim = ylim))
   } 
   else if(type=="WTD") {
     if(is.null(ylab)) ylab = expression(paste("Water table depth  (mm)"))
@@ -154,6 +155,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
   
   WaterBalance = x$WaterBalance
   Soil = x$Soil
+  Stand = x$Stand
   nlayers = length(soilInput$W)
   
   transpMode = input$control$transpirationMode

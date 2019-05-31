@@ -1107,6 +1107,7 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
   NumericMatrix PlantTranspiration(numDays, numCohorts);
   NumericMatrix PlantPhotosynthesis(numDays, numCohorts);
   NumericVector EplantCohTot(numCohorts, 0.0);
+  NumericMatrix PlantAbsSWRFraction(numDays, numCohorts);
   NumericMatrix PlantAbsSWR(numDays, numCohorts);
   NumericMatrix PlantAbsLWR(numDays, numCohorts);
   NumericMatrix PlantLAI(numDays, numCohorts);
@@ -1188,6 +1189,7 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
     PlantStress(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["DDS"]);
     
     if(transpirationMode=="Granier") {
+      PlantAbsSWRFraction(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["AbsorbedSWRFraction"]);
       PlantPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["psi"]);
     }
     else if(transpirationMode=="Sperry")  {
@@ -1305,6 +1307,7 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
   }
   DWB.attr("row.names") = meteo.attr("row.names") ;
   
+  if(transpirationMode=="Granier") PlantAbsSWRFraction.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")); 
   PlantTranspiration.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names"));
   PlantStress.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   StemPLC.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
@@ -1348,6 +1351,7 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
                      Named("WaterBalance")=DWB, 
                      Named("Soil") = SWB,
                      Named("PlantLAI") = PlantLAI,
+                     Named("PlantAbsorbedSWRFraction") = PlantAbsSWRFraction,
                      Named("PlantTranspiration") = PlantTranspiration,
                      Named("PlantPhotosynthesis") = PlantPhotosynthesis,
                      Named("PlantPsi") = PlantPsi, 

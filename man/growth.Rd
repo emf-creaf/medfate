@@ -49,27 +49,33 @@ growth(x, soil, meteo,  latitude = NA, elevation = NA, slope = NA, aspect = NA)
   \item{\code{"soilInput"}: A copy of the object \code{soil} of class \code{\link{soil}} given as input.}
   \item{\code{"WaterBalance"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
   \itemize{
-  \item{\code{"LAIcell"}: The LAI of the stand (accounting for leaf phenology) (in m2/m2).}
-  \item{\code{"Cm"}: The water retention capacity of the stand (in mm) (accounting for leaf phenology).}
-  \item{\code{"Lground"}: The proportion of PAR that reaches the ground (accounting for leaf phenology).}
   \item{\code{"PET"}: Potential evapotranspiration (in mm).}
   \item{\code{"Rainfall"}: Input precipitation (in mm).}
   \item{\code{"NetPrec"}: Net precipitation, after accounting for interception (in mm).}
   \item{\code{"Infiltration"}: The amount of water infiltrating into the soil (in mm).}
   \item{\code{"Runoff"}: The amount of water exported via surface runoff (in mm).}
   \item{\code{"DeepDrainage"}: The amount of water exported via deep drainage (in mm).}
-  \item{\code{"Etot"}: Evapotranspiration (in mm).}
-  \item{\code{"Esoil"}: Bare soil evaporation (in mm).}
-  \item{\code{"Eplanttot"}: Plant transpiration (considering all soil layers) (in mm).}
-  \item{\code{"Eplant.1"}, \code{...}, \code{"Eplant.k"}: Plant transpiration from each soil layer (in mm).}
+  \item{\code{"Evapotranspiration"}: Evapotranspiration (in mm).}
+  \item{\code{"SoilEvaporation"}: Bare soil evaporation (in mm).}
+  \item{\code{"Transpiration"}: Plant transpiration (considering all soil layers) (in mm).}
   }
   \item{\code{"Soil"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
   \itemize{
   \item{\code{"W.1"}, \code{...}, \code{"W.k"}: Relative soil moisture content (relative to field capacity) in each soil layer.}
   \item{\code{"ML.1"}, \code{...}, \code{"ML.k"}: Soil water volume in each soil layer (in L/m2).}
   \item{\code{"MLTot"}: Total soil water volume (in L/m2).}
+  \item{\code{"PlantExt.1"}, \code{...}, \code{"PlantExt.k"}: Plant extraction from each soil layer (in mm).}
   \item{\code{"psi.1"}, \code{...}, \code{"psi.k"}: Soil water potential in each soil layer (in MPa).}
   }
+  \item{\code{"Stand"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
+       \itemize{
+          \item{\code{"GDD"}: Cumulative growth degree days.}
+          \item{\code{"LAIcell"}: LAI of the stand (accounting for leaf phenology) (in m2/m2).}
+          \item{\code{"LAIcelldead"}: LAI of the stand corresponding to dead leaves (in m2/m2).}
+          \item{\code{"Cm"}: Water retention capacity of the canopy (in mm) (accounting for leaf phenology).}
+          \item{\code{"LgroundPAR"}: The proportion of PAR that reaches the ground (accounting for leaf phenology).}
+          \item{\code{"LgroundSWR"}: The proportion of SWR that reaches the ground (accounting for leaf phenology).}
+      }
   \item{\code{"PlantTranspiration"}: A data frame with the amount of daily transpiration (in mm) for each plant cohort. Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
   \item{\code{"PlantPhotosynthesis"}: A data frame with the amount of daily photosynthesis (in g C · m-2) for each plant cohort. Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
   \item{\code{"PlantRespiration"}: A data frame with the amount of daily maintenance respiration (in g C · m-2) for each plant cohort. Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}

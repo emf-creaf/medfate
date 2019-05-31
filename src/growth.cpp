@@ -276,8 +276,10 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   NumericVector GDD(numDays);
   NumericVector SoilEvaporation(numDays);
   NumericVector LAIcell(numDays);
+  NumericVector LAIcelldead(numDays);
   NumericVector Cm(numDays);
-  NumericVector Lground(numDays);
+  NumericVector LgroundPAR(numDays);
+  NumericVector LgroundSWR(numDays);
   NumericVector Runoff(numDays);
   NumericVector NetRain(numDays);
   NumericVector Rain(numDays);
@@ -335,10 +337,15 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
                    latitude, elevation, solarConstant, delta, Precipitation[i], PET[i], 
                    er, 0.0, verbose);
     }    
+    
+    List stand = s["Stand"];
+    LgroundPAR[i] = stand["LgroundPAR"];
+    LgroundSWR[i] = stand["LgroundSWR"];
+    LAIcell[i] = stand["LAIcell"];
+    LAIcelldead[i] = stand["LAIcelldead"];
+    Cm[i] = stand["Cm"];
+    
     List db = s["WaterBalance"];
-    Lground[i] = db["Lground"];
-    LAIcell[i] = db["LAIcell"];
-    Cm[i] = db["Cm"];
     DeepDrainage[i] = db["DeepDrainage"];
     Infiltration[i] = db["Infiltration"];
     Runoff[i] = db["Runoff"];
@@ -555,16 +562,19 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   DataFrame SWB = DataFrame::create(_["W"]=Wdays, _["ML"]=MLdays,_["MLTot"]=MLTot,
                                     _["WTD"] = WaterTable,
                                     _["SWE"] = SWE, _["PlantExt"]=Eplantdays, _["psi"]=psidays);
-  Rcpp::DataFrame DWB = DataFrame::create(_["GDD"] = GDD,
-                                          _["LAIcell"]=LAIcell, _["Cm"]=Cm, _["Lground"] = Lground, _["PET"]=PET, 
+  Rcpp::DataFrame Stand = DataFrame::create(_["GDD"] = GDD,
+                                          _["LAIcell"]=LAIcell, _["LAIcelldead"]=LAIcelldead,
+                                          _["Cm"]=Cm, _["LgroundPAR"] = LgroundPAR, _["LgroundSWR"] = LgroundSWR);
+  Rcpp::DataFrame DWB = DataFrame::create(_["PET"]=PET, 
                                           _["Precipitation"] = Precipitation, _["Rain"] = Rain, _["Snow"] = Snow, 
                                           _["NetRain"]=NetRain,_["Infiltration"]=Infiltration, _["Runoff"]=Runoff, _["DeepDrainage"]=DeepDrainage, 
                                           _["Evapotranspiration"]=Evapotranspiration,_["SoilEvaporation"]=SoilEvaporation,
                                           _["Transpiration"]=Transpiration);
   
-  SWB.attr("row.names") = meteo.attr("row.names") ;
-  DWB.attr("row.names") = meteo.attr("row.names") ;
-
+  SWB.attr("row.names") = meteo.attr("row.names");
+  DWB.attr("row.names") = meteo.attr("row.names");
+  Stand.attr("row.names") = meteo.attr("row.names");
+  
   PlantTranspiration.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
   PlantPhotosynthesis.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   PlantRespiration.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
@@ -586,6 +596,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
                         Named("soilInput") = soilInput,
                         Named("WaterBalance")=DWB, 
                         Named("Soil")=SWB,
+                        Named("Stand")=Stand,
                         Named("PlantTranspiration") = PlantTranspiration,
                         Named("PlantPhotosynthesis") = PlantPhotosynthesis,
                         Named("PlantRespiration") = PlantRespiration,
