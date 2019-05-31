@@ -86,4 +86,4 @@ This is a *reference book* for simulation and static models included in **medfat
 The following chapter describes the soil, vegetation and meteorology inputs that apply to all models. After that, the book presents each simulation model using a set of chapters. The first chapter introduces the model and the remaining describe the details of formulations by processes. Those process formulations that are common to more than one model (like hydrology) are described only once. Static models and their functions are presented grouped at the end of the book, before the appendices.
 
 
-In this book we use `code` or `variablename` to indicate R code or to refer to variable names within R, and `functionname()` to refer to a package function. When relevant, we will indicate the correspondence between mathematical symbols, their units and variable names within R. 
+In this book we use `objectname` or `variablename` to indicate R code or to refer to an R objects or a variable within data frames, and `functionname()` to refer to a package function. When relevant, we indicate the correspondence between mathematical symbols, their units and names within R. 

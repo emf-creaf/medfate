@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 18 Leaf biomass, leaf area and vertical profiles | The medfate reference book</title>
+  <title>Chapter 3 Basic water balance model | The medfate reference book</title>
   <meta name="description" content="This is a reference book for models implemented in package medfate." />
   <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 18 Leaf biomass, leaf area and vertical profiles | The medfate reference book" />
+  <meta property="og:title" content="Chapter 3 Basic water balance model | The medfate reference book" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 18 Leaf biomass, leaf area and vertical profiles | The medfate reference book" />
+  <meta name="twitter:title" content="Chapter 3 Basic water balance model | The medfate reference book" />
   
   <meta name="twitter:description" content="This is a reference book for models implemented in package medfate." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="update-of-structural-variables.html">
-<link rel="next" href="fuel-characteristics-and-fire-behaviour.html">
+<link rel="prev" href="model-inputs.html">
+<link rel="next" href="leaf-phenology-and-light-extinction.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -371,122 +371,105 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="leafbiomass" class="section level1">
-<h1><span class="header-section-number">Chapter 18</span> Leaf biomass, leaf area and vertical profiles</h1>
-<div id="input-data" class="section level2">
-<h2><span class="header-section-number">18.1</span> Input data</h2>
-<div id="forest-inventory-data" class="section level3">
-<h3><span class="header-section-number">18.1.1</span> Forest inventory data</h3>
-<p>The input data for tree cohorts are:</p>
+<div id="basicwaterbalance" class="section level1">
+<h1><span class="header-section-number">Chapter 3</span> Basic water balance model</h1>
+<div id="design-principles" class="section level2">
+<h2><span class="header-section-number">3.1</span> Design principles</h2>
+<p>The water balance model described in <span class="citation">De Cáceres et al. (<a href="#ref-DeCaceres2015">2015</a>)</span> calculates temporal variations in soil moisture on a daily step basis for the input forest stand and for the period corresponding to input weather data.</p>
+<p>The model considers only the vertical spatial dimension of the stand and not the horizontal distribution of
+plants within it. In other words, the model is not spatially explicit (i.e., plants do not interact for space explicitly). Still, the stand is divided into groups of plants, here referred to as <em>plant cohorts</em> of different species, height and leaf area index (<span class="math inline">\(LAI\)</span>). Height and <span class="math inline">\(LAI\)</span> values determine competition for light. <span class="math inline">\(LAI\)</span> values also drive competition for water, along with root distribution. The soil water balance follows the design principles of SIERRA <span class="citation">(Mouillot, Rambal, and Lavorel <a href="#ref-Mouillot2001">2001</a>; Ruffault et al. <a href="#ref-Ruffault2014">2014</a>, <a href="#ref-Ruffault2013">2013</a>)</span> and BILJOU <span class="citation">(Granier et al. <a href="#ref-Granier1999">1999</a>, <a href="#ref-Granier2007">2007</a>)</span>, although some features are taken from other models <span class="citation">(Kergoat <a href="#ref-Kergoat1998">1998</a>)</span>. Potential evapotranspiration (<span class="math inline">\(PET\)</span>) is given as input and the model determines maximum canopy transpiration (<span class="math inline">\(Tr_{\max}\)</span>) using an empirical relationship between the <span class="math inline">\(LAI\)</span> of the stand and the ratio <span class="math inline">\(Tr_{\max}/PET\)</span> <span class="citation">(Granier et al. <a href="#ref-Granier1999">1999</a>)</span>. Actual plant transpiration is estimated using a function that depends on current soil moisture levels, species-specific drought resistance, fine root distribution and the degree of shading of the target plant cohort.</p>
+</div>
+<div id="state-variables" class="section level2">
+<h2><span class="header-section-number">3.2</span> State variables</h2>
+<p>The model has the following state variables:</p>
 <ul>
-<li><span class="math inline">\(SP_i\)</span>: Species identity}</li>
-<li><span class="math inline">\(DBH_i\)</span>: Diameter at breast height (in cm) of the representative tree.</li>
-<li><span class="math inline">\(H_i\)</span>: Height (in cm) of the representative tree.</li>
-<li><span class="math inline">\(N_i\)</span>: Cohort density (in <span class="math inline">\(ind.\cdot ha^{-1}\)</span>).</li>
-</ul>
-<p>The input data for shrub cohorts are:</p>
-<ul>
-<li><span class="math inline">\(SP_i\)</span>: Species identity</li>
-<li><span class="math inline">\(C_i\)</span>: Plant cover (in percent).</li>
-<li><span class="math inline">\(H_i\)</span>: Mean plant height (in cm).</li>
+<li>Cumulative growth degree days, <span class="math inline">\(GDD\)</span>, are tracked by the model and determine leaf phenological status of winter deciduous species.</li>
+<li>Daily soil moisture content dynamics on each layer <span class="math inline">\(s\)</span> are tracked using <span class="math inline">\(W_s = \theta(\Psi_s)/ \theta_{fc,s}\)</span>, the <strong>proportion of volumetric soil moisture in relation to field capacity</strong>, where field capacity, <span class="math inline">\(\theta_{fc,s}\)</span>, is assumed to correspond to <span class="math inline">\(\Psi_{fc} = -0.033\)</span> MPa. Note that <span class="math inline">\(W_s\)</span> values larger than one are possible if the soil is between field capacity and saturation (which can happen if deep drainage is not allowed).</li>
+<li>If snow accumulation/melting is considered, the model tracks <span class="math inline">\(S_{snow}\)</span>, the snow water equivalent (in mm) of the snow pack storage over the surface.</li>
+<li>If irreversible cavitation is activated, the model tracks <span class="math inline">\(P_{embolized,i}\)</span>, the maximum value of daily drought stress so far experienced.</li>
 </ul>
 </div>
-<div id="allometric-species-specific-parameters" class="section level3">
-<h3><span class="header-section-number">18.1.2</span> Allometric species-specific parameters</h3>
+<div id="water-balance" class="section level2">
+<h2><span class="header-section-number">3.3</span> Water balance</h2>
+<p>Daily variations in soil water content (mm) can be summarized as:</p>
+<span class="math display">\[\begin{equation}
+\Delta{SWC} = Pr + Sm - In - Ru - Dd - Es -Tr
+\end{equation}\]</span>
+<p>where <span class="math inline">\(Pr\)</span> is precipitation as rainfall, <span class="math inline">\(Sm\)</span> is water from melting the snow pack (if considered), <span class="math inline">\(In\)</span> is the interception loss (i.e., water evaporated after being intercepted by the canopy), <span class="math inline">\(Ru\)</span> is surface runoff, <span class="math inline">\(Dd\)</span> is deep drainage (i.e. water percolated to layers beyond soil depth), <span class="math inline">\(Es\)</span> is evaporation from soil and <span class="math inline">\(Tr\)</span> is plant transpiration. If snow dynamics are considered, the water balance of the snow pack is defined as:</p>
+<span class="math display">\[\begin{equation}
+\Delta{S_{snow}} = Ps - Sm
+\end{equation}\]</span>
+<p>where <span class="math inline">\(Ps\)</span> is precipitation as snowfall and <span class="math inline">\(Sm\)</span> is snow melt.</p>
+</div>
+<div id="process-scheduling" class="section level2">
+<h2><span class="header-section-number">3.4</span> Process scheduling</h2>
+<p>Every day water balance is perfomed as follows. The model first updates leaf area values according to the phenology of species and calculates light extinction. After that, the model updates soil water content of soil layers in several steps:</p>
 <ul>
-<li><span class="math inline">\(a_{fbt}, b_{fbt}, c_{fbt}, d_{fbt}\)</span> [<code>a_fbt</code>, <code>b_fbt</code>, <code>c_fbt</code>, <code>d_fbt</code>]: Regression coefficients used to calculate foliar biomass of an individual tree from its <span class="math inline">\(DBH\)</span> and the cummulative basal area of larger trees.</li>
-<li><span class="math inline">\(a_{ash}\)</span> [<code>a_ash</code>]: Regression coefficient relating the square of shrub height with shrub area.</li>
-<li><span class="math inline">\(a_{bsh}\)</span> and <span class="math inline">\(b_{bsh}\)</span> [<code>a_bsh</code>, <code>b_bsh</code>]: Allometric coefficients relating phytovolume with dry weight of shrub individuals.</li>
-<li><span class="math inline">\(cr(SP_i)\)</span>: [<code>cr</code>]: Ratio between crown length and total height for shrubs.</li>
+<li>Update leaf area values according to the phenology of species (section <a href="leaf-phenology-and-light-extinction.html#leafphenology">4.1</a>).</li>
+<li>If snow dynamics are included, increase snow pack from snow precipitation (<span class="math inline">\(Ps\)</span>) and decreases it from snow melting (<span class="math inline">\(Sm\)</span>) (section <a href="hydrology.html#snowpack">5.1</a>).</li>
+<li>Increase soil moisture due to rainfall (<span class="math inline">\(Pr\)</span>), surface runon (<span class="math inline">\(Ro\)</span>) and snow melting (<span class="math inline">\(Sm\)</span>), after accounting for interception loss (<span class="math inline">\(In\)</span>), surface runoff (<span class="math inline">\(Ru\)</span>) and deep drainage (<span class="math inline">\(Dd\)</span>) (sections <a href="hydrology.html#interception">5.2</a> and <a href="hydrology.html#runoff">5.3</a>)</li>
+<li>Decrease water content due to bare soil evaporation (<span class="math inline">\(Es\)</span>) (section <a href="hydrology.html#soilevaporation">5.4</a>).</li>
+<li>Determine transpiration, photosynthesis and drought stress for each plant cohort and decrease water content due to plant transpiration (<span class="math inline">\(Tr\)</span>) (chapter <a href="transpirationgranier.html#transpirationgranier">6</a>).</li>
+</ul>
+</div>
+<div id="model-input" class="section level2">
+<h2><span class="header-section-number">3.5</span> Model input</h2>
+<div id="metereological-input" class="section level3">
+<h3><span class="header-section-number">3.5.1</span> Metereological input</h3>
+<p>The minimum weather variables required to run the model are mean temperature (<span class="math inline">\(T_{mean}\)</span>), precipitation (<span class="math inline">\(P\)</span>) and potential evapotranspiration (<span class="math inline">\(PET\)</span>). Solar radiation (<span class="math inline">\(Rad\)</span>) is required if snow pack dynamics have to be simulated. Optionally, the user may also specify values of wind speed (<span class="math inline">\(u\)</span>) that are used to control leaf fall in autumn. Definitions and units of these variables are given in section <a href="model-inputs.html#meteoinput">2.3</a>.</p>
+</div>
+<div id="control-parameters-1" class="section level3">
+<h3><span class="header-section-number">3.5.2</span> Control parameters</h3>
+<p>The control values relevant for the simple water balance model are:</p>
+<ul>
+<li><code>verbose [=TRUE]</code>: Whether extra console output is desired during simulations.</li>
+<li><code>soilFunctions [= &quot;SX&quot;]</code>: Water retention curve model, either “SX” (for Saxton) or “VG” (for Van Genuchten).</li>
+<li><code>leafPhenology [= TRUE]</code>: Whether leaf phenology is simulated.</li>
+<li><code>snowpack [= TRUE]</code>: Whether dynamics of snow pack are included.</li>
+<li><code>drainage [= TRUE]</code>: Whether water exceeding the field capacity of the bottom layer is lost by deep drainage into a non-reachable compartment.</li>
+<li><code>transpirationMode [= &quot;Granier&quot;]</code>: Transpiration model, in this case “Granier”.</li>
+<li><code>defaultWindSpeed [= 2.5]</code>: Default value for wind speed (in <span class="math inline">\(m \cdot s^{-1}\)</span>) when this is missing (only used for leaf fall).</li>
+<li><code>cavitationRefill [= TRUE]</code>: If <code>FALSE</code> the model operates in a irreversible cavitation mode.</li>
 </ul>
 </div>
 </div>
-<div id="leaf-biomass-and-area" class="section level2">
-<h2><span class="header-section-number">18.2</span> Leaf biomass and area</h2>
-<div id="leaf-biomass-for-tree-cohorts" class="section level3">
-<h3><span class="header-section-number">18.2.1</span> Leaf biomass for tree cohorts</h3>
-<p>Foliar biomass for a single tree of cohort <span class="math inline">\(i\)</span> (<span class="math inline">\(FB_{tree,i}\)</span>; in <span class="math inline">\(kg\)</span>) is calculated using:
-<span class="math display" id="eq:onetreefoliarbiomass">\[\begin{equation}
-FB_{tree,i} = a_{fbt} \cdot DBH_{i}^{b_{fbt}}\cdot e^{c_{fbt}\cdot BAL_i} \cdot DBH_{i}^{d_{fbt} \cdot BA_{sup}}
-\tag{18.1}
-\end{equation}\]</span>
-where <span class="math inline">\(DBH_{i}\)</span> is the diameter of the tree (in <span class="math inline">\(cm\)</span>), <span class="math inline">\(BAL_i\)</span> is the cummulative basal area (<span class="math inline">\(m^2\cdot ha^{-1}\)</span>) of trees having a larger diameter, and <span class="math inline">\(a_{fbt}\)</span>, <span class="math inline">\(b_{fbt}\)</span>, <span class="math inline">\(c_{fbt}\)</span> and <span class="math inline">\(c_{fbt}\)</span> are species-specific regression coefficients. The foliar biomass of the whole tree cohort (<span class="math inline">\(FB_{i}\)</span>; in <span class="math inline">\(kg\cdot m^{-2}\)</span>) is obtained multiplying tree foliar biomass by tree density (<span class="math inline">\(N_{i}\)</span>; in <span class="math inline">\(ind.\cdot ha^{-1}\)</span>):
-<span class="math display" id="eq:treefoliarbiomass">\[\begin{equation}
-FB_{i} = FB_{tree,i}\cdot (N_{i}/10000)
-\tag{18.2}
-\end{equation}\]</span></p>
-</div>
-<div id="leaf-biomass-for-shrub-cohorts" class="section level3">
-<h3><span class="header-section-number">18.2.2</span> Leaf biomass for shrub cohorts</h3>
-<p>To calculate the leaf biomass of a shrub cohort, we first determine <span class="math inline">\(A_{sh,i}\)</span>, the area (in <span class="math inline">\(cm^2\)</span>) occupied by one average individual of height <span class="math inline">\(H_{i}\)</span> (in <span class="math inline">\(cm\)</span>), using the quadratic relationship:
-<span class="math display">\[\begin{equation}
-A_{sh,i} = a_{ash} \cdot H_{i}^2
-\end{equation}\]</span>
-where <span class="math inline">\(a_{ash}\)</span> is a species-specific parameter. The model then estimates the dry weight of leaves and branches up to 6.35mm in diameter (<span class="math inline">\(B_{sh,i}\)</span>, in kg) of this average individual (i.e. fine fuel biomass), using an allometric relationship with shrub crown phytovolume assuming a cylinder (in <span class="math inline">\(cm^3\)</span>):
-<span class="math display">\[\begin{equation}
-B_{sh,i} = a_{bsh} \cdot (A_{sh,i}\cdot H_{i}\cdot cr(SP_i))^{b_{bsh}}
-\end{equation}\]</span>
-where <span class="math inline">\(a_{bsh}\)</span> and <span class="math inline">\(b_{bsh}\)</span> are species-specific parameters and <span class="math inline">\(cr(SP_i)\)</span> is a species-specific crown ratio (a proportion between 0 and 1, the ratio between crown length and total height). Shrub density (<span class="math inline">\(N_{i}\)</span>; in <span class="math inline">\(ind.\cdot m^{-2}\)</span>) can be grossly estimated from percent cover (<span class="math inline">\(C_{i}\)</span>, in percent) and <span class="math inline">\(A_{sh,i}\)</span> (in <span class="math inline">\(cm^{-2}\)</span>):
-<span class="math display">\[\begin{equation}
-N_{i} = \frac{C_{i}/100}{A_{sh,i}/10000}
-\end{equation}\]</span>
-The fine fuel biomass of a shrub cohort (<span class="math inline">\(W_{i}\)</span>, in <span class="math inline">\(kg \cdot m^{-2}\)</span>) is simply the product of <span class="math inline">\(B_{sh,i}\)</span> (<span class="math inline">\(kg\)</span> of dry weight) and <span class="math inline">\(N_{i}\)</span>:
-<span class="math display" id="eq:shrubloading">\[\begin{equation}
-W_{i} =  B_{sh,i}\cdot N_{i}
-\tag{18.3}
-\end{equation}\]</span>
-Foliar biomass (in <span class="math inline">\(kg \cdot m^{-2}\)</span>) can be obtained using the species-specific ratio <span class="math inline">\(r_{6.35}(SP_i)\)</span>:
-<span class="math display" id="eq:shrubfoliarbiomass">\[\begin{equation}
-FB_{i} =  W_{i}/r_{6.35}(SP_i)\\
-\tag{18.4}
-\end{equation}\]</span>
-If not known, <span class="math inline">\(r_{6.35}(SP_i)\)</span> can be set to a default value of 2 (equivalent to %50 of weight corresponding to leaves).</p>
-</div>
-<div id="leaf-area" class="section level3">
-<h3><span class="header-section-number">18.2.3</span> Leaf area</h3>
-</div>
-</div>
-<div id="vertical-distribution-of-leaves" class="section level2">
-<h2><span class="header-section-number">18.3</span> Vertical distribution of leaves</h2>
-<div id="crownbaseheight" class="section level3">
-<h3><span class="header-section-number">18.3.1</span> Crown base height</h3>
-<p>Crown base height (<span class="math inline">\(H_{b,i}\)</span>; in cm) is defined as the height corresponding to the first living branch expressed as a fraction of total height. It is calculated from the crown ratio (<span class="math inline">\(CR\)</span>; a proportion between 0 and 1), i.e. the ratio between crown length and total height:
-<span class="math display" id="eq:CrownHeight">\[\begin{equation}
-H_{b,i} = H_{i} \cdot (1 - CR_i)
-\tag{18.5}
-\end{equation}\]</span>
-In the case of shrubs the crown ratio is simply equal by a species-specific parameter: <span class="math inline">\(CR_i = cr(SP_i)\)</span>. In the case of trees, the crown ratio is modelled as a function of tree size and stand competition, following a modification of the logistic equation of <span class="citation">Hasenauer and Monserud (<a href="#ref-Hasenauer1996">1996</a>)</span>:
-<span class="math display" id="eq:treecrownratio">\[\begin{equation}
-CR_i = \frac{1}{1+e^{-(a_{cr}+b_{1cr}\cdot HD +b_{2cr} \cdot (H_i/100)+b_{3cr} \cdot DBH_i^2+c_{1cr} \cdot BAL_i + c_{2cr} \cdot ln(CCF))}}
-\tag{18.6}
-\end{equation}\]</span>
-where <span class="math inline">\(HD = H_i/(100\cdot DBH_i)\)</span> is the height to diameter ratio (in <span class="math inline">\(m\cdot cm^{-1}\)</span>), <span class="math inline">\(H_i\)</span> is the tree height, <span class="math inline">\(DBH_i\)</span> is the diameter, <span class="math inline">\(CCF\)</span> is the crown competition factor and <span class="math inline">\(a_{cr}\)</span>, <span class="math inline">\(b_{1cr}\)</span>, <span class="math inline">\(b_{2cr}\)</span>, <span class="math inline">\(b_{3cr}\)</span>, <span class="math inline">\(c_{1cr}\)</span> and <span class="math inline">\(c_{2cr}\)</span> are species-specific parameters. The crown competition factor is in turn calculated using <span class="citation">(Krajicek, Brinkman, and Gingrich <a href="#ref-Krajicek1961">1961</a>)</span>:
-<span class="math display">\[\begin{equation}
-CCF = \sum_{i}{N_i \cdot MCA_i}= \sum_{i}{N_i \cdot \pi \cdot (CW_i/2)^2/100}
-\end{equation}\]</span>
-where <span class="math inline">\(N_i\)</span> is the tree density, <span class="math inline">\(MCA_i\)</span> is the maximum crown area (in percent of unit area) and <span class="math inline">\(CW_i\)</span> is the crown width (in m) assuming an open-grown tree, estimated from an allometric relationship with tree diameter:
-<span class="math display">\[\begin{equation}
-CW_i = a_{cw}\cdot BDH_i^{b_{cw}} 
-\end{equation}\]</span>
-where again <span class="math inline">\(a_{cw}\)</span> and <span class="math inline">\(b_{cw}\)</span> are species-specific parameters.</p>
-</div>
-<div id="ladprofile" class="section level3">
-<h3><span class="header-section-number">18.3.2</span> Leaf area density profile</h3>
-<p>Leaf area of any plant cohort is assumed to be distributed vertically following a truncated Gaussian function whose standardized values -1.5 and 1.5 correspond to crown base height and total plant height, respectively. The following figure illustrates the leaf area density profile for an example forest stand.</p>
-<pre class="sourceCode r" id="cb46"><code class="sourceCode r"><div class="sourceLine" id="cb46-1" data-line-number="1"><span class="kw">vprofile_leafAreaDensity</span>(exampleforest, SpParamsMED, <span class="dt">z =</span> <span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">1000</span>, <span class="dt">by=</span><span class="dv">1</span>))</div></code></pre>
-<p><img src="medfatebook_files/figure-html/unnamed-chunk-76-1.png" width="384" style="display: block; margin: auto;" /></p>
-<p>This density profile determines the extinction rates of light and wind through the forest canopy.</p>
+<div id="model-output" class="section level2">
+<h2><span class="header-section-number">3.6</span> Model output</h2>
+<p>Function <code>spwb</code> returns a list object whose elements are data tables. Each table has dates as rows and has different output variables:</p>
+<ul>
+<li><code>WaterBalance</code>: Components of the climatic and soil daily water balance (i.e. net precipitation, infiltration, runoff, plant transpiration…).</li>
+<li><code>Soil</code>: Daily variation of soil variables (volume, moisture relative to field capacity, water potential) for soil layers.</li>
+<li><code>PlantLAI</code>: Daily leaf area index for each plant cohort.</li>
+<li><code>PlantTranspiration</code>: Daily transpiration (in mm) for each plant cohort.</li>
+<li><code>PlantPhotosynthesis</code>: Daily net photosynthesis (in <span class="math inline">\(g C \cdot m^{-2}\)</span>) for each plant cohort.</li>
+<li><code>PlantPsi</code>: Daily water potential of each plant (in MPa).</li>
+<li><code>PlantStress</code>: Daily stress level suffered by each plant cohort (relative whole-plant conductance).</li>
+</ul>
 
-</div>
 </div>
 </div>
 <h3>Bibliography</h3>
 <div id="refs" class="references">
-<div id="ref-Hasenauer1996">
-<p>Hasenauer, Hubert, and Robert A. Monserud. 1996. “A crown ratio model for Austrian Forests.” <em>Forest Ecology and Management</em> 84 (1-3):49–60. <a href="https://doi.org/10.1016/0378-1127(96)03768-1" class="uri">https://doi.org/10.1016/0378-1127(96)03768-1</a>.</p>
+<div id="ref-DeCaceres2015">
+<p>De Cáceres, Miquel, Jordi Martínez-Vilalta, Lluís Coll, Pilar Llorens, Pere Casals, Rafael Poyatos, Juli G. Pausas, and Lluís Brotons. 2015. “Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes.” <em>Agricultural and Forest Meteorology</em> 213. Elsevier B.V.:77–90. <a href="https://doi.org/10.1016/j.agrformet.2015.06.012" class="uri">https://doi.org/10.1016/j.agrformet.2015.06.012</a>.</p>
 </div>
-<div id="ref-Krajicek1961">
-<p>Krajicek, Je, Ka Brinkman, and Sf Gingrich. 1961. “Crown competition-a measure of density.” <em>Forest Science</em> 7 (1):35–42.</p>
+<div id="ref-Granier1999">
+<p>Granier, A., N. Bréda, P. Biron, and S. Villette. 1999. “A lumped water balance model to evaluate duration and intensity of drought constraints in forest stands.” <em>Ecological Modelling</em> 116:269–83. <a href="https://doi.org/10.1016/S0304-3800(98)00205-1" class="uri">https://doi.org/10.1016/S0304-3800(98)00205-1</a>.</p>
+</div>
+<div id="ref-Granier2007">
+<p>Granier, A., M. Reichstein, N. Bréda, I.A. Janssens, E. Falge, P. Ciais, T. Grünwald, et al. 2007. “Evidence for soil water control on carbon and water dynamics in European forests during the extremely dry year: 2003.” <em>Agricultural and Forest Meteorology</em> 143 (1-2):123–45. <a href="https://doi.org/10.1016/j.agrformet.2006.12.004" class="uri">https://doi.org/10.1016/j.agrformet.2006.12.004</a>.</p>
+</div>
+<div id="ref-Kergoat1998">
+<p>Kergoat, Laurent. 1998. “A model for hydrological equilibrium of leaf area index on a global scale.” <em>Journal of Hydrology</em> 212-213 (December):268–86. <a href="https://doi.org/10.1016/S0022-1694(98)00211-X" class="uri">https://doi.org/10.1016/S0022-1694(98)00211-X</a>.</p>
+</div>
+<div id="ref-Mouillot2001">
+<p>Mouillot, Florent, Serge Rambal, and Sandra Lavorel. 2001. “A generic process-based SImulator for meditERRanean landscApes (SIERRA): design and validation exercises.” <em>Forest Ecology and Management</em> 147 (1):75–97. <a href="https://doi.org/10.1016/S0378-1127(00)00432-1" class="uri">https://doi.org/10.1016/S0378-1127(00)00432-1</a>.</p>
+</div>
+<div id="ref-Ruffault2014">
+<p>Ruffault, Julien, Nicolas K Martin-StPaul, Carole Duffet, Fabien Goge, and Florent Mouillot. 2014. “Projecting future drought in Mediterranean forests: bias correction of climate models matters!” <em>Theoretical and Applied Climatology</em> 117 (1-2):113–22. <a href="https://doi.org/10.1007/s00704-013-0992-z" class="uri">https://doi.org/10.1007/s00704-013-0992-z</a>.</p>
+</div>
+<div id="ref-Ruffault2013">
+<p>Ruffault, Julien, Nicolas K. Martin-StPaul, Serge Rambal, and Florent Mouillot. 2013. “Differential regional responses in drought length, intensity and timing to recent climate changes in a Mediterranean forested ecosystem.” <em>Climatic Change</em> 117 (1-2):103–17. <a href="https://doi.org/10.1007/s10584-012-0559-5" class="uri">https://doi.org/10.1007/s10584-012-0559-5</a>.</p>
 </div>
 </div>
             </section>
@@ -494,8 +477,8 @@ where again <span class="math inline">\(a_{cw}\)</span> and <span class="math in
           </div>
         </div>
       </div>
-<a href="update-of-structural-variables.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="fuel-characteristics-and-fire-behaviour.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="model-inputs.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="leaf-phenology-and-light-extinction.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

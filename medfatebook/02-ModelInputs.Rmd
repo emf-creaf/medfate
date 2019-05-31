@@ -23,17 +23,25 @@ Physical soil properties, like soil texture (i.e. percent of sand, silt and clay
 
 ### Water retention curves
 
-The water retention curve of a soil is the relationship between volumetric soil moisture ($\theta$, in $m^3 \cdot m^{-3}$ of soil, excluding rock fragments) and the soil water potential ($\Psi$, in MPa). This curve is characteristic for different types of soil, and is also called the *soil moisture characteristic curve*. Two water retention curve models are available in **medfate**:
+The water retention curve of a soil is the relationship between volumetric soil moisture ($\theta$, in $m^3 \cdot m^{-3}$ of soil, excluding rock fragments) and the soil water potential ($\Psi$, in MPa). This curve is characteristic for different types of soil, and is also called the *soil moisture characteristic curve*. Two water retention curve models are available in **medfate** (fig. \@ref(fig:retention-curves)):
 
 1. *Saxton model*: In this model, volumetric soil moisture $\theta(\Psi)$ corresponding to a given water potential $\Psi$ (in MPa) below $\Psi_{fc}$ is calculated using: 
 \begin{equation}\theta(\Psi) = (\Psi/A)^{(1/B)}\end{equation}
 where $A$ and $B$ depend on the texture and, if available, organic matter in the soil. If organic matter is available, $A$ and $B$ are calculated from $P_{clay}$, $P_{sand}$ and $OM$ following @Saxton2006. Otherwise, they are calculated from $P_{clay}$ and $P_{sand}$ as indicated in @Saxton1986. Volumetric changes between field capacity and saturation are estimated using a linear function.
 2. *Van Genuchten model*: The well known van Genuchten [-@Genuchten1980] model is:
 \begin{equation}\theta(\Psi) = \theta_{res}+\frac{\theta_{sat}-\theta_{res}}{\left[1+ (\alpha \cdot \Psi)^n \right]^{1-1/n}}\end{equation}
-where $\theta(\psi)$ is the water retention, $\theta_{sat}$ is the saturated water content, $\theta_{res}$ is the residual water content, $\alpha$ is related to the inverse of the air entry pressure, and $n$ is a measure of the pore-size distribution.
+where $\theta(\psi)$ is the water retention, $\theta_{sat}$ is the saturated water content, $\theta_{res}$ is the residual water content, $\alpha$ is related to the inverse of the air entry pressure, and $n$ is a measure of the pore-size distribution. 
+
+(ref:retention-curves-cap) Water retention curves under the Saxton and Van Genuchten models, for the same physical attributes (25% sand, 25% clay, 50% silt and bulk density of $1.5 g \cdot cm^{-3}$).
+
+```{r retention-curves, fig.align='center', fig.width=4, fig.height=3.5, echo = FALSE, fig.cap='(ref:retention-curves-cap)'}
+soil_retentionCurvePlot(soil(defaultSoilParams()), model="both")+
+  theme(legend.position =c(0.7,0.8))
+```
+
 
 ### Soil initialization
-Soil initialization is needed to estimate soil hydrological parameters for each soil layer $s$ from their physical attributes. Initialization is done using function `soil()`, which adds the following information to the physical soil description: 
+Soil initialization is needed to estimate soil hydrological parameters for each soil layer $s$ from their physical attributes. Initialization is done using function `soil()`, which returns an object of a class with the same name. Function `soil()` adds the following information to the physical soil description: 
 
 | Symbol | Units | R  | Description                               | 
 |--------|-------|----| ------------------------------------------|
@@ -50,7 +58,7 @@ Macroporosity values are calculated using the equations given in @Stolf2011, whi
 1. Using the USDA texture classification and the average texture class parameters given by @Carsel1988.
 2. Directly from the soil texture, organic matter and bulk density, using the pedotransfer functions in @Toth2015.
 
-Users can also edit the `soil` object manually, for example to provide specific parameters of the Van Genuchten retention curve calibrated from soil samples.
+All simulation functions need an object of class `soil` to be run. Users can edit the `soil` object manually (it is actually a list), for example to provide specific parameters of the Van Genuchten retention curve calibrated from soil samples.
 
 ### Water content and water table depth
 
@@ -77,46 +85,44 @@ WT = \sum_{s}{d_s \cdot \min\left[1,(\theta_{sat,s} - \theta(\Psi_s))/(\theta_{s
 
 ## Vegetation description
 
-Representation of vegetation is not spatially-explicit in **medfate** (i.e. trees or shrubs do not have explicit coordinates within forest stands). However, differences in tree or shrub size (i.e. height) are explicitly taken into account. The taxonomic identity of plants is also considered, and parameter values need to be provided for each taxonomic entity (but the package could be used with functional groups). This representation is chosen so that package functions can be easily applied to forest plot data, for example from national forest inventories. 
+The representation of plants within a target plot is done in **medfate** by means of **cohorts** of woody plants (i.e. trees and shrubs). A plant cohort respresents plants that belong to the same species (or functional group) and are more or less of the same *size*. For example, trees in a stand may be grouped by species and diameter class. This representation is chosen so that package functions can be easily applied to forest plot data, for example from national forest inventories. The description of plant cohorts includes a measure of *abundance* of the cohort in the stand, which in the case of trees is density as stems per hectare and for shrubs is percent cover. In fact this (and the fact that shrubs are multi-stemmed) is the only motivation for distinguishing between tree cohorts and shrub cohorts. 
 
-Vegetation in the stand is described using a set of plant cohorts, in an object
-of class `spwbInput`. Each plant cohort $i$ is primarly defined by its
-species identity ($SP_i$; with R name [`SP`]).
+Note that one limitation of the representation of vegetation using plant cohorts is that it is not spatially-explicit (i.e. plants cannot have explicit coordinates within forest stands) and hence spatial (horizontal) interactions cannot be taken into account.  
 
-### Aboveground parameters
+### Attributes of plant cohorts 
 
-The aboveground structure if each cohort is defined using a set attributes defined in the following table, where columns **spwb** and **growth** indicate whether attributes are required by functions `spwb()` and `growth()`, respectively:
+A plant cohort $i$ is either a *tree cohort* or a *shrub cohort*, and is defined using a set attributes shown in the following table, where columns **spwb** and **growth** indicate whether attributes are required by functions `spwb()` and `growth()`, respectively:
 
 | Symbol | Units | R  | Description                        | spwb | growth |
 |--------|-------|----| ------------------------------------|-----|-----|
-| $H_i$  | $cm$  | `H` | Total tree or shrub height |  Y  |  Y  |
-| $CR_i$ |       | `CR`| Crown ratio (i.e. ratio between crown length and total height) | Y | Y |
-| $N$ | $ind · ha^{-1}$ | `N` | The density of tree individuals | N | Y |
-| $DBH$ | $cm$ | `DBH` | Tree diameter at breast height | N | Y |
-| $Cover$ | % | `Cover` | Shrub percent cover | N | Y |
+| $SP_i$  |  | `Species` | Species identity |  Y  |  Y  |
+| $H_i$  | $cm$  | `Height` | Average tree or shrub height |  Y  |  Y  |
+| $CR_i$ |       | `CR`| Crown ratio (i.e. ratio between crown length and plant height) | Y | Y |
+| $N_i$ | $ind · ha^{-1}$ | `N` | Density of tree individuals | N | Y |
+| $DBH_i$ | $cm$ | `DBH` | Tree diameter at breast height | N | Y |
+| $Cover_i$ | % | `Cover` | Shrub percent cover | N | Y |
 | $LAI^{live}_i$ | $m^2 \cdot m^{-2}$ | `LAI_live` | (Maximum) leaf area index | Y | Y |
 | $LAI^{dead}_i$ | $m^2 \cdot m^{-2}$ | `LAI_dead` | Dead leaf area index | Y | Y |
 | $LAI^{\phi}_i$ | $m^2 \cdot m^{-2}$ | `LAI_expanded` | Current expanded leaf area index | Y | Y |
+| $Z_{50,i}$ | mm | `Z50` | Depth above which 50% of the fine root mass is located | Y | Y |
+| $Z_{95,i}$ | mm | `Z95` | Depth above which 95% of the fine root mass is located | Y | Y |
 
-Height values refer to average height of individuals included in the cohort, and the same for crown ratio and $DBH$. $LAI$ variables refer to one-side leaf area of plants in the cohort per surface area of the stand. While plant height is relatively easy to measure, it is normally quite hard to estimate leaf area indices for stands and species. Package **medfate** provides some utilities to provide estimates crown ratio and $LAI$ from forest inventory data (e.g. heights, DBH and density for measured trees), using allometric relationships calibrated for catalonia (see chapter \@ref(leafbiomass)).
+Height values refer to average height of individuals included in the cohort, and the same for crown ratio and $DBH$. $LAI$ variables refer to one-side leaf area of plants in the cohort per surface area of the stand. While plant height is relatively easy to measure, it is normally quite hard to estimate leaf area indices for stands and species. Package **medfate** provides some utilities to provide estimates crown ratio and $LAI$ from forest inventory data (e.g. heights, DBH and density for measured trees), using allometric relationships calibrated for catalonia (see chapter \@ref(leafbiomass)). 
 
-Vegetation characteristics stay constant during simulations using function `spwb()`, although the actual expanded leaf area and dead leaf area may vary is the species is winter deciduous. Function `growth()` can modify any of the vegetation attributes.
+Trees and shrubs do not need to be distinguished in soil water balance calculations, since both kinds of cohort have a $LAI$ value. Vegetation characteristics stay constant during simulations using function `spwb()`, although the actual expanded leaf area and dead leaf area may vary is the species is winter deciduous.
+
+In contrast, growth simulation requires updating the structure of vegetation, i.e. heights, tree diameters and shrub cover. Function `growth()` can modify any of the vegetation attributes.
 
 
-### Belowground parameters
+### Vertical root distribution
 
-The root system of each plant cohorts is described using the proportion of fine
-roots in each soil layer:
-
-+ $v_{i,s}$ [`V[i,s]`]: The proportion of fine roots in each soil layer $s$.
-
-The rooting system of each cohort $i$ (i.e. the proportions $v_{i,s}$) can be defined assuming conic distribution of fine roots (see `root_conicDistribution()`). In this case, only rooting depth parameter is needed to determine fine root proportions. Alternatively, one can adopt the linear dose response model (Collins and Bras, 2007; Schenk and Jackson, 2002): 
+The root system of each plant cohort $i$ is described using the proportion of fine roots in each soil layer $s$: $v_{i,s}$. The proportions $v_{i,s}$ are normally defined using the linear dose response model [@Schenk2002; @Collins2007]: 
 \begin{equation}
 Y_i(z)=\frac{1}{1+(z/Z_{50,i})^{c_i}}
 \end{equation}
 where $Y_i(z)$ is the cumulative fraction of fine root mass located between surface and depth $z$; $Z_{50,i}$ is the depth above which 50% of the root mass is located; and $c_i$ is a shape parameter related to $Z_{50,i}$ and $Z_{95,i}$ as $c_i  = 2.94 / \ln(Z_{50,i} / Z_{95,i})$ (see `root_ldrDistribution()`). 
 
-```{r, echo = FALSE, fig.width=7, fig.height=4, fig.cap = "Examples of root density profile according to a conic distribution (left) and the linear dose response model (right)."}
+```{r root-distribution, echo = FALSE, fig.width=8, fig.height=4, fig.cap = "Examples of root density profile according to a conic distribution (left) and the linear dose response model (right)."}
 par(mar=c(4,4,1,1), mfrow=c(1,2))
 P = root_conicDistribution(c(200,1500), rep(10,151))
 matplot(x=t(P)*10, y=seq(0,1500, by=10), type="l", xlim=c(0,2), ylim=c(1500,0), ylab = "Depth (mm)", 
@@ -129,6 +135,14 @@ matplot(x=t(P)*10, y=seq(0,1500, by=10), type="l", xlim=c(0,2), ylim=c(1500,0), 
 legend("bottomright", legend=c("Z50 = 100, Z95 = 200", 
        "Z50 = 200, Z95 = 1500"), col=c("black","red"), lty=1:2, bty="n")
 ```
+
+Note, however, that the actual input to simulation functions is the matrix of $v_{i,s}$ values - not $Z_{50,i}$ and $Z_{95,i}$ -, which means that the proportions of fine roots can be modified manually or be defined by another model. In fact, **medfate** also allows calculating $v_{i,s}$ values assuming a conic distribution of fine roots (see `root_conicDistribution()`), as shown in fig. \@ref(fig:root-distribution) above. 
+
+### Plant (species) traits and vegetation initialization
+
+Besides the physical representation of vegetation, forest ecosystem models require information regarding vegetation functioning, because this influences the outcome of biophysical, physiological and hydrological processes. In the following chapters, we will indicate for each simulated process its required trait parameters. Normally, plant traits are described at the species level because infra-specific parameters are hard to get. Even at the species level, many hard (e.g. physiological) traits are hard to obtain, so in **medfate** we provide a default species parameter table for woody species found in Catalonia, with many of them occurring elsewhere in the Mediterranean Basin (`SpParamsMED`).
+
+The package provides functions `spwbInput()` and `growthInput()` that prepare the vegetation input for simulation functions `spwb()` and `growth()`, respectively. This preparation mostly consists in compiling the necessary functional traits from the species parameter table, following the species (or species group) attribute of plant cohorts. User can modify the output of these preparing functions to account for intra-specific trait variation (see function `modifySpParams()`). 
 
 
 ## Metereological input {#meteoinput}
@@ -146,8 +160,18 @@ Weather input data must include variables calculated at the **daily** scale. Dat
 | $Rad$ | $MJ \cdot m^{-2}$ | `Radiation` | Solar radiation after accounting for clouds |
 | $u$ | $m \cdot s^{-1}$ | `WindSpeed` | Wind speed |
 
-Not all models require all weather variables, this will be indicated in the corresponding model chapters. For convenience, we recommend meteorological input to be generated using package **meteoland** [@DeCaceres2018].
+Not all simulation models require all weather variables. In particular, basic water balance modelling requires much less information than advance water balance modelling. The meteorological variables required in each case will be indicated in the corresponding model chapters. Since it allows producing data frames with appropiate variable units and column names, we recommend meteorological input to be generated using package **meteoland** [@DeCaceres2018].
 
 
 ## Control parameters
-Control parameters are a list of parameter values, initialized using function `defaultControl()`, that the user can modify to change the general behavior of model functions. Not all control parameters are relevant to all model functions
+
+Control parameters are a list of global parameter values, initialized using function `defaultControl()`, that the user can modify to change the general behavior of simulation functions. Here is the set of global control parameters currently accepted in **medfate**:
+```{r}
+names(defaultControl())
+```
+
+
+
+Not all control parameters are relevant to all simulation functions (this will be indicated in the following chapters), but there is an important control parameter called `transpirationMode`, because it allows the user to switch between the basic and advanced water balance models (chapters \@ref(basicwaterbalance) and \@ref(advancedwaterbalance)). 
+
+Control parameters are employed when initializing vegetation information using functions `spwbInput()` and `growthInput()`, since they are needed also to make decisions at the point of initialization. Control parameters are also stored in the result of this functions, so the user does not need to specify again control parameters when calling simulation functions `spwb()` or `growth()`.

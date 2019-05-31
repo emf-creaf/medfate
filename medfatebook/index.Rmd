@@ -18,6 +18,7 @@ description: "This is a reference book for models implemented in package medfate
 ```{r, include=FALSE}
 options(tinytex.verbose = TRUE) #For debugging
 library(medfate)
+library(ggplot2)
 ```
 This is a reference book for the models implemented in the R package **medfate**. This package provides functions for the simulation of functioning and dynamics of Mediterranean forests.
 ```{r, out.width='20%', fig.align="center", echo=FALSE}

@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 2 Model inputs | The medfate reference book</title>
   <meta name="description" content="This is a reference book for models implemented in package medfate." />
-  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 2 Model inputs | The medfate reference book" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 
 
 
-<meta name="date" content="2019-05-30" />
+<meta name="date" content="2019-05-31" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -31,7 +31,7 @@
   
   
 <link rel="prev" href="intro.html">
-<link rel="next" href="basic-water-balance-model.html">
+<link rel="next" href="basicwaterbalance.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -48,6 +48,59 @@
 
 
 
+<style type="text/css">
+div.sourceLine, a.sourceLine { display: inline-block; min-height: 1.25em; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; }
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+div.sourceLine, a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource div.sourceLine, .numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource div.sourceLine::before, .numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em; }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; color: #aaaaaa;  padding-left: 4px; }
+@media screen {
+a.sourceLine::before { text-decoration: underline; color: initial; }
+}
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.bn { color: #40a070; } /* BaseN */
+code span.fl { color: #40a070; } /* Float */
+code span.ch { color: #4070a0; } /* Char */
+code span.st { color: #4070a0; } /* String */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.ot { color: #007020; } /* Other */
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.fu { color: #06287e; } /* Function */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code span.cn { color: #880000; } /* Constant */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.im { } /* Import */
+code span.va { color: #19177c; } /* Variable */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.op { color: #666666; } /* Operator */
+code span.bu { } /* BuiltIn */
+code span.ex { } /* Extension */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.at { color: #7d9029; } /* Attribute */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -85,23 +138,24 @@
 <li class="chapter" data-level="2.1.4" data-path="model-inputs.html"><a href="model-inputs.html#water-content-and-water-table-depth"><i class="fa fa-check"></i><b>2.1.4</b> Water content and water table depth</a></li>
 </ul></li>
 <li class="chapter" data-level="2.2" data-path="model-inputs.html"><a href="model-inputs.html#vegetation-description"><i class="fa fa-check"></i><b>2.2</b> Vegetation description</a><ul>
-<li class="chapter" data-level="2.2.1" data-path="model-inputs.html"><a href="model-inputs.html#aboveground-parameters"><i class="fa fa-check"></i><b>2.2.1</b> Aboveground parameters</a></li>
-<li class="chapter" data-level="2.2.2" data-path="model-inputs.html"><a href="model-inputs.html#belowground-parameters"><i class="fa fa-check"></i><b>2.2.2</b> Belowground parameters</a></li>
+<li class="chapter" data-level="2.2.1" data-path="model-inputs.html"><a href="model-inputs.html#attributes-of-plant-cohorts"><i class="fa fa-check"></i><b>2.2.1</b> Attributes of plant cohorts</a></li>
+<li class="chapter" data-level="2.2.2" data-path="model-inputs.html"><a href="model-inputs.html#vertical-root-distribution"><i class="fa fa-check"></i><b>2.2.2</b> Vertical root distribution</a></li>
+<li class="chapter" data-level="2.2.3" data-path="model-inputs.html"><a href="model-inputs.html#plant-species-traits-and-vegetation-initialization"><i class="fa fa-check"></i><b>2.2.3</b> Plant (species) traits and vegetation initialization</a></li>
 </ul></li>
 <li class="chapter" data-level="2.3" data-path="model-inputs.html"><a href="model-inputs.html#meteoinput"><i class="fa fa-check"></i><b>2.3</b> Metereological input</a></li>
 <li class="chapter" data-level="2.4" data-path="model-inputs.html"><a href="model-inputs.html#control-parameters"><i class="fa fa-check"></i><b>2.4</b> Control parameters</a></li>
 </ul></li>
 <li class="part"><span><b>II Basic water balance modelling</b></span></li>
-<li class="chapter" data-level="3" data-path="basic-water-balance-model.html"><a href="basic-water-balance-model.html"><i class="fa fa-check"></i><b>3</b> Basic water balance model</a><ul>
-<li class="chapter" data-level="3.1" data-path="basic-water-balance-model.html"><a href="basic-water-balance-model.html#design-principles"><i class="fa fa-check"></i><b>3.1</b> Design principles</a></li>
-<li class="chapter" data-level="3.2" data-path="basic-water-balance-model.html"><a href="basic-water-balance-model.html#state-variables"><i class="fa fa-check"></i><b>3.2</b> State variables</a></li>
-<li class="chapter" data-level="3.3" data-path="basic-water-balance-model.html"><a href="basic-water-balance-model.html#water-balance"><i class="fa fa-check"></i><b>3.3</b> Water balance</a></li>
-<li class="chapter" data-level="3.4" data-path="basic-water-balance-model.html"><a href="basic-water-balance-model.html#process-scheduling"><i class="fa fa-check"></i><b>3.4</b> Process scheduling</a></li>
-<li class="chapter" data-level="3.5" data-path="basic-water-balance-model.html"><a href="basic-water-balance-model.html#model-input"><i class="fa fa-check"></i><b>3.5</b> Model input</a><ul>
-<li class="chapter" data-level="3.5.1" data-path="basic-water-balance-model.html"><a href="basic-water-balance-model.html#metereological-input"><i class="fa fa-check"></i><b>3.5.1</b> Metereological input</a></li>
-<li class="chapter" data-level="3.5.2" data-path="basic-water-balance-model.html"><a href="basic-water-balance-model.html#control-parameters-1"><i class="fa fa-check"></i><b>3.5.2</b> Control parameters</a></li>
+<li class="chapter" data-level="3" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html"><i class="fa fa-check"></i><b>3</b> Basic water balance model</a><ul>
+<li class="chapter" data-level="3.1" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#design-principles"><i class="fa fa-check"></i><b>3.1</b> Design principles</a></li>
+<li class="chapter" data-level="3.2" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#state-variables"><i class="fa fa-check"></i><b>3.2</b> State variables</a></li>
+<li class="chapter" data-level="3.3" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#water-balance"><i class="fa fa-check"></i><b>3.3</b> Water balance</a></li>
+<li class="chapter" data-level="3.4" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#process-scheduling"><i class="fa fa-check"></i><b>3.4</b> Process scheduling</a></li>
+<li class="chapter" data-level="3.5" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#model-input"><i class="fa fa-check"></i><b>3.5</b> Model input</a><ul>
+<li class="chapter" data-level="3.5.1" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#metereological-input"><i class="fa fa-check"></i><b>3.5.1</b> Metereological input</a></li>
+<li class="chapter" data-level="3.5.2" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#control-parameters-1"><i class="fa fa-check"></i><b>3.5.2</b> Control parameters</a></li>
 </ul></li>
-<li class="chapter" data-level="3.6" data-path="basic-water-balance-model.html"><a href="basic-water-balance-model.html#model-output"><i class="fa fa-check"></i><b>3.6</b> Model output</a></li>
+<li class="chapter" data-level="3.6" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#model-output"><i class="fa fa-check"></i><b>3.6</b> Model output</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="leaf-phenology-and-light-extinction.html"><a href="leaf-phenology-and-light-extinction.html"><i class="fa fa-check"></i><b>4</b> Leaf phenology and light extinction</a><ul>
 <li class="chapter" data-level="4.1" data-path="leaf-phenology-and-light-extinction.html"><a href="leaf-phenology-and-light-extinction.html#leafphenology"><i class="fa fa-check"></i><b>4.1</b> Leaf phenology and leaf fall</a></li>
@@ -120,20 +174,20 @@
 <li class="chapter" data-level="6.4" data-path="transpirationgranier.html"><a href="transpirationgranier.html#irreversible-cavitation-and-hydraulic-disconnection"><i class="fa fa-check"></i><b>6.4</b> Irreversible cavitation and hydraulic disconnection</a></li>
 </ul></li>
 <li class="part"><span><b>III Advanced water balance modelling</b></span></li>
-<li class="chapter" data-level="7" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html"><i class="fa fa-check"></i><b>7</b> Advanced water balance model</a><ul>
-<li class="chapter" data-level="7.1" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#design-principles-1"><i class="fa fa-check"></i><b>7.1</b> Design principles</a></li>
-<li class="chapter" data-level="7.2" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#state-variables-1"><i class="fa fa-check"></i><b>7.2</b> State variables</a></li>
-<li class="chapter" data-level="7.3" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#water-and-energy-balances"><i class="fa fa-check"></i><b>7.3</b> Water and energy balances</a><ul>
-<li class="chapter" data-level="7.3.1" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#water-balance-1"><i class="fa fa-check"></i><b>7.3.1</b> Water balance</a></li>
-<li class="chapter" data-level="7.3.2" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#energy-balance"><i class="fa fa-check"></i><b>7.3.2</b> Energy balance</a></li>
+<li class="chapter" data-level="7" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html"><i class="fa fa-check"></i><b>7</b> Advanced water balance model</a><ul>
+<li class="chapter" data-level="7.1" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#design-principles-1"><i class="fa fa-check"></i><b>7.1</b> Design principles</a></li>
+<li class="chapter" data-level="7.2" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#state-variables-1"><i class="fa fa-check"></i><b>7.2</b> State variables</a></li>
+<li class="chapter" data-level="7.3" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#water-and-energy-balances"><i class="fa fa-check"></i><b>7.3</b> Water and energy balances</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#water-balance-1"><i class="fa fa-check"></i><b>7.3.1</b> Water balance</a></li>
+<li class="chapter" data-level="7.3.2" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#energy-balance"><i class="fa fa-check"></i><b>7.3.2</b> Energy balance</a></li>
 </ul></li>
-<li class="chapter" data-level="7.4" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#process-scheduling-1"><i class="fa fa-check"></i><b>7.4</b> Process scheduling</a></li>
-<li class="chapter" data-level="7.5" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#model-input-1"><i class="fa fa-check"></i><b>7.5</b> Model input</a><ul>
-<li class="chapter" data-level="7.5.1" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#meteorological-input"><i class="fa fa-check"></i><b>7.5.1</b> Meteorological input</a></li>
-<li class="chapter" data-level="7.5.2" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#control-parameters-2"><i class="fa fa-check"></i><b>7.5.2</b> Control parameters</a></li>
-<li class="chapter" data-level="7.5.3" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#species-parameters"><i class="fa fa-check"></i><b>7.5.3</b> Species parameters</a></li>
+<li class="chapter" data-level="7.4" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#process-scheduling-1"><i class="fa fa-check"></i><b>7.4</b> Process scheduling</a></li>
+<li class="chapter" data-level="7.5" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#model-input-1"><i class="fa fa-check"></i><b>7.5</b> Model input</a><ul>
+<li class="chapter" data-level="7.5.1" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#meteorological-input"><i class="fa fa-check"></i><b>7.5.1</b> Meteorological input</a></li>
+<li class="chapter" data-level="7.5.2" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#control-parameters-2"><i class="fa fa-check"></i><b>7.5.2</b> Control parameters</a></li>
+<li class="chapter" data-level="7.5.3" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#species-parameters"><i class="fa fa-check"></i><b>7.5.3</b> Species parameters</a></li>
 </ul></li>
-<li class="chapter" data-level="7.6" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#model-output-1"><i class="fa fa-check"></i><b>7.6</b> Model output</a></li>
+<li class="chapter" data-level="7.6" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#model-output-1"><i class="fa fa-check"></i><b>7.6</b> Model output</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="subdaily-temperature-and-light-variations.html"><a href="subdaily-temperature-and-light-variations.html"><i class="fa fa-check"></i><b>8</b> Subdaily temperature and light variations</a><ul>
 <li class="chapter" data-level="8.1" data-path="subdaily-temperature-and-light-variations.html"><a href="subdaily-temperature-and-light-variations.html#air-temperature"><i class="fa fa-check"></i><b>8.1</b> Air temperature</a></li>
@@ -290,10 +344,11 @@
 <li class="chapter" data-level="B" data-path="symbols.html"><a href="symbols.html"><i class="fa fa-check"></i><b>B</b> Symbols</a><ul>
 <li class="chapter" data-level="B.1" data-path="symbols.html"><a href="symbols.html#soils"><i class="fa fa-check"></i><b>B.1</b> Soils</a></li>
 <li class="chapter" data-level="B.2" data-path="symbols.html"><a href="symbols.html#vegetation"><i class="fa fa-check"></i><b>B.2</b> Vegetation</a></li>
-<li class="chapter" data-level="B.3" data-path="symbols.html"><a href="symbols.html#anatomy"><i class="fa fa-check"></i><b>B.3</b> Anatomy</a></li>
-<li class="chapter" data-level="B.4" data-path="symbols.html"><a href="symbols.html#plant-hydraulics-2"><i class="fa fa-check"></i><b>B.4</b> Plant hydraulics</a></li>
-<li class="chapter" data-level="B.5" data-path="symbols.html"><a href="symbols.html#plant-water-compartments"><i class="fa fa-check"></i><b>B.5</b> Plant water compartments</a></li>
-<li class="chapter" data-level="B.6" data-path="symbols.html"><a href="symbols.html#stomatal-regulation-and-photosynthesis-1"><i class="fa fa-check"></i><b>B.6</b> Stomatal regulation and photosynthesis</a></li>
+<li class="chapter" data-level="B.3" data-path="symbols.html"><a href="symbols.html#meteorology"><i class="fa fa-check"></i><b>B.3</b> Meteorology</a></li>
+<li class="chapter" data-level="B.4" data-path="symbols.html"><a href="symbols.html#anatomy"><i class="fa fa-check"></i><b>B.4</b> Anatomy</a></li>
+<li class="chapter" data-level="B.5" data-path="symbols.html"><a href="symbols.html#plant-hydraulics-2"><i class="fa fa-check"></i><b>B.5</b> Plant hydraulics</a></li>
+<li class="chapter" data-level="B.6" data-path="symbols.html"><a href="symbols.html#plant-water-compartments"><i class="fa fa-check"></i><b>B.6</b> Plant water compartments</a></li>
+<li class="chapter" data-level="B.7" data-path="symbols.html"><a href="symbols.html#stomatal-regulation-and-photosynthesis-1"><i class="fa fa-check"></i><b>B.7</b> Stomatal regulation and photosynthesis</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="bibliography.html"><a href="bibliography.html"><i class="fa fa-check"></i>Bibliography</a></li>
 <li class="divider"></li>
@@ -377,19 +432,26 @@
 </div>
 <div id="water-retention-curves" class="section level3">
 <h3><span class="header-section-number">2.1.2</span> Water retention curves</h3>
-<p>The water retention curve of a soil is the relationship between volumetric soil moisture (<span class="math inline">\(\theta\)</span>, in <span class="math inline">\(m^3 \cdot m^{-3}\)</span> of soil, excluding rock fragments) and the soil water potential (<span class="math inline">\(\Psi\)</span>, in MPa). This curve is characteristic for different types of soil, and is also called the <em>soil moisture characteristic curve</em>. Two water retention curve models are available in <strong>medfate</strong>:</p>
+<p>The water retention curve of a soil is the relationship between volumetric soil moisture (<span class="math inline">\(\theta\)</span>, in <span class="math inline">\(m^3 \cdot m^{-3}\)</span> of soil, excluding rock fragments) and the soil water potential (<span class="math inline">\(\Psi\)</span>, in MPa). This curve is characteristic for different types of soil, and is also called the <em>soil moisture characteristic curve</em>. Two water retention curve models are available in <strong>medfate</strong> (fig. <a href="model-inputs.html#fig:retention-curves">2.1</a>):</p>
 <ol style="list-style-type: decimal">
 <li><em>Saxton model</em>: In this model, volumetric soil moisture <span class="math inline">\(\theta(\Psi)\)</span> corresponding to a given water potential <span class="math inline">\(\Psi\)</span> (in MPa) below <span class="math inline">\(\Psi_{fc}\)</span> is calculated using:
 <span class="math display">\[\begin{equation}\theta(\Psi) = (\Psi/A)^{(1/B)}\end{equation}\]</span>
-where <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> depend on the texture and, if available, organic matter in the soil. If organic matter is available, <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> are calculated from <span class="math inline">\(P_{clay}\)</span>, <span class="math inline">\(P_{sand}\)</span> and <span class="math inline">\(OM\)</span> following <span class="citation">K. E. Saxton and Rawls (<a href="#ref-Saxton2006">2006</a>)</span>. Otherwise, they are calculated from <span class="math inline">\(P_{clay}\)</span> and <span class="math inline">\(P_{sand}\)</span> as indicated in <span class="citation">K. Saxton et al. (<a href="#ref-Saxton1986">1986</a>)</span>. Volumetric changes between field capacity and saturation are estimated using a linear function.</li>
+where <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> depend on the texture and, if available, organic matter in the soil. If organic matter is available, <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span> are calculated from <span class="math inline">\(P_{clay}\)</span>, <span class="math inline">\(P_{sand}\)</span> and <span class="math inline">\(OM\)</span> following <span class="citation">Saxton and Rawls (<a href="#ref-Saxton2006">2006</a>)</span>. Otherwise, they are calculated from <span class="math inline">\(P_{clay}\)</span> and <span class="math inline">\(P_{sand}\)</span> as indicated in <span class="citation">Saxton et al. (<a href="#ref-Saxton1986">1986</a>)</span>. Volumetric changes between field capacity and saturation are estimated using a linear function.</li>
 <li><em>Van Genuchten model</em>: The well known van Genuchten <span class="citation">(<a href="#ref-Genuchten1980">1980</a>)</span> model is:
 <span class="math display">\[\begin{equation}\theta(\Psi) = \theta_{res}+\frac{\theta_{sat}-\theta_{res}}{\left[1+ (\alpha \cdot \Psi)^n \right]^{1-1/n}}\end{equation}\]</span>
 where <span class="math inline">\(\theta(\psi)\)</span> is the water retention, <span class="math inline">\(\theta_{sat}\)</span> is the saturated water content, <span class="math inline">\(\theta_{res}\)</span> is the residual water content, <span class="math inline">\(\alpha\)</span> is related to the inverse of the air entry pressure, and <span class="math inline">\(n\)</span> is a measure of the pore-size distribution.</li>
 </ol>
+
+<div class="figure" style="text-align: center"><span id="fig:retention-curves"></span>
+<img src="medfatebook_files/figure-html/retention-curves-1.png" alt="Water retention curves under the Saxton and Van Genuchten models, for the same physical attributes (25% sand, 25% clay, 50% silt and bulk density of \(1.5 g \cdot cm^{-3}\))." width="384" />
+<p class="caption">
+Figure 2.1: Water retention curves under the Saxton and Van Genuchten models, for the same physical attributes (25% sand, 25% clay, 50% silt and bulk density of <span class="math inline">\(1.5 g \cdot cm^{-3}\)</span>).
+</p>
+</div>
 </div>
 <div id="soil-initialization" class="section level3">
 <h3><span class="header-section-number">2.1.3</span> Soil initialization</h3>
-<p>Soil initialization is needed to estimate soil hydrological parameters for each soil layer <span class="math inline">\(s\)</span> from their physical attributes. Initialization is done using function <code>soil()</code>, which adds the following information to the physical soil description:</p>
+<p>Soil initialization is needed to estimate soil hydrological parameters for each soil layer <span class="math inline">\(s\)</span> from their physical attributes. Initialization is done using function <code>soil()</code>, which returns an object of a class with the same name. Function <code>soil()</code> adds the following information to the physical soil description:</p>
 <table style="width:90%;">
 <colgroup>
 <col width="12%" />
@@ -453,17 +515,17 @@ where <span class="math inline">\(\theta(\psi)\)</span> is the water retention, 
 <p>Macroporosity values are calculated using the equations given in <span class="citation">Stolf et al. (<a href="#ref-Stolf2011">2011</a>)</span>, while <span class="math inline">\(\gamma_{soil}\)</span> and <span class="math inline">\(\kappa_{soil}\)</span> are derived from texture. Parameters of the van Genuchten model (including are estimated from the physical description of the soil using one of two pedotransfer functions (see help for <code>soil()</code>):</p>
 <ol style="list-style-type: decimal">
 <li>Using the USDA texture classification and the average texture class parameters given by <span class="citation">Carsel and Parrish (<a href="#ref-Carsel1988">1988</a>)</span>.</li>
-<li>Directly from the soil texture, organic matter and bulk density, using the pedotransfer functions in <span class="citation">B. Tóth et al. (<a href="#ref-Toth2015">2015</a>)</span>.</li>
+<li>Directly from the soil texture, organic matter and bulk density, using the pedotransfer functions in <span class="citation">Tóth et al. (<a href="#ref-Toth2015">2015</a>)</span>.</li>
 </ol>
-<p>Users can also edit the <code>soil</code> object manually, for example to provide specific parameters of the Van Genuchten retention curve calibrated from soil samples.</p>
+<p>All simulation functions need an object of class <code>soil</code> to be run. Users can edit the <code>soil</code> object manually (it is actually a list), for example to provide specific parameters of the Van Genuchten retention curve calibrated from soil samples.</p>
 </div>
 <div id="water-content-and-water-table-depth" class="section level3">
 <h3><span class="header-section-number">2.1.4</span> Water content and water table depth</h3>
-The <em>water content</em> (<span class="math inline">\(V_s\)</span> in mm) of a soil layer <span class="math inline">\(s\)</span> is calculated from its water potential and water retention curve using:
+<p>The <em>water content</em> (<span class="math inline">\(V_s\)</span> in mm) of a soil layer <span class="math inline">\(s\)</span> is calculated from its water potential and water retention curve using:
 <span class="math display">\[\begin{equation}
 V_s(\Psi) = d_s\cdot ((100-P_{rocks,s})/100)\cdot\theta_{s}(\Psi)
 \end{equation}\]</span>
-<p>where <span class="math inline">\(d_s\)</span> is the depth of the soil layer (in mm) and <span class="math inline">\(P_{rocks,s}\)</span> is the percentage of rock fragments. Besides this general formula, a number of contents are important to remember.</p>
+where <span class="math inline">\(d_s\)</span> is the depth of the soil layer (in mm) and <span class="math inline">\(P_{rocks,s}\)</span> is the percentage of rock fragments. Besides this general formula, a number of contents are important to remember.</p>
 <ul>
 <li><em>Water holding capacity</em> (<span class="math inline">\(V_{fc, s}\)</span>, in mm) of the soil layer <span class="math inline">\(s\)</span> is defined as the volumetric water content at field capacity, i.e. -0.033 MPa:
 <span class="math display">\[\begin{equation}
@@ -474,19 +536,19 @@ where <span class="math inline">\(\theta_{fc,s} = \theta_s(-0.033)\)</span>.</li
 <li><em>Water content at wilting point</em> (-1.5 MPa) is calculated replacing <span class="math inline">\(\theta_{fc,s}\)</span> by <span class="math inline">\(\theta_{wp,s} = \theta_s(-1.5)\)</span>.</li>
 <li>The <em>amount of extractable water</em> is the difference between water content at field capacity and a the water content at a conventional minimum water potential, which can be set at wilting point or lower values (by default at -5 MPa in <strong>medfate</strong>).</li>
 </ul>
-The depth of water table is the depth of saturated soil. In medfate, <em>water table depth</em> (<span class="math inline">\(WT\)</span>, in mm) equals soil depth when all soil layers are below field capacity. When some layers are between field capacity and saturation, water table depth is calculated as:
+<p>The depth of water table is the depth of saturated soil. In medfate, <em>water table depth</em> (<span class="math inline">\(WT\)</span>, in mm) equals soil depth when all soil layers are below field capacity. When some layers are between field capacity and saturation, water table depth is calculated as:
 <span class="math display">\[\begin{equation}
 WT = \sum_{s}{d_s \cdot \min\left[1,(\theta_{sat,s} - \theta(\Psi_s))/(\theta_{sat,s}-\theta_{fc,s})\right]}
-\end{equation}\]</span>
+\end{equation}\]</span></p>
 </div>
 </div>
 <div id="vegetation-description" class="section level2">
 <h2><span class="header-section-number">2.2</span> Vegetation description</h2>
-<p>Representation of vegetation is not spatially-explicit in <strong>medfate</strong> (i.e. trees or shrubs do not have explicit coordinates within forest stands). However, differences in tree or shrub size (i.e. height) are explicitly taken into account. The taxonomic identity of plants is also considered, and parameter values need to be provided for each taxonomic entity (but the package could be used with functional groups). This representation is chosen so that package functions can be easily applied to forest plot data, for example from national forest inventories.</p>
-<p>Vegetation in the stand is described using a set of plant cohorts, in an object of class <code>spwbInput</code>. Each plant cohort <span class="math inline">\(i\)</span> is primarly defined by its species identity (<span class="math inline">\(SP_i\)</span>; with R name [<code>SP</code>]).</p>
-<div id="aboveground-parameters" class="section level3">
-<h3><span class="header-section-number">2.2.1</span> Aboveground parameters</h3>
-<p>The aboveground structure if each cohort is defined using a set attributes defined in the following table, where columns <strong>spwb</strong> and <strong>growth</strong> indicate whether attributes are required by functions <code>spwb()</code> and <code>growth()</code>, respectively:</p>
+<p>The representation of plants within a target plot is done in <strong>medfate</strong> by means of <strong>cohorts</strong> of woody plants (i.e. trees and shrubs). A plant cohort respresents plants that belong to the same species (or functional group) and are more or less of the same <em>size</em>. For example, trees in a stand may be grouped by species and diameter class. This representation is chosen so that package functions can be easily applied to forest plot data, for example from national forest inventories. The description of plant cohorts includes a measure of <em>abundance</em> of the cohort in the stand, which in the case of trees is density as stems per hectare and for shrubs is percent cover. In fact this (and the fact that shrubs are multi-stemmed) is the only motivation for distinguishing between tree cohorts and shrub cohorts.</p>
+<p>Note that one limitation of the representation of vegetation using plant cohorts is that it is not spatially-explicit (i.e. plants cannot have explicit coordinates within forest stands) and hence spatial (horizontal) interactions cannot be taken into account.</p>
+<div id="attributes-of-plant-cohorts" class="section level3">
+<h3><span class="header-section-number">2.2.1</span> Attributes of plant cohorts</h3>
+<p>A plant cohort <span class="math inline">\(i\)</span> is either a <em>tree cohort</em> or a <em>shrub cohort</em>, and is defined using a set attributes shown in the following table, where columns <strong>spwb</strong> and <strong>growth</strong> indicate whether attributes are required by functions <code>spwb()</code> and <code>growth()</code>, respectively:</p>
 <table style="width:99%;">
 <colgroup>
 <col width="12%" />
@@ -508,46 +570,54 @@ WT = \sum_{s}{d_s \cdot \min\left[1,(\theta_{sat,s} - \theta(\Psi_s))/(\theta_{s
 </thead>
 <tbody>
 <tr class="odd">
-<td><span class="math inline">\(H_i\)</span></td>
-<td><span class="math inline">\(cm\)</span></td>
-<td><code>H</code></td>
-<td>Total tree or shrub height</td>
+<td><span class="math inline">\(SP_i\)</span></td>
+<td></td>
+<td><code>Species</code></td>
+<td>Species identity</td>
 <td>Y</td>
 <td>Y</td>
 </tr>
 <tr class="even">
-<td><span class="math inline">\(CR_i\)</span></td>
-<td></td>
-<td><code>CR</code></td>
-<td>Crown ratio (i.e. ratio between crown length and total height)</td>
+<td><span class="math inline">\(H_i\)</span></td>
+<td><span class="math inline">\(cm\)</span></td>
+<td><code>Height</code></td>
+<td>Average tree or shrub height</td>
 <td>Y</td>
 <td>Y</td>
 </tr>
 <tr class="odd">
-<td><span class="math inline">\(N\)</span></td>
-<td><span class="math inline">\(ind · ha^{-1}\)</span></td>
-<td><code>N</code></td>
-<td>The density of tree individuals</td>
-<td>N</td>
+<td><span class="math inline">\(CR_i\)</span></td>
+<td></td>
+<td><code>CR</code></td>
+<td>Crown ratio (i.e. ratio between crown length and plant height)</td>
+<td>Y</td>
 <td>Y</td>
 </tr>
 <tr class="even">
-<td><span class="math inline">\(DBH\)</span></td>
+<td><span class="math inline">\(N_i\)</span></td>
+<td><span class="math inline">\(ind · ha^{-1}\)</span></td>
+<td><code>N</code></td>
+<td>Density of tree individuals</td>
+<td>N</td>
+<td>Y</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(DBH_i\)</span></td>
 <td><span class="math inline">\(cm\)</span></td>
 <td><code>DBH</code></td>
 <td>Tree diameter at breast height</td>
 <td>N</td>
 <td>Y</td>
 </tr>
-<tr class="odd">
-<td><span class="math inline">\(Cover\)</span></td>
+<tr class="even">
+<td><span class="math inline">\(Cover_i\)</span></td>
 <td>%</td>
 <td><code>Cover</code></td>
 <td>Shrub percent cover</td>
 <td>N</td>
 <td>Y</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><span class="math inline">\(LAI^{live}_i\)</span></td>
 <td><span class="math inline">\(m^2 \cdot m^{-2}\)</span></td>
 <td><code>LAI_live</code></td>
@@ -555,7 +625,7 @@ WT = \sum_{s}{d_s \cdot \min\left[1,(\theta_{sat,s} - \theta(\Psi_s))/(\theta_{s
 <td>Y</td>
 <td>Y</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><span class="math inline">\(LAI^{dead}_i\)</span></td>
 <td><span class="math inline">\(m^2 \cdot m^{-2}\)</span></td>
 <td><code>LAI_dead</code></td>
@@ -563,7 +633,7 @@ WT = \sum_{s}{d_s \cdot \min\left[1,(\theta_{sat,s} - \theta(\Psi_s))/(\theta_{s
 <td>Y</td>
 <td>Y</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><span class="math inline">\(LAI^{\phi}_i\)</span></td>
 <td><span class="math inline">\(m^2 \cdot m^{-2}\)</span></td>
 <td><code>LAI_expanded</code></td>
@@ -571,28 +641,47 @@ WT = \sum_{s}{d_s \cdot \min\left[1,(\theta_{sat,s} - \theta(\Psi_s))/(\theta_{s
 <td>Y</td>
 <td>Y</td>
 </tr>
+<tr class="even">
+<td><span class="math inline">\(Z_{50,i}\)</span></td>
+<td>mm</td>
+<td><code>Z50</code></td>
+<td>Depth above which 50% of the fine root mass is located</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(Z_{95,i}\)</span></td>
+<td>mm</td>
+<td><code>Z95</code></td>
+<td>Depth above which 95% of the fine root mass is located</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
 </tbody>
 </table>
 <p>Height values refer to average height of individuals included in the cohort, and the same for crown ratio and <span class="math inline">\(DBH\)</span>. <span class="math inline">\(LAI\)</span> variables refer to one-side leaf area of plants in the cohort per surface area of the stand. While plant height is relatively easy to measure, it is normally quite hard to estimate leaf area indices for stands and species. Package <strong>medfate</strong> provides some utilities to provide estimates crown ratio and <span class="math inline">\(LAI\)</span> from forest inventory data (e.g. heights, DBH and density for measured trees), using allometric relationships calibrated for catalonia (see chapter <a href="leafbiomass.html#leafbiomass">18</a>).</p>
-<p>Vegetation characteristics stay constant during simulations using function <code>spwb()</code>, although the actual expanded leaf area and dead leaf area may vary is the species is winter deciduous. Function <code>growth()</code> can modify any of the vegetation attributes.</p>
+<p>Trees and shrubs do not need to be distinguished in soil water balance calculations, since both kinds of cohort have a <span class="math inline">\(LAI\)</span> value. Vegetation characteristics stay constant during simulations using function <code>spwb()</code>, although the actual expanded leaf area and dead leaf area may vary is the species is winter deciduous.</p>
+<p>In contrast, growth simulation requires updating the structure of vegetation, i.e. heights, tree diameters and shrub cover. Function <code>growth()</code> can modify any of the vegetation attributes.</p>
 </div>
-<div id="belowground-parameters" class="section level3">
-<h3><span class="header-section-number">2.2.2</span> Belowground parameters</h3>
-<p>The root system of each plant cohorts is described using the proportion of fine roots in each soil layer:</p>
-<ul>
-<li><span class="math inline">\(v_{i,s}\)</span> [<code>V[i,s]</code>]: The proportion of fine roots in each soil layer <span class="math inline">\(s\)</span>.</li>
-</ul>
-The rooting system of each cohort <span class="math inline">\(i\)</span> (i.e. the proportions <span class="math inline">\(v_{i,s}\)</span>) can be defined assuming conic distribution of fine roots (see <code>root_conicDistribution()</code>). In this case, only rooting depth parameter is needed to determine fine root proportions. Alternatively, one can adopt the linear dose response model (Collins and Bras, 2007; Schenk and Jackson, 2002):
+<div id="vertical-root-distribution" class="section level3">
+<h3><span class="header-section-number">2.2.2</span> Vertical root distribution</h3>
+<p>The root system of each plant cohort <span class="math inline">\(i\)</span> is described using the proportion of fine roots in each soil layer <span class="math inline">\(s\)</span>: <span class="math inline">\(v_{i,s}\)</span>. The proportions <span class="math inline">\(v_{i,s}\)</span> are normally defined using the linear dose response model <span class="citation">(Schenk and Jackson <a href="#ref-Schenk2002">2002</a>; Collins and Bras <a href="#ref-Collins2007">2007</a>)</span>:
 <span class="math display">\[\begin{equation}
 Y_i(z)=\frac{1}{1+(z/Z_{50,i})^{c_i}}
 \end{equation}\]</span>
-<p>where <span class="math inline">\(Y_i(z)\)</span> is the cumulative fraction of fine root mass located between surface and depth <span class="math inline">\(z\)</span>; <span class="math inline">\(Z_{50,i}\)</span> is the depth above which 50% of the root mass is located; and <span class="math inline">\(c_i\)</span> is a shape parameter related to <span class="math inline">\(Z_{50,i}\)</span> and <span class="math inline">\(Z_{95,i}\)</span> as <span class="math inline">\(c_i = 2.94 / \ln(Z_{50,i} / Z_{95,i})\)</span> (see <code>root_ldrDistribution()</code>).</p>
-<div class="figure"><span id="fig:unnamed-chunk-3"></span>
-<img src="medfatebook_files/figure-html/unnamed-chunk-3-1.png" alt="Examples of root density profile according to a conic distribution (left) and the linear dose response model (right)." width="672" />
+where <span class="math inline">\(Y_i(z)\)</span> is the cumulative fraction of fine root mass located between surface and depth <span class="math inline">\(z\)</span>; <span class="math inline">\(Z_{50,i}\)</span> is the depth above which 50% of the root mass is located; and <span class="math inline">\(c_i\)</span> is a shape parameter related to <span class="math inline">\(Z_{50,i}\)</span> and <span class="math inline">\(Z_{95,i}\)</span> as <span class="math inline">\(c_i = 2.94 / \ln(Z_{50,i} / Z_{95,i})\)</span> (see <code>root_ldrDistribution()</code>).</p>
+<div class="figure"><span id="fig:root-distribution"></span>
+<img src="medfatebook_files/figure-html/root-distribution-1.png" alt="Examples of root density profile according to a conic distribution (left) and the linear dose response model (right)." width="768" />
 <p class="caption">
-Figure 2.1: Examples of root density profile according to a conic distribution (left) and the linear dose response model (right).
+Figure 2.2: Examples of root density profile according to a conic distribution (left) and the linear dose response model (right).
 </p>
 </div>
+<p>Note, however, that the actual input to simulation functions is the matrix of <span class="math inline">\(v_{i,s}\)</span> values - not <span class="math inline">\(Z_{50,i}\)</span> and <span class="math inline">\(Z_{95,i}\)</span> -, which means that the proportions of fine roots can be modified manually or be defined by another model. In fact, <strong>medfate</strong> also allows calculating <span class="math inline">\(v_{i,s}\)</span> values assuming a conic distribution of fine roots (see <code>root_conicDistribution()</code>), as shown in fig. <a href="model-inputs.html#fig:root-distribution">2.2</a> above.</p>
+</div>
+<div id="plant-species-traits-and-vegetation-initialization" class="section level3">
+<h3><span class="header-section-number">2.2.3</span> Plant (species) traits and vegetation initialization</h3>
+<p>Besides the physical representation of vegetation, forest ecosystem models require information regarding vegetation functioning, because this influences the outcome of biophysical, physiological and hydrological processes. In the following chapters, we will indicate for each simulated process its required trait parameters. Normally, plant traits are described at the species level because infra-specific parameters are hard to get. Even at the species level, many hard (e.g. physiological) traits are hard to obtain, so in <strong>medfate</strong> we provide a default species parameter table for woody species found in Catalonia, with many of them occurring elsewhere in the Mediterranean Basin (<code>SpParamsMED</code>).</p>
+<p>The package provides functions <code>spwbInput()</code> and <code>growthInput()</code> that prepare the vegetation input for simulation functions <code>spwb()</code> and <code>growth()</code>, respectively. This preparation mostly consists in compiling the necessary functional traits from the species parameter table, following the species (or species group) attribute of plant cohorts. User can modify the output of these preparing functions to account for intra-specific trait variation (see function <code>modifySpParams()</code>).</p>
 </div>
 </div>
 <div id="meteoinput" class="section level2">
@@ -670,11 +759,25 @@ Figure 2.1: Examples of root density profile according to a conic distribution (
 </tr>
 </tbody>
 </table>
-<p>Not all models require all weather variables, this will be indicated in the corresponding model chapters. For convenience, we recommend meteorological input to be generated using package <strong>meteoland</strong> <span class="citation">(De Cáceres et al. <a href="#ref-DeCaceres2018">2018</a>)</span>.</p>
+<p>Not all simulation models require all weather variables. In particular, basic water balance modelling requires much less information than advance water balance modelling. The meteorological variables required in each case will be indicated in the corresponding model chapters. Since it allows producing data frames with appropiate variable units and column names, we recommend meteorological input to be generated using package <strong>meteoland</strong> <span class="citation">(De Cáceres et al. <a href="#ref-DeCaceres2018">2018</a>)</span>.</p>
 </div>
 <div id="control-parameters" class="section level2">
 <h2><span class="header-section-number">2.4</span> Control parameters</h2>
-<p>Control parameters are a list of parameter values, initialized using function <code>defaultControl()</code>, that the user can modify to change the general behavior of model functions. Not all control parameters are relevant to all model functions</p>
+<p>Control parameters are a list of global parameter values, initialized using function <code>defaultControl()</code>, that the user can modify to change the general behavior of simulation functions. Here is the set of global control parameters currently accepted in <strong>medfate</strong>:</p>
+<pre class="sourceCode r" id="cb4"><code class="sourceCode r"><div class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">names</span>(<span class="kw">defaultControl</span>())</div></code></pre>
+<pre><code>##  [1] &quot;verbose&quot;                          &quot;subdailyResults&quot;                 
+##  [3] &quot;soilFunctions&quot;                    &quot;snowpack&quot;                        
+##  [5] &quot;drainage&quot;                         &quot;leafPhenology&quot;                   
+##  [7] &quot;transpirationMode&quot;                &quot;hydraulicCostFunction&quot;           
+##  [9] &quot;verticalLayerSize&quot;                &quot;nStemSegments&quot;                   
+## [11] &quot;capacitance&quot;                      &quot;cavitationRefill&quot;                
+## [13] &quot;klat&quot;                             &quot;taper&quot;                           
+## [15] &quot;numericParams&quot;                    &quot;fracRootResistance&quot;              
+## [17] &quot;averageFracRhizosphereResistance&quot; &quot;Catm&quot;                            
+## [19] &quot;ndailysteps&quot;                      &quot;thermalCapacityLAI&quot;              
+## [21] &quot;defaultWindSpeed&quot;                 &quot;storagePool&quot;</code></pre>
+<p>Not all control parameters are relevant to all simulation functions (this will be indicated in the following chapters), but there is an important control parameter called <code>transpirationMode</code>, because it allows the user to switch between the basic and advanced water balance models (chapters <a href="basicwaterbalance.html#basicwaterbalance">3</a> and <a href="advancedwaterbalance.html#advancedwaterbalance">7</a>).</p>
+<p>Control parameters are employed when initializing vegetation information using functions <code>spwbInput()</code> and <code>growthInput()</code>, since they are needed also to make decisions at the point of initialization. Control parameters are also stored in the result of this functions, so the user does not need to specify again control parameters when calling simulation functions <code>spwb()</code> or <code>growth()</code>.</p>
 
 </div>
 </div>
@@ -684,28 +787,34 @@ Figure 2.1: Examples of root density profile according to a conic distribution (
 <h3>Bibliography</h3>
 <div id="refs" class="references">
 <div id="ref-Carsel1988">
-<p>Carsel, Robert F., and Rudolph S Parrish. 1988. “Developing joint probability distributions of soil water retention characteristics.” <em>Water Resources Research</em> 24 (5): 755–69.</p>
+<p>Carsel, Robert F., and Rudolph S Parrish. 1988. “Developing joint probability distributions of soil water retention characteristics.” <em>Water Resources Research</em> 24 (5):755–69.</p>
+</div>
+<div id="ref-Collins2007">
+<p>Collins, D. B. G., and R. L. Bras. 2007. “Plant rooting strategies in water-limited ecosystems.” <em>Water Resources Research</em> 43 (6):W06407. <a href="https://doi.org/10.1029/2006WR005541" class="uri">https://doi.org/10.1029/2006WR005541</a>.</p>
 </div>
 <div id="ref-DeCaceres2018">
-<p>De Cáceres, Miquel, Nicolas Martin-StPaul, Marco Turco, Antoine Cabon, and Victor Granda. 2018. “Estimating daily meteorological data and downscaling climate models over landscapes.” <em>Environmental Modelling &amp; Software</em> 108 (August). Elsevier: 186–96. doi:<a href="https://doi.org/10.1016/j.envsoft.2018.08.003">10.1016/j.envsoft.2018.08.003</a>.</p>
+<p>De Cáceres, Miquel, Nicolas Martin-StPaul, Marco Turco, Antoine Cabon, and Victor Granda. 2018. “Estimating daily meteorological data and downscaling climate models over landscapes.” <em>Environmental Modelling &amp; Software</em> 108 (August). Elsevier:186–96. <a href="https://doi.org/10.1016/j.envsoft.2018.08.003" class="uri">https://doi.org/10.1016/j.envsoft.2018.08.003</a>.</p>
 </div>
 <div id="ref-Genuchten1980">
-<p>Genuchten, MT Van. 1980. “A closed-form equation for predicting the hydraulic conductivity of unsaturated soils.” <em>Soil Science Society of America Journal</em> 44: 892–98. <a href="https://dl.sciencesocieties.org/publications/sssaj/abstracts/44/5/SS0440050892" class="uri">https://dl.sciencesocieties.org/publications/sssaj/abstracts/44/5/SS0440050892</a>.</p>
+<p>Genuchten, MT Van. 1980. “A closed-form equation for predicting the hydraulic conductivity of unsaturated soils.” <em>Soil Science Society of America Journal</em> 44:892–98. <a href="https://dl.sciencesocieties.org/publications/sssaj/abstracts/44/5/SS0440050892" class="uri">https://dl.sciencesocieties.org/publications/sssaj/abstracts/44/5/SS0440050892</a>.</p>
 </div>
 <div id="ref-Ruffault2013">
-<p>Ruffault, Julien, Nicolas K. Martin-StPaul, Serge Rambal, and Florent Mouillot. 2013. “Differential regional responses in drought length, intensity and timing to recent climate changes in a Mediterranean forested ecosystem.” <em>Climatic Change</em> 117 (1-2): 103–17. doi:<a href="https://doi.org/10.1007/s10584-012-0559-5">10.1007/s10584-012-0559-5</a>.</p>
+<p>Ruffault, Julien, Nicolas K. Martin-StPaul, Serge Rambal, and Florent Mouillot. 2013. “Differential regional responses in drought length, intensity and timing to recent climate changes in a Mediterranean forested ecosystem.” <em>Climatic Change</em> 117 (1-2):103–17. <a href="https://doi.org/10.1007/s10584-012-0559-5" class="uri">https://doi.org/10.1007/s10584-012-0559-5</a>.</p>
 </div>
 <div id="ref-Saxton2006">
-<p>Saxton, K. E., and W. J. Rawls. 2006. “Soil water characteristic estimates by texture and organic matter for hydrologic solutions.” <em>Soil Science Society of America Journal</em> 70 (5): 1569. doi:<a href="https://doi.org/10.2136/sssaj2005.0117">10.2136/sssaj2005.0117</a>.</p>
+<p>Saxton, K. E., and W. J. Rawls. 2006. “Soil water characteristic estimates by texture and organic matter for hydrologic solutions.” <em>Soil Science Society of America Journal</em> 70 (5):1569. <a href="https://doi.org/10.2136/sssaj2005.0117" class="uri">https://doi.org/10.2136/sssaj2005.0117</a>.</p>
 </div>
 <div id="ref-Saxton1986">
-<p>Saxton, K.E., W. J. Rawls, J.S. Romberger, and R.I. Papendick. 1986. “Estimating generalized soil-water characteristics from texture.” <em>Soil Science Society of America Journal</em> 50: 1031–6.</p>
+<p>Saxton, K.E., W. J. Rawls, J.S. Romberger, and R.I. Papendick. 1986. “Estimating generalized soil-water characteristics from texture.” <em>Soil Science Society of America Journal</em> 50:1031–6.</p>
+</div>
+<div id="ref-Schenk2002">
+<p>Schenk, H. Jochen, and Robert B. Jackson. 2002. “Rooting depths, lateral root spreads and below-ground/above-ground allometries of plants in water-limited ecosystems.” <em>Journal of Ecology</em> 90 (3):480–94. <a href="https://doi.org/10.1046/j.1365-2745.2002.00682.x" class="uri">https://doi.org/10.1046/j.1365-2745.2002.00682.x</a>.</p>
 </div>
 <div id="ref-Stolf2011">
-<p>Stolf, Rubismar, ÁM Thurler, O Oliveira, S Bacchi, and K Reichardt. 2011. “Method to estimate soil macroporosity and microporosity based on sand content and bulk density.” <em>Revista Brasileira de Ciencias Do Solo</em> 35 (1): 447–59. <a href="http://www.scielo.br/scielo.php?pid=S0100-06832011000200014{\&amp;}script=sci{\_}arttext" class="uri">http://www.scielo.br/scielo.php?pid=S0100-06832011000200014{\&amp;}script=sci{\_}arttext</a>.</p>
+<p>Stolf, Rubismar, ÁM Thurler, O Oliveira, S Bacchi, and K Reichardt. 2011. “Method to estimate soil macroporosity and microporosity based on sand content and bulk density.” <em>Revista Brasileira de Ciencias Do Solo</em> 35 (1):447–59. <a href="http://www.scielo.br/scielo.php?pid=S0100-06832011000200014{\&amp;}script=sci{\_}arttext" class="uri">http://www.scielo.br/scielo.php?pid=S0100-06832011000200014{\&amp;}script=sci{\_}arttext</a>.</p>
 </div>
 <div id="ref-Toth2015">
-<p>Tóth, B., M. Weynants, A. Nemes, A. Makó, G. Bilas, and G. Tóth. 2015. “New generation of hydraulic pedotransfer functions for Europe.” <em>European Journal of Soil Science</em> 66 (1): 226–38. doi:<a href="https://doi.org/10.1111/ejss.12192">10.1111/ejss.12192</a>.</p>
+<p>Tóth, B., M. Weynants, A. Nemes, A. Makó, G. Bilas, and G. Tóth. 2015. “New generation of hydraulic pedotransfer functions for Europe.” <em>European Journal of Soil Science</em> 66 (1):226–38. <a href="https://doi.org/10.1111/ejss.12192" class="uri">https://doi.org/10.1111/ejss.12192</a>.</p>
 </div>
 </div>
             </section>
@@ -714,7 +823,7 @@ Figure 2.1: Examples of root density profile according to a conic distribution (
         </div>
       </div>
 <a href="intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="basic-water-balance-model.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="basicwaterbalance.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -764,7 +873,7 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "";
+    var src = "true";
     if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');

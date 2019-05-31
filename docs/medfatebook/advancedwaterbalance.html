@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 18 Leaf biomass, leaf area and vertical profiles | The medfate reference book</title>
+  <title>Chapter 7 Advanced water balance model | The medfate reference book</title>
   <meta name="description" content="This is a reference book for models implemented in package medfate." />
   <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 18 Leaf biomass, leaf area and vertical profiles | The medfate reference book" />
+  <meta property="og:title" content="Chapter 7 Advanced water balance model | The medfate reference book" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 18 Leaf biomass, leaf area and vertical profiles | The medfate reference book" />
+  <meta name="twitter:title" content="Chapter 7 Advanced water balance model | The medfate reference book" />
   
   <meta name="twitter:description" content="This is a reference book for models implemented in package medfate." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="update-of-structural-variables.html">
-<link rel="next" href="fuel-characteristics-and-fire-behaviour.html">
+<link rel="prev" href="transpirationgranier.html">
+<link rel="next" href="subdaily-temperature-and-light-variations.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -371,122 +371,156 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="leafbiomass" class="section level1">
-<h1><span class="header-section-number">Chapter 18</span> Leaf biomass, leaf area and vertical profiles</h1>
-<div id="input-data" class="section level2">
-<h2><span class="header-section-number">18.1</span> Input data</h2>
-<div id="forest-inventory-data" class="section level3">
-<h3><span class="header-section-number">18.1.1</span> Forest inventory data</h3>
-<p>The input data for tree cohorts are:</p>
+<div id="advancedwaterbalance" class="section level1">
+<h1><span class="header-section-number">Chapter 7</span> Advanced water balance model</h1>
+<div id="design-principles-1" class="section level2">
+<h2><span class="header-section-number">7.1</span> Design principles</h2>
+<p>The model performs soil water balance and energy balance for the input forest stand and for the period corresponding to input weather data. Soil water balance is calculated on a daily step basis for the input forest stand and for the period corresponding to input weather data. The model considers only the vertical spatial dimension of the stand, and not the horizontal distribution of plants within it. Still, the stand is divided into groups of plants (here referred to as `plant cohorts’) of different species, height and leaf area index (<span class="math inline">\(LAI\)</span>). As hydrological processes, the model includes water interception loss <span class="citation">(Gash, Lloyd, and Lachaud <a href="#ref-Gash1995">1995</a>)</span>, plant transpiration and hydraulic redistribution, evaporation from soil <span class="citation">(Ritchie <a href="#ref-Ritchie1972">1972</a>)</span> and the partition between infiltration and runoff <span class="citation">(Boughton <a href="#ref-Boughton1989">1989</a>)</span>. Water exceeding soil water holding capacity is lost via deep drainage. For plant transpiration, the model determines subdaily regulation of leaf water conductance and actual transpiration involving detailed calculations of hydraulics and photosynthesis <span class="citation">(J. S. Sperry, Venturas, et al. <a href="#ref-Sperry2016">2016</a>)</span>. This level of complexity allows a precise estimation of photosynthesis and hydraulic redistribution of water among soil layers.</p>
+<p>Radiation and energy balances are conducted subdaily at two levels: canopy/soil and leaf. One one hand the model keeps track of temperature variation of the air in the canopy (i.e. canopy energy balance) and in the soil (i.e. soil energy balance) as the result of energy exchanges between them and with the atmosphere. These energy balance equations are very similar to those of Best et al. <span class="citation">(<a href="#ref-Best2011">2011</a>)</span> for model JULES. On the other, the model performs the energy balance at the leaf level to determine transpiration <span class="citation">(J. S. Sperry, Venturas, et al. <a href="#ref-Sperry2016">2016</a>)</span>. At this scale, radiation inputs include shortwave radiation from the atmosphere absorbed by the leaf and absorbed longwave radiation coming from both the atmosphere and the canopy itself. Leaf temperature is determined assuming that the temperature of the air is that of the canopy. After performing stomatal regulation, the model upscales the transpiration flux at the canopy level and the corresponding latent heat is used to complete the calculation of the energy balance at the canopy level. Note that the latent heat fluxes from evaporation from the soil and of intercepted water are not currently included in the energy balance.</p>
+</div>
+<div id="state-variables-1" class="section level2">
+<h2><span class="header-section-number">7.2</span> State variables</h2>
+<p>The model has the following state variables:
++ Cumulative growth degree days, <span class="math inline">\(GDD\)</span>, are tracked by the model and determine leaf phenological status of winter deciduous species.
++ Daily soil moisture content dynamics on each layer <span class="math inline">\(s\)</span> are tracked using <span class="math inline">\(W = \theta(\Psi_s)/ \theta_{fc,s}\)</span>, the <strong>proportion of volumetric soil moisture in relation to field capacity</strong>, where field capacity, <span class="math inline">\(\theta_{fc,s}\)</span>, is assumed to correspond to <span class="math inline">\(\Psi_{fc} = -0.033\)</span> MPa. Soils are not allowed to contain more water than dictated by their field capacity.
++ The temperature of the canopy and of each soil layer (<span class="math inline">\(T_c\)</span> and <span class="math inline">\(T_s\)</span>; both in ºC) are tracked for every subdaily step.
++ If irreversible cavitation is activated, the model also tracks <span class="math inline">\(P_{embolized,i}\)</span>, the maximum value of daily drought stress so far experienced.</p>
+</div>
+<div id="water-and-energy-balances" class="section level2">
+<h2><span class="header-section-number">7.3</span> Water and energy balances</h2>
+<div id="water-balance-1" class="section level3">
+<h3><span class="header-section-number">7.3.1</span> Water balance</h3>
+<p>Daily variations in soil water content (mm) can be summarized as:</p>
+<span class="math display">\[\begin{equation}
+\Delta{SWC} = Pr + Sm - In - Ru - Dd - Es -Tr
+\end{equation}\]</span>
+<p>where <span class="math inline">\(Pr\)</span> is precipitation as rainfall, <span class="math inline">\(Sm\)</span> is water from melting the snow pack (if considered), <span class="math inline">\(In\)</span> is the interception loss (i.e., water evaporated after being intercepted by the canopy), <span class="math inline">\(Ru\)</span> is surface runoff, <span class="math inline">\(Dd\)</span> is deep drainage (i.e. water percolated to layers beyond soil depth), <span class="math inline">\(Es\)</span> is evaporation from soil and <span class="math inline">\(Tr\)</span> is plant transpiration. If snow dynamics are considered, the water balance of the snow pack is defined as:</p>
+<span class="math display">\[\begin{equation}
+\Delta{S_{snow}} = Ps - Sm
+\end{equation}\]</span>
+<p>where <span class="math inline">\(Ps\)</span> is precipitation as snowfall and <span class="math inline">\(Sm\)</span> is snow melt.</p>
+</div>
+<div id="energy-balance" class="section level3">
+<h3><span class="header-section-number">7.3.2</span> Energy balance</h3>
+<p>The canopy absorbs shortwave radiation from the atmosphere (<span class="math inline">\(K_{abs,ca}\)</span>). It also absorbs longwave counterradiation from the atmosphere (<span class="math inline">\(L_{abs,ca}\)</span>) and longwave radiation emmited from the soil (<span class="math inline">\(L_{abs,cs}\)</span>). These inputs are counterbalanced by the longwave radiation emmited by the canopy (<span class="math inline">\(L_{em,c}\)</span>) in both cases. Other energy fluxes considered are convective exchanges between the canopy and atmosphere (<span class="math inline">\(H_{ca}\)</span>) and between the canopy and the soil (<span class="math inline">\(H_{cs}\)</span>). Finally, energy is released to the atmosphere through latent heat (<span class="math inline">\(LE_{c}\)</span>) produced via transpiration (so far, interception and soil evaporation are not included). The instantaneous energy balance equation for the canopy is thus:
+<span class="math display">\[\begin{equation}
+  C_{c} \cdot \frac{\delta T_{c}}{\delta t} = K_{abs,ca} + (L_{abs,ca} - L_{em,c}) + (L_{abs,cs} - L_{em,c}) - LE_{c} - H_{ca} - H_{cs} 
+\end{equation}\]</span>
+where <span class="math inline">\(C_{c}\)</span> is the canopy thermal capacitance. Like the canopy, the soil absorbs short- and longwave radiation from the atmosphere (<span class="math inline">\(K_{abs,sa}\)</span> and <span class="math inline">\(L_{abs,sa}\)</span>). It also absorbs longwave radiation released by the canopy (<span class="math inline">\(L_{abs,sc} = L_{em,c}\)</span>) and emmits longwave radiation (<span class="math inline">\(L_{em,s}\)</span>). Note that <span class="math inline">\(L_{abs,cs} \leq L_{em,s}\)</span> because part of the radiation emmitted by the soil is sent to the atmosphere without being intercepted by the canopy. Finally, it also exchanges convective energy with the canopy (<span class="math inline">\(H_{cs}\)</span>). The energy balance equation for the soil is:
+<span class="math display">\[\begin{equation}
+  C_{s} \cdot \frac{\delta T_{s}}{\delta t} = K_{abs,sa} + L_{abs,sa} - L_{em,s} + L_{abs,sc} + H_{cs} 
+\end{equation}\]</span>
+where <span class="math inline">\(C_{s}\)</span> is the soil thermal capacitance.</p>
+</div>
+</div>
+<div id="process-scheduling-1" class="section level2">
+<h2><span class="header-section-number">7.4</span> Process scheduling</h2>
+<p>Every day the model performs the following actions:</p>
 <ul>
-<li><span class="math inline">\(SP_i\)</span>: Species identity}</li>
-<li><span class="math inline">\(DBH_i\)</span>: Diameter at breast height (in cm) of the representative tree.</li>
-<li><span class="math inline">\(H_i\)</span>: Height (in cm) of the representative tree.</li>
-<li><span class="math inline">\(N_i\)</span>: Cohort density (in <span class="math inline">\(ind.\cdot ha^{-1}\)</span>).</li>
-</ul>
-<p>The input data for shrub cohorts are:</p>
+<li>Update leaf area values according to the phenology of species.</li>
+<li>Increase soil moisture due to precipitation after accounting for canopy interception loss, surface runoff and deep drainage.</li>
+<li>Determine subdaily temperature and direct/diffuse irradiance variations.</li>
+<li>Determine short- and longwave radiation absorved by the canopy and the soil at subdaily steps.</li>
+<li>Determine plant transpiration, photosynthesis and close soil/canopy energy balance at subdaily steps. This involves the following sub-actions:
 <ul>
-<li><span class="math inline">\(SP_i\)</span>: Species identity</li>
-<li><span class="math inline">\(C_i\)</span>: Plant cover (in percent).</li>
-<li><span class="math inline">\(H_i\)</span>: Mean plant height (in cm).</li>
+<li>Determine longwave radiation emmited by soil and canopy, according to their temperature.</li>
+<li>Update the water supply function of each plant cohort, according to the hydraulic model and the current soil water potential.</li>
+<li>Calculate leaf temperature and photosynthesis, for shade and sunlit leaves of each plant cohort, corresponding to each transpiration value of the supply function.</li>
+<li>Determine stomatal conductance, transpiration and photosynthesis on shade and sunlit leaves of each plant cohort according to a profit maximization strategy.</li>
+<li>Update soil moisture after scaling transpiration from leaf to canopy level.</li>
+<li>Complete energy balance of the canopy and the soil (after translating plant transpiration to latent heat and calculating convective heat exchange for both the canopy and the soil).</li>
+</ul></li>
+<li>Determine drought stress index for each plant cohort.</li>
+<li>Decrease water content due to bare soil evaporation, closing the water balance.</li>
 </ul>
 </div>
-<div id="allometric-species-specific-parameters" class="section level3">
-<h3><span class="header-section-number">18.1.2</span> Allometric species-specific parameters</h3>
+<div id="model-input-1" class="section level2">
+<h2><span class="header-section-number">7.5</span> Model input</h2>
+<div id="meteorological-input" class="section level3">
+<h3><span class="header-section-number">7.5.1</span> Meteorological input</h3>
+<p>The minimum weather variables required to run the model are min/max temperatures (<span class="math inline">\(T_{min}\)</span> and <span class="math inline">\(T_{max}\)</span>), min/max relative humidity (<span class="math inline">\(RH_{min}\)</span> and <span class="math inline">\(RH_{max}\)</span>), precipitation (<span class="math inline">\(P\)</span>) and solar radiation (<span class="math inline">\(Rad\)</span>). Wind speed (<span class="math inline">\(u\)</span>) is also needed for the model, but the user ma introduce missing values if not available (then, a default value will be used). Definitions and units of these variables are given in section <a href="model-inputs.html#meteoinput">2.3</a>.</p>
+</div>
+<div id="control-parameters-2" class="section level3">
+<h3><span class="header-section-number">7.5.2</span> Control parameters</h3>
+<p>The control values relevant for the advanced water balance model are:</p>
 <ul>
-<li><span class="math inline">\(a_{fbt}, b_{fbt}, c_{fbt}, d_{fbt}\)</span> [<code>a_fbt</code>, <code>b_fbt</code>, <code>c_fbt</code>, <code>d_fbt</code>]: Regression coefficients used to calculate foliar biomass of an individual tree from its <span class="math inline">\(DBH\)</span> and the cummulative basal area of larger trees.</li>
-<li><span class="math inline">\(a_{ash}\)</span> [<code>a_ash</code>]: Regression coefficient relating the square of shrub height with shrub area.</li>
-<li><span class="math inline">\(a_{bsh}\)</span> and <span class="math inline">\(b_{bsh}\)</span> [<code>a_bsh</code>, <code>b_bsh</code>]: Allometric coefficients relating phytovolume with dry weight of shrub individuals.</li>
-<li><span class="math inline">\(cr(SP_i)\)</span>: [<code>cr</code>]: Ratio between crown length and total height for shrubs.</li>
+<li><code>verbose [=TRUE]</code>: Whether extra console output is desired during simulations.</li>
+<li><code>soilFunctions [= &quot;SX&quot;]</code>: Water retention curve model, either “SX” (for Saxton) or “VG” (for Van Genuchten).</li>
+<li><code>leafPhenology [= TRUE]</code>: Whether leaf phenology is simulated.</li>
+<li><code>snowpack [= TRUE]</code>: Whether dynamics of snow pack are included.</li>
+<li><code>drainage [= TRUE]</code>: Whether water exceeding the field capacity of the bottom layer is lost by deep drainage into a non-reachable compartment.</li>
+<li><code>transpirationMode [= &quot;Granier&quot;]</code>: Transpiration model, in this case should be “Sperry”.</li>
+<li><code>defaultWindSpeed [= 2.5]</code>: Default value for wind speed (in <span class="math inline">\(m \cdot s^{-1}\)</span>) when this is missing (only used for leaf fall).</li>
+<li><code>hydraulicCostFunction [= 1]</code>: Variant of the hydraulic cost function used in the stomatal regulation model of <span class="citation">J. S. Sperry, Venturas, et al. (<a href="#ref-Sperry2016">2016</a>)</span>. Values accepted are 1 (original cost function based on the derivative of supply function), 2 (leaf vulnerability curve).</li>
+<li><code>ndailysteps [=24]</code>: Number of daily substeps.</li>
+<li><code>thermalCapacityLAI [= 1000000]</code>: Canopy thermal capacitance per LAI unit.</li>
+<li><code>verticalLayerSize [= 100]</code>: The size of vertical layers (in cm) for photosynthesis calculation.</li>
+<li><code>cavitationRefill [= TRUE]</code>: If <code>FALSE</code> the model operates in a irreversible cavitation mode.</li>
+<li><code>taper [= TRUE]</code>: Whether taper of xylem conduits is accounted for when calculating aboveground stem conductance from xylem conductivity.</li>
+<li><code>averageFracRhizosphereResistance [= 0.15]</code>: Fraction to total continuum (stem+root+rhizosphere) resistance that corresponds to rhizosphere (averaged across soil water potential values).</li>
+<li><code>numericParams</code>: A list with params for numerical approximation routines.</li>
+<li><code>Catm [=386]</code>: Atmospheric CO2 concentration (in micromol <span class="math inline">\(CO_2 \cdot mol^{-1}\)</span> = ppm).</li>
+</ul>
+</div>
+<div id="species-parameters" class="section level3">
+<h3><span class="header-section-number">7.5.3</span> Species parameters</h3>
+<p>Vegetation functional attributes are normally filled for each cohort by function  from species identity. However, different parameters can be specified for different cohort of the same species if desired. Basic functional parameters relate to light extinction, water interception and leaf phenology:</p>
+<ul>
+<li><span class="math inline">\(k_{PAR,i}\)</span> [<code>k</code>]: PAR extinction coefficient.</li>
+<li><span class="math inline">\(s_{water, i}\)</span> [<code>g</code>]: Crown water storage capacity (i.e. depth of
+water that can be retained by leaves and branches) per LAI unit (in <span class="math inline">\(mmH_2O·LAI^{-1}\)</span>).</li>
+<li><span class="math inline">\(S_{GDD,i}\)</span> [<code>Sgdd</code>]: Growth degree days corresponding to leave
+budburst (in degrees Celsius).</li>
+</ul>
+<p>A second set of plant functional parameters are related to plant transpiration and photosynthesis:</p>
+<ul>
+<li><span class="math inline">\(g_{wmin,i}\)</span> [<code>Gwmin</code>]: Minimum leaf water conductance (in <span class="math inline">\(mol·s^{-1}·m^{-2}\)</span>).</li>
+<li><span class="math inline">\(g_{wmax,i}\)</span> [<code>Gwmax</code>]: Maximum leaf water conductance (in <span class="math inline">\(mol·s^{-1}·m^{-2}\)</span>).</li>
+<li><span class="math inline">\(k_{rhizo,i,s}\)</span> [<code>VGrhizo_kmax</code>]: Maximum hydraulic conductance of the rhizosphere for each soil layer.</li>
+<li><span class="math inline">\(k_{\max root,i,s}\)</span> [<code>VCroot_kmax</code>]: Maximum hydraulic conductance of the root xylem for each soil layer.</li>
+<li><span class="math inline">\(c_{root,i}\)</span> and <span class="math inline">\(d_{root,i}\)</span> [<code>VCroot_c</code> and <code>VCroot_c</code>]: Parameters of the root xylem vulnerability curve.</li>
+<li><span class="math inline">\(k_{\max stem,i}\)</span> [<code>VCstem_kmax</code>]: Maximum hydraulic conductance of the stem xylem.</li>
+<li><span class="math inline">\(c_{stem,i}\)</span> and <span class="math inline">\(d_{stem,i}\)</span> [<code>VCstem_c</code> and <code>VCstem_c</code>]: Parameters of the stem xylem vulnerability curve.</li>
+<li><span class="math inline">\(V298_{max,i}\)</span> [<code>Vmax298</code>]: Maximum Rubisco carboxylation rate at 25ºC (in <span class="math inline">\(\mu mol CO_2·s^{-1}·m^{-2}\)</span>).</li>
+<li><span class="math inline">\(J298_{max,i}\)</span> [<code>Jmax298</code>]: Maximum rate of electron transport at 25ºC (in <span class="math inline">\(\mu mol e ·s^{-1}·m^{-2}\)</span>).}</li>
+<li><span class="math inline">\(P_{rootdisc,i}\)</span> [<code>pRootDisc</code>]: Relative conductance of roots that leads to hydraulic disconnection from soil.</li>
+<li><span class="math inline">\(k_{rhizo,i,s}\)</span> [<code>VGrhizo_kmax</code>]: Maximum rhizosphere conductance values for each soil layer.</li>
+<li><span class="math inline">\(k_{root,i,s}\)</span> [<code>VCroot_kmax</code>]: Maximum root xylem conductance values for each soil layer.</li>
 </ul>
 </div>
 </div>
-<div id="leaf-biomass-and-area" class="section level2">
-<h2><span class="header-section-number">18.2</span> Leaf biomass and area</h2>
-<div id="leaf-biomass-for-tree-cohorts" class="section level3">
-<h3><span class="header-section-number">18.2.1</span> Leaf biomass for tree cohorts</h3>
-<p>Foliar biomass for a single tree of cohort <span class="math inline">\(i\)</span> (<span class="math inline">\(FB_{tree,i}\)</span>; in <span class="math inline">\(kg\)</span>) is calculated using:
-<span class="math display" id="eq:onetreefoliarbiomass">\[\begin{equation}
-FB_{tree,i} = a_{fbt} \cdot DBH_{i}^{b_{fbt}}\cdot e^{c_{fbt}\cdot BAL_i} \cdot DBH_{i}^{d_{fbt} \cdot BA_{sup}}
-\tag{18.1}
-\end{equation}\]</span>
-where <span class="math inline">\(DBH_{i}\)</span> is the diameter of the tree (in <span class="math inline">\(cm\)</span>), <span class="math inline">\(BAL_i\)</span> is the cummulative basal area (<span class="math inline">\(m^2\cdot ha^{-1}\)</span>) of trees having a larger diameter, and <span class="math inline">\(a_{fbt}\)</span>, <span class="math inline">\(b_{fbt}\)</span>, <span class="math inline">\(c_{fbt}\)</span> and <span class="math inline">\(c_{fbt}\)</span> are species-specific regression coefficients. The foliar biomass of the whole tree cohort (<span class="math inline">\(FB_{i}\)</span>; in <span class="math inline">\(kg\cdot m^{-2}\)</span>) is obtained multiplying tree foliar biomass by tree density (<span class="math inline">\(N_{i}\)</span>; in <span class="math inline">\(ind.\cdot ha^{-1}\)</span>):
-<span class="math display" id="eq:treefoliarbiomass">\[\begin{equation}
-FB_{i} = FB_{tree,i}\cdot (N_{i}/10000)
-\tag{18.2}
-\end{equation}\]</span></p>
-</div>
-<div id="leaf-biomass-for-shrub-cohorts" class="section level3">
-<h3><span class="header-section-number">18.2.2</span> Leaf biomass for shrub cohorts</h3>
-<p>To calculate the leaf biomass of a shrub cohort, we first determine <span class="math inline">\(A_{sh,i}\)</span>, the area (in <span class="math inline">\(cm^2\)</span>) occupied by one average individual of height <span class="math inline">\(H_{i}\)</span> (in <span class="math inline">\(cm\)</span>), using the quadratic relationship:
-<span class="math display">\[\begin{equation}
-A_{sh,i} = a_{ash} \cdot H_{i}^2
-\end{equation}\]</span>
-where <span class="math inline">\(a_{ash}\)</span> is a species-specific parameter. The model then estimates the dry weight of leaves and branches up to 6.35mm in diameter (<span class="math inline">\(B_{sh,i}\)</span>, in kg) of this average individual (i.e. fine fuel biomass), using an allometric relationship with shrub crown phytovolume assuming a cylinder (in <span class="math inline">\(cm^3\)</span>):
-<span class="math display">\[\begin{equation}
-B_{sh,i} = a_{bsh} \cdot (A_{sh,i}\cdot H_{i}\cdot cr(SP_i))^{b_{bsh}}
-\end{equation}\]</span>
-where <span class="math inline">\(a_{bsh}\)</span> and <span class="math inline">\(b_{bsh}\)</span> are species-specific parameters and <span class="math inline">\(cr(SP_i)\)</span> is a species-specific crown ratio (a proportion between 0 and 1, the ratio between crown length and total height). Shrub density (<span class="math inline">\(N_{i}\)</span>; in <span class="math inline">\(ind.\cdot m^{-2}\)</span>) can be grossly estimated from percent cover (<span class="math inline">\(C_{i}\)</span>, in percent) and <span class="math inline">\(A_{sh,i}\)</span> (in <span class="math inline">\(cm^{-2}\)</span>):
-<span class="math display">\[\begin{equation}
-N_{i} = \frac{C_{i}/100}{A_{sh,i}/10000}
-\end{equation}\]</span>
-The fine fuel biomass of a shrub cohort (<span class="math inline">\(W_{i}\)</span>, in <span class="math inline">\(kg \cdot m^{-2}\)</span>) is simply the product of <span class="math inline">\(B_{sh,i}\)</span> (<span class="math inline">\(kg\)</span> of dry weight) and <span class="math inline">\(N_{i}\)</span>:
-<span class="math display" id="eq:shrubloading">\[\begin{equation}
-W_{i} =  B_{sh,i}\cdot N_{i}
-\tag{18.3}
-\end{equation}\]</span>
-Foliar biomass (in <span class="math inline">\(kg \cdot m^{-2}\)</span>) can be obtained using the species-specific ratio <span class="math inline">\(r_{6.35}(SP_i)\)</span>:
-<span class="math display" id="eq:shrubfoliarbiomass">\[\begin{equation}
-FB_{i} =  W_{i}/r_{6.35}(SP_i)\\
-\tag{18.4}
-\end{equation}\]</span>
-If not known, <span class="math inline">\(r_{6.35}(SP_i)\)</span> can be set to a default value of 2 (equivalent to %50 of weight corresponding to leaves).</p>
-</div>
-<div id="leaf-area" class="section level3">
-<h3><span class="header-section-number">18.2.3</span> Leaf area</h3>
-</div>
-</div>
-<div id="vertical-distribution-of-leaves" class="section level2">
-<h2><span class="header-section-number">18.3</span> Vertical distribution of leaves</h2>
-<div id="crownbaseheight" class="section level3">
-<h3><span class="header-section-number">18.3.1</span> Crown base height</h3>
-<p>Crown base height (<span class="math inline">\(H_{b,i}\)</span>; in cm) is defined as the height corresponding to the first living branch expressed as a fraction of total height. It is calculated from the crown ratio (<span class="math inline">\(CR\)</span>; a proportion between 0 and 1), i.e. the ratio between crown length and total height:
-<span class="math display" id="eq:CrownHeight">\[\begin{equation}
-H_{b,i} = H_{i} \cdot (1 - CR_i)
-\tag{18.5}
-\end{equation}\]</span>
-In the case of shrubs the crown ratio is simply equal by a species-specific parameter: <span class="math inline">\(CR_i = cr(SP_i)\)</span>. In the case of trees, the crown ratio is modelled as a function of tree size and stand competition, following a modification of the logistic equation of <span class="citation">Hasenauer and Monserud (<a href="#ref-Hasenauer1996">1996</a>)</span>:
-<span class="math display" id="eq:treecrownratio">\[\begin{equation}
-CR_i = \frac{1}{1+e^{-(a_{cr}+b_{1cr}\cdot HD +b_{2cr} \cdot (H_i/100)+b_{3cr} \cdot DBH_i^2+c_{1cr} \cdot BAL_i + c_{2cr} \cdot ln(CCF))}}
-\tag{18.6}
-\end{equation}\]</span>
-where <span class="math inline">\(HD = H_i/(100\cdot DBH_i)\)</span> is the height to diameter ratio (in <span class="math inline">\(m\cdot cm^{-1}\)</span>), <span class="math inline">\(H_i\)</span> is the tree height, <span class="math inline">\(DBH_i\)</span> is the diameter, <span class="math inline">\(CCF\)</span> is the crown competition factor and <span class="math inline">\(a_{cr}\)</span>, <span class="math inline">\(b_{1cr}\)</span>, <span class="math inline">\(b_{2cr}\)</span>, <span class="math inline">\(b_{3cr}\)</span>, <span class="math inline">\(c_{1cr}\)</span> and <span class="math inline">\(c_{2cr}\)</span> are species-specific parameters. The crown competition factor is in turn calculated using <span class="citation">(Krajicek, Brinkman, and Gingrich <a href="#ref-Krajicek1961">1961</a>)</span>:
-<span class="math display">\[\begin{equation}
-CCF = \sum_{i}{N_i \cdot MCA_i}= \sum_{i}{N_i \cdot \pi \cdot (CW_i/2)^2/100}
-\end{equation}\]</span>
-where <span class="math inline">\(N_i\)</span> is the tree density, <span class="math inline">\(MCA_i\)</span> is the maximum crown area (in percent of unit area) and <span class="math inline">\(CW_i\)</span> is the crown width (in m) assuming an open-grown tree, estimated from an allometric relationship with tree diameter:
-<span class="math display">\[\begin{equation}
-CW_i = a_{cw}\cdot BDH_i^{b_{cw}} 
-\end{equation}\]</span>
-where again <span class="math inline">\(a_{cw}\)</span> and <span class="math inline">\(b_{cw}\)</span> are species-specific parameters.</p>
-</div>
-<div id="ladprofile" class="section level3">
-<h3><span class="header-section-number">18.3.2</span> Leaf area density profile</h3>
-<p>Leaf area of any plant cohort is assumed to be distributed vertically following a truncated Gaussian function whose standardized values -1.5 and 1.5 correspond to crown base height and total plant height, respectively. The following figure illustrates the leaf area density profile for an example forest stand.</p>
-<pre class="sourceCode r" id="cb46"><code class="sourceCode r"><div class="sourceLine" id="cb46-1" data-line-number="1"><span class="kw">vprofile_leafAreaDensity</span>(exampleforest, SpParamsMED, <span class="dt">z =</span> <span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">1000</span>, <span class="dt">by=</span><span class="dv">1</span>))</div></code></pre>
-<p><img src="medfatebook_files/figure-html/unnamed-chunk-76-1.png" width="384" style="display: block; margin: auto;" /></p>
-<p>This density profile determines the extinction rates of light and wind through the forest canopy.</p>
+<div id="model-output-1" class="section level2">
+<h2><span class="header-section-number">7.6</span> Model output</h2>
+<p>Function <code>spwb</code> with <code>transpirationMode = &quot;Sperry&quot;</code> returns a list object whose elements are data tables. Each table has dates as rows and has different output variables:</p>
+<ul>
+<li><code>WaterBalance</code>: Components of the climatic and soil daily water balance (i.e. net precipitation, infiltration, runoff, plant transpiration…).</li>
+<li><code>Soil</code>: Daily variation of soil variables (volume, moisture relative to field capacity, water potential) for soil layers.</li>
+<li><code>EnergyBalance</code>: Components of the atmosphere-canopy-soil energy balance, including latent heat, convective heat, conduction heat and radiation exchanges.</li>
+<li><code>PlantLAI</code>: Daily leaf area index for each plant cohort.</li>
+<li><code>PlantTranspiration</code>: Daily transpiration (in mm) for each plant cohort.</li>
+<li><code>PlantPhotosynthesis</code>: Daily net photosynthesis (in g C·m-2) for each plant cohort.</li>
+<li><code>PlantPsi</code>: Daily water potential of each plant (in MPa).</li>
+<li><code>PlantStress</code>: Daily stress level suffered by each plant cohort (relative whole-plant conductance).</li>
+</ul>
 
-</div>
 </div>
 </div>
 <h3>Bibliography</h3>
 <div id="refs" class="references">
-<div id="ref-Hasenauer1996">
-<p>Hasenauer, Hubert, and Robert A. Monserud. 1996. “A crown ratio model for Austrian Forests.” <em>Forest Ecology and Management</em> 84 (1-3):49–60. <a href="https://doi.org/10.1016/0378-1127(96)03768-1" class="uri">https://doi.org/10.1016/0378-1127(96)03768-1</a>.</p>
+<div id="ref-Best2011">
+<p>Best, M.J., M. Pryor, and D.B. Clarck. 2011. “The Joint UK Land Environment Simulator (JULES), Model description – Part 1: Energy and water fluxes.” <em>Geoscientific Model Development Discussions</em> 4 (1):677–99. <a href="https://doi.org/10.5194/gmd-4-677-2011" class="uri">https://doi.org/10.5194/gmd-4-677-2011</a>.</p>
 </div>
-<div id="ref-Krajicek1961">
-<p>Krajicek, Je, Ka Brinkman, and Sf Gingrich. 1961. “Crown competition-a measure of density.” <em>Forest Science</em> 7 (1):35–42.</p>
+<div id="ref-Boughton1989">
+<p>Boughton, WC. 1989. “A review of the USDA SCS curve number method.” <em>Australian Journal of Soil Research</em> 27:511–23. <a href="http://www.publish.csiro.au/?paper=SR9890511" class="uri">http://www.publish.csiro.au/?paper=SR9890511</a>.</p>
+</div>
+<div id="ref-Gash1995">
+<p>Gash, JHC, CR Lloyd, and G Lachaud. 1995. “Estimating sparse forest rainfall interception with an analytical model.” <em>Journal of Hydrology</em> 170 (79-86). <a href="https://doi.org/10.1016/0022-1694(95)02697-N" class="uri">https://doi.org/10.1016/0022-1694(95)02697-N</a>.</p>
+</div>
+<div id="ref-Ritchie1972">
+<p>Ritchie, JT. 1972. “Model for predicting evaporation from a row crop with incomplete cover.” <em>Water Resources Research</em> 8:1204–13. <a href="http://onlinelibrary.wiley.com/doi/10.1029/WR008i005p01204/full" class="uri">http://onlinelibrary.wiley.com/doi/10.1029/WR008i005p01204/full</a>.</p>
+</div>
+<div id="ref-Sperry2016">
+<p>Sperry, John S., Martin D. Venturas, William R. L. Anderegg, Maurizio Mencuccini, D. S. Mackay, YuJie Wang, and David M Love. 2016. “Predicting stomatal responses to the environment from the optimization of photosynthetic gain and hydraulic cost.” <em>Plant Cell and Environment</em> 40 (6):816–30. <a href="https://doi.org/10.1111/pce.12852" class="uri">https://doi.org/10.1111/pce.12852</a>.</p>
 </div>
 </div>
             </section>
@@ -494,8 +528,8 @@ where again <span class="math inline">\(a_{cw}\)</span> and <span class="math in
           </div>
         </div>
       </div>
-<a href="update-of-structural-variables.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="fuel-characteristics-and-fire-behaviour.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="transpirationgranier.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="subdaily-temperature-and-light-variations.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

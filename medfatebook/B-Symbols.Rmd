@@ -35,14 +35,34 @@ The following tables list all symbols used in this document, along with their un
 
 | Symbol | Units | R param | Description                        |
 |--------|-------|---------|------------------------------------|
-| $H_i$ | cm | `H` | Total tree or shrub height of cohort $i$ |
-| $CR_i$ | | `CR` | Crown ratio (i.e. the ratio between crown length and total height) of cohort $i$ |
-| $LAI^{live}_i$ | | `LAI_live` | (Maximum) leaf area index (one-side leaf area per surface area of the stand) of cohort $i$ |
-| $LAI^{dead}_i$ | | `LAI_dead` | Dead leaf area index (one-side dead leaf area per surface area of the stand) of cohort $i$ |
-| $LAI^{\phi}_i$ | | `LAI_expanded` | Current expanded leaf area index (one-side expanded leaf area per surface area of the stand) of cohort $i$ |
+| $SP_i$  |  | `Species` | Species identity of cohort $i$ |
+| $H_i$  | $cm$  | `Height` | Average tree or shrub height of cohort $i$ |
+| $CR_i$ |       | `CR`| Crown ratio (i.e. ratio between crown length and plant height) of cohort $i$ |
+| $N_i$ | $ind · ha^{-1}$ | `N` | Density of tree individuals of cohort $i$ |
+| $DBH_i$ | $cm$ | `DBH` | Diameter at breast height of trees in cohort $i$ |
+| $Cover_i$ | % | `Cover` | Percent cover of shrubs in cohort $i$ |
+| $LAI^{live}_i$ | $m^2 \cdot m^{-2}$ | `LAI_live` | (Maximum) leaf area index (one-side leaf area per surface area of the stand) of cohort $i$ |
+| $LAI^{dead}_i$ | $m^2 \cdot m^{-2}$ | `LAI_dead` | Dead leaf area index (one-side dead leaf area per surface area of the stand) of cohort $i$ |
+| $LAI^{\phi}_i$ | $m^2 \cdot m^{-2}$ | `LAI_expanded` | Current expanded leaf area index (one-side expanded leaf area per surface area of the stand) of cohort $i$ |
 | $v_{i,s}$ | [0-1] | `V[i,s]` | The proportion of fine roots of cohort $i$ in soil layer $s$ |
 | $Z_{50,i}$ | mm | `Z50` | Depth above which 50% of the fine root mass of cohort $i$ is located |
 | $Z_{95,i}$ | mm | `Z95` | Depth above which 95% of the fine root mass of cohort $i$ is located |
+
+
+## Meteorology
+
+
+| Symbol | Units | R param | Description                        |
+|--------|-------|---------|------------------------------------|
+| $T_{mean}$ | $^{\circ} \mathrm{C}$ | `MeanTemperature` | Mean temperature |
+| $T_{min}$ | $^{\circ} \mathrm{C}$ | `MinTemperature` | Minimum temperature |
+| $T_{max}$ | $^{\circ} \mathrm{C}$ | `MaxTemperature` | Maximum temperature |
+| $RH_{min}$ | % | `MinRelativeHumidity` | Minimum relative humidity |
+| $RH_{max}$ | % | `MaxRelativeHumidity` | Maximum relative humidity |
+| $P$ | $L \cdot m^{-2} = mm$ | `Precipitation` | Precipitation |
+| $PET$ | $L \cdot m^{-2} = mm$ | `PET` | Potential evapotranspiration, preferably calculated using Penman's equation |
+| $Rad$ | $MJ \cdot m^{-2}$ | `Radiation` | Solar radiation after accounting for clouds |
+| $u$ | $m \cdot s^{-1}$ | `WindSpeed` | Wind speed |
 
 ## Anatomy 
 

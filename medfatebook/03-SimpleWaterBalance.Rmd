@@ -1,6 +1,6 @@
 # (PART) Basic water balance modelling {-}
 
-# Basic water balance model
+# Basic water balance model {#basicwaterbalance}
 
 ## Design principles
 

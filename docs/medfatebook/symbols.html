@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>B Symbols | The medfate reference book</title>
   <meta name="description" content="This is a reference book for models implemented in package medfate." />
-  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
 
   <meta property="og:title" content="B Symbols | The medfate reference book" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 
 
 
-<meta name="date" content="2019-05-30" />
+<meta name="date" content="2019-05-31" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -49,41 +49,57 @@
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+div.sourceLine, a.sourceLine { display: inline-block; min-height: 1.25em; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; }
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+div.sourceLine, a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource div.sourceLine, .numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource div.sourceLine::before, .numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em; }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; color: #aaaaaa;  padding-left: 4px; }
+@media screen {
+a.sourceLine::before { text-decoration: underline; color: initial; }
+}
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.bn { color: #40a070; } /* BaseN */
+code span.fl { color: #40a070; } /* Float */
+code span.ch { color: #4070a0; } /* Char */
+code span.st { color: #4070a0; } /* String */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.ot { color: #007020; } /* Other */
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.fu { color: #06287e; } /* Function */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code span.cn { color: #880000; } /* Constant */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.im { } /* Import */
+code span.va { color: #19177c; } /* Variable */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.op { color: #666666; } /* Operator */
+code span.bu { } /* BuiltIn */
+code span.ex { } /* Extension */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.at { color: #7d9029; } /* Attribute */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -122,23 +138,24 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="2.1.4" data-path="model-inputs.html"><a href="model-inputs.html#water-content-and-water-table-depth"><i class="fa fa-check"></i><b>2.1.4</b> Water content and water table depth</a></li>
 </ul></li>
 <li class="chapter" data-level="2.2" data-path="model-inputs.html"><a href="model-inputs.html#vegetation-description"><i class="fa fa-check"></i><b>2.2</b> Vegetation description</a><ul>
-<li class="chapter" data-level="2.2.1" data-path="model-inputs.html"><a href="model-inputs.html#aboveground-parameters"><i class="fa fa-check"></i><b>2.2.1</b> Aboveground parameters</a></li>
-<li class="chapter" data-level="2.2.2" data-path="model-inputs.html"><a href="model-inputs.html#belowground-parameters"><i class="fa fa-check"></i><b>2.2.2</b> Belowground parameters</a></li>
+<li class="chapter" data-level="2.2.1" data-path="model-inputs.html"><a href="model-inputs.html#attributes-of-plant-cohorts"><i class="fa fa-check"></i><b>2.2.1</b> Attributes of plant cohorts</a></li>
+<li class="chapter" data-level="2.2.2" data-path="model-inputs.html"><a href="model-inputs.html#vertical-root-distribution"><i class="fa fa-check"></i><b>2.2.2</b> Vertical root distribution</a></li>
+<li class="chapter" data-level="2.2.3" data-path="model-inputs.html"><a href="model-inputs.html#plant-species-traits-and-vegetation-initialization"><i class="fa fa-check"></i><b>2.2.3</b> Plant (species) traits and vegetation initialization</a></li>
 </ul></li>
 <li class="chapter" data-level="2.3" data-path="model-inputs.html"><a href="model-inputs.html#meteoinput"><i class="fa fa-check"></i><b>2.3</b> Metereological input</a></li>
 <li class="chapter" data-level="2.4" data-path="model-inputs.html"><a href="model-inputs.html#control-parameters"><i class="fa fa-check"></i><b>2.4</b> Control parameters</a></li>
 </ul></li>
 <li class="part"><span><b>II Basic water balance modelling</b></span></li>
-<li class="chapter" data-level="3" data-path="basic-water-balance-model.html"><a href="basic-water-balance-model.html"><i class="fa fa-check"></i><b>3</b> Basic water balance model</a><ul>
-<li class="chapter" data-level="3.1" data-path="basic-water-balance-model.html"><a href="basic-water-balance-model.html#design-principles"><i class="fa fa-check"></i><b>3.1</b> Design principles</a></li>
-<li class="chapter" data-level="3.2" data-path="basic-water-balance-model.html"><a href="basic-water-balance-model.html#state-variables"><i class="fa fa-check"></i><b>3.2</b> State variables</a></li>
-<li class="chapter" data-level="3.3" data-path="basic-water-balance-model.html"><a href="basic-water-balance-model.html#water-balance"><i class="fa fa-check"></i><b>3.3</b> Water balance</a></li>
-<li class="chapter" data-level="3.4" data-path="basic-water-balance-model.html"><a href="basic-water-balance-model.html#process-scheduling"><i class="fa fa-check"></i><b>3.4</b> Process scheduling</a></li>
-<li class="chapter" data-level="3.5" data-path="basic-water-balance-model.html"><a href="basic-water-balance-model.html#model-input"><i class="fa fa-check"></i><b>3.5</b> Model input</a><ul>
-<li class="chapter" data-level="3.5.1" data-path="basic-water-balance-model.html"><a href="basic-water-balance-model.html#metereological-input"><i class="fa fa-check"></i><b>3.5.1</b> Metereological input</a></li>
-<li class="chapter" data-level="3.5.2" data-path="basic-water-balance-model.html"><a href="basic-water-balance-model.html#control-parameters-1"><i class="fa fa-check"></i><b>3.5.2</b> Control parameters</a></li>
+<li class="chapter" data-level="3" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html"><i class="fa fa-check"></i><b>3</b> Basic water balance model</a><ul>
+<li class="chapter" data-level="3.1" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#design-principles"><i class="fa fa-check"></i><b>3.1</b> Design principles</a></li>
+<li class="chapter" data-level="3.2" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#state-variables"><i class="fa fa-check"></i><b>3.2</b> State variables</a></li>
+<li class="chapter" data-level="3.3" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#water-balance"><i class="fa fa-check"></i><b>3.3</b> Water balance</a></li>
+<li class="chapter" data-level="3.4" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#process-scheduling"><i class="fa fa-check"></i><b>3.4</b> Process scheduling</a></li>
+<li class="chapter" data-level="3.5" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#model-input"><i class="fa fa-check"></i><b>3.5</b> Model input</a><ul>
+<li class="chapter" data-level="3.5.1" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#metereological-input"><i class="fa fa-check"></i><b>3.5.1</b> Metereological input</a></li>
+<li class="chapter" data-level="3.5.2" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#control-parameters-1"><i class="fa fa-check"></i><b>3.5.2</b> Control parameters</a></li>
 </ul></li>
-<li class="chapter" data-level="3.6" data-path="basic-water-balance-model.html"><a href="basic-water-balance-model.html#model-output"><i class="fa fa-check"></i><b>3.6</b> Model output</a></li>
+<li class="chapter" data-level="3.6" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#model-output"><i class="fa fa-check"></i><b>3.6</b> Model output</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="leaf-phenology-and-light-extinction.html"><a href="leaf-phenology-and-light-extinction.html"><i class="fa fa-check"></i><b>4</b> Leaf phenology and light extinction</a><ul>
 <li class="chapter" data-level="4.1" data-path="leaf-phenology-and-light-extinction.html"><a href="leaf-phenology-and-light-extinction.html#leafphenology"><i class="fa fa-check"></i><b>4.1</b> Leaf phenology and leaf fall</a></li>
@@ -157,20 +174,20 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="6.4" data-path="transpirationgranier.html"><a href="transpirationgranier.html#irreversible-cavitation-and-hydraulic-disconnection"><i class="fa fa-check"></i><b>6.4</b> Irreversible cavitation and hydraulic disconnection</a></li>
 </ul></li>
 <li class="part"><span><b>III Advanced water balance modelling</b></span></li>
-<li class="chapter" data-level="7" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html"><i class="fa fa-check"></i><b>7</b> Advanced water balance model</a><ul>
-<li class="chapter" data-level="7.1" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#design-principles-1"><i class="fa fa-check"></i><b>7.1</b> Design principles</a></li>
-<li class="chapter" data-level="7.2" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#state-variables-1"><i class="fa fa-check"></i><b>7.2</b> State variables</a></li>
-<li class="chapter" data-level="7.3" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#water-and-energy-balances"><i class="fa fa-check"></i><b>7.3</b> Water and energy balances</a><ul>
-<li class="chapter" data-level="7.3.1" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#water-balance-1"><i class="fa fa-check"></i><b>7.3.1</b> Water balance</a></li>
-<li class="chapter" data-level="7.3.2" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#energy-balance"><i class="fa fa-check"></i><b>7.3.2</b> Energy balance</a></li>
+<li class="chapter" data-level="7" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html"><i class="fa fa-check"></i><b>7</b> Advanced water balance model</a><ul>
+<li class="chapter" data-level="7.1" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#design-principles-1"><i class="fa fa-check"></i><b>7.1</b> Design principles</a></li>
+<li class="chapter" data-level="7.2" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#state-variables-1"><i class="fa fa-check"></i><b>7.2</b> State variables</a></li>
+<li class="chapter" data-level="7.3" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#water-and-energy-balances"><i class="fa fa-check"></i><b>7.3</b> Water and energy balances</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#water-balance-1"><i class="fa fa-check"></i><b>7.3.1</b> Water balance</a></li>
+<li class="chapter" data-level="7.3.2" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#energy-balance"><i class="fa fa-check"></i><b>7.3.2</b> Energy balance</a></li>
 </ul></li>
-<li class="chapter" data-level="7.4" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#process-scheduling-1"><i class="fa fa-check"></i><b>7.4</b> Process scheduling</a></li>
-<li class="chapter" data-level="7.5" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#model-input-1"><i class="fa fa-check"></i><b>7.5</b> Model input</a><ul>
-<li class="chapter" data-level="7.5.1" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#meteorological-input"><i class="fa fa-check"></i><b>7.5.1</b> Meteorological input</a></li>
-<li class="chapter" data-level="7.5.2" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#control-parameters-2"><i class="fa fa-check"></i><b>7.5.2</b> Control parameters</a></li>
-<li class="chapter" data-level="7.5.3" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#species-parameters"><i class="fa fa-check"></i><b>7.5.3</b> Species parameters</a></li>
+<li class="chapter" data-level="7.4" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#process-scheduling-1"><i class="fa fa-check"></i><b>7.4</b> Process scheduling</a></li>
+<li class="chapter" data-level="7.5" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#model-input-1"><i class="fa fa-check"></i><b>7.5</b> Model input</a><ul>
+<li class="chapter" data-level="7.5.1" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#meteorological-input"><i class="fa fa-check"></i><b>7.5.1</b> Meteorological input</a></li>
+<li class="chapter" data-level="7.5.2" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#control-parameters-2"><i class="fa fa-check"></i><b>7.5.2</b> Control parameters</a></li>
+<li class="chapter" data-level="7.5.3" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#species-parameters"><i class="fa fa-check"></i><b>7.5.3</b> Species parameters</a></li>
 </ul></li>
-<li class="chapter" data-level="7.6" data-path="advanced-water-balance-model.html"><a href="advanced-water-balance-model.html#model-output-1"><i class="fa fa-check"></i><b>7.6</b> Model output</a></li>
+<li class="chapter" data-level="7.6" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#model-output-1"><i class="fa fa-check"></i><b>7.6</b> Model output</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="subdaily-temperature-and-light-variations.html"><a href="subdaily-temperature-and-light-variations.html"><i class="fa fa-check"></i><b>8</b> Subdaily temperature and light variations</a><ul>
 <li class="chapter" data-level="8.1" data-path="subdaily-temperature-and-light-variations.html"><a href="subdaily-temperature-and-light-variations.html#air-temperature"><i class="fa fa-check"></i><b>8.1</b> Air temperature</a></li>
@@ -327,10 +344,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="B" data-path="symbols.html"><a href="symbols.html"><i class="fa fa-check"></i><b>B</b> Symbols</a><ul>
 <li class="chapter" data-level="B.1" data-path="symbols.html"><a href="symbols.html#soils"><i class="fa fa-check"></i><b>B.1</b> Soils</a></li>
 <li class="chapter" data-level="B.2" data-path="symbols.html"><a href="symbols.html#vegetation"><i class="fa fa-check"></i><b>B.2</b> Vegetation</a></li>
-<li class="chapter" data-level="B.3" data-path="symbols.html"><a href="symbols.html#anatomy"><i class="fa fa-check"></i><b>B.3</b> Anatomy</a></li>
-<li class="chapter" data-level="B.4" data-path="symbols.html"><a href="symbols.html#plant-hydraulics-2"><i class="fa fa-check"></i><b>B.4</b> Plant hydraulics</a></li>
-<li class="chapter" data-level="B.5" data-path="symbols.html"><a href="symbols.html#plant-water-compartments"><i class="fa fa-check"></i><b>B.5</b> Plant water compartments</a></li>
-<li class="chapter" data-level="B.6" data-path="symbols.html"><a href="symbols.html#stomatal-regulation-and-photosynthesis-1"><i class="fa fa-check"></i><b>B.6</b> Stomatal regulation and photosynthesis</a></li>
+<li class="chapter" data-level="B.3" data-path="symbols.html"><a href="symbols.html#meteorology"><i class="fa fa-check"></i><b>B.3</b> Meteorology</a></li>
+<li class="chapter" data-level="B.4" data-path="symbols.html"><a href="symbols.html#anatomy"><i class="fa fa-check"></i><b>B.4</b> Anatomy</a></li>
+<li class="chapter" data-level="B.5" data-path="symbols.html"><a href="symbols.html#plant-hydraulics-2"><i class="fa fa-check"></i><b>B.5</b> Plant hydraulics</a></li>
+<li class="chapter" data-level="B.6" data-path="symbols.html"><a href="symbols.html#plant-water-compartments"><i class="fa fa-check"></i><b>B.6</b> Plant water compartments</a></li>
+<li class="chapter" data-level="B.7" data-path="symbols.html"><a href="symbols.html#stomatal-regulation-and-photosynthesis-1"><i class="fa fa-check"></i><b>B.7</b> Stomatal regulation and photosynthesis</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="bibliography.html"><a href="bibliography.html"><i class="fa fa-check"></i>Bibliography</a></li>
 <li class="divider"></li>
@@ -528,32 +546,56 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </thead>
 <tbody>
 <tr class="odd">
-<td><span class="math inline">\(H_i\)</span></td>
-<td>cm</td>
-<td><code>H</code></td>
-<td>Total tree or shrub height of cohort <span class="math inline">\(i\)</span></td>
+<td><span class="math inline">\(SP_i\)</span></td>
+<td></td>
+<td><code>Species</code></td>
+<td>Species identity of cohort <span class="math inline">\(i\)</span></td>
 </tr>
 <tr class="even">
+<td><span class="math inline">\(H_i\)</span></td>
+<td><span class="math inline">\(cm\)</span></td>
+<td><code>Height</code></td>
+<td>Average tree or shrub height of cohort <span class="math inline">\(i\)</span></td>
+</tr>
+<tr class="odd">
 <td><span class="math inline">\(CR_i\)</span></td>
 <td></td>
 <td><code>CR</code></td>
-<td>Crown ratio (i.e. the ratio between crown length and total height) of cohort <span class="math inline">\(i\)</span></td>
+<td>Crown ratio (i.e. ratio between crown length and plant height) of cohort <span class="math inline">\(i\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(N_i\)</span></td>
+<td><span class="math inline">\(ind · ha^{-1}\)</span></td>
+<td><code>N</code></td>
+<td>Density of tree individuals of cohort <span class="math inline">\(i\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(DBH_i\)</span></td>
+<td><span class="math inline">\(cm\)</span></td>
+<td><code>DBH</code></td>
+<td>Diameter at breast height of trees in cohort <span class="math inline">\(i\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(Cover_i\)</span></td>
+<td>%</td>
+<td><code>Cover</code></td>
+<td>Percent cover of shrubs in cohort <span class="math inline">\(i\)</span></td>
 </tr>
 <tr class="odd">
 <td><span class="math inline">\(LAI^{live}_i\)</span></td>
-<td></td>
+<td><span class="math inline">\(m^2 \cdot m^{-2}\)</span></td>
 <td><code>LAI_live</code></td>
 <td>(Maximum) leaf area index (one-side leaf area per surface area of the stand) of cohort <span class="math inline">\(i\)</span></td>
 </tr>
 <tr class="even">
 <td><span class="math inline">\(LAI^{dead}_i\)</span></td>
-<td></td>
+<td><span class="math inline">\(m^2 \cdot m^{-2}\)</span></td>
 <td><code>LAI_dead</code></td>
 <td>Dead leaf area index (one-side dead leaf area per surface area of the stand) of cohort <span class="math inline">\(i\)</span></td>
 </tr>
 <tr class="odd">
 <td><span class="math inline">\(LAI^{\phi}_i\)</span></td>
-<td></td>
+<td><span class="math inline">\(m^2 \cdot m^{-2}\)</span></td>
 <td><code>LAI_expanded</code></td>
 <td>Current expanded leaf area index (one-side expanded leaf area per surface area of the stand) of cohort <span class="math inline">\(i\)</span></td>
 </tr>
@@ -578,8 +620,83 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </tbody>
 </table>
 </div>
+<div id="meteorology" class="section level2">
+<h2><span class="header-section-number">B.3</span> Meteorology</h2>
+<table style="width:89%;">
+<colgroup>
+<col width="12%" />
+<col width="11%" />
+<col width="13%" />
+<col width="51%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Symbol</th>
+<th>Units</th>
+<th>R param</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(T_{mean}\)</span></td>
+<td><span class="math inline">\(^{\circ} \mathrm{C}\)</span></td>
+<td><code>MeanTemperature</code></td>
+<td>Mean temperature</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(T_{min}\)</span></td>
+<td><span class="math inline">\(^{\circ} \mathrm{C}\)</span></td>
+<td><code>MinTemperature</code></td>
+<td>Minimum temperature</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(T_{max}\)</span></td>
+<td><span class="math inline">\(^{\circ} \mathrm{C}\)</span></td>
+<td><code>MaxTemperature</code></td>
+<td>Maximum temperature</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(RH_{min}\)</span></td>
+<td>%</td>
+<td><code>MinRelativeHumidity</code></td>
+<td>Minimum relative humidity</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(RH_{max}\)</span></td>
+<td>%</td>
+<td><code>MaxRelativeHumidity</code></td>
+<td>Maximum relative humidity</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(P\)</span></td>
+<td><span class="math inline">\(L \cdot m^{-2} = mm\)</span></td>
+<td><code>Precipitation</code></td>
+<td>Precipitation</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(PET\)</span></td>
+<td><span class="math inline">\(L \cdot m^{-2} = mm\)</span></td>
+<td><code>PET</code></td>
+<td>Potential evapotranspiration, preferably calculated using Penman’s equation</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(Rad\)</span></td>
+<td><span class="math inline">\(MJ \cdot m^{-2}\)</span></td>
+<td><code>Radiation</code></td>
+<td>Solar radiation after accounting for clouds</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(u\)</span></td>
+<td><span class="math inline">\(m \cdot s^{-1}\)</span></td>
+<td><code>WindSpeed</code></td>
+<td>Wind speed</td>
+</tr>
+</tbody>
+</table>
+</div>
 <div id="anatomy" class="section level2">
-<h2><span class="header-section-number">B.3</span> Anatomy</h2>
+<h2><span class="header-section-number">B.4</span> Anatomy</h2>
 <table style="width:89%;">
 <colgroup>
 <col width="12%" />
@@ -642,7 +759,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </table>
 </div>
 <div id="plant-hydraulics-2" class="section level2">
-<h2><span class="header-section-number">B.4</span> Plant hydraulics</h2>
+<h2><span class="header-section-number">B.5</span> Plant hydraulics</h2>
 <table style="width:89%;">
 <colgroup>
 <col width="12%" />
@@ -783,7 +900,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </table>
 </div>
 <div id="plant-water-compartments" class="section level2">
-<h2><span class="header-section-number">B.5</span> Plant water compartments</h2>
+<h2><span class="header-section-number">B.6</span> Plant water compartments</h2>
 <table style="width:89%;">
 <colgroup>
 <col width="12%" />
@@ -864,7 +981,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </table>
 </div>
 <div id="stomatal-regulation-and-photosynthesis-1" class="section level2">
-<h2><span class="header-section-number">B.6</span> Stomatal regulation and photosynthesis</h2>
+<h2><span class="header-section-number">B.7</span> Stomatal regulation and photosynthesis</h2>
 <table style="width:89%;">
 <colgroup>
 <col width="12%" />
@@ -913,7 +1030,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h3>Bibliography</h3>
 <div id="refs" class="references">
 <div id="ref-Genuchten1980">
-<p>Genuchten, MT Van. 1980. “A closed-form equation for predicting the hydraulic conductivity of unsaturated soils.” <em>Soil Science Society of America Journal</em> 44: 892–98. <a href="https://dl.sciencesocieties.org/publications/sssaj/abstracts/44/5/SS0440050892" class="uri">https://dl.sciencesocieties.org/publications/sssaj/abstracts/44/5/SS0440050892</a>.</p>
+<p>Genuchten, MT Van. 1980. “A closed-form equation for predicting the hydraulic conductivity of unsaturated soils.” <em>Soil Science Society of America Journal</em> 44:892–98. <a href="https://dl.sciencesocieties.org/publications/sssaj/abstracts/44/5/SS0440050892" class="uri">https://dl.sciencesocieties.org/publications/sssaj/abstracts/44/5/SS0440050892</a>.</p>
 </div>
 </div>
             </section>
@@ -972,7 +1089,7 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "";
+    var src = "true";
     if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');

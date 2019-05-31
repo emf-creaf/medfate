@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 3 Basic water balance model | The medfate reference book</title>
   <meta name="description" content="This is a reference book for models implemented in package medfate." />
-  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 3 Basic water balance model | The medfate reference book" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 
 
 
-<meta name="date" content="2019-05-30" />
+<meta name="date" content="2019-05-31" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -49,41 +49,57 @@
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+div.sourceLine, a.sourceLine { display: inline-block; min-height: 1.25em; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; }
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+div.sourceLine, a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource div.sourceLine, .numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource div.sourceLine::before, .numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em; }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; color: #aaaaaa;  padding-left: 4px; }
+@media screen {
+a.sourceLine::before { text-decoration: underline; color: initial; }
+}
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.bn { color: #40a070; } /* BaseN */
+code span.fl { color: #40a070; } /* Float */
+code span.ch { color: #4070a0; } /* Char */
+code span.st { color: #4070a0; } /* String */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.ot { color: #007020; } /* Other */
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.fu { color: #06287e; } /* Function */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code span.cn { color: #880000; } /* Constant */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.im { } /* Import */
+code span.va { color: #19177c; } /* Variable */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.op { color: #666666; } /* Operator */
+code span.bu { } /* BuiltIn */
+code span.ex { } /* Extension */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.at { color: #7d9029; } /* Attribute */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -123,7 +139,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 <li class="chapter" data-level="2.2" data-path="model-inputs.html"><a href="model-inputs.html#vegetation-description"><i class="fa fa-check"></i><b>2.2</b> Vegetation description</a><ul>
 <li class="chapter" data-level="2.2.1" data-path="model-inputs.html"><a href="model-inputs.html#aboveground-parameters"><i class="fa fa-check"></i><b>2.2.1</b> Aboveground parameters</a></li>
-<li class="chapter" data-level="2.2.2" data-path="model-inputs.html"><a href="model-inputs.html#belowground-parameters"><i class="fa fa-check"></i><b>2.2.2</b> Belowground parameters</a></li>
+<li class="chapter" data-level="2.2.2" data-path="model-inputs.html"><a href="model-inputs.html#root-distribution"><i class="fa fa-check"></i><b>2.2.2</b> Root distribution</a></li>
 </ul></li>
 <li class="chapter" data-level="2.3" data-path="model-inputs.html"><a href="model-inputs.html#meteoinput"><i class="fa fa-check"></i><b>2.3</b> Metereological input</a></li>
 <li class="chapter" data-level="2.4" data-path="model-inputs.html"><a href="model-inputs.html#control-parameters"><i class="fa fa-check"></i><b>2.4</b> Control parameters</a></li>
@@ -358,7 +374,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="design-principles" class="section level2">
 <h2><span class="header-section-number">3.1</span> Design principles</h2>
 <p>The water balance model described in <span class="citation">De Cáceres et al. (<a href="#ref-DeCaceres2015">2015</a>)</span> calculates temporal variations in soil moisture on a daily step basis for the input forest stand and for the period corresponding to input weather data.</p>
-<p>The model considers only the vertical spatial dimension of the stand and not the horizontal distribution of plants within it. In other words, the model is not spatially explicit (i.e., plants do not interact for space explicitly). Still, the stand is divided into groups of plants, here referred to as <em>plant cohorts</em> of different species, height and leaf area index (<span class="math inline">\(LAI\)</span>). Height and <span class="math inline">\(LAI\)</span> values determine competition for light. <span class="math inline">\(LAI\)</span> values also drive competition for water, along with root distribution. The soil water balance follows the design principles of SIERRA <span class="citation">(Mouillot, Rambal, and Lavorel <a href="#ref-Mouillot2001">2001</a>; Ruffault et al. <a href="#ref-Ruffault2014">2014</a>; Ruffault et al. <a href="#ref-Ruffault2013">2013</a>)</span> and BILJOU <span class="citation">(Granier et al. <a href="#ref-Granier1999">1999</a>; <a href="#ref-Granier2007">2007</a>)</span>, although some features are taken from other models <span class="citation">(Kergoat <a href="#ref-Kergoat1998">1998</a>)</span>. Potential evapotranspiration (<span class="math inline">\(PET\)</span>) is given as input and the model determines maximum canopy transpiration (<span class="math inline">\(Tr_{\max}\)</span>) using an empirical relationship between the <span class="math inline">\(LAI\)</span> of the stand and the ratio <span class="math inline">\(Tr_{\max}/PET\)</span> <span class="citation">(Granier et al. <a href="#ref-Granier1999">1999</a>)</span>. Actual plant transpiration is estimated using a function that depends on current soil moisture levels, species-specific drought resistance, fine root distribution and the degree of shading of the target plant cohort.</p>
+<p>The model considers only the vertical spatial dimension of the stand and not the horizontal distribution of
+plants within it. In other words, the model is not spatially explicit (i.e., plants do not interact for space explicitly). Still, the stand is divided into groups of plants, here referred to as <em>plant cohorts</em> of different species, height and leaf area index (<span class="math inline">\(LAI\)</span>). Height and <span class="math inline">\(LAI\)</span> values determine competition for light. <span class="math inline">\(LAI\)</span> values also drive competition for water, along with root distribution. The soil water balance follows the design principles of SIERRA <span class="citation">(Mouillot, Rambal, and Lavorel <a href="#ref-Mouillot2001">2001</a>; Ruffault et al. <a href="#ref-Ruffault2014">2014</a>, <a href="#ref-Ruffault2013">2013</a>)</span> and BILJOU <span class="citation">(Granier et al. <a href="#ref-Granier1999">1999</a>, <a href="#ref-Granier2007">2007</a>)</span>, although some features are taken from other models <span class="citation">(Kergoat <a href="#ref-Kergoat1998">1998</a>)</span>. Potential evapotranspiration (<span class="math inline">\(PET\)</span>) is given as input and the model determines maximum canopy transpiration (<span class="math inline">\(Tr_{\max}\)</span>) using an empirical relationship between the <span class="math inline">\(LAI\)</span> of the stand and the ratio <span class="math inline">\(Tr_{\max}/PET\)</span> <span class="citation">(Granier et al. <a href="#ref-Granier1999">1999</a>)</span>. Actual plant transpiration is estimated using a function that depends on current soil moisture levels, species-specific drought resistance, fine root distribution and the degree of shading of the target plant cohort.</p>
 </div>
 <div id="state-variables" class="section level2">
 <h2><span class="header-section-number">3.2</span> State variables</h2>
@@ -432,25 +449,25 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h3>Bibliography</h3>
 <div id="refs" class="references">
 <div id="ref-DeCaceres2015">
-<p>De Cáceres, Miquel, Jordi Martínez-Vilalta, Lluís Coll, Pilar Llorens, Pere Casals, Rafael Poyatos, Juli G. Pausas, and Lluís Brotons. 2015. “Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes.” <em>Agricultural and Forest Meteorology</em> 213. Elsevier B.V.: 77–90. doi:<a href="https://doi.org/10.1016/j.agrformet.2015.06.012">10.1016/j.agrformet.2015.06.012</a>.</p>
+<p>De Cáceres, Miquel, Jordi Martínez-Vilalta, Lluís Coll, Pilar Llorens, Pere Casals, Rafael Poyatos, Juli G. Pausas, and Lluís Brotons. 2015. “Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes.” <em>Agricultural and Forest Meteorology</em> 213. Elsevier B.V.:77–90. <a href="https://doi.org/10.1016/j.agrformet.2015.06.012" class="uri">https://doi.org/10.1016/j.agrformet.2015.06.012</a>.</p>
 </div>
 <div id="ref-Granier1999">
-<p>Granier, A., N. Bréda, P. Biron, and S. Villette. 1999. “A lumped water balance model to evaluate duration and intensity of drought constraints in forest stands.” <em>Ecological Modelling</em> 116: 269–83. doi:<a href="https://doi.org/10.1016/S0304-3800(98)00205-1">10.1016/S0304-3800(98)00205-1</a>.</p>
+<p>Granier, A., N. Bréda, P. Biron, and S. Villette. 1999. “A lumped water balance model to evaluate duration and intensity of drought constraints in forest stands.” <em>Ecological Modelling</em> 116:269–83. <a href="https://doi.org/10.1016/S0304-3800(98)00205-1" class="uri">https://doi.org/10.1016/S0304-3800(98)00205-1</a>.</p>
 </div>
 <div id="ref-Granier2007">
-<p>Granier, A., M. Reichstein, N. Bréda, I.A. Janssens, E. Falge, P. Ciais, T. Grünwald, et al. 2007. “Evidence for soil water control on carbon and water dynamics in European forests during the extremely dry year: 2003.” <em>Agricultural and Forest Meteorology</em> 143 (1-2): 123–45. doi:<a href="https://doi.org/10.1016/j.agrformet.2006.12.004">10.1016/j.agrformet.2006.12.004</a>.</p>
+<p>Granier, A., M. Reichstein, N. Bréda, I.A. Janssens, E. Falge, P. Ciais, T. Grünwald, et al. 2007. “Evidence for soil water control on carbon and water dynamics in European forests during the extremely dry year: 2003.” <em>Agricultural and Forest Meteorology</em> 143 (1-2):123–45. <a href="https://doi.org/10.1016/j.agrformet.2006.12.004" class="uri">https://doi.org/10.1016/j.agrformet.2006.12.004</a>.</p>
 </div>
 <div id="ref-Kergoat1998">
-<p>Kergoat, Laurent. 1998. “A model for hydrological equilibrium of leaf area index on a global scale.” <em>Journal of Hydrology</em> 212-213 (December): 268–86. doi:<a href="https://doi.org/10.1016/S0022-1694(98)00211-X">10.1016/S0022-1694(98)00211-X</a>.</p>
+<p>Kergoat, Laurent. 1998. “A model for hydrological equilibrium of leaf area index on a global scale.” <em>Journal of Hydrology</em> 212-213 (December):268–86. <a href="https://doi.org/10.1016/S0022-1694(98)00211-X" class="uri">https://doi.org/10.1016/S0022-1694(98)00211-X</a>.</p>
 </div>
 <div id="ref-Mouillot2001">
-<p>Mouillot, Florent, Serge Rambal, and Sandra Lavorel. 2001. “A generic process-based SImulator for meditERRanean landscApes (SIERRA): design and validation exercises.” <em>Forest Ecology and Management</em> 147 (1): 75–97. doi:<a href="https://doi.org/10.1016/S0378-1127(00)00432-1">10.1016/S0378-1127(00)00432-1</a>.</p>
+<p>Mouillot, Florent, Serge Rambal, and Sandra Lavorel. 2001. “A generic process-based SImulator for meditERRanean landscApes (SIERRA): design and validation exercises.” <em>Forest Ecology and Management</em> 147 (1):75–97. <a href="https://doi.org/10.1016/S0378-1127(00)00432-1" class="uri">https://doi.org/10.1016/S0378-1127(00)00432-1</a>.</p>
 </div>
 <div id="ref-Ruffault2014">
-<p>Ruffault, Julien, Nicolas K Martin-StPaul, Carole Duffet, Fabien Goge, and Florent Mouillot. 2014. “Projecting future drought in Mediterranean forests: bias correction of climate models matters!” <em>Theoretical and Applied Climatology</em> 117 (1-2): 113–22. doi:<a href="https://doi.org/10.1007/s00704-013-0992-z">10.1007/s00704-013-0992-z</a>.</p>
+<p>Ruffault, Julien, Nicolas K Martin-StPaul, Carole Duffet, Fabien Goge, and Florent Mouillot. 2014. “Projecting future drought in Mediterranean forests: bias correction of climate models matters!” <em>Theoretical and Applied Climatology</em> 117 (1-2):113–22. <a href="https://doi.org/10.1007/s00704-013-0992-z" class="uri">https://doi.org/10.1007/s00704-013-0992-z</a>.</p>
 </div>
 <div id="ref-Ruffault2013">
-<p>Ruffault, Julien, Nicolas K. Martin-StPaul, Serge Rambal, and Florent Mouillot. 2013. “Differential regional responses in drought length, intensity and timing to recent climate changes in a Mediterranean forested ecosystem.” <em>Climatic Change</em> 117 (1-2): 103–17. doi:<a href="https://doi.org/10.1007/s10584-012-0559-5">10.1007/s10584-012-0559-5</a>.</p>
+<p>Ruffault, Julien, Nicolas K. Martin-StPaul, Serge Rambal, and Florent Mouillot. 2013. “Differential regional responses in drought length, intensity and timing to recent climate changes in a Mediterranean forested ecosystem.” <em>Climatic Change</em> 117 (1-2):103–17. <a href="https://doi.org/10.1007/s10584-012-0559-5" class="uri">https://doi.org/10.1007/s10584-012-0559-5</a>.</p>
 </div>
 </div>
             </section>
@@ -509,7 +526,7 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "";
+    var src = "true";
     if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');
