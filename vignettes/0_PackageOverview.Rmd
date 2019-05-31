@@ -1,5 +1,5 @@
 ---
-title: "Package overview"
+title: "0. Package overview"
 author: "Miquel De Caceres"
 date: "`r Sys.Date()`"
 output: 

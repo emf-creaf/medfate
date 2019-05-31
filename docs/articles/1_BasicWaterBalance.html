@@ -5,11 +5,11 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>1. Introduction to water balance simulation • medfate</title>
+<title>1. Basic water balance simulation • medfate</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="1. Introduction to water balance simulation">
+<script src="../pkgdown.js"></script><meta property="og:title" content="1. Basic water balance simulation">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.3</span>
       </span>
     </div>
 
@@ -53,16 +53,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/AdvancedWaterEnergyBalance.html">2. Advanced water and energy balance simulation</a>
+      <a href="../articles/0_PackageOverview.html">0. Package overview</a>
     </li>
     <li>
-      <a href="../articles/ForestGrowth.html">3. Forest growth simulation</a>
+      <a href="../articles/1_BasicWaterBalance.html">1. Basic water balance simulation</a>
     </li>
     <li>
-      <a href="../articles/PackageOverview.html">Package overview</a>
+      <a href="../articles/2_AdvancedWaterEnergyBalance.html">2. Advanced water and energy balance simulation</a>
     </li>
     <li>
-      <a href="../articles/SimpleWaterBalance.html">1. Introduction to water balance simulation</a>
+      <a href="../articles/3_ForestGrowth.html">3. Forest growth simulation</a>
     </li>
   </ul>
 </li>
@@ -79,13 +79,13 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>1. Introduction to water balance simulation</h1>
+      <h1>1. Basic water balance simulation</h1>
                         <h4 class="author">Miquel De Caceres</h4>
             
-            <h4 class="date">2019-05-30</h4>
+            <h4 class="date">2019-05-31</h4>
       
       
-      <div class="hidden name"><code>SimpleWaterBalance.Rmd</code></div>
+      <div class="hidden name"><code>1_BasicWaterBalance.Rmd</code></div>
 
     </div>
 
@@ -195,7 +195,7 @@
 <p>While Saxton equations use texture and organic matter as inputs, the Van Genuchten-Mualem equations need other parameters, which are estimated using pedotransfer functions and their names start with <code>VG_</code> (two alternative options are provided in function <code>soil</code> to estimate Van Genuchten parameters). The following code calls function <code><a href="../reference/soil_texture.html">soil_retentionCurvePlot()</a></code> to illustrate the difference between the two water retention models in this soil:</p>
 <pre class="sourceCode r" id="cb13"><code class="sourceCode r"><div class="sourceLine" id="cb13-1" data-line-number="1">
 <span class="kw"><a href="../reference/soil_texture.html">soil_retentionCurvePlot</a></span>(examplesoil, <span class="dt">model=</span><span class="st">"both"</span>)</div></code></pre>
-<p><img src="SimpleWaterBalance_files/figure-html/unnamed-chunk-7-1.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="1_BasicWaterBalance_files/figure-html/unnamed-chunk-7-1.png" width="480" style="display: block; margin: auto;"></p>
 <p>Low-level functions, such as <code><a href="../reference/soil_texture.html">soil_psi2thetaSX()</a></code> and <code><a href="../reference/soil_texture.html">soil_psi2thetaVG()</a></code> (and their counterparts <code><a href="../reference/soil_texture.html">soil_theta2psiSX()</a></code> and <code><a href="../reference/soil_texture.html">soil_theta2psiVG()</a></code>), can be used to calculate volumetric soil moisture from the water potential (and viceversa) using the two models. When simulating soil water balance, the user can choose among the two models (see <code>control</code> parameters below).</p>
 </div>
 </div>
@@ -295,10 +295,10 @@
 <p>Aboveground leaf area distribution (with or without distinguishing among cohorts) can be examined by calling function <code><a href="../reference/VerticalProfiles.html">vprofile_leafAreaDensity()</a></code>:</p>
 <pre class="sourceCode r" id="cb21"><code class="sourceCode r"><div class="sourceLine" id="cb21-1" data-line-number="1">
 <span class="kw"><a href="../reference/VerticalProfiles.html">vprofile_leafAreaDensity</a></span>(above, <span class="dt">byCohorts =</span> F)</div></code></pre>
-<p><img src="SimpleWaterBalance_files/figure-html/unnamed-chunk-12-1.png" width="384" style="display: block; margin: auto;"></p>
+<p><img src="1_BasicWaterBalance_files/figure-html/unnamed-chunk-12-1.png" width="384" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb22"><code class="sourceCode r"><div class="sourceLine" id="cb22-1" data-line-number="1">
 <span class="kw"><a href="../reference/VerticalProfiles.html">vprofile_leafAreaDensity</a></span>(above, <span class="dt">byCohorts =</span> T)</div></code></pre>
-<p><img src="SimpleWaterBalance_files/figure-html/unnamed-chunk-13-1.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="1_BasicWaterBalance_files/figure-html/unnamed-chunk-13-1.png" width="480" style="display: block; margin: auto;"></p>
 <p>Regarding <strong>belowground</strong> information, a matrix describing for each plant cohort, the proportion of fine roots in each soil layer. As before, we use function <code><a href="../reference/forest2spwbInput.html">forest2belowground()</a></code> on the object <code>exampleforest</code> to show how should the data look like:</p>
 <pre class="sourceCode r" id="cb23"><code class="sourceCode r"><div class="sourceLine" id="cb23-1" data-line-number="1">below =<span class="st"> </span><span class="kw"><a href="../reference/forest2spwbInput.html">forest2belowground</a></span>(exampleforest, examplesoil, SpParamsMED)</div>
 <div class="sourceLine" id="cb23-2" data-line-number="2">below</div></code></pre>
@@ -317,7 +317,7 @@
 <p>Users can visually inspect the distribution of fine roots of <code>forest</code> objects by calling function <code><a href="../reference/VerticalProfiles.html">vprofile_rootDistribution()</a></code>:</p>
 <pre class="sourceCode r" id="cb27"><code class="sourceCode r"><div class="sourceLine" id="cb27-1" data-line-number="1">
 <span class="kw"><a href="../reference/VerticalProfiles.html">vprofile_rootDistribution</a></span>(exampleforest, SpParamsMED)</div></code></pre>
-<p><img src="SimpleWaterBalance_files/figure-html/unnamed-chunk-16-1.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="1_BasicWaterBalance_files/figure-html/unnamed-chunk-16-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 </div>
 <div id="meteorological-forcing" class="section level3">
@@ -737,42 +737,42 @@
 <p>Package <code>medfate</code> provides a simple <code>plot</code> function for objects of class <code>spwb</code>. It can be used to show meteorological inputs, snow dynamics, and different components of the water balance:</p>
 <pre class="sourceCode r" id="cb61"><code class="sourceCode r"><div class="sourceLine" id="cb61-1" data-line-number="1">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(S, <span class="dt">type =</span> <span class="st">"PET_Precipitation"</span>)</div></code></pre>
-<p><img src="SimpleWaterBalance_files/figure-html/unnamed-chunk-33-1.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="1_BasicWaterBalance_files/figure-html/unnamed-chunk-33-1.png" width="480" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb62"><code class="sourceCode r"><div class="sourceLine" id="cb62-1" data-line-number="1">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(S, <span class="dt">type =</span> <span class="st">"Snow"</span>)</div></code></pre>
-<p><img src="SimpleWaterBalance_files/figure-html/unnamed-chunk-33-2.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="1_BasicWaterBalance_files/figure-html/unnamed-chunk-33-2.png" width="480" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb63"><code class="sourceCode r"><div class="sourceLine" id="cb63-1" data-line-number="1">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(S, <span class="dt">type =</span> <span class="st">"Export"</span>)</div></code></pre>
-<p><img src="SimpleWaterBalance_files/figure-html/unnamed-chunk-33-3.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="1_BasicWaterBalance_files/figure-html/unnamed-chunk-33-3.png" width="480" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb64"><code class="sourceCode r"><div class="sourceLine" id="cb64-1" data-line-number="1">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(S, <span class="dt">type =</span> <span class="st">"Evapotranspiration"</span>)</div></code></pre>
-<p><img src="SimpleWaterBalance_files/figure-html/unnamed-chunk-34-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="1_BasicWaterBalance_files/figure-html/unnamed-chunk-34-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>Function <code>plot</code> is also allows displaying soil moisture dynamics by layer, which can be done in four different ways (the first two only imply a change in axis units):</p>
 <pre class="sourceCode r" id="cb65"><code class="sourceCode r"><div class="sourceLine" id="cb65-1" data-line-number="1">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(S, <span class="dt">type=</span><span class="st">"SoilTheta"</span>)</div></code></pre>
-<p><img src="SimpleWaterBalance_files/figure-html/unnamed-chunk-35-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="1_BasicWaterBalance_files/figure-html/unnamed-chunk-35-1.png" width="672" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb66"><code class="sourceCode r"><div class="sourceLine" id="cb66-1" data-line-number="1">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(S, <span class="dt">type=</span><span class="st">"SoilRWC"</span>)</div></code></pre>
-<p><img src="SimpleWaterBalance_files/figure-html/unnamed-chunk-35-2.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="1_BasicWaterBalance_files/figure-html/unnamed-chunk-35-2.png" width="672" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb67"><code class="sourceCode r"><div class="sourceLine" id="cb67-1" data-line-number="1">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(S, <span class="dt">type=</span><span class="st">"SoilPsi"</span>)</div></code></pre>
-<p><img src="SimpleWaterBalance_files/figure-html/unnamed-chunk-35-3.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="1_BasicWaterBalance_files/figure-html/unnamed-chunk-35-3.png" width="672" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb68"><code class="sourceCode r"><div class="sourceLine" id="cb68-1" data-line-number="1">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(S, <span class="dt">type=</span><span class="st">"SoilVol"</span>)</div></code></pre>
-<p><img src="SimpleWaterBalance_files/figure-html/unnamed-chunk-35-4.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="1_BasicWaterBalance_files/figure-html/unnamed-chunk-35-4.png" width="672" style="display: block; margin: auto;"></p>
 <p>Finally, the same function can also be used to draw the dynamics of plant variables by cohorts, such as transpiration, photosynthesis, water potential or drought stress:</p>
 <pre class="sourceCode r" id="cb69"><code class="sourceCode r"><div class="sourceLine" id="cb69-1" data-line-number="1">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(S, <span class="dt">type=</span><span class="st">"PlantTranspiration"</span>)</div></code></pre>
-<p><img src="SimpleWaterBalance_files/figure-html/unnamed-chunk-36-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="1_BasicWaterBalance_files/figure-html/unnamed-chunk-36-1.png" width="672" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb70"><code class="sourceCode r"><div class="sourceLine" id="cb70-1" data-line-number="1">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(S, <span class="dt">type=</span><span class="st">"PlantPhotosynthesis"</span>)</div></code></pre>
-<p><img src="SimpleWaterBalance_files/figure-html/unnamed-chunk-36-2.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="1_BasicWaterBalance_files/figure-html/unnamed-chunk-36-2.png" width="672" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb71"><code class="sourceCode r"><div class="sourceLine" id="cb71-1" data-line-number="1">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(S, <span class="dt">type=</span><span class="st">"PlantPsi"</span>)</div></code></pre>
-<p><img src="SimpleWaterBalance_files/figure-html/unnamed-chunk-36-3.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="1_BasicWaterBalance_files/figure-html/unnamed-chunk-36-3.png" width="672" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb72"><code class="sourceCode r"><div class="sourceLine" id="cb72-1" data-line-number="1">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(S, <span class="dt">type=</span><span class="st">"PlantStress"</span>)</div></code></pre>
-<p><img src="SimpleWaterBalance_files/figure-html/unnamed-chunk-36-4.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="1_BasicWaterBalance_files/figure-html/unnamed-chunk-36-4.png" width="672" style="display: block; margin: auto;"></p>
 </div>
 <div id="general-summaries" class="section level3">
 <h3 class="hasAnchor">
@@ -864,7 +864,7 @@
 <p>As the general summary function, <code><a href="../reference/spwb_stress.html">spwb_stress()</a></code> allows calculating stress indices at several temporal scales. For example the water stress index (integral of water potential values) can be calculated and drawn for every month:</p>
 <pre class="sourceCode r" id="cb85"><code class="sourceCode r"><div class="sourceLine" id="cb85-1" data-line-number="1">
 <span class="kw"><a href="../reference/spwb_stress.html">spwb_stress</a></span>(S, <span class="dt">index =</span> <span class="st">"WSI"</span>, <span class="dt">freq =</span> <span class="st">"months"</span>, <span class="dt">draw=</span><span class="ot">TRUE</span>)</div></code></pre>
-<p><img src="SimpleWaterBalance_files/figure-html/unnamed-chunk-42-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="1_BasicWaterBalance_files/figure-html/unnamed-chunk-42-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>Another specific summary function is <code><a href="../reference/spwb_waterUseEfficiency.html">spwb_waterUseEfficiency()</a></code>. This is most useful with advanced water and energy balance modeling, but for simple water balance it calculates the ratio between photosynthesis and transpiration at the desired scale:</p>
 <pre class="sourceCode r" id="cb86"><code class="sourceCode r"><div class="sourceLine" id="cb86-1" data-line-number="1">
 <span class="kw"><a href="../reference/spwb_waterUseEfficiency.html">spwb_waterUseEfficiency</a></span>(S, <span class="dt">type =</span> <span class="st">"Stand An/E"</span>, <span class="dt">freq =</span> <span class="st">"months"</span>, <span class="dt">draw=</span><span class="ot">FALSE</span>)</div></code></pre>

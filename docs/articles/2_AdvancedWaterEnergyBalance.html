@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.3</span>
       </span>
     </div>
 
@@ -53,16 +53,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/AdvancedWaterEnergyBalance.html">2. Advanced water and energy balance simulation</a>
+      <a href="../articles/0_PackageOverview.html">0. Package overview</a>
     </li>
     <li>
-      <a href="../articles/ForestGrowth.html">3. Forest growth simulation</a>
+      <a href="../articles/1_BasicWaterBalance.html">1. Basic water balance simulation</a>
     </li>
     <li>
-      <a href="../articles/PackageOverview.html">Package overview</a>
+      <a href="../articles/2_AdvancedWaterEnergyBalance.html">2. Advanced water and energy balance simulation</a>
     </li>
     <li>
-      <a href="../articles/SimpleWaterBalance.html">1. Introduction to water balance simulation</a>
+      <a href="../articles/3_ForestGrowth.html">3. Forest growth simulation</a>
     </li>
   </ul>
 </li>
@@ -82,10 +82,10 @@
       <h1>2. Advanced water and energy balance simulation</h1>
                         <h4 class="author">Miquel De Caceres</h4>
             
-            <h4 class="date">2019-05-30</h4>
+            <h4 class="date">2019-05-31</h4>
       
       
-      <div class="hidden name"><code>AdvancedWaterEnergyBalance.Rmd</code></div>
+      <div class="hidden name"><code>2_AdvancedWaterEnergyBalance.Rmd</code></div>
 
     </div>
 
@@ -312,16 +312,16 @@
 <p>Given a <code>spwbInput</code> object, we can use function <code><a href="../reference/hydraulics_conductancefunctions.html">hydraulics_vulnerabilityCurvePlot()</a></code> to inspect <strong>vulnerability curves</strong> (i.e. how hydraulic conductance of a given segment changes with the water potential) for each plant cohort and each of the different segments of the soil-plant hydraulic network: rhizosphere, roots, stems and leaves:</p>
 <pre class="sourceCode r" id="cb28"><code class="sourceCode r"><div class="sourceLine" id="cb28-1" data-line-number="1">
 <span class="kw"><a href="../reference/hydraulics_conductancefunctions.html">hydraulics_vulnerabilityCurvePlot</a></span>(x, <span class="dt">type=</span><span class="st">"leaf"</span>)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-17-1.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-17-1.png" width="480" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb29"><code class="sourceCode r"><div class="sourceLine" id="cb29-1" data-line-number="1">
 <span class="kw"><a href="../reference/hydraulics_conductancefunctions.html">hydraulics_vulnerabilityCurvePlot</a></span>(x, <span class="dt">type=</span><span class="st">"stem"</span>)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-17-2.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-17-2.png" width="480" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb30"><code class="sourceCode r"><div class="sourceLine" id="cb30-1" data-line-number="1">
 <span class="kw"><a href="../reference/hydraulics_conductancefunctions.html">hydraulics_vulnerabilityCurvePlot</a></span>(x, <span class="dt">type=</span><span class="st">"root"</span>)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-17-3.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-17-3.png" width="480" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb31"><code class="sourceCode r"><div class="sourceLine" id="cb31-1" data-line-number="1">
 <span class="kw"><a href="../reference/hydraulics_conductancefunctions.html">hydraulics_vulnerabilityCurvePlot</a></span>(x, examplesoil, <span class="dt">type=</span><span class="st">"rhizo"</span>)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-17-4.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-17-4.png" width="480" style="display: block; margin: auto;"></p>
 <p>The maximum values and shape of vulnerability curves for leaves and stems are regulated by parameters in <code>paramsTransp</code>. Roots have vulnerability curve parameters in the same data frame, but maximum conductance values need to be specified for each soil layer and are given in <code>below$VCroot_kmax</code>. Note that the last call to <code><a href="../reference/hydraulics_conductancefunctions.html">hydraulics_vulnerabilityCurvePlot()</a></code> includes a <code>soil</code> object. This is because the van Genuchten parameters that define the shape of the vulnerability curve for the rhizosphere are stored in this object. Maximum conductance values in the rhizosphere are given in <code>below$VGrhizo_kmax</code>.</p>
 </div>
 <div id="supply-functions" class="section level3">
@@ -330,16 +330,16 @@
 <p>The vulnerability curves conformng the hydraulic network are used in the model to build the <strong>supply function</strong>, which relates water flow (i.e. transpiration) with the drop of water potential along the whole hydraulic pathway. The supply function contains not only these two variables, but also the water potential of intermediate nodes in the the hydraulic network. Function <code><a href="../reference/hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot()</a></code> can be used to inspect any of this variables:</p>
 <pre class="sourceCode r" id="cb32"><code class="sourceCode r"><div class="sourceLine" id="cb32-1" data-line-number="1">
 <span class="kw"><a href="../reference/hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot</a></span>(x, examplesoil, <span class="dt">type=</span><span class="st">"E"</span>)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-18-1.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-18-1.png" width="480" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb33"><code class="sourceCode r"><div class="sourceLine" id="cb33-1" data-line-number="1">
 <span class="kw"><a href="../reference/hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot</a></span>(x, examplesoil, <span class="dt">type=</span><span class="st">"ERhizo"</span>)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-18-2.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-18-2.png" width="480" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb34"><code class="sourceCode r"><div class="sourceLine" id="cb34-1" data-line-number="1">
 <span class="kw"><a href="../reference/hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot</a></span>(x, examplesoil, <span class="dt">type=</span><span class="st">"dEdP"</span>)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-18-3.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-18-3.png" width="480" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb35"><code class="sourceCode r"><div class="sourceLine" id="cb35-1" data-line-number="1">
 <span class="kw"><a href="../reference/hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot</a></span>(x, examplesoil, <span class="dt">type=</span><span class="st">"psiStem"</span>)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-18-4.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-18-4.png" width="480" style="display: block; margin: auto;"></p>
 <p>Calls to <code><a href="../reference/hydraulics_supplyfunctions.html">hydraulics_supplyFunctionPlot()</a></code> always need both a <code>spwbInput</code> object and a <code>soil</code> object. The soil moisture state (i.e. its water potential) is the starting point for the calculation of the supply function, so different curves will be obtained for different values of soil moisture.</p>
 </div>
 <div id="stomatal-regulation-and-photosynthesis" class="section level3">
@@ -351,39 +351,39 @@
 <div class="sourceLine" id="cb36-2" data-line-number="2">
 <span class="kw"><a href="../reference/transpiration.html">transp_stomatalRegulationPlot</a></span>(x, examplesoil, examplemeteo, <span class="dt">day =</span> d, <span class="dt">timestep=</span><span class="dv">12</span>,</div>
 <div class="sourceLine" id="cb36-3" data-line-number="3">                              <span class="dt">latitude =</span> <span class="fl">41.82592</span>, <span class="dt">elevation =</span> <span class="dv">100</span>, <span class="dt">type=</span><span class="st">"E"</span>)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb37"><code class="sourceCode r"><div class="sourceLine" id="cb37-1" data-line-number="1">
 <span class="kw"><a href="../reference/transpiration.html">transp_stomatalRegulationPlot</a></span>(x, examplesoil, examplemeteo, <span class="dt">day =</span> d, <span class="dt">timestep=</span><span class="dv">12</span>,</div>
 <div class="sourceLine" id="cb37-2" data-line-number="2">                              <span class="dt">latitude =</span> <span class="fl">41.82592</span>, <span class="dt">elevation =</span> <span class="dv">100</span>, <span class="dt">type=</span><span class="st">"An"</span>)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-19-2.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-19-2.png" width="672" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb38"><code class="sourceCode r"><div class="sourceLine" id="cb38-1" data-line-number="1">
 <span class="kw"><a href="../reference/transpiration.html">transp_stomatalRegulationPlot</a></span>(x, examplesoil, examplemeteo, <span class="dt">day =</span> d, <span class="dt">timestep=</span><span class="dv">12</span>,</div>
 <div class="sourceLine" id="cb38-2" data-line-number="2">                              <span class="dt">latitude =</span> <span class="fl">41.82592</span>, <span class="dt">elevation =</span> <span class="dv">100</span>, <span class="dt">type=</span><span class="st">"Gw"</span>)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-19-3.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-19-3.png" width="672" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb39"><code class="sourceCode r"><div class="sourceLine" id="cb39-1" data-line-number="1">
 <span class="kw"><a href="../reference/transpiration.html">transp_stomatalRegulationPlot</a></span>(x, examplesoil, examplemeteo, <span class="dt">day =</span> d, <span class="dt">timestep=</span><span class="dv">12</span>,</div>
 <div class="sourceLine" id="cb39-2" data-line-number="2">                              <span class="dt">latitude =</span> <span class="fl">41.82592</span>, <span class="dt">elevation =</span> <span class="dv">100</span>, <span class="dt">type=</span><span class="st">"T"</span>)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-19-4.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-19-4.png" width="672" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb40"><code class="sourceCode r"><div class="sourceLine" id="cb40-1" data-line-number="1">
 <span class="kw"><a href="../reference/transpiration.html">transp_stomatalRegulationPlot</a></span>(x, examplesoil, examplemeteo, <span class="dt">day =</span> d, <span class="dt">timestep=</span><span class="dv">12</span>,</div>
 <div class="sourceLine" id="cb40-2" data-line-number="2">                              <span class="dt">latitude =</span> <span class="fl">41.82592</span>, <span class="dt">elevation =</span> <span class="dv">100</span>, <span class="dt">type=</span><span class="st">"VPD"</span>)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-19-5.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-19-5.png" width="672" style="display: block; margin: auto;"></p>
 </div>
 <div id="pressure-volume-curves" class="section level3">
 <h3 class="hasAnchor">
 <a href="#pressure-volume-curves" class="anchor"></a>Pressure volume curves</h3>
 <pre class="sourceCode r" id="cb41"><code class="sourceCode r"><div class="sourceLine" id="cb41-1" data-line-number="1">
 <span class="kw"><a href="../reference/moisture.html">moisture_pressureVolumeCurvePlot</a></span>(x, <span class="dt">segment=</span><span class="st">"leaf"</span>, <span class="dt">fraction=</span><span class="st">"symplastic"</span>)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-20-1.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-20-1.png" width="480" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb42"><code class="sourceCode r"><div class="sourceLine" id="cb42-1" data-line-number="1">
 <span class="kw"><a href="../reference/moisture.html">moisture_pressureVolumeCurvePlot</a></span>(x, <span class="dt">segment=</span><span class="st">"leaf"</span>, <span class="dt">fraction=</span><span class="st">"apoplastic"</span>)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-20-2.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-20-2.png" width="480" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb43"><code class="sourceCode r"><div class="sourceLine" id="cb43-1" data-line-number="1">
 <span class="kw"><a href="../reference/moisture.html">moisture_pressureVolumeCurvePlot</a></span>(x, <span class="dt">segment=</span><span class="st">"stem"</span>, <span class="dt">fraction=</span><span class="st">"symplastic"</span>)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-20-3.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-20-3.png" width="480" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb44"><code class="sourceCode r"><div class="sourceLine" id="cb44-1" data-line-number="1">
 <span class="kw"><a href="../reference/moisture.html">moisture_pressureVolumeCurvePlot</a></span>(x, <span class="dt">segment=</span><span class="st">"stem"</span>, <span class="dt">fraction=</span><span class="st">"apoplastic"</span>)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-20-4.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-20-4.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 </div>
 <div id="water-balance-for-a-single-day" class="section level2">
@@ -443,13 +443,13 @@
 <p>Package <code>medfate</code> provides a <code>plot</code> function for objects of class <code>spwb_day</code> that can be used to inspect the results of the simulation. We use this function to display subdaily dynamics in plant, soil and canopy variables. For example, we can use it to display temperature variations (only the temperature of the topmost soil layer is drawn):</p>
 <pre class="sourceCode r" id="cb54"><code class="sourceCode r"><div class="sourceLine" id="cb54-1" data-line-number="1">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(sd1, <span class="dt">type =</span> <span class="st">"Temperature"</span>)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-26-1.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-26-1.png" width="480" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb55"><code class="sourceCode r"><div class="sourceLine" id="cb55-1" data-line-number="1">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(sd1, <span class="dt">type =</span> <span class="st">"CanopyEnergyBalance"</span>)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-26-2.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-26-2.png" width="480" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb56"><code class="sourceCode r"><div class="sourceLine" id="cb56-1" data-line-number="1">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(sd1, <span class="dt">type =</span> <span class="st">"SoilEnergyBalance"</span>)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-26-3.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-26-3.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div id="plant-output" class="section level3">
 <h3 class="hasAnchor">
@@ -475,16 +475,16 @@
 <p>While <code>Plants</code> contains one value per cohort and variable that summarizes the whole simulated day, information by disaggregated by time step can be accessed in <code>PlantsInst</code>. Moreover, we can use function <code><a href="../reference/plot.spwb_day.html">plot.spwb_day()</a></code> to draw plots of sub-daily variation per species of plant transpiration per ground area (L·m<span class="math inline">\(^{-2}\)</span>), transpiration per leaf area (also in L·m<span class="math inline">\(^{-2}\)</span>), plant net photosynthesis (in g C·m<span class="math inline">\(^{-2}\)</span>), and plant water potential (in MPa):</p>
 <pre class="sourceCode r" id="cb59"><code class="sourceCode r"><div class="sourceLine" id="cb59-1" data-line-number="1">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(sd1, <span class="dt">type =</span> <span class="st">"PlantTranspiration"</span>, <span class="dt">bySpecies =</span> T)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-28-1.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-28-1.png" width="480" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb60"><code class="sourceCode r"><div class="sourceLine" id="cb60-1" data-line-number="1">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(sd1, <span class="dt">type =</span> <span class="st">"PlantTranspirationPerLeaf"</span>, <span class="dt">bySpecies =</span> T)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-28-2.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-28-2.png" width="480" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb61"><code class="sourceCode r"><div class="sourceLine" id="cb61-1" data-line-number="1">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(sd1, <span class="dt">type =</span> <span class="st">"PlantPhotosynthesis"</span>, <span class="dt">bySpecies =</span> T)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-28-3.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-28-3.png" width="480" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb62"><code class="sourceCode r"><div class="sourceLine" id="cb62-1" data-line-number="1">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(sd1, <span class="dt">type =</span> <span class="st">"LeafPsiAverage"</span>, <span class="dt">bySpecies =</span> T)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-28-4.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-28-4.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div id="output-for-sunlit-and-shade-leaves" class="section level3">
 <h3 class="hasAnchor">
@@ -503,29 +503,29 @@
 <p>Instantaneous values are also stored for sunlit and shade leaves. We can also use the <code>plot</code> function for objects of class <code>spwb_day</code> to draw instantaneous variations in temperature for sunlit and shade leaves:</p>
 <pre class="sourceCode r" id="cb67"><code class="sourceCode r"><div class="sourceLine" id="cb67-1" data-line-number="1">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(sd1, <span class="dt">type =</span> <span class="st">"LeafTemperature"</span>, <span class="dt">bySpecies=</span><span class="ot">TRUE</span>)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-30-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-30-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>Note that sunlit leaves of some species reach temperatures higher than the canopy. We can also plot variations in instantaneous net photosynthesis rates:</p>
 <pre class="sourceCode r" id="cb68"><code class="sourceCode r"><div class="sourceLine" id="cb68-1" data-line-number="1">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(sd1, <span class="dt">type =</span> <span class="st">"LeafPhotosynthesis"</span>, <span class="dt">bySpecies=</span><span class="ot">TRUE</span>)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-31-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-31-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>Or variations in stomatal conductance:</p>
 <pre class="sourceCode r" id="cb69"><code class="sourceCode r"><div class="sourceLine" id="cb69-1" data-line-number="1">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(sd1, <span class="dt">type =</span> <span class="st">"LeafStomatalConductance"</span>, <span class="dt">bySpecies=</span><span class="ot">TRUE</span>)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-32-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-32-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>Or variations in vapour pressure deficit:</p>
 <pre class="sourceCode r" id="cb70"><code class="sourceCode r"><div class="sourceLine" id="cb70-1" data-line-number="1">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(sd1, <span class="dt">type =</span> <span class="st">"LeafVPD"</span>, <span class="dt">bySpecies=</span><span class="ot">TRUE</span>)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-33-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-33-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>Or variations in leaf water potential:</p>
 <pre class="sourceCode r" id="cb71"><code class="sourceCode r"><div class="sourceLine" id="cb71-1" data-line-number="1">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(sd1, <span class="dt">type =</span> <span class="st">"LeafPsi"</span>, <span class="dt">bySpecies=</span><span class="ot">TRUE</span>)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-34-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-34-1.png" width="672" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb72"><code class="sourceCode r"><div class="sourceLine" id="cb72-1" data-line-number="1">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(sd1, <span class="dt">type =</span> <span class="st">"LeafCi"</span>, <span class="dt">bySpecies=</span><span class="ot">TRUE</span>)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-35-1.png" width="720" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-35-1.png" width="720" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb73"><code class="sourceCode r"><div class="sourceLine" id="cb73-1" data-line-number="1">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(sd1, <span class="dt">type =</span> <span class="st">"LeafIntrinsicWUE"</span>, <span class="dt">bySpecies=</span><span class="ot">TRUE</span>)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-36-1.png" width="720" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-36-1.png" width="720" style="display: block; margin: auto;"></p>
 </div>
 </div>
 <div id="water-balance-for-multiple-days" class="section level2">
@@ -646,16 +646,16 @@
 <p>Package <code>medfate</code> also provides a <code>plot</code> function for objects of class <code>spwb</code>. It can be used to show the meteorological input. Additionally, it can also be used to draw soil and plant variables. In the code below we draw water fluxes, soil water potentials, plant transpiration and plant (mid-day) water potential:</p>
 <pre class="sourceCode r" id="cb96"><code class="sourceCode r"><div class="sourceLine" id="cb96-1" data-line-number="1">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(S, <span class="dt">type=</span><span class="st">"Evapotranspiration"</span>)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-46-1.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-46-1.png" width="672" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb97"><code class="sourceCode r"><div class="sourceLine" id="cb97-1" data-line-number="1">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(S, <span class="dt">type=</span><span class="st">"SoilPsi"</span>, <span class="dt">bySpecies =</span> <span class="ot">TRUE</span>)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-46-2.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-46-2.png" width="672" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb98"><code class="sourceCode r"><div class="sourceLine" id="cb98-1" data-line-number="1">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(S, <span class="dt">type=</span><span class="st">"PlantTranspiration"</span>, <span class="dt">bySpecies =</span> <span class="ot">TRUE</span>)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-46-3.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-46-3.png" width="672" style="display: block; margin: auto;"></p>
 <pre class="sourceCode r" id="cb99"><code class="sourceCode r"><div class="sourceLine" id="cb99-1" data-line-number="1">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(S, <span class="dt">type=</span><span class="st">"LeafPsiMin"</span>, <span class="dt">bySpecies =</span> <span class="ot">TRUE</span>)</div></code></pre>
-<p><img src="AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-46-4.png" width="672" style="display: block; margin: auto;"></p>
+<p><img src="2_AdvancedWaterEnergyBalance_files/figure-html/unnamed-chunk-46-4.png" width="672" style="display: block; margin: auto;"></p>
 <p>While the simulation model uses daily steps, users may be interested in outputs at larger time scales. The package provides a <code>summary</code> for objects of class <code>spwb</code>. This function can be used to summarize the model’s output at different temporal steps (i.e. weekly, annual, …). For example, to obtain the average soil moisture and water potentials by months one can use:</p>
 <pre class="sourceCode r" id="cb100"><code class="sourceCode r"><div class="sourceLine" id="cb100-1" data-line-number="1">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/summary">summary</a></span>(S, <span class="dt">freq=</span><span class="st">"months"</span>,<span class="dt">FUN=</span>mean, <span class="dt">output=</span><span class="st">"Soil"</span>)</div></code></pre>

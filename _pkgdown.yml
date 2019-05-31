@@ -8,12 +8,12 @@ home:
 articles:
 - title: Overview
   contents:
-    - starts_with("Package")
+    - starts_with("0_Package")
 - title: Simulation models
   contents:
-    - starts_with("Simple")
-    - starts_with("Advanced")
-    - starts_with("Forest")
+    - starts_with("1_Basic")
+    - starts_with("2_Advanced")
+    - starts_with("3_Forest")
 
 reference:
 - title: Forest
