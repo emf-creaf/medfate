@@ -1,0 +1,89 @@
+home:
+  links:
+  - text: Package website
+    href: http://vegmod.ctfc.cat/medfateweb
+  - text: Package reference book
+    href: https://miquelcaceres.github.io/medfate/medfatebook/
+    
+articles:
+- title: Overview
+  contents:
+    - starts_with("Package")
+- title: Simulation models
+  contents:
+    - starts_with("Simple")
+    - starts_with("Advanced")
+    - starts_with("Forest")
+
+reference:
+- title: Forest
+  desc:  Forest definition and properties.
+  contents:
+  - exampleforest
+  - SpParamsMED
+  - modifySpParams
+  - extractSFIforest
+  - starts_with("forest")
+  - starts_with("plant_")
+  - starts_with("root_")
+  - starts_with("species_")
+  - starts_with("vprofile_")
+
+- title: Meteorology
+  desc:  Forest meteorology and biophysics.
+  contents:
+  - examplemeteo
+  - starts_with("biophysics")
+
+- title: Soil
+  desc:  Soil-related functions.
+  contents:
+  - starts_with("defaultSoil")
+  - soil
+  - soilgridsParams
+  - starts_with("soil_")
+
+- title: Simulation
+  desc:  Simulation model functions.
+  contents:
+  - starts_with("defaultControl")
+  - starts_with("spwb_")
+  - starts_with("pwb")
+  - starts_with("growth")
+  - starts_with("plot.spwb")
+  - starts_with("plot.growth")
+
+- title: Phenology
+  desc:  Leaf phenology processes.
+  contents:
+  - starts_with("pheno_")
+
+
+- title: Hydraulics
+  desc:  Plant hydraulic processes.
+  contents:
+  - starts_with("hydraulics_")
+
+- title: Hydrology
+  desc:  Forest hydrology processes.
+  contents:
+  - starts_with("hydrology_")
+
+- title: Light and photosynthesis
+  desc:  Light extinction and photosynthesis processes.
+  contents:
+  - starts_with("light_")
+  - starts_with("photo_")
+
+- title: Plant transpiration
+  desc:  Plant transpiration processes.
+  contents:
+  - starts_with("transp_")
+
+- title: Fire hazard
+  desc:  Fuel characteristics and fire hazard.
+  contents:
+  - starts_with("fire_")
+  - starts_with("moisture_")
+  - starts_with("fuel_")
+  - SFM_metric
