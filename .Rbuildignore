@@ -6,3 +6,4 @@
 ^modeltests/*$
 ^medfatebook/*$
 ^docs/*$
+^_pkgdown.yml$
