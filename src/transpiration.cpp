@@ -1182,6 +1182,7 @@ List transpirationGranier(List x, List soil, double tday, double pet, bool modif
     }
   }
   DataFrame Plants = DataFrame::create(_["LAI"] = LAIcohort,
+                                       _["AbsorbedSWRFraction"] = CohASWRF, 
                                        _["Transpiration"] = Eplant, 
                                        _["Photosynthesis"] = Anplant,
                                        _["psi"] = PlantPsi, _["DDS"] = DDS);

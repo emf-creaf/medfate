@@ -5,6 +5,8 @@
 __Version history__
 _Version 0.8.3, June 2019.
 1. Reference book (medfatebook) launched
+2. Fraction of absorbed SWR output in Granier's transpiration
+3. 'Stand' data frame output in spwb(), separated from 'WaterBalance'
 
 _Version 0.8.2, May 2019.
 1. Modification of meteoland to better calculate direct/diffuse light on slopes
