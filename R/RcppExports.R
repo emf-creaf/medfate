@@ -501,7 +501,7 @@ hydrology_verticalInputs <- function(soil, soilFunctions, prec, er, tday, rad, e
     .Call(`_medfate_swrExtinctionProfile`, z, x, SpParams, gdd)
 }
 
-.cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
+light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
     .Call(`_medfate_cohortAbsorbedSWRFraction`, z, x, SpParams, gdd)
 }
 

@@ -142,9 +142,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="3.6" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#model-output"><i class="fa fa-check"></i><b>3.6</b> Model output</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="leafphenologylight.html"><a href="leafphenologylight.html"><i class="fa fa-check"></i><b>4</b> Leaf phenology and light extinction</a><ul>
-<li class="chapter" data-level="4.1" data-path="leafphenologylight.html"><a href="leafphenologylight.html#leaf-phenology-and-leaf-fall"><i class="fa fa-check"></i><b>4.1</b> Leaf phenology and leaf fall</a></li>
-<li class="chapter" data-level="4.2" data-path="leafphenologylight.html"><a href="leafphenologylight.html#leaf-vertical-distribution"><i class="fa fa-check"></i><b>4.2</b> Leaf vertical distribution</a></li>
-<li class="chapter" data-level="4.3" data-path="leafphenologylight.html"><a href="leafphenologylight.html#light-extinction"><i class="fa fa-check"></i><b>4.3</b> Light extinction</a></li>
+<li class="chapter" data-level="4.1" data-path="leafphenologylight.html"><a href="leafphenologylight.html#leafphenology"><i class="fa fa-check"></i><b>4.1</b> Leaf phenology and leaf fall</a></li>
+<li class="chapter" data-level="4.2" data-path="leafphenologylight.html"><a href="leafphenologylight.html#leafdistribution"><i class="fa fa-check"></i><b>4.2</b> Leaf vertical distribution</a></li>
+<li class="chapter" data-level="4.3" data-path="leafphenologylight.html"><a href="leafphenologylight.html#basiclightextinction"><i class="fa fa-check"></i><b>4.3</b> Light extinction</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="hydrology.html"><a href="hydrology.html"><i class="fa fa-check"></i><b>5</b> Hydrology</a><ul>
 <li class="chapter" data-level="5.1" data-path="hydrology.html"><a href="hydrology.html#snowpack"><i class="fa fa-check"></i><b>5.1</b> Snow pack dynamics</a></li>
@@ -328,9 +328,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="B.2" data-path="symbols.html"><a href="symbols.html#vegetation"><i class="fa fa-check"></i><b>B.2</b> Vegetation</a></li>
 <li class="chapter" data-level="B.3" data-path="symbols.html"><a href="symbols.html#meteorology"><i class="fa fa-check"></i><b>B.3</b> Meteorology</a></li>
 <li class="chapter" data-level="B.4" data-path="symbols.html"><a href="symbols.html#anatomy"><i class="fa fa-check"></i><b>B.4</b> Anatomy</a></li>
-<li class="chapter" data-level="B.5" data-path="symbols.html"><a href="symbols.html#plant-hydraulics-2"><i class="fa fa-check"></i><b>B.5</b> Plant hydraulics</a></li>
-<li class="chapter" data-level="B.6" data-path="symbols.html"><a href="symbols.html#plant-water-compartments"><i class="fa fa-check"></i><b>B.6</b> Plant water compartments</a></li>
-<li class="chapter" data-level="B.7" data-path="symbols.html"><a href="symbols.html#stomatal-regulation-and-photosynthesis-1"><i class="fa fa-check"></i><b>B.7</b> Stomatal regulation and photosynthesis</a></li>
+<li class="chapter" data-level="B.5" data-path="symbols.html"><a href="symbols.html#light-extinction"><i class="fa fa-check"></i><b>B.5</b> Light extinction</a></li>
+<li class="chapter" data-level="B.6" data-path="symbols.html"><a href="symbols.html#plant-hydraulics-2"><i class="fa fa-check"></i><b>B.6</b> Plant hydraulics</a></li>
+<li class="chapter" data-level="B.7" data-path="symbols.html"><a href="symbols.html#plant-water-compartments"><i class="fa fa-check"></i><b>B.7</b> Plant water compartments</a></li>
+<li class="chapter" data-level="B.8" data-path="symbols.html"><a href="symbols.html#stomatal-regulation-and-photosynthesis-1"><i class="fa fa-check"></i><b>B.8</b> Stomatal regulation and photosynthesis</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="bibliography.html"><a href="bibliography.html"><i class="fa fa-check"></i>Bibliography</a></li>
 <li class="divider"></li>
@@ -582,72 +583,78 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <td>Foliar biomass of cohort <span class="math inline">\(i\)</span></td>
 </tr>
 <tr class="odd">
+<td><span class="math inline">\(\phi_i\)</span></td>
+<td>[0-1]</td>
+<td></td>
+<td>Fraction of maximum leaf area currently expanded for cohort <span class="math inline">\(i\)</span></td>
+</tr>
+<tr class="even">
 <td><span class="math inline">\(LAI^{live}_i\)</span></td>
 <td><span class="math inline">\(m^2 \cdot m^{-2}\)</span></td>
 <td><code>LAI_live</code></td>
 <td>(Maximum) leaf area index (one-side leaf area per surface area of the stand) of cohort <span class="math inline">\(i\)</span></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><span class="math inline">\(LAI^{dead}_i\)</span></td>
 <td><span class="math inline">\(m^2 \cdot m^{-2}\)</span></td>
 <td><code>LAI_dead</code></td>
 <td>Dead leaf area index (one-side dead leaf area per surface area of the stand) of cohort <span class="math inline">\(i\)</span></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><span class="math inline">\(LAI^{\phi}_i\)</span></td>
 <td><span class="math inline">\(m^2 \cdot m^{-2}\)</span></td>
 <td><code>LAI_expanded</code></td>
 <td>Current expanded leaf area index (one-side expanded leaf area per surface area of the stand) of cohort <span class="math inline">\(i\)</span></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><span class="math inline">\(LAI^{all}_{i}\)</span></td>
 <td><span class="math inline">\(m^2 \cdot m^{-2}\)</span></td>
 <td></td>
 <td>Total leaf area index (live or dead) of cohort <span class="math inline">\(i\)</span></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><span class="math inline">\(LAI^{live}_{stand}\)</span></td>
 <td><span class="math inline">\(m^2 \cdot m^{-2}\)</span></td>
 <td></td>
 <td>Maximum leaf area index of living leaves of the stand</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><span class="math inline">\(LAI^{dead}_{stand}\)</span></td>
 <td><span class="math inline">\(m^2 \cdot m^{-2}\)</span></td>
 <td></td>
 <td>Leaf area index of dead leaves of the stand</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><span class="math inline">\(LAI^{\phi}_{stand}\)</span></td>
 <td><span class="math inline">\(m^2 \cdot m^{-2}\)</span></td>
 <td></td>
 <td>Current expanded leaf area index of live leaves of the stand</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><span class="math inline">\(LAI_{stand}\)</span></td>
 <td><span class="math inline">\(m^2 \cdot m^{-2}\)</span></td>
 <td></td>
 <td>Total leaf area index (live or dead) of the stand</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><span class="math inline">\(LA_{i}\)</span></td>
 <td><span class="math inline">\(m^{2}\)</span></td>
 <td></td>
 <td>Leaf area of an individual of cohort <span class="math inline">\(i\)</span></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><span class="math inline">\(v_{i,s}\)</span></td>
 <td>[0-1]</td>
 <td><code>V[i,s]</code></td>
 <td>The proportion of fine roots of cohort <span class="math inline">\(i\)</span> in soil layer <span class="math inline">\(s\)</span></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><span class="math inline">\(Z_{50,i}\)</span></td>
 <td>mm</td>
 <td><code>Z50</code></td>
 <td>Depth above which 50% of the fine root mass of cohort <span class="math inline">\(i\)</span> is located</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><span class="math inline">\(Z_{95,i}\)</span></td>
 <td>mm</td>
 <td><code>Z95</code></td>
@@ -800,8 +807,47 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </tbody>
 </table>
 </div>
+<div id="light-extinction" class="section level2">
+<h2><span class="header-section-number">B.5</span> Light extinction</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Symbol</th>
+<th>Units</th>
+<th>R param</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(k_{PAR,i}\)</span></td>
+<td></td>
+<td><code>k</code></td>
+<td>PAR extinction coefficient for cohort <span class="math inline">\(i\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(k_{SWR,i}\)</span></td>
+<td></td>
+<td></td>
+<td>SWR extinction coefficient for cohort <span class="math inline">\(i\)</span></td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(L^{PAR}_{ground}\)</span></td>
+<td>[0-1]</td>
+<td><code>LgroundPAR</code></td>
+<td>Fraction of PAR reaching the ground</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(L^{SWR}_{ground}\)</span></td>
+<td>[0-1]</td>
+<td><code>LgroundSWR</code></td>
+<td>Fraction of SWR reaching the ground</td>
+</tr>
+</tbody>
+</table>
+</div>
 <div id="plant-hydraulics-2" class="section level2">
-<h2><span class="header-section-number">B.5</span> Plant hydraulics</h2>
+<h2><span class="header-section-number">B.6</span> Plant hydraulics</h2>
 <table style="width:89%;">
 <colgroup>
 <col width="12%" />
@@ -942,7 +988,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </table>
 </div>
 <div id="plant-water-compartments" class="section level2">
-<h2><span class="header-section-number">B.6</span> Plant water compartments</h2>
+<h2><span class="header-section-number">B.7</span> Plant water compartments</h2>
 <table style="width:89%;">
 <colgroup>
 <col width="12%" />
@@ -1023,7 +1069,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </table>
 </div>
 <div id="stomatal-regulation-and-photosynthesis-1" class="section level2">
-<h2><span class="header-section-number">B.7</span> Stomatal regulation and photosynthesis</h2>
+<h2><span class="header-section-number">B.8</span> Stomatal regulation and photosynthesis</h2>
 <table style="width:89%;">
 <colgroup>
 <col width="12%" />

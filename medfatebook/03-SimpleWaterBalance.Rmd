@@ -38,7 +38,7 @@ where $Ps$ is precipitation as snowfall and $Sm$ is snow melt.
 
 Every day, water balance is simuilated in the following several steps:
 
-+ Update leaf area values according to the phenology of species and recalculate light extinction (chapter \@ref(leafphenologylight)).
++ Update leaf area values according to the phenology of species and recalculate light extinction (sections \@ref(leafphenology) and \@ref(basiclightextinction)).
 + If snow dynamics are included, increase snow pack from snow precipitation ($Ps$) and decreases it from snow melting ($Sm$) (section \@ref(snowpack)).
 + Increase soil moisture due to rainfall ($Pr$), surface runon ($Ro$) and snow melting ($Sm$), after accounting for interception loss ($In$), surface runoff ($Ru$) and deep drainage ($Dd$)  (sections \@ref(interception) and \@ref(runoff))
 + Decrease water content due to bare soil evaporation ($Es$) (section \@ref(soilevaporation)).

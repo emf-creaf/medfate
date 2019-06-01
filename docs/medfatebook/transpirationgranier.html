@@ -142,9 +142,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="3.6" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#model-output"><i class="fa fa-check"></i><b>3.6</b> Model output</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="leafphenologylight.html"><a href="leafphenologylight.html"><i class="fa fa-check"></i><b>4</b> Leaf phenology and light extinction</a><ul>
-<li class="chapter" data-level="4.1" data-path="leafphenologylight.html"><a href="leafphenologylight.html#leaf-phenology-and-leaf-fall"><i class="fa fa-check"></i><b>4.1</b> Leaf phenology and leaf fall</a></li>
-<li class="chapter" data-level="4.2" data-path="leafphenologylight.html"><a href="leafphenologylight.html#leaf-vertical-distribution"><i class="fa fa-check"></i><b>4.2</b> Leaf vertical distribution</a></li>
-<li class="chapter" data-level="4.3" data-path="leafphenologylight.html"><a href="leafphenologylight.html#light-extinction"><i class="fa fa-check"></i><b>4.3</b> Light extinction</a></li>
+<li class="chapter" data-level="4.1" data-path="leafphenologylight.html"><a href="leafphenologylight.html#leafphenology"><i class="fa fa-check"></i><b>4.1</b> Leaf phenology and leaf fall</a></li>
+<li class="chapter" data-level="4.2" data-path="leafphenologylight.html"><a href="leafphenologylight.html#leafdistribution"><i class="fa fa-check"></i><b>4.2</b> Leaf vertical distribution</a></li>
+<li class="chapter" data-level="4.3" data-path="leafphenologylight.html"><a href="leafphenologylight.html#basiclightextinction"><i class="fa fa-check"></i><b>4.3</b> Light extinction</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="hydrology.html"><a href="hydrology.html"><i class="fa fa-check"></i><b>5</b> Hydrology</a><ul>
 <li class="chapter" data-level="5.1" data-path="hydrology.html"><a href="hydrology.html#snowpack"><i class="fa fa-check"></i><b>5.1</b> Snow pack dynamics</a></li>
@@ -328,9 +328,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="B.2" data-path="symbols.html"><a href="symbols.html#vegetation"><i class="fa fa-check"></i><b>B.2</b> Vegetation</a></li>
 <li class="chapter" data-level="B.3" data-path="symbols.html"><a href="symbols.html#meteorology"><i class="fa fa-check"></i><b>B.3</b> Meteorology</a></li>
 <li class="chapter" data-level="B.4" data-path="symbols.html"><a href="symbols.html#anatomy"><i class="fa fa-check"></i><b>B.4</b> Anatomy</a></li>
-<li class="chapter" data-level="B.5" data-path="symbols.html"><a href="symbols.html#plant-hydraulics-2"><i class="fa fa-check"></i><b>B.5</b> Plant hydraulics</a></li>
-<li class="chapter" data-level="B.6" data-path="symbols.html"><a href="symbols.html#plant-water-compartments"><i class="fa fa-check"></i><b>B.6</b> Plant water compartments</a></li>
-<li class="chapter" data-level="B.7" data-path="symbols.html"><a href="symbols.html#stomatal-regulation-and-photosynthesis-1"><i class="fa fa-check"></i><b>B.7</b> Stomatal regulation and photosynthesis</a></li>
+<li class="chapter" data-level="B.5" data-path="symbols.html"><a href="symbols.html#light-extinction"><i class="fa fa-check"></i><b>B.5</b> Light extinction</a></li>
+<li class="chapter" data-level="B.6" data-path="symbols.html"><a href="symbols.html#plant-hydraulics-2"><i class="fa fa-check"></i><b>B.6</b> Plant hydraulics</a></li>
+<li class="chapter" data-level="B.7" data-path="symbols.html"><a href="symbols.html#plant-water-compartments"><i class="fa fa-check"></i><b>B.7</b> Plant water compartments</a></li>
+<li class="chapter" data-level="B.8" data-path="symbols.html"><a href="symbols.html#stomatal-regulation-and-photosynthesis-1"><i class="fa fa-check"></i><b>B.8</b> Stomatal regulation and photosynthesis</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="bibliography.html"><a href="bibliography.html"><i class="fa fa-check"></i>Bibliography</a></li>
 <li class="divider"></li>
@@ -362,8 +363,8 @@ In this model daily potential evapotranspiration (<span class="math inline">\(PE
 \frac{Tr_{\max}}{PET}= -0.006\,LAI_{stand}^2+0.134\,LAI_{stand}+0.036
 \end{equation}\]</span>
 This equation has already been adopted for Mediterranean biomes (Fyllas and Troumbis, 2009; Ruffault et al., 2013).
-<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-9"></span>
-<img src="medfatebook_files/figure-html/unnamed-chunk-9-1.png" alt="Empirical relationship between $Tr_max/PET$ and $LAI_{stand}$" width="384" />
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-10"></span>
+<img src="medfatebook_files/figure-html/unnamed-chunk-10-1.png" alt="Empirical relationship between $Tr_max/PET$ and $LAI_{stand}$" width="384" />
 <p class="caption">
 Figure 6.1: Empirical relationship between <span class="math inline">\(Tr_max/PET\)</span> and <span class="math inline">\(LAI_{stand}\)</span>
 </p>
@@ -380,8 +381,8 @@ Actual plant transpiration depends on soil moisture and is calculated for each p
 K_{i,s}=K_{i}(\Psi_s) = \exp \left \{\ln{(0.5)}\cdot \left[ \frac{\Psi_s}{\Psi_{extract,i}} \right] ^r \right \} 
 \end{equation}\]</span>
 where <span class="math inline">\(r\)</span> is an exponent that modulates the steepness of the decrease in relative conductance when soil potential becomes negative (by default, <span class="math inline">\(r = 3\)</span>) and <span class="math inline">\(\ln(0.5)\)</span> is used to ensure that <span class="math inline">\(K_{i}(\Psi_{extract,i}) = 0.5\)</span> (Fig. 4).
-<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-10"></span>
-<img src="medfatebook_files/figure-html/unnamed-chunk-10-1.png" alt="Whole-plant relative water conductance functions for different water potential values ($r = 3$ in all cases)." width="336" />
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-11"></span>
+<img src="medfatebook_files/figure-html/unnamed-chunk-11-1.png" alt="Whole-plant relative water conductance functions for different water potential values ($r = 3$ in all cases)." width="336" />
 <p class="caption">
 Figure 6.2: Whole-plant relative water conductance functions for different water potential values (<span class="math inline">\(r = 3\)</span> in all cases).
 </p>

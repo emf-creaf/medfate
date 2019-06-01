@@ -166,7 +166,7 @@ NumericVector cohortAbsorbedSWRFraction(NumericVector LAI_expanded, NumericVecto
   return(cohortAbsorbedSWRFraction(LAIme, LAImd, kSWR));
 }
 
-// [[Rcpp::export(".cohortAbsorbedSWRFraction")]]
+// [[Rcpp::export("light_cohortAbsorbedSWRFraction")]]
 NumericVector cohortAbsorbedSWRFraction(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL) {
   NumericMatrix LAIme =  LAIdistribution(z, x, SpParams, gdd);
   NumericMatrix LAImd(LAIme.nrow(), LAIme.ncol());
@@ -176,7 +176,9 @@ NumericVector cohortAbsorbedSWRFraction(NumericVector z, List x, DataFrame SpPar
   NumericVector k = cohortNumericParameter(x, SpParams, "k");
   NumericVector kSWR(k.size());
   for(int i=0;i<k.size();i++) kSWR[i] = k[i]/1.35;
-  return(cohortAbsorbedSWRFraction(LAIme, LAImd, kSWR));
+  NumericVector caswrf = cohortAbsorbedSWRFraction(LAIme, LAImd, kSWR);
+  caswrf.attr("names") = cohortIDs(x);
+  return(caswrf);
 }
 
 // [[Rcpp::export("light_layerIrradianceFraction")]]

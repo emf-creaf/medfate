@@ -1,7 +1,7 @@
 # Leaf phenology and light extinction {#leafphenologylight}
 
 
-## Leaf phenology and leaf fall 
+## Leaf phenology and leaf fall {#leafphenology}
 
 Given a base temperature ($T_{base} = 5^{\circ} \mathrm{C}$), the growth degree days ($GDD$) are zero for all those days where mean temperature $T_{mean}$ is below $T_{base}$ and start increasing when temperatures become warmer than this threshold. In other words, the $GDD$ function accumulates $\max(0.0, T_{mean} - T_{base})$ for all days previous to the current one. At the end of a year the cummulative value is set again to zero. Plant species can have either *evergreen* or *winter-deciduous* phenology. Evergreen plants maintain constant leaf area over the year, whereas in deciduous plants leaf-phenological status is updated daily, represented by $\phi_i$, the fraction of maximum leaf area. Leaf area index ($LAI$) values of deciduous plants are adjusted for leaf phenology following [@Prentice1993; @Sitch2003]:
 
@@ -31,9 +31,9 @@ LAI^{all}_{stand} &=& \sum_{i=1}^c{LAI_{i}^{all}} = LAI^{\phi}_{stand}+LAI^{dead
 
 Although simulations will normally start in winter and $GDD$ will be zero at the beginning, the user can specify a starting non-zero value for $GDD$ in the object created by function \texttt{spwbInput()}.
 
-## Leaf vertical distribution
+## Leaf vertical distribution {#leafdistribution}
 
-Crown base height ($H_{b,i}$; in cm) is defined as the height corresponding to the first living branch. It is calculated from the crown ratio ($CR$; a proportion between 0 and 1), i.e. the ratio between crown length and total height:
+Crown base height ($H_{b,i}$; in $cm$) of cohort $i$ is defined as the height corresponding to the first living branch. It is calculated from the crown ratio of the cohort ($CR_i$; a proportion between 0 and 1), i.e. the ratio between crown length and total height:
 \begin{equation}
 H_{b,i} = H_{i} \cdot (1 - CR_i)
 (\#eq:CrownHeight)
@@ -41,70 +41,62 @@ H_{b,i} = H_{i} \cdot (1 - CR_i)
 
 Leaf area of any plant cohort is assumed to be distributed vertically following a **truncated Gaussian function** whose standardized values -1.5 and 1.5 correspond to crown base height ($CR_i$) and total plant height ($H_i$), respectively. The model divides the vertical dimension into vertical layers (by default, each layer is 50 cm in width). Let us define $LAI_{i,j}^{all} = LAI_{i,j}^{\phi}+LAI_{i,j}^{dead}$ as the leaf area index of cohort $i$ in layer $j$. The truncated Gaussian distribution defines the $LAI_{i,j}^{\phi}$ and $LAI_{i,j}^{dead}$ for all plant cohorts and vertical layers.
 
-Dividing the leaf area of a given layer by its width, one obtains the *leaf area density* ($LAD$ in $m^2 \cdot m^{-3}$). The following figure illustrates the leaf area density profile for an example forest stand. The left panel allows identificating the truncated Gaussian function of each plant cohort.
-```{r, fig.width=8, fig.height=4, fig.align='center', echo=FALSE, fig.cap="Leaf area density distribution in a forest stand. The left panel shows the distribution for each plant cohort separately, whereas the right panel shows the overall density distribution."}
+Dividing the leaf area of a given layer by its width, one obtains the *leaf area density* ($LAD$ in $m^2 \cdot m^{-3}$). Figure \@ref(fig:leafareadensity) illustrates the leaf area density profile for an example forest stand (see function `vprofile_leafAreaDensity()`). 
+
+```{r leafareadensity, fig.width=8, fig.height=4, fig.align='center', echo=FALSE, fig.cap="Leaf area density distribution in a forest stand. The left panel shows the distribution for each plant cohort separately, whereas the right panel shows the overall density distribution."}
 g1<-vprofile_leafAreaDensity(exampleforest, SpParamsMED, z = seq(0,1000, by=1), byCohorts = T)
 g1 <- g1 + theme(legend.background = element_blank(), legend.position = c(0.8,0.8))
 g2<-vprofile_leafAreaDensity(exampleforest, SpParamsMED, z = seq(0,1000, by=1))
 plot_grid(g1, g2, nrow=1, ncol=2)
 ```
 
-The leaf area density profile determines the extinction rates of light and wind through the forest canopy. The same truncated Gaussian distribution is used to distribute fuel loading in the vertical dimension.
+The leaf area density profile determines the extinction rates of light through the forest canopy. The same truncated Gaussian distribution is used to distribute leaf and small branch biomass in the vertical dimension.
 
-## Light extinction
-The proportion of photosynthetic active radiation (PAR) decreases with leaf area following thee Beer-Lambert’s light extinction equation. To calculate the proportion of PAR available for a given plant cohort one must accumulate the light extinction caused by cohorts whose crown is above that of the target cohort:
-\begin{equation}
-L^{PAR}_i=e^{-\sum_{h=1}^{c}{k_{PAR,h} \cdot LAI_{h}^{all} \cdot p_{ih}}}
-\end{equation}
-where $k_{PAR,h}$ is the PAR extinction coefficient of cohort $h$. Because plant
-cohorts may differ in height only slightly, leaf area is multiplied by $p_{ih}$,
-the proportion of the crown of cohort $h$ that overtops that of cohort $i$: 
-\begin{equation}
-p_{ih}=\max(0,\min(1,(H_h-H_i\cdot (1 - CR_i))/(H_h-H_h\cdot (1 - CR_h))))
-\end{equation}
-where $CR_i$ and $CR_h$ are the crown ratio of cohorts $i$ and $h$. In other terms,
-cohorts whose crown is completely above that of $i$ reduce the amount of light
-available more strongly by than cohorts that are only slightly taller.
+## Light extinction {#basiclightextinction}
+The proportion of photosynthetic active radiation (PAR) and short-wave radiation (SWR; 400-3000 nm) decreases through the canopy following thee Beer-Lambert’s light extinction equation. 
 $L^{PAR}_{ground}$, the proportion of PAR that reaches the ground, is calculated as:
 \begin{equation}
 L^{PAR}_{ground}=e^{-\sum_{i=1}^{c}{k_{PAR,i} \cdot LAI_{i}^{all}}}
 \end{equation}
+where $k_{PAR,i}$ is the PAR extinction coefficient of cohort $i$. 
 
-The shortwave radiation (SWR; 400-3000 nm) energy absorbed by each plant cohort
-needs to be calculated to determine plant transpiration, and the radiation absorbed
-by the soil is needed to calculate soil evaporation. Foliage absorbs a higher
-proportion of PAR than SWR; thus, the extinction coefficient is higher for PAR
-than for SWR. However, values for the ratio of extinction coefficients are rather
-constant. Following Friend et al. [-@Friend1997] here it is assumed that the extinction
-coefficient for PAR is 1.35 times larger than that for SWR (i.e.
-$k_{SWR,i} = k_{PAR,i}/1.35$). 
+The proportion of shortwave radiation (SWR) energy absorbed by each plant cohort needs to be calculated to divide the transpiration of the stand among cohorts (chapter \@ref(transpirationgranier)), and the radiation absorbed by the soil is needed to calculate soil evaporation (section \@ref(soilevaporation)). Foliage absorbs a higher proportion of PAR than SWR; thus, the extinction coefficient is higher for PAR than for SWR. However, values for the ratio of extinction coefficients are rather constant. Following Friend et al. [-@Friend1997] it is assumed that the extinction coefficient for PAR is 1.35 times larger than that for SWR (i.e.
+$k_{SWR,i} = k_{PAR,i}/1.35$). Figure \@ref(fig:lightextinction) shows the PAR and SWR extinction profiles (see functions `vprofile_PARExtinction()` and `vprofile_SWRExtinction()`) corresponding to the leaf area density distribution of Fig. \@ref(fig:leafareadensity). 
 
-To calculate radiation absorption, where the vertical dimension of the plot is
-divided into 1 m deep layers, and the SWR absorbed is calculated for each plant
-cohort in each layer. Let $n$ be the number of canopy layers. The fraction of
-radiation incident on layer $j$ that is absorbed in the same layer is:
+```{r lightextinction, fig.width=8, fig.height=4, fig.align='center', echo=FALSE, fig.cap="Light extinction in a forest stand. Note the sharper decrease of PAR (left panel) in comparison to SWR (right panel)"}
+g1<-vprofile_PARExtinction(exampleforest, SpParamsMED, z = seq(0,1000, by=1))
+g2<-vprofile_SWRExtinction(exampleforest, SpParamsMED, z = seq(0,1000, by=1))
+plot_grid(g1, g2, nrow=1, ncol=2)
+```
+
+To calculate radiation absorption, where the vertical dimension of the plot is divided into layers (as explained for leaf area distribution), and the SWR absorbed is calculated for each plant cohort in each layer. Let $n$ be the number of canopy layers. The fraction of radiation incident on layer $j$ that is absorbed in the same layer is:
 \begin{equation}
 f_j=1 - e^{-\sum_{i=1}^{c}{k_{SWR,i} \cdot LAI_{i,j}^{all}}}
 \end{equation}
-where $LAI_{i,j}^{all} = LAI_{i,j}^{\phi}+LAI_{i,j}^{dead}$ is the leaf area
-index of cohort $i$ in layer $j$. Hence, the fraction transmitted is $(1-f_j)$.
-The fraction of radiation incident on layer $j$ that is absorbed by expanded leaves
-of plant cohort $i$ in that layer ($f_{ij}$) is calculated from the relative
+where $LAI_{i,j}$ is the leaf area index of cohort $i$ in layer $j$. Hence, the fraction transmitted is $(1-f_j)$. The fraction of radiation incident on layer $j$ that is absorbed by expanded leaves of plant cohort $i$ in that layer ($f_{ij}$) is calculated from the relative
 contribution of these leaves to the total absorption in the layer:
 \begin{equation}
 f_{ij} = f_j \cdot \frac{k_{SWR,i}\cdot LAI_{i,j}^{\phi}}{\sum_{h=1}^{c}{k_{SWR,h} \cdot LAI_{h,j}^{all}}}
 \end{equation}
-The fraction of canopy radiation absorbed by a plant cohort $i$ across all layers
-is found by adding the fraction absorbed in each layer:
+The fraction of canopy radiation absorbed by a plant cohort $i$ across all layers is found by adding the fraction absorbed in each layer:
 \begin{equation}
 f_i = \sum_{j=1}^{n}{f_{ij}\cdot \prod_{h>j}^{n}{(1-f_h)}}
 \end{equation}
 where for each layer the fraction of the radiation incident in the canopy that
 reaches the layer is found by multiplying the transmitted fractions across the
-layers above it. The proportion of (shortwave) net radiation absorbed by the
+layers above it. For example, the fraction of SWR absorbed by each of the three cohorts of the example in Fig. \@ref(fig:leafareadensity) would be (see function `light_cohortAbsorbedSWRFraction()`):
+```{r, echo=FALSE}
+caswrf = light_cohortAbsorbedSWRFraction(seq(0,1000, by=10), exampleforest, SpParamsMED)
+caswrf
+```
+
+The proportion of (shortwave) net radiation absorbed by the
 ground is simply:
 \begin{equation}
 L^{SWR}_{ground} = 1 - \sum_{j}^{n}{f_j}
 \end{equation}
-
-
+which in our example would be:
+```{r, echo=FALSE}
+1-sum(caswrf)
+```
+as also shown in Fig. \@ref(fig:lightextinction).

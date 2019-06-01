@@ -142,9 +142,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="3.6" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#model-output"><i class="fa fa-check"></i><b>3.6</b> Model output</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="leafphenologylight.html"><a href="leafphenologylight.html"><i class="fa fa-check"></i><b>4</b> Leaf phenology and light extinction</a><ul>
-<li class="chapter" data-level="4.1" data-path="leafphenologylight.html"><a href="leafphenologylight.html#leaf-phenology-and-leaf-fall"><i class="fa fa-check"></i><b>4.1</b> Leaf phenology and leaf fall</a></li>
-<li class="chapter" data-level="4.2" data-path="leafphenologylight.html"><a href="leafphenologylight.html#leaf-vertical-distribution"><i class="fa fa-check"></i><b>4.2</b> Leaf vertical distribution</a></li>
-<li class="chapter" data-level="4.3" data-path="leafphenologylight.html"><a href="leafphenologylight.html#light-extinction"><i class="fa fa-check"></i><b>4.3</b> Light extinction</a></li>
+<li class="chapter" data-level="4.1" data-path="leafphenologylight.html"><a href="leafphenologylight.html#leafphenology"><i class="fa fa-check"></i><b>4.1</b> Leaf phenology and leaf fall</a></li>
+<li class="chapter" data-level="4.2" data-path="leafphenologylight.html"><a href="leafphenologylight.html#leafdistribution"><i class="fa fa-check"></i><b>4.2</b> Leaf vertical distribution</a></li>
+<li class="chapter" data-level="4.3" data-path="leafphenologylight.html"><a href="leafphenologylight.html#basiclightextinction"><i class="fa fa-check"></i><b>4.3</b> Light extinction</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="hydrology.html"><a href="hydrology.html"><i class="fa fa-check"></i><b>5</b> Hydrology</a><ul>
 <li class="chapter" data-level="5.1" data-path="hydrology.html"><a href="hydrology.html#snowpack"><i class="fa fa-check"></i><b>5.1</b> Snow pack dynamics</a></li>
@@ -328,9 +328,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="B.2" data-path="symbols.html"><a href="symbols.html#vegetation"><i class="fa fa-check"></i><b>B.2</b> Vegetation</a></li>
 <li class="chapter" data-level="B.3" data-path="symbols.html"><a href="symbols.html#meteorology"><i class="fa fa-check"></i><b>B.3</b> Meteorology</a></li>
 <li class="chapter" data-level="B.4" data-path="symbols.html"><a href="symbols.html#anatomy"><i class="fa fa-check"></i><b>B.4</b> Anatomy</a></li>
-<li class="chapter" data-level="B.5" data-path="symbols.html"><a href="symbols.html#plant-hydraulics-2"><i class="fa fa-check"></i><b>B.5</b> Plant hydraulics</a></li>
-<li class="chapter" data-level="B.6" data-path="symbols.html"><a href="symbols.html#plant-water-compartments"><i class="fa fa-check"></i><b>B.6</b> Plant water compartments</a></li>
-<li class="chapter" data-level="B.7" data-path="symbols.html"><a href="symbols.html#stomatal-regulation-and-photosynthesis-1"><i class="fa fa-check"></i><b>B.7</b> Stomatal regulation and photosynthesis</a></li>
+<li class="chapter" data-level="B.5" data-path="symbols.html"><a href="symbols.html#light-extinction"><i class="fa fa-check"></i><b>B.5</b> Light extinction</a></li>
+<li class="chapter" data-level="B.6" data-path="symbols.html"><a href="symbols.html#plant-hydraulics-2"><i class="fa fa-check"></i><b>B.6</b> Plant hydraulics</a></li>
+<li class="chapter" data-level="B.7" data-path="symbols.html"><a href="symbols.html#plant-water-compartments"><i class="fa fa-check"></i><b>B.7</b> Plant water compartments</a></li>
+<li class="chapter" data-level="B.8" data-path="symbols.html"><a href="symbols.html#stomatal-regulation-and-photosynthesis-1"><i class="fa fa-check"></i><b>B.8</b> Stomatal regulation and photosynthesis</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="bibliography.html"><a href="bibliography.html"><i class="fa fa-check"></i>Bibliography</a></li>
 <li class="divider"></li>
@@ -380,8 +381,8 @@ where <span class="math inline">\(P\)</span> is the daily gross precipitation (i
 S=\sum_{i}{s_{water,i}\cdot LAI_{i}^{\phi}}
 \end{equation}\]</span>
 <p>where <span class="math inline">\(s_{water,i}\)</span> is the depth of water that can be retained by leaves and trunks of a species <span class="math inline">\(i\)</span> per unit of leaf area index (mm·LAI<span class="math inline">\(^{-1}\)</span>). To estimate the stand cover, <span class="math inline">\(C\)</span>, we use the complement of the percentage of PAR that reaches the ground, i.e. <span class="math inline">\(C = 1 - L^{PAR}_{ground}\)</span> <span class="citation">(Deguchi, Hattori, and Park <a href="#ref-Deguchi2006">2006</a>)</span>. Fig. 1 below shows examples of relative throughfall, calculated according to the interception model, under different situations (see function <code>hydrology_rainInterception()</code>).</p>
-<div class="figure"><span id="fig:unnamed-chunk-6"></span>
-<img src="medfatebook_files/figure-html/unnamed-chunk-6-1.png" alt="Examples of canopy interception with different S (canopy water storage capacity), E/R (ratio between evaporation and rainfall rates) and p (throughfall coefficient; p = 1 - C)" width="672" />
+<div class="figure"><span id="fig:unnamed-chunk-7"></span>
+<img src="medfatebook_files/figure-html/unnamed-chunk-7-1.png" alt="Examples of canopy interception with different S (canopy water storage capacity), E/R (ratio between evaporation and rainfall rates) and p (throughfall coefficient; p = 1 - C)" width="672" />
 <p class="caption">
 Figure 5.1: Examples of canopy interception with different S (canopy water storage capacity), E/R (ratio between evaporation and rainfall rates) and p (throughfall coefficient; p = 1 - C)
 </p>
@@ -394,8 +395,8 @@ The water that reaches the soil is the sum of net rainfall (<span class="math in
 Ru=\frac{(Pr_{net} + Ro + Sm - 0.2 \cdot V_{soil})^2}{(Pr_{net} + Ro + Sm - 0.8 \cdot V_{soil})}
 \end{equation}\]</span>
 <p>where <span class="math inline">\(V_{soil}\)</span> (in mm) is the overall soil water retention capacity. Following <span class="citation">Granier et al. (<a href="#ref-Granier1999">1999</a>)</span>, part of the water reaching one soil layer percolates quickly through the macropores. The amount of water reaching each layer through macropores is modelled using an extinction function (see function <code>hydrology_infiltrationRepartition</code>). The remaining water is retained by the micropores refilling the current soil layer. When this soil layer reaches its field capacity the excess of water also percolates to the soil layer below.</p>
-<div class="figure"><span id="fig:unnamed-chunk-7"></span>
-<img src="medfatebook_files/figure-html/unnamed-chunk-7-1.png" alt="Examples of infiltration/runoff calculation for different values of net rainfall and overall retention capacity, $V_{soil}$, calculated from different soil depths (topsoil+subsoil) and assuming that soil texture is 15% clay and 25% sand. Rock fragment content was 25% and 40% for the topsoil and subsoil, respectively." width="768" />
+<div class="figure"><span id="fig:unnamed-chunk-8"></span>
+<img src="medfatebook_files/figure-html/unnamed-chunk-8-1.png" alt="Examples of infiltration/runoff calculation for different values of net rainfall and overall retention capacity, $V_{soil}$, calculated from different soil depths (topsoil+subsoil) and assuming that soil texture is 15% clay and 25% sand. Rock fragment content was 25% and 40% for the topsoil and subsoil, respectively." width="768" />
 <p class="caption">
 Figure 5.2: Examples of infiltration/runoff calculation for different values of net rainfall and overall retention capacity, <span class="math inline">\(V_{soil}\)</span>, calculated from different soil depths (topsoil+subsoil) and assuming that soil texture is 15% clay and 25% sand. Rock fragment content was 25% and 40% for the topsoil and subsoil, respectively.
 </p>
@@ -421,8 +422,8 @@ SE_{soil} = \gamma_{soil} \cdot (\sqrt{t+1}-\sqrt{1})
 E_{soil} = \min(PE_{soil}, SE_{soil})
 \end{equation}\]</span>
 <p>Finally, <span class="math inline">\(E_{soil}\)</span> is distributed along the soil profile according to an exponential decay function with an extinction coefficient <span class="math inline">\(\kappa_{soil}\)</span> <span class="citation">(Mouillot, Rambal, and Lavorel <a href="#ref-Mouillot2001">2001</a>)</span>.</p>
-<div class="figure"><span id="fig:unnamed-chunk-8"></span>
-<img src="medfatebook_files/figure-html/unnamed-chunk-8-1.png" alt="Cumulative bare soil evaporation for different values of maximum evaporation rate and extinction coefficient. Three soil layers (0 – 30 cm; 30 – 150 cm; 150 – 400 cm) are initialized at field capacity ($V_1 = 50 mm$; $V_2 = 201 mm$; $V_3 = 35 mm$). $PE_{soil}$ was assumed not to be limiting. When the extinction coefficient is smaller a higher proportion of the evaporated water is removed from the subsoil and less from the topsoil. This causes more water being available to calculate t in the next step." width="384" />
+<div class="figure"><span id="fig:unnamed-chunk-9"></span>
+<img src="medfatebook_files/figure-html/unnamed-chunk-9-1.png" alt="Cumulative bare soil evaporation for different values of maximum evaporation rate and extinction coefficient. Three soil layers (0 – 30 cm; 30 – 150 cm; 150 – 400 cm) are initialized at field capacity ($V_1 = 50 mm$; $V_2 = 201 mm$; $V_3 = 35 mm$). $PE_{soil}$ was assumed not to be limiting. When the extinction coefficient is smaller a higher proportion of the evaporated water is removed from the subsoil and less from the topsoil. This causes more water being available to calculate t in the next step." width="384" />
 <p class="caption">
 Figure 5.3: Cumulative bare soil evaporation for different values of maximum evaporation rate and extinction coefficient. Three soil layers (0 – 30 cm; 30 – 150 cm; 150 – 400 cm) are initialized at field capacity (<span class="math inline">\(V_1 = 50 mm\)</span>; <span class="math inline">\(V_2 = 201 mm\)</span>; <span class="math inline">\(V_3 = 35 mm\)</span>). <span class="math inline">\(PE_{soil}\)</span> was assumed not to be limiting. When the extinction coefficient is smaller a higher proportion of the evaporated water is removed from the subsoil and less from the topsoil. This causes more water being available to calculate t in the next step.
 </p>

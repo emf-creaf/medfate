@@ -44,6 +44,7 @@ The following tables list all symbols used in this document, along with their un
 | $DBH_i$ | $cm$ | `DBH` | Diameter at breast height of trees in cohort $i$ |
 | $Cover_i$ | % | `Cover` | Percent cover of shrubs in cohort $i$ |
 | $FB_{i}$ | $kg \cdot m^{-2}$ | | Foliar biomass of cohort $i$ |
+| $\phi_i$ | [0-1] | | Fraction of maximum leaf area currently expanded for cohort $i$ |
 | $LAI^{live}_i$ | $m^2 \cdot m^{-2}$ | `LAI_live` | (Maximum) leaf area index (one-side leaf area per surface area of the stand) of cohort $i$ |
 | $LAI^{dead}_i$ | $m^2 \cdot m^{-2}$ | `LAI_dead` | Dead leaf area index (one-side dead leaf area per surface area of the stand) of cohort $i$ |
 | $LAI^{\phi}_i$ | $m^2 \cdot m^{-2}$ | `LAI_expanded` | Current expanded leaf area index (one-side expanded leaf area per surface area of the stand) of cohort $i$ |
@@ -85,6 +86,15 @@ The following tables list all symbols used in this document, along with their un
 | $\rho_{wood}$ | $g \cdot cm^{-3}$ | `WoodDens` | Wood tissue density |
 | $\Theta_{sapwood}$ | $m^3 \cdot m^{-3}$ | | Sapwood porosity (volume of empty spaces over total volume) |
 | $\Theta_{leaf}$ | $m^3 \cdot m^{-3}$ | | Leaf porosity (volume of empty spaces over total volume) |
+
+## Light extinction
+
+| Symbol | Units | R param | Description                        |
+|--------|-------|---------|------------------------------------|
+| $k_{PAR,i}$ | | `k` | PAR extinction coefficient for cohort $i$ |
+| $k_{SWR,i}$ | |  | SWR extinction coefficient for cohort $i$ |
+| $L^{PAR}_{ground}$ | [0-1] | `LgroundPAR` | Fraction of PAR reaching the ground |
+| $L^{SWR}_{ground}$ | [0-1] | `LgroundSWR` | Fraction of SWR reaching the ground |
 
 
 ## Plant hydraulics

@@ -49,7 +49,7 @@ vprofile_windExtinction(x, SpParams, wind20H, z = NULL,  gdd = NA, draw = TRUE,
 }
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 }
 \seealso{
 \code{\link{forest}}
