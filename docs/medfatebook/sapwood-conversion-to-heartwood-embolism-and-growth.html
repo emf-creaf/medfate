@@ -147,10 +147,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="4.3" data-path="leafphenologylight.html"><a href="leafphenologylight.html#basiclightextinction"><i class="fa fa-check"></i><b>4.3</b> Light extinction</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="hydrology.html"><a href="hydrology.html"><i class="fa fa-check"></i><b>5</b> Hydrology</a><ul>
-<li class="chapter" data-level="5.1" data-path="hydrology.html"><a href="hydrology.html#snowpack"><i class="fa fa-check"></i><b>5.1</b> Snow pack dynamics</a></li>
-<li class="chapter" data-level="5.2" data-path="hydrology.html"><a href="hydrology.html#interception"><i class="fa fa-check"></i><b>5.2</b> Rainfall interception loss</a></li>
-<li class="chapter" data-level="5.3" data-path="hydrology.html"><a href="hydrology.html#runoff"><i class="fa fa-check"></i><b>5.3</b> Runoff, infiltration and percolation</a></li>
-<li class="chapter" data-level="5.4" data-path="hydrology.html"><a href="hydrology.html#soilevaporation"><i class="fa fa-check"></i><b>5.4</b> Bare soil evaporation</a></li>
+<li class="chapter" data-level="5.1" data-path="hydrology.html"><a href="hydrology.html#precipitation"><i class="fa fa-check"></i><b>5.1</b> Precipitation</a></li>
+<li class="chapter" data-level="5.2" data-path="hydrology.html"><a href="hydrology.html#snowpack"><i class="fa fa-check"></i><b>5.2</b> Snow pack dynamics</a></li>
+<li class="chapter" data-level="5.3" data-path="hydrology.html"><a href="hydrology.html#interception"><i class="fa fa-check"></i><b>5.3</b> Rainfall interception loss</a></li>
+<li class="chapter" data-level="5.4" data-path="hydrology.html"><a href="hydrology.html#runoff"><i class="fa fa-check"></i><b>5.4</b> Runoff, infiltration and percolation</a></li>
+<li class="chapter" data-level="5.5" data-path="hydrology.html"><a href="hydrology.html#soilevaporation"><i class="fa fa-check"></i><b>5.5</b> Bare soil evaporation</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="transpirationgranier.html"><a href="transpirationgranier.html"><i class="fa fa-check"></i><b>6</b> Transpiration and photosynthesis under Granier’s model</a><ul>
 <li class="chapter" data-level="6.1" data-path="transpirationgranier.html"><a href="transpirationgranier.html#pet-and-maximum-canopy-transpiration"><i class="fa fa-check"></i><b>6.1</b> PET and maximum canopy transpiration</a></li>
@@ -375,7 +376,7 @@ Before applying either growth or cavitation the model determines the extent to w
 <span class="math display">\[\begin{equation}
 f_{turgor}(\Psi_{leaf}) = 1 - \left[e^{(\Psi_{leaf}/\Psi_{tlp})-1}\right]^5
 \end{equation}\]</span>
-<p>where <span class="math inline">\(f_{turgor}(\Psi_{leaf})=0\)</span> if <span class="math inline">\(\Psi_{leaf} &gt; \Psi_{tlp}\)</span>. The following figure illustrates the function for <span class="math inline">\(\Psi_{tlp}=-1.5\)</span> MPa: <img src="medfatebook_files/figure-html/unnamed-chunk-73-1.png" width="384" style="display: block; margin: auto;" /></p>
+<p>where <span class="math inline">\(f_{turgor}(\Psi_{leaf})=0\)</span> if <span class="math inline">\(\Psi_{leaf} &gt; \Psi_{tlp}\)</span>. The following figure illustrates the function for <span class="math inline">\(\Psi_{tlp}=-1.5\)</span> MPa: <img src="medfatebook_files/figure-html/unnamed-chunk-71-1.png" width="384" style="display: block; margin: auto;" /></p>
 <p>If <span class="math inline">\(f_{turgor}(\Psi_{leaf})&gt;0\)</span> growth is applied, but there can be leaf area losses from sapwood turnover, whereas if <span class="math inline">\(f_{turgor}(\Psi_{leaf}) = 0\)</span> growth does not occur and cavitation is possible. The following two subsection detail the behavior of the growth model in each case.</p>
 </div>
 <div id="growth-and-turnover-during-non-drought-periods" class="section level2">
@@ -396,14 +397,14 @@ Several sink limitations may occur. One is the turgor limitation, which is repre
 <span class="math display">\[\begin{equation}
 f_{conc} = \frac{1}{1+\exp \left(-5 \cdot \frac{(C_{fast}/C_{fast, \max})-0.5}{0.5}\right)}
 \end{equation}\]</span>
-<p><img src="medfatebook_files/figure-html/unnamed-chunk-74-1.png" width="384" style="display: block; margin: auto;" /></p>
+<p><img src="medfatebook_files/figure-html/unnamed-chunk-72-1.png" width="384" style="display: block; margin: auto;" /></p>
 <p>Obviously, if carbon pools are not considered <span class="math inline">\(f_{conc} = 1\)</span>.</p>
 Growth modulation due to temperature is incorporated through <span class="math inline">\(f_{temp}(T_{mean})\)</span>, using a truncated parabolic function as in Poyatos et al. (2007):
 <span class="math display">\[\begin{equation}
 f_{temp}(T) = \frac{(T-T_{low}) \cdot (T_{high}-T)}{(T_{opt}-T_{low}) \cdot (T_{high}-T_{opt})}
 \end{equation}\]</span>
 <p>where <span class="math inline">\(0 \leq f_{temp}(T) \leq 1\)</span>, <span class="math inline">\(T_{low}\)</span> and <span class="math inline">\(T_{high}\)</span> minimum and maximum temperature values for growth and <span class="math inline">\(T_{opt}\)</span> is the optimum growth temperature.</p>
-<p><img src="medfatebook_files/figure-html/unnamed-chunk-75-1.png" width="384" style="display: block; margin: auto;" /></p>
+<p><img src="medfatebook_files/figure-html/unnamed-chunk-73-1.png" width="384" style="display: block; margin: auto;" /></p>
 The rate of daily increase in sapwood area taking into account sink limitations is (<span class="math inline">\(\Delta SA_{sink}\)</span>; <span class="math inline">\(cm^2\)</span>):
 <span class="math display">\[\begin{equation}
 \Delta SA_{sink} = RGR_{\max} \cdot SA \cdot f_{turgor}(\Psi_{leaf}) \cdot f_{conc} \cdot f_{temp}(T_{mean})
@@ -455,7 +456,7 @@ If two carbon pools are considered then carbon can be transferred from one to th
 <span class="math display">\[\begin{equation}
 r_{transf} = 0.1 \cdot \frac{2}{1+\exp \left(-5 \cdot \frac{(C_{fast}/C_{fast, \max})-0.5}{0.5}\right)}-1
 \end{equation}\]</span>
-<p><img src="medfatebook_files/figure-html/unnamed-chunk-76-1.png" width="384" style="display: block; margin: auto;" /></p>
+<p><img src="medfatebook_files/figure-html/unnamed-chunk-74-1.png" width="384" style="display: block; margin: auto;" /></p>
 <p>where <span class="math inline">\(0.1\)</span> indicates that the maximum daily transfer rate is 10% of the source C pool size. If <span class="math inline">\(r_{transf}&lt;0\)</span> then <span class="math inline">\(-r_{transf} \cdot C_{slow, \max}\)</span> g of carbon are taken from the slow C pool and 90% of this amount is added into the fast C pool (the remaining 10% is assumed to be the transfer cost). Similarly, if <span class="math inline">\(r_{transf}&gt;0\)</span> then <span class="math inline">\(r_{transf} \cdot C_{fast, \max}\)</span> g of carbon are taken from the fast C pool and 90% of this amount is added into the slow C pool (again, the remaining 10% is assumed to be the transfer cost). The amounts of C transferred are also limited by the amount that would be needed to fill the sink pool (i.e., if the sink pool is already full, no carbon is transferred).</p>
 </div>
 <div id="update-of-maximum-stem-conductance" class="section level2">

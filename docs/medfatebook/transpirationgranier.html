@@ -147,10 +147,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="4.3" data-path="leafphenologylight.html"><a href="leafphenologylight.html#basiclightextinction"><i class="fa fa-check"></i><b>4.3</b> Light extinction</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="hydrology.html"><a href="hydrology.html"><i class="fa fa-check"></i><b>5</b> Hydrology</a><ul>
-<li class="chapter" data-level="5.1" data-path="hydrology.html"><a href="hydrology.html#snowpack"><i class="fa fa-check"></i><b>5.1</b> Snow pack dynamics</a></li>
-<li class="chapter" data-level="5.2" data-path="hydrology.html"><a href="hydrology.html#interception"><i class="fa fa-check"></i><b>5.2</b> Rainfall interception loss</a></li>
-<li class="chapter" data-level="5.3" data-path="hydrology.html"><a href="hydrology.html#runoff"><i class="fa fa-check"></i><b>5.3</b> Runoff, infiltration and percolation</a></li>
-<li class="chapter" data-level="5.4" data-path="hydrology.html"><a href="hydrology.html#soilevaporation"><i class="fa fa-check"></i><b>5.4</b> Bare soil evaporation</a></li>
+<li class="chapter" data-level="5.1" data-path="hydrology.html"><a href="hydrology.html#precipitation"><i class="fa fa-check"></i><b>5.1</b> Precipitation</a></li>
+<li class="chapter" data-level="5.2" data-path="hydrology.html"><a href="hydrology.html#snowpack"><i class="fa fa-check"></i><b>5.2</b> Snow pack dynamics</a></li>
+<li class="chapter" data-level="5.3" data-path="hydrology.html"><a href="hydrology.html#interception"><i class="fa fa-check"></i><b>5.3</b> Rainfall interception loss</a></li>
+<li class="chapter" data-level="5.4" data-path="hydrology.html"><a href="hydrology.html#runoff"><i class="fa fa-check"></i><b>5.4</b> Runoff, infiltration and percolation</a></li>
+<li class="chapter" data-level="5.5" data-path="hydrology.html"><a href="hydrology.html#soilevaporation"><i class="fa fa-check"></i><b>5.5</b> Bare soil evaporation</a></li>
 </ul></li>
 <li class="chapter" data-level="6" data-path="transpirationgranier.html"><a href="transpirationgranier.html"><i class="fa fa-check"></i><b>6</b> Transpiration and photosynthesis under Granier’s model</a><ul>
 <li class="chapter" data-level="6.1" data-path="transpirationgranier.html"><a href="transpirationgranier.html#pet-and-maximum-canopy-transpiration"><i class="fa fa-check"></i><b>6.1</b> PET and maximum canopy transpiration</a></li>
@@ -363,8 +364,8 @@ In this model daily potential evapotranspiration (<span class="math inline">\(PE
 \frac{Tr_{\max}}{PET}= -0.006\,LAI_{stand}^2+0.134\,LAI_{stand}+0.036
 \end{equation}\]</span>
 This equation has already been adopted for Mediterranean biomes (Fyllas and Troumbis, 2009; Ruffault et al., 2013).
-<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-10"></span>
-<img src="medfatebook_files/figure-html/unnamed-chunk-10-1.png" alt="Empirical relationship between $Tr_max/PET$ and $LAI_{stand}$" width="384" />
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-8"></span>
+<img src="medfatebook_files/figure-html/unnamed-chunk-8-1.png" alt="Empirical relationship between $Tr_max/PET$ and $LAI_{stand}$" width="384" />
 <p class="caption">
 Figure 6.1: Empirical relationship between <span class="math inline">\(Tr_max/PET\)</span> and <span class="math inline">\(LAI_{stand}\)</span>
 </p>
@@ -381,8 +382,8 @@ Actual plant transpiration depends on soil moisture and is calculated for each p
 K_{i,s}=K_{i}(\Psi_s) = \exp \left \{\ln{(0.5)}\cdot \left[ \frac{\Psi_s}{\Psi_{extract,i}} \right] ^r \right \} 
 \end{equation}\]</span>
 where <span class="math inline">\(r\)</span> is an exponent that modulates the steepness of the decrease in relative conductance when soil potential becomes negative (by default, <span class="math inline">\(r = 3\)</span>) and <span class="math inline">\(\ln(0.5)\)</span> is used to ensure that <span class="math inline">\(K_{i}(\Psi_{extract,i}) = 0.5\)</span> (Fig. 4).
-<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-11"></span>
-<img src="medfatebook_files/figure-html/unnamed-chunk-11-1.png" alt="Whole-plant relative water conductance functions for different water potential values ($r = 3$ in all cases)." width="336" />
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-9"></span>
+<img src="medfatebook_files/figure-html/unnamed-chunk-9-1.png" alt="Whole-plant relative water conductance functions for different water potential values ($r = 3$ in all cases)." width="336" />
 <p class="caption">
 Figure 6.2: Whole-plant relative water conductance functions for different water potential values (<span class="math inline">\(r = 3\)</span> in all cases).
 </p>

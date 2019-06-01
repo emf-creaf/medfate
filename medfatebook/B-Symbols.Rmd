@@ -28,6 +28,7 @@ The following tables list all symbols used in this document, along with their un
 | $\kappa_{soil}$ | | `Ksoil` | Extinction parameter to regulate the amount of water evaporated from each soil layer |
 | $WT$ | $mm$ | | Water table depth |
 | $V_{s}$ | $mm$ | | Water content in soil layer $s$ |
+| $V_{fc, soil}$ | $mm$ | | Water retention capacity of the whole soil |
 | $W_{s}$ | [0-1] |`W` | Proportion of volumetric moisture in relation to field capacity in soil layer $s$ |
 | $S_{snow}$ | $mm$ |`SWE` | Snow water equivalent of the snow pack storage over the soil surface |
 
@@ -95,6 +96,27 @@ The following tables list all symbols used in this document, along with their un
 | $k_{SWR,i}$ | |  | SWR extinction coefficient for cohort $i$ |
 | $L^{PAR}_{ground}$ | [0-1] | `LgroundPAR` | Fraction of PAR reaching the ground |
 | $L^{SWR}_{ground}$ | [0-1] | `LgroundSWR` | Fraction of SWR reaching the ground |
+
+
+## Hydrology and water balance
+
+| Symbol | Units | R param | Description                        |
+|--------|-------|---------|------------------------------------|
+| $Ps$ | $mm$ | `Snow`| Precipitation as snow |
+| $Pr$ | $mm$ | `Rain`| Precipitation as rainfall |
+| $Sm$ | $mm$ | `Snowmelt` | Snowmelt |
+| $Pr_{net}$ | $mm$ | `NetRain`| Net rainfall |
+| $In$ | $mm$ | `Interception` | Interception loss |
+| $Ru$ | $mm$ | `Runoff` | Water exported from the stand as runoff |
+| $Ro$ | $mm$ | `Runon` | Water imported to the stand as runon |
+| $Dd$ | $mm$ | `DeepDrainage` | Water exported from the stand as deep drainage |
+| $P_G$ | $mm$ | | Amount of rainfall needed to saturate the canopy for a given event |
+| $S_{canopy}$ | $mm$ | `Cm` | Canopy water storage capacity |
+| $(E/R)$ | |  | Ratio between evaporation rate and rainfall rate |  
+| $C_{canopy}$ | [0-1] | | Canopy cover | 
+| $PE_{soil}$ | $mm$ | | Evaporation demand from the soil |
+| $SE_{soil}$ | $mm$ | | Evaporation supply from the soil |
+| $Es$ | $mm$ | `SoilEvaporation` | Evaporation from the soil surface |
 
 
 ## Plant hydraulics
