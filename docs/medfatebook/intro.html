@@ -102,7 +102,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><a href="./intro.html">The medfate book</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#how-to-use-this-book"><i class="fa fa-check"></i>How to use this book</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#conventions"><i class="fa fa-check"></i>Conventions</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#acknowledgements"><i class="fa fa-check"></i>Acknowledgements</a></li>
+</ul></li>
 <li class="part"><span><b>I Preliminaries</b></span></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
 <li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#purpose"><i class="fa fa-check"></i><b>1.1</b> Purpose</a></li>
@@ -112,7 +116,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="1.3.2" data-path="intro.html"><a href="intro.html#sub-model-functions"><i class="fa fa-check"></i><b>1.3.2</b> Sub-model functions</a></li>
 <li class="chapter" data-level="1.3.3" data-path="intro.html"><a href="intro.html#static-functions"><i class="fa fa-check"></i><b>1.3.3</b> Static functions</a></li>
 </ul></li>
-<li class="chapter" data-level="1.4" data-path="intro.html"><a href="intro.html#how-to-use-this-book"><i class="fa fa-check"></i><b>1.4</b> How to use this book</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="model-inputs.html"><a href="model-inputs.html"><i class="fa fa-check"></i><b>2</b> Model inputs</a><ul>
 <li class="chapter" data-level="2.1" data-path="model-inputs.html"><a href="model-inputs.html#soil-description"><i class="fa fa-check"></i><b>2.1</b> Soil description</a><ul>
@@ -429,14 +432,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Crown fire behavior.</li>
 <li>Fire potential ratings of surface fire behavior and crown fire behavior.</li>
 </ol>
-</div>
-</div>
-<div id="how-to-use-this-book" class="section level2">
-<h2><span class="header-section-number">1.4</span> How to use this book</h2>
-<p>This is a <em>reference book</em> for simulation and static models included in <strong>medfate</strong>. Hands-on user guides to run simulation functions and static functions can be found as <em>package vignettes</em> within the package. Our aim is to continuously update the reference book along with package developments, so that users have detailed information about the models at the time functions are run. As the manual will follow package updates, after a given model application users should store a <strong>PDF version</strong> of the reference manual to be sure it matches the version the package reported in their application report or article.</p>
-<p>The following chapter describes the soil, vegetation and meteorology inputs that apply to all models. After that, the book presents each simulation model using a set of chapters. The first chapter introduces the model and the remaining describe the details of formulations by processes. Those process formulations that are common to more than one model (like hydrology) are described only once. Static models and their functions are presented grouped at the end of the book, before the appendices.</p>
-<p>In this book we use <code>objectname</code> or <code>variablename</code> to indicate R code or to refer to an R objects or a variable within data frames, and <code>functionname()</code> to refer to a package function. When relevant, we indicate the correspondence between mathematical symbols, their units and names within R.</p>
 
+</div>
 </div>
 </div>
             </section>

@@ -48,43 +48,6 @@
 
 
 
-<style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -102,7 +65,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><a href="./intro.html">The medfate book</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#how-to-use-this-book"><i class="fa fa-check"></i>How to use this book</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#acknowledgements"><i class="fa fa-check"></i>Acknowledgements</a></li>
+</ul></li>
 <li class="part"><span><b>I Preliminaries</b></span></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
 <li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#purpose"><i class="fa fa-check"></i><b>1.1</b> Purpose</a></li>
@@ -112,7 +78,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="1.3.2" data-path="intro.html"><a href="intro.html#sub-model-functions"><i class="fa fa-check"></i><b>1.3.2</b> Sub-model functions</a></li>
 <li class="chapter" data-level="1.3.3" data-path="intro.html"><a href="intro.html#static-functions"><i class="fa fa-check"></i><b>1.3.3</b> Static functions</a></li>
 </ul></li>
-<li class="chapter" data-level="1.4" data-path="intro.html"><a href="intro.html#how-to-use-this-book"><i class="fa fa-check"></i><b>1.4</b> How to use this book</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="model-inputs.html"><a href="model-inputs.html"><i class="fa fa-check"></i><b>2</b> Model inputs</a><ul>
 <li class="chapter" data-level="2.1" data-path="model-inputs.html"><a href="model-inputs.html#soil-description"><i class="fa fa-check"></i><b>2.1</b> Soil description</a><ul>
@@ -371,8 +336,23 @@ Forest Science and Technology Center of Catalonia (CTFC)<br><a class="author_ema
 </div>
 <div id="preface" class="section level1 unnumbered">
 <h1>Preface</h1>
-<p>This is a reference book for the models implemented in the R package <strong>medfate</strong>. This package provides functions for the simulation of functioning and dynamics of Mediterranean forests. <img src="LOGO_Group.png" width="20%" style="display: block; margin: auto;" /> The online version of this book is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.</p>
+<p>This is a reference book for the models implemented in the R package <strong>medfate</strong>. This package provides functions for the simulation of functioning and dynamics of Mediterranean forests.</p>
+<div id="how-to-use-this-book" class="section level2 unnumbered">
+<h2>How to use this book</h2>
+<p>This is a <em>reference book</em> for simulation and static models included in package <strong>medfate</strong> (ver. <strong>0.8.3</strong>). Hands-on user guides to run simulation functions and static functions can be found as <em>package vignettes</em> within the package. Our aim is to continuously update the reference book along with package developments, so that users have detailed information about the models at the time functions are run. As the manual will follow package updates, after a given model application users should store a <strong>PDF version</strong> of the reference manual to be sure it matches the version the package reported in their application report or article.</p>
+<p>The first part of the book present the main functions of the package and describes the soil, vegetation and meteorology inputs that apply to all models. After that, the book presents each simulation model using a set of chapters. The first of them provides an overview of the model and the remaining ones describe the details of formulations by processes. Those process formulations that are common to more than one model (like hydrology) are described only once. Static models and their functions are presented grouped at the end of the book, before the appendices, which include parametrization information and a list of all symbols for reference.</p>
+<p>In this book we use <code>objectname</code> or <code>variablename</code> to indicate R code or to refer to an R objects or a variable within data frames, and <code>functionname()</code> to refer to a package function. When relevant, we indicate the correspondence between mathematical symbols, their units and names within R.</p>
+</div>
+<div id="acknowledgements" class="section level2 unnumbered">
+<h2>Acknowledgements</h2>
+<p>Package <strong>medfate</strong> is the core R package of an ongoing research project devoted to the development of process-based modelling tools focused on Mediterranean forest functioning and dynamics. I have been intensively working on this project since 2013, when I obtained a <em>Ramon y Cajal</em> research fellowship from the Spanish government. An investment on a long-term modelling project could not have started with this financial help, that of competitive research projects that have followed and the support of CTFC, the research institution where I work.</p>
+<p>The idea of an R package devoted to Mediterranean vegetation evolved after a previous attempt at modelling the dynamics of plant cohorts within a landscape model that tried to extend the MEDFIRE model. I made these initial efforts when I was still a post-doc at CTFC under the supervision of Lluís Brotons, to whom I am grateful for having greatly expanded my view of ecology and its applications. Undertaking this initial endeavour made us contact two excellent researchers in fire and drought ecology respectively, Juli G. Pausas (CIDE-CSIC) and Jordi Martínez-Vilalta (CREAF-UAB). While interacting with Juli was rewarding and fostered my interest in wildfires, Jordi had a profound influence on the project. Collaborating with him caused a slow but steady drift of my research interests towards the water balance, plant hydraulics and drought impacts. His influence on my work was not so apparent when we published water balance model (and launched the R package) with the help of hydrologist Pilar Llorens (CSIC) and other researchers (Rafa Poyatos, Lluís Coll and Pere Casals). However, it became undeniable when I started studying plant hydraulics, trying to understand and implement Sperry’s model in the package. Jordi made me interact with people in his research group and introduced me to Maurizio Mencuccini, another great ecophysiologist with whom he had been working for a long time. I have to thank Maurizio and Jordi for encouraging me to continue working on this development project and overcome the difficulty that entails learning scientific disciplines quite far from my previous experience.</p>
+<p>The development of the package has benefited from many colleagues who have provided me with ideas or have struggled to use the models within it. Asaf Karavani was among the first package users besides me. Together, we used the package to predict soil moisture dynamics in forest plots where mushroom production was being monitored. Antoine Cabon (CTFC) was also an early user of the package. I have enjoyed endless discussions with him about several processes and how to implement them. While he was the Ph.D. student and I one of his advisors, I felt we both learned together. Moreover, Antoine has contributed with some functions to the package (and I hope he will contribute more!). Another key person for the development of <strong>medfate</strong> was working with Victor Granda (now at CREAF), whose great programming skills and profound knowledge about R technologies has encouraged me to embrace new programming habits and skills. I owe the idea of separating packages <strong>meteoland</strong> and <strong>medfate</strong> to Roberto Molowny (CREAF) an excellent modeller. More recently, collaboration with another ecophysiologist, Nicolas Martin-StPaul (INRA), has stimulated improvements both in <strong>meteoland</strong> and <strong>medfate</strong>. In fact, Nicolas has became another key person in my research, with whom I share the interest for one of the interfaces between fire and drought, namely fuel moisture dynamics.</p>
+<p>I would not like to finish the acknowledgements without thanking my colleagues at CTFC, for their collaboration and support all these years. Particularly, Lluís Coll and Pere Casals have been continuously supporting my efforts and finding new model applications. Moreover, they have contributed to the knowledge within the package with their expertise in forest dynamics, soils and fire issues. I also thank Mario Beltrán and Assu Gil for teaching me forestry.</p>
+<p>Finally, I would like to thank José Manuel, who takes care of me and has to endure my endless talking about the package and its models, and to my family for being there in difficult times, including my nephews from who I learn the joy of life.</p>
+<p><img src="LOGO_Group.png" width="20%" style="display: block; margin: auto;" /></p>
 
+</div>
 </div>
 
 

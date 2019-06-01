@@ -102,7 +102,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><a href="./intro.html">The medfate book</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#how-to-use-this-book"><i class="fa fa-check"></i>How to use this book</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#conventions"><i class="fa fa-check"></i>Conventions</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#acknowledgements"><i class="fa fa-check"></i>Acknowledgements</a></li>
+</ul></li>
 <li class="part"><span><b>I Preliminaries</b></span></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
 <li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#purpose"><i class="fa fa-check"></i><b>1.1</b> Purpose</a></li>
@@ -112,7 +116,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="1.3.2" data-path="intro.html"><a href="intro.html#sub-model-functions"><i class="fa fa-check"></i><b>1.3.2</b> Sub-model functions</a></li>
 <li class="chapter" data-level="1.3.3" data-path="intro.html"><a href="intro.html#static-functions"><i class="fa fa-check"></i><b>1.3.3</b> Static functions</a></li>
 </ul></li>
-<li class="chapter" data-level="1.4" data-path="intro.html"><a href="intro.html#how-to-use-this-book"><i class="fa fa-check"></i><b>1.4</b> How to use this book</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="model-inputs.html"><a href="model-inputs.html"><i class="fa fa-check"></i><b>2</b> Model inputs</a><ul>
 <li class="chapter" data-level="2.1" data-path="model-inputs.html"><a href="model-inputs.html#soil-description"><i class="fa fa-check"></i><b>2.1</b> Soil description</a><ul>
@@ -363,9 +366,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
             <section class="normal" id="section-">
 <div id="basicwaterbalance" class="section level1">
 <h1><span class="header-section-number">Chapter 3</span> Basic water balance model</h1>
+<p>This chapter provides an overview of the water balance model described in <span class="citation">De Cáceres et al. (<a href="#ref-DeCaceres2015">2015</a>)</span>, which allows simulating the temporal variation in soil moisture on a daily step basis for a given forest stand and for the period corresponding to input weather data. While the information provided in this chapter should be enough to understand what the model does and when it can be useful, the following ones provide a deeper understanding on how the different processes are formulated.</p>
 <div id="design-principles" class="section level2">
 <h2><span class="header-section-number">3.1</span> Design principles</h2>
-<p>The water balance model described in <span class="citation">De Cáceres et al. (<a href="#ref-DeCaceres2015">2015</a>)</span> simulates temporal variation in soil moisture on a daily step basis for a given forest stand and for the period corresponding to input weather data.</p>
 <p>The model considers only the vertical spatial dimension of the stand and not the horizontal distribution of plants within it. In other words, the model is not spatially explicit (i.e., plants do not interact for space explicitly). Still, the stand is divided into groups of plants, here referred to as <em>plant cohorts</em> of different species, height and leaf area index (<span class="math inline">\(LAI\)</span>). Height and <span class="math inline">\(LAI\)</span> values determine competition for light. <span class="math inline">\(LAI\)</span> values also drive competition for water, along with root distribution. The soil water balance follows the design principles of SIERRA <span class="citation">(Mouillot, Rambal, and Lavorel <a href="#ref-Mouillot2001">2001</a>; Ruffault et al. <a href="#ref-Ruffault2014">2014</a>; Ruffault et al. <a href="#ref-Ruffault2013">2013</a>)</span> and BILJOU <span class="citation">(Granier et al. <a href="#ref-Granier1999">1999</a>; <a href="#ref-Granier2007">2007</a>)</span>, although some features are taken from other models <span class="citation">(Kergoat <a href="#ref-Kergoat1998">1998</a>)</span>. Potential evapotranspiration (<span class="math inline">\(PET\)</span>) is a required input and the model determines maximum canopy transpiration (<span class="math inline">\(Tr_{\max}\)</span>) using an empirical relationship between the <span class="math inline">\(LAI\)</span> of the stand and the ratio <span class="math inline">\(Tr_{\max}/PET\)</span> <span class="citation">(Granier et al. <a href="#ref-Granier1999">1999</a>)</span>. Actual plant transpiration is estimated using a function that depends on current soil moisture levels, cohort-specific drought resistance, fine root distribution and the degree of shading of the target plant cohort.</p>
 </div>
 <div id="state-variables" class="section level2">

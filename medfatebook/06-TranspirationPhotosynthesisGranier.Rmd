@@ -30,7 +30,7 @@ Tr_{\max, i} = Tr_{\max} \cdot \frac{f_i}{\sum_{j}{f_j}}
 Actual plant transpiration depends on soil moisture and is calculated for each plant cohort and each soil layer separately. $Tr_{i,s}$ (in $mm$) represents the transpiration made by cohort $i$ from layer $s$. Actual plant transpiration from a given layer is regulated by soil moisture and the resistance to water flow through the plant. For each plant cohort $i$ and soil layer $s$, the model first estimates the a whole-plant relative water conductance, $K_{i,s}$, which varies between 0 and 1 depending on $\Psi_{extract,i}$, the potential at which conductance is 50% of maximum, and $\Psi_s$, the water potential in layer $s$. This relationship is modelled using a Weibull function (see function `hydraulics_psi2K()`):
 \begin{equation}
 K_{i,s}=K_{i}(\Psi_s) = \exp \left \{\ln{(0.5)}\cdot \left[ \frac{\Psi_s}{\Psi_{extract,i}} \right] ^r \right \} 
-(#eq:relativewholeplantconductance)
+(\#eq:relativewholeplantconductance)
 \end{equation}
 where $r$ is an exponent that modulates the steepness of the decrease in relative
 conductance when soil potential becomes negative (by default, $r = 3$) and $\ln(0.5)$

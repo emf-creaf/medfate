@@ -79,11 +79,3 @@ Vegetation functioning and dynamics have strong, but complex, effects on fire ha
 3. Crown fire behavior.
 4. Fire potential ratings of surface fire behavior and crown fire behavior.
 
-## How to use this book
-
-This is a *reference book* for simulation and static models included in **medfate**. Hands-on user guides to run simulation functions and static functions can be found as *package vignettes* within the package. Our aim is to continuously update the reference book along with package developments, so that users have detailed information about the models at the time functions are run. As the manual will follow package updates, after a given model application users should store a **PDF version** of the reference manual to be sure it matches the version the package reported in their application report or article.
-
-The following chapter describes the soil, vegetation and meteorology inputs that apply to all models. After that, the book presents each simulation model using a set of chapters. The first chapter introduces the model and the remaining describe the details of formulations by processes. Those process formulations that are common to more than one model (like hydrology) are described only once. Static models and their functions are presented grouped at the end of the book, before the appendices.
-
-
-In this book we use `objectname` or `variablename` to indicate R code or to refer to an R objects or a variable within data frames, and `functionname()` to refer to a package function. When relevant, we indicate the correspondence between mathematical symbols, their units and names within R. 

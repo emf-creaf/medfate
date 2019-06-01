@@ -123,7 +123,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{2019-05-30}
+    \date{2019-06-01}
 
 \usepackage{booktabs}
 \usepackage{amsthm}
@@ -147,6 +147,69 @@
 This is a reference book for the models implemented in the R package
 \textbf{medfate}. This package provides functions for the simulation of
 functioning and dynamics of Mediterranean forests.
+
+\section*{How to use this book}\label{how-to-use-this-book}
+\addcontentsline{toc}{section}{How to use this book}
+
+This is a \emph{reference book} for simulation and static models
+included in package \textbf{medfate} (ver. \textbf{0.8.3}). Hands-on
+user guides to run simulation functions and static functions can be
+found as \emph{package vignettes} within the package. Our aim is to
+continuously update the reference book along with package developments,
+so that users have detailed information about the models at the time
+functions are run. As the manual will follow package updates, after a
+given model application users should store a \textbf{PDF version} of the
+reference manual to be sure it matches the version the package reported
+in their application report or article.
+
+The first part of the book present the main functions of the package and
+describes the soil, vegetation and meteorology inputs that apply to all
+models. After that, the book presents each simulation model using a set
+of chapters. The first of them provides an overview of the model and the
+remaining ones describe the details of formulations by processes. Those
+process formulations that are common to more than one model (like
+hydrology) are described only once. Static models and their functions
+are presented grouped at the end of the book, before the appendices,
+which include parametrization information and a list of all symbols for
+reference.
+
+In this book we use \texttt{objectname} or \texttt{variablename} to
+indicate R code or to refer to an R objects or a variable within data
+frames, and \texttt{functionname()} to refer to a package function. When
+relevant, we indicate the correspondence between mathematical symbols,
+their units and names within R.
+
+\section*{Acknowledgements}\label{acknowledgements}
+\addcontentsline{toc}{section}{Acknowledgements}
+
+Package \textbf{medfate} is the core R package of an ongoing research
+project devoted to the development of process-based modelling tools
+focused on Mediterranean forest functioning and dynamics. I have been
+intensively working on this project since 2013, when I obtained a
+\emph{Ramon y Cajal} research fellowship from the Spanish government. An
+investment on a long-term modelling project could not have started with
+this financial help, that of competitive research projects that have
+followed and the support of CTFC, the research institution where I work.
+
+The idea of an R package devoted to Mediterranean vegetation evolved
+after a previous attempt at modelling the dynamics of plant cohorts
+within a landscape model implemented in SELES (a language for a
+landscape model development platform of the same name). I made these
+initial efforts when I was still a post-doc at CTFC under the
+supervision of Lluís Brotons, to whom I am grateful for having greatly
+expanded my view of ecology and its applications. Undertaking this
+initial endeavour made us contact to excellent researchers in fire and
+drought ecology respectively, Juli G. Pausas (CIDE-CSIC) and Jordi
+Martínez-Vilalta (CREAF-UAB). While interacting with Juli has been
+rewarding and has fostered my interest in wildfires, Jordi had a
+profound influence on the project. He is to be thanked (or blamed) for
+the slow but steady drift of my research interests towards the water
+cycle, plant hydraulics and drought impacts. His influence on my work
+was not so apparent when we published water balance model (and launched
+the R package) with the help of hydrologist Pilar Llorens (CSIC) and
+other researchers (Rafa Poyatos, Lluís Coll and Pere Casals). However,
+it become undeniable after I started studying plant hydraulics, trying
+to understand and implement Sperry's model.
 
 \begin{center}\includegraphics[width=0.2\linewidth]{LOGO_Group} \end{center}
 
@@ -353,34 +416,6 @@ obtaining the following:
   behavior.
 \end{enumerate}
 
-\section{How to use this book}\label{how-to-use-this-book}
-
-This is a \emph{reference book} for simulation and static models
-included in \textbf{medfate}. Hands-on user guides to run simulation
-functions and static functions can be found as \emph{package vignettes}
-within the package. Our aim is to continuously update the reference book
-along with package developments, so that users have detailed information
-about the models at the time functions are run. As the manual will
-follow package updates, after a given model application users should
-store a \textbf{PDF version} of the reference manual to be sure it
-matches the version the package reported in their application report or
-article.
-
-The following chapter describes the soil, vegetation and meteorology
-inputs that apply to all models. After that, the book presents each
-simulation model using a set of chapters. The first chapter introduces
-the model and the remaining describe the details of formulations by
-processes. Those process formulations that are common to more than one
-model (like hydrology) are described only once. Static models and their
-functions are presented grouped at the end of the book, before the
-appendices.
-
-In this book we use \texttt{code} or \texttt{variablename} to indicate R
-code or to refer to variable names within R, and \texttt{functionname()}
-to refer to a package function. When relevant, we will indicate the
-correspondence between mathematical symbols, their units and variable
-names within R.
-
 \chapter{Model inputs}\label{model-inputs}
 
 Data input for process-based models of forest functioning and dynamics
@@ -460,7 +495,8 @@ volumetric soil moisture (\(\theta\), in \(m^3 \cdot m^{-3}\) of soil,
 excluding rock fragments) and the soil water potential (\(\Psi\), in
 MPa). This curve is characteristic for different types of soil, and is
 also called the \emph{soil moisture characteristic curve}. Two water
-retention curve models are available in \textbf{medfate}:
+retention curve models are available in \textbf{medfate} (fig.
+\ref{fig:retention-curves}):
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -488,15 +524,30 @@ retention curve models are available in \textbf{medfate}:
   where \(\theta(\psi)\) is the water retention, \(\theta_{sat}\) is the
   saturated water content, \(\theta_{res}\) is the residual water
   content, \(\alpha\) is related to the inverse of the air entry
-  pressure (and here has to be expressed in \(MPa^{-1}\)), and \(n\) is
-  a measure of the pore-size distribution.
+  pressure, and \(n\) is a measure of the pore-size distribution.
 \end{enumerate}
+
+
+
+
+
+\begin{figure}
+
+{\centering \includegraphics{medfatebook_files/figure-latex/retention-curves-1} 
+
+}
+
+\caption{Water retention curves under the Saxton and
+Van Genuchten models, for the same physical attributes (25\% sand, 25\%
+clay, 50\% silt and bulk density of \(1.5 g \cdot cm^{-3}\)).}\label{fig:retention-curves}
+\end{figure}
 
 \subsection{Soil initialization}\label{soil-initialization}
 
 Soil initialization is needed to estimate soil hydrological parameters
 for each soil layer \(s\) from their physical attributes. Initialization
-is done using function \texttt{soil()}, which adds the following
+is done using function \texttt{soil()}, which returns an object of a
+class with the same name. Function \texttt{soil()} adds the following
 information to the physical soil description:
 
 \begin{longtable}[]{@{}llll@{}}
@@ -570,7 +621,7 @@ Parameter of the Van Genuchten \citeyearpar{Genuchten1980} model\strut
 \begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
 \(\alpha_s\)\strut
 \end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
-\strut
+\(MPa^{-1}\)\strut
 \end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright\strut
 \texttt{VG\_alpha}\strut
 \end{minipage} & \begin{minipage}[t]{0.53\columnwidth}\raggedright\strut
@@ -580,9 +631,10 @@ Parameter of the Van Genuchten \citeyearpar{Genuchten1980} model\strut
 \end{longtable}
 
 Macroporosity values are calculated using the equations given in
-\citet{Stolf2011}. Parameters of the van Genuchten model are estimated
-from the physical description of the soil using one of two pedotransfer
-functions (see help for \texttt{soil()}):
+\citet{Stolf2011}, while \(\gamma_{soil}\) and \(\kappa_{soil}\) are
+derived from texture. Parameters of the van Genuchten model (including
+are estimated from the physical description of the soil using one of two
+pedotransfer functions (see help for \texttt{soil()}):
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -595,9 +647,10 @@ functions (see help for \texttt{soil()}):
   the pedotransfer functions in \citet{Toth2015}.
 \end{enumerate}
 
-Users can also edit the \texttt{soil} object manually, for example to
-provide specific parameters of the Van Genuchten retention curve
-calibrated from soil samples.
+All simulation functions need an object of class \texttt{soil} to be
+run. Users can edit the \texttt{soil} object manually (it is actually a
+list), for example to provide specific parameters of the Van Genuchten
+retention curve calibrated from soil samples.
 
 \subsection{Water content and water table
 depth}\label{water-content-and-water-table-depth}
@@ -629,7 +682,7 @@ number of contents are important to remember.
   \emph{Water content at saturation} is calculated anagolously, but
   replacing \(\theta_{fc,s}\) by \(\theta_{sat, s} = \theta_s(0)\).
 \item
-  \emph{Water content }at wilting point* (-1.5 MPa) is calculated
+  \emph{Water content at wilting point} (-1.5 MPa) is calculated
   replacing \(\theta_{fc,s}\) by \(\theta_{wp,s} = \theta_s(-1.5)\).
 \item
   The \emph{amount of extractable water} is the difference between water
@@ -649,27 +702,33 @@ WT = \sum_{s}{d_s \cdot \min\left[1,(\theta_{sat,s} - \theta(\Psi_s))/(\theta_{s
 
 \section{Vegetation description}\label{vegetation-description}
 
-Representation of vegetation is not spatially-explicit in
-\textbf{medfate} (i.e.~trees or shrubs do not have explicit coordinates
-within forest stands). However, differences in tree or shrub size
-(i.e.~height) are explicitly taken into account. The taxonomic identity
-of plants is also considered, and parameter values need to be provided
-for each taxonomic entity (but the package could be used with functional
-groups). This representation is chosen so that package functions can be
-easily applied to forest plot data, for example from national forest
-inventories.
+The representation of plants within a target plot is done in
+\textbf{medfate} by means of \textbf{cohorts} of woody plants
+(i.e.~trees and shrubs). A plant cohort respresents plants that belong
+to the same species (or functional group) and are more or less of the
+same \emph{size}. For example, trees in a stand may be grouped by
+species and diameter class. This representation is chosen so that
+package functions can be easily applied to forest plot data, for example
+from national forest inventories. The description of plant cohorts
+includes a measure of \emph{abundance} of the cohort in the stand, which
+in the case of trees is density as stems per hectare and for shrubs is
+percent cover. In fact this (and the fact that shrubs are multi-stemmed)
+is the only motivation for distinguishing between tree cohorts and shrub
+cohorts.
 
-Vegetation in the stand is described using a set of plant cohorts, in an
-object of class \texttt{spwbInput}. Each plant cohort \(i\) is primarly
-defined by its species identity (\(SP_i\); with R name
-{[}\texttt{SP}{]}).
+Note that one limitation of the representation of vegetation using plant
+cohorts is that it is not spatially-explicit (i.e.~plants cannot have
+explicit coordinates within forest stands) and hence spatial
+(horizontal) interactions cannot be taken into account.
 
-\subsection{Aboveground parameters}\label{aboveground-parameters}
+\subsection{Attributes of plant
+cohorts}\label{attributes-of-plant-cohorts}
 
-The aboveground structure if each cohort is defined using a set
-attributes defined in the following table, where columns \textbf{spwb}
-and \textbf{growth} indicate whether attributes are required by
-functions \texttt{spwb()} and \texttt{growth()}, respectively:
+A plant cohort \(i\) is either a \emph{tree cohort} or a \emph{shrub
+cohort}, and is defined using a set attributes shown in the following
+table, where columns \textbf{spwb} and \textbf{growth} indicate whether
+attributes are required by functions \texttt{spwb()} and
+\texttt{growth()}, respectively:
 
 \begin{longtable}[]{@{}llllll@{}}
 \toprule
@@ -689,13 +748,26 @@ growth\strut
 \midrule
 \endhead
 \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\(SP_i\)\strut
+\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright\strut
+\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright\strut
+\texttt{Species}\strut
+\end{minipage} & \begin{minipage}[t]{0.43\columnwidth}\raggedright\strut
+Species identity\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright\strut
+Y\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright\strut
+Y\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
 \(H_i\)\strut
 \end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright\strut
 \(cm\)\strut
 \end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright\strut
-\texttt{H}\strut
+\texttt{Height}\strut
 \end{minipage} & \begin{minipage}[t]{0.43\columnwidth}\raggedright\strut
-Total tree or shrub height\strut
+Average tree or shrub height\strut
 \end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright\strut
 Y\strut
 \end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright\strut
@@ -708,27 +780,27 @@ Y\strut
 \end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright\strut
 \texttt{CR}\strut
 \end{minipage} & \begin{minipage}[t]{0.43\columnwidth}\raggedright\strut
-Crown ratio (i.e.~ratio between crown length and total height)\strut
+Crown ratio (i.e.~ratio between crown length and plant height)\strut
 \end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright\strut
 Y\strut
 \end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright\strut
 Y\strut
 \end{minipage}\tabularnewline
 \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
-\(N\)\strut
+\(N_i\)\strut
 \end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright\strut
 \(ind · ha^{-1}\)\strut
 \end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright\strut
 \texttt{N}\strut
 \end{minipage} & \begin{minipage}[t]{0.43\columnwidth}\raggedright\strut
-The density of tree individuals\strut
+Density of tree individuals\strut
 \end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright\strut
 N\strut
 \end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright\strut
 Y\strut
 \end{minipage}\tabularnewline
 \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
-\(DBH\)\strut
+\(DBH_i\)\strut
 \end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright\strut
 \(cm\)\strut
 \end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright\strut
@@ -741,7 +813,7 @@ N\strut
 Y\strut
 \end{minipage}\tabularnewline
 \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
-\(Cover\)\strut
+\(Cover_i\)\strut
 \end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright\strut
 \%\strut
 \end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright\strut
@@ -792,6 +864,32 @@ Y\strut
 \end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright\strut
 Y\strut
 \end{minipage}\tabularnewline
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\(Z_{50,i}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright\strut
+mm\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright\strut
+\texttt{Z50}\strut
+\end{minipage} & \begin{minipage}[t]{0.43\columnwidth}\raggedright\strut
+Depth above which 50\% of the fine root mass is located\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright\strut
+Y\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright\strut
+Y\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\(Z_{95,i}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.09\columnwidth}\raggedright\strut
+mm\strut
+\end{minipage} & \begin{minipage}[t]{0.06\columnwidth}\raggedright\strut
+\texttt{Z95}\strut
+\end{minipage} & \begin{minipage}[t]{0.43\columnwidth}\raggedright\strut
+Depth above which 95\% of the fine root mass is located\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright\strut
+Y\strut
+\end{minipage} & \begin{minipage}[t]{0.07\columnwidth}\raggedright\strut
+Y\strut
+\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -805,29 +903,23 @@ estimates crown ratio and \(LAI\) from forest inventory data
 (e.g.~heights, DBH and density for measured trees), using allometric
 relationships calibrated for catalonia (see chapter \ref{leafbiomass}).
 
+Trees and shrubs do not need to be distinguished in soil water balance
+calculations, since both kinds of cohort have a \(LAI\) value.
 Vegetation characteristics stay constant during simulations using
 function \texttt{spwb()}, although the actual expanded leaf area and
-dead leaf area may vary is the species is winter deciduous. Function
+dead leaf area may vary is the species is winter deciduous.
+
+In contrast, growth simulation requires updating the structure of
+vegetation, i.e.~heights, tree diameters and shrub cover. Function
 \texttt{growth()} can modify any of the vegetation attributes.
 
-\subsection{Belowground parameters}\label{belowground-parameters}
+\subsection{Vertical root
+distribution}\label{vertical-root-distribution}
 
-The root system of each plant cohorts is described using the proportion
-of fine roots in each soil layer:
-
-\begin{itemize}
-\tightlist
-\item
-  \(v_{i,s}\) {[}\texttt{V{[}i,s{]}}{]}: The proportion of fine roots in
-  each soil layer \(s\).
-\end{itemize}
-
-The rooting system of each cohort \(i\) (i.e.~the proportions
-\(v_{i,s}\)) can be defined assuming conic distribution of fine roots
-(see \texttt{root\_conicDistribution()}). In this case, only rooting
-depth parameter is needed to determine fine root proportions.
-Alternatively, one can adopt the linear dose response model (Collins and
-Bras, 2007; Schenk and Jackson, 2002):
+The root system of each plant cohort \(i\) is described using the
+proportion of fine roots in each soil layer \(s\): \(v_{i,s}\). The
+proportions \(v_{i,s}\) are normally defined using the linear dose
+response model \citep{Schenk2002, Collins2007}:
 
 \begin{equation}
 Y_i(z)=\frac{1}{1+(z/Z_{50,i})^{c_i}}
@@ -842,11 +934,43 @@ related to \(Z_{50,i}\) and \(Z_{95,i}\) as
 
 \begin{figure}
 \centering
-\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-4-1.pdf}
-\caption{\label{fig:unnamed-chunk-4}Examples of root density profile
+\includegraphics{medfatebook_files/figure-latex/root-distribution-1.pdf}
+\caption{\label{fig:root-distribution}Examples of root density profile
 according to a conic distribution (left) and the linear dose response
 model (right).}
 \end{figure}
+
+Note, however, that the actual input to simulation functions is the
+matrix of \(v_{i,s}\) values - not \(Z_{50,i}\) and \(Z_{95,i}\) -,
+which means that the proportions of fine roots can be modified manually
+or be defined by another model. In fact, \textbf{medfate} also allows
+calculating \(v_{i,s}\) values assuming a conic distribution of fine
+roots (see \texttt{root\_conicDistribution()}), as shown in fig.
+\ref{fig:root-distribution} above.
+
+\subsection{Plant (species) traits and vegetation
+initialization}\label{plant-species-traits-and-vegetation-initialization}
+
+Besides the physical representation of vegetation, forest ecosystem
+models require information regarding vegetation functioning, because
+this influences the outcome of biophysical, physiological and
+hydrological processes. In the following chapters, we will indicate for
+each simulated process its required trait parameters. Normally, plant
+traits are described at the species level because infra-specific
+parameters are hard to get. Even at the species level, many hard
+(e.g.~physiological) traits are hard to obtain, so in \textbf{medfate}
+we provide a default species parameter table for woody species found in
+Catalonia, with many of them occurring elsewhere in the Mediterranean
+Basin (\texttt{SpParamsMED}).
+
+The package provides functions \texttt{spwbInput()} and
+\texttt{growthInput()} that prepare the vegetation input for simulation
+functions \texttt{spwb()} and \texttt{growth()}, respectively. This
+preparation mostly consists in compiling the necessary functional traits
+from the species parameter table, following the species (or species
+group) attribute of plant cohorts. User can modify the output of these
+preparing functions to account for intra-specific trait variation (see
+function \texttt{modifySpParams()}).
 
 \section{Metereological input}\label{meteoinput}
 
@@ -953,28 +1077,69 @@ Wind speed\strut
 \bottomrule
 \end{longtable}
 
-Not all models require all weather variables, this will be indicated in
-the corresponding model chapters. For convenience, we recommend
-meteorological input to be generated using package \textbf{meteoland}
-\citep{DeCaceres2018}.
+Not all simulation models require all weather variables. In particular,
+basic water balance modelling requires much less information than
+advance water balance modelling. The meteorological variables required
+in each case will be indicated in the corresponding model chapters.
+Since it allows producing data frames with appropiate variable units and
+column names, we recommend meteorological input to be generated using
+package \textbf{meteoland} \citep{DeCaceres2018}.
 
 \section{Control parameters}\label{control-parameters}
 
-Control parameters are a list of parameter values, initialized using
-function \texttt{defaultControl()}, that the user can modify to change
-the general behavior of model functions. Not all control parameters are
-relevant to all model functions
+Control parameters are a list of global parameter values, initialized
+using function \texttt{defaultControl()}, that the user can modify to
+change the general behavior of simulation functions. Here is the set of
+global control parameters currently accepted in \textbf{medfate}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{names}\NormalTok{(}\KeywordTok{defaultControl}\NormalTok{())}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "verbose"                          "subdailyResults"                 
+##  [3] "soilFunctions"                    "snowpack"                        
+##  [5] "drainage"                         "leafPhenology"                   
+##  [7] "transpirationMode"                "hydraulicCostFunction"           
+##  [9] "verticalLayerSize"                "nStemSegments"                   
+## [11] "capacitance"                      "cavitationRefill"                
+## [13] "klat"                             "taper"                           
+## [15] "numericParams"                    "fracRootResistance"              
+## [17] "averageFracRhizosphereResistance" "Catm"                            
+## [19] "ndailysteps"                      "thermalCapacityLAI"              
+## [21] "defaultWindSpeed"                 "storagePool"
+\end{verbatim}
+
+Not all control parameters are relevant to all simulation functions
+(this will be indicated in the following chapters), but there is an
+important control parameter called \texttt{transpirationMode}, because
+it allows the user to switch between the basic and advanced water
+balance models (chapters \ref{basicwaterbalance} and
+\ref{advancedwaterbalance}).
+
+Control parameters are employed when initializing vegetation information
+using functions \texttt{spwbInput()} and \texttt{growthInput()}, since
+they are needed also to make decisions at the point of initialization.
+Control parameters are also stored in the result of this functions, so
+the user does not need to specify again control parameters when calling
+simulation functions \texttt{spwb()} or \texttt{growth()}.
 
 \part{Basic water balance
 modelling}\label{part-basic-water-balance-modelling}
 
-\chapter{Basic water balance model}\label{basic-water-balance-model}
+\chapter{Basic water balance model}\label{basicwaterbalance}
+
+This chapter provides an overview of the water balance model described
+in \citet{DeCaceres2015}, which allows simulating the temporal variation
+in soil moisture on a daily step basis for a given forest stand and for
+the period corresponding to input weather data. While the information
+provided in this chapter should be enough to understand what the model
+does and when it can be useful, the following ones provide a deeper
+understanding on how the different processes are formulated.
 
 \section{Design principles}\label{design-principles}
-
-The water balance model described in \citet{DeCaceres2015} calculates
-temporal variations in soil moisture on a daily step basis for the input
-forest stand and for the period corresponding to input weather data.
 
 The model considers only the vertical spatial dimension of the stand and
 not the horizontal distribution of plants within it. In other words, the
@@ -987,17 +1152,17 @@ along with root distribution. The soil water balance follows the design
 principles of SIERRA \citep{Mouillot2001, Ruffault2014, Ruffault2013}
 and BILJOU \citetext{\citealp{Granier1999}; \citeyear{Granier2007}},
 although some features are taken from other models \citep{Kergoat1998}.
-Potential evapotranspiration (\(PET\)) is given as input and the model
+Potential evapotranspiration (\(PET\)) is a required input and the model
 determines maximum canopy transpiration (\(Tr_{\max}\)) using an
 empirical relationship between the \(LAI\) of the stand and the ratio
 \(Tr_{\max}/PET\) \citep{Granier1999}. Actual plant transpiration is
 estimated using a function that depends on current soil moisture levels,
-species-specific drought resistance, fine root distribution and the
+cohort-specific drought resistance, fine root distribution and the
 degree of shading of the target plant cohort.
 
 \section{State variables}\label{state-variables}
 
-The model has the following state variables:
+The following are state variables in the model:
 
 \begin{itemize}
 \tightlist
@@ -1006,7 +1171,7 @@ The model has the following state variables:
   determine leaf phenological status of winter deciduous species.
 \item
   Daily soil moisture content dynamics on each layer \(s\) are tracked
-  using \(W_s = \theta(\Psi_s)/ \theta_{fc,s}\), the \textbf{proportion
+  using \(W_s = \theta_s(\Psi)/ \theta_{fc,s}\), the \textbf{proportion
   of volumetric soil moisture in relation to field capacity}, where
   field capacity, \(\theta_{fc,s}\), is assumed to correspond to
   \(\Psi_{fc} = -0.033\) MPa. Note that \(W_s\) values larger than one
@@ -1024,10 +1189,11 @@ The model has the following state variables:
 
 \section{Water balance}\label{water-balance}
 
-Daily variations in soil water content (mm) can be summarized as:
+Daily variations in soil water content (\(\Delta{V_{soil}}\) in \(mm\))
+can be summarized as:
 
 \begin{equation}
-\Delta{SWC} = Pr + Sm - In - Ru - Dd - Es -Tr
+\Delta{V_{soil}} = Pr + Sm - In - Ru - Dd - Es -Tr
 \end{equation}
 
 where \(Pr\) is precipitation as rainfall, \(Sm\) is water from melting
@@ -1036,7 +1202,8 @@ water evaporated after being intercepted by the canopy), \(Ru\) is
 surface runoff, \(Dd\) is deep drainage (i.e.~water percolated to layers
 beyond soil depth), \(Es\) is evaporation from soil and \(Tr\) is plant
 transpiration. If snow dynamics are considered, the water balance of the
-snow pack is defined as:
+snow pack (\(\Delta{S_{snow}}\) in \(mm\) of snow water equivalents) is
+defined as:
 
 \begin{equation}
 \Delta{S_{snow}} = Ps - Sm
@@ -1046,33 +1213,37 @@ where \(Ps\) is precipitation as snowfall and \(Sm\) is snow melt.
 
 \section{Process scheduling}\label{process-scheduling}
 
-Every day water balance is perfomed as follows. The model first updates
-leaf area values according to the phenology of species and calculates
-light extinction. After that, the model updates soil water content of
-soil layers in several steps:
+Every day, water balance is simuilated in the following several steps:
 
 \begin{itemize}
 \tightlist
 \item
-  Update leaf area values according to the phenology of species (section
-  \ref{leafphenology}).
+  Update leaf area values according to the phenology of species and
+  recalculate light extinction (sections \ref{leafphenology} and
+  \ref{basiclightextinction}).
 \item
   If snow dynamics are included, increase snow pack from snow
   precipitation (\(Ps\)) and decreases it from snow melting (\(Sm\))
   (section \ref{snowpack}).
 \item
-  Increase soil moisture due to rainfall (\(Pr\)), surface runon
-  (\(Ro\)) and snow melting (\(Sm\)), after accounting for interception
-  loss (\(In\)), surface runoff (\(Ru\)) and deep drainage (\(Dd\))
-  (sections \ref{interception} and \ref{runoff})
+  Determine rainfall interception loss (\(In\)) and net rainfall
+  (\(Pr_{net}\)) (section \ref{interception})
 \item
-  Decrease water content due to bare soil evaporation (\(Es\)) (section
-  \ref{soilevaporation}).
+  Increase soil water content due to net rainfall (\(Pr_{net}\)),
+  surface runon (\(Ro\)) and snow melting (\(Sm\)), after accounting for
+  surface runoff (\(Ru\)) and deep drainage (\(Dd\)) (section
+  \ref{runoff}).
+\item
+  Decrease soil water content due to bare soil evaporation (\(Es\))
+  (section \ref{soilevaporation}).
 \item
   Determine transpiration, photosynthesis and drought stress for each
   plant cohort and decrease water content due to plant transpiration
   (\(Tr\)) (chapter \ref{transpirationgranier}).
 \end{itemize}
+
+Details of the formulation of each of these processes are provided
+within the referred chapters and sections.
 
 \section{Model input}\label{model-input}
 
@@ -1081,7 +1252,7 @@ soil layers in several steps:
 The minimum weather variables required to run the model are mean
 temperature (\(T_{mean}\)), precipitation (\(P\)) and potential
 evapotranspiration (\(PET\)). Solar radiation (\(Rad\)) is required if
-snow pack dynamics have to be simulated. Optionally, the user may also
+snow pack dynamics have to be simulated. Additionally, the user may also
 specify values of wind speed (\(u\)) that are used to control leaf fall
 in autumn. Definitions and units of these variables are given in section
 \ref{meteoinput}.
@@ -1133,11 +1304,11 @@ tables. Each table has dates as rows and has different output variables:
   transpiration\ldots{}).
 \item
   \texttt{Soil}: Daily variation of soil variables (volume, moisture
-  relative to field capacity, water potential) for soil layers.
+  relative to field capacity, water potential) for each soil layer.
 \item
-  \texttt{PlantLAI}: Daily leaf area index for each plant cohort.
+  \texttt{PlantLAI}: Daily values leaf area index for each plant cohort.
 \item
-  \texttt{PlantTranspiration}: Daily transpiration (in mm) for each
+  \texttt{PlantTranspiration}: Daily transpiration (in \(mm\)) for each
   plant cohort.
 \item
   \texttt{PlantPhotosynthesis}: Daily net photosynthesis (in
@@ -1149,8 +1320,11 @@ tables. Each table has dates as rows and has different output variables:
   (relative whole-plant conductance).
 \end{itemize}
 
-\chapter{Leaf phenology and light
-extinction}\label{leaf-phenology-and-light-extinction}
+The output of simulations can be inspected using specific \texttt{plot}
+and \texttt{summary} functions (see the corresponding package
+\emph{vignette}).
+
+\chapter{Leaf phenology and light extinction}\label{leafphenologylight}
 
 \section{Leaf phenology and leaf fall}\label{leafphenology}
 
@@ -1160,20 +1334,22 @@ temperature \(T_{mean}\) is below \(T_{base}\) and start increasing when
 temperatures become warmer than this threshold. In other words, the
 \(GDD\) function accumulates \(\max(0.0, T_{mean} - T_{base})\) for all
 days previous to the current one. At the end of a year the cummulative
-value is set again to zero. Plant species can have either evergreen or
-winter-deciduous phenology. Evergreen plants maintain constant leaf area
-over the year, whereas in deciduous plants leaf-phenological status is
-updated daily, represented by \(\phi_i\), the fraction of maximum leaf
-area. Leaf area index (LAI) values of deciduous plants are adjusted for
-leaf phenology following \citep{Prentice1993, Sitch2003}:
+value is set again to zero. Plant species can have either
+\emph{evergreen} or \emph{winter-deciduous} phenology. Evergreen plants
+maintain constant leaf area over the year, whereas in deciduous plants
+leaf-phenological status is updated daily, represented by \(\phi_i\),
+the fraction of maximum leaf area. Leaf area index (\(LAI\)) values of
+deciduous plants are adjusted for leaf phenology following
+\citep{Prentice1993, Sitch2003}:
 
 \begin{equation}
 LAI_{i}^{\phi}=LAI^{live}_i\,\cdot\phi_i
 \end{equation}
 
-Budburst occurs when daily temperature exceeds \(T_{base}\) and
-\(\phi_i\) increases linearly from 0 to 1 as function of the degree days
-above \(T_{base}\), until a the value \(S_{GDD,i}\) is reached
+whereas for evergreen species \(LAI_{i}^{\phi}=LAI^{live}_i\). Budburst
+in deciduous species occurs when daily temperature exceeds \(T_{base}\)
+and \(\phi_i\) increases linearly from 0 to 1 as function of the degree
+days above \(T_{base}\), until a the value \(S_{GDD,i}\) is reached
 (i.e.~until \(GDD > S_{GDD,i}\)). In autumn, \(\phi_i\) drops to 0 when
 average daily temperature falls again below \(T_{base}\)
 \citep{Sitch2003}. The drop of \(\phi_i\) causes live expanded leaves to
@@ -1185,85 +1361,126 @@ exponential function of wind speed:
 LAI^{dead}_i=LAI^{dead}_i\,\cdot e^{- u/10}
 \end{equation}
 
-where \(u\) is wind speed in (m·s\(^{-1}\)).
+where \(u\) is wind speed in (\(m \cdot s^{-1}\)).
 
-After updating the leaf area of each cohort, the model updates the total
-leaf area of the stand. To simplify the notation, let us call
-\(LAI^{all}_{i}\) the sum of dead and live expanded leaves of a cohort
-\(i\):
+We will call total leaf area of a plant cohort \(i\) (\(LAI^{all}_{i}\))
+to the sum of dead and live expanded leaves of the cohort:
 
 \begin{equation}
 LAI^{all}_{i} = LAI^{\phi}_{i}+LAI^{dead}_{i}
 \end{equation}
 
-If there are \(c\) plant cohorts, the leaf area index of the whole
-stand, \(LAI_{stand}\) is then:
+If there are \(c\) plant cohorts, the leaf area index of the whole stand
+can be calculated for living leaves, expanded leaves, dead leaves and
+total leaf area as:
 
-\begin{equation}
-LAI_{stand} = \sum_{i=1}^c{LAI_{i}^{all}}= \sum_{i=1}^c{LAI^{\phi}_{i}+LAI^{dead}_{i}}
-\end{equation}
+\begin{eqnarray}
+LAI^{live}_{stand} &=& \sum_{i=1}^c{LAI_{i}^{live}} \\
+LAI^{\phi}_{stand} &=& \sum_{i=1}^c{LAI_{i}^{\phi}} \\
+LAI^{dead}_{stand} &=& \sum_{i=1}^c{LAI_{i}^{dead}} \\
+LAI^{all}_{stand} &=& \sum_{i=1}^c{LAI_{i}^{all}} = LAI^{\phi}_{stand}+LAI^{dead}_{stand}
+\end{eqnarray}
 
 Although simulations will normally start in winter and \(GDD\) will be
 zero at the beginning, the user can specify a starting non-zero value
 for \(GDD\) in the object created by function \texttt{spwbInput()}.
 
-\section{Light extinction}\label{light-extinction}
+\section{Leaf vertical distribution}\label{leafdistribution}
 
-The proportion of photosynthetic active radiation (PAR) decreases with
-leaf area following thee Beer-Lambert's light extinction equation. To
-calculate the proportion of PAR available for a given plant cohort one
-must accumulate the light extinction caused by cohorts whose crown is
-above that of the target cohort:
-
-\begin{equation}
-L^{PAR}_i=e^{-\sum_{h=1}^{c}{k_{PAR,h} \cdot LAI_{h}^{all} \cdot p_{ih}}}
-\end{equation}
-
-where \(k_{PAR,h}\) is the PAR extinction coefficient of cohort \(h\).
-Because plant cohorts may differ in height only slightly, leaf area is
-multiplied by \(p_{ih}\), the proportion of the crown of cohort \(h\)
-that overtops that of cohort \(i\):
+Crown base height (\(H_{b,i}\); in \(cm\)) of cohort \(i\) is defined as
+the height corresponding to the first living branch. It is calculated
+from the crown ratio of the cohort (\(CR_i\); a proportion between 0 and
+1), i.e.~the ratio between crown length and total height:
 
 \begin{equation}
-p_{ih}=\max(0,\min(1,(H_h-H_i\cdot (1 - CR_i))/(H_h-H_h\cdot (1 - CR_h))))
+H_{b,i} = H_{i} \cdot (1 - CR_i)
+\label{eq:CrownHeight}
 \end{equation}
 
-where \(CR_i\) and \(CR_h\) are the crown ratio of cohorts \(i\) and
-\(h\). In other terms, cohorts whose crown is completely above that of
-\(i\) reduce the amount of light available more strongly by than cohorts
-that are only slightly taller. \(L^{PAR}_{ground}\), the proportion of
-PAR that reaches the ground, is calculated as:
+Leaf area of any plant cohort is assumed to be distributed vertically
+following a \textbf{truncated Gaussian function} whose standardized
+values -1.5 and 1.5 correspond to crown base height (\(CR_i\)) and total
+plant height (\(H_i\)), respectively. The model divides the vertical
+dimension into vertical layers (by default, each layer is 50 cm in
+width). Let us define
+\(LAI_{i,j}^{all} = LAI_{i,j}^{\phi}+LAI_{i,j}^{dead}\) as the leaf area
+index of cohort \(i\) in layer \(j\). The truncated Gaussian
+distribution defines the \(LAI_{i,j}^{\phi}\) and \(LAI_{i,j}^{dead}\)
+for all plant cohorts and vertical layers.
+
+Dividing the leaf area of a given layer by its width, one obtains the
+\emph{leaf area density} (\(LAD\) in \(m^2 \cdot m^{-3}\)). Figure
+\ref{fig:leafareadensity} illustrates the leaf area density profile for
+an example forest stand (see function
+\texttt{vprofile\_leafAreaDensity()}).
+
+\begin{figure}
+
+{\centering \includegraphics{medfatebook_files/figure-latex/leafareadensity-1} 
+
+}
+
+\caption{Leaf area density distribution in a forest stand. The left panel shows the distribution for each plant cohort separately, whereas the right panel shows the overall density distribution.}\label{fig:leafareadensity}
+\end{figure}
+
+The leaf area density profile determines the extinction rates of light
+through the forest canopy. The same truncated Gaussian distribution is
+used to distribute leaf and small branch biomass in the vertical
+dimension.
+
+\section{Light extinction}\label{basiclightextinction}
+
+The proportion of photosynthetic active radiation (PAR) and short-wave
+radiation (SWR; 400-3000 nm) decreases through the canopy following thee
+Beer-Lambert's light extinction equation. \(L^{PAR}_{ground}\), the
+proportion of PAR that reaches the ground, is calculated as:
 
 \begin{equation}
 L^{PAR}_{ground}=e^{-\sum_{i=1}^{c}{k_{PAR,i} \cdot LAI_{i}^{all}}}
 \end{equation}
 
-The shortwave radiation (SWR; 400-3000 nm) energy absorbed by each plant
-cohort needs to be calculated to determine plant transpiration, and the
-radiation absorbed by the soil is needed to calculate soil evaporation.
-Foliage absorbs a higher proportion of PAR than SWR; thus, the
-extinction coefficient is higher for PAR than for SWR. However, values
-for the ratio of extinction coefficients are rather constant. Following
-Friend et al. \citeyearpar{Friend1997} here it is assumed that the
-extinction coefficient for PAR is 1.35 times larger than that for SWR
-(i.e. \(k_{SWR,i} = k_{PAR,i}/1.35\)).
+where \(k_{PAR,i}\) is the PAR extinction coefficient of cohort \(i\).
+
+The proportion of shortwave radiation (SWR) energy absorbed by each
+plant cohort needs to be calculated to divide the transpiration of the
+stand among cohorts (chapter \ref{transpirationgranier}), and the
+radiation absorbed by the soil is needed to calculate soil evaporation
+(section \ref{soilevaporation}). Foliage absorbs a higher proportion of
+PAR than SWR; thus, the extinction coefficient is higher for PAR than
+for SWR. However, values for the ratio of extinction coefficients are
+rather constant. Following Friend et al. \citeyearpar{Friend1997} it is
+assumed that the extinction coefficient for PAR is 1.35 times larger
+than that for SWR (i.e. \(k_{SWR,i} = k_{PAR,i}/1.35\)). Figure
+\ref{fig:lightextinction} shows the PAR and SWR extinction profiles (see
+functions \texttt{vprofile\_PARExtinction()} and
+\texttt{vprofile\_SWRExtinction()}) corresponding to the leaf area
+density distribution of Fig. \ref{fig:leafareadensity}.
+
+\begin{figure}
+
+{\centering \includegraphics{medfatebook_files/figure-latex/lightextinction-1} 
+
+}
+
+\caption{Light extinction in a forest stand. Note the sharper decrease of PAR (left panel) in comparison to SWR (right panel)}\label{fig:lightextinction}
+\end{figure}
 
 To calculate radiation absorption, where the vertical dimension of the
-plot is divided into 1 m deep layers, and the SWR absorbed is calculated
-for each plant cohort in each layer. Let \(n\) be the number of canopy
-layers. The fraction of radiation incident on layer \(j\) that is
-absorbed in the same layer is:
+plot is divided into layers (as explained for leaf area distribution),
+and the SWR absorbed is calculated for each plant cohort in each layer.
+Let \(n\) be the number of canopy layers. The fraction of radiation
+incident on layer \(j\) that is absorbed in the same layer is:
 
 \begin{equation}
 f_j=1 - e^{-\sum_{i=1}^{c}{k_{SWR,i} \cdot LAI_{i,j}^{all}}}
 \end{equation}
 
-where \(LAI_{i,j}^{all} = LAI_{i,j}^{\phi}+LAI_{i,j}^{dead}\) is the
-leaf area index of cohort \(i\) in layer \(j\). Hence, the fraction
-transmitted is \((1-f_j)\). The fraction of radiation incident on layer
-\(j\) that is absorbed by expanded leaves of plant cohort \(i\) in that
-layer (\(f_{ij}\)) is calculated from the relative contribution of these
-leaves to the total absorption in the layer:
+where \(LAI_{i,j}\) is the leaf area index of cohort \(i\) in layer
+\(j\). Hence, the fraction transmitted is \((1-f_j)\). The fraction of
+radiation incident on layer \(j\) that is absorbed by expanded leaves of
+plant cohort \(i\) in that layer (\(f_{ij}\)) is calculated from the
+relative contribution of these leaves to the total absorption in the
+layer:
 
 \begin{equation}
 f_{ij} = f_j \cdot \frac{k_{SWR,i}\cdot LAI_{i,j}^{\phi}}{\sum_{h=1}^{c}{k_{SWR,h} \cdot LAI_{h,j}^{all}}}
@@ -1278,119 +1495,167 @@ f_i = \sum_{j=1}^{n}{f_{ij}\cdot \prod_{h>j}^{n}{(1-f_h)}}
 
 where for each layer the fraction of the radiation incident in the
 canopy that reaches the layer is found by multiplying the transmitted
-fractions across the layers above it. The proportion of (shortwave) net
-radiation absorbed by the ground is simply:
+fractions across the layers above it. For example, the fraction of SWR
+absorbed by each of the three cohorts of the example in Fig.
+\ref{fig:leafareadensity} would be (see function
+\texttt{light\_cohortAbsorbedSWRFraction()}):
+
+\begin{verbatim}
+##      T1_54      T2_68      S1_65 
+## 0.23371749 0.23236269 0.01904071
+\end{verbatim}
+
+The proportion of (shortwave) net radiation absorbed by the ground is
+simply:
 
 \begin{equation}
 L^{SWR}_{ground} = 1 - \sum_{j}^{n}{f_j}
 \end{equation}
 
+which in our example would be:
+
+\begin{verbatim}
+## [1] 0.5148791
+\end{verbatim}
+
+as also shown in Fig. \ref{fig:lightextinction}.
+
 \chapter{Hydrology}\label{hydrology}
+
+\section{Precipitation}\label{precipitation}
+
+Precipitation (\(P\)) is considered be snow precipitation (\(Ps\)) when
+\(T_{mean}<0\), and is considered rainfall (\(Pr\)) otherwise. Thus, we
+have:
+
+\begin{equation}
+P = Pr + Ps
+\end{equation}
+
+Interception of snow by the canopy is neglected, and all snow is assumed
+to accumulate in a single storage compartment \(S_{snow}\) over the soil
+(i.e.~canopy snow storage capacity is neglected). Rainfall interception
+is described in section \ref{interception}.
 
 \section{Snow pack dynamics}\label{snowpack}
 
-Precipitation is considered be snow when \(T_{mean}<0\). Interception of
-snow by the canopy is neglected, and all snow is assumed to accumulate
-in a single storage compartment \(S_{snow}\) over the soil (i.e.~canopy
-snow storage capacity is neglected). A very simple snow submodel is used
-for snow pack dynamics (accumulation and melt), taken from
-\citet{Kergoat1998}. When mean air temperature is above 0 Celsius
-\(T_{mean}>0\), a simple energy budget relates snow melt, \(Sm\) (mm),
-to air temperature and soil-level radiation (see function
-\texttt{hydrology\_snowMelt}):
+A very simple snow submodel is used for snow pack dynamics (accumulation
+and melt), taken from \citet{Kergoat1998}. When mean air temperature is
+above 0 Celsius \(T_{mean}>0\), a simple energy budget relates snow
+melt, \(Sm\) (mm), to air temperature and soil-level radiation (see
+function \texttt{hydrology\_snowMelt}):
 
 \begin{equation}
 Sm = \frac{Rad\cdot L^{SWR}_{ground}\cdot (1-\alpha_{ice}) + \tau_{day} \cdot T_{mean} \cdot \rho \cdot C_p/r_{s}}{\lambda_{ice}}
 \end{equation}
 
-where \(Rad\) is solar radiation (MJ·m\(^{-2}\)), \(L^{SWR}_{ground}\)
-is the fraction of (short-wave) radiation reaching the ground,
-\(\alpha_{ice} = 0.9\) is the albedo of snow, \(\tau_{day} = 86400\) is
-the day duration in s, \(\rho\) is the air density (depending on
-temperature and elevation), \(C_{p} = 1013.86 \cdot 10^{-6}\)
-MJ·kg\(^{-1}\)·C\(^{-1}\) is the specific heat capacity of the air and
-\(r_{s} = 100\) s·m\(^{-1}\) is the snow aerodynamic resistance and
-\(\lambda_{ice} = 0.33355\)MJ·kg is the (latent) heat of fusion of snow.
+where \(Rad\) is solar radiation (\(MJ \cdot m^{-2}\)),
+\(L^{SWR}_{ground}\) is the fraction of (short-wave) radiation reaching
+the ground, \(\alpha_{ice} = 0.9\) is the albedo of snow,
+\(\tau_{day} = 86400\) is the day duration in s, \(\rho\) is the air
+density (depending on temperature and elevation),
+\(C_{p} = 1013.86 \cdot 10^{-6} MJ \cdot kg^{-1} \cdot C^{-1}\) is the
+specific heat capacity of the air and \(r_{s} = 100 s \cdot m^{-1}\) is
+the snow aerodynamic resistance and
+\(\lambda_{ice} = 0.33355 MJ \cdot kg\) is the (latent) heat of fusion
+of snow.
 
 \section{Rainfall interception loss}\label{interception}
 
-Interception loss is only modelled for water precipitation (i.e.~snow
-interception is not modelled). Rainfall interception loss, \(In\), is
-estimated using the \citet{Gash1995} analytical interception model for
-sparse canopies, where rain is assumed to fall in a single event during
-the day. First, the amount of rainfall needed to saturate the canopy is
-calculated:
+As mentioned above, interception loss is only modelled for liquid
+precipitation (i.e.~snow interception is not modelled). Rainfall
+interception loss, \(In\), is estimated using the \citet{Gash1995}
+analytical interception model for sparse canopies, where rain is assumed
+to fall in a single event during the day. First, the amount of rainfall
+needed to saturate the canopy is calculated:
 
 \begin{equation}
-P_G = - \frac{S/C}{(E/R)} \cdot \ln(1-(E/R))
+P_G = - \frac{S_{canopy}/C_{canopy}}{(E/R)} \cdot \ln(1-(E/R))
 \end{equation}
 
-where \(S\) is the canopy water storage capacity (in mm) -- i.e.~the
-minimum amount of water needed to saturate the canopy --, \(C\) is the
-canopy cover and \((E/R)\) is the ratio of evaporation rate to rainfall
-rate during the rainfall event. Simplifying assumptions are made to
-determine \((E/R)\). Values of the Evaporation-to-rainfall ratio are
-calculated from daily potential evapotranspiration and rainfall, while
-accounting for seasonal variation in rainfall intensity (mm/h). Minimum
-values for rainfall intensity are assumed for convective storms (5.6
-mm/h) and synoptic storms (1.5 mm/h) from \citet{Miralles2010}. Synoptic
-storms are assumed between December and June, and convective storms are
-assumed for the remaining months, as typical in the Mediterranean Basin.
+where \(S_{canopy}\) is the canopy water storage capacity (in \(mm\)) --
+i.e.~the minimum amount of water needed to saturate the canopy --,
+\(C_{canopy}\) is the canopy cover and \((E/R)\) is the ratio of
+evaporation rate to rainfall rate during the rainfall event. Simplifying
+assumptions are made to determine \((E/R)\). Values of the
+Evaporation-to-rainfall ratio are calculated from daily potential
+evapotranspiration and rainfall, while accounting for seasonal variation
+in rainfall intensity (\(mm \cdot h^{-1}\)). Minimum values for rainfall
+intensity are assumed for convective storms (5.6 \(mm \cdot h^{-1}\))
+and synoptic storms (1.5 \(mm \cdot h^{-1}\)) from \citet{Miralles2010}.
+Synoptic storms are assumed between December and June, and convective
+storms are assumed for the remaining months, as typical in the
+Mediterranean Basin.
 
-The amount of water evaporated from interception, \(I\) (mm), is
+The amount of water evaporated from interception (\(In\), in \(mm\)), is
 calculated as:
 
 \begin{eqnarray}
-In = C\cdot P_G+C\cdot(E/R)\cdot(P-P_G) \: {if}\: P > P_G \\
-In = C\cdot P\: {if}\: P \leq P_G
+In = C\cdot P_G+C\cdot(E/R)\cdot(Pr-P_G) \: {if}\: Pr > P_G \\
+In = C\cdot Pr\: {if}\: Pr \leq P_G
 \end{eqnarray}
 
-where \(P\) is the daily gross precipitation (in mm). Net rainfall,
-\(Pr_{net}\), is calculated as the difference between gross rainfall and
-interception loss. Although interception models are normally applied to
-single-canopy stands, we apply the sparse Gash model to the whole stand
-(including shrubs). Moreover, in our implementation stem interception is
-lumped with canopy interception, so that \(S\) represents both.
-Following \citet{Watanabe1996} we estimate \(S\), the canopy water
-storage capacity, from adjusted LAI values:
+where \(Pr\) is the daily gross rainfall (in \(mm\)). Net rainfall
+(\(Pr_{net}\), also in \(mm\)) includes throughfall and stemflow, and is
+calculated as the difference between gross rainfall and interception
+loss.
+
+Although interception models are normally applied to single-canopy
+stands, we apply the sparse Gash model to the whole stand (including
+shrubs). Moreover, in our implementation stem interception is lumped
+with canopy interception, so that \(S_{canopy}\) represents both.
+Following \citet{Watanabe1996} we estimate \(S_{canopy}\), the canopy
+water storage capacity, from adjusted LAI values:
 
 \begin{equation}
-S=\sum_{i}{s_{water,i}\cdot LAI_{i}^{\phi}}
+S_{canopy}=\sum_{i}{s_{water,i}\cdot LAI_{i}^{\phi}}
 \end{equation}
 
 where \(s_{water,i}\) is the depth of water that can be retained by
-leaves and trunks of a species \(i\) per unit of leaf area index
-(mm·LAI\(^{-1}\)). To estimate the stand cover, \(C\), we use the
-complement of the percentage of PAR that reaches the ground, i.e.
-\(C = 1 - L^{PAR}_{ground}\) \citep{Deguchi2006}. Fig. 1 below shows
-examples of relative throughfall, calculated according to the
-interception model, under different situations (see function
-\texttt{hydrology\_rainInterception()}).
+leaves, branches and stems of cohort \(i\) per unit of leaf area index
+(\(mm \cdot LAI^{-1}\)). To estimate the stand cover, \(C_{canopy}\), we
+use the complement of the percentage of PAR that reaches the ground,
+i.e. \(C_{canopy} = 1 - L^{PAR}_{ground}\) \citep{Deguchi2006}. Fig.
+\ref{fig:interception} below shows examples of relative throughfall
+(including stemflow), calculated according to the Gash et al
+\citeyearpar{Gash1995} interception model, under different situations
+(see function \texttt{hydrology\_rainInterception()}).
+
+
+
+
+
 
 \begin{figure}
-\centering
-\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-5-1.pdf}
-\caption{\label{fig:unnamed-chunk-5}Examples of canopy interception with
-different S (canopy water storage capacity), E/R (ratio between
-evaporation and rainfall rates) and p (throughfall coefficient; p = 1 -
-C)}
+
+{\centering \includegraphics{medfatebook_files/figure-latex/interception-1} 
+
+}
+
+\caption{Examples of canopy interception with different
+\(S_{canopy}\) (canopy water storage capacity), \(E/R\) (ratio between
+evaporation and rainfall rates) and \(p\) (throughfall coefficient;
+\(p = 1 - C_{canopy}\)).}\label{fig:interception}
 \end{figure}
 
 \section{Runoff, infiltration and percolation}\label{runoff}
 
 The water that reaches the soil is the sum of net rainfall
-(\(Pr_{net}\)), runon (\(Ro\)) and melted snow (\(Sm\)). The amount of
-water infiltrating into the soil is \(Pr_{net} + Sm + Ro - Ru\), where
-\(Ru\) is the water lost by surface runoff (see function
-\texttt{hydrology\_infiltrationAmount}). Surface runoff (in mm), is
-calculated using the USDA SCS curve number method, as in
-\citet{Boughton1989}:
+(\(Pr_{net}\)), runon (\(Ro\), in \(mm\)) and melted snow (\(Sm\)). The
+amount of water infiltrating into the soil is
+\(Pr_{net} + Sm + Ro - Ru\), where \(Ru\) (in \(mm\)) is the water lost
+by surface runoff (see function
+\texttt{hydrology\_infiltrationAmount()}).
+
+Surface runoff, is calculated using the USDA SCS curve number method, as
+in \citet{Boughton1989}:
 
 \begin{equation}
-Ru=\frac{(Pr_{net} + Ro + Sm - 0.2 \cdot V_{soil})^2}{(Pr_{net} + Ro + Sm - 0.8 \cdot V_{soil})}
+Ru=\frac{(Pr_{net} + Ro + Sm - 0.2 \cdot V_{fc, soil})^2}{(Pr_{net} + Ro + Sm - 0.8 \cdot V_{fc, soil})}
 \end{equation}
 
 where \(V_{soil}\) (in mm) is the overall soil water retention capacity.
+
 Following \citet{Granier1999}, part of the water reaching one soil layer
 percolates quickly through the macropores. The amount of water reaching
 each layer through macropores is modelled using an extinction function
@@ -1399,15 +1664,23 @@ remaining water is retained by the micropores refilling the current soil
 layer. When this soil layer reaches its field capacity the excess of
 water also percolates to the soil layer below.
 
+
+
+
+
+
+
 \begin{figure}
-\centering
-\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-6-1.pdf}
-\caption{\label{fig:unnamed-chunk-6}Examples of infiltration/runoff
-calculation for different values of net rainfall and overall retention
-capacity, \(V_{soil}\), calculated from different soil depths
-(topsoil+subsoil) and assuming that soil texture is 15\% clay and 25\%
-sand. Rock fragment content was 25\% and 40\% for the topsoil and
-subsoil, respectively.}
+
+{\centering \includegraphics{medfatebook_files/figure-latex/infiltration-1} 
+
+}
+
+\caption{Examples of infiltration/runoff calculation for
+different values of net rainfall and overall retention capacity,
+\(V_{soil}\), calculated from different soil depths (topsoil+subsoil)
+and assuming that soil texture is 15\% clay and 25\% sand. Rock fragment
+content was 25\% and 40\% for the topsoil and subsoil, respectively.}\label{fig:infiltration}
 \end{figure}
 
 If \texttt{drainage\ =\ TRUE}, the water percolating from the lowest
@@ -1423,147 +1696,171 @@ be infiltration excess and is added to the surface runoff.
 \section{Bare soil evaporation}\label{soilevaporation}
 
 Evaporation from the soil surface is the last component of the soil
-water balance to be calculated. There is a difference in the way that
-soil evaporative demand is calculated depending on the transpiration
-mode. Potential evaporation from the soil (\(PE_{soil}\); in
-\(mm\cdot day^{-1}\)) is defined as the product between \(PET\) and
+water balance to be calculated before calculating plant transpiration.
+Potential evaporation from the soil (\(PE_{soil}\); in
+\(mm \cdot day^{-1}\)) is defined as the product between \(PET\) and
 \(L^{SWR}_{ground}\), the proportion of SWR absorbed by the ground:
 
 \begin{equation}
-PE_{soil} =  PET\cdot L^{SWR}_{ground}
+PE_{soil} =  PET \cdot L^{SWR}_{ground}
 \end{equation}
 
 Actual evaporation from the soil surface is modeled as in
-\citet{Mouillot2001}, who followed \citet{Ritchie1972}. First, the model
-determines the time needed to evaporate the current water deficit
-(difference between field capacity and current moisture) in the surface
-soil layer:
+\citet{Mouillot2001}, who in turn followed \citet{Ritchie1972}. First,
+the model determines the time needed to evaporate the current water
+deficit (difference between field capacity and current moisture) in the
+surface soil layer:
 
 \begin{equation}
-t = \left \{ \frac{V_1\cdot(1- W_1)}{\gamma_{soil}} \right \}
+t = \left \{ \frac{V_{fc,1}\cdot(1- W_1)}{\gamma_{soil}} \right \}
 \end{equation}
 
-where \(\gamma_{soil}\) is the maximum daily evaporation
-(mm·day\(^{-1}\)). The calculated time is used to determine the
+where \(V_{fc,1}\) is the water retention capacity of layer 1, \(W_1\)
+is the current proportion of volumetric moisture in relation to field
+capacity and \(\gamma_{soil}\) is the maximum daily evaporation
+(\(mm \cdot day^{-1}\)). The calculated time is used to determine the
 `supplied' evaporation, \(SE_{soil}\):
 
 \begin{equation}
 SE_{soil} = \gamma_{soil} \cdot (\sqrt{t+1}-\sqrt{1})
 \end{equation}
 
-The amount of water evaporated from the soil, \(E_{soil}\), is then
-calculated as the minimum between supply and demand \citep{Federer1982},
-the latter being the product of PET and the proportion of light that
-reaches the ground (see function
-\texttt{hydrology\_soilEvaporationAmount}):
+The amount of water evaporated from the soil, \(Es\), is then calculated
+as the minimum between supply and demand \citep{Federer1982}, the latter
+being the product of \(PET\) and the proportion of light that reaches
+the ground (see function \texttt{hydrology\_soilEvaporationAmount}):
 
 \begin{equation}
-E_{soil} = \min(PE_{soil}, SE_{soil})
+Es = \min(PE_{soil}, SE_{soil})
 \end{equation}
 
-Finally, \(E_{soil}\) is distributed along the soil profile according to
-an exponential decay function with an extinction coefficient
-\(\kappa_{soil}\) \citep{Mouillot2001}.
+Finally, \(Es\) is distributed along the soil profile according to an
+exponential decay function with an extinction coefficient
+\(\kappa_{soil}\) \citep{Mouillot2001}. Figure \ref{fig:soilevaporation}
+shows the cumulative evaporation from soils for different values of
+maximum evaporation rate and extinction coefficient. When the extinction
+coefficient is smaller a higher proportion of the evaporated water is
+removed from the subsoil and less from the topsoil. This causes more
+water being available to calculate \(t\) in the next step.
 
-\begin{figure}
-\centering
-\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-7-1.pdf}
-\caption{\label{fig:unnamed-chunk-7}Cumulative bare soil evaporation for
-different values of maximum evaporation rate and extinction coefficient.
-Three soil layers (0 -- 30 cm; 30 -- 150 cm; 150 -- 400 cm) are
-initialized at field capacity (\(V_1 = 50 mm\); \(V_2 = 201 mm\);
-\(V_3 = 35 mm\)). \(PE_{soil}\) was assumed not to be limiting. When the
-extinction coefficient is smaller a higher proportion of the evaporated
-water is removed from the subsoil and less from the topsoil. This causes
-more water being available to calculate t in the next step.}
-\end{figure}
 
-\chapter{Transpiration and photosynthesis under Granier's
-model}\label{transpirationgranier}
 
-\section{PET and maximum canopy
-transpiration}\label{pet-and-maximum-canopy-transpiration}
 
-In this model daily potential evapotranspiration (\(PET\); in
-mm·day\(^{-1}\); the amount of evaporation that would occur if a
-sufficient water source was available) is part of the meteorological
-input and has to be calculated externally. \(PET\) is assumed to
-represent open water evaporation potential (like in Penman's formula).
-Maximum canopy transpiration \(Tr_{\max}\) not only depends on \(PET\)
-but also on the amount of transpirating surface. To estimate
-\(Tr_{\max}\) we take the approach of \citet{Granier1999}, where
-\(Tr_{\max}/PET\) is a function of \(LAI_{stand}\) -- the cumulative
-leaf area of the forest stand --, according to the empirical equation:
 
-\begin{equation}
-\frac{Tr_{\max}}{PET}= -0.006\,LAI_{stand}^2+0.134\,LAI_{stand}+0.036
-\end{equation}
 
-This equation has already been adopted for Mediterranean biomes (Fyllas
-and Troumbis, 2009; Ruffault et al., 2013).
+
 
 \begin{figure}
 
-{\centering \includegraphics{medfatebook_files/figure-latex/unnamed-chunk-8-1} 
+{\centering \includegraphics{medfatebook_files/figure-latex/soilevaporation-1} 
 
 }
 
-\caption{Empirical relationship between $Tr_max/PET$ and $LAI_{stand}$}\label{fig:unnamed-chunk-8}
+\caption{Cumulative bare soil evaporation for different
+values of maximum evaporation rate (\(\gamma_{soil}\)) and extinction
+coefficient (\(\kappa_{soil}\)). Three soil layers (0 -- 30 cm; 30 --
+150 cm; 150 -- 400 cm) are initialized at field capacity
+(\(V_1 = 50 mm\); \(V_2 = 201 mm\); \(V_3 = 35 mm\)). \(PE_{soil}\) was
+assumed not to be limiting.}\label{fig:soilevaporation}
+\end{figure}
+
+\chapter{Transpiration, photosynthesis and drought stress under
+Granier's model}\label{transpirationgranier}
+
+\section{Plant transpiration and
+photosynthesis}\label{plant-transpiration-and-photosynthesis}
+
+\subsection{Maximum transpiration}\label{maximum-transpiration}
+
+Potential evapotranspiration (\(PET\), in \(mm\)) is assumed to
+represent open water evaporation potential. Maximum canopy transpiration
+\(Tr_{\max}\) depends on both \(PET\) and the amount of transpirating
+surface, i.e.~the current cumulative \(LAI\) of the stand,
+\(LAI^{\phi}_{stand}\). To estimate \(Tr_{\max}\) the model uses the
+empirical equation of \citet{Granier1999}, where \(Tr_{\max}/PET\) is a
+function of \(LAI^{\phi}_{stand}\):
+
+\begin{equation}
+\frac{Tr_{\max}}{PET}= -0.006\cdot (LAI^{\phi}_{stand})^2+0.134\cdot LAI^{\phi}_{stand}+0.036
+\end{equation}
+
+This equation has already been adopted for Mediterranean biomes
+\citep{Fyllas2009, Ruffault2013}.
+
+
+
+
+\begin{figure}
+
+{\centering \includegraphics{medfatebook_files/figure-latex/tmaxpet-1} 
+
+}
+
+\caption{Empirical relationship between \(Tr_{\max}/PET\) and
+\(LAI^{\phi}_{stand}\)}\label{fig:tmaxpet}
 \end{figure}
 
 The maximum transpiration for a given plant cohort \(i\) is calculated
-as the portion of \(Tr_{\max}\) defined by the fraction of total
-absorbed SWR that is due to cohort \(i\):
+as the portion of \(Tr_{\max}\) defined by \(f_i\) the fraction of total
+absorbed SWR that is due to cohort \(i\) (see section
+\ref{basiclightextinction}):
 
 \begin{equation}
 Tr_{\max, i} = Tr_{\max} \cdot \frac{f_i}{\sum_{j}{f_j}}
 \end{equation}
 
-\section{Actual plant transpiration}\label{actual-plant-transpiration}
+\subsection{Actual plant
+transpiration}\label{actual-plant-transpiration}
 
 Actual plant transpiration depends on soil moisture and is calculated
 for each plant cohort and each soil layer separately. \(Tr_{i,s}\) (in
-mm·day\(^{-1}\)) represents the transpiration made by cohort \(i\) from
-layer \(s\). Actual plant transpiration from a given layer is regulated
-by soil moisture and the resistance to water flow through the plant. For
+\(mm\)) represents the transpiration made by cohort \(i\) from layer
+\(s\). Actual plant transpiration from a given layer is regulated by
+soil moisture and the resistance to water flow through the plant. For
 each plant cohort \(i\) and soil layer \(s\), the model first estimates
 the a whole-plant relative water conductance, \(K_{i,s}\), which varies
 between 0 and 1 depending on \(\Psi_{extract,i}\), the potential at
 which conductance is 50\% of maximum, and \(\Psi_s\), the water
-potential in layer \(s\) (see function \texttt{hydraulics\_psi2K()}):
+potential in layer \(s\). This relationship is modelled using a Weibull
+function (see function \texttt{hydraulics\_psi2K()}):
 
 \begin{equation}
 K_{i,s}=K_{i}(\Psi_s) = \exp \left \{\ln{(0.5)}\cdot \left[ \frac{\Psi_s}{\Psi_{extract,i}} \right] ^r \right \} 
+\label{eq:relativewholeplantconductance}
 \end{equation}
 
 where \(r\) is an exponent that modulates the steepness of the decrease
 in relative conductance when soil potential becomes negative (by
 default, \(r = 3\)) and \(\ln(0.5)\) is used to ensure that
-\(K_{i}(\Psi_{extract,i}) = 0.5\) (Fig. 4).
+\(K_{i}(\Psi_{extract,i}) = 0.5\) (Fig.
+\ref{fig:wholeplantconductance}).
+
+
+
 
 \begin{figure}
 
-{\centering \includegraphics{medfatebook_files/figure-latex/unnamed-chunk-9-1} 
+{\centering \includegraphics{medfatebook_files/figure-latex/wholeplantconductance-1} 
 
 }
 
-\caption{Whole-plant relative water conductance functions for different water potential values ($r = 3$ in all cases).}\label{fig:unnamed-chunk-9}
+\caption{Whole-plant relative water conductance
+functions for different water potential values (\(r = 3\) in all cases)}\label{fig:wholeplantconductance}
 \end{figure}
 
 Actual transpiration of plant cohort \(i\) from a given soil layer
-\(s\), \(Tr_{i,s}\), is defined as the product of (Mouillot et al.,
-2001): (i) the maximum transpiration of the plant cohort; (ii) the
-relative whole-plant conductance, \(K_{i,s}\), corresponding to the
-species and water potential in layer \(s\); (iii) the proportion of
-plant fine roots in layer \(s\), \(v_{i,s}\):
+\(s\), \(Tr_{i,s}\), is defined as the product of \citep{Mouillot2001}:
+the maximum transpiration of the plant cohort (\(Tr_{\max,i}\)), the
+relative whole-plant conductance (\(K_{i,s}\)) corresponding to the
+species and water potential in layer \(s\), and the proportion of plant
+fine roots in layer \(s\), \(v_{i,s}\):
 
 \begin{equation}
 Tr_{i,s} =  Tr_{\max,i} \cdot K_{i,s} \cdot v_{i,s}
 \end{equation}
 
-The total amount of water transpired by plants, \(Tr\) (in
-mm·day\(^{-1}\)), is the sum of \(Tr_{i,s}\) values over all plant
-cohorts and soil layers:
+The total amount of water transpired by plants, \(Tr\) (in \(mm\)), is
+the sum of \(Tr_{i,s}\) values over all plant cohorts and soil layers:
 
 \begin{equation}
 Tr =\sum_{s}\sum_{i}{Tr_{i,s}}
@@ -1574,20 +1871,31 @@ Assuming no water limitations (i.e. \(K_{i,s} = 1\)), we have that
 \(Tr_{\max}\) if soil water potential in any layer is negative enough to
 cause a significant reduction in whole-plant conductance. At the plant
 level, the transpiration of a given plant cohort will be lower than that
-of others if: (1) the cohort is under the shade (it reduces \(f_i\) and
-hence \(Tr_{\max,i}\)); (2) the cohort has a lower amount of leaf area
-(it reduces \(f_i\) and hence \(Tr_{\max,i}\)); (3) the soil layers
-exploited by the cohort have more negative water potentials (it reduces
-\(K_{i,s}\)).
+of others if:
 
-\section{Plant photosynthesis}\label{plant-photosynthesis}
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  The cohort is under the shade (it reduces \(f_i\) and hence
+  \(Tr_{\max,i}\))
+\item
+  The cohort has a lower amount of leaf area (it reduces \(f_i\) and
+  hence \(Tr_{\max,i}\))
+\item
+  The soil layers exploited by the cohort have more negative water
+  potentials (it reduces \(K_{i,s}\)).
+\end{enumerate}
 
-Because it is useful for growth and forest dynamics, and for
-compatibility with the `Sperry' transpiration mode, the `Granier'
-transpiration mode also calculates net assimilated carbon. Assuming a
-constant maximum water use efficiency (WUE), photosynthesis for a given
-plant cohort \(i\) (in g C · m\(^{-2}\) · day\(^{-1}\)) is estimated as
-a function of transpiration \citep{Mouillot2001}:
+\subsection{Plant photosynthesis}\label{plant-photosynthesis}
+
+Because it is useful for growth, and for compatibility with the `Sperry'
+transpiration mode (chapter \ref{advancedwaterbalance}), the water
+balance model using `Granier' transpiration mode also calculates net
+assimilated carbon. Assuming a constant maximum water use efficiency
+(WUE), photosynthesis for a given plant cohort \(i\) (in
+\(g C \cdot m^{-2}\)) is estimated as a function of transpiration
+\citep{Mouillot2001}:
 
 \begin{equation}
 A_n = \alpha \cdot WUE_{\max} \cdot Tr_i
@@ -1595,10 +1903,13 @@ A_n = \alpha \cdot WUE_{\max} \cdot Tr_i
 
 where \(Tr_i\) is the transpiration of plant cohort \(i\),
 \(WUE_{\max}\) is the maximum water use efficiency of the corresponding
-species (in g C · mm\(^{-1}\)) and \(\alpha = T_{mean}/20\) is bounded
-between 0 and 1.
+species (in \(g C \cdot mm^{-1}\)) and \(\alpha = T_{mean}/20\) is
+bounded between 0 and 1.
 
-\subsubsection{Plant drought stress and plant water potential}
+\section{Plant drought stress}\label{plant-drought-stress}
+
+\subsection{Daily drought stress and plant water
+potential}\label{daily-drought-stress-and-plant-water-potential}
 
 Similarly to \citet{Mouillot2002}, daily drought stress of a given plant
 cohort \(i\), \(DDS_i\), is defined as the complement of relative
@@ -1619,18 +1930,18 @@ potential drop from soil to the leaf. Moreover, in a multilayered soil
 it is difficult to know what would be the water potential of the plant.
 Despite these limitations, a gross surrogate of (pre-dawn) `leaf water
 potential' (\(\Psi_{leaf,i}\); in MPa) may be obtained averaging
-whole-plant relative conductance values:
+whole-plant relative conductance values and inverting the conductance
+function:
 
 \begin{equation}
-\Psi_{leaf,i}=K^{-1}(K_i) = K^{-1}\left(\sum_{s}{K_{i,s}\cdot v_{i,s}}\right)
+\Psi_{leaf,i}= K_i^{-1}\left(\sum_{s}{K_{i,s}\cdot v_{i,s}}\right)
 \end{equation}
 
-where \(K_i\) is the average whole-plant relative conductance obtained
-from the scalar product of conductances and fine root proportions and
-\(K^{-1}\) is the inverse of the whole-plant conductance function (see
-function \texttt{hydraulics\_K2Psi()}).
+where \(K_i^{-1}\) is the inverse of the relative whole-plant
+conductance eq. \eqref{eq:relativewholeplantconductance} (see function
+\texttt{hydraulics\_K2Psi()}).
 
-\section{Irreversible cavitation and hydraulic
+\subsection{Irreversible cavitation and hydraulic
 disconnection}\label{irreversible-cavitation-and-hydraulic-disconnection}
 
 The water balance model is normally run assuming that although soil
@@ -1652,6 +1963,11 @@ maximum drought stress:
 K_{i,s} = \min \{K_{i}(\Psi_s), 1.0 - P_{embolized,i} \}
 \end{equation}
 
+Note that, even if cavitation can be considered irreversible,
+\(P_{embolized,i}\) values are set to zero at the beginning of each
+year, assuming that embolized plants overcome the conductance loss by
+creating new xylem tissue.
+
 Another optional behavior consists in allowing the plant to disconnect
 from the soil when its potential becomes too negative. This may be
 advantageous for a cavitation-sensitive plant that is competing for
@@ -1668,8 +1984,7 @@ determining plant water potential.
 \part{Advanced water balance
 modelling}\label{part-advanced-water-balance-modelling}
 
-\chapter{Advanced water balance
-model}\label{advanced-water-balance-model}
+\chapter{Advanced water balance model}\label{advancedwaterbalance}
 
 \section{Design principles}\label{design-principles-1}
 
@@ -1730,10 +2045,11 @@ drought stress so far experienced.
 
 \subsection{Water balance}\label{water-balance-1}
 
-Daily variations in soil water content (mm) can be summarized as:
+Daily variations in soil water content (\(\Delta{V_{soil}}\) in \(mm\))
+can be summarized as:
 
 \begin{equation}
-\Delta{SWC} = Pr + Sm - In - Ru - Dd - Es -Tr
+\Delta{V_{soil}} = Pr + Sm - In - Ru - Dd - Es -Tr
 \end{equation}
 
 where \(Pr\) is precipitation as rainfall, \(Sm\) is water from melting
@@ -2106,7 +2422,7 @@ irradiance reaching each layer \citep{Anten2016}. Extinction of direct
 radiation also defines the proportion of leaves of each layer that are
 affected by sunflecks (i.e.~the proportion of sunlit leaves).
 
-\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-11-1.pdf}
+\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-8-1.pdf}
 
 The amount of absorved diffuse radiation per leaf area unit of cohort
 \(i\) within a given canopy layer \(j\) is calculated as:
@@ -2410,7 +2726,7 @@ higher vulnerability:
 With these parameter values, the vulnerability curves for root, stem and
 leaf are (see \texttt{hydraulics\_xylemConductance()}):
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-17-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-14-1} \end{center}
 
 The dotted line between 0 and \(\Psi_{cav} = -2.5\) MPa indicates the
 modification of the stem xylem vulnerability curve when cavitation has
@@ -2564,7 +2880,7 @@ With these parameters, the resulting \(k_{rh}(\Psi)\) functions can be
 displayed using the function
 \texttt{hydraulics\_vanGenuchtenConductance()}:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-21-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-18-1} \end{center}
 
 \section{Water content of plant
 tissues}\label{water-content-of-plant-tissues}
@@ -2625,7 +2941,7 @@ point (\(\Psi_{tlp}\)) can be found by \citep{Bartlett2012}:
 As an example, the following figure draws the pressure-volume curve for
 a tissue with \(\epsilon = 12\) and \(\pi_0 = -3.0\)MPa:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-22-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-19-1} \end{center}
 
 To calculate \(RWC_{sym}\) from the water potential of a tissue, the
 previous equations need to be combined and, after isolating
@@ -2641,7 +2957,7 @@ maximum conductance in the vulnerability curve:
 RWC_{apo}(\Psi) = \frac{k(\Psi)}{k_{max}} = e^{-((\Psi/d)^{c})}
 \end{equation}
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-23-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-20-1} \end{center}
 
 The average relative water content in a given compartment (\(RWC\)) can
 be obtained from \(\Psi_{sym}\) and \(\Psi_{apo}\) by calculating
@@ -2744,7 +3060,7 @@ incomplete gamma function. The shape of the supply function starting at
 different root crown water potential values (\(\Psi_{rootcrown}\)) is
 (see function \texttt{hydraulics\_EXylem()}):
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-24-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-21-1} \end{center}
 
 Right pane shows the supply functions that are obtained in the case of a
 cavitated xylem (i.e.~without refilling), assuming that the minimum
@@ -2759,7 +3075,7 @@ approximation of \citet{VanLier2009}. Here we draw the supply function
 for the rhizosphere starting at the four different values of bulk soil
 pressure (\(\Psi_{soil}\)) and for the same three texture types:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-25-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-22-1} \end{center}
 
 The nearly vertical lines indicate that for many values of \(E_i\) the
 corresponding drop in water potential through the rhizosphere will be
@@ -2787,7 +3103,7 @@ pressure (\(\Psi_{canopy}\)), starting from different bulk soil
 (\(\Psi_{soil}\)) values (see function
 \texttt{hydraulics\textbackslash{}\_supplyFunctionTwoElements()}):
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-26-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-23-1} \end{center}
 
 The supply function for the whole continuum contains much information.
 The \(\Psi\) intercept at \(E=0\) represents the predawn canopy sap
@@ -2800,7 +3116,7 @@ not equal to either of the vulnerability curves and it has to be
 obtained numerically. The derivative functions corresponding to the
 supply functions shown in the previous figure are:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-27-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-24-1} \end{center}
 
 The derivative \(dE/d\Psi_{canopy}\) is the conductance if the entire
 continuum was exposed to \(\Psi_{canopy}\) \citep{Sperry2015}. It
@@ -2855,7 +3171,7 @@ pressure (\(\Psi_{leaf}\)), starting from different bulk soil
 (\(\Psi_{soil}\)) values (see function
 \texttt{hydraulics\_supplyFunctionThreeElements()}):
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-29-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-26-1} \end{center}
 
 Note that overall conductance and the maximum flow of the supply
 function are smaller in this case than in the representation using two
@@ -2868,7 +3184,7 @@ functions corresponding to the supply functions shown in the previous
 figure are (note the highest value being equal to the overall maximum
 conductance):
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-30-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-27-1} \end{center}
 
 \subsection{Supply function of a root
 system}\label{supply-function-of-a-root-system}
@@ -2908,7 +3224,7 @@ conduct water balance operations on each layer.
 
 }
 
-\caption{Schematic representation of hydraulics in a root network}\label{fig:unnamed-chunk-31}
+\caption{Schematic representation of hydraulics in a root network}\label{fig:unnamed-chunk-28}
 \end{figure}
 
 As an example, we start by defining the water potential of three soil
@@ -3003,7 +3319,7 @@ functions for each soil texture and starting from the different soil
 water potential configurations (see function
 \texttt{hydraulics\_supplyFunctionBelowground()}):
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-38-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-35-1} \end{center}
 
 The derivative of \(dE/d\Psi_{rootcrown}\) for the supply function of
 the root system is again obtained numerically. Solving the previous
@@ -3011,7 +3327,7 @@ system of equations provides the water potentials in different points of
 the root system. Here we plot them for the results of silt loam texture
 and the first and last soil potential vectors defined above:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-39-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-36-1} \end{center}
 
 Note that when soil is not dry (first situation) pressure drop in the
 rhizosphere is negligible, but not the pressure drop in the root xylem.
@@ -3019,7 +3335,7 @@ For drier soils rhizosphere becomes more relevant. We can also plot the
 flow rates across each of the parallel paths (again corresponding to the
 results of silt loam texture and for the four soil potential vectors):
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-40-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-37-1} \end{center}
 
 Note that the contribution of each soil layer depends on the soil
 conditions and the total amount of flow. For a low total flow rate some
@@ -3059,7 +3375,7 @@ operations from \(E=0\) to a critical value \(E_{crit}\).
 
 }
 
-\caption{Schematic representation of hydraulics in a whole-plant network}\label{fig:unnamed-chunk-41}
+\caption{Schematic representation of hydraulics in a whole-plant network}\label{fig:unnamed-chunk-38}
 \end{figure}
 
 The following figure shows network supply functions (with \(S = 1\)) for
@@ -3067,19 +3383,19 @@ each soil texture and starting from the different soil water potential
 configurations (see function
 \texttt{hydraulics\_supplyFunctionNetwork()}):
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-42-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-39-1} \end{center}
 
 As with previous representations of the soil-plant continuum, the
 derivative of \(dE/d\Psi_{leaf}\) for the network topology is obtained
 numerically:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-43-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-40-1} \end{center}
 
 As with the root system, we can know the water potentials in different
 points of the continuum. Here we plot them for the results of silt loam
 texture and the first and last soil potential vectors defined above:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-44-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-41-1} \end{center}
 
 \subsection{Supply function with water
 compartments}\label{supply-function-with-water-compartments}
@@ -3121,7 +3437,7 @@ E_{i,out} = E_{i, in} - \frac{\Delta S_{i}}{\Delta t} = \int_{\Psi_{up}}^{\Psi_{
 
 }
 
-\caption{Schematic representation of hydraulics in a whole-plant network with water compartments}\label{fig:unnamed-chunk-45}
+\caption{Schematic representation of hydraulics in a whole-plant network with water compartments}\label{fig:unnamed-chunk-42}
 \end{figure}
 
 When building the supply function from the root crown to the leaf, one
@@ -3170,7 +3486,7 @@ and leaf water compartments, assuming a 1-hr time step and either 0 MPa
 or -1.5 MPa as previous water potential for all segments (see function
 \texttt{hydraulics\_supplyFunctionNetworkCapacitance()}):
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-47-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-44-1} \end{center}
 
 For the same water potential drop, the effect of the water compartment
 results in a larger transpiration flow. If the previous water potential
@@ -3273,13 +3589,13 @@ sizes and varying values of wind speed and flow rate, calculated for
 24ºC canopy temperature and 740 \(W \cdot m^{-2}\) instantaneous
 absorved radiation (see function \texttt{biophysics\_leafTemperature}):
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-49-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-46-1} \end{center}
 
 Let's now fix wind speed to 2 m/s. The application of the above
 equations to the \(E(\Psi_{leaf})\) curves corresponding to the complete
 hydraulic network yields the following \(T_{leaf}(\Psi_{leaf})\) curves:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-50-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-47-1} \end{center}
 
 Thus, transpiration decreases leaf temperature (whereas radiation
 increases it and wind speed makes it more similar to air temperature).
@@ -3311,7 +3627,7 @@ average \(vp_{day}\):
 the application of the above equation to the \(T_{leaf}(\Psi_{leaf})\)
 curves yields the following \(VPD_{leaf}(\Psi_{leaf})\) curves:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-52-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-49-1} \end{center}
 
 Since leaf saturated VP decreases when leaf temperature decreases,
 transpiration decreases leaf VPD as a result of decreasing leaf
@@ -3335,7 +3651,7 @@ the application of the equation for \(g_{sw}\) to the
 \(VPD_{leaf}(\Psi_{leaf})\) curves yields the following
 \(g_{sw}(\Psi_{leaf})\) curves:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-53-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-50-1} \end{center}
 
 Hence, larger values of transpiration require larger values of leaf
 water vapour conductance. In the previous figure we have indicated the
@@ -3447,7 +3763,7 @@ rate parameters:
 one can obtain the following \(A(\Psi_{leaf})\) curves from
 \(T_{leaf}(\Psi_{leaf})\) and \(g_{sc}(\Psi_{leaf})\):
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-56-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-53-1} \end{center}
 
 Finally, leaf net photosynthesis (i.e.~accounting for autotrophic
 respiration) is calculated as:
@@ -3495,7 +3811,7 @@ separately \citep{DePury1997}.Extinction of direct radiation also
 defines the proportion of leaves of each layer that are affected by
 direct light beams (i.e.~the proportion of sunlit leaves).
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-58-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-55-1} \end{center}
 
 For simplicity, here we will assume constant windspeed in all layers:
 
@@ -3523,7 +3839,7 @@ complement of the zenith angle). Under these conditions, the amount of
 shortwave and PAR radiation absorbed per unit of leaf area at each
 canopy layer is \citep{Anten2016}:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-61-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-58-1} \end{center}
 
 Following \citet{DePury1997}, we further assume that maximum
 assimilation rates are highest for leaves at the top of the canopy and
@@ -3559,7 +3875,7 @@ or a big-leaf model (bottom). These were generated using functions
 \texttt{photo\_leafPhotosynthesisFunction()}, respectively. Note the
 coincidence between the multi-layer and the sun-shade models.
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-64-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-61-1} \end{center}
 
 \section{Stomatal regulation}\label{stomatal-regulation}
 
@@ -3613,7 +3929,7 @@ parameter \texttt{hydraulicCostFunction} (see function
 \(\theta_1\) and \(\theta_2\) curves corresponding to the supply
 functions:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-66-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-63-1} \end{center}
 
 The normalized photosynthetic \emph{gain function}
 \(\beta(\Psi_{leaf})\) reflects the actual assimilation rate with
@@ -3628,7 +3944,7 @@ estimated over the full \(\Psi_{leaf}\) range. The following figures
 illustrate the \(\theta(\Psi_{leaf})\) and \(\beta(\Psi_{leaf})\) curves
 corresponding to the supply and assimilation functions:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-67-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-64-1} \end{center}
 
 \subsection{Profit maximization at the leaf
 level}\label{profit-maximization-at-the-leaf-level}
@@ -3653,7 +3969,7 @@ function. The following figures illustrate the \(Profit_1(\Psi_{leaf})\)
 and \(Profit_2(\Psi_{leaf})\) curves of corresponding to the previous
 cost and gain curves: \textbackslash{}begin\{center\}
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-68-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-65-1} \end{center}
 
 Squares in the previous figures indicate the maximum profit points in
 each situation. In the case of non-cavitated system (left panels), the
@@ -3676,7 +3992,7 @@ Differences between profit functions can be more easily seen when
 plotting the change from original (uncavitated) regulation to the
 cavitated one, in terms of both canopy sap pressure and flow rate:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-69-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-66-1} \end{center}
 
 In \(Profit_1\) irreversible cavitation often brings, after soil
 rewetting, less conservative stomatal regulation that enables higher
@@ -4001,7 +4317,7 @@ below.
 
 }
 
-\caption{Schematic representation of hydraulics in a whole-plant network after disconnection from soil}\label{fig:unnamed-chunk-70}
+\caption{Schematic representation of hydraulics in a whole-plant network after disconnection from soil}\label{fig:unnamed-chunk-67}
 \end{figure}
 
 As before, each time step \(\Delta t\) is divided into \(m\) substeps
@@ -4503,7 +4819,7 @@ f_{turgor}(\Psi_{leaf}) = 1 - \left[e^{(\Psi_{leaf}/\Psi_{tlp})-1}\right]^5
 where \(f_{turgor}(\Psi_{leaf})=0\) if \(\Psi_{leaf} > \Psi_{tlp}\). The
 following figure illustrates the function for \(\Psi_{tlp}=-1.5\) MPa:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-71-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-68-1} \end{center}
 
 If \(f_{turgor}(\Psi_{leaf})>0\) growth is applied, but there can be
 leaf area losses from sapwood turnover, whereas if
@@ -4562,7 +4878,7 @@ decrease with decreasing concentration, following a sigmoidal function:
 f_{conc} = \frac{1}{1+\exp \left(-5 \cdot \frac{(C_{fast}/C_{fast, \max})-0.5}{0.5}\right)}
 \end{equation}
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-72-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-69-1} \end{center}
 
 Obviously, if carbon pools are not considered \(f_{conc} = 1\).
 
@@ -4578,7 +4894,7 @@ where \(0 \leq f_{temp}(T) \leq 1\), \(T_{low}\) and \(T_{high}\)
 minimum and maximum temperature values for growth and \(T_{opt}\) is the
 optimum growth temperature.
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-73-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-70-1} \end{center}
 
 The rate of daily increase in sapwood area taking into account sink
 limitations is (\(\Delta SA_{sink}\); \(cm^2\)):
@@ -4687,7 +5003,7 @@ modelled using a sigmoidal function:
 r_{transf} = 0.1 \cdot \frac{2}{1+\exp \left(-5 \cdot \frac{(C_{fast}/C_{fast, \max})-0.5}{0.5}\right)}-1
 \end{equation}
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-74-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-71-1} \end{center}
 
 where \(0.1\) indicates that the maximum daily transfer rate is 10\% of
 the source C pool size. If \(r_{transf}<0\) then
@@ -4913,7 +5229,7 @@ parameters}\label{allometric-species-specific-parameters}
   height for shrubs.
 \end{itemize}
 
-\section{Leaf biomass and area}\label{leaf-biomass-and-area}
+\section{Allometric relationships}\label{allometric-relationships}
 
 \subsection{Leaf biomass for tree
 cohorts}\label{leaf-biomass-for-tree-cohorts}
@@ -4975,7 +5291,7 @@ The fine fuel biomass of a shrub cohort (\(W_{i}\), in
 dry weight) and \(N_{i}\):
 
 \begin{equation}
-W_{i} =  B_{sh,i}\cdot N_{i}
+W_{i} =  B_{sh,i} \cdot N_{i}
 \label{eq:shrubloading}
 \end{equation}
 
@@ -4983,30 +5299,33 @@ Foliar biomass (in \(kg \cdot m^{-2}\)) can be obtained using the
 species-specific ratio \(r_{6.35}(SP_i)\):
 
 \begin{equation}
-FB_{i} =  W_{i}/r_{6.35}(SP_i)\\
+FB_{i} =  W_{i}/r_{6.35}(SP_i)
 \label{eq:shrubfoliarbiomass}
 \end{equation}
 
 If not known, \(r_{6.35}(SP_i)\) can be set to a default value of 2
 (equivalent to \%50 of weight corresponding to leaves).
 
-\subsection{Leaf area}\label{leaf-area}
+\subsection{Leaf area and LAI}\label{leaf-area-and-lai}
 
-\section{Vertical distribution of
-leaves}\label{vertical-distribution-of-leaves}
-
-\subsection{Crown base height}\label{crownbaseheight}
-
-Crown base height (\(H_{b,i}\); in cm) is defined as the height
-corresponding to the first living branch expressed as a fraction of
-total height. It is calculated from the crown ratio (\(CR\); a
-proportion between 0 and 1), i.e.~the ratio between crown length and
-total height:
+Leaf area index (\(LAI\) in \(m^2 \cdot m^{-2}\)) of a given cohort
+\(i\) can be calculated from its foliar biomass (in \(kg \cdot m^{-2}\))
+by using a \emph{specific leaf area} coefficient (\(SLA\), in
+\(m^2 \cdot kg^{-1}\)) that in \textbf{medfate} is species-specific:
 
 \begin{equation}
-H_{b,i} = H_{i} \cdot (1 - CR_i)
-\label{eq:CrownHeight}
+LAI_{i} =  FB_{i} \cdot SLA
 \end{equation}
+
+The leaf area (\(LA\) in \(m^2\)) of an individual of the cohort is
+found by dividing it by plant density (\(N_i\), in
+\(ind.\cdot ha^{-1}\)) and multiplying by 10000 \(m^2 \cdot ha^{-1}\):
+
+\begin{equation}
+LA_{i} =  10000 \cdot LAI_{i} / N_{i}
+\end{equation}
+
+\subsection{Crown base height}\label{crownbaseheight}
 
 In the case of shrubs the crown ratio is simply equal by a
 species-specific parameter: \(CR_i = cr(SP_i)\). In the case of trees,
@@ -5040,25 +5359,6 @@ CW_i = a_{cw}\cdot BDH_i^{b_{cw}}
 \end{equation}
 
 where again \(a_{cw}\) and \(b_{cw}\) are species-specific parameters.
-
-\subsection{Leaf area density profile}\label{ladprofile}
-
-Leaf area of any plant cohort is assumed to be distributed vertically
-following a truncated Gaussian function whose standardized values -1.5
-and 1.5 correspond to crown base height and total plant height,
-respectively. The following figure illustrates the leaf area density
-profile for an example forest stand.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{vprofile_leafAreaDensity}\NormalTok{(exampleforest, SpParamsMED, }\DataTypeTok{z =} \KeywordTok{seq}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1000}\NormalTok{, }\DataTypeTok{by=}\DecValTok{1}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-76-1} \end{center}
-
-This density profile determines the extinction rates of light and wind
-through the forest canopy.
 
 \chapter{Fuel characteristics and fire
 behaviour}\label{fuel-characteristics-and-fire-behaviour}
@@ -5346,7 +5646,7 @@ bulk density profile for a given forest stand. Following
 \citet{Mitsopoulos2007}, a threshold \(t_{BDP} = 0.04\) has been used to
 determine shrub and canopy heights.
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-78-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-73-1} \end{center}
 
 \subsection{\texorpdfstring{Fuel loading (\(w\)) and fuel depth
 (\(\delta\))}{Fuel loading (w) and fuel depth (\textbackslash{}delta)}}\label{fuel-loading-w-and-fuel-depth-delta}
@@ -6591,7 +6891,7 @@ tree of height \(H\) and \(r_{int,ref}\) is the corresponding radius for
 a tree of height \(H_{ref}\) (\(H\) and \(H_{ref}\) are measured in m).
 The form of the empirical relationship by \citet{Olson2014} is:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-80-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-75-1} \end{center}
 
 Let's consider an example for a \emph{Quercus ilex} target tree of 4m
 height and where species-specific conductivity \(K_{s,max,ref} = 0.77\)
@@ -6696,7 +6996,7 @@ section of \citet{Christoffersen2016} (see also \citet{Savage2010}). The
 following figure shows the value of \(\chi_{tap:notap,ag}\) for
 different heights:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-84-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-79-1} \end{center}
 
 Note that, since \(\chi_{tap:notap,ag}(1) = 3.82\) (indicated using grey
 dashed lines in the last figure), the equation of maximum conductance
@@ -6730,7 +7030,7 @@ ilex} depending on the tree height and with/without considering taper of
 conduits. The plot on the right (both axes in log) show the slope of the
 dependency of conductance with height in both cases:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-86-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-81-1} \end{center}
 
 \subsection{Root xylem maximum hydraulic
 conductance}\label{root-xylem-maximum-hydraulic-conductance}
@@ -6910,7 +7210,7 @@ distribution, and is not a fixed fraction of stem maximum conductance.
 Assuming constant root length, then the proportion of total resistance
 due to the stem will increase with tree height \citep{Magnani2000}:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-97-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-92-1} \end{center}
 
 where the horizontal gray line indicates the value of 62.5\%. Of course
 rooting depth also increases with tree age, but young trees have higher
@@ -6946,7 +7246,7 @@ figure illustrates how the supply function, for different soil water
 potentials, is affected by increasing values of the average percentage
 of rhizosphere resistance:
 
-\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-98-1} \end{center}
+\begin{center}\includegraphics{medfatebook_files/figure-latex/unnamed-chunk-93-1} \end{center}
 
 \citet{Sperry2016a} found average percentages of rhizosphere resistance
 around 67\%, but these exceptionally-high values were probably a
@@ -7148,7 +7448,7 @@ Description\strut
 \begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
 \(d_{s}\)\strut
 \end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
-mm\strut
+\(mm\)\strut
 \end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
 \texttt{widths}\strut
 \end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
@@ -7320,11 +7620,29 @@ each soil layer\strut
 \begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
 \(WT\)\strut
 \end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
-mm\strut
+\(mm\)\strut
 \end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
 \strut
 \end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
 Water table depth\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\(V_{s}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\(mm\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
+\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
+Water content in soil layer \(s\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\(V_{fc, soil}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\(mm\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
+\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
+Water retention capacity of the whole soil\strut
 \end{minipage}\tabularnewline
 \begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
 \(W_{s}\)\strut
@@ -7339,7 +7657,7 @@ layer \(s\)\strut
 \begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
 \(S_{snow}\)\strut
 \end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
-mm\strut
+\(mm\)\strut
 \end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
 \texttt{SWE}\strut
 \end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
@@ -7365,13 +7683,32 @@ Description\strut
 \midrule
 \endhead
 \begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\(SP_i\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
+\texttt{Species}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
+Species identity of cohort \(i\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
 \(H_i\)\strut
 \end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
-cm\strut
+\(cm\)\strut
 \end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
-\texttt{H}\strut
+\texttt{Height}\strut
 \end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
-Total tree or shrub height of cohort \(i\)\strut
+Average tree or shrub height of cohort \(i\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\(H_{b,i}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\(cm\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
+\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
+Crown base height (i.e.~the height corresponding to the first living
+branch) of cohort \(i\)\strut
 \end{minipage}\tabularnewline
 \begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
 \(CR_i\)\strut
@@ -7380,13 +7717,58 @@ Total tree or shrub height of cohort \(i\)\strut
 \end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
 \texttt{CR}\strut
 \end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
-Crown ratio (i.e.~the ratio between crown length and total height) of
-cohort \(i\)\strut
+Crown ratio (i.e.~ratio between crown length and plant height) of cohort
+\(i\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\(N_i\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\(ind · ha^{-1}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
+\texttt{N}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
+Density of tree individuals of cohort \(i\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\(DBH_i\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\(cm\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
+\texttt{DBH}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
+Diameter at breast height of trees in cohort \(i\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\(Cover_i\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\%\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
+\texttt{Cover}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
+Percent cover of shrubs in cohort \(i\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\(FB_{i}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\(kg \cdot m^{-2}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
+\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
+Foliar biomass of cohort \(i\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\(\phi_i\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+{[}0-1{]}\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
+\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
+Fraction of maximum leaf area currently expanded for cohort \(i\)\strut
 \end{minipage}\tabularnewline
 \begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
 \(LAI^{live}_i\)\strut
 \end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
-\strut
+\(m^2 \cdot m^{-2}\)\strut
 \end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
 \texttt{LAI\_live}\strut
 \end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
@@ -7396,7 +7778,7 @@ stand) of cohort \(i\)\strut
 \begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
 \(LAI^{dead}_i\)\strut
 \end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
-\strut
+\(m^2 \cdot m^{-2}\)\strut
 \end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
 \texttt{LAI\_dead}\strut
 \end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
@@ -7406,12 +7788,66 @@ stand) of cohort \(i\)\strut
 \begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
 \(LAI^{\phi}_i\)\strut
 \end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
-\strut
+\(m^2 \cdot m^{-2}\)\strut
 \end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
 \texttt{LAI\_expanded}\strut
 \end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
 Current expanded leaf area index (one-side expanded leaf area per
 surface area of the stand) of cohort \(i\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\(LAI^{all}_{i}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\(m^2 \cdot m^{-2}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
+\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
+Total leaf area index (live or dead) of cohort \(i\)\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\(LAI^{live}_{stand}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\(m^2 \cdot m^{-2}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
+\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
+Maximum leaf area index of living leaves of the stand\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\(LAI^{dead}_{stand}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\(m^2 \cdot m^{-2}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
+\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
+Leaf area index of dead leaves of the stand\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\(LAI^{\phi}_{stand}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\(m^2 \cdot m^{-2}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
+\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
+Current expanded leaf area index of live leaves of the stand\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\(LAI_{stand}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\(m^2 \cdot m^{-2}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
+\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
+Total leaf area index (live or dead) of the stand\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\(LA_{i}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\(m^{2}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
+\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
+Leaf area of an individual of cohort \(i\)\strut
 \end{minipage}\tabularnewline
 \begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
 \(v_{i,s}\)\strut
@@ -7441,6 +7877,115 @@ mm\strut
 \end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
 Depth above which 95\% of the fine root mass of cohort \(i\) is
 located\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\section{Meteorology}\label{meteorology}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+\begin{minipage}[b]{0.11\columnwidth}\raggedright\strut
+Symbol\strut
+\end{minipage} & \begin{minipage}[b]{0.10\columnwidth}\raggedright\strut
+Units\strut
+\end{minipage} & \begin{minipage}[b]{0.12\columnwidth}\raggedright\strut
+R param\strut
+\end{minipage} & \begin{minipage}[b]{0.45\columnwidth}\raggedright\strut
+Description\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\(T_{mean}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\(^{\circ} \mathrm{C}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
+\texttt{MeanTemperature}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
+Mean temperature\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\(T_{min}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\(^{\circ} \mathrm{C}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
+\texttt{MinTemperature}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
+Minimum temperature\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\(T_{max}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\(^{\circ} \mathrm{C}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
+\texttt{MaxTemperature}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
+Maximum temperature\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\(RH_{min}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\%\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
+\texttt{MinRelativeHumidity}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
+Minimum relative humidity\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\(RH_{max}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\%\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
+\texttt{MaxRelativeHumidity}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
+Maximum relative humidity\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\(P\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\(L \cdot m^{-2} = mm\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
+\texttt{Precipitation}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
+Precipitation\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\(PET\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\(L \cdot m^{-2} = mm\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
+\texttt{PET}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
+Potential evapotranspiration, preferably calculated using Penman's
+equation\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\(Rad\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\(MJ \cdot m^{-2}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
+\texttt{Radiation}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
+Solar radiation after accounting for clouds\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\(u\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\(m \cdot s^{-1}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
+\texttt{WindSpeed}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
+Wind speed\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.11\columnwidth}\raggedright\strut
+\(GDD\)\strut
+\end{minipage} & \begin{minipage}[t]{0.10\columnwidth}\raggedright\strut
+\(^{\circ} \mathrm{C}\)\strut
+\end{minipage} & \begin{minipage}[t]{0.12\columnwidth}\raggedright\strut
+\texttt{GDD}\strut
+\end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
+Growth degree days.\strut
 \end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
@@ -7523,6 +8068,60 @@ Sapwood porosity (volume of empty spaces over total volume)\strut
 \end{minipage} & \begin{minipage}[t]{0.45\columnwidth}\raggedright\strut
 Leaf porosity (volume of empty spaces over total volume)\strut
 \end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\section{Light extinction}\label{light-extinction}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+Symbol & Units & R param & Description\tabularnewline
+\midrule
+\endhead
+\(k_{PAR,i}\) & & \texttt{k} & PAR extinction coefficient for cohort
+\(i\)\tabularnewline
+\(k_{SWR,i}\) & & & SWR extinction coefficient for cohort
+\(i\)\tabularnewline
+\(L^{PAR}_{ground}\) & {[}0-1{]} & \texttt{LgroundPAR} & Fraction of PAR
+reaching the ground\tabularnewline
+\(L^{SWR}_{ground}\) & {[}0-1{]} & \texttt{LgroundSWR} & Fraction of SWR
+reaching the ground\tabularnewline
+\bottomrule
+\end{longtable}
+
+\section{Hydrology and water balance}\label{hydrology-and-water-balance}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+Symbol & Units & R param & Description\tabularnewline
+\midrule
+\endhead
+\(Ps\) & \(mm\) & \texttt{Snow} & Precipitation as snow\tabularnewline
+\(Pr\) & \(mm\) & \texttt{Rain} & Precipitation as
+rainfall\tabularnewline
+\(Sm\) & \(mm\) & \texttt{Snowmelt} & Snowmelt\tabularnewline
+\(Pr_{net}\) & \(mm\) & \texttt{NetRain} & Net rainfall\tabularnewline
+\(In\) & \(mm\) & \texttt{Interception} & Interception
+loss\tabularnewline
+\(Ru\) & \(mm\) & \texttt{Runoff} & Water exported from the stand as
+runoff\tabularnewline
+\(Ro\) & \(mm\) & \texttt{Runon} & Water imported to the stand as
+runon\tabularnewline
+\(Dd\) & \(mm\) & \texttt{DeepDrainage} & Water exported from the stand
+as deep drainage\tabularnewline
+\(P_G\) & \(mm\) & & Amount of rainfall needed to saturate the canopy
+for a given event\tabularnewline
+\(S_{canopy}\) & \(mm\) & \texttt{Cm} & Canopy water storage
+capacity\tabularnewline
+\((E/R)\) & & & Ratio between evaporation rate and rainfall
+rate\tabularnewline
+\(C_{canopy}\) & {[}0-1{]} & & Canopy cover\tabularnewline
+\(PE_{soil}\) & \(mm\) & & Evaporation demand from the
+soil\tabularnewline
+\(SE_{soil}\) & \(mm\) & & Evaporation supply from the
+soil\tabularnewline
+\(Es\) & \(mm\) & \texttt{SoilEvaporation} & Evaporation from the soil
+surface\tabularnewline
 \bottomrule
 \end{longtable}
 
