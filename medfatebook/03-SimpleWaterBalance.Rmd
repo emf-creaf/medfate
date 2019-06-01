@@ -40,8 +40,9 @@ Every day, water balance is simuilated in the following several steps:
 
 + Update leaf area values according to the phenology of species and recalculate light extinction (sections \@ref(leafphenology) and \@ref(basiclightextinction)).
 + If snow dynamics are included, increase snow pack from snow precipitation ($Ps$) and decreases it from snow melting ($Sm$) (section \@ref(snowpack)).
-+ Increase soil moisture due to rainfall ($Pr$), surface runon ($Ro$) and snow melting ($Sm$), after accounting for interception loss ($In$), surface runoff ($Ru$) and deep drainage ($Dd$)  (sections \@ref(interception) and \@ref(runoff))
-+ Decrease water content due to bare soil evaporation ($Es$) (section \@ref(soilevaporation)).
++ Determine rainfall interception loss ($In$) and net rainfall ($Pr_{net}$) (section \@ref(interception))
++ Increase soil water content due to net rainfall ($Pr_{net}$), surface runon ($Ro$) and snow melting ($Sm$), after accounting for surface runoff ($Ru$) and deep drainage ($Dd$) (section \@ref(runoff)).
++ Decrease soil water content due to bare soil evaporation ($Es$) (section \@ref(soilevaporation)).
 + Determine transpiration, photosynthesis and drought stress for each plant cohort  and decrease water content due to plant transpiration ($Tr$) (chapter \@ref(transpirationgranier)).
 
 Details of the formulation of each of these processes are provided within the referred chapters and sections.

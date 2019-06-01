@@ -51,7 +51,7 @@ shows examples of relative throughfall (including stemflow), calculated accordin
 
 (ref:interception-cap) Examples of canopy interception with different $S_{canopy}$ (canopy water storage capacity), $E/R$ (ratio between evaporation and rainfall rates) and $p$ (throughfall coefficient; $p = 1 - C_{canopy}$).
 
-```{r interception, echo=FALSE, fig.width=7, fig.height=7,  fig.align='center', fig.cap='(ref:interception-cap)'}
+```{r interception, echo=FALSE, fig.width=8, fig.height=8,  fig.align='center', fig.cap='(ref:interception-cap)'}
 par(mfrow=c(2,2), mar=c(5,5,5,1))
 throughfallMatrixGash<-function(P = seq(1,50, by=1), Cm = seq(1,5, by=1), ER = 0.08,p=0.8) {
   m2<-P-hydrology_rainInterception(P,Cm[1],p,ER=ER)

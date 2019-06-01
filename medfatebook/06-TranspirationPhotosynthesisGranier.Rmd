@@ -1,36 +1,44 @@
-# Transpiration and photosynthesis under Granier's model {#transpirationgranier}
+# Transpiration, photosynthesis and drought stress under Granier's model {#transpirationgranier}
 
-## PET and maximum canopy transpiration
+## Plant transpiration and photosynthesis
+### Maximum transpiration
 
-In this model daily potential evapotranspiration ($PET$; in mm·day$^{-1}$; the amount of evaporation that would occur if a sufficient water source was available) is part of the meteorological input and has to be calculated externally. $PET$ is assumed to represent open water evaporation potential (like in Penman's formula). Maximum canopy transpiration $Tr_{\max}$ not only depends on $PET$ but also on the amount of transpirating surface. To estimate $Tr_{\max}$ we take the approach of @Granier1999, where $Tr_{\max}/PET$ is a function of $LAI_{stand}$ – the cumulative leaf area of the forest stand –, according to the empirical equation:
+Potential evapotranspiration ($PET$, in $mm$) is assumed to represent open water evaporation potential. Maximum canopy transpiration $Tr_{\max}$ depends on both $PET$ and the amount of transpirating surface, i.e. the current cumulative $LAI$ of the stand, $LAI^{\phi}_{stand}$. To estimate $Tr_{\max}$ the model uses the empirical equation of @Granier1999, where $Tr_{\max}/PET$ is a function of $LAI^{\phi}_{stand}$:
+
 \begin{equation}
-\frac{Tr_{\max}}{PET}= -0.006\,LAI_{stand}^2+0.134\,LAI_{stand}+0.036
+\frac{Tr_{\max}}{PET}= -0.006\cdot (LAI^{\phi}_{stand})^2+0.134\cdot LAI^{\phi}_{stand}+0.036
 \end{equation}
-This equation has already been adopted for Mediterranean biomes (Fyllas and
-Troumbis, 2009; Ruffault et al., 2013). 
-```{r, fig.width=4, fig.height=4, fig.align = "center", echo=FALSE, fig.cap="Empirical relationship between $Tr_max/PET$ and $LAI_{stand}$"}
+This equation has already been adopted for Mediterranean biomes [@Fyllas2009; @Ruffault2013]. 
+
+(ref:tmaxpet-cap) Empirical relationship between $Tr_{\max}/PET$ and $LAI^{\phi}_{stand}$
+
+```{r tmaxpet, fig.width=4, fig.height=4, fig.align = "center", echo=FALSE, fig.cap='(ref:tmaxpet-cap)'}
 par(mar=c(4,4,1,1))
 LAIc = seq(0,10, by=0.01)
 TmaxPET = -0.006*(LAIc^2) + 0.134*LAIc + 0.036
 plot(LAIc, TmaxPET, type="l", ylab="Tr_max/PET", xlab="LAIstand", ylim=c(0,1))
 ```
 
-The maximum transpiration for a given plant cohort $i$ is calculated as the
-portion of $Tr_{\max}$ defined by the fraction of total absorbed SWR that is due
-to cohort $i$:
+The maximum transpiration for a given plant cohort $i$ is calculated as the portion of $Tr_{\max}$ defined by $f_i$ the fraction of total absorbed SWR that is due
+to cohort $i$ (see section \@ref(basiclightextinction)):
 \begin{equation}
 Tr_{\max, i} = Tr_{\max} \cdot \frac{f_i}{\sum_{j}{f_j}}
 \end{equation}
 
-## Actual plant transpiration
-Actual plant transpiration depends on soil moisture and is calculated for each plant cohort and each soil layer separately. $Tr_{i,s}$ (in mm·day$^{-1}$) represents the transpiration made by cohort $i$ from layer $s$. Actual plant transpiration from a given layer is regulated by soil moisture and the resistance to water flow through the plant. For each plant cohort $i$ and soil layer $s$, the model first estimates the a whole-plant relative water conductance, $K_{i,s}$, which varies between 0 and 1 depending on $\Psi_{extract,i}$, the potential at which conductance is 50% of maximum, and $\Psi_s$, the water potential in layer $s$ (see function `hydraulics_psi2K()`):
+### Actual plant transpiration
+
+Actual plant transpiration depends on soil moisture and is calculated for each plant cohort and each soil layer separately. $Tr_{i,s}$ (in $mm$) represents the transpiration made by cohort $i$ from layer $s$. Actual plant transpiration from a given layer is regulated by soil moisture and the resistance to water flow through the plant. For each plant cohort $i$ and soil layer $s$, the model first estimates the a whole-plant relative water conductance, $K_{i,s}$, which varies between 0 and 1 depending on $\Psi_{extract,i}$, the potential at which conductance is 50% of maximum, and $\Psi_s$, the water potential in layer $s$. This relationship is modelled using a Weibull function (see function `hydraulics_psi2K()`):
 \begin{equation}
 K_{i,s}=K_{i}(\Psi_s) = \exp \left \{\ln{(0.5)}\cdot \left[ \frac{\Psi_s}{\Psi_{extract,i}} \right] ^r \right \} 
+(#eq:relativewholeplantconductance)
 \end{equation}
 where $r$ is an exponent that modulates the steepness of the decrease in relative
 conductance when soil potential becomes negative (by default, $r = 3$) and $\ln(0.5)$
-is used to ensure that $K_{i}(\Psi_{extract,i}) = 0.5$ (Fig. 4).
-```{r, fig.width=3.5, fig.height=3.5, fig.align="center", echo=FALSE, fig.cap="Whole-plant relative water conductance functions for different water potential values ($r = 3$ in all cases)."}
+is used to ensure that $K_{i}(\Psi_{extract,i}) = 0.5$ (Fig. \@ref(fig:wholeplantconductance)).
+
+(ref:wholeplantconductance-cap) Whole-plant relative water conductance functions for different water potential values ($r = 3$ in all cases)
+
+```{r wholeplantconductance, fig.width=4, fig.height=4, fig.align="center", echo=FALSE, fig.cap='(ref:wholeplantconductance-cap)'}
 par(mar=c(4,4,1,1))
 x = seq(-10, 0, by=0.01)
 plot(-x ,unlist(lapply(x,hydraulics_psi2K,-2.0,3.0)), type="l", ylab="K (relative conductance)", xlim=c(0,10), ylim=c(0,1),xlab="Soil water potential (-MPa)", frame=FALSE)
@@ -43,88 +51,59 @@ abline(h=50, col="gray", lwd=2)
 ```
 
 Actual transpiration of plant cohort $i$ from a given soil layer $s$, $Tr_{i,s}$,
-is defined as the product of (Mouillot et al., 2001): (i) the maximum transpiration
-of the plant cohort; (ii) the relative whole-plant conductance, $K_{i,s}$,
-corresponding to the species and water potential in layer $s$; (iii) the
-proportion of plant fine roots in layer $s$, $v_{i,s}$:
+is defined as the product of [@Mouillot2001]: the maximum transpiration of the plant cohort ($Tr_{\max,i}$), the relative whole-plant conductance ($K_{i,s}$) corresponding to the species and water potential in layer $s$, and the proportion of plant fine roots in layer $s$, $v_{i,s}$:
 \begin{equation}
 Tr_{i,s} =  Tr_{\max,i} \cdot K_{i,s} \cdot v_{i,s}
 \end{equation}
-The total amount of water transpired by plants, $Tr$ (in mm·day$^{-1}$), is the sum of
-$Tr_{i,s}$ values over all plant cohorts and soil layers:
+
+The total amount of water transpired by plants, $Tr$ (in $mm$), is the sum of $Tr_{i,s}$ values over all plant cohorts and soil layers:
 \begin{equation}
 Tr =\sum_{s}\sum_{i}{Tr_{i,s}}
 \end{equation}
-Assuming no water limitations (i.e. $K_{i,s} = 1$), we have that $Tr = Tr_{\max}$.
-Total stand transpiration will be lower than $Tr_{\max}$ if soil water potential
-in any layer is negative enough to cause a significant reduction in whole-plant
-conductance. At the plant level, the transpiration of a given plant cohort will
-be lower than that of others if: (1) the cohort is under the shade (it reduces
-$f_i$ and hence $Tr_{\max,i}$); (2) the cohort has a lower amount of leaf area
-(it reduces $f_i$ and hence $Tr_{\max,i}$); (3) the soil layers exploited by the
-cohort have more negative water potentials (it reduces $K_{i,s}$). 
+Assuming no water limitations (i.e. $K_{i,s} = 1$), we have that $Tr = Tr_{\max}$. Total stand transpiration will be lower than $Tr_{\max}$ if soil water potential in any layer is negative enough to cause a significant reduction in whole-plant conductance. At the plant level, the transpiration of a given plant cohort will be lower than that of others if: 
+
+  a. The cohort is under the shade (it reduces $f_i$ and hence $Tr_{\max,i}$)
+  b. The cohort has a lower amount of leaf area (it reduces $f_i$ and hence $Tr_{\max,i}$)
+  c. The soil layers exploited by the cohort have more negative water potentials (it reduces $K_{i,s}$). 
 
 
-## Plant photosynthesis
+### Plant photosynthesis
 
-Because it is useful for growth and forest dynamics, and for compatibility with
-the 'Sperry' transpiration mode, the 'Granier' transpiration mode also calculates
-net assimilated carbon. Assuming a constant maximum water use efficiency (WUE),
-photosynthesis for a given plant cohort $i$ (in g C · m$^{-2}$ · day$^{-1}$) is
-estimated as a function of transpiration [@Mouillot2001]:
+Because it is useful for growth, and for compatibility with the 'Sperry' transpiration mode (chapter \@ref(advancedwaterbalance)), the water balance model using 'Granier' transpiration mode also calculates net assimilated carbon. Assuming a constant maximum water use efficiency (WUE), photosynthesis for a given plant cohort $i$ (in $g C \cdot m^{-2}$) is estimated as a function of transpiration [@Mouillot2001]:
 \begin{equation}
 A_n = \alpha \cdot WUE_{\max} \cdot Tr_i
 \end{equation}
-where $Tr_i$ is the transpiration of plant cohort $i$, $WUE_{\max}$ is the
-maximum water use efficiency of the corresponding species (in g C · mm$^{-1}$)
-and $\alpha = T_{mean}/20$ is bounded between 0 and 1.
+where $Tr_i$ is the transpiration of plant cohort $i$, $WUE_{\max}$ is the maximum water use efficiency of the corresponding species (in $g C \cdot mm^{-1}$) and $\alpha = T_{mean}/20$ is bounded between 0 and 1.
 
-\subsubsection{Plant drought stress and plant water potential}
+## Plant drought stress
 
-Similarly to @Mouillot2002, daily drought stress of a given plant cohort
-$i$, $DDS_i$, is defined as the complement of relative whole-plant conductance and
-is aggregated across soil layers using the proportion of fine roots in each layer
-as weights:
+### Daily drought stress and plant water potential
+
+Similarly to @Mouillot2002, daily drought stress of a given plant cohort $i$, $DDS_i$, is defined as the complement of relative whole-plant conductance and is aggregated across soil layers using the proportion of fine roots in each layer as weights:
 \begin{equation}
 DDS_i=\phi_i \cdot \sum_{s}{(1-K_{i,s})\cdot v_{i,s}}
 \end{equation}
-Leaf-phenological status is included to prevent winter deciduous plants from
-suffering drought stress during winter. Daily drought stress values can be later
-used to define drought stress indices for larger temporal scales, as presented in
-the main text.
+Leaf-phenological status is included to prevent winter deciduous plants from suffering drought stress during winter. Daily drought stress values can be later used to define drought stress indices for larger temporal scales, as presented in the main text.
 
-Granier's transpiration model does not allow estimating a water potential drop
-from soil to the leaf. Moreover, in a multilayered soil it is difficult to know
-what would be the water potential of the plant. Despite these limitations, a
-gross surrogate of (pre-dawn) 'leaf water potential' ($\Psi_{leaf,i}$; in MPa) may be
-obtained averaging whole-plant relative conductance values:
+Granier's transpiration model does not allow estimating a water potential drop from soil to the leaf. Moreover, in a multilayered soil it is difficult to know what would be the water potential of the plant. Despite these limitations, a gross surrogate of (pre-dawn) 'leaf water potential' ($\Psi_{leaf,i}$; in MPa) may be obtained averaging whole-plant relative conductance values and inverting the conductance function:
 \begin{equation}
-\Psi_{leaf,i}=K^{-1}(K_i) = K^{-1}\left(\sum_{s}{K_{i,s}\cdot v_{i,s}}\right)
+\Psi_{leaf,i}= K_i^{-1}\left(\sum_{s}{K_{i,s}\cdot v_{i,s}}\right)
 \end{equation}
-where $K_i$ is the average whole-plant relative conductance obtained from the
-scalar product of conductances and fine root proportions and $K^{-1}$ is the inverse of the whole-plant conductance function (see function `hydraulics_K2Psi()`). 
+where $K_i^{-1}$ is the inverse of the relative whole-plant conductance eq. \@ref(eq:relativewholeplantconductance) (see function `hydraulics_K2Psi()`). 
 
-## Irreversible cavitation and hydraulic disconnection
-The water balance model is normally run assuming that although soil drought may
-reduce transpiration, embolized xylem conduits are automatically refilled when
-soil moisture recovers (in other words, cavitation is reversible). It is possible
-to simulate irreversible cavitation by setting `cavitationRefill = FALSE` in the control parameters. This option causes the model to keep track of the maximum value of drought stress so far experienced:
+### Irreversible cavitation and hydraulic disconnection
+The water balance model is normally run assuming that although soil drought may reduce transpiration, embolized xylem conduits are automatically refilled when soil moisture recovers (in other words, cavitation is reversible). It is possible to simulate irreversible cavitation by setting `cavitationRefill = FALSE` in the control parameters. This option causes the model to keep track of the maximum value of drought stress so far experienced:
 \begin{equation}
 P_{embolized,i}= \max \{P_{embolized,i}, DDS_i \}
 \end{equation}
-and then $K_{i,s}$ cannot be larger than the complement of this maximum drought
-stress:
+and then $K_{i,s}$ cannot be larger than the complement of this maximum drought stress:
 \begin{equation}
 K_{i,s} = \min \{K_{i}(\Psi_s), 1.0 - P_{embolized,i} \}
 \end{equation}
 
-Another optional behavior consists in allowing the plant to disconnect from the
-soil when its potential becomes too negative. This may be advantageous for a
-cavitation-sensitive plant that is competing for water with another plant with
-higher extraction capacity. Parameter $K_{rootdisc,i}$ can be used to specify the
-minimum relative conductance value that the plant will tolerate without
-disconnecting hydraulically from the soil (by default $K_{rootdisc,i} = 0$).
-If, after possibly accounting for irreversible cavitation, $K_{i,s}<K_{rootdisc,i}$
+Note that, even if cavitation can be considered irreversible, $P_{embolized,i}$ values are set to zero at the beginning of each year, assuming that embolized plants overcome the conductance loss by creating new xylem tissue.
+
+Another optional behavior consists in allowing the plant to disconnect from the soil when its potential becomes too negative. This may be advantageous for a cavitation-sensitive plant that is competing for water with another plant with higher extraction capacity. Parameter $K_{rootdisc,i}$ can be used to specify the minimum relative conductance value that the plant will tolerate without disconnecting hydraulically from the soil (by default $K_{rootdisc,i} = 0$). If, after possibly accounting for irreversible cavitation, $K_{i,s}<K_{rootdisc,i}$
 for a given soil layer, then the model assumes that transpiration from this soil
 layer is absent. Moreover, $K_{i,s}$ is assumed equal to $K_{rootdisc,i}$ for the
 sake of determining plant water potential. 

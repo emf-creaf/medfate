@@ -48,6 +48,43 @@
 
 
 
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -116,11 +153,16 @@
 <li class="chapter" data-level="5.4" data-path="hydrology.html"><a href="hydrology.html#runoff"><i class="fa fa-check"></i><b>5.4</b> Runoff, infiltration and percolation</a></li>
 <li class="chapter" data-level="5.5" data-path="hydrology.html"><a href="hydrology.html#soilevaporation"><i class="fa fa-check"></i><b>5.5</b> Bare soil evaporation</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="transpirationgranier.html"><a href="transpirationgranier.html"><i class="fa fa-check"></i><b>6</b> Transpiration and photosynthesis under Granier’s model</a><ul>
-<li class="chapter" data-level="6.1" data-path="transpirationgranier.html"><a href="transpirationgranier.html#pet-and-maximum-canopy-transpiration"><i class="fa fa-check"></i><b>6.1</b> PET and maximum canopy transpiration</a></li>
-<li class="chapter" data-level="6.2" data-path="transpirationgranier.html"><a href="transpirationgranier.html#actual-plant-transpiration"><i class="fa fa-check"></i><b>6.2</b> Actual plant transpiration</a></li>
-<li class="chapter" data-level="6.3" data-path="transpirationgranier.html"><a href="transpirationgranier.html#plant-photosynthesis"><i class="fa fa-check"></i><b>6.3</b> Plant photosynthesis</a></li>
-<li class="chapter" data-level="6.4" data-path="transpirationgranier.html"><a href="transpirationgranier.html#irreversible-cavitation-and-hydraulic-disconnection"><i class="fa fa-check"></i><b>6.4</b> Irreversible cavitation and hydraulic disconnection</a></li>
+<li class="chapter" data-level="6" data-path="transpirationgranier.html"><a href="transpirationgranier.html"><i class="fa fa-check"></i><b>6</b> Transpiration, photosynthesis and drought stress under Granier’s model</a><ul>
+<li class="chapter" data-level="6.1" data-path="transpirationgranier.html"><a href="transpirationgranier.html#plant-transpiration-and-photosynthesis"><i class="fa fa-check"></i><b>6.1</b> Plant transpiration and photosynthesis</a><ul>
+<li class="chapter" data-level="6.1.1" data-path="transpirationgranier.html"><a href="transpirationgranier.html#maximum-transpiration"><i class="fa fa-check"></i><b>6.1.1</b> Maximum transpiration</a></li>
+<li class="chapter" data-level="6.1.2" data-path="transpirationgranier.html"><a href="transpirationgranier.html#actual-plant-transpiration"><i class="fa fa-check"></i><b>6.1.2</b> Actual plant transpiration</a></li>
+<li class="chapter" data-level="6.1.3" data-path="transpirationgranier.html"><a href="transpirationgranier.html#plant-photosynthesis"><i class="fa fa-check"></i><b>6.1.3</b> Plant photosynthesis</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="transpirationgranier.html"><a href="transpirationgranier.html#plant-drought-stress"><i class="fa fa-check"></i><b>6.2</b> Plant drought stress</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="transpirationgranier.html"><a href="transpirationgranier.html#daily-drought-stress-and-plant-water-potential"><i class="fa fa-check"></i><b>6.2.1</b> Daily drought stress and plant water potential</a></li>
+<li class="chapter" data-level="6.2.2" data-path="transpirationgranier.html"><a href="transpirationgranier.html#irreversible-cavitation-and-hydraulic-disconnection"><i class="fa fa-check"></i><b>6.2.2</b> Irreversible cavitation and hydraulic disconnection</a></li>
+</ul></li>
 </ul></li>
 <li class="part"><span><b>III Advanced water balance modelling</b></span></li>
 <li class="chapter" data-level="7" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html"><i class="fa fa-check"></i><b>7</b> Advanced water balance model</a><ul>
@@ -339,7 +381,7 @@ Sm = \frac{Rad\cdot L^{SWR}_{ground}\cdot (1-\alpha_{ice}) + \tau_{day} \cdot T_
 </div>
 <div id="interception" class="section level2">
 <h2><span class="header-section-number">5.3</span> Rainfall interception loss</h2>
-As mentioned above, interception loss is only modelled for liquid precipitation (i.e. snow interception is not modelled). Rainfall interception loss, <span class="math inline">\(In\)</span>, is estimated using the <span class="citation">J. Gash, Lloyd, and Lachaud (<a href="#ref-Gash1995">1995</a>)</span> analytical interception model for sparse canopies, where rain is assumed to fall in a single event during the day. First, the amount of rainfall needed to saturate the canopy is calculated:
+As mentioned above, interception loss is only modelled for liquid precipitation (i.e. snow interception is not modelled). Rainfall interception loss, <span class="math inline">\(In\)</span>, is estimated using the <span class="citation">Gash, Lloyd, and Lachaud (<a href="#ref-Gash1995">1995</a>)</span> analytical interception model for sparse canopies, where rain is assumed to fall in a single event during the day. First, the amount of rainfall needed to saturate the canopy is calculated:
 <span class="math display">\[\begin{equation}
 P_G = - \frac{S_{canopy}/C_{canopy}}{(E/R)} \cdot \ln(1-(E/R))
 \end{equation}\]</span>
@@ -357,7 +399,7 @@ S_{canopy}=\sum_{i}{s_{water,i}\cdot LAI_{i}^{\phi}}
 <p>where <span class="math inline">\(s_{water,i}\)</span> is the depth of water that can be retained by leaves, branches and stems of cohort <span class="math inline">\(i\)</span> per unit of leaf area index (<span class="math inline">\(mm \cdot LAI^{-1}\)</span>). To estimate the stand cover, <span class="math inline">\(C_{canopy}\)</span>, we use the complement of the percentage of PAR that reaches the ground, i.e. <span class="math inline">\(C_{canopy} = 1 - L^{PAR}_{ground}\)</span> <span class="citation">(Deguchi, Hattori, and Park <a href="#ref-Deguchi2006">2006</a>)</span>. Fig. <a href="hydrology.html#fig:interception">5.1</a> below shows examples of relative throughfall (including stemflow), calculated according to the Gash et al <span class="citation">(<a href="#ref-Gash1995">1995</a>)</span> interception model, under different situations (see function <code>hydrology_rainInterception()</code>).</p>
 
 <div class="figure" style="text-align: center"><span id="fig:interception"></span>
-<img src="medfatebook_files/figure-html/interception-1.png" alt="Examples of canopy interception with different \(S_{canopy}\) (canopy water storage capacity), \(E/R\) (ratio between evaporation and rainfall rates) and \(p\) (throughfall coefficient; \(p = 1 - C_{canopy}\))." width="672" />
+<img src="medfatebook_files/figure-html/interception-1.png" alt="Examples of canopy interception with different \(S_{canopy}\) (canopy water storage capacity), \(E/R\) (ratio between evaporation and rainfall rates) and \(p\) (throughfall coefficient; \(p = 1 - C_{canopy}\))." width="768" />
 <p class="caption">
 Figure 5.1: Examples of canopy interception with different <span class="math inline">\(S_{canopy}\)</span> (canopy water storage capacity), <span class="math inline">\(E/R\)</span> (ratio between evaporation and rainfall rates) and <span class="math inline">\(p\)</span> (throughfall coefficient; <span class="math inline">\(p = 1 - C_{canopy}\)</span>).
 </p>
