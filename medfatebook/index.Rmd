@@ -19,7 +19,11 @@ description: "This is a reference book for models implemented in package medfate
 options(tinytex.verbose = TRUE) #For debugging
 library(medfate)
 library(ggplot2)
+library(cowplot)
+data("SpParamsMED")
+data(exampleforest)
 ```
+
 This is a reference book for the models implemented in the R package **medfate**. This package provides functions for the simulation of functioning and dynamics of Mediterranean forests.
 ```{r, out.width='20%', fig.align="center", echo=FALSE}
 knitr::include_graphics("LOGO_Group.png")

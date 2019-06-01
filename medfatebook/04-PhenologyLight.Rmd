@@ -3,32 +3,53 @@
 
 ## Leaf phenology and leaf fall 
 
-Given a base temperature ($T_{base} = 5^{\circ} \mathrm{C}$), the growth degree days ($GDD$) are zero for all those days where mean temperature $T_{mean}$ is below $T_{base}$ and start increasing when temperatures become warmer than this threshold. In other words, the $GDD$ function accumulates $\max(0.0, T_{mean} - T_{base})$ for all days previous to the current one. At the end of a year the cummulative value is set again to zero. Plant species can have either *evergreen* or *winter-deciduous* phenology. Evergreen plants maintain constant leaf area over the year, whereas in deciduous plants leaf-phenological status is updated daily, represented by $\phi_i$, the fraction of maximum leaf area. Leaf area index (LAI) values of deciduous plants are adjusted for leaf phenology following [@Prentice1993; @Sitch2003]:
+Given a base temperature ($T_{base} = 5^{\circ} \mathrm{C}$), the growth degree days ($GDD$) are zero for all those days where mean temperature $T_{mean}$ is below $T_{base}$ and start increasing when temperatures become warmer than this threshold. In other words, the $GDD$ function accumulates $\max(0.0, T_{mean} - T_{base})$ for all days previous to the current one. At the end of a year the cummulative value is set again to zero. Plant species can have either *evergreen* or *winter-deciduous* phenology. Evergreen plants maintain constant leaf area over the year, whereas in deciduous plants leaf-phenological status is updated daily, represented by $\phi_i$, the fraction of maximum leaf area. Leaf area index ($LAI$) values of deciduous plants are adjusted for leaf phenology following [@Prentice1993; @Sitch2003]:
 
 \begin{equation}
 LAI_{i}^{\phi}=LAI^{live}_i\,\cdot\phi_i
 \end{equation}
 
-Budburst occurs when daily temperature exceeds $T_{base}$ and $\phi_i$ increases
-linearly from 0 to 1 as function of the degree days above $T_{base}$, until a the
-value $S_{GDD,i}$ is reached (i.e. until $GDD > S_{GDD,i}$). In autumn, $\phi_i$
-drops to 0 when average daily temperature falls again below $T_{base}$ [@Sitch2003]. The drop of $\phi_i$ causes live expanded leaves to become dead leaves. To avoid a sudden decrease of leaf area, dead leaves are kept in the canopy and they are reduced daily using a negative exponential function of wind speed:
+whereas for evergreen species $LAI_{i}^{\phi}=LAI^{live}_i$. Budburst in deciduous species occurs when daily temperature exceeds $T_{base}$ and $\phi_i$ increases linearly from 0 to 1 as function of the degree days above $T_{base}$, until a the
+value $S_{GDD,i}$ is reached (i.e. until $GDD > S_{GDD,i}$). In autumn, $\phi_i$ drops to 0 when average daily temperature falls again below $T_{base}$ [@Sitch2003]. The drop of $\phi_i$ causes live expanded leaves to become dead leaves. To avoid a sudden decrease of leaf area, dead leaves are kept in the canopy and they are reduced daily using a negative exponential function of wind speed:
 \begin{equation}
 LAI^{dead}_i=LAI^{dead}_i\,\cdot e^{- u/10}
 \end{equation}
 where $u$ is wind speed in ($m \cdot s^{-1}$).
 
-After updating the leaf area of each cohort, the model updates the total leaf area of the stand. To simplify the notation, let us call $LAI^{all}_{i}$ the sum of dead and live expanded leaves of a cohort $i$:
+We will call total leaf area of a plant cohort $i$ ($LAI^{all}_{i}$) to the sum of dead and live expanded leaves of the cohort:
 \begin{equation}
 LAI^{all}_{i} = LAI^{\phi}_{i}+LAI^{dead}_{i}
 \end{equation}
-If there are $c$ plant cohorts, the leaf area index of the whole stand, $LAI_{stand}$
-is then:
-\begin{equation}
-LAI_{stand} = \sum_{i=1}^c{LAI_{i}^{all}}
-\end{equation}
+
+If there are $c$ plant cohorts, the leaf area index of the whole stand can be calculated for living leaves, expanded leaves, dead leaves and total leaf area as:
+\begin{eqnarray}
+LAI^{live}_{stand} &=& \sum_{i=1}^c{LAI_{i}^{live}} \\
+LAI^{\phi}_{stand} &=& \sum_{i=1}^c{LAI_{i}^{\phi}} \\
+LAI^{dead}_{stand} &=& \sum_{i=1}^c{LAI_{i}^{dead}} \\
+LAI^{all}_{stand} &=& \sum_{i=1}^c{LAI_{i}^{all}} = LAI^{\phi}_{stand}+LAI^{dead}_{stand}
+\end{eqnarray}
 
 Although simulations will normally start in winter and $GDD$ will be zero at the beginning, the user can specify a starting non-zero value for $GDD$ in the object created by function \texttt{spwbInput()}.
+
+## Leaf vertical distribution
+
+Crown base height ($H_{b,i}$; in cm) is defined as the height corresponding to the first living branch. It is calculated from the crown ratio ($CR$; a proportion between 0 and 1), i.e. the ratio between crown length and total height:
+\begin{equation}
+H_{b,i} = H_{i} \cdot (1 - CR_i)
+(\#eq:CrownHeight)
+\end{equation}
+
+Leaf area of any plant cohort is assumed to be distributed vertically following a **truncated Gaussian function** whose standardized values -1.5 and 1.5 correspond to crown base height ($CR_i$) and total plant height ($H_i$), respectively. The model divides the vertical dimension into vertical layers (by default, each layer is 50 cm in width). Let us define $LAI_{i,j}^{all} = LAI_{i,j}^{\phi}+LAI_{i,j}^{dead}$ as the leaf area index of cohort $i$ in layer $j$. The truncated Gaussian distribution defines the $LAI_{i,j}^{\phi}$ and $LAI_{i,j}^{dead}$ for all plant cohorts and vertical layers.
+
+Dividing the leaf area of a given layer by its width, one obtains the *leaf area density* ($LAD$ in $m^2 \cdot m^{-3}$). The following figure illustrates the leaf area density profile for an example forest stand. The left panel allows identificating the truncated Gaussian function of each plant cohort.
+```{r, fig.width=8, fig.height=4, fig.align='center', echo=FALSE, fig.cap="Leaf area density distribution in a forest stand. The left panel shows the distribution for each plant cohort separately, whereas the right panel shows the overall density distribution."}
+g1<-vprofile_leafAreaDensity(exampleforest, SpParamsMED, z = seq(0,1000, by=1), byCohorts = T)
+g1 <- g1 + theme(legend.background = element_blank(), legend.position = c(0.8,0.8))
+g2<-vprofile_leafAreaDensity(exampleforest, SpParamsMED, z = seq(0,1000, by=1))
+plot_grid(g1, g2, nrow=1, ncol=2)
+```
+
+The leaf area density profile determines the extinction rates of light and wind through the forest canopy. The same truncated Gaussian distribution is used to distribute fuel loading in the vertical dimension.
 
 ## Light extinction
 The proportion of photosynthetic active radiation (PAR) decreases with leaf area following thee Beer-Lambert’s light extinction equation. To calculate the proportion of PAR available for a given plant cohort one must accumulate the light extinction caused by cohorts whose crown is above that of the target cohort:

@@ -1,9 +1,5 @@
 # (PART) Static modules {-}
 
-```{r, echo = FALSE}
-data("SpParamsMED")
-data(exampleforest)
-```
 
 # Leaf biomass, leaf area and vertical profiles {#leafbiomass}
 
@@ -32,7 +28,7 @@ The input data for shrub cohorts are:
 + $a_{bsh}$ and $b_{bsh}$ [`a_bsh`, `b_bsh`]: Allometric coefficients relating phytovolume with dry weight of shrub individuals.
 + $cr(SP_i)$: [`cr`]: Ratio between crown length and total height for shrubs.
 
-## Leaf biomass and area
+## Allometric relationships
 
 ### Leaf biomass for tree cohorts
 
@@ -48,6 +44,7 @@ FB_{i} = FB_{tree,i}\cdot (N_{i}/10000)
 \end{equation}
 
 ### Leaf biomass for shrub cohorts
+
 To calculate the leaf biomass of a shrub cohort, we first determine $A_{sh,i}$, the area (in $cm^2$) occupied by one average individual of height $H_{i}$ (in $cm$), using the quadratic relationship: 
 \begin{equation}
 A_{sh,i} = a_{ash} \cdot H_{i}^2
@@ -62,27 +59,29 @@ N_{i} = \frac{C_{i}/100}{A_{sh,i}/10000}
 \end{equation}
 The fine fuel biomass of a shrub cohort ($W_{i}$, in $kg \cdot m^{-2}$) is simply the product of $B_{sh,i}$ ($kg$ of dry weight) and $N_{i}$:
 \begin{equation}
-W_{i} =  B_{sh,i}\cdot N_{i}
+W_{i} =  B_{sh,i} \cdot N_{i}
 (\#eq:shrubloading)
 \end{equation}
 Foliar biomass (in $kg \cdot m^{-2}$) can be obtained using the species-specific ratio $r_{6.35}(SP_i)$:
 \begin{equation}
-FB_{i} =  W_{i}/r_{6.35}(SP_i)\\
+FB_{i} =  W_{i}/r_{6.35}(SP_i)
 (\#eq:shrubfoliarbiomass)
 \end{equation}
 If not known, $r_{6.35}(SP_i)$ can be set to a default value of 2 (equivalent to %50 of weight corresponding to leaves).
 
-### Leaf area
-
-## Vertical distribution of leaves
+### Leaf area and LAI
+Leaf area index ($LAI$ in $m^2 \cdot m^{-2}$) of a given cohort $i$ can be calculated from its foliar biomass (in $kg \cdot m^{-2}$) by using a *specific leaf area* coefficient ($SLA$, in $m^2 \cdot kg^{-1}$) that in **medfate** is species-specific:
+\begin{equation}
+LAI_{i} =  FB_{i} \cdot SLA
+\end{equation}
+The leaf area ($LA$ in $m^2$) of an individual of the cohort is found by dividing it by plant density ($N_i$, in $ind.\cdot ha^{-1}$) and multiplying by 10000 $m^2 \cdot ha^{-1}$:
+\begin{equation}
+LA_{i} =  10000 \cdot LAI_{i} / N_{i}
+\end{equation}
 
 ### Crown base height {#crownbaseheight}
 
-Crown base height ($H_{b,i}$; in cm) is defined as the height corresponding to the first living branch expressed as a fraction of total height. It is calculated from the crown ratio ($CR$; a proportion between 0 and 1), i.e. the ratio between crown length and total height:
-\begin{equation}
-H_{b,i} = H_{i} \cdot (1 - CR_i)
-(\#eq:CrownHeight)
-\end{equation}
+
 In the case of shrubs the crown ratio is simply equal by a species-specific parameter: $CR_i =  cr(SP_i)$. In the case of trees, the crown ratio is modelled as a function of tree size and stand competition, following a modification of the logistic equation of @Hasenauer1996:
 \begin{equation}
 CR_i = \frac{1}{1+e^{-(a_{cr}+b_{1cr}\cdot HD +b_{2cr} \cdot (H_i/100)+b_{3cr} \cdot DBH_i^2+c_{1cr} \cdot BAL_i + c_{2cr} \cdot ln(CCF))}}
@@ -97,12 +96,3 @@ where $N_i$ is the tree density, $MCA_i$ is the maximum crown area (in percent o
 CW_i = a_{cw}\cdot BDH_i^{b_{cw}} 
 \end{equation}
 where again $a_{cw}$ and $b_{cw}$ are species-specific parameters. 
-
-### Leaf area density profile {#ladprofile}
-
-Leaf area of any plant cohort is assumed to be distributed vertically following a truncated Gaussian function whose standardized values -1.5 and 1.5 correspond to crown base height and total plant height, respectively. The following figure illustrates the leaf area density profile for an example forest stand. 
-```{r, fig.width=4, fig.height=4, fig.align='center'}
-vprofile_leafAreaDensity(exampleforest, SpParamsMED, z = seq(0,1000, by=1))
-```
-
-This density profile determines the extinction rates of light and wind through the forest canopy.

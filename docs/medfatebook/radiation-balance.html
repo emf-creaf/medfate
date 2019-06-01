@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 9 Radiation balance | The medfate reference book</title>
   <meta name="description" content="This is a reference book for models implemented in package medfate." />
-  <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 9 Radiation balance | The medfate reference book" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 
 
 
-<meta name="date" content="2019-05-31" />
+<meta name="date" content="2019-06-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -49,57 +49,41 @@
 
 
 <style type="text/css">
-div.sourceLine, a.sourceLine { display: inline-block; min-height: 1.25em; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; }
-@media print {
-code.sourceCode { white-space: pre-wrap; }
-div.sourceLine, a.sourceLine { text-indent: -1em; padding-left: 1em; }
-}
-pre.numberSource div.sourceLine, .numberSource a.sourceLine
-  { position: relative; }
-pre.numberSource div.sourceLine::before, .numberSource a.sourceLine::before
-  { content: attr(data-line-number);
-    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em; }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; color: #aaaaaa;  padding-left: 4px; }
-@media screen {
-a.sourceLine::before { text-decoration: underline; color: initial; }
-}
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.bn { color: #40a070; } /* BaseN */
-code span.fl { color: #40a070; } /* Float */
-code span.ch { color: #4070a0; } /* Char */
-code span.st { color: #4070a0; } /* String */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.ot { color: #007020; } /* Other */
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.fu { color: #06287e; } /* Function */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code span.cn { color: #880000; } /* Constant */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.im { } /* Import */
-code span.va { color: #19177c; } /* Variable */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.op { color: #666666; } /* Operator */
-code span.bu { } /* BuiltIn */
-code span.ex { } /* Extension */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.at { color: #7d9029; } /* Attribute */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -159,7 +143,8 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 </ul></li>
 <li class="chapter" data-level="4" data-path="leafphenologylight.html"><a href="leafphenologylight.html"><i class="fa fa-check"></i><b>4</b> Leaf phenology and light extinction</a><ul>
 <li class="chapter" data-level="4.1" data-path="leafphenologylight.html"><a href="leafphenologylight.html#leaf-phenology-and-leaf-fall"><i class="fa fa-check"></i><b>4.1</b> Leaf phenology and leaf fall</a></li>
-<li class="chapter" data-level="4.2" data-path="leafphenologylight.html"><a href="leafphenologylight.html#light-extinction"><i class="fa fa-check"></i><b>4.2</b> Light extinction</a></li>
+<li class="chapter" data-level="4.2" data-path="leafphenologylight.html"><a href="leafphenologylight.html#leaf-vertical-distribution"><i class="fa fa-check"></i><b>4.2</b> Leaf vertical distribution</a></li>
+<li class="chapter" data-level="4.3" data-path="leafphenologylight.html"><a href="leafphenologylight.html#light-extinction"><i class="fa fa-check"></i><b>4.3</b> Light extinction</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="hydrology.html"><a href="hydrology.html"><i class="fa fa-check"></i><b>5</b> Hydrology</a><ul>
 <li class="chapter" data-level="5.1" data-path="hydrology.html"><a href="hydrology.html#snowpack"><i class="fa fa-check"></i><b>5.1</b> Snow pack dynamics</a></li>
@@ -283,14 +268,11 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <li class="chapter" data-level="18.1.1" data-path="leafbiomass.html"><a href="leafbiomass.html#forest-inventory-data"><i class="fa fa-check"></i><b>18.1.1</b> Forest inventory data</a></li>
 <li class="chapter" data-level="18.1.2" data-path="leafbiomass.html"><a href="leafbiomass.html#allometric-species-specific-parameters"><i class="fa fa-check"></i><b>18.1.2</b> Allometric species-specific parameters</a></li>
 </ul></li>
-<li class="chapter" data-level="18.2" data-path="leafbiomass.html"><a href="leafbiomass.html#leaf-biomass-and-area"><i class="fa fa-check"></i><b>18.2</b> Leaf biomass and area</a><ul>
+<li class="chapter" data-level="18.2" data-path="leafbiomass.html"><a href="leafbiomass.html#allometric-relationships"><i class="fa fa-check"></i><b>18.2</b> Allometric relationships</a><ul>
 <li class="chapter" data-level="18.2.1" data-path="leafbiomass.html"><a href="leafbiomass.html#leaf-biomass-for-tree-cohorts"><i class="fa fa-check"></i><b>18.2.1</b> Leaf biomass for tree cohorts</a></li>
 <li class="chapter" data-level="18.2.2" data-path="leafbiomass.html"><a href="leafbiomass.html#leaf-biomass-for-shrub-cohorts"><i class="fa fa-check"></i><b>18.2.2</b> Leaf biomass for shrub cohorts</a></li>
-<li class="chapter" data-level="18.2.3" data-path="leafbiomass.html"><a href="leafbiomass.html#leaf-area"><i class="fa fa-check"></i><b>18.2.3</b> Leaf area</a></li>
-</ul></li>
-<li class="chapter" data-level="18.3" data-path="leafbiomass.html"><a href="leafbiomass.html#vertical-distribution-of-leaves"><i class="fa fa-check"></i><b>18.3</b> Vertical distribution of leaves</a><ul>
-<li class="chapter" data-level="18.3.1" data-path="leafbiomass.html"><a href="leafbiomass.html#crownbaseheight"><i class="fa fa-check"></i><b>18.3.1</b> Crown base height</a></li>
-<li class="chapter" data-level="18.3.2" data-path="leafbiomass.html"><a href="leafbiomass.html#ladprofile"><i class="fa fa-check"></i><b>18.3.2</b> Leaf area density profile</a></li>
+<li class="chapter" data-level="18.2.3" data-path="leafbiomass.html"><a href="leafbiomass.html#leaf-area-and-lai"><i class="fa fa-check"></i><b>18.2.3</b> Leaf area and LAI</a></li>
+<li class="chapter" data-level="18.2.4" data-path="leafbiomass.html"><a href="leafbiomass.html#crownbaseheight"><i class="fa fa-check"></i><b>18.2.4</b> Crown base height</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="19" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html"><i class="fa fa-check"></i><b>19</b> Fuel characteristics and fire behaviour</a><ul>
@@ -377,31 +359,31 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <div id="shortwave-radiation-absorbed-by-the-canopy" class="section level2">
 <h2><span class="header-section-number">9.1</span> Shortwave radiation absorbed by the canopy</h2>
 <p>The canopy is divided into vertical layers (whose size is determined by the control parameter ), and the expanded and dead leaf area index of each cohort within each layer is determined. Let <span class="math inline">\(n\)</span> be the number of canopy layers. And let <span class="math inline">\(LAI_{i,j}^{all} = LAI_{i,j}^{\phi}+LAI_{i,j}^{dead}\)</span> be the leaf area index of cohort <span class="math inline">\(i\)</span> in layer <span class="math inline">\(j\)</span>. Furthermore, it is generally accepted that sunlit and shade leaves need to be treated separately <span class="citation">(De Pury and Farquhar <a href="#ref-DePury1997">1997</a>)</span>. This separation is necessary because photosynthesis of shade leaves has an essentially linear response to irradiance, while photosynthesis of leaves in sunflecks is often light saturated and independent of irradiance.</p>
-<p>The average irradiance reaching the top of each canopy layer <span class="math inline">\(j\)</span> is calculated separately for direct beam and diffuse radiation:
+The average irradiance reaching the top of each canopy layer <span class="math inline">\(j\)</span> is calculated separately for direct beam and diffuse radiation:
 <span class="math display">\[\begin{eqnarray}
 I_{beam,j} &amp;=&amp; (1 - \gamma) \cdot I_{beam} \cdot \exp\left[ \sum_{h=j+1}^{n}{\sum_{i}^{c}{-k_{b,i}\cdot \alpha_i^{0.5}\cdot LAI^{all}_{i,h}}}\right]\\
 I_{dif,j} &amp;=&amp; (1 - \gamma) \cdot I_{dif} \cdot \exp\left[ \sum_{h=j+1}^{n}{\sum_{i}^{c}{-k_{d,i}\cdot \alpha_i^{0.5}\cdot LAI^{all}_{i,h}}}\right]
 \end{eqnarray}\]</span>
-where <span class="math inline">\(I_{beam}\)</span> and <span class="math inline">\(I_{dif}\)</span> are the direct and diffuse irrradiance at the top of the canopy, <span class="math inline">\(\gamma\)</span> is the leaf reflectance (<span class="math inline">\(\gamma_{PAR} = 0.04\)</span>, <span class="math inline">\(\gamma_{SWR} = 0.05\)</span>), <span class="math inline">\(k_{b,i}\)</span> is the extinction coefficient of cohort <span class="math inline">\(i\)</span> for direct light (<span class="math inline">\(k_{b,i} = 0.8\)</span>), <span class="math inline">\(k_{d,i}\)</span> is the extinction coefficient of cohort <span class="math inline">\(i\)</span> for diffuse light (i.e. <span class="math inline">\(k_{PAR}\)</span> or <span class="math inline">\(k_{SWR}\)</span>) and <span class="math inline">\(\alpha_i\)</span> is the absorbance coefficient (<span class="math inline">\(\alpha_{i,PAR} = 0.9\)</span>, <span class="math inline">\(\alpha_{i,SWR} = 0.7\)</span>).</p>
-<p>The proportion of sunlit leaves, i.e. leaves in a canopy layer that the direct light beams (sunflecks) reach is:
+<p>where <span class="math inline">\(I_{beam}\)</span> and <span class="math inline">\(I_{dif}\)</span> are the direct and diffuse irrradiance at the top of the canopy, <span class="math inline">\(\gamma\)</span> is the leaf reflectance (<span class="math inline">\(\gamma_{PAR} = 0.04\)</span>, <span class="math inline">\(\gamma_{SWR} = 0.05\)</span>), <span class="math inline">\(k_{b,i}\)</span> is the extinction coefficient of cohort <span class="math inline">\(i\)</span> for direct light (<span class="math inline">\(k_{b,i} = 0.8\)</span>), <span class="math inline">\(k_{d,i}\)</span> is the extinction coefficient of cohort <span class="math inline">\(i\)</span> for diffuse light (i.e. <span class="math inline">\(k_{PAR}\)</span> or <span class="math inline">\(k_{SWR}\)</span>) and <span class="math inline">\(\alpha_i\)</span> is the absorbance coefficient (<span class="math inline">\(\alpha_{i,PAR} = 0.9\)</span>, <span class="math inline">\(\alpha_{i,SWR} = 0.7\)</span>).</p>
+The proportion of sunlit leaves, i.e. leaves in a canopy layer that the direct light beams (sunflecks) reach is:
 <span class="math display">\[\begin{equation}
 f_{SL, j}  = \exp\left( \sum_{k&gt;j}^{n}{\sum_{i}^{c}{-k_{b,i} \cdot LAI^{all}_{i,k}}}\right) \cdot \exp\left( \sum_{i}^{c}{-k_{b,i} \cdot 0.5\cdot LAI^{all}_{i,j}}\right)
 \end{equation}\]</span>
-As an example we will consider a canopy of one species of LAI = 2, divided into ten layers with constant leaf density.</p>
+<p>As an example we will consider a canopy of one species of LAI = 2, divided into ten layers with constant leaf density.</p>
 <p>This canopy definition leads to a percentage of the above-canopy irradiance reaching each layer <span class="citation">(Anten and Bastiaans <a href="#ref-Anten2016">2016</a>)</span>. Extinction of direct radiation also defines the proportion of leaves of each layer that are affected by sunflecks (i.e. the proportion of sunlit leaves).</p>
-<p><img src="medfatebook_files/figure-html/unnamed-chunk-11-1.png" width="768" /></p>
-<p>The amount of absorved diffuse radiation per leaf area unit of cohort <span class="math inline">\(i\)</span> within a given canopy layer <span class="math inline">\(j\)</span> is calculated as:
+<p><img src="medfatebook_files/figure-html/unnamed-chunk-12-1.png" width="768" /></p>
+The amount of absorved diffuse radiation per leaf area unit of cohort <span class="math inline">\(i\)</span> within a given canopy layer <span class="math inline">\(j\)</span> is calculated as:
 <span class="math display">\[\begin{equation}
 I_{dif,i,j} = I_{dif,j} \cdot k_{d,i} \cdot \alpha_i^{0.5} \exp\left[ \sum_{h}^{c}{-k_{d,h}\cdot \alpha_h^{0.5}\cdot 0.5\cdot LAI^{all}_{h,j}}\right]
-\end{equation}\]</span></p>
-<p>The amount of absorved scattered beam radiation per leaf area unit of cohort <span class="math inline">\(i\)</span> within a given canopy layer <span class="math inline">\(j\)</span> is calculated as:
+\end{equation}\]</span>
+The amount of absorved scattered beam radiation per leaf area unit of cohort <span class="math inline">\(i\)</span> within a given canopy layer <span class="math inline">\(j\)</span> is calculated as:
 <span class="math display">\[\begin{equation}
 % \begin{split}
 I_{sca,i,j} = I_{b,j} \cdot k_{b,i} \left( \alpha_i^{0.5}\cdot \exp \left( \sum_{h}^{c}{-k_{b,h}\cdot \alpha_h\cdot 0.5\cdot LAI^{all}_{h,i}}\right) 
 -\frac{\alpha_i}{(1-\gamma)}\cdot \exp\left( \sum_{h}^{c}{-k_{b,h}\cdot 0.5\cdot LAI^{all}_{h,i}}\right) \right)
 % \end{split}
-\end{equation}\]</span></p>
-<p>Finally, the direct radiation absorbed by a unit of sunlit leaf area of cohort <span class="math inline">\(i\)</span> in a canopy layer <span class="math inline">\(j\)</span> does not depend on the position of the canopy layer and is:
+\end{equation}\]</span>
+Finally, the direct radiation absorbed by a unit of sunlit leaf area of cohort <span class="math inline">\(i\)</span> in a canopy layer <span class="math inline">\(j\)</span> does not depend on the position of the canopy layer and is:
 <span class="math display">\[\begin{equation}
 I_{dir,i,j} = I_{beam} \cdot \alpha_i \cdot 0.5/\sin{\beta}
 \end{equation}\]</span>
@@ -414,11 +396,11 @@ The total amount of light absorbed by shaded/sunlit foliage of cohort <span clas
 <span class="math display">\[\begin{eqnarray}
 \Phi_{SH,i,j} &amp;=&amp; I_{SH,i,j}\cdot (1 - f_{SL,j}) \cdot LAI^{\phi}_{i,j}\\
 \Phi_{SL,i,j} &amp;=&amp; I_{SL,i,j}\cdot f_{SL,j} \cdot LAI^{\phi}_{i,j}
-\end{eqnarray}\]</span></p>
+\end{eqnarray}\]</span>
 </div>
 <div id="shortwave-radiation-absorbed-by-the-soil" class="section level2">
 <h2><span class="header-section-number">9.2</span> Shortwave radiation absorbed by the soil</h2>
-<p>The instantaneous shortwave radiation reaching the soil is calculated separately for direct beam and diffuse radiation:
+The instantaneous shortwave radiation reaching the soil is calculated separately for direct beam and diffuse radiation:
 <span class="math display">\[\begin{eqnarray}
 K_{beam, soil} &amp;=&amp;  K_{beam} \cdot \exp\left[ \sum_{h=j+1}^{n}{\sum_{i}^{c}{-k_{b,i}\cdot \alpha_i^{0.5} \cdot LAI^{all}_{i,h}}}\right]\\
 K_{dif, soil} &amp;=&amp; K_{dif} \cdot \exp\left[ \sum_{h=j+1}^{n}{\sum_{i}^{c}{-k_{d,i}\cdot LAI^{all}_{i,h}}}\right]
@@ -431,11 +413,11 @@ where <span class="math inline">\(\gamma_{SWR, soil} = 0.10\)</span> is the SWR 
 <span class="math display">\[\begin{equation}
 L_{abs,sa} = (1 - \gamma_{LWR, soil})\cdot L_{a} \cdot \exp\left[ \sum_{h=j+1}^{n}{\sum_{i}^{c}{-k_{LWR}\cdot LAI^{all}_{i,h}}}\right]
 \end{equation}\]</span>
-where <span class="math inline">\(L_a\)</span> is the atmosphere longwave irradiance, <span class="math inline">\(k_{LWR} = 0.8\)</span> is the extinction coefficient for LWR and <span class="math inline">\(\gamma_{LWR, soil} = 0.05\)</span> is LWR soil reflectance (5% albedo) of the soil.</p>
+<p>where <span class="math inline">\(L_a\)</span> is the atmosphere longwave irradiance, <span class="math inline">\(k_{LWR} = 0.8\)</span> is the extinction coefficient for LWR and <span class="math inline">\(\gamma_{LWR, soil} = 0.05\)</span> is LWR soil reflectance (5% albedo) of the soil.</p>
 </div>
 <div id="longwave-soil-canopy-radiation-exchange" class="section level2">
 <h2><span class="header-section-number">9.3</span> Longwave soil-canopy radiation exchange</h2>
-<p>Longwave radiation (LWR) emmited by a surface at the canopy temperature <span class="math inline">\(T_{can}\)</span> would be:
+Longwave radiation (LWR) emmited by a surface at the canopy temperature <span class="math inline">\(T_{can}\)</span> would be:
 <span class="math display">\[\begin{equation}
 L_{em} = 0.95 \cdot \sigma \cdot (T_{can} + 273.16)^{4.0}
 \end{equation}\]</span>
@@ -444,11 +426,11 @@ where <span class="math inline">\(0.95\)</span> is emissivity and <span class="m
 p_{exch} &amp;=&amp; \frac{L_{abs,ca}}{L_a} \\
 L_{em, c} &amp;=&amp; p_{exch} \cdot L_{em}
 \end{eqnarray}\]</span>
-<span class="math inline">\(L_{em, c}\)</span> is discounted twice from the canopy energy balance: as losses to the atmosphere and losses to the soil.</p>
-<p>LWR emmited by the soil is calculated from the temperature of the first soil layer:
+<p><span class="math inline">\(L_{em, c}\)</span> is discounted twice from the canopy energy balance: as losses to the atmosphere and losses to the soil.</p>
+LWR emmited by the soil is calculated from the temperature of the first soil layer:
 <span class="math display">\[\begin{equation}
 L_{em, s} = 0.95 \cdot \sigma \cdot (T_{soil} + 273.16)^{4.0}
-\end{equation}\]</span></p>
+\end{equation}\]</span>
 <p>Again, the canopy only absorbs part of this radiation, the remaining going to the atmosphere:</p>
 <span class="math display">\[\begin{equation}
 L_{abs, cs} = p_{exch} \cdot L_{em,s}
@@ -462,7 +444,7 @@ L_{abs, cs} = p_{exch} \cdot L_{em,s}
 <p>Anten, Niels P R, and Lammert Bastiaans. 2016. “The use of canopy models to analyze light competition among plants.” In <em>Canopy Photosynthesis: From Basics to Application</em>, edited by K. Hikosaka, Ülo Niinemets, and Niels P R Anten, 379–98. Springer.</p>
 </div>
 <div id="ref-DePury1997">
-<p>De Pury, D G G, and Graham D Farquhar. 1997. “Simple scaling of photosynthesis from leaves to canopies without the errors of big-leaf models.” <em>Plant, Cell and Environment</em> 20 (5):537–57. <a href="https://doi.org/10.1111/j.1365-3040.1997.tb00466.x" class="uri">https://doi.org/10.1111/j.1365-3040.1997.tb00466.x</a>.</p>
+<p>De Pury, D G G, and Graham D Farquhar. 1997. “Simple scaling of photosynthesis from leaves to canopies without the errors of big-leaf models.” <em>Plant, Cell and Environment</em> 20 (5): 537–57. doi:<a href="https://doi.org/10.1111/j.1365-3040.1997.tb00466.x">10.1111/j.1365-3040.1997.tb00466.x</a>.</p>
 </div>
 </div>
             </section>
@@ -521,7 +503,7 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "true";
+    var src = "";
     if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');

@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 10 Canopy and soil energy balances | The medfate reference book</title>
   <meta name="description" content="This is a reference book for models implemented in package medfate." />
-  <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 10 Canopy and soil energy balances | The medfate reference book" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 
 
 
-<meta name="date" content="2019-05-31" />
+<meta name="date" content="2019-06-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -49,57 +49,41 @@
 
 
 <style type="text/css">
-div.sourceLine, a.sourceLine { display: inline-block; min-height: 1.25em; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; }
-@media print {
-code.sourceCode { white-space: pre-wrap; }
-div.sourceLine, a.sourceLine { text-indent: -1em; padding-left: 1em; }
-}
-pre.numberSource div.sourceLine, .numberSource a.sourceLine
-  { position: relative; }
-pre.numberSource div.sourceLine::before, .numberSource a.sourceLine::before
-  { content: attr(data-line-number);
-    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em; }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; color: #aaaaaa;  padding-left: 4px; }
-@media screen {
-a.sourceLine::before { text-decoration: underline; color: initial; }
-}
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.bn { color: #40a070; } /* BaseN */
-code span.fl { color: #40a070; } /* Float */
-code span.ch { color: #4070a0; } /* Char */
-code span.st { color: #4070a0; } /* String */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.ot { color: #007020; } /* Other */
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.fu { color: #06287e; } /* Function */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code span.cn { color: #880000; } /* Constant */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.im { } /* Import */
-code span.va { color: #19177c; } /* Variable */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.op { color: #666666; } /* Operator */
-code span.bu { } /* BuiltIn */
-code span.ex { } /* Extension */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.at { color: #7d9029; } /* Attribute */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -159,7 +143,8 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 </ul></li>
 <li class="chapter" data-level="4" data-path="leafphenologylight.html"><a href="leafphenologylight.html"><i class="fa fa-check"></i><b>4</b> Leaf phenology and light extinction</a><ul>
 <li class="chapter" data-level="4.1" data-path="leafphenologylight.html"><a href="leafphenologylight.html#leaf-phenology-and-leaf-fall"><i class="fa fa-check"></i><b>4.1</b> Leaf phenology and leaf fall</a></li>
-<li class="chapter" data-level="4.2" data-path="leafphenologylight.html"><a href="leafphenologylight.html#light-extinction"><i class="fa fa-check"></i><b>4.2</b> Light extinction</a></li>
+<li class="chapter" data-level="4.2" data-path="leafphenologylight.html"><a href="leafphenologylight.html#leaf-vertical-distribution"><i class="fa fa-check"></i><b>4.2</b> Leaf vertical distribution</a></li>
+<li class="chapter" data-level="4.3" data-path="leafphenologylight.html"><a href="leafphenologylight.html#light-extinction"><i class="fa fa-check"></i><b>4.3</b> Light extinction</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="hydrology.html"><a href="hydrology.html"><i class="fa fa-check"></i><b>5</b> Hydrology</a><ul>
 <li class="chapter" data-level="5.1" data-path="hydrology.html"><a href="hydrology.html#snowpack"><i class="fa fa-check"></i><b>5.1</b> Snow pack dynamics</a></li>
@@ -283,14 +268,11 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <li class="chapter" data-level="18.1.1" data-path="leafbiomass.html"><a href="leafbiomass.html#forest-inventory-data"><i class="fa fa-check"></i><b>18.1.1</b> Forest inventory data</a></li>
 <li class="chapter" data-level="18.1.2" data-path="leafbiomass.html"><a href="leafbiomass.html#allometric-species-specific-parameters"><i class="fa fa-check"></i><b>18.1.2</b> Allometric species-specific parameters</a></li>
 </ul></li>
-<li class="chapter" data-level="18.2" data-path="leafbiomass.html"><a href="leafbiomass.html#leaf-biomass-and-area"><i class="fa fa-check"></i><b>18.2</b> Leaf biomass and area</a><ul>
+<li class="chapter" data-level="18.2" data-path="leafbiomass.html"><a href="leafbiomass.html#allometric-relationships"><i class="fa fa-check"></i><b>18.2</b> Allometric relationships</a><ul>
 <li class="chapter" data-level="18.2.1" data-path="leafbiomass.html"><a href="leafbiomass.html#leaf-biomass-for-tree-cohorts"><i class="fa fa-check"></i><b>18.2.1</b> Leaf biomass for tree cohorts</a></li>
 <li class="chapter" data-level="18.2.2" data-path="leafbiomass.html"><a href="leafbiomass.html#leaf-biomass-for-shrub-cohorts"><i class="fa fa-check"></i><b>18.2.2</b> Leaf biomass for shrub cohorts</a></li>
-<li class="chapter" data-level="18.2.3" data-path="leafbiomass.html"><a href="leafbiomass.html#leaf-area"><i class="fa fa-check"></i><b>18.2.3</b> Leaf area</a></li>
-</ul></li>
-<li class="chapter" data-level="18.3" data-path="leafbiomass.html"><a href="leafbiomass.html#vertical-distribution-of-leaves"><i class="fa fa-check"></i><b>18.3</b> Vertical distribution of leaves</a><ul>
-<li class="chapter" data-level="18.3.1" data-path="leafbiomass.html"><a href="leafbiomass.html#crownbaseheight"><i class="fa fa-check"></i><b>18.3.1</b> Crown base height</a></li>
-<li class="chapter" data-level="18.3.2" data-path="leafbiomass.html"><a href="leafbiomass.html#ladprofile"><i class="fa fa-check"></i><b>18.3.2</b> Leaf area density profile</a></li>
+<li class="chapter" data-level="18.2.3" data-path="leafbiomass.html"><a href="leafbiomass.html#leaf-area-and-lai"><i class="fa fa-check"></i><b>18.2.3</b> Leaf area and LAI</a></li>
+<li class="chapter" data-level="18.2.4" data-path="leafbiomass.html"><a href="leafbiomass.html#crownbaseheight"><i class="fa fa-check"></i><b>18.2.4</b> Crown base height</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="19" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html"><i class="fa fa-check"></i><b>19</b> Fuel characteristics and fire behaviour</a><ul>
@@ -375,20 +357,20 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <h1><span class="header-section-number">Chapter 10</span> Canopy and soil energy balances</h1>
 <div id="convective-energy" class="section level2">
 <h2><span class="header-section-number">10.1</span> Convective energy</h2>
-<p>Convective energy fluxes between atmosphere and the canopy (<span class="math inline">\(H_{ca}\)</span>) and between the canopy and the soil (<span class="math inline">\(H_{cs}\)</span>) are determined as follows:
+Convective energy fluxes between atmosphere and the canopy (<span class="math inline">\(H_{ca}\)</span>) and between the canopy and the soil (<span class="math inline">\(H_{cs}\)</span>) are determined as follows:
 <span class="math display">\[\begin{eqnarray}
 H_{ca} &amp;=&amp; \frac{\rho_{a} \cdot c_p}{r_{ca}}\cdot (T_{can} - T_a) \\
 H_{cs} &amp;=&amp; \frac{\rho_{c} \cdot c_p}{r_{cs}}\cdot (T_{can} - T_{soil})
 \end{eqnarray}\]</span>
-where <span class="math inline">\(\rho_{a}\)</span> and <span class="math inline">\(\rho_{c}\)</span> are the air density above-canopy and inside-canopy, respectively, <span class="math inline">\(c_{p}\)</span> = 1013.86 <span class="math inline">\(J·kg^{-1}·C^{-1}\)</span> is the specific heat capacity of the air. <span class="math inline">\(r_{ca}\)</span> and <span class="math inline">\(r_{cs}\)</span> are the atmosphere-canopy and canopy-soil aerodynamic resistances (in <span class="math inline">\(s·m^{-1}\)</span>). These, in turn, are calculated using canopy height, total LAI and above-canopy and below-canopy wind speeds.</p>
+<p>where <span class="math inline">\(\rho_{a}\)</span> and <span class="math inline">\(\rho_{c}\)</span> are the air density above-canopy and inside-canopy, respectively, <span class="math inline">\(c_{p}\)</span> = 1013.86 <span class="math inline">\(J·kg^{-1}·C^{-1}\)</span> is the specific heat capacity of the air. <span class="math inline">\(r_{ca}\)</span> and <span class="math inline">\(r_{cs}\)</span> are the atmosphere-canopy and canopy-soil aerodynamic resistances (in <span class="math inline">\(s·m^{-1}\)</span>). These, in turn, are calculated using canopy height, total LAI and above-canopy and below-canopy wind speeds.</p>
 </div>
 <div id="latent-heat" class="section level2">
 <h2><span class="header-section-number">10.2</span> Latent heat</h2>
-<p>As mentioned above, the model only considers latent heat exchanged from plant transpiration, neglecting energy fluxes corresponding to evaporation from the soil and evaporation of rain intercepted by the canopy. After determining stomatal regulation and transpiration for each plant cohort, latent heat of transpiration is simply calculated as:
+As mentioned above, the model only considers latent heat exchanged from plant transpiration, neglecting energy fluxes corresponding to evaporation from the soil and evaporation of rain intercepted by the canopy. After determining stomatal regulation and transpiration for each plant cohort, latent heat of transpiration is simply calculated as:
 <span class="math display">\[\begin{equation}
 LE_{c} = \lambda_{T_{can}} \sum_{i}{E_i}
 \end{equation}\]</span>
-where <span class="math inline">\(\lambda_{T_{can}}\)</span> is the latent heat of vaporization at temperature <span class="math inline">\(T_{can}\)</span> (in J·kg<span class="math inline">\(^{-1}\)</span>) and <span class="math inline">\(E_i\)</span> is the instanteous transpiration flux calculated for cohort <span class="math inline">\(i\)</span>.</p>
+<p>where <span class="math inline">\(\lambda_{T_{can}}\)</span> is the latent heat of vaporization at temperature <span class="math inline">\(T_{can}\)</span> (in J·kg<span class="math inline">\(^{-1}\)</span>) and <span class="math inline">\(E_i\)</span> is the instanteous transpiration flux calculated for cohort <span class="math inline">\(i\)</span>.</p>
 </div>
 <div id="canopy-capacitance-and-temperature-changes" class="section level2">
 <h2><span class="header-section-number">10.3</span> Canopy capacitance and temperature changes</h2>
@@ -396,25 +378,25 @@ where <span class="math inline">\(\lambda_{T_{can}}\)</span> is the latent heat 
 </div>
 <div id="soil-temperature-changes" class="section level2">
 <h2><span class="header-section-number">10.4</span> Soil temperature changes</h2>
-<p>Instantaneous soil temperature changes on each soil layer depend on the balance between incoming and outcoming energies (<span class="math inline">\(G_k\)</span> and <span class="math inline">\(G_{k-1}\)</span>):
+Instantaneous soil temperature changes on each soil layer depend on the balance between incoming and outcoming energies (<span class="math inline">\(G_k\)</span> and <span class="math inline">\(G_{k-1}\)</span>):
 <span class="math display">\[\begin{equation}
 \frac{\delta T_{soil,k}}{\delta t} = \frac{G_k - G_{k-1}}{C_{soil,k} \cdot \Delta z_k}
 \end{equation}\]</span>
-where <span class="math inline">\(\Delta z_k\)</span> is the soil width of layer <span class="math inline">\(k\)</span> and <span class="math inline">\(C_{soil,k}\)</span> is the thermal capacity of layer <span class="math inline">\(k\)</span>, depending on soil moisture and texture (see function <code>soil_thermalcapacity</code>).</p>
-<p>Energy inflow to the first layer (i.e. <span class="math inline">\(G_0\)</span>) is the result of the soil energy balance explained above, while energy transfers between layers (i.e. <span class="math inline">\(G_k\)</span>) depend on the soil temperature gradient:
+<p>where <span class="math inline">\(\Delta z_k\)</span> is the soil width of layer <span class="math inline">\(k\)</span> and <span class="math inline">\(C_{soil,k}\)</span> is the thermal capacity of layer <span class="math inline">\(k\)</span>, depending on soil moisture and texture (see function <code>soil_thermalcapacity</code>).</p>
+Energy inflow to the first layer (i.e. <span class="math inline">\(G_0\)</span>) is the result of the soil energy balance explained above, while energy transfers between layers (i.e. <span class="math inline">\(G_k\)</span>) depend on the soil temperature gradient:
 <span class="math display">\[\begin{eqnarray}
 G_0 &amp;=&amp; K_{abs,sa} + L_{abs,sa} - L_{em,s} + L_{abs,sc} + H_{cs}\\
 G_k &amp;=&amp; \lambda_{soil,k} \cdot \frac{\delta T_{soil,k}}{\delta z}
 \end{eqnarray}\]</span>
-where <span class="math inline">\(\lambda_{soil,k}\)</span> is the thermal conductivity of layer <span class="math inline">\(k\)</span>, depending on soil moisture and texture (see function <code>soil_thermalconductivity</code>). The gradient in the bottom layer is calculated assuming a temperature of the earth (at 10 m) of 15.5 Celsius.</p>
+<p>where <span class="math inline">\(\lambda_{soil,k}\)</span> is the thermal conductivity of layer <span class="math inline">\(k\)</span>, depending on soil moisture and texture (see function <code>soil_thermalconductivity</code>). The gradient in the bottom layer is calculated assuming a temperature of the earth (at 10 m) of 15.5 Celsius.</p>
 </div>
 <div id="bare-soil-evaporation" class="section level2">
 <h2><span class="header-section-number">10.5</span> Bare soil evaporation</h2>
-<p>Evaporation from the soil surface is the last component of the soil water balance to be calculated. Soil evaporative demand, i.e. potential evaporation from the soil (<span class="math inline">\(PE_{soil}\)</span>; in <span class="math inline">\(mm\cdot day^{-1}\)</span>), is calculated using the Penman-Monteith combination equation:
+Evaporation from the soil surface is the last component of the soil water balance to be calculated. Soil evaporative demand, i.e. potential evaporation from the soil (<span class="math inline">\(PE_{soil}\)</span>; in <span class="math inline">\(mm\cdot day^{-1}\)</span>), is calculated using the Penman-Monteith combination equation:
 <span class="math display">\[\begin{equation}
 PE_{soil} = \frac{1}{\lambda} \cdot \frac{\Delta \cdot R_{n,soil} + D \cdot (\rho \cdot C_p/r_a)}{\Delta + \gamma \cdot (1 + r_{soil}/r_a)}
 \end{equation}\]</span>
-where <span class="math inline">\(D\)</span> is the vapour pressure deficit (in kPa), <span class="math inline">\(\Delta\)</span> is the slope of the saturated vapor pressure (in <span class="math inline">\(Pa \cdot K^{-1}\)</span>), <span class="math inline">\(\gamma\)</span> is the psychrometer constant (in <span class="math inline">\(kPa\cdot K^{-1}\)</span>), <span class="math inline">\(\lambda\)</span> is the latent heat vaporization of water (in <span class="math inline">\(MJ\cdot kg^{-1}\)</span>) and <span class="math inline">\(C_p\)</span> is the specific heat of air (in <span class="math inline">\(MJ\cdot kg^{-1}\cdot K^{-1}\)</span>). <span class="math inline">\(r_{soil}\)</span> is the resistance of the soil surface, set to a constant value (<span class="math inline">\(r_{soil} = 200\)</span> <span class="math inline">\(s\cdot m^{-1}\)</span>). For simplicity, aerodynamic resistance (<span class="math inline">\(r_a\)</span>) in the soil is currently set to <span class="math inline">\(r_a = 208.0/u\)</span> where <span class="math inline">\(u\)</span> is the input wind speed.</p>
+<p>where <span class="math inline">\(D\)</span> is the vapour pressure deficit (in kPa), <span class="math inline">\(\Delta\)</span> is the slope of the saturated vapor pressure (in <span class="math inline">\(Pa \cdot K^{-1}\)</span>), <span class="math inline">\(\gamma\)</span> is the psychrometer constant (in <span class="math inline">\(kPa\cdot K^{-1}\)</span>), <span class="math inline">\(\lambda\)</span> is the latent heat vaporization of water (in <span class="math inline">\(MJ\cdot kg^{-1}\)</span>) and <span class="math inline">\(C_p\)</span> is the specific heat of air (in <span class="math inline">\(MJ\cdot kg^{-1}\cdot K^{-1}\)</span>). <span class="math inline">\(r_{soil}\)</span> is the resistance of the soil surface, set to a constant value (<span class="math inline">\(r_{soil} = 200\)</span> <span class="math inline">\(s\cdot m^{-1}\)</span>). For simplicity, aerodynamic resistance (<span class="math inline">\(r_a\)</span>) in the soil is currently set to <span class="math inline">\(r_a = 208.0/u\)</span> where <span class="math inline">\(u\)</span> is the input wind speed.</p>
 
 </div>
 </div>
@@ -474,7 +456,7 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "true";
+    var src = "";
     if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');

@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 6 Transpiration and photosynthesis under Granier’s model | The medfate reference book</title>
   <meta name="description" content="This is a reference book for models implemented in package medfate." />
-  <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 6 Transpiration and photosynthesis under Granier’s model | The medfate reference book" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 
 
 
-<meta name="date" content="2019-05-31" />
+<meta name="date" content="2019-06-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -49,57 +49,41 @@
 
 
 <style type="text/css">
-div.sourceLine, a.sourceLine { display: inline-block; min-height: 1.25em; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; }
-@media print {
-code.sourceCode { white-space: pre-wrap; }
-div.sourceLine, a.sourceLine { text-indent: -1em; padding-left: 1em; }
-}
-pre.numberSource div.sourceLine, .numberSource a.sourceLine
-  { position: relative; }
-pre.numberSource div.sourceLine::before, .numberSource a.sourceLine::before
-  { content: attr(data-line-number);
-    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em; }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; color: #aaaaaa;  padding-left: 4px; }
-@media screen {
-a.sourceLine::before { text-decoration: underline; color: initial; }
-}
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.bn { color: #40a070; } /* BaseN */
-code span.fl { color: #40a070; } /* Float */
-code span.ch { color: #4070a0; } /* Char */
-code span.st { color: #4070a0; } /* String */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.ot { color: #007020; } /* Other */
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.fu { color: #06287e; } /* Function */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code span.cn { color: #880000; } /* Constant */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.im { } /* Import */
-code span.va { color: #19177c; } /* Variable */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.op { color: #666666; } /* Operator */
-code span.bu { } /* BuiltIn */
-code span.ex { } /* Extension */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.at { color: #7d9029; } /* Attribute */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -159,7 +143,8 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 </ul></li>
 <li class="chapter" data-level="4" data-path="leafphenologylight.html"><a href="leafphenologylight.html"><i class="fa fa-check"></i><b>4</b> Leaf phenology and light extinction</a><ul>
 <li class="chapter" data-level="4.1" data-path="leafphenologylight.html"><a href="leafphenologylight.html#leaf-phenology-and-leaf-fall"><i class="fa fa-check"></i><b>4.1</b> Leaf phenology and leaf fall</a></li>
-<li class="chapter" data-level="4.2" data-path="leafphenologylight.html"><a href="leafphenologylight.html#light-extinction"><i class="fa fa-check"></i><b>4.2</b> Light extinction</a></li>
+<li class="chapter" data-level="4.2" data-path="leafphenologylight.html"><a href="leafphenologylight.html#leaf-vertical-distribution"><i class="fa fa-check"></i><b>4.2</b> Leaf vertical distribution</a></li>
+<li class="chapter" data-level="4.3" data-path="leafphenologylight.html"><a href="leafphenologylight.html#light-extinction"><i class="fa fa-check"></i><b>4.3</b> Light extinction</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="hydrology.html"><a href="hydrology.html"><i class="fa fa-check"></i><b>5</b> Hydrology</a><ul>
 <li class="chapter" data-level="5.1" data-path="hydrology.html"><a href="hydrology.html#snowpack"><i class="fa fa-check"></i><b>5.1</b> Snow pack dynamics</a></li>
@@ -283,14 +268,11 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <li class="chapter" data-level="18.1.1" data-path="leafbiomass.html"><a href="leafbiomass.html#forest-inventory-data"><i class="fa fa-check"></i><b>18.1.1</b> Forest inventory data</a></li>
 <li class="chapter" data-level="18.1.2" data-path="leafbiomass.html"><a href="leafbiomass.html#allometric-species-specific-parameters"><i class="fa fa-check"></i><b>18.1.2</b> Allometric species-specific parameters</a></li>
 </ul></li>
-<li class="chapter" data-level="18.2" data-path="leafbiomass.html"><a href="leafbiomass.html#leaf-biomass-and-area"><i class="fa fa-check"></i><b>18.2</b> Leaf biomass and area</a><ul>
+<li class="chapter" data-level="18.2" data-path="leafbiomass.html"><a href="leafbiomass.html#allometric-relationships"><i class="fa fa-check"></i><b>18.2</b> Allometric relationships</a><ul>
 <li class="chapter" data-level="18.2.1" data-path="leafbiomass.html"><a href="leafbiomass.html#leaf-biomass-for-tree-cohorts"><i class="fa fa-check"></i><b>18.2.1</b> Leaf biomass for tree cohorts</a></li>
 <li class="chapter" data-level="18.2.2" data-path="leafbiomass.html"><a href="leafbiomass.html#leaf-biomass-for-shrub-cohorts"><i class="fa fa-check"></i><b>18.2.2</b> Leaf biomass for shrub cohorts</a></li>
-<li class="chapter" data-level="18.2.3" data-path="leafbiomass.html"><a href="leafbiomass.html#leaf-area"><i class="fa fa-check"></i><b>18.2.3</b> Leaf area</a></li>
-</ul></li>
-<li class="chapter" data-level="18.3" data-path="leafbiomass.html"><a href="leafbiomass.html#vertical-distribution-of-leaves"><i class="fa fa-check"></i><b>18.3</b> Vertical distribution of leaves</a><ul>
-<li class="chapter" data-level="18.3.1" data-path="leafbiomass.html"><a href="leafbiomass.html#crownbaseheight"><i class="fa fa-check"></i><b>18.3.1</b> Crown base height</a></li>
-<li class="chapter" data-level="18.3.2" data-path="leafbiomass.html"><a href="leafbiomass.html#ladprofile"><i class="fa fa-check"></i><b>18.3.2</b> Leaf area density profile</a></li>
+<li class="chapter" data-level="18.2.3" data-path="leafbiomass.html"><a href="leafbiomass.html#leaf-area-and-lai"><i class="fa fa-check"></i><b>18.2.3</b> Leaf area and LAI</a></li>
+<li class="chapter" data-level="18.2.4" data-path="leafbiomass.html"><a href="leafbiomass.html#crownbaseheight"><i class="fa fa-check"></i><b>18.2.4</b> Crown base height</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="19" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html"><i class="fa fa-check"></i><b>19</b> Fuel characteristics and fire behaviour</a><ul>
@@ -379,20 +361,17 @@ In this model daily potential evapotranspiration (<span class="math inline">\(PE
 <span class="math display">\[\begin{equation}
 \frac{Tr_{\max}}{PET}= -0.006\,LAI_{stand}^2+0.134\,LAI_{stand}+0.036
 \end{equation}\]</span>
-This equation has already been adopted for Mediterranean biomes (Fyllas and
-Troumbis, 2009; Ruffault et al., 2013).
-<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-8"></span>
-<img src="medfatebook_files/figure-html/unnamed-chunk-8-1.png" alt="Empirical relationship between $Tr_max/PET$ and $LAI_{stand}$" width="384" />
+This equation has already been adopted for Mediterranean biomes (Fyllas and Troumbis, 2009; Ruffault et al., 2013).
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-9"></span>
+<img src="medfatebook_files/figure-html/unnamed-chunk-9-1.png" alt="Empirical relationship between $Tr_max/PET$ and $LAI_{stand}$" width="384" />
 <p class="caption">
 Figure 6.1: Empirical relationship between <span class="math inline">\(Tr_max/PET\)</span> and <span class="math inline">\(LAI_{stand}\)</span>
 </p>
 </div>
-<p>The maximum transpiration for a given plant cohort <span class="math inline">\(i\)</span> is calculated as the
-portion of <span class="math inline">\(Tr_{\max}\)</span> defined by the fraction of total absorbed SWR that is due
-to cohort <span class="math inline">\(i\)</span>:
+The maximum transpiration for a given plant cohort <span class="math inline">\(i\)</span> is calculated as the portion of <span class="math inline">\(Tr_{\max}\)</span> defined by the fraction of total absorbed SWR that is due to cohort <span class="math inline">\(i\)</span>:
 <span class="math display">\[\begin{equation}
 Tr_{\max, i} = Tr_{\max} \cdot \frac{f_i}{\sum_{j}{f_j}}
-\end{equation}\]</span></p>
+\end{equation}\]</span>
 </div>
 <div id="actual-plant-transpiration" class="section level2">
 <h2><span class="header-section-number">6.2</span> Actual plant transpiration</h2>
@@ -400,97 +379,53 @@ Actual plant transpiration depends on soil moisture and is calculated for each p
 <span class="math display">\[\begin{equation}
 K_{i,s}=K_{i}(\Psi_s) = \exp \left \{\ln{(0.5)}\cdot \left[ \frac{\Psi_s}{\Psi_{extract,i}} \right] ^r \right \} 
 \end{equation}\]</span>
-where <span class="math inline">\(r\)</span> is an exponent that modulates the steepness of the decrease in relative
-conductance when soil potential becomes negative (by default, <span class="math inline">\(r = 3\)</span>) and <span class="math inline">\(\ln(0.5)\)</span>
-is used to ensure that <span class="math inline">\(K_{i}(\Psi_{extract,i}) = 0.5\)</span> (Fig. 4).
-<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-9"></span>
-<img src="medfatebook_files/figure-html/unnamed-chunk-9-1.png" alt="Whole-plant relative water conductance functions for different water potential values ($r = 3$ in all cases)." width="336" />
+where <span class="math inline">\(r\)</span> is an exponent that modulates the steepness of the decrease in relative conductance when soil potential becomes negative (by default, <span class="math inline">\(r = 3\)</span>) and <span class="math inline">\(\ln(0.5)\)</span> is used to ensure that <span class="math inline">\(K_{i}(\Psi_{extract,i}) = 0.5\)</span> (Fig. 4).
+<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-10"></span>
+<img src="medfatebook_files/figure-html/unnamed-chunk-10-1.png" alt="Whole-plant relative water conductance functions for different water potential values ($r = 3$ in all cases)." width="336" />
 <p class="caption">
 Figure 6.2: Whole-plant relative water conductance functions for different water potential values (<span class="math inline">\(r = 3\)</span> in all cases).
 </p>
 </div>
-<p>Actual transpiration of plant cohort <span class="math inline">\(i\)</span> from a given soil layer <span class="math inline">\(s\)</span>, <span class="math inline">\(Tr_{i,s}\)</span>,
-is defined as the product of (Mouillot et al., 2001): (i) the maximum transpiration
-of the plant cohort; (ii) the relative whole-plant conductance, <span class="math inline">\(K_{i,s}\)</span>,
-corresponding to the species and water potential in layer <span class="math inline">\(s\)</span>; (iii) the
-proportion of plant fine roots in layer <span class="math inline">\(s\)</span>, <span class="math inline">\(v_{i,s}\)</span>:
+Actual transpiration of plant cohort <span class="math inline">\(i\)</span> from a given soil layer <span class="math inline">\(s\)</span>, <span class="math inline">\(Tr_{i,s}\)</span>, is defined as the product of (Mouillot et al., 2001): (i) the maximum transpiration of the plant cohort; (ii) the relative whole-plant conductance, <span class="math inline">\(K_{i,s}\)</span>, corresponding to the species and water potential in layer <span class="math inline">\(s\)</span>; (iii) the proportion of plant fine roots in layer <span class="math inline">\(s\)</span>, <span class="math inline">\(v_{i,s}\)</span>:
 <span class="math display">\[\begin{equation}
 Tr_{i,s} =  Tr_{\max,i} \cdot K_{i,s} \cdot v_{i,s}
 \end{equation}\]</span>
-The total amount of water transpired by plants, <span class="math inline">\(Tr\)</span> (in mm·day<span class="math inline">\(^{-1}\)</span>), is the sum of
-<span class="math inline">\(Tr_{i,s}\)</span> values over all plant cohorts and soil layers:
+The total amount of water transpired by plants, <span class="math inline">\(Tr\)</span> (in mm·day<span class="math inline">\(^{-1}\)</span>), is the sum of <span class="math inline">\(Tr_{i,s}\)</span> values over all plant cohorts and soil layers:
 <span class="math display">\[\begin{equation}
 Tr =\sum_{s}\sum_{i}{Tr_{i,s}}
 \end{equation}\]</span>
-Assuming no water limitations (i.e. <span class="math inline">\(K_{i,s} = 1\)</span>), we have that <span class="math inline">\(Tr = Tr_{\max}\)</span>.
-Total stand transpiration will be lower than <span class="math inline">\(Tr_{\max}\)</span> if soil water potential
-in any layer is negative enough to cause a significant reduction in whole-plant
-conductance. At the plant level, the transpiration of a given plant cohort will
-be lower than that of others if: (1) the cohort is under the shade (it reduces
-<span class="math inline">\(f_i\)</span> and hence <span class="math inline">\(Tr_{\max,i}\)</span>); (2) the cohort has a lower amount of leaf area
-(it reduces <span class="math inline">\(f_i\)</span> and hence <span class="math inline">\(Tr_{\max,i}\)</span>); (3) the soil layers exploited by the
-cohort have more negative water potentials (it reduces <span class="math inline">\(K_{i,s}\)</span>).</p>
+<p>Assuming no water limitations (i.e. <span class="math inline">\(K_{i,s} = 1\)</span>), we have that <span class="math inline">\(Tr = Tr_{\max}\)</span>. Total stand transpiration will be lower than <span class="math inline">\(Tr_{\max}\)</span> if soil water potential in any layer is negative enough to cause a significant reduction in whole-plant conductance. At the plant level, the transpiration of a given plant cohort will be lower than that of others if: (1) the cohort is under the shade (it reduces <span class="math inline">\(f_i\)</span> and hence <span class="math inline">\(Tr_{\max,i}\)</span>); (2) the cohort has a lower amount of leaf area (it reduces <span class="math inline">\(f_i\)</span> and hence <span class="math inline">\(Tr_{\max,i}\)</span>); (3) the soil layers exploited by the cohort have more negative water potentials (it reduces <span class="math inline">\(K_{i,s}\)</span>).</p>
 </div>
 <div id="plant-photosynthesis" class="section level2">
 <h2><span class="header-section-number">6.3</span> Plant photosynthesis</h2>
-<p>Because it is useful for growth and forest dynamics, and for compatibility with
-the ‘Sperry’ transpiration mode, the ‘Granier’ transpiration mode also calculates
-net assimilated carbon. Assuming a constant maximum water use efficiency (WUE),
-photosynthesis for a given plant cohort <span class="math inline">\(i\)</span> (in g C · m<span class="math inline">\(^{-2}\)</span> · day<span class="math inline">\(^{-1}\)</span>) is
-estimated as a function of transpiration <span class="citation">(Mouillot, Rambal, and Lavorel <a href="#ref-Mouillot2001">2001</a>)</span>:
+Because it is useful for growth and forest dynamics, and for compatibility with the ‘Sperry’ transpiration mode, the ‘Granier’ transpiration mode also calculates net assimilated carbon. Assuming a constant maximum water use efficiency (WUE), photosynthesis for a given plant cohort <span class="math inline">\(i\)</span> (in g C · m<span class="math inline">\(^{-2}\)</span> · day<span class="math inline">\(^{-1}\)</span>) is estimated as a function of transpiration <span class="citation">(Mouillot, Rambal, and Lavorel <a href="#ref-Mouillot2001">2001</a>)</span>:
 <span class="math display">\[\begin{equation}
 A_n = \alpha \cdot WUE_{\max} \cdot Tr_i
 \end{equation}\]</span>
-where <span class="math inline">\(Tr_i\)</span> is the transpiration of plant cohort <span class="math inline">\(i\)</span>, <span class="math inline">\(WUE_{\max}\)</span> is the
-maximum water use efficiency of the corresponding species (in g C · mm<span class="math inline">\(^{-1}\)</span>)
-and <span class="math inline">\(\alpha = T_{mean}/20\)</span> is bounded between 0 and 1.</p>
+<p>where <span class="math inline">\(Tr_i\)</span> is the transpiration of plant cohort <span class="math inline">\(i\)</span>, <span class="math inline">\(WUE_{\max}\)</span> is the maximum water use efficiency of the corresponding species (in g C · mm<span class="math inline">\(^{-1}\)</span>) and <span class="math inline">\(\alpha = T_{mean}/20\)</span> is bounded between 0 and 1.</p>
 
-<p>Similarly to <span class="citation">Mouillot, Rambal, and Joffre (<a href="#ref-Mouillot2002">2002</a>)</span>, daily drought stress of a given plant cohort
-<span class="math inline">\(i\)</span>, <span class="math inline">\(DDS_i\)</span>, is defined as the complement of relative whole-plant conductance and
-is aggregated across soil layers using the proportion of fine roots in each layer
-as weights:
+Similarly to <span class="citation">Mouillot, Rambal, and Joffre (<a href="#ref-Mouillot2002">2002</a>)</span>, daily drought stress of a given plant cohort <span class="math inline">\(i\)</span>, <span class="math inline">\(DDS_i\)</span>, is defined as the complement of relative whole-plant conductance and is aggregated across soil layers using the proportion of fine roots in each layer as weights:
 <span class="math display">\[\begin{equation}
 DDS_i=\phi_i \cdot \sum_{s}{(1-K_{i,s})\cdot v_{i,s}}
 \end{equation}\]</span>
-Leaf-phenological status is included to prevent winter deciduous plants from
-suffering drought stress during winter. Daily drought stress values can be later
-used to define drought stress indices for larger temporal scales, as presented in
-the main text.</p>
-<p>Granier’s transpiration model does not allow estimating a water potential drop
-from soil to the leaf. Moreover, in a multilayered soil it is difficult to know
-what would be the water potential of the plant. Despite these limitations, a
-gross surrogate of (pre-dawn) ‘leaf water potential’ (<span class="math inline">\(\Psi_{leaf,i}\)</span>; in MPa) may be
-obtained averaging whole-plant relative conductance values:
+<p>Leaf-phenological status is included to prevent winter deciduous plants from suffering drought stress during winter. Daily drought stress values can be later used to define drought stress indices for larger temporal scales, as presented in the main text.</p>
+Granier’s transpiration model does not allow estimating a water potential drop from soil to the leaf. Moreover, in a multilayered soil it is difficult to know what would be the water potential of the plant. Despite these limitations, a gross surrogate of (pre-dawn) ‘leaf water potential’ (<span class="math inline">\(\Psi_{leaf,i}\)</span>; in MPa) may be obtained averaging whole-plant relative conductance values:
 <span class="math display">\[\begin{equation}
 \Psi_{leaf,i}=K^{-1}(K_i) = K^{-1}\left(\sum_{s}{K_{i,s}\cdot v_{i,s}}\right)
 \end{equation}\]</span>
-where <span class="math inline">\(K_i\)</span> is the average whole-plant relative conductance obtained from the
-scalar product of conductances and fine root proportions and <span class="math inline">\(K^{-1}\)</span> is the inverse of the whole-plant conductance function (see function <code>hydraulics_K2Psi()</code>).</p>
+<p>where <span class="math inline">\(K_i\)</span> is the average whole-plant relative conductance obtained from the scalar product of conductances and fine root proportions and <span class="math inline">\(K^{-1}\)</span> is the inverse of the whole-plant conductance function (see function <code>hydraulics_K2Psi()</code>).</p>
 </div>
 <div id="irreversible-cavitation-and-hydraulic-disconnection" class="section level2">
 <h2><span class="header-section-number">6.4</span> Irreversible cavitation and hydraulic disconnection</h2>
-<p>The water balance model is normally run assuming that although soil drought may
-reduce transpiration, embolized xylem conduits are automatically refilled when
-soil moisture recovers (in other words, cavitation is reversible). It is possible
-to simulate irreversible cavitation by setting <code>cavitationRefill = FALSE</code> in the control parameters. This option causes the model to keep track of the maximum value of drought stress so far experienced:
+The water balance model is normally run assuming that although soil drought may reduce transpiration, embolized xylem conduits are automatically refilled when soil moisture recovers (in other words, cavitation is reversible). It is possible to simulate irreversible cavitation by setting <code>cavitationRefill = FALSE</code> in the control parameters. This option causes the model to keep track of the maximum value of drought stress so far experienced:
 <span class="math display">\[\begin{equation}
 P_{embolized,i}= \max \{P_{embolized,i}, DDS_i \}
 \end{equation}\]</span>
-and then <span class="math inline">\(K_{i,s}\)</span> cannot be larger than the complement of this maximum drought
-stress:
+and then <span class="math inline">\(K_{i,s}\)</span> cannot be larger than the complement of this maximum drought stress:
 <span class="math display">\[\begin{equation}
 K_{i,s} = \min \{K_{i}(\Psi_s), 1.0 - P_{embolized,i} \}
-\end{equation}\]</span></p>
-<p>Another optional behavior consists in allowing the plant to disconnect from the
-soil when its potential becomes too negative. This may be advantageous for a
-cavitation-sensitive plant that is competing for water with another plant with
-higher extraction capacity. Parameter <span class="math inline">\(K_{rootdisc,i}\)</span> can be used to specify the
-minimum relative conductance value that the plant will tolerate without
-disconnecting hydraulically from the soil (by default <span class="math inline">\(K_{rootdisc,i} = 0\)</span>).
-If, after possibly accounting for irreversible cavitation, <span class="math inline">\(K_{i,s}&lt;K_{rootdisc,i}\)</span>
-for a given soil layer, then the model assumes that transpiration from this soil
-layer is absent. Moreover, <span class="math inline">\(K_{i,s}\)</span> is assumed equal to <span class="math inline">\(K_{rootdisc,i}\)</span> for the
-sake of determining plant water potential.</p>
+\end{equation}\]</span>
+<p>Another optional behavior consists in allowing the plant to disconnect from the soil when its potential becomes too negative. This may be advantageous for a cavitation-sensitive plant that is competing for water with another plant with higher extraction capacity. Parameter <span class="math inline">\(K_{rootdisc,i}\)</span> can be used to specify the minimum relative conductance value that the plant will tolerate without disconnecting hydraulically from the soil (by default <span class="math inline">\(K_{rootdisc,i} = 0\)</span>). If, after possibly accounting for irreversible cavitation, <span class="math inline">\(K_{i,s}&lt;K_{rootdisc,i}\)</span> for a given soil layer, then the model assumes that transpiration from this soil layer is absent. Moreover, <span class="math inline">\(K_{i,s}\)</span> is assumed equal to <span class="math inline">\(K_{rootdisc,i}\)</span> for the sake of determining plant water potential.</p>
 
 </div>
 </div>
@@ -500,13 +435,13 @@ sake of determining plant water potential.</p>
 <h3>Bibliography</h3>
 <div id="refs" class="references">
 <div id="ref-Granier1999">
-<p>Granier, A., N. Bréda, P. Biron, and S. Villette. 1999. “A lumped water balance model to evaluate duration and intensity of drought constraints in forest stands.” <em>Ecological Modelling</em> 116:269–83. <a href="https://doi.org/10.1016/S0304-3800(98)00205-1" class="uri">https://doi.org/10.1016/S0304-3800(98)00205-1</a>.</p>
+<p>Granier, A., N. Bréda, P. Biron, and S. Villette. 1999. “A lumped water balance model to evaluate duration and intensity of drought constraints in forest stands.” <em>Ecological Modelling</em> 116: 269–83. doi:<a href="https://doi.org/10.1016/S0304-3800(98)00205-1">10.1016/S0304-3800(98)00205-1</a>.</p>
 </div>
 <div id="ref-Mouillot2002">
-<p>Mouillot, Florent, Serge Rambal, and Richard Joffre. 2002. “Simulating climate change impacts on fire frequency and vegetation dynamics in a Mediterranean-type ecosystem.” <em>Global Change Biology</em> 8 (5). Wiley Online Library:423–37.</p>
+<p>Mouillot, Florent, Serge Rambal, and Richard Joffre. 2002. “Simulating climate change impacts on fire frequency and vegetation dynamics in a Mediterranean-type ecosystem.” <em>Global Change Biology</em> 8 (5). Wiley Online Library: 423–37.</p>
 </div>
 <div id="ref-Mouillot2001">
-<p>Mouillot, Florent, Serge Rambal, and Sandra Lavorel. 2001. “A generic process-based SImulator for meditERRanean landscApes (SIERRA): design and validation exercises.” <em>Forest Ecology and Management</em> 147 (1):75–97. <a href="https://doi.org/10.1016/S0378-1127(00)00432-1" class="uri">https://doi.org/10.1016/S0378-1127(00)00432-1</a>.</p>
+<p>Mouillot, Florent, Serge Rambal, and Sandra Lavorel. 2001. “A generic process-based SImulator for meditERRanean landscApes (SIERRA): design and validation exercises.” <em>Forest Ecology and Management</em> 147 (1): 75–97. doi:<a href="https://doi.org/10.1016/S0378-1127(00)00432-1">10.1016/S0378-1127(00)00432-1</a>.</p>
 </div>
 </div>
             </section>
@@ -565,7 +500,7 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "true";
+    var src = "";
     if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');
