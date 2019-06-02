@@ -196,13 +196,15 @@ sd1<-spwb_day(x, examplesoil, rownames(examplemeteo)[d],
              latitude = 41.82592, elevation = 100, 
              slope= 0, aspect = 0, prec = examplemeteo$Precipitation[d])
 ```
-Function `spwb_day()` is most useful when working with the complex transpiration model. This is why so many meteorological variables are required. The output of `spwb_day()` is a list with three elements:
+Function `spwb_day()` is most useful when working with the complex transpiration model. This is why so many meteorological variables are required. The output of `spwb_day()` is a list with five elements:
 ```{r}
 names(sd1)
 ```
 
+* **cohorts**: Table with the species code and species name of each cohort.
 * **WaterBalance**: Contains the soil water balance flows (precipitation, infiltration, transpiration, ...)
 * **Soil**: Contains output values by soil layer (i.e. water evaporated from each soil layer, water transpired from each soil layer and the final soil water potential).
+* **Stand**: A list with stand LAI (expanded and dead leaves), canopy water retention capacity and the proportion of light (SWR or PAR) reaching the ground.
 * **Plants**: Contains output values by plant cohort (i.e. LAI values, transpiration, water potential, drought stress index, ...).
 
 ```{r}

@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.3</span>
       </span>
     </div>
 
@@ -86,16 +86,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/AdvancedWaterEnergyBalance.html">2. Advanced water and energy balance simulation</a>
+      <a href="../articles/0_PackageOverview.html">0. Package overview</a>
     </li>
     <li>
-      <a href="../articles/ForestGrowth.html">3. Forest growth simulation</a>
+      <a href="../articles/1_BasicWaterBalance.html">1. Basic water balance simulation</a>
     </li>
     <li>
-      <a href="../articles/PackageOverview.html">Package overview</a>
+      <a href="../articles/2_AdvancedWaterEnergyBalance.html">2. Advanced water and energy balance simulation</a>
     </li>
     <li>
-      <a href="../articles/SimpleWaterBalance.html">1. Introduction to water balance simulation</a>
+      <a href="../articles/3_ForestGrowth.html">3. Forest growth simulation</a>
     </li>
   </ul>
 </li>
@@ -231,6 +231,7 @@
 <li><p><code>"Plants"</code>: A data frame of results for each plant cohort:
     <ul>
 <li><p><code>"LAI"</code>: Leaf area index of the plant cohort.</p></li>
+<li><p><code>"AbsorbedSWRFraction"</code>: Fraction of SWR absorbed by each cohort.</p></li>
 <li><p><code>"Transpiration"</code>: Transpirated water (in mm) corresponding to each cohort.</p></li>
 <li><p><code>"Photosynthesis"</code>: Net photosynthesis (in gC/m2) corresponding to each cohort.</p></li>
 <li><p><code>"psi"</code>: Water potential (in MPa) of the plant cohort (average over soil layers).</p></li>
@@ -340,10 +341,14 @@
 #&gt; S1_65 65 Quercus coccifera
 #&gt; 
 #&gt; $Plants
-#&gt;              LAI Transpiration Photosynthesis    psi          DDS
-#&gt; T1_54 0.81670117    0.13418193     0.14397814 -0.033 3.113699e-06
-#&gt; T2_68 0.79779523    0.13350249     0.14324909 -0.033 9.225785e-07
-#&gt; S1_65 0.08913325    0.01093569     0.01173408 -0.033 3.892129e-07
+#&gt;              LAI AbsorbedSWRFraction Transpiration Photosynthesis    psi
+#&gt; T1_54 0.81670117          0.23363185    0.13418193     0.14397814 -0.033
+#&gt; T2_68 0.79779523          0.23244833    0.13350249     0.14324909 -0.033
+#&gt; S1_65 0.08913325          0.01904071    0.01093569     0.01173408 -0.033
+#&gt;                DDS
+#&gt; T1_54 3.113699e-06
+#&gt; T2_68 9.225785e-07
+#&gt; S1_65 3.892129e-07
 #&gt; 
 #&gt; $Extraction
 #&gt;                 1           2
