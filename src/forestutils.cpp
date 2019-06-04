@@ -682,7 +682,7 @@ NumericVector speciesPhytovolume(List x, DataFrame SpParams) {
 }
 
 // [[Rcpp::export("stand_phytovolume")]]
-double standPhytovolume(List x, DataFrame SpParams, double gdd = NA_REAL) {
+double standPhytovolume(List x, DataFrame SpParams) {
   NumericVector cp = cohortPhytovolume(x, SpParams);
   double tp= 0.0;
   for(int i=0;i<cp.size();i++){if(!NumericVector::is_na(cp[i])) tp+=cp[i];}

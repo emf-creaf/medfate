@@ -1,12 +1,12 @@
 ---
-title: "0. Package overview"
+title: "Package overview"
 author: "Miquel De Caceres"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
     toc: TRUE
 vignette: >
-  %\VignetteIndexEntry{0. Package overview}
+  %\VignetteIndexEntry{Package overview}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignettePackage{medfate}
   \usepackage[utf8]{inputenc}
@@ -38,7 +38,7 @@ Models included in `medfate` were primarily designed to be ran on **forest inven
 data(exampleforest)
 exampleforest
 ```
-Trees are expected to be primarily described in terms of species, diameter (DBH) and height, whereas shrubs are described in terms of species, percent cover and mean height.
+Trees are expected to be primarily described in terms of species, diameter (DBH) and height, whereas shrubs are described in terms of species, percent cover and mean height. Functions are provided to map variables in user data frames into tables `treeData` and `shrubData` (see function `forest_mapWoodyTables()`).
 
 ### Soil objects
 Simulation models in `medfate` require information on the physical attributes of soil, namely soil depth, texture, bulk density and rock fragment content. Soil physical attributes can be initialized to default values, for a given number of layers, using function `defaultSoilParams()`:
@@ -47,7 +47,7 @@ Simulation models in `medfate` require information on the physical attributes of
 spar = defaultSoilParams(2)
 print(spar)
 ```
-where `widths` are soil layer widths in mm; `clay` and `sand` are the percentage of clay and sand, in percent of dry weight, `om` stands for organic matter, `bd` is bulk density (in g·cm$^{-3}$) and `rfc` the percentage of rock fragments. Because soil properties vary strongly at fine spatial scales, ideally soil physical attributes should be measured on samples taken at the forest stand to be simulated. For those users lacking such data, soil properties modelled at larger scales are available via soilgrids.org (see function `soilgridsParams()`). 
+where `widths` are soil layer widths in mm; `clay` and `sand` are the percentage of clay and sand, in percent of dry weight, `om` stands for organic matter, `bd` is bulk density (in $g \cdot cm^{-3}$) and `rfc` the percentage of rock fragments. Because soil properties vary strongly at fine spatial scales, ideally soil physical attributes should be measured on samples taken at the forest stand to be simulated. For those users lacking such data, soil properties modelled at larger scales are available via soilgrids.org (see function `soilgridsParams()`). 
 
 The soil input for simulations is an object of class `soil` (a list) that is created using a function with the same name:
 ```{r}
@@ -93,12 +93,12 @@ Many of the functions included in `medfate` are internally called by simulation 
 * `transp_*`: Stomatal regulation and resulting transpiration/photosynthesis.
 
 ## Static functions
-### Plant and forest attributes
+### Plant, species and stand attributes
 Package `medfate` include a number of functions to examine properties of the plants conforming the `forest` object, summary functions at the stand level or vertical profiles of several physical properties:
 
 * `plant_*`: Cohort-level information (species name, id, leaf area, height...).
 * `species_*`: Cohort-level attributes aggregated by species (e.g. basal area).
-* `forest_*`: Forest-level attributes (e.g. basal area).
+* `stand_*`: Stand-level attributes (e.g. basal area).
 * `vprofile_*`: Vertical profiles (light, wind, fuel density, leaf area density).
 
 ### Fuel properties and fire hazard

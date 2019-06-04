@@ -137,8 +137,8 @@ species_phytovolume <- function(x, SpParams) {
     .Call(`_medfate_speciesPhytovolume`, x, SpParams)
 }
 
-stand_phytovolume <- function(x, SpParams, gdd = NA_real_) {
-    .Call(`_medfate_standPhytovolume`, x, SpParams, gdd)
+stand_phytovolume <- function(x, SpParams) {
+    .Call(`_medfate_standPhytovolume`, x, SpParams)
 }
 
 .treeFuel <- function(SP, N, dbh, SpParams, gdd = NA_real_, includeDead = TRUE) {

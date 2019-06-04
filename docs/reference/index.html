@@ -83,16 +83,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/0_PackageOverview.html">0. Package overview</a>
+      <a href="../articles/AdvancedWaterEnergyBalance.html">Advanced water and energy balance simulation</a>
     </li>
     <li>
-      <a href="../articles/1_BasicWaterBalance.html">1. Basic water balance simulation</a>
+      <a href="../articles/BasicWaterBalance.html">Basic water balance simulation</a>
     </li>
     <li>
-      <a href="../articles/2_AdvancedWaterEnergyBalance.html">2. Advanced water and energy balance simulation</a>
+      <a href="../articles/ForestGrowth.html">Forest growth simulation</a>
     </li>
     <li>
-      <a href="../articles/3_ForestGrowth.html">3. Forest growth simulation</a>
+      <a href="../articles/PackageOverview.html">Package overview</a>
     </li>
   </ul>
 </li>
@@ -142,18 +142,6 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="forest.html">summary(<i>&lt;forest&gt;</i>)</a></code> <code><a href="forest.html">print(<i>&lt;summary.forest&gt;</i>)</a></code> <code><a href="forest.html">emptyforest()</a></code> </p>
-        </td>
-        <td><p>Forest description</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="forest2spwbInput.html">forest2aboveground()</a></code> <code><a href="forest2spwbInput.html">forest2belowground()</a></code> <code><a href="forest2spwbInput.html">forest2growthInput()</a></code> <code><a href="forest2spwbInput.html">forest2spwbInput()</a></code> <code><a href="forest2spwbInput.html">growthInput()</a></code> <code><a href="forest2spwbInput.html">spwbInput()</a></code> </p>
-        </td>
-        <td><p>Input for simulation models</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="forest_extractSFIData.html">forest_extractSFIData()</a></code> <code><a href="forest_extractSFIData.html">forest_translateSFISpeciesCodes()</a></code> </p>
         </td>
         <td><p>Extract forest from SFI data</p></td>
@@ -166,9 +154,43 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="forest_values.html">forest_basalArea()</a></code> <code><a href="forest_values.html">forest_mergeTrees()</a></code> </p>
+          <p><code><a href="forest_mergeTrees.html">forest_mergeTrees()</a></code> </p>
         </td>
         <td><p>Forest utility functions</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-species-parameters" class="hasAnchor"><a href="#section-species-parameters" class="anchor"></a>Species parameters</h2>
+          <p class="section-desc"><p>Species parameter data and utility functions.</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="SpParamsMED.html">SpParamsMED</a></code> </p>
+        </td>
+        <td><p>Parameter values for Mediterranean species</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="modifySpParams.html">modifySpParams()</a></code> <code><a href="modifySpParams.html">modifyCohortParams()</a></code> </p>
+        </td>
+        <td><p>Modify species/cohort parameters</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-forest-description" class="hasAnchor"><a href="#section-forest-description" class="anchor"></a>Forest description</h2>
+          <p class="section-desc"><p>Plant, species and forest attributes</p></p>
+        </th>
+      </tr>
+      <tr>
+        
+        <td>
+          <p><code><a href="stand_values.html">stand_basalArea()</a></code> <code><a href="stand_values.html">stand_foliarBiomass()</a></code> <code><a href="stand_values.html">stand_fuel()</a></code> <code><a href="stand_values.html">stand_LAI()</a></code> <code><a href="stand_values.html">stand_phytovolume()</a></code> </p>
+        </td>
+        <td><p>Stand values</p></td>
       </tr><tr>
         
         <td>
@@ -193,26 +215,6 @@
           <p><code><a href="VerticalProfiles.html">vprofile_leafAreaDensity()</a></code> <code><a href="VerticalProfiles.html">vprofile_rootDistribution()</a></code> <code><a href="VerticalProfiles.html">vprofile_fuelBulkDensity()</a></code> <code><a href="VerticalProfiles.html">vprofile_PARExtinction()</a></code> <code><a href="VerticalProfiles.html">vprofile_SWRExtinction()</a></code> <code><a href="VerticalProfiles.html">vprofile_windExtinction()</a></code> </p>
         </td>
         <td><p>Vertical profiles</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-species-parameters" class="hasAnchor"><a href="#section-species-parameters" class="anchor"></a>Species parameters</h2>
-          <p class="section-desc"><p>Species parameter data and utility functions.</p></p>
-        </th>
-      </tr>
-      <tr>
-        
-        <td>
-          <p><code><a href="SpParamsMED.html">SpParamsMED</a></code> </p>
-        </td>
-        <td><p>Parameter values for Mediterranean species</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="modifySpParams.html">modifySpParams()</a></code> <code><a href="modifySpParams.html">modifyCohortParams()</a></code> </p>
-        </td>
-        <td><p>Modify species/cohort parameters</p></td>
       </tr>
     </tbody><tbody>
       <tr>
@@ -505,6 +507,7 @@
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#section-forest">Forest</a></li>
       <li><a href="#section-species-parameters">Species parameters</a></li>
+      <li><a href="#section-forest-description">Forest description</a></li>
       <li><a href="#section-meteorology">Meteorology</a></li>
       <li><a href="#section-soil">Soil</a></li>
       <li><a href="#section-simulation">Simulation</a></li>

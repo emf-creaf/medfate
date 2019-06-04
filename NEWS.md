@@ -7,6 +7,7 @@
 - Fraction of absorbed SWR output in Granier's transpiration
 - 'Stand' data frame output in spwb(), separated from 'WaterBalance'
 - New function 'forest_mapTreeTable', 'forest_mapShrubTable' and 'forest_mapWoodyTables'
+- 'stand_*' functions for stand-level properties
 
 # Version 0.8.2
 - Modification of meteoland to better calculate direct/diffuse light on slopes

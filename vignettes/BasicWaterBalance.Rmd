@@ -1,12 +1,12 @@
 ---
-title: "1. Basic water balance simulation"
+title: "Basic water balance simulation"
 author: "Miquel De Caceres"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
     toc: TRUE
 vignette: >
-  %\VignetteIndexEntry{1. Basic water balance simulation}
+  %\VignetteIndexEntry{Basic water balance simulation}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignettePackage{medfate}
   \usepackage[utf8]{inputenc}

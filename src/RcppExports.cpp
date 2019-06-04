@@ -442,15 +442,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // standPhytovolume
-double standPhytovolume(List x, DataFrame SpParams, double gdd);
-RcppExport SEXP _medfate_standPhytovolume(SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
+double standPhytovolume(List x, DataFrame SpParams);
+RcppExport SEXP _medfate_standPhytovolume(SEXP xSEXP, SEXP SpParamsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
-    Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
-    rcpp_result_gen = Rcpp::wrap(standPhytovolume(x, SpParams, gdd));
+    rcpp_result_gen = Rcpp::wrap(standPhytovolume(x, SpParams));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4020,7 +4019,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_shrubCrownPhytovolume", (DL_FUNC) &_medfate_shrubCrownPhytovolume, 5},
     {"_medfate_cohortPhytovolume", (DL_FUNC) &_medfate_cohortPhytovolume, 2},
     {"_medfate_speciesPhytovolume", (DL_FUNC) &_medfate_speciesPhytovolume, 2},
-    {"_medfate_standPhytovolume", (DL_FUNC) &_medfate_standPhytovolume, 3},
+    {"_medfate_standPhytovolume", (DL_FUNC) &_medfate_standPhytovolume, 2},
     {"_medfate_treeFuel", (DL_FUNC) &_medfate_treeFuel, 6},
     {"_medfate_shrubFuel", (DL_FUNC) &_medfate_shrubFuel, 7},
     {"_medfate_cohortFuel", (DL_FUNC) &_medfate_cohortFuel, 4},

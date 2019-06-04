@@ -5,11 +5,11 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>0. Package overview • medfate</title>
+<title>Package overview • medfate</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="0. Package overview">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Package overview">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -53,16 +53,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/0_PackageOverview.html">0. Package overview</a>
+      <a href="../articles/AdvancedWaterEnergyBalance.html">Advanced water and energy balance simulation</a>
     </li>
     <li>
-      <a href="../articles/1_BasicWaterBalance.html">1. Basic water balance simulation</a>
+      <a href="../articles/BasicWaterBalance.html">Basic water balance simulation</a>
     </li>
     <li>
-      <a href="../articles/2_AdvancedWaterEnergyBalance.html">2. Advanced water and energy balance simulation</a>
+      <a href="../articles/ForestGrowth.html">Forest growth simulation</a>
     </li>
     <li>
-      <a href="../articles/3_ForestGrowth.html">3. Forest growth simulation</a>
+      <a href="../articles/PackageOverview.html">Package overview</a>
     </li>
   </ul>
 </li>
@@ -82,13 +82,13 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>0. Package overview</h1>
+      <h1>Package overview</h1>
                         <h4 class="author">Miquel De Caceres</h4>
             
             <h4 class="date">2019-06-04</h4>
       
       
-      <div class="hidden name"><code>0_PackageOverview.Rmd</code></div>
+      <div class="hidden name"><code>PackageOverview.Rmd</code></div>
 
     </div>
 
@@ -140,7 +140,7 @@
 ## 
 ## attr(,"class")
 ## [1] "forest" "list"</code></pre>
-<p>Trees are expected to be primarily described in terms of species, diameter (DBH) and height, whereas shrubs are described in terms of species, percent cover and mean height.</p>
+<p>Trees are expected to be primarily described in terms of species, diameter (DBH) and height, whereas shrubs are described in terms of species, percent cover and mean height. Functions are provided to map variables in user data frames into tables <code>treeData</code> and <code>shrubData</code> (see function <code><a href="../reference/forest_mapWoodyTables.html">forest_mapWoodyTables()</a></code>).</p>
 </div>
 <div id="soil-objects" class="section level3">
 <h3 class="hasAnchor">
@@ -152,7 +152,7 @@
 <pre><code>##   widths clay sand om  bd rfc
 ## 1    300   25   25 NA 1.5  20
 ## 2    700   25   25 NA 1.5  40</code></pre>
-<p>where <code>widths</code> are soil layer widths in mm; <code>clay</code> and <code>sand</code> are the percentage of clay and sand, in percent of dry weight, <code>om</code> stands for organic matter, <code>bd</code> is bulk density (in g·cm<span class="math inline">\(^{-3}\)</span>) and <code>rfc</code> the percentage of rock fragments. Because soil properties vary strongly at fine spatial scales, ideally soil physical attributes should be measured on samples taken at the forest stand to be simulated. For those users lacking such data, soil properties modelled at larger scales are available via soilgrids.org (see function <code><a href="../reference/soilgridsParams.html">soilgridsParams()</a></code>).</p>
+<p>where <code>widths</code> are soil layer widths in mm; <code>clay</code> and <code>sand</code> are the percentage of clay and sand, in percent of dry weight, <code>om</code> stands for organic matter, <code>bd</code> is bulk density (in <span class="math inline">\(g \cdot cm^{-3}\)</span>) and <code>rfc</code> the percentage of rock fragments. Because soil properties vary strongly at fine spatial scales, ideally soil physical attributes should be measured on samples taken at the forest stand to be simulated. For those users lacking such data, soil properties modelled at larger scales are available via soilgrids.org (see function <code><a href="../reference/soilgridsParams.html">soilgridsParams()</a></code>).</p>
 <p>The soil input for simulations is an object of class <code>soil</code> (a list) that is created using a function with the same name:</p>
 <pre class="sourceCode r" id="cb5"><code class="sourceCode r"><div class="sourceLine" id="cb5-1" data-line-number="1">examplesoil =<span class="st"> </span><span class="kw"><a href="../reference/soil.html">soil</a></span>(spar)</div>
 <div class="sourceLine" id="cb5-2" data-line-number="2">
@@ -222,9 +222,9 @@
 <div id="static-functions" class="section level2">
 <h2 class="hasAnchor">
 <a href="#static-functions" class="anchor"></a>Static functions</h2>
-<div id="plant-and-forest-attributes" class="section level3">
+<div id="plant-species-and-stand-attributes" class="section level3">
 <h3 class="hasAnchor">
-<a href="#plant-and-forest-attributes" class="anchor"></a>Plant and forest attributes</h3>
+<a href="#plant-species-and-stand-attributes" class="anchor"></a>Plant, species and stand attributes</h3>
 <p>Package <code>medfate</code> include a number of functions to examine properties of the plants conforming the <code>forest</code> object, summary functions at the stand level or vertical profiles of several physical properties:</p>
 <ul>
 <li>
@@ -232,7 +232,7 @@
 <li>
 <code>species_*</code>: Cohort-level attributes aggregated by species (e.g. basal area).</li>
 <li>
-<code>forest_*</code>: Forest-level attributes (e.g. basal area).</li>
+<code>stand_*</code>: Stand-level attributes (e.g. basal area).</li>
 <li>
 <code>vprofile_*</code>: Vertical profiles (light, wind, fuel density, leaf area density).</li>
 </ul>

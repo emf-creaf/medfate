@@ -31,8 +31,6 @@ forest_mapShrubTable(y, mapping, SpParams)
   \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
   \item{plot.size}{The size of plot sampled area (in m2). Alternatively, 'plot.size' can a column in \code{x} and specified in \code{mapping} to indicate that trees have been measured in different subplots and, therefore, they represent different densities per hectare.}
 }
-\details{
-}
 \value{
 Functions \code{forest_mapTreeTable} and \code{forest_mapShrubTable} return a data frame with the structure of \code{treeData} and \code{shrubData} from \code{\link{forest}} objects. Function \code{forest_mapWoodyTable} returns directly a \code{\link{forest}} object.
 }

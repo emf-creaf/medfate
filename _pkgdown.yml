@@ -8,29 +8,35 @@ home:
 articles:
 - title: Overview
   contents:
-    - starts_with("0_Package")
+    - starts_with("Package")
 - title: Simulation models
   contents:
-    - starts_with("1_Basic")
-    - starts_with("2_Advanced")
-    - starts_with("3_Forest")
+    - starts_with("Basic")
+    - starts_with("Advanced")
+    - starts_with("Forest")
 
 reference:
 - title: Forest
   desc:  Forest definition and properties.
   contents:
   - exampleforest
-  - starts_with("forest")
-  - starts_with("plant_")
-  - starts_with("root_")
-  - starts_with("species_")
-  - starts_with("vprofile_")
+  - starts_with("forest_")
 
 - title: Species parameters
   desc:  Species parameter data and utility functions.
   contents:
   - SpParamsMED
   - modifySpParams
+
+- title: Forest description
+  desc:  Plant, species and forest attributes
+  contents:
+  - starts_with("stand_")
+  - starts_with("plant_")
+  - starts_with("root_")
+  - starts_with("species_")
+  - starts_with("vprofile_")
+
 
 - title: Meteorology
   desc:  Forest meteorology and biophysics.

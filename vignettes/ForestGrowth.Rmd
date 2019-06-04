@@ -1,12 +1,12 @@
 ---
-title: "3. Forest growth simulation"
+title: "Forest growth simulation"
 author: "Miquel De Caceres"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
     toc: TRUE
 vignette: >
-  %\VignetteIndexEntry{3. Forest growth simulation}
+  %\VignetteIndexEntry{Forest growth simulation}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignettePackage{medfate}
   \usepackage[utf8]{inputenc}
