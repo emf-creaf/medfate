@@ -21,12 +21,12 @@ light_layerSunlitFraction(LAIme, LAImd, kb)
 light_cohortSunlitShadeAbsorbedRadiation(Ib0, Id0, Ibf, Idf, beta,
                                          LAIme, LAImd,
                                          kb, kd, alpha, gamma)
-light_instantaneousLightExtinctionAbsortion(LAIme, LAImd, LAImx, 
+light_instantaneousLightExtinctionAbsortion(LAIme, LAImd, LAImx,
                                             kPAR, gammaSWR,
                                             ddd, LWR_diffuse,
                                             ntimesteps = 24, canopyMode= "sunshade", 
                                             trunkExtinctionFraction = 0.1)
-light_cohortAbsorbedSWRFraction(z, x, SpParams, gdd = NA)                                            
+light_cohortAbsorbedSWRFraction(z, x, SpParams, gdd = NA)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

@@ -266,14 +266,14 @@ NumericVector dbhClassBasalArea(List x, NumericVector DBHbreaks) {
   }
   return(dcBA);
 }
-// [[Rcpp::export("forest_basalArea")]]
-double forestBasalArea(List x) {
+// [[Rcpp::export("stand_basalArea")]]
+double standBasalArea(List x) {
   NumericVector ba = cohortBasalArea(x);
   double tba = 0.0;
   for(int i=0;i<ba.size();i++){if(!NumericVector::is_na(ba[i])) tba+=ba[i];}
   return(tba);
 }
-double forestBasalAreaForMinDBH(List x, double minDBH) {
+double standBasalAreaForMinDBH(List x, double minDBH) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
   NumericVector tba = treeBasalArea(treeData["N"], treeData["DBH"]);
   NumericVector treeDBH = treeData["DBH"];
@@ -597,6 +597,15 @@ NumericVector speciesFoliarBiomass(List x, DataFrame SpParams, double gdd = NA_R
   NumericVector fb = cohortFoliarBiomass(x, SpParams, gdd);
   return(sumBySpecies(fb, cohortSpecies(x), SpParams));
 }
+
+// [[Rcpp::export("stand_foliarBiomass")]]
+double standFoliarBiomass(List x, DataFrame SpParams, double gdd = NA_REAL) {
+  NumericVector fb = cohortFoliarBiomass(x, SpParams, gdd);
+  double tfb= 0.0;
+  for(int i=0;i<fb.size();i++){if(!NumericVector::is_na(fb[i])) tfb+=fb[i];}
+  return(tfb);
+}
+
 /**
  *  Cover (percent)
  */
@@ -672,6 +681,13 @@ NumericVector speciesPhytovolume(List x, DataFrame SpParams) {
   return(sumBySpecies(cp, cohortSpecies(x), SpParams));
 }
 
+// [[Rcpp::export("stand_phytovolume")]]
+double standPhytovolume(List x, DataFrame SpParams, double gdd = NA_REAL) {
+  NumericVector cp = cohortPhytovolume(x, SpParams);
+  double tp= 0.0;
+  for(int i=0;i<cp.size();i++){if(!NumericVector::is_na(cp[i])) tp+=cp[i];}
+  return(tp);
+}
 /**
  * Fine fuel loading (in kg/m2)
  */
@@ -760,7 +776,13 @@ NumericVector speciesFuel(List x, DataFrame SpParams, double gdd = NA_REAL, bool
   NumericVector cf = cohortFuel(x, SpParams, gdd, includeDead);
   return(sumBySpecies(cf, cohortSpecies(x), SpParams));
 }
-
+// [[Rcpp::export("stand_fuel")]]
+double standFuel(List x, DataFrame SpParams, double gdd = NA_REAL, bool includeDead = true) {
+  NumericVector cf = cohortFuel(x, SpParams, gdd, includeDead);
+  double tf= 0.0;
+  for(int i=0;i<cf.size();i++){if(!NumericVector::is_na(cf[i])) tf+=cf[i];}
+  return(tf);
+}
 
 /**
  * Cohort equilibrium leaf litter (in kg/m2)
@@ -851,6 +873,13 @@ NumericVector speciesLAI(List x, DataFrame SpParams, double gdd = NA_REAL) {
   return(sumBySpecies(cl, cohortSpecies(x), SpParams));
 }
 
+// [[Rcpp::export("stand_LAI")]]
+double standLAI(List x, DataFrame SpParams, double gdd = NA_REAL) {
+  NumericVector cl = cohortLAI(x, SpParams, gdd);
+  double tl= 0.0;
+  for(int i=0;i<cl.size();i++){if(!NumericVector::is_na(cl[i])) tl+=cl[i];}
+  return(tl);
+}
 
 // [[Rcpp::export(".LAIdistributionVectors")]]
 NumericMatrix LAIdistributionVectors(NumericVector z, NumericVector LAI, NumericVector H, NumericVector CR) {

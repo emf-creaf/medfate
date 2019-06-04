@@ -61,8 +61,8 @@ plant_largerTreeBasalArea <- function(x) {
     .Call(`_medfate_cohortLargerTreeBasalArea`, x)
 }
 
-forest_basalArea <- function(x) {
-    .Call(`_medfate_forestBasalArea`, x)
+stand_basalArea <- function(x) {
+    .Call(`_medfate_standBasalArea`, x)
 }
 
 plant_density <- function(x, SpParams) {
@@ -109,6 +109,10 @@ species_foliarBiomass <- function(x, SpParams, gdd = NA_real_) {
     .Call(`_medfate_speciesFoliarBiomass`, x, SpParams, gdd)
 }
 
+stand_foliarBiomass <- function(x, SpParams, gdd = NA_real_) {
+    .Call(`_medfate_standFoliarBiomass`, x, SpParams, gdd)
+}
+
 .shrubCover <- function(x, excludeMinHeight = 0.0) {
     .Call(`_medfate_shrubCover`, x, excludeMinHeight)
 }
@@ -133,6 +137,10 @@ species_phytovolume <- function(x, SpParams) {
     .Call(`_medfate_speciesPhytovolume`, x, SpParams)
 }
 
+stand_phytovolume <- function(x, SpParams, gdd = NA_real_) {
+    .Call(`_medfate_standPhytovolume`, x, SpParams, gdd)
+}
+
 .treeFuel <- function(SP, N, dbh, SpParams, gdd = NA_real_, includeDead = TRUE) {
     .Call(`_medfate_treeFuel`, SP, N, dbh, SpParams, gdd, includeDead)
 }
@@ -147,6 +155,10 @@ plant_fuel <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE) {
 
 species_fuel <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE) {
     .Call(`_medfate_speciesFuel`, x, SpParams, gdd, includeDead)
+}
+
+stand_fuel <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE) {
+    .Call(`_medfate_standFuel`, x, SpParams, gdd, includeDead)
 }
 
 plant_equilibriumLeafLitter <- function(x, SpParams, AET = 800) {
@@ -171,6 +183,10 @@ plant_LAI <- function(x, SpParams, gdd = NA_real_) {
 
 species_LAI <- function(x, SpParams, gdd = NA_real_) {
     .Call(`_medfate_speciesLAI`, x, SpParams, gdd)
+}
+
+stand_LAI <- function(x, SpParams, gdd = NA_real_) {
+    .Call(`_medfate_standLAI`, x, SpParams, gdd)
 }
 
 .LAIdistributionVectors <- function(z, LAI, H, CR) {
