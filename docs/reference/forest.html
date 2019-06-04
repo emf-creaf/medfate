@@ -32,7 +32,7 @@
 
 <meta property="og:title" content="Forest description — forest" />
 
-<meta property="og:description" content="Description of a forest patch." />
+<meta property="og:description" content="Description of a forest stand." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8.3</span>
       </span>
     </div>
 
@@ -86,18 +86,21 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/AdvancedWaterEnergyBalance.html">2. Advanced water and energy balance simulation</a>
+      <a href="../articles/0_PackageOverview.html">0. Package overview</a>
     </li>
     <li>
-      <a href="../articles/ForestGrowth.html">3. Forest growth simulation</a>
+      <a href="../articles/1_BasicWaterBalance.html">1. Basic water balance simulation</a>
     </li>
     <li>
-      <a href="../articles/PackageOverview.html">Package overview</a>
+      <a href="../articles/2_AdvancedWaterEnergyBalance.html">2. Advanced water and energy balance simulation</a>
     </li>
     <li>
-      <a href="../articles/SimpleWaterBalance.html">1. Introduction to water balance simulation</a>
+      <a href="../articles/3_ForestGrowth.html">3. Forest growth simulation</a>
     </li>
   </ul>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       
@@ -122,7 +125,7 @@
 
     <div class="ref-description">
     
-    <p>Description of a forest patch.</p>
+    <p>Description of a forest stand.</p>
     
     </div>
 
@@ -139,7 +142,7 @@
       <th>object</th>
       <td><p>An object of class <code>forest</code> has the following structure:</p><ul>
 <li><p><code>ID</code>: An identifier of the forest stand (a string).</p></li>
-<li><p><code>patchsize</code>: The area of the forest stand, in square meters.</p></li>
+<li><p><code>patchsize</code>: The area that forest stand description represents, in square meters.</p></li>
 <li><p><code>treeData</code>: A data frame of tree cohorts (in rows) and the following columns:
    <ul>
 <li><p><code>Species</code>: Non-negative integer for tree species identity (i.e., 0,1,2,...).</p></li>
@@ -210,7 +213,7 @@
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='exampleforest.html'>exampleforest</a></code>, <code><a href='extractSFIforest.html'>extractSFIforest</a></code>, <code><a href='soil.html'>soil</a></code></p></div>
+    <div class='dont-index'><p><code><a href='exampleforest.html'>exampleforest</a></code>, <code>forest_mapWoodyData</code>, <code><a href='forest_extractSFIData.html'>forest_extractSFIData</a></code></p></div>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

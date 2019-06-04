@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Articles • medfate</title>
+<title>Extract forest from SFI data — forest_extractSFIData • medfate</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,7 +30,10 @@
 
 
 
-<meta property="og:title" content="Articles" />
+<meta property="og:title" content="Extract forest from SFI data — forest_extractSFIData" />
+
+<meta property="og:description" content="Creates a forest object from Spanish Forest Inventory (SFI) data (DGCN 2005)." />
+<meta name="twitter:card" content="summary" />
 
 
 
@@ -47,7 +50,7 @@
   </head>
 
   <body>
-    <div class="container template-article-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -96,9 +99,6 @@
     </li>
   </ul>
 </li>
-<li>
-  <a href="../news/index.html">Changelog</a>
-</li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
@@ -115,27 +115,97 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Articles</h1>
+    <h1>Extract forest from SFI data</h1>
+    
+    <div class="hidden name"><code>forest_extractSFIData.Rd</code></div>
     </div>
 
-    <div class="section ">
-      <h3>Overview</h3>
-      <p class="section-desc"></p>
-
-      <ul>
-        <li><a href="0_PackageOverview.html">0. Package overview</a></li>
-      </ul>
+    <div class="ref-description">
+    
+    <p>Creates a <code><a href='forest.html'>forest</a></code> object from Spanish Forest Inventory (SFI) data (DGCN 2005).</p>
+    
     </div>
-    <div class="section ">
-      <h3>Simulation models</h3>
-      <p class="section-desc"></p>
 
-      <ul>
-        <li><a href="1_BasicWaterBalance.html">1. Basic water balance simulation</a></li>
-        <li><a href="2_AdvancedWaterEnergyBalance.html">2. Advanced water and energy balance simulation</a></li>
-        <li><a href="3_ForestGrowth.html">3. Forest growth simulation</a></li>
-      </ul>
-    </div>
+    <pre class="usage"><span class='fu'>forest_extractSFIData</span>(<span class='no'>SFItreeData</span>, <span class='no'>SFIshrubData</span>, <span class='no'>ID</span>, <span class='no'>SpParams</span>,
+                 <span class='kw'>SFIherbData</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>SFIcodes</span><span class='kw'>=</span><span class='kw'>NULL</span>,
+                 <span class='kw'>patchsize</span><span class='kw'>=</span> <span class='fl'>10000</span>, <span class='kw'>setDefaults</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
+<span class='fu'>forest_translateSFISpeciesCodes</span>(<span class='no'>x</span>, <span class='no'>SFIcodes</span>)</pre>
+    
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>SFItreeData</th>
+      <td><p>A data frame with measured tree data.</p></td>
+    </tr>
+    <tr>
+      <th>SFIshrubData</th>
+      <td><p>A data frame with measured shrub data.</p></td>
+    </tr>
+    <tr>
+      <th>ID</th>
+      <td><p>A string with the ID of the plot to be extracted.</p></td>
+    </tr>
+    <tr>
+      <th>SpParams</th>
+      <td><p>A data frame with species parameters (see details).</p></td>
+    </tr>
+    <tr>
+      <th>SFIcodes</th>
+      <td><p>A string vector (of length equal to the number of rows in <code>SpParams</code> of the SFI species codes that correspond to the model species codification. Each string may contain different coma-separated codes in order to merge SFI species into a single model species.</p></td>
+    </tr>
+    <tr>
+      <th>SFIherbData</th>
+      <td><p>A data frame with cover and mean height of the herb layer.</p></td>
+    </tr>
+    <tr>
+      <th>patchsize</th>
+      <td><p>The area of the forest stand, in square meters.</p></td>
+    </tr>
+    <tr>
+      <th>setDefaults</th>
+      <td><p>Initializes default values for missing fields in SFI data.</p></td>
+    </tr>
+    <tr>
+      <th>x</th>
+      <td><p>A data frame with a column called 'Especie'.</p></td>
+    </tr>
+    </table>
+    
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>SFI data needs to be in a specific format. Function <code>forest_extractSFIData</code> calls <code>forest_translateSFISpeciesCodes</code> internally.</p>
+    
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>An object of class <code><a href='forest.html'>forest</a></code>.</p>
+    
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>DGCN (2005). Tercer Inventario Forestal Nacional (1997-2007): Catalunya. Dirección General de Conservación de la Naturaleza, Ministerio de Medio Ambiente, Madrid.</p>
+    
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='forest.html'>forest</a></code></p></div>
+    
+
+  </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+    <h2>Contents</h2>
+    <ul class="nav nav-pills nav-stacked">
+      <li><a href="#arguments">Arguments</a></li>
+      
+      <li><a href="#details">Details</a></li>
+
+      <li><a href="#value">Value</a></li>
+
+      <li><a href="#references">References</a></li>
+
+      <li><a href="#see-also">See also</a></li>
+          </ul>
+
+    <h2>Author</h2>
+    <p>Miquel De Cáceres Ainsa, CTFC</p>
   </div>
 </div>
 

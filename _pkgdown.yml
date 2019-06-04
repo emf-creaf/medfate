@@ -20,14 +20,17 @@ reference:
   desc:  Forest definition and properties.
   contents:
   - exampleforest
-  - SpParamsMED
-  - modifySpParams
-  - extractSFIforest
   - starts_with("forest")
   - starts_with("plant_")
   - starts_with("root_")
   - starts_with("species_")
   - starts_with("vprofile_")
+
+- title: Species parameters
+  desc:  Species parameter data and utility functions.
+  contents:
+  - SpParamsMED
+  - modifySpParams
 
 - title: Meteorology
   desc:  Forest meteorology and biophysics.

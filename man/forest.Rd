@@ -8,7 +8,7 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Forest description}
 \description{
-Description of a forest patch.
+Description of a forest stand.
 }
 \usage{
 \method{summary}{forest}(object, SpParams, detailed=FALSE, ...) 
@@ -20,7 +20,7 @@ emptyforest(ID="", patchsize=10000, ntree = 0, nshrub = 0)
   \item{object}{An object of class \code{forest} has the following structure:
   \itemize{
   \item{\code{ID}: An identifier of the forest stand (a string).}
-  \item{\code{patchsize}: The area of the forest stand, in square meters.}
+  \item{\code{patchsize}: The area that forest stand description represents, in square meters.}
   \item{\code{treeData}: A data frame of tree cohorts (in rows) and the following columns:
    \itemize{
       \item{\code{Species}: Non-negative integer for tree species identity (i.e., 0,1,2,...).}
