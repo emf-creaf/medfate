@@ -1,12 +1,12 @@
-extractSFIforest<-function(SFItreeData, SFIshrubData, ID, SpParams, 
+forest_extractSFIData<-function(SFItreeData, SFIshrubData, ID, SpParams, 
                            SFIherbData = NULL, SFIcodes=NULL, 
                            patchsize = 10000, setDefaults=TRUE) {
   f = list()
   xid = SFItreeData[SFItreeData$ID==ID,]
   yid = SFIshrubData[SFIshrubData$ID==ID,]
   if(!is.null(SFIcodes)) {
-    xid$Species = translateSpeciesCodes(xid, SFIcodes)
-    yid$Species = translateSpeciesCodes(yid, SFIcodes)
+    xid$Species = forest_translateSFISpeciesCodes(xid, SFIcodes)
+    yid$Species = forest_translateSFISpeciesCodes(yid, SFIcodes)
   } 
   #Remove NA species
   xid = xid[!is.na(xid$Species),]

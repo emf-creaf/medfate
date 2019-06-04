@@ -1,8 +1,7 @@
 \encoding{UTF-8}
-\name{extractSFIforest}
-\alias{extractSFIforest}
-\alias{translateSpeciesCodes}
-%- Also NEED an '\alias' for EACH other topic documented here.
+\name{forest_extractSFIData}
+\alias{forest_extractSFIData}
+\alias{forest_translateSFISpeciesCodes}
 \title{
 Extract forest from SFI data
 }
@@ -10,10 +9,10 @@ Extract forest from SFI data
 Creates a \code{\link{forest}} object from Spanish Forest Inventory (SFI) data (DGCN 2005).
 }
 \usage{
-extractSFIforest(SFItreeData, SFIshrubData, ID, SpParams,  
+forest_extractSFIData(SFItreeData, SFIshrubData, ID, SpParams,  
                  SFIherbData = NULL, SFIcodes=NULL, 
                  patchsize= 10000, setDefaults=TRUE)
-translateSpeciesCodes(x, SFIcodes)                 
+forest_translateSFISpeciesCodes(x, SFIcodes)                 
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -28,7 +27,7 @@ translateSpeciesCodes(x, SFIcodes)
   \item{x}{A data frame with a column called 'Especie'.}  
 }
 \details{
-SFI data needs to be in a specific format. Function \code{extractSFIforest} calls \code{translateSpeciesCodes} internally.
+SFI data needs to be in a specific format. Function \code{forest_extractSFIData} calls \code{forest_translateSFISpeciesCodes} internally.
 }
 \value{
 An object of class \code{\link{forest}}.

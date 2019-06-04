@@ -1,4 +1,4 @@
-translateSpeciesCodes<-function(x, SFIcodes) {  
+forest_translateSFISpeciesCodes<-function(x, SFIcodes) {  
   lsfi = strsplit(SFIcodes,"[,./]")
   sfiNumCod = unique(as.numeric(unlist(lsfi)))
   repVect = rep(NA,max(sfiNumCod))
