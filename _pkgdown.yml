@@ -16,10 +16,12 @@ articles:
     - starts_with("Forest")
 
 reference:
-- title: Forest
-  desc:  Forest definition and properties.
+- title: Forest definition
+  desc:  Forest definition and manipulation functions
   contents:
   - exampleforest
+  - forest
+  - emptyforest
   - starts_with("forest_")
 
 - title: Species parameters
@@ -28,7 +30,7 @@ reference:
   - SpParamsMED
   - modifySpParams
 
-- title: Forest description
+- title: Forest attributes
   desc:  Plant, species and forest attributes
   contents:
   - starts_with("stand_")
@@ -39,13 +41,13 @@ reference:
 
 
 - title: Meteorology
-  desc:  Forest meteorology and biophysics.
+  desc:  Forest meteorology and biophysics
   contents:
   - examplemeteo
   - starts_with("biophysics")
 
 - title: Soil
-  desc:  Soil-related functions.
+  desc:  Soil-related functions
   contents:
   - starts_with("defaultSoil")
   - soil
@@ -53,7 +55,7 @@ reference:
   - starts_with("soil_")
 
 - title: Simulation
-  desc:  Simulation model functions.
+  desc:  Simulation model functions
   contents:
   - starts_with("defaultControl")
   - starts_with("spwb_")
@@ -63,34 +65,34 @@ reference:
   - starts_with("plot.growth")
 
 - title: Phenology
-  desc:  Leaf phenology processes.
+  desc:  Leaf phenology processes
   contents:
   - starts_with("pheno_")
 
 
 - title: Hydraulics
-  desc:  Plant hydraulic processes.
+  desc:  Plant hydraulic processes
   contents:
   - starts_with("hydraulics_")
 
 - title: Hydrology
-  desc:  Forest hydrology processes.
+  desc:  Forest hydrology processes
   contents:
   - starts_with("hydrology_")
 
 - title: Light and photosynthesis
-  desc:  Light extinction and photosynthesis processes.
+  desc:  Light extinction and photosynthesis processes
   contents:
   - starts_with("light_")
   - starts_with("photo_")
 
 - title: Plant transpiration
-  desc:  Plant transpiration processes.
+  desc:  Plant transpiration processes
   contents:
   - starts_with("transp_")
 
 - title: Fire hazard
-  desc:  Fuel characteristics and fire hazard.
+  desc:  Fuel characteristics and fire hazard
   contents:
   - starts_with("fire_")
   - starts_with("moisture_")

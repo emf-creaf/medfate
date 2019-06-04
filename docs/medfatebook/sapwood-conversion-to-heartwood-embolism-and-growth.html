@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 16 Sapwood conversion to heartwood, embolism and growth | The medfate reference book</title>
   <meta name="description" content="This is a reference book for models implemented in package medfate." />
-  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 16 Sapwood conversion to heartwood, embolism and growth | The medfate reference book" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 
 
 
-<meta name="date" content="2019-06-01" />
+<meta name="date" content="2019-06-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -49,41 +49,57 @@
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+div.sourceLine, a.sourceLine { display: inline-block; min-height: 1.25em; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; }
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+div.sourceLine, a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource div.sourceLine, .numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource div.sourceLine::before, .numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em; }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; color: #aaaaaa;  padding-left: 4px; }
+@media screen {
+a.sourceLine::before { text-decoration: underline; color: initial; }
+}
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.bn { color: #40a070; } /* BaseN */
+code span.fl { color: #40a070; } /* Float */
+code span.ch { color: #4070a0; } /* Char */
+code span.st { color: #4070a0; } /* String */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.ot { color: #007020; } /* Other */
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.fu { color: #06287e; } /* Function */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code span.cn { color: #880000; } /* Constant */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.im { } /* Import */
+code span.va { color: #19177c; } /* Variable */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.op { color: #666666; } /* Operator */
+code span.bu { } /* BuiltIn */
+code span.ex { } /* Extension */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.at { color: #7d9029; } /* Attribute */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -104,7 +120,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a><ul>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#how-to-use-this-book"><i class="fa fa-check"></i>How to use this book</a></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html#conventions"><i class="fa fa-check"></i>Conventions</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#acknowledgements"><i class="fa fa-check"></i>Acknowledgements</a></li>
 </ul></li>
 <li class="part"><span><b>I Preliminaries</b></span></li>
@@ -118,16 +133,17 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="model-inputs.html"><a href="model-inputs.html"><i class="fa fa-check"></i><b>2</b> Model inputs</a><ul>
-<li class="chapter" data-level="2.1" data-path="model-inputs.html"><a href="model-inputs.html#soil-description"><i class="fa fa-check"></i><b>2.1</b> Soil description</a><ul>
+<li class="chapter" data-level="2.1" data-path="model-inputs.html"><a href="model-inputs.html#soilinput"><i class="fa fa-check"></i><b>2.1</b> Soil description</a><ul>
 <li class="chapter" data-level="2.1.1" data-path="model-inputs.html"><a href="model-inputs.html#physical-properties"><i class="fa fa-check"></i><b>2.1.1</b> Physical properties</a></li>
 <li class="chapter" data-level="2.1.2" data-path="model-inputs.html"><a href="model-inputs.html#water-retention-curves"><i class="fa fa-check"></i><b>2.1.2</b> Water retention curves</a></li>
 <li class="chapter" data-level="2.1.3" data-path="model-inputs.html"><a href="model-inputs.html#soil-initialization"><i class="fa fa-check"></i><b>2.1.3</b> Soil initialization</a></li>
 <li class="chapter" data-level="2.1.4" data-path="model-inputs.html"><a href="model-inputs.html#water-content-and-water-table-depth"><i class="fa fa-check"></i><b>2.1.4</b> Water content and water table depth</a></li>
 </ul></li>
-<li class="chapter" data-level="2.2" data-path="model-inputs.html"><a href="model-inputs.html#vegetation-description"><i class="fa fa-check"></i><b>2.2</b> Vegetation description</a><ul>
+<li class="chapter" data-level="2.2" data-path="model-inputs.html"><a href="model-inputs.html#vegetationinput"><i class="fa fa-check"></i><b>2.2</b> Vegetation description</a><ul>
 <li class="chapter" data-level="2.2.1" data-path="model-inputs.html"><a href="model-inputs.html#attributes-of-plant-cohorts"><i class="fa fa-check"></i><b>2.2.1</b> Attributes of plant cohorts</a></li>
 <li class="chapter" data-level="2.2.2" data-path="model-inputs.html"><a href="model-inputs.html#vertical-root-distribution"><i class="fa fa-check"></i><b>2.2.2</b> Vertical root distribution</a></li>
-<li class="chapter" data-level="2.2.3" data-path="model-inputs.html"><a href="model-inputs.html#plant-species-traits-and-vegetation-initialization"><i class="fa fa-check"></i><b>2.2.3</b> Plant (species) traits and vegetation initialization</a></li>
+<li class="chapter" data-level="2.2.3" data-path="model-inputs.html"><a href="model-inputs.html#forest-plot-objects"><i class="fa fa-check"></i><b>2.2.3</b> Forest plot objects</a></li>
+<li class="chapter" data-level="2.2.4" data-path="model-inputs.html"><a href="model-inputs.html#plant-species-traits-and-vegetation-initialization"><i class="fa fa-check"></i><b>2.2.4</b> Plant (species) traits and vegetation initialization</a></li>
 </ul></li>
 <li class="chapter" data-level="2.3" data-path="model-inputs.html"><a href="model-inputs.html#meteoinput"><i class="fa fa-check"></i><b>2.3</b> Metereological input</a></li>
 <li class="chapter" data-level="2.4" data-path="model-inputs.html"><a href="model-inputs.html#control-parameters"><i class="fa fa-check"></i><b>2.4</b> Control parameters</a></li>
@@ -138,11 +154,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="3.2" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#state-variables"><i class="fa fa-check"></i><b>3.2</b> State variables</a></li>
 <li class="chapter" data-level="3.3" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#water-balance"><i class="fa fa-check"></i><b>3.3</b> Water balance</a></li>
 <li class="chapter" data-level="3.4" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#process-scheduling"><i class="fa fa-check"></i><b>3.4</b> Process scheduling</a></li>
-<li class="chapter" data-level="3.5" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#model-input"><i class="fa fa-check"></i><b>3.5</b> Model input</a><ul>
-<li class="chapter" data-level="3.5.1" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#metereological-input"><i class="fa fa-check"></i><b>3.5.1</b> Metereological input</a></li>
-<li class="chapter" data-level="3.5.2" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#control-parameters-1"><i class="fa fa-check"></i><b>3.5.2</b> Control parameters</a></li>
+<li class="chapter" data-level="3.5" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#inputs-and-outputs"><i class="fa fa-check"></i><b>3.5</b> Inputs and outputs</a><ul>
+<li class="chapter" data-level="3.5.1" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#soil-vegetation-and-meteorology"><i class="fa fa-check"></i><b>3.5.1</b> Soil, vegetation and meteorology</a></li>
+<li class="chapter" data-level="3.5.2" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#species-parameters"><i class="fa fa-check"></i><b>3.5.2</b> Species parameters</a></li>
+<li class="chapter" data-level="3.5.3" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#control-parameters-1"><i class="fa fa-check"></i><b>3.5.3</b> Control parameters</a></li>
+<li class="chapter" data-level="3.5.4" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#model-output"><i class="fa fa-check"></i><b>3.5.4</b> Model output</a></li>
 </ul></li>
-<li class="chapter" data-level="3.6" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#model-output"><i class="fa fa-check"></i><b>3.6</b> Model output</a></li>
+<li class="chapter" data-level="3.6" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#applications"><i class="fa fa-check"></i><b>3.6</b> Applications</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="leafphenologylight.html"><a href="leafphenologylight.html"><i class="fa fa-check"></i><b>4</b> Leaf phenology and light extinction</a><ul>
 <li class="chapter" data-level="4.1" data-path="leafphenologylight.html"><a href="leafphenologylight.html#leafphenology"><i class="fa fa-check"></i><b>4.1</b> Leaf phenology and leaf fall</a></li>
@@ -176,10 +194,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="7.3.2" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#energy-balance"><i class="fa fa-check"></i><b>7.3.2</b> Energy balance</a></li>
 </ul></li>
 <li class="chapter" data-level="7.4" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#process-scheduling-1"><i class="fa fa-check"></i><b>7.4</b> Process scheduling</a></li>
-<li class="chapter" data-level="7.5" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#model-input-1"><i class="fa fa-check"></i><b>7.5</b> Model input</a><ul>
-<li class="chapter" data-level="7.5.1" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#meteorological-input"><i class="fa fa-check"></i><b>7.5.1</b> Meteorological input</a></li>
+<li class="chapter" data-level="7.5" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#inputs-and-outputs-1"><i class="fa fa-check"></i><b>7.5</b> Inputs and outputs</a><ul>
+<li class="chapter" data-level="7.5.1" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#model-inputs-1"><i class="fa fa-check"></i><b>7.5.1</b> Model inputs</a></li>
 <li class="chapter" data-level="7.5.2" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#control-parameters-2"><i class="fa fa-check"></i><b>7.5.2</b> Control parameters</a></li>
-<li class="chapter" data-level="7.5.3" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#species-parameters"><i class="fa fa-check"></i><b>7.5.3</b> Species parameters</a></li>
+<li class="chapter" data-level="7.5.3" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#model-outputs"><i class="fa fa-check"></i><b>7.5.3</b> Model outputs</a></li>
 </ul></li>
 <li class="chapter" data-level="7.6" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#model-output-1"><i class="fa fa-check"></i><b>7.6</b> Model output</a></li>
 </ul></li>
@@ -249,9 +267,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="14.3" data-path="forest-growth-model.html"><a href="forest-growth-model.html#process-scheduling-2"><i class="fa fa-check"></i><b>14.3</b> Process scheduling</a><ul>
 <li class="chapter" data-level="14.3.1" data-path="forest-growth-model.html"><a href="forest-growth-model.html#water-balance-plant-transpiration-and-photosynthesis"><i class="fa fa-check"></i><b>14.3.1</b> Water balance, plant transpiration and photosynthesis</a></li>
 </ul></li>
-<li class="chapter" data-level="14.4" data-path="forest-growth-model.html"><a href="forest-growth-model.html#model-input-2"><i class="fa fa-check"></i><b>14.4</b> Model input</a><ul>
+<li class="chapter" data-level="14.4" data-path="forest-growth-model.html"><a href="forest-growth-model.html#model-input"><i class="fa fa-check"></i><b>14.4</b> Model input</a><ul>
 <li class="chapter" data-level="14.4.1" data-path="forest-growth-model.html"><a href="forest-growth-model.html#vegetation-state-variables-and-parameters"><i class="fa fa-check"></i><b>14.4.1</b> Vegetation state variables and parameters</a></li>
-<li class="chapter" data-level="14.4.2" data-path="forest-growth-model.html"><a href="forest-growth-model.html#metereological-input-1"><i class="fa fa-check"></i><b>14.4.2</b> Metereological input</a></li>
+<li class="chapter" data-level="14.4.2" data-path="forest-growth-model.html"><a href="forest-growth-model.html#metereological-input"><i class="fa fa-check"></i><b>14.4.2</b> Metereological input</a></li>
 </ul></li>
 <li class="chapter" data-level="14.5" data-path="forest-growth-model.html"><a href="forest-growth-model.html#model-output-2"><i class="fa fa-check"></i><b>14.5</b> Model output</a></li>
 </ul></li>
@@ -368,7 +386,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h1><span class="header-section-number">Chapter 16</span> Sapwood conversion to heartwood, embolism and growth</h1>
 <div id="sapwood-conversion-to-heartwood-embolism-and-growth-1" class="section level2">
 <h2><span class="header-section-number">16.1</span> Sapwood conversion to heartwood, embolism and growth</h2>
-<span class="citation">Prentice, Sykes, and Cramer (<a href="#ref-Prentice1993">1993</a>)</span> assumed a constant annual rate of 4% for the conversion from sapwood to heartwood. Similarly, <span class="citation">Sitch et al. (<a href="#ref-Sitch2003">2003</a>)</span> assumed a sapwood annual turnover rate of 5% for all biomes. A reasonable value for maximum daily turnover rate would be (assuming an annual rate 4.5%):
+<p><span class="citation">Prentice, Sykes, and Cramer (<a href="#ref-Prentice1993">1993</a>)</span> assumed a constant annual rate of 4% for the conversion from sapwood to heartwood. Similarly, <span class="citation">Sitch et al. (<a href="#ref-Sitch2003">2003</a>)</span> assumed a sapwood annual turnover rate of 5% for all biomes. A reasonable value for maximum daily turnover rate would be (assuming an annual rate 4.5%):
 <span class="math display">\[\begin{equation}
 1-0.955^{(1/365)} = 0.0001261398
 \end{equation}\]</span>
@@ -376,8 +394,8 @@ The actual proportion of sapwood area that is transformed into heartwood is:
 <span class="math display">\[\begin{equation}
 p_{heartwood} = \frac{0.0001261398}{1+15\cdot e^{-0.01\cdot H}}
 \end{equation}\]</span>
-<p>where 0.01 is a constant causing short plants to have slower turnover rates.</p>
-Sapwood turnover is applied at the same rate in evergreen and deciduous species. The amount of sapwood that is converted to heartwood every day, <span class="math inline">\(\Delta SA_{turnover}\)</span>, is thus:
+where 0.01 is a constant causing short plants to have slower turnover rates.</p>
+<p>Sapwood turnover is applied at the same rate in evergreen and deciduous species. The amount of sapwood that is converted to heartwood every day, <span class="math inline">\(\Delta SA_{turnover}\)</span>, is thus:
 <span class="math display">\[\begin{equation}
 \Delta SA_{turnover} = SA \cdot p_{heartwood}
 \end{equation}\]</span>
@@ -385,13 +403,14 @@ Before applying either growth or cavitation the model determines the extent to w
 <span class="math display">\[\begin{equation}
 f_{turgor}(\Psi_{leaf}) = 1 - \left[e^{(\Psi_{leaf}/\Psi_{tlp})-1}\right]^5
 \end{equation}\]</span>
-<p>where <span class="math inline">\(f_{turgor}(\Psi_{leaf})=0\)</span> if <span class="math inline">\(\Psi_{leaf} &gt; \Psi_{tlp}\)</span>. The following figure illustrates the function for <span class="math inline">\(\Psi_{tlp}=-1.5\)</span> MPa: <img src="medfatebook_files/figure-html/unnamed-chunk-68-1.png" width="384" style="display: block; margin: auto;" /></p>
+where <span class="math inline">\(f_{turgor}(\Psi_{leaf})=0\)</span> if <span class="math inline">\(\Psi_{leaf} &gt; \Psi_{tlp}\)</span>. The following figure illustrates the function for <span class="math inline">\(\Psi_{tlp}=-1.5\)</span> MPa:
+<img src="medfatebook_files/figure-html/unnamed-chunk-69-1.png" width="384" style="display: block; margin: auto;" /></p>
 <p>If <span class="math inline">\(f_{turgor}(\Psi_{leaf})&gt;0\)</span> growth is applied, but there can be leaf area losses from sapwood turnover, whereas if <span class="math inline">\(f_{turgor}(\Psi_{leaf}) = 0\)</span> growth does not occur and cavitation is possible. The following two subsection detail the behavior of the growth model in each case.</p>
 </div>
 <div id="growth-and-turnover-during-non-drought-periods" class="section level2">
 <h2><span class="header-section-number">16.2</span> Growth and turnover during non-drought periods</h2>
 <p>If (i.e.<span class="math inline">\(f_{turgor}(\Psi_{leaf})&gt;0\)</span>) the model determines growth, expressed as formation of new sapwood and leaf area increase. Daily sapwood growth rate is assumed to depend on the availability of carbon (i.e., <span class="math inline">\(C_{available}&gt;0\)</span>), but also requires temperature to be within acceptable ranges (because it affects biochemical rates) and minimum turgor for cell elongation.</p>
-The adoption of the pipe model (Shinozaki et al. 1964) implies that the addition of new foliage requires building a proportional amount of xylem conduits and fine roots. This is represented in the model by a species-specific Huber value <span class="math inline">\(Hv\)</span> (in <span class="math inline">\(m^2·m^{-2}\)</span>). Since all living biomass equations are linearly related to sapwood area, the total cost in g C per 1 <span class="math inline">\(cm^2\)</span> of newly formed sapwood area:
+<p>The adoption of the pipe model (Shinozaki et al. 1964) implies that the addition of new foliage requires building a proportional amount of xylem conduits and fine roots. This is represented in the model by a species-specific Huber value <span class="math inline">\(Hv\)</span> (in <span class="math inline">\(m^2·m^{-2}\)</span>). Since all living biomass equations are linearly related to sapwood area, the total cost in g C per 1 <span class="math inline">\(cm^2\)</span> of newly formed sapwood area:
 <span class="math display">\[\begin{eqnarray}
 C_{cost,leaf} &amp;=&amp; 0.3 \cdot \frac{0.1\cdot Hv}{SLA}\\
 C_{cost,stem} &amp;=&amp; (H + Z) \cdot W_{dens} \cdot W_{C}\\
@@ -401,33 +420,33 @@ C_{cost,overall} &amp;=&amp; 1.3 \cdot (C_{cost,leaf}+C_{cost,stem} + C_{cost,ro
 where 0.1 is needed to express <span class="math inline">\(C_{cost,leaf}\)</span> in units of <span class="math inline">\(g · cm^{-2}\)</span> and factor 1.3 is used in the calculation of <span class="math inline">\(C_{cost,overall}\)</span> because growth respiration is assumed to be a constant proportion of all new tissue growth (30% of new tissue is respired, Ryan 1990). Note that carbon allocation to the three compartments does not follow constant proportions for different plants because the larger the size of a plant, the more C will need to be allocated in the vascular system per unit of sapwood area increment, and hence the proportion of C allocated to leaves and fine roots will decrease. The maximum increase in sapwood area according to the availability of C is:
 <span class="math display">\[\begin{equation}
 \Delta SA_{available} = \frac{C_{available}}{C_{cost,overall}}
-\end{equation}\]</span>
-Several sink limitations may occur. One is the turgor limitation, which is represented in the model by <span class="math inline">\(f_{turgor}\)</span>. If carbon pools are considered, then the C concentration in the fast pool (i.e. <span class="math inline">\(C_{fast}/C_{fast, \max}\)</span>) may also limit the rate of growth. We model this sink limitation by assuming that the maximum rate of growth will decrease with decreasing concentration, following a sigmoidal function:
+\end{equation}\]</span></p>
+<p>Several sink limitations may occur. One is the turgor limitation, which is represented in the model by <span class="math inline">\(f_{turgor}\)</span>. If carbon pools are considered, then the C concentration in the fast pool (i.e. <span class="math inline">\(C_{fast}/C_{fast, \max}\)</span>) may also limit the rate of growth. We model this sink limitation by assuming that the maximum rate of growth will decrease with decreasing concentration, following a sigmoidal function:
 <span class="math display">\[\begin{equation}
 f_{conc} = \frac{1}{1+\exp \left(-5 \cdot \frac{(C_{fast}/C_{fast, \max})-0.5}{0.5}\right)}
-\end{equation}\]</span>
-<p><img src="medfatebook_files/figure-html/unnamed-chunk-69-1.png" width="384" style="display: block; margin: auto;" /></p>
+\end{equation}\]</span></p>
+<p><img src="medfatebook_files/figure-html/unnamed-chunk-70-1.png" width="384" style="display: block; margin: auto;" /></p>
 <p>Obviously, if carbon pools are not considered <span class="math inline">\(f_{conc} = 1\)</span>.</p>
-Growth modulation due to temperature is incorporated through <span class="math inline">\(f_{temp}(T_{mean})\)</span>, using a truncated parabolic function as in Poyatos et al. (2007):
+<p>Growth modulation due to temperature is incorporated through <span class="math inline">\(f_{temp}(T_{mean})\)</span>, using a truncated parabolic function as in Poyatos et al. (2007):
 <span class="math display">\[\begin{equation}
 f_{temp}(T) = \frac{(T-T_{low}) \cdot (T_{high}-T)}{(T_{opt}-T_{low}) \cdot (T_{high}-T_{opt})}
 \end{equation}\]</span>
-<p>where <span class="math inline">\(0 \leq f_{temp}(T) \leq 1\)</span>, <span class="math inline">\(T_{low}\)</span> and <span class="math inline">\(T_{high}\)</span> minimum and maximum temperature values for growth and <span class="math inline">\(T_{opt}\)</span> is the optimum growth temperature.</p>
-<p><img src="medfatebook_files/figure-html/unnamed-chunk-70-1.png" width="384" style="display: block; margin: auto;" /></p>
-The rate of daily increase in sapwood area taking into account sink limitations is (<span class="math inline">\(\Delta SA_{sink}\)</span>; <span class="math inline">\(cm^2\)</span>):
+where <span class="math inline">\(0 \leq f_{temp}(T) \leq 1\)</span>, <span class="math inline">\(T_{low}\)</span> and <span class="math inline">\(T_{high}\)</span> minimum and maximum temperature values for growth and <span class="math inline">\(T_{opt}\)</span> is the optimum growth temperature.</p>
+<p><img src="medfatebook_files/figure-html/unnamed-chunk-71-1.png" width="384" style="display: block; margin: auto;" /></p>
+<p>The rate of daily increase in sapwood area taking into account sink limitations is (<span class="math inline">\(\Delta SA_{sink}\)</span>; <span class="math inline">\(cm^2\)</span>):
 <span class="math display">\[\begin{equation}
 \Delta SA_{sink} = RGR_{\max} \cdot SA \cdot f_{turgor}(\Psi_{leaf}) \cdot f_{conc} \cdot f_{temp}(T_{mean})
 \end{equation}\]</span>
-<p>where <span class="math inline">\(RGR_{\max}\)</span> is the user-defined, species-specific maximum relative growth rate in sapwood area (in <span class="math inline">\(cm^2·cm^{-2}\)</span>), which can incorporate nutrient deficiency effects.</p>
-The final growth rate of sapwood area per individual, <span class="math inline">\(\Delta SA_{growth}\)</span> (in <span class="math inline">\(cm^2\)</span>), is found by combining the potential increase in sapwood area according to availability and cost with the sink limitations:
+where <span class="math inline">\(RGR_{\max}\)</span> is the user-defined, species-specific maximum relative growth rate in sapwood area (in <span class="math inline">\(cm^2·cm^{-2}\)</span>), which can incorporate nutrient deficiency effects.</p>
+<p>The final growth rate of sapwood area per individual, <span class="math inline">\(\Delta SA_{growth}\)</span> (in <span class="math inline">\(cm^2\)</span>), is found by combining the potential increase in sapwood area according to availability and cost with the sink limitations:
 <span class="math display">\[\begin{equation}
 \Delta SA_{growth} = \min(\Delta SA_{available}, \, \Delta SA_{sink})
 \end{equation}\]</span>
 If carbon pools are considered the actual carbon growth consumption (i.e. <span class="math inline">\(C_{cost,overall} \cdot \Delta SA_{growth}\)</span>) has to be subtracted from <span class="math inline">\(C_{fast}\)</span>:
 <span class="math display">\[\begin{equation}
 C_{fast} = C_{fast} - C_{cost,overall} \cdot \Delta SA_{growth}
-\end{equation}\]</span>
-Sapwood area is updated considering both new sapwood formation and sapwood conversion to heartwood (<span class="math inline">\(\Delta SA_{turnover}\)</span>):
+\end{equation}\]</span></p>
+<p>Sapwood area is updated considering both new sapwood formation and sapwood conversion to heartwood (<span class="math inline">\(\Delta SA_{turnover}\)</span>):
 <span class="math display">\[\begin{equation}
 SA = SA + \Delta SA_{growth} - \Delta SA_{turnover} 
 \end{equation}\]</span>
@@ -436,12 +455,12 @@ After updating sapwood area, the model updates living, expanded and dead leaf ar
 LAI^{live} &amp;=&amp; LAI^{live} + N \cdot (\Delta SA_{growth} - \Delta SA_{turnover}) \cdot Hv \\
 LAI^{\phi} &amp;=&amp; LAI^{live}\,\cdot\phi \\
 LAI^{dead} &amp;=&amp; LAI^{dead} + N \cdot \Delta SA_{turnover} \cdot Hv 
-\end{eqnarray}\]</span>
+\end{eqnarray}\]</span></p>
 <p>During non-drought periods the state variables regulating drought effects are kept at initial values (i.e. <span class="math inline">\(\Psi_{\min} = 0\)</span> and <span class="math inline">\(LAI^{predrought} = LAI^{live}\)</span>).</p>
 </div>
 <div id="leaf-area-losses-during-drought-periods" class="section level2">
 <h2><span class="header-section-number">16.3</span> Leaf area losses during drought-periods</h2>
-During drought-periods (i.e. if <span class="math inline">\(f_{turgor}(\Psi_{leaf})=0\)</span>) cavitation may occur. However, cavitation is applied at the leaf area level and not at the sapwood area level. During drought periods reductions of live leaf area can come from either sapwood conversion into heartwood or cavitation. First, the model compares the current <span class="math inline">\(\Psi_{leaf}\)</span> value with <span class="math inline">\(\Psi_{\min}\)</span> the minimum potential experienced since drought started:
+<p>During drought-periods (i.e. if <span class="math inline">\(f_{turgor}(\Psi_{leaf})=0\)</span>) cavitation may occur. However, cavitation is applied at the leaf area level and not at the sapwood area level. During drought periods reductions of live leaf area can come from either sapwood conversion into heartwood or cavitation. First, the model compares the current <span class="math inline">\(\Psi_{leaf}\)</span> value with <span class="math inline">\(\Psi_{\min}\)</span> the minimum potential experienced since drought started:
 <span class="math display">\[\begin{equation}
 \Psi_{\min} = \min(\Psi_{leaf}, \, \Psi_{\min})
 \end{equation}\]</span>
@@ -457,40 +476,40 @@ Since leaf area reduction may also come from sapwood conversion into heartwood, 
 <span class="math display">\[\begin{equation}
 LAI^{live} = \min(LAI^{live} - N \cdot \Delta SA_{turnover} \cdot Hv , \, LAI^{predrought} \cdot (1 - P_{emb}))
 \end{equation}\]</span>
-<p>and expanded leaf area (<span class="math inline">\(LAI^{\phi}\)</span>) and dead leaf area (<span class="math inline">\(LAI^{dead}\)</span>) are modified accordingly.</p>
+and expanded leaf area (<span class="math inline">\(LAI^{\phi}\)</span>) and dead leaf area (<span class="math inline">\(LAI^{dead}\)</span>) are modified accordingly.</p>
 </div>
 <div id="transfer-between-carbon-pools" class="section level2">
 <h2><span class="header-section-number">16.4</span> Transfer between carbon pools</h2>
-If two carbon pools are considered then carbon can be transferred from one to the other. The model assumes that the direction of transfer depends on the C concentration in the fast pool. When the pool is at full capacity its C should be converted to long-term storage, whereas if the pool is empty C stored in the slow pool should be mobilised. The relative rate of transfer (<span class="math inline">\(r_{transfer}\)</span>; in <span class="math inline">\(g C·g C^{-1}\)</span>) is modelled using a sigmoidal function:
+<p>If two carbon pools are considered then carbon can be transferred from one to the other. The model assumes that the direction of transfer depends on the C concentration in the fast pool. When the pool is at full capacity its C should be converted to long-term storage, whereas if the pool is empty C stored in the slow pool should be mobilised. The relative rate of transfer (<span class="math inline">\(r_{transfer}\)</span>; in <span class="math inline">\(g C·g C^{-1}\)</span>) is modelled using a sigmoidal function:
 <span class="math display">\[\begin{equation}
 r_{transf} = 0.1 \cdot \frac{2}{1+\exp \left(-5 \cdot \frac{(C_{fast}/C_{fast, \max})-0.5}{0.5}\right)}-1
-\end{equation}\]</span>
-<p><img src="medfatebook_files/figure-html/unnamed-chunk-71-1.png" width="384" style="display: block; margin: auto;" /></p>
+\end{equation}\]</span></p>
+<p><img src="medfatebook_files/figure-html/unnamed-chunk-72-1.png" width="384" style="display: block; margin: auto;" /></p>
 <p>where <span class="math inline">\(0.1\)</span> indicates that the maximum daily transfer rate is 10% of the source C pool size. If <span class="math inline">\(r_{transf}&lt;0\)</span> then <span class="math inline">\(-r_{transf} \cdot C_{slow, \max}\)</span> g of carbon are taken from the slow C pool and 90% of this amount is added into the fast C pool (the remaining 10% is assumed to be the transfer cost). Similarly, if <span class="math inline">\(r_{transf}&gt;0\)</span> then <span class="math inline">\(r_{transf} \cdot C_{fast, \max}\)</span> g of carbon are taken from the fast C pool and 90% of this amount is added into the slow C pool (again, the remaining 10% is assumed to be the transfer cost). The amounts of C transferred are also limited by the amount that would be needed to fill the sink pool (i.e., if the sink pool is already full, no carbon is transferred).</p>
 </div>
 <div id="update-of-maximum-stem-conductance" class="section level2">
 <h2><span class="header-section-number">16.5</span> Update of maximum stem conductance</h2>
-The inclusion of <span class="math inline">\(Hv\)</span> in the initialization of <span class="math inline">\(SA\)</span> and in growth equations causes sapwood area and leaf area to maintain a constant ratio equal to <span class="math inline">\(Hv\)</span>. However, this rule may be broken by leaf phenology or when losing leaves because of drought stress. Leaf area reductions cause transpirational demand to be reduced accordingly. Moreover, in the case of Complex’s transpiration mode leaf loss causes variations in leaf area to sapwood area ratio, which may become lower than <span class="math inline">\(Hv\)</span> and, hence, maximum stem hydraulic conductance may increase. Tree size controls much of the variation in stem hydraulic conductance, since hydraulic path length increases with tree height. We modelled stem conductance per leaf area unit (<span class="math inline">\(k_{stem, \max}\)</span>; in <span class="math inline">\(mmol·m^{-2}·s^{-1}·MPa^{-1}\)</span>) as a function of species-specific xylem conductivity (<span class="math inline">\(k_{xylem, \max}\)</span>; in <span class="math inline">\(kg·m^{-1}·s^{-1}·MPa^{-1}\)</span>), leaf area to sapwood area ratio and tree height <span class="citation">(Christoffersen et al. <a href="#ref-Christoffersen2016">2016</a>)</span>:
+<p>The inclusion of <span class="math inline">\(Hv\)</span> in the initialization of <span class="math inline">\(SA\)</span> and in growth equations causes sapwood area and leaf area to maintain a constant ratio equal to <span class="math inline">\(Hv\)</span>. However, this rule may be broken by leaf phenology or when losing leaves because of drought stress. Leaf area reductions cause transpirational demand to be reduced accordingly. Moreover, in the case of Complex’s transpiration mode leaf loss causes variations in leaf area to sapwood area ratio, which may become lower than <span class="math inline">\(Hv\)</span> and, hence, maximum stem hydraulic conductance may increase. Tree size controls much of the variation in stem hydraulic conductance, since hydraulic path length increases with tree height. We modelled stem conductance per leaf area unit (<span class="math inline">\(k_{stem, \max}\)</span>; in <span class="math inline">\(mmol·m^{-2}·s^{-1}·MPa^{-1}\)</span>) as a function of species-specific xylem conductivity (<span class="math inline">\(k_{xylem, \max}\)</span>; in <span class="math inline">\(kg·m^{-1}·s^{-1}·MPa^{-1}\)</span>), leaf area to sapwood area ratio and tree height <span class="citation">(Christoffersen et al. <a href="#ref-Christoffersen2016">2016</a>)</span>:
 <span class="math display">\[\begin{equation}
 k_{stem, \max} = \frac{1000}{0.018} \cdot \frac{k_{xylem, \max} \cdot (SA/10000)}{(H/100) \cdot LA^{\phi}} \cdot \chi_{taper}
 \end{equation}\]</span>
-<p>where <span class="math inline">\(\chi_{taper}\)</span> is a factor to account for taper of xylem conduit with height <span class="citation">(Savage et al. <a href="#ref-Savage2010">2010</a>; Christoffersen et al. <a href="#ref-Christoffersen2016">2016</a>)</span>, 0.018 is the molar weight of water (in kg·mol<span class="math inline">\(^{-1}\)</span>). This way, if the leaf-to-sapwood area ratio decreases with tree height, as has been documented in several species (McDowell et al. 2002), the decreasing conductance effects with height may be partially overcome <span class="citation">(Christoffersen et al. <a href="#ref-Christoffersen2016">2016</a>)</span>. A drought-induced decrease in <span class="math inline">\(LA^{\phi}\)</span> alleviate drought effects (i.e. a lower decrease in water potential across the stem for the same flow) because of an increase in conductance.</p>
+where <span class="math inline">\(\chi_{taper}\)</span> is a factor to account for taper of xylem conduit with height <span class="citation">(Savage et al. <a href="#ref-Savage2010">2010</a>; Christoffersen et al. <a href="#ref-Christoffersen2016">2016</a>)</span>, 0.018 is the molar weight of water (in kg·mol<span class="math inline">\(^{-1}\)</span>). This way, if the leaf-to-sapwood area ratio decreases with tree height, as has been documented in several species (McDowell et al. 2002), the decreasing conductance effects with height may be partially overcome <span class="citation">(Christoffersen et al. <a href="#ref-Christoffersen2016">2016</a>)</span>. A drought-induced decrease in <span class="math inline">\(LA^{\phi}\)</span> alleviate drought effects (i.e. a lower decrease in water potential across the stem for the same flow) because of an increase in conductance.</p>
 
 </div>
 </div>
 <h3>Bibliography</h3>
 <div id="refs" class="references">
 <div id="ref-Christoffersen2016">
-<p>Christoffersen, Bradley O., Manuel Gloor, Sophie Fauset, Nikolaos M. Fyllas, David R. Galbraith, Timothy R. Baker, Lucy Rowland, et al. 2016. “Linking hydraulic traits to tropical forest function in a size-structured and trait-driven model (TFS v.1-Hydro).” <em>Geoscientific Model Development Discussions</em> 0 (June): 1–60. doi:<a href="https://doi.org/10.5194/gmd-2016-128">10.5194/gmd-2016-128</a>.</p>
+<p>Christoffersen, Bradley O., Manuel Gloor, Sophie Fauset, Nikolaos M. Fyllas, David R. Galbraith, Timothy R. Baker, Lucy Rowland, et al. 2016. “Linking hydraulic traits to tropical forest function in a size-structured and trait-driven model (TFS v.1-Hydro).” <em>Geoscientific Model Development Discussions</em> 0 (June):1–60. <a href="https://doi.org/10.5194/gmd-2016-128" class="uri">https://doi.org/10.5194/gmd-2016-128</a>.</p>
 </div>
 <div id="ref-Prentice1993">
-<p>Prentice, I. Colin, Martin T. Sykes, and Wolfgang Cramer. 1993. “A simulation model for the transient effects of climate change on forest landscapes.” <em>Ecological Modelling</em> 65 (1-2): 51–70. doi:<a href="https://doi.org/10.1016/0304-3800(93)90126-D">10.1016/0304-3800(93)90126-D</a>.</p>
+<p>Prentice, I. Colin, Martin T. Sykes, and Wolfgang Cramer. 1993. “A simulation model for the transient effects of climate change on forest landscapes.” <em>Ecological Modelling</em> 65 (1-2):51–70. <a href="https://doi.org/10.1016/0304-3800(93)90126-D" class="uri">https://doi.org/10.1016/0304-3800(93)90126-D</a>.</p>
 </div>
 <div id="ref-Savage2010">
-<p>Savage, V M, L P Bentley, B J Enquist, J S Sperry, D D Smith, P B Reich, and E I von Allmen. 2010. “Hydraulic trade-offs and space filling enable better predictions of vascular structure and function in plants.” <em>Proceedings of the National Academy of Sciences of the United States of America</em> 107 (52): 22722–7. doi:<a href="https://doi.org/10.1073/pnas.1012194108">10.1073/pnas.1012194108</a>.</p>
+<p>Savage, V M, L P Bentley, B J Enquist, J S Sperry, D D Smith, P B Reich, and E I von Allmen. 2010. “Hydraulic trade-offs and space filling enable better predictions of vascular structure and function in plants.” <em>Proceedings of the National Academy of Sciences of the United States of America</em> 107 (52):22722–7. <a href="https://doi.org/10.1073/pnas.1012194108" class="uri">https://doi.org/10.1073/pnas.1012194108</a>.</p>
 </div>
 <div id="ref-Sitch2003">
-<p>Sitch, S., B. Smith, I. C. Prentice, a. Arneth, a. Bondeau, W. Cramer, J. O. Kaplan, et al. 2003. “Evaluation of ecosystem dynamics, plant geography and terrestrial carbon cycling in the LPJ dynamic global vegetation model.” <em>Global Change Biology</em> 9 (2): 161–85. doi:<a href="https://doi.org/10.1046/j.1365-2486.2003.00569.x">10.1046/j.1365-2486.2003.00569.x</a>.</p>
+<p>Sitch, S., B. Smith, I. C. Prentice, a. Arneth, a. Bondeau, W. Cramer, J. O. Kaplan, et al. 2003. “Evaluation of ecosystem dynamics, plant geography and terrestrial carbon cycling in the LPJ dynamic global vegetation model.” <em>Global Change Biology</em> 9 (2):161–85. <a href="https://doi.org/10.1046/j.1365-2486.2003.00569.x" class="uri">https://doi.org/10.1046/j.1365-2486.2003.00569.x</a>.</p>
 </div>
 </div>
             </section>
@@ -549,7 +568,7 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "";
+    var src = "true";
     if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');

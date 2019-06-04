@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 3 Basic water balance model | The medfate reference book</title>
   <meta name="description" content="This is a reference book for models implemented in package medfate." />
-  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 3 Basic water balance model | The medfate reference book" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 
 
 
-<meta name="date" content="2019-06-01" />
+<meta name="date" content="2019-06-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -49,41 +49,57 @@
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+div.sourceLine, a.sourceLine { display: inline-block; min-height: 1.25em; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; }
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+div.sourceLine, a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource div.sourceLine, .numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource div.sourceLine::before, .numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em; }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; color: #aaaaaa;  padding-left: 4px; }
+@media screen {
+a.sourceLine::before { text-decoration: underline; color: initial; }
+}
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.bn { color: #40a070; } /* BaseN */
+code span.fl { color: #40a070; } /* Float */
+code span.ch { color: #4070a0; } /* Char */
+code span.st { color: #4070a0; } /* String */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.ot { color: #007020; } /* Other */
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.fu { color: #06287e; } /* Function */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code span.cn { color: #880000; } /* Constant */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.im { } /* Import */
+code span.va { color: #19177c; } /* Variable */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.op { color: #666666; } /* Operator */
+code span.bu { } /* BuiltIn */
+code span.ex { } /* Extension */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.at { color: #7d9029; } /* Attribute */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -104,7 +120,6 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a><ul>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#how-to-use-this-book"><i class="fa fa-check"></i>How to use this book</a></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html#conventions"><i class="fa fa-check"></i>Conventions</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#acknowledgements"><i class="fa fa-check"></i>Acknowledgements</a></li>
 </ul></li>
 <li class="part"><span><b>I Preliminaries</b></span></li>
@@ -118,16 +133,17 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="model-inputs.html"><a href="model-inputs.html"><i class="fa fa-check"></i><b>2</b> Model inputs</a><ul>
-<li class="chapter" data-level="2.1" data-path="model-inputs.html"><a href="model-inputs.html#soil-description"><i class="fa fa-check"></i><b>2.1</b> Soil description</a><ul>
+<li class="chapter" data-level="2.1" data-path="model-inputs.html"><a href="model-inputs.html#soilinput"><i class="fa fa-check"></i><b>2.1</b> Soil description</a><ul>
 <li class="chapter" data-level="2.1.1" data-path="model-inputs.html"><a href="model-inputs.html#physical-properties"><i class="fa fa-check"></i><b>2.1.1</b> Physical properties</a></li>
 <li class="chapter" data-level="2.1.2" data-path="model-inputs.html"><a href="model-inputs.html#water-retention-curves"><i class="fa fa-check"></i><b>2.1.2</b> Water retention curves</a></li>
 <li class="chapter" data-level="2.1.3" data-path="model-inputs.html"><a href="model-inputs.html#soil-initialization"><i class="fa fa-check"></i><b>2.1.3</b> Soil initialization</a></li>
 <li class="chapter" data-level="2.1.4" data-path="model-inputs.html"><a href="model-inputs.html#water-content-and-water-table-depth"><i class="fa fa-check"></i><b>2.1.4</b> Water content and water table depth</a></li>
 </ul></li>
-<li class="chapter" data-level="2.2" data-path="model-inputs.html"><a href="model-inputs.html#vegetation-description"><i class="fa fa-check"></i><b>2.2</b> Vegetation description</a><ul>
+<li class="chapter" data-level="2.2" data-path="model-inputs.html"><a href="model-inputs.html#vegetationinput"><i class="fa fa-check"></i><b>2.2</b> Vegetation description</a><ul>
 <li class="chapter" data-level="2.2.1" data-path="model-inputs.html"><a href="model-inputs.html#attributes-of-plant-cohorts"><i class="fa fa-check"></i><b>2.2.1</b> Attributes of plant cohorts</a></li>
 <li class="chapter" data-level="2.2.2" data-path="model-inputs.html"><a href="model-inputs.html#vertical-root-distribution"><i class="fa fa-check"></i><b>2.2.2</b> Vertical root distribution</a></li>
-<li class="chapter" data-level="2.2.3" data-path="model-inputs.html"><a href="model-inputs.html#plant-species-traits-and-vegetation-initialization"><i class="fa fa-check"></i><b>2.2.3</b> Plant (species) traits and vegetation initialization</a></li>
+<li class="chapter" data-level="2.2.3" data-path="model-inputs.html"><a href="model-inputs.html#forest-plot-objects"><i class="fa fa-check"></i><b>2.2.3</b> Forest plot objects</a></li>
+<li class="chapter" data-level="2.2.4" data-path="model-inputs.html"><a href="model-inputs.html#plant-species-traits-and-vegetation-initialization"><i class="fa fa-check"></i><b>2.2.4</b> Plant (species) traits and vegetation initialization</a></li>
 </ul></li>
 <li class="chapter" data-level="2.3" data-path="model-inputs.html"><a href="model-inputs.html#meteoinput"><i class="fa fa-check"></i><b>2.3</b> Metereological input</a></li>
 <li class="chapter" data-level="2.4" data-path="model-inputs.html"><a href="model-inputs.html#control-parameters"><i class="fa fa-check"></i><b>2.4</b> Control parameters</a></li>
@@ -138,11 +154,13 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="3.2" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#state-variables"><i class="fa fa-check"></i><b>3.2</b> State variables</a></li>
 <li class="chapter" data-level="3.3" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#water-balance"><i class="fa fa-check"></i><b>3.3</b> Water balance</a></li>
 <li class="chapter" data-level="3.4" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#process-scheduling"><i class="fa fa-check"></i><b>3.4</b> Process scheduling</a></li>
-<li class="chapter" data-level="3.5" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#model-input"><i class="fa fa-check"></i><b>3.5</b> Model input</a><ul>
-<li class="chapter" data-level="3.5.1" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#metereological-input"><i class="fa fa-check"></i><b>3.5.1</b> Metereological input</a></li>
-<li class="chapter" data-level="3.5.2" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#control-parameters-1"><i class="fa fa-check"></i><b>3.5.2</b> Control parameters</a></li>
+<li class="chapter" data-level="3.5" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#inputs-and-outputs"><i class="fa fa-check"></i><b>3.5</b> Inputs and outputs</a><ul>
+<li class="chapter" data-level="3.5.1" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#soil-vegetation-and-meteorology"><i class="fa fa-check"></i><b>3.5.1</b> Soil, vegetation and meteorology</a></li>
+<li class="chapter" data-level="3.5.2" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#species-parameters"><i class="fa fa-check"></i><b>3.5.2</b> Species parameters</a></li>
+<li class="chapter" data-level="3.5.3" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#control-parameters-1"><i class="fa fa-check"></i><b>3.5.3</b> Control parameters</a></li>
+<li class="chapter" data-level="3.5.4" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#model-output"><i class="fa fa-check"></i><b>3.5.4</b> Model output</a></li>
 </ul></li>
-<li class="chapter" data-level="3.6" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#model-output"><i class="fa fa-check"></i><b>3.6</b> Model output</a></li>
+<li class="chapter" data-level="3.6" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#applications"><i class="fa fa-check"></i><b>3.6</b> Applications</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="leafphenologylight.html"><a href="leafphenologylight.html"><i class="fa fa-check"></i><b>4</b> Leaf phenology and light extinction</a><ul>
 <li class="chapter" data-level="4.1" data-path="leafphenologylight.html"><a href="leafphenologylight.html#leafphenology"><i class="fa fa-check"></i><b>4.1</b> Leaf phenology and leaf fall</a></li>
@@ -176,10 +194,10 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="7.3.2" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#energy-balance"><i class="fa fa-check"></i><b>7.3.2</b> Energy balance</a></li>
 </ul></li>
 <li class="chapter" data-level="7.4" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#process-scheduling-1"><i class="fa fa-check"></i><b>7.4</b> Process scheduling</a></li>
-<li class="chapter" data-level="7.5" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#model-input-1"><i class="fa fa-check"></i><b>7.5</b> Model input</a><ul>
-<li class="chapter" data-level="7.5.1" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#meteorological-input"><i class="fa fa-check"></i><b>7.5.1</b> Meteorological input</a></li>
+<li class="chapter" data-level="7.5" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#inputs-and-outputs-1"><i class="fa fa-check"></i><b>7.5</b> Inputs and outputs</a><ul>
+<li class="chapter" data-level="7.5.1" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#model-inputs-1"><i class="fa fa-check"></i><b>7.5.1</b> Model inputs</a></li>
 <li class="chapter" data-level="7.5.2" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#control-parameters-2"><i class="fa fa-check"></i><b>7.5.2</b> Control parameters</a></li>
-<li class="chapter" data-level="7.5.3" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#species-parameters"><i class="fa fa-check"></i><b>7.5.3</b> Species parameters</a></li>
+<li class="chapter" data-level="7.5.3" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#model-outputs"><i class="fa fa-check"></i><b>7.5.3</b> Model outputs</a></li>
 </ul></li>
 <li class="chapter" data-level="7.6" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#model-output-1"><i class="fa fa-check"></i><b>7.6</b> Model output</a></li>
 </ul></li>
@@ -249,9 +267,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="14.3" data-path="forest-growth-model.html"><a href="forest-growth-model.html#process-scheduling-2"><i class="fa fa-check"></i><b>14.3</b> Process scheduling</a><ul>
 <li class="chapter" data-level="14.3.1" data-path="forest-growth-model.html"><a href="forest-growth-model.html#water-balance-plant-transpiration-and-photosynthesis"><i class="fa fa-check"></i><b>14.3.1</b> Water balance, plant transpiration and photosynthesis</a></li>
 </ul></li>
-<li class="chapter" data-level="14.4" data-path="forest-growth-model.html"><a href="forest-growth-model.html#model-input-2"><i class="fa fa-check"></i><b>14.4</b> Model input</a><ul>
+<li class="chapter" data-level="14.4" data-path="forest-growth-model.html"><a href="forest-growth-model.html#model-input"><i class="fa fa-check"></i><b>14.4</b> Model input</a><ul>
 <li class="chapter" data-level="14.4.1" data-path="forest-growth-model.html"><a href="forest-growth-model.html#vegetation-state-variables-and-parameters"><i class="fa fa-check"></i><b>14.4.1</b> Vegetation state variables and parameters</a></li>
-<li class="chapter" data-level="14.4.2" data-path="forest-growth-model.html"><a href="forest-growth-model.html#metereological-input-1"><i class="fa fa-check"></i><b>14.4.2</b> Metereological input</a></li>
+<li class="chapter" data-level="14.4.2" data-path="forest-growth-model.html"><a href="forest-growth-model.html#metereological-input"><i class="fa fa-check"></i><b>14.4.2</b> Metereological input</a></li>
 </ul></li>
 <li class="chapter" data-level="14.5" data-path="forest-growth-model.html"><a href="forest-growth-model.html#model-output-2"><i class="fa fa-check"></i><b>14.5</b> Model output</a></li>
 </ul></li>
@@ -369,7 +387,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>This chapter provides an overview of the water balance model described in <span class="citation">De Cáceres et al. (<a href="#ref-DeCaceres2015">2015</a>)</span>, which allows simulating the temporal variation in soil moisture on a daily step basis for a given forest stand and for the period corresponding to input weather data. While the information provided in this chapter should be enough to understand what the model does and when it can be useful, the following ones provide a deeper understanding on how the different processes are formulated.</p>
 <div id="design-principles" class="section level2">
 <h2><span class="header-section-number">3.1</span> Design principles</h2>
-<p>The model considers only the vertical spatial dimension of the stand and not the horizontal distribution of plants within it. In other words, the model is not spatially explicit (i.e., plants do not interact for space explicitly). Still, the stand is divided into groups of plants, here referred to as <em>plant cohorts</em> of different species, height and leaf area index (<span class="math inline">\(LAI\)</span>). Height and <span class="math inline">\(LAI\)</span> values determine competition for light. <span class="math inline">\(LAI\)</span> values also drive competition for water, along with root distribution. The soil water balance follows the design principles of SIERRA <span class="citation">(Mouillot, Rambal, and Lavorel <a href="#ref-Mouillot2001">2001</a>; Ruffault et al. <a href="#ref-Ruffault2014">2014</a>; Ruffault et al. <a href="#ref-Ruffault2013">2013</a>)</span> and BILJOU <span class="citation">(Granier et al. <a href="#ref-Granier1999">1999</a>; <a href="#ref-Granier2007">2007</a>)</span>, although some features are taken from other models <span class="citation">(Kergoat <a href="#ref-Kergoat1998">1998</a>)</span>. Potential evapotranspiration (<span class="math inline">\(PET\)</span>) is a required input and the model determines maximum canopy transpiration (<span class="math inline">\(Tr_{\max}\)</span>) using an empirical relationship between the <span class="math inline">\(LAI\)</span> of the stand and the ratio <span class="math inline">\(Tr_{\max}/PET\)</span> <span class="citation">(Granier et al. <a href="#ref-Granier1999">1999</a>)</span>. Actual plant transpiration is estimated using a function that depends on current soil moisture levels, cohort-specific drought resistance, fine root distribution and the degree of shading of the target plant cohort.</p>
+<p>The model considers only the vertical spatial dimension of the stand and not the horizontal distribution of plants within it. In other words, the model is not spatially explicit (i.e., plants do not interact for space explicitly). Still, the stand is divided into groups of plants, here referred to as <em>plant cohorts</em> of different species, height and leaf area index (<span class="math inline">\(LAI\)</span>). Height and <span class="math inline">\(LAI\)</span> values determine competition for light. <span class="math inline">\(LAI\)</span> values also drive competition for water, along with root distribution. The soil water balance follows the design principles of SIERRA <span class="citation">(Mouillot, Rambal, and Lavorel <a href="#ref-Mouillot2001">2001</a>; Ruffault et al. <a href="#ref-Ruffault2014">2014</a>, <a href="#ref-Ruffault2013">2013</a>)</span> and BILJOU <span class="citation">(Granier et al. <a href="#ref-Granier1999">1999</a>, <a href="#ref-Granier2007">2007</a>)</span>, although some features are taken from other models <span class="citation">(Kergoat <a href="#ref-Kergoat1998">1998</a>)</span>. Potential evapotranspiration (<span class="math inline">\(PET\)</span>) is a required input and the model determines maximum canopy transpiration (<span class="math inline">\(Tr_{\max}\)</span>) using an empirical relationship between the <span class="math inline">\(LAI\)</span> of the stand and the ratio <span class="math inline">\(Tr_{\max}/PET\)</span> <span class="citation">(Granier et al. <a href="#ref-Granier1999">1999</a>)</span>. Actual plant transpiration is estimated using a function that depends on current soil moisture levels, cohort-specific drought resistance, fine root distribution and the degree of shading of the target plant cohort.</p>
 </div>
 <div id="state-variables" class="section level2">
 <h2><span class="header-section-number">3.2</span> State variables</h2>
@@ -406,14 +424,77 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul>
 <p>Details of the formulation of each of these processes are provided within the referred chapters and sections.</p>
 </div>
-<div id="model-input" class="section level2">
-<h2><span class="header-section-number">3.5</span> Model input</h2>
-<div id="metereological-input" class="section level3">
-<h3><span class="header-section-number">3.5.1</span> Metereological input</h3>
+<div id="inputs-and-outputs" class="section level2">
+<h2><span class="header-section-number">3.5</span> Inputs and outputs</h2>
+<div id="soil-vegetation-and-meteorology" class="section level3">
+<h3><span class="header-section-number">3.5.1</span> Soil, vegetation and meteorology</h3>
+<p><strong>Soil</strong></p>
+<p>Soil input requirements are fully described in section <a href="model-inputs.html#soilinput">2.1</a>.</p>
+<p><strong>Vegetation</strong></p>
+<p>Vegetation input requirements are fully described in section <a href="model-inputs.html#vegetationinput">2.2</a>. Trees and shrubs do not need to be distinguished in soil water balance calculations, since both kinds of cohort have a <span class="math inline">\(LAI\)</span> value. In most cases, users only need to estimate the leaf area index corresponding to live leaves, i.e. <span class="math inline">\(LAI^{live}\)</span>, because normally at the starting point all leaves are expanded (i.e. <span class="math inline">\(LAI^{\phi} = LAI^{live}\)</span>) and one can assume no dead leaves in the canopy (i.e., <span class="math inline">\(LAI^{dead} = 0\)</span>). Vegetation characteristics stay constant during simulations using function <code>spwb()</code>, although the actual expanded leaf area (<span class="math inline">\(LAI^{\phi}\)</span>) and dead leaf area may vary is the species is winter deciduous.</p>
+<p><strong>Meteorology</strong></p>
 <p>The minimum weather variables required to run the model are mean temperature (<span class="math inline">\(T_{mean}\)</span>), precipitation (<span class="math inline">\(P\)</span>) and potential evapotranspiration (<span class="math inline">\(PET\)</span>). Solar radiation (<span class="math inline">\(Rad\)</span>) is required if snow pack dynamics have to be simulated. Additionally, the user may also specify values of wind speed (<span class="math inline">\(u\)</span>) that are used to control leaf fall in autumn. Definitions and units of these variables are given in section <a href="model-inputs.html#meteoinput">2.3</a>.</p>
 </div>
+<div id="species-parameters" class="section level3">
+<h3><span class="header-section-number">3.5.2</span> Species parameters</h3>
+<p>Basic water balance modelling requires the following parameters to be specified for each plant cohort. These are normally specified at the species level (see documentation for <code>SpParamsMED</code>):</p>
+<table style="width:89%;">
+<colgroup>
+<col width="12%" />
+<col width="11%" />
+<col width="13%" />
+<col width="51%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Symbol</th>
+<th>Units</th>
+<th>R param</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(k_{PAR,i}\)</span></td>
+<td></td>
+<td><code>k</code></td>
+<td>PAR extinction coefficient</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(s_{water, i}\)</span></td>
+<td><span class="math inline">\(mmH_2O·LAI^{-1}\)</span></td>
+<td><code>g</code></td>
+<td>Crown water storage capacity (i.e. depth of water that can be retained by leaves and branches) per LAI unit.</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(S_{GDD,i}\)</span></td>
+<td><span class="math inline">\(^{\circ} \mathrm{C}\)</span></td>
+<td><code>Sgdd</code></td>
+<td>Growth degree days corresponding to leave budburst</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\Psi_{extract,i}\)</span></td>
+<td>MPa</td>
+<td><code>Psi_Extract</code></td>
+<td>The water potential at which whole plant conductance is 50% of maximum</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(WUE_{\max,i}\)</span></td>
+<td><span class="math inline">\(g C \cdot mm^{-1}\)</span></td>
+<td><code>WUE</code></td>
+<td>Maximum water use efficency</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(K_{rootdisc,i}\)</span></td>
+<td>[0-1]</td>
+<td><code>pRootDisc</code></td>
+<td>Whole-plant relative conductance corresponding to hydraulic disconnection from the soil</td>
+</tr>
+</tbody>
+</table>
+</div>
 <div id="control-parameters-1" class="section level3">
-<h3><span class="header-section-number">3.5.2</span> Control parameters</h3>
+<h3><span class="header-section-number">3.5.3</span> Control parameters</h3>
 <p>The control values relevant for the simple water balance model are:</p>
 <ul>
 <li><code>verbose [=TRUE]</code>: Whether extra console output is desired during simulations.</li>
@@ -426,9 +507,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><code>cavitationRefill [= TRUE]</code>: If <code>FALSE</code> the model operates in a irreversible cavitation mode.</li>
 </ul>
 </div>
-</div>
-<div id="model-output" class="section level2">
-<h2><span class="header-section-number">3.6</span> Model output</h2>
+<div id="model-output" class="section level3">
+<h3><span class="header-section-number">3.5.4</span> Model output</h3>
 <p>Function <code>spwb</code> returns a list object whose elements are data tables. Each table has dates as rows and has different output variables:</p>
 <ul>
 <li><code>WaterBalance</code>: Components of the climatic and soil daily water balance (i.e. net precipitation, infiltration, runoff, plant transpiration…).</li>
@@ -440,31 +520,50 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><code>PlantStress</code>: Daily stress level suffered by each plant cohort (relative whole-plant conductance).</li>
 </ul>
 <p>The output of simulations can be inspected using specific <code>plot</code> and <code>summary</code> functions (see the corresponding package <em>vignette</em>).</p>
+</div>
+</div>
+<div id="applications" class="section level2">
+<h2><span class="header-section-number">3.6</span> Applications</h2>
+<p>The basic water balance model is relatively easy to parametrize and use. These features make it appropriate for applications that do not seek a high predictive at the plant level, but require robust estimates at the stand level. In our opinion the basic water balance model may be useful for the following applications:</p>
+<ol style="list-style-type: decimal">
+<li>To monitor or forecast temporal variation in soil water content in particular stands.</li>
+<li>Monitor or forecast temporal variation of plant drought stress in particular stands (for example to anticipate mortality events).</li>
+</ol>
+<p>For example, <span class="citation">Karavani et al. (<a href="#ref-Karavani2018">2018</a>)</span> employed the water balance to provide sound estimates of soil moisture dynamics to predict mushroom production in a network forest stands. The model is particularly interesting to test the relationship between forest structure/composition and the water balance at the stand level or the drought stress suffered by plants, as done in <span class="citation">Ameztegui et al. (<a href="#ref-Ameztegui2017">2017</a>)</span>. See also another application in <span class="citation">Rolo and Moreno (<a href="#ref-Rolo2019">2019</a>)</span>.</p>
 
 </div>
 </div>
 <h3>Bibliography</h3>
 <div id="refs" class="references">
+<div id="ref-Ameztegui2017">
+<p>Ameztegui, Aitor, Antoine Cabon, Miquel De Caceres, and Lluís Coll. 2017. “Managing stand density to enhance the adaptability of Scots pine stands to climate change: A modelling approach.” <em>Ecological Modelling</em> 356. Elsevier B.V.:141–50. <a href="https://doi.org/10.1016/j.ecolmodel.2017.04.006" class="uri">https://doi.org/10.1016/j.ecolmodel.2017.04.006</a>.</p>
+</div>
 <div id="ref-DeCaceres2015">
-<p>De Cáceres, Miquel, Jordi Martínez-Vilalta, Lluís Coll, Pilar Llorens, Pere Casals, Rafael Poyatos, Juli G. Pausas, and Lluís Brotons. 2015. “Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes.” <em>Agricultural and Forest Meteorology</em> 213. Elsevier B.V.: 77–90. doi:<a href="https://doi.org/10.1016/j.agrformet.2015.06.012">10.1016/j.agrformet.2015.06.012</a>.</p>
+<p>De Cáceres, Miquel, Jordi Martínez-Vilalta, Lluís Coll, Pilar Llorens, Pere Casals, Rafael Poyatos, Juli G. Pausas, and Lluís Brotons. 2015. “Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes.” <em>Agricultural and Forest Meteorology</em> 213. Elsevier B.V.:77–90. <a href="https://doi.org/10.1016/j.agrformet.2015.06.012" class="uri">https://doi.org/10.1016/j.agrformet.2015.06.012</a>.</p>
 </div>
 <div id="ref-Granier1999">
-<p>Granier, A., N. Bréda, P. Biron, and S. Villette. 1999. “A lumped water balance model to evaluate duration and intensity of drought constraints in forest stands.” <em>Ecological Modelling</em> 116: 269–83. doi:<a href="https://doi.org/10.1016/S0304-3800(98)00205-1">10.1016/S0304-3800(98)00205-1</a>.</p>
+<p>Granier, A., N. Bréda, P. Biron, and S. Villette. 1999. “A lumped water balance model to evaluate duration and intensity of drought constraints in forest stands.” <em>Ecological Modelling</em> 116:269–83. <a href="https://doi.org/10.1016/S0304-3800(98)00205-1" class="uri">https://doi.org/10.1016/S0304-3800(98)00205-1</a>.</p>
 </div>
 <div id="ref-Granier2007">
-<p>Granier, A., M. Reichstein, N. Bréda, I.A. Janssens, E. Falge, P. Ciais, T. Grünwald, et al. 2007. “Evidence for soil water control on carbon and water dynamics in European forests during the extremely dry year: 2003.” <em>Agricultural and Forest Meteorology</em> 143 (1-2): 123–45. doi:<a href="https://doi.org/10.1016/j.agrformet.2006.12.004">10.1016/j.agrformet.2006.12.004</a>.</p>
+<p>Granier, A., M. Reichstein, N. Bréda, I.A. Janssens, E. Falge, P. Ciais, T. Grünwald, et al. 2007. “Evidence for soil water control on carbon and water dynamics in European forests during the extremely dry year: 2003.” <em>Agricultural and Forest Meteorology</em> 143 (1-2):123–45. <a href="https://doi.org/10.1016/j.agrformet.2006.12.004" class="uri">https://doi.org/10.1016/j.agrformet.2006.12.004</a>.</p>
+</div>
+<div id="ref-Karavani2018">
+<p>Karavani, Asaf, Miquel De Cáceres, Juan Martínez de Aragón, José Antonio Bonet, and Sergio De-Miguel. 2018. “Effect of climatic and soil moisture conditions on mushroom productivity and related ecosystem services in Mediterranean pine stands facing climate change.” <em>Agricultural and Forest Meteorology</em> 248 (February 2017). Elsevier:432–40. <a href="https://doi.org/10.1016/j.agrformet.2017.10.024" class="uri">https://doi.org/10.1016/j.agrformet.2017.10.024</a>.</p>
 </div>
 <div id="ref-Kergoat1998">
-<p>Kergoat, Laurent. 1998. “A model for hydrological equilibrium of leaf area index on a global scale.” <em>Journal of Hydrology</em> 212-213 (December): 268–86. doi:<a href="https://doi.org/10.1016/S0022-1694(98)00211-X">10.1016/S0022-1694(98)00211-X</a>.</p>
+<p>Kergoat, Laurent. 1998. “A model for hydrological equilibrium of leaf area index on a global scale.” <em>Journal of Hydrology</em> 212-213 (December):268–86. <a href="https://doi.org/10.1016/S0022-1694(98)00211-X" class="uri">https://doi.org/10.1016/S0022-1694(98)00211-X</a>.</p>
 </div>
 <div id="ref-Mouillot2001">
-<p>Mouillot, Florent, Serge Rambal, and Sandra Lavorel. 2001. “A generic process-based SImulator for meditERRanean landscApes (SIERRA): design and validation exercises.” <em>Forest Ecology and Management</em> 147 (1): 75–97. doi:<a href="https://doi.org/10.1016/S0378-1127(00)00432-1">10.1016/S0378-1127(00)00432-1</a>.</p>
+<p>Mouillot, Florent, Serge Rambal, and Sandra Lavorel. 2001. “A generic process-based SImulator for meditERRanean landscApes (SIERRA): design and validation exercises.” <em>Forest Ecology and Management</em> 147 (1):75–97. <a href="https://doi.org/10.1016/S0378-1127(00)00432-1" class="uri">https://doi.org/10.1016/S0378-1127(00)00432-1</a>.</p>
+</div>
+<div id="ref-Rolo2019">
+<p>Rolo, Victor, and Gerardo Moreno. 2019. “Shrub encroachment and climate change increase the exposure to drought of Mediterranean wood-pastures.” <em>Science of the Total Environment</em> 660. Elsevier B.V:550–58. <a href="https://doi.org/10.1016/j.scitotenv.2019.01.029" class="uri">https://doi.org/10.1016/j.scitotenv.2019.01.029</a>.</p>
 </div>
 <div id="ref-Ruffault2014">
-<p>Ruffault, Julien, Nicolas K Martin-StPaul, Carole Duffet, Fabien Goge, and Florent Mouillot. 2014. “Projecting future drought in Mediterranean forests: bias correction of climate models matters!” <em>Theoretical and Applied Climatology</em> 117 (1-2): 113–22. doi:<a href="https://doi.org/10.1007/s00704-013-0992-z">10.1007/s00704-013-0992-z</a>.</p>
+<p>Ruffault, Julien, Nicolas K Martin-StPaul, Carole Duffet, Fabien Goge, and Florent Mouillot. 2014. “Projecting future drought in Mediterranean forests: bias correction of climate models matters!” <em>Theoretical and Applied Climatology</em> 117 (1-2):113–22. <a href="https://doi.org/10.1007/s00704-013-0992-z" class="uri">https://doi.org/10.1007/s00704-013-0992-z</a>.</p>
 </div>
 <div id="ref-Ruffault2013">
-<p>Ruffault, Julien, Nicolas K. Martin-StPaul, Serge Rambal, and Florent Mouillot. 2013. “Differential regional responses in drought length, intensity and timing to recent climate changes in a Mediterranean forested ecosystem.” <em>Climatic Change</em> 117 (1-2): 103–17. doi:<a href="https://doi.org/10.1007/s10584-012-0559-5">10.1007/s10584-012-0559-5</a>.</p>
+<p>Ruffault, Julien, Nicolas K. Martin-StPaul, Serge Rambal, and Florent Mouillot. 2013. “Differential regional responses in drought length, intensity and timing to recent climate changes in a Mediterranean forested ecosystem.” <em>Climatic Change</em> 117 (1-2):103–17. <a href="https://doi.org/10.1007/s10584-012-0559-5" class="uri">https://doi.org/10.1007/s10584-012-0559-5</a>.</p>
 </div>
 </div>
             </section>
@@ -523,7 +622,7 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "";
+    var src = "true";
     if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');

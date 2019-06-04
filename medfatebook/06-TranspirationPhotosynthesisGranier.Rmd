@@ -71,9 +71,9 @@ Assuming no water limitations (i.e. $K_{i,s} = 1$), we have that $Tr = Tr_{\max}
 
 Because it is useful for growth, and for compatibility with the 'Sperry' transpiration mode (chapter \@ref(advancedwaterbalance)), the water balance model using 'Granier' transpiration mode also calculates net assimilated carbon. Assuming a constant maximum water use efficiency (WUE), photosynthesis for a given plant cohort $i$ (in $g C \cdot m^{-2}$) is estimated as a function of transpiration [@Mouillot2001]:
 \begin{equation}
-A_n = \alpha \cdot WUE_{\max} \cdot Tr_i
+A_n = \alpha \cdot WUE_{\max,i} \cdot Tr_i
 \end{equation}
-where $Tr_i$ is the transpiration of plant cohort $i$, $WUE_{\max}$ is the maximum water use efficiency of the corresponding species (in $g C \cdot mm^{-1}$) and $\alpha = T_{mean}/20$ is bounded between 0 and 1.
+where $Tr_i$ is the transpiration of plant cohort $i$, $WUE_{\max,i}$ is the maximum water use efficiency of the cohort (in $g C \cdot mm^{-1}$) and $\alpha = T_{mean}/20$ is bounded between 0 and 1.
 
 ## Plant drought stress
 

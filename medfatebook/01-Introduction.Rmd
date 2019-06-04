@@ -35,7 +35,7 @@ devtools::install_github("miquelcaceres/medfate",
 
 ### Dynamic simulation functions
 
-Soil water balance can be studied for a given forest stand using function `spwb()`, with the following purposes:
+Forest water and energy balance can be studied for a given forest stand using function `spwb()`, with the following purposes:
 
 1. Monitor or forecast temporal variation in soil water content in particular stands (for example to estimate mushroom yield).
 2. Monitor or forecast temporal variation of plant drought stress in particular stands (for example to anticipate mortality events).
