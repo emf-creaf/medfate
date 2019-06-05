@@ -107,7 +107,7 @@ A plant cohort $i$ is either a *tree cohort* or a *shrub cohort*, and is defined
 | $Z_{50,i}$ | mm | `Z50` | Depth above which 50% of the fine root mass is located | Y | Y |
 | $Z_{95,i}$ | mm | `Z95` | Depth above which 95% of the fine root mass is located | Y | Y |
 
-Height values refer to average height of individuals included in the cohort, and the same for crown ratio and $DBH$. $LAI$ variables refer to one-side leaf area of plants in the cohort per surface area of the stand. While plant height is relatively easy to measure, it is normally quite hard to estimate leaf area indices for stands and species. Package **medfate** provides some utilities to provide estimates crown ratio and $LAI$ from forest inventory data (e.g. heights, DBH and density for measured trees), using allometric relationships calibrated for catalonia (see chapter \@ref(leafbiomass)). 
+Height values refer to average height of individuals included in the cohort, and the same for crown ratio and $DBH$. $LAI$ variables refer to one-side leaf area of plants in the cohort per surface area of the stand. While plant height is relatively easy to measure, it is normally quite hard to estimate leaf area indices for stands and species. Package **medfate** provides some utilities to provide estimates crown ratio and $LAI$ from forest inventory data (e.g. heights, DBH and density for measured trees), using allometric relationships calibrated for catalonia (see chapter \@ref(allometricmodels)). 
 
 Trees and shrubs do not need to be distinguished in soil water balance calculations, since both kinds of cohort have a $LAI$ value. Vegetation characteristics stay constant during simulations using function `spwb()`, although the actual expanded leaf area and dead leaf area may vary is the species is winter deciduous.
 
@@ -139,7 +139,7 @@ legend("bottomright", legend=c("Z50 = 100, Z95 = 200",
 Note, however, that the actual input to simulation functions is the matrix of $v_{i,s}$ values - not $Z_{50,i}$ and $Z_{95,i}$ -, which means that the proportions of fine roots can be modified manually or be defined by another model. In fact, **medfate** also allows calculating $v_{i,s}$ values assuming a conic distribution of fine roots (see `root_conicDistribution()`), as shown in fig. \@ref(fig:root-distribution) above. 
 
 
-### Forest plot objects
+### Forest plot objects {#forestobjects}
 
 Forest plots in `medfate` are assumed to be in a format that follows closely the Spanish national forest inventory. Each forest plot is represented in an object of class `forest`, a list that contains several elements. Among them, the most important items are two data frames, `treeData` (for trees) and `shrubData` for shrubs:
 ```{r}

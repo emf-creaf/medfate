@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>The medfate reference book</title>
   <meta name="description" content="This is a reference book for models implemented in package medfate." />
-  <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
 
   <meta property="og:title" content="The medfate reference book" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 
 
 
-<meta name="date" content="2019-06-04" />
+<meta name="date" content="2019-06-05" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -49,57 +49,41 @@
 
 
 <style type="text/css">
-div.sourceLine, a.sourceLine { display: inline-block; min-height: 1.25em; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; }
-@media print {
-code.sourceCode { white-space: pre-wrap; }
-div.sourceLine, a.sourceLine { text-indent: -1em; padding-left: 1em; }
-}
-pre.numberSource div.sourceLine, .numberSource a.sourceLine
-  { position: relative; }
-pre.numberSource div.sourceLine::before, .numberSource a.sourceLine::before
-  { content: attr(data-line-number);
-    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em; }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; color: #aaaaaa;  padding-left: 4px; }
-@media screen {
-a.sourceLine::before { text-decoration: underline; color: initial; }
-}
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.bn { color: #40a070; } /* BaseN */
-code span.fl { color: #40a070; } /* Float */
-code span.ch { color: #4070a0; } /* Char */
-code span.st { color: #4070a0; } /* String */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.ot { color: #007020; } /* Other */
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.fu { color: #06287e; } /* Function */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code span.cn { color: #880000; } /* Constant */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.im { } /* Import */
-code span.va { color: #19177c; } /* Variable */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.op { color: #666666; } /* Operator */
-code span.bu { } /* BuiltIn */
-code span.ex { } /* Extension */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.at { color: #7d9029; } /* Attribute */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -142,7 +126,7 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <li class="chapter" data-level="2.2" data-path="model-inputs.html"><a href="model-inputs.html#vegetationinput"><i class="fa fa-check"></i><b>2.2</b> Vegetation description</a><ul>
 <li class="chapter" data-level="2.2.1" data-path="model-inputs.html"><a href="model-inputs.html#attributes-of-plant-cohorts"><i class="fa fa-check"></i><b>2.2.1</b> Attributes of plant cohorts</a></li>
 <li class="chapter" data-level="2.2.2" data-path="model-inputs.html"><a href="model-inputs.html#vertical-root-distribution"><i class="fa fa-check"></i><b>2.2.2</b> Vertical root distribution</a></li>
-<li class="chapter" data-level="2.2.3" data-path="model-inputs.html"><a href="model-inputs.html#forest-plot-objects"><i class="fa fa-check"></i><b>2.2.3</b> Forest plot objects</a></li>
+<li class="chapter" data-level="2.2.3" data-path="model-inputs.html"><a href="model-inputs.html#forestobjects"><i class="fa fa-check"></i><b>2.2.3</b> Forest plot objects</a></li>
 <li class="chapter" data-level="2.2.4" data-path="model-inputs.html"><a href="model-inputs.html#plant-species-traits-and-vegetation-initialization"><i class="fa fa-check"></i><b>2.2.4</b> Plant (species) traits and vegetation initialization</a></li>
 </ul></li>
 <li class="chapter" data-level="2.3" data-path="model-inputs.html"><a href="model-inputs.html#meteoinput"><i class="fa fa-check"></i><b>2.3</b> Metereological input</a></li>
@@ -195,11 +179,12 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 </ul></li>
 <li class="chapter" data-level="7.4" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#process-scheduling-1"><i class="fa fa-check"></i><b>7.4</b> Process scheduling</a></li>
 <li class="chapter" data-level="7.5" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#inputs-and-outputs-1"><i class="fa fa-check"></i><b>7.5</b> Inputs and outputs</a><ul>
-<li class="chapter" data-level="7.5.1" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#model-inputs-1"><i class="fa fa-check"></i><b>7.5.1</b> Model inputs</a></li>
-<li class="chapter" data-level="7.5.2" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#control-parameters-2"><i class="fa fa-check"></i><b>7.5.2</b> Control parameters</a></li>
-<li class="chapter" data-level="7.5.3" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#model-outputs"><i class="fa fa-check"></i><b>7.5.3</b> Model outputs</a></li>
+<li class="chapter" data-level="7.5.1" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#soil-vegetation-and-meteorology-1"><i class="fa fa-check"></i><b>7.5.1</b> Soil, vegetation and meteorology</a></li>
+<li class="chapter" data-level="7.5.2" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#species-parameters-1"><i class="fa fa-check"></i><b>7.5.2</b> Species parameters</a></li>
+<li class="chapter" data-level="7.5.3" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#control-parameters-2"><i class="fa fa-check"></i><b>7.5.3</b> Control parameters</a></li>
+<li class="chapter" data-level="7.5.4" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#model-output-1"><i class="fa fa-check"></i><b>7.5.4</b> Model output</a></li>
 </ul></li>
-<li class="chapter" data-level="7.6" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#model-output-1"><i class="fa fa-check"></i><b>7.6</b> Model output</a></li>
+<li class="chapter" data-level="7.6" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#applications-1"><i class="fa fa-check"></i><b>7.6</b> Applications</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="subdaily-temperature-and-light-variations.html"><a href="subdaily-temperature-and-light-variations.html"><i class="fa fa-check"></i><b>8</b> Subdaily temperature and light variations</a><ul>
 <li class="chapter" data-level="8.1" data-path="subdaily-temperature-and-light-variations.html"><a href="subdaily-temperature-and-light-variations.html#air-temperature"><i class="fa fa-check"></i><b>8.1</b> Air temperature</a></li>
@@ -290,16 +275,15 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <li class="chapter" data-level="17.2" data-path="update-of-structural-variables.html"><a href="update-of-structural-variables.html#shrub-height-and-cover"><i class="fa fa-check"></i><b>17.2</b> Shrub height and cover</a></li>
 </ul></li>
 <li class="part"><span><b>V Static modules</b></span></li>
-<li class="chapter" data-level="18" data-path="leafbiomass.html"><a href="leafbiomass.html"><i class="fa fa-check"></i><b>18</b> Leaf biomass, leaf area and vertical profiles</a><ul>
-<li class="chapter" data-level="18.1" data-path="leafbiomass.html"><a href="leafbiomass.html#input-data"><i class="fa fa-check"></i><b>18.1</b> Input data</a><ul>
-<li class="chapter" data-level="18.1.1" data-path="leafbiomass.html"><a href="leafbiomass.html#forest-inventory-data"><i class="fa fa-check"></i><b>18.1.1</b> Forest inventory data</a></li>
-<li class="chapter" data-level="18.1.2" data-path="leafbiomass.html"><a href="leafbiomass.html#allometric-species-specific-parameters"><i class="fa fa-check"></i><b>18.1.2</b> Allometric species-specific parameters</a></li>
+<li class="chapter" data-level="18" data-path="allometricmodels.html"><a href="allometricmodels.html"><i class="fa fa-check"></i><b>18</b> Allometric models</a><ul>
+<li class="chapter" data-level="18.1" data-path="allometricmodels.html"><a href="allometricmodels.html#input-data"><i class="fa fa-check"></i><b>18.1</b> Input data</a><ul>
+<li class="chapter" data-level="18.1.1" data-path="allometricmodels.html"><a href="allometricmodels.html#forest-plot-data"><i class="fa fa-check"></i><b>18.1.1</b> Forest plot data</a></li>
+<li class="chapter" data-level="18.1.2" data-path="allometricmodels.html"><a href="allometricmodels.html#species-parameters-2"><i class="fa fa-check"></i><b>18.1.2</b> Species parameters</a></li>
 </ul></li>
-<li class="chapter" data-level="18.2" data-path="leafbiomass.html"><a href="leafbiomass.html#allometric-relationships"><i class="fa fa-check"></i><b>18.2</b> Allometric relationships</a><ul>
-<li class="chapter" data-level="18.2.1" data-path="leafbiomass.html"><a href="leafbiomass.html#leaf-biomass-for-tree-cohorts"><i class="fa fa-check"></i><b>18.2.1</b> Leaf biomass for tree cohorts</a></li>
-<li class="chapter" data-level="18.2.2" data-path="leafbiomass.html"><a href="leafbiomass.html#leaf-biomass-for-shrub-cohorts"><i class="fa fa-check"></i><b>18.2.2</b> Leaf biomass for shrub cohorts</a></li>
-<li class="chapter" data-level="18.2.3" data-path="leafbiomass.html"><a href="leafbiomass.html#leaf-area-and-lai"><i class="fa fa-check"></i><b>18.2.3</b> Leaf area and LAI</a></li>
-<li class="chapter" data-level="18.2.4" data-path="leafbiomass.html"><a href="leafbiomass.html#crownbaseheight"><i class="fa fa-check"></i><b>18.2.4</b> Crown base height</a></li>
+<li class="chapter" data-level="18.2" data-path="allometricmodels.html"><a href="allometricmodels.html#allometric-relationships"><i class="fa fa-check"></i><b>18.2</b> Allometric relationships</a><ul>
+<li class="chapter" data-level="18.2.1" data-path="allometricmodels.html"><a href="allometricmodels.html#leaf-biomass"><i class="fa fa-check"></i><b>18.2.1</b> Leaf biomass</a></li>
+<li class="chapter" data-level="18.2.2" data-path="allometricmodels.html"><a href="allometricmodels.html#leaf-area-and-lai"><i class="fa fa-check"></i><b>18.2.2</b> Leaf area and LAI</a></li>
+<li class="chapter" data-level="18.2.3" data-path="allometricmodels.html"><a href="allometricmodels.html#crownbaseheight"><i class="fa fa-check"></i><b>18.2.3</b> Crown base height</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="19" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html"><i class="fa fa-check"></i><b>19</b> Fuel characteristics and fire behaviour</a><ul>
@@ -388,7 +372,7 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <address class="author_afil">
 Forest Science and Technology Center of Catalonia (CTFC)<br><a class="author_email" href="mailto:#"><a href="mailto:miquelcaceres@gmail.com">miquelcaceres@gmail.com</a></a>
 </address>
-<p class="date"><em>2019-06-04</em></p>
+<p class="date"><em>2019-06-05</em></p>
 </div>
 <div id="preface" class="section level1 unnumbered">
 <h1>Preface</h1>
@@ -405,7 +389,7 @@ Forest Science and Technology Center of Catalonia (CTFC)<br><a class="author_ema
 <p>The idea of an R package devoted to Mediterranean vegetation evolved after a previous attempt at modelling the dynamics of plant cohorts within a landscape model that tried to extend the MEDFIRE model. I made these initial efforts when I was still a post-doc at CTFC under the supervision of Lluís Brotons, to whom I am grateful for having greatly expanded my view of ecology and its applications. Undertaking this initial endeavour made us contact two excellent researchers in fire and drought ecology respectively, Juli G. Pausas (CIDE-CSIC) and Jordi Martínez-Vilalta (CREAF-UAB). While interacting with Juli was rewarding and fostered my interest in wildfires, Jordi had a profound influence on the project. Collaborating with him caused a slow but steady drift of my research interests towards the water balance, plant hydraulics and drought impacts. His influence on my work was not so apparent when we published water balance model (and launched the R package) with the help of hydrologist Pilar Llorens (CSIC) and other researchers (Rafa Poyatos, Lluís Coll and Pere Casals). However, it became undeniable when I started studying plant hydraulics, trying to understand and implement Sperry’s model in the package. Jordi made me interact with people in his research group and introduced me to Maurizio Mencuccini, another great ecophysiologist with whom he had been working for a long time. I have to thank Maurizio and Jordi for encouraging me to continue working on this development project and overcome the difficulty that entails learning scientific disciplines quite far from my previous experience.</p>
 <p>The development of the package has benefited from many colleagues who have provided me with ideas or have struggled to use the models within it. Asaf Karavani was among the first package users besides me. Together, we used the package to predict soil moisture dynamics in forest plots where mushroom production was being monitored. Antoine Cabon (CTFC) was also an early user of the package. I have enjoyed endless discussions with him about several processes and how to implement them. While he was the Ph.D. student and I one of his advisors, I felt we both learned together. Moreover, Antoine has contributed with some functions to the package (and I hope he will contribute more!). Another key person for the development of <strong>medfate</strong> was working with Victor Granda (now at CREAF), whose great programming skills and profound knowledge about R technologies has encouraged me to embrace new programming habits and skills. I owe the idea of separating packages <strong>meteoland</strong> and <strong>medfate</strong> to Roberto Molowny (CREAF) an excellent modeller. More recently, collaboration with another ecophysiologist, Nicolas Martin-StPaul (INRA), has stimulated improvements both in <strong>meteoland</strong> and <strong>medfate</strong>. In fact, Nicolas has became another key person in my research, with whom I share the interest for one of the interfaces between fire and drought, namely fuel moisture dynamics.</p>
 <p>I would not like to finish the acknowledgements without thanking my colleagues at CTFC, for their collaboration and support all these years. Particularly, Lluís Coll and Pere Casals have been continuously supporting my efforts and finding new model applications. Moreover, they have contributed to the knowledge within the package with their expertise in forest dynamics, soils and fire issues. I also thank Mario Beltrán and Assu Gil for teaching me forestry.</p>
-<p>Finally, I would like to thank José Manuel, who takes care of me and has to endure my endless talking about the package and its models, and to my family for being there in difficult times, including my nephews from who I learn the joy of life.</p>
+<p>Finally, I would like to thank José Manuel, who takes care of me and has to endure my endless talking about the package and its models, to my family for being there at difficult times, including my two nephews from whom I learn the joy of life.</p>
 <p><img src="LOGO_Group.png" width="20%" style="display: block; margin: auto;" /></p>
 
 </div>
@@ -469,7 +453,7 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "true";
+    var src = "";
     if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');

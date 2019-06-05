@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 5 Hydrology | The medfate reference book</title>
   <meta name="description" content="This is a reference book for models implemented in package medfate." />
-  <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 5 Hydrology | The medfate reference book" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 
 
 
-<meta name="date" content="2019-06-04" />
+<meta name="date" content="2019-06-05" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -49,57 +49,41 @@
 
 
 <style type="text/css">
-div.sourceLine, a.sourceLine { display: inline-block; min-height: 1.25em; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; }
-@media print {
-code.sourceCode { white-space: pre-wrap; }
-div.sourceLine, a.sourceLine { text-indent: -1em; padding-left: 1em; }
-}
-pre.numberSource div.sourceLine, .numberSource a.sourceLine
-  { position: relative; }
-pre.numberSource div.sourceLine::before, .numberSource a.sourceLine::before
-  { content: attr(data-line-number);
-    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em; }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; color: #aaaaaa;  padding-left: 4px; }
-@media screen {
-a.sourceLine::before { text-decoration: underline; color: initial; }
-}
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.bn { color: #40a070; } /* BaseN */
-code span.fl { color: #40a070; } /* Float */
-code span.ch { color: #4070a0; } /* Char */
-code span.st { color: #4070a0; } /* String */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.ot { color: #007020; } /* Other */
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.fu { color: #06287e; } /* Function */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code span.cn { color: #880000; } /* Constant */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.im { } /* Import */
-code span.va { color: #19177c; } /* Variable */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.op { color: #666666; } /* Operator */
-code span.bu { } /* BuiltIn */
-code span.ex { } /* Extension */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.at { color: #7d9029; } /* Attribute */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -142,7 +126,7 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <li class="chapter" data-level="2.2" data-path="model-inputs.html"><a href="model-inputs.html#vegetationinput"><i class="fa fa-check"></i><b>2.2</b> Vegetation description</a><ul>
 <li class="chapter" data-level="2.2.1" data-path="model-inputs.html"><a href="model-inputs.html#attributes-of-plant-cohorts"><i class="fa fa-check"></i><b>2.2.1</b> Attributes of plant cohorts</a></li>
 <li class="chapter" data-level="2.2.2" data-path="model-inputs.html"><a href="model-inputs.html#vertical-root-distribution"><i class="fa fa-check"></i><b>2.2.2</b> Vertical root distribution</a></li>
-<li class="chapter" data-level="2.2.3" data-path="model-inputs.html"><a href="model-inputs.html#forest-plot-objects"><i class="fa fa-check"></i><b>2.2.3</b> Forest plot objects</a></li>
+<li class="chapter" data-level="2.2.3" data-path="model-inputs.html"><a href="model-inputs.html#forestobjects"><i class="fa fa-check"></i><b>2.2.3</b> Forest plot objects</a></li>
 <li class="chapter" data-level="2.2.4" data-path="model-inputs.html"><a href="model-inputs.html#plant-species-traits-and-vegetation-initialization"><i class="fa fa-check"></i><b>2.2.4</b> Plant (species) traits and vegetation initialization</a></li>
 </ul></li>
 <li class="chapter" data-level="2.3" data-path="model-inputs.html"><a href="model-inputs.html#meteoinput"><i class="fa fa-check"></i><b>2.3</b> Metereological input</a></li>
@@ -195,11 +179,12 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 </ul></li>
 <li class="chapter" data-level="7.4" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#process-scheduling-1"><i class="fa fa-check"></i><b>7.4</b> Process scheduling</a></li>
 <li class="chapter" data-level="7.5" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#inputs-and-outputs-1"><i class="fa fa-check"></i><b>7.5</b> Inputs and outputs</a><ul>
-<li class="chapter" data-level="7.5.1" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#model-inputs-1"><i class="fa fa-check"></i><b>7.5.1</b> Model inputs</a></li>
-<li class="chapter" data-level="7.5.2" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#control-parameters-2"><i class="fa fa-check"></i><b>7.5.2</b> Control parameters</a></li>
-<li class="chapter" data-level="7.5.3" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#model-outputs"><i class="fa fa-check"></i><b>7.5.3</b> Model outputs</a></li>
+<li class="chapter" data-level="7.5.1" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#soil-vegetation-and-meteorology-1"><i class="fa fa-check"></i><b>7.5.1</b> Soil, vegetation and meteorology</a></li>
+<li class="chapter" data-level="7.5.2" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#species-parameters-1"><i class="fa fa-check"></i><b>7.5.2</b> Species parameters</a></li>
+<li class="chapter" data-level="7.5.3" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#control-parameters-2"><i class="fa fa-check"></i><b>7.5.3</b> Control parameters</a></li>
+<li class="chapter" data-level="7.5.4" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#model-output-1"><i class="fa fa-check"></i><b>7.5.4</b> Model output</a></li>
 </ul></li>
-<li class="chapter" data-level="7.6" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#model-output-1"><i class="fa fa-check"></i><b>7.6</b> Model output</a></li>
+<li class="chapter" data-level="7.6" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#applications-1"><i class="fa fa-check"></i><b>7.6</b> Applications</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="subdaily-temperature-and-light-variations.html"><a href="subdaily-temperature-and-light-variations.html"><i class="fa fa-check"></i><b>8</b> Subdaily temperature and light variations</a><ul>
 <li class="chapter" data-level="8.1" data-path="subdaily-temperature-and-light-variations.html"><a href="subdaily-temperature-and-light-variations.html#air-temperature"><i class="fa fa-check"></i><b>8.1</b> Air temperature</a></li>
@@ -290,16 +275,15 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <li class="chapter" data-level="17.2" data-path="update-of-structural-variables.html"><a href="update-of-structural-variables.html#shrub-height-and-cover"><i class="fa fa-check"></i><b>17.2</b> Shrub height and cover</a></li>
 </ul></li>
 <li class="part"><span><b>V Static modules</b></span></li>
-<li class="chapter" data-level="18" data-path="leafbiomass.html"><a href="leafbiomass.html"><i class="fa fa-check"></i><b>18</b> Leaf biomass, leaf area and vertical profiles</a><ul>
-<li class="chapter" data-level="18.1" data-path="leafbiomass.html"><a href="leafbiomass.html#input-data"><i class="fa fa-check"></i><b>18.1</b> Input data</a><ul>
-<li class="chapter" data-level="18.1.1" data-path="leafbiomass.html"><a href="leafbiomass.html#forest-inventory-data"><i class="fa fa-check"></i><b>18.1.1</b> Forest inventory data</a></li>
-<li class="chapter" data-level="18.1.2" data-path="leafbiomass.html"><a href="leafbiomass.html#allometric-species-specific-parameters"><i class="fa fa-check"></i><b>18.1.2</b> Allometric species-specific parameters</a></li>
+<li class="chapter" data-level="18" data-path="allometricmodels.html"><a href="allometricmodels.html"><i class="fa fa-check"></i><b>18</b> Allometric models</a><ul>
+<li class="chapter" data-level="18.1" data-path="allometricmodels.html"><a href="allometricmodels.html#input-data"><i class="fa fa-check"></i><b>18.1</b> Input data</a><ul>
+<li class="chapter" data-level="18.1.1" data-path="allometricmodels.html"><a href="allometricmodels.html#forest-plot-data"><i class="fa fa-check"></i><b>18.1.1</b> Forest plot data</a></li>
+<li class="chapter" data-level="18.1.2" data-path="allometricmodels.html"><a href="allometricmodels.html#species-parameters-2"><i class="fa fa-check"></i><b>18.1.2</b> Species parameters</a></li>
 </ul></li>
-<li class="chapter" data-level="18.2" data-path="leafbiomass.html"><a href="leafbiomass.html#allometric-relationships"><i class="fa fa-check"></i><b>18.2</b> Allometric relationships</a><ul>
-<li class="chapter" data-level="18.2.1" data-path="leafbiomass.html"><a href="leafbiomass.html#leaf-biomass-for-tree-cohorts"><i class="fa fa-check"></i><b>18.2.1</b> Leaf biomass for tree cohorts</a></li>
-<li class="chapter" data-level="18.2.2" data-path="leafbiomass.html"><a href="leafbiomass.html#leaf-biomass-for-shrub-cohorts"><i class="fa fa-check"></i><b>18.2.2</b> Leaf biomass for shrub cohorts</a></li>
-<li class="chapter" data-level="18.2.3" data-path="leafbiomass.html"><a href="leafbiomass.html#leaf-area-and-lai"><i class="fa fa-check"></i><b>18.2.3</b> Leaf area and LAI</a></li>
-<li class="chapter" data-level="18.2.4" data-path="leafbiomass.html"><a href="leafbiomass.html#crownbaseheight"><i class="fa fa-check"></i><b>18.2.4</b> Crown base height</a></li>
+<li class="chapter" data-level="18.2" data-path="allometricmodels.html"><a href="allometricmodels.html#allometric-relationships"><i class="fa fa-check"></i><b>18.2</b> Allometric relationships</a><ul>
+<li class="chapter" data-level="18.2.1" data-path="allometricmodels.html"><a href="allometricmodels.html#leaf-biomass"><i class="fa fa-check"></i><b>18.2.1</b> Leaf biomass</a></li>
+<li class="chapter" data-level="18.2.2" data-path="allometricmodels.html"><a href="allometricmodels.html#leaf-area-and-lai"><i class="fa fa-check"></i><b>18.2.2</b> Leaf area and LAI</a></li>
+<li class="chapter" data-level="18.2.3" data-path="allometricmodels.html"><a href="allometricmodels.html#crownbaseheight"><i class="fa fa-check"></i><b>18.2.3</b> Crown base height</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="19" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html"><i class="fa fa-check"></i><b>19</b> Fuel characteristics and fire behaviour</a><ul>
@@ -386,49 +370,38 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <h1><span class="header-section-number">Chapter 5</span> Hydrology</h1>
 <div id="precipitation" class="section level2">
 <h2><span class="header-section-number">5.1</span> Precipitation</h2>
-<p>Precipitation (<span class="math inline">\(P\)</span>) is considered be snow precipitation (<span class="math inline">\(Ps\)</span>) when <span class="math inline">\(T_{mean}&lt;0\)</span>, and is considered rainfall (<span class="math inline">\(Pr\)</span>) otherwise. Thus, we have:
+Precipitation (<span class="math inline">\(P\)</span>) is considered be snow precipitation (<span class="math inline">\(Ps\)</span>) when <span class="math inline">\(T_{mean}&lt;0\)</span>, and is considered rainfall (<span class="math inline">\(Pr\)</span>) otherwise. Thus, we have:
 <span class="math display">\[\begin{equation}
 P = Pr + Ps
-\end{equation}\]</span></p>
+\end{equation}\]</span>
 <p>Interception of snow by the canopy is neglected, and all snow is assumed to accumulate in a single storage compartment <span class="math inline">\(S_{snow}\)</span> over the soil (i.e. canopy snow storage capacity is neglected). Rainfall interception is described in section <a href="hydrology.html#interception">5.3</a>.</p>
 </div>
 <div id="snowpack" class="section level2">
 <h2><span class="header-section-number">5.2</span> Snow pack dynamics</h2>
-<p>A very simple snow submodel is used for snow pack dynamics (accumulation and melt), taken from <span class="citation">Kergoat (<a href="#ref-Kergoat1998">1998</a>)</span>. When mean air temperature is above 0 Celsius <span class="math inline">\(T_{mean}&gt;0\)</span>, a simple energy budget relates snow melt, <span class="math inline">\(Sm\)</span> (mm), to air temperature and soil-level radiation (see function ):
+A very simple snow submodel is used for snow pack dynamics (accumulation and melt), taken from <span class="citation">Kergoat (<a href="#ref-Kergoat1998">1998</a>)</span>. When mean air temperature is above 0 Celsius <span class="math inline">\(T_{mean}&gt;0\)</span>, a simple energy budget relates snow melt, <span class="math inline">\(Sm\)</span> (mm), to air temperature and soil-level radiation (see function ):
 <span class="math display">\[\begin{equation}
 Sm = \frac{Rad\cdot L^{SWR}_{ground}\cdot (1-\alpha_{ice}) + \tau_{day} \cdot T_{mean} \cdot \rho \cdot C_p/r_{s}}{\lambda_{ice}}
 \end{equation}\]</span>
-where <span class="math inline">\(Rad\)</span> is solar radiation (<span class="math inline">\(MJ \cdot m^{-2}\)</span>), <span class="math inline">\(L^{SWR}_{ground}\)</span> is the fraction of (short-wave) radiation reaching the ground, <span class="math inline">\(\alpha_{ice} = 0.9\)</span> is the albedo of snow, <span class="math inline">\(\tau_{day} = 86400\)</span> is the day duration in s, <span class="math inline">\(\rho\)</span> is the air density (depending on temperature and elevation), <span class="math inline">\(C_{p} = 1013.86 \cdot 10^{-6} MJ \cdot kg^{-1} \cdot C^{-1}\)</span> is the specific heat capacity of the air and <span class="math inline">\(r_{s} = 100 s \cdot m^{-1}\)</span> is the snow aerodynamic resistance and <span class="math inline">\(\lambda_{ice} = 0.33355 MJ \cdot kg\)</span> is the (latent) heat of fusion of snow.</p>
+<p>where <span class="math inline">\(Rad\)</span> is solar radiation (<span class="math inline">\(MJ \cdot m^{-2}\)</span>), <span class="math inline">\(L^{SWR}_{ground}\)</span> is the fraction of (short-wave) radiation reaching the ground, <span class="math inline">\(\alpha_{ice} = 0.9\)</span> is the albedo of snow, <span class="math inline">\(\tau_{day} = 86400\)</span> is the day duration in s, <span class="math inline">\(\rho\)</span> is the air density (depending on temperature and elevation), <span class="math inline">\(C_{p} = 1013.86 \cdot 10^{-6} MJ \cdot kg^{-1} \cdot C^{-1}\)</span> is the specific heat capacity of the air and <span class="math inline">\(r_{s} = 100 s \cdot m^{-1}\)</span> is the snow aerodynamic resistance and <span class="math inline">\(\lambda_{ice} = 0.33355 MJ \cdot kg\)</span> is the (latent) heat of fusion of snow.</p>
 </div>
 <div id="interception" class="section level2">
 <h2><span class="header-section-number">5.3</span> Rainfall interception loss</h2>
-<p>As mentioned above, interception loss is only modelled for liquid precipitation (i.e. snow interception is not modelled). Rainfall interception loss, <span class="math inline">\(In\)</span>, is estimated using the <span class="citation">Gash, Lloyd, and Lachaud (<a href="#ref-Gash1995">1995</a>)</span> analytical interception model for sparse canopies, where rain is assumed to fall in a single event during the day. First, the amount of rainfall needed to saturate the canopy is calculated:
+As mentioned above, interception loss is only modelled for liquid precipitation (i.e. snow interception is not modelled). Rainfall interception loss, <span class="math inline">\(In\)</span>, is estimated using the <span class="citation">Gash, Lloyd, and Lachaud (<a href="#ref-Gash1995">1995</a>)</span> analytical interception model for sparse canopies, where rain is assumed to fall in a single event during the day. First, the amount of rainfall needed to saturate the canopy is calculated:
 <span class="math display">\[\begin{equation}
 P_G = - \frac{S_{canopy}/C_{canopy}}{(E/R)} \cdot \ln(1-(E/R))
 \end{equation}\]</span>
-where <span class="math inline">\(S_{canopy}\)</span> is the canopy water storage capacity (in <span class="math inline">\(mm\)</span>) – i.e. the minimum amount
-of water needed to saturate the canopy –, <span class="math inline">\(C_{canopy}\)</span> is the canopy cover and <span class="math inline">\((E/R)\)</span> is
-the ratio of evaporation rate to rainfall rate during the rainfall event.
-Simplifying assumptions are made to determine <span class="math inline">\((E/R)\)</span>. Values of the Evaporation-to-rainfall ratio are calculated from daily potential evapotranspiration and rainfall, while accounting for seasonal variation in rainfall intensity (<span class="math inline">\(mm \cdot h^{-1}\)</span>). Minimum values for rainfall intensity are assumed for convective storms (5.6 <span class="math inline">\(mm \cdot h^{-1}\)</span>) and synoptic storms (1.5 <span class="math inline">\(mm \cdot h^{-1}\)</span>) from <span class="citation">Miralles et al. (<a href="#ref-Miralles2010">2010</a>)</span>. Synoptic storms are assumed between December and June, and convective storms are assumed for the remaining months, as typical in the Mediterranean Basin.</p>
-<p>The amount of water evaporated from interception (<span class="math inline">\(In\)</span>, in <span class="math inline">\(mm\)</span>), is calculated as:
+<p>where <span class="math inline">\(S_{canopy}\)</span> is the canopy water storage capacity (in <span class="math inline">\(mm\)</span>) – i.e. the minimum amount of water needed to saturate the canopy –, <span class="math inline">\(C_{canopy}\)</span> is the canopy cover and <span class="math inline">\((E/R)\)</span> is the ratio of evaporation rate to rainfall rate during the rainfall event. Simplifying assumptions are made to determine <span class="math inline">\((E/R)\)</span>. Values of the Evaporation-to-rainfall ratio are calculated from daily potential evapotranspiration and rainfall, while accounting for seasonal variation in rainfall intensity (<span class="math inline">\(mm \cdot h^{-1}\)</span>). Minimum values for rainfall intensity are assumed for convective storms (5.6 <span class="math inline">\(mm \cdot h^{-1}\)</span>) and synoptic storms (1.5 <span class="math inline">\(mm \cdot h^{-1}\)</span>) from <span class="citation">Miralles et al. (<a href="#ref-Miralles2010">2010</a>)</span>. Synoptic storms are assumed between December and June, and convective storms are assumed for the remaining months, as typical in the Mediterranean Basin.</p>
+The amount of water evaporated from interception (<span class="math inline">\(In\)</span>, in <span class="math inline">\(mm\)</span>), is calculated as:
 <span class="math display">\[\begin{eqnarray}
 In = C\cdot P_G+C\cdot(E/R)\cdot(Pr-P_G) \: {if}\: Pr &gt; P_G \\
 In = C\cdot Pr\: {if}\: Pr \leq P_G
 \end{eqnarray}\]</span>
-where <span class="math inline">\(Pr\)</span> is the daily gross rainfall (in <span class="math inline">\(mm\)</span>). Net rainfall (<span class="math inline">\(Pr_{net}\)</span>, also in <span class="math inline">\(mm\)</span>) includes throughfall and stemflow, and is calculated as the difference between gross rainfall and interception loss.</p>
-<p>Although interception models are normally applied to single-canopy stands, we
-apply the sparse Gash model to the whole stand (including shrubs). Moreover, in
-our implementation stem interception is lumped with canopy interception, so that
-<span class="math inline">\(S_{canopy}\)</span> represents both. Following <span class="citation">Watanabe and Mizutani (<a href="#ref-Watanabe1996">1996</a>)</span> we estimate <span class="math inline">\(S_{canopy}\)</span>, the
-canopy water storage capacity, from adjusted LAI values:
+<p>where <span class="math inline">\(Pr\)</span> is the daily gross rainfall (in <span class="math inline">\(mm\)</span>). Net rainfall (<span class="math inline">\(Pr_{net}\)</span>, also in <span class="math inline">\(mm\)</span>) includes throughfall and stemflow, and is calculated as the difference between gross rainfall and interception loss.</p>
+Although interception models are normally applied to single-canopy stands, we apply the sparse Gash model to the whole stand (including shrubs). Moreover, in our implementation stem interception is lumped with canopy interception, so that <span class="math inline">\(S_{canopy}\)</span> represents both. Following <span class="citation">Watanabe and Mizutani (<a href="#ref-Watanabe1996">1996</a>)</span> we estimate <span class="math inline">\(S_{canopy}\)</span>, the canopy water storage capacity, from adjusted LAI values:
 <span class="math display">\[\begin{equation}
 S_{canopy}=\sum_{i}{s_{water,i}\cdot LAI_{i}^{\phi}}
 \end{equation}\]</span>
-where <span class="math inline">\(s_{water,i}\)</span> is the depth of water that can be retained by leaves, branches and
-stems of cohort <span class="math inline">\(i\)</span> per unit of leaf area index (<span class="math inline">\(mm \cdot LAI^{-1}\)</span>). To estimate
-the stand cover, <span class="math inline">\(C_{canopy}\)</span>, we use the complement of the percentage of PAR that reaches
-the ground, i.e. <span class="math inline">\(C_{canopy} = 1 - L^{PAR}_{ground}\)</span> <span class="citation">(Deguchi, Hattori, and Park <a href="#ref-Deguchi2006">2006</a>)</span>. Fig. <a href="hydrology.html#fig:interception">5.1</a> below
-shows examples of relative throughfall (including stemflow), calculated according to the Gash et al <span class="citation">(<a href="#ref-Gash1995">1995</a>)</span> interception model, under different situations (see function <code>hydrology_rainInterception()</code>).</p>
+<p>where <span class="math inline">\(s_{water,i}\)</span> is the depth of water that can be retained by leaves, branches and stems of cohort <span class="math inline">\(i\)</span> per unit of leaf area index (<span class="math inline">\(mm \cdot LAI^{-1}\)</span>). To estimate the stand cover, <span class="math inline">\(C_{canopy}\)</span>, we use the complement of the percentage of PAR that reaches the ground, i.e. <span class="math inline">\(C_{canopy} = 1 - L^{PAR}_{ground}\)</span> <span class="citation">(Deguchi, Hattori, and Park <a href="#ref-Deguchi2006">2006</a>)</span>. Fig. <a href="hydrology.html#fig:interception">5.1</a> below shows examples of relative throughfall (including stemflow), calculated according to the Gash et al <span class="citation">(<a href="#ref-Gash1995">1995</a>)</span> interception model, under different situations (see function <code>hydrology_rainInterception()</code>).</p>
 
 <div class="figure" style="text-align: center"><span id="fig:interception"></span>
 <img src="medfatebook_files/figure-html/interception-1.png" alt="Examples of canopy interception with different \(S_{canopy}\) (canopy water storage capacity), \(E/R\) (ratio between evaporation and rainfall rates) and \(p\) (throughfall coefficient; \(p = 1 - C_{canopy}\))." width="768" />
@@ -440,11 +413,11 @@ Figure 5.1: Examples of canopy interception with different <span class="math inl
 <div id="runoff" class="section level2">
 <h2><span class="header-section-number">5.4</span> Runoff, infiltration and percolation</h2>
 <p>The water that reaches the soil is the sum of net rainfall (<span class="math inline">\(Pr_{net}\)</span>), runon (<span class="math inline">\(Ro\)</span>, in <span class="math inline">\(mm\)</span>) and melted snow (<span class="math inline">\(Sm\)</span>). The amount of water infiltrating into the soil is <span class="math inline">\(Pr_{net} + Sm + Ro - Ru\)</span>, where <span class="math inline">\(Ru\)</span> (in <span class="math inline">\(mm\)</span>) is the water lost by surface runoff (see function <code>hydrology_infiltrationAmount()</code>).</p>
-<p>Surface runoff, is calculated using the USDA SCS curve number method, as in <span class="citation">Boughton (<a href="#ref-Boughton1989">1989</a>)</span>:
+Surface runoff, is calculated using the USDA SCS curve number method, as in <span class="citation">Boughton (<a href="#ref-Boughton1989">1989</a>)</span>:
 <span class="math display">\[\begin{equation}
 Ru=\frac{(Pr_{net} + Ro + Sm - 0.2 \cdot V_{fc, soil})^2}{(Pr_{net} + Ro + Sm - 0.8 \cdot V_{fc, soil})}
 \end{equation}\]</span>
-where <span class="math inline">\(V_{soil}\)</span> (in mm) is the overall soil water retention capacity.</p>
+<p>where <span class="math inline">\(V_{soil}\)</span> (in mm) is the overall soil water retention capacity.</p>
 <p>Following <span class="citation">Granier et al. (<a href="#ref-Granier1999">1999</a>)</span>, part of the water reaching one soil layer percolates quickly through the macropores. The amount of water reaching each layer through macropores is modelled using an extinction function (see function <code>hydrology_infiltrationRepartition</code>). The remaining water is retained by the micropores refilling the current soil layer. When this soil layer reaches its field capacity the excess of water also percolates to the soil layer below.</p>
 
 <div class="figure" style="text-align: center"><span id="fig:infiltration"></span>
@@ -457,11 +430,11 @@ Figure 5.2: Examples of infiltration/runoff calculation for different values of 
 </div>
 <div id="soilevaporation" class="section level2">
 <h2><span class="header-section-number">5.5</span> Bare soil evaporation</h2>
-<p>Evaporation from the soil surface is the last component of the soil water balance to be calculated before calculating plant transpiration. Potential evaporation from the soil (<span class="math inline">\(PE_{soil}\)</span>; in <span class="math inline">\(mm \cdot day^{-1}\)</span>) is defined as the product between <span class="math inline">\(PET\)</span> and <span class="math inline">\(L^{SWR}_{ground}\)</span>, the proportion of SWR absorbed by the ground:
+Evaporation from the soil surface is the last component of the soil water balance to be calculated before calculating plant transpiration. Potential evaporation from the soil (<span class="math inline">\(PE_{soil}\)</span>; in <span class="math inline">\(mm \cdot day^{-1}\)</span>) is defined as the product between <span class="math inline">\(PET\)</span> and <span class="math inline">\(L^{SWR}_{ground}\)</span>, the proportion of SWR absorbed by the ground:
 <span class="math display">\[\begin{equation}
 PE_{soil} =  PET \cdot L^{SWR}_{ground}
-\end{equation}\]</span></p>
-<p>Actual evaporation from the soil surface is modeled as in <span class="citation">Mouillot, Rambal, and Lavorel (<a href="#ref-Mouillot2001">2001</a>)</span>, who in turn followed <span class="citation">Ritchie (<a href="#ref-Ritchie1972">1972</a>)</span>. First, the model determines the time needed to evaporate the current water deficit (difference between field capacity and current moisture) in the surface soil layer:
+\end{equation}\]</span>
+Actual evaporation from the soil surface is modeled as in <span class="citation">Mouillot, Rambal, and Lavorel (<a href="#ref-Mouillot2001">2001</a>)</span>, who in turn followed <span class="citation">Ritchie (<a href="#ref-Ritchie1972">1972</a>)</span>. First, the model determines the time needed to evaporate the current water deficit (difference between field capacity and current moisture) in the surface soil layer:
 <span class="math display">\[\begin{equation}
 t = \left \{ \frac{V_{fc,1}\cdot(1- W_1)}{\gamma_{soil}} \right \}
 \end{equation}\]</span>
@@ -469,9 +442,7 @@ where <span class="math inline">\(V_{fc,1}\)</span> is the water retention capac
 <span class="math display">\[\begin{equation}
 SE_{soil} = \gamma_{soil} \cdot (\sqrt{t+1}-\sqrt{1})
 \end{equation}\]</span>
-The amount of water evaporated from the soil, <span class="math inline">\(Es\)</span>, is then calculated as
-the minimum between supply and demand <span class="citation">(Federer <a href="#ref-Federer1982">1982</a>)</span>, the latter being the product
-of <span class="math inline">\(PET\)</span> and the proportion of light that reaches the ground (see function <code>hydrology_soilEvaporationAmount</code>):</p>
+<p>The amount of water evaporated from the soil, <span class="math inline">\(Es\)</span>, is then calculated as the minimum between supply and demand <span class="citation">(Federer <a href="#ref-Federer1982">1982</a>)</span>, the latter being the product of <span class="math inline">\(PET\)</span> and the proportion of light that reaches the ground (see function <code>hydrology_soilEvaporationAmount</code>):</p>
 <span class="math display">\[\begin{equation}
 Es = \min(PE_{soil}, SE_{soil})
 \end{equation}\]</span>
@@ -489,34 +460,34 @@ Figure 5.3: Cumulative bare soil evaporation for different values of maximum eva
 <h3>Bibliography</h3>
 <div id="refs" class="references">
 <div id="ref-Boughton1989">
-<p>Boughton, WC. 1989. “A review of the USDA SCS curve number method.” <em>Australian Journal of Soil Research</em> 27:511–23. <a href="http://www.publish.csiro.au/?paper=SR9890511" class="uri">http://www.publish.csiro.au/?paper=SR9890511</a>.</p>
+<p>Boughton, WC. 1989. “A review of the USDA SCS curve number method.” <em>Australian Journal of Soil Research</em> 27: 511–23. <a href="http://www.publish.csiro.au/?paper=SR9890511" class="uri">http://www.publish.csiro.au/?paper=SR9890511</a>.</p>
 </div>
 <div id="ref-Deguchi2006">
-<p>Deguchi, Aiko, Shigeaki Hattori, and Ho-Teak Park. 2006. “The influence of seasonal changes in canopy structure on interception loss: Application of the revised Gash model.” <em>Journal of Hydrology</em> 318 (1-4):80–102. <a href="https://doi.org/10.1016/j.jhydrol.2005.06.005" class="uri">https://doi.org/10.1016/j.jhydrol.2005.06.005</a>.</p>
+<p>Deguchi, Aiko, Shigeaki Hattori, and Ho-Teak Park. 2006. “The influence of seasonal changes in canopy structure on interception loss: Application of the revised Gash model.” <em>Journal of Hydrology</em> 318 (1-4): 80–102. doi:<a href="https://doi.org/10.1016/j.jhydrol.2005.06.005">10.1016/j.jhydrol.2005.06.005</a>.</p>
 </div>
 <div id="ref-Federer1982">
-<p>Federer, CA. 1982. “Transpirational supply and demand: plant, soil, and atmospheric effects evaluated by simulation.” <em>Water Resources Research</em> 18 (2):355–62. <a href="http://onlinelibrary.wiley.com/doi/10.1029/WR018i002p00355/full" class="uri">http://onlinelibrary.wiley.com/doi/10.1029/WR018i002p00355/full</a>.</p>
+<p>Federer, CA. 1982. “Transpirational supply and demand: plant, soil, and atmospheric effects evaluated by simulation.” <em>Water Resources Research</em> 18 (2): 355–62. <a href="http://onlinelibrary.wiley.com/doi/10.1029/WR018i002p00355/full" class="uri">http://onlinelibrary.wiley.com/doi/10.1029/WR018i002p00355/full</a>.</p>
 </div>
 <div id="ref-Gash1995">
-<p>Gash, JHC, CR Lloyd, and G Lachaud. 1995. “Estimating sparse forest rainfall interception with an analytical model.” <em>Journal of Hydrology</em> 170 (79-86). <a href="https://doi.org/10.1016/0022-1694(95)02697-N" class="uri">https://doi.org/10.1016/0022-1694(95)02697-N</a>.</p>
+<p>Gash, JHC, CR Lloyd, and G Lachaud. 1995. “Estimating sparse forest rainfall interception with an analytical model.” <em>Journal of Hydrology</em> 170 (79-86). doi:<a href="https://doi.org/10.1016/0022-1694(95)02697-N">10.1016/0022-1694(95)02697-N</a>.</p>
 </div>
 <div id="ref-Granier1999">
-<p>Granier, A., N. Bréda, P. Biron, and S. Villette. 1999. “A lumped water balance model to evaluate duration and intensity of drought constraints in forest stands.” <em>Ecological Modelling</em> 116:269–83. <a href="https://doi.org/10.1016/S0304-3800(98)00205-1" class="uri">https://doi.org/10.1016/S0304-3800(98)00205-1</a>.</p>
+<p>Granier, A., N. Bréda, P. Biron, and S. Villette. 1999. “A lumped water balance model to evaluate duration and intensity of drought constraints in forest stands.” <em>Ecological Modelling</em> 116: 269–83. doi:<a href="https://doi.org/10.1016/S0304-3800(98)00205-1">10.1016/S0304-3800(98)00205-1</a>.</p>
 </div>
 <div id="ref-Kergoat1998">
-<p>Kergoat, Laurent. 1998. “A model for hydrological equilibrium of leaf area index on a global scale.” <em>Journal of Hydrology</em> 212-213 (December):268–86. <a href="https://doi.org/10.1016/S0022-1694(98)00211-X" class="uri">https://doi.org/10.1016/S0022-1694(98)00211-X</a>.</p>
+<p>Kergoat, Laurent. 1998. “A model for hydrological equilibrium of leaf area index on a global scale.” <em>Journal of Hydrology</em> 212-213 (December): 268–86. doi:<a href="https://doi.org/10.1016/S0022-1694(98)00211-X">10.1016/S0022-1694(98)00211-X</a>.</p>
 </div>
 <div id="ref-Miralles2010">
-<p>Miralles, Diego G., John H. Gash, Thomas R. H. Holmes, Richard A. M. de Jeu, and A. J. Dolman. 2010. “Global canopy interception from satellite observations.” <em>Journal of Geophysical Research</em> 115 (D16):D16122. <a href="https://doi.org/10.1029/2009JD013530" class="uri">https://doi.org/10.1029/2009JD013530</a>.</p>
+<p>Miralles, Diego G., John H. Gash, Thomas R. H. Holmes, Richard A. M. de Jeu, and A. J. Dolman. 2010. “Global canopy interception from satellite observations.” <em>Journal of Geophysical Research</em> 115 (D16): D16122. doi:<a href="https://doi.org/10.1029/2009JD013530">10.1029/2009JD013530</a>.</p>
 </div>
 <div id="ref-Mouillot2001">
-<p>Mouillot, Florent, Serge Rambal, and Sandra Lavorel. 2001. “A generic process-based SImulator for meditERRanean landscApes (SIERRA): design and validation exercises.” <em>Forest Ecology and Management</em> 147 (1):75–97. <a href="https://doi.org/10.1016/S0378-1127(00)00432-1" class="uri">https://doi.org/10.1016/S0378-1127(00)00432-1</a>.</p>
+<p>Mouillot, Florent, Serge Rambal, and Sandra Lavorel. 2001. “A generic process-based SImulator for meditERRanean landscApes (SIERRA): design and validation exercises.” <em>Forest Ecology and Management</em> 147 (1): 75–97. doi:<a href="https://doi.org/10.1016/S0378-1127(00)00432-1">10.1016/S0378-1127(00)00432-1</a>.</p>
 </div>
 <div id="ref-Ritchie1972">
-<p>Ritchie, JT. 1972. “Model for predicting evaporation from a row crop with incomplete cover.” <em>Water Resources Research</em> 8:1204–13. <a href="http://onlinelibrary.wiley.com/doi/10.1029/WR008i005p01204/full" class="uri">http://onlinelibrary.wiley.com/doi/10.1029/WR008i005p01204/full</a>.</p>
+<p>Ritchie, JT. 1972. “Model for predicting evaporation from a row crop with incomplete cover.” <em>Water Resources Research</em> 8: 1204–13. <a href="http://onlinelibrary.wiley.com/doi/10.1029/WR008i005p01204/full" class="uri">http://onlinelibrary.wiley.com/doi/10.1029/WR008i005p01204/full</a>.</p>
 </div>
 <div id="ref-Watanabe1996">
-<p>Watanabe, Tsutomu, and Kanji Mizutani. 1996. “Model study on micrometeorological aspects of rainfall interception over an evergreen broad-leaved.” <em>Agricultural and Forest Meteorology</em> 80:195–214.</p>
+<p>Watanabe, Tsutomu, and Kanji Mizutani. 1996. “Model study on micrometeorological aspects of rainfall interception over an evergreen broad-leaved.” <em>Agricultural and Forest Meteorology</em> 80: 195–214.</p>
 </div>
 </div>
             </section>
@@ -575,7 +546,7 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "true";
+    var src = "";
     if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');

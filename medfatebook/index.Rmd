@@ -44,7 +44,7 @@ The development of the package has benefited from many colleagues who have provi
 
 I would not like to finish the acknowledgements without thanking my colleagues at CTFC, for their collaboration and support all these years. Particularly, Lluís Coll and Pere Casals have been continuously supporting my efforts and finding new model applications. Moreover, they have contributed to the knowledge within the package with their expertise in forest dynamics, soils and fire issues. I also thank Mario Beltrán and Assu Gil for teaching me forestry. 
 
-Finally, I would like to thank José Manuel, who takes care of me and has to endure my endless talking about the package and its models, and to my family for being there in difficult times, including my nephews from who I learn the joy of life.   
+Finally, I would like to thank José Manuel, who takes care of me and has to endure my endless talking about the package and its models, to my family for being there at difficult times, including my two nephews from whom I learn the joy of life.   
 
 ```{r, out.width='20%', fig.align="center", echo=FALSE}
 knitr::include_graphics("LOGO_Group.png")
