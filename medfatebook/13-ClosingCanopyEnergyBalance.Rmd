@@ -1,4 +1,4 @@
-# Canopy and soil energy balances
+# Closing canopy and soil energy balances {#closecanopysoilenergybalance}
 
 ## Convective energy
 Convective energy fluxes between atmosphere and the canopy ($H_{ca}$) and between the canopy and the soil ($H_{cs}$) are determined as follows:
@@ -34,9 +34,3 @@ G_k &=& \lambda_{soil,k} \cdot \frac{\delta T_{soil,k}}{\delta z}
 \end{eqnarray}
 where $\lambda_{soil,k}$ is the thermal conductivity of layer $k$, depending on soil moisture and texture (see function `soil_thermalconductivity`). The gradient in the bottom layer is calculated assuming a temperature of the earth (at 10 m) of 15.5 Celsius.
 
-## Bare soil evaporation
-Evaporation from the soil surface is the last component of the soil water balance to be calculated. Soil evaporative demand, i.e. potential evaporation from the soil ($PE_{soil}$; in $mm\cdot day^{-1}$), is calculated using the Penman-Monteith combination equation:
-\begin{equation}
-PE_{soil} = \frac{1}{\lambda} \cdot \frac{\Delta \cdot R_{n,soil} + D \cdot (\rho \cdot C_p/r_a)}{\Delta + \gamma \cdot (1 + r_{soil}/r_a)}
-\end{equation}
-where  $D$ is the vapour pressure deficit (in kPa), $\Delta$  is the slope of the saturated vapor pressure (in $Pa \cdot K^{-1}$), $\gamma$ is the psychrometer constant (in $kPa\cdot K^{-1}$), $\lambda$ is the latent heat vaporization of water (in $MJ\cdot kg^{-1}$) and $C_p$ is the specific heat of air (in $MJ\cdot kg^{-1}\cdot K^{-1}$). $r_{soil}$ is the resistance of the soil surface, set to a constant value ($r_{soil} = 200$ $s\cdot m^{-1}$). For simplicity, aerodynamic resistance ($r_a$) in the soil is currently set to $r_a = 208.0/u$ where $u$ is the input wind speed.

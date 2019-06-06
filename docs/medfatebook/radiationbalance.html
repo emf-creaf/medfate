@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 14 Forest growth model | The medfate reference book</title>
+  <title>Chapter 9 Radiation balance | The medfate reference book</title>
   <meta name="description" content="This is a reference book for models implemented in package medfate." />
   <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 14 Forest growth model | The medfate reference book" />
+  <meta property="og:title" content="Chapter 9 Radiation balance | The medfate reference book" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 14 Forest growth model | The medfate reference book" />
+  <meta name="twitter:title" content="Chapter 9 Radiation balance | The medfate reference book" />
   
   <meta name="twitter:description" content="This is a reference book for models implemented in package medfate." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="closecanopysoilenergybalance.html">
-<link rel="next" href="plant-compartments-respiration-and-carbon-balance.html">
+<link rel="prev" href="subdailytemplight.html">
+<link rel="next" href="planthydraulics.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -383,124 +383,98 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="forest-growth-model" class="section level1">
-<h1><span class="header-section-number">Chapter 14</span> Forest growth model</h1>
-<div id="design-principles-2" class="section level2">
-<h2><span class="header-section-number">14.1</span> Design principles</h2>
-<p>The physical structure of the stand is represented in one (vertical) dimension. Height (or depth) is the only dimension that matters (i.e. the coordinates of plants are not explicit). The model is cohort-based, meaning that similar plant individuals are represented using a single entity with average properties (e.g. tree height or diameter) and a density variable is used to scale from individual level to the cohort level. Processes are implemented either at the cohort-level (water balance and photosynthesis) or at the individual level (carbon balance and growth). The model has been designed to be executed on forest inventory plots, but it can be run on other kind of vegetation (e.g. shrublands or crops) provided vegetation is described using the appropriate variables (i.e. diameter and height for trees, percent cover and height for shrubs). The model tries to reproduce the physiological processes that modulate leaf area changes and plant growth rates. Nevertheless, since the model does not implement all processes that may affect growth (such as nutrient availability), maximum growth rates and maximum plant sizes are constrained from user inputs, to ensure that model can be more easily calibrated and validated with observations. Consequently, we believe the model is suited to study variations of plant growth derived from environmental conditions and competition for light and water.</p>
-<p>Leaf area of each plant cohort is divided between live (wether in resistance buds or unfolded leaves) and dead (standing dead trees). Expanded leaf area corresponds to the portion of live leaf area that is unfolded at any given moment through the leaf phenological cycle. Leaf area density of individuals is considered constant across the crown. Sapwood area of individuals is another important state variable. The Pipe model <span class="citation">(Shinozaki et al. <a href="#ref-Shinozaki1964">1964</a>)</span> is adopted to link increments of leaf area, sapwood area and fine root biomass. Ratios of leaf area to sapwood area (Huber value) can vary within species, due to environmental conditions <span class="citation">(Mencuccini and Grace <a href="#ref-Mencuccini1995">1995</a>)</span>. The model assumes a constant, species-specific Huber value, but allows deviations from the pipe model caused by drought-related leaf area reductions.</p>
-<p>Water fluxes, soil water balance and plant photosynthesis processes follow the design of the soil water balance model and this part of the model design will not be repeated here. Plant respiration is calculated at the individual level, by estimating the respiration of leaves, stem and fine root compartments. While fine root respiration is proportional to leaf respiration, and hence to expanded leaf area, stem respiration depends on plant size.</p>
-<p>Growth is determined taking into account environmental limitations on both source (i.e. carbon assimilation) and sink (i.e. carbon investment on plant tissue expansion) <span class="citation">(Fatichi, Leuzinger, and Körner <a href="#ref-Fatichi2014">2014</a>; Guillemot et al. <a href="#ref-Guillemot2015">2015</a>; Körner <a href="#ref-Korner2015">2015</a>)</span>. With respect to carbon availability for growth, the model offers three alternatives. In the first one, carbon available for growth is simply the daily difference between net photosynthesis and maintenance respiration (i.e. no carbon storage). The second alternatives involves a single (fast) carbon storage pool that allows decoupling assimilation from growth. Finally, the third alternative involves two carbon storage pools (‘fast’ and ‘slow’) with a transfer rate between them <span class="citation">(Richardson et al. <a href="#ref-Richardson2013">2013</a>; Dietze et al. <a href="#ref-Dietze2014">2014</a>)</span>, which we assume to be regulated by the need to maintain, as much as possible, a minimum amount of carbon in the fast pool (i.e. for metabolic and osmotic purposes). In the second and third modes, maximum overall C storage capacity is proportional to plant size.</p>
-<p>The LPG model <span class="citation">(Sitch et al. <a href="#ref-Sitch2003">2003</a>)</span> applies different turnover rates for different tissues, but then tries to satisfy the pipe model <span class="citation">(Shinozaki et al. <a href="#ref-Shinozaki1964">1964</a>)</span> by allocating C where it is more limiting. Instead, we assume that baseline leaf and fine root turnover rates are linearly related to conversion from sapwood to heartwood. Similarly to 3-PG <span class="citation">(Landsberg and Waring <a href="#ref-Landsberg1997">1997</a>)</span> we assume that the turnover rate is smallest for young plants, and it increases up to a maximum value. The model assumes that plants cannot suffer from cavitation if the leaf water potential is large enough for growth to occur (i.e. if cell turgidity is large enough for cell elongation). Similarly, it also assumes that growth stops before cavitation starts during drought events. When sapwood area reduction occurs, this not only reduces leaf area, but also decreases the amount of fast C reserves available for future growth. Thus it is assumed that parts of the plant are effectively disconnected.</p>
-<p>Tree structural variables are updated as in forest gap models <span class="citation">(Lindner, Sievänen, and Pretzsch <a href="#ref-Lindner1997">1997</a>)</span>.</p>
-</div>
-<div id="state-variables-2" class="section level2">
-<h2><span class="header-section-number">14.2</span> State variables</h2>
-</div>
-<div id="process-scheduling-2" class="section level2">
-<h2><span class="header-section-number">14.3</span> Process scheduling</h2>
-<p>Every day the growth model first updates the expanded leaf area of living plants according to the phenology of species and the day of the year. Then the model performs soil water balance, transpiration and photosynthesis calculations by calling the soil water balance submodel. After dealing with water fluxes and photosynthesis, the model determines the amount of respiratory biomass, the maximum storage value per individual and maintenance respiration at the individual level. The comparison between photosynthesis and respiration leads to an amount of carbon available for growth (if no carbon pools are considered) or a change in the amount of fast carbon storage pool (if one or two carbon pools are considered). After that, the model determines variations in sapwood area, dead leaf area and live leaf area, which can originate due to conversion from sapwood to heartwood, growth or drought-induced cavitation. If two carbon storage pools are considered, at the end of the day the model determines the direction and amount of carbon transfer between them. Once a year (or by the end of the simulated period) the model translates sapwood area growth into structural variables (i.e., plant height, tree DBH, tree crown ratio and shrub cover).</p>
-<div id="water-balance-plant-transpiration-and-photosynthesis" class="section level3">
-<h3><span class="header-section-number">14.3.1</span> Water balance, plant transpiration and photosynthesis</h3>
-<p>The growth model calls the soil water balance model as a submodel to perform soil water balance and photosynthesis calculations. We only summarize the steps here. The submodel first increases soil moisture due to precipitation, accounting for canopy interception loss, surface runoff and deep drainage. To calculate water losses due to transpiration, the submodel acts differently depending on whether transpiration mode is set to ‘Granier’ or ‘Sperry’. Generally speaking, though, the submodel determines stomatal conductance of each plant cohort according to the environmental conditions (i.e. light, leaf temperature, water vapor deficit and soil moisture) and this leads to an estimation of transpiration and net photosynthesis. The submodel then decreases water content due to bare soil evaporation, and plant transpiration, which completes the daily water balance.</p>
-<p>Among other outputs, the soil water balance submodel provides values of leaf water potential <span class="math inline">\(\Psi_{leaf}\)</span> (in MPa) and net photosynthesis calculated at the plant cohort level, <span class="math inline">\(A_n^{coh}\)</span> (in <span class="math inline">\(g C · m^{-2} · day^{-1}\)</span>). <span class="math inline">\(\Psi_{leaf}\)</span> is used in the growth model to modulate drought effects on growth and leaf area losses (see below), whereas <span class="math inline">\(A_n\)</span> is obviously needed to determine carbon balance and growth. Since carbon balance is calculated at the individual level, <span class="math inline">\(A_n^{coh}\)</span> needs to be scaled to net photosynthesis per individual (in <span class="math inline">\(g C · ind^{-1} · day^{-1}\)</span>) using:
+<div id="radiationbalance" class="section level1">
+<h1><span class="header-section-number">Chapter 9</span> Radiation balance</h1>
+<p>The following subsection detail the calculation of radiation components of the energy balance equations.</p>
+<div id="shortwaveradiationcanopyabs" class="section level2">
+<h2><span class="header-section-number">9.1</span> Shortwave radiation absorbed by the canopy</h2>
+<p>The canopy is divided into vertical layers (whose size is determined by the control parameter ), and the expanded and dead leaf area index of each cohort within each layer is determined. Let <span class="math inline">\(n\)</span> be the number of canopy layers. And let <span class="math inline">\(LAI_{i,j}^{all} = LAI_{i,j}^{\phi}+LAI_{i,j}^{dead}\)</span> be the leaf area index of cohort <span class="math inline">\(i\)</span> in layer <span class="math inline">\(j\)</span>. Furthermore, it is generally accepted that sunlit and shade leaves need to be treated separately <span class="citation">(De Pury and Farquhar <a href="#ref-DePury1997">1997</a>)</span>. This separation is necessary because photosynthesis of shade leaves has an essentially linear response to irradiance, while photosynthesis of leaves in sunflecks is often light saturated and independent of irradiance.</p>
+<p>The average irradiance reaching the top of each canopy layer <span class="math inline">\(j\)</span> is calculated separately for direct beam and diffuse radiation:
+<span class="math display">\[\begin{eqnarray}
+I_{beam,j} &amp;=&amp; (1 - \gamma) \cdot I_{beam} \cdot \exp\left[ \sum_{h=j+1}^{n}{\sum_{i}^{c}{-k_{b,i}\cdot \alpha_i^{0.5}\cdot LAI^{all}_{i,h}}}\right]\\
+I_{dif,j} &amp;=&amp; (1 - \gamma) \cdot I_{dif} \cdot \exp\left[ \sum_{h=j+1}^{n}{\sum_{i}^{c}{-k_{d,i}\cdot \alpha_i^{0.5}\cdot LAI^{all}_{i,h}}}\right]
+\end{eqnarray}\]</span>
+where <span class="math inline">\(I_{beam}\)</span> and <span class="math inline">\(I_{dif}\)</span> are the direct and diffuse irrradiance at the top of the canopy, <span class="math inline">\(\gamma\)</span> is the leaf reflectance (<span class="math inline">\(\gamma_{PAR} = 0.04\)</span>, <span class="math inline">\(\gamma_{SWR} = 0.05\)</span>), <span class="math inline">\(k_{b,i}\)</span> is the extinction coefficient of cohort <span class="math inline">\(i\)</span> for direct light (<span class="math inline">\(k_{b,i} = 0.8\)</span>), <span class="math inline">\(k_{d,i}\)</span> is the extinction coefficient of cohort <span class="math inline">\(i\)</span> for diffuse light (i.e. <span class="math inline">\(k_{PAR}\)</span> or <span class="math inline">\(k_{SWR}\)</span>) and <span class="math inline">\(\alpha_i\)</span> is the absorbance coefficient (<span class="math inline">\(\alpha_{i,PAR} = 0.9\)</span>, <span class="math inline">\(\alpha_{i,SWR} = 0.7\)</span>).</p>
+<p>The proportion of sunlit leaves, i.e. leaves in a canopy layer that the direct light beams (sunflecks) reach is:
 <span class="math display">\[\begin{equation}
-A_{n}^{ind} = 10000 \cdot A_n^{coh} / N
+f_{SL, j}  = \exp\left( \sum_{k&gt;j}^{n}{\sum_{i}^{c}{-k_{b,i} \cdot LAI^{all}_{i,k}}}\right) \cdot \exp\left( \sum_{i}^{c}{-k_{b,i} \cdot 0.5\cdot LAI^{all}_{i,j}}\right)
 \end{equation}\]</span>
-where <span class="math inline">\(N\)</span> is the density of individuals per hectare.</p>
+As an example we will consider a canopy of one species of LAI = 2, divided into ten layers with constant leaf density.</p>
+<p>This canopy definition leads to a percentage of the above-canopy irradiance reaching each layer <span class="citation">(Anten and Bastiaans <a href="#ref-Anten2016">2016</a>)</span>. Extinction of direct radiation also defines the proportion of leaves of each layer that are affected by sunflecks (i.e. the proportion of sunlit leaves).</p>
+<p><img src="medfatebook_files/figure-html/unnamed-chunk-9-1.png" width="768" /></p>
+<p>The amount of absorved diffuse radiation per leaf area unit of cohort <span class="math inline">\(i\)</span> within a given canopy layer <span class="math inline">\(j\)</span> is calculated as:
+<span class="math display">\[\begin{equation}
+I_{dif,i,j} = I_{dif,j} \cdot k_{d,i} \cdot \alpha_i^{0.5} \exp\left[ \sum_{h}^{c}{-k_{d,h}\cdot \alpha_h^{0.5}\cdot 0.5\cdot LAI^{all}_{h,j}}\right]
+\end{equation}\]</span></p>
+<p>The amount of absorved scattered beam radiation per leaf area unit of cohort <span class="math inline">\(i\)</span> within a given canopy layer <span class="math inline">\(j\)</span> is calculated as:
+<span class="math display">\[\begin{equation}
+% \begin{split}
+I_{sca,i,j} = I_{b,j} \cdot k_{b,i} \left( \alpha_i^{0.5}\cdot \exp \left( \sum_{h}^{c}{-k_{b,h}\cdot \alpha_h\cdot 0.5\cdot LAI^{all}_{h,i}}\right) 
+-\frac{\alpha_i}{(1-\gamma)}\cdot \exp\left( \sum_{h}^{c}{-k_{b,h}\cdot 0.5\cdot LAI^{all}_{h,i}}\right) \right)
+% \end{split}
+\end{equation}\]</span></p>
+<p>Finally, the direct radiation absorbed by a unit of sunlit leaf area of cohort <span class="math inline">\(i\)</span> in a canopy layer <span class="math inline">\(j\)</span> does not depend on the position of the canopy layer and is:
+<span class="math display">\[\begin{equation}
+I_{dir,i,j} = I_{beam} \cdot \alpha_i \cdot 0.5/\sin{\beta}
+\end{equation}\]</span>
+where <span class="math inline">\(\beta\)</span> is the solar elevation angle, which changes throughout the day. The amount of light absorbed by shaded/sunlit foliage of cohort <span class="math inline">\(i\)</span> in layer <span class="math inline">\(j\)</span> per leaf area unit (<span class="math inline">\(I_{SH,i,j}\)</span> and <span class="math inline">\(I_{SL,i,j}\)</span>, respectively) is:
+<span class="math display">\[\begin{eqnarray}
+I_{SH,i,j} &amp;=&amp; I_{dif,i,j} + I_{sca,i,j} \\
+I_{SL,i,j} &amp;=&amp; I_{dif,i,j} + I_{sca,i,j} + I_{dir,i,j}
+\end{eqnarray}\]</span>
+The total amount of light absorbed by shaded/sunlit foliage of cohort <span class="math inline">\(i\)</span> per ground area unit is found by taking into account the proportion of sunlit foliage:
+<span class="math display">\[\begin{eqnarray}
+\Phi_{SH,i,j} &amp;=&amp; I_{SH,i,j}\cdot (1 - f_{SL,j}) \cdot LAI^{\phi}_{i,j}\\
+\Phi_{SL,i,j} &amp;=&amp; I_{SL,i,j}\cdot f_{SL,j} \cdot LAI^{\phi}_{i,j}
+\end{eqnarray}\]</span></p>
 </div>
+<div id="shortwaveradiationsoilabs" class="section level2">
+<h2><span class="header-section-number">9.2</span> Shortwave radiation absorbed by the soil</h2>
+<p>The instantaneous shortwave radiation reaching the soil is calculated separately for direct beam and diffuse radiation:
+<span class="math display">\[\begin{eqnarray}
+K_{beam, soil} &amp;=&amp;  K_{beam} \cdot \exp\left[ \sum_{h=j+1}^{n}{\sum_{i}^{c}{-k_{b,i}\cdot \alpha_i^{0.5} \cdot LAI^{all}_{i,h}}}\right]\\
+K_{dif, soil} &amp;=&amp; K_{dif} \cdot \exp\left[ \sum_{h=j+1}^{n}{\sum_{i}^{c}{-k_{d,i}\cdot LAI^{all}_{i,h}}}\right]
+\end{eqnarray}\]</span>
+where <span class="math inline">\(K_{beam}\)</span> and <span class="math inline">\(K_{dif}\)</span> are the direct and diffuse irrradiance at the top of the canopy, <span class="math inline">\(k_{b,i}\)</span> is the extinction coefficient of cohort <span class="math inline">\(i\)</span> for direct light (<span class="math inline">\(k_{b,i} = 0.8\)</span>) and <span class="math inline">\(k_{d,i}\)</span> is the extinction coefficient of cohort <span class="math inline">\(i\)</span> for diffuse SWR. From these, the SWR absorbed by the soil is found by:
+<span class="math display">\[\begin{equation}
+K_{abs,sa} = (1 - \gamma_{SWR, soil})\cdot (K_{beam, soil} + K_{dif, soil})
+\end{equation}\]</span>
+where <span class="math inline">\(\gamma_{SWR, soil} = 0.10\)</span> is the SWR reflectance (10% albedo) of the soil. LWR is treated in the same way as diffuse SWR. The instantaneous LWR reaching the soil is:
+<span class="math display">\[\begin{equation}
+L_{abs,sa} = (1 - \gamma_{LWR, soil})\cdot L_{a} \cdot \exp\left[ \sum_{h=j+1}^{n}{\sum_{i}^{c}{-k_{LWR}\cdot LAI^{all}_{i,h}}}\right]
+\end{equation}\]</span>
+where <span class="math inline">\(L_a\)</span> is the atmosphere longwave irradiance, <span class="math inline">\(k_{LWR} = 0.8\)</span> is the extinction coefficient for LWR and <span class="math inline">\(\gamma_{LWR, soil} = 0.05\)</span> is LWR soil reflectance (5% albedo) of the soil.</p>
 </div>
-<div id="model-input" class="section level2">
-<h2><span class="header-section-number">14.4</span> Model input</h2>
-<div id="vegetation-state-variables-and-parameters" class="section level3">
-<h3><span class="header-section-number">14.4.1</span> Vegetation state variables and parameters</h3>
-<p>Vegetation in the stand is described using a set of plant cohorts, described in an object of class <code>growthInput</code>. This function assembles all parameters needed for the simulation of a given stand in a single list. Model parameters are grouped by category. Regarding physical aboveground description of the stand, each plant cohort is defined by its species identity (<span class="math inline">\(SP\)</span>; with R name [<code>SP</code>]). In addition, each cohort needs to be defined regarding the following state variables:</p>
-<ul>
-<li><span class="math inline">\(N\)</span> [<code>N</code>]: The density of individuals (in <span class="math inline">\(ind · ha^{-1}\)</span>).</li>
-<li><span class="math inline">\(DBH\)</span> [<code>DBH</code>]: Tree diameter at breast height (in cm).</li>
-<li><span class="math inline">\(Cover\)</span> [<code>Cover</code>]: Shrub percent cover (in %).</li>
-<li><span class="math inline">\(H\)</span> [<code>H</code>]: Total tree or shrub height (in cm).}</li>
-<li><span class="math inline">\(CR\)</span> [<code>CR</code>]: Crown ratio (i.e. the ratio between crown length and total height).}</li>
-<li><span class="math inline">\(LAI^{live}\)</span> [<code>LAI_live</code>]: Live leaf area index (one-side live leaf area of plants in the cohort per surface area of the stand) (in m<span class="math inline">\(^2\)</span>·m<span class="math inline">\(^{-2}\)</span>).}</li>
-<li><span class="math inline">\(LAI^{\phi}\)</span> [<code>LAI_expanded</code>]: Expanded leaf area index (one-side expanded leaf area of plants in the cohort per surface area of the stand) (in m<span class="math inline">\(^2\)</span>·m<span class="math inline">\(^{-2}\)</span>).}</li>
-<li><span class="math inline">\(LAI^{dead}\)</span> [<code>LAI_dead</code>]: Dead leaf area index (one-side dead leaf area of plants in the cohort per surface area of the stand) (in m<span class="math inline">\(^2\)</span>·m<span class="math inline">\(^{-2}\)</span>).}</li>
-<li><span class="math inline">\(LAI^{predrought}\)</span> [<code>LAI_predrought</code>]: Live leaf area index before the current drought started (one-side dead leaf area of plants in the cohort per surface area of the stand) (in m<span class="math inline">\(^2\)</span>·m<span class="math inline">\(^{-2}\)</span>).}</li>
-<li><span class="math inline">\(SA\)</span> [<code>SA</code>]: Area of functional sapwood per individual (in cm<span class="math inline">\(^2\)</span>·ind<span class="math inline">\(^{-1}\)</span>).}</li>
-<li><span class="math inline">\(C_{fast}\)</span> [<code>fastCstorage</code>]: Amount of C in the fast carbon storage pool (in g C·ind<span class="math inline">\(^{-1}\)</span>).}</li>
-<li><span class="math inline">\(C_{slow}\)</span> [<code>slowCstorage</code>]: Amount of C in the slow carbon storage pool (in g C·ind<span class="math inline">\(^{-1}\)</span>).}</li>
-</ul>
-<p>Excepting <span class="math inline">\(SP\)</span> (species identity) and <span class="math inline">\(N\)</span> (density), the remaining aboveground state variables are modified during growth simulations. Belowground parameters are the following:</p>
-<ul>
-<li><span class="math inline">\(Z\)</span> [<code>Z</code>]: The rooting depth (in cm).}</li>
-<li><span class="math inline">\(V\)</span> [<code>V</code>]: A matrix with the proportion of fine roots in each soil layer.}</li>
-</ul>
-<p>Additional belowground variables are included if `transpirationMode = “Complex”}. These, and the parameters needed for water balance calculations are described in vignette ‘’.</p>
-<p>The following physiological parameters are needed for growth calculations:</p>
-<ul>
-<li><span class="math inline">\(SLA\)</span> [<code>SLA</code>]: Specific leaf area (m<span class="math inline">\(^2\)</span>·kg<span class="math inline">\(^{-1}\)</span>).</li>
-<li><span class="math inline">\(Hv\)</span> [<code>Al2As</code>]: Huber value. Leaf area to sapwood area ratio (in m<span class="math inline">\(^2\)</span>·m<span class="math inline">\(^{-2}\)</span>).}</li>
-<li><span class="math inline">\(W_{dens}\)</span> [<code>WoodDens</code>]: Wood density (at 0% humidity) (in g·cm<span class="math inline">\(^{-3}\)</span>).}</li>
-<li><span class="math inline">\(W_{C}\)</span> [<code>WoodC</code>]: Wood carbon content in relation to dry weight (in g·g<span class="math inline">\(^{-1}\)</span>).}</li>
-<li><span class="math inline">\(C_{p,\max}\)</span> [<code>Cstoragepmax</code>]: Maximum storage capacity, expressed as C per total respiratory C (in gC·gC<span class="math inline">\(^{-1}\)</span>).</li>
-<li><span class="math inline">\(RGR_{\max}\)</span> [<code>RGRmax</code>]: Maximum daily relative growth rate (in sapwood area basis) (in cm<span class="math inline">\(^2\)</span>·cm<span class="math inline">\(^{-2}\)</span>).</li>
-</ul>
-<p>Another set of parameters is needed to transform changes in sapwood area and leaf area to changes in the structural variables such as tree height, tree crown ratio or shrub cover:</p>
-<ul>
-<li><span class="math inline">\(H_{\max}\)</span> [<code>Hmax</code>]: Maximum plant height (in cm).</li>
-<li><span class="math inline">\(f_{HD,\min}\)</span>, <span class="math inline">\(f_{HD,\max}\)</span> [<code>fHDmin},</code>fHDmax`]: Minimum and maximum values of the height-diameter ratio (in cm·cm<span class="math inline">\(^{-1}\)</span>).</li>
-<li><span class="math inline">\(Z_{\max}\)</span> [<code>Zmax</code>]: Maximum rooting depth (in mm).</li>
-<li><span class="math inline">\(a_{ash}\)</span> [<code>Aash</code>]: Regression coefficient for the quadratic relationship between shrub height and shrub area.</li>
-<li><span class="math inline">\(a_{bsh}\)</span>, <span class="math inline">\(b_{bsh}\)</span> [<code>Absh</code>, <code>Bbsh</code>]: Allometric coefficients relating crown phytovolume with dry weight of shrub individuals.</li>
-<li><span class="math inline">\(CR\)</span> [<code>cr</code>]: Ratio between crown length and total height (constant value for shrubs).</li>
-<li><span class="math inline">\(r_{6.35}\)</span> [<code>r635</code>]: Ratio between the dry weight of leaves plus branches and the dry weight of leaves alone for branches of 6.35 mm of diameter.</li>
-<li><span class="math inline">\(a_{cr}\)</span>, <span class="math inline">\(b_{1cr}\)</span>, <span class="math inline">\(b_{2cr}\)</span>, <span class="math inline">\(b_{3cr}\)</span>, <span class="math inline">\(c_{1cr}\)</span>, <span class="math inline">\(c_{2cr}\)</span> [<code>B1cr</code>, <code>B2cr</code>, <code>B3cr</code>, <code>C1cr</code>, <code>C2cr</code>]: Regression coefficients used to update the crown ratio of trees.</li>
-<li><span class="math inline">\(a_{cw}\)</span>, <span class="math inline">\(b_{cw}\)</span> [<code>Acw</code>, <code>Bcw</code>]: Regression coefficients used to calculate the crown width of trees (as intermediary step to obtain the crown ratio).</li>
-</ul>
-</div>
-<div id="metereological-input" class="section level3">
-<h3><span class="header-section-number">14.4.2</span> Metereological input</h3>
-<p>Weather input data must include variables calculated at the <strong>daily</strong> scale. The variables required by function <code>growth()</code> depend on the transpiration mode, similarly to function <code>spwb()</code>. We recommend meteorological input to be generated using package <strong>meteoland</strong> <span class="citation">(De Cáceres et al. <a href="#ref-DeCaceres2018">2018</a>)</span>.</p>
-</div>
-</div>
-<div id="model-output-2" class="section level2">
-<h2><span class="header-section-number">14.5</span> Model output</h2>
+<div id="longwaveradiationexchange" class="section level2">
+<h2><span class="header-section-number">9.3</span> Longwave soil-canopy radiation exchange</h2>
+<p>Longwave radiation (LWR) emmited by a surface at the canopy temperature <span class="math inline">\(T_{can}\)</span> would be:
+<span class="math display">\[\begin{equation}
+L_{em} = 0.95 \cdot \sigma \cdot (T_{can} + 273.16)^{4.0}
+\end{equation}\]</span>
+where <span class="math inline">\(0.95\)</span> is emissivity and <span class="math inline">\(\sigma = 5.67 \cdot 10^{-8.0} Wm^{-2}\)</span> is the Stephan-Boltzmann constant. However, the canopy may only partially cover the soil surface, so the value must be reduced by the proportion of the canopy layer actually exchanging energy. We take this as the proportion between atmospheric and absorbed LWR:
+<span class="math display">\[\begin{eqnarray}
+p_{exch} &amp;=&amp; \frac{L_{abs,ca}}{L_a} \\
+L_{em, c} &amp;=&amp; p_{exch} \cdot L_{em}
+\end{eqnarray}\]</span>
+<span class="math inline">\(L_{em, c}\)</span> is discounted twice from the canopy energy balance: as losses to the atmosphere and losses to the soil.</p>
+<p>LWR emmited by the soil is calculated from the temperature of the first soil layer:
+<span class="math display">\[\begin{equation}
+L_{em, s} = 0.95 \cdot \sigma \cdot (T_{soil} + 273.16)^{4.0}
+\end{equation}\]</span></p>
+<p>Again, the canopy only absorbs part of this radiation, the remaining going to the atmosphere:</p>
+<span class="math display">\[\begin{equation}
+L_{abs, cs} = p_{exch} \cdot L_{em,s}
+\end{equation}\]</span>
 
 </div>
 </div>
 <h3>Bibliography</h3>
 <div id="refs" class="references">
-<div id="ref-DeCaceres2018">
-<p>De Cáceres, Miquel, Nicolas Martin-StPaul, Marco Turco, Antoine Cabon, and Victor Granda. 2018. “Estimating daily meteorological data and downscaling climate models over landscapes.” <em>Environmental Modelling &amp; Software</em> 108 (August). Elsevier:186–96. <a href="https://doi.org/10.1016/j.envsoft.2018.08.003" class="uri">https://doi.org/10.1016/j.envsoft.2018.08.003</a>.</p>
+<div id="ref-Anten2016">
+<p>Anten, Niels P R, and Lammert Bastiaans. 2016. “The use of canopy models to analyze light competition among plants.” In <em>Canopy Photosynthesis: From Basics to Application</em>, edited by K. Hikosaka, Ülo Niinemets, and Niels P R Anten, 379–98. Springer.</p>
 </div>
-<div id="ref-Dietze2014">
-<p>Dietze, Michael C, Anna Sala, Mariah S Carbone, Claudia I Czimczik, Joshua A Mantooth, Andrew D Richardson, and Rodrigo Vargas. 2014. “Nonstructural Carbon in Woody Plants.” <em>Annual Review of Plant Biology</em> 65 (1):667–87. <a href="https://doi.org/10.1146/annurev-arplant-050213-040054" class="uri">https://doi.org/10.1146/annurev-arplant-050213-040054</a>.</p>
-</div>
-<div id="ref-Fatichi2014">
-<p>Fatichi, Simone, Sebastian Leuzinger, and Christian Körner. 2014. “Moving beyond photosynthesis: From carbon source to sink-driven vegetation modeling.” <em>New Phytologist</em> 201 (4):1086–95. <a href="https://doi.org/10.1111/nph.12614" class="uri">https://doi.org/10.1111/nph.12614</a>.</p>
-</div>
-<div id="ref-Guillemot2015">
-<p>Guillemot, J., N. K. Martin-Stpaul, E. Dufrêne, C. François, K. Soudani, J. M. Ourcival, and N. Delpierre. 2015. “The dynamic of the annual carbon allocation to wood in European tree species is consistent with a combined source-sink limitation of growth: Implications for modelling.” <em>Biogeosciences</em> 12 (9):2773–90. <a href="https://doi.org/10.5194/bg-12-2773-2015" class="uri">https://doi.org/10.5194/bg-12-2773-2015</a>.</p>
-</div>
-<div id="ref-Korner2015">
-<p>Körner, Christian. 2015. “Paradigm shift in plant growth control.” <em>Current Opinion in Plant Biology</em> 25:107–14. <a href="https://doi.org/10.1016/j.pbi.2015.05.003" class="uri">https://doi.org/10.1016/j.pbi.2015.05.003</a>.</p>
-</div>
-<div id="ref-Landsberg1997">
-<p>Landsberg, J.J., and R.H. Waring. 1997. “A generalised model of forest productivity using simplified concepts of radiation-use efficiency, carbon balance and partitioning.” <em>Forest Ecology and Management</em> 95 (3):209–28. <a href="https://doi.org/10.1016/S0378-1127(97)00026-1" class="uri">https://doi.org/10.1016/S0378-1127(97)00026-1</a>.</p>
-</div>
-<div id="ref-Lindner1997">
-<p>Lindner, Marcus, Risto Sievänen, and Hans Pretzsch. 1997. “Improving the simulation of stand structure in a forest gap model.” <em>Forest Ecology and Management</em> 95 (2):183–95. <a href="https://doi.org/10.1016/S0378-1127(96)03967-9" class="uri">https://doi.org/10.1016/S0378-1127(96)03967-9</a>.</p>
-</div>
-<div id="ref-Mencuccini1995">
-<p>Mencuccini, Maurizio, and John Grace. 1995. “Climate influences the leaf area/sapwood area ratio in Scots pine.” <em>Tree Physiology</em> 15 (1):1–10. <a href="https://doi.org/10.1093/treephys/15.1.1" class="uri">https://doi.org/10.1093/treephys/15.1.1</a>.</p>
-</div>
-<div id="ref-Richardson2013">
-<p>Richardson, Andrew D., Mariah S. Carbone, Trevor F. Keenan, Claudia I. Czimczik, David Y. Hollinger, Paula Murakami, Paul G. Schaberg, and Xiaomei Xu. 2013. “Seasonal dynamics and age of stemwood nonstructural carbohydrates in temperate forest trees.” <em>New Phytologist</em> 197 (3):850–61. <a href="https://doi.org/10.1111/nph.12042" class="uri">https://doi.org/10.1111/nph.12042</a>.</p>
-</div>
-<div id="ref-Shinozaki1964">
-<p>Shinozaki, K, K Yoda, K Hozumi, and T Kira. 1964. “A quantitative analysis of plant form - the pipe model theory. I. Basic analysis.” <em>Japanese Journal of Ecology</em> 14:97–105.</p>
-</div>
-<div id="ref-Sitch2003">
-<p>Sitch, S., B. Smith, I. C. Prentice, a. Arneth, a. Bondeau, W. Cramer, J. O. Kaplan, et al. 2003. “Evaluation of ecosystem dynamics, plant geography and terrestrial carbon cycling in the LPJ dynamic global vegetation model.” <em>Global Change Biology</em> 9 (2):161–85. <a href="https://doi.org/10.1046/j.1365-2486.2003.00569.x" class="uri">https://doi.org/10.1046/j.1365-2486.2003.00569.x</a>.</p>
+<div id="ref-DePury1997">
+<p>De Pury, D G G, and Graham D Farquhar. 1997. “Simple scaling of photosynthesis from leaves to canopies without the errors of big-leaf models.” <em>Plant, Cell and Environment</em> 20 (5):537–57. <a href="https://doi.org/10.1111/j.1365-3040.1997.tb00466.x" class="uri">https://doi.org/10.1111/j.1365-3040.1997.tb00466.x</a>.</p>
 </div>
 </div>
             </section>
@@ -508,8 +482,8 @@ where <span class="math inline">\(N\)</span> is the density of individuals per h
           </div>
         </div>
       </div>
-<a href="closecanopysoilenergybalance.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="plant-compartments-respiration-and-carbon-balance.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="subdailytemplight.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="planthydraulics.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

@@ -1,4 +1,4 @@
-# Subdaily temperature and light variations
+# Subdaily temperature and light variations {#subdailytemplight}
 
 ## Air temperature
 Diurnal above-canopy air temperature ($T_a$) variations are modeled assuming a sinusoidal pattern with $T_a = T_{\min}$ at sunrise and $T_a = (T_{\min}+T_{\max})/2$ at sunset. Air temperature varies linearly between sunset and sunrise [@McMurtrie1990].

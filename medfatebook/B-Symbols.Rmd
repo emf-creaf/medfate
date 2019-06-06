@@ -86,11 +86,11 @@ The following tables list all symbols used in this document, along with their un
 
 | Symbol | Units | R param | Description                        |
 |--------|-------|---------|------------------------------------|
-| $H_v$  | $m^2 \cdot m^{-2}$ | `1/Al2As` | Huber value (ratio of sapwood area to leaf area) |
-|  $d$   | $cm$  | `LeafWidth` | Leaf width |
+| $HV$  | $m^2 \cdot m^{-2}$ | `1/Al2As` | Huber value (ratio of sapwood area to leaf area) |
+|  $LW$   | $cm$  | `LeafWidth` | Leaf width |
 | $SLA$  | $m^2 \cdot kg^{-1}$ | `SLA` | Specific leaf area |
-| $\rho_{leaf}$ | $g \cdot cm^{-3}$ | `LeafDens` | Leaf tissue density |
-| $\rho_{wood}$ | $g \cdot cm^{-3}$ | `WoodDens` | Wood tissue density |
+| $\rho_{leaf}$ | $g \cdot cm^{-3}$ | `LeafDensity` | Leaf tissue density |
+| $\rho_{wood}$ | $g \cdot cm^{-3}$ | `WoodDensity` | Wood tissue density |
 | $\Theta_{sapwood}$ | $m^3 \cdot m^{-3}$ | | Sapwood porosity (volume of empty spaces over total volume) |
 | $\Theta_{leaf}$ | $m^3 \cdot m^{-3}$ | | Leaf porosity (volume of empty spaces over total volume) |
 
@@ -124,20 +124,39 @@ The following tables list all symbols used in this document, along with their un
 | $SE_{soil}$ | $mm$ | | Evaporation supply from the soil |
 | $Es$ | $mm$ | `SoilEvaporation` | Evaporation from the soil surface |
 
+## Energy balance
+
+| Symbol | Units | R param | Description                        |
+|--------|-------|---------|------------------------------------|
+| $K_{abs,ca}$ | $W$ | `SWRcanin` |  Atmosphere shortwave radiation absorbed by the canopy |
+| $K_{abs,sa}$ | $W$ | `SWRsoilin`  |  Atmosphere shortwave radiation absorbed by the soil |
+| $L_{abs,ca}$ | $W$ | `LWRcanin`  |  Atmosphere longwave radiation absorbed by the canopy |
+| $L_{abs,sa}$ | $W$ | `LWRsoilin` |  Atmosphere longwave radiation absorbed by the soil |
+| $L_{abs,cs}$ | $W$ | `LWRsoilcan`|  Longwave radiation emmited by the soil and absorbed by the canopy |
+| $L_{em,c}$ | $W$ | `LWRcanout` |  Longwave radiation emmited by the canopy |
+| $L_{em,s}$ | $W$ | `LWRsoilout`|  Longwave radiation emmited by the soil |
+| $H_{ca}$ | $W$ | `Hcan` |  Convective heat exchange between the canopy and the atmosphere |
+| $H_{cs}$ | $W$ | `Hcansoil` |  Convective heat exchange between the canopy and the soil |
+| $LE_{c}$ | $W$ | `LEcan`| Energy released as latent heat from the canopy towards the atmosphere |
+| $LE_{s}$ | $W$ | `LEsoil` | Energy released as latent heat from the soil towards the atmosphere |
+| $T_{c}$ | $^\circ \mathrm{C}$ | | Canopy temperature |
+| $T_{s}$ | $^\circ \mathrm{C}$ | | Soil temperature |
+| $C_{c}$ | $J \cdot m^{-3} \cdot K^{-1}$ | | Canopy thermal capacity (revise units) |
+| $C_{s}$ | $J \cdot m^{-3} \cdot K^{-1}$ | | Soil thermal capacity |
 
 ## Plant hydraulics
 
 | Symbol | Units | R param | Description                        |
 |--------|-------|---------|------------------------------------|
-| $K_{s,max,ref}$ | $kg \cdot s^{-1} \cdot m^{-1} \cdot MPa^{-1}$ | `Kmax_stemxylem` | Maximum stem sapwood reference conductivity per leaf area unit |
-| $K_{r,max,ref}$ | $kg \cdot s^{-1} \cdot m^{-1} \cdot MPa^{-1}$ | `Kmax_rootxylem` | Maximum root sapwood reference conductivity per leaf area unit |
-| $k_{s, max}$ | $mmol \cdot s^{-1} \cdot m^{-2} \cdot MPa^{-1}$ |  | Maximum whole-stem conductance (per leaf area unit) |
-| $k_{r, max}$ | $mmol \cdot s^{-1} \cdot m^{-2} \cdot MPa^{-1}$ |  | Maximum root conductance (per leaf area unit) |
-| $k_{rh, max}$ | $mmol \cdot s^{-1} \cdot m^{-2} \cdot MPa^{-1}$ |  | Maximum rhizosphere conductance (per leaf area unit) |
-| $k_{l, max}$ | $mmol \cdot s^{-1} \cdot m^{-2} \cdot MPa^{-1}$ | `VCleaf_kmax` | Maximum leaf conductance (per leaf area unit) |
-| $c_l$, $d_l$ | (unitless), MPa | `VCleaf_c`, `VCleaf_d` | Parameters of the vulnerability curve for leaves |
-| $c_r$, $d_r$ | (unitless), MPa | `VCroot_c`, `VCroot_d` | Parameters of the vulnerability curve for root xylem |
-| $c_s$, $d_s$ | (unitless), MPa | `VCstem_c`, `VCstem_d` | Parameters of the vulnerability curve for stem xylem |
+| $K_{stem,max,ref}$ | $kg \cdot s^{-1} \cdot m^{-1} \cdot MPa^{-1}$ | `Kmax_stemxylem` | Maximum stem sapwood reference conductivity per leaf area unit |
+| $K_{root,max,ref}$ | $kg \cdot s^{-1} \cdot m^{-1} \cdot MPa^{-1}$ | `Kmax_rootxylem` | Maximum root sapwood reference conductivity per leaf area unit |
+| $k_{stem, \max}$ | $mmol \cdot s^{-1} \cdot m^{-2} \cdot MPa^{-1}$ |  `VCstem_kmax` | Maximum whole-stem conductance (per leaf area unit) |
+| $k_{root, \max}$ | $mmol \cdot s^{-1} \cdot m^{-2} \cdot MPa^{-1}$ |  `VCroot_kmax` | Maximum root conductance (per leaf area unit) |
+| $k_{rhizo, \max}$ | $mmol \cdot s^{-1} \cdot m^{-2} \cdot MPa^{-1}$ |  | Maximum rhizosphere conductance (per leaf area unit) |
+| $k_{leaf, \max}$ | $mmol \cdot s^{-1} \cdot m^{-2} \cdot MPa^{-1}$ | `VCleaf_kmax` | Maximum leaf conductance (per leaf area unit) |
+| $c_{leaf}$, $d_{leaf}$ | (unitless), MPa | `VCleaf_c`, `VCleaf_d` | Parameters of the vulnerability curve for leaves |
+| $c_{root}$, $d_{root}$ | (unitless), MPa | `VCroot_c`, `VCroot_d` | Parameters of the vulnerability curve for root xylem |
+| $c_{stem}$, $d_{stem}$ | (unitless), MPa | `VCstem_c`, `VCstem_d` | Parameters of the vulnerability curve for stem xylem |
 | $n$, $\alpha$ | | | Texture-specific parameters of the van Genuchten equation |
 | $\Psi$ | MPa | | Water potential in a given water compartment |
 | $\Psi_P$ | MPa | | Turgor water potential in a given water compartment |
@@ -163,8 +182,8 @@ The following tables list all symbols used in this document, along with their un
 | $RWC_{sym}$ | [0-1] | | Relative water content in the symplasm fraction of a tissue |
 | $RWC_{apo}$ | [0-1] | | Relative water content in the apoplasm fraction of a tissue |
 | $V_{segment}$ | $m^3 \cdot m^{-2}$ | | Water capacity of a segment (leaf or stem) |
-| $V_{leaf}$ | $m^3 \cdot m^{-2}$ | | Leaf water capacity per leaf area unit |
-| $V_{sapwood}$ | $m^3 \cdot m^{-2}$ | | Sapwood water capacity per leaf area unit |
+| $V_{leaf}$ | $m^3 \cdot m^{-2}$ | `Vleaf` | Leaf water capacity per leaf area unit |
+| $V_{sapwood}$ | $m^3 \cdot m^{-2}$ | `Vsapwood` | Sapwood water capacity per leaf area unit |
 
 ## Stomatal regulation and photosynthesis
 | Symbol | Units | R param | Description                        |

@@ -69,7 +69,7 @@ Package **medfate** include a number of functions to examine properties of the p
 
 * `plant_*`: Cohort-level information (species name, id, leaf area, height...).
 * `species_*`: Cohort-level attributes aggregated by species (e.g. basal area).
-* `forest_*`: Forest-level attributes (e.g. basal area).
+* `stand_*`: Stand-level attributes (e.g. basal area).
 * `vprofile_*`: Vertical profiles (light, wind, fuel density, leaf area density).
 
 Vegetation functioning and dynamics have strong, but complex, effects on fire hazard. On one hand, growth and death of organs and individuals changes the amount of standing live and dead fuels, as well as downed dead fuels. On the other, day-to-day changes in soil and plant water content changes the physical properties of fuel, notably fuel moisture content. Package **medfate** provides functions to estimate fuel properties and potential fire behaviour in forest inventory plots. Specifically, function `fuel_stratification()` provides a stratification of the stand into understory and canopy strata; and `fuel_FCCS()` calculates fuel characteristics. Function `fuel_cohortFineFMC()` allows obtaining daily fuel moisture content estimates corresponding to the water status of plants, as returned by function `spwb()`. A fire behaviour model is implemented in function `fire_FCCS()` to calculate the intensity of surface fire reaction and the rate of fire spread of surface fires assuming a steady-state fire. Fuel and fire behaviour functions allow obtaining the following: 

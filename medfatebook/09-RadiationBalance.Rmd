@@ -1,7 +1,7 @@
-# Radiation balance
+# Radiation balance {#radiationbalance}
 The following subsection detail the calculation of radiation components of the energy balance equations.
 
-## Shortwave radiation absorbed by the canopy
+## Shortwave radiation absorbed by the canopy {#shortwaveradiationcanopyabs}
 The canopy is divided into vertical layers (whose size is determined by the control parameter \texttt{verticalLayerSize}), and the expanded and dead leaf area index of each cohort within each layer is determined. Let $n$ be the number of canopy layers. And let $LAI_{i,j}^{all} = LAI_{i,j}^{\phi}+LAI_{i,j}^{dead}$ be the leaf area index of cohort $i$ in layer $j$. Furthermore, it is generally accepted that sunlit and shade leaves need to be treated separately [@DePury1997]. This separation is necessary because photosynthesis of shade leaves has an essentially linear response to irradiance, while photosynthesis of leaves in sunflecks is often light saturated and independent of irradiance.
 
 The average irradiance reaching the top of each canopy layer $j$ is calculated separately for direct beam and diffuse radiation:
@@ -87,7 +87,7 @@ The total amount of light absorbed by shaded/sunlit foliage of cohort $i$ per gr
 \Phi_{SL,i,j} &=& I_{SL,i,j}\cdot f_{SL,j} \cdot LAI^{\phi}_{i,j}
 \end{eqnarray}
 
-## Shortwave radiation absorbed by the soil
+## Shortwave radiation absorbed by the soil {#shortwaveradiationsoilabs}
 The instantaneous shortwave radiation reaching the soil is calculated separately for direct beam and diffuse radiation:
 \begin{eqnarray}
 K_{beam, soil} &=&  K_{beam} \cdot \exp\left[ \sum_{h=j+1}^{n}{\sum_{i}^{c}{-k_{b,i}\cdot \alpha_i^{0.5} \cdot LAI^{all}_{i,h}}}\right]\\
@@ -103,7 +103,7 @@ L_{abs,sa} = (1 - \gamma_{LWR, soil})\cdot L_{a} \cdot \exp\left[ \sum_{h=j+1}^{
 \end{equation}
 where $L_a$ is the atmosphere longwave irradiance, $k_{LWR} = 0.8$ is the extinction coefficient for LWR and $\gamma_{LWR, soil} = 0.05$ is LWR soil reflectance (5% albedo) of the soil.
 
-## Longwave soil-canopy radiation exchange
+## Longwave soil-canopy radiation exchange {#longwaveradiationexchange}
 Longwave radiation (LWR) emmited by a surface at the canopy temperature $T_{can}$ would be:
 \begin{equation}
 L_{em} = 0.95 \cdot \sigma \cdot (T_{can} + 273.16)^{4.0}

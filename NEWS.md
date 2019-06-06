@@ -8,6 +8,7 @@
 - 'Stand' data frame output in spwb(), separated from 'WaterBalance'
 - New function 'forest_mapTreeTable', 'forest_mapShrubTable' and 'forest_mapWoodyTables'
 - 'stand_*' functions for stand-level properties
+- No SWR soil absorption when snow pack is present in Sperry's model
 
 # Version 0.8.2
 - Modification of meteoland to better calculate direct/diffuse light on slopes
