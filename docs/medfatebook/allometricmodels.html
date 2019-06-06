@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 18 Allometric models | The medfate reference book</title>
   <meta name="description" content="This is a reference book for models implemented in package medfate." />
-  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 18 Allometric models | The medfate reference book" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 
 
 
-<meta name="date" content="2019-06-05" />
+<meta name="date" content="2019-06-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -49,41 +49,57 @@
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+div.sourceLine, a.sourceLine { display: inline-block; min-height: 1.25em; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; }
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+div.sourceLine, a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource div.sourceLine, .numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource div.sourceLine::before, .numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em; }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; color: #aaaaaa;  padding-left: 4px; }
+@media screen {
+a.sourceLine::before { text-decoration: underline; color: initial; }
+}
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.bn { color: #40a070; } /* BaseN */
+code span.fl { color: #40a070; } /* Float */
+code span.ch { color: #4070a0; } /* Char */
+code span.st { color: #4070a0; } /* String */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.ot { color: #007020; } /* Other */
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.fu { color: #06287e; } /* Function */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code span.cn { color: #880000; } /* Constant */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.im { } /* Import */
+code span.va { color: #19177c; } /* Variable */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.op { color: #666666; } /* Operator */
+code span.bu { } /* BuiltIn */
+code span.ex { } /* Extension */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.at { color: #7d9029; } /* Attribute */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -283,14 +299,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="18.2" data-path="allometricmodels.html"><a href="allometricmodels.html#allometric-relationships"><i class="fa fa-check"></i><b>18.2</b> Allometric relationships</a><ul>
 <li class="chapter" data-level="18.2.1" data-path="allometricmodels.html"><a href="allometricmodels.html#leaf-biomass"><i class="fa fa-check"></i><b>18.2.1</b> Leaf biomass</a></li>
 <li class="chapter" data-level="18.2.2" data-path="allometricmodels.html"><a href="allometricmodels.html#leaf-area-and-lai"><i class="fa fa-check"></i><b>18.2.2</b> Leaf area and LAI</a></li>
-<li class="chapter" data-level="18.2.3" data-path="allometricmodels.html"><a href="allometricmodels.html#crownbaseheight"><i class="fa fa-check"></i><b>18.2.3</b> Crown base height</a></li>
+<li class="chapter" data-level="18.2.3" data-path="allometricmodels.html"><a href="allometricmodels.html#crownbaseheight"><i class="fa fa-check"></i><b>18.2.3</b> Crown vertical dimensions</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="19" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html"><i class="fa fa-check"></i><b>19</b> Fuel characteristics and fire behaviour</a><ul>
 <li class="chapter" data-level="19.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#purpose-1"><i class="fa fa-check"></i><b>19.1</b> Purpose</a></li>
 <li class="chapter" data-level="19.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#input-data-1"><i class="fa fa-check"></i><b>19.2</b> Input data</a><ul>
-<li class="chapter" data-level="19.2.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#forest-inventory-plot-data"><i class="fa fa-check"></i><b>19.2.1</b> Forest inventory plot data</a></li>
-<li class="chapter" data-level="19.2.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#species-specific-parameters"><i class="fa fa-check"></i><b>19.2.2</b> Species-specific parameters</a></li>
+<li class="chapter" data-level="19.2.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#forest-plot-data-1"><i class="fa fa-check"></i><b>19.2.1</b> Forest plot data</a></li>
+<li class="chapter" data-level="19.2.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#species-parameters-3"><i class="fa fa-check"></i><b>19.2.2</b> Species parameters</a></li>
 <li class="chapter" data-level="19.2.3" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#other-inputs"><i class="fa fa-check"></i><b>19.2.3</b> Other inputs</a></li>
 </ul></li>
 <li class="chapter" data-level="19.3" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#fuel-characteristics"><i class="fa fa-check"></i><b>19.3</b> Fuel characteristics</a><ul>
@@ -501,7 +517,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h3><span class="header-section-number">18.2.1</span> Leaf biomass</h3>
 <p>Leaf biomass calculations are done differently for trees and shrub cohorts. They are calculated from <code>forest</code> objects using function <code>plant_foliarBiomass()</code>.</p>
 <p><strong>Tree cohorts</strong></p>
-Foliar biomass for a single tree of cohort <span class="math inline">\(i\)</span> (<span class="math inline">\(FB_{tree,i}\)</span>; in <span class="math inline">\(kg\)</span>) is calculated using:
+<p>Foliar biomass for a single tree of cohort <span class="math inline">\(i\)</span> (<span class="math inline">\(FB_{tree,i}\)</span>; in <span class="math inline">\(kg\)</span>) is calculated using:
 <span class="math display" id="eq:onetreefoliarbiomass">\[\begin{equation}
 FB_{tree,i} = a_{fbt} \cdot DBH_{i}^{b_{fbt}}\cdot e^{c_{fbt}\cdot BAL_i} \cdot DBH_{i}^{d_{fbt} \cdot BA_{sup}}
 \tag{18.1}
@@ -510,9 +526,9 @@ where <span class="math inline">\(DBH_{i}\)</span> is the diameter of the tree (
 <span class="math display" id="eq:treefoliarbiomass">\[\begin{equation}
 FB_{i} = FB_{tree,i}\cdot (N_{i}/10000)
 \tag{18.2}
-\end{equation}\]</span>
+\end{equation}\]</span></p>
 <p><strong>Shrub cohorts</strong></p>
-To calculate the leaf biomass of a shrub cohort, we first determine <span class="math inline">\(A_{sh,i}\)</span>, the area (in <span class="math inline">\(cm^2\)</span>) occupied by one average individual of height <span class="math inline">\(H_{i}\)</span> (in <span class="math inline">\(cm\)</span>), using the quadratic relationship:
+<p>To calculate the leaf biomass of a shrub cohort, we first determine <span class="math inline">\(A_{sh,i}\)</span>, the area (in <span class="math inline">\(cm^2\)</span>) occupied by one average individual of height <span class="math inline">\(H_{i}\)</span> (in <span class="math inline">\(cm\)</span>), using the quadratic relationship:
 <span class="math display">\[\begin{equation}
 A_{sh,i} = a_{ash} \cdot H_{i}^2
 \end{equation}\]</span>
@@ -534,36 +550,41 @@ Foliar biomass (in <span class="math inline">\(kg \cdot m^{-2}\)</span>) can be 
 FB_{i} =  W_{i}/r_{6.35, i}
 \tag{18.4}
 \end{equation}\]</span>
-<p>If not known, <span class="math inline">\(r_{6.35,i}\)</span> can be set to a default value of 2 (equivalent to 50% of weight corresponding to leaves).</p>
+If not known, <span class="math inline">\(r_{6.35,i}\)</span> can be set to a default value of 2 (equivalent to 50% of weight corresponding to leaves).</p>
 </div>
 <div id="leaf-area-and-lai" class="section level3">
 <h3><span class="header-section-number">18.2.2</span> Leaf area and LAI</h3>
-Leaf area index (<span class="math inline">\(LAI\)</span> in <span class="math inline">\(m^2 \cdot m^{-2}\)</span>) of a given cohort <span class="math inline">\(i\)</span> can be calculated from its foliar biomass (in <span class="math inline">\(kg \cdot m^{-2}\)</span>) by using a <em>specific leaf area</em> coefficient (<span class="math inline">\(SLA\)</span>, in <span class="math inline">\(m^2 \cdot kg^{-1}\)</span>) that in <strong>medfate</strong> is species-specific:
+<p>Leaf area index (<span class="math inline">\(LAI\)</span> in <span class="math inline">\(m^2 \cdot m^{-2}\)</span>) of a given cohort <span class="math inline">\(i\)</span> can be calculated from its foliar biomass (in <span class="math inline">\(kg \cdot m^{-2}\)</span>) by using a <em>specific leaf area</em> coefficient (<span class="math inline">\(SLA\)</span>, in <span class="math inline">\(m^2 \cdot kg^{-1}\)</span>) that in <strong>medfate</strong> is species-specific:
 <span class="math display">\[\begin{equation}
 LAI_{i} =  FB_{i} \cdot SLA
 \end{equation}\]</span>
 The leaf area (<span class="math inline">\(LA\)</span> in <span class="math inline">\(m^2\)</span>) of an individual of the cohort is found by dividing it by plant density (<span class="math inline">\(N_i\)</span>, in <span class="math inline">\(ind.\cdot ha^{-1}\)</span>) and multiplying by 10000 <span class="math inline">\(m^2 \cdot ha^{-1}\)</span>:
 <span class="math display">\[\begin{equation}
 LA_{i} =  10000 \cdot LAI_{i} / N_{i}
-\end{equation}\]</span>
+\end{equation}\]</span></p>
 <p>LAI values are calculated from <code>forest</code> objects using function <code>plant_LAI()</code>.</p>
 </div>
 <div id="crownbaseheight" class="section level3">
-<h3><span class="header-section-number">18.2.3</span> Crown base height</h3>
-In the case of shrubs the crown ratio is an input (species-specific) parameter (<span class="math inline">\(cr\)</span>). In the case of trees, the crown ratio is modelled as a function of tree size and stand competition, following a modification of the logistic equation of <span class="citation">Hasenauer and Monserud (<a href="#ref-Hasenauer1996">1996</a>)</span> :
+<h3><span class="header-section-number">18.2.3</span> Crown vertical dimensions</h3>
+<p>Crown base height, i.e. the height were the first living branch of trees or shrubs occurs, is an important parameter to know the vertical distribution of leaves (see section <a href="leafphenologylight.html#leafdistribution">4.2</a>). Crown base height of a plant cohort <span class="math inline">\(i\)</span> (i.e., <span class="math inline">\(H_{crown,i}\)</span>, in <span class="math inline">\(cm\)</span>) is related to the total height of the cohort (<span class="math inline">\(H_i\)</span>, in <span class="math inline">\(cm\)</span>) and its crown ratio (<span class="math inline">\(CR_i\)</span>), which is the ratio between crown length and plant height:
+<span class="math display" id="eq:CrownHeight">\[\begin{equation}
+H_{crown,i} = (1 - CR_i) \cdot H_i
+\tag{18.5}
+\end{equation}\]</span>
+In the case of shrubs the crown ratio <span class="math inline">\(CR_i\)</span> is normally an input (species-specific) parameter (<span class="math inline">\(cr\)</span>). In the case of trees, the crown ratio is modelled as a function of tree size and stand competition, following a modification of the logistic equation of <span class="citation">Hasenauer and Monserud (<a href="#ref-Hasenauer1996">1996</a>)</span> :
 <span class="math display" id="eq:treecrownratio">\[\begin{equation}
 CR_i = \frac{1}{1+e^{-(a_{cr}+b_{1cr}\cdot HD_i +b_{2cr} \cdot (H_i/100)+b_{3cr} \cdot DBH_i^2+c_{1cr} \cdot BAL_i + c_{2cr} \cdot ln(CCF_i))}}
-\tag{18.5}
+\tag{18.6}
 \end{equation}\]</span>
 where <span class="math inline">\(HD_i = H_i/(100\cdot DBH_i)\)</span> is the height to diameter ratio (in <span class="math inline">\(m\cdot cm^{-1}\)</span>), <span class="math inline">\(H_i\)</span> is the tree height, <span class="math inline">\(DBH_i\)</span> is the diameter, <span class="math inline">\(CCF_i\)</span> is the crown competition factor and <span class="math inline">\(a_{cr}\)</span>, <span class="math inline">\(b_{1cr}\)</span>, <span class="math inline">\(b_{2cr}\)</span>, <span class="math inline">\(b_{3cr}\)</span>, <span class="math inline">\(c_{1cr}\)</span> and <span class="math inline">\(c_{2cr}\)</span> are species-specific parameters. The crown competition factor is in turn calculated using <span class="citation">(Krajicek, Brinkman, and Gingrich <a href="#ref-Krajicek1961">1961</a>)</span>:
 <span class="math display">\[\begin{equation}
-CCF_i = \sum_{i}{N_i \cdot MCA_i}= \sum_{i}{N_i \cdot \pi \cdot (CW_i/2)^2/100}
+CCF_i = \sum_{i}{N_i \cdot \pi \cdot (CW_i/2)^2/100}
 \end{equation}\]</span>
-where <span class="math inline">\(N_i\)</span> is the tree density, <span class="math inline">\(MCA_i\)</span> is the maximum crown area (in percent of unit area) and <span class="math inline">\(CW_i\)</span> is the crown width (in m) assuming an open-grown tree, estimated from an allometric relationship with tree diameter:
+where <span class="math inline">\(N_i\)</span> is the tree density and <span class="math inline">\(CW_i\)</span> is the crown width (in <span class="math inline">\(m\)</span>) assuming an open-grown tree, estimated from an allometric relationship with tree diameter:
 <span class="math display">\[\begin{equation}
 CW_i = a_{cw}\cdot DBH_i^{b_{cw}} 
 \end{equation}\]</span>
-<p>where again <span class="math inline">\(a_{cw}\)</span> and <span class="math inline">\(b_{cw}\)</span> are species-specific parameters.</p>
+where again <span class="math inline">\(a_{cw}\)</span> and <span class="math inline">\(b_{cw}\)</span> are species-specific parameters.</p>
 <p>Crown ratios can be calculated from forest objects using function <code>plant_crownRatio()</code>. Similar calculations are performed to estimate crown length and crown base height, with functions <code>plant_crownLength()</code> and <code>plant_crownBaseHeight()</code>, respectively.</p>
 
 </div>
@@ -572,10 +593,10 @@ CW_i = a_{cw}\cdot DBH_i^{b_{cw}}
 <h3>Bibliography</h3>
 <div id="refs" class="references">
 <div id="ref-Hasenauer1996">
-<p>Hasenauer, Hubert, and Robert A. Monserud. 1996. “A crown ratio model for Austrian Forests.” <em>Forest Ecology and Management</em> 84 (1-3): 49–60. doi:<a href="https://doi.org/10.1016/0378-1127(96)03768-1">10.1016/0378-1127(96)03768-1</a>.</p>
+<p>Hasenauer, Hubert, and Robert A. Monserud. 1996. “A crown ratio model for Austrian Forests.” <em>Forest Ecology and Management</em> 84 (1-3):49–60. <a href="https://doi.org/10.1016/0378-1127(96)03768-1" class="uri">https://doi.org/10.1016/0378-1127(96)03768-1</a>.</p>
 </div>
 <div id="ref-Krajicek1961">
-<p>Krajicek, Je, Ka Brinkman, and Sf Gingrich. 1961. “Crown competition-a measure of density.” <em>Forest Science</em> 7 (1): 35–42.</p>
+<p>Krajicek, Je, Ka Brinkman, and Sf Gingrich. 1961. “Crown competition-a measure of density.” <em>Forest Science</em> 7 (1):35–42.</p>
 </div>
 </div>
             </section>
@@ -634,7 +655,7 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "";
+    var src = "true";
     if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');

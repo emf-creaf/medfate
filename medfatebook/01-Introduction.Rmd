@@ -20,13 +20,13 @@ install.packages("medfate")
 Users can also download and install the latest stable versions GitHub as follows (required package `devtools` should be installed/updated first):
 
 ```{r installation, eval = FALSE}
-devtools::install_github("miquelcaceres/medfate")
+devtools::install_github("vegmod/medfate")
 ```
 
 When installing from GitHub, may need to force the installation of package vignettes, by using: 
 
 ```{r installation vignettes, eval = FALSE}
-devtools::install_github("miquelcaceres/medfate", 
+devtools::install_github("vegmod/medfate", 
                          build_opts = c("--no-resave-data", "--no-manual"))
 ```
 

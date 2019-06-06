@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 15 Plant compartments, respiration and carbon balance | The medfate reference book</title>
   <meta name="description" content="This is a reference book for models implemented in package medfate." />
-  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 15 Plant compartments, respiration and carbon balance | The medfate reference book" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 
 
 
-<meta name="date" content="2019-06-05" />
+<meta name="date" content="2019-06-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -49,41 +49,57 @@
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+div.sourceLine, a.sourceLine { display: inline-block; min-height: 1.25em; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; }
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+div.sourceLine, a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource div.sourceLine, .numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource div.sourceLine::before, .numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em; }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; color: #aaaaaa;  padding-left: 4px; }
+@media screen {
+a.sourceLine::before { text-decoration: underline; color: initial; }
+}
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.bn { color: #40a070; } /* BaseN */
+code span.fl { color: #40a070; } /* Float */
+code span.ch { color: #4070a0; } /* Char */
+code span.st { color: #4070a0; } /* String */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.ot { color: #007020; } /* Other */
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.fu { color: #06287e; } /* Function */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code span.cn { color: #880000; } /* Constant */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.im { } /* Import */
+code span.va { color: #19177c; } /* Variable */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.op { color: #666666; } /* Operator */
+code span.bu { } /* BuiltIn */
+code span.ex { } /* Extension */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.at { color: #7d9029; } /* Attribute */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -283,14 +299,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="18.2" data-path="allometricmodels.html"><a href="allometricmodels.html#allometric-relationships"><i class="fa fa-check"></i><b>18.2</b> Allometric relationships</a><ul>
 <li class="chapter" data-level="18.2.1" data-path="allometricmodels.html"><a href="allometricmodels.html#leaf-biomass"><i class="fa fa-check"></i><b>18.2.1</b> Leaf biomass</a></li>
 <li class="chapter" data-level="18.2.2" data-path="allometricmodels.html"><a href="allometricmodels.html#leaf-area-and-lai"><i class="fa fa-check"></i><b>18.2.2</b> Leaf area and LAI</a></li>
-<li class="chapter" data-level="18.2.3" data-path="allometricmodels.html"><a href="allometricmodels.html#crownbaseheight"><i class="fa fa-check"></i><b>18.2.3</b> Crown base height</a></li>
+<li class="chapter" data-level="18.2.3" data-path="allometricmodels.html"><a href="allometricmodels.html#crownbaseheight"><i class="fa fa-check"></i><b>18.2.3</b> Crown vertical dimensions</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="19" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html"><i class="fa fa-check"></i><b>19</b> Fuel characteristics and fire behaviour</a><ul>
 <li class="chapter" data-level="19.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#purpose-1"><i class="fa fa-check"></i><b>19.1</b> Purpose</a></li>
 <li class="chapter" data-level="19.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#input-data-1"><i class="fa fa-check"></i><b>19.2</b> Input data</a><ul>
-<li class="chapter" data-level="19.2.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#forest-inventory-plot-data"><i class="fa fa-check"></i><b>19.2.1</b> Forest inventory plot data</a></li>
-<li class="chapter" data-level="19.2.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#species-specific-parameters"><i class="fa fa-check"></i><b>19.2.2</b> Species-specific parameters</a></li>
+<li class="chapter" data-level="19.2.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#forest-plot-data-1"><i class="fa fa-check"></i><b>19.2.1</b> Forest plot data</a></li>
+<li class="chapter" data-level="19.2.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#species-parameters-3"><i class="fa fa-check"></i><b>19.2.2</b> Species parameters</a></li>
 <li class="chapter" data-level="19.2.3" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#other-inputs"><i class="fa fa-check"></i><b>19.2.3</b> Other inputs</a></li>
 </ul></li>
 <li class="chapter" data-level="19.3" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#fuel-characteristics"><i class="fa fa-check"></i><b>19.3</b> Fuel characteristics</a><ul>
@@ -370,24 +386,24 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h1><span class="header-section-number">Chapter 15</span> Plant compartments, respiration and carbon balance</h1>
 <div id="biomass-compartments" class="section level2">
 <h2><span class="header-section-number">15.1</span> Biomass compartments</h2>
-Biomass of leaves, sapwood and fine roots is needed in the model to estimate respiratory costs (and, if needed, the size of the C storage pools). Respiratory leaf biomass per individual (<span class="math inline">\(B_{leaf}\)</span>; <span class="math inline">\(g C·ind^{-1}\)</span>) is the result of dividing live expanded leaf area by <span class="math inline">\(SLA\)</span> (<span class="math inline">\(kg dry·m^{-2}\)</span>), the specific leaf area coefficient of the species, and multypling by a carbon conversion factor (0.3 <span class="math inline">\(gC·g dry^{-1}\)</span>):
+<p>Biomass of leaves, sapwood and fine roots is needed in the model to estimate respiratory costs (and, if needed, the size of the C storage pools). Respiratory leaf biomass per individual (<span class="math inline">\(B_{leaf}\)</span>; <span class="math inline">\(g C·ind^{-1}\)</span>) is the result of dividing live expanded leaf area by <span class="math inline">\(SLA\)</span> (<span class="math inline">\(kg dry·m^{-2}\)</span>), the specific leaf area coefficient of the species, and multypling by a carbon conversion factor (0.3 <span class="math inline">\(gC·g dry^{-1}\)</span>):
 <span class="math display">\[\begin{equation}
 B_{leaf} = 0.3 \cdot 1000 \cdot LA^{\phi} / SLA
 \end{equation}\]</span>
-<p>where <span class="math inline">\(LA^{\phi} = 10000 \cdot LAI^{\phi} / N\)</span> is the expanded leaf area per individual (in m<span class="math inline">\(^2\)</span>) and factor 1000 is used to convert from kg to g. Hence, only expanded leaf area has respiratory cost (i.e. winter resistance buds do not) and counts for C storage purposes.</p>
-Respiratory sapwood biomass per individual (<span class="math inline">\(B_{stem}\)</span>; <span class="math inline">\(g C·ind^{-1}\)</span>) represents the sapwood biomass of stems (including trunks and branches) and coarse roots. It is defined as the product of sapwood area (<span class="math inline">\(SA\)</span>; in <span class="math inline">\(cm^2\)</span>) per individual times the sum of height (<span class="math inline">\(H\)</span>; in cm) and rooting depth (<span class="math inline">\(Z\)</span>; cm), transformed to carbon biomass using species-specific parameters of wood C density (<span class="math inline">\(W_{dens}\)</span>; <span class="math inline">\(g dry·cm^{-3}\)</span>) and carbon content (<span class="math inline">\(W_{C}\)</span>; <span class="math inline">\(g C · g dry^{-1}\)</span>):
+where <span class="math inline">\(LA^{\phi} = 10000 \cdot LAI^{\phi} / N\)</span> is the expanded leaf area per individual (in m<span class="math inline">\(^2\)</span>) and factor 1000 is used to convert from kg to g. Hence, only expanded leaf area has respiratory cost (i.e. winter resistance buds do not) and counts for C storage purposes.</p>
+<p>Respiratory sapwood biomass per individual (<span class="math inline">\(B_{stem}\)</span>; <span class="math inline">\(g C·ind^{-1}\)</span>) represents the sapwood biomass of stems (including trunks and branches) and coarse roots. It is defined as the product of sapwood area (<span class="math inline">\(SA\)</span>; in <span class="math inline">\(cm^2\)</span>) per individual times the sum of height (<span class="math inline">\(H\)</span>; in cm) and rooting depth (<span class="math inline">\(Z\)</span>; cm), transformed to carbon biomass using species-specific parameters of wood C density (<span class="math inline">\(W_{dens}\)</span>; <span class="math inline">\(g dry·cm^{-3}\)</span>) and carbon content (<span class="math inline">\(W_{C}\)</span>; <span class="math inline">\(g C · g dry^{-1}\)</span>):
 <span class="math display">\[\begin{equation}
 B_{stem} = SA\cdot (H + Z) \cdot W_{dens} \cdot W_{C}
-\end{equation}\]</span>
-Finally, the biomass of fine roots per individual (<span class="math inline">\(B_{root}\)</span>; g C·ind<span class="math inline">\(^{-1}\)</span>) is simply assumed proportional to expanded leaf biomass per individual:
+\end{equation}\]</span></p>
+<p>Finally, the biomass of fine roots per individual (<span class="math inline">\(B_{root}\)</span>; g C·ind<span class="math inline">\(^{-1}\)</span>) is simply assumed proportional to expanded leaf biomass per individual:
 <span class="math display">\[\begin{equation}
 B_{root} = B_{leaf}/2.5
 \end{equation}\]</span>
-<p>where 2.5 is a ratio between leaf biomass and fine root biomass. Hence, fine-root maintenance respiration costs are also influenced by leaf-phenological status <span class="citation">(Sitch et al. <a href="#ref-Sitch2003">2003</a>)</span>.</p>
+where 2.5 is a ratio between leaf biomass and fine root biomass. Hence, fine-root maintenance respiration costs are also influenced by leaf-phenological status <span class="citation">(Sitch et al. <a href="#ref-Sitch2003">2003</a>)</span>.</p>
 </div>
 <div id="maximum-capacity-of-c-pools" class="section level2">
 <h2><span class="header-section-number">15.2</span> Maximum capacity of C pools</h2>
-If carbon pools are considered, their maximum capacity is updated at this point. If there is a single (fast) carbon pool, its maximum storage capacity per individual (<span class="math inline">\(C_{fast,\max}\)</span>; <span class="math inline">\(g C·ind^{-1}\)</span>) is defined proportional to the total living biomass (i.e., easily accessed C sources like sugars are assumed to be stored in all living parts of the plant):
+<p>If carbon pools are considered, their maximum capacity is updated at this point. If there is a single (fast) carbon pool, its maximum storage capacity per individual (<span class="math inline">\(C_{fast,\max}\)</span>; <span class="math inline">\(g C·ind^{-1}\)</span>) is defined proportional to the total living biomass (i.e., easily accessed C sources like sugars are assumed to be stored in all living parts of the plant):
 <span class="math display">\[\begin{equation}
 C_{fast,\max} = C_{p,\max} \cdot (B_{leaf} + B_{stem} + B_{root})
 \end{equation}\]</span>
@@ -396,11 +412,11 @@ where <span class="math inline">\(C_{p,\max}\)</span> is the amount of C storage
 C_{fast,\max} &amp;=&amp; 0.05 \cdot (B_{leaf} + B_{stem} + B_{root})\\
 C_{slow,\max} &amp;=&amp; \max \left(C_{slow,\max},\, (C_{p, \max}-0.05) \cdot (B_{leaf} + B_{stem} + B_{root})\right)
 \end{eqnarray}\]</span>
-<p>Note the maximum function for the slow C pool, which ensures that the size of the slow pool will not decrease if there is a decrease in leaf area. Thus, while the slow C pool is still calculated in relation to the total living biomass, it is assumed to be primarily found in long-lasting organs (stem, roots, lignotubers, …).</p>
+Note the maximum function for the slow C pool, which ensures that the size of the slow pool will not decrease if there is a decrease in leaf area. Thus, while the slow C pool is still calculated in relation to the total living biomass, it is assumed to be primarily found in long-lasting organs (stem, roots, lignotubers, …).</p>
 </div>
 <div id="maintenance-respiration-and-c-balance" class="section level2">
 <h2><span class="header-section-number">15.3</span> Maintenance respiration and C balance</h2>
-Individual daily maintenance respiration (<span class="math inline">\(R^{ind}\)</span>; in <span class="math inline">\(g C·ind^{-1}\)</span>) is calculated for each of the three compartments (leaves, alive vascular tissues (stem and coarse roots), and fine roots) (Mouillot et al. 2001). The model uses a <span class="math inline">\(Q_{10}\)</span> relationship with temperature, which means that for every 10ºC change in temperature there is a <span class="math inline">\(Q_{10}\)</span> factor change in respiration. Baseline respiration rates (<span class="math inline">\(r_{leaf}\)</span>, <span class="math inline">\(r_{stem}\)</span> and <span class="math inline">\(r_{root}\)</span> for leaves, vascular tissues and fine roots, respectively; in <span class="math inline">\(gC·gC^{-1}\)</span>) are not species-specific and all refer to 20ºC:
+<p>Individual daily maintenance respiration (<span class="math inline">\(R^{ind}\)</span>; in <span class="math inline">\(g C·ind^{-1}\)</span>) is calculated for each of the three compartments (leaves, alive vascular tissues (stem and coarse roots), and fine roots) (Mouillot et al. 2001). The model uses a <span class="math inline">\(Q_{10}\)</span> relationship with temperature, which means that for every 10ºC change in temperature there is a <span class="math inline">\(Q_{10}\)</span> factor change in respiration. Baseline respiration rates (<span class="math inline">\(r_{leaf}\)</span>, <span class="math inline">\(r_{stem}\)</span> and <span class="math inline">\(r_{root}\)</span> for leaves, vascular tissues and fine roots, respectively; in <span class="math inline">\(gC·gC^{-1}\)</span>) are not species-specific and all refer to 20ºC:
 <span class="math display">\[\begin{eqnarray}
 R_{leaf} &amp;=&amp; B_{leaf} \cdot r_{leaf} \cdot Q_{10}^{(T_{mean}-20)/10} \\
 R_{stem} &amp;=&amp; B_{stem} \cdot r_{stem} \cdot Q_{10}^{(T_{mean}-20)/10} \\
@@ -419,14 +435,14 @@ whereas if carbon pools are considered, the fast C pool is updated with the resu
 <span class="math display">\[\begin{eqnarray}
 C_{fast} &amp;=&amp; \max(0,\,C_{fast} + A_n^{ind} -  R^{ind})\\
 C_{available} &amp;=&amp; C_{fast}
-\end{eqnarray}\]</span>
+\end{eqnarray}\]</span></p>
 
 </div>
 </div>
 <h3>Bibliography</h3>
 <div id="refs" class="references">
 <div id="ref-Sitch2003">
-<p>Sitch, S., B. Smith, I. C. Prentice, a. Arneth, a. Bondeau, W. Cramer, J. O. Kaplan, et al. 2003. “Evaluation of ecosystem dynamics, plant geography and terrestrial carbon cycling in the LPJ dynamic global vegetation model.” <em>Global Change Biology</em> 9 (2): 161–85. doi:<a href="https://doi.org/10.1046/j.1365-2486.2003.00569.x">10.1046/j.1365-2486.2003.00569.x</a>.</p>
+<p>Sitch, S., B. Smith, I. C. Prentice, a. Arneth, a. Bondeau, W. Cramer, J. O. Kaplan, et al. 2003. “Evaluation of ecosystem dynamics, plant geography and terrestrial carbon cycling in the LPJ dynamic global vegetation model.” <em>Global Change Biology</em> 9 (2):161–85. <a href="https://doi.org/10.1046/j.1365-2486.2003.00569.x" class="uri">https://doi.org/10.1046/j.1365-2486.2003.00569.x</a>.</p>
 </div>
 </div>
             </section>
@@ -485,7 +501,7 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "";
+    var src = "true";
     if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');

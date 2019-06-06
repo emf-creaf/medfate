@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 2 Model inputs | The medfate reference book</title>
   <meta name="description" content="This is a reference book for models implemented in package medfate." />
-  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 2 Model inputs | The medfate reference book" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 
 
 
-<meta name="date" content="2019-06-05" />
+<meta name="date" content="2019-06-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -49,41 +49,57 @@
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+div.sourceLine, a.sourceLine { display: inline-block; min-height: 1.25em; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; }
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+div.sourceLine, a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource div.sourceLine, .numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource div.sourceLine::before, .numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em; }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; color: #aaaaaa;  padding-left: 4px; }
+@media screen {
+a.sourceLine::before { text-decoration: underline; color: initial; }
+}
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.bn { color: #40a070; } /* BaseN */
+code span.fl { color: #40a070; } /* Float */
+code span.ch { color: #4070a0; } /* Char */
+code span.st { color: #4070a0; } /* String */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.ot { color: #007020; } /* Other */
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.fu { color: #06287e; } /* Function */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code span.cn { color: #880000; } /* Constant */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.im { } /* Import */
+code span.va { color: #19177c; } /* Variable */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.op { color: #666666; } /* Operator */
+code span.bu { } /* BuiltIn */
+code span.ex { } /* Extension */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.at { color: #7d9029; } /* Attribute */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -283,14 +299,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="18.2" data-path="allometricmodels.html"><a href="allometricmodels.html#allometric-relationships"><i class="fa fa-check"></i><b>18.2</b> Allometric relationships</a><ul>
 <li class="chapter" data-level="18.2.1" data-path="allometricmodels.html"><a href="allometricmodels.html#leaf-biomass"><i class="fa fa-check"></i><b>18.2.1</b> Leaf biomass</a></li>
 <li class="chapter" data-level="18.2.2" data-path="allometricmodels.html"><a href="allometricmodels.html#leaf-area-and-lai"><i class="fa fa-check"></i><b>18.2.2</b> Leaf area and LAI</a></li>
-<li class="chapter" data-level="18.2.3" data-path="allometricmodels.html"><a href="allometricmodels.html#crownbaseheight"><i class="fa fa-check"></i><b>18.2.3</b> Crown base height</a></li>
+<li class="chapter" data-level="18.2.3" data-path="allometricmodels.html"><a href="allometricmodels.html#crownbaseheight"><i class="fa fa-check"></i><b>18.2.3</b> Crown vertical dimensions</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="19" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html"><i class="fa fa-check"></i><b>19</b> Fuel characteristics and fire behaviour</a><ul>
 <li class="chapter" data-level="19.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#purpose-1"><i class="fa fa-check"></i><b>19.1</b> Purpose</a></li>
 <li class="chapter" data-level="19.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#input-data-1"><i class="fa fa-check"></i><b>19.2</b> Input data</a><ul>
-<li class="chapter" data-level="19.2.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#forest-inventory-plot-data"><i class="fa fa-check"></i><b>19.2.1</b> Forest inventory plot data</a></li>
-<li class="chapter" data-level="19.2.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#species-specific-parameters"><i class="fa fa-check"></i><b>19.2.2</b> Species-specific parameters</a></li>
+<li class="chapter" data-level="19.2.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#forest-plot-data-1"><i class="fa fa-check"></i><b>19.2.1</b> Forest plot data</a></li>
+<li class="chapter" data-level="19.2.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#species-parameters-3"><i class="fa fa-check"></i><b>19.2.2</b> Species parameters</a></li>
 <li class="chapter" data-level="19.2.3" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#other-inputs"><i class="fa fa-check"></i><b>19.2.3</b> Other inputs</a></li>
 </ul></li>
 <li class="chapter" data-level="19.3" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#fuel-characteristics"><i class="fa fa-check"></i><b>19.3</b> Fuel characteristics</a><ul>
@@ -516,11 +532,11 @@ Figure 2.1: Water retention curves under the Saxton and Van Genuchten models, fo
 </div>
 <div id="water-content-and-water-table-depth" class="section level3">
 <h3><span class="header-section-number">2.1.4</span> Water content and water table depth</h3>
-The <em>water content</em> (<span class="math inline">\(V_s\)</span> in mm) of a soil layer <span class="math inline">\(s\)</span> is calculated from its water potential and water retention curve using:
+<p>The <em>water content</em> (<span class="math inline">\(V_s\)</span> in mm) of a soil layer <span class="math inline">\(s\)</span> is calculated from its water potential and water retention curve using:
 <span class="math display">\[\begin{equation}
 V_s(\Psi) = d_s\cdot ((100-P_{rocks,s})/100)\cdot\theta_{s}(\Psi)
 \end{equation}\]</span>
-<p>where <span class="math inline">\(d_s\)</span> is the depth of the soil layer (in mm) and <span class="math inline">\(P_{rocks,s}\)</span> is the percentage of rock fragments. Besides this general formula, a number of contents are important to remember.</p>
+where <span class="math inline">\(d_s\)</span> is the depth of the soil layer (in mm) and <span class="math inline">\(P_{rocks,s}\)</span> is the percentage of rock fragments. Besides this general formula, a number of contents are important to remember.</p>
 <ul>
 <li><em>Water holding capacity</em> (<span class="math inline">\(V_{fc, s}\)</span>, in mm) of the soil layer <span class="math inline">\(s\)</span> is defined as the volumetric water content at field capacity, i.e. -0.033 MPa:
 <span class="math display">\[\begin{equation}
@@ -531,10 +547,10 @@ where <span class="math inline">\(\theta_{fc,s} = \theta_s(-0.033)\)</span>.</li
 <li><em>Water content at wilting point</em> (-1.5 MPa) is calculated replacing <span class="math inline">\(\theta_{fc,s}\)</span> by <span class="math inline">\(\theta_{wp,s} = \theta_s(-1.5)\)</span>.</li>
 <li>The <em>amount of extractable water</em> is the difference between water content at field capacity and a the water content at a conventional minimum water potential, which can be set at wilting point or lower values (by default at -5 MPa in <strong>medfate</strong>).</li>
 </ul>
-The depth of water table is the depth of saturated soil. In medfate, <em>water table depth</em> (<span class="math inline">\(WT\)</span>, in mm) equals soil depth when all soil layers are below field capacity. When some layers are between field capacity and saturation, water table depth is calculated as:
+<p>The depth of water table is the depth of saturated soil. In medfate, <em>water table depth</em> (<span class="math inline">\(WT\)</span>, in mm) equals soil depth when all soil layers are below field capacity. When some layers are between field capacity and saturation, water table depth is calculated as:
 <span class="math display">\[\begin{equation}
 WT = \sum_{s}{d_s \cdot \min\left[1,(\theta_{sat,s} - \theta(\Psi_s))/(\theta_{sat,s}-\theta_{fc,s})\right]}
-\end{equation}\]</span>
+\end{equation}\]</span></p>
 </div>
 </div>
 <div id="vegetationinput" class="section level2">
@@ -660,11 +676,11 @@ WT = \sum_{s}{d_s \cdot \min\left[1,(\theta_{sat,s} - \theta(\Psi_s))/(\theta_{s
 </div>
 <div id="vertical-root-distribution" class="section level3">
 <h3><span class="header-section-number">2.2.2</span> Vertical root distribution</h3>
-The root system of each plant cohort <span class="math inline">\(i\)</span> is described using the proportion of fine roots in each soil layer <span class="math inline">\(s\)</span>: <span class="math inline">\(v_{i,s}\)</span>. The proportions <span class="math inline">\(v_{i,s}\)</span> are normally defined using the linear dose response model <span class="citation">(Schenk and Jackson <a href="#ref-Schenk2002">2002</a>; Collins and Bras <a href="#ref-Collins2007">2007</a>)</span>:
+<p>The root system of each plant cohort <span class="math inline">\(i\)</span> is described using the proportion of fine roots in each soil layer <span class="math inline">\(s\)</span>: <span class="math inline">\(v_{i,s}\)</span>. The proportions <span class="math inline">\(v_{i,s}\)</span> are normally defined using the linear dose response model <span class="citation">(Schenk and Jackson <a href="#ref-Schenk2002">2002</a>; Collins and Bras <a href="#ref-Collins2007">2007</a>)</span>:
 <span class="math display">\[\begin{equation}
 Y_i(z)=\frac{1}{1+(z/Z_{50,i})^{c_i}}
 \end{equation}\]</span>
-<p>where <span class="math inline">\(Y_i(z)\)</span> is the cumulative fraction of fine root mass located between surface and depth <span class="math inline">\(z\)</span>; <span class="math inline">\(Z_{50,i}\)</span> is the depth above which 50% of the root mass is located; and <span class="math inline">\(c_i\)</span> is a shape parameter related to <span class="math inline">\(Z_{50,i}\)</span> and <span class="math inline">\(Z_{95,i}\)</span> as <span class="math inline">\(c_i = 2.94 / \ln(Z_{50,i} / Z_{95,i})\)</span> (see <code>root_ldrDistribution()</code>).</p>
+where <span class="math inline">\(Y_i(z)\)</span> is the cumulative fraction of fine root mass located between surface and depth <span class="math inline">\(z\)</span>; <span class="math inline">\(Z_{50,i}\)</span> is the depth above which 50% of the root mass is located; and <span class="math inline">\(c_i\)</span> is a shape parameter related to <span class="math inline">\(Z_{50,i}\)</span> and <span class="math inline">\(Z_{95,i}\)</span> as <span class="math inline">\(c_i = 2.94 / \ln(Z_{50,i} / Z_{95,i})\)</span> (see <code>root_ldrDistribution()</code>).</p>
 <div class="figure"><span id="fig:root-distribution"></span>
 <img src="medfatebook_files/figure-html/root-distribution-1.png" alt="Examples of root density profile according to a conic distribution (left) and the linear dose response model (right)." width="768" />
 <p class="caption">
@@ -676,8 +692,8 @@ Figure 2.2: Examples of root density profile according to a conic distribution (
 <div id="forestobjects" class="section level3">
 <h3><span class="header-section-number">2.2.3</span> Forest plot objects</h3>
 <p>Forest plots in <code>medfate</code> are assumed to be in a format that follows closely the Spanish national forest inventory. Each forest plot is represented in an object of class <code>forest</code>, a list that contains several elements. Among them, the most important items are two data frames, <code>treeData</code> (for trees) and <code>shrubData</code> for shrubs:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(exampleforest)
-exampleforest</code></pre></div>
+<pre class="sourceCode r" id="cb4"><code class="sourceCode r"><div class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">data</span>(exampleforest)</div>
+<div class="sourceLine" id="cb4-2" data-line-number="2">exampleforest</div></code></pre>
 <pre><code>## $ID
 ## [1] &quot;1&quot;
 ## 
@@ -795,7 +811,7 @@ exampleforest</code></pre></div>
 <div id="control-parameters" class="section level2">
 <h2><span class="header-section-number">2.4</span> Control parameters</h2>
 <p>Control parameters are a list of global parameter values, initialized using function <code>defaultControl()</code>, that the user can modify to change the general behavior of simulation functions. Here is the set of global control parameters currently accepted in <strong>medfate</strong>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(<span class="kw">defaultControl</span>())</code></pre></div>
+<pre class="sourceCode r" id="cb6"><code class="sourceCode r"><div class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">names</span>(<span class="kw">defaultControl</span>())</div></code></pre>
 <pre><code>##  [1] &quot;verbose&quot;                          &quot;subdailyResults&quot;                 
 ##  [3] &quot;soilFunctions&quot;                    &quot;snowpack&quot;                        
 ##  [5] &quot;drainage&quot;                         &quot;leafPhenology&quot;                   
@@ -818,34 +834,34 @@ exampleforest</code></pre></div>
 <h3>Bibliography</h3>
 <div id="refs" class="references">
 <div id="ref-Carsel1988">
-<p>Carsel, Robert F., and Rudolph S Parrish. 1988. “Developing joint probability distributions of soil water retention characteristics.” <em>Water Resources Research</em> 24 (5): 755–69.</p>
+<p>Carsel, Robert F., and Rudolph S Parrish. 1988. “Developing joint probability distributions of soil water retention characteristics.” <em>Water Resources Research</em> 24 (5):755–69.</p>
 </div>
 <div id="ref-Collins2007">
-<p>Collins, D. B. G., and R. L. Bras. 2007. “Plant rooting strategies in water-limited ecosystems.” <em>Water Resources Research</em> 43 (6): W06407. doi:<a href="https://doi.org/10.1029/2006WR005541">10.1029/2006WR005541</a>.</p>
+<p>Collins, D. B. G., and R. L. Bras. 2007. “Plant rooting strategies in water-limited ecosystems.” <em>Water Resources Research</em> 43 (6):W06407. <a href="https://doi.org/10.1029/2006WR005541" class="uri">https://doi.org/10.1029/2006WR005541</a>.</p>
 </div>
 <div id="ref-DeCaceres2018">
-<p>De Cáceres, Miquel, Nicolas Martin-StPaul, Marco Turco, Antoine Cabon, and Victor Granda. 2018. “Estimating daily meteorological data and downscaling climate models over landscapes.” <em>Environmental Modelling &amp; Software</em> 108 (August). Elsevier: 186–96. doi:<a href="https://doi.org/10.1016/j.envsoft.2018.08.003">10.1016/j.envsoft.2018.08.003</a>.</p>
+<p>De Cáceres, Miquel, Nicolas Martin-StPaul, Marco Turco, Antoine Cabon, and Victor Granda. 2018. “Estimating daily meteorological data and downscaling climate models over landscapes.” <em>Environmental Modelling &amp; Software</em> 108 (August). Elsevier:186–96. <a href="https://doi.org/10.1016/j.envsoft.2018.08.003" class="uri">https://doi.org/10.1016/j.envsoft.2018.08.003</a>.</p>
 </div>
 <div id="ref-Genuchten1980">
-<p>Genuchten, MT Van. 1980. “A closed-form equation for predicting the hydraulic conductivity of unsaturated soils.” <em>Soil Science Society of America Journal</em> 44: 892–98. <a href="https://dl.sciencesocieties.org/publications/sssaj/abstracts/44/5/SS0440050892" class="uri">https://dl.sciencesocieties.org/publications/sssaj/abstracts/44/5/SS0440050892</a>.</p>
+<p>Genuchten, MT Van. 1980. “A closed-form equation for predicting the hydraulic conductivity of unsaturated soils.” <em>Soil Science Society of America Journal</em> 44:892–98. <a href="https://dl.sciencesocieties.org/publications/sssaj/abstracts/44/5/SS0440050892" class="uri">https://dl.sciencesocieties.org/publications/sssaj/abstracts/44/5/SS0440050892</a>.</p>
 </div>
 <div id="ref-Ruffault2013">
-<p>Ruffault, Julien, Nicolas K. Martin-StPaul, Serge Rambal, and Florent Mouillot. 2013. “Differential regional responses in drought length, intensity and timing to recent climate changes in a Mediterranean forested ecosystem.” <em>Climatic Change</em> 117 (1-2): 103–17. doi:<a href="https://doi.org/10.1007/s10584-012-0559-5">10.1007/s10584-012-0559-5</a>.</p>
+<p>Ruffault, Julien, Nicolas K. Martin-StPaul, Serge Rambal, and Florent Mouillot. 2013. “Differential regional responses in drought length, intensity and timing to recent climate changes in a Mediterranean forested ecosystem.” <em>Climatic Change</em> 117 (1-2):103–17. <a href="https://doi.org/10.1007/s10584-012-0559-5" class="uri">https://doi.org/10.1007/s10584-012-0559-5</a>.</p>
 </div>
 <div id="ref-Saxton2006">
-<p>Saxton, K. E., and W. J. Rawls. 2006. “Soil water characteristic estimates by texture and organic matter for hydrologic solutions.” <em>Soil Science Society of America Journal</em> 70 (5): 1569. doi:<a href="https://doi.org/10.2136/sssaj2005.0117">10.2136/sssaj2005.0117</a>.</p>
+<p>Saxton, K. E., and W. J. Rawls. 2006. “Soil water characteristic estimates by texture and organic matter for hydrologic solutions.” <em>Soil Science Society of America Journal</em> 70 (5):1569. <a href="https://doi.org/10.2136/sssaj2005.0117" class="uri">https://doi.org/10.2136/sssaj2005.0117</a>.</p>
 </div>
 <div id="ref-Saxton1986">
-<p>Saxton, K.E., W. J. Rawls, J.S. Romberger, and R.I. Papendick. 1986. “Estimating generalized soil-water characteristics from texture.” <em>Soil Science Society of America Journal</em> 50: 1031–6.</p>
+<p>Saxton, K.E., W. J. Rawls, J.S. Romberger, and R.I. Papendick. 1986. “Estimating generalized soil-water characteristics from texture.” <em>Soil Science Society of America Journal</em> 50:1031–6.</p>
 </div>
 <div id="ref-Schenk2002">
-<p>Schenk, H. Jochen, and Robert B. Jackson. 2002. “Rooting depths, lateral root spreads and below-ground/above-ground allometries of plants in water-limited ecosystems.” <em>Journal of Ecology</em> 90 (3): 480–94. doi:<a href="https://doi.org/10.1046/j.1365-2745.2002.00682.x">10.1046/j.1365-2745.2002.00682.x</a>.</p>
+<p>Schenk, H. Jochen, and Robert B. Jackson. 2002. “Rooting depths, lateral root spreads and below-ground/above-ground allometries of plants in water-limited ecosystems.” <em>Journal of Ecology</em> 90 (3):480–94. <a href="https://doi.org/10.1046/j.1365-2745.2002.00682.x" class="uri">https://doi.org/10.1046/j.1365-2745.2002.00682.x</a>.</p>
 </div>
 <div id="ref-Stolf2011">
-<p>Stolf, Rubismar, ÁM Thurler, O Oliveira, S Bacchi, and K Reichardt. 2011. “Method to estimate soil macroporosity and microporosity based on sand content and bulk density.” <em>Revista Brasileira de Ciencias Do Solo</em> 35 (1): 447–59. <a href="http://www.scielo.br/scielo.php?pid=S0100-06832011000200014{\&amp;}script=sci{\_}arttext" class="uri">http://www.scielo.br/scielo.php?pid=S0100-06832011000200014{\&amp;}script=sci{\_}arttext</a>.</p>
+<p>Stolf, Rubismar, ÁM Thurler, O Oliveira, S Bacchi, and K Reichardt. 2011. “Method to estimate soil macroporosity and microporosity based on sand content and bulk density.” <em>Revista Brasileira de Ciencias Do Solo</em> 35 (1):447–59. <a href="http://www.scielo.br/scielo.php?pid=S0100-06832011000200014{\&amp;}script=sci{\_}arttext" class="uri">http://www.scielo.br/scielo.php?pid=S0100-06832011000200014{\&amp;}script=sci{\_}arttext</a>.</p>
 </div>
 <div id="ref-Toth2015">
-<p>Tóth, B., M. Weynants, A. Nemes, A. Makó, G. Bilas, and G. Tóth. 2015. “New generation of hydraulic pedotransfer functions for Europe.” <em>European Journal of Soil Science</em> 66 (1): 226–38. doi:<a href="https://doi.org/10.1111/ejss.12192">10.1111/ejss.12192</a>.</p>
+<p>Tóth, B., M. Weynants, A. Nemes, A. Makó, G. Bilas, and G. Tóth. 2015. “New generation of hydraulic pedotransfer functions for Europe.” <em>European Journal of Soil Science</em> 66 (1):226–38. <a href="https://doi.org/10.1111/ejss.12192" class="uri">https://doi.org/10.1111/ejss.12192</a>.</p>
 </div>
 </div>
             </section>
@@ -904,7 +920,7 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "";
+    var src = "true";
     if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');

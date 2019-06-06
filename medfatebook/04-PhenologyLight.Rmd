@@ -33,13 +33,7 @@ Although simulations will normally start in winter and $GDD$ will be zero at the
 
 ## Leaf vertical distribution {#leafdistribution}
 
-Crown base height ($H_{b,i}$; in $cm$) of cohort $i$ is defined as the height corresponding to the first living branch. It is calculated from the crown ratio of the cohort ($CR_i$; a proportion between 0 and 1), i.e. the ratio between crown length and total height:
-\begin{equation}
-H_{b,i} = H_{i} \cdot (1 - CR_i)
-(\#eq:CrownHeight)
-\end{equation}
-
-Leaf area of any plant cohort is assumed to be distributed vertically following a **truncated Gaussian function** whose standardized values -1.5 and 1.5 correspond to crown base height ($CR_i$) and total plant height ($H_i$), respectively. The model divides the vertical dimension into vertical layers (by default, each layer is 50 cm in width). Let us define $LAI_{i,j}^{all} = LAI_{i,j}^{\phi}+LAI_{i,j}^{dead}$ as the leaf area index of cohort $i$ in layer $j$. The truncated Gaussian distribution defines the $LAI_{i,j}^{\phi}$ and $LAI_{i,j}^{dead}$ for all plant cohorts and vertical layers.
+Crown base height ($H_{crown,i}$; in $cm$) of cohort $i$ is defined as the height corresponding to the first living branch. It is calculated from the crown ratio of the cohort ($CR_i$; a proportion between 0 and 1), i.e. the ratio between crown length and total height (see eq. \@ref(eq:CrownHeight)). The leaf area of any plant cohort is assumed to be distributed vertically following a **truncated Gaussian function** whose standardized values -1.5 and 1.5 correspond to crown base height ($H_{crown,i}$) and total plant height ($H_i$), respectively. The model divides the vertical dimension into vertical layers (by default, each layer is 50 cm in width). Let us define $LAI_{i,j}^{all} = LAI_{i,j}^{\phi}+LAI_{i,j}^{dead}$ as the leaf area index of cohort $i$ in layer $j$. The truncated Gaussian distribution defines the $LAI_{i,j}^{\phi}$ and $LAI_{i,j}^{dead}$ for all plant cohorts and vertical layers.
 
 Dividing the leaf area of a given layer by its width, one obtains the *leaf area density* ($LAD$ in $m^2 \cdot m^{-3}$). Figure \@ref(fig:leafareadensity) illustrates the leaf area density profile for an example forest stand (see function `vprofile_leafAreaDensity()`). 
 

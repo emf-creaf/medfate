@@ -2,7 +2,7 @@
 
 # Advanced water balance model {#advancedwaterbalance}
 
-This chapter provides an overview of a water balance model, described in De Cáceres et al. (in prep.), that shares some characteristics with the basic water balance model described in previous chapters (namely, phenological and hydrological processes), but adds substantial detail in plant hydraulics and photosynthesis. As in chapter {#basicwaterbalance}, we provide an overview of the model in the present chapter and the following ones provide a much deeper understanding on model details. We recommend users to familiarize with basic water balance modelling processes before reading this and the subsequent chapters.
+This chapter provides an overview of a water balance model, described in De Cáceres et al. (in prep.), that shares some characteristics with the basic water balance model described in previous chapters (namely, phenological and hydrological processes), but adds substantial detail in plant hydraulics and photosynthesis. As in chapter \@ref(basicwaterbalance), we provide an overview of the model in the present chapter and the following ones provide a much deeper understanding on model details. We recommend users to familiarize with basic water balance modelling processes before reading this and the subsequent chapters.
 
 ## Design principles
 

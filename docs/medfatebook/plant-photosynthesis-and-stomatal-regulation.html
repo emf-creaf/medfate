@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 12 Plant photosynthesis and stomatal regulation | The medfate reference book</title>
   <meta name="description" content="This is a reference book for models implemented in package medfate." />
-  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 12 Plant photosynthesis and stomatal regulation | The medfate reference book" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 
 
 
-<meta name="date" content="2019-06-05" />
+<meta name="date" content="2019-06-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -49,41 +49,57 @@
 
 
 <style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+div.sourceLine, a.sourceLine { display: inline-block; min-height: 1.25em; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; }
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+div.sourceLine, a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource div.sourceLine, .numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource div.sourceLine::before, .numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em; }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; color: #aaaaaa;  padding-left: 4px; }
+@media screen {
+a.sourceLine::before { text-decoration: underline; color: initial; }
+}
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.bn { color: #40a070; } /* BaseN */
+code span.fl { color: #40a070; } /* Float */
+code span.ch { color: #4070a0; } /* Char */
+code span.st { color: #4070a0; } /* String */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.ot { color: #007020; } /* Other */
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.fu { color: #06287e; } /* Function */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code span.cn { color: #880000; } /* Constant */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.im { } /* Import */
+code span.va { color: #19177c; } /* Variable */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.op { color: #666666; } /* Operator */
+code span.bu { } /* BuiltIn */
+code span.ex { } /* Extension */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.at { color: #7d9029; } /* Attribute */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 </style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
@@ -283,14 +299,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="18.2" data-path="allometricmodels.html"><a href="allometricmodels.html#allometric-relationships"><i class="fa fa-check"></i><b>18.2</b> Allometric relationships</a><ul>
 <li class="chapter" data-level="18.2.1" data-path="allometricmodels.html"><a href="allometricmodels.html#leaf-biomass"><i class="fa fa-check"></i><b>18.2.1</b> Leaf biomass</a></li>
 <li class="chapter" data-level="18.2.2" data-path="allometricmodels.html"><a href="allometricmodels.html#leaf-area-and-lai"><i class="fa fa-check"></i><b>18.2.2</b> Leaf area and LAI</a></li>
-<li class="chapter" data-level="18.2.3" data-path="allometricmodels.html"><a href="allometricmodels.html#crownbaseheight"><i class="fa fa-check"></i><b>18.2.3</b> Crown base height</a></li>
+<li class="chapter" data-level="18.2.3" data-path="allometricmodels.html"><a href="allometricmodels.html#crownbaseheight"><i class="fa fa-check"></i><b>18.2.3</b> Crown vertical dimensions</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="19" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html"><i class="fa fa-check"></i><b>19</b> Fuel characteristics and fire behaviour</a><ul>
 <li class="chapter" data-level="19.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#purpose-1"><i class="fa fa-check"></i><b>19.1</b> Purpose</a></li>
 <li class="chapter" data-level="19.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#input-data-1"><i class="fa fa-check"></i><b>19.2</b> Input data</a><ul>
-<li class="chapter" data-level="19.2.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#forest-inventory-plot-data"><i class="fa fa-check"></i><b>19.2.1</b> Forest inventory plot data</a></li>
-<li class="chapter" data-level="19.2.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#species-specific-parameters"><i class="fa fa-check"></i><b>19.2.2</b> Species-specific parameters</a></li>
+<li class="chapter" data-level="19.2.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#forest-plot-data-1"><i class="fa fa-check"></i><b>19.2.1</b> Forest plot data</a></li>
+<li class="chapter" data-level="19.2.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#species-parameters-3"><i class="fa fa-check"></i><b>19.2.2</b> Species parameters</a></li>
 <li class="chapter" data-level="19.2.3" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#other-inputs"><i class="fa fa-check"></i><b>19.2.3</b> Other inputs</a></li>
 </ul></li>
 <li class="chapter" data-level="19.3" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#fuel-characteristics"><i class="fa fa-check"></i><b>19.3</b> Fuel characteristics</a><ul>
@@ -373,27 +389,27 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="leaf-vpd-conductance-to-water-vapor-and-photosynthesis" class="section level3">
 <h3><span class="header-section-number">12.1.1</span> Leaf VPD, conductance to water vapor and photosynthesis</h3>
 <p>The water supply function specifies the flow rate, as per leaf area, for values of leaf water potential. If we know air temperature, air vapour pressure and the light conditions in which leaves are, we can be translate the supply function into a photosynthesis function <span class="citation">(J. S. Sperry, Venturas, et al. <a href="#ref-Sperry2016">2016</a>)</span>. In a nutshell, <span class="math inline">\(E\)</span> from the supply function is used to calculate leaf temperature from an evaluation of the leaf energy balance. The diffusive conductances of the leaf to water and <span class="math inline">\(CO_{2}\)</span> are obtained from water supply and water vapor deficit. The gross assimilation rate is then obtained from the diffusive conductance and a modelled curve between assimilation and leaf internal <span class="math inline">\(CO_{2}\)</span> concentration. Gross assimilation is calculated, without subtracting autotrophic respiration, because the purpose is to represent the instantaneous gain of opening the stomata. Nevertheless autotrophic respiration is included when calculating leaf net photosynthesis.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Tmin =<span class="st"> </span><span class="dv">15</span>
-Tmax =<span class="st"> </span><span class="dv">30</span>
-RHmin =<span class="st"> </span><span class="dv">60</span>
-RHmax =<span class="st"> </span><span class="dv">75</span>
-Tcan =<span class="st"> </span>meteoland<span class="op">::</span><span class="kw">utils_averageDaylightTemperature</span>(Tmin, Tmax)
-vpa =<span class="st"> </span>meteoland<span class="op">::</span><span class="kw">utils_averageDailyVP</span>(Tmin, Tmax, RHmin, RHmax)
-Patm =<span class="st"> </span>meteoland<span class="op">::</span><span class="kw">utils_atmosphericPressure</span>(<span class="dv">100</span>)
-
-Q =<span class="st"> </span><span class="dv">2000</span>
-Catm =<span class="st"> </span><span class="dv">386</span>
-
-Vmax298 =<span class="st"> </span><span class="dv">100</span>
-Jmax298 =<span class="st"> </span><span class="fl">1.67</span><span class="op">*</span>Vmax298
-Gmin =<span class="st"> </span><span class="fl">0.00001</span>;
-Gmax =<span class="st"> </span><span class="fl">0.3</span>
-
-Rabs =<span class="st"> </span><span class="dv">740</span> <span class="co">#W * m-2</span></code></pre></div>
+<pre class="sourceCode r" id="cb42"><code class="sourceCode r"><div class="sourceLine" id="cb42-1" data-line-number="1">Tmin =<span class="st"> </span><span class="dv">15</span></div>
+<div class="sourceLine" id="cb42-2" data-line-number="2">Tmax =<span class="st"> </span><span class="dv">30</span></div>
+<div class="sourceLine" id="cb42-3" data-line-number="3">RHmin =<span class="st"> </span><span class="dv">60</span></div>
+<div class="sourceLine" id="cb42-4" data-line-number="4">RHmax =<span class="st"> </span><span class="dv">75</span></div>
+<div class="sourceLine" id="cb42-5" data-line-number="5">Tcan =<span class="st"> </span>meteoland<span class="op">::</span><span class="kw">utils_averageDaylightTemperature</span>(Tmin, Tmax)</div>
+<div class="sourceLine" id="cb42-6" data-line-number="6">vpa =<span class="st"> </span>meteoland<span class="op">::</span><span class="kw">utils_averageDailyVP</span>(Tmin, Tmax, RHmin, RHmax)</div>
+<div class="sourceLine" id="cb42-7" data-line-number="7">Patm =<span class="st"> </span>meteoland<span class="op">::</span><span class="kw">utils_atmosphericPressure</span>(<span class="dv">100</span>)</div>
+<div class="sourceLine" id="cb42-8" data-line-number="8"></div>
+<div class="sourceLine" id="cb42-9" data-line-number="9">Q =<span class="st"> </span><span class="dv">2000</span></div>
+<div class="sourceLine" id="cb42-10" data-line-number="10">Catm =<span class="st"> </span><span class="dv">386</span></div>
+<div class="sourceLine" id="cb42-11" data-line-number="11"></div>
+<div class="sourceLine" id="cb42-12" data-line-number="12">Vmax298 =<span class="st"> </span><span class="dv">100</span></div>
+<div class="sourceLine" id="cb42-13" data-line-number="13">Jmax298 =<span class="st"> </span><span class="fl">1.67</span><span class="op">*</span>Vmax298</div>
+<div class="sourceLine" id="cb42-14" data-line-number="14">Gmin =<span class="st"> </span><span class="fl">0.00001</span>;</div>
+<div class="sourceLine" id="cb42-15" data-line-number="15">Gmax =<span class="st"> </span><span class="fl">0.3</span></div>
+<div class="sourceLine" id="cb42-16" data-line-number="16"></div>
+<div class="sourceLine" id="cb42-17" data-line-number="17">Rabs =<span class="st"> </span><span class="dv">740</span> <span class="co">#W * m-2</span></div></code></pre>
 </div>
 <div id="leaf-temperature-and-vapor-pressure-deficit" class="section level3">
 <h3><span class="header-section-number">12.1.2</span> Leaf temperature and vapor pressure deficit</h3>
-Leaf temperature (<span class="math inline">\(T_{leaf}\)</span>; in Celsius) can be calculated for any given flow rate <span class="math inline">\(E(\Psi_{leaf})\)</span> using <span class="citation">(Campbell and Norman <a href="#ref-Campbell1998">1998</a>)</span>:
+<p>Leaf temperature (<span class="math inline">\(T_{leaf}\)</span>; in Celsius) can be calculated for any given flow rate <span class="math inline">\(E(\Psi_{leaf})\)</span> using <span class="citation">(Campbell and Norman <a href="#ref-Campbell1998">1998</a>)</span>:
 <span class="math display">\[\begin{equation}
 T_{leaf}(\Psi_{leaf}) = T_{can}+\frac{I_{abs}-\epsilon\cdot\sigma\cdot(T_{can}+273.15)^4-\lambda_v\cdot E(\Psi_{leaf})}{C_p\cdot(g_r+g_{Ha})}
 \end{equation}\]</span>
@@ -406,19 +422,20 @@ Finally, <span class="math inline">\(g_r\)</span> and <span class="math inline">
 g_r &amp;=&amp; \frac{4\cdot \epsilon \cdot \sigma \cdot (T_{can}+273.15)^3}{C_p} \\
 g_{Ha} &amp;=&amp; 0.189 \cdot (u/d)^{0.5}
 \end{eqnarray}\]</span>
-<p>where <span class="math inline">\(u\)</span> is wind speed (in <span class="math inline">\(m \cdot s^{-1}\)</span>), taken as the wind speed at mid-crown height, and <span class="math inline">\(d\)</span> is 0.72 times the leaf width (species parameter <code>LeafWidth</code> in <span class="math inline">\(cm\)</span>).</p>
-<p>The following figures illustrate the value of <span class="math inline">\(T_{leaf}\)</span> for two leaf sizes and varying values of wind speed and flow rate, calculated for 24ºC canopy temperature and 740 <span class="math inline">\(W \cdot m^{-2}\)</span> instantaneous absorved radiation (see function <code>biophysics_leafTemperature</code>): <img src="medfatebook_files/figure-html/unnamed-chunk-47-1.png" width="768" style="display: block; margin: auto;" /></p>
+where <span class="math inline">\(u\)</span> is wind speed (in <span class="math inline">\(m \cdot s^{-1}\)</span>), taken as the wind speed at mid-crown height, and <span class="math inline">\(d\)</span> is 0.72 times the leaf width (species parameter <code>LeafWidth</code> in <span class="math inline">\(cm\)</span>).</p>
+<p>The following figures illustrate the value of <span class="math inline">\(T_{leaf}\)</span> for two leaf sizes and varying values of wind speed and flow rate, calculated for 24ºC canopy temperature and 740 <span class="math inline">\(W \cdot m^{-2}\)</span> instantaneous absorved radiation (see function <code>biophysics_leafTemperature</code>):
+<img src="medfatebook_files/figure-html/unnamed-chunk-47-1.png" width="768" style="display: block; margin: auto;" /></p>
 <p>Let’s now fix wind speed to 2 m/s. The application of the above equations to the <span class="math inline">\(E(\Psi_{leaf})\)</span> curves corresponding to the complete hydraulic network yields the following <span class="math inline">\(T_{leaf}(\Psi_{leaf})\)</span> curves:</p>
 <p><img src="medfatebook_files/figure-html/unnamed-chunk-48-1.png" width="768" style="display: block; margin: auto;" /></p>
-Thus, transpiration decreases leaf temperature (whereas radiation increases it and wind speed makes it more similar to air temperature). Vapor pressure deficit in the leaf (<span class="math inline">\(VPD_{leaf}\)</span>, in kPa) is calculated as:
+<p>Thus, transpiration decreases leaf temperature (whereas radiation increases it and wind speed makes it more similar to air temperature). Vapor pressure deficit in the leaf (<span class="math inline">\(VPD_{leaf}\)</span>, in kPa) is calculated as:
 <span class="math display">\[\begin{equation}
 VPD_{leaf} = VP(T_{leaf})-vp_{day}
 \end{equation}\]</span>
-<p>Where <span class="math inline">\(vp_{day}\)</span> is the average daily vapor pressure and <span class="math inline">\(VP(T)\)</span> is a function giving the saturated vapor pressure for temperature <span class="math inline">\(T\)</span>. Let us assume the following values of relative humidity, yielding an average <span class="math inline">\(vp_{day}\)</span>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">RHmin =<span class="st"> </span><span class="dv">60</span>
-RHmax =<span class="st"> </span><span class="dv">75</span>
-vpa =<span class="st"> </span><span class="kw">utils_averageDailyVP</span>(Tmin, Tmax, RHmin, RHmax)
-vpa</code></pre></div>
+Where <span class="math inline">\(vp_{day}\)</span> is the average daily vapor pressure and <span class="math inline">\(VP(T)\)</span> is a function giving the saturated vapor pressure for temperature <span class="math inline">\(T\)</span>. Let us assume the following values of relative humidity, yielding an average <span class="math inline">\(vp_{day}\)</span>:</p>
+<pre class="sourceCode r" id="cb43"><code class="sourceCode r"><div class="sourceLine" id="cb43-1" data-line-number="1">RHmin =<span class="st"> </span><span class="dv">60</span></div>
+<div class="sourceLine" id="cb43-2" data-line-number="2">RHmax =<span class="st"> </span><span class="dv">75</span></div>
+<div class="sourceLine" id="cb43-3" data-line-number="3">vpa =<span class="st"> </span><span class="kw">utils_averageDailyVP</span>(Tmin, Tmax, RHmin, RHmax)</div>
+<div class="sourceLine" id="cb43-4" data-line-number="4">vpa</div></code></pre>
 <pre><code>## [1] 1.912181</code></pre>
 <p>the application of the above equation to the <span class="math inline">\(T_{leaf}(\Psi_{leaf})\)</span> curves yields the following <span class="math inline">\(VPD_{leaf}(\Psi_{leaf})\)</span> curves:</p>
 <p><img src="medfatebook_files/figure-html/unnamed-chunk-50-1.png" width="768" style="display: block; margin: auto;" /></p>
@@ -426,21 +443,21 @@ vpa</code></pre></div>
 </div>
 <div id="leaf-conductance-to-water-vapor" class="section level3">
 <h3><span class="header-section-number">12.1.3</span> Leaf conductance to water vapor</h3>
-Leaf conductance to water vapor (<span class="math inline">\(g_{sw}\)</span>; in <span class="math inline">\(mol H_2O \cdot s^{-1} \cdot m^{-2}\)</span>) and to carbon dioxide (<span class="math inline">\(g_{sc}\)</span>; in mol <span class="math inline">\(CO_{2} \cdot s^{-1} \cdot m^{-2}\)</span>) are obtained for each value of <span class="math inline">\(E\)</span> (in <span class="math inline">\(mol \cdot s^{-1} \cdot m^{-2}\)</span>) and <span class="math inline">\(VPD_{leaf}\)</span> using:
+<p>Leaf conductance to water vapor (<span class="math inline">\(g_{sw}\)</span>; in <span class="math inline">\(mol H_2O \cdot s^{-1} \cdot m^{-2}\)</span>) and to carbon dioxide (<span class="math inline">\(g_{sc}\)</span>; in mol <span class="math inline">\(CO_{2} \cdot s^{-1} \cdot m^{-2}\)</span>) are obtained for each value of <span class="math inline">\(E\)</span> (in <span class="math inline">\(mol \cdot s^{-1} \cdot m^{-2}\)</span>) and <span class="math inline">\(VPD_{leaf}\)</span> using:
 <span class="math display">\[\begin{eqnarray}
 g_{sw} &amp;=&amp; E \cdot \frac{P_{atm}}{VPD_{leaf}}\\
 g_{sc} &amp;=&amp; g_{sw}/1.6
 \end{eqnarray}\]</span>
-<p>the application of the equation for <span class="math inline">\(g_{sw}\)</span> to the <span class="math inline">\(VPD_{leaf}(\Psi_{leaf})\)</span> curves yields the following <span class="math inline">\(g_{sw}(\Psi_{leaf})\)</span> curves:</p>
+the application of the equation for <span class="math inline">\(g_{sw}\)</span> to the <span class="math inline">\(VPD_{leaf}(\Psi_{leaf})\)</span> curves yields the following <span class="math inline">\(g_{sw}(\Psi_{leaf})\)</span> curves:</p>
 <p><img src="medfatebook_files/figure-html/unnamed-chunk-51-1.png" width="768" style="display: block; margin: auto;" /></p>
 <p>Hence, larger values of transpiration require larger values of leaf water vapour conductance. In the previous figure we have indicated the thresholds of <span class="math inline">\(g_{swmin}\)</span> and <span class="math inline">\(g_{swmax}\)</span>, the species-specific minimum and maximum water vapour conductances (i.e. conductances when stomata are fully closed and fully open, respectively; see parameters <code>Gwmin</code> and <code>Gwmax</code> in <code>SpParamsMED</code>).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Gmin =<span class="st"> </span><span class="fl">0.0045</span>;
-Gmax =<span class="st"> </span><span class="fl">0.3</span></code></pre></div>
+<pre class="sourceCode r" id="cb45"><code class="sourceCode r"><div class="sourceLine" id="cb45-1" data-line-number="1">Gmin =<span class="st"> </span><span class="fl">0.0045</span>;</div>
+<div class="sourceLine" id="cb45-2" data-line-number="2">Gmax =<span class="st"> </span><span class="fl">0.3</span></div></code></pre>
 <p><span class="math inline">\(g_{sw}\)</span> cannot exceed <span class="math inline">\(g_{swmax}\)</span> so that some flow rates may not be possible (see stomatal regulation below). However, <span class="math inline">\(g_{swmax}\)</span> should quickly become non-limiting as soil dries (i.e. reducing <span class="math inline">\(E\)</span>) or <span class="math inline">\(VPD_{leaf}\)</span> increases <span class="citation">(J. S. Sperry, Venturas, et al. <a href="#ref-Sperry2016">2016</a>)</span>. Minimum stomatal conductance is also used in <strong>medfate</strong> when building the supply function, as it specifies the minimum flow rates that will occur for completely-closed stomata, i.e. the minimum flow from which supply function is build.</p>
 </div>
 <div id="leaf-photosynthesis" class="section level3">
 <h3><span class="header-section-number">12.1.4</span> Leaf photosynthesis</h3>
-Rubisco-limited photosynthesis rate <span class="math inline">\(A_c\)</span> (in <span class="math inline">\(\mu mol CO_2 \cdot s^{-1} \cdot m^{-2}\)</span>) is modelled using <span class="citation">(Collatz et al. <a href="#ref-Collatz1991">1991</a>; Medlyn, Loustau, and Delzon <a href="#ref-Medlyn2002">2002</a>)</span>:
+<p>Rubisco-limited photosynthesis rate <span class="math inline">\(A_c\)</span> (in <span class="math inline">\(\mu mol CO_2 \cdot s^{-1} \cdot m^{-2}\)</span>) is modelled using <span class="citation">(Collatz et al. <a href="#ref-Collatz1991">1991</a>; Medlyn, Loustau, and Delzon <a href="#ref-Medlyn2002">2002</a>)</span>:
 <span class="math display">\[\begin{equation}
 A_c=\frac{V_{max}\cdot (C_i- \Gamma*)}{C_i+K_c \cdot (1+ O_a/K_o)}
 \end{equation}\]</span>
@@ -467,51 +484,51 @@ where <span class="math inline">\(c&#39;=0.98\)</span> is a curvature factor. Th
 <span class="math display">\[\begin{equation}
 A = g_{sc} \cdot (C_{atm}-C_i)
 \end{equation}\]</span>
-<p>where <span class="math inline">\(C_{atm}\)</span> is the atmospheric <span class="math inline">\(CO_{2}\)</span> concentration (in <span class="math inline">\(\mu mol \cdot mol^{-1}\)</span>; see parameter  in function <code>defaultControl()</code>). Combining the two equations for <span class="math inline">\(A\)</span> and finding the root of the resulting equation using Newton-Raphson method allows determining <span class="math inline">\(C_i\)</span> and therefore <span class="math inline">\(A\)</span>. Thus, after defining PAR photon flux density, atmosphere <span class="math inline">\(CO_{2}\)</span> concentration and maximum rate parameters:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Q =<span class="st"> </span><span class="dv">2000</span>
-Catm =<span class="st"> </span><span class="dv">386</span>
-Vmax298 =<span class="st"> </span><span class="dv">100</span>
-Jmax298 =<span class="st"> </span><span class="fl">1.67</span><span class="op">*</span>Vmax298</code></pre></div>
+where <span class="math inline">\(C_{atm}\)</span> is the atmospheric <span class="math inline">\(CO_{2}\)</span> concentration (in <span class="math inline">\(\mu mol \cdot mol^{-1}\)</span>; see parameter  in function <code>defaultControl()</code>). Combining the two equations for <span class="math inline">\(A\)</span> and finding the root of the resulting equation using Newton-Raphson method allows determining <span class="math inline">\(C_i\)</span> and therefore <span class="math inline">\(A\)</span>. Thus, after defining PAR photon flux density, atmosphere <span class="math inline">\(CO_{2}\)</span> concentration and maximum rate parameters:</p>
+<pre class="sourceCode r" id="cb46"><code class="sourceCode r"><div class="sourceLine" id="cb46-1" data-line-number="1">Q =<span class="st"> </span><span class="dv">2000</span></div>
+<div class="sourceLine" id="cb46-2" data-line-number="2">Catm =<span class="st"> </span><span class="dv">386</span></div>
+<div class="sourceLine" id="cb46-3" data-line-number="3">Vmax298 =<span class="st"> </span><span class="dv">100</span></div>
+<div class="sourceLine" id="cb46-4" data-line-number="4">Jmax298 =<span class="st"> </span><span class="fl">1.67</span><span class="op">*</span>Vmax298</div></code></pre>
 <p>one can obtain the following <span class="math inline">\(A(\Psi_{leaf})\)</span> curves from <span class="math inline">\(T_{leaf}(\Psi_{leaf})\)</span> and <span class="math inline">\(g_{sc}(\Psi_{leaf})\)</span>:</p>
 <p><img src="medfatebook_files/figure-html/unnamed-chunk-54-1.png" width="768" style="display: block; margin: auto;" /></p>
-Finally, leaf net photosynthesis (i.e. accounting for autotrophic respiration) is calculated as:
+<p>Finally, leaf net photosynthesis (i.e. accounting for autotrophic respiration) is calculated as:
 <span class="math display">\[\begin{equation}
 A_n = A - 0.015 \cdot V_{max}
-\end{equation}\]</span>
+\end{equation}\]</span></p>
 </div>
 </div>
 <div id="crown-photosynthesis" class="section level2">
 <h2><span class="header-section-number">12.2</span> Crown photosynthesis</h2>
 <p>In the previous subsection we calculated photosynthesis at the leaf level. However, the function <span class="math inline">\(A(\Psi_{leaf})\)</span> can be calculated for a whole crown. Essentially we need to repeat the calculations of leaf temperature, leaf VPD, leaf gas conductance and photosynthesis for every leaf to be considered in the crown. Gross and net photosynthesis values can be then aggregated across the crown for each value of <span class="math inline">\(\Psi_{leaf}\)</span>, so that the function <span class="math inline">\(A(\Psi_{leaf})\)</span> is obtained. Here we will consider a crown of one species divided into 10 layers, with constant leaf density:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">LAI =<span class="st"> </span><span class="dv">2</span>
-nlayer =<span class="st"> </span><span class="dv">10</span>
-LAIlayerlive =<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rep</span>(LAI<span class="op">/</span>nlayer,nlayer),nlayer,<span class="dv">1</span>)
-LAIlayermax =<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rep</span>(LAI<span class="op">/</span>nlayer,nlayer),nlayer,<span class="dv">1</span>)
-LAIlayerdead =<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>,nlayer,<span class="dv">1</span>)
-kb =<span class="st"> </span><span class="fl">0.8</span>
-kd_PAR =<span class="st"> </span><span class="fl">0.5</span>
-kd_SWR =<span class="st"> </span>kd_PAR<span class="op">/</span><span class="fl">1.35</span>
-alpha_PAR =<span class="st"> </span><span class="fl">0.9</span>
-gamma_PAR =<span class="st"> </span><span class="fl">0.04</span>
-gamma_SWR =<span class="st"> </span><span class="fl">0.05</span>
-alpha_SWR =<span class="st"> </span><span class="fl">0.7</span></code></pre></div>
+<pre class="sourceCode r" id="cb47"><code class="sourceCode r"><div class="sourceLine" id="cb47-1" data-line-number="1">LAI =<span class="st"> </span><span class="dv">2</span></div>
+<div class="sourceLine" id="cb47-2" data-line-number="2">nlayer =<span class="st"> </span><span class="dv">10</span></div>
+<div class="sourceLine" id="cb47-3" data-line-number="3">LAIlayerlive =<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rep</span>(LAI<span class="op">/</span>nlayer,nlayer),nlayer,<span class="dv">1</span>)</div>
+<div class="sourceLine" id="cb47-4" data-line-number="4">LAIlayermax =<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rep</span>(LAI<span class="op">/</span>nlayer,nlayer),nlayer,<span class="dv">1</span>)</div>
+<div class="sourceLine" id="cb47-5" data-line-number="5">LAIlayerdead =<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>,nlayer,<span class="dv">1</span>)</div>
+<div class="sourceLine" id="cb47-6" data-line-number="6">kb =<span class="st"> </span><span class="fl">0.8</span></div>
+<div class="sourceLine" id="cb47-7" data-line-number="7">kd_PAR =<span class="st"> </span><span class="fl">0.5</span></div>
+<div class="sourceLine" id="cb47-8" data-line-number="8">kd_SWR =<span class="st"> </span>kd_PAR<span class="op">/</span><span class="fl">1.35</span></div>
+<div class="sourceLine" id="cb47-9" data-line-number="9">alpha_PAR =<span class="st"> </span><span class="fl">0.9</span></div>
+<div class="sourceLine" id="cb47-10" data-line-number="10">gamma_PAR =<span class="st"> </span><span class="fl">0.04</span></div>
+<div class="sourceLine" id="cb47-11" data-line-number="11">gamma_SWR =<span class="st"> </span><span class="fl">0.05</span></div>
+<div class="sourceLine" id="cb47-12" data-line-number="12">alpha_SWR =<span class="st"> </span><span class="fl">0.7</span></div></code></pre>
 <p>Many aspects may vary across the crown, including environmental conditions (such as direct/diffuse light or wind speed) and photosynthesis parameters (e.g. <code>Vmax298</code>). The previous crown definition and light parameters lead to a percentage of the above-canopy irradiance reaching each layer <span class="citation">(Anten and Bastiaans <a href="#ref-Anten2016">2016</a>)</span>. Furthermore, it is generally accepted that sunlit and shade leaves need to be treated separately <span class="citation">(De Pury and Farquhar <a href="#ref-DePury1997">1997</a>)</span>.Extinction of direct radiation also defines the proportion of leaves of each layer that are affected by direct light beams (i.e. the proportion of sunlit leaves).</p>
 <p><img src="medfatebook_files/figure-html/unnamed-chunk-56-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>For simplicity, here we will assume constant windspeed in all layers:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ulayer =<span class="st"> </span><span class="kw">rep</span>(<span class="dv">2</span>, <span class="dv">10</span>)</code></pre></div>
+<pre class="sourceCode r" id="cb48"><code class="sourceCode r"><div class="sourceLine" id="cb48-1" data-line-number="1">ulayer =<span class="st"> </span><span class="kw">rep</span>(<span class="dv">2</span>, <span class="dv">10</span>)</div></code></pre>
 <p>Regarding incoming light, we assume the following direct and diffuse irradiance at the top of the canopy:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">solarElevation =<span class="st"> </span><span class="fl">0.67</span>
-SWR_direct =<span class="st"> </span><span class="dv">1100</span>
-SWR_diffuse =<span class="st"> </span><span class="dv">300</span>
-PAR_direct =<span class="st"> </span><span class="dv">550</span>
-PAR_diffuse =<span class="st"> </span><span class="dv">150</span></code></pre></div>
+<pre class="sourceCode r" id="cb49"><code class="sourceCode r"><div class="sourceLine" id="cb49-1" data-line-number="1">solarElevation =<span class="st"> </span><span class="fl">0.67</span></div>
+<div class="sourceLine" id="cb49-2" data-line-number="2">SWR_direct =<span class="st"> </span><span class="dv">1100</span></div>
+<div class="sourceLine" id="cb49-3" data-line-number="3">SWR_diffuse =<span class="st"> </span><span class="dv">300</span></div>
+<div class="sourceLine" id="cb49-4" data-line-number="4">PAR_direct =<span class="st"> </span><span class="dv">550</span></div>
+<div class="sourceLine" id="cb49-5" data-line-number="5">PAR_diffuse =<span class="st"> </span><span class="dv">150</span></div></code></pre>
 <p>Solar elevation is the angle between the sun and the horizon (i.e. the complement of the zenith angle). Under these conditions, the amount of shortwave and PAR radiation absorbed per unit of leaf area at each canopy layer is <span class="citation">(Anten and Bastiaans <a href="#ref-Anten2016">2016</a>)</span>:</p>
 <p><img src="medfatebook_files/figure-html/unnamed-chunk-59-1.png" width="672" style="display: block; margin: auto;" /></p>
-Following <span class="citation">De Pury and Farquhar (<a href="#ref-DePury1997">1997</a>)</span>, we further assume that maximum assimilation rates are highest for leaves at the top of the canopy and there is a exponential decrease from there towards the bottom, where maximum rates are 50% of those at the top:
+<p>Following <span class="citation">De Pury and Farquhar (<a href="#ref-DePury1997">1997</a>)</span>, we further assume that maximum assimilation rates are highest for leaves at the top of the canopy and there is a exponential decrease from there towards the bottom, where maximum rates are 50% of those at the top:
 <span class="math display">\[\begin{equation}
 V_{max,298}(L_i) =V_{max,298}\cdot exp(-0.713\cdot L_i/LAIc)   
 \end{equation}\]</span>
-<p>where <span class="math inline">\(L_i\)</span> is the cumulative LAI value at a given canopy layer <span class="math inline">\(i\)</span> and <span class="math inline">\(LAIc\)</span> is the canopy LAI.</p>
+where <span class="math inline">\(L_i\)</span> is the cumulative LAI value at a given canopy layer <span class="math inline">\(i\)</span> and <span class="math inline">\(LAIc\)</span> is the canopy LAI.</p>
 <p>Multilayer canopy models allow evaluating leaf conditions, stomatal conductance and photosynthesis for different points of the canopy. However, this comes at high computational cost. While big-leaf canopy models are known to be unaccurate under some situations, sun-shade canopy models <span class="citation">(De Pury and Farquhar <a href="#ref-DePury1997">1997</a>)</span> provide estimates that are close to multiple layer models <span class="citation">(Hikosaka, Kumagai, and Ito <a href="#ref-Hikosaka2016">2016</a>)</span>. Sun-shade models involve: (a) aggregating the leaf area of sunlit/shade leaves across layers; (b) aggregating the light absorbed by leaves of each kind across layers; and (c) aggregating maximum assimilation rates across layers, again separating sunlit and shade leaves. One then calls the photosynthesis model twice (i.e. once for shade leaves and once for sunlit leaves), using the aggregated maximum assimilation rates. Separating the two kinds of leaves acknowledges that they operate at different parts of the light-saturation curve. The following figure provides the canopy photosynthesis functions obtained, under different situations, using a full 10-layer canopy description (top), a sunshade canopy model (center) or a big-leaf model (bottom). These were generated using functions <code>photo_multilayerPhotosynthesisFunction()</code>, <code>photo_sunshadePhotosynthesisFunction()</code> and <code>photo_leafPhotosynthesisFunction()</code>, respectively. Note the coincidence between the multi-layer and the sun-shade models.</p>
 <p><img src="medfatebook_files/figure-html/unnamed-chunk-62-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
@@ -520,41 +537,43 @@ V_{max,298}(L_i) =V_{max,298}\cdot exp(-0.713\cdot L_i/LAIc)
 <p><span class="citation">J. S. Sperry, Venturas, et al. (<a href="#ref-Sperry2016">2016</a>)</span> presented a profit maximization approach where hydraulic costs of opening the stomata are compared against photosynthetic gain. Details of their approach, and two suggested variants, a given in the next two subsections. The final subsection explains how to scale stomatal regulation (and hence, transpiration and photosynthesis) from leaf to plant.</p>
 <div id="cost-and-gain-functions" class="section level3">
 <h3><span class="header-section-number">12.3.1</span> Cost and gain functions</h3>
-The hydraulic supply function is used to derive a transpirational <em>cost function</em> <span class="math inline">\(\theta_1(\Psi_{leaf})\)</span> that reflects the increasing damage from cavitation and the greater difficulty of moving water along the continuum <span class="citation">(J. S. Sperry, Wang, et al. <a href="#ref-Sperry2016a">2016</a>)</span>:
+<p>The hydraulic supply function is used to derive a transpirational <em>cost function</em> <span class="math inline">\(\theta_1(\Psi_{leaf})\)</span> that reflects the increasing damage from cavitation and the greater difficulty of moving water along the continuum <span class="citation">(J. S. Sperry, Wang, et al. <a href="#ref-Sperry2016a">2016</a>)</span>:
 <span class="math display">\[\begin{equation}
 \theta_1(\Psi_{leaf}) = \frac{k_{c,max}-k_{c}(\Psi_{leaf})}{k_{c,max}-k_{crit}}
 \end{equation}\]</span>
-<p>where <span class="math inline">\(k_c(\Psi_{leaf}) = dE/d\Psi(\Psi_{leaf})\)</span> is the slope of the supply function, <span class="math inline">\(k_{c,max} = dE/d\Psi(\Psi_{soil})\)</span> and <span class="math inline">\(k_{crit} = dE/d\Psi(\Psi_{crit})\)</span> is the slope of the supply function at <span class="math inline">\(E = E_{crit}\)</span> the critical flow beyond which hydraulic failure occurs.</p>
-Alternatively, we considered a second cost function (<span class="math inline">\(\theta_2(\Psi_{leaf})\)</span>) using the vulnerability curve of the leaf:
+where <span class="math inline">\(k_c(\Psi_{leaf}) = dE/d\Psi(\Psi_{leaf})\)</span> is the slope of the supply function, <span class="math inline">\(k_{c,max} = dE/d\Psi(\Psi_{soil})\)</span> and <span class="math inline">\(k_{crit} = dE/d\Psi(\Psi_{crit})\)</span> is the slope of the supply function at <span class="math inline">\(E = E_{crit}\)</span> the critical flow beyond which hydraulic failure occurs.</p>
+<p>Alternatively, we considered a second cost function (<span class="math inline">\(\theta_2(\Psi_{leaf})\)</span>) using the vulnerability curve of the leaf:
 <span class="math display">\[\begin{eqnarray}
 \theta_2(\Psi_{leaf}) &amp;=&amp; \frac{k_{l, max}-k_l(\Psi_{leaf})}{k_{l,max} - k_{l,min}}\\
 \end{eqnarray}\]</span>
-<p>where <span class="math inline">\(k_l\)</span> is the leaf conductance function; and <span class="math inline">\(k_{l,min}\)</span> and <span class="math inline">\(k_{l,max}\)</span> are the minimum and maximum leaf conductance values found in the supply function. Using the leaf vulnerability curve for the cost function is grounded on the fact that stomatal regulation occurs at leaves, so that instantaneous regulation should respond to the loss of hydraulic conductance at this point, independently of what happens to the rest of the continuum. Hormonal signals from root to leaf are assumed to regulate stomatal aperture at longer time scales. Obviously, <span class="math inline">\(\theta_2\)</span> is the same before irreversible cavitation. The difference between them may be interpreted as the following. <span class="math inline">\(\theta_2\)</span> strictly follows the potential at the leaf level (and hence could be related to a loss of turgor).</p>
+where <span class="math inline">\(k_l\)</span> is the leaf conductance function; and <span class="math inline">\(k_{l,min}\)</span> and <span class="math inline">\(k_{l,max}\)</span> are the minimum and maximum leaf conductance values found in the supply function. Using the leaf vulnerability curve for the cost function is grounded on the fact that stomatal regulation occurs at leaves, so that instantaneous regulation should respond to the loss of hydraulic conductance at this point, independently of what happens to the rest of the continuum. Hormonal signals from root to leaf are assumed to regulate stomatal aperture at longer time scales. Obviously, <span class="math inline">\(\theta_2\)</span> is the same before irreversible cavitation. The difference between them may be interpreted as the following. <span class="math inline">\(\theta_2\)</span> strictly follows the potential at the leaf level (and hence could be related to a loss of turgor).</p>
 <p>The type of cost function can be specified by the user by setting parameter <code>hydraulicCostFunction</code> (see function <code>defaultControl()</code>). The following figures illustrate the <span class="math inline">\(\theta_1\)</span> and <span class="math inline">\(\theta_2\)</span> curves corresponding to the supply functions:</p>
 <p><img src="medfatebook_files/figure-html/unnamed-chunk-64-1.png" width="768" style="display: block; margin: auto;" /></p>
-The normalized photosynthetic <em>gain function</em> <span class="math inline">\(\beta(\Psi_{leaf})\)</span> reflects the actual assimilation rate with respect to the maximum:
+<p>The normalized photosynthetic <em>gain function</em> <span class="math inline">\(\beta(\Psi_{leaf})\)</span> reflects the actual assimilation rate with respect to the maximum:
 <span class="math display">\[\begin{equation}
 \beta(\Psi_{leaf}) = \frac{A(\Psi_{leaf})}{A_{max}}
 \end{equation}\]</span>
-<p>where <span class="math inline">\(A_{max}\)</span> is the instantaneous maximum assimilation rate estimated over the full <span class="math inline">\(\Psi_{leaf}\)</span> range. The following figures illustrate the <span class="math inline">\(\theta(\Psi_{leaf})\)</span> and <span class="math inline">\(\beta(\Psi_{leaf})\)</span> curves corresponding to the supply and assimilation functions:</p>
+where <span class="math inline">\(A_{max}\)</span> is the instantaneous maximum assimilation rate estimated over the full <span class="math inline">\(\Psi_{leaf}\)</span> range. The following figures illustrate the <span class="math inline">\(\theta(\Psi_{leaf})\)</span> and <span class="math inline">\(\beta(\Psi_{leaf})\)</span> curves corresponding to the supply and assimilation functions:</p>
 <p><img src="medfatebook_files/figure-html/unnamed-chunk-65-1.png" width="768" style="display: block; margin: auto;" /></p>
 </div>
 <div id="profit-maximization-at-the-leaf-level" class="section level3">
 <h3><span class="header-section-number">12.3.2</span> Profit maximization at the leaf level</h3>
-According to <span class="citation">J. S. Sperry, Venturas, et al. (<a href="#ref-Sperry2016">2016</a>)</span>, stomatal regulation can be effectively estimated by determining the maximum of the <em>profit function</em> (<span class="math inline">\(Profit(\Psi_{leaf})\)</span>), for which we consider three alternatives corresponding to the two cost functions:
+<p>According to <span class="citation">J. S. Sperry, Venturas, et al. (<a href="#ref-Sperry2016">2016</a>)</span>, stomatal regulation can be effectively estimated by determining the maximum of the <em>profit function</em> (<span class="math inline">\(Profit(\Psi_{leaf})\)</span>), for which we consider three alternatives corresponding to the two cost functions:
 <span class="math display">\[\begin{eqnarray}
 Profit_1(\Psi_{leaf}) &amp;=&amp; \beta(\Psi_{leaf})-\theta_1(\Psi_{leaf})\\
 Profit_2(\Psi_{leaf}) &amp;=&amp; \beta(\Psi_{leaf})-\theta_2(\Psi_{leaf})\\
 \end{eqnarray}\]</span>
-<p>Once <span class="math inline">\(\Psi_{leaf}\)</span> that maximizes profit is determined, the values of the remaining variables are also determined. At this point, it may happen that <span class="math inline">\(g_{sw}(\Psi_{leaf})\)</span> is lower than the minimum (i.e. cuticular) water vapor conductance (<span class="math inline">\(g_{swmin}\)</span>) or larger than the maximum water vapor conductance (<span class="math inline">\(g_{swmax}\)</span>). These thresholds need to be taken into account when determining the maximum of the profit function. The following figures illustrate the <span class="math inline">\(Profit_1(\Psi_{leaf})\)</span> and <span class="math inline">\(Profit_2(\Psi_{leaf})\)</span> curves of corresponding to the previous cost and gain curves: \begin{center}</p>
+Once <span class="math inline">\(\Psi_{leaf}\)</span> that maximizes profit is determined, the values of the remaining variables are also determined. At this point, it may happen that <span class="math inline">\(g_{sw}(\Psi_{leaf})\)</span> is lower than the minimum (i.e. cuticular) water vapor conductance (<span class="math inline">\(g_{swmin}\)</span>) or larger than the maximum water vapor conductance (<span class="math inline">\(g_{swmax}\)</span>). These thresholds need to be taken into account when determining the maximum of the profit function. The following figures illustrate the <span class="math inline">\(Profit_1(\Psi_{leaf})\)</span> and <span class="math inline">\(Profit_2(\Psi_{leaf})\)</span> curves of corresponding to the previous cost and gain curves:
+\begin{center}</p>
 <p><img src="medfatebook_files/figure-html/unnamed-chunk-66-1.png" width="768" style="display: block; margin: auto;" /></p>
 <p>Squares in the previous figures indicate the maximum profit points in each situation. In the case of non-cavitated system (left panels), the drier the soil, the closer is the maximum profit <span class="math inline">\(\Psi_{leaf}\)</span> to soil water potential as one would expect intuitively. This occurs for all three profit functions. Unlike <span class="math inline">\(\theta_1\)</span> which is different for each soil texture (and soil potential), <span class="math inline">\(\theta_2\)</span> is the same for all soil textures. As a result, the regulation points do not differ much among textures in <span class="math inline">\(Profit_2\)</span> and <span class="math inline">\(Profit_3\)</span> because the only difference is in the gain function. For a system with xylem cavitation (right panel), the maximum <span class="math inline">\(Profit_1\)</span> curves behave strangely. In particular may get a more negative value for <span class="math inline">\(\Psi_{canopy}\)</span> for wet soils than for dry soils. This effect does not occur when using <span class="math inline">\(Profit_2\)</span>. <span class="math inline">\(Profit_2\)</span> brings plant water potentials to more negative values after cavitation. Although cavitation did not change the <span class="math inline">\(\theta_2\)</span> function, the supply function is flatter and this affects the gain function, making it increase less steeply with lower potentials.</p>
-<p>Differences between profit functions can be more easily seen when plotting the change from original (uncavitated) regulation to the cavitated one, in terms of both canopy sap pressure and flow rate: <img src="medfatebook_files/figure-html/unnamed-chunk-67-1.png" width="384" style="display: block; margin: auto;" /></p>
+<p>Differences between profit functions can be more easily seen when plotting the change from original (uncavitated) regulation to the cavitated one, in terms of both canopy sap pressure and flow rate:
+<img src="medfatebook_files/figure-html/unnamed-chunk-67-1.png" width="384" style="display: block; margin: auto;" /></p>
 <p>In <span class="math inline">\(Profit_1\)</span> irreversible cavitation often brings, after soil rewetting, less conservative stomatal regulation that enables higher flow rates. This does not seem to happen in <span class="math inline">\(Profit_2\)</span>, where despite irreversible cavitation leads to more negative water potentials, predicted flow rates after rewetting are not above those predicted before cavitation.</p>
 </div>
 <div id="scaling-to-the-plant-level" class="section level3">
 <h3><span class="header-section-number">12.3.3</span> Scaling to the plant level</h3>
-So far, we have considered stomatal regulation by at the leaf level only. At the plant level, the gain function could be build from the crown photosynthesis function <span class="math inline">\(A(\Psi_{leaf})\)</span> that we defined in subsection ‘Crown photosynthesis’. However, using the crown photosynthesis function would imply the assumption that the same stomatal aperture occurs in all leaves of the crown, independently of whether they are in shade or sunlit. A more realistic approach is to determine stomatal regulation by profit maximization for sunlit and shade leaves separately; and then determining the average photosynthesis and flow rate from the leaf area of each leaf type. The gain function and profit maximization calculations conducted for each leaf type yield instantaneous water potentials <span class="math inline">\(\Psi_{sunlit}\)</span> and <span class="math inline">\(\Psi_{shade}\)</span>. They also yield flow values <span class="math inline">\(E_{shade}\)</span> and <span class="math inline">\(E_{sunlit}\)</span>, in <span class="math inline">\(mmol H_2O \cdot s^{-1} \cdot m^{-2}\)</span> of leaf area unit. The average flow rate in <span class="math inline">\(mmol H_2O \cdot s^{-1} \cdot m^{-2}\)</span> per leaf area unit at the plant level is the weighed average:
+<p>So far, we have considered stomatal regulation by at the leaf level only. At the plant level, the gain function could be build from the crown photosynthesis function <span class="math inline">\(A(\Psi_{leaf})\)</span> that we defined in subsection ‘Crown photosynthesis’. However, using the crown photosynthesis function would imply the assumption that the same stomatal aperture occurs in all leaves of the crown, independently of whether they are in shade or sunlit. A more realistic approach is to determine stomatal regulation by profit maximization for sunlit and shade leaves separately; and then determining the average photosynthesis and flow rate from the leaf area of each leaf type. The gain function and profit maximization calculations conducted for each leaf type yield instantaneous water potentials <span class="math inline">\(\Psi_{sunlit}\)</span> and <span class="math inline">\(\Psi_{shade}\)</span>. They also yield flow values <span class="math inline">\(E_{shade}\)</span> and <span class="math inline">\(E_{sunlit}\)</span>, in <span class="math inline">\(mmol H_2O \cdot s^{-1} \cdot m^{-2}\)</span> of leaf area unit. The average flow rate in <span class="math inline">\(mmol H_2O \cdot s^{-1} \cdot m^{-2}\)</span> per leaf area unit at the plant level is the weighed average:
 <span class="math display">\[\begin{equation}
  E_{plant} = \frac{E_{sunlit} \cdot LAI_{sunlit} + E_{shade} \cdot LAI_{shade}}{LAI_{sunlit} + LAI_{shade}}
 \end{equation}\]</span>
@@ -562,7 +581,7 @@ where <span class="math inline">\(LAI_{sunlit}\)</span> and <span class="math in
 <span class="math display">\[\begin{equation}
  A_{n, plant} = \frac{A_{n,sunlit} \cdot LAI_{sunlit} + A_{n,shade} \cdot LAI_{shade}}{LAI_{sunlit} + LAI_{shade}}
 \end{equation}\]</span>
-<p>Profit maximization calculations for shade and sunlit leaves imply different amount of water extracted from the soil layers and different plant water potentials. To overcome this issue, we must use the hydraulic supply function to find the extraction flows from soil layers, the water potential at the root crown and the ‘average’ water potential of the crown all corresponding to the average flow <span class="math inline">\(E_{plant}\)</span>.</p>
+Profit maximization calculations for shade and sunlit leaves imply different amount of water extracted from the soil layers and different plant water potentials. To overcome this issue, we must use the hydraulic supply function to find the extraction flows from soil layers, the water potential at the root crown and the ‘average’ water potential of the crown all corresponding to the average flow <span class="math inline">\(E_{plant}\)</span>.</p>
 
 </div>
 </div>
@@ -573,31 +592,31 @@ where <span class="math inline">\(LAI_{sunlit}\)</span> and <span class="math in
 <p>Anten, Niels P R, and Lammert Bastiaans. 2016. “The use of canopy models to analyze light competition among plants.” In <em>Canopy Photosynthesis: From Basics to Application</em>, edited by K. Hikosaka, Ülo Niinemets, and Niels P R Anten, 379–98. Springer.</p>
 </div>
 <div id="ref-Bernacchi2001">
-<p>Bernacchi, C. J., E. L. Singsaas, C. Pimentel, A. R. Portis, and S. P. Long. 2001. “Improved temperature response functions for models of Rubisco-limited photosynthesis.” <em>Plant, Cell and Environment</em> 24 (2): 253–59. doi:<a href="https://doi.org/10.1046/j.1365-3040.2001.00668.x">10.1046/j.1365-3040.2001.00668.x</a>.</p>
+<p>Bernacchi, C. J., E. L. Singsaas, C. Pimentel, A. R. Portis, and S. P. Long. 2001. “Improved temperature response functions for models of Rubisco-limited photosynthesis.” <em>Plant, Cell and Environment</em> 24 (2):253–59. <a href="https://doi.org/10.1046/j.1365-3040.2001.00668.x" class="uri">https://doi.org/10.1046/j.1365-3040.2001.00668.x</a>.</p>
 </div>
 <div id="ref-Campbell1998">
 <p>Campbell, Gaylon S., and John M. Norman. 1998. <em>An introduction to environmental biophysics</em>. 2nd editio. New York: Springer-Verlag. <a href="http://books.google.com/books?id=v6UpE6lThCwC" class="uri">http://books.google.com/books?id=v6UpE6lThCwC</a>.</p>
 </div>
 <div id="ref-Collatz1991">
-<p>Collatz, G. James, J. Timothy Ball, Cyril Grivet, and Joseph A. Berry. 1991. “Physiological and environmental regulation of stomatal conductance, photosynthesis and transpiration: a model that includes a laminar boundary layer.” <em>Agricultural and Forest Meteorology</em> 54 (2-4): 107–36. doi:<a href="https://doi.org/10.1016/0168-1923(91)90002-8">10.1016/0168-1923(91)90002-8</a>.</p>
+<p>Collatz, G. James, J. Timothy Ball, Cyril Grivet, and Joseph A. Berry. 1991. “Physiological and environmental regulation of stomatal conductance, photosynthesis and transpiration: a model that includes a laminar boundary layer.” <em>Agricultural and Forest Meteorology</em> 54 (2-4):107–36. <a href="https://doi.org/10.1016/0168-1923(91)90002-8" class="uri">https://doi.org/10.1016/0168-1923(91)90002-8</a>.</p>
 </div>
 <div id="ref-DePury1997">
-<p>De Pury, D G G, and Graham D Farquhar. 1997. “Simple scaling of photosynthesis from leaves to canopies without the errors of big-leaf models.” <em>Plant, Cell and Environment</em> 20 (5): 537–57. doi:<a href="https://doi.org/10.1111/j.1365-3040.1997.tb00466.x">10.1111/j.1365-3040.1997.tb00466.x</a>.</p>
+<p>De Pury, D G G, and Graham D Farquhar. 1997. “Simple scaling of photosynthesis from leaves to canopies without the errors of big-leaf models.” <em>Plant, Cell and Environment</em> 20 (5):537–57. <a href="https://doi.org/10.1111/j.1365-3040.1997.tb00466.x" class="uri">https://doi.org/10.1111/j.1365-3040.1997.tb00466.x</a>.</p>
 </div>
 <div id="ref-Hikosaka2016">
-<p>Hikosaka, Kouki, Tomo’omi Kumagai, and Akihiko Ito. 2016. “Modeling Canopy Photosynthesis.” In, 239–68. doi:<a href="https://doi.org/10.1007/978-94-017-7291-4_9">10.1007/978-94-017-7291-4_9</a>.</p>
+<p>Hikosaka, Kouki, Tomo’omi Kumagai, and Akihiko Ito. 2016. “Modeling Canopy Photosynthesis.” In, 239–68. <a href="https://doi.org/10.1007/978-94-017-7291-4_9" class="uri">https://doi.org/10.1007/978-94-017-7291-4_9</a>.</p>
 </div>
 <div id="ref-Leuning2002">
-<p>Leuning, Ray. 2002. “Temperature dependence of two parameters in a photosynthesis model.” <em>Plant, Cell and Environment</em> 25 (9): 1205–10. doi:<a href="https://doi.org/10.1046/j.1365-3040.2002.00898.x">10.1046/j.1365-3040.2002.00898.x</a>.</p>
+<p>Leuning, Ray. 2002. “Temperature dependence of two parameters in a photosynthesis model.” <em>Plant, Cell and Environment</em> 25 (9):1205–10. <a href="https://doi.org/10.1046/j.1365-3040.2002.00898.x" class="uri">https://doi.org/10.1046/j.1365-3040.2002.00898.x</a>.</p>
 </div>
 <div id="ref-Medlyn2002">
-<p>Medlyn, B. E., D. Loustau, and S. Delzon. 2002. “Temperature response of parameters of a biochemically based model of photosynthesis. I. Seasonal changes in mature maritime pine (Pinus pinaster Ait.).” <em>Plant, Cell and Environment</em> 25 (9): 1155–65. doi:<a href="https://doi.org/10.1046/j.1365-3040.2002.00890.x">10.1046/j.1365-3040.2002.00890.x</a>.</p>
+<p>Medlyn, B. E., D. Loustau, and S. Delzon. 2002. “Temperature response of parameters of a biochemically based model of photosynthesis. I. Seasonal changes in mature maritime pine (Pinus pinaster Ait.).” <em>Plant, Cell and Environment</em> 25 (9):1155–65. <a href="https://doi.org/10.1046/j.1365-3040.2002.00890.x" class="uri">https://doi.org/10.1046/j.1365-3040.2002.00890.x</a>.</p>
 </div>
 <div id="ref-Sperry2016">
-<p>Sperry, John S., Martin D. Venturas, William R. L. Anderegg, Maurizio Mencuccini, D. S. Mackay, YuJie Wang, and David M Love. 2016. “Predicting stomatal responses to the environment from the optimization of photosynthetic gain and hydraulic cost.” <em>Plant Cell and Environment</em> 40 (6): 816–30. doi:<a href="https://doi.org/10.1111/pce.12852">10.1111/pce.12852</a>.</p>
+<p>Sperry, John S., Martin D. Venturas, William R. L. Anderegg, Maurizio Mencuccini, D. S. Mackay, YuJie Wang, and David M Love. 2016. “Predicting stomatal responses to the environment from the optimization of photosynthetic gain and hydraulic cost.” <em>Plant Cell and Environment</em> 40 (6):816–30. <a href="https://doi.org/10.1111/pce.12852" class="uri">https://doi.org/10.1111/pce.12852</a>.</p>
 </div>
 <div id="ref-Sperry2016a">
-<p>Sperry, John S., Yujie Wang, Brett T. Wolfe, D. Scott Mackay, William R L Anderegg, Nate G. Mcdowell, and William T. Pockman. 2016. “Pragmatic hydraulic theory predicts stomatal responses to climatic water deficits.” <em>New Phytologist</em> 212: 577–89. doi:<a href="https://doi.org/10.1111/nph.14059">10.1111/nph.14059</a>.</p>
+<p>Sperry, John S., Yujie Wang, Brett T. Wolfe, D. Scott Mackay, William R L Anderegg, Nate G. Mcdowell, and William T. Pockman. 2016. “Pragmatic hydraulic theory predicts stomatal responses to climatic water deficits.” <em>New Phytologist</em> 212:577–89. <a href="https://doi.org/10.1111/nph.14059" class="uri">https://doi.org/10.1111/nph.14059</a>.</p>
 </div>
 </div>
             </section>
@@ -656,7 +675,7 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "";
+    var src = "true";
     if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');

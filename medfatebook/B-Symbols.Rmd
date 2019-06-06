@@ -41,7 +41,7 @@ The following tables list all symbols used in this document, along with their un
 | $A_{sh,i}$  | $cm^2$ |  | Area occupied by an average shrub individual of cohort $i$ |
 | $B_{sh,i}$  | $kg$ |  | Fine-fuel biomass of an average shrub individual of cohort $i$ |
 | $H_i$  | $cm$  | `Height` | Average tree or shrub height of cohort $i$ |
-| $H_{b,i}$ | $cm$ | | Crown base height (i.e. the height corresponding to the first living branch) of cohort $i$ |
+| $H_{crown,i}$ | $cm$ | | Crown base height (i.e. the height corresponding to the first living branch) of cohort $i$ |
 | $CCF_i$ | | | Crown competition factor of cohort $i$ |
 | $CW_i$ | $m$ | | Crown width that a tree of cohort $i$ would have in open-ground conditions |
 | $CR_i$ |       | `CR`| Crown ratio (i.e. ratio between crown length and plant height) of cohort $i$ |

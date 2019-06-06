@@ -93,19 +93,24 @@ LA_{i} =  10000 \cdot LAI_{i} / N_{i}
 
 LAI values are calculated from `forest` objects using function `plant_LAI()`.
 
-### Crown base height {#crownbaseheight}
+### Crown vertical dimensions {#crownbaseheight}
 
 
-In the case of shrubs the crown ratio is an input (species-specific) parameter ($cr$). In the case of trees, the crown ratio is modelled as a function of tree size and stand competition, following a modification of the logistic equation of @Hasenauer1996 :
+Crown base height, i.e. the height were the first living branch of trees or shrubs occurs, is an important parameter to know the vertical distribution of leaves (see section \@ref(leafdistribution)). Crown base height of a plant cohort $i$ (i.e., $H_{crown,i}$, in $cm$) is related to the total height of the cohort ($H_i$, in $cm$) and its crown ratio ($CR_i$), which is the ratio between crown length and plant height:
+\begin{equation}
+H_{crown,i} = (1 - CR_i) \cdot H_i
+(\#eq:CrownHeight)
+\end{equation}
+In the case of shrubs the crown ratio $CR_i$ is normally an input (species-specific) parameter ($cr$). In the case of trees, the crown ratio is modelled as a function of tree size and stand competition, following a modification of the logistic equation of @Hasenauer1996 :
 \begin{equation}
 CR_i = \frac{1}{1+e^{-(a_{cr}+b_{1cr}\cdot HD_i +b_{2cr} \cdot (H_i/100)+b_{3cr} \cdot DBH_i^2+c_{1cr} \cdot BAL_i + c_{2cr} \cdot ln(CCF_i))}}
 (\#eq:treecrownratio)
 \end{equation}
 where $HD_i = H_i/(100\cdot DBH_i)$ is the height to diameter ratio (in $m\cdot cm^{-1}$), $H_i$ is the tree height, $DBH_i$ is the diameter, $CCF_i$ is the crown competition factor and $a_{cr}$, $b_{1cr}$, $b_{2cr}$, $b_{3cr}$, $c_{1cr}$ and $c_{2cr}$ are species-specific parameters. The crown competition factor is in turn calculated using [@Krajicek1961]:
 \begin{equation}
-CCF_i = \sum_{i}{N_i \cdot MCA_i}= \sum_{i}{N_i \cdot \pi \cdot (CW_i/2)^2/100}
+CCF_i = \sum_{i}{N_i \cdot \pi \cdot (CW_i/2)^2/100}
 \end{equation}
-where $N_i$ is the tree density, $MCA_i$ is the maximum crown area (in percent of unit area) and $CW_i$ is the crown width (in m) assuming an open-grown tree, estimated from an allometric relationship with tree diameter:
+where $N_i$ is the tree density and $CW_i$ is the crown width (in $m$) assuming an open-grown tree, estimated from an allometric relationship with tree diameter:
 \begin{equation}
 CW_i = a_{cw}\cdot DBH_i^{b_{cw}} 
 \end{equation}

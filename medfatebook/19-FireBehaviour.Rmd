@@ -12,29 +12,31 @@ Functions `fuel_FCCS()` and `fire_FCCS()` allow calculating potential fire behav
 
 ## Input data
 
-### Forest inventory plot data
-The input data for tree cohorts are:
+### Forest plot data
+As explained in section \@ref(vegetationinput), **medfate** has been specially designed to work with forest inventory plots. The tree/shrub cohort attributes required to apply allometric models are same as for chapter \@ref(allometricmodels):
 
-+ $SP_i$: Species identity}
-+ $DBH_i$: Diameter at breast height (in cm) of the representative tree.
-+ $H_i$: Height (in cm) of the representative tree.
-+ $N_i$: Cohort density (in $ind.\cdot ha^{-1}$).
 
-The input data for shrub cohorts are:
+| Symbol | Units | R  | Description                        | trees | shrubs |
+|--------|-------|----| ------------------------------------|-----|-----|
+| $SP_i$  |  | `Species` | Species identity |  Y  |  Y  |
+| $H_i$  | $cm$  | `Height` | Average tree or shrub height |  Y  |  Y  |
+| $N_i$ | $ind · ha^{-1}$ | `N` | Density of tree individuals | Y | N |
+| $DBH_i$ | $cm$ | `DBH` | Tree diameter at breast height | Y | N |
+| $Cover_i$ | % | `Cover` | Shrub percent cover | N | Y |
 
-+ $SP_i$: Species identity
-+ $C_i$: Plant cover (in percent).
-+ $H_i$: Mean plant height (in cm).
 
 Cohorts are not distinguished for the herbaceous stratum, and the variables needed are:
 
-+ $C_{he}$: Herbaceous cover (in percent).
-+ $H_{he}$: Mean herb height (in cm).
+| Symbol | Units | R  | Description                        |
+|--------|-------|----| ------------------------------------|
+| $C_{he}$ | % | `herbCover` | Herbaceous percent cover |
+| $H_{he}$ | $cm$ | `herbHeight` | Mean herb height |
 
 Finally, the model also requires the percent cover of trees in the canopy ($C_{ca}$). This is easily available from forest inventory data, but could also be derived from the description of tree cohorts.
 
+Fire behaviour functions require data in form of a `forest` object (see section \@ref(forestobjects)).
 
-### Species-specific parameters
+### Species parameters
 
 + $r_{6.35}(SP_i)$ [`r635`]: Ratio between the weight of leaves plus branches and the weight of leaves alone for branches of 6.35 mm.
 + $\rho_p(SP_i)$ [`PD`]: Particle density.
@@ -78,17 +80,21 @@ The Fuel Characteristics Classification System (FCCS) on which this document is 
 Shrubs, herbs and woody fuels are constitute the **upper surface fuels**, whereas herbs and woody fuels alone consitute the **lower surface fuels**. FCCS summarizes and calculates characteristics for each fuelbed stratum and layer. Our model estimates fuel loading and characteristics for canopy, shrub, non-woody vegetation, as well as fine (1h) woody fuels and litter fuels. Larger woody fuels (10h or 100h) could be considered if information about forest management actions is available. Ground fuels are not included here.
 
 ### Cohort fuel loading
-Here we consider as burnable fuels foliage and branches up to 6.35 mm = 0.25 in in diameter. The same consideration applies to both trees and shrubs. 
+Here we consider as burnable fuels foliage and branches up to 6.35 mm = 0.25 in in diameter. The same consideration applies to both trees and shrubs. They are calculated from `forest` objects using function `plant_fuel()`.
+
+**Tree cohorts**
 
 Fine fuel loading for a tree cohort ($W_{i}$; in $kg\cdot m^{-2}$), including its leaves and branches with diameter up to 6.35 mm = 0.25 in, is calculated from foliar biomass ($FB_{i}$, see eq. \@ref(eq:treefoliarbiomass)) using:
 \begin{equation}
-W_{i} = r_{6.35}(SP_i)\cdot FB_{i}
+W_{i} = r_{6.35,i}\cdot FB_{i}
 \end{equation}
-where $r_{6.35}(SP_i)$ is the ratio between the weight of leaves plus branches and the weight of leaves alone for branches of 6.35 mm in diameter for the species of cohort $i$. The biomass corresponding to branches of less than < 6.35 mm ($SBB_{i}$, also in $kg\cdot m^{-2}$) is obtained by subtraction: 
+where $r_{6.35,i}$ is the ratio between the weight of leaves plus branches and the weight of leaves alone for branches of 6.35 mm in diameter for the species of cohort $i$. The biomass corresponding to branches of less than < 6.35 mm ($SBB_{i}$, also in $kg\cdot m^{-2}$) is obtained by subtraction: 
 \begin{equation}
-SBB_{i} = (r_{6.35}(SP_i)-1)\cdot FB_{i}
+SBB_{i} = (r_{6.35,i}-1)\cdot FB_{i}
 \end{equation}
 Whereas $W_{i}$ is the cohort loading variable influencing fire behavior, $FB_{i}$ and $SBB_{i}$ are cohort variables used to estimate fine dead woody and leaf litter loadings.
+
+**Shrub cohorts**
 
 Our procedure to estimate shrub fuel loading differs from @Prichard2013 because they calculate first total biomass of the shrub species and then consider the percentage of total weight that corresponds to leaves and small branches. In our case, we estimate fine fuel loading ($W_{i}$, in $kg \cdot m^{-2}$) and foliar biomass ($FB_i$, in $kg \cdot m^{-2}$) of shrubs from eqs. \@ref(eq:shrubloading) and \@ref(eq:shrubfoliarbiomass). Biomass of small branches (in $kg \cdot m^{-2}$) can be obtained from :
 \begin{equation}
@@ -97,15 +103,11 @@ SBB_{i} = W_{i} - FB_{i}
 
 ### Vertical distribution of cohort fuels
 
-For all tree or shrub cohorts fuels are assumed to be homogeneously distributed between the crown base height ($H_{b,i}$; in cm) and the total height ($H_i$). Crown base height of trees is calculated as explained in \@ref(crownbaseheight). The loading of a cohort that occurs within a given height interval of limits $H_1$ and $H_2$ is calculated as:
+Vertical distribution of fine fuels are distributed between the crown base height ($H_{crown,i}$; in $cm$) and the total height ($H_i$, in $cm$) following a **truncated Gaussian distribution**, as done for the distribution of leaves (see section \@ref(leafdistribution)). Crown base height of trees is calculated as explained in \@ref(crownbaseheight). The loading of a cohort that occurs within a given height interval of limits $H_1$ and $H_2$ is calculated as:
 \begin{equation}
 W_i(H_1, H_2) = W_i\cdot p_i(H_1, H_2)
 \end{equation}
-where $p_i(H_1, H_2)$ is the proportion of the crown of cohort $i$ that corresponds to the height interval $(H_1, H_2)$:
-\begin{equation}
-p_i(H_1, H_2) = \frac{\max(0, \min(H_i, H_2) - \max(H_{b,i}, H_1))}{H_{i}-H_{b,i}}
-\end{equation}
-
+where $p_i(H_1, H_2)$ is the proportion of the crown of cohort $i$ that corresponds to the height interval $(H_1, H_2)$.
 
 ### Fuel bulk density profile
 Knowing at which height fuels are placed, the **fuel bulk density profile**  [@Reinhardt2006] is defined for any given interval $(H_1, H_2)$ as the bulk density ($kg/m^3$) of fine  fuels corresponding to that interval:
@@ -120,8 +122,8 @@ Canopy bulk density normally ranges between 0 and 0.4 $kg/m^3$ [@Scott2002]. @Sa
 + *Canopy top height*, $H_{ct}$ (in $cm$): the maximum height where bulk density is larger than $t_{BDP}$.
 + *Canopy gap*, $H_{gap}$ (in $cm$): the difference between $H_{cb}$ and $H_{st}$. The canopy gap is used to calculate crown initiation potential.
 
-The following figure illustrates the definition and analysis of the fuel bulk density profile for a given forest stand. Following @Mitsopoulos2007, a threshold $t_{BDP} = 0.04$ has been used to determine shrub and canopy heights.
-```{r, echo=FALSE, fig.width=4, fig.height=4, fig.align='center'}
+Figure \@ref(fig:bulkdensityprofile) illustrates the definition and analysis of the fuel bulk density profile for a given forest stand (see function `vprofile_fuelBulkDensity()`). Following @Mitsopoulos2007, a threshold $t_{BDP} = 0.04$ is used to determine shrub and canopy heights.
+```{r bulkdensityprofile, echo=FALSE, fig.width=4, fig.height=4, fig.align='center', fig.cap="Bulk density profile of an example forest"}
 vprofile_fuelBulkDensity(exampleforest, SpParamsMED, z = seq(0,1000, by=1))
 # fs = fuel.Stratification(exampleforest,SpParamsMED, bulkDensityThreshold = 0.04)
 # abline(v=0.04, col="red", lty=2)

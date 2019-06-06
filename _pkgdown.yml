@@ -3,7 +3,7 @@ home:
   - text: Package website
     href: http://vegmod.ctfc.cat/medfateweb
   - text: Package reference book
-    href: https://miquelcaceres.github.io/medfate/medfatebook/
+    href: https://vegmod.github.io/medfate/medfatebook/
     
 articles:
 - title: Overview
