@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 12 Plant photosynthesis and stomatal regulation | The medfate reference book</title>
+  <title>Chapter 11 Plant photosynthesis and stomatal regulation | The medfate reference book</title>
   <meta name="description" content="This is a reference book for models implemented in package medfate." />
   <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 12 Plant photosynthesis and stomatal regulation | The medfate reference book" />
+  <meta property="og:title" content="Chapter 11 Plant photosynthesis and stomatal regulation | The medfate reference book" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 12 Plant photosynthesis and stomatal regulation | The medfate reference book" />
+  <meta name="twitter:title" content="Chapter 11 Plant photosynthesis and stomatal regulation | The medfate reference book" />
   
   <meta name="twitter:description" content="This is a reference book for models implemented in package medfate." />
   
@@ -30,7 +30,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="plant-hydraulics.html">
+<link rel="prev" href="planthydraulics.html">
 <link rel="next" href="transpirationsperry.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -140,10 +140,10 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <li class="chapter" data-level="2.1.4" data-path="model-inputs.html"><a href="model-inputs.html#water-content-and-water-table-depth"><i class="fa fa-check"></i><b>2.1.4</b> Water content and water table depth</a></li>
 </ul></li>
 <li class="chapter" data-level="2.2" data-path="model-inputs.html"><a href="model-inputs.html#vegetationinput"><i class="fa fa-check"></i><b>2.2</b> Vegetation description</a><ul>
-<li class="chapter" data-level="2.2.1" data-path="model-inputs.html"><a href="model-inputs.html#attributes-of-plant-cohorts"><i class="fa fa-check"></i><b>2.2.1</b> Attributes of plant cohorts</a></li>
+<li class="chapter" data-level="2.2.1" data-path="model-inputs.html"><a href="model-inputs.html#structural-attributes-of-plant-cohorts"><i class="fa fa-check"></i><b>2.2.1</b> Structural attributes of plant cohorts</a></li>
 <li class="chapter" data-level="2.2.2" data-path="model-inputs.html"><a href="model-inputs.html#vertical-root-distribution"><i class="fa fa-check"></i><b>2.2.2</b> Vertical root distribution</a></li>
 <li class="chapter" data-level="2.2.3" data-path="model-inputs.html"><a href="model-inputs.html#forestobjects"><i class="fa fa-check"></i><b>2.2.3</b> Forest plot objects</a></li>
-<li class="chapter" data-level="2.2.4" data-path="model-inputs.html"><a href="model-inputs.html#plant-species-traits-and-vegetation-initialization"><i class="fa fa-check"></i><b>2.2.4</b> Plant (species) traits and vegetation initialization</a></li>
+<li class="chapter" data-level="2.2.4" data-path="model-inputs.html"><a href="model-inputs.html#functional-traits-and-vegetation-initialization"><i class="fa fa-check"></i><b>2.2.4</b> Functional traits and vegetation initialization</a></li>
 </ul></li>
 <li class="chapter" data-level="2.3" data-path="model-inputs.html"><a href="model-inputs.html#meteoinput"><i class="fa fa-check"></i><b>2.3</b> Metereological input</a></li>
 <li class="chapter" data-level="2.4" data-path="model-inputs.html"><a href="model-inputs.html#control-parameters"><i class="fa fa-check"></i><b>2.4</b> Control parameters</a></li>
@@ -156,7 +156,7 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <li class="chapter" data-level="3.4" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#process-scheduling"><i class="fa fa-check"></i><b>3.4</b> Process scheduling</a></li>
 <li class="chapter" data-level="3.5" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#inputs-and-outputs"><i class="fa fa-check"></i><b>3.5</b> Inputs and outputs</a><ul>
 <li class="chapter" data-level="3.5.1" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#soil-vegetation-and-meteorology"><i class="fa fa-check"></i><b>3.5.1</b> Soil, vegetation and meteorology</a></li>
-<li class="chapter" data-level="3.5.2" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#species-parameters"><i class="fa fa-check"></i><b>3.5.2</b> Species parameters</a></li>
+<li class="chapter" data-level="3.5.2" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#vegetation-functional-parameters"><i class="fa fa-check"></i><b>3.5.2</b> Vegetation functional parameters</a></li>
 <li class="chapter" data-level="3.5.3" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#control-parameters-1"><i class="fa fa-check"></i><b>3.5.3</b> Control parameters</a></li>
 <li class="chapter" data-level="3.5.4" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#model-output"><i class="fa fa-check"></i><b>3.5.4</b> Model output</a></li>
 </ul></li>
@@ -191,75 +191,75 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <li class="chapter" data-level="7.2" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#state-variables-1"><i class="fa fa-check"></i><b>7.2</b> State variables</a></li>
 <li class="chapter" data-level="7.3" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#water-and-energy-balances"><i class="fa fa-check"></i><b>7.3</b> Water and energy balances</a><ul>
 <li class="chapter" data-level="7.3.1" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#water-balance-1"><i class="fa fa-check"></i><b>7.3.1</b> Water balance</a></li>
-<li class="chapter" data-level="7.3.2" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#energy-balance"><i class="fa fa-check"></i><b>7.3.2</b> Energy balance</a></li>
+<li class="chapter" data-level="7.3.2" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#canopy-energy-balance"><i class="fa fa-check"></i><b>7.3.2</b> Canopy energy balance</a></li>
+<li class="chapter" data-level="7.3.3" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#soil-energy-balance"><i class="fa fa-check"></i><b>7.3.3</b> Soil energy balance</a></li>
 </ul></li>
 <li class="chapter" data-level="7.4" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#process-scheduling-1"><i class="fa fa-check"></i><b>7.4</b> Process scheduling</a></li>
 <li class="chapter" data-level="7.5" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#inputs-and-outputs-1"><i class="fa fa-check"></i><b>7.5</b> Inputs and outputs</a><ul>
 <li class="chapter" data-level="7.5.1" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#soil-vegetation-and-meteorology-1"><i class="fa fa-check"></i><b>7.5.1</b> Soil, vegetation and meteorology</a></li>
-<li class="chapter" data-level="7.5.2" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#species-parameters-1"><i class="fa fa-check"></i><b>7.5.2</b> Species parameters</a></li>
+<li class="chapter" data-level="7.5.2" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#vegetation-functional-parameters-1"><i class="fa fa-check"></i><b>7.5.2</b> Vegetation functional parameters</a></li>
 <li class="chapter" data-level="7.5.3" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#control-parameters-2"><i class="fa fa-check"></i><b>7.5.3</b> Control parameters</a></li>
 <li class="chapter" data-level="7.5.4" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#model-output-1"><i class="fa fa-check"></i><b>7.5.4</b> Model output</a></li>
 </ul></li>
 <li class="chapter" data-level="7.6" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#applications-1"><i class="fa fa-check"></i><b>7.6</b> Applications</a></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="subdaily-temperature-and-light-variations.html"><a href="subdaily-temperature-and-light-variations.html"><i class="fa fa-check"></i><b>8</b> Subdaily temperature and light variations</a><ul>
-<li class="chapter" data-level="8.1" data-path="subdaily-temperature-and-light-variations.html"><a href="subdaily-temperature-and-light-variations.html#air-temperature"><i class="fa fa-check"></i><b>8.1</b> Air temperature</a></li>
-<li class="chapter" data-level="8.2" data-path="subdaily-temperature-and-light-variations.html"><a href="subdaily-temperature-and-light-variations.html#diffuse-and-direct-radiation"><i class="fa fa-check"></i><b>8.2</b> Diffuse and direct radiation</a></li>
-<li class="chapter" data-level="8.3" data-path="subdaily-temperature-and-light-variations.html"><a href="subdaily-temperature-and-light-variations.html#longwave-radiation"><i class="fa fa-check"></i><b>8.3</b> Longwave radiation</a></li>
+<li class="chapter" data-level="8" data-path="subdailytemplight.html"><a href="subdailytemplight.html"><i class="fa fa-check"></i><b>8</b> Subdaily temperature and light variations</a><ul>
+<li class="chapter" data-level="8.1" data-path="subdailytemplight.html"><a href="subdailytemplight.html#air-temperature"><i class="fa fa-check"></i><b>8.1</b> Air temperature</a></li>
+<li class="chapter" data-level="8.2" data-path="subdailytemplight.html"><a href="subdailytemplight.html#diffuse-and-direct-radiation"><i class="fa fa-check"></i><b>8.2</b> Diffuse and direct radiation</a></li>
+<li class="chapter" data-level="8.3" data-path="subdailytemplight.html"><a href="subdailytemplight.html#longwave-radiation"><i class="fa fa-check"></i><b>8.3</b> Longwave radiation</a></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="radiation-balance.html"><a href="radiation-balance.html"><i class="fa fa-check"></i><b>9</b> Radiation balance</a><ul>
-<li class="chapter" data-level="9.1" data-path="radiation-balance.html"><a href="radiation-balance.html#shortwave-radiation-absorbed-by-the-canopy"><i class="fa fa-check"></i><b>9.1</b> Shortwave radiation absorbed by the canopy</a></li>
-<li class="chapter" data-level="9.2" data-path="radiation-balance.html"><a href="radiation-balance.html#shortwave-radiation-absorbed-by-the-soil"><i class="fa fa-check"></i><b>9.2</b> Shortwave radiation absorbed by the soil</a></li>
-<li class="chapter" data-level="9.3" data-path="radiation-balance.html"><a href="radiation-balance.html#longwave-soil-canopy-radiation-exchange"><i class="fa fa-check"></i><b>9.3</b> Longwave soil-canopy radiation exchange</a></li>
+<li class="chapter" data-level="9" data-path="radiationbalance.html"><a href="radiationbalance.html"><i class="fa fa-check"></i><b>9</b> Radiation balance</a><ul>
+<li class="chapter" data-level="9.1" data-path="radiationbalance.html"><a href="radiationbalance.html#shortwaveradiationcanopyabs"><i class="fa fa-check"></i><b>9.1</b> Shortwave radiation absorbed by the canopy</a></li>
+<li class="chapter" data-level="9.2" data-path="radiationbalance.html"><a href="radiationbalance.html#shortwaveradiationsoilabs"><i class="fa fa-check"></i><b>9.2</b> Shortwave radiation absorbed by the soil</a></li>
+<li class="chapter" data-level="9.3" data-path="radiationbalance.html"><a href="radiationbalance.html#longwaveradiationexchange"><i class="fa fa-check"></i><b>9.3</b> Longwave soil-canopy radiation exchange</a></li>
 </ul></li>
-<li class="chapter" data-level="10" data-path="canopy-and-soil-energy-balances.html"><a href="canopy-and-soil-energy-balances.html"><i class="fa fa-check"></i><b>10</b> Canopy and soil energy balances</a><ul>
-<li class="chapter" data-level="10.1" data-path="canopy-and-soil-energy-balances.html"><a href="canopy-and-soil-energy-balances.html#convective-energy"><i class="fa fa-check"></i><b>10.1</b> Convective energy</a></li>
-<li class="chapter" data-level="10.2" data-path="canopy-and-soil-energy-balances.html"><a href="canopy-and-soil-energy-balances.html#latent-heat"><i class="fa fa-check"></i><b>10.2</b> Latent heat</a></li>
-<li class="chapter" data-level="10.3" data-path="canopy-and-soil-energy-balances.html"><a href="canopy-and-soil-energy-balances.html#canopy-capacitance-and-temperature-changes"><i class="fa fa-check"></i><b>10.3</b> Canopy capacitance and temperature changes</a></li>
-<li class="chapter" data-level="10.4" data-path="canopy-and-soil-energy-balances.html"><a href="canopy-and-soil-energy-balances.html#soil-temperature-changes"><i class="fa fa-check"></i><b>10.4</b> Soil temperature changes</a></li>
-<li class="chapter" data-level="10.5" data-path="canopy-and-soil-energy-balances.html"><a href="canopy-and-soil-energy-balances.html#bare-soil-evaporation"><i class="fa fa-check"></i><b>10.5</b> Bare soil evaporation</a></li>
+<li class="chapter" data-level="10" data-path="planthydraulics.html"><a href="planthydraulics.html"><i class="fa fa-check"></i><b>10</b> Plant hydraulics</a><ul>
+<li class="chapter" data-level="10.1" data-path="planthydraulics.html"><a href="planthydraulics.html#vulnerability-curves"><i class="fa fa-check"></i><b>10.1</b> Vulnerability curves</a><ul>
+<li class="chapter" data-level="10.1.1" data-path="planthydraulics.html"><a href="planthydraulics.html#xylem-vulnerability-curves"><i class="fa fa-check"></i><b>10.1.1</b> Xylem vulnerability curves</a></li>
+<li class="chapter" data-level="10.1.2" data-path="planthydraulics.html"><a href="planthydraulics.html#rhizosphere-vulnerability-curve"><i class="fa fa-check"></i><b>10.1.2</b> Rhizosphere vulnerability curve</a></li>
 </ul></li>
-<li class="chapter" data-level="11" data-path="plant-hydraulics.html"><a href="plant-hydraulics.html"><i class="fa fa-check"></i><b>11</b> Plant hydraulics</a><ul>
-<li class="chapter" data-level="11.1" data-path="plant-hydraulics.html"><a href="plant-hydraulics.html#vulnerability-curves"><i class="fa fa-check"></i><b>11.1</b> Vulnerability curves</a><ul>
-<li class="chapter" data-level="11.1.1" data-path="plant-hydraulics.html"><a href="plant-hydraulics.html#xylem-vulnerability-curves"><i class="fa fa-check"></i><b>11.1.1</b> Xylem vulnerability curves</a></li>
-<li class="chapter" data-level="11.1.2" data-path="plant-hydraulics.html"><a href="plant-hydraulics.html#rhizosphere-vulnerability-curve"><i class="fa fa-check"></i><b>11.1.2</b> Rhizosphere vulnerability curve</a></li>
+<li class="chapter" data-level="10.2" data-path="planthydraulics.html"><a href="planthydraulics.html#water-content-of-plant-tissues"><i class="fa fa-check"></i><b>10.2</b> Water content of plant tissues</a><ul>
+<li class="chapter" data-level="10.2.1" data-path="planthydraulics.html"><a href="planthydraulics.html#pressure-volume-curves"><i class="fa fa-check"></i><b>10.2.1</b> Pressure-volume curves</a></li>
+<li class="chapter" data-level="10.2.2" data-path="planthydraulics.html"><a href="planthydraulics.html#water-content-and-live-fuel-moisture-content"><i class="fa fa-check"></i><b>10.2.2</b> Water content and live fuel moisture content</a></li>
+<li class="chapter" data-level="10.2.3" data-path="planthydraulics.html"><a href="planthydraulics.html#relative-water-content-and-cavitation"><i class="fa fa-check"></i><b>10.2.3</b> Relative water content and cavitation</a></li>
 </ul></li>
-<li class="chapter" data-level="11.2" data-path="plant-hydraulics.html"><a href="plant-hydraulics.html#water-content-of-plant-tissues"><i class="fa fa-check"></i><b>11.2</b> Water content of plant tissues</a><ul>
-<li class="chapter" data-level="11.2.1" data-path="plant-hydraulics.html"><a href="plant-hydraulics.html#pressure-volume-curves"><i class="fa fa-check"></i><b>11.2.1</b> Pressure-volume curves</a></li>
-<li class="chapter" data-level="11.2.2" data-path="plant-hydraulics.html"><a href="plant-hydraulics.html#water-content-and-live-fuel-moisture-content"><i class="fa fa-check"></i><b>11.2.2</b> Water content and live fuel moisture content</a></li>
-<li class="chapter" data-level="11.2.3" data-path="plant-hydraulics.html"><a href="plant-hydraulics.html#relative-water-content-and-cavitation"><i class="fa fa-check"></i><b>11.2.3</b> Relative water content and cavitation</a></li>
-</ul></li>
-<li class="chapter" data-level="11.3" data-path="plant-hydraulics.html"><a href="plant-hydraulics.html#supply-functions"><i class="fa fa-check"></i><b>11.3</b> Supply functions</a><ul>
-<li class="chapter" data-level="11.3.1" data-path="plant-hydraulics.html"><a href="plant-hydraulics.html#supply-function-for-single-elements"><i class="fa fa-check"></i><b>11.3.1</b> Supply function for single elements</a></li>
-<li class="chapter" data-level="11.3.2" data-path="plant-hydraulics.html"><a href="plant-hydraulics.html#supply-function-of-two-elements-in-series"><i class="fa fa-check"></i><b>11.3.2</b> Supply function of two elements in series</a></li>
-<li class="chapter" data-level="11.3.3" data-path="plant-hydraulics.html"><a href="plant-hydraulics.html#supply-function-of-three-elements-in-series"><i class="fa fa-check"></i><b>11.3.3</b> Supply function of three elements in series</a></li>
-<li class="chapter" data-level="11.3.4" data-path="plant-hydraulics.html"><a href="plant-hydraulics.html#supply-function-of-a-root-system"><i class="fa fa-check"></i><b>11.3.4</b> Supply function of a root system</a></li>
-<li class="chapter" data-level="11.3.5" data-path="plant-hydraulics.html"><a href="plant-hydraulics.html#supply-function-of-the-soil-plant-continuum"><i class="fa fa-check"></i><b>11.3.5</b> Supply function of the soil-plant continuum</a></li>
-<li class="chapter" data-level="11.3.6" data-path="plant-hydraulics.html"><a href="plant-hydraulics.html#supply-function-with-water-compartments"><i class="fa fa-check"></i><b>11.3.6</b> Supply function with water compartments</a></li>
+<li class="chapter" data-level="10.3" data-path="planthydraulics.html"><a href="planthydraulics.html#supply-functions"><i class="fa fa-check"></i><b>10.3</b> Supply functions</a><ul>
+<li class="chapter" data-level="10.3.1" data-path="planthydraulics.html"><a href="planthydraulics.html#supply-function-for-single-elements"><i class="fa fa-check"></i><b>10.3.1</b> Supply function for single elements</a></li>
+<li class="chapter" data-level="10.3.2" data-path="planthydraulics.html"><a href="planthydraulics.html#supply-function-of-two-elements-in-series"><i class="fa fa-check"></i><b>10.3.2</b> Supply function of two elements in series</a></li>
+<li class="chapter" data-level="10.3.3" data-path="planthydraulics.html"><a href="planthydraulics.html#supply-function-of-three-elements-in-series"><i class="fa fa-check"></i><b>10.3.3</b> Supply function of three elements in series</a></li>
+<li class="chapter" data-level="10.3.4" data-path="planthydraulics.html"><a href="planthydraulics.html#supply-function-of-a-root-system"><i class="fa fa-check"></i><b>10.3.4</b> Supply function of a root system</a></li>
+<li class="chapter" data-level="10.3.5" data-path="planthydraulics.html"><a href="planthydraulics.html#supply-function-of-the-soil-plant-continuum"><i class="fa fa-check"></i><b>10.3.5</b> Supply function of the soil-plant continuum</a></li>
+<li class="chapter" data-level="10.3.6" data-path="planthydraulics.html"><a href="planthydraulics.html#supply-function-with-water-compartments"><i class="fa fa-check"></i><b>10.3.6</b> Supply function with water compartments</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="12" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html"><i class="fa fa-check"></i><b>12</b> Plant photosynthesis and stomatal regulation</a><ul>
-<li class="chapter" data-level="12.1" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html#leaf-energy-balance-gas-exchange-and-photosynthesis"><i class="fa fa-check"></i><b>12.1</b> Leaf energy balance, gas exchange and photosynthesis</a><ul>
-<li class="chapter" data-level="12.1.1" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html#leaf-vpd-conductance-to-water-vapor-and-photosynthesis"><i class="fa fa-check"></i><b>12.1.1</b> Leaf VPD, conductance to water vapor and photosynthesis</a></li>
-<li class="chapter" data-level="12.1.2" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html#leaf-temperature-and-vapor-pressure-deficit"><i class="fa fa-check"></i><b>12.1.2</b> Leaf temperature and vapor pressure deficit</a></li>
-<li class="chapter" data-level="12.1.3" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html#leaf-conductance-to-water-vapor"><i class="fa fa-check"></i><b>12.1.3</b> Leaf conductance to water vapor</a></li>
-<li class="chapter" data-level="12.1.4" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html#leaf-photosynthesis"><i class="fa fa-check"></i><b>12.1.4</b> Leaf photosynthesis</a></li>
+<li class="chapter" data-level="11" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html"><i class="fa fa-check"></i><b>11</b> Plant photosynthesis and stomatal regulation</a><ul>
+<li class="chapter" data-level="11.1" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html#leafenergybalancephoto"><i class="fa fa-check"></i><b>11.1</b> Leaf energy balance, gas exchange and photosynthesis</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html#leaf-vpd-conductance-to-water-vapor-and-photosynthesis"><i class="fa fa-check"></i><b>11.1.1</b> Leaf VPD, conductance to water vapor and photosynthesis</a></li>
+<li class="chapter" data-level="11.1.2" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html#leaf-temperature-and-vapor-pressure-deficit"><i class="fa fa-check"></i><b>11.1.2</b> Leaf temperature and vapor pressure deficit</a></li>
+<li class="chapter" data-level="11.1.3" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html#leaf-conductance-to-water-vapor"><i class="fa fa-check"></i><b>11.1.3</b> Leaf conductance to water vapor</a></li>
+<li class="chapter" data-level="11.1.4" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html#leaf-photosynthesis"><i class="fa fa-check"></i><b>11.1.4</b> Leaf photosynthesis</a></li>
 </ul></li>
-<li class="chapter" data-level="12.2" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html#crown-photosynthesis"><i class="fa fa-check"></i><b>12.2</b> Crown photosynthesis</a></li>
-<li class="chapter" data-level="12.3" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html#stomatal-regulation"><i class="fa fa-check"></i><b>12.3</b> Stomatal regulation</a><ul>
-<li class="chapter" data-level="12.3.1" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html#cost-and-gain-functions"><i class="fa fa-check"></i><b>12.3.1</b> Cost and gain functions</a></li>
-<li class="chapter" data-level="12.3.2" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html#profit-maximization-at-the-leaf-level"><i class="fa fa-check"></i><b>12.3.2</b> Profit maximization at the leaf level</a></li>
-<li class="chapter" data-level="12.3.3" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html#scaling-to-the-plant-level"><i class="fa fa-check"></i><b>12.3.3</b> Scaling to the plant level</a></li>
+<li class="chapter" data-level="11.2" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html#crown-photosynthesis"><i class="fa fa-check"></i><b>11.2</b> Crown photosynthesis</a></li>
+<li class="chapter" data-level="11.3" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html#stomatalregulation"><i class="fa fa-check"></i><b>11.3</b> Stomatal regulation</a><ul>
+<li class="chapter" data-level="11.3.1" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html#cost-and-gain-functions"><i class="fa fa-check"></i><b>11.3.1</b> Cost and gain functions</a></li>
+<li class="chapter" data-level="11.3.2" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html#profit-maximization-at-the-leaf-level"><i class="fa fa-check"></i><b>11.3.2</b> Profit maximization at the leaf level</a></li>
 </ul></li>
+<li class="chapter" data-level="11.4" data-path="plant-photosynthesis-and-stomatal-regulation.html"><a href="plant-photosynthesis-and-stomatal-regulation.html#scalingtranspirationphotosynthesis"><i class="fa fa-check"></i><b>11.4</b> Scaling to the plant level</a></li>
 </ul></li>
-<li class="chapter" data-level="13" data-path="transpirationsperry.html"><a href="transpirationsperry.html"><i class="fa fa-check"></i><b>13</b> Transpiration and photosynthesis under Sperry’s model</a><ul>
-<li class="chapter" data-level="13.1" data-path="transpirationsperry.html"><a href="transpirationsperry.html#water-supply-function"><i class="fa fa-check"></i><b>13.1</b> Water supply function</a></li>
-<li class="chapter" data-level="13.2" data-path="transpirationsperry.html"><a href="transpirationsperry.html#leaf-energy-balance"><i class="fa fa-check"></i><b>13.2</b> Leaf energy balance</a></li>
-<li class="chapter" data-level="13.3" data-path="transpirationsperry.html"><a href="transpirationsperry.html#leaf-photosynthesis-functions"><i class="fa fa-check"></i><b>13.3</b> Leaf photosynthesis functions</a></li>
-<li class="chapter" data-level="13.4" data-path="transpirationsperry.html"><a href="transpirationsperry.html#stomatal-regulation-1"><i class="fa fa-check"></i><b>13.4</b> Stomatal regulation</a></li>
-<li class="chapter" data-level="13.5" data-path="transpirationsperry.html"><a href="transpirationsperry.html#plant-drought-stress-and-water-potentials"><i class="fa fa-check"></i><b>13.5</b> Plant drought stress and water potentials</a></li>
-<li class="chapter" data-level="13.6" data-path="transpirationsperry.html"><a href="transpirationsperry.html#irreversible-cavitation-and-hydraulic-disconnection-1"><i class="fa fa-check"></i><b>13.6</b> Irreversible cavitation and hydraulic disconnection</a></li>
-<li class="chapter" data-level="13.7" data-path="transpirationsperry.html"><a href="transpirationsperry.html#transpiration-and-photosynthesis-after-soil-disconnection"><i class="fa fa-check"></i><b>13.7</b> Transpiration and photosynthesis after soil disconnection</a></li>
+<li class="chapter" data-level="12" data-path="transpirationsperry.html"><a href="transpirationsperry.html"><i class="fa fa-check"></i><b>12</b> Transpiration and photosynthesis under Sperry’s model</a><ul>
+<li class="chapter" data-level="12.1" data-path="transpirationsperry.html"><a href="transpirationsperry.html#water-supply-function"><i class="fa fa-check"></i><b>12.1</b> Water supply function</a></li>
+<li class="chapter" data-level="12.2" data-path="transpirationsperry.html"><a href="transpirationsperry.html#leaf-energy-balance"><i class="fa fa-check"></i><b>12.2</b> Leaf energy balance</a></li>
+<li class="chapter" data-level="12.3" data-path="transpirationsperry.html"><a href="transpirationsperry.html#leaf-photosynthesis-functions"><i class="fa fa-check"></i><b>12.3</b> Leaf photosynthesis functions</a></li>
+<li class="chapter" data-level="12.4" data-path="transpirationsperry.html"><a href="transpirationsperry.html#stomatal-regulation"><i class="fa fa-check"></i><b>12.4</b> Stomatal regulation</a></li>
+<li class="chapter" data-level="12.5" data-path="transpirationsperry.html"><a href="transpirationsperry.html#advanceddroughtstress"><i class="fa fa-check"></i><b>12.5</b> Plant drought stress and water potentials</a></li>
+<li class="chapter" data-level="12.6" data-path="transpirationsperry.html"><a href="transpirationsperry.html#irreversible-cavitation-and-hydraulic-disconnection-1"><i class="fa fa-check"></i><b>12.6</b> Irreversible cavitation and hydraulic disconnection</a></li>
+<li class="chapter" data-level="12.7" data-path="transpirationsperry.html"><a href="transpirationsperry.html#transpiration-and-photosynthesis-after-soil-disconnection"><i class="fa fa-check"></i><b>12.7</b> Transpiration and photosynthesis after soil disconnection</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="closecanopysoilenergybalance.html"><a href="closecanopysoilenergybalance.html"><i class="fa fa-check"></i><b>13</b> Closing canopy and soil energy balances</a><ul>
+<li class="chapter" data-level="13.1" data-path="closecanopysoilenergybalance.html"><a href="closecanopysoilenergybalance.html#convective-energy"><i class="fa fa-check"></i><b>13.1</b> Convective energy</a></li>
+<li class="chapter" data-level="13.2" data-path="closecanopysoilenergybalance.html"><a href="closecanopysoilenergybalance.html#latent-heat"><i class="fa fa-check"></i><b>13.2</b> Latent heat</a></li>
+<li class="chapter" data-level="13.3" data-path="closecanopysoilenergybalance.html"><a href="closecanopysoilenergybalance.html#canopy-capacitance-and-temperature-changes"><i class="fa fa-check"></i><b>13.3</b> Canopy capacitance and temperature changes</a></li>
+<li class="chapter" data-level="13.4" data-path="closecanopysoilenergybalance.html"><a href="closecanopysoilenergybalance.html#soil-temperature-changes"><i class="fa fa-check"></i><b>13.4</b> Soil temperature changes</a></li>
 </ul></li>
 <li class="part"><span><b>IV Forest growth modelling</b></span></li>
 <li class="chapter" data-level="14" data-path="forest-growth-model.html"><a href="forest-growth-model.html"><i class="fa fa-check"></i><b>14</b> Forest growth model</a><ul>
@@ -294,7 +294,7 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <li class="chapter" data-level="18" data-path="allometricmodels.html"><a href="allometricmodels.html"><i class="fa fa-check"></i><b>18</b> Allometric models</a><ul>
 <li class="chapter" data-level="18.1" data-path="allometricmodels.html"><a href="allometricmodels.html#input-data"><i class="fa fa-check"></i><b>18.1</b> Input data</a><ul>
 <li class="chapter" data-level="18.1.1" data-path="allometricmodels.html"><a href="allometricmodels.html#forest-plot-data"><i class="fa fa-check"></i><b>18.1.1</b> Forest plot data</a></li>
-<li class="chapter" data-level="18.1.2" data-path="allometricmodels.html"><a href="allometricmodels.html#species-parameters-2"><i class="fa fa-check"></i><b>18.1.2</b> Species parameters</a></li>
+<li class="chapter" data-level="18.1.2" data-path="allometricmodels.html"><a href="allometricmodels.html#species-parameters"><i class="fa fa-check"></i><b>18.1.2</b> Species parameters</a></li>
 </ul></li>
 <li class="chapter" data-level="18.2" data-path="allometricmodels.html"><a href="allometricmodels.html#allometric-relationships"><i class="fa fa-check"></i><b>18.2</b> Allometric relationships</a><ul>
 <li class="chapter" data-level="18.2.1" data-path="allometricmodels.html"><a href="allometricmodels.html#leaf-biomass"><i class="fa fa-check"></i><b>18.2.1</b> Leaf biomass</a></li>
@@ -306,7 +306,7 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <li class="chapter" data-level="19.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#purpose-1"><i class="fa fa-check"></i><b>19.1</b> Purpose</a></li>
 <li class="chapter" data-level="19.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#input-data-1"><i class="fa fa-check"></i><b>19.2</b> Input data</a><ul>
 <li class="chapter" data-level="19.2.1" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#forest-plot-data-1"><i class="fa fa-check"></i><b>19.2.1</b> Forest plot data</a></li>
-<li class="chapter" data-level="19.2.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#species-parameters-3"><i class="fa fa-check"></i><b>19.2.2</b> Species parameters</a></li>
+<li class="chapter" data-level="19.2.2" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#species-parameters-1"><i class="fa fa-check"></i><b>19.2.2</b> Species parameters</a></li>
 <li class="chapter" data-level="19.2.3" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#other-inputs"><i class="fa fa-check"></i><b>19.2.3</b> Other inputs</a></li>
 </ul></li>
 <li class="chapter" data-level="19.3" data-path="fuel-characteristics-and-fire-behaviour.html"><a href="fuel-characteristics-and-fire-behaviour.html#fuel-characteristics"><i class="fa fa-check"></i><b>19.3</b> Fuel characteristics</a><ul>
@@ -336,7 +336,7 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 </ul></li>
 <li class="appendix"><span><b>Appendices</b></span></li>
 <li class="chapter" data-level="A" data-path="model-parametrization.html"><a href="model-parametrization.html"><i class="fa fa-check"></i><b>A</b> Model parametrization</a><ul>
-<li class="chapter" data-level="A.1" data-path="model-parametrization.html"><a href="model-parametrization.html#plant-hydraulics-1"><i class="fa fa-check"></i><b>A.1</b> Plant Hydraulics</a><ul>
+<li class="chapter" data-level="A.1" data-path="model-parametrization.html"><a href="model-parametrization.html#plant-hydraulics"><i class="fa fa-check"></i><b>A.1</b> Plant Hydraulics</a><ul>
 <li class="chapter" data-level="A.1.1" data-path="model-parametrization.html"><a href="model-parametrization.html#vulnerability-curves-1"><i class="fa fa-check"></i><b>A.1.1</b> Vulnerability curves</a></li>
 <li class="chapter" data-level="A.1.2" data-path="model-parametrization.html"><a href="model-parametrization.html#leaf-maximum-conductance"><i class="fa fa-check"></i><b>A.1.2</b> Leaf maximum conductance</a></li>
 <li class="chapter" data-level="A.1.3" data-path="model-parametrization.html"><a href="model-parametrization.html#stem-xylem-maximum-conductance"><i class="fa fa-check"></i><b>A.1.3</b> Stem xylem maximum conductance</a></li>
@@ -357,9 +357,10 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <li class="chapter" data-level="B.4" data-path="symbols.html"><a href="symbols.html#anatomy"><i class="fa fa-check"></i><b>B.4</b> Anatomy</a></li>
 <li class="chapter" data-level="B.5" data-path="symbols.html"><a href="symbols.html#light-extinction"><i class="fa fa-check"></i><b>B.5</b> Light extinction</a></li>
 <li class="chapter" data-level="B.6" data-path="symbols.html"><a href="symbols.html#hydrology-and-water-balance"><i class="fa fa-check"></i><b>B.6</b> Hydrology and water balance</a></li>
-<li class="chapter" data-level="B.7" data-path="symbols.html"><a href="symbols.html#plant-hydraulics-2"><i class="fa fa-check"></i><b>B.7</b> Plant hydraulics</a></li>
-<li class="chapter" data-level="B.8" data-path="symbols.html"><a href="symbols.html#plant-water-compartments"><i class="fa fa-check"></i><b>B.8</b> Plant water compartments</a></li>
-<li class="chapter" data-level="B.9" data-path="symbols.html"><a href="symbols.html#stomatal-regulation-and-photosynthesis-1"><i class="fa fa-check"></i><b>B.9</b> Stomatal regulation and photosynthesis</a></li>
+<li class="chapter" data-level="B.7" data-path="symbols.html"><a href="symbols.html#energy-balance"><i class="fa fa-check"></i><b>B.7</b> Energy balance</a></li>
+<li class="chapter" data-level="B.8" data-path="symbols.html"><a href="symbols.html#plant-hydraulics-1"><i class="fa fa-check"></i><b>B.8</b> Plant hydraulics</a></li>
+<li class="chapter" data-level="B.9" data-path="symbols.html"><a href="symbols.html#plant-water-compartments"><i class="fa fa-check"></i><b>B.9</b> Plant water compartments</a></li>
+<li class="chapter" data-level="B.10" data-path="symbols.html"><a href="symbols.html#stomatal-regulation-and-photosynthesis-1"><i class="fa fa-check"></i><b>B.10</b> Stomatal regulation and photosynthesis</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="bibliography.html"><a href="bibliography.html"><i class="fa fa-check"></i>Bibliography</a></li>
 <li class="divider"></li>
@@ -383,11 +384,11 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 
             <section class="normal" id="section-">
 <div id="plant-photosynthesis-and-stomatal-regulation" class="section level1">
-<h1><span class="header-section-number">Chapter 12</span> Plant photosynthesis and stomatal regulation</h1>
-<div id="leaf-energy-balance-gas-exchange-and-photosynthesis" class="section level2">
-<h2><span class="header-section-number">12.1</span> Leaf energy balance, gas exchange and photosynthesis</h2>
+<h1><span class="header-section-number">Chapter 11</span> Plant photosynthesis and stomatal regulation</h1>
+<div id="leafenergybalancephoto" class="section level2">
+<h2><span class="header-section-number">11.1</span> Leaf energy balance, gas exchange and photosynthesis</h2>
 <div id="leaf-vpd-conductance-to-water-vapor-and-photosynthesis" class="section level3">
-<h3><span class="header-section-number">12.1.1</span> Leaf VPD, conductance to water vapor and photosynthesis</h3>
+<h3><span class="header-section-number">11.1.1</span> Leaf VPD, conductance to water vapor and photosynthesis</h3>
 <p>The water supply function specifies the flow rate, as per leaf area, for values of leaf water potential. If we know air temperature, air vapour pressure and the light conditions in which leaves are, we can be translate the supply function into a photosynthesis function <span class="citation">(J. S. Sperry, Venturas, et al. <a href="#ref-Sperry2016">2016</a>)</span>. In a nutshell, <span class="math inline">\(E\)</span> from the supply function is used to calculate leaf temperature from an evaluation of the leaf energy balance. The diffusive conductances of the leaf to water and <span class="math inline">\(CO_{2}\)</span> are obtained from water supply and water vapor deficit. The gross assimilation rate is then obtained from the diffusive conductance and a modelled curve between assimilation and leaf internal <span class="math inline">\(CO_{2}\)</span> concentration. Gross assimilation is calculated, without subtracting autotrophic respiration, because the purpose is to represent the instantaneous gain of opening the stomata. Nevertheless autotrophic respiration is included when calculating leaf net photosynthesis.</p>
 <pre class="sourceCode r" id="cb42"><code class="sourceCode r"><div class="sourceLine" id="cb42-1" data-line-number="1">Tmin =<span class="st"> </span><span class="dv">15</span></div>
 <div class="sourceLine" id="cb42-2" data-line-number="2">Tmax =<span class="st"> </span><span class="dv">30</span></div>
@@ -408,7 +409,7 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <div class="sourceLine" id="cb42-17" data-line-number="17">Rabs =<span class="st"> </span><span class="dv">740</span> <span class="co">#W * m-2</span></div></code></pre>
 </div>
 <div id="leaf-temperature-and-vapor-pressure-deficit" class="section level3">
-<h3><span class="header-section-number">12.1.2</span> Leaf temperature and vapor pressure deficit</h3>
+<h3><span class="header-section-number">11.1.2</span> Leaf temperature and vapor pressure deficit</h3>
 <p>Leaf temperature (<span class="math inline">\(T_{leaf}\)</span>; in Celsius) can be calculated for any given flow rate <span class="math inline">\(E(\Psi_{leaf})\)</span> using <span class="citation">(Campbell and Norman <a href="#ref-Campbell1998">1998</a>)</span>:
 <span class="math display">\[\begin{equation}
 T_{leaf}(\Psi_{leaf}) = T_{can}+\frac{I_{abs}-\epsilon\cdot\sigma\cdot(T_{can}+273.15)^4-\lambda_v\cdot E(\Psi_{leaf})}{C_p\cdot(g_r+g_{Ha})}
@@ -442,7 +443,7 @@ Where <span class="math inline">\(vp_{day}\)</span> is the average daily vapor p
 <p>Since leaf saturated VP decreases when leaf temperature decreases, transpiration decreases leaf VPD as a result of decreasing leaf temperature.</p>
 </div>
 <div id="leaf-conductance-to-water-vapor" class="section level3">
-<h3><span class="header-section-number">12.1.3</span> Leaf conductance to water vapor</h3>
+<h3><span class="header-section-number">11.1.3</span> Leaf conductance to water vapor</h3>
 <p>Leaf conductance to water vapor (<span class="math inline">\(g_{sw}\)</span>; in <span class="math inline">\(mol H_2O \cdot s^{-1} \cdot m^{-2}\)</span>) and to carbon dioxide (<span class="math inline">\(g_{sc}\)</span>; in mol <span class="math inline">\(CO_{2} \cdot s^{-1} \cdot m^{-2}\)</span>) are obtained for each value of <span class="math inline">\(E\)</span> (in <span class="math inline">\(mol \cdot s^{-1} \cdot m^{-2}\)</span>) and <span class="math inline">\(VPD_{leaf}\)</span> using:
 <span class="math display">\[\begin{eqnarray}
 g_{sw} &amp;=&amp; E \cdot \frac{P_{atm}}{VPD_{leaf}}\\
@@ -456,7 +457,7 @@ the application of the equation for <span class="math inline">\(g_{sw}\)</span> 
 <p><span class="math inline">\(g_{sw}\)</span> cannot exceed <span class="math inline">\(g_{swmax}\)</span> so that some flow rates may not be possible (see stomatal regulation below). However, <span class="math inline">\(g_{swmax}\)</span> should quickly become non-limiting as soil dries (i.e. reducing <span class="math inline">\(E\)</span>) or <span class="math inline">\(VPD_{leaf}\)</span> increases <span class="citation">(J. S. Sperry, Venturas, et al. <a href="#ref-Sperry2016">2016</a>)</span>. Minimum stomatal conductance is also used in <strong>medfate</strong> when building the supply function, as it specifies the minimum flow rates that will occur for completely-closed stomata, i.e. the minimum flow from which supply function is build.</p>
 </div>
 <div id="leaf-photosynthesis" class="section level3">
-<h3><span class="header-section-number">12.1.4</span> Leaf photosynthesis</h3>
+<h3><span class="header-section-number">11.1.4</span> Leaf photosynthesis</h3>
 <p>Rubisco-limited photosynthesis rate <span class="math inline">\(A_c\)</span> (in <span class="math inline">\(\mu mol CO_2 \cdot s^{-1} \cdot m^{-2}\)</span>) is modelled using <span class="citation">(Collatz et al. <a href="#ref-Collatz1991">1991</a>; Medlyn, Loustau, and Delzon <a href="#ref-Medlyn2002">2002</a>)</span>:
 <span class="math display">\[\begin{equation}
 A_c=\frac{V_{max}\cdot (C_i- \Gamma*)}{C_i+K_c \cdot (1+ O_a/K_o)}
@@ -498,7 +499,7 @@ A_n = A - 0.015 \cdot V_{max}
 </div>
 </div>
 <div id="crown-photosynthesis" class="section level2">
-<h2><span class="header-section-number">12.2</span> Crown photosynthesis</h2>
+<h2><span class="header-section-number">11.2</span> Crown photosynthesis</h2>
 <p>In the previous subsection we calculated photosynthesis at the leaf level. However, the function <span class="math inline">\(A(\Psi_{leaf})\)</span> can be calculated for a whole crown. Essentially we need to repeat the calculations of leaf temperature, leaf VPD, leaf gas conductance and photosynthesis for every leaf to be considered in the crown. Gross and net photosynthesis values can be then aggregated across the crown for each value of <span class="math inline">\(\Psi_{leaf}\)</span>, so that the function <span class="math inline">\(A(\Psi_{leaf})\)</span> is obtained. Here we will consider a crown of one species divided into 10 layers, with constant leaf density:</p>
 <pre class="sourceCode r" id="cb47"><code class="sourceCode r"><div class="sourceLine" id="cb47-1" data-line-number="1">LAI =<span class="st"> </span><span class="dv">2</span></div>
 <div class="sourceLine" id="cb47-2" data-line-number="2">nlayer =<span class="st"> </span><span class="dv">10</span></div>
@@ -532,11 +533,11 @@ where <span class="math inline">\(L_i\)</span> is the cumulative LAI value at a 
 <p>Multilayer canopy models allow evaluating leaf conditions, stomatal conductance and photosynthesis for different points of the canopy. However, this comes at high computational cost. While big-leaf canopy models are known to be unaccurate under some situations, sun-shade canopy models <span class="citation">(De Pury and Farquhar <a href="#ref-DePury1997">1997</a>)</span> provide estimates that are close to multiple layer models <span class="citation">(Hikosaka, Kumagai, and Ito <a href="#ref-Hikosaka2016">2016</a>)</span>. Sun-shade models involve: (a) aggregating the leaf area of sunlit/shade leaves across layers; (b) aggregating the light absorbed by leaves of each kind across layers; and (c) aggregating maximum assimilation rates across layers, again separating sunlit and shade leaves. One then calls the photosynthesis model twice (i.e. once for shade leaves and once for sunlit leaves), using the aggregated maximum assimilation rates. Separating the two kinds of leaves acknowledges that they operate at different parts of the light-saturation curve. The following figure provides the canopy photosynthesis functions obtained, under different situations, using a full 10-layer canopy description (top), a sunshade canopy model (center) or a big-leaf model (bottom). These were generated using functions <code>photo_multilayerPhotosynthesisFunction()</code>, <code>photo_sunshadePhotosynthesisFunction()</code> and <code>photo_leafPhotosynthesisFunction()</code>, respectively. Note the coincidence between the multi-layer and the sun-shade models.</p>
 <p><img src="medfatebook_files/figure-html/unnamed-chunk-62-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
-<div id="stomatal-regulation" class="section level2">
-<h2><span class="header-section-number">12.3</span> Stomatal regulation</h2>
+<div id="stomatalregulation" class="section level2">
+<h2><span class="header-section-number">11.3</span> Stomatal regulation</h2>
 <p><span class="citation">J. S. Sperry, Venturas, et al. (<a href="#ref-Sperry2016">2016</a>)</span> presented a profit maximization approach where hydraulic costs of opening the stomata are compared against photosynthetic gain. Details of their approach, and two suggested variants, a given in the next two subsections. The final subsection explains how to scale stomatal regulation (and hence, transpiration and photosynthesis) from leaf to plant.</p>
 <div id="cost-and-gain-functions" class="section level3">
-<h3><span class="header-section-number">12.3.1</span> Cost and gain functions</h3>
+<h3><span class="header-section-number">11.3.1</span> Cost and gain functions</h3>
 <p>The hydraulic supply function is used to derive a transpirational <em>cost function</em> <span class="math inline">\(\theta_1(\Psi_{leaf})\)</span> that reflects the increasing damage from cavitation and the greater difficulty of moving water along the continuum <span class="citation">(J. S. Sperry, Wang, et al. <a href="#ref-Sperry2016a">2016</a>)</span>:
 <span class="math display">\[\begin{equation}
 \theta_1(\Psi_{leaf}) = \frac{k_{c,max}-k_{c}(\Psi_{leaf})}{k_{c,max}-k_{crit}}
@@ -557,7 +558,7 @@ where <span class="math inline">\(A_{max}\)</span> is the instantaneous maximum 
 <p><img src="medfatebook_files/figure-html/unnamed-chunk-65-1.png" width="768" style="display: block; margin: auto;" /></p>
 </div>
 <div id="profit-maximization-at-the-leaf-level" class="section level3">
-<h3><span class="header-section-number">12.3.2</span> Profit maximization at the leaf level</h3>
+<h3><span class="header-section-number">11.3.2</span> Profit maximization at the leaf level</h3>
 <p>According to <span class="citation">J. S. Sperry, Venturas, et al. (<a href="#ref-Sperry2016">2016</a>)</span>, stomatal regulation can be effectively estimated by determining the maximum of the <em>profit function</em> (<span class="math inline">\(Profit(\Psi_{leaf})\)</span>), for which we consider three alternatives corresponding to the two cost functions:
 <span class="math display">\[\begin{eqnarray}
 Profit_1(\Psi_{leaf}) &amp;=&amp; \beta(\Psi_{leaf})-\theta_1(\Psi_{leaf})\\
@@ -571,8 +572,9 @@ Once <span class="math inline">\(\Psi_{leaf}\)</span> that maximizes profit is d
 <img src="medfatebook_files/figure-html/unnamed-chunk-67-1.png" width="384" style="display: block; margin: auto;" /></p>
 <p>In <span class="math inline">\(Profit_1\)</span> irreversible cavitation often brings, after soil rewetting, less conservative stomatal regulation that enables higher flow rates. This does not seem to happen in <span class="math inline">\(Profit_2\)</span>, where despite irreversible cavitation leads to more negative water potentials, predicted flow rates after rewetting are not above those predicted before cavitation.</p>
 </div>
-<div id="scaling-to-the-plant-level" class="section level3">
-<h3><span class="header-section-number">12.3.3</span> Scaling to the plant level</h3>
+</div>
+<div id="scalingtranspirationphotosynthesis" class="section level2">
+<h2><span class="header-section-number">11.4</span> Scaling to the plant level</h2>
 <p>So far, we have considered stomatal regulation by at the leaf level only. At the plant level, the gain function could be build from the crown photosynthesis function <span class="math inline">\(A(\Psi_{leaf})\)</span> that we defined in subsection ‘Crown photosynthesis’. However, using the crown photosynthesis function would imply the assumption that the same stomatal aperture occurs in all leaves of the crown, independently of whether they are in shade or sunlit. A more realistic approach is to determine stomatal regulation by profit maximization for sunlit and shade leaves separately; and then determining the average photosynthesis and flow rate from the leaf area of each leaf type. The gain function and profit maximization calculations conducted for each leaf type yield instantaneous water potentials <span class="math inline">\(\Psi_{sunlit}\)</span> and <span class="math inline">\(\Psi_{shade}\)</span>. They also yield flow values <span class="math inline">\(E_{shade}\)</span> and <span class="math inline">\(E_{sunlit}\)</span>, in <span class="math inline">\(mmol H_2O \cdot s^{-1} \cdot m^{-2}\)</span> of leaf area unit. The average flow rate in <span class="math inline">\(mmol H_2O \cdot s^{-1} \cdot m^{-2}\)</span> per leaf area unit at the plant level is the weighed average:
 <span class="math display">\[\begin{equation}
  E_{plant} = \frac{E_{sunlit} \cdot LAI_{sunlit} + E_{shade} \cdot LAI_{shade}}{LAI_{sunlit} + LAI_{shade}}
@@ -583,7 +585,6 @@ where <span class="math inline">\(LAI_{sunlit}\)</span> and <span class="math in
 \end{equation}\]</span>
 Profit maximization calculations for shade and sunlit leaves imply different amount of water extracted from the soil layers and different plant water potentials. To overcome this issue, we must use the hydraulic supply function to find the extraction flows from soil layers, the water potential at the root crown and the ‘average’ water potential of the crown all corresponding to the average flow <span class="math inline">\(E_{plant}\)</span>.</p>
 
-</div>
 </div>
 </div>
 <h3>Bibliography</h3>
@@ -624,7 +625,7 @@ Profit maximization calculations for shade and sunlit leaves imply different amo
           </div>
         </div>
       </div>
-<a href="plant-hydraulics.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="planthydraulics.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="transpirationsperry.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>

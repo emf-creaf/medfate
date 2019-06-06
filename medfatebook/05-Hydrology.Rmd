@@ -11,7 +11,7 @@ Interception of snow by the canopy is neglected, and all snow is assumed to accu
 
 ## Snow pack dynamics {#snowpack}
 
- A very simple snow submodel is used for snow pack dynamics (accumulation and melt), taken from @Kergoat1998. When mean air temperature is above 0 Celsius $T_{mean}>0$, a simple energy budget relates snow melt, $Sm$ (mm), to air temperature and soil-level radiation (see function \texttt{hydrology\_snowMelt}):
+ A very simple snow submodel is used for snow pack dynamics (accumulation and melt), taken from @Kergoat1998. When mean air temperature is above 0 Celsius ($T_{mean}>0$), a simple energy budget relates snow melt, $Sm$ (mm), to air temperature and soil-level radiation (see function \texttt{hydrology\_snowMelt}):
 \begin{equation}
 Sm = \frac{Rad\cdot L^{SWR}_{ground}\cdot (1-\alpha_{ice}) + \tau_{day} \cdot T_{mean} \cdot \rho \cdot C_p/r_{s}}{\lambda_{ice}}
 \end{equation}
@@ -165,7 +165,9 @@ If `drainage = TRUE`, the water percolating from the lowest layer is considered 
 
 ## Bare soil evaporation {#soilevaporation}
 
-Evaporation from the soil surface is the last component of the soil water balance to be calculated before calculating plant transpiration. Potential evaporation from the soil ($PE_{soil}$; in $mm \cdot day^{-1}$) is defined as the product between $PET$ and $L^{SWR}_{ground}$, the proportion of SWR absorbed by the ground:
+Evaporation from the soil surface is the last component of the soil water balance to be calculated before calculating plant transpiration. Bare soil evaporation cannot happen if there is snow over the soil surface (i.e., if $S_{snow}>0$). 
+
+Potential evaporation from the soil ($PE_{soil}$; in $mm \cdot day^{-1}$) is defined as the product between $PET$ and $L^{SWR}_{ground}$, the proportion of SWR absorbed by the ground:
 \begin{equation}
 PE_{soil} =  PET \cdot L^{SWR}_{ground}
 \end{equation}

@@ -23,26 +23,29 @@ Daily variations in soil water content ($\Delta{V_{soil}}$ in $mm$) can be summa
 
 \begin{equation}
 \Delta{V_{soil}} = Pr + Sm - In - Ru - Dd - Es -Tr
+(#eq:basicwaterbalanceequation)
 \end{equation}
 
-where $Pr$ is precipitation as rainfall, $Sm$ is water from melting the snow pack (if considered), $In$ is the interception loss (i.e., water evaporated after being intercepted by the canopy), $Ru$ is surface runoff, $Dd$ is deep drainage (i.e. water percolated to layers beyond soil depth), $Es$ is evaporation from soil and $Tr$ is plant transpiration. If snow dynamics are considered, the water balance of the snow pack ($\Delta{S_{snow}}$ in $mm$ of snow water equivalents) is defined as:
+where $Pr$ is precipitation as rainfall, $Sm$ is water from melting the snow pack (if considered), $In$ is the interception loss (i.e., water evaporated after being intercepted by the canopy), $Ru$ is surface runoff, $Dd$ is deep drainage (i.e. water percolated to layers beyond soil depth), $Es$ is evaporation from soil and $Tr$ is plant transpiration. 
+
+If snow dynamics are considered, the water balance of the snow pack ($\Delta{S_{snow}}$ in $mm$ of snow water equivalents) is defined as:
 
 \begin{equation}
 \Delta{S_{snow}} = Ps - Sm
 \end{equation}
 
-where $Ps$ is precipitation as snowfall and $Sm$ is snow melt.
+where $Ps$ is precipitation as snowfall and $Sm$ is snow melt. Evaporation from bare soil cannot occur if there is a snow pack over the soil (i.e., if $S_{snow}>0$ then $Es = 0$).
 
 ## Process scheduling
 
-Every day, water balance is simuilated in the following several steps:
+Every day, water balance is simuilated using the following steps:
 
-+ Update leaf area values according to the phenology of species and recalculate light extinction (sections \@ref(leafphenology) and \@ref(basiclightextinction)).
-+ If snow dynamics are included, increase snow pack from snow precipitation ($Ps$) and decreases it from snow melting ($Sm$) (section \@ref(snowpack)).
-+ Determine rainfall interception loss ($In$) and net rainfall ($Pr_{net}$) (section \@ref(interception))
-+ Increase soil water content due to net rainfall ($Pr_{net}$), surface runon ($Ro$) and snow melting ($Sm$), after accounting for surface runoff ($Ru$) and deep drainage ($Dd$) (section \@ref(runoff)).
-+ Decrease soil water content due to bare soil evaporation ($Es$) (section \@ref(soilevaporation)).
-+ Determine transpiration, photosynthesis and drought stress for each plant cohort  and decrease water content due to plant transpiration ($Tr$) (chapter \@ref(transpirationgranier)).
+  1. Update leaf area values according to the phenology of species and recalculate light extinction (sections \@ref(leafphenology) and \@ref(basiclightextinction)).
+  2. If snow dynamics are included, increase snow pack from snow precipitation ($Ps$) and decreases it from snow melting ($Sm$) (section \@ref(snowpack)).
+  3. Determine rainfall interception loss ($In$) and net rainfall ($Pr_{net}$) (section \@ref(interception))
+  4. Increase soil water content due to net rainfall ($Pr_{net}$), surface runon ($Ro$) and snow melting ($Sm$), after accounting for surface runoff ($Ru$) and deep drainage ($Dd$) (section \@ref(runoff)).
+  5. Decrease soil water content due to bare soil evaporation ($Es$), if snow is not present (section \@ref(soilevaporation)).
+  6. Determine transpiration, photosynthesis and drought stress for each plant cohort  and decrease water content due to plant transpiration ($Tr$) (chapter \@ref(transpirationgranier)).
 
 Details of the formulation of each of these processes are provided within the referred chapters and sections.
 
@@ -62,12 +65,12 @@ Vegetation input requirements are fully described in section \@ref(vegetationinp
 
 The minimum weather variables required to run the model are mean temperature ($T_{mean}$), precipitation ($P$) and potential evapotranspiration ($PET$). Solar radiation ($Rad$) is required if snow pack dynamics have to be simulated. Additionally, the user may also specify values of wind speed ($u$) that are used to control leaf fall in autumn. Definitions and units of these variables are given in section \@ref(meteoinput).
 
-### Species parameters
+### Vegetation functional parameters
 
-Basic water balance modelling requires the following parameters to be specified for each plant cohort. These are normally specified at the species level (see documentation for `SpParamsMED`):
+Vegetation functional attributes are normally filled for each cohort by function `spwbInput()` from species identity. However, different parameters can be specified for different cohort of the same species if desired (see function `modifyCohortParams()`). Functional parameters relate to light extinction, water interception and leaf phenology (`paramsBase`):
 
-| Symbol | Units | R param | Description                        |
-|--------|-------|---------|------------------------------------|
+| Symbol | Units | R  | Description                                  | 
+|--------|-------|----| ---------------------------------------------|
 | $k_{PAR,i}$ | | `k` | PAR extinction coefficient |
 | $s_{water, i}$ | $mmH_2O·LAI^{-1}$ | `g` | Crown water storage capacity (i.e. depth of water that can be retained by leaves and branches) per LAI unit. |
 | $S_{GDD,i}$ | $^{\circ} \mathrm{C}$ | `Sgdd` | Growth degree days corresponding to leave budburst|

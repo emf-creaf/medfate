@@ -89,9 +89,9 @@ The representation of plants within a target plot is done in **medfate** by mean
 
 Note that one limitation of the representation of vegetation using plant cohorts is that it is not spatially-explicit (i.e. plants cannot have explicit coordinates within forest stands) and hence spatial (horizontal) interactions cannot be taken into account.  
 
-### Attributes of plant cohorts 
+### Structural attributes of plant cohorts 
 
-A plant cohort $i$ is either a *tree cohort* or a *shrub cohort*, and is defined using a set attributes shown in the following table, where columns **spwb** and **growth** indicate whether attributes are required by functions `spwb()` and `growth()`, respectively:
+A plant cohort $i$ is either a *tree cohort* or a *shrub cohort*, and is defined using a set of structural attributes shown in the following table, where columns **spwb** and **growth** indicate whether attributes are required by functions `spwb()` and `growth()`, respectively:
 
 | Symbol | Units | R  | Description                        | spwb | growth |
 |--------|-------|----| ------------------------------------|-----|-----|
@@ -149,11 +149,11 @@ exampleforest
 While not strictly necessary, forest objects are the convenient format to start calculations with **medfate**, because there are many static functions that take forest objects as input. The package includes functions to facilitate mapping variables in user data into tables `treeData` and `shrubData` (see function `forest_mapWoodyTables()`).
 
 
-### Plant (species) traits and vegetation initialization
+### Functional traits and vegetation initialization
 
-Besides the physical representation of vegetation, forest ecosystem models require information regarding vegetation functioning, because this influences the outcome of biophysical, physiological and hydrological processes. In the following chapters, we will indicate for each simulated process its required trait parameters. Normally, plant traits are described at the species level because infra-specific parameters are hard to get. Even at the species level, many hard (e.g. physiological) traits are hard to obtain, so in **medfate** we provide a default species parameter table for woody species found in Catalonia, with many of them occurring elsewhere in the Mediterranean Basin (`SpParamsMED`).
+Besides the physical representation of vegetation, forest ecosystem models require information regarding vegetation functioning, because this influences the outcome of biophysical, physiological and hydrological processes. In the following chapters, we will indicate for each simulated process its required functional parameters. Normally, functional traits are described at the species level because infra-specific parameters are hard to get. Even at the species level, many hard (e.g. physiological) traits are hard to obtain, so in **medfate** we provide a default species parameter table for woody species found in Catalonia, with many of them occurring elsewhere in the Mediterranean Basin (`SpParamsMED`). User can modify this data frame to account for intra-specific trait variation (see function `modifySpParams()`). 
 
-The package provides functions `spwbInput()` and `growthInput()` that prepare the vegetation input for simulation functions `spwb()` and `growth()`, respectively. This preparation mostly consists in compiling the necessary functional traits from the species parameter table, following the species (or species group) attribute of plant cohorts. User can modify the output of these preparing functions to account for intra-specific trait variation (see function `modifySpParams()`). 
+The package provides functions `spwbInput()` and `growthInput()` that prepare the vegetation input for simulation functions `spwb()` and `growth()`, respectively. This initialization mostly consists in compiling the necessary functional traits from the species parameter table, following the species (or species group) attribute of plant cohorts. Some new parameters are derived from others but take into account the structural attributes of cohorts (an example of these derived quantities is stem conductance, which estimated from stem xylem conductivity and other attributes). Users can modify the output of these initialization functions to modify values for specific plant cohorts, either the species parameters or cohort specific parameters (see function `modifyCohortParams()`). 
 
 
 ## Metereological input {#meteoinput}

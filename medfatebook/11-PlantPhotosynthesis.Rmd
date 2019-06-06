@@ -1,6 +1,6 @@
 # Plant photosynthesis and stomatal regulation
 
-## Leaf energy balance, gas exchange and photosynthesis
+## Leaf energy balance, gas exchange and photosynthesis {#leafenergybalancephoto}
 
 ### Leaf VPD, conductance to water vapor and photosynthesis
 
@@ -747,7 +747,7 @@ lines(-supplyNetwork34emb$psiLeaf, psi2A34blemb$Photosynthesis, lty=3, lwd=1, co
 legend("bottomright", bty="n", legend=textures, lwd=1, lty=1:3, cex=0.8)
 ```
 
-## Stomatal regulation
+## Stomatal regulation {#stomatalregulation}
 
 @Sperry2016 presented a profit maximization approach where hydraulic costs of opening the stomata are compared against photosynthetic gain. Details of their approach, and two suggested variants, a given in the next two subsections. The final subsection explains how to scale stomatal regulation (and hence, transpiration and photosynthesis) from leaf to plant.
 
@@ -1157,7 +1157,7 @@ legend("topright", bty="n", col=c(col1,col2,col3,col4), lty=1, legend=c("P_soil 
 In $Profit_1$ irreversible cavitation often brings, after soil rewetting, less conservative stomatal regulation that enables higher flow rates. This does not seem to happen in $Profit_2$, where despite irreversible cavitation leads to more negative water potentials, predicted flow rates after rewetting are not above those predicted before cavitation.
 
 
-### Scaling to the plant level
+## Scaling to the plant level {#scalingtranspirationphotosynthesis}
 
 So far, we have considered stomatal regulation by at the leaf level only. At the plant level, the gain function could be build from the crown photosynthesis function $A(\Psi_{leaf})$ that we defined in subsection 'Crown photosynthesis'. However, using the crown photosynthesis function would imply the assumption that the same stomatal aperture occurs in all leaves of the crown, independently of whether they are in shade or sunlit. A more realistic approach is to determine stomatal regulation by profit maximization for sunlit and shade leaves separately; and then determining the average photosynthesis and flow rate from the leaf area of each leaf type. The gain function and profit maximization calculations conducted for each leaf type yield instantaneous water potentials $\Psi_{sunlit}$ and $\Psi_{shade}$. They also yield flow values $E_{shade}$ and $E_{sunlit}$, in $mmol H_2O \cdot s^{-1} \cdot m^{-2}$ of leaf area unit. The average flow rate in $mmol H_2O \cdot s^{-1} \cdot m^{-2}$ per leaf area unit at the plant level is the weighed average:
 \begin{equation}
