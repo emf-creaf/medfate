@@ -1,5 +1,7 @@
 # Hydrology
 
+Forest hydrological processes are key for soil and plant water balances. This chapter details the design and implementation of vertical hydrological processes included in the package. The only process that is not described here is plant transpiration, which will be covered in detail in chapter \@ref(transpirationgranier).
+
 ## Precipitation {#precipitation}
 
 Precipitation ($P$) is considered be snow precipitation ($Ps$) when $T_{mean}<0$, and is considered rainfall ($Pr$) otherwise. Thus, we have:

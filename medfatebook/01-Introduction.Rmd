@@ -2,11 +2,13 @@
 
 # Introduction {#intro}
 
+This chapter provides an overview of the purpose under the development of **medfate**, its main simulation functions and applications. 
+
 ## Purpose
 
 Being able to anticipate the impact of global change on ecosystems is one of the major environmental challenges in contemporary societies. However, uncertainties in how ecological systems function and practical constraints in how to integrate available information prevent the development of robust and reliable predictive models. Despite the amount of knowledge accumulated about the functioning and dynamics of Mediterranean forests, scientists should make coordinate their efforts to address the challenge of integrating the different global change drivers in a modelling framework useful for research and applications.
 
-The R package **medfate** has been designed to simulate the functioning and dynamics of Mediterranean forest stands at temporal scales from days to years. Fire and drought impacts are the main subjects covered by the package. Eco-hydrological processes are fundamental for the simulation models included in the package. In particular, the package allows the simulation of water balance of soils and plants within forest stands. It also allows simulating plant growth of a set of cohorts competing for light and water within a forest stand. Finally, the package also includes functions to relate the amount of plant biomass and the relative water content of plant tissues to live fuel moisture content, hence, fire hazard.
+The R package **medfate** has been designed to simulate the functioning and dynamics of Mediterranean forest stands at temporal scales from days to years. Fire and drought impacts are the main subjects covered by the package, although eco-hydrological processes are fundamental for the simulation models included in the package. In particular, the package allows the simulation of water balance of soils and plants within forest stands. It also allows simulating plant growth of a set of cohorts competing for light and water within a forest stand. Finally, the package also includes functions to relate the amount of plant biomass and the relative water content of plant tissues to live fuel moisture content, hence, fire hazard.
 
 The version of the reference manual that you are reading is intended to reflect **version `r packageVersion("medfate")`** of the package.
 
@@ -35,17 +37,11 @@ devtools::install_github("vegmod/medfate",
 
 ### Dynamic simulation functions
 
-Forest water and energy balance can be studied for a given forest stand using function `spwb()`, with the following purposes:
+Forest water and energy balance can be studied for a given forest stand using function `spwb()`. This function allows simulating vertical hydrological processes and some plant physiological processes (hydraulics, photosynthesis and stomatal regulation).  The same function is used to run two models of different degree of complexity, from which the user should choose depending on the intended application. Most processes are implemented at the daily scale, although others operate at subdaily steps.
 
-1. Monitor or forecast temporal variation in soil water content in particular stands (for example to estimate mushroom yield).
-2. Monitor or forecast temporal variation of plant drought stress in particular stands (for example to anticipate mortality events).
-3. Monitor or forecast temporal variation of fuel moisture in particular stands (for example to monitor wildfire risk).
+Changes in leaf area and plant growth are key to evaluate the influence of climatic conditions on forest structure and function. Function `growth()` extends the previous models because it allows simulating  growth of a set of plant cohorts competing for light and water in a given forest stand. It can be used to forecast temporal variation in water fluxes and soil water content in forest stands while taking into account processes determining leaf area changes and plant growth.
 
-Changes in leaf area and plant growth are key to evaluate the influence of climatic conditions on forest structure and function. Function `growth()` allows simulating  growth of a set of plant cohorts competing for light and water in a given forest stand, with the following purposes:
-
-1. Monitor or forecast temporal variation in water fluxes and soil water content in forest stands (for example to estimate regulation ecosystem services) taking into account processes determining leaf area changes and plant growth.
-2. Monitor or forecast temporal variation of plant size (i.e. growth) in forest stands.
-3. Monitor or forecast temporal variation of live fuel moisture and the amount of standing dead and live fuels in forest stands (for example to monitor wildfire risk).
+While all simulation functions in the package focus on particular forest stands and vertical hydrological processes, the package has been designed so that it could be part of a broader modelling framework including lateral water flows.
 
 ### Sub-model functions
 
@@ -79,3 +75,6 @@ Vegetation functioning and dynamics have strong, but complex, effects on fire ha
 3. Crown fire behavior.
 4. Fire potential ratings of surface fire behavior and crown fire behavior.
 
+### Implementation
+
+The package has a user interface in R, but simulation functions and many calculations have been implemented in C++ and linked to R via the **Rcpp** package. 

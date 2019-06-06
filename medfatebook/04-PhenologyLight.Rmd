@@ -1,16 +1,19 @@
 # Leaf phenology and light extinction {#leafphenologylight}
 
+Leaf phenology determines seasonal variations in the surface area of leaves, hence influencing the energy and water exchange between plants and the atmosphere. Light extinction is an important process to consider in a model where plants have different heights. The two processes are currently dealt with in a very simple way. 
 
 ## Leaf phenology and leaf fall {#leafphenology}
 
-Given a base temperature ($T_{base} = 5^{\circ} \mathrm{C}$), the growth degree days ($GDD$) are zero for all those days where mean temperature $T_{mean}$ is below $T_{base}$ and start increasing when temperatures become warmer than this threshold. In other words, the $GDD$ function accumulates $\max(0.0, T_{mean} - T_{base})$ for all days previous to the current one. At the end of a year the cummulative value is set again to zero. Plant species can have either *evergreen* or *winter-deciduous* phenology. Evergreen plants maintain constant leaf area over the year, whereas in deciduous plants leaf-phenological status is updated daily, represented by $\phi_i$, the fraction of maximum leaf area. Leaf area index ($LAI$) values of deciduous plants are adjusted for leaf phenology following [@Prentice1993; @Sitch2003]:
+Given a base temperature ($T_{base} = 5^{\circ} \mathrm{C}$), the growth degree days ($GDD$) are zero for all those days where mean temperature $T_{mean}$ is below $T_{base}$ and start increasing when temperatures become warmer than this threshold. In other words, the $GDD$ function accumulates $\max(0.0, T_{mean} - T_{base})$ for all days previous to the current one. At the end of a year the cummulative value is set again to zero. Plant species can have either *evergreen* or *winter-deciduous* phenology. Evergreen plants maintain constant leaf area over the year, whereas in deciduous plants leaf-phenological status is updated daily, represented by $\phi_i$, the fraction of maximum leaf area (see function `pheno_leafDevelopmentStatus()`). Leaf area index ($LAI$) values of deciduous plants are adjusted for leaf phenology following [@Prentice1993; @Sitch2003]:
 
 \begin{equation}
 LAI_{i}^{\phi}=LAI^{live}_i\,\cdot\phi_i
 \end{equation}
 
 whereas for evergreen species $LAI_{i}^{\phi}=LAI^{live}_i$. Budburst in deciduous species occurs when daily temperature exceeds $T_{base}$ and $\phi_i$ increases linearly from 0 to 1 as function of the degree days above $T_{base}$, until a the
-value $S_{GDD,i}$ is reached (i.e. until $GDD > S_{GDD,i}$). In autumn, $\phi_i$ drops to 0 when average daily temperature falls again below $T_{base}$ [@Sitch2003]. The drop of $\phi_i$ causes live expanded leaves to become dead leaves. To avoid a sudden decrease of leaf area, dead leaves are kept in the canopy and they are reduced daily using a negative exponential function of wind speed:
+value $S_{GDD,i}$ is reached (i.e. until $GDD > S_{GDD,i}$). In autumn, $\phi_i$ drops to 0 when average daily temperature falls again below $T_{base}$ [@Sitch2003]. 
+
+The drop of $\phi_i$ causes live expanded leaves to become dead leaves. To avoid a sudden decrease of leaf area, dead leaves are kept in the canopy and they are reduced daily using a negative exponential function of wind speed:
 \begin{equation}
 LAI^{dead}_i=LAI^{dead}_i\,\cdot e^{- u/10}
 \end{equation}
@@ -29,7 +32,7 @@ LAI^{dead}_{stand} &=& \sum_{i=1}^c{LAI_{i}^{dead}} \\
 LAI^{all}_{stand} &=& \sum_{i=1}^c{LAI_{i}^{all}} = LAI^{\phi}_{stand}+LAI^{dead}_{stand}
 \end{eqnarray}
 
-Although simulations will normally start in winter and $GDD$ will be zero at the beginning, the user can specify a starting non-zero value for $GDD$ in the object created by function \texttt{spwbInput()}.
+Although simulations will normally start in winter and $GDD$ will be zero at the beginning, the user can specify a starting non-zero value for $GDD$ in the object created by function \texttt{spwbInput()}. Function `pheno_updateLeaves()` updates the status of expanded leaves and dead leaves in a simulation object.
 
 ## Leaf vertical distribution {#leafdistribution}
 
