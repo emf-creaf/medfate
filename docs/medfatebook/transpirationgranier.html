@@ -23,7 +23,7 @@
 
 
 
-<meta name="date" content="2019-06-06" />
+<meta name="date" content="2019-06-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -120,6 +120,7 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a><ul>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#how-to-use-this-book"><i class="fa fa-check"></i>How to use this book</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#an-ongoing-project"><i class="fa fa-check"></i>An ongoing project</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#acknowledgements"><i class="fa fa-check"></i>Acknowledgements</a></li>
 </ul></li>
 <li class="part"><span><b>I Preliminaries</b></span></li>
@@ -130,6 +131,7 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <li class="chapter" data-level="1.3.1" data-path="intro.html"><a href="intro.html#dynamic-simulation-functions"><i class="fa fa-check"></i><b>1.3.1</b> Dynamic simulation functions</a></li>
 <li class="chapter" data-level="1.3.2" data-path="intro.html"><a href="intro.html#sub-model-functions"><i class="fa fa-check"></i><b>1.3.2</b> Sub-model functions</a></li>
 <li class="chapter" data-level="1.3.3" data-path="intro.html"><a href="intro.html#static-functions"><i class="fa fa-check"></i><b>1.3.3</b> Static functions</a></li>
+<li class="chapter" data-level="1.3.4" data-path="intro.html"><a href="intro.html#implementation"><i class="fa fa-check"></i><b>1.3.4</b> Implementation</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="model-inputs.html"><a href="model-inputs.html"><i class="fa fa-check"></i><b>2</b> Model inputs</a><ul>
@@ -158,7 +160,7 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <li class="chapter" data-level="3.5.1" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#soil-vegetation-and-meteorology"><i class="fa fa-check"></i><b>3.5.1</b> Soil, vegetation and meteorology</a></li>
 <li class="chapter" data-level="3.5.2" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#vegetation-functional-parameters"><i class="fa fa-check"></i><b>3.5.2</b> Vegetation functional parameters</a></li>
 <li class="chapter" data-level="3.5.3" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#control-parameters-1"><i class="fa fa-check"></i><b>3.5.3</b> Control parameters</a></li>
-<li class="chapter" data-level="3.5.4" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#model-output"><i class="fa fa-check"></i><b>3.5.4</b> Model output</a></li>
+<li class="chapter" data-level="3.5.4" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#basicwaterbalanceoutput"><i class="fa fa-check"></i><b>3.5.4</b> Model output</a></li>
 </ul></li>
 <li class="chapter" data-level="3.6" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#applications"><i class="fa fa-check"></i><b>3.6</b> Applications</a></li>
 </ul></li>
@@ -199,7 +201,7 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <li class="chapter" data-level="7.5.1" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#soil-vegetation-and-meteorology-1"><i class="fa fa-check"></i><b>7.5.1</b> Soil, vegetation and meteorology</a></li>
 <li class="chapter" data-level="7.5.2" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#vegetation-functional-parameters-1"><i class="fa fa-check"></i><b>7.5.2</b> Vegetation functional parameters</a></li>
 <li class="chapter" data-level="7.5.3" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#control-parameters-2"><i class="fa fa-check"></i><b>7.5.3</b> Control parameters</a></li>
-<li class="chapter" data-level="7.5.4" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#model-output-1"><i class="fa fa-check"></i><b>7.5.4</b> Model output</a></li>
+<li class="chapter" data-level="7.5.4" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#advancedwaterbalanceoutput"><i class="fa fa-check"></i><b>7.5.4</b> Model output</a></li>
 </ul></li>
 <li class="chapter" data-level="7.6" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#applications-1"><i class="fa fa-check"></i><b>7.6</b> Applications</a></li>
 </ul></li>
@@ -262,17 +264,17 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <li class="chapter" data-level="13.4" data-path="closecanopysoilenergybalance.html"><a href="closecanopysoilenergybalance.html#soil-temperature-changes"><i class="fa fa-check"></i><b>13.4</b> Soil temperature changes</a></li>
 </ul></li>
 <li class="part"><span><b>IV Forest growth modelling</b></span></li>
-<li class="chapter" data-level="14" data-path="forest-growth-model.html"><a href="forest-growth-model.html"><i class="fa fa-check"></i><b>14</b> Forest growth model</a><ul>
-<li class="chapter" data-level="14.1" data-path="forest-growth-model.html"><a href="forest-growth-model.html#design-principles-2"><i class="fa fa-check"></i><b>14.1</b> Design principles</a></li>
-<li class="chapter" data-level="14.2" data-path="forest-growth-model.html"><a href="forest-growth-model.html#state-variables-2"><i class="fa fa-check"></i><b>14.2</b> State variables</a></li>
-<li class="chapter" data-level="14.3" data-path="forest-growth-model.html"><a href="forest-growth-model.html#process-scheduling-2"><i class="fa fa-check"></i><b>14.3</b> Process scheduling</a><ul>
-<li class="chapter" data-level="14.3.1" data-path="forest-growth-model.html"><a href="forest-growth-model.html#water-balance-plant-transpiration-and-photosynthesis"><i class="fa fa-check"></i><b>14.3.1</b> Water balance, plant transpiration and photosynthesis</a></li>
+<li class="chapter" data-level="14" data-path="growthmodelling.html"><a href="growthmodelling.html"><i class="fa fa-check"></i><b>14</b> Forest growth model</a><ul>
+<li class="chapter" data-level="14.1" data-path="growthmodelling.html"><a href="growthmodelling.html#design-principles-2"><i class="fa fa-check"></i><b>14.1</b> Design principles</a></li>
+<li class="chapter" data-level="14.2" data-path="growthmodelling.html"><a href="growthmodelling.html#state-variables-2"><i class="fa fa-check"></i><b>14.2</b> State variables</a></li>
+<li class="chapter" data-level="14.3" data-path="growthmodelling.html"><a href="growthmodelling.html#process-scheduling-2"><i class="fa fa-check"></i><b>14.3</b> Process scheduling</a><ul>
+<li class="chapter" data-level="14.3.1" data-path="growthmodelling.html"><a href="growthmodelling.html#water-balance-plant-transpiration-and-photosynthesis"><i class="fa fa-check"></i><b>14.3.1</b> Water balance, plant transpiration and photosynthesis</a></li>
 </ul></li>
-<li class="chapter" data-level="14.4" data-path="forest-growth-model.html"><a href="forest-growth-model.html#model-input"><i class="fa fa-check"></i><b>14.4</b> Model input</a><ul>
-<li class="chapter" data-level="14.4.1" data-path="forest-growth-model.html"><a href="forest-growth-model.html#vegetation-state-variables-and-parameters"><i class="fa fa-check"></i><b>14.4.1</b> Vegetation state variables and parameters</a></li>
-<li class="chapter" data-level="14.4.2" data-path="forest-growth-model.html"><a href="forest-growth-model.html#metereological-input"><i class="fa fa-check"></i><b>14.4.2</b> Metereological input</a></li>
+<li class="chapter" data-level="14.4" data-path="growthmodelling.html"><a href="growthmodelling.html#model-input"><i class="fa fa-check"></i><b>14.4</b> Model input</a><ul>
+<li class="chapter" data-level="14.4.1" data-path="growthmodelling.html"><a href="growthmodelling.html#vegetation-state-variables-and-parameters"><i class="fa fa-check"></i><b>14.4.1</b> Vegetation state variables and parameters</a></li>
+<li class="chapter" data-level="14.4.2" data-path="growthmodelling.html"><a href="growthmodelling.html#metereological-input"><i class="fa fa-check"></i><b>14.4.2</b> Metereological input</a></li>
 </ul></li>
-<li class="chapter" data-level="14.5" data-path="forest-growth-model.html"><a href="forest-growth-model.html#model-output-2"><i class="fa fa-check"></i><b>14.5</b> Model output</a></li>
+<li class="chapter" data-level="14.5" data-path="growthmodelling.html"><a href="growthmodelling.html#model-output"><i class="fa fa-check"></i><b>14.5</b> Model output</a></li>
 </ul></li>
 <li class="chapter" data-level="15" data-path="plant-compartments-respiration-and-carbon-balance.html"><a href="plant-compartments-respiration-and-carbon-balance.html"><i class="fa fa-check"></i><b>15</b> Plant compartments, respiration and carbon balance</a><ul>
 <li class="chapter" data-level="15.1" data-path="plant-compartments-respiration-and-carbon-balance.html"><a href="plant-compartments-respiration-and-carbon-balance.html#biomass-compartments"><i class="fa fa-check"></i><b>15.1</b> Biomass compartments</a></li>
@@ -385,6 +387,7 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
             <section class="normal" id="section-">
 <div id="transpirationgranier" class="section level1">
 <h1><span class="header-section-number">Chapter 6</span> Transpiration, photosynthesis and drought stress under Granier’s model</h1>
+<p>This chapter describes how daily plant transpiration is modelled in the basic water balance model, completing the flows needed to evaluate eq. <a href="basicwaterbalance.html#eq:basicwaterbalanceequation">(3.1)</a>. The model uses the approach of BILJOU <span class="citation">(Granier et al. <a href="#ref-Granier1999">1999</a>)</span> to estimate stand maximum transpiration, and then divides this value among the contribution of plant cohorts and estimate actual transpiration depending on soil moisture and cohort functional parameters, which determine plant drought. The chapter also describes how is daily photosynthesis estimated, a process that in this model does not influence transpiration but is necessary for growth calculations (chapter <a href="growthmodelling.html#growthmodelling">14</a>).</p>
 <div id="plant-transpiration-and-photosynthesis" class="section level2">
 <h2><span class="header-section-number">6.1</span> Plant transpiration and photosynthesis</h2>
 <div id="maximum-transpiration" class="section level3">
@@ -442,9 +445,9 @@ Assuming no water limitations (i.e. <span class="math inline">\(K_{i,s} = 1\)</s
 </div>
 <div id="plant-photosynthesis" class="section level3">
 <h3><span class="header-section-number">6.1.3</span> Plant photosynthesis</h3>
-<p>Because it is useful for growth, and for compatibility with the ‘Sperry’ transpiration mode (chapter <a href="advancedwaterbalance.html#advancedwaterbalance">7</a>), the water balance model using ‘Granier’ transpiration mode also calculates net assimilated carbon. Assuming a constant maximum water use efficiency (WUE), photosynthesis for a given plant cohort <span class="math inline">\(i\)</span> (in <span class="math inline">\(g C \cdot m^{-2}\)</span>) is estimated as a function of transpiration <span class="citation">(Mouillot, Rambal, and Lavorel <a href="#ref-Mouillot2001">2001</a>)</span>:
+<p>Because it is useful for growth, and for compatibility with the ‘Sperry’ transpiration mode (chapter <a href="advancedwaterbalance.html#advancedwaterbalance">7</a>), the water balance model using ‘Granier’ transpiration mode also calculates net assimilated carbon. Assuming a constant maximum water use efficiency (<span class="math inline">\(WUE_{\max}\)</span>), photosynthesis for a given plant cohort <span class="math inline">\(i\)</span> (in <span class="math inline">\(g C \cdot m^{-2}\)</span>) is estimated as a function of transpiration <span class="citation">(Mouillot, Rambal, and Lavorel <a href="#ref-Mouillot2001">2001</a>)</span>:
 <span class="math display">\[\begin{equation}
-A_n = \alpha \cdot WUE_{\max,i} \cdot Tr_i
+A_{n,i} = \alpha \cdot WUE_{\max,i} \cdot Tr_i
 \end{equation}\]</span>
 where <span class="math inline">\(Tr_i\)</span> is the transpiration of plant cohort <span class="math inline">\(i\)</span>, <span class="math inline">\(WUE_{\max,i}\)</span> is the maximum water use efficiency of the cohort (in <span class="math inline">\(g C \cdot mm^{-1}\)</span>) and <span class="math inline">\(\alpha = T_{mean}/20\)</span> is bounded between 0 and 1.</p>
 </div>

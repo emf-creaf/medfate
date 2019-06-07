@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 4 Leaf phenology and light extinction | The medfate reference book</title>
   <meta name="description" content="This is a reference book for models implemented in package medfate." />
-  <meta name="generator" content="bookdown 0.10 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.11 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 4 Leaf phenology and light extinction | The medfate reference book" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 
 
 
-<meta name="date" content="2019-06-06" />
+<meta name="date" content="2019-06-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -48,6 +48,59 @@
 
 
 
+<style type="text/css">
+div.sourceLine, a.sourceLine { display: inline-block; min-height: 1.25em; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; }
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+div.sourceLine, a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource div.sourceLine, .numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource div.sourceLine::before, .numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em; }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; color: #aaaaaa;  padding-left: 4px; }
+@media screen {
+a.sourceLine::before { text-decoration: underline; color: initial; }
+}
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.bn { color: #40a070; } /* BaseN */
+code span.fl { color: #40a070; } /* Float */
+code span.ch { color: #4070a0; } /* Char */
+code span.st { color: #4070a0; } /* String */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.ot { color: #007020; } /* Other */
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.fu { color: #06287e; } /* Function */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code span.cn { color: #880000; } /* Constant */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.im { } /* Import */
+code span.va { color: #19177c; } /* Variable */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.op { color: #666666; } /* Operator */
+code span.bu { } /* BuiltIn */
+code span.ex { } /* Extension */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.at { color: #7d9029; } /* Attribute */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -107,7 +160,7 @@
 <li class="chapter" data-level="3.5.1" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#soil-vegetation-and-meteorology"><i class="fa fa-check"></i><b>3.5.1</b> Soil, vegetation and meteorology</a></li>
 <li class="chapter" data-level="3.5.2" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#vegetation-functional-parameters"><i class="fa fa-check"></i><b>3.5.2</b> Vegetation functional parameters</a></li>
 <li class="chapter" data-level="3.5.3" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#control-parameters-1"><i class="fa fa-check"></i><b>3.5.3</b> Control parameters</a></li>
-<li class="chapter" data-level="3.5.4" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#model-output"><i class="fa fa-check"></i><b>3.5.4</b> Model output</a></li>
+<li class="chapter" data-level="3.5.4" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#basicwaterbalanceoutput"><i class="fa fa-check"></i><b>3.5.4</b> Model output</a></li>
 </ul></li>
 <li class="chapter" data-level="3.6" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#applications"><i class="fa fa-check"></i><b>3.6</b> Applications</a></li>
 </ul></li>
@@ -148,7 +201,7 @@
 <li class="chapter" data-level="7.5.1" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#soil-vegetation-and-meteorology-1"><i class="fa fa-check"></i><b>7.5.1</b> Soil, vegetation and meteorology</a></li>
 <li class="chapter" data-level="7.5.2" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#vegetation-functional-parameters-1"><i class="fa fa-check"></i><b>7.5.2</b> Vegetation functional parameters</a></li>
 <li class="chapter" data-level="7.5.3" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#control-parameters-2"><i class="fa fa-check"></i><b>7.5.3</b> Control parameters</a></li>
-<li class="chapter" data-level="7.5.4" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#model-output-1"><i class="fa fa-check"></i><b>7.5.4</b> Model output</a></li>
+<li class="chapter" data-level="7.5.4" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#advancedwaterbalanceoutput"><i class="fa fa-check"></i><b>7.5.4</b> Model output</a></li>
 </ul></li>
 <li class="chapter" data-level="7.6" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#applications-1"><i class="fa fa-check"></i><b>7.6</b> Applications</a></li>
 </ul></li>
@@ -211,17 +264,17 @@
 <li class="chapter" data-level="13.4" data-path="closecanopysoilenergybalance.html"><a href="closecanopysoilenergybalance.html#soil-temperature-changes"><i class="fa fa-check"></i><b>13.4</b> Soil temperature changes</a></li>
 </ul></li>
 <li class="part"><span><b>IV Forest growth modelling</b></span></li>
-<li class="chapter" data-level="14" data-path="forest-growth-model.html"><a href="forest-growth-model.html"><i class="fa fa-check"></i><b>14</b> Forest growth model</a><ul>
-<li class="chapter" data-level="14.1" data-path="forest-growth-model.html"><a href="forest-growth-model.html#design-principles-2"><i class="fa fa-check"></i><b>14.1</b> Design principles</a></li>
-<li class="chapter" data-level="14.2" data-path="forest-growth-model.html"><a href="forest-growth-model.html#state-variables-2"><i class="fa fa-check"></i><b>14.2</b> State variables</a></li>
-<li class="chapter" data-level="14.3" data-path="forest-growth-model.html"><a href="forest-growth-model.html#process-scheduling-2"><i class="fa fa-check"></i><b>14.3</b> Process scheduling</a><ul>
-<li class="chapter" data-level="14.3.1" data-path="forest-growth-model.html"><a href="forest-growth-model.html#water-balance-plant-transpiration-and-photosynthesis"><i class="fa fa-check"></i><b>14.3.1</b> Water balance, plant transpiration and photosynthesis</a></li>
+<li class="chapter" data-level="14" data-path="growthmodelling.html"><a href="growthmodelling.html"><i class="fa fa-check"></i><b>14</b> Forest growth model</a><ul>
+<li class="chapter" data-level="14.1" data-path="growthmodelling.html"><a href="growthmodelling.html#design-principles-2"><i class="fa fa-check"></i><b>14.1</b> Design principles</a></li>
+<li class="chapter" data-level="14.2" data-path="growthmodelling.html"><a href="growthmodelling.html#state-variables-2"><i class="fa fa-check"></i><b>14.2</b> State variables</a></li>
+<li class="chapter" data-level="14.3" data-path="growthmodelling.html"><a href="growthmodelling.html#process-scheduling-2"><i class="fa fa-check"></i><b>14.3</b> Process scheduling</a><ul>
+<li class="chapter" data-level="14.3.1" data-path="growthmodelling.html"><a href="growthmodelling.html#water-balance-plant-transpiration-and-photosynthesis"><i class="fa fa-check"></i><b>14.3.1</b> Water balance, plant transpiration and photosynthesis</a></li>
 </ul></li>
-<li class="chapter" data-level="14.4" data-path="forest-growth-model.html"><a href="forest-growth-model.html#model-input"><i class="fa fa-check"></i><b>14.4</b> Model input</a><ul>
-<li class="chapter" data-level="14.4.1" data-path="forest-growth-model.html"><a href="forest-growth-model.html#vegetation-state-variables-and-parameters"><i class="fa fa-check"></i><b>14.4.1</b> Vegetation state variables and parameters</a></li>
-<li class="chapter" data-level="14.4.2" data-path="forest-growth-model.html"><a href="forest-growth-model.html#metereological-input"><i class="fa fa-check"></i><b>14.4.2</b> Metereological input</a></li>
+<li class="chapter" data-level="14.4" data-path="growthmodelling.html"><a href="growthmodelling.html#model-input"><i class="fa fa-check"></i><b>14.4</b> Model input</a><ul>
+<li class="chapter" data-level="14.4.1" data-path="growthmodelling.html"><a href="growthmodelling.html#vegetation-state-variables-and-parameters"><i class="fa fa-check"></i><b>14.4.1</b> Vegetation state variables and parameters</a></li>
+<li class="chapter" data-level="14.4.2" data-path="growthmodelling.html"><a href="growthmodelling.html#metereological-input"><i class="fa fa-check"></i><b>14.4.2</b> Metereological input</a></li>
 </ul></li>
-<li class="chapter" data-level="14.5" data-path="forest-growth-model.html"><a href="forest-growth-model.html#model-output-2"><i class="fa fa-check"></i><b>14.5</b> Model output</a></li>
+<li class="chapter" data-level="14.5" data-path="growthmodelling.html"><a href="growthmodelling.html#model-output"><i class="fa fa-check"></i><b>14.5</b> Model output</a></li>
 </ul></li>
 <li class="chapter" data-level="15" data-path="plant-compartments-respiration-and-carbon-balance.html"><a href="plant-compartments-respiration-and-carbon-balance.html"><i class="fa fa-check"></i><b>15</b> Plant compartments, respiration and carbon balance</a><ul>
 <li class="chapter" data-level="15.1" data-path="plant-compartments-respiration-and-carbon-balance.html"><a href="plant-compartments-respiration-and-carbon-balance.html#biomass-compartments"><i class="fa fa-check"></i><b>15.1</b> Biomass compartments</a></li>
@@ -337,32 +390,33 @@
 <p>Leaf phenology determines seasonal variations in the surface area of leaves, hence influencing the energy and water exchange between plants and the atmosphere. Light extinction is an important process to consider in a model where plants have different heights. The two processes are currently dealt with in a very simple way.</p>
 <div id="leafphenology" class="section level2">
 <h2><span class="header-section-number">4.1</span> Leaf phenology and leaf fall</h2>
-<p>Given a base temperature (<span class="math inline">\(T_{base} = 5^{\circ} \mathrm{C}\)</span>), the growth degree days (<span class="math inline">\(GDD\)</span>) are zero for all those days where mean temperature <span class="math inline">\(T_{mean}\)</span> is below <span class="math inline">\(T_{base}\)</span> and start increasing when temperatures become warmer than this threshold. In other words, the <span class="math inline">\(GDD\)</span> function accumulates <span class="math inline">\(\max(0.0, T_{mean} - T_{base})\)</span> for all days previous to the current one. At the end of a year the cummulative value is set again to zero. Plant species can have either <em>evergreen</em> or <em>winter-deciduous</em> phenology. Evergreen plants maintain constant leaf area over the year, whereas in deciduous plants leaf-phenological status is updated daily, represented by <span class="math inline">\(\phi_i\)</span>, the fraction of maximum leaf area (see function <code>pheno_leafDevelopmentStatus()</code>). Leaf area index (<span class="math inline">\(LAI\)</span>) values of deciduous plants are adjusted for leaf phenology following <span class="citation">(I. C. Prentice, Sykes, and Cramer <a href="#ref-Prentice1993">1993</a>; Sitch et al. <a href="#ref-Sitch2003">2003</a>)</span>:</p>
+<p>Given a base temperature (<span class="math inline">\(T_{base} = 5^{\circ} \mathrm{C}\)</span>), the growth degree days (<span class="math inline">\(GDD\)</span>) are zero for all those days where mean temperature <span class="math inline">\(T_{mean}\)</span> is below <span class="math inline">\(T_{base}\)</span> and start increasing when temperatures become warmer than this threshold. In other words, the <span class="math inline">\(GDD\)</span> function accumulates <span class="math inline">\(\max(0.0, T_{mean} - T_{base})\)</span> for all days previous to the current one. At the end of a year the cummulative value is set again to zero. Plant species can have either <em>evergreen</em> or <em>winter-deciduous</em> phenology. Evergreen plants maintain constant leaf area over the year, whereas in deciduous plants leaf-phenological status is updated daily, represented by <span class="math inline">\(\phi_i\)</span>, the fraction of maximum leaf area (see function <code>pheno_leafDevelopmentStatus()</code>). Leaf area index (<span class="math inline">\(LAI\)</span>) values of deciduous plants are adjusted for leaf phenology following <span class="citation">(Prentice, Sykes, and Cramer <a href="#ref-Prentice1993">1993</a>; Sitch et al. <a href="#ref-Sitch2003">2003</a>)</span>:</p>
 <span class="math display">\[\begin{equation}
 LAI_{i}^{\phi}=LAI^{live}_i\,\cdot\phi_i
 \end{equation}\]</span>
-<p>whereas for evergreen species <span class="math inline">\(LAI_{i}^{\phi}=LAI^{live}_i\)</span>. Budburst in deciduous species occurs when daily temperature exceeds <span class="math inline">\(T_{base}\)</span> and <span class="math inline">\(\phi_i\)</span> increases linearly from 0 to 1 as function of the degree days above <span class="math inline">\(T_{base}\)</span>, until a the value <span class="math inline">\(S_{GDD,i}\)</span> is reached (i.e. until <span class="math inline">\(GDD &gt; S_{GDD,i}\)</span>). In autumn, <span class="math inline">\(\phi_i\)</span> drops to 0 when average daily temperature falls again below <span class="math inline">\(T_{base}\)</span> <span class="citation">(Sitch et al. <a href="#ref-Sitch2003">2003</a>)</span>.</p>
-The drop of <span class="math inline">\(\phi_i\)</span> causes live expanded leaves to become dead leaves. To avoid a sudden decrease of leaf area, dead leaves are kept in the canopy and they are reduced daily using a negative exponential function of wind speed:
+<p>whereas for evergreen species <span class="math inline">\(LAI_{i}^{\phi}=LAI^{live}_i\)</span>. Budburst in deciduous species occurs when daily temperature exceeds <span class="math inline">\(T_{base}\)</span> and <span class="math inline">\(\phi_i\)</span> increases linearly from 0 to 1 as function of the degree days above <span class="math inline">\(T_{base}\)</span>, until a the
+value <span class="math inline">\(S_{GDD,i}\)</span> is reached (i.e. until <span class="math inline">\(GDD &gt; S_{GDD,i}\)</span>). In autumn, <span class="math inline">\(\phi_i\)</span> drops to 0 when average daily temperature falls again below <span class="math inline">\(T_{base}\)</span> <span class="citation">(Sitch et al. <a href="#ref-Sitch2003">2003</a>)</span>.</p>
+<p>The drop of <span class="math inline">\(\phi_i\)</span> causes live expanded leaves to become dead leaves. To avoid a sudden decrease of leaf area, dead leaves are kept in the canopy and they are reduced daily using a negative exponential function of wind speed:
 <span class="math display">\[\begin{equation}
 LAI^{dead}_i=LAI^{dead}_i\,\cdot e^{- u/10}
 \end{equation}\]</span>
-<p>where <span class="math inline">\(u\)</span> is wind speed in (<span class="math inline">\(m \cdot s^{-1}\)</span>).</p>
-We will call total leaf area of a plant cohort <span class="math inline">\(i\)</span> (<span class="math inline">\(LAI^{all}_{i}\)</span>) to the sum of dead and live expanded leaves of the cohort:
+where <span class="math inline">\(u\)</span> is wind speed in (<span class="math inline">\(m \cdot s^{-1}\)</span>).</p>
+<p>We will call total leaf area of a plant cohort <span class="math inline">\(i\)</span> (<span class="math inline">\(LAI^{all}_{i}\)</span>) to the sum of dead and live expanded leaves of the cohort:
 <span class="math display">\[\begin{equation}
 LAI^{all}_{i} = LAI^{\phi}_{i}+LAI^{dead}_{i}
-\end{equation}\]</span>
-If there are <span class="math inline">\(c\)</span> plant cohorts, the leaf area index of the whole stand can be calculated for living leaves, expanded leaves, dead leaves and total leaf area as:
+\end{equation}\]</span></p>
+<p>If there are <span class="math inline">\(c\)</span> plant cohorts, the leaf area index of the whole stand can be calculated for living leaves, expanded leaves, dead leaves and total leaf area as:
 <span class="math display">\[\begin{eqnarray}
 LAI^{live}_{stand} &amp;=&amp; \sum_{i=1}^c{LAI_{i}^{live}} \\
 LAI^{\phi}_{stand} &amp;=&amp; \sum_{i=1}^c{LAI_{i}^{\phi}} \\
 LAI^{dead}_{stand} &amp;=&amp; \sum_{i=1}^c{LAI_{i}^{dead}} \\
 LAI^{all}_{stand} &amp;=&amp; \sum_{i=1}^c{LAI_{i}^{all}} = LAI^{\phi}_{stand}+LAI^{dead}_{stand}
-\end{eqnarray}\]</span>
+\end{eqnarray}\]</span></p>
 <p>Although simulations will normally start in winter and <span class="math inline">\(GDD\)</span> will be zero at the beginning, the user can specify a starting non-zero value for <span class="math inline">\(GDD\)</span> in the object created by function . Function <code>pheno_updateLeaves()</code> updates the status of expanded leaves and dead leaves in a simulation object.</p>
 </div>
 <div id="leafdistribution" class="section level2">
 <h2><span class="header-section-number">4.2</span> Leaf vertical distribution</h2>
-<p>Crown base height (<span class="math inline">\(H_{crown,i}\)</span>; in <span class="math inline">\(cm\)</span>) of cohort <span class="math inline">\(i\)</span> is defined as the height corresponding to the first living branch. It is calculated from the crown ratio of the cohort (<span class="math inline">\(CR_i\)</span>; a proportion between 0 and 1), i.e. the ratio between crown length and total height (see eq. <a href="#eq:CrownHeight">(<strong>??</strong>)</a>). The leaf area of any plant cohort is assumed to be distributed vertically following a <strong>truncated Gaussian function</strong> whose standardized values -1.5 and 1.5 correspond to crown base height (<span class="math inline">\(H_{crown,i}\)</span>) and total plant height (<span class="math inline">\(H_i\)</span>), respectively. The model divides the vertical dimension into vertical layers (by default, each layer is 50 cm in width). Let us define <span class="math inline">\(LAI_{i,j}^{all} = LAI_{i,j}^{\phi}+LAI_{i,j}^{dead}\)</span> as the leaf area index of cohort <span class="math inline">\(i\)</span> in layer <span class="math inline">\(j\)</span>. The truncated Gaussian distribution defines the <span class="math inline">\(LAI_{i,j}^{\phi}\)</span> and <span class="math inline">\(LAI_{i,j}^{dead}\)</span> for all plant cohorts and vertical layers.</p>
+<p>Crown base height (<span class="math inline">\(H_{crown,i}\)</span>; in <span class="math inline">\(cm\)</span>) of cohort <span class="math inline">\(i\)</span> is defined as the height corresponding to the first living branch. It is calculated from the crown ratio of the cohort (<span class="math inline">\(CR_i\)</span>; a proportion between 0 and 1), i.e. the ratio between crown length and total height (see eq. <a href="allometricmodels.html#eq:CrownHeight">(18.5)</a>). The leaf area of any plant cohort is assumed to be distributed vertically following a <strong>truncated Gaussian function</strong> whose standardized values -1.5 and 1.5 correspond to crown base height (<span class="math inline">\(H_{crown,i}\)</span>) and total plant height (<span class="math inline">\(H_i\)</span>), respectively. The model divides the vertical dimension into vertical layers (by default, each layer is 50 cm in width). Let us define <span class="math inline">\(LAI_{i,j}^{all} = LAI_{i,j}^{\phi}+LAI_{i,j}^{dead}\)</span> as the leaf area index of cohort <span class="math inline">\(i\)</span> in layer <span class="math inline">\(j\)</span>. The truncated Gaussian distribution defines the <span class="math inline">\(LAI_{i,j}^{\phi}\)</span> and <span class="math inline">\(LAI_{i,j}^{dead}\)</span> for all plant cohorts and vertical layers.</p>
 <p>Dividing the leaf area of a given layer by its width, one obtains the <em>leaf area density</em> (<span class="math inline">\(LAD\)</span> in <span class="math inline">\(m^2 \cdot m^{-3}\)</span>). Figure <a href="leafphenologylight.html#fig:leafareadensity">4.1</a> illustrates the leaf area density profile for an example forest stand (see function <code>vprofile_leafAreaDensity()</code>).</p>
 <div class="figure" style="text-align: center"><span id="fig:leafareadensity"></span>
 <img src="medfatebook_files/figure-html/leafareadensity-1.png" alt="Leaf area density distribution in a forest stand. The left panel shows the distribution for each plant cohort separately, whereas the right panel shows the overall density distribution." width="768" />
@@ -374,23 +428,26 @@ Figure 4.1: Leaf area density distribution in a forest stand. The left panel sho
 </div>
 <div id="basiclightextinction" class="section level2">
 <h2><span class="header-section-number">4.3</span> Light extinction</h2>
-The proportion of photosynthetic active radiation (PAR) and short-wave radiation (SWR; 400-3000 nm) decreases through the canopy following thee Beer-Lambert’s light extinction equation. <span class="math inline">\(L^{PAR}_{ground}\)</span>, the proportion of PAR that reaches the ground, is calculated as:
+<p>The proportion of photosynthetic active radiation (PAR) and short-wave radiation (SWR; 400-3000 nm) decreases through the canopy following thee Beer-Lambert’s light extinction equation.
+<span class="math inline">\(L^{PAR}_{ground}\)</span>, the proportion of PAR that reaches the ground, is calculated as:
 <span class="math display">\[\begin{equation}
 L^{PAR}_{ground}=e^{-\sum_{i=1}^{c}{k_{PAR,i} \cdot LAI_{i}^{all}}}
 \end{equation}\]</span>
-<p>where <span class="math inline">\(k_{PAR,i}\)</span> is the PAR extinction coefficient of cohort <span class="math inline">\(i\)</span>.</p>
-<p>The proportion of shortwave radiation (SWR) energy absorbed by each plant cohort needs to be calculated to divide the transpiration of the stand among cohorts (chapter <a href="transpirationgranier.html#transpirationgranier">6</a>), and the radiation absorbed by the soil is needed to calculate soil evaporation (section <a href="hydrology.html#soilevaporation">5.5</a>). Foliage absorbs a higher proportion of PAR than SWR; thus, the extinction coefficient is higher for PAR than for SWR. However, values for the ratio of extinction coefficients are rather constant. Following Friend et al. <span class="citation">(<a href="#ref-Friend1997">1997</a>)</span> it is assumed that the extinction coefficient for PAR is 1.35 times larger than that for SWR (i.e. <span class="math inline">\(k_{SWR,i} = k_{PAR,i}/1.35\)</span>). Figure <a href="leafphenologylight.html#fig:lightextinction">4.2</a> shows the PAR and SWR extinction profiles (see functions <code>vprofile_PARExtinction()</code> and <code>vprofile_SWRExtinction()</code>) corresponding to the leaf area density distribution of Fig. <a href="leafphenologylight.html#fig:leafareadensity">4.1</a>.</p>
+where <span class="math inline">\(k_{PAR,i}\)</span> is the PAR extinction coefficient of cohort <span class="math inline">\(i\)</span>.</p>
+<p>The proportion of shortwave radiation (SWR) energy absorbed by each plant cohort needs to be calculated to divide the transpiration of the stand among cohorts (chapter <a href="transpirationgranier.html#transpirationgranier">6</a>), and the radiation absorbed by the soil is needed to calculate soil evaporation (section <a href="hydrology.html#soilevaporation">5.5</a>). Foliage absorbs a higher proportion of PAR than SWR; thus, the extinction coefficient is higher for PAR than for SWR. However, values for the ratio of extinction coefficients are rather constant. Following Friend et al. <span class="citation">(<a href="#ref-Friend1997">1997</a>)</span> it is assumed that the extinction coefficient for PAR is 1.35 times larger than that for SWR (i.e.
+<span class="math inline">\(k_{SWR,i} = k_{PAR,i}/1.35\)</span>). Figure <a href="leafphenologylight.html#fig:lightextinction">4.2</a> shows the PAR and SWR extinction profiles (see functions <code>vprofile_PARExtinction()</code> and <code>vprofile_SWRExtinction()</code>) corresponding to the leaf area density distribution of Fig. <a href="leafphenologylight.html#fig:leafareadensity">4.1</a>.</p>
 <div class="figure" style="text-align: center"><span id="fig:lightextinction"></span>
 <img src="medfatebook_files/figure-html/lightextinction-1.png" alt="Light extinction in a forest stand. Note the sharper decrease of PAR (left panel) in comparison to SWR (right panel)" width="768" />
 <p class="caption">
 Figure 4.2: Light extinction in a forest stand. Note the sharper decrease of PAR (left panel) in comparison to SWR (right panel)
 </p>
 </div>
-To calculate radiation absorption, where the vertical dimension of the plot is divided into layers (as explained for leaf area distribution), and the SWR absorbed is calculated for each plant cohort in each layer. Let <span class="math inline">\(n\)</span> be the number of canopy layers. The fraction of radiation incident on layer <span class="math inline">\(j\)</span> that is absorbed in the same layer is:
+<p>To calculate radiation absorption, where the vertical dimension of the plot is divided into layers (as explained for leaf area distribution), and the SWR absorbed is calculated for each plant cohort in each layer. Let <span class="math inline">\(n\)</span> be the number of canopy layers. The fraction of radiation incident on layer <span class="math inline">\(j\)</span> that is absorbed in the same layer is:
 <span class="math display">\[\begin{equation}
 f_j=1 - e^{-\sum_{i=1}^{c}{k_{SWR,i} \cdot LAI_{i,j}^{all}}}
 \end{equation}\]</span>
-where <span class="math inline">\(LAI_{i,j}\)</span> is the leaf area index of cohort <span class="math inline">\(i\)</span> in layer <span class="math inline">\(j\)</span>. Hence, the fraction transmitted is <span class="math inline">\((1-f_j)\)</span>. The fraction of radiation incident on layer <span class="math inline">\(j\)</span> that is absorbed by expanded leaves of plant cohort <span class="math inline">\(i\)</span> in that layer (<span class="math inline">\(f_{ij}\)</span>) is calculated from the relative contribution of these leaves to the total absorption in the layer:
+where <span class="math inline">\(LAI_{i,j}\)</span> is the leaf area index of cohort <span class="math inline">\(i\)</span> in layer <span class="math inline">\(j\)</span>. Hence, the fraction transmitted is <span class="math inline">\((1-f_j)\)</span>. The fraction of radiation incident on layer <span class="math inline">\(j\)</span> that is absorbed by expanded leaves of plant cohort <span class="math inline">\(i\)</span> in that layer (<span class="math inline">\(f_{ij}\)</span>) is calculated from the relative
+contribution of these leaves to the total absorption in the layer:
 <span class="math display">\[\begin{equation}
 f_{ij} = f_j \cdot \frac{k_{SWR,i}\cdot LAI_{i,j}^{\phi}}{\sum_{h=1}^{c}{k_{SWR,h} \cdot LAI_{h,j}^{all}}}
 \end{equation}\]</span>
@@ -398,14 +455,17 @@ The fraction of canopy radiation absorbed by a plant cohort <span class="math in
 <span class="math display">\[\begin{equation}
 f_i = \sum_{j=1}^{n}{f_{ij}\cdot \prod_{h&gt;j}^{n}{(1-f_h)}}
 \end{equation}\]</span>
-<p>where for each layer the fraction of the radiation incident in the canopy that reaches the layer is found by multiplying the transmitted fractions across the layers above it. For example, the fraction of SWR absorbed by each of the three cohorts of the example in Fig. <a href="leafphenologylight.html#fig:leafareadensity">4.1</a> would be (see function <code>light_cohortAbsorbedSWRFraction()</code>):</p>
+where for each layer the fraction of the radiation incident in the canopy that
+reaches the layer is found by multiplying the transmitted fractions across the
+layers above it. For example, the fraction of SWR absorbed by each of the three cohorts of the example in Fig. <a href="leafphenologylight.html#fig:leafareadensity">4.1</a> would be (see function <code>light_cohortAbsorbedSWRFraction()</code>):</p>
 <pre><code>##      T1_54      T2_68      S1_65 
 ## 0.23371749 0.23236269 0.01904071</code></pre>
-The proportion of (shortwave) net radiation absorbed by the ground is simply:
+<p>The proportion of (shortwave) net radiation absorbed by the
+ground is simply:
 <span class="math display">\[\begin{equation}
 L^{SWR}_{ground} = 1 - \sum_{j}^{n}{f_j}
 \end{equation}\]</span>
-<p>which in our example would be:</p>
+which in our example would be:</p>
 <pre><code>## [1] 0.5148791</code></pre>
 <p>as also shown in Fig. <a href="leafphenologylight.html#fig:lightextinction">4.2</a>.</p>
 
@@ -414,13 +474,13 @@ L^{SWR}_{ground} = 1 - \sum_{j}^{n}{f_j}
 <h3>Bibliography</h3>
 <div id="refs" class="references">
 <div id="ref-Friend1997">
-<p>Friend, A D, A K Stevens, R G Knox, and M G R Cannell. 1997. “A process-based, terrestrial biosphere model of ecosystem dynamics (Hybrid v3.0).” <em>Ecological Modelling</em> 95: 249–87. doi:<a href="https://doi.org/10.1016/S0304-3800(96)00034-8">10.1016/S0304-3800(96)00034-8</a>.</p>
+<p>Friend, A D, A K Stevens, R G Knox, and M G R Cannell. 1997. “A process-based, terrestrial biosphere model of ecosystem dynamics (Hybrid v3.0).” <em>Ecological Modelling</em> 95:249–87. <a href="https://doi.org/10.1016/S0304-3800(96)00034-8" class="uri">https://doi.org/10.1016/S0304-3800(96)00034-8</a>.</p>
 </div>
 <div id="ref-Prentice1993">
-<p>Prentice, I. Colin, Martin T. Sykes, and Wolfgang Cramer. 1993. “A simulation model for the transient effects of climate change on forest landscapes.” <em>Ecological Modelling</em> 65 (1-2): 51–70. doi:<a href="https://doi.org/10.1016/0304-3800(93)90126-D">10.1016/0304-3800(93)90126-D</a>.</p>
+<p>Prentice, I. Colin, Martin T. Sykes, and Wolfgang Cramer. 1993. “A simulation model for the transient effects of climate change on forest landscapes.” <em>Ecological Modelling</em> 65 (1-2):51–70. <a href="https://doi.org/10.1016/0304-3800(93)90126-D" class="uri">https://doi.org/10.1016/0304-3800(93)90126-D</a>.</p>
 </div>
 <div id="ref-Sitch2003">
-<p>Sitch, S., B. Smith, I. C. Prentice, a. Arneth, a. Bondeau, W. Cramer, J. O. Kaplan, et al. 2003. “Evaluation of ecosystem dynamics, plant geography and terrestrial carbon cycling in the LPJ dynamic global vegetation model.” <em>Global Change Biology</em> 9 (2): 161–85. doi:<a href="https://doi.org/10.1046/j.1365-2486.2003.00569.x">10.1046/j.1365-2486.2003.00569.x</a>.</p>
+<p>Sitch, S., B. Smith, I. C. Prentice, a. Arneth, a. Bondeau, W. Cramer, J. O. Kaplan, et al. 2003. “Evaluation of ecosystem dynamics, plant geography and terrestrial carbon cycling in the LPJ dynamic global vegetation model.” <em>Global Change Biology</em> 9 (2):161–85. <a href="https://doi.org/10.1046/j.1365-2486.2003.00569.x" class="uri">https://doi.org/10.1046/j.1365-2486.2003.00569.x</a>.</p>
 </div>
 </div>
             </section>
@@ -479,7 +539,7 @@ gitbook.start({
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    var src = "";
+    var src = "true";
     if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:" && /^https?:/.test(src))
       src = src.replace(/^https?:/, '');

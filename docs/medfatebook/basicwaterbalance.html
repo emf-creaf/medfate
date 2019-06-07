@@ -23,7 +23,7 @@
 
 
 
-<meta name="date" content="2019-06-06" />
+<meta name="date" content="2019-06-07" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -120,6 +120,7 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a><ul>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#how-to-use-this-book"><i class="fa fa-check"></i>How to use this book</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#an-ongoing-project"><i class="fa fa-check"></i>An ongoing project</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#acknowledgements"><i class="fa fa-check"></i>Acknowledgements</a></li>
 </ul></li>
 <li class="part"><span><b>I Preliminaries</b></span></li>
@@ -130,6 +131,7 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <li class="chapter" data-level="1.3.1" data-path="intro.html"><a href="intro.html#dynamic-simulation-functions"><i class="fa fa-check"></i><b>1.3.1</b> Dynamic simulation functions</a></li>
 <li class="chapter" data-level="1.3.2" data-path="intro.html"><a href="intro.html#sub-model-functions"><i class="fa fa-check"></i><b>1.3.2</b> Sub-model functions</a></li>
 <li class="chapter" data-level="1.3.3" data-path="intro.html"><a href="intro.html#static-functions"><i class="fa fa-check"></i><b>1.3.3</b> Static functions</a></li>
+<li class="chapter" data-level="1.3.4" data-path="intro.html"><a href="intro.html#implementation"><i class="fa fa-check"></i><b>1.3.4</b> Implementation</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="model-inputs.html"><a href="model-inputs.html"><i class="fa fa-check"></i><b>2</b> Model inputs</a><ul>
@@ -158,7 +160,7 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <li class="chapter" data-level="3.5.1" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#soil-vegetation-and-meteorology"><i class="fa fa-check"></i><b>3.5.1</b> Soil, vegetation and meteorology</a></li>
 <li class="chapter" data-level="3.5.2" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#vegetation-functional-parameters"><i class="fa fa-check"></i><b>3.5.2</b> Vegetation functional parameters</a></li>
 <li class="chapter" data-level="3.5.3" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#control-parameters-1"><i class="fa fa-check"></i><b>3.5.3</b> Control parameters</a></li>
-<li class="chapter" data-level="3.5.4" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#model-output"><i class="fa fa-check"></i><b>3.5.4</b> Model output</a></li>
+<li class="chapter" data-level="3.5.4" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#basicwaterbalanceoutput"><i class="fa fa-check"></i><b>3.5.4</b> Model output</a></li>
 </ul></li>
 <li class="chapter" data-level="3.6" data-path="basicwaterbalance.html"><a href="basicwaterbalance.html#applications"><i class="fa fa-check"></i><b>3.6</b> Applications</a></li>
 </ul></li>
@@ -199,7 +201,7 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <li class="chapter" data-level="7.5.1" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#soil-vegetation-and-meteorology-1"><i class="fa fa-check"></i><b>7.5.1</b> Soil, vegetation and meteorology</a></li>
 <li class="chapter" data-level="7.5.2" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#vegetation-functional-parameters-1"><i class="fa fa-check"></i><b>7.5.2</b> Vegetation functional parameters</a></li>
 <li class="chapter" data-level="7.5.3" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#control-parameters-2"><i class="fa fa-check"></i><b>7.5.3</b> Control parameters</a></li>
-<li class="chapter" data-level="7.5.4" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#model-output-1"><i class="fa fa-check"></i><b>7.5.4</b> Model output</a></li>
+<li class="chapter" data-level="7.5.4" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#advancedwaterbalanceoutput"><i class="fa fa-check"></i><b>7.5.4</b> Model output</a></li>
 </ul></li>
 <li class="chapter" data-level="7.6" data-path="advancedwaterbalance.html"><a href="advancedwaterbalance.html#applications-1"><i class="fa fa-check"></i><b>7.6</b> Applications</a></li>
 </ul></li>
@@ -262,17 +264,17 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <li class="chapter" data-level="13.4" data-path="closecanopysoilenergybalance.html"><a href="closecanopysoilenergybalance.html#soil-temperature-changes"><i class="fa fa-check"></i><b>13.4</b> Soil temperature changes</a></li>
 </ul></li>
 <li class="part"><span><b>IV Forest growth modelling</b></span></li>
-<li class="chapter" data-level="14" data-path="forest-growth-model.html"><a href="forest-growth-model.html"><i class="fa fa-check"></i><b>14</b> Forest growth model</a><ul>
-<li class="chapter" data-level="14.1" data-path="forest-growth-model.html"><a href="forest-growth-model.html#design-principles-2"><i class="fa fa-check"></i><b>14.1</b> Design principles</a></li>
-<li class="chapter" data-level="14.2" data-path="forest-growth-model.html"><a href="forest-growth-model.html#state-variables-2"><i class="fa fa-check"></i><b>14.2</b> State variables</a></li>
-<li class="chapter" data-level="14.3" data-path="forest-growth-model.html"><a href="forest-growth-model.html#process-scheduling-2"><i class="fa fa-check"></i><b>14.3</b> Process scheduling</a><ul>
-<li class="chapter" data-level="14.3.1" data-path="forest-growth-model.html"><a href="forest-growth-model.html#water-balance-plant-transpiration-and-photosynthesis"><i class="fa fa-check"></i><b>14.3.1</b> Water balance, plant transpiration and photosynthesis</a></li>
+<li class="chapter" data-level="14" data-path="growthmodelling.html"><a href="growthmodelling.html"><i class="fa fa-check"></i><b>14</b> Forest growth model</a><ul>
+<li class="chapter" data-level="14.1" data-path="growthmodelling.html"><a href="growthmodelling.html#design-principles-2"><i class="fa fa-check"></i><b>14.1</b> Design principles</a></li>
+<li class="chapter" data-level="14.2" data-path="growthmodelling.html"><a href="growthmodelling.html#state-variables-2"><i class="fa fa-check"></i><b>14.2</b> State variables</a></li>
+<li class="chapter" data-level="14.3" data-path="growthmodelling.html"><a href="growthmodelling.html#process-scheduling-2"><i class="fa fa-check"></i><b>14.3</b> Process scheduling</a><ul>
+<li class="chapter" data-level="14.3.1" data-path="growthmodelling.html"><a href="growthmodelling.html#water-balance-plant-transpiration-and-photosynthesis"><i class="fa fa-check"></i><b>14.3.1</b> Water balance, plant transpiration and photosynthesis</a></li>
 </ul></li>
-<li class="chapter" data-level="14.4" data-path="forest-growth-model.html"><a href="forest-growth-model.html#model-input"><i class="fa fa-check"></i><b>14.4</b> Model input</a><ul>
-<li class="chapter" data-level="14.4.1" data-path="forest-growth-model.html"><a href="forest-growth-model.html#vegetation-state-variables-and-parameters"><i class="fa fa-check"></i><b>14.4.1</b> Vegetation state variables and parameters</a></li>
-<li class="chapter" data-level="14.4.2" data-path="forest-growth-model.html"><a href="forest-growth-model.html#metereological-input"><i class="fa fa-check"></i><b>14.4.2</b> Metereological input</a></li>
+<li class="chapter" data-level="14.4" data-path="growthmodelling.html"><a href="growthmodelling.html#model-input"><i class="fa fa-check"></i><b>14.4</b> Model input</a><ul>
+<li class="chapter" data-level="14.4.1" data-path="growthmodelling.html"><a href="growthmodelling.html#vegetation-state-variables-and-parameters"><i class="fa fa-check"></i><b>14.4.1</b> Vegetation state variables and parameters</a></li>
+<li class="chapter" data-level="14.4.2" data-path="growthmodelling.html"><a href="growthmodelling.html#metereological-input"><i class="fa fa-check"></i><b>14.4.2</b> Metereological input</a></li>
 </ul></li>
-<li class="chapter" data-level="14.5" data-path="forest-growth-model.html"><a href="forest-growth-model.html#model-output-2"><i class="fa fa-check"></i><b>14.5</b> Model output</a></li>
+<li class="chapter" data-level="14.5" data-path="growthmodelling.html"><a href="growthmodelling.html#model-output"><i class="fa fa-check"></i><b>14.5</b> Model output</a></li>
 </ul></li>
 <li class="chapter" data-level="15" data-path="plant-compartments-respiration-and-carbon-balance.html"><a href="plant-compartments-respiration-and-carbon-balance.html"><i class="fa fa-check"></i><b>15</b> Plant compartments, respiration and carbon balance</a><ul>
 <li class="chapter" data-level="15.1" data-path="plant-compartments-respiration-and-carbon-balance.html"><a href="plant-compartments-respiration-and-carbon-balance.html#biomass-compartments"><i class="fa fa-check"></i><b>15.1</b> Biomass compartments</a></li>
@@ -510,27 +512,99 @@ code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Infor
 <li><code>cavitationRefill [= TRUE]</code>: If <code>FALSE</code> the model operates in a irreversible cavitation mode.</li>
 </ul>
 </div>
-<div id="model-output" class="section level3">
+<div id="basicwaterbalanceoutput" class="section level3">
 <h3><span class="header-section-number">3.5.4</span> Model output</h3>
-<p>Function <code>spwb</code> returns a list object whose elements are data tables. Each table has dates as rows and has different output variables:</p>
-<ul>
-<li><code>WaterBalance</code>: Components of the climatic and soil daily water balance (i.e. net precipitation, infiltration, runoff, plant transpiration…).</li>
-<li><code>Soil</code>: Daily variation of soil variables (volume, moisture relative to field capacity, water potential) for each soil layer.</li>
-<li><code>PlantLAI</code>: Daily values leaf area index for each plant cohort.</li>
-<li><code>PlantTranspiration</code>: Daily transpiration (in <span class="math inline">\(mm\)</span>) for each plant cohort.</li>
-<li><code>PlantPhotosynthesis</code>: Daily net photosynthesis (in <span class="math inline">\(g C \cdot m^{-2}\)</span>) for each plant cohort.</li>
-<li><code>PlantPsi</code>: Daily water potential of each plant (in MPa).</li>
-<li><code>PlantStress</code>: Daily stress level suffered by each plant cohort (relative whole-plant conductance).</li>
-</ul>
-<p>The output of simulations can be inspected using specific <code>plot</code> and <code>summary</code> functions (see the corresponding package <em>vignette</em>).</p>
+<p>Function <code>spwb()</code> returns a list of a class with the same name. The first four elements of this list (i.e., <code>latitude</code>, <code>topography</code>, <code>spwbInput</code> and <code>soilInput</code>) are simply copies of model inputs. The next three elements correspond to water balance flows, soil state variables and stand-level variables:</p>
+<table style="width:99%;">
+<colgroup>
+<col width="13%" />
+<col width="84%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Element</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>WaterBalance</code></td>
+<td>Climatic input and water balance flows (i.e. net precipitation, infiltration, runoff, transpiration…).</td>
+</tr>
+<tr class="even">
+<td><code>Soil</code></td>
+<td>Soil variables (volume, moisture relative to field capacity, water potential) for each soil layer.</td>
+</tr>
+<tr class="odd">
+<td><code>Stand</code></td>
+<td>Stand-level variables, such as <span class="math inline">\(LAI\)</span>, the water retention capacity of the canopy or the fraction of light reaching the ground.</td>
+</tr>
+</tbody>
+</table>
+<p>The remaining elements include the output of plant cohort variables, with dates in rows and plant cohorts in columns:</p>
+<table style="width:99%;">
+<colgroup>
+<col width="13%" />
+<col width="12%" />
+<col width="11%" />
+<col width="61%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Element</th>
+<th>Symbol</th>
+<th>Units</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>PlantLAI</code></td>
+<td><span class="math inline">\(LAI^{\phi}_i\)</span></td>
+<td><span class="math inline">\(m^2 \cdot m^{-2}\)</span></td>
+<td>Leaf area index (expanded).</td>
+</tr>
+<tr class="even">
+<td><code>PlantAbsorbedSWRFraction</code></td>
+<td><span class="math inline">\(f_i\)</span></td>
+<td>[0-1]</td>
+<td>Fraction of shortwave radiation absorbed.</td>
+</tr>
+<tr class="odd">
+<td><code>PlantTranspiration</code></td>
+<td><span class="math inline">\(Tr_{i}\)</span></td>
+<td><span class="math inline">\(mm\)</span></td>
+<td>Transpiration per ground area.</td>
+</tr>
+<tr class="even">
+<td><code>PlantPhotosynthesis</code></td>
+<td><span class="math inline">\(A_{n,i}\)</span></td>
+<td><span class="math inline">\(g C \cdot m^{-2}\)</span></td>
+<td>Net photosynthesis per ground area.</td>
+</tr>
+<tr class="odd">
+<td><code>PlantPsi</code></td>
+<td><span class="math inline">\(\Psi_{leaf,i}\)</span></td>
+<td>MPa</td>
+<td>Plant (leaf) water potential.</td>
+</tr>
+<tr class="even">
+<td><code>PlantStress</code></td>
+<td><span class="math inline">\(DDS_i\)</span></td>
+<td>[0-1]</td>
+<td>Stress level suffered by each plant cohort (relative whole-plant conductance).</td>
+</tr>
+</tbody>
+</table>
+<p>The output of simulations can be inspected using <code>plot</code> and <code>summary</code> functions specific to <code>spwb</code> objects (examples are given in the corresponding package <em>vignette</em>).</p>
 </div>
 </div>
 <div id="applications" class="section level2">
 <h2><span class="header-section-number">3.6</span> Applications</h2>
-<p>The basic water balance model is relatively easy to parametrize and use. These features make it appropriate for applications that do not seek a high predictive at the plant level, but require robust estimates at the stand level. In our opinion the basic water balance model may be useful for the following applications:</p>
+<p>The basic water balance model is relatively easy to parametrize and use. Moreover, the model is quite fast. These features make it appropriate for applications that do not seek a high predictive at the plant level, but require robust estimates at the stand level. In our opinion the basic water balance model may be useful for the following applications:</p>
 <ol style="list-style-type: decimal">
-<li>To monitor or forecast temporal variation in soil water content in particular stands.</li>
-<li>Monitor or forecast temporal variation of plant drought stress in particular stands (for example to anticipate mortality events).</li>
+<li>To monitor or forecast temporal variation in soil water content in particular stands or in multiple stands across a landscape.</li>
+<li>Monitor or forecast temporal variation of plant drought stress in particular stands or in multiple stands across a landscape (for example to anticipate mortality events).</li>
 </ol>
 <p>For example, <span class="citation">Karavani et al. (<a href="#ref-Karavani2018">2018</a>)</span> employed the water balance to provide sound estimates of soil moisture dynamics to predict mushroom production in a network forest stands. The model is particularly interesting to test the relationship between forest structure/composition and the water balance at the stand level or the drought stress suffered by plants, as done in <span class="citation">Ameztegui et al. (<a href="#ref-Ameztegui2017">2017</a>)</span>. See also another application in <span class="citation">Rolo and Moreno (<a href="#ref-Rolo2019">2019</a>)</span>.</p>
 
