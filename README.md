@@ -40,11 +40,10 @@ devtools::install_github("vegmod/medfate",
 
 The package installation includes a number of *vignettes* that
 illustrate how to run simulation models in **medfate**. Vignettes and
-documentation of package functions can also be read at the [GitHub pages
-site](https://vegmod.github.io/medfate/) of the package.
-
-The [medfate reference
-book](https://vegmod.github.io/medfate/medfatebook/) provides full
+documentation of package functions can also be read at the [package
+website](https://vegmod.github.io/medfateweb/) of the package. In
+particular, the [medfate reference
+book](https://vegmod.github.io/medfateweb/medfatebook/) provides full
 documentation regarding the design and formulation of models included in
 the package.
 
