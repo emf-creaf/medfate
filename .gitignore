@@ -10,9 +10,6 @@ src/*.dll
 medfate.Rproj
 src-i386/*.*
 src-x64/*.*
-medfatebook/_book/*
-medfatebook/_bookdown_files/*
-medfatebook/medfatebook.log
 modeltests/*.tex
 modeltests/*.log
 modeltests/*.pdf
