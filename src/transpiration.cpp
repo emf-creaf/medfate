@@ -1069,6 +1069,7 @@ List transpirationGranier(List x, List soil, double tday, double pet, bool modif
   List control = x["control"];
   bool cavitationRefill = control["cavitationRefill"];
   String soilFunctions = control["soilFunctions"];
+  double verticalLayerSize = control["verticalLayerSize"];
   
   //Soil input
   NumericVector W = soil["W"]; //Access to soil state variable
@@ -1107,16 +1108,26 @@ List transpirationGranier(List x, List soil, double tday, double pet, bool modif
   
   //Determine whether leaves are out (phenology) and the adjusted Leaf area
   NumericVector Phe(numCohorts,0.0);
-  double s = 0.0, LAIcell = 0.0, LAIcelldead = 0.0;
+  double s = 0.0, LAIcell = 0.0, canopyHeight = 0.0, LAIcelldead = 0.0;
   for(int c=0;c<numCohorts;c++) {
     if(LAIlive[c]>0) Phe[c]=LAIphe[c]/LAIlive[c]; //Phenological status
     else Phe[c]=0.0;
     s += (kPAR[c]*(LAIphe[c]+LAIdead[c]));
     LAIcell += LAIphe[c]+LAIdead[c];
     LAIcelldead += LAIdead[c];
+    if(canopyHeight<H[c]) canopyHeight = H[c];
   }
-  NumericVector CohASWRF = cohortAbsorbedSWRFraction(LAIphe,  LAIdead, H, CR, kPAR);
+  int nz = ceil(canopyHeight/verticalLayerSize); //Number of vertical layers
+  NumericVector z(nz+1,0.0);
+  NumericVector zmid(nz);
+  for(int i=1;i<=nz;i++) {
+    z[i] = z[i-1] + verticalLayerSize;
+    zmid[i-1] = (verticalLayerSize/2.0) + verticalLayerSize*((double) (i-1));
+  }
+  
+  NumericVector CohASWRF = cohortAbsorbedSWRFraction(z, LAIphe,  LAIdead, H, CR, kPAR);
 
+  
   //Apply fractions to potential evapotranspiration
   //Maximum canopy transpiration
   //    Tmax = PET[i]*(-0.006*pow(LAIcell[i],2.0)+0.134*LAIcell[i]+0.036); //From Granier (1999)

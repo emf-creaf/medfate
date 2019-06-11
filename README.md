@@ -38,17 +38,15 @@ devtools::install_github("vegmod/medfate",
 
 ## Documentation
 
-The package installation includes a number of *vignettes* that
-illustrate how to run simulation models in **medfate**. Vignettes and
-documentation of package functions can also be read at the [package
-website](https://vegmod.github.io/medfateweb/) of the package. In
-particular, the [medfate reference
-book](https://vegmod.github.io/medfateweb/medfatebook/) provides full
-documentation regarding the design and formulation of models included in
-the package.
+  - The package installation includes a number of *vignettes* that
+    illustrate how to run simulation models in **medfate**.
 
-An interactive example application showing the behaviour of the water
-balance model can be found at <http://vegmod.ctfc.cat/medfateweb>.
+  - Additional documentation of the package, including a *reference
+    book*, can be found at <https://vegmod.github.io/>.
+
+  - An interactive example application showing the behaviour of the
+    water balance model can be found at
+    <http://vegmod.ctfc.cat/medfateweb>.
 
 ## References
 

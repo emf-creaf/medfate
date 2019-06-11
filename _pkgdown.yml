@@ -1,11 +1,9 @@
-destination: "../medfateweb/docs"
+destination: "../medfateweb2/static/docs"
 
 home:
   links:
   - text: Package website
-    href: https://vegmod.github.io/medfateweb
-  - text: Package reference book
-    href: https://vegmod.github.io/medfateweb/medfatebook
+    href: https://vegmod.github.io
   - text: Package shiny application
     href: http://vegmod.ctfc.cat/medfateweb
     
