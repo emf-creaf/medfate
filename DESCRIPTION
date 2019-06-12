@@ -10,7 +10,7 @@ Authors@R: c(
 	person('Antoine', 'Cabon', role='aut'))
 Description: Functions to simulate Mediterranean forest functioning and dynamics using cohort-based description of vegetation [De Caceres et al. (2015) <doi:10.1016/j.agrformet.2015.06.012>].
 License: GPL (>= 2)
-URL: http://vegmod.github.io
+URL: https://vegmod.github.io/rpackage/medfate
 LazyLoad: yes
 Depends: R (>= 3.4.0), sp
 Imports: spdep, GSIF, ggplot2, methods, meteoland (>= 0.8.1), Rcpp (>= 0.12.12)
@@ -19,3 +19,4 @@ LinkingTo: Rcpp, meteoland
 Encoding: UTF-8
 NeedsCompilation: yes
 VignetteBuilder: utils, knitr
+RoxygenNote: 6.1.1

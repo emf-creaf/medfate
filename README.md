@@ -42,7 +42,7 @@ devtools::install_github("vegmod/medfate",
     illustrate how to run simulation models in **medfate**.
 
   - Additional documentation of the package, including a *reference
-    book*, can be found at <https://vegmod.github.io/>.
+    book*, can be found at <https://vegmod.github.io/rpackage/medfate>.
 
   - An interactive example application showing the behaviour of the
     water balance model can be found at

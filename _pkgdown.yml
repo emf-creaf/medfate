@@ -1,9 +1,9 @@
-destination: "../medfateweb2/static/docs"
+destination: "D:/Rservices/vegmod_web/static/medfatedocs"
 
 home:
   links:
   - text: Package website
-    href: https://vegmod.github.io
+    href: https://vegmod.github.io/rpackage/medfate
   - text: Package shiny application
     href: http://vegmod.ctfc.cat/medfateweb
     
