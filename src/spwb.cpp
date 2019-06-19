@@ -134,7 +134,6 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   //Base parameters
   DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
   NumericVector Sgdd = Rcpp::as<Rcpp::NumericVector>(paramsBase["Sgdd"]);
-  NumericVector albedo = Rcpp::as<Rcpp::NumericVector>(paramsBase["albedo"]);
   NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsBase["k"]);
   NumericVector gRainIntercept = Rcpp::as<Rcpp::NumericVector>(paramsBase["g"]);
 
