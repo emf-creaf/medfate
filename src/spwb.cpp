@@ -46,7 +46,7 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   //Parameters  
   DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
   NumericVector Sgdd = Rcpp::as<Rcpp::NumericVector>(paramsBase["Sgdd"]);
-  NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsBase["k"]);
+  NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsBase["kPAR"]);
   NumericVector gRainIntercept = Rcpp::as<Rcpp::NumericVector>(paramsBase["g"]);
   
 
@@ -134,7 +134,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   //Base parameters
   DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
   NumericVector Sgdd = Rcpp::as<Rcpp::NumericVector>(paramsBase["Sgdd"]);
-  NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsBase["k"]);
+  NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsBase["kPAR"]);
   NumericVector gRainIntercept = Rcpp::as<Rcpp::NumericVector>(paramsBase["g"]);
 
   //1. Leaf Phenology: Adjusted leaf area index
@@ -294,7 +294,7 @@ void checkspwbInput(List x, List soil, String transpirationMode, String soilFunc
   if(!x.containsElementNamed("paramsBase")) stop("paramsBase missing in spwbInput");
   DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
   if(!paramsBase.containsElementNamed("Sgdd")) stop("Sgdd missing in spwbInput$paramsBase");
-  if(!paramsBase.containsElementNamed("k")) stop("k missing in spwbInput$paramsBase");
+  if(!paramsBase.containsElementNamed("kPAR")) stop("kPAR missing in spwbInput$paramsBase");
   if(!paramsBase.containsElementNamed("g")) stop("g missing in spwbInput$paramsBase");
   
   if(!x.containsElementNamed("paramsTransp")) stop("paramsTransp missing in spwbInput");

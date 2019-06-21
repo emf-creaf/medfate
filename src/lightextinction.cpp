@@ -319,7 +319,7 @@ NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd, Nume
  */
 // [[Rcpp::export("light_instantaneousLightExtinctionAbsortion")]]
 List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, 
-                                           NumericVector kPAR, NumericVector gammaSWR,
+                                           NumericVector kPAR, NumericVector alphaSWR, NumericVector gammaSWR,
                                            DataFrame ddd, NumericVector LWR_diffuse, 
                                            int ntimesteps = 24, String canopyMode= "sunshade", double trunkExtinctionFraction = 0.1) {
 
@@ -336,16 +336,15 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
   double kb = 0.8;
   NumericVector gammaPAR(numCohorts); //PAR albedo 
   NumericVector gammaLWR(numCohorts, 0.03); //3% albedo of LWR
-  NumericVector alphaPAR(numCohorts), alphaSWR(numCohorts), alphaLWR(numCohorts);
+  NumericVector alphaPAR(numCohorts), alphaLWR(numCohorts);
   NumericVector kSWR(numCohorts), kbvec(numCohorts), kLWR(numCohorts);
   for(int c=0;c<numCohorts;c++) {
     kSWR[c] = kPAR[c]/1.35;
-    alphaPAR[c] = 0.9;
-    alphaSWR[c] = 0.7;
+    alphaPAR[c] = alphaSWR[c]*1.35;
+    gammaPAR[c] = gammaSWR[c]*0.8; // (PAR albedo 80% of SWR albedo)
     kbvec[c] = kb;
     alphaLWR[c] = 0.97; //Longwave coefficients
     kLWR[c] = 0.8;
-    gammaPAR[c] = gammaSWR[c]*0.8; // (PAR albedo 80% of SWR albedo)
   }
   
   //Average radiation extinction fractions for direct and diffuse PAR/SWR radiation and LWR radiation
