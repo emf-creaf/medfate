@@ -30,37 +30,37 @@ NumericVector parcohortC(NumericVector H, NumericVector LAI_expanded,  NumericVe
 
 // [[Rcpp::export(".parcohort")]]
 NumericVector parcohort(IntegerVector SP, NumericVector H, NumericVector CR, NumericVector LAI, DataFrame SpParams){
-  NumericVector kSP = SpParams["k"];  
+  NumericVector kPARSP = SpParams["kPAR"];  
   int n = SP.size();
-  NumericVector k(n), LAI_dead(n);
+  NumericVector kPAR(n), LAI_dead(n);
   for(int i=0; i<n;i++) {
-    k[i] = kSP[SP[i]];
+    kPAR[i] = kPARSP[SP[i]];
     LAI_dead[i]=0.0;
   }
-  return(parcohortC(H,LAI,LAI_dead,k,CR));
+  return(parcohortC(H,LAI,LAI_dead,kPAR,CR));
 }
 
 // [[Rcpp::export(".parheight")]]
 NumericVector parheight(NumericVector heights, IntegerVector SP, NumericVector H, NumericVector CR, NumericVector LAI, DataFrame SpParams){
   int n = SP.size();
-  NumericVector kSP = SpParams["k"];  
-  NumericVector k(n), LAI_dead(n);
+  NumericVector kPARSP = SpParams["kPAR"];  
+  NumericVector kPAR(n), LAI_dead(n);
   for(int i=0; i<n;i++) {
-    k[i] = kSP[SP[i]];
+    kPAR[i] = kPARSP[SP[i]];
     LAI_dead[i]=0.0;
   }
   NumericVector AL(heights.size());
-  for(int i=0; i<heights.size();i++) AL[i] = availableLight(heights[i], H,LAI,LAI_dead, k,CR);
+  for(int i=0; i<heights.size();i++) AL[i] = availableLight(heights[i], H,LAI,LAI_dead, kPAR,CR);
   return(AL);
 }
 
 // [[Rcpp::export(".swrheight")]]
 NumericVector swrheight(NumericVector heights, IntegerVector SP, NumericVector H, NumericVector CR, NumericVector LAI, DataFrame SpParams){
   int n = SP.size();
-  NumericVector kSP = SpParams["k"];  
+  NumericVector kPARSP = SpParams["kPAR"];  
   NumericVector kSWR(n), LAI_dead(n);
   for(int i=0; i<n;i++) {
-    kSWR[i] = kSP[SP[i]]/1.35;
+    kSWR[i] = kPARSP[SP[i]]/1.35;
     LAI_dead[i]=0.0;
   }
   NumericVector AL(heights.size());
@@ -165,9 +165,9 @@ NumericVector cohortAbsorbedSWRFraction(NumericVector z, List x, DataFrame SpPar
   int nlayer = LAIme.nrow();
   int ncoh = LAIme.ncol();
   for(int i=0;i<nlayer;i++) for(int j=0;j<ncoh;j++) LAImd(i,j)=0.0; 
-  NumericVector k = cohortNumericParameter(x, SpParams, "k");
-  NumericVector kSWR(k.size());
-  for(int i=0;i<k.size();i++) kSWR[i] = k[i]/1.35;
+  NumericVector kPAR = cohortNumericParameter(x, SpParams, "kPAR");
+  NumericVector kSWR(kPAR.size());
+  for(int i=0;i<kPAR.size();i++) kSWR[i] = kPAR[i]/1.35;
   NumericVector caswrf = cohortAbsorbedSWRFraction(LAIme, LAImd, kSWR);
   caswrf.attr("names") = cohortIDs(x);
   return(caswrf);
