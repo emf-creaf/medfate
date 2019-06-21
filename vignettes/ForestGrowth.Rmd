@@ -19,7 +19,7 @@ library(medfate)
 
 ## About this vignette
 
-This document describes how to run a growth model of `medfate`. This document is meant to teach users to run the simulation model within R. All the details of the model design and formulation are given in a separate document that can be found on the website of the R package (http://vegmod.ctfc.cat/medfateweb). 
+This document describes how to run a growth model of `medfate`. This document is meant to teach users to run the simulation model within R. All the details of the model design and formulation can be found at https://vegmod.github.io/software/medfate. 
 
 ## Preparing model inputs
 Any forest growth model needs information on climate, vegetation and soils of the forest stand to be simulated. Moreover, since models in `medfate` differentiate between species, information on species-specific model parameters is also needed. In this subsection we explain the different steps (including optional pathways) to prepare all the data needed to run function `growth()`.
@@ -80,7 +80,7 @@ These species commonly occur in the Spanish forest inventory of Catalonia, but m
 names(SpParamsMED)
 ```
 
-Not all parameters are needed for all models. The user can find parameter definitions in the help page of this data set. However, to fully understand the role of parameters in the model, the user should read the details of model design and formulation (http://vegmod.ctfc.cat/medfateweb). 
+Not all parameters are needed for all models. The user can find parameter definitions in the help page of this data set. However, to fully understand the role of parameters in the model, the user should read the details of model design and formulation (https://vegmod.github.io/software/medfate). 
 
 ### Vegetation
 
