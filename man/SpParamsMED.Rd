@@ -53,8 +53,9 @@ A data set of parameter values for Mediterranean species, resulting from bibliog
     \item{\code{HeatContent}}{High fuel heat content (kJ/kg).}
     \item{\code{fHDmin}}{Minimum value of the height-to-diameter ratio (dimensionless).}
     \item{\code{fHDmax}}{Maximum value of the height-to-diameter ratio (dimensionless).}
-    \item{\code{albedo}}{Leaf reflectance for short wave radiation.}
-    \item{\code{k}}{Light extinction coeficient for PAR.}
+    \item{\code{gammaSWR}}{Reflectance (albedo) for SWR (\code{gammaPAR = 0.8*gammaSWR}).}
+    \item{\code{alphaSWR}}{Absorbance coefficient for SWR (\code{alphaPAR = alphaSWR * 1.35}).}
+    \item{\code{kPAR}}{Extinction coeficient for PAR (\code{kSWR = kPAR/1.35}).}
     \item{\code{g}}{Canopy water storage capacity per LAI unit (in mm/LAI).}
     \item{\code{Sgdd}}{Growth degree days for leaf budburst (in Celsius)}
     \item{\code{Al2As}}{Leaf area to sapwood area ratio (in m2·m-2).}

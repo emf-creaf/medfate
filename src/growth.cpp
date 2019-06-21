@@ -81,7 +81,7 @@ void checkgrowthInput(List x, List soil, String transpirationMode, String soilFu
   if(!x.containsElementNamed("paramsBase")) stop("paramsBase missing in growthInput");
   DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
   if(!paramsBase.containsElementNamed("Sgdd")) stop("Sgdd missing in growthInput$paramsBase");
-  if(!paramsBase.containsElementNamed("k")) stop("k missing in growthInput$paramsBase");
+  if(!paramsBase.containsElementNamed("kPAR")) stop("kPAR missing in growthInput$paramsBase");
   if(!paramsBase.containsElementNamed("g")) stop("g missing in growthInput$paramsBase");
   
   if(!x.containsElementNamed("paramsGrowth")) stop("paramsGrowth missing in growthInput");
@@ -202,7 +202,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   //Base parameters
   DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
   NumericVector Sgdd = paramsBase["Sgdd"];
-  NumericVector k = paramsBase["k"];
+  NumericVector kPAR = paramsBase["kPAR"];
   
 
   //Transpiration parameters
@@ -510,7 +510,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
         SAgrowthcum[j] = 0.0; //Reset cumulative growth
       }
 
-      NumericVector L = parcohortC(H, LAI_live, LAI_dead, k, CR);
+      NumericVector L = parcohortC(H, LAI_live, LAI_dead, kPAR, CR);
       for(int j=0;j<numCohorts; j++) {
         if(!NumericVector::is_na(DBH[j])) {
           double fHmod = std::max(0.0,std::min(1.0,(1.0-((H[j]-137.0)/(Hmax[j]-137.0)))));

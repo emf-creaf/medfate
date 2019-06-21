@@ -23,6 +23,6 @@ List cohortSunlitShadeAbsorbedRadiation(double Ib0, double Id0, NumericVector Ib
 NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd, NumericVector kb);
 
 List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, 
-                                           NumericVector kPAR, NumericVector albedo,
-                                           DataFrame ddd, NumericVector LWR_diffuse,
+                                           NumericVector kPAR, NumericVector alphaSWR, NumericVector gammaSWR,
+                                           DataFrame ddd, NumericVector LWR_diffuse, 
                                            int ntimesteps = 24, String canopyMode= "sunshade", double trunkExtinctionFraction = 0.1);
