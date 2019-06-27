@@ -65,9 +65,14 @@ Functions \code{forest2spwbInput} and \code{spwbInput} return a list of class \c
   }
   \item{\code{paramsBase}: A data frame with columns:
      \itemize{
-       \item{\code{k}: PAR extinction coefficient.}
+       \item{\code{kPAR}: PAR extinction coefficient.}
        \item{\code{g}: Canopy water retention capacity per LAI unit (mm/LAI).}
        \item{\code{Sgdd}: Growth degree days needed for leaf budburst (for winter decideous species).}
+     }
+     If \code{control$transpirationMode = "Sperry"} additional columns are:
+     \itemize{
+       \item{\code{gammaSWR}: Reflectance (albedo) coefficient for SWR .}
+       \item{\code{alphaSWR}: Absorbance coefficient for SWR .}
      }
   }
   \item{\code{paramsTransp}: A data frame with transpiration parameters. If \code{control$transpirationMode = "Granier"}, columns are:

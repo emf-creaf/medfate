@@ -22,7 +22,7 @@ light_cohortSunlitShadeAbsorbedRadiation(Ib0, Id0, Ibf, Idf, beta,
                                          LAIme, LAImd,
                                          kb, kd, alpha, gamma)
 light_instantaneousLightExtinctionAbsortion(LAIme, LAImd, LAImx,
-                                            kPAR, gammaSWR,
+                                            kPAR, alphaSWR, gammaSWR,
                                             ddd, LWR_diffuse,
                                             ntimesteps = 24, canopyMode= "sunshade", 
                                             trunkExtinctionFraction = 0.1)
@@ -40,10 +40,11 @@ light_cohortAbsorbedSWRFraction(z, x, SpParams, gdd = NA)
   \item{Id0}{Above-canopy diffuse incident radiation.}
   \item{Ibf}{Fraction of above-canopy direct radiation reaching each vegetation layer.}
   \item{Idf}{Fraction of above-canopy diffuse radiation reaching each vegetation layer.}
-  \item{alpha}{A vecfor of leaf absorvance by species.}
+  \item{alpha}{A vecfor of leaf absorbance by species.}
   \item{beta}{Solar elevation (in radians).}
   \item{gamma}{Vector of canopy reflectance values.}
   \item{kPAR}{A vector of visible light extinction coefficients for each cohort.}
+  \item{alphaSWR}{A vecfor of hort-wave absorbance coefficients for each cohort.}
   \item{gammaSWR}{A vector of short-wave reflectance coefficients (albedo) for each cohort.}
   \item{ddd}{A dataframe with direct and diffuse radiation for different subdaily time steps (see function \code{radiation_directDiffuseDay} in package meteoland).}
   \item{LWR_diffuse}{A vector with diffuse longwave radiation for different subdaily time steps.}

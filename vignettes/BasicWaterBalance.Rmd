@@ -19,7 +19,7 @@ library(medfate)
 
 ## About this vignette
 
-The present document describes how to run the soil plant water balance model described in De Cáceres et al. (2015) using package `medfate`. The  document indicates how to prepare the inputs, use the simulation functions and inspect the outputs. All the details of the model design and formulation are given in a separate vignette that can be found on the website of the R package (http://vegmod.ctfc.cat/medfateweb). Because it introduces many basic features of package `medfate`, this document should be read before addressing advanced topics of water balance simulations or growth simulations.
+The present document describes how to run the soil plant water balance model described in De Cáceres et al. (2015) using package `medfate`. The  document indicates how to prepare the inputs, use the simulation functions and inspect the outputs. All the details of the model design and formulation can be found at https://vegmod.github.io/software/medfate. Because it introduces many basic features of package `medfate`, this document should be read before addressing advanced topics of water balance simulations or growth simulations.
 
 ## Preparing model inputs
 Any forest water balance model needs information on **climate**, **vegetation** and **soils** of the forest stand to be simulated. Moreover, since the soil water balance in `medfate` differentiates between species,  **species-specific parameters** are also needed. In this subsection we explain the different steps (including optional pathways) to prepare all the data needed to run function `spwb()`.

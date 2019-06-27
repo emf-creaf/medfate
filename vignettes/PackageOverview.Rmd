@@ -27,7 +27,7 @@ library(medfate)
 ```
 
 
-Package vignettes only cover how to run models using the package functions. Complete documentation on the design and formulation of medfate models can be found in the **medfate reference book** at https://vegmod.github.io.
+Package vignettes only cover how to run models using the package functions. Complete documentation on the design and formulation of medfate models can be found in the **medfate reference book** at https://vegmod.github.io/software/medfate.
 
 ## Data structures
 

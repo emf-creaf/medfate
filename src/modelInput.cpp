@@ -405,8 +405,9 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
 
   NumericVector W = soil["W"];
   int nlayers = W.length();
-  NumericVector albedo = cohortNumericParameter(SP, SpParams, "albedo");
-  NumericVector k = cohortNumericParameter(SP, SpParams, "k");
+  NumericVector alphaSWR = cohortNumericParameter(SP, SpParams, "alphaSWR");
+  NumericVector gammaSWR = cohortNumericParameter(SP, SpParams, "gammaSWR");
+  NumericVector kPAR = cohortNumericParameter(SP, SpParams, "kPAR");
   NumericVector g = cohortNumericParameter(SP, SpParams, "g");
   NumericVector Sgdd = cohortNumericParameter(SP, SpParams, "Sgdd");
   int numCohorts = SP.size();
@@ -427,14 +428,18 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
                                          _["LAI_dead"] = LAI_dead);
   plantsdf.attr("row.names") = above.attr("row.names");
   
-  //Base params
-  DataFrame paramsBasedf = DataFrame::create(_["albedo"] = albedo, _["k"] = k, _["g"] = g, _["Sgdd"] = Sgdd);
-  paramsBasedf.attr("row.names") = above.attr("row.names");
-  
+
  
 
   List input;
   if(transpirationMode=="Granier") {
+    
+    //Base params
+    DataFrame paramsBasedf = DataFrame::create(_["kPAR"] = kPAR, 
+                                               _["g"] = g, 
+                                               _["Sgdd"] = Sgdd);
+    paramsBasedf.attr("row.names") = above.attr("row.names");
+    
     NumericVector WUE = cohortNumericParameter(SP, SpParams, "WUE");
     NumericVector Psi_Extract = cohortNumericParameter(SP, SpParams, "Psi_Extract");
     NumericVector pRootDisc = cohortNumericParameter(SP, SpParams, "pRootDisc");
@@ -459,6 +464,15 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     input["Photosynthesis"] = pvec;
     input["PLC"] = NumericVector(numCohorts, 0.0);
   } else if(transpirationMode =="Sperry"){
+    
+    //Base params
+    DataFrame paramsBasedf = DataFrame::create(_["alphaSWR"] = alphaSWR,
+                                               _["gammaSWR"] = gammaSWR, 
+                                               _["kPAR"] = kPAR, 
+                                               _["g"] = g, 
+                                               _["Sgdd"] = Sgdd);
+    paramsBasedf.attr("row.names") = above.attr("row.names");
+    
     int numStemSegments = control["nStemSegments"];
     bool capacitance = control["capacitance"];
     
@@ -571,8 +585,9 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   
   DataFrame paramsAllometriesdf = paramsAllometries(above, SpParams);
   
-  NumericVector albedo = cohortNumericParameter(SP, SpParams, "albedo");
-  NumericVector k = cohortNumericParameter(SP, SpParams, "k");
+  NumericVector alphaSWR = cohortNumericParameter(SP, SpParams, "alphaSWR");
+  NumericVector gammaSWR = cohortNumericParameter(SP, SpParams, "gammaSWR");
+  NumericVector kPAR = cohortNumericParameter(SP, SpParams, "kPAR");
   NumericVector g = cohortNumericParameter(SP, SpParams, "g");
   NumericVector Sgdd = cohortNumericParameter(SP, SpParams, "Sgdd");
   
@@ -622,14 +637,15 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   }
   plantsdf.attr("row.names") = above.attr("row.names");
   
-  
-  //Base params
-  DataFrame paramsBasedf = DataFrame::create(_["albedo"] = albedo, _["k"] = k, _["g"] = g, _["Sgdd"] = Sgdd);
-  paramsBasedf.attr("row.names") = above.attr("row.names");
-  
 
   List input;
   if(transpirationMode=="Granier") {
+    //Base params
+    DataFrame paramsBasedf = DataFrame::create(_["kPAR"] = kPAR, 
+                                               _["g"] = g, 
+                                               _["Sgdd"] = Sgdd);
+    paramsBasedf.attr("row.names") = above.attr("row.names");
+    
     NumericVector WUE = cohortNumericParameter(SP, SpParams, "WUE");
     NumericVector Psi_Extract = cohortNumericParameter(SP, SpParams, "Psi_Extract");
     NumericVector pRootDisc = cohortNumericParameter(SP, SpParams, "pRootDisc");
@@ -661,6 +677,15 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     input["PLC"] = cvec;
 
   } else if(transpirationMode =="Sperry"){
+    
+    //Base params
+    DataFrame paramsBasedf = DataFrame::create(_["alphaSWR"] = alphaSWR,
+                                               _["gammaSWR"] = gammaSWR, 
+                                               _["kPAR"] = kPAR, 
+                                               _["g"] = g, 
+                                               _["Sgdd"] = Sgdd);
+    paramsBasedf.attr("row.names") = above.attr("row.names");
+    
     int numStemSegments = control["nStemSegments"];
     bool capacitance = control["capacitance"];
 

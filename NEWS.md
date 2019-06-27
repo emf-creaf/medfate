@@ -10,6 +10,7 @@
 - 'stand_*' functions for stand-level properties
 - No SWR soil absorption when snow pack is present in Sperry's model
 - verticalLayerSize made a control parameter for Granier's model
+- Changes in light parameters: New parameter 'alphaSWR'. 'albedo' renamed to 'gammaSWR'. 'k' renamed to 'kPAR'
 
 # Version 0.8.2
 - Modification of meteoland to better calculate direct/diffuse light on slopes

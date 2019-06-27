@@ -141,8 +141,9 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   
   //Base parameters
   DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
-  NumericVector albedo = Rcpp::as<Rcpp::NumericVector>(paramsBase["albedo"]);
-  NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsBase["k"]);
+  NumericVector alphaSWR = Rcpp::as<Rcpp::NumericVector>(paramsBase["alphaSWR"]);
+  NumericVector gammaSWR = Rcpp::as<Rcpp::NumericVector>(paramsBase["gammaSWR"]);
+  NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsBase["kPAR"]);
   
   //Anatomy parameters
   DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
@@ -271,7 +272,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   
   //4c. Light extinction and absortion by time steps
   List lightExtinctionAbsortion = instantaneousLightExtinctionAbsortion(LAIme, LAImd, LAImx,
-                                                                        kPAR, albedo,
+                                                                        kPAR, alphaSWR, gammaSWR,
                                                                         ddd,  lwdr,
                                                                         ntimesteps,  "sunshade", 0.1);
   List abs_PAR_SL_list = lightExtinctionAbsortion["PAR_SL"];
@@ -1093,7 +1094,7 @@ List transpirationGranier(List x, List soil, double tday, double pet, bool modif
   
   //Parameters  
   DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
-  NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsBase["k"]);
+  NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsBase["kPAR"]);
   
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
   NumericVector Psi_Extract = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Psi_Extract"]);
