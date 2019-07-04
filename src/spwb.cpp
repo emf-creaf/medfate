@@ -586,8 +586,10 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   NumericVector Wini = soil["W"];
   Wdays(0,_) = Wini;
   NumericVector initialContent = water(soil, soilFunctions);
+  double initialSnowContent = soil["SWE"];
   if(verbose) {
     Rcout<<"Initial soil water content (mm): "<< sum(initialContent)<<"\n";
+    Rcout<<"Initial snowpack content (mm): "<< initialSnowContent<<"\n";
   }
 
   if(verbose) Rcout << "Performing daily simulations ";
@@ -778,10 +780,12 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   
   if(verbose) {
     NumericVector finalContent = water(soil, soilFunctions);
+    double finalSnowContent = soil["SWE"];
     Rcout<<"Final soil water content (mm): "<< sum(finalContent)<<"\n";
-    Rcout<<"Change in soil water content (mm): "<< sum(finalContent) - sum(initialContent)<<"\n";
-
+    Rcout<<"Final snowpack content (mm): "<< finalSnowContent<<"\n";
+    
     double Precipitationsum = sum(Precipitation);
+    double Rainfallsum = sum(Rain);
     double NetRainsum = sum(NetRain);
     double Interceptionsum = sum(Interception);
     double SoilEvaporationsum = sum(SoilEvaporation);
@@ -789,12 +793,18 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
     double Infiltrationsum  = sum(Infiltration);
     double DeepDrainagesum = sum(DeepDrainage);
     double Transpirationsum = sum(Transpiration);
+    double Snowmeltsum = sum(Snowmelt);
+    double Snowsum = sum(Snow);
     
-    double wb = Precipitationsum - Interceptionsum - Runoffsum - DeepDrainagesum - SoilEvaporationsum - sum(PlantExtraction);
-    Rcout<<"Water balance result (mm): "<< wb<<"\n";
+    double soil_wb = (Rainfallsum - Interceptionsum) + Snowmeltsum - Runoffsum - DeepDrainagesum - SoilEvaporationsum - sum(PlantExtraction);
+    double snowpack_wb = Snowsum - Snowmeltsum;
+    Rcout<<"Change in soil water content (mm): "<< sum(finalContent) - sum(initialContent)<<"\n";
+    Rcout<<"Soil water balance result (mm): "<< soil_wb<<"\n";
+    Rcout<<"Change in snowpack water content (mm): "<< finalSnowContent - initialSnowContent<<"\n";
+    Rcout<<"Snowpack water balance result (mm): "<< snowpack_wb<<"\n";
     Rcout<<"Water balance components:\n";
     Rcout<<"  Precipitation (mm) "  <<round(Precipitationsum) <<"\n";
-    Rcout<<"  Rain (mm) "  <<round(sum(Rain)) <<" Snow (mm) "  <<round(sum(Snow)) <<"\n";
+    Rcout<<"  Rain (mm) "  <<round(Rainfallsum) <<" Snow (mm) "  <<round(Snowsum) <<"\n";
     Rcout<<"  Interception (mm) " << round(Interceptionsum)  <<" Net rainfall (mm) " << round(NetRainsum) <<"\n";
     Rcout<<"  Infiltration (mm) " << round(Infiltrationsum)  <<
       " Runoff (mm) " << round(Runoffsum) <<

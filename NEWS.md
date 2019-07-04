@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 0.8.4
+- Water balance console output modified in spwb
+
 # Version 0.8.3
 - Reference book (medfatebook) launched
 - Fraction of absorbed SWR output in Granier's transpiration
