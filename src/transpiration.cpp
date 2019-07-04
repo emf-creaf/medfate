@@ -378,10 +378,10 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
         supply[c] = supplyFunctionNetwork(psic,
                                           VGrhizo_kmaxc,VG_nc,VG_alphac,
                                           VCroot_kmaxc, VCroot_c[c],VCroot_d[c],
-                                                                            VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
-                                                                                                                 VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
-                                                                                                                                                      PLCStemPrev, 0.0, maxNsteps, 
-                                                                                                                                                      ntrial, psiTol, ETol, 0.001); 
+                                          VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
+                                          VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
+                                          PLCStemPrev, 0.0, maxNsteps, 
+                                          ntrial, psiTol, ETol, 0.001); 
       }
     } else {
       stop("Plant cohort not connected to any soil layer!");
@@ -599,8 +599,63 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
             for(int lc=0;lc<nlayerscon[c];lc++) {
               Esoilcn[lc] = ElayersMat(iPM,lc)*0.001*0.01802*LAIphe[c]*tstep; //Scale from flow to water volume in the time step
             }
+            //Copy psiRhizo and from connected layers to psiRhizo from soil layers
+            NumericMatrix psiRhizo = Rcpp::as<Rcpp::NumericMatrix>(sFunction["psiRhizo"]);
+            int cl = 0;
+            for(int l=0;l<nlayers;l++) {
+              if(layerConnected(c,l)) {
+                psiRhizoMAT(c,l) = psiRhizo(iPM,cl);
+                cl++;
+              } 
+            }
           } else {
+            NumericVector newPsiStem2 = Rcpp::as<Rcpp::NumericMatrix>(sFunction["psiStem2"]);
+            psiStem2VEC[c] = newPsiStem2[iPM];
             
+            //Calculate flow from roots and scale water extracted to cohort level
+            //Uses psiStem and psiRoot values from previous step
+            double psiPLCStem = apoplasticWaterPotential(1.0-PLCstemVEC[c], VCstem_c[c], VCstem_d[c]);
+            double Eroot2stem = EXylem(psiStem1VEC[c], psiRootVEC[c], 
+                                       VCstem_kmax[c]*2.0, VCstem_c[c], VCstem_d[c],
+                                       true, psiPLCStem);
+            NumericVector psic = NumericVector(nlayerscon[c]);
+            NumericVector VG_nc = NumericVector(nlayerscon[c]);
+            NumericVector VG_alphac= NumericVector(nlayerscon[c]);
+            NumericVector VCroot_kmaxc = NumericVector(nlayerscon[c]);
+            NumericVector VGrhizo_kmaxc = NumericVector(nlayerscon[c]);
+            int cnt=0;
+            for(int l=0;l<nlayers;l++) {
+              if(layerConnected(c,l)) {
+                psic[cnt] = psiVec[l];
+                VG_nc[cnt] = VG_n[l];
+                VG_alphac[cnt] = VG_alpha[l];
+                VCroot_kmaxc[cnt] = VCroot_kmax(c,l);
+                VGrhizo_kmaxc[cnt] = VGrhizo_kmax(c,l);
+                cnt++;
+              }
+            }
+            List E2b = E2psiBelowground(Eroot2stem, psic, 
+                                        VGrhizo_kmaxc, VG_nc, VG_alphac,
+                                        VCroot_kmaxc, VCroot_c[c], VCroot_d[c], 
+                                        NumericVector::create(0),
+                                        ntrial, psiTol, ETol);
+            psiRootVEC[c] = E2b["psiRoot"]; // New psiRoot value
+            
+            //Scale water extracted from soil to cohort level
+            NumericVector ElayersVEC  = Rcpp::as<Rcpp::NumericVector>(E2b["ERhizo"]);
+            for(int lc=0;lc<nlayerscon[c];lc++) {
+              Esoilcn[lc] = ElayersVEC[lc]*0.001*0.01802*LAIphe[c]*tstep; //Scale from flow to water volume in the time step
+            }
+            //Copy psiRhizo and from connected layers to psiRhizo from soil layers
+            NumericVector psiRhizo = Rcpp::as<Rcpp::NumericVector>(E2b["psiRhizo"]);
+            int cl = 0;
+            for(int l=0;l<nlayers;l++) {
+              if(layerConnected(c,l)) {
+                psiRhizoMAT(c,l) = psiRhizo[cl];
+                cl++;
+              } 
+            }
+            //TO DO: stem segment water balance
           }
           
           //Balance between extraction and transpiration
@@ -623,12 +678,9 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
           
           
           //Copy transpiration and from connected layers to transpiration from soil layers
-          //Copy psiRhizo and from connected layers to psiRhizo from soil layers
-          NumericMatrix psiRhizo = Rcpp::as<Rcpp::NumericMatrix>(sFunction["psiRhizo"]);
           int cl = 0;
           for(int l=0;l<nlayers;l++) {
             if(layerConnected(c,l)) {
-              psiRhizoMAT(c,l) = psiRhizo(iPM,cl);
               SoilWaterExtract(c,l) += Esoilcn[cl]; //Add to cummulative transpiration from layers
               soilLayerExtractInst(l,n) += Esoilcn[cl];
               cl++;

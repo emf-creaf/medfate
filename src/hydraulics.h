@@ -36,6 +36,10 @@ double findRhizosphereMaximumConductance(double averageResistancePercent, double
                                          double kleafmax, double leafc, double leafd);
 
 
+double EXylem(double psiPlant, double psiUpstream, 
+              double kxylemmax, double c, double d, 
+              bool allowNegativeFlux = true, double psiCav = 0.0);
+
 double E2psiXylem(double E, double psiUpstream, double kxylemmax, double c, double d, double psiCav = 0.0);
 
 
