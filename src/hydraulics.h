@@ -70,6 +70,10 @@ List E2psiAbovegroundCapacitanceDisconnected(double E,
                                              double Vleaf, double leaffapo, double leafpi0, double leafeps,
                                              double klat,
                                              double tstep = 3600.0);
+List E2psiStem1Leaf(double E, double psiStem1, 
+                    double kstemmax, double stemc, double stemd,
+                    double kleafmax, double leafc, double leafd,
+                    double PLCstem);
 
 List E2psiNetwork(double E, NumericVector psiSoil,
                   NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
@@ -119,6 +123,12 @@ List supplyFunctionBelowground(NumericVector psiSoil,
                               int ntrial = 10, double psiTol = 0.0001, double ETol = 0.0001,
                               double pCrit = 0.001);
 
+List supplyFunctionStem1Leaf(double psiStem1,
+                             double kstemmax, double stemc, double stemd,
+                             double kleafmax, double leafc, double leafd,
+                             double PLCstem,
+                             double minFlow = 0.0, int maxNsteps=400, 
+                             double ETol = 0.0001, double pCrit = 0.001);
 
 List supplyFunctionNetwork(NumericVector psiSoil, 
                            NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,

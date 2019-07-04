@@ -608,8 +608,8 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
           NumericVector PLC = Rcpp::as<Rcpp::NumericVector>(x["PLC"]);
           for(int j=0;j<PLC.length();j++) PLC[j] = 0.0;
         } else {
-          NumericMatrix StemPLC = Rcpp::as<Rcpp::NumericMatrix>(x["PLCstem"]);
-          for(int j=0;j<StemPLC.nrow();j++) for(int k=0;k<StemPLC.ncol();k++)  StemPLC(j,k) = 0.0;
+          NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(x["PLCstem"]);
+          for(int j=0;j<StemPLC.length();j++) StemPLC[j] = 0.0;
         }
       }
 
