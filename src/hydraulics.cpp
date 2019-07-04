@@ -2116,7 +2116,7 @@ double maximumRootHydraulicConductance(double xylemConductivity, double Al2As, N
 
 
 /**
- * Calculate capacity of stem per leaf area (in m3·m-2)
+ * Calculate capacity of stem per leaf area (in mm = l·m-2)
  * 
  * Al2As - Leaf area to sapwood area ratio (in m2·m-2)
  * height - plant height (in cm)
@@ -2125,17 +2125,17 @@ double maximumRootHydraulicConductance(double xylemConductivity, double Al2As, N
  */
 // [[Rcpp::export("hydraulics_stemWaterCapacity")]]
 double stemWaterCapacity(double Al2As, double height, double wd) {
-  return(0.48*(height/(Al2As*100.0))*(1.0- (wd/1.54)));
+  return(1000*0.48*(height/(Al2As*100.0))*(1.0- (wd/1.54)));
 }
 
 /**
- * Calculate  capacity of leaves per leaf area (in m3·m-2)
+ * Calculate  capacity of leaves per leaf area (in mm = l·m-2)
  * 
  * SLA - Specific leaf area (in m2/kg)
  * ld - leaf density (in g/cm3 = 1000 kg/m3)
  */
 // [[Rcpp::export("hydraulics_leafWaterCapacity")]]
 double leafWaterCapacity(double SLA, double ld) {
-  return(1.0/(1000.0*ld*SLA))*(1.0- (ld/1.54));
+  return(1000.0/(1000.0*ld*SLA))*(1.0- (ld/1.54));
 }
 

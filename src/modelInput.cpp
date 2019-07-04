@@ -473,7 +473,6 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
                                                _["Sgdd"] = Sgdd);
     paramsBasedf.attr("row.names") = above.attr("row.names");
     
-    int numStemSegments = control["nStemSegments"];
     bool capacitance = control["capacitance"];
     
     DataFrame paramsAnatomydf = paramsAnatomy(above, SpParams);
@@ -483,15 +482,14 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     List below = paramsBelow(above, V, soil, 
                              paramsTranspirationdf, control);
     
-    NumericMatrix RWCstemmat =  NumericMatrix(numCohorts, numStemSegments);
-    std::fill(RWCstemmat.begin(), RWCstemmat.end(), 1.0);
-    RWCstemmat.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numStemSegments));
-    NumericMatrix PLCmat =  NumericMatrix(numCohorts, numStemSegments);
-    std::fill(PLCmat.begin(), PLCmat.end(), 0.0);
-    PLCmat.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numStemSegments));
-    NumericMatrix psiStemmat =  NumericMatrix(numCohorts, numStemSegments);
-    std::fill(psiStemmat.begin(), psiStemmat.end(), 0.0);
-    psiStemmat.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numStemSegments));
+    NumericVector psiStorage =  NumericVector(numCohorts, 0.0);
+    psiStorage.attr("names") = above.attr("row.names");
+    NumericVector PLCstem =  NumericVector(numCohorts, 0.0);
+    PLCstem.attr("names") = above.attr("row.names");
+    NumericVector psiStem1 =  NumericVector(numCohorts, 0.0);
+    psiStem1.attr("names") = above.attr("row.names");
+    NumericVector psiStem2 =  NumericVector(numCohorts, 0.0);
+    psiStem2.attr("names") = above.attr("row.names");
     NumericVector Einst = NumericVector(numCohorts, 0.0);
     Einst.attr("names") = above.attr("row.names");
     NumericMatrix psiRhizo =  NumericMatrix(numCohorts, nlayers);
@@ -501,8 +499,6 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     psiRoot.attr("names") = above.attr("row.names");
     NumericVector psiLeaf = NumericVector(numCohorts, 0.0);
     psiLeaf.attr("names") = above.attr("row.names");
-    NumericVector rwcsleaf = NumericVector(numCohorts, 1.0);
-    rwcsleaf.attr("names") = above.attr("row.names");
     if(soilFunctions=="SX") {
       soilFunctions = "VG"; 
       warning("Soil pedotransfer functions set to Van Genuchten ('VG').");
@@ -529,13 +525,13 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     NumericVector pvec =  NumericVector(numCohorts, 0.0);
     pvec.attr("names") = above.attr("row.names");
     input["Photosynthesis"] = pvec;
-    input["PLCstem"] = PLCmat;
-    input["RWCsympstem"] = RWCstemmat;
-    input["RWCsympleaf"] = rwcsleaf;
+    input["PLCstem"] = PLCstem;
     input["Einst"] = Einst;
     input["psiRhizo"] = psiRhizo;
     input["psiRoot"] = psiRoot;
-    input["psiStem"] = psiStemmat;
+    input["psiStorage"] = psiStorage;
+    input["psiStem1"] = psiStem1;
+    input["psiStem2"] = psiStem2;
     input["psiLeaf"] = psiLeaf;
   }
 
@@ -686,7 +682,6 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                                                _["Sgdd"] = Sgdd);
     paramsBasedf.attr("row.names") = above.attr("row.names");
     
-    int numStemSegments = control["nStemSegments"];
     bool capacitance = control["capacitance"];
 
     DataFrame paramsAnatomydf = paramsAnatomy(above, SpParams);
@@ -696,25 +691,24 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     List below = paramsBelowZ(above, V, Z, soil, 
                              paramsTranspirationdf, control);
     
-    NumericMatrix RWCstemmat =  NumericMatrix(numCohorts, numStemSegments);
-    std::fill(RWCstemmat.begin(), RWCstemmat.end(), 1.0);
-    RWCstemmat.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numStemSegments));
-    NumericMatrix PLCmat =  NumericMatrix(numCohorts, numStemSegments);
-    std::fill(PLCmat.begin(), PLCmat.end(), 0.0);
-    PLCmat.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numStemSegments));
-    NumericMatrix psiStemmat =  NumericMatrix(numCohorts, numStemSegments);
-    std::fill(psiStemmat.begin(), psiStemmat.end(), 0.0);
-    psiStemmat.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numStemSegments));
+    NumericVector psiStorage =  NumericVector(numCohorts, 0.0);
+    psiStorage.attr("names") = above.attr("row.names");
+    NumericVector PLCstem =  NumericVector(numCohorts, 0.0);
+    PLCstem.attr("names") = above.attr("row.names");
+    NumericVector psiStem1 =  NumericVector(numCohorts, 0.0);
+    psiStem1.attr("names") = above.attr("row.names");
+    NumericVector psiStem2 =  NumericVector(numCohorts, 0.0);
+    psiStem2.attr("names") = above.attr("row.names");
     NumericVector Einst = NumericVector(numCohorts, 0.0);
     Einst.attr("names") = above.attr("row.names");
+    NumericMatrix psiRhizo =  NumericMatrix(numCohorts, nlayers);
+    psiRhizo.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
+    std::fill(psiRhizo.begin(), psiRhizo.end(), 0.0);
     NumericVector psiRoot = NumericVector(numCohorts, 0.0);
     psiRoot.attr("names") = above.attr("row.names");
     NumericVector psiLeaf = NumericVector(numCohorts, 0.0);
     psiLeaf.attr("names") = above.attr("row.names");
-    NumericMatrix psiRhizo =  NumericMatrix(numCohorts, nlayers);
-    psiRhizo.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
-    NumericVector rwcsleaf = NumericVector(numCohorts, 1.0);
-    rwcsleaf.attr("names") = above.attr("row.names");
+    
     if(soilFunctions=="SX") {
       soilFunctions = "VG"; 
       warning("Soil pedotransfer functions set to Van Genuchten ('VG').");
@@ -743,13 +737,13 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     NumericVector pvec =  NumericVector(numCohorts, 0.0);
     pvec.attr("names") = above.attr("row.names");
     input["Photosynthesis"] = pvec;
-    input["PLCstem"] = PLCmat;
-    input["RWCsympstem"] = RWCstemmat;
-    input["RWCsympleaf"] = rwcsleaf;
+    input["PLCstem"] = PLCstem;
     input["Einst"] = Einst;
     input["psiRhizo"] = psiRhizo;
     input["psiRoot"] = psiRoot;
-    input["psiStem"] = psiStemmat;
+    input["psiStorage"] = psiStorage;
+    input["psiStem1"] = psiStem1;
+    input["psiStem2"] = psiStem2;
     input["psiLeaf"] = psiLeaf;
 
   } 
