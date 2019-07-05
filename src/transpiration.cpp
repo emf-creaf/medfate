@@ -645,8 +645,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
             psiStem2VEC[c] = newPsiStem2[iPM];
             
             NumericVector newPsiStem1 = Rcpp::as<Rcpp::NumericVector>(sFunctionBelow["psiStem1"]);
-            NumericVector fittedEBelow = Rcpp::as<Rcpp::NumericVector>(sFunctionBelow["E"]);
-              
+
             int iPMB = -1;
             
             //TO DO: stem segment water balance
@@ -691,21 +690,20 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
 
                             
               //Stem apoplastic water balance
-              VStemApo_mmol += (Flat + fittedEBelow[iPMB] - EinstVEC[c]);
-              RWCStemApo = VStemApo_mmol/VStemApo_mmolmax;
-              if(RWCStemApo>1.0) RWCStemApo = 1.0;
+              VStemApo_mmol += (Flat + sum(ERhizo(iPMB,_)) - EinstVEC[c]);
+              RWCStemApo = std::min(1.0,VStemApo_mmol/VStemApo_mmolmax);
               psiStem1VEC[c] = apoplasticWaterPotential(RWCStemApo, VCstem_c[c], VCstem_d[c]);
               if(NumericVector::is_na(psiStem1VEC[c]))  psiStem1VEC[c] = -40.0;
               
               //Stem symplastic water balance
               VStemSymp_mmol += (Fver-Flat);
-              RWCStemSymp = VStemSymp_mmol/VStemSymp_mmolmax;
+              RWCStemSymp = std::min(1.0,VStemSymp_mmol/VStemSymp_mmolmax);
               psiSympStemVEC[c] = symplasticWaterPotential(RWCStemSymp, StemPI0[c], StemEPS[c]);
               if(NumericVector::is_na(psiSympStemVEC[c]))  psiSympStemVEC[c] = -40.0;
 
               //Leaf symplastic water balance
               VLeafSymp_mmol -= Fver;
-              RWCLeafSymp = VLeafSymp_mmol/VLeafSymp_mmolmax;
+              RWCLeafSymp = std::min(1.0,VLeafSymp_mmol/VLeafSymp_mmolmax);
               psiSympLeafVEC[c] = symplasticWaterPotential(RWCLeafSymp, LeafPI0[c], LeafEPS[c]);
               if(NumericVector::is_na(psiSympLeafVEC[c]))  psiSympLeafVEC[c] = -40.0;
               
@@ -738,7 +736,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
           //Add to daily plant cohort transpiration
           Eplant[c] +=Einst(c,n);
           Anplant[c] +=Aninst(c,n);
-          
+          //Add PWB
+          PWB[c] += PWBinst(c,n); 
           
           // Store the PLC corresponding to stem1 water potential
           if(!cavitationRefill) PLCstemVEC[c] = std::max(PLCstemVEC[c], 1.0 - xylemConductance(psiStem1VEC[c], 1.0, VCstem_c[c], VCstem_d[c]));
@@ -793,8 +792,6 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
         minPsiRhizo(c,l) = std::min(minPsiRhizo(c,l),psiRhizoMAT(c,l));
       }
       
-      //Add PWB
-      PWB[c] += PWBinst(c,n); 
     } //End of cohort loop
     
     
