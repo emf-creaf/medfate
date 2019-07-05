@@ -175,6 +175,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   NumericVector LeafAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafAF"]);
   NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vleaf"]); //l·m-2 = mm
   
+
   //Comunication with outside
   NumericVector transpiration = Rcpp::as<Rcpp::NumericVector>(x["Transpiration"]);
   NumericVector photosynthesis = Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
@@ -631,6 +632,10 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
                 cl++;
               } 
             }
+            
+            RWCsteminst(c,n) = symplasticRelativeWaterContent(psiStem1VEC[c], StemPI0[c], StemEPS[c])*(1.0 - StemAF[c]) + apoplasticRelativeWaterContent(psiStem1VEC[c], VCstem_c[c], VCstem_d[c])*StemAF[c];
+            RWCleafinst(c,n) = symplasticRelativeWaterContent(psiLeafVEC[c], LeafPI0[c], LeafEPS[c])*(1.0 - LeafAF[c]) + apoplasticRelativeWaterContent(psiLeafVEC[c], VCleaf_c[c], VCleaf_d[c])*LeafAF[c];
+            
           } else {
             NumericVector newPsiStem2 = Rcpp::as<Rcpp::NumericVector>(sFunctionAbove["psiStem2"]);
             psiStem2VEC[c] = newPsiStem2[iPM];
@@ -641,16 +646,16 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
             int iPMB = -1;
             
             //TO DO: stem segment water balance
-            //Estimate current apoplastic stem volume
-            NumericVector StemPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemPI0"]);
-            NumericVector StemEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemEPS"]);
-            NumericVector StemAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemAF"]);
-            NumericVector Vsapwood = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vsapwood"]); //l·m-2 = mm
-            double Vmmolmax = 1000.0*((Vsapwood[c]*StemAF[c])/0.018); //mmol·m-2
-            double Vmmol = Vmmolmax * (1.0-PLCstemVEC[c]); //mmol·m-2
-            double rwc = Vmmol/Vmmolmax;
+            //Estimate current apoplastic and symplastic volumes
+            // NOTE: Vsapwood and Vleaf are in l·m-2
+            double VStemSymp_mmolmax = 1000.0*((Vsapwood[c]*(1.0-StemAF[c]))/0.018); //mmol·m-2
+            double VStemApo_mmolmax = 1000.0*((Vsapwood[c]*StemAF[c])/0.018); //mmol·m-2
+            double RWCStemSymp = symplasticRelativeWaterContent(psiStorageVEC[c], StemPI0[c], StemEPS[c]); //mmol·m-2
+            double RWCStemApo = apoplasticRelativeWaterContent(psiStem1VEC[c], VCstem_c[c], VCstem_d[c]); //mmol·m-2
+            double VStemSymp_mmol = VStemSymp_mmolmax * RWCStemSymp;
+            double VStemApo_mmol = VStemApo_mmolmax * RWCStemApo;
             //Perform water balance
-            // Rcout<<"\n Before wb - Vol: "<<Vmmol<<" RWC:"<< rwc <<" Psi: "<< psiStem1VEC[c]<<" PsiRoot: "<< psiRootVEC[c] <<"  transpiration: "<< fittedE[iPM]<<"\n";
+            // Rcout<<"\n Before wb - Vol: "<<VStemApo_mmol<<" RWC:"<< RWCStemApo <<" Psi: "<< psiStem1VEC[c]<<" PsiRoot: "<< psiRootVEC[c] <<"  transpiration: "<< fittedE[iPM]<<"\n";
             for(double scnt=0.0; scnt<tstep;scnt = scnt+1.0) {
               //Find root flow corresponding to psiStem1VEC[c]
               //Find iPM for water potential corresponding to the current water potential
@@ -669,17 +674,27 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
               }
               for(int lc=0;lc<nlayerscon[c];lc++) ElayersVEC[lc] += ERhizo(iPMB,lc); //Add flow from soil to ElayersVEC
               
-              Vmmol += (fittedEBelow[iPMB] - EinstVEC[c]);
-              //RWC
-              rwc = Vmmol/Vmmolmax;
-              if(rwc>1.0) rwc = 1.0;
-              psiStem1VEC[c] = apoplasticWaterPotential(rwc, VCstem_c[c], VCstem_d[c]);
+              //Calculate lateral flow
+              double Flat = (psiStorageVEC[c] - psiStem1VEC[c])*klat;
+              
+              //Apoplastic water balance
+              VStemApo_mmol += (Flat + fittedEBelow[iPMB] - EinstVEC[c]);
+              RWCStemApo = VStemApo_mmol/VStemApo_mmolmax;
+              if(RWCStemApo>1.0) RWCStemApo = 1.0;
+              psiStem1VEC[c] = apoplasticWaterPotential(RWCStemApo, VCstem_c[c], VCstem_d[c]);
               if(NumericVector::is_na(psiStem1VEC[c]))  psiStem1VEC[c] = -40.0;
+              
+              //Symplastic water balance
+              VStemSymp_mmol -=Flat;
+              RWCStemSymp = VStemSymp_mmol/VStemSymp_mmolmax;
+              psiStorageVEC[c] = symplasticWaterPotential(RWCStemSymp, StemPI0[c], StemEPS[c]);
+              if(NumericVector::is_na(psiStorageVEC[c]))  psiStorageVEC[c] = -40.0;
+              
               // Rcout<< " Psi: "<< psiStem1VEC[c]<<" PsiRoot: "<< psiRootVEC[c]<<"\n";
             }
             
             psiRootVEC[c] = psiRoot[iPMB]; // New psiRoot value
-            // Rcout<<" after - Vol: "<<Vmmol<<" RWC:"<<rwc <<" Psi:"<< psiStem1VEC[c]<< " PsiRoot: "<< psiRootVEC[c] <<"\n";
+            // Rcout<<" after - Vol: "<<VStem_mmol<<" RWC:"<<rwc_stem <<" Psi:"<< psiStem1VEC[c]<< " PsiRoot: "<< psiRootVEC[c] <<"\n";
             // stop("kk");
             
             //Copy psiRhizo and from connected layers to psiRhizo from soil layers
@@ -719,6 +734,9 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
               cl++;
             } 
           }
+          RWCsteminst(c,n) = symplasticRelativeWaterContent(psiStorageVEC[c], StemPI0[c], StemEPS[c])*(1.0 - StemAF[c]) + apoplasticRelativeWaterContent(psiStem1VEC[c], VCstem_c[c], VCstem_d[c])*StemAF[c];
+          RWCleafinst(c,n) = symplasticRelativeWaterContent(psiLeafVEC[c], LeafPI0[c], LeafEPS[c])*(1.0 - LeafAF[c]) + apoplasticRelativeWaterContent(psiLeafVEC[c], VCleaf_c[c], VCleaf_d[c])*LeafAF[c];
+          
         } else {
           if(verbose) Rcout<<"NS!";
           Psi_SH(c,n) = NA_REAL;
@@ -738,8 +756,6 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
       
       //Store (for output) instantaneous leaf, stem and root potential, plc and rwc values
       PLC(c,n) = PLCstemVEC[c];
-      RWCsteminst(c,n) = symplasticRelativeWaterContent(psiStem1VEC[c], StemPI0[c], StemEPS[c])*(1.0 - StemAF[c]) + (1.0- PLCstemVEC[c])*StemAF[c];
-      RWCleafinst(c,n) = symplasticRelativeWaterContent(psiLeafVEC[c], LeafPI0[c], LeafEPS[c])*(1.0 - LeafAF[c]) + apoplasticRelativeWaterContent(psiLeafVEC[c], VCleaf_c[c], VCleaf_d[c])*LeafAF[c];
       PsiSteminst(c,n) = psiStem1VEC[c]; 
       PsiLeafinst(c,n) = psiLeafVEC[c]; //Store instantaneous (average) leaf potential
       PsiRootinst(c,n) = psiRootVEC[c]; //Store instantaneous root crown potential
