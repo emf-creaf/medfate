@@ -348,6 +348,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   
   //Hydraulics: supply functions
   List supply(numCohorts);
+  List supplyAboveground(numCohorts);
   supply.attr("names") = above.attr("row.names");
   for(int c=0;c<numCohorts;c++) {
     // Copy values from connected layers
@@ -373,14 +374,25 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
     // Rcout<<minFlow<<"\n";
     if(nlayerscon[c]>0) {
       //Build supply function networks 
-      NumericVector PLCStemPrev = NumericVector::create(PLCstemVEC[c],PLCstemVEC[c]); //Get row
-      supply[c] = supplyFunctionNetwork(psic,
-                                        VGrhizo_kmaxc,VG_nc,VG_alphac,
-                                        VCroot_kmaxc, VCroot_c[c],VCroot_d[c],
-                                        VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
-                                        VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
-                                        PLCStemPrev, 0.0, maxNsteps, 
-                                        ntrial, psiTol, ETol, 0.001); 
+      if(!capacitance) {
+        supply[c] = supplyFunctionNetwork(psic,
+                                          VGrhizo_kmaxc,VG_nc,VG_alphac,
+                                          VCroot_kmaxc, VCroot_c[c],VCroot_d[c],
+                                          VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
+                                          VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
+                                          NumericVector::create(PLCstemVEC[c],PLCstemVEC[c]), 
+                                          0.0, maxNsteps, 
+                                          ntrial, psiTol, ETol, 0.001); 
+      } else {
+        supply[c] = supplyFunctionNetworkStem1(psic,
+                                               VGrhizo_kmaxc,VG_nc,VG_alphac,
+                                               VCroot_kmaxc, VCroot_c[c],VCroot_d[c],
+                                               VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
+                                               PLCstemVEC[c],
+                                               0.0, maxNsteps, 
+                                               ntrial, psiTol, ETol, 0.001); 
+        
+      }
     } else {
       stop("Plant cohort not connected to any soil layer!");
     }
@@ -478,13 +490,27 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
         
         double Gwminc = Gwmin[c];
         
-        //Retrieve supply function
-        List sFunction = supply[c];
+        //Retrieve supply functions
+        List sFunctionBelow, sFunctionAbove;
+        if(!capacitance) {
+          sFunctionAbove = supply[c];
+          sFunctionBelow = supply[c];
+        } else {
+          // sFunctionAbove = supplyAboveground[c];
+          sFunctionAbove = supplyFunctionStem1Leaf(psiStem1VEC[c],
+                                                   VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
+                                                   VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
+                                                   PLCstemVEC[c], 
+                                                   0.0, maxNsteps, 
+                                                   ETol, 0.001);
+          
+          sFunctionBelow = supply[c];
+        }
 
         //Retrieve transpiration, psiLeaf and dEdP vectors
-        fittedE = sFunction["E"];
-        dEdP = sFunction["dEdP"];
-        psiLeaf = sFunction["psiLeaf"];
+        fittedE = sFunctionAbove["E"];
+        dEdP = sFunctionAbove["dEdP"];
+        psiLeaf = sFunctionAbove["psiLeaf"];
         //Set minimum conductance to zero to avoid large decreases in water potential to achieve a minimum flow 
         Gwminc = 0.0; 
         
@@ -519,8 +545,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
           
           
           //Profit maximization
-          List PMSunlit = profitMaximization(sFunction, photoSunlit,  hydraulicCostFunction, Gwminc, Gwmax[c], VCstem_kmax[c]);
-          List PMShade = profitMaximization(sFunction, photoShade,  hydraulicCostFunction, Gwminc,Gwmax[c], VCstem_kmax[c]);
+          List PMSunlit = profitMaximization(sFunctionAbove, photoSunlit,  hydraulicCostFunction, Gwminc, Gwmax[c], VCstem_kmax[c]);
+          List PMShade = profitMaximization(sFunctionAbove, photoShade,  hydraulicCostFunction, Gwminc,Gwmax[c], VCstem_kmax[c]);
           int iPMSunlit = PMSunlit["iMaxProfit"];
           int iPMShade = PMShade["iMaxProfit"];
           
@@ -584,15 +610,15 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
           NumericVector Esoilcn(nlayerscon[c],0.0);
           NumericVector ElayersVEC(nlayerscon[c],0.0);
           
-          NumericMatrix ERhizo = Rcpp::as<Rcpp::NumericMatrix>(sFunction["ERhizo"]);
-          NumericVector psiRoot = sFunction["psiRoot"];
-          NumericMatrix psiRhizo = Rcpp::as<Rcpp::NumericMatrix>(sFunction["psiRhizo"]);
-          NumericMatrix newPsiStem = Rcpp::as<Rcpp::NumericMatrix>(sFunction["psiStem"]);
-          psiStem2VEC[c] = newPsiStem(iPM,1);
+          NumericMatrix ERhizo = Rcpp::as<Rcpp::NumericMatrix>(sFunctionBelow["ERhizo"]);
+          NumericVector psiRoot = sFunctionBelow["psiRoot"];
+          NumericMatrix psiRhizo = Rcpp::as<Rcpp::NumericMatrix>(sFunctionBelow["psiRhizo"]);
           
           if(!capacitance) {
             //Store steady state stem1 and root water potential values
+            NumericMatrix newPsiStem = Rcpp::as<Rcpp::NumericMatrix>(sFunctionAbove["psiStem"]);
             psiStem1VEC[c] = newPsiStem(iPM,0); 
+            psiStem2VEC[c] = newPsiStem(iPM,1);
             psiRootVEC[c] = psiRoot[iPM]; 
             for(int lc=0;lc<nlayerscon[c];lc++) {
               ElayersVEC[lc] = ERhizo(iPM,lc)*tstep; //Scale according to the time step
@@ -606,10 +632,12 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
               } 
             }
           } else {
-
-
-            // Rcout<<"\n Eroot2stem: " << Eroot2stem<< " New Psiroot: "<<psiRootVEC[c]<<"\n";
-            double Eroot2stem;
+            NumericVector newPsiStem2 = Rcpp::as<Rcpp::NumericVector>(sFunctionAbove["psiStem2"]);
+            psiStem2VEC[c] = newPsiStem2[iPM];
+            
+            NumericVector newPsiStem1 = Rcpp::as<Rcpp::NumericVector>(sFunctionBelow["psiStem1"]);
+            NumericVector fittedEBelow = Rcpp::as<Rcpp::NumericVector>(sFunctionBelow["E"]);
+              
             int iPMB = -1;
             
             //TO DO: stem segment water balance
@@ -628,27 +656,29 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
               //Find iPM for water potential corresponding to the current water potential
               double absDiff = 99999999.9;
               iPMB = -1;
-              for(int k=0;k<fittedE.size();k++){ //Only check up to the size of fittedE
-                double adk = std::abs(newPsiStem(k,0)-psiStem1VEC[c]);
+              for(int k=0;k<newPsiStem1.size();k++){ //Only check up to the size of fittedE
+                double adk = std::abs(newPsiStem1[k]-psiStem1VEC[c]);
                 if(adk<absDiff) {
                   absDiff = adk;
                   iPMB = k;
                 }
               }
               if(iPMB==-1) {
+                Rcout<<"\n psiStem1VEC[c]="<< psiStem1VEC[c] << " newPsiStem1.size= "<< newPsiStem1.size()<<"\n";
                 stop("iPMB = -1");
               }
-              psiRootVEC[c] = std::min(0.0,psiRoot[iPMB]); // New psiRoot value
               for(int lc=0;lc<nlayerscon[c];lc++) ElayersVEC[lc] += ERhizo(iPMB,lc); //Add flow from soil to ElayersVEC
               
-              Vmmol += (fittedE[iPMB] - EinstVEC[c]);
+              Vmmol += (fittedEBelow[iPMB] - EinstVEC[c]);
               //RWC
               rwc = Vmmol/Vmmolmax;
               if(rwc>1.0) rwc = 1.0;
-              //Recalculate stem water potential
               psiStem1VEC[c] = apoplasticWaterPotential(rwc, VCstem_c[c], VCstem_d[c]);
-              // Rcout<< " Eroot2stem: "<<Eroot2stem<<" fittedEBelow[iPMB]:"<< fittedEBelow[iPMB] <<" Psi: "<< psiStem1VEC[c]<<" PsiRoot: "<< psiRootVEC[c]<<"\n";
+              if(NumericVector::is_na(psiStem1VEC[c]))  psiStem1VEC[c] = -40.0;
+              // Rcout<< " Psi: "<< psiStem1VEC[c]<<" PsiRoot: "<< psiRootVEC[c]<<"\n";
             }
+            
+            psiRootVEC[c] = psiRoot[iPMB]; // New psiRoot value
             // Rcout<<" after - Vol: "<<Vmmol<<" RWC:"<<rwc <<" Psi:"<< psiStem1VEC[c]<< " PsiRoot: "<< psiRootVEC[c] <<"\n";
             // stop("kk");
             

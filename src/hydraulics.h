@@ -78,6 +78,14 @@ List E2psiStem1Leaf(double E, double psiStem1,
                     double kstemmax, double stemc, double stemd,
                     double kleafmax, double leafc, double leafd,
                     double PLCstem);
+List E2psiNetworkStem1(double E, NumericVector psiSoil, 
+                       NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
+                       NumericVector krootmax, double rootc, double rootd, 
+                       double kstemmax, double stemc, double stemd,
+                       double PLCstem,
+                       NumericVector psiIni = NumericVector::create(0),
+                       int ntrial = 10, 
+                       double psiTol = 0.0001, double ETol = 0.0001);
 
 List E2psiNetwork(double E, NumericVector psiSoil,
                   NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
@@ -133,6 +141,15 @@ List supplyFunctionStem1Leaf(double psiStem1,
                              double PLCstem,
                              double minFlow = 0.0, int maxNsteps=400, 
                              double ETol = 0.0001, double pCrit = 0.001);
+
+List supplyFunctionNetworkStem1(NumericVector psiSoil, 
+                                NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,
+                                NumericVector krootmax, double rootc, double rootd, 
+                                double kstemmax, double stemc, double stemd,
+                                double PLCstem,
+                                double minFlow = 0.0, int maxNsteps=400, 
+                                int ntrial = 200, double psiTol = 0.0001, double ETol = 0.0001,
+                                double pCrit = 0.001);
 
 List supplyFunctionNetwork(NumericVector psiSoil, 
                            NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil,

@@ -1307,6 +1307,32 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// E2psiNetworkStem1
+List E2psiNetworkStem1(double E, NumericVector psiSoil, NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil, NumericVector krootmax, double rootc, double rootd, double kstemmax, double stemc, double stemd, double PLCstem, NumericVector psiIni, int ntrial, double psiTol, double ETol);
+RcppExport SEXP _medfate_E2psiNetworkStem1(SEXP ESEXP, SEXP psiSoilSEXP, SEXP krhizomaxSEXP, SEXP nsoilSEXP, SEXP alphasoilSEXP, SEXP krootmaxSEXP, SEXP rootcSEXP, SEXP rootdSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP PLCstemSEXP, SEXP psiIniSEXP, SEXP ntrialSEXP, SEXP psiTolSEXP, SEXP ETolSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type E(ESEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type psiSoil(psiSoilSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type krhizomax(krhizomaxSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type nsoil(nsoilSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type alphasoil(alphasoilSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type krootmax(krootmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type rootc(rootcSEXP);
+    Rcpp::traits::input_parameter< double >::type rootd(rootdSEXP);
+    Rcpp::traits::input_parameter< double >::type kstemmax(kstemmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type stemc(stemcSEXP);
+    Rcpp::traits::input_parameter< double >::type stemd(stemdSEXP);
+    Rcpp::traits::input_parameter< double >::type PLCstem(PLCstemSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type psiIni(psiIniSEXP);
+    Rcpp::traits::input_parameter< int >::type ntrial(ntrialSEXP);
+    Rcpp::traits::input_parameter< double >::type psiTol(psiTolSEXP);
+    Rcpp::traits::input_parameter< double >::type ETol(ETolSEXP);
+    rcpp_result_gen = Rcpp::wrap(E2psiNetworkStem1(E, psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, PLCstem, psiIni, ntrial, psiTol, ETol));
+    return rcpp_result_gen;
+END_RCPP
+}
 // E2psiNetwork
 List E2psiNetwork(double E, NumericVector psiSoil, NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil, NumericVector krootmax, double rootc, double rootd, double kstemmax, double stemc, double stemd, double kleafmax, double leafc, double leafd, NumericVector PLCstem, NumericVector psiIni, int ntrial, double psiTol, double ETol);
 RcppExport SEXP _medfate_E2psiNetwork(SEXP ESEXP, SEXP psiSoilSEXP, SEXP krhizomaxSEXP, SEXP nsoilSEXP, SEXP alphasoilSEXP, SEXP krootmaxSEXP, SEXP rootcSEXP, SEXP rootdSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP kleafmaxSEXP, SEXP leafcSEXP, SEXP leafdSEXP, SEXP PLCstemSEXP, SEXP psiIniSEXP, SEXP ntrialSEXP, SEXP psiTolSEXP, SEXP ETolSEXP) {
@@ -1530,6 +1556,33 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type ETol(ETolSEXP);
     Rcpp::traits::input_parameter< double >::type pCrit(pCritSEXP);
     rcpp_result_gen = Rcpp::wrap(supplyFunctionStem1Leaf(psiStem1, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem, minFlow, maxNsteps, ETol, pCrit));
+    return rcpp_result_gen;
+END_RCPP
+}
+// supplyFunctionNetworkStem1
+List supplyFunctionNetworkStem1(NumericVector psiSoil, NumericVector krhizomax, NumericVector nsoil, NumericVector alphasoil, NumericVector krootmax, double rootc, double rootd, double kstemmax, double stemc, double stemd, double PLCstem, double minFlow, int maxNsteps, int ntrial, double psiTol, double ETol, double pCrit);
+RcppExport SEXP _medfate_supplyFunctionNetworkStem1(SEXP psiSoilSEXP, SEXP krhizomaxSEXP, SEXP nsoilSEXP, SEXP alphasoilSEXP, SEXP krootmaxSEXP, SEXP rootcSEXP, SEXP rootdSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP PLCstemSEXP, SEXP minFlowSEXP, SEXP maxNstepsSEXP, SEXP ntrialSEXP, SEXP psiTolSEXP, SEXP ETolSEXP, SEXP pCritSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type psiSoil(psiSoilSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type krhizomax(krhizomaxSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type nsoil(nsoilSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type alphasoil(alphasoilSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type krootmax(krootmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type rootc(rootcSEXP);
+    Rcpp::traits::input_parameter< double >::type rootd(rootdSEXP);
+    Rcpp::traits::input_parameter< double >::type kstemmax(kstemmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type stemc(stemcSEXP);
+    Rcpp::traits::input_parameter< double >::type stemd(stemdSEXP);
+    Rcpp::traits::input_parameter< double >::type PLCstem(PLCstemSEXP);
+    Rcpp::traits::input_parameter< double >::type minFlow(minFlowSEXP);
+    Rcpp::traits::input_parameter< int >::type maxNsteps(maxNstepsSEXP);
+    Rcpp::traits::input_parameter< int >::type ntrial(ntrialSEXP);
+    Rcpp::traits::input_parameter< double >::type psiTol(psiTolSEXP);
+    Rcpp::traits::input_parameter< double >::type ETol(ETolSEXP);
+    Rcpp::traits::input_parameter< double >::type pCrit(pCritSEXP);
+    rcpp_result_gen = Rcpp::wrap(supplyFunctionNetworkStem1(psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, PLCstem, minFlow, maxNsteps, ntrial, psiTol, ETol, pCrit));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4117,6 +4170,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_E2psiAbovegroundCapacitance", (DL_FUNC) &_medfate_E2psiAbovegroundCapacitance, 20},
     {"_medfate_E2psiAbovegroundCapacitanceDisconnected", (DL_FUNC) &_medfate_E2psiAbovegroundCapacitanceDisconnected, 22},
     {"_medfate_E2psiStem1Leaf", (DL_FUNC) &_medfate_E2psiStem1Leaf, 9},
+    {"_medfate_E2psiNetworkStem1", (DL_FUNC) &_medfate_E2psiNetworkStem1, 16},
     {"_medfate_E2psiNetwork", (DL_FUNC) &_medfate_E2psiNetwork, 19},
     {"_medfate_E2psiNetworkCapacitance", (DL_FUNC) &_medfate_E2psiNetworkCapacitance, 30},
     {"_medfate_supplyFunctionOneXylem", (DL_FUNC) &_medfate_supplyFunctionOneXylem, 8},
@@ -4126,6 +4180,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_supplyFunctionAboveground", (DL_FUNC) &_medfate_supplyFunctionAboveground, 9},
     {"_medfate_supplyFunctionAbovegroundCapacitance", (DL_FUNC) &_medfate_supplyFunctionAbovegroundCapacitance, 20},
     {"_medfate_supplyFunctionStem1Leaf", (DL_FUNC) &_medfate_supplyFunctionStem1Leaf, 12},
+    {"_medfate_supplyFunctionNetworkStem1", (DL_FUNC) &_medfate_supplyFunctionNetworkStem1, 17},
     {"_medfate_supplyFunctionNetwork", (DL_FUNC) &_medfate_supplyFunctionNetwork, 20},
     {"_medfate_supplyFunctionNetworkCapacitance", (DL_FUNC) &_medfate_supplyFunctionNetworkCapacitance, 31},
     {"_medfate_regulatedPsiXylem", (DL_FUNC) &_medfate_regulatedPsiXylem, 6},

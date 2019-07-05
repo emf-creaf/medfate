@@ -361,6 +361,10 @@ hydraulics_E2psiStem1Leaf <- function(E, psiStem1, kstemmax, stemc, stemd, kleaf
     .Call(`_medfate_E2psiStem1Leaf`, E, psiStem1, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem)
 }
 
+hydraulics_E2psiNetworkStem1 <- function(E, psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, PLCstem, psiIni = as.numeric( c(0)), ntrial = 10L, psiTol = 0.0001, ETol = 0.0001) {
+    .Call(`_medfate_E2psiNetworkStem1`, E, psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, PLCstem, psiIni, ntrial, psiTol, ETol)
+}
+
 hydraulics_E2psiNetwork <- function(E, psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem, psiIni = as.numeric( c(0)), ntrial = 10L, psiTol = 0.0001, ETol = 0.0001) {
     .Call(`_medfate_E2psiNetwork`, E, psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem, psiIni, ntrial, psiTol, ETol)
 }
@@ -395,6 +399,10 @@ hydraulics_supplyFunctionAbovegroundCapacitance <- function(Erootcrown, psiRootC
 
 hydraulics_supplyFunctionStem1Leaf <- function(psiStem1, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem, minFlow = 0.0, maxNsteps = 400L, ETol = 0.0001, pCrit = 0.001) {
     .Call(`_medfate_supplyFunctionStem1Leaf`, psiStem1, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem, minFlow, maxNsteps, ETol, pCrit)
+}
+
+hydraulics_supplyFunctionNetworkStem1 <- function(psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, PLCstem, minFlow = 0.0, maxNsteps = 400L, ntrial = 200L, psiTol = 0.0001, ETol = 0.0001, pCrit = 0.001) {
+    .Call(`_medfate_supplyFunctionNetworkStem1`, psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, PLCstem, minFlow, maxNsteps, ntrial, psiTol, ETol, pCrit)
 }
 
 hydraulics_supplyFunctionNetwork <- function(psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem, minFlow = 0.0, maxNsteps = 400L, ntrial = 200L, psiTol = 0.0001, ETol = 0.0001, pCrit = 0.001) {
