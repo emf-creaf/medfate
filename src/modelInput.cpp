@@ -482,8 +482,10 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     List below = paramsBelow(above, V, soil, 
                              paramsTranspirationdf, control);
     
-    NumericVector psiStorage =  NumericVector(numCohorts, 0.0);
-    psiStorage.attr("names") = above.attr("row.names");
+    NumericVector psiSympStem =  NumericVector(numCohorts, 0.0);
+    psiSympStem.attr("names") = above.attr("row.names");
+    NumericVector psiSympLeaf =  NumericVector(numCohorts, 0.0);
+    psiSympLeaf.attr("names") = above.attr("row.names");
     NumericVector PLCstem =  NumericVector(numCohorts, 0.0);
     PLCstem.attr("names") = above.attr("row.names");
     NumericVector psiStem1 =  NumericVector(numCohorts, 0.0);
@@ -529,9 +531,10 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     input["Einst"] = Einst;
     input["psiRhizo"] = psiRhizo;
     input["psiRoot"] = psiRoot;
-    input["psiStorage"] = psiStorage;
+    input["psiSympStem"] = psiSympStem;
     input["psiStem1"] = psiStem1;
     input["psiStem2"] = psiStem2;
+    input["psiSympLeaf"] = psiSympLeaf;
     input["psiLeaf"] = psiLeaf;
   }
 
@@ -691,8 +694,10 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     List below = paramsBelowZ(above, V, Z, soil, 
                              paramsTranspirationdf, control);
     
-    NumericVector psiStorage =  NumericVector(numCohorts, 0.0);
-    psiStorage.attr("names") = above.attr("row.names");
+    NumericVector psiSympStem =  NumericVector(numCohorts, 0.0);
+    psiSympStem.attr("names") = above.attr("row.names");
+    NumericVector psiSympLeaf =  NumericVector(numCohorts, 0.0);
+    psiSympLeaf.attr("names") = above.attr("row.names");
     NumericVector PLCstem =  NumericVector(numCohorts, 0.0);
     PLCstem.attr("names") = above.attr("row.names");
     NumericVector psiStem1 =  NumericVector(numCohorts, 0.0);
@@ -741,9 +746,10 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     input["Einst"] = Einst;
     input["psiRhizo"] = psiRhizo;
     input["psiRoot"] = psiRoot;
-    input["psiStorage"] = psiStorage;
+    input["psiSympStem"] = psiSympStem;
     input["psiStem1"] = psiStem1;
     input["psiStem2"] = psiStem2;
+    input["psiSympLeaf"] = psiSympLeaf;
     input["psiLeaf"] = psiLeaf;
 
   } 
