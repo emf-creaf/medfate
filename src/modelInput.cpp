@@ -505,10 +505,10 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     }
     List paramsCanopy = List::create(_["gdd"] = 0,_["Temp"] = NA_REAL);
     List ctl = clone(control);
-    if(capacitance) {
-      ctl["hydraulicCostFunction"] = 2;
-      warning("Hydraulic cost function set to '2'.");
-    }
+    // if(capacitance) {
+    //   ctl["hydraulicCostFunction"] = 2;
+    //   warning("Hydraulic cost function set to '2'.");
+    // }
     input = List::create(_["control"] = ctl,
                          _["canopy"] = paramsCanopy,
                          _["cohorts"] = cohortDescdf,
@@ -715,10 +715,10 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     }
     List paramsCanopy = List::create(_["gdd"] = 0,_["Temp"] = NA_REAL);
     List ctl = clone(control);
-    if(capacitance) {
-      ctl["hydraulicCostFunction"] = 2;
-      warning("Hydraulic cost function set to '2'.");
-    }
+    // if(capacitance) {
+    //   ctl["hydraulicCostFunction"] = 2;
+    //   warning("Hydraulic cost function set to '2'.");
+    // }
     input = List::create(_["control"] = ctl,
                          _["canopy"] = paramsCanopy,
                          _["cohorts"] = cohortDescdf,

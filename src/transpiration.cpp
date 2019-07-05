@@ -169,11 +169,11 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   NumericVector StemPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemPI0"]);
   NumericVector StemEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemEPS"]);
   NumericVector StemAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemAF"]);
-  NumericVector Vsapwood = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vsapwood"]);
+  NumericVector Vsapwood = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vsapwood"]); //l·m-2 = mm
   NumericVector LeafPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafPI0"]);
   NumericVector LeafEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafEPS"]);
   NumericVector LeafAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafAF"]);
-  NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vleaf"]);
+  NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vleaf"]); //l·m-2 = mm
   
   //Comunication with outside
   NumericVector transpiration = Rcpp::as<Rcpp::NumericVector>(x["Transpiration"]);
@@ -372,17 +372,15 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
     // double minFlow = std::max(0.0,1000.0*(Gwmin[c]*(tmin+tmax)/2.0)/Patm);
     // Rcout<<minFlow<<"\n";
     if(nlayerscon[c]>0) {
-      //Build supply function networks if capacitance is not considered
-      if(!capacitance) {
-        NumericVector PLCStemPrev = NumericVector::create(PLCstemVEC[c],PLCstemVEC[c]); //Get row
-        supply[c] = supplyFunctionNetwork(psic,
-                                          VGrhizo_kmaxc,VG_nc,VG_alphac,
-                                          VCroot_kmaxc, VCroot_c[c],VCroot_d[c],
-                                          VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
-                                          VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
-                                          PLCStemPrev, 0.0, maxNsteps, 
-                                          ntrial, psiTol, ETol, 0.001); 
-      }
+      //Build supply function networks 
+      NumericVector PLCStemPrev = NumericVector::create(PLCstemVEC[c],PLCstemVEC[c]); //Get row
+      supply[c] = supplyFunctionNetwork(psic,
+                                        VGrhizo_kmaxc,VG_nc,VG_alphac,
+                                        VCroot_kmaxc, VCroot_c[c],VCroot_d[c],
+                                        VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
+                                        VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
+                                        PLCStemPrev, 0.0, maxNsteps, 
+                                        ntrial, psiTol, ETol, 0.001); 
     } else {
       stop("Plant cohort not connected to any soil layer!");
     }
@@ -474,23 +472,15 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
         //NumericVector psiStemPrev = NumericVector::create(psiStem1VEC[c],psiStem2VEC[c]);
         //double psiLeafPrev = psiLeafVEC[c];
 
-        List sFunction;
         // Rcout<<c<<" E "<<EinstPrev<<" PR "<< psiRootPrev<<" PL "<<psiLeafPrev<< " PS "<<psiStemPrev[0]<< " "<<rwcsleafPrev<< " "<<RWCStemPrev[0]<<"\n";
         NumericVector fittedE, dEdP;
         NumericVector psiLeaf;
         
         double Gwminc = Gwmin[c];
         
-        //Retrieve supply function or build new one
-        if(!capacitance) { //If not capacitance get supply function already built
-          sFunction = supply[c];
-        } else { // Build stem1leaf supply function
-          sFunction = supplyFunctionStem1Leaf(psiStem1VEC[c],
-                                              VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
-                                              VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
-                                              PLCstemVEC[c], 0.0, maxNsteps, 
-                                              ETol, 0.001);
-        }
+        //Retrieve supply function
+        List sFunction = supply[c];
+
         //Retrieve transpiration, psiLeaf and dEdP vectors
         fittedE = sFunction["E"];
         dEdP = sFunction["dEdP"];
@@ -583,24 +573,31 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
 
           //Store instantaneous total conductance
           dEdPinst(c,n) = dEdP[iPM];
-
+          
+          //Store instantaneous flow and leaf water potential
+          EinstVEC[c] = fittedE[iPM];
+          psiLeafVEC[c] = psiLeaf[iPM];
+          
           //Scale from instantaneous flow to water volume in the time step
           Einst(c,n) = fittedE[iPM]*0.001*0.01802*LAIphe[c]*tstep; 
           
           NumericVector Esoilcn(nlayerscon[c],0.0);
+          NumericVector ElayersVEC(nlayerscon[c],0.0);
+          
+          NumericMatrix ERhizo = Rcpp::as<Rcpp::NumericMatrix>(sFunction["ERhizo"]);
+          NumericVector psiRoot = sFunction["psiRoot"];
+          NumericMatrix psiRhizo = Rcpp::as<Rcpp::NumericMatrix>(sFunction["psiRhizo"]);
+          NumericMatrix newPsiStem = Rcpp::as<Rcpp::NumericMatrix>(sFunction["psiStem"]);
+          psiStem2VEC[c] = newPsiStem(iPM,1);
+          
           if(!capacitance) {
-            NumericMatrix ElayersMat = Rcpp::as<Rcpp::NumericMatrix>(sFunction["ERhizo"]);
-            NumericVector psiRoot = sFunction["psiRoot"];
-            NumericMatrix newPsiStem = Rcpp::as<Rcpp::NumericMatrix>(sFunction["psiStem"]);
+            //Store steady state stem1 and root water potential values
+            psiStem1VEC[c] = newPsiStem(iPM,0); 
             psiRootVEC[c] = psiRoot[iPM]; 
-            psiStem1VEC[c] = newPsiStem(iPM,0);
-            psiStem2VEC[c] = newPsiStem(iPM,1);
-            //Scale water extracted from soil to cohort level
             for(int lc=0;lc<nlayerscon[c];lc++) {
-              Esoilcn[lc] = ElayersMat(iPM,lc)*0.001*0.01802*LAIphe[c]*tstep; //Scale from flow to water volume in the time step
+              ElayersVEC[lc] = ERhizo(iPM,lc)*tstep; //Scale according to the time step
             }
             //Copy psiRhizo and from connected layers to psiRhizo from soil layers
-            NumericMatrix psiRhizo = Rcpp::as<Rcpp::NumericMatrix>(sFunction["psiRhizo"]);
             int cl = 0;
             for(int l=0;l<nlayers;l++) {
               if(layerConnected(c,l)) {
@@ -609,53 +606,65 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
               } 
             }
           } else {
-            NumericVector newPsiStem2 = Rcpp::as<Rcpp::NumericMatrix>(sFunction["psiStem2"]);
-            psiStem2VEC[c] = newPsiStem2[iPM];
+
+
+            // Rcout<<"\n Eroot2stem: " << Eroot2stem<< " New Psiroot: "<<psiRootVEC[c]<<"\n";
+            double Eroot2stem;
+            int iPMB = -1;
             
-            //Calculate flow from roots and scale water extracted to cohort level
-            //Uses psiStem and psiRoot values from previous step
-            double psiPLCStem = apoplasticWaterPotential(1.0-PLCstemVEC[c], VCstem_c[c], VCstem_d[c]);
-            double Eroot2stem = EXylem(psiStem1VEC[c], psiRootVEC[c], 
-                                       VCstem_kmax[c]*2.0, VCstem_c[c], VCstem_d[c],
-                                       true, psiPLCStem);
-            NumericVector psic = NumericVector(nlayerscon[c]);
-            NumericVector VG_nc = NumericVector(nlayerscon[c]);
-            NumericVector VG_alphac= NumericVector(nlayerscon[c]);
-            NumericVector VCroot_kmaxc = NumericVector(nlayerscon[c]);
-            NumericVector VGrhizo_kmaxc = NumericVector(nlayerscon[c]);
-            int cnt=0;
-            for(int l=0;l<nlayers;l++) {
-              if(layerConnected(c,l)) {
-                psic[cnt] = psiVec[l];
-                VG_nc[cnt] = VG_n[l];
-                VG_alphac[cnt] = VG_alpha[l];
-                VCroot_kmaxc[cnt] = VCroot_kmax(c,l);
-                VGrhizo_kmaxc[cnt] = VGrhizo_kmax(c,l);
-                cnt++;
+            //TO DO: stem segment water balance
+            //Estimate current apoplastic stem volume
+            NumericVector StemPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemPI0"]);
+            NumericVector StemEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemEPS"]);
+            NumericVector StemAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemAF"]);
+            NumericVector Vsapwood = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vsapwood"]); //l·m-2 = mm
+            double Vmmolmax = 1000.0*((Vsapwood[c]*StemAF[c])/0.018); //mmol·m-2
+            double Vmmol = Vmmolmax * (1.0-PLCstemVEC[c]); //mmol·m-2
+            double rwc = Vmmol/Vmmolmax;
+            //Perform water balance
+            // Rcout<<"\n Before wb - Vol: "<<Vmmol<<" RWC:"<< rwc <<" Psi: "<< psiStem1VEC[c]<<" PsiRoot: "<< psiRootVEC[c] <<"  transpiration: "<< fittedE[iPM]<<"\n";
+            for(double scnt=0.0; scnt<tstep;scnt = scnt+1.0) {
+              //Find root flow corresponding to psiStem1VEC[c]
+              //Find iPM for water potential corresponding to the current water potential
+              double absDiff = 99999999.9;
+              iPMB = -1;
+              for(int k=0;k<fittedE.size();k++){ //Only check up to the size of fittedE
+                double adk = std::abs(newPsiStem(k,0)-psiStem1VEC[c]);
+                if(adk<absDiff) {
+                  absDiff = adk;
+                  iPMB = k;
+                }
               }
+              if(iPMB==-1) {
+                stop("iPMB = -1");
+              }
+              psiRootVEC[c] = std::min(0.0,psiRoot[iPMB]); // New psiRoot value
+              for(int lc=0;lc<nlayerscon[c];lc++) ElayersVEC[lc] += ERhizo(iPMB,lc); //Add flow from soil to ElayersVEC
+              
+              Vmmol += (fittedE[iPMB] - EinstVEC[c]);
+              //RWC
+              rwc = Vmmol/Vmmolmax;
+              if(rwc>1.0) rwc = 1.0;
+              //Recalculate stem water potential
+              psiStem1VEC[c] = apoplasticWaterPotential(rwc, VCstem_c[c], VCstem_d[c]);
+              // Rcout<< " Eroot2stem: "<<Eroot2stem<<" fittedEBelow[iPMB]:"<< fittedEBelow[iPMB] <<" Psi: "<< psiStem1VEC[c]<<" PsiRoot: "<< psiRootVEC[c]<<"\n";
             }
-            List E2b = E2psiBelowground(Eroot2stem, psic, 
-                                        VGrhizo_kmaxc, VG_nc, VG_alphac,
-                                        VCroot_kmaxc, VCroot_c[c], VCroot_d[c], 
-                                        NumericVector::create(0),
-                                        ntrial, psiTol, ETol);
-            psiRootVEC[c] = E2b["psiRoot"]; // New psiRoot value
+            // Rcout<<" after - Vol: "<<Vmmol<<" RWC:"<<rwc <<" Psi:"<< psiStem1VEC[c]<< " PsiRoot: "<< psiRootVEC[c] <<"\n";
+            // stop("kk");
             
-            //Scale water extracted from soil to cohort level
-            NumericVector ElayersVEC  = Rcpp::as<Rcpp::NumericVector>(E2b["ERhizo"]);
-            for(int lc=0;lc<nlayerscon[c];lc++) {
-              Esoilcn[lc] = ElayersVEC[lc]*0.001*0.01802*LAIphe[c]*tstep; //Scale from flow to water volume in the time step
-            }
             //Copy psiRhizo and from connected layers to psiRhizo from soil layers
-            NumericVector psiRhizo = Rcpp::as<Rcpp::NumericVector>(E2b["psiRhizo"]);
             int cl = 0;
             for(int l=0;l<nlayers;l++) {
               if(layerConnected(c,l)) {
-                psiRhizoMAT(c,l) = psiRhizo[cl];
+                psiRhizoMAT(c,l) = psiRhizo(iPMB,cl);
                 cl++;
               } 
             }
-            //TO DO: stem segment water balance
+          }
+          
+          //Scale soil water extracted from leaf to cohort level
+          for(int lc=0;lc<nlayerscon[c];lc++) {
+            Esoilcn[lc] = ElayersVEC[lc]*0.001*0.01802*LAIphe[c]; //Scale from flow to water volume in the time step
           }
           
           //Balance between extraction and transpiration
@@ -665,12 +674,6 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
           Eplant[c] +=Einst(c,n);
           Anplant[c] +=Aninst(c,n);
           
-          
-          //Update symplastic storage and PLC
-          EinstVEC[c] = fittedE[iPM];
-          PLC(c,n) = NA_REAL;
-          RWCsteminst(c,n) = NA_REAL;
-          psiLeafVEC[c] = psiLeaf[iPM];
           
           // Store the PLC corresponding to stem1 water potential
           if(!cavitationRefill) PLCstemVEC[c] = std::max(PLCstemVEC[c], 1.0 - xylemConductance(psiStem1VEC[c], 1.0, VCstem_c[c], VCstem_d[c]));
