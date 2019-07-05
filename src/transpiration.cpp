@@ -443,6 +443,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   NumericMatrix PLC(numCohorts, ntimesteps);
   NumericVector PLCm(numCohorts), RWCsm(numCohorts), RWClm(numCohorts);
   NumericVector dEdPm(numCohorts);
+  NumericVector PWB(numCohorts,0.0);
   
   List outPhotoSunlit(numCohorts);
   List outPhotoShade(numCohorts);
@@ -613,12 +614,13 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
           NumericVector Esoilcn(nlayerscon[c],0.0);
           NumericVector ElayersVEC(nlayerscon[c],0.0);
           
+          //Get info from sFunctionBelow (this will be different depending on wether capacitance is considered)
           NumericMatrix ERhizo = Rcpp::as<Rcpp::NumericMatrix>(sFunctionBelow["ERhizo"]);
           NumericVector psiRoot = sFunctionBelow["psiRoot"];
           NumericMatrix psiRhizo = Rcpp::as<Rcpp::NumericMatrix>(sFunctionBelow["psiRhizo"]);
           
           if(!capacitance) {
-            //Store steady state stem1 and root water potential values
+            //Store steady state stem and rootcrown and root surface water potential values
             NumericMatrix newPsiStem = Rcpp::as<Rcpp::NumericMatrix>(sFunctionAbove["psiStem"]);
             psiStem1VEC[c] = newPsiStem(iPM,0); 
             psiStem2VEC[c] = newPsiStem(iPM,1);
@@ -638,6 +640,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
             psiSympLeafVEC[c] = psiLeafVEC[c]; //Leaf symplastic compartment coupled with apoplastic compartment
             
           } else {
+            //Store steady state stem2 water potential
             NumericVector newPsiStem2 = Rcpp::as<Rcpp::NumericVector>(sFunctionAbove["psiStem2"]);
             psiStem2VEC[c] = newPsiStem2[iPM];
             
@@ -660,8 +663,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
             double VStemApo_mmol = VStemApo_mmolmax * RWCStemApo;
             //Perform water balance
             // Rcout<<"\n Before wb - Vol: "<<VStemApo_mmol<<" RWC:"<< RWCStemApo <<" Psi: "<< psiStem1VEC[c]<<" PsiRoot: "<< psiRootVEC[c] <<"  transpiration: "<< fittedE[iPM]<<"\n";
-            for(double scnt=0.0; scnt<tstep;scnt = scnt+1.0) {
-              //Find root flow corresponding to psiStem1VEC[c]
+            for(double scnt=0.0; scnt<tstep;scnt += 1.0) {
+              //Find flow corresponding to psiStem1VEC[c]
               //Find iPM for water potential corresponding to the current water potential
               double absDiff = 99999999.9;
               iPMB = -1;
@@ -676,7 +679,9 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
                 Rcout<<"\n psiStem1VEC[c]="<< psiStem1VEC[c] << " newPsiStem1.size= "<< newPsiStem1.size()<<"\n";
                 stop("iPMB = -1");
               }
-              for(int lc=0;lc<nlayerscon[c];lc++) ElayersVEC[lc] += ERhizo(iPMB,lc); //Add flow from soil to ElayersVEC
+              
+              //Add flow from soil to ElayersVEC
+              for(int lc=0;lc<nlayerscon[c];lc++) ElayersVEC[lc] += ERhizo(iPMB,lc); 
               
               //Calculate lateral flow
               double Flat = (psiSympStemVEC[c] - psiStem1VEC[c])*klat;
@@ -685,7 +690,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
               double Fver = (psiSympLeafVEC[c] - psiSympStemVEC[c])*ksymver;
 
                             
-              //Apoplastic water balance
+              //Stem apoplastic water balance
               VStemApo_mmol += (Flat + fittedEBelow[iPMB] - EinstVEC[c]);
               RWCStemApo = VStemApo_mmol/VStemApo_mmolmax;
               if(RWCStemApo>1.0) RWCStemApo = 1.0;
@@ -707,10 +712,11 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
               // Rcout<< " Psi: "<< psiStem1VEC[c]<<" PsiRoot: "<< psiRootVEC[c]<<"\n";
             }
             
-            psiRootVEC[c] = psiRoot[iPMB]; // New psiRoot value
             // Rcout<<" after - Vol: "<<VStem_mmol<<" RWC:"<<rwc_stem <<" Psi:"<< psiStem1VEC[c]<< " PsiRoot: "<< psiRootVEC[c] <<"\n";
             // stop("kk");
             
+            // New psiRoot value
+            psiRootVEC[c] = psiRoot[iPMB]; 
             //Copy psiRhizo and from connected layers to psiRhizo from soil layers
             int cl = 0;
             for(int l=0;l<nlayers;l++) {
@@ -786,6 +792,9 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
       for(int l=0;l<nlayers;l++) {
         minPsiRhizo(c,l) = std::min(minPsiRhizo(c,l),psiRhizoMAT(c,l));
       }
+      
+      //Add PWB
+      PWB[c] += PWBinst(c,n); 
     } //End of cohort loop
     
     
@@ -977,7 +986,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
                                        _["dEdP"] = dEdPm,//Average daily soilplant conductance
                                        _["DDS"] = DDS, //Daily drought stress is the ratio of average soil plant conductance over its maximum value
                                        _["StemRWC"] = RWCsm,
-                                       _["LeafRWC"] = RWClm);
+                                       _["LeafRWC"] = RWClm,
+                                       _["WaterBalance"] = PWB);
   Plants.attr("row.names") = above.attr("row.names");
   
   List l;
