@@ -533,7 +533,7 @@ List E2psiAboveground(double E, double psiRootCrown,
   return(List::create( Named("E")=E, Named("psiStem") =psiStem,Named("psiLeaf") =psiLeaf,Named("kterm") = kterm));
 }
 
-// [[Rcpp::export("hydraulics_E2psiAbovegroundCapacitance")]]
+
 List E2psiAbovegroundCapacitance(double E, double psiRootCrown, 
                          NumericVector psiStemPrev, NumericVector PLCstem,
                          double psiLeafPrev, 
@@ -711,7 +711,7 @@ List E2psiAbovegroundCapacitance(double E, double psiRootCrown,
 // }
 
 
-// [[Rcpp::export("hydraulics_E2psiAbovegroundCapacitanceDisconnected")]]
+
 List E2psiAbovegroundCapacitanceDisconnected(double E,                           
                       NumericVector psiStemPrev, NumericVector PLCstem, NumericVector RWCsympstemPrev, 
                       double psiLeafPrev, double RWCsympleafPrev,
@@ -920,7 +920,6 @@ List E2psiNetwork(double E, NumericVector psiSoil,
                       Named("kterm") = kterm, Named("x") = E2psiRS["x"]));
 } 
 
-// [[Rcpp::export("hydraulics_E2psiNetworkCapacitance")]]
 List E2psiNetworkCapacitance(double E, NumericVector psiSoil, 
                              NumericVector psiStemPrev, NumericVector PLCstem,
                              double psiLeafPrev, 
@@ -1418,7 +1417,7 @@ List supplyFunctionAboveground(NumericVector Erootcrown, NumericVector psiRootCr
   
 }
 
-// [[Rcpp::export("hydraulics_supplyFunctionAbovegroundCapacitance")]]
+
 List supplyFunctionAbovegroundCapacitance(NumericVector Erootcrown, NumericVector psiRootCrown,
                                   NumericVector psiStemPrev, NumericVector PLCstemPrev,
                                   double psiLeafPrev, 
@@ -1910,7 +1909,7 @@ List supplyFunctionNetwork(NumericVector psiSoil,
                       Named("kterm") = supplyKtermDef));
   
 }
-// [[Rcpp::export("hydraulics_supplyFunctionNetworkCapacitance")]]
+
 List supplyFunctionNetworkCapacitance(NumericVector psiSoil, 
                                       NumericVector psiStemPrev, NumericVector PLCstemPrev,
                                       double psiLeafPrev, 
