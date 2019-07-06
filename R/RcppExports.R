@@ -349,14 +349,6 @@ hydraulics_E2psiAboveground <- function(E, psiRootCrown, kstemmax, stemc, stemd,
     .Call(`_medfate_E2psiAboveground`, E, psiRootCrown, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem)
 }
 
-hydraulics_E2psiAbovegroundCapacitance <- function(E, psiRootCrown, psiStemPrev, PLCstem, psiLeafPrev, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, tstep = 3600.0) {
-    .Call(`_medfate_E2psiAbovegroundCapacitance`, E, psiRootCrown, psiStemPrev, PLCstem, psiLeafPrev, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, tstep)
-}
-
-hydraulics_E2psiAbovegroundCapacitanceDisconnected <- function(E, psiStemPrev, PLCstem, RWCsympstemPrev, psiLeafPrev, RWCsympleafPrev, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, klat, tstep = 3600.0) {
-    .Call(`_medfate_E2psiAbovegroundCapacitanceDisconnected`, E, psiStemPrev, PLCstem, RWCsympstemPrev, psiLeafPrev, RWCsympleafPrev, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, klat, tstep)
-}
-
 hydraulics_E2psiStem1Leaf <- function(E, psiStem1, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem) {
     .Call(`_medfate_E2psiStem1Leaf`, E, psiStem1, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem)
 }
@@ -367,10 +359,6 @@ hydraulics_E2psiNetworkStem1 <- function(E, psiSoil, krhizomax, nsoil, alphasoil
 
 hydraulics_E2psiNetwork <- function(E, psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem, psiIni = as.numeric( c(0)), ntrial = 10L, psiTol = 0.0001, ETol = 0.0001) {
     .Call(`_medfate_E2psiNetwork`, E, psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem, psiIni, ntrial, psiTol, ETol)
-}
-
-hydraulics_E2psiNetworkCapacitance <- function(E, psiSoil, psiStemPrev, PLCstem, psiLeafPrev, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, tstep = 3600.0, psiIni = as.numeric( c(0)), ntrial = 10L, psiTol = 0.0001, ETol = 0.0001) {
-    .Call(`_medfate_E2psiNetworkCapacitance`, E, psiSoil, psiStemPrev, PLCstem, psiLeafPrev, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, tstep, psiIni, ntrial, psiTol, ETol)
 }
 
 hydraulics_supplyFunctionOneXylem <- function(psiSoil, v, kstemmax, stemc, stemd, psiCav = 0.0, maxNsteps = 200L, dE = 0.01) {
@@ -393,10 +381,6 @@ hydraulics_supplyFunctionAboveground <- function(Erootcrown, psiRootCrown, kstem
     .Call(`_medfate_supplyFunctionAboveground`, Erootcrown, psiRootCrown, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem)
 }
 
-hydraulics_supplyFunctionAbovegroundCapacitance <- function(Erootcrown, psiRootCrown, psiStemPrev, PLCstemPrev, psiLeafPrev, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, tstep = 3600.0) {
-    .Call(`_medfate_supplyFunctionAbovegroundCapacitance`, Erootcrown, psiRootCrown, psiStemPrev, PLCstemPrev, psiLeafPrev, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, tstep)
-}
-
 hydraulics_supplyFunctionStem1Leaf <- function(psiStem1, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem, minFlow = 0.0, maxNsteps = 400L, ETol = 0.0001, pCrit = 0.001) {
     .Call(`_medfate_supplyFunctionStem1Leaf`, psiStem1, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem, minFlow, maxNsteps, ETol, pCrit)
 }
@@ -407,10 +391,6 @@ hydraulics_supplyFunctionNetworkStem1 <- function(psiSoil, krhizomax, nsoil, alp
 
 hydraulics_supplyFunctionNetwork <- function(psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem, minFlow = 0.0, maxNsteps = 400L, ntrial = 200L, psiTol = 0.0001, ETol = 0.0001, pCrit = 0.001) {
     .Call(`_medfate_supplyFunctionNetwork`, psiSoil, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, PLCstem, minFlow, maxNsteps, ntrial, psiTol, ETol, pCrit)
-}
-
-hydraulics_supplyFunctionNetworkCapacitance <- function(psiSoil, psiStemPrev, PLCstemPrev, psiLeafPrev, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, tstep = 3600.0, minFlow = 0.0, maxNsteps = 400L, ntrial = 200L, psiTol = 0.0001, ETol = 0.0001, pCrit = 0.001) {
-    .Call(`_medfate_supplyFunctionNetworkCapacitance`, psiSoil, psiStemPrev, PLCstemPrev, psiLeafPrev, krhizomax, nsoil, alphasoil, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, Vsapwood, stemfapo, stempi0, stemeps, Vleaf, leaffapo, leafpi0, leafeps, tstep, minFlow, maxNsteps, ntrial, psiTol, ETol, pCrit)
 }
 
 hydraulics_regulatedPsiXylem <- function(E, psiUpstream, kxylemmax, c, d, psiStep = -0.01) {
