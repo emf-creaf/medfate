@@ -261,7 +261,6 @@ DataFrame paramsTranspiration(DataFrame above, NumericMatrix V, List soil, DataF
         _["VCleaf_kmax"]=VCleaf_kmax,_["VCleaf_c"]=VCleaf_c,_["VCleaf_d"]=VCleaf_d,
         _["VCstem_kmax"]=VCstem_kmax,_["VCstem_c"]=VCstem_c,_["VCstem_d"]=VCstem_d, 
         _["VCroot_kmax"] = VCroottot_kmax ,_["VCroot_c"]=VCroot_c,_["VCroot_d"]=VCroot_d,
-        _["pRootDisc"] = pRootDisc,
         _["Plant_kmax"] = Plant_kmax);
   paramsTranspdf.attr("row.names") = above.attr("row.names");
   return(paramsTranspdf);

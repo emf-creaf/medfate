@@ -299,8 +299,8 @@ void checkspwbInput(List x, List soil, String transpirationMode, String soilFunc
   
   if(!x.containsElementNamed("paramsTransp")) stop("paramsTransp missing in spwbInput");
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
-  if(!paramsTransp.containsElementNamed("pRootDisc")) stop("pRootDisc missing in spwbInput$paramsTransp");
   if(transpirationMode=="Granier") {
+    if(!paramsTransp.containsElementNamed("pRootDisc")) stop("pRootDisc missing in spwbInput$paramsTransp");
     if(!paramsTransp.containsElementNamed("Psi_Extract")) stop("Psi_Extract missing in spwbInput$paramsTransp");
     if(!paramsTransp.containsElementNamed("WUE")) stop("WUE missing in spwbInput$paramsTransp");
   } else if(transpirationMode=="Sperry") {

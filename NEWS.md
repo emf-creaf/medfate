@@ -8,6 +8,7 @@
 - Output of plant water balance
 - New option in control
 - Stem segments fixed to two
+- functional parameter pRootDisc removed from Sperry's advanced model
 
 # Version 0.8.3
 - Reference book (medfatebook) launched
