@@ -41,7 +41,7 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE, xlab = N
       m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
       OM = sweep(m1,1,lai1,"/")
     } 
-    if(is.null(ylab)) ylab = "(Upper) stem water potential (MPa)"
+    if(is.null(ylab)) ylab = "Stem water potential (MPa)"
     return(.multiple_subday_dynamics(t(OM), ylab = ylab))
   }
   else if(type=="RootPsi") {

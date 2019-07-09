@@ -9,6 +9,7 @@
 - New option in control
 - Stem segments fixed to two
 - functional parameter pRootDisc removed from Sperry's advanced model
+- Bug correction in fuel_cohortFineFMC
 
 # Version 0.8.3
 - Reference book (medfatebook) launched

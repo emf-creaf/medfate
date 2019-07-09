@@ -365,7 +365,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       OM = m1/lai1
       OM[lai1==0] = NA
     } 
-    if(is.null(ylab)) ylab = "Midday (upper) stem water potential (MPa)"
+    if(is.null(ylab)) ylab = "Midday stem water potential (MPa)"
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="RootPsi") {

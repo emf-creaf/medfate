@@ -158,8 +158,8 @@ List cohortFineFuelMoistureContent(List spwb, List x) {
   
   //Anatomy parameters
   NumericVector r635 = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["r635"]);
-  NumericVector WoodDens = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["WoodDens"]);
-  NumericVector LeafDens = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["LeafDens"]);
+  NumericVector WoodDens = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["WoodDensity"]);
+  NumericVector LeafDens = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["LeafDensity"]);
   
   //Transpiration parameters
   NumericVector VCstem_c = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_c"]);
@@ -173,10 +173,10 @@ List cohortFineFuelMoistureContent(List spwb, List x) {
   NumericVector LeafAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafAF"]);
 
 
-  NumericMatrix psiapoleaf = Rcpp::as<Rcpp::NumericMatrix>(spwb["LeafPsi"]);
-  NumericMatrix PLCstem = Rcpp::as<Rcpp::NumericMatrix>(spwb["PlantStress"]);
-  NumericMatrix RWCsymleaf = Rcpp::as<Rcpp::NumericMatrix>(spwb["PlantRWCleaf"]);
-  NumericMatrix RWCsymstem = Rcpp::as<Rcpp::NumericMatrix>(spwb["PlantRWCstem"]);
+  NumericMatrix psiapoleaf = Rcpp::as<Rcpp::NumericMatrix>(spwb["LeafPsiMin"]);
+  NumericMatrix PLCstem = Rcpp::as<Rcpp::NumericMatrix>(spwb["StemPLC"]);
+  NumericMatrix RWCsymleaf = Rcpp::as<Rcpp::NumericMatrix>(spwb["LeafRWC"]);
+  NumericMatrix RWCsymstem = Rcpp::as<Rcpp::NumericMatrix>(spwb["StemRWC"]);
   List l = psiapoleaf.attr("dimnames");
   CharacterVector days = l[0];
   CharacterVector cohNames = l[1];

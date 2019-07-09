@@ -682,26 +682,27 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
               //Add flow from soil to ElayersVEC
               for(int lc=0;lc<nlayerscon[c];lc++) ElayersVEC[lc] += ERhizo(iPMB,lc); 
               
-              //Calculate lateral flow
-              double Flat = (psiSympStemVEC[c] - psiStem1VEC[c])*klat;
-              
+              //Calculate stem and leaf lateral flows
+              double Flatstem = (psiSympStemVEC[c] - psiStem1VEC[c])*klat;
+              double Flatleaf = (psiSympLeafVEC[c] - psiLeafVEC[c])*klat;
+
               //Calculate vertical flow
               double Fver = (psiSympLeafVEC[c] - psiSympStemVEC[c])*ksymver;
 
               //Leaf symplastic water balance
-              VLeafSymp_mmol += -Fver;
+              VLeafSymp_mmol += (-Fver-Flatleaf);
               RWCLeafSymp = std::min(1.0,VLeafSymp_mmol/VLeafSymp_mmolmax);
               psiSympLeafVEC[c] = symplasticWaterPotential(RWCLeafSymp, LeafPI0[c], LeafEPS[c]);
               if(NumericVector::is_na(psiSympLeafVEC[c]))  psiSympLeafVEC[c] = -40.0;
               
               //Stem symplastic water balance
-              VStemSymp_mmol += (Fver-Flat);
+              VStemSymp_mmol += (Fver-Flatstem);
               RWCStemSymp = std::min(1.0,VStemSymp_mmol/VStemSymp_mmolmax);
               psiSympStemVEC[c] = symplasticWaterPotential(RWCStemSymp, StemPI0[c], StemEPS[c]);
               if(NumericVector::is_na(psiSympStemVEC[c]))  psiSympStemVEC[c] = -40.0;
               
               //Stem apoplastic water balance
-              VStemApo_mmol += (Flat + sum(ERhizo(iPMB,_)) - EinstVEC[c]);
+              VStemApo_mmol += (Flatstem + sum(ERhizo(iPMB,_)) - (EinstVEC[c] - Flatleaf));
               RWCStemApo = std::min(1.0,VStemApo_mmol/VStemApo_mmolmax);
               psiStem1VEC[c] = apoplasticWaterPotential(RWCStemApo, VCstem_c[c], VCstem_d[c]);
               if(NumericVector::is_na(psiStem1VEC[c]))  psiStem1VEC[c] = -40.0;
