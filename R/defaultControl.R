@@ -11,10 +11,10 @@ defaultControl<-function() {
     transpirationMode = "Granier", #vs. "Sperry"
     hydraulicCostFunction = 1, #vs. 2
     verticalLayerSize = 100,
-    nStemSegments = 1,
+    # nStemSegments = 1,
     capacitance = FALSE,
     cavitationRefill = TRUE,
-    # ksymver = 0, # whole-stem symplastic vertical conductance
+    ksymver = 0.05, # leaf-stem symplastic vertical conductance
     klat = 0.1, # symplastic-apoplastic lateral conductance
     taper = TRUE,
     numericParams=list(maxNsteps = 400, ntrial = 200, psiTol = 0.0001, ETol = 0.0000001),

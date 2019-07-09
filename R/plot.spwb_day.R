@@ -16,7 +16,8 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE, xlab = N
             "LeafTranspiration","LeafPhotosynthesis", "LeafAbsorbedSWR",
             "LeafCi", "LeafIntrinsicWUE",
             "LeafVPD","LeafStomatalConductance", "LeafTemperature",
-            "Temperature","CanopyEnergyBalance", "SoilEnergyBalance", "PlantWaterBalance")
+            "Temperature","CanopyEnergyBalance", "SoilEnergyBalance", 
+            "PlantWaterBalance", "PlantWaterBalancePerLeaf")
   type = match.arg(type,TYPES)  
   cohortnames = row.names(x$cohorts)
   timesteps = as.numeric(colnames(x$PlantsInst$PsiLeaf))
@@ -40,7 +41,7 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE, xlab = N
       m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
       OM = sweep(m1,1,lai1,"/")
     } 
-    if(is.null(ylab)) ylab = "(Upper) stem water potential (MPa)"
+    if(is.null(ylab)) ylab = "Stem water potential (MPa)"
     return(.multiple_subday_dynamics(t(OM), ylab = ylab))
   }
   else if(type=="RootPsi") {
@@ -104,6 +105,18 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE, xlab = N
       OM = sweep(m1,1,lai1,"/")
     } 
     if(is.null(ylab)) ylab =  expression(paste("Extraction - transpiration (",L%.%m^{-2},")"))
+    return(.multiple_subday_dynamics(t(OM), ylab = ylab))
+  }
+  else if(type=="PlantWaterBalancePerLeaf") {
+    OM = PlantsInst$PWB
+    if(bySpecies) {
+      m1 = apply(OM,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
+      OM = sweep(m1,1,lai1,"/")
+    } else {
+      OM = sweep(OM,1,Plants$LAI,"/")
+    }
+    if(is.null(ylab)) ylab =  expression(paste("Extraction - transpiration per leaf area (",L%.%m^{-2},")"))
     return(.multiple_subday_dynamics(t(OM), ylab = ylab))
   }
   else if(type=="PlantExtraction") {

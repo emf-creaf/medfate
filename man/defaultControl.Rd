@@ -26,10 +26,11 @@ A list, with the following options:
 \item{\code{hydraulicCostFunction (= 1)}: Variant of the hydraulic cost function used in the stomatal regulation model of Sperry & Love (2016). Values accepted are 1 (original cost function based on the derivative of supply function), 2 (leaf vulnerability curve).}
 \item{\code{ndailysteps (= 24)}: Number of steps into which each day is divided for determination of stomatal conductance, transpiration and photosynthesis (24 equals 1-hour intervals).}
 \item{\code{verticalLayerSize (= 100)}: The size of vertical layers (in cm) for photosynthesis calculation.}
-\item{\code{nStemSegments (= 1)}: Number of segments within the stem.}
-\item{\code{capacitance (=FALSE)}: Whether capacitance is considered in simulations.}
+%\item{\code{nStemSegments (= 1)}: Number of segments within the stem.}
+\item{\code{capacitance (=FALSE)}: Whether the effect of plant water compartments is considered in simulations.}
 \item{\code{cavitationRefill (= TRUE)}: Whether refilling of embolized conduits is activated.}
-\item{\code{klat (= 0.1)}: Symplastic-apoplastic lateral conductance.}
+\item{\code{klat (= 0.1)}: Stem symplastic-apoplastic lateral conductance (in mmol·s-1·m-2·MPa-1). Only relevant when \code{capacitance = TRUE}.}
+\item{\code{ksymver (= 0.05)}: Leaf-stem symplastic vertical conductance (in mmol·s-1·m-2·MPa-1). Only relevant when \code{capacitance = TRUE}.}
 \item{\code{taper (= TRUE)}: Whether taper of xylem conduits is accounted for when calculating aboveground stem conductance from xylem conductivity.}
 \item{\code{numericParams}: A list with the following elements:
 \itemize{
