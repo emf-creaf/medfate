@@ -14,8 +14,8 @@ defaultControl<-function() {
     # nStemSegments = 1,
     capacitance = FALSE,
     cavitationRefill = TRUE,
-    ksymver = 0.05, # leaf-stem symplastic vertical conductance
-    klat = 0.1, # symplastic-apoplastic lateral conductance
+    klatstem = 0.1, # stem symplastic-apoplastic lateral conductance
+    klatleaf = 0.05, # leaf symplastic-apoplastic lateral conductance
     taper = TRUE,
     numericParams=list(maxNsteps = 400, ntrial = 200, psiTol = 0.0001, ETol = 0.0000001),
     fracRootResistance = 0.4,

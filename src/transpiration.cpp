@@ -97,8 +97,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   double ETol = numericParams["ETol"];
   bool capacitance = control["capacitance"];
   bool cavitationRefill = control["cavitationRefill"];
-  double klat = control["klat"];
-  double ksymver = control["ksymver"];
+  double klatleaf = control["klatleaf"];
+  double klatstem = control["klatstem"];
   int ntimesteps = control["ndailysteps"];
   int hydraulicCostFunction = control["hydraulicCostFunction"];
 
@@ -683,20 +683,18 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
               for(int lc=0;lc<nlayerscon[c];lc++) ElayersVEC[lc] += ERhizo(iPMB,lc); 
               
               //Calculate stem and leaf lateral flows
-              double Flatstem = (psiSympStemVEC[c] - psiStem1VEC[c])*klat;
-              double Flatleaf = (psiSympLeafVEC[c] - psiLeafVEC[c])*klat;
+              double Flatstem = (psiSympStemVEC[c] - psiStem1VEC[c])*klatstem;
+              double Flatleaf = (psiSympLeafVEC[c] - psiLeafVEC[c])*klatleaf;
 
-              //Calculate vertical flow
-              double Fver = (psiSympLeafVEC[c] - psiSympStemVEC[c])*ksymver;
 
               //Leaf symplastic water balance
-              VLeafSymp_mmol += (-Fver-Flatleaf);
+              VLeafSymp_mmol += (-Flatleaf);
               RWCLeafSymp = std::min(1.0,VLeafSymp_mmol/VLeafSymp_mmolmax);
               psiSympLeafVEC[c] = symplasticWaterPotential(RWCLeafSymp, LeafPI0[c], LeafEPS[c]);
               if(NumericVector::is_na(psiSympLeafVEC[c]))  psiSympLeafVEC[c] = -40.0;
               
               //Stem symplastic water balance
-              VStemSymp_mmol += (Fver-Flatstem);
+              VStemSymp_mmol += (-Flatstem);
               RWCStemSymp = std::min(1.0,VStemSymp_mmol/VStemSymp_mmolmax);
               psiSympStemVEC[c] = symplasticWaterPotential(RWCStemSymp, StemPI0[c], StemEPS[c]);
               if(NumericVector::is_na(psiSympStemVEC[c]))  psiSympStemVEC[c] = -40.0;
