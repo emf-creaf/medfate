@@ -472,8 +472,7 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
                                                _["Sgdd"] = Sgdd);
     paramsBasedf.attr("row.names") = above.attr("row.names");
     
-    bool capacitance = control["capacitance"];
-    
+
     DataFrame paramsAnatomydf = paramsAnatomy(above, SpParams);
     DataFrame paramsWaterStoragedf = paramsWaterStorage(above, SpParams, paramsAnatomydf);
     DataFrame paramsTranspirationdf = paramsTranspiration(above, V, soil, SpParams,
@@ -506,10 +505,6 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     }
     List paramsCanopy = List::create(_["gdd"] = 0,_["Temp"] = NA_REAL);
     List ctl = clone(control);
-    // if(capacitance) {
-    //   ctl["hydraulicCostFunction"] = 2;
-    //   warning("Hydraulic cost function set to '2'.");
-    // }
     input = List::create(_["control"] = ctl,
                          _["canopy"] = paramsCanopy,
                          _["cohorts"] = cohortDescdf,
@@ -684,8 +679,6 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                                                _["Sgdd"] = Sgdd);
     paramsBasedf.attr("row.names") = above.attr("row.names");
     
-    bool capacitance = control["capacitance"];
-
     DataFrame paramsAnatomydf = paramsAnatomy(above, SpParams);
     DataFrame paramsWaterStoragedf = paramsWaterStorage(above, SpParams, paramsAnatomydf);
     DataFrame paramsTranspirationdf = paramsTranspiration(above, V, soil, SpParams,
@@ -719,10 +712,6 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     }
     List paramsCanopy = List::create(_["gdd"] = 0,_["Temp"] = NA_REAL);
     List ctl = clone(control);
-    // if(capacitance) {
-    //   ctl["hydraulicCostFunction"] = 2;
-    //   warning("Hydraulic cost function set to '2'.");
-    // }
     input = List::create(_["control"] = ctl,
                          _["canopy"] = paramsCanopy,
                          _["cohorts"] = cohortDescdf,
