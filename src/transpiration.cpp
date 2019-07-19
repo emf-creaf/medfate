@@ -43,6 +43,7 @@ List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, i
     maxKterm = std::max(maxKterm, supplyKterm[i]);
     Agmax = std::max(Agmax, Ag[i]);
   }
+  
   //Evaluate profit for valid steps
   NumericVector profit(nsteps, NA_REAL);
   NumericVector cost(nsteps, NA_REAL);
@@ -63,7 +64,7 @@ List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, i
     profit[i] = gain[i]-cost[i];
   }
   
-  while((Gw[ini]<=Gwmin) & (ini<fin)) ini +=1; 
+  while((Gw[ini]<=Gwmin) & (ini<fin)) ini +=1;
   while((Gw[fin]>=Gwmax) & (fin>ini)) fin -=1; 
   
   int imaxprofit=ini;
@@ -515,8 +516,12 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
         fittedE = sFunctionAbove["E"];
         dEdP = sFunctionAbove["dEdP"];
         psiLeaf = sFunctionAbove["psiLeaf"];
-        //Set minimum conductance to zero to avoid large decreases in water potential to achieve a minimum flow 
-        Gwminc = 0.0; 
+        // if(capacitance) {
+          Gwminc = Gwmin[c];
+        // } else {
+          //Set minimum conductance to zero to avoid large decreases in water potential to achieve a minimum flow 
+          // Gwminc = 0.0; 
+        // }
         
         
         if(fittedE.size()>0) {
@@ -563,7 +568,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
               outPMShade[c] = PMShade;
             }
           }
-          // Rcout<<iPMSunlit<<" "<<iPMShade<<"\n";
+          // Rcout<<iPMSunlit<<" "<<iPMShade <<" "<<GwSunlit[iPMSunlit]<<" "<<GwShade[iPMShade]<<" "<<fittedE[iPMSunlit]<<" "<<fittedE[iPMShade]<<"\n";
           //Get leaf status
           Psi_SH(c,n) = psiLeaf[iPMShade];
           Psi_SL(c,n) = psiLeaf[iPMSunlit];

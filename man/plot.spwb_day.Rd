@@ -9,8 +9,10 @@
 Functions to plot the results of the soil water balance model for one day (see \code{\link{spwb_day}}) or the transpiration calculations with Sperry (see \code{\link{transp_transpirationSperry}}).
 }
 \usage{
-\method{plot}{spwb_day}(x, type="PlantTranspiration", bySpecies = FALSE, xlab = NULL, ylab = NULL, ...)
-\method{plot}{pwb_day}(x, type="PlantTranspiration", bySpecies = FALSE, xlab = NULL, ylab = NULL, ...)
+\method{plot}{spwb_day}(x, type="PlantTranspiration", bySpecies = FALSE, 
+                        xlim = NULL, ylim=NULL, xlab = NULL, ylab = NULL, ...)
+\method{plot}{pwb_day}(x, type="PlantTranspiration", bySpecies = FALSE, 
+                       xlim = NULL, ylim=NULL, xlab = NULL, ylab = NULL, ...)
 }
 \arguments{
   \item{x}{An object of class \code{spwb_day} or \code{pwb_day}.}
@@ -44,6 +46,8 @@ Functions to plot the results of the soil water balance model for one day (see \
    }
   }
   \item{bySpecies}{Allows aggregating output by species, before drawing plots. Aggregation can involve a sum (as for plant lai or transpiration) or a LAI-weighted mean (as for plant stress or plant water potential).}
+  \item{xlim}{Range of values for x.}
+  \item{ylim}{Range of values for y.}
   \item{xlab}{x-axis label.}
   \item{ylab}{y-axis label.}
   \item{...}{Additional parameters for function \code{plot}.}

@@ -1632,7 +1632,7 @@ List supplyFunctionStem1Leaf(double psiStem1,
   double maxdEdp = (ETol*2.0)/std::abs(psiLeafI - supplyPsiLeaf[0]);
   
   int nsteps = 1;
-  double dE = std::min(0.05,maxdEdp*0.05);
+  double dE = std::min(0.0005,maxdEdp*0.05);
   for(int i=1;i<maxNsteps;i++) {
     // if(i==3) stop("kk");
     supplyE[i] = supplyE[i-1]+dE;
@@ -1653,6 +1653,8 @@ List supplyFunctionStem1Leaf(double psiStem1,
         supplydEdp[i-1] = (d1+d2)/2.0;
       }
       if(supplyE[i]>0.1) dE = std::min(0.05,supplydEdp[i-1]*0.05);
+      else if(supplyE[i]>0.05) dE = std::min(0.01,supplydEdp[i-1]*0.05);
+      else if(supplyE[i]>0.01) dE = std::min(0.005,supplydEdp[i-1]*0.05);
       nsteps++;
       if(supplydEdp[i-1]<(pCrit*maxdEdp)) break;
     } else {
@@ -1728,7 +1730,7 @@ List supplyFunctionNetworkStem1(NumericVector psiSoil,
   double maxdEdp = (ETol*2.0)/std::abs(psiStem1I - supplyPsiStem1[0]);
   
   int nsteps = 1;
-  double dE = std::min(0.05,maxdEdp*0.05);
+  double dE = std::min(0.0005,maxdEdp*0.05);
   for(int i=1;i<maxNsteps;i++) {
     // if(i==3) stop("kk");
     supplyE[i] = supplyE[i-1]+dE;
@@ -1755,6 +1757,8 @@ List supplyFunctionNetworkStem1(NumericVector psiSoil,
         supplydEdp[i-1] = (d1+d2)/2.0;
       }
       if(supplyE[i]>0.1) dE = std::min(0.05,supplydEdp[i-1]*0.05);
+      else if(supplyE[i]>0.05) dE = std::min(0.01,supplydEdp[i-1]*0.05);
+      else if(supplyE[i]>0.01) dE = std::min(0.005,supplydEdp[i-1]*0.05);
       nsteps++;
       if(supplydEdp[i-1]<(pCrit*maxdEdp)) break;
     } else {
@@ -1840,7 +1844,7 @@ List supplyFunctionNetwork(NumericVector psiSoil,
   double maxdEdp = (ETol*2.0)/std::abs(psiLeafI - supplyPsiLeaf[0]);
   
   int nsteps = 1;
-  double dE = std::min(0.05,maxdEdp*0.05);
+  double dE = std::min(0.0005,maxdEdp*0.05);
   for(int i=1;i<maxNsteps;i++) {
     // if(i==3) stop("kk");
     supplyE[i] = supplyE[i-1]+dE;
@@ -1871,6 +1875,8 @@ List supplyFunctionNetwork(NumericVector psiSoil,
         supplydEdp[i-1] = (d1+d2)/2.0;
       }
       if(supplyE[i]>0.1) dE = std::min(0.05,supplydEdp[i-1]*0.05);
+      else if(supplyE[i]>0.05) dE = std::min(0.01,supplydEdp[i-1]*0.05);
+      else if(supplyE[i]>0.01) dE = std::min(0.005,supplydEdp[i-1]*0.05);
       nsteps++;
       if(supplydEdp[i-1]<(pCrit*maxdEdp)) break;
     } else {
