@@ -349,7 +349,7 @@ void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER
       Temp[i] = NA_REAL;
     }
     if(transpirationMode=="Sperry") {
-      NumericVector psiRoot = Rcpp::as<Rcpp::NumericVector>(x["psiRoot"]);
+      NumericVector psiRootCrown = Rcpp::as<Rcpp::NumericVector>(x["psiRootCrown"]);
       NumericMatrix psiStem = Rcpp::as<Rcpp::NumericMatrix>(x["psiStem"]);
       NumericMatrix PLCstem = Rcpp::as<Rcpp::NumericMatrix>(x["PLCstem"]);
       NumericMatrix RWCsympstem = Rcpp::as<Rcpp::NumericMatrix>(x["RWCsympstem"]);
@@ -361,7 +361,7 @@ void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER
       for(int i=0;i<PLCstem.nrow();i++) {
         Einst[i] = 0.0;
         psiLeaf[i] = 0.0;
-        psiRoot[i] = 0.0;
+        psiRootCrown[i] = 0.0;
         RWCsympleaf[i] = 0.0;
         Transpiration[i] = 0.0;
         Photosynthesis[i] = 0.0;
@@ -402,7 +402,7 @@ void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER
     NumericMatrix fromRWCstem = Rcpp::as<Rcpp::NumericMatrix>(from["StemRWC"]);
     NumericMatrix fromRWCleaf = Rcpp::as<Rcpp::NumericMatrix>(from["LeafRWC"]);
     
-    NumericVector psiRoot = Rcpp::as<Rcpp::NumericVector>(x["psiRoot"]);
+    NumericVector psiRootCrown = Rcpp::as<Rcpp::NumericVector>(x["psiRootCrown"]);
     NumericMatrix psiStem = Rcpp::as<Rcpp::NumericMatrix>(x["psiStem"]);
     NumericVector psiLeaf = Rcpp::as<Rcpp::NumericVector>(x["psiLeaf"]);
     NumericMatrix PLCstem = Rcpp::as<Rcpp::NumericMatrix>(x["PLCstem"]);
@@ -415,7 +415,7 @@ void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER
       Einst[i] = 0.0;
       Transpiration[i] = 0.0;
       Photosynthesis[i] = 0.0;
-      psiRoot[i] = fromRootPsi(day,i);
+      psiRootCrown[i] = fromRootPsi(day,i);
       psiLeaf[i] = fromLeafPsiMin(day,i);
       RWCsympleaf[i] = fromRWCleaf(day,i);
       for(int j=0;j<PLCstem.ncol();j++) {

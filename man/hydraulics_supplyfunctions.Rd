@@ -3,24 +3,18 @@
 \alias{hydraulics_ECrit}
 \alias{hydraulics_EXylem}
 \alias{hydraulics_EVanGenuchten}
-\alias{hydraulics_ECapacitance}
 \alias{hydraulics_E2psiXylem}
 \alias{hydraulics_E2psiVanGenuchten}
 \alias{hydraulics_E2psiTwoElements}
 \alias{hydraulics_E2psiBelowground}
 \alias{hydraulics_E2psiAboveground}
-\alias{hydraulics_E2psiAbovegroundCapacitance}
-\alias{hydraulics_E2psiAbovegroundCapacitanceDisconnected}
 \alias{hydraulics_E2psiNetwork}
-\alias{hydraulics_E2psiNetworkCapacitance}
 \alias{hydraulics_supplyFunctionOneXylem}
 \alias{hydraulics_supplyFunctionTwoElements}
 \alias{hydraulics_supplyFunctionThreeElements}
 \alias{hydraulics_supplyFunctionBelowground}
 \alias{hydraulics_supplyFunctionAboveground}
-\alias{hydraulics_supplyFunctionAbovegroundCapacitance}
 \alias{hydraulics_supplyFunctionNetwork}
-\alias{hydraulics_supplyFunctionNetworkCapacitance}
 \alias{hydraulics_supplyFunctionPlot}
 \alias{hydraulics_regulatedPsiXylem}
 \alias{hydraulics_regulatedPsiTwoElements}
@@ -37,9 +31,6 @@ hydraulics_EXylem(psiPlant, psiUpstream,
                   psiCav = 0)
 hydraulics_EVanGenuchten(psiRhizo, psiSoil, krhizomax, 
                       n, alpha, l = 0.5)
-hydraulics_ECapacitance(psi, psiPrev, PLCprev,
-                      V, fapo, c,  d, 
-                      pi0, eps,timestep)                         
 hydraulics_ECrit(psiUpstream, kxylemmax, c, d, pCrit = 0.001)
 hydraulics_E2psiXylem(E, psiUpstream, 
                       kxylemmax, c, d, psiCav = 0)
@@ -56,23 +47,6 @@ hydraulics_E2psiAboveground(E, psiRootCrown,
                       kstemmax, stemc, stemd,
                       kleafmax, leafc, leafd,
                       PLCstem)  
-hydraulics_E2psiAbovegroundCapacitance(E, psiRootCrown, 
-                      psiStemPrev, PLCstem,
-                      psiLeafPrev, 
-                      kstemmax, stemc, stemd,
-                      kleafmax, leafc, leafd,
-                      Vsapwood, stemfapo, stempi0, stemeps,
-                      Vleaf, leaffapo, leafpi0, leafeps,
-                      tstep)
-hydraulics_E2psiAbovegroundCapacitanceDisconnected(E,                           
-                      psiStemPrev, PLCstem, RWCsympstemPrev, 
-                      psiLeafPrev, RWCsympleafPrev,
-                      kstemmax, stemc, stemd,
-                      kleafmax, leafc, leafd,
-                      Vsapwood, stemfapo, stempi0, stemeps,
-                      Vleaf, leaffapo, leafpi0, leafeps,
-                      klat,
-                      tstep = 3600.0)                                       
 hydraulics_E2psiNetwork(E, psiSoil, 
                   krhizomax, nsoil, alphasoil,
                   krootmax, rootc, rootd, 
@@ -82,19 +56,6 @@ hydraulics_E2psiNetwork(E, psiSoil,
                   psiIni = as.numeric(c(0)),
                   ntrial = 10, 
                   psiTol = 0.0001, ETol = 0.0001)
-hydraulics_E2psiNetworkCapacitance(E, psiSoil, 
-                  psiStemPrev, PLCstem,
-                  psiLeafPrev, 
-                  krhizomax, nsoil, alphasoil,
-                  krootmax, rootc, rootd, 
-                  kstemmax, stemc, stemd,
-                  kleafmax, leafc, leafd,
-                  Vsapwood, stemfapo, stempi0, stemeps,
-                  Vleaf, leaffapo, leafpi0, leafeps,
-                  tstep = 3600.0,
-                  psiIni = as.numeric(c(0)),
-                  ntrial = 10, psiTol = 0.0001, ETol = 0.0001)
-
 hydraulics_supplyFunctionOneXylem(psiSoil, v, 
                   kstemmax, stemc, stemd, psiCav = 0,
                   maxNsteps=200, dE=0.01)
@@ -118,15 +79,7 @@ hydraulics_supplyFunctionAboveground(Erootcrown, psiRootCrown,
                   kleafmax, leafc, leafd,
                   PLCstem)
 
-hydraulics_supplyFunctionAbovegroundCapacitance(Erootcrown, psiRootCrown,
-                  psiStemPrev, PLCstemPrev, 
-                  psiLeafPrev, 
-                  kstemmax, stemc, stemd,
-                  kleafmax, leafc, leafd,
-                  Vsapwood, stemfapo, stempi0, stemeps,
-                  Vleaf, leaffapo, leafpi0, leafeps,
-                  tstep = 3600.0)
-                               
+
 hydraulics_supplyFunctionNetwork(psiSoil, 
                   krhizomax, nsoil, alphasoil,
                   krootmax, rootc, rootd, 

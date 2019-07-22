@@ -43,6 +43,7 @@ List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, i
     maxKterm = std::max(maxKterm, supplyKterm[i]);
     Agmax = std::max(Agmax, Ag[i]);
   }
+  
   //Evaluate profit for valid steps
   NumericVector profit(nsteps, NA_REAL);
   NumericVector cost(nsteps, NA_REAL);
@@ -63,7 +64,7 @@ List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, i
     profit[i] = gain[i]-cost[i];
   }
   
-  while((Gw[ini]<=Gwmin) & (ini<fin)) ini +=1; 
+  while((Gw[ini]<=Gwmin) & (ini<fin)) ini +=1;
   while((Gw[fin]>=Gwmax) & (fin>ini)) fin -=1; 
   
   int imaxprofit=ini;
@@ -97,8 +98,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   double ETol = numericParams["ETol"];
   bool capacitance = control["capacitance"];
   bool cavitationRefill = control["cavitationRefill"];
-  double klat = control["klat"];
-  double ksymver = control["ksymver"];
+  double klatleaf = control["klatleaf"];
+  double klatstem = control["klatstem"];
   int ntimesteps = control["ndailysteps"];
   int hydraulicCostFunction = control["hydraulicCostFunction"];
 
@@ -160,6 +161,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   NumericVector VCleaf_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_kmax"]);
   NumericVector VCleaf_c = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_c"]);
   NumericVector VCleaf_d = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_d"]);
+  NumericVector VCroot_kmax_sum = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCroot_kmax"]);
   NumericVector VCroot_c = paramsTransp["VCroot_c"];
   NumericVector VCroot_d = paramsTransp["VCroot_d"];
   NumericVector Vmax298 = paramsTransp["Vmax298"];
@@ -190,7 +192,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   NumericVector psiLeafVEC = Rcpp::as<Rcpp::NumericVector>(x["psiLeaf"]);
   NumericVector psiStem1VEC = Rcpp::as<Rcpp::NumericVector>(x["psiStem1"]);
   NumericVector psiStem2VEC = Rcpp::as<Rcpp::NumericVector>(x["psiStem2"]);
-  NumericVector psiRootVEC = Rcpp::as<Rcpp::NumericVector>(x["psiRoot"]);
+  NumericVector psiRootCrownVEC = Rcpp::as<Rcpp::NumericVector>(x["psiRootCrown"]);
   NumericMatrix psiRhizoMAT = Rcpp::as<Rcpp::NumericMatrix>(x["psiRhizo"]);
   NumericVector EinstVEC = Rcpp::as<Rcpp::NumericVector>(x["Einst"]);
   
@@ -490,7 +492,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
 
         // Rcout<<c<<" E "<<EinstPrev<<" PR "<< psiRootPrev<<" PL "<<psiLeafPrev<< " PS "<<psiStemPrev[0]<< " "<<rwcsleafPrev<< " "<<RWCStemPrev[0]<<"\n";
         NumericVector fittedE, dEdP;
-        NumericVector psiLeaf;
+        NumericVector psiLeaf, psiRootCrown;
         
         double Gwminc = Gwmin[c];
         
@@ -500,13 +502,18 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
           sFunctionAbove = supply[c];
           sFunctionBelow = supply[c];
         } else {
+          double psiRootCrownFake = E2psiXylemUp(EinstVEC[c], psiStem1VEC[c],VCstem_kmax[c]*2.0, VCstem_c[c], VCstem_d[c]);
+          double psiFineRootFake= E2psiXylemUp(EinstVEC[c], psiRootCrownFake,VCroot_kmax_sum[c], VCroot_c[c], VCroot_d[c]);
+          if(NumericVector::is_na(psiFineRootFake)) psiFineRootFake = 0.0;
+          // Rcout<< c << " EinstVEC[c] "<< EinstVEC[c] << " psiStem1VEC[c] "<< psiStem1VEC[c]<<" psiFineRootFake "<< psiFineRootFake << " psiRootCrownFake "<< psiRootCrownFake<<"\n";
           // sFunctionAbove = supplyAboveground[c];
-          sFunctionAbove = supplyFunctionStem1Leaf(psiStem1VEC[c],
-                                                   VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
-                                                   VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
-                                                   PLCstemVEC[c], 
-                                                   0.0, maxNsteps, 
-                                                   ETol, 0.001);
+          sFunctionAbove = supplyFunctionFineRootLeaf(psiFineRootFake,
+                                                      VCroot_kmax_sum[c], VCroot_c[c], VCroot_d[c],
+                                                      VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
+                                                      VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
+                                                      PLCstemVEC[c], 
+                                                      0.0, maxNsteps, 
+                                                      ETol, 0.001);
           
           sFunctionBelow = supply[c];
         }
@@ -515,8 +522,16 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
         fittedE = sFunctionAbove["E"];
         dEdP = sFunctionAbove["dEdP"];
         psiLeaf = sFunctionAbove["psiLeaf"];
-        //Set minimum conductance to zero to avoid large decreases in water potential to achieve a minimum flow 
-        Gwminc = 0.0; 
+        
+        //Get info from sFunctionAbove
+        psiRootCrown = sFunctionAbove["psiRootCrown"];
+        
+        // if(capacitance) {
+          Gwminc = Gwmin[c];
+        // } else {
+          //Set minimum conductance to zero to avoid large decreases in water potential to achieve a minimum flow 
+          // Gwminc = 0.0; 
+        // }
         
         
         if(fittedE.size()>0) {
@@ -563,7 +578,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
               outPMShade[c] = PMShade;
             }
           }
-          // Rcout<<iPMSunlit<<" "<<iPMShade<<"\n";
+          // Rcout<<iPMSunlit<<" "<<iPMShade <<" "<<GwSunlit[iPMSunlit]<<" "<<GwShade[iPMShade]<<" "<<fittedE[iPMSunlit]<<" "<<fittedE[iPMShade]<<"\n";
           //Get leaf status
           Psi_SH(c,n) = psiLeaf[iPMShade];
           Psi_SL(c,n) = psiLeaf[iPMSunlit];
@@ -607,6 +622,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
           //Store instantaneous flow and leaf water potential
           EinstVEC[c] = fittedE[iPM];
           psiLeafVEC[c] = psiLeaf[iPM];
+          psiRootCrownVEC[c] = psiRootCrown[iPM]; 
           
           //Scale from instantaneous flow to water volume in the time step
           Einst(c,n) = fittedE[iPM]*0.001*0.01802*LAIphe[c]*tstep; 
@@ -614,9 +630,9 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
           NumericVector Esoilcn(nlayerscon[c],0.0);
           NumericVector ElayersVEC(nlayerscon[c],0.0);
           
+          
           //Get info from sFunctionBelow (this will be different depending on wether capacitance is considered)
           NumericMatrix ERhizo = Rcpp::as<Rcpp::NumericMatrix>(sFunctionBelow["ERhizo"]);
-          NumericVector psiRoot = sFunctionBelow["psiRoot"];
           NumericMatrix psiRhizo = Rcpp::as<Rcpp::NumericMatrix>(sFunctionBelow["psiRhizo"]);
           
           if(!capacitance) {
@@ -624,7 +640,6 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
             NumericMatrix newPsiStem = Rcpp::as<Rcpp::NumericMatrix>(sFunctionAbove["psiStem"]);
             psiStem1VEC[c] = newPsiStem(iPM,0); 
             psiStem2VEC[c] = newPsiStem(iPM,1);
-            psiRootVEC[c] = psiRoot[iPM]; 
             for(int lc=0;lc<nlayerscon[c];lc++) {
               ElayersVEC[lc] = ERhizo(iPM,lc)*tstep; //Scale according to the time step
             }
@@ -661,7 +676,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
             double VStemSymp_mmol = VStemSymp_mmolmax * RWCStemSymp;
             double VStemApo_mmol = VStemApo_mmolmax * RWCStemApo;
             //Perform water balance
-            // Rcout<<"\n Before wb - Vol: "<<VStemApo_mmol<<" RWC:"<< RWCStemApo <<" Psi: "<< psiStem1VEC[c]<<" PsiRoot: "<< psiRootVEC[c] <<"  transpiration: "<< fittedE[iPM]<<"\n";
+            // Rcout<<"\n"<<c<<" Before - iPM " << iPM<< " EinstVEC[c]: "<< EinstVEC[c]<<" Vol: "<<VStemApo_mmol<<" RWC:"<< RWCStemApo <<" Psi: "<< psiStem1VEC[c]<< " psiLeafVEC[c]: "<<psiLeafVEC[c]<<"\n";
             for(double scnt=0.0; scnt<tstep;scnt += 1.0) {
               //Find flow corresponding to psiStem1VEC[c]
               //Find iPM for water potential corresponding to the current water potential
@@ -678,45 +693,44 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
                 Rcout<<"\n psiStem1VEC[c]="<< psiStem1VEC[c] << " newPsiStem1.size= "<< newPsiStem1.size()<<"\n";
                 stop("iPMB = -1");
               }
-              
+              // psiStem1VEC[c] = newPsiStem1[iPMB];
+                
               //Add flow from soil to ElayersVEC
               for(int lc=0;lc<nlayerscon[c];lc++) ElayersVEC[lc] += ERhizo(iPMB,lc); 
               
               //Calculate stem and leaf lateral flows
-              double Flatstem = (psiSympStemVEC[c] - psiStem1VEC[c])*klat;
-              double Flatleaf = (psiSympLeafVEC[c] - psiLeafVEC[c])*klat;
+              double Flatstem = (psiSympStemVEC[c] - psiStem1VEC[c])*klatstem;
+              double Flatleaf = (psiSympLeafVEC[c] - psiLeafVEC[c])*klatleaf;
 
-              //Calculate vertical flow
-              double Fver = (psiSympLeafVEC[c] - psiSympStemVEC[c])*ksymver;
 
               //Leaf symplastic water balance
-              VLeafSymp_mmol += (-Fver-Flatleaf);
-              RWCLeafSymp = std::min(1.0,VLeafSymp_mmol/VLeafSymp_mmolmax);
-              psiSympLeafVEC[c] = symplasticWaterPotential(RWCLeafSymp, LeafPI0[c], LeafEPS[c]);
+              VLeafSymp_mmol += (-Flatleaf);
+              RWCLeafSymp = VLeafSymp_mmol/VLeafSymp_mmolmax;
+              psiSympLeafVEC[c] = symplasticWaterPotential(std::min(1.0,RWCLeafSymp), LeafPI0[c], LeafEPS[c]);
               if(NumericVector::is_na(psiSympLeafVEC[c]))  psiSympLeafVEC[c] = -40.0;
               
               //Stem symplastic water balance
-              VStemSymp_mmol += (Fver-Flatstem);
-              RWCStemSymp = std::min(1.0,VStemSymp_mmol/VStemSymp_mmolmax);
-              psiSympStemVEC[c] = symplasticWaterPotential(RWCStemSymp, StemPI0[c], StemEPS[c]);
+              VStemSymp_mmol += (-Flatstem);
+              RWCStemSymp = VStemSymp_mmol/VStemSymp_mmolmax;
+              psiSympStemVEC[c] = symplasticWaterPotential(std::min(1.0,RWCStemSymp), StemPI0[c], StemEPS[c]);
               if(NumericVector::is_na(psiSympStemVEC[c]))  psiSympStemVEC[c] = -40.0;
               
               //Stem apoplastic water balance
               VStemApo_mmol += (Flatstem + sum(ERhizo(iPMB,_)) - (EinstVEC[c] - Flatleaf));
-              RWCStemApo = std::min(1.0,VStemApo_mmol/VStemApo_mmolmax);
-              psiStem1VEC[c] = apoplasticWaterPotential(RWCStemApo, VCstem_c[c], VCstem_d[c]);
+              RWCStemApo = VStemApo_mmol/VStemApo_mmolmax;
+              psiStem1VEC[c] = apoplasticWaterPotential(std::min(1.0,RWCStemApo), VCstem_c[c], VCstem_d[c]);
               if(NumericVector::is_na(psiStem1VEC[c]))  psiStem1VEC[c] = -40.0;
               
 
 
-              // Rcout<< " Psi: "<< psiStem1VEC[c]<<" psiSympStemVEC: "<< psiSympStemVEC[c]<<" psiSympLeafVEC: "<< psiSympLeafVEC[c]<<"\n";
+              // if((c==2) & (n==1)) {
+              //   Rcout<< iPMB<<"  sum(ERhizo(iPMB,_) "<<  sum(ERhizo(iPMB,_)) << " Flatstem: "<<Flatstem<<" Flatleaf: "<<Flatleaf<<" VStemApo_mmol: "<<VStemApo_mmol<<" Psi: "<< psiStem1VEC[c]<<" psiSympStemVEC: "<< psiSympStemVEC[c]<<" psiSympLeafVEC: "<< psiSympLeafVEC[c]<<"\n";
+              //   if(scnt>10.0) stop("");
+              // }
             }
             
-            // Rcout<<c<<" after -  psiStem1VEC:"<< psiStem1VEC[c]<<" psiSympStemVEC: "<< psiSympStemVEC[c]<<" psiSympLeafVEC: "<< psiSympLeafVEC[c] <<"\n";
-            // stop("kk");
-            
-            // New psiRoot value
-            psiRootVEC[c] = psiRoot[iPMB]; 
+            // Rcout<<c<<" after - EinstVEC: "<<EinstVEC[c] << " RWCStemApo: " << RWCStemApo << "  psiStem1VEC:"<< psiStem1VEC[c]<<" psiSympStemVEC: "<< psiSympStemVEC[c]<<" psiSympLeafVEC: "<< psiSympLeafVEC[c] <<"\n";
+
             //Copy psiRhizo and from connected layers to psiRhizo from soil layers
             int cl = 0;
             for(int l=0;l<nlayers;l++) {
@@ -779,7 +793,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
       RWCleafinst(c,n) = symplasticRelativeWaterContent(psiSympLeafVEC[c], LeafPI0[c], LeafEPS[c])*(1.0 - LeafAF[c]) + apoplasticRelativeWaterContent(psiLeafVEC[c], VCleaf_c[c], VCleaf_d[c])*LeafAF[c];
       PsiSteminst(c,n) = psiStem1VEC[c]; 
       PsiLeafinst(c,n) = psiLeafVEC[c]; //Store instantaneous (average) leaf potential
-      PsiRootinst(c,n) = psiRootVEC[c]; //Store instantaneous root crown potential
+      PsiRootinst(c,n) = psiRootCrownVEC[c]; //Store instantaneous root crown potential
       
       //Store the minimum water potential of the day (i.e. mid-day)
       minPsiLeaf_SL[c] = std::min(minPsiLeaf_SL[c],Psi_SL(c,n));
