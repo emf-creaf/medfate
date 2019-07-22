@@ -887,7 +887,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
     double maxConductance = maximumSoilPlantConductance(VGrhizo_kmax(c,_), VCroot_kmax(c,_), VCstem_kmax[c], VCleaf_kmax[c]);
     DDS[c] = Phe[c]*(1.0 - (dEdPm[c]/maxConductance));
     
-    if(cavitationRefill=="progressive") {
+    if(cavitationRefill=="rate") {
       double SAmax = 10e4/Al2As[c]; //cm2·m-2 of leaf area
       double r = std::max(0.0, refillMaximumRate*(psiSympStemVEC[c] + 1.5)/1.5);
       PLCstemVEC[c] = std::max(0.0, PLCstemVEC[c] - (r/SAmax));

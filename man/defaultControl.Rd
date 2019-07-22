@@ -28,7 +28,7 @@ A list, with the following options:
 \item{\code{verticalLayerSize (= 100)}: The size of vertical layers (in cm) for photosynthesis calculation.}
 %\item{\code{nStemSegments (= 1)}: Number of segments within the stem.}
 \item{\code{capacitance (=FALSE)}: Whether the effect of plant water compartments is considered in simulations.}
-\item{\code{cavitationRefill (= "total")}: A string indicating how refilling of embolized conduits is done ("none" - no refilling, "annual" - every first day of the year, "progressive" - assuming progressive sapwood formation, "total" - instantaneous complete refilling).}
+\item{\code{cavitationRefill (= "total")}: A string indicating how refilling of embolized conduits is done ("none" - no refilling, "annual" - every first day of the year, "rate" - following a rate of new sapwood formation, "total" - instantaneous complete refilling).}
 \item{\code{klatstem (= 0.1)}: Stem symplastic-apoplastic lateral conductance (in mmol·s-1·m-2·MPa-1). Only relevant when \code{capacitance = TRUE}.}
 \item{\code{klatleaf (= 0.05)}: Leaf symplastic-apoplastic lateral conductance (in mmol·s-1·m-2·MPa-1). Only relevant when \code{capacitance = TRUE}.}
 \item{\code{taper (= TRUE)}: Whether taper of xylem conduits is accounted for when calculating aboveground stem conductance from xylem conductivity.}
