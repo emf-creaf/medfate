@@ -495,8 +495,8 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     NumericMatrix psiRhizo =  NumericMatrix(numCohorts, nlayers);
     psiRhizo.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
     std::fill(psiRhizo.begin(), psiRhizo.end(), 0.0);
-    NumericVector psiRoot = NumericVector(numCohorts, 0.0);
-    psiRoot.attr("names") = above.attr("row.names");
+    NumericVector psiRootCrown = NumericVector(numCohorts, 0.0);
+    psiRootCrown.attr("names") = above.attr("row.names");
     NumericVector psiLeaf = NumericVector(numCohorts, 0.0);
     psiLeaf.attr("names") = above.attr("row.names");
     if(soilFunctions=="SX") {
@@ -524,7 +524,7 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     input["PLCstem"] = PLCstem;
     input["Einst"] = Einst;
     input["psiRhizo"] = psiRhizo;
-    input["psiRoot"] = psiRoot;
+    input["psiRootCrown"] = psiRootCrown;
     input["psiSympStem"] = psiSympStem;
     input["psiStem1"] = psiStem1;
     input["psiStem2"] = psiStem2;
@@ -701,8 +701,8 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     NumericMatrix psiRhizo =  NumericMatrix(numCohorts, nlayers);
     psiRhizo.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
     std::fill(psiRhizo.begin(), psiRhizo.end(), 0.0);
-    NumericVector psiRoot = NumericVector(numCohorts, 0.0);
-    psiRoot.attr("names") = above.attr("row.names");
+    NumericVector psiRootCrown = NumericVector(numCohorts, 0.0);
+    psiRootCrown.attr("names") = above.attr("row.names");
     NumericVector psiLeaf = NumericVector(numCohorts, 0.0);
     psiLeaf.attr("names") = above.attr("row.names");
     
@@ -733,7 +733,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     input["PLCstem"] = PLCstem;
     input["Einst"] = Einst;
     input["psiRhizo"] = psiRhizo;
-    input["psiRoot"] = psiRoot;
+    input["psiRootCrown"] = psiRootCrown;
     input["psiSympStem"] = psiSympStem;
     input["psiStem1"] = psiStem1;
     input["psiStem2"] = psiStem2;
