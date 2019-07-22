@@ -14,6 +14,7 @@ defaultControl<-function() {
     # nStemSegments = 1,
     capacitance = FALSE,
     cavitationRefill = "total",
+    refillMaximumRate = 0.05,
     klatstem = 0.1, # stem symplastic-apoplastic lateral conductance
     klatleaf = 0.05, # leaf symplastic-apoplastic lateral conductance
     taper = TRUE,

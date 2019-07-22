@@ -98,6 +98,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   double ETol = numericParams["ETol"];
   bool capacitance = control["capacitance"];
   String cavitationRefill = control["cavitationRefill"];
+  double refillMaximumRate = control["refillMaximumRate"];
   double klatleaf = control["klatleaf"];
   double klatstem = control["klatstem"];
   int ntimesteps = control["ndailysteps"];
@@ -888,8 +889,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
     
     if(cavitationRefill=="progressive") {
       double SAmax = 10e4/Al2As[c]; //cm2·m-2 of leaf area
-      double rmax = 0.05; 
-      double r = std::max(0.0, rmax*(psiSympStemVEC[c] + 1.5)/1.5);
+      double r = std::max(0.0, refillMaximumRate*(psiSympStemVEC[c] + 1.5)/1.5);
       PLCstemVEC[c] = std::max(0.0, PLCstemVEC[c] - (r/SAmax));
     }
   }
