@@ -13,7 +13,7 @@ defaultControl<-function() {
     verticalLayerSize = 100,
     # nStemSegments = 1,
     capacitance = FALSE,
-    cavitationRefill = TRUE,
+    cavitationRefill = "total",
     klatstem = 0.1, # stem symplastic-apoplastic lateral conductance
     klatleaf = 0.05, # leaf symplastic-apoplastic lateral conductance
     taper = TRUE,
