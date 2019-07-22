@@ -395,7 +395,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
                                                VGrhizo_kmaxc,VG_nc,VG_alphac,
                                                VCroot_kmaxc, VCroot_c[c],VCroot_d[c],
                                                VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
-                                               PLCstemVEC[c],
+                                               0.0, //PLCstemVEC[c],
                                                0.0, maxNsteps, 
                                                ntrial, psiTol, ETol, 0.001); 
         
@@ -504,8 +504,10 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
           sFunctionAbove = supply[c];
           sFunctionBelow = supply[c];
         } else {
-          double psiRootCrownFake = E2psiXylemUp(EinstVEC[c], psiStem1VEC[c],VCstem_kmax[c]*2.0, VCstem_c[c], VCstem_d[c]);
-          double psiFineRootFake= E2psiXylemUp(EinstVEC[c], psiRootCrownFake,VCroot_kmax_sum[c], VCroot_c[c], VCroot_d[c]);
+          double psiPLCStem = apoplasticWaterPotential(1.0-PLCstemVEC[c], VCstem_c[c], VCstem_d[c]);
+          double psiRootCrownFake = std::min(0.0,E2psiXylemUp(EinstVEC[c], psiStem1VEC[c],VCstem_kmax[c]*2.0, VCstem_c[c], VCstem_d[c], psiPLCStem));
+          if(NumericVector::is_na(psiRootCrownFake)) psiRootCrownFake = 0.0;
+          double psiFineRootFake= std::min(0.0,E2psiXylemUp(EinstVEC[c], psiRootCrownFake,VCroot_kmax_sum[c], VCroot_c[c], VCroot_d[c]));
           if(NumericVector::is_na(psiFineRootFake)) psiFineRootFake = 0.0;
           // Rcout<< c << " EinstVEC[c] "<< EinstVEC[c] << " psiStem1VEC[c] "<< psiStem1VEC[c]<<" psiFineRootFake "<< psiFineRootFake << " psiRootCrownFake "<< psiRootCrownFake<<"\n";
           // sFunctionAbove = supplyAboveground[c];
