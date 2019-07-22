@@ -11,6 +11,7 @@
 - functional parameter pRootDisc removed from Sperry's advanced model
 - Bug correction in fuel_cohortFineFMC
 - Remove ksympver and add klatleaf/klatstem to control parameters
+- New control option 'fracLeafResistance'
 
 # Version 0.8.3
 - Reference book (medfatebook) launched
