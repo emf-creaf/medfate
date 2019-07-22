@@ -94,6 +94,7 @@ DataFrame paramsTranspiration(DataFrame above, NumericMatrix V, List soil, DataF
   int numCohorts = SP.size();
   NumericVector Vc;
   double fracRootResistance = control["fracRootResistance"];
+  double fracLeafResistance = control["fracLeafResistance"];
   
   NumericVector dVec = soil["dVec"];
   
@@ -189,10 +190,16 @@ DataFrame paramsTranspiration(DataFrame above, NumericMatrix V, List soil, DataF
     }
     //Sack, L., & Holbrook, N.M. 2006. Leaf Hydraulics. Annual Review of Plant Biology 57: 361–381.
     if(NumericVector::is_na(VCleaf_kmax[c])) { 
-      if(Group[c]=="Angiosperm") {
-        VCleaf_kmax[c] = 8.0;
+      if(NumericVector::is_na(fracLeafResistance)) {
+        if(Group[c]=="Angiosperm") {
+          VCleaf_kmax[c] = 8.0;
+        } else {
+          VCleaf_kmax[c] = 6.0;
+        }
       } else {
-        VCleaf_kmax[c] = 6.0;
+        double rstem = (1.0/VCstem_kmax[c]);
+        double rtot = rstem/(1.0-fracRootResistance - fracLeafResistance);
+        VCleaf_kmax[c] = 1.0/(rtot*fracLeafResistance);
       }
     } 
     //Default vulnerability curve parameters if missing
