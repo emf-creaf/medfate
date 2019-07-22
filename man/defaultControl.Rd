@@ -43,6 +43,7 @@ A list, with the following options:
 \item{\code{thermalCapacityLAI (=1000000)}: Thermal canopy capacitance per LAI unit.}
 \item{\code{defaultWindSpeed (= 2.5)}: Default wind speed value (in m/s) to be used when missing from data. }
 \item{\code{Catm (=386)}: Atmospheric CO2 concentration (in micromol·mol-1 = ppm).}
+\item{\code{fracLeafResistance (= NA)}: Fraction of plant total resistance (leaf+stem+root) that corresponds to leaves. This fraction is used if \code{VCleaf_kmax = NA}.}
 \item{\code{fracRootResistance (=0.40)}: Fraction of plant total resistance (leaf+stem+root) that corresponds to root system. If \code{fracRootResistance = NA} then root conductance is calculated from root xylem conductivity and root distribution.}
 \item{\code{averageFracRhizosphereResistance (=0.15)}: Fraction to total continuum (leaf+stem+root+rhizosphere) resistance that corresponds to rhizosphere (averaged across soil water potential values).}
 \item{\code{storagePool (="none")}: Whether carbon storage pools are considered (either "none", "one" or "two").}
