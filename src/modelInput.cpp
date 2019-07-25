@@ -76,7 +76,7 @@ DataFrame paramsWaterStorage(DataFrame above, DataFrame SpParams,
     if(NumericVector::is_na(LeafAF[c])) LeafAF[c] = 0.29;
     
     //Calculate stem and leaf capacity per leaf area (in m3·m-2)
-    Vsapwood[c] = stemWaterCapacity(Al2As[c], H[c], WoodDensity[c]); 
+    Vsapwood[c] = 2.0*stemWaterCapacity(Al2As[c], H[c], WoodDensity[c]); //Assume same water capacity in stem and roots
     Vleaf[c] = leafWaterCapacity(SLA[c], LeafDensity[c]); 
   }
   DataFrame paramsWaterStoragedf = DataFrame::create(
