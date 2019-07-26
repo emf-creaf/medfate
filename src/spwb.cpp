@@ -434,6 +434,8 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
   String soilFunctions = control["soilFunctions"];
+  String cavitationRefill = control["cavitationRefill"];
+  
   bool verbose = control["verbose"];
   bool subdailyResults = control["subdailyResults"];
   bool leafPhenology = control["leafPhenology"];
@@ -604,13 +606,15 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
       if(wind<0.1) wind = 0.1; //Minimum windspeed abovecanopy
       
       //If DOY == 1 reset PLC (Growth assumed)
-      if(DOY[i]==1) {
-        if(transpirationMode=="Granier") {
-          NumericVector PLC = Rcpp::as<Rcpp::NumericVector>(x["PLC"]);
-          for(int j=0;j<PLC.length();j++) PLC[j] = 0.0;
-        } else {
-          NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(x["PLCstem"]);
-          for(int j=0;j<StemPLC.length();j++) StemPLC[j] = 0.0;
+      if(cavitationRefill=="annual") {
+        if(DOY[i]==1) {
+          if(transpirationMode=="Granier") {
+            NumericVector PLC = Rcpp::as<Rcpp::NumericVector>(x["PLC"]);
+            for(int j=0;j<PLC.length();j++) PLC[j] = 0.0;
+          } else {
+            NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(x["PLCstem"]);
+            for(int j=0;j<StemPLC.length();j++) StemPLC[j] = 0.0;
+          }
         }
       }
 
@@ -987,6 +991,8 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
   String soilFunctions = control["soilFunctions"];
+  String cavitationRefill = control["cavitationRefill"];
+
   bool verbose = control["verbose"];
   bool subdailyResults = control["subdailyResults"];
   bool leafPhenology = control["leafPhenology"];
@@ -1145,13 +1151,15 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
     psidays(i,_) = psi(soil, soilFunctions); //Get soil water potential
       
       //If DOY == 1 reset PLC (Growth assumed)
-      if(DOY[i]==1) {
-        if(transpirationMode=="Granier") {
-          NumericVector PLC = Rcpp::as<Rcpp::NumericVector>(x["PLC"]);
-          for(int j=0;j<PLC.length();j++) PLC[j] = 0.0;
-        } else {
-          NumericMatrix StemPLC = Rcpp::as<Rcpp::NumericMatrix>(x["PLCstem"]);
-          for(int j=0;j<StemPLC.nrow();j++) for(int k=0;k<StemPLC.ncol();k++)  StemPLC(j,k) = 0.0;
+      if(cavitationRefill=="annual") {
+        if(DOY[i]==1) {
+          if(transpirationMode=="Granier") {
+            NumericVector PLC = Rcpp::as<Rcpp::NumericVector>(x["PLC"]);
+            for(int j=0;j<PLC.length();j++) PLC[j] = 0.0;
+          } else {
+            NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(x["PLCstem"]);
+            for(int j=0;j<StemPLC.length();j++) StemPLC[j] = 0.0;
+          }
         }
       }
       

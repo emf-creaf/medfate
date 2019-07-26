@@ -14,6 +14,7 @@ using namespace Rcpp;
 
 const double SIGMA_Wm2 = 5.67*1e-8;
 const double Cp_JKG = 1013.86; // J * kg^-1 * ºC^-1
+const double eps_xylem = 10^3; // xylem elastic modulus (1 GPa = 1000 MPa)
 
 // [[Rcpp::export("transp_profitMaximization")]]
 List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, int type, double Gwmin, double Gwmax, double kleafmax = NA_REAL) {
@@ -97,7 +98,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   double psiTol = numericParams["psiTol"];
   double ETol = numericParams["ETol"];
   bool capacitance = control["capacitance"];
-  bool cavitationRefill = control["cavitationRefill"];
+  String cavitationRefill = control["cavitationRefill"];
+  double refillMaximumRate = control["refillMaximumRate"];
   double klatleaf = control["klatleaf"];
   double klatstem = control["klatstem"];
   int ntimesteps = control["ndailysteps"];
@@ -150,6 +152,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   //Anatomy parameters
   DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
   NumericVector leafWidth = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["LeafWidth"]);
+  NumericVector Al2As = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["Al2As"]);
   
   //Transpiration parameters
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
@@ -393,7 +396,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
                                                VGrhizo_kmaxc,VG_nc,VG_alphac,
                                                VCroot_kmaxc, VCroot_c[c],VCroot_d[c],
                                                VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
-                                               PLCstemVEC[c],
+                                               0.0, //PLCstemVEC[c],
                                                0.0, maxNsteps, 
                                                ntrial, psiTol, ETol, 0.001); 
         
@@ -502,8 +505,10 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
           sFunctionAbove = supply[c];
           sFunctionBelow = supply[c];
         } else {
-          double psiRootCrownFake = E2psiXylemUp(EinstVEC[c], psiStem1VEC[c],VCstem_kmax[c]*2.0, VCstem_c[c], VCstem_d[c]);
-          double psiFineRootFake= E2psiXylemUp(EinstVEC[c], psiRootCrownFake,VCroot_kmax_sum[c], VCroot_c[c], VCroot_d[c]);
+          double psiPLCStem = apoplasticWaterPotential(1.0-PLCstemVEC[c], VCstem_c[c], VCstem_d[c]);
+          double psiRootCrownFake = std::min(0.0,E2psiXylemUp(EinstVEC[c], psiStem1VEC[c],VCstem_kmax[c]*2.0, VCstem_c[c], VCstem_d[c], psiPLCStem));
+          if(NumericVector::is_na(psiRootCrownFake)) psiRootCrownFake = 0.0;
+          double psiFineRootFake= std::min(0.0,E2psiXylemUp(EinstVEC[c], psiRootCrownFake,VCroot_kmax_sum[c], VCroot_c[c], VCroot_d[c]));
           if(NumericVector::is_na(psiFineRootFake)) psiFineRootFake = 0.0;
           // Rcout<< c << " EinstVEC[c] "<< EinstVEC[c] << " psiStem1VEC[c] "<< psiStem1VEC[c]<<" psiFineRootFake "<< psiFineRootFake << " psiRootCrownFake "<< psiRootCrownFake<<"\n";
           // sFunctionAbove = supplyAboveground[c];
@@ -654,6 +659,13 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
             psiSympStemVEC[c] = psiStem1VEC[c]; //Stem symplastic compartment coupled with apoplastic compartment
             psiSympLeafVEC[c] = psiLeafVEC[c]; //Leaf symplastic compartment coupled with apoplastic compartment
             
+            // Store the PLC corresponding to stem1 water potential
+            if(cavitationRefill!="total") {
+              PLCstemVEC[c] = std::max(PLCstemVEC[c], 1.0 - xylemConductance(psiStem1VEC[c], 1.0, VCstem_c[c], VCstem_d[c])); 
+            } else { //Immediate refilling
+              PLCstemVEC[c] = 1.0 - xylemConductance(psiStem1VEC[c], 1.0, VCstem_c[c], VCstem_d[c]); 
+            }
+            
           } else {
             //Store steady state stem2 water potential
             NumericVector newPsiStem2 = Rcpp::as<Rcpp::NumericVector>(sFunctionAbove["psiStem2"]);
@@ -668,13 +680,13 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
             // NOTE: Vsapwood and Vleaf are in l·m-2
             double VLeafSymp_mmolmax = 1000.0*((Vleaf[c]*(1.0-LeafAF[c]))/0.018); //mmol·m-2
             double VStemSymp_mmolmax = 1000.0*((Vsapwood[c]*(1.0-StemAF[c]))/0.018); //mmol·m-2
+            //Substract from maximum apoplastic compartment embolized conduits
             double VStemApo_mmolmax = 1000.0*((Vsapwood[c]*StemAF[c])/0.018); //mmol·m-2
             double RWCLeafSymp = symplasticRelativeWaterContent(psiSympLeafVEC[c], LeafPI0[c], LeafEPS[c]); //mmol·m-2
             double RWCStemSymp = symplasticRelativeWaterContent(psiSympStemVEC[c], StemPI0[c], StemEPS[c]); //mmol·m-2
-            double RWCStemApo = apoplasticRelativeWaterContent(psiStem1VEC[c], VCstem_c[c], VCstem_d[c]); //mmol·m-2
             double VLeafSymp_mmol = VLeafSymp_mmolmax * RWCLeafSymp;
             double VStemSymp_mmol = VStemSymp_mmolmax * RWCStemSymp;
-            double VStemApo_mmol = VStemApo_mmolmax * RWCStemApo;
+            double Vcav = 0.0;
             //Perform water balance
             // Rcout<<"\n"<<c<<" Before - iPM " << iPM<< " EinstVEC[c]: "<< EinstVEC[c]<<" Vol: "<<VStemApo_mmol<<" RWC:"<< RWCStemApo <<" Psi: "<< psiStem1VEC[c]<< " psiLeafVEC[c]: "<<psiLeafVEC[c]<<"\n";
             for(double scnt=0.0; scnt<tstep;scnt += 1.0) {
@@ -716,12 +728,25 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
               if(NumericVector::is_na(psiSympStemVEC[c]))  psiSympStemVEC[c] = -40.0;
               
               //Stem apoplastic water balance
-              VStemApo_mmol += (Flatstem + sum(ERhizo(iPMB,_)) - (EinstVEC[c] - Flatleaf));
-              RWCStemApo = VStemApo_mmol/VStemApo_mmolmax;
-              psiStem1VEC[c] = apoplasticWaterPotential(std::min(1.0,RWCStemApo), VCstem_c[c], VCstem_d[c]);
-              if(NumericVector::is_na(psiStem1VEC[c]))  psiStem1VEC[c] = -40.0;
+              double Vchange = (Flatstem + sum(ERhizo(iPMB,_)) - (EinstVEC[c] - Flatleaf)) + Vcav;
+              
+              psiStem1VEC[c] = psiStem1VEC[c] + eps_xylem*(Vchange/VStemApo_mmolmax);
+              
+              // VStemApo_mmol += (Flatstem + sum(ERhizo(iPMB,_)) - (EinstVEC[c] - Flatleaf));
+              // RWCStemApo = VStemApo_mmol/VStemApo_mmolmax;
+              // psiStem1VEC[c] = apoplasticWaterPotential(std::min(1.0,RWCStemApo), VCstem_c[c], VCstem_d[c]);
+              // if(NumericVector::is_na(psiStem1VEC[c]))  psiStem1VEC[c] = -40.0;
               
 
+              //Recalculate PLC and calculate volume corresponding to new cavitation
+              double plc_old = PLCstemVEC[c];
+              if(cavitationRefill!="total") {
+                PLCstemVEC[c] = std::max(PLCstemVEC[c], 1.0 - xylemConductance(psiStem1VEC[c], 1.0, VCstem_c[c], VCstem_d[c])); 
+                Vcav = VStemApo_mmolmax*(PLCstemVEC[c]-plc_old);
+              } else { //Immediate refilling
+                PLCstemVEC[c] = 1.0 - xylemConductance(psiStem1VEC[c], 1.0, VCstem_c[c], VCstem_d[c]); 
+                Vcav = 0.0;
+              }
 
               // if((c==2) & (n==1)) {
               //   Rcout<< iPMB<<"  sum(ERhizo(iPMB,_) "<<  sum(ERhizo(iPMB,_)) << " Flatstem: "<<Flatstem<<" Flatleaf: "<<Flatleaf<<" VStemApo_mmol: "<<VStemApo_mmol<<" Psi: "<< psiStem1VEC[c]<<" psiSympStemVEC: "<< psiSympStemVEC[c]<<" psiSympLeafVEC: "<< psiSympLeafVEC[c]<<"\n";
@@ -755,10 +780,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
           //Add PWB
           PWB[c] += PWBinst(c,n); 
           
-          // Store the PLC corresponding to stem1 water potential
-          if(!cavitationRefill) PLCstemVEC[c] = std::max(PLCstemVEC[c], 1.0 - xylemConductance(psiStem1VEC[c], 1.0, VCstem_c[c], VCstem_d[c]));
-          else PLCstemVEC[c] = 1.0 - xylemConductance(psiStem1VEC[c], 1.0, VCstem_c[c], VCstem_d[c]);
-          
+
           
           //Copy transpiration and from connected layers to transpiration from soil layers
           int cl = 0;
@@ -880,6 +902,12 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
     dEdPm[c] = sum(dEdPinst(c,_))/((double)dEdPinst.ncol());  
     double maxConductance = maximumSoilPlantConductance(VGrhizo_kmax(c,_), VCroot_kmax(c,_), VCstem_kmax[c], VCleaf_kmax[c]);
     DDS[c] = Phe[c]*(1.0 - (dEdPm[c]/maxConductance));
+    
+    if(cavitationRefill=="rate") {
+      double SAmax = 10e4/Al2As[c]; //cm2·m-2 of leaf area
+      double r = std::max(0.0, refillMaximumRate*(psiSympStemVEC[c] + 1.5)/1.5);
+      PLCstemVEC[c] = std::max(0.0, PLCstemVEC[c] - (r/SAmax));
+    }
   }
   
   
@@ -1083,7 +1111,7 @@ List transpirationSperry(List x, List soil, DataFrame meteo, int day,
 List transpirationGranier(List x, List soil, double tday, double pet, bool modifyInput = true) {
   //Control parameters
   List control = x["control"];
-  bool cavitationRefill = control["cavitationRefill"];
+  String cavitationRefill = control["cavitationRefill"];
   String soilFunctions = control["soilFunctions"];
   double verticalLayerSize = control["verticalLayerSize"];
   
@@ -1166,7 +1194,9 @@ List transpirationGranier(List x, List soil, double tday, double pet, bool modif
     Kl = Psi2K(psiSoil[l], Psi_Extract, WeibullShape);
     
     //Limit Kl due to previous cavitation
-    if(!cavitationRefill) for(int c=0;c<numCohorts;c++) Kl[c] = std::min(Kl[c], 1.0-pEmb[c]);
+    if(cavitationRefill!="total") {
+      for(int c=0;c<numCohorts;c++) Kl[c] = std::min(Kl[c], 1.0-pEmb[c]); 
+    }
     //Limit Kl to minimum value for root disconnection
     Vl = V(_,l);
     epc = pmax(TmaxCoh*Kl*Vl,0.0);
@@ -1189,7 +1219,7 @@ List transpirationGranier(List x, List soil, double tday, double pet, bool modif
   double alpha = std::max(std::min(tday/20.0,1.0),0.0);
   for(int c=0;c<numCohorts;c++) {
     PlantPsi[c] = averagePsi(PsiRoot(c,_), V(c,_), WeibullShape, Psi_Extract[c]);
-    if(!cavitationRefill) {
+    if(cavitationRefill!="total") {
       pEmb[c] = std::max(DDS[c], pEmb[c]); //Track current embolism if no refill
       DDS[c] = pEmb[c];
     }

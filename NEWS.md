@@ -4,6 +4,8 @@
 
 # Version 0.8.5
 - New control option 'fracLeafResistance'
+- Different options for 'cavitationRefill'
+- New control option 'refillMaximumRate'
 
 # Version 0.8.4
 - Water balance console output modified in spwb
