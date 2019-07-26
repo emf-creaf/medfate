@@ -684,7 +684,6 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
             double VStemApo_mmolmax = 1000.0*((Vsapwood[c]*StemAF[c])/0.018); //mmol·m-2
             double RWCLeafSymp = symplasticRelativeWaterContent(psiSympLeafVEC[c], LeafPI0[c], LeafEPS[c]); //mmol·m-2
             double RWCStemSymp = symplasticRelativeWaterContent(psiSympStemVEC[c], StemPI0[c], StemEPS[c]); //mmol·m-2
-            double RWCStemApo = apoplasticRelativeWaterContent(psiStem1VEC[c], VCstem_c[c], VCstem_d[c]); //mmol·m-2
             double VLeafSymp_mmol = VLeafSymp_mmolmax * RWCLeafSymp;
             double VStemSymp_mmol = VStemSymp_mmolmax * RWCStemSymp;
             double Vcav = 0.0;
@@ -733,8 +732,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
               
               psiStem1VEC[c] = psiStem1VEC[c] + eps_xylem*(Vchange/VStemApo_mmolmax);
               
-              //VStemApo_mmol += (Flatstem + sum(ERhizo(iPMB,_)) - (EinstVEC[c] - Flatleaf));
-              //RWCStemApo = VStemApo_mmol/VStemApo_mmolmax;
+              // VStemApo_mmol += (Flatstem + sum(ERhizo(iPMB,_)) - (EinstVEC[c] - Flatleaf));
+              // RWCStemApo = VStemApo_mmol/VStemApo_mmolmax;
               // psiStem1VEC[c] = apoplasticWaterPotential(std::min(1.0,RWCStemApo), VCstem_c[c], VCstem_d[c]);
               // if(NumericVector::is_na(psiStem1VEC[c]))  psiStem1VEC[c] = -40.0;
               
@@ -743,10 +742,11 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
               double plc_old = PLCstemVEC[c];
               if(cavitationRefill!="total") {
                 PLCstemVEC[c] = std::max(PLCstemVEC[c], 1.0 - xylemConductance(psiStem1VEC[c], 1.0, VCstem_c[c], VCstem_d[c])); 
+                Vcav = VStemApo_mmolmax*(PLCstemVEC[c]-plc_old);
               } else { //Immediate refilling
                 PLCstemVEC[c] = 1.0 - xylemConductance(psiStem1VEC[c], 1.0, VCstem_c[c], VCstem_d[c]); 
+                Vcav = 0.0;
               }
-              Vcav = VStemApo_mmolmax*(PLCstemVEC[c]-plc_old);
 
               // if((c==2) & (n==1)) {
               //   Rcout<< iPMB<<"  sum(ERhizo(iPMB,_) "<<  sum(ERhizo(iPMB,_)) << " Flatstem: "<<Flatstem<<" Flatleaf: "<<Flatleaf<<" VStemApo_mmol: "<<VStemApo_mmol<<" Psi: "<< psiStem1VEC[c]<<" psiSympStemVEC: "<< psiSympStemVEC[c]<<" psiSympLeafVEC: "<< psiSympLeafVEC[c]<<"\n";

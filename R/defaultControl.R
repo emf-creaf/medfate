@@ -15,8 +15,8 @@ defaultControl<-function() {
     capacitance = FALSE,
     cavitationRefill = "total",
     refillMaximumRate = 0.05,
-    klatstem = 0.1, # stem symplastic-apoplastic lateral conductance
-    klatleaf = 0.05, # leaf symplastic-apoplastic lateral conductance
+    klatstem = 0.01, # stem symplastic-apoplastic lateral conductance
+    klatleaf = 0.01, # leaf symplastic-apoplastic lateral conductance
     taper = TRUE,
     numericParams=list(maxNsteps = 400, ntrial = 200, psiTol = 0.0001, ETol = 0.0000001),
     fracLeafResistance = NA,
