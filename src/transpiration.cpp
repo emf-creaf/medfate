@@ -89,6 +89,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   double psiTol = numericParams["psiTol"];
   double ETol = numericParams["ETol"];
   bool capacitance = control["capacitance"];
+  bool cuticularTranspiration = control["cuticularTranspiration"];
   String cavitationRefill = control["cavitationRefill"];
   double refillMaximumRate = control["refillMaximumRate"];
   double klatleaf = control["klatleaf"];
@@ -523,13 +524,9 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
         //Get info from sFunctionAbove
         psiRootCrown = sFunctionAbove["psiRootCrown"];
         
-        // if(capacitance) {
-          // Gwminc = Gwmin[c];
-        // } else {
-          //Set minimum conductance to zero to avoid large decreases in water potential to achieve a minimum flow 
-          // Gwminc = 0.0; 
-        // }
-        
+        double Gwminc = Gwmin[c];
+        if(!cuticularTranspiration) Gwminc = 0.0;
+
         
         if(fittedE.size()>0) {
           //Photosynthesis function for sunlit and shade leaves
@@ -539,14 +536,14 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
                                                              irradianceToPhotonFlux(absPAR_SL[c]), 
                                                              Vmax298SL[c], 
                                                              Jmax298SL[c], 
-                                                             Gwmin[c], Gwmax[c], leafWidth[c], LAI_SL[c]);
+                                                             leafWidth[c], LAI_SL[c]);
           DataFrame photoShade = leafPhotosynthesisFunction(fittedE, Catm, Patm,Tcan[n], vpatm, 
                                                             zWind[c], 
                                                             absSWR_SH[c] + LWR_emmcan*LAI_SH[c], 
                                                             irradianceToPhotonFlux(absPAR_SH[c]),
                                                             Vmax298SH[c], 
                                                             Jmax298SH[c], 
-                                                            Gwmin[c], Gwmax[c], leafWidth[c], LAI_SH[c]);
+                                                            leafWidth[c], LAI_SH[c]);
           
           NumericVector AnSunlit = photoSunlit["NetPhotosynthesis"];
           NumericVector AnShade = photoShade["NetPhotosynthesis"];
@@ -561,8 +558,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
           
           
           //Profit maximization
-          List PMSunlit = profitMaximization(sFunctionAbove, photoSunlit,  Gwmin[c], Gwmax[c], gainModifier, costModifier);
-          List PMShade = profitMaximization(sFunctionAbove, photoShade,  Gwmin[c],Gwmax[c], gainModifier, costModifier);
+          List PMSunlit = profitMaximization(sFunctionAbove, photoSunlit,  Gwminc, Gwmax[c], gainModifier, costModifier);
+          List PMShade = profitMaximization(sFunctionAbove, photoShade,  Gwminc,Gwmax[c], gainModifier, costModifier);
           int iPMSunlit = PMSunlit["iMaxProfit"];
           int iPMShade = PMShade["iMaxProfit"];
           

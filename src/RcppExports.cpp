@@ -2452,8 +2452,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // leafPhotosynthesisFunction
-DataFrame leafPhotosynthesisFunction(NumericVector E, double Catm, double Patm, double Tair, double vpa, double u, double absRad, double Q, double Vmax298, double Jmax298, double Gwmin, double Gwmax, double leafWidth, double refLeafArea, bool verbose);
-RcppExport SEXP _medfate_leafPhotosynthesisFunction(SEXP ESEXP, SEXP CatmSEXP, SEXP PatmSEXP, SEXP TairSEXP, SEXP vpaSEXP, SEXP uSEXP, SEXP absRadSEXP, SEXP QSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP GwminSEXP, SEXP GwmaxSEXP, SEXP leafWidthSEXP, SEXP refLeafAreaSEXP, SEXP verboseSEXP) {
+DataFrame leafPhotosynthesisFunction(NumericVector E, double Catm, double Patm, double Tair, double vpa, double u, double absRad, double Q, double Vmax298, double Jmax298, double leafWidth, double refLeafArea, bool verbose);
+RcppExport SEXP _medfate_leafPhotosynthesisFunction(SEXP ESEXP, SEXP CatmSEXP, SEXP PatmSEXP, SEXP TairSEXP, SEXP vpaSEXP, SEXP uSEXP, SEXP absRadSEXP, SEXP QSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP leafWidthSEXP, SEXP refLeafAreaSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2467,18 +2467,16 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type Q(QSEXP);
     Rcpp::traits::input_parameter< double >::type Vmax298(Vmax298SEXP);
     Rcpp::traits::input_parameter< double >::type Jmax298(Jmax298SEXP);
-    Rcpp::traits::input_parameter< double >::type Gwmin(GwminSEXP);
-    Rcpp::traits::input_parameter< double >::type Gwmax(GwmaxSEXP);
     Rcpp::traits::input_parameter< double >::type leafWidth(leafWidthSEXP);
     Rcpp::traits::input_parameter< double >::type refLeafArea(refLeafAreaSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(leafPhotosynthesisFunction(E, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, Gwmin, Gwmax, leafWidth, refLeafArea, verbose));
+    rcpp_result_gen = Rcpp::wrap(leafPhotosynthesisFunction(E, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, leafWidth, refLeafArea, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
 // sunshadePhotosynthesisFunction
-DataFrame sunshadePhotosynthesisFunction(NumericVector E, double Catm, double Patm, double Tair, double vpa, double SLarea, double SHarea, double u, double absRadSL, double absRadSH, double QSL, double QSH, double Vmax298SL, double Vmax298SH, double Jmax298SL, double Jmax298SH, double Gwmin, double Gwmax, double leafWidth, bool verbose);
-RcppExport SEXP _medfate_sunshadePhotosynthesisFunction(SEXP ESEXP, SEXP CatmSEXP, SEXP PatmSEXP, SEXP TairSEXP, SEXP vpaSEXP, SEXP SLareaSEXP, SEXP SHareaSEXP, SEXP uSEXP, SEXP absRadSLSEXP, SEXP absRadSHSEXP, SEXP QSLSEXP, SEXP QSHSEXP, SEXP Vmax298SLSEXP, SEXP Vmax298SHSEXP, SEXP Jmax298SLSEXP, SEXP Jmax298SHSEXP, SEXP GwminSEXP, SEXP GwmaxSEXP, SEXP leafWidthSEXP, SEXP verboseSEXP) {
+DataFrame sunshadePhotosynthesisFunction(NumericVector E, double Catm, double Patm, double Tair, double vpa, double SLarea, double SHarea, double u, double absRadSL, double absRadSH, double QSL, double QSH, double Vmax298SL, double Vmax298SH, double Jmax298SL, double Jmax298SH, double leafWidth, bool verbose);
+RcppExport SEXP _medfate_sunshadePhotosynthesisFunction(SEXP ESEXP, SEXP CatmSEXP, SEXP PatmSEXP, SEXP TairSEXP, SEXP vpaSEXP, SEXP SLareaSEXP, SEXP SHareaSEXP, SEXP uSEXP, SEXP absRadSLSEXP, SEXP absRadSHSEXP, SEXP QSLSEXP, SEXP QSHSEXP, SEXP Vmax298SLSEXP, SEXP Vmax298SHSEXP, SEXP Jmax298SLSEXP, SEXP Jmax298SHSEXP, SEXP leafWidthSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2498,17 +2496,15 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type Vmax298SH(Vmax298SHSEXP);
     Rcpp::traits::input_parameter< double >::type Jmax298SL(Jmax298SLSEXP);
     Rcpp::traits::input_parameter< double >::type Jmax298SH(Jmax298SHSEXP);
-    Rcpp::traits::input_parameter< double >::type Gwmin(GwminSEXP);
-    Rcpp::traits::input_parameter< double >::type Gwmax(GwmaxSEXP);
     Rcpp::traits::input_parameter< double >::type leafWidth(leafWidthSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(sunshadePhotosynthesisFunction(E, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, Gwmin, Gwmax, leafWidth, verbose));
+    rcpp_result_gen = Rcpp::wrap(sunshadePhotosynthesisFunction(E, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, leafWidth, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
 // multilayerPhotosynthesisFunction
-DataFrame multilayerPhotosynthesisFunction(NumericVector E, double Catm, double Patm, double Tair, double vpa, NumericVector SLarea, NumericVector SHarea, NumericVector u, NumericVector absRadSL, NumericVector absRadSH, NumericVector QSL, NumericVector QSH, NumericVector Vmax298, NumericVector Jmax298, double Gwmin, double Gwmax, double leafWidth, bool verbose);
-RcppExport SEXP _medfate_multilayerPhotosynthesisFunction(SEXP ESEXP, SEXP CatmSEXP, SEXP PatmSEXP, SEXP TairSEXP, SEXP vpaSEXP, SEXP SLareaSEXP, SEXP SHareaSEXP, SEXP uSEXP, SEXP absRadSLSEXP, SEXP absRadSHSEXP, SEXP QSLSEXP, SEXP QSHSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP GwminSEXP, SEXP GwmaxSEXP, SEXP leafWidthSEXP, SEXP verboseSEXP) {
+DataFrame multilayerPhotosynthesisFunction(NumericVector E, double Catm, double Patm, double Tair, double vpa, NumericVector SLarea, NumericVector SHarea, NumericVector u, NumericVector absRadSL, NumericVector absRadSH, NumericVector QSL, NumericVector QSH, NumericVector Vmax298, NumericVector Jmax298, double leafWidth, bool verbose);
+RcppExport SEXP _medfate_multilayerPhotosynthesisFunction(SEXP ESEXP, SEXP CatmSEXP, SEXP PatmSEXP, SEXP TairSEXP, SEXP vpaSEXP, SEXP SLareaSEXP, SEXP SHareaSEXP, SEXP uSEXP, SEXP absRadSLSEXP, SEXP absRadSHSEXP, SEXP QSLSEXP, SEXP QSHSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP leafWidthSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2526,11 +2522,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type QSH(QSHSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type Vmax298(Vmax298SEXP);
     Rcpp::traits::input_parameter< NumericVector >::type Jmax298(Jmax298SEXP);
-    Rcpp::traits::input_parameter< double >::type Gwmin(GwminSEXP);
-    Rcpp::traits::input_parameter< double >::type Gwmax(GwmaxSEXP);
     Rcpp::traits::input_parameter< double >::type leafWidth(leafWidthSEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(multilayerPhotosynthesisFunction(E, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298, Jmax298, Gwmin, Gwmax, leafWidth, verbose));
+    rcpp_result_gen = Rcpp::wrap(multilayerPhotosynthesisFunction(E, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298, Jmax298, leafWidth, verbose));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4079,9 +4073,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_electronLimitedPhotosynthesis", (DL_FUNC) &_medfate_electronLimitedPhotosynthesis, 4},
     {"_medfate_rubiscoLimitedPhotosynthesis", (DL_FUNC) &_medfate_rubiscoLimitedPhotosynthesis, 4},
     {"_medfate_leafphotosynthesis", (DL_FUNC) &_medfate_leafphotosynthesis, 7},
-    {"_medfate_leafPhotosynthesisFunction", (DL_FUNC) &_medfate_leafPhotosynthesisFunction, 15},
-    {"_medfate_sunshadePhotosynthesisFunction", (DL_FUNC) &_medfate_sunshadePhotosynthesisFunction, 20},
-    {"_medfate_multilayerPhotosynthesisFunction", (DL_FUNC) &_medfate_multilayerPhotosynthesisFunction, 18},
+    {"_medfate_leafPhotosynthesisFunction", (DL_FUNC) &_medfate_leafPhotosynthesisFunction, 13},
+    {"_medfate_sunshadePhotosynthesisFunction", (DL_FUNC) &_medfate_sunshadePhotosynthesisFunction, 18},
+    {"_medfate_multilayerPhotosynthesisFunction", (DL_FUNC) &_medfate_multilayerPhotosynthesisFunction, 16},
     {"_medfate_conicDistribution", (DL_FUNC) &_medfate_conicDistribution, 2},
     {"_medfate_ldrDistribution", (DL_FUNC) &_medfate_ldrDistribution, 3},
     {"_medfate_rootDistribution", (DL_FUNC) &_medfate_rootDistribution, 2},
