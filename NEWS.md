@@ -6,6 +6,7 @@
 - New control option 'fracLeafResistance'
 - Different options for 'cavitationRefill'
 - New control option 'refillMaximumRate'
+- Control parameter 'hydraulicCostFunction' replaced by 'costModifier' and 'gainModifier'
 
 # Version 0.8.4
 - Water balance console output modified in spwb
