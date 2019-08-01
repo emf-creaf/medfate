@@ -9,6 +9,7 @@
 - Control parameter 'hydraulicCostFunction' replaced by 'costModifier' and 'gainModifier'
 - New control parameter 'cuticularTranspiration'
 - Numerical controls to avoid NaN in functions 'soil_theta2psiSX' and 'soil_psi2thetaSX'
+- Bug correction in estimation of root conductance proportions
 
 # Version 0.8.4
 - Water balance console output modified in spwb
