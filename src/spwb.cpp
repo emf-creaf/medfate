@@ -350,26 +350,28 @@ void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER
     }
     if(transpirationMode=="Sperry") {
       NumericVector psiRootCrown = Rcpp::as<Rcpp::NumericVector>(x["psiRootCrown"]);
-      NumericMatrix psiStem = Rcpp::as<Rcpp::NumericMatrix>(x["psiStem"]);
-      NumericMatrix PLCstem = Rcpp::as<Rcpp::NumericMatrix>(x["PLCstem"]);
-      NumericMatrix RWCsympstem = Rcpp::as<Rcpp::NumericMatrix>(x["RWCsympstem"]);
-      NumericVector RWCsympleaf = Rcpp::as<Rcpp::NumericVector>(x["RWCsympleaf"]);
+      NumericVector psiStem1 = Rcpp::as<Rcpp::NumericVector>(x["psiStem1"]);
+      NumericVector psiStem2 = Rcpp::as<Rcpp::NumericVector>(x["psiStem2"]);
+      NumericVector psiSympStem = Rcpp::as<Rcpp::NumericVector>(x["psiSympStem"]);
+      NumericVector psiSympLeaf = Rcpp::as<Rcpp::NumericVector>(x["psiSympLeaf"]);
+      NumericMatrix psiRhizo = Rcpp::as<Rcpp::NumericMatrix>(x["psiRhizo"]);
       NumericVector psiLeaf = Rcpp::as<Rcpp::NumericVector>(x["psiLeaf"]);
+      NumericVector PLCstem = Rcpp::as<Rcpp::NumericVector>(x["PLCstem"]);
       NumericVector Einst = Rcpp::as<Rcpp::NumericVector>(x["Einst"]);
       NumericVector Transpiration = Rcpp::as<Rcpp::NumericVector>(x["Transpiration"]);
       NumericVector Photosynthesis = Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
-      for(int i=0;i<PLCstem.nrow();i++) {
+      for(int i=0;i<psiLeaf.size();i++) {
         Einst[i] = 0.0;
         psiLeaf[i] = 0.0;
+        PLCstem[i] = 0.0;
+        psiStem1[i] = 0.0;
+        psiStem2[i] = 0.0;
         psiRootCrown[i] = 0.0;
-        RWCsympleaf[i] = 0.0;
+        psiSympLeaf[i] = 0.0;
+        psiSympStem[i] = 0.0;
         Transpiration[i] = 0.0;
         Photosynthesis[i] = 0.0;
-        for(int j=0;j<PLCstem.ncol();j++) {
-          psiStem(i,j) = 0.0;
-          PLCstem(i,j) = 0.0; 
-          RWCsympstem(i,j) = 1.0; 
-        }
+        for(int j=0;j<psiRhizo.ncol();j++) psiRhizo(i,j) = 0.0;
       }
     } else {
       NumericVector Transpiration = Rcpp::as<Rcpp::NumericVector>(x["Transpiration"]);
