@@ -9,7 +9,9 @@ defaultControl<-function() {
     drainage = TRUE,
     leafPhenology = TRUE,
     transpirationMode = "Granier", #vs. "Sperry"
-    hydraulicCostFunction = 1, #vs. 2
+    cuticularTranspiration = TRUE,
+    gainModifier = 1, 
+    costModifier = 1, 
     verticalLayerSize = 100,
     # nStemSegments = 1,
     capacitance = FALSE,

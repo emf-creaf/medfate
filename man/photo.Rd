@@ -26,17 +26,17 @@ photo_electronLimitedPhotosynthesis(Q, Ci, GT, Jmax)
 photo_rubiscoLimitedPhotosynthesis(Ci, GT, Km, Vmax)
 photo_photosynthesis(Q, Catm, Gc, leaf_temp, Vmax298, Jmax298, verbose = FALSE)
 photo_leafPhotosynthesisFunction(E, Catm, Patm, Tair, vpa, u, 
-                             absRad, Q, Vmax298, Jmax298, Gwmin, Gwmax,
+                             absRad, Q, Vmax298, Jmax298,
                              leafWidth = 1.0, refLeafArea = 1, verbose = FALSE)
 photo_sunshadePhotosynthesisFunction(E, Catm, Patm, Tair, vpa, 
                                      SLarea, SHarea, u, 
                                      absRadSL, absRadSH, QSL, QSH, 
                                      Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, 
-                                     Gwmin, Gwmax, leafWidth = 1.0, verbose = FALSE)
+                                     leafWidth = 1.0, verbose = FALSE)
 photo_multilayerPhotosynthesisFunction(E, Catm, Patm, Tair, vpa, 
                                       SLarea, SHarea, u, 
                                       absRadSL, absRadSH, QSL, QSH, 
-                                      Vmax298, Jmax298, Gwmin, Gwmax, leafWidth = 1.0, 
+                                      Vmax298, Jmax298, leafWidth = 1.0, 
                                       verbose = FALSE)
 }
 
@@ -62,7 +62,6 @@ photo_multilayerPhotosynthesisFunction(E, Catm, Patm, Tair, vpa,
   \item{absRad}{Absorbed long- and short-wave radiation (in W*m^-2).}
   \item{leafWidth}{Leaf width (in cm).}
   \item{refLeafArea}{Leaf reference area.}
-  \item{Gwmin, Gwmax}{Minimum and maximum leaf water conductance (i.e. cuticular and maximum stomatal conductance) (mol * s-1 * m-2).}
   \item{verbose}{Boolean flag to indicate console output.}
   \item{SLarea, SHarea}{Leaf area index of sunlit/shade leaves (for each canopy layer in the case of \code{photo_multilayerPhotosynthesisFunction}).}
   \item{absRadSL, absRadSH}{Instantaneous absorbed radiation (W·m-2) per unit of sunlit/shade leaf area (for each canopy layer in the case of \code{photo_multilayerPhotosynthesisFunction}).}

@@ -17,15 +17,16 @@ const double Cp_JKG = 1013.86; // J * kg^-1 * ºC^-1
 const double eps_xylem = 10^3; // xylem elastic modulus (1 GPa = 1000 MPa)
 
 // [[Rcpp::export("transp_profitMaximization")]]
-List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, int type, double Gwmin, double Gwmax, double kleafmax = NA_REAL) {
-  NumericVector supplyKterm = supplyFunction["kterm"];
+List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, double Gwmin, double Gwmax, 
+                        double gainModifier = 1.0, double costModifier = 1.0) {
+  // NumericVector supplyKterm = supplyFunction["kterm"];
   NumericVector supplyE = supplyFunction["E"];
   NumericVector supplydEdp = supplyFunction["dEdP"];
   NumericVector Ag = photosynthesisFunction["Photosynthesis"];
   NumericVector Gw = photosynthesisFunction["WaterVaporConductance"];
   int nsteps = supplydEdp.size();
   double maxdEdp = 0.0, mindEdp = 99999999.0;
-  double maxKterm = 0.0, minKterm = 99999999.0;
+  // double maxKterm = 0.0, minKterm = 99999999.0;
   double Agmax = 0.0;
   //Find valid limits according to stomatal conductance
   int ini = 0, fin = nsteps-1;
@@ -40,8 +41,8 @@ List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, i
     // }
     mindEdp = std::min(mindEdp, supplydEdp[i]);
     maxdEdp = std::max(maxdEdp, supplydEdp[i]);
-    minKterm = std::min(minKterm, supplyKterm[i]);
-    maxKterm = std::max(maxKterm, supplyKterm[i]);
+    // minKterm = std::min(minKterm, supplyKterm[i]);
+    // maxKterm = std::max(maxKterm, supplyKterm[i]);
     Agmax = std::max(Agmax, Ag[i]);
   }
   
@@ -50,18 +51,8 @@ List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, i
   NumericVector cost(nsteps, NA_REAL);
   NumericVector gain(nsteps, NA_REAL);
   for(int i=ini;i<fin;i++) {
-    if(type==1) {
-      // if(i<imaxdEdp) {
-      //   cost[i]= 0.0; 
-      // } else {
-      //   cost[i] = std::max(0.0,(maxdEdp-supplydEdp[i])/(maxdEdp-mindEdp));  
-      // }
-      cost[i] = (maxdEdp-supplydEdp[i])/(maxdEdp-mindEdp);  
-    }
-    else {
-      cost[i] = (maxKterm-supplyKterm[i])/(maxKterm - minKterm);
-    }
-    gain[i] = Ag[i]/Agmax;
+    gain[i] = pow(Ag[i]/Agmax, gainModifier);
+    cost[i] = pow((maxdEdp-supplydEdp[i])/(maxdEdp-mindEdp), costModifier);  
     profit[i] = gain[i]-cost[i];
   }
   
@@ -98,13 +89,15 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   double psiTol = numericParams["psiTol"];
   double ETol = numericParams["ETol"];
   bool capacitance = control["capacitance"];
+  bool cuticularTranspiration = control["cuticularTranspiration"];
   String cavitationRefill = control["cavitationRefill"];
   double refillMaximumRate = control["refillMaximumRate"];
   double klatleaf = control["klatleaf"];
   double klatstem = control["klatstem"];
   int ntimesteps = control["ndailysteps"];
-  int hydraulicCostFunction = control["hydraulicCostFunction"];
-
+  double costModifier = control["costModifier"];
+  double gainModifier = control["gainModifier"];
+  
   double verticalLayerSize = control["verticalLayerSize"];
   double thermalCapacityLAI = control["thermalCapacityLAI"];
   double defaultWindSpeed = control["defaultWindSpeed"];
@@ -158,6 +151,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
   NumericVector Gwmin = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Gwmin"]);
   NumericVector Gwmax = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Gwmax"]);
+  NumericVector Plant_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Plant_kmax"]);
   NumericVector VCstem_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_kmax"]);
   NumericVector VCstem_c = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_c"]);
   NumericVector VCstem_d = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_d"]);
@@ -497,8 +491,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
         NumericVector fittedE, dEdP;
         NumericVector psiLeaf, psiRootCrown;
         
-        double Gwminc = Gwmin[c];
-        
+
         //Retrieve supply functions
         List sFunctionBelow, sFunctionAbove;
         if(!capacitance) {
@@ -531,13 +524,9 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
         //Get info from sFunctionAbove
         psiRootCrown = sFunctionAbove["psiRootCrown"];
         
-        // if(capacitance) {
-          Gwminc = Gwmin[c];
-        // } else {
-          //Set minimum conductance to zero to avoid large decreases in water potential to achieve a minimum flow 
-          // Gwminc = 0.0; 
-        // }
-        
+        double Gwminc = Gwmin[c];
+        if(!cuticularTranspiration) Gwminc = 0.0;
+
         
         if(fittedE.size()>0) {
           //Photosynthesis function for sunlit and shade leaves
@@ -547,14 +536,14 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
                                                              irradianceToPhotonFlux(absPAR_SL[c]), 
                                                              Vmax298SL[c], 
                                                              Jmax298SL[c], 
-                                                             Gwminc, Gwmax[c], leafWidth[c], LAI_SL[c]);
+                                                             leafWidth[c], LAI_SL[c]);
           DataFrame photoShade = leafPhotosynthesisFunction(fittedE, Catm, Patm,Tcan[n], vpatm, 
                                                             zWind[c], 
                                                             absSWR_SH[c] + LWR_emmcan*LAI_SH[c], 
                                                             irradianceToPhotonFlux(absPAR_SH[c]),
                                                             Vmax298SH[c], 
                                                             Jmax298SH[c], 
-                                                            Gwminc, Gwmax[c], leafWidth[c], LAI_SH[c]);
+                                                            leafWidth[c], LAI_SH[c]);
           
           NumericVector AnSunlit = photoSunlit["NetPhotosynthesis"];
           NumericVector AnShade = photoShade["NetPhotosynthesis"];
@@ -569,8 +558,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
           
           
           //Profit maximization
-          List PMSunlit = profitMaximization(sFunctionAbove, photoSunlit,  hydraulicCostFunction, Gwminc, Gwmax[c], VCstem_kmax[c]);
-          List PMShade = profitMaximization(sFunctionAbove, photoShade,  hydraulicCostFunction, Gwminc,Gwmax[c], VCstem_kmax[c]);
+          List PMSunlit = profitMaximization(sFunctionAbove, photoSunlit,  Gwminc, Gwmax[c], gainModifier, costModifier);
+          List PMShade = profitMaximization(sFunctionAbove, photoShade,  Gwminc,Gwmax[c], gainModifier, costModifier);
           int iPMSunlit = PMSunlit["iMaxProfit"];
           int iPMShade = PMShade["iMaxProfit"];
           

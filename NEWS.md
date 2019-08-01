@@ -3,9 +3,12 @@
 -------------------------------
 
 # Version 0.8.5
-- New control option 'fracLeafResistance'
-- Different options for 'cavitationRefill'
-- New control option 'refillMaximumRate'
+- New control parameter 'fracLeafResistance'
+- Different control options for parameter 'cavitationRefill'
+- New control parameter 'refillMaximumRate'
+- Control parameter 'hydraulicCostFunction' replaced by 'costModifier' and 'gainModifier'
+- New control parameter 'cuticularTranspiration'
+- Numerical controls to avoid NaN in functions 'soil_theta2psiSX' and 'soil_psi2thetaSX'
 
 # Version 0.8.4
 - Water balance console output modified in spwb

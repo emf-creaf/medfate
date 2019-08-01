@@ -64,23 +64,30 @@ double theta2psiSaxton(double clay, double sand, double theta, double om = NA_RE
     om = om/100.0;
     double theta1500t = -0.024*sand + 0.487*clay+0.006*om + 0.005*(sand*om) - 0.013*(clay*om) + 0.068*(sand*clay) + 0.031;
     double theta1500 = theta1500t + (0.14*theta1500t - 0.02);
+    if(theta1500<0.00001) theta1500 = 0.00001;//Truncate theta1500 to avoid NaN when taking logarithms
     double theta33t = -0.251*sand + 0.195*clay + 0.011*om + 0.006*(sand*om) - 0.027*(clay*om) + 0.452*(sand*clay) + 0.299;
     double theta33 = theta33t + (1.283*pow(theta33t,2.0) - 0.374 * theta33t - 0.015);
+    if(theta33<0.00001) theta33 = 0.00001;//Truncate theta33 to avoid NaN when taking logarithms
     B = 3.816712/(log(theta33)-log(theta1500)); //3.816712 = log(1500) - log(33)
     A = exp(3.496508 + B*log(theta33)); // 3.496508 = log(33)
     psi = -0.001*(A*pow(theta,-1.0*B));
+    // Rcout<<" "<<theta33<<" "<< theta1500<<" "<<A<<" "<< B <<" "<<psi<<"\n";
     if(psi > -0.033) { // If calculated psi > -33 KPa use linear part
       double theta_S33t = (0.278*sand) + (0.034*clay)+ (0.022*om) - (0.018*(sand*om)) - (0.027*(clay*om)) - (0.584*(sand*clay)) + 0.078;
       double theta_S33 = theta_S33t + (0.636*theta_S33t-0.107);
       double theta_sat = theta33+theta_S33 - (0.097*sand) + 0.043;
       double psi_et = -(21.67*sand) - (27.93*clay) - (81.97*theta_S33)+(71.12*(sand*theta_S33))+(8.29*(clay*theta_S33))+(14.05*(sand*clay))+27.16;
       double psi_e = -0.001*(psi_et + ((0.02*pow(psi_et, 2.0)) - (0.113*psi_et) - 0.70));//air-entry tension in MPa
+      // Rcout<<psi_et<<" "<< psi_e<<"\n";
+      if(psi_e>0.0) psi_e = 0.0;
       psi = -0.033 - ((theta-theta33)*(-0.033 - psi_e)/(theta_sat - theta33));
       psi = std::min(psi,psi_e); //Truncate to air entry tension
+      // Rcout<<psi<<"\n";
     }
   }
   if(psi < -40.0) psi = -40.0;
   if(theta==0.0) psi = -40.0;
+  if(psi>0.0) psi = 0.0;
   return(psi);
 }
 /**
@@ -112,8 +119,10 @@ double psi2thetaSaxton(double clay, double sand, double psi, double om = NA_REAL
     om = om/100.0;
     double theta1500t = (-0.024*sand) + (0.487*clay) + (0.006*om) + (0.005*(sand*om)) - (0.013*(clay*om)) + (0.068*(sand*clay)) + 0.031;
     double theta1500 = theta1500t + ((0.14*theta1500t) - 0.02);
+    if(theta1500<0.00001) theta1500 = 0.00001;//Truncate theta1500 to avoid NaN when taking logarithms
     double theta33t = (-0.251*sand) + (0.195*clay) + (0.011*om) + (0.006*(sand*om)) - (0.027*(clay*om)) + (0.452*(sand*clay)) + 0.299;
     double theta33 = theta33t + (1.283*pow(theta33t,2.0) - 0.374 * theta33t - 0.015);
+    if(theta33<0.00001) theta33 = 0.00001;//Truncate theta33 to avoid NaN when taking logarithms
     B = 3.816712/(log(theta33)-log(theta1500)); //3.816712 = log(1500) - log(33)
     A = exp(3.496508 + B*log(theta33)); // 3.496508 = log(33)
     // Rcout<<theta1500t<<" "<<theta1500<<" "<<theta33t<<" "<<theta33<<" "<< A<<" "<<B<<" "<< psi<<"\n";
@@ -126,6 +135,7 @@ double psi2thetaSaxton(double clay, double sand, double psi, double om = NA_REAL
       double theta_sat = theta33+theta_S33 - (0.097*sand) + 0.043;
       double psi_et = -(21.67*sand) - (27.93*clay) - (81.97*theta_S33)+(71.12*(sand*theta_S33))+(8.29*(clay*theta_S33))+(14.05*(sand*clay))+27.16;
       double psi_e = -0.001*(psi_et + ((0.02*pow(psi_et, 2.0)) - (0.113*psi_et) - 0.70));//air-entry tension in MPa
+      if(psi_e>0.0) psi_e = 0.0;
       psi = std::min(psi,psi_e); //Truncate to air entry tension
       theta = theta33+(((-0.033-psi)*(theta_sat - theta33))/(-0.033-psi_e));
     }
