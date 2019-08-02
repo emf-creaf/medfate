@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 0.8.6
+- New function 'spwb_sensitivity' for sensitivity analyses
+
 # Version 0.8.5
 - New control parameter 'fracLeafResistance'
 - Different control options for parameter 'cavitationRefill'
