@@ -7,12 +7,14 @@ Sensitivity analysis for soil plant water balance simulations
 Performs a set of calls to \code{\link{spwb}} with the aim to determine the sensitivity to particular parameters.
 }
 \usage{
-spwb_sensitivity(x, paramType = "above", paramName = "LAI_live", 
+spwb_sensitivity(x, soil, meteo, paramType = "above", paramName = "LAI_live", 
                  p_change = c(-80,-40,-20,0,20,40,80), summary.fun = NULL, simplify=TRUE,...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{An object of class \code{\link{spwbInput}}.}
+  \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
+  \item{meteo}{A data frame with daily meteorological data series (see \code{\link{spwb}}).}
   \item{paramType}{Data frame of \code{x} to modify.}
   \item{paramName}{Name of the parameter to modify.}
   \item{p_change}{Numerical vector with percentages of change.}
