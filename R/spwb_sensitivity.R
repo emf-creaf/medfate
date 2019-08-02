@@ -8,7 +8,7 @@ spwb_sensitivity<-function(x, paramType = "above", paramName = "LAI_live",
     cat(paste0(names(l)[i]," "))
     xi = x
     xi$control$verbose= FALSE
-    xi[[paramType]][[paramName]] = xi[[paramType]][[paramName]]*p_change[i]/100
+    xi[[paramType]][[paramName]] = xi[[paramType]][[paramName]]*(1+(p_change[i]/100))
     if(paramName=="LAI_live") xi[[paramType]][["LAI_expanded"]] = xi[[paramType]][["LAI_expanded"]]*p_change[i]/100
     l[[i]] = spwb(xi,...)
   }
