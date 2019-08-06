@@ -4,6 +4,7 @@
 
 # Version 0.8.6
 - New function 'spwb_sensitivity' for sensitivity analyses
+- New control parameter 'unlimitedSoilWater'
 
 # Version 0.8.5
 - New control parameter 'fracLeafResistance'
