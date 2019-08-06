@@ -26,6 +26,16 @@ spwb_sensitivity<-function(x, soil, meteo,
       xi$paramsTransp$VCstem_kmax[cohort] = xi$paramsTransp$VCstem_kmax[cohort]*f
       xi$paramsTransp$VCroot_kmax[cohort] = xi$paramsTransp$VCroot_kmax[cohort]*f
     } 
+    else if(paramName=="c") {
+      xi$paramsTransp$VCleaf_c[cohort] = xi$paramsTransp$VCleaf_c[cohort]*f
+      xi$paramsTransp$VCstem_c[cohort] = xi$paramsTransp$VCstem_c[cohort]*f
+      xi$paramsTransp$VCroot_c[cohort] = xi$paramsTransp$VCroot_c[cohort]*f
+    } 
+    else if(paramName=="d") {
+      xi$paramsTransp$VCleaf_d[cohort] = xi$paramsTransp$VCleaf_d[cohort]*f
+      xi$paramsTransp$VCstem_d[cohort] = xi$paramsTransp$VCstem_d[cohort]*f
+      xi$paramsTransp$VCroot_d[cohort] = xi$paramsTransp$VCroot_d[cohort]*f
+    } 
     else if(paramName=="Vmax298/Jmax298") {
       xi$paramsTransp$Vmax298[cohort] = xi$paramsTransp$Vmax298[cohort]*f
       xi$paramsTransp$Jmax298[cohort] = xi$paramsTransp$Jmax298[cohort]*f
