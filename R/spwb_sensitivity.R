@@ -11,10 +11,27 @@ spwb_sensitivity<-function(x, soil, meteo,
     xi = x
     xi$control$verbose= FALSE
     f = (1+(p_change[i]/100))
-    xi[[paramType]][[paramName]][cohort] = xi[[paramType]][[paramName]][cohort]*f
-    if(paramName=="LAI_live") xi[[paramType]][["LAI_expanded"]][cohort] = xi[[paramType]][["LAI_expanded"]][cohort]*f
+    if(paramName=="LAI_live") {
+      xi$above$LAI_live[cohort] =xi$above$LAI_live[cohort]*f
+      xi$above$LAI_expanded[cohort] =xi$above$LAI_expanded[cohort]*f
+    } 
     else if(paramName=="VCroot_kmax") {
+      xi$paramsTransp$VCroot_kmax[cohort] = xi$paramsTransp$VCroot_kmax[cohort]*f
       xi$below$VCroot_kmax[cohort, ] = xi$below$VCroot_kmax[cohort, ]*f
+    }
+    else if(paramName=="Plant_kmax") {
+      xi$paramsTransp$Plant_kmax[cohort] = xi$paramsTransp$Plant_kmax[cohort]*f
+      xi$below$VCroot_kmax[cohort, ] = xi$below$VCroot_kmax[cohort, ]*f
+      xi$paramsTransp$VCleaf_kmax[cohort] = xi$paramsTransp$VCleaf_kmax[cohort]*f
+      xi$paramsTransp$VCstem_kmax[cohort] = xi$paramsTransp$VCstem_kmax[cohort]*f
+      xi$paramsTransp$VCroot_kmax[cohort] = xi$paramsTransp$VCroot_kmax[cohort]*f
+    } 
+    else if(paramName=="Vmax298/Jmax298") {
+      xi$paramsTransp$Vmax298[cohort] = xi$paramsTransp$Vmax298[cohort]*f
+      xi$paramsTransp$Jmax298[cohort] = xi$paramsTransp$Jmax298[cohort]*f
+    }
+    else {
+      xi[[paramType]][[paramName]][cohort] = xi[[paramType]][[paramName]][cohort]*f
     }
     spwb_resetInputs(xi, soil)
     l[[i]] = spwb(xi, soil, meteo, ...)
