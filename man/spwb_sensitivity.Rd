@@ -27,6 +27,7 @@ spwb_sensitivity(x, soil, meteo,
 \details{
 Due to parameter dependence, modifying some parameters affects others:
 \itemize{
+  \item{Setting \code{paramName = "Z50/Z95"} affects \code{below$V}, \code{below$VCroot_kmax} and \code{below$VGrhizo_kmax}.}
   \item{Modifying \code{LAI_live} also affects \code{LAI_expanded}.}
   \item{Modifying \code{VCroot_kmax} from \code{paramsTransp} affects both \code{paramsTransp$VCroot_kmax} and \code{below$VCroot_kmax}.}
   \item{Modifying \code{c} affects simultaneously \code{paramsTransp$VCleaf_c}, \code{paramsTransp$VCstem_c} and \code{paramsTransp$VCroot_c}.}

@@ -11,7 +11,20 @@ spwb_sensitivity<-function(x, soil, meteo,
     xi = x
     xi$control$verbose= FALSE
     f = (1+(p_change[i]/100))
-    if(paramName=="LAI_live") {
+    if(paramName=="Z50/Z95") {
+      d = soil$dVec
+      xi$below$Z50[cohort] = xi$below$Z50[cohort]*f
+      xi$below$Z95[cohort] = xi$below$Z95[cohort]*f
+      for(ci in cohort) {
+        v = root_ldrDistribution(xi$below$Z50[ci], xi$below$Z95[ci], d)
+        xi$below$V[ci, ] = v
+        if(xi$control$transpirationMode=="Sperry") {
+          xi$below$VCroot_kmax[ci,] = xi$paramsTransp$VCroot_kmax[ci]*root_xylemConductanceProportions(v, d)
+          xi$below$VGrhizo_kmax[ci, ] = v*sum(xi$below$VGrhizo_kmax[ci, ])
+        }
+      }
+    } 
+    else if(paramName=="LAI_live") {
       xi$above$LAI_live[cohort] =xi$above$LAI_live[cohort]*f
       xi$above$LAI_expanded[cohort] =xi$above$LAI_expanded[cohort]*f
     } 
