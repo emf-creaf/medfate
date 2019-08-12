@@ -5,6 +5,7 @@
 # Version 0.8.6
 - New function 'spwb_sensitivity' for sensitivity analyses
 - New control parameter 'unlimitedSoilWater'
+- Bug correction in canopy height with LAI = 0
 
 # Version 0.8.5
 - New control parameter 'fracLeafResistance'
