@@ -139,11 +139,14 @@ spwb_ldrOptimization<-function(x, soil, meteo, psi_crit, opt_mode = 1,
       s.[["usda_Type"]] <- s.[["usda_Type"]][1:nl]
       
       V[,i,j] <- 0
-      x_1sp$below$V[,] <- root_ldrDistribution(Z50 = Z50[i,j], Z95 = RZ[j], d=s.$dVec)
+      x_1sp$below$V = x$below$V[sp,1:nl,drop = FALSE]
+      x_1sp$below$V[1,] <- root_ldrDistribution(Z50 = Z50[i,j], Z95 = RZ[j], d=s.$dVec)
       V[1:length(x_1sp$below$V),i,j] <- x_1sp$below$V
       if(x_1sp$control$transpirationMode=="Sperry"){
-        x_1sp$below$VCroot_kmax[,] = x_1sp$paramsTransp$VCroot_kmax*root_xylemConductanceProportions(x_1sp$below$V, s.$dVec)
-        x_1sp$below$VGrhizo_kmax[,] = x_1sp$below$V*sum(x$below$VGrhizo_kmax[sp,])
+        x_1sp$below$VCroot_kmax = x$below$VCroot_kmax[sp,1:nl,drop = FALSE]
+        x_1sp$below$VGrhizo_kmax = x$below$VGrhizo_kmax[sp,1:nl,drop = FALSE]
+        x_1sp$below$VCroot_kmax[1,] = x_1sp$paramsTransp$VCroot_kmax*root_xylemConductanceProportions(x_1sp$below$V, s.$dVec)
+        x_1sp$below$VGrhizo_kmax[1,] = x_1sp$below$V*sum(x$below$VGrhizo_kmax[sp,])
       }
       
 
