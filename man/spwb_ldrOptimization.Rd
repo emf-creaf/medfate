@@ -29,6 +29,7 @@ spwb_ldrOptimization(x, soil, meteo, psi_crit, opt_mode = 1, RZmin = 301, RZmax 
     \itemize{
        \item{\code{opt_mode = 1} maximizes transpiration along the line of stress equal to \code{psi_crit} (Cabon et al. 2018).}
        \item{\code{opt_mode = 2} maximizes transpiration, subject to root construction constrains, among combinations with  stress according to \code{psi_crit}).}
+       \item{\code{opt_mode = 3} maximizes photosynthesis, subject to root construction constrains, among combinations with  stress according to \code{psi_crit}).}
     }
   }
   \item{RZmin}{The minimum value of RZ (the rooting depth) to be explored (in mm)}
