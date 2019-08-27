@@ -1,37 +1,26 @@
 \encoding{UTF-8}
 \name{spwb_ldrOptimization}
 \alias{spwb_ldrOptimization}
+\alias{spwb_ldrExploration}
 
 \title{Optimization of root distribution}
 
-\description{The function \code{spwb_ldrOptimization} optimizes the species root distribution within \code{spwb}, given the arguments \code{x}, \code{meteo}, \code{soil} and \code{psi_crit}. The optimization is based on the eco-hydrological equilibrium hypothesis (Eagleson, 1982), which is formulated here as the root distribution for which plant transpiration is maximized while the plant water potential is close to the species-defined critical value \code{psi_crit} (Cabon et al.,2018). Returns the optimized root distribution for each species, expressed as parameters of the function \code{root_ldrDistribution}.}
+\description{Functions \code{spwb_ldrExploration} and \code{spwb_ldrOptimization} are used to find optimum the species root distribution within \code{spwb}, given the arguments \code{x}, \code{meteo}, \code{soil} and \code{psi_crit}.}
 
 \usage{
-spwb_ldrOptimization(x, soil, meteo, psi_crit, opt_mode = 1, RZmin = 301, RZmax = 4000, 
-                    V1min = 0.01, V1max = 0.94, resolution = 20, heat_stop = 0, 
-                    transformation = "identity", explore_out = FALSE, 
-                    verbose = FALSE, ...)
+spwb_ldrExploration(x, soil, meteo, cohorts = NULL,
+                     RZmin = 301, RZmax = 4000, 
+                     V1min = 0.01, V1max = 0.94, resolution = 10, heat_stop = 0, 
+                     transformation = "identity", 
+                     verbose = FALSE, ...)
+spwb_ldrOptimization(y, psi_crit, opt_mode = 1)
 }
 
 \arguments{
   \item{x}{An object of class \code{\link{spwbInput}}.}
   \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
-  \item{meteo}{A data frame with daily meteorological data series. When using the 'Granier' transpiration mode the following columns are required:
-   \itemize{
-     \item{\code{DOY}: Day of the year (Julian day).}
-     \item{\code{Precipitation}: Precipitation (in mm).}
-     \item{\code{MeanTemperature}: Mean temperature (in degrees Celsius).}
-     \item{\code{PET}: Potential evapotranspiration (in mm).}
-    }
-  }
-  \item{psi_crit}{A numerical vector of length iqual to the number of species in the plot containing the species values of water potential inducing hydraulic failure (in MPa). Use \code{NA} values to skip optimization for particular plant cohorts.}
-  \item{opt_mode}{Optimization mode:
-    \itemize{
-       \item{\code{opt_mode = 1} maximizes transpiration along the line of stress equal to \code{psi_crit} (Cabon et al. 2018).}
-       \item{\code{opt_mode = 2} maximizes transpiration, subject to root construction constrains, among combinations with  stress according to \code{psi_crit}).}
-       \item{\code{opt_mode = 3} maximizes photosynthesis, subject to root construction constrains, among combinations with  stress according to \code{psi_crit}).}
-    }
-  }
+  \item{meteo}{A data frame with daily meteorological data series (see \code{\link{spwb}}).}
+  \item{cohorts}{A character string with the names of cohorts to be explored. If \code{NULL} then all cohorts are explored.}
   \item{RZmin}{The minimum value of RZ (the rooting depth) to be explored (in mm)}
   \item{RZmax}{The maximum value of RZ (the rooting depth) to be explored (in mm)}
   \item{V1min}{The minimum value of V1 (the root proportion in the first soil layer) to be explored}
@@ -39,15 +28,28 @@ spwb_ldrOptimization(x, soil, meteo, psi_crit, opt_mode = 1, RZmin = 301, RZmax 
   \item{resolution}{An integer defining the number of values to obtain by discretization of the root parameters RZ and V1. The number of parameter combinations and therefore the computation cost increases increase with the square of resolution}
   \item{transformation}{Function to modify the size of Z intervals to be explored (by default, bins are equal).}
   \item{heat_stop}{An integer defining the number of days during to discard from the calculation of the optimal root distribution. Usefull if the soil water content initialization is not certain}
-  \item{explore_out}{A logical value. Are the values of average daily plant transpiration and minimum plant water potential to be returned?}
-  \item{verbose}{A logical value. Print the internal messages of the function?}
   \item{...}{Additional parameters to function \code{\link{spwb}}.}
+  \item{y}{The result of calling \code{spwb_ldrExploration}.}
+  \item{psi_crit}{A numerical vector of length iqual to the number of species in the plot containing the species values of water potential inducing hydraulic failure (in MPa). Use \code{NA} values to skip optimization for particular plant cohorts.}
+  \item{opt_mode}{Optimization mode:
+    \itemize{
+       \item{\code{opt_mode = 1} maximizes transpiration along the line of stress equal to \code{psi_crit} (Cabon et al. 2018). The optimization is based on the eco-hydrological equilibrium hypothesis (Eagleson, 1982), which is formulated here as the root distribution for which plant transpiration is maximized while the plant water potential is close to the species-defined critical value \code{psi_crit} (Cabon et al.,2018).}
+       \item{\code{opt_mode = 2} maximizes transpiration among combinations with stress according to \code{psi_crit}).}
+       \item{\code{opt_mode = 3} maximizes photosynthesis among combinations with stress according to \code{psi_crit}).}
+       \item{\code{opt_mode = 4} maximizes transpiration, subject to root construction constrains, among combinations with stress according to \code{psi_crit}).}
+       \item{\code{opt_mode = 5} maximizes photosynthesis, subject to root construction constrains, among combinations with stress according to \code{psi_crit}).}
+    }
+  }
+  \item{verbose}{A logical value. Print the internal messages of the function?}
 }
 \details{
-For each combination of the parameters RZ and V1 the function runs \code{spwb}, setting the total soil depth equal to RZ. The root proportion in each soil layer is derived from V1, the depth of the first soil layer (as defined in the argument \code{soil}) and RZ using the LDR root distribution model (Schenk and Jackson, 2002) and assuming that the depth containing 95 percent of the roots is equal to RZ. \code{psi_crit}, the species specific water potential inducing hydraulic failure, can be approached by the water potential inducing 50 percent of loss of conductance for the and gymnosperms and 88 percent for the angiosperms (Urli et al., 2013, Brodribb et al., 2010). Details of the hypothesis and limitations of the optimization method are given in Cabon et al. (under review).
+For each combination of the parameters RZ and V1 the function \code{spwb_ldrExploration} runs \code{spwb}, setting the total soil depth equal to RZ. The root proportion in each soil layer is derived from V1, the depth of the first soil layer (as defined in the argument \code{soil}) and RZ using the LDR root distribution model (Schenk and Jackson, 2002) and assuming that the depth containing 95 percent of the roots is equal to RZ.
+Function \code{spwb_ldrOptimization} takes the result of the exploration and tries to find optimum root distribution parameters. \code{psi_crit}, the species specific water potential inducing hydraulic failure, can be approached by the water potential inducing 50 percent of loss of conductance for the and gymnosperms and 88 percent for the angiosperms (Urli et al., 2013, Brodribb et al., 2010). Details of the hypothesis and limitations of the optimization method are given in Cabon et al. (2019).
 }
 \value{
-If \code{explore_out = FALSE} returns a data frame with containing the species index used in medfate, \code{psi_crit} and the otpimized values of V1 and the LDR parameters Z50 and Z95 (see \code{\link{root_ldrDistribution}}) and as many rows as the number of species. If \code{explore_out = TRUE} returns a list containing \code{optim}, the aforementioned data frame, and \code{explore_out}, a list containing two array with the values of average daily plant transpiration and the minimum plant water potential for each species and parameter combination.
+Function \code{spwb_ldrExploration} returns a list containing a list containing the explored RZ and V1 combinations as well as arrays with the values of average daily plant transpiration, average daily net photosynthesis and the minimum plant water potential for each cohort and parameter combination.
+
+Function \code{spwb_ldrOptimization}  returns a data frame with containing the species index used in medfate, \code{psi_crit} and the optimized values of V1 and the LDR parameters Z50 and Z95 (see \code{\link{root_ldrDistribution}}) and as many rows as the number of species. 
 }
 \references{
 Brodribb, T.J., Bowman, D.J.M.S., Nichols, S., Delzon, S., Burlett, R., 2010. Xylem function and growth rate interact to determine recovery rates after exposure to extreme water deficit. New Phytol. 188, 533–542. doi:10.1111/j.1469-8137.2010.03393.x
@@ -89,10 +91,14 @@ control = defaultControl()
 #Initialize input
 x = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
 
-#Run optimization
-spwb_ldrOptimization(x = x, soil = examplesoil, meteo = examplemeteo, 
-                     psi_crit = c(-2,-3,-4), elevation = 100)
-}
+#Run exploration
+y = spwb_ldrExploration(x = x, soil = examplesoil, meteo = examplemeteo, 
+                        elevation = 100)
 
+#Optimization under different modes
+spwb_ldrOptimization(y = y, psi_crit = c(-2,-3,-4), opt_mode = 1)
+spwb_ldrOptimization(y = y, psi_crit = c(-2,-3,-4), opt_mode = 2)
+spwb_ldrOptimization(y = y, psi_crit = c(-2,-3,-4), opt_mode = 3)
+}
 }
 

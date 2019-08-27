@@ -12,12 +12,10 @@
   function (y) uniroot((function (x) f(x) - y), lower = lower, upper = upper, extendInt = "yes")[1]
 }
 
-spwb_ldrOptimization<-function(x, soil, meteo, psi_crit, opt_mode = 1,
-                              RZmin = 301, RZmax = 4000, V1min = 0.01, V1max = 0.94, resolution = 20, 
-                              heat_stop = 0, transformation = "identity", explore_out = FALSE, verbose = FALSE, 
+spwb_ldrExploration<-function(x, soil, meteo, cohorts = NULL, 
+                              RZmin = 301, RZmax = 4000, V1min = 0.01, V1max = 0.94, resolution = 10, 
+                              heat_stop = 0, transformation = "identity", verbose = FALSE, 
                               ...) {
-  
-  if(length(psi_crit)!= nrow(x$above)) stop("The length of 'psi_crit' must be equal to the number of cohorts in 'x'.")
   # define the days to keep in the analysis
   op_days <- (heat_stop+1):nrow(meteo)
   
@@ -30,14 +28,14 @@ spwb_ldrOptimization<-function(x, soil, meteo, psi_crit, opt_mode = 1,
   }
   
   RZ_trans <- seq(trans(RZmin), trans(RZmax), length.out = resolution)
-  RZ <- unlist(sapply(RZ_trans, FUN = inverse_trans))
+  RZ <- as.numeric(unlist(sapply(RZ_trans, FUN = inverse_trans)))
   
   # the case where RZ = Z1 will create problems when using the LDR model -> remove if it exists
   Z1 <- soil$dVec[1]
   if(sum(RZ == Z1) > 0){
     if(verbose) cat("\nThe function to derive the root proportion in each soil layer is not defined for RZ = Z1 (depth of the first soil layer)\n",
-        "This value is removed\n", 
-        paste("Resolution is now\n", resolution-1))
+                    "This value is removed\n", 
+                    paste("Resolution is now\n", resolution-1))
     RZ <- RZ[-which(RZ == Z1)]
   }
   
@@ -68,7 +66,8 @@ spwb_ldrOptimization<-function(x, soil, meteo, psi_crit, opt_mode = 1,
   x$above$LAI_dead <- sum(x$above$LAI_dead)
   
   # Data outputs
-  An<-E <- PsiMin <- array(dim = c(nrow(x$above), length(V1), length(RZ)), dimnames = list(SP = x$cohorts$SP, V1 = V1, RZ = RZ))
+  if(is.null(cohorts)) cohorts = row.names(x$cohorts)
+  An<-E <- PsiMin <- array(dim = c(length(cohorts), length(V1), length(RZ)), dimnames = list(cohort = cohorts, V1 = V1, RZ = RZ))
   
   # Start loop
   cc <- which(mExplore == T, arr.ind = T)
@@ -76,11 +75,11 @@ spwb_ldrOptimization<-function(x, soil, meteo, psi_crit, opt_mode = 1,
   # Reset input
   spwb_resetInputs(x, soil)
   
-  spOptim = 1:nrow(x$above)
-  spOptim = spOptim[!is.na(psi_crit)] #Exclude from optimization those cohort for which NA is supplied as psi_crit
-  for(sp in spOptim){
-    SP <- x$cohorts$SP[sp]
-    cat(paste("Exploring root distribution of cohort", row.names(x$cohorts)[sp],"(", x$cohorts$Name[sp],"):\n"))
+  for(ci in 1:length(cohorts)){
+    coh = cohorts[ci]
+    sp = which(row.names(x$cohorts)==coh)
+    
+    cat(paste("Exploring root distribution of cohort", coh,"(", x$cohorts$Name[sp],"):\n"))
     
     x_1sp <- x
     x_1sp$cohorts <- x$cohorts[sp,,drop = FALSE]
@@ -149,13 +148,6 @@ spwb_ldrOptimization<-function(x, soil, meteo, psi_crit, opt_mode = 1,
         x_1sp$below$VGrhizo_kmax[1,] = x_1sp$below$V*sum(x$below$VGrhizo_kmax[sp,])
       }
       
-
-      # if(verbose) {
-      #   print(x_1sp)
-      #   print(s.)
-      # }
-      # Run the model
-      # if(verbose) x_1sp$control$verbose=T
       s_res <- spwb(x = x_1sp, meteo = meteo, soil = s., ...)
       
       # Outputs
@@ -167,96 +159,114 @@ spwb_ldrOptimization<-function(x, soil, meteo, psi_crit, opt_mode = 1,
         f
       }
       if(x_1sp$control$transpirationMode=="Granier") {
-        PsiMin[sp,i,j] <- mean(aggregate(s_res$PlantPsi[op_days], 
+        PsiMin[ci,i,j] <- mean(aggregate(s_res$PlantPsi[op_days], 
                                          by = list(years[op_days]),
                                          FUN = function(x) min(ma(x)))$x)
       } else {
-        PsiMin[sp,i,j] <- mean(aggregate(s_res$StemPsi[op_days], 
+        PsiMin[ci,i,j] <- mean(aggregate(s_res$StemPsi[op_days], 
                                          by = list(years[op_days]),
                                          FUN = function(x) min(ma(x)))$x)
       }
       # if(verbose) print(s_res$spwbInput)
-      E[sp,i,j] <- mean(s_res$PlantTranspiration[op_days], na.rm=T)
-      An[sp,i,j] <- mean(s_res$PlantPhotosynthesis[op_days], na.rm=T)
+      E[ci,i,j] <- mean(s_res$PlantTranspiration[op_days], na.rm=T)
+      An[ci,i,j] <- mean(s_res$PlantPhotosynthesis[op_days], na.rm=T)
       setTxtProgressBar(pb, row)
     }
     cat("\n")
   }
+  res <-list(cohorts = cohorts, RZ = RZ, V1 = V1, Z50 = Z50, E = E, An = An, PsiMin = PsiMin)
+  class(res)<-list("spwb_ldrExploration","list")
+  return(res)
+}
+
+spwb_ldrOptimization<-function(y, psi_crit, opt_mode = 1) {
   
-  # To see the variations of the root distribution in the different layers
-  # V_melt <- melt(V)
-  # for(l in 1:dim(V)[1]){
-  #   p <- ggplot(V_melt[V_melt$layer == l,], aes(x = RZ, y = V1, fill = value, z = value)) + geom_raster()+geom_contour()
-  #   print(p)
-  # }
-  # if(verbose) {
-  #   print(PsiMin)
-  #   print(E)
-  #   print(An)
-  # }
-  optim <- data.frame(psi_crit = psi_crit[1:length(x$cohorts$SP)], Z50 = NA, Z95 = NA, V1 = NA)
-  row.names(optim) = row.names(x$cohorts)
-  for (i in spOptim){
-    if(!is.na(psi_crit[i])){
-      psimin <- PsiMin[i,,]
-      e <- E[i,,]
-      an <- An[i,,]
-      if(opt_mode==1) {
-        # emax <- max(e)
-        # e[e >= emax-0.05*emax] <- emax - 0.05*emax
-        # cost <- (matrix(z, ncol = 1)%*%(1-v) + matrix(300, ncol = 1, nrow = length(z))%*%v)^(3/2)
-        supinf <- matrix(0, ncol = ncol(psimin), nrow = nrow(psimin))
-        supinf[psimin >= psi_crit[i]] <- 1
-        subselb <- rbind(supinf[-nrow(supinf),]-supinf[-1,], rep(0, ncol(supinf))) 
-        subselt <- rbind(rep(0, ncol(supinf)), supinf[-1,]-supinf[-nrow(supinf),]) 
-        subsell <- cbind(rep(0, nrow(supinf)), supinf[,-1]-supinf[,-ncol(supinf)])
-        subselr <- cbind(supinf[,-ncol(supinf)]-supinf[,-1], rep(0, nrow(supinf)))
-        sel <- matrix(F, ncol = ncol(psimin), nrow = nrow(psimin))
-        sel[subselb == 1 | subselt == 1 | subsell == 1 | subselr == 1] <- T
-        if(length(e[sel])==0) {
-          warning(paste("Psi value", psi_crit[i],"for cohort ",row.names(x$cohorts)[i],"not reached for any combination."))
-          optim[i,] <- NA
-        } else {
-          point <- which(sel & e == max(e[sel]), arr.ind = T)
-          optim$Z50[i] <- Z50[point[1], point[2]]
-          optim$V1[i] <- V1[point[1]]
-          optim$Z95[i] <- RZ[point[2]]
-        }
-      } else if(opt_mode==2) {
-        V1 = as.numeric(rownames(e))
-        RZ = as.numeric(colnames(e))
-        selPsi = (psimin > psi_crit[i]) # Select combinations with less stress than psi_crit
-        if(sum(selPsi)==0) selPsi = (psimin == max(psimin)) # If none, select combination of minimum stress
-        maxE = max(e[selPsi]) # Find maximum transpiration (among combinations selected)
-        sel2 = selPsi & (e >= maxE*0.95) # Select combinations with > 95% of maximum transpiration
-        points = as.data.frame(which(sel2, arr.ind = TRUE))
-        minZ = min(points$RZ, na.rm=T) # Minimum rooting depth
-        maxV1 = max(points$V1[points$RZ==minZ], na.rm=T) # Maximum V1
-        point = c(maxV1, minZ)
-        optim$Z50[i] <- Z50[point[1], point[2]]
-        optim$V1[i] <- V1[point[1]]
-        optim$Z95[i] <- RZ[point[2]]
-      } else if(opt_mode==3) {
-        V1 = as.numeric(rownames(an))
-        RZ = as.numeric(colnames(an))
-        selPsi = (psimin > psi_crit[i]) # Select combinations with less stress than psi_crit
-        if(sum(selPsi)==0) selPsi = (psimin == max(psimin)) # If none, select combination of minimum stress
-        maxAn = max(an[selPsi]) # Find maximum transpiration (among combinations selected)
-        sel2 = selPsi & (an >= maxAn*0.95) # Select combinations with > 95% of maximum photosynthesis
-        points = as.data.frame(which(sel2, arr.ind = TRUE))
-        minZ = min(points$RZ, na.rm=T) # Minimum rooting depth
-        maxV1 = max(points$V1[points$RZ==minZ], na.rm=T) # Maximum V1
-        point = c(maxV1, minZ)
+
+  E = y$E
+  An = y$An
+  PsiMin = y$PsiMin
+  V1 = y$V1
+  RZ = y$RZ
+  Z50 = y$Z50
+  cohorts = y$cohorts
+
+  if(length(psi_crit)!= length(cohorts)) stop("The length of 'psi_crit' must be equal to the number of cohorts in 'y'.")
+  
+  optim <- data.frame(psi_crit = psi_crit, Z50 = NA, Z95 = NA, V1 = NA)
+  row.names(optim) = cohorts
+  for (i in 1:length(cohorts)){
+    psimin <- PsiMin[i,,]
+    e <- E[i,,]
+    an <- An[i,,]
+    if(opt_mode==1) {
+      # emax <- max(e)
+      # e[e >= emax-0.05*emax] <- emax - 0.05*emax
+      # cost <- (matrix(z, ncol = 1)%*%(1-v) + matrix(300, ncol = 1, nrow = length(z))%*%v)^(3/2)
+      supinf <- matrix(0, ncol = ncol(psimin), nrow = nrow(psimin))
+      supinf[psimin >= psi_crit[i]] <- 1
+      subselb <- rbind(supinf[-nrow(supinf),]-supinf[-1,], rep(0, ncol(supinf))) 
+      subselt <- rbind(rep(0, ncol(supinf)), supinf[-1,]-supinf[-nrow(supinf),]) 
+      subsell <- cbind(rep(0, nrow(supinf)), supinf[,-1]-supinf[,-ncol(supinf)])
+      subselr <- cbind(supinf[,-ncol(supinf)]-supinf[,-1], rep(0, nrow(supinf)))
+      sel <- matrix(F, ncol = ncol(psimin), nrow = nrow(psimin))
+      sel[subselb == 1 | subselt == 1 | subsell == 1 | subselr == 1] <- T
+      if(length(e[sel])==0) {
+        warning(paste("Psi value", psi_crit[i],"for cohort ",row.names(x$cohorts)[i],"not reached for any combination."))
+        optim[i,] <- NA
+      } else {
+        point <- which(sel & e == max(e[sel]), arr.ind = T)
         optim$Z50[i] <- Z50[point[1], point[2]]
         optim$V1[i] <- V1[point[1]]
         optim$Z95[i] <- RZ[point[2]]
       }
+    } 
+    else if(opt_mode==2) {
+      selPsi = (psimin > psi_crit[i]) # Select combinations with less stress than psi_crit
+      if(sum(selPsi)==0) selPsi = (psimin == max(psimin)) # If none, select combination of minimum stress
+      maxE = max(e[selPsi]) # Find maximum transpiration (among combinations selected)
+      sel2 = selPsi & (e == maxE) # Select combination with maximum transpiration
+      point = which(sel2, arr.ind = TRUE)
+      optim$Z50[i] <- Z50[point[1], point[2]]
+      optim$V1[i] <- V1[point[1]]
+      optim$Z95[i] <- RZ[point[2]]
+    } 
+    else if(opt_mode==3) {
+      selPsi = (psimin > psi_crit[i]) # Select combinations with less stress than psi_crit
+      if(sum(selPsi)==0) selPsi = (psimin == max(psimin)) # If none, select combination of minimum stress
+      maxAn = max(an[selPsi]) # Find maximum transpiration (among combinations selected)
+      sel2 = selPsi & (an == maxAn) # Select combinations with maximum photosynthesis
+      point = which(sel2, arr.ind = TRUE)
+      optim$Z50[i] <- Z50[point[1], point[2]]
+      optim$V1[i] <- V1[point[1]]
+      optim$Z95[i] <- RZ[point[2]]
     }
-    else{
-      optim[i,c("Z50", "Z95")] <- NA
-    }
+    else if(opt_mode==4) {
+      selPsi = (psimin > psi_crit[i]) # Select combinations with less stress than psi_crit
+      if(sum(selPsi)==0) selPsi = (psimin == max(psimin)) # If none, select combination of minimum stress
+      maxE = max(e[selPsi]) # Find maximum transpiration (among combinations selected)
+      sel2 = selPsi & (e >= maxE*0.95) # Select combinations with > 95% of maximum transpiration
+      points = as.data.frame(which(sel2, arr.ind = TRUE))
+      minZ = min(points$RZ, na.rm=T) # Minimum rooting depth
+      maxV1 = max(points$V1[points$RZ==minZ], na.rm=T) # Maximum V1
+      point = c(maxV1, minZ)
+      optim$Z50[i] <- Z50[point[1], point[2]]
+      optim$V1[i] <- V1[point[1]]
+      optim$Z95[i] <- RZ[point[2]]
+    } 
+    else if(opt_mode==5) {
+      selPsi = (psimin > psi_crit[i]) # Select combinations with less stress than psi_crit
+      if(sum(selPsi)==0) selPsi = (psimin == max(psimin)) # If none, select combination of minimum stress
+      maxAn = max(an[selPsi]) # Find maximum transpiration (among combinations selected)
+      sel2 = selPsi & (an >= maxAn*0.95) # Select combinations with > 95% of maximum photosynthesis
+      points = as.data.frame(which(sel2, arr.ind = TRUE))
+      minZ = min(points$RZ, na.rm=T) # Minimum rooting depth
+      maxV1 = max(points$V1[points$RZ==minZ], na.rm=T) # Maximum V1
+      point = c(maxV1, minZ)
+      optim$Z50[i] <- Z50[point[1], point[2]]
+      optim$V1[i] <- V1[point[1]]
+      optim$Z95[i] <- RZ[point[2]]
+    } 
   }
-  if(explore_out) return(list(optim=optim, explore_out=list(E = E, An = An, PsiMin = PsiMin)))
   return(optim)
 }
 
