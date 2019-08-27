@@ -230,7 +230,7 @@ spwb_ldrOptimization<-function(x, soil, meteo, psi_crit, opt_mode = 1,
         maxE = max(e[selPsi]) # Find maximum transpiration (among combinations selected)
         sel2 = selPsi & (e >= maxE*0.95) # Select combinations with > 95% of maximum transpiration
         points = as.data.frame(which(sel2, arr.ind = TRUE))
-        minZ = min(points$RZ, na.rm=T) # Mimimum rooting depth
+        minZ = min(points$RZ, na.rm=T) # Minimum rooting depth
         maxV1 = max(points$V1[points$RZ==minZ], na.rm=T) # Maximum V1
         point = c(maxV1, minZ)
         optim$Z50[i] <- Z50[point[1], point[2]]
@@ -242,9 +242,9 @@ spwb_ldrOptimization<-function(x, soil, meteo, psi_crit, opt_mode = 1,
         selPsi = (psimin > psi_crit[i]) # Select combinations with less stress than psi_crit
         if(sum(selPsi)==0) selPsi = (psimin == max(psimin)) # If none, select combination of minimum stress
         maxAn = max(an[selPsi]) # Find maximum transpiration (among combinations selected)
-        sel2 = selPsi & (an >= maxAn*0.95) # Select combinations with > 95% of maximum transpiration
+        sel2 = selPsi & (an >= maxAn*0.95) # Select combinations with > 95% of maximum photosynthesis
         points = as.data.frame(which(sel2, arr.ind = TRUE))
-        minZ = min(points$RZ, na.rm=T) # Mimimum rooting depth
+        minZ = min(points$RZ, na.rm=T) # Minimum rooting depth
         maxV1 = max(points$V1[points$RZ==minZ], na.rm=T) # Maximum V1
         point = c(maxV1, minZ)
         optim$Z50[i] <- Z50[point[1], point[2]]
@@ -256,7 +256,7 @@ spwb_ldrOptimization<-function(x, soil, meteo, psi_crit, opt_mode = 1,
       optim[i,c("Z50", "Z95")] <- NA
     }
   }
-  if(explore_out) return(list(optim=optim, explore_out=list(E = E, PsiMin = PsiMin)))
+  if(explore_out) return(list(optim=optim, explore_out=list(E = E, An = An, PsiMin = PsiMin)))
   return(optim)
 }
 
