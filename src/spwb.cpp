@@ -441,6 +441,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   bool verbose = control["verbose"];
   bool subdailyResults = control["subdailyResults"];
   bool leafPhenology = control["leafPhenology"];
+  bool unlimitedSoilWater = control["unlimitedSoilWater"];
   checkspwbInput(x, soil, transpirationMode, soilFunctions);
   
   //Store input
@@ -620,6 +621,10 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
         }
       }
 
+      if(unlimitedSoilWater) {
+        NumericVector W = soil["W"];
+        for(int h=0;h<W.size();h++) W[h] = 1.0;
+      }
       
       //1. Phenology and leaf fall
       if(leafPhenology) updateLeaves(x, DOY[i], MeanTemperature[i], wind);

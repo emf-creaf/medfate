@@ -7,7 +7,8 @@ Sensitivity analysis for soil plant water balance simulations
 Performs a set of calls to \code{\link{spwb}} with the aim to determine the sensitivity to particular parameters.
 }
 \usage{
-spwb_sensitivity(x, soil, meteo, paramType = "above", paramName = "LAI_live", 
+spwb_sensitivity(x, soil, meteo, 
+                 paramType = "above", paramName = "LAI_live", cohort = NA,
                  p_change = c(-80,-40,-20,0,20,40,80), summary.fun = NULL, simplify=TRUE,...)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -17,12 +18,23 @@ spwb_sensitivity(x, soil, meteo, paramType = "above", paramName = "LAI_live",
   \item{meteo}{A data frame with daily meteorological data series (see \code{\link{spwb}}).}
   \item{paramType}{Data frame of \code{x} to modify.}
   \item{paramName}{Name of the parameter to modify.}
+  \item{cohort}{Integer with the cohort to modify (if \code{NA} parameter values of all cohort are modified).}
   \item{p_change}{Numerical vector with percentages of change.}
   \item{summary.fun}{Summary function to be applied to the results of each simulation. }
   \item{simplify}{Whether the result of \code{summary.fun} should be simplified (see \code{\link{sapply}}). }
   \item{...}{Additional parameters to function \code{\link{spwb}}.}
 }
 \details{
+Due to parameter dependence, modifying some parameters affects others:
+\itemize{
+  \item{Setting \code{paramName = "Z50/Z95"} affects \code{below$V}, \code{below$VCroot_kmax} and \code{below$VGrhizo_kmax}.}
+  \item{Modifying \code{LAI_live} also affects \code{LAI_expanded}.}
+  \item{Modifying \code{VCroot_kmax} from \code{paramsTransp} affects both \code{paramsTransp$VCroot_kmax} and \code{below$VCroot_kmax}.}
+  \item{Modifying \code{c} affects simultaneously \code{paramsTransp$VCleaf_c}, \code{paramsTransp$VCstem_c} and \code{paramsTransp$VCroot_c}.}
+  \item{Modifying \code{d} affects simultaneously \code{paramsTransp$VCleaf_d}, \code{paramsTransp$VCstem_d} and \code{paramsTransp$VCroot_d}.}
+  \item{Modifying \code{Plantt_kmax} from \code{paramsTransp} affects \code{paramsTransp$VCleaf_kmax}, \code{paramsTransp$VCstem_kmax}, \code{paramsTransp$VCroot_kmax} and \code{below$VCroot_kmax}.}
+  \item{Setting \code{paramName = "Vmax298/Jmax298"} affects both \code{paramsTransp$Vmax298} and \code{paramsTransp$Jmax298}.}
+}
 
 }
 \value{

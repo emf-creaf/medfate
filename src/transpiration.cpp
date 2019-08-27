@@ -224,7 +224,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
     LAIcell += (LAIphe[c]+LAIdead[c]);
     LAIcelldead += LAIdead[c];
     LAIcellmax += LAIlive[c];
-    if(canopyHeight<H[c]) canopyHeight = H[c];
+    if((canopyHeight<H[c]) & (LAIphe[c]>0.0)) canopyHeight = H[c];
   }
   int nz = ceil(canopyHeight/verticalLayerSize); //Number of vertical layers
   NumericVector z(nz+1,0.0);

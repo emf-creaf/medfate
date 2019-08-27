@@ -68,10 +68,13 @@ spwb_ldrOptimization<-function(x, soil, meteo, psi_crit, opt_mode = 1,
   x$above$LAI_dead <- sum(x$above$LAI_dead)
   
   # Data outputs
-  E <- PsiMin <- array(dim = c(nrow(x$above), length(V1), length(RZ)), dimnames = list(SP = x$cohorts$SP, V1 = V1, RZ = RZ))
+  An<-E <- PsiMin <- array(dim = c(nrow(x$above), length(V1), length(RZ)), dimnames = list(SP = x$cohorts$SP, V1 = V1, RZ = RZ))
   
   # Start loop
   cc <- which(mExplore == T, arr.ind = T)
+  
+  # Reset input
+  spwb_resetInputs(x, soil)
   
   spOptim = 1:nrow(x$above)
   spOptim = spOptim[!is.na(psi_crit)] #Exclude from optimization those cohort for which NA is supplied as psi_crit
@@ -80,13 +83,31 @@ spwb_ldrOptimization<-function(x, soil, meteo, psi_crit, opt_mode = 1,
     cat(paste("Exploring root distribution of cohort", row.names(x$cohorts)[sp],"(", x$cohorts$Name[sp],"):\n"))
     
     x_1sp <- x
-    x_1sp$cohorts <- x_1sp$cohorts[sp,]
-    x_1sp$above <- x_1sp$above[sp,]
-    x_1sp$paramsBase <- x_1sp$paramsBase[sp,] 
-    x_1sp$paramsTransp <- x_1sp$paramsTransp[sp,] 
-    x_1sp$Transpiration <- x_1sp$Transpiration[sp] 
-    x_1sp$Photosynthesis <- x_1sp$Photosynthesis[sp] 
-    x_1sp$PLC <- x_1sp$PLC[sp] 
+    x_1sp$cohorts <- x$cohorts[sp,,drop = FALSE]
+    x_1sp$above <- x$above[sp,,drop = FALSE]
+    x_1sp$below <- x$below
+    x_1sp$below$V <- x$below$V[sp,,drop = FALSE] 
+    x_1sp$paramsBase <- x$paramsBase[sp,,drop = FALSE] 
+    x_1sp$paramsTransp <- x$paramsTransp[sp,,drop = FALSE] 
+    x_1sp$Transpiration <- x$Transpiration[sp,drop = FALSE] 
+    x_1sp$Photosynthesis <- x$Photosynthesis[sp,drop = FALSE] 
+    if(x_1sp$control$transpirationMode=="Granier") {
+      x_1sp$PLC <- x$PLC[sp,drop = FALSE] 
+    } else {
+      x_1sp$below$VGrhizo_kmax <- x$below$V[sp,,drop = FALSE] 
+      x_1sp$below$VCroot_kmax <- x$below$V[sp,,drop = FALSE] 
+      x_1sp$paramsAnatomy <- x$paramsAnatomy[sp,,drop = FALSE] 
+      x_1sp$paramsWaterStorage <- x$paramsWaterStorage[sp,,drop = FALSE] 
+      x_1sp$PLCstem <- x$PLCstem[sp,drop = FALSE] 
+      x_1sp$Einst <- x$Einst[sp,drop = FALSE] 
+      x_1sp$psiRhizo <- x$psiRhizo[sp,,drop = FALSE] 
+      x_1sp$psiRootCrown <- x$psiRootCrown[sp,drop = FALSE] 
+      x_1sp$psiSympStem <- x$psiSympStem[sp,drop = FALSE] 
+      x_1sp$psiStem1 <- x$psiStem1[sp,drop = FALSE] 
+      x_1sp$psiStem2 <- x$psiStem2[sp,drop = FALSE] 
+      x_1sp$psiSympLeaf <- x$psiSympLeaf[sp,drop = FALSE] 
+      x_1sp$psiLeaf <- x$psiLeaf[sp,drop = FALSE] 
+    }
     x_1sp$control$verbose <- F
     
     pb <- txtProgressBar(max = nrow(cc), style = 3)
@@ -118,11 +139,24 @@ spwb_ldrOptimization<-function(x, soil, meteo, psi_crit, opt_mode = 1,
       s.[["usda_Type"]] <- s.[["usda_Type"]][1:nl]
       
       V[,i,j] <- 0
-      x_1sp$below$V <- root_ldrDistribution(Z50 = Z50[i,j], Z95 = RZ[j], d=s.$dVec)
+      x_1sp$below$V = x$below$V[sp,1:nl,drop = FALSE]
+      x_1sp$below$V[1,] <- root_ldrDistribution(Z50 = Z50[i,j], Z95 = RZ[j], d=s.$dVec)
       V[1:length(x_1sp$below$V),i,j] <- x_1sp$below$V
+      if(x_1sp$control$transpirationMode=="Sperry"){
+        x_1sp$below$VCroot_kmax = x$below$VCroot_kmax[sp,1:nl,drop = FALSE]
+        x_1sp$below$VGrhizo_kmax = x$below$VGrhizo_kmax[sp,1:nl,drop = FALSE]
+        x_1sp$below$VCroot_kmax[1,] = x_1sp$paramsTransp$VCroot_kmax*root_xylemConductanceProportions(x_1sp$below$V, s.$dVec)
+        x_1sp$below$VGrhizo_kmax[1,] = x_1sp$below$V*sum(x$below$VGrhizo_kmax[sp,])
+      }
       
+
+      # if(verbose) {
+      #   print(x_1sp)
+      #   print(s.)
+      # }
       # Run the model
-      spwb <- spwb(x = x_1sp, meteo = meteo, soil = s., ...)
+      # if(verbose) x_1sp$control$verbose=T
+      s_res <- spwb(x = x_1sp, meteo = meteo, soil = s., ...)
       
       # Outputs
       years <- substr(as.Date(rownames(meteo)), start = 1, stop = 4)
@@ -132,10 +166,18 @@ spwb_ldrOptimization<-function(x, soil, meteo, psi_crit, opt_mode = 1,
         # print(sum(is.na(f)))
         f
       }
-      PsiMin[sp,i,j] <- mean(aggregate(spwb$PlantPsi[op_days], 
-                                       by = list(years[op_days]),
-                                       FUN = function(x) min(ma(x)))$x)
-      E[sp,i,j] <- mean(spwb$PlantTranspiration[op_days], na.rm=T)
+      if(x_1sp$control$transpirationMode=="Granier") {
+        PsiMin[sp,i,j] <- mean(aggregate(s_res$PlantPsi[op_days], 
+                                         by = list(years[op_days]),
+                                         FUN = function(x) min(ma(x)))$x)
+      } else {
+        PsiMin[sp,i,j] <- mean(aggregate(s_res$StemPsi[op_days], 
+                                         by = list(years[op_days]),
+                                         FUN = function(x) min(ma(x)))$x)
+      }
+      # if(verbose) print(s_res$spwbInput)
+      E[sp,i,j] <- mean(s_res$PlantTranspiration[op_days], na.rm=T)
+      An[sp,i,j] <- mean(s_res$PlantPhotosynthesis[op_days], na.rm=T)
       setTxtProgressBar(pb, row)
     }
     cat("\n")
@@ -147,13 +189,18 @@ spwb_ldrOptimization<-function(x, soil, meteo, psi_crit, opt_mode = 1,
   #   p <- ggplot(V_melt[V_melt$layer == l,], aes(x = RZ, y = V1, fill = value, z = value)) + geom_raster()+geom_contour()
   #   print(p)
   # }
-  
+  # if(verbose) {
+  #   print(PsiMin)
+  #   print(E)
+  #   print(An)
+  # }
   optim <- data.frame(psi_crit = psi_crit[1:length(x$cohorts$SP)], Z50 = NA, Z95 = NA, V1 = NA)
   row.names(optim) = row.names(x$cohorts)
   for (i in spOptim){
     if(!is.na(psi_crit[i])){
       psimin <- PsiMin[i,,]
       e <- E[i,,]
+      an <- An[i,,]
       if(opt_mode==1) {
         # emax <- max(e)
         # e[e >= emax-0.05*emax] <- emax - 0.05*emax
@@ -175,7 +222,7 @@ spwb_ldrOptimization<-function(x, soil, meteo, psi_crit, opt_mode = 1,
           optim$V1[i] <- V1[point[1]]
           optim$Z95[i] <- RZ[point[2]]
         }
-      } else {
+      } else if(opt_mode==2) {
         V1 = as.numeric(rownames(e))
         RZ = as.numeric(colnames(e))
         selPsi = (psimin > psi_crit[i]) # Select combinations with less stress than psi_crit
@@ -183,8 +230,22 @@ spwb_ldrOptimization<-function(x, soil, meteo, psi_crit, opt_mode = 1,
         maxE = max(e[selPsi]) # Find maximum transpiration (among combinations selected)
         sel2 = selPsi & (e >= maxE*0.95) # Select combinations with > 95% of maximum transpiration
         points = as.data.frame(which(sel2, arr.ind = TRUE))
-        minZ = min(points$RZ) # Mimimum rooting depth
-        maxV1 = max(points$V1[points$RZ==minZ]) # Maximum V1
+        minZ = min(points$RZ, na.rm=T) # Mimimum rooting depth
+        maxV1 = max(points$V1[points$RZ==minZ], na.rm=T) # Maximum V1
+        point = c(maxV1, minZ)
+        optim$Z50[i] <- Z50[point[1], point[2]]
+        optim$V1[i] <- V1[point[1]]
+        optim$Z95[i] <- RZ[point[2]]
+      } else if(opt_mode==3) {
+        V1 = as.numeric(rownames(an))
+        RZ = as.numeric(colnames(an))
+        selPsi = (psimin > psi_crit[i]) # Select combinations with less stress than psi_crit
+        if(sum(selPsi)==0) selPsi = (psimin == max(psimin)) # If none, select combination of minimum stress
+        maxAn = max(an[selPsi]) # Find maximum transpiration (among combinations selected)
+        sel2 = selPsi & (an >= maxAn*0.95) # Select combinations with > 95% of maximum transpiration
+        points = as.data.frame(which(sel2, arr.ind = TRUE))
+        minZ = min(points$RZ, na.rm=T) # Mimimum rooting depth
+        maxV1 = max(points$V1[points$RZ==minZ], na.rm=T) # Maximum V1
         point = c(maxV1, minZ)
         optim$Z50[i] <- Z50[point[1], point[2]]
         optim$V1[i] <- V1[point[1]]

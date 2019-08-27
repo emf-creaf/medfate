@@ -181,8 +181,8 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
   } 
   type = match.arg(type,TYPES)  
   if(is.null(xlab)) xlab = ""  
-
-  else if(type=="SoilPsi") {
+  
+  if(type=="SoilPsi") {
     PsiM = Soil[,paste("psi",1:nlayers,sep=".")]
     if(is.null(ylab)) ylab = "Soil water potential (MPa)"    
     return(.multiple_dynamics(as.matrix(PsiM),  xlab = xlab, ylab = ylab, ylim = ylim,
@@ -400,7 +400,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(is.null(ylab)) ylab = expression(paste("Plant transpiration per leaf area  ",(L%.%m^{-2})))
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
-  if(type=="PlantWaterBalance") {
+  else if(type=="PlantWaterBalance") {
     OM = x$PlantWaterBalance
     if(bySpecies) {
       OM = t(apply(OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
