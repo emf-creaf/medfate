@@ -28,6 +28,10 @@ spwb_sensitivity<-function(x, soil, meteo,
       xi$above$LAI_live[cohort] =xi$above$LAI_live[cohort]*f
       xi$above$LAI_expanded[cohort] =xi$above$LAI_expanded[cohort]*f
     } 
+    else if(paramName=="WaterStorage") {
+      xi$paramsWaterStorage$Vsapwood[cohort] =xi$paramsWaterStorage$Vsapwood[cohort]*f
+      xi$paramsWaterStorage$Vleaf[cohort] =xi$paramsWaterStorage$Vleaf[cohort]*f
+    } 
     else if(paramName=="VCroot_kmax") {
       xi$paramsTransp$VCroot_kmax[cohort] = xi$paramsTransp$VCroot_kmax[cohort]*f
       xi$below$VCroot_kmax[cohort, ] = xi$below$VCroot_kmax[cohort, ]*f
