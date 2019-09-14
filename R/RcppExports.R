@@ -801,8 +801,16 @@ fuel_windAdjustmentFactor <- function(topShrubHeight, bottomCanopyHeight, topCan
     .Call(`_medfate_windSpeedAtHeightOverCanopy`, z, wind20H, canopyHeight)
 }
 
+wind_windSpeedMassmanExtinction <- function(z, wind20H, LAIc, canopyHeight) {
+    .Call(`_medfate_windSpeedMassmanExtinction`, z, wind20H, LAIc, canopyHeight)
+}
+
 .windExtinctionProfile <- function(z, wind20H, LAIc, canopyHeight) {
     .Call(`_medfate_windExtinctionProfile`, z, wind20H, LAIc, canopyHeight)
+}
+
+wind_aerodynamicResistance <- function(canopyHeight, wind) {
+    .Call(`_medfate_aerodynamicResistance`, canopyHeight, wind)
 }
 
 # Register entry points for exported C++ functions
