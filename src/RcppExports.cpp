@@ -3821,6 +3821,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// windSpeedMassmanExtinction
+double windSpeedMassmanExtinction(double z, double wind20H, double LAIc, double canopyHeight);
+RcppExport SEXP _medfate_windSpeedMassmanExtinction(SEXP zSEXP, SEXP wind20HSEXP, SEXP LAIcSEXP, SEXP canopyHeightSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type z(zSEXP);
+    Rcpp::traits::input_parameter< double >::type wind20H(wind20HSEXP);
+    Rcpp::traits::input_parameter< double >::type LAIc(LAIcSEXP);
+    Rcpp::traits::input_parameter< double >::type canopyHeight(canopyHeightSEXP);
+    rcpp_result_gen = Rcpp::wrap(windSpeedMassmanExtinction(z, wind20H, LAIc, canopyHeight));
+    return rcpp_result_gen;
+END_RCPP
+}
 // windExtinctionProfile
 NumericVector windExtinctionProfile(NumericVector z, double wind20H, double LAIc, double canopyHeight);
 RcppExport SEXP _medfate_windExtinctionProfile(SEXP zSEXP, SEXP wind20HSEXP, SEXP LAIcSEXP, SEXP canopyHeightSEXP) {
@@ -3832,6 +3846,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type LAIc(LAIcSEXP);
     Rcpp::traits::input_parameter< double >::type canopyHeight(canopyHeightSEXP);
     rcpp_result_gen = Rcpp::wrap(windExtinctionProfile(z, wind20H, LAIc, canopyHeight));
+    return rcpp_result_gen;
+END_RCPP
+}
+// aerodynamicResistance
+double aerodynamicResistance(double canopyHeight, double wind);
+RcppExport SEXP _medfate_aerodynamicResistance(SEXP canopyHeightSEXP, SEXP windSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type canopyHeight(canopyHeightSEXP);
+    Rcpp::traits::input_parameter< double >::type wind(windSEXP);
+    rcpp_result_gen = Rcpp::wrap(aerodynamicResistance(canopyHeight, wind));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4123,7 +4149,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_shelteredMidflameWindSpeed", (DL_FUNC) &_medfate_shelteredMidflameWindSpeed, 3},
     {"_medfate_windAdjustmentFactor", (DL_FUNC) &_medfate_windAdjustmentFactor, 4},
     {"_medfate_windSpeedAtHeightOverCanopy", (DL_FUNC) &_medfate_windSpeedAtHeightOverCanopy, 3},
+    {"_medfate_windSpeedMassmanExtinction", (DL_FUNC) &_medfate_windSpeedMassmanExtinction, 4},
     {"_medfate_windExtinctionProfile", (DL_FUNC) &_medfate_windExtinctionProfile, 4},
+    {"_medfate_aerodynamicResistance", (DL_FUNC) &_medfate_aerodynamicResistance, 2},
     {"_medfate_RcppExport_registerCCallable", (DL_FUNC) &_medfate_RcppExport_registerCCallable, 0},
     {NULL, NULL, 0}
 };

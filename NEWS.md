@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 0.8.7
+- Corrections to energy balance for zero LAI (deciduous species)
+
 # Version 0.8.6
 - New function 'spwb_sensitivity' for sensitivity analyses
 - New control parameter 'unlimitedSoilWater'
