@@ -224,7 +224,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
     LAIcell += (LAIphe[c]+LAIdead[c]);
     LAIcelldead += LAIdead[c];
     LAIcellmax += LAIlive[c];
-    if((canopyHeight<H[c]) & (LAIphe[c]>0.0)) canopyHeight = H[c];
+    if((canopyHeight<H[c]) & ((LAIphe[c]+LAIdead[c])>0.0)) canopyHeight = H[c];
   }
   int nz = ceil(canopyHeight/verticalLayerSize); //Number of vertical layers
   NumericVector z(nz+1,0.0);
@@ -842,58 +842,36 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
     //Soil LWR emmission
     LWRsoilout[n] = emm_LWR_soil[n];
 
-    //IF LAI < 0.2 then canopy is assumed thermically coupled to atm
-    if(LAIcell > 0.2) {
-      
-      //Proportion of the canopy exchanging LWR radiation  as the fraction of incoming LWR
-      double canLWRexchprop = abs_LWR_can[n]/lwdr[n];
-      // Rcout<<canLWRexchprop<<"\n";
-      //Latent heat (evaporation of intercepted + transpiration)
-      double canEvapStep = abs_SWR_can[n]*(canopyEvaporation/sum(abs_SWR_can));
-      double LEwat = (1e6)*meteoland::utils_latentHeatVaporisation(Tcan[n])*(sum(Einst(_,n)) + canEvapStep)/tstep;
-      LEcan_heat[n] = LEwat; 
-      //Canopy longwave emmission
-      LWRcanout[n] = LWR_emmcan*canLWRexchprop;
-      //Canopy convective heat exchange
-      Hcan_heat[n] = (meteoland::utils_airDensity(Tatm[n],Patm)*Cp_JKG*(Tcan[n]-Tatm[n]))/RAcan;
-      
-      //Soil-canopy turbulent heat exchange
-      Hcansoil[n] = (meteoland::utils_airDensity(Tcan[n],Patm)*Cp_JKG*(Tcan[n]-Tsoil[0]))/RAsoil;
-      //Soil-canopy heat exchange
-      LWRsoilcan[n] =  LWRsoilout[n]*canLWRexchprop;
-      double G = LWRcanout[n] - LWRsoilcan[n] + Hcansoil[n]; //Only include a fraction equal to absorption
-      //Canopy temperature changes
-      Ebal[n] = abs_SWR_can[n]+abs_LWR_can[n] - LWRcanout[n] - LEcan_heat[n] - Hcan_heat[n] - G;
-      double canopyThermalCapacity = 0.5*(0.8*LAIcellmax + 1.2*LAIcell)*thermalCapacityLAI; //Avoids zero capacity for winter deciduous
-      double Tcannext = Tcan[n]+ std::max(-3.0, std::min(3.0, tstep*Ebal[n]/canopyThermalCapacity)); //Avoids changes in temperature that are too fast
-      if(n<(ntimesteps-1)) Tcan[n+1] = Tcannext;
-
-      //Soil energy balance including exchange with canopy
-      Ebalsoil[n] = abs_SWR_soil[n] + abs_LWR_soil[n] + LWRcanout[n] + Hcansoil[n] - LEsoil_heat[n] - LWRsoilout[n]; //Here we use all energy escaping to atmosphere
-            
-      //save canopy temperature
-      canopyParams["Temp"] = Tcannext;
-    } else {
-      
-      //Exclude canopy from energy balance
-      LEcan_heat[n] = NA_REAL;
-      LWRcanout[n] = NA_REAL;
-      Hcan_heat[n] = NA_REAL;
-      Hcansoil[n] = NA_REAL;
-      LWRsoilcan[n] = NA_REAL;
-      Ebal[n] = NA_REAL;
-      
-      //Soil-atm turbulent heat exchange
-      Hcansoil[n] = (meteoland::utils_airDensity(Tatm[n],Patm)*Cp_JKG*(Tatm[n]-Tsoil[0]))/RAsoil;
-      
-      //Soil energy balance
-      if(SWE>0.0) abs_SWR_soil[n] = 0.0; //Set SWR absorbed by soil to zero if snow pack is present
-      Ebalsoil[n] = abs_SWR_soil[n] + abs_LWR_soil[n] + Hcansoil[n] - LEsoil_heat[n] - LWRsoilout[n]; //Here we use all energy escaping to atmosphere
-      
-      Tcan = Tatm[n];
-      //save canopy temperature
-      canopyParams["Temp"] = Tatm[n];
-    }
+    //Proportion of the canopy exchanging LWR radiation  as the fraction of incoming LWR
+    double canLWRexchprop = abs_LWR_can[n]/lwdr[n];
+    // Rcout<<canLWRexchprop<<"\n";
+    //Latent heat (evaporation of intercepted + transpiration)
+    double canEvapStep = abs_SWR_can[n]*(canopyEvaporation/sum(abs_SWR_can));
+    double LEwat = (1e6)*meteoland::utils_latentHeatVaporisation(Tcan[n])*(sum(Einst(_,n)) + canEvapStep)/tstep;
+    LEcan_heat[n] = LEwat; 
+    //Canopy longwave emmission
+    LWRcanout[n] = LWR_emmcan*canLWRexchprop;
+    //Canopy convective heat exchange
+    Hcan_heat[n] = (meteoland::utils_airDensity(Tatm[n],Patm)*Cp_JKG*(Tcan[n]-Tatm[n]))/RAcan;
+    
+    //Soil-canopy turbulent heat exchange
+    Hcansoil[n] = (meteoland::utils_airDensity(Tcan[n],Patm)*Cp_JKG*(Tcan[n]-Tsoil[0]))/RAsoil;
+    //Soil-canopy heat exchange
+    LWRsoilcan[n] =  LWRsoilout[n]*canLWRexchprop;
+    double G = LWRcanout[n] - LWRsoilcan[n] + Hcansoil[n]; //Only include a fraction equal to absorption
+    //Canopy temperature changes
+    Ebal[n] = abs_SWR_can[n]+abs_LWR_can[n] - LWRcanout[n] - LEcan_heat[n] - Hcan_heat[n] - G;
+    double canopyThermalCapacity = 0.5*(0.8*LAIcellmax + 1.2*LAIcell)*thermalCapacityLAI; //Avoids zero capacity for winter deciduous
+    double Tcannext = Tcan[n]+ std::max(-3.0, std::min(3.0, tstep*Ebal[n]/canopyThermalCapacity)); //Avoids changes in temperature that are too fast
+    if(n<(ntimesteps-1)) Tcan[n+1] = Tcannext;
+    
+    //Soil energy balance including exchange with canopy
+    Ebalsoil[n] = abs_SWR_soil[n] + abs_LWR_soil[n] + LWRcanout[n] + Hcansoil[n] - LEsoil_heat[n] - LWRsoilout[n]; //Here we use all energy escaping to atmosphere
+    
+    //save canopy temperature
+    canopyParams["Temp"] = Tcannext;
+    
+   
     //Soil temperature changes
     NumericVector soilTchange = temperatureChange(dVec, Tsoil, sand, clay, W, Theta_FC, Ebalsoil[n]);
     for(int l=0;l<nlayers;l++) Tsoil[l] = Tsoil[l] + (soilTchange[l]*tstep);
