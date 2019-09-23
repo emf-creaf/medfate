@@ -4,6 +4,7 @@ spwb_sensitivity<-function(x, soil, meteo,
   n = length(p_change)
   l = vector("list", n)
   names(l) = paste0(ifelse(p_change>0,"+", ""),p_change, "%")
+  fracRootResistance = x$control$fracRootResistance
   if(is.na(cohort)) cohort = 1:nrow(x$cohorts)
   cat("Running spwb simulations: ")
   for(i in 1:n) {
@@ -28,6 +29,27 @@ spwb_sensitivity<-function(x, soil, meteo,
       xi$above$LAI_live[cohort] =xi$above$LAI_live[cohort]*f
       xi$above$LAI_expanded[cohort] =xi$above$LAI_expanded[cohort]*f
     } 
+    else if(paramName=="Al2As") {
+      xi$paramsAnatomy$Al2As[cohort] =xi$paramsAnatomy$Al2As[cohort]*f
+      xi$paramsWaterStorage$Vsapwood[cohort] =xi$paramsWaterStorage$Vsapwood[cohort]/f
+      xi$paramsTransp$VCstem_kmax[cohort] = xi$paramsTransp$VCstem_kmax[cohort]/f
+      prev = xi$paramsTransp$VCroot_kmax
+      #Recalculate krootmax
+      if(!is.na(fracRootResistance)) { 
+        rstem = (1.0/xi$paramsTransp$VCstem_kmax[cohort])
+        rleaf = (1.0/xi$paramsTransp$VCleaf_kmax[cohort])
+        rtot = (rstem+rleaf)/(1.0 - fracRootResistance)
+        xi$paramsTransp$VCroot_kmax[cohort] =  1.0/(rtot - rstem - rleaf)
+      } else {
+        xi$paramsTransp$VCroot_kmax[cohort] = xi$paramsTransp$VCroot_kmax[cohort]/f
+      }
+      #Update krootmax for soil layers
+      for(ci in cohort) {
+        xi$below$VCroot_kmax[ci,] = xi$below$VCroot_kmax[ci,]*(xi$paramsTransp$VCroot_kmax[ci]/prev[ci])
+      }
+      #Update plant kmax
+      xi$paramsTransp$Plant_kmax[cohort] = xi$paramsTransp$VCleaf_kmax[cohort]+xi$paramsTransp$VCstem_kmax[cohort]+xi$paramsTransp$VCroot_kmax[cohort]
+    }
     else if(paramName=="WaterStorage") {
       xi$paramsWaterStorage$Vsapwood[cohort] =xi$paramsWaterStorage$Vsapwood[cohort]*f
       xi$paramsWaterStorage$Vleaf[cohort] =xi$paramsWaterStorage$Vleaf[cohort]*f
