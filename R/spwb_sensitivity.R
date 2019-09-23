@@ -33,20 +33,8 @@ spwb_sensitivity<-function(x, soil, meteo,
       xi$paramsAnatomy$Al2As[cohort] =xi$paramsAnatomy$Al2As[cohort]*f
       xi$paramsWaterStorage$Vsapwood[cohort] =xi$paramsWaterStorage$Vsapwood[cohort]/f
       xi$paramsTransp$VCstem_kmax[cohort] = xi$paramsTransp$VCstem_kmax[cohort]/f
-      prev = xi$paramsTransp$VCroot_kmax
-      #Recalculate krootmax
-      if(!is.na(fracRootResistance)) { 
-        rstem = (1.0/xi$paramsTransp$VCstem_kmax[cohort])
-        rleaf = (1.0/xi$paramsTransp$VCleaf_kmax[cohort])
-        rtot = (rstem+rleaf)/(1.0 - fracRootResistance)
-        xi$paramsTransp$VCroot_kmax[cohort] =  1.0/(rtot - rstem - rleaf)
-      } else {
-        xi$paramsTransp$VCroot_kmax[cohort] = xi$paramsTransp$VCroot_kmax[cohort]/f
-      }
-      #Update krootmax for soil layers
-      for(ci in cohort) {
-        xi$below$VCroot_kmax[ci,] = xi$below$VCroot_kmax[ci,]*(xi$paramsTransp$VCroot_kmax[ci]/prev[ci])
-      }
+      xi$paramsTransp$VCroot_kmax[cohort] = xi$paramsTransp$VCroot_kmax[cohort]/f
+      xi$below$VCroot_kmax[cohort,] = xi$below$VCroot_kmax[cohort,]/f
       #Update plant kmax
       xi$paramsTransp$Plant_kmax[cohort] = 1/((1/xi$paramsTransp$VCleaf_kmax[cohort])+(1/xi$paramsTransp$VCstem_kmax[cohort])+(1/xi$paramsTransp$VCroot_kmax[cohort]))
     }
