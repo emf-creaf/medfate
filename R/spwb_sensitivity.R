@@ -48,7 +48,7 @@ spwb_sensitivity<-function(x, soil, meteo,
         xi$below$VCroot_kmax[ci,] = xi$below$VCroot_kmax[ci,]*(xi$paramsTransp$VCroot_kmax[ci]/prev[ci])
       }
       #Update plant kmax
-      xi$paramsTransp$Plant_kmax[cohort] = xi$paramsTransp$VCleaf_kmax[cohort]+xi$paramsTransp$VCstem_kmax[cohort]+xi$paramsTransp$VCroot_kmax[cohort]
+      xi$paramsTransp$Plant_kmax[cohort] = 1/((1/xi$paramsTransp$VCleaf_kmax[cohort])+(1/xi$paramsTransp$VCstem_kmax[cohort])+(1/xi$paramsTransp$VCroot_kmax[cohort]))
     }
     else if(paramName=="WaterStorage") {
       xi$paramsWaterStorage$Vsapwood[cohort] =xi$paramsWaterStorage$Vsapwood[cohort]*f
