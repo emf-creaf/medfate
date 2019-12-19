@@ -33,7 +33,8 @@ Due to parameter dependence, modifying some parameters affects others:
   \item{Modifying \code{WaterStorage} affects simultaneously \code{paramsWaterStorage$Vleaf} and \code{paramsWaterStorage$Vsapwood}.}
   \item{Modifying \code{c} affects simultaneously \code{paramsTransp$VCleaf_c}, \code{paramsTransp$VCstem_c} and \code{paramsTransp$VCroot_c}.}
   \item{Modifying \code{d} affects simultaneously \code{paramsTransp$VCleaf_d}, \code{paramsTransp$VCstem_d} and \code{paramsTransp$VCroot_d}.}
-  \item{Modifying \code{Plantt_kmax} from \code{paramsTransp} affects \code{paramsTransp$VCleaf_kmax}, \code{paramsTransp$VCstem_kmax}, \code{paramsTransp$VCroot_kmax} and \code{below$VCroot_kmax}.}
+  \item{Modifying \code{Plant_kmax} from \code{paramsTransp} affects \code{paramsTransp$VCleaf_kmax}, \code{paramsTransp$VCstem_kmax}, \code{paramsTransp$VCroot_kmax} and \code{below$VCroot_kmax}.}
+  \item{Modifying \code{Al2As} from \code{paramsAnatomy} affects \code{paramsWaterStorage$Vsapwood}, \code{paramsTransp$VCstem_kmax}, \code{paramsTransp$VCroot_kmax} and \code{below$VCroot_kmax}.}
   \item{Setting \code{paramName = "Vmax298/Jmax298"} affects both \code{paramsTransp$Vmax298} and \code{paramsTransp$Jmax298}.}
 }
 

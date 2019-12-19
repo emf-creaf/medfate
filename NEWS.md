@@ -2,8 +2,13 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 0.8.8
+- New function 'soil_rockWeight2Volume'
+
 # Version 0.8.7
 - Corrections to energy balance for zero LAI (deciduous species)
+- SFI functions moved to medfateland
+- soilgridParams modified to accept a SpatialPoints object as input
 
 # Version 0.8.6
 - New function 'spwb_sensitivity' for sensitivity analyses

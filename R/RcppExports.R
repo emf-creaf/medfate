@@ -713,6 +713,10 @@ soil_water <- function(soil, model = "SX") {
     .Call(`_medfate_water`, soil, model)
 }
 
+soil_rockWeight2Volume <- function(pWeight, bulkDensity, rockDensity = 2.3) {
+    .Call(`_medfate_rockWeight2Volume`, pWeight, bulkDensity, rockDensity)
+}
+
 soil_psi <- function(soil, model = "SX") {
     .Call(`_medfate_psi`, soil, model)
 }
