@@ -612,6 +612,27 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
+    inline double soil_rockWeight2Volume(double pWeight, double bulkDensity, double rockDensity = 2.3) {
+        typedef SEXP(*Ptr_soil_rockWeight2Volume)(SEXP,SEXP,SEXP);
+        static Ptr_soil_rockWeight2Volume p_soil_rockWeight2Volume = NULL;
+        if (p_soil_rockWeight2Volume == NULL) {
+            validateSignature("double(*soil_rockWeight2Volume)(double,double,double)");
+            p_soil_rockWeight2Volume = (Ptr_soil_rockWeight2Volume)R_GetCCallable("medfate", "_medfate_soil_rockWeight2Volume");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p_soil_rockWeight2Volume(Shield<SEXP>(Rcpp::wrap(pWeight)), Shield<SEXP>(Rcpp::wrap(bulkDensity)), Shield<SEXP>(Rcpp::wrap(rockDensity)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<double >(rcpp_result_gen);
+    }
+
     inline NumericVector soil_psi(List soil, String model = "SX") {
         typedef SEXP(*Ptr_soil_psi)(SEXP,SEXP);
         static Ptr_soil_psi p_soil_psi = NULL;

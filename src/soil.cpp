@@ -553,6 +553,12 @@ NumericVector water(List soil, String model="SX") {
   return(Water);
 }
 
+// [[Rcpp::export("soil_rockWeight2Volume")]]
+double rockWeight2Volume(double pWeight, double bulkDensity, double rockDensity = 2.3) {
+  double rVolume = pWeight/rockDensity;
+  double sVolume = (100.0-pWeight)/bulkDensity;
+  return(100.0*rVolume/(rVolume+sVolume));
+}
 /**
  * Returns current water potential, according to the given pedotransfer model
  */

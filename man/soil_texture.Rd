@@ -20,10 +20,11 @@
 \alias{soil_vanGenuchtenParamsToth}
 \alias{soil_waterTableDepth}
 \alias{soil_retentionCurvePlot}
+\alias{soil_rockWeight2Volume}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Soil texture and hydraulics}
 \description{
-Functions \code{soil_psi2thetaSX} and \code{soil_theta2psiSX} calculate water potentials (psi) and water contents (theta) using texture data the formulae of Saxton et al. (1986) or Saxton & Rawls (2006) depending on whether organic matter is available. Functions code{soil_psi2thetaVG} and \code{soil_theta2psiVG} to the same calculations as before, but using the Van Genuchten - Mualem equations (\enc{Wösten}{Wosten} & van Genuchten 1988). Function \code{soil_USDAType} returns the USDA type for a given texture. Function \code{soil_vanGenuchtenParamsCarsel} gives parameters for van Genuchten-Mualem equations for a given texture type (Leij et al. 1996), whereas function \code{soil_vanGenuchtenParamsToth} gives parameters for van Genuchten-Mualem equations for a given texture, organic matter and bulk density (Toth et al. 2015). Correspondingly, functions \code{soil_waterFC} and \code{soil_thetaFC} calculate the water volume (in mm or as percent of soil volume) of each soil layer at field capacity, according to a given water retention model. Functions \code{soil_waterWP} and \code{soil_thetaWP} calculate the water volume (in mm or as percent of soil volume) of each soil layer at wilting point (-1.5 MPa), and functions \code{soil_waterSAT}, \code{soil_thetaSATSX} and \code{soil_thetaSAT} calculate the saturated water volume (in mm or as percent of soil volume) of each soil layer. Functions \code{soil_psi}, \code{soil_water} and \code{soil_theta} return the current water potential and water content (in mm or as \% volume) of the soil object, according to a given water retention model.
+Functions \code{soil_psi2thetaSX} and \code{soil_theta2psiSX} calculate water potentials (psi) and water contents (theta) using texture data the formulae of Saxton et al. (1986) or Saxton & Rawls (2006) depending on whether organic matter is available. Functions code{soil_psi2thetaVG} and \code{soil_theta2psiVG} to the same calculations as before, but using the Van Genuchten - Mualem equations (\enc{Wösten}{Wosten} & van Genuchten 1988). Function \code{soil_USDAType} returns the USDA type for a given texture. Function \code{soil_vanGenuchtenParamsCarsel} gives parameters for van Genuchten-Mualem equations for a given texture type (Leij et al. 1996), whereas function \code{soil_vanGenuchtenParamsToth} gives parameters for van Genuchten-Mualem equations for a given texture, organic matter and bulk density (Toth et al. 2015). Correspondingly, functions \code{soil_waterFC} and \code{soil_thetaFC} calculate the water volume (in mm or as percent of soil volume) of each soil layer at field capacity, according to a given water retention model. Functions \code{soil_waterWP} and \code{soil_thetaWP} calculate the water volume (in mm or as percent of soil volume) of each soil layer at wilting point (-1.5 MPa), and functions \code{soil_waterSAT}, \code{soil_thetaSATSX} and \code{soil_thetaSAT} calculate the saturated water volume (in mm or as percent of soil volume) of each soil layer. Functions \code{soil_psi}, \code{soil_water} and \code{soil_theta} return the current water potential and water content (in mm or as \% volume) of the soil object, according to a given water retention model. Function \code{soil_rockWeight2Volume} transform rock percentage from weight to volume basis.
 }
 \usage{
 soil_psi2thetaSX(clay, sand, psi, om = NA)
@@ -45,6 +46,7 @@ soil_thetaWP(soil, model="SX")
 soil_thetaSAT(soil, model="SX")
 soil_thetaSATSX(clay, sand, om = NA)
 soil_waterTableDepth(soil, model="SX")
+soil_rockWeight2Volume(pWeight, bulkDensity, rockDensity = 2.3)
 soil_retentionCurvePlot(soil, model="SX", layer = 1, 
                         psi = seq(0, -6.0, by=-0.01),
                         relative = TRUE, to = "SAT")
@@ -66,6 +68,9 @@ soil_retentionCurvePlot(soil, model="SX", layer = 1,
   \item{relative}{Boolean flag to indicate that retention curve should be relative to field capacity or saturation.}
   \item{to}{Either 'SAT' (saturation) or 'FC' (field capacity).}
   \item{minPsi}{Minimum water potential (in MPa) to calculate the amount of extractable water.}
+  \item{pWeight}{Percentage of corresponding to rocks, in weight.}
+  \item{bulkDensity}{Bulk density of the soil fraction (g/cm3).}
+  \item{rockDensity}{Rock density (g/cm3).}
 }
 \value{
 Functions \code{soil_psi2thetaSX} and \code{soil_psi2thetaVG} return the soil water potential (in MPa) from soil volumetric water content, and functions \code{soil_theta2psiSX} and \code{soil_theta2psiVG} do the reverse calculation returning water potential in MPa. Function \code{soil_USDAType} returns a string. Function \code{soil_vanGenuchtenParamsToth} and \code{soil_vanGenuchtenParamsCarsel} return a vector with four parameter values (alpha, n, theta_res and theta_sat, where alpha is in MPa-1). Function \code{soil_waterTableDepth} returns water table depth in mm from surface.
