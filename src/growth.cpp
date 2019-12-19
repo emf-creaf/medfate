@@ -139,6 +139,8 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   List spwbInput = clone(x);
   List soilInput = clone(soil);
   
+  // Rcout<<"1";
+  
   //Cohort info
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   NumericVector SP = cohorts["SP"];
@@ -149,9 +151,11 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   String storagePool = control["storagePool"];
   bool verbose = control["verbose"];
   bool snowpack = control["snowpack"];
-  bool cavitationRefill = control["cavitationRefill"];
+  String cavitationRefill = control["cavitationRefill"];
   bool taper = control["taper"];
   checkgrowthInput(x, soil, transpirationMode, soilFunctions);
+  
+  // Rcout<<"2";
   
   NumericVector Precipitation = meteo["Precipitation"];
   NumericVector MeanTemperature = meteo["MeanTemperature"];
@@ -204,6 +208,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   NumericVector Sgdd = paramsBase["Sgdd"];
   NumericVector kPAR = paramsBase["kPAR"];
   
+  // Rcout<<"3";
 
   //Transpiration parameters
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
@@ -297,7 +302,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   
   NumericVector Wini = soil["W"];
   Wdays(0,_) = Wini;
-
+  
   if(verbose) Rcout << "Performing daily simulations ";
   List s;
   for(int i=0;i<numDays;i++) {
@@ -429,7 +434,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
         fastCstorage[j] = fastCstorage[j]-deltaSAgrowth*cost; //Remove construction costs from (fast) C pool
       }
       if(transpirationMode=="Granier"){
-        if(!cavitationRefill) { //If we track cavitation update proportion of embolized conduits
+        if(cavitationRefill!="total") { //If we track cavitation update proportion of embolized conduits
           NumericVector pEmb =  Rcpp::as<Rcpp::NumericVector>(x["PLC"]);
           pEmb[j] = pEmb[j]*((SA[j] - deltaSAturnover)/(SA[j] + deltaSAgrowth - deltaSAturnover));
         }
