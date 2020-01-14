@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 0.8.9
+- Update supply function plot.
+
 # Version 0.8.8
 - New function 'soil_rockWeight2Volume'
 
