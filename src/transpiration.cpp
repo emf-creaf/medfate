@@ -768,9 +768,9 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
           //Balance between extraction and transpiration
           PWBinst(c,n) = sum(Esoilcn) - Einst(c,n);
           
-          //Add to daily plant cohort transpiration
-          Eplant[c] +=Einst(c,n);
-          Anplant[c] +=Aninst(c,n);
+          //Add step transpiration to daily plant cohort transpiration
+          Eplant[c] += Einst(c,n);
+          Anplant[c] += Aninst(c,n);
           //Add PWB
           PWB[c] += PWBinst(c,n); 
           
@@ -896,7 +896,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
     
     if(cavitationRefill=="rate") {
       double SAmax = 10e4/Al2As[c]; //cm2·m-2 of leaf area
-      double r = std::max(0.0, refillMaximumRate*(psiSympStemVEC[c] + 1.5)/1.5);
+      double r = refillMaximumRate*std::max(0.0, (psiSympStemVEC[c] + 1.5)/1.5);
       PLCstemVEC[c] = std::max(0.0, PLCstemVEC[c] - (r/SAmax));
     }
   }

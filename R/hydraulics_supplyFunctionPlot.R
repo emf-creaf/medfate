@@ -76,11 +76,14 @@ hydraulics_supplyFunctionPlot<-function(x, soil, draw = TRUE, type="E", speciesN
         dfRhizo = rbind(dfRhizo, dfi)
       }
     }
+    dfRhizo$cohort = factor(dfRhizo$cohort, levels = cohortnames)
+    
     df = data.frame("psi" = psi, 
                     "psiStem" = psiStem, 
                     "psiRoot" = psiRoot, 
                     "E" = E, "dEdP" = dEdP, 
                     "cohort" = cohort)
+    df$cohort = factor(df$cohort, levels = cohortnames)
     if(type=="E") {
       ylab = expression(paste("Flow rate    ",(mmol%.%s^{-1}%.%m^{-2})))
       g<-ggplot(df, aes_string(x = "psi", y="E"))+
