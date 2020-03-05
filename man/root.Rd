@@ -48,7 +48,7 @@ data(exampleforestMED)
 #Default species parameterization
 data(SpParamsMED)
 
-ntree = nrow(exampleforest$treeData)
+ntree = nrow(exampleforestMED$treeData)
 
 #Initialize soil with default soil params
 S = soil(defaultSoilParams())

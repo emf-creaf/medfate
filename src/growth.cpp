@@ -524,7 +524,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
           H[j] = H[j] + fHD*deltaDBH[j];
         }
       }
-      NumericVector crNew = treeCrownRatio(N, DBH, H, Acw, Bcw, Acr, B1cr, B2cr, B3cr, C1cr, C2cr);
+      NumericVector crNew = treeCrownRatioMED(N, DBH, H, Acw, Bcw, Acr, B1cr, B2cr, B3cr, C1cr, C2cr);
       for(int j=0;j<numCohorts; j++) {
         if(!NumericVector::is_na(DBH[j])) {
           CR[j] = crNew[j];
