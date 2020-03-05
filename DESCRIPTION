@@ -13,7 +13,7 @@ Description: Functions to simulate Mediterranean forest functioning and dynamics
 License: GPL (>= 2)
 URL: https://vegmod.github.io/software/medfate
 LazyLoad: yes
-Depends: R (>= 3.4.0), sp
+Depends: R (>= 3.5.0), sp
 Imports: spdep, GSIF, ggplot2, methods, meteoland (>= 0.8.1), Rcpp (>= 0.12.12)
 Suggests: knitr, rmarkdown, rjson
 LinkingTo: Rcpp, meteoland

@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 0.9.0
+- New parametrization data set 'SpParamsUS'
+
 # Version 0.8.9
 - Update supply function plot.
 
