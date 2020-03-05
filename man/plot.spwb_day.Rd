@@ -67,7 +67,7 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 data(examplemeteo)
 
 #Load example plot plant data
-data(exampleforest)
+data(exampleforestMED)
 
 #Default species parameterization
 data(SpParamsMED)
@@ -84,7 +84,7 @@ examplesoil = soil(defaultSoilParams(2), W=c(0.5,0.5))
 control$transpirationMode="Sperry"
 
 #Simulate one day only
-x2 = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+x2 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 d = 100
 sd2<-spwb_day(x2, examplesoil, rownames(examplemeteo)[d], 
              examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 

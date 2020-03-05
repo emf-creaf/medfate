@@ -120,20 +120,20 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 
 \examples{
 #Load example plot plant data
-data(exampleforest)
+data(exampleforestMED)
 
 #Default species parameterization
 data(SpParamsMED)
 
 # Aboveground parameters
-above = forest2aboveground(exampleforest, SpParamsMED)
+above = forest2aboveground(exampleforestMED, SpParamsMED)
 above
 
 # Initialize soil with default soil params
 examplesoil = soil(defaultSoilParams())
 
 # Belowground parameters
-below = forest2belowground(exampleforest, examplesoil, SpParamsMED)
+below = forest2belowground(exampleforestMED, examplesoil, SpParamsMED)
 below
 
 # Initialize control parameters
@@ -144,11 +144,11 @@ spwbInput(above, below, examplesoil,SpParamsMED, control)
 
 # When starting from an object of class 'forest' the whole process
 # can be simplified:
-forest2spwbInput(exampleforest, examplesoil, SpParamsMED, control)
+forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
 
 
 # Prepare input for complex transpiration mode
 control$transpirationMode = "Sperry"
-forest2spwbInput(exampleforest,examplesoil,SpParamsMED, control)
+forest2spwbInput(exampleforestMED,examplesoil,SpParamsMED, control)
 
 }

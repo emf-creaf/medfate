@@ -103,7 +103,7 @@ Objects \code{x} and \code{soil} are modified during the simulation.
 data(examplemeteo)
 
 #Load example plot plant data
-data(exampleforest)
+data(exampleforestMED)
 
 #Default species parameterization
 data(SpParamsMED)
@@ -115,7 +115,7 @@ examplesoil = soil(defaultSoilParams(2))
 control = defaultControl()
 
 #Initialize input
-x = forest2growthInput(exampleforest,examplesoil, SpParamsMED, control)
+x = forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
 #Call simulation function
 G1<-growth(x, examplesoil, examplemeteo, elevation = 100)

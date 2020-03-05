@@ -93,7 +93,7 @@ xlab="Canopy pressure (-MPa)", lwd=1.5,ylim=c(0,kstemmax))
 
 
 #Load example dataset
-data(exampleforest)
+data(exampleforestMED)
 #Default species parameterization
 data(SpParamsMED)
 
@@ -107,7 +107,7 @@ control = defaultControl()
 control$transpirationMode="Sperry"
 
 #Initialize input
-x = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+x = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
 #Leaf vulnerability curves
 hydraulics_vulnerabilityCurvePlot(x, type="leaf")

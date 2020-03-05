@@ -26,7 +26,7 @@ library(medfate)
 data(examplemeteo)
 
 #Load example plot plant data
-data(exampleforest)
+data(exampleforestMED)
 
 #Default species parameterization
 data(SpParamsMED)
@@ -47,7 +47,7 @@ soil(sp)
 
 We consider two different forest stands. The first contains a single tree cohort:
 <<>>=
-forest1 = exampleforest
+forest1 = exampleforestMED
 forest1$treeData = forest1$treeData[1,]
 forest1$treeData$N = forest1$treeData$N*4
 forest1$shrubData = forest1$shrubData[-(1:4),]

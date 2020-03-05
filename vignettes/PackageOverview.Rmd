@@ -35,8 +35,8 @@ Package vignettes only cover how to run models using the package functions. Comp
 
 Models included in `medfate` were primarily designed to be ran on **forest inventory plots**. In this kind of data, the vegetation of a sampled area is primarily described in terms of woody plants (trees and shrubs) along with their size and species identity. Forest plots in `medfate` are assumed to be in a format that follows closely the Spanish national forest inventory. Each forest plot is represented in an object of class `forest`, a list that contains several elements. Among them, the most important items are two data frames, `treeData` (for trees) and `shrubData` for shrubs:
 ```{r}
-data(exampleforest)
-exampleforest
+data(exampleforestMED)
+exampleforestMED
 ```
 Trees are expected to be primarily described in terms of species, diameter (DBH) and height, whereas shrubs are described in terms of species, percent cover and mean height. Functions are provided to map variables in user data frames into tables `treeData` and `shrubData` (see function `forest_mapWoodyTables()`).
 

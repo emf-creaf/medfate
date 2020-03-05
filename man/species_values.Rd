@@ -51,7 +51,7 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 data(SpParamsMED)
 
 #Load example plot
-data(exampleforest)
+data(exampleforestMED)
 
 #Species basal area
 species_basalArea(exampleforest, SpParamsMED)

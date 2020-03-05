@@ -44,8 +44,8 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 data(SpParamsMED)
 
 #Load example plot
-data(exampleforest)
+data(exampleforestMED)
 
 #A short way to obtain total basal area
-stand_basalArea(exampleforest)
+stand_basalArea(exampleforestMED)
 }

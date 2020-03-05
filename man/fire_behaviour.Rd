@@ -96,13 +96,13 @@ Default moisture, slope and windspeed values are benchmark conditions used to ca
 }
 \examples{
 #Load example plot plant data
-data(exampleforest)
+data(exampleforestMED)
 
 #Default species parameterization
 data(SpParamsMED)
 
 #Calculate fuel properties according to FCCS
-fccs = fuel_FCCS(exampleforest, 50,100, SpParamsMED)
+fccs = fuel_FCCS(exampleforestMED, 50,100, SpParamsMED)
 
 #Calculate fire behavior according to FCCS
 fire_FCCS(fccs)
@@ -111,7 +111,7 @@ fire_FCCS(fccs)
 data(SFM_metric)
 
 #Fuel stratification (returns heights in cm)
-fs = fuel_stratification(exampleforest, SpParamsMED)
+fs = fuel_stratification(exampleforestMED, SpParamsMED)
 
 #Correct windspeed (transform heights to m)
 u = 11 #m/s

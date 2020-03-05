@@ -57,8 +57,8 @@ Not all parameters are needed for all models. The user can find parameter defini
 
 Models included in `medfate` were primarily designed to be ran on **forest inventory plots** (these are explained in detail in **1. Introduction to water balance simulation**):
 ```{r}
-data(exampleforest)
-exampleforest
+data(exampleforestMED)
+exampleforestMED
 ```
 
 ### Meteorological forcing
@@ -91,7 +91,7 @@ control$soilFunctions = "VG"
 A last step is needed before running the simulation function, consisting in the compilation of parameters and the calculation of additional parameter values for each plant cohort. If one has a `forest` object, the `spwbInput` object can be generated in directly from it:
 
 ```{r}
-x = forest2spwbInput(exampleforest, examplesoil, SpParamsMED, control)
+x = forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
 ```
 
 The `spwbInput` object for advanced water and energy balance is similar to that of simple water balance simulations, but contains more elements. Information about the cohort species is found in element `cohorts`  (i.e. code, species and name):

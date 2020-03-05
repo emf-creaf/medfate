@@ -158,7 +158,7 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 data(examplemeteo)
 
 #Load example plot plant data
-data(exampleforest)
+data(exampleforestMED)
 
 #Default species parameterization
 data(SpParamsMED)
@@ -171,7 +171,7 @@ examplesoil = soil(defaultSoilParams(2))
 control = defaultControl()
 
 #Initialize input
-x = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+x = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
 # Transpiration according to Granier's model, plant water potential 
 # and plant stress for a given day
@@ -185,7 +185,7 @@ control$transpirationMode="Sperry"
 examplesoil2 = soil(defaultSoilParams(2))
 
 #Initialize input
-x2 = forest2spwbInput(exampleforest,examplesoil2, SpParamsMED, control)
+x2 = forest2spwbInput(exampleforestMED,examplesoil2, SpParamsMED, control)
 
 # Stomatal VPD curve and chosen value for the 12th time step at day 100
 transp_stomatalRegulationPlot(x2, examplesoil2, examplemeteo, day=100, timestep = 12,

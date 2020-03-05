@@ -97,16 +97,16 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 }
 \examples{
 #Load example plot plant data
-data(exampleforest)
+data(exampleforestMED)
 
 #Default species parameterization
 data(SpParamsMED)
 
 #Show stratification of fuels
-fuel_stratification(exampleforest, SpParamsMED)
+fuel_stratification(exampleforestMED, SpParamsMED)
 
 #Calculate fuel properties according to FCCS
-fccs = fuel_FCCS(exampleforest, 50,100, SpParamsMED)
+fccs = fuel_FCCS(exampleforestMED, 50,100, SpParamsMED)
 fccs
 
 fuel_windAdjustmentFactor(fccs$htc[2], fccs$hbc[1], fccs$htc[1], fccs$cover[1])

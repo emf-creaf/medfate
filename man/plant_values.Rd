@@ -91,21 +91,21 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 data(SpParamsMED)
 
 #Load example plot
-data(exampleforest)
+data(exampleforestMED)
 
 #A short way to obtain total basal area
-sum(plant_basalArea(exampleforest), na.rm=TRUE)
+sum(plant_basalArea(exampleforestMED), na.rm=TRUE)
 
 #The same forest level function for LAI
-sum(plant_LAI(exampleforest, SpParamsMED))
+sum(plant_LAI(exampleforestMED, SpParamsMED))
 
 #The same forest level function for fuel loading
-sum(plant_fuel(exampleforest, SpParamsMED))
+sum(plant_fuel(exampleforestMED, SpParamsMED))
 
 #Summary function for 'forest' objects can be also used
-summary(exampleforest, SpParamsMED)
+summary(exampleforestMED, SpParamsMED)
 
-plant_speciesName(exampleforest, SpParamsMED)
+plant_speciesName(exampleforestMED, SpParamsMED)
 
-plant_ID(exampleforest)
+plant_ID(exampleforestMED)
 }
