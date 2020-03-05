@@ -8,8 +8,10 @@
 \description{
   Data set for illustration of model behaviour. Includes a description of the plant cohorts of a forest stand.
 }
-\usage{data(exampleforestMED)}
-\usage{data(exampleforestUS)}
+\usage{
+data(exampleforestMED)
+data(exampleforestUS)
+}
 \format{
  An object of class \code{\link{forest}} containing the description of the tree, sapling and shrub cohorts of a forest patch.
 }
