@@ -93,10 +93,6 @@ plant_crownLength <- function(x, SpParams, mode = "MED") {
     .Call(`_medfate_cohortCrownLength`, x, SpParams, mode)
 }
 
-.treeFoliarBiomass <- function(SP, N, dbh, SpParams, gdd = NA_real_) {
-    .Call(`_medfate_treeFoliarBiomass`, SP, N, dbh, SpParams, gdd)
-}
-
 plant_foliarBiomass <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
     .Call(`_medfate_cohortFoliarBiomass`, x, SpParams, gdd, mode)
 }
@@ -137,10 +133,6 @@ stand_phytovolume <- function(x, SpParams) {
     .Call(`_medfate_standPhytovolume`, x, SpParams)
 }
 
-.treeFuel <- function(SP, N, dbh, SpParams, gdd = NA_real_, includeDead = TRUE) {
-    .Call(`_medfate_treeFuel`, SP, N, dbh, SpParams, gdd, includeDead)
-}
-
 plant_fuel <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE, mode = "MED") {
     .Call(`_medfate_cohortFuel`, x, SpParams, gdd, includeDead, mode)
 }
@@ -159,10 +151,6 @@ plant_equilibriumLeafLitter <- function(x, SpParams, AET = 800) {
 
 plant_equilibriumSmallBranchLitter <- function(x, SpParams, smallBranchDecompositionRate = 0.81) {
     .Call(`_medfate_cohortEquilibriumSmallBranchLitter`, x, SpParams, smallBranchDecompositionRate)
-}
-
-.treeLAI <- function(SP, N, dbh, SpParams, gdd = NA_real_) {
-    .Call(`_medfate_treeLAI`, SP, N, dbh, SpParams, gdd)
 }
 
 plant_LAI <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
