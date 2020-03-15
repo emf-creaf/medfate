@@ -55,7 +55,7 @@ Ritchie (1972). Model for predicting evaporation from a row crop with incomplete
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 }
 \seealso{
- \code{\link{spwb}}, \code{\link{hydrology_verticalInputs}}
+ \code{\link{spwb}}, \code{\link{hydrology_soilWaterInputs}}
 }
 \examples{
 SoilDepth = c(200,400,800,1200,1500)
