@@ -65,11 +65,14 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   double LgroundSWR = exp((-1.0)*s/1.35);
   
   //Snow pack dynamics and hydrology input
-  NumericVector hydroInputs = verticalInputs(soil, soilFunctions, prec, er, tday, rad, elevation,
+  NumericVector hydroInputs = soilWaterInputs(soil, soilFunctions, prec, er, tday, rad, elevation,
                                              Cm, LgroundPAR, LgroundSWR, 
                                              runon,
-                                             snowpack, drainage, true);
-
+                                             snowpack, true);
+  NumericVector infilPerc = soilInfiltrationPercolation(soil, soilFunctions, 
+                                                        hydroInputs["Input"],
+                                                        drainage, true);
+  
   //Evaporation from bare soil if there is no snow
   NumericVector EsoilVec = soilEvaporation(soil, soilFunctions, pet, LgroundSWR, true);
 
@@ -82,10 +85,11 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   
   NumericVector psiVec = psi(soil, soilFunctions); //Calculate current soil water potential for output
   
-  NumericVector DB = NumericVector::create(_["PET"] = pet, _["Rain"] = hydroInputs["Rain"], _["Snow"] = hydroInputs["Snow"], 
+  NumericVector DB = NumericVector::create(_["PET"] = pet, 
+                                           _["Rain"] = hydroInputs["Rain"], _["Snow"] = hydroInputs["Snow"], 
                                            _["NetRain"] = hydroInputs["NetRain"], _["Snowmelt"] = hydroInputs["Snowmelt"],
                                            _["Runon"] = hydroInputs["Runon"], 
-                                           _["Infiltration"] = hydroInputs["Infiltration"], _["Runoff"] = hydroInputs["Runoff"], _["DeepDrainage"] = hydroInputs["DeepDrainage"],
+                                           _["Infiltration"] = infilPerc["Infiltration"], _["Runoff"] = infilPerc["Runoff"], _["DeepDrainage"] = infilPerc["DeepDrainage"],
                                            _["SoilEvaporation"] = sum(EsoilVec), _["PlantExtraction"] = sum(EplantVec), _["Transpiration"] = sum(EplantVec));
   
   NumericVector Stand = NumericVector::create(_["LAIcell"] = LAIcell, _["LAIcelldead"] = LAIcelldead, 
@@ -152,11 +156,15 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   double LgroundPAR = exp((-1.0)*s);
   double LgroundSWR = exp((-1.0)*s/1.35);
   
-  //Snow pack dynamics and hydrology input
-  NumericVector hydroInputs = verticalInputs(soil, soilFunctions, prec, er, tday, rad, elevation,
-                                             Cm, LgroundPAR, LgroundSWR, 
-                                             runon,
-                                             snowpack, drainage);
+  //A.1 - Snow pack dynamics and soil water input
+  NumericVector hydroInputs = soilWaterInputs(soil, soilFunctions, prec, er, tday, rad, elevation,
+                                              Cm, LgroundPAR, LgroundSWR, 
+                                              runon,
+                                              snowpack, true);
+  //A.2 - Soil infiltration and percolation
+  NumericVector infilPerc = soilInfiltrationPercolation(soil, soilFunctions, 
+                                                        hydroInputs["Input"],
+                                                        drainage, true);
   
   
   
@@ -192,8 +200,10 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   }
   NumericVector psiVec = psi(soil, soilFunctions); //Calculate current soil water potential for output
   
-  NumericVector DB = NumericVector::create(_["PET"] = pet,_["Rain"] = hydroInputs["Rain"],_["Snow"] = hydroInputs["Snow"],_["NetRain"] = hydroInputs["NetRain"], _["Snowmelt"] = hydroInputs["Snowmelt"],
-                                           _["Runon"] = hydroInputs["Runon"], _["Infiltration"] = hydroInputs["Infiltration"], _["Runoff"] = hydroInputs["Runoff"], _["DeepDrainage"] = hydroInputs["DeepDrainage"],
+  NumericVector DB = NumericVector::create(_["PET"] = pet,
+                                           _["Rain"] = hydroInputs["Rain"],_["Snow"] = hydroInputs["Snow"],_["NetRain"] = hydroInputs["NetRain"], _["Snowmelt"] = hydroInputs["Snowmelt"],
+                                           _["Runon"] = hydroInputs["Runon"], 
+                                           _["Infiltration"] = infilPerc["Infiltration"], _["Runoff"] = infilPerc["Runoff"], _["DeepDrainage"] = infilPerc["DeepDrainage"],
                                            _["SoilEvaporation"] = sum(EsoilVec), _["PlantExtraction"] = sum(EplantVec), _["Transpiration"] = sum(Eplant),
                                            _["HydraulicRedistribution"] = sum(soilHydraulicInput));
   

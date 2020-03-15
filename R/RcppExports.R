@@ -457,8 +457,12 @@ hydrology_snowMelt <- function(tday, rad, LgroundSWR, elevation) {
     .Call(`_medfate_snowMelt`, tday, rad, LgroundSWR, elevation)
 }
 
-hydrology_verticalInputs <- function(soil, soilFunctions, prec, er, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, runon = 0.0, snowpack = TRUE, drainage = TRUE, modifySoil = TRUE) {
-    .Call(`_medfate_verticalInputs`, soil, soilFunctions, prec, er, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, runon, snowpack, drainage, modifySoil)
+hydrology_soilWaterInputs <- function(soil, soilFunctions, prec, er, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, runon = 0.0, snowpack = TRUE, modifySoil = TRUE) {
+    .Call(`_medfate_soilWaterInputs`, soil, soilFunctions, prec, er, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, runon, snowpack, modifySoil)
+}
+
+hydrology_soilInfiltrationPercolation <- function(soil, soilFunctions, waterInput, drainage = TRUE, modifySoil = TRUE) {
+    .Call(`_medfate_soilInfiltrationPercolation`, soil, soilFunctions, waterInput, drainage, modifySoil)
 }
 
 .incgam <- function(a, x) {
