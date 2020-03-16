@@ -9,6 +9,7 @@ defaultControl<-function() {
     drainage = TRUE,
     unlimitedSoilWater = FALSE,
     plantWaterPools = FALSE,
+    maximumPoolMixingRate = 0.2,
     leafPhenology = TRUE,
     transpirationMode = "Granier", #vs. "Sperry"
     cuticularTranspiration = TRUE,

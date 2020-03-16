@@ -17,10 +17,10 @@ const double Cp_JKG = 1013.86; // J * kg^-1 * ºC^-1
 const double eps_xylem = 10^3; // xylem elastic modulus (1 GPa = 1000 MPa)
 
 // [[Rcpp::export("transp_mixingProportions")]]
-NumericVector mixingProportions(NumericMatrix V, double LAIcelllive) {
+NumericVector mixingProportions(NumericMatrix V, double LAIcelllive, double maximumPoolMixingRate) {
   int numCohorts = V.nrow();
   int numlayers = V.ncol();
-  double pmixmax = 0.2*(1.0 - exp(-LAIcelllive));
+  double pmixmax = maximumPoolMixingRate*(1.0 - exp(-LAIcelllive));
   NumericVector layerRD(numlayers);
   NumericVector pmixing(numlayers);
   double maxRD = 0.0;
@@ -34,10 +34,10 @@ NumericVector mixingProportions(NumericMatrix V, double LAIcelllive) {
   return(pmixing);
 }
 // Mixes the moisture of pools among cohorts
-void poolMixing(NumericMatrix V, NumericMatrix W, NumericVector Ws, double LAIcelllive) {
+void poolMixing(NumericMatrix V, NumericMatrix W, NumericVector Ws, double LAIcelllive, double maximumPoolMixingRate) {
   int numCohorts = V.nrow();
   int numlayers = V.ncol();
-  NumericVector pmixing = mixingProportions(V, LAIcelllive);
+  NumericVector pmixing = mixingProportions(V, LAIcelllive, maximumPoolMixingRate);
   for(int c=0;c<numCohorts;c++) {
     for(int l=0;l<numlayers;l++) {
       W(c,l) = W(c,l)*(1.0-pmixing[l]) + Ws[l]*pmixing[l]; 
@@ -128,7 +128,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   double costModifier = control["costModifier"];
   double gainModifier = control["gainModifier"];
   bool plantWaterPools = control["plantWaterPools"];
-  
+  double maximumPoolMixingRate = control["maximumPoolMixingRate"];
   double verticalLayerSize = control["verticalLayerSize"];
   double thermalCapacityLAI = control["thermalCapacityLAI"];
   double defaultWindSpeed = control["defaultWindSpeed"];
@@ -955,7 +955,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
           W(c,l) = W(c,l) - (SoilWaterExtract(c,l)*(LAIcelllive/LAIlive[c])/Water_FC[l]);
         }
       }
-      poolMixing(V,W,Ws,LAIcelllive);
+      poolMixing(V,W,Ws,LAIcelllive,maximumPoolMixingRate);
     } else { //copy soil to the pools of all cohorts
       for(int c=0;c<numCohorts;c++) {
         for(int l=0;l<nlayers;l++) {
@@ -1164,6 +1164,7 @@ List transpirationGranier(List x, List soil, double tday, double pet,
   String soilFunctions = control["soilFunctions"];
   double verticalLayerSize = control["verticalLayerSize"];
   bool plantWaterPools = control["plantWaterPools"];
+  double maximumPoolMixingRate = control["maximumPoolMixingRate"];
   
   //Soil water at field capacity
   NumericVector Water_FC = waterFC(soil, soilFunctions);
@@ -1301,7 +1302,7 @@ List transpirationGranier(List x, List soil, double tday, double pet,
           W(c,l) = W(c,l) - (EplantCoh(c,l)*(LAIcelllive/LAIlive[c])/Water_FC[l]);
         }
       }
-      poolMixing(V,W,Ws,LAIcelllive);
+      poolMixing(V,W,Ws,LAIcelllive,maximumPoolMixingRate);
     } else { //copy soil to the pools of all cohorts
       for(int c=0;c<numCohorts;c++) {
         for(int l=0;l<nlayers;l++) {
