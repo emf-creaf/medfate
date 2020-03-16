@@ -3739,8 +3739,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // transpirationGranier
-List transpirationGranier(List x, List soil, DataFrame meteo, int day, bool modifyInput);
-RcppExport SEXP _medfate_transpirationGranier(SEXP xSEXP, SEXP soilSEXP, SEXP meteoSEXP, SEXP daySEXP, SEXP modifyInputSEXP) {
+List transpirationGranier(List x, List soil, DataFrame meteo, int day, bool modifyInputX, bool modifyInputSoil);
+RcppExport SEXP _medfate_transpirationGranier(SEXP xSEXP, SEXP soilSEXP, SEXP meteoSEXP, SEXP daySEXP, SEXP modifyInputXSEXP, SEXP modifyInputSoilSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -3748,8 +3748,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type meteo(meteoSEXP);
     Rcpp::traits::input_parameter< int >::type day(daySEXP);
-    Rcpp::traits::input_parameter< bool >::type modifyInput(modifyInputSEXP);
-    rcpp_result_gen = Rcpp::wrap(transpirationGranier(x, soil, meteo, day, modifyInput));
+    Rcpp::traits::input_parameter< bool >::type modifyInputX(modifyInputXSEXP);
+    Rcpp::traits::input_parameter< bool >::type modifyInputSoil(modifyInputSoilSEXP);
+    rcpp_result_gen = Rcpp::wrap(transpirationGranier(x, soil, meteo, day, modifyInputX, modifyInputSoil));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4139,7 +4140,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_tissueFMC", (DL_FUNC) &_medfate_tissueFMC, 3},
     {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 6},
     {"_medfate_transpirationSperry", (DL_FUNC) &_medfate_transpirationSperry, 13},
-    {"_medfate_transpirationGranier", (DL_FUNC) &_medfate_transpirationGranier, 5},
+    {"_medfate_transpirationGranier", (DL_FUNC) &_medfate_transpirationGranier, 6},
     {"_medfate_windSpeedAtCanopyHeight", (DL_FUNC) &_medfate_windSpeedAtCanopyHeight, 2},
     {"_medfate_unshelteredMidflameWindSpeed", (DL_FUNC) &_medfate_unshelteredMidflameWindSpeed, 2},
     {"_medfate_shelteredMidflameWindSpeed", (DL_FUNC) &_medfate_shelteredMidflameWindSpeed, 3},

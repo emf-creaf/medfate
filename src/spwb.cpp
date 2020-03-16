@@ -25,12 +25,15 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   List control = x["control"];
   bool snowpack = control["snowpack"];
   bool drainage = control["drainage"];
+  bool plantWaterPools = control["plantWaterPools"];
   String soilFunctions = control["soilFunctions"];
 
-  //Soil input
-  NumericVector W = soil["W"]; //Access to soil state variable
-  int nlayers = W.size();
+  //Number of soil layers
+  int nlayers = Rcpp::as<Rcpp::NumericVector>(soil["dVec"]).size();
   
+  List below = x["below"];
+  NumericMatrix W = below["W"];
+  NumericVector Ws = soil["W"];
 
   //Vegetation input
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
@@ -52,37 +55,88 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
 
   //Determine whether leaves are out (phenology) and the adjusted Leaf area
   NumericVector Phe(numCohorts,0.0);
-  double s = 0.0, LAIcell = 0.0, LAIcelldead = 0.0, Cm = 0.0;
+  double s = 0.0, LAIcell = 0.0, LAIcelllive, LAIcelldead = 0.0, Cm = 0.0;
   for(int c=0;c<numCohorts;c++) {
     if(LAIlive[c]>0) Phe[c]=LAIphe[c]/LAIlive[c]; //Phenological status
     else Phe[c]=0.0;
     s += (kPAR[c]*(LAIphe[c]+LAIdead[c]));
     LAIcell += LAIphe[c]+LAIdead[c];
     LAIcelldead += LAIdead[c];
+    LAIcelllive += LAIlive[c];
     Cm += (LAIphe[c]+LAIdead[c])*gRainIntercept[c]; //LAI dead also counts on interception
   }
   double LgroundPAR = exp((-1.0)*s);
   double LgroundSWR = exp((-1.0)*s/1.35);
   
+  NumericVector f_soil(numCohorts, 0.0);
+  if(plantWaterPools) {
+    for(int c=0;c<numCohorts;c++) {
+      f_soil[c] = LAIlive[c]/LAIcelllive;
+    }
+  }
   //Snow pack dynamics and hydrology input
   NumericVector hydroInputs = soilWaterInputs(soil, soilFunctions, prec, er, tday, rad, elevation,
                                              Cm, LgroundPAR, LgroundSWR, 
                                              runon,
                                              snowpack, true);
-  NumericVector infilPerc = soilInfiltrationPercolation(soil, soilFunctions, 
-                                                        hydroInputs["Input"],
-                                                        drainage, true);
   
-  //Evaporation from bare soil if there is no snow
-  NumericVector EsoilVec = soilEvaporation(soil, soilFunctions, pet, LgroundSWR, true);
-
-  //Canopy transpiration  
-  List transp = transpirationGranier(x, soil, tday, pet, true);
+  NumericVector infilPerc, EsoilVec;
   NumericVector EplantVec(nlayers, 0.0);
+  DataFrame Plants;
+
+  if(!plantWaterPools) {
+    //Soil infiltration and percolation
+    infilPerc = soilInfiltrationPercolation(soil, soilFunctions, 
+                                            hydroInputs["Input"],
+                                            drainage, true);
+    //Evaporation from bare soil (if there is no snow)
+    EsoilVec = soilEvaporation(soil, soilFunctions, pet, LgroundSWR, true);
+    
+    //Copy soil status to x
+    for(int c=0;c<numCohorts;c++) for(int l=0;l<nlayers;l++) W(c,l) = Ws[l];
+  } else {
+    //Reset soil moisture
+    for(int l=0;l<nlayers;l++) Ws[l] = 0.0;
+    
+    //Initialize result vectors
+    infilPerc = NumericVector::create(_["Infiltration"] = 0.0, 
+                                      _["Runoff"] = 0.0, 
+                                      _["DeepDrainage"] = 0.0);
+    EsoilVec = NumericVector(nlayers,0.0);
+    for(int c=0;c<numCohorts;c++) {
+      
+      //Clone soil and copy moisture values from x
+      List soil_c =  clone(soil);
+      NumericVector W_c = soil_c["W"];
+      for(int l=0;l<nlayers;l++) W_c[l] = W(c,l);
+      
+      //Soil_c infiltration and percolation
+      NumericVector infilPerc_c = soilInfiltrationPercolation(soil_c, soilFunctions, 
+                                              hydroInputs["Input"],
+                                              drainage, true);
+      //Evaporation from bare soil_c (if there is no snow)
+      NumericVector EsoilVec_c = soilEvaporation(soil_c, soilFunctions, pet, LgroundSWR, true);
+      //Copy result vectors
+      infilPerc["Infiltration"] = infilPerc["Infiltration"] + f_soil[c]*infilPerc_c["Infiltration"];
+      infilPerc["Runoff"] = infilPerc["Runoff"] + f_soil[c]*infilPerc_c["Runoff"];
+      infilPerc["DeepDrainage"] = infilPerc["DeepDrainage"] + f_soil[c]*infilPerc_c["DeepDrainage"];
+      for(int l=0;l<nlayers;l++) EsoilVec[l] = EsoilVec[l] + f_soil[c]*EsoilVec_c[l];
+      // Copy soil_c status back to x
+      for(int l=0;l<nlayers;l++) {
+        W(c,l) = W_c[l];
+        Ws[l] = Ws[l] + f_soil[c]*W(c,l); //weighted average for soil moisture
+      }
+    }
+  }
+  
+  //Canopy transpiration  
+  // Rcout<<"hola";
+  List transp = transpirationGranier(x, soil, tday, pet, true, true);
+  // Rcout<<"hola2";
   NumericMatrix EplantCoh = Rcpp::as<Rcpp::NumericMatrix>(transp["Extraction"]);
   for(int l=0;l<nlayers;l++) EplantVec[l] = sum(EplantCoh(_,l));
-  DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(transp["Plants"]);
-  
+  Plants = Rcpp::as<Rcpp::DataFrame>(transp["Plants"]);
+
   NumericVector psiVec = psi(soil, soilFunctions); //Calculate current soil water potential for output
   
   NumericVector DB = NumericVector::create(_["PET"] = pet, 
@@ -121,9 +175,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   String soilFunctions = control["soilFunctions"];
   int ntimesteps = control["ndailysteps"];
 
-  //Soil input
-  NumericVector W = soil["W"]; //Access to soil state variable
-  int nlayers = W.size();
+  //Number of soil layers
+  int nlayers = Rcpp::as<Rcpp::NumericVector>(soil["dVec"]).size();
 
   //Vegetation input
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
@@ -1194,7 +1247,7 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
     
     //2. transpiration and photosynthesis
     if(transpirationMode=="Granier") {
-      s = transpirationGranier(x, soil, MeanTemperature[i], PET[i], true);
+      s = transpirationGranier(x, soil, MeanTemperature[i], PET[i], true, true);
     } else if(transpirationMode=="Sperry") {
       std::string c = as<std::string>(dateStrings[i]);
       int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));

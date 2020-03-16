@@ -1099,18 +1099,17 @@ List transpirationSperry(List x, List soil, DataFrame meteo, int day,
 } 
 
 
-List transpirationGranier(List x, List soil, double tday, double pet, bool modifyInput = true) {
+List transpirationGranier(List x, List soil, double tday, double pet, 
+                          bool modifyInputX = true, bool modifyInputSoil = true) {
   //Control parameters
   List control = x["control"];
   String cavitationRefill = control["cavitationRefill"];
   String soilFunctions = control["soilFunctions"];
   double verticalLayerSize = control["verticalLayerSize"];
+  bool plantWaterPools = control["plantWaterPools"];
   
-  //Soil input
-  NumericVector W = soil["W"]; //Access to soil state variable
-  NumericVector psiSoil = psi(soil,soilFunctions); //Update soil water potential
+  //Soil water at field capacity
   NumericVector Water_FC = waterFC(soil, soilFunctions);
-  int nlayers = W.size();
   
   //Vegetation input
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
@@ -1125,6 +1124,7 @@ List transpirationGranier(List x, List soil, double tday, double pet, bool modif
   //Root distribution input
   List below = Rcpp::as<Rcpp::List>(x["below"]);
   NumericMatrix V = Rcpp::as<Rcpp::NumericMatrix>(below["V"]);
+  NumericMatrix W = Rcpp::as<Rcpp::NumericMatrix>(below["W"]);
   
   //Parameters  
   DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
@@ -1140,16 +1140,16 @@ List transpirationGranier(List x, List soil, double tday, double pet, bool modif
   NumericVector photosynthesis = Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
   NumericVector pEmb = clone(Rcpp::as<Rcpp::NumericVector>(x["PLC"]));
   
-  
   //Determine whether leaves are out (phenology) and the adjusted Leaf area
   NumericVector Phe(numCohorts,0.0);
-  double s = 0.0, LAIcell = 0.0, canopyHeight = 0.0, LAIcelldead = 0.0;
+  double s = 0.0, LAIcell = 0.0, canopyHeight = 0.0, LAIcelllive = 0.0, LAIcelldead = 0.0;
   for(int c=0;c<numCohorts;c++) {
     if(LAIlive[c]>0) Phe[c]=LAIphe[c]/LAIlive[c]; //Phenological status
     else Phe[c]=0.0;
     s += (kPAR[c]*(LAIphe[c]+LAIdead[c]));
     LAIcell += LAIphe[c]+LAIdead[c];
     LAIcelldead += LAIdead[c];
+    LAIcelllive += LAIlive[c];
     if(canopyHeight<H[c]) canopyHeight = H[c];
   }
   int nz = ceil(canopyHeight/verticalLayerSize); //Number of vertical layers
@@ -1174,6 +1174,12 @@ List transpirationGranier(List x, List soil, double tday, double pet, bool modif
   if(pabs>0.0) TmaxCoh = Tmax*(CohASWRF/pabs);
   
   //Actual plant transpiration
+  //Soil input
+  //Clone soil
+  NumericVector psiSoil = psi(soil,soilFunctions); //Update soil water potential
+  List soil_c;
+  if(plantWaterPools) soil_c= clone(soil);
+  int nlayers = W.ncol();
   NumericMatrix EplantCoh(numCohorts, nlayers);
   NumericMatrix PsiRoot(numCohorts, nlayers);
   NumericVector PlantPsi(numCohorts, NA_REAL);
@@ -1181,31 +1187,60 @@ List transpirationGranier(List x, List soil, double tday, double pet, bool modif
   NumericVector DDS(numCohorts, 0.0);
   NumericVector Kl, epc, Vl;
   double WeibullShape=3.0;
-  for(int l=0;l<nlayers;l++) {
-    Kl = Psi2K(psiSoil[l], Psi_Extract, WeibullShape);
-    
-    //Limit Kl due to previous cavitation
-    if(cavitationRefill!="total") {
-      for(int c=0;c<numCohorts;c++) Kl[c] = std::min(Kl[c], 1.0-pEmb[c]); 
+  for(int c=0;c<numCohorts;c++) {
+    if(plantWaterPools) { 
+      //Copy plant water pool moisture to soil moisture
+      NumericVector W_c = soil_c["W"];
+      for(int l=0;l<nlayers;l++) W_c[l] = W(c,l);
+      //Update soil water potential from pool moisture
+      psiSoil = psi(soil_c,soilFunctions); 
     }
-    //Limit Kl to minimum value for root disconnection
-    Vl = V(_,l);
-    epc = pmax(TmaxCoh*Kl*Vl,0.0);
-    for(int c=0;c<numCohorts;c++) {
+    for(int l=0;l<nlayers;l++) {
+      double Klc = Psi2K(psiSoil[l], Psi_Extract[c], WeibullShape);
+      //Limit Kl due to previous cavitation
+      if(cavitationRefill!="total") {
+        Klc = std::min(Klc, 1.0-pEmb[c]); 
+      }
+      double epc = std::max(TmaxCoh[c]*Klc*V(c,l),0.0);
       PsiRoot(c,l) = psiSoil[l]; //Set initial guess of root potential to soil values
       //If relative conductance is smaller than the value for root disconnection
       //Set root potential to minimum value before disconnection and transpiration from that layer to zero
-      if(Kl[c]<pRootDisc[c]) { 
+      if(Klc<pRootDisc[c]) { 
         PsiRoot(c,l) = K2Psi(pRootDisc[c],Psi_Extract[c],WeibullShape);
-        Kl[c] = pRootDisc[c]; //So that layer stress does not go below pRootDisc
-        epc[c] = 0.0; //Set transpiration from layer to zero
+        Klc = pRootDisc[c]; //So that layer stress does not go below pRootDisc
+        epc = 0.0; //Set transpiration from layer to zero
       }
+      EplantCoh(c,l) = epc;
+      Eplant[c] = Eplant[c] + epc;
+      DDS[c] = DDS[c] + Phe[c]*(V(c,l)*(1.0 - Klc)); //Add stress from the current layer
+      
     }
-    
-    EplantCoh(_,l) = epc;
-    Eplant = Eplant + epc;
-    DDS = DDS + Phe*(Vl*(1.0 - Kl)); //Add stress from the current layer
   }
+  // for(int l=0;l<nlayers;l++) {
+  //   Kl = Psi2K(psiSoil[l], Psi_Extract, WeibullShape);
+  //   
+  //   //Limit Kl due to previous cavitation
+  //   if(cavitationRefill!="total") {
+  //     for(int c=0;c<numCohorts;c++) Kl[c] = std::min(Kl[c], 1.0-pEmb[c]); 
+  //   }
+  //   //Limit Kl to minimum value for root disconnection
+  //   Vl = V(_,l);
+  //   epc = pmax(TmaxCoh*Kl*Vl,0.0);
+  //   for(int c=0;c<numCohorts;c++) {
+  //     PsiRoot(c,l) = psiSoil[l]; //Set initial guess of root potential to soil values
+  //     //If relative conductance is smaller than the value for root disconnection
+  //     //Set root potential to minimum value before disconnection and transpiration from that layer to zero
+  //     if(Kl[c]<pRootDisc[c]) { 
+  //       PsiRoot(c,l) = K2Psi(pRootDisc[c],Psi_Extract[c],WeibullShape);
+  //       Kl[c] = pRootDisc[c]; //So that layer stress does not go below pRootDisc
+  //       epc[c] = 0.0; //Set transpiration from layer to zero
+  //     }
+  //   }
+  //   
+  //   EplantCoh(_,l) = epc;
+  //   Eplant = Eplant + epc;
+  //   DDS = DDS + Phe*(Vl*(1.0 - Kl)); //Add stress from the current layer
+  // }
   
   double alpha = std::max(std::min(tday/20.0,1.0),0.0);
   for(int c=0;c<numCohorts;c++) {
@@ -1218,23 +1253,37 @@ List transpirationGranier(List x, List soil, double tday, double pet, bool modif
   }
   
   
-  if(modifyInput) {
+  if(modifyInputX) {
     for(int c=0;c<numCohorts;c++) {
       transpiration[c] = Eplant[c];
       photosynthesis[c] = Anplant[c];
     }
     x["PLC"] = pEmb;
   }
+  //Modifies input soil
+  if(modifyInputSoil) {
+    NumericVector Ws = soil["W"];
+    for(int l=0;l<nlayers;l++) Ws[l] = Ws[l] - (sum(EplantCoh(_,l))/Water_FC[l]); 
+    if(plantWaterPools) {
+      for(int c=0;c<numCohorts;c++) {
+        for(int l=0;l<nlayers;l++) {
+          W(c,l) = W(c,l) - (EplantCoh(c,l)*(LAIcelllive/LAIlive[c])/Water_FC[l]);
+        }
+      }
+    } else { //copy soil to the pools of all cohorts
+      for(int c=0;c<numCohorts;c++) {
+        for(int l=0;l<nlayers;l++) {
+          W(c,l) = Ws[l];
+        }
+      }
+    }
+  }
   
   //Copy LAIexpanded for output
   NumericVector LAIcohort(numCohorts);
   for(int c=0;c<numCohorts;c++) LAIcohort[c]= LAIphe[c];
   
-  if(modifyInput) {
-    for(int l=0;l<nlayers;l++) {
-      W[l] = W[l] - (sum(EplantCoh(_,l))/Water_FC[l]); 
-    }
-  }
+
   DataFrame Plants = DataFrame::create(_["LAI"] = LAIcohort,
                                        _["AbsorbedSWRFraction"] = CohASWRF, 
                                        _["Transpiration"] = Eplant, 
@@ -1251,13 +1300,13 @@ List transpirationGranier(List x, List soil, double tday, double pet, bool modif
 
 // [[Rcpp::export("transp_transpirationGranier")]]
 List transpirationGranier(List x, List soil, DataFrame meteo, int day,
-                          bool modifyInput = true) {
+                          bool modifyInputX = true, bool modifyInputSoil = true) {
   if(!meteo.containsElementNamed("MeanTemperature")) stop("Please include variable 'MeanTemperature' in weather input.");
   NumericVector MeanTemperature = meteo["MeanTemperature"];
   if(!meteo.containsElementNamed("PET")) stop("Please include variable 'PET' in weather input.");
   NumericVector PET = meteo["PET"];
   double pet = PET[day-1];
   double tday = MeanTemperature[day-1];
-  return(transpirationGranier(x,soil, tday, pet, modifyInput));
+  return(transpirationGranier(x,soil, tday, pet, modifyInputX, modifyInputSoil));
 } 
 

@@ -14,7 +14,8 @@ Set of high-level functions used in the calculation of stomatal conductance and 
 \usage{
 transp_profitMaximization(supplyFunction, photosynthesisFunction, Gwmin, Gwmax, 
                           gainModifier = 1.0, costModifier = 1.0)
-transp_transpirationGranier(x, soil, meteo, day, modifyInput = TRUE)
+transp_transpirationGranier(x, soil, meteo, day, 
+                            modifyInputX = TRUE, modifyInputSoil = TRUE)
 transp_transpirationSperry(x, soil, meteo, day,
                            latitude, elevation, slope, aspect, 
                            canopyEvaporation = 0, snowMelt = 0, soilEvaporation = 0, 
@@ -54,7 +55,7 @@ transp_stomatalRegulationPlot(x, soil, meteo, day, timestep,
   \item{snowMelt}{Snow melt values  for \code{day} (mm).}
   \item{stepFunctions}{An integer to indicate a simulation step for which photosynthesis and profit maximization functions are desired.}
   \item{type}{A string with plot type, either \code{"E"} (transpiration flow), \code{"An"} (net photosynthesis), \code{"Gw"} (stomatal conductance), \code{"T"} (temperature) or \code{"VPD"} (vapour pressure deficit).}
-  \item{modifyInput}{Boolean flag to indicate that the input \code{x} and \code{soil} objects are allowed to be modified during the simulation.}
+  \item{modifyInputX, modifyInputSoil}{Boolean flags to indicate that the input \code{x} and \code{soil} objects are allowed to be modified during the simulation.}
 }
 \details{
 Details of the transpiration submodel are given in a vignette.

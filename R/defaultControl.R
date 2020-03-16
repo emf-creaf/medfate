@@ -8,6 +8,7 @@ defaultControl<-function() {
     snowpack = TRUE,
     drainage = TRUE,
     unlimitedSoilWater = FALSE,
+    plantWaterPools = FALSE,
     leafPhenology = TRUE,
     transpirationMode = "Granier", #vs. "Sperry"
     cuticularTranspiration = TRUE,

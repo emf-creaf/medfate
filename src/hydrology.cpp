@@ -218,7 +218,8 @@ NumericVector soilInfiltrationPercolation(List soil, String soilFunctions,
     }
   }
   if(modifySoil) {
-    soil["W"] = W;
+    NumericVector Ws = soil["W"];
+    for(int l=0;l<nlayers;l++) Ws[l] = W[l];
   }
   NumericVector DB = NumericVector::create(_["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage);
   return(DB);

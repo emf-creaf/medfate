@@ -278,6 +278,7 @@ List paramsBelow(DataFrame above, NumericMatrix V, List soil,
   NumericVector dVec = soil["dVec"];
   NumericVector VG_alpha = soil["VG_alpha"];
   NumericVector VG_n = soil["VG_n"];
+  NumericVector Ws = soil["W"];
   int nlayers = dVec.size();
   
   double averageFracRhizosphereResistance = control["averageFracRhizosphereResistance"];
@@ -299,6 +300,9 @@ List paramsBelow(DataFrame above, NumericMatrix V, List soil,
   
   int numCohorts = VCroottot_kmax.length();
   
+  NumericMatrix W = NumericMatrix(numCohorts, nlayers);
+  W.attr("dimnames") = V.attr("dimnames");
+  
   NumericMatrix VCroot_kmax(numCohorts, nlayers); 
   NumericMatrix VGrhizo_kmax(numCohorts, nlayers);
   NumericVector Vc;
@@ -306,6 +310,7 @@ List paramsBelow(DataFrame above, NumericMatrix V, List soil,
     Vc = V(c,_);
     
     for(int l=0;l<nlayers;l++) {
+      W(c,l) = Ws[l];
       VCroot_kmax(c,_) = VCroottot_kmax[c]*xylemConductanceProportions(Vc,dVec);
       VGrhizo_kmax(c,l) = V(c,l)*findRhizosphereMaximumConductance(averageFracRhizosphereResistance*100.0, VG_n[l], VG_alpha[l],
                    VCroot_kmax[c], VCroot_c[c], VCroot_d[c],
@@ -318,6 +323,7 @@ List paramsBelow(DataFrame above, NumericMatrix V, List soil,
   
   
   List below = List::create(_["V"] = V,
+                            _["W"] = W,
                             _["VGrhizo_kmax"] = VGrhizo_kmax,
                             _["VCroot_kmax"] = VCroot_kmax);
   return(below);
@@ -331,6 +337,7 @@ List paramsBelowZ(DataFrame above, NumericMatrix V, NumericVector Z, List soil,
   Z.attr("names") = above.attr("row.names");
   
   List below = List::create(_["V"] = V, _["Z"] = Z,
+                            _["W"] = belowTemp["W"],
                             _["VGrhizo_kmax"] = belowTemp["VGrhizo_kmax"],
                             _["VCroot_kmax"] = belowTemp["VCroot_kmax"]);
   
@@ -395,6 +402,8 @@ DataFrame paramsAllometries(DataFrame above, DataFrame SpParams) {
 // [[Rcpp::export("spwbInput")]]
 List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, List control) {
   
+  int nlayers = V.ncol();
+  
   IntegerVector SP = above["SP"];
   NumericVector LAI_live = above["LAI_live"];
   NumericVector LAI_expanded = above["LAI_expanded"];
@@ -409,8 +418,6 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
   if((soilFunctions!="SX") & (soilFunctions!="VG")) stop("Wrong soil functions ('soilFunctions' should be either 'SX' or 'VG')");
   
 
-  NumericVector W = soil["W"];
-  int nlayers = W.length();
   NumericVector alphaSWR = cohortNumericParameter(SP, SpParams, "alphaSWR");
   NumericVector gammaSWR = cohortNumericParameter(SP, SpParams, "gammaSWR");
   NumericVector kPAR = cohortNumericParameter(SP, SpParams, "kPAR");
@@ -439,6 +446,12 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
 
   List input;
   if(transpirationMode=="Granier") {
+    NumericVector Ws = soil["W"];
+    NumericMatrix W = NumericMatrix(numCohorts, nlayers);
+    W.attr("dimnames") = V.attr("dimnames");
+    for(int c=0;c<numCohorts;c++){
+      for(int l=0;l<nlayers;l++) W(c,l) = Ws[l]; //Init from soil state
+    }
     
     //Base params
     DataFrame paramsBasedf = DataFrame::create(_["kPAR"] = kPAR, 
@@ -451,7 +464,8 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     NumericVector pRootDisc = cohortNumericParameter(SP, SpParams, "pRootDisc");
     DataFrame paramsTranspdf = DataFrame::create(_["Psi_Extract"]=Psi_Extract,_["WUE"] = WUE,  _["pRootDisc"] = pRootDisc);
     paramsTranspdf.attr("row.names") = above.attr("row.names");
-    List below = List::create(_["V"] = V);
+    List below = List::create(_["V"] = V,
+                              _["W"] = W);
 
     List paramsCanopy = List::create(_["gdd"] = 0);
     input = List::create(_["control"] = clone(control),
