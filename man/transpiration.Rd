@@ -19,7 +19,8 @@ transp_transpirationGranier(x, soil, meteo, day,
 transp_transpirationSperry(x, soil, meteo, day,
                            latitude, elevation, slope, aspect, 
                            canopyEvaporation = 0, snowMelt = 0, soilEvaporation = 0, 
-                           stepFunctions = NA, modifyInput = TRUE)
+                           stepFunctions = NA, 
+                           modifyInputX = TRUE, modifyInputSoil = TRUE)
 transp_stomatalRegulationPlot(x, soil, meteo, day, timestep, 
                               latitude, elevation, slope = NA, aspect = NA,
                               type="E")

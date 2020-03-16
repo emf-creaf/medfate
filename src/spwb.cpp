@@ -68,12 +68,6 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   double LgroundPAR = exp((-1.0)*s);
   double LgroundSWR = exp((-1.0)*s/1.35);
   
-  NumericVector f_soil(numCohorts, 0.0);
-  if(plantWaterPools) {
-    for(int c=0;c<numCohorts;c++) {
-      f_soil[c] = LAIlive[c]/LAIcelllive;
-    }
-  }
   //Snow pack dynamics and hydrology input
   NumericVector hydroInputs = soilWaterInputs(soil, soilFunctions, prec, er, tday, rad, elevation,
                                              Cm, LgroundPAR, LgroundSWR, 
@@ -82,8 +76,7 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   
   NumericVector infilPerc, EsoilVec;
   NumericVector EplantVec(nlayers, 0.0);
-  DataFrame Plants;
-
+  
   if(!plantWaterPools) {
     //Soil infiltration and percolation
     infilPerc = soilInfiltrationPercolation(soil, soilFunctions, 
@@ -104,6 +97,7 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
                                       _["DeepDrainage"] = 0.0);
     EsoilVec = NumericVector(nlayers,0.0);
     for(int c=0;c<numCohorts;c++) {
+      double f_soil_c = LAIlive[c]/LAIcelllive;
       
       //Clone soil and copy moisture values from x
       List soil_c =  clone(soil);
@@ -117,14 +111,14 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
       //Evaporation from bare soil_c (if there is no snow)
       NumericVector EsoilVec_c = soilEvaporation(soil_c, soilFunctions, pet, LgroundSWR, true);
       //Copy result vectors
-      infilPerc["Infiltration"] = infilPerc["Infiltration"] + f_soil[c]*infilPerc_c["Infiltration"];
-      infilPerc["Runoff"] = infilPerc["Runoff"] + f_soil[c]*infilPerc_c["Runoff"];
-      infilPerc["DeepDrainage"] = infilPerc["DeepDrainage"] + f_soil[c]*infilPerc_c["DeepDrainage"];
-      for(int l=0;l<nlayers;l++) EsoilVec[l] = EsoilVec[l] + f_soil[c]*EsoilVec_c[l];
+      infilPerc["Infiltration"] = infilPerc["Infiltration"] + f_soil_c*infilPerc_c["Infiltration"];
+      infilPerc["Runoff"] = infilPerc["Runoff"] + f_soil_c*infilPerc_c["Runoff"];
+      infilPerc["DeepDrainage"] = infilPerc["DeepDrainage"] + f_soil_c*infilPerc_c["DeepDrainage"];
+      for(int l=0;l<nlayers;l++) EsoilVec[l] = EsoilVec[l] + f_soil_c*EsoilVec_c[l];
       // Copy soil_c status back to x
       for(int l=0;l<nlayers;l++) {
         W(c,l) = W_c[l];
-        Ws[l] = Ws[l] + f_soil[c]*W(c,l); //weighted average for soil moisture
+        Ws[l] = Ws[l] + f_soil_c*W(c,l); //weighted average for soil moisture
       }
     }
   }
@@ -135,7 +129,7 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   // Rcout<<"hola2";
   NumericMatrix EplantCoh = Rcpp::as<Rcpp::NumericMatrix>(transp["Extraction"]);
   for(int l=0;l<nlayers;l++) EplantVec[l] = sum(EplantCoh(_,l));
-  Plants = Rcpp::as<Rcpp::DataFrame>(transp["Plants"]);
+  DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(transp["Plants"]);
 
   NumericVector psiVec = psi(soil, soilFunctions); //Calculate current soil water potential for output
   
@@ -172,12 +166,17 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   List control = x["control"];
   bool drainage = control["drainage"];
   bool snowpack = control["snowpack"];
+  bool plantWaterPools = control["plantWaterPools"];
   String soilFunctions = control["soilFunctions"];
   int ntimesteps = control["ndailysteps"];
 
   //Number of soil layers
   int nlayers = Rcpp::as<Rcpp::NumericVector>(soil["dVec"]).size();
 
+  List below = x["below"];
+  NumericMatrix W = below["W"];
+  NumericVector Ws = soil["W"];
+  
   //Vegetation input
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
@@ -197,12 +196,13 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   //1. Leaf Phenology: Adjusted leaf area index
   double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
   NumericVector Phe(numCohorts);
-  double s = 0.0, LAIcell = 0.0, LAIcelldead = 0.0, Cm = 0.0, LAIcellmax = 0.0;
+  double s = 0.0, LAIcell = 0.0, LAIcelldead = 0.0, LAIcelllive = 0.0, Cm = 0.0, LAIcellmax = 0.0;
   for(int c=0;c<numCohorts;c++) {
     Phe[c]=LAIphe[c]/LAIlive[c]; //Phenological status
     LAIcell += (LAIphe[c]+LAIdead[c]);
     LAIcelldead += LAIdead[c];
     LAIcellmax += LAIlive[c];
+    LAIcelllive += LAIlive[c];
     s += (kPAR[c]*(LAIphe[c]+LAIdead[c]));
     Cm += (LAIphe[c]+LAIdead[c])*gRainIntercept[c]; //LAI dead also counts on interception
   }
@@ -214,22 +214,60 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
                                               Cm, LgroundPAR, LgroundSWR, 
                                               runon,
                                               snowpack, true);
-  //A.2 - Soil infiltration and percolation
-  NumericVector infilPerc = soilInfiltrationPercolation(soil, soilFunctions, 
-                                                        hydroInputs["Input"],
-                                                        drainage, true);
   
-  
-  
-  //B.1 - Evaporation from bare soil if there is no snow
-  NumericVector EsoilVec = soilEvaporation(soil, soilFunctions, pet, LgroundSWR, true);
-  
+  NumericVector infilPerc, EsoilVec;
+  if(!plantWaterPools) {
+    //A.2 - Soil infiltration and percolation
+    infilPerc = soilInfiltrationPercolation(soil, soilFunctions, 
+                                            hydroInputs["Input"],
+                                                       drainage, true);
+    //B.1 - Evaporation from bare soil if there is no snow
+    EsoilVec = soilEvaporation(soil, soilFunctions, pet, LgroundSWR, true);
+    
+    //Copy soil status to x
+    for(int c=0;c<numCohorts;c++) for(int l=0;l<nlayers;l++) W(c,l) = Ws[l];
+  } else {
+    //Reset soil moisture
+    for(int l=0;l<nlayers;l++) Ws[l] = 0.0;
+    
+    //Initialize result vectors
+    infilPerc = NumericVector::create(_["Infiltration"] = 0.0, 
+                                      _["Runoff"] = 0.0, 
+                                      _["DeepDrainage"] = 0.0);
+    EsoilVec = NumericVector(nlayers,0.0);
+    for(int c=0;c<numCohorts;c++) {
+      double f_soil_c = LAIlive[c]/LAIcelllive;
+      
+      //Clone soil and copy moisture values from x
+      List soil_c =  clone(soil);
+      NumericVector W_c = soil_c["W"];
+      for(int l=0;l<nlayers;l++) W_c[l] = W(c,l);
+      
+      //Soil_c infiltration and percolation
+      NumericVector infilPerc_c = soilInfiltrationPercolation(soil_c, soilFunctions, 
+                                                              hydroInputs["Input"],
+                                                                         drainage, true);
+      //Evaporation from bare soil_c (if there is no snow)
+      NumericVector EsoilVec_c = soilEvaporation(soil_c, soilFunctions, pet, LgroundSWR, true);
+      //Copy result vectors
+      infilPerc["Infiltration"] = infilPerc["Infiltration"] + f_soil_c*infilPerc_c["Infiltration"];
+      infilPerc["Runoff"] = infilPerc["Runoff"] + f_soil_c*infilPerc_c["Runoff"];
+      infilPerc["DeepDrainage"] = infilPerc["DeepDrainage"] + f_soil_c*infilPerc_c["DeepDrainage"];
+      for(int l=0;l<nlayers;l++) EsoilVec[l] = EsoilVec[l] + f_soil_c*EsoilVec_c[l];
+      // Copy soil_c status back to x
+      for(int l=0;l<nlayers;l++) {
+        W(c,l) = W_c[l];
+        Ws[l] = Ws[l] + f_soil_c*W(c,l); //weighted average for soil moisture
+      }
+    }
+  }
+
   //B.2 - Canopy transpiration  
   List transp = transpirationSperry(x, soil,tmin, tmax, rhmin, rhmax, rad, wind, 
                                     latitude, elevation, slope, aspect, 
                                     solarConstant, delta, prec, 
                                     hydroInputs["Interception"], hydroInputs["Snowmelt"], sum(EsoilVec),
-                                    verbose, NA_INTEGER, true);
+                                    verbose, NA_INTEGER, true, true);
 
   
   NumericMatrix soilLayerExtractInst = Rcpp::as<Rcpp::NumericMatrix>(transp["ExtractionInst"]);
@@ -1264,7 +1302,7 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
                               latitude, elevation, slope, aspect,
                               solarConstant, delta, prec,
                               canopyEvaporation[i], snowMelt[i], soilEvaporation[i],
-                              verbose, NA_INTEGER, true);
+                              verbose, NA_INTEGER, true, true);
       
     }
     List Plants = s["Plants"];

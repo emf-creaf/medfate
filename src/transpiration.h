@@ -13,4 +13,5 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
                   double latitude, double elevation, double slope, double aspect,
                   double solarConstant, double delta, double prec,
                   double canopyEvaporation = 0.0, double snowMelt = 0.0, double soilEvaporation = 0.0,
-                  bool verbose = false, int stepFunctions = NA_INTEGER, bool modifyInput = true);
+                  bool verbose = false, int stepFunctions = NA_INTEGER, 
+                  bool modifyInputX = true, bool modifyInputSoil = true);

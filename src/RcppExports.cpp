@@ -3716,8 +3716,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // transpirationSperry
-List transpirationSperry(List x, List soil, DataFrame meteo, int day, double latitude, double elevation, double slope, double aspect, double canopyEvaporation, double snowMelt, double soilEvaporation, int stepFunctions, bool modifyInput);
-RcppExport SEXP _medfate_transpirationSperry(SEXP xSEXP, SEXP soilSEXP, SEXP meteoSEXP, SEXP daySEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP canopyEvaporationSEXP, SEXP snowMeltSEXP, SEXP soilEvaporationSEXP, SEXP stepFunctionsSEXP, SEXP modifyInputSEXP) {
+List transpirationSperry(List x, List soil, DataFrame meteo, int day, double latitude, double elevation, double slope, double aspect, double canopyEvaporation, double snowMelt, double soilEvaporation, int stepFunctions, bool modifyInputX, bool modifyInputSoil);
+RcppExport SEXP _medfate_transpirationSperry(SEXP xSEXP, SEXP soilSEXP, SEXP meteoSEXP, SEXP daySEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP canopyEvaporationSEXP, SEXP snowMeltSEXP, SEXP soilEvaporationSEXP, SEXP stepFunctionsSEXP, SEXP modifyInputXSEXP, SEXP modifyInputSoilSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -3733,8 +3733,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type snowMelt(snowMeltSEXP);
     Rcpp::traits::input_parameter< double >::type soilEvaporation(soilEvaporationSEXP);
     Rcpp::traits::input_parameter< int >::type stepFunctions(stepFunctionsSEXP);
-    Rcpp::traits::input_parameter< bool >::type modifyInput(modifyInputSEXP);
-    rcpp_result_gen = Rcpp::wrap(transpirationSperry(x, soil, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, stepFunctions, modifyInput));
+    Rcpp::traits::input_parameter< bool >::type modifyInputX(modifyInputXSEXP);
+    Rcpp::traits::input_parameter< bool >::type modifyInputSoil(modifyInputSoilSEXP);
+    rcpp_result_gen = Rcpp::wrap(transpirationSperry(x, soil, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, stepFunctions, modifyInputX, modifyInputSoil));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4139,7 +4140,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_tissueRelativeWaterContent", (DL_FUNC) &_medfate_tissueRelativeWaterContent, 8},
     {"_medfate_tissueFMC", (DL_FUNC) &_medfate_tissueFMC, 3},
     {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 6},
-    {"_medfate_transpirationSperry", (DL_FUNC) &_medfate_transpirationSperry, 13},
+    {"_medfate_transpirationSperry", (DL_FUNC) &_medfate_transpirationSperry, 14},
     {"_medfate_transpirationGranier", (DL_FUNC) &_medfate_transpirationGranier, 6},
     {"_medfate_windSpeedAtCanopyHeight", (DL_FUNC) &_medfate_windSpeedAtCanopyHeight, 2},
     {"_medfate_unshelteredMidflameWindSpeed", (DL_FUNC) &_medfate_unshelteredMidflameWindSpeed, 2},
