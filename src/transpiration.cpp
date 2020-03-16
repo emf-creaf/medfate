@@ -16,6 +16,35 @@ const double SIGMA_Wm2 = 5.67*1e-8;
 const double Cp_JKG = 1013.86; // J * kg^-1 * ºC^-1
 const double eps_xylem = 10^3; // xylem elastic modulus (1 GPa = 1000 MPa)
 
+// [[Rcpp::export("transp_mixingProportions")]]
+NumericVector mixingProportions(NumericMatrix V, double LAIcelllive) {
+  int numCohorts = V.nrow();
+  int numlayers = V.ncol();
+  double pmixmax = 0.2*(1.0 - exp(-LAIcelllive));
+  NumericVector layerRD(numlayers);
+  NumericVector pmixing(numlayers);
+  double maxRD = 0.0;
+  for(int l=0;l<numlayers;l++) {
+    layerRD[l] = pow(sum(V(_,l)),2.0); 
+    maxRD = std::max(maxRD, layerRD[l]);
+  }
+  for(int l=0;l<numlayers;l++) {
+    pmixing[l] = (layerRD[l]/maxRD)*pmixmax;
+  }
+  return(pmixing);
+}
+// Mixes the moisture of pools among cohorts
+void poolMixing(NumericMatrix V, NumericMatrix W, NumericVector Ws, double LAIcelllive) {
+  int numCohorts = V.nrow();
+  int numlayers = V.ncol();
+  NumericVector pmixing = mixingProportions(V, LAIcelllive);
+  for(int c=0;c<numCohorts;c++) {
+    for(int l=0;l<numlayers;l++) {
+      W(c,l) = W(c,l)*(1.0-pmixing[l]) + Ws[l]*pmixing[l]; 
+    }
+  }
+}
+
 // [[Rcpp::export("transp_profitMaximization")]]
 List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, double Gwmin, double Gwmax, 
                         double gainModifier = 1.0, double costModifier = 1.0) {
@@ -926,6 +955,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
           W(c,l) = W(c,l) - (SoilWaterExtract(c,l)*(LAIcelllive/LAIlive[c])/Water_FC[l]);
         }
       }
+      poolMixing(V,W,Ws,LAIcelllive);
     } else { //copy soil to the pools of all cohorts
       for(int c=0;c<numCohorts;c++) {
         for(int l=0;l<nlayers;l++) {
@@ -1271,6 +1301,7 @@ List transpirationGranier(List x, List soil, double tday, double pet,
           W(c,l) = W(c,l) - (EplantCoh(c,l)*(LAIcelllive/LAIlive[c])/Water_FC[l]);
         }
       }
+      poolMixing(V,W,Ws,LAIcelllive);
     } else { //copy soil to the pools of all cohorts
       for(int c=0;c<numCohorts;c++) {
         for(int l=0;l<nlayers;l++) {

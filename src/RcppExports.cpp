@@ -3699,6 +3699,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// mixingProportions
+NumericVector mixingProportions(NumericMatrix V, double LAIcelllive);
+RcppExport SEXP _medfate_mixingProportions(SEXP VSEXP, SEXP LAIcellliveSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type V(VSEXP);
+    Rcpp::traits::input_parameter< double >::type LAIcelllive(LAIcellliveSEXP);
+    rcpp_result_gen = Rcpp::wrap(mixingProportions(V, LAIcelllive));
+    return rcpp_result_gen;
+END_RCPP
+}
 // profitMaximization
 List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, double Gwmin, double Gwmax, double gainModifier, double costModifier);
 RcppExport SEXP _medfate_profitMaximization(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP, SEXP GwminSEXP, SEXP GwmaxSEXP, SEXP gainModifierSEXP, SEXP costModifierSEXP) {
@@ -4139,6 +4151,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_apoplasticWaterPotential", (DL_FUNC) &_medfate_apoplasticWaterPotential, 3},
     {"_medfate_tissueRelativeWaterContent", (DL_FUNC) &_medfate_tissueRelativeWaterContent, 8},
     {"_medfate_tissueFMC", (DL_FUNC) &_medfate_tissueFMC, 3},
+    {"_medfate_mixingProportions", (DL_FUNC) &_medfate_mixingProportions, 2},
     {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 6},
     {"_medfate_transpirationSperry", (DL_FUNC) &_medfate_transpirationSperry, 14},
     {"_medfate_transpirationGranier", (DL_FUNC) &_medfate_transpirationGranier, 6},
