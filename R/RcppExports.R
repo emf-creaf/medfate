@@ -613,8 +613,8 @@ root_xylemConductanceProportions <- function(v, d, depthWidthRatio = 1.0) {
     .Call(`_medfate_xylemConductanceProportions`, v, d, depthWidthRatio)
 }
 
-root_rhizosphereOverlapProportions <- function(V, LAIcelllive, f) {
-    .Call(`_medfate_rhizosphereOverlapProportions`, V, LAIcelllive, f)
+root_rhizosphereOverlapProportions <- function(V, LAIlive, f) {
+    .Call(`_medfate_rhizosphereOverlapProportions`, V, LAIlive, f)
 }
 
 soil_thetaSATSX <- function(clay, sand, om = NA_real_) {
