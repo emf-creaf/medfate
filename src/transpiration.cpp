@@ -16,34 +16,63 @@ const double SIGMA_Wm2 = 5.67*1e-8;
 const double Cp_JKG = 1013.86; // J * kg^-1 * ºC^-1
 const double eps_xylem = 10^3; // xylem elastic modulus (1 GPa = 1000 MPa)
 
-// [[Rcpp::export("transp_mixingProportions")]]
-NumericVector mixingProportions(NumericMatrix V, double LAIcelllive, double maximumPoolMixingRate) {
+// [[Rcpp::export("transp_rootOverlapProportions")]]
+NumericMatrix rootOverlapProportions(NumericMatrix V, double LAIcelllive, double f) {
   int numCohorts = V.nrow();
   int numlayers = V.ncol();
-  double pmixmax = maximumPoolMixingRate*(1.0 - exp(-LAIcelllive));
-  NumericVector layerRD(numlayers);
-  NumericVector pmixing(numlayers);
-  double maxRD = 0.0;
-  for(int l=0;l<numlayers;l++) {
-    layerRD[l] = pow(sum(V(_,l)),2.0); 
-    maxRD = std::max(maxRD, layerRD[l]);
-  }
-  for(int l=0;l<numlayers;l++) {
-    pmixing[l] = (layerRD[l]/maxRD)*pmixmax;
-  }
-  return(pmixing);
-}
-// Mixes the moisture of pools among cohorts
-void poolMixing(NumericMatrix V, NumericMatrix W, NumericVector Ws, double LAIcelllive, double maximumPoolMixingRate) {
-  int numCohorts = V.nrow();
-  int numlayers = V.ncol();
-  NumericVector pmixing = mixingProportions(V, LAIcelllive, maximumPoolMixingRate);
+  double pmixmax = (1.0 - exp(-f*LAIcelllive));
+  NumericMatrix pmixing(numCohorts,numlayers);
   for(int c=0;c<numCohorts;c++) {
+    double RDs = 0.0;
+    NumericVector layerRD(numlayers,0.0);
     for(int l=0;l<numlayers;l++) {
-      W(c,l) = W(c,l)*(1.0-pmixing[l]) + Ws[l]*pmixing[l]; 
+      if(numCohorts>1) {
+        for(int c2=0;c2<numCohorts;c2++) {
+          if(c2!=c) layerRD[l] += V(c,l)*V(c2,l);
+        }
+        layerRD[l] = layerRD[l]/((double) (numCohorts-1));
+      }
+      RDs += layerRD[l];
+    }
+    for(int l=0;l<numlayers;l++) {
+      pmixing(c,l) = (layerRD[l]/RDs)*pmixmax;
     }
   }
+  pmixing.attr("dimnames") = V.attr("dimnames");
+  return(pmixing);
 }
+
+NumericMatrix cohortRhizosphereMoisture(NumericMatrix W, NumericMatrix ROP, NumericVector poolProportions) {
+  int numCohorts = W.nrow();
+  int nlayers = W.ncol();
+  NumericMatrix CRM(numCohorts, nlayers);
+  CRM.attr("dimnames") = W.attr("dimnames");
+  
+  for(int c=0;c<numCohorts;c++) {
+    double pps = 0.0;
+    for(int c2=0;c2<numCohorts;c2++) if(c2!=c) pps +=poolProportions[c2];
+    for(int l=0;l<nlayers;l++) {
+      CRM(c,l) = W(c,l)*(1.0 - ROP(c,l));
+      for(int c2=0;c2<numCohorts;c2++) {
+        if(c2!=c) {
+          CRM(c,l) += W(c2,l)*ROP(c,l)*(poolProportions[c2]/pps);
+        }
+      }
+    }
+  }
+  return(CRM);
+}
+// Mixes the moisture of pools among cohorts
+// void poolMixing(NumericMatrix V, NumericMatrix W, NumericVector Ws, double LAIcelllive, double maximumPoolMixingRate) {
+//   int numCohorts = V.nrow();
+//   int numlayers = V.ncol();
+//   NumericVector pmixing = mixingProportions(V, LAIcelllive, maximumPoolMixingRate);
+//   for(int c=0;c<numCohorts;c++) {
+//     for(int l=0;l<numlayers;l++) {
+//       W(c,l) = W(c,l)*(1.0-pmixing[l]) + Ws[l]*pmixing[l]; 
+//     }
+//   }
+// }
 
 // [[Rcpp::export("transp_profitMaximization")]]
 List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, double Gwmin, double Gwmax, 
@@ -950,12 +979,12 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
       Ws[l] = std::max(Ws[l] - (sum(soilLayerExtractInst(l,_))/Water_FC[l]),0.0);
     } 
     if(plantWaterPools) {
-      for(int c=0;c<numCohorts;c++) {
-        for(int l=0;l<nlayers;l++) {
-          W(c,l) = W(c,l) - (SoilWaterExtract(c,l)*(LAIcelllive/LAIlive[c])/Water_FC[l]);
-        }
-      }
-      poolMixing(V,W,Ws,LAIcelllive,maximumPoolMixingRate);
+      // for(int c=0;c<numCohorts;c++) {
+      //   for(int l=0;l<nlayers;l++) {
+      //     W(c,l) = W(c,l) - (SoilWaterExtract(c,l)*(LAIcelllive/LAIlive[c])/Water_FC[l]);
+      //   }
+      // }
+      // poolMixing(V,W,Ws,LAIcelllive,maximumPoolMixingRate);
     } else { //copy soil to the pools of all cohorts
       for(int c=0;c<numCohorts;c++) {
         for(int l=0;l<nlayers;l++) {
@@ -1183,6 +1212,7 @@ List transpirationGranier(List x, List soil, double tday, double pet,
   List below = Rcpp::as<Rcpp::List>(x["below"]);
   NumericMatrix V = Rcpp::as<Rcpp::NumericMatrix>(below["V"]);
   NumericMatrix W = Rcpp::as<Rcpp::NumericMatrix>(below["W"]);
+  NumericMatrix ROP, Wrhizo;
   
   //Parameters  
   DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
@@ -1235,7 +1265,16 @@ List transpirationGranier(List x, List soil, double tday, double pet,
   //Soil input
   NumericVector psiSoil = psi(soil,soilFunctions); //Update soil water potential
   List soil_c;
-  if(plantWaterPools) soil_c= clone(soil); //Clone soil
+  if(plantWaterPools) {
+    //Calculate proportions of cohort-unique pools
+    NumericVector poolProportions(numCohorts);
+    for(int c=0;c<numCohorts;c++) poolProportions[c] = LAIlive[c]/LAIcelllive;
+    //Calculate proportions of roots overlapping other pools
+    ROP = rootOverlapProportions(V, LAIcelllive, maximumPoolMixingRate);
+    soil_c= clone(soil); //Clone soil
+    //Calculate average rhizosphere moisture, including root overlaps
+    Wrhizo = cohortRhizosphereMoisture(W, ROP, poolProportions);
+  }
   int nlayers = W.ncol();
   NumericMatrix EplantCoh(numCohorts, nlayers);
   NumericMatrix PsiRoot(numCohorts, nlayers);
@@ -1246,9 +1285,9 @@ List transpirationGranier(List x, List soil, double tday, double pet,
   double WeibullShape=3.0;
   for(int c=0;c<numCohorts;c++) {
     if(plantWaterPools) { 
-      //Copy plant water pool moisture to soil moisture
+      //Copy rhizosphere moisture to soil moisture
       NumericVector W_c = soil_c["W"];
-      for(int l=0;l<nlayers;l++) W_c[l] = W(c,l);
+      for(int l=0;l<nlayers;l++) W_c[l] = Wrhizo(c,l);
       //Update soil water potential from pool moisture
       psiSoil = psi(soil_c,soilFunctions); 
     }
@@ -1297,12 +1336,12 @@ List transpirationGranier(List x, List soil, double tday, double pet,
     NumericVector Ws = soil["W"];
     for(int l=0;l<nlayers;l++) Ws[l] = Ws[l] - (sum(EplantCoh(_,l))/Water_FC[l]); 
     if(plantWaterPools) {
-      for(int c=0;c<numCohorts;c++) {
-        for(int l=0;l<nlayers;l++) {
-          W(c,l) = W(c,l) - (EplantCoh(c,l)*(LAIcelllive/LAIlive[c])/Water_FC[l]);
-        }
-      }
-      poolMixing(V,W,Ws,LAIcelllive,maximumPoolMixingRate);
+      // for(int c=0;c<numCohorts;c++) {
+      //   for(int l=0;l<nlayers;l++) {
+      //     W(c,l) = W(c,l) - (EplantCoh(c,l)*(LAIcelllive/LAIlive[c])/Water_FC[l]);
+      //   }
+      // }
+      // poolMixing(V,W,Ws,LAIcelllive,maximumPoolMixingRate);
     } else { //copy soil to the pools of all cohorts
       for(int c=0;c<numCohorts;c++) {
         for(int l=0;l<nlayers;l++) {
