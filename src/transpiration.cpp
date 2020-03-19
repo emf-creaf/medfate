@@ -189,7 +189,9 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   //Root distribution input
   List below = Rcpp::as<Rcpp::List>(x["below"]);
   NumericMatrix V =Rcpp::as<Rcpp::NumericMatrix>(below["V"]);
-  NumericMatrix W = Rcpp::as<Rcpp::NumericMatrix>(below["W"]);
+  NumericMatrix Wpool = Rcpp::as<Rcpp::NumericMatrix>(below["W"]);
+  NumericMatrix ROP, Wrhizo;
+  NumericVector poolProportions(numCohorts);
   NumericMatrix VCroot_kmax= Rcpp::as<Rcpp::NumericMatrix>(below["VCroot_kmax"]);
   NumericMatrix VGrhizo_kmax= Rcpp::as<Rcpp::NumericMatrix>(below["VGrhizo_kmax"]);
   
@@ -408,15 +410,23 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   
   //Hydraulics: supply functions
   List soil_c;
-  if(plantWaterPools) soil_c= clone(soil); //Clone soil
+  if(plantWaterPools) {
+    //Calculate proportions of cohort-unique pools
+    for(int c=0;c<numCohorts;c++) poolProportions[c] = LAIlive[c]/LAIcelllive;
+    //Calculate proportions of rhizosphere overlapping other pools
+    ROP = rhizosphereOverlapProportions(V, LAIcelllive, maximumPoolMixingRate);
+    soil_c= clone(soil); //Clone soil
+    //Calculate average rhizosphere moisture, including rhizosphere overlaps
+    Wrhizo = cohortRhizosphereMoisture(Wpool, ROP, poolProportions);
+  }
   List supply(numCohorts);
   List supplyAboveground(numCohorts);
   supply.attr("names") = above.attr("row.names");
   for(int c=0;c<numCohorts;c++) {
     if(plantWaterPools) { 
-      //Copy plant water pool moisture to soil moisture
+      //Copy rhizosphere moisture to soil moisture
       NumericVector W_c = soil_c["W"];
-      for(int l=0;l<nlayers;l++) W_c[l] = W(c,l);
+      for(int l=0;l<nlayers;l++) W_c[l] = Wrhizo(c,l);
       //Update soil water potential from pool moisture
       psiSoil = psi(soil_c,soilFunctions); 
     }
@@ -976,16 +986,19 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
       Ws[l] = std::max(Ws[l] - (sum(soilLayerExtractInst(l,_))/Water_FC[l]),0.0);
     } 
     if(plantWaterPools) {
-      // for(int c=0;c<numCohorts;c++) {
-      //   for(int l=0;l<nlayers;l++) {
-      //     W(c,l) = W(c,l) - (SoilWaterExtract(c,l)*(LAIcelllive/LAIlive[c])/Water_FC[l]);
-      //   }
+      rhizosphereMoistureExtraction(SoilWaterExtract, Water_FC,
+                                    Wpool, ROP,
+                                    poolProportions);
+      // for(int l=0;l<nlayers;l++) {
+      //   double Ws2 = 0.0;
+      //   for(int c=0;c<numCohorts;c++) Ws2 +=Wpool(c,l)*poolProportions[c];
+      // 
+      //   Rcout<<l<<": "<< Ws[l]<< " = " << Ws2<<"\n";
       // }
-      // poolMixing(V,W,Ws,LAIcelllive,maximumPoolMixingRate);
     } else { //copy soil to the pools of all cohorts
       for(int c=0;c<numCohorts;c++) {
         for(int l=0;l<nlayers;l++) {
-          W(c,l) = Ws[l];
+          Wpool(c,l) = Ws[l];
         }
       }
     }
@@ -1337,12 +1350,12 @@ List transpirationGranier(List x, List soil, double tday, double pet,
       rhizosphereMoistureExtraction(EplantCoh, Water_FC,
                                     Wpool, ROP,
                                     poolProportions);
-      for(int l=0;l<nlayers;l++) {
-        double Ws2 = 0.0;
-        for(int c=0;c<numCohorts;c++) Ws2 +=Wpool(c,l)*poolProportions[c];
-
-        Rcout<<l<<": "<< Ws[l]<< " = " << Ws2<<"\n";
-      }
+      // for(int l=0;l<nlayers;l++) {
+      //   double Ws2 = 0.0;
+      //   for(int c=0;c<numCohorts;c++) Ws2 +=Wpool(c,l)*poolProportions[c];
+      // 
+      //   Rcout<<l<<": "<< Ws[l]<< " = " << Ws2<<"\n";
+      // }
       
     } else { //copy soil to the pools of all cohorts
       for(int c=0;c<numCohorts;c++) {
