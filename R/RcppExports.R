@@ -613,6 +613,10 @@ root_xylemConductanceProportions <- function(v, d, depthWidthRatio = 1.0) {
     .Call(`_medfate_xylemConductanceProportions`, v, d, depthWidthRatio)
 }
 
+root_rhizosphereOverlapProportions <- function(V, LAIcelllive, f) {
+    .Call(`_medfate_rhizosphereOverlapProportions`, V, LAIcelllive, f)
+}
+
 soil_thetaSATSX <- function(clay, sand, om = NA_real_) {
     .Call(`_medfate_thetaSATSaxton`, clay, sand, om)
 }
@@ -751,10 +755,6 @@ moisture_tissueRWC <- function(psiSym, pi0, epsilon, psiApo, c, d, af, femb = 0.
 
 moisture_tissueFMC <- function(RWC, density, d0 = 1.54) {
     .Call(`_medfate_tissueFMC`, RWC, density, d0)
-}
-
-transp_rootOverlapProportions <- function(V, LAIcelllive, f) {
-    .Call(`_medfate_rootOverlapProportions`, V, LAIcelllive, f)
 }
 
 transp_profitMaximization <- function(supplyFunction, photosynthesisFunction, Gwmin, Gwmax, gainModifier = 1.0, costModifier = 1.0) {

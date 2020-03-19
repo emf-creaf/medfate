@@ -7,6 +7,7 @@
 #include "forestutils.h"
 #include "tissuemoisture.h"
 #include "photosynthesis.h"
+#include "root.h"
 #include "soil.h"
 #include <Rcpp.h>
 #include <meteoland.h>
@@ -16,31 +17,6 @@ const double SIGMA_Wm2 = 5.67*1e-8;
 const double Cp_JKG = 1013.86; // J * kg^-1 * ºC^-1
 const double eps_xylem = 10^3; // xylem elastic modulus (1 GPa = 1000 MPa)
 
-// [[Rcpp::export("transp_rootOverlapProportions")]]
-NumericMatrix rootOverlapProportions(NumericMatrix V, double LAIcelllive, double f) {
-  int numCohorts = V.nrow();
-  int numlayers = V.ncol();
-  double pmixmax = (1.0 - exp(-f*LAIcelllive));
-  NumericMatrix pmixing(numCohorts,numlayers);
-  for(int c=0;c<numCohorts;c++) {
-    double RDs = 0.0;
-    NumericVector layerRD(numlayers,0.0);
-    for(int l=0;l<numlayers;l++) {
-      if(numCohorts>1) {
-        for(int c2=0;c2<numCohorts;c2++) {
-          if(c2!=c) layerRD[l] += V(c,l)*V(c2,l);
-        }
-        layerRD[l] = layerRD[l]/((double) (numCohorts-1));
-      }
-      RDs += layerRD[l];
-    }
-    for(int l=0;l<numlayers;l++) {
-      pmixing(c,l) = (layerRD[l]/RDs)*pmixmax;
-    }
-  }
-  pmixing.attr("dimnames") = V.attr("dimnames");
-  return(pmixing);
-}
 
 NumericMatrix cohortRhizosphereMoisture(NumericMatrix W, NumericMatrix ROP, NumericVector poolProportions) {
   int numCohorts = W.nrow();
@@ -61,6 +37,27 @@ NumericMatrix cohortRhizosphereMoisture(NumericMatrix W, NumericMatrix ROP, Nume
     }
   }
   return(CRM);
+}
+
+void rhizosphereMoistureExtraction(NumericMatrix cohExtract, 
+                                   NumericVector WaterFC,
+                                   NumericMatrix Wpool, 
+                                   NumericMatrix ROP,
+                                   NumericVector poolProportions) {
+  int numCohorts = Wpool.nrow();
+  int nlayers = Wpool.ncol();
+  for(int coh=0;coh<numCohorts;coh++) {
+    double pps = 0.0;
+    for(int c2=0;c2<numCohorts;c2++) if(c2!=coh) pps +=poolProportions[c2];
+    for(int l=0;l<nlayers;l++) {
+      Wpool(coh,l) = Wpool(coh,l) - (1.0 - ROP(coh,l))*(cohExtract(coh,l)/(WaterFC[l]*poolProportions[coh]));
+      for(int c2=0;c2<numCohorts;c2++) {
+        if(c2!=coh) {
+          Wpool(c2,l) = Wpool(c2,l) - ROP(coh,l)*(cohExtract(coh,l)/(WaterFC[l]*pps));
+        }
+      }
+    }
+  }
 }
 // Mixes the moisture of pools among cohorts
 // void poolMixing(NumericMatrix V, NumericMatrix W, NumericVector Ws, double LAIcelllive, double maximumPoolMixingRate) {
@@ -1211,8 +1208,9 @@ List transpirationGranier(List x, List soil, double tday, double pet,
   //Root distribution input
   List below = Rcpp::as<Rcpp::List>(x["below"]);
   NumericMatrix V = Rcpp::as<Rcpp::NumericMatrix>(below["V"]);
-  NumericMatrix W = Rcpp::as<Rcpp::NumericMatrix>(below["W"]);
+  NumericMatrix Wpool = Rcpp::as<Rcpp::NumericMatrix>(below["W"]);
   NumericMatrix ROP, Wrhizo;
+  NumericVector poolProportions(numCohorts);
   
   //Parameters  
   DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
@@ -1267,15 +1265,14 @@ List transpirationGranier(List x, List soil, double tday, double pet,
   List soil_c;
   if(plantWaterPools) {
     //Calculate proportions of cohort-unique pools
-    NumericVector poolProportions(numCohorts);
     for(int c=0;c<numCohorts;c++) poolProportions[c] = LAIlive[c]/LAIcelllive;
-    //Calculate proportions of roots overlapping other pools
-    ROP = rootOverlapProportions(V, LAIcelllive, maximumPoolMixingRate);
+    //Calculate proportions of rhizosphere overlapping other pools
+    ROP = rhizosphereOverlapProportions(V, LAIcelllive, maximumPoolMixingRate);
     soil_c= clone(soil); //Clone soil
-    //Calculate average rhizosphere moisture, including root overlaps
-    Wrhizo = cohortRhizosphereMoisture(W, ROP, poolProportions);
+    //Calculate average rhizosphere moisture, including rhizosphere overlaps
+    Wrhizo = cohortRhizosphereMoisture(Wpool, ROP, poolProportions);
   }
-  int nlayers = W.ncol();
+  int nlayers = Wpool.ncol();
   NumericMatrix EplantCoh(numCohorts, nlayers);
   NumericMatrix PsiRoot(numCohorts, nlayers);
   NumericVector PlantPsi(numCohorts, NA_REAL);
@@ -1336,16 +1333,21 @@ List transpirationGranier(List x, List soil, double tday, double pet,
     NumericVector Ws = soil["W"];
     for(int l=0;l<nlayers;l++) Ws[l] = Ws[l] - (sum(EplantCoh(_,l))/Water_FC[l]); 
     if(plantWaterPools) {
-      // for(int c=0;c<numCohorts;c++) {
-      //   for(int l=0;l<nlayers;l++) {
-      //     W(c,l) = W(c,l) - (EplantCoh(c,l)*(LAIcelllive/LAIlive[c])/Water_FC[l]);
-      //   }
-      // }
-      // poolMixing(V,W,Ws,LAIcelllive,maximumPoolMixingRate);
+      
+      rhizosphereMoistureExtraction(EplantCoh, Water_FC,
+                                    Wpool, ROP,
+                                    poolProportions);
+      for(int l=0;l<nlayers;l++) {
+        double Ws2 = 0.0;
+        for(int c=0;c<numCohorts;c++) Ws2 +=Wpool(c,l)*poolProportions[c];
+
+        Rcout<<l<<": "<< Ws[l]<< " = " << Ws2<<"\n";
+      }
+      
     } else { //copy soil to the pools of all cohorts
       for(int c=0;c<numCohorts;c++) {
         for(int l=0;l<nlayers;l++) {
-          W(c,l) = Ws[l];
+          Wpool(c,l) = Ws[l];
         }
       }
     }

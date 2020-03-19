@@ -2551,6 +2551,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// rhizosphereOverlapProportions
+NumericMatrix rhizosphereOverlapProportions(NumericMatrix V, double LAIcelllive, double f);
+RcppExport SEXP _medfate_rhizosphereOverlapProportions(SEXP VSEXP, SEXP LAIcellliveSEXP, SEXP fSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type V(VSEXP);
+    Rcpp::traits::input_parameter< double >::type LAIcelllive(LAIcellliveSEXP);
+    Rcpp::traits::input_parameter< double >::type f(fSEXP);
+    rcpp_result_gen = Rcpp::wrap(rhizosphereOverlapProportions(V, LAIcelllive, f));
+    return rcpp_result_gen;
+END_RCPP
+}
 // thetaSATSaxton
 double thetaSATSaxton(double clay, double sand, double om);
 static SEXP _medfate_thetaSATSaxton_try(SEXP claySEXP, SEXP sandSEXP, SEXP omSEXP) {
@@ -3699,19 +3712,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// rootOverlapProportions
-NumericMatrix rootOverlapProportions(NumericMatrix V, double LAIcelllive, double f);
-RcppExport SEXP _medfate_rootOverlapProportions(SEXP VSEXP, SEXP LAIcellliveSEXP, SEXP fSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type V(VSEXP);
-    Rcpp::traits::input_parameter< double >::type LAIcelllive(LAIcellliveSEXP);
-    Rcpp::traits::input_parameter< double >::type f(fSEXP);
-    rcpp_result_gen = Rcpp::wrap(rootOverlapProportions(V, LAIcelllive, f));
-    return rcpp_result_gen;
-END_RCPP
-}
 // profitMaximization
 List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, double Gwmin, double Gwmax, double gainModifier, double costModifier);
 RcppExport SEXP _medfate_profitMaximization(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP, SEXP GwminSEXP, SEXP GwmaxSEXP, SEXP gainModifierSEXP, SEXP costModifierSEXP) {
@@ -4117,6 +4117,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_rootDistribution", (DL_FUNC) &_medfate_rootDistribution, 2},
     {"_medfate_rootLengths", (DL_FUNC) &_medfate_rootLengths, 3},
     {"_medfate_xylemConductanceProportions", (DL_FUNC) &_medfate_xylemConductanceProportions, 3},
+    {"_medfate_rhizosphereOverlapProportions", (DL_FUNC) &_medfate_rhizosphereOverlapProportions, 3},
     {"_medfate_thetaSATSaxton", (DL_FUNC) &_medfate_thetaSATSaxton, 3},
     {"_medfate_theta2psiSaxton", (DL_FUNC) &_medfate_theta2psiSaxton, 4},
     {"_medfate_psi2thetaSaxton", (DL_FUNC) &_medfate_psi2thetaSaxton, 4},
@@ -4152,7 +4153,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_apoplasticWaterPotential", (DL_FUNC) &_medfate_apoplasticWaterPotential, 3},
     {"_medfate_tissueRelativeWaterContent", (DL_FUNC) &_medfate_tissueRelativeWaterContent, 8},
     {"_medfate_tissueFMC", (DL_FUNC) &_medfate_tissueFMC, 3},
-    {"_medfate_rootOverlapProportions", (DL_FUNC) &_medfate_rootOverlapProportions, 3},
     {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 6},
     {"_medfate_transpirationSperry", (DL_FUNC) &_medfate_transpirationSperry, 14},
     {"_medfate_transpirationGranier", (DL_FUNC) &_medfate_transpirationGranier, 6},
