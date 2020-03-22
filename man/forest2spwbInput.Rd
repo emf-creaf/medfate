@@ -15,7 +15,7 @@ Input for simulation models
 Functions \code{forest2spwbInput} and \code{forest2growthInput} take an object of class \code{\link{forest}} and calculate input data for functions \code{\link{spwb}}, \code{\link{pwb}} and \code{\link{growth}}, respectively. Functions \code{spwbInput} and \code{growthInput} does the same from input data. Function \code{forest2aboveground} calculates aboveground variables that may be used in \code{spwbInput} and \code{growthInput} functions. Similarly, function \code{forest2belowground} calculates belowground root distribution that may be used in \code{spwbInput} and \code{growthInput} functions.
 }
 \usage{
-forest2aboveground(x, SpParams, gdd = NA)
+forest2aboveground(x, SpParams, gdd = NA, mode = "MED")
 forest2belowground(x, soil, SpParams)
 forest2growthInput(x, soil, SpParams, control)
 forest2spwbInput(x, soil, SpParams, control)
@@ -26,6 +26,7 @@ spwbInput(above,  V,  soil, SpParams, control)
   \item{x}{An object of class \code{\link{forest}}.}
   \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}} and \code{\link{SpParamsMED}}).}
   \item{gdd}{Growth degree days to account for leaf phenology effects (in Celsius). This should be left \code{NA} in most applications.}
+  \item{mode}{Calculation mode, either "MED" or "US".}
   \item{soil}{An object of class \code{\link{soil}}.}
   \item{control}{A list with default control parameters (see \code{\link{defaultControl}}).}
   \item{above}{A data frame with aboveground plant information (see the return value of \code{forest2aboveground} below). In the case of \code{spwbInput} the variables should include \code{SP}, \code{LAI_live}, \code{LAI_dead}, \code{H} and \code{CR}.}
