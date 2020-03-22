@@ -66,7 +66,7 @@ summary.forest<-function(object, SpParams, mode = "MED", detailed = FALSE, ...) 
         summaryLAI(object,SpParams),
         summaryFuel(object,SpParams))
   s["Phytovolume"] = sum(plant_phytovolume(object, SpParams),na.rm=TRUE)
-  class(s)<-c("summary.forest","numeric")
+  class(s)<-c("summary.forest","list")
   return(s)
 }
 print.summary.forest<-function(x, digits=getOption("digits"),...) {

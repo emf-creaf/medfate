@@ -70,14 +70,11 @@ emptyforest(ID="", patchsize=10000, ntree = 0, nshrub = 0)
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 }
 \seealso{
- \code{\link{exampleforestMED}}, \code{\link{forest_mapWoodyTables}}, \code{\link{forest_extractSFIData}}
+ \code{\link{exampleforestMED}}, \code{\link{forest_mapWoodyTables}}
 }
 \examples{
 data(exampleforestMED)
 data(SpParamsMED)
 
 summary(exampleforestMED, SpParamsMED)
-
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.

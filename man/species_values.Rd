@@ -55,5 +55,5 @@ data(SpParamsMED)
 data(exampleforestMED)
 
 #Species basal area
-species_basalArea(exampleforest, SpParamsMED)
+species_basalArea(exampleforestMED, SpParamsMED)
 }
