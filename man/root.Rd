@@ -3,7 +3,7 @@
 \alias{root_ldrDistribution}
 \alias{root_conicDistribution}
 \alias{root_xylemConductanceProportions}
-\alias{root_root_rhizosphereOverlapProportions}
+\alias{root_rhizosphereOverlapProportions}
 \alias{root_rootLengths}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Distribution of fine roots}

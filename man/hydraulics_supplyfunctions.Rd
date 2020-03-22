@@ -3,12 +3,16 @@
 \alias{hydraulics_ECrit}
 \alias{hydraulics_EXylem}
 \alias{hydraulics_EVanGenuchten}
+\alias{hydraulics_ECapacitance}
 \alias{hydraulics_E2psiXylem}
+\alias{hydraulics_E2psiXylemUp}
 \alias{hydraulics_E2psiVanGenuchten}
 \alias{hydraulics_E2psiTwoElements}
+\alias{hydraulics_E2psiFineRootLeaf}
 \alias{hydraulics_E2psiBelowground}
 \alias{hydraulics_E2psiAboveground}
 \alias{hydraulics_E2psiNetwork}
+\alias{hydraulics_E2psiNetworkStem1}
 \alias{hydraulics_supplyFunctionOneXylem}
 \alias{hydraulics_supplyFunctionTwoElements}
 \alias{hydraulics_supplyFunctionThreeElements}
@@ -31,13 +35,24 @@ hydraulics_EXylem(psiPlant, psiUpstream,
                   psiCav = 0)
 hydraulics_EVanGenuchten(psiRhizo, psiSoil, krhizomax, 
                       n, alpha, l = 0.5)
+hydraulics_ECapacitance(psi, psiPrev, PLCprev,
+                        V, fapo, c, d, 
+                        pi0, eps,
+                        timestep)
 hydraulics_ECrit(psiUpstream, kxylemmax, c, d, pCrit = 0.001)
 hydraulics_E2psiXylem(E, psiUpstream, 
+                      kxylemmax, c, d, psiCav = 0)
+hydraulics_E2psiXylemUp(E, psiDownstream, 
                       kxylemmax, c, d, psiCav = 0)
 hydraulics_E2psiVanGenuchten(E, psiSoil, krhizomax, n, alpha, 
                       psiStep = -0.0001, psiMax = -10.0)
 hydraulics_E2psiTwoElements(E, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, 
                       psiCav = 0, psiStep = -1e-04, psiMax = -10.0)
+hydraulics_E2psiFineRootLeaf(E, psiFineRoot, 
+                      krootmax, rootc, rootd,
+                      kstemmax, stemc, stemd,
+                      kleafmax, leafc, leafd,
+                      PLCstem)
 hydraulics_E2psiBelowground(E, psiSoil, 
                       krhizomax, nsoil, alphasoil,
                       krootmax, rootc, rootd, 
@@ -48,6 +63,15 @@ hydraulics_E2psiAboveground(E, psiRootCrown,
                       kleafmax, leafc, leafd,
                       PLCstem)  
 hydraulics_E2psiNetwork(E, psiSoil, 
+                  krhizomax, nsoil, alphasoil,
+                  krootmax, rootc, rootd, 
+                  kstemmax, stemc, stemd,
+                  kleafmax, leafc, leafd,
+                  PLCstem,
+                  psiIni = as.numeric(c(0)),
+                  ntrial = 10, 
+                  psiTol = 0.0001, ETol = 0.0001)
+hydraulics_E2psiNetworkStem1(E, psiSoil, 
                   krhizomax, nsoil, alphasoil,
                   krootmax, rootc, rootd, 
                   kstemmax, stemc, stemd,
