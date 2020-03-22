@@ -11,7 +11,7 @@
 Description of a forest stand.
 }
 \usage{
-\method{summary}{forest}(object, SpParams, detailed=FALSE, ...) 
+\method{summary}{forest}(object, SpParams, mode = "MED", detailed=FALSE, ...) 
 \method{print}{summary.forest}(x, digits = getOption("digits"), ...)
 emptyforest(ID="", patchsize=10000, ntree = 0, nshrub = 0)
 }
@@ -51,6 +51,7 @@ emptyforest(ID="", patchsize=10000, ntree = 0, nshrub = 0)
   }
   }
   \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
+  \item{mode}{Calculation mode, either "MED" or "US".}
   \item{detailed}{A boolean flag to indicate that a detailed summary is desired.}
   \item{x}{The object returned by \code{summary.forest}.}
   \item{digits}{Minimal number of significant digits.}
