@@ -19,7 +19,7 @@ library(medfate)
 
 ## About this vignette
 
-This document describes how to run a growth model of `medfate`. This document is meant to teach users to run the simulation model within R. All the details of the model design and formulation can be found at https://vegmod.github.io/software/medfate. 
+This document describes how to run a growth model of `medfate`. This document is meant to teach users to run the simulation model within R. All the details of the model design and formulation can be found at https://vegmod.ctfc.cat/software/medfate. 
 
 ## Preparing model inputs
 Any forest growth model needs information on climate, vegetation and soils of the forest stand to be simulated. Moreover, since models in `medfate` differentiate between species, information on species-specific model parameters is also needed. In this subsection we explain the different steps (including optional pathways) to prepare all the data needed to run function `growth()`.

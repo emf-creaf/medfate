@@ -1,4 +1,4 @@
-# function to use soilgrids to estimate soil characteristics
+# function to use soilgrids to estimate soil characteristics (requires GSIF)
 soilgridsParams <- function(points, depths = c(300, 500, 1200), verbose = FALSE) {
   
   if(!inherits(points, "SpatialPoints")) stop("Object 'points' has to be a SpatialPoints.")

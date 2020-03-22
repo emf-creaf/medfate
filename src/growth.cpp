@@ -321,7 +321,8 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
     //2. Water balance and photosynthesis
     if(transpirationMode=="Granier") {
       double er = erFactor(DOY[i], PET[i], Precipitation[i]);
-      s = spwbDay1(x, soil, MeanTemperature[i], PET[i], Precipitation[i], er, 0.0, Radiation[i], elevation, false); //No Runon in simulations for a single cell
+      s = spwbDay1(x, soil, MeanTemperature[i], PET[i], Precipitation[i], er, 0.0, 
+                   Radiation[i], elevation, false); //No Runon in simulations for a single cell
     } else if(transpirationMode=="Sperry") {
       std::string c = as<std::string>(dateStrings[i]);
       int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
