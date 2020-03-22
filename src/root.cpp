@@ -230,12 +230,12 @@ NumericVector xylemConductanceProportions(NumericVector v, NumericVector d, doub
 
 
 // [[Rcpp::export("root_rhizosphereOverlapProportions")]]
-NumericMatrix rhizosphereOverlapProportions(NumericMatrix V, NumericVector LAIlive, double f) {
+NumericMatrix rhizosphereOverlapProportions(NumericMatrix V, NumericVector LAIlive, double poolOverlapFactor) {
   int numCohorts = V.nrow();
   int numlayers = V.ncol();
   double LAIcelllive = 0.0;
   for(int c=0;c<numCohorts;c++) LAIcelllive +=LAIlive[c];
-  double ropmax = (1.0 - exp(-(f*LAIcelllive)));
+  double ropmax = (1.0 - exp(-(poolOverlapFactor*LAIcelllive)));
   NumericMatrix ROP(numCohorts,numlayers);
   for(int c=0;c<numCohorts;c++) {
     for(int l=0;l<numlayers;l++) {

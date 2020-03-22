@@ -2552,15 +2552,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // rhizosphereOverlapProportions
-NumericMatrix rhizosphereOverlapProportions(NumericMatrix V, NumericVector LAIlive, double f);
-RcppExport SEXP _medfate_rhizosphereOverlapProportions(SEXP VSEXP, SEXP LAIliveSEXP, SEXP fSEXP) {
+NumericMatrix rhizosphereOverlapProportions(NumericMatrix V, NumericVector LAIlive, double poolOverlapFactor);
+RcppExport SEXP _medfate_rhizosphereOverlapProportions(SEXP VSEXP, SEXP LAIliveSEXP, SEXP poolOverlapFactorSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericMatrix >::type V(VSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type LAIlive(LAIliveSEXP);
-    Rcpp::traits::input_parameter< double >::type f(fSEXP);
-    rcpp_result_gen = Rcpp::wrap(rhizosphereOverlapProportions(V, LAIlive, f));
+    Rcpp::traits::input_parameter< double >::type poolOverlapFactor(poolOverlapFactorSEXP);
+    rcpp_result_gen = Rcpp::wrap(rhizosphereOverlapProportions(V, LAIlive, poolOverlapFactor));
     return rcpp_result_gen;
 END_RCPP
 }

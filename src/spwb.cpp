@@ -32,8 +32,8 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   int nlayers = Rcpp::as<Rcpp::NumericVector>(soil["dVec"]).size();
   
   List below = x["below"];
-  NumericMatrix W = below["W"];
-  NumericVector Ws = soil["W"];
+  NumericMatrix Wpool = x["W"];
+  NumericVector Wsoil = soil["W"];
 
   //Vegetation input
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
@@ -86,10 +86,10 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
     EsoilVec = soilEvaporation(soil, soilFunctions, pet, LgroundSWR, true);
     
     //Copy soil status to x
-    for(int c=0;c<numCohorts;c++) for(int l=0;l<nlayers;l++) W(c,l) = Ws[l];
+    for(int c=0;c<numCohorts;c++) for(int l=0;l<nlayers;l++) Wpool(c,l) = Wsoil[l];
   } else {
     //Reset soil moisture
-    for(int l=0;l<nlayers;l++) Ws[l] = 0.0;
+    for(int l=0;l<nlayers;l++) Wsoil[l] = 0.0;
     
     //Initialize result vectors
     infilPerc = NumericVector::create(_["Infiltration"] = 0.0, 
@@ -102,7 +102,7 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
       //Clone soil and copy moisture values from x
       List soil_c =  clone(soil);
       NumericVector W_c = soil_c["W"];
-      for(int l=0;l<nlayers;l++) W_c[l] = W(c,l);
+      for(int l=0;l<nlayers;l++) W_c[l] = Wpool(c,l);
       
       //Soil_c infiltration and percolation
       NumericVector infilPerc_c = soilInfiltrationPercolation(soil_c, soilFunctions, 
@@ -117,8 +117,8 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
       for(int l=0;l<nlayers;l++) EsoilVec[l] = EsoilVec[l] + f_soil_c*EsoilVec_c[l];
       // Copy soil_c status back to x
       for(int l=0;l<nlayers;l++) {
-        W(c,l) = W_c[l];
-        Ws[l] = Ws[l] + f_soil_c*W(c,l); //weighted average for soil moisture
+        Wpool(c,l) = W_c[l];
+        Wsoil[l] = Wsoil[l] + f_soil_c*Wpool(c,l); //weighted average for soil moisture
       }
     }
   }
@@ -174,8 +174,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   int nlayers = Rcpp::as<Rcpp::NumericVector>(soil["dVec"]).size();
 
   List below = x["below"];
-  NumericMatrix W = below["W"];
-  NumericVector Ws = soil["W"];
+  NumericMatrix Wpool = x["W"];
+  NumericVector Wsoil = soil["W"];
   
   //Vegetation input
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
@@ -225,10 +225,10 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
     EsoilVec = soilEvaporation(soil, soilFunctions, pet, LgroundSWR, true);
     
     //Copy soil status to x
-    for(int c=0;c<numCohorts;c++) for(int l=0;l<nlayers;l++) W(c,l) = Ws[l];
+    for(int c=0;c<numCohorts;c++) for(int l=0;l<nlayers;l++) Wpool(c,l) = Wsoil[l];
   } else {
     //Reset soil moisture
-    for(int l=0;l<nlayers;l++) Ws[l] = 0.0;
+    for(int l=0;l<nlayers;l++) Wsoil[l] = 0.0;
     
     //Initialize result vectors
     infilPerc = NumericVector::create(_["Infiltration"] = 0.0, 
@@ -241,7 +241,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
       //Clone soil and copy moisture values from x
       List soil_c =  clone(soil);
       NumericVector W_c = soil_c["W"];
-      for(int l=0;l<nlayers;l++) W_c[l] = W(c,l);
+      for(int l=0;l<nlayers;l++) W_c[l] = Wpool(c,l);
       
       //Soil_c infiltration and percolation
       NumericVector infilPerc_c = soilInfiltrationPercolation(soil_c, soilFunctions, 
@@ -256,8 +256,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
       for(int l=0;l<nlayers;l++) EsoilVec[l] = EsoilVec[l] + f_soil_c*EsoilVec_c[l];
       // Copy soil_c status back to x
       for(int l=0;l<nlayers;l++) {
-        W(c,l) = W_c[l];
-        Ws[l] = Ws[l] + f_soil_c*W(c,l); //weighted average for soil moisture
+        Wpool(c,l) = W_c[l];
+        Wsoil[l] = Wsoil[l] + f_soil_c*Wpool(c,l); //weighted average for soil moisture
       }
     }
   }
