@@ -80,10 +80,11 @@ NumericVector woodyFuelProfile(NumericVector z, NumericVector fuelBiomass, Numer
   return(wfp);
 }
 // [[Rcpp::export(".woodyFuelProfile")]]
-NumericVector woodyFuelProfile(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL) {
-  NumericVector Fuel = cohortFuel(x, SpParams, gdd); //in kg/m2
+NumericVector woodyFuelProfile(NumericVector z, List x, DataFrame SpParams, 
+                               double gdd = NA_REAL, String mode = "MED") {
+  NumericVector Fuel = cohortFuel(x, SpParams, gdd, true, mode); //in kg/m2
   NumericVector H = cohortHeight(x);
-  NumericVector CR = cohortCrownRatio(x, SpParams);
+  NumericVector CR = cohortCrownRatio(x, SpParams, mode);
   return(woodyFuelProfile(z, Fuel, H, CR));
 }
 
@@ -159,7 +160,8 @@ double layerFuelAverageCrownLength(double minHeight, double maxHeight, NumericVe
 }
 
 // [[Rcpp::export("fuel_stratification")]]
-List fuelLiveStratification(List object, DataFrame SpParams, double gdd = NA_REAL, double heightProfileStep = 10.0, double maxHeightProfile = 5000.0,double bulkDensityThreshold = 0.05) {
+List fuelLiveStratification(List object, DataFrame SpParams, double gdd = NA_REAL, String mode = "MED", 
+                            double heightProfileStep = 10.0, double maxHeightProfile = 5000.0,double bulkDensityThreshold = 0.05) {
   int numSteps = (int) (maxHeightProfile/heightProfileStep);
   NumericVector z(numSteps);
   for(int i=0;i<numSteps; i++)  {
@@ -167,7 +169,7 @@ List fuelLiveStratification(List object, DataFrame SpParams, double gdd = NA_REA
    else z[i] = z[i-1] + heightProfileStep;
   }
   //Profile has length numSteps-1
-  NumericVector wfp = woodyFuelProfile(z, object, SpParams, gdd); //kg/m3
+  NumericVector wfp = woodyFuelProfile(z, object, SpParams, gdd, mode); //kg/m3
   int index0 = 0;
 
   //Minimum height between 0 and 200 cm where BD > BDT
@@ -196,9 +198,9 @@ List fuelLiveStratification(List object, DataFrame SpParams, double gdd = NA_REA
     cbh = z[index2];
     cth = z[index3+1];
   }
-  NumericVector cLAI = cohortLAI(object,SpParams);
+  NumericVector cLAI = cohortLAI(object,SpParams, NA_REAL, mode);
   NumericVector cH = cohortHeight(object);
-  NumericVector cCR = cohortCrownRatio(object,SpParams);
+  NumericVector cCR = cohortCrownRatio(object,SpParams, mode);
   double understoryLAI = layerLAI(fbbh, fbh, cLAI, cH, cCR);
   double canopyLAI = layerLAI(cbh, cth, cLAI, cH, cCR);
   return(List::create(_["surfaceLayerBaseHeight"] = fbbh,
@@ -213,11 +215,13 @@ List fuelLiveStratification(List object, DataFrame SpParams, double gdd = NA_REA
  * FCCS fuel definition
  */
 // [[Rcpp::export("fuel_FCCS")]]
-DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, DataFrame SpParams, NumericVector cohortFMC = NumericVector::create(), double gdd = NA_REAL, 
+DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, DataFrame SpParams, NumericVector cohortFMC = NumericVector::create(), 
+                         double gdd = NA_REAL, String mode = "MED", 
                    double heightProfileStep = 10.0, double maxHeightProfile = 5000, double bulkDensityThreshold = 0.05) {
-  List liveStrat = fuelLiveStratification(object, SpParams, gdd, heightProfileStep, maxHeightProfile, bulkDensityThreshold);
+  List liveStrat = fuelLiveStratification(object, SpParams, gdd, mode, 
+                                          heightProfileStep, maxHeightProfile, bulkDensityThreshold);
   
-  NumericVector cohLoading = cohortFuel(object, SpParams, gdd);
+  NumericVector cohLoading = cohortFuel(object, SpParams, gdd, true, mode);
   NumericVector cohLeafLitter = cohortEquilibriumLeafLitter(object, SpParams, AET);
   NumericVector cohSmallBranchLitter = cohortEquilibriumSmallBranchLitter(object, SpParams, smallBranchDecompositionRate);
   NumericVector cohHeight = cohortHeight(object);
@@ -227,7 +231,7 @@ DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, Dat
   NumericVector cohSAV = cohortNumericParameter(object, SpParams, "SAV");
   NumericVector cohFlammability = cohortNumericParameter(object, SpParams, "Flammability");
   NumericVector cohHeatContent = cohortNumericParameter(object, SpParams, "HeatContent");
-  NumericVector cohCR = cohortCrownRatio(object, SpParams);
+  NumericVector cohCR = cohortCrownRatio(object, SpParams, mode);
   NumericVector cohMinFMC = cohortNumericParameter(object, SpParams, "minFMC");
   NumericVector cohMaxFMC = cohortNumericParameter(object, SpParams, "maxFMC");
   NumericVector cohpDead = cohortNumericParameter(object, SpParams, "pDead");
@@ -551,103 +555,103 @@ List rothermelFuelComplex(NumericVector wSI, NumericVector sSI, double delta, Nu
  * Calculates fuel biomass (in tons/hectare) for five fuel classes:
  * Fuel classes are: 1-hour, 10-hour, 100-hour, live herbs and live woody
  */
-List fuelStructure(List object, DataFrame SpParams, DataFrame FuelModelParams, double gdd = NA_REAL, 
-                   double heightProfileStep = 10.0, double maxHeightProfile = 5000, double bulkDensityThreshold = 0.05,
-                   bool useModelForLive = false) {
-    
-  List fs = fuelStructure(object, SpParams, gdd, heightProfileStep, maxHeightProfile, bulkDensityThreshold);
-
-    //Fuel biomass tons/ha of five classes
-  CharacterVector FMcode = object["FuelModelCode"];
-  CharacterVector models = FuelModelParams.attr("row.names");
-  NumericVector load1h = FuelModelParams["Load_1h"];
-  NumericVector load10h = FuelModelParams["Load_10h"];
-  NumericVector load100h = FuelModelParams["Load_100h"];
-  NumericVector loadLiveHerb = FuelModelParams["Load_Live_Herb"];
-  NumericVector loadLiveWoody = FuelModelParams["Load_Live_Woody"];
-  NumericVector fuelbedDepth = FuelModelParams["Fuel_Bed_Depth"];
-  NumericVector fbLoading(5), fbSurfaceToVolumeRatio(5),fbHeatContent(5); 
-  double patchsize = object["patchsize"]; //in square meters
-  double fbHeight = NA_REAL;
-  for(int i=0;i<models.length();i++) {
-    if(models[i]==FMcode[0]) {
-      fbLoading[0] = (load1h[i]*(10000.0/patchsize));
-      fbLoading[1] = (load10h[i]*(10000.0/patchsize));
-      fbLoading[2] = (load100h[i]*(10000.0/patchsize));
-      fbLoading[3] = (loadLiveHerb[i]*(10000.0/patchsize));
-      fbLoading[4] = (loadLiveWoody[i]*(10000.0/patchsize));
-      fbSurfaceToVolumeRatio[0] = Rcpp::as<Rcpp::NumericVector>(FuelModelParams["SA/V_1h"])[i];
-      fbSurfaceToVolumeRatio[1] = Rcpp::as<Rcpp::NumericVector>(FuelModelParams["SA/V_10h"])[i];
-      fbSurfaceToVolumeRatio[2] = Rcpp::as<Rcpp::NumericVector>(FuelModelParams["SA/V_100h"])[i];
-      fbSurfaceToVolumeRatio[3] = Rcpp::as<Rcpp::NumericVector>(FuelModelParams["SA/V_Live_Herb"])[i];
-      fbSurfaceToVolumeRatio[4] = Rcpp::as<Rcpp::NumericVector>(FuelModelParams["SA/V_Live_Woody"])[i];
-      fbHeatContent[0] = Rcpp::as<Rcpp::NumericVector>(FuelModelParams["Heat_1h"])[i];
-      fbHeatContent[1] = Rcpp::as<Rcpp::NumericVector>(FuelModelParams["Heat_10h"])[i];
-      fbHeatContent[2] = Rcpp::as<Rcpp::NumericVector>(FuelModelParams["Heat_100h"])[i];
-      fbHeatContent[3] = Rcpp::as<Rcpp::NumericVector>(FuelModelParams["Heat_Live_Herb"])[i];
-      fbHeatContent[4] = Rcpp::as<Rcpp::NumericVector>(FuelModelParams["Heat_Live_Woody"])[i];
-      fbHeight = fuelbedDepth[i];
-    }
-  }
-  
-  NumericVector cohortLoading = cohortFuel(object, SpParams, gdd);
-  NumericVector minFMC = cohortNumericParameter(object, SpParams, "minFMC");
-  NumericVector maxFMC = cohortNumericParameter(object, SpParams, "maxFMC");
-  NumericVector CR = cohortCrownRatio(object, SpParams);
-  NumericVector H = cohortHeight(object);
-  
-  double canopyBaseHeight = fs["canopyBaseHeight"];
-  double canopyTopHeight =  fs["canopyTopHeight"];
-  
-  if(!useModelForLive) {
-    double herbCover = object["herbCover"];
-    double herbHeight = object["herbHeight"];
-    if((!NumericVector::is_na(herbCover)) & (!NumericVector::is_na(herbHeight))) { //If plot data is available
-      fbLoading[3] = 0.14*herbCover*(herbHeight/100.0); // From piropinus
-    }
-    fbLoading[4] = fs["fuelBedWoodyBiomass"];
-    fbHeight = fs["fuelbedHeight"];
-    NumericVector cohortSAV = cohortNumericParameter(object, SpParams, "SAV");
-    NumericVector cohortHeatContent = cohortNumericParameter(object, SpParams, "HeatContent");
-    //Herbaceous fuel
-    fbSurfaceToVolumeRatio[3] = 4921.0;
-    fbHeatContent[3] = 18622;
-    //Woody fuel
-    fbSurfaceToVolumeRatio[4] = layerFuelAverageParameter( 0.0, fbHeight, cohortSAV, cohortLoading, H, CR);
-    fbHeatContent[4] = layerFuelAverageParameter( 0.0, fbHeight, cohortHeatContent, cohortLoading, H, CR);
-  }
-  
-  
-  //Rothermel fuel complex
-  List fc = rothermelFuelComplex(fbLoading, fbSurfaceToVolumeRatio, fbHeight, fbHeatContent);
-  
-  //Fuel minimum and maximum moisture
-  double minCanopyFMC = canopyLiveFuelMoisture( canopyBaseHeight, canopyTopHeight, minFMC, 
-                                           cohortLoading, H, CR);
-  double maxCanopyFMC = canopyLiveFuelMoisture( canopyBaseHeight, canopyTopHeight, maxFMC, 
-                                           cohortLoading, H, CR);
-  double minFuelBedFMC = fuelbedLiveFuelMoisture( fbHeight, minFMC, 
-                                           cohortLoading, H, CR);
-  double maxFuelBedFMC = fuelbedLiveFuelMoisture( fbHeight, maxFMC, 
-                                           cohortLoading, H, CR);
-  
-  return(List::create(_["fuelbedHeight [cm]"] = fbHeight,
-                      _["fuelbedLoading [kg/m2]"] = fbLoading,
-                      _["fuelbedSAV [m2/m3]"] = fbSurfaceToVolumeRatio,
-                      _["fuelbedHeatContent [kJ/kg]"] = fbHeatContent,
-                      _["fuelcomplexSAV [m2/m3]"] = fc["Characteristic SAV [m2/m3]"],
-                      _["fuelcomplexBulkDensity [kg/m3]"] = fc["Bulk density [kg/m3]"],
-                      _["fuelcomplexPackingRatio [dimensionless]"] = fc["Packing ratio [dimensionless]"],
-                      _["fuelcomplexRelativePackingRatio [dimensionless]"] = fc["Relative packing ratio [dimensionless]"],
-                      _["fuelcomplexDeadHeatContent [kJ/kg]"] = fc["Dead heat content [kJ/kg]"],
-                      _["fuelcomplexLiveHeatContent [kJ/kg]"] = fc["Live heat content [kJ/kg]"],
-                      _["canopyBaseHeight [cm]"] = canopyBaseHeight,
-                      _["canopyTopHeight [cm]"] = canopyTopHeight,
-                      _["canopyLength [cm]"] = fs["canopyLength"],
-                      _["canopyBulkDensity [kg/m3]"] = fs["canopyBulkDensity"],
-                      _["canopyLAI [dimensionless]"] = fs["canopyLAI"],
-                      _["canopyMinFMC [%]"] = minCanopyFMC,
-                      _["canopyMaxFMC [%]"] = maxCanopyFMC,
-                      _["fuelbedMinFMC [%]"] = minFuelBedFMC,
-                      _["fuelbedMaxFMC [%]"] = maxFuelBedFMC));
-}
+// List fuelStructure(List object, DataFrame SpParams, DataFrame FuelModelParams, double gdd = NA_REAL, 
+//                    double heightProfileStep = 10.0, double maxHeightProfile = 5000, double bulkDensityThreshold = 0.05,
+//                    bool useModelForLive = false) {
+//     
+//   List fs = fuelStructure(object, SpParams, gdd, heightProfileStep, maxHeightProfile, bulkDensityThreshold);
+// 
+//     //Fuel biomass tons/ha of five classes
+//   CharacterVector FMcode = object["FuelModelCode"];
+//   CharacterVector models = FuelModelParams.attr("row.names");
+//   NumericVector load1h = FuelModelParams["Load_1h"];
+//   NumericVector load10h = FuelModelParams["Load_10h"];
+//   NumericVector load100h = FuelModelParams["Load_100h"];
+//   NumericVector loadLiveHerb = FuelModelParams["Load_Live_Herb"];
+//   NumericVector loadLiveWoody = FuelModelParams["Load_Live_Woody"];
+//   NumericVector fuelbedDepth = FuelModelParams["Fuel_Bed_Depth"];
+//   NumericVector fbLoading(5), fbSurfaceToVolumeRatio(5),fbHeatContent(5); 
+//   double patchsize = object["patchsize"]; //in square meters
+//   double fbHeight = NA_REAL;
+//   for(int i=0;i<models.length();i++) {
+//     if(models[i]==FMcode[0]) {
+//       fbLoading[0] = (load1h[i]*(10000.0/patchsize));
+//       fbLoading[1] = (load10h[i]*(10000.0/patchsize));
+//       fbLoading[2] = (load100h[i]*(10000.0/patchsize));
+//       fbLoading[3] = (loadLiveHerb[i]*(10000.0/patchsize));
+//       fbLoading[4] = (loadLiveWoody[i]*(10000.0/patchsize));
+//       fbSurfaceToVolumeRatio[0] = Rcpp::as<Rcpp::NumericVector>(FuelModelParams["SA/V_1h"])[i];
+//       fbSurfaceToVolumeRatio[1] = Rcpp::as<Rcpp::NumericVector>(FuelModelParams["SA/V_10h"])[i];
+//       fbSurfaceToVolumeRatio[2] = Rcpp::as<Rcpp::NumericVector>(FuelModelParams["SA/V_100h"])[i];
+//       fbSurfaceToVolumeRatio[3] = Rcpp::as<Rcpp::NumericVector>(FuelModelParams["SA/V_Live_Herb"])[i];
+//       fbSurfaceToVolumeRatio[4] = Rcpp::as<Rcpp::NumericVector>(FuelModelParams["SA/V_Live_Woody"])[i];
+//       fbHeatContent[0] = Rcpp::as<Rcpp::NumericVector>(FuelModelParams["Heat_1h"])[i];
+//       fbHeatContent[1] = Rcpp::as<Rcpp::NumericVector>(FuelModelParams["Heat_10h"])[i];
+//       fbHeatContent[2] = Rcpp::as<Rcpp::NumericVector>(FuelModelParams["Heat_100h"])[i];
+//       fbHeatContent[3] = Rcpp::as<Rcpp::NumericVector>(FuelModelParams["Heat_Live_Herb"])[i];
+//       fbHeatContent[4] = Rcpp::as<Rcpp::NumericVector>(FuelModelParams["Heat_Live_Woody"])[i];
+//       fbHeight = fuelbedDepth[i];
+//     }
+//   }
+//   
+//   NumericVector cohortLoading = cohortFuel(object, SpParams, gdd);
+//   NumericVector minFMC = cohortNumericParameter(object, SpParams, "minFMC");
+//   NumericVector maxFMC = cohortNumericParameter(object, SpParams, "maxFMC");
+//   NumericVector CR = cohortCrownRatio(object, SpParams);
+//   NumericVector H = cohortHeight(object);
+//   
+//   double canopyBaseHeight = fs["canopyBaseHeight"];
+//   double canopyTopHeight =  fs["canopyTopHeight"];
+//   
+//   if(!useModelForLive) {
+//     double herbCover = object["herbCover"];
+//     double herbHeight = object["herbHeight"];
+//     if((!NumericVector::is_na(herbCover)) & (!NumericVector::is_na(herbHeight))) { //If plot data is available
+//       fbLoading[3] = 0.14*herbCover*(herbHeight/100.0); // From piropinus
+//     }
+//     fbLoading[4] = fs["fuelBedWoodyBiomass"];
+//     fbHeight = fs["fuelbedHeight"];
+//     NumericVector cohortSAV = cohortNumericParameter(object, SpParams, "SAV");
+//     NumericVector cohortHeatContent = cohortNumericParameter(object, SpParams, "HeatContent");
+//     //Herbaceous fuel
+//     fbSurfaceToVolumeRatio[3] = 4921.0;
+//     fbHeatContent[3] = 18622;
+//     //Woody fuel
+//     fbSurfaceToVolumeRatio[4] = layerFuelAverageParameter( 0.0, fbHeight, cohortSAV, cohortLoading, H, CR);
+//     fbHeatContent[4] = layerFuelAverageParameter( 0.0, fbHeight, cohortHeatContent, cohortLoading, H, CR);
+//   }
+//   
+//   
+//   //Rothermel fuel complex
+//   List fc = rothermelFuelComplex(fbLoading, fbSurfaceToVolumeRatio, fbHeight, fbHeatContent);
+//   
+//   //Fuel minimum and maximum moisture
+//   double minCanopyFMC = canopyLiveFuelMoisture( canopyBaseHeight, canopyTopHeight, minFMC, 
+//                                            cohortLoading, H, CR);
+//   double maxCanopyFMC = canopyLiveFuelMoisture( canopyBaseHeight, canopyTopHeight, maxFMC, 
+//                                            cohortLoading, H, CR);
+//   double minFuelBedFMC = fuelbedLiveFuelMoisture( fbHeight, minFMC, 
+//                                            cohortLoading, H, CR);
+//   double maxFuelBedFMC = fuelbedLiveFuelMoisture( fbHeight, maxFMC, 
+//                                            cohortLoading, H, CR);
+//   
+//   return(List::create(_["fuelbedHeight [cm]"] = fbHeight,
+//                       _["fuelbedLoading [kg/m2]"] = fbLoading,
+//                       _["fuelbedSAV [m2/m3]"] = fbSurfaceToVolumeRatio,
+//                       _["fuelbedHeatContent [kJ/kg]"] = fbHeatContent,
+//                       _["fuelcomplexSAV [m2/m3]"] = fc["Characteristic SAV [m2/m3]"],
+//                       _["fuelcomplexBulkDensity [kg/m3]"] = fc["Bulk density [kg/m3]"],
+//                       _["fuelcomplexPackingRatio [dimensionless]"] = fc["Packing ratio [dimensionless]"],
+//                       _["fuelcomplexRelativePackingRatio [dimensionless]"] = fc["Relative packing ratio [dimensionless]"],
+//                       _["fuelcomplexDeadHeatContent [kJ/kg]"] = fc["Dead heat content [kJ/kg]"],
+//                       _["fuelcomplexLiveHeatContent [kJ/kg]"] = fc["Live heat content [kJ/kg]"],
+//                       _["canopyBaseHeight [cm]"] = canopyBaseHeight,
+//                       _["canopyTopHeight [cm]"] = canopyTopHeight,
+//                       _["canopyLength [cm]"] = fs["canopyLength"],
+//                       _["canopyBulkDensity [kg/m3]"] = fs["canopyBulkDensity"],
+//                       _["canopyLAI [dimensionless]"] = fs["canopyLAI"],
+//                       _["canopyMinFMC [%]"] = minCanopyFMC,
+//                       _["canopyMaxFMC [%]"] = maxCanopyFMC,
+//                       _["fuelbedMinFMC [%]"] = minFuelBedFMC,
+//                       _["fuelbedMaxFMC [%]"] = maxFuelBedFMC));
+// }

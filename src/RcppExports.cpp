@@ -691,8 +691,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // woodyFuelProfile
-NumericVector woodyFuelProfile(NumericVector z, List x, DataFrame SpParams, double gdd);
-RcppExport SEXP _medfate_woodyFuelProfile(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
+NumericVector woodyFuelProfile(NumericVector z, List x, DataFrame SpParams, double gdd, String mode);
+RcppExport SEXP _medfate_woodyFuelProfile(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP modeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -700,7 +700,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
-    rcpp_result_gen = Rcpp::wrap(woodyFuelProfile(z, x, SpParams, gdd));
+    Rcpp::traits::input_parameter< String >::type mode(modeSEXP);
+    rcpp_result_gen = Rcpp::wrap(woodyFuelProfile(z, x, SpParams, gdd, mode));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -798,24 +799,25 @@ BEGIN_RCPP
 END_RCPP
 }
 // fuelLiveStratification
-List fuelLiveStratification(List object, DataFrame SpParams, double gdd, double heightProfileStep, double maxHeightProfile, double bulkDensityThreshold);
-RcppExport SEXP _medfate_fuelLiveStratification(SEXP objectSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP heightProfileStepSEXP, SEXP maxHeightProfileSEXP, SEXP bulkDensityThresholdSEXP) {
+List fuelLiveStratification(List object, DataFrame SpParams, double gdd, String mode, double heightProfileStep, double maxHeightProfile, double bulkDensityThreshold);
+RcppExport SEXP _medfate_fuelLiveStratification(SEXP objectSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP modeSEXP, SEXP heightProfileStepSEXP, SEXP maxHeightProfileSEXP, SEXP bulkDensityThresholdSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type object(objectSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
+    Rcpp::traits::input_parameter< String >::type mode(modeSEXP);
     Rcpp::traits::input_parameter< double >::type heightProfileStep(heightProfileStepSEXP);
     Rcpp::traits::input_parameter< double >::type maxHeightProfile(maxHeightProfileSEXP);
     Rcpp::traits::input_parameter< double >::type bulkDensityThreshold(bulkDensityThresholdSEXP);
-    rcpp_result_gen = Rcpp::wrap(fuelLiveStratification(object, SpParams, gdd, heightProfileStep, maxHeightProfile, bulkDensityThreshold));
+    rcpp_result_gen = Rcpp::wrap(fuelLiveStratification(object, SpParams, gdd, mode, heightProfileStep, maxHeightProfile, bulkDensityThreshold));
     return rcpp_result_gen;
 END_RCPP
 }
 // FCCSproperties
-DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, DataFrame SpParams, NumericVector cohortFMC, double gdd, double heightProfileStep, double maxHeightProfile, double bulkDensityThreshold);
-RcppExport SEXP _medfate_FCCSproperties(SEXP objectSEXP, SEXP ShrubCoverSEXP, SEXP CanopyCoverSEXP, SEXP SpParamsSEXP, SEXP cohortFMCSEXP, SEXP gddSEXP, SEXP heightProfileStepSEXP, SEXP maxHeightProfileSEXP, SEXP bulkDensityThresholdSEXP) {
+DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, DataFrame SpParams, NumericVector cohortFMC, double gdd, String mode, double heightProfileStep, double maxHeightProfile, double bulkDensityThreshold);
+RcppExport SEXP _medfate_FCCSproperties(SEXP objectSEXP, SEXP ShrubCoverSEXP, SEXP CanopyCoverSEXP, SEXP SpParamsSEXP, SEXP cohortFMCSEXP, SEXP gddSEXP, SEXP modeSEXP, SEXP heightProfileStepSEXP, SEXP maxHeightProfileSEXP, SEXP bulkDensityThresholdSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -825,10 +827,11 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type cohortFMC(cohortFMCSEXP);
     Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
+    Rcpp::traits::input_parameter< String >::type mode(modeSEXP);
     Rcpp::traits::input_parameter< double >::type heightProfileStep(heightProfileStepSEXP);
     Rcpp::traits::input_parameter< double >::type maxHeightProfile(maxHeightProfileSEXP);
     Rcpp::traits::input_parameter< double >::type bulkDensityThreshold(bulkDensityThresholdSEXP);
-    rcpp_result_gen = Rcpp::wrap(FCCSproperties(object, ShrubCover, CanopyCover, SpParams, cohortFMC, gdd, heightProfileStep, maxHeightProfile, bulkDensityThreshold));
+    rcpp_result_gen = Rcpp::wrap(FCCSproperties(object, ShrubCover, CanopyCover, SpParams, cohortFMC, gdd, mode, heightProfileStep, maxHeightProfile, bulkDensityThreshold));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2081,8 +2084,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // parExtinctionProfile
-NumericVector parExtinctionProfile(NumericVector z, List x, DataFrame SpParams, double gdd);
-RcppExport SEXP _medfate_parExtinctionProfile(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
+NumericVector parExtinctionProfile(NumericVector z, List x, DataFrame SpParams, double gdd, String mode);
+RcppExport SEXP _medfate_parExtinctionProfile(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP modeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2090,13 +2093,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
-    rcpp_result_gen = Rcpp::wrap(parExtinctionProfile(z, x, SpParams, gdd));
+    Rcpp::traits::input_parameter< String >::type mode(modeSEXP);
+    rcpp_result_gen = Rcpp::wrap(parExtinctionProfile(z, x, SpParams, gdd, mode));
     return rcpp_result_gen;
 END_RCPP
 }
 // swrExtinctionProfile
-NumericVector swrExtinctionProfile(NumericVector z, List x, DataFrame SpParams, double gdd);
-RcppExport SEXP _medfate_swrExtinctionProfile(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP) {
+NumericVector swrExtinctionProfile(NumericVector z, List x, DataFrame SpParams, double gdd, String mode);
+RcppExport SEXP _medfate_swrExtinctionProfile(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP modeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2104,7 +2108,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
-    rcpp_result_gen = Rcpp::wrap(swrExtinctionProfile(z, x, SpParams, gdd));
+    Rcpp::traits::input_parameter< String >::type mode(modeSEXP);
+    rcpp_result_gen = Rcpp::wrap(swrExtinctionProfile(z, x, SpParams, gdd, mode));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -3990,15 +3995,15 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_EMCadsorption", (DL_FUNC) &_medfate_EMCadsorption, 2},
     {"_medfate_EMCSimard", (DL_FUNC) &_medfate_EMCSimard, 2},
     {"_medfate_cohortFineFuelMoistureContent", (DL_FUNC) &_medfate_cohortFineFuelMoistureContent, 2},
-    {"_medfate_woodyFuelProfile", (DL_FUNC) &_medfate_woodyFuelProfile, 4},
+    {"_medfate_woodyFuelProfile", (DL_FUNC) &_medfate_woodyFuelProfile, 5},
     {"_medfate_layerCohortFuelLoading", (DL_FUNC) &_medfate_layerCohortFuelLoading, 5},
     {"_medfate_layerFuelLoading", (DL_FUNC) &_medfate_layerFuelLoading, 5},
     {"_medfate_layerLAI", (DL_FUNC) &_medfate_layerLAI, 5},
     {"_medfate_layerFuelAverageSpeciesParameter", (DL_FUNC) &_medfate_layerFuelAverageSpeciesParameter, 6},
     {"_medfate_layerFuelAverageParameter", (DL_FUNC) &_medfate_layerFuelAverageParameter, 6},
     {"_medfate_layerFuelAverageCrownLength", (DL_FUNC) &_medfate_layerFuelAverageCrownLength, 6},
-    {"_medfate_fuelLiveStratification", (DL_FUNC) &_medfate_fuelLiveStratification, 6},
-    {"_medfate_FCCSproperties", (DL_FUNC) &_medfate_FCCSproperties, 9},
+    {"_medfate_fuelLiveStratification", (DL_FUNC) &_medfate_fuelLiveStratification, 7},
+    {"_medfate_FCCSproperties", (DL_FUNC) &_medfate_FCCSproperties, 10},
     {"_medfate_defoliationFraction", (DL_FUNC) &_medfate_defoliationFraction, 2},
     {"_medfate_growth", (DL_FUNC) &_medfate_growth, 7},
     {"_medfate_Psi2K", (DL_FUNC) &_medfate_Psi2K, 3},
@@ -4060,8 +4065,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_parcohort", (DL_FUNC) &_medfate_parcohort, 5},
     {"_medfate_parheight", (DL_FUNC) &_medfate_parheight, 6},
     {"_medfate_swrheight", (DL_FUNC) &_medfate_swrheight, 6},
-    {"_medfate_parExtinctionProfile", (DL_FUNC) &_medfate_parExtinctionProfile, 4},
-    {"_medfate_swrExtinctionProfile", (DL_FUNC) &_medfate_swrExtinctionProfile, 4},
+    {"_medfate_parExtinctionProfile", (DL_FUNC) &_medfate_parExtinctionProfile, 5},
+    {"_medfate_swrExtinctionProfile", (DL_FUNC) &_medfate_swrExtinctionProfile, 5},
     {"_medfate_cohortAbsorbedSWRFraction", (DL_FUNC) &_medfate_cohortAbsorbedSWRFraction, 4},
     {"_medfate_layerIrradianceFraction", (DL_FUNC) &_medfate_layerIrradianceFraction, 6},
     {"_medfate_layerIrradianceFractionBottomUp", (DL_FUNC) &_medfate_layerIrradianceFractionBottomUp, 6},

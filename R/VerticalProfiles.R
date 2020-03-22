@@ -1,10 +1,11 @@
-vprofile_leafAreaDensity<-function(x, SpParams = NULL, z = NULL, gdd = NA, byCohorts = FALSE,
-                                   bySpecies = FALSE, draw = TRUE, xlim = NULL) {
+vprofile_leafAreaDensity<-function(x, SpParams = NULL, z = NULL, gdd = NA, mode = "MED",
+                                   byCohorts = FALSE, bySpecies = FALSE, 
+                                   draw = TRUE, xlim = NULL) {
   if(!(inherits(x,"data.frame") || inherits(x, "forest"))) stop("'x' should be of class 'forest' or 'data.frame'")
   if(inherits(x, "forest")) {
     if(is.null(SpParams)) stop("Please, provide 'SpParams' to calculate leaf area.")
     spnames = plant_speciesName(x, SpParams)
-    x = forest2aboveground(x, SpParams, gdd)
+    x = forest2aboveground(x, SpParams, gdd, mode = mode)
   } else {
     if(any(!(c("LAI_expanded", "H", "CR", "SP") %in% names(x)))) {
       stop("Data frame should contain columns 'SP', 'LAI_expanded', 'H' and 'CR'")
@@ -52,7 +53,8 @@ vprofile_leafAreaDensity<-function(x, SpParams = NULL, z = NULL, gdd = NA, byCoh
   else return(lai)
 }
 
-vprofile_rootDistribution<-function(x, SpParams, d = NULL, bySpecies = FALSE, draw = TRUE, xlim = NULL) {
+vprofile_rootDistribution<-function(x, SpParams, d = NULL, bySpecies = FALSE, 
+                                    draw = TRUE, xlim = NULL) {
   if(is.null(d)){
     zmax = 0
     if(nrow(x$shrubData)>0) zmax = max(zmax, ceiling(max(x$shrubData$Z95)/100)*100)
@@ -78,10 +80,10 @@ vprofile_rootDistribution<-function(x, SpParams, d = NULL, bySpecies = FALSE, dr
   } else return(rd)
 }
 
-vprofile_fuelBulkDensity<-function(x, SpParams, z = NULL, gdd = NA,draw = TRUE,
-                                   xlim = NULL) {
+vprofile_fuelBulkDensity<-function(x, SpParams, z = NULL, gdd = NA, mode = "MED", 
+                                   draw = TRUE, xlim = NULL) {
   if(is.null(z)) z = seq(0, ceiling(max(plant_height(x))/100)*100 +10, by=10)
-  wfp = .woodyFuelProfile(z,x, SpParams, gdd)
+  wfp = .woodyFuelProfile(z,x, SpParams, gdd, mode = mode)
   df = data.frame("BD" = c(0,wfp), "Z" = z)
   if(draw) {
     g<-ggplot(df, aes_string(x="BD", y="Z"))+
@@ -94,10 +96,10 @@ vprofile_fuelBulkDensity<-function(x, SpParams, z = NULL, gdd = NA,draw = TRUE,
   if(draw) return(g)
   else return(wfp)
 }
-vprofile_PARExtinction<-function(x, SpParams, z = NULL, gdd = NA, draw = TRUE,
-                                 xlim = c(0,100)) {
+vprofile_PARExtinction<-function(x, SpParams, z = NULL, gdd = NA, mode = "MED", 
+                                 draw = TRUE, xlim = c(0,100)) {
   if(is.null(z)) z = seq(0, ceiling(max(plant_height(x))/100)*100 +10, by=10)
-  pep = .parExtinctionProfile(z,x, SpParams, gdd)
+  pep = .parExtinctionProfile(z,x, SpParams, gdd, mode = mode)
   df = data.frame("PEP" = pep, "Z" = z)
   if(draw) {
     g<-ggplot(df, aes_string(x="PEP", y="Z"))+
@@ -110,10 +112,10 @@ vprofile_PARExtinction<-function(x, SpParams, z = NULL, gdd = NA, draw = TRUE,
   if(draw) return(g)
   else return(pep)
 }
-vprofile_SWRExtinction<-function(x, SpParams, z = NULL, gdd = NA, draw = TRUE,
-                                 xlim = c(0,100)) {
+vprofile_SWRExtinction<-function(x, SpParams, z = NULL, gdd = NA, mode = "MED",
+                                 draw = TRUE, xlim = c(0,100)) {
   if(is.null(z)) z = seq(0, ceiling(max(plant_height(x))/100)*100 +10, by=10)
-  swr = .swrExtinctionProfile(z,x, SpParams, gdd)
+  swr = .swrExtinctionProfile(z,x, SpParams, gdd, mode = mode)
   df = data.frame("SWR" = swr, "Z" = z)
   if(draw) {
     g<-ggplot(df, aes_string(x="SWR", y="Z"))+
@@ -126,10 +128,10 @@ vprofile_SWRExtinction<-function(x, SpParams, z = NULL, gdd = NA, draw = TRUE,
   if(draw) return(g)
   else return(swr)
 }
-vprofile_windExtinction<-function(x, SpParams, wind20H, z = NULL, gdd = NA, draw = TRUE,
-                                  xlim = NULL) {
+vprofile_windExtinction<-function(x, SpParams, wind20H, z = NULL, gdd = NA, mode = "MED", 
+                                  draw = TRUE, xlim = NULL) {
   if(is.null(z)) z = seq(0, ceiling(max(plant_height(x))/100)*100 +10, by=10)
-  fls = fuel_stratification(x, SpParams, gdd)
+  fls = fuel_stratification(x, SpParams, gdd, mode = mode)
   LAIc = fls$canopyLAI
   canopyHeight = fls$canopyTopHeight
   wep = .windExtinctionProfile(z, wind20H, LAIc, canopyHeight)

@@ -209,8 +209,8 @@ fuel_cohortFineFMC <- function(spwb, x) {
     .Call(`_medfate_cohortFineFuelMoistureContent`, spwb, x)
 }
 
-.woodyFuelProfile <- function(z, x, SpParams, gdd = NA_real_) {
-    .Call(`_medfate_woodyFuelProfile`, z, x, SpParams, gdd)
+.woodyFuelProfile <- function(z, x, SpParams, gdd = NA_real_, mode = "MED") {
+    .Call(`_medfate_woodyFuelProfile`, z, x, SpParams, gdd, mode)
 }
 
 .layerCohortFuelLoading <- function(minHeight, maxHeight, cohortLoading, H, CR) {
@@ -237,12 +237,12 @@ fuel_cohortFineFMC <- function(spwb, x) {
     .Call(`_medfate_layerFuelAverageCrownLength`, minHeight, maxHeight, cohortCrownLength, cohortLoading, H, CR)
 }
 
-fuel_stratification <- function(object, SpParams, gdd = NA_real_, heightProfileStep = 10.0, maxHeightProfile = 5000.0, bulkDensityThreshold = 0.05) {
-    .Call(`_medfate_fuelLiveStratification`, object, SpParams, gdd, heightProfileStep, maxHeightProfile, bulkDensityThreshold)
+fuel_stratification <- function(object, SpParams, gdd = NA_real_, mode = "MED", heightProfileStep = 10.0, maxHeightProfile = 5000.0, bulkDensityThreshold = 0.05) {
+    .Call(`_medfate_fuelLiveStratification`, object, SpParams, gdd, mode, heightProfileStep, maxHeightProfile, bulkDensityThreshold)
 }
 
-fuel_FCCS <- function(object, ShrubCover, CanopyCover, SpParams, cohortFMC = as.numeric( c()), gdd = NA_real_, heightProfileStep = 10.0, maxHeightProfile = 5000, bulkDensityThreshold = 0.05) {
-    .Call(`_medfate_FCCSproperties`, object, ShrubCover, CanopyCover, SpParams, cohortFMC, gdd, heightProfileStep, maxHeightProfile, bulkDensityThreshold)
+fuel_FCCS <- function(object, ShrubCover, CanopyCover, SpParams, cohortFMC = as.numeric( c()), gdd = NA_real_, mode = "MED", heightProfileStep = 10.0, maxHeightProfile = 5000, bulkDensityThreshold = 0.05) {
+    .Call(`_medfate_FCCSproperties`, object, ShrubCover, CanopyCover, SpParams, cohortFMC, gdd, mode, heightProfileStep, maxHeightProfile, bulkDensityThreshold)
 }
 
 .growth_defoliationFraction <- function(conc, threshold) {
@@ -489,12 +489,12 @@ hydrology_soilInfiltrationPercolation <- function(soil, soilFunctions, waterInpu
     .Call(`_medfate_swrheight`, heights, SP, H, CR, LAI, SpParams)
 }
 
-.parExtinctionProfile <- function(z, x, SpParams, gdd = NA_real_) {
-    .Call(`_medfate_parExtinctionProfile`, z, x, SpParams, gdd)
+.parExtinctionProfile <- function(z, x, SpParams, gdd = NA_real_, mode = "MED") {
+    .Call(`_medfate_parExtinctionProfile`, z, x, SpParams, gdd, mode)
 }
 
-.swrExtinctionProfile <- function(z, x, SpParams, gdd = NA_real_) {
-    .Call(`_medfate_swrExtinctionProfile`, z, x, SpParams, gdd)
+.swrExtinctionProfile <- function(z, x, SpParams, gdd = NA_real_, mode = "MED") {
+    .Call(`_medfate_swrExtinctionProfile`, z, x, SpParams, gdd, mode)
 }
 
 light_cohortAbsorbedSWRFraction <- function(z, x, SpParams, gdd = NA_real_) {
