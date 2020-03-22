@@ -59,14 +59,14 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 data(SpParamsMED)
 
 #Load example plot plant data
-data(exampleforest)
+data(exampleforestMED)
 
-vprofile_leafAreaDensity(exampleforest, SpParamsMED)
-vprofile_fuelBulkDensity(exampleforest, SpParamsMED)
+vprofile_leafAreaDensity(exampleforestMED, SpParamsMED)
+vprofile_fuelBulkDensity(exampleforestMED, SpParamsMED)
 
-vprofile_PARExtinction(exampleforest, SpParamsMED)
-vprofile_SWRExtinction(exampleforest, SpParamsMED)
+vprofile_PARExtinction(exampleforestMED, SpParamsMED)
+vprofile_SWRExtinction(exampleforestMED, SpParamsMED)
 
-vprofile_windExtinction(exampleforest, SpParamsMED, 20)
+vprofile_windExtinction(exampleforestMED, SpParamsMED, 20)
 
 }

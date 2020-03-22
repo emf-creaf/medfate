@@ -9,7 +9,8 @@ Performs a set of calls to \code{\link{spwb}} with the aim to determine the sens
 \usage{
 spwb_sensitivity(x, soil, meteo, 
                  paramType = "above", paramName = "LAI_live", cohort = NA,
-                 p_change = c(-80,-40,-20,0,20,40,80), summary.fun = NULL, simplify=TRUE,...)
+                 p_change = c(-80,-40,-20,0,20,40,80), 
+                 summary.fun = NULL, simplify=TRUE,...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

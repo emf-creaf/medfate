@@ -16,10 +16,10 @@ Functions to calculate attributes of a \code{\link{forest}} object by species.
 \usage{
 species_basalArea(x, SpParams)
 species_cover(x, SpParams)
-species_density(x, SpParams)
-species_foliarBiomass(x, SpParams, gdd = NA)
-species_fuel(x, SpParams, gdd = NA, includeDead = TRUE)
-species_LAI(x, SpParams, gdd = NA)
+species_density(x, SpParams, mode = "MED")
+species_foliarBiomass(x, SpParams, gdd = NA, mode = "MED")
+species_fuel(x, SpParams, gdd = NA, includeDead = TRUE, mode = "MED")
+species_LAI(x, SpParams, gdd = NA, mode = "MED")
 species_phytovolume(x, SpParams)
 }
 \arguments{
@@ -27,6 +27,7 @@ species_phytovolume(x, SpParams)
   \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
   \item{gdd}{Growth degree days (to account for leaf phenology effects).}
   \item{includeDead}{A flag to indicate that standing dead fuels (dead branches) are included.}
+  \item{mode}{Calculation mode, either "MED" or "US".}
 }
 \value{
 A vector with values for each species in \code{SpParams}:
@@ -51,8 +52,8 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 data(SpParamsMED)
 
 #Load example plot
-data(exampleforest)
+data(exampleforestMED)
 
 #Species basal area
-species_basalArea(exampleforest, SpParamsMED)
+species_basalArea(exampleforestMED, SpParamsMED)
 }

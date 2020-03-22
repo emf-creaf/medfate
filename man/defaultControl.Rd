@@ -23,6 +23,8 @@ A list, with the following options:
 \item{\code{drainage (=TRUE)}: Boolean flag to indicate the simulation of deep drainage.}
 \item{\code{leafPhenology (=TRUE)}: Boolean flag to indicate the simulation of leaf phenology for winter-deciduous species.}
 \item{\code{unlimitedSoilWater (=FALSE)}: Boolean flag to indicate the simulation of plant transpiration assuming that soil water is always at field capacity.}
+\item{\code{plantWaterPools (=FALSE)}: Boolean flag to indicate the simulation of water balance assuming that each cohort has its own water pools (mixing between pools of different cohorts is regulated via \code{poolOverlapFactor}).}
+\item{\code{poolOverlapFactor (= 0.2)}: Maximum daily rate of mixing between water pools of different cohorts (actual rate depends on the proportion of fine roots, so the actual mixing rate is normally small for deep layers).}
 \item{\code{transpirationMode (="Granier")}: Transpiration model (either 'Granier' or 'Sperry'). See \code{\link{spwbInput}}.}
 \item{\code{cuticularTranspiration (=TRUE)}: Boolean flag to indicate the simulation of cuticular transpiration (at night or when stomata are fully closed) according to minimum stomatal conductance.}
 \item{\code{gainModifier, costModifier (= 1)}: Modifiers (exponents) of the gain and cost functions defined in Sperry et al. (2016).}

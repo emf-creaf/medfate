@@ -8,7 +8,6 @@ emptyforest<-function(ID="", patchsize=10000, ntree = 0, nshrub = 0) {
   l$shrubData = data.frame(Species=numeric(nshrub), Height=numeric(nshrub), 
                           Cover = numeric(nshrub), 
                           Z50 = numeric(nshrub), Z95=numeric(nshrub))
-  l$seedBank = data.frame(Species=numeric(ntree+nshrub),Abundance=numeric(ntree+nshrub))
   l$herbCover = 0;
   l$herbHeight = 0;
   class(l)<-c("forest","list")

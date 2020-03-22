@@ -9,7 +9,6 @@ importFrom("grDevices", "rainbow")
 importFrom("graphics", "axis", "abline", "barplot", "legend", "lines", "matplot","mtext",
            "matlines", "par", "polygon","axis.Date")
 importFrom("utils", "setTxtProgressBar", "txtProgressBar", "head", "tail")
-importFrom("GSIF", "REST.SoilGrids","over")
 useDynLib(medfate, .registration = TRUE)
 exportPattern("^[[:alpha:]]+")
 

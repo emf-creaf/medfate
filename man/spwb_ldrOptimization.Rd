@@ -77,7 +77,7 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 data(examplemeteo)
 
 #Load example plot plant data
-data(exampleforest)
+data(exampleforestMED)
 
 #Default species parameterization
 data(SpParamsMED)
@@ -89,7 +89,7 @@ examplesoil = soil(defaultSoilParams(2))
 control = defaultControl()
 
 #Initialize input
-x = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+x = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
 #Run exploration
 y = spwb_ldrExploration(x = x, soil = examplesoil, meteo = examplemeteo, 

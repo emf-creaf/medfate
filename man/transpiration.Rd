@@ -14,11 +14,13 @@ Set of high-level functions used in the calculation of stomatal conductance and 
 \usage{
 transp_profitMaximization(supplyFunction, photosynthesisFunction, Gwmin, Gwmax, 
                           gainModifier = 1.0, costModifier = 1.0)
-transp_transpirationGranier(x, soil, meteo, day, modifyInput = TRUE)
+transp_transpirationGranier(x, soil, meteo, day, 
+                            modifyInputX = TRUE, modifyInputSoil = TRUE)
 transp_transpirationSperry(x, soil, meteo, day,
                            latitude, elevation, slope, aspect, 
                            canopyEvaporation = 0, snowMelt = 0, soilEvaporation = 0, 
-                           stepFunctions = NA, modifyInput = TRUE)
+                           stepFunctions = NA, 
+                           modifyInputX = TRUE, modifyInputSoil = TRUE)
 transp_stomatalRegulationPlot(x, soil, meteo, day, timestep, 
                               latitude, elevation, slope = NA, aspect = NA,
                               type="E")
@@ -54,7 +56,7 @@ transp_stomatalRegulationPlot(x, soil, meteo, day, timestep,
   \item{snowMelt}{Snow melt values  for \code{day} (mm).}
   \item{stepFunctions}{An integer to indicate a simulation step for which photosynthesis and profit maximization functions are desired.}
   \item{type}{A string with plot type, either \code{"E"} (transpiration flow), \code{"An"} (net photosynthesis), \code{"Gw"} (stomatal conductance), \code{"T"} (temperature) or \code{"VPD"} (vapour pressure deficit).}
-  \item{modifyInput}{Boolean flag to indicate that the input \code{x} and \code{soil} objects are allowed to be modified during the simulation.}
+  \item{modifyInputX, modifyInputSoil}{Boolean flags to indicate that the input \code{x} and \code{soil} objects are allowed to be modified during the simulation.}
 }
 \details{
 Details of the transpiration submodel are given in a vignette.
@@ -158,7 +160,7 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 data(examplemeteo)
 
 #Load example plot plant data
-data(exampleforest)
+data(exampleforestMED)
 
 #Default species parameterization
 data(SpParamsMED)
@@ -171,12 +173,12 @@ examplesoil = soil(defaultSoilParams(2))
 control = defaultControl()
 
 #Initialize input
-x = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+x = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
 # Transpiration according to Granier's model, plant water potential 
 # and plant stress for a given day
 transp_transpirationGranier(x, examplesoil, examplemeteo, 1, 
-                            modifyInput = FALSE)
+                            modifyInputX = FALSE, modifyInputSoil = FALSE)
 
 #Switch to 'Sperry' transpiration mode
 control$transpirationMode="Sperry"
@@ -185,7 +187,7 @@ control$transpirationMode="Sperry"
 examplesoil2 = soil(defaultSoilParams(2))
 
 #Initialize input
-x2 = forest2spwbInput(exampleforest,examplesoil2, SpParamsMED, control)
+x2 = forest2spwbInput(exampleforestMED,examplesoil2, SpParamsMED, control)
 
 # Stomatal VPD curve and chosen value for the 12th time step at day 100
 transp_stomatalRegulationPlot(x2, examplesoil2, examplemeteo, day=100, timestep = 12,

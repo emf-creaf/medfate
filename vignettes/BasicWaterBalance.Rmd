@@ -19,7 +19,7 @@ library(medfate)
 
 ## About this vignette
 
-The present document describes how to run the soil plant water balance model described in De Cáceres et al. (2015) using package `medfate`. The  document indicates how to prepare the inputs, use the simulation functions and inspect the outputs. All the details of the model design and formulation can be found at https://vegmod.github.io/software/medfate. Because it introduces many basic features of package `medfate`, this document should be read before addressing advanced topics of water balance simulations or growth simulations.
+The present document describes how to run the soil plant water balance model described in De Cáceres et al. (2015) using package `medfate`. The  document indicates how to prepare the inputs, use the simulation functions and inspect the outputs. All the details of the model design and formulation can be found at https://vegmod.ctfc.cat/software/medfate. Because it introduces many basic features of package `medfate`, this document should be read before addressing advanced topics of water balance simulations or growth simulations.
 
 ## Preparing model inputs
 Any forest water balance model needs information on **climate**, **vegetation** and **soils** of the forest stand to be simulated. Moreover, since the soil water balance in `medfate` differentiates between species,  **species-specific parameters** are also needed. In this subsection we explain the different steps (including optional pathways) to prepare all the data needed to run function `spwb()`.
@@ -87,7 +87,7 @@ These species commonly occur in the Spanish forest inventory of Catalonia, but m
 names(SpParamsMED)
 ```
 
-Not all parameters are needed for all models. The user can find parameter definitions in the help page of this data set. However, to fully understand the role of parameters in the model, the user should read the details of model design and formulation (http://vegmod.ctfc.cat/medfateweb). 
+Not all parameters are needed for all models. The user can find parameter definitions in the help page of this data set. However, to fully understand the role of parameters in the model, the user should read the details of model design and formulation (http://vegmod.ctfc.cat/software/medfate). 
 
 ### Vegetation
 
@@ -95,15 +95,15 @@ Not all parameters are needed for all models. The user can find parameter defini
 
 Models included in `medfate` were primarily designed to be ran on **forest inventory plots**. In this kind of data, the  vegetation of a sampled area is described in terms of woody plants (trees and shrubs) along with their size and species identity. Forest plots in `medfate` are assumed to be in a format that follows closely the Spanish forest inventory. Each forest plot is represented in an object of class `forest`, a list that contains several elements. Among them, the most important items are two data frames, `treeData` (for trees) and `shrubData` for shrubs:
 ```{r}
-data(exampleforest)
-exampleforest
+data(exampleforestMED)
+exampleforestMED
 ```
 Trees are expected to be primarily described in terms of species, diameter (DBH) and height, whereas shrubs are described in terms of species, percent cover and mean height. 
 
 #### Aboveground and belowground data
-Because the forest plot format is rather specific, simulation functions in `medfate` allow starting in a more general way using two data frames, one with **aboveground** information (i.e. the leave area and size of plants) and the other with **belowground** information (i.e. root distribution). The aboveground data frame does not distinguish between trees and shrubs. It includes, for each plant cohort to be considered in rows, its *species identity*, *height* and *leaf area index* (LAI). While users can build their input data themselves, we use function `forest2aboveground()` on the object `exampleforest` to show how should the data look like:
+Because the forest plot format is rather specific, simulation functions in `medfate` allow starting in a more general way using two data frames, one with **aboveground** information (i.e. the leave area and size of plants) and the other with **belowground** information (i.e. root distribution). The aboveground data frame does not distinguish between trees and shrubs. It includes, for each plant cohort to be considered in rows, its *species identity*, *height* and *leaf area index* (LAI). While users can build their input data themselves, we use function `forest2aboveground()` on the object `exampleforestMED` to show how should the data look like:
 ```{r}
-above = forest2aboveground(exampleforest, SpParamsMED)
+above = forest2aboveground(exampleforestMED, SpParamsMED)
 above
 ```
 Note that the call to `forest2aboveground()` included species parameters, because species-specific values are needed to calculate leaf area from tree diameters or shrub cover. Columns `N`, `DBH` and `Cover` are required for simulating growth, but not for soil water balance, which only requires columns `SP`, `H` (in cm), `CR` (i.e. the crown ratio), `LAI_live`, `LAI_expanded` and `LAI_dead`. Here plant cohorts are given unique codes that tell us whether they correspond to trees or shrubs, but the user can use other row identifiers as long as they are unique. In practice, the user only needs to worry to calculate the values for `LAI_live`. `LAI_live` and `LAI_expanded` can contain the same LAI values, and `LAI_dead` is normally zero. This is so because models update `LAI_expanded` and `LAI_dead` according to the leaf phenology of species.
@@ -117,15 +117,15 @@ vprofile_leafAreaDensity(above, byCohorts = F)
 vprofile_leafAreaDensity(above, byCohorts = T)
 ```
 
-Regarding **belowground** information, a matrix describing for each plant cohort, the proportion of fine roots in each soil layer. As before, we use function `forest2belowground()` on the object `exampleforest` to show how should the data look like:
+Regarding **belowground** information, a matrix describing for each plant cohort, the proportion of fine roots in each soil layer. As before, we use function `forest2belowground()` on the object `exampleforestMED` to show how should the data look like:
 ```{r}
-below = forest2belowground(exampleforest, examplesoil, SpParamsMED)
+below = forest2belowground(exampleforestMED, examplesoil, SpParamsMED)
 below
 ```
 Function `forest2belowground()` internally takes values of `Z50` and `Z95` and calls  function `root_ldrDistribution()` to estimate the distribution of fine roots according to the linear dose response model. For example the first row is:
 ```{r}
-root_ldrDistribution(exampleforest$treeData$Z50[1], 
-                     exampleforest$treeData$Z95[1],
+root_ldrDistribution(exampleforestMED$treeData$Z50[1], 
+                     exampleforestMED$treeData$Z95[1],
                      examplesoil$dVec)
 ```
 An analogous function `root_conicDistribution()` can be used to estimate fine root distribution according to a cone. The user is free to build any numeric matrix for root distribution, as long as values in rows sum always one (i.e. we have proportions). Otherwise, functions `root_conicDistribution()` and `root_ldrDistribution()` can be used to calculate root distribution under specific assumptions.
@@ -133,7 +133,7 @@ An analogous function `root_conicDistribution()` can be used to estimate fine ro
 Users can visually inspect the distribution of fine roots of `forest` objects by calling function `vprofile_rootDistribution()`:
 
 ```{r, fig = TRUE, fig.width= 5, fig.height=3, fig.align= 'center', echo=TRUE}
-vprofile_rootDistribution(exampleforest, SpParamsMED)
+vprofile_rootDistribution(exampleforestMED, SpParamsMED)
 ```
 
 
@@ -174,7 +174,7 @@ x
 As with the soil input object, the `spwbInput` object may be modified during simulations. In the case of soil water balance, these modifications are minimal, for example concerning `LAI_expanded`, but in the case of growth simulations the object is used to store the status of vegetation during and at the end of simulations. If one has a `forest` object, the `spwbInput` object can be generated in directly from it, avoiding the need to explicitly build aboveground and belowground data frames:
 
 ```{r}
-x = forest2spwbInput(exampleforest, examplesoil, SpParamsMED, control)
+x = forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
 ```
 
 

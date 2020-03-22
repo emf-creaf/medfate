@@ -143,7 +143,7 @@ State variables stored in objects \code{x} and \code{soil} are modified during t
 data(examplemeteo)
 
 #Load example plot plant data
-data(exampleforest)
+data(exampleforestMED)
 
 #Default species parameterization
 data(SpParamsMED)
@@ -155,7 +155,7 @@ examplesoil = soil(defaultSoilParams(2))
 control = defaultControl()
 
 #Initialize input
-x1 = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+x1 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
 #Call simulation function
 S1<-spwb(x1, examplesoil, examplemeteo, elevation = 100)
@@ -175,7 +175,7 @@ examplesoil2 = soil(defaultSoilParams(2))
 control$transpirationMode="Sperry"
 
 #Initialize input
-x2 = forest2spwbInput(exampleforest,examplesoil2, SpParamsMED, control)
+x2 = forest2spwbInput(exampleforestMED,examplesoil2, SpParamsMED, control)
 
 #Call simulation function (11 days)
 d = 100:110

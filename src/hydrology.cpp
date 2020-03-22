@@ -118,21 +118,14 @@ double snowMelt(double tday, double rad, double LgroundSWR, double elevation) {
   return(melt);
 }
 
-// [[Rcpp::export("hydrology_verticalInputs")]]
-NumericVector verticalInputs(List soil, String soilFunctions, double prec, double er, double tday, double rad, double elevation,
-                    double Cm, double LgroundPAR, double LgroundSWR, 
-                    double runon = 0.0,
-                    bool snowpack = true, bool drainage = true, bool modifySoil = true) {
+// [[Rcpp::export("hydrology_soilWaterInputs")]]
+NumericVector soilWaterInputs(List soil, String soilFunctions, double prec, double er, double tday, double rad, double elevation,
+                             double Cm, double LgroundPAR, double LgroundSWR, 
+                             double runon = 0.0,
+                             bool snowpack = true, bool modifySoil = true) {
   //Soil input
-  NumericVector W = clone(Rcpp::as<Rcpp::NumericVector>(soil["W"])); //Access to soil state variable
-  NumericVector dVec = soil["dVec"];
-  NumericVector macro = soil["macro"];
-  NumericVector rfc = soil["rfc"];
-  NumericVector Water_FC = waterFC(soil, soilFunctions);
-  NumericVector Water_SAT = waterSAT(soil, soilFunctions);
   double swe = soil["SWE"]; //snow pack
-  int nlayers = W.size();
-  
+
   //Snow pack dynamics
   double snow = 0.0, rain=0.0;
   double melt = 0.0;
@@ -155,14 +148,43 @@ NumericVector verticalInputs(List soil, String soilFunctions, double prec, doubl
   }
   
   //Hydrologic input
-  double NetRain = 0.0, Infiltration= 0.0, Runoff= 0.0, DeepDrainage= 0.0;
-  double interception = interceptionGashDay(rain,Cm,LgroundPAR,er);
-  if(rain>0.0) NetRain = rain - interception;
-  if((NetRain+runon+melt)>0.0) {
+  double NetRain = 0.0, Interception = 0.0;
+  if(rain>0.0)  {
+    Interception = interceptionGashDay(rain,Cm,LgroundPAR,er);
+    NetRain = rain - Interception; 
+  }
+  if(modifySoil) {
+    soil["SWE"] = swe;
+  }
+  NumericVector WI = NumericVector::create(_["Rain"] = rain, _["Snow"] = snow,
+                                           _["Interception"] = Interception,
+                                           _["NetRain"] = NetRain, 
+                                           _["Snowmelt"] = melt,
+                                           _["Runon"] = runon,
+                                           _["Input"] = runon+melt+NetRain);
+  return(WI);
+}
+// [[Rcpp::export("hydrology_soilInfiltrationPercolation")]]
+NumericVector soilInfiltrationPercolation(List soil, String soilFunctions, 
+                                          double waterInput,
+                                          bool drainage = true, bool modifySoil = true) {
+  //Soil input
+  NumericVector W = clone(Rcpp::as<Rcpp::NumericVector>(soil["W"])); //Access to soil state variable
+  NumericVector dVec = soil["dVec"];
+  NumericVector macro = soil["macro"];
+  NumericVector rfc = soil["rfc"];
+  NumericVector Water_FC = waterFC(soil, soilFunctions);
+  NumericVector Water_SAT = waterSAT(soil, soilFunctions);
+  int nlayers = W.size();
+  
+
+  //Hydrologic input
+  double Infiltration= 0.0, Runoff= 0.0, DeepDrainage= 0.0;
+  if(waterInput>0.0) {
     //Interception
     //Net Runoff and infiltration
-    Infiltration = infiltrationAmount(NetRain+runon+melt, Water_FC[0]);
-    Runoff = (NetRain+runon+melt) - Infiltration;
+    Infiltration = infiltrationAmount(waterInput, Water_FC[0]);
+    Runoff = waterInput - Infiltration;
     //Decide infiltration repartition among layers
     NumericVector Ivec = infiltrationRepartition(Infiltration, dVec, macro);
     //Input of the first soil layer is infiltration
@@ -196,14 +218,9 @@ NumericVector verticalInputs(List soil, String soilFunctions, double prec, doubl
     }
   }
   if(modifySoil) {
-    soil["SWE"] = swe;
-    soil["W"] = W;
+    NumericVector Ws = soil["W"];
+    for(int l=0;l<nlayers;l++) Ws[l] = W[l];
   }
-  NumericVector DB = NumericVector::create(_["Rain"] = rain, _["Snow"] = snow,
-                                           _["Interception"] = interception,
-                                           _["NetRain"] = NetRain, 
-                                           _["Snowmelt"] = melt,
-                                           _["Runon"] = runon, 
-                                           _["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage);
+  NumericVector DB = NumericVector::create(_["Infiltration"] = Infiltration, _["Runoff"] = Runoff, _["DeepDrainage"] = DeepDrainage);
   return(DB);
 }

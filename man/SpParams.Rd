@@ -1,14 +1,18 @@
 \encoding{UTF-8}
-\name{SpParamsMED}
+\name{SpParams}
 \alias{SpParamsMED}
+\alias{SpParamsUS}
 \docType{data}
 \title{
-Parameter values for Mediterranean species
+Data tables with species parameter values for Mediterranean and US
 }
 \description{
-A data set of parameter values for Mediterranean species, resulting from bibliographic search, fit to empirical data or expert-based guesses.
+A data sets of species parameter values, resulting from bibliographic search, fit to empirical data or expert-based guesses.
 }
-\usage{data("SpParamsMED")}
+\usage{
+data("SpParamsMED")
+data("SpParamsUS")
+}
 \format{
   A data frame with 89 observations (species) on the following 77 variables.
   \describe{

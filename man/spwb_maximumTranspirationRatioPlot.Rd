@@ -36,7 +36,7 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 data(examplemeteo)
 
 #Load example plot plant data
-data(exampleforest)
+data(exampleforestMED)
 
 #Default species parameterization
 data(SpParamsMED)
@@ -51,7 +51,7 @@ control = defaultControl()
 control$transpirationMode="Sperry"
 
 #Initialize input
-x2 = forest2spwbInput(exampleforest,examplesoil2, SpParamsMED, control)
+x2 = forest2spwbInput(exampleforestMED,examplesoil2, SpParamsMED, control)
 
 #Run optimization
 spwb_maximumTranspirationRatioPlot(x2, examplesoil2, examplemeteo, 

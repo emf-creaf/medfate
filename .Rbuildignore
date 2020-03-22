@@ -4,6 +4,7 @@
 ^NEWS.md$
 ^README.md$
 ^README.Rmd$
+^data-raw/*$
 ^modeltests/*$
 ^medfatebook/*$
 ^docs/*$

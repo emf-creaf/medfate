@@ -30,18 +30,18 @@ plant_basalArea(x)
 plant_largerTreeBasalArea(x)
 plant_characterParameter(x, SpParams, parName)
 plant_cover(x)
-plant_crownBaseHeight(x, SpParams)
-plant_crownLength(x, SpParams)
-plant_crownRatio(x, SpParams)
-plant_density(x, SpParams)
+plant_crownBaseHeight(x, SpParams, mode = "MED")
+plant_crownLength(x, SpParams, mode = "MED")
+plant_crownRatio(x, SpParams, mode = "MED")
+plant_density(x, SpParams, mode = "MED")
 plant_equilibriumLeafLitter(x, SpParams, AET = 800)
 plant_equilibriumSmallBranchLitter(x, SpParams, 
                                    smallBranchDecompositionRate = 0.81)
-plant_foliarBiomass(x, SpParams, gdd = NA)
-plant_fuel(x, SpParams, gdd = NA, includeDead = TRUE)
+plant_foliarBiomass(x, SpParams, gdd = NA, mode = "MED")
+plant_fuel(x, SpParams, gdd = NA, includeDead = TRUE, mode = "MED")
 plant_height(x)
 plant_ID(x)
-plant_LAI(x, SpParams, gdd = NA)
+plant_LAI(x, SpParams, gdd = NA, mode = "MED")
 plant_parameter(x, SpParams, parName)
 plant_phytovolume(x, SpParams)
 plant_species(x)
@@ -51,6 +51,7 @@ plant_speciesName(x, SpParams)
   \item{x}{An object of class \code{\link{forest}}.}
   \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
   \item{parName}{A string with a parameter name.}
+  \item{mode}{Calculation mode, either "MED" or "US".}
   \item{gdd}{Growth degree days (to account for leaf phenology effects).}
   \item{AET}{Actual annual evapotranspiration (in mm).}
   \item{smallBranchDecompositionRate}{Decomposition rate of small branches.}
@@ -91,21 +92,21 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
 data(SpParamsMED)
 
 #Load example plot
-data(exampleforest)
+data(exampleforestMED)
 
 #A short way to obtain total basal area
-sum(plant_basalArea(exampleforest), na.rm=TRUE)
+sum(plant_basalArea(exampleforestMED), na.rm=TRUE)
 
 #The same forest level function for LAI
-sum(plant_LAI(exampleforest, SpParamsMED))
+sum(plant_LAI(exampleforestMED, SpParamsMED))
 
 #The same forest level function for fuel loading
-sum(plant_fuel(exampleforest, SpParamsMED))
+sum(plant_fuel(exampleforestMED, SpParamsMED))
 
 #Summary function for 'forest' objects can be also used
-summary(exampleforest, SpParamsMED)
+summary(exampleforestMED, SpParamsMED)
 
-plant_speciesName(exampleforest, SpParamsMED)
+plant_speciesName(exampleforestMED, SpParamsMED)
 
-plant_ID(exampleforest)
+plant_ID(exampleforestMED)
 }

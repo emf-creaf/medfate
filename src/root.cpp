@@ -227,3 +227,29 @@ NumericVector xylemConductanceProportions(NumericVector v, NumericVector d, doub
   for(int i=0;i<nlayers;i++) w[i] = w[i]/wsum;
   return(w);
 }
+
+
+// [[Rcpp::export("root_rhizosphereOverlapProportions")]]
+NumericMatrix rhizosphereOverlapProportions(NumericMatrix V, NumericVector LAIlive, double poolOverlapFactor) {
+  int numCohorts = V.nrow();
+  int numlayers = V.ncol();
+  double LAIcelllive = 0.0;
+  for(int c=0;c<numCohorts;c++) LAIcelllive +=LAIlive[c];
+  double ropmax = (1.0 - exp(-(poolOverlapFactor*LAIcelllive)));
+  NumericMatrix ROP(numCohorts,numlayers);
+  for(int c=0;c<numCohorts;c++) {
+    for(int l=0;l<numlayers;l++) {
+      double rdl = 0.0;
+      double rds = 0.0;
+      for(int c2=0;c2<numCohorts;c2++) {
+        if(c2!=c) {
+          rdl += (V(c,l)*V(c2,l));
+          rds += V(c2,l);
+        }
+      }
+      ROP(c,l) = (rdl/rds)*ropmax*(1.0 - (LAIlive[c]/LAIcelllive));
+    }
+  }
+  ROP.attr("dimnames") = V.attr("dimnames");
+  return(ROP);
+}

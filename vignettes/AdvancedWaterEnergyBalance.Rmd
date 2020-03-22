@@ -19,7 +19,7 @@ library(medfate)
 
 ## About this vignette
 
-This document describes how to run a water and energy balance model that uses a more detailed approach for hydraulics and stomatal regulation. This document is meant to teach users to run the simulation model within R. All the details of the model design and formulation can be found at  https://vegmod.github.io/software/medfate. 
+This document describes how to run a water and energy balance model that uses a more detailed approach for hydraulics and stomatal regulation. This document is meant to teach users to run the simulation model within R. All the details of the model design and formulation can be found at  https://vegmod.ctfc.cat/software/medfate. 
 
 ## Preparing model inputs
 Most details of the soil plant water balance model inputs are already covered in vignette **1. Introduction to water balance simulation**. Here only differences are mentioned.
@@ -51,14 +51,14 @@ These species commonly occur in the Spanish forest inventory of Catalonia, but m
 names(SpParamsMED)
 ```
 
-Not all parameters are needed for all models. The user can find parameter definitions in the help page of this data set. However, to fully understand the role of parameters in the model, the user should read the details of model design and formulation (https://vegmod.github.io/software/medfate). 
+Not all parameters are needed for all models. The user can find parameter definitions in the help page of this data set. However, to fully understand the role of parameters in the model, the user should read the details of model design and formulation (https://vegmod.ctfc.cat/software/medfate). 
 
 ### Vegetation
 
 Models included in `medfate` were primarily designed to be ran on **forest inventory plots** (these are explained in detail in **1. Introduction to water balance simulation**):
 ```{r}
-data(exampleforest)
-exampleforest
+data(exampleforestMED)
+exampleforestMED
 ```
 
 ### Meteorological forcing
@@ -91,7 +91,7 @@ control$soilFunctions = "VG"
 A last step is needed before running the simulation function, consisting in the compilation of parameters and the calculation of additional parameter values for each plant cohort. If one has a `forest` object, the `spwbInput` object can be generated in directly from it:
 
 ```{r}
-x = forest2spwbInput(exampleforest, examplesoil, SpParamsMED, control)
+x = forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
 ```
 
 The `spwbInput` object for advanced water and energy balance is similar to that of simple water balance simulations, but contains more elements. Information about the cohort species is found in element `cohorts`  (i.e. code, species and name):

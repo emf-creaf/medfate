@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 int findRowIndex(int sp, DataFrame SpParams);
 
-DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL);
+DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL, String mode = "MED");
 NumericMatrix forest2belowground(List x, List soil, DataFrame SpParams);
 
 NumericVector cohortNumericParameter(List x, DataFrame SpParams, String parName);
@@ -21,7 +21,8 @@ CharacterVector cohortIDs(List x);
 
 NumericVector cohortHeight(List x);
 
-NumericVector cohortDensity(List x, DataFrame SpParams);
+NumericVector cohortDensity(List x, DataFrame SpParams, String mode = "MED");
+NumericVector speciesDensity(List x, DataFrame SpParams, String mode = "MED");
 
 NumericVector treeBasalArea(NumericVector N, NumericVector dbh);
 NumericVector treeCohortBasalArea(List x);
@@ -34,28 +35,31 @@ double treeDensity(List x);
 double minDBHDensity(List x, double minDBH);
 NumericVector dbhClassDensity(List x, NumericVector DBHbreaks);
 
-NumericVector treeCrownRatio(NumericVector N, NumericVector dbh, NumericVector H, 
-                             NumericVector Acw, NumericVector Bcw,
-                             NumericVector Acr, NumericVector B1cr, NumericVector B2cr, NumericVector B3cr,
-                             NumericVector C1cr, NumericVector C2cr);
+NumericVector treeCrownRatioMED(NumericVector N, NumericVector dbh, NumericVector H, 
+                                NumericVector Acw, NumericVector Bcw,
+                                NumericVector Acr, NumericVector B1cr, NumericVector B2cr, NumericVector B3cr,
+                                NumericVector C1cr, NumericVector C2cr);
 
 NumericVector treeFuel(IntegerVector SP, NumericVector N, NumericVector dbh, DataFrame SpParams, double gdd = NA_REAL, bool includeDead = true);
-NumericVector shrubFuel(IntegerVector SP, NumericVector Cover, NumericVector H, DataFrame SpParams, double gdd = NA_REAL, bool includeDead = true);
-NumericVector cohortFuel(List x, DataFrame SpParams, double gdd = NA_REAL, bool includeDead = true);
+NumericVector shrubFuelMED(IntegerVector SP, NumericVector Cover, NumericVector H, DataFrame SpParams, double gdd = NA_REAL, bool includeDead = true);
+NumericVector shrubFuelUS(IntegerVector SP, NumericVector Cover, NumericVector H, DataFrame SpParams, double gdd = NA_REAL, bool includeDead = true);
 
-NumericVector cohortCrownRatio(List x, DataFrame SpParams);
-NumericVector cohortCrownBaseHeight(List x, DataFrame SpParams);
-NumericVector cohortCrownLength(List x, DataFrame SpParams);
+NumericVector cohortFuel(List x, DataFrame SpParams, double gdd = NA_REAL, bool includeDead = true, String mode = "MED");
 
-NumericVector cohortFoliarBiomass(List x, DataFrame SpParams, double gdd = NA_REAL);
+NumericVector cohortCrownRatio(List x, DataFrame SpParams, String mode = "MED");
+NumericVector cohortCrownBaseHeight(List x, DataFrame SpParams, String mode = "MED");
+NumericVector cohortCrownLength(List x, DataFrame SpParams, String mode = "MED");
+
+NumericVector cohortFoliarBiomass(List x, DataFrame SpParams, double gdd = NA_REAL, String mode = "MED");
+
 NumericVector cohortEquilibriumLeafLitter(List x, DataFrame SpParams, double AET = 800);
 NumericVector cohortEquilibriumSmallBranchLitter(List x, DataFrame SpParams, double smallBranchDecompositionRate = 0.81);
 
 NumericVector treeLAI(IntegerVector SP, NumericVector N, NumericVector dbh, DataFrame SpParams, NumericVector pEmb=NumericVector(0), double gdd = NA_REAL);
 NumericVector shrubLAI(IntegerVector SP, NumericVector Cover, NumericVector H, DataFrame SpParams, double gdd = NA_REAL);
-NumericVector cohortLAI(List x, DataFrame SpParams, double gdd = NA_REAL);
+NumericVector cohortLAI(List x, DataFrame SpParams, double gdd = NA_REAL, String mode = "MED");
 NumericMatrix LAIdistributionVectors(NumericVector z, NumericVector LAI, NumericVector H, NumericVector CR);
-NumericMatrix LAIdistribution(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL);
+NumericMatrix LAIdistribution(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL, String mode = "MED");
 
 double shrubCover(List x, double excludeMinHeight = 0.0);
 

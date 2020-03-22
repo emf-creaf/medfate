@@ -70,7 +70,7 @@ Objects \code{x} and \code{soil} are modified during the simulation. Daily trans
 data(examplemeteo)
 
 #Load example plot plant data
-data(exampleforest)
+data(exampleforestMED)
 
 #Default species parameterization
 data(SpParamsMED)
@@ -83,7 +83,7 @@ examplesoil = soil(defaultSoilParams(2), W=c(0.5,0.5))
 
 
 #Simulate one day only
-x1 = forest2spwbInput(exampleforest,examplesoil, SpParamsMED, control)
+x1 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 d = 100
 sd1<-spwb_day(x1, examplesoil, rownames(examplemeteo)[d],  
              examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
@@ -100,7 +100,7 @@ control$transpirationMode="Sperry"
 
 
 #Simulate one day only
-x2 = forest2spwbInput(exampleforest,examplesoil2, SpParamsMED, control)
+x2 = forest2spwbInput(exampleforestMED,examplesoil2, SpParamsMED, control)
 d = 100
 sd2<-spwb_day(x2, examplesoil2, rownames(examplemeteo)[d],
              examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 

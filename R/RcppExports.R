@@ -65,12 +65,12 @@ stand_basalArea <- function(x) {
     .Call(`_medfate_standBasalArea`, x)
 }
 
-plant_density <- function(x, SpParams) {
-    .Call(`_medfate_cohortDensity`, x, SpParams)
+plant_density <- function(x, SpParams, mode = "MED") {
+    .Call(`_medfate_cohortDensity`, x, SpParams, mode)
 }
 
-species_density <- function(x, SpParams) {
-    .Call(`_medfate_speciesDensity`, x, SpParams)
+species_density <- function(x, SpParams, mode = "MED") {
+    .Call(`_medfate_speciesDensity`, x, SpParams, mode)
 }
 
 plant_height <- function(x) {
@@ -81,36 +81,28 @@ plant_height <- function(x) {
     .Call(`_medfate_shrubCrownRatio`, SP, SpParams)
 }
 
-plant_crownRatio <- function(x, SpParams) {
-    .Call(`_medfate_cohortCrownRatio`, x, SpParams)
+plant_crownRatio <- function(x, SpParams, mode = "MED") {
+    .Call(`_medfate_cohortCrownRatio`, x, SpParams, mode)
 }
 
-plant_crownBaseHeight <- function(x, SpParams) {
-    .Call(`_medfate_cohortCrownBaseHeight`, x, SpParams)
+plant_crownBaseHeight <- function(x, SpParams, mode = "MED") {
+    .Call(`_medfate_cohortCrownBaseHeight`, x, SpParams, mode)
 }
 
-plant_crownLength <- function(x, SpParams) {
-    .Call(`_medfate_cohortCrownLength`, x, SpParams)
+plant_crownLength <- function(x, SpParams, mode = "MED") {
+    .Call(`_medfate_cohortCrownLength`, x, SpParams, mode)
 }
 
-.treeFoliarBiomass <- function(SP, N, dbh, SpParams, gdd = NA_real_) {
-    .Call(`_medfate_treeFoliarBiomass`, SP, N, dbh, SpParams, gdd)
+plant_foliarBiomass <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
+    .Call(`_medfate_cohortFoliarBiomass`, x, SpParams, gdd, mode)
 }
 
-.shrubFoliarBiomass <- function(SP, Cover, H, CR, SpParams, gdd = NA_real_) {
-    .Call(`_medfate_shrubFoliarBiomass`, SP, Cover, H, CR, SpParams, gdd)
+species_foliarBiomass <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
+    .Call(`_medfate_speciesFoliarBiomass`, x, SpParams, gdd, mode)
 }
 
-plant_foliarBiomass <- function(x, SpParams, gdd = NA_real_) {
-    .Call(`_medfate_cohortFoliarBiomass`, x, SpParams, gdd)
-}
-
-species_foliarBiomass <- function(x, SpParams, gdd = NA_real_) {
-    .Call(`_medfate_speciesFoliarBiomass`, x, SpParams, gdd)
-}
-
-stand_foliarBiomass <- function(x, SpParams, gdd = NA_real_) {
-    .Call(`_medfate_standFoliarBiomass`, x, SpParams, gdd)
+stand_foliarBiomass <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
+    .Call(`_medfate_standFoliarBiomass`, x, SpParams, gdd, mode)
 }
 
 .shrubCover <- function(x, excludeMinHeight = 0.0) {
@@ -141,24 +133,16 @@ stand_phytovolume <- function(x, SpParams) {
     .Call(`_medfate_standPhytovolume`, x, SpParams)
 }
 
-.treeFuel <- function(SP, N, dbh, SpParams, gdd = NA_real_, includeDead = TRUE) {
-    .Call(`_medfate_treeFuel`, SP, N, dbh, SpParams, gdd, includeDead)
+plant_fuel <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE, mode = "MED") {
+    .Call(`_medfate_cohortFuel`, x, SpParams, gdd, includeDead, mode)
 }
 
-.shrubFuel <- function(SP, Cover, H, CR, SpParams, gdd = NA_real_, includeDead = TRUE) {
-    .Call(`_medfate_shrubFuel`, SP, Cover, H, CR, SpParams, gdd, includeDead)
+species_fuel <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE, mode = "MED") {
+    .Call(`_medfate_speciesFuel`, x, SpParams, gdd, includeDead, mode)
 }
 
-plant_fuel <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE) {
-    .Call(`_medfate_cohortFuel`, x, SpParams, gdd, includeDead)
-}
-
-species_fuel <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE) {
-    .Call(`_medfate_speciesFuel`, x, SpParams, gdd, includeDead)
-}
-
-stand_fuel <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE) {
-    .Call(`_medfate_standFuel`, x, SpParams, gdd, includeDead)
+stand_fuel <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE, mode = "MED") {
+    .Call(`_medfate_standFuel`, x, SpParams, gdd, includeDead, mode)
 }
 
 plant_equilibriumLeafLitter <- function(x, SpParams, AET = 800) {
@@ -169,44 +153,36 @@ plant_equilibriumSmallBranchLitter <- function(x, SpParams, smallBranchDecomposi
     .Call(`_medfate_cohortEquilibriumSmallBranchLitter`, x, SpParams, smallBranchDecompositionRate)
 }
 
-.treeLAI <- function(SP, N, dbh, SpParams, gdd = NA_real_) {
-    .Call(`_medfate_treeLAI`, SP, N, dbh, SpParams, gdd)
+plant_LAI <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
+    .Call(`_medfate_cohortLAI`, x, SpParams, gdd, mode)
 }
 
-.shrubLAI <- function(SP, Cover, H, SpParams, gdd = NA_real_) {
-    .Call(`_medfate_shrubLAI`, SP, Cover, H, SpParams, gdd)
+species_LAI <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
+    .Call(`_medfate_speciesLAI`, x, SpParams, gdd, mode)
 }
 
-plant_LAI <- function(x, SpParams, gdd = NA_real_) {
-    .Call(`_medfate_cohortLAI`, x, SpParams, gdd)
-}
-
-species_LAI <- function(x, SpParams, gdd = NA_real_) {
-    .Call(`_medfate_speciesLAI`, x, SpParams, gdd)
-}
-
-stand_LAI <- function(x, SpParams, gdd = NA_real_) {
-    .Call(`_medfate_standLAI`, x, SpParams, gdd)
+stand_LAI <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
+    .Call(`_medfate_standLAI`, x, SpParams, gdd, mode)
 }
 
 .LAIdistributionVectors <- function(z, LAI, H, CR) {
     .Call(`_medfate_LAIdistributionVectors`, z, LAI, H, CR)
 }
 
-.LAIdistribution <- function(z, x, SpParams, gdd = NA_real_) {
-    .Call(`_medfate_LAIdistribution`, z, x, SpParams, gdd)
+.LAIdistribution <- function(z, x, SpParams, gdd = NA_real_, mode = "MED") {
+    .Call(`_medfate_LAIdistribution`, z, x, SpParams, gdd, mode)
 }
 
 .LAIprofileVectors <- function(z, LAI, H, CR) {
     .Call(`_medfate_LAIprofileVectors`, z, LAI, H, CR)
 }
 
-.LAIprofile <- function(z, x, SpParams, gdd = NA_real_) {
-    .Call(`_medfate_LAIprofile`, z, x, SpParams, gdd)
+.LAIprofile <- function(z, x, SpParams, gdd = NA_real_, mode = "MED") {
+    .Call(`_medfate_LAIprofile`, z, x, SpParams, gdd, mode)
 }
 
-forest2aboveground <- function(x, SpParams, gdd = NA_real_) {
-    .Call(`_medfate_forest2aboveground`, x, SpParams, gdd)
+forest2aboveground <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
+    .Call(`_medfate_forest2aboveground`, x, SpParams, gdd, mode)
 }
 
 forest2belowground <- function(x, soil, SpParams) {
@@ -481,8 +457,12 @@ hydrology_snowMelt <- function(tday, rad, LgroundSWR, elevation) {
     .Call(`_medfate_snowMelt`, tday, rad, LgroundSWR, elevation)
 }
 
-hydrology_verticalInputs <- function(soil, soilFunctions, prec, er, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, runon = 0.0, snowpack = TRUE, drainage = TRUE, modifySoil = TRUE) {
-    .Call(`_medfate_verticalInputs`, soil, soilFunctions, prec, er, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, runon, snowpack, drainage, modifySoil)
+hydrology_soilWaterInputs <- function(soil, soilFunctions, prec, er, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, runon = 0.0, snowpack = TRUE, modifySoil = TRUE) {
+    .Call(`_medfate_soilWaterInputs`, soil, soilFunctions, prec, er, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, runon, snowpack, modifySoil)
+}
+
+hydrology_soilInfiltrationPercolation <- function(soil, soilFunctions, waterInput, drainage = TRUE, modifySoil = TRUE) {
+    .Call(`_medfate_soilInfiltrationPercolation`, soil, soilFunctions, waterInput, drainage, modifySoil)
 }
 
 .incgam <- function(a, x) {
@@ -633,6 +613,10 @@ root_xylemConductanceProportions <- function(v, d, depthWidthRatio = 1.0) {
     .Call(`_medfate_xylemConductanceProportions`, v, d, depthWidthRatio)
 }
 
+root_rhizosphereOverlapProportions <- function(V, LAIlive, poolOverlapFactor) {
+    .Call(`_medfate_rhizosphereOverlapProportions`, V, LAIlive, poolOverlapFactor)
+}
+
 soil_thetaSATSX <- function(clay, sand, om = NA_real_) {
     .Call(`_medfate_thetaSATSaxton`, clay, sand, om)
 }
@@ -777,12 +761,12 @@ transp_profitMaximization <- function(supplyFunction, photosynthesisFunction, Gw
     .Call(`_medfate_profitMaximization`, supplyFunction, photosynthesisFunction, Gwmin, Gwmax, gainModifier, costModifier)
 }
 
-transp_transpirationSperry <- function(x, soil, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation = 0.0, snowMelt = 0.0, soilEvaporation = 0.0, stepFunctions = NA_integer_, modifyInput = TRUE) {
-    .Call(`_medfate_transpirationSperry`, x, soil, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, stepFunctions, modifyInput)
+transp_transpirationSperry <- function(x, soil, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation = 0.0, snowMelt = 0.0, soilEvaporation = 0.0, stepFunctions = NA_integer_, modifyInputX = TRUE, modifyInputSoil = TRUE) {
+    .Call(`_medfate_transpirationSperry`, x, soil, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, stepFunctions, modifyInputX, modifyInputSoil)
 }
 
-transp_transpirationGranier <- function(x, soil, meteo, day, modifyInput = TRUE) {
-    .Call(`_medfate_transpirationGranier`, x, soil, meteo, day, modifyInput)
+transp_transpirationGranier <- function(x, soil, meteo, day, modifyInputX = TRUE, modifyInputSoil = TRUE) {
+    .Call(`_medfate_transpirationGranier`, x, soil, meteo, day, modifyInputX, modifyInputSoil)
 }
 
 .windSpeedAtCanopyHeight <- function(wind20H, canopyHeight) {
@@ -805,16 +789,8 @@ fuel_windAdjustmentFactor <- function(topShrubHeight, bottomCanopyHeight, topCan
     .Call(`_medfate_windSpeedAtHeightOverCanopy`, z, wind20H, canopyHeight)
 }
 
-wind_windSpeedMassmanExtinction <- function(z, wind20H, LAIc, canopyHeight) {
-    .Call(`_medfate_windSpeedMassmanExtinction`, z, wind20H, LAIc, canopyHeight)
-}
-
 .windExtinctionProfile <- function(z, wind20H, LAIc, canopyHeight) {
     .Call(`_medfate_windExtinctionProfile`, z, wind20H, LAIc, canopyHeight)
-}
-
-wind_aerodynamicResistance <- function(canopyHeight, wind) {
-    .Call(`_medfate_aerodynamicResistance`, canopyHeight, wind)
 }
 
 # Register entry points for exported C++ functions

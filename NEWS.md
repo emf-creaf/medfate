@@ -2,6 +2,12 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 0.9.0
+- New parametrization data set 'SpParamsUS'
+- Function 'hydrology_verticalInputs' replaced by 'hydrology_soilWaterInputs' and 'hydrology_soilInfiltrationPercolation'.
+- New simulation control option: 'plantWaterPools'.
+- Hard (Imports) dependency from GSIF changed to soft (Suggests) one.
+
 # Version 0.8.9
 - Update supply function plot.
 

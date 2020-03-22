@@ -211,7 +211,7 @@ spwb_ldrOptimization<-function(y, psi_crit, opt_mode = 1) {
       sel <- matrix(F, ncol = ncol(psimin), nrow = nrow(psimin))
       sel[subselb == 1 | subselt == 1 | subsell == 1 | subselr == 1] <- T
       if(length(e[sel])==0) {
-        warning(paste("Psi value", psi_crit[i],"for cohort ",row.names(x$cohorts)[i],"not reached for any combination."))
+        warning(paste("Psi value", psi_crit[i],"for cohort ",row.names(cohorts)[i],"not reached for any combination."))
         optim[i,] <- NA
       } else {
         point <- which(sel & e == max(e[sel]), arr.ind = T)

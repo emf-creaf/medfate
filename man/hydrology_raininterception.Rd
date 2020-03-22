@@ -56,13 +56,13 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 }
 \examples{
 #Load example plot plant data
-data(exampleforest)
+data(exampleforestMED)
 
 #Default species parameterization
 data(SpParamsMED)
 
 #Draw rainfall interception for two values of the E/R ratio
-hydrology_interceptionPlot(exampleforest, SpParamsMED, ER = c(0.05, 0.2))
+hydrology_interceptionPlot(exampleforestMED, SpParamsMED, ER = c(0.05, 0.2))
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

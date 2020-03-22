@@ -5,7 +5,7 @@
 \title{SoilGrids soil description fetcher}
 
 \description{\code{soilgridsParams} takes a vector of depths and returns a
-list of soil characteristics ready to use with \code{\link{soil}} function.}
+list of soil characteristics ready to use with \code{\link{soil}} function (requires package GSIF).}
 
 \usage{
 soilgridsParams(points, depths = c(300, 500, 1200), verbose = FALSE)
@@ -54,6 +54,8 @@ learning. PLoS ONE 12(2): e0169748. doi:10.1371/journal.pone.0169748.
 }
 \examples{
 \dontrun{
+  library(GSIF)
+  library(rjson)
   coords_sp <- SpatialPoints(cbind(long = -5.6333, lat = 42.6667), 
                              CRS("+proj=longlat +datum=WGS84"))
   foo <- soilgridsParams(coords_sp, depths = c(300, 600, 1200))

@@ -395,6 +395,8 @@ DataFrame paramsAllometries(DataFrame above, DataFrame SpParams) {
 // [[Rcpp::export("spwbInput")]]
 List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, List control) {
   
+  int nlayers = V.ncol();
+  
   IntegerVector SP = above["SP"];
   NumericVector LAI_live = above["LAI_live"];
   NumericVector LAI_expanded = above["LAI_expanded"];
@@ -409,8 +411,6 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
   if((soilFunctions!="SX") & (soilFunctions!="VG")) stop("Wrong soil functions ('soilFunctions' should be either 'SX' or 'VG')");
   
 
-  NumericVector W = soil["W"];
-  int nlayers = W.length();
   NumericVector alphaSWR = cohortNumericParameter(SP, SpParams, "alphaSWR");
   NumericVector gammaSWR = cohortNumericParameter(SP, SpParams, "gammaSWR");
   NumericVector kPAR = cohortNumericParameter(SP, SpParams, "kPAR");
@@ -436,7 +436,13 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
   
 
  
-
+ NumericVector Wsoil = soil["W"];
+ NumericMatrix Wpool = NumericMatrix(numCohorts, nlayers);
+ Wpool.attr("dimnames") = V.attr("dimnames");
+ for(int c=0;c<numCohorts;c++){
+   for(int l=0;l<nlayers;l++) Wpool(c,l) = Wsoil[l]; //Init from soil state
+ }
+ 
   List input;
   if(transpirationMode=="Granier") {
     
@@ -469,6 +475,7 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     pvec.attr("names") = above.attr("row.names");
     input["Photosynthesis"] = pvec;
     input["PLC"] = NumericVector(numCohorts, 0.0);
+    input["W"] = Wpool;
   } else if(transpirationMode =="Sperry"){
     
     //Base params
@@ -537,6 +544,7 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     input["psiStem2"] = psiStem2;
     input["psiSympLeaf"] = psiSympLeaf;
     input["psiLeaf"] = psiLeaf;
+    input["W"] = Wpool;
   }
 
   input.attr("class") = CharacterVector::create("spwbInput","list");
@@ -550,6 +558,9 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
  */
 // [[Rcpp::export("growthInput")]]
 List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, DataFrame SpParams, List control) {
+  
+  int nlayers = V.ncol();
+  
   IntegerVector SP = above["SP"];
   NumericVector LAI_live = above["LAI_live"];
   NumericVector LAI_expanded = above["LAI_expanded"];
@@ -569,9 +580,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   String storagePool = control["storagePool"];
   if((storagePool!="none") & (storagePool!="one")& (storagePool!="two")) stop("Wrong storage pool ('storagePool' should be 'none', 'one' or 'two')");
 
-  
-  NumericVector W = soil["W"];
-  int nlayers = W.length();
+
   
   DataFrame paramsAnatomydf = paramsAnatomy(above, SpParams);
   NumericVector WoodDensity = paramsAnatomydf["WoodDensity"];
@@ -602,7 +611,13 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     SA[c] = 10000.0*(LAI_live[c]/(N[c]/10000.0))/Al2As[c];//Individual SA in cm2/m2
   }
   
-
+  NumericVector Wsoil = soil["W"];
+  NumericMatrix Wpool = NumericMatrix(numCohorts, nlayers);
+  Wpool.attr("dimnames") = V.attr("dimnames");
+  for(int c=0;c<numCohorts;c++){
+    for(int l=0;l<nlayers;l++) Wpool(c,l) = Wsoil[l]; //Init from soil state
+  }
+  
   //Cohort description
   CharacterVector nsp = cohortCharacterParameter(SP, SpParams, "Name");
   DataFrame cohortDescdf = DataFrame::create(_["SP"] = SP, _["Name"] = nsp);
@@ -675,7 +690,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     NumericVector cvec =  NumericVector(numCohorts, 0.0);
     cvec.attr("names") = above.attr("row.names");
     input["PLC"] = cvec;
-
+    input["W"] = Wpool;
   } else if(transpirationMode =="Sperry"){
     
     //Base params
@@ -746,7 +761,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     input["psiStem2"] = psiStem2;
     input["psiSympLeaf"] = psiSympLeaf;
     input["psiLeaf"] = psiLeaf;
-
+    input["W"] = Wpool;
   } 
   
   input.attr("class") = CharacterVector::create("growthInput","list");

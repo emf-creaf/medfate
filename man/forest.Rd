@@ -5,13 +5,12 @@
 \alias{summary.forest}
 \alias{print.summary.forest}
 
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{Forest description}
 \description{
 Description of a forest stand.
 }
 \usage{
-\method{summary}{forest}(object, SpParams, detailed=FALSE, ...) 
+\method{summary}{forest}(object, SpParams, mode = "MED", detailed=FALSE, ...) 
 \method{print}{summary.forest}(x, digits = getOption("digits"), ...)
 emptyforest(ID="", patchsize=10000, ntree = 0, nshrub = 0)
 }
@@ -51,6 +50,7 @@ emptyforest(ID="", patchsize=10000, ntree = 0, nshrub = 0)
   }
   }
   \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
+  \item{mode}{Calculation mode, either "MED" or "US".}
   \item{detailed}{A boolean flag to indicate that a detailed summary is desired.}
   \item{x}{The object returned by \code{summary.forest}.}
   \item{digits}{Minimal number of significant digits.}
@@ -63,20 +63,17 @@ emptyforest(ID="", patchsize=10000, ntree = 0, nshrub = 0)
   Function \code{summary.forest} can be used to summarize a \code{forest} object in the console. Function \code{emptyforest} creates an empty \code{forest} object.
 }
 \value{
-  Function \code{summary.forest} returns a data frame with the basal area and LAI of the forest, either expressed as totals or divided among life stages and species. Function \code{emptyforest} returns an empty \code{forest} object.
+  Function \code{summary.forest} returns a list with the basal area and LAI of the forest, either expressed as totals or divided among life stages and species. Function \code{emptyforest} returns an empty \code{forest} object.
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 }
 \seealso{
- \code{\link{exampleforest}}, \code{\link{forest_mapWoodyTables}}, \code{\link{forest_extractSFIData}}
+ \code{\link{exampleforestMED}}, \code{\link{forest_mapWoodyTables}}
 }
 \examples{
-data(exampleforest)
+data(exampleforestMED)
 data(SpParamsMED)
 
-summary(exampleforest, SpParamsMED)
-
+summary(exampleforestMED, SpParamsMED)
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.

@@ -38,5 +38,5 @@ Functions \code{forest_mapTreeTable} and \code{forest_mapShrubTable} return a da
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 }
 \seealso{
-\code{\link{forest}}, \code{\link{forest_extractSFIData}}
+\code{\link{forest}}
 }
