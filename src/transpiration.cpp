@@ -15,7 +15,7 @@ using namespace Rcpp;
 
 const double SIGMA_Wm2 = 5.67*1e-8;
 const double Cp_JKG = 1013.86; // J * kg^-1 * ºC^-1
-const double eps_xylem = 10^3; // xylem elastic modulus (1 GPa = 1000 MPa)
+const double eps_xylem = 1e3; // xylem elastic modulus (1 GPa = 1000 MPa)
 
 
 NumericMatrix cohortRhizosphereMoisture(NumericMatrix W, NumericMatrix ROP, NumericVector poolProportions) {

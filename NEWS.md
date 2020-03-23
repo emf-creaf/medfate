@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 0.9.1
+- Small bug fixes
+
 # Version 0.9.0
 - New parametrization data set 'SpParamsUS'
 - Function 'hydrology_verticalInputs' replaced by 'hydrology_soilWaterInputs' and 'hydrology_soilInfiltrationPercolation'.
