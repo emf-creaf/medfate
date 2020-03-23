@@ -11,7 +11,6 @@
 \alias{hydraulics_terminalConduitRadius}
 \alias{hydraulics_stemWaterCapacity}
 \alias{hydraulics_leafWaterCapacity}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Scaling from conductivity to conductance
 }
@@ -46,7 +45,6 @@ hydraulics_stemWaterCapacity(Al2As, height, wd)
 hydraulics_leafWaterCapacity(SLA, ld)
 }
 
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{psiSoil}{Soil water potential (in MPa). A scalar or a vector depending on the function.}
   \item{psiRhizo}{Water potential (in MPa) in the rhizosphere (root surface).}
@@ -96,7 +94,7 @@ Savage, V. M., L. P. Bentley, B. J. Enquist, J. S. Sperry, D. D. Smith, P. B. Re
 Olson, M.E., Anfodillo, T., Rosell, J.A., Petit, G., Crivellaro, A., Isnard, S., León-Gómez, C., Alvarado-Cárdenas, L.O., & Castorena, M. 2014. Universal hydraulics of the flowering plants: Vessel diameter scales with stem length across angiosperm lineages, habits and climates. Ecology Letters 17: 988–997.
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 }
 \seealso{
 \code{\link{hydraulics_psi2K}}, \code{\link{hydraulics_supplyFunctionPlot}}, \code{\link{spwb}}, \code{\link{soil}}

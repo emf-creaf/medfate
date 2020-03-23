@@ -82,7 +82,7 @@ A vector with values for each plant of the input \code{\link{forest}} object:
 }
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, Centre Tecnologic Forestal de Catalunya
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 }
 \seealso{
  \code{\link{spwb}}, \code{\link{forest}}, \code{\link{summary.forest}}
