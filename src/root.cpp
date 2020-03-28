@@ -1,8 +1,10 @@
-#include <numeric>
 #include <Rcpp.h>
+#include <numeric>
 using namespace Rcpp;
 using namespace std;
-
+using std::exp;
+using std::log;
+using std::sqrt;
 
 
 
@@ -229,27 +231,34 @@ NumericVector xylemConductanceProportions(NumericVector v, NumericVector d, doub
 }
 
 
-// [[Rcpp::export("root_rhizosphereOverlapProportions")]]
-NumericMatrix rhizosphereOverlapProportions(NumericMatrix V, NumericVector LAIlive, double poolOverlapFactor) {
+// [[Rcpp::export("root_horizontalOverlapProportions")]]
+List horizontalOverlapProportions(NumericMatrix V, NumericVector LAIlive, double poolOverlapFactor) {
   int numCohorts = V.nrow();
   int numlayers = V.ncol();
-  double LAIcelllive = 0.0;
-  for(int c=0;c<numCohorts;c++) LAIcelllive +=LAIlive[c];
+  double LAIcelllive = sum(LAIlive);
   double ropmax = (1.0 - exp(-(poolOverlapFactor*LAIcelllive)));
-  NumericMatrix ROP(numCohorts,numlayers);
-  for(int c=0;c<numCohorts;c++) {
+  NumericVector poolProportions(numCohorts);
+  for(int c=0;c<numCohorts;c++) poolProportions[c] = LAIlive[c]/LAIcelllive;
+  List l(numCohorts);
+  for(int coh=0;coh<numCohorts;coh++) {
+    NumericMatrix RHOP(numCohorts,numlayers);
+    double Vmax = 0.0;
     for(int l=0;l<numlayers;l++) {
-      double rdl = 0.0;
-      double rds = 0.0;
-      for(int c2=0;c2<numCohorts;c2++) {
-        if(c2!=c) {
-          rdl += (V(c,l)*V(c2,l));
-          rds += V(c2,l);
-        }
-      }
-      ROP(c,l) = (rdl/rds)*ropmax*(1.0 - (LAIlive[c]/LAIcelllive));
+      Vmax = std::max(Vmax, V(coh,l));
     }
+    for(int l=0;l<numlayers;l++) {
+      double s = 0.0;
+      for(int c=0;c<numCohorts;c++) {
+        if(c!=coh) {
+          RHOP(c,l) = poolProportions[c]*ropmax*sqrt(V(coh,l)*V(c,l))/Vmax;
+          s +=RHOP(c,l);
+        } 
+      }
+      RHOP(coh,l) = 1.0 - s;
+    }
+    RHOP.attr("dimnames") = V.attr("dimnames");
+    l[coh] = RHOP;
   }
-  ROP.attr("dimnames") = V.attr("dimnames");
-  return(ROP);
+  l.attr("names") = rownames(V);
+  return(l);
 }
