@@ -71,7 +71,7 @@ NumericVector swrheight(NumericVector heights, IntegerVector SP, NumericVector H
 // [[Rcpp::export(".parExtinctionProfile")]]
 NumericVector parExtinctionProfile(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL,
                                    String mode = "MED") {
-  DataFrame above = forest2aboveground(x, SpParams, gdd, mode = mode);
+  DataFrame above = forest2aboveground(x, SpParams, gdd, mode);
   IntegerVector SP = above["SP"];
   NumericVector H = above["H"];
   NumericVector LAI = above["LAI_expanded"];
@@ -82,7 +82,7 @@ NumericVector parExtinctionProfile(NumericVector z, List x, DataFrame SpParams, 
 // [[Rcpp::export(".swrExtinctionProfile")]]
 NumericVector swrExtinctionProfile(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL,
                                    String mode = "MED") {
-  DataFrame above = forest2aboveground(x, SpParams,  gdd, mode = mode);
+  DataFrame above = forest2aboveground(x, SpParams,  gdd, mode);
   IntegerVector SP = above["SP"];
   NumericVector H = above["H"];
   NumericVector LAI = above["LAI_expanded"];

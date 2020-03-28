@@ -2556,16 +2556,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// rhizosphereOverlapProportions
-NumericMatrix rhizosphereOverlapProportions(NumericMatrix V, NumericVector LAIlive, double poolOverlapFactor);
-RcppExport SEXP _medfate_rhizosphereOverlapProportions(SEXP VSEXP, SEXP LAIliveSEXP, SEXP poolOverlapFactorSEXP) {
+// horizontalProportions
+List horizontalProportions(NumericMatrix V, NumericVector LAIlive, double poolOverlapFactor);
+RcppExport SEXP _medfate_horizontalProportions(SEXP VSEXP, SEXP LAIliveSEXP, SEXP poolOverlapFactorSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericMatrix >::type V(VSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type LAIlive(LAIliveSEXP);
     Rcpp::traits::input_parameter< double >::type poolOverlapFactor(poolOverlapFactorSEXP);
-    rcpp_result_gen = Rcpp::wrap(rhizosphereOverlapProportions(V, LAIlive, poolOverlapFactor));
+    rcpp_result_gen = Rcpp::wrap(horizontalProportions(V, LAIlive, poolOverlapFactor));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4096,7 +4096,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_rootDistribution", (DL_FUNC) &_medfate_rootDistribution, 2},
     {"_medfate_rootLengths", (DL_FUNC) &_medfate_rootLengths, 3},
     {"_medfate_xylemConductanceProportions", (DL_FUNC) &_medfate_xylemConductanceProportions, 3},
-    {"_medfate_rhizosphereOverlapProportions", (DL_FUNC) &_medfate_rhizosphereOverlapProportions, 3},
+    {"_medfate_horizontalProportions", (DL_FUNC) &_medfate_horizontalProportions, 3},
     {"_medfate_thetaSATSaxton", (DL_FUNC) &_medfate_thetaSATSaxton, 3},
     {"_medfate_theta2psiSaxton", (DL_FUNC) &_medfate_theta2psiSaxton, 4},
     {"_medfate_psi2thetaSaxton", (DL_FUNC) &_medfate_psi2thetaSaxton, 4},

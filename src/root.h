@@ -12,4 +12,4 @@ NumericMatrix conicDistribution(NumericVector Z, NumericVector d);
 NumericMatrix ldrDistribution(NumericVector Z50, NumericVector Z95, NumericVector d);
 NumericVector rootLengths(NumericVector v, NumericVector d, double depthWidthRatio = 1.0);
 NumericVector xylemConductanceProportions(NumericVector v, NumericVector d, double depthWidthRatio = 1.0);
-NumericMatrix rhizosphereOverlapProportions(NumericMatrix V, NumericVector LAIlive, double poolOverlapFactor);
+List horizontalProportions(NumericMatrix V, NumericVector LAIlive, double poolOverlapFactor);

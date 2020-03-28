@@ -66,9 +66,9 @@ THe function returns a data frame containing the species index used in medfate,
 calibrated values for Z50, Z95 and V1 and the MAE value for that combination.
 }
 \author{
-\enc{Víctor}{Victor} Granda, Centre Tecnologic Forestal de Catalunya
+\enc{Víctor}{Victor} Granda, CTFC-CREAF
 
-Antoine Cabon, Centre Tecnologic Forestal de Catalunya
+Antoine Cabon, CTFC
 
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 }

@@ -436,18 +436,25 @@ void checkspwbInput(List x, List soil, String transpirationMode, String soilFunc
 // [[Rcpp::export("spwb_resetInputs")]]
 void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER) {
   List can = x["canopy"];
-  NumericVector W = soil["W"];
-  int nlayers = W.size();
+  NumericVector Wsoil = soil["W"];
+  NumericMatrix Wpool = x["W"];
   NumericVector Temp = soil["Temp"];
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
+  int nlayers = Wsoil.size();
+  int numCohorts = Wpool.nrow();
   
   if(Rf_isNull(from) || from.size()==0) {
     can["gdd"] = 0.0;
     can["Temp"] = NA_REAL;
     for(int i=0;i<nlayers;i++) {
-      W[i] = 1.0; //Defaults to soil at field capacity
+      Wsoil[i] = 1.0; //Defaults to soil at field capacity
       Temp[i] = NA_REAL;
+    }
+    for(int c=0;c<numCohorts;c++) {
+      for(int l=0;l<nlayers;l++) {
+        Wpool(c,l) = 1.0;
+      }
     }
     if(transpirationMode=="Sperry") {
       NumericVector psiRootCrown = Rcpp::as<Rcpp::NumericVector>(x["psiRootCrown"]);
@@ -494,9 +501,15 @@ void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER
     can["gdd"] = GDD[day];
     can["Temp"] = NA_REAL;
     for(int i=0;i<nlayers;i++) {
-      W[i] = Rcpp::as<Rcpp::NumericVector>(SWB[i])[day];
+      Wsoil[i] = Rcpp::as<Rcpp::NumericVector>(SWB[i])[day];
       //TO DO: STORE/RECOVER SOIL LAYER TEMPERATURE?
       Temp[i] = NA_REAL;
+    }
+    //Assumes soil pools are equal to the overal soil (soil pool states are not stored)
+    for(int c=0;c<numCohorts;c++) {
+      for(int l=0;l<nlayers;l++) {
+        Wpool(c,l) = Wsoil[l];
+      }
     }
     NumericMatrix fromPLC = Rcpp::as<Rcpp::NumericMatrix>(from["PlantStress"]);
     NumericMatrix fromRootPsi = Rcpp::as<Rcpp::NumericMatrix>(from["RootPsi"]);
@@ -528,8 +541,6 @@ void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER
       }
     }
   }
-  soil["W"] = W;
-  soil["Temp"] =Temp;
 }
 
 // [[Rcpp::export("spwb")]]

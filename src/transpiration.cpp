@@ -15,24 +15,21 @@ using namespace Rcpp;
 
 const double SIGMA_Wm2 = 5.67*1e-8;
 const double Cp_JKG = 1013.86; // J * kg^-1 * ºC^-1
-const double eps_xylem = 10^3; // xylem elastic modulus (1 GPa = 1000 MPa)
+const double eps_xylem = 1e3; // xylem elastic modulus (1 GPa = 1000 MPa)
 
-
-NumericMatrix cohortRhizosphereMoisture(NumericMatrix W, NumericMatrix ROP, NumericVector poolProportions) {
+//Returns the average soil moisture within the rhizosphere of each cohort
+NumericMatrix cohortRhizosphereMoisture(NumericMatrix W, List RHOP) {
   int numCohorts = W.nrow();
   int nlayers = W.ncol();
   NumericMatrix CRM(numCohorts, nlayers);
   CRM.attr("dimnames") = W.attr("dimnames");
   
-  for(int c=0;c<numCohorts;c++) {
-    double pps = 0.0;
-    for(int c2=0;c2<numCohorts;c2++) if(c2!=c) pps +=poolProportions[c2];
+  for(int coh=0;coh<numCohorts;coh++) {
+    NumericMatrix RHOPcoh = Rcpp::as<Rcpp::NumericMatrix>(RHOP[coh]);
     for(int l=0;l<nlayers;l++) {
-      CRM(c,l) = W(c,l)*(1.0 - ROP(c,l));
-      for(int c2=0;c2<numCohorts;c2++) {
-        if(c2!=c) {
-          CRM(c,l) += W(c2,l)*ROP(c,l)*(poolProportions[c2]/pps);
-        }
+      CRM(coh,l) = 0.0;
+      for(int c=0;c<numCohorts;c++) {
+        CRM(coh,l) += RHOPcoh(c,l)*W(c,l);
       }
     }
   }
@@ -42,19 +39,15 @@ NumericMatrix cohortRhizosphereMoisture(NumericMatrix W, NumericMatrix ROP, Nume
 void rhizosphereMoistureExtraction(NumericMatrix cohExtract, 
                                    NumericVector WaterFC,
                                    NumericMatrix Wpool, 
-                                   NumericMatrix ROP,
+                                   List RHOP,
                                    NumericVector poolProportions) {
   int numCohorts = Wpool.nrow();
   int nlayers = Wpool.ncol();
   for(int coh=0;coh<numCohorts;coh++) {
-    double pps = 0.0;
-    for(int c2=0;c2<numCohorts;c2++) if(c2!=coh) pps +=poolProportions[c2];
-    for(int l=0;l<nlayers;l++) {
-      Wpool(coh,l) = Wpool(coh,l) - (1.0 - ROP(coh,l))*(cohExtract(coh,l)/(WaterFC[l]*poolProportions[coh]));
-      for(int c2=0;c2<numCohorts;c2++) {
-        if(c2!=coh) {
-          Wpool(c2,l) = Wpool(c2,l) - ROP(coh,l)*(cohExtract(coh,l)/(WaterFC[l]*pps));
-        }
+    NumericMatrix RHOPcoh = Rcpp::as<Rcpp::NumericMatrix>(RHOP[coh]);
+    for(int c=0;c<numCohorts;c++) {
+      for(int l=0;l<nlayers;l++) {
+        Wpool(c,l) -= (RHOPcoh(c,l)*cohExtract(coh,l)/(WaterFC[l]*poolProportions[c]));
       }
     }
   }
@@ -184,7 +177,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   
   //Water pools
   NumericMatrix Wpool = Rcpp::as<Rcpp::NumericMatrix>(x["W"]);
-  NumericMatrix ROP, Wrhizo;
+  NumericMatrix Wrhizo;
+  List RHOP;
   NumericVector poolProportions(numCohorts);
   
   
@@ -406,10 +400,10 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
     //Calculate proportions of cohort-unique pools
     for(int c=0;c<numCohorts;c++) poolProportions[c] = LAIlive[c]/LAIcelllive;
     //Calculate proportions of rhizosphere overlapping other pools
-    ROP = rhizosphereOverlapProportions(V, LAIlive, poolOverlapFactor);
+    RHOP = horizontalProportions(V, LAIlive, poolOverlapFactor);
     soil_c= clone(soil); //Clone soil
     //Calculate average rhizosphere moisture, including rhizosphere overlaps
-    Wrhizo = cohortRhizosphereMoisture(Wpool, ROP, poolProportions);
+    Wrhizo = cohortRhizosphereMoisture(Wpool, RHOP);
   }
   List supply(numCohorts);
   List supplyAboveground(numCohorts);
@@ -979,7 +973,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
     } 
     if(plantWaterPools) {
       rhizosphereMoistureExtraction(SoilWaterExtract, Water_FC,
-                                    Wpool, ROP,
+                                    Wpool, RHOP,
                                     poolProportions);
       // for(int l=0;l<nlayers;l++) {
       //   double Ws2 = 0.0;
@@ -1216,7 +1210,8 @@ List transpirationGranier(List x, List soil, double tday, double pet,
 
   //Water pools
   NumericMatrix Wpool = Rcpp::as<Rcpp::NumericMatrix>(x["W"]);
-  NumericMatrix ROP, Wrhizo;
+  NumericMatrix Wrhizo;
+  List RHOP;
   NumericVector poolProportions(numCohorts);
   
   //Parameters  
@@ -1274,10 +1269,10 @@ List transpirationGranier(List x, List soil, double tday, double pet,
     //Calculate proportions of cohort-unique pools
     for(int c=0;c<numCohorts;c++) poolProportions[c] = LAIlive[c]/LAIcelllive;
     //Calculate proportions of rhizosphere overlapping other pools
-    ROP = rhizosphereOverlapProportions(V, LAIlive, poolOverlapFactor);
+    RHOP = horizontalProportions(V, LAIlive, poolOverlapFactor);
     soil_c= clone(soil); //Clone soil
     //Calculate average rhizosphere moisture, including rhizosphere overlaps
-    Wrhizo = cohortRhizosphereMoisture(Wpool, ROP, poolProportions);
+    Wrhizo = cohortRhizosphereMoisture(Wpool, RHOP);
   }
   int nlayers = Wpool.ncol();
   NumericMatrix EplantCoh(numCohorts, nlayers);
@@ -1342,7 +1337,7 @@ List transpirationGranier(List x, List soil, double tday, double pet,
     if(plantWaterPools) {
       
       rhizosphereMoistureExtraction(EplantCoh, Water_FC,
-                                    Wpool, ROP,
+                                    Wpool, RHOP,
                                     poolProportions);
       // for(int l=0;l<nlayers;l++) {
       //   double Ws2 = 0.0;

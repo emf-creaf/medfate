@@ -3,9 +3,8 @@
 \alias{root_ldrDistribution}
 \alias{root_conicDistribution}
 \alias{root_xylemConductanceProportions}
-\alias{root_rhizosphereOverlapProportions}
+\alias{root_horizontalProportions}
 \alias{root_rootLengths}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{Distribution of fine roots}
 \description{
 Functions to calculate the distribution of fine roots within the soil, given root system parameters and soil layer definition (layer widths).
@@ -15,7 +14,7 @@ root_conicDistribution(Zcone, d)
 root_ldrDistribution(Z50, Z95, d)
 root_xylemConductanceProportions(v, d, depthWidthRatio = 1)
 root_rootLengths(v, d, depthWidthRatio = 1.0)
-root_rhizosphereOverlapProportions(V, LAIlive, poolOverlapFactor)
+root_horizontalProportions(V, LAIlive, poolOverlapFactor)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -30,10 +29,10 @@ root_rhizosphereOverlapProportions(V, LAIlive, poolOverlapFactor)
   \item{poolOverlapFactor}{Factor to regulate the influence of LAI on root overlap.}
 }
 \details{
-  Function \code{root_conicDistribution} assumes a conic distribution of fine roots, whereas function \code{root_ldrDistribution} distributes fine roots according to the linear dose response model of Schenck & Jackson (2002). Function \code{root_xylemConductanceProportions} calculates the proportion of total root xylem conductance that can be attributed to each layer, according to layer widths and the proportion of fine roots (Sperry et al. 2016). Function \code{root_rhizosphereOverlapProportions} calculates the proportion of occupied root space that is shared with other cohorts, per cohort and soil layer.
+  Function \code{root_conicDistribution} assumes a conic distribution of fine roots, whereas function \code{root_ldrDistribution} distributes fine roots according to the linear dose response model of Schenck & Jackson (2002). Function \code{root_xylemConductanceProportions} calculates the proportion of total root xylem conductance that can be attributed to each layer, according to layer widths and the proportion of fine roots (Sperry et al. 2016). Function \code{root_horizontalProportions} calculates the (horizontal) proportion of roots of each cohort in the water pool corresponding to itself and that of other cohorts, for each soil layer.
 }
 \value{
-  Functions \code{root_conicDistribution} and \code{root_ldrDistribution} return a matrix with as many rows as elements in \code{Z} (or \code{Z50}) and as many columns as soil layers.  Values in all cases correspond to the proportion of fine roots in each soil layer. Function \code{root_xylemConductanceProportions} returns a vector of proportions of the same length as the number of layers.
+  Functions \code{root_conicDistribution} and \code{root_ldrDistribution} return a matrix with as many rows as elements in \code{Z} (or \code{Z50}) and as many columns as soil layers.  Values in all cases correspond to the proportion of fine roots in each soil layer. Function \code{root_xylemConductanceProportions} returns a vector of proportions of the same length as the number of layers. Function \code{root_horizontalProportions} returns a list (with as many elements as cohorts) with each element being a matrix.
 }
 \references{
 Schenk, H., Jackson, R., 2002. The global biogeography of roots. Ecol. Monogr. 72, 311–328.
