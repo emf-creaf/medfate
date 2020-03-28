@@ -400,7 +400,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
     //Calculate proportions of cohort-unique pools
     for(int c=0;c<numCohorts;c++) poolProportions[c] = LAIlive[c]/LAIcelllive;
     //Calculate proportions of rhizosphere overlapping other pools
-    RHOP = horizontalRootProportions(V, LAIlive, poolOverlapFactor);
+    RHOP = horizontalProportions(V, LAIlive, poolOverlapFactor);
     soil_c= clone(soil); //Clone soil
     //Calculate average rhizosphere moisture, including rhizosphere overlaps
     Wrhizo = cohortRhizosphereMoisture(Wpool, RHOP);
@@ -1269,7 +1269,7 @@ List transpirationGranier(List x, List soil, double tday, double pet,
     //Calculate proportions of cohort-unique pools
     for(int c=0;c<numCohorts;c++) poolProportions[c] = LAIlive[c]/LAIcelllive;
     //Calculate proportions of rhizosphere overlapping other pools
-    RHOP = horizontalRootProportions(V, LAIlive, poolOverlapFactor);
+    RHOP = horizontalProportions(V, LAIlive, poolOverlapFactor);
     soil_c= clone(soil); //Clone soil
     //Calculate average rhizosphere moisture, including rhizosphere overlaps
     Wrhizo = cohortRhizosphereMoisture(Wpool, RHOP);

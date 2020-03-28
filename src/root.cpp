@@ -231,8 +231,8 @@ NumericVector xylemConductanceProportions(NumericVector v, NumericVector d, doub
 }
 
 
-// [[Rcpp::export("root_horizontalRootProportions")]]
-List horizontalRootProportions(NumericMatrix V, NumericVector LAIlive, double poolOverlapFactor) {
+// [[Rcpp::export("root_horizontalProportions")]]
+List horizontalProportions(NumericMatrix V, NumericVector LAIlive, double poolOverlapFactor) {
   int numCohorts = V.nrow();
   int numlayers = V.ncol();
   double LAIcelllive = sum(LAIlive);

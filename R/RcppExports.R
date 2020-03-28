@@ -613,8 +613,8 @@ root_xylemConductanceProportions <- function(v, d, depthWidthRatio = 1.0) {
     .Call(`_medfate_xylemConductanceProportions`, v, d, depthWidthRatio)
 }
 
-root_horizontalRootProportions <- function(V, LAIlive, poolOverlapFactor) {
-    .Call(`_medfate_horizontalRootProportions`, V, LAIlive, poolOverlapFactor)
+root_horizontalProportions <- function(V, LAIlive, poolOverlapFactor) {
+    .Call(`_medfate_horizontalProportions`, V, LAIlive, poolOverlapFactor)
 }
 
 soil_thetaSATSX <- function(clay, sand, om = NA_real_) {
