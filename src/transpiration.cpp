@@ -32,16 +32,6 @@ NumericMatrix cohortRhizosphereMoisture(NumericMatrix W, List RHOP) {
         CRM(coh,l) += RHOPcoh(c,l)*W(c,l);
       }
     }
-    // double pps = 0.0;
-    // for(int c2=0;c2<numCohorts;c2++) if(c2!=c) pps +=poolProportions[c2];
-    // for(int l=0;l<nlayers;l++) {
-    //   CRM(c,l) = W(c,l)*(1.0 - RHOP(c,l)*(1.0 - poolProportions[c]));
-    //   for(int c2=0;c2<numCohorts;c2++) {
-    //     if(c2!=c) {
-    //       CRM(c,l) += W(c2,l)*RHOP(c,l)*(1.0 - poolProportions[c])*(poolProportions[c2]/pps);
-    //     }
-    //   }
-    // }
   }
   return(CRM);
 }
@@ -60,16 +50,6 @@ void rhizosphereMoistureExtraction(NumericMatrix cohExtract,
         Wpool(c,l) -= (RHOPcoh(c,l)*cohExtract(coh,l)/(WaterFC[l]*poolProportions[c]));
       }
     }
-    // double pps = 0.0;
-    // for(int c2=0;c2<numCohorts;c2++) if(c2!=coh) pps +=poolProportions[c2];
-    // for(int l=0;l<nlayers;l++) {
-    //   Wpool(coh,l) = Wpool(coh,l) - (1.0 - RHOP(coh,l)*(1.0 - poolProportions[coh]))*(cohExtract(coh,l)/(WaterFC[l]*poolProportions[coh]));
-    //   for(int c2=0;c2<numCohorts;c2++) {
-    //     if(c2!=coh) {
-    //       Wpool(c2,l) = Wpool(c2,l) - RHOP(coh,l)*(1.0 - poolProportions[coh])*(cohExtract(coh,l)/(WaterFC[l]*pps));
-    //     }
-    //   }
-    // }
   }
 }
 
@@ -420,7 +400,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
     //Calculate proportions of cohort-unique pools
     for(int c=0;c<numCohorts;c++) poolProportions[c] = LAIlive[c]/LAIcelllive;
     //Calculate proportions of rhizosphere overlapping other pools
-    RHOP = horizontalOverlapProportions(V, LAIlive, poolOverlapFactor);
+    RHOP = horizontalRootProportions(V, LAIlive, poolOverlapFactor);
     soil_c= clone(soil); //Clone soil
     //Calculate average rhizosphere moisture, including rhizosphere overlaps
     Wrhizo = cohortRhizosphereMoisture(Wpool, RHOP);
@@ -1289,7 +1269,7 @@ List transpirationGranier(List x, List soil, double tday, double pet,
     //Calculate proportions of cohort-unique pools
     for(int c=0;c<numCohorts;c++) poolProportions[c] = LAIlive[c]/LAIcelllive;
     //Calculate proportions of rhizosphere overlapping other pools
-    RHOP = horizontalOverlapProportions(V, LAIlive, poolOverlapFactor);
+    RHOP = horizontalRootProportions(V, LAIlive, poolOverlapFactor);
     soil_c= clone(soil); //Clone soil
     //Calculate average rhizosphere moisture, including rhizosphere overlaps
     Wrhizo = cohortRhizosphereMoisture(Wpool, RHOP);

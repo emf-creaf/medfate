@@ -5,7 +5,6 @@
 \alias{root_xylemConductanceProportions}
 \alias{root_horizontalOverlapProportions}
 \alias{root_rootLengths}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{Distribution of fine roots}
 \description{
 Functions to calculate the distribution of fine roots within the soil, given root system parameters and soil layer definition (layer widths).
@@ -15,7 +14,7 @@ root_conicDistribution(Zcone, d)
 root_ldrDistribution(Z50, Z95, d)
 root_xylemConductanceProportions(v, d, depthWidthRatio = 1)
 root_rootLengths(v, d, depthWidthRatio = 1.0)
-root_horizontalOverlapProportions(V, LAIlive, poolOverlapFactor)
+root_horizontalRootProportions(V, LAIlive, poolOverlapFactor)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
