@@ -5,6 +5,7 @@
 # Version 0.9.1
 - Small bug fixes
 - update 'spwb_resetInputs'
+- Update of plant water pools.
 
 # Version 0.9.0
 - New parametrization data set 'SpParamsUS'
