@@ -5,7 +5,8 @@
 # Version 0.9.1
 - Small bug fixes
 - update 'spwb_resetInputs'
-- Update of plant water pools.
+- Update of plant water pools
+- New output (annual stand summaries and aboveground structure) for function 'growth'
 
 # Version 0.9.0
 - New parametrization data set 'SpParamsUS'

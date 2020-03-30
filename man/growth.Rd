@@ -87,6 +87,8 @@ growth(x, soil, meteo,  latitude = NA, elevation = NA, slope = NA, aspect = NA)
  \item{\code{"PlantPsi"}: A data frame with the average daily water potential of each plant (in MPa). Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
  \item{\code{"PlantLAIdead"}: A data frame with the dead leaf area index (in m2 · m-2) for each plant cohort. Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
  \item{\code{"PlantLAIlive"}: A data frame with the live leaf area index (in m2 · m-2) for each plant cohort. Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
+ \item{\code{"StandStructures"}: A list with the aboveground structure of the stand at the beginning of the simulation and after each simulated year.}
+ \item{\code{"StandSummary"}: A data frame with stand-level summaries (leaf area index, tree basal area, tree density, shrub cover, etc.) at the beginning of the simulation and after each simulated year.}
   }
 }
 \author{

@@ -130,6 +130,34 @@ void checkgrowthInput(List x, List soil, String transpirationMode, String soilFu
   }
 }
 
+void recordStandSummary(DataFrame standSummary, NumericVector LAIlive,
+                        NumericVector N, 
+                        NumericVector DBH,  NumericVector Cover, 
+                        NumericVector H, int pos) {
+  NumericVector SLAI = as<Rcpp::NumericVector>(standSummary["LeafAreaIndex"]);
+  SLAI[pos] = 0.0;
+  NumericVector TBA = as<Rcpp::NumericVector>(standSummary["TreeBasalArea"]);
+  TBA[pos] = 0.0;
+  NumericVector TDensity = as<Rcpp::NumericVector>(standSummary["TreeDensity"]);
+  TDensity[pos] = 0.0;
+  NumericVector SCover = as<Rcpp::NumericVector>(standSummary["ShrubCover"]);
+  SCover[pos] = 0.0;
+  NumericVector MaxHeight = as<Rcpp::NumericVector>(standSummary["MaxHeight"]);
+  MaxHeight[pos] = 0.0;
+  int numCohorts = N.length();
+  NumericVector treeBA = treeBasalArea(N, DBH);
+  for(int i=0;i<numCohorts;i++) {
+    SLAI[pos] += LAIlive[i];
+    if(!NumericVector::is_na(treeBA[i])) {
+      TBA[pos] += treeBA[i];
+      TDensity[pos] +=N[i];
+      MaxHeight[pos] = std::max(MaxHeight[pos], H[i]);
+    } else {
+      SCover[pos] +=Cover[i];
+    }
+  }
+}
+
 // [[Rcpp::export("growth")]]
 List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL) {
   //Control params
@@ -308,6 +336,13 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   for(int i=0;i<numDays;i++) {
     if(((DOY[i]==1) & (i>0)) | ((i==(numDays-1)) & (DOY[i]>=365))) numYears = numYears + 1;
   }
+  DataFrame standSummary = DataFrame::create(
+    _["LeafAreaIndex"] = NumericVector(numYears+1,0.0),
+    _["TreeBasalArea"] = NumericVector(numYears+1,0.0),
+    _["TreeDensity"] = NumericVector(numYears+1,0.0),
+    _["ShrubCover"] = NumericVector(numYears+1,0.0),
+    _["MaxHeight"] = NumericVector(numYears+1,0.0)
+  );
   List standStructures(numYears+1);
   CharacterVector nss(numYears+1);
   for(int i=0;i<(numYears+1);i++) {
@@ -319,8 +354,10 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
       nss[i] = Result;
     }
   }
+  standSummary.attr("row.names") = nss;
   standStructures.attr("names") = nss;
   standStructures[0] = clone(above);
+  recordStandSummary(standSummary, LAI_live, N, DBH, Cover, H, 0);
   
 
   if(verbose) Rcout << "Performing daily simulations ";
@@ -575,6 +612,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
       
       // Store stand structure
       standStructures[iyear] = clone(above);
+      recordStandSummary(standSummary, LAI_live, N, DBH, Cover, H,iyear);
     }
     if(i<(numDays-1))  Wdays(i+1,_) = as<Rcpp::NumericVector>(soil["W"]);
     WaterTable[i] = waterTableDepth(soil, soilFunctions);
@@ -640,7 +678,8 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
                         Named("PlantStress") = PlantStress,
                         Named("PlantLAIdead") = PlantLAIdead,
                         Named("PlantLAIlive") = PlantLAIlive,
-                        Named("StandStructures") = standStructures);
+                        Named("StandStructures") = standStructures,
+                        Named("StandSummary") = standSummary);
   l.attr("class") = CharacterVector::create("growth","list");
   return(l);
 }
