@@ -303,8 +303,29 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   NumericVector Wini = soil["W"];
   Wdays(0,_) = Wini;
   
+  //Count years (times structural variables will be updated)
+  int numYears = 0;
+  for(int i=0;i<numDays;i++) {
+    if(((DOY[i]==1) & (i>0)) | ((i==(numDays-1)) & (DOY[i]>=365))) numYears = numYears + 1;
+  }
+  List standStructures(numYears+1);
+  CharacterVector nss(numYears+1);
+  for(int i=0;i<(numYears+1);i++) {
+    if(i==0) {
+      nss[i] = "Initial"; 
+    } else {
+      char Result[16];
+      sprintf(Result, "Year_%d", i);
+      nss[i] = Result;
+    }
+  }
+  standStructures.attr("names") = nss;
+  standStructures[0] = clone(above);
+  
+
   if(verbose) Rcout << "Performing daily simulations ";
   List s;
+  int iyear = 0;
   for(int i=0;i<numDays;i++) {
     if(verbose & (i%10 == 0)) Rcout<<".";//<<i;
     
@@ -505,8 +526,10 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
       PlantSAgrowth(i,j) = deltaSAgrowth;
     }
     //4 Update structural variables
-    if(((DOY[i]==1) & (i>0)) | (i==(numDays-1))) { 
+    if(((DOY[i]==1) & (i>0)) | ((i==(numDays-1)) & (DOY[i]>=365))) { 
       if(verbose) Rcout<<" [update structural variables] ";
+      iyear++;
+      
       NumericVector deltaDBH(numCohorts, 0.0);
       for(int j=0;j<numCohorts; j++) {
         if(!NumericVector::is_na(DBH[j])) {
@@ -549,6 +572,9 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
           Cover[j] = (N[j]*Aash[j]*pow(H[j],2.0)/1e6); //Updates shrub cover
         }
       }
+      
+      // Store stand structure
+      standStructures[iyear] = clone(above);
     }
     if(i<(numDays-1))  Wdays(i+1,_) = as<Rcpp::NumericVector>(soil["W"]);
     WaterTable[i] = waterTableDepth(soil, soilFunctions);
@@ -613,7 +639,8 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
                         Named("PlantPsi") = PlantPsi, 
                         Named("PlantStress") = PlantStress,
                         Named("PlantLAIdead") = PlantLAIdead,
-                        Named("PlantLAIlive") = PlantLAIlive);
+                        Named("PlantLAIlive") = PlantLAIlive,
+                        Named("StandStructures") = standStructures);
   l.attr("class") = CharacterVector::create("growth","list");
   return(l);
 }
