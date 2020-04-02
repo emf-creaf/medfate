@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 0.10.0
+- Reorganization of growth function
+
 # Version 0.9.1
 - Small bug fixes
 - update 'spwb_resetInputs'
