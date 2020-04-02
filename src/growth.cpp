@@ -656,14 +656,14 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
     NumericVector PlantLAIdeadDay = Rcpp::as<Rcpp::NumericVector>(growDay["PlantLAIdead"]);
     NumericVector PlantSAgrowthDay = Rcpp::as<Rcpp::NumericVector>(growDay["PlantSAgrowth"]);
     for(int j=0;j<numCohorts;j++){
-      SAgrowthcum[j] += PlantSAgrowthDay[j]; //Store cumulative SA growth (for structural variable update)
       PlantRespiration(i,j) = PlantRespirationDay[j];
       PlantCstorageFast(i,j) = PlantCstorageFastDay[j];
       PlantCstorageSlow(i,j) = PlantCstorageSlowDay[j];
       PlantSA(i,j) = PlantSADay[j];
       PlantLAIlive(i,j) = PlantLAIliveDay[j];
       PlantLAIdead(i,j) = PlantLAIdeadDay[j];
-      PlantSAgrowth(i,j) = PlantSAgrowthDay[i];
+      PlantSAgrowth(i,j) = PlantSAgrowthDay[j];
+      SAgrowthcum[j] += PlantSAgrowthDay[j]; //Store cumulative SA growth (for structural variable update)
     }
     
     //4 Update structural variables
