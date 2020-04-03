@@ -733,6 +733,26 @@ pwb <- function(x, soil, meteo, W, latitude = NA_real_, elevation = NA_real_, sl
     .Call(`_medfate_pwb`, x, soil, meteo, W, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation)
 }
 
+moisture_relativeSapViscosity <- function(conc, temp) {
+    .Call(`_medfate_relativeSapViscosity`, conc, temp)
+}
+
+moisture_osmoticWaterPotential <- function(conc, temp) {
+    .Call(`_medfate_osmoticWaterPotential`, conc, temp)
+}
+
+moisture_sugarConcentration <- function(osmoticWP, temp) {
+    .Call(`_medfate_sugarConcentration`, osmoticWP, temp)
+}
+
+moisture_turgor <- function(psi, conc, temp) {
+    .Call(`_medfate_turgor`, psi, conc, temp)
+}
+
+moisture_floemFlow <- function(psiUpstream, psiDownstream, concUpstream, concDownstream, temp, k_f = 3.0e-5) {
+    .Call(`_medfate_floemFlow`, psiUpstream, psiDownstream, concUpstream, concDownstream, temp, k_f)
+}
+
 moisture_symplasticRWC <- function(psiSym, pi0, epsilon) {
     .Call(`_medfate_symplasticRelativeWaterContent`, psiSym, pi0, epsilon)
 }
