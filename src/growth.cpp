@@ -3,6 +3,7 @@
 #include "phenology.h"
 #include "biophysicsutils.h"
 #include "forestutils.h"
+#include "tissuemoisture.h"
 #include "hydraulics.h"
 #include "hydrology.h"
 #include "soil.h"
@@ -375,6 +376,41 @@ DataFrame growthPipe(List x, List spwbOut, double tday) {
   
   df.attr("row.names") = cohorts.attr("row.names");
   return(df);
+}
+
+// [[Rcpp::export("dailyFloemFlow")]]
+NumericMatrix dailyFloemFlow(List x, List spwbOut) {
+  DataFrame paramStorage =  Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
+  NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramStorage["Vleaf"]);
+  NumericVector stemPI0 = Rcpp::as<Rcpp::NumericVector>(paramStorage["StemPI0"]);
+  NumericVector leafPI0 = Rcpp::as<Rcpp::NumericVector>(paramStorage["LeafPI0"]);
+  NumericVector stemEPS = Rcpp::as<Rcpp::NumericVector>(paramStorage["StemEPS"]);
+  NumericVector leafEPS = Rcpp::as<Rcpp::NumericVector>(paramStorage["LeafEPS"]);
+  List plantsInst = spwbOut["PlantsInst"];  
+  NumericMatrix An =  Rcpp::as<Rcpp::NumericMatrix>(plantsInst["An"]);
+  NumericMatrix rwcStem =  Rcpp::as<Rcpp::NumericMatrix>(plantsInst["RWCstem"]);
+  NumericMatrix rwcLeaf =  Rcpp::as<Rcpp::NumericMatrix>(plantsInst["RWCleaf"]);
+  List eb = spwbOut["EnergyBalance"];  
+  DataFrame tempDF =  Rcpp::as<Rcpp::DataFrame>(eb["Temperature"]);
+  NumericVector Tcan = Rcpp::as<Rcpp::NumericVector>(tempDF["Tcan"]);
+  
+  int numCohorts = stemPI0.length();
+  int numSteps = Tcan.length();
+  NumericMatrix ff(numCohorts, numSteps);
+  for(int c=0;c<numCohorts;c++) {
+    double leafconc= sum(An(c,_))*10.0/(6.0*44.0*Vleaf[c]);
+    for(int s=0;s<numSteps;s++) {
+      double an_sucr = An(c,s)/(6.0*44.0); //mol sucrose
+      leafconc += an_sucr/Vleaf[c];
+      double psiUp = symplasticWaterPotential(rwcLeaf(c,s), leafPI0[c], leafEPS[c]);
+      double psiDown = symplasticWaterPotential(rwcStem(c,s), stemPI0[c], stemEPS[c]);
+      double concUp = sugarConcentration(leafPI0[c], Tcan[s])+leafconc;
+      double concDown = sugarConcentration(stemPI0[c], Tcan[s]);
+      ff(c,s) = floemFlow(psiUp, psiDown, concUp, concDown, Tcan[s])*3600.0; //flow per hour
+    }
+  }
+  ff.attr("dimnames") = rwcStem.attr("dimnames");
+  return(ff);
 }
 
 // [[Rcpp::export("growth")]]

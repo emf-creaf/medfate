@@ -249,6 +249,10 @@ fuel_FCCS <- function(object, ShrubCover, CanopyCover, SpParams, cohortFMC = as.
     .Call(`_medfate_defoliationFraction`, conc, threshold)
 }
 
+dailyFloemFlow <- function(x, spwbOut) {
+    .Call(`_medfate_dailyFloemFlow`, x, spwbOut)
+}
+
 growth <- function(x, soil, meteo, latitude = NA_real_, elevation = NA_real_, slope = NA_real_, aspect = NA_real_) {
     .Call(`_medfate_growth`, x, soil, meteo, latitude, elevation, slope, aspect)
 }

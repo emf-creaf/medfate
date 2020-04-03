@@ -5,6 +5,13 @@
 #endif
 using namespace Rcpp;
 
+double sugarConcentration(double osmoticWP, double temp);
+double osmoticWaterPotential(double conc, double temp);
+
+double floemFlow(double psiUpstream, double psiDownstream,
+                 double concUpstream, double concDownstream,
+                 double temp, double k_f = 3.0e-5);
+
 double symplasticRelativeWaterContent(double psiSym, double pi0, double epsilon);
 double symplasticWaterPotential(double RWC, double pi0, double epsilon);
 double apoplasticRelativeWaterContent(double psiApo, double c, double d);
