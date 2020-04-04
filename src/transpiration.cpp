@@ -60,7 +60,7 @@ List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, d
   // NumericVector supplyKterm = supplyFunction["kterm"];
   NumericVector supplyE = supplyFunction["E"];
   NumericVector supplydEdp = supplyFunction["dEdP"];
-  NumericVector Ag = photosynthesisFunction["Photosynthesis"];
+  NumericVector Ag = photosynthesisFunction["GrossPhotosynthesis"];
   NumericVector Gw = photosynthesisFunction["WaterVaporConductance"];
   int nsteps = supplydEdp.size();
   double maxdEdp = 0.0, mindEdp = 99999999.0;
@@ -224,7 +224,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
 
   //Comunication with outside
   NumericVector transpiration = Rcpp::as<Rcpp::NumericVector>(x["Transpiration"]);
-  NumericVector photosynthesis = Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
+  NumericVector photosynthesis = Rcpp::as<Rcpp::NumericVector>(x["GrossPhotosynthesis"]);
   for(int c=0;c<numCohorts;c++) { //Reset photosynthesis and transpiration
     photosynthesis[c] = 0.0;
     transpiration[c] = 0.0;
@@ -469,12 +469,12 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   NumericVector psiBk(nlayers);
   for(int l=0;l<nlayers;l++) psiBk[l] = psiSoil[l]; //Store initial soil water potential
   NumericMatrix K(numCohorts, nlayers);
-  NumericVector Eplant(numCohorts, 0.0), Anplant(numCohorts, 0.0);
+  NumericVector Eplant(numCohorts, 0.0), Anplant(numCohorts, 0.0), Agplant(numCohorts, 0.0);
   NumericMatrix Rninst(numCohorts,ntimesteps);
   NumericMatrix dEdPinst(numCohorts, ntimesteps);
   NumericMatrix Qinst(numCohorts,ntimesteps);
   NumericMatrix Einst(numCohorts, ntimesteps);
-  NumericMatrix Aninst(numCohorts, ntimesteps);
+  NumericMatrix Aninst(numCohorts, ntimesteps), Aginst(numCohorts, ntimesteps);
   NumericMatrix PsiLeafinst(numCohorts, ntimesteps);  
   NumericMatrix PsiSteminst(numCohorts, ntimesteps);
   NumericMatrix RWCleafinst(numCohorts, ntimesteps);
@@ -544,6 +544,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
       //default values
       dEdPinst(c,n) = 0.0;
       Einst(c,n) = 0.0;
+      Aginst(c,n) = 0.0;
       Aninst(c,n) = 0.0;
       
       if(LAIphe[c]>0.0) { //Process transpiration and photosynthesis only if there are some leaves
@@ -614,6 +615,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
                                                             Jmax298SH[c], 
                                                             leafWidth[c], LAI_SH[c]);
           
+          NumericVector AgSunlit = photoSunlit["GrossPhotosynthesis"];
+          NumericVector AgShade = photoShade["GrossPhotosynthesis"];
           NumericVector AnSunlit = photoSunlit["NetPhotosynthesis"];
           NumericVector AnShade = photoShade["NetPhotosynthesis"];
           NumericVector GwSunlit = photoSunlit["WaterVaporConductance"];
@@ -657,7 +660,9 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
           Temp_SL(c,n)= TempSunlit[iPMSunlit];
           
           //Scale photosynthesis
+          double Agsum = AgSunlit[iPMSunlit]*LAI_SL[c] + AgShade[iPMShade]*LAI_SH[c];
           double Ansum = AnSunlit[iPMSunlit]*LAI_SL[c] + AnShade[iPMShade]*LAI_SH[c];
+          Aginst(c,n) = (1e-6)*12.01017*Agsum*tstep;
           Aninst(c,n) = (1e-6)*12.01017*Ansum*tstep;
           
           //Average flow from sunlit and shade leaves
@@ -835,6 +840,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
           //Add step transpiration to daily plant cohort transpiration
           Eplant[c] += Einst(c,n);
           Anplant[c] += Aninst(c,n);
+          Agplant[c] += Aginst(c,n);
           //Add PWB
           PWB[c] += PWBinst(c,n); 
           
@@ -950,7 +956,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   for(int c=0;c<numCohorts;c++) {
     SoilExtractCoh[c] =  sum(SoilWaterExtract(c,_));
     transpiration[c] = Eplant[c]; 
-    photosynthesis[c] = Anplant[c];
+    photosynthesis[c] = Agplant[c]; //store gross photosynthesis for growth model
     PLCm[c] = sum(PLC(c,_))/((double)PLC.ncol());
     RWCsm[c] = sum(RWCsteminst(c,_))/((double)RWCsteminst.ncol());
     RWClm[c] = sum(RWCleafinst(c,_))/((double)RWCleafinst.ncol());
@@ -1025,6 +1031,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   PsiLeafinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   PsiSteminst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   PsiRootinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  Aginst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   Aninst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   PLC.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   RWCleafinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
@@ -1225,7 +1232,7 @@ List transpirationGranier(List x, List soil, double tday, double pet,
   
   //Communication vectors
   NumericVector transpiration = Rcpp::as<Rcpp::NumericVector>(x["Transpiration"]);
-  NumericVector photosynthesis = Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
+  NumericVector photosynthesis = Rcpp::as<Rcpp::NumericVector>(x["GrossPhotosynthesis"]);
   NumericVector pEmb = clone(Rcpp::as<Rcpp::NumericVector>(x["PLC"]));
   
   //Determine whether leaves are out (phenology) and the adjusted Leaf area
@@ -1326,7 +1333,7 @@ List transpirationGranier(List x, List soil, double tday, double pet,
   if(modifyInputX) {
     for(int c=0;c<numCohorts;c++) {
       transpiration[c] = Eplant[c];
-      photosynthesis[c] = Anplant[c];
+      photosynthesis[c] = Anplant[c]; //No distinction between gross and net photosynthesis
     }
     x["PLC"] = pEmb;
   }

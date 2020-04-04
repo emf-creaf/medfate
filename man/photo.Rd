@@ -84,14 +84,27 @@ Values returned for each function are:
 \itemize{
   \item{\code{LeafTemperature}: Leaf temperature (ºC).}
   \item{\code{LeafVPD}: Leaf vapor pressure deficit (kPa).}
+  \item{\code{LeafCi}: Internal CO2 concentration (micromol * mol-1).}
   \item{\code{WaterVaporConductance}: Leaf vapor conductance (mol * s-1 * m-2).}
-  \item{\code{Photosynthesis}: Gross photosynthesis (micromol*s-1*m-2).}
+  \item{\code{GrossPhotosynthesis}: Gross photosynthesis (micromol*s-1*m-2).}
   \item{\code{NetPhotosynthesis}: Net photosynthesis, after discounting autotrophic respiration (micromol*s-1*m-2).}
   }
 }
-\item{\code{photo_sunshadePhotosynthesisFunction} and \code{photo_multilayerPhotosynthesisFunction}: Return a data frame with the following columns:
+\item{\code{photo_sunshadePhotosynthesisFunction}: Returns a data frame with the following columns:
 \itemize{
-  \item{\code{Photosynthesis}: Gross photosynthesis (micromol*s-1*m-2).}
+  \item{\code{GrossPhotosynthesis}: Gross photosynthesis (micromol*s-1*m-2).}
+  \item{\code{NetPhotosynthesis}: Net photosynthesis, after discounting autotrophic respiration (micromol*s-1*m-2).}
+  \item{\code{LeafCiSL}: Sunlit leaf internal CO2 concentration (micromol * mol-1).}
+  \item{\code{LeafCiSH}: Shade leaf internal CO2 concentration (micromol * mol-1).}
+  \item{\code{LeafTempSL}: Sunlit leaf temperature (ºC).}
+  \item{\code{LeafTempSH}: Shade leaf temperature (ºC).}
+  \item{\code{LeafVPDSL}: Sunlit leaf vapor pressure deficit (kPa).}
+  \item{\code{LeafVPDSH}: Shade leaf vapor pressure deficit (kPa).}
+  }
+}
+\item{\code{photo_multilayerPhotosynthesisFunction}: Return a data frame with the following columns:
+\itemize{
+  \item{\code{GrossPhotosynthesis}: Gross photosynthesis (micromol*s-1*m-2).}
   \item{\code{NetPhotosynthesis}: Net photosynthesis, after discounting autotrophic respiration (micromol*s-1*m-2).}
   }
 }

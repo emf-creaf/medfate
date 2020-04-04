@@ -473,7 +473,7 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     input["Transpiration"] = tvec;
     NumericVector pvec =  NumericVector(numCohorts, 0.0);
     pvec.attr("names") = above.attr("row.names");
-    input["Photosynthesis"] = pvec;
+    input["GrossPhotosynthesis"] = pvec;
     input["PLC"] = NumericVector(numCohorts, 0.0);
     input["W"] = Wpool;
   } else if(transpirationMode =="Sperry"){
@@ -534,7 +534,7 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     input["Transpiration"] = tvec;
     NumericVector pvec =  NumericVector(numCohorts, 0.0);
     pvec.attr("names") = above.attr("row.names");
-    input["Photosynthesis"] = pvec;
+    input["GrossPhotosynthesis"] = pvec;
     input["PLCstem"] = PLCstem;
     input["Einst"] = Einst;
     input["psiRhizo"] = psiRhizo;
@@ -608,7 +608,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   
   NumericVector SA(numCohorts);
   for(int c=0;c<numCohorts;c++){
-    SA[c] = 10000.0*(LAI_live[c]/(N[c]/10000.0))/Al2As[c];//Individual SA in cm2/m2
+    SA[c] = 10000.0*(LAI_live[c]/(N[c]/10000.0))/Al2As[c];//Individual SA in cm2
   }
   
   NumericVector Wsoil = soil["W"];
@@ -686,7 +686,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     input["Transpiration"] = tvec;
     NumericVector pvec =  NumericVector(numCohorts, 0.0);
     pvec.attr("names") = above.attr("row.names");
-    input["Photosynthesis"] = pvec;
+    input["GrossPhotosynthesis"] = pvec;
     NumericVector cvec =  NumericVector(numCohorts, 0.0);
     cvec.attr("names") = above.attr("row.names");
     input["PLC"] = cvec;
@@ -751,7 +751,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     input["Transpiration"] = tvec;
     NumericVector pvec =  NumericVector(numCohorts, 0.0);
     pvec.attr("names") = above.attr("row.names");
-    input["Photosynthesis"] = pvec;
+    input["GrossPhotosynthesis"] = pvec;
     input["PLCstem"] = PLCstem;
     input["Einst"] = Einst;
     input["psiRhizo"] = psiRhizo;

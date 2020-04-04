@@ -92,8 +92,8 @@ Functions \code{forest2spwbInput} and \code{spwbInput} return a list of class \c
        \item{\code{VCstem_c}, \code{VCstem_d}: Parameters of the stem xylem vulnerability curve.}
     }
   }
-  \item{\code{Transpiration}: Plant cohort transpiration of the current day (mm of water = L/m2; filled with zeroes before simulations).}
-  \item{\code{Photosynthesis}: Plant cohort photosynthesis of the current day (g C/m2; filled with zeroes before simulations).}
+  \item{\code{Transpiration}: Plant cohort transpiration of the last simulated day (mm of water = L/m2; filled with zeroes before simulations).}
+  \item{\code{GrossPhotosynthesis}: Plant cohort (gross) photosynthesis of the last simulated day (g C/m2; filled with zeroes before simulations).}
 }
 Functions \code{forest2growthInput} and \code{growthInput} return a list of class \code{growthInput} with the same elements as \code{spwbInput}, but with additional information. 
 

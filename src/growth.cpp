@@ -201,7 +201,7 @@ DataFrame growthPipe(List x, List spwbOut, double tday) {
   List Plants = spwbOut["Plants"];
   
   //Recover module-communication state variables
-  NumericVector An =  Rcpp::as<Rcpp::NumericVector>(Plants["Photosynthesis"]);
+  NumericVector Ag =  Rcpp::as<Rcpp::NumericVector>(x["GrossPhotosynthesis"]);
   NumericVector psiCoh;
   if(transpirationMode=="Granier") {
     psiCoh =  Rcpp::as<Rcpp::NumericVector>(Plants["psi"]);  
@@ -240,7 +240,7 @@ DataFrame growthPipe(List x, List spwbOut, double tday) {
   NumericVector PlantCstorageSlow(numCohorts,0.0);
   NumericVector PlantSA(numCohorts,0.0);
   NumericVector PlantSAgrowth(numCohorts,0.0);
-  NumericVector PlantPhotosynthesis(numCohorts,0.0);
+  NumericVector PlantGrossPhotosynthesis(numCohorts,0.0);
   NumericVector PlantLAIdead(numCohorts,0.0);
   NumericVector PlantLAIlive(numCohorts,0.0);
   
@@ -260,7 +260,7 @@ DataFrame growthPipe(List x, List spwbOut, double tday) {
     }
     
     //3.2 Respiration and photosynthesis 
-    double Anj = An[j]/(N[j]/10000.0); //Translate g C · m-2 to g C · ind-1
+    double Agj = Ag[j]/(N[j]/10000.0); //Translate g C · m-2 to g C · ind-1
     // double Anj = 0.0;
     double QR = qResp(tday);
     double Rj = (B_leaf_expanded*leaf_RR + B_stem*stem_RR + B_fineroot*root_RR)*QR;
@@ -268,9 +268,9 @@ DataFrame growthPipe(List x, List spwbOut, double tday) {
     //3.3. Carbon balance, update of fast C pool and C available for growth
     double growthAvailableC = 0.0;
     if(storagePool=="none") {
-      growthAvailableC = std::max(0.0,Anj-Rj);
+      growthAvailableC = std::max(0.0,Agj-Rj);
     } else  {
-      growthAvailableC = std::max(0.0,fastCstorage[j]+(Anj-Rj));
+      growthAvailableC = std::max(0.0,fastCstorage[j]+(Agj-Rj));
       fastCstorage[j] = growthAvailableC;
     }
     
@@ -542,7 +542,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   NumericMatrix PlantCstorageSlow(numDays, numCohorts);
   NumericMatrix PlantSA(numDays, numCohorts);
   NumericMatrix PlantSAgrowth(numDays, numCohorts);
-  NumericMatrix PlantPhotosynthesis(numDays, numCohorts);
+  NumericMatrix PlantGrossPhotosynthesis(numDays, numCohorts);
   NumericMatrix PlantLAIdead(numDays, numCohorts);
   NumericMatrix PlantLAIlive(numDays, numCohorts);
   NumericVector SAgrowthcum(numCohorts, 0.0);
@@ -670,8 +670,8 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
     List Plants = s["Plants"];
     NumericVector EplantCoh = Plants["Transpiration"];
     Eplantdays(i,_) = EplantVec;
-    NumericVector An =  Rcpp::as<Rcpp::NumericVector>(Plants["Photosynthesis"]);
-    PlantPhotosynthesis(i,_) = An;
+    NumericVector Ag =  Rcpp::as<Rcpp::NumericVector>(x["GrossPhotosynthesis"]);
+    PlantGrossPhotosynthesis(i,_) = Ag;
     PlantTranspiration(i,_) = EplantCoh;
     PlantStress(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["DDS"]);
     NumericVector psiCoh;
@@ -786,7 +786,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   Stand.attr("row.names") = meteo.attr("row.names");
   
   PlantTranspiration.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
-  PlantPhotosynthesis.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
+  PlantGrossPhotosynthesis.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   PlantRespiration.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   PlantCstorageFast.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   PlantCstorageSlow.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
@@ -808,7 +808,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
                         Named("Soil")=SWB,
                         Named("Stand")=Stand,
                         Named("PlantTranspiration") = PlantTranspiration,
-                        Named("PlantPhotosynthesis") = PlantPhotosynthesis,
+                        Named("PlantGrossPhotosynthesis") = PlantGrossPhotosynthesis,
                         Named("PlantRespiration") = PlantRespiration,
                         Named("PlantCstorageFast") = PlantCstorageFast,
                         Named("PlantCstorageSlow") = PlantCstorageSlow,

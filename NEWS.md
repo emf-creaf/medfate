@@ -4,6 +4,7 @@
 
 # Version 0.10.0
 - Reorganization of growth function
+- Clarification of gross and net photosynthesis
 
 # Version 0.9.1
 - Small bug fixes

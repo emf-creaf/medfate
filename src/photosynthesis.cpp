@@ -213,7 +213,7 @@ DataFrame leafPhotosynthesisFunction(NumericVector E, double Catm, double Patm, 
                       Named("LeafVPD") = leafVPD,
                       Named("WaterVaporConductance") = Gw,
                       Named("Ci") = Ci,
-                      Named("Photosynthesis") = Ag,
+                      Named("GrossPhotosynthesis") = Ag,
                       Named("NetPhotosynthesis") = An));
 }
 
@@ -292,7 +292,7 @@ DataFrame sunshadePhotosynthesisFunction(NumericVector E, double Catm, double Pa
     }
     
   }
-  return(DataFrame::create(Named("Photosynthesis") = Ag,
+  return(DataFrame::create(Named("GrossPhotosynthesis") = Ag,
                       Named("NetPhotosynthesis") = An,
                       Named("LeafCiSL") = leafCiSL,
                       Named("LeafCiSH") = leafCiSH,
@@ -342,7 +342,7 @@ DataFrame multilayerPhotosynthesisFunction(NumericVector E, double Catm, double 
       }
     }
   }
-  return(DataFrame::create(Named("Photosynthesis") = Ag,
+  return(DataFrame::create(Named("GrossPhotosynthesis") = Ag,
                       Named("NetPhotosynthesis") = An));
 }
 
