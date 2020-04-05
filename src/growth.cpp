@@ -6,14 +6,13 @@
 #include "tissuemoisture.h"
 #include "hydraulics.h"
 #include "hydrology.h"
+#include "carbon.h"
 #include "soil.h"
 #include "spwb.h"
 #include <Rcpp.h>
 #include <meteoland.h>
 using namespace Rcpp;
 
-const double leafCperDry = 0.3; //g C · g dry-1
-const double rootCperDry = 0.4959; //g C · g dry-1
 
 const double leaf_RR = 0.008; 
 const double stem_RR = 0.0005;
@@ -24,12 +23,62 @@ const double growthCarbonConcentrationThreshold = 0.5;
 
 const double dailySAturnoverProportion = 0.0001261398; //Equivalent to annual 4.5% 1-(1-0.045)^(1.0/365)
 
-NumericVector carbonCompartments(double SA, double LAI, double H, double Z, double N, double SLA, double WoodDensity, double WoodC) {
-  double B_leaf = leafCperDry*1000.0*(LAI/(N/10000.0))/SLA; //Biomass in g C · ind-1
-  double B_stem = WoodC*SA*(H+Z)*WoodDensity;
-  double B_fineroot = B_leaf/2.5;
-  return(NumericVector::create(B_leaf, B_stem, B_fineroot)); 
+
+
+/**
+ * floem flow (Holtta et al. 2017)
+ *  psiUpstream, psiDownstream - water potential upstream (leaves)  and downstream
+ *  concUpstream, concDownstream - sugar concentration upstream (leaves) and downstream (stem)
+ *  k_f - floem conductance per leaf area basis (l*m-2*MPa-1*s-1)
+ *  
+ *  out mol*s-1
+ */
+// [[Rcpp::export("growth_floemFlow")]]
+double floemFlow(double psiUpstream, double psiDownstream,
+                 double concUpstream, double concDownstream,
+                 double temp, double k_f = 3.0e-5) {
+  double turgor_up = turgor(psiUpstream, concUpstream, temp);
+  double turgor_down = turgor(psiDownstream, concDownstream, temp);
+  double concMean = (concUpstream+concDownstream)/2.0;
+  double relVisc = relativeSapViscosity(concMean, temp);
+  if(temp < 0.0) k_f = 0.0; // No floem flow if temperature below zero
+  return(k_f*concMean*(turgor_up - turgor_down)/relVisc);
 }
+// [[Rcpp::export("growth_dailyFloemFlow")]]
+NumericMatrix dailyFloemFlow(List x, List spwbOut) {
+  DataFrame paramStorage =  Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
+  NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramStorage["Vleaf"]);
+  NumericVector stemPI0 = Rcpp::as<Rcpp::NumericVector>(paramStorage["StemPI0"]);
+  NumericVector leafPI0 = Rcpp::as<Rcpp::NumericVector>(paramStorage["LeafPI0"]);
+  NumericVector stemEPS = Rcpp::as<Rcpp::NumericVector>(paramStorage["StemEPS"]);
+  NumericVector leafEPS = Rcpp::as<Rcpp::NumericVector>(paramStorage["LeafEPS"]);
+  List plantsInst = spwbOut["PlantsInst"];  
+  NumericMatrix An =  Rcpp::as<Rcpp::NumericMatrix>(plantsInst["An"]);
+  NumericMatrix rwcStem =  Rcpp::as<Rcpp::NumericMatrix>(plantsInst["RWCstem"]);
+  NumericMatrix rwcLeaf =  Rcpp::as<Rcpp::NumericMatrix>(plantsInst["RWCleaf"]);
+  List eb = spwbOut["EnergyBalance"];  
+  DataFrame tempDF =  Rcpp::as<Rcpp::DataFrame>(eb["Temperature"]);
+  NumericVector Tcan = Rcpp::as<Rcpp::NumericVector>(tempDF["Tcan"]);
+  
+  int numCohorts = stemPI0.length();
+  int numSteps = Tcan.length();
+  NumericMatrix ff(numCohorts, numSteps);
+  for(int c=0;c<numCohorts;c++) {
+    double leafconc= sum(An(c,_))*10.0/(6.0*44.0*Vleaf[c]);
+    for(int s=0;s<numSteps;s++) {
+      double an_sucr = An(c,s)/(6.0*44.0); //mol sucrose
+      leafconc += an_sucr/Vleaf[c];
+      double psiUp = symplasticWaterPotential(rwcLeaf(c,s), leafPI0[c], leafEPS[c]);
+      double psiDown = symplasticWaterPotential(rwcStem(c,s), stemPI0[c], stemEPS[c]);
+      double concUp = sugarConcentration(leafPI0[c], Tcan[s])+leafconc;
+      double concDown = sugarConcentration(stemPI0[c], Tcan[s]);
+      ff(c,s) = floemFlow(psiUp, psiDown, concUp, concDown, Tcan[s])*3600.0; //flow per hour
+    }
+  }
+  ff.attr("dimnames") = rwcStem.attr("dimnames");
+  return(ff);
+}
+
 double qResp(double Tmean) {
   return(pow(Q10_resp,(Tmean-20.0)/10.0));
 }
@@ -378,40 +427,6 @@ DataFrame growthPipe(List x, List spwbOut, double tday) {
   return(df);
 }
 
-// [[Rcpp::export("dailyFloemFlow")]]
-NumericMatrix dailyFloemFlow(List x, List spwbOut) {
-  DataFrame paramStorage =  Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
-  NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramStorage["Vleaf"]);
-  NumericVector stemPI0 = Rcpp::as<Rcpp::NumericVector>(paramStorage["StemPI0"]);
-  NumericVector leafPI0 = Rcpp::as<Rcpp::NumericVector>(paramStorage["LeafPI0"]);
-  NumericVector stemEPS = Rcpp::as<Rcpp::NumericVector>(paramStorage["StemEPS"]);
-  NumericVector leafEPS = Rcpp::as<Rcpp::NumericVector>(paramStorage["LeafEPS"]);
-  List plantsInst = spwbOut["PlantsInst"];  
-  NumericMatrix An =  Rcpp::as<Rcpp::NumericMatrix>(plantsInst["An"]);
-  NumericMatrix rwcStem =  Rcpp::as<Rcpp::NumericMatrix>(plantsInst["RWCstem"]);
-  NumericMatrix rwcLeaf =  Rcpp::as<Rcpp::NumericMatrix>(plantsInst["RWCleaf"]);
-  List eb = spwbOut["EnergyBalance"];  
-  DataFrame tempDF =  Rcpp::as<Rcpp::DataFrame>(eb["Temperature"]);
-  NumericVector Tcan = Rcpp::as<Rcpp::NumericVector>(tempDF["Tcan"]);
-  
-  int numCohorts = stemPI0.length();
-  int numSteps = Tcan.length();
-  NumericMatrix ff(numCohorts, numSteps);
-  for(int c=0;c<numCohorts;c++) {
-    double leafconc= sum(An(c,_))*10.0/(6.0*44.0*Vleaf[c]);
-    for(int s=0;s<numSteps;s++) {
-      double an_sucr = An(c,s)/(6.0*44.0); //mol sucrose
-      leafconc += an_sucr/Vleaf[c];
-      double psiUp = symplasticWaterPotential(rwcLeaf(c,s), leafPI0[c], leafEPS[c]);
-      double psiDown = symplasticWaterPotential(rwcStem(c,s), stemPI0[c], stemEPS[c]);
-      double concUp = sugarConcentration(leafPI0[c], Tcan[s])+leafconc;
-      double concDown = sugarConcentration(stemPI0[c], Tcan[s]);
-      ff(c,s) = floemFlow(psiUp, psiDown, concUp, concDown, Tcan[s])*3600.0; //flow per hour
-    }
-  }
-  ff.attr("dimnames") = rwcStem.attr("dimnames");
-  return(ff);
-}
 
 // [[Rcpp::export("growth")]]
 List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL) {

@@ -245,12 +245,16 @@ fuel_FCCS <- function(object, ShrubCover, CanopyCover, SpParams, cohortFMC = as.
     .Call(`_medfate_FCCSproperties`, object, ShrubCover, CanopyCover, SpParams, cohortFMC, gdd, mode, heightProfileStep, maxHeightProfile, bulkDensityThreshold)
 }
 
-.growth_defoliationFraction <- function(conc, threshold) {
-    .Call(`_medfate_defoliationFraction`, conc, threshold)
+growth_floemFlow <- function(psiUpstream, psiDownstream, concUpstream, concDownstream, temp, k_f = 3.0e-5) {
+    .Call(`_medfate_floemFlow`, psiUpstream, psiDownstream, concUpstream, concDownstream, temp, k_f)
 }
 
-dailyFloemFlow <- function(x, spwbOut) {
+growth_dailyFloemFlow <- function(x, spwbOut) {
     .Call(`_medfate_dailyFloemFlow`, x, spwbOut)
+}
+
+.growth_defoliationFraction <- function(conc, threshold) {
+    .Call(`_medfate_defoliationFraction`, conc, threshold)
 }
 
 growth <- function(x, soil, meteo, latitude = NA_real_, elevation = NA_real_, slope = NA_real_, aspect = NA_real_) {
@@ -737,10 +741,6 @@ pwb <- function(x, soil, meteo, W, latitude = NA_real_, elevation = NA_real_, sl
     .Call(`_medfate_pwb`, x, soil, meteo, W, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation)
 }
 
-moisture_relativeSapViscosity <- function(conc, temp) {
-    .Call(`_medfate_relativeSapViscosity`, conc, temp)
-}
-
 moisture_osmoticWaterPotential <- function(conc, temp) {
     .Call(`_medfate_osmoticWaterPotential`, conc, temp)
 }
@@ -749,12 +749,12 @@ moisture_sugarConcentration <- function(osmoticWP, temp) {
     .Call(`_medfate_sugarConcentration`, osmoticWP, temp)
 }
 
-moisture_turgor <- function(psi, conc, temp) {
-    .Call(`_medfate_turgor`, psi, conc, temp)
+moisture_relativeSapViscosity <- function(conc, temp) {
+    .Call(`_medfate_relativeSapViscosity`, conc, temp)
 }
 
-moisture_floemFlow <- function(psiUpstream, psiDownstream, concUpstream, concDownstream, temp, k_f = 3.0e-5) {
-    .Call(`_medfate_floemFlow`, psiUpstream, psiDownstream, concUpstream, concDownstream, temp, k_f)
+moisture_turgor <- function(psi, conc, temp) {
+    .Call(`_medfate_turgor`, psi, conc, temp)
 }
 
 moisture_symplasticRWC <- function(psiSym, pi0, epsilon) {

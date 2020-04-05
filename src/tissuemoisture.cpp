@@ -1,11 +1,25 @@
 #include <Rcpp.h>
 #include <numeric>
 #include <math.h>
+#include "carbon.h"
 using namespace Rcpp;
 
-double Rn = 0.008314472; // The perfect gas constant MPa·l/K·mol = kJ/K·mol
-double waterViscosity;
-double sucroseMolarWeight = 342.3; //g*mol-1
+const double Rn = 0.008314472; // The perfect gas constant MPa·l/K·mol = kJ/K·mol
+
+/**
+ * Van 't Hoff equation
+ *  conc - mol/l 
+ *  temp - deg C
+ *  wp - MPa
+ */
+// [[Rcpp::export("moisture_osmoticWaterPotential")]]
+double osmoticWaterPotential(double conc, double temp) {
+  return(- conc*Rn*(temp + 273.15));
+}
+// [[Rcpp::export("moisture_sugarConcentration")]]
+double sugarConcentration(double osmoticWP, double temp) {
+  return(- osmoticWP/(Rn*(temp + 273.15)));
+}
 
 /**
  * On the pressure dependence of the viscosity of aqueous sugar solutions
@@ -26,20 +40,6 @@ double relativeSapViscosity(double conc, double temp) {
   double relWat = exp(-3.7188+(578.919/(-137.546+ Tkelvin))); // Vogel equation for liquid dynamic viscosity (= 1 for 25ºC)
   return(relWat*relVisc);
 }
-/**
- * Van 't Hoff equation
- *  conc - mol/l 
- *  temp - deg C
- *  wp - MPa
- */
-// [[Rcpp::export("moisture_osmoticWaterPotential")]]
-double osmoticWaterPotential(double conc, double temp) {
-  return(- conc*Rn*(temp + 273.15));
-}
-// [[Rcpp::export("moisture_sugarConcentration")]]
-double sugarConcentration(double osmoticWP, double temp) {
-  return(- osmoticWP/(Rn*(temp + 273.15)));
-}
 
 /**
  *  Turgor (MPa)
@@ -52,25 +52,7 @@ double turgor(double psi, double conc, double temp) {
   return(std::max(0.0, psi-osmoticWaterPotential(conc,temp)));
 }
 
-/**
- * floem flow (Holtta et al. 2017)
- *  psiUpstream, psiDownstream - water potential upstream (leaves)  and downstream
- *  concUpstream, concDownstream - sugar concentration upstream (leaves) and downstream (stem)
- *  k_f - floem conductance per leaf area basis (l*m-2*MPa-1*s-1)
- *  
- *  out mol*s-1
- */
-// [[Rcpp::export("moisture_floemFlow")]]
-double floemFlow(double psiUpstream, double psiDownstream,
-                 double concUpstream, double concDownstream,
-                 double temp, double k_f = 3.0e-5) {
-  double turgor_up = turgor(psiUpstream, concUpstream, temp);
-  double turgor_down = turgor(psiDownstream, concDownstream, temp);
-  double concMean = (concUpstream+concDownstream)/2.0;
-  double relVisc = relativeSapViscosity(concMean, temp);
-  if(temp < 0.0) k_f = 0.0; // No floem flow if temperature below zero
-  return(k_f*concMean*(turgor_up - turgor_down)/relVisc);
-}
+
 /**
 * Calculates symplastic relative water content from tissue water potential
 * 
