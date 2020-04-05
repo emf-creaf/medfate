@@ -30,7 +30,7 @@ double sugarConcentration(double osmoticWP, double temp) {
  */
 // [[Rcpp::export("moisture_relativeSapViscosity")]]
 double relativeSapViscosity(double conc, double temp) {
-  double x = conc*sucroseMolarWeight/1e3; //from mol/l to g*cm-3
+  double x = conc*glucoseMolarWeight/1e3; //from mol/l to g*cm-3
   double Tkelvin = temp + 273.15;
   double q0a = 1.12; //g*cm-3
   double q1 = -0.248;

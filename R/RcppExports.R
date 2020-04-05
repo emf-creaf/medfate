@@ -13,6 +13,30 @@ biophysics_leafTemperature <- function(absRad, airTemperature, u, E, leafWidth =
     .Call(`_medfate_leafTemperature`, absRad, airTemperature, u, E, leafWidth)
 }
 
+carbon_leafStorageVolume <- function(LAI, N, SLA, leafDensity) {
+    .Call(`_medfate_leafStorageVolume`, LAI, N, SLA, leafDensity)
+}
+
+carbon_leafCstructural <- function(LAI, N, SLA) {
+    .Call(`_medfate_leafCstructural`, LAI, N, SLA)
+}
+
+carbon_sapwoodStorageVolume <- function(SA, H, Z, woodDensity, vessel2sapwood) {
+    .Call(`_medfate_sapwoodStorageVolume`, SA, H, Z, woodDensity, vessel2sapwood)
+}
+
+carbon_sapwoodCstructural <- function(SA, H, Z, woodDensity, woodCperDry) {
+    .Call(`_medfate_sapwoodCstructural`, SA, H, Z, woodDensity, woodCperDry)
+}
+
+carbon_leafStarchCapacity <- function(LAI, N, SLA, leafDensity) {
+    .Call(`_medfate_leafStarchCapacity`, LAI, N, SLA, leafDensity)
+}
+
+carbon_sapwoodStarchCapacity <- function(SA, H, Z, woodDensity, vessel2sapwood) {
+    .Call(`_medfate_sapwoodStarchCapacity`, SA, H, Z, woodDensity, vessel2sapwood)
+}
+
 .criticalFirelineIntensity <- function(CBH, M) {
     .Call(`_medfate_criticalFirelineIntensity`, CBH, M)
 }
