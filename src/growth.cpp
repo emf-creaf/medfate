@@ -208,7 +208,7 @@ void recordStandSummary(DataFrame standSummary, NumericVector LAIlive,
   }
 }
 
-DataFrame growthPipe(List x, List spwbOut, double tday) {
+DataFrame growthDay(List x, List spwbOut, double tday) {
   //Control params
   List control = x["control"];  
   
@@ -296,6 +296,9 @@ DataFrame growthPipe(List x, List spwbOut, double tday) {
   //3. Carbon balance and growth
   double B_leaf_expanded, B_stem, B_fineroot;
   for(int j=0;j<numCohorts;j++){
+    //Respiratory biomass and C compartments
+    double B_leaf_expanded = leafCstructural(LAI_expanded[j],N[j],SLA[j]);
+    double B_sapwood;
     //3.1 Live biomass and maximum C pool capacity
     NumericVector compartments = carbonCompartments(SA[j], LAI_expanded[j], H[j], Z[j], N[j], SLA[j], WoodDensity[j], WoodC[j]);
     B_leaf_expanded = compartments[0];
@@ -427,6 +430,224 @@ DataFrame growthPipe(List x, List spwbOut, double tday) {
   return(df);
 }
 
+DataFrame growthPipe(List x, List spwbOut, double tday) {
+  //Control params
+  List control = x["control"];  
+  
+  String storagePool = control["storagePool"];
+  String transpirationMode = control["transpirationMode"];
+  String cavitationRefill = control["cavitationRefill"];
+  bool taper = control["taper"];
+  
+  //Cohort info
+  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
+  NumericVector SP = cohorts["SP"];
+  int numCohorts = SP.size();
+  
+  //Aboveground parameters  
+  DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
+  NumericVector DBH = above["DBH"];
+  NumericVector Cover = above["Cover"];
+  NumericVector H = above["H"];
+  NumericVector N = above["N"];
+  NumericVector CR = above["CR"];
+  NumericVector LAI_live = above["LAI_live"];
+  NumericVector LAI_expanded = above["LAI_expanded"];
+  NumericVector LAI_dead = above["LAI_dead"];
+  NumericVector SA = above["SA"];
+  NumericVector fastCstorage, slowCstorage;
+  if(storagePool=="one") {
+    fastCstorage = above["fastCstorage"];
+  } else if(storagePool=="two") {
+    fastCstorage = above["fastCstorage"];
+    slowCstorage = above["slowCstorage"];
+  }
+  
+  //Belowground parameters  
+  List below = Rcpp::as<Rcpp::List>(x["below"]);
+  NumericVector Z = Rcpp::as<Rcpp::NumericVector>(below["Z"]);
+  
+  
+  List stand = spwbOut["Stand"];
+  List Plants = spwbOut["Plants"];
+  
+  //Recover module-communication state variables
+  NumericVector Ag =  Rcpp::as<Rcpp::NumericVector>(x["GrossPhotosynthesis"]);
+  NumericVector psiCoh;
+  if(transpirationMode=="Granier") {
+    psiCoh =  Rcpp::as<Rcpp::NumericVector>(Plants["psi"]);  
+  } else {
+    psiCoh =  clone(Rcpp::as<Rcpp::NumericVector>(x["psiLeaf"]));  
+  }
+  
+  //Anatomy parameters
+  DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
+  NumericVector SLA = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["SLA"]);
+  NumericVector Al2As = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["Al2As"]);
+  NumericVector WoodDensity = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["WoodDensity"]);
+  //Growth parameters
+  DataFrame paramsGrowth = Rcpp::as<Rcpp::DataFrame>(x["paramsGrowth"]);
+  NumericVector WoodC = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["WoodC"]);
+  NumericVector RGRmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRmax"]);
+  NumericVector Cstoragepmax= Rcpp::as<Rcpp::NumericVector>(paramsGrowth["Cstoragepmax"]);
+  NumericVector slowCstorage_max(numCohorts), fastCstorage_max(numCohorts);
+  
+  
+  //Transpiration parameters
+  DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
+  NumericVector Kmax_stemxylem, VCstem_kmax, Psi_Extract, VCstem_c, VCstem_d;
+  if(transpirationMode=="Sperry") {
+    Kmax_stemxylem = paramsTransp["Kmax_stemxylem"];
+    VCstem_kmax = paramsTransp["VCstem_kmax"];
+    // VCstem_c = paramsTransp["VCstem_c"];
+    // VCstem_d = paramsTransp["VCstem_d"];
+  } else if(transpirationMode == "Granier"){
+    // Psi_Extract = paramsTransp["Psi_Extract"];
+  }
+  
+  //Output vectors
+  NumericVector PlantRespiration(numCohorts,0.0);
+  NumericVector PlantCstorageFast(numCohorts,0.0);
+  NumericVector PlantCstorageSlow(numCohorts,0.0);
+  NumericVector PlantSA(numCohorts,0.0);
+  NumericVector PlantSAgrowth(numCohorts,0.0);
+  NumericVector PlantGrossPhotosynthesis(numCohorts,0.0);
+  NumericVector PlantLAIdead(numCohorts,0.0);
+  NumericVector PlantLAIlive(numCohorts,0.0);
+  
+  //3. Carbon balance and growth
+  double B_leaf_expanded, B_stem, B_fineroot;
+  for(int j=0;j<numCohorts;j++){
+    //3.1 Live biomass and maximum C pool capacity
+    NumericVector compartments = carbonCompartments(SA[j], LAI_expanded[j], H[j], Z[j], N[j], SLA[j], WoodDensity[j], WoodC[j]);
+    B_leaf_expanded = compartments[0];
+    B_stem = compartments[1];
+    B_fineroot = compartments[2];
+    if(storagePool == "one") {
+      fastCstorage_max[j] = Cstoragepmax[j]*(B_leaf_expanded+B_stem+B_fineroot);
+    } else if(storagePool == "two") {
+      fastCstorage_max[j] = 0.05*(B_leaf_expanded+B_stem+B_fineroot);
+      slowCstorage_max[j] = std::max(slowCstorage_max[j],(Cstoragepmax[j]-0.05)*(B_leaf_expanded+B_stem+B_fineroot)); //Slow pool capacity cannot decrease
+    }
+    
+    //3.2 Respiration and photosynthesis 
+    double Agj = Ag[j]/(N[j]/10000.0); //Translate g C · m-2 to g C · ind-1
+    // double Anj = 0.0;
+    double QR = qResp(tday);
+    double Rj = (B_leaf_expanded*leaf_RR + B_stem*stem_RR + B_fineroot*root_RR)*QR;
+    
+    //3.3. Carbon balance, update of fast C pool and C available for growth
+    double growthAvailableC = 0.0;
+    if(storagePool=="none") {
+      growthAvailableC = std::max(0.0,Agj-Rj);
+    } else  {
+      growthAvailableC = std::max(0.0,fastCstorage[j]+(Agj-Rj));
+      fastCstorage[j] = growthAvailableC;
+    }
+    
+    //3.4 Growth in LAI_live and SA
+    double deltaSAturnover = (dailySAturnoverProportion/(1.0+15*exp(-0.01*H[j])))*SA[j];
+    double f_turgor = turgorGrowthFactor(psiCoh[j],-1.5);
+    double deltaSAgrowth = 0.0;
+    // if(f_turgor>0.0) { //Growth is possible
+    double costLA = 0.1*leafCperDry*(Al2As[j]/SLA[j]); //Construction cost in g C·cm-2 of sapwood
+    double costSA = WoodC[j]*(H[j]+Z[j])*WoodDensity[j];  //Construction cost in g C·cm-2 of sapwood
+    double costFR = costLA/2.5;
+    double cost = 1.3*(costLA+costSA+costFR);  //Construction cost in g C·cm-2 of sapwood (including 30% growth respiration)
+    double deltaSAavailable = growthAvailableC/cost;
+    double f_source = 1.0;
+    if(storagePool!="none") {
+      f_source = carbonGrowthFactor(fastCstorage[j]/fastCstorage_max[j], growthCarbonConcentrationThreshold);
+    } 
+    double f_temp = temperatureGrowthFactor(tday);
+    double deltaSAsink = RGRmax[j]*SA[j]*f_temp*f_turgor;
+    deltaSAgrowth = std::min(deltaSAsink*f_source, deltaSAavailable);
+    
+    //update pools
+    if(storagePool != "none") {
+      fastCstorage[j] = fastCstorage[j]-deltaSAgrowth*cost; //Remove construction costs from (fast) C pool
+    }
+    if(transpirationMode=="Granier"){
+      if(cavitationRefill!="total") { //If we track cavitation update proportion of embolized conduits
+        NumericVector pEmb =  Rcpp::as<Rcpp::NumericVector>(x["PLC"]);
+        pEmb[j] = pEmb[j]*((SA[j] - deltaSAturnover)/(SA[j] + deltaSAgrowth - deltaSAturnover));
+      }
+    } else {
+      NumericMatrix PLCstem =  Rcpp::as<Rcpp::NumericMatrix>(x["PLCstem"]);
+      int nStemSegments = PLCstem.ncol();
+      for(int s=0;s<nStemSegments;s++) {
+        PLCstem(j,s) = PLCstem(j,s)*((SA[j] - deltaSAturnover)/(SA[j] + deltaSAgrowth - deltaSAturnover));
+      }
+      
+    }
+    SA[j] = SA[j] + deltaSAgrowth - deltaSAturnover; //Update sapwood area
+    
+    double leafDie = std::min((N[j]/10000.0)*(deltaSAturnover/10000.0)*Al2As[j], LAI_live[j]);
+    LAI_dead[j] += leafDie; //Update dead LAI
+    LAI_live[j] += (N[j]/10000.0)*((deltaSAgrowth-deltaSAturnover)/10000.0)*Al2As[j]; //Update live LAI
+    LAI_live[j] = std::max(LAI_live[j], 0.0); //Check negative values do not occur
+    
+    //3.5 transfer between pools and constrain of C pools
+    if(storagePool == "one") {
+      fastCstorage[j] = std::max(0.0,std::min(fastCstorage[j], fastCstorage_max[j]));
+    } else if(storagePool == "two") {
+      //Relative transfer rate (maximum 5% of the source pool per day)
+      double reltransferRate = 0.05*storageTransferRelativeRate(fastCstorage[j], fastCstorage_max[j]);
+      if(reltransferRate>0.0) { //Transfer from fast to slow 
+        double transfer = std::min(reltransferRate*fastCstorage[j],(slowCstorage_max[j]-slowCstorage[j])*0.9);
+        fastCstorage[j] -= transfer;
+        slowCstorage[j] += transfer*0.9; //10% cost in respiration (not added to slow pool)
+      } else { //Transfer from slow to fast 
+        double transfer = std::min(-reltransferRate*slowCstorage[j],(fastCstorage_max[j]-fastCstorage[j])*0.9);
+        fastCstorage[j] += transfer*0.9; //10% cost in respiration (removed from what actually reaches fast pool)
+        slowCstorage[j] -= transfer;
+      }
+      //Trim pools to maximum capacity
+      fastCstorage[j] = std::max(0.0,std::min(fastCstorage[j], fastCstorage_max[j]));
+      slowCstorage[j] = std::max(0.0,std::min(slowCstorage[j], slowCstorage_max[j]));
+    }
+    
+    //3.8 Calculate defoliation if fast storage is low
+    if(storagePool!="none") {
+      double def = defoliationFraction(fastCstorage[j]/fastCstorage_max[j], growthCarbonConcentrationThreshold);
+      double maxLAI = (SA[j]*Al2As[j]/10000.0)*(N[j]/10000.0);
+      double defLAI = maxLAI * (1.0-def);
+      // Rcout<<defLAI<<" "<<LAI_live[j]<<"\n";
+      LAI_live[j] = std::min(LAI_live[j], defLAI);
+    }
+    
+    //3.7 Update stem conductance (Sperry mode)
+    if(transpirationMode=="Sperry") {
+      double al2as = (LAI_expanded[j]/(N[j]/10000.0))/(SA[j]/10000.0);
+      VCstem_kmax[j]=maximumStemHydraulicConductance(Kmax_stemxylem[j], al2as,H[j], taper);
+      // Rcout<<Al2As[j]<<" "<< al2as<<" "<<VCstem_kmax[j]<<"\n";
+    }
+    
+    //Output variables
+    PlantRespiration[j] = Rj*(N[j]/10000.0); //Scaled to cohort level: Translate g C · ind-1 to g C · m-2
+    if(storagePool=="one") {
+      PlantCstorageFast[j] = fastCstorage[j]/fastCstorage_max[j];
+    } else if(storagePool == "two") {
+      PlantCstorageFast[j] = fastCstorage[j]/fastCstorage_max[j];
+      PlantCstorageSlow[j] = slowCstorage[j]/slowCstorage_max[j];
+    }
+    PlantSA[j] = SA[j];
+    PlantLAIlive[j] = LAI_live[j];
+    PlantLAIdead[j] = LAI_dead[j];
+    PlantSAgrowth[j] = deltaSAgrowth;
+  }
+  
+  DataFrame df = DataFrame::create(_["PlantRespiration"] = PlantRespiration,
+                                   _["PlantCstorageFast"] = PlantCstorageFast,
+                                   _["PlantCstorageSlow"] = PlantCstorageSlow,
+                                   _["PlantSA"] = PlantSA,
+                                   _["PlantLAIlive"] = PlantLAIlive,
+                                   _["PlantLAIdead"] = PlantLAIdead,
+                                   _["PlantSAgrowth"] = PlantSAgrowth);
+  
+  df.attr("row.names") = cohorts.attr("row.names");
+  return(df);
+}
 
 // [[Rcpp::export("growth")]]
 List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL) {
