@@ -9,7 +9,7 @@ hydraulics_supplyFunctionPlot<-function(x, soil, draw = TRUE, type="E", speciesN
   VG_alphac = soil$VG_alpha
   VCroot_kmax = x$below$VCroot_kmax
   VGrhizo_kmax = x$below$VGrhizo_kmax
-  PLCstem = x$PLCstem
+  PLCstem = x$internalWater$PLCstem
   nlayer = length(psiSoil)
   col = rainbow(nlayer, start = 0.8, end = 0.1)
   

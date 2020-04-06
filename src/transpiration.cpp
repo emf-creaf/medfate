@@ -483,8 +483,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   NumericMatrix RWCsteminst(numCohorts, ntimesteps);
   NumericMatrix PsiRootinst(numCohorts, ntimesteps);
   NumericMatrix PWBinst(numCohorts, ntimesteps);
-  NumericMatrix An_SL(numCohorts, ntimesteps);
-  NumericMatrix An_SH(numCohorts, ntimesteps);
+  NumericMatrix An_SL(numCohorts, ntimesteps), Ag_SL(numCohorts, ntimesteps);
+  NumericMatrix An_SH(numCohorts, ntimesteps), Ag_SH(numCohorts, ntimesteps);
   NumericMatrix Psi_SL(numCohorts, ntimesteps);
   NumericMatrix Psi_SH(numCohorts, ntimesteps);
   NumericMatrix Ci_SL(numCohorts, ntimesteps);
@@ -652,6 +652,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
           Psi_SL(c,n) = psiLeaf[iPMSunlit];
           An_SH(c,n) = AnShade[iPMShade];
           An_SL(c,n) = AnSunlit[iPMSunlit];
+          Ag_SH(c,n) = AgShade[iPMShade];
+          Ag_SL(c,n) = AgSunlit[iPMSunlit];
           Ci_SH(c,n) = CiShade[iPMShade];
           Ci_SL(c,n) = CiSunlit[iPMSunlit];
           GW_SH(c,n)= GwShade[iPMShade];
@@ -1015,6 +1017,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   Psi_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   An_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   An_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  Ag_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  Ag_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   SWR_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   SWR_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   LWR_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
@@ -1063,6 +1067,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   List ShadeInst = List::create(
     _["Abs_SWR"] = SWR_SH,
     _["Abs_LWR"] = LWR_SH,
+    _["Ag"] = Ag_SH,
     _["An"] = An_SH,
     _["Ci"] = Ci_SH,
     _["GW"] = GW_SH,
@@ -1072,6 +1077,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   List SunlitInst = List::create(
     _["Abs_SWR"]=SWR_SL,
     _["Abs_LWR"] = LWR_SL,
+    _["Ag"] = Ag_SL,
     _["An"] = An_SL,
     _["Ci"] = Ci_SL,
     _["GW"] = GW_SL,

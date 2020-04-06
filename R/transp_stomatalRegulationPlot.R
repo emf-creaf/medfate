@@ -29,8 +29,8 @@ transp_stomatalRegulationPlot<-function(x, soil, meteo, day, timestep, latitude,
   for(i in 1:ncoh) {
     psi = c(psi, -l[[i]]$psiLeaf)
     E = c(E, l[[i]]$E)
-    An_sunlit = c(An_sunlit, phsunlit[[i]]$Photosynthesis)
-    An_shade = c(An_shade, phshade[[i]]$Photosynthesis)
+    An_sunlit = c(An_sunlit, phsunlit[[i]]$NetPhotosynthesis)
+    An_shade = c(An_shade, phshade[[i]]$NetPhotosynthesis)
     Gw_sunlit = c(Gw_sunlit, phsunlit[[i]]$WaterVaporConductance)
     Gw_shade = c(Gw_shade, phshade[[i]]$WaterVaporConductance)
     Temp_sunlit = c(Temp_sunlit, phsunlit[[i]]$LeafTemperature)
@@ -72,7 +72,7 @@ transp_stomatalRegulationPlot<-function(x, soil, meteo, day, timestep, latitude,
   else if(type=="An") {
     g<- g + geom_path(aes_string(y = "An", col = "cohort"))+
       geom_point(data = df_PM, aes_string(y="An", col = "cohort"))+
-      ylab(expression(paste("Photosynthesis "(mu*mol*C%.%s^{-1}%.%m^{-2}))))
+      ylab(expression(paste("Net photosynthesis "(mu*mol*C%.%s^{-1}%.%m^{-2}))))
   } 
   else if(type=="Gw") {
     g<- g + geom_path(aes_string(y = "Gw", col = "cohort"))+
