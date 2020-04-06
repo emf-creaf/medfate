@@ -809,9 +809,9 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
     
     List Plants = s["Plants"];
     NumericVector EplantCoh = Plants["Transpiration"];
+    NumericVector AgplantCoh = Plants["GrossPhotosynthesis"];
     Eplantdays(i,_) = EplantVec;
-    NumericVector Ag =  Rcpp::as<Rcpp::NumericVector>(x["GrossPhotosynthesis"]);
-    PlantGrossPhotosynthesis(i,_) = Ag;
+    PlantGrossPhotosynthesis(i,_) = AgplantCoh;
     PlantTranspiration(i,_) = EplantCoh;
     PlantStress(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["DDS"]);
     NumericVector psiCoh;

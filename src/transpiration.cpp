@@ -1080,7 +1080,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
     _["Psi"] = Psi_SL);
   
   List PlantsInst = List::create(
-    _["E"]=Einst, _["An"]=Aninst,
+    _["E"]=Einst, _["Ag"]=Aginst, _["An"]=Aninst,
     _["SunlitLeaves"] = SunlitInst,
     _["ShadeLeaves"] = ShadeInst,
     _["dEdPinst"] = dEdPinst,
@@ -1094,7 +1094,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   DataFrame Plants = DataFrame::create(_["LAI"] = LAIcohort,
                                        _["Extraction"] = SoilExtractCoh,
                                        _["Transpiration"] = Eplant,
-                                       _["Photosynthesis"] = Anplant,
+                                       _["GrossPhotosynthesis"] = Agplant,
+                                       _["NetPhotosynthesis"] = Anplant,
                                        _["RootPsi"] = minPsiRoot, 
                                        _["StemPsi"] = minPsiStem, 
                                        _["StemPLC"] = PLCm, //Average daily stem PLC

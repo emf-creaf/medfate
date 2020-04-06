@@ -585,6 +585,8 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   NumericMatrix LeafRWC(numDays, numCohorts);
   NumericMatrix PlantTranspiration(numDays, numCohorts);
   NumericMatrix PlantPhotosynthesis(numDays, numCohorts);
+  NumericMatrix PlantNetPhotosynthesis(numDays, numCohorts);
+  NumericMatrix PlantGrossPhotosynthesis(numDays, numCohorts);
   NumericVector EplantCohTot(numCohorts, 0.0);
   NumericMatrix PlantAbsSWRFraction(numDays, numCohorts);
   NumericMatrix PlantAbsSWR(numDays, numCohorts);
@@ -748,10 +750,11 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
       PlantLAI(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["LAI"]);
       NumericVector EplantCoh = Plants["Transpiration"];
       Eplantdays(i,_) = EplantVec;
-      PlantPhotosynthesis(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["Photosynthesis"]);
       PlantTranspiration(i,_) = EplantCoh;
       PlantStress(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["DDS"]);
       if(transpirationMode=="Sperry") {
+        PlantGrossPhotosynthesis(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["GrossPhotosynthesis"]);
+        PlantNetPhotosynthesis(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["NetPhotosynthesis"]);
         NumericVector HydrInVec = sb["HydraulicInput"];
         HydrIndays(i,_) = HydrInVec;
         LeafPsiMin(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["LeafPsiMin"]);
@@ -771,6 +774,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
           nm(i,_) =  RhizoPsiStep(c,_);
         }
       } else {
+        PlantPhotosynthesis(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["Photosynthesis"]);
         PlantAbsSWRFraction(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["AbsorbedSWRFraction"]);
         PlantPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["psi"]);
       }
@@ -890,6 +894,8 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   PlantWaterBalance.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   RootPsi.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   PlantPhotosynthesis.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
+  PlantGrossPhotosynthesis.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
+  PlantNetPhotosynthesis.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   PlantAbsSWR.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   PlantAbsLWR.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   PlantLAI.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
@@ -924,8 +930,8 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
                      Named("PlantStress") = PlantStress,
                      Named("subdaily") =  subdailyRes);
   } else {
-    CharacterVector ln = CharacterVector(30);
-    l = List(30);
+    CharacterVector ln = CharacterVector(31);
+    l = List(31);
     l[0] = latitude;
     ln[0] = "latitude";
     l[1] = topo;
@@ -952,40 +958,42 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
     ln[11] = "PlantAbsorbedLWR";
     l[12] = PlantTranspiration;
     ln[12] = "PlantTranspiration";
-    l[13] = PlantPhotosynthesis;
-    ln[13] = "PlantPhotosynthesis";
-    l[14] = dEdP;
-    ln[14] = "dEdP";
-    l[15] = LeafPsiMin;
-    ln[15] = "LeafPsiMin";
-    l[16] = LeafPsiMax;
-    ln[16] = "LeafPsiMax";
-    l[17] = LeafPsiMin_SL;
-    ln[17] = "LeafPsiMin_SL";
-    l[18] = LeafPsiMax_SL;
-    ln[18] = "LeafPsiMax_SL";
-    l[19] = LeafPsiMin_SH;
-    ln[19] = "LeafPsiMin_SH";
-    l[20] = LeafPsiMax_SH;
-    ln[20] = "LeafPsiMax_SH";
-    l[21] = LeafRWC;
-    ln[21] = "LeafRWC";
-    l[22] = StemPsi;
-    ln[22] = "StemPsi";
-    l[23] = StemPLC;
-    ln[23] = "StemPLC";
-    l[24] = StemRWC;
-    ln[24] = "StemRWC";
-    l[25] = RootPsi;
-    ln[25] = "RootPsi";
-    l[26] = RhizoPsi;
-    ln[26] = "RhizoPsi";
-    l[27] = PlantStress;
-    ln[27] = "PlantStress";
-    l[28] = PlantWaterBalance;
-    ln[28] = "PlantWaterBalance";
-    l[29] = subdailyRes;
-    ln[29] = "subdaily";
+    l[13] = PlantGrossPhotosynthesis;
+    ln[13] = "PlantGrossPhotosynthesis";
+    l[14] = PlantNetPhotosynthesis;
+    ln[14] = "PlantNetPhotosynthesis";
+    l[15] = dEdP;
+    ln[15] = "dEdP";
+    l[16] = LeafPsiMin;
+    ln[16] = "LeafPsiMin";
+    l[17] = LeafPsiMax;
+    ln[17] = "LeafPsiMax";
+    l[18] = LeafPsiMin_SL;
+    ln[18] = "LeafPsiMin_SL";
+    l[19] = LeafPsiMax_SL;
+    ln[19] = "LeafPsiMax_SL";
+    l[20] = LeafPsiMin_SH;
+    ln[20] = "LeafPsiMin_SH";
+    l[21] = LeafPsiMax_SH;
+    ln[21] = "LeafPsiMax_SH";
+    l[22] = LeafRWC;
+    ln[22] = "LeafRWC";
+    l[23] = StemPsi;
+    ln[23] = "StemPsi";
+    l[24] = StemPLC;
+    ln[24] = "StemPLC";
+    l[25] = StemRWC;
+    ln[25] = "StemRWC";
+    l[26] = RootPsi;
+    ln[26] = "RootPsi";
+    l[27] = RhizoPsi;
+    ln[27] = "RhizoPsi";
+    l[28] = PlantStress;
+    ln[28] = "PlantStress";
+    l[29] = PlantWaterBalance;
+    ln[29] = "PlantWaterBalance";
+    l[30] = subdailyRes;
+    ln[30] = "subdaily";
     l.attr("names") = ln;
   }
   l.attr("class") = CharacterVector::create("spwb","list");
@@ -1139,6 +1147,8 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
   NumericMatrix LeafRWC(numDays, numCohorts);
   NumericMatrix PlantTranspiration(numDays, numCohorts);
   NumericMatrix PlantPhotosynthesis(numDays, numCohorts);
+  NumericMatrix PlantGrossPhotosynthesis(numDays, numCohorts);
+  NumericMatrix PlantNetPhotosynthesis(numDays, numCohorts);
   NumericVector EplantCohTot(numCohorts, 0.0);
   NumericMatrix PlantAbsSWRFraction(numDays, numCohorts);
   NumericMatrix PlantAbsSWR(numDays, numCohorts);
@@ -1220,15 +1230,17 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
     PlantExtraction[i] = sum(SoilWaterExtract);
     Transpiration[i] = sum(EplantCoh);
     NumericVector HydrInVec(nlayers, 0.0);
-    PlantPhotosynthesis(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["Photosynthesis"]);
     PlantTranspiration(i,_) = EplantCoh;
     PlantStress(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["DDS"]);
     
     if(transpirationMode=="Granier") {
+      PlantPhotosynthesis(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["Photosynthesis"]);
       PlantAbsSWRFraction(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["AbsorbedSWRFraction"]);
       PlantPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["psi"]);
     }
     else if(transpirationMode=="Sperry")  {
+      PlantGrossPhotosynthesis(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["GrossPhotosynthesis"]);
+      PlantNetPhotosynthesis(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["NetPhotosynthesis"]);
       NumericMatrix soilLayerExtractInst = s["ExtractionInst"];
       for(int l=0;l<nlayers;l++) {
         for(int n=0;n<ntimesteps;n++) {
@@ -1362,6 +1374,8 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
   PlantWaterBalance.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   RootPsi.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   PlantPhotosynthesis.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
+  PlantGrossPhotosynthesis.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
+  PlantNetPhotosynthesis.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   PlantAbsSWR.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   PlantAbsLWR.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   PlantLAI.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
@@ -1396,8 +1410,8 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
                      Named("PlantStress") = PlantStress,
                      Named("subdaily") =  subdailyRes);
   } else {
-    CharacterVector ln = CharacterVector(29);
-    l = List(29);
+    CharacterVector ln = CharacterVector(30);
+    l = List(30);
     l[0] = latitude;
     ln[0] = "latitude";
     l[1] = topo;
@@ -1422,40 +1436,42 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
     ln[10] = "PlantAbsorbedLWR";
     l[11] = PlantTranspiration;
     ln[11] = "PlantTranspiration";
-    l[12] = PlantPhotosynthesis;
-    ln[12] = "PlantPhotosynthesis";
-    l[13] = dEdP;
-    ln[13] = "dEdP";
-    l[14] = LeafPsiMin;
-    ln[14] = "LeafPsiMin";
-    l[15] = LeafPsiMax;
-    ln[15] = "LeafPsiMax";
-    l[16] = LeafPsiMin_SL;
-    ln[16] = "LeafPsiMin_SL";
-    l[17] = LeafPsiMax_SL;
-    ln[17] = "LeafPsiMax_SL";
-    l[18] = LeafPsiMin_SH;
-    ln[18] = "LeafPsiMin_SH";
-    l[19] = LeafPsiMax_SH;
-    ln[19] = "LeafPsiMax_SH";
-    l[20] = LeafRWC;
-    ln[20] = "LeafRWC";
-    l[21] = StemPsi;
-    ln[21] = "StemPsi";
-    l[22] = StemPLC;
-    ln[22] = "StemPLC";
-    l[23] = StemRWC;
-    ln[23] = "StemRWC";
-    l[24] = RootPsi;
-    ln[24] = "RootPsi";
-    l[25] = RhizoPsi;
-    ln[25] = "RhizoPsi";
-    l[26] = PlantStress;
-    ln[26] = "PlantStress";
-    l[27] = PlantWaterBalance;
-    ln[27] = "PlantWaterBalance";
-    l[28] = subdailyRes;
-    ln[28] = "subdaily";
+    l[12] = PlantGrossPhotosynthesis;
+    ln[12] = "PlantGrossPhotosynthesis";
+    l[13] = PlantNetPhotosynthesis;
+    ln[13] = "PlantNetPhotosynthesis";
+    l[14] = dEdP;
+    ln[14] = "dEdP";
+    l[15] = LeafPsiMin;
+    ln[15] = "LeafPsiMin";
+    l[16] = LeafPsiMax;
+    ln[16] = "LeafPsiMax";
+    l[17] = LeafPsiMin_SL;
+    ln[17] = "LeafPsiMin_SL";
+    l[18] = LeafPsiMax_SL;
+    ln[18] = "LeafPsiMax_SL";
+    l[19] = LeafPsiMin_SH;
+    ln[19] = "LeafPsiMin_SH";
+    l[20] = LeafPsiMax_SH;
+    ln[20] = "LeafPsiMax_SH";
+    l[21] = LeafRWC;
+    ln[21] = "LeafRWC";
+    l[22] = StemPsi;
+    ln[22] = "StemPsi";
+    l[23] = StemPLC;
+    ln[23] = "StemPLC";
+    l[24] = StemRWC;
+    ln[24] = "StemRWC";
+    l[25] = RootPsi;
+    ln[25] = "RootPsi";
+    l[26] = RhizoPsi;
+    ln[26] = "RhizoPsi";
+    l[27] = PlantStress;
+    ln[27] = "PlantStress";
+    l[28] = PlantWaterBalance;
+    ln[28] = "PlantWaterBalance";
+    l[29] = subdailyRes;
+    ln[29] = "subdaily";
     l.attr("names") = ln;
   }
   l.attr("class") = CharacterVector::create("pwb","list");

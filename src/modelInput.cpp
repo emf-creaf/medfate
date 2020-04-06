@@ -396,7 +396,7 @@ DataFrame internalCarbonDataFrame(DataFrame above,
 
   
   DataFrame df;
-  if(Rf_isNull(paramsGrowthdf)) {
+  if(Rf_isNull(paramsAnatomydf) || paramsAnatomydf.size()==0) {
     df = DataFrame::create(Named("Agday") = NumericVector(numCohorts, 0.0));
   } else {
     NumericVector WoodDensity = paramsAnatomydf["WoodDensity"];
