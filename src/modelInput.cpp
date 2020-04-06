@@ -1,6 +1,7 @@
 #include <Rcpp.h>
 #include "spwb.h"
 #include "growth.h"
+#include "carbon.h"
 #include "root.h"
 #include "forestutils.h"
 #include "tissuemoisture.h"
@@ -391,12 +392,16 @@ DataFrame paramsAllometries(DataFrame above, DataFrame SpParams) {
 DataFrame internalCarbonDataFrame(DataFrame above, 
                                   List below,
                                   DataFrame paramsAnatomydf,
+                                  DataFrame paramsWaterStoragedf,
                                   DataFrame paramsGrowthdf) {
   int numCohorts = above.nrow();
 
   NumericVector WoodDensity = paramsAnatomydf["WoodDensity"];
+  NumericVector LeafDensity = paramsAnatomydf["LeafDensity"];
   NumericVector SLA = paramsAnatomydf["SLA"];
   NumericVector Al2As = paramsAnatomydf["Al2As"];
+  NumericVector LeafPI0 = paramsWaterStoragedf["LeafPI0"];
+  NumericVector StemPI0 = paramsWaterStoragedf["StemPI0"];
   
   NumericVector WoodC = paramsGrowthdf["WoodC"];
   NumericVector Cstoragepmax = paramsGrowthdf["Cstoragepmax"];
@@ -412,16 +417,31 @@ DataFrame internalCarbonDataFrame(DataFrame above,
   NumericVector H = above["H"];
   NumericVector CR = above["CR"];
   NumericVector SA = above["SA"];
-  
-  NumericVector slowCstorage(numCohorts), fastCstorage(numCohorts);
+
+  NumericVector sugarLeaf(numCohorts);
+  NumericVector starchLeaf(numCohorts);
+  NumericVector sugarSapwood(numCohorts);
+  NumericVector starchSapwood(numCohorts);
   for(int c=0;c<numCohorts;c++){
-    NumericVector compartments = carbonCompartments(SA[c], LAI_expanded[c], H[c], 
-                                                    Z[c], N[c], SLA[c], WoodDensity[c], WoodC[c]);
-    slowCstorage[c] = 0.5*(Cstoragepmax[c]-0.05)*(compartments[0]+compartments[1]+compartments[2]); //Slow pool at 50%
-    fastCstorage[c] = 0.5*0.05*(compartments[0]+compartments[1]+compartments[2]); //Fast pool at 50%
+    // 50% in starch storage
+    starchLeaf[c] = 0.5*leafStarchCapacity(LAI_expanded[c], N[c], SLA[c], LeafDensity[c]);
+    starchSapwood[c] = 0.5*sapwoodStarchCapacity(SA[c], H[c], Z[c], WoodDensity[c], 0.5);
+    //Sugar storage from PI0
+    double lconc = sugarConcentration(LeafPI0[c],15.0);
+    double lvol = leafStorageVolume(LAI_expanded[c], N[c], SLA[c], LeafDensity[c]); //l
+    double lstvol = 0.001*(starchLeaf[c]/starchDensity);
+    // Rcout<<lvol<<" "<< svol<< " "<< lconc <<"\n";
+    sugarLeaf[c] = glucoseMolarWeight*lconc*(lvol - lstvol);
+    double sconc = sugarConcentration(StemPI0[c],15.0);
+    double svol = sapwoodStorageVolume(SA[c], H[c], Z[c], WoodDensity[c], 0.5); //l
+    double sstvol = 0.001*(starchSapwood[c]/starchDensity);
+    Rcout<<svol<<" "<< sstvol<< " "<< sconc <<"\n";
+    sugarSapwood[c] = glucoseMolarWeight*sconc*(svol - sstvol);
   }
-  DataFrame df = DataFrame::create(Named("fastCstorage") = fastCstorage,
-                                   Named("slowCstorage") = slowCstorage);
+  DataFrame df = DataFrame::create(Named("sugarLeaf") = sugarLeaf,
+                                   Named("starchLeaf") = starchLeaf,
+                                   Named("sugarSapwood") = sugarSapwood,
+                                   Named("starchSapwood") = starchSapwood);
   df.attr("row.names") = above.attr("row.names");
   return(df);
 }  
@@ -605,6 +625,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   
   DataFrame paramsGrowthdf = paramsGrowth(above, SpParams);
 
+  DataFrame paramsWaterStoragedf = paramsWaterStorage(above, SpParams, paramsAnatomydf);
   
   DataFrame paramsAllometriesdf = paramsAllometries(above, SpParams);
   
@@ -672,7 +693,8 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                          _["paramsAllometries"] = paramsAllometriesdf,
                          _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
                          _["internalCarbon"] = internalCarbonDataFrame(plantsdf, below, 
-                                                         paramsAnatomydf, paramsGrowthdf));
+                                                         paramsAnatomydf, paramsWaterStoragedf,
+                                                         paramsGrowthdf));
   } else if(transpirationMode =="Sperry"){
     
     //Base params
@@ -683,8 +705,6 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                                                _["Sgdd"] = Sgdd);
     paramsBasedf.attr("row.names") = above.attr("row.names");
     
-    DataFrame paramsAnatomydf = paramsAnatomy(above, SpParams);
-    DataFrame paramsWaterStoragedf = paramsWaterStorage(above, SpParams, paramsAnatomydf);
     DataFrame paramsTranspirationdf = paramsTranspiration(above, V, soil, SpParams,
                                                           paramsAnatomydf, control);
     List below = paramsBelowZ(above, V, Z, soil, 
@@ -715,7 +735,8 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                          _["paramsAllometries"] = paramsAllometriesdf,
                          _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
                          _["internalCarbon"] = internalCarbonDataFrame(plantsdf, below,
-                                                         paramsAnatomydf, paramsGrowthdf));
+                                                         paramsAnatomydf, paramsWaterStoragedf,
+                                                         paramsGrowthdf));
     
   } 
   

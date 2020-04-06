@@ -13,6 +13,22 @@ biophysics_leafTemperature <- function(absRad, airTemperature, u, E, leafWidth =
     .Call(`_medfate_leafTemperature`, absRad, airTemperature, u, E, leafWidth)
 }
 
+moisture_osmoticWaterPotential <- function(conc, temp) {
+    .Call(`_medfate_osmoticWaterPotential`, conc, temp)
+}
+
+moisture_sugarConcentration <- function(osmoticWP, temp) {
+    .Call(`_medfate_sugarConcentration`, osmoticWP, temp)
+}
+
+carbon_relativeSapViscosity <- function(conc, temp) {
+    .Call(`_medfate_relativeSapViscosity`, conc, temp)
+}
+
+carbon_turgor <- function(psi, conc, temp) {
+    .Call(`_medfate_turgor`, psi, conc, temp)
+}
+
 carbon_leafStorageVolume <- function(LAI, N, SLA, leafDensity) {
     .Call(`_medfate_leafStorageVolume`, LAI, N, SLA, leafDensity)
 }
@@ -763,22 +779,6 @@ spwb <- function(x, soil, meteo, latitude = NA_real_, elevation = NA_real_, slop
 
 pwb <- function(x, soil, meteo, W, latitude = NA_real_, elevation = NA_real_, slope = NA_real_, aspect = NA_real_, canopyEvaporation = numeric(0), snowMelt = numeric(0), soilEvaporation = numeric(0)) {
     .Call(`_medfate_pwb`, x, soil, meteo, W, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation)
-}
-
-moisture_osmoticWaterPotential <- function(conc, temp) {
-    .Call(`_medfate_osmoticWaterPotential`, conc, temp)
-}
-
-moisture_sugarConcentration <- function(osmoticWP, temp) {
-    .Call(`_medfate_sugarConcentration`, osmoticWP, temp)
-}
-
-moisture_relativeSapViscosity <- function(conc, temp) {
-    .Call(`_medfate_relativeSapViscosity`, conc, temp)
-}
-
-moisture_turgor <- function(psi, conc, temp) {
-    .Call(`_medfate_turgor`, psi, conc, temp)
 }
 
 moisture_symplasticRWC <- function(psiSym, pi0, epsilon) {

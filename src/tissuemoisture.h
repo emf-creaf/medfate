@@ -5,10 +5,6 @@
 #endif
 using namespace Rcpp;
 
-double sugarConcentration(double osmoticWP, double temp);
-double osmoticWaterPotential(double conc, double temp);
-double turgor(double psi, double conc, double temp);
-double relativeSapViscosity(double conc, double temp);
 
 double symplasticRelativeWaterContent(double psiSym, double pi0, double epsilon);
 double symplasticWaterPotential(double RWC, double pi0, double epsilon);

@@ -11,6 +11,12 @@ const double starchDensity = 1.5; //g·cm-3
 const double leafCperDry = 0.3; //g C · g dry-1
 const double rootCperDry = 0.4959; //g C · g dry-1
 
+
+double sugarConcentration(double osmoticWP, double temp);
+double osmoticWaterPotential(double conc, double temp);
+double turgor(double psi, double conc, double temp);
+double relativeSapViscosity(double conc, double temp);
+
 double leafStarchCapacity(double LAI, double N, double SLA, double leafDensity);
 double leafStorageVolume(double LAI, double N, double SLA, double leafDensity);
 double leafCstructural(double LAI, double N, double SLA);

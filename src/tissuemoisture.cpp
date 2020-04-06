@@ -4,55 +4,6 @@
 #include "carbon.h"
 using namespace Rcpp;
 
-const double Rn = 0.008314472; // The perfect gas constant MPa·l/K·mol = kJ/K·mol
-
-/**
- * Van 't Hoff equation
- *  conc - mol/l 
- *  temp - deg C
- *  wp - MPa
- */
-// [[Rcpp::export("moisture_osmoticWaterPotential")]]
-double osmoticWaterPotential(double conc, double temp) {
-  return(- conc*Rn*(temp + 273.15));
-}
-// [[Rcpp::export("moisture_sugarConcentration")]]
-double sugarConcentration(double osmoticWP, double temp) {
-  return(- osmoticWP/(Rn*(temp + 273.15)));
-}
-
-/**
- * On the pressure dependence of the viscosity of aqueous sugar solutions
- * Rheol Acta (2002) 41: 369–374 DOI 10.1007/s00397-002-0238-y
- * 
- *  x - sugar concentration (mol/l)
- *  temp - temperature (degrees C)
- */
-// [[Rcpp::export("moisture_relativeSapViscosity")]]
-double relativeSapViscosity(double conc, double temp) {
-  double x = conc*glucoseMolarWeight/1e3; //from mol/l to g*cm-3
-  double Tkelvin = temp + 273.15;
-  double q0a = 1.12; //g*cm-3
-  double q1 = -0.248;
-  double Ea = 2.61; //kJ*mol-1 energy of activation
-  double va = x/(q0a*exp(-1.0*Ea/(Rn*Tkelvin)));
-  double relVisc = exp(va/(1.0 + q1*va)); // relative viscosity
-  double relWat = exp(-3.7188+(578.919/(-137.546+ Tkelvin))); // Vogel equation for liquid dynamic viscosity (= 1 for 25ºC)
-  return(relWat*relVisc);
-}
-
-/**
- *  Turgor (MPa)
- *  conc - mol/l 
- *  temp - deg C
- *  psi - water potential (MPa)
- */
-// [[Rcpp::export("moisture_turgor")]]
-double turgor(double psi, double conc, double temp) {
-  return(std::max(0.0, psi-osmoticWaterPotential(conc,temp)));
-}
-
-
 /**
 * Calculates symplastic relative water content from tissue water potential
 * 
