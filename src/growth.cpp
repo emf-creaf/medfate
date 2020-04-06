@@ -25,6 +25,7 @@ const double dailySAturnoverProportion = 0.0001261398; //Equivalent to annual 4.
 
 
 
+
 /**
  * floem flow (Holtta et al. 2017)
  *  psiUpstream, psiDownstream - water potential upstream (leaves)  and downstream
@@ -274,9 +275,11 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
   //Transpiration parameters
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
   NumericVector Kmax_stemxylem, VCstem_kmax, Psi_Extract, VCstem_c, VCstem_d;
+  NumericMatrix VGrhizo_kmax;
   if(transpirationMode=="Sperry") {
     Kmax_stemxylem = paramsTransp["Kmax_stemxylem"];
     VCstem_kmax = paramsTransp["VCstem_kmax"];
+    VGrhizo_kmax = Rcpp::as<Rcpp::NumericMatrix>(below["VGrhizo_kmax"]);
     // VCstem_c = paramsTransp["VCstem_c"];
     // VCstem_d = paramsTransp["VCstem_d"];
   } else if(transpirationMode == "Granier"){
@@ -296,126 +299,27 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
   //3. Carbon balance and growth
   double B_leaf_expanded, B_stem, B_fineroot;
   for(int j=0;j<numCohorts;j++){
-    //Respiratory biomass and C compartments
+    //3.1 Respiratory biomass and C compartments
     double B_leaf_expanded = leafCstructural(LAI_expanded[j],N[j],SLA[j]);
-    double B_sapwood;
-    //3.1 Live biomass and maximum C pool capacity
-    NumericVector compartments = carbonCompartments(SA[j], LAI_expanded[j], H[j], Z[j], N[j], SLA[j], WoodDensity[j], WoodC[j]);
-    B_leaf_expanded = compartments[0];
-    B_stem = compartments[1];
-    B_fineroot = compartments[2];
-    if(storagePool == "one") {
-      fastCstorage_max[j] = Cstoragepmax[j]*(B_leaf_expanded+B_stem+B_fineroot);
-    } else if(storagePool == "two") {
-      fastCstorage_max[j] = 0.05*(B_leaf_expanded+B_stem+B_fineroot);
-      slowCstorage_max[j] = std::max(slowCstorage_max[j],(Cstoragepmax[j]-0.05)*(B_leaf_expanded+B_stem+B_fineroot)); //Slow pool capacity cannot decrease
-    }
-    
-    //3.2 Respiration and photosynthesis 
-    double Agj = Ag[j]/(N[j]/10000.0); //Translate g C · m-2 to g C · ind-1
-    // double Anj = 0.0;
-    double QR = qResp(tday);
-    double Rj = (B_leaf_expanded*leaf_RR + B_stem*stem_RR + B_fineroot*root_RR)*QR;
-    
-    //3.3. Carbon balance, update of fast C pool and C available for growth
-    double growthAvailableC = 0.0;
-    if(storagePool=="none") {
-      growthAvailableC = std::max(0.0,Agj-Rj);
-    } else  {
-      growthAvailableC = std::max(0.0,fastCstorage[j]+(Agj-Rj));
-      fastCstorage[j] = growthAvailableC;
-    }
-    
-    //3.4 Growth in LAI_live and SA
-    double deltaSAturnover = (dailySAturnoverProportion/(1.0+15*exp(-0.01*H[j])))*SA[j];
-    double f_turgor = turgorGrowthFactor(psiCoh[j],-1.5);
-    double deltaSAgrowth = 0.0;
-    // if(f_turgor>0.0) { //Growth is possible
-    double costLA = 0.1*leafCperDry*(Al2As[j]/SLA[j]); //Construction cost in g C·cm-2 of sapwood
-    double costSA = WoodC[j]*(H[j]+Z[j])*WoodDensity[j];  //Construction cost in g C·cm-2 of sapwood
-    double costFR = costLA/2.5;
-    double cost = 1.3*(costLA+costSA+costFR);  //Construction cost in g C·cm-2 of sapwood (including 30% growth respiration)
-    double deltaSAavailable = growthAvailableC/cost;
-    double f_source = 1.0;
-    if(storagePool!="none") {
-      f_source = carbonGrowthFactor(fastCstorage[j]/fastCstorage_max[j], growthCarbonConcentrationThreshold);
-    } 
-    double f_temp = temperatureGrowthFactor(tday);
-    double deltaSAsink = RGRmax[j]*SA[j]*f_temp*f_turgor;
-    deltaSAgrowth = std::min(deltaSAsink*f_source, deltaSAavailable);
-    
-    //update pools
-    if(storagePool != "none") {
-      fastCstorage[j] = fastCstorage[j]-deltaSAgrowth*cost; //Remove construction costs from (fast) C pool
-    }
-    if(transpirationMode=="Granier"){
-      if(cavitationRefill!="total") { //If we track cavitation update proportion of embolized conduits
-        NumericVector pEmb =  Rcpp::as<Rcpp::NumericVector>(x["PLC"]);
-        pEmb[j] = pEmb[j]*((SA[j] - deltaSAturnover)/(SA[j] + deltaSAgrowth - deltaSAturnover));
-      }
+    double B_sapwood = sapwoodCstructural(SA[j], H[j], Z[j], WoodDensity[j], WoodC[j]);
+    double B_fineroots;
+    if(transpirationMode=="Sperry") { //Should be coupled to fine root conductance
+      B_fineroots = B_leaf_expanded/2.5;
+      // B_fineroots = sum(VGrhizo_kmax(j,_))/
     } else {
-      NumericMatrix PLCstem =  Rcpp::as<Rcpp::NumericMatrix>(x["PLCstem"]);
-      int nStemSegments = PLCstem.ncol();
-      for(int s=0;s<nStemSegments;s++) {
-        PLCstem(j,s) = PLCstem(j,s)*((SA[j] - deltaSAturnover)/(SA[j] + deltaSAgrowth - deltaSAturnover));
-      }
-      
+      B_fineroots = B_leaf_expanded/2.5;
     }
-    SA[j] = SA[j] + deltaSAgrowth - deltaSAturnover; //Update sapwood area
+    double ST_max_leaves = leafStarchCapacity(LAI_expanded[j],  N[j], SLA[j], 0.3);
+    double ST_volume_leaves = leafStorageVolume(LAI_expanded[j],  N[j], SLA[j], 0.3);
+    double ST_max_sapwood = sapwoodStarchCapacity(SA[j], H[j],Z[j],WoodDensity[j], 0.2);
+    double ST_volume_sapwood = sapwoodStorageVolume(SA[j], H[j],Z[j],WoodDensity[j], 0.2);
     
-    double leafDie = std::min((N[j]/10000.0)*(deltaSAturnover/10000.0)*Al2As[j], LAI_live[j]);
-    LAI_dead[j] += leafDie; //Update dead LAI
-    LAI_live[j] += (N[j]/10000.0)*((deltaSAgrowth-deltaSAturnover)/10000.0)*Al2As[j]; //Update live LAI
-    LAI_live[j] = std::max(LAI_live[j], 0.0); //Check negative values do not occur
-
-    //3.5 transfer between pools and constrain of C pools
-    if(storagePool == "one") {
-      fastCstorage[j] = std::max(0.0,std::min(fastCstorage[j], fastCstorage_max[j]));
-    } else if(storagePool == "two") {
-      //Relative transfer rate (maximum 5% of the source pool per day)
-      double reltransferRate = 0.05*storageTransferRelativeRate(fastCstorage[j], fastCstorage_max[j]);
-      if(reltransferRate>0.0) { //Transfer from fast to slow 
-        double transfer = std::min(reltransferRate*fastCstorage[j],(slowCstorage_max[j]-slowCstorage[j])*0.9);
-        fastCstorage[j] -= transfer;
-        slowCstorage[j] += transfer*0.9; //10% cost in respiration (not added to slow pool)
-      } else { //Transfer from slow to fast 
-        double transfer = std::min(-reltransferRate*slowCstorage[j],(fastCstorage_max[j]-fastCstorage[j])*0.9);
-        fastCstorage[j] += transfer*0.9; //10% cost in respiration (removed from what actually reaches fast pool)
-        slowCstorage[j] -= transfer;
-      }
-      //Trim pools to maximum capacity
-      fastCstorage[j] = std::max(0.0,std::min(fastCstorage[j], fastCstorage_max[j]));
-      slowCstorage[j] = std::max(0.0,std::min(slowCstorage[j], slowCstorage_max[j]));
-    }
-    
-    //3.8 Calculate defoliation if fast storage is low
-    if(storagePool!="none") {
-      double def = defoliationFraction(fastCstorage[j]/fastCstorage_max[j], growthCarbonConcentrationThreshold);
-      double maxLAI = (SA[j]*Al2As[j]/10000.0)*(N[j]/10000.0);
-      double defLAI = maxLAI * (1.0-def);
-      // Rcout<<defLAI<<" "<<LAI_live[j]<<"\n";
-      LAI_live[j] = std::min(LAI_live[j], defLAI);
-    }
-    
-    //3.7 Update stem conductance (Sperry mode)
-    if(transpirationMode=="Sperry") {
-      double al2as = (LAI_expanded[j]/(N[j]/10000.0))/(SA[j]/10000.0);
-      VCstem_kmax[j]=maximumStemHydraulicConductance(Kmax_stemxylem[j], al2as,H[j], taper);
-      // Rcout<<Al2As[j]<<" "<< al2as<<" "<<VCstem_kmax[j]<<"\n";
-    }
-    
-    //Output variables
-    PlantRespiration[j] = Rj*(N[j]/10000.0); //Scaled to cohort level: Translate g C · ind-1 to g C · m-2
-    if(storagePool=="one") {
-      PlantCstorageFast[j] = fastCstorage[j]/fastCstorage_max[j];
-    } else if(storagePool == "two") {
-      PlantCstorageFast[j] = fastCstorage[j]/fastCstorage_max[j];
-      PlantCstorageSlow[j] = slowCstorage[j]/slowCstorage_max[j];
-    }
-    PlantSA[j] = SA[j];
-    PlantLAIlive[j] = LAI_live[j];
-    PlantLAIdead[j] = LAI_dead[j];
-    PlantSAgrowth[j] = deltaSAgrowth;
+    //3.2 Leaf respiration and photosynthesis
+    double Agj = Ag[j]/(N[j]/10000.0); //Translate g C · m-2 to g C · ind-1
+    double QR = qResp(tday);
+    double LRj = B_leaf_expanded*leaf_RR*QR;
+                        
+ 
   }
   
   DataFrame df = DataFrame::create(_["PlantRespiration"] = PlantRespiration,

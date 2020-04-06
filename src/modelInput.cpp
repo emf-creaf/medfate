@@ -388,6 +388,37 @@ DataFrame paramsAllometries(DataFrame above, DataFrame SpParams) {
   return(paramsAllometriesdf);
 }
 
+DataFrame internalCarbonDataFrame(DataFrame above, bool growth) {
+  int numCohorts = above.nrow();
+  DataFrame df;
+  if(!growth) {
+    df = DataFrame::create(Named("Agday") = NumericVector(numCohorts, 0.0));
+  } else {
+    df = DataFrame::create(Named("Agday") = NumericVector(numCohorts, 0.0));
+  }
+  df.attr("row.names") = above.attr("row.names");
+  return(df);
+}  
+DataFrame internalWaterDataFrame(DataFrame above, String transpirationMode) {
+  int numCohorts = above.nrow();
+  DataFrame df;
+  if(transpirationMode=="Granier") {
+    df = DataFrame::create(Named("Eday") = NumericVector(numCohorts, 0.0),
+                           Named("PLC") = NumericVector(numCohorts, 0.0));
+  } else {
+    df = DataFrame::create(Named("Eday") = NumericVector(numCohorts, 0.0),
+                           Named("Einst") = NumericVector(numCohorts, 0.0),
+                           Named("psiRootCrown") = NumericVector(numCohorts, 0.0),
+                           Named("psiStem1") = NumericVector(numCohorts, 0.0),
+                           Named("psiStem2") = NumericVector(numCohorts, 0.0),
+                           Named("psiLeaf") = NumericVector(numCohorts, 0.0),
+                           Named("psiSympStem") = NumericVector(numCohorts, 0.0),
+                           Named("psiSympLeaf") = NumericVector(numCohorts, 0.0),
+                           Named("PLCstem") = NumericVector(numCohorts, 0.0));
+  }
+  df.attr("row.names") = above.attr("row.names");
+  return(df);
+}
 
 /**
  *  Prepare Soil Water Balance input
@@ -434,14 +465,13 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
                                          _["LAI_dead"] = LAI_dead);
   plantsdf.attr("row.names") = above.attr("row.names");
   
-
  
- NumericVector Wsoil = soil["W"];
- NumericMatrix Wpool = NumericMatrix(numCohorts, nlayers);
- Wpool.attr("dimnames") = V.attr("dimnames");
- for(int c=0;c<numCohorts;c++){
-   for(int l=0;l<nlayers;l++) Wpool(c,l) = Wsoil[l]; //Init from soil state
- }
+  NumericVector Wsoil = soil["W"];
+  NumericMatrix Wpool = NumericMatrix(numCohorts, nlayers);
+  Wpool.attr("dimnames") = V.attr("dimnames");
+  for(int c=0;c<numCohorts;c++){
+    for(int l=0;l<nlayers;l++) Wpool(c,l) = Wsoil[l]; //Init from soil state
+  }
  
   List input;
   if(transpirationMode=="Granier") {
@@ -457,7 +487,8 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     NumericVector pRootDisc = cohortNumericParameter(SP, SpParams, "pRootDisc");
     DataFrame paramsTranspdf = DataFrame::create(_["Psi_Extract"]=Psi_Extract,_["WUE"] = WUE,  _["pRootDisc"] = pRootDisc);
     paramsTranspdf.attr("row.names") = above.attr("row.names");
-    List below = List::create(_["V"] = V);
+    List below = List::create(_["V"] = V,
+                              _["W"] = Wpool);
 
     List paramsCanopy = List::create(_["gdd"] = 0);
     input = List::create(_["control"] = clone(control),
@@ -466,16 +497,9 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
                          _["above"] = plantsdf,
                          _["below"] = below,
                          _["paramsBase"] = paramsBasedf,
-                         _["paramsTransp"] = paramsTranspdf);
-    
-    NumericVector tvec =  NumericVector(numCohorts, 0.0);
-    tvec.attr("names") = above.attr("row.names");
-    input["Transpiration"] = tvec;
-    NumericVector pvec =  NumericVector(numCohorts, 0.0);
-    pvec.attr("names") = above.attr("row.names");
-    input["GrossPhotosynthesis"] = pvec;
-    input["PLC"] = NumericVector(numCohorts, 0.0);
-    input["W"] = Wpool;
+                         _["paramsTransp"] = paramsTranspdf,
+                         _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
+                         _["internalCarbon"] = internalCarbonDataFrame(above, false));
   } else if(transpirationMode =="Sperry"){
     
     //Base params
@@ -491,32 +515,18 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     DataFrame paramsWaterStoragedf = paramsWaterStorage(above, SpParams, paramsAnatomydf);
     DataFrame paramsTranspirationdf = paramsTranspiration(above, V, soil, SpParams,
                                                           paramsAnatomydf, control);
-    List below = paramsBelow(above, V, soil, 
-                             paramsTranspirationdf, control);
-    
-    NumericVector psiSympStem =  NumericVector(numCohorts, 0.0);
-    psiSympStem.attr("names") = above.attr("row.names");
-    NumericVector psiSympLeaf =  NumericVector(numCohorts, 0.0);
-    psiSympLeaf.attr("names") = above.attr("row.names");
-    NumericVector PLCstem =  NumericVector(numCohorts, 0.0);
-    PLCstem.attr("names") = above.attr("row.names");
-    NumericVector psiStem1 =  NumericVector(numCohorts, 0.0);
-    psiStem1.attr("names") = above.attr("row.names");
-    NumericVector psiStem2 =  NumericVector(numCohorts, 0.0);
-    psiStem2.attr("names") = above.attr("row.names");
-    NumericVector Einst = NumericVector(numCohorts, 0.0);
-    Einst.attr("names") = above.attr("row.names");
     NumericMatrix psiRhizo =  NumericMatrix(numCohorts, nlayers);
     psiRhizo.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
     std::fill(psiRhizo.begin(), psiRhizo.end(), 0.0);
-    NumericVector psiRootCrown = NumericVector(numCohorts, 0.0);
-    psiRootCrown.attr("names") = above.attr("row.names");
-    NumericVector psiLeaf = NumericVector(numCohorts, 0.0);
-    psiLeaf.attr("names") = above.attr("row.names");
     if(soilFunctions=="SX") {
       soilFunctions = "VG"; 
       warning("Soil pedotransfer functions set to Van Genuchten ('VG').");
     }
+    List below = paramsBelow(above, V, soil, 
+                             paramsTranspirationdf, control);
+    below["W"] = Wpool;
+    below["psiRhizo"] = psiRhizo;
+    
     List paramsCanopy = List::create(_["gdd"] = 0,_["Temp"] = NA_REAL);
     List ctl = clone(control);
     input = List::create(_["control"] = ctl,
@@ -527,24 +537,9 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
                          _["paramsBase"] = paramsBasedf,
                          _["paramsAnatomy"] = paramsAnatomydf,
                          _["paramsTransp"] = paramsTranspirationdf,
-                         _["paramsWaterStorage"] = paramsWaterStoragedf);
-    
-    NumericVector tvec =  NumericVector(numCohorts, 0.0);
-    tvec.attr("names") = above.attr("row.names");
-    input["Transpiration"] = tvec;
-    NumericVector pvec =  NumericVector(numCohorts, 0.0);
-    pvec.attr("names") = above.attr("row.names");
-    input["GrossPhotosynthesis"] = pvec;
-    input["PLCstem"] = PLCstem;
-    input["Einst"] = Einst;
-    input["psiRhizo"] = psiRhizo;
-    input["psiRootCrown"] = psiRootCrown;
-    input["psiSympStem"] = psiSympStem;
-    input["psiStem1"] = psiStem1;
-    input["psiStem2"] = psiStem2;
-    input["psiSympLeaf"] = psiSympLeaf;
-    input["psiLeaf"] = psiLeaf;
-    input["W"] = Wpool;
+                         _["paramsWaterStorage"] = paramsWaterStoragedf,
+                         _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
+                         _["internalCarbon"] = internalCarbonDataFrame(above, false));
   }
 
   input.attr("class") = CharacterVector::create("spwbInput","list");

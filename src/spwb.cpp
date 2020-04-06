@@ -437,10 +437,11 @@ void checkspwbInput(List x, List soil, String transpirationMode, String soilFunc
 void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER) {
   List can = x["canopy"];
   NumericVector Wsoil = soil["W"];
-  NumericMatrix Wpool = x["W"];
   NumericVector Temp = soil["Temp"];
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
+  List below = x["below"];
+  NumericMatrix Wpool = below["W"];
   int nlayers = Wsoil.size();
   int numCohorts = Wpool.nrow();
   
@@ -456,18 +457,21 @@ void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER
         Wpool(c,l) = 1.0;
       }
     }
+    DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
+    DataFrame internalCarbon = Rcpp::as<Rcpp::DataFrame>(x["internalCarbon"]);
+    
     if(transpirationMode=="Sperry") {
-      NumericVector psiRootCrown = Rcpp::as<Rcpp::NumericVector>(x["psiRootCrown"]);
-      NumericVector psiStem1 = Rcpp::as<Rcpp::NumericVector>(x["psiStem1"]);
-      NumericVector psiStem2 = Rcpp::as<Rcpp::NumericVector>(x["psiStem2"]);
-      NumericVector psiSympStem = Rcpp::as<Rcpp::NumericVector>(x["psiSympStem"]);
-      NumericVector psiSympLeaf = Rcpp::as<Rcpp::NumericVector>(x["psiSympLeaf"]);
-      NumericMatrix psiRhizo = Rcpp::as<Rcpp::NumericMatrix>(x["psiRhizo"]);
-      NumericVector psiLeaf = Rcpp::as<Rcpp::NumericVector>(x["psiLeaf"]);
-      NumericVector PLCstem = Rcpp::as<Rcpp::NumericVector>(x["PLCstem"]);
-      NumericVector Einst = Rcpp::as<Rcpp::NumericVector>(x["Einst"]);
-      NumericVector Transpiration = Rcpp::as<Rcpp::NumericVector>(x["Transpiration"]);
-      NumericVector Photosynthesis = Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
+      NumericMatrix psiRhizo = Rcpp::as<Rcpp::NumericMatrix>(below["psiRhizo"]);
+      NumericVector psiRootCrown = Rcpp::as<Rcpp::NumericVector>(internalWater["psiRootCrown"]);
+      NumericVector psiStem1 = Rcpp::as<Rcpp::NumericVector>(internalWater["psiStem1"]);
+      NumericVector psiStem2 = Rcpp::as<Rcpp::NumericVector>(internalWater["psiStem2"]);
+      NumericVector psiSympStem = Rcpp::as<Rcpp::NumericVector>(internalWater["psiSympStem"]);
+      NumericVector psiSympLeaf = Rcpp::as<Rcpp::NumericVector>(internalWater["psiSympLeaf"]);
+      NumericVector psiLeaf = Rcpp::as<Rcpp::NumericVector>(internalWater["psiLeaf"]);
+      NumericVector PLCstem = Rcpp::as<Rcpp::NumericVector>(internalWater["PLCstem"]);
+      NumericVector Einst = Rcpp::as<Rcpp::NumericVector>(internalWater["Einst"]);
+      NumericVector Eday = Rcpp::as<Rcpp::NumericVector>(internalWater["Eday"]);
+      NumericVector Agday = Rcpp::as<Rcpp::NumericVector>(internalCarbon["Agday"]);
       for(int i=0;i<psiLeaf.size();i++) {
         Einst[i] = 0.0;
         psiLeaf[i] = 0.0;
@@ -477,17 +481,17 @@ void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER
         psiRootCrown[i] = 0.0;
         psiSympLeaf[i] = 0.0;
         psiSympStem[i] = 0.0;
-        Transpiration[i] = 0.0;
-        Photosynthesis[i] = 0.0;
+        Eday[i] = 0.0;
+        Agday[i] = 0.0;
         for(int j=0;j<psiRhizo.ncol();j++) psiRhizo(i,j) = 0.0;
       }
     } else {
-      NumericVector Transpiration = Rcpp::as<Rcpp::NumericVector>(x["Transpiration"]);
-      NumericVector Photosynthesis = Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
-      NumericVector PLC = Rcpp::as<Rcpp::NumericVector>(x["PLC"]);
-      for(int i=0;i<Transpiration.length();i++) {
-        Transpiration[i] = 0.0;
-        Photosynthesis[i] = 0.0;
+      NumericVector Eday = Rcpp::as<Rcpp::NumericVector>(internalWater["Eday"]);
+      NumericVector Agday = Rcpp::as<Rcpp::NumericVector>(internalCarbon["Agday"]);
+      NumericVector PLC = Rcpp::as<Rcpp::NumericVector>(internalWater["PLC"]);
+      for(int i=0;i<Eday.length();i++) {
+        Eday[i] = 0.0;
+        Agday[i] = 0.0;
         PLC[i] = 0.0;
       }
     }
