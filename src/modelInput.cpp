@@ -388,17 +388,52 @@ DataFrame paramsAllometries(DataFrame above, DataFrame SpParams) {
   return(paramsAllometriesdf);
 }
 
-DataFrame internalCarbonDataFrame(DataFrame above, bool growth) {
+DataFrame internalCarbonDataFrame(DataFrame above, 
+                                  List below = R_NilValue,
+                                  DataFrame paramsAnatomydf = R_NilValue,
+                                  DataFrame paramsGrowthdf = R_NilValue) {
   int numCohorts = above.nrow();
+
+  
   DataFrame df;
-  if(!growth) {
+  if(Rf_isNull(paramsGrowthdf)) {
     df = DataFrame::create(Named("Agday") = NumericVector(numCohorts, 0.0));
   } else {
-    df = DataFrame::create(Named("Agday") = NumericVector(numCohorts, 0.0));
+    NumericVector WoodDensity = paramsAnatomydf["WoodDensity"];
+    NumericVector SLA = paramsAnatomydf["SLA"];
+    NumericVector Al2As = paramsAnatomydf["Al2As"];
+    
+    NumericVector WoodC = paramsGrowthdf["WoodC"];
+    NumericVector Cstoragepmax = paramsGrowthdf["Cstoragepmax"];
+    
+    NumericVector Z = below["Z"];
+    IntegerVector SP = above["SP"];
+    NumericVector LAI_live = above["LAI_live"];
+    NumericVector LAI_expanded = above["LAI_expanded"];
+    NumericVector LAI_dead = above["LAI_dead"];
+    NumericVector N = above["N"];
+    NumericVector DBH = above["DBH"];
+    NumericVector Cover = above["Cover"];
+    NumericVector H = above["H"];
+    NumericVector CR = above["CR"];
+    NumericVector SA = above["SA"];
+    
+    NumericVector slowCstorage(numCohorts), fastCstorage(numCohorts);
+    for(int c=0;c<numCohorts;c++){
+      NumericVector compartments = carbonCompartments(SA[c], LAI_expanded[c], H[c], 
+                                                      Z[c], N[c], SLA[c], WoodDensity[c], WoodC[c]);
+      slowCstorage[c] = 0.5*(Cstoragepmax[c]-0.05)*(compartments[0]+compartments[1]+compartments[2]); //Slow pool at 50%
+      fastCstorage[c] = 0.5*0.05*(compartments[0]+compartments[1]+compartments[2]); //Fast pool at 50%
+    }
+    df = DataFrame::create(Named("Agday") = NumericVector(numCohorts, 0.0),
+                           Named("fastCstorage") = fastCstorage,
+                           Named("slowCstorage") = slowCstorage);
   }
   df.attr("row.names") = above.attr("row.names");
   return(df);
 }  
+
+
 DataFrame internalWaterDataFrame(DataFrame above, String transpirationMode) {
   int numCohorts = above.nrow();
   DataFrame df;
@@ -499,7 +534,7 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
                          _["paramsBase"] = paramsBasedf,
                          _["paramsTransp"] = paramsTranspdf,
                          _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
-                         _["internalCarbon"] = internalCarbonDataFrame(above, false));
+                         _["internalCarbon"] = internalCarbonDataFrame(above));
   } else if(transpirationMode =="Sperry"){
     
     //Base params
@@ -539,7 +574,7 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
                          _["paramsTransp"] = paramsTranspirationdf,
                          _["paramsWaterStorage"] = paramsWaterStoragedf,
                          _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
-                         _["internalCarbon"] = internalCarbonDataFrame(above, false));
+                         _["internalCarbon"] = internalCarbonDataFrame(above));
   }
 
   input.attr("class") = CharacterVector::create("spwbInput","list");
@@ -572,9 +607,6 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   String soilFunctions = control["soilFunctions"]; 
   if((soilFunctions!="SX") & (soilFunctions!="VG")) stop("Wrong soil functions ('soilFunctions' should be either 'SX' or 'VG')");
   
-  String storagePool = control["storagePool"];
-  if((storagePool!="none") & (storagePool!="one")& (storagePool!="two")) stop("Wrong storage pool ('storagePool' should be 'none', 'one' or 'two')");
-
 
   
   DataFrame paramsAnatomydf = paramsAnatomy(above, SpParams);
@@ -583,9 +615,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   NumericVector Al2As = paramsAnatomydf["Al2As"];
   
   DataFrame paramsGrowthdf = paramsGrowth(above, SpParams);
-  NumericVector WoodC = paramsGrowthdf["WoodC"];
-  NumericVector Cstoragepmax = paramsGrowthdf["Cstoragepmax"];
-  
+
   
   DataFrame paramsAllometriesdf = paramsAllometries(above, SpParams);
   
@@ -618,33 +648,9 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   DataFrame cohortDescdf = DataFrame::create(_["SP"] = SP, _["Name"] = nsp);
   cohortDescdf.attr("row.names") = above.attr("row.names");
   
-  DataFrame plantsdf;
-  if(storagePool=="one") {
-    NumericVector fastCstorage(numCohorts);
-    for(int c=0;c<numCohorts;c++){
-      NumericVector compartments = carbonCompartments(SA[c], LAI_expanded[c], H[c], 
-                                                      Z[c], N[c], SLA[c], WoodDensity[c], WoodC[c]);
-      fastCstorage[c] = 0.5*Cstoragepmax[c]*(compartments[0]+compartments[1]+compartments[2]);//Pool at 50%
-    }
-    plantsdf = DataFrame::create(_["SP"]=SP, _["N"]=N,_["DBH"]=DBH, _["Cover"] = Cover, _["H"]=H, _["CR"]=CR,
-                                   _["LAI_live"]=LAI_live, _["LAI_expanded"]=LAI_expanded, _["LAI_dead"] = LAI_dead,  
-                                   _["SA"] = SA, _["fastCstorage"] = fastCstorage);
-  } else if(storagePool=="two") {
-    NumericVector slowCstorage(numCohorts), fastCstorage(numCohorts);
-    for(int c=0;c<numCohorts;c++){
-      NumericVector compartments = carbonCompartments(SA[c], LAI_expanded[c], H[c], 
-                                                      Z[c], N[c], SLA[c], WoodDensity[c], WoodC[c]);
-      slowCstorage[c] = 0.5*(Cstoragepmax[c]-0.05)*(compartments[0]+compartments[1]+compartments[2]); //Slow pool at 50%
-      fastCstorage[c] = 0.5*0.05*(compartments[0]+compartments[1]+compartments[2]); //Fast pool at 50%
-    }
-    plantsdf = DataFrame::create(_["SP"]=SP, _["N"]=N,_["DBH"]=DBH, _["Cover"] = Cover, _["H"]=H, _["CR"]=CR,
-                                 _["LAI_live"]=LAI_live, _["LAI_expanded"]=LAI_expanded, _["LAI_dead"] = LAI_dead,  
-                                   _["SA"] = SA, _["fastCstorage"] = fastCstorage, _["slowCstorage"] = slowCstorage);
-  } else {
-    plantsdf = DataFrame::create(_["SP"]=SP, _["N"]=N,_["DBH"]=DBH, _["Cover"] = Cover, _["H"]=H, _["CR"]=CR,
-                                 _["LAI_live"]=LAI_live, _["LAI_expanded"]=LAI_expanded, _["LAI_dead"] = LAI_dead,  
+  DataFrame plantsdf = DataFrame::create(_["SP"]=SP, _["N"]=N,_["DBH"]=DBH, _["Cover"] = Cover, _["H"]=H, _["CR"]=CR,
+                               _["LAI_live"]=LAI_live, _["LAI_expanded"]=LAI_expanded, _["LAI_dead"] = LAI_dead,  
                                  _["SA"] = SA);
-  }
   plantsdf.attr("row.names") = above.attr("row.names");
   
 
@@ -676,7 +682,8 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                          _["paramsGrowth"]= paramsGrowthdf,
                          _["paramsAllometries"] = paramsAllometriesdf,
                          _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
-                         _["internalCarbon"] = internalCarbonDataFrame(above, true));
+                         _["internalCarbon"] = internalCarbonDataFrame(plantsdf, below, 
+                                                         paramsAnatomydf, paramsGrowthdf));
   } else if(transpirationMode =="Sperry"){
     
     //Base params
@@ -698,6 +705,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     psiRhizo.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
     std::fill(psiRhizo.begin(), psiRhizo.end(), 0.0);
     below["psiRhizo"] = psiRhizo;
+    below["Wpool"] = Wpool;
     
     if(soilFunctions=="SX") {
       soilFunctions = "VG"; 
@@ -717,7 +725,8 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                          _["paramsGrowth"]= paramsGrowthdf,
                          _["paramsAllometries"] = paramsAllometriesdf,
                          _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
-                         _["internalCarbon"] = internalCarbonDataFrame(above, true));
+                         _["internalCarbon"] = internalCarbonDataFrame(plantsdf, below,
+                                                         paramsAnatomydf, paramsGrowthdf));
     
   } 
   
