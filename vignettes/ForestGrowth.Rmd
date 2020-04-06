@@ -142,11 +142,6 @@ Most of these parameters should normally be left to their default value. However
 
  1. Console output can be turned off by setting `verbose = FALSE`. 
  2. The complexity of the soil water balance calculations is controlled using `transpirationMode`. 
- 3. The consideration of a single (or two) carbon storage pool is controlled using `storagePool`.
- 
-```{r}
-control$storagePool = "two"
-```
 
 
 ### Growth input object

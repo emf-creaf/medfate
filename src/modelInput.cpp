@@ -669,7 +669,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     DataFrame paramsTranspdf = DataFrame::create(_["Psi_Extract"]=Psi_Extract,_["WUE"] = WUE, _["pRootDisc"] = pRootDisc);
     paramsTranspdf.attr("row.names") = above.attr("row.names");
     
-    List below = List::create( _["Z"]=Z,_["V"] = V);
+    List below = List::create( _["Z"]=Z,_["V"] = V,_["Wpool"] = Wpool);
     List paramsCanopy = List::create(_["gdd"] = 0);
     input = List::create(_["control"] = clone(control),
                          _["canopy"] = paramsCanopy,

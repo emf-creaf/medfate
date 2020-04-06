@@ -213,7 +213,6 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
   //Control params
   List control = x["control"];  
   
-  String storagePool = control["storagePool"];
   String transpirationMode = control["transpirationMode"];
   String cavitationRefill = control["cavitationRefill"];
   bool taper = control["taper"];
@@ -234,28 +233,29 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
   NumericVector LAI_expanded = above["LAI_expanded"];
   NumericVector LAI_dead = above["LAI_dead"];
   NumericVector SA = above["SA"];
-  NumericVector fastCstorage, slowCstorage;
-  if(storagePool=="one") {
-    fastCstorage = above["fastCstorage"];
-  } else if(storagePool=="two") {
-    fastCstorage = above["fastCstorage"];
-    slowCstorage = above["slowCstorage"];
-  }
+
   
   //Belowground parameters  
   List below = Rcpp::as<Rcpp::List>(x["below"]);
   NumericVector Z = Rcpp::as<Rcpp::NumericVector>(below["Z"]);
+  
+  //Internal state variables
+  List internalWater = Rcpp::as<Rcpp::List>(x["internalWater"]);
+  List internalCarbon = Rcpp::as<Rcpp::List>(x["internalCarbon"]);
+  NumericVector fastCstorage = internalCarbon["fastCstorage"];
+  NumericVector slowCstorage = internalCarbon["slowCstorage"];
   
   
   List stand = spwbOut["Stand"];
   List Plants = spwbOut["Plants"];
   
   //Recover module-communication state variables
-  NumericVector Ag =  Rcpp::as<Rcpp::NumericVector>(x["GrossPhotosynthesis"]);
-  NumericVector psiCoh;
+  NumericVector Ag, psiCoh;
   if(transpirationMode=="Granier") {
+    Ag =  Rcpp::as<Rcpp::NumericVector>(Plants["Photosynthesis"]);
     psiCoh =  Rcpp::as<Rcpp::NumericVector>(Plants["psi"]);  
   } else {
+    Ag =  Rcpp::as<Rcpp::NumericVector>(Plants["GrossPhotosynthesis"]);
     psiCoh =  clone(Rcpp::as<Rcpp::NumericVector>(x["psiLeaf"]));  
   }
   
@@ -338,7 +338,6 @@ DataFrame growthPipe(List x, List spwbOut, double tday) {
   //Control params
   List control = x["control"];  
   
-  String storagePool = control["storagePool"];
   String transpirationMode = control["transpirationMode"];
   String cavitationRefill = control["cavitationRefill"];
   bool taper = control["taper"];
@@ -348,7 +347,7 @@ DataFrame growthPipe(List x, List spwbOut, double tday) {
   NumericVector SP = cohorts["SP"];
   int numCohorts = SP.size();
   
-  //Aboveground parameters  
+  //Aboveground state variables  
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   NumericVector DBH = above["DBH"];
   NumericVector Cover = above["Cover"];
@@ -359,28 +358,28 @@ DataFrame growthPipe(List x, List spwbOut, double tday) {
   NumericVector LAI_expanded = above["LAI_expanded"];
   NumericVector LAI_dead = above["LAI_dead"];
   NumericVector SA = above["SA"];
-  NumericVector fastCstorage, slowCstorage;
-  if(storagePool=="one") {
-    fastCstorage = above["fastCstorage"];
-  } else if(storagePool=="two") {
-    fastCstorage = above["fastCstorage"];
-    slowCstorage = above["slowCstorage"];
-  }
   
   //Belowground parameters  
   List below = Rcpp::as<Rcpp::List>(x["below"]);
   NumericVector Z = Rcpp::as<Rcpp::NumericVector>(below["Z"]);
+  
+  //Internal state variables
+  List internalWater = Rcpp::as<Rcpp::List>(x["internalWater"]);
+  List internalCarbon = Rcpp::as<Rcpp::List>(x["internalCarbon"]);
+  NumericVector fastCstorage = internalCarbon["fastCstorage"];
+  NumericVector slowCstorage = internalCarbon["slowCstorage"];
   
   
   List stand = spwbOut["Stand"];
   List Plants = spwbOut["Plants"];
   
   //Recover module-communication state variables
-  NumericVector Ag =  Rcpp::as<Rcpp::NumericVector>(x["GrossPhotosynthesis"]);
-  NumericVector psiCoh;
+  NumericVector Ag, psiCoh;
   if(transpirationMode=="Granier") {
+    Ag =  Rcpp::as<Rcpp::NumericVector>(Plants["Photosynthesis"]);
     psiCoh =  Rcpp::as<Rcpp::NumericVector>(Plants["psi"]);  
   } else {
+    Ag =  Rcpp::as<Rcpp::NumericVector>(Plants["GrossPhotosynthesis"]);
     psiCoh =  clone(Rcpp::as<Rcpp::NumericVector>(x["psiLeaf"]));  
   }
   
@@ -427,12 +426,8 @@ DataFrame growthPipe(List x, List spwbOut, double tday) {
     B_leaf_expanded = compartments[0];
     B_stem = compartments[1];
     B_fineroot = compartments[2];
-    if(storagePool == "one") {
-      fastCstorage_max[j] = Cstoragepmax[j]*(B_leaf_expanded+B_stem+B_fineroot);
-    } else if(storagePool == "two") {
-      fastCstorage_max[j] = 0.05*(B_leaf_expanded+B_stem+B_fineroot);
-      slowCstorage_max[j] = std::max(slowCstorage_max[j],(Cstoragepmax[j]-0.05)*(B_leaf_expanded+B_stem+B_fineroot)); //Slow pool capacity cannot decrease
-    }
+    fastCstorage_max[j] = 0.05*(B_leaf_expanded+B_stem+B_fineroot);
+    slowCstorage_max[j] = std::max(slowCstorage_max[j],(Cstoragepmax[j]-0.05)*(B_leaf_expanded+B_stem+B_fineroot)); //Slow pool capacity cannot decrease
     
     //3.2 Respiration and photosynthesis 
     double Agj = Ag[j]/(N[j]/10000.0); //Translate g C · m-2 to g C · ind-1
@@ -442,12 +437,8 @@ DataFrame growthPipe(List x, List spwbOut, double tday) {
     
     //3.3. Carbon balance, update of fast C pool and C available for growth
     double growthAvailableC = 0.0;
-    if(storagePool=="none") {
-      growthAvailableC = std::max(0.0,Agj-Rj);
-    } else  {
-      growthAvailableC = std::max(0.0,fastCstorage[j]+(Agj-Rj));
-      fastCstorage[j] = growthAvailableC;
-    }
+    growthAvailableC = std::max(0.0,fastCstorage[j]+(Agj-Rj));
+    fastCstorage[j] = growthAvailableC;
     
     //3.4 Growth in LAI_live and SA
     double deltaSAturnover = (dailySAturnoverProportion/(1.0+15*exp(-0.01*H[j])))*SA[j];
@@ -460,17 +451,13 @@ DataFrame growthPipe(List x, List spwbOut, double tday) {
     double cost = 1.3*(costLA+costSA+costFR);  //Construction cost in g C·cm-2 of sapwood (including 30% growth respiration)
     double deltaSAavailable = growthAvailableC/cost;
     double f_source = 1.0;
-    if(storagePool!="none") {
-      f_source = carbonGrowthFactor(fastCstorage[j]/fastCstorage_max[j], growthCarbonConcentrationThreshold);
-    } 
+    f_source = carbonGrowthFactor(fastCstorage[j]/fastCstorage_max[j], growthCarbonConcentrationThreshold);
     double f_temp = temperatureGrowthFactor(tday);
     double deltaSAsink = RGRmax[j]*SA[j]*f_temp*f_turgor;
     deltaSAgrowth = std::min(deltaSAsink*f_source, deltaSAavailable);
     
     //update pools
-    if(storagePool != "none") {
-      fastCstorage[j] = fastCstorage[j]-deltaSAgrowth*cost; //Remove construction costs from (fast) C pool
-    }
+    fastCstorage[j] = fastCstorage[j]-deltaSAgrowth*cost; //Remove construction costs from (fast) C pool
     if(transpirationMode=="Granier"){
       if(cavitationRefill!="total") { //If we track cavitation update proportion of embolized conduits
         NumericVector pEmb =  Rcpp::as<Rcpp::NumericVector>(x["PLC"]);
@@ -492,33 +479,27 @@ DataFrame growthPipe(List x, List spwbOut, double tday) {
     LAI_live[j] = std::max(LAI_live[j], 0.0); //Check negative values do not occur
     
     //3.5 transfer between pools and constrain of C pools
-    if(storagePool == "one") {
-      fastCstorage[j] = std::max(0.0,std::min(fastCstorage[j], fastCstorage_max[j]));
-    } else if(storagePool == "two") {
-      //Relative transfer rate (maximum 5% of the source pool per day)
-      double reltransferRate = 0.05*storageTransferRelativeRate(fastCstorage[j], fastCstorage_max[j]);
-      if(reltransferRate>0.0) { //Transfer from fast to slow 
-        double transfer = std::min(reltransferRate*fastCstorage[j],(slowCstorage_max[j]-slowCstorage[j])*0.9);
-        fastCstorage[j] -= transfer;
-        slowCstorage[j] += transfer*0.9; //10% cost in respiration (not added to slow pool)
-      } else { //Transfer from slow to fast 
-        double transfer = std::min(-reltransferRate*slowCstorage[j],(fastCstorage_max[j]-fastCstorage[j])*0.9);
-        fastCstorage[j] += transfer*0.9; //10% cost in respiration (removed from what actually reaches fast pool)
-        slowCstorage[j] -= transfer;
-      }
-      //Trim pools to maximum capacity
-      fastCstorage[j] = std::max(0.0,std::min(fastCstorage[j], fastCstorage_max[j]));
-      slowCstorage[j] = std::max(0.0,std::min(slowCstorage[j], slowCstorage_max[j]));
+    //Relative transfer rate (maximum 5% of the source pool per day)
+    double reltransferRate = 0.05*storageTransferRelativeRate(fastCstorage[j], fastCstorage_max[j]);
+    if(reltransferRate>0.0) { //Transfer from fast to slow 
+      double transfer = std::min(reltransferRate*fastCstorage[j],(slowCstorage_max[j]-slowCstorage[j])*0.9);
+      fastCstorage[j] -= transfer;
+      slowCstorage[j] += transfer*0.9; //10% cost in respiration (not added to slow pool)
+    } else { //Transfer from slow to fast 
+      double transfer = std::min(-reltransferRate*slowCstorage[j],(fastCstorage_max[j]-fastCstorage[j])*0.9);
+      fastCstorage[j] += transfer*0.9; //10% cost in respiration (removed from what actually reaches fast pool)
+      slowCstorage[j] -= transfer;
     }
+    //Trim pools to maximum capacity
+    fastCstorage[j] = std::max(0.0,std::min(fastCstorage[j], fastCstorage_max[j]));
+    slowCstorage[j] = std::max(0.0,std::min(slowCstorage[j], slowCstorage_max[j]));
     
     //3.8 Calculate defoliation if fast storage is low
-    if(storagePool!="none") {
-      double def = defoliationFraction(fastCstorage[j]/fastCstorage_max[j], growthCarbonConcentrationThreshold);
-      double maxLAI = (SA[j]*Al2As[j]/10000.0)*(N[j]/10000.0);
-      double defLAI = maxLAI * (1.0-def);
-      // Rcout<<defLAI<<" "<<LAI_live[j]<<"\n";
-      LAI_live[j] = std::min(LAI_live[j], defLAI);
-    }
+    double def = defoliationFraction(fastCstorage[j]/fastCstorage_max[j], growthCarbonConcentrationThreshold);
+    double maxLAI = (SA[j]*Al2As[j]/10000.0)*(N[j]/10000.0);
+    double defLAI = maxLAI * (1.0-def);
+    // Rcout<<defLAI<<" "<<LAI_live[j]<<"\n";
+    LAI_live[j] = std::min(LAI_live[j], defLAI);
     
     //3.7 Update stem conductance (Sperry mode)
     if(transpirationMode=="Sperry") {
@@ -529,12 +510,8 @@ DataFrame growthPipe(List x, List spwbOut, double tday) {
     
     //Output variables
     PlantRespiration[j] = Rj*(N[j]/10000.0); //Scaled to cohort level: Translate g C · ind-1 to g C · m-2
-    if(storagePool=="one") {
-      PlantCstorageFast[j] = fastCstorage[j]/fastCstorage_max[j];
-    } else if(storagePool == "two") {
-      PlantCstorageFast[j] = fastCstorage[j]/fastCstorage_max[j];
-      PlantCstorageSlow[j] = slowCstorage[j]/slowCstorage_max[j];
-    }
+    PlantCstorageFast[j] = fastCstorage[j]/fastCstorage_max[j];
+    PlantCstorageSlow[j] = slowCstorage[j]/slowCstorage_max[j];
     PlantSA[j] = SA[j];
     PlantLAIlive[j] = LAI_live[j];
     PlantLAIdead[j] = LAI_dead[j];
@@ -571,7 +548,6 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   String transpirationMode = control["transpirationMode"];
   String soilFunctions = control["soilFunctions"];
   
-  String storagePool = control["storagePool"];
   bool verbose = control["verbose"];
   bool snowpack = control["snowpack"];
   String cavitationRefill = control["cavitationRefill"];
@@ -617,10 +593,14 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   NumericVector SA = above["SA"];
   int numCohorts = SP.size();
 
-  //Belowground parameters  
+  //Belowground state variables  
   List below = Rcpp::as<Rcpp::List>(x["below"]);
   NumericVector Z = Rcpp::as<Rcpp::NumericVector>(below["Z"]);
 
+  //Internal state variables
+  DataFrame internalWater = Rcpp::as<Rcpp::List>(x["internalWater"]);
+  DataFrame internalCarbon = Rcpp::as<Rcpp::List>(x["internalCarbon"]);
+  
   //Canpopy parameters
   List canopyParams = x["canopy"];
   
@@ -809,16 +789,19 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
     
     List Plants = s["Plants"];
     NumericVector EplantCoh = Plants["Transpiration"];
-    NumericVector AgplantCoh = Plants["GrossPhotosynthesis"];
+    if(transpirationMode=="Granier") {
+      PlantGrossPhotosynthesis(i,_) =  Rcpp::as<Rcpp::NumericVector>(Plants["Photosynthesis"]);
+    } else {
+      PlantGrossPhotosynthesis(i,_) =  Rcpp::as<Rcpp::NumericVector>(Plants["GrossPhotosynthesis"]);
+    }
     Eplantdays(i,_) = EplantVec;
-    PlantGrossPhotosynthesis(i,_) = AgplantCoh;
     PlantTranspiration(i,_) = EplantCoh;
     PlantStress(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["DDS"]);
     NumericVector psiCoh;
     if(transpirationMode=="Granier") {
       psiCoh =  Rcpp::as<Rcpp::NumericVector>(Plants["psi"]);  
     } else {
-      psiCoh =  clone(Rcpp::as<Rcpp::NumericVector>(x["psiLeaf"]));  
+      psiCoh =  clone(Rcpp::as<Rcpp::NumericVector>(internalWater["psiLeaf"]));  
     }
     PlantPsi(i,_) = psiCoh;
 

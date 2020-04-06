@@ -17,7 +17,7 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
             "Export", "LAI", "WTD",
             "PlantExtraction","PlantLAI",
             "PlantStress", "PlantPsi","PlantPhotosynthesis", "PlantTranspiration", "PlantWUE",
-            "PlantPhotosynthesisPerLeaf","PlantTranspirationPerLeaf")
+            "PhotosynthesisPerLeaf","TranspirationPerLeaf")
   if(transpMode=="Sperry") {
     TYPES = c("PET_Precipitation","PET_NetRain","Snow","Evapotranspiration",
               "SoilPsi","SoilTheta", "SoilRWC", "SoilVol", 
@@ -25,13 +25,13 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
               "PlantExtraction","HydraulicRedistribution",
               "PlantLAI",
               "SoilPlantConductance","PlantStress", 
-              "PlantPhotosynthesis", "PlantTranspiration","PlantWUE",
-              "PlantPhotosynthesisPerLeaf","PlantTranspirationPerLeaf", 
+              "PlantNetPhotosynthesis", "PlantGrossPhotosynthesis", "PlantTranspiration","PlantWUE",
+              "NetPhotosynthesisPerLeaf","GrossPhotosynthesisPerLeaf","TranspirationPerLeaf", 
               "LeafPsiMin", "LeafPsiMax", "LeafPsiMin_SL", "LeafPsiMax_SL", "LeafPsiMin_SH", "LeafPsiMax_SH",
               "StemPsi","RootPsi","StemPLC", "StemRWC", "LeafRWC", 
               "PlantWaterBalance",
-              "PlantAbsorbedSWR", "PlantAbsorbedSWRPerLeaf",
-              "PlantAbsorbedLWR", "PlantAbsorbedLWRPerLeaf",
+              "PlantAbsorbedSWR", "AbsorbedSWRPerLeaf",
+              "PlantAbsorbedLWR", "AbsorbedLWRPerLeaf",
               "AirTemperature","SoilTemperature", "CanopyTemperature",
               "CanopyEnergyBalance", "SoilEnergyBalance")
   } 
@@ -163,19 +163,19 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
   TYPES = c("SoilPsi","SoilTheta", "SoilRWC",
             "PlantExtraction","PlantLAI",
             "PlantStress", "PlantPsi","PlantPhotosynthesis", "PlantTranspiration", "PlantWUE",
-            "PlantPhotosynthesisPerLeaf","PlantTranspirationPerLeaf")
+            "PhotosynthesisPerLeaf","TranspirationPerLeaf")
   if(transpMode=="Sperry") {
     TYPES = c("SoilPsi","SoilTheta", "SoilRWC",
               "PlantExtraction","HydraulicRedistribution",
               "PlantLAI",
               "SoilPlantConductance","PlantStress", 
-              "PlantPhotosynthesis", "PlantTranspiration","PlantWUE",
-              "PlantPhotosynthesisPerLeaf","PlantTranspirationPerLeaf", 
+              "PlantNetPhotosynthesis", "PlantGrossPhotosynthesis", "PlantTranspiration","PlantWUE",
+              "NetPhotosynthesisPerLeaf","GrossPhotosynthesisPerLeaf","TranspirationPerLeaf", 
               "LeafPsiMin", "LeafPsiMax", "LeafPsiMin_SL", "LeafPsiMax_SL", "LeafPsiMin_SH", "LeafPsiMax_SH",
               "StemPsi","RootPsi","StemPLC", "StemRWC", "LeafRWC", 
               "PlantWaterBalance",
-              "PlantAbsorbedSWR", "PlantAbsorbedSWRPerLeaf",
-              "PlantAbsorbedLWR", "PlantAbsorbedLWRPerLeaf",
+              "PlantAbsorbedSWR", "AbsorbedSWRPerLeaf",
+              "PlantAbsorbedLWR", "AbsorbedLWRPerLeaf",
               "AirTemperature","SoilTemperature", "CanopyTemperature",
               "CanopyEnergyBalance", "SoilEnergyBalance")
   } 
@@ -416,7 +416,23 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(is.null(ylab)) ylab = expression(paste("Plant photosynthesis   ",(g*C%.%m^{-2})))
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
-  else if(type=="PlantPhotosynthesisPerLeaf") {
+  else if(type=="PlantNetPhotosynthesis") {
+    df = x$PlantNetPhotosynthesis
+    if(bySpecies) {
+      df = t(apply(df,1, tapply, input$cohorts$Name, sum, na.rm=T))
+    } 
+    if(is.null(ylab)) ylab = expression(paste("Plant net photosynthesis   ",(g*C%.%m^{-2})))
+    return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab = ylab, ylim = ylim))
+  } 
+  else if(type=="PlantGrossPhotosynthesis") {
+    df = x$PlantGrossPhotosynthesis
+    if(bySpecies) {
+      df = t(apply(df,1, tapply, input$cohorts$Name, sum, na.rm=T))
+    } 
+    if(is.null(ylab)) ylab = expression(paste("Plant gross photosynthesis   ",(g*C%.%m^{-2})))
+    return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab = ylab, ylim = ylim))
+  } 
+  else if(type=="PhotosynthesisPerLeaf") {
     df = x$PlantPhotosynthesis
     if(bySpecies) {
       m1 = apply(df,1, tapply, input$cohorts$Name, sum, na.rm=T)
@@ -426,11 +442,38 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       df = df/x$PlantLAI
       df[x$PlantLAI==0] = NA
     }
-    if(is.null(ylab)) ylab = expression(paste("Plant photosynthesis per leaf area   ",(g*C%.%m^{-2})))
+    if(is.null(ylab)) ylab = expression(paste("Photosynthesis per leaf area   ",(g*C%.%m^{-2})))
+    return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab = ylab, ylim = ylim))
+  } 
+  else if(type=="GrossPhotosynthesisPerLeaf") {
+    df = x$PlantGrossPhotosynthesis
+    if(bySpecies) {
+      m1 = apply(df,1, tapply, input$cohorts$Name, sum, na.rm=T)
+      lai1 = apply(x$PlantLAI,1,tapply, input$cohorts$Name, sum, na.rm=T)
+      df = t(m1/lai1)
+    } else {
+      df = df/x$PlantLAI
+      df[x$PlantLAI==0] = NA
+    }
+    if(is.null(ylab)) ylab = expression(paste("Gross photosynthesis per leaf area   ",(g*C%.%m^{-2})))
+    return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab = ylab, ylim = ylim))
+  } 
+  else if(type=="NetPhotosynthesisPerLeaf") {
+    df = x$PlantNetPhotosynthesis
+    if(bySpecies) {
+      m1 = apply(df,1, tapply, input$cohorts$Name, sum, na.rm=T)
+      lai1 = apply(x$PlantLAI,1,tapply, input$cohorts$Name, sum, na.rm=T)
+      df = t(m1/lai1)
+    } else {
+      df = df/x$PlantLAI
+      df[x$PlantLAI==0] = NA
+    }
+    if(is.null(ylab)) ylab = expression(paste("Net photosynthesis per leaf area   ",(g*C%.%m^{-2})))
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="PlantWUE") {
-    OM = x$PlantPhotosynthesis/x$PlantTranspiration
+    if("PlantPhotosynthesis" %in% names(x)) OM = x$PlantPhotosynthesis/x$PlantTranspiration
+    else OM = x$PlantNetPhotosynthesis/x$PlantTranspiration
     if(bySpecies) {
       OM = t(apply(OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
     } 
@@ -445,7 +488,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(is.null(ylab)) ylab = expression(paste("Plant absorbed SWR  ",(MJ%.%m^{-2})))
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
-  else if(type=="PlantAbsorbedSWRPerLeaf") {
+  else if(type=="AbsorbedSWRPerLeaf") {
     df = x$PlantAbsorbedSWR
     if(bySpecies) {
       m1 = apply(df,1, tapply, input$cohorts$Name, sum, na.rm=T)
@@ -455,7 +498,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       df = df/x$PlantLAI
       df[x$PlantLAI==0] = NA
     }
-    if(is.null(ylab)) ylab = expression(paste("Plant absorbed SWR per leaf area  ",(MJ%.%m^{-2})))
+    if(is.null(ylab)) ylab = expression(paste("Absorbed SWR per leaf area  ",(MJ%.%m^{-2})))
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="PlantAbsorbedLWR") {
@@ -466,7 +509,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(is.null(ylab)) ylab = expression(paste("Plant absorbed LWR  ",(MJ%.%m^{-2})))
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
-  else if(type=="PlantAbsorbedLWRPerLeaf") {
+  else if(type=="AbsorbedLWRPerLeaf") {
     df = x$PlantAbsorbedLWR
     if(bySpecies) {
       m1 = apply(df,1, tapply, input$cohorts$Name, sum, na.rm=T)
@@ -476,7 +519,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       df = df/x$PlantLAI
       df[x$PlantLAI==0] = NA
     }
-    if(is.null(ylab)) ylab = expression(paste("Plant absorbed LWR per leaf area  ",(MJ%.%m^{-2})))
+    if(is.null(ylab)) ylab = expression(paste("Absorbed LWR per leaf area  ",(MJ%.%m^{-2})))
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="AirTemperature") {
