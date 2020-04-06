@@ -2398,6 +2398,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// resetInputs
+void resetInputs(List x, List soil, List from, int day);
+RcppExport SEXP _medfate_resetInputs(SEXP xSEXP, SEXP soilSEXP, SEXP fromSEXP, SEXP daySEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< List >::type from(fromSEXP);
+    Rcpp::traits::input_parameter< int >::type day(daySEXP);
+    resetInputs(x, soil, from, day);
+    return R_NilValue;
+END_RCPP
+}
 // gdd
 NumericVector gdd(IntegerVector DOY, NumericVector Temp, double Tbase, double cum);
 RcppExport SEXP _medfate_gdd(SEXP DOYSEXP, SEXP TempSEXP, SEXP TbaseSEXP, SEXP cumSEXP) {
@@ -3628,42 +3641,6 @@ RcppExport SEXP _medfate_spwbDay(SEXP xSEXP, SEXP soilSEXP, SEXP dateSEXP, SEXP 
     UNPROTECT(1);
     return rcpp_result_gen;
 }
-// resetInputs
-void resetInputs(List x, List soil, List from, int day);
-static SEXP _medfate_resetInputs_try(SEXP xSEXP, SEXP soilSEXP, SEXP fromSEXP, SEXP daySEXP) {
-BEGIN_RCPP
-    Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
-    Rcpp::traits::input_parameter< List >::type from(fromSEXP);
-    Rcpp::traits::input_parameter< int >::type day(daySEXP);
-    resetInputs(x, soil, from, day);
-    return R_NilValue;
-END_RCPP_RETURN_ERROR
-}
-RcppExport SEXP _medfate_resetInputs(SEXP xSEXP, SEXP soilSEXP, SEXP fromSEXP, SEXP daySEXP) {
-    SEXP rcpp_result_gen;
-    {
-        Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_medfate_resetInputs_try(xSEXP, soilSEXP, fromSEXP, daySEXP));
-    }
-    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
-    if (rcpp_isInterrupt_gen) {
-        UNPROTECT(1);
-        Rf_onintr();
-    }
-    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
-    if (rcpp_isLongjump_gen) {
-        Rcpp::internal::resumeJump(rcpp_result_gen);
-    }
-    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
-    if (rcpp_isError_gen) {
-        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
-        UNPROTECT(1);
-        Rf_error(CHAR(rcpp_msgSEXP_gen));
-    }
-    UNPROTECT(1);
-    return rcpp_result_gen;
-}
 // spwb
 List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation, double slope, double aspect);
 static SEXP _medfate_spwb_try(SEXP xSEXP, SEXP soilSEXP, SEXP meteoSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP) {
@@ -4054,7 +4031,6 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("NumericVector(*soil_thermalCapacity)(List,String)");
         signatures.insert("NumericVector(*soil_thermalConductivity)(List,String)");
         signatures.insert("List(*spwb_day)(List,List,CharacterVector,double,double,double,double,double,double,double,double,double,double,double,double)");
-        signatures.insert("void(*spwb_resetInputs)(List,List,List,int)");
         signatures.insert("List(*spwb)(List,List,DataFrame,double,double,double,double)");
         signatures.insert("List(*pwb)(List,List,DataFrame,NumericMatrix,double,double,double,double,NumericVector,NumericVector,NumericVector)");
     }
@@ -4098,7 +4074,6 @@ RcppExport SEXP _medfate_RcppExport_registerCCallable() {
     R_RegisterCCallable("medfate", "_medfate_soil_thermalCapacity", (DL_FUNC)_medfate_thermalCapacity_try);
     R_RegisterCCallable("medfate", "_medfate_soil_thermalConductivity", (DL_FUNC)_medfate_thermalConductivity_try);
     R_RegisterCCallable("medfate", "_medfate_spwb_day", (DL_FUNC)_medfate_spwbDay_try);
-    R_RegisterCCallable("medfate", "_medfate_spwb_resetInputs", (DL_FUNC)_medfate_resetInputs_try);
     R_RegisterCCallable("medfate", "_medfate_spwb", (DL_FUNC)_medfate_spwb_try);
     R_RegisterCCallable("medfate", "_medfate_pwb", (DL_FUNC)_medfate_pwb_try);
     R_RegisterCCallable("medfate", "_medfate_RcppExport_validate", (DL_FUNC)_medfate_RcppExport_validate);
@@ -4249,6 +4224,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_growthInput", (DL_FUNC) &_medfate_growthInput, 6},
     {"_medfate_forest2spwbInput", (DL_FUNC) &_medfate_forest2spwbInput, 4},
     {"_medfate_forest2growthInput", (DL_FUNC) &_medfate_forest2growthInput, 4},
+    {"_medfate_resetInputs", (DL_FUNC) &_medfate_resetInputs, 4},
     {"_medfate_gdd", (DL_FUNC) &_medfate_gdd, 4},
     {"_medfate_leafDevelopmentStatus", (DL_FUNC) &_medfate_leafDevelopmentStatus, 2},
     {"_medfate_updateLeaves", (DL_FUNC) &_medfate_updateLeaves, 5},
@@ -4294,7 +4270,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_thermalCapacity", (DL_FUNC) &_medfate_thermalCapacity, 2},
     {"_medfate_thermalConductivity", (DL_FUNC) &_medfate_thermalConductivity, 2},
     {"_medfate_spwbDay", (DL_FUNC) &_medfate_spwbDay, 15},
-    {"_medfate_resetInputs", (DL_FUNC) &_medfate_resetInputs, 4},
     {"_medfate_spwb", (DL_FUNC) &_medfate_spwb, 7},
     {"_medfate_pwb", (DL_FUNC) &_medfate_pwb, 11},
     {"_medfate_osmoticWaterPotential", (DL_FUNC) &_medfate_osmoticWaterPotential, 2},

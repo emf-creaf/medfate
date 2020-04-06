@@ -70,7 +70,7 @@ spwb_sensitivity<-function(x, soil, meteo,
     else {
       xi[[paramType]][[paramName]][cohort] = xi[[paramType]][[paramName]][cohort]*f
     }
-    spwb_resetInputs(xi, soil)
+    resetInputs(xi, soil)
     l[[i]] = spwb(xi, soil, meteo, ...)
   }
   cat("\n")

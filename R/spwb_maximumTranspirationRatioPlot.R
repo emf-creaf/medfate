@@ -71,7 +71,7 @@ spwb_maximumTranspirationRatioPlot<-function(x, soil,  meteo, latitude, elevatio
       xlai = xIni
       xlai$above$LAI_live = xlai$above$LAI_live*LAIComp/sum(xlai$above$LAI_live)
       xlai$above$LAI_expanded = xlai$above$LAI_live
-      spwb_resetInputs(xlai, s)
+      resetInputs(xlai, s)
       W = matrix(1, nrow=ndays, ncol = length(s$W))
       pwb_res[[j]] = pwb(xlai,s,meteo,W, latitude = latitude, elevation = elevation, slope = slope, aspect = aspect)
       Tmax[,j] = pwb_res[[j]]$WaterBalance$Transpiration
@@ -98,7 +98,7 @@ spwb_maximumTranspirationRatioPlot<-function(x, soil,  meteo, latitude, elevatio
     xlai = xIni
     xlai$above$LAI_live = xlai$above$LAI_live*LAIComp/sum(xlai$above$LAI_live)
     xlai$above$LAI_expanded = xlai$above$LAI_live
-    spwb_resetInputs(xlai, s)
+    resetInputs(xlai, s)
     W = matrix(1, nrow=ndays, ncol = length(s$W))
     pwb_res[[j]] = pwb(xlai,s,meteo,W, latitude = latitude, elevation = elevation)
     Tmax_all[,j] = pwb_res[[j]]$WaterBalance$Transpiration

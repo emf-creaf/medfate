@@ -488,7 +488,7 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     DataFrame paramsTranspdf = DataFrame::create(_["Psi_Extract"]=Psi_Extract,_["WUE"] = WUE,  _["pRootDisc"] = pRootDisc);
     paramsTranspdf.attr("row.names") = above.attr("row.names");
     List below = List::create(_["V"] = V,
-                              _["W"] = Wpool);
+                              _["Wpool"] = Wpool);
 
     List paramsCanopy = List::create(_["gdd"] = 0);
     input = List::create(_["control"] = clone(control),
@@ -524,7 +524,7 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     }
     List below = paramsBelow(above, V, soil, 
                              paramsTranspirationdf, control);
-    below["W"] = Wpool;
+    below["Wpool"] = Wpool;
     below["psiRhizo"] = psiRhizo;
     
     List paramsCanopy = List::create(_["gdd"] = 0,_["Temp"] = NA_REAL);
@@ -674,18 +674,9 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                          _["paramsAnatomy"] = paramsAnatomydf,
                          _["paramsTransp"] = paramsTranspdf,
                          _["paramsGrowth"]= paramsGrowthdf,
-                         _["paramsAllometries"] = paramsAllometriesdf);
-    
-    NumericVector tvec =  NumericVector(numCohorts, 0.0);
-    tvec.attr("names") = above.attr("row.names");
-    input["Transpiration"] = tvec;
-    NumericVector pvec =  NumericVector(numCohorts, 0.0);
-    pvec.attr("names") = above.attr("row.names");
-    input["GrossPhotosynthesis"] = pvec;
-    NumericVector cvec =  NumericVector(numCohorts, 0.0);
-    cvec.attr("names") = above.attr("row.names");
-    input["PLC"] = cvec;
-    input["W"] = Wpool;
+                         _["paramsAllometries"] = paramsAllometriesdf,
+                         _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
+                         _["internalCarbon"] = internalCarbonDataFrame(above, true));
   } else if(transpirationMode =="Sperry"){
     
     //Base params
@@ -703,25 +694,10 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     List below = paramsBelowZ(above, V, Z, soil, 
                              paramsTranspirationdf, control);
     
-    NumericVector psiSympStem =  NumericVector(numCohorts, 0.0);
-    psiSympStem.attr("names") = above.attr("row.names");
-    NumericVector psiSympLeaf =  NumericVector(numCohorts, 0.0);
-    psiSympLeaf.attr("names") = above.attr("row.names");
-    NumericVector PLCstem =  NumericVector(numCohorts, 0.0);
-    PLCstem.attr("names") = above.attr("row.names");
-    NumericVector psiStem1 =  NumericVector(numCohorts, 0.0);
-    psiStem1.attr("names") = above.attr("row.names");
-    NumericVector psiStem2 =  NumericVector(numCohorts, 0.0);
-    psiStem2.attr("names") = above.attr("row.names");
-    NumericVector Einst = NumericVector(numCohorts, 0.0);
-    Einst.attr("names") = above.attr("row.names");
     NumericMatrix psiRhizo =  NumericMatrix(numCohorts, nlayers);
     psiRhizo.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
     std::fill(psiRhizo.begin(), psiRhizo.end(), 0.0);
-    NumericVector psiRootCrown = NumericVector(numCohorts, 0.0);
-    psiRootCrown.attr("names") = above.attr("row.names");
-    NumericVector psiLeaf = NumericVector(numCohorts, 0.0);
-    psiLeaf.attr("names") = above.attr("row.names");
+    below["psiRhizo"] = psiRhizo;
     
     if(soilFunctions=="SX") {
       soilFunctions = "VG"; 
@@ -739,24 +715,10 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                          _["paramsTransp"] = paramsTranspirationdf,
                          _["paramsWaterStorage"] = paramsWaterStoragedf,
                          _["paramsGrowth"]= paramsGrowthdf,
-                         _["paramsAllometries"] = paramsAllometriesdf);
+                         _["paramsAllometries"] = paramsAllometriesdf,
+                         _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
+                         _["internalCarbon"] = internalCarbonDataFrame(above, true));
     
-    NumericVector tvec =  NumericVector(numCohorts, 0.0);
-    tvec.attr("names") = above.attr("row.names");
-    input["Transpiration"] = tvec;
-    NumericVector pvec =  NumericVector(numCohorts, 0.0);
-    pvec.attr("names") = above.attr("row.names");
-    input["GrossPhotosynthesis"] = pvec;
-    input["PLCstem"] = PLCstem;
-    input["Einst"] = Einst;
-    input["psiRhizo"] = psiRhizo;
-    input["psiRootCrown"] = psiRootCrown;
-    input["psiSympStem"] = psiSympStem;
-    input["psiStem1"] = psiStem1;
-    input["psiStem2"] = psiStem2;
-    input["psiSympLeaf"] = psiSympLeaf;
-    input["psiLeaf"] = psiLeaf;
-    input["W"] = Wpool;
   } 
   
   input.attr("class") = CharacterVector::create("growthInput","list");
@@ -794,4 +756,118 @@ List forest2growthInput(List x, List soil, DataFrame SpParams, List control) {
   }
   DataFrame above = forest2aboveground(x, SpParams, NA_REAL);
   return(growthInput(above,  Z, V, soil, SpParams, control));
+}
+
+// [[Rcpp::export("resetInputs")]]
+void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER) {
+  List can = x["canopy"];
+  NumericVector Wsoil = soil["W"];
+  NumericVector Temp = soil["Temp"];
+  List control = x["control"];
+  String transpirationMode = control["transpirationMode"];
+  List below = x["below"];
+  NumericMatrix Wpool = below["Wpool"];
+  int nlayers = Wsoil.size();
+  int numCohorts = Wpool.nrow();
+  
+  if(Rf_isNull(from) || from.size()==0) {
+    can["gdd"] = 0.0;
+    can["Temp"] = NA_REAL;
+    for(int i=0;i<nlayers;i++) {
+      Wsoil[i] = 1.0; //Defaults to soil at field capacity
+      Temp[i] = NA_REAL;
+    }
+    for(int c=0;c<numCohorts;c++) {
+      for(int l=0;l<nlayers;l++) {
+        Wpool(c,l) = 1.0;
+      }
+    }
+    DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
+    DataFrame internalCarbon = Rcpp::as<Rcpp::DataFrame>(x["internalCarbon"]);
+    
+    if(transpirationMode=="Sperry") {
+      NumericMatrix psiRhizo = Rcpp::as<Rcpp::NumericMatrix>(below["psiRhizo"]);
+      NumericVector psiRootCrown = Rcpp::as<Rcpp::NumericVector>(internalWater["psiRootCrown"]);
+      NumericVector psiStem1 = Rcpp::as<Rcpp::NumericVector>(internalWater["psiStem1"]);
+      NumericVector psiStem2 = Rcpp::as<Rcpp::NumericVector>(internalWater["psiStem2"]);
+      NumericVector psiSympStem = Rcpp::as<Rcpp::NumericVector>(internalWater["psiSympStem"]);
+      NumericVector psiSympLeaf = Rcpp::as<Rcpp::NumericVector>(internalWater["psiSympLeaf"]);
+      NumericVector psiLeaf = Rcpp::as<Rcpp::NumericVector>(internalWater["psiLeaf"]);
+      NumericVector PLCstem = Rcpp::as<Rcpp::NumericVector>(internalWater["PLCstem"]);
+      NumericVector Einst = Rcpp::as<Rcpp::NumericVector>(internalWater["Einst"]);
+      NumericVector Eday = Rcpp::as<Rcpp::NumericVector>(internalWater["Eday"]);
+      NumericVector Agday = Rcpp::as<Rcpp::NumericVector>(internalCarbon["Agday"]);
+      for(int i=0;i<psiLeaf.size();i++) {
+        Einst[i] = 0.0;
+        psiLeaf[i] = 0.0;
+        PLCstem[i] = 0.0;
+        psiStem1[i] = 0.0;
+        psiStem2[i] = 0.0;
+        psiRootCrown[i] = 0.0;
+        psiSympLeaf[i] = 0.0;
+        psiSympStem[i] = 0.0;
+        Eday[i] = 0.0;
+        Agday[i] = 0.0;
+        for(int j=0;j<psiRhizo.ncol();j++) psiRhizo(i,j) = 0.0;
+      }
+    } else {
+      NumericVector Eday = Rcpp::as<Rcpp::NumericVector>(internalWater["Eday"]);
+      NumericVector Agday = Rcpp::as<Rcpp::NumericVector>(internalCarbon["Agday"]);
+      NumericVector PLC = Rcpp::as<Rcpp::NumericVector>(internalWater["PLC"]);
+      for(int i=0;i<Eday.length();i++) {
+        Eday[i] = 0.0;
+        Agday[i] = 0.0;
+        PLC[i] = 0.0;
+      }
+    }
+    
+  } else {
+    if(IntegerVector::is_na(day)) day = 0;
+    else day = day-1; //Input will be 1 for first day
+    DataFrame DWB = Rcpp::as<Rcpp::DataFrame>(from["WaterBalance"]);
+    DataFrame SWB = Rcpp::as<Rcpp::DataFrame>(from["Soil"]);
+    NumericVector GDD = DWB["GDD"];
+    can["gdd"] = GDD[day];
+    can["Temp"] = NA_REAL;
+    for(int i=0;i<nlayers;i++) {
+      Wsoil[i] = Rcpp::as<Rcpp::NumericVector>(SWB[i])[day];
+      //TO DO: STORE/RECOVER SOIL LAYER TEMPERATURE?
+      Temp[i] = NA_REAL;
+    }
+    //Assumes soil pools are equal to the overal soil (soil pool states are not stored)
+    for(int c=0;c<numCohorts;c++) {
+      for(int l=0;l<nlayers;l++) {
+        Wpool(c,l) = Wsoil[l];
+      }
+    }
+    NumericMatrix fromPLC = Rcpp::as<Rcpp::NumericMatrix>(from["PlantStress"]);
+    NumericMatrix fromRootPsi = Rcpp::as<Rcpp::NumericMatrix>(from["RootPsi"]);
+    NumericMatrix fromLeafPsiMin = Rcpp::as<Rcpp::NumericMatrix>(from["LeafPsiMin"]);
+    NumericMatrix fromStemPsi = Rcpp::as<Rcpp::NumericMatrix>(from["StemPsi"]);
+    NumericMatrix fromRWCstem = Rcpp::as<Rcpp::NumericMatrix>(from["StemRWC"]);
+    NumericMatrix fromRWCleaf = Rcpp::as<Rcpp::NumericMatrix>(from["LeafRWC"]);
+    
+    NumericVector psiRootCrown = Rcpp::as<Rcpp::NumericVector>(x["psiRootCrown"]);
+    NumericMatrix psiStem = Rcpp::as<Rcpp::NumericMatrix>(x["psiStem"]);
+    NumericVector psiLeaf = Rcpp::as<Rcpp::NumericVector>(x["psiLeaf"]);
+    NumericMatrix PLCstem = Rcpp::as<Rcpp::NumericMatrix>(x["PLCstem"]);
+    NumericMatrix RWCsympstem = Rcpp::as<Rcpp::NumericMatrix>(x["RWCsympstem"]);
+    NumericVector RWCsympleaf = Rcpp::as<Rcpp::NumericVector>(x["RWCsympleaf"]);
+    NumericVector Einst = Rcpp::as<Rcpp::NumericVector>(x["Einst"]);
+    NumericVector Transpiration = Rcpp::as<Rcpp::NumericVector>(x["Transpiration"]);
+    NumericVector Photosynthesis = Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
+    for(int i=0;i<PLCstem.nrow();i++) {
+      Einst[i] = 0.0;
+      Transpiration[i] = 0.0;
+      Photosynthesis[i] = 0.0;
+      psiRootCrown[i] = fromRootPsi(day,i);
+      psiLeaf[i] = fromLeafPsiMin(day,i);
+      RWCsympleaf[i] = fromRWCleaf(day,i);
+      for(int j=0;j<PLCstem.ncol();j++) {
+        psiStem(i,j) = fromStemPsi(day,i);
+        PLCstem(i,j) = fromPLC(day,i); 
+        RWCsympstem(i,j) = fromRWCstem(day,i); 
+      }
+    }
+  }
 }

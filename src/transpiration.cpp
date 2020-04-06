@@ -176,7 +176,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   NumericMatrix VGrhizo_kmax= Rcpp::as<Rcpp::NumericMatrix>(below["VGrhizo_kmax"]);
   
   //Water pools
-  NumericMatrix Wpool = Rcpp::as<Rcpp::NumericMatrix>(x["W"]);
+  NumericMatrix Wpool = Rcpp::as<Rcpp::NumericMatrix>(below["Wpool"]);
   NumericMatrix Wrhizo;
   List RHOP;
   NumericVector poolProportions(numCohorts);
@@ -223,21 +223,23 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   
 
   //Comunication with outside
-  NumericVector transpiration = Rcpp::as<Rcpp::NumericVector>(x["Transpiration"]);
-  NumericVector photosynthesis = Rcpp::as<Rcpp::NumericVector>(x["GrossPhotosynthesis"]);
+  DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
+  DataFrame internalCarbon = Rcpp::as<Rcpp::DataFrame>(x["internalCarbon"]);
+  NumericVector transpiration = Rcpp::as<Rcpp::NumericVector>(internalWater["Eday"]);
+  NumericVector photosynthesis = Rcpp::as<Rcpp::NumericVector>(internalCarbon["Agday"]);
   for(int c=0;c<numCohorts;c++) { //Reset photosynthesis and transpiration
     photosynthesis[c] = 0.0;
     transpiration[c] = 0.0;
   }
-  NumericVector PLCstemVEC = Rcpp::as<Rcpp::NumericVector>(x["PLCstem"]);
-  NumericVector psiSympStemVEC = Rcpp::as<Rcpp::NumericVector>(x["psiSympStem"]);
-  NumericVector psiSympLeafVEC = Rcpp::as<Rcpp::NumericVector>(x["psiSympLeaf"]);
-  NumericVector psiLeafVEC = Rcpp::as<Rcpp::NumericVector>(x["psiLeaf"]);
-  NumericVector psiStem1VEC = Rcpp::as<Rcpp::NumericVector>(x["psiStem1"]);
-  NumericVector psiStem2VEC = Rcpp::as<Rcpp::NumericVector>(x["psiStem2"]);
-  NumericVector psiRootCrownVEC = Rcpp::as<Rcpp::NumericVector>(x["psiRootCrown"]);
-  NumericMatrix psiRhizoMAT = Rcpp::as<Rcpp::NumericMatrix>(x["psiRhizo"]);
-  NumericVector EinstVEC = Rcpp::as<Rcpp::NumericVector>(x["Einst"]);
+  NumericVector PLCstemVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["PLCstem"]);
+  NumericVector psiSympStemVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["psiSympStem"]);
+  NumericVector psiSympLeafVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["psiSympLeaf"]);
+  NumericVector psiLeafVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["psiLeaf"]);
+  NumericVector psiStem1VEC = Rcpp::as<Rcpp::NumericVector>(internalWater["psiStem1"]);
+  NumericVector psiStem2VEC = Rcpp::as<Rcpp::NumericVector>(internalWater["psiStem2"]);
+  NumericVector psiRootCrownVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["psiRootCrown"]);
+  NumericMatrix psiRhizoMAT = Rcpp::as<Rcpp::NumericMatrix>(below["psiRhizo"]);
+  NumericVector EinstVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["Einst"]);
   
   if(NumericVector::is_na(aspect)) aspect = 0.0;
   if(NumericVector::is_na(slope)) slope = 0.0;
@@ -1216,7 +1218,7 @@ List transpirationGranier(List x, List soil, double tday, double pet,
   NumericMatrix V = Rcpp::as<Rcpp::NumericMatrix>(below["V"]);
 
   //Water pools
-  NumericMatrix Wpool = Rcpp::as<Rcpp::NumericMatrix>(x["W"]);
+  NumericMatrix Wpool = Rcpp::as<Rcpp::NumericMatrix>(below["Wpool"]);
   NumericMatrix Wrhizo;
   List RHOP;
   NumericVector poolProportions(numCohorts);
@@ -1231,9 +1233,12 @@ List transpirationGranier(List x, List soil, double tday, double pet,
   NumericVector pRootDisc = Rcpp::as<Rcpp::NumericVector>(paramsTransp["pRootDisc"]);
   
   //Communication vectors
-  NumericVector transpiration = Rcpp::as<Rcpp::NumericVector>(x["Transpiration"]);
-  NumericVector photosynthesis = Rcpp::as<Rcpp::NumericVector>(x["GrossPhotosynthesis"]);
-  NumericVector pEmb = clone(Rcpp::as<Rcpp::NumericVector>(x["PLC"]));
+  //Comunication with outside
+  DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
+  DataFrame internalCarbon = Rcpp::as<Rcpp::DataFrame>(x["internalCarbon"]);
+  NumericVector transpiration = Rcpp::as<Rcpp::NumericVector>(internalWater["Eday"]);
+  NumericVector photosynthesis = Rcpp::as<Rcpp::NumericVector>(internalCarbon["Agday"]);
+  NumericVector pEmb = clone(Rcpp::as<Rcpp::NumericVector>(internalWater["PLC"]));
   
   //Determine whether leaves are out (phenology) and the adjusted Leaf area
   NumericVector Phe(numCohorts,0.0);
@@ -1335,7 +1340,7 @@ List transpirationGranier(List x, List soil, double tday, double pet,
       transpiration[c] = Eplant[c];
       photosynthesis[c] = Anplant[c]; //No distinction between gross and net photosynthesis
     }
-    x["PLC"] = pEmb;
+    internalWater["PLC"] = pEmb;
   }
   //Modifies input soil
   if(modifyInputSoil) {

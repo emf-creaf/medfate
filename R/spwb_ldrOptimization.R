@@ -73,7 +73,7 @@ spwb_ldrExploration<-function(x, soil, meteo, cohorts = NULL,
   cc <- which(mExplore == T, arr.ind = T)
   
   # Reset input
-  spwb_resetInputs(x, soil)
+  resetInputs(x, soil)
   
   for(ci in 1:length(cohorts)){
     coh = cohorts[ci]

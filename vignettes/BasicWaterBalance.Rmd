@@ -220,7 +220,7 @@ x$canopy$gdd
 ```
 We simply reset state variables to their default values so that new simulations are not affected by the end state of the previous simulation:
 ```{r}
-spwb_resetInputs(x, examplesoil)
+resetInputs(x, examplesoil)
 examplesoil$W
 x$canopy$gdd
 ```

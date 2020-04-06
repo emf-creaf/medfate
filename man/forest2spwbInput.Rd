@@ -117,7 +117,7 @@ Functions \code{forest2growthInput} and \code{growthInput} return a list of clas
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 }
-\seealso{\code{\link{spwb}}, \code{\link{soil}},  \code{\link{forest}}, \code{\link{SpParamsMED}}, \code{\link{defaultSoilParams}}, \code{\link{plant_ID}}}
+\seealso{\code{\link{resetInputs}}, \code{\link{spwb}}, \code{\link{soil}},  \code{\link{forest}}, \code{\link{SpParamsMED}}, \code{\link{defaultSoilParams}}, \code{\link{plant_ID}}}
 
 \examples{
 #Load example plot plant data

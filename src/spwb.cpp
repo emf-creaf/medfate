@@ -32,7 +32,7 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   int nlayers = Rcpp::as<Rcpp::NumericVector>(soil["dVec"]).size();
   
   List below = x["below"];
-  NumericMatrix Wpool = x["W"];
+  NumericMatrix Wpool = below["Wpool"];
   NumericVector Wsoil = soil["W"];
 
   //Vegetation input
@@ -174,7 +174,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   int nlayers = Rcpp::as<Rcpp::NumericVector>(soil["dVec"]).size();
 
   List below = x["below"];
-  NumericMatrix Wpool = x["W"];
+  NumericMatrix Wpool = below["Wpool"];
   NumericVector Wsoil = soil["W"];
   
   //Vegetation input
@@ -433,119 +433,6 @@ void checkspwbInput(List x, List soil, String transpirationMode, String soilFunc
   }
 }
 
-// [[Rcpp::export("spwb_resetInputs")]]
-void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER) {
-  List can = x["canopy"];
-  NumericVector Wsoil = soil["W"];
-  NumericVector Temp = soil["Temp"];
-  List control = x["control"];
-  String transpirationMode = control["transpirationMode"];
-  List below = x["below"];
-  NumericMatrix Wpool = below["W"];
-  int nlayers = Wsoil.size();
-  int numCohorts = Wpool.nrow();
-  
-  if(Rf_isNull(from) || from.size()==0) {
-    can["gdd"] = 0.0;
-    can["Temp"] = NA_REAL;
-    for(int i=0;i<nlayers;i++) {
-      Wsoil[i] = 1.0; //Defaults to soil at field capacity
-      Temp[i] = NA_REAL;
-    }
-    for(int c=0;c<numCohorts;c++) {
-      for(int l=0;l<nlayers;l++) {
-        Wpool(c,l) = 1.0;
-      }
-    }
-    DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
-    DataFrame internalCarbon = Rcpp::as<Rcpp::DataFrame>(x["internalCarbon"]);
-    
-    if(transpirationMode=="Sperry") {
-      NumericMatrix psiRhizo = Rcpp::as<Rcpp::NumericMatrix>(below["psiRhizo"]);
-      NumericVector psiRootCrown = Rcpp::as<Rcpp::NumericVector>(internalWater["psiRootCrown"]);
-      NumericVector psiStem1 = Rcpp::as<Rcpp::NumericVector>(internalWater["psiStem1"]);
-      NumericVector psiStem2 = Rcpp::as<Rcpp::NumericVector>(internalWater["psiStem2"]);
-      NumericVector psiSympStem = Rcpp::as<Rcpp::NumericVector>(internalWater["psiSympStem"]);
-      NumericVector psiSympLeaf = Rcpp::as<Rcpp::NumericVector>(internalWater["psiSympLeaf"]);
-      NumericVector psiLeaf = Rcpp::as<Rcpp::NumericVector>(internalWater["psiLeaf"]);
-      NumericVector PLCstem = Rcpp::as<Rcpp::NumericVector>(internalWater["PLCstem"]);
-      NumericVector Einst = Rcpp::as<Rcpp::NumericVector>(internalWater["Einst"]);
-      NumericVector Eday = Rcpp::as<Rcpp::NumericVector>(internalWater["Eday"]);
-      NumericVector Agday = Rcpp::as<Rcpp::NumericVector>(internalCarbon["Agday"]);
-      for(int i=0;i<psiLeaf.size();i++) {
-        Einst[i] = 0.0;
-        psiLeaf[i] = 0.0;
-        PLCstem[i] = 0.0;
-        psiStem1[i] = 0.0;
-        psiStem2[i] = 0.0;
-        psiRootCrown[i] = 0.0;
-        psiSympLeaf[i] = 0.0;
-        psiSympStem[i] = 0.0;
-        Eday[i] = 0.0;
-        Agday[i] = 0.0;
-        for(int j=0;j<psiRhizo.ncol();j++) psiRhizo(i,j) = 0.0;
-      }
-    } else {
-      NumericVector Eday = Rcpp::as<Rcpp::NumericVector>(internalWater["Eday"]);
-      NumericVector Agday = Rcpp::as<Rcpp::NumericVector>(internalCarbon["Agday"]);
-      NumericVector PLC = Rcpp::as<Rcpp::NumericVector>(internalWater["PLC"]);
-      for(int i=0;i<Eday.length();i++) {
-        Eday[i] = 0.0;
-        Agday[i] = 0.0;
-        PLC[i] = 0.0;
-      }
-    }
-
-  } else {
-    if(IntegerVector::is_na(day)) day = 0;
-    else day = day-1; //Input will be 1 for first day
-    DataFrame DWB = Rcpp::as<Rcpp::DataFrame>(from["WaterBalance"]);
-    DataFrame SWB = Rcpp::as<Rcpp::DataFrame>(from["Soil"]);
-    NumericVector GDD = DWB["GDD"];
-    can["gdd"] = GDD[day];
-    can["Temp"] = NA_REAL;
-    for(int i=0;i<nlayers;i++) {
-      Wsoil[i] = Rcpp::as<Rcpp::NumericVector>(SWB[i])[day];
-      //TO DO: STORE/RECOVER SOIL LAYER TEMPERATURE?
-      Temp[i] = NA_REAL;
-    }
-    //Assumes soil pools are equal to the overal soil (soil pool states are not stored)
-    for(int c=0;c<numCohorts;c++) {
-      for(int l=0;l<nlayers;l++) {
-        Wpool(c,l) = Wsoil[l];
-      }
-    }
-    NumericMatrix fromPLC = Rcpp::as<Rcpp::NumericMatrix>(from["PlantStress"]);
-    NumericMatrix fromRootPsi = Rcpp::as<Rcpp::NumericMatrix>(from["RootPsi"]);
-    NumericMatrix fromLeafPsiMin = Rcpp::as<Rcpp::NumericMatrix>(from["LeafPsiMin"]);
-    NumericMatrix fromStemPsi = Rcpp::as<Rcpp::NumericMatrix>(from["StemPsi"]);
-    NumericMatrix fromRWCstem = Rcpp::as<Rcpp::NumericMatrix>(from["StemRWC"]);
-    NumericMatrix fromRWCleaf = Rcpp::as<Rcpp::NumericMatrix>(from["LeafRWC"]);
-    
-    NumericVector psiRootCrown = Rcpp::as<Rcpp::NumericVector>(x["psiRootCrown"]);
-    NumericMatrix psiStem = Rcpp::as<Rcpp::NumericMatrix>(x["psiStem"]);
-    NumericVector psiLeaf = Rcpp::as<Rcpp::NumericVector>(x["psiLeaf"]);
-    NumericMatrix PLCstem = Rcpp::as<Rcpp::NumericMatrix>(x["PLCstem"]);
-    NumericMatrix RWCsympstem = Rcpp::as<Rcpp::NumericMatrix>(x["RWCsympstem"]);
-    NumericVector RWCsympleaf = Rcpp::as<Rcpp::NumericVector>(x["RWCsympleaf"]);
-    NumericVector Einst = Rcpp::as<Rcpp::NumericVector>(x["Einst"]);
-    NumericVector Transpiration = Rcpp::as<Rcpp::NumericVector>(x["Transpiration"]);
-    NumericVector Photosynthesis = Rcpp::as<Rcpp::NumericVector>(x["Photosynthesis"]);
-    for(int i=0;i<PLCstem.nrow();i++) {
-      Einst[i] = 0.0;
-      Transpiration[i] = 0.0;
-      Photosynthesis[i] = 0.0;
-      psiRootCrown[i] = fromRootPsi(day,i);
-      psiLeaf[i] = fromLeafPsiMin(day,i);
-      RWCsympleaf[i] = fromRWCleaf(day,i);
-      for(int j=0;j<PLCstem.ncol();j++) {
-        psiStem(i,j) = fromStemPsi(day,i);
-        PLCstem(i,j) = fromPLC(day,i); 
-        RWCsympstem(i,j) = fromRWCstem(day,i); 
-      }
-    }
-  }
-}
 
 // [[Rcpp::export("spwb")]]
 List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL) {
@@ -727,11 +614,12 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
       //If DOY == 1 reset PLC (Growth assumed)
       if(cavitationRefill=="annual") {
         if(DOY[i]==1) {
+          DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
           if(transpirationMode=="Granier") {
-            NumericVector PLC = Rcpp::as<Rcpp::NumericVector>(x["PLC"]);
+            NumericVector PLC = Rcpp::as<Rcpp::NumericVector>(internalWater["PLC"]);
             for(int j=0;j<PLC.length();j++) PLC[j] = 0.0;
           } else {
-            NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(x["PLCstem"]);
+            NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["PLCstem"]);
             for(int j=0;j<StemPLC.length();j++) StemPLC[j] = 0.0;
           }
         }
@@ -1276,11 +1164,12 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
       //If DOY == 1 reset PLC (Growth assumed)
       if(cavitationRefill=="annual") {
         if(DOY[i]==1) {
+          DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
           if(transpirationMode=="Granier") {
-            NumericVector PLC = Rcpp::as<Rcpp::NumericVector>(x["PLC"]);
+            NumericVector PLC = Rcpp::as<Rcpp::NumericVector>(internalWater["PLC"]);
             for(int j=0;j<PLC.length();j++) PLC[j] = 0.0;
           } else {
-            NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(x["PLCstem"]);
+            NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["PLCstem"]);
             for(int j=0;j<StemPLC.length();j++) StemPLC[j] = 0.0;
           }
         }

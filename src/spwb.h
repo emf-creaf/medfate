@@ -6,7 +6,6 @@
 using namespace Rcpp;
 
 void checkspwbInput(List x, List soil, String transpirationMode);
-void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER);
 
 List spwbDay(List x, List soil, CharacterVector date, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
              double latitude, double elevation, double slope, double aspect,  

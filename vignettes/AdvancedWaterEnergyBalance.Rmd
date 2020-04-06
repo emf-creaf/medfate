@@ -303,9 +303,9 @@ We can also see the current state of canopy variables:
 ```{r}
 x$canopy
 ```
-We simply use function `spwb_resetInputs()` to reset state variables to their default values, so that the new simulation is not affected by the end state of the previous simulation:
+We simply use function `resetInputs()` to reset state variables to their default values, so that the new simulation is not affected by the end state of the previous simulation:
 ```{r}
-spwb_resetInputs(x, examplesoil)
+resetInputs(x, examplesoil)
 examplesoil$W
 examplesoil$Temp
 x$canopy

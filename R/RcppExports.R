@@ -573,6 +573,10 @@ forest2growthInput <- function(x, soil, SpParams, control) {
     .Call(`_medfate_forest2growthInput`, x, soil, SpParams, control)
 }
 
+resetInputs <- function(x, soil, from = NULL, day = NA_integer_) {
+    invisible(.Call(`_medfate_resetInputs`, x, soil, from, day))
+}
+
 .gdd <- function(DOY, Temp, Tbase = 5.0, cum = 0.0) {
     .Call(`_medfate_gdd`, DOY, Temp, Tbase, cum)
 }
@@ -751,10 +755,6 @@ soil_thermalConductivity <- function(soil, model = "SX") {
 
 spwb_day <- function(x, soil, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, runon = 0.0) {
     .Call(`_medfate_spwbDay`, x, soil, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, runon)
-}
-
-spwb_resetInputs <- function(x, soil, from = NULL, day = NA_integer_) {
-    invisible(.Call(`_medfate_resetInputs`, x, soil, from, day))
 }
 
 spwb <- function(x, soil, meteo, latitude = NA_real_, elevation = NA_real_, slope = NA_real_, aspect = NA_real_) {
