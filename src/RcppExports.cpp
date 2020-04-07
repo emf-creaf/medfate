@@ -989,14 +989,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // dailyFloemFlow
-NumericMatrix dailyFloemFlow(List x, List spwbOut);
-RcppExport SEXP _medfate_dailyFloemFlow(SEXP xSEXP, SEXP spwbOutSEXP) {
+NumericMatrix dailyFloemFlow(List x, List spwbOut, NumericVector concLeaf, NumericVector concSapwood);
+RcppExport SEXP _medfate_dailyFloemFlow(SEXP xSEXP, SEXP spwbOutSEXP, SEXP concLeafSEXP, SEXP concSapwoodSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< List >::type spwbOut(spwbOutSEXP);
-    rcpp_result_gen = Rcpp::wrap(dailyFloemFlow(x, spwbOut));
+    Rcpp::traits::input_parameter< NumericVector >::type concLeaf(concLeafSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type concSapwood(concSapwoodSEXP);
+    rcpp_result_gen = Rcpp::wrap(dailyFloemFlow(x, spwbOut, concLeaf, concSapwood));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4155,7 +4157,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_fuelLiveStratification", (DL_FUNC) &_medfate_fuelLiveStratification, 7},
     {"_medfate_FCCSproperties", (DL_FUNC) &_medfate_FCCSproperties, 10},
     {"_medfate_floemFlow", (DL_FUNC) &_medfate_floemFlow, 6},
-    {"_medfate_dailyFloemFlow", (DL_FUNC) &_medfate_dailyFloemFlow, 2},
+    {"_medfate_dailyFloemFlow", (DL_FUNC) &_medfate_dailyFloemFlow, 4},
     {"_medfate_defoliationFraction", (DL_FUNC) &_medfate_defoliationFraction, 2},
     {"_medfate_growth", (DL_FUNC) &_medfate_growth, 7},
     {"_medfate_Psi2K", (DL_FUNC) &_medfate_Psi2K, 3},

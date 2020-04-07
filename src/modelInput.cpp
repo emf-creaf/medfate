@@ -430,12 +430,13 @@ DataFrame internalCarbonDataFrame(DataFrame above,
     double lconc = sugarConcentration(LeafPI0[c],15.0);
     double lvol = leafStorageVolume(LAI_expanded[c], N[c], SLA[c], LeafDensity[c]); //l
     double lstvol = 0.001*(starchLeaf[c]/starchDensity);
-    // Rcout<<lvol<<" "<< svol<< " "<< lconc <<"\n";
+    Rcout<<c<<": "<<lvol<<" "<< lstvol<< " "<< lconc <<"\n";
     sugarLeaf[c] = glucoseMolarWeight*lconc*(lvol - lstvol);
     double sconc = sugarConcentration(StemPI0[c],15.0);
+    sconc = std::min(sconc,lconc); // Do not allow higher initial concentration in sapwood
     double svol = sapwoodStorageVolume(SA[c], H[c], Z[c], WoodDensity[c], 0.5); //l
     double sstvol = 0.001*(starchSapwood[c]/starchDensity);
-    // Rcout<<svol<<" "<< sstvol<< " "<< sconc <<"\n";
+    Rcout<<c<<": "<<svol<<" "<< sstvol<< " "<< sconc <<"\n";
     sugarSapwood[c] = glucoseMolarWeight*sconc*(svol - sstvol);
   }
   DataFrame df = DataFrame::create(Named("sugarLeaf") = sugarLeaf,

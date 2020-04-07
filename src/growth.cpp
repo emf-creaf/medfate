@@ -32,7 +32,7 @@ const double dailySAturnoverProportion = 0.0001261398; //Equivalent to annual 4.
  *  concUpstream, concDownstream - sugar concentration upstream (leaves) and downstream (stem)
  *  k_f - floem conductance per leaf area basis (l*m-2*MPa-1*s-1)
  *  
- *  out mol*s-1
+ *  out mol*s-1*m-2 (flow per leaf area basis)
  */
 // [[Rcpp::export("growth_floemFlow")]]
 double floemFlow(double psiUpstream, double psiDownstream,
@@ -46,7 +46,8 @@ double floemFlow(double psiUpstream, double psiDownstream,
   return(k_f*concMean*(turgor_up - turgor_down)/relVisc);
 }
 // [[Rcpp::export("growth_dailyFloemFlow")]]
-NumericMatrix dailyFloemFlow(List x, List spwbOut) {
+NumericMatrix dailyFloemFlow(List x, List spwbOut, 
+                             NumericVector concLeaf, NumericVector concSapwood) {
   DataFrame paramStorage =  Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
   NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramStorage["Vleaf"]);
   NumericVector stemPI0 = Rcpp::as<Rcpp::NumericVector>(paramStorage["StemPI0"]);
@@ -65,11 +66,11 @@ NumericMatrix dailyFloemFlow(List x, List spwbOut) {
   NumericMatrix ff(numCohorts, numSteps);
   for(int c=0;c<numCohorts;c++) {
     for(int s=0;s<numSteps;s++) {
+      // double leafPI = osmoticWaterPotential(concLeaf[c], Tcan[s]);
+      // double sapwoodPI = osmoticWaterPotential(concs[c], Tcan[s]);
       double psiUp = symplasticWaterPotential(rwcLeaf(c,s), leafPI0[c], leafEPS[c]);
       double psiDown = symplasticWaterPotential(rwcStem(c,s), stemPI0[c], stemEPS[c]);
-      double concUp = sugarConcentration(leafPI0[c], Tcan[s]);
-      double concDown = sugarConcentration(stemPI0[c], Tcan[s]);
-      ff(c,s) = floemFlow(psiUp, psiDown, concUp, concDown, Tcan[s])*3600.0; //flow per hour
+      ff(c,s) = floemFlow(psiUp, psiDown, concLeaf[c], concSapwood[c], Tcan[s])*3600.0; //flow as mol per hour and leaf area basis
     }
   }
   ff.attr("dimnames") = rwcStem.attr("dimnames");
@@ -104,6 +105,210 @@ double defoliationFraction(double conc, double threshold) {
   return(std::max(0.0,(exp(k*conc)-exp(k*threshold))/(1.0-exp(k*threshold))));
 }
 
+
+/**
+* Daily plant carbon balance
+*/
+DataFrame growthDay(List x, List spwbOut, double tday) {
+  //Control params
+  List control = x["control"];  
+  
+  String transpirationMode = control["transpirationMode"];
+  String cavitationRefill = control["cavitationRefill"];
+  bool taper = control["taper"];
+  
+  //Cohort info
+  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
+  NumericVector SP = cohorts["SP"];
+  int numCohorts = SP.size();
+  
+  //Aboveground parameters  
+  DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
+  NumericVector DBH = above["DBH"];
+  NumericVector Cover = above["Cover"];
+  NumericVector H = above["H"];
+  NumericVector N = above["N"];
+  NumericVector CR = above["CR"];
+  NumericVector LAI_live = above["LAI_live"];
+  NumericVector LAI_expanded = above["LAI_expanded"];
+  NumericVector LAI_dead = above["LAI_dead"];
+  NumericVector SA = above["SA"];
+  
+  
+  //Belowground parameters  
+  List below = Rcpp::as<Rcpp::List>(x["below"]);
+  NumericVector Z = Rcpp::as<Rcpp::NumericVector>(below["Z"]);
+  
+  //Internal state variables
+  List internalWater = Rcpp::as<Rcpp::List>(x["internalWater"]);
+  List internalCarbon = Rcpp::as<Rcpp::List>(x["internalCarbon"]);
+  NumericVector sugarLeaf = internalCarbon["sugarLeaf"];
+  NumericVector starchLeaf = internalCarbon["starchLeaf"];
+  NumericVector sugarSapwood = internalCarbon["sugarSapwood"];
+  NumericVector starchSapwood = internalCarbon["starchSapwood"];
+  
+  
+  List stand = spwbOut["Stand"];
+  List Plants = spwbOut["Plants"];
+  
+  //Recover module-communication state variables
+  NumericVector Ag;
+  if(transpirationMode=="Granier") {
+    Ag =  Rcpp::as<Rcpp::NumericVector>(Plants["Photosynthesis"]);
+  } else if(transpirationMode=="Sperry") {
+    Ag =  Rcpp::as<Rcpp::NumericVector>(Plants["GrossPhotosynthesis"]);
+  }
+  
+  //Anatomy parameters
+  DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
+  NumericVector SLA = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["SLA"]);
+  NumericVector Al2As = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["Al2As"]);
+  NumericVector WoodDensity = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["WoodDensity"]);
+  NumericVector LeafDensity = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["LeafDensity"]);
+  //Growth parameters
+  DataFrame paramsGrowth = Rcpp::as<Rcpp::DataFrame>(x["paramsGrowth"]);
+  NumericVector WoodC = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["WoodC"]);
+  NumericVector RGRmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRmax"]);
+  NumericVector Cstoragepmax= Rcpp::as<Rcpp::NumericVector>(paramsGrowth["Cstoragepmax"]);
+  NumericVector slowCstorage_max(numCohorts), fastCstorage_max(numCohorts);
+  //Transpiration parameters
+  DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
+  NumericVector Kmax_stemxylem, VCstem_kmax, Psi_Extract, VCstem_c, VCstem_d;
+  NumericMatrix VGrhizo_kmax;
+  if(transpirationMode=="Sperry") {
+    Kmax_stemxylem = paramsTransp["Kmax_stemxylem"];
+    VCstem_kmax = paramsTransp["VCstem_kmax"];
+    VGrhizo_kmax = Rcpp::as<Rcpp::NumericMatrix>(below["VGrhizo_kmax"]);
+  }
+  //Water storage parameters
+  DataFrame paramsWaterStorage = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
+  NumericVector StemPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemPI0"]);
+  NumericVector StemEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemEPS"]);
+  NumericVector StemAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemAF"]);
+  NumericVector Vsapwood = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vsapwood"]); //l·m-2 = mm
+  NumericVector LeafPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafPI0"]);
+  NumericVector LeafEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafEPS"]);
+  NumericVector LeafAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafAF"]);
+  NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vleaf"]); //l·m-2 = mm
+  
+  //Output vectors
+  NumericVector PlantRespiration(numCohorts,0.0);
+  NumericVector PlantSugarLeaf(numCohorts,0.0);
+  NumericVector PlantStarchLeaf(numCohorts,0.0);
+  NumericVector PlantSugarSapwood(numCohorts,0.0);
+  NumericVector PlantStarchSapwood(numCohorts,0.0);
+  NumericVector PlantSA(numCohorts,0.0);
+  NumericVector PlantSAgrowth(numCohorts,0.0);
+  NumericVector PlantGrossPhotosynthesis(numCohorts,0.0);
+  NumericVector PlantLAIdead(numCohorts,0.0);
+  NumericVector PlantLAIlive(numCohorts,0.0);
+  
+  
+  NumericVector ST_volume_leaves(numCohorts,0.0);
+  NumericVector ST_volume_sapwood(numCohorts,0.0);
+  NumericVector conc_leaves(numCohorts,0.0);
+  NumericVector conc_sapwood(numCohorts,0.0);
+  for(int j=0;j<numCohorts;j++){
+    ST_volume_leaves[j] = leafStorageVolume(LAI_expanded[j],  N[j], SLA[j], LeafDensity[j]);
+    ST_volume_sapwood[j] = sapwoodStorageVolume(SA[j], H[j],Z[j],WoodDensity[j], 0.5);
+    double lstvol = 0.001*(starchLeaf[j]/starchDensity);
+    double sstvol = 0.001*(starchSapwood[j]/starchDensity);
+    conc_leaves[j] = sugarLeaf[j]/((ST_volume_leaves[j]-lstvol)*glucoseMolarWeight);
+    conc_sapwood[j] = sugarSapwood[j]/((ST_volume_sapwood[j]-sstvol)*glucoseMolarWeight);
+    
+    Rcout<<j << " sugar leaf: "<< sugarLeaf[j]<< " vol: "<< ST_volume_leaves[j] <<" conc: "<<  conc_leaves[j]<<"\n";
+    Rcout<<j << " sugar sapwood: "<< sugarSapwood[j]<< " vol: "<< ST_volume_sapwood[j] <<" conc: "<<  conc_sapwood[j]<<"\n";
+  }
+  
+  //Daily floem transport
+  NumericMatrix DFT = dailyFloemFlow(x, spwbOut, 
+                                     conc_leaves, conc_sapwood);
+  
+  //3. Carbon balance and growth
+  double B_leaf_expanded, B_stem, B_fineroot;
+  for(int j=0;j<numCohorts;j++){
+    
+    double LAlive = leafArea(LAI_live[j], N[j]);
+    //3.1 Respiratory biomass and C compartments
+    double B_leaf_live = leafCstructural(LAI_live[j],N[j],SLA[j]);
+    double B_leaf_expanded = leafCstructural(LAI_expanded[j],N[j],SLA[j]);
+    double B_sapwood = sapwoodCstructural(SA[j], H[j], Z[j], WoodDensity[j], WoodC[j]);
+    double B_fineroots;
+    if(transpirationMode=="Sperry") { //Should be coupled to fine root conductance
+      B_fineroots = B_leaf_expanded/2.5;
+      // B_fineroots = sum(VGrhizo_kmax(j,_))/
+    } else {
+      B_fineroots = B_leaf_expanded/2.5;
+    }
+    double ST_max_leaves = leafStarchCapacity(LAI_expanded[j],  N[j], SLA[j], 0.3);
+    double ST_max_sapwood = sapwoodStarchCapacity(SA[j], H[j],Z[j],WoodDensity[j], 0.2);
+    
+    double dailyFloemTransport = sum(DFT(j,_))*glucoseMolarWeight*LAlive; //g C
+    
+    //3.2 Leaf photosynthesis and floem transport
+    double leafAg = Ag[j]/(N[j]/10000.0); //Translate g C · m-2 to g C · ind-1
+    sugarLeaf[j] = sugarLeaf[j] + leafAg - dailyFloemTransport;
+    Rcout<<LAlive<< " "<<leafAg<< " "<< dailyFloemTransport<<"\n";
+    
+    //3.3 Leaf respiration
+    double QR = qResp(tday);
+    double leafResp = B_leaf_expanded*leaf_RR*QR;
+    //If there is no enough sugar to sustain respiration some leaves die
+    //Starch is assumed to be relocated
+    if(sugarLeaf[j] - leafResp < 0.0) {
+      double deficit = (leafResp - sugarLeaf[j]);
+      double biomassDeficit = deficit/(leaf_RR*QR);
+      LAI_dead[j] += LAI_expanded[j]*(biomassDeficit/B_leaf_live);
+      LAI_live[j] = LAI_live[j]*(1.0- (biomassDeficit/B_leaf_live));
+      LAI_expanded[j] = LAI_expanded[j]*(1.0- (biomassDeficit/B_leaf_live));
+      sugarLeaf[j] = 0.0;
+    } else {
+      sugarLeaf[j] = sugarLeaf[j] - leafResp;
+    }
+    
+    //3.4 Leaf growth
+    
+    //3.5 Leaf sugar-starch dynamics 
+    
+    //3.6 Sapwood floem transport (inputs)
+    sugarSapwood[j] = sugarSapwood[j] + dailyFloemTransport;
+    
+    //3.7 Sapwood and fine root respiration
+    double sapwoodResp = B_sapwood*sapwood_RR*QR;
+    double finerootResp = B_fineroot*fineroot_RR*QR;
+    double sfrResp = sapwoodResp+finerootResp;
+    
+    if(sugarSapwood[j] - sfrResp < 0.0) {
+      stop("Death");
+    } else {
+      sugarSapwood[j] = sugarSapwood[j] - sfrResp;
+    }
+    
+    //Output variables
+    PlantSugarLeaf[j] = sugarLeaf[j];
+    PlantStarchLeaf[j] = starchLeaf[j];
+    PlantSugarSapwood[j] = sugarSapwood[j];
+    PlantStarchSapwood[j] = starchSapwood[j];
+    PlantSA[j] = SA[j];
+    PlantLAIlive[j] = LAI_live[j];
+    PlantLAIdead[j] = LAI_dead[j];
+  }
+  
+  DataFrame df = DataFrame::create(_["PlantRespiration"] = PlantRespiration,
+                                   _["PlantSugarLeaf"] = PlantSugarLeaf,
+                                   _["PlantStarchLeaf"] = PlantStarchLeaf,
+                                   _["PlantSugarSapwood"] = PlantSugarSapwood,
+                                   _["PlantStarchSapwood"] = PlantStarchSapwood,
+                                   _["PlantSA"] = PlantSA,
+                                   _["PlantLAIlive"] = PlantLAIlive,
+                                   _["PlantLAIdead"] = PlantLAIdead,
+                                   _["PlantSAgrowth"] = PlantSAgrowth);
+  
+  df.attr("row.names") = cohorts.attr("row.names");
+  return(df);
+}
+
+
 void checkgrowthInput(List x, List soil, String transpirationMode, String soilFunctions) {
   if(!x.containsElementNamed("above")) stop("above missing in growthInput");
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
@@ -136,13 +341,13 @@ void checkgrowthInput(List x, List soil, String transpirationMode, String soilFu
   if(!paramsGrowth.containsElementNamed("WoodC")) stop("WoodC missing in growthInput$paramsGrowth");
   if(!paramsGrowth.containsElementNamed("Cstoragepmax")) stop("Cstoragepmax missing in growthInput$paramsGrowth");
   if(!paramsGrowth.containsElementNamed("RGRmax")) stop("RGRmax missing in growthInput$paramsGrowth");
-
+  
   if(!x.containsElementNamed("paramsAnatomy")) stop("paramsAnatomy missing in growthInput");
   DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
   if(!paramsAnatomy.containsElementNamed("SLA")) stop("SLA missing in paramsAnatomy$paramsGrowth");
   if(!paramsAnatomy.containsElementNamed("Al2As")) stop("Al2As missing in paramsAnatomy$paramsGrowth");
   if(!paramsAnatomy.containsElementNamed("WoodDensity")) stop("WoodDensity missing in paramsAnatomy$paramsGrowth");
-
+  
   if(!x.containsElementNamed("paramsTransp")) stop("paramsTransp missing in growthInput");
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
   // if(!paramsTransp.containsElementNamed("pRootDisc")) stop("pRootDisc missing in growthInput$paramsTransp");
@@ -203,189 +408,6 @@ void recordStandSummary(DataFrame standSummary, NumericVector LAIlive,
       SCover[pos] +=Cover[i];
     }
   }
-}
-
-/**
- * Daily plant carbon balance
- */
-DataFrame growthDay(List x, List spwbOut, double tday) {
-  //Control params
-  List control = x["control"];  
-  
-  String transpirationMode = control["transpirationMode"];
-  String cavitationRefill = control["cavitationRefill"];
-  bool taper = control["taper"];
-  
-  //Cohort info
-  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
-  NumericVector SP = cohorts["SP"];
-  int numCohorts = SP.size();
-  
-  //Aboveground parameters  
-  DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
-  NumericVector DBH = above["DBH"];
-  NumericVector Cover = above["Cover"];
-  NumericVector H = above["H"];
-  NumericVector N = above["N"];
-  NumericVector CR = above["CR"];
-  NumericVector LAI_live = above["LAI_live"];
-  NumericVector LAI_expanded = above["LAI_expanded"];
-  NumericVector LAI_dead = above["LAI_dead"];
-  NumericVector SA = above["SA"];
-
-  
-  //Belowground parameters  
-  List below = Rcpp::as<Rcpp::List>(x["below"]);
-  NumericVector Z = Rcpp::as<Rcpp::NumericVector>(below["Z"]);
-  
-  //Internal state variables
-  List internalWater = Rcpp::as<Rcpp::List>(x["internalWater"]);
-  List internalCarbon = Rcpp::as<Rcpp::List>(x["internalCarbon"]);
-  NumericVector sugarLeaf = internalCarbon["sugarLeaf"];
-  NumericVector starchLeaf = internalCarbon["starchLeaf"];
-  NumericVector sugarSapwood = internalCarbon["sugarSapwood"];
-  NumericVector starchSapwood = internalCarbon["starchSapwood"];
-  
-  
-  List stand = spwbOut["Stand"];
-  List Plants = spwbOut["Plants"];
-  
-  //Recover module-communication state variables
-  NumericVector Ag;
-  if(transpirationMode=="Granier") {
-    Ag =  Rcpp::as<Rcpp::NumericVector>(Plants["Photosynthesis"]);
-  } else if(transpirationMode=="Sperry") {
-    Ag =  Rcpp::as<Rcpp::NumericVector>(Plants["GrossPhotosynthesis"]);
-  }
-  
-  //Anatomy parameters
-  DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
-  NumericVector SLA = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["SLA"]);
-  NumericVector Al2As = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["Al2As"]);
-  NumericVector WoodDensity = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["WoodDensity"]);
-  //Growth parameters
-  DataFrame paramsGrowth = Rcpp::as<Rcpp::DataFrame>(x["paramsGrowth"]);
-  NumericVector WoodC = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["WoodC"]);
-  NumericVector RGRmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRmax"]);
-  NumericVector Cstoragepmax= Rcpp::as<Rcpp::NumericVector>(paramsGrowth["Cstoragepmax"]);
-  NumericVector slowCstorage_max(numCohorts), fastCstorage_max(numCohorts);
-  //Transpiration parameters
-  DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
-  NumericVector Kmax_stemxylem, VCstem_kmax, Psi_Extract, VCstem_c, VCstem_d;
-  NumericMatrix VGrhizo_kmax;
-  if(transpirationMode=="Sperry") {
-    Kmax_stemxylem = paramsTransp["Kmax_stemxylem"];
-    VCstem_kmax = paramsTransp["VCstem_kmax"];
-    VGrhizo_kmax = Rcpp::as<Rcpp::NumericMatrix>(below["VGrhizo_kmax"]);
-  }
-  //Water storage parameters
-  DataFrame paramsWaterStorage = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
-  NumericVector StemPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemPI0"]);
-  NumericVector StemEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemEPS"]);
-  NumericVector StemAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemAF"]);
-  NumericVector Vsapwood = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vsapwood"]); //l·m-2 = mm
-  NumericVector LeafPI0 = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafPI0"]);
-  NumericVector LeafEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafEPS"]);
-  NumericVector LeafAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafAF"]);
-  NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vleaf"]); //l·m-2 = mm
-  
-  //Output vectors
-  NumericVector PlantRespiration(numCohorts,0.0);
-  NumericVector PlantSugarLeaf(numCohorts,0.0);
-  NumericVector PlantStarchLeaf(numCohorts,0.0);
-  NumericVector PlantSugarSapwood(numCohorts,0.0);
-  NumericVector PlantStarchSapwood(numCohorts,0.0);
-  NumericVector PlantSA(numCohorts,0.0);
-  NumericVector PlantSAgrowth(numCohorts,0.0);
-  NumericVector PlantGrossPhotosynthesis(numCohorts,0.0);
-  NumericVector PlantLAIdead(numCohorts,0.0);
-  NumericVector PlantLAIlive(numCohorts,0.0);
-  
-  //Daily floem transport
-  NumericMatrix DFT = dailyFloemFlow(x, spwbOut);
-    
-  //3. Carbon balance and growth
-  double B_leaf_expanded, B_stem, B_fineroot;
-  for(int j=0;j<numCohorts;j++){
-    //3.1 Respiratory biomass and C compartments
-    double B_leaf_live = leafCstructural(LAI_live[j],N[j],SLA[j]);
-    double B_leaf_expanded = leafCstructural(LAI_expanded[j],N[j],SLA[j]);
-    double B_sapwood = sapwoodCstructural(SA[j], H[j], Z[j], WoodDensity[j], WoodC[j]);
-    double B_fineroots;
-    if(transpirationMode=="Sperry") { //Should be coupled to fine root conductance
-      B_fineroots = B_leaf_expanded/2.5;
-      // B_fineroots = sum(VGrhizo_kmax(j,_))/
-    } else {
-      B_fineroots = B_leaf_expanded/2.5;
-    }
-    double ST_max_leaves = leafStarchCapacity(LAI_expanded[j],  N[j], SLA[j], 0.3);
-    double ST_volume_leaves = leafStorageVolume(LAI_expanded[j],  N[j], SLA[j], 0.3);
-    double ST_max_sapwood = sapwoodStarchCapacity(SA[j], H[j],Z[j],WoodDensity[j], 0.2);
-    double ST_volume_sapwood = sapwoodStorageVolume(SA[j], H[j],Z[j],WoodDensity[j], 0.2);
-    
-    double dailyFloemTransport = sum(DFT(j,_))*glucoseMolarWeight; //g C
-    
-    //3.2 Leaf photosynthesis and floem transport
-    double leafAg = Ag[j]/(N[j]/10000.0); //Translate g C · m-2 to g C · ind-1
-    sugarLeaf[j] = sugarLeaf[j] + leafAg - dailyFloemTransport;
-    Rcout<<leafAg<< " "<< dailyFloemTransport<<"\n";
-    
-    //3.3 Leaf respiration
-    double QR = qResp(tday);
-    double leafResp = B_leaf_expanded*leaf_RR*QR;
-    //If there is no enough sugar to sustain respiration some leaves die
-    //Starch is assumed to be relocated
-    if(sugarLeaf[j] - leafResp < 0.0) {
-      double deficit = (leafResp - sugarLeaf[j]);
-      double biomassDeficit = deficit/(leaf_RR*QR);
-      LAI_dead[j] += LAI_expanded[j]*(biomassDeficit/B_leaf_live);
-      LAI_live[j] = LAI_live[j]*(1.0- (biomassDeficit/B_leaf_live));
-      LAI_expanded[j] = LAI_expanded[j]*(1.0- (biomassDeficit/B_leaf_live));
-      sugarLeaf[j] = 0.0;
-    } else {
-      sugarLeaf[j] = sugarLeaf[j] - leafResp;
-    }
-    
-    //3.4 Leaf growth
-    
-    //3.5 Leaf sugar-starch dynamics 
- 
-    //3.6 Sapwood floem transport (inputs)
-    sugarSapwood[j] = sugarSapwood[j] + dailyFloemTransport;
-    
-    //3.7 Sapwood and fine root respiration
-    double sapwoodResp = B_sapwood*sapwood_RR*QR;
-    double finerootResp = B_fineroot*fineroot_RR*QR;
-    double sfrResp = sapwoodResp+finerootResp;
-    
-    if(sugarSapwood[j] - sfrResp < 0.0) {
-      stop("Death");
-    } else {
-      sugarSapwood[j] = sugarSapwood[j] - sfrResp;
-    }
-    
-    //Output variables
-    PlantSugarLeaf[j] = sugarLeaf[j];
-    PlantStarchLeaf[j] = starchLeaf[j];
-    PlantSugarSapwood[j] = sugarSapwood[j];
-    PlantStarchSapwood[j] = starchSapwood[j];
-    PlantSA[j] = SA[j];
-    PlantLAIlive[j] = LAI_live[j];
-    PlantLAIdead[j] = LAI_dead[j];
-  }
-  
-  DataFrame df = DataFrame::create(_["PlantRespiration"] = PlantRespiration,
-                                   _["PlantSugarLeaf"] = PlantSugarLeaf,
-                                   _["PlantStarchLeaf"] = PlantStarchLeaf,
-                                   _["PlantSugarSapwood"] = PlantSugarSapwood,
-                                   _["PlantStarchSapwood"] = PlantStarchSapwood,
-                                   _["PlantSA"] = PlantSA,
-                                   _["PlantLAIlive"] = PlantLAIlive,
-                                   _["PlantLAIdead"] = PlantLAIdead,
-                                   _["PlantSAgrowth"] = PlantSAgrowth);
-  
-  df.attr("row.names") = cohorts.attr("row.names");
-  return(df);
 }
 
 // DataFrame growthPipe(List x, List spwbOut, double tday) {

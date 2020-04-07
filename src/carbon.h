@@ -17,6 +17,8 @@ double sugarConcentration(double osmoticWP, double temp, double nonSugarConc = 0
 double turgor(double psi, double conc, double temp);
 double relativeSapViscosity(double conc, double temp);
 
+double leafArea(double LAI, double N);
+
 double leafStarchCapacity(double LAI, double N, double SLA, double leafDensity);
 double leafStorageVolume(double LAI, double N, double SLA, double leafDensity);
 double leafCstructural(double LAI, double N, double SLA);

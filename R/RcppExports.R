@@ -289,8 +289,8 @@ growth_floemFlow <- function(psiUpstream, psiDownstream, concUpstream, concDowns
     .Call(`_medfate_floemFlow`, psiUpstream, psiDownstream, concUpstream, concDownstream, temp, k_f)
 }
 
-growth_dailyFloemFlow <- function(x, spwbOut) {
-    .Call(`_medfate_dailyFloemFlow`, x, spwbOut)
+growth_dailyFloemFlow <- function(x, spwbOut, concLeaf, concSapwood) {
+    .Call(`_medfate_dailyFloemFlow`, x, spwbOut, concLeaf, concSapwood)
 }
 
 .growth_defoliationFraction <- function(conc, threshold) {
