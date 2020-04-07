@@ -952,8 +952,6 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   NumericVector DDS(numCohorts, 0.0);
   for(int c=0;c<numCohorts;c++) {
     SoilExtractCoh[c] =  sum(SoilWaterExtract(c,_));
-    // transpiration[c] = Eplant[c]; 
-    // photosynthesis[c] = Agplant[c]; //store gross photosynthesis for growth model
     PLCm[c] = sum(PLC(c,_))/((double)PLC.ncol());
     RWCsm[c] = sum(RWCsteminst(c,_))/((double)RWCsteminst.ncol());
     RWClm[c] = sum(RWCleafinst(c,_))/((double)RWCleafinst.ncol());

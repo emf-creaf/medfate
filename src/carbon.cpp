@@ -10,6 +10,7 @@ const double starchDensity = 1.5; //g·cm-3
 const double leafCperDry = 0.3; //g C · g dry-1
 const double rootCperDry = 0.4959; //g C · g dry-1
 
+const double nonSugarConc = 0.21; //mol ·l-1
 const double Rn = 0.008314472; // The perfect gas constant MPa·l/K·mol = kJ/K·mol
 
 /**
@@ -18,13 +19,13 @@ const double Rn = 0.008314472; // The perfect gas constant MPa·l/K·mol = kJ/K�
  *  temp - deg C
  *  wp - MPa
  */
-// [[Rcpp::export("moisture_osmoticWaterPotential")]]
-double osmoticWaterPotential(double conc, double temp) {
-  return(- conc*Rn*(temp + 273.15));
+// [[Rcpp::export("carbon_osmoticWaterPotential")]]
+double osmoticWaterPotential(double conc, double temp, double nonSugarConc = 0.2) {
+  return(- (conc + nonSugarConc)*Rn*(temp + 273.15));
 }
-// [[Rcpp::export("moisture_sugarConcentration")]]
-double sugarConcentration(double osmoticWP, double temp) {
-  return(- osmoticWP/(Rn*(temp + 273.15)));
+// [[Rcpp::export("carbon_sugarConcentration")]]
+double sugarConcentration(double osmoticWP, double temp, double nonSugarConc = 0.2) {
+  return(- osmoticWP/(Rn*(temp + 273.15)) - nonSugarConc);
 }
 
 
@@ -32,12 +33,12 @@ double sugarConcentration(double osmoticWP, double temp) {
 * On the pressure dependence of the viscosity of aqueous sugar solutions
 * Rheol Acta (2002) 41: 369–374 DOI 10.1007/s00397-002-0238-y
 * 
-*  x - sugar concentration (mol/l)
+*  sugarConc - sugar concentration (mol/l)
 *  temp - temperature (degrees C)
 */
 // [[Rcpp::export("carbon_relativeSapViscosity")]]
-double relativeSapViscosity(double conc, double temp) {
-  double x = conc*glucoseMolarWeight/1e3; //from mol/l to g*cm-3
+double relativeSapViscosity(double sugarConc, double temp) {
+  double x = sugarConc*glucoseMolarWeight/1e3; //from mol/l to g*cm-3
   double Tkelvin = temp + 273.15;
   double q0a = 1.12; //g*cm-3
   double q1 = -0.248;

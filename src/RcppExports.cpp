@@ -50,38 +50,40 @@ BEGIN_RCPP
 END_RCPP
 }
 // osmoticWaterPotential
-double osmoticWaterPotential(double conc, double temp);
-RcppExport SEXP _medfate_osmoticWaterPotential(SEXP concSEXP, SEXP tempSEXP) {
+double osmoticWaterPotential(double conc, double temp, double nonSugarConc);
+RcppExport SEXP _medfate_osmoticWaterPotential(SEXP concSEXP, SEXP tempSEXP, SEXP nonSugarConcSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type conc(concSEXP);
     Rcpp::traits::input_parameter< double >::type temp(tempSEXP);
-    rcpp_result_gen = Rcpp::wrap(osmoticWaterPotential(conc, temp));
+    Rcpp::traits::input_parameter< double >::type nonSugarConc(nonSugarConcSEXP);
+    rcpp_result_gen = Rcpp::wrap(osmoticWaterPotential(conc, temp, nonSugarConc));
     return rcpp_result_gen;
 END_RCPP
 }
 // sugarConcentration
-double sugarConcentration(double osmoticWP, double temp);
-RcppExport SEXP _medfate_sugarConcentration(SEXP osmoticWPSEXP, SEXP tempSEXP) {
+double sugarConcentration(double osmoticWP, double temp, double nonSugarConc);
+RcppExport SEXP _medfate_sugarConcentration(SEXP osmoticWPSEXP, SEXP tempSEXP, SEXP nonSugarConcSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type osmoticWP(osmoticWPSEXP);
     Rcpp::traits::input_parameter< double >::type temp(tempSEXP);
-    rcpp_result_gen = Rcpp::wrap(sugarConcentration(osmoticWP, temp));
+    Rcpp::traits::input_parameter< double >::type nonSugarConc(nonSugarConcSEXP);
+    rcpp_result_gen = Rcpp::wrap(sugarConcentration(osmoticWP, temp, nonSugarConc));
     return rcpp_result_gen;
 END_RCPP
 }
 // relativeSapViscosity
-double relativeSapViscosity(double conc, double temp);
-RcppExport SEXP _medfate_relativeSapViscosity(SEXP concSEXP, SEXP tempSEXP) {
+double relativeSapViscosity(double sugarConc, double temp);
+RcppExport SEXP _medfate_relativeSapViscosity(SEXP sugarConcSEXP, SEXP tempSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type conc(concSEXP);
+    Rcpp::traits::input_parameter< double >::type sugarConc(sugarConcSEXP);
     Rcpp::traits::input_parameter< double >::type temp(tempSEXP);
-    rcpp_result_gen = Rcpp::wrap(relativeSapViscosity(conc, temp));
+    rcpp_result_gen = Rcpp::wrap(relativeSapViscosity(sugarConc, temp));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4084,8 +4086,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_radiationDiurnalPattern", (DL_FUNC) &_medfate_radiationDiurnalPattern, 2},
     {"_medfate_temperatureDiurnalPattern", (DL_FUNC) &_medfate_temperatureDiurnalPattern, 4},
     {"_medfate_leafTemperature", (DL_FUNC) &_medfate_leafTemperature, 5},
-    {"_medfate_osmoticWaterPotential", (DL_FUNC) &_medfate_osmoticWaterPotential, 2},
-    {"_medfate_sugarConcentration", (DL_FUNC) &_medfate_sugarConcentration, 2},
+    {"_medfate_osmoticWaterPotential", (DL_FUNC) &_medfate_osmoticWaterPotential, 3},
+    {"_medfate_sugarConcentration", (DL_FUNC) &_medfate_sugarConcentration, 3},
     {"_medfate_relativeSapViscosity", (DL_FUNC) &_medfate_relativeSapViscosity, 2},
     {"_medfate_turgor", (DL_FUNC) &_medfate_turgor, 3},
     {"_medfate_leafStorageVolume", (DL_FUNC) &_medfate_leafStorageVolume, 4},

@@ -13,16 +13,16 @@ biophysics_leafTemperature <- function(absRad, airTemperature, u, E, leafWidth =
     .Call(`_medfate_leafTemperature`, absRad, airTemperature, u, E, leafWidth)
 }
 
-moisture_osmoticWaterPotential <- function(conc, temp) {
-    .Call(`_medfate_osmoticWaterPotential`, conc, temp)
+carbon_osmoticWaterPotential <- function(conc, temp, nonSugarConc = 0.2) {
+    .Call(`_medfate_osmoticWaterPotential`, conc, temp, nonSugarConc)
 }
 
-moisture_sugarConcentration <- function(osmoticWP, temp) {
-    .Call(`_medfate_sugarConcentration`, osmoticWP, temp)
+carbon_sugarConcentration <- function(osmoticWP, temp, nonSugarConc = 0.2) {
+    .Call(`_medfate_sugarConcentration`, osmoticWP, temp, nonSugarConc)
 }
 
-carbon_relativeSapViscosity <- function(conc, temp) {
-    .Call(`_medfate_relativeSapViscosity`, conc, temp)
+carbon_relativeSapViscosity <- function(sugarConc, temp) {
+    .Call(`_medfate_relativeSapViscosity`, sugarConc, temp)
 }
 
 carbon_turgor <- function(psi, conc, temp) {
