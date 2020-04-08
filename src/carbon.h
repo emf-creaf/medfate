@@ -5,8 +5,9 @@
 #endif
 using namespace Rcpp;
 
-const double glucoseMolarWeight = 180.156; //g*mol-1
-const double starchMolarWeight = 162.1406; //g*mol-1
+const double carbonMolarMass = 12.0107; //g*mol-1
+const double glucoseMolarMass = 180.156; //g*mol-1
+const double starchMolarMass = 162.1406; //g*mol-1
 const double starchDensity = 1.5; //g·cm-3
 const double leafCperDry = 0.3; //g C · g dry-1
 const double rootCperDry = 0.4959; //g C · g dry-1

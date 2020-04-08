@@ -2,9 +2,9 @@
 #include "hydraulics.h"
 using namespace Rcpp;
 
-
-const double glucoseMolarWeight = 180.156; //g*mol-1
-const double starchMolarWeight = 162.1406; //g*mol-1
+const double carbonMolarMass = 12.0107; //g*mol-1
+const double glucoseMolarMass = 180.156; //g*mol-1
+const double starchMolarMass = 162.1406; //g*mol-1
 const double starchDensity = 1.5; //g·cm-3
 
 const double leafCperDry = 0.3; //g C · g dry-1
@@ -38,7 +38,7 @@ double sugarConcentration(double osmoticWP, double temp, double nonSugarConc = 0
 */
 // [[Rcpp::export("carbon_relativeSapViscosity")]]
 double relativeSapViscosity(double sugarConc, double temp) {
-  double x = sugarConc*glucoseMolarWeight/1e3; //from mol/l to g*cm-3
+  double x = sugarConc*glucoseMolarMass/1e3; //from mol/l to g*cm-3
   double Tkelvin = temp + 273.15;
   double q0a = 1.12; //g*cm-3
   double q1 = -0.248;

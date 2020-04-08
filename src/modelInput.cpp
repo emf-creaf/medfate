@@ -428,16 +428,18 @@ DataFrame internalCarbonDataFrame(DataFrame above,
     starchSapwood[c] = 0.5*sapwoodStarchCapacity(SA[c], H[c], Z[c], WoodDensity[c], 0.5);
     //Sugar storage from PI0
     double lconc = sugarConcentration(LeafPI0[c],15.0);
-    double lvol = leafStorageVolume(LAI_expanded[c], N[c], SLA[c], LeafDensity[c]); //l
-    double lstvol = 0.001*(starchLeaf[c]/starchDensity);
-    Rcout<<c<<": "<<lvol<<" "<< lstvol<< " "<< lconc <<"\n";
-    sugarLeaf[c] = glucoseMolarWeight*lconc*(lvol - lstvol);
+    // double lvol = leafStorageVolume(LAI_expanded[c], N[c], SLA[c], LeafDensity[c]); //l
+    // double lstvol = 0.001*(starchLeaf[c]/starchDensity);
+    // // Rcout<<c<<": "<<lvol<<" "<< lstvol<< " "<< lconc <<"\n";
+    // sugarLeaf[c] = glucoseMolarMass*lconc*(lvol - lstvol);
+    sugarLeaf[c] = lconc;
     double sconc = sugarConcentration(StemPI0[c],15.0);
-    sconc = std::min(sconc,lconc); // Do not allow higher initial concentration in sapwood
-    double svol = sapwoodStorageVolume(SA[c], H[c], Z[c], WoodDensity[c], 0.5); //l
-    double sstvol = 0.001*(starchSapwood[c]/starchDensity);
-    Rcout<<c<<": "<<svol<<" "<< sstvol<< " "<< sconc <<"\n";
-    sugarSapwood[c] = glucoseMolarWeight*sconc*(svol - sstvol);
+    // sconc = std::min(sconc,lconc); // Do not allow higher initial concentration in sapwood
+    // double svol = sapwoodStorageVolume(SA[c], H[c], Z[c], WoodDensity[c], 0.5); //l
+    // double sstvol = 0.001*(starchSapwood[c]/starchDensity);
+    // Rcout<<c<<": "<<svol<<" "<< sstvol<< " "<< sconc <<"\n";
+    // sugarSapwood[c] = glucoseMolarMass*sconc*(svol - sstvol);
+    sugarSapwood[c] = sconc;
   }
   DataFrame df = DataFrame::create(Named("sugarLeaf") = sugarLeaf,
                                    Named("starchLeaf") = starchLeaf,
