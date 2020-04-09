@@ -10,8 +10,41 @@ const double starchDensity = 1.5; //g·cm-3
 const double leafCperDry = 0.3; //g C · g dry-1
 const double rootCperDry = 0.4959; //g C · g dry-1
 
-const double nonSugarConc = 0.21; //mol ·l-1
 const double Rn = 0.008314472; // The perfect gas constant MPa·l/K·mol = kJ/K·mol
+
+//Sains Malaysiana 44(7)(2015): 973–977
+//Modeling of Sago Starch Hydrolysis Using Glucoamylase
+// double starchHydrolysis(double starchConc) {
+//   double ks_hydrolysis_starch_vol = 2.324; // = g·L-1
+//   double vmax_hydrolysis_starch_vol = 0.424; // = g·L-1·min-1
+//   starchConc = starchConc*starchMolarMass; // from mol·L-1 to g·L-1
+//   double v = (vmax_hydrolysis_starch_vol*starchConc)/(ks_hydrolysis_starch_vol + starchConc);
+//   v = v/(starchMolarMass*60.0); // from g·L-1·min to mol·L-1·s-1
+//   return(v); //return mol·L-1·s-1
+// }
+
+double sugarStarchDynamics(double sugarConc, double starchConc,
+                           double kmsyn, double vmaxsyn, double khyd) {
+  double sugarM = sugarConc*(18.0/1000.0); //from mol·L-1 to mol·mol-1
+  double starchM = starchConc*(18.0/1000.0); //from mol·L-1 to mol·mol-1
+  double STsyn = vmaxsyn*(sugarM/(kmsyn + sugarM));
+  double SThyd = khyd*starchM;
+  double dSdt = (STsyn-SThyd)*(1000.0/18.0);
+  return(dSdt/(3600.0*24.0)); //return mol·l-1·s-1
+}
+
+// [[Rcpp::export("carbon_sugarStarchDynamicsLeaf")]]
+double sugarStarchDynamicsLeaf(double sugarConc, double starchConc) {
+  return(sugarStarchDynamics(sugarConc, starchConc, 0.1, 0.3, 1));
+}
+// [[Rcpp::export("carbon_sugarStarchDynamicsStem")]]
+double sugarStarchDynamicsStem(double sugarConc, double starchConc) {
+  return(sugarStarchDynamics(sugarConc, starchConc, 0.1, 0.15, 0.4));
+}
+// [[Rcpp::export("carbon_sugarStarchDynamicsRoot")]]
+double sugarStarchDynamicsRoot(double sugarConc, double starchConc) {
+  return(sugarStarchDynamics(sugarConc, starchConc, 0.1, 0.6, 0.4));
+}
 
 /**
  * Van 't Hoff equation
@@ -20,11 +53,11 @@ const double Rn = 0.008314472; // The perfect gas constant MPa·l/K·mol = kJ/K�
  *  wp - MPa
  */
 // [[Rcpp::export("carbon_osmoticWaterPotential")]]
-double osmoticWaterPotential(double conc, double temp, double nonSugarConc = 0.2) {
+double osmoticWaterPotential(double conc, double temp, double nonSugarConc = 0.4) {
   return(- (conc + nonSugarConc)*Rn*(temp + 273.15));
 }
 // [[Rcpp::export("carbon_sugarConcentration")]]
-double sugarConcentration(double osmoticWP, double temp, double nonSugarConc = 0.2) {
+double sugarConcentration(double osmoticWP, double temp, double nonSugarConc = 0.4) {
   return(- osmoticWP/(Rn*(temp + 273.15)) - nonSugarConc);
 }
 

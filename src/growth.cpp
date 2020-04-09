@@ -22,8 +22,10 @@ const double Q10_resp = 2.0;
 
 const double growthCarbonConcentrationThreshold = 0.5;
 
-const double dailySAturnoverProportion = 0.0001261398; //Equivalent to annual 4.5% 1-(1-0.045)^(1.0/365)
-
+//Ogle & Pacala 2010
+//Tree Physiology 29, 587–605
+const double dailySAturnoverProportion = 0.0001261398; //day-1 Equivalent to annual 4.5% 1-(1-0.045)^(1.0/365)
+const double dailyFineRootTurnoverProportion = 0.001897231; //day-1 Equivalent to annual 4.5% 1-(1-0.5)^(1.0/365)
 
 
 
@@ -142,6 +144,8 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
   
   //Internal state variables
   List internalWater = Rcpp::as<Rcpp::List>(x["internalWater"]);
+  NumericVector NSPL = Rcpp::as<Rcpp::NumericVector>(internalWater["NSPL"]);
+  
   List internalCarbon = Rcpp::as<Rcpp::List>(x["internalCarbon"]);
   NumericVector sugarLeaf = internalCarbon["sugarLeaf"];
   NumericVector starchLeaf = internalCarbon["starchLeaf"];
@@ -166,6 +170,7 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
   
   //Anatomy parameters
   DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
+  NumericVector Hmed = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["Hmed"]);
   NumericVector SLA = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["SLA"]);
   NumericVector Al2As = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["Al2As"]);
   NumericVector WoodDensity = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["WoodDensity"]);
@@ -247,12 +252,13 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
     double sfrRespDay = sapwoodResp+finerootResp;
     double sfrRespStep = sfrRespDay/((double) numSteps);
     
+    //Carbon balance for leaves and stems
     for(int s=0;s<numSteps;s++) {
       //Transform to mass
-      double lstvol = 0.001*(starchLeaf[j]/starchDensity);
-      double sstvol = 0.001*(starchSapwood[j]/starchDensity);
-      double leafSugarMass = sugarLeaf[j]*((ST_volume_leaves[j]-lstvol)*glucoseMolarMass);
-      double sapwoodSugarMass = sugarSapwood[j]*((ST_volume_sapwood[j]-sstvol)*glucoseMolarMass);
+      // double lstvol = 0.001*(starchLeaf[j]/starchDensity);
+      // double sstvol = 0.001*(starchSapwood[j]/starchDensity);
+      double leafSugarMass = sugarLeaf[j]*(ST_volume_leaves[j]*glucoseMolarMass);
+      double sapwoodSugarMass = sugarSapwood[j]*(ST_volume_sapwood[j]*glucoseMolarMass);
       
       //gross fotosynthesis
       double leafAgStepC = AgStep(j,s)/(N[j]/10000.0); //Translate g C · m-2 · h-1 to g C · h-1
@@ -263,10 +269,10 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
       sapwoodSugarMass = sapwoodSugarMass - sfrRespStep;
 
       //transform to concentration
-      sugarLeaf[j] = leafSugarMass/((ST_volume_leaves[j]-lstvol)*glucoseMolarMass);
-      sugarSapwood[j] = sapwoodSugarMass/((ST_volume_sapwood[j]-sstvol)*glucoseMolarMass);
+      sugarLeaf[j] = leafSugarMass/(ST_volume_leaves[j]*glucoseMolarMass);
+      sugarSapwood[j] = sapwoodSugarMass/(ST_volume_sapwood[j]*glucoseMolarMass);
       
-      //flowm transport      
+      //floem transport      
       double psiUp = symplasticWaterPotential(rwcLeaf(j,s), LeafPI0[j], LeafEPS[j]);
       double psiDown = symplasticWaterPotential(rwcStem(j,s), StemPI0[j], StemEPS[j]);
       
@@ -276,8 +282,34 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
       sugarLeaf[j] = sugarLeaf[j] - ff;
       sugarSapwood[j] = sugarSapwood[j] + ff;
       PlantSugarTransport[j] += ff;
+      
+      //sugar-starch dynamics
+      double conversionLeaf = sugarStarchDynamicsLeaf(sugarLeaf[j], starchLeaf[j])*3600.0;
+      sugarLeaf[j] = sugarLeaf[j] - conversionLeaf;
+      starchLeaf[j] = starchLeaf[j] + conversionLeaf;
+      
+      double conversionSapwood = sugarStarchDynamicsRoot(sugarSapwood[j], starchSapwood[j])*3600.0;
+      sugarSapwood[j] = sugarSapwood[j] - conversionSapwood;
+      starchSapwood[j] = starchSapwood[j] + conversionSapwood;
+      
     }
     
+    //Growth and senescense
+    double deltaSAturnover = (dailySAturnoverProportion/(1.0+15.0*exp(-0.01*H[j])))*SA[j];
+    double deltaSAgrowth = 0.0;
+    
+    SA[j] = SA[j] + deltaSAgrowth - deltaSAturnover; //Update sapwood area
+         
+    //Update Huber value and stem hydraulic conductance
+    Al2As[j] = (LAlive)/(SA[j]/10000.0);
+    VCstem_kmax[j]=maximumStemHydraulicConductance(Kmax_stemxylem[j], Hmed[j], Al2As[j] ,H[j], taper);
+         
+    //Update leaf and stem osmotic water potential at turgor loss
+    LeafPI0[j] = osmoticWaterPotential(sugarLeaf[j], tday);
+    StemPI0[j] = osmoticWaterPotential(sugarSapwood[j], tday);
+    //Update non-stomatal photosynthesis limitations
+    NSPL[j] = 1.0 - std::max(0.0, std::min(1.0, sugarLeaf[j] - 0.5)); //photosynthesis limited when conc > 0.5 and zero when conc > 1.5 mol·l-1
+      
     //3.2 Leaf photosynthesis and floem transport
     // sugarLeaf[j] = sugarLeaf[j] + leafAg - dailyFloemTransport;
     // Rcout<<LAlive<< " "<<leafAg<< " "<< dailyFloemTransport<<"\n";

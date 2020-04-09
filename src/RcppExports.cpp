@@ -49,6 +49,42 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// sugarStarchDynamicsLeaf
+double sugarStarchDynamicsLeaf(double sugarConc, double starchConc);
+RcppExport SEXP _medfate_sugarStarchDynamicsLeaf(SEXP sugarConcSEXP, SEXP starchConcSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type sugarConc(sugarConcSEXP);
+    Rcpp::traits::input_parameter< double >::type starchConc(starchConcSEXP);
+    rcpp_result_gen = Rcpp::wrap(sugarStarchDynamicsLeaf(sugarConc, starchConc));
+    return rcpp_result_gen;
+END_RCPP
+}
+// sugarStarchDynamicsStem
+double sugarStarchDynamicsStem(double sugarConc, double starchConc);
+RcppExport SEXP _medfate_sugarStarchDynamicsStem(SEXP sugarConcSEXP, SEXP starchConcSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type sugarConc(sugarConcSEXP);
+    Rcpp::traits::input_parameter< double >::type starchConc(starchConcSEXP);
+    rcpp_result_gen = Rcpp::wrap(sugarStarchDynamicsStem(sugarConc, starchConc));
+    return rcpp_result_gen;
+END_RCPP
+}
+// sugarStarchDynamicsRoot
+double sugarStarchDynamicsRoot(double sugarConc, double starchConc);
+RcppExport SEXP _medfate_sugarStarchDynamicsRoot(SEXP sugarConcSEXP, SEXP starchConcSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type sugarConc(sugarConcSEXP);
+    Rcpp::traits::input_parameter< double >::type starchConc(starchConcSEXP);
+    rcpp_result_gen = Rcpp::wrap(sugarStarchDynamicsRoot(sugarConc, starchConc));
+    return rcpp_result_gen;
+END_RCPP
+}
 // osmoticWaterPotential
 double osmoticWaterPotential(double conc, double temp, double nonSugarConc);
 RcppExport SEXP _medfate_osmoticWaterPotential(SEXP concSEXP, SEXP tempSEXP, SEXP nonSugarConcSEXP) {
@@ -1768,8 +1804,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // maximumStemHydraulicConductance
-double maximumStemHydraulicConductance(double xylemConductivity, double refheight, double Al2As, double height, bool angiosperm, bool taper);
-RcppExport SEXP _medfate_maximumStemHydraulicConductance(SEXP xylemConductivitySEXP, SEXP refheightSEXP, SEXP Al2AsSEXP, SEXP heightSEXP, SEXP angiospermSEXP, SEXP taperSEXP) {
+double maximumStemHydraulicConductance(double xylemConductivity, double refheight, double Al2As, double height, bool taper);
+RcppExport SEXP _medfate_maximumStemHydraulicConductance(SEXP xylemConductivitySEXP, SEXP refheightSEXP, SEXP Al2AsSEXP, SEXP heightSEXP, SEXP taperSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1777,9 +1813,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type refheight(refheightSEXP);
     Rcpp::traits::input_parameter< double >::type Al2As(Al2AsSEXP);
     Rcpp::traits::input_parameter< double >::type height(heightSEXP);
-    Rcpp::traits::input_parameter< bool >::type angiosperm(angiospermSEXP);
     Rcpp::traits::input_parameter< bool >::type taper(taperSEXP);
-    rcpp_result_gen = Rcpp::wrap(maximumStemHydraulicConductance(xylemConductivity, refheight, Al2As, height, angiosperm, taper));
+    rcpp_result_gen = Rcpp::wrap(maximumStemHydraulicConductance(xylemConductivity, refheight, Al2As, height, taper));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4088,6 +4123,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_radiationDiurnalPattern", (DL_FUNC) &_medfate_radiationDiurnalPattern, 2},
     {"_medfate_temperatureDiurnalPattern", (DL_FUNC) &_medfate_temperatureDiurnalPattern, 4},
     {"_medfate_leafTemperature", (DL_FUNC) &_medfate_leafTemperature, 5},
+    {"_medfate_sugarStarchDynamicsLeaf", (DL_FUNC) &_medfate_sugarStarchDynamicsLeaf, 2},
+    {"_medfate_sugarStarchDynamicsStem", (DL_FUNC) &_medfate_sugarStarchDynamicsStem, 2},
+    {"_medfate_sugarStarchDynamicsRoot", (DL_FUNC) &_medfate_sugarStarchDynamicsRoot, 2},
     {"_medfate_osmoticWaterPotential", (DL_FUNC) &_medfate_osmoticWaterPotential, 3},
     {"_medfate_sugarConcentration", (DL_FUNC) &_medfate_sugarConcentration, 3},
     {"_medfate_relativeSapViscosity", (DL_FUNC) &_medfate_relativeSapViscosity, 2},
@@ -4200,7 +4238,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_taperFactorSavage", (DL_FUNC) &_medfate_taperFactorSavage, 1},
     {"_medfate_terminalConduitRadius", (DL_FUNC) &_medfate_terminalConduitRadius, 1},
     {"_medfate_referenceConductivityHeightFactor", (DL_FUNC) &_medfate_referenceConductivityHeightFactor, 2},
-    {"_medfate_maximumStemHydraulicConductance", (DL_FUNC) &_medfate_maximumStemHydraulicConductance, 6},
+    {"_medfate_maximumStemHydraulicConductance", (DL_FUNC) &_medfate_maximumStemHydraulicConductance, 5},
     {"_medfate_maximumRootHydraulicConductance", (DL_FUNC) &_medfate_maximumRootHydraulicConductance, 5},
     {"_medfate_stemWaterCapacity", (DL_FUNC) &_medfate_stemWaterCapacity, 3},
     {"_medfate_leafWaterCapacity", (DL_FUNC) &_medfate_leafWaterCapacity, 2},

@@ -2343,7 +2343,7 @@ double referenceConductivityHeightFactor(double refheight, double height) {
  */
 // [[Rcpp::export("hydraulics_maximumStemHydraulicConductance")]]
 double maximumStemHydraulicConductance(double xylemConductivity, double refheight, double Al2As, double height, 
-                                       bool angiosperm = true, bool taper = false) {
+                                       bool taper = false) {
   
   
   // Christoffersen, B. O., M. Gloor, S. Fauset, N. M. Fyllas, D. R. Galbraith, T. R. Baker, L. Rowland, R. A. Fisher, O. J. Binks, S. A. Sevanto, C. Xu, S. Jansen, B. Choat, M. Mencuccini, N. G. McDowell, and P. Meir. 2016. Linking hydraulic traits to tropical forest function in a size-structured and trait-driven model (TFS v.1-Hydro). Geoscientific Model Development Discussions 0:1–60.

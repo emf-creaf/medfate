@@ -233,6 +233,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   NumericVector psiRootCrownVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["psiRootCrown"]);
   NumericMatrix psiRhizoMAT = Rcpp::as<Rcpp::NumericMatrix>(below["psiRhizo"]);
   NumericVector EinstVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["Einst"]);
+  NumericVector NSPLVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["NSPL"]);
   
   if(NumericVector::is_na(aspect)) aspect = 0.0;
   if(NumericVector::is_na(slope)) slope = 0.0;
@@ -599,15 +600,15 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
                                                              zWind[c], 
                                                              absSWR_SL[c] + LWR_emmcan*LAI_SL[c], 
                                                              irradianceToPhotonFlux(absPAR_SL[c]), 
-                                                             Vmax298SL[c], 
-                                                             Jmax298SL[c], 
+                                                             NSPLVEC[c]*Vmax298SL[c], 
+                                                             NSPLVEC[c]*Jmax298SL[c], 
                                                              leafWidth[c], LAI_SL[c]);
           DataFrame photoShade = leafPhotosynthesisFunction(fittedE, Catm, Patm,Tcan[n], vpatm, 
                                                             zWind[c], 
                                                             absSWR_SH[c] + LWR_emmcan*LAI_SH[c], 
                                                             irradianceToPhotonFlux(absPAR_SH[c]),
-                                                            Vmax298SH[c], 
-                                                            Jmax298SH[c], 
+                                                            NSPLVEC[c]*Vmax298SH[c], 
+                                                            NSPLVEC[c]*Jmax298SH[c], 
                                                             leafWidth[c], LAI_SH[c]);
           
           NumericVector AgSunlit = photoSunlit["GrossPhotosynthesis"];

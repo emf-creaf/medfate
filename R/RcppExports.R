@@ -13,11 +13,23 @@ biophysics_leafTemperature <- function(absRad, airTemperature, u, E, leafWidth =
     .Call(`_medfate_leafTemperature`, absRad, airTemperature, u, E, leafWidth)
 }
 
-carbon_osmoticWaterPotential <- function(conc, temp, nonSugarConc = 0.2) {
+carbon_sugarStarchDynamicsLeaf <- function(sugarConc, starchConc) {
+    .Call(`_medfate_sugarStarchDynamicsLeaf`, sugarConc, starchConc)
+}
+
+carbon_sugarStarchDynamicsStem <- function(sugarConc, starchConc) {
+    .Call(`_medfate_sugarStarchDynamicsStem`, sugarConc, starchConc)
+}
+
+carbon_sugarStarchDynamicsRoot <- function(sugarConc, starchConc) {
+    .Call(`_medfate_sugarStarchDynamicsRoot`, sugarConc, starchConc)
+}
+
+carbon_osmoticWaterPotential <- function(conc, temp, nonSugarConc = 0.4) {
     .Call(`_medfate_osmoticWaterPotential`, conc, temp, nonSugarConc)
 }
 
-carbon_sugarConcentration <- function(osmoticWP, temp, nonSugarConc = 0.2) {
+carbon_sugarConcentration <- function(osmoticWP, temp, nonSugarConc = 0.4) {
     .Call(`_medfate_sugarConcentration`, osmoticWP, temp, nonSugarConc)
 }
 
@@ -461,8 +473,8 @@ hydraulics_referenceConductivityHeightFactor <- function(refheight, height) {
     .Call(`_medfate_referenceConductivityHeightFactor`, refheight, height)
 }
 
-hydraulics_maximumStemHydraulicConductance <- function(xylemConductivity, refheight, Al2As, height, angiosperm = TRUE, taper = FALSE) {
-    .Call(`_medfate_maximumStemHydraulicConductance`, xylemConductivity, refheight, Al2As, height, angiosperm, taper)
+hydraulics_maximumStemHydraulicConductance <- function(xylemConductivity, refheight, Al2As, height, taper = FALSE) {
+    .Call(`_medfate_maximumStemHydraulicConductance`, xylemConductivity, refheight, Al2As, height, taper)
 }
 
 hydraulics_maximumRootHydraulicConductance <- function(xylemConductivity, Al2As, v, widths, depthWidthRatio = 1.0) {

@@ -35,10 +35,13 @@ DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams) {
   NumericVector WoodDensity = cohortNumericParameter(SP, SpParams, "WoodDensity");
   NumericVector r635 = cohortNumericParameter(SP, SpParams, "r635");
   NumericVector leafwidth = cohortNumericParameter(SP, SpParams, "LeafWidth");
+  NumericVector Hmed = cohortNumericParameter(SP, SpParams, "Hmed"); //To correct conductivity
+  
   for(int c=0;c<numCohorts;c++){
     if(NumericVector::is_na(Al2As[c])) Al2As[c] = 2500.0; // = 4 cm2·m-2
   }
   DataFrame paramsAnatomydf = DataFrame::create(
+    _["Hmed"] = Hmed,
     _["Al2As"] = Al2As, _["SLA"] = SLA, _["LeafWidth"] = leafwidth, 
     _["LeafDensity"] = LeafDensity, _["WoodDensity"] = WoodDensity, _["r635"] = r635
   );
@@ -153,7 +156,7 @@ DataFrame paramsTranspiration(DataFrame above, NumericMatrix V, List soil, DataF
     if(NumericVector::is_na(Kmax_rootxylem[c])) Kmax_rootxylem[c] = 4.0*Kmax_stemxylem[c];
     
     //Calculate stem maximum conductance (in mmol·m-2·s-1·MPa-1)
-    VCstem_kmax[c]=maximumStemHydraulicConductance(Kmax_stemxylem[c], Hmed[c], Al2As[c],H[c], (Group[c]=="Angiosperm"),control["taper"]); 
+    VCstem_kmax[c]=maximumStemHydraulicConductance(Kmax_stemxylem[c], Hmed[c], Al2As[c],H[c],control["taper"]); 
     
     //Xylem vulnerability curve
     if(NumericVector::is_na(VCstem_d[c]) | NumericVector::is_na(VCstem_c[c])) {
@@ -423,9 +426,12 @@ DataFrame internalCarbonDataFrame(DataFrame above,
   NumericVector sugarSapwood(numCohorts);
   NumericVector starchSapwood(numCohorts);
   for(int c=0;c<numCohorts;c++){
+    double lvol = leafStorageVolume(LAI_expanded[c],  N[c], SLA[c], LeafDensity[c]);
+    double svol = sapwoodStorageVolume(SA[c], H[c],Z[c],WoodDensity[c], 0.5);
+    
     // 50% in starch storage
-    starchLeaf[c] = 0.5*leafStarchCapacity(LAI_expanded[c], N[c], SLA[c], LeafDensity[c]);
-    starchSapwood[c] = 0.5*sapwoodStarchCapacity(SA[c], H[c], Z[c], WoodDensity[c], 0.5);
+    starchLeaf[c] = (0.5/(lvol*starchMolarMass))*leafStarchCapacity(LAI_expanded[c], N[c], SLA[c], LeafDensity[c]);
+    starchSapwood[c] = (0.5/(svol*starchMolarMass))*sapwoodStarchCapacity(SA[c], H[c], Z[c], WoodDensity[c], 0.5);
     //Sugar storage from PI0
     double lconc = sugarConcentration(LeafPI0[c],15.0);
     // double lvol = leafStorageVolume(LAI_expanded[c], N[c], SLA[c], LeafDensity[c]); //l
@@ -463,7 +469,8 @@ DataFrame internalWaterDataFrame(DataFrame above, String transpirationMode) {
                            Named("psiLeaf") = NumericVector(numCohorts, 0.0),
                            Named("psiSympStem") = NumericVector(numCohorts, 0.0),
                            Named("psiSympLeaf") = NumericVector(numCohorts, 0.0),
-                           Named("PLCstem") = NumericVector(numCohorts, 0.0));
+                           Named("PLCstem") = NumericVector(numCohorts, 0.0),
+                           Named("NSPL") = NumericVector(numCohorts, 1.0));
   }
   df.attr("row.names") = above.attr("row.names");
   return(df);
