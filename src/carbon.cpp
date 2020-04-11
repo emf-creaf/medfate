@@ -128,21 +128,21 @@ double sapwoodCstructural(double SA, double H, double Z, double woodDensity, dou
   return(woodCperDry*sapwoodVolume(SA,H,Z)*woodDensity);
 }
 /*
- * Leaf starch storage capacity in g C · ind-1
+ * Leaf starch storage capacity in mol · ind-1
  * Up to 10% of leaf cell volume
  */
 // [[Rcpp::export("carbon_leafStarchCapacity")]]
 double leafStarchCapacity(double LAI, double N, double SLA, double leafDensity) {
-  return(0.1*1000.0*leafStorageVolume(LAI,N,SLA,leafDensity)*starchDensity);
+  return(0.1*1000.0*leafStorageVolume(LAI,N,SLA,leafDensity)*starchDensity/starchMolarMass);
 }
 
 /*
- *  Sapwood starch storage capacity in g C · ind-1
+ *  Sapwood starch storage capacity in mol · ind-1
  *  Up to 50% of volume of non-conductive cells
  */
 // [[Rcpp::export("carbon_sapwoodStarchCapacity")]]
 double sapwoodStarchCapacity(double SA, double H, double Z, double woodDensity, double vessel2sapwood) {
-  return(0.5*1000.0*sapwoodStorageVolume(SA,H,Z,woodDensity,vessel2sapwood)*starchDensity);
+  return(0.5*1000.0*sapwoodStorageVolume(SA,H,Z,woodDensity,vessel2sapwood)*starchDensity/starchMolarMass);
 }
 
 NumericVector carbonCompartments(double SA, double LAI, double H, double Z, double N, double SLA, double WoodDensity, double WoodC) {

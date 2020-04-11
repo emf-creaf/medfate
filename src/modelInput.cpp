@@ -36,7 +36,7 @@ DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams) {
   NumericVector r635 = cohortNumericParameter(SP, SpParams, "r635");
   NumericVector leafwidth = cohortNumericParameter(SP, SpParams, "LeafWidth");
   NumericVector Hmed = cohortNumericParameter(SP, SpParams, "Hmed"); //To correct conductivity
-  
+    
   for(int c=0;c<numCohorts;c++){
     if(NumericVector::is_na(Al2As[c])) Al2As[c] = 2500.0; // = 4 cm2·m-2
   }
@@ -348,13 +348,17 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams) {
   NumericVector WoodC = cohortNumericParameter(SP, SpParams, "WoodC");
   NumericVector RGRmax = cohortNumericParameter(SP, SpParams, "RGRmax");
   NumericVector Cstoragepmax = cohortNumericParameter(SP, SpParams, "Cstoragepmax");
+  NumericVector leafDuration  = cohortNumericParameter(SP, SpParams, "LeafDuration");
   
 
   for(int c=0;c<numCohorts;c++){
     Cstoragepmax[c] = std::max(0.05,Cstoragepmax[c]); //Minimum 5%
   }
   
-  DataFrame paramsGrowthdf = DataFrame::create(_["WoodC"] = WoodC, _["Cstoragepmax"] = Cstoragepmax, _["RGRmax"] = RGRmax);
+  DataFrame paramsGrowthdf = DataFrame::create(_["WoodC"] = WoodC, 
+                                               _["Cstoragepmax"] = Cstoragepmax, 
+                                               _["RGRmax"] = RGRmax, 
+                                               _["leafDuration"] = leafDuration);
   paramsGrowthdf.attr("row.names") = above.attr("row.names");
   return(paramsGrowthdf);
 }
@@ -421,10 +425,11 @@ DataFrame internalCarbonDataFrame(DataFrame above,
   NumericVector CR = above["CR"];
   NumericVector SA = above["SA"];
 
-  NumericVector sugarLeaf(numCohorts);
-  NumericVector starchLeaf(numCohorts);
-  NumericVector sugarSapwood(numCohorts);
-  NumericVector starchSapwood(numCohorts);
+  NumericVector sugarLeaf(numCohorts,0.0);
+  NumericVector starchLeaf(numCohorts,0.0);
+  NumericVector sugarSapwood(numCohorts,0.0);
+  NumericVector starchSapwood(numCohorts,0.0);
+  NumericVector longtermStorage(numCohorts,0.0);
   for(int c=0;c<numCohorts;c++){
     double lvol = leafStorageVolume(LAI_expanded[c],  N[c], SLA[c], LeafDensity[c]);
     double svol = sapwoodStorageVolume(SA[c], H[c],Z[c],WoodDensity[c], 0.5);
@@ -450,7 +455,8 @@ DataFrame internalCarbonDataFrame(DataFrame above,
   DataFrame df = DataFrame::create(Named("sugarLeaf") = sugarLeaf,
                                    Named("starchLeaf") = starchLeaf,
                                    Named("sugarSapwood") = sugarSapwood,
-                                   Named("starchSapwood") = starchSapwood);
+                                   Named("starchSapwood") = starchSapwood,
+                                   Named("longtermStorage") = longtermStorage);
   df.attr("row.names") = above.attr("row.names");
   return(df);
 }  
