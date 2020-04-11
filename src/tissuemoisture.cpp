@@ -4,6 +4,11 @@
 #include "carbon.h"
 using namespace Rcpp;
 
+
+// [[Rcpp::export("moisture_turgorLossPoint")]]
+double turgorLossPoint(double pi0, double epsilon) {
+  return((pi0*epsilon)/(pi0+epsilon));
+}
 /**
 * Calculates symplastic relative water content from tissue water potential
 * 
@@ -19,7 +24,7 @@ using namespace Rcpp;
 */
 // [[Rcpp::export("moisture_symplasticRWC")]]
 double symplasticRelativeWaterContent(double psiSym, double pi0, double epsilon) {
-  double psi_tl = (pi0*epsilon)/(pi0+epsilon);
+  double psi_tl = turgorLossPoint(pi0,epsilon);
   double rwc = 0;
   if(psiSym< psi_tl) {
     rwc = (-std::abs(pi0))/psiSym;

@@ -19,8 +19,16 @@ const double leaf_RR = 0.00260274; // g gluc · g dw -1 · day -1
 const double sapwood_RR = 6.849315e-05; // g gluc · g dw -1 · day -1
 const double fineroot_RR = 0.002054795; // g gluc · g dw -1 · day -1
 const double Q10_resp = 2.0;
+//construction costs
+const double leaf_CC = 1.5; // g gluc · g dw -1
+const double sapwood_CC = 1.47; // g gluc · g dw -1
+const double fineroots_CC = 1.30; // g gluc · g dw -1
 
-const double growthCarbonConcentrationThreshold = 0.5;
+//Maximum relative growth rate of leaves
+const double RGRleafmax = 0.01; // m2·m-2
+
+// minimum concentration (mol gluc·l-1) to ensure metabolism
+const double growthCarbonConcentrationThreshold = 0.2; 
 
 //Ogle & Pacala 2010
 //Tree Physiology 29, 587–605
@@ -145,6 +153,8 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
   //Internal state variables
   List internalWater = Rcpp::as<Rcpp::List>(x["internalWater"]);
   NumericVector NSPL = Rcpp::as<Rcpp::NumericVector>(internalWater["NSPL"]);
+  NumericVector psiSympLeaf = Rcpp::as<Rcpp::NumericVector>(internalWater["psiSympLeaf"]);
+  NumericVector psiSympStem = Rcpp::as<Rcpp::NumericVector>(internalWater["psiSympStem"]);
   
   List internalCarbon = Rcpp::as<Rcpp::List>(x["internalCarbon"]);
   NumericVector sugarLeaf = internalCarbon["sugarLeaf"];
@@ -231,6 +241,7 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
   for(int j=0;j<numCohorts;j++){
     
     double LAlive = leafArea(LAI_live[j], N[j]);
+    
     //3.1 Respiratory biomass and C compartments
     double B_leaf_live = leafCstructural(LAI_live[j],N[j],SLA[j]);
     double B_leaf_expanded = leafCstructural(LAI_expanded[j],N[j],SLA[j]);
@@ -293,12 +304,34 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
       starchSapwood[j] = starchSapwood[j] + conversionSapwood;
       
     }
+    //Leaf senescense by starvation
+    if(sugarLeaf[j] < 0.0) {
+      double respirationExcess = sugarLeaf[j]*(ST_volume_leaves[j]*glucoseMolarMass); //g gluc
+      double propExcess = respirationExcess/leafRespDay; //day
+      double LAlive[j] = LAlive[j](1.0 - propExcess); 
+      LAI_dead[j] += LAI_expanded[j]*propExcess;
+      LAI_live[j] = LAI_live[j]*(1.0- propExcess);
+      LAI_expanded[j] = LAI_expanded[j]*(1.0- propExcess);
+      sugarLeaf[j] = 0.0;
+    }
     
-    //Growth and senescense
+    //Leaf growth
+    double f_temp = temperatureGrowthFactor(tday);
+    double fLA_turgor = turgorGrowthFactor(psiSympLeaf[j],turgorLossPoint(LeafPI0[j], LeafEPS[j]));
+    if(fLA_turgor>0.0) {
+      double costLA = leaf_CC/(1000.0*SLA[j]); // g gluc · m-2 of leaf area
+      double fLA_source = carbonGrowthFactor(sugarLeaf[j], growthCarbonConcentrationThreshold);
+      double deltaLAsink = RGRleafmax*LAlive[j]*f_temp*fLA_turgor;
+      double deltaLAavailable = sugarLeaf[j]/costLA;
+      double deltaLAgrowth = std::min(deltaLAsink*fLA_source, deltaLAavailable);
+      LAlive[j] = LAlive[j] + deltaLAgrowth; //Update leaf area
+    }
+    
+    
+    //SA growth and senescense
     double deltaSAturnover = (dailySAturnoverProportion/(1.0+15.0*exp(-0.01*H[j])))*SA[j];
-    double deltaSAgrowth = 0.0;
-    
     SA[j] = SA[j] + deltaSAgrowth - deltaSAturnover; //Update sapwood area
+         
          
     //Update Huber value and stem hydraulic conductance
     Al2As[j] = (LAlive)/(SA[j]/10000.0);
@@ -313,20 +346,6 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
     //3.2 Leaf photosynthesis and floem transport
     // sugarLeaf[j] = sugarLeaf[j] + leafAg - dailyFloemTransport;
     // Rcout<<LAlive<< " "<<leafAg<< " "<< dailyFloemTransport<<"\n";
-    
-    //3.3 Leaf respiration
-    //If there is no enough sugar to sustain respiration some leaves die
-    //Starch is assumed to be relocated
-    // if(sugarLeaf[j] - leafResp < 0.0) {
-    //   double deficit = (leafResp - sugarLeaf[j]);
-    //   double biomassDeficit = deficit/(leaf_RR*QR);
-    //   LAI_dead[j] += LAI_expanded[j]*(biomassDeficit/B_leaf_live);
-    //   LAI_live[j] = LAI_live[j]*(1.0- (biomassDeficit/B_leaf_live));
-    //   LAI_expanded[j] = LAI_expanded[j]*(1.0- (biomassDeficit/B_leaf_live));
-    //   sugarLeaf[j] = 0.0;
-    // } else {
-    //   sugarLeaf[j] = sugarLeaf[j] - leafResp;
-    // }
     
     //3.4 Leaf growth
     

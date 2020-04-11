@@ -793,6 +793,10 @@ pwb <- function(x, soil, meteo, W, latitude = NA_real_, elevation = NA_real_, sl
     .Call(`_medfate_pwb`, x, soil, meteo, W, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation)
 }
 
+moisture_turgorLossPoint <- function(pi0, epsilon) {
+    .Call(`_medfate_turgorLossPoint`, pi0, epsilon)
+}
+
 moisture_symplasticRWC <- function(psiSym, pi0, epsilon) {
     .Call(`_medfate_symplasticRelativeWaterContent`, psiSym, pi0, epsilon)
 }
