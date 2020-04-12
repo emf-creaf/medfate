@@ -93,9 +93,11 @@ double turgor(double psi, double conc, double temp) {
   return(std::max(0.0, psi-osmoticWaterPotential(conc,temp)));
 }
 
-
+/**
+ * Leaf area in m2 · ind-1
+ */
 double leafArea(double LAI, double N) {
-  return(10000.0*LAI/N); //Leaf area in m2 · ind-1
+  return(10000.0*LAI/N);
 }
 /**
  * leaf volume in l
@@ -105,28 +107,14 @@ double leafStorageVolume(double LAI, double N, double SLA, double leafDensity) {
   return(leafArea(LAI,N)*leafWaterCapacity(SLA, leafDensity)); 
 }
 
-// [[Rcpp::export("carbon_leafCstructural")]]
-double leafCstructural(double LAI, double N, double SLA) {
-  return(leafCperDry*1000.0*leafArea(LAI,N)/SLA);  //Leaf structural biomass in g C · ind-1
-}
-/**
- * sapwood volume in l
+/*
+ * Leaf structural biomass in g dw · ind-1
  */
-double sapwoodVolume(double SA, double H, double Z) { //SA in cm2, H and Z in cm
-  return(0.001*SA*(H+Z));
+// [[Rcpp::export("carbon_leafStructuralBiomass")]]
+double leafStructuralBiomass(double LAI, double N, double SLA) {
+  return(1000.0*leafArea(LAI,N)/SLA);  
 }
-/**
- * sapwood storage volume in l
- */
-// [[Rcpp::export("carbon_sapwoodStorageVolume")]]
-double sapwoodStorageVolume(double SA, double H, double Z, double woodDensity, double vessel2sapwood) { //SA in cm2, H and Z in cm
-  double woodPorosity = (1.0- (woodDensity/1.54));
-  return((1.0 - vessel2sapwood)*sapwoodVolume(SA,H,Z)*woodPorosity);
-}
-// [[Rcpp::export("carbon_sapwoodCstructural")]]
-double sapwoodCstructural(double SA, double H, double Z, double woodDensity, double woodCperDry) {//SA in cm2, H and Z in cm
-  return(woodCperDry*sapwoodVolume(SA,H,Z)*woodDensity);
-}
+
 /*
  * Leaf starch storage capacity in mol · ind-1
  * Up to 10% of leaf cell volume
@@ -136,18 +124,65 @@ double leafStarchCapacity(double LAI, double N, double SLA, double leafDensity) 
   return(0.1*1000.0*leafStorageVolume(LAI,N,SLA,leafDensity)*starchDensity/starchMolarMass);
 }
 
+
+/**
+ * sapwood volume in l = dm3
+ * 
+ * SA - cm2
+ * H - cm
+ * Z - mm
+ */
+double sapwoodVolume(double SA, double H, double Z) {
+  return(0.001*SA*(H+(Z/10.0)));
+}
+/**
+ * sapwood storage volume in l
+ *  
+ *  SA - cm2
+ *  H - cm
+ *  Z - mm
+ *  woodDensity - g/cm3
+ */
+// [[Rcpp::export("carbon_sapwoodStorageVolume")]]
+double sapwoodStorageVolume(double SA, double H, double Z, double woodDensity, double vessel2sapwood) { 
+  double woodPorosity = (1.0- (woodDensity/1.54));
+  return((1.0 - vessel2sapwood)*sapwoodVolume(SA,H,Z)*woodPorosity);
+}
+
+/**
+ * sapwood structural biomass in g dw
+ * 
+ *  SA - cm2
+ *  H - cm
+ *  Z - mm
+ *  woodDensity - g/cm3
+ */
+// [[Rcpp::export("carbon_sapwoodStructuralBiomass")]]
+double sapwoodStructuralBiomass(double SA, double H, double Z, double woodDensity) {
+  return(1000.0*sapwoodVolume(SA,H,Z)*woodDensity);
+}
+
+// [[Rcpp::export("carbon_sapwoodStructuralLivingBiomass")]]
+double sapwoodStructuralLivingBiomass(double SA, double H, double Z, double woodDensity, double vessel2sapwood) {
+  return(sapwoodStructuralBiomass(SA,H,Z,woodDensity)*(1.0-vessel2sapwood));
+}
 /*
  *  Sapwood starch storage capacity in mol · ind-1
  *  Up to 50% of volume of non-conductive cells
+ *  
+ *  SA - cm2
+ *  H - cm
+ *  Z - mm
+ *  woodDensity - g/cm3
  */
 // [[Rcpp::export("carbon_sapwoodStarchCapacity")]]
 double sapwoodStarchCapacity(double SA, double H, double Z, double woodDensity, double vessel2sapwood) {
   return(0.5*1000.0*sapwoodStorageVolume(SA,H,Z,woodDensity,vessel2sapwood)*starchDensity/starchMolarMass);
 }
 
-NumericVector carbonCompartments(double SA, double LAI, double H, double Z, double N, double SLA, double WoodDensity, double WoodC) {
-  double B_leaf = leafCstructural(LAI,N,SLA);
-  double B_stem = sapwoodCstructural(SA,H,Z,WoodDensity, WoodC);
-  double B_fineroot = B_leaf/2.5;
-  return(NumericVector::create(B_leaf, B_stem, B_fineroot)); 
-}
+// NumericVector carbonCompartments(double SA, double LAI, double H, double Z, double N, double SLA, double WoodDensity, double WoodC) {
+//   double B_leaf = leafStructural(LAI,N,SLA);
+//   double B_stem = sapwoodCstructural(SA,H,Z,WoodDensity, WoodC);
+//   double B_fineroot = B_leaf/2.5;
+//   return(NumericVector::create(B_leaf, B_stem, B_fineroot)); 
+// }

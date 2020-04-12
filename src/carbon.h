@@ -20,16 +20,17 @@ double relativeSapViscosity(double conc, double temp);
 
 double leafArea(double LAI, double N);
 
-double leafStarchCapacity(double LAI, double N, double SLA, double leafDensity);
 double leafStorageVolume(double LAI, double N, double SLA, double leafDensity);
-double leafCstructural(double LAI, double N, double SLA);
+double leafStructuralBiomass(double LAI, double N, double SLA);
+double leafStarchCapacity(double LAI, double N, double SLA, double leafDensity);
 
 double sapwoodStorageVolume(double SA, double H, double Z, double woodDensity, double vessel2sapwood);
-double sapwoodCstructural(double SA, double H, double Z, double woodDensity, double woodCperDry);
+double sapwoodStructuralBiomass(double SA, double H, double Z, double woodDensity);
+double sapwoodStructuralLivingBiomass(double SA, double H, double Z, double woodDensity, double vessel2sapwood);
 double sapwoodStarchCapacity(double SA, double H, double Z, double woodDensity, double vessel2sapwood);
 
 double sugarStarchDynamicsLeaf(double sugarConc, double starchConc);
 double sugarStarchDynamicsStem(double sugarConc, double starchConc);
 double sugarStarchDynamicsRoot(double sugarConc, double starchConc);
 
-NumericVector carbonCompartments(double SA, double LAI, double H, double Z, double N, double SLA, double WoodDensity, double WoodC);
+// NumericVector carbonCompartments(double SA, double LAI, double H, double Z, double N, double SLA, double WoodDensity, double WoodC);

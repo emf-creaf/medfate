@@ -15,18 +15,18 @@ using namespace Rcpp;
 
 //Ogle & Pacala 2010
 //Tree Physiology 29, 587–605
-// const double leaf_RR = 0.00260274; // g gluc · g dw -1 · day -1
-// const double sapwood_RR = 6.849315e-05; // g gluc · g dw -1 · day -1
-// const double fineroot_RR = 0.002054795; // g gluc · g dw -1 · day -1
+const double leaf_RR = 0.00260274; // g gluc · g dw -1 · day -1
+const double sapwood_RR = 6.849315e-05; // g gluc · g dw -1 · day -1
+const double fineroot_RR = 0.002054795; // g gluc · g dw -1 · day -1
 const double Q10_resp = 2.0;
 //construction costs
 const double leaf_CC = 1.5; // g gluc · g dw -1
 const double sapwood_CC = 1.47; // g gluc · g dw -1
 const double fineroots_CC = 1.30; // g gluc · g dw -1
 
-const double leaf_RR = 0.05; // g gluc · g dw -1 · day -1
-const double sapwood_RR = 0.005; // g gluc · g dw -1 · day -1
-const double fineroot_RR = 0.05; // g gluc · g dw -1 · day -1
+// const double leaf_RR = 0.05; // g gluc · g dw -1 · day -1
+// const double sapwood_RR = 0.005; // g gluc · g dw -1 · day -1
+// const double fineroot_RR = 0.05; // g gluc · g dw -1 · day -1
 
 //Maximum relative growth rate of leaves
 const double RGRleafmax = 0.01; // m2·m-2
@@ -219,7 +219,7 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
   NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vleaf"]); //l·m-2 = mm
   
   //Output vectors
-  NumericVector PlantRespiration(numCohorts,0.0);
+  NumericVector MaintenanceRespiration(numCohorts,0.0);
   NumericVector PlantSugarTransport(numCohorts,0.0);
   NumericVector PlantSugarLeaf(numCohorts,0.0);
   NumericVector PlantStarchLeaf(numCohorts,0.0);
@@ -227,7 +227,7 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
   NumericVector PlantStarchSapwood(numCohorts,0.0);
   NumericVector PlantSA(numCohorts,0.0);
   NumericVector PlantSAgrowth(numCohorts,0.0);
-  NumericVector PlantGrossPhotosynthesis(numCohorts,0.0);
+  NumericVector GrossPhotosynthesis(numCohorts,0.0);
   NumericVector PlantLAIdead(numCohorts,0.0);
   NumericVector PlantLAIlive(numCohorts,0.0);
   
@@ -237,45 +237,31 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
   NumericVector Volume_sapwood(numCohorts,0.0);
   NumericVector Starch_max_leaves(numCohorts,0.0);
   NumericVector Starch_max_sapwood(numCohorts,0.0);
+  NumericVector B_struct_leaves(numCohorts,0.0);
+  NumericVector B_struct_sapwood(numCohorts,0.0);
+  NumericVector B_struct_fineroots(numCohorts,0.0);
+
+  //3. Carbon balance and growth
   for(int j=0;j<numCohorts;j++){
+
     Volume_leaves[j] = leafStorageVolume(LAI_expanded[j],  N[j], SLA[j], LeafDensity[j]);
     Volume_sapwood[j] = sapwoodStorageVolume(SA[j], H[j],Z[j],WoodDensity[j], 0.5);
     Starch_max_leaves[j] = leafStarchCapacity(LAI_expanded[j],  N[j], SLA[j], 0.3)/Volume_leaves[j];
     Starch_max_sapwood[j] = sapwoodStarchCapacity(SA[j], H[j],Z[j],WoodDensity[j], 0.2)/Volume_sapwood[j];
-    Rcout << j << " Lvol: "<< Volume_leaves[j] << " Svol: "<<Volume_sapwood[j]<< " LStarchMax: "<<Starch_max_leaves[j]<< " SStarchMax: "<<Starch_max_sapwood[j]<<"\n";
-  }
-  
-  //3. Carbon balance and growth
-  double B_leaf_expanded, B_stem, B_fineroot;
-  for(int j=0;j<numCohorts;j++){
+    B_struct_leaves[j] = leafStructuralBiomass(LAI_expanded[j],N[j],SLA[j]);
+    B_struct_sapwood[j] = sapwoodStructuralLivingBiomass(SA[j], H[j], Z[j], WoodDensity[j], 0.5);
+    B_struct_fineroots[j] = B_struct_leaves[j]/2.0; //TO BE CHANGED
+    
+    // Rcout << j << " Lvol: "<< Volume_leaves[j] << " Svol: "<<Volume_sapwood[j]<< " LStarchMax: "<<Starch_max_leaves[j]
+    //       << " SStarchMax: "<<Starch_max_sapwood[j]<< " Bleaf "<< B_struct_leaves[j]<< " Bsap "<< B_struct_sapwood[j]<< " Bfr "<< B_struct_fineroots[j]<<"\n";
     
     double LAexpanded = leafArea(LAI_expanded[j], N[j]);
     double LAlive = leafArea(LAI_live[j], N[j]);
     double LAdead = leafArea(LAI_dead[j], N[j]);
     double LAlive_ini = LAlive;
     
-    //3.1 Respiratory biomass and C compartments
-    double B_leaf_expanded = leafCstructural(LAI_expanded[j],N[j],SLA[j]);
-    double B_sapwood = sapwoodCstructural(SA[j], H[j], Z[j], WoodDensity[j], WoodC[j]);
-    double B_fineroots;
-    if(transpirationMode=="Sperry") { //Should be coupled to fine root conductance
-      B_fineroots = B_leaf_expanded/2.5;
-      // B_fineroots = sum(VGrhizo_kmax(j,_))/
-    } else {
-      B_fineroots = B_leaf_expanded/2.5;
-    }
-    double B_total = B_leaf_expanded + B_sapwood + B_fineroots;
-      
-    //Leaf daily respiration
-    double QR = qResp(tday);
-    double leafRespDay = B_leaf_expanded*leaf_RR*QR;
-    double leafRespStep = leafRespDay/((double) numSteps);
-    //3.7 Sapwood and fine root respiration
-    double sapwoodResp = B_sapwood*sapwood_RR*QR;
-    double finerootResp = B_fineroot*fineroot_RR*QR;
-    double sfrRespDay = sapwoodResp+finerootResp;
-    double sfrRespStep = sfrRespDay/((double) numSteps);
-    
+    double leafRespDay = 0.0;
+    double sfrRespDay = 0.0;
     //Carbon balance for labile carbon of leaves and stems
     for(int s=0;s<numSteps;s++) {
       
@@ -291,10 +277,22 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
       double leafSugarMassStep = sugarLeafStep*(Volume_leaves[j]*glucoseMolarMass);
       double sapwoodSugarMassStep = sugarSapwoodStep*(Volume_sapwood[j]*glucoseMolarMass);
       
+      //Respiratory biomass (g dw · ind-1)
+      double B_resp_leaves = B_struct_leaves[j] + leafSugarMassStep;
+      double B_resp_sapwood = B_struct_sapwood[j] + sapwoodSugarMassStep;
+      double B_resp_fineroots = B_struct_fineroots[j];
+      double QR = qResp(Tcan[s]);
+      double leafRespStep = B_resp_leaves*leaf_RR*QR/((double) numSteps);
+      double sfrRespStep = (B_resp_sapwood*sapwood_RR + B_resp_fineroots*fineroot_RR)*QR/((double) numSteps);
+      leafRespDay +=leafRespStep;
+      sfrRespDay += sfrRespStep;
+      
       //gross fotosynthesis
       double leafAgStepC = AgStep(j,s)/(N[j]/10000.0); //Translate g C · m-2 · h-1 to g C · h-1
       double leafAgStepG = leafAgStepC*(glucoseMolarMass/(carbonMolarMass*6.0)); // from g C· h-1 to g gluc · h-1
-      PlantGrossPhotosynthesis[j] += (leafAgStepG/B_total);
+      
+      GrossPhotosynthesis[j] += leafAgStepG; //Ag in g gluc
+      MaintenanceRespiration[j] += (sfrRespStep + leafRespStep); //Rm in g gluc
       
       //sugar mass balance
       leafSugarMassStep = leafSugarMassStep + leafAgStepG - leafRespStep;
@@ -309,20 +307,24 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
       double psiUp = symplasticWaterPotential(rwcLeaf(j,s), LeafPI0[j], LeafEPS[j]);
       double psiDown = symplasticWaterPotential(rwcStem(j,s), StemPI0[j], StemEPS[j]);
       
-      double ff = floemFlow(psiUp, psiDown, sugarLeafStep, sugarSapwoodStep, Tcan[s])*3600.0*LAlive; //flow as mol glucose per hour
-      
-      //Apply floem transport (mol gluc) to sugar concentrations (mol gluc· l-1)
-      sugarLeafStep = ((sugarLeafStep*Volume_leaves[j]) - ff)/Volume_leaves[j];
-      sugarSapwoodStep = ((sugarSapwoodStep*Volume_sapwood[j]) + ff)/Volume_sapwood[j];
+      double ff = 0.0;
+      for(int t=0;t<3600;t++) {
+        double ft = floemFlow(psiUp, psiDown, sugarLeafStep, sugarSapwoodStep, Tcan[s])*LAlive; //flow as mol glucose per s
+        
+        //Apply floem transport (mol gluc) to sugar concentrations (mol gluc· l-1)
+        sugarLeafStep = ((sugarLeafStep*Volume_leaves[j]) - ft)/Volume_leaves[j];
+        sugarSapwoodStep = ((sugarSapwoodStep*Volume_sapwood[j]) + ft)/Volume_sapwood[j];
+        ff +=ft;
+      }
       PlantSugarTransport[j] += ff; //To calculate daily floem balance (positive means towards stem)
       // Rcout<<" coh:"<<j<< " s:"<<s<< " conc leaf: "<< sugarLeafStep << " conc sap: "<< sugarSapwoodStep<<" ff: "<<ff<< "\n";
-
+      
       // sugar-starch dynamics
       double conversionLeaf = sugarStarchDynamicsLeaf(sugarLeafStep, starchLeafStep)*3600.0;
       sugarLeafStep = sugarLeafStep - conversionLeaf;
       starchLeafStep = starchLeafStep + conversionLeaf;
       // Rcout<<" coh:"<<j<< " s:"<<s<< " Lsugar: "<< sugarLeafStep << " Lstarch: "<< sugarSapwoodStep<<" starch formation: "<<conversionLeaf<< "\n";
-      
+
       double conversionSapwood = sugarStarchDynamicsRoot(sugarSapwoodStep, starchSapwoodStep)*3600.0;
       sugarSapwoodStep = sugarSapwoodStep - conversionSapwood;
       starchSapwoodStep = starchSapwoodStep + conversionSapwood;
@@ -390,9 +392,10 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
       VCroot_kmax(j,s) = VCroot_kmax(j,s)*(LAlive/LAlive_ini);
     }     
     
-    //Update leaf and stem osmotic water potential at turgor loss
-    // LeafPI0[j] = osmoticWaterPotential(sugarLeaf[j], tday);
-    // StemPI0[j] = osmoticWaterPotential(sugarSapwood[j], tday);
+    //Update leaf and stem osmotic water potential at maximum turgor
+    LeafPI0[j] = osmoticWaterPotential(sugarLeaf[j], tday)/rwcLeaf(j, numSteps-1);
+    StemPI0[j] = osmoticWaterPotential(sugarSapwood[j], tday)/rwcStem(j, numSteps-1);
+    
     //Update non-stomatal photosynthesis limitations
     NSPL[j] = 1.0 - std::max(0.0, std::min(1.0, sugarLeaf[j] - 0.5)); //photosynthesis limited when conc > 0.5 and zero when conc > 1.5 mol·l-1
       
@@ -404,11 +407,10 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
     PlantSA[j] = SA[j];
     PlantLAIlive[j] = LAI_live[j];
     PlantLAIdead[j] = LAI_dead[j];
-    PlantRespiration[j] = (sfrRespDay + leafRespDay)/B_total;
   }
   
-  DataFrame df = DataFrame::create(_["PlantGrossPhotosynthesis"] = PlantGrossPhotosynthesis,
-                                   _["PlantRespiration"] = PlantRespiration,
+  DataFrame df = DataFrame::create(_["GrossPhotosynthesis"] = GrossPhotosynthesis,
+                                   _["MaintenanceRespiration"] = MaintenanceRespiration,
                                    _["PlantSugarLeaf"] = PlantSugarLeaf,
                                    _["PlantStarchLeaf"] = PlantStarchLeaf,
                                    _["PlantSugarSapwood"] = PlantSugarSapwood,
@@ -1049,7 +1051,8 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
     DataFrame growDay = growthDay(x,s,MeanTemperature[i]);  
     
     //4. Assemble output
-    NumericVector PlantRespirationDay = Rcpp::as<Rcpp::NumericVector>(growDay["PlantRespiration"]);
+    NumericVector MaintenanceRespirationDay = Rcpp::as<Rcpp::NumericVector>(growDay["MaintenanceRespiration"]);
+    NumericVector GrossPhotosynthesisDay = Rcpp::as<Rcpp::NumericVector>(growDay["GrossPhotosynthesis"]);
     NumericVector PlantSugarLeafDay = Rcpp::as<Rcpp::NumericVector>(growDay["PlantSugarLeaf"]);
     NumericVector PlantStarchLeafDay = Rcpp::as<Rcpp::NumericVector>(growDay["PlantStarchLeaf"]);
     NumericVector PlantSugarSapwoodDay = Rcpp::as<Rcpp::NumericVector>(growDay["PlantSugarSapwood"]);
@@ -1059,10 +1062,9 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
     NumericVector PlantLAIliveDay = Rcpp::as<Rcpp::NumericVector>(growDay["PlantLAIlive"]);
     NumericVector PlantLAIdeadDay = Rcpp::as<Rcpp::NumericVector>(growDay["PlantLAIdead"]);
     NumericVector PlantSAgrowthDay = Rcpp::as<Rcpp::NumericVector>(growDay["PlantSAgrowth"]);
-    NumericVector PlantGrossPhotosynthesisDay = Rcpp::as<Rcpp::NumericVector>(growDay["PlantGrossPhotosynthesis"]);
     for(int j=0;j<numCohorts;j++){
-      PlantGrossPhotosynthesis(i,j) = PlantGrossPhotosynthesisDay[j];
-      PlantRespiration(i,j) = PlantRespirationDay[j];
+      PlantGrossPhotosynthesis(i,j) = GrossPhotosynthesisDay[j];
+      PlantRespiration(i,j) = MaintenanceRespirationDay[j];
       PlantSugarLeaf(i,j) = PlantSugarLeafDay[j];
       PlantStarchLeaf(i,j) = PlantStarchLeafDay[j];
       PlantSugarSapwood(i,j) = PlantSugarSapwoodDay[j];

@@ -45,20 +45,24 @@ carbon_leafStorageVolume <- function(LAI, N, SLA, leafDensity) {
     .Call(`_medfate_leafStorageVolume`, LAI, N, SLA, leafDensity)
 }
 
-carbon_leafCstructural <- function(LAI, N, SLA) {
-    .Call(`_medfate_leafCstructural`, LAI, N, SLA)
+carbon_leafStructuralBiomass <- function(LAI, N, SLA) {
+    .Call(`_medfate_leafStructuralBiomass`, LAI, N, SLA)
+}
+
+carbon_leafStarchCapacity <- function(LAI, N, SLA, leafDensity) {
+    .Call(`_medfate_leafStarchCapacity`, LAI, N, SLA, leafDensity)
 }
 
 carbon_sapwoodStorageVolume <- function(SA, H, Z, woodDensity, vessel2sapwood) {
     .Call(`_medfate_sapwoodStorageVolume`, SA, H, Z, woodDensity, vessel2sapwood)
 }
 
-carbon_sapwoodCstructural <- function(SA, H, Z, woodDensity, woodCperDry) {
-    .Call(`_medfate_sapwoodCstructural`, SA, H, Z, woodDensity, woodCperDry)
+carbon_sapwoodStructuralBiomass <- function(SA, H, Z, woodDensity) {
+    .Call(`_medfate_sapwoodStructuralBiomass`, SA, H, Z, woodDensity)
 }
 
-carbon_leafStarchCapacity <- function(LAI, N, SLA, leafDensity) {
-    .Call(`_medfate_leafStarchCapacity`, LAI, N, SLA, leafDensity)
+carbon_sapwoodStructuralLivingBiomass <- function(SA, H, Z, woodDensity, vessel2sapwood) {
+    .Call(`_medfate_sapwoodStructuralLivingBiomass`, SA, H, Z, woodDensity, vessel2sapwood)
 }
 
 carbon_sapwoodStarchCapacity <- function(SA, H, Z, woodDensity, vessel2sapwood) {
