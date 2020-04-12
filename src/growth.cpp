@@ -15,12 +15,12 @@ using namespace Rcpp;
 
 //Ogle & Pacala 2010
 //Tree Physiology 29, 587–605
-const double leaf_RR = 0.00260274; // g gluc · g dw -1 · day -1
-const double sapwood_RR = 6.849315e-05; // g gluc · g dw -1 · day -1
-const double fineroot_RR = 0.002054795; // g gluc · g dw -1 · day -1
-// const double leaf_RR = 0.0260274; // g gluc · g dw -1 · day -1
-// const double sapwood_RR = 6.849315e-04; // g gluc · g dw -1 · day -1
-// const double fineroot_RR = 0.02054795; // g gluc · g dw -1 · day -1
+// const double leaf_RR = 0.00260274; // g gluc · g dw -1 · day -1
+// const double sapwood_RR = 6.849315e-05; // g gluc · g dw -1 · day -1
+// const double fineroot_RR = 0.002054795; // g gluc · g dw -1 · day -1
+const double leaf_RR = 0.0260274; // g gluc · g dw -1 · day -1
+const double sapwood_RR = 6.849315e-04; // g gluc · g dw -1 · day -1
+const double fineroot_RR = 0.02054795; // g gluc · g dw -1 · day -1
 const double Q10_resp = 2.0;
 //construction costs
 const double leaf_CC = 1.5; // g gluc · g dw -1
@@ -31,8 +31,8 @@ const double fineroots_CC = 1.30; // g gluc · g dw -1
 // const double sapwood_RR = 0.005; // g gluc · g dw -1 · day -1
 // const double fineroot_RR = 0.05; // g gluc · g dw -1 · day -1
 
-//Maximum relative growth rate of leaves (1%/day)
-const double RGRleafmax = 0.01; // m2·m-2·day-1
+//Maximum relative growth rate of leaves (0.5%/day)
+const double RGRleafmax = 0.005; // m2·m-2·day-1
 
 // minimum concentration (mol gluc·l-1) to ensure metabolism
 const double equilibriumConcentrationLeaves = 0.1; 
@@ -207,10 +207,11 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
   // NumericVector slowCstorage_max(numCohorts), fastCstorage_max(numCohorts);
   //Transpiration parameters
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
-  NumericVector Kmax_stemxylem, VCstem_kmax, Psi_Extract, VCstem_c, VCstem_d;
+  NumericVector Kmax_stemxylem, VCstem_kmax, VCroot_kmaxVEC, Psi_Extract, VCstem_c, VCstem_d;
   NumericMatrix VGrhizo_kmax, VCroot_kmax;
   Kmax_stemxylem = paramsTransp["Kmax_stemxylem"];
   VCstem_kmax = paramsTransp["VCstem_kmax"];
+  VCroot_kmaxVEC= paramsTransp["VCroot_kmax"];
   VGrhizo_kmax = Rcpp::as<Rcpp::NumericMatrix>(below["VGrhizo_kmax"]);
   VCroot_kmax = Rcpp::as<Rcpp::NumericMatrix>(below["VCroot_kmax"]);
   int numLayers = VCroot_kmax.ncol();
@@ -371,18 +372,18 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
     //Leaf growth
     double f_temp = temperatureGrowthFactor(tday);
     double fLA_turgor = turgorGrowthFactor(psiSympLeaf[j],turgorLossPoint(LeafPI0[j], LeafEPS[j]));
-    if(fLA_turgor>0.0) {
-      double costLA = leaf_CC/(1000.0*SLA[j]); // g gluc · m-2 of leaf area
+    if(fLA_turgor>0.0 & f_temp>0.0) {
+      double costPerLA = 1000.0*leaf_CC/SLA[j]; // g gluc · m-2 of leaf area
       double fLA_sinkC = carbonGrowthFactor(sugarLeaf[j], equilibriumConcentrationLeaves);
       double deltaLAsink = RGRleafmax*LAlive*f_temp*fLA_turgor*fLA_sinkC;
-      double deltaLAavailable = (sugarLeaf[j]*(glucoseMolarMass*Volume_leaves[j]))/costLA;
+      double deltaLAavailable = (sugarLeaf[j]*(glucoseMolarMass*Volume_leaves[j]))/costPerLA;
       double deltaLAgrowth = std::min(deltaLAsink, deltaLAavailable);
-      double growthCost = deltaLAgrowth*costLA;
+      double growthCost = deltaLAgrowth*costPerLA;
       sugarLeaf[j] = sugarLeaf[j] - (growthCost/(glucoseMolarMass*Volume_leaves[j]));
       LAlive += deltaLAgrowth; //Update leaf area
       LAexpanded +=deltaLAgrowth;
       GrowthRespiration[j] +=growthCost; //growth cost in g gluc
-      // Rcout<< j << " fLAturgor: "<< fLA_turgor<< " fLA_sinkC "<< fLA_sinkC<< "f_temp"<< f_temp<<"\n";
+      Rcout<< j << " costPerLA " << costPerLA << " fLAturgor: "<< fLA_turgor<< " fLA_sinkC "<< fLA_sinkC<< "f_temp"<< f_temp<<" deltaLAgrowth"<< deltaLAgrowth<<"\n";
     }
 
     //SA growth senescense
@@ -399,6 +400,7 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
     //Update Huber value, stem and root hydraulic conductance
     Al2As[j] = (LAlive)/(SA[j]/10000.0);
     VCstem_kmax[j]=maximumStemHydraulicConductance(Kmax_stemxylem[j], Hmed[j], Al2As[j] ,H[j], taper);
+    VCroot_kmaxVEC[j] = VCroot_kmaxVEC[j]*(LAlive_ini/LAlive);
     for(int s=0;s<numLayers;s++) {
       VCroot_kmax(j,s) = VCroot_kmax(j,s)*(LAlive_ini/LAlive);
     }     
