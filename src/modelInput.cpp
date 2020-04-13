@@ -432,14 +432,14 @@ DataFrame internalCarbonDataFrame(DataFrame above,
   NumericVector starchLeaf(numCohorts,0.0);
   NumericVector sugarSapwood(numCohorts,0.0);
   NumericVector starchSapwood(numCohorts,0.0);
-  NumericVector longtermStorage(numCohorts,0.0);
+  // NumericVector longtermStorage(numCohorts,0.0);
   for(int c=0;c<numCohorts;c++){
     double lvol = leafStorageVolume(LAI_expanded[c],  N[c], SLA[c], LeafDensity[c]);
     double svol = sapwoodStorageVolume(SA[c], H[c],Z[c],WoodDensity[c], 0.5);
     
     // 50% in starch storage
-    starchLeaf[c] = (0.5/(lvol*starchMolarMass))*leafStarchCapacity(LAI_expanded[c], N[c], SLA[c], LeafDensity[c]);
-    starchSapwood[c] = (0.5/(svol*starchMolarMass))*sapwoodStarchCapacity(SA[c], H[c], Z[c], WoodDensity[c], 0.5);
+    starchLeaf[c] = (0.5/(lvol*glucoseMolarMass))*leafStarchCapacity(LAI_expanded[c], N[c], SLA[c], LeafDensity[c]);
+    starchSapwood[c] = (0.5/(svol*glucoseMolarMass))*sapwoodStarchCapacity(SA[c], H[c], Z[c], WoodDensity[c], 0.5);
     //Sugar storage from PI0
     double lconc = sugarConcentration(LeafPI0[c],15.0, nonSugarConc);
     // double lvol = leafStorageVolume(LAI_expanded[c], N[c], SLA[c], LeafDensity[c]); //l
@@ -458,8 +458,7 @@ DataFrame internalCarbonDataFrame(DataFrame above,
   DataFrame df = DataFrame::create(Named("sugarLeaf") = sugarLeaf,
                                    Named("starchLeaf") = starchLeaf,
                                    Named("sugarSapwood") = sugarSapwood,
-                                   Named("starchSapwood") = starchSapwood,
-                                   Named("longtermStorage") = longtermStorage);
+                                   Named("starchSapwood") = starchSapwood);
   df.attr("row.names") = above.attr("row.names");
   return(df);
 }  

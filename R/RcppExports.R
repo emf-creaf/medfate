@@ -305,10 +305,6 @@ growth_floemFlow <- function(psiUpstream, psiDownstream, concUpstream, concDowns
     .Call(`_medfate_floemFlow`, psiUpstream, psiDownstream, concUpstream, concDownstream, temp, k_f, nonSugarConc)
 }
 
-.growth_defoliationFraction <- function(conc, threshold) {
-    .Call(`_medfate_defoliationFraction`, conc, threshold)
-}
-
 growth <- function(x, soil, meteo, latitude = NA_real_, elevation = NA_real_, slope = NA_real_, aspect = NA_real_) {
     .Call(`_medfate_growth`, x, soil, meteo, latitude, elevation, slope, aspect)
 }

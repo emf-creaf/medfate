@@ -1043,18 +1043,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// defoliationFraction
-double defoliationFraction(double conc, double threshold);
-RcppExport SEXP _medfate_defoliationFraction(SEXP concSEXP, SEXP thresholdSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type conc(concSEXP);
-    Rcpp::traits::input_parameter< double >::type threshold(thresholdSEXP);
-    rcpp_result_gen = Rcpp::wrap(defoliationFraction(conc, threshold));
-    return rcpp_result_gen;
-END_RCPP
-}
 // growth
 List growth(List x, List soil, DataFrame meteo, double latitude, double elevation, double slope, double aspect);
 RcppExport SEXP _medfate_growth(SEXP xSEXP, SEXP soilSEXP, SEXP meteoSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP) {
@@ -4213,7 +4201,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_fuelLiveStratification", (DL_FUNC) &_medfate_fuelLiveStratification, 7},
     {"_medfate_FCCSproperties", (DL_FUNC) &_medfate_FCCSproperties, 10},
     {"_medfate_floemFlow", (DL_FUNC) &_medfate_floemFlow, 7},
-    {"_medfate_defoliationFraction", (DL_FUNC) &_medfate_defoliationFraction, 2},
     {"_medfate_growth", (DL_FUNC) &_medfate_growth, 7},
     {"_medfate_Psi2K", (DL_FUNC) &_medfate_Psi2K, 3},
     {"_medfate_K2Psi", (DL_FUNC) &_medfate_K2Psi, 3},

@@ -114,15 +114,15 @@ double temperatureGrowthFactor(double Tmean) {
 double turgorGrowthFactor(double psi, double psi_tlp) {
   return(std::max(0.0,1.0 - pow(exp((psi/psi_tlp)-1.0),5.0)));
 }
-double carbonGrowthFactor(double conc, double threshold) {
-  double k =10.0;
-  return(std::max(0.0,(1.0 - exp(k*(threshold-conc)))/(1.0 - exp(k*(-conc)))));
-}
-// [[Rcpp::export(".growth_defoliationFraction")]]
-double defoliationFraction(double conc, double threshold) {
-  double k =-10.0;
-  return(std::max(0.0,(exp(k*conc)-exp(k*threshold))/(1.0-exp(k*threshold))));
-}
+// double carbonGrowthFactor(double conc, double threshold) {
+//   double k =10.0;
+//   return(std::max(0.0,(1.0 - exp(k*(threshold-conc)))/(1.0 - exp(k*(-conc)))));
+// }
+// // [[Rcpp::export(".growth_defoliationFraction")]]
+// double defoliationFraction(double conc, double threshold) {
+//   double k =-10.0;
+//   return(std::max(0.0,(exp(k*conc)-exp(k*threshold))/(1.0-exp(k*threshold))));
+// }
 
 
 /**
@@ -171,7 +171,7 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
   NumericVector starchLeaf = internalCarbon["starchLeaf"];
   NumericVector sugarSapwood = internalCarbon["sugarSapwood"];
   NumericVector starchSapwood = internalCarbon["starchSapwood"];
-  NumericVector longtermStorage = internalCarbon["longtermStorage"];
+  // NumericVector longtermStorage = internalCarbon["longtermStorage"];
   
   
   List stand = spwbOut["Stand"];
@@ -228,8 +228,14 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
   NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vleaf"]); //l·m-2 = mm
   
   //Output vectors
-  NumericVector MaintenanceRespiration(numCohorts,0.0);
-  NumericVector GrowthRespiration(numCohorts,0.0);
+  NumericVector LeafMaintenanceRespiration(numCohorts,0.0);
+  NumericVector SapwoodMaintenanceRespiration(numCohorts,0.0);
+  NumericVector FineRootMaintenanceRespiration(numCohorts,0.0);
+  NumericVector LeafGrowthRespiration(numCohorts,0.0);
+  NumericVector SapwoodGrowthRespiration(numCohorts,0.0);
+  NumericVector FineRootGrowthRespiration(numCohorts,0.0);
+  NumericVector LabileMassLeaf(numCohorts,0.0);
+  NumericVector LabileMassSapwood(numCohorts,0.0);
   NumericVector PlantSugarTransport(numCohorts,0.0);
   NumericVector PlantSugarLeaf(numCohorts,0.0);
   NumericVector PlantStarchLeaf(numCohorts,0.0);
@@ -237,6 +243,7 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
   NumericVector PlantStarchSapwood(numCohorts,0.0);
   NumericVector PlantSA(numCohorts,0.0);
   NumericVector PlantSAgrowth(numCohorts,0.0);
+  NumericVector PlantLAgrowth(numCohorts,0.0);
   NumericVector GrossPhotosynthesis(numCohorts,0.0);
   NumericVector PlantLAIdead(numCohorts,0.0);
   NumericVector PlantLAIlive(numCohorts,0.0);
@@ -253,7 +260,7 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
 
   //3. Carbon balance and growth
   for(int j=0;j<numCohorts;j++){
-
+    
     Volume_leaves[j] = leafStorageVolume(LAI_expanded[j],  N[j], SLA[j], LeafDensity[j]);
     Volume_sapwood[j] = sapwoodStorageVolume(SA[j], H[j],Z[j],WoodDensity[j], 0.5);
     Starch_max_leaves[j] = leafStarchCapacity(LAI_expanded[j],  N[j], SLA[j], 0.3)/Volume_leaves[j];
@@ -261,6 +268,9 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
     B_struct_leaves[j] = leafStructuralBiomass(LAI_expanded[j],N[j],SLA[j]);
     B_struct_sapwood[j] = sapwoodStructuralLivingBiomass(SA[j], H[j], Z[j], WoodDensity[j], 0.5);
     B_struct_fineroots[j] = B_struct_leaves[j]/2.0; //TO BE CHANGED
+    
+    double labileMassLeafIni = (sugarLeaf[j]+starchLeaf[j])*(glucoseMolarMass*Volume_leaves[j]);
+    double labileMassSapwoodIni = (sugarSapwood[j]+starchSapwood[j])*(glucoseMolarMass*Volume_sapwood[j]);
     
     // Rcout << j << " Lvol: "<< Volume_leaves[j] << " Svol: "<<Volume_sapwood[j]<< " LStarchMax: "<<Starch_max_leaves[j]
     //       << " SStarchMax: "<<Starch_max_sapwood[j]<< " Bleaf "<< B_struct_leaves[j]<< " Bsap "<< B_struct_sapwood[j]<< " Bfr "<< B_struct_fineroots[j]<<"\n";
@@ -271,7 +281,7 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
     double LAlive_ini = LAlive;
     
     double leafRespDay = 0.0;
-    double sfrRespDay = 0.0;
+    // double sfrRespDay = 0.0;
     
     double tlpConcLeaf = 0.2;
     double tlpConcSapwood = 0.2;
@@ -285,17 +295,12 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
       // tlpConcLeaf = sugarConcentration(leafTLP,Tcan[s], nonSugarConc)*(rwcLeafTLP/rwcLeaf(j,s)); 
       // tlpConcSapwood = sugarConcentration(stemTLP,Tcan[s], nonSugarConc)*(rwcStemTLP/rwcStem(j,s)); 
       
-      //transform concentrations relative to RWC = 1 to concentrations relative to RWC of the step
-      double sugarLeafStep = sugarLeaf[j]/rwcLeaf(j,s);
-      double sugarSapwoodStep = sugarSapwood[j]/rwcStem(j,s);
-      double starchLeafStep = starchLeaf[j]/rwcLeaf(j,s);
-      double starchSapwoodStep = starchSapwood[j]/rwcStem(j,s);
-      
+
       //Transform sugar concentration (mol gluc · l-1) to sugar mass (g gluc)
       // double lstvol = 0.001*(starchLeaf[j]/starchDensity);
       // double sstvol = 0.001*(starchSapwood[j]/starchDensity);
-      double leafSugarMassStep = sugarLeafStep*(Volume_leaves[j]*glucoseMolarMass);
-      double sapwoodSugarMassStep = sugarSapwoodStep*(Volume_sapwood[j]*glucoseMolarMass);
+      double leafSugarMassStep = sugarLeaf[j]*(Volume_leaves[j]*glucoseMolarMass);
+      double sapwoodSugarMassStep = sugarSapwood[j]*(Volume_sapwood[j]*glucoseMolarMass);
       
       //Respiratory biomass (g dw · ind-1)
       double B_resp_leaves = B_struct_leaves[j] + leafSugarMassStep;
@@ -303,25 +308,27 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
       double B_resp_fineroots = B_struct_fineroots[j];
       double QR = qResp(Tcan[s]);
       double leafRespStep = B_resp_leaves*leaf_RR*QR/((double) numSteps);
-      double sfrRespStep = (B_resp_sapwood*sapwood_RR + B_resp_fineroots*fineroot_RR)*QR/((double) numSteps);
+      double sapwoodRespStep = B_resp_sapwood*sapwood_RR*QR/((double) numSteps);
+      double finerootRespStep = B_resp_fineroots*fineroot_RR*QR/((double) numSteps);
       leafRespDay +=leafRespStep;
-      sfrRespDay += sfrRespStep;
-      
+
       //gross fotosynthesis
       double leafAgStepC = AgStep(j,s)/(N[j]/10000.0); //Translate g C · m-2 · h-1 to g C · h-1
       double leafAgStepG = leafAgStepC*(glucoseMolarMass/(carbonMolarMass*6.0)); // from g C· h-1 to g gluc · h-1
       
       GrossPhotosynthesis[j] += leafAgStepG; //Ag in g gluc
-      MaintenanceRespiration[j] += (sfrRespStep + leafRespStep); //Rm in g gluc
+      LeafMaintenanceRespiration[j] += leafRespStep; //Rm in g gluc
+      SapwoodMaintenanceRespiration[j] += sapwoodRespStep; //Rm in g gluc
+      FineRootMaintenanceRespiration[j] += finerootRespStep; //Rm in g gluc
       
       //sugar mass balance
       leafSugarMassStep = leafSugarMassStep + leafAgStepG - leafRespStep;
-      sapwoodSugarMassStep = sapwoodSugarMassStep - sfrRespStep;
+      sapwoodSugarMassStep = sapwoodSugarMassStep - sapwoodRespStep - finerootRespStep;
       // Rcout<<" coh:"<<j<< " s:"<<s<<" A: "<< leafAgStepG << "Rl: " << leafRespStep<<" sugar mass leaf: "<< leafSugarMassStep << " Rs"<<  sfrRespStep<< " sugar mass sap: "<< sapwoodSugarMassStep<<"\n";
       
       //re-transform to concentration (mol gluc · l-1)
-      sugarLeafStep = leafSugarMassStep/(Volume_leaves[j]*glucoseMolarMass);
-      sugarSapwoodStep = sapwoodSugarMassStep/(Volume_sapwood[j]*glucoseMolarMass);
+      sugarLeaf[j] = leafSugarMassStep/(Volume_leaves[j]*glucoseMolarMass);
+      sugarSapwood[j] = sapwoodSugarMassStep/(Volume_sapwood[j]*glucoseMolarMass);
       
       //floem transport      
       double psiUp = symplasticWaterPotential(rwcLeaf(j,s), LeafPI0[j], LeafEPS[j]);
@@ -329,42 +336,26 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
       
       double ff = 0.0;
       for(int t=0;t<3600;t++) {
-        double ft = floemFlow(psiUp, psiDown, sugarLeafStep, sugarSapwoodStep, Tcan[s], k_floem, nonSugarConc)*LAlive; //flow as mol glucose per s
+        double ft = floemFlow(psiUp, psiDown, sugarLeaf[j]/rwcLeaf(j,s), sugarSapwood[j]/rwcStem(j,s), Tcan[s], k_floem, nonSugarConc)*LAlive; //flow as mol glucose per s
         // sugar-starch dynamics
-        double conversionLeaf = sugarStarchDynamicsLeaf(sugarLeafStep, starchLeafStep, tlpConcLeaf);
-        double conversionSapwood = sugarStarchDynamicsStem(sugarSapwoodStep, starchSapwoodStep, tlpConcSapwood);
-        // Rcout<<" coh:"<<j<< " s:"<<s<< " Lsugar: "<< sugarLeafStep << " Lstarch: "<< sugarSapwoodStep<<" starch formation: "<<conversionLeaf<< "\n";
-        starchLeafStep  += conversionLeaf;
-        starchSapwoodStep += conversionSapwood;
-        // Rcout<<" coh:"<<j<< " s:"<<s<< " Ssugar: "<< sugarSapwoodStep << " Sstarch: "<< starchSapwoodStep<<" starch formation: "<<conversionSapwood<< "\n";
+        double conversionLeaf = sugarStarchDynamicsLeaf(sugarLeaf[j]/rwcLeaf(j,s), starchLeaf[j]/rwcLeaf(j,s), tlpConcLeaf);
+        double conversionSapwood = sugarStarchDynamicsStem(sugarSapwood[j]/rwcStem(j,s), starchSapwood[j]/rwcStem(j,s), tlpConcSapwood);
+        // Rcout<<" coh:"<<j<< " s:"<<s<< " Lsugar: "<< sugarLeaf[j] << " Lstarch: "<< sugarSapwood[j]<<" starch formation: "<<conversionLeaf<< "\n";
+        starchLeaf[j]  += conversionLeaf*rwcLeaf(j,s);
+        starchSapwood[j] += conversionSapwood*rwcStem(j,s);
+        // Rcout<<" coh:"<<j<< " s:"<<s<< " Ssugar: "<< sugarSapwood[j] << " Sstarch: "<< starchSapwood[j]<<" starch formation: "<<conversionSapwood<< "\n";
         //Apply floem transport (mol gluc) to sugar concentrations (mol gluc· l-1)
-        sugarLeafStep = ((sugarLeafStep*Volume_leaves[j]) - ft)/Volume_leaves[j] - conversionLeaf;
-        sugarSapwoodStep = ((sugarSapwoodStep*Volume_sapwood[j]) + ft)/Volume_sapwood[j] - conversionSapwood;
-        // sugarLeafStep = ((sugarLeafStep*Volume_leaves[j]) - ft)/Volume_leaves[j];
-        // sugarSapwoodStep = ((sugarSapwoodStep*Volume_sapwood[j]) + ft)/Volume_sapwood[j];
-        
+        sugarLeaf[j]  +=  (-ft/Volume_leaves[j]) - (conversionLeaf*rwcLeaf(j,s));
+        sugarSapwood[j] +=  (ft/Volume_sapwood[j]) - (conversionSapwood*rwcStem(j,s));
+
         ff +=ft;
       }
       PlantSugarTransport[j] += ff; //To calculate daily floem balance (positive means towards stem)
-      // Rcout<<" coh:"<<j<< " s:"<<s<< " conc leaf: "<< sugarLeafStep << " conc sap: "<< sugarSapwoodStep<<" ff: "<<ff<< "\n";
+      // Rcout<<" coh:"<<j<< " s:"<<s<< " conc leaf: "<< sugarLeaf[j] << " conc sap: "<< sugarSapwood[j]<<" ff: "<<ff<< "\n";
       
       // Rcout<<j<<" LeafTLP "<< turgorLossPoint(LeafPI0[j], LeafEPS[j])<< " Leaf PI "<< osmoticWaterPotential(sugarLeaf[j], tday)<< " Conc "<< sugarLeaf[j]<< " TLPconc"<< tlpConcLeaf<<"\n";
-      
-      sugarLeaf[j] = sugarLeafStep*rwcLeaf(j,s);
-      starchLeaf[j] = starchLeafStep*rwcLeaf(j,s);
-      sugarSapwood[j] = sugarSapwoodStep*rwcStem(j,s);
-      starchSapwood[j] = starchSapwoodStep*rwcStem(j,s);
     }
-    //Check starch limits
-    // if(starchLeaf[j]> Starch_max_leaves[j]) {
-    //   longtermStorage[j] += (starchLeaf[j]-Starch_max_leaves[j])*Volume_leaves[j];
-    //   starchLeaf[j] = Starch_max_leaves[j];
-    // }
-    // if(starchSapwood[j]> Starch_max_sapwood[j]) {
-    //   longtermStorage[j] += (starchSapwood[j]-Starch_max_sapwood[j])*Volume_sapwood[j];
-    //   starchSapwood[j] = Starch_max_sapwood[j];
-    // }
-    
+
     if(sugarLeaf[j] < 0.0) { //Leaf senescense due to C starvation
       double respirationExcess = -sugarLeaf[j]*(Volume_leaves[j]*glucoseMolarMass); //g gluc
       double propExcess = respirationExcess/leafRespDay; //day
@@ -385,15 +376,15 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
     double fLA_turgor = turgorGrowthFactor(psiSympLeaf[j],turgorLossPoint(LeafPI0[j], LeafEPS[j]));
     if(fLA_turgor>0.0 & f_temp>0.0) {
       double costPerLA = 1000.0*leaf_CC/SLA[j]; // g gluc · m-2 of leaf area
-      double fLA_sinkC = carbonGrowthFactor(sugarLeaf[j], tlpConcLeaf);
-      double deltaLAsink = RGRleafmax*LAlive*f_temp*fLA_turgor*fLA_sinkC;
-      double deltaLAavailable = (sugarLeaf[j]*(glucoseMolarMass*Volume_leaves[j]))/costPerLA;
+      double deltaLAsink = RGRleafmax*LAlive*f_temp*fLA_turgor;
+      double deltaLAavailable = std::max(0.0,((sugarLeaf[j]-tlpConcLeaf)*(glucoseMolarMass*Volume_leaves[j]))/costPerLA);
       double deltaLAgrowth = std::min(deltaLAsink, deltaLAavailable);
       double growthCost = deltaLAgrowth*costPerLA;
       sugarLeaf[j] = sugarLeaf[j] - (growthCost/(glucoseMolarMass*Volume_leaves[j]));
       LAlive += deltaLAgrowth; //Update leaf area
       LAexpanded +=deltaLAgrowth;
-      GrowthRespiration[j] +=growthCost; //growth cost in g gluc
+      LeafGrowthRespiration[j] +=growthCost; //growth cost in g gluc
+      PlantLAgrowth[j] += deltaLAgrowth;
       // Rcout<< j << " costPerLA " << costPerLA << " fLAturgor: "<< fLA_turgor<< " fLA_sinkC "<< fLA_sinkC<< "f_temp"<< f_temp<<" deltaLAgrowth"<< deltaLAgrowth<<"\n";
     }
 
@@ -404,13 +395,13 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
     double fSA_turgor = turgorGrowthFactor(psiSympStem[j],turgorLossPoint(StemPI0[j], StemEPS[j]));
     if(fSA_turgor>0.0 & f_temp>0.0) {
       double costPerSA = sapwood_CC*(H[j]+(Z[j]/10.0))*WoodDensity[j];  //Construction cost in g gluc ·cm-2 of sapwood
-      double deltaSAavailable = (sugarSapwood[j]*(glucoseMolarMass*Volume_sapwood[j]))/costPerSA;
-      double fSA_sinkC = carbonGrowthFactor(sugarSapwood[j], tlpConcSapwood);
-      double deltaSAsink = RGRmax[j]*SA[j]*f_temp*fSA_turgor+fSA_sinkC;
+      double deltaSAavailable = std::max(0.0,((sugarSapwood[j] - tlpConcSapwood)*(glucoseMolarMass*Volume_sapwood[j]))/costPerSA);
+      double deltaSAsink = RGRmax[j]*SA[j]*f_temp*fSA_turgor;
       double deltaSAgrowth = std::min(deltaSAsink, deltaSAavailable);
       double growthCost = deltaSAgrowth*costPerSA;
       sugarSapwood[j] = sugarSapwood[j] - (growthCost/(glucoseMolarMass*Volume_sapwood[j]));
       SA[j] += deltaSAgrowth; //Update sapwood area
+      SapwoodGrowthRespiration[j] +=growthCost; //growth cost in g gluc
       PlantSAgrowth[j] += deltaSAgrowth;
       // Rcout<< j << " costPerSA " << costPerSA << " fLAturgor: "<< fSA_turgor<< " fLA_sinkC "<< fSA_sinkC<< "f_temp"<< f_temp<<" deltaSAgrowth"<< deltaSAgrowth<<"\n";
     }      
@@ -444,20 +435,36 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
     PlantSA[j] = SA[j];
     PlantLAIlive[j] = LAI_live[j];
     PlantLAIdead[j] = LAI_dead[j];
+    LabileMassLeaf[j] = (sugarLeaf[j]+starchLeaf[j])*(glucoseMolarMass*Volume_leaves[j]);
+    LabileMassSapwood[j] = (sugarSapwood[j]+starchSapwood[j])*(glucoseMolarMass*Volume_sapwood[j]);
+    
+    //Carbon balance check
+    // double sugarTransportMass = PlantSugarTransport[j]*glucoseMolarMass;
+    // double sumLeaf = GrossPhotosynthesis[j] - LeafMaintenanceRespiration[j] - LeafGrowthRespiration[j] - sugarTransportMass;
+    // double sumSapwood = sugarTransportMass - SapwoodMaintenanceRespiration[j] - FineRootMaintenanceRespiration[j] - SapwoodGrowthRespiration[j] - FineRootGrowthRespiration[j];
+    // Rcout<<j<<" CBLeaf "<< sumLeaf << " ChLabLeaf: "<< (LabileMassLeaf[j] - labileMassLeafIni);
+    // Rcout<<" CBSapwood "<< sumSapwood << " ChLabSapwood: "<< (LabileMassSapwood[j] - labileMassSapwoodIni)<<"\n";
   }
   
   DataFrame df = DataFrame::create(_["GrossPhotosynthesis"] = GrossPhotosynthesis,
-                                   _["MaintenanceRespiration"] = MaintenanceRespiration,
-                                   _["GrowthRespiration"] = GrowthRespiration,
-                                   _["PlantSugarLeaf"] = PlantSugarLeaf,
-                                   _["PlantStarchLeaf"] = PlantStarchLeaf,
-                                   _["PlantSugarSapwood"] = PlantSugarSapwood,
-                                   _["PlantStarchSapwood"] = PlantStarchSapwood,
-                                   _["PlantSugarTransport"] = PlantSugarTransport,
+                                   _["LeafMaintenanceRespiration"] = LeafMaintenanceRespiration,
+                                   _["SapwoodMaintenanceRespiration"] = SapwoodMaintenanceRespiration,
+                                   _["FineRootMaintenanceRespiration"] = FineRootMaintenanceRespiration,
+                                   _["LeafGrowthRespiration"] = LeafGrowthRespiration,
+                                   _["SapwoodGrowthRespiration"] = SapwoodGrowthRespiration,
+                                   _["FineRootGrowthRespiration"] = FineRootGrowthRespiration,
+                                   _["SugarLeaf"] = PlantSugarLeaf,
+                                   _["StarchLeaf"] = PlantStarchLeaf,
+                                   _["SugarSapwood"] = PlantSugarSapwood,
+                                   _["StarchSapwood"] = PlantStarchSapwood,
+                                   _["SugarTransport"] = PlantSugarTransport,
+                                   _["LabileMassLeaf"] = LabileMassLeaf,
+                                   _["LabileMassSapwood"] = LabileMassSapwood,
                                    _["PlantSA"] = PlantSA,
                                    _["PlantLAIlive"] = PlantLAIlive,
                                    _["PlantLAIdead"] = PlantLAIdead,
-                                   _["PlantSAgrowth"] = PlantSAgrowth);
+                                   _["PlantSAgrowth"] = PlantSAgrowth,
+                                   _["PlantLAgrowth"] = PlantLAgrowth);
   
   df.attr("row.names") = cohorts.attr("row.names");
   return(df);
@@ -907,8 +914,14 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   NumericMatrix PlantPsi(numDays, numCohorts);
   NumericMatrix PlantStress(numDays, numCohorts);
   NumericMatrix PlantTranspiration(numDays, numCohorts);
-  NumericMatrix MaintenanceRespiration(numDays, numCohorts);
-  NumericMatrix GrowthRespiration(numDays, numCohorts);
+  NumericMatrix LeafMaintenanceRespiration(numDays, numCohorts);
+  NumericMatrix SapwoodMaintenanceRespiration(numDays, numCohorts);
+  NumericMatrix FineRootMaintenanceRespiration(numDays, numCohorts);
+  NumericMatrix LeafGrowthRespiration(numDays, numCohorts);
+  NumericMatrix SapwoodGrowthRespiration(numDays, numCohorts);
+  NumericMatrix FineRootGrowthRespiration(numDays, numCohorts);
+  NumericMatrix LabileMassLeaf(numDays, numCohorts);
+  NumericMatrix LabileMassSapwood(numDays, numCohorts);
   NumericMatrix PlantSugarLeaf(numDays, numCohorts);
   NumericMatrix PlantStarchLeaf(numDays, numCohorts);
   NumericMatrix PlantSugarSapwood(numDays, numCohorts);
@@ -916,6 +929,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   NumericMatrix PlantSugarTransport(numDays, numCohorts);
   NumericMatrix PlantSA(numDays, numCohorts);
   NumericMatrix PlantSAgrowth(numDays, numCohorts);
+  NumericMatrix PlantLAgrowth(numDays, numCohorts);
   NumericMatrix GrossPhotosynthesis(numDays, numCohorts);
   NumericMatrix PlantLAIdead(numDays, numCohorts);
   NumericMatrix PlantLAIlive(numDays, numCohorts);
@@ -1090,32 +1104,28 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
     DataFrame growDay = growthDay(x,s,MeanTemperature[i]);  
     
     //4. Assemble output
-    NumericVector MaintenanceRespirationDay = Rcpp::as<Rcpp::NumericVector>(growDay["MaintenanceRespiration"]);
-    NumericVector GrowthRespirationDay = Rcpp::as<Rcpp::NumericVector>(growDay["GrowthRespiration"]);
-    NumericVector GrossPhotosynthesisDay = Rcpp::as<Rcpp::NumericVector>(growDay["GrossPhotosynthesis"]);
-    NumericVector PlantSugarLeafDay = Rcpp::as<Rcpp::NumericVector>(growDay["PlantSugarLeaf"]);
-    NumericVector PlantStarchLeafDay = Rcpp::as<Rcpp::NumericVector>(growDay["PlantStarchLeaf"]);
-    NumericVector PlantSugarSapwoodDay = Rcpp::as<Rcpp::NumericVector>(growDay["PlantSugarSapwood"]);
-    NumericVector PlantStarchSapwoodDay = Rcpp::as<Rcpp::NumericVector>(growDay["PlantStarchSapwood"]);
-    NumericVector PlantSugarTransportDay = Rcpp::as<Rcpp::NumericVector>(growDay["PlantSugarTransport"]);
-    NumericVector PlantSADay = Rcpp::as<Rcpp::NumericVector>(growDay["PlantSA"]);
-    NumericVector PlantLAIliveDay = Rcpp::as<Rcpp::NumericVector>(growDay["PlantLAIlive"]);
-    NumericVector PlantLAIdeadDay = Rcpp::as<Rcpp::NumericVector>(growDay["PlantLAIdead"]);
-    NumericVector PlantSAgrowthDay = Rcpp::as<Rcpp::NumericVector>(growDay["PlantSAgrowth"]);
+    LeafMaintenanceRespiration(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["LeafMaintenanceRespiration"]);
+    SapwoodMaintenanceRespiration(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["SapwoodMaintenanceRespiration"]);
+    FineRootMaintenanceRespiration(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["FineRootMaintenanceRespiration"]);
+    LeafGrowthRespiration(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["LeafGrowthRespiration"]);
+    SapwoodGrowthRespiration(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["SapwoodGrowthRespiration"]);
+    FineRootGrowthRespiration(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["FineRootGrowthRespiration"]);
+    GrossPhotosynthesis(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["GrossPhotosynthesis"]);
+    LabileMassLeaf(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["LabileMassLeaf"]);
+    LabileMassSapwood(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["LabileMassSapwood"]);
+    PlantSugarLeaf(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["SugarLeaf"]);
+    PlantStarchLeaf(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["StarchLeaf"]);
+    PlantSugarSapwood(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["SugarSapwood"]);
+    PlantStarchSapwood(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["StarchSapwood"]);
+    PlantSugarTransport(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["SugarTransport"]);
+    PlantSA(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["PlantSA"]);
+    PlantLAIlive(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["PlantLAIlive"]);
+    PlantLAIdead(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["PlantLAIdead"]);
+    PlantLAgrowth(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["PlantLAgrowth"]);
+    PlantSAgrowth(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["PlantSAgrowth"]);
+    NumericVector PlantLAgrowthDay = Rcpp::as<Rcpp::NumericVector>(growDay["PlantLAgrowth"]);
     for(int j=0;j<numCohorts;j++){
-      GrossPhotosynthesis(i,j) = GrossPhotosynthesisDay[j];
-      MaintenanceRespiration(i,j) = MaintenanceRespirationDay[j];
-      GrowthRespiration(i,j) = GrowthRespirationDay[j];
-      PlantSugarLeaf(i,j) = PlantSugarLeafDay[j];
-      PlantStarchLeaf(i,j) = PlantStarchLeafDay[j];
-      PlantSugarSapwood(i,j) = PlantSugarSapwoodDay[j];
-      PlantStarchSapwood(i,j) = PlantStarchSapwoodDay[j];
-      PlantSugarTransport(i,j) = PlantSugarTransportDay[j];
-      PlantSA(i,j) = PlantSADay[j];
-      PlantLAIlive(i,j) = PlantLAIliveDay[j];
-      PlantLAIdead(i,j) = PlantLAIdeadDay[j];
-      PlantSAgrowth(i,j) = PlantSAgrowthDay[j];
-      SAgrowthcum[j] += PlantSAgrowthDay[j]; //Store cumulative SA growth (for structural variable update)
+      SAgrowthcum[j] += PlantSAgrowth(i,j); //Store cumulative SA growth (for structural variable update)
     }
     
     //4 Update structural variables
@@ -1202,10 +1212,16 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   Stand.attr("row.names") = meteo.attr("row.names");
   
   PlantTranspiration.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
-  GrossPhotosynthesis.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
-  MaintenanceRespiration.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
-  GrowthRespiration.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
-  PlantSugarLeaf.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
+  GrossPhotosynthesis.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
+  LeafMaintenanceRespiration.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
+  SapwoodMaintenanceRespiration.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
+  FineRootMaintenanceRespiration.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
+  LeafGrowthRespiration.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
+  SapwoodGrowthRespiration.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
+  FineRootGrowthRespiration.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
+  LabileMassLeaf.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
+  LabileMassSapwood.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
+  PlantSugarLeaf.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
   PlantStarchLeaf.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   PlantSugarSapwood.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   PlantStarchSapwood.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
@@ -1220,17 +1236,25 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   NumericVector topo = NumericVector::create(elevation, slope, aspect);
   topo.attr("names") = CharacterVector::create("elevation", "slope", "aspect");
   
-  List plantStorage = List::create(
+  List carbonBalance = List::create(
+    Named("GrossPhotosynthesis") = GrossPhotosynthesis,
+    Named("LeafMaintenanceRespiration") = LeafMaintenanceRespiration,
+    Named("SapwoodMaintenanceRespiration") = SapwoodMaintenanceRespiration,
+    Named("FineRootMaintenanceRespiration") = FineRootMaintenanceRespiration,
+    Named("LeafGrowthRespiration") = LeafGrowthRespiration,
+    Named("SapwoodGrowthRespiration") = SapwoodGrowthRespiration,
+    Named("FineRootGrowthRespiration") = FineRootGrowthRespiration,
     Named("SugarLeaf") = PlantSugarLeaf,
     Named("StarchLeaf") = PlantStarchLeaf,
     Named("SugarSapwood") = PlantSugarSapwood,
     Named("StarchSapwood") = PlantStarchSapwood,
-    Named("SugarTransport") = PlantSugarTransport
+    Named("SugarTransport") = PlantSugarTransport,
+    Named("LabileMassLeaf") = LabileMassLeaf,
+    Named("LabileMassSapwood") = LabileMassSapwood
   );
-  List carbonBalance = List::create(
-    Named("GrossPhotosynthesis") = GrossPhotosynthesis,
-    Named("MaintenanceRespiration") = MaintenanceRespiration,
-    Named("GrowthRespiration") = GrowthRespiration
+  List plantGrowth = List::create(
+    Named("LA") = PlantLAgrowth,
+    Named("SA") = PlantSAgrowth
   );
   List l = List::create(Named("latitude") = latitude,
                         Named("topography") = topo,
@@ -1240,12 +1264,11 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
                         Named("Soil")=SWB,
                         Named("Stand")=Stand,
                         Named("CarbonBalance") = carbonBalance,
-                        Named("PlantStorage") = plantStorage,
+                        Named("PlantGrowth") = plantGrowth,
                         Named("PlantTranspiration") = PlantTranspiration,
-                        Named("PlantSAgrowth") = PlantSAgrowth,
-                        Named("PlantSA")=PlantSA,
                         Named("PlantPsi") = PlantPsi, 
                         Named("PlantStress") = PlantStress,
+                        Named("PlantSA")=PlantSA,
                         Named("PlantLAIdead") = PlantLAIdead,
                         Named("PlantLAIlive") = PlantLAIlive,
                         Named("StandStructures") = standStructures,
