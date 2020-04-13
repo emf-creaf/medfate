@@ -24,13 +24,13 @@ const double Rn = 0.008314472; // The perfect gas constant MPa·l/K·mol = kJ/K�
 // }
 
 double sugarStarchDynamics(double sugarConc, double starchConc,
-                           double kmsyn, double vmaxsyn, double khyd, double eqSugarConc) {
+                           double kmsyn, double vmaxsyn, double khyd, double tlpSugarConc) {
   double sugarM = sugarConc*(18.0/1000.0); //from mol·L-1 to mol·mol-1
   double starchM = starchConc*(18.0/1000.0); //from mol·L-1 to mol·mol-1
   double STsyn = vmaxsyn*(sugarM/(kmsyn + sugarM));
   double SThyd = khyd*starchM;
   double dSdt;
-  if(sugarConc > eqSugarConc) {
+  if(sugarConc > tlpSugarConc) {
     dSdt = (STsyn - SThyd)*(1000.0/18.0);
   } else { //Downregulate starch synthesis
     dSdt = -SThyd*(1000.0/18.0);
@@ -39,16 +39,16 @@ double sugarStarchDynamics(double sugarConc, double starchConc,
 }
 
 // [[Rcpp::export("carbon_sugarStarchDynamicsLeaf")]]
-double sugarStarchDynamicsLeaf(double sugarConc, double starchConc, double eqSugarConc) {
-  return(sugarStarchDynamics(sugarConc, starchConc, 0.1, 0.3, 1, eqSugarConc));
+double sugarStarchDynamicsLeaf(double sugarConc, double starchConc, double tlpSugarConc) {
+  return(sugarStarchDynamics(sugarConc, starchConc, 0.1, 0.3, 1, tlpSugarConc));
 }
 // [[Rcpp::export("carbon_sugarStarchDynamicsStem")]]
-double sugarStarchDynamicsStem(double sugarConc, double starchConc, double eqSugarConc) {
-  return(sugarStarchDynamics(sugarConc, starchConc, 0.1, 0.15, 0.4, eqSugarConc));
+double sugarStarchDynamicsStem(double sugarConc, double starchConc, double tlpSugarConc) {
+  return(sugarStarchDynamics(sugarConc, starchConc, 0.1, 0.15, 0.4, tlpSugarConc));
 }
 // [[Rcpp::export("carbon_sugarStarchDynamicsRoot")]]
-double sugarStarchDynamicsRoot(double sugarConc, double starchConc, double eqSugarConc) {
-  return(sugarStarchDynamics(sugarConc, starchConc, 0.1, 0.6, 0.4, eqSugarConc));
+double sugarStarchDynamicsRoot(double sugarConc, double starchConc, double tlpSugarConc) {
+  return(sugarStarchDynamics(sugarConc, starchConc, 0.1, 0.6, 0.4, tlpSugarConc));
 }
 
 /**
@@ -58,11 +58,11 @@ double sugarStarchDynamicsRoot(double sugarConc, double starchConc, double eqSug
  *  wp - MPa
  */
 // [[Rcpp::export("carbon_osmoticWaterPotential")]]
-double osmoticWaterPotential(double conc, double temp, double nonSugarConc = 0.4) {
+double osmoticWaterPotential(double conc, double temp, double nonSugarConc) {
   return(- (conc + nonSugarConc)*Rn*(temp + 273.15));
 }
 // [[Rcpp::export("carbon_sugarConcentration")]]
-double sugarConcentration(double osmoticWP, double temp, double nonSugarConc = 0.4) {
+double sugarConcentration(double osmoticWP, double temp, double nonSugarConc) {
   return(- osmoticWP/(Rn*(temp + 273.15)) - nonSugarConc);
 }
 
@@ -94,8 +94,8 @@ double relativeSapViscosity(double sugarConc, double temp) {
  *  psi - water potential (MPa)
  */
 // [[Rcpp::export("carbon_turgor")]]
-double turgor(double psi, double conc, double temp) {
-  return(std::max(0.0, psi-osmoticWaterPotential(conc,temp)));
+double turgor(double psi, double conc, double temp, double nonSugarConc) {
+  return(std::max(0.0, psi-osmoticWaterPotential(conc,temp, nonSugarConc)));
 }
 
 /**

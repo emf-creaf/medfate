@@ -50,41 +50,41 @@ BEGIN_RCPP
 END_RCPP
 }
 // sugarStarchDynamicsLeaf
-double sugarStarchDynamicsLeaf(double sugarConc, double starchConc, double eqSugarConc);
-RcppExport SEXP _medfate_sugarStarchDynamicsLeaf(SEXP sugarConcSEXP, SEXP starchConcSEXP, SEXP eqSugarConcSEXP) {
+double sugarStarchDynamicsLeaf(double sugarConc, double starchConc, double tlpSugarConc);
+RcppExport SEXP _medfate_sugarStarchDynamicsLeaf(SEXP sugarConcSEXP, SEXP starchConcSEXP, SEXP tlpSugarConcSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type sugarConc(sugarConcSEXP);
     Rcpp::traits::input_parameter< double >::type starchConc(starchConcSEXP);
-    Rcpp::traits::input_parameter< double >::type eqSugarConc(eqSugarConcSEXP);
-    rcpp_result_gen = Rcpp::wrap(sugarStarchDynamicsLeaf(sugarConc, starchConc, eqSugarConc));
+    Rcpp::traits::input_parameter< double >::type tlpSugarConc(tlpSugarConcSEXP);
+    rcpp_result_gen = Rcpp::wrap(sugarStarchDynamicsLeaf(sugarConc, starchConc, tlpSugarConc));
     return rcpp_result_gen;
 END_RCPP
 }
 // sugarStarchDynamicsStem
-double sugarStarchDynamicsStem(double sugarConc, double starchConc, double eqSugarConc);
-RcppExport SEXP _medfate_sugarStarchDynamicsStem(SEXP sugarConcSEXP, SEXP starchConcSEXP, SEXP eqSugarConcSEXP) {
+double sugarStarchDynamicsStem(double sugarConc, double starchConc, double tlpSugarConc);
+RcppExport SEXP _medfate_sugarStarchDynamicsStem(SEXP sugarConcSEXP, SEXP starchConcSEXP, SEXP tlpSugarConcSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type sugarConc(sugarConcSEXP);
     Rcpp::traits::input_parameter< double >::type starchConc(starchConcSEXP);
-    Rcpp::traits::input_parameter< double >::type eqSugarConc(eqSugarConcSEXP);
-    rcpp_result_gen = Rcpp::wrap(sugarStarchDynamicsStem(sugarConc, starchConc, eqSugarConc));
+    Rcpp::traits::input_parameter< double >::type tlpSugarConc(tlpSugarConcSEXP);
+    rcpp_result_gen = Rcpp::wrap(sugarStarchDynamicsStem(sugarConc, starchConc, tlpSugarConc));
     return rcpp_result_gen;
 END_RCPP
 }
 // sugarStarchDynamicsRoot
-double sugarStarchDynamicsRoot(double sugarConc, double starchConc, double eqSugarConc);
-RcppExport SEXP _medfate_sugarStarchDynamicsRoot(SEXP sugarConcSEXP, SEXP starchConcSEXP, SEXP eqSugarConcSEXP) {
+double sugarStarchDynamicsRoot(double sugarConc, double starchConc, double tlpSugarConc);
+RcppExport SEXP _medfate_sugarStarchDynamicsRoot(SEXP sugarConcSEXP, SEXP starchConcSEXP, SEXP tlpSugarConcSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type sugarConc(sugarConcSEXP);
     Rcpp::traits::input_parameter< double >::type starchConc(starchConcSEXP);
-    Rcpp::traits::input_parameter< double >::type eqSugarConc(eqSugarConcSEXP);
-    rcpp_result_gen = Rcpp::wrap(sugarStarchDynamicsRoot(sugarConc, starchConc, eqSugarConc));
+    Rcpp::traits::input_parameter< double >::type tlpSugarConc(tlpSugarConcSEXP);
+    rcpp_result_gen = Rcpp::wrap(sugarStarchDynamicsRoot(sugarConc, starchConc, tlpSugarConc));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -127,15 +127,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // turgor
-double turgor(double psi, double conc, double temp);
-RcppExport SEXP _medfate_turgor(SEXP psiSEXP, SEXP concSEXP, SEXP tempSEXP) {
+double turgor(double psi, double conc, double temp, double nonSugarConc);
+RcppExport SEXP _medfate_turgor(SEXP psiSEXP, SEXP concSEXP, SEXP tempSEXP, SEXP nonSugarConcSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type psi(psiSEXP);
     Rcpp::traits::input_parameter< double >::type conc(concSEXP);
     Rcpp::traits::input_parameter< double >::type temp(tempSEXP);
-    rcpp_result_gen = Rcpp::wrap(turgor(psi, conc, temp));
+    Rcpp::traits::input_parameter< double >::type nonSugarConc(nonSugarConcSEXP);
+    rcpp_result_gen = Rcpp::wrap(turgor(psi, conc, temp, nonSugarConc));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1026,8 +1027,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // floemFlow
-double floemFlow(double psiUpstream, double psiDownstream, double concUpstream, double concDownstream, double temp, double k_f);
-RcppExport SEXP _medfate_floemFlow(SEXP psiUpstreamSEXP, SEXP psiDownstreamSEXP, SEXP concUpstreamSEXP, SEXP concDownstreamSEXP, SEXP tempSEXP, SEXP k_fSEXP) {
+double floemFlow(double psiUpstream, double psiDownstream, double concUpstream, double concDownstream, double temp, double k_f, double nonSugarConc);
+RcppExport SEXP _medfate_floemFlow(SEXP psiUpstreamSEXP, SEXP psiDownstreamSEXP, SEXP concUpstreamSEXP, SEXP concDownstreamSEXP, SEXP tempSEXP, SEXP k_fSEXP, SEXP nonSugarConcSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1037,21 +1038,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type concDownstream(concDownstreamSEXP);
     Rcpp::traits::input_parameter< double >::type temp(tempSEXP);
     Rcpp::traits::input_parameter< double >::type k_f(k_fSEXP);
-    rcpp_result_gen = Rcpp::wrap(floemFlow(psiUpstream, psiDownstream, concUpstream, concDownstream, temp, k_f));
-    return rcpp_result_gen;
-END_RCPP
-}
-// dailyFloemFlow
-NumericMatrix dailyFloemFlow(List x, List spwbOut, NumericVector concLeaf, NumericVector concSapwood);
-RcppExport SEXP _medfate_dailyFloemFlow(SEXP xSEXP, SEXP spwbOutSEXP, SEXP concLeafSEXP, SEXP concSapwoodSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    Rcpp::traits::input_parameter< List >::type spwbOut(spwbOutSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type concLeaf(concLeafSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type concSapwood(concSapwoodSEXP);
-    rcpp_result_gen = Rcpp::wrap(dailyFloemFlow(x, spwbOut, concLeaf, concSapwood));
+    Rcpp::traits::input_parameter< double >::type nonSugarConc(nonSugarConcSEXP);
+    rcpp_result_gen = Rcpp::wrap(floemFlow(psiUpstream, psiDownstream, concUpstream, concDownstream, temp, k_f, nonSugarConc));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4158,7 +4146,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_osmoticWaterPotential", (DL_FUNC) &_medfate_osmoticWaterPotential, 3},
     {"_medfate_sugarConcentration", (DL_FUNC) &_medfate_sugarConcentration, 3},
     {"_medfate_relativeSapViscosity", (DL_FUNC) &_medfate_relativeSapViscosity, 2},
-    {"_medfate_turgor", (DL_FUNC) &_medfate_turgor, 3},
+    {"_medfate_turgor", (DL_FUNC) &_medfate_turgor, 4},
     {"_medfate_leafStorageVolume", (DL_FUNC) &_medfate_leafStorageVolume, 4},
     {"_medfate_leafStructuralBiomass", (DL_FUNC) &_medfate_leafStructuralBiomass, 3},
     {"_medfate_leafStarchCapacity", (DL_FUNC) &_medfate_leafStarchCapacity, 4},
@@ -4224,8 +4212,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_layerFuelAverageCrownLength", (DL_FUNC) &_medfate_layerFuelAverageCrownLength, 6},
     {"_medfate_fuelLiveStratification", (DL_FUNC) &_medfate_fuelLiveStratification, 7},
     {"_medfate_FCCSproperties", (DL_FUNC) &_medfate_FCCSproperties, 10},
-    {"_medfate_floemFlow", (DL_FUNC) &_medfate_floemFlow, 6},
-    {"_medfate_dailyFloemFlow", (DL_FUNC) &_medfate_dailyFloemFlow, 4},
+    {"_medfate_floemFlow", (DL_FUNC) &_medfate_floemFlow, 7},
     {"_medfate_defoliationFraction", (DL_FUNC) &_medfate_defoliationFraction, 2},
     {"_medfate_growth", (DL_FUNC) &_medfate_growth, 7},
     {"_medfate_Psi2K", (DL_FUNC) &_medfate_Psi2K, 3},

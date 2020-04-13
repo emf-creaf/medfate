@@ -13,23 +13,23 @@ biophysics_leafTemperature <- function(absRad, airTemperature, u, E, leafWidth =
     .Call(`_medfate_leafTemperature`, absRad, airTemperature, u, E, leafWidth)
 }
 
-carbon_sugarStarchDynamicsLeaf <- function(sugarConc, starchConc, eqSugarConc) {
-    .Call(`_medfate_sugarStarchDynamicsLeaf`, sugarConc, starchConc, eqSugarConc)
+carbon_sugarStarchDynamicsLeaf <- function(sugarConc, starchConc, tlpSugarConc) {
+    .Call(`_medfate_sugarStarchDynamicsLeaf`, sugarConc, starchConc, tlpSugarConc)
 }
 
-carbon_sugarStarchDynamicsStem <- function(sugarConc, starchConc, eqSugarConc) {
-    .Call(`_medfate_sugarStarchDynamicsStem`, sugarConc, starchConc, eqSugarConc)
+carbon_sugarStarchDynamicsStem <- function(sugarConc, starchConc, tlpSugarConc) {
+    .Call(`_medfate_sugarStarchDynamicsStem`, sugarConc, starchConc, tlpSugarConc)
 }
 
-carbon_sugarStarchDynamicsRoot <- function(sugarConc, starchConc, eqSugarConc) {
-    .Call(`_medfate_sugarStarchDynamicsRoot`, sugarConc, starchConc, eqSugarConc)
+carbon_sugarStarchDynamicsRoot <- function(sugarConc, starchConc, tlpSugarConc) {
+    .Call(`_medfate_sugarStarchDynamicsRoot`, sugarConc, starchConc, tlpSugarConc)
 }
 
-carbon_osmoticWaterPotential <- function(conc, temp, nonSugarConc = 0.4) {
+carbon_osmoticWaterPotential <- function(conc, temp, nonSugarConc) {
     .Call(`_medfate_osmoticWaterPotential`, conc, temp, nonSugarConc)
 }
 
-carbon_sugarConcentration <- function(osmoticWP, temp, nonSugarConc = 0.4) {
+carbon_sugarConcentration <- function(osmoticWP, temp, nonSugarConc) {
     .Call(`_medfate_sugarConcentration`, osmoticWP, temp, nonSugarConc)
 }
 
@@ -37,8 +37,8 @@ carbon_relativeSapViscosity <- function(sugarConc, temp) {
     .Call(`_medfate_relativeSapViscosity`, sugarConc, temp)
 }
 
-carbon_turgor <- function(psi, conc, temp) {
-    .Call(`_medfate_turgor`, psi, conc, temp)
+carbon_turgor <- function(psi, conc, temp, nonSugarConc) {
+    .Call(`_medfate_turgor`, psi, conc, temp, nonSugarConc)
 }
 
 carbon_leafStorageVolume <- function(LAI, N, SLA, leafDensity) {
@@ -301,12 +301,8 @@ fuel_FCCS <- function(object, ShrubCover, CanopyCover, SpParams, cohortFMC = as.
     .Call(`_medfate_FCCSproperties`, object, ShrubCover, CanopyCover, SpParams, cohortFMC, gdd, mode, heightProfileStep, maxHeightProfile, bulkDensityThreshold)
 }
 
-growth_floemFlow <- function(psiUpstream, psiDownstream, concUpstream, concDownstream, temp, k_f = 3.0e-5) {
-    .Call(`_medfate_floemFlow`, psiUpstream, psiDownstream, concUpstream, concDownstream, temp, k_f)
-}
-
-growth_dailyFloemFlow <- function(x, spwbOut, concLeaf, concSapwood) {
-    .Call(`_medfate_dailyFloemFlow`, x, spwbOut, concLeaf, concSapwood)
+growth_floemFlow <- function(psiUpstream, psiDownstream, concUpstream, concDownstream, temp, k_f, nonSugarConc) {
+    .Call(`_medfate_floemFlow`, psiUpstream, psiDownstream, concUpstream, concDownstream, temp, k_f, nonSugarConc)
 }
 
 .growth_defoliationFraction <- function(conc, threshold) {

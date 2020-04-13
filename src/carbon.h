@@ -13,9 +13,9 @@ const double leafCperDry = 0.3; //g C · g dry-1
 const double rootCperDry = 0.4959; //g C · g dry-1
 
 
-double osmoticWaterPotential(double conc, double temp, double nonSugarConc = 0.4);
-double sugarConcentration(double osmoticWP, double temp, double nonSugarConc = 0.4);
-double turgor(double psi, double conc, double temp);
+double osmoticWaterPotential(double conc, double temp, double nonSugarConc);
+double sugarConcentration(double osmoticWP, double temp, double nonSugarConc);
+double turgor(double psi, double conc, double temp, double nonSugarConc);
 double relativeSapViscosity(double conc, double temp);
 
 double leafArea(double LAI, double N);
@@ -29,8 +29,8 @@ double sapwoodStructuralBiomass(double SA, double H, double Z, double woodDensit
 double sapwoodStructuralLivingBiomass(double SA, double H, double Z, double woodDensity, double vessel2sapwood);
 double sapwoodStarchCapacity(double SA, double H, double Z, double woodDensity, double vessel2sapwood);
 
-double sugarStarchDynamicsLeaf(double sugarConc, double starchConc, double eqSugarConc);
-double sugarStarchDynamicsStem(double sugarConc, double starchConc, double eqSugarConc);
-double sugarStarchDynamicsRoot(double sugarConc, double starchConc, double eqSugarConc);
+double sugarStarchDynamicsLeaf(double sugarConc, double starchConc, double tlpSugarConc);
+double sugarStarchDynamicsStem(double sugarConc, double starchConc, double tlpSugarConc);
+double sugarStarchDynamicsRoot(double sugarConc, double starchConc, double tlpSugarConc);
 
 // NumericVector carbonCompartments(double SA, double LAI, double H, double Z, double N, double SLA, double WoodDensity, double WoodC);

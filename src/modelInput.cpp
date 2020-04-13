@@ -400,9 +400,12 @@ DataFrame internalCarbonDataFrame(DataFrame above,
                                   List below,
                                   DataFrame paramsAnatomydf,
                                   DataFrame paramsWaterStoragedf,
-                                  DataFrame paramsGrowthdf) {
+                                  DataFrame paramsGrowthdf,
+                                  List control) {
   int numCohorts = above.nrow();
 
+  double nonSugarConc = control["nonSugarConc"];
+  
   NumericVector WoodDensity = paramsAnatomydf["WoodDensity"];
   NumericVector LeafDensity = paramsAnatomydf["LeafDensity"];
   NumericVector SLA = paramsAnatomydf["SLA"];
@@ -438,13 +441,13 @@ DataFrame internalCarbonDataFrame(DataFrame above,
     starchLeaf[c] = (0.5/(lvol*starchMolarMass))*leafStarchCapacity(LAI_expanded[c], N[c], SLA[c], LeafDensity[c]);
     starchSapwood[c] = (0.5/(svol*starchMolarMass))*sapwoodStarchCapacity(SA[c], H[c], Z[c], WoodDensity[c], 0.5);
     //Sugar storage from PI0
-    double lconc = sugarConcentration(LeafPI0[c],15.0);
+    double lconc = sugarConcentration(LeafPI0[c],15.0, nonSugarConc);
     // double lvol = leafStorageVolume(LAI_expanded[c], N[c], SLA[c], LeafDensity[c]); //l
     // double lstvol = 0.001*(starchLeaf[c]/starchDensity);
     // // Rcout<<c<<": "<<lvol<<" "<< lstvol<< " "<< lconc <<"\n";
     // sugarLeaf[c] = glucoseMolarMass*lconc*(lvol - lstvol);
     sugarLeaf[c] = lconc;
-    double sconc = sugarConcentration(StemPI0[c],15.0);
+    double sconc = sugarConcentration(StemPI0[c],15.0, nonSugarConc);
     // sconc = std::min(sconc,lconc); // Do not allow higher initial concentration in sapwood
     // double svol = sapwoodStorageVolume(SA[c], H[c], Z[c], WoodDensity[c], 0.5); //l
     // double sstvol = 0.001*(starchSapwood[c]/starchDensity);
@@ -710,7 +713,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                          _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
                          _["internalCarbon"] = internalCarbonDataFrame(plantsdf, below, 
                                                          paramsAnatomydf, paramsWaterStoragedf,
-                                                         paramsGrowthdf));
+                                                         paramsGrowthdf, control));
   } else if(transpirationMode =="Sperry"){
     
     //Base params
@@ -752,7 +755,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                          _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
                          _["internalCarbon"] = internalCarbonDataFrame(plantsdf, below,
                                                          paramsAnatomydf, paramsWaterStoragedf,
-                                                         paramsGrowthdf));
+                                                         paramsGrowthdf, control));
     
   } 
   
