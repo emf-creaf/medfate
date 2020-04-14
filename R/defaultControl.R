@@ -32,8 +32,10 @@ defaultControl<-function() {
     thermalCapacityLAI = 1000000,
     defaultWindSpeed = 2.5, #m/s
     # growth
+    nonStomatalPhotosynthesisLimitation = TRUE,
     k_floem = 3.0e-5, # floem conductance per leaf area basis (l*m-2*MPa-1*s-1)
-    nonSugarConc = 0.5 # mol · l-1
+    nonSugarConc = 0.5, # mol · l-1
+    allocationStrategy = "Plant_kmax"
     # storagePool = "none"
     
 #     #For water balance

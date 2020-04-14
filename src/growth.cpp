@@ -133,8 +133,10 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
   List control = x["control"];  
   
   String transpirationMode = control["transpirationMode"];
+  String allocationStrategy = control["allocationStrategy"];
   String cavitationRefill = control["cavitationRefill"];
   bool taper = control["taper"];
+  bool nonStomatalPhotosynthesisLimitation = control["nonStomatalPhotosynthesisLimitation"];
   double nonSugarConc = control["nonSugarConc"];
   double k_floem = control["k_floem"];
   
@@ -171,7 +173,7 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
   NumericVector starchLeaf = internalCarbon["starchLeaf"];
   NumericVector sugarSapwood = internalCarbon["sugarSapwood"];
   NumericVector starchSapwood = internalCarbon["starchSapwood"];
-  // NumericVector longtermStorage = internalCarbon["longtermStorage"];
+  NumericVector allocationTarget = internalCarbon["allocationTarget"];
   
   
   List stand = spwbOut["Stand"];
@@ -201,6 +203,7 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
   NumericVector WoodC = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["WoodC"]);
   NumericVector RGRmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRmax"]);
   NumericVector leafDuration = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["leafDuration"]);
+
   // NumericVector Cstoragepmax= Rcpp::as<Rcpp::NumericVector>(paramsGrowth["Cstoragepmax"]);
   // NumericVector slowCstorage_max(numCohorts), fastCstorage_max(numCohorts);
   //Transpiration parameters
@@ -334,17 +337,24 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
       // Rcout << j << " fLA_turgor "<< fLA_turgor << " fSA_turgor "<< fSA_turgor << "f_temp"<< f_temp <<"\n";
       double growthCostLAStep = 0.0;
       double growthCostSAStep = 0.0;
-      if(fLA_turgor>0.0 & f_temp>0.0) {
-        double deltaLAsink = RGRleafmax/((double) numSteps)*LAlive*f_temp*fLA_turgor;
+      
+      double Psapwood = 1.0;
+      if(allocationStrategy == "Plant_kmax") {
+        Psapwood = 1.0/(1.0+exp(10.0/allocationTarget[j]*(Plant_kmax[j] - allocationTarget[j])));
+      } else if(allocationStrategy =="Al2As") {
+        Psapwood = 1.0 - 1.0/(1.0+exp(10.0/allocationTarget[j]*(Al2As[j] - allocationTarget[j])));
+      }
+      if(fLA_turgor>0.0 && f_temp>0.0) {
+        double deltaLAsink = (1.0-Psapwood)*RGRleafmax/((double) numSteps)*LAlive*f_temp*fLA_turgor;
         double deltaLAavailable = std::max(0.0,(sugarLeaf[j]*(glucoseMolarMass*Volume_leaves[j]))/costPerLA);
         double deltaLAgrowthStep = std::min(deltaLAsink, deltaLAavailable);
         growthCostLAStep = deltaLAgrowthStep*costPerLA;
         deltaLAgrowth += deltaLAgrowthStep;
         LeafGrowthRespiration[j] +=growthCostLAStep; //growth cost in g gluc
       }
-      if(fSA_turgor>0.0 & f_temp>0.0) {
+      if(fSA_turgor>0.0 && f_temp>0.0) {
         double deltaSAavailable = std::max(0.0,(sugarSapwood[j]*(glucoseMolarMass*Volume_sapwood[j]))/costPerSA);
-        double deltaSAsink = RGRmax[j]/((double) numSteps)*SA[j]*f_temp*fSA_turgor;
+        double deltaSAsink = Psapwood*RGRmax[j]/((double) numSteps)*SA[j]*f_temp*fSA_turgor;
         double deltaSAgrowthStep = std::min(deltaSAsink, deltaSAavailable);
         growthCostSAStep = deltaSAgrowthStep*costPerSA;
         deltaSAgrowth  +=deltaSAgrowthStep;
@@ -437,8 +447,9 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
     StemPI0[j] = osmoticWaterPotential(sugarSapwood[j], tday, nonSugarConc)/rwcStem(j, numSteps-1);
     
     //Update non-stomatal photosynthesis limitations
-    NSPL[j] = 1.0 - std::max(0.0, std::min(1.0, sugarLeaf[j] - 0.5)); //photosynthesis limited when conc > 0.5 and zero when conc > 1.5 mol·l-1
-      
+    if(nonStomatalPhotosynthesisLimitation) NSPL[j] = 1.0 - std::max(0.0, std::min(1.0, sugarLeaf[j] - 0.5)); //photosynthesis limited when conc > 0.5 and zero when conc > 1.5 mol·l-1
+    else NSPL[j] = 1.0;
+    
     //Output variables
     PlantSugarLeaf[j] = sugarLeaf[j];
     PlantStarchLeaf[j] = starchLeaf[j];
@@ -975,7 +986,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   //Count years (times structural variables will be updated)
   int numYears = 0;
   for(int i=0;i<numDays;i++) {
-    if(((DOY[i]==1) & (i>0)) | ((i==(numDays-1)) & (DOY[i]>=365))) numYears = numYears + 1;
+    if(((DOY[i]==1) && (i>0)) | ((i==(numDays-1)) && (DOY[i]>=365))) numYears = numYears + 1;
   }
   DataFrame standSummary = DataFrame::create(
     _["LeafAreaIndex"] = NumericVector(numYears+1,0.0),
@@ -1013,7 +1024,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   List s;
   int iyear = 0;
   for(int i=0;i<numDays;i++) {
-    if(verbose & (i%10 == 0)) Rcout<<".";//<<i;
+    if(verbose && (i%10 == 0)) Rcout<<".";//<<i;
     
     double wind = WindSpeed[i];
     if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; //Default 1 m/s -> 10% of fall every day
@@ -1141,7 +1152,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
     }
     
     //4 Update structural variables
-    if(((DOY[i]==1) & (i>0)) | ((i==(numDays-1)) & (DOY[i]>=365))) { 
+    if(((DOY[i]==1) && (i>0)) | ((i==(numDays-1)) && (DOY[i]>=365))) { 
       if(verbose) Rcout<<" [update structural variables] ";
       iyear++;
       
