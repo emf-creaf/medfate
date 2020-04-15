@@ -8,8 +8,8 @@
 Function \code{spwb()} is a water balance model that determines changes in soil moisture, soil water potentials and plant transpiration and drought stress at daily steps for a given forest stand during a period specified in the input climatic data. Additionally, the function also calculates plant net photosynthesis. Function \code{pwb()} performs plant water balance only (i.e. soil moisture dynamics is an input) at daily steps for a given forest stand during a period specified in the input climatic data. On both simulation functions transpiration and photosynthesis processes are conducted with different level of detail depending on the transpiration mode.
 }
 \usage{
-spwb(x, soil, meteo,  latitude = NA, elevation = NA, slope = NA, aspect = NA)
-pwb(x, soil, meteo, W, latitude = NA, elevation = NA, slope = NA, aspect = NA,
+spwb(x, soil, meteo,  latitude , elevation = NA, slope = NA, aspect = NA)
+pwb(x, soil, meteo, W, latitude, elevation = NA, slope = NA, aspect = NA,
     canopyEvaporation = numeric(0), 
     snowMelt = numeric(0), 
     soilEvaporation = numeric(0))
@@ -38,7 +38,7 @@ pwb(x, soil, meteo, W, latitude = NA, elevation = NA, slope = NA, aspect = NA,
     }
   }
   \item{W}{A matrix with the same number of rows as \code{meteo} and as many columns as soil layers, containing the soil moisture of each layer as proportion of field capacity.}
-  \item{latitude}{Latitude (in degrees). Required when using the 'Sperry' transpiration mode.}
+  \item{latitude}{Latitude (in degrees).}
   \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when using the 'Sperry' transpiration mode. Elevation is also required for 'Granier' if snowpack dynamics are simulated.}
   \item{canopyEvaporation}{A vector of daily canopy evaporation (from interception) values (mm). The length should match the number of rows in \code{meteo}.}
   \item{soilEvaporation}{A vector of daily bare soil evaporation values (mm). The length should match the number of rows in \code{meteo}.}
@@ -84,7 +84,6 @@ pwb(x, soil, meteo, W, latitude = NA, elevation = NA, slope = NA, aspect = NA,
       \item{\code{"Stand"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
       
        \itemize{
-          \item{\code{"GDD"}: Cumulative growth degree days.}
           \item{\code{"LAIcell"}: LAI of the stand (accounting for leaf phenology) (in m2/m2).}
           \item{\code{"LAIcelldead"}: LAI of the stand corresponding to dead leaves (in m2/m2).}
           \item{\code{"Cm"}: Water retention capacity of the canopy (in mm) (accounting for leaf phenology).}
@@ -155,7 +154,7 @@ control = defaultControl()
 x1 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
 #Call simulation function
-S1<-spwb(x1, examplesoil, examplemeteo, elevation = 100)
+S1<-spwb(x1, examplesoil, examplemeteo, latitude = 41.82592, elevation = 100)
         
 #Plot results
 plot(S1)

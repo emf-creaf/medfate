@@ -21,17 +21,33 @@ double leafDevelopmentStatus(double Sgdd, double gdd) {
   if(Sgdd>0.0) return(std::min(std::max(gdd/Sgdd,0.0),1.0));
   return 1.0;
 }
+double leafSenescenceStatus(double Ssen, double sen) {
+  if(sen>Ssen) return(0.0);
+  return 1.0;
+}
+
 // [[Rcpp::export("pheno_leafDevelopmentStatus")]]
-NumericVector leafDevelopmentStatus(NumericVector Sgdd, double gdd) {
+NumericVector leafDevelopmentStatus(NumericVector Sgdd, NumericVector gdd) {
   NumericVector phe(Sgdd.size());
-  for(int i=0;i<Sgdd.size();i++) phe[i] = leafDevelopmentStatus(Sgdd[i], gdd);
+  for(int i=0;i<Sgdd.size();i++) phe[i] = leafDevelopmentStatus(Sgdd[i], gdd[i]);
+  return(phe);
+}
+
+// [[Rcpp::export("pheno_leafSenescenceStatus")]]
+NumericVector leafSenescenceStatus(NumericVector Ssen, NumericVector sen) {
+  NumericVector phe(Ssen.size());
+  for(int i=0;i<Ssen.size();i++) phe[i] = leafSenescenceStatus(Ssen[i], sen[i]);
   return(phe);
 }
 
 // [[Rcpp::export("pheno_updateLeaves")]]
-void updateLeaves(List x, double doy, double tmean, double wind, double Tbase = 5.0) {
+void updateLeaves(List x, int doy, double photoperiod, double tmean, double wind) {
   DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
   NumericVector Sgdd = paramsPhenology["Sgdd"];
+  NumericVector Tbgdd = paramsPhenology["Tbgdd"];
+  NumericVector Ssen = paramsPhenology["Ssen"];
+  NumericVector Psen = paramsPhenology["Psen"];
+  NumericVector Tbsen = paramsPhenology["Tbsen"];
   
   //Plant input
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
@@ -42,17 +58,35 @@ void updateLeaves(List x, double doy, double tmean, double wind, double Tbase = 
   NumericVector LAI_expanded = above["LAI_expanded"];
   int numCohorts = SP.size();
   
-  List canopyParams = x["canopy"];
-  double gddday = canopyParams["gdd"];
-  if((tmean-Tbase < 0.0) & (doy>180)) {
-    gddday = 0.0;
-  } else if (doy<180){ //Only increase in the first part of the year
-    if(tmean-Tbase>0.0) gddday = gddday + (tmean - Tbase);
+  DataFrame internalPhenology = x["internalPhenology"];
+  NumericVector gdd = internalPhenology["gdd"];
+  NumericVector sen = internalPhenology["sen"];
+  for(int j=0;j<numCohorts;j++) {
+    if(Sgdd[j]>0.0) {
+      if(doy>180) {
+        gdd[j] = 0.0;
+      } else { //Only increase in the first part of the year
+        if(tmean-Tbgdd[j]>0.0) gdd[j] = gdd[j] + (tmean - Tbgdd[j]);
+      }
+    }
+    if(Ssen[j]>0.0) {
+      // Rcout<< doy <<" "<< photoperiod<< " "<<Psen[j]<<"\n";
+      if(photoperiod>Psen[j]) {
+        sen[j] = 0.0;
+      } else {
+        double rsen = 0.0;
+        if(tmean-Tbsen[j]<0.0) {
+          rsen = pow(Tbsen[j]-tmean,2.0) * pow(photoperiod/Psen[j],2.0);
+        }
+        sen[j] = sen[j] + rsen;
+      }
+    }
   }
-  canopyParams["gdd"] = gddday;
-  
+
   //Update phenological status
-  NumericVector phe = leafDevelopmentStatus(Sgdd, gddday);
+  NumericVector phe;
+  if(doy<180) phe = leafDevelopmentStatus(Sgdd, gdd);
+  else phe = leafSenescenceStatus(Ssen, sen);
   for(int j=0;j<numCohorts;j++) {
     LAI_dead[j] *= exp(-1.0*(wind/10.0)); //Decrease dead leaf area according to wind speed
     double LAI_exp_prev= LAI_expanded[j]; //Store previous value

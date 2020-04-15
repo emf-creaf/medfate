@@ -23,6 +23,17 @@ IntegerVector date2doy(CharacterVector dateStrings) {
   return(doy);
 }
 
+IntegerVector date2photoperiod(CharacterVector dateStrings, double latitude) {
+  IntegerVector photoperiod(dateStrings.size());
+  //Derive photoperiod from date and latitude
+  for(int i=0;i<dateStrings.size();i++) {
+    std::string c = as<std::string>(dateStrings[i]);
+    int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
+    double delta = meteoland::radiation_solarDeclination(J);
+    photoperiod[i] = meteoland::radiation_daylength(latitude, 0.0, 0.0, delta);
+  }
+  return(photoperiod);
+}
 
 /**
  * Returns the proportion of daily radiation corresponding to the input time 

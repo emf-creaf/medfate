@@ -189,8 +189,10 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   int numCohorts = LAIlive.size();
 
   //Base parameters
+  DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
+  NumericVector Sgdd = Rcpp::as<Rcpp::NumericVector>(paramsPhenology["Sgdd"]);
+  
   DataFrame paramsInterception = Rcpp::as<Rcpp::DataFrame>(x["paramsInterception"]);
-  NumericVector Sgdd = Rcpp::as<Rcpp::NumericVector>(paramsInterception["Sgdd"]);
   NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsInterception["kPAR"]);
   NumericVector gRainIntercept = Rcpp::as<Rcpp::NumericVector>(paramsInterception["g"]);
 
@@ -337,13 +339,12 @@ List spwbDay(List x, List soil, CharacterVector date, double tmin, double tmax, 
   std::string c = as<std::string>(date[0]);
   int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
   double delta = meteoland::radiation_solarDeclination(J);
-  double deltaPrev = meteoland::radiation_solarDeclination(J - 1);
-  double photoperiod = meteoland::radiation_daylength(latitude, 0.0, 0.0, delta);
   double solarConstant = meteoland::radiation_solarConstant(J);
   double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
   double latrad = latitude * (PI/180.0);
   double asprad = aspect * (PI/180.0);
   double slorad = slope * (PI/180.0);
+  double photoperiod = meteoland::radiation_daylength(latrad, 0.0, 0.0, delta);
   double pet = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
 
   //Derive doy from date  
@@ -353,7 +354,7 @@ List spwbDay(List x, List soil, CharacterVector date, double tmin, double tmax, 
   if(wind<0.1) wind = 0.1; //Minimum windspeed abovecanopy
   
   //Update phenology
-  if(leafPhenology) updateLeaves(x, doy, tday, wind);
+  if(leafPhenology) updateLeaves(x, doy, photoperiod, tday, wind);
   
   double er = erFactor(doy, pet, prec);
   List s;
@@ -395,9 +396,11 @@ void checkspwbInput(List x, List soil, String transpirationMode, String soilFunc
     if(!below.containsElementNamed("VCroot_kmax")) stop("VCroot_kmax missing in spwbInput$below");
   }  
   
+  if(!x.containsElementNamed("paramsPhenology")) stop("paramsPhenology missing in spwbInput");
+  DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
+  if(!paramsPhenology.containsElementNamed("Sgdd")) stop("Sgdd missing in spwbInput$paramsPhenology");
   if(!x.containsElementNamed("paramsInterception")) stop("paramsInterception missing in spwbInput");
   DataFrame paramsInterception = Rcpp::as<Rcpp::DataFrame>(x["paramsInterception"]);
-  if(!paramsInterception.containsElementNamed("Sgdd")) stop("Sgdd missing in spwbInput$paramsInterception");
   if(!paramsInterception.containsElementNamed("kPAR")) stop("kPAR missing in spwbInput$paramsInterception");
   if(!paramsInterception.containsElementNamed("g")) stop("g missing in spwbInput$paramsInterception");
   
@@ -438,7 +441,7 @@ void checkspwbInput(List x, List soil, String transpirationMode, String soilFunc
 
 
 // [[Rcpp::export("spwb")]]
-List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL) {
+List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL) {
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
   String soilFunctions = control["soilFunctions"];
@@ -458,6 +461,10 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   NumericVector MinTemperature, MaxTemperature;
   NumericVector MinRelativeHumidity, MaxRelativeHumidity;
   NumericVector Radiation;
+  
+  if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
+  double latrad = latitude * (PI/180.0);
+  
   if(!meteo.containsElementNamed("Precipitation")) stop("Please include variable 'Precipitation' in weather input.");
   NumericVector Precipitation = meteo["Precipitation"];
   int numDays = Precipitation.size();
@@ -474,7 +481,6 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
       else Radiation = meteo["Radiation"];
     }
   } else if(transpirationMode=="Sperry") {
-    if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
     if(NumericVector::is_na(elevation)) stop("Value for 'elevation' should not be missing.");
     if(!meteo.containsElementNamed("MinTemperature")) stop("Please include variable 'MinTemperature' in weather input.");
     MinTemperature = meteo["MinTemperature"];
@@ -490,6 +496,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   CharacterVector dateStrings = meteo.attr("row.names");
   
   IntegerVector DOY = date2doy(dateStrings);
+  IntegerVector Photoperiod = date2photoperiod(dateStrings, latrad);
   
   //Canpopy parameters
   List canopyParams = x["canopy"];
@@ -509,7 +516,6 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
   
 
   //Water balance output variables
-  NumericVector GDD(numDays); 
   NumericVector LAIcell(numDays),LAIcelldead(numDays);
   NumericVector Cm(numDays);
   NumericVector LgroundPAR(numDays);
@@ -636,12 +642,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
       }
       
       //1. Phenology and leaf fall
-      if(leafPhenology) updateLeaves(x, DOY[i], MeanTemperature[i], wind);
-      
-      //Store GDD
-      GDD[i] = canopyParams["gdd"];
-      
-
+      if(leafPhenology) updateLeaves(x, DOY[i], Photoperiod[i], MeanTemperature[i], wind);
       
       //2. Water balance and photosynthesis
       if(transpirationMode=="Granier") {
@@ -655,7 +656,6 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
         int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
         double delta = meteoland::radiation_solarDeclination(J);
         double solarConstant = meteoland::radiation_solarConstant(J);
-        double latrad = latitude * (PI/180.0);
         if(NumericVector::is_na(aspect)) aspect = 0.0;
         if(NumericVector::is_na(slope)) slope = 0.0;
         double asprad = aspect * (PI/180.0);
@@ -858,8 +858,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
                              _["psi"]=psidays); 
    }
    SWB.attr("row.names") = meteo.attr("row.names") ;
-   DataFrame Stand = DataFrame::create(_["GDD"] = GDD,
-                             _["LAIcell"]=LAIcell, _["LAIcelldead"] = LAIcelldead,  _["Cm"]=Cm, 
+   DataFrame Stand = DataFrame::create(_["LAIcell"]=LAIcell, _["LAIcelldead"] = LAIcelldead,  _["Cm"]=Cm, 
                                _["LgroundPAR"] = LgroundPAR, _["LgroundSWR"] = LgroundSWR);
    Stand.attr("row.names") = meteo.attr("row.names") ;
    DataFrame DWB;
@@ -1006,7 +1005,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double 
 
 // [[Rcpp::export("pwb")]]
 List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
-            double latitude = NA_REAL, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL, 
+            double latitude, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL, 
             NumericVector canopyEvaporation = NumericVector(0), 
             NumericVector snowMelt = NumericVector(0), 
             NumericVector soilEvaporation = NumericVector(0)) {
@@ -1025,7 +1024,10 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
   List spwbInput = clone(x);
   List soilInput = clone(soil);
   
-  //Meteorological input    
+  if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
+  double latrad = latitude * (PI/180.0);
+
+    //Meteorological input    
   NumericVector MinTemperature, MaxTemperature;
   NumericVector MinRelativeHumidity, MaxRelativeHumidity;
   NumericVector Radiation;
@@ -1041,7 +1043,6 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
     if(!meteo.containsElementNamed("PET")) stop("Please include variable 'PET' in weather input.");
     PET = meteo["PET"];
   } else if(transpirationMode=="Sperry") {
-    if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
     if(NumericVector::is_na(elevation)) stop("Value for 'elevation' should not be missing.");
     if(!meteo.containsElementNamed("MinTemperature")) stop("Please include variable 'MinTemperature' in weather input.");
     MinTemperature = meteo["MinTemperature"];
@@ -1067,6 +1068,7 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
   CharacterVector dateStrings = meteo.attr("row.names");
   
   IntegerVector DOY = date2doy(dateStrings);
+  IntegerVector Photoperiod = date2photoperiod(dateStrings, latrad);
   
   //Canpopy parameters
   List canopyParams = x["canopy"];
@@ -1086,7 +1088,6 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
   List subdailyRes(numDays);
   
   //Transpiration output variables
-  NumericVector GDD(numDays); 
   NumericVector Transpiration(numDays);
   NumericVector PlantExtraction(numDays);
   NumericVector HydraulicRedistribution(numDays, 0.0);
@@ -1190,11 +1191,7 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
       
       
       //1. Phenology and leaf fall
-      if(leafPhenology) updateLeaves(x, DOY[i], MeanTemperature[i], wind);
-      
-      //Store GDD
-      GDD[i] = canopyParams["gdd"];
-      
+      if(leafPhenology) updateLeaves(x, DOY[i], Photoperiod[i], MeanTemperature[i], wind);
       
     
     int ntimesteps = control["ndailysteps"];

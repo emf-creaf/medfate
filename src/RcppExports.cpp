@@ -2507,28 +2507,40 @@ BEGIN_RCPP
 END_RCPP
 }
 // leafDevelopmentStatus
-NumericVector leafDevelopmentStatus(NumericVector Sgdd, double gdd);
+NumericVector leafDevelopmentStatus(NumericVector Sgdd, NumericVector gdd);
 RcppExport SEXP _medfate_leafDevelopmentStatus(SEXP SgddSEXP, SEXP gddSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type Sgdd(SgddSEXP);
-    Rcpp::traits::input_parameter< double >::type gdd(gddSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type gdd(gddSEXP);
     rcpp_result_gen = Rcpp::wrap(leafDevelopmentStatus(Sgdd, gdd));
     return rcpp_result_gen;
 END_RCPP
 }
+// leafSenescenceStatus
+NumericVector leafSenescenceStatus(NumericVector Ssen, NumericVector sen);
+RcppExport SEXP _medfate_leafSenescenceStatus(SEXP SsenSEXP, SEXP senSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type Ssen(SsenSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type sen(senSEXP);
+    rcpp_result_gen = Rcpp::wrap(leafSenescenceStatus(Ssen, sen));
+    return rcpp_result_gen;
+END_RCPP
+}
 // updateLeaves
-void updateLeaves(List x, double doy, double tmean, double wind, double Tbase);
-RcppExport SEXP _medfate_updateLeaves(SEXP xSEXP, SEXP doySEXP, SEXP tmeanSEXP, SEXP windSEXP, SEXP TbaseSEXP) {
+void updateLeaves(List x, int doy, double photoperiod, double tmean, double wind);
+RcppExport SEXP _medfate_updateLeaves(SEXP xSEXP, SEXP doySEXP, SEXP photoperiodSEXP, SEXP tmeanSEXP, SEXP windSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    Rcpp::traits::input_parameter< double >::type doy(doySEXP);
+    Rcpp::traits::input_parameter< int >::type doy(doySEXP);
+    Rcpp::traits::input_parameter< double >::type photoperiod(photoperiodSEXP);
     Rcpp::traits::input_parameter< double >::type tmean(tmeanSEXP);
     Rcpp::traits::input_parameter< double >::type wind(windSEXP);
-    Rcpp::traits::input_parameter< double >::type Tbase(TbaseSEXP);
-    updateLeaves(x, doy, tmean, wind, Tbase);
+    updateLeaves(x, doy, photoperiod, tmean, wind);
     return R_NilValue;
 END_RCPP
 }
@@ -4277,6 +4289,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_resetInputs", (DL_FUNC) &_medfate_resetInputs, 4},
     {"_medfate_gdd", (DL_FUNC) &_medfate_gdd, 4},
     {"_medfate_leafDevelopmentStatus", (DL_FUNC) &_medfate_leafDevelopmentStatus, 2},
+    {"_medfate_leafSenescenceStatus", (DL_FUNC) &_medfate_leafSenescenceStatus, 2},
     {"_medfate_updateLeaves", (DL_FUNC) &_medfate_updateLeaves, 5},
     {"_medfate_gammaTemp", (DL_FUNC) &_medfate_gammaTemp, 1},
     {"_medfate_KmTemp", (DL_FUNC) &_medfate_KmTemp, 2},

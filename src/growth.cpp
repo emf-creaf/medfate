@@ -519,9 +519,11 @@ void checkgrowthInput(List x, List soil, String transpirationMode, String soilFu
     if(!below.containsElementNamed("VCroot_kmax")) stop("VCroot_kmax missing in growthInput$below");
   }  
   
-  if(!x.containsElementNamed("paramsInterception")) stop("paramsInterception missing in growthInput");
+  if(!x.containsElementNamed("paramsPhenology")) stop("paramsPhenology missing in growthInput");
   DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
   if(!paramsPhenology.containsElementNamed("Sgdd")) stop("Sgdd missing in paramsPhenology");
+  
+  if(!x.containsElementNamed("paramsInterception")) stop("paramsInterception missing in growthInput");
   DataFrame paramsInterception = Rcpp::as<Rcpp::DataFrame>(x["paramsInterception"]);
   if(!paramsInterception.containsElementNamed("kPAR")) stop("kPAR missing in growthInput$paramsInterception");
   if(!paramsInterception.containsElementNamed("g")) stop("g missing in growthInput$paramsInterception");
@@ -797,13 +799,14 @@ void recordStandSummary(DataFrame standSummary, NumericVector LAIlive,
 // }
 
 // [[Rcpp::export("growth")]]
-List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL) {
+List growth(List x, List soil, DataFrame meteo, double latitude, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL) {
   //Control params
   List control = x["control"];  
   
   //Store input
   List spwbInput = clone(x);
   List soilInput = clone(soil);
+  
   
   // Rcout<<"1";
   
@@ -821,6 +824,8 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   bool unlimitedSoilWater = control["unlimitedSoilWater"];
   String cavitationRefill = control["cavitationRefill"];
   checkgrowthInput(x, soil, transpirationMode, soilFunctions);
+  
+  if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
   
   //Meteorological input    
   NumericVector MinTemperature, MaxTemperature;
@@ -842,7 +847,6 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
       else Radiation = meteo["Radiation"];
     }
   } else if(transpirationMode=="Sperry") {
-    if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
     if(NumericVector::is_na(elevation)) stop("Value for 'elevation' should not be missing.");
     if(!meteo.containsElementNamed("MinTemperature")) stop("Please include variable 'MinTemperature' in weather input.");
     MinTemperature = meteo["MinTemperature"];
@@ -858,6 +862,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   CharacterVector dateStrings = meteo.attr("row.names");
   
   IntegerVector DOY = date2doy(dateStrings);
+  IntegerVector Photoperiod = date2photoperiod(dateStrings, latitude);
   
   //Canpopy parameters
   List canopyParams = x["canopy"];
@@ -1057,7 +1062,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
     }
     
     //1. Phenology and leaf fall
-    if(leafPhenology) updateLeaves(x, DOY[i], MeanTemperature[i], wind);
+    if(leafPhenology) updateLeaves(x, DOY[i], Photoperiod[i], MeanTemperature[i], wind);
     
     //Store GDD
     GDD[i] = canopyParams["gdd"];

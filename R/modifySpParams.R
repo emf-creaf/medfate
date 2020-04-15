@@ -56,7 +56,7 @@ modifyCohortParams<-function(x, customParams) {
       if(!is.na(val)) {
         if (param %in% above_par) x[['above']][[coh, param]] <- val
         if (param %in% base_par) x[['paramsInterception']][[coh, param]] <- val
-        if (param %in% transp_par) x[['paramsTransp']][[coh, param]] <- val
+        if (param %in% transp_par) x[['paramsTranspiration']][[coh, param]] <- val
         if (param %in% anatomy_par) x[['paramsAnatomy']][[coh, param]] <- val
         if (param %in% waterstorage_par) x[['paramsWaterStorage']][[coh, param]] <- val
       }

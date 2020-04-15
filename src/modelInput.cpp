@@ -427,9 +427,9 @@ DataFrame paramsAllometries(DataFrame above, DataFrame SpParams) {
 DataFrame internalPhenologyDataFrame(DataFrame above) {
   int numCohorts = above.nrow();
   NumericVector gdd(numCohorts,0.0);
-  NumericVector send(numCohorts,0.0);
+  NumericVector sen(numCohorts,0.0);
   DataFrame df = DataFrame::create(Named("gdd") = gdd,
-                                   Named("send") = send);
+                                   Named("sen") = sen);
   df.attr("row.names") = above.attr("row.names");
   return(df);
 }

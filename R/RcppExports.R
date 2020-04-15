@@ -305,7 +305,7 @@ growth_floemFlow <- function(psiUpstream, psiDownstream, concUpstream, concDowns
     .Call(`_medfate_floemFlow`, psiUpstream, psiDownstream, concUpstream, concDownstream, temp, k_f, nonSugarConc)
 }
 
-growth <- function(x, soil, meteo, latitude = NA_real_, elevation = NA_real_, slope = NA_real_, aspect = NA_real_) {
+growth <- function(x, soil, meteo, latitude, elevation = NA_real_, slope = NA_real_, aspect = NA_real_) {
     .Call(`_medfate_growth`, x, soil, meteo, latitude, elevation, slope, aspect)
 }
 
@@ -609,8 +609,12 @@ pheno_leafDevelopmentStatus <- function(Sgdd, gdd) {
     .Call(`_medfate_leafDevelopmentStatus`, Sgdd, gdd)
 }
 
-pheno_updateLeaves <- function(x, doy, tmean, wind, Tbase = 5.0) {
-    invisible(.Call(`_medfate_updateLeaves`, x, doy, tmean, wind, Tbase))
+pheno_leafSenescenceStatus <- function(Ssen, sen) {
+    .Call(`_medfate_leafSenescenceStatus`, Ssen, sen)
+}
+
+pheno_updateLeaves <- function(x, doy, photoperiod, tmean, wind) {
+    invisible(.Call(`_medfate_updateLeaves`, x, doy, photoperiod, tmean, wind))
 }
 
 photo_GammaTemp <- function(leaf_temp) {
@@ -781,11 +785,11 @@ spwb_day <- function(x, soil, date, tmin, tmax, rhmin, rhmax, rad, wind, latitud
     .Call(`_medfate_spwbDay`, x, soil, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, runon)
 }
 
-spwb <- function(x, soil, meteo, latitude = NA_real_, elevation = NA_real_, slope = NA_real_, aspect = NA_real_) {
+spwb <- function(x, soil, meteo, latitude, elevation = NA_real_, slope = NA_real_, aspect = NA_real_) {
     .Call(`_medfate_spwb`, x, soil, meteo, latitude, elevation, slope, aspect)
 }
 
-pwb <- function(x, soil, meteo, W, latitude = NA_real_, elevation = NA_real_, slope = NA_real_, aspect = NA_real_, canopyEvaporation = numeric(0), snowMelt = numeric(0), soilEvaporation = numeric(0)) {
+pwb <- function(x, soil, meteo, W, latitude, elevation = NA_real_, slope = NA_real_, aspect = NA_real_, canopyEvaporation = numeric(0), snowMelt = numeric(0), soilEvaporation = numeric(0)) {
     .Call(`_medfate_pwb`, x, soil, meteo, W, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation)
 }
 
