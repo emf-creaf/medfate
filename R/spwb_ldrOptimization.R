@@ -86,7 +86,7 @@ spwb_ldrExploration<-function(x, soil, meteo, cohorts = NULL,
     x_1sp$above <- x$above[sp,,drop = FALSE]
     x_1sp$below <- x$below
     x_1sp$below$V <- x$below$V[sp,,drop = FALSE] 
-    x_1sp$paramsBase <- x$paramsBase[sp,,drop = FALSE] 
+    x_1sp$paramsInterception <- x$paramsInterception[sp,,drop = FALSE] 
     x_1sp$paramsTransp <- x$paramsTransp[sp,,drop = FALSE] 
     x_1sp$Transpiration <- x$Transpiration[sp,drop = FALSE] 
     x_1sp$Photosynthesis <- x$Photosynthesis[sp,drop = FALSE] 

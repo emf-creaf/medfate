@@ -30,8 +30,8 @@ NumericVector leafDevelopmentStatus(NumericVector Sgdd, double gdd) {
 
 // [[Rcpp::export("pheno_updateLeaves")]]
 void updateLeaves(List x, double doy, double tmean, double wind, double Tbase = 5.0) {
-  DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
-  NumericVector Sgdd = paramsBase["Sgdd"];
+  DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
+  NumericVector Sgdd = paramsPhenology["Sgdd"];
   
   //Plant input
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);

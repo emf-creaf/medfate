@@ -183,10 +183,10 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   
   
   //Base parameters
-  DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
-  NumericVector alphaSWR = Rcpp::as<Rcpp::NumericVector>(paramsBase["alphaSWR"]);
-  NumericVector gammaSWR = Rcpp::as<Rcpp::NumericVector>(paramsBase["gammaSWR"]);
-  NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsBase["kPAR"]);
+  DataFrame paramsInterception = Rcpp::as<Rcpp::DataFrame>(x["paramsInterception"]);
+  NumericVector alphaSWR = Rcpp::as<Rcpp::NumericVector>(paramsInterception["alphaSWR"]);
+  NumericVector gammaSWR = Rcpp::as<Rcpp::NumericVector>(paramsInterception["gammaSWR"]);
+  NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsInterception["kPAR"]);
   
   //Anatomy parameters
   DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
@@ -194,7 +194,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   NumericVector Al2As = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["Al2As"]);
   
   //Transpiration parameters
-  DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
+  DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
   NumericVector Gwmin = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Gwmin"]);
   NumericVector Gwmax = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Gwmax"]);
   NumericVector Plant_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Plant_kmax"]);
@@ -1223,10 +1223,10 @@ List transpirationGranier(List x, List soil, double tday, double pet,
   NumericVector poolProportions(numCohorts);
   
   //Parameters  
-  DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
-  NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsBase["kPAR"]);
+  DataFrame paramsInterception = Rcpp::as<Rcpp::DataFrame>(x["paramsInterception"]);
+  NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsInterception["kPAR"]);
   
-  DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
+  DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
   NumericVector Psi_Extract = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Psi_Extract"]);
   NumericVector WUE = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE"]);
   NumericVector pRootDisc = Rcpp::as<Rcpp::NumericVector>(paramsTransp["pRootDisc"]);

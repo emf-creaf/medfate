@@ -211,7 +211,7 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
   // NumericVector Cstoragepmax= Rcpp::as<Rcpp::NumericVector>(paramsGrowth["Cstoragepmax"]);
   // NumericVector slowCstorage_max(numCohorts), fastCstorage_max(numCohorts);
   //Transpiration parameters
-  DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
+  DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
   NumericVector Kmax_stemxylem, VCstem_kmax, VCroot_kmaxVEC, Psi_Extract, VCstem_c, VCstem_d;
   NumericMatrix VGrhizo_kmax, VCroot_kmax;
   Kmax_stemxylem = paramsTransp["Kmax_stemxylem"];
@@ -519,11 +519,12 @@ void checkgrowthInput(List x, List soil, String transpirationMode, String soilFu
     if(!below.containsElementNamed("VCroot_kmax")) stop("VCroot_kmax missing in growthInput$below");
   }  
   
-  if(!x.containsElementNamed("paramsBase")) stop("paramsBase missing in growthInput");
-  DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
-  if(!paramsBase.containsElementNamed("Sgdd")) stop("Sgdd missing in growthInput$paramsBase");
-  if(!paramsBase.containsElementNamed("kPAR")) stop("kPAR missing in growthInput$paramsBase");
-  if(!paramsBase.containsElementNamed("g")) stop("g missing in growthInput$paramsBase");
+  if(!x.containsElementNamed("paramsInterception")) stop("paramsInterception missing in growthInput");
+  DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
+  if(!paramsPhenology.containsElementNamed("Sgdd")) stop("Sgdd missing in paramsPhenology");
+  DataFrame paramsInterception = Rcpp::as<Rcpp::DataFrame>(x["paramsInterception"]);
+  if(!paramsInterception.containsElementNamed("kPAR")) stop("kPAR missing in growthInput$paramsInterception");
+  if(!paramsInterception.containsElementNamed("g")) stop("g missing in growthInput$paramsInterception");
   
   if(!x.containsElementNamed("paramsGrowth")) stop("paramsGrowth missing in growthInput");
   DataFrame paramsGrowth = Rcpp::as<Rcpp::DataFrame>(x["paramsGrowth"]);
@@ -537,24 +538,24 @@ void checkgrowthInput(List x, List soil, String transpirationMode, String soilFu
   if(!paramsAnatomy.containsElementNamed("Al2As")) stop("Al2As missing in paramsAnatomy$paramsGrowth");
   if(!paramsAnatomy.containsElementNamed("WoodDensity")) stop("WoodDensity missing in paramsAnatomy$paramsGrowth");
   
-  if(!x.containsElementNamed("paramsTransp")) stop("paramsTransp missing in growthInput");
-  DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
+  if(!x.containsElementNamed("paramsTranspiration")) stop("paramsTranspiration missing in growthInput");
+  DataFrame paramsTranspiration = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
   // if(!paramsTransp.containsElementNamed("pRootDisc")) stop("pRootDisc missing in growthInput$paramsTransp");
   if(transpirationMode=="Granier") {
-    if(!paramsTransp.containsElementNamed("Psi_Extract")) stop("Psi_Extract missing in growthInput$paramsTransp");
-    if(!paramsTransp.containsElementNamed("WUE")) stop("WUE missing in growthInput$paramsTransp");
+    if(!paramsTranspiration.containsElementNamed("Psi_Extract")) stop("Psi_Extract missing in growthInput$paramsTransp");
+    if(!paramsTranspiration.containsElementNamed("WUE")) stop("WUE missing in growthInput$paramsTransp");
   } else if(transpirationMode=="Sperry") {
     if(!soil.containsElementNamed("VG_n")) stop("VG_n missing in soil");
     if(!soil.containsElementNamed("VG_alpha")) stop("VG_alpha missing in soil");
     
-    if(!paramsTransp.containsElementNamed("VCstem_kmax")) stop("VCstem_kmax missing in growthInput");
-    if(!paramsTransp.containsElementNamed("VCstem_c")) stop("VCstem_c missing in growthInput$paramsTransp");
-    if(!paramsTransp.containsElementNamed("VCstem_d")) stop("VCstem_d missing in growthInput$paramsTransp");
-    if(!paramsTransp.containsElementNamed("VCroot_c")) stop("VCroot_c missing in growthInput$paramsTransp");
-    if(!paramsTransp.containsElementNamed("VCroot_d")) stop("VCroot_d missing in growthInput$paramsTransp");
-    if(!paramsTransp.containsElementNamed("Gwmax")) stop("Gwmax missing in growthInput$paramsTransp");
-    if(!paramsTransp.containsElementNamed("Vmax298")) stop("Vmax298 missing in growthInput$paramsTransp");
-    if(!paramsTransp.containsElementNamed("Jmax298")) stop("Jmax298 missing in growthInput$paramsTransp");
+    if(!paramsTranspiration.containsElementNamed("VCstem_kmax")) stop("VCstem_kmax missing in growthInput");
+    if(!paramsTranspiration.containsElementNamed("VCstem_c")) stop("VCstem_c missing in growthInput$paramsTransp");
+    if(!paramsTranspiration.containsElementNamed("VCstem_d")) stop("VCstem_d missing in growthInput$paramsTransp");
+    if(!paramsTranspiration.containsElementNamed("VCroot_c")) stop("VCroot_c missing in growthInput$paramsTransp");
+    if(!paramsTranspiration.containsElementNamed("VCroot_d")) stop("VCroot_d missing in growthInput$paramsTransp");
+    if(!paramsTranspiration.containsElementNamed("Gwmax")) stop("Gwmax missing in growthInput$paramsTransp");
+    if(!paramsTranspiration.containsElementNamed("Vmax298")) stop("Vmax298 missing in growthInput$paramsTransp");
+    if(!paramsTranspiration.containsElementNamed("Jmax298")) stop("Jmax298 missing in growthInput$paramsTransp");
   }
   if(!soil.containsElementNamed("W")) stop("W missing in soil");
   if(!soil.containsElementNamed("dVec")) stop("dVec missing in soil");
@@ -884,14 +885,16 @@ List growth(List x, List soil, DataFrame meteo, double latitude = NA_REAL, doubl
   
 
   //Base parameters
-  DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
-  NumericVector Sgdd = paramsBase["Sgdd"];
-  NumericVector kPAR = paramsBase["kPAR"];
+  DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
+  NumericVector Sgdd = Rcpp::as<Rcpp::NumericVector>(paramsPhenology["Sgdd"]);
+  
+  DataFrame paramsInterception = Rcpp::as<Rcpp::DataFrame>(x["paramsInterception"]);
+  NumericVector kPAR = paramsInterception["kPAR"];
   
   // Rcout<<"3";
 
   //Transpiration parameters
-  DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
+  DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
   NumericVector Kmax_stemxylem, VCstem_kmax, Psi_Extract, VCstem_c, VCstem_d;
   if(transpirationMode=="Sperry") {
     Kmax_stemxylem = paramsTransp["Kmax_stemxylem"];

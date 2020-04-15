@@ -47,12 +47,13 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
 
 
   //Parameters  
-  DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
-  NumericVector Sgdd = Rcpp::as<Rcpp::NumericVector>(paramsBase["Sgdd"]);
-  NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsBase["kPAR"]);
-  NumericVector gRainIntercept = Rcpp::as<Rcpp::NumericVector>(paramsBase["g"]);
+  DataFrame paramsInterception = Rcpp::as<Rcpp::DataFrame>(x["paramsInterception"]);
+  NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsInterception["kPAR"]);
+  NumericVector gRainIntercept = Rcpp::as<Rcpp::NumericVector>(paramsInterception["g"]);
   
-
+  DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
+  NumericVector Sgdd = Rcpp::as<Rcpp::NumericVector>(paramsPhenology["Sgdd"]);
+  
   //Determine whether leaves are out (phenology) and the adjusted Leaf area
   NumericVector Phe(numCohorts,0.0);
   double s = 0.0, LAIcell = 0.0, LAIcelllive, LAIcelldead = 0.0, Cm = 0.0;
@@ -188,10 +189,10 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   int numCohorts = LAIlive.size();
 
   //Base parameters
-  DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
-  NumericVector Sgdd = Rcpp::as<Rcpp::NumericVector>(paramsBase["Sgdd"]);
-  NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsBase["kPAR"]);
-  NumericVector gRainIntercept = Rcpp::as<Rcpp::NumericVector>(paramsBase["g"]);
+  DataFrame paramsInterception = Rcpp::as<Rcpp::DataFrame>(x["paramsInterception"]);
+  NumericVector Sgdd = Rcpp::as<Rcpp::NumericVector>(paramsInterception["Sgdd"]);
+  NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsInterception["kPAR"]);
+  NumericVector gRainIntercept = Rcpp::as<Rcpp::NumericVector>(paramsInterception["g"]);
 
   //1. Leaf Phenology: Adjusted leaf area index
   double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
@@ -336,6 +337,8 @@ List spwbDay(List x, List soil, CharacterVector date, double tmin, double tmax, 
   std::string c = as<std::string>(date[0]);
   int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
   double delta = meteoland::radiation_solarDeclination(J);
+  double deltaPrev = meteoland::radiation_solarDeclination(J - 1);
+  double photoperiod = meteoland::radiation_daylength(latitude, 0.0, 0.0, delta);
   double solarConstant = meteoland::radiation_solarConstant(J);
   double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
   double latrad = latitude * (PI/180.0);
@@ -392,27 +395,27 @@ void checkspwbInput(List x, List soil, String transpirationMode, String soilFunc
     if(!below.containsElementNamed("VCroot_kmax")) stop("VCroot_kmax missing in spwbInput$below");
   }  
   
-  if(!x.containsElementNamed("paramsBase")) stop("paramsBase missing in spwbInput");
-  DataFrame paramsBase = Rcpp::as<Rcpp::DataFrame>(x["paramsBase"]);
-  if(!paramsBase.containsElementNamed("Sgdd")) stop("Sgdd missing in spwbInput$paramsBase");
-  if(!paramsBase.containsElementNamed("kPAR")) stop("kPAR missing in spwbInput$paramsBase");
-  if(!paramsBase.containsElementNamed("g")) stop("g missing in spwbInput$paramsBase");
+  if(!x.containsElementNamed("paramsInterception")) stop("paramsInterception missing in spwbInput");
+  DataFrame paramsInterception = Rcpp::as<Rcpp::DataFrame>(x["paramsInterception"]);
+  if(!paramsInterception.containsElementNamed("Sgdd")) stop("Sgdd missing in spwbInput$paramsInterception");
+  if(!paramsInterception.containsElementNamed("kPAR")) stop("kPAR missing in spwbInput$paramsInterception");
+  if(!paramsInterception.containsElementNamed("g")) stop("g missing in spwbInput$paramsInterception");
   
-  if(!x.containsElementNamed("paramsTransp")) stop("paramsTransp missing in spwbInput");
-  DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
+  if(!x.containsElementNamed("paramsTranspiration")) stop("paramsTranspiration missing in spwbInput");
+  DataFrame paramsTranspiration = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
   if(transpirationMode=="Granier") {
-    if(!paramsTransp.containsElementNamed("pRootDisc")) stop("pRootDisc missing in spwbInput$paramsTransp");
-    if(!paramsTransp.containsElementNamed("Psi_Extract")) stop("Psi_Extract missing in spwbInput$paramsTransp");
-    if(!paramsTransp.containsElementNamed("WUE")) stop("WUE missing in spwbInput$paramsTransp");
+    if(!paramsTranspiration.containsElementNamed("pRootDisc")) stop("pRootDisc missing in spwbInput$paramsTranspiration");
+    if(!paramsTranspiration.containsElementNamed("Psi_Extract")) stop("Psi_Extract missing in spwbInput$paramsTranspiration");
+    if(!paramsTranspiration.containsElementNamed("WUE")) stop("WUE missing in spwbInput$paramsTranspiration");
   } else if(transpirationMode=="Sperry") {
-    if(!paramsTransp.containsElementNamed("VCstem_kmax")) stop("VCstem_kmax missing in spwbInput$paramsTransp");
-    if(!paramsTransp.containsElementNamed("VCstem_c")) stop("VCstem_c missing in spwbInput$paramsTransp");
-    if(!paramsTransp.containsElementNamed("VCstem_d")) stop("VCstem_d missing in spwbInput$paramsTransp");
-    if(!paramsTransp.containsElementNamed("VCroot_c")) stop("VCroot_c missing in spwbInput$paramsTransp");
-    if(!paramsTransp.containsElementNamed("VCroot_d")) stop("VCroot_d missing in spwbInput$paramsTransp");
-    if(!paramsTransp.containsElementNamed("Gwmax")) stop("Gwmax missing in spwbInput$paramsTransp");
-    if(!paramsTransp.containsElementNamed("Vmax298")) stop("Vmax298 missing in spwbInput$paramsTransp");
-    if(!paramsTransp.containsElementNamed("Jmax298")) stop("Jmax298 missing in spwbInput$paramsTransp");
+    if(!paramsTranspiration.containsElementNamed("VCstem_kmax")) stop("VCstem_kmax missing in spwbInput$paramsTranspiration");
+    if(!paramsTranspiration.containsElementNamed("VCstem_c")) stop("VCstem_c missing in spwbInput$paramsTranspiration");
+    if(!paramsTranspiration.containsElementNamed("VCstem_d")) stop("VCstem_d missing in spwbInput$paramsTranspiration");
+    if(!paramsTranspiration.containsElementNamed("VCroot_c")) stop("VCroot_c missing in spwbInput$paramsTranspiration");
+    if(!paramsTranspiration.containsElementNamed("VCroot_d")) stop("VCroot_d missing in spwbInput$paramsTranspiration");
+    if(!paramsTranspiration.containsElementNamed("Gwmax")) stop("Gwmax missing in spwbInput$paramsTranspiration");
+    if(!paramsTranspiration.containsElementNamed("Vmax298")) stop("Vmax298 missing in spwbInput$paramsTranspiration");
+    if(!paramsTranspiration.containsElementNamed("Jmax298")) stop("Jmax298 missing in spwbInput$paramsTranspiration");
   }
   if(transpirationMode=="Sperry") {
     if(!soil.containsElementNamed("VG_n")) stop("VG_n missing in soil");

@@ -2,7 +2,7 @@
  NEWS for R Package "medfate"
 -------------------------------
 
-# Version 0.10.0
+# Version 1.0
 - Reorganization of growth function
 - Clarification of gross and net photosynthesis
 - 'spwb_resetInputs' to 'resetInputs'

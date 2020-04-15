@@ -26,6 +26,34 @@ void checkSpeciesParameters(DataFrame SpParams, CharacterVector params) {
   }
 }
 
+DataFrame paramsPhenology(DataFrame above, DataFrame SpParams) {
+  IntegerVector SP = above["SP"];
+  int numCohorts = SP.size();
+  NumericVector Sgdd = cohortNumericParameter(SP, SpParams, "Sgdd");
+  // NumericVector TbaseGdd = cohortNumericParameter(SP, SpParams, "TbaseGdd");
+  // NumericVector Ssen = cohortNumericParameter(SP, SpParams, "Ssen");
+  // NumericVector PstartSen = cohortNumericParameter(SP, SpParams, "PstartSen");
+  // NumericVector TbaseSen = cohortNumericParameter(SP, SpParams, "TbaseSen");
+  NumericVector Tbgdd(numCohorts, 0.0);
+  NumericVector Ssen(numCohorts, 0.0);
+  NumericVector Psen(numCohorts, 0.0);
+  NumericVector Tbsen(numCohorts, 0.0);
+  for(int j=0; j<numCohorts;j++) {
+    if(Sgdd[j]>0.0) {
+      Tbgdd[j]= 5.0;
+      Ssen[j] = 8268.0;
+      Psen[j] = 12.5;
+      Tbsen[j] = 28.5;
+    }
+  }
+  DataFrame paramsPhenologydf = DataFrame::create(
+    _["Sgdd"] = Sgdd, _["Tbgdd"] = Tbgdd, 
+    _["Ssen"] = Ssen, _["Psen"] = Psen, _["Tbsen"] = Tbsen 
+  );
+  paramsPhenologydf.attr("row.names") = above.attr("row.names");
+  return(paramsPhenologydf);
+}
+
 DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams) {
   IntegerVector SP = above["SP"];
   int numCohorts = SP.size();
@@ -266,15 +294,15 @@ DataFrame paramsTranspiration(DataFrame above, NumericMatrix V, List soil, DataF
     Plant_kmax[c] = 1.0/((1.0/VCleaf_kmax[c])+(1.0/VCstem_kmax[c])+(1.0/VCroottot_kmax[c]));
   }
   
-  DataFrame paramsTranspdf = DataFrame::create(
+  DataFrame paramsTranspirationdf = DataFrame::create(
     _["Gwmin"]=Gwmin, _["Gwmax"]=Gwmax,_["Vmax298"]=Vmax298,
       _["Jmax298"]=Jmax298, _["Kmax_stemxylem"] = Kmax_stemxylem, _["Kmax_rootxylem"] = Kmax_rootxylem,
         _["VCleaf_kmax"]=VCleaf_kmax,_["VCleaf_c"]=VCleaf_c,_["VCleaf_d"]=VCleaf_d,
         _["VCstem_kmax"]=VCstem_kmax,_["VCstem_c"]=VCstem_c,_["VCstem_d"]=VCstem_d, 
         _["VCroot_kmax"] = VCroottot_kmax ,_["VCroot_c"]=VCroot_c,_["VCroot_d"]=VCroot_d,
         _["Plant_kmax"] = Plant_kmax);
-  paramsTranspdf.attr("row.names") = above.attr("row.names");
-  return(paramsTranspdf);
+  paramsTranspirationdf.attr("row.names") = above.attr("row.names");
+  return(paramsTranspirationdf);
 }
 
 List paramsBelow(DataFrame above, NumericMatrix V, List soil, 
@@ -396,10 +424,19 @@ DataFrame paramsAllometries(DataFrame above, DataFrame SpParams) {
   return(paramsAllometriesdf);
 }
 
+DataFrame internalPhenologyDataFrame(DataFrame above) {
+  int numCohorts = above.nrow();
+  NumericVector gdd(numCohorts,0.0);
+  NumericVector send(numCohorts,0.0);
+  DataFrame df = DataFrame::create(Named("gdd") = gdd,
+                                   Named("send") = send);
+  df.attr("row.names") = above.attr("row.names");
+  return(df);
+}
 DataFrame internalCarbonDataFrame(DataFrame above, 
                                   List below,
                                   DataFrame paramsAnatomydf,
-                                  DataFrame paramsTranspdf,
+                                  DataFrame paramsTranspirationdf,
                                   DataFrame paramsWaterStoragedf,
                                   DataFrame paramsGrowthdf,
                                   List control) {
@@ -418,7 +455,7 @@ DataFrame internalCarbonDataFrame(DataFrame above,
   NumericVector WoodC = paramsGrowthdf["WoodC"];
   NumericVector Cstoragepmax = paramsGrowthdf["Cstoragepmax"];
   
-  NumericVector Plant_kmax = paramsTranspdf["Plant_kmax"];
+  NumericVector Plant_kmax = paramsTranspirationdf["Plant_kmax"];
   
   NumericVector Z = below["Z"];
   IntegerVector SP = above["SP"];
@@ -521,7 +558,6 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
   NumericVector gammaSWR = cohortNumericParameter(SP, SpParams, "gammaSWR");
   NumericVector kPAR = cohortNumericParameter(SP, SpParams, "kPAR");
   NumericVector g = cohortNumericParameter(SP, SpParams, "g");
-  NumericVector Sgdd = cohortNumericParameter(SP, SpParams, "Sgdd");
   int numCohorts = SP.size();
   for(int c=0;c<numCohorts;c++){
     if(NumericVector::is_na(CR[c])) CR[c] = 0.5; //PATCH TO AVOID MISSING VALUES!!!!
@@ -547,44 +583,43 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
   for(int c=0;c<numCohorts;c++){
     for(int l=0;l<nlayers;l++) Wpool(c,l) = Wsoil[l]; //Init from soil state
   }
- 
+
   List input;
   if(transpirationMode=="Granier") {
     
     //Base params
-    DataFrame paramsBasedf = DataFrame::create(_["kPAR"] = kPAR, 
-                                               _["g"] = g, 
-                                               _["Sgdd"] = Sgdd);
-    paramsBasedf.attr("row.names") = above.attr("row.names");
-    
+    DataFrame paramsInterceptiondf = DataFrame::create(_["kPAR"] = kPAR, 
+                                               _["g"] = g);
+    paramsInterceptiondf.attr("row.names") = above.attr("row.names");
+  
     NumericVector WUE = cohortNumericParameter(SP, SpParams, "WUE");
     NumericVector Psi_Extract = cohortNumericParameter(SP, SpParams, "Psi_Extract");
     NumericVector pRootDisc = cohortNumericParameter(SP, SpParams, "pRootDisc");
-    DataFrame paramsTranspdf = DataFrame::create(_["Psi_Extract"]=Psi_Extract,_["WUE"] = WUE,  _["pRootDisc"] = pRootDisc);
-    paramsTranspdf.attr("row.names") = above.attr("row.names");
+    DataFrame paramsTranspirationdf = DataFrame::create(_["Psi_Extract"]=Psi_Extract,_["WUE"] = WUE,  _["pRootDisc"] = pRootDisc);
+    paramsTranspirationdf.attr("row.names") = above.attr("row.names");
     List below = List::create(_["V"] = V,
                               _["Wpool"] = Wpool);
 
-    List paramsCanopy = List::create(_["gdd"] = 0);
+    List paramsCanopy = List::create(_["gdd"] = 0.0);
     input = List::create(_["control"] = clone(control),
                          _["canopy"] = paramsCanopy,
                          _["cohorts"] = cohortDescdf,
                          _["above"] = plantsdf,
                          _["below"] = below,
-                         _["paramsBase"] = paramsBasedf,
-                         _["paramsTransp"] = paramsTranspdf,
+                         _["paramsPhenology"] = paramsPhenology(above, SpParams),
+                         _["paramsInterception"] = paramsInterceptiondf,
+                         _["paramsTranspiration"] = paramsTranspirationdf,
+                         _["internalPhenology"] = internalPhenologyDataFrame(above),
                          _["internalWater"] = internalWaterDataFrame(above, transpirationMode));
   } else if(transpirationMode =="Sperry"){
     
     //Base params
-    DataFrame paramsBasedf = DataFrame::create(_["alphaSWR"] = alphaSWR,
+    DataFrame paramsInterceptiondf = DataFrame::create(_["alphaSWR"] = alphaSWR,
                                                _["gammaSWR"] = gammaSWR, 
                                                _["kPAR"] = kPAR, 
-                                               _["g"] = g, 
-                                               _["Sgdd"] = Sgdd);
-    paramsBasedf.attr("row.names") = above.attr("row.names");
+                                               _["g"] = g);
+    paramsInterceptiondf.attr("row.names") = above.attr("row.names");
     
-
     DataFrame paramsAnatomydf = paramsAnatomy(above, SpParams);
     DataFrame paramsWaterStoragedf = paramsWaterStorage(above, SpParams, paramsAnatomydf);
     DataFrame paramsTranspirationdf = paramsTranspiration(above, V, soil, SpParams,
@@ -601,17 +636,19 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     below["Wpool"] = Wpool;
     below["psiRhizo"] = psiRhizo;
     
-    List paramsCanopy = List::create(_["gdd"] = 0,_["Temp"] = NA_REAL);
+    List paramsCanopy = List::create(_["gdd"] = 0.0,_["Temp"] = NA_REAL);
     List ctl = clone(control);
     input = List::create(_["control"] = ctl,
                          _["canopy"] = paramsCanopy,
                          _["cohorts"] = cohortDescdf,
                          _["above"] = plantsdf,
                          _["below"] = below,
-                         _["paramsBase"] = paramsBasedf,
+                         _["paramsPhenology"] = paramsPhenology(above, SpParams),
                          _["paramsAnatomy"] = paramsAnatomydf,
-                         _["paramsTransp"] = paramsTranspirationdf,
+                         _["paramsInterception"] = paramsInterceptiondf,
+                         _["paramsTranspiration"] = paramsTranspirationdf,
                          _["paramsWaterStorage"] = paramsWaterStoragedf,
+                         _["internalPhenology"] = internalPhenologyDataFrame(above),
                          _["internalWater"] = internalWaterDataFrame(above, transpirationMode));
   }
 
@@ -662,8 +699,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   NumericVector gammaSWR = cohortNumericParameter(SP, SpParams, "gammaSWR");
   NumericVector kPAR = cohortNumericParameter(SP, SpParams, "kPAR");
   NumericVector g = cohortNumericParameter(SP, SpParams, "g");
-  NumericVector Sgdd = cohortNumericParameter(SP, SpParams, "Sgdd");
-  
+
   int numCohorts = SP.size();
   for(int c=0;c<numCohorts;c++){
     if(NumericVector::is_na(CR[c])) CR[c] = 0.5; //PATCH TO AVOID MISSING VALUES!!!!
@@ -696,49 +732,49 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   List input;
   if(transpirationMode=="Granier") {
     //Base params
-    DataFrame paramsBasedf = DataFrame::create(_["kPAR"] = kPAR, 
-                                               _["g"] = g, 
-                                               _["Sgdd"] = Sgdd);
-    paramsBasedf.attr("row.names") = above.attr("row.names");
+    DataFrame paramsInterceptiondf = DataFrame::create(_["kPAR"] = kPAR, 
+                                               _["g"] = g);
+    paramsInterceptiondf.attr("row.names") = above.attr("row.names");
     
     NumericVector WUE = cohortNumericParameter(SP, SpParams, "WUE");
     NumericVector Psi_Extract = cohortNumericParameter(SP, SpParams, "Psi_Extract");
     NumericVector pRootDisc = cohortNumericParameter(SP, SpParams, "pRootDisc");
     
-    DataFrame paramsTranspdf = DataFrame::create(_["Psi_Extract"]=Psi_Extract,_["WUE"] = WUE, _["pRootDisc"] = pRootDisc);
-    paramsTranspdf.attr("row.names") = above.attr("row.names");
+    DataFrame paramsTranspirationdf = DataFrame::create(_["Psi_Extract"]=Psi_Extract,_["WUE"] = WUE, _["pRootDisc"] = pRootDisc);
+    paramsTranspirationdf.attr("row.names") = above.attr("row.names");
     
     List below = List::create( _["Z"]=Z,_["V"] = V,_["Wpool"] = Wpool);
-    List paramsCanopy = List::create(_["gdd"] = 0);
+    List paramsCanopy = List::create(_["gdd"] = 0.0);
     input = List::create(_["control"] = clone(control),
                          _["canopy"] = paramsCanopy,
                          _["cohorts"] = cohortDescdf,
                          _["above"] = plantsdf,
                          _["below"] = below,
-                         _["paramsBase"] = paramsBasedf,
+                         _["paramsPhenology"] = paramsPhenology(above, SpParams),
                          _["paramsAnatomy"] = paramsAnatomydf,
-                         _["paramsTransp"] = paramsTranspdf,
+                         _["paramsInterception"] = paramsInterceptiondf,
+                         _["paramsTranspiration"] = paramsTranspirationdf,
                          _["paramsGrowth"]= paramsGrowthdf,
                          _["paramsAllometries"] = paramsAllometriesdf,
+                         _["internalPhenology"] = internalPhenologyDataFrame(above),
                          _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
                          _["internalCarbon"] = internalCarbonDataFrame(plantsdf, below, 
-                                                         paramsAnatomydf, paramsTranspdf,
+                                                         paramsAnatomydf, paramsTranspirationdf,
                                                          paramsWaterStoragedf,
                                                          paramsGrowthdf, control));
   } else if(transpirationMode =="Sperry"){
     
     //Base params
-    DataFrame paramsBasedf = DataFrame::create(_["alphaSWR"] = alphaSWR,
+    DataFrame paramsInterceptiondf = DataFrame::create(_["alphaSWR"] = alphaSWR,
                                                _["gammaSWR"] = gammaSWR, 
                                                _["kPAR"] = kPAR, 
-                                               _["g"] = g, 
-                                               _["Sgdd"] = Sgdd);
-    paramsBasedf.attr("row.names") = above.attr("row.names");
+                                               _["g"] = g);
+    paramsInterceptiondf.attr("row.names") = above.attr("row.names");
     
-    DataFrame paramsTranspdf = paramsTranspiration(above, V, soil, SpParams,
+    DataFrame paramsTranspirationdf = paramsTranspiration(above, V, soil, SpParams,
                                                           paramsAnatomydf, control);
     List below = paramsBelowZ(above, V, Z, soil, 
-                              paramsTranspdf, control);
+                              paramsTranspirationdf, control);
     
     NumericMatrix psiRhizo =  NumericMatrix(numCohorts, nlayers);
     psiRhizo.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
@@ -750,22 +786,24 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
       soilFunctions = "VG"; 
       warning("Soil pedotransfer functions set to Van Genuchten ('VG').");
     }
-    List paramsCanopy = List::create(_["gdd"] = 0,_["Temp"] = NA_REAL);
+    List paramsCanopy = List::create(_["gdd"] = 0.0,_["Temp"] = NA_REAL);
     List ctl = clone(control);
     input = List::create(_["control"] = ctl,
                          _["canopy"] = paramsCanopy,
                          _["cohorts"] = cohortDescdf,
                          _["above"] = plantsdf,
                          _["below"] = below,
-                         _["paramsBase"] = paramsBasedf,
+                         _["paramsPhenology"] = paramsPhenology(above, SpParams),
                          _["paramsAnatomy"] = paramsAnatomydf,
-                         _["paramsTransp"] = paramsTranspdf,
+                         _["paramsInterception"] = paramsInterceptiondf,
+                         _["paramsTranspiration"] = paramsTranspirationdf,
                          _["paramsWaterStorage"] = paramsWaterStoragedf,
                          _["paramsGrowth"]= paramsGrowthdf,
                          _["paramsAllometries"] = paramsAllometriesdf,
+                         _["internalPhenology"] = internalPhenologyDataFrame(above),
                          _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
                          _["internalCarbon"] = internalCarbonDataFrame(plantsdf, below,
-                                                         paramsAnatomydf, paramsTranspdf,
+                                                         paramsAnatomydf, paramsTranspirationdf,
                                                          paramsWaterStoragedf,
                                                          paramsGrowthdf, control));
     

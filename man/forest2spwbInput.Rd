@@ -64,7 +64,7 @@ Functions \code{forest2spwbInput} and \code{spwbInput} return a list of class \c
         \item{\code{VGroot_kmax}: A matrix with maximum root xylem conductance values of each cohort (in rows) in each soil layer (in columns).}
      }
   }
-  \item{\code{paramsBase}: A data frame with columns:
+  \item{\code{paramsInterception}: A data frame with columns:
      \itemize{
        \item{\code{kPAR}: PAR extinction coefficient.}
        \item{\code{g}: Canopy water retention capacity per LAI unit (mm/LAI).}
