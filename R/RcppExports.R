@@ -13,16 +13,16 @@ biophysics_leafTemperature <- function(absRad, airTemperature, u, E, leafWidth =
     .Call(`_medfate_leafTemperature`, absRad, airTemperature, u, E, leafWidth)
 }
 
-carbon_sugarStarchDynamicsLeaf <- function(sugarConc, starchConc, tlpSugarConc) {
-    .Call(`_medfate_sugarStarchDynamicsLeaf`, sugarConc, starchConc, tlpSugarConc)
+carbon_sugarStarchDynamicsLeaf <- function(sugarConc, starchConc, eqSugarConc) {
+    .Call(`_medfate_sugarStarchDynamicsLeaf`, sugarConc, starchConc, eqSugarConc)
 }
 
-carbon_sugarStarchDynamicsStem <- function(sugarConc, starchConc, tlpSugarConc) {
-    .Call(`_medfate_sugarStarchDynamicsStem`, sugarConc, starchConc, tlpSugarConc)
+carbon_sugarStarchDynamicsStem <- function(sugarConc, starchConc, eqSugarConc) {
+    .Call(`_medfate_sugarStarchDynamicsStem`, sugarConc, starchConc, eqSugarConc)
 }
 
-carbon_sugarStarchDynamicsRoot <- function(sugarConc, starchConc, tlpSugarConc) {
-    .Call(`_medfate_sugarStarchDynamicsRoot`, sugarConc, starchConc, tlpSugarConc)
+carbon_sugarStarchDynamicsRoot <- function(sugarConc, starchConc, eqSugarConc) {
+    .Call(`_medfate_sugarStarchDynamicsRoot`, sugarConc, starchConc, eqSugarConc)
 }
 
 carbon_osmoticWaterPotential <- function(conc, temp, nonSugarConc) {

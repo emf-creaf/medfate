@@ -29,8 +29,8 @@ double sapwoodStructuralBiomass(double SA, double H, double Z, double woodDensit
 double sapwoodStructuralLivingBiomass(double SA, double H, double Z, double woodDensity, double vessel2sapwood);
 double sapwoodStarchCapacity(double SA, double H, double Z, double woodDensity, double vessel2sapwood);
 
-double sugarStarchDynamicsLeaf(double sugarConc, double starchConc, double tlpSugarConc);
-double sugarStarchDynamicsStem(double sugarConc, double starchConc, double tlpSugarConc);
-double sugarStarchDynamicsRoot(double sugarConc, double starchConc, double tlpSugarConc);
+double sugarStarchDynamicsLeaf(double sugarConc, double starchConc, double eqSugarConc);
+double sugarStarchDynamicsStem(double sugarConc, double starchConc, double eqSugarConc);
+double sugarStarchDynamicsRoot(double sugarConc, double starchConc, double eqSugarConc);
 
 // NumericVector carbonCompartments(double SA, double LAI, double H, double Z, double N, double SLA, double WoodDensity, double WoodC);
