@@ -3,6 +3,7 @@ defaultControl<-function() {
     #For all
     verbose = TRUE,
     subdailyResults = FALSE,
+  
     # swb
     soilFunctions = "SX",
     snowpack = TRUE,
@@ -11,6 +12,7 @@ defaultControl<-function() {
     plantWaterPools = FALSE,
     poolOverlapFactor = 0.5,
     leafPhenology = TRUE,
+    unfoldingDD = 300,
     transpirationMode = "Granier", #vs. "Sperry"
     cuticularTranspiration = TRUE,
     gainModifier = 1, 

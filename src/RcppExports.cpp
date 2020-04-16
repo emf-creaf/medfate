@@ -2507,14 +2507,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // leafDevelopmentStatus
-NumericVector leafDevelopmentStatus(NumericVector Sgdd, NumericVector gdd);
-RcppExport SEXP _medfate_leafDevelopmentStatus(SEXP SgddSEXP, SEXP gddSEXP) {
+NumericVector leafDevelopmentStatus(NumericVector Sgdd, NumericVector gdd, double unfoldingDD);
+RcppExport SEXP _medfate_leafDevelopmentStatus(SEXP SgddSEXP, SEXP gddSEXP, SEXP unfoldingDDSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type Sgdd(SgddSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type gdd(gddSEXP);
-    rcpp_result_gen = Rcpp::wrap(leafDevelopmentStatus(Sgdd, gdd));
+    Rcpp::traits::input_parameter< double >::type unfoldingDD(unfoldingDDSEXP);
+    rcpp_result_gen = Rcpp::wrap(leafDevelopmentStatus(Sgdd, gdd, unfoldingDD));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4288,7 +4289,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_forest2growthInput", (DL_FUNC) &_medfate_forest2growthInput, 4},
     {"_medfate_resetInputs", (DL_FUNC) &_medfate_resetInputs, 4},
     {"_medfate_gdd", (DL_FUNC) &_medfate_gdd, 4},
-    {"_medfate_leafDevelopmentStatus", (DL_FUNC) &_medfate_leafDevelopmentStatus, 2},
+    {"_medfate_leafDevelopmentStatus", (DL_FUNC) &_medfate_leafDevelopmentStatus, 3},
     {"_medfate_leafSenescenceStatus", (DL_FUNC) &_medfate_leafSenescenceStatus, 2},
     {"_medfate_updateLeaves", (DL_FUNC) &_medfate_updateLeaves, 5},
     {"_medfate_gammaTemp", (DL_FUNC) &_medfate_gammaTemp, 1},

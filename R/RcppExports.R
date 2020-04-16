@@ -605,8 +605,8 @@ resetInputs <- function(x, soil, from = NULL, day = NA_integer_) {
     .Call(`_medfate_gdd`, DOY, Temp, Tbase, cum)
 }
 
-pheno_leafDevelopmentStatus <- function(Sgdd, gdd) {
-    .Call(`_medfate_leafDevelopmentStatus`, Sgdd, gdd)
+pheno_leafDevelopmentStatus <- function(Sgdd, gdd, unfoldingDD = 300.0) {
+    .Call(`_medfate_leafDevelopmentStatus`, Sgdd, gdd, unfoldingDD)
 }
 
 pheno_leafSenescenceStatus <- function(Ssen, sen) {

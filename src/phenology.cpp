@@ -17,9 +17,14 @@ NumericVector gdd(IntegerVector DOY, NumericVector Temp, double Tbase = 5.0, dou
   return(GDD);
 }
 
-double leafDevelopmentStatus(double Sgdd, double gdd) {
-  if(Sgdd>0.0) return(std::min(std::max(gdd/Sgdd,0.0),1.0));
-  return 1.0;
+double leafDevelopmentStatus(double Sgdd, double gdd, double unfoldingDD = 300.0) {
+  double ds = 0.0;
+  if(Sgdd>0.0) {
+    if(gdd>Sgdd) ds = std::min(1.0, (gdd - Sgdd)/unfoldingDD);
+  } else {
+    ds = 1.0;
+  }
+  return(ds);
 }
 double leafSenescenceStatus(double Ssen, double sen) {
   if(sen>Ssen) return(0.0);
@@ -27,9 +32,9 @@ double leafSenescenceStatus(double Ssen, double sen) {
 }
 
 // [[Rcpp::export("pheno_leafDevelopmentStatus")]]
-NumericVector leafDevelopmentStatus(NumericVector Sgdd, NumericVector gdd) {
+NumericVector leafDevelopmentStatus(NumericVector Sgdd, NumericVector gdd, double unfoldingDD = 300.0) {
   NumericVector phe(Sgdd.size());
-  for(int i=0;i<Sgdd.size();i++) phe[i] = leafDevelopmentStatus(Sgdd[i], gdd[i]);
+  for(int i=0;i<Sgdd.size();i++) phe[i] = leafDevelopmentStatus(Sgdd[i], gdd[i], unfoldingDD);
   return(phe);
 }
 
@@ -42,6 +47,10 @@ NumericVector leafSenescenceStatus(NumericVector Ssen, NumericVector sen) {
 
 // [[Rcpp::export("pheno_updateLeaves")]]
 void updateLeaves(List x, int doy, double photoperiod, double tmean, double wind) {
+  
+  List control = x["control"];
+  double unfoldingDD = control["unfoldingDD"];
+  
   DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
   NumericVector Sgdd = paramsPhenology["Sgdd"];
   NumericVector Tbgdd = paramsPhenology["Tbgdd"];
@@ -85,7 +94,7 @@ void updateLeaves(List x, int doy, double photoperiod, double tmean, double wind
 
   //Update phenological status
   NumericVector phe;
-  if(doy<180) phe = leafDevelopmentStatus(Sgdd, gdd);
+  if(doy<180) phe = leafDevelopmentStatus(Sgdd, gdd, unfoldingDD);
   else phe = leafSenescenceStatus(Ssen, sen);
   for(int j=0;j<numCohorts;j++) {
     LAI_dead[j] *= exp(-1.0*(wind/10.0)); //Decrease dead leaf area according to wind speed
