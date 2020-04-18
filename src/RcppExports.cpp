@@ -3915,8 +3915,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // profitMaximization
-List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, double Gwmin, double Gwmax, double gainModifier, double costModifier);
-RcppExport SEXP _medfate_profitMaximization(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP, SEXP GwminSEXP, SEXP GwmaxSEXP, SEXP gainModifierSEXP, SEXP costModifierSEXP) {
+List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, double Gwmin, double Gwmax, double gainModifier, double costModifier, String costWater);
+RcppExport SEXP _medfate_profitMaximization(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP, SEXP GwminSEXP, SEXP GwmaxSEXP, SEXP gainModifierSEXP, SEXP costModifierSEXP, SEXP costWaterSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -3926,7 +3926,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type Gwmax(GwmaxSEXP);
     Rcpp::traits::input_parameter< double >::type gainModifier(gainModifierSEXP);
     Rcpp::traits::input_parameter< double >::type costModifier(costModifierSEXP);
-    rcpp_result_gen = Rcpp::wrap(profitMaximization(supplyFunction, photosynthesisFunction, Gwmin, Gwmax, gainModifier, costModifier));
+    Rcpp::traits::input_parameter< String >::type costWater(costWaterSEXP);
+    rcpp_result_gen = Rcpp::wrap(profitMaximization(supplyFunction, photosynthesisFunction, Gwmin, Gwmax, gainModifier, costModifier, costWater));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4343,7 +4344,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_apoplasticWaterPotential", (DL_FUNC) &_medfate_apoplasticWaterPotential, 3},
     {"_medfate_tissueRelativeWaterContent", (DL_FUNC) &_medfate_tissueRelativeWaterContent, 8},
     {"_medfate_tissueFMC", (DL_FUNC) &_medfate_tissueFMC, 3},
-    {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 6},
+    {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 7},
     {"_medfate_transpirationSperry", (DL_FUNC) &_medfate_transpirationSperry, 14},
     {"_medfate_transpirationGranier", (DL_FUNC) &_medfate_transpirationGranier, 6},
     {"_medfate_windSpeedAtCanopyHeight", (DL_FUNC) &_medfate_windSpeedAtCanopyHeight, 2},

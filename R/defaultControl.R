@@ -15,6 +15,7 @@ defaultControl<-function() {
     unfoldingDD = 300,
     transpirationMode = "Granier", #vs. "Sperry"
     cuticularTranspiration = TRUE,
+    costWater = "dEdP",
     gainModifier = 1, 
     costModifier = 1, 
     verticalLayerSize = 100,

@@ -871,8 +871,7 @@ void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER
       }
     }
     DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
-    DataFrame internalCarbon = Rcpp::as<Rcpp::DataFrame>(x["internalCarbon"]);
-    
+
     if(transpirationMode=="Sperry") {
       NumericMatrix psiRhizo = Rcpp::as<Rcpp::NumericMatrix>(below["psiRhizo"]);
       NumericVector psiRootCrown = Rcpp::as<Rcpp::NumericVector>(internalWater["psiRootCrown"]);
@@ -883,8 +882,6 @@ void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER
       NumericVector psiLeaf = Rcpp::as<Rcpp::NumericVector>(internalWater["psiLeaf"]);
       NumericVector PLCstem = Rcpp::as<Rcpp::NumericVector>(internalWater["PLCstem"]);
       NumericVector Einst = Rcpp::as<Rcpp::NumericVector>(internalWater["Einst"]);
-      NumericVector Eday = Rcpp::as<Rcpp::NumericVector>(internalWater["Eday"]);
-      NumericVector Agday = Rcpp::as<Rcpp::NumericVector>(internalCarbon["Agday"]);
       for(int i=0;i<psiLeaf.size();i++) {
         Einst[i] = 0.0;
         psiLeaf[i] = 0.0;
@@ -894,17 +891,11 @@ void resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER
         psiRootCrown[i] = 0.0;
         psiSympLeaf[i] = 0.0;
         psiSympStem[i] = 0.0;
-        Eday[i] = 0.0;
-        Agday[i] = 0.0;
         for(int j=0;j<psiRhizo.ncol();j++) psiRhizo(i,j) = 0.0;
       }
     } else {
-      NumericVector Eday = Rcpp::as<Rcpp::NumericVector>(internalWater["Eday"]);
-      NumericVector Agday = Rcpp::as<Rcpp::NumericVector>(internalCarbon["Agday"]);
       NumericVector PLC = Rcpp::as<Rcpp::NumericVector>(internalWater["PLC"]);
-      for(int i=0;i<Eday.length();i++) {
-        Eday[i] = 0.0;
-        Agday[i] = 0.0;
+      for(int i=0;i<PLC.length();i++) {
         PLC[i] = 0.0;
       }
     }

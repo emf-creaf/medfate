@@ -56,15 +56,15 @@ void rhizosphereMoistureExtraction(NumericMatrix cohExtract,
 
 // [[Rcpp::export("transp_profitMaximization")]]
 List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, double Gwmin, double Gwmax, 
-                        double gainModifier = 1.0, double costModifier = 1.0) {
-  // NumericVector supplyKterm = supplyFunction["kterm"];
+                        double gainModifier = 1.0, double costModifier = 1.0, String costWater = "dEdP") {
   NumericVector supplyE = supplyFunction["E"];
   NumericVector supplydEdp = supplyFunction["dEdP"];
   NumericVector Ag = photosynthesisFunction["GrossPhotosynthesis"];
   NumericVector Gw = photosynthesisFunction["WaterVaporConductance"];
+  NumericVector supplyKterm = supplyFunction["kterm"];
   int nsteps = supplydEdp.size();
   double maxdEdp = 0.0, mindEdp = 99999999.0;
-  // double maxKterm = 0.0, minKterm = 99999999.0;
+  double maxKterm = 0.0, minKterm = 99999999.0;
   double Agmax = 0.0;
   //Find valid limits according to stomatal conductance
   int ini = 0, fin = nsteps-1;
@@ -77,10 +77,13 @@ List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, d
     //   maxdEdp = supplydEdp[i];
     //   imaxdEdp = i;
     // }
-    mindEdp = std::min(mindEdp, supplydEdp[i]);
-    maxdEdp = std::max(maxdEdp, supplydEdp[i]);
-    // minKterm = std::min(minKterm, supplyKterm[i]);
-    // maxKterm = std::max(maxKterm, supplyKterm[i]);
+    if(costWater=="dEdP") {
+      mindEdp = std::min(mindEdp, supplydEdp[i]);
+      maxdEdp = std::max(maxdEdp, supplydEdp[i]);
+    } else {
+      minKterm = std::min(minKterm, supplyKterm[i]);
+      maxKterm = std::max(maxKterm, supplyKterm[i]);
+    }
     Agmax = std::max(Agmax, Ag[i]);
   }
   
@@ -90,7 +93,11 @@ List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, d
   NumericVector gain(nsteps, NA_REAL);
   for(int i=ini;i<fin;i++) {
     gain[i] = pow(Ag[i]/Agmax, gainModifier);
-    cost[i] = pow((maxdEdp-supplydEdp[i])/(maxdEdp-mindEdp), costModifier);  
+    if(costWater=="dEdP") {
+      cost[i] = pow((maxdEdp-supplydEdp[i])/(maxdEdp-mindEdp), costModifier); 
+    }  else {
+      cost[i] = pow((maxKterm-supplyKterm[i])/(maxKterm-minKterm), costModifier);
+    }
     profit[i] = gain[i]-cost[i];
   }
   
@@ -134,6 +141,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
   double klatleaf = control["klatleaf"];
   double klatstem = control["klatstem"];
   int ntimesteps = control["ndailysteps"];
+  String costWater = control["costWater"];
   double costModifier = control["costModifier"];
   double gainModifier = control["gainModifier"];
   bool plantWaterPools = control["plantWaterPools"];
@@ -626,8 +634,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
           
           
           //Profit maximization
-          List PMSunlit = profitMaximization(sFunctionAbove, photoSunlit,  Gwminc, Gwmax[c], gainModifier, costModifier);
-          List PMShade = profitMaximization(sFunctionAbove, photoShade,  Gwminc,Gwmax[c], gainModifier, costModifier);
+          List PMSunlit = profitMaximization(sFunctionAbove, photoSunlit,  Gwminc, Gwmax[c], gainModifier, costModifier, costWater);
+          List PMShade = profitMaximization(sFunctionAbove, photoShade,  Gwminc,Gwmax[c], gainModifier, costModifier, costWater);
           int iPMSunlit = PMSunlit["iMaxProfit"];
           int iPMShade = PMShade["iMaxProfit"];
           
