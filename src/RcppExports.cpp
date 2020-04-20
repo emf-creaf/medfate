@@ -49,6 +49,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// waterDynamicViscosity
+double waterDynamicViscosity(double temp);
+RcppExport SEXP _medfate_waterDynamicViscosity(SEXP tempSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type temp(tempSEXP);
+    rcpp_result_gen = Rcpp::wrap(waterDynamicViscosity(temp));
+    return rcpp_result_gen;
+END_RCPP
+}
 // sugarStarchDynamicsLeaf
 double sugarStarchDynamicsLeaf(double sugarConc, double starchConc, double eqSugarConc);
 RcppExport SEXP _medfate_sugarStarchDynamicsLeaf(SEXP sugarConcSEXP, SEXP starchConcSEXP, SEXP eqSugarConcSEXP) {
@@ -1152,6 +1163,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type n(nSEXP);
     Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
     rcpp_result_gen = Rcpp::wrap(vanGenuchtenConductance(psi, krhizomax, n, alpha));
+    return rcpp_result_gen;
+END_RCPP
+}
+// correctConductanceForViscosity
+double correctConductanceForViscosity(double kxylem, double temp);
+RcppExport SEXP _medfate_correctConductanceForViscosity(SEXP kxylemSEXP, SEXP tempSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type kxylem(kxylemSEXP);
+    Rcpp::traits::input_parameter< double >::type temp(tempSEXP);
+    rcpp_result_gen = Rcpp::wrap(correctConductanceForViscosity(kxylem, temp));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4142,6 +4165,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_radiationDiurnalPattern", (DL_FUNC) &_medfate_radiationDiurnalPattern, 2},
     {"_medfate_temperatureDiurnalPattern", (DL_FUNC) &_medfate_temperatureDiurnalPattern, 4},
     {"_medfate_leafTemperature", (DL_FUNC) &_medfate_leafTemperature, 5},
+    {"_medfate_waterDynamicViscosity", (DL_FUNC) &_medfate_waterDynamicViscosity, 1},
     {"_medfate_sugarStarchDynamicsLeaf", (DL_FUNC) &_medfate_sugarStarchDynamicsLeaf, 3},
     {"_medfate_sugarStarchDynamicsStem", (DL_FUNC) &_medfate_sugarStarchDynamicsStem, 3},
     {"_medfate_sugarStarchDynamicsRoot", (DL_FUNC) &_medfate_sugarStarchDynamicsRoot, 3},
@@ -4223,6 +4247,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_xylemPsi", (DL_FUNC) &_medfate_xylemPsi, 4},
     {"_medfate_psiCrit", (DL_FUNC) &_medfate_psiCrit, 3},
     {"_medfate_vanGenuchtenConductance", (DL_FUNC) &_medfate_vanGenuchtenConductance, 4},
+    {"_medfate_correctConductanceForViscosity", (DL_FUNC) &_medfate_correctConductanceForViscosity, 2},
     {"_medfate_Egamma", (DL_FUNC) &_medfate_Egamma, 5},
     {"_medfate_Egammainv", (DL_FUNC) &_medfate_Egammainv, 5},
     {"_medfate_EXylem", (DL_FUNC) &_medfate_EXylem, 7},

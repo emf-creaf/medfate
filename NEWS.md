@@ -6,6 +6,7 @@
 - Reorganization of growth function
 - Clarification of gross and net photosynthesis
 - 'spwb_resetInputs' to 'resetInputs'
+- Dependence of kmax on temperature (due to sap dynamic viscosity) incorporated
 
 # Version 0.9.1
 - Small bug fixes

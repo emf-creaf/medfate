@@ -13,6 +13,10 @@ biophysics_leafTemperature <- function(absRad, airTemperature, u, E, leafWidth =
     .Call(`_medfate_leafTemperature`, absRad, airTemperature, u, E, leafWidth)
 }
 
+biophysics_waterDynamicViscosity <- function(temp) {
+    .Call(`_medfate_waterDynamicViscosity`, temp)
+}
+
 carbon_sugarStarchDynamicsLeaf <- function(sugarConc, starchConc, eqSugarConc) {
     .Call(`_medfate_sugarStarchDynamicsLeaf`, sugarConc, starchConc, eqSugarConc)
 }
@@ -335,6 +339,10 @@ hydraulics_psiCrit <- function(c, d, pCrit = 0.001) {
 
 hydraulics_vanGenuchtenConductance <- function(psi, krhizomax, n, alpha) {
     .Call(`_medfate_vanGenuchtenConductance`, psi, krhizomax, n, alpha)
+}
+
+hydraulics_correctConductanceForViscosity <- function(kxylem, temp) {
+    .Call(`_medfate_correctConductanceForViscosity`, kxylem, temp)
 }
 
 .Egamma <- function(psi, kxylemmax, c, d, psiCav = 0.0) {

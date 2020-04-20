@@ -111,3 +111,17 @@ double irradianceToPhotonFlux(double I, double lambda = 546.6507) {
   return(I*lambda*0.836*1e-2);
 }
 
+/**
+ * Vogel equation for liquid dynamic viscosity (= 1 for 20ºC) (= 1/fluidity)
+ * 
+ * Hervé Cochard. A new mechanism for tree mortality due to drought and heatwaves. BioRxiv, 2019,
+ *  pp.531632. ff10.1101/531632ff. ffhal-02273372f
+ *  empirical equation for fluidity = 1/viscosity = 1.012e-4*pow(T,2.0) + 2.042e-2*T + 5.518e-1
+ *  where T in degrees C
+ *  
+ *  temp - Temperature in degrees C
+ */
+// [[Rcpp::export("biophysics_waterDynamicViscosity")]]
+double waterDynamicViscosity(double temp) {
+  return(exp(-3.7188+(578.919/(-137.546+ temp + 273.15))));
+}

@@ -4,6 +4,7 @@
 \alias{hydraulics_K2Psi}
 \alias{hydraulics_averagePsi}
 \alias{hydraulics_psiCrit}
+\alias{hydraulics_correctConductanceForViscosity}
 \alias{hydraulics_vulnerabilityCurvePlot}
 \alias{hydraulics_vanGenuchtenConductance}
 \alias{hydraulics_xylemConductance}
@@ -28,6 +29,7 @@ hydraulics_psiCrit(c, d, pCrit = 0.001)
 hydraulics_vanGenuchtenConductance(psi, krhizomax, n, alpha)
 hydraulics_xylemConductance(psi, kxylemmax, c, d)
 hydraulics_xylemPsi(kxylem, kxylemmax, c, d)
+hydraulics_correctConductanceForViscosity(kxylem, temp)
 hydraulics_psi2Weibull(psi50, psi88)
 }
 
@@ -53,6 +55,7 @@ hydraulics_psi2Weibull(psi50, psi88)
   \item{ylim, xlab, ylab}{Graphical parameters to override function defaults.}
   \item{pCrit}{Proportion of maximum conductance considered critical for hydraulic functioning.}
   \item{psi50, psi88}{Water potentials (in MPa) corresponding to 50\% and 88\% of percent loss of conductance.}
+  \item{temp}{Temperature (in degrees Celsius).}
 }
 \details{
 Details of the hydraulic model are given in a vignette. Function \code{hydraulics_vulnerabilityCurvePlot} draws a plot of the vulnerability curves for the given \code{soil} object and network properties of each plant cohort in \code{x}.

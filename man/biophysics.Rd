@@ -3,6 +3,7 @@
 \alias{biophysics_leafTemperature}
 \alias{biophysics_radiationDiurnalPattern}
 \alias{biophysics_temperatureDiurnalPattern}
+\alias{biophysics_waterDynamicViscosity}
 
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
@@ -15,6 +16,7 @@ Set of functions used in the calculation of biophysical variables.
 biophysics_leafTemperature(absRad, airTemperature, u, E, leafWidth = 1.0)
 biophysics_radiationDiurnalPattern(t, daylength)
 biophysics_temperatureDiurnalPattern(t, tmin, tmax, daylength)
+biophysics_waterDynamicViscosity(temp)
 }
 
 %- maybe also 'usage' for other objects documented here.
@@ -27,6 +29,7 @@ biophysics_temperatureDiurnalPattern(t, tmin, tmax, daylength)
   \item{leafWidth}{Leaf width (in cm).}
   \item{t}{Time of the day (in seconds).}
   \item{daylength}{Day length (in seconds).}
+  \item{temp}{Temperature (ºC).}
 }
 
 \value{
@@ -35,6 +38,7 @@ Values returned for each function are:
 \item{\code{biophysics_leafTemperature}: leaf temperature (in ºC)} 
 \item{\code{biophysics_radiationDiurnalPattern}: the proportion of daily radiation corresponding to the input time in seconds after sunrise.} 
 \item{\code{biophysics_temperatureDiurnalPattern}: diurnal pattern of temperature assuming a sinusoidal pattern with T = Tmin at sunrise and T = (Tmin+Tmax)/2 at sunset.}
+\item{\code{biophysics_waterDynamicViscosity}: Water dynamic viscosity relative to 20ºC.} 
 }
 }
 \references{

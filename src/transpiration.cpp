@@ -398,6 +398,9 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
     if((nlayerscon[c]==0) & verbose) Rcout<<"D";
   }
   
+  //Average sap fluidity
+  double sapFluidityDay = 1.0/waterDynamicViscosity((tmin+tmax)/2.0);
+  
   //Hydraulics: supply functions
   List soil_c;
   if(plantWaterPools) {
@@ -432,7 +435,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
     for(int l=0;l<nlayers;l++) {
       if(layerConnected(c,l)) {
         Vc[cnt] = V(c,l);
-        VCroot_kmaxc[cnt] = VCroot_kmax(c,l);
+        VCroot_kmaxc[cnt] = sapFluidityDay*VCroot_kmax(c,l);
         VGrhizo_kmaxc[cnt] = VGrhizo_kmax(c,l);
         psic[cnt] = psiSoil[l];
         VG_nc[cnt] = VG_n[l];
@@ -447,17 +450,17 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
       if(!capacitance) {
         supply[c] = supplyFunctionNetwork(psic,
                                           VGrhizo_kmaxc,VG_nc,VG_alphac,
-                                          VCroot_kmaxc, VCroot_c[c],VCroot_d[c],
-                                          VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
-                                          VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
+                                          VCroot_kmaxc, VCroot_c[c], VCroot_d[c],
+                                          sapFluidityDay*VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
+                                          sapFluidityDay*VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
                                           NumericVector::create(PLCstemVEC[c],PLCstemVEC[c]), 
                                           0.0, maxNsteps, 
                                           ntrial, psiTol, ETol, 0.001); 
       } else {
         supply[c] = supplyFunctionNetworkStem1(psic,
                                                VGrhizo_kmaxc,VG_nc,VG_alphac,
-                                               VCroot_kmaxc, VCroot_c[c],VCroot_d[c],
-                                               VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
+                                               sapFluidityDay*VCroot_kmaxc, VCroot_c[c],VCroot_d[c],
+                                               sapFluidityDay*VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
                                                0.0, //PLCstemVEC[c],
                                                0.0, maxNsteps, 
                                                ntrial, psiTol, ETol, 0.001); 
@@ -565,7 +568,6 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
         NumericVector fittedE, dEdP;
         NumericVector psiLeaf, psiRootCrown;
         
-
         //Retrieve supply functions
         List sFunctionBelow, sFunctionAbove;
         if(!capacitance) {
@@ -579,10 +581,12 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
           if(NumericVector::is_na(psiFineRootFake)) psiFineRootFake = 0.0;
           // Rcout<< c << " EinstVEC[c] "<< EinstVEC[c] << " psiStem1VEC[c] "<< psiStem1VEC[c]<<" psiFineRootFake "<< psiFineRootFake << " psiRootCrownFake "<< psiRootCrownFake<<"\n";
           // sFunctionAbove = supplyAboveground[c];
+          double sapFluidityBelow = 1.0/waterDynamicViscosity(Tsoil[0]);
+          double sapFluidityAbove = 1.0/waterDynamicViscosity(Tcan[n]);
           sFunctionAbove = supplyFunctionFineRootLeaf(psiFineRootFake,
-                                                      VCroot_kmax_sum[c], VCroot_c[c], VCroot_d[c],
-                                                      VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
-                                                      VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
+                                                      sapFluidityBelow*VCroot_kmax_sum[c], VCroot_c[c], VCroot_d[c],
+                                                      sapFluidityAbove*VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
+                                                      sapFluidityAbove*VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c],
                                                       PLCstemVEC[c], 
                                                       0.0, maxNsteps, 
                                                       ETol, 0.001);
@@ -966,7 +970,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
     RWClm[c] = sum(RWCleafinst(c,_))/((double)RWCleafinst.ncol());
     dEdPm[c] = sum(dEdPinst(c,_))/((double)dEdPinst.ncol());  
     double maxConductance = maximumSoilPlantConductance(VGrhizo_kmax(c,_), VCroot_kmax(c,_), VCstem_kmax[c], VCleaf_kmax[c]);
-    DDS[c] = Phe[c]*(1.0 - (dEdPm[c]/maxConductance));
+    DDS[c] = Phe[c]*(1.0 - (dEdPm[c]/(sapFluidityDay*maxConductance)));
     
     if(cavitationRefill=="rate") {
       double SAmax = 10e4/Al2As[c]; //cm2·m-2 of leaf area

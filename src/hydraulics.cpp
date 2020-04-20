@@ -1,5 +1,6 @@
 #include "Rcpp.h"
 #include "root.h"
+#include "biophysicsutils.h"
 #include "tissuemoisture.h"
 #include "incgamma.h"
 #include <math.h>
@@ -89,8 +90,10 @@ double vanGenuchtenConductance(double psi, double krhizomax, double n, double al
 
 
 
-
-
+// [[Rcpp::export("hydraulics_correctConductanceForViscosity")]]
+double correctConductanceForViscosity(double kxylem, double temp) {
+  return(kxylem/waterDynamicViscosity(temp));
+}
 
 
 

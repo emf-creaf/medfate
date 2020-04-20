@@ -387,7 +387,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(is.null(ylab)) ylab = expression(paste("Plant transpiration   ",(L%.%m^{-2})))
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
-  else if(type=="PlantTranspirationPerLeaf") {
+  else if(type=="TranspirationPerLeaf") {
     df = x$PlantTranspiration
     if(bySpecies) {
       m1 = apply(df,1, tapply, input$cohorts$Name, sum, na.rm=T)
@@ -397,7 +397,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       df = df/x$PlantLAI
       df[x$PlantLAI==0] = NA
     }
-    if(is.null(ylab)) ylab = expression(paste("Plant transpiration per leaf area  ",(L%.%m^{-2})))
+    if(is.null(ylab)) ylab = expression(paste("Transpiration per leaf area  ",(L%.%m^{-2})))
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="PlantWaterBalance") {

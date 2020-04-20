@@ -13,3 +13,5 @@ double leafTemperature(double absRad, double airTemperature, double u, double E,
 double temperatureDiurnalPattern(double t, double tmin, double tmax, double daylength);
 double radiationDiurnalPattern(double t, double daylength);
 double irradianceToPhotonFlux(double I, double lambda = 546.6507);
+
+double waterDynamicViscosity(double temp);

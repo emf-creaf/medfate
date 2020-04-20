@@ -1,5 +1,6 @@
 #include <Rcpp.h>
 #include "hydraulics.h"
+#include "biophysicsutils.h"
 using namespace Rcpp;
 
 const double carbonMolarMass = 12.0107; //g*mol-1
@@ -83,7 +84,7 @@ double relativeSapViscosity(double sugarConc, double temp) {
   double Ea = 2.61; //kJ*mol-1 energy of activation
   double va = x/(q0a*exp(-1.0*Ea/(Rn*Tkelvin)));
   double relVisc = exp(va/(1.0 + q1*va)); // relative viscosity
-  double relWat = exp(-3.7188+(578.919/(-137.546+ Tkelvin))); // Vogel equation for liquid dynamic viscosity (= 1 for 25ºC)
+  double relWat = waterDynamicViscosity(temp); 
   return(relWat*relVisc);
 }
 
