@@ -1,6 +1,9 @@
 plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
-                    xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, ...) {
-  dates = as.Date(rownames(x$WaterBalance))
+                    dates = NULL, subdaily = FALSE, 
+                    xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL,...) {
+  
+  if(subdaily) return(.plotsubdaily(x,type, bySpecies, dates, 
+                                    xlim, ylim, xlab, ylab))
   
   input = x$spwbInput
   soilInput = x$soilInput
@@ -45,6 +48,7 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     df[["Precipitation"]] = x$WaterBalance$Precipitation
     df[["Snow"]] = x$WaterBalance$Snow
     df[["Date"]] = as.Date(row.names(x$WaterBalance))
+    if(!is.null(dates)) df = df[df$Date %in% dates,]
     Date = df$Date
     Snow = df$Snow
     Precipitation = df$Precipitation
@@ -64,6 +68,7 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     df[["PET"]] = x$WaterBalance$PET
     df[["NetRain"]] = x$WaterBalance$NetRain
     df[["Date"]] = as.Date(row.names(x$WaterBalance))
+    if(!is.null(dates)) df = df[df$Date %in% dates,]
     Date = df$Date
     PET = df$PET
     NetRain = df$NetRain
@@ -82,6 +87,7 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     df[["Snow"]] = x$WaterBalance$Snow
     df[["Snowpack"]] = x$Soil$SWE
     df[["Date"]] = as.Date(row.names(x$WaterBalance))
+    if(!is.null(dates)) df = df[df$Date %in% dates,]
     Date = df$Date
     Snow = df$Swow
     Snowpack = df$Snowpack
@@ -101,16 +107,20 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     df[["Interception evaporation"]] = x$WaterBalance$Interception
     df[["Plant transpiration"]] = x$WaterBalance$Transpiration
     df[["Bare soil evaporation"]] = x$WaterBalance$SoilEvaporation
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
     return(.multiple_dynamics(as.matrix(df), ylab=ylab, xlab=xlab, ylim = ylim))
   } 
   else if(type=="LAI") {
     if(is.null(ylab)) ylab = expression(paste("Leaf Area Index   ",(m^{2}%.%m^{-2})))
-    return(.multiple_dynamics(as.matrix(Stand[,c("LAIcell", "LAIcelldead")]), ylab = ylab, ylim = ylim))
+    df = Stand[,c("LAIcell", "LAIcelldead")]
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
+    return(.multiple_dynamics(as.matrix(df), ylab = ylab, ylim = ylim))
   } 
   else if(type=="WTD") {
     if(is.null(ylab)) ylab = expression(paste("Water table depth  (mm)"))
     xv = Soil$WTD
     names(xv) = row.names(Soil)
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
     return(.single_dynamics(xv, ylab = ylab, ylim = ylim))
   } 
   else if(type=="Export") {
@@ -120,6 +130,7 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     df[["DeepDrainage"]] = x$WaterBalance$DeepDrainage
     df[["Runoff"]] = x$WaterBalance$Runoff 
     df[["Date"]]= as.Date(row.names(x$WaterBalance))
+    if(!is.null(dates)) df = df[df$Date %in% dates,]
     Date = df$Date
     Export = df$Export
     DeepDrainage = df$DeepDrainage
@@ -137,18 +148,22 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     if(is.null(ylab)) ylab = "Soil water content (mm)"
     MLM = data.frame("Total" = Soil$MLTot, 
                      Soil[,paste("ML",1:nlayers,sep=".")])
+    if(!is.null(dates)) MLM = MLM[row.names(MLM) %in% as.character(dates),]
     return(.multiple_dynamics(as.matrix(MLM), ylab = ylab, ylim = ylim,
                               xlab=xlab, labels = c("Total", paste("Layer", 1:nlayers))))
   } 
   else {
     plot.pwb(x, type=type, bySpecies = bySpecies,
-             xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, ...)
+             dates = dates, xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, ...)
   }
 }
 
 plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
+                   dates = NULL, subdaily = FALSE,
                    xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, ...) {
-  dates = as.Date(rownames(x$WaterBalance))
+  
+  if(subdaily) return(.plotsubdaily(x,type, bySpecies, dates, 
+                                    xlim, ylim, xlab, ylab))
   
   input = x$spwbInput
   soilInput = x$soilInput
@@ -185,11 +200,13 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
   if(type=="SoilPsi") {
     PsiM = Soil[,paste("psi",1:nlayers,sep=".")]
     if(is.null(ylab)) ylab = "Soil water potential (MPa)"    
+    if(!is.null(dates)) PsiM = PsiM[row.names(PsiM) %in% as.character(dates),]
     return(.multiple_dynamics(as.matrix(PsiM),  xlab = xlab, ylab = ylab, ylim = ylim,
                               labels = paste("Layer", 1:nlayers)))
   } 
   else if(type=="SoilTheta") {
     WM = Soil[,paste("W",1:nlayers,sep=".")]
+    if(!is.null(dates)) WM = WM[row.names(WM) %in% as.character(dates),]
     theta_FC = soil_thetaFC(soilInput, model = input$control$soilFunctions)
     WM = 100*sweep(WM, 2,theta_FC, "*")
     if(is.null(ylab)) ylab = "Soil moisture (% volume)"
@@ -198,12 +215,14 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
   } 
   else if(type=="SoilRWC") {
     WM = Soil[,paste("W",1:nlayers,sep=".")]
+    if(!is.null(dates)) WM = WM[row.names(WM) %in% as.character(dates),]
     if(is.null(ylab)) ylab = "Soil moisture (% field capacity)"
     return(.multiple_dynamics(as.matrix(WM),  xlab = xlab, ylab = ylab, ylim = ylim,
                               labels = paste("Layer", 1:nlayers)))
   } 
   else if(type=="PlantExtraction") {
     extrBal = Soil[,paste("PlantExt",1:nlayers,sep=".")]
+    if(!is.null(dates)) extrBal = extrBal[row.names(extrBal) %in% as.character(dates),]
     if(is.null(ylab)) ylab = "Extraction from soil layer (mm)"    
     g<-.multiple_dynamics(as.matrix(extrBal),  xlab = xlab, ylab = ylab, ylim = ylim,
                               labels = paste("Layer", 1:nlayers))
@@ -212,6 +231,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
   } 
   else if(type=="HydraulicRedistribution") {
     hydrIn = Soil[,paste("HydraulicInput",1:nlayers,sep=".")]
+    if(!is.null(dates)) hydrIn = hydrIn[row.names(hydrIn) %in% as.character(dates),]
     if(is.null(ylab)) ylab = "Hydraulic input (mm)"    
     return(.multiple_dynamics(as.matrix(hydrIn),  xlab = xlab, ylab = ylab, ylim = ylim,
                               labels = paste("Layer", 1:nlayers)))
@@ -221,6 +241,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(bySpecies) {
       OM = t(apply(OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
     } 
+    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     if(is.null(ylab)) ylab = expression(paste("Leaf Area Index   ",(m^{2}%.%m^{-2})))
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
@@ -232,6 +253,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       OM = m1/lai1
       OM[lai1==0] = NA
     } 
+    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     if(is.null(ylab)) ylab = expression(paste("Average soil-plant conductance ",(mmol%.%m^{-2}%.%s^{-1})))
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
@@ -243,6 +265,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       OM = m1/lai1
       OM[lai1==0] = NA
     } 
+    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     if(is.null(ylab)) ylab = "Drought stress [0-1]"
     if(is.null(ylim)) ylim = c(0,1)
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
@@ -255,6 +278,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       OM = m1/lai1
       OM[lai1==0] = NA
     } 
+    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     if(is.null(ylab)) ylab = "Percent loss conductance in stem [%]"
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
@@ -266,6 +290,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       OM = m1/lai1
       OM[lai1==0] = NA
     } 
+    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     if(is.null(ylab)) ylab = "Relative water content in stem [%]"
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
@@ -277,6 +302,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       OM = m1/lai1
       OM[lai1==0] = NA
     } 
+    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     if(is.null(ylab)) ylab = "Relative water content in leaf [%]"
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
@@ -288,6 +314,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       OM = m1/lai1
       OM[lai1==0] = NA
     } 
+    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     if(is.null(ylab)) ylab = "Plant water potential (MPa)"
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
@@ -299,6 +326,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       OM = m1/lai1
       OM[lai1==0] = NA
     } 
+    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     if(is.null(ylab)) ylab = "Minimum (midday) leaf water potential (MPa)"
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
@@ -310,6 +338,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       OM = m1/lai1
       OM[lai1==0] = NA
     } 
+    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     if(is.null(ylab)) ylab = "Maximum (predawn) leaf water potential (MPa)"
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
@@ -321,6 +350,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       OM = m1/lai1
       OM[lai1==0] = NA
     } 
+    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     if(is.null(ylab)) ylab = "Minimum (midday) sunlit leaf water potential (MPa)"
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
@@ -332,6 +362,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       OM = m1/lai1
       OM[lai1==0] = NA
     } 
+    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     if(is.null(ylab)) ylab = "Maximum (predawn) sunlit leaf water potential (MPa)"
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
@@ -343,6 +374,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       OM = m1/lai1
       OM[lai1==0] = NA
     } 
+    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     if(is.null(ylab)) ylab = "Minimum (midday) shade leaf water potential (MPa)"
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
@@ -354,6 +386,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       OM = m1/lai1
       OM[lai1==0] = NA
     } 
+    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     if(is.null(ylab)) ylab = "Maximum (predawn) shade leaf water potential (MPa)"
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   }
@@ -365,6 +398,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       OM = m1/lai1
       OM[lai1==0] = NA
     } 
+    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     if(is.null(ylab)) ylab = "Midday stem water potential (MPa)"
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
@@ -376,6 +410,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       OM = m1/lai1
       OM[lai1==0] = NA
     } 
+    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     if(is.null(ylab)) ylab = "Midday root crown water potential (MPa)"
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
@@ -384,6 +419,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(bySpecies) {
       OM = t(apply(OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
     } 
+    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     if(is.null(ylab)) ylab = expression(paste("Plant transpiration   ",(L%.%m^{-2})))
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
@@ -397,6 +433,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       df = df/x$PlantLAI
       df[x$PlantLAI==0] = NA
     }
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
     if(is.null(ylab)) ylab = expression(paste("Transpiration per leaf area  ",(L%.%m^{-2})))
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
@@ -406,6 +443,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       OM = t(apply(OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
     } 
     if(is.null(ylab)) ylab = expression(paste("Plant water balance   ",(L%.%m^{-2})))
+    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="PlantPhotosynthesis") {
@@ -413,6 +451,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(bySpecies) {
       df = t(apply(df,1, tapply, input$cohorts$Name, sum, na.rm=T))
     } 
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
     if(is.null(ylab)) ylab = expression(paste("Plant photosynthesis   ",(g*C%.%m^{-2})))
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
@@ -421,6 +460,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(bySpecies) {
       df = t(apply(df,1, tapply, input$cohorts$Name, sum, na.rm=T))
     } 
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
     if(is.null(ylab)) ylab = expression(paste("Plant net photosynthesis   ",(g*C%.%m^{-2})))
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
@@ -429,6 +469,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(bySpecies) {
       df = t(apply(df,1, tapply, input$cohorts$Name, sum, na.rm=T))
     } 
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
     if(is.null(ylab)) ylab = expression(paste("Plant gross photosynthesis   ",(g*C%.%m^{-2})))
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
@@ -442,6 +483,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       df = df/x$PlantLAI
       df[x$PlantLAI==0] = NA
     }
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
     if(is.null(ylab)) ylab = expression(paste("Photosynthesis per leaf area   ",(g*C%.%m^{-2})))
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
@@ -455,6 +497,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       df = df/x$PlantLAI
       df[x$PlantLAI==0] = NA
     }
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
     if(is.null(ylab)) ylab = expression(paste("Gross photosynthesis per leaf area   ",(g*C%.%m^{-2})))
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
@@ -468,6 +511,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       df = df/x$PlantLAI
       df[x$PlantLAI==0] = NA
     }
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
     if(is.null(ylab)) ylab = expression(paste("Net photosynthesis per leaf area   ",(g*C%.%m^{-2})))
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
@@ -477,6 +521,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(bySpecies) {
       OM = t(apply(OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
     } 
+    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     if(is.null(ylab)) ylab = expression(paste("Plant daily WUE   ",(g*C%.%L^{-1})))
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
@@ -485,6 +530,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(bySpecies) {
       df = t(apply(df,1, tapply, input$cohorts$Name, sum, na.rm=T))
     } 
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
     if(is.null(ylab)) ylab = expression(paste("Plant absorbed SWR  ",(MJ%.%m^{-2})))
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
@@ -498,6 +544,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       df = df/x$PlantLAI
       df[x$PlantLAI==0] = NA
     }
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
     if(is.null(ylab)) ylab = expression(paste("Absorbed SWR per leaf area  ",(MJ%.%m^{-2})))
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
@@ -506,6 +553,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(bySpecies) {
       df = t(apply(df,1, tapply, input$cohorts$Name, sum, na.rm=T))
     } 
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
     if(is.null(ylab)) ylab = expression(paste("Plant absorbed LWR  ",(MJ%.%m^{-2})))
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
@@ -519,6 +567,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       df = df/x$PlantLAI
       df[x$PlantLAI==0] = NA
     }
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
     if(is.null(ylab)) ylab = expression(paste("Absorbed LWR per leaf area  ",(MJ%.%m^{-2})))
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
@@ -528,6 +577,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     df[["Mean"]] = x$Temperature$Tatm_mean
     df[["Minimum"]] = x$Temperature$Tatm_min
     df[["Maximum"]] = x$Temperature$Tatm_max
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim))
   } 
   else if(type=="CanopyTemperature") {
@@ -536,6 +586,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     df[["Mean"]] = x$Temperature$Tcan_mean
     df[["Minimum"]] = x$Temperature$Tcan_min
     df[["Maximum"]] = x$Temperature$Tcan_max
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim))
   } 
   else if(type=="SoilTemperature") {
@@ -544,6 +595,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     df[["Mean"]] = x$Temperature$Tsoil_mean
     df[["Minimum"]] = x$Temperature$Tsoil_min
     df[["Maximum"]] = x$Temperature$Tsoil_max
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim))
   } 
   else if(type=="CanopyEnergyBalance") {
@@ -557,6 +609,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     df[["Latent heat"]] = -x$EnergyBalance$LEcan
     df[["Convection can./atm."]] = -x$EnergyBalance$Hcan
     df[["Convection soil/can."]] = -x$EnergyBalance$Hcansoil
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
     g<-.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim)
     return(g)
     # lines(dates, x$EnergyBalance$Ebalcan, col="black",...)
@@ -581,6 +634,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     df[["LWR emmited"]] = -x$EnergyBalance$LWRsoilout
     df[["Convection soil/can."]] = x$EnergyBalance$Hcansoil
     df[["Latent heat"]] = -x$EnergyBalance$LEsoil
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
     g<-.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim)
     return(g)
     # lines(dates, x$EnergyBalance$Ebalsoil, col="black",...)
@@ -593,4 +647,50 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     # legend("topright", bty="n", col=c("red","brown","orange", "blue", "green", "gray", "black"), lty=1,
     #        legend=c("SWR abs. from atm.","LWR abs. from atm.", "LWR abs. from canopy","LWR emmited","Latent heat (L)",  "Convection soil/can.", "Balance"),...)        
   }
+}
+
+.plotsubdaily<-function(x, type="PlantTranspiration", bySpecies = FALSE,
+                        dates = NULL, xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL) {
+  input = x$spwbInput
+  if(type=="PlantTranspiration") {
+    m = extractSubdaily(x, "E", dates)
+    if(is.null(ylab)) ylab = expression(paste("Plant transpiration ",(L%.%m^{-2})))
+    return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
+  } else if(type=="PlantGrossPhotosynthesis") {
+    m = extractSubdaily(x, "Ag", dates)
+    if(is.null(ylab)) ylab = expression(paste("Gross photosynthesis ",(gC%.%m^{-2})))
+    return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
+  } else if(type=="PlantNetPhotosynthesis") {
+    m = extractSubdaily(x, "An", dates)
+    if(is.null(ylab)) ylab = expression(paste("Net photosynthesis ",(gC%.%m^{-2})))
+    return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
+  } else if(type=="PsiLeaf" || type=="LeafPsi") {
+    m = extractSubdaily(x, "PsiLeaf", dates)
+    if(is.null(ylab)) ylab = expression(paste("Leaf water potential ",(MPa)))
+    return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
+  } else if(type=="PsiStem" || type=="StemPsi") {
+    m = extractSubdaily(x, "PsiStem", dates)
+    if(is.null(ylab)) ylab = expression(paste("Stem water potential ",(MPa)))
+    return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
+  } else if(type=="PsiRoot" || type=="RootPsi") {
+    m = extractSubdaily(x, "PsiRoot", dates)
+    if(is.null(ylab)) ylab = expression(paste("Root water potential ",(MPa)))
+    return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
+  } else if(type=="StemRWC" || type=="RWCstem") {
+    m = extractSubdaily(x, "RWCstem", dates)
+    if(is.null(ylab)) ylab = "Relative water content in stem [%]"
+    return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
+  } else if(type=="LeafRWC" || type=="RWCleaf") {
+    m = extractSubdaily(x, "RWCleaf", dates)
+    if(is.null(ylab)) ylab = "Relative water content in leaf [%]"
+    return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
+  } else if(type=="PlantWaterBalance") {
+    m = extractSubdaily(x, "PWB", dates)
+    if(is.null(ylab)) ylab = expression(paste("Plant water balance ",(L%.%m^{-2})))
+    return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
+  } else if(type=="SoilPlantConductance") {
+    m = extractSubdaily(x, "dEdPinst", dates)
+    if(is.null(ylab)) ylab = expression(paste("Soil-plant conductance ",(mmol%.%m^{-2}%.%s^{-1})))
+    return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
+  } 
 }

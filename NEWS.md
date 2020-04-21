@@ -7,6 +7,7 @@
 - Clarification of gross and net photosynthesis
 - 'spwb_resetInputs' to 'resetInputs'
 - Dependence of kmax on temperature (due to sap dynamic viscosity) incorporated
+- Functions plot.spwb and plot.pwb modified to draw subdaily dynamics for a subset of dates 
 
 # Version 0.9.1
 - Small bug fixes

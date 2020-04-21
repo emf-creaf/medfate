@@ -45,6 +45,21 @@
   return(g)
 }
 
+.multiple_dynamics_subdaily<-function(x, xlab = "", ylab=NULL, ylim = NULL, labels = NULL) {
+  if(is.null(labels)) labels = colnames(x)[-1]
+  df = data.frame("Y" = as.vector(as.matrix(x[,-1])), 
+                  "DateTime" = as.POSIXct(x$datetime),
+                  "Cohort" = gl(length(names(x)[-1]), nrow(x), labels=labels))
+  g<-ggplot(df, aes_string(x="DateTime", y="Y"))+
+    geom_line(aes_string(col="Cohort", linetype = "Cohort"))+
+    scale_color_discrete(name="")+
+    scale_linetype_discrete(name="")+
+    theme_bw()+
+    xlab(xlab)
+  if(!is.null(ylim)) g <- g+ylim(ylim)
+  if(!is.null(ylab)) g <- g+ylab(ylab)
+  return(g)
+}
 .single_dynamics<-function(x, xlab="", ylab=NULL, ylim = NULL) {
   df = data.frame("Y" = x, 
                   "Date" = as.Date(names(x)))
