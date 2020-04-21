@@ -66,19 +66,24 @@ double radiationDiurnalPattern(double t, double daylength) {
 double temperatureDiurnalPattern(double t, double tmin, double tmax, 
                                  double tminPrev, double tmaxPrev, double tminNext, double daylength) {
   double temp;
-  if((t<0) | (t>daylength)) {
-    if(t<0) {
-      t = t + 86400.0;
-      t = t - daylength;
-      double tfin = 86400.0-daylength;
-      temp = (0.5*(tmaxPrev-tminPrev)*(1.0-(t/tfin)) + tmin*(t/tfin));
+  if((t<0.0) | (t>daylength)) {
+    double tfin = 86400.0-daylength;
+    if(t<0.0) {
+      t = t + 86400.0 - daylength;
+      temp = (0.5*(tmaxPrev+tminPrev)*(1.0-(t/tfin)) + tmin*(t/tfin));
+      // Rcout<< t << " dl "<< daylength <<" ("<< tminPrev<< ", "<< tmaxPrev<<") ("<< tmin<< ", "<<tmax<<") to ("<<tminNext<<",) ";
+      // Rcout << " from prev tfin "<< tfin<< " ratio "<< t/tfin;
     } else {
       t = t - daylength;
-      double tfin = 86400.0-daylength;
-      temp = (0.5*(tmax-tmin)*(1.0-(t/tfin)) + tminNext*(t/tfin));
+      temp = (0.5*(tmax+tmin)*(1.0-(t/tfin)) + tminNext*(t/tfin));
+      // Rcout<< t << " dl "<< daylength <<" ("<< tminPrev<< ", "<< tmaxPrev<<") ("<< tmin<< ", "<<tmax<<") to ("<<tminNext<<",) ";
+      // Rcout << " to next tfin "<< tfin<< " ratio "<< t/tfin;
     }
+    // Rcout<<" "<< temp <<"\n";
   } else {
-    temp = 0.5*(tmin+tmax-(tmax-tmin)*cos(1.5*PI*t/daylength));
+    double ct = cos(1.5*PI*t/daylength);
+    temp = 0.5*(tmin+tmax-(tmax-tmin)*ct);
+    // Rcout<<" t "<< t << " dl "<< daylength << " ct "<<ct <<" "<< 0.5*(tmax+tmin)<<" "<<temp <<"\n";
   }
   return(temp);
 }
