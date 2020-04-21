@@ -307,7 +307,7 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
       OM_SH = sweep(m1,1,lai1,"/")
     } 
-    if(is.null(ylab)) ylab="Vapour pressure deficit (kPa)"
+    if(is.null(ylab)) ylab="Leaf vapour pressure deficit (kPa)"
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
   else if(type=="LeafStomatalConductance") {
@@ -352,7 +352,7 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
       OM_SH = sweep(m1,1,lai1,"/")
     } 
-    if(is.null(ylab)) ylab=expression(paste("Intercellular CO2 concentration sunlit  ", (ppm)))
+    if(is.null(ylab)) ylab=expression(paste("Intercellular CO2 concentration ", (ppm)))
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
   else if(type=="Temperature") {

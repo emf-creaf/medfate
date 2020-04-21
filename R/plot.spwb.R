@@ -661,6 +661,13 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
 .plotsubdaily<-function(x, type="PlantTranspiration", bySpecies = FALSE,
                         dates = NULL, xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL) {
   input = x$spwbInput
+  TYPES = c("PlantTranspiration", "PlantGrossPhotosynthesis",
+            "PlantNetPhotosynthesis", "PsiLeaf", "LeafPsi", "PsiStem","StemPsi",
+            "PsiRoot","RootPsi","LeafRWC","RWCLeaf","StemRWC","RWCStem",
+            "PlantWaterBalance","SoilPlantConductance","Temperature", "PlantExtraction",
+            "LeafStomatalConductance","LeafVPD","LeafCi", "LeafTemperature")
+  type = match.arg(type,TYPES)  
+  
   if(type=="PlantTranspiration") {
     m = extractSubdaily(x, "E", dates)
     if(is.null(ylab)) ylab = expression(paste("Plant transpiration ",(L%.%m^{-2})))
@@ -711,5 +718,28 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     m = extractSubdaily(x, "ExtractionInst", dates)
     if(is.null(ylab)) ylab = expression(paste("Extraction from soil layers   ",(L%.%m^{-2})))
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
-  }
+  } else if(type=="LeafStomatalConductance") {
+    mSu = extractSubdaily(x, "SunlitLeaves$GW", dates)
+    mSh = extractSubdaily(x, "ShadeLeaves$GW", dates)
+    if(is.null(ylab)) ylab=expression(paste("Stomatal conductance ", (mmol%.%m^{-2}%.%s^{-1})))
+    return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
+  } else if(type=="LeafTemperature") {
+    mSu = extractSubdaily(x, "SunlitLeaves$Temp", dates)
+    mSh = extractSubdaily(x, "ShadeLeaves$Temp", dates)
+    if(is.null(ylab)) ylab="Leaf temperature (degrees C)"
+    return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
+  } else if(type=="LeafVPD") {
+    mSu = extractSubdaily(x, "SunlitLeaves$VPD", dates)
+    mSh = extractSubdaily(x, "ShadeLeaves$VPD", dates)
+    if(is.null(ylab)) ylab="Leaf vapour pressure deficit (kPa)"
+    return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
+  } else if(type=="LeafCi") {
+    mSu = extractSubdaily(x, "SunlitLeaves$Ci", dates)
+    mSh = extractSubdaily(x, "ShadeLeaves$Ci", dates)
+    if(is.null(ylab)) ylab=expression(paste("Intercellular CO2 concentration  ", (ppm)))
+    return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
+  } 
 }
+
+# "LeafCi", "LeafIntrinsicWUE",
+# "LeafVPD",

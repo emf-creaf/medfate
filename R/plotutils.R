@@ -60,6 +60,29 @@
   if(!is.null(ylab)) g <- g+ylab(ylab)
   return(g)
 }
+.multiple_dynamics_subdaily_sunlit_shade<-function(x_sl, x_sh, xlab = "Time step", ylab=NULL, ylim = NULL, labels = NULL) {
+  if(is.null(labels)) labels = colnames(x_sl)[-1]
+  df_sl = data.frame("Y" = as.vector(as.matrix(x_sl[,-1])), 
+                     "DateTime" = as.POSIXct(x_sl$datetime),
+                     "Cohort" = gl(length(colnames(x_sl)[-1]), nrow(x_sl), labels=labels),
+                     "LeafType" = "Sunlit", stringsAsFactors = F)
+  df_sh = data.frame("Y" = as.vector(as.matrix(x_sh[,-1])), 
+                     "DateTime" = as.POSIXct(x_sh$datetime),
+                     "Cohort" = gl(length(colnames(x_sh)[-1]), nrow(x_sh), labels=labels),
+                     "LeafType" = "Shade", stringsAsFactors = F)
+  df = as.data.frame(rbind(df_sl, df_sh), stringsAsFactors = F)
+  df$LeafType = factor(df$LeafType, levels =c("Sunlit","Shade"))
+  g<-ggplot(df, aes_string(x="DateTime", y="Y"))+
+    geom_line(aes_string(col="Cohort", linetype = "Cohort"))+
+    facet_wrap(~LeafType, ncol=1)+
+    scale_color_discrete(name="")+
+    scale_linetype_discrete(name="")+
+    theme_bw()+
+    xlab(xlab)
+  if(!is.null(ylim)) g <- g+ylim(ylim)
+  if(!is.null(ylab)) g <- g+ylab(ylab)
+  return(g)
+}
 .single_dynamics<-function(x, xlab="", ylab=NULL, ylim = NULL) {
   df = data.frame("Y" = x, 
                   "Date" = as.Date(names(x)))
