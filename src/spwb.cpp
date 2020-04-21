@@ -667,7 +667,6 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
         double tminPrev = tmin;
         double tminNext = tmin;
         if(i>0) {
-          Rcout<<"hola";
           tmaxPrev = MaxTemperature[i-1];
           tminPrev = MinTemperature[i-1];
         }
