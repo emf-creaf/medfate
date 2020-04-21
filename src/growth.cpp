@@ -1086,12 +1086,20 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
       double slorad = slope * (PI/180.0);
       double tmin = MinTemperature[i];
       double tmax = MaxTemperature[i];
+      double tmaxPrev = tmax;
+      double tminPrev = tmin;
+      double tminNext = tmin;
+      if(i>0) {
+        tmaxPrev = MaxTemperature[i-1];
+        tminPrev = MinTemperature[i-1];
+      }
+      if(i<(numDays-1)) tminNext = MinTemperature[i+1]; 
       double rhmin = MinRelativeHumidity[i];
       double rhmax = MaxRelativeHumidity[i];
       double rad = Radiation[i];
       PET[i] = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
       double er = erFactor(DOY[i], PET[i], Precipitation[i]);
-      s = spwbDay2(x, soil, tmin, tmax, 
+      s = spwbDay2(x, soil, tmin, tmax, tminPrev, tmaxPrev, tminNext,
                    rhmin, rhmax, rad, wind, 
                    latitude, elevation, slope, aspect,
                    solarConstant, delta, Precipitation[i], PET[i], 

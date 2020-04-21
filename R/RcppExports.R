@@ -5,8 +5,8 @@ biophysics_radiationDiurnalPattern <- function(t, daylength) {
     .Call(`_medfate_radiationDiurnalPattern`, t, daylength)
 }
 
-biophysics_temperatureDiurnalPattern <- function(t, tmin, tmax, daylength) {
-    .Call(`_medfate_temperatureDiurnalPattern`, t, tmin, tmax, daylength)
+biophysics_temperatureDiurnalPattern <- function(t, tmin, tmax, tminPrev, tmaxPrev, tminNext, daylength) {
+    .Call(`_medfate_temperatureDiurnalPattern`, t, tmin, tmax, tminPrev, tmaxPrev, tminNext, daylength)
 }
 
 biophysics_leafTemperature <- function(absRad, airTemperature, u, E, leafWidth = 1.0) {

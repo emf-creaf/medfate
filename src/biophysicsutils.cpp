@@ -63,13 +63,20 @@ double radiationDiurnalPattern(double t, double daylength) {
  * Forest Ecology and Management 30:381–413.
  */
 // [[Rcpp::export("biophysics_temperatureDiurnalPattern")]]
-double temperatureDiurnalPattern(double t, double tmin, double tmax, double daylength) {
+double temperatureDiurnalPattern(double t, double tmin, double tmax, 
+                                 double tminPrev, double tmaxPrev, double tminNext, double daylength) {
   double temp;
   if((t<0) | (t>daylength)) {
-    if(t<0) t = t + 86400.0;
-    t = t - daylength;
-    double tfin = 86400.0-daylength;
-    temp = (0.5*(tmax-tmin)*(1.0-(t/tfin)) + tmin*(t/tfin));
+    if(t<0) {
+      t = t + 86400.0;
+      t = t - daylength;
+      double tfin = 86400.0-daylength;
+      temp = (0.5*(tmaxPrev-tminPrev)*(1.0-(t/tfin)) + tmin*(t/tfin));
+    } else {
+      t = t - daylength;
+      double tfin = 86400.0-daylength;
+      temp = (0.5*(tmax-tmin)*(1.0-(t/tfin)) + tminNext*(t/tfin));
+    }
   } else {
     temp = 0.5*(tmin+tmax-(tmax-tmin)*cos(1.5*PI*t/daylength));
   }

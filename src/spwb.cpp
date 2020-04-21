@@ -158,7 +158,7 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
 
 
 // Soil water balance with Sperry hydraulic and stomatal conductance models
-List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
+List spwbDay2(List x, List soil, double tmin, double tmax, double tminPrev, double tmaxPrev, double tminNext, double rhmin, double rhmax, double rad, double wind, 
              double latitude, double elevation, double slope, double aspect,
              double solarConstant, double delta, 
              double prec, double pet, double er, double runon=0.0, bool verbose = false) {
@@ -266,7 +266,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double rhmin, double 
   }
 
   //B.2 - Canopy transpiration  
-  List transp = transpirationSperry(x, soil,tmin, tmax, rhmin, rhmax, rad, wind, 
+  List transp = transpirationSperry(x, soil,tmin, tmax, tminPrev, tmaxPrev, tminNext, 
+                                    rhmin, rhmax, rad, wind, 
                                     latitude, elevation, slope, aspect, 
                                     solarConstant, delta, prec, 
                                     hydroInputs["Interception"], hydroInputs["Snowmelt"], sum(EsoilVec),
@@ -361,7 +362,7 @@ List spwbDay(List x, List soil, CharacterVector date, double tmin, double tmax, 
   if(transpirationMode=="Granier") {
     s = spwbDay1(x,soil, tday, pet, prec, er, runon, rad, elevation, verbose);
   } else {
-    s = spwbDay2(x,soil, tmin, tmax, rhmin, rhmax, rad, wind, 
+    s = spwbDay2(x,soil, tmin, tmax, tmin, tmax, tmin, rhmin, rhmax, rad, wind, 
                  latitude, elevation, slope, aspect,
                  solarConstant, delta, prec, pet, er, runon, verbose);
   }
@@ -662,12 +663,20 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
         double slorad = slope * (PI/180.0);
         double tmin = MinTemperature[i];
         double tmax = MaxTemperature[i];
+        double tmaxPrev = tmax;
+        double tminPrev = tmin;
+        double tminNext = tmin;
+        if(i>0) {
+          tmaxPrev = MaxTemperature[i-1];
+          tminPrev = MinTemperature[i-1];
+        }
+        if(i<(numDays-1)) tminNext = MinTemperature[i+1]; 
         double rhmin = MinRelativeHumidity[i];
         double rhmax = MaxRelativeHumidity[i];
         double rad = Radiation[i];
         PET[i] = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
         double er = erFactor(DOY[i], PET[i], Precipitation[i]);
-        s = spwbDay2(x, soil, tmin, tmax, 
+        s = spwbDay2(x, soil, tmin, tmax, tminPrev, tmaxPrev, tminNext,
                      rhmin, rhmax, rad, wind, 
                      latitude, elevation, slope, aspect,
                      solarConstant, delta, Precipitation[i], PET[i], 
@@ -1207,12 +1216,21 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
       double solarConstant = meteoland::radiation_solarConstant(J);
       double tmin = MinTemperature[i];
       double tmax = MaxTemperature[i];
+      double tmaxPrev = tmax;
+      double tminPrev = tmin;
+      double tminNext = tmin;
+      if(i>0) {
+        tmaxPrev = MaxTemperature[i-1];
+        tminPrev = MinTemperature[i-1];
+      }
+      if(i<(numDays-1)) tminNext = MinTemperature[i+1]; 
       double rhmin = MinRelativeHumidity[i];
       double rhmax = MaxRelativeHumidity[i];
       double rad = Radiation[i];
       double prec = Precipitation[i];
       
-      s = transpirationSperry(x, soil, tmin, tmax, rhmin, rhmax, rad, wind, 
+      s = transpirationSperry(x, soil, tmin, tmax, tminPrev, tmaxPrev, tminNext, 
+                              rhmin, rhmax, rad, wind, 
                               latitude, elevation, slope, aspect,
                               solarConstant, delta, prec,
                               canopyEvaporation[i], snowMelt[i], soilEvaporation[i],

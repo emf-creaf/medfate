@@ -120,7 +120,9 @@ List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, d
 }
 
 
-List transpirationSperry(List x, List soil, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, 
+List transpirationSperry(List x, List soil, double tmin, double tmax, 
+                         double tminPrev, double tmaxPrev, double tminNext, 
+                         double rhmin, double rhmax, double rad, double wind, 
                   double latitude, double elevation, double slope, double aspect, 
                   double solarConstant, double delta, double prec,
                   double canopyEvaporation = 0.0, double snowMelt = 0.0, double soilEvaporation = 0.0,
@@ -312,7 +314,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax, double rhm
     //From solar hour (radians) to seconds from sunrise
     Tsunrise[n] = (solarHour[n]*43200.0/PI)+ (tauday/2.0) +(tstep/2.0); 
     //Calculate instantaneous temperature and light conditions
-    Tatm[n] = temperatureDiurnalPattern(Tsunrise[n], tmin, tmax, tauday);
+    Tatm[n] = temperatureDiurnalPattern(Tsunrise[n], tmin, tmax, tminPrev, tmaxPrev, tminNext, tauday);
     //Longwave sky diffuse radiation (W/m2)
     lwdr[n] = meteoland::radiation_skyLongwaveRadiation(Tatm[n], vpatm, cloudcover);
   }
@@ -1185,6 +1187,14 @@ List transpirationSperry(List x, List soil, DataFrame meteo, int day,
   double rad = Radiation[day-1];
   double tmax = MaxTemperature[day-1];
   double tmin = MinTemperature[day-1];
+  double tmaxPrev = tmax;
+  double tminPrev = tmin;
+  double tminNext = tmin;
+  if(day>1) {
+    tmaxPrev = MaxTemperature[day-2];
+    tminPrev = MinTemperature[day-2];
+  }
+  if(day<(MaxTemperature.length()-1)) tminNext = MinTemperature[day];
   double rhmax = MaxRelativeHumidity[day-1];
   double rhmin = MinRelativeHumidity[day-1];
   double wind = WindSpeed[day-1];
@@ -1192,7 +1202,7 @@ List transpirationSperry(List x, List soil, DataFrame meteo, int day,
   double delta = meteoland::radiation_solarDeclination(J);
   double solarConstant = meteoland::radiation_solarConstant(J);
 
-  return(transpirationSperry(x,soil, tmin, tmax, rhmin, rhmax, rad, wind, 
+  return(transpirationSperry(x,soil, tmin, tmax, tminPrev, tmaxPrev, tminNext, rhmin, rhmax, rad, wind, 
                      latitude, elevation, slope, aspect,
                      solarConstant, delta, prec,
                      canopyEvaporation, snowMelt, soilEvaporation,

@@ -21,16 +21,19 @@ BEGIN_RCPP
 END_RCPP
 }
 // temperatureDiurnalPattern
-double temperatureDiurnalPattern(double t, double tmin, double tmax, double daylength);
-RcppExport SEXP _medfate_temperatureDiurnalPattern(SEXP tSEXP, SEXP tminSEXP, SEXP tmaxSEXP, SEXP daylengthSEXP) {
+double temperatureDiurnalPattern(double t, double tmin, double tmax, double tminPrev, double tmaxPrev, double tminNext, double daylength);
+RcppExport SEXP _medfate_temperatureDiurnalPattern(SEXP tSEXP, SEXP tminSEXP, SEXP tmaxSEXP, SEXP tminPrevSEXP, SEXP tmaxPrevSEXP, SEXP tminNextSEXP, SEXP daylengthSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type t(tSEXP);
     Rcpp::traits::input_parameter< double >::type tmin(tminSEXP);
     Rcpp::traits::input_parameter< double >::type tmax(tmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type tminPrev(tminPrevSEXP);
+    Rcpp::traits::input_parameter< double >::type tmaxPrev(tmaxPrevSEXP);
+    Rcpp::traits::input_parameter< double >::type tminNext(tminNextSEXP);
     Rcpp::traits::input_parameter< double >::type daylength(daylengthSEXP);
-    rcpp_result_gen = Rcpp::wrap(temperatureDiurnalPattern(t, tmin, tmax, daylength));
+    rcpp_result_gen = Rcpp::wrap(temperatureDiurnalPattern(t, tmin, tmax, tminPrev, tmaxPrev, tminNext, daylength));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4163,7 +4166,7 @@ RcppExport SEXP _medfate_RcppExport_registerCCallable() {
 
 static const R_CallMethodDef CallEntries[] = {
     {"_medfate_radiationDiurnalPattern", (DL_FUNC) &_medfate_radiationDiurnalPattern, 2},
-    {"_medfate_temperatureDiurnalPattern", (DL_FUNC) &_medfate_temperatureDiurnalPattern, 4},
+    {"_medfate_temperatureDiurnalPattern", (DL_FUNC) &_medfate_temperatureDiurnalPattern, 7},
     {"_medfate_leafTemperature", (DL_FUNC) &_medfate_leafTemperature, 5},
     {"_medfate_waterDynamicViscosity", (DL_FUNC) &_medfate_waterDynamicViscosity, 1},
     {"_medfate_sugarStarchDynamicsLeaf", (DL_FUNC) &_medfate_sugarStarchDynamicsLeaf, 3},

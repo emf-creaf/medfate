@@ -15,7 +15,8 @@ Set of functions used in the calculation of biophysical variables.
 \usage{
 biophysics_leafTemperature(absRad, airTemperature, u, E, leafWidth = 1.0)
 biophysics_radiationDiurnalPattern(t, daylength)
-biophysics_temperatureDiurnalPattern(t, tmin, tmax, daylength)
+biophysics_temperatureDiurnalPattern(t, tmin, tmax, 
+                                     tminPrev, tmaxPrev, tminNext, daylength)
 biophysics_waterDynamicViscosity(temp)
 }
 
@@ -24,6 +25,7 @@ biophysics_waterDynamicViscosity(temp)
   \item{u}{Wind speed above the leaf boundary layer (in m/s).}
   \item{airTemperature}{Air temperature (in ºC).}
   \item{tmin, tmax}{Minimum and maximum daily temperature (ºC).}
+  \item{tminPrev, tmaxPrev, tminNext}{Maximum and minimum daily temperatures of the previous and following day (ºC).}
   \item{absRad}{Absorbed long- and short-wave radiation (in W·m-2).}
   \item{E}{Transpiration flow (in mmol H20·m-2·s-1) per one sided leaf area basis.}
   \item{leafWidth}{Leaf width (in cm).}
