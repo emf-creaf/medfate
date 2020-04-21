@@ -27,7 +27,7 @@ extractSubdaily<-function(x, output = "E", dates = NULL)  {
     m<-data.frame(matrix(nrow = numDates*numSteps, ncol = ncols+1))
     for(i in 1:numDates) {
       ori = x$subdaily[[as.character(dates[i])]]$EnergyBalance$Temperature
-      m[((i-1)*numSteps+1):(i*numSteps), 2:(ncols+1)] = t(ori) 
+      m[((i-1)*numSteps+1):(i*numSteps), 2:(ncols+1)] = ori 
     }
     colnames(m) = c("datetime", colnames(ori1))
   } else if(output=="ExtractionInst") {
@@ -36,7 +36,7 @@ extractSubdaily<-function(x, output = "E", dates = NULL)  {
     m<-data.frame(matrix(nrow = numDates*numSteps, ncol = ncols+1))
     for(i in 1:numDates) {
       ori = x$subdaily[[as.character(dates[i])]]$ExtractionInst
-      m[((i-1)*numSteps+1):(i*numSteps), 2:(ncols+1)] = ori 
+      m[((i-1)*numSteps+1):(i*numSteps), 2:(ncols+1)] = t(ori) 
     }
     colnames(m) = c("datetime", rownames(ori1))
   }
