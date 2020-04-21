@@ -35,7 +35,7 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
               "PlantWaterBalance",
               "PlantAbsorbedSWR", "AbsorbedSWRPerLeaf",
               "PlantAbsorbedLWR", "AbsorbedLWRPerLeaf",
-              "AirTemperature","SoilTemperature", "CanopyTemperature",
+              "Temperature","AirTemperature","SoilTemperature", "CanopyTemperature",
               "CanopyEnergyBalance", "SoilEnergyBalance")
   } 
   type = match.arg(type,TYPES)  
@@ -191,7 +191,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
               "PlantWaterBalance",
               "PlantAbsorbedSWR", "AbsorbedSWRPerLeaf",
               "PlantAbsorbedLWR", "AbsorbedLWRPerLeaf",
-              "AirTemperature","SoilTemperature", "CanopyTemperature",
+              "Temperature","AirTemperature","SoilTemperature", "CanopyTemperature",
               "CanopyEnergyBalance", "SoilEnergyBalance")
   } 
   type = match.arg(type,TYPES)  
@@ -571,6 +571,15 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(is.null(ylab)) ylab = expression(paste("Absorbed LWR per leaf area  ",(MJ%.%m^{-2})))
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
+  else if(type=="Temperature") {
+    if(is.null(ylab)) ylab = "Temperature (Celsius)"
+    df = data.frame(row.names=row.names(x$Temperature))
+    df[["Above-canopy"]] = x$Temperature$Tatm_mean
+    df[["Inside-canopy"]] = x$Temperature$Tcan_mean
+    df[["Soil"]] = x$Temperature$Tsoil_mean
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
+    return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim))
+  } 
   else if(type=="AirTemperature") {
     if(is.null(ylab)) ylab = "Above-canopy temperature (Celsius)"
     df = data.frame(row.names=row.names(x$Temperature))
@@ -692,5 +701,15 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     m = extractSubdaily(x, "dEdPinst", dates)
     if(is.null(ylab)) ylab = expression(paste("Soil-plant conductance ",(mmol%.%m^{-2}%.%s^{-1})))
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
-  } 
+  } else if(type=="Temperature") {
+    m = extractSubdaily(x, "Temperature", dates)
+    m = m[,c("datetime","Tatm", "Tcan", "Tsoil.1")]
+    names(m) = c("datetime", "Above-canopy","Inside-canopy", "Soil")
+    if(is.null(ylab)) ylab = "Temperature (Celsius)"
+    return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
+  } else if(type=="PlantExtraction") {
+    m = extractSubdaily(x, "ExtractionInst", dates)
+    if(is.null(ylab)) ylab = expression(paste("Extraction from soil layers   ",(L%.%m^{-2})))
+    return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
+  }
 }
