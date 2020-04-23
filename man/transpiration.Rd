@@ -13,7 +13,7 @@ Set of high-level functions used in the calculation of stomatal conductance and 
 }
 \usage{
 transp_profitMaximization(supplyFunction, photosynthesisFunction, Gwmin, Gwmax, 
-                          gainModifier = 1.0, costModifier = 1.0)
+                          gainModifier = 1.0, costModifier = 1.0, costWater = "dEdP")
 transp_transpirationGranier(x, soil, meteo, day, 
                             modifyInputX = TRUE, modifyInputSoil = TRUE)
 transp_transpirationSperry(x, soil, meteo, day,
@@ -32,6 +32,7 @@ transp_stomatalRegulationPlot(x, soil, meteo, day, timestep,
   \item{photosynthesisFunction}{Function returned by \code{photo_photosynthesisFunction()}.}
   \item{Gwmin, Gwmax}{Minimum and maximum stomatal conductance (mol·m-2·s-1).}
   \item{gainModifier, costModifier}{Modifiers (exponents) of the gain and cost functions defined in Sperry et al. (2016).}
+  \item{costWater}{Cost water function, either "dEdP" (default) or "kterm" (experimental).}
   \item{x}{An object of class \code{\link{spwbInput}} built using the 'Sperry' transpiration mode.}
   \item{soil}{An object of class \code{\link{soil}}.}
   \item{meteo}{A data frame with daily meteorological data series:
@@ -57,9 +58,6 @@ transp_stomatalRegulationPlot(x, soil, meteo, day, timestep,
   \item{stepFunctions}{An integer to indicate a simulation step for which photosynthesis and profit maximization functions are desired.}
   \item{type}{A string with plot type, either \code{"E"} (transpiration flow), \code{"An"} (net photosynthesis), \code{"Gw"} (stomatal conductance), \code{"T"} (temperature) or \code{"VPD"} (vapour pressure deficit).}
   \item{modifyInputX, modifyInputSoil}{Boolean flags to indicate that the input \code{x} and \code{soil} objects are allowed to be modified during the simulation.}
-}
-\details{
-Details of the transpiration submodel are given in a vignette.
 }
 
 \value{

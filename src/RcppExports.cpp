@@ -2506,15 +2506,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // resetInputs
-void resetInputs(List x, List soil, List from, int day);
-RcppExport SEXP _medfate_resetInputs(SEXP xSEXP, SEXP soilSEXP, SEXP fromSEXP, SEXP daySEXP) {
+void resetInputs(List x, List soil);
+RcppExport SEXP _medfate_resetInputs(SEXP xSEXP, SEXP soilSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
-    Rcpp::traits::input_parameter< List >::type from(fromSEXP);
-    Rcpp::traits::input_parameter< int >::type day(daySEXP);
-    resetInputs(x, soil, from, day);
+    resetInputs(x, soil);
     return R_NilValue;
 END_RCPP
 }
@@ -4316,7 +4314,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_growthInput", (DL_FUNC) &_medfate_growthInput, 6},
     {"_medfate_forest2spwbInput", (DL_FUNC) &_medfate_forest2spwbInput, 4},
     {"_medfate_forest2growthInput", (DL_FUNC) &_medfate_forest2growthInput, 4},
-    {"_medfate_resetInputs", (DL_FUNC) &_medfate_resetInputs, 4},
+    {"_medfate_resetInputs", (DL_FUNC) &_medfate_resetInputs, 2},
     {"_medfate_gdd", (DL_FUNC) &_medfate_gdd, 4},
     {"_medfate_leafDevelopmentStatus", (DL_FUNC) &_medfate_leafDevelopmentStatus, 3},
     {"_medfate_leafSenescenceStatus", (DL_FUNC) &_medfate_leafSenescenceStatus, 2},
