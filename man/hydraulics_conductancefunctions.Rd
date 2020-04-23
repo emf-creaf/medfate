@@ -10,7 +10,6 @@
 \alias{hydraulics_xylemConductance}
 \alias{hydraulics_xylemPsi}
 \alias{hydraulics_psi2Weibull}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Hydraulic confuctance functions
 }
@@ -32,8 +31,6 @@ hydraulics_xylemPsi(kxylem, kxylemmax, c, d)
 hydraulics_correctConductanceForViscosity(kxylem, temp)
 hydraulics_psi2Weibull(psi50, psi88)
 }
-
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{psi}{A scalar (or a vector, depending on the function) with water potential (in MPa).}
   \item{K}{Whole-plant relative conductance (0-1).}
