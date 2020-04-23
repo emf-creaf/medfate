@@ -159,17 +159,21 @@ spwb_ldrExploration<-function(x, soil, meteo, cohorts = NULL,
         f
       }
       if(x_1sp$control$transpirationMode=="Granier") {
-        PsiMin[ci,i,j] <- mean(aggregate(s_res$PlantPsi[op_days], 
+        PsiMin[ci,i,j] <- mean(aggregate(s_res$Plants$PlantPsi[op_days], 
                                          by = list(years[op_days]),
                                          FUN = function(x) min(ma(x)))$x)
       } else {
-        PsiMin[ci,i,j] <- mean(aggregate(s_res$StemPsi[op_days], 
+        PsiMin[ci,i,j] <- mean(aggregate(s_res$Plants$StemPsi[op_days], 
                                          by = list(years[op_days]),
                                          FUN = function(x) min(ma(x)))$x)
       }
       # if(verbose) print(s_res$spwbInput)
-      E[ci,i,j] <- mean(s_res$PlantTranspiration[op_days], na.rm=T)
-      An[ci,i,j] <- mean(s_res$PlantPhotosynthesis[op_days], na.rm=T)
+      E[ci,i,j] <- mean(s_res$Plants$Transpiration[op_days], na.rm=T)
+      if(x_1sp$control$transpirationMode=="Granier") {
+        An[ci,i,j] <- mean(s_res$Plants$Photosynthesis[op_days], na.rm=T)
+      } else {
+        An[ci,i,j] <- mean(s_res$Plants$NetPhotosynthesis[op_days], na.rm=T)
+      }
       setTxtProgressBar(pb, row)
     }
     cat("\n")
