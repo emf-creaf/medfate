@@ -5,7 +5,7 @@
 
 \title{Soil-plant water balance}
 \description{
-Function \code{spwb()} is a water balance model that determines changes in soil moisture, soil water potentials and plant transpiration and drought stress at daily steps for a given forest stand during a period specified in the input climatic data. Additionally, the function also calculates plant net photosynthesis. Function \code{pwb()} performs plant water balance only (i.e. soil moisture dynamics is an input) at daily steps for a given forest stand during a period specified in the input climatic data. On both simulation functions transpiration and photosynthesis processes are conducted with different level of detail depending on the transpiration mode.
+Function \code{spwb()} is a water balance model that determines changes in soil moisture, soil water potentials, plant transpiration and drought stress at daily steps for a given forest stand during a period specified in the input climatic data. Function \code{pwb()} performs plant water balance only (i.e. soil moisture dynamics is an input) at daily steps for a given forest stand during a period specified in the input climatic data. On both simulation functions plant transpiration and photosynthesis processes are conducted with different level of detail depending on the transpiration mode.
 }
 \usage{
 spwb(x, soil, meteo,  latitude , elevation = NA, slope = NA, aspect = NA)
@@ -14,7 +14,6 @@ pwb(x, soil, meteo, W, latitude, elevation = NA, slope = NA, aspect = NA,
     snowMelt = numeric(0), 
     soilEvaporation = numeric(0))
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{An object of class \code{\link{spwbInput}}.}
   \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
@@ -45,7 +44,7 @@ pwb(x, soil, meteo, W, latitude, elevation = NA, slope = NA, aspect = NA,
   \item{snowMelt}{A vector of daily snow melt values (mm). The length should match the number of rows in \code{meteo}.}
 }
 \details{
-  Detailed model description is available in the vignettes section. The model using 'Granier' transpiration mode is illustrated by function \code{\link{transp_transpirationGranier}} and described in De Caceres et al. (2015). Simulations using the 'Sperry' transpiration mode are computationally much more expensive, are described in De Cáceres et al. (submitted) and are illustrated by function \code{\link{transp_transpirationSperry}}. 
+  The model using 'Granier' transpiration mode is illustrated by function \code{\link{transp_transpirationGranier}} and described in De Caceres et al. (2015). Simulations using the 'Sperry' transpiration mode are computationally much more expensive, are described in De Cáceres et al. (submitted) and are illustrated by function \code{\link{transp_transpirationSperry}}. 
 }
 \value{
   Function \code{spwb} returns a list of class 'spwb' whereas Function \code{pwb} returns a list of class 'pwb'. There are many elements in common in these lists, so they are listed here together:
@@ -66,7 +65,7 @@ pwb(x, soil, meteo, W, latitude, elevation = NA, slope = NA, aspect = NA,
           \item{\code{"DeepDrainage"}: The amount of water exported via deep drainage (in mm).}
           \item{\code{"Evapotranspiration"}: Evapotranspiration (in mm).}
           \item{\code{"SoilEvaporation"}: Bare soil evaporation (in mm).}
-          \item{\code{"PlantExtraction"}: Amount of water extracted from soil by plants (in mm) (can only be diferent from transpiration for \code{transpirationMode = "Sperry"} when capacitance is considered).}
+          \item{\code{"PlantExtraction"}: Amount of water extracted from soil by plants (in mm) (can only be different from transpiration for \code{transpirationMode = "Sperry"} when capacitance is considered).}
           \item{\code{"Transpiration"}: Plant transpiration (considering all soil layers) (in mm).}
           \item{\code{"HydraulicRedistribution"}: Water redistributed among soil layers, transported through the plant hydraulic network (only for \code{transpirationMode = "Sperry"}).}
           
@@ -128,7 +127,7 @@ De \enc{Cáceres}{Caceres} M, Mencuccini M, Martin-StPaul N, Limousin JM, Coll L
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 }
 \note{
-State variables stored in objects \code{x} and \code{soil} are modified during the simulation. Daily transpiration and photosynthesis values are stored in columns \code{Transpiration} and \code{Photosynthesis} of object \code{x}. Water content relative to field capacity (vector \code{W}) of \code{soil} is also modified.  
+State variables stored in objects \code{x} and \code{soil} are modified during the simulation.  
 }
 \seealso{
 \code{\link{spwbInput}}, \code{\link{spwb_day}}, \code{\link{plot.spwb}},  

@@ -1123,11 +1123,15 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
                                        _["LeafRWC"] = RWClm,
                                        _["WaterBalance"] = PWB);
   Plants.attr("row.names") = above.attr("row.names");
+  NumericVector Stand = NumericVector::create(_["LAI"] = LAIcell, 
+                                              _["LAIlive"] = LAIcelllive, 
+                                              _["LAIdead"] = LAIcelldead);
   
   List l;
   if(!IntegerVector::is_na(stepFunctions)){
     l = List::create(_["cohorts"] = clone(cohorts),
                      _["EnergyBalance"] = EB,
+                     _["Stand"] = Stand,
                      _["Extraction"] = SoilWaterExtract,
                      _["ExtractionInst"] = soilLayerExtractInst,
                      _["RhizoPsi"] = minPsiRhizo,
@@ -1147,6 +1151,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
                      _["EnergyBalance"] = EB,
                      _["Extraction"] = SoilWaterExtract,
                      _["RhizoPsi"] = minPsiRhizo,
+                     _["Stand"] = Stand,
                      _["Plants"] = Plants,
                      _["SunlitLeaves"] = Sunlit,
                      _["ShadeLeaves"] = Shade,
@@ -1389,7 +1394,10 @@ List transpirationGranier(List x, List soil, double tday, double pet,
   NumericVector LAIcohort(numCohorts);
   for(int c=0;c<numCohorts;c++) LAIcohort[c]= LAIphe[c];
   
-
+  NumericVector Stand = NumericVector::create(_["LAI"] = LAIcell,
+                                              _["LAIlive"] = LAIcelllive, 
+                                              _["LAIdead"] = LAIcelldead);
+  
   DataFrame Plants = DataFrame::create(_["LAI"] = LAIcohort,
                                        _["AbsorbedSWRFraction"] = CohASWRF, 
                                        _["Transpiration"] = Eplant, 
@@ -1398,6 +1406,7 @@ List transpirationGranier(List x, List soil, double tday, double pet,
   Plants.attr("row.names") = above.attr("row.names");
   EplantCoh.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
   List l = List::create(_["cohorts"] = clone(cohorts),
+                        _["Stand"] = Stand,
                         _["Plants"] = Plants,
                         _["Extraction"] = EplantCoh);
   return(l);

@@ -56,7 +56,7 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   
   //Determine whether leaves are out (phenology) and the adjusted Leaf area
   NumericVector Phe(numCohorts,0.0);
-  double s = 0.0, LAIcell = 0.0, LAIcelllive, LAIcelldead = 0.0, Cm = 0.0;
+  double s = 0.0, LAIcell = 0.0, LAIcelllive = 0.0, LAIcelldead = 0.0, Cm = 0.0;
   for(int c=0;c<numCohorts;c++) {
     if(LAIlive[c]>0) Phe[c]=LAIphe[c]/LAIlive[c]; //Phenological status
     else Phe[c]=0.0;
@@ -141,7 +141,7 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
                                            _["Infiltration"] = infilPerc["Infiltration"], _["Runoff"] = infilPerc["Runoff"], _["DeepDrainage"] = infilPerc["DeepDrainage"],
                                            _["SoilEvaporation"] = sum(EsoilVec), _["PlantExtraction"] = sum(EplantVec), _["Transpiration"] = sum(EplantVec));
   
-  NumericVector Stand = NumericVector::create(_["LAIcell"] = LAIcell, _["LAIcelldead"] = LAIcelldead, 
+  NumericVector Stand = NumericVector::create(_["LAI"] = LAIcell, _["LAIlive"] = LAIcelllive, _["LAIdead"] = LAIcelldead, 
                                            _["Cm"] = Cm, _["LgroundPAR"] = LgroundPAR, _["LgroundSWR"] = LgroundSWR);
   DataFrame SB = DataFrame::create(_["SoilEvaporation"] = EsoilVec, 
                                    _["PlantExtraction"] = EplantVec, 
@@ -302,7 +302,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double tminPrev, doub
                                            _["SoilEvaporation"] = sum(EsoilVec), _["PlantExtraction"] = sum(EplantVec), _["Transpiration"] = sum(Eplant),
                                            _["HydraulicRedistribution"] = sum(soilHydraulicInput));
   
-  NumericVector Stand = NumericVector::create(_["LAIcell"] = LAIcell, _["LAIcelldead"] = LAIcelldead, _["Cm"] = Cm, 
+  NumericVector Stand = NumericVector::create(_["LAI"] = LAIcell,_["LAIlive"] = LAIcelllive, _["LAIdead"] = LAIcelldead,
+                                              _["Cm"] = Cm, 
                                               _["LgroundPAR"] = LgroundPAR, _["LgroundSWR"] = LgroundSWR);
   
   DataFrame SB = DataFrame::create(_["SoilEvaporation"] = EsoilVec, 
@@ -515,12 +516,13 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
   //Detailed subday results
   List subdailyRes(numDays);
   
-
-  //Water balance output variables
-  NumericVector LAIcell(numDays),LAIcelldead(numDays);
+  //Stand output variables
+  NumericVector LAI(numDays),LAIlive(numDays),LAIdead(numDays);
   NumericVector Cm(numDays);
   NumericVector LgroundPAR(numDays);
   NumericVector LgroundSWR(numDays);
+  
+  //Water balance output variables
   NumericVector Runoff(numDays);
   NumericVector Rain(numDays);
   NumericVector Snow(numDays);
@@ -732,8 +734,9 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
       List stand = s["Stand"];
       LgroundPAR[i] = stand["LgroundPAR"];
       LgroundSWR[i] = stand["LgroundSWR"];
-      LAIcell[i] = stand["LAIcell"];
-      LAIcelldead[i] = stand["LAIcelldead"];
+      LAI[i] = stand["LAI"];
+      LAIlive[i] = stand["LAIlive"];
+      LAIdead[i] = stand["LAIdead"];
       Cm[i] = stand["Cm"];
       
       List db = s["WaterBalance"];
@@ -867,7 +870,8 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
                              _["psi"]=psidays); 
    }
    SWB.attr("row.names") = meteo.attr("row.names") ;
-   DataFrame Stand = DataFrame::create(_["LAIcell"]=LAIcell, _["LAIcelldead"] = LAIcelldead,  _["Cm"]=Cm, 
+   DataFrame Stand = DataFrame::create(_["LAI"]=LAI, _["LAIlive"]=LAIlive, _["LAIdead"] = LAIdead,  
+                                       _["Cm"]=Cm, 
                                _["LgroundPAR"] = LgroundPAR, _["LgroundSWR"] = LgroundSWR);
    Stand.attr("row.names") = meteo.attr("row.names") ;
    DataFrame DWB;
@@ -942,6 +946,10 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
                      Named("Plants") = plants,
                      Named("subdaily") =  subdailyRes);
   } else {
+    List sunlit = List::create(Named("LeafPsiMin") = LeafPsiMin_SL, 
+                               Named("LeafPsiMax") = LeafPsiMax_SL);
+    List shade = List::create(Named("LeafPsiMin") = LeafPsiMin_SH, 
+                              Named("LeafPsiMax") = LeafPsiMax_SH);
     List plants = List::create(Named("LAI") = PlantLAI,
                                Named("AbsorbedSWR") = PlantAbsSWR,
                                Named("AbsorbedLWR") = PlantAbsLWR,
@@ -949,18 +957,17 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
                                Named("GrossPhotosynthesis") = PlantGrossPhotosynthesis,
                                Named("NetPhotosynthesis") = PlantNetPhotosynthesis,
                                Named("dEdP") = dEdP, 
+                               Named("PlantWaterBalance") = PlantWaterBalance,
+                               Named("SunlitLeaves") = sunlit,
+                               Named("ShadeLeaves") = shade,
                                Named("LeafPsiMin") = LeafPsiMin, 
                                Named("LeafPsiMax") = LeafPsiMax, 
-                               Named("LeafPsiMin_SL") = LeafPsiMin_SL, 
-                               Named("LeafPsiMax_SL") = LeafPsiMax_SL, 
-                               Named("LeafPsiMin_SH") = LeafPsiMin_SH, 
-                               Named("LeafPsiMax_SH") = LeafPsiMax_SH,
                                Named("LeafRWC") = LeafRWC, 
+                               Named("StemRWC") = StemRWC, 
                                Named("StemPsi") = StemPsi, 
                                Named("StemPLC") = StemPLC, 
                                Named("RootPsi") = RootPsi, 
                                Named("RhizoPsi") = RhizoPsi, 
-                               Named("PlantWaterBalance") = PlantWaterBalance,
                                Named("PlantStress") = PlantStress);
     l = List::create(Named("latitude") = latitude,
                      Named("topography") = topo,
@@ -1095,6 +1102,9 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
   NumericVector RAcan(numDays, NA_REAL);
   NumericVector RAsoil(numDays, NA_REAL);
   
+  //Stand output variables
+  NumericVector LAI(numDays),LAIlive(numDays),LAIdead(numDays);
+
 
   //Soil output variables
   NumericMatrix Wdays(numDays, nlayers); //Soil moisture content in relation to field capacity
@@ -1300,6 +1310,11 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
       StemRWC(i,_) = as<Rcpp::NumericVector>(Plants["StemRWC"]);
       LeafRWC(i,_) = as<Rcpp::NumericVector>(Plants["LeafRWC"]); 
     } 
+    List stand = s["Stand"];
+    LAI[i] = stand["LAI"];
+    LAIlive[i] = stand["LAIlive"];
+    LAIdead[i] = stand["LAIdead"];
+        
     EplantCohTot = EplantCohTot + EplantCoh;
     Eplanttot[i] = sum(EplantCoh);
     
@@ -1331,6 +1346,8 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
                             _["psi"]=psidays); 
   }
   SWB.attr("row.names") = meteo.attr("row.names") ;
+  DataFrame Stand = DataFrame::create(_["LAI"]=LAI,_["LAIlive"]=LAIlive, _["LAIdead"] = LAIdead);
+  Stand.attr("row.names") = meteo.attr("row.names") ;
   
   DataFrame DWB;
   if(transpirationMode=="Granier") {
@@ -1393,9 +1410,14 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
                      Named("soilInput") = soilInput,
                      Named("WaterBalance")=DWB, 
                      Named("Soil")=SWB,
+                     Named("Stand") =Stand,
                      Named("Plants") = plants,
                      Named("subdaily") =  subdailyRes);
   } else {
+    List sunlit = List::create(Named("LeafPsiMin") = LeafPsiMin_SL, 
+                               Named("LeafPsiMax") = LeafPsiMax_SL);
+    List shade = List::create(Named("LeafPsiMin") = LeafPsiMin_SH, 
+                              Named("LeafPsiMax") = LeafPsiMax_SH);
     List plants = List::create(Named("LAI") = PlantLAI,
                                Named("AbsorbedSWR") = PlantAbsSWR,
                                Named("AbsorbedLWR") = PlantAbsLWR,
@@ -1403,18 +1425,17 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
                                Named("GrossPhotosynthesis") = PlantGrossPhotosynthesis,
                                Named("NetPhotosynthesis") = PlantNetPhotosynthesis,
                                Named("dEdP") = dEdP, 
+                               Named("PlantWaterBalance") = PlantWaterBalance,
+                               Named("SunlitLeaves") = sunlit,
+                               Named("ShadeLeaves") = shade,
                                Named("LeafPsiMin") = LeafPsiMin, 
                                Named("LeafPsiMax") = LeafPsiMax, 
-                               Named("LeafPsiMin_SL") = LeafPsiMin_SL, 
-                               Named("LeafPsiMax_SL") = LeafPsiMax_SL, 
-                               Named("LeafPsiMin_SH") = LeafPsiMin_SH, 
-                               Named("LeafPsiMax_SH") = LeafPsiMax_SH,
                                Named("LeafRWC") = LeafRWC, 
+                               Named("StemRWC") = StemRWC, 
                                Named("StemPsi") = StemPsi, 
                                Named("StemPLC") = StemPLC, 
                                Named("RootPsi") = RootPsi, 
                                Named("RhizoPsi") = RhizoPsi, 
-                               Named("PlantWaterBalance") = PlantWaterBalance,
                                Named("PlantStress") = PlantStress);
     l = List::create(Named("latitude") = latitude,
                      Named("topography") = topo,
@@ -1424,6 +1445,7 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
                      Named("EnergyBalance") = DEB,
                      Named("Temperature") = DT,
                      Named("Soil")=SWB,
+                     Named("Stand") =Stand,
                      Named("Plants") = plants,
                      Named("subdaily") =  subdailyRes);
   }
