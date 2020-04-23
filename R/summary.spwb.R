@@ -9,7 +9,7 @@ summary.spwb<-function(object, freq="years", output="WaterBalance", FUN=sum, byS
   else if(output=="EnergyBalance") OM = object$EnergyBalance
   else if(output=="Temperature") OM = object$Temperature
   else if(output=="PlantLAI") {
-    OM = object$PlantLAI
+    OM = object$Plants$LAI
     if(bySpecies) {
       OM = t(apply(OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
     } 
@@ -18,10 +18,10 @@ summary.spwb<-function(object, freq="years", output="WaterBalance", FUN=sum, byS
     stop("Cannot summarize subdaily output")
   }
   else {
-    OM = object[[output]]
+    OM = object$Plants[[output]]
     if(bySpecies) {
-      lai1 = t(apply(object$PlantLAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      m1 = t(apply(object$PlantLAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
+      lai1 = t(apply(object$Plants$LAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
+      m1 = t(apply(object$Plants$LAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
       OM = m1/lai1
       OM[lai1==0] = NA
     } 

@@ -226,7 +226,7 @@ x$canopy$gdd
 ```
 Now we are ready to call function `spwb()`:
 ```{r}
-S = spwb(x, examplesoil, examplemeteo, elevation = 100)
+S = spwb(x, examplesoil, examplemeteo, latitude = 41.82592, elevation = 100)
 ```
 Function `spwb()` returns an object of class with the same name, actually a list:
 ```{r}
