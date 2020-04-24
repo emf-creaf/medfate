@@ -99,7 +99,7 @@ double correctConductanceForViscosity(double kxylem, double temp) {
 
 // [[Rcpp::export(".Egamma")]]
 double Egamma(double psi, double kxylemmax, double c, double d, double psiCav = 0.0) {
-  if(psi>0.0) return(-Egamma(-psi, kxylemmax,c,d,psiCav));
+  if(psi>0.0) return(-Egamma(-psi, kxylemmax,c,d,0.0));
   else if(psi==0.0) return(0.0);
   double h = 1.0/c;
   double z = pow(psi/d,c);
