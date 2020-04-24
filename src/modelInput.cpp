@@ -34,19 +34,24 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams) {
   // NumericVector Ssen = cohortNumericParameter(SP, SpParams, "Ssen");
   // NumericVector PstartSen = cohortNumericParameter(SP, SpParams, "PstartSen");
   // NumericVector TbaseSen = cohortNumericParameter(SP, SpParams, "TbaseSen");
+  CharacterVector phenoType(numCohorts);
   NumericVector Tbgdd(numCohorts, 0.0);
   NumericVector Ssen(numCohorts, 0.0);
   NumericVector Psen(numCohorts, 0.0);
   NumericVector Tbsen(numCohorts, 0.0);
   for(int j=0; j<numCohorts;j++) {
     if(Sgdd[j]>0.0) {
+      phenoType[j] = "winter-deciduous";
       Tbgdd[j]= 5.0;
       Ssen[j] = 8268.0;
       Psen[j] = 12.5;
       Tbsen[j] = 28.5;
+    } else {
+      phenoType[j] = "evergreen";
     }
   }
   DataFrame paramsPhenologydf = DataFrame::create(
+    _["type"] = phenoType,
     _["Sgdd"] = Sgdd, _["Tbgdd"] = Tbgdd, 
     _["Ssen"] = Ssen, _["Psen"] = Psen, _["Tbsen"] = Tbsen 
   );

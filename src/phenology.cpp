@@ -52,6 +52,7 @@ void updateLeaves(List x, int doy, double photoperiod, double tmean, double wind
   double unfoldingDD = control["unfoldingDD"];
   
   DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
+  CharacterVector phenoType = paramsPhenology["type"];
   NumericVector Sgdd = paramsPhenology["Sgdd"];
   NumericVector Tbgdd = paramsPhenology["Tbgdd"];
   NumericVector Ssen = paramsPhenology["Ssen"];
@@ -67,7 +68,7 @@ void updateLeaves(List x, int doy, double photoperiod, double tmean, double wind
   NumericVector LAI_expanded = above["LAI_expanded"];
   int numCohorts = SP.size();
   
-  DataFrame internalPhenology = x["internalPhenology"];
+  DataFrame internalPhenology =  Rcpp::as<Rcpp::DataFrame>(x["internalPhenology"]);
   NumericVector gdd = internalPhenology["gdd"];
   NumericVector sen = internalPhenology["sen"];
   for(int j=0;j<numCohorts;j++) {
@@ -98,8 +99,10 @@ void updateLeaves(List x, int doy, double photoperiod, double tmean, double wind
   else phe = leafSenescenceStatus(Ssen, sen);
   for(int j=0;j<numCohorts;j++) {
     LAI_dead[j] *= exp(-1.0*(wind/10.0)); //Decrease dead leaf area according to wind speed
-    double LAI_exp_prev= LAI_expanded[j]; //Store previous value
-    LAI_expanded[j] = LAI_live[j]*phe[j]; //Update expanded leaf area (will decrease if LAI_live decreases)
-    LAI_dead[j] += std::max(0.0, LAI_exp_prev-LAI_expanded[j]);//Check increase dead leaf area if expanded leaf area has decreased
+    if(phenoType[j] == "winter-deciduous") {
+      double LAI_exp_prev= LAI_expanded[j]; //Store previous value
+      LAI_expanded[j] = LAI_live[j]*phe[j]; //Update expanded leaf area (will decrease if LAI_live decreases)
+      LAI_dead[j] += std::max(0.0, LAI_exp_prev-LAI_expanded[j]);//Check increase dead leaf area if expanded leaf area has decreased
+    }
   }
 }

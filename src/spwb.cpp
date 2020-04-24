@@ -519,17 +519,10 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
   NumericVector LgroundSWR(numDays);
   
   //Water balance output variables
-  NumericVector Runoff(numDays);
-  NumericVector Rain(numDays);
-  NumericVector Snow(numDays);
-  NumericVector Snowmelt(numDays);
-  NumericVector NetRain(numDays);
-  NumericVector Interception(numDays);
-  NumericVector Infiltration(numDays);
-  NumericVector DeepDrainage(numDays);
-  NumericVector SoilEvaporation(numDays);
-  NumericVector Transpiration(numDays);
-  NumericVector PlantExtraction(numDays);
+  NumericVector Runoff(numDays),Rain(numDays),Snow(numDays);
+  NumericVector Snowmelt(numDays),NetRain(numDays);
+  NumericVector Interception(numDays),Infiltration(numDays),DeepDrainage(numDays);
+  NumericVector SoilEvaporation(numDays),Transpiration(numDays),PlantExtraction(numDays);
   NumericVector HydraulicRedistribution(numDays, 0.0);
   
   NumericMatrix Eplantdays(numDays, nlayers);
@@ -694,6 +687,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
             PlantAbsLWR(i,j) += 0.000001*(LWR_SL(j,n)+LWR_SH(j,n))*tstep;
           }
         }
+        
         List EB = Rcpp::as<Rcpp::List>(s["EnergyBalance"]);
         DataFrame Tinst = Rcpp::as<Rcpp::DataFrame>(EB["Temperature"]); 
         DataFrame CEBinst = Rcpp::as<Rcpp::DataFrame>(EB["CanopyEnergyBalance"]); 
@@ -851,44 +845,8 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
     }
   }
 
-   DataFrame SWB;
-   if(transpirationMode=="Granier") {
-     SWB = DataFrame::create(_["W"]=Wdays, _["ML"]=MLdays,_["MLTot"]=MLTot,
-                             _["WTD"] = WaterTable,
-                             _["SWE"] = SWE, 
-                             _["PlantExt"]=Eplantdays,
-                             _["psi"]=psidays); 
-   } else {
-     SWB = DataFrame::create(_["W"]=Wdays, _["ML"]=MLdays,_["MLTot"]=MLTot,
-                             _["WTD"] = WaterTable,
-                             _["SWE"] = SWE, 
-                             _["PlantExt"]=Eplantdays,
-                             _["HydraulicInput"] = HydrIndays,
-                             _["psi"]=psidays); 
-   }
-   SWB.attr("row.names") = meteo.attr("row.names") ;
-   DataFrame Stand = DataFrame::create(_["LAI"]=LAI, _["LAIlive"]=LAIlive, _["LAIexpanded"] = LAIexpanded, _["LAIdead"] = LAIdead,  
-                                       _["Cm"]=Cm, 
-                               _["LgroundPAR"] = LgroundPAR, _["LgroundSWR"] = LgroundSWR);
-   Stand.attr("row.names") = meteo.attr("row.names") ;
-   DataFrame DWB;
-   if(transpirationMode=="Granier") {
-     DWB = DataFrame::create(_["PET"]=PET, 
-                             _["Precipitation"] = Precipitation, _["Rain"] = Rain, _["Snow"] = Snow, 
-                             _["NetRain"]=NetRain, _["Snowmelt"] = Snowmelt, _["Infiltration"]=Infiltration, _["Runoff"]=Runoff, _["DeepDrainage"]=DeepDrainage, 
-                             _["Evapotranspiration"]=Evapotranspiration,_["Interception"] = Interception, _["SoilEvaporation"]=SoilEvaporation,
-                             _["PlantExtraction"] = PlantExtraction, _["Transpiration"]=Transpiration);
-   } else {
-     DWB = DataFrame::create(_["PET"]=PET, 
-                             _["Precipitation"] = Precipitation, _["Rain"] = Rain, _["Snow"] = Snow, 
-                             _["NetRain"]=NetRain, _["Snowmelt"] = Snowmelt, _["Infiltration"]=Infiltration, _["Runoff"]=Runoff, _["DeepDrainage"]=DeepDrainage, 
-                             _["Evapotranspiration"]=Evapotranspiration,_["Interception"] = Interception, _["SoilEvaporation"]=SoilEvaporation,
-                             _["PlantExtraction"] = PlantExtraction, _["Transpiration"]=Transpiration, 
-                             _["HydraulicRedistribution"] = HydraulicRedistribution);
-   }
-   DWB.attr("row.names") = meteo.attr("row.names") ;
-
-   if(transpirationMode=="Granier") PlantAbsSWRFraction.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")); 
+  //Add matrix dimnames
+  if(transpirationMode=="Granier") PlantAbsSWRFraction.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")); 
   PlantTranspiration.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names"));
   PlantStress.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   StemPLC.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
@@ -912,19 +870,52 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
   PlantAbsLWR.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   PlantLAI.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   
-  DataFrame DEB = DataFrame::create(_["SWRcanin"] = SWRcanin, _["LWRcanin"] = LWRcanin, _["LWRcanout"] = LWRcanout,
-                                    _["LEcan"] = LEcan_heat, _["Hcan"] = Hcan_heat, _["LWRsoilcan"] = LWRsoilcan, _["Ebalcan"] = Ebalcan, 
-                                    _["Hcansoil"] = Hcansoil, _["SWRsoilin"] = SWRsoilin, _["LWRsoilin"] = LWRsoilin, _["LWRsoilout"] = LWRsoilout,
-                                    _["LEsoil"] = LEsoil_heat, _["Ebalsoil"] = Ebalsoil, _["RAcan"] = RAcan, _["RAsoil"] = RAsoil);  
-  DataFrame DT = DataFrame::create(_["Tatm_mean"] = Tatm_mean, _["Tatm_min"] = Tatm_min, _["Tatm_max"] = Tatm_max,
-                                   _["Tcan_mean"] = Tcan_mean, _["Tcan_min"] = Tcan_min, _["Tcan_max"] = Tcan_max,
-                                   _["Tsoil_mean"] = Tsoil_mean, _["Tsoil_min"] = Tsoil_min, _["Tsoil_max"] = Tsoil_max);
-  DEB.attr("row.names") = meteo.attr("row.names") ;
-  DT.attr("row.names") = meteo.attr("row.names") ;
   subdailyRes.attr("names") = meteo.attr("row.names") ;
   
   NumericVector topo = NumericVector::create(elevation, slope, aspect);
   topo.attr("names") = CharacterVector::create("elevation", "slope", "aspect");
+  
+  //Assemble output
+  DataFrame DWB;
+  if(transpirationMode=="Granier") {
+    DWB = DataFrame::create(_["PET"]=PET, 
+                            _["Precipitation"] = Precipitation, _["Rain"] = Rain, _["Snow"] = Snow, 
+                            _["NetRain"]=NetRain, _["Snowmelt"] = Snowmelt, _["Infiltration"]=Infiltration, _["Runoff"]=Runoff, _["DeepDrainage"]=DeepDrainage, 
+                              _["Evapotranspiration"]=Evapotranspiration,_["Interception"] = Interception, _["SoilEvaporation"]=SoilEvaporation,
+                              _["PlantExtraction"] = PlantExtraction, _["Transpiration"]=Transpiration);
+  } else {
+    DWB = DataFrame::create(_["PET"]=PET, 
+                            _["Precipitation"] = Precipitation, _["Rain"] = Rain, _["Snow"] = Snow, 
+                            _["NetRain"]=NetRain, _["Snowmelt"] = Snowmelt, _["Infiltration"]=Infiltration, _["Runoff"]=Runoff, _["DeepDrainage"]=DeepDrainage, 
+                              _["Evapotranspiration"]=Evapotranspiration,_["Interception"] = Interception, _["SoilEvaporation"]=SoilEvaporation,
+                              _["PlantExtraction"] = PlantExtraction, _["Transpiration"]=Transpiration, 
+                              _["HydraulicRedistribution"] = HydraulicRedistribution);
+  }
+  DWB.attr("row.names") = meteo.attr("row.names") ;
+  
+  DataFrame SWB;
+  if(transpirationMode=="Granier") {
+    SWB = DataFrame::create(_["W"]=Wdays, _["ML"]=MLdays,_["MLTot"]=MLTot,
+                            _["WTD"] = WaterTable,
+                            _["SWE"] = SWE, 
+                            _["PlantExt"]=Eplantdays,
+                            _["psi"]=psidays); 
+  } else {
+    SWB = DataFrame::create(_["W"]=Wdays, _["ML"]=MLdays,_["MLTot"]=MLTot,
+                            _["WTD"] = WaterTable,
+                            _["SWE"] = SWE, 
+                            _["PlantExt"]=Eplantdays,
+                            _["HydraulicInput"] = HydrIndays,
+                            _["psi"]=psidays); 
+  }
+  SWB.attr("row.names") = meteo.attr("row.names") ;
+  
+  
+  DataFrame Stand = DataFrame::create(_["LAI"]=LAI, _["LAIlive"]=LAIlive, _["LAIexpanded"] = LAIexpanded, _["LAIdead"] = LAIdead,  
+                                      _["Cm"]=Cm, 
+                                      _["LgroundPAR"] = LgroundPAR, _["LgroundSWR"] = LgroundSWR);
+  Stand.attr("row.names") = meteo.attr("row.names");
+  
   List l;
   if(transpirationMode=="Granier") {
     List plants = List::create(Named("LAI") = PlantLAI,
@@ -943,6 +934,17 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
                      Named("Plants") = plants,
                      Named("subdaily") =  subdailyRes);
   } else {
+    
+    DataFrame DEB = DataFrame::create(_["SWRcanin"] = SWRcanin, _["LWRcanin"] = LWRcanin, _["LWRcanout"] = LWRcanout,
+                                      _["LEcan"] = LEcan_heat, _["Hcan"] = Hcan_heat, _["LWRsoilcan"] = LWRsoilcan, _["Ebalcan"] = Ebalcan, 
+                                        _["Hcansoil"] = Hcansoil, _["SWRsoilin"] = SWRsoilin, _["LWRsoilin"] = LWRsoilin, _["LWRsoilout"] = LWRsoilout,
+                                          _["LEsoil"] = LEsoil_heat, _["Ebalsoil"] = Ebalsoil, _["RAcan"] = RAcan, _["RAsoil"] = RAsoil);  
+    DataFrame DT = DataFrame::create(_["Tatm_mean"] = Tatm_mean, _["Tatm_min"] = Tatm_min, _["Tatm_max"] = Tatm_max,
+                                     _["Tcan_mean"] = Tcan_mean, _["Tcan_min"] = Tcan_min, _["Tcan_max"] = Tcan_max,
+                                       _["Tsoil_mean"] = Tsoil_mean, _["Tsoil_min"] = Tsoil_min, _["Tsoil_max"] = Tsoil_max);
+    DEB.attr("row.names") = meteo.attr("row.names") ;
+    DT.attr("row.names") = meteo.attr("row.names") ;
+    
     List sunlit = List::create(Named("LeafPsiMin") = LeafPsiMin_SL, 
                                Named("LeafPsiMax") = LeafPsiMax_SL);
     List shade = List::create(Named("LeafPsiMin") = LeafPsiMin_SH, 
