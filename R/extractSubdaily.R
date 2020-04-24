@@ -1,5 +1,5 @@
 extractSubdaily<-function(x, output = "E", dates = NULL)  {
-  leafTypes= c("Abs_SWR","Abs_LWR","Ag","An","Ci","GW","VPD","Temp","Psi")  
+  leafTypes= c("Abs_SWR","Abs_LWR","E","Ag","An","Ci","GW","VPD","Temp","Psi","iWUE")  
   sunlitTypes = paste("SunlitLeaves",leafTypes, sep="$")
   shadeTypes = paste("ShadeLeaves",leafTypes, sep="$")
   plantTypes = c("E","Ag","An","dEdPinst","PsiRoot",
@@ -47,8 +47,18 @@ extractSubdaily<-function(x, output = "E", dates = NULL)  {
     numCohorts = nrow(x$spwbInput$above)
     m<-data.frame(matrix(nrow = numDates*numSteps, ncol = numCohorts+1))
     for(i in 1:numDates) {
-      ori = x$subdaily[[as.character(dates[i])]]$PlantsInst$SunlitLeaves[[leafType]]
-      m[((i-1)*numSteps+1):(i*numSteps), 2:(numCohorts+1)] = t(ori) 
+      if(leafType=="E") {
+        ori1 = x$subdaily[[as.character(dates[i])]]$PlantsInst$SunlitLeaves$GW
+        ori2 = x$subdaily[[as.character(dates[i])]]$PlantsInst$SunlitLeaves$VPD
+        m[((i-1)*numSteps+1):(i*numSteps), 2:(numCohorts+1)] = t(ori1*ori2) 
+      } else if(leafType=="iWUE") {
+          ori1 = x$subdaily[[as.character(dates[i])]]$PlantsInst$SunlitLeaves$An
+          ori2 = x$subdaily[[as.character(dates[i])]]$PlantsInst$SunlitLeaves$GW
+          m[((i-1)*numSteps+1):(i*numSteps), 2:(numCohorts+1)] = t(ori1/ori2) 
+      } else{
+        ori = x$subdaily[[as.character(dates[i])]]$PlantsInst$SunlitLeaves[[leafType]]
+        m[((i-1)*numSteps+1):(i*numSteps), 2:(numCohorts+1)] = t(ori) 
+      }
     }
     colnames(m) = c("datetime", row.names(x$spwbInput$above))
   } else if(output %in% shadeTypes) {
@@ -56,8 +66,18 @@ extractSubdaily<-function(x, output = "E", dates = NULL)  {
     numCohorts = nrow(x$spwbInput$above)
     m<-data.frame(matrix(nrow = numDates*numSteps, ncol = numCohorts+1))
     for(i in 1:numDates) {
-      ori = x$subdaily[[as.character(dates[i])]]$PlantsInst$ShadeLeaves[[leafType]]
-      m[((i-1)*numSteps+1):(i*numSteps), 2:(numCohorts+1)] = t(ori) 
+      if(leafType=="E") {
+        ori1 = x$subdaily[[as.character(dates[i])]]$PlantsInst$ShadeLeaves$GW
+        ori2 = x$subdaily[[as.character(dates[i])]]$PlantsInst$ShadeLeaves$VPD
+        m[((i-1)*numSteps+1):(i*numSteps), 2:(numCohorts+1)] = t(ori1*ori2) 
+      } else if(leafType=="iWUE") {
+        ori1 = x$subdaily[[as.character(dates[i])]]$PlantsInst$ShadeLeaves$An
+        ori2 = x$subdaily[[as.character(dates[i])]]$PlantsInst$ShadeLeaves$GW
+        m[((i-1)*numSteps+1):(i*numSteps), 2:(numCohorts+1)] = t(ori1/ori2) 
+      } else{
+        ori = x$subdaily[[as.character(dates[i])]]$PlantsInst$ShadeLeaves[[leafType]]
+        m[((i-1)*numSteps+1):(i*numSteps), 2:(numCohorts+1)] = t(ori) 
+      }
     }
     colnames(m) = c("datetime", row.names(x$spwbInput$above))
   }

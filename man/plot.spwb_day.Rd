@@ -2,9 +2,7 @@
 \name{plot.spwb_day}
 \alias{plot.spwb_day}
 \alias{plot.pwb_day}
-
-%- Also NEED an '\alias' for EACH other topic documented here.
-\title{Displays simulation results for one day}
+\title{Plots simulation results for one day}
 \description{
 Functions to plot the results of the soil water balance model for one day (see \code{\link{spwb_day}}) or the transpiration calculations with Sperry (see \code{\link{transp_transpirationSperry}}).
 }
@@ -16,7 +14,17 @@ Functions to plot the results of the soil water balance model for one day (see \
 }
 \arguments{
   \item{x}{An object of class \code{spwb_day} or \code{pwb_day}.}
-  \item{type}{The information to be plotted:
+  \item{type}{The information to be plotted (see details).}
+  \item{bySpecies}{Allows aggregating output by species, before drawing plots. Aggregation can involve a sum (as for plant lai or transpiration) or a LAI-weighted mean (as for plant stress or plant water potential).}
+  \item{xlim}{Range of values for x.}
+  \item{ylim}{Range of values for y.}
+  \item{xlab}{x-axis label.}
+  \item{ylab}{y-axis label.}
+  \item{...}{Additional parameters for function \code{plot}.}
+
+}
+\details{
+The following plots are currently available:
   \itemize{
     \item{\code{"LeafPsi"}:}{Leaf water potential (for shade and sunlit leaves).}
     \item{\code{"LeafPsiAverage"}:}{Average leaf water potential.}
@@ -38,6 +46,7 @@ Functions to plot the results of the soil water balance model for one day (see \
     \item{\code{"LeafGrossPhotosynthesis"}:}{ Instantaneous gross photosynthesis per leaf area (differentiates sunlit and shade leaves).}
     \item{\code{"LeafNetPhotosynthesis"}:}{ Instantaneous net photosynthesis per leaf area (differentiates sunlit and shade leaves).}
     \item{\code{"LeafAbsorbedSWR"}:}{ Absorbed short wave radiation per leaf area (differentiates sunlit and shade leaves).}
+    \item{\code{"LeafAbsorbedLWR"}:}{ Absorbed long wave radiation per leaf area (differentiates sunlit and shade leaves).}
     \item{\code{"LeafCi"}:}{ Leaf intercellular CO2 concentration (differentiates sunlit and shade leaves).}
     \item{\code{"LeafIntrinsicWUE"}:}{ Leaf intrinsic water use efficiency, i.e. the ratio between instantaneous photosynthesis and stomatal conductance (differentiates sunlit and shade leaves).}
     \item{\code{"LeafVPD"}:}{ Leaf vapour pressure deficit (differentiates sunlit and shade leaves).}
@@ -49,17 +58,10 @@ Functions to plot the results of the soil water balance model for one day (see \
     \item{\code{"PlantWaterBalance"}:}{ Difference between water extraction from the soil and transpired water per ground area.}
     \item{\code{"WaterBalancePerLeaf"}:}{ Difference between water extraction from the soil and transpired water per leaf area.}
    }
-  }
-  \item{bySpecies}{Allows aggregating output by species, before drawing plots. Aggregation can involve a sum (as for plant lai or transpiration) or a LAI-weighted mean (as for plant stress or plant water potential).}
-  \item{xlim}{Range of values for x.}
-  \item{ylim}{Range of values for y.}
-  \item{xlab}{x-axis label.}
-  \item{ylab}{y-axis label.}
-  \item{...}{Additional parameters for function \code{plot}.}
 
 }
 \note{
-Only for soil plant water balance simulations using \code{transpirationMode = "Sperry"}. 
+Only for soil plant water balance simulations using \code{transpirationMode = "Sperry"}. This function can be used to display subdaily dynamics of corresponding to single days on \code{\link{swpb}} runs, if control option \code{subdailyResults} is set to \code{TRUE}. See also option \code{subdaily} in \code{\link{plot.spwb}}.
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC

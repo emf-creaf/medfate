@@ -16,7 +16,8 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
             "PlantExtraction","PlantTranspiration", "TranspirationPerLeaf",
             "PlantGrossPhotosynthesis","GrossPhotosynthesisPerLeaf","PlantNetPhotosynthesis","NetPhotosynthesisPerLeaf", 
             "PlantAbsorbedSWR",
-            "LeafTranspiration","LeafNetPhotosynthesis", "LeafGrossPhotosynthesis", "LeafAbsorbedSWR",
+            "LeafTranspiration","LeafNetPhotosynthesis", "LeafGrossPhotosynthesis", 
+            "LeafAbsorbedSWR","LeafAbsorbedLWR",
             "LeafCi", "LeafIntrinsicWUE",
             "LeafVPD","LeafStomatalConductance", "LeafTemperature",
             "Temperature","CanopyEnergyBalance", "SoilEnergyBalance", 
@@ -265,6 +266,23 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(is.null(ylab)) ylab=expression(paste("Absorbed SWR per leaf area ",(W%.%m^{-2})))
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
+  else if(type=="LeafAbsorbedLWR") {
+    OM_SL = PlantsInst$SunlitLeaves$Abs_LWR
+    OM_SH = PlantsInst$ShadeLeaves$Abs_LWR
+    if(bySpecies) {
+      m1 = apply(OM_SL,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      lai1 = apply(x$SunlitLeaves$LAI,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM_SL = m1/lai1
+      m1 = apply(OM_SH,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      lai1 = apply(x$ShadeLeaves$LAI,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM_SH = m1/lai1
+    } else {
+      OM_SL = OM_SL/x$SunlitLeaves$LAI
+      OM_SH = OM_SH/x$ShadeLeaves$LAI
+    }
+    if(is.null(ylab)) ylab=expression(paste("Absorbed LWR per leaf area ",(W%.%m^{-2})))
+    return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
+  }
   else if(type=="LeafPsi") {
     OM_SL = PlantsInst$SunlitLeaves$Psi
     OM_SH = PlantsInst$ShadeLeaves$Psi
@@ -337,7 +355,7 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
       OM_SH = sweep(m1,1,lai1,"/")
     } 
-    if(is.null(ylab)) ylab=expression(paste("iWUE sunlit   ", (mu%.%mol%.%mol^{-1})))
+    if(is.null(ylab)) ylab=expression(paste("iWUE  ", (mu%.%mol%.%mol^{-1})))
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
   else if(type=="LeafCi") {
