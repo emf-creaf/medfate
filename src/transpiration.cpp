@@ -270,12 +270,13 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   
   //1. Leaf Phenology: Adjusted leaf area index
   NumericVector Phe(numCohorts);
-  double LAIcell = 0.0, LAIcelldead = 0.0, LAIcelllive = 0.0, canopyHeight = 0.0;
+  double LAIcell = 0.0, LAIcelldead = 0.0, LAIcelllive = 0.0, LAIcellexpanded = 0.0, canopyHeight = 0.0;
   for(int c=0;c<numCohorts;c++) {
     Phe[c]=LAIphe[c]/LAIlive[c]; //Phenological status
     LAIcell += (LAIphe[c]+LAIdead[c]);
     LAIcelldead += LAIdead[c];
     LAIcelllive += LAIlive[c];
+    LAIcellexpanded +=LAIphe[c];
     if((canopyHeight<H[c]) & ((LAIphe[c]+LAIdead[c])>0.0)) canopyHeight = H[c];
   }
   int nz = ceil(canopyHeight/verticalLayerSize); //Number of vertical layers
@@ -1125,6 +1126,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   Plants.attr("row.names") = above.attr("row.names");
   NumericVector Stand = NumericVector::create(_["LAI"] = LAIcell, 
                                               _["LAIlive"] = LAIcelllive, 
+                                              _["LAIexpanded"] = LAIcellexpanded, 
                                               _["LAIdead"] = LAIcelldead);
   
   List l;
@@ -1265,13 +1267,14 @@ List transpirationGranier(List x, List soil, double tday, double pet,
   
   //Determine whether leaves are out (phenology) and the adjusted Leaf area
   NumericVector Phe(numCohorts,0.0);
-  double s = 0.0, LAIcell = 0.0, canopyHeight = 0.0, LAIcelllive = 0.0, LAIcelldead = 0.0;
+  double s = 0.0, LAIcell = 0.0, canopyHeight = 0.0, LAIcelllive = 0.0, LAIcellexpanded = 0.0,LAIcelldead = 0.0;
   for(int c=0;c<numCohorts;c++) {
     if(LAIlive[c]>0) Phe[c]=LAIphe[c]/LAIlive[c]; //Phenological status
     else Phe[c]=0.0;
     s += (kPAR[c]*(LAIphe[c]+LAIdead[c]));
     LAIcell += LAIphe[c]+LAIdead[c];
     LAIcelldead += LAIdead[c];
+    LAIcellexpanded +=LAIphe[c];
     LAIcelllive += LAIlive[c];
     if(canopyHeight<H[c]) canopyHeight = H[c];
   }
@@ -1396,6 +1399,7 @@ List transpirationGranier(List x, List soil, double tday, double pet,
   
   NumericVector Stand = NumericVector::create(_["LAI"] = LAIcell,
                                               _["LAIlive"] = LAIcelllive, 
+                                              _["LAIexpanded"] = LAIcellexpanded, 
                                               _["LAIdead"] = LAIcelldead);
   
   DataFrame Plants = DataFrame::create(_["LAI"] = LAIcohort,

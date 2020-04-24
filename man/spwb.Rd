@@ -87,6 +87,7 @@ pwb(x, soil, meteo, W, latitude, elevation = NA, slope = NA, aspect = NA,
        \itemize{
           \item{\code{"LAI"}: LAI of the stand (including live and dead leaves) (in m2/m2).}
           \item{\code{"LAIlive"}: LAI of the stand assuming all leaves are unfolded (in m2/m2).}
+          \item{\code{"LAIexpanded"}: LAI of the stand of leaves actually unfolded (in m2/m2).}
           \item{\code{"LAIdead"}: LAI of the stand corresponding to dead leaves (in m2/m2).}
           \item{\code{"Cm"}: Water retention capacity of the canopy (in mm) (accounting for leaf phenology).}
           \item{\code{"LgroundPAR"}: The proportion of PAR that reaches the ground (accounting for leaf phenology).}

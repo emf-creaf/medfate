@@ -971,10 +971,11 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   NumericVector SAgrowthcum(numCohorts, 0.0);
   
   //Water balance output variables
-  NumericVector GDD(numDays);
   NumericVector SoilEvaporation(numDays);
-  NumericVector LAIcell(numDays);
-  NumericVector LAIcelldead(numDays);
+  NumericVector LAI(numDays);
+  NumericVector LAIlive(numDays);
+  NumericVector LAIexpanded(numDays);
+  NumericVector LAIdead(numDays);
   NumericVector Cm(numDays);
   NumericVector LgroundPAR(numDays);
   NumericVector LgroundSWR(numDays);
@@ -1064,9 +1065,6 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
     //1. Phenology and leaf fall
     if(leafPhenology) updateLeaves(x, DOY[i], Photoperiod[i], MeanTemperature[i], wind);
     
-    //Store GDD
-    GDD[i] = canopyParams["gdd"];
-    
     //2. Water balance and photosynthesis
     if(transpirationMode=="Granier") {
       double er = erFactor(DOY[i], PET[i], Precipitation[i]);
@@ -1109,8 +1107,9 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
     List stand = s["Stand"];
     LgroundPAR[i] = stand["LgroundPAR"];
     LgroundSWR[i] = stand["LgroundSWR"];
-    LAIcell[i] = stand["LAIcell"];
-    LAIcelldead[i] = stand["LAIcelldead"];
+    LAI[i] = stand["LAI"];
+    LAIlive[i] = stand["LAIlive"];
+    LAIdead[i] = stand["LAIdead"];
     Cm[i] = stand["Cm"];
     
     List db = s["WaterBalance"];
@@ -1241,9 +1240,8 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   DataFrame SWB = DataFrame::create(_["W"]=Wdays, _["ML"]=MLdays,_["MLTot"]=MLTot,
                                     _["WTD"] = WaterTable,
                                     _["SWE"] = SWE, _["PlantExt"]=Eplantdays, _["psi"]=psidays);
-  Rcpp::DataFrame Stand = DataFrame::create(_["GDD"] = GDD,
-                                          _["LAIcell"]=LAIcell, _["LAIcelldead"]=LAIcelldead,
-                                          _["Cm"]=Cm, _["LgroundPAR"] = LgroundPAR, _["LgroundSWR"] = LgroundSWR);
+  Rcpp::DataFrame Stand = DataFrame::create(_["LAI"]=LAI, _["LAIdead"]=LAIdead,
+                                            _["Cm"]=Cm, _["LgroundPAR"] = LgroundPAR, _["LgroundSWR"] = LgroundSWR);
   Rcpp::DataFrame DWB = DataFrame::create(_["PET"]=PET, 
                                           _["Precipitation"] = Precipitation, _["Rain"] = Rain, _["Snow"] = Snow, 
                                           _["NetRain"]=NetRain,_["Infiltration"]=Infiltration, _["Runoff"]=Runoff, _["DeepDrainage"]=DeepDrainage, 

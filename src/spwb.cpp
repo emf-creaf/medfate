@@ -54,16 +54,13 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
   NumericVector Sgdd = Rcpp::as<Rcpp::NumericVector>(paramsPhenology["Sgdd"]);
   
-  //Determine whether leaves are out (phenology) and the adjusted Leaf area
-  NumericVector Phe(numCohorts,0.0);
-  double s = 0.0, LAIcell = 0.0, LAIcelllive = 0.0, LAIcelldead = 0.0, Cm = 0.0;
+  double s = 0.0, LAIcell = 0.0, LAIcelllive = 0.0, LAIcellexpanded = 0.0, LAIcelldead = 0.0, Cm = 0.0;
   for(int c=0;c<numCohorts;c++) {
-    if(LAIlive[c]>0) Phe[c]=LAIphe[c]/LAIlive[c]; //Phenological status
-    else Phe[c]=0.0;
     s += (kPAR[c]*(LAIphe[c]+LAIdead[c]));
     LAIcell += LAIphe[c]+LAIdead[c];
     LAIcelldead += LAIdead[c];
     LAIcelllive += LAIlive[c];
+    LAIcellexpanded +=LAIphe[c];
     Cm += (LAIphe[c]+LAIdead[c])*gRainIntercept[c]; //LAI dead also counts on interception
   }
   double LgroundPAR = exp((-1.0)*s);
@@ -141,7 +138,7 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
                                            _["Infiltration"] = infilPerc["Infiltration"], _["Runoff"] = infilPerc["Runoff"], _["DeepDrainage"] = infilPerc["DeepDrainage"],
                                            _["SoilEvaporation"] = sum(EsoilVec), _["PlantExtraction"] = sum(EplantVec), _["Transpiration"] = sum(EplantVec));
   
-  NumericVector Stand = NumericVector::create(_["LAI"] = LAIcell, _["LAIlive"] = LAIcelllive, _["LAIdead"] = LAIcelldead, 
+  NumericVector Stand = NumericVector::create(_["LAI"] = LAIcell, _["LAIlive"] = LAIcelllive,  _["LAIexpanded"] = LAIcellexpanded, _["LAIdead"] = LAIcelldead, 
                                            _["Cm"] = Cm, _["LgroundPAR"] = LgroundPAR, _["LgroundSWR"] = LgroundSWR);
   DataFrame SB = DataFrame::create(_["SoilEvaporation"] = EsoilVec, 
                                    _["PlantExtraction"] = EplantVec, 
@@ -198,14 +195,13 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double tminPrev, doub
 
   //1. Leaf Phenology: Adjusted leaf area index
   double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
-  NumericVector Phe(numCohorts);
-  double s = 0.0, LAIcell = 0.0, LAIcelldead = 0.0, LAIcelllive = 0.0, Cm = 0.0, LAIcellmax = 0.0;
+  double s = 0.0, LAIcell = 0.0, LAIcelldead = 0.0, LAIcelllive = 0.0,  LAIcellexpanded = 0.0, Cm = 0.0, LAIcellmax = 0.0;
   for(int c=0;c<numCohorts;c++) {
-    Phe[c]=LAIphe[c]/LAIlive[c]; //Phenological status
     LAIcell += (LAIphe[c]+LAIdead[c]);
     LAIcelldead += LAIdead[c];
     LAIcellmax += LAIlive[c];
     LAIcelllive += LAIlive[c];
+    LAIcellexpanded +=LAIphe[c];
     s += (kPAR[c]*(LAIphe[c]+LAIdead[c]));
     Cm += (LAIphe[c]+LAIdead[c])*gRainIntercept[c]; //LAI dead also counts on interception
   }
@@ -302,7 +298,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double tminPrev, doub
                                            _["SoilEvaporation"] = sum(EsoilVec), _["PlantExtraction"] = sum(EplantVec), _["Transpiration"] = sum(Eplant),
                                            _["HydraulicRedistribution"] = sum(soilHydraulicInput));
   
-  NumericVector Stand = NumericVector::create(_["LAI"] = LAIcell,_["LAIlive"] = LAIcelllive, _["LAIdead"] = LAIcelldead,
+  NumericVector Stand = NumericVector::create(_["LAI"] = LAIcell,_["LAIlive"] = LAIcelllive, _["LAIexpanded"] = LAIcellexpanded, _["LAIdead"] = LAIcelldead,
                                               _["Cm"] = Cm, 
                                               _["LgroundPAR"] = LgroundPAR, _["LgroundSWR"] = LgroundSWR);
   
@@ -517,7 +513,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
   List subdailyRes(numDays);
   
   //Stand output variables
-  NumericVector LAI(numDays),LAIlive(numDays),LAIdead(numDays);
+  NumericVector LAI(numDays),LAIexpanded(numDays),LAIlive(numDays),LAIdead(numDays);
   NumericVector Cm(numDays);
   NumericVector LgroundPAR(numDays);
   NumericVector LgroundSWR(numDays);
@@ -735,6 +731,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
       LgroundPAR[i] = stand["LgroundPAR"];
       LgroundSWR[i] = stand["LgroundSWR"];
       LAI[i] = stand["LAI"];
+      LAIexpanded[i] = stand["LAIexpanded"];
       LAIlive[i] = stand["LAIlive"];
       LAIdead[i] = stand["LAIdead"];
       Cm[i] = stand["Cm"];
@@ -870,7 +867,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
                              _["psi"]=psidays); 
    }
    SWB.attr("row.names") = meteo.attr("row.names") ;
-   DataFrame Stand = DataFrame::create(_["LAI"]=LAI, _["LAIlive"]=LAIlive, _["LAIdead"] = LAIdead,  
+   DataFrame Stand = DataFrame::create(_["LAI"]=LAI, _["LAIlive"]=LAIlive, _["LAIexpanded"] = LAIexpanded, _["LAIdead"] = LAIdead,  
                                        _["Cm"]=Cm, 
                                _["LgroundPAR"] = LgroundPAR, _["LgroundSWR"] = LgroundSWR);
    Stand.attr("row.names") = meteo.attr("row.names") ;
@@ -1103,7 +1100,7 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
   NumericVector RAsoil(numDays, NA_REAL);
   
   //Stand output variables
-  NumericVector LAI(numDays),LAIlive(numDays),LAIdead(numDays);
+  NumericVector LAI(numDays),LAIlive(numDays),LAIexpanded(numDays),LAIdead(numDays);
 
 
   //Soil output variables
@@ -1313,6 +1310,7 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
     List stand = s["Stand"];
     LAI[i] = stand["LAI"];
     LAIlive[i] = stand["LAIlive"];
+    LAIexpanded[i] = stand["LAIexpanded"];
     LAIdead[i] = stand["LAIdead"];
         
     EplantCohTot = EplantCohTot + EplantCoh;
@@ -1346,7 +1344,7 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
                             _["psi"]=psidays); 
   }
   SWB.attr("row.names") = meteo.attr("row.names") ;
-  DataFrame Stand = DataFrame::create(_["LAI"]=LAI,_["LAIlive"]=LAIlive, _["LAIdead"] = LAIdead);
+  DataFrame Stand = DataFrame::create(_["LAI"]=LAI,_["LAIlive"]=LAIlive,_["LAIexpanded"]=LAIexpanded, _["LAIdead"] = LAIdead);
   Stand.attr("row.names") = meteo.attr("row.names") ;
   
   DataFrame DWB;
