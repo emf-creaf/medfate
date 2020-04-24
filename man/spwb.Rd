@@ -96,7 +96,7 @@ pwb(x, soil, meteo, W, latitude, elevation = NA, slope = NA, aspect = NA,
       \item{\code{"subdaily"}: A list of objects of class \code{\link{spwb_day}}, one per day simulated (only if required in \code{control} parameters, see \code{\link{defaultControl}}).}
  }
  
- When \code{transpirationMode = "Granier"}, element \code{Plants} is a list with the following subelements:
+ When \code{transpirationMode = "Granier"}, element \code{"Plants"} is a list with the following subelements:
  \itemize{
      \item{\code{"LAI"}: A data frame with the daily leaf area index for each plant cohort.}
      \item{\code{"AbsorbedSWRFraction"}: A data frame with the fraction of SWR absorbed by each plant cohort. }
@@ -105,7 +105,7 @@ pwb(x, soil, meteo, W, latitude, elevation = NA, slope = NA, aspect = NA,
      \item{\code{"PlantPsi"}: A data frame with the average daily water potential of each plant (in MPa).}
      \item{\code{"PlantStress"}: A data frame with the amount of daily stress [0-1] suffered by each plant cohort (relative whole-plant conductance).}
 }
-If \code{transpirationMode="Sperry"}, element \code{Plants} is a list with the following subelements:
+If \code{transpirationMode="Sperry"}, element \code{"Plants"} is a list with the following subelements:
  \itemize{
    \item{\code{"LAI"}: A data frame with the daily leaf area index for each plant cohort.}
    \item{\code{"AbsorbedSWR"}: A data frame with the daily SWR absorbed by each plant cohort.}
