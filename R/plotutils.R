@@ -1,3 +1,46 @@
+.getDailySPWBPlotTypes<-function(transpirationMode = "Granier") {
+   if(transpirationMode=="Granier") {
+     TYPES = c("PET_Precipitation","PET_NetRain","Snow","Evapotranspiration",
+               "SoilPsi","SoilTheta","SoilRWC","SoilVol", 
+               "Export", "LAI", "WTD",
+               "PlantExtraction","PlantLAI",
+               "PlantStress", "PlantPsi","PlantPhotosynthesis", "PlantTranspiration", "PlantWUE",
+               "PhotosynthesisPerLeaf","TranspirationPerLeaf")
+   } else {
+     TYPES = c("PET_Precipitation","PET_NetRain","Snow","Evapotranspiration",
+               "SoilPsi","SoilTheta", "SoilRWC", "SoilVol", 
+               "Export", "LAI", "WTD",
+               "PlantExtraction","HydraulicRedistribution",
+               "PlantLAI",
+               "SoilPlantConductance","PlantStress", 
+               "PlantNetPhotosynthesis", "PlantGrossPhotosynthesis", "PlantTranspiration","PlantWUE",
+               "NetPhotosynthesisPerLeaf","GrossPhotosynthesisPerLeaf","TranspirationPerLeaf", 
+               "LeafPsiMin", "LeafPsiMax", "LeafPsiMin_SL", "LeafPsiMax_SL", "LeafPsiMin_SH", "LeafPsiMax_SH",
+               "StemPsi","RootPsi","StemPLC", "StemRWC", "LeafRWC", 
+               "PlantWaterBalance",
+               "PlantAbsorbedSWR", "AbsorbedSWRPerLeaf",
+               "PlantAbsorbedLWR", "AbsorbedLWRPerLeaf",
+               "Temperature","AirTemperature","SoilTemperature", "CanopyTemperature",
+               "CanopyEnergyBalance", "SoilEnergyBalance")
+   }
+  return(TYPES)
+}
+
+.getSubdailySPWBPlotTypes<-function(){
+  TYPES = c("LeafPsi","LeafPsiAverage","RootPsi", "StemPsi", 
+            "StemPLC","StemRWC", "LeafRWC",
+            "SoilPlantConductance",
+            "PlantExtraction","PlantTranspiration", "TranspirationPerLeaf",
+            "PlantGrossPhotosynthesis","GrossPhotosynthesisPerLeaf","PlantNetPhotosynthesis","NetPhotosynthesisPerLeaf", 
+            "PlantAbsorbedSWR",
+            "LeafTranspiration","LeafNetPhotosynthesis", "LeafGrossPhotosynthesis", 
+            "LeafAbsorbedSWR","LeafAbsorbedLWR",
+            "LeafCi", "LeafIntrinsicWUE",
+            "LeafVPD","LeafStomatalConductance", "LeafTemperature",
+            "Temperature","CanopyEnergyBalance", "SoilEnergyBalance", 
+            "PlantWaterBalance", "WaterBalancePerLeaf")
+  return(TYPES)
+}
 .multiple_x<-function(x, y, xlab = "", ylab=NULL, xlim = NULL, ylim = NULL, labels = NULL) {
   if(is.null(labels)) labels = colnames(x)
   df = data.frame("X" = as.vector(x), 

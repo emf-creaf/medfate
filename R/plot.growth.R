@@ -1,17 +1,28 @@
 plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE, 
+                      dates = NULL, subdaily = FALSE, 
                       xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, ...) {
-  TYPES_SWB =   c("PET_Precipitation","PET_NetRain","Snow","Evapotranspiration",
-                  "SoilPsi","SoilTheta","SoilRWC","SoilVol", 
-                  "Export", "LAI", "WTD",
-                  "PlantExtraction","PlantLAI",
-                  "PlantStress", "PlantPsi","PlantPhotosynthesis", "PlantTranspiration", "PlantWUE",
-                  "PlantPhotosynthesisPerLeaf","PlantTranspirationPerLeaf")
+
+  if(subdaily) return(.plotsubdaily(x,type, bySpecies, dates, 
+                                    xlim, ylim, xlab, ylab))
+  
+  # Get common elements
+  input = x$spwbInput
+  soilInput = x$soilInput
+  WaterBalance = x$WaterBalance
+  Soil = x$Soil
+  Stand = x$Stand
+  Plants = x$Plants
+  
+  nlayers = length(soilInput$W)
+  
+  transpMode = input$control$transpirationMode
+  
+  TYPES_SWB = .getDailySPWBPlotTypes(transpMode)  
   TYPES = c(TYPES_SWB, "PlantRespiration", "PlantRespirationPerLeaf", "PlantRespirationPerIndividual",
             "PlantCBalance", "PlantCBalancePerLeaf","PlantCBalancePerIndividual",
             "PlantCstorageFast", "PlantCstorageSlow", "PlantSAgrowth", "PlantRelativeSAgrowth", "PlantSA",
             "PlantLAIlive","PlantLAIdead")
 
-  input = x$spwbInput
   type = match.arg(type,TYPES)  
 
   if(type %in% TYPES_SWB) {
@@ -24,6 +35,7 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
       if(bySpecies) {
         OM = t(apply(OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
       } 
+      if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
       if(is.null(ylab)) ylab = expression(paste("Plant respiration ",(g*C%.%m^{-2})))
       return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
     } 
@@ -37,6 +49,7 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
         OM = OM/x$PlantLAIlive
         OM[x$PlantLAIlive==0] = NA
       }
+      if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
       if(is.null(ylab)) ylab = expression(paste("Plant respiration per leaf area ",(g*C%.%m^{-2})))
       return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
     } 
@@ -49,6 +62,7 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
       } else {
         OM = sweep(OM, 2, input$above$N/10000, "/")
       }
+      if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
       if(is.null(ylab)) ylab = expression(paste("Plant respiration per individual ",(g*C%.%ind^{-1})))
       return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
     } 
@@ -57,6 +71,7 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
       if(bySpecies) {
         OM = t(apply(OM,1, tapply, x$cohorts$Name, sum, na.rm=T))
       } 
+      if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
       if(is.null(ylab)) ylab = expression(paste("Plant C balance ",(g*C%.%m^{-2})))
       g<-.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim)+
         geom_hline(yintercept = 0, col="gray")
@@ -72,6 +87,7 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
         OM = OM/x$PlantLAIlive
         OM[x$PlantLAIlive==0] = NA
       }
+      if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
       if(is.null(ylab)) ylab = expression(paste("Plant C balance per leaf area ",(g*C%.%m^{-2})))
       g<-.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim)+
         geom_hline(yintercept = 0, col="gray")
@@ -86,6 +102,7 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
       } else {
         OM = sweep(OM, 2, input$above$N/10000, "/")
       }
+      if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
       if(is.null(ylab)) ylab = expression(paste("Plant C balance per individual ",(g*C%.%ind^{-1})))
       g<-.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim)+
         geom_hline(yintercept = 0, col="gray")
@@ -96,6 +113,7 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
       if(bySpecies) {
         OM = t(apply(OM,1, tapply, x$cohorts$Name, mean, na.rm=T))
       } 
+      if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
       if(is.null(ylab)) ylab = expression(paste("Fast C storage pool [0-1]"))
       return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
     } 
@@ -104,6 +122,7 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
       if(bySpecies) {
         OM = t(apply(OM,1, tapply, x$cohorts$Name, mean, na.rm=T))
       } 
+      if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
       if(is.null(ylab)) ylab = expression(paste("Slow C storage pool  [0-1]"))
       return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
     } 
@@ -112,6 +131,7 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
       if(bySpecies) {
         OM = t(apply(OM,1, tapply, x$cohorts$Name, mean, na.rm=T))
       } 
+      if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
       if(is.null(ylab)) ylab = expression(paste("Sapwood area growth ",(cm^2)))
       return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
     } 
@@ -120,6 +140,7 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
       if(bySpecies) {
         OM = t(apply(OM,1, tapply, x$cohorts$Name, mean, na.rm=T))
       } 
+      if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
       if(is.null(ylab)) ylab = expression(paste("Relative sapwood area growth ",(cm^2%.%cm^{-2})))
       return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
     } 
@@ -128,6 +149,7 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
       if(bySpecies) {
         OM = t(apply(OM,1, tapply, x$cohorts$Name, mean, na.rm=T))
       } 
+      if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
       if(is.null(ylab)) ylab = expression(paste("Sapwood area  ",(cm^2)))
       return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
     }
@@ -136,6 +158,7 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
       if(bySpecies) {
         OM = t(apply(OM,1, tapply, x$cohorts$Name, sum, na.rm=T))
       } 
+      if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
       if(is.null(ylab)) ylab = expression(paste("Live Leaf Area Index   ",(m^{2}%.%m^{-2})))
       return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
     } 
@@ -144,6 +167,7 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
       if(bySpecies) {
         OM = t(apply(OM,1, tapply, x$cohorts$Name, sum, na.rm=T))
       } 
+      if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
       if(is.null(ylab)) ylab = expression(paste("Dead Leaf Area Index   ",(m^{2}%.%m^{-2})))
       return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
     } 

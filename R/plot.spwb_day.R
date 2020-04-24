@@ -10,19 +10,7 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
   EB = x$EnergyBalance
   Plants = x$Plants
   PlantsInst = x$PlantsInst
-  TYPES = c("LeafPsi","LeafPsiAverage","RootPsi", "StemPsi", 
-            "StemPLC","StemRWC", "LeafRWC",
-            "SoilPlantConductance",
-            "PlantExtraction","PlantTranspiration", "TranspirationPerLeaf",
-            "PlantGrossPhotosynthesis","GrossPhotosynthesisPerLeaf","PlantNetPhotosynthesis","NetPhotosynthesisPerLeaf", 
-            "PlantAbsorbedSWR",
-            "LeafTranspiration","LeafNetPhotosynthesis", "LeafGrossPhotosynthesis", 
-            "LeafAbsorbedSWR","LeafAbsorbedLWR",
-            "LeafCi", "LeafIntrinsicWUE",
-            "LeafVPD","LeafStomatalConductance", "LeafTemperature",
-            "Temperature","CanopyEnergyBalance", "SoilEnergyBalance", 
-            "PlantWaterBalance", "WaterBalancePerLeaf")
-  type = match.arg(type,TYPES)  
+  type = match.arg(type,.getSubdailySPWBPlotTypes())  
   cohortnames = row.names(x$cohorts)
   timesteps = as.numeric(colnames(x$PlantsInst$PsiLeaf))
   if(is.null(xlab)) xlab = "Time step"

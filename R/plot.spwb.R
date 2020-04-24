@@ -16,30 +16,9 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
   nlayers = length(soilInput$W)
   
   transpMode = input$control$transpirationMode
-  
-  TYPES = c("PET_Precipitation","PET_NetRain","Snow","Evapotranspiration",
-            "SoilPsi","SoilTheta","SoilRWC","SoilVol", 
-            "Export", "LAI", "WTD",
-            "PlantExtraction","PlantLAI",
-            "PlantStress", "PlantPsi","PlantPhotosynthesis", "PlantTranspiration", "PlantWUE",
-            "PhotosynthesisPerLeaf","TranspirationPerLeaf")
-  if(transpMode=="Sperry") {
-    TYPES = c("PET_Precipitation","PET_NetRain","Snow","Evapotranspiration",
-              "SoilPsi","SoilTheta", "SoilRWC", "SoilVol", 
-              "Export", "LAI", "WTD",
-              "PlantExtraction","HydraulicRedistribution",
-              "PlantLAI",
-              "SoilPlantConductance","PlantStress", 
-              "PlantNetPhotosynthesis", "PlantGrossPhotosynthesis", "PlantTranspiration","PlantWUE",
-              "NetPhotosynthesisPerLeaf","GrossPhotosynthesisPerLeaf","TranspirationPerLeaf", 
-              "LeafPsiMin", "LeafPsiMax", "LeafPsiMin_SL", "LeafPsiMax_SL", "LeafPsiMin_SH", "LeafPsiMax_SH",
-              "StemPsi","RootPsi","StemPLC", "StemRWC", "LeafRWC", 
-              "PlantWaterBalance",
-              "PlantAbsorbedSWR", "AbsorbedSWRPerLeaf",
-              "PlantAbsorbedLWR", "AbsorbedLWRPerLeaf",
-              "Temperature","AirTemperature","SoilTemperature", "CanopyTemperature",
-              "CanopyEnergyBalance", "SoilEnergyBalance")
-  } 
+
+  TYPES = .getDailySPWBPlotTypes(transpMode)  
+
   type = match.arg(type,TYPES)  
   if(is.null(xlab)) xlab = ""
   if(type=="PET_Precipitation") {
@@ -665,14 +644,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
 .plotsubdaily<-function(x, type="PlantTranspiration", bySpecies = FALSE,
                         dates = NULL, xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL) {
   input = x$spwbInput
-  TYPES = c("PlantTranspiration", "PlantGrossPhotosynthesis",
-            "PlantNetPhotosynthesis", "PsiLeaf", "LeafPsi", "LeafPsiAverage", "PsiStem","StemPsi",
-            "PsiRoot","RootPsi","LeafRWC","RWCLeaf","StemRWC","RWCStem",
-            "PlantWaterBalance","SoilPlantConductance","Temperature", "PlantExtraction",
-            "LeafTranspiration", "LeafPsi", "LeafGrossPhotosynthesis", "LeafNetPhotosynthesis",
-            "LeafAbsorbedSWR","LeafAbsorbedLWR", "LeafIntrinsicWUE",
-            "LeafStomatalConductance","LeafVPD","LeafCi", "LeafTemperature")
-  type = match.arg(type,TYPES)  
+  type = match.arg(type, .getSubdailySPWBPlotTypes())  
   
   if(type=="PlantTranspiration") {
     m = extractSubdaily(x, "E", dates)
