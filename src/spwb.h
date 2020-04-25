@@ -7,8 +7,24 @@ using namespace Rcpp;
 
 void checkspwbInput(List x, List soil, String transpirationMode);
 
-List definePlantWaterDailyOutputList(DataFrame meteo, DataFrame above, List soil, List control);
-void fillPlantWaterDailyOutputList(List x, List sDay, int day, String transpirationMode);
+DataFrame defineWaterBalanceDailyOutput(DataFrame meteo, String transpirationMode);
+DataFrame defineSoilWaterBalanceDailyOutput(DataFrame meteo, List soil, String transpirationMode);
+DataFrame defineEnergyBalanceDailyOutput(DataFrame meteo);
+DataFrame defineTemperatureDailyOutput(DataFrame meteo);
+List definePlantWaterDailyOutput(DataFrame meteo, DataFrame above, List soil, List control);
+
+void fillWaterBalanceDailyOutput(DataFrame DWB, List sDay, int iday, String transpirationMode);
+void fillSoilWaterBalanceDailyOutput(DataFrame SWB, List soil, List sDay, 
+                                     int iday, int numDays, String transpirationMode,
+                                     String soilFunctions);
+void fillEnergyBalanceTemperatureDailyOutput(DataFrame DEB, DataFrame DT, List sDay, int iday);
+void fillPlantWaterDailyOutput(List x, List sDay, int day, String transpirationMode);
+
+void printWaterBalanceResult(DataFrame DWB, List plantDWOL, 
+                             List soil, String soilFunctions,
+                             NumericVector initialContent, double initialSnowContent,
+                             String transpirationMode);
+
 List spwbDay(List x, List soil, CharacterVector date, double tmin, double tmax, 
              double rhmin, double rhmax, double rad, double wind, 
              double latitude, double elevation, double slope, double aspect,  
