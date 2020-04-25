@@ -754,39 +754,9 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
   NumericVector RAsoil(numDays, NA_REAL);
   
   //Plant output variables
-  NumericMatrix PlantPsi(numDays, numCohorts);
-  NumericMatrix dEdP(numDays, numCohorts);
-  NumericMatrix LeafPsiMin(numDays, numCohorts);
-  NumericMatrix LeafPsiMax(numDays, numCohorts);
-  NumericMatrix LeafPsiMin_SL(numDays, numCohorts);
-  NumericMatrix LeafPsiMax_SL(numDays, numCohorts);
-  NumericMatrix LeafPsiMin_SH(numDays, numCohorts);
-  NumericMatrix LeafPsiMax_SH(numDays, numCohorts);
-  NumericMatrix StemPsi(numDays, numCohorts);
-  NumericMatrix RootPsi(numDays, numCohorts);
-  NumericMatrix StemPLC(numDays, numCohorts);
-  NumericMatrix PlantWaterBalance(numDays, numCohorts);
-  List RhizoPsi(numCohorts);
-  for(int c=0;c<numCohorts;c++) {
-    NumericMatrix nm = NumericMatrix(numDays, nlayers);
-    nm.attr("dimnames") = List::create(meteo.attr("row.names"), seq(1,nlayers)) ;
-    RhizoPsi[c] = nm;
-  }
-  RhizoPsi.attr("names") = above.attr("row.names");
-  
-  NumericMatrix PlantStress(numDays, numCohorts);
-  NumericMatrix StemRWC(numDays, numCohorts);
-  NumericMatrix LeafRWC(numDays, numCohorts);
-  NumericMatrix PlantTranspiration(numDays, numCohorts);
-  NumericMatrix PlantPhotosynthesis(numDays, numCohorts);
-  NumericMatrix PlantNetPhotosynthesis(numDays, numCohorts);
-  NumericMatrix PlantGrossPhotosynthesis(numDays, numCohorts);
+  List plantDWOL = definePlantWaterDailyOutputList(meteo, above, soil, control);
   NumericVector EplantCohTot(numCohorts, 0.0);
-  NumericMatrix PlantAbsSWRFraction(numDays, numCohorts);
-  NumericMatrix PlantAbsSWR(numDays, numCohorts);
-  NumericMatrix PlantAbsLWR(numDays, numCohorts);
-  NumericMatrix PlantLAI(numDays, numCohorts);
-  
+
   
   NumericVector Wini = soil["W"];
   Wdays(0,_) = Wini;
@@ -865,21 +835,6 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
                      latitude, elevation, slope, aspect,
                      solarConstant, delta, Precipitation[i], PET[i], 
                      er, 0.0, verbose);
-        List Plants = Rcpp::as<Rcpp::List>(s["Plants"]);
-        List PlantsInst = Rcpp::as<Rcpp::List>(s["PlantsInst"]);
-        List ShadeLeaves = Rcpp::as<Rcpp::List>(PlantsInst["ShadeLeaves"]);
-        List SunlitLeaves = Rcpp::as<Rcpp::List>(PlantsInst["SunlitLeaves"]);
-        
-        NumericMatrix SWR_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitLeaves["Abs_SWR"]);
-        NumericMatrix SWR_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeLeaves["Abs_SWR"]);
-        NumericMatrix LWR_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitLeaves["Abs_LWR"]);
-        NumericMatrix LWR_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeLeaves["Abs_LWR"]);
-        for(int j=0;j<numCohorts;j++) {
-          for(int n=0;n<ntimesteps;n++){
-            PlantAbsSWR(i,j) += 0.000001*(SWR_SL(j,n)+SWR_SH(j,n))*tstep;
-            PlantAbsLWR(i,j) += 0.000001*(LWR_SL(j,n)+LWR_SH(j,n))*tstep;
-          }
-        }
         
         List EB = Rcpp::as<Rcpp::List>(s["EnergyBalance"]);
         DataFrame Tinst = Rcpp::as<Rcpp::DataFrame>(EB["Temperature"]); 
@@ -914,6 +869,11 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
         Tsoil_max[i] = max(Tsoil);
         Tsoil_mean[i] = sum(Tsoil)/((double) ntimesteps);
       }
+      
+      //Update plant daily water output
+      fillPlantWaterDailyOutputList(plantDWOL, s, i, transpirationMode);
+      
+      
       List stand = s["Stand"];
       LgroundPAR[i] = stand["LgroundPAR"];
       LgroundSWR[i] = stand["LgroundSWR"];
@@ -944,46 +904,17 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
       psidays(i,_) = psi;
       NumericVector EplantVec = sb["PlantExtraction"];
       SWE[i] = soil["SWE"];
-        
-      List Plants = s["Plants"];
-      PlantLAI(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["LAI"]);
-      NumericVector EplantCoh = Plants["Transpiration"];
       Eplantdays(i,_) = EplantVec;
-      PlantTranspiration(i,_) = EplantCoh;
-      PlantStress(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["DDS"]);
+      
+      List Plants = s["Plants"];
+      NumericVector EplantCoh = Plants["Transpiration"];
       if(transpirationMode=="Sperry") {
-        PlantGrossPhotosynthesis(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["GrossPhotosynthesis"]);
-        PlantNetPhotosynthesis(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["NetPhotosynthesis"]);
         NumericVector HydrInVec = sb["HydraulicInput"];
         HydrIndays(i,_) = HydrInVec;
-        LeafPsiMin(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["LeafPsiMin"]);
-        LeafPsiMax(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["LeafPsiMax"]);
-        LeafPsiMin_SL(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["LeafPsiMin_SL"]);
-        LeafPsiMax_SL(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["LeafPsiMax_SL"]);
-        LeafPsiMin_SH(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["LeafPsiMin_SH"]);
-        LeafPsiMax_SH(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["LeafPsiMax_SH"]);
-        RootPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["RootPsi"]); 
-        StemPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["StemPsi"]); 
-        StemPLC(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["StemPLC"]); 
-        PlantWaterBalance(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["WaterBalance"]); 
-        dEdP(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["dEdP"]); 
-        NumericMatrix RhizoPsiStep = Rcpp::as<Rcpp::NumericMatrix>(s["RhizoPsi"]);
-        for(int c=0;c<numCohorts;c++) {
-          NumericMatrix nm = Rcpp::as<Rcpp::NumericMatrix>(RhizoPsi[c]);
-          nm(i,_) =  RhizoPsiStep(c,_);
-        }
-      } else {
-        PlantPhotosynthesis(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["Photosynthesis"]);
-        PlantAbsSWRFraction(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["AbsorbedSWRFraction"]);
-        PlantPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["psi"]);
       }
       EplantCohTot = EplantCohTot + EplantCoh;
       Eplanttot[i] = sum(EplantCoh);
-      if(transpirationMode=="Sperry"){
-        StemRWC(i,_) = as<Rcpp::NumericVector>(Plants["StemRWC"]);
-        LeafRWC(i,_) = as<Rcpp::NumericVector>(Plants["LeafRWC"]); 
-      }
-      
+
       if(subdailyResults) {
         subdailyRes[i] = clone(s);
       }
@@ -1032,37 +963,14 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
     Rcout<<"  Soil evaporation (mm) " << round(SoilEvaporationsum);
     Rcout<<" Transpiration (mm) "  <<round(Transpirationsum) <<"\n";
     if(transpirationMode =="Sperry") {
+      NumericMatrix PlantWaterBalance = Rcpp::as<Rcpp::NumericMatrix>(plantDWOL["PlantWaterBalance"]);
       Rcout<<"  Plant extraction from soil (mm) " << round(sum(PlantExtraction));
       Rcout<<"  Plant water balance (mm) " << round(sum(PlantWaterBalance));
       Rcout<<" Hydraulic redistribution (mm) " << round(sum(HydraulicRedistribution)) <<"\n";
     }
   }
 
-  //Add matrix dimnames
-  if(transpirationMode=="Granier") PlantAbsSWRFraction.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")); 
-  PlantTranspiration.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names"));
-  PlantStress.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  StemPLC.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  StemRWC.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  LeafRWC.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  PlantPsi.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  dEdP.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  LeafPsiMin.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  LeafPsiMax.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  LeafPsiMin_SL.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  LeafPsiMax_SL.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  LeafPsiMin_SH.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  LeafPsiMax_SH.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  StemPsi.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  PlantWaterBalance.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  RootPsi.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  PlantPhotosynthesis.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  PlantGrossPhotosynthesis.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  PlantNetPhotosynthesis.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  PlantAbsSWR.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  PlantAbsLWR.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  PlantLAI.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  
+
   subdailyRes.attr("names") = meteo.attr("row.names") ;
   
   NumericVector topo = NumericVector::create(elevation, slope, aspect);
@@ -1111,12 +1019,6 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
   
   List l;
   if(transpirationMode=="Granier") {
-    List plants = List::create(Named("LAI") = PlantLAI,
-                               Named("AbsorbedSWRFraction") = PlantAbsSWRFraction,
-                               Named("Transpiration") = PlantTranspiration,
-                               Named("Photosynthesis") = PlantPhotosynthesis,
-                               Named("PlantPsi") = PlantPsi, 
-                               Named("PlantStress") = PlantStress);
     l = List::create(Named("latitude") = latitude,
                      Named("topography") = topo,
                      Named("spwbInput") = spwbInput,
@@ -1124,7 +1026,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
                      Named("WaterBalance")=DWB, 
                      Named("Soil")=SWB,
                      Named("Stand")=Stand, 
-                     Named("Plants") = plants,
+                     Named("Plants") = plantDWOL,
                      Named("subdaily") =  subdailyRes);
   } else {
     
@@ -1138,29 +1040,6 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
     DEB.attr("row.names") = meteo.attr("row.names") ;
     DT.attr("row.names") = meteo.attr("row.names") ;
     
-    List sunlit = List::create(Named("LeafPsiMin") = LeafPsiMin_SL, 
-                               Named("LeafPsiMax") = LeafPsiMax_SL);
-    List shade = List::create(Named("LeafPsiMin") = LeafPsiMin_SH, 
-                              Named("LeafPsiMax") = LeafPsiMax_SH);
-    List plants = List::create(Named("LAI") = PlantLAI,
-                               Named("AbsorbedSWR") = PlantAbsSWR,
-                               Named("AbsorbedLWR") = PlantAbsLWR,
-                               Named("Transpiration") = PlantTranspiration,
-                               Named("GrossPhotosynthesis") = PlantGrossPhotosynthesis,
-                               Named("NetPhotosynthesis") = PlantNetPhotosynthesis,
-                               Named("dEdP") = dEdP, 
-                               Named("PlantWaterBalance") = PlantWaterBalance,
-                               Named("SunlitLeaves") = sunlit,
-                               Named("ShadeLeaves") = shade,
-                               Named("LeafPsiMin") = LeafPsiMin, 
-                               Named("LeafPsiMax") = LeafPsiMax, 
-                               Named("LeafRWC") = LeafRWC, 
-                               Named("StemRWC") = StemRWC, 
-                               Named("StemPsi") = StemPsi, 
-                               Named("StemPLC") = StemPLC, 
-                               Named("RootPsi") = RootPsi, 
-                               Named("RhizoPsi") = RhizoPsi, 
-                               Named("PlantStress") = PlantStress);
     l = List::create(Named("latitude") = latitude,
                      Named("topography") = topo,
                      Named("spwbInput") = spwbInput,
@@ -1170,7 +1049,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
                      Named("Temperature") = DT,
                      Named("Soil")=SWB,
                      Named("Stand")=Stand, 
-                     Named("Plants") = plants,
+                     Named("Plants") = plantDWOL,
                      Named("subdaily") =  subdailyRes);
   }
   l.attr("class") = CharacterVector::create("spwb","list");
@@ -1304,39 +1183,9 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
   NumericMatrix Eplantdays(numDays, nlayers);
   
   //Plant output variables
-  NumericMatrix PlantPsi(numDays, numCohorts);
-  NumericMatrix dEdP(numDays, numCohorts);
-  NumericMatrix LeafPsiMin(numDays, numCohorts);
-  NumericMatrix LeafPsiMax(numDays, numCohorts);
-  NumericMatrix LeafPsiMin_SL(numDays, numCohorts);
-  NumericMatrix LeafPsiMax_SL(numDays, numCohorts);
-  NumericMatrix LeafPsiMin_SH(numDays, numCohorts);
-  NumericMatrix LeafPsiMax_SH(numDays, numCohorts);
-  NumericMatrix StemPsi(numDays, numCohorts);
-  NumericMatrix RootPsi(numDays, numCohorts);
-  NumericMatrix StemPLC(numDays, numCohorts);
-  NumericMatrix PlantWaterBalance(numDays, numCohorts);
-  List RhizoPsi(numCohorts);
-  for(int c=0;c<numCohorts;c++) {
-    NumericMatrix nm = NumericMatrix(numDays, nlayers);
-    nm.attr("dimnames") = List::create(meteo.attr("row.names"), seq(1,nlayers)) ;
-    RhizoPsi[c] = nm;
-  }
-  RhizoPsi.attr("names") = above.attr("row.names");
-  
-  NumericMatrix PlantStress(numDays, numCohorts);
-  NumericMatrix StemRWC(numDays, numCohorts);
-  NumericMatrix LeafRWC(numDays, numCohorts);
-  NumericMatrix PlantTranspiration(numDays, numCohorts);
-  NumericMatrix PlantPhotosynthesis(numDays, numCohorts);
-  NumericMatrix PlantGrossPhotosynthesis(numDays, numCohorts);
-  NumericMatrix PlantNetPhotosynthesis(numDays, numCohorts);
+  List plantDWOL = definePlantWaterDailyOutputList(meteo, above, soil, control);
   NumericVector EplantCohTot(numCohorts, 0.0);
-  NumericMatrix PlantAbsSWRFraction(numDays, numCohorts);
-  NumericMatrix PlantAbsSWR(numDays, numCohorts);
-  NumericMatrix PlantAbsLWR(numDays, numCohorts);
-  NumericMatrix PlantLAI(numDays, numCohorts);
-  
+
   
 
   if(verbose) Rcout << "Performing daily simulations ";
@@ -1406,8 +1255,11 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
                               verbose, NA_INTEGER, true, true);
       
     }
+    
+    //Update plant daily water output
+    fillPlantWaterDailyOutputList(plantDWOL, s, i, transpirationMode);
+    
     List Plants = s["Plants"];
-    PlantLAI(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["LAI"]);
     NumericVector EplantCoh = Plants["Transpiration"];
     NumericMatrix SoilWaterExtract = s["Extraction"];
     for(int l=0;l<nlayers;l++) {
@@ -1417,17 +1269,8 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
     PlantExtraction[i] = sum(SoilWaterExtract);
     Transpiration[i] = sum(EplantCoh);
     NumericVector HydrInVec(nlayers, 0.0);
-    PlantTranspiration(i,_) = EplantCoh;
-    PlantStress(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["DDS"]);
-    
-    if(transpirationMode=="Granier") {
-      PlantPhotosynthesis(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["Photosynthesis"]);
-      PlantAbsSWRFraction(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["AbsorbedSWRFraction"]);
-      PlantPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["psi"]);
-    }
-    else if(transpirationMode=="Sperry")  {
-      PlantGrossPhotosynthesis(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["GrossPhotosynthesis"]);
-      PlantNetPhotosynthesis(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["NetPhotosynthesis"]);
+
+    if(transpirationMode=="Sperry")  {
       NumericMatrix soilLayerExtractInst = s["ExtractionInst"];
       for(int l=0;l<nlayers;l++) {
         for(int n=0;n<ntimesteps;n++) {
@@ -1436,20 +1279,6 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
       }
       HydraulicRedistribution[i] = sum(HydrInVec);
       
-      List PlantsInst = Rcpp::as<Rcpp::List>(s["PlantsInst"]);
-      List ShadeLeaves = Rcpp::as<Rcpp::List>(PlantsInst["ShadeLeaves"]);
-      List SunlitLeaves = Rcpp::as<Rcpp::List>(PlantsInst["SunlitLeaves"]);
-      
-      NumericMatrix SWR_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitLeaves["Abs_SWR"]);
-      NumericMatrix SWR_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeLeaves["Abs_SWR"]);
-      NumericMatrix LWR_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitLeaves["Abs_LWR"]);
-      NumericMatrix LWR_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeLeaves["Abs_LWR"]);
-      for(int j=0;j<numCohorts;j++) {
-        for(int n=0;n<ntimesteps;n++){
-          PlantAbsSWR(i,j) += 0.000001*(SWR_SL(j,n)+SWR_SH(j,n))*tstep;
-          PlantAbsLWR(i,j) += 0.000001*(LWR_SL(j,n)+LWR_SH(j,n))*tstep;
-        }
-      }
       List EB = Rcpp::as<Rcpp::List>(s["EnergyBalance"]);
       DataFrame Tinst = Rcpp::as<Rcpp::DataFrame>(EB["Temperature"]); 
       DataFrame CEBinst = Rcpp::as<Rcpp::DataFrame>(EB["CanopyEnergyBalance"]); 
@@ -1483,24 +1312,6 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
       Tsoil_max[i] = max(Tsoil);
       Tsoil_mean[i] = sum(Tsoil)/((double) ntimesteps);
       HydrIndays(i,_) = HydrInVec;
-      LeafPsiMin(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["LeafPsiMin"]);
-      LeafPsiMax(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["LeafPsiMax"]);
-      LeafPsiMin_SL(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["LeafPsiMin_SL"]);
-      LeafPsiMax_SL(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["LeafPsiMax_SL"]);
-      LeafPsiMin_SH(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["LeafPsiMin_SH"]);
-      LeafPsiMax_SH(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["LeafPsiMax_SH"]);
-      RootPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["RootPsi"]); 
-      StemPsi(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["StemPsi"]); 
-      StemPLC(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["StemPLC"]); 
-      PlantWaterBalance(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["WaterBalance"]); 
-      dEdP(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["dEdP"]); 
-      NumericMatrix RhizoPsiStep = Rcpp::as<Rcpp::NumericMatrix>(s["RhizoPsi"]);
-      for(int c=0;c<numCohorts;c++) {
-        NumericMatrix nm = Rcpp::as<Rcpp::NumericMatrix>(RhizoPsi[c]);
-        nm(i,_) =  RhizoPsiStep(c,_);
-      }
-      StemRWC(i,_) = as<Rcpp::NumericVector>(Plants["StemRWC"]);
-      LeafRWC(i,_) = as<Rcpp::NumericVector>(Plants["LeafRWC"]); 
     } 
     List stand = s["Stand"];
     LAI[i] = stand["LAI"];
@@ -1551,30 +1362,7 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
   }
   DWB.attr("row.names") = meteo.attr("row.names") ;
   
-  if(transpirationMode=="Granier") PlantAbsSWRFraction.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")); 
-  PlantTranspiration.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names"));
-  PlantStress.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  StemPLC.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  StemRWC.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  LeafRWC.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  PlantPsi.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  dEdP.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  LeafPsiMin.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  LeafPsiMax.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  LeafPsiMin_SL.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  LeafPsiMax_SL.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  LeafPsiMin_SH.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  LeafPsiMax_SH.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  StemPsi.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  PlantWaterBalance.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  RootPsi.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  PlantPhotosynthesis.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  PlantGrossPhotosynthesis.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  PlantNetPhotosynthesis.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  PlantAbsSWR.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  PlantAbsLWR.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  PlantLAI.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  
+
   DataFrame DEB = DataFrame::create(_["SWRcanin"] = SWRcanin, _["LWRcanin"] = LWRcanin, _["LWRcanout"] = LWRcanout,
                                     _["LEcan"] = LEcan_heat, _["Hcan"] = Hcan_heat, _["LWRsoilcan"] = LWRsoilcan, _["Ebalcan"] = Ebalcan, 
                                       _["Hcansoil"] = Hcansoil, _["SWRsoilin"] = SWRsoilin, _["LWRsoilin"] = LWRsoilin, _["LWRsoilout"] = LWRsoilout,
@@ -1591,12 +1379,6 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
 
   List l;
   if(transpirationMode=="Granier") {
-    List plants = List::create(Named("LAI") = PlantLAI,
-                               Named("AbsorbedSWRFraction") = PlantAbsSWRFraction,
-                               Named("Transpiration") = PlantTranspiration,
-                               Named("Photosynthesis") = PlantPhotosynthesis,
-                               Named("PlantPsi") = PlantPsi, 
-                               Named("PlantStress") = PlantStress);
     l = List::create(Named("latitude") = latitude,
                      Named("topography") = topo,
                      Named("spwbInput") = spwbInput,
@@ -1604,32 +1386,9 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
                      Named("WaterBalance")=DWB, 
                      Named("Soil")=SWB,
                      Named("Stand") =Stand,
-                     Named("Plants") = plants,
+                     Named("Plants") = plantDWOL,
                      Named("subdaily") =  subdailyRes);
   } else {
-    List sunlit = List::create(Named("LeafPsiMin") = LeafPsiMin_SL, 
-                               Named("LeafPsiMax") = LeafPsiMax_SL);
-    List shade = List::create(Named("LeafPsiMin") = LeafPsiMin_SH, 
-                              Named("LeafPsiMax") = LeafPsiMax_SH);
-    List plants = List::create(Named("LAI") = PlantLAI,
-                               Named("AbsorbedSWR") = PlantAbsSWR,
-                               Named("AbsorbedLWR") = PlantAbsLWR,
-                               Named("Transpiration") = PlantTranspiration,
-                               Named("GrossPhotosynthesis") = PlantGrossPhotosynthesis,
-                               Named("NetPhotosynthesis") = PlantNetPhotosynthesis,
-                               Named("dEdP") = dEdP, 
-                               Named("PlantWaterBalance") = PlantWaterBalance,
-                               Named("SunlitLeaves") = sunlit,
-                               Named("ShadeLeaves") = shade,
-                               Named("LeafPsiMin") = LeafPsiMin, 
-                               Named("LeafPsiMax") = LeafPsiMax, 
-                               Named("LeafRWC") = LeafRWC, 
-                               Named("StemRWC") = StemRWC, 
-                               Named("StemPsi") = StemPsi, 
-                               Named("StemPLC") = StemPLC, 
-                               Named("RootPsi") = RootPsi, 
-                               Named("RhizoPsi") = RhizoPsi, 
-                               Named("PlantStress") = PlantStress);
     l = List::create(Named("latitude") = latitude,
                      Named("topography") = topo,
                      Named("spwbInput") = spwbInput,
@@ -1639,7 +1398,7 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
                      Named("Temperature") = DT,
                      Named("Soil")=SWB,
                      Named("Stand") =Stand,
-                     Named("Plants") = plants,
+                     Named("Plants") = plantDWOL,
                      Named("subdaily") =  subdailyRes);
   }
   l.attr("class") = CharacterVector::create("pwb","list");
