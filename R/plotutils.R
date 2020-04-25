@@ -41,6 +41,13 @@
             "PlantWaterBalance", "WaterBalancePerLeaf")
   return(TYPES)
 }
+.getSubdailyGROWTHPlotTypes<-function(){
+  TYPES = c("GrossPhotosynthesis",
+            "MaintenanceRespiration",
+            .getSubdailySPWBPlotTypes())
+  return(TYPES)
+}
+
 .multiple_x<-function(x, y, xlab = "", ylab=NULL, xlim = NULL, ylim = NULL, labels = NULL) {
   if(is.null(labels)) labels = colnames(x)
   df = data.frame("X" = as.vector(x), 

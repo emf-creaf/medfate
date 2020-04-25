@@ -1,7 +1,8 @@
 plot.growth_day<-function(x, type="PlantTranspiration", bySpecies = FALSE, 
                           xlim = NULL, ylim=NULL, xlab = NULL, ylab = NULL, ...) {
+  GROWTH_TYPES = .getSubdailyGROWTHPlotTypes()
   PWB_TYPES = .getSubdailySPWBPlotTypes()
-  type = match.arg(type,PWB_TYPES)
+  type = match.arg(type,GROWTH_TYPES)
   if(type %in% PWB_TYPES) {
     plot.pwb_day(x, type, bySpecies, xlim, ylim, xlab, ylab,...)
   }

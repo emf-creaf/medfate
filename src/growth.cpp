@@ -444,7 +444,11 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   NumericVector LeafAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafAF"]);
   NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vleaf"]); //l·m-2 = mm
   
-  //Output vectors
+  //Subdaily output matrices
+  NumericMatrix GrossPhotosynthesisInst(numCohorts, numSteps);  
+  NumericMatrix MaintenanceRespirationInst(numCohorts, numSteps);  
+
+  //Daily output vectors
   NumericVector LeafMaintenanceRespiration(numCohorts,0.0);
   NumericVector SapwoodMaintenanceRespiration(numCohorts,0.0);
   NumericVector FineRootMaintenanceRespiration(numCohorts,0.0);
@@ -538,10 +542,14 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
       double leafAgStepC = AgStep(j,s)/(N[j]/10000.0); //Translate g C · m-2 · h-1 to g C · h-1
       double leafAgStepG = leafAgStepC*(glucoseMolarMass/(carbonMolarMass*6.0)); // from g C· h-1 to g gluc · h-1
       
+      //Update daily values
       GrossPhotosynthesis[j] += leafAgStepG; //Ag in g gluc
       LeafMaintenanceRespiration[j] += leafRespStep; //Rm in g gluc
       SapwoodMaintenanceRespiration[j] += sapwoodRespStep; //Rm in g gluc
       FineRootMaintenanceRespiration[j] += finerootRespStep; //Rm in g gluc
+      //Store instantaneous values
+      MaintenanceRespirationInst(j,s) = leafRespStep+sapwoodRespStep+finerootRespStep;
+      GrossPhotosynthesisInst(j,s) = leafAgStepG;
       
       //Leaf growth
       double f_temp = temperatureGrowthFactor(Tcan[s]);
@@ -683,6 +691,13 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
     // Rcout<<" CBSapwood "<< sumSapwood << " ChLabSapwood: "<< (LabileMassSapwood[j] - labileMassSapwoodIni)<<"\n";
   }
   
+  GrossPhotosynthesisInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
+  MaintenanceRespirationInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
+  List plantCBInst = List::create(
+    _["GrossPhotosynthesis"] = GrossPhotosynthesisInst,
+    _["MaintenanceRespiration"] = MaintenanceRespirationInst
+  );
+  
   DataFrame plantCarbonBalance = DataFrame::create(_["GrossPhotosynthesis"] = GrossPhotosynthesis,
                                    _["LeafMaintenanceRespiration"] = LeafMaintenanceRespiration,
                                    _["SapwoodMaintenanceRespiration"] = SapwoodMaintenanceRespiration,
@@ -722,6 +737,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
                         _["ShadeLeaves"] = spwbOut["ShadeLeaves"],
                         _["ExtractionInst"] = spwbOut["ExtractionInst"],
                         _["PlantsInst"] = spwbOut["PlantsInst"],
+                        _["PlantCBInst"] = plantCBInst,
                         _["LightExtinction"] = spwbOut["LightExtinction"],
                         _["WindExtinction"] = spwbOut["WindExtinction"]);
   l.attr("class") = CharacterVector::create("growth_day","list");
@@ -884,7 +900,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   List control = x["control"];  
   
   //Store input
-  List spwbInput = clone(x);
+  List growthInput = clone(x);
   List soilInput = clone(soil);
   
   
@@ -1347,7 +1363,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   if(transpirationMode=="Granier") {
     l = List::create(Named("latitude") = latitude,
                      Named("topography") = topo,
-                     Named("spwbInput") = spwbInput,
+                     Named("growthInput") = growthInput,
                      Named("soilInput") = soilInput,
                      Named("WaterBalance")=DWB, 
                      Named("Soil")=SWB,
@@ -1363,7 +1379,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   
     l = List::create(Named("latitude") = latitude,
                    Named("topography") = topo,
-                   Named("spwbInput") = spwbInput,
+                   Named("growthInput") = growthInput,
                    Named("soilInput") = soilInput,
                    Named("WaterBalance")=DWB, 
                    Named("EnergyBalance") = DEB,

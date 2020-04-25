@@ -643,8 +643,13 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
 
 .plotsubdaily<-function(x, type="PlantTranspiration", bySpecies = FALSE,
                         dates = NULL, xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL) {
-  input = x$spwbInput
-  type = match.arg(type, .getSubdailySPWBPlotTypes())  
+  if(("spwb" %in% class(x)) || ("pwb" %in% class(x))) {
+    input = x$spwbInput
+    type = match.arg(type, .getSubdailySPWBPlotTypes())  
+  } else {
+    input = x$growthInput
+    type = match.arg(type, .getSubdailyGROWTHPlotTypes())  
+  }
   
   if(type=="PlantTranspiration") {
     m = extractSubdaily(x, "E", dates)
@@ -751,5 +756,13 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     mSh = extractSubdaily(x, "ShadeLeaves$iWUE", dates)
     if(is.null(ylab)) ylab=expression(paste("iWUE  ", (mu%.%mol%.%mol^{-1})))
     return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
+  } else if(type=="GrossPhotosynthesis") {
+    m = extractSubdaily(x, "GrossPhotosynthesis", dates)
+    if(is.null(ylab)) ylab=expression(paste("Gross photosynthesis  ", (gGluc%.%ind^{-1})))
+    return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
+  } else if(type=="MaintenanceRespiration") {
+    m = extractSubdaily(x, "MaintenanceRespiration", dates)
+    if(is.null(ylab)) ylab=expression(paste("Maintenance respiration  ", (gGluc%.%ind^{-1})))
+    return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
 }
