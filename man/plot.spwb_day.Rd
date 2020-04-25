@@ -1,19 +1,22 @@
 \encoding{UTF-8}
 \name{plot.spwb_day}
+\alias{plot.growth_day}
 \alias{plot.spwb_day}
 \alias{plot.pwb_day}
 \title{Plots simulation results for one day}
 \description{
-Functions to plot the results of the soil water balance model for one day (see \code{\link{spwb_day}}) or the transpiration calculations with Sperry (see \code{\link{transp_transpirationSperry}}).
+Functions to plot the subdaily simulation results of \code{\link{spwb_day}}, \code{\link{growth_day}} or the transpiration calculations of \code{\link{transp_transpirationSperry}}.
 }
 \usage{
+\method{plot}{growth_day}(x, type="PlantTranspiration", bySpecies = FALSE, 
+                        xlim = NULL, ylim=NULL, xlab = NULL, ylab = NULL, ...)
 \method{plot}{spwb_day}(x, type="PlantTranspiration", bySpecies = FALSE, 
                         xlim = NULL, ylim=NULL, xlab = NULL, ylab = NULL, ...)
 \method{plot}{pwb_day}(x, type="PlantTranspiration", bySpecies = FALSE, 
                        xlim = NULL, ylim=NULL, xlab = NULL, ylab = NULL, ...)
 }
 \arguments{
-  \item{x}{An object of class \code{spwb_day} or \code{pwb_day}.}
+  \item{x}{An object of class \code{spwb_day}, \code{growth_day} or \code{pwb_day}.}
   \item{type}{The information to be plotted (see details).}
   \item{bySpecies}{Allows aggregating output by species, before drawing plots. Aggregation can involve a sum (as for plant lai or transpiration) or a LAI-weighted mean (as for plant stress or plant water potential).}
   \item{xlim}{Range of values for x.}
@@ -24,7 +27,7 @@ Functions to plot the results of the soil water balance model for one day (see \
 
 }
 \details{
-The following plots are currently available:
+The following plots are currently available for \code{spwb_day} and \code{pwb_day}:
   \itemize{
     \item{\code{"LeafPsi"}:}{Leaf water potential (for shade and sunlit leaves).}
     \item{\code{"LeafPsiAverage"}:}{Average leaf water potential.}

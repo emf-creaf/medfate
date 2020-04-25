@@ -17,8 +17,9 @@ Function \code{plot} produces temporal graphs of the results of the soil plant w
                     xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, ...)
 \method{plot}{pwb}(x, type="PlantTranspiration", bySpecies = FALSE,
                    dates = NULL, subdaily = FALSE,
-                   xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, ...)                   
+                   xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, ...)
 \method{plot}{growth}(x, type="PET_Precipitation", bySpecies = FALSE, 
+                      dates = NULL, subdaily = FALSE,
                       xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, ...)
 \method{summary}{pwb}(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, ...)
 \method{summary}{spwb}(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, ...)
@@ -40,7 +41,7 @@ Function \code{plot} produces temporal graphs of the results of the soil plant w
   \item{...}{Additional parameters for function \code{plot} or \code{summary}.}
 }
 \details{
-The following plots are currently available:
+The following plots are currently available for \code{\link{spwb}} (most of them also for \code{\link{pwb}}):
   \itemize{
     \item{\code{"PET_Precipitation"}:}{ Potential evapotranspiration and Precipitation.}
     \item{\code{"PET_NetRain"}:}{ Potential evapotranspiration and Net rainfall.}
@@ -76,19 +77,22 @@ The following plots are currently available:
     \item{\code{"SoilTemperature"}:}{ Minimum/maximum/mean daily temperatures inside the first soil layer (only for \code{transpirationMode = "Sperry"}).}
     \item{\code{"CanopyEnergyBalance"}:}{ Canopy energy balance components (only for \code{transpirationMode = "Sperry"}).}
     \item{\code{"SoilEnergyBalance"}:}{ Soil energy balance components (only for \code{transpirationMode = "Sperry"}).}
-    \item{\code{"PlantRespiration"}:}{ Plant cohort respiration (only for \code{plot.growth}).}
-    \item{\code{"PlantRespirationPerLeaf"}:}{ Plant cohort respiration per leaf area (only for \code{plot.growth}).}
-    \item{\code{"PlantRespirationPerIndividual"}:}{ Respiration per individual (only for \code{plot.growth}).}
-    \item{\code{"PlantCBalance"}:}{ Plant cohort carbon balance (only for \code{plot.growth}).}
-    \item{\code{"PlantCBalancePerLeaf"}:}{ Plant cohort carbon balance per leaf area (only for \code{plot.growth}).}
-    \item{\code{"PlantCBalancePerIndividual"}:}{ Carbon balance per individual (only for \code{plot.growth}).}
-    \item{\code{"PlantCstorageFast"}:}{ Amount of fast-dynamics carbon reserves  (only for \code{plot.growth}).}
-    \item{\code{"PlantCstorageSlow"}:}{ Amount of slow-dynamics carbon reserves  (only for \code{plot.growth}).}
-    \item{\code{"PlantSA"}:}{ Amount of sapwood area in an individual  (only for \code{plot.growth}).}
-    \item{\code{"PlantSAgrowth"}:}{ Amount of newly-created sapwood area  (only for \code{plot.growth}).}
-    \item{\code{"PlantRelativeSAgrowth"}:}{ Amount of newly-created sapwood area per sapwood area (only for \code{plot.growth}).}
-    \item{\code{"PlantLAIlive"}:}{ Plant cohort leaf area index of live leaves (only for \code{plot.growth}).}
-    \item{\code{"PlantLAIdead"}:}{ Plant cohort leaf area index of dead leaves (only for \code{plot.growth}).}
+  }
+The following are only available for \code{\link{growth}}:
+ \itemize{
+    \item{\code{"PlantRespiration"}:}{ Plant cohort respiration.}
+    \item{\code{"PlantRespirationPerLeaf"}:}{ Plant cohort respiration per leaf area.}
+    \item{\code{"PlantRespirationPerIndividual"}:}{ Respiration per individual.}
+    \item{\code{"PlantCBalance"}:}{ Plant cohort carbon balance.}
+    \item{\code{"PlantCBalancePerLeaf"}:}{ Plant cohort carbon balance per leaf area.}
+    \item{\code{"PlantCBalancePerIndividual"}:}{ Carbon balance per individual.}
+    \item{\code{"PlantCstorageFast"}:}{ Amount of fast-dynamics carbon reserves.}
+    \item{\code{"PlantCstorageSlow"}:}{ Amount of slow-dynamics carbon reserves.}
+    \item{\code{"PlantSA"}:}{ Amount of sapwood area in an individual.}
+    \item{\code{"PlantSAgrowth"}:}{ Amount of newly-created sapwood area.}
+    \item{\code{"PlantRelativeSAgrowth"}:}{ Amount of newly-created sapwood area per sapwood area.}
+    \item{\code{"PlantLAIlive"}:}{ Plant cohort leaf area index of live leaves.}
+    \item{\code{"PlantLAIdead"}:}{ Plant cohort leaf area index of dead leaves.}
    }
 }
 \references{

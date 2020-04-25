@@ -309,6 +309,10 @@ growth_floemFlow <- function(psiUpstream, psiDownstream, concUpstream, concDowns
     .Call(`_medfate_floemFlow`, psiUpstream, psiDownstream, concUpstream, concDownstream, temp, k_f, nonSugarConc)
 }
 
+growth_day <- function(x, soil, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, runon = 0.0) {
+    .Call(`_medfate_growthDay`, x, soil, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, runon)
+}
+
 growth <- function(x, soil, meteo, latitude, elevation = NA_real_, slope = NA_real_, aspect = NA_real_) {
     .Call(`_medfate_growth`, x, soil, meteo, latitude, elevation, slope, aspect)
 }

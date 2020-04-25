@@ -126,12 +126,222 @@ double turgorGrowthFactor(double psi, double psi_tlp) {
 // }
 
 
-/**
-* Daily plant carbon balance
-*/
-DataFrame growthDay(List x, List spwbOut, double tday) {
+
+List growthDay1(List x, List soil, double tday, double pet, double prec, double er, double runon=0.0, 
+              double rad = NA_REAL, double elevation = NA_REAL, bool verbose = false) {
+  return(spwbDay1(x, soil, tday, pet, prec, er,runon,
+                  rad, elevation, verbose));
+  //   //Control params
+  //   List control = x["control"];  
+  //   
+  //   String transpirationMode = control["transpirationMode"];
+  //   String cavitationRefill = control["cavitationRefill"];
+  //   bool taper = control["taper"];
+  //   
+  //   //Cohort info
+  //   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
+  //   NumericVector SP = cohorts["SP"];
+  //   int numCohorts = SP.size();
+  //   
+  //   //Aboveground state variables  
+  //   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
+  //   NumericVector DBH = above["DBH"];
+  //   NumericVector Cover = above["Cover"];
+  //   NumericVector H = above["H"];
+  //   NumericVector N = above["N"];
+  //   NumericVector CR = above["CR"];
+  //   NumericVector LAI_live = above["LAI_live"];
+  //   NumericVector LAI_expanded = above["LAI_expanded"];
+  //   NumericVector LAI_dead = above["LAI_dead"];
+  //   NumericVector SA = above["SA"];
+  //   
+  //   //Belowground parameters  
+  //   List below = Rcpp::as<Rcpp::List>(x["below"]);
+  //   NumericVector Z = Rcpp::as<Rcpp::NumericVector>(below["Z"]);
+  //   
+  //   //Internal state variables
+  //   List internalWater = Rcpp::as<Rcpp::List>(x["internalWater"]);
+  //   List internalCarbon = Rcpp::as<Rcpp::List>(x["internalCarbon"]);
+  //   NumericVector fastCstorage = internalCarbon["fastCstorage"];
+  //   NumericVector slowCstorage = internalCarbon["slowCstorage"];
+  //   
+  //   
+  //   List stand = spwbOut["Stand"];
+  //   List Plants = spwbOut["Plants"];
+  //   
+  //   //Recover module-communication state variables
+  //   NumericVector Ag, psiCoh;
+  //   if(transpirationMode=="Granier") {
+  //     Ag =  Rcpp::as<Rcpp::NumericVector>(Plants["Photosynthesis"]);
+  //     psiCoh =  Rcpp::as<Rcpp::NumericVector>(Plants["psi"]);  
+  //   } else {
+  //     Ag =  Rcpp::as<Rcpp::NumericVector>(Plants["GrossPhotosynthesis"]);
+  //     psiCoh =  clone(Rcpp::as<Rcpp::NumericVector>(x["psiLeaf"]));  
+  //   }
+  //   
+  //   //Anatomy parameters
+  //   DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
+  //   NumericVector SLA = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["SLA"]);
+  //   NumericVector Al2As = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["Al2As"]);
+  //   NumericVector WoodDensity = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["WoodDensity"]);
+  //   //Growth parameters
+  //   DataFrame paramsGrowth = Rcpp::as<Rcpp::DataFrame>(x["paramsGrowth"]);
+  //   NumericVector WoodC = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["WoodC"]);
+  //   NumericVector RGRmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRmax"]);
+  //   NumericVector Cstoragepmax= Rcpp::as<Rcpp::NumericVector>(paramsGrowth["Cstoragepmax"]);
+  //   NumericVector slowCstorage_max(numCohorts), fastCstorage_max(numCohorts);
+  //   
+  //   
+  //   //Transpiration parameters
+  //   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
+  //   NumericVector Kmax_stemxylem, VCstem_kmax, Psi_Extract, VCstem_c, VCstem_d;
+  //   if(transpirationMode=="Sperry") {
+  //     Kmax_stemxylem = paramsTransp["Kmax_stemxylem"];
+  //     VCstem_kmax = paramsTransp["VCstem_kmax"];
+  //     // VCstem_c = paramsTransp["VCstem_c"];
+  //     // VCstem_d = paramsTransp["VCstem_d"];
+  //   } else if(transpirationMode == "Granier"){
+  //     // Psi_Extract = paramsTransp["Psi_Extract"];
+  //   }
+  //   
+  //   //Output vectors
+  //   NumericVector PlantRespiration(numCohorts,0.0);
+  //   NumericVector PlantCstorageFast(numCohorts,0.0);
+  //   NumericVector PlantCstorageSlow(numCohorts,0.0);
+  //   NumericVector PlantSA(numCohorts,0.0);
+  //   NumericVector PlantSAgrowth(numCohorts,0.0);
+  //   NumericVector PlantGrossPhotosynthesis(numCohorts,0.0);
+  //   NumericVector PlantLAIdead(numCohorts,0.0);
+  //   NumericVector PlantLAIlive(numCohorts,0.0);
+  //   
+  //   //3. Carbon balance and growth
+  //   double B_leaf_expanded, B_stem, B_fineroot;
+  //   for(int j=0;j<numCohorts;j++){
+  //     //3.1 Live biomass and maximum C pool capacity
+  //     NumericVector compartments = carbonCompartments(SA[j], LAI_expanded[j], H[j], Z[j], N[j], SLA[j], WoodDensity[j], WoodC[j]);
+  //     B_leaf_expanded = compartments[0];
+  //     B_stem = compartments[1];
+  //     B_fineroot = compartments[2];
+  //     fastCstorage_max[j] = 0.05*(B_leaf_expanded+B_stem+B_fineroot);
+  //     slowCstorage_max[j] = std::max(slowCstorage_max[j],(Cstoragepmax[j]-0.05)*(B_leaf_expanded+B_stem+B_fineroot)); //Slow pool capacity cannot decrease
+  //     
+  //     //3.2 Respiration and photosynthesis 
+  //     double Agj = Ag[j]/(N[j]/10000.0); //Translate g C · m-2 to g C · ind-1
+  //     // double Anj = 0.0;
+  //     double QR = qResp(tday);
+  //     double Rj = (B_leaf_expanded*leaf_RR + B_stem*stem_RR + B_fineroot*root_RR)*QR;
+  //     
+  //     //3.3. Carbon balance, update of fast C pool and C available for growth
+  //     double growthAvailableC = 0.0;
+  //     growthAvailableC = std::max(0.0,fastCstorage[j]+(Agj-Rj));
+  //     fastCstorage[j] = growthAvailableC;
+  //     
+  //     //3.4 Growth in LAI_live and SA
+  //     double deltaSAturnover = (dailySAturnoverProportion/(1.0+15*exp(-0.01*H[j])))*SA[j];
+  //     double f_turgor = turgorGrowthFactor(psiCoh[j],-1.5);
+  //     double deltaSAgrowth = 0.0;
+  //     // if(f_turgor>0.0) { //Growth is possible
+  //     double costLA = 0.1*leafCperDry*(Al2As[j]/SLA[j]); //Construction cost in g C·cm-2 of sapwood
+  //     double costSA = WoodC[j]*(H[j]+Z[j])*WoodDensity[j];  //Construction cost in g C·cm-2 of sapwood
+  //     double costFR = costLA/2.5;
+  //     double cost = 1.3*(costLA+costSA+costFR);  //Construction cost in g C·cm-2 of sapwood (including 30% growth respiration)
+  //     double deltaSAavailable = growthAvailableC/cost;
+  //     double f_source = 1.0;
+  //     f_source = carbonGrowthFactor(fastCstorage[j]/fastCstorage_max[j], growthCarbonConcentrationThreshold);
+  //     double f_temp = temperatureGrowthFactor(tday);
+  //     double deltaSAsink = RGRmax[j]*SA[j]*f_temp*f_turgor;
+  //     deltaSAgrowth = std::min(deltaSAsink*f_source, deltaSAavailable);
+  //     
+  //     //update pools
+  //     fastCstorage[j] = fastCstorage[j]-deltaSAgrowth*cost; //Remove construction costs from (fast) C pool
+  //     if(transpirationMode=="Granier"){
+  //       if(cavitationRefill!="total") { //If we track cavitation update proportion of embolized conduits
+  //         NumericVector pEmb =  Rcpp::as<Rcpp::NumericVector>(x["PLC"]);
+  //         pEmb[j] = pEmb[j]*((SA[j] - deltaSAturnover)/(SA[j] + deltaSAgrowth - deltaSAturnover));
+  //       }
+  //     } else {
+  //       NumericMatrix PLCstem =  Rcpp::as<Rcpp::NumericMatrix>(x["PLCstem"]);
+  //       int nStemSegments = PLCstem.ncol();
+  //       for(int s=0;s<nStemSegments;s++) {
+  //         PLCstem(j,s) = PLCstem(j,s)*((SA[j] - deltaSAturnover)/(SA[j] + deltaSAgrowth - deltaSAturnover));
+  //       }
+  //       
+  //     }
+  //     SA[j] = SA[j] + deltaSAgrowth - deltaSAturnover; //Update sapwood area
+  //     
+  //     double leafDie = std::min((N[j]/10000.0)*(deltaSAturnover/10000.0)*Al2As[j], LAI_live[j]);
+  //     LAI_dead[j] += leafDie; //Update dead LAI
+  //     LAI_live[j] += (N[j]/10000.0)*((deltaSAgrowth-deltaSAturnover)/10000.0)*Al2As[j]; //Update live LAI
+  //     LAI_live[j] = std::max(LAI_live[j], 0.0); //Check negative values do not occur
+  //     
+  //     //3.5 transfer between pools and constrain of C pools
+  //     //Relative transfer rate (maximum 5% of the source pool per day)
+  //     double reltransferRate = 0.05*storageTransferRelativeRate(fastCstorage[j], fastCstorage_max[j]);
+  //     if(reltransferRate>0.0) { //Transfer from fast to slow 
+  //       double transfer = std::min(reltransferRate*fastCstorage[j],(slowCstorage_max[j]-slowCstorage[j])*0.9);
+  //       fastCstorage[j] -= transfer;
+  //       slowCstorage[j] += transfer*0.9; //10% cost in respiration (not added to slow pool)
+  //     } else { //Transfer from slow to fast 
+  //       double transfer = std::min(-reltransferRate*slowCstorage[j],(fastCstorage_max[j]-fastCstorage[j])*0.9);
+  //       fastCstorage[j] += transfer*0.9; //10% cost in respiration (removed from what actually reaches fast pool)
+  //       slowCstorage[j] -= transfer;
+  //     }
+  //     //Trim pools to maximum capacity
+  //     fastCstorage[j] = std::max(0.0,std::min(fastCstorage[j], fastCstorage_max[j]));
+  //     slowCstorage[j] = std::max(0.0,std::min(slowCstorage[j], slowCstorage_max[j]));
+  //     
+  //     //3.8 Calculate defoliation if fast storage is low
+  //     double def = defoliationFraction(fastCstorage[j]/fastCstorage_max[j], growthCarbonConcentrationThreshold);
+  //     double maxLAI = (SA[j]*Al2As[j]/10000.0)*(N[j]/10000.0);
+  //     double defLAI = maxLAI * (1.0-def);
+  //     // Rcout<<defLAI<<" "<<LAI_live[j]<<"\n";
+  //     LAI_live[j] = std::min(LAI_live[j], defLAI);
+  //     
+  //     //3.7 Update stem conductance (Sperry mode)
+  //     if(transpirationMode=="Sperry") {
+  //       double al2as = (LAI_expanded[j]/(N[j]/10000.0))/(SA[j]/10000.0);
+  //       VCstem_kmax[j]=maximumStemHydraulicConductance(Kmax_stemxylem[j], al2as,H[j], taper);
+  //       // Rcout<<Al2As[j]<<" "<< al2as<<" "<<VCstem_kmax[j]<<"\n";
+  //     }
+  //     
+  //     //Output variables
+  //     PlantRespiration[j] = Rj*(N[j]/10000.0); //Scaled to cohort level: Translate g C · ind-1 to g C · m-2
+  //     PlantCstorageFast[j] = fastCstorage[j]/fastCstorage_max[j];
+  //     PlantCstorageSlow[j] = slowCstorage[j]/slowCstorage_max[j];
+  //     PlantSA[j] = SA[j];
+  //     PlantLAIlive[j] = LAI_live[j];
+  //     PlantLAIdead[j] = LAI_dead[j];
+  //     PlantSAgrowth[j] = deltaSAgrowth;
+  //   }
+  //   
+  //   DataFrame df = DataFrame::create(_["PlantRespiration"] = PlantRespiration,
+  //                                    _["PlantCstorageFast"] = PlantCstorageFast,
+  //                                    _["PlantCstorageSlow"] = PlantCstorageSlow,
+  //                                    _["PlantSA"] = PlantSA,
+  //                                    _["PlantLAIlive"] = PlantLAIlive,
+  //                                    _["PlantLAIdead"] = PlantLAIdead,
+  //                                    _["PlantSAgrowth"] = PlantSAgrowth);
+  //   
+  //   df.attr("row.names") = cohorts.attr("row.names");
+  //   return(df);
+}
+
+List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, double tmaxPrev, double tminNext, 
+                double rhmin, double rhmax, double rad, double wind, 
+                double latitude, double elevation, double slope, double aspect,
+                double solarConstant, double delta, 
+                double prec, double pet, double er, double runon=0.0, bool verbose = false) {
+  
+  List spwbOut = spwbDay2(x, soil, tmin, tmax, tminPrev, tmaxPrev, tminNext,
+                          rhmin, rhmax, rad, wind, 
+                          latitude, elevation, slope, aspect,
+                          solarConstant, delta, 
+                          prec, pet, er, runon, verbose);
+  
   //Control params
   List control = x["control"];  
+  
+  double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
   
   String transpirationMode = control["transpirationMode"];
   String allocationStrategy = control["allocationStrategy"];
@@ -473,7 +683,7 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
     // Rcout<<" CBSapwood "<< sumSapwood << " ChLabSapwood: "<< (LabileMassSapwood[j] - labileMassSapwoodIni)<<"\n";
   }
   
-  DataFrame df = DataFrame::create(_["GrossPhotosynthesis"] = GrossPhotosynthesis,
+  DataFrame plantCarbonBalance = DataFrame::create(_["GrossPhotosynthesis"] = GrossPhotosynthesis,
                                    _["LeafMaintenanceRespiration"] = LeafMaintenanceRespiration,
                                    _["SapwoodMaintenanceRespiration"] = SapwoodMaintenanceRespiration,
                                    _["FineRootMaintenanceRespiration"] = FineRootMaintenanceRespiration,
@@ -486,16 +696,80 @@ DataFrame growthDay(List x, List spwbOut, double tday) {
                                    _["StarchSapwood"] = PlantStarchSapwood,
                                    _["SugarTransport"] = PlantSugarTransport,
                                    _["LabileMassLeaf"] = LabileMassLeaf,
-                                   _["LabileMassSapwood"] = LabileMassSapwood,
-                                   _["PlantSA"] = PlantSA,
-                                   _["PlantLAIlive"] = PlantLAIlive,
-                                   _["PlantLAIexpanded"] = PlantLAIexpanded,
-                                   _["PlantLAIdead"] = PlantLAIdead,
-                                   _["PlantSAgrowth"] = PlantSAgrowth,
-                                   _["PlantLAgrowth"] = PlantLAgrowth);
+                                   _["LabileMassSapwood"] = LabileMassSapwood);
+  plantCarbonBalance.attr("row.names") = above.attr("row.names");
   
-  df.attr("row.names") = cohorts.attr("row.names");
-  return(df);
+  DataFrame plantGrowth = List::create(
+    _["SA"] = PlantSA,
+    _["LAIlive"] = PlantLAIlive,
+    _["LAIexpanded"] = PlantLAIexpanded,
+    _["LAIdead"] = PlantLAIdead,
+    _["SAgrowth"] = PlantSAgrowth,
+    _["LAgrowth"] = PlantLAgrowth
+  );
+  plantGrowth.attr("row.names") = above.attr("row.names");
+  
+  List l = List::create(_["cohorts"] = clone(cohorts),
+                        _["WaterBalance"] = spwbOut["WaterBalance"], 
+                        _["EnergyBalance"] = spwbOut["EnergyBalance"],
+                        _["Soil"] = spwbOut["Soil"], 
+                        _["Stand"] = spwbOut["Stand"], 
+                        _["Plants"] = spwbOut["Plants"],
+                        _["PlantCarbonBalance"] = plantCarbonBalance,
+                        _["PlantGrowth"] = plantGrowth,
+                        _["RhizoPsi"] = spwbOut["RhizoPsi"],
+                        _["SunlitLeaves"] = spwbOut["SunlitLeaves"],
+                        _["ShadeLeaves"] = spwbOut["ShadeLeaves"],
+                        _["ExtractionInst"] = spwbOut["ExtractionInst"],
+                        _["PlantsInst"] = spwbOut["PlantsInst"],
+                        _["LightExtinction"] = spwbOut["LightExtinction"],
+                        _["WindExtinction"] = spwbOut["WindExtinction"]);
+  l.attr("class") = CharacterVector::create("growth_day","list");
+  return(l);
+}
+
+
+// [[Rcpp::export("growth_day")]]
+List growthDay(List x, List soil, CharacterVector date, double tmin, double tmax, double rhmin, 
+               double rhmax, double rad, double wind, 
+               double latitude, double elevation, double slope, double aspect,  
+               double prec, double runon=0.0) {
+  //Control parameters
+  List control = x["control"];
+  bool verbose = control["verbose"];
+  bool leafPhenology = control["leafPhenology"];
+  String transpirationMode = control["transpirationMode"];
+  std::string c = as<std::string>(date[0]);
+  int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
+  double delta = meteoland::radiation_solarDeclination(J);
+  double solarConstant = meteoland::radiation_solarConstant(J);
+  double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
+  double latrad = latitude * (PI/180.0);
+  double asprad = aspect * (PI/180.0);
+  double slorad = slope * (PI/180.0);
+  double photoperiod = meteoland::radiation_daylength(latrad, 0.0, 0.0, delta);
+  double pet = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
+  
+  //Derive doy from date  
+  int J0101 = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),1,1);
+  int doy = J - J0101+1;
+  if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; 
+  if(wind<0.1) wind = 0.1; //Minimum windspeed abovecanopy
+  
+  //Update phenology
+  if(leafPhenology && doy >180) updateLeaves(x, doy, photoperiod, tday, wind);
+  
+  double er = erFactor(doy, pet, prec);
+  List s;
+  if(transpirationMode=="Granier") {
+    s = growthDay1(x,soil, tday, pet, prec, er, runon, rad, elevation, verbose);
+  } else {
+    s = growthDay2(x,soil, tmin, tmax, tmin, tmax, tmin, rhmin, rhmax, rad, wind, 
+                 latitude, elevation, slope, aspect,
+                 solarConstant, delta, prec, pet, er, runon, verbose);
+  }
+  // Rcout<<"hola4\n";
+  return(s);
 }
 
 
@@ -603,201 +877,6 @@ void recordStandSummary(DataFrame standSummary, NumericVector LAIlive,
   }
 }
 
-// DataFrame growthPipe(List x, List spwbOut, double tday) {
-//   //Control params
-//   List control = x["control"];  
-//   
-//   String transpirationMode = control["transpirationMode"];
-//   String cavitationRefill = control["cavitationRefill"];
-//   bool taper = control["taper"];
-//   
-//   //Cohort info
-//   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
-//   NumericVector SP = cohorts["SP"];
-//   int numCohorts = SP.size();
-//   
-//   //Aboveground state variables  
-//   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
-//   NumericVector DBH = above["DBH"];
-//   NumericVector Cover = above["Cover"];
-//   NumericVector H = above["H"];
-//   NumericVector N = above["N"];
-//   NumericVector CR = above["CR"];
-//   NumericVector LAI_live = above["LAI_live"];
-//   NumericVector LAI_expanded = above["LAI_expanded"];
-//   NumericVector LAI_dead = above["LAI_dead"];
-//   NumericVector SA = above["SA"];
-//   
-//   //Belowground parameters  
-//   List below = Rcpp::as<Rcpp::List>(x["below"]);
-//   NumericVector Z = Rcpp::as<Rcpp::NumericVector>(below["Z"]);
-//   
-//   //Internal state variables
-//   List internalWater = Rcpp::as<Rcpp::List>(x["internalWater"]);
-//   List internalCarbon = Rcpp::as<Rcpp::List>(x["internalCarbon"]);
-//   NumericVector fastCstorage = internalCarbon["fastCstorage"];
-//   NumericVector slowCstorage = internalCarbon["slowCstorage"];
-//   
-//   
-//   List stand = spwbOut["Stand"];
-//   List Plants = spwbOut["Plants"];
-//   
-//   //Recover module-communication state variables
-//   NumericVector Ag, psiCoh;
-//   if(transpirationMode=="Granier") {
-//     Ag =  Rcpp::as<Rcpp::NumericVector>(Plants["Photosynthesis"]);
-//     psiCoh =  Rcpp::as<Rcpp::NumericVector>(Plants["psi"]);  
-//   } else {
-//     Ag =  Rcpp::as<Rcpp::NumericVector>(Plants["GrossPhotosynthesis"]);
-//     psiCoh =  clone(Rcpp::as<Rcpp::NumericVector>(x["psiLeaf"]));  
-//   }
-//   
-//   //Anatomy parameters
-//   DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
-//   NumericVector SLA = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["SLA"]);
-//   NumericVector Al2As = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["Al2As"]);
-//   NumericVector WoodDensity = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["WoodDensity"]);
-//   //Growth parameters
-//   DataFrame paramsGrowth = Rcpp::as<Rcpp::DataFrame>(x["paramsGrowth"]);
-//   NumericVector WoodC = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["WoodC"]);
-//   NumericVector RGRmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRmax"]);
-//   NumericVector Cstoragepmax= Rcpp::as<Rcpp::NumericVector>(paramsGrowth["Cstoragepmax"]);
-//   NumericVector slowCstorage_max(numCohorts), fastCstorage_max(numCohorts);
-//   
-//   
-//   //Transpiration parameters
-//   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTransp"]);
-//   NumericVector Kmax_stemxylem, VCstem_kmax, Psi_Extract, VCstem_c, VCstem_d;
-//   if(transpirationMode=="Sperry") {
-//     Kmax_stemxylem = paramsTransp["Kmax_stemxylem"];
-//     VCstem_kmax = paramsTransp["VCstem_kmax"];
-//     // VCstem_c = paramsTransp["VCstem_c"];
-//     // VCstem_d = paramsTransp["VCstem_d"];
-//   } else if(transpirationMode == "Granier"){
-//     // Psi_Extract = paramsTransp["Psi_Extract"];
-//   }
-//   
-//   //Output vectors
-//   NumericVector PlantRespiration(numCohorts,0.0);
-//   NumericVector PlantCstorageFast(numCohorts,0.0);
-//   NumericVector PlantCstorageSlow(numCohorts,0.0);
-//   NumericVector PlantSA(numCohorts,0.0);
-//   NumericVector PlantSAgrowth(numCohorts,0.0);
-//   NumericVector PlantGrossPhotosynthesis(numCohorts,0.0);
-//   NumericVector PlantLAIdead(numCohorts,0.0);
-//   NumericVector PlantLAIlive(numCohorts,0.0);
-//   
-//   //3. Carbon balance and growth
-//   double B_leaf_expanded, B_stem, B_fineroot;
-//   for(int j=0;j<numCohorts;j++){
-//     //3.1 Live biomass and maximum C pool capacity
-//     NumericVector compartments = carbonCompartments(SA[j], LAI_expanded[j], H[j], Z[j], N[j], SLA[j], WoodDensity[j], WoodC[j]);
-//     B_leaf_expanded = compartments[0];
-//     B_stem = compartments[1];
-//     B_fineroot = compartments[2];
-//     fastCstorage_max[j] = 0.05*(B_leaf_expanded+B_stem+B_fineroot);
-//     slowCstorage_max[j] = std::max(slowCstorage_max[j],(Cstoragepmax[j]-0.05)*(B_leaf_expanded+B_stem+B_fineroot)); //Slow pool capacity cannot decrease
-//     
-//     //3.2 Respiration and photosynthesis 
-//     double Agj = Ag[j]/(N[j]/10000.0); //Translate g C · m-2 to g C · ind-1
-//     // double Anj = 0.0;
-//     double QR = qResp(tday);
-//     double Rj = (B_leaf_expanded*leaf_RR + B_stem*stem_RR + B_fineroot*root_RR)*QR;
-//     
-//     //3.3. Carbon balance, update of fast C pool and C available for growth
-//     double growthAvailableC = 0.0;
-//     growthAvailableC = std::max(0.0,fastCstorage[j]+(Agj-Rj));
-//     fastCstorage[j] = growthAvailableC;
-//     
-//     //3.4 Growth in LAI_live and SA
-//     double deltaSAturnover = (dailySAturnoverProportion/(1.0+15*exp(-0.01*H[j])))*SA[j];
-//     double f_turgor = turgorGrowthFactor(psiCoh[j],-1.5);
-//     double deltaSAgrowth = 0.0;
-//     // if(f_turgor>0.0) { //Growth is possible
-//     double costLA = 0.1*leafCperDry*(Al2As[j]/SLA[j]); //Construction cost in g C·cm-2 of sapwood
-//     double costSA = WoodC[j]*(H[j]+Z[j])*WoodDensity[j];  //Construction cost in g C·cm-2 of sapwood
-//     double costFR = costLA/2.5;
-//     double cost = 1.3*(costLA+costSA+costFR);  //Construction cost in g C·cm-2 of sapwood (including 30% growth respiration)
-//     double deltaSAavailable = growthAvailableC/cost;
-//     double f_source = 1.0;
-//     f_source = carbonGrowthFactor(fastCstorage[j]/fastCstorage_max[j], growthCarbonConcentrationThreshold);
-//     double f_temp = temperatureGrowthFactor(tday);
-//     double deltaSAsink = RGRmax[j]*SA[j]*f_temp*f_turgor;
-//     deltaSAgrowth = std::min(deltaSAsink*f_source, deltaSAavailable);
-//     
-//     //update pools
-//     fastCstorage[j] = fastCstorage[j]-deltaSAgrowth*cost; //Remove construction costs from (fast) C pool
-//     if(transpirationMode=="Granier"){
-//       if(cavitationRefill!="total") { //If we track cavitation update proportion of embolized conduits
-//         NumericVector pEmb =  Rcpp::as<Rcpp::NumericVector>(x["PLC"]);
-//         pEmb[j] = pEmb[j]*((SA[j] - deltaSAturnover)/(SA[j] + deltaSAgrowth - deltaSAturnover));
-//       }
-//     } else {
-//       NumericMatrix PLCstem =  Rcpp::as<Rcpp::NumericMatrix>(x["PLCstem"]);
-//       int nStemSegments = PLCstem.ncol();
-//       for(int s=0;s<nStemSegments;s++) {
-//         PLCstem(j,s) = PLCstem(j,s)*((SA[j] - deltaSAturnover)/(SA[j] + deltaSAgrowth - deltaSAturnover));
-//       }
-//       
-//     }
-//     SA[j] = SA[j] + deltaSAgrowth - deltaSAturnover; //Update sapwood area
-//     
-//     double leafDie = std::min((N[j]/10000.0)*(deltaSAturnover/10000.0)*Al2As[j], LAI_live[j]);
-//     LAI_dead[j] += leafDie; //Update dead LAI
-//     LAI_live[j] += (N[j]/10000.0)*((deltaSAgrowth-deltaSAturnover)/10000.0)*Al2As[j]; //Update live LAI
-//     LAI_live[j] = std::max(LAI_live[j], 0.0); //Check negative values do not occur
-//     
-//     //3.5 transfer between pools and constrain of C pools
-//     //Relative transfer rate (maximum 5% of the source pool per day)
-//     double reltransferRate = 0.05*storageTransferRelativeRate(fastCstorage[j], fastCstorage_max[j]);
-//     if(reltransferRate>0.0) { //Transfer from fast to slow 
-//       double transfer = std::min(reltransferRate*fastCstorage[j],(slowCstorage_max[j]-slowCstorage[j])*0.9);
-//       fastCstorage[j] -= transfer;
-//       slowCstorage[j] += transfer*0.9; //10% cost in respiration (not added to slow pool)
-//     } else { //Transfer from slow to fast 
-//       double transfer = std::min(-reltransferRate*slowCstorage[j],(fastCstorage_max[j]-fastCstorage[j])*0.9);
-//       fastCstorage[j] += transfer*0.9; //10% cost in respiration (removed from what actually reaches fast pool)
-//       slowCstorage[j] -= transfer;
-//     }
-//     //Trim pools to maximum capacity
-//     fastCstorage[j] = std::max(0.0,std::min(fastCstorage[j], fastCstorage_max[j]));
-//     slowCstorage[j] = std::max(0.0,std::min(slowCstorage[j], slowCstorage_max[j]));
-//     
-//     //3.8 Calculate defoliation if fast storage is low
-//     double def = defoliationFraction(fastCstorage[j]/fastCstorage_max[j], growthCarbonConcentrationThreshold);
-//     double maxLAI = (SA[j]*Al2As[j]/10000.0)*(N[j]/10000.0);
-//     double defLAI = maxLAI * (1.0-def);
-//     // Rcout<<defLAI<<" "<<LAI_live[j]<<"\n";
-//     LAI_live[j] = std::min(LAI_live[j], defLAI);
-//     
-//     //3.7 Update stem conductance (Sperry mode)
-//     if(transpirationMode=="Sperry") {
-//       double al2as = (LAI_expanded[j]/(N[j]/10000.0))/(SA[j]/10000.0);
-//       VCstem_kmax[j]=maximumStemHydraulicConductance(Kmax_stemxylem[j], al2as,H[j], taper);
-//       // Rcout<<Al2As[j]<<" "<< al2as<<" "<<VCstem_kmax[j]<<"\n";
-//     }
-//     
-//     //Output variables
-//     PlantRespiration[j] = Rj*(N[j]/10000.0); //Scaled to cohort level: Translate g C · ind-1 to g C · m-2
-//     PlantCstorageFast[j] = fastCstorage[j]/fastCstorage_max[j];
-//     PlantCstorageSlow[j] = slowCstorage[j]/slowCstorage_max[j];
-//     PlantSA[j] = SA[j];
-//     PlantLAIlive[j] = LAI_live[j];
-//     PlantLAIdead[j] = LAI_dead[j];
-//     PlantSAgrowth[j] = deltaSAgrowth;
-//   }
-//   
-//   DataFrame df = DataFrame::create(_["PlantRespiration"] = PlantRespiration,
-//                                    _["PlantCstorageFast"] = PlantCstorageFast,
-//                                    _["PlantCstorageSlow"] = PlantCstorageSlow,
-//                                    _["PlantSA"] = PlantSA,
-//                                    _["PlantLAIlive"] = PlantLAIlive,
-//                                    _["PlantLAIdead"] = PlantLAIdead,
-//                                    _["PlantSAgrowth"] = PlantSAgrowth);
-//   
-//   df.attr("row.names") = cohorts.attr("row.names");
-//   return(df);
-// }
 
 // [[Rcpp::export("growth")]]
 List growth(List x, List soil, DataFrame meteo, double latitude, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL) {
@@ -1014,20 +1093,9 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   NumericVector SWE(numDays, 0.0);
   
   //Plant water output variables
-  NumericMatrix PlantPsi(numDays, numCohorts);
-  NumericMatrix PlantStress(numDays, numCohorts);
-  NumericMatrix PlantTranspiration(numDays, numCohorts);
-  NumericMatrix dEdP(numDays, numCohorts);
-  NumericMatrix LeafPsiMin(numDays, numCohorts);
-  NumericMatrix LeafPsiMax(numDays, numCohorts);
-  NumericMatrix LeafPsiMin_SL(numDays, numCohorts);
-  NumericMatrix LeafPsiMax_SL(numDays, numCohorts);
-  NumericMatrix LeafPsiMin_SH(numDays, numCohorts);
-  NumericMatrix LeafPsiMax_SH(numDays, numCohorts);
-  NumericMatrix StemPsi(numDays, numCohorts);
-  NumericMatrix RootPsi(numDays, numCohorts);
-  NumericMatrix StemPLC(numDays, numCohorts);
-  NumericMatrix PlantWaterBalance(numDays, numCohorts);
+  List plantDWOL = definePlantWaterDailyOutputList(meteo, above, soil, control);
+  NumericVector EplantCohTot(numCohorts, 0.0);
+
   
   //Count years (times structural variables will be updated)
   int numYears = 0;
@@ -1101,8 +1169,8 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
     //2. Water balance and photosynthesis
     if(transpirationMode=="Granier") {
       double er = erFactor(DOY[i], PET[i], Precipitation[i]);
-      s = spwbDay1(x, soil, MeanTemperature[i], PET[i], Precipitation[i], er, 0.0, 
-                   Radiation[i], elevation, false); //No Runon in simulations for a single cell
+      s = growthDay1(x, soil, MeanTemperature[i], PET[i], Precipitation[i], er, 0.0, 
+                     Radiation[i], elevation, false); //No Runon in simulations for a single cell
     } else if(transpirationMode=="Sperry") {
       int ntimesteps = control["ndailysteps"];
       double tstep = 86400.0/((double) ntimesteps);
@@ -1130,7 +1198,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
       double rad = Radiation[i];
       PET[i] = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
       double er = erFactor(DOY[i], PET[i], Precipitation[i]);
-      s = spwbDay2(x, soil, tmin, tmax, tminPrev, tmaxPrev, tminNext,
+      s = growthDay2(x, soil, tmin, tmax, tminPrev, tmaxPrev, tminNext,
                    rhmin, rhmax, rad, wind, 
                    latitude, elevation, slope, aspect,
                    solarConstant, delta, Precipitation[i], PET[i], 
@@ -1149,6 +1217,9 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
     List sb = s["Soil"];
     List db = s["WaterBalance"];
     List Plants = s["Plants"];
+    DataFrame cb = Rcpp::as<Rcpp::DataFrame>(s["PlantCarbonBalance"]);
+    DataFrame pg = Rcpp::as<Rcpp::DataFrame>(s["PlantGrowth"]);
+    
     DeepDrainage[i] = db["DeepDrainage"];
     Infiltration[i] = db["Infiltration"];
     Runoff[i] = db["Runoff"];
@@ -1165,24 +1236,18 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
     psidays(i,_) = psi;
     NumericVector EplantVec = sb["PlantExtraction"];
     SWE[i] = soil["SWE"];
-    
-    NumericVector EplantCoh = Plants["Transpiration"];
     Eplantdays(i,_) = EplantVec;
-    PlantTranspiration(i,_) = EplantCoh;
-    PlantStress(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["DDS"]);
-    NumericVector psiCoh;
-    if(transpirationMode=="Granier") {
-      psiCoh =  Rcpp::as<Rcpp::NumericVector>(Plants["psi"]);  
-    } else {
+    
+    //Update plant daily water output
+    fillPlantWaterDailyOutputList(plantDWOL, s, i, transpirationMode);
+    
+    if(transpirationMode=="Sperry") {
       int ntimesteps = control["ndailysteps"];
       double tstep = 86400.0/((double) ntimesteps);
 
       HydraulicRedistribution[i] = db["HydraulicRedistribution"];
       NumericVector HydrInVec = sb["HydraulicInput"];
       HydrIndays(i,_) = HydrInVec;
-      
-      psiCoh =  clone(Rcpp::as<Rcpp::NumericVector>(internalWater["psiLeaf"])); 
-      NumericVector Agd =  Rcpp::as<Rcpp::NumericVector>(Plants["GrossPhotosynthesis"]);
       
       List EB = Rcpp::as<Rcpp::List>(s["EnergyBalance"]);
       DataFrame Tinst = Rcpp::as<Rcpp::DataFrame>(EB["Temperature"]); 
@@ -1217,35 +1282,30 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
       Tsoil_max[i] = max(Tsoil);
       Tsoil_mean[i] = sum(Tsoil)/((double) ntimesteps);
     }
-    PlantPsi(i,_) = psiCoh;
 
-    //3. Carbon balance and growth
-    DataFrame growDay = growthDay(x,s,MeanTemperature[i]);  
-    
     //4. Assemble output
-    LeafMaintenanceRespiration(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["LeafMaintenanceRespiration"]);
-    SapwoodMaintenanceRespiration(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["SapwoodMaintenanceRespiration"]);
-    FineRootMaintenanceRespiration(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["FineRootMaintenanceRespiration"]);
-    LeafGrowthRespiration(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["LeafGrowthRespiration"]);
-    SapwoodGrowthRespiration(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["SapwoodGrowthRespiration"]);
-    FineRootGrowthRespiration(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["FineRootGrowthRespiration"]);
-    GrossPhotosynthesis(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["GrossPhotosynthesis"]);
-    LabileMassLeaf(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["LabileMassLeaf"]);
-    LabileMassSapwood(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["LabileMassSapwood"]);
-    PlantSugarLeaf(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["SugarLeaf"]);
-    PlantStarchLeaf(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["StarchLeaf"]);
-    PlantSugarSapwood(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["SugarSapwood"]);
-    PlantStarchSapwood(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["StarchSapwood"]);
-    PlantSugarTransport(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["SugarTransport"]);
-    PlantSA(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["PlantSA"]);
-    PlantLAIlive(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["PlantLAIlive"]);
-    PlantLAIexpanded(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["PlantLAIexpanded"]);
-    PlantLAIdead(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["PlantLAIdead"]);
-    PlantLAgrowth(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["PlantLAgrowth"]);
-    PlantSAgrowth(i,_) = Rcpp::as<Rcpp::NumericVector>(growDay["PlantSAgrowth"]);
-    PlantWaterBalance(i,_) = Rcpp::as<Rcpp::NumericVector>(Plants["WaterBalance"]); 
+    LeafMaintenanceRespiration(i,_) = Rcpp::as<Rcpp::NumericVector>(cb["LeafMaintenanceRespiration"]);
+    SapwoodMaintenanceRespiration(i,_) = Rcpp::as<Rcpp::NumericVector>(cb["SapwoodMaintenanceRespiration"]);
+    FineRootMaintenanceRespiration(i,_) = Rcpp::as<Rcpp::NumericVector>(cb["FineRootMaintenanceRespiration"]);
+    LeafGrowthRespiration(i,_) = Rcpp::as<Rcpp::NumericVector>(cb["LeafGrowthRespiration"]);
+    SapwoodGrowthRespiration(i,_) = Rcpp::as<Rcpp::NumericVector>(cb["SapwoodGrowthRespiration"]);
+    FineRootGrowthRespiration(i,_) = Rcpp::as<Rcpp::NumericVector>(cb["FineRootGrowthRespiration"]);
+    GrossPhotosynthesis(i,_) = Rcpp::as<Rcpp::NumericVector>(cb["GrossPhotosynthesis"]);
+    LabileMassLeaf(i,_) = Rcpp::as<Rcpp::NumericVector>(cb["LabileMassLeaf"]);
+    LabileMassSapwood(i,_) = Rcpp::as<Rcpp::NumericVector>(cb["LabileMassSapwood"]);
+    PlantSugarLeaf(i,_) = Rcpp::as<Rcpp::NumericVector>(cb["SugarLeaf"]);
+    PlantStarchLeaf(i,_) = Rcpp::as<Rcpp::NumericVector>(cb["StarchLeaf"]);
+    PlantSugarSapwood(i,_) = Rcpp::as<Rcpp::NumericVector>(cb["SugarSapwood"]);
+    PlantStarchSapwood(i,_) = Rcpp::as<Rcpp::NumericVector>(cb["StarchSapwood"]);
+    PlantSugarTransport(i,_) = Rcpp::as<Rcpp::NumericVector>(cb["SugarTransport"]);
     
-    NumericVector PlantLAgrowthDay = Rcpp::as<Rcpp::NumericVector>(growDay["PlantLAgrowth"]);
+    PlantSA(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["SA"]);
+    PlantLAIlive(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["LAIlive"]);
+    PlantLAIexpanded(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["LAIexpanded"]);
+    PlantLAIdead(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["LAIdead"]);
+    PlantLAgrowth(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["LAgrowth"]);
+    PlantSAgrowth(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["SAgrowth"]);
+    
     for(int j=0;j<numCohorts;j++){
       SAgrowthcum[j] += PlantSAgrowth(i,j); //Store cumulative SA growth (for structural variable update)
     }
@@ -1351,6 +1411,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
     Rcout<<"  Soil evaporation (mm) " << round(SoilEvaporationsum);
     Rcout<<" Transpiration (mm) "  <<round(Transpirationsum) <<"\n";
     if(transpirationMode =="Sperry") {
+      NumericMatrix PlantWaterBalance = Rcpp::as<Rcpp::NumericMatrix>(plantDWOL["PlantWaterBalance"]);
       Rcout<<"  Plant extraction from soil (mm) " << round(sum(PlantExtraction));
       Rcout<<"  Plant water balance (mm) " << round(sum(PlantWaterBalance));
       Rcout<<" Hydraulic redistribution (mm) " << round(sum(HydraulicRedistribution)) <<"\n";
@@ -1358,7 +1419,6 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   }
   
   //Add matrix dimnames
-  PlantTranspiration.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
   GrossPhotosynthesis.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
   LeafMaintenanceRespiration.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
   SapwoodMaintenanceRespiration.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names"));
@@ -1376,8 +1436,6 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   PlantSA.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   PlantLAgrowth.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   PlantSAgrowth.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
-  PlantPsi.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
-  PlantStress.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   PlantLAIdead.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   PlantLAIlive.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   
@@ -1430,7 +1488,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   
   
   // Assemble output
-  List carbonBalance = List::create(
+  List plantCarbonBalance = List::create(
     Named("GrossPhotosynthesis") = GrossPhotosynthesis,
     Named("LeafMaintenanceRespiration") = LeafMaintenanceRespiration,
     Named("SapwoodMaintenanceRespiration") = SapwoodMaintenanceRespiration,
@@ -1446,45 +1504,31 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
     Named("LabileMassLeaf") = LabileMassLeaf,
     Named("LabileMassSapwood") = LabileMassSapwood
   );
-  List plantGrowth = List::create(
-    Named("LA") = PlantLAgrowth,
-    Named("SA") = PlantSAgrowth
-  );
+
+  List plantGrowth = List::create(Named("SA")=PlantSA,
+                                  Named("LAIlive") = PlantLAIlive,
+                                  Named("LAIexpanded") = PlantLAIexpanded,
+                                  Named("LAIdead") = PlantLAIdead,
+                                  Named("LAgrowth") = PlantLAgrowth,
+                                  Named("SAgrowth") = PlantSAgrowth);
   
   List l;
   if(transpirationMode=="Granier") {
-    List plants = List::create(Named("Transpiration") = PlantTranspiration,
-                               Named("Growth") = plantGrowth,
-                               Named("SA")=PlantSA,
-                               Named("LAIlive") = PlantLAIlive,
-                               Named("LAIexpanded") = PlantLAIexpanded,
-                               Named("LAIdead") = PlantLAIdead,
-                               Named("PlantPsi") = PlantPsi, 
-                               Named("PlantStress") = PlantStress);
-    
     l = List::create(Named("latitude") = latitude,
                      Named("topography") = topo,
                      Named("spwbInput") = spwbInput,
                      Named("soilInput") = soilInput,
                      Named("WaterBalance")=DWB, 
-                     Named("CarbonBalance") = carbonBalance,
                      Named("Soil")=SWB,
                      Named("Stand")=Stand,
-                     Named("Plants") = plants,
+                     Named("Plants") = plantDWOL,
+                     Named("PlantCarbonBalance") = plantCarbonBalance,
+                     Named("PlantGrowth") = plantGrowth,
                      Named("StandStructures") = standStructures,
                      Named("StandSummary") = standSummary,
                      Named("subdaily") =  subdailyRes);
     
   } else {
-    List plants = List::create(Named("Transpiration") = PlantTranspiration,
-                               Named("Growth") = plantGrowth,
-                               Named("SA")=PlantSA,
-                               Named("LAIlive") = PlantLAIlive,
-                               Named("LAIexpanded") = PlantLAIexpanded,
-                               Named("LAIdead") = PlantLAIdead,
-                               Named("PlantPsi") = PlantPsi, 
-                               Named("PlantStress") = PlantStress);
-    
     DataFrame DEB = DataFrame::create(_["SWRcanin"] = SWRcanin, _["LWRcanin"] = LWRcanin, _["LWRcanout"] = LWRcanout,
                                       _["LEcan"] = LEcan_heat, _["Hcan"] = Hcan_heat, _["LWRsoilcan"] = LWRsoilcan, _["Ebalcan"] = Ebalcan, 
                                         _["Hcansoil"] = Hcansoil, _["SWRsoilin"] = SWRsoilin, _["LWRsoilin"] = LWRsoilin, _["LWRsoilout"] = LWRsoilout,
@@ -1502,10 +1546,11 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
                    Named("WaterBalance")=DWB, 
                    Named("EnergyBalance") = DEB,
                    Named("Temperature") = DT,
-                   Named("CarbonBalance") = carbonBalance,
                    Named("Soil")=SWB,
                    Named("Stand")=Stand,
-                   Named("Plants") = plants,
+                   Named("Plants") = plantDWOL,
+                   Named("PlantCarbonBalance") = plantCarbonBalance,
+                   Named("PlantGrowth") = plantGrowth,
                    Named("StandStructures") = standStructures,
                    Named("StandSummary") = standSummary,
                    Named("subdaily") =  subdailyRes);
