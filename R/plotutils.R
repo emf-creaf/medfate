@@ -41,6 +41,14 @@
             "PlantWaterBalance", "WaterBalancePerLeaf")
   return(TYPES)
 }
+.getDailyGROWTHPlotTypes<-function(transpirationMode = "Granier"){
+  TYPES = c("GrossPhotosynthesis","MaintenanceRespiration","GrowthRespiration",
+            "SugarTransport",
+            "SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport",
+            "SapwoodArea", "LeafArea","SAgrowth", "LAgrowth", "HuberValue",
+            .getDailySPWBPlotTypes(transpirationMode))
+  return(TYPES)
+}
 .getSubdailyGROWTHPlotTypes<-function(){
   TYPES = c("GrossPhotosynthesis",
             "MaintenanceRespiration",
@@ -49,6 +57,23 @@
             "SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport",
             .getSubdailySPWBPlotTypes())
   return(TYPES)
+}
+.getYLab<-function(type) {
+  ylab="Unknown"
+  if(type=="GrossPhotosynthesis") ylab=expression(paste("Gross photosynthesis  ", (gGluc%.%gdry^{-1})))
+  else if(type=="MaintenanceRespiration") ylab=expression(paste("Maintenance respiration  ", (gGluc%.%gdry^{-1})))
+  else if(type=="GrowthRespiration") ylab=expression(paste("Growth respiration  ", (gGluc%.%gdry^{-1})))
+  else if(type=="SugarLeaf") ylab=expression(paste("Leaf sugar concentration  ", (mol%.%L^{-1})))
+  else if(type=="StarchLeaf") ylab=expression(paste("Leaf starch concentration  ", (mol%.%L^{-1})))
+  else if(type=="SugarSapwood") ylab=expression(paste("Sapwood sugar concentration  ", (mol%.%L^{-1})))
+  else if(type=="StarchSapwood") ylab=expression(paste("Sapwood starch concentration  ", (mol%.%L^{-1})))
+  else if(type=="SugarTransport") ylab=expression(paste("Floem sugar transport rate ", (mmol%.%s^{-1})))
+  else if(type=="SapwoodArea")  ylab = expression(paste("Sapwood area  ",(cm^2)))
+  else if(type=="LeafArea")  ylab = expression(paste("Leaf area  ",(m^2)))
+  else if(type=="HuberValue")  ylab = expression(paste("Huber value  ",(cm^2 %.% m^{-2})))
+  else if(type=="SAgrowth") ylab = expression(paste("Sapwood area growth ",(cm^2)))
+  else if(type=="LAgrowth") ylab = expression(paste("Leaf area growth ",(m^2)))
+  return(ylab)
 }
 
 .multiple_x<-function(x, y, xlab = "", ylab=NULL, xlim = NULL, ylim = NULL, labels = NULL) {

@@ -458,9 +458,9 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   NumericVector LabileMassLeaf(numCohorts,0.0), LabileMassSapwood(numCohorts,0.0);
   NumericVector PlantSugarTransport(numCohorts,0.0), PlantSugarLeaf(numCohorts,0.0), PlantStarchLeaf(numCohorts,0.0);
   NumericVector PlantSugarSapwood(numCohorts,0.0), PlantStarchSapwood(numCohorts,0.0);
-  NumericVector PlantSA(numCohorts,0.0);
-  NumericVector PlantSAgrowth(numCohorts,0.0);
-  NumericVector PlantLAgrowth(numCohorts,0.0);
+  NumericVector SapwoodArea(numCohorts,0.0), LeafArea(numCohorts,0.0), HuberValue(numCohorts,0.0);
+  NumericVector SAgrowth(numCohorts,0.0);
+  NumericVector LAgrowth(numCohorts,0.0);
   NumericVector GrossPhotosynthesis(numCohorts,0.0);
   NumericVector PlantLAIdead(numCohorts,0.0), PlantLAIlive(numCohorts,0.0),PlantLAIexpanded(numCohorts,0.0);
   
@@ -639,14 +639,14 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
     //Leaf growth
     LAlive += deltaLAgrowth; //Update leaf area
     LAexpanded +=deltaLAgrowth;
-    PlantLAgrowth[j] += deltaLAgrowth;
+    LAgrowth[j] += deltaLAgrowth;
     
     //SA growth senescense
     double deltaSAturnover = (dailySAturnoverProportion/(1.0+15.0*exp(-0.01*H[j])))*SA[j];
     SA[j] = SA[j] - deltaSAturnover; //Update sapwood area
     //SA growth     
     SA[j] += deltaSAgrowth; //Update sapwood area
-    PlantSAgrowth[j] += deltaSAgrowth;
+    SAgrowth[j] += deltaSAgrowth;
          
     
     //Update LAI
@@ -681,7 +681,9 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
     PlantStarchLeaf[j] = starchLeaf[j];
     PlantSugarSapwood[j] = sugarSapwood[j];
     PlantStarchSapwood[j] = starchSapwood[j];
-    PlantSA[j] = SA[j];
+    SapwoodArea[j] = SA[j];
+    LeafArea[j] = LAexpanded;
+    HuberValue[j] = 10000.0/Al2As[j];
     PlantLAIlive[j] = LAI_live[j];
     PlantLAIexpanded[j] = LAI_expanded[j];
     PlantLAIdead[j] = LAI_dead[j];
@@ -728,12 +730,14 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   plantCarbonBalance.attr("row.names") = above.attr("row.names");
   
   DataFrame plantGrowth = List::create(
-    _["SA"] = PlantSA,
-    _["LAIlive"] = PlantLAIlive,
-    _["LAIexpanded"] = PlantLAIexpanded,
-    _["LAIdead"] = PlantLAIdead,
-    _["SAgrowth"] = PlantSAgrowth,
-    _["LAgrowth"] = PlantLAgrowth
+    _["SapwoodArea"] = SapwoodArea,
+    _["LeafArea"] = LeafArea,
+    _["HuberValue"] = HuberValue,
+    _["SAgrowth"] = SAgrowth,
+    _["LAgrowth"] = LAgrowth
+    // _["LAIlive"] = PlantLAIlive,
+    // _["LAIexpanded"] = PlantLAIexpanded,
+    // _["LAIdead"] = PlantLAIdead,
   );
   plantGrowth.attr("row.names") = above.attr("row.names");
   
@@ -1068,9 +1072,11 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   NumericMatrix PlantSugarSapwood(numDays, numCohorts);
   NumericMatrix PlantStarchSapwood(numDays, numCohorts);
   NumericMatrix PlantSugarTransport(numDays, numCohorts);
-  NumericMatrix PlantSA(numDays, numCohorts);
-  NumericMatrix PlantSAgrowth(numDays, numCohorts);
-  NumericMatrix PlantLAgrowth(numDays, numCohorts);
+  NumericMatrix SapwoodArea(numDays, numCohorts);
+  NumericMatrix LeafArea(numDays, numCohorts);
+  NumericMatrix SAgrowth(numDays, numCohorts);
+  NumericMatrix LAgrowth(numDays, numCohorts);
+  NumericMatrix HuberValue(numDays, numCohorts);
   NumericMatrix GrossPhotosynthesis(numDays, numCohorts);
   NumericMatrix PlantLAIexpanded(numDays, numCohorts), PlantLAIdead(numDays, numCohorts), PlantLAIlive(numDays, numCohorts);
   NumericVector SAgrowthcum(numCohorts, 0.0);
@@ -1231,15 +1237,19 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
     PlantStarchSapwood(i,_) = Rcpp::as<Rcpp::NumericVector>(cb["StarchSapwood"]);
     PlantSugarTransport(i,_) = Rcpp::as<Rcpp::NumericVector>(cb["SugarTransport"]);
     
-    PlantSA(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["SA"]);
-    PlantLAIlive(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["LAIlive"]);
-    PlantLAIexpanded(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["LAIexpanded"]);
-    PlantLAIdead(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["LAIdead"]);
-    PlantLAgrowth(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["LAgrowth"]);
-    PlantSAgrowth(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["SAgrowth"]);
+    SapwoodArea(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["SapwoodArea"]);
+    LeafArea(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["LeafArea"]);
+    HuberValue(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["HuberValue"]);
+    LAgrowth(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["LAgrowth"]);
+    SAgrowth(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["SAgrowth"]);
+    
+    // PlantLAIlive(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["LAIlive"]);
+    // PlantLAIexpanded(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["LAIexpanded"]);
+    // PlantLAIdead(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["LAIdead"]);
+    
     
     for(int j=0;j<numCohorts;j++){
-      SAgrowthcum[j] += PlantSAgrowth(i,j); //Store cumulative SA growth (for structural variable update)
+      SAgrowthcum[j] += SAgrowth(i,j); //Store cumulative SA growth (for structural variable update)
     }
     
     //4 Update structural variables
@@ -1318,11 +1328,14 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   PlantSugarSapwood.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   PlantStarchSapwood.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   PlantSugarTransport.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
-  PlantSA.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
-  PlantLAgrowth.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
-  PlantSAgrowth.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
-  PlantLAIdead.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
-  PlantLAIlive.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
+  SapwoodArea.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
+  LeafArea.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
+  HuberValue.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
+  LAgrowth.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
+  SAgrowth.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
+  // PlantLAIdead.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
+  // PlantLAIlive.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
+  // PlantLAIexpanded.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   
   subdailyRes.attr("names") = meteo.attr("row.names") ;
   
@@ -1349,12 +1362,11 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
     Named("LabileMassSapwood") = LabileMassSapwood
   );
 
-  List plantGrowth = List::create(Named("SA")=PlantSA,
-                                  Named("LAIlive") = PlantLAIlive,
-                                  Named("LAIexpanded") = PlantLAIexpanded,
-                                  Named("LAIdead") = PlantLAIdead,
-                                  Named("LAgrowth") = PlantLAgrowth,
-                                  Named("SAgrowth") = PlantSAgrowth);
+  List plantGrowth = List::create(Named("SapwoodArea")=SapwoodArea,
+                                  Named("LeafArea") = LeafArea,
+                                  Named("HuberValue") = HuberValue,
+                                  Named("LAgrowth") = LAgrowth,
+                                  Named("SAgrowth") = SAgrowth);
   
   List l;
   if(transpirationMode=="Granier") {
