@@ -30,6 +30,7 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams) {
   IntegerVector SP = above["SP"];
   int numCohorts = SP.size();
   NumericVector Sgdd = cohortNumericParameter(SP, SpParams, "Sgdd");
+  NumericVector leafDuration  = cohortNumericParameter(SP, SpParams, "LeafDuration");
   // NumericVector TbaseGdd = cohortNumericParameter(SP, SpParams, "TbaseGdd");
   // NumericVector Ssen = cohortNumericParameter(SP, SpParams, "Ssen");
   // NumericVector PstartSen = cohortNumericParameter(SP, SpParams, "PstartSen");
@@ -47,11 +48,16 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams) {
       Psen[j] = 12.5;
       Tbsen[j] = 28.5;
     } else {
-      phenoType[j] = "evergreen";
+      phenoType[j] = "oneflush-evergreen";
+      Tbgdd[j]= 5.0;
+      Ssen[j] = 8268.0;
+      Psen[j] = 12.5;
+      Tbsen[j] = 28.5;
     }
   }
   DataFrame paramsPhenologydf = DataFrame::create(
     _["type"] = phenoType,
+    _["LeafDuration"] = leafDuration,
     _["Sgdd"] = Sgdd, _["Tbgdd"] = Tbgdd, 
     _["Ssen"] = Ssen, _["Psen"] = Psen, _["Tbsen"] = Tbsen 
   );
@@ -381,7 +387,6 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams) {
   NumericVector WoodC = cohortNumericParameter(SP, SpParams, "WoodC");
   NumericVector RGRmax = cohortNumericParameter(SP, SpParams, "RGRmax");
   NumericVector Cstoragepmax = cohortNumericParameter(SP, SpParams, "Cstoragepmax");
-  NumericVector leafDuration  = cohortNumericParameter(SP, SpParams, "LeafDuration");
   
 
   for(int c=0;c<numCohorts;c++){
@@ -390,8 +395,7 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams) {
   
   DataFrame paramsGrowthdf = DataFrame::create(_["WoodC"] = WoodC, 
                                                _["Cstoragepmax"] = Cstoragepmax, 
-                                               _["RGRmax"] = RGRmax, 
-                                               _["leafDuration"] = leafDuration);
+                                               _["RGRmax"] = RGRmax);
   paramsGrowthdf.attr("row.names") = above.attr("row.names");
   return(paramsGrowthdf);
 }
@@ -431,37 +435,43 @@ DataFrame paramsAllometries(DataFrame above, DataFrame SpParams) {
 
 DataFrame internalPhenologyDataFrame(DataFrame above) {
   int numCohorts = above.nrow();
+  NumericVector phi(numCohorts,0.0);
   NumericVector gdd(numCohorts,0.0);
   NumericVector sen(numCohorts,0.0);
+  LogicalVector budFormation(numCohorts, false);
+  LogicalVector leafUnfolding(numCohorts, false);
+  LogicalVector leafSenescence(numCohorts, false);
+  LogicalVector leafDormancy(numCohorts, false);
+  
   DataFrame df = DataFrame::create(Named("gdd") = gdd,
-                                   Named("sen") = sen);
+                                   Named("sen") = sen,
+                                   Named("budFormation") = budFormation,
+                                   Named("leafUnfolding") = leafUnfolding,
+                                   Named("leafSenescence") = leafSenescence,
+                                   Named("leafDormancy") = leafDormancy,
+                                   Named("phi") = phi);
   df.attr("row.names") = above.attr("row.names");
   return(df);
 }
 DataFrame internalCarbonDataFrame(DataFrame above, 
                                   List below,
                                   DataFrame paramsAnatomydf,
-                                  DataFrame paramsTranspirationdf,
                                   DataFrame paramsWaterStoragedf,
                                   DataFrame paramsGrowthdf,
                                   List control) {
   int numCohorts = above.nrow();
 
   double nonSugarConc = control["nonSugarConc"];
-  String allocationStrategy = control["allocationStrategy"];
-  
+
   NumericVector WoodDensity = paramsAnatomydf["WoodDensity"];
   NumericVector LeafDensity = paramsAnatomydf["LeafDensity"];
   NumericVector SLA = paramsAnatomydf["SLA"];
-  NumericVector Al2As = paramsAnatomydf["Al2As"];
   NumericVector LeafPI0 = paramsWaterStoragedf["LeafPI0"];
   NumericVector StemPI0 = paramsWaterStoragedf["StemPI0"];
   
   NumericVector WoodC = paramsGrowthdf["WoodC"];
   NumericVector Cstoragepmax = paramsGrowthdf["Cstoragepmax"];
-  
-  NumericVector Plant_kmax = paramsTranspirationdf["Plant_kmax"];
-  
+
   NumericVector Z = below["Z"];
   IntegerVector SP = above["SP"];
   NumericVector LAI_live = above["LAI_live"];
@@ -478,14 +488,8 @@ DataFrame internalCarbonDataFrame(DataFrame above,
   NumericVector starchLeaf(numCohorts,0.0);
   NumericVector sugarSapwood(numCohorts,0.0);
   NumericVector starchSapwood(numCohorts,0.0);
-  NumericVector allocationTarget(numCohorts,0.0);
   // NumericVector longtermStorage(numCohorts,0.0);
   for(int c=0;c<numCohorts;c++){
-    if(allocationStrategy=="Plant_kmax") {
-      allocationTarget[c] = Plant_kmax[c];
-    } else if(allocationStrategy=="Al2As") {
-      allocationTarget[c] = Al2As[c];
-    }
     double lvol = leafStorageVolume(LAI_expanded[c],  N[c], SLA[c], LeafDensity[c]);
     double svol = sapwoodStorageVolume(SA[c], H[c],Z[c],WoodDensity[c], 0.5);
     
@@ -510,8 +514,35 @@ DataFrame internalCarbonDataFrame(DataFrame above,
   DataFrame df = DataFrame::create(Named("sugarLeaf") = sugarLeaf,
                                    Named("starchLeaf") = starchLeaf,
                                    Named("sugarSapwood") = sugarSapwood,
-                                   Named("starchSapwood") = starchSapwood,
-                                   Named("allocationTarget") = allocationTarget);
+                                   Named("starchSapwood") = starchSapwood);
+  df.attr("row.names") = above.attr("row.names");
+  return(df);
+}  
+
+
+DataFrame internalAllocationDataFrame(DataFrame above, 
+                                  DataFrame paramsAnatomydf,
+                                  DataFrame paramsTranspirationdf,
+                                  List control) {
+  int numCohorts = above.nrow();
+  
+  String allocationStrategy = control["allocationStrategy"];
+  
+  NumericVector Al2As = paramsAnatomydf["Al2As"];
+  NumericVector Plant_kmax = paramsTranspirationdf["Plant_kmax"];
+  
+  NumericVector allocationTarget(numCohorts,0.0);
+  NumericVector leafAreaTarget(numCohorts,0.0);
+  // NumericVector longtermStorage(numCohorts,0.0);
+  for(int c=0;c<numCohorts;c++){
+    if(allocationStrategy=="Plant_kmax") {
+      allocationTarget[c] = Plant_kmax[c];
+    } else if(allocationStrategy=="Al2As") {
+      allocationTarget[c] = Al2As[c];
+    }
+  }
+  DataFrame df = DataFrame::create(Named("allocationTarget") = allocationTarget,
+                                   Named("leafAreaTarget") = leafAreaTarget);
   df.attr("row.names") = above.attr("row.names");
   return(df);
 }  
@@ -764,9 +795,12 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                          _["internalPhenology"] = internalPhenologyDataFrame(above),
                          _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
                          _["internalCarbon"] = internalCarbonDataFrame(plantsdf, below, 
-                                                         paramsAnatomydf, paramsTranspirationdf,
+                                                         paramsAnatomydf, 
                                                          paramsWaterStoragedf,
-                                                         paramsGrowthdf, control));
+                                                         paramsGrowthdf, control),
+                        _["internalAllocation"] = internalAllocationDataFrame(plantsdf,
+                                                            paramsAnatomydf,
+                                                            paramsTranspirationdf, control));
   } else if(transpirationMode =="Sperry"){
     
     //Base params
@@ -808,9 +842,12 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                          _["internalPhenology"] = internalPhenologyDataFrame(above),
                          _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
                          _["internalCarbon"] = internalCarbonDataFrame(plantsdf, below,
-                                                         paramsAnatomydf, paramsTranspirationdf,
+                                                         paramsAnatomydf, 
                                                          paramsWaterStoragedf,
-                                                         paramsGrowthdf, control));
+                                                         paramsGrowthdf, control),
+                         _["internalAllocation"] = internalAllocationDataFrame(plantsdf,
+                                                         paramsAnatomydf,
+                                                         paramsTranspirationdf, control));
     
   } 
   

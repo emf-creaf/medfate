@@ -332,6 +332,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
                 double solarConstant, double delta, 
                 double prec, double pet, double er, double runon=0.0, bool verbose = false) {
   
+  //Soil-plant water balance
   List spwbOut = spwbDay2(x, soil, tmin, tmax, tminPrev, tmaxPrev, tminNext,
                           rhmin, rhmax, rad, wind, 
                           latitude, elevation, slope, aspect,
@@ -629,11 +630,6 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
       LAexpanded = LAexpanded*(1.0 - propExcess);
       LAlive = LAlive*(1.0 - propExcess);
       sugarLeaf[j] = 0.0;
-    } else { //Leaf senescence due to age (Ca+ accumulation) (should change with better phenology modelling)
-      double propAged = (1.0/(365.25*leafDuration[j]));
-      LAdead = LAdead + LAexpanded*propAged;
-      LAexpanded = LAexpanded*(1.0 - propAged); 
-      LAlive = LAlive*(1.0 - propAged); 
     }
     
     //Leaf growth
@@ -790,7 +786,10 @@ List growthDay(List x, List soil, CharacterVector date, double tmin, double tmax
   if(wind<0.1) wind = 0.1; //Minimum windspeed abovecanopy
   
   //Update phenology
-  if(leafPhenology && doy >180) updateLeaves(x, doy, photoperiod, tday, wind);
+  if(leafPhenology) {
+    updatePhenology(x, doy, photoperiod, tday);
+    updateLeaves(x, wind, true);
+  }
   
   double er = erFactor(doy, pet, prec);
   List s;
@@ -1161,8 +1160,11 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
     }
     
     //1. Phenology (only leaf fall)
-    if(leafPhenology && DOY[i]>180) updateLeaves(x, DOY[i], Photoperiod[i], MeanTemperature[i], wind);
-    
+    if(leafPhenology) {
+      updatePhenology(x, DOY[i], Photoperiod[i], MeanTemperature[i]);
+      updateLeaves(x, wind, true);
+    }
+
     //2. Water balance and photosynthesis
     if(transpirationMode=="Granier") {
       double er = erFactor(DOY[i], PET[i], Precipitation[i]);

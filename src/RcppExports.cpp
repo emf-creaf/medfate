@@ -2569,7 +2569,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // leafSenescenceStatus
-NumericVector leafSenescenceStatus(NumericVector Ssen, NumericVector sen);
+LogicalVector leafSenescenceStatus(NumericVector Ssen, NumericVector sen);
 RcppExport SEXP _medfate_leafSenescenceStatus(SEXP SsenSEXP, SEXP senSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -2580,17 +2580,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// updateLeaves
-void updateLeaves(List x, int doy, double photoperiod, double tmean, double wind);
-RcppExport SEXP _medfate_updateLeaves(SEXP xSEXP, SEXP doySEXP, SEXP photoperiodSEXP, SEXP tmeanSEXP, SEXP windSEXP) {
+// updatePhenology
+void updatePhenology(List x, int doy, double photoperiod, double tmean);
+RcppExport SEXP _medfate_updatePhenology(SEXP xSEXP, SEXP doySEXP, SEXP photoperiodSEXP, SEXP tmeanSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< int >::type doy(doySEXP);
     Rcpp::traits::input_parameter< double >::type photoperiod(photoperiodSEXP);
     Rcpp::traits::input_parameter< double >::type tmean(tmeanSEXP);
+    updatePhenology(x, doy, photoperiod, tmean);
+    return R_NilValue;
+END_RCPP
+}
+// updateLeaves
+void updateLeaves(List x, double wind, bool fromGrowthModel);
+RcppExport SEXP _medfate_updateLeaves(SEXP xSEXP, SEXP windSEXP, SEXP fromGrowthModelSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< double >::type wind(windSEXP);
-    updateLeaves(x, doy, photoperiod, tmean, wind);
+    Rcpp::traits::input_parameter< bool >::type fromGrowthModel(fromGrowthModelSEXP);
+    updateLeaves(x, wind, fromGrowthModel);
     return R_NilValue;
 END_RCPP
 }
@@ -4344,7 +4355,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_gdd", (DL_FUNC) &_medfate_gdd, 4},
     {"_medfate_leafDevelopmentStatus", (DL_FUNC) &_medfate_leafDevelopmentStatus, 3},
     {"_medfate_leafSenescenceStatus", (DL_FUNC) &_medfate_leafSenescenceStatus, 2},
-    {"_medfate_updateLeaves", (DL_FUNC) &_medfate_updateLeaves, 5},
+    {"_medfate_updatePhenology", (DL_FUNC) &_medfate_updatePhenology, 4},
+    {"_medfate_updateLeaves", (DL_FUNC) &_medfate_updateLeaves, 3},
     {"_medfate_gammaTemp", (DL_FUNC) &_medfate_gammaTemp, 1},
     {"_medfate_KmTemp", (DL_FUNC) &_medfate_KmTemp, 2},
     {"_medfate_VmaxTemp", (DL_FUNC) &_medfate_VmaxTemp, 2},

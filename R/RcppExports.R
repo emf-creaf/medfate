@@ -625,8 +625,12 @@ pheno_leafSenescenceStatus <- function(Ssen, sen) {
     .Call(`_medfate_leafSenescenceStatus`, Ssen, sen)
 }
 
-pheno_updateLeaves <- function(x, doy, photoperiod, tmean, wind) {
-    invisible(.Call(`_medfate_updateLeaves`, x, doy, photoperiod, tmean, wind))
+pheno_updatePhenology <- function(x, doy, photoperiod, tmean) {
+    invisible(.Call(`_medfate_updatePhenology`, x, doy, photoperiod, tmean))
+}
+
+pheno_updateLeaves <- function(x, wind, fromGrowthModel) {
+    invisible(.Call(`_medfate_updateLeaves`, x, wind, fromGrowthModel))
 }
 
 photo_GammaTemp <- function(leaf_temp) {

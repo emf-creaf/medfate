@@ -6,9 +6,9 @@ NumericVector gdd(IntegerVector DOY, NumericVector Temp, double Tbase = 5.0, dou
   int nDays = Temp.size();
   NumericVector GDD(nDays);
   for(int i=0;i<nDays;i++){
-    if((Temp[i]-Tbase < 0.0) & (DOY[i]>180)) {
+    if((Temp[i]-Tbase < 0.0) & (DOY[i]>200)) {
       cum = 0.0;
-    } else if (DOY[i]<180){ //Only increase in the first part of the year
+    } else if (DOY[i]<200){ //Only increase in the first part of the year
       if(Temp[i]-Tbase>0.0) cum = cum + (Temp[i]-Tbase);
     }
     GDD[i] = cum;
@@ -26,9 +26,9 @@ double leafDevelopmentStatus(double Sgdd, double gdd, double unfoldingDD = 300.0
   }
   return(ds);
 }
-double leafSenescenceStatus(double Ssen, double sen) {
-  if(sen>Ssen) return(0.0);
-  return 1.0;
+bool leafSenescenceStatus(double Ssen, double sen) {
+  if(sen>Ssen) return(false);
+  return true;
 }
 
 // [[Rcpp::export("pheno_leafDevelopmentStatus")]]
@@ -39,15 +39,14 @@ NumericVector leafDevelopmentStatus(NumericVector Sgdd, NumericVector gdd, doubl
 }
 
 // [[Rcpp::export("pheno_leafSenescenceStatus")]]
-NumericVector leafSenescenceStatus(NumericVector Ssen, NumericVector sen) {
-  NumericVector phe(Ssen.size());
+LogicalVector leafSenescenceStatus(NumericVector Ssen, NumericVector sen) {
+  LogicalVector phe(Ssen.size());
   for(int i=0;i<Ssen.size();i++) phe[i] = leafSenescenceStatus(Ssen[i], sen[i]);
   return(phe);
 }
 
-// [[Rcpp::export("pheno_updateLeaves")]]
-void updateLeaves(List x, int doy, double photoperiod, double tmean, double wind) {
-  
+// [[Rcpp::export("pheno_updatePhenology")]]
+void updatePhenology(List x, int doy, double photoperiod, double tmean) {
   List control = x["control"];
   double unfoldingDD = control["unfoldingDD"];
   
@@ -71,38 +70,131 @@ void updateLeaves(List x, int doy, double photoperiod, double tmean, double wind
   DataFrame internalPhenology =  Rcpp::as<Rcpp::DataFrame>(x["internalPhenology"]);
   NumericVector gdd = internalPhenology["gdd"];
   NumericVector sen = internalPhenology["sen"];
+  NumericVector phi = internalPhenology["phi"];
+  LogicalVector budFormation = internalPhenology["budFormation"];
+  LogicalVector leafUnfolding = internalPhenology["leafUnfolding"];
+  LogicalVector leafSenescence = internalPhenology["leafSenescence"];
+  LogicalVector leafDormancy = internalPhenology["leafDormancy"];
+  
   for(int j=0;j<numCohorts;j++) {
-    if(Sgdd[j]>0.0) {
-      if(doy>180) {
+    if(phenoType[j] == "winter-deciduous") {
+      if(doy>200) {
+        phi[j] = 0.0;
         gdd[j] = 0.0;
-      } else { //Only increase in the first part of the year
+        leafUnfolding[j] = false;
+        if(photoperiod>Psen[j]) {
+          sen[j] = 0.0;
+          leafSenescence[j] = false;
+          budFormation[j] = false;
+          leafDormancy[j] = false;
+        } else if(!leafDormancy[j]) {
+          double rsen = 0.0;
+          if(tmean-Tbsen[j]<0.0) {
+            rsen = pow(Tbsen[j]-tmean,2.0) * pow(photoperiod/Psen[j],2.0);
+          }
+          sen[j] = sen[j] + rsen;
+          leafSenescence[j] = leafSenescenceStatus(Ssen[j],sen[j]);
+          budFormation[j] = leafSenescence[j];
+          leafDormancy[j] = leafSenescence[j];
+        }
+      } else if (doy<=200) { //Only increase in the first part of the year
+        sen[j] = 0.0;
+        budFormation[j] = false;
+        leafSenescence[j] = false;
         if(tmean-Tbgdd[j]>0.0) gdd[j] = gdd[j] + (tmean - Tbgdd[j]);
+        phi[j] = leafDevelopmentStatus(Sgdd[j], gdd[j]);
+        leafUnfolding[j] = (phi[j]>0.0);
+        leafDormancy[j] = (phi[j]==0.0);
       }
     }
-    if(Ssen[j]>0.0) {
-      // Rcout<< doy <<" "<< photoperiod<< " "<<Psen[j]<<"\n";
-      if(photoperiod>Psen[j]) {
-        sen[j] = 0.0;
-      } else {
-        double rsen = 0.0;
-        if(tmean-Tbsen[j]<0.0) {
-          rsen = pow(Tbsen[j]-tmean,2.0) * pow(photoperiod/Psen[j],2.0);
+    else if(phenoType[j] == "oneflush-evergreen") {
+      if(doy>200) {
+        gdd[j] = 0.0;
+        leafUnfolding[j] = false;
+        leafSenescence[j] = false;
+        if(photoperiod>Psen[j]) {
+          sen[j] = 0.0;
+          budFormation[j] = false;
+          leafDormancy[j] = false;
+        } else if (!leafDormancy[j]){
+          double rsen = 0.0;
+          if(tmean-Tbsen[j]<0.0) {
+            rsen = pow(Tbsen[j]-tmean,2.0) * pow(photoperiod/Psen[j],2.0);
+          }
+          sen[j] = sen[j] + rsen;
+          budFormation[j] = leafSenescenceStatus(Ssen[j],sen[j]);
+          leafDormancy[j] = budFormation[j];
         }
-        sen[j] = sen[j] + rsen;
+      } else if (doy<=200) { //Only increase in the first part of the year
+        sen[j] = 0.0;
+        budFormation[j] = false;
+        if(tmean-Tbgdd[j]>0.0) gdd[j] = gdd[j] + (tmean - Tbgdd[j]);
+        double ph = leafDevelopmentStatus(Sgdd[j], gdd[j]);
+        leafSenescence[j] = (ph>0.0);
+        leafUnfolding[j] = (ph>0.0);
+        leafDormancy[j] = (ph==0.0);
       }
+    }
+    else if(phenoType[j] == "progressive-evergreen") {
+      leafSenescence[j] = true;
+      leafUnfolding[j] = true;
+      budFormation[j] = true;
+      leafDormancy[j] = false;
     }
   }
+}
 
-  //Update phenological status
-  NumericVector phe;
-  if(doy<180) phe = leafDevelopmentStatus(Sgdd, gdd, unfoldingDD);
-  else phe = leafSenescenceStatus(Ssen, sen);
+// [[Rcpp::export("pheno_updateLeaves")]]
+void updateLeaves(List x, double wind, bool fromGrowthModel) {
+  List control = x["control"];
+  DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
+  NumericVector LAI_live = above["LAI_live"];
+  NumericVector LAI_dead = above["LAI_dead"];
+  NumericVector LAI_expanded = above["LAI_expanded"];
+  int numCohorts = LAI_live.size();
+
+  DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
+  CharacterVector phenoType = paramsPhenology["type"];
+  NumericVector leafDuration = paramsPhenology["LeafDuration"];
+  
+  DataFrame internalPhenology =  Rcpp::as<Rcpp::DataFrame>(x["internalPhenology"]);
+  NumericVector phi = internalPhenology["phi"];
+  LogicalVector budFormation = internalPhenology["budFormation"];
+  LogicalVector leafUnfolding = internalPhenology["leafUnfolding"];
+  LogicalVector leafSenescence = internalPhenology["leafSenescence"];
+  LogicalVector leafDormancy = internalPhenology["leafDormancy"];
+  
   for(int j=0;j<numCohorts;j++) {
     LAI_dead[j] *= exp(-1.0*(wind/10.0)); //Decrease dead leaf area according to wind speed
     if(phenoType[j] == "winter-deciduous") {
-      double LAI_exp_prev= LAI_expanded[j]; //Store previous value
-      LAI_expanded[j] = LAI_live[j]*phe[j]; //Update expanded leaf area (will decrease if LAI_live decreases)
-      LAI_dead[j] += std::max(0.0, LAI_exp_prev-LAI_expanded[j]);//Check increase dead leaf area if expanded leaf area has decreased
+      if(leafSenescence[j]) {
+        double LAI_exp_prev= LAI_expanded[j]; //Store previous value
+        LAI_expanded[j] = 0.0; //Update expanded leaf area (will decrease if LAI_live decreases)
+        LAI_dead[j] += LAI_exp_prev;//Check increase dead leaf area if expanded leaf area has decreased
+        leafSenescence[j] = false;
+        budFormation[j] = false;
+        leafDormancy[j] = true;
+      } 
+      else if(leafDormancy[j]) {
+        LAI_expanded[j] = 0.0;
+      }
+      else if(!fromGrowthModel && leafUnfolding[j]) {
+        LAI_expanded[j] = LAI_live[j]*phi[j]; //Update expanded leaf area (will decrease if LAI_live decreases)
+      }
+    } 
+    else if(phenoType[j] == "oneflush-evergreen" || phenoType[j] == "progressive-evergreen") {
+      if(fromGrowthModel && leafSenescence[j]) {
+        double propAged = (1.0/(365.25*leafDuration[j]));
+        if(phenoType[j] == "oneflush-evergreen") {
+          propAged = (1.0/leafDuration[j]);
+          leafSenescence[j] = false;
+        }
+        //Leaf senescence due to age (Ca+ accumulation) (should change with better phenology modelling)
+        double LAI_exp_prev= LAI_expanded[j]; //Store previous value
+        LAI_dead[j] = LAI_expanded[j]*propAged;
+        LAI_expanded[j] = LAI_expanded[j]*(1.0 - propAged); //Update expanded leaf area (will decrease if LAI_live decreases)
+        LAI_live[j] = LAI_live[j]*(1.0 - propAged); //Update expanded leaf area (will decrease if LAI_live decreases)
+      }
     }
-  }
+  }    
 }

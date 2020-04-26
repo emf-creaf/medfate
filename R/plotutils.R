@@ -138,7 +138,7 @@
   if(!is.null(ylab)) g <- g+ylab(ylab)
   return(g)
 }
-.multiple_dynamics_subdaily_sunlit_shade<-function(x_sl, x_sh, xlab = "Time step", ylab=NULL, ylim = NULL, labels = NULL) {
+.multiple_dynamics_subdaily_sunlit_shade<-function(x_sl, x_sh, xlab = "", ylab=NULL, ylim = NULL, labels = NULL) {
   if(is.null(labels)) labels = colnames(x_sl)[-1]
   df_sl = data.frame("Y" = as.vector(as.matrix(x_sl[,-1])), 
                      "DateTime" = as.POSIXct(x_sl$datetime),

@@ -352,7 +352,11 @@ List spwbDay(List x, List soil, CharacterVector date, double tmin, double tmax, 
   if(wind<0.1) wind = 0.1; //Minimum windspeed abovecanopy
   
   //Update phenology
-  if(leafPhenology) updateLeaves(x, doy, photoperiod, tday, wind);
+  if(leafPhenology) {
+    updatePhenology(x, doy, photoperiod, tday);
+    updateLeaves(x, wind, false);
+  }
+  
   
   double er = erFactor(doy, pet, prec);
   List s;
@@ -1069,7 +1073,10 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
       }
       
       //1. Phenology and leaf fall
-      if(leafPhenology) updateLeaves(x, DOY[i], Photoperiod[i], MeanTemperature[i], wind);
+      if(leafPhenology) {
+        updatePhenology(x, DOY[i], Photoperiod[i], MeanTemperature[i]);
+        updateLeaves(x, wind, false);
+      }
       
       //2. Water balance and photosynthesis
       if(transpirationMode=="Granier") {
@@ -1318,7 +1325,10 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
       
       
       //1. Phenology and leaf fall
-      if(leafPhenology) updateLeaves(x, DOY[i], Photoperiod[i], MeanTemperature[i], wind);
+      if(leafPhenology) {
+        updatePhenology(x, DOY[i], Photoperiod[i], MeanTemperature[i]);
+        updateLeaves(x, wind, false);
+      }
       
     
     int ntimesteps = control["ndailysteps"];
