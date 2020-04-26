@@ -5,8 +5,12 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
   if(subdaily) return(.plotsubdaily(x,type, bySpecies, dates, 
                                     xlim, ylim, xlab, ylab))
   
-  # Get common elements
-  input = x$spwbInput
+  if(("spwb" %in% class(x)) || ("pwb" %in% class(x))) {
+    input = x$spwbInput
+  } else {
+    input = x$growthInput
+  }
+  
   soilInput = x$soilInput
   WaterBalance = x$WaterBalance
   Soil = x$Soil
@@ -140,7 +144,11 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
   if(subdaily) return(.plotsubdaily(x,type, bySpecies, dates, 
                                     xlim, ylim, xlab, ylab))
   
-  input = x$spwbInput
+  if(("spwb" %in% class(x)) || ("pwb" %in% class(x))) {
+    input = x$spwbInput
+  } else {
+    input = x$growthInput
+  }
   soilInput = x$soilInput
   
   WaterBalance = x$WaterBalance
@@ -648,28 +656,30 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
                                     xlim, ylim, xlab, ylab))
   
   # Get common elements
-  input = x$spwbInput
+  input = x$growthInput
   soilInput = x$soilInput
   WaterBalance = x$WaterBalance
   Soil = x$Soil
   Stand = x$Stand
   Plants = x$Plants
+  PlantGrowth = x$PlantGrowth
   
   nlayers = length(soilInput$W)
   
   transpMode = input$control$transpirationMode
   
+  TYPES_GROWTH = c("PlantRespiration", "PlantRespirationPerLeaf", "PlantRespirationPerIndividual",
+                   "PlantCBalance", "PlantCBalancePerLeaf","PlantCBalancePerIndividual",
+                   "PlantCstorageFast", "PlantCstorageSlow", 
+                   "PlantLAgrowth", "PlantSAgrowth", "PlantSA",
+                   "PlantLAIlive","PlantLAIdead","PlantLAIexpanded")
   TYPES_SWB = .getDailySPWBPlotTypes(transpMode)  
-  TYPES = c(TYPES_SWB, "PlantRespiration", "PlantRespirationPerLeaf", "PlantRespirationPerIndividual",
-            "PlantCBalance", "PlantCBalancePerLeaf","PlantCBalancePerIndividual",
-            "PlantCstorageFast", "PlantCstorageSlow", "PlantSAgrowth", "PlantRelativeSAgrowth", "PlantSA",
-            "PlantLAIlive","PlantLAIdead")
+  TYPES = c(TYPES_SWB, TYPES_GROWTH)
   
   type = match.arg(type,TYPES)  
   
   if(type %in% TYPES_SWB) {
-    x$PlantLAI = x$PlantLAIlive
-    plot.spwb(x,type, bySpecies, xlim, ylim, xlab, ylab, ...)
+    plot.spwb(x,type, bySpecies, dates, subdaily, xlim, ylim, xlab, ylab, ...)
   } else {
     if(is.null(xlab)) xlab = ""
     if(type=="PlantRespiration") {
@@ -769,7 +779,7 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
       return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
     } 
     else if(type=="PlantSAgrowth") {
-      OM = x$PlantSAgrowth
+      OM = PlantGrowth$SAgrowth
       if(bySpecies) {
         OM = t(apply(OM,1, tapply, x$cohorts$Name, mean, na.rm=T))
       } 
@@ -777,17 +787,8 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
       if(is.null(ylab)) ylab = expression(paste("Sapwood area growth ",(cm^2)))
       return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
     } 
-    else if(type=="PlantRelativeSAgrowth") {
-      OM = x$PlantSAgrowth/x$PlantSA
-      if(bySpecies) {
-        OM = t(apply(OM,1, tapply, x$cohorts$Name, mean, na.rm=T))
-      } 
-      if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
-      if(is.null(ylab)) ylab = expression(paste("Relative sapwood area growth ",(cm^2%.%cm^{-2})))
-      return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
-    } 
     else if(type=="PlantSA") {
-      OM = x$PlantSA
+      OM = PlantGrowth$SA
       if(bySpecies) {
         OM = t(apply(OM,1, tapply, x$cohorts$Name, mean, na.rm=T))
       } 
@@ -795,8 +796,17 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
       if(is.null(ylab)) ylab = expression(paste("Sapwood area  ",(cm^2)))
       return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
     }
+    else if(type=="PlantLAgrowth") {
+      OM = PlantGrowth$LAgrowth
+      if(bySpecies) {
+        OM = t(apply(OM,1, tapply, x$cohorts$Name, mean, na.rm=T))
+      } 
+      if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
+      if(is.null(ylab)) ylab = expression(paste("Leaf area growth ",(m^2)))
+      return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
+    } 
     else if(type=="PlantLAIlive") {
-      OM = x$PlantLAIlive
+      OM = PlantGrowth$LAIlive
       if(bySpecies) {
         OM = t(apply(OM,1, tapply, x$cohorts$Name, sum, na.rm=T))
       } 
@@ -804,8 +814,17 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
       if(is.null(ylab)) ylab = expression(paste("Live Leaf Area Index   ",(m^{2}%.%m^{-2})))
       return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
     } 
+    else if(type=="PlantLAIexpanded") {
+      OM = PlantGrowth$LAIexpanded
+      if(bySpecies) {
+        OM = t(apply(OM,1, tapply, x$cohorts$Name, sum, na.rm=T))
+      } 
+      if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
+      if(is.null(ylab)) ylab = expression(paste("Expanded Leaf Area Index   ",(m^{2}%.%m^{-2})))
+      return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
+    } 
     else if(type=="PlantLAIdead") {
-      OM = x$PlantLAIdead
+      OM = PlantGrowth$LAIdead
       if(bySpecies) {
         OM = t(apply(OM,1, tapply, x$cohorts$Name, sum, na.rm=T))
       } 
@@ -931,13 +950,19 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     mSh = extractSubdaily(x, "ShadeLeaves$iWUE", dates)
     if(is.null(ylab)) ylab=expression(paste("iWUE  ", (mu%.%mol%.%mol^{-1})))
     return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
-  } else if(type=="GrossPhotosynthesis") {
-    m = extractSubdaily(x, "GrossPhotosynthesis", dates)
-    if(is.null(ylab)) ylab=expression(paste("Gross photosynthesis  ", (gGluc%.%ind^{-1})))
-    return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
-  } else if(type=="MaintenanceRespiration") {
-    m = extractSubdaily(x, "MaintenanceRespiration", dates)
-    if(is.null(ylab)) ylab=expression(paste("Maintenance respiration  ", (gGluc%.%ind^{-1})))
+  } else if(type %in% c("GrossPhotosynthesis", "MaintenanceRespiration", 
+                        "GrowthRespiration", "SugarLeaf","StarchLeaf","SugarSapwood","StarchSapwood", "SugarTransport")) {
+    m = extractSubdaily(x, type, dates)
+    if(is.null(ylab)) {
+      if(type=="GrossPhotosynthesis") ylab=expression(paste("Gross photosynthesis  ", (gGluc%.%gdry^{-1})))
+      else if(type=="MaintenanceRespiration") ylab=expression(paste("Maintenance respiration  ", (gGluc%.%gdry^{-1})))
+      else if(type=="GrowthRespiration") ylab=expression(paste("Growth respiration  ", (gGluc%.%gdry^{-1})))
+      else if(type=="SugarLeaf") ylab=expression(paste("Leaf sugar concentration  ", (mol%.%L^{-1})))
+      else if(type=="StarchLeaf") ylab=expression(paste("Leaf starch concentration  ", (mol%.%L^{-1})))
+      else if(type=="SugarSapwood") ylab=expression(paste("Sapwood sugar concentration  ", (mol%.%L^{-1})))
+      else if(type=="StarchSapwood") ylab=expression(paste("Sapwood starch concentration  ", (mol%.%L^{-1})))
+      else if(type=="SugarTransport") ylab=expression(paste("Floem sugar transport rate ", (mmol%.%s^{-1})))
+    }
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
 }

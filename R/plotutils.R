@@ -44,6 +44,9 @@
 .getSubdailyGROWTHPlotTypes<-function(){
   TYPES = c("GrossPhotosynthesis",
             "MaintenanceRespiration",
+            "GrowthRespiration",
+            "SugarTransport",
+            "SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport",
             .getSubdailySPWBPlotTypes())
   return(TYPES)
 }

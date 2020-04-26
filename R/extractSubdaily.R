@@ -5,7 +5,9 @@ extractSubdaily<-function(x, output = "E", dates = NULL)  {
   plantTypes = c("E","Ag","An","dEdPinst","PsiRoot",
                 "PsiStem","PsiLeaf","PLCstem","RWCstem","RWCleaf","PWB")
   PWBTYPES = c("Temperature", "ExtractionInst", plantTypes, sunlitTypes, shadeTypes)
-  GROWTHTYPES = c("GrossPhotosynthesis", "MaintenanceRespiration", PWBTYPES)
+  CBTYPES = c("GrossPhotosynthesis", "MaintenanceRespiration", "GrowthRespiration", 
+              "SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport")
+  GROWTHTYPES = c(CBTYPES, PWBTYPES)
   if(is.null(dates)) dates = as.Date(names(x$subdaily))
   
   if(("spwb" %in% class(x)) || ("pwb" %in% class(x))) {
@@ -89,24 +91,15 @@ extractSubdaily<-function(x, output = "E", dates = NULL)  {
       }
     }
     colnames(m) = c("datetime", row.names(input$above))
-  } else if(output=="GrossPhotosynthesis") {
-    ori1 = x$subdaily[[as.character(dates[1])]]$PlantCBInst$GrossPhotosynthesis
+  } else if(output %in% CBTYPES) {
+    ori1 = x$subdaily[[as.character(dates[1])]]$PlantCBInst[[output]]
     ncols = nrow(ori1)
     m<-data.frame(matrix(nrow = numDates*numSteps, ncol = ncols+1))
     for(i in 1:numDates) {
-      ori = x$subdaily[[as.character(dates[i])]]$PlantCBInst$GrossPhotosynthesis
+      ori = x$subdaily[[as.character(dates[i])]]$PlantCBInst[[output]]
       m[((i-1)*numSteps+1):(i*numSteps), 2:(ncols+1)] = t(ori) 
     }
-    colnames(m) = c("datetime", rownames(ori1))
-  } else if(output=="MaintenanceRespiration") {
-    ori1 = x$subdaily[[as.character(dates[1])]]$PlantCBInst$MaintenanceRespiration
-    ncols = nrow(ori1)
-    m<-data.frame(matrix(nrow = numDates*numSteps, ncol = ncols+1))
-    for(i in 1:numDates) {
-      ori = x$subdaily[[as.character(dates[i])]]$PlantCBInst$MaintenanceRespiration
-      m[((i-1)*numSteps+1):(i*numSteps), 2:(ncols+1)] = t(ori) 
-    }
-    colnames(m) = c("datetime", rownames(ori1))
+    colnames(m) = c("datetime", row.names(ori1))
   }
   m$datetime = as.character(as.POSIXct(paste(dates[gl(n=numDates, k=numSteps)], times)))
   return(m)
