@@ -273,6 +273,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   double LAIcell = 0.0, LAIcelldead = 0.0, LAIcelllive = 0.0, LAIcellexpanded = 0.0, canopyHeight = 0.0;
   for(int c=0;c<numCohorts;c++) {
     Phe[c]=LAIphe[c]/LAIlive[c]; //Phenological status
+    if(LAIlive[c]==0.0) Phe[c] = 0.0;
     LAIcell += (LAIphe[c]+LAIdead[c]);
     LAIcelldead += LAIdead[c];
     LAIcelllive += LAIlive[c];
