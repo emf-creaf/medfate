@@ -97,6 +97,7 @@ void updatePhenology(List x, int doy, double photoperiod, double tmean) {
           budFormation[j] = leafSenescence[j];
           leafDormancy[j] = leafSenescence[j];
         }
+        // Rcout << doy<< " "<< photoperiod<<" "<< sen[j]<<" "<<  leafSenescence[j] << "\n";
       } else if (doy<=200) { //Only increase in the first part of the year
         sen[j] = 0.0;
         budFormation[j] = false;

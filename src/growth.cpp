@@ -988,6 +988,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   checkgrowthInput(x, soil, transpirationMode, soilFunctions);
   
   if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
+  double latrad = latitude * (PI/180.0);
   
   //Meteorological input    
   NumericVector MinTemperature, MaxTemperature;
@@ -1024,7 +1025,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   CharacterVector dateStrings = meteo.attr("row.names");
   
   IntegerVector DOY = date2doy(dateStrings);
-  IntegerVector Photoperiod = date2photoperiod(dateStrings, latitude);
+  IntegerVector Photoperiod = date2photoperiod(dateStrings, latrad);
   
   //Canpopy parameters
   List canopyParams = x["canopy"];
