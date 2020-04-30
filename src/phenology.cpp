@@ -114,7 +114,7 @@ void updatePhenology(List x, int doy, double photoperiod, double tmean) {
         leafSenescence[j] = false;
         if(photoperiod>Psen[j]) {
           sen[j] = 0.0;
-          budFormation[j] = false;
+          budFormation[j] = true;
           leafDormancy[j] = false;
         } else if (!leafDormancy[j]){
           double rsen = 0.0;
@@ -122,17 +122,20 @@ void updatePhenology(List x, int doy, double photoperiod, double tmean) {
             rsen = pow(Tbsen[j]-tmean,2.0) * pow(photoperiod/Psen[j],2.0);
           }
           sen[j] = sen[j] + rsen;
-          budFormation[j] = leafSenescenceStatus(Ssen[j],sen[j]);
-          leafDormancy[j] = budFormation[j];
+          leafDormancy[j] = leafSenescenceStatus(Ssen[j],sen[j]);
+          budFormation[j] = !leafDormancy[j];
         }
       } else if (doy<=200) { //Only increase in the first part of the year
         sen[j] = 0.0;
         budFormation[j] = false;
-        if(tmean-Tbgdd[j]>0.0) gdd[j] = gdd[j] + (tmean - Tbgdd[j]);
-        double ph = leafDevelopmentStatus(Sgdd[j], gdd[j]);
-        leafSenescence[j] = (ph>0.0);
-        leafUnfolding[j] = (ph>0.0);
-        leafDormancy[j] = (ph==0.0);
+        if(!leafUnfolding[j]) {
+          if(tmean-Tbgdd[j]>0.0) gdd[j] = gdd[j] + (tmean - Tbgdd[j]);
+          double ph = leafDevelopmentStatus(Sgdd[j], gdd[j]);
+          leafSenescence[j] = (ph>0.0);
+          leafUnfolding[j] = (ph>0.0);
+          leafDormancy[j] = (ph==0.0);
+        }
+        // Rcout<<j<< " phi: "<< ph<<"\n";
       }
     }
     else if(phenoType[j] == "progressive-evergreen") {
@@ -188,6 +191,7 @@ void updateLeaves(List x, double wind, bool fromGrowthModel) {
         if(phenoType[j] == "oneflush-evergreen") {
           propAged = (1.0/leafDuration[j]);
           leafSenescence[j] = false;
+          // Rcout<<j<< " "<<propAged<<"\n";
         }
         //Leaf senescence due to age (Ca+ accumulation) (should change with better phenology modelling)
         double LAI_exp_prev= LAI_expanded[j]; //Store previous value

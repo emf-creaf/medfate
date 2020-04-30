@@ -6,7 +6,7 @@
 Function \code{growth} is a forest growth model that calculates changes in leaf area, sapwood area and structural variables for all plant cohorts in a given forest stand during a period specified in the input climatic data. 
 }
 \usage{
-growth(x, soil, meteo,  latitude = NA, elevation = NA, slope = NA, aspect = NA) 
+growth(x, soil, meteo,  latitude, elevation = NA, slope = NA, aspect = NA) 
 }
 \arguments{
   \item{x}{An object of class \code{\link{growthInput}}.}
@@ -95,7 +95,7 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 Objects \code{x} and \code{soil} are modified during the simulation.   
 }
 \seealso{
-\code{\link{growthInput}}, \code{\link{forest}}
+\code{\link{growthInput}}, \code{\link{growth_day}}, \code{\link{plot.growth}}
 }
 \examples{
 #Load example daily meteorological data
@@ -112,11 +112,12 @@ examplesoil = soil(defaultSoilParams(2))
 
 #Initialize control parameters
 control = defaultControl()
+control$transpirationMode = "Sperry"
 
 #Initialize input
 x = forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
 #Call simulation function
-G1<-growth(x, examplesoil, examplemeteo, elevation = 100)
+G1<-growth(x, examplesoil, examplemeteo[1:10,], latitude = 41.82592, elevation = 100)
  
 }

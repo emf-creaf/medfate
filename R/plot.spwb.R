@@ -673,8 +673,8 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
   if(type %in% TYPES_SWB) {
     plot.spwb(x,type, bySpecies, dates, subdaily, xlim, ylim, xlab, ylab, ...)
   } 
-  else if(type %in% c("GrossPhotosynthesis", "MaintenanceRespiration", 
-                        "GrowthRespiration", "SugarLeaf","StarchLeaf","SugarSapwood","StarchSapwood", "SugarTransport")) {
+  else if(type %in% c("GrossPhotosynthesis", "MaintenanceRespiration",  "GrowthRespiration", "CarbonBalance", 
+                      "SugarLeaf","StarchLeaf","SugarSapwood","StarchSapwood", "SugarTransport")) {
       OM = PCB[[type]]
       if(bySpecies) {
         OM = t(apply(OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
@@ -832,8 +832,8 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     if(is.null(ylab)) ylab=expression(paste("iWUE  ", (mu%.%mol%.%mol^{-1})))
     return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
   } 
-  else if(type %in% c("GrossPhotosynthesis", "MaintenanceRespiration", 
-                        "GrowthRespiration", "SugarLeaf","StarchLeaf","SugarSapwood","StarchSapwood", "SugarTransport")) {
+  else if(type %in% c("GrossPhotosynthesis", "MaintenanceRespiration", "GrowthRespiration", "CarbonBalance",
+                      "SugarLeaf","StarchLeaf","SugarSapwood","StarchSapwood", "SugarTransport")) {
     m = extractSubdaily(x, type, dates)
     if(is.null(ylab)) ylab=.getYLab(type)
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))

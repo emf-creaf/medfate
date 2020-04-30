@@ -5,7 +5,7 @@ extractSubdaily<-function(x, output = "E", dates = NULL)  {
   plantTypes = c("E","Ag","An","dEdPinst","PsiRoot",
                 "PsiStem","PsiLeaf","PLCstem","RWCstem","RWCleaf","PWB")
   PWBTYPES = c("Temperature", "ExtractionInst", plantTypes, sunlitTypes, shadeTypes)
-  CBTYPES = c("GrossPhotosynthesis", "MaintenanceRespiration", "GrowthRespiration", 
+  CBTYPES = c("GrossPhotosynthesis", "MaintenanceRespiration", "GrowthRespiration", "CarbonBalance",
               "SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport")
   GROWTHTYPES = c(CBTYPES, PWBTYPES)
   if(is.null(dates)) dates = as.Date(names(x$subdaily))

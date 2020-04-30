@@ -49,6 +49,7 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams) {
       Tbsen[j] = 28.5;
     } else {
       phenoType[j] = "oneflush-evergreen";
+      Sgdd[j] = 200.0;
       Tbgdd[j]= 5.0;
       Ssen[j] = 8268.0;
       Psen[j] = 12.5;
@@ -528,6 +529,7 @@ DataFrame internalAllocationDataFrame(DataFrame above,
   
   String allocationStrategy = control["allocationStrategy"];
   
+  NumericVector SA = above["SA"];
   NumericVector Al2As = paramsAnatomydf["Al2As"];
   NumericVector Plant_kmax = paramsTranspirationdf["Plant_kmax"];
   
@@ -535,6 +537,7 @@ DataFrame internalAllocationDataFrame(DataFrame above,
   NumericVector leafAreaTarget(numCohorts,0.0);
   // NumericVector longtermStorage(numCohorts,0.0);
   for(int c=0;c<numCohorts;c++){
+    leafAreaTarget[c] = Al2As[c]*(SA[c]/10000.0);
     if(allocationStrategy=="Plant_kmax") {
       allocationTarget[c] = Plant_kmax[c];
     } else if(allocationStrategy=="Al2As") {
