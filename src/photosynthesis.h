@@ -5,10 +5,10 @@
 #endif
 using namespace Rcpp;
 
-NumericVector leafphotosynthesis(double Q, double Catm, double Gc, double leaf_temp, double Vmax298, double Jmax298, bool verbose=false);
+NumericVector leafphotosynthesis(double Q, double Catm, double Gc, double Tleaf, double Vmax298, double Jmax298, bool verbose=false);
 
-double VmaxTemp(double Vmax298, double leaf_temp);
-double JmaxTemp(double Jmax298, double leaf_temp);
+double VmaxTemp(double Vmax298, double Tleaf);
+double JmaxTemp(double Jmax298, double Tleaf);
 
 DataFrame leafPhotosynthesisFunction(NumericVector E, double Catm, double Patm, double Tair, double vpa, double u, 
                             double absRad, double Q, double Vmax298, double Jmax298, 

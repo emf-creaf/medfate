@@ -633,20 +633,20 @@ pheno_updateLeaves <- function(x, wind, fromGrowthModel) {
     invisible(.Call(`_medfate_updateLeaves`, x, wind, fromGrowthModel))
 }
 
-photo_GammaTemp <- function(leaf_temp) {
-    .Call(`_medfate_gammaTemp`, leaf_temp)
+photo_GammaTemp <- function(Tleaf) {
+    .Call(`_medfate_gammaTemp`, Tleaf)
 }
 
-photo_KmTemp <- function(leaf_temp, Oi = 209.0) {
-    .Call(`_medfate_KmTemp`, leaf_temp, Oi)
+photo_KmTemp <- function(Tleaf, Oi = 209.0) {
+    .Call(`_medfate_KmTemp`, Tleaf, Oi)
 }
 
-photo_VmaxTemp <- function(Vmax298, leaf_temp) {
-    .Call(`_medfate_VmaxTemp`, Vmax298, leaf_temp)
+photo_VmaxTemp <- function(Vmax298, Tleaf) {
+    .Call(`_medfate_VmaxTemp`, Vmax298, Tleaf)
 }
 
-photo_JmaxTemp <- function(Jmax298, leaf_temp) {
-    .Call(`_medfate_JmaxTemp`, Jmax298, leaf_temp)
+photo_JmaxTemp <- function(Jmax298, Tleaf) {
+    .Call(`_medfate_JmaxTemp`, Jmax298, Tleaf)
 }
 
 photo_electronLimitedPhotosynthesis <- function(Q, Ci, GT, Jmax) {
@@ -657,8 +657,8 @@ photo_rubiscoLimitedPhotosynthesis <- function(Ci, GT, Km, Vmax) {
     .Call(`_medfate_rubiscoLimitedPhotosynthesis`, Ci, GT, Km, Vmax)
 }
 
-photo_photosynthesis <- function(Q, Catm, Gc, leaf_temp, Vmax298, Jmax298, verbose = FALSE) {
-    .Call(`_medfate_leafphotosynthesis`, Q, Catm, Gc, leaf_temp, Vmax298, Jmax298, verbose)
+photo_photosynthesis <- function(Q, Catm, Gc, Tleaf, Vmax298, Jmax298, verbose = FALSE) {
+    .Call(`_medfate_leafphotosynthesis`, Q, Catm, Gc, Tleaf, Vmax298, Jmax298, verbose)
 }
 
 photo_leafPhotosynthesisFunction <- function(E, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, leafWidth = 1.0, refLeafArea = 1.0, verbose = FALSE) {

@@ -2606,49 +2606,49 @@ BEGIN_RCPP
 END_RCPP
 }
 // gammaTemp
-double gammaTemp(double leaf_temp);
-RcppExport SEXP _medfate_gammaTemp(SEXP leaf_tempSEXP) {
+double gammaTemp(double Tleaf);
+RcppExport SEXP _medfate_gammaTemp(SEXP TleafSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type leaf_temp(leaf_tempSEXP);
-    rcpp_result_gen = Rcpp::wrap(gammaTemp(leaf_temp));
+    Rcpp::traits::input_parameter< double >::type Tleaf(TleafSEXP);
+    rcpp_result_gen = Rcpp::wrap(gammaTemp(Tleaf));
     return rcpp_result_gen;
 END_RCPP
 }
 // KmTemp
-double KmTemp(double leaf_temp, double Oi);
-RcppExport SEXP _medfate_KmTemp(SEXP leaf_tempSEXP, SEXP OiSEXP) {
+double KmTemp(double Tleaf, double Oi);
+RcppExport SEXP _medfate_KmTemp(SEXP TleafSEXP, SEXP OiSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type leaf_temp(leaf_tempSEXP);
+    Rcpp::traits::input_parameter< double >::type Tleaf(TleafSEXP);
     Rcpp::traits::input_parameter< double >::type Oi(OiSEXP);
-    rcpp_result_gen = Rcpp::wrap(KmTemp(leaf_temp, Oi));
+    rcpp_result_gen = Rcpp::wrap(KmTemp(Tleaf, Oi));
     return rcpp_result_gen;
 END_RCPP
 }
 // VmaxTemp
-double VmaxTemp(double Vmax298, double leaf_temp);
-RcppExport SEXP _medfate_VmaxTemp(SEXP Vmax298SEXP, SEXP leaf_tempSEXP) {
+double VmaxTemp(double Vmax298, double Tleaf);
+RcppExport SEXP _medfate_VmaxTemp(SEXP Vmax298SEXP, SEXP TleafSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type Vmax298(Vmax298SEXP);
-    Rcpp::traits::input_parameter< double >::type leaf_temp(leaf_tempSEXP);
-    rcpp_result_gen = Rcpp::wrap(VmaxTemp(Vmax298, leaf_temp));
+    Rcpp::traits::input_parameter< double >::type Tleaf(TleafSEXP);
+    rcpp_result_gen = Rcpp::wrap(VmaxTemp(Vmax298, Tleaf));
     return rcpp_result_gen;
 END_RCPP
 }
 // JmaxTemp
-double JmaxTemp(double Jmax298, double leaf_temp);
-RcppExport SEXP _medfate_JmaxTemp(SEXP Jmax298SEXP, SEXP leaf_tempSEXP) {
+double JmaxTemp(double Jmax298, double Tleaf);
+RcppExport SEXP _medfate_JmaxTemp(SEXP Jmax298SEXP, SEXP TleafSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type Jmax298(Jmax298SEXP);
-    Rcpp::traits::input_parameter< double >::type leaf_temp(leaf_tempSEXP);
-    rcpp_result_gen = Rcpp::wrap(JmaxTemp(Jmax298, leaf_temp));
+    Rcpp::traits::input_parameter< double >::type Tleaf(TleafSEXP);
+    rcpp_result_gen = Rcpp::wrap(JmaxTemp(Jmax298, Tleaf));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2681,19 +2681,19 @@ BEGIN_RCPP
 END_RCPP
 }
 // leafphotosynthesis
-NumericVector leafphotosynthesis(double Q, double Catm, double Gc, double leaf_temp, double Vmax298, double Jmax298, bool verbose);
-RcppExport SEXP _medfate_leafphotosynthesis(SEXP QSEXP, SEXP CatmSEXP, SEXP GcSEXP, SEXP leaf_tempSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP verboseSEXP) {
+NumericVector leafphotosynthesis(double Q, double Catm, double Gc, double Tleaf, double Vmax298, double Jmax298, bool verbose);
+RcppExport SEXP _medfate_leafphotosynthesis(SEXP QSEXP, SEXP CatmSEXP, SEXP GcSEXP, SEXP TleafSEXP, SEXP Vmax298SEXP, SEXP Jmax298SEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type Q(QSEXP);
     Rcpp::traits::input_parameter< double >::type Catm(CatmSEXP);
     Rcpp::traits::input_parameter< double >::type Gc(GcSEXP);
-    Rcpp::traits::input_parameter< double >::type leaf_temp(leaf_tempSEXP);
+    Rcpp::traits::input_parameter< double >::type Tleaf(TleafSEXP);
     Rcpp::traits::input_parameter< double >::type Vmax298(Vmax298SEXP);
     Rcpp::traits::input_parameter< double >::type Jmax298(Jmax298SEXP);
     Rcpp::traits::input_parameter< bool >::type verbose(verboseSEXP);
-    rcpp_result_gen = Rcpp::wrap(leafphotosynthesis(Q, Catm, Gc, leaf_temp, Vmax298, Jmax298, verbose));
+    rcpp_result_gen = Rcpp::wrap(leafphotosynthesis(Q, Catm, Gc, Tleaf, Vmax298, Jmax298, verbose));
     return rcpp_result_gen;
 END_RCPP
 }

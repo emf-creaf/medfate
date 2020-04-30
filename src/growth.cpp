@@ -388,7 +388,10 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   NumericVector starchLeaf = internalCarbon["starchLeaf"];
   NumericVector sugarSapwood = internalCarbon["sugarSapwood"];
   NumericVector starchSapwood = internalCarbon["starchSapwood"];
-  NumericVector allocationTarget = internalCarbon["allocationTarget"];
+  
+  List internalAllocation = Rcpp::as<Rcpp::List>(x["internalAllocation"]);
+  NumericVector allocationTarget = internalAllocation["allocationTarget"];
+  NumericVector leafAreaTarget = internalAllocation["leafAreaTarget"];
   
   
   List stand = spwbOut["Stand"];
@@ -417,7 +420,9 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   DataFrame paramsGrowth = Rcpp::as<Rcpp::DataFrame>(x["paramsGrowth"]);
   NumericVector WoodC = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["WoodC"]);
   NumericVector RGRmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRmax"]);
-  NumericVector leafDuration = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["leafDuration"]);
+  //Phenology parameters
+  DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
+  NumericVector leafDuration = Rcpp::as<Rcpp::NumericVector>(paramsPhenology["LeafDuration"]);
 
   // NumericVector Cstoragepmax= Rcpp::as<Rcpp::NumericVector>(paramsGrowth["Cstoragepmax"]);
   // NumericVector slowCstorage_max(numCohorts), fastCstorage_max(numCohorts);

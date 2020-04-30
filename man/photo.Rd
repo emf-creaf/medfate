@@ -10,7 +10,6 @@
 \alias{photo_leafPhotosynthesisFunction}
 \alias{photo_sunshadePhotosynthesisFunction}
 \alias{photo_multilayerPhotosynthesisFunction}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Photosynthesis submodel functions
 }
@@ -18,13 +17,13 @@ Photosynthesis submodel functions
 Set of functions used in the calculation of photosynthesis.
 }
 \usage{
-photo_GammaTemp(leaf_temp)
-photo_KmTemp(leaf_temp, Oi = 209)
-photo_VmaxTemp(Vmax298, leaf_temp)
-photo_JmaxTemp(Jmax298, leaf_temp)
+photo_GammaTemp(Tleaf)
+photo_KmTemp(Tleaf, Oi = 209)
+photo_VmaxTemp(Vmax298, Tleaf)
+photo_JmaxTemp(Jmax298, Tleaf)
 photo_electronLimitedPhotosynthesis(Q, Ci, GT, Jmax)
 photo_rubiscoLimitedPhotosynthesis(Ci, GT, Km, Vmax)
-photo_photosynthesis(Q, Catm, Gc, leaf_temp, Vmax298, Jmax298, verbose = FALSE)
+photo_photosynthesis(Q, Catm, Gc, Tleaf, Vmax298, Jmax298, verbose = FALSE)
 photo_leafPhotosynthesisFunction(E, Catm, Patm, Tair, vpa, u, 
                              absRad, Q, Vmax298, Jmax298,
                              leafWidth = 1.0, refLeafArea = 1, verbose = FALSE)
@@ -39,10 +38,8 @@ photo_multilayerPhotosynthesisFunction(E, Catm, Patm, Tair, vpa,
                                       Vmax298, Jmax298, leafWidth = 1.0, 
                                       verbose = FALSE)
 }
-
-%- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{leaf_temp}{Leaf temperature (in ºC).}
+  \item{Tleaf}{Leaf temperature (in ºC).}
   \item{Oi}{Oxigen concentration (mmol*mol-1).}
   \item{Vmax298, Vmax298SL, Vmax298SH}{Maximum Rubisco carboxylation rate per leaf area at 298ºK (i.e. 25 ºC) (micromol*s-1*m-2) (for each canopy layer in the case of \code{photo_multilayerPhotosynthesisFunction}). 'SH' stands for shade leaves, whereas 'SL' stands for sunlit leaves.}
   \item{Jmax298, Jmax298SL, Jmax298SH}{Maximum electron transport rate per leaf area at 298ºK (i.e. 25 ºC) (micromol*s-1*m-2) (for each canopy layer in the case of \code{photo_multilayerPhotosynthesisFunction}). 'SH' stands for shade leaves, whereas 'SL' stands for sunlit leaves.}

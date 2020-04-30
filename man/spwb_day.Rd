@@ -1,17 +1,20 @@
 \encoding{UTF-8}
 \name{spwb_day}
 \alias{spwb_day}
-\title{Soil-plant water balance for a single day}
+\alias{growth_day}
+\title{Single day simulation}
 \description{
-Function \code{spwb_day} performs water balance for a single day.
+Function \code{spwb_day} performs water balance for a single day and \code{growth_day} performs water and carbon balance for a single day.
 }
 \usage{
 spwb_day(x, soil, date, tmin, tmax, rhmin, rhmax, rad, wind, 
-        latitude, elevation, slope, aspect, prec, runon = 0.0)
+         latitude, elevation, slope, aspect, prec, runon = 0.0)
+growth_day(x, soil, date, tmin, tmax, rhmin, rhmax, rad, wind, 
+           latitude, elevation, slope, aspect, prec, runon = 0.0)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{An object of class \code{\link{spwbInput}}.}
+  \item{x}{An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}.}
   \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
   \item{date}{Date as string "yyyy-mm-dd".}
   \item{tmin, tmax}{Minimum and maximum temperature (in degrees Celsius).}
@@ -27,7 +30,7 @@ spwb_day(x, soil, date, tmin, tmax, rhmin, rhmax, rad, wind,
   Detailed model description is available in the vignettes section. The model using 'Granier' transpiration mode is described in De Caceres et al. (2015). Simulations using the 'Sperry' transpiration mode are computationally much more expensive. 
 }
 \value{
-An object (a list) of class \code{spwb_day} with the following elements:
+Function \code{spwb_day()} returns a list of class \code{spwb_day} with the following elements:
 
 \itemize{
   \item{\code{"cohorts"}: A data frame with cohort information, copied from \code{\link{spwbInput}}.}
@@ -68,7 +71,7 @@ Objects \code{x} and \code{soil} are modified during the simulation.
 }
 \seealso{
 \code{\link{spwbInput}}, \code{\link{spwb}},  \code{\link{plot.spwb_day}},  
-\code{\link{spwb_ldrOptimization}}, \code{\link{forest}}
+\code{\link{growthInput}}, \code{\link{growth}},  \code{\link{plot.growth_day}}  
 }
 \examples{
 #Load example daily meteorological data
@@ -83,13 +86,13 @@ data(SpParamsMED)
 #Initialize control parameters
 control = defaultControl()
 
-#Initialize soil with default soil params (2 layers)
-examplesoil = soil(defaultSoilParams(2), W=c(0.5,0.5))
-
-
-#Simulate one day only
-x1 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+# Day to be simulated
 d = 100
+
+
+#Simulate water balance one day only (Granier)
+examplesoil = soil(defaultSoilParams(2))
+x1 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 sd1<-spwb_day(x1, examplesoil, rownames(examplemeteo)[d],  
              examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
              examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
@@ -97,16 +100,11 @@ sd1<-spwb_day(x1, examplesoil, rownames(examplemeteo)[d],
              latitude = 41.82592, elevation = 100, slope=0, aspect=0,
              prec = examplemeteo$Precipitation[d])
 
-#Initialize soil with default soil params (2 layers)
-examplesoil2 = soil(defaultSoilParams(2))
 
-#Switch to 'Sperry' transpiration mode
+#Simulate water balance for one day only (Sperry's mode)
 control$transpirationMode="Sperry"
-
-
-#Simulate one day only
+examplesoil2 = soil(defaultSoilParams(2))
 x2 = forest2spwbInput(exampleforestMED,examplesoil2, SpParamsMED, control)
-d = 100
 sd2<-spwb_day(x2, examplesoil2, rownames(examplemeteo)[d],
              examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
              examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
@@ -116,5 +114,16 @@ sd2<-spwb_day(x2, examplesoil2, rownames(examplemeteo)[d],
 
 #Plot plant transpiration (see function 'plot.swb.day()')
 plot(sd2)
+
+
+#Simulate water and carbon balance for one day only
+examplesoil3 = soil(defaultSoilParams(2))
+x3 = forest2growthInput(exampleforestMED,examplesoil3, SpParamsMED, control)
+sd3<-growth_day(x3, examplesoil3, rownames(examplemeteo)[d],
+             examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
+             examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
+             examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
+             latitude = 41.82592, elevation = 100, slope=0, aspect=0,
+             prec = examplemeteo$Precipitation[d])
 
 }

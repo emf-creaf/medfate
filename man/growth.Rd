@@ -1,8 +1,6 @@
 \encoding{UTF-8}
 \name{growth}
 \alias{growth}
-
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{Forest growth}
 \description{
 Function \code{growth} is a forest growth model that calculates changes in leaf area, sapwood area and structural variables for all plant cohorts in a given forest stand during a period specified in the input climatic data. 
@@ -10,7 +8,6 @@ Function \code{growth} is a forest growth model that calculates changes in leaf 
 \usage{
 growth(x, soil, meteo,  latitude = NA, elevation = NA, slope = NA, aspect = NA) 
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{An object of class \code{\link{growthInput}}.}
   \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
