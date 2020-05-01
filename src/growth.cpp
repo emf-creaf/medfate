@@ -378,22 +378,22 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   NumericVector Z = Rcpp::as<Rcpp::NumericVector>(below["Z"]);
   
   //Internal state variables
-  List internalWater = Rcpp::as<Rcpp::List>(x["internalWater"]);
+  DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
   NumericVector NSPL = Rcpp::as<Rcpp::NumericVector>(internalWater["NSPL"]);
   NumericVector psiSympLeaf = Rcpp::as<Rcpp::NumericVector>(internalWater["psiSympLeaf"]);
   NumericVector psiSympStem = Rcpp::as<Rcpp::NumericVector>(internalWater["psiSympStem"]);
   
-  List internalCarbon = Rcpp::as<Rcpp::List>(x["internalCarbon"]);
+  DataFrame internalCarbon = Rcpp::as<Rcpp::DataFrame>(x["internalCarbon"]);
   NumericVector sugarLeaf = internalCarbon["sugarLeaf"];
   NumericVector starchLeaf = internalCarbon["starchLeaf"];
   NumericVector sugarSapwood = internalCarbon["sugarSapwood"];
   NumericVector starchSapwood = internalCarbon["starchSapwood"];
   
-  List internalAllocation = Rcpp::as<Rcpp::List>(x["internalAllocation"]);
+  DataFrame internalAllocation = Rcpp::as<Rcpp::DataFrame>(x["internalAllocation"]);
   NumericVector allocationTarget = internalAllocation["allocationTarget"];
   NumericVector leafAreaTarget = internalAllocation["leafAreaTarget"];
   
-  List internalPhenology = Rcpp::as<Rcpp::List>(x["internalPhenology"]);
+  DataFrame internalPhenology = Rcpp::as<Rcpp::DataFrame>(x["internalPhenology"]);
   LogicalVector leafUnfolding = internalPhenology["leafUnfolding"];
   LogicalVector budFormation = internalPhenology["budFormation"];
   
@@ -1025,7 +1025,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   CharacterVector dateStrings = meteo.attr("row.names");
   
   IntegerVector DOY = date2doy(dateStrings);
-  IntegerVector Photoperiod = date2photoperiod(dateStrings, latrad);
+  NumericVector Photoperiod = date2photoperiod(dateStrings, latrad);
   
   //Canpopy parameters
   List canopyParams = x["canopy"];
@@ -1307,6 +1307,10 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
       if(verbose) Rcout<<" [update structural variables] ";
       iyear++;
       
+      DataFrame internalAllocation = Rcpp::as<Rcpp::DataFrame>(x["internalAllocation"]);
+      NumericVector allocationTarget = internalAllocation["allocationTarget"];
+      NumericVector leafAreaTarget = internalAllocation["leafAreaTarget"];
+      
       NumericVector deltaDBH(numCohorts, 0.0);
       for(int j=0;j<numCohorts; j++) {
         if(!NumericVector::is_na(DBH[j])) {
@@ -1335,16 +1339,16 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
       //Shrub variables
       for(int j=0;j<numCohorts; j++) {
         if(NumericVector::is_na(DBH[j])) {
-          double Wleaves = LAI_live[j]/((N[j]/10000)*SLA[j]);  //Calculates the biomass (dry weight) of leaves
+          double Wleaves = leafAreaTarget[j]/SLA[j];  //Calculates the biomass (kg dry weight) of leaves
           double PV = pow(Wleaves*r635[j]/Absh[j], 1.0/Bbsh[j]); //Calculates crown phytovolume (in m3)
           H[j] = pow(1e6*PV/(Aash[j]*CR[j]), 1.0/3.0); //Updates shrub height
           if(H[j]> Hmax[j]) { //Limit height (and update the former variables)
             H[j] = Hmax[j];
-            PV = (Aash[j]*pow(H[j],2.0)/10000.0)*(H[j]/100.0)*CR[j];
-            Wleaves = Absh[j]*pow(PV, Bbsh[j])/r635[j];
-            double prevLive = LAI_live[j];
-            LAI_live[j] = Wleaves*((N[j]/10000)*SLA[j]); //Update LAI_live to the maximum
-            LAI_dead[j] += prevLive - LAI_live[j]; //Increment dead LAI with the difference
+            // PV = (Aash[j]*pow(H[j],2.0)/10000.0)*(H[j]/100.0)*CR[j];
+            // Wleaves = Absh[j]*pow(PV, Bbsh[j])/r635[j];
+            // double prevLive = LAI_live[j];
+            // LAI_live[j] = Wleaves*((N[j]/10000)*SLA[j]); //Update LAI_live to the maximum
+            // LAI_dead[j] += prevLive - LAI_live[j]; //Increment dead LAI with the difference
           }
           Cover[j] = (N[j]*Aash[j]*pow(H[j],2.0)/1e6); //Updates shrub cover
         }

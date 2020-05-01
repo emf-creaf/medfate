@@ -23,8 +23,8 @@ IntegerVector date2doy(CharacterVector dateStrings) {
   return(doy);
 }
 
-IntegerVector date2photoperiod(CharacterVector dateStrings, double latitude) {
-  IntegerVector photoperiod(dateStrings.size());
+NumericVector date2photoperiod(CharacterVector dateStrings, double latitude) {
+  NumericVector photoperiod(dateStrings.size());
   //Derive photoperiod from date and latitude
   for(int i=0;i<dateStrings.size();i++) {
     std::string c = as<std::string>(dateStrings[i]);

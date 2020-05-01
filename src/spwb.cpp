@@ -1005,7 +1005,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
   CharacterVector dateStrings = meteo.attr("row.names");
   
   IntegerVector DOY = date2doy(dateStrings);
-  IntegerVector Photoperiod = date2photoperiod(dateStrings, latrad);
+  NumericVector Photoperiod = date2photoperiod(dateStrings, latrad);
   
   //Canpopy parameters
   List canopyParams = x["canopy"];
@@ -1251,7 +1251,7 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
   CharacterVector dateStrings = meteo.attr("row.names");
   
   IntegerVector DOY = date2doy(dateStrings);
-  IntegerVector Photoperiod = date2photoperiod(dateStrings, latrad);
+  NumericVector Photoperiod = date2photoperiod(dateStrings, latrad);
   
   //Canpopy parameters
   List canopyParams = x["canopy"];

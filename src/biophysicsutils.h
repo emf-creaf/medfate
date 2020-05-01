@@ -6,7 +6,7 @@
 using namespace Rcpp;
 
 IntegerVector date2doy(CharacterVector dateStrings);
-IntegerVector date2photoperiod(CharacterVector dateStrings, double latitude);
+NumericVector date2photoperiod(CharacterVector dateStrings, double latitude);
 
 
 double leafTemperature(double absRad, double airTemperature, double u, double E,  double leafWidth = 0.01);

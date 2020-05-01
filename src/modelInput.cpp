@@ -43,17 +43,18 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams) {
   for(int j=0; j<numCohorts;j++) {
     if(Sgdd[j]>0.0) {
       phenoType[j] = "winter-deciduous";
+      Sgdd[j] = 80.0;
       Tbgdd[j]= 5.0;
-      Ssen[j] = 8268.0;
-      Psen[j] = 12.5;
-      Tbsen[j] = 28.5;
+      Ssen[j] = 10178.0;
+      Psen[j] = 12.0;
+      Tbsen[j] = 25.0;
     } else {
       phenoType[j] = "oneflush-evergreen";
-      Sgdd[j] = 200.0;
+      Sgdd[j] = 80.0;
       Tbgdd[j]= 5.0;
-      Ssen[j] = 8268.0;
-      Psen[j] = 12.5;
-      Tbsen[j] = 28.5;
+      Ssen[j] = 10178.0;
+      Psen[j] = 12.0;
+      Tbsen[j] = 25.0;
     }
   }
   DataFrame paramsPhenologydf = DataFrame::create(

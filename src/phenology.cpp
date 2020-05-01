@@ -27,8 +27,8 @@ double leafDevelopmentStatus(double Sgdd, double gdd, double unfoldingDD = 300.0
   return(ds);
 }
 bool leafSenescenceStatus(double Ssen, double sen) {
-  if(sen>Ssen) return(false);
-  return true;
+  if(sen>Ssen) return(true);
+  return false;
 }
 
 // [[Rcpp::export("pheno_leafDevelopmentStatus")]]
@@ -79,6 +79,7 @@ void updatePhenology(List x, int doy, double photoperiod, double tmean) {
   for(int j=0;j<numCohorts;j++) {
     if(phenoType[j] == "winter-deciduous" || phenoType[j] == "winter-semideciduous") {
       if(doy>200) {
+        double rsen = 0.0;
         phi[j] = 0.0;
         gdd[j] = 0.0;
         leafUnfolding[j] = false;
@@ -88,24 +89,25 @@ void updatePhenology(List x, int doy, double photoperiod, double tmean) {
           budFormation[j] = false;
           leafDormancy[j] = false;
         } else if(!leafDormancy[j]) {
-          double rsen = 0.0;
           if(tmean-Tbsen[j]<0.0) {
-            rsen = pow(Tbsen[j]-tmean,2.0) * pow(photoperiod/Psen[j],2.0);
+            rsen = pow(Tbsen[j]-tmean,2.0);
+            // rsen = pow(Tbsen[j]-tmean,2.0) * pow(photoperiod/Psen[j],2.0);
           }
           sen[j] = sen[j] + rsen;
           leafSenescence[j] = leafSenescenceStatus(Ssen[j],sen[j]);
           budFormation[j] = leafSenescence[j];
           leafDormancy[j] = leafSenescence[j];
         }
-        // Rcout << doy<< " "<< photoperiod<<" "<< sen[j]<<" "<<  leafSenescence[j] << "\n";
+        // Rcout << doy<< " "<< photoperiod<<" "<< rsen <<" "<< sen[j]<<" "<<  leafSenescence[j] << "\n";
       } else if (doy<=200) { //Only increase in the first part of the year
         sen[j] = 0.0;
         budFormation[j] = false;
         leafSenescence[j] = false;
         if(tmean-Tbgdd[j]>0.0) gdd[j] = gdd[j] + (tmean - Tbgdd[j]);
-        phi[j] = leafDevelopmentStatus(Sgdd[j], gdd[j]);
+        phi[j] = leafDevelopmentStatus(Sgdd[j], gdd[j], unfoldingDD);
         leafUnfolding[j] = (phi[j]>0.0);
         leafDormancy[j] = (phi[j]==0.0);
+        // Rcout << doy<< " "<< photoperiod<<" "<< gdd[j]<<" "<<  leafUnfolding[j] << "\n";
       }
     }
     else if(phenoType[j] == "oneflush-evergreen") {
@@ -120,7 +122,8 @@ void updatePhenology(List x, int doy, double photoperiod, double tmean) {
         } else if (!leafDormancy[j]){
           double rsen = 0.0;
           if(tmean-Tbsen[j]<0.0) {
-            rsen = pow(Tbsen[j]-tmean,2.0) * pow(photoperiod/Psen[j],2.0);
+            rsen = pow(Tbsen[j]-tmean,2.0);
+            // rsen = pow(Tbsen[j]-tmean,2.0) * pow(photoperiod/Psen[j],2.0);
           }
           sen[j] = sen[j] + rsen;
           leafDormancy[j] = leafSenescenceStatus(Ssen[j],sen[j]);
@@ -131,7 +134,7 @@ void updatePhenology(List x, int doy, double photoperiod, double tmean) {
         budFormation[j] = false;
         if(!leafUnfolding[j]) {
           if(tmean-Tbgdd[j]>0.0) gdd[j] = gdd[j] + (tmean - Tbgdd[j]);
-          double ph = leafDevelopmentStatus(Sgdd[j], gdd[j]);
+          double ph = leafDevelopmentStatus(Sgdd[j], gdd[j],unfoldingDD);
           leafSenescence[j] = (ph>0.0);
           leafUnfolding[j] = (ph>0.0);
           leafDormancy[j] = (ph==0.0);
