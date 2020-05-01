@@ -29,32 +29,28 @@ void checkSpeciesParameters(DataFrame SpParams, CharacterVector params) {
 DataFrame paramsPhenology(DataFrame above, DataFrame SpParams) {
   IntegerVector SP = above["SP"];
   int numCohorts = SP.size();
-  NumericVector Sgdd = cohortNumericParameter(SP, SpParams, "Sgdd");
+  CharacterVector phenoType = cohortCharacterParameter(SP, SpParams, "PhenologyType");
   NumericVector leafDuration  = cohortNumericParameter(SP, SpParams, "LeafDuration");
+  NumericVector Sgdd  = cohortNumericParameter(SP, SpParams, "Sgdd");
   // NumericVector TbaseGdd = cohortNumericParameter(SP, SpParams, "TbaseGdd");
   // NumericVector Ssen = cohortNumericParameter(SP, SpParams, "Ssen");
   // NumericVector PstartSen = cohortNumericParameter(SP, SpParams, "PstartSen");
   // NumericVector TbaseSen = cohortNumericParameter(SP, SpParams, "TbaseSen");
-  CharacterVector phenoType(numCohorts);
   NumericVector Tbgdd(numCohorts, 0.0);
   NumericVector Ssen(numCohorts, 0.0);
   NumericVector Psen(numCohorts, 0.0);
   NumericVector Tbsen(numCohorts, 0.0);
   for(int j=0; j<numCohorts;j++) {
-    if(Sgdd[j]>0.0) {
-      phenoType[j] = "winter-deciduous";
-      Sgdd[j] = 80.0;
+    if(phenoType[j] == "winter-deciduous" || phenoType[j] == "winter-semideciduous") { //Delpierre et al 2009
       Tbgdd[j]= 5.0;
-      Ssen[j] = 10178.0;
-      Psen[j] = 12.0;
-      Tbsen[j] = 25.0;
-    } else {
-      phenoType[j] = "oneflush-evergreen";
-      Sgdd[j] = 80.0;
+      Ssen[j] = 8268.0;
+      Psen[j] = 12.5;
+      Tbsen[j] = 28.5;
+    } else if(phenoType[j] == "oneflush-evergreen") {
       Tbgdd[j]= 5.0;
-      Ssen[j] = 10178.0;
-      Psen[j] = 12.0;
-      Tbsen[j] = 25.0;
+      Ssen[j] = 8268.0;
+      Psen[j] = 12.5;
+      Tbsen[j] = 8.5;
     }
   }
   DataFrame paramsPhenologydf = DataFrame::create(
@@ -145,7 +141,8 @@ DataFrame paramsTranspiration(DataFrame above, NumericMatrix V, List soil, DataF
   
   CharacterVector Group = cohortCharacterParameter(SP, SpParams, "Group");
   CharacterVector Order = cohortCharacterParameter(SP, SpParams, "Order");
-  CharacterVector TreeType = cohortCharacterParameter(SP, SpParams, "TreeType");
+  CharacterVector GrowthForm = cohortCharacterParameter(SP, SpParams, "GrowthForm");
+  CharacterVector phenoType = cohortCharacterParameter(SP, SpParams, "PhenologyType");
   
   NumericVector Hmed = cohortNumericParameter(SP, SpParams, "Hmed"); //To correct conductivity
   NumericVector Gwmin = cohortNumericParameter(SP, SpParams, "Gwmin");
@@ -178,15 +175,15 @@ DataFrame paramsTranspiration(DataFrame above, NumericMatrix V, List soil, DataF
     if(NumericVector::is_na(Kmax_stemxylem[c])) {
       // From: Maherali H, Pockman W, Jackson R (2004) Adaptive variation in the vulnerability of woody plants to xylem cavitation. Ecology 85:2184–2199
       if(Group[c]=="Angiosperm") {
-        if(TreeType[c]=="Shrub") {
+        if((GrowthForm[c]=="Shrub") && (phenoType[c] == "winter-deciduous")) {
           Kmax_stemxylem[c] = 1.55; //Angiosperm deciduous shrub
-        } else if(TreeType[c]=="Deciduous") {
+        } else if((GrowthForm[c]=="Tree" || GrowthForm[c]=="Tree/Shrub") && (phenoType[c] == "winter-deciduous")) {
           Kmax_stemxylem[c] = 1.58; //Angiosperm winter-deciduous tree
         } else { 
           Kmax_stemxylem[c] = 2.43; //Angiosperm evergreen tree
         }
       } else {
-        if(TreeType[c]=="Shrub") {
+        if(GrowthForm[c]=="Shrub") {
           Kmax_stemxylem[c] = 0.24; //Gymnosperm shrub
         } else {
           Kmax_stemxylem[c] = 0.48; //Gymnosperm tree
@@ -204,15 +201,15 @@ DataFrame paramsTranspiration(DataFrame above, NumericMatrix V, List soil, DataF
       double psi50 = NA_REAL;
       // From: Maherali H, Pockman W, Jackson R (2004) Adaptive variation in the vulnerability of woody plants to xylem cavitation. Ecology 85:2184–2199
       if(Group[c]=="Angiosperm") {
-        if(TreeType[c]=="Shrub") {
+        if((GrowthForm[c]=="Shrub") && (phenoType[c] != "winter-deciduous")) {
           psi50 = -5.09; //Angiosperm evergreen shrub
-        } else if(TreeType[c]=="Deciduous") {
+        } else if((GrowthForm[c]!="Shrub") && (phenoType[c] == "winter-deciduous")) {
           psi50 = -2.34; //Angiosperm winter-deciduous tree
         } else { 
           psi50 = -1.51; //Angiosperm evergreen tree
         }
       } else {
-        if(TreeType[c]=="Shrub") {
+        if(GrowthForm[c]=="Shrub") {
           psi50 = -8.95; //Gymnosperm shrub
         } else {
           psi50 = -4.17; //Gymnosperm tree
