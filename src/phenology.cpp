@@ -77,7 +77,7 @@ void updatePhenology(List x, int doy, double photoperiod, double tmean) {
   LogicalVector leafDormancy = internalPhenology["leafDormancy"];
   
   for(int j=0;j<numCohorts;j++) {
-    if(phenoType[j] == "winter-deciduous") {
+    if(phenoType[j] == "winter-deciduous" || phenoType[j] == "winter-semideciduous") {
       if(doy>200) {
         phi[j] = 0.0;
         gdd[j] = 0.0;
@@ -169,8 +169,10 @@ void updateLeaves(List x, double wind, bool fromGrowthModel) {
   LogicalVector leafDormancy = internalPhenology["leafDormancy"];
   
   for(int j=0;j<numCohorts;j++) {
-    LAI_dead[j] *= exp(-1.0*(wind/10.0)); //Decrease dead leaf area according to wind speed
-    if(phenoType[j] == "winter-deciduous") {
+    bool leafFall = true;
+    if(phenoType[j] == "winter-semideciduous") leafFall = leafUnfolding[j];
+    if(leafFall) LAI_dead[j] *= exp(-1.0*(wind/10.0)); //Decrease dead leaf area according to wind speed
+    if(phenoType[j] == "winter-deciduous" || phenoType[j] == "winter-semideciduous") {
       if(leafSenescence[j]) {
         double LAI_exp_prev= LAI_expanded[j]; //Store previous value
         LAI_expanded[j] = 0.0; //Update expanded leaf area (will decrease if LAI_live decreases)
@@ -181,6 +183,7 @@ void updateLeaves(List x, double wind, bool fromGrowthModel) {
         leafDormancy[j] = true;
       } 
       else if(leafDormancy[j]) {
+        if(phenoType[j] == "winter-semideciduous") LAI_dead[j] += LAI_expanded[j];
         LAI_expanded[j] = 0.0;
         if(fromGrowthModel) LAI_live[j] = LAI_expanded[j];
       }

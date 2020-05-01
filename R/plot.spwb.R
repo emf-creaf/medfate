@@ -207,7 +207,8 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
   } 
   else if(type=="LAI") {
     if(is.null(ylab)) ylab = expression(paste("Leaf Area Index   ",(m^{2}%.%m^{-2})))
-    df = Stand[,c("LAI", "LAIdead")]
+    df = Stand[,c("LAI", "LAIexpanded", "LAIdead")]
+    names(df)<-c("Total (live+dead)", "Live unfolded","Dead standing")
     if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
     return(.multiple_dynamics(as.matrix(df), ylab = ylab, ylim = ylim))
   } 
