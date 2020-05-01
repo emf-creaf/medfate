@@ -23,7 +23,6 @@ data("SpParamsUS")
     \item{\code{Order}}{Taxonomical order.}
     \item{\code{Family}}{Taxonomical family.}
     \item{\code{GrowthForm}}{A factor with levels \code{Shrub}, \code{Tree} and \code{Tree/Shrub}.}
-    \item{\code{TreeType}}{A factor with levels \code{Conifer}, \code{Deciduous}, \code{Evergreen} or \code{Shrub}}
     \item{\code{Hmed}}{Median plant height (in cm).}
     \item{\code{Hmax}}{Maximum plant height (in cm).}
     \item{\code{Z50}}{Rooting depth (in mm) corresponding to 50\% of fine roots.}
@@ -35,8 +34,14 @@ data("SpParamsUS")
     \item{\code{a_fbt}, \code{b_fbt}, \code{c_fbt}, \code{d_fbt}}{Regression coefficients used to calculate foliar biomass of an individual tree from its dbh and the cummulative basal area of larger trees.}
     \item{\code{a_cr}, \code{b_1cr}, \code{b_2cr}, \code{b_3cr}, \code{c_1cr}, \code{c_2cr}}{Regression coefficients used to calculate crown ratio of trees.}
     \item{\code{a_cw}, \code{b_cw}}{Regression coefficients used to calculated crown width of trees.}
+    \item{\code{PhenologyType}}{Leaf phenology: "oneflush-evergreen", "progressive-evergreen", "winter-deciduous" or "winter-semideciduous".}
+    \item{\code{LeafDuration}}{Leaf duration (in years).}
+    \item{\code{Sgdd}}{Growth degree days for leaf budburst (in Celsius)}
     \item{\code{SLA}}{Specific leaf area (mm2/mg = m2/kg).}
+    \item{\code{Al2As}}{Leaf area to sapwood area ratio (in m2·m-2).}
+    \item{\code{LeafWidth}}{Leaf width (in cm).}
     \item{\code{LeafDensity}}{Density of leaf tissue (dry weight over volume).}
+    \item{\code{WoodDensity}}{Wood density (at 0 percent humidity!).}
     \item{\code{r635}}{Ratio between the weight of leaves plus branches and the weight of leaves alone for branches of 6.35 mm.}
     \item{\code{pDead}}{Proportion of total fine fuels that are dead}
     \item{\code{maxFMC}}{Maximum fuel moisture (in percent of dry weight)}
@@ -47,8 +52,6 @@ data("SpParamsUS")
     \item{\code{StemPI0}}{Osmotic potential at full turgor of symplastic xylem tissue (MPa).}
     \item{\code{StemEPS}}{Modulus of elasticity (capacity of the cell wall to resist changes in volume in response to changes in turgor) of symplastic xylem tissue (Mpa).}
     \item{\code{StemAF}}{Apoplastic fraction (proportion of water outside the living cells) in stem xylem.}
-    \item{\code{Cstoragepmax}}{Maximum storage capacity, expressed as the fraction of C per total respiratory of C.}
-    \item{\code{LeafDuration}}{Leaf duration (in years).}
     \item{\code{LigninPercent}}{Percent of lignin+cutin over dry weight in leaves.}
     \item{\code{ParticleDensity}}{Particle density (kg/m3).}
     \item{\code{LeafLitterFuelType}}{Fuel type for leaf litter, with levels \code{Broadleaved}, \code{LongLinear}, \code{Scale} and \code{ShortLinear}.}
@@ -61,12 +64,7 @@ data("SpParamsUS")
     \item{\code{alphaSWR}}{Absorbance coefficient for SWR (\code{alphaPAR = alphaSWR * 1.35}).}
     \item{\code{kPAR}}{Extinction coeficient for PAR (\code{kSWR = kPAR/1.35}).}
     \item{\code{g}}{Canopy water storage capacity per LAI unit (in mm/LAI).}
-    \item{\code{Sgdd}}{Growth degree days for leaf budburst (in Celsius)}
-    \item{\code{Al2As}}{Leaf area to sapwood area ratio (in m2·m-2).}
     \item{\code{WUE}}{Water use efficiency for carbon assimilation (g C /mm water).}
-    \item{\code{WoodC}}{Wood carbon content per dry weight (g C /g dry).}
-    \item{\code{WoodDensity}}{Wood density (at 0 percent humidity!).}
-    \item{\code{RGRmax}}{Maximum relative growth rate (in basal area or sapwood area) (in cm2·cm-2).}
     \item{\code{Psi_Extract}}{Water potential corresponding to 50\% relative conductance (in MPa).}
     \item{\code{pRootDisc}}{Relative root conductance leading to hydraulic disconnection from a soil layer.}
     \item{\code{Gwmin}}{Minimum stomatal conductance to water vapor per leaf area unit (in mol·s-1·m-2).}
@@ -77,10 +75,11 @@ data("SpParamsUS")
     \item{\code{VCstem_c}, \code{VCstem_d}}{Parameters of the stem xylem vulnerability curve (\code{VCstem_d} in MPa).}
     \item{\code{Kmax_rootxylem}}{Sapwood-specific hydraulic conductivity of root xylem (in kg H2O·s-1·m-1·MPa-1).}
     \item{\code{VCroot_c}, \code{VCroot_d}}{Parameters of the root xylem vulnerability curve (\code{VCroot_d} in MPa).}
-    \item{\code{LeafWidth}}{Leaf width (in cm).}
     \item{\code{Narea}}{Nitrogen contrentration per leaf area (in g·m-2).}
     \item{\code{Vmax298}}{Maximum Rubisco carboxilation rate at 25ºC (in micromol CO2·s-1·m-2).}
     \item{\code{Jmax298}}{Maximum electron transport rate at 25ºC (in micromol electrons·s-1·m-2).}
+    \item{\code{WoodC}}{Wood carbon content per dry weight (g C /g dry).}
+    \item{\code{RGRmax}}{Maximum relative growth rate (in basal area or sapwood area) (in cm2·cm-2).}
   }
 }
 \details{

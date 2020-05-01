@@ -678,14 +678,14 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
     //Leaf growth
     LAlive += deltaLAgrowth; //Update leaf area
     LAexpanded +=deltaLAgrowth;
-    LAgrowth[j] += deltaLAgrowth;
+    LAgrowth[j] += deltaLAgrowth/SA[j];//Store Leaf area growth rate in relation to sapwood area (m2/cm2)
     
     //SA growth senescense
     double deltaSAturnover = (dailySAturnoverProportion/(1.0+15.0*exp(-0.01*H[j])))*SA[j];
     SA[j] = SA[j] - deltaSAturnover; //Update sapwood area
     //SA growth     
     SA[j] += deltaSAgrowth; //Update sapwood area
-    SAgrowth[j] += deltaSAgrowth;
+    SAgrowth[j] += deltaSAgrowth/SA[j]; //Store sapwood area growth rate (cm2/cm2)
          
     
     //Update LAI
@@ -888,7 +888,6 @@ void checkgrowthInput(List x, List soil, String transpirationMode, String soilFu
   if(!x.containsElementNamed("paramsGrowth")) stop("paramsGrowth missing in growthInput");
   DataFrame paramsGrowth = Rcpp::as<Rcpp::DataFrame>(x["paramsGrowth"]);
   if(!paramsGrowth.containsElementNamed("WoodC")) stop("WoodC missing in growthInput$paramsGrowth");
-  if(!paramsGrowth.containsElementNamed("Cstoragepmax")) stop("Cstoragepmax missing in growthInput$paramsGrowth");
   if(!paramsGrowth.containsElementNamed("RGRmax")) stop("RGRmax missing in growthInput$paramsGrowth");
   
   if(!x.containsElementNamed("paramsAnatomy")) stop("paramsAnatomy missing in growthInput");

@@ -70,8 +70,8 @@
   else if(type=="SapwoodArea")  ylab = expression(paste("Sapwood area  ",(cm^2)))
   else if(type=="LeafArea")  ylab = expression(paste("Leaf area  ",(m^2)))
   else if(type=="HuberValue")  ylab = expression(paste("Huber value  ",(cm^2 %.% m^{-2})))
-  else if(type=="SAgrowth") ylab = expression(paste("Sapwood area growth ",(cm^2)))
-  else if(type=="LAgrowth") ylab = expression(paste("Leaf area growth ",(m^2)))
+  else if(type=="SAgrowth") ylab = expression(paste("Sapwood area growth rate ",(cm^2 %.% cm^{-2} %.% d^{-1})))
+  else if(type=="LAgrowth") ylab = expression(paste("Leaf area growth rate ",(m^2 %.% cm^{-2} %.% d^{-1})))
   return(ylab)
 }
 

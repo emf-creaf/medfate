@@ -385,15 +385,9 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams) {
   
   NumericVector WoodC = cohortNumericParameter(SP, SpParams, "WoodC");
   NumericVector RGRmax = cohortNumericParameter(SP, SpParams, "RGRmax");
-  NumericVector Cstoragepmax = cohortNumericParameter(SP, SpParams, "Cstoragepmax");
-  
 
-  for(int c=0;c<numCohorts;c++){
-    Cstoragepmax[c] = std::max(0.05,Cstoragepmax[c]); //Minimum 5%
-  }
-  
+
   DataFrame paramsGrowthdf = DataFrame::create(_["WoodC"] = WoodC, 
-                                               _["Cstoragepmax"] = Cstoragepmax, 
                                                _["RGRmax"] = RGRmax);
   paramsGrowthdf.attr("row.names") = above.attr("row.names");
   return(paramsGrowthdf);
@@ -469,7 +463,6 @@ DataFrame internalCarbonDataFrame(DataFrame above,
   NumericVector StemPI0 = paramsWaterStoragedf["StemPI0"];
   
   NumericVector WoodC = paramsGrowthdf["WoodC"];
-  NumericVector Cstoragepmax = paramsGrowthdf["Cstoragepmax"];
 
   NumericVector Z = below["Z"];
   IntegerVector SP = above["SP"];
