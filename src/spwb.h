@@ -11,6 +11,7 @@ DataFrame defineWaterBalanceDailyOutput(DataFrame meteo, String transpirationMod
 DataFrame defineSoilWaterBalanceDailyOutput(DataFrame meteo, List soil, String transpirationMode);
 DataFrame defineEnergyBalanceDailyOutput(DataFrame meteo);
 DataFrame defineTemperatureDailyOutput(DataFrame meteo);
+List defineSunlitShadeLeavesDailyOutput(DataFrame meteo, DataFrame above);
 List definePlantWaterDailyOutput(DataFrame meteo, DataFrame above, List soil, List control);
 
 void fillWaterBalanceDailyOutput(DataFrame DWB, List sDay, int iday, String transpirationMode);
@@ -18,7 +19,7 @@ void fillSoilWaterBalanceDailyOutput(DataFrame SWB, List soil, List sDay,
                                      int iday, int numDays, String transpirationMode,
                                      String soilFunctions);
 void fillEnergyBalanceTemperatureDailyOutput(DataFrame DEB, DataFrame DT, List sDay, int iday);
-void fillPlantWaterDailyOutput(List x, List sDay, int day, String transpirationMode);
+void fillPlantWaterDailyOutput(List x, List sunlit, List shade, List sDay, int day, String transpirationMode);
 
 void printWaterBalanceResult(DataFrame DWB, List plantDWOL, 
                              List soil, String soilFunctions,

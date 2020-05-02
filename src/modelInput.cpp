@@ -54,7 +54,7 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams) {
     }
   }
   DataFrame paramsPhenologydf = DataFrame::create(
-    _["type"] = phenoType,
+    _["PhenologyType"] = phenoType,
     _["LeafDuration"] = leafDuration,
     _["Sgdd"] = Sgdd, _["Tbgdd"] = Tbgdd, 
     _["Ssen"] = Ssen, _["Psen"] = Psen, _["Tbsen"] = Tbsen 

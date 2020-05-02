@@ -335,7 +335,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafPsiMin_SL") {
-    OM = Plants$SunlitLeaves$LeafPsiMin
+    OM = x$SunlitLeaves$LeafPsiMin
     if(bySpecies) {
       lai1 = t(apply(Plants$LAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
       m1 = t(apply(Plants$LAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
@@ -347,7 +347,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafPsiMax_SL") {
-    OM = Plants$SunlitLeaves$LeafPsiMax
+    OM = x$SunlitLeaves$LeafPsiMax
     if(bySpecies) {
       lai1 = t(apply(Plants$LAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
       m1 = t(apply(Plants$LAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
@@ -359,7 +359,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafPsiMin_SH") {
-    OM = Plants$ShadeLeaves$LeafPsiMin
+    OM = x$ShadeLeaves$LeafPsiMin
     if(bySpecies) {
       lai1 = t(apply(Plants$LAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
       m1 = t(apply(Plants$LAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
@@ -371,7 +371,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafPsiMax_SH") {
-    OM = Plants$ShadeLeaves$LeafPsiMax
+    OM = x$ShadeLeaves$LeafPsiMax
     if(bySpecies) {
       lai1 = t(apply(Plants$LAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
       m1 = t(apply(Plants$LAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))

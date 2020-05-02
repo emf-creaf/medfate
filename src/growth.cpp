@@ -425,8 +425,9 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   NumericVector RGRmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRmax"]);
   //Phenology parameters
   DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
+  CharacterVector phenoType = Rcpp::as<Rcpp::CharacterVector>(paramsPhenology["PhenologyType"]);
   NumericVector leafDuration = Rcpp::as<Rcpp::NumericVector>(paramsPhenology["LeafDuration"]);
-
+  
   // NumericVector Cstoragepmax= Rcpp::as<Rcpp::NumericVector>(paramsGrowth["Cstoragepmax"]);
   // NumericVector slowCstorage_max(numCohorts), fastCstorage_max(numCohorts);
   //Transpiration parameters
@@ -679,6 +680,15 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
     LAlive += deltaLAgrowth; //Update leaf area
     LAexpanded +=deltaLAgrowth;
     LAgrowth[j] += deltaLAgrowth/SA[j];//Store Leaf area growth rate in relation to sapwood area (m2/cm2)
+    
+    //Leaf senescence due to age (Ca+ accumulation) only in evergreen species
+    if(phenoType[j] == "oneflush-evergreen" || phenoType[j] == "progressive-evergreen") {
+        double propAged = (1.0/(365.25*leafDuration[j]));
+        double LA_exp_prev= LAexpanded; //Store previous value
+        LAdead += LAexpanded*propAged;
+        LAexpanded = LAexpanded*(1.0 - propAged); //Update expanded leaf area
+        LAlive = LAlive*(1.0 - propAged); //Update expanded leaf area
+    }
     
     //SA growth senescense
     double deltaSAturnover = (dailySAturnoverProportion/(1.0+15.0*exp(-0.01*H[j])))*SA[j];
@@ -1142,6 +1152,8 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   NumericVector LgroundSWR(numDays);
 
   //Plant water output variables
+  List sunlitDO = defineSunlitShadeLeavesDailyOutput(meteo, above);
+  List shadeDO = defineSunlitShadeLeavesDailyOutput(meteo, above);
   List plantDWOL = definePlantWaterDailyOutput(meteo, above, soil, control);
   NumericVector EplantCohTot(numCohorts, 0.0);
 
@@ -1257,7 +1269,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
       fillEnergyBalanceTemperatureDailyOutput(DEB,DT,s,i);
     }    
     
-    fillPlantWaterDailyOutput(plantDWOL, s, i, transpirationMode);
+    fillPlantWaterDailyOutput(plantDWOL, sunlitDO, shadeDO, s, i, transpirationMode);
     fillWaterBalanceDailyOutput(DWB, s,i, transpirationMode);
     fillSoilWaterBalanceDailyOutput(SWB, soil, s,
                                     i, numDays, transpirationMode, soilFunctions);
@@ -1451,6 +1463,8 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
                    Named("Soil")=SWB,
                    Named("Stand")=Stand,
                    Named("Plants") = plantDWOL,
+                   Named("SunlitLeaves") = sunlitDO,
+                   Named("ShadeLeaves") = shadeDO,
                    Named("PlantCarbonBalance") = plantCarbonBalance,
                    Named("PlantGrowth") = plantGrowth,
                    Named("StandStructures") = standStructures,

@@ -28,8 +28,8 @@ spwb_waterUseEfficiency<-function(x, type = "Plant An/E", leaves = "average", fr
     rownames(iWUEdays)= as.character(dates)
     colnames(iWUEdays) = rownames(coh)
     for(i in 1:ndays) {
-      sl = sd[[i]]$PlantsInst$SunlitLeaves
-      sh = sd[[i]]$PlantsInst$ShadeLeaves
+      sl = sd[[i]]$SunlitLeavesInst
+      sh = sd[[i]]$ShadeLeavesInst
       sl_lai = sd[[i]]$SunlitLeaves$LAI
       sh_lai = sd[[i]]$ShadeLeaves$LAI
       an_sl = sl$An
@@ -92,8 +92,8 @@ spwb_waterUseEfficiency<-function(x, type = "Plant An/E", leaves = "average", fr
     rownames(Cidays)= as.character(dates)
     colnames(Cidays) = rownames(coh)
     for(i in 1:ndays) {
-      sl = sd[[i]]$PlantsInst$SunlitLeaves
-      sh = sd[[i]]$PlantsInst$ShadeLeaves
+      sl = sd[[i]]$SunlitLeavesInst
+      sh = sd[[i]]$ShadeLeavesInst
       sl_lai = sd[[i]]$SunlitLeaves$LAI
       sh_lai = sd[[i]]$ShadeLeaves$LAI
       an_sl = sl$An

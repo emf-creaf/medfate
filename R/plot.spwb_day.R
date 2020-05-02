@@ -20,6 +20,8 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
   EB = x$EnergyBalance
   Plants = x$Plants
   PlantsInst = x$PlantsInst
+  SunlitLeavesInst = x$SunlitLeavesInst
+  ShadeLeavesInst = x$ShadeLeavesInst
   type = match.arg(type,.getSubdailySPWBPlotTypes())  
   cohortnames = row.names(x$cohorts)
   timesteps = as.numeric(colnames(x$PlantsInst$PsiLeaf))
@@ -188,8 +190,8 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
   }
   else if(type=="LeafTranspiration") {
-    OM_SL = PlantsInst$SunlitLeaves$VPD*PlantsInst$SunlitLeaves$GW
-    OM_SH = PlantsInst$ShadeLeaves$VPD*PlantsInst$ShadeLeaves$GW
+    OM_SL = SunlitLeavesInst$VPD*SunlitLeavesInst$GW
+    OM_SH = ShadeLeavesInst$VPD*ShadeLeavesInst$GW
     if(bySpecies) {
       lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
       OMlai = sweep(OM_SL, 1, Plants$LAI, "*")
@@ -203,8 +205,8 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
   else if(type=="LeafNetPhotosynthesis") {
-    OM_SL = PlantsInst$SunlitLeaves$An
-    OM_SH = PlantsInst$ShadeLeaves$An
+    OM_SL = SunlitLeavesInst$An
+    OM_SH = ShadeLeavesInst$An
     if(bySpecies) {
       lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
       OMlai = sweep(OM_SL, 1, Plants$LAI, "*")
@@ -218,8 +220,8 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
   else if(type=="LeafGrossPhotosynthesis") {
-    OM_SL = PlantsInst$SunlitLeaves$Ag
-    OM_SH = PlantsInst$ShadeLeaves$Ag
+    OM_SL = SunlitLeavesInst$Ag
+    OM_SH = ShadeLeavesInst$Ag
     if(bySpecies) {
       lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
       OMlai = sweep(OM_SL, 1, Plants$LAI, "*")
@@ -233,8 +235,8 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
   else if(type=="PlantAbsorbedSWR") {
-    OM_SL = PlantsInst$SunlitLeaves$Abs_SWR
-    OM_SH = PlantsInst$ShadeLeaves$Abs_SWR
+    OM_SL = SunlitLeavesInst$Abs_SWR
+    OM_SH = ShadeLeavesInst$Abs_SWR
     if(bySpecies) {
       lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
       OMlai = sweep(OM_SL, 1, Plants$LAI, "*")
@@ -248,8 +250,8 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
   else if(type=="LeafAbsorbedSWR") {
-    OM_SL = PlantsInst$SunlitLeaves$Abs_SWR
-    OM_SH = PlantsInst$ShadeLeaves$Abs_SWR
+    OM_SL = SunlitLeavesInst$Abs_SWR
+    OM_SH = ShadeLeavesInst$Abs_SWR
     if(bySpecies) {
       m1 = apply(OM_SL,2, tapply, x$cohorts$Name, sum, na.rm=T)
       lai1 = apply(x$SunlitLeaves$LAI,2, tapply, x$cohorts$Name, sum, na.rm=T)
@@ -265,8 +267,8 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
   else if(type=="LeafAbsorbedLWR") {
-    OM_SL = PlantsInst$SunlitLeaves$Abs_LWR
-    OM_SH = PlantsInst$ShadeLeaves$Abs_LWR
+    OM_SL = SunlitLeavesInst$Abs_LWR
+    OM_SH = ShadeLeavesInst$Abs_LWR
     if(bySpecies) {
       m1 = apply(OM_SL,2, tapply, x$cohorts$Name, sum, na.rm=T)
       lai1 = apply(x$SunlitLeaves$LAI,2, tapply, x$cohorts$Name, sum, na.rm=T)
@@ -282,8 +284,8 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
   else if(type=="LeafPsi") {
-    OM_SL = PlantsInst$SunlitLeaves$Psi
-    OM_SH = PlantsInst$ShadeLeaves$Psi
+    OM_SL = SunlitLeavesInst$Psi
+    OM_SH = ShadeLeavesInst$Psi
     if(bySpecies) {
       lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
       OMlai = sweep(OM_SL, 1, Plants$LAI, "*")
@@ -297,8 +299,8 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
   else if(type=="LeafTemperature") {
-    OM_SL = PlantsInst$SunlitLeaves$Temp
-    OM_SH = PlantsInst$ShadeLeaves$Temp
+    OM_SL = SunlitLeavesInst$Temp
+    OM_SH = ShadeLeavesInst$Temp
     if(bySpecies) {
       lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
       OMlai = sweep(OM_SL, 1, Plants$LAI, "*")
@@ -312,8 +314,8 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
   else if(type=="LeafVPD") {
-    OM_SL = PlantsInst$SunlitLeaves$VPD
-    OM_SH = PlantsInst$ShadeLeaves$VPD
+    OM_SL = SunlitLeavesInst$VPD
+    OM_SH = ShadeLeavesInst$VPD
     if(bySpecies) {
       lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
       OMlai = sweep(OM_SL, 1, Plants$LAI, "*")
@@ -327,8 +329,8 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
   else if(type=="LeafStomatalConductance") {
-    OM_SL = PlantsInst$SunlitLeaves$GW
-    OM_SH = PlantsInst$ShadeLeaves$GW
+    OM_SL = SunlitLeavesInst$GW
+    OM_SH = ShadeLeavesInst$GW
     if(bySpecies) {
       lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
       OMlai = sweep(OM_SL, 1, Plants$LAI, "*")
@@ -342,8 +344,8 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
   else if(type=="LeafIntrinsicWUE") {
-    OM_SL = PlantsInst$SunlitLeaves$An/PlantsInst$SunlitLeaves$GW
-    OM_SH = PlantsInst$ShadeLeaves$An/PlantsInst$ShadeLeaves$GW
+    OM_SL = SunlitLeavesInst$An/SunlitLeavesInst$GW
+    OM_SH = ShadeLeavesInst$An/ShadeLeavesInst$GW
     if(bySpecies) {
       lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
       OMlai = sweep(OM_SL, 1, Plants$LAI, "*")
@@ -357,8 +359,8 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
   else if(type=="LeafCi") {
-    OM_SL = PlantsInst$SunlitLeaves$Ci
-    OM_SH = PlantsInst$ShadeLeaves$Ci
+    OM_SL = SunlitLeavesInst$Ci
+    OM_SH = ShadeLeavesInst$Ci
     if(bySpecies) {
       lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
       OMlai = sweep(OM_SL, 1, Plants$LAI, "*")

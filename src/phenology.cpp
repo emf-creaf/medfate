@@ -51,7 +51,7 @@ void updatePhenology(List x, int doy, double photoperiod, double tmean) {
   double unfoldingDD = control["unfoldingDD"];
   
   DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
-  CharacterVector phenoType = paramsPhenology["type"];
+  CharacterVector phenoType = paramsPhenology["PhenologyType"];
   NumericVector Sgdd = paramsPhenology["Sgdd"];
   NumericVector Tbgdd = paramsPhenology["Tbgdd"];
   NumericVector Ssen = paramsPhenology["Ssen"];
@@ -161,7 +161,7 @@ void updateLeaves(List x, double wind, bool fromGrowthModel) {
   int numCohorts = LAI_live.size();
 
   DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
-  CharacterVector phenoType = paramsPhenology["type"];
+  CharacterVector phenoType = paramsPhenology["PhenologyType"];
   NumericVector leafDuration = paramsPhenology["LeafDuration"];
   
   DataFrame internalPhenology =  Rcpp::as<Rcpp::DataFrame>(x["internalPhenology"]);
@@ -194,20 +194,5 @@ void updateLeaves(List x, double wind, bool fromGrowthModel) {
         LAI_expanded[j] = LAI_live[j]*phi[j]; //Update expanded leaf area (will decrease if LAI_live decreases)
       }
     } 
-    else if(phenoType[j] == "oneflush-evergreen" || phenoType[j] == "progressive-evergreen") {
-      if(fromGrowthModel && leafSenescence[j]) {
-        double propAged = (1.0/(365.25*leafDuration[j]));
-        if(phenoType[j] == "oneflush-evergreen") {
-          propAged = (1.0/leafDuration[j]);
-          leafSenescence[j] = false;
-          // Rcout<<j<< " "<<propAged<<"\n";
-        }
-        //Leaf senescence due to age (Ca+ accumulation) (should change with better phenology modelling)
-        double LAI_exp_prev= LAI_expanded[j]; //Store previous value
-        LAI_dead[j] = LAI_expanded[j]*propAged;
-        LAI_expanded[j] = LAI_expanded[j]*(1.0 - propAged); //Update expanded leaf area (will decrease if LAI_live decreases)
-        LAI_live[j] = LAI_live[j]*(1.0 - propAged); //Update expanded leaf area (will decrease if LAI_live decreases)
-      }
-    }
   }    
 }

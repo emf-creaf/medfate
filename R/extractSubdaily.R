@@ -59,15 +59,15 @@ extractSubdaily<-function(x, output = "E", dates = NULL)  {
     m<-data.frame(matrix(nrow = numDates*numSteps, ncol = numCohorts+1))
     for(i in 1:numDates) {
       if(leafType=="E") {
-        ori1 = x$subdaily[[as.character(dates[i])]]$PlantsInst$SunlitLeaves$GW
-        ori2 = x$subdaily[[as.character(dates[i])]]$PlantsInst$SunlitLeaves$VPD
+        ori1 = x$subdaily[[as.character(dates[i])]]$SunlitLeavesInst$GW
+        ori2 = x$subdaily[[as.character(dates[i])]]$SunlitLeavesInst$VPD
         m[((i-1)*numSteps+1):(i*numSteps), 2:(numCohorts+1)] = t(ori1*ori2) 
       } else if(leafType=="iWUE") {
-          ori1 = x$subdaily[[as.character(dates[i])]]$PlantsInst$SunlitLeaves$An
-          ori2 = x$subdaily[[as.character(dates[i])]]$PlantsInst$SunlitLeaves$GW
+          ori1 = x$subdaily[[as.character(dates[i])]]$SunlitLeavesInst$An
+          ori2 = x$subdaily[[as.character(dates[i])]]$SunlitLeavesInst$GW
           m[((i-1)*numSteps+1):(i*numSteps), 2:(numCohorts+1)] = t(ori1/ori2) 
       } else{
-        ori = x$subdaily[[as.character(dates[i])]]$PlantsInst$SunlitLeaves[[leafType]]
+        ori = x$subdaily[[as.character(dates[i])]]$SunlitLeavesInst[[leafType]]
         m[((i-1)*numSteps+1):(i*numSteps), 2:(numCohorts+1)] = t(ori) 
       }
     }
@@ -78,15 +78,15 @@ extractSubdaily<-function(x, output = "E", dates = NULL)  {
     m<-data.frame(matrix(nrow = numDates*numSteps, ncol = numCohorts+1))
     for(i in 1:numDates) {
       if(leafType=="E") {
-        ori1 = x$subdaily[[as.character(dates[i])]]$PlantsInst$ShadeLeaves$GW
-        ori2 = x$subdaily[[as.character(dates[i])]]$PlantsInst$ShadeLeaves$VPD
+        ori1 = x$subdaily[[as.character(dates[i])]]$ShadeLeavesInst$GW
+        ori2 = x$subdaily[[as.character(dates[i])]]$ShadeLeavesInst$VPD
         m[((i-1)*numSteps+1):(i*numSteps), 2:(numCohorts+1)] = t(ori1*ori2) 
       } else if(leafType=="iWUE") {
-        ori1 = x$subdaily[[as.character(dates[i])]]$PlantsInst$ShadeLeaves$An
-        ori2 = x$subdaily[[as.character(dates[i])]]$PlantsInst$ShadeLeaves$GW
+        ori1 = x$subdaily[[as.character(dates[i])]]$ShadeLeavesInst$An
+        ori2 = x$subdaily[[as.character(dates[i])]]$ShadeLeavesInst$GW
         m[((i-1)*numSteps+1):(i*numSteps), 2:(numCohorts+1)] = t(ori1/ori2) 
       } else{
-        ori = x$subdaily[[as.character(dates[i])]]$PlantsInst$ShadeLeaves[[leafType]]
+        ori = x$subdaily[[as.character(dates[i])]]$ShadeLeavesInst[[leafType]]
         m[((i-1)*numSteps+1):(i*numSteps), 2:(numCohorts+1)] = t(ori) 
       }
     }

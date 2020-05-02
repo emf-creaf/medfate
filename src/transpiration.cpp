@@ -1062,12 +1062,16 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   DataFrame Sunlit = DataFrame::create(
     _["LAI"] = LAI_SL, 
     _["Vmax298"] = Vmax298SL,
-    _["Jmax298"] = Jmax298SL
+    _["Jmax298"] = Jmax298SL,
+    _["LeafPsiMin"] = minPsiLeaf_SL, 
+    _["LeafPsiMax"] = maxPsiLeaf_SL 
   );
   DataFrame Shade = DataFrame::create(
     _["LAI"] = LAI_SH, 
     _["Vmax298"] = Vmax298SH,
-    _["Jmax298"] = Jmax298SH
+    _["Jmax298"] = Jmax298SH,
+    _["LeafPsiMin"] = minPsiLeaf_SH, 
+    _["LeafPsiMax"] = maxPsiLeaf_SH 
   );
   Sunlit.attr("row.names") = above.attr("row.names");
   Shade.attr("row.names") = above.attr("row.names");
@@ -1095,8 +1099,6 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   
   List PlantsInst = List::create(
     _["E"]=Einst, _["Ag"]=Aginst, _["An"]=Aninst,
-    _["SunlitLeaves"] = SunlitInst,
-    _["ShadeLeaves"] = ShadeInst,
     _["dEdPinst"] = dEdPinst,
     _["PsiRoot"] = PsiRootinst, 
     _["PsiStem"] = PsiSteminst,
@@ -1115,10 +1117,6 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
                                        _["StemPLC"] = PLCm, //Average daily stem PLC
                                        _["LeafPsiMin"] = minPsiLeaf, 
                                        _["LeafPsiMax"] = maxPsiLeaf, 
-                                       _["LeafPsiMin_SL"] = minPsiLeaf_SL, 
-                                       _["LeafPsiMax_SL"] = maxPsiLeaf_SL, 
-                                       _["LeafPsiMin_SH"] = minPsiLeaf_SH, 
-                                       _["LeafPsiMax_SH"] = maxPsiLeaf_SH, 
                                        _["dEdP"] = dEdPm,//Average daily soilplant conductance
                                        _["DDS"] = DDS, //Daily drought stress is the ratio of average soil plant conductance over its maximum value
                                        _["StemRWC"] = RWCsm,
@@ -1142,6 +1140,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
                      _["SunlitLeaves"] = Sunlit,
                      _["ShadeLeaves"] = Shade,
                      _["PlantsInst"] = PlantsInst,
+                     _["SunlitLeavesInst"] = SunlitInst,
+                     _["ShadeLeavesInst"] = ShadeInst,
                      _["LightExtinction"] = lightExtinctionAbsortion,
                      _["WindExtinction"] = zWind,
                      _["SupplyFunctions"] = supply,
@@ -1160,6 +1160,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
                      _["ShadeLeaves"] = Shade,
                      _["ExtractionInst"] = soilLayerExtractInst,
                      _["PlantsInst"] = PlantsInst,
+                     _["SunlitLeavesInst"] = SunlitInst,
+                     _["ShadeLeavesInst"] = ShadeInst,
                      _["LightExtinction"] = lightExtinctionAbsortion,
                      _["WindExtinction"] = zWind,
                      _["SupplyFunctions"] = supply);
