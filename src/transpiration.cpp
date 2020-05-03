@@ -492,8 +492,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   NumericMatrix Qinst(numCohorts,ntimesteps);
   NumericMatrix Einst(numCohorts, ntimesteps);
   NumericMatrix Aninst(numCohorts, ntimesteps), Aginst(numCohorts, ntimesteps);
-  NumericMatrix PsiLeafinst(numCohorts, ntimesteps);  
-  NumericMatrix PsiSteminst(numCohorts, ntimesteps);
+  NumericMatrix PsiLeafinst(numCohorts, ntimesteps), PsiSteminst(numCohorts, ntimesteps);
+  NumericMatrix PsiSympLeafinst(numCohorts, ntimesteps), PsiSympSteminst(numCohorts, ntimesteps);
   NumericMatrix RWCleafinst(numCohorts, ntimesteps);
   NumericMatrix RWCsteminst(numCohorts, ntimesteps);
   NumericMatrix PsiRootinst(numCohorts, ntimesteps);
@@ -904,6 +904,16 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
           Temp_SH(c,n)= NA_REAL;
           Temp_SL(c,n)= NA_REAL;
         }        
+      } else { //Plants with no LAI should be in equilibrium with soil (i.e. no transpiration)
+        List sFunctionBelow = supply[c];
+        NumericVector psiLeaf = sFunctionBelow["psiLeaf"];
+        NumericVector  psiStem1 = sFunctionBelow["psiStem"];
+        NumericVector  psiRootCrown = sFunctionBelow["psiRootCrown"];
+        psiStem1VEC[c] = psiStem1[0];
+        psiSympStemVEC[c] = psiStem1[0];
+        psiLeafVEC[c] = psiLeaf[0];
+        psiSympLeafVEC[c] = psiLeaf[0];
+        psiRootCrownVEC[c] = psiRootCrown[0];
       }
       
       
@@ -914,6 +924,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
       PsiSteminst(c,n) = psiStem1VEC[c]; 
       PsiLeafinst(c,n) = psiLeafVEC[c]; //Store instantaneous (average) leaf potential
       PsiRootinst(c,n) = psiRootCrownVEC[c]; //Store instantaneous root crown potential
+      PsiSympLeafinst(c,n) = psiSympLeafVEC[c];
+      PsiSympSteminst(c,n) = psiSympStemVEC[c];
       
       //Store the minimum water potential of the day (i.e. mid-day)
       meanGW_SL[c] += GW_SL(c,n)/((double) ntimesteps);
@@ -1069,6 +1081,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   dEdPinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   PsiLeafinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   PsiSteminst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  PsiSympLeafinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  PsiSympSteminst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   PsiRootinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   Aginst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   Aninst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
@@ -1130,6 +1144,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
     _["PsiRoot"] = PsiRootinst, 
     _["PsiStem"] = PsiSteminst,
     _["PsiLeaf"] = PsiLeafinst,
+    _["PsiSympStem"] = PsiSympSteminst,
+    _["PsiSympLeaf"] = PsiSympLeafinst,
     _["PLCstem"] = PLC, 
     _["RWCstem"] = RWCsteminst,
     _["RWCleaf"] = RWCleafinst,

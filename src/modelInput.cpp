@@ -737,6 +737,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   
   
   NumericVector SA(numCohorts);
+  StringVector Status(numCohorts, "alive");
   for(int c=0;c<numCohorts;c++){
     SA[c] = 10000.0*(LAI_live[c]/(N[c]/10000.0))/Al2As[c];//Individual SA in cm2
   }
@@ -755,7 +756,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   
   DataFrame plantsdf = DataFrame::create(_["SP"]=SP, _["N"]=N,_["DBH"]=DBH, _["Cover"] = Cover, _["H"]=H, _["CR"]=CR,
                                _["LAI_live"]=LAI_live, _["LAI_expanded"]=LAI_expanded, _["LAI_dead"] = LAI_dead,  
-                                 _["SA"] = SA);
+                               _["SA"] = SA, _["Status"] = Status);
   plantsdf.attr("row.names") = above.attr("row.names");
   
 

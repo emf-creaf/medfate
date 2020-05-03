@@ -48,6 +48,28 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(is.null(ylab)) ylab = "Stem water potential (MPa)"
     return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
   }
+  else if(type=="LeafSympPsi") {
+    OM = PlantsInst$PsiSympLeaf
+    if(bySpecies) {
+      lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
+      OMlai = sweep(OM, 1, Plants$LAI, "*")
+      m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM = sweep(m1,1,lai1,"/")
+    } 
+    if(is.null(ylab)) ylab = "Leaf symplastic water potential (MPa)"
+    return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
+  }
+  else if(type=="StemSympPsi") {
+    OM = PlantsInst$PsiSympStem
+    if(bySpecies) {
+      lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
+      OMlai = sweep(OM, 1, Plants$LAI, "*")
+      m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM = sweep(m1,1,lai1,"/")
+    } 
+    if(is.null(ylab)) ylab = "Stem symplastic water potential (MPa)"
+    return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
+  }
   else if(type=="RootPsi") {
     OM = PlantsInst$PsiRoot
     if(bySpecies) {

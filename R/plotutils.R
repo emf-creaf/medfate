@@ -29,6 +29,7 @@
 
 .getSubdailySPWBPlotTypes<-function(){
   TYPES = c("LeafPsi","LeafPsiAverage","RootPsi", "StemPsi", 
+            "LeafSympPsi", "StemSympPsi",
             "StemPLC","StemRWC", "LeafRWC",
             "SoilPlantConductance",
             "PlantExtraction","PlantTranspiration", "TranspirationPerLeaf",
