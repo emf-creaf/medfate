@@ -371,7 +371,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   NumericVector LAI_expanded = above["LAI_expanded"];
   NumericVector LAI_dead = above["LAI_dead"];
   NumericVector SA = above["SA"];
-  StringVector Status = above["Status"];
+  StringVector Status = Rcpp::as<Rcpp::StringVector>(above["Status"]);
   
   
   
@@ -500,7 +500,6 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   
   //3. Carbon balance and growth
   for(int j=0;j<numCohorts;j++){
-    // Rcout<<j<< Status[j]<<"\n";
     if(Status[j]=="alive") {
       double costPerLA = 1000.0*leaf_CC/SLA[j]; // Construction cost in g gluc · m-2 of leaf area
       double costPerSA = sapwood_CC*(H[j]+(Z[j]/10.0))*WoodDensity[j];  //Construction cost in g gluc ·cm-2 of sapwood
@@ -792,6 +791,9 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
       // Rcout<<" CBSapwood "<< sumSapwood << " ChLabSapwood: "<< (LabileMassSapwood[j] - labileMassSapwoodIni)<<"\n";
     }
   }
+
+  //Needed with string vectors
+  above["Status"] = Status;
   
   GrossPhotosynthesisInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
   MaintenanceRespirationInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
