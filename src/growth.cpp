@@ -500,7 +500,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   
   //3. Carbon balance and growth
   for(int j=0;j<numCohorts;j++){
-    Rcout<<j<< Status[j]<<"\n";
+    // Rcout<<j<< Status[j]<<"\n";
     if(Status[j]=="alive") {
       double costPerLA = 1000.0*leaf_CC/SLA[j]; // Construction cost in g gluc · m-2 of leaf area
       double costPerSA = sapwood_CC*(H[j]+(Z[j]/10.0))*WoodDensity[j];  //Construction cost in g gluc ·cm-2 of sapwood
