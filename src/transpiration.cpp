@@ -101,15 +101,21 @@ List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, d
     profit[i] = gain[i]-cost[i];
   }
   
-  while((Gw[ini]<=Gwmin) & (ini<fin)) ini +=1;
-  while((Gw[fin]>=Gwmax) & (fin>ini)) fin -=1; 
+  while((Gw[ini]<=Gwmin) && (ini<fin)) ini++;
+  while((Gw[fin]>=Gwmax) && (fin>ini)) fin--; 
+  
+  //Ensure that ini <=fin
+  ini = std::min(ini, fin);
+  fin = std::max(ini,fin);
   
   int imaxprofit=ini;
   double maxprofit=profit[ini];
-  for(int i=ini+1;i<fin;i++){
-    if((profit[i]>maxprofit)) {
-      maxprofit = profit[i];
-      imaxprofit = i;
+  if(fin>ini) {
+    for(int i=ini+1;i<=fin;i++){
+      if((profit[i]>maxprofit)) {
+        maxprofit = profit[i];
+        imaxprofit = i;
+      }
     }
   }
   // Rcout<<ini<< " "<< fin<<" Gwmx= "<<Gwmax<<" Gwmin "<<Gwmin<<" iPM="<< imaxprofit<<" Eini=" <<supplyE[ini]<<" Efin=" <<supplyE[fin]<<" E[iPM]=" <<supplyE[imaxprofit]<<"\n";
@@ -643,7 +649,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
           
           //Profit maximization
           List PMSunlit, PMShade;
-          int iPMSunlit, iPMShade;
+          int iPMSunlit = 0, iPMShade = 0;
           
           if(!cochard) { //Pure Sperry model
             PMSunlit = profitMaximization(sFunctionAbove, photoSunlit,  Gwmin[c], Gwmax[c], gainModifier, costModifier, costWater);
@@ -654,9 +660,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
             if(psiLeaf[c] < psiTlp) {  //Is leaf turgor zero
               iPMSunlit = 0;
               iPMShade  = 0;
-              Rcout<<"+";
-              for(int j=0;j<GwSunlit.size();j++) if(GwSunlit[j]<Gwmin[c]) iPMSunlit++;
-              for(int j=0;j<GwShade.size();j++) if(GwShade[j]<Gwmin[c]) iPMShade++;
+              for(int j=0;j<(GwSunlit.size()-1);j++) if(GwSunlit[j]<Gwmin[c]) iPMSunlit++;
+              for(int j=0;j<(GwShade.size()-1);j++) if(GwShade[j]<Gwmin[c]) iPMShade++;
             } else {
               PMSunlit = profitMaximization(sFunctionAbove, photoSunlit,  Gwmin[c], Gwmax[c], gainModifier, costModifier, costWater);
               PMShade = profitMaximization(sFunctionAbove, photoShade,  Gwmin[c],Gwmax[c], gainModifier, costModifier, costWater);
