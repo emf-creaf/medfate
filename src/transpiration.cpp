@@ -137,7 +137,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   double psiTol = numericParams["psiTol"];
   double ETol = numericParams["ETol"];
   bool capacitance = control["capacitance"];
-  bool cuticularTranspiration = control["cuticularTranspiration"];
+  bool cochard = control["cochard"];
   String cavitationRefill = control["cavitationRefill"];
   double refillMaximumRate = control["refillMaximumRate"];
   double klatleaf = control["klatleaf"];
@@ -509,6 +509,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   NumericMatrix Temp_SH(numCohorts, ntimesteps);
   NumericMatrix Temp_SL(numCohorts, ntimesteps);
   NumericVector minPsiLeaf(numCohorts,0.0), maxPsiLeaf(numCohorts,-99999.0); 
+  NumericVector meanGW_SL(numCohorts,0.0), meanGW_SH(numCohorts,-99999.0); 
   NumericVector minPsiLeaf_SL(numCohorts,0.0), maxPsiLeaf_SL(numCohorts,-99999.0); 
   NumericVector minPsiLeaf_SH(numCohorts,0.0), maxPsiLeaf_SH(numCohorts,-99999.0);
   NumericVector minPsiStem(numCohorts, 0.0), minPsiRoot(numCohorts,0.0); //Minimum potentials experienced
@@ -598,6 +599,9 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
           sFunctionBelow = supply[c];
         }
 
+        //Determine turgor loss point (as proxy of stomatal closure)
+        double psiTlp = turgorLossPoint(LeafPI0[c], LeafEPS[c]);
+        
         //Retrieve transpiration, psiLeaf and dEdP vectors
         fittedE = sFunctionAbove["E"];
         dEdP = sFunctionAbove["dEdP"];
@@ -605,10 +609,6 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
         
         //Get info from sFunctionAbove
         psiRootCrown = sFunctionAbove["psiRootCrown"];
-        
-        double Gwminc = Gwmin[c];
-        if(!cuticularTranspiration) Gwminc = 0.0;
-
         
         if(fittedE.size()>0) {
           //Photosynthesis function for sunlit and shade leaves
@@ -642,10 +642,28 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
           
           
           //Profit maximization
-          List PMSunlit = profitMaximization(sFunctionAbove, photoSunlit,  Gwminc, Gwmax[c], gainModifier, costModifier, costWater);
-          List PMShade = profitMaximization(sFunctionAbove, photoShade,  Gwminc,Gwmax[c], gainModifier, costModifier, costWater);
-          int iPMSunlit = PMSunlit["iMaxProfit"];
-          int iPMShade = PMShade["iMaxProfit"];
+          List PMSunlit, PMShade;
+          int iPMSunlit, iPMShade;
+          
+          if(!cochard) { //Pure Sperry model
+            PMSunlit = profitMaximization(sFunctionAbove, photoSunlit,  Gwmin[c], Gwmax[c], gainModifier, costModifier, costWater);
+            PMShade = profitMaximization(sFunctionAbove, photoShade,  Gwmin[c],Gwmax[c], gainModifier, costModifier, costWater);
+            iPMSunlit = PMSunlit["iMaxProfit"];
+            iPMShade = PMShade["iMaxProfit"];
+          } else {
+            if(psiLeaf[c] < psiTlp) {  //Is leaf turgor zero
+              iPMSunlit = 0;
+              iPMShade  = 0;
+              Rcout<<"+";
+              for(int j=0;j<GwSunlit.size();j++) if(GwSunlit[j]<Gwmin[c]) iPMSunlit++;
+              for(int j=0;j<GwShade.size();j++) if(GwShade[j]<Gwmin[c]) iPMShade++;
+            } else {
+              PMSunlit = profitMaximization(sFunctionAbove, photoSunlit,  Gwmin[c], Gwmax[c], gainModifier, costModifier, costWater);
+              PMShade = profitMaximization(sFunctionAbove, photoShade,  Gwmin[c],Gwmax[c], gainModifier, costModifier, costWater);
+              iPMSunlit = PMSunlit["iMaxProfit"];
+              iPMShade = PMShade["iMaxProfit"];
+            }
+          }
           
           //Store?
           if(!IntegerVector::is_na(stepFunctions)) {
@@ -893,6 +911,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
       PsiRootinst(c,n) = psiRootCrownVEC[c]; //Store instantaneous root crown potential
       
       //Store the minimum water potential of the day (i.e. mid-day)
+      meanGW_SL[c] += GW_SL(c,n)/((double) ntimesteps);
+      meanGW_SH[c] += GW_SH(c,n)/((double) ntimesteps);
       minPsiLeaf_SL[c] = std::min(minPsiLeaf_SL[c],Psi_SL(c,n));
       minPsiLeaf_SH[c] = std::min(minPsiLeaf_SH[c],Psi_SH(c,n));
       maxPsiLeaf_SL[c] = std::max(maxPsiLeaf_SL[c],Psi_SL(c,n));
@@ -1064,14 +1084,16 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
     _["Vmax298"] = Vmax298SL,
     _["Jmax298"] = Jmax298SL,
     _["LeafPsiMin"] = minPsiLeaf_SL, 
-    _["LeafPsiMax"] = maxPsiLeaf_SL 
+    _["LeafPsiMax"] = maxPsiLeaf_SL, 
+    _["GW"] = meanGW_SL  
   );
   DataFrame Shade = DataFrame::create(
     _["LAI"] = LAI_SH, 
     _["Vmax298"] = Vmax298SH,
     _["Jmax298"] = Jmax298SH,
     _["LeafPsiMin"] = minPsiLeaf_SH, 
-    _["LeafPsiMax"] = maxPsiLeaf_SH 
+    _["LeafPsiMax"] = maxPsiLeaf_SH, 
+    _["GW"] = meanGW_SH 
   );
   Sunlit.attr("row.names") = above.attr("row.names");
   Shade.attr("row.names") = above.attr("row.names");

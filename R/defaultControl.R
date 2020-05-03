@@ -14,7 +14,7 @@ defaultControl<-function() {
     leafPhenology = TRUE,
     unfoldingDD = 300,
     transpirationMode = "Granier", #vs. "Sperry"
-    cuticularTranspiration = TRUE,
+    cochard = FALSE,
     costWater = "dEdP",
     gainModifier = 1, 
     costModifier = 1, 

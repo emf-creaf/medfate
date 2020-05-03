@@ -171,6 +171,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
               "SoilPlantConductance","PlantStress", 
               "PlantNetPhotosynthesis", "PlantGrossPhotosynthesis", "PlantTranspiration","PlantWUE",
               "NetPhotosynthesisPerLeaf","GrossPhotosynthesisPerLeaf","TranspirationPerLeaf", 
+              "GW_SL", "GW_SH",
               "LeafPsiMin", "LeafPsiMax", "LeafPsiMin_SL", "LeafPsiMax_SL", "LeafPsiMin_SH", "LeafPsiMax_SH",
               "StemPsi","RootPsi","StemPLC", "StemRWC", "LeafRWC", 
               "PlantWaterBalance",
@@ -380,6 +381,30 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     } 
     if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     if(is.null(ylab)) ylab = "Maximum (predawn) shade leaf water potential (MPa)"
+    return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
+  }
+  else if(type=="GW_SH") {
+    OM = x$ShadeLeaves$GW
+    if(bySpecies) {
+      lai1 = t(apply(Plants$LAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
+      m1 = t(apply(Plants$LAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
+      OM = m1/lai1
+      OM[lai1==0] = NA
+    } 
+    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
+    if(is.null(ylab)) ylab = expression(paste("Shade leaf stomatal conductance ",(mmol%.%m^{-2}%.%s^{-1})))
+    return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
+  }
+  else if(type=="GW_SL") {
+    OM = x$SunlitLeaves$GW
+    if(bySpecies) {
+      lai1 = t(apply(Plants$LAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
+      m1 = t(apply(Plants$LAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
+      OM = m1/lai1
+      OM[lai1==0] = NA
+    } 
+    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
+    if(is.null(ylab)) ylab = expression(paste("Sunlit leaf stomatal conductance ",(mmol%.%m^{-2}%.%s^{-1})))
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   }
   else if(type=="StemPsi") {
