@@ -709,6 +709,8 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   NumericVector H = above["H"];
   NumericVector CR = above["CR"];
   
+  control["cavitationRefill"] = "growth";
+  
   String transpirationMode = control["transpirationMode"];
   if((transpirationMode!="Granier") & (transpirationMode!="Sperry")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Granier' or 'Sperry')");
 

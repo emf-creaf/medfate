@@ -387,7 +387,8 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   NumericVector psiApoStem = Rcpp::as<Rcpp::NumericVector>(internalWater["psiStem1"]);
   NumericVector psiSympLeaf = Rcpp::as<Rcpp::NumericVector>(internalWater["psiSympLeaf"]);
   NumericVector psiSympStem = Rcpp::as<Rcpp::NumericVector>(internalWater["psiSympStem"]);
-
+  NumericVector PLCstem = Rcpp::as<Rcpp::NumericVector>(internalWater["PLCstem"]);
+  
   DataFrame internalCarbon = Rcpp::as<Rcpp::DataFrame>(x["internalCarbon"]);
   NumericVector sugarLeaf = internalCarbon["sugarLeaf"];
   NumericVector starchLeaf = internalCarbon["starchLeaf"];
@@ -718,11 +719,14 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
       LAlive = LAlive*(1.0 - propLeafSenescence); //Update expanded leaf area
       
       //SA growth senescense
+      double SAprev = SA[j];
       double deltaSAturnover = (dailySAturnoverProportion/(1.0+15.0*exp(-0.01*H[j])))*SA[j];
       SA[j] = SA[j] - deltaSAturnover; //Update sapwood area
       //SA growth     
       SA[j] += deltaSAgrowth; //Update sapwood area
       SAgrowth[j] += deltaSAgrowth/SA[j]; //Store sapwood area growth rate (cm2/cm2)
+      //Decrease PLC due to new SA growth
+      if(cavitationRefill=="growth") PLCstem[j] = std::max(0.0, PLCstem[j] - (deltaSAgrowth/SA[j]));
       
       //Death by carbon starvation or dessication
       double stemRWCAll = symplasticRelativeWaterContent(psiSympStem[j], StemPI0[j], StemEPS[j])*(1.0 - StemAF[j]) + apoplasticRelativeWaterContent(psiApoStem[j], VCstem_c[j], VCstem_d[j])*StemAF[j];
@@ -1017,14 +1021,14 @@ void recordStandSummary(DataFrame standSummary, NumericVector LAIlive,
 
 // [[Rcpp::export("growth")]]
 List growth(List x, List soil, DataFrame meteo, double latitude, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL) {
-  //Control params
-  List control = x["control"];  
   
+  //Control params 
+  List control =x["control"];  
   //Store input
   List growthInput = clone(x);
   List soilInput = clone(soil);
   
-  
+    
   // Rcout<<"1";
   
   //Cohort info
@@ -1039,7 +1043,6 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   bool subdailyResults = control["subdailyResults"];
   bool leafPhenology = control["leafPhenology"];
   bool unlimitedSoilWater = control["unlimitedSoilWater"];
-  String cavitationRefill = control["cavitationRefill"];
   checkgrowthInput(x, soil, transpirationMode, soilFunctions);
   
   if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
@@ -1249,20 +1252,6 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
     double wind = WindSpeed[i];
     if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; //Default 1 m/s -> 10% of fall every day
     if(wind<0.1) wind = 0.1; //Minimum windspeed abovecanopy
-    
-    //If DOY == 1 reset PLC (Growth assumed)
-    if(cavitationRefill=="annual") {
-      if(DOY[i]==1) {
-        DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
-        if(transpirationMode=="Granier") {
-          NumericVector PLC = Rcpp::as<Rcpp::NumericVector>(internalWater["PLC"]);
-          for(int j=0;j<PLC.length();j++) PLC[j] = 0.0;
-        } else {
-          NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["PLCstem"]);
-          for(int j=0;j<StemPLC.length();j++) StemPLC[j] = 0.0;
-        }
-      }
-    }
     
     if(unlimitedSoilWater) {
       NumericVector W = soil["W"];
