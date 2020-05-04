@@ -166,6 +166,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   NumericVector LAIdead = Rcpp::as<Rcpp::NumericVector>(above["LAI_dead"]);
   NumericVector H = Rcpp::as<Rcpp::NumericVector>(above["H"]);
   NumericVector CR = Rcpp::as<Rcpp::NumericVector>(above["CR"]);
+  StringVector Status = Rcpp::as<Rcpp::StringVector>(above["Status"]);
+  
   int numCohorts = LAIlive.size();
   
   //Soil input
@@ -904,16 +906,24 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
           Temp_SH(c,n)= NA_REAL;
           Temp_SL(c,n)= NA_REAL;
         }        
-      } else { //Plants with no LAI should be in equilibrium with soil (i.e. no transpiration)
+      } else if(Status[c]=="alive") { //Living plants with no LAI should be in equilibrium with soil (i.e. no transpiration)
         List sFunctionBelow = supply[c];
-        NumericVector psiLeaf = sFunctionBelow["psiLeaf"];
-        NumericVector  psiStem1 = sFunctionBelow["psiStem"];
         NumericVector  psiRootCrown = sFunctionBelow["psiRootCrown"];
-        psiStem1VEC[c] = psiStem1[0];
-        psiSympStemVEC[c] = psiStem1[0];
-        psiLeafVEC[c] = psiLeaf[0];
-        psiSympLeafVEC[c] = psiLeaf[0];
         psiRootCrownVEC[c] = psiRootCrown[0];
+        if(!capacitance) {
+          NumericVector  psiStem1 = sFunctionBelow["psiStem"];
+          psiStem1VEC[c] = psiStem1[0];
+          psiSympStemVEC[c] = psiStem1[0];
+          NumericVector psiLeaf = sFunctionBelow["psiLeaf"];
+          psiLeafVEC[c] = psiLeaf[0];
+          psiSympLeafVEC[c] = psiLeaf[0];
+        } else {
+          NumericVector  psiStem1 = sFunctionBelow["psiStem1"];
+          psiStem1VEC[c] = psiStem1[0];
+          psiSympStemVEC[c] = psiStem1[0];
+          psiLeafVEC[c] = psiStem1VEC[c];
+          psiSympLeafVEC[c] = psiSympStemVEC[c];
+        }
       }
       
       

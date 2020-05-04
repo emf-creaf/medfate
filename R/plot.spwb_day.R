@@ -6,6 +6,12 @@ plot.growth_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
   if(type %in% PWB_TYPES) {
     plot.pwb_day(x, type, bySpecies, xlim, ylim, xlab, ylab,...)
   }
+  CBInst = x$PlantCBInst
+  if(type=="SugarLeaf") {
+    OM = CBInst$SugarLeaf
+    if(is.null(ylab)) ylab = .getYLab(type)
+    return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
+  }
 }
 
 plot.spwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE, 

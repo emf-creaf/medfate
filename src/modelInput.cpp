@@ -593,6 +593,8 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     if(NumericVector::is_na(CR[c])) CR[c] = 0.5; //PATCH TO AVOID MISSING VALUES!!!!
   }
   
+  StringVector Status(numCohorts, "alive");
+  
 
   //Cohort description
   CharacterVector nsp = cohortCharacterParameter(SP, SpParams, "Name");
@@ -603,7 +605,8 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
   DataFrame plantsdf = DataFrame::create(_["H"]=H, _["CR"]=CR, 
                                          _["LAI_live"]=LAI_live, 
                                          _["LAI_expanded"] = LAI_expanded, 
-                                         _["LAI_dead"] = LAI_dead);
+                                         _["LAI_dead"] = LAI_dead,
+                                         _["Status"] = Status);
   plantsdf.attr("row.names") = above.attr("row.names");
   
  
