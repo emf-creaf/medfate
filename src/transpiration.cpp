@@ -504,8 +504,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   NumericMatrix Aninst(numCohorts, ntimesteps), Aginst(numCohorts, ntimesteps);
   NumericMatrix LeafPsiInst(numCohorts, ntimesteps), StemPsiInst(numCohorts, ntimesteps);
   NumericMatrix PsiSympLeafinst(numCohorts, ntimesteps), PsiSympSteminst(numCohorts, ntimesteps);
-  NumericMatrix LeafRWCInst(numCohorts, ntimesteps);
-  NumericMatrix StemRWCInst(numCohorts, ntimesteps);
+  NumericMatrix LeafRWCInst(numCohorts, ntimesteps), StemRWCInst(numCohorts, ntimesteps);
+  NumericMatrix LeafSympRWCInst(numCohorts, ntimesteps), StemSympRWCInst(numCohorts, ntimesteps);
   NumericMatrix RootPsiInst(numCohorts, ntimesteps);
   NumericMatrix PWBinst(numCohorts, ntimesteps);
   NumericMatrix An_SL(numCohorts, ntimesteps), Ag_SL(numCohorts, ntimesteps);
@@ -532,7 +532,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   NumericMatrix minPsiRhizo(numCohorts, nlayers);
   std::fill(minPsiRhizo.begin(), minPsiRhizo.end(), 0.0);
   NumericMatrix PLC(numCohorts, ntimesteps);
-  NumericVector PLCm(numCohorts), RWCsm(numCohorts), RWClm(numCohorts);
+  NumericVector PLCm(numCohorts), RWCsm(numCohorts), RWClm(numCohorts),RWCssm(numCohorts), RWClsm(numCohorts);
   NumericVector dEdPm(numCohorts);
   NumericVector PWB(numCohorts,0.0);
   
@@ -942,8 +942,10 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
       
       //Store (for output) instantaneous leaf, stem and root potential, plc and rwc values
       PLC(c,n) = StemPLCVEC[c];
-      StemRWCInst(c,n) = symplasticRelativeWaterContent(StemSympPsiVEC[c], stempi0, StemEPS[c])*(1.0 - StemAF[c]) + apoplasticRelativeWaterContent(Stem1PsiVEC[c], VCstem_c[c], VCstem_d[c])*StemAF[c];
-      LeafRWCInst(c,n) = symplasticRelativeWaterContent(LeafSympPsiVEC[c], leafpi0, LeafEPS[c])*(1.0 - LeafAF[c]) + apoplasticRelativeWaterContent(LeafPsiVEC[c], VCleaf_c[c], VCleaf_d[c])*LeafAF[c];
+      StemSympRWCInst(c,n) = symplasticRelativeWaterContent(StemSympPsiVEC[c], stempi0, StemEPS[c]);
+      LeafSympRWCInst(c,n) = symplasticRelativeWaterContent(LeafSympPsiVEC[c], leafpi0, LeafEPS[c]);
+      StemRWCInst(c,n) = StemSympRWCInst(c,n)*(1.0 - StemAF[c]) + apoplasticRelativeWaterContent(Stem1PsiVEC[c], VCstem_c[c], VCstem_d[c])*StemAF[c];
+      LeafRWCInst(c,n) = LeafSympRWCInst(c,n)*(1.0 - LeafAF[c]) + apoplasticRelativeWaterContent(LeafPsiVEC[c], VCleaf_c[c], VCleaf_d[c])*LeafAF[c];
       StemPsiInst(c,n) = Stem1PsiVEC[c]; 
       LeafPsiInst(c,n) = LeafPsiVEC[c]; //Store instantaneous (average) leaf potential
       RootPsiInst(c,n) = RootCrownPsiVEC[c]; //Store instantaneous root crown potential
@@ -1032,6 +1034,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
     PLCm[c] = sum(PLC(c,_))/((double)PLC.ncol());
     RWCsm[c] = sum(StemRWCInst(c,_))/((double)StemRWCInst.ncol());
     RWClm[c] = sum(LeafRWCInst(c,_))/((double)LeafRWCInst.ncol());
+    RWCssm[c] = sum(StemSympRWCInst(c,_))/((double)StemSympRWCInst.ncol());
+    RWClsm[c] = sum(LeafSympRWCInst(c,_))/((double)LeafSympRWCInst.ncol());
     dEdPm[c] = sum(dEdPInst(c,_))/((double)dEdPInst.ncol());  
     double maxConductance = maximumSoilPlantConductance(VGrhizo_kmax(c,_), VCroot_kmax(c,_), VCstem_kmax[c], VCleaf_kmax[c]);
     DDS[c] = Phe[c]*(1.0 - (dEdPm[c]/(sapFluidityDay*maxConductance)));
@@ -1112,6 +1116,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   PLC.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   LeafRWCInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   StemRWCInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  LeafSympRWCInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  StemSympRWCInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   PWBinst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   minPsiRhizo.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
   soilLayerExtractInst.attr("dimnames") = List::create(seq(1,nlayers), seq(1,ntimesteps));
@@ -1172,6 +1178,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
     _["StemPLC"] = PLC, 
     _["StemRWC"] = StemRWCInst,
     _["LeafRWC"] = LeafRWCInst,
+    _["StemSympRWC"] = StemSympRWCInst,
+    _["LeafSympRWC"] = LeafSympRWCInst,
     _["PWB"] = PWBinst);
   DataFrame Plants = DataFrame::create(_["LAI"] = LAIcohort,
                                        _["Extraction"] = SoilExtractCoh,
@@ -1187,6 +1195,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
                                        _["DDS"] = DDS, //Daily drought stress is the ratio of average soil plant conductance over its maximum value
                                        _["StemRWC"] = RWCsm,
                                        _["LeafRWC"] = RWClm,
+                                       _["StemSympRWC"] = RWCssm,
+                                       _["LeafSympRWC"] = RWClsm,
                                        _["WaterBalance"] = PWB);
   Plants.attr("row.names") = above.attr("row.names");
   NumericVector Stand = NumericVector::create(_["LAI"] = LAIcell, 

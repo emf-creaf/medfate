@@ -34,8 +34,10 @@ The following plots are currently available for \code{spwb_day} and \code{pwb_da
     \item{\code{"RootPsi"}:}{Root crown water potential.}
     \item{\code{"StemPsi"}:}{(Upper) stem water potential.}
     \item{\code{"StemPLC"}:}{(Average) percentage of loss conductance in the stem conduits.}
-    \item{\code{"StemRWC"}:}{(Average) relative water content in the stem symplasm.}
-    \item{\code{"LeafRWC"}:}{Relative water content in the leaf symplasm.}
+    \item{\code{"StemRWC"}:}{(Average) relative water content in the stem.}
+    \item{\code{"LeafRWC"}:}{Relative water content in the leaf.}
+    \item{\code{"StemSympRWC"}:}{(Average) relative water content in the stem symplasm.}
+    \item{\code{"LeafSympRWC"}:}{Relative water content in the leaf symplasm.}
     \item{\code{"SoilPlantConductance"}:}{Overall soil plant conductance (calculated as the derivative of the supply function).}
     \item{\code{"PlantExtraction"}:}{ Water extracted from each soil layer.}
     \item{\code{"PlantTranspiration"}:}{ Plant cohort transpiration per ground area.}

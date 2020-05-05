@@ -129,8 +129,8 @@ List cohortFMC(List spwb) {
   List plants = spwb["Plants"];
   NumericMatrix psiapoleaf = Rcpp::as<Rcpp::NumericMatrix>(plants["LeafPsiMin"]);
   NumericMatrix StemPLC = Rcpp::as<Rcpp::NumericMatrix>(plants["StemPLC"]);
-  NumericMatrix RWCsymleaf = Rcpp::as<Rcpp::NumericMatrix>(plants["LeafRWC"]);
-  NumericMatrix RWCsymstem = Rcpp::as<Rcpp::NumericMatrix>(plants["StemRWC"]);
+  NumericMatrix RWCsymleaf = Rcpp::as<Rcpp::NumericMatrix>(plants["LeafSympRWC"]);
+  NumericMatrix RWCsymstem = Rcpp::as<Rcpp::NumericMatrix>(plants["StemSympRWC"]);
   List l = psiapoleaf.attr("dimnames");
   CharacterVector days = l[0];
   CharacterVector cohNames = l[1];

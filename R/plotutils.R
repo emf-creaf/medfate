@@ -17,7 +17,7 @@
                "NetPhotosynthesisPerLeaf","GrossPhotosynthesisPerLeaf","TranspirationPerLeaf", 
                "LeafPsiMin", "LeafPsiMax", 
                "GW_SL", "GW_SH","LeafPsiMin_SL", "LeafPsiMax_SL", "LeafPsiMin_SH", "LeafPsiMax_SH",
-               "StemPsi","RootPsi","StemPLC", "StemRWC", "LeafRWC", 
+               "StemPsi","RootPsi","StemPLC", "StemRWC", "LeafRWC","StemSympRWC", "LeafSympRWC", 
                "PlantWaterBalance",
                "PlantAbsorbedSWR", "AbsorbedSWRPerLeaf",
                "PlantAbsorbedLWR", "AbsorbedLWRPerLeaf",
@@ -76,6 +76,11 @@
   else if(type=="LAgrowth") ylab = expression(paste("Leaf area growth rate ",(m^2 %.% cm^{-2} %.% d^{-1})))
   else if(type=="LeafPI0")  ylab = expression(paste("Leaf osmotic potential at full turgor  ",(MPa)))
   else if(type=="StemPI0")  ylab = expression(paste("Stem osmotic potential at full turgor  ",(MPa)))
+  else if(type=="StemPLC") ylab = "Percent loss conductance in stem [%]"
+  else if(type=="StemRWC") ylab = "Relative water content in stem [%]"
+  else if(type=="StemSympRWC") ylab = "Relative water content in stem symplasm [%]"
+  else if(type=="LeafRWC") ylab = "Relative water content in leaf [%]"
+  else if(type=="LeafSympRWC") ylab = "Relative water content in leaf symplasm [%]"
   return(ylab)
 }
 

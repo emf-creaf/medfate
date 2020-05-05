@@ -173,7 +173,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
               "NetPhotosynthesisPerLeaf","GrossPhotosynthesisPerLeaf","TranspirationPerLeaf", 
               "GW_SL", "GW_SH",
               "LeafPsiMin", "LeafPsiMax", "LeafPsiMin_SL", "LeafPsiMax_SL", "LeafPsiMin_SH", "LeafPsiMax_SH",
-              "StemPsi","RootPsi","StemPLC", "StemRWC", "LeafRWC", 
+              "StemPsi","RootPsi","StemPLC", "StemRWC", "LeafRWC", "StemSympRWC", "LeafSympRWC", 
               "PlantWaterBalance",
               "PlantAbsorbedSWR", "AbsorbedSWRPerLeaf",
               "PlantAbsorbedLWR", "AbsorbedLWRPerLeaf",
@@ -263,8 +263,8 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(is.null(ylim)) ylim = c(0,1)
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
-  else if(type=="StemPLC") {
-    OM = Plants$StemPLC*100
+  else if(type %in% c("StemPLC", "StemRWC", "LeafRWC", "StemSympRWC", "LeafSympRWC")) {
+    OM = Plants[[type]]*100
     if(bySpecies) {
       lai1 = t(apply(Plants$LAI,1, tapply, input$cohorts$Name, sum))
       m1 = t(apply(Plants$LAI * OM,1, tapply, input$cohorts$Name, sum))
@@ -272,31 +272,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       OM[lai1==0] = NA
     } 
     if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
-    if(is.null(ylab)) ylab = "Percent loss conductance in stem [%]"
-    return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
-  } 
-  else if(type=="StemRWC") {
-    OM = Plants$StemRWC*100
-    if(bySpecies) {
-      lai1 = t(apply(Plants$LAI,1, tapply, input$cohorts$Name, sum))
-      m1 = t(apply(Plants$LAI * OM,1, tapply, input$cohorts$Name, sum))
-      OM = m1/lai1
-      OM[lai1==0] = NA
-    } 
-    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
-    if(is.null(ylab)) ylab = "Relative water content in stem [%]"
-    return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
-  } 
-  else if(type=="LeafRWC") {
-    OM = Plants$LeafRWC*100
-    if(bySpecies) {
-      lai1 = t(apply(Plants$LAI,1, tapply, input$cohorts$Name, sum))
-      m1 = t(apply(Plants$LAI * OM,1, tapply, input$cohorts$Name, sum))
-      OM = m1/lai1
-      OM[lai1==0] = NA
-    } 
-    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
-    if(is.null(ylab)) ylab = "Relative water content in leaf [%]"
+    if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="PlantPsi") {

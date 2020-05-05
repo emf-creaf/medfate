@@ -126,6 +126,8 @@ If \code{transpirationMode="Sperry"}, element \code{"Plants"} is a list with the
    \item{\code{"LeafPsiMax"}: A data frame with the maximum (predawn) daily (average) leaf water potential of each plant (in MPa).}
    \item{\code{"LeafRWC"}: A data frame with the average daily leaf relative water content of each plant (in percent).}
    \item{\code{"StemRWC"}: A data frame with the average daily stem relative water content of each plant (in percent). }
+   \item{\code{"LeafSympRWC"}: A data frame with the average daily leaf symplasm relative water content of each plant (in percent).}
+   \item{\code{"StemSympRWC"}: A data frame with the average daily stem symplasm relative water content of each plant (in percent). }
    \item{\code{"StemPsi"}: A data frame with the minimum daily stem water potential of each plant (in MPa). }
    \item{\code{"StemPLC"}: A data frame with the average daily proportion of stem conductance loss of each plant ([0-1]).}
  \item{\code{"RootPsi"}: A data frame with the minimum daily root water potential of each plant (in MPa). }

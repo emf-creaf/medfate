@@ -109,6 +109,17 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(is.null(ylab)) ylab = "Stem relative water content (%)"
     return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
   }
+  else if(type=="StemSympRWC") {
+    OM = PlantsInst$StemSympRWC*100
+    if(bySpecies) {
+      lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
+      OMlai = sweep(OM, 1, Plants$LAI, "*")
+      m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM = sweep(m1,1,lai1,"/")
+    } 
+    if(is.null(ylab)) ylab = "Stem symplasm relative water content (%)"
+    return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
+  }
   else if(type=="LeafRWC") {
     OM = PlantsInst$LeafRWC*100
     if(bySpecies) {
@@ -118,6 +129,17 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       OM = sweep(m1,1,lai1,"/")
     } 
     if(is.null(ylab)) ylab = "Leaf relative water content (%)"
+    return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
+  }
+  else if(type=="LeafSympRWC") {
+    OM = PlantsInst$LeafSympRWC*100
+    if(bySpecies) {
+      lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
+      OMlai = sweep(OM, 1, Plants$LAI, "*")
+      m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM = sweep(m1,1,lai1,"/")
+    } 
+    if(is.null(ylab)) ylab = "Leaf symplasm relative water content (%)"
     return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
   }
   else if(type=="SoilPlantConductance") {
