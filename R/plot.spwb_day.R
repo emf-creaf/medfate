@@ -55,7 +55,7 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
   }
   else if(type=="LeafSympPsi") {
-    OM = PlantsInst$PsiSympLeaf
+    OM = PlantsInst$LeafSympPsi
     if(bySpecies) {
       lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
       OMlai = sweep(OM, 1, Plants$LAI, "*")
@@ -66,7 +66,7 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
   }
   else if(type=="StemSympPsi") {
-    OM = PlantsInst$PsiSympStem
+    OM = PlantsInst$StemSympPsi
     if(bySpecies) {
       lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
       OMlai = sweep(OM, 1, Plants$LAI, "*")

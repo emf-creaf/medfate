@@ -219,8 +219,10 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   int numSteps = AgStep.ncol();
   
   //RWC including apoplastic fraction
-  NumericMatrix PsiSympSteminst =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["PsiSympStem"]);
-  NumericMatrix PsiSympLeafinst =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["PsiSympLeaf"]);
+  NumericMatrix StemSympPsiInst =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemSympPsi"]);
+  NumericMatrix LeafSympPsiInst =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["LeafSympPsi"]);
+  NumericMatrix StemSympRWCInst =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemSympRWC"]);
+  NumericMatrix LeafSympRWCInst =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["LeafSympRWC"]);
   
   List eb = spwbOut["EnergyBalance"];  
   DataFrame tempDF =  Rcpp::as<Rcpp::DataFrame>(eb["Temperature"]);
@@ -391,8 +393,8 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
         
         //Leaf growth
         double f_temp = temperatureGrowthFactor(Tcan[s]);
-        double fLA_turgor = turgorGrowthFactor(PsiSympLeafinst(j,s),turgorLossPoint(LeafPI0[j], LeafEPS[j]));
-        double fSA_turgor = turgorGrowthFactor(PsiSympSteminst(j,s),turgorLossPoint(StemPI0[j], StemEPS[j]));
+        double fLA_turgor = turgorGrowthFactor(LeafSympPsiInst(j,s),turgorLossPoint(LeafPI0[j], LeafEPS[j]));
+        double fSA_turgor = turgorGrowthFactor(StemSympPsiInst(j,s),turgorLossPoint(StemPI0[j], StemEPS[j]));
         // Rcout << j << " fLA_turgor "<< fLA_turgor << " fSA_turgor "<< fSA_turgor << "f_temp"<< f_temp <<"\n";
         double growthCostLAStep = 0.0;
         double growthCostSAStep = 0.0;
@@ -447,23 +449,21 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
         double ff = 0.0;
         double ctl = 3600.0*Volume_leaves[j]*glucoseMolarMass;
         double cts = 3600.0*Volume_sapwood[j]*glucoseMolarMass;
-        double rwcStem = symplasticRelativeWaterContent(PsiSympSteminst(j,s), StemPI0[j], StemEPS[j]);
-        double rwcLeaf = symplasticRelativeWaterContent(PsiSympLeafinst(j,s), LeafPI0[j], LeafEPS[j]);
         for(int t=0;t<3600;t++) {
           sugarSapwood[j] += sapwoodSugarMassDeltaStep/cts;
           
-          double conversionSapwood = sugarStarchDynamicsStem(sugarSapwood[j]/rwcStem, starchSapwood[j]/rwcStem, minimumSapwoodSugarConc);
+          double conversionSapwood = sugarStarchDynamicsStem(sugarSapwood[j]/StemSympRWCInst(j,s), starchSapwood[j]/StemSympRWCInst(j,s), minimumSapwoodSugarConc);
           // Rcout<<" coh:"<<j<< " s:"<<s<< " Lsugar: "<< sugarLeaf[j] << " Lstarch: "<< sugarSapwood[j]<<" starch formation: "<<conversionLeaf<< "\n";
-          double starchSapwoodIncrease = conversionSapwood*rwcStem;
+          double starchSapwoodIncrease = conversionSapwood*StemSympRWCInst(j,s);
           starchSapwoodIncrease = std::min(starchSapwoodIncrease, Starch_max_sapwood[j] - starchSapwood[j]);
           starchSapwood[j] += starchSapwoodIncrease;
           
           if(LAlive>0.0) {
             sugarLeaf[j] += leafSugarMassDeltaStep/ctl;
-            double ft = floemFlow(PsiSympLeafinst(j,s), PsiSympSteminst(j,s), sugarLeaf[j]/rwcLeaf, sugarSapwood[j]/rwcStem, Tcan[s], k_floem, nonSugarConc)*LAlive; //flow as mol glucose per s
+            double ft = floemFlow(LeafSympPsiInst(j,s), StemSympPsiInst(j,s), sugarLeaf[j]/LeafSympRWCInst(j,s), sugarSapwood[j]/StemSympRWCInst(j,s), Tcan[s], k_floem, nonSugarConc)*LAlive; //flow as mol glucose per s
             // sugar-starch dynamics
-            double conversionLeaf = sugarStarchDynamicsLeaf(sugarLeaf[j]/rwcLeaf, starchLeaf[j]/rwcLeaf, minimumLeafSugarConc);
-            double starchLeafIncrease = conversionLeaf*rwcLeaf;
+            double conversionLeaf = sugarStarchDynamicsLeaf(sugarLeaf[j]/LeafSympRWCInst(j,s), starchLeaf[j]/LeafSympRWCInst(j,s), minimumLeafSugarConc);
+            double starchLeafIncrease = conversionLeaf*LeafSympRWCInst(j,s);
             starchLeafIncrease = std::min(starchLeafIncrease, Starch_max_leaves[j] - starchLeaf[j]);
             starchLeaf[j]  += starchLeafIncrease;
             // Rcout<<" coh:"<<j<< " s:"<<s<< " Ssugar: "<< sugarSapwood[j] << " Sstarch: "<< starchSapwood[j]<<" starch formation: "<<conversionSapwood<< "\n";
