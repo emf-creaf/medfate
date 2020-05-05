@@ -65,7 +65,7 @@ Functions \code{forest2spwbInput} and \code{spwbInput} return a list of class \c
      \itemize{
         \item{\code{VGrhizo_kmax}: A matrix with maximum rhizosphere conductance values of each cohort (in rows) in each soil layer (in columns).}
         \item{\code{VGroot_kmax}: A matrix with maximum root xylem conductance values of each cohort (in rows) in each soil layer (in columns).}
-        \item{\code{psiRhizo}: A matrix with the water potential around the rhizosphere of each cohort (in rows) in each soil layer (in columns).}
+        \item{\code{RhizoPsi}: A matrix with the water potential around the rhizosphere of each cohort (in rows) in each soil layer (in columns).}
      }
   }
   \item{\code{paramsPhenology}: A data frame with leaf phenology parameters.

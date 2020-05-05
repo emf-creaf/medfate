@@ -20,11 +20,11 @@ spwb_resistances<-function(x, cohort = 1, relative = FALSE, draw = FALSE,
   VCleaf_c = paramsTranspiration$VCleaf_c
   VCleaf_d = paramsTranspiration$VCleaf_d
   
-  psiLeaf = x$Plants$LeafPsiMin
-  psiStem = x$Plants$StemPsi
-  psiRoot = x$Plants$RootPsi
-  PLCstem = x$Plants$PlantStress
-  psiRhizo = x$Plants$RhizoPsi
+  LeafPsi = x$Plants$LeafPsiMin
+  StemPsi = x$Plants$StemPsi
+  RootPsi = x$Plants$RootPsi
+  StemPLC = x$Plants$PlantStress
+  RhizoPsi = x$Plants$RhizoPsi
   
   nlayers = length(VG_nc)
   psiSoil = x$Soil$psi.1
@@ -39,10 +39,10 @@ spwb_resistances<-function(x, cohort = 1, relative = FALSE, draw = FALSE,
   colnames(resmat) = c("Rhizosphere", "Root", "Stem", "Leaf")
   for(j in 1:nsteps) {
     rrow  = hydraulics_soilPlantResistances(psiSoil = psiSoil[j,],
-                                            psiRhizo = psiRhizo[[cohort]][j,],
-                                            psiStem = psiStem[j,cohort],
-                                            PLCstem = PLCstem[j,cohort],
-                                            psiLeaf = psiLeaf[j,cohort],
+                                            psiRhizo = RhizoPsi[[cohort]][j,],
+                                            psiStem = StemPsi[j,cohort],
+                                            PLCstem = StemPLC[j,cohort],
+                                            psiLeaf = LeafPsi[j,cohort],
                                             VGrhizo_kmax[cohort,],VG_nc,VG_alphac,
                                             VCroot_kmax[cohort,], VCroot_c[cohort],VCroot_d[cohort],
                                             VCstem_kmax[cohort], VCstem_c[cohort],VCstem_d[cohort], 

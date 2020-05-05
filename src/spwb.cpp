@@ -1075,7 +1075,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
             NumericVector PLC = Rcpp::as<Rcpp::NumericVector>(internalWater["PLC"]);
             for(int j=0;j<PLC.length();j++) PLC[j] = 0.0;
           } else {
-            NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["PLCstem"]);
+            NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
             for(int j=0;j<StemPLC.length();j++) StemPLC[j] = 0.0;
           }
         }
@@ -1335,7 +1335,7 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
             NumericVector PLC = Rcpp::as<Rcpp::NumericVector>(internalWater["PLC"]);
             for(int j=0;j<PLC.length();j++) PLC[j] = 0.0;
           } else {
-            NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["PLCstem"]);
+            NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
             for(int j=0;j<StemPLC.length();j++) StemPLC[j] = 0.0;
           }
         }

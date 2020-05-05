@@ -549,13 +549,13 @@ DataFrame internalWaterDataFrame(DataFrame above, String transpirationMode) {
     df = DataFrame::create(Named("PLC") = NumericVector(numCohorts, 0.0));
   } else {
     df = DataFrame::create(Named("Einst") = NumericVector(numCohorts, 0.0),
-                           Named("psiRootCrown") = NumericVector(numCohorts, 0.0),
-                           Named("psiStem1") = NumericVector(numCohorts, 0.0),
-                           Named("psiStem2") = NumericVector(numCohorts, 0.0),
-                           Named("psiLeaf") = NumericVector(numCohorts, 0.0),
-                           Named("psiSympStem") = NumericVector(numCohorts, 0.0),
-                           Named("psiSympLeaf") = NumericVector(numCohorts, 0.0),
-                           Named("PLCstem") = NumericVector(numCohorts, 0.0),
+                           Named("RootCrownPsi") = NumericVector(numCohorts, 0.0),
+                           Named("Stem1Psi") = NumericVector(numCohorts, 0.0),
+                           Named("Stem2Psi") = NumericVector(numCohorts, 0.0),
+                           Named("LeafPsi") = NumericVector(numCohorts, 0.0),
+                           Named("StemSympPsi") = NumericVector(numCohorts, 0.0),
+                           Named("LeafSympPsi") = NumericVector(numCohorts, 0.0),
+                           Named("StemPLC") = NumericVector(numCohorts, 0.0),
                            Named("NSPL") = NumericVector(numCohorts, 1.0));
   }
   df.attr("row.names") = above.attr("row.names");
@@ -657,9 +657,9 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     DataFrame paramsWaterStoragedf = paramsWaterStorage(above, SpParams, paramsAnatomydf);
     DataFrame paramsTranspirationdf = paramsTranspiration(above, V, soil, SpParams,
                                                           paramsAnatomydf, control);
-    NumericMatrix psiRhizo =  NumericMatrix(numCohorts, nlayers);
-    psiRhizo.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
-    std::fill(psiRhizo.begin(), psiRhizo.end(), 0.0);
+    NumericMatrix RhizoPsi =  NumericMatrix(numCohorts, nlayers);
+    RhizoPsi.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
+    std::fill(RhizoPsi.begin(), RhizoPsi.end(), 0.0);
     if(soilFunctions=="SX") {
       soilFunctions = "VG"; 
       warning("Soil pedotransfer functions set to Van Genuchten ('VG').");
@@ -667,7 +667,7 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     List below = paramsBelow(above, V, soil, 
                              paramsTranspirationdf, control);
     below["Wpool"] = Wpool;
-    below["psiRhizo"] = psiRhizo;
+    below["RhizoPsi"] = RhizoPsi;
     
     List paramsCanopy = List::create(_["gdd"] = 0.0,_["Temp"] = NA_REAL);
     List ctl = clone(control);
@@ -815,10 +815,10 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     List below = paramsBelowZ(above, V, Z, soil, 
                               paramsTranspirationdf, control);
     
-    NumericMatrix psiRhizo =  NumericMatrix(numCohorts, nlayers);
-    psiRhizo.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
-    std::fill(psiRhizo.begin(), psiRhizo.end(), 0.0);
-    below["psiRhizo"] = psiRhizo;
+    NumericMatrix RhizoPsi =  NumericMatrix(numCohorts, nlayers);
+    RhizoPsi.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
+    std::fill(RhizoPsi.begin(), RhizoPsi.end(), 0.0);
+    below["RhizoPsi"] = RhizoPsi;
     below["Wpool"] = Wpool;
     
     if(soilFunctions=="SX") {
@@ -914,25 +914,25 @@ void resetInputs(List x, List soil) {
   DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
   
   if(transpirationMode=="Sperry") {
-    NumericMatrix psiRhizo = Rcpp::as<Rcpp::NumericMatrix>(below["psiRhizo"]);
-    NumericVector psiRootCrown = Rcpp::as<Rcpp::NumericVector>(internalWater["psiRootCrown"]);
-    NumericVector psiStem1 = Rcpp::as<Rcpp::NumericVector>(internalWater["psiStem1"]);
-    NumericVector psiStem2 = Rcpp::as<Rcpp::NumericVector>(internalWater["psiStem2"]);
-    NumericVector psiSympStem = Rcpp::as<Rcpp::NumericVector>(internalWater["psiSympStem"]);
-    NumericVector psiSympLeaf = Rcpp::as<Rcpp::NumericVector>(internalWater["psiSympLeaf"]);
-    NumericVector psiLeaf = Rcpp::as<Rcpp::NumericVector>(internalWater["psiLeaf"]);
-    NumericVector PLCstem = Rcpp::as<Rcpp::NumericVector>(internalWater["PLCstem"]);
+    NumericMatrix RhizoPsi = Rcpp::as<Rcpp::NumericMatrix>(below["RhizoPsi"]);
+    NumericVector RootCrownPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["RootCrownPsi"]);
+    NumericVector Stem1Psi = Rcpp::as<Rcpp::NumericVector>(internalWater["Stem1Psi"]);
+    NumericVector Stem2Psi = Rcpp::as<Rcpp::NumericVector>(internalWater["Stem2Psi"]);
+    NumericVector StemSympPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["StemSympPsi"]);
+    NumericVector LeafSympPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafSympPsi"]);
+    NumericVector LeafPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPsi"]);
+    NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
     NumericVector Einst = Rcpp::as<Rcpp::NumericVector>(internalWater["Einst"]);
-    for(int i=0;i<psiLeaf.size();i++) {
+    for(int i=0;i<LeafPsi.size();i++) {
       Einst[i] = 0.0;
-      psiLeaf[i] = 0.0;
-      PLCstem[i] = 0.0;
-      psiStem1[i] = 0.0;
-      psiStem2[i] = 0.0;
-      psiRootCrown[i] = 0.0;
-      psiSympLeaf[i] = 0.0;
-      psiSympStem[i] = 0.0;
-      for(int j=0;j<psiRhizo.ncol();j++) psiRhizo(i,j) = 0.0;
+      LeafPsi[i] = 0.0;
+      StemPLC[i] = 0.0;
+      Stem1Psi[i] = 0.0;
+      Stem2Psi[i] = 0.0;
+      RootCrownPsi[i] = 0.0;
+      LeafSympPsi[i] = 0.0;
+      StemSympPsi[i] = 0.0;
+      for(int j=0;j<RhizoPsi.ncol();j++) RhizoPsi(i,j) = 0.0;
     }
   } else {
     NumericVector PLC = Rcpp::as<Rcpp::NumericVector>(internalWater["PLC"]);

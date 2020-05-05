@@ -97,15 +97,15 @@ spwb_ldrExploration<-function(x, soil, meteo, cohorts = NULL,
       x_1sp$below$VCroot_kmax <- x$below$V[sp,,drop = FALSE] 
       x_1sp$paramsAnatomy <- x$paramsAnatomy[sp,,drop = FALSE] 
       x_1sp$paramsWaterStorage <- x$paramsWaterStorage[sp,,drop = FALSE] 
-      x_1sp$PLCstem <- x$PLCstem[sp,drop = FALSE] 
+      x_1sp$StemPLC <- x$StemPLC[sp,drop = FALSE] 
       x_1sp$Einst <- x$Einst[sp,drop = FALSE] 
-      x_1sp$psiRhizo <- x$psiRhizo[sp,,drop = FALSE] 
-      x_1sp$psiRootCrown <- x$psiRootCrown[sp,drop = FALSE] 
-      x_1sp$psiSympStem <- x$psiSympStem[sp,drop = FALSE] 
-      x_1sp$psiStem1 <- x$psiStem1[sp,drop = FALSE] 
-      x_1sp$psiStem2 <- x$psiStem2[sp,drop = FALSE] 
-      x_1sp$psiSympLeaf <- x$psiSympLeaf[sp,drop = FALSE] 
-      x_1sp$psiLeaf <- x$psiLeaf[sp,drop = FALSE] 
+      x_1sp$RhizoPsi <- x$RhizoPsi[sp,,drop = FALSE] 
+      x_1sp$RootCrownPsi <- x$RootCrownPsi[sp,drop = FALSE] 
+      x_1sp$StemSympPsi <- x$StemSympPsi[sp,drop = FALSE] 
+      x_1sp$StemPsi1 <- x$StemPsi1[sp,drop = FALSE] 
+      x_1sp$StemPsi2 <- x$StemPsi2[sp,drop = FALSE] 
+      x_1sp$LeafSympPsi <- x$LeafSympPsi[sp,drop = FALSE] 
+      x_1sp$LeafPsi <- x$LeafPsi[sp,drop = FALSE] 
     }
     x_1sp$control$verbose <- F
     

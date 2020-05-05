@@ -746,27 +746,27 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafPsiAverage") {
-    m = extractSubdaily(x, "PsiLeaf", dates)
+    m = extractSubdaily(x, "LeafPsi", dates)
     if(is.null(ylab)) ylab = expression(paste("Leaf water potential ",(MPa)))
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
-  else if(type=="PsiStem" || type=="StemPsi") {
-    m = extractSubdaily(x, "PsiStem", dates)
+  else if(type=="StemPsi") {
+    m = extractSubdaily(x, "StemPsi", dates)
     if(is.null(ylab)) ylab = expression(paste("Stem water potential ",(MPa)))
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
-  else if(type=="PsiRoot" || type=="RootPsi") {
-    m = extractSubdaily(x, "PsiRoot", dates)
+  else if(type=="RootPsi") {
+    m = extractSubdaily(x, "RootPsi", dates)
     if(is.null(ylab)) ylab = expression(paste("Root water potential ",(MPa)))
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
-  else if(type=="StemRWC" || type=="RWCstem") {
-    m = extractSubdaily(x, "RWCstem", dates)
+  else if(type=="StemRWC") {
+    m = extractSubdaily(x, "StemRWC", dates)
     if(is.null(ylab)) ylab = "Relative water content in stem [%]"
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
-  else if(type=="LeafRWC" || type=="RWCleaf") {
-    m = extractSubdaily(x, "RWCleaf", dates)
+  else if(type=="LeafRWC") {
+    m = extractSubdaily(x, "LeafRWC", dates)
     if(is.null(ylab)) ylab = "Relative water content in leaf [%]"
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
@@ -776,7 +776,7 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="SoilPlantConductance") {
-    m = extractSubdaily(x, "dEdPinst", dates)
+    m = extractSubdaily(x, "dEdP", dates)
     if(is.null(ylab)) ylab = expression(paste("Soil-plant conductance ",(mmol%.%m^{-2}%.%s^{-1})))
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
@@ -792,7 +792,7 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     if(is.null(ylab)) ylab = expression(paste("Extraction from soil layers   ",(L%.%m^{-2})))
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
-  else if(type=="PsiLeaf" || type=="LeafPsi") {
+  else if(type=="LeafPsi") {
     mSu = extractSubdaily(x, "SunlitLeaves$Psi", dates)
     mSh = extractSubdaily(x, "ShadeLeaves$Psi", dates)
     if(is.null(ylab)) ylab=expression(paste("Leaf water potential ", (MPa)))

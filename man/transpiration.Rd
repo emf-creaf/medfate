@@ -131,13 +131,13 @@ Function \code{transp_transpirationGranier} and \code{transp_transpirationSperry
             \item{\code{"Psi"}: A data frame with leaf water potential (in MPa). }
         }
       }
-      \item{\code{"dEdPinst"}: A data frame with the slope of the plant supply function (an estimation of whole-plant conductance).}
-      \item{\code{"PsiRoot"}: A data frame with root crown water potential (in MPa) for each plant cohort during each time step.}
-      \item{\code{"PsiStem"}: A data frame with stem water potential (in MPa) for each plant cohort during each time step.}
-      \item{\code{"PsiLeaf"}: A data frame with leaf (average) water potential (in MPa) for each plant cohort during each time step. }
-      \item{\code{"PLCstem"}: A data frame with the proportion loss of conductance [0-1] for each plant cohort during each time step. }
-      \item{\code{"RWCstem"}: A data frame with the (average) relative water content of symplastic stem tissue [0-1] for each plant cohort during each time step. }
-      \item{\code{"RWCleaf"}: A data frame with the relative water content of symplastic leaf tissue [0-1] for each plant cohort during each time step. }
+      \item{\code{"dEdP"}: A data frame with the slope of the plant supply function (an estimation of whole-plant conductance).}
+      \item{\code{"RootPsi"}: A data frame with root crown water potential (in MPa) for each plant cohort during each time step.}
+      \item{\code{"StemPsi"}: A data frame with stem water potential (in MPa) for each plant cohort during each time step.}
+      \item{\code{"LeafPsi"}: A data frame with leaf (average) water potential (in MPa) for each plant cohort during each time step. }
+      \item{\code{"StemPLC"}: A data frame with the proportion loss of conductance [0-1] for each plant cohort during each time step. }
+      \item{\code{"StemRWC"}: A data frame with the (average) relative water content of symplastic stem tissue [0-1] for each plant cohort during each time step. }
+      \item{\code{"LeafRWC"}: A data frame with the relative water content of symplastic leaf tissue [0-1] for each plant cohort during each time step. }
       \item{\code{"PWB"}: A data frame with plant water balance (extraction - transpiration).}
     }
   }

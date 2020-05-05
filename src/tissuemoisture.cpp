@@ -128,7 +128,7 @@ List cohortFMC(List spwb) {
   
   List plants = spwb["Plants"];
   NumericMatrix psiapoleaf = Rcpp::as<Rcpp::NumericMatrix>(plants["LeafPsiMin"]);
-  NumericMatrix PLCstem = Rcpp::as<Rcpp::NumericMatrix>(plants["StemPLC"]);
+  NumericMatrix StemPLC = Rcpp::as<Rcpp::NumericMatrix>(plants["StemPLC"]);
   NumericMatrix RWCsymleaf = Rcpp::as<Rcpp::NumericMatrix>(plants["LeafRWC"]);
   NumericMatrix RWCsymstem = Rcpp::as<Rcpp::NumericMatrix>(plants["StemRWC"]);
   List l = psiapoleaf.attr("dimnames");
@@ -156,7 +156,7 @@ List cohortFMC(List spwb) {
       double rwc_sym_leaf = RWCsymleaf(d,c);
       double rwc_leaf = rwc_apo_leaf*f_apo_leaf + rwc_sym_leaf*(1.0 - f_apo_leaf);
       leafFMC(d,c) = tissueFMC(rwc_leaf, density_leaf);
-      double rwc_apo_stem = 1.0-PLCstem(d,c);
+      double rwc_apo_stem = 1.0-StemPLC(d,c);
       double rwc_sym_stem = RWCsymstem(d,c);
       double rwc_stem = rwc_apo_stem*f_apo_stem + rwc_sym_stem*(1.0 - f_apo_stem);
       twigFMC(d,c) = tissueFMC(rwc_stem, density_stem);
