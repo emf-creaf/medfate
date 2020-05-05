@@ -19,3 +19,5 @@ double tissueRelativeWaterContent(double psiSym, double pi0, double epsilon,
                                   double af, double femb = 0.0);
 
 double turgorLossPoint(double pi0, double epsilon);
+
+List cohortFMC(List spwb);

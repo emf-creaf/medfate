@@ -6,6 +6,7 @@
 #include "phenology.h"
 #include "forestutils.h"
 #include "tissuemoisture.h"
+#include "carbon.h"
 #include "photosynthesis.h"
 #include "root.h"
 #include "soil.h"
@@ -157,6 +158,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   double verticalLayerSize = control["verticalLayerSize"];
   double thermalCapacityLAI = control["thermalCapacityLAI"];
   double defaultWindSpeed = control["defaultWindSpeed"];
+  double nonSugarConc = control["nonSugarConc"];
   
   //Vegetation input
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
@@ -482,7 +484,13 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
       stop("Plant cohort not connected to any soil layer!");
     }
   }
-  
+  //Sugar conc in sapwood and leaf of each cohort
+  NumericVector sugarLeaf(numCohorts, 0.0);
+  NumericVector sugarSapwood(numCohorts, 0.0);
+  for(int c=0;c<numCohorts;c++) {
+    sugarLeaf[c] = sugarConcentration(LeafPI0[c],20.0, nonSugarConc);
+    sugarSapwood[c] = sugarConcentration(StemPI0[c],20.0, nonSugarConc);
+  }
   
   //Transpiration and photosynthesis
   NumericVector psiBk(nlayers);
@@ -537,6 +545,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   outPMSunlit.attr("names") = above.attr("row.names");
   outPMShade.attr("names") = above.attr("row.names");
   
+  
   for(int n=0;n<ntimesteps;n++) { //Time loop
     //Long-wave radiation due to canopy temperature
     if(NumericVector::is_na(Tcan[n])) Tcan[n] = Tatm[n]; //If missing take above-canopy air temperature
@@ -560,6 +569,10 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
     NumericVector absLWR_SH = abs_LWR_SH_list[n];
     
     for(int c=0;c<numCohorts;c++) { //Plant cohort loop
+      //Current osmotic potentials
+      double leafpi0 = osmoticWaterPotential(sugarLeaf[c], Tcan[n], nonSugarConc);
+      double stempi0 = osmoticWaterPotential(sugarSapwood[c], Tcan[n], nonSugarConc);
+      
       
       //default values
       dEdPinst(c,n) = 0.0;
@@ -608,7 +621,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
         }
 
         //Determine turgor loss point (as proxy of stomatal closure)
-        double psiTlp = turgorLossPoint(LeafPI0[c], LeafEPS[c]);
+        double psiTlp = turgorLossPoint(leafpi0, LeafEPS[c]);
         
         //Retrieve transpiration, psiLeaf and dEdP vectors
         fittedE = sFunctionAbove["E"];
@@ -784,8 +797,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
             double VStemSymp_mmolmax = 1000.0*((Vsapwood[c]*(1.0-StemAF[c]))/0.018); //mmol·m-2
             //Substract from maximum apoplastic compartment embolized conduits
             double VStemApo_mmolmax = 1000.0*((Vsapwood[c]*StemAF[c])/0.018); //mmol·m-2
-            double RWCLeafSymp = symplasticRelativeWaterContent(psiSympLeafVEC[c], LeafPI0[c], LeafEPS[c]); //mmol·m-2
-            double RWCStemSymp = symplasticRelativeWaterContent(psiSympStemVEC[c], StemPI0[c], StemEPS[c]); //mmol·m-2
+            double RWCLeafSymp = symplasticRelativeWaterContent(psiSympLeafVEC[c], leafpi0, LeafEPS[c]); //mmol·m-2
+            double RWCStemSymp = symplasticRelativeWaterContent(psiSympStemVEC[c], stempi0, StemEPS[c]); //mmol·m-2
             double VLeafSymp_mmol = VLeafSymp_mmolmax * RWCLeafSymp;
             double VStemSymp_mmol = VStemSymp_mmolmax * RWCStemSymp;
             double Vcav = 0.0;
@@ -820,13 +833,13 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
               //Leaf symplastic water balance
               VLeafSymp_mmol += (-Flatleaf);
               RWCLeafSymp = VLeafSymp_mmol/VLeafSymp_mmolmax;
-              psiSympLeafVEC[c] = symplasticWaterPotential(std::min(1.0,RWCLeafSymp), LeafPI0[c], LeafEPS[c]);
+              psiSympLeafVEC[c] = symplasticWaterPotential(std::min(1.0,RWCLeafSymp), leafpi0, LeafEPS[c]);
               if(NumericVector::is_na(psiSympLeafVEC[c]))  psiSympLeafVEC[c] = -40.0;
               
               //Stem symplastic water balance
               VStemSymp_mmol += (-Flatstem);
               RWCStemSymp = VStemSymp_mmol/VStemSymp_mmolmax;
-              psiSympStemVEC[c] = symplasticWaterPotential(std::min(1.0,RWCStemSymp), StemPI0[c], StemEPS[c]);
+              psiSympStemVEC[c] = symplasticWaterPotential(std::min(1.0,RWCStemSymp), stempi0, StemEPS[c]);
               if(NumericVector::is_na(psiSympStemVEC[c]))  psiSympStemVEC[c] = -40.0;
               
               //Stem apoplastic water balance
@@ -929,8 +942,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
       
       //Store (for output) instantaneous leaf, stem and root potential, plc and rwc values
       PLC(c,n) = PLCstemVEC[c];
-      RWCsteminst(c,n) = symplasticRelativeWaterContent(psiSympStemVEC[c], StemPI0[c], StemEPS[c])*(1.0 - StemAF[c]) + apoplasticRelativeWaterContent(psiStem1VEC[c], VCstem_c[c], VCstem_d[c])*StemAF[c];
-      RWCleafinst(c,n) = symplasticRelativeWaterContent(psiSympLeafVEC[c], LeafPI0[c], LeafEPS[c])*(1.0 - LeafAF[c]) + apoplasticRelativeWaterContent(psiLeafVEC[c], VCleaf_c[c], VCleaf_d[c])*LeafAF[c];
+      RWCsteminst(c,n) = symplasticRelativeWaterContent(psiSympStemVEC[c], stempi0, StemEPS[c])*(1.0 - StemAF[c]) + apoplasticRelativeWaterContent(psiStem1VEC[c], VCstem_c[c], VCstem_d[c])*StemAF[c];
+      RWCleafinst(c,n) = symplasticRelativeWaterContent(psiSympLeafVEC[c], leafpi0, LeafEPS[c])*(1.0 - LeafAF[c]) + apoplasticRelativeWaterContent(psiLeafVEC[c], VCleaf_c[c], VCleaf_d[c])*LeafAF[c];
       PsiSteminst(c,n) = psiStem1VEC[c]; 
       PsiLeafinst(c,n) = psiLeafVEC[c]; //Store instantaneous (average) leaf potential
       PsiRootinst(c,n) = psiRootCrownVEC[c]; //Store instantaneous root crown potential

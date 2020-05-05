@@ -390,7 +390,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   NumericVector PLCstem = Rcpp::as<Rcpp::NumericVector>(internalWater["PLCstem"]);
   
   DataFrame internalCarbon = Rcpp::as<Rcpp::DataFrame>(x["internalCarbon"]);
-  NumericVector sugarLeaf = internalCarbon["sugarLeaf"];
+  NumericVector sugarLeaf = internalCarbon["sugarLeaf"]; //Concentrations assuming RWC = 1
   NumericVector starchLeaf = internalCarbon["starchLeaf"];
   NumericVector sugarSapwood = internalCarbon["sugarSapwood"];
   NumericVector starchSapwood = internalCarbon["starchSapwood"];
@@ -652,7 +652,6 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
           starchSapwood[j] += starchSapwoodIncrease;
           
           if(LAlive>0.0) {
-            //TO IMPROVE: rwcLeaf includes apoplastic fraction
             sugarLeaf[j] += leafSugarMassDeltaStep/ctl;
             double ft = floemFlow(PsiSympLeafinst(j,s), PsiSympSteminst(j,s), sugarLeaf[j]/rwcLeaf, sugarSapwood[j]/rwcStem, Tcan[s], k_floem, nonSugarConc)*LAlive; //flow as mol glucose per s
             // sugar-starch dynamics
@@ -763,12 +762,9 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
       
       
       //Update leaf and stem osmotic water potential at full turgor
-      double leafRWCSymp = symplasticRelativeWaterContent(psiSympLeaf[j], LeafPI0[j], LeafEPS[j]);
-      double stemRWCSymp = symplasticRelativeWaterContent(psiSympStem[j], StemPI0[j], StemEPS[j]);
-      LeafPI0[j] = osmoticWaterPotential(sugarLeaf[j], tday, nonSugarConc)/leafRWCSymp;
-      StemPI0[j] = osmoticWaterPotential(sugarSapwood[j], tday, nonSugarConc)/stemRWCSymp;
-      // Rcout<<" coh:"<<j<< " conc leaf: "<< sugarLeaf[j] << " conc sap: "<< sugarSapwood[j]<< " "<< LeafPI0[j]<<"\n";
-      
+      LeafPI0[j] = osmoticWaterPotential(sugarLeaf[j], 20.0, nonSugarConc); //Osmotic potential at full turgor assuming RWC = 1 and 20ºC
+      StemPI0[j] = osmoticWaterPotential(sugarSapwood[j], 20.0, nonSugarConc);
+
       //Update non-stomatal photosynthesis limitations
       if(nonStomatalPhotosynthesisLimitation) NSPL[j] = 1.0 - std::max(0.0, std::min(1.0, sugarLeaf[j] - 0.5)); //photosynthesis limited when conc > 0.5 and zero when conc > 1.5 mol·l-1
       else NSPL[j] = 1.0;
@@ -830,7 +826,9 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
                                    _["StarchSapwood"] = PlantStarchSapwood,
                                    _["SugarTransport"] = PlantSugarTransport,
                                    _["LabileMassLeaf"] = LabileMassLeaf,
-                                   _["LabileMassSapwood"] = LabileMassSapwood);
+                                   _["LabileMassSapwood"] = LabileMassSapwood,
+                                   _["StemPI0"] = clone(StemPI0), //Store a copy of the current osmotic potential at full turgor
+                                   _["LeafPI0"] = clone(LeafPI0));
   plantCarbonBalance.attr("row.names") = above.attr("row.names");
   
   DataFrame plantGrowth = List::create(
@@ -1190,6 +1188,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   NumericMatrix GrossPhotosynthesis(numDays, numCohorts);
   NumericMatrix PlantLAIexpanded(numDays, numCohorts), PlantLAIdead(numDays, numCohorts), PlantLAIlive(numDays, numCohorts);
   NumericVector SAgrowthcum(numCohorts, 0.0);
+  NumericMatrix StemPI0(numDays, numCohorts), LeafPI0(numDays, numCohorts);
   
   //Water balance output variables
   DataFrame DWB = defineWaterBalanceDailyOutput(meteo, transpirationMode);
@@ -1339,6 +1338,8 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
     PlantSugarSapwood(i,_) = Rcpp::as<Rcpp::NumericVector>(cb["SugarSapwood"]);
     PlantStarchSapwood(i,_) = Rcpp::as<Rcpp::NumericVector>(cb["StarchSapwood"]);
     PlantSugarTransport(i,_) = Rcpp::as<Rcpp::NumericVector>(cb["SugarTransport"]);
+    StemPI0(i,_) = Rcpp::as<Rcpp::NumericVector>(cb["StemPI0"]); 
+    LeafPI0(i,_) = Rcpp::as<Rcpp::NumericVector>(cb["LeafPI0"]); 
     
     SapwoodArea(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["SapwoodArea"]);
     LeafArea(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["LeafArea"]);
@@ -1436,6 +1437,8 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   HuberValue.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   LAgrowth.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   SAgrowth.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
+  StemPI0.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
+  LeafPI0.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   // PlantLAIdead.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   // PlantLAIlive.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   // PlantLAIexpanded.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
@@ -1463,7 +1466,9 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
     Named("StarchSapwood") = PlantStarchSapwood,
     Named("SugarTransport") = PlantSugarTransport,
     Named("LabileMassLeaf") = LabileMassLeaf,
-    Named("LabileMassSapwood") = LabileMassSapwood
+    Named("LabileMassSapwood") = LabileMassSapwood,
+    Named("LeafPI0") = LeafPI0,
+    Named("StemPI0") = StemPI0
   );
 
   List plantGrowth = List::create(Named("SapwoodArea")=SapwoodArea,

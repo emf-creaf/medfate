@@ -844,7 +844,7 @@ void fillPlantWaterDailyOutput(List x, List sunlit, List shade, List sDay, int i
     NumericMatrix LeafPsiMin_SH = Rcpp::as<Rcpp::NumericMatrix>(shade["LeafPsiMin"]);
     NumericMatrix LeafPsiMax_SH = Rcpp::as<Rcpp::NumericMatrix>(shade["LeafPsiMax"]);
     NumericMatrix LeafGW_SH = Rcpp::as<Rcpp::NumericMatrix>(shade["GW"]);
-    
+
     List RhizoPsi = x["RhizoPsi"];
     NumericMatrix PlantNetPhotosynthesis= Rcpp::as<Rcpp::NumericMatrix>(x["NetPhotosynthesis"]);
     NumericMatrix PlantGrossPhotosynthesis= Rcpp::as<Rcpp::NumericMatrix>(x["GrossPhotosynthesis"]);
@@ -888,6 +888,7 @@ void fillPlantWaterDailyOutput(List x, List sunlit, List shade, List sDay, int i
     RootPsi(iday,_) = Rcpp::as<Rcpp::NumericVector>(Plants["RootPsi"]); 
     StemPsi(iday,_) = Rcpp::as<Rcpp::NumericVector>(Plants["StemPsi"]); 
     StemPLC(iday,_) = Rcpp::as<Rcpp::NumericVector>(Plants["StemPLC"]); 
+    
     PlantWaterBalance(iday,_) = Rcpp::as<Rcpp::NumericVector>(Plants["WaterBalance"]); 
     dEdP(iday,_) = Rcpp::as<Rcpp::NumericVector>(Plants["dEdP"]); 
     for(int c=0;c<numCohorts;c++) {

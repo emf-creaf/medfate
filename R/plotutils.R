@@ -45,7 +45,7 @@
 }
 .getDailyGROWTHPlotTypes<-function(transpirationMode = "Granier"){
   TYPES = c("GrossPhotosynthesis","MaintenanceRespiration","GrowthRespiration", "CarbonBalance",
-            "SugarTransport",
+            "SugarTransport", "LeafPI0", "StemPI0",
             "SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport",
             "SapwoodArea", "LeafArea","SAgrowth", "LAgrowth", "HuberValue",
             .getDailySPWBPlotTypes(transpirationMode))
@@ -74,6 +74,8 @@
   else if(type=="HuberValue")  ylab = expression(paste("Huber value  ",(cm^2 %.% m^{-2})))
   else if(type=="SAgrowth") ylab = expression(paste("Sapwood area growth rate ",(cm^2 %.% cm^{-2} %.% d^{-1})))
   else if(type=="LAgrowth") ylab = expression(paste("Leaf area growth rate ",(m^2 %.% cm^{-2} %.% d^{-1})))
+  else if(type=="LeafPI0")  ylab = expression(paste("Leaf osmotic potential at full turgor  ",(MPa)))
+  else if(type=="StemPI0")  ylab = expression(paste("Stem osmotic potential at full turgor  ",(MPa)))
   return(ylab)
 }
 

@@ -700,7 +700,7 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     plot.spwb(x,type, bySpecies, dates, subdaily, xlim, ylim, xlab, ylab, ...)
   } 
   else if(type %in% c("GrossPhotosynthesis", "MaintenanceRespiration",  "GrowthRespiration", "CarbonBalance", 
-                      "SugarLeaf","StarchLeaf","SugarSapwood","StarchSapwood", "SugarTransport")) {
+                      "SugarLeaf","StarchLeaf","SugarSapwood","StarchSapwood", "SugarTransport", "LeafPI0", "StemPI0")) {
       OM = PCB[[type]]
       if(bySpecies) {
         OM = t(apply(OM,1, tapply, input$cohorts$Name, sum, na.rm=T))

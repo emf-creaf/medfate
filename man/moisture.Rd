@@ -6,6 +6,7 @@
 \alias{moisture_apoplasticPsi}
 \alias{moisture_tissueRWC}
 \alias{moisture_tissueFMC}
+\alias{moisture_cohortFMC}
 \alias{moisture_pressureVolumeCurvePlot}
 \title{
 Tissue moisture functions
@@ -22,6 +23,7 @@ moisture_tissueRWC(psiSym, pi0, epsilon,
                    psiApo, c, d, 
                    af, femb = 0)
 moisture_tissueFMC(RWC, density, d0 = 1.54)
+moisture_cohortFMC(spwb)
 moisture_pressureVolumeCurvePlot(x, segment="leaf", 
                     fraction = "all",
                     psiVec =  seq(-0.1, -8.0, by =-0.01),
@@ -44,9 +46,10 @@ moisture_pressureVolumeCurvePlot(x, segment="leaf",
   \item{speciesNames}{A flag to indicate the use of species names instead of cohort names in plots.}
   \item{density}{Tissue density (g·cm-1).}
   \item{d0}{Matric density (g·cm-1).}
+  \item{spwb}{Object returned by function \code{\link{spwb}} or \code{\link{growth}}.}
 }
 \details{
-Details of the tissue moisture calculations are given in a vignette. 
+Details of the tissue moisture calculations are given in a vignette. Function \code{moisture_cohortFMC()} calculates the fuel moisture content of leaves and twigs of each cohort, from the results of soil water balance.
 }
 \value{
 Values returned for each function are:

@@ -883,18 +883,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// cohortFineFuelMoistureContent
-List cohortFineFuelMoistureContent(List spwb, List x);
-RcppExport SEXP _medfate_cohortFineFuelMoistureContent(SEXP spwbSEXP, SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type spwb(spwbSEXP);
-    Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(cohortFineFuelMoistureContent(spwb, x));
-    return rcpp_result_gen;
-END_RCPP
-}
 // woodyFuelProfile
 NumericVector woodyFuelProfile(NumericVector z, List x, DataFrame SpParams, double gdd, String mode);
 RcppExport SEXP _medfate_woodyFuelProfile(SEXP zSEXP, SEXP xSEXP, SEXP SpParamsSEXP, SEXP gddSEXP, SEXP modeSEXP) {
@@ -3974,6 +3962,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cohortFMC
+List cohortFMC(List spwb);
+RcppExport SEXP _medfate_cohortFMC(SEXP spwbSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type spwb(spwbSEXP);
+    rcpp_result_gen = Rcpp::wrap(cohortFMC(spwb));
+    return rcpp_result_gen;
+END_RCPP
+}
 // profitMaximization
 List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, double Gwmin, double Gwmax, double gainModifier, double costModifier, String costWater);
 RcppExport SEXP _medfate_profitMaximization(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP, SEXP GwminSEXP, SEXP GwmaxSEXP, SEXP gainModifierSEXP, SEXP costModifierSEXP, SEXP costWaterSEXP) {
@@ -4265,7 +4264,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_EMCdesorption", (DL_FUNC) &_medfate_EMCdesorption, 2},
     {"_medfate_EMCadsorption", (DL_FUNC) &_medfate_EMCadsorption, 2},
     {"_medfate_EMCSimard", (DL_FUNC) &_medfate_EMCSimard, 2},
-    {"_medfate_cohortFineFuelMoistureContent", (DL_FUNC) &_medfate_cohortFineFuelMoistureContent, 2},
     {"_medfate_woodyFuelProfile", (DL_FUNC) &_medfate_woodyFuelProfile, 5},
     {"_medfate_layerCohortFuelLoading", (DL_FUNC) &_medfate_layerCohortFuelLoading, 5},
     {"_medfate_layerFuelLoading", (DL_FUNC) &_medfate_layerFuelLoading, 5},
@@ -4408,6 +4406,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_apoplasticWaterPotential", (DL_FUNC) &_medfate_apoplasticWaterPotential, 3},
     {"_medfate_tissueRelativeWaterContent", (DL_FUNC) &_medfate_tissueRelativeWaterContent, 8},
     {"_medfate_tissueFMC", (DL_FUNC) &_medfate_tissueFMC, 3},
+    {"_medfate_cohortFMC", (DL_FUNC) &_medfate_cohortFMC, 1},
     {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 7},
     {"_medfate_transpirationSperry", (DL_FUNC) &_medfate_transpirationSperry, 14},
     {"_medfate_transpirationGranier", (DL_FUNC) &_medfate_transpirationGranier, 6},

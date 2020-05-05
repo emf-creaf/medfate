@@ -1,15 +1,13 @@
 \encoding{UTF-8}
 \name{fuel_properties}
 \alias{fuel_FCCS}
-\alias{fuel_cohortFineFMC}
 \alias{fuel_stratification}
 \alias{fuel_windAdjustmentFactor}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Fuel stratification and fuel characteristics
 }
 \description{
-Function \code{fuel_stratification} provides a stratification of the stand into understory and canopy strata. Function \code{fuel_FCCS} calculates fuel characteristics from a \code{forest} object following an adaptation of the protocols described for the Fuel Characteristics Classification System (Prichard et al. 2013). Function \code{fuel_windAdjustmentFactor} determines the adjustment factor of wind for surface fires, according to Andrews (2012). Function \code{fuel_cohortFineFMC} calculates the fuel moisture content of leaves and twigs of each cohort, from the results of soil water balance.
+Function \code{fuel_stratification} provides a stratification of the stand into understory and canopy strata. Function \code{fuel_FCCS} calculates fuel characteristics from a \code{forest} object following an adaptation of the protocols described for the Fuel Characteristics Classification System (Prichard et al. 2013). Function \code{fuel_windAdjustmentFactor} determines the adjustment factor of wind for surface fires, according to Andrews (2012). 
 }
 \usage{
 fuel_stratification(object, SpParams, gdd = NA, mode = "MED",
@@ -18,7 +16,6 @@ fuel_stratification(object, SpParams, gdd = NA, mode = "MED",
 fuel_FCCS(object, ShrubCover, CanopyCover, SpParams, cohortFMC = as.numeric(c()),
           gdd = NA, mode = "MED", heightProfileStep = 10, maxHeightProfile = 5000, 
           bulkDensityThreshold = 0.05)
-fuel_cohortFineFMC(spwb, x)
 fuel_windAdjustmentFactor(topShrubHeight, bottomCanopyHeight, topCanopyHeight,
                           canopyCover)
 }
@@ -34,12 +31,10 @@ fuel_windAdjustmentFactor(topShrubHeight, bottomCanopyHeight, topCanopyHeight,
   \item{heightProfileStep}{Precision for the fuel bulk density profile.}
   \item{maxHeightProfile}{Maximum height for the fuel bulk density profile.}
   \item{bulkDensityThreshold}{Minimum fuel bulk density to delimit fuel strata.}
-  \item{spwb}{Object returned by function \code{\link{spwb}}.}
   \item{topShrubHeight}{Shrub stratum top height (in m).}
   \item{bottomCanopyHeight}{Canopy base height (in m).}
   \item{topCanopyHeight}{Canopy top height (in m).}
   \item{canopyCover}{Canopy percent cover.}
-  \item{x}{An object of class \code{\link{spwbInput}}.}
 }
 \details{
 Details are described in a vignette.
