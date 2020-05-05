@@ -30,7 +30,7 @@
 .getSubdailySPWBPlotTypes<-function(){
   TYPES = c("LeafPsi","LeafPsiAverage","RootPsi", "StemPsi", 
             "LeafSympPsi", "StemSympPsi",
-            "StemPLC","StemRWC", "LeafRWC",
+            "StemPLC","StemRWC", "LeafRWC","StemSympRWC", "LeafSympRWC",
             "SoilPlantConductance",
             "PlantExtraction","PlantTranspiration", "TranspirationPerLeaf",
             "PlantGrossPhotosynthesis","GrossPhotosynthesisPerLeaf","PlantNetPhotosynthesis","NetPhotosynthesisPerLeaf", 
@@ -81,6 +81,17 @@
   else if(type=="StemSympRWC") ylab = "Relative water content in stem symplasm [%]"
   else if(type=="LeafRWC") ylab = "Relative water content in leaf [%]"
   else if(type=="LeafSympRWC") ylab = "Relative water content in leaf symplasm [%]"
+  else if(type=="PlantPsi") ylab = "Plant water potential (MPa)"
+  else if(type=="StemPsi") ylab = "Midday stem water potential (MPa)"
+  else if(type=="RootPsi") ylab = "Midday root crown water potential (MPa)"
+  else if(type=="LeafPsiMin") ylab = "Minimum (midday) leaf water potential (MPa)"
+  else if(type=="LeafPsiMax") ylab = "Maximum (predawn) leaf water potential (MPa)"
+  else if(type=="LeafPsiMin_SL") ylab = "Minimum (midday) sunlit leaf water potential (MPa)"
+  else if(type=="LeafPsiMax_SL") ylab = "Maximum (midday) sunlit leaf water potential (MPa)"
+  else if(type=="LeafPsiMin_SH") ylab = "Minimum (midday) shade leaf water potential (MPa)"
+  else if(type=="LeafPsiMax_SH") ylab = "Maximum (midday) shade leaf water potential (MPa)"
+  else if(type=="GW_SH") ylab = expression(paste("Shade leaf stomatal conductance ",(mmol%.%m^{-2}%.%s^{-1})))
+  else if(type=="GW_SL") ylab = expression(paste("Sunlit leaf stomatal conductance ",(mmol%.%m^{-2}%.%s^{-1})))
   return(ylab)
 }
 

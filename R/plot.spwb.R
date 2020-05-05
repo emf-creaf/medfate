@@ -155,6 +155,8 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
   Soil = x$Soil
   Stand = x$Stand
   Plants = x$Plants
+  SunlitLeaves = x$SunlitLeaves
+  ShadeLeaves = x$ShadeLeaves
   
   nlayers = length(soilInput$W)
   
@@ -275,8 +277,8 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
-  else if(type=="PlantPsi") {
-    OM = Plants$PlantPsi
+  else if(type %in% c("PlantPsi", "LeafPsiMin","LeafPsiMax", "StemPsi", "RootPsi")) {
+    OM = Plants[[type]]
     if(bySpecies) {
       lai1 = t(apply(Plants$LAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
       m1 = t(apply(Plants$LAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
@@ -284,11 +286,12 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       OM[lai1==0] = NA
     } 
     if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
-    if(is.null(ylab)) ylab = "Plant water potential (MPa)"
+    if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
-  else if(type=="LeafPsiMin") {
-    OM = Plants$LeafPsiMin
+  else if(type %in% c("LeafPsiMin_SL", "LeafPsiMax_SL", "GW_SL")) {
+    subType = strsplit(type,"_")[[1]][1]
+    OM = SunlitLeaves[[subType]]
     if(bySpecies) {
       lai1 = t(apply(Plants$LAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
       m1 = t(apply(Plants$LAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
@@ -296,11 +299,12 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       OM[lai1==0] = NA
     } 
     if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
-    if(is.null(ylab)) ylab = "Minimum (midday) leaf water potential (MPa)"
+    if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
-  else if(type=="LeafPsiMax") {
-    OM = Plants$LeafPsiMax
+  else if(type %in% c("LeafPsiMin_SH", "LeafPsiMax_SH", "GW_SH")) {
+    subType = strsplit(type,"_")[[1]][1]
+    OM = ShadeLeaves[[subType]]
     if(bySpecies) {
       lai1 = t(apply(Plants$LAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
       m1 = t(apply(Plants$LAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
@@ -308,103 +312,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       OM[lai1==0] = NA
     } 
     if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
-    if(is.null(ylab)) ylab = "Maximum (predawn) leaf water potential (MPa)"
-    return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
-  } 
-  else if(type=="LeafPsiMin_SL") {
-    OM = x$SunlitLeaves$LeafPsiMin
-    if(bySpecies) {
-      lai1 = t(apply(Plants$LAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      m1 = t(apply(Plants$LAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      OM = m1/lai1
-      OM[lai1==0] = NA
-    } 
-    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
-    if(is.null(ylab)) ylab = "Minimum (midday) sunlit leaf water potential (MPa)"
-    return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
-  } 
-  else if(type=="LeafPsiMax_SL") {
-    OM = x$SunlitLeaves$LeafPsiMax
-    if(bySpecies) {
-      lai1 = t(apply(Plants$LAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      m1 = t(apply(Plants$LAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      OM = m1/lai1
-      OM[lai1==0] = NA
-    } 
-    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
-    if(is.null(ylab)) ylab = "Maximum (predawn) sunlit leaf water potential (MPa)"
-    return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
-  } 
-  else if(type=="LeafPsiMin_SH") {
-    OM = x$ShadeLeaves$LeafPsiMin
-    if(bySpecies) {
-      lai1 = t(apply(Plants$LAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      m1 = t(apply(Plants$LAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      OM = m1/lai1
-      OM[lai1==0] = NA
-    } 
-    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
-    if(is.null(ylab)) ylab = "Minimum (midday) shade leaf water potential (MPa)"
-    return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
-  } 
-  else if(type=="LeafPsiMax_SH") {
-    OM = x$ShadeLeaves$LeafPsiMax
-    if(bySpecies) {
-      lai1 = t(apply(Plants$LAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      m1 = t(apply(Plants$LAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      OM = m1/lai1
-      OM[lai1==0] = NA
-    } 
-    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
-    if(is.null(ylab)) ylab = "Maximum (predawn) shade leaf water potential (MPa)"
-    return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
-  }
-  else if(type=="GW_SH") {
-    OM = x$ShadeLeaves$GW
-    if(bySpecies) {
-      lai1 = t(apply(Plants$LAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      m1 = t(apply(Plants$LAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      OM = m1/lai1
-      OM[lai1==0] = NA
-    } 
-    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
-    if(is.null(ylab)) ylab = expression(paste("Shade leaf stomatal conductance ",(mmol%.%m^{-2}%.%s^{-1})))
-    return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
-  }
-  else if(type=="GW_SL") {
-    OM = x$SunlitLeaves$GW
-    if(bySpecies) {
-      lai1 = t(apply(Plants$LAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      m1 = t(apply(Plants$LAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      OM = m1/lai1
-      OM[lai1==0] = NA
-    } 
-    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
-    if(is.null(ylab)) ylab = expression(paste("Sunlit leaf stomatal conductance ",(mmol%.%m^{-2}%.%s^{-1})))
-    return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
-  }
-  else if(type=="StemPsi") {
-    OM = Plants$StemPsi
-    if(bySpecies) {
-      lai1 = t(apply(Plants$LAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      m1 = t(apply(Plants$LAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      OM = m1/lai1
-      OM[lai1==0] = NA
-    } 
-    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
-    if(is.null(ylab)) ylab = "Midday stem water potential (MPa)"
-    return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
-  } 
-  else if(type=="RootPsi") {
-    OM = Plants$RootPsi
-    if(bySpecies) {
-      lai1 = t(apply(Plants$LAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      m1 = t(apply(Plants$LAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      OM = m1/lai1
-      OM[lai1==0] = NA
-    } 
-    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
-    if(is.null(ylab)) ylab = "Midday root crown water potential (MPa)"
+    if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="PlantTranspiration") {
@@ -726,24 +634,9 @@ plot.growth<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     if(is.null(ylab)) ylab = expression(paste("Leaf water potential ",(MPa)))
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
-  else if(type=="StemPsi") {
-    m = extractSubdaily(x, "StemPsi", dates)
-    if(is.null(ylab)) ylab = expression(paste("Stem water potential ",(MPa)))
-    return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
-  } 
-  else if(type=="RootPsi") {
-    m = extractSubdaily(x, "RootPsi", dates)
-    if(is.null(ylab)) ylab = expression(paste("Root water potential ",(MPa)))
-    return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
-  } 
-  else if(type=="StemRWC") {
-    m = extractSubdaily(x, "StemRWC", dates)
-    if(is.null(ylab)) ylab = "Relative water content in stem [%]"
-    return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
-  } 
-  else if(type=="LeafRWC") {
-    m = extractSubdaily(x, "LeafRWC", dates)
-    if(is.null(ylab)) ylab = "Relative water content in leaf [%]"
+  else if(type %in% c("StemPsi", "RootPsi", "LeafRWC", "StemRWC","LeafSympRWC", "StemSympRWC")) {
+    m = extractSubdaily(x, type, dates)
+    if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="PlantWaterBalance") {
