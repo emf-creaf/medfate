@@ -939,34 +939,34 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
         }
       }
       
-      
-      //Store (for output) instantaneous leaf, stem and root potential, plc and rwc values
-      PLC(c,n) = StemPLCVEC[c];
-      StemSympRWCInst(c,n) = symplasticRelativeWaterContent(StemSympPsiVEC[c], stempi0, StemEPS[c]);
-      LeafSympRWCInst(c,n) = symplasticRelativeWaterContent(LeafSympPsiVEC[c], leafpi0, LeafEPS[c]);
-      StemRWCInst(c,n) = StemSympRWCInst(c,n)*(1.0 - StemAF[c]) + apoplasticRelativeWaterContent(Stem1PsiVEC[c], VCstem_c[c], VCstem_d[c])*StemAF[c];
-      LeafRWCInst(c,n) = LeafSympRWCInst(c,n)*(1.0 - LeafAF[c]) + apoplasticRelativeWaterContent(LeafPsiVEC[c], VCleaf_c[c], VCleaf_d[c])*LeafAF[c];
-      StemPsiInst(c,n) = Stem1PsiVEC[c]; 
-      LeafPsiInst(c,n) = LeafPsiVEC[c]; //Store instantaneous (average) leaf potential
-      RootPsiInst(c,n) = RootCrownPsiVEC[c]; //Store instantaneous root crown potential
-      LeafSympPsiInst(c,n) = LeafSympPsiVEC[c];
-      StemSympPsiInst(c,n) = StemSympPsiVEC[c];
-      
-      //Store the minimum water potential of the day (i.e. mid-day)
-      meanGW_SL[c] += GW_SL(c,n)/((double) ntimesteps);
-      meanGW_SH[c] += GW_SH(c,n)/((double) ntimesteps);
-      minLeafPsi_SL[c] = std::min(minLeafPsi_SL[c],Psi_SL(c,n));
-      minLeafPsi_SH[c] = std::min(minLeafPsi_SH[c],Psi_SH(c,n));
-      maxLeafPsi_SL[c] = std::max(maxLeafPsi_SL[c],Psi_SL(c,n));
-      maxLeafPsi_SH[c] = std::max(maxLeafPsi_SH[c],Psi_SH(c,n));
-      minLeafPsi[c] = std::min(minLeafPsi[c],LeafPsiInst(c,n));
-      maxLeafPsi[c] = std::max(maxLeafPsi[c],LeafPsiInst(c,n));
-      minStemPsi[c] = std::min(minStemPsi[c],StemPsiInst(c,n));
-      minRootPsi[c] = std::min(minRootPsi[c],RootPsiInst(c,n));
-      for(int l=0;l<nlayers;l++) {
-        minPsiRhizo(c,l) = std::min(minPsiRhizo(c,l),RhizoPsiMAT(c,l));
+      if(Status[c]=="alive") {
+        //Store (for output) instantaneous leaf, stem and root potential, plc and rwc values
+        PLC(c,n) = StemPLCVEC[c];
+        StemSympRWCInst(c,n) = symplasticRelativeWaterContent(StemSympPsiVEC[c], stempi0, StemEPS[c]);
+        LeafSympRWCInst(c,n) = symplasticRelativeWaterContent(LeafSympPsiVEC[c], leafpi0, LeafEPS[c]);
+        StemRWCInst(c,n) = StemSympRWCInst(c,n)*(1.0 - StemAF[c]) + apoplasticRelativeWaterContent(Stem1PsiVEC[c], VCstem_c[c], VCstem_d[c])*StemAF[c];
+        LeafRWCInst(c,n) = LeafSympRWCInst(c,n)*(1.0 - LeafAF[c]) + apoplasticRelativeWaterContent(LeafPsiVEC[c], VCleaf_c[c], VCleaf_d[c])*LeafAF[c];
+        StemPsiInst(c,n) = Stem1PsiVEC[c]; 
+        LeafPsiInst(c,n) = LeafPsiVEC[c]; //Store instantaneous (average) leaf potential
+        RootPsiInst(c,n) = RootCrownPsiVEC[c]; //Store instantaneous root crown potential
+        LeafSympPsiInst(c,n) = LeafSympPsiVEC[c];
+        StemSympPsiInst(c,n) = StemSympPsiVEC[c];
+        
+        //Store the minimum water potential of the day (i.e. mid-day)
+        meanGW_SL[c] += GW_SL(c,n)/((double) ntimesteps);
+        meanGW_SH[c] += GW_SH(c,n)/((double) ntimesteps);
+        minLeafPsi_SL[c] = std::min(minLeafPsi_SL[c],Psi_SL(c,n));
+        minLeafPsi_SH[c] = std::min(minLeafPsi_SH[c],Psi_SH(c,n));
+        maxLeafPsi_SL[c] = std::max(maxLeafPsi_SL[c],Psi_SL(c,n));
+        maxLeafPsi_SH[c] = std::max(maxLeafPsi_SH[c],Psi_SH(c,n));
+        minLeafPsi[c] = std::min(minLeafPsi[c],LeafPsiInst(c,n));
+        maxLeafPsi[c] = std::max(maxLeafPsi[c],LeafPsiInst(c,n));
+        minStemPsi[c] = std::min(minStemPsi[c],StemPsiInst(c,n));
+        minRootPsi[c] = std::min(minRootPsi[c],RootPsiInst(c,n));
+        for(int l=0;l<nlayers;l++) {
+          minPsiRhizo(c,l) = std::min(minPsiRhizo(c,l),RhizoPsiMAT(c,l));
+        }
       }
-      
     } //End of cohort loop
     
     //CANOPY AND SOIL ENERGY BALANCE

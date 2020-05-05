@@ -211,14 +211,16 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   LogicalVector budFormation = internalPhenology["budFormation"];
   
   List stand = spwbOut["Stand"];
-  List Plants = spwbOut["Plants"];
+  DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(spwbOut["Plants"]);
   List PlantsInst = spwbOut["PlantsInst"];
   
   //Recover module-communication state variables
   NumericMatrix AgStep  =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["Ag"]);
   int numSteps = AgStep.ncol();
   
-  //RWC including apoplastic fraction
+  //Data from spwb
+  NumericVector LeafRWC = Plants["LeafRWC"];
+  NumericVector StemRWC = Plants["StemRWC"];
   NumericMatrix StemSympPsiInst =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemSympPsi"]);
   NumericMatrix LeafSympPsiInst =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["LeafSympPsi"]);
   NumericMatrix StemSympRWCInst =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemSympRWC"]);
@@ -252,12 +254,8 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   NumericMatrix VGrhizo_kmax, VCroot_kmax;
   Kmax_stemxylem = paramsTransp["Kmax_stemxylem"];
   NumericVector VCleaf_kmax= paramsTransp["VCleaf_kmax"];
-  NumericVector VCleaf_c= paramsTransp["VCleaf_c"];
-  NumericVector VCleaf_d= paramsTransp["VCleaf_d"];
   NumericVector Plant_kmax= paramsTransp["Plant_kmax"];
   VCstem_kmax = paramsTransp["VCstem_kmax"];
-  VCstem_c = paramsTransp["VCstem_c"];
-  VCstem_d = paramsTransp["VCstem_d"];
   VCroot_kmaxVEC= paramsTransp["VCroot_kmax"];
   VGrhizo_kmax = Rcpp::as<Rcpp::NumericMatrix>(below["VGrhizo_kmax"]);
   VCroot_kmax = Rcpp::as<Rcpp::NumericMatrix>(below["VCroot_kmax"]);
@@ -512,12 +510,10 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
         propLeafSenescence = (1.0/(365.25*leafDuration[j]));
       }
       //Leaf senescence due to drought 
-      //RWC including apoplastic fraction
-      double leafRWCAll = symplasticRelativeWaterContent(psiSympLeaf[j], LeafPI0[j], LeafEPS[j])*(1.0 - LeafAF[j]) + apoplasticRelativeWaterContent(psiApoLeaf[j], VCleaf_c[j], VCleaf_d[j])*LeafAF[j];
-      if(leafRWCAll < 0.5) {
+      if(LeafRWC[j] < 0.5) {
         double k = -5.0;
         propLeafSenescence = std::min(propLeafSenescence,
-                                      std::max(0.0,(exp(k*leafRWCAll)-exp(k*0.5))/(1.0-exp(k*0.5))));
+                                      std::max(0.0,(exp(k*LeafRWC[j])-exp(k*0.5))/(1.0-exp(k*0.5))));
       }
       double LA_exp_prev= LAexpanded; //Store previous value
       LAdead += LAexpanded*propLeafSenescence;
@@ -535,13 +531,12 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
       if(cavitationRefill=="growth") StemPLC[j] = std::max(0.0, StemPLC[j] - (deltaSAgrowth/SA[j]));
       
       //Death by carbon starvation or dessication
-      double stemRWCAll = symplasticRelativeWaterContent(psiSympStem[j], StemPI0[j], StemEPS[j])*(1.0 - StemAF[j]) + apoplasticRelativeWaterContent(psiApoStem[j], VCstem_c[j], VCstem_d[j])*StemAF[j];
-      if((sugarSapwood[j]<0.0) || (stemRWCAll <0.5)) {
+      if((sugarSapwood[j]<0.0) || (StemRWC[j] <0.5)) {
         LAdead = LAlive;
         LAlive = 0.0;
         LAexpanded = 0.0;
         if(sugarSapwood[j]<0.0) Status(j) = "starvation";
-        else if(stemRWCAll<0.5) Status(j) = "dessication";
+        else if(StemRWC[j]<0.5) Status(j) = "dessication";
         Rcout<<" [Cohort "<< j<<" died from " << Status(j)<<"] ";
       }
       
