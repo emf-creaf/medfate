@@ -517,24 +517,32 @@ DataFrame internalAllocationDataFrame(DataFrame above,
                                   DataFrame paramsTranspirationdf,
                                   List control) {
   int numCohorts = above.nrow();
-  
-  String allocationStrategy = control["allocationStrategy"];
-  
-  NumericVector SA = above["SA"];
-  NumericVector Al2As = paramsAnatomydf["Al2As"];
-  NumericVector Plant_kmax = paramsTranspirationdf["Plant_kmax"];
-  
+
   NumericVector allocationTarget(numCohorts,0.0);
   NumericVector leafAreaTarget(numCohorts,0.0);
-  // NumericVector longtermStorage(numCohorts,0.0);
-  for(int c=0;c<numCohorts;c++){
-    leafAreaTarget[c] = Al2As[c]*(SA[c]/10000.0);
-    if(allocationStrategy=="Plant_kmax") {
-      allocationTarget[c] = Plant_kmax[c];
-    } else if(allocationStrategy=="Al2As") {
+  
+  String transpirationMode = control["transpirationMode"];
+  NumericVector SA = above["SA"];
+  NumericVector Al2As = paramsAnatomydf["Al2As"];
+  if(transpirationMode=="Granier") {
+    for(int c=0;c<numCohorts;c++){
+      leafAreaTarget[c] = Al2As[c]*(SA[c]/10000.0);
       allocationTarget[c] = Al2As[c];
     }
+  } else {
+    String allocationStrategy = control["allocationStrategy"];
+    NumericVector Plant_kmax = paramsTranspirationdf["Plant_kmax"];
+    // NumericVector longtermStorage(numCohorts,0.0);
+    for(int c=0;c<numCohorts;c++){
+      leafAreaTarget[c] = Al2As[c]*(SA[c]/10000.0);
+      if(allocationStrategy=="Plant_kmax") {
+        allocationTarget[c] = Plant_kmax[c];
+      } else if(allocationStrategy=="Al2As") {
+        allocationTarget[c] = Al2As[c];
+      }
+    }
   }
+  
   DataFrame df = DataFrame::create(Named("allocationTarget") = allocationTarget,
                                    Named("leafAreaTarget") = leafAreaTarget);
   df.attr("row.names") = above.attr("row.names");
