@@ -443,11 +443,11 @@ void checkspwbInput(List x, List soil, String transpirationMode, String soilFunc
   }
 }
 
-DataFrame defineWaterBalanceDailyOutput(DataFrame meteo, String transpirationMode) {
+DataFrame defineWaterBalanceDailyOutput(DataFrame meteo, NumericVector PET, String transpirationMode) {
   CharacterVector dateStrings = meteo.attr("row.names");
   int numDays = dateStrings.length();
   
-  NumericVector Precipitation(numDays), Evapotranspiration(numDays), PET(numDays);
+  NumericVector Precipitation(numDays), Evapotranspiration(numDays);
   NumericVector Runoff(numDays),Rain(numDays),Snow(numDays);
   NumericVector Snowmelt(numDays),NetRain(numDays);
   NumericVector Interception(numDays),Infiltration(numDays),DeepDrainage(numDays);
@@ -993,6 +993,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
   if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
   double latrad = latitude * (PI/180.0);
   
+  
   if(!meteo.containsElementNamed("Precipitation")) stop("Please include variable 'Precipitation' in weather input.");
   NumericVector Precipitation = meteo["Precipitation"];
   int numDays = Precipitation.size();
@@ -1000,7 +1001,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
   NumericVector MeanTemperature = meteo["MeanTemperature"];
   NumericVector WindSpeed(numDays, NA_REAL);
   if(meteo.containsElementNamed("WindSpeed")) WindSpeed = meteo["WindSpeed"];
-  NumericVector PET = NumericVector(numDays,0.0);
+  NumericVector PET(numDays, NA_REAL);
   if(transpirationMode=="Granier") {
     if(!meteo.containsElementNamed("PET")) stop("Please include variable 'PET' in weather input.");
     PET = meteo["PET"];
@@ -1042,8 +1043,9 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
   NumericVector LgroundPAR(numDays);
   NumericVector LgroundSWR(numDays);
   
+  
   //Water balance output variables
-  DataFrame DWB = defineWaterBalanceDailyOutput(meteo, transpirationMode);
+  DataFrame DWB = defineWaterBalanceDailyOutput(meteo, PET, transpirationMode);
   DataFrame SWB = defineSoilWaterBalanceDailyOutput(meteo, soil, transpirationMode);
   
   //EnergyBalance output variables

@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 void checkspwbInput(List x, List soil, String transpirationMode);
 
-DataFrame defineWaterBalanceDailyOutput(DataFrame meteo, String transpirationMode);
+DataFrame defineWaterBalanceDailyOutput(DataFrame meteo, NumericVector PET, String transpirationMode);
 DataFrame defineSoilWaterBalanceDailyOutput(DataFrame meteo, List soil, String transpirationMode);
 DataFrame defineEnergyBalanceDailyOutput(DataFrame meteo);
 DataFrame defineTemperatureDailyOutput(DataFrame meteo);

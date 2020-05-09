@@ -12,13 +12,16 @@
 Function \code{plot} produces temporal graphs of the results of the soil plant water balance model (see \code{\link{spwb}}), plant water balance model (see \code{\link{pwb}}) or the forest growth model (see \code{\link{growth}}), whereas function \code{summary} summarizes the model's output in different temporal steps (i.e. weekly, annual, ...).
 }
 \usage{
-\method{plot}{spwb}(x, type="PET_Precipitation", bySpecies = FALSE,
+\method{plot}{spwb}(x, type="PET_Precipitation", 
+                    cohorts = NULL, bySpecies = FALSE,
                     dates = NULL, subdaily = FALSE,
                     xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, ...)
-\method{plot}{pwb}(x, type="PlantTranspiration", bySpecies = FALSE,
+\method{plot}{pwb}(x, type="PlantTranspiration", 
+                   cohorts = NULL, bySpecies = FALSE,
                    dates = NULL, subdaily = FALSE,
                    xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, ...)
-\method{plot}{growth}(x, type="PET_Precipitation", bySpecies = FALSE, 
+\method{plot}{growth}(x, type="PET_Precipitation", 
+                      cohorts = NULL, bySpecies = FALSE, 
                       dates = NULL, subdaily = FALSE,
                       xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, ...)
 \method{summary}{pwb}(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, ...)
@@ -28,6 +31,7 @@ Function \code{plot} produces temporal graphs of the results of the soil plant w
 \arguments{
   \item{x, object}{An object of class \code{spwb}.}
   \item{type}{The information to be plotted (see details)}
+  \item{cohorts}{An integer, boolean or character vector to select the plant cohorts to be plotted.}
   \item{bySpecies}{Allows aggregating output by species, before calculating summaries or drawing plots (only has an effect with some values of \code{type}). Aggregation can involve a sum (as for plant lai or transpiration) or a LAI-weighted mean (as for plant stress or plant water potential).}
   \item{dates}{A Date vector with a subset of dates to be plotted.}
   \item{subdaily}{Whether subdaily results should be shown, only for simulations using \code{transpirationMode = "Sperry"} and having set \code{subdailyResults = TRUE} in the simulation control object. If \code{subdaily = TRUE}, then the valid strings for \code{type} are listed in \code{\link{plot.spwb_day}}.}

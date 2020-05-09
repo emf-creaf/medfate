@@ -1,29 +1,32 @@
+.getDailyPWBPlotTypes<-function(transpirationMode = "Granier") {
+  if(transpirationMode=="Granier") {
+    TYPES = c("SoilPsi","SoilTheta", "SoilRWC", "LAI",
+              "PlantExtraction","PlantLAI", 
+              "PlantStress", "PlantPsi","PlantPhotosynthesis", "PlantTranspiration", "PlantWUE",
+              "PhotosynthesisPerLeaf","TranspirationPerLeaf")
+  } else {
+    TYPES = c("SoilPsi","SoilTheta", "SoilRWC", "LAI",
+              "PlantExtraction","HydraulicRedistribution",
+              "PlantLAI",
+              "SoilPlantConductance","PlantStress", 
+              "PlantNetPhotosynthesis", "PlantGrossPhotosynthesis", "PlantTranspiration","PlantWUE",
+              "NetPhotosynthesisPerLeaf","GrossPhotosynthesisPerLeaf","TranspirationPerLeaf", 
+              "GW_SL", "GW_SH", "LeafPsiRange",
+              "LeafPsiMin", "LeafPsiMax", "LeafPsiMin_SL", "LeafPsiMax_SL", "LeafPsiMin_SH", "LeafPsiMax_SH",
+              "StemPsi","RootPsi","StemPLC", "StemRWC", "LeafRWC", "StemSympRWC", "LeafSympRWC", 
+              "PlantWaterBalance",
+              "PlantAbsorbedSWR", "AbsorbedSWRPerLeaf",
+              "PlantAbsorbedLWR", "AbsorbedLWRPerLeaf",
+              "Temperature","AirTemperature","SoilTemperature", "CanopyTemperature",
+              "CanopyEnergyBalance", "SoilEnergyBalance")
+  }
+  return(TYPES)
+}
 .getDailySPWBPlotTypes<-function(transpirationMode = "Granier") {
-   if(transpirationMode=="Granier") {
-     TYPES = c("PET_Precipitation","PET_NetRain","Snow","Evapotranspiration",
-               "SoilPsi","SoilTheta","SoilRWC","SoilVol", 
-               "Export", "LAI", "WTD",
-               "PlantExtraction","PlantLAI",
-               "PlantStress", "PlantPsi","PlantPhotosynthesis", "PlantTranspiration", "PlantWUE",
-               "PhotosynthesisPerLeaf","TranspirationPerLeaf")
-   } else {
-     TYPES = c("PET_Precipitation","PET_NetRain","Snow","Evapotranspiration",
-               "SoilPsi","SoilTheta", "SoilRWC", "SoilVol", 
-               "Export", "LAI", "WTD",
-               "PlantExtraction","HydraulicRedistribution",
-               "PlantLAI",
-               "SoilPlantConductance","PlantStress", 
-               "PlantNetPhotosynthesis", "PlantGrossPhotosynthesis", "PlantTranspiration","PlantWUE",
-               "NetPhotosynthesisPerLeaf","GrossPhotosynthesisPerLeaf","TranspirationPerLeaf", 
-               "LeafPsiMin", "LeafPsiMax", 
-               "GW_SL", "GW_SH","LeafPsiMin_SL", "LeafPsiMax_SL", "LeafPsiMin_SH", "LeafPsiMax_SH",
-               "StemPsi","RootPsi","StemPLC", "StemRWC", "LeafRWC","StemSympRWC", "LeafSympRWC", 
-               "PlantWaterBalance",
-               "PlantAbsorbedSWR", "AbsorbedSWRPerLeaf",
-               "PlantAbsorbedLWR", "AbsorbedLWRPerLeaf",
-               "Temperature","AirTemperature","SoilTemperature", "CanopyTemperature",
-               "CanopyEnergyBalance", "SoilEnergyBalance")
-   }
+  TYPES = c(.getDailyPWBPlotTypes(transpirationMode),
+            "PET_Precipitation","PET_NetRain","Snow","Evapotranspiration",
+            "SoilVol", 
+            "Export", "WTD")
   return(TYPES)
 }
 
@@ -82,8 +85,10 @@
   else if(type=="LeafRWC") ylab = "Relative water content in leaf [%]"
   else if(type=="LeafSympRWC") ylab = "Relative water content in leaf symplasm [%]"
   else if(type=="PlantPsi") ylab = "Plant water potential (MPa)"
+  else if(type=="PlantStress") ylab = "Drought stress [0-1]"
   else if(type=="StemPsi") ylab = "Midday stem water potential (MPa)"
   else if(type=="RootPsi") ylab = "Midday root crown water potential (MPa)"
+  else if(type=="SoilPlantConductance") ylab = expression(paste("Average soil-plant conductance ",(mmol%.%m^{-2}%.%s^{-1})))
   else if(type=="LeafPsiMin") ylab = "Minimum (midday) leaf water potential (MPa)"
   else if(type=="LeafPsiMax") ylab = "Maximum (predawn) leaf water potential (MPa)"
   else if(type=="LeafPsiMin_SL") ylab = "Minimum (midday) sunlit leaf water potential (MPa)"
@@ -141,6 +146,22 @@
   if(!is.null(ylab)) g <- g+ylab(ylab)
   return(g)
 }
+.multiple_dynamics_range<-function(x1,x2, xlab = "", ylab=NULL, ylim = NULL, labels = NULL) {
+  if(is.null(labels)) labels = colnames(x1)
+  df = data.frame("Y1" = as.vector(x1),
+                  "Y2" = as.vector(x2),
+                  "Date" = as.Date(rownames(x1)),
+                  "Cohort" = gl(length(colnames(x1)), nrow(x1), labels=labels))
+  g<-ggplot(df, aes_string(x="Date"))+
+    geom_ribbon(aes_string(ymin = "Y2", ymax="Y1",fill="Cohort"), alpha = 0.5)+
+    scale_fill_discrete(name="")+
+    theme_bw()+
+    xlab(xlab)
+  if(!is.null(ylim)) g <- g+ylim(ylim)
+  if(!is.null(ylab)) g <- g+ylab(ylab)
+  return(g)
+}
+
 
 .multiple_dynamics_subdaily<-function(x, xlab = "", ylab=NULL, ylim = NULL, labels = NULL) {
   if(is.null(labels)) labels = colnames(x)[-1]

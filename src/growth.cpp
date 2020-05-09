@@ -1412,7 +1412,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   NumericMatrix StemPI0(numDays, numCohorts), LeafPI0(numDays, numCohorts);
   
   //Water balance output variables
-  DataFrame DWB = defineWaterBalanceDailyOutput(meteo, transpirationMode);
+  DataFrame DWB = defineWaterBalanceDailyOutput(meteo, PET, transpirationMode);
   DataFrame SWB = defineSoilWaterBalanceDailyOutput(meteo, soil, transpirationMode);
   
   
