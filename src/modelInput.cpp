@@ -455,7 +455,8 @@ DataFrame internalCarbonDataFrame(DataFrame above,
   int numCohorts = above.nrow();
 
   double nonSugarConc = control["nonSugarConc"];
-
+  String transpirationMode = control["transpirationMode"];
+  
   NumericVector WoodDensity = paramsAnatomydf["WoodDensity"];
   NumericVector LeafDensity = paramsAnatomydf["LeafDensity"];
   NumericVector SLA = paramsAnatomydf["SLA"];
@@ -476,6 +477,8 @@ DataFrame internalCarbonDataFrame(DataFrame above,
   NumericVector CR = above["CR"];
   NumericVector SA = above["SA"];
 
+  // NumericVector sugar(numCohorts,0.0);
+  // NumericVector starch(numCohorts,0.0);
   NumericVector sugarLeaf(numCohorts,0.0);
   NumericVector starchLeaf(numCohorts,0.0);
   NumericVector sugarSapwood(numCohorts,0.0);
@@ -488,25 +491,25 @@ DataFrame internalCarbonDataFrame(DataFrame above,
     // 50% in starch storage
     starchLeaf[c] = (0.5/(lvol*glucoseMolarMass))*leafStarchCapacity(LAI_expanded[c], N[c], SLA[c], LeafDensity[c]);
     starchSapwood[c] = (0.5/(svol*glucoseMolarMass))*sapwoodStarchCapacity(SA[c], H[c], Z[c], WoodDensity[c], 0.5);
+    // starch[c] = starchLeaf[c]+starchSapwood[c];
+    
     //Sugar storage from PI0
     double lconc = sugarConcentration(LeafPI0[c],20.0, nonSugarConc);
-    // double lvol = leafStorageVolume(LAI_expanded[c], N[c], SLA[c], LeafDensity[c]); //l
-    // double lstvol = 0.001*(starchLeaf[c]/starchDensity);
-    // // Rcout<<c<<": "<<lvol<<" "<< lstvol<< " "<< lconc <<"\n";
-    // sugarLeaf[c] = glucoseMolarMass*lconc*(lvol - lstvol);
     sugarLeaf[c] = lconc;
     double sconc = sugarConcentration(StemPI0[c],20.0, nonSugarConc);
-    // sconc = std::min(sconc,lconc); // Do not allow higher initial concentration in sapwood
-    // double svol = sapwoodStorageVolume(SA[c], H[c], Z[c], WoodDensity[c], 0.5); //l
-    // double sstvol = 0.001*(starchSapwood[c]/starchDensity);
-    // Rcout<<c<<": "<<svol<<" "<< sstvol<< " "<< sconc <<"\n";
-    // sugarSapwood[c] = glucoseMolarMass*sconc*(svol - sstvol);
     sugarSapwood[c] = sconc;
+    // sugar[c] = sugarLeaf[c] + sugarSapwood[c];
   }
-  DataFrame df = DataFrame::create(Named("sugarLeaf") = sugarLeaf,
-                                   Named("starchLeaf") = starchLeaf,
-                                   Named("sugarSapwood") = sugarSapwood,
-                                   Named("starchSapwood") = starchSapwood);
+  DataFrame df;
+  // if(transpirationMode=="Granier"){
+  //   df = DataFrame::create(Named("sugar") = sugar,
+  //                          Named("starch") = starch);
+  // } else {
+    df = DataFrame::create(Named("sugarLeaf") = sugarLeaf,
+                           Named("starchLeaf") = starchLeaf,
+                           Named("sugarSapwood") = sugarSapwood,
+                           Named("starchSapwood") = starchSapwood);
+  // }
   df.attr("row.names") = above.attr("row.names");
   return(df);
 }  
@@ -798,6 +801,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                          _["paramsAnatomy"] = paramsAnatomydf,
                          _["paramsInterception"] = paramsInterceptiondf,
                          _["paramsTranspiration"] = paramsTranspirationdf,
+                         _["paramsWaterStorage"] = paramsWaterStoragedf,
                          _["paramsGrowth"]= paramsGrowthdf,
                          _["paramsAllometries"] = paramsAllometriesdf,
                          _["internalPhenology"] = internalPhenologyDataFrame(above),

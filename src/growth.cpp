@@ -193,8 +193,8 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
   NumericVector PlantPsi = Plants["psi"];
   
   //Data from spwb
-  NumericVector LeafRWC = Plants["LeafRWC"];
-  NumericVector StemRWC = Plants["StemRWC"];
+  // NumericVector LeafRWC = Plants["LeafRWC"];
+  // NumericVector StemRWC = Plants["StemRWC"];
 
   //Anatomy parameters
   DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
@@ -214,7 +214,7 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
   
   //Transpiration parameters
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
-  NumericVector Psi_Extract = Rcpp::as<Rcpp::NumericVector>(paramsPhenology["Psi_Extract"]);
+  NumericVector Psi_Extract = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Psi_Extract"]);
   
 
   //Water storage parameters
@@ -329,23 +329,20 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
         double deltaLAsink = std::min(deltaLApheno, RGRleafmax*leafAreaTarget[j]*f_temp*fLA_turgor);
         if(LAlive>0.0) {
           double deltaLAavailable = std::max(0.0,((sugarLeaf[j] - minimumSugarConc)*(glucoseMolarMass*Volume_leaves[j]))/costPerLA);
-          double deltaLAgrowth = std::min(deltaLAsink, deltaLAavailable);
+          deltaLAgrowth += std::min(deltaLAsink, deltaLAavailable);
           growthCostLA += deltaLAgrowth*costPerLA;
-          deltaLAgrowth += deltaLAgrowth;
         } else { //Grow at expense of stem sugar
           double deltaLAavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarConc)*(glucoseMolarMass*Volume_sapwood[j]))/costPerLA);
-          double deltaLAgrowth = std::min(deltaLAsink, deltaLAavailable);
+          deltaLAgrowth += std::min(deltaLAsink, deltaLAavailable);
           growthCostSA += deltaLAgrowth*costPerLA;
-          deltaLAgrowth += deltaLAgrowth;
         }
       }
 
       if(LAlive > 0.0 && fSA_turgor>0.0 && f_temp>0.0) {
         double deltaSAavailable = std::max(0.0,((sugarSapwood[j]- minimumSugarConc)*(glucoseMolarMass*Volume_sapwood[j]))/costPerSA);
         double deltaSAsink = RGRmax[j]*SA[j]*f_temp*fSA_turgor;
-        double deltaSAgrowth = std::min(deltaSAsink, deltaSAavailable);
+        deltaSAgrowth += std::min(deltaSAsink, deltaSAavailable);
         growthCostSA += deltaSAgrowth*costPerSA; //increase cost (may be non zero if leaf growth was charged onto sapwood)
-        deltaSAgrowth  +=deltaSAgrowth;
       }      
       
       GrowthRespiration[j] +=(growthCostLA + growthCostSA)/B_total; //growth cost in g gluc · gdry-1
@@ -356,73 +353,25 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
       double leafSugarMassDelta = leafAgG - leafRespDay - growthCostLA;
       double sapwoodSugarMassDelta = - sapwoodResp - finerootResp - growthCostSA;
       
-      // for(int s=0;s<numSteps;s++) {
-        
-        // minimum concentration (mol gluc·l-1) to avoid turgor loss
-        // double leafTLP = turgorLossPoint(LeafPI0[j], LeafEPS[j]);
-        // double stemTLP = turgorLossPoint(StemPI0[j], StemEPS[j]);
-        // double rwcLeafTLP = symplasticRelativeWaterContent(leafTLP, LeafPI0[j], LeafEPS[j]);
-        // double rwcStemTLP = symplasticRelativeWaterContent(stemTLP, StemPI0[j], StemEPS[j]);
-        // tlpConcLeaf = sugarConcentration(leafTLP,Tcan[s], nonSugarConc)*(rwcLeafTLP/rwcLeaf(j,s)); 
-        // tlpConcSapwood = sugarConcentration(stemTLP,Tcan[s], nonSugarConc)*(rwcStemTLP/rwcStem(j,s)); 
-        
-        //Transform sugar concentration (mol gluc · l-1) to sugar mass (g gluc)
-        // double lstvol = 0.001*(starchLeaf[j]/starchDensity);
-        // double sstvol = 0.001*(starchSapwood[j]/starchDensity);
-        
-        
-        
-        
-        // double Psapwood = 1.0;
-        // if(allocationStrategy == "Plant_kmax") {
-        //   Psapwood = 1.0/(1.0+exp(10.0/allocationTarget[j]*(Plant_kmax[j] - allocationTarget[j])));
-        // } else if(allocationStrategy =="Al2As") {
-        //   Psapwood = 1.0 - 1.0/(1.0+exp(10.0/allocationTarget[j]*(Al2As[j] - allocationTarget[j])));
-        // }
-        // Rcout<<" coh:"<<j<< " s:"<<s<<" dS: "<< leafSugarMassDeltaStep<<" sugar mass leaf: "<< leafSugarMassStep << " dS:"<< sapwoodSugarMassDeltaStep<< " sugar mass sap: "<< sapwoodSugarMassStep<<"\n";
-        
-        
-        //floem transport      
-        
-        double ff = 0.0;
-        double ctl = 3600.0*Volume_leaves[j]*glucoseMolarMass;
-        double cts = 3600.0*Volume_sapwood[j]*glucoseMolarMass;
-      //   for(int t=0;t<24*3600;t++) {
-      //     sugarSapwood[j] += sapwoodSugarMassDelta/cts;
-      //     
-      //     double conversionSapwood = sugarStarchDynamics(sugarSapwood[j]/StemSympRWCInst(j,s), starchSapwood[j]/StemSympRWCInst(j,s), minimumSapwoodSugarConc);
-      //     // Rcout<<" coh:"<<j<< " s:"<<s<< " Lsugar: "<< sugarLeaf[j] << " Lstarch: "<< sugarSapwood[j]<<" starch formation: "<<conversionLeaf<< "\n";
-      //     double starchSapwoodIncrease = conversionSapwood*StemSympRWCInst(j,s);
-      //     starchSapwoodIncrease = std::min(starchSapwoodIncrease, Starch_max_sapwood[j] - starchSapwood[j]);
-      //     starchSapwood[j] += starchSapwoodIncrease;
-      //     
-      //     if(LAlive>0.0) {
-      //       sugarLeaf[j] += leafSugarMassDeltaStep/ctl;
-      //       double ft = floemFlow(LeafSympPsiInst(j,s), StemSympPsiInst(j,s), sugarLeaf[j]/LeafSympRWCInst(j,s), sugarSapwood[j]/StemSympRWCInst(j,s), Tcan[s], k_floem, nonSugarConc)*LAlive; //flow as mol glucose per s
-      //       // sugar-starch dynamics
-      //       double conversionLeaf = sugarStarchDynamicsLeaf(sugarLeaf[j]/LeafSympRWCInst(j,s), starchLeaf[j]/LeafSympRWCInst(j,s), minimumLeafSugarConc);
-      //       double starchLeafIncrease = conversionLeaf*LeafSympRWCInst(j,s);
-      //       starchLeafIncrease = std::min(starchLeafIncrease, Starch_max_leaves[j] - starchLeaf[j]);
-      //       starchLeaf[j]  += starchLeafIncrease;
-      //       // Rcout<<" coh:"<<j<< " s:"<<s<< " Ssugar: "<< sugarSapwood[j] << " Sstarch: "<< starchSapwood[j]<<" starch formation: "<<conversionSapwood<< "\n";
-      //       //Apply floem transport (mol gluc) to sugar concentrations (mol gluc· l-1)
-      //       sugarLeaf[j]  +=  (-ft/Volume_leaves[j]) - starchLeafIncrease;
-      //       sugarSapwood[j] +=  (ft/Volume_sapwood[j]) - starchSapwoodIncrease;
-      //       ff +=ft;
-      //     } else {
-      //       sugarSapwood[j] += - starchSapwoodIncrease;
-      //     }
-      //   }
-      //   PlantSugarLeafInst(j,s) = sugarLeaf[j];
-      //   PlantSugarSapwoodInst(j,s) = sugarSapwood[j];
-      //   PlantStarchLeafInst(j,s) = starchLeaf[j];
-      //   PlantStarchSapwoodInst(j,s) = starchSapwood[j];
-      //   PlantSugarTransportInst(j,s) = 1000.0*ff/(3600.0); //mmol·s-1
-      //   PlantSugarTransport[j] += ff; //To calculate daily floem balance (positive means towards stem)
-      //   // Rcout<<" coh:"<<j<< " s:"<<s<< " conc leaf: "<< sugarLeaf[j] << " conc sap: "<< sugarSapwood[j]<<" ff: "<<ff<< "\n";
-      //   
-      //   // Rcout<<j<<" LeafTLP "<< turgorLossPoint(LeafPI0[j], LeafEPS[j])<< " Leaf PI "<< osmoticWaterPotential(sugarLeaf[j], tday)<< " Conc "<< sugarLeaf[j]<< " TLPconc"<< tlpConcLeaf<<"\n";
-      // }
+      sugarSapwood[j] += sapwoodSugarMassDelta/(Volume_sapwood[j]*glucoseMolarMass);
+      if(LAlive>0.0) {
+        sugarLeaf[j] += leafSugarMassDelta/(Volume_leaves[j]*glucoseMolarMass);
+        //floem transport to make sugar concentrations equal     
+        double ff = (sugarLeaf[j]-sugarSapwood[j])/2.0;
+        sugarLeaf[j] -=ff;
+        PlantSugarTransport[j] = (ff*Volume_leaves[j])/(3600.0*24.0); //mol · s-1
+        sugarSapwood[j] +=(Volume_leaves[j]/Volume_sapwood[j])*ff;
+        double conversionLeaf = std::max(-starchLeaf[j], sugarLeaf[j] - minimumLeafSugarConc);
+        starchLeaf[j] +=conversionLeaf;
+        sugarLeaf[j] -=conversionLeaf;
+      }
+      double conversionSapwood = std::max(-starchSapwood[j], sugarSapwood[j] - minimumSapwoodSugarConc);
+      starchSapwood[j] +=conversionSapwood;
+      sugarSapwood[j] -=conversionSapwood;
+
+      //Excess is lost
+      starchLeaf[j] = std::min(starchLeaf[j], Starch_max_leaves[j]);
+      starchSapwood[j] = std::min(starchSapwood[j], Starch_max_sapwood[j]);
       
       if(sugarLeaf[j] < 0.0) { //Leaf senescense due to C starvation
         double respirationExcess = -sugarLeaf[j]*(Volume_leaves[j]*glucoseMolarMass); //g gluc
@@ -442,7 +391,7 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
       LAlive += deltaLAgrowth; //Update leaf area
       LAexpanded +=deltaLAgrowth;
       LAgrowth[j] += deltaLAgrowth/SA[j];//Store Leaf area growth rate in relation to sapwood area (m2/cm2)
-      
+      // Rcout<< j<<" "<< growthCostLA << " "<<deltaLAgrowth<< " "<<LAlive<<"\n";
       //Leaf senescence
       double propLeafSenescence = 0.0;
       //Leaf senescence due to age (Ca+ accumulation) only in evergreen species
@@ -450,11 +399,17 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
         propLeafSenescence = (1.0/(365.25*leafDuration[j]));
       }
       //Leaf senescence due to drought 
-      if(LeafRWC[j] < 0.5) {
-        double k = -5.0;
-        propLeafSenescence = std::min(propLeafSenescence,
-                                      std::max(0.0,(exp(k*LeafRWC[j])-exp(k*0.5))/(1.0-exp(k*0.5))));
+      double LAplc = std::min(LAlive, (1.0 - StemPLC[j])*leafAreaTarget[j]);
+      if(LAplc<LAlive) {
+        Rcout<<j<< " "<< LAplc<< " "<< LAlive<<"\n";
+        propLeafSenescence = std::max((LAlive-LAplc)/LAlive, propLeafSenescence); 
+        StemPLC[j] -=propLeafSenescence;
       }
+      // if(LeafRWC[j] < 0.5) {
+      //   double k = -5.0;
+      //   propLeafSenescence = std::min(propLeafSenescence,
+      //                                 std::max(0.0,(exp(k*LeafRWC[j])-exp(k*0.5))/(1.0-exp(k*0.5))));
+      // }
       double LA_exp_prev= LAexpanded; //Store previous value
       LAdead += LAexpanded*propLeafSenescence;
       LAexpanded = LAexpanded*(1.0 - propLeafSenescence); //Update expanded leaf area
@@ -471,12 +426,12 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
       if(cavitationRefill=="growth") StemPLC[j] = std::max(0.0, StemPLC[j] - (deltaSAgrowth/SA[j]));
       
       //Death by carbon starvation or dessication
-      if((sugarSapwood[j]<0.0) || (StemRWC[j] <0.5)) {
+      if((sugarSapwood[j]<0.0) || (StemPLC[j] >0.8)) {
         LAdead = LAlive;
         LAlive = 0.0;
         LAexpanded = 0.0;
         if(sugarSapwood[j]<0.0) Status(j) = "starvation";
-        else if(StemRWC[j]<0.5) Status(j) = "dessication";
+        else if(StemPLC[j]>0.8) Status(j) = "dessication";
         Rcout<<" [Cohort "<< j<<" died from " << Status(j)<<"] ";
       }
       
@@ -669,15 +624,13 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   // NumericVector slowCstorage_max(numCohorts), fastCstorage_max(numCohorts);
   //Transpiration parameters
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
-  NumericVector Kmax_stemxylem, VCstem_kmax, VCroot_kmaxVEC, Psi_Extract, VCstem_c, VCstem_d;
-  NumericMatrix VGrhizo_kmax, VCroot_kmax;
-  Kmax_stemxylem = paramsTransp["Kmax_stemxylem"];
+  NumericVector Kmax_stemxylem = paramsTransp["Kmax_stemxylem"];
   NumericVector VCleaf_kmax= paramsTransp["VCleaf_kmax"];
   NumericVector Plant_kmax= paramsTransp["Plant_kmax"];
-  VCstem_kmax = paramsTransp["VCstem_kmax"];
-  VCroot_kmaxVEC= paramsTransp["VCroot_kmax"];
-  VGrhizo_kmax = Rcpp::as<Rcpp::NumericMatrix>(below["VGrhizo_kmax"]);
-  VCroot_kmax = Rcpp::as<Rcpp::NumericMatrix>(below["VCroot_kmax"]);
+  NumericVector VCstem_kmax = paramsTransp["VCstem_kmax"];
+  NumericVector VCroot_kmaxVEC= paramsTransp["VCroot_kmax"];
+  NumericMatrix VGrhizo_kmax = Rcpp::as<Rcpp::NumericMatrix>(below["VGrhizo_kmax"]);
+  NumericMatrix VCroot_kmax = Rcpp::as<Rcpp::NumericMatrix>(below["VCroot_kmax"]);
   int numLayers = VCroot_kmax.ncol();
   
   //Water storage parameters
@@ -1339,17 +1292,6 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   
   // Rcout<<"3";
 
-  //Transpiration parameters
-  DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
-  NumericVector Kmax_stemxylem, VCstem_kmax, Psi_Extract, VCstem_c, VCstem_d;
-  if(transpirationMode=="Sperry") {
-    Kmax_stemxylem = paramsTransp["Kmax_stemxylem"];
-    VCstem_kmax = paramsTransp["VCstem_kmax"];
-    VCstem_c = paramsTransp["VCstem_c"];
-    VCstem_d = paramsTransp["VCstem_d"];
-  } else if(transpirationMode == "Granier"){
-    Psi_Extract = paramsTransp["Psi_Extract"];
-  }
 
   //Soil input
   NumericVector Water_FC = waterFC(soil, soilFunctions);
