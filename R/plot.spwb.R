@@ -423,6 +423,7 @@ plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = F
   input = x$growthInput
   soilInput = x$soilInput
   PlantGrowth = x$PlantGrowth
+  Plants = x$Plants
   PCB = x$PlantCarbonBalance
   
   nlayers = length(soilInput$W)

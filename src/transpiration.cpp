@@ -1336,13 +1336,15 @@ List transpirationGranier(List x, List soil, double tday, double pet,
   
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
   NumericVector Psi_Extract = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Psi_Extract"]);
+  NumericVector Psi_Critic = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Psi_Critic"]);
   NumericVector WUE = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE"]);
   NumericVector pRootDisc = Rcpp::as<Rcpp::NumericVector>(paramsTransp["pRootDisc"]);
   
   //Communication vectors
   //Comunication with outside
   DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
-  NumericVector pEmb = clone(Rcpp::as<Rcpp::NumericVector>(internalWater["PLC"]));
+  NumericVector PlantPsi = clone(Rcpp::as<Rcpp::NumericVector>(internalWater["PlantPsi"]));
+  NumericVector StemPLC = clone(Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]));
   
   //Determine whether leaves are out (phenology) and the adjusted Leaf area
   NumericVector Phe(numCohorts,0.0);
@@ -1394,7 +1396,6 @@ List transpirationGranier(List x, List soil, double tday, double pet,
   int nlayers = Wpool.ncol();
   NumericMatrix EplantCoh(numCohorts, nlayers);
   NumericMatrix RootPsi(numCohorts, nlayers);
-  NumericVector PlantPsi(numCohorts, NA_REAL);
   NumericVector Eplant(numCohorts, 0.0), Anplant(numCohorts, 0.0);
   NumericVector DDS(numCohorts, 0.0);
   NumericVector Kl, epc, Vl;
@@ -1411,7 +1412,7 @@ List transpirationGranier(List x, List soil, double tday, double pet,
       double Klc = Psi2K(psiSoil[l], Psi_Extract[c], WeibullShape);
       //Limit Kl due to previous cavitation
       if(cavitationRefill!="total") {
-        Klc = std::min(Klc, 1.0-pEmb[c]); 
+        Klc = std::min(Klc, 1.0-StemPLC[c]); 
       }
       double epc = std::max(TmaxCoh[c]*Klc*V(c,l),0.0);
       RootPsi(c,l) = psiSoil[l]; //Set initial guess of root potential to soil values
@@ -1425,7 +1426,6 @@ List transpirationGranier(List x, List soil, double tday, double pet,
       EplantCoh(c,l) = epc;
       Eplant[c] = Eplant[c] + epc;
       DDS[c] = DDS[c] + Phe[c]*(V(c,l)*(1.0 - Klc)); //Add stress from the current layer
-      
     }
   }
 
@@ -1433,19 +1433,17 @@ List transpirationGranier(List x, List soil, double tday, double pet,
   for(int c=0;c<numCohorts;c++) {
     PlantPsi[c] = averagePsi(RootPsi(c,_), V(c,_), WeibullShape, Psi_Extract[c]);
     if(cavitationRefill!="total") {
-      pEmb[c] = std::max(DDS[c], pEmb[c]); //Track current embolism if no refill
-      DDS[c] = pEmb[c];
+      StemPLC[c] = std::max(1.0 - Psi2K(PlantPsi[c],Psi_Critic[c],WeibullShape), StemPLC[c]); //Track current embolism if no refill
+    } else {
+      StemPLC[c] = 1.0 - Psi2K(PlantPsi[c],Psi_Critic[c],WeibullShape);
     }
     Anplant[c] = alpha*WUE[c]*Eplant[c];
   }
   
   
   if(modifyInputX) {
-    // for(int c=0;c<numCohorts;c++) {
-    //   transpiration[c] = Eplant[c];
-    //   photosynthesis[c] = Anplant[c]; //No distinction between gross and net photosynthesis
-    // }
-    internalWater["PLC"] = pEmb;
+    internalWater["StemPLC"] = StemPLC;
+    internalWater["PlantPsi"] = PlantPsi;
   }
   //Modifies input soil
   if(modifyInputSoil) {
@@ -1456,13 +1454,6 @@ List transpirationGranier(List x, List soil, double tday, double pet,
       rhizosphereMoistureExtraction(EplantCoh, Water_FC,
                                     Wpool, RHOP,
                                     poolProportions);
-      // for(int l=0;l<nlayers;l++) {
-      //   double Ws2 = 0.0;
-      //   for(int c=0;c<numCohorts;c++) Ws2 +=Wpool(c,l)*poolProportions[c];
-      // 
-      //   Rcout<<l<<": "<< Ws[l]<< " = " << Ws2<<"\n";
-      // }
-      
     } else { //copy soil to the pools of all cohorts
       for(int c=0;c<numCohorts;c++) {
         for(int l=0;l<nlayers;l++) {
@@ -1485,7 +1476,9 @@ List transpirationGranier(List x, List soil, double tday, double pet,
                                        _["AbsorbedSWRFraction"] = CohASWRF, 
                                        _["Transpiration"] = Eplant, 
                                        _["Photosynthesis"] = Anplant,
-                                       _["psi"] = PlantPsi, _["DDS"] = DDS);
+                                       _["PlantPsi"] = PlantPsi, 
+                                       _["DDS"] = DDS,
+                                       _["StemPLC"] = StemPLC);
   Plants.attr("row.names") = above.attr("row.names");
   EplantCoh.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
   List l = List::create(_["cohorts"] = clone(cohorts),

@@ -128,7 +128,19 @@ DataFrame paramsWaterStorage(DataFrame above, DataFrame SpParams,
   return(paramsWaterStoragedf);
 }
 
-DataFrame paramsTranspiration(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
+DataFrame paramsTranspirationGranier(DataFrame above,  DataFrame SpParams) {
+  IntegerVector SP = above["SP"];
+  NumericVector WUE = cohortNumericParameter(SP, SpParams, "WUE");
+  NumericVector Psi_Extract = cohortNumericParameter(SP, SpParams, "Psi_Extract");
+  NumericVector Psi_Critic = cohortNumericParameter(SP, SpParams, "Psi_Critic");
+  NumericVector pRootDisc = cohortNumericParameter(SP, SpParams, "pRootDisc");
+  DataFrame paramsTranspirationdf = DataFrame::create(_["Psi_Extract"]=Psi_Extract,
+                                                      _["Psi_Critic"] = Psi_Critic,
+                                                      _["WUE"] = WUE, _["pRootDisc"] = pRootDisc);
+  paramsTranspirationdf.attr("row.names") = above.attr("row.names");
+  return(paramsTranspirationdf);
+}
+DataFrame paramsTranspirationSperry(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
                               DataFrame paramsAnatomydf, List control) {
   IntegerVector SP = above["SP"];
   NumericVector H = above["H"];
@@ -136,6 +148,7 @@ DataFrame paramsTranspiration(DataFrame above, NumericMatrix V, List soil, DataF
   NumericVector Vc;
   double fracRootResistance = control["fracRootResistance"];
   double fracLeafResistance = control["fracLeafResistance"];
+  String transpirationMode = control["transpirationMode"];
   
   NumericVector dVec = soil["dVec"];
   
@@ -303,7 +316,6 @@ DataFrame paramsTranspiration(DataFrame above, NumericMatrix V, List soil, DataF
     //Plant kmax
     Plant_kmax[c] = 1.0/((1.0/VCleaf_kmax[c])+(1.0/VCstem_kmax[c])+(1.0/VCroottot_kmax[c]));
   }
-  
   DataFrame paramsTranspirationdf = DataFrame::create(
     _["Gwmin"]=Gwmin, _["Gwmax"]=Gwmax,_["Vmax298"]=Vmax298,
       _["Jmax298"]=Jmax298, _["Kmax_stemxylem"] = Kmax_stemxylem, _["Kmax_rootxylem"] = Kmax_rootxylem,
@@ -557,7 +569,8 @@ DataFrame internalWaterDataFrame(DataFrame above, String transpirationMode) {
   int numCohorts = above.nrow();
   DataFrame df;
   if(transpirationMode=="Granier") {
-    df = DataFrame::create(Named("PLC") = NumericVector(numCohorts, 0.0));
+    df = DataFrame::create(Named("PlantPsi") = NumericVector(numCohorts, 0.0),
+                           Named("StemPLC") = NumericVector(numCohorts, 0.0));
   } else {
     df = DataFrame::create(Named("Einst") = NumericVector(numCohorts, 0.0),
                            Named("RootCrownPsi") = NumericVector(numCohorts, 0.0),
@@ -627,7 +640,8 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
   for(int c=0;c<numCohorts;c++){
     for(int l=0;l<nlayers;l++) Wpool(c,l) = Wsoil[l]; //Init from soil state
   }
-
+  
+  
   List input;
   if(transpirationMode=="Granier") {
     
@@ -636,14 +650,8 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
                                                _["g"] = g);
     paramsInterceptiondf.attr("row.names") = above.attr("row.names");
   
-    NumericVector WUE = cohortNumericParameter(SP, SpParams, "WUE");
-    NumericVector Psi_Extract = cohortNumericParameter(SP, SpParams, "Psi_Extract");
-    NumericVector pRootDisc = cohortNumericParameter(SP, SpParams, "pRootDisc");
-    DataFrame paramsTranspirationdf = DataFrame::create(_["Psi_Extract"]=Psi_Extract,_["WUE"] = WUE,  _["pRootDisc"] = pRootDisc);
-    paramsTranspirationdf.attr("row.names") = above.attr("row.names");
     List below = List::create(_["V"] = V,
                               _["Wpool"] = Wpool);
-
     List paramsCanopy = List::create(_["gdd"] = 0.0);
     input = List::create(_["control"] = clone(control),
                          _["canopy"] = paramsCanopy,
@@ -652,7 +660,7 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
                          _["below"] = below,
                          _["paramsPhenology"] = paramsPhenology(above, SpParams),
                          _["paramsInterception"] = paramsInterceptiondf,
-                         _["paramsTranspiration"] = paramsTranspirationdf,
+                         _["paramsTranspiration"] = paramsTranspirationGranier(above,SpParams),
                          _["internalPhenology"] = internalPhenologyDataFrame(above),
                          _["internalWater"] = internalWaterDataFrame(above, transpirationMode));
   } else if(transpirationMode =="Sperry"){
@@ -665,9 +673,9 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
     paramsInterceptiondf.attr("row.names") = above.attr("row.names");
     
     DataFrame paramsAnatomydf = paramsAnatomy(above, SpParams);
-    DataFrame paramsWaterStoragedf = paramsWaterStorage(above, SpParams, paramsAnatomydf);
-    DataFrame paramsTranspirationdf = paramsTranspiration(above, V, soil, SpParams,
+    DataFrame paramsTranspirationdf = paramsTranspirationSperry(above, V, soil, SpParams,
                                                           paramsAnatomydf, control);
+    DataFrame paramsWaterStoragedf = paramsWaterStorage(above, SpParams, paramsAnatomydf);
     NumericMatrix RhizoPsi =  NumericMatrix(numCohorts, nlayers);
     RhizoPsi.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
     std::fill(RhizoPsi.begin(), RhizoPsi.end(), 0.0);
@@ -783,12 +791,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                                                _["g"] = g);
     paramsInterceptiondf.attr("row.names") = above.attr("row.names");
     
-    NumericVector WUE = cohortNumericParameter(SP, SpParams, "WUE");
-    NumericVector Psi_Extract = cohortNumericParameter(SP, SpParams, "Psi_Extract");
-    NumericVector pRootDisc = cohortNumericParameter(SP, SpParams, "pRootDisc");
-    
-    DataFrame paramsTranspirationdf = DataFrame::create(_["Psi_Extract"]=Psi_Extract,_["WUE"] = WUE, _["pRootDisc"] = pRootDisc);
-    paramsTranspirationdf.attr("row.names") = above.attr("row.names");
+    DataFrame paramsTranspirationdf = paramsTranspirationGranier(above, SpParams);
     
     List below = List::create( _["Z"]=Z,_["V"] = V,_["Wpool"] = Wpool);
     List paramsCanopy = List::create(_["gdd"] = 0.0);
@@ -822,7 +825,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                                                _["g"] = g);
     paramsInterceptiondf.attr("row.names") = above.attr("row.names");
     
-    DataFrame paramsTranspirationdf = paramsTranspiration(above, V, soil, SpParams,
+    DataFrame paramsTranspirationdf = paramsTranspirationSperry(above, V, soil, SpParams,
                                                           paramsAnatomydf, control);
     List below = paramsBelowZ(above, V, Z, soil, 
                               paramsTranspirationdf, control);

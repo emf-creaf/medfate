@@ -171,7 +171,8 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
   //Internal state variables
   DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
   //Values at the end of the day (after calling spwb)
-  NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["PLC"]);
+  NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
+  NumericVector PlantPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["PlantPsi"]);
   
   DataFrame internalCarbon = Rcpp::as<Rcpp::DataFrame>(x["internalCarbon"]);
   NumericVector sugarLeaf = internalCarbon["sugarLeaf"]; //Concentrations assuming RWC = 1
@@ -190,8 +191,7 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
   List stand = spwbOut["Stand"];
   DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(spwbOut["Plants"]);
   NumericVector Ag = Plants["Photosynthesis"];
-  NumericVector PlantPsi = Plants["psi"];
-  
+
   //Data from spwb
   // NumericVector LeafRWC = Plants["LeafRWC"];
   // NumericVector StemRWC = Plants["StemRWC"];
@@ -401,9 +401,8 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
       //Leaf senescence due to drought 
       double LAplc = std::min(LAlive, (1.0 - StemPLC[j])*leafAreaTarget[j]);
       if(LAplc<LAlive) {
-        Rcout<<j<< " "<< LAplc<< " "<< LAlive<<"\n";
+        // Rcout<<j<< " "<< LAplc<< " "<< LAlive<<"\n";
         propLeafSenescence = std::max((LAlive-LAplc)/LAlive, propLeafSenescence); 
-        StemPLC[j] -=propLeafSenescence;
       }
       // if(LeafRWC[j] < 0.5) {
       //   double k = -5.0;
@@ -426,12 +425,12 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
       if(cavitationRefill=="growth") StemPLC[j] = std::max(0.0, StemPLC[j] - (deltaSAgrowth/SA[j]));
       
       //Death by carbon starvation or dessication
-      if((sugarSapwood[j]<0.0) || (StemPLC[j] >0.8)) {
+      if((sugarSapwood[j]<0.0) || (StemPLC[j] > 0.5)) {
         LAdead = LAlive;
         LAlive = 0.0;
         LAexpanded = 0.0;
         if(sugarSapwood[j]<0.0) Status(j) = "starvation";
-        else if(StemPLC[j]>0.8) Status(j) = "dessication";
+        else if(StemPLC[j]>0.5) Status(j) = "dessication";
         Rcout<<" [Cohort "<< j<<" died from " << Status(j)<<"] ";
       }
       
@@ -1162,30 +1161,38 @@ void checkgrowthInput(List x, List soil, String transpirationMode, String soilFu
   }
 }
 
-void recordStandSummary(DataFrame standSummary, NumericVector LAIlive,
-                        NumericVector N, 
-                        NumericVector DBH,  NumericVector Cover, 
-                        NumericVector H, int pos) {
+void recordStandSummary(DataFrame standSummary, DataFrame above, int pos) {
+  
+  NumericVector DBH = above["DBH"];
+  NumericVector Cover = above["Cover"];
+  NumericVector H = above["H"];
+  NumericVector N = above["N"];
+  NumericVector LAI_live = above["LAI_live"];
+  StringVector Status = above["Status"];
+  
   NumericVector SLAI = as<Rcpp::NumericVector>(standSummary["LeafAreaIndex"]);
   SLAI[pos] = 0.0;
-  NumericVector TBA = as<Rcpp::NumericVector>(standSummary["TreeBasalArea"]);
-  TBA[pos] = 0.0;
-  NumericVector TDensity = as<Rcpp::NumericVector>(standSummary["TreeDensity"]);
-  TDensity[pos] = 0.0;
-  NumericVector SCover = as<Rcpp::NumericVector>(standSummary["ShrubCover"]);
-  SCover[pos] = 0.0;
+  NumericVector TBAL = as<Rcpp::NumericVector>(standSummary["TreeBasalAreaLive"]);
+  TBAL[pos] = 0.0;
+  NumericVector TBAD = as<Rcpp::NumericVector>(standSummary["TreeBasalAreaDead"]);
+  TBAD[pos] = 0.0;
+  NumericVector SCoverL = as<Rcpp::NumericVector>(standSummary["ShrubCoverLive"]);
+  SCoverL[pos] = 0.0;
+  NumericVector SCoverD = as<Rcpp::NumericVector>(standSummary["ShrubCoverDead"]);
+  SCoverD[pos] = 0.0;
   NumericVector MaxHeight = as<Rcpp::NumericVector>(standSummary["MaxHeight"]);
   MaxHeight[pos] = 0.0;
   int numCohorts = N.length();
   NumericVector treeBA = treeBasalArea(N, DBH);
   for(int i=0;i<numCohorts;i++) {
-    SLAI[pos] += LAIlive[i];
+    SLAI[pos] += LAI_live[i];
     if(!NumericVector::is_na(treeBA[i])) {
-      TBA[pos] += treeBA[i];
-      TDensity[pos] +=N[i];
+      if(Status[i]=="alive") TBAL[pos] += treeBA[i];
+      else TBAD[pos] += treeBA[i];
       MaxHeight[pos] = std::max(MaxHeight[pos], H[i]);
     } else {
-      SCover[pos] +=Cover[i];
+      if(Status[i]=="alive") SCoverL[pos] +=Cover[i];
+      else SCoverD[pos] +=Cover[i];
     }
   }
 }
@@ -1262,16 +1269,6 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   
   //Aboveground parameters  
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
-  NumericVector DBH = above["DBH"];
-  NumericVector Cover = above["Cover"];
-  NumericVector H = above["H"];
-  NumericVector N = above["N"];
-  NumericVector CR = above["CR"];
-  NumericVector LAI_live = above["LAI_live"];
-  NumericVector LAI_expanded = above["LAI_expanded"];
-  NumericVector LAI_dead = above["LAI_dead"];
-  NumericVector SA = above["SA"];
-  StringVector Status = above["Status"];
   int numCohorts = SP.size();
 
   //Belowground state variables  
@@ -1377,9 +1374,10 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   }
   DataFrame standSummary = DataFrame::create(
     _["LeafAreaIndex"] = NumericVector(numYears+1,0.0),
-    _["TreeBasalArea"] = NumericVector(numYears+1,0.0),
-    _["TreeDensity"] = NumericVector(numYears+1,0.0),
-    _["ShrubCover"] = NumericVector(numYears+1,0.0),
+    _["TreeBasalAreaLive"] = NumericVector(numYears+1,0.0),
+    _["TreeBasalAreaDead"] = NumericVector(numYears+1,0.0),
+    _["ShrubCoverLive"] = NumericVector(numYears+1,0.0),
+    _["ShrubCoverDead"] = NumericVector(numYears+1,0.0),
     _["MaxHeight"] = NumericVector(numYears+1,0.0)
   );
   List standStructures(numYears+1);
@@ -1396,7 +1394,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   standSummary.attr("row.names") = nss;
   standStructures.attr("names") = nss;
   standStructures[0] = clone(above);
-  recordStandSummary(standSummary, LAI_live, N, DBH, Cover, H, 0);
+  recordStandSummary(standSummary, above, 0);
   
   NumericVector initialContent = water(soil, soilFunctions);
   double initialSnowContent = soil["SWE"];
@@ -1519,6 +1517,17 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
       if(verbose) Rcout<<" [update structural variables] ";
       iyear++;
       
+      NumericVector DBH = above["DBH"];
+      NumericVector Cover = above["Cover"];
+      NumericVector H = above["H"];
+      NumericVector N = above["N"];
+      NumericVector CR = above["CR"];
+      NumericVector LAI_live = above["LAI_live"];
+      NumericVector LAI_expanded = above["LAI_expanded"];
+      NumericVector LAI_dead = above["LAI_dead"];
+      NumericVector SA = above["SA"];
+      StringVector Status = above["Status"];
+      
       DataFrame internalAllocation = Rcpp::as<Rcpp::DataFrame>(x["internalAllocation"]);
       NumericVector allocationTarget = internalAllocation["allocationTarget"];
       NumericVector leafAreaTarget = internalAllocation["leafAreaTarget"];
@@ -1534,7 +1543,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
 
       NumericVector L = parcohortC(H, LAI_live, LAI_dead, kPAR, CR);
       for(int j=0;j<numCohorts; j++) {
-        if(!NumericVector::is_na(DBH[j])) {
+        if(!NumericVector::is_na(DBH[j]) && Status[j]=="alive") {
           double fHmod = std::max(0.0,std::min(1.0,(1.0-((H[j]-137.0)/(Hmax[j]-137.0)))));
           double fHD = (fHDmin[j]*(L[j]/100.0) + fHDmax[j]*(1.0-(L[j]/100.0)))*fHmod;
           // Rcout << fHmod<<" "<< fHD<<" "<< L[j]<<"\n";
@@ -1543,14 +1552,14 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
       }
       NumericVector crNew = treeCrownRatioMED(N, DBH, H, Acw, Bcw, Acr, B1cr, B2cr, B3cr, C1cr, C2cr);
       for(int j=0;j<numCohorts; j++) {
-        if(!NumericVector::is_na(DBH[j])) {
+        if(!NumericVector::is_na(DBH[j]) && Status[j]=="alive") {
           CR[j] = crNew[j];
         }
       }
 
       //Shrub variables
       for(int j=0;j<numCohorts; j++) {
-        if(NumericVector::is_na(DBH[j])) {
+        if(NumericVector::is_na(DBH[j]) && Status[j]=="alive") {
           double Wleaves = leafAreaTarget[j]/SLA[j];  //Calculates the biomass (kg dry weight) of leaves
           double PV = pow(Wleaves*r635[j]/Absh[j], 1.0/Bbsh[j]); //Calculates crown phytovolume (in m3)
           H[j] = pow(1e6*PV/(Aash[j]*CR[j]), 1.0/3.0); //Updates shrub height
@@ -1568,7 +1577,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
       
       // Store stand structure
       standStructures[iyear] = clone(above);
-      recordStandSummary(standSummary, LAI_live, N, DBH, Cover, H,iyear);
+      recordStandSummary(standSummary, above,iyear);
     }
 
     if(subdailyResults) {

@@ -65,7 +65,8 @@ data("SpParamsUS")
     \item{\code{kPAR}}{Extinction coeficient for PAR (\code{kSWR = kPAR/1.35}).}
     \item{\code{g}}{Canopy water storage capacity per LAI unit (in mm/LAI).}
     \item{\code{WUE}}{Water use efficiency for carbon assimilation (g C /mm water).}
-    \item{\code{Psi_Extract}}{Water potential corresponding to 50\% relative conductance (in MPa).}
+    \item{\code{Psi_Extract}}{Water potential corresponding to 50\% stomatal conductance (in MPa).}
+    \item{\code{Psi_Critic}}{Water potential corresponding to 50\% of stem cavitation (in MPa).}
     \item{\code{pRootDisc}}{Relative root conductance leading to hydraulic disconnection from a soil layer.}
     \item{\code{Gwmin}}{Minimum stomatal conductance to water vapor per leaf area unit (in mol·s-1·m-2).}
     \item{\code{Gwmax}}{Maximum stomatal conductance to water vapor per leaf area unit (in mol·s-1·m-2).}
