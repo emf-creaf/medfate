@@ -592,8 +592,8 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   int numSteps = AgStep.ncol();
   
   //Data from spwb
-  NumericVector LeafRWC = Plants["LeafRWC"];
-  NumericVector StemRWC = Plants["StemRWC"];
+  NumericVector LeafSympRWC = Plants["LeafSympRWC"];
+  NumericVector StemSympRWC = Plants["StemSympRWC"];
   NumericMatrix StemSympPsiInst =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemSympPsi"]);
   NumericMatrix LeafSympPsiInst =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["LeafSympPsi"]);
   NumericMatrix StemSympRWCInst =  Rcpp::as<Rcpp::NumericMatrix>(PlantsInst["StemSympRWC"]);
@@ -881,11 +881,17 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
         propLeafSenescence = (1.0/(365.25*leafDuration[j]));
       }
       //Leaf senescence due to drought 
-      if(LeafRWC[j] < 0.5) {
-        double k = -5.0;
-        propLeafSenescence = std::min(propLeafSenescence,
-                                      std::max(0.0,(exp(k*LeafRWC[j])-exp(k*0.5))/(1.0-exp(k*0.5))));
+      double LAplc = std::min(LAlive, (1.0 - StemPLC[j])*leafAreaTarget[j]);
+      if(LAplc<LAlive) {
+        // Rcout<<j<< " "<< LAplc<< " "<< LAlive<<"\n";
+        propLeafSenescence = std::max((LAlive-LAplc)/LAlive, propLeafSenescence); 
       }
+      //Complete defoliation if RWCsymp < 0.5
+      if(LAlive > 0.0 && LeafSympRWC[j]<0.5){
+        propLeafSenescence = 1.0;
+        Rcout<<" [Cohort "<< j<<" defoliated ] ";
+      }
+      
       double LA_exp_prev= LAexpanded; //Store previous value
       LAdead += LAexpanded*propLeafSenescence;
       LAexpanded = LAexpanded*(1.0 - propLeafSenescence); //Update expanded leaf area
@@ -902,12 +908,12 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
       if(cavitationRefill=="growth") StemPLC[j] = std::max(0.0, StemPLC[j] - (deltaSAgrowth/SA[j]));
       
       //Death by carbon starvation or dessication
-      if((sugarSapwood[j]<0.0) || (StemRWC[j] <0.5)) {
+      if((sugarSapwood[j]<0.0) || (StemSympRWC[j] <0.5)) {
         LAdead = LAlive;
         LAlive = 0.0;
         LAexpanded = 0.0;
         if(sugarSapwood[j]<0.0) Status(j) = "starvation";
-        else if(StemRWC[j]<0.5) Status(j) = "dessication";
+        else if(StemSympRWC[j]<0.5) Status(j) = "dessication";
         Rcout<<" [Cohort "<< j<<" died from " << Status(j)<<"] ";
       }
       
