@@ -2799,6 +2799,35 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// rootRadialLengths
+NumericVector rootRadialLengths(double Z95, NumericVector v, NumericVector d, double depthWidthRatio);
+RcppExport SEXP _medfate_rootRadialLengths(SEXP Z95SEXP, SEXP vSEXP, SEXP dSEXP, SEXP depthWidthRatioSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type Z95(Z95SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type v(vSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
+    Rcpp::traits::input_parameter< double >::type depthWidthRatio(depthWidthRatioSEXP);
+    rcpp_result_gen = Rcpp::wrap(rootRadialLengths(Z95, v, d, depthWidthRatio));
+    return rcpp_result_gen;
+END_RCPP
+}
+// areaWithRoots
+NumericVector areaWithRoots(double N, double Z95, NumericVector v, NumericVector d, double depthWidthRatio);
+RcppExport SEXP _medfate_areaWithRoots(SEXP NSEXP, SEXP Z95SEXP, SEXP vSEXP, SEXP dSEXP, SEXP depthWidthRatioSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type N(NSEXP);
+    Rcpp::traits::input_parameter< double >::type Z95(Z95SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type v(vSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
+    Rcpp::traits::input_parameter< double >::type depthWidthRatio(depthWidthRatioSEXP);
+    rcpp_result_gen = Rcpp::wrap(areaWithRoots(N, Z95, v, d, depthWidthRatio));
+    return rcpp_result_gen;
+END_RCPP
+}
 // rootLengths
 NumericVector rootLengths(NumericVector v, NumericVector d, double depthWidthRatio);
 RcppExport SEXP _medfate_rootLengths(SEXP vSEXP, SEXP dSEXP, SEXP depthWidthRatioSEXP) {
@@ -2822,6 +2851,22 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
     Rcpp::traits::input_parameter< double >::type depthWidthRatio(depthWidthRatioSEXP);
     rcpp_result_gen = Rcpp::wrap(xylemConductanceProportions(v, d, depthWidthRatio));
+    return rcpp_result_gen;
+END_RCPP
+}
+// horizontalProportionsNew
+List horizontalProportionsNew(NumericMatrix V, NumericVector N, NumericVector Z95, NumericVector LAIlive, NumericVector d, double depthWidthRatio);
+RcppExport SEXP _medfate_horizontalProportionsNew(SEXP VSEXP, SEXP NSEXP, SEXP Z95SEXP, SEXP LAIliveSEXP, SEXP dSEXP, SEXP depthWidthRatioSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type V(VSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type N(NSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Z95(Z95SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type LAIlive(LAIliveSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
+    Rcpp::traits::input_parameter< double >::type depthWidthRatio(depthWidthRatioSEXP);
+    rcpp_result_gen = Rcpp::wrap(horizontalProportionsNew(V, N, Z95, LAIlive, d, depthWidthRatio));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4368,8 +4413,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_conicDistribution", (DL_FUNC) &_medfate_conicDistribution, 2},
     {"_medfate_ldrDistribution", (DL_FUNC) &_medfate_ldrDistribution, 3},
     {"_medfate_rootDistribution", (DL_FUNC) &_medfate_rootDistribution, 2},
+    {"_medfate_rootRadialLengths", (DL_FUNC) &_medfate_rootRadialLengths, 4},
+    {"_medfate_areaWithRoots", (DL_FUNC) &_medfate_areaWithRoots, 5},
     {"_medfate_rootLengths", (DL_FUNC) &_medfate_rootLengths, 3},
     {"_medfate_xylemConductanceProportions", (DL_FUNC) &_medfate_xylemConductanceProportions, 3},
+    {"_medfate_horizontalProportionsNew", (DL_FUNC) &_medfate_horizontalProportionsNew, 6},
     {"_medfate_horizontalProportions", (DL_FUNC) &_medfate_horizontalProportions, 3},
     {"_medfate_thetaSATSaxton", (DL_FUNC) &_medfate_thetaSATSaxton, 3},
     {"_medfate_theta2psiSaxton", (DL_FUNC) &_medfate_theta2psiSaxton, 4},

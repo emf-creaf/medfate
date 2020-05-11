@@ -143,6 +143,42 @@ NumericMatrix rootDistribution(NumericVector z, List x) {
 }
 
 /**
+ *  Root axials lengths
+ * 
+ *  returns root axial lengths in mm (same units as d)
+ */
+// [[Rcpp::export("root_radialLengths")]]
+NumericVector rootRadialLengths(double Z95, NumericVector v, NumericVector d, double depthWidthRatio = 1.0) {
+  int nlayers = v.size();
+  //Radial lengths
+  NumericVector r(nlayers), rl(nlayers);
+  double maxr = 0.0;
+  for(int i=0;i<nlayers;i++) {
+    r[i] = sqrt(v[i]/(d[i]*PI));
+    maxr = std::max(r[i],maxr); 
+  }
+  for(int i=0;i<nlayers;i++) {
+    rl[i] = Z95*depthWidthRatio*(r[i]/maxr);
+    // Rcout<<rl[i]<<" ";
+  }
+  return(rl);
+}
+
+/**
+ * Stand area covered by roots (in m2/ha)
+ */
+// [[Rcpp::export("root_areaWithRoots")]]
+NumericVector areaWithRoots(double N, double Z95, NumericVector v, NumericVector d, double depthWidthRatio = 1.0) {
+  NumericVector rl = rootRadialLengths(Z95,v,d,depthWidthRatio);
+  int nlayer = rl.size();
+  NumericVector area(nlayer, 0.0);
+  for(int i=0;i<nlayer;i++) {
+    area[i] = std::min(pow(rl[i]/1000.0,2.0)*PI*N,10000.0);
+  }
+  return(area);
+}
+
+/**
  *  Root lengths
  * 
  * Calculates the sum of radial and vertical root lengths.
@@ -228,6 +264,42 @@ NumericVector xylemConductanceProportions(NumericVector v, NumericVector d, doub
   }
   for(int i=0;i<nlayers;i++) w[i] = w[i]/wsum;
   return(w);
+}
+
+
+// [[Rcpp::export("root_horizontalProportionsNew")]]
+List horizontalProportionsNew(NumericMatrix V, NumericVector N, NumericVector Z95, NumericVector LAIlive,
+                              NumericVector d, double depthWidthRatio = 1.0) {
+  int numCohorts = V.nrow();
+  int numlayers = V.ncol();
+  double LAIcelllive = sum(LAIlive);
+  NumericVector poolProportions(numCohorts);
+  for(int c=0;c<numCohorts;c++) poolProportions[c] = LAIlive[c]/LAIcelllive;
+  List l(numCohorts);
+  for(int coh=0;coh<numCohorts;coh++) {
+    NumericVector awr = areaWithRoots(N[coh], Z95[coh], V(coh,_),d, depthWidthRatio);
+    NumericMatrix RHOP(numCohorts,numlayers);
+    double poolarea = poolProportions[coh];
+    for(int l=0;l<numlayers;l++) {
+      double pal = awr[l]/10000.0;
+      // Rcout<<coh<< "  "<< l <<" "<<poolarea<< " "<<pal<<"\n";
+      double sv = 0.0;
+      for(int j=0;j<numCohorts;j++) if(j!=coh) sv += V(j,l);
+      for(int j=0;j<numCohorts;j++) {
+        if(j==coh) {
+          RHOP(coh,l) = std::min(poolarea,pal)/pal;
+        } else if(pal>poolarea) {
+          RHOP(j,l) = ((pal-poolarea)/pal)*V(j,l)/sv;
+        } else {
+          RHOP(j,l) = 0.0;
+        }
+      }
+    }
+    RHOP.attr("dimnames") = V.attr("dimnames");
+    l[coh] = RHOP;
+  }
+  l.attr("names") = rownames(V);
+  return(l);
 }
 
 

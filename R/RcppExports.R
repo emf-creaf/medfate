@@ -681,12 +681,24 @@ root_ldrDistribution <- function(Z50, Z95, d) {
     .Call(`_medfate_rootDistribution`, z, x)
 }
 
+root_radialLengths <- function(Z95, v, d, depthWidthRatio = 1.0) {
+    .Call(`_medfate_rootRadialLengths`, Z95, v, d, depthWidthRatio)
+}
+
+root_areaWithRoots <- function(N, Z95, v, d, depthWidthRatio = 1.0) {
+    .Call(`_medfate_areaWithRoots`, N, Z95, v, d, depthWidthRatio)
+}
+
 root_rootLengths <- function(v, d, depthWidthRatio = 1.0) {
     .Call(`_medfate_rootLengths`, v, d, depthWidthRatio)
 }
 
 root_xylemConductanceProportions <- function(v, d, depthWidthRatio = 1.0) {
     .Call(`_medfate_xylemConductanceProportions`, v, d, depthWidthRatio)
+}
+
+root_horizontalProportionsNew <- function(V, N, Z95, LAIlive, d, depthWidthRatio = 1.0) {
+    .Call(`_medfate_horizontalProportionsNew`, V, N, Z95, LAIlive, d, depthWidthRatio)
 }
 
 root_horizontalProportions <- function(V, LAIlive, poolOverlapFactor) {
