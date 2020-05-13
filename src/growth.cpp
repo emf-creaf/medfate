@@ -7,6 +7,7 @@
 #include "hydraulics.h"
 #include "hydrology.h"
 #include "carbon.h"
+#include "woodformation.h"
 #include "soil.h"
 #include "spwb.h"
 #include <Rcpp.h>
@@ -124,7 +125,6 @@ double turgorGrowthFactor(double psi, double psi_tlp) {
 //   double k =-10.0;
 //   return(std::max(0.0,(exp(k*conc)-exp(k*threshold))/(1.0-exp(k*threshold))));
 // }
-
 
 
 List growthDay1(List x, List soil, double tday, double pet, double prec, double er, double runon=0.0, 
@@ -506,6 +506,9 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
   return(l);
 }
 
+
+
+
 List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, double tmaxPrev, double tminNext, 
                 double rhmin, double rhmax, double rad, double wind, 
                 double latitude, double elevation, double slope, double aspect,
@@ -642,6 +645,10 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   NumericVector LeafEPS = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafEPS"]);
   NumericVector LeafAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafAF"]);
   NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vleaf"]); //l·m-2 = mm
+  
+  
+  //Ring of forming vessels
+  List ring = as<Rcpp::List>(x["ring"]);
   
   //Subdaily output matrices
   NumericMatrix CarbonBalanceInst(numCohorts, numSteps);  

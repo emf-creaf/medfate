@@ -4153,6 +4153,26 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// grow_ring
+void grow_ring(List ring, double psi, double Tc, double Nc, double phi0, double pi0, double CRD0, double Y_P, double Y_T, double h, double s);
+RcppExport SEXP _medfate_grow_ring(SEXP ringSEXP, SEXP psiSEXP, SEXP TcSEXP, SEXP NcSEXP, SEXP phi0SEXP, SEXP pi0SEXP, SEXP CRD0SEXP, SEXP Y_PSEXP, SEXP Y_TSEXP, SEXP hSEXP, SEXP sSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type ring(ringSEXP);
+    Rcpp::traits::input_parameter< double >::type psi(psiSEXP);
+    Rcpp::traits::input_parameter< double >::type Tc(TcSEXP);
+    Rcpp::traits::input_parameter< double >::type Nc(NcSEXP);
+    Rcpp::traits::input_parameter< double >::type phi0(phi0SEXP);
+    Rcpp::traits::input_parameter< double >::type pi0(pi0SEXP);
+    Rcpp::traits::input_parameter< double >::type CRD0(CRD0SEXP);
+    Rcpp::traits::input_parameter< double >::type Y_P(Y_PSEXP);
+    Rcpp::traits::input_parameter< double >::type Y_T(Y_TSEXP);
+    Rcpp::traits::input_parameter< double >::type h(hSEXP);
+    Rcpp::traits::input_parameter< double >::type s(sSEXP);
+    grow_ring(ring, psi, Tc, Nc, phi0, pi0, CRD0, Y_P, Y_T, h, s);
+    return R_NilValue;
+END_RCPP
+}
 
 // validate (ensure exported C++ functions exist before calling them)
 static int _medfate_RcppExport_validate(const char* sig) { 
@@ -4464,6 +4484,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_windAdjustmentFactor", (DL_FUNC) &_medfate_windAdjustmentFactor, 4},
     {"_medfate_windSpeedAtHeightOverCanopy", (DL_FUNC) &_medfate_windSpeedAtHeightOverCanopy, 3},
     {"_medfate_windExtinctionProfile", (DL_FUNC) &_medfate_windExtinctionProfile, 4},
+    {"_medfate_grow_ring", (DL_FUNC) &_medfate_grow_ring, 11},
     {"_medfate_RcppExport_registerCCallable", (DL_FUNC) &_medfate_RcppExport_registerCCallable, 0},
     {NULL, NULL, 0}
 };

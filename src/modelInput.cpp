@@ -3,6 +3,7 @@
 #include "growth.h"
 #include "carbon.h"
 #include "root.h"
+#include "woodformation.h"
 #include "forestutils.h"
 #include "tissuemoisture.h"
 #include "hydraulics.h"
@@ -815,7 +816,8 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                                                          paramsGrowthdf, control),
                         _["internalAllocation"] = internalAllocationDataFrame(plantsdf,
                                                             paramsAnatomydf,
-                                                            paramsTranspirationdf, control));
+                                                            paramsTranspirationdf, control),
+                        _["ring"] = initialize_ring());
   } else if(transpirationMode =="Sperry"){
     
     //Base params
@@ -862,7 +864,8 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                                                          paramsGrowthdf, control),
                          _["internalAllocation"] = internalAllocationDataFrame(plantsdf,
                                                          paramsAnatomydf,
-                                                         paramsTranspirationdf, control));
+                                                         paramsTranspirationdf, control),
+                         _["ring"] = initialize_ring());
     
   } 
   
