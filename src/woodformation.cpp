@@ -4,29 +4,26 @@ using namespace Rcpp;
 /// Constants
 double Rn = 8.314; // The perfect gas constant
 double T0 = -273.15; // Absolute 0 temperature in degC
-double Tref = 15; // Reference temperature in degC
+double Tref = 15.0; // Reference temperature in degC
 
 
-List initialize_ring(double phi0=0.13, double pi0=-0.8, double CRD0=8.3){
+List initialize_ring(){
   
-  IntegerVector formation_dog(0);
-  int l = formation_dog.size();
-  NumericVector phi(l, phi0);
-  NumericVector pi(l, pi0);
-  NumericVector CRD(l, CRD0);
+  IntegerVector formation(0);
+  NumericVector phi(0);
+  NumericVector pi(0);
+  NumericVector CRD(0);
   
   IntegerVector dog(0);
-  NumericVector P;
+  NumericVector P(0),SA(0);
   
-  DataFrame cells = DataFrame::create(_["formation_dog"] = formation_dog,
+  DataFrame cells = DataFrame::create(_["formation"] = formation,
                                       _["phi"] = phi,
                                       _["pi"] = pi,
                                       _["CRD"] = CRD);
   
-  DataFrame divisions = DataFrame::create(_["dog"] = dog,
-                                          _["P"] = P);
-  
-  List ring = List::create(_["divisions"] = divisions,
+  List ring = List::create(_["P"] = P,
+                           _["SA"] = SA,
                            _["cells"] = cells);
   
   
@@ -34,16 +31,16 @@ List initialize_ring(double phi0=0.13, double pi0=-0.8, double CRD0=8.3){
 }
 
 ////// Effect of temperature (on metabolic rate and microtubule stability)
-double _microT(double Tc, double inflection, double scale=5){
-  double out = 1/(1+exp((-Tc+inflection)*scale));
+double _microT(double Tc, double inflection, double scale=5.0){
+  double out = 1.0/(1.0+exp((-Tc+inflection)*scale));
   return out;
 }
 double _metR(double Tc, double DHa, double DSd, double DHd){
   double Tk = Tc-T0;
-  double out = Tk*exp(-DHa/(Rn*Tk)) / (1+exp(DSd/Rn*(1-(DHd/(DSd*Tk)))));
+  double out = Tk*exp(-DHa/(Rn*Tk)) / (1.0+exp(DSd/Rn*(1.0-(DHd/(DSd*Tk)))));
   return out;
 }
-double T_fun(double Tc, double Y_T=8, double DHa=87.5e3, double DSd=1.09e3, double DHd=333e3){
+double T_fun(double Tc, double Y_T=8.0, double DHa=87.5e3, double DSd=1.09e3, double DHd=333e3){
   double out = _metR(Tc, DHa, DSd, DHd);
   out = out/_metR(Tref, DHa, DSd, DHd); // the output is equal to 1 at Tref degC
   out = out*_microT(Tc, Y_T);
@@ -66,7 +63,7 @@ double _n2pi(double n, double V, double Tc){
 ////// Cell expansion model
 double _r(double psi, double Tc, double pi, double phi, double Y_P, double Y_T){
   double out = phi*(psi-pi-Y_P);
-  if(out<0) out=0;
+  if(out<0.0) out=0.0;
   out = out*T_fun(Tc,Y_T);
   return out;
 }
@@ -79,13 +76,13 @@ double _divide(double psi, double Tc,
   
   double r; //  Cell relative growth rate
   double P; // Cell production rate
-  double pi_Tcorr = _n2pi(_pi2n(pi0,1,Tref),1,Tc);
+  double pi_Tcorr = _n2pi(_pi2n(pi0,1.0,Tref),1.0,Tc);
   r = _r(psi, Tc, pi_Tcorr, phi0, Y_P, Y_T);
-  P = r/log(2)*Nc;
+  P = r/log(2.0)*Nc;
   
   return(P);
 }
-DataFrame _expand_cell(double psi, double Tc,
+List _expand_cell(double psi, double Tc,
                   double phi0=0.13, double pi0=-0.8, double CRD0=8.3,
                   double Y_P=0.05, double Y_T=8, double h=0.043*1.8, double s=1.8){
   // default parameters from Cabon et al. New Phytologist 2020. h is different because of potential error in the ref value.
@@ -97,32 +94,32 @@ DataFrame _expand_cell(double psi, double Tc,
   double r = _r(psi, Tc, pi0, phi0, Y_P, Y_T);
   
   // Variable update
-  double CRD1 = CRD0*(1+r); // cell diameter (volume) increment
+  double CRD1 = CRD0*(1.0+r); // cell diameter (volume) increment
   double pi1 = _n2pi(n, CRD1, Tref); // pi is returned at Tref in order to be consistent with input
-  double phi1 = phi0 + phi0*(s*r - h*T_fun(Tc, -999)); //changes in cell wall properties. Hardening (thickening and lignification) is temperature sensitive but not threshold prone because lignification does not need microtubules
-  if(phi1<0) {
-    phi1=0;
-  } else {}
+  double phi1 = phi0 + phi0*(s*r - h*T_fun(Tc, -999.9)); //changes in cell wall properties. Hardening (thickening and lignification) is temperature sensitive but not threshold prone because lignification does not need microtubules
+  if(phi1<0.0) {
+    phi1=0.0;
+  }
   
   // return outputs
-  return(DataFrame::create(_["phi"]=phi1,
-                           _["pi"]=pi1,
-                           _["CRD"]=CRD1));
+  return(List::create(_["phi"]=phi1,
+                      _["pi"]=pi1,
+                      _["CRD"]=CRD1));
 }
 
 
 void _expand_ring(List ring, double psi, double Tc, 
-                  double Y_P=0.05, double Y_T=5, double h=0.043*1.8, double s=1.8){
+                  double Y_P=0.05, double Y_T=5.0, double h=0.043*1.8, double s=1.8){
   
   DataFrame cells = as<DataFrame>(ring["cells"]);
   NumericVector phi = cells["phi"];
   NumericVector pi = cells["pi"];
   NumericVector CRD = cells["CRD"];
-  IntegerVector formation_dog = cells["formation_dog"];
+  IntegerVector formation = cells["formation"];
   int l = cells.nrow();
   
   for(int i=0; i<l; i++){
-    DataFrame temp = _expand_cell(psi, Tc,
+    List temp = _expand_cell(psi, Tc,
                              phi[i], pi[i], CRD[i],
                              Y_P, Y_T, h, s);
     
@@ -130,40 +127,29 @@ void _expand_ring(List ring, double psi, double Tc,
     pi[i] = temp["pi"];
     CRD[i] = temp["CRD"];
   }
-  
-  cells["phi"] = phi;
-  cells["pi"] = pi;
-  cells["CRD"] = CRD;
-  
-  ring["cells"] = cells;
-  // return ring;
 }
 
 // [[Rcpp::export]]
 void grow_ring(List ring, double psi, double Tc,
                 double Nc=8.85, double phi0=0.13, double pi0=-0.8, double CRD0=8.3,
-                double Y_P=0.05, double Y_T=8, double h=0.043*1.8, double s=1.8){
+                double Y_P=0.05, double Y_T=8.0, double h=0.043*1.8, double s=1.8){
   
   DataFrame cells = as<DataFrame>(ring["cells"]);
   NumericVector phi = cells["phi"];
   NumericVector pi = cells["pi"];
   NumericVector CRD = cells["CRD"];
-  DateVector formation_dog = cells["formation_dog"];
+  IntegerVector formation = cells["formation"];
   
-  DataFrame divisions = as<DataFrame>(ring["divisions"]);
-  NumericVector P = divisions["P"];
-  IntegerVector P_dog = divisions["dog"];
+  NumericVector P = as<NumericVector>(ring["P"]);
+  NumericVector SA = as<NumericVector>(ring["SA"]);
   
-  int dog = P_dog.size()+1;
+  int dog = P.size()+1;
   
   // Calculate cell production
   double P_i = _divide(psi, Tc, Nc, phi0, pi0, Y_P, Y_T);
   // Update the cell production vector
   P.push_back(P_i);
-  P_dog.push_back(dog);
-  divisions = DataFrame::create(_["dog"] = P_dog,
-                                _["P"] = P);
-  
+
   
   // Calculate the whole number of cells formed at the current and previous timestep
   double Pnew = sum(P); int Pnew_int = floor(Pnew);
@@ -174,16 +160,22 @@ void grow_ring(List ring, double psi, double Tc,
     phi.push_back(phi0);
     pi.push_back(pi0);
     CRD.push_back(CRD0);
-    formation_dog.push_back(dog);
+    formation.push_back(dog);
   }
+  // double SAprev = 0.0;
+  // if(SA.length()>0) SAprev = SA[SA.length()-1];
+  double SAnew = 0.0;
+  for(int i=0;i<CRD.length();i++) SAnew += pow(CRD[i]/10000.0, 2.0); //Assumes square cell section
+  SA.push_back(SAnew);
   
   // Create new cells data frame
-  cells = DataFrame::create(_["formation_dog"] = formation_dog,
+  cells = DataFrame::create(_["formation"] = formation,
                             _["phi"] = phi,
                             _["pi"] = pi,
                             _["CRD"] = CRD);
   // Update ring object
-  ring["divisions"] = divisions;
+  ring["P"] = P;
+  ring["SA"] = SA;
   ring["cells"] = cells;
   // Calculate cell expansion
   _expand_ring(ring, psi, Tc, Y_P, Y_T, h, s);

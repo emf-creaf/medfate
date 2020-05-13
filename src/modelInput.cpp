@@ -785,6 +785,10 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   plantsdf.attr("row.names") = above.attr("row.names");
   
 
+  List ringList(numCohorts);
+  for(int i=0;i<numCohorts;i++) ringList[i] = initialize_ring();
+  ringList.attr("names") = above.attr("row.names");
+  
   List input;
   if(transpirationMode=="Granier") {
     //Base params
@@ -817,7 +821,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                         _["internalAllocation"] = internalAllocationDataFrame(plantsdf,
                                                             paramsAnatomydf,
                                                             paramsTranspirationdf, control),
-                        _["ring"] = initialize_ring());
+                        _["rings"] = ringList);
   } else if(transpirationMode =="Sperry"){
     
     //Base params
@@ -865,7 +869,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                          _["internalAllocation"] = internalAllocationDataFrame(plantsdf,
                                                          paramsAnatomydf,
                                                          paramsTranspirationdf, control),
-                         _["ring"] = initialize_ring());
+                         _["rings"] = ringList);
     
   } 
   

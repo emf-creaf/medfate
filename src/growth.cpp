@@ -648,7 +648,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   
   
   //Ring of forming vessels
-  List ring = as<Rcpp::List>(x["ring"]);
+  List ringList = as<Rcpp::List>(x["rings"]);
   
   //Subdaily output matrices
   NumericMatrix CarbonBalanceInst(numCohorts, numSteps);  
@@ -726,6 +726,9 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
         // Rcout<< LAlive<< " "<< leafAreaTarget[j]<<"\n";
       }
       
+      //Xylogenesis
+      grow_ring(ringList[j], psiSympStem[j] ,tday, 10.0);
+      
       //Carbon balance for labile carbon of leaves and stems
       for(int s=0;s<numSteps;s++) {
         
@@ -770,7 +773,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
         //Leaf growth
         double f_temp = temperatureGrowthFactor(Tcan[s]);
         double fLA_turgor = turgorGrowthFactor(LeafSympPsiInst(j,s),turgorLossPoint(LeafPI0[j], LeafEPS[j]));
-        double fSA_turgor = turgorGrowthFactor(StemSympPsiInst(j,s),turgorLossPoint(StemPI0[j], StemEPS[j]));
+        // double fSA_turgor = turgorGrowthFactor(StemSympPsiInst(j,s),turgorLossPoint(StemPI0[j], StemEPS[j]));
         // Rcout << j << " fLA_turgor "<< fLA_turgor << " fSA_turgor "<< fSA_turgor << "f_temp"<< f_temp <<"\n";
         double growthCostLAStep = 0.0;
         double growthCostSAStep = 0.0;
@@ -799,9 +802,15 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
         // } else if(allocationStrategy =="Al2As") {
         //   Psapwood = 1.0 - 1.0/(1.0+exp(10.0/allocationTarget[j]*(Al2As[j] - allocationTarget[j])));
         // }
-        if(LAlive > 0.0 && fSA_turgor>0.0 && f_temp>0.0) {
+        if(LAlive > 0.0) {
+          List ring = ringList[j];
+          NumericVector SAring = ring["SA"];
+          double deltaSAring = 0.0;
+          if(SAring.length()==1) deltaSAring = SAring[0];
+          else deltaSAring = SAring[SAring.length()-1] - SAring[SAring.length()-2];
+          double RGRcellmax = pow(1e-4,2.0)/SA[j];
+          double deltaSAsink = deltaSAring*(RGRmax[j]/RGRcellmax)/10.0; //Correction for the difference in the number of cells
           double deltaSAavailable = std::max(0.0,((sugarSapwood[j]- minimumSugarConc)*(glucoseMolarMass*Volume_sapwood[j]))/costPerSA);
-          double deltaSAsink = RGRmax[j]/((double) numSteps)*SA[j]*f_temp*fSA_turgor;
           double deltaSAgrowthStep = std::min(deltaSAsink, deltaSAavailable);
           growthCostSAStep += deltaSAgrowthStep*costPerSA; //increase cost (may be non zero if leaf growth was charged onto sapwood)
           deltaSAgrowth  +=deltaSAgrowthStep;
@@ -910,7 +919,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
       SA[j] = SA[j] - deltaSAturnover; //Update sapwood area
       //SA growth     
       SA[j] += deltaSAgrowth; //Update sapwood area
-      SAgrowth[j] += deltaSAgrowth/SA[j]; //Store sapwood area growth rate (cm2/cm2)
+      SAgrowth[j] += deltaSAgrowth; //Store sapwood area growth rate (cm2/d-1)
       //Decrease PLC due to new SA growth
       if(cavitationRefill=="growth") StemPLC[j] = std::max(0.0, StemPLC[j] - (deltaSAgrowth/SA[j]));
       
@@ -1588,6 +1597,9 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
         }
       }
       
+      //reset ring structures
+      List ringList = x["rings"];
+      for(int j=0;j<numCohorts; j++) ringList[j] = initialize_ring();
       // Store stand structure
       standStructures[iyear] = clone(above);
       recordStandSummary(standSummary, above,iyear);
