@@ -32,8 +32,8 @@ const double fineroots_CC = 1.30; // g gluc · g dw -1
 // const double sapwood_RR = 0.005; // g gluc · g dw -1 · day -1
 // const double fineroot_RR = 0.05; // g gluc · g dw -1 · day -1
 
-//Maximum relative growth rate of leaves (10%/day)
-const double RGRleafmax = 0.1; // m2·m-2·day-1
+//Maximum relative growth rate of leaves (should be faster than RGRsapwood)
+const double RGRleafmax = 0.05; // m2 leaf ·cm-2 sapwood· day-1
 
 
 //Ogle & Pacala 2010
@@ -229,6 +229,10 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
   NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["Vleaf"]); //l·m-2 = mm
   
 
+  //Ring of forming vessels
+  List ringList = as<Rcpp::List>(x["rings"]);
+  
+  
   //Daily output vectors
   NumericVector CarbonBalance(numCohorts,0.0);
   NumericVector MaintenanceRespiration(numCohorts,0.0);
@@ -253,6 +257,8 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
   
   double minimumLeafSugarConc = equilibriumLeafTotalConc - nonSugarConc;
   double minimumSapwoodSugarConc = equilibriumSapwoodTotalConc - nonSugarConc;
+  
+  double rleafcellmax = relative_expansion_rate(0.0 ,25, -2.0,0.5,0.05,5.0);
   
   //3. Carbon balance and growth
   for(int j=0;j<numCohorts;j++){
@@ -315,18 +321,20 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
       }
       MaintenanceRespiration[j] += (leafRespDay+sapwoodResp+finerootResp)/B_total; 
       
+      
+      //Xylogenesis
+      grow_ring(ringList[j], PlantPsi[j] ,tday, 10.0);
+      double rleafcell = relative_expansion_rate(PlantPsi[j] ,tday, LeafPI0[j],0.5,0.05,5.0);
+      
       //Leaf growth
-      double f_temp = temperatureGrowthFactor(tday);
-      double fLA_turgor = turgorGrowthFactor(PlantPsi[j],turgorLossPoint(LeafPI0[j], LeafEPS[j]));
-      double fSA_turgor = turgorGrowthFactor(PlantPsi[j],turgorLossPoint(StemPI0[j], StemEPS[j]));
       // Rcout << j << " fLA_turgor "<< fLA_turgor << " fSA_turgor "<< fSA_turgor << "f_temp"<< f_temp <<"\n";
       double growthCostLA = 0.0;
       double growthCostSA = 0.0;
       
       
-      if(leafUnfolding[j] && fLA_turgor>0.0 && f_temp>0.0) {
+      if(leafUnfolding[j]) {
         double deltaLApheno = std::max(leafAreaTarget[j] - LAlive, 0.0);
-        double deltaLAsink = std::min(deltaLApheno, RGRleafmax*leafAreaTarget[j]*f_temp*fLA_turgor);
+        double deltaLAsink = std::min(deltaLApheno, SA[j]*RGRleafmax*(rleafcell/rleafcellmax));
         if(LAlive>0.0) {
           double deltaLAavailable = std::max(0.0,((sugarLeaf[j] - minimumSugarConc)*(glucoseMolarMass*Volume_leaves[j]))/costPerLA);
           deltaLAgrowth += std::min(deltaLAsink, deltaLAavailable);
@@ -338,9 +346,15 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
         }
       }
 
-      if(LAlive > 0.0 && fSA_turgor>0.0 && f_temp>0.0) {
+      if(LAlive > 0.0) {
+        List ring = ringList[j];
+        NumericVector SAring = ring["SA"];
+        double deltaSAring = 0.0;
+        if(SAring.length()==1) deltaSAring = SAring[0];
+        else deltaSAring = SAring[SAring.length()-1] - SAring[SAring.length()-2];
+        double RGRcellmax = pow(1e-4,2.0)/SA[j];
+        double deltaSAsink = deltaSAring*(RGRmax[j]/RGRcellmax)/10.0; //Correction for the difference in the number of cells
         double deltaSAavailable = std::max(0.0,((sugarSapwood[j]- minimumSugarConc)*(glucoseMolarMass*Volume_sapwood[j]))/costPerSA);
-        double deltaSAsink = RGRmax[j]*SA[j]*f_temp*fSA_turgor;
         deltaSAgrowth += std::min(deltaSAsink, deltaSAavailable);
         growthCostSA += deltaSAgrowth*costPerSA; //increase cost (may be non zero if leaf growth was charged onto sapwood)
       }      
@@ -683,6 +697,8 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
 
   double minimumLeafSugarConc = equilibriumLeafTotalConc - nonSugarConc;
   double minimumSapwoodSugarConc = equilibriumSapwoodTotalConc - nonSugarConc;
+
+  double rleafcellmax = relative_expansion_rate(0.0 ,25, -2.0,0.5,0.05,5.0);
   
   //3. Carbon balance and growth
   for(int j=0;j<numCohorts;j++){
@@ -728,7 +744,8 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
       
       //Xylogenesis
       grow_ring(ringList[j], psiSympStem[j] ,tday, 10.0);
-      
+      double rleafcell = relative_expansion_rate(psiSympLeaf[j] ,tday, LeafPI0[j],0.5,0.05,5.0);
+        
       //Carbon balance for labile carbon of leaves and stems
       for(int s=0;s<numSteps;s++) {
         
@@ -771,17 +788,17 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
         MaintenanceRespiration[j] += MaintenanceRespirationInst(j,s); 
         
         //Leaf growth
-        double f_temp = temperatureGrowthFactor(Tcan[s]);
-        double fLA_turgor = turgorGrowthFactor(LeafSympPsiInst(j,s),turgorLossPoint(LeafPI0[j], LeafEPS[j]));
+        // double f_temp = temperatureGrowthFactor(Tcan[s]);
+        // double fLA_turgor = turgorGrowthFactor(LeafSympPsiInst(j,s),turgorLossPoint(LeafPI0[j], LeafEPS[j]));
         // double fSA_turgor = turgorGrowthFactor(StemSympPsiInst(j,s),turgorLossPoint(StemPI0[j], StemEPS[j]));
         // Rcout << j << " fLA_turgor "<< fLA_turgor << " fSA_turgor "<< fSA_turgor << "f_temp"<< f_temp <<"\n";
         double growthCostLAStep = 0.0;
         double growthCostSAStep = 0.0;
         
         
-        if(leafUnfolding[j] && fLA_turgor>0.0 && f_temp>0.0) {
+        if(leafUnfolding[j]) {
           double deltaLApheno = std::max(leafAreaTarget[j] - LAlive, 0.0);
-          double deltaLAsink = std::min(deltaLApheno, RGRleafmax/((double) numSteps)*leafAreaTarget[j]*f_temp*fLA_turgor);
+          double deltaLAsink = std::min(deltaLApheno, (1.0/((double) numSteps))*SA[j]*RGRleafmax*(rleafcell/rleafcellmax));
           if(LAlive>0.0) {
             double deltaLAavailable = std::max(0.0,((sugarLeaf[j] - minimumSugarConc)*(glucoseMolarMass*Volume_leaves[j]))/costPerLA);
             double deltaLAgrowthStep = std::min(deltaLAsink, deltaLAavailable);
@@ -809,7 +826,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
           if(SAring.length()==1) deltaSAring = SAring[0];
           else deltaSAring = SAring[SAring.length()-1] - SAring[SAring.length()-2];
           double RGRcellmax = pow(1e-4,2.0)/SA[j];
-          double deltaSAsink = deltaSAring*(RGRmax[j]/RGRcellmax)/10.0; //Correction for the difference in the number of cells
+          double deltaSAsink = (1.0/((double) numSteps))*deltaSAring*(RGRmax[j]/RGRcellmax)/10.0; //Correction for the difference in the number of cells
           double deltaSAavailable = std::max(0.0,((sugarSapwood[j]- minimumSugarConc)*(glucoseMolarMass*Volume_sapwood[j]))/costPerSA);
           double deltaSAgrowthStep = std::min(deltaSAsink, deltaSAavailable);
           growthCostSAStep += deltaSAgrowthStep*costPerSA; //increase cost (may be non zero if leaf growth was charged onto sapwood)
@@ -919,7 +936,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
       SA[j] = SA[j] - deltaSAturnover; //Update sapwood area
       //SA growth     
       SA[j] += deltaSAgrowth; //Update sapwood area
-      SAgrowth[j] += deltaSAgrowth; //Store sapwood area growth rate (cm2/d-1)
+      SAgrowth[j] += deltaSAgrowth/SA[j]; //Store sapwood area growth rate (cm2·cm-2·d-1)
       //Decrease PLC due to new SA growth
       if(cavitationRefill=="growth") StemPLC[j] = std::max(0.0, StemPLC[j] - (deltaSAgrowth/SA[j]));
       

@@ -61,7 +61,7 @@ double _n2pi(double n, double V, double Tc){
 }
 
 ////// Cell expansion model
-double _r(double psi, double Tc, double pi, double phi, double Y_P, double Y_T){
+double relative_expansion_rate(double psi, double Tc, double pi, double phi, double Y_P, double Y_T){
   double out = phi*(psi-pi-Y_P);
   if(out<0.0) out=0.0;
   out = out*T_fun(Tc,Y_T);
@@ -77,7 +77,7 @@ double _divide(double psi, double Tc,
   double r; //  Cell relative growth rate
   double P; // Cell production rate
   double pi_Tcorr = _n2pi(_pi2n(pi0,1.0,Tref),1.0,Tc);
-  r = _r(psi, Tc, pi_Tcorr, phi0, Y_P, Y_T);
+  r = relative_expansion_rate(psi, Tc, pi_Tcorr, phi0, Y_P, Y_T);
   P = r/log(2.0)*Nc;
   
   return(P);
@@ -91,7 +91,7 @@ List _expand_cell(double psi, double Tc,
   pi0 = _n2pi(n, CRD0, Tc); // updates the value of pi0 which is given at Tref for the current temperature Tc
   
   // Calculate relative volume expansion rate
-  double r = _r(psi, Tc, pi0, phi0, Y_P, Y_T);
+  double r = relative_expansion_rate(psi, Tc, pi0, phi0, Y_P, Y_T);
   
   // Variable update
   double CRD1 = CRD0*(1.0+r); // cell diameter (volume) increment
@@ -165,7 +165,10 @@ void grow_ring(List ring, double psi, double Tc,
   // double SAprev = 0.0;
   // if(SA.length()>0) SAprev = SA[SA.length()-1];
   double SAnew = 0.0;
-  for(int i=0;i<CRD.length();i++) SAnew += pow(CRD[i]/10000.0, 2.0); //Assumes square cell section
+  for(int i=0;i<CRD.length();i++) {
+    double w = std::min(1.0, ((double)(dog-formation[i]))/20.0);
+    SAnew += w*CRD[i]*20.0; //20 micras diametro tangencial 
+  }
   SA.push_back(SAnew);
   
   // Create new cells data frame
