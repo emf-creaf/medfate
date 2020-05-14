@@ -8,6 +8,7 @@
 \alias{moisture_tissueFMC}
 \alias{moisture_cohortFMC}
 \alias{moisture_pressureVolumeCurvePlot}
+\alias{moisture_turgorLossPoint}
 \title{
 Tissue moisture functions
 }
@@ -19,6 +20,7 @@ moisture_symplasticRWC(psiSym, pi0, epsilon)
 moisture_symplasticPsi(RWC, pi0, epsilon)
 moisture_apoplasticRWC(psiApo, c, d)
 moisture_apoplasticPsi(RWC, c, d)
+moisture_turgorLossPoint(pi0, epsilon) 
 moisture_tissueRWC(psiSym, pi0, epsilon, 
                    psiApo, c, d, 
                    af, femb = 0)
@@ -29,8 +31,6 @@ moisture_pressureVolumeCurvePlot(x, segment="leaf",
                     psiVec =  seq(-0.1, -8.0, by =-0.01),
                     speciesNames = FALSE)                    
 }
-
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{psiSym, psiApo}{Symplastic or apoplastic water potential (MPa).}
   \item{RWC}{Relative water content [0-1].}
@@ -58,6 +58,7 @@ Values returned for each function are:
 \item{\code{moisture_apoplasticRWC}: Relative water content [0-1] of the apoplastic fraction.}
 \item{\code{moisture_symplasticWaterPotential}: Water potential (in MPa) of the symplastic fraction.}
 \item{\code{moisture_apoplasticWaterPotential}: Water potential (in MPa) of the apoplastic fraction.}
+\item{\code{moisture_turgorLossPoint}: Water potential (in MPa) corresponding to turgor loss point.}
 \item{\code{moisture_segmentRWC}: Segment relative water content [0-1].}
 }
 }

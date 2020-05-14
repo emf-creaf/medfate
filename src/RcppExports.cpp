@@ -89,19 +89,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// sugarStarchDynamicsRoot
-double sugarStarchDynamicsRoot(double sugarConc, double starchConc, double eqSugarConc);
-RcppExport SEXP _medfate_sugarStarchDynamicsRoot(SEXP sugarConcSEXP, SEXP starchConcSEXP, SEXP eqSugarConcSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type sugarConc(sugarConcSEXP);
-    Rcpp::traits::input_parameter< double >::type starchConc(starchConcSEXP);
-    Rcpp::traits::input_parameter< double >::type eqSugarConc(eqSugarConcSEXP);
-    rcpp_result_gen = Rcpp::wrap(sugarStarchDynamicsRoot(sugarConc, starchConc, eqSugarConc));
-    return rcpp_result_gen;
-END_RCPP
-}
 // osmoticWaterPotential
 double osmoticWaterPotential(double conc, double temp, double nonSugarConc);
 RcppExport SEXP _medfate_osmoticWaterPotential(SEXP concSEXP, SEXP tempSEXP, SEXP nonSugarConcSEXP) {
@@ -140,34 +127,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// turgor
-double turgor(double psi, double conc, double temp, double nonSugarConc);
-RcppExport SEXP _medfate_turgor(SEXP psiSEXP, SEXP concSEXP, SEXP tempSEXP, SEXP nonSugarConcSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type psi(psiSEXP);
-    Rcpp::traits::input_parameter< double >::type conc(concSEXP);
-    Rcpp::traits::input_parameter< double >::type temp(tempSEXP);
-    Rcpp::traits::input_parameter< double >::type nonSugarConc(nonSugarConcSEXP);
-    rcpp_result_gen = Rcpp::wrap(turgor(psi, conc, temp, nonSugarConc));
-    return rcpp_result_gen;
-END_RCPP
-}
-// leafStorageVolume
-double leafStorageVolume(double LAI, double N, double SLA, double leafDensity);
-RcppExport SEXP _medfate_leafStorageVolume(SEXP LAISEXP, SEXP NSEXP, SEXP SLASEXP, SEXP leafDensitySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type LAI(LAISEXP);
-    Rcpp::traits::input_parameter< double >::type N(NSEXP);
-    Rcpp::traits::input_parameter< double >::type SLA(SLASEXP);
-    Rcpp::traits::input_parameter< double >::type leafDensity(leafDensitySEXP);
-    rcpp_result_gen = Rcpp::wrap(leafStorageVolume(LAI, N, SLA, leafDensity));
-    return rcpp_result_gen;
-END_RCPP
-}
 // leafStructuralBiomass
 double leafStructuralBiomass(double LAI, double N, double SLA);
 RcppExport SEXP _medfate_leafStructuralBiomass(SEXP LAISEXP, SEXP NSEXP, SEXP SLASEXP) {
@@ -192,21 +151,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type SLA(SLASEXP);
     Rcpp::traits::input_parameter< double >::type leafDensity(leafDensitySEXP);
     rcpp_result_gen = Rcpp::wrap(leafStarchCapacity(LAI, N, SLA, leafDensity));
-    return rcpp_result_gen;
-END_RCPP
-}
-// sapwoodStorageVolume
-double sapwoodStorageVolume(double SA, double H, double Z, double woodDensity, double vessel2sapwood);
-RcppExport SEXP _medfate_sapwoodStorageVolume(SEXP SASEXP, SEXP HSEXP, SEXP ZSEXP, SEXP woodDensitySEXP, SEXP vessel2sapwoodSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type SA(SASEXP);
-    Rcpp::traits::input_parameter< double >::type H(HSEXP);
-    Rcpp::traits::input_parameter< double >::type Z(ZSEXP);
-    Rcpp::traits::input_parameter< double >::type woodDensity(woodDensitySEXP);
-    Rcpp::traits::input_parameter< double >::type vessel2sapwood(vessel2sapwoodSEXP);
-    rcpp_result_gen = Rcpp::wrap(sapwoodStorageVolume(SA, H, Z, woodDensity, vessel2sapwood));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1025,23 +969,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type maxHeightProfile(maxHeightProfileSEXP);
     Rcpp::traits::input_parameter< double >::type bulkDensityThreshold(bulkDensityThresholdSEXP);
     rcpp_result_gen = Rcpp::wrap(FCCSproperties(object, ShrubCover, CanopyCover, SpParams, cohortFMC, gdd, mode, heightProfileStep, maxHeightProfile, bulkDensityThreshold));
-    return rcpp_result_gen;
-END_RCPP
-}
-// floemFlow
-double floemFlow(double psiUpstream, double psiDownstream, double concUpstream, double concDownstream, double temp, double k_f, double nonSugarConc);
-RcppExport SEXP _medfate_floemFlow(SEXP psiUpstreamSEXP, SEXP psiDownstreamSEXP, SEXP concUpstreamSEXP, SEXP concDownstreamSEXP, SEXP tempSEXP, SEXP k_fSEXP, SEXP nonSugarConcSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type psiUpstream(psiUpstreamSEXP);
-    Rcpp::traits::input_parameter< double >::type psiDownstream(psiDownstreamSEXP);
-    Rcpp::traits::input_parameter< double >::type concUpstream(concUpstreamSEXP);
-    Rcpp::traits::input_parameter< double >::type concDownstream(concDownstreamSEXP);
-    Rcpp::traits::input_parameter< double >::type temp(tempSEXP);
-    Rcpp::traits::input_parameter< double >::type k_f(k_fSEXP);
-    Rcpp::traits::input_parameter< double >::type nonSugarConc(nonSugarConcSEXP);
-    rcpp_result_gen = Rcpp::wrap(floemFlow(psiUpstream, psiDownstream, concUpstream, concDownstream, temp, k_f, nonSugarConc));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2799,35 +2726,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// rootRadialLengths
-NumericVector rootRadialLengths(double Z95, NumericVector v, NumericVector d, double depthWidthRatio);
-RcppExport SEXP _medfate_rootRadialLengths(SEXP Z95SEXP, SEXP vSEXP, SEXP dSEXP, SEXP depthWidthRatioSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type Z95(Z95SEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type v(vSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
-    Rcpp::traits::input_parameter< double >::type depthWidthRatio(depthWidthRatioSEXP);
-    rcpp_result_gen = Rcpp::wrap(rootRadialLengths(Z95, v, d, depthWidthRatio));
-    return rcpp_result_gen;
-END_RCPP
-}
-// areaWithRoots
-NumericVector areaWithRoots(double N, double Z95, NumericVector v, NumericVector d, double depthWidthRatio);
-RcppExport SEXP _medfate_areaWithRoots(SEXP NSEXP, SEXP Z95SEXP, SEXP vSEXP, SEXP dSEXP, SEXP depthWidthRatioSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type N(NSEXP);
-    Rcpp::traits::input_parameter< double >::type Z95(Z95SEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type v(vSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
-    Rcpp::traits::input_parameter< double >::type depthWidthRatio(depthWidthRatioSEXP);
-    rcpp_result_gen = Rcpp::wrap(areaWithRoots(N, Z95, v, d, depthWidthRatio));
-    return rcpp_result_gen;
-END_RCPP
-}
 // rootLengths
 NumericVector rootLengths(NumericVector v, NumericVector d, double depthWidthRatio);
 RcppExport SEXP _medfate_rootLengths(SEXP vSEXP, SEXP dSEXP, SEXP depthWidthRatioSEXP) {
@@ -2851,22 +2749,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
     Rcpp::traits::input_parameter< double >::type depthWidthRatio(depthWidthRatioSEXP);
     rcpp_result_gen = Rcpp::wrap(xylemConductanceProportions(v, d, depthWidthRatio));
-    return rcpp_result_gen;
-END_RCPP
-}
-// horizontalProportionsNew
-List horizontalProportionsNew(NumericMatrix V, NumericVector N, NumericVector Z95, NumericVector LAIlive, NumericVector d, double depthWidthRatio);
-RcppExport SEXP _medfate_horizontalProportionsNew(SEXP VSEXP, SEXP NSEXP, SEXP Z95SEXP, SEXP LAIliveSEXP, SEXP dSEXP, SEXP depthWidthRatioSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type V(VSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type N(NSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type Z95(Z95SEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type LAIlive(LAIliveSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
-    Rcpp::traits::input_parameter< double >::type depthWidthRatio(depthWidthRatioSEXP);
-    rcpp_result_gen = Rcpp::wrap(horizontalProportionsNew(V, N, Z95, LAIlive, d, depthWidthRatio));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4153,26 +4035,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// grow_ring
-void grow_ring(List ring, double psi, double Tc, double Nc, double phi0, double pi0, double CRD0, double Y_P, double Y_T, double h, double s);
-RcppExport SEXP _medfate_grow_ring(SEXP ringSEXP, SEXP psiSEXP, SEXP TcSEXP, SEXP NcSEXP, SEXP phi0SEXP, SEXP pi0SEXP, SEXP CRD0SEXP, SEXP Y_PSEXP, SEXP Y_TSEXP, SEXP hSEXP, SEXP sSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< List >::type ring(ringSEXP);
-    Rcpp::traits::input_parameter< double >::type psi(psiSEXP);
-    Rcpp::traits::input_parameter< double >::type Tc(TcSEXP);
-    Rcpp::traits::input_parameter< double >::type Nc(NcSEXP);
-    Rcpp::traits::input_parameter< double >::type phi0(phi0SEXP);
-    Rcpp::traits::input_parameter< double >::type pi0(pi0SEXP);
-    Rcpp::traits::input_parameter< double >::type CRD0(CRD0SEXP);
-    Rcpp::traits::input_parameter< double >::type Y_P(Y_PSEXP);
-    Rcpp::traits::input_parameter< double >::type Y_T(Y_TSEXP);
-    Rcpp::traits::input_parameter< double >::type h(hSEXP);
-    Rcpp::traits::input_parameter< double >::type s(sSEXP);
-    grow_ring(ring, psi, Tc, Nc, phi0, pi0, CRD0, Y_P, Y_T, h, s);
-    return R_NilValue;
-END_RCPP
-}
 
 // validate (ensure exported C++ functions exist before calling them)
 static int _medfate_RcppExport_validate(const char* sig) { 
@@ -4269,15 +4131,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_waterDynamicViscosity", (DL_FUNC) &_medfate_waterDynamicViscosity, 1},
     {"_medfate_sugarStarchDynamicsLeaf", (DL_FUNC) &_medfate_sugarStarchDynamicsLeaf, 3},
     {"_medfate_sugarStarchDynamicsStem", (DL_FUNC) &_medfate_sugarStarchDynamicsStem, 3},
-    {"_medfate_sugarStarchDynamicsRoot", (DL_FUNC) &_medfate_sugarStarchDynamicsRoot, 3},
     {"_medfate_osmoticWaterPotential", (DL_FUNC) &_medfate_osmoticWaterPotential, 3},
     {"_medfate_sugarConcentration", (DL_FUNC) &_medfate_sugarConcentration, 3},
     {"_medfate_relativeSapViscosity", (DL_FUNC) &_medfate_relativeSapViscosity, 2},
-    {"_medfate_turgor", (DL_FUNC) &_medfate_turgor, 4},
-    {"_medfate_leafStorageVolume", (DL_FUNC) &_medfate_leafStorageVolume, 4},
     {"_medfate_leafStructuralBiomass", (DL_FUNC) &_medfate_leafStructuralBiomass, 3},
     {"_medfate_leafStarchCapacity", (DL_FUNC) &_medfate_leafStarchCapacity, 4},
-    {"_medfate_sapwoodStorageVolume", (DL_FUNC) &_medfate_sapwoodStorageVolume, 5},
     {"_medfate_sapwoodStructuralBiomass", (DL_FUNC) &_medfate_sapwoodStructuralBiomass, 4},
     {"_medfate_sapwoodStructuralLivingBiomass", (DL_FUNC) &_medfate_sapwoodStructuralLivingBiomass, 5},
     {"_medfate_sapwoodStarchCapacity", (DL_FUNC) &_medfate_sapwoodStarchCapacity, 5},
@@ -4338,7 +4196,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_layerFuelAverageCrownLength", (DL_FUNC) &_medfate_layerFuelAverageCrownLength, 6},
     {"_medfate_fuelLiveStratification", (DL_FUNC) &_medfate_fuelLiveStratification, 7},
     {"_medfate_FCCSproperties", (DL_FUNC) &_medfate_FCCSproperties, 10},
-    {"_medfate_floemFlow", (DL_FUNC) &_medfate_floemFlow, 7},
     {"_medfate_growthDay", (DL_FUNC) &_medfate_growthDay, 15},
     {"_medfate_growth", (DL_FUNC) &_medfate_growth, 7},
     {"_medfate_Psi2K", (DL_FUNC) &_medfate_Psi2K, 3},
@@ -4433,11 +4290,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_conicDistribution", (DL_FUNC) &_medfate_conicDistribution, 2},
     {"_medfate_ldrDistribution", (DL_FUNC) &_medfate_ldrDistribution, 3},
     {"_medfate_rootDistribution", (DL_FUNC) &_medfate_rootDistribution, 2},
-    {"_medfate_rootRadialLengths", (DL_FUNC) &_medfate_rootRadialLengths, 4},
-    {"_medfate_areaWithRoots", (DL_FUNC) &_medfate_areaWithRoots, 5},
     {"_medfate_rootLengths", (DL_FUNC) &_medfate_rootLengths, 3},
     {"_medfate_xylemConductanceProportions", (DL_FUNC) &_medfate_xylemConductanceProportions, 3},
-    {"_medfate_horizontalProportionsNew", (DL_FUNC) &_medfate_horizontalProportionsNew, 6},
     {"_medfate_horizontalProportions", (DL_FUNC) &_medfate_horizontalProportions, 3},
     {"_medfate_thetaSATSaxton", (DL_FUNC) &_medfate_thetaSATSaxton, 3},
     {"_medfate_theta2psiSaxton", (DL_FUNC) &_medfate_theta2psiSaxton, 4},
@@ -4484,7 +4338,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_windAdjustmentFactor", (DL_FUNC) &_medfate_windAdjustmentFactor, 4},
     {"_medfate_windSpeedAtHeightOverCanopy", (DL_FUNC) &_medfate_windSpeedAtHeightOverCanopy, 3},
     {"_medfate_windExtinctionProfile", (DL_FUNC) &_medfate_windExtinctionProfile, 4},
-    {"_medfate_grow_ring", (DL_FUNC) &_medfate_grow_ring, 11},
     {"_medfate_RcppExport_registerCCallable", (DL_FUNC) &_medfate_RcppExport_registerCCallable, 0},
     {NULL, NULL, 0}
 };

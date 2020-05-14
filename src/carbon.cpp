@@ -47,7 +47,6 @@ double sugarStarchDynamicsLeaf(double sugarConc, double starchConc, double eqSug
 double sugarStarchDynamicsStem(double sugarConc, double starchConc, double eqSugarConc) {
   return(sugarStarchDynamics(sugarConc, starchConc, 0.1, 0.15, 0.4, eqSugarConc));
 }
-// [[Rcpp::export("carbon_sugarStarchDynamicsRoot")]]
 double sugarStarchDynamicsRoot(double sugarConc, double starchConc, double eqSugarConc) {
   return(sugarStarchDynamics(sugarConc, starchConc, 0.1, 0.6, 0.4, eqSugarConc));
 }
@@ -94,7 +93,6 @@ double relativeSapViscosity(double sugarConc, double temp) {
  *  temp - deg C
  *  psi - water potential (MPa)
  */
-// [[Rcpp::export("carbon_turgor")]]
 double turgor(double psi, double conc, double temp, double nonSugarConc) {
   return(std::max(0.0, psi-osmoticWaterPotential(conc,temp, nonSugarConc)));
 }
@@ -108,7 +106,6 @@ double leafArea(double LAI, double N) {
 /**
  * leaf volume in l
  */
-// [[Rcpp::export("carbon_leafStorageVolume")]]
 double leafStorageVolume(double LAI, double N, double SLA, double leafDensity) {
   return(leafArea(LAI,N)*leafWaterCapacity(SLA, leafDensity)); 
 }
@@ -149,7 +146,6 @@ double sapwoodVolume(double SA, double H, double Z) {
  *  Z - mm
  *  woodDensity - g/cm3
  */
-// [[Rcpp::export("carbon_sapwoodStorageVolume")]]
 double sapwoodStorageVolume(double SA, double H, double Z, double woodDensity, double vessel2sapwood) { 
   double woodPorosity = (1.0- (woodDensity/1.54));
   return((1.0 - vessel2sapwood)*sapwoodVolume(SA,H,Z)*woodPorosity);

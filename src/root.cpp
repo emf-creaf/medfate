@@ -147,7 +147,6 @@ NumericMatrix rootDistribution(NumericVector z, List x) {
  * 
  *  returns root axial lengths in mm (same units as d)
  */
-// [[Rcpp::export("root_radialLengths")]]
 NumericVector rootRadialLengths(double Z95, NumericVector v, NumericVector d, double depthWidthRatio = 1.0) {
   int nlayers = v.size();
   //Radial lengths
@@ -167,7 +166,6 @@ NumericVector rootRadialLengths(double Z95, NumericVector v, NumericVector d, do
 /**
  * Stand area covered by roots (in m2/ha)
  */
-// [[Rcpp::export("root_areaWithRoots")]]
 NumericVector areaWithRoots(double N, double Z95, NumericVector v, NumericVector d, double depthWidthRatio = 1.0) {
   NumericVector rl = rootRadialLengths(Z95,v,d,depthWidthRatio);
   int nlayer = rl.size();
@@ -267,7 +265,6 @@ NumericVector xylemConductanceProportions(NumericVector v, NumericVector d, doub
 }
 
 
-// [[Rcpp::export("root_horizontalProportionsNew")]]
 List horizontalProportionsNew(NumericMatrix V, NumericVector N, NumericVector Z95, NumericVector LAIlive,
                               NumericVector d, double depthWidthRatio = 1.0) {
   int numCohorts = V.nrow();

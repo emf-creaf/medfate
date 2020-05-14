@@ -52,7 +52,6 @@ const double dailyFineRootTurnoverProportion = 0.001897231; //day-1 Equivalent t
  *  
  *  out mol*s-1*m-2 (flow per leaf area basis)
  */
-// [[Rcpp::export("growth_floemFlow")]]
 double floemFlow(double psiUpstream, double psiDownstream,
                  double concUpstream, double concDownstream,
                  double temp, double k_f, double nonSugarConc) {

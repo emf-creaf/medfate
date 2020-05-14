@@ -25,10 +25,6 @@ carbon_sugarStarchDynamicsStem <- function(sugarConc, starchConc, eqSugarConc) {
     .Call(`_medfate_sugarStarchDynamicsStem`, sugarConc, starchConc, eqSugarConc)
 }
 
-carbon_sugarStarchDynamicsRoot <- function(sugarConc, starchConc, eqSugarConc) {
-    .Call(`_medfate_sugarStarchDynamicsRoot`, sugarConc, starchConc, eqSugarConc)
-}
-
 carbon_osmoticWaterPotential <- function(conc, temp, nonSugarConc) {
     .Call(`_medfate_osmoticWaterPotential`, conc, temp, nonSugarConc)
 }
@@ -41,24 +37,12 @@ carbon_relativeSapViscosity <- function(sugarConc, temp) {
     .Call(`_medfate_relativeSapViscosity`, sugarConc, temp)
 }
 
-carbon_turgor <- function(psi, conc, temp, nonSugarConc) {
-    .Call(`_medfate_turgor`, psi, conc, temp, nonSugarConc)
-}
-
-carbon_leafStorageVolume <- function(LAI, N, SLA, leafDensity) {
-    .Call(`_medfate_leafStorageVolume`, LAI, N, SLA, leafDensity)
-}
-
 carbon_leafStructuralBiomass <- function(LAI, N, SLA) {
     .Call(`_medfate_leafStructuralBiomass`, LAI, N, SLA)
 }
 
 carbon_leafStarchCapacity <- function(LAI, N, SLA, leafDensity) {
     .Call(`_medfate_leafStarchCapacity`, LAI, N, SLA, leafDensity)
-}
-
-carbon_sapwoodStorageVolume <- function(SA, H, Z, woodDensity, vessel2sapwood) {
-    .Call(`_medfate_sapwoodStorageVolume`, SA, H, Z, woodDensity, vessel2sapwood)
 }
 
 carbon_sapwoodStructuralBiomass <- function(SA, H, Z, woodDensity) {
@@ -299,10 +283,6 @@ fuel_stratification <- function(object, SpParams, gdd = NA_real_, mode = "MED", 
 
 fuel_FCCS <- function(object, ShrubCover, CanopyCover, SpParams, cohortFMC = as.numeric( c()), gdd = NA_real_, mode = "MED", heightProfileStep = 10.0, maxHeightProfile = 5000, bulkDensityThreshold = 0.05) {
     .Call(`_medfate_FCCSproperties`, object, ShrubCover, CanopyCover, SpParams, cohortFMC, gdd, mode, heightProfileStep, maxHeightProfile, bulkDensityThreshold)
-}
-
-growth_floemFlow <- function(psiUpstream, psiDownstream, concUpstream, concDownstream, temp, k_f, nonSugarConc) {
-    .Call(`_medfate_floemFlow`, psiUpstream, psiDownstream, concUpstream, concDownstream, temp, k_f, nonSugarConc)
 }
 
 growth_day <- function(x, soil, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, runon = 0.0) {
@@ -681,24 +661,12 @@ root_ldrDistribution <- function(Z50, Z95, d) {
     .Call(`_medfate_rootDistribution`, z, x)
 }
 
-root_radialLengths <- function(Z95, v, d, depthWidthRatio = 1.0) {
-    .Call(`_medfate_rootRadialLengths`, Z95, v, d, depthWidthRatio)
-}
-
-root_areaWithRoots <- function(N, Z95, v, d, depthWidthRatio = 1.0) {
-    .Call(`_medfate_areaWithRoots`, N, Z95, v, d, depthWidthRatio)
-}
-
 root_rootLengths <- function(v, d, depthWidthRatio = 1.0) {
     .Call(`_medfate_rootLengths`, v, d, depthWidthRatio)
 }
 
 root_xylemConductanceProportions <- function(v, d, depthWidthRatio = 1.0) {
     .Call(`_medfate_xylemConductanceProportions`, v, d, depthWidthRatio)
-}
-
-root_horizontalProportionsNew <- function(V, N, Z95, LAIlive, d, depthWidthRatio = 1.0) {
-    .Call(`_medfate_horizontalProportionsNew`, V, N, Z95, LAIlive, d, depthWidthRatio)
 }
 
 root_horizontalProportions <- function(V, LAIlive, poolOverlapFactor) {
@@ -883,10 +851,6 @@ fuel_windAdjustmentFactor <- function(topShrubHeight, bottomCanopyHeight, topCan
 
 .windExtinctionProfile <- function(z, wind20H, LAIc, canopyHeight) {
     .Call(`_medfate_windExtinctionProfile`, z, wind20H, LAIc, canopyHeight)
-}
-
-grow_ring <- function(ring, psi, Tc, Nc = 8.85, phi0 = 0.13, pi0 = -0.8, CRD0 = 8.3, Y_P = 0.05, Y_T = 8.0, h = 0.043*1.8, s = 1.8) {
-    invisible(.Call(`_medfate_grow_ring`, ring, psi, Tc, Nc, phi0, pi0, CRD0, Y_P, Y_T, h, s))
 }
 
 # Register entry points for exported C++ functions

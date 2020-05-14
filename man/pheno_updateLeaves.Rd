@@ -43,7 +43,7 @@ Functions \code{pheno_updatePhenology} and \code{pheno_updateLeaves} modify the 
 Chuine, I., De Cortazar-Atauri, I.G., Kramer, K., \enc{Hänninen}{Hanninen}, H., 2013. Plant development
 models. Phenology: An Integrative Environmental Science. Springer, pp. 275–293.
 
-Delpierre N, Dufrêne E, Soudani K et al (2009a) Modelling interannual and spatial variability of leaf senescence for three deciduous tree species in France. Agric For Meteorol 149:938–948. doi:10.1016/j.agrformet.2008.11.014
+Delpierre N, Dufrêne E, Soudani K et al (2009) Modelling interannual and spatial variability of leaf senescence for three deciduous tree species in France. Agric For Meteorol 149:938–948. doi:10.1016/j.agrformet.2008.11.014
 }
 \seealso{
 \code{\link{spwb}}, \code{\link{spwbInput}}
