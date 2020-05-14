@@ -164,10 +164,7 @@ First, information about the cohort species is found in element `cohorts`  (i.e.
 ```{r}
 x$cohorts
 ```
-Element `canopy` contains state variables of the whole canopy, which include growth degree days and canopy temperature:
-```{r}
-x$canopy
-```
+
 Element `above` contains the aboveground structure data that we already know, but with additional columns that describe the estimated initial amount of sapwood area and carbon reserves (if required):
 ```{r}
 x$above
@@ -205,7 +202,9 @@ G1<-growth(x, examplesoil, examplemeteo, latitude = 41.82592, elevation = 100)
 
 ## Plotting results
 
-### Carbon balance
+In addition to all the plots that were available for result of simulations with function `spwb()`, one can display the following information out of the output of function `growth()`:
+
+### Carbon balance components
 To inspect components of the plant carbon balance we can first display gross photosynthesis expressed as assimilation relative to biomass:
 ```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
 plot(G1, "GrossPhotosynthesis", bySpecies = T)
@@ -219,6 +218,19 @@ Finally we can display the daily negative or positive balance of the plant, whic
 ```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
 plot(G1, "CarbonBalance", bySpecies = T)
 ```
+
+### Carbon storage
+Carbon assimilation and respiration rates define the dynamics of stored carbon, which in medfate is divided into two organs (leaves and sapwood) and two chemical compounds (soluble sugars and starch):
+```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
+plot(G1, "SugarLeaf", bySpecies = T)
+plot(G1, "StarchLeaf", bySpecies = T)
+```
+
+```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
+plot(G1, "SugarSapwood", bySpecies = T)
+plot(G1, "StarchSapwood", bySpecies = T)
+```
+
 
 ### Leaf and sapwood area changes
 Leaf and sapwood area dynamics arising from the interplay between growth and senescence of tissues can be inspected using:
