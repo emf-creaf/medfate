@@ -199,39 +199,48 @@ Finally, note that one can play with plant-specific parameters for growth simula
 ## Executing the growth model
 In this vignette we will use one year of example meteorological data with the following precipitation and temperature seasonal trends:
 ```{r}
-G1<-growth(x, examplesoil, examplemeteo, elevation = 100)
+G1<-growth(x, examplesoil, examplemeteo, latitude = 41.82592, elevation = 100)
 
 ```
 
-### Plotting results
-```{r, fig=TRUE, echo=FALSE, fig.width=7, fig.height=4}
-plot(G1, "PlantPhotosynthesisPerLeaf")
-plot(G1, "PlantTranspirationPerLeaf")
+## Plotting results
+
+### Carbon balance
+To inspect components of the plant carbon balance we can first display gross photosynthesis expressed as assimilation relative to biomass:
+```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
+plot(G1, "GrossPhotosynthesis", bySpecies = T)
+```
+Then we can draw the respiration costs (maintenance and growth) in the same units:
+```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
+plot(G1, "MaintenanceRespiration", bySpecies = T)
+plot(G1, "GrowthRespiration", bySpecies = T)
+```
+Finally we can display the daily negative or positive balance of the plant, which determines changes in plant carbon pools:
+```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
+plot(G1, "CarbonBalance", bySpecies = T)
+```
+
+### Leaf and sapwood area changes
+Leaf and sapwood area dynamics arising from the interplay between growth and senescence of tissues can be inspected using:
+```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
+plot(G1, "LeafArea", bySpecies = T)
+plot(G1, "SapwoodArea", bySpecies = T)
+```
+The corresponding daily growth rates can also be displayed:
+```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
+plot(G1, "LAgrowth", bySpecies = T)
+plot(G1, "SAgrowth", bySpecies = T)
 ```
 
 
-```{r, fig=TRUE, echo=FALSE, fig.width=7, fig.height=4}
-plot(G1, "PlantRespiration")
-plot(G1, "PlantRespirationPerLeaf")
-plot(G1, "PlantRespirationPerIndividual")
-plot(G1, "PlantCBalance")
-plot(G1, "PlantCBalancePerLeaf")
-plot(G1, "PlantCBalancePerIndividual")
+## Stand structure dynamics
+The output object returned by function `growth()` contains information of the year-by-year stand (aboveground) structure, starting with the initial one:
+```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
+G1$StandStructures
 ```
 
-
-```{r, fig=TRUE, echo=FALSE, fig.width=7, fig.height=4}
-plot(G1, "PlantSAgrowth")
-plot(G1, "PlantRelativeSAgrowth")
-```
-
-
-```{r, fig=TRUE, echo=FALSE, fig.width=7, fig.height=4}
-plot(G1, "PlantLAIlive")
-plot(G1, "PlantLAIdead")
-```
-```{r, fig=TRUE, echo=FALSE, fig.width=7.5, fig.height=3.5}
-plot(G1, "PlantCstorageFast")
-plot(G1, "PlantCstorageSlow")
+We can also display summarized stand information (leaf area index, basal area, etc.) using:
+```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
+G1$StandStructures
 ```
 

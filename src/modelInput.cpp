@@ -935,6 +935,7 @@ void resetInputs(List x, List soil) {
     }
   }
   DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
+  NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
   
   if(transpirationMode=="Sperry") {
     NumericMatrix RhizoPsi = Rcpp::as<Rcpp::NumericMatrix>(below["RhizoPsi"]);
@@ -944,23 +945,25 @@ void resetInputs(List x, List soil) {
     NumericVector StemSympPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["StemSympPsi"]);
     NumericVector LeafSympPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafSympPsi"]);
     NumericVector LeafPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPsi"]);
-    NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
     NumericVector Einst = Rcpp::as<Rcpp::NumericVector>(internalWater["Einst"]);
+    NumericVector NSPL = Rcpp::as<Rcpp::NumericVector>(internalWater["NSPL"]);
     for(int i=0;i<LeafPsi.size();i++) {
       Einst[i] = 0.0;
-      LeafPsi[i] = 0.0;
-      StemPLC[i] = 0.0;
+      RootCrownPsi[i] = 0.0;
       Stem1Psi[i] = 0.0;
       Stem2Psi[i] = 0.0;
-      RootCrownPsi[i] = 0.0;
+      LeafPsi[i] = 0.0;
       LeafSympPsi[i] = 0.0;
       StemSympPsi[i] = 0.0;
+      StemPLC[i] = 0.0;
+      NSPL[i] = 1.0;
       for(int j=0;j<RhizoPsi.ncol();j++) RhizoPsi(i,j) = 0.0;
     }
   } else {
-    NumericVector PLC = Rcpp::as<Rcpp::NumericVector>(internalWater["PLC"]);
-    for(int i=0;i<PLC.length();i++) {
-      PLC[i] = 0.0;
+    NumericVector PlantPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["PlantPsi"]);
+    for(int i=0;i<StemPLC.length();i++) {
+      PlantPsi[i] = 0.0;
+      StemPLC[i] = 0.0;
     }
   }
 }

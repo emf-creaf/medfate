@@ -330,9 +330,9 @@ As before, `WaterBalance` contains water balance components, but in this case in
 ```{r}
 head(S$WaterBalance)
 ```
-Elements `PlantLAI`, `PlantStress`, `LeafPsi`, `PlantTranspiration` and `PlantPhotosynthesis` contain daily values by plant cohorts, for example plant water potentials are:
+Elements `Plants` is itself a list with several elements that contain daily output results by plant cohorts, for example leaf minimum (midday) water potentials are:
 ```{r}
-head(S$LeafPsi)
+head(S$Plants$LeafPsiMin)
 ```
 
 
