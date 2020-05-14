@@ -398,10 +398,14 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams) {
   
   NumericVector WoodC = cohortNumericParameter(SP, SpParams, "WoodC");
   NumericVector RGRmax = cohortNumericParameter(SP, SpParams, "RGRmax");
-
+  NumericVector fHDmin = cohortNumericParameter(SP, SpParams, "fHDmin");
+  NumericVector fHDmax = cohortNumericParameter(SP, SpParams, "fHDmax");
+  
 
   DataFrame paramsGrowthdf = DataFrame::create(_["WoodC"] = WoodC, 
-                                               _["RGRmax"] = RGRmax);
+                                               _["RGRmax"] = RGRmax,
+                                               _["fHDmin"] = fHDmin,
+                                               _["fHDmax"] = fHDmax);
   paramsGrowthdf.attr("row.names") = above.attr("row.names");
   return(paramsGrowthdf);
 }
@@ -424,8 +428,6 @@ DataFrame paramsAllometries(DataFrame above, DataFrame SpParams) {
   NumericVector C2cr = cohortNumericParameter(SP, SpParams, "c_2cr");
   NumericVector Acw = cohortNumericParameter(SP, SpParams, "a_cw");
   NumericVector Bcw = cohortNumericParameter(SP, SpParams, "b_cw");
-  NumericVector fHDmin = cohortNumericParameter(SP, SpParams, "fHDmin");
-  NumericVector fHDmax = cohortNumericParameter(SP, SpParams, "fHDmax");
 
   DataFrame paramsAllometriesdf = DataFrame::create(_["Hmax"] = Hmax,
                                                     _["Zmax"] = Zmax,
@@ -433,8 +435,7 @@ DataFrame paramsAllometries(DataFrame above, DataFrame SpParams) {
                                                     _["r635"] = r635,
                                                     _["Acr"] = Acr, _["B1cr"] = B1cr, _["B2cr"] = B2cr, _["B3cr"] = B3cr,
                                                     _["C1cr"] = C1cr, _["C2cr"] = C2cr, 
-                                                    _["Acw"] = Acw, _["Bcw"] = Bcw,
-                                                    _["fHDmin"] = fHDmin,_["fHDmax"] = fHDmax);
+                                                    _["Acw"] = Acw, _["Bcw"] = Bcw);
   paramsAllometriesdf.attr("row.names") = above.attr("row.names");
   return(paramsAllometriesdf);
 }

@@ -112,12 +112,11 @@ examplesoil = soil(defaultSoilParams(2))
 
 #Initialize control parameters
 control = defaultControl()
-control$transpirationMode = "Sperry"
 
 #Initialize input
 x = forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
 #Call simulation function
-G1<-growth(x, examplesoil, examplemeteo[1:10,], latitude = 41.82592, elevation = 100)
+G1<-growth(x, examplesoil, examplemeteo, latitude = 41.82592, elevation = 100)
  
 }

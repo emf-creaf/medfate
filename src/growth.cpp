@@ -1356,8 +1356,11 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   NumericVector B3cr  = paramsAllometries["B3cr"];
   NumericVector C1cr  = paramsAllometries["C1cr"];
   NumericVector C2cr  = paramsAllometries["C2cr"];
-  NumericVector fHDmin= paramsAllometries["fHDmin"];
-  NumericVector fHDmax= paramsAllometries["fHDmax"];
+  
+  //Allometric parameters
+  DataFrame paramsGrowth = Rcpp::as<Rcpp::DataFrame>(x["paramsGrowth"]);
+  NumericVector fHDmin= paramsGrowth["fHDmin"];
+  NumericVector fHDmax= paramsGrowth["fHDmax"];
   
   
   
