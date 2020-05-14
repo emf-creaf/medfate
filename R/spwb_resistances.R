@@ -35,7 +35,7 @@ spwb_resistances<-function(x, cohort = 1, relative = FALSE, draw = FALSE,
   
   nsteps = nrow(psiSoil)
   resmat = matrix(0, nrow=nsteps, ncol = 4)
-  rownames(resmat) = rownames(psiStem)
+  rownames(resmat) = rownames(StemPsi)
   colnames(resmat) = c("Rhizosphere", "Root", "Stem", "Leaf")
   for(j in 1:nsteps) {
     rrow  = hydraulics_soilPlantResistances(psiSoil = psiSoil[j,],

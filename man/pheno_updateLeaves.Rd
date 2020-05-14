@@ -1,8 +1,9 @@
 \encoding{UTF-8}
 \name{pheno_updateLeaves}
-\alias{pheno_updateLeaves}
 \alias{pheno_leafDevelopmentStatus}
 \alias{pheno_leafSenescenceStatus}
+\alias{pheno_updateLeaves}
+\alias{pheno_updatePhenology}
 \title{
 Leaf phenology
 }
@@ -13,7 +14,8 @@ Function \code{pheno_updateLeaves} updates the status of expanded leaves and dea
 \usage{
 pheno_leafDevelopmentStatus(Sgdd, gdd, unfoldingDD = 300)
 pheno_leafSenescenceStatus(Ssen, sen)
-pheno_updateLeaves(x, doy, photoperiod, tmean, wind)
+pheno_updatePhenology(x, doy, photoperiod, tmean)
+pheno_updateLeaves(x, wind, fromGrowthModel)
 }
 \arguments{
   \item{Sgdd}{Degree days required for leaf budburst (in Celsius).}
@@ -26,15 +28,16 @@ pheno_updateLeaves(x, doy, photoperiod, tmean, wind)
   \item{photoperiod}{Day length (in hours).}
   \item{tmean}{Average day temperature (in Celsius).}
   \item{wind}{Average day wind speed (in m/s).}
+  \item{fromGrowthModel}{Boolean flag to indicate that routine is called from \code{\link{growth}} simulation function.}
 }
 \value{
-Function \code{pheno_leafDevelopmentStatus} returns a vector of values between 0 and 1, whereas function \code{pheno_leafSenescenceStatus} returns a vector of 0 (senescent) and 1 (expanded) values.
+Function \code{pheno_leafDevelopmentStatus} returns a vector of values between 0 and 1, whereas function \code{pheno_leafSenescenceStatus} returns a vector of 0 (senescent) and 1 (expanded) values. The other two functions do not return any value (see details).
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 }
 \note{
-Function \code{pheno_updateLeaves} modifies the object \code{x}.
+Functions \code{pheno_updatePhenology} and \code{pheno_updateLeaves} modify the input object \code{x}. The first modifies phenological state and the second modifies the leaf area accordingly.
 }
 \references{
 Chuine, I., De Cortazar-Atauri, I.G., Kramer, K., \enc{Hänninen}{Hanninen}, H., 2013. Plant development
@@ -43,5 +46,6 @@ models. Phenology: An Integrative Environmental Science. Springer, pp. 275–293
 Delpierre N, Dufrêne E, Soudani K et al (2009a) Modelling interannual and spatial variability of leaf senescence for three deciduous tree species in France. Agric For Meteorol 149:938–948. doi:10.1016/j.agrformet.2008.11.014
 }
 \seealso{
-\code{\link{spwb}}
+\code{\link{spwb}}, \code{\link{spwbInput}}
+
 }
