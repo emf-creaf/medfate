@@ -18,6 +18,7 @@ pheno_updateLeaves(x, doy, photoperiod, tmean, wind)
 \arguments{
   \item{Sgdd}{Degree days required for leaf budburst (in Celsius).}
   \item{gdd}{Cumulative degree days (in Celsius)}
+  \item{unfoldingDD}{Degree-days for complete leaf unfolding after budburst has occurred.}
   \item{Ssen}{Threshold to start leaf senescence.}
   \item{sen}{Cumulative senescence variable.}
   \item{x}{An object of class \code{\link{spwbInput}}.}

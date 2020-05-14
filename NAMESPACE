@@ -19,6 +19,7 @@ S3method(plot,pwb_day)
 S3method(plot,spwb)
 S3method(plot,spwb_day)
 S3method(plot,growth)
+S3method(plot,growth_day)
 
 S3method(summary, pwb)
 S3method(summary, spwb)

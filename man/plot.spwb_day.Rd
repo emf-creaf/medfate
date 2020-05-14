@@ -66,7 +66,7 @@ The following plots are currently available for \code{spwb_day} and \code{pwb_da
 
 }
 \note{
-Only for soil plant water balance simulations using \code{transpirationMode = "Sperry"}. This function can be used to display subdaily dynamics of corresponding to single days on \code{\link{swpb}} runs, if control option \code{subdailyResults} is set to \code{TRUE}. See also option \code{subdaily} in \code{\link{plot.spwb}}.
+Only for soil plant water balance simulations using \code{transpirationMode = "Sperry"}. This function can be used to display subdaily dynamics of corresponding to single days on \code{\link{spwb}} runs, if control option \code{subdailyResults} is set to \code{TRUE}. See also option \code{subdaily} in \code{\link{plot.spwb}}.
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
