@@ -90,15 +90,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // osmoticWaterPotential
-double osmoticWaterPotential(double conc, double temp, double nonSugarConc);
-RcppExport SEXP _medfate_osmoticWaterPotential(SEXP concSEXP, SEXP tempSEXP, SEXP nonSugarConcSEXP) {
+double osmoticWaterPotential(double sugarConc, double temp, double nonSugarConc);
+RcppExport SEXP _medfate_osmoticWaterPotential(SEXP sugarConcSEXP, SEXP tempSEXP, SEXP nonSugarConcSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type conc(concSEXP);
+    Rcpp::traits::input_parameter< double >::type sugarConc(sugarConcSEXP);
     Rcpp::traits::input_parameter< double >::type temp(tempSEXP);
     Rcpp::traits::input_parameter< double >::type nonSugarConc(nonSugarConcSEXP);
-    rcpp_result_gen = Rcpp::wrap(osmoticWaterPotential(conc, temp, nonSugarConc));
+    rcpp_result_gen = Rcpp::wrap(osmoticWaterPotential(sugarConc, temp, nonSugarConc));
     return rcpp_result_gen;
 END_RCPP
 }

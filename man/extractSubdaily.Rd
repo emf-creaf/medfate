@@ -1,0 +1,34 @@
+\name{extractSubdaily}
+\alias{extractSubdaily}
+\title{
+Extracts subdaily output
+}
+\description{
+Given the result of simulations, this function extracts subdaily output corresponding to each simulated day and returns it as a data frame.
+}
+\usage{
+extractSubdaily(x, output = "E", dates = NULL)
+}
+\arguments{
+  \item{x}{An object returned by simulation functions \code{\link{spwb}}, \code{\link{pwb}} or \code{\link{growth}}.}
+  \item{output}{See options in section details.}
+  \item{dates}{A date vector indicating the subset of simulated days for which subdaily output is desired.}
+}
+\details{
+This function only works when simulations have been carried using control option 'subdailyResults = TRUE' (see \code{\link{defaultControl}}). Subdaily simulation results will then be stored as elements of the a list called 'subdaily' in the simulation output. Function \code{extractSubdaily} will assemble subdaily results from this list and return them as a data frame. Options for parameter 'output' are the following:
+\itemize{
+\item{Functions pwb() and spwb(): "E","Ag","An","dEdP","RootPsi","StemPsi","LeafPsi","StemPLC","StemRWC","LeafRWC","StemSympRWC","LeafSympRWC","PWB", "Temperature", "ExtractionInst".
+}
+\item{Additional options for shade and sunlit leaves in pwb() and spbw(): Either "SunlitLeaves$x" or "ShadeLeaves$x" where 'x' is one of the following: "Abs_SWR","Abs_LWR","E","Ag","An","Ci","GW","VPD","Temp","Psi","iWUE".
+}
+\item{Additional options for function growth(): "GrossPhotosynthesis", "MaintenanceRespiration", "GrowthRespiration", "CarbonBalance","SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport".
+}
+}
+}
+\value{A data frame with a column 'datetime' and as many columns as plant cohorts.}
+\author{
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
+}
+\seealso{
+\code{\link{spwb}}, \code{\link{pwb}}, \code{\link{defaultControl}}
+}

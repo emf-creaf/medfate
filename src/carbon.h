@@ -13,10 +13,10 @@ const double leafCperDry = 0.3; //g C · g dry-1
 const double rootCperDry = 0.4959; //g C · g dry-1
 
 
-double osmoticWaterPotential(double conc, double temp, double nonSugarConc);
+double osmoticWaterPotential(double sugarConc, double temp, double nonSugarConc);
 double sugarConcentration(double osmoticWP, double temp, double nonSugarConc);
-double turgor(double psi, double conc, double temp, double nonSugarConc);
-double relativeSapViscosity(double conc, double temp);
+double turgor(double psi, double sugarConc, double temp, double nonSugarConc);
+double relativeSapViscosity(double sugarConc, double temp);
 
 double leafArea(double LAI, double N);
 

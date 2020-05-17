@@ -58,8 +58,8 @@ double sugarStarchDynamicsRoot(double sugarConc, double starchConc, double eqSug
  *  wp - MPa
  */
 // [[Rcpp::export("carbon_osmoticWaterPotential")]]
-double osmoticWaterPotential(double conc, double temp, double nonSugarConc) {
-  return(- (conc + nonSugarConc)*Rn*(temp + 273.15));
+double osmoticWaterPotential(double sugarConc, double temp, double nonSugarConc) {
+  return(- (sugarConc + nonSugarConc)*Rn*(temp + 273.15));
 }
 // [[Rcpp::export("carbon_sugarConcentration")]]
 double sugarConcentration(double osmoticWP, double temp, double nonSugarConc) {
@@ -93,8 +93,8 @@ double relativeSapViscosity(double sugarConc, double temp) {
  *  temp - deg C
  *  psi - water potential (MPa)
  */
-double turgor(double psi, double conc, double temp, double nonSugarConc) {
-  return(std::max(0.0, psi-osmoticWaterPotential(conc,temp, nonSugarConc)));
+double turgor(double psi, double sugarConc, double temp, double nonSugarConc) {
+  return(std::max(0.0, psi-osmoticWaterPotential(sugarConc,temp, nonSugarConc)));
 }
 
 /**

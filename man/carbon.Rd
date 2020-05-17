@@ -7,6 +7,7 @@
 \alias{carbon_sapwoodStructuralLivingBiomass}
 \alias{carbon_relativeSapViscosity}
 \alias{carbon_sugarConcentration}
+\alias{carbon_osmoticWaterPotential}
 \alias{carbon_sugarStarchDynamicsLeaf}
 \alias{carbon_sugarStarchDynamicsStem}
 \title{
@@ -22,6 +23,7 @@ carbon_sapwoodStarchCapacity(SA, H, Z, woodDensity, vessel2sapwood)
 carbon_sapwoodStructuralBiomass(SA, H, Z, woodDensity)
 carbon_sapwoodStructuralLivingBiomass(SA, H, Z, woodDensity, vessel2sapwood)
 carbon_sugarConcentration(osmoticWP, temp, nonSugarConc)
+carbon_osmoticWaterPotential(sugarConc, temp, nonSugarConc)
 carbon_relativeSapViscosity(sugarConc, temp)
 carbon_sugarStarchDynamicsLeaf(sugarConc, starchConc, eqSugarConc)
 }
@@ -37,9 +39,10 @@ carbon_sugarStarchDynamicsLeaf(sugarConc, starchConc, eqSugarConc)
   \item{vessel2sapwood}{Proportion of sapwood corresponding to vessels.}
   \item{osmoticWP}{Osmotic water potential (MPa).}
   \item{temp}{Temperature (degrees Celsius).}
-  \item{nonSugarConc}{Concentration of inorganic solutes (mol·l-1).}
-  \item{sugarConc}{Concentration of soluble sugars (mol·l-1).}
-  \item{eqSugarConc}{Equilibrium concentration of soluble sugars (mol·l-1).}
+  \item{nonSugarConc}{Concentration of inorganic solutes (mol/l).}
+  \item{sugarConc}{Concentration of soluble sugars (mol/l).}
+  \item{starchConc}{Concentration of starch (mol/l)}
+  \item{eqSugarConc}{Equilibrium concentration of soluble sugars (mol/l).}
 }
 \value{
 Values returned for each function are:
@@ -47,8 +50,6 @@ Values returned for each function are:
 \item{\code{carbon_leafStarchCapacity}: Capacity of storing starch in the leaf compartment (mol glucose).}
 \item{\code{carbon_sapwoodStarchCapacity}: Capacity of storing starch in the sapwood compartment (mol glucose).}
 }
-}
-\references{
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC

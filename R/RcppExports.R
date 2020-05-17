@@ -25,8 +25,8 @@ carbon_sugarStarchDynamicsStem <- function(sugarConc, starchConc, eqSugarConc) {
     .Call(`_medfate_sugarStarchDynamicsStem`, sugarConc, starchConc, eqSugarConc)
 }
 
-carbon_osmoticWaterPotential <- function(conc, temp, nonSugarConc) {
-    .Call(`_medfate_osmoticWaterPotential`, conc, temp, nonSugarConc)
+carbon_osmoticWaterPotential <- function(sugarConc, temp, nonSugarConc) {
+    .Call(`_medfate_osmoticWaterPotential`, sugarConc, temp, nonSugarConc)
 }
 
 carbon_sugarConcentration <- function(osmoticWP, temp, nonSugarConc) {
