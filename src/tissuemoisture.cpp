@@ -1,9 +1,14 @@
 #include <Rcpp.h>
 #include <numeric>
 #include <math.h>
+#include "carbon.h"
 using namespace Rcpp;
 
 
+// [[Rcpp::export("moisture_turgorLossPoint")]]
+double turgorLossPoint(double pi0, double epsilon) {
+  return((pi0*epsilon)/(pi0+epsilon));
+}
 /**
 * Calculates symplastic relative water content from tissue water potential
 * 
@@ -19,7 +24,7 @@ using namespace Rcpp;
 */
 // [[Rcpp::export("moisture_symplasticRWC")]]
 double symplasticRelativeWaterContent(double psiSym, double pi0, double epsilon) {
-  double psi_tl = (pi0*epsilon)/(pi0+epsilon);
+  double psi_tl = turgorLossPoint(pi0,epsilon);
   double rwc = 0;
   if(psiSym< psi_tl) {
     rwc = (-std::abs(pi0))/psiSym;
@@ -84,4 +89,82 @@ double tissueRelativeWaterContent(double psiSym, double pi0, double epsilon,
 double tissueFMC(double RWC, double density, double d0 = 1.54) {
   return(100*RWC*((1.0/density) - (1.0/d0)));
 }
+
+
+
+/**
+ * Translates soil water balance results to fuel moisture content of plant cohorts.
+ * 
+ *   spwb - The output of spwb() or growth()
+ */
+// [[Rcpp::export("moisture_cohortFMC")]]
+List cohortFMC(List spwb) {
+  List x;
+  if(spwb.containsElementNamed("spwbInput")) x = spwb["spwbInput"];
+  else if(spwb.containsElementNamed("growthInput")) x = spwb["growthInput"];
+  else stop("wrong input");
+  
+  //Draw cohort-based variables
+  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
+  DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
+  DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
+  DataFrame paramsTranspiration = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
+  
+  //Anatomy parameters
+  NumericVector r635 = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["r635"]);
+  NumericVector WoodDens = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["WoodDensity"]);
+  NumericVector LeafDens = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["LeafDensity"]);
+  
+  //Transpiration parameters
+  NumericVector VCstem_c = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCstem_c"]);
+  NumericVector VCstem_d = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCstem_d"]);
+  NumericVector VCleaf_c = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleaf_c"]);
+  NumericVector VCleaf_d = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleaf_d"]);
+  
+  //Water storage parameters
+  DataFrame paramsWaterStorage = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
+  NumericVector StemAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["StemAF"]);
+  NumericVector LeafAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafAF"]);
+  
+  List plants = spwb["Plants"];
+  NumericMatrix psiapoleaf = Rcpp::as<Rcpp::NumericMatrix>(plants["LeafPsiMin"]);
+  NumericMatrix StemPLC = Rcpp::as<Rcpp::NumericMatrix>(plants["StemPLC"]);
+  NumericMatrix RWCsymleaf = Rcpp::as<Rcpp::NumericMatrix>(plants["LeafSympRWC"]);
+  NumericMatrix RWCsymstem = Rcpp::as<Rcpp::NumericMatrix>(plants["StemSympRWC"]);
+  List l = psiapoleaf.attr("dimnames");
+  CharacterVector days = l[0];
+  CharacterVector cohNames = l[1];
+  int numDays = psiapoleaf.nrow();
+  int numCohorts = psiapoleaf.ncol();
+  
+  NumericMatrix leafFMC(numDays, numCohorts);
+  NumericMatrix twigFMC(numDays, numCohorts);
+  NumericMatrix fineFMC(numDays, numCohorts);
+  leafFMC.attr("dimnames") = l;
+  twigFMC.attr("dimnames") = l;
+  fineFMC.attr("dimnames") = l;
+  for(int c=0;c<numCohorts;c++) {
+    double f_apo_leaf = LeafAF[c];
+    double f_apo_stem = StemAF[c];
+    double density_leaf = LeafDens[c];
+    double density_stem = WoodDens[c];
+    double leafc = VCleaf_c[c];
+    double leafd = VCleaf_d[c];
+    double p_leaves = 1.0/r635[c];
+    for(int d=0;d<numDays;d++) {
+      double rwc_apo_leaf = apoplasticRelativeWaterContent(psiapoleaf(d,c), leafc, leafd);
+      double rwc_sym_leaf = RWCsymleaf(d,c);
+      double rwc_leaf = rwc_apo_leaf*f_apo_leaf + rwc_sym_leaf*(1.0 - f_apo_leaf);
+      leafFMC(d,c) = tissueFMC(rwc_leaf, density_leaf);
+      double rwc_apo_stem = 1.0-StemPLC(d,c);
+      double rwc_sym_stem = RWCsymstem(d,c);
+      double rwc_stem = rwc_apo_stem*f_apo_stem + rwc_sym_stem*(1.0 - f_apo_stem);
+      twigFMC(d,c) = tissueFMC(rwc_stem, density_stem);
+      
+      fineFMC(d,c)  =leafFMC(d,c)*p_leaves + twigFMC(d,c)*(1.0 - p_leaves);
+    }
+  }
+  return(List::create(Named("LeafFMC") = leafFMC, Named("TwigFMC") = twigFMC, Named("FineFMC") = fineFMC));
+}
+
   

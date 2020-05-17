@@ -6,7 +6,9 @@
 \alias{moisture_apoplasticPsi}
 \alias{moisture_tissueRWC}
 \alias{moisture_tissueFMC}
+\alias{moisture_cohortFMC}
 \alias{moisture_pressureVolumeCurvePlot}
+\alias{moisture_turgorLossPoint}
 \title{
 Tissue moisture functions
 }
@@ -18,17 +20,17 @@ moisture_symplasticRWC(psiSym, pi0, epsilon)
 moisture_symplasticPsi(RWC, pi0, epsilon)
 moisture_apoplasticRWC(psiApo, c, d)
 moisture_apoplasticPsi(RWC, c, d)
+moisture_turgorLossPoint(pi0, epsilon) 
 moisture_tissueRWC(psiSym, pi0, epsilon, 
                    psiApo, c, d, 
                    af, femb = 0)
 moisture_tissueFMC(RWC, density, d0 = 1.54)
+moisture_cohortFMC(spwb)
 moisture_pressureVolumeCurvePlot(x, segment="leaf", 
                     fraction = "all",
                     psiVec =  seq(-0.1, -8.0, by =-0.01),
                     speciesNames = FALSE)                    
 }
-
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{psiSym, psiApo}{Symplastic or apoplastic water potential (MPa).}
   \item{RWC}{Relative water content [0-1].}
@@ -44,9 +46,10 @@ moisture_pressureVolumeCurvePlot(x, segment="leaf",
   \item{speciesNames}{A flag to indicate the use of species names instead of cohort names in plots.}
   \item{density}{Tissue density (g·cm-1).}
   \item{d0}{Matric density (g·cm-1).}
+  \item{spwb}{Object returned by function \code{\link{spwb}} or \code{\link{growth}}.}
 }
 \details{
-Details of the tissue moisture calculations are given in a vignette. 
+Details of the tissue moisture calculations are given in a vignette. Function \code{moisture_cohortFMC()} calculates the fuel moisture content of leaves and twigs of each cohort, from the results of soil water balance.
 }
 \value{
 Values returned for each function are:
@@ -55,6 +58,7 @@ Values returned for each function are:
 \item{\code{moisture_apoplasticRWC}: Relative water content [0-1] of the apoplastic fraction.}
 \item{\code{moisture_symplasticWaterPotential}: Water potential (in MPa) of the symplastic fraction.}
 \item{\code{moisture_apoplasticWaterPotential}: Water potential (in MPa) of the apoplastic fraction.}
+\item{\code{moisture_turgorLossPoint}: Water potential (in MPa) corresponding to turgor loss point.}
 \item{\code{moisture_segmentRWC}: Segment relative water content [0-1].}
 }
 }

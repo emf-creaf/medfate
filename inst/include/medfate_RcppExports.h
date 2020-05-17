@@ -759,27 +759,7 @@ namespace medfate {
         return Rcpp::as<List >(rcpp_result_gen);
     }
 
-    inline void spwb_resetInputs(List x, List soil, List from = R_NilValue, int day = NA_INTEGER) {
-        typedef SEXP(*Ptr_spwb_resetInputs)(SEXP,SEXP,SEXP,SEXP);
-        static Ptr_spwb_resetInputs p_spwb_resetInputs = NULL;
-        if (p_spwb_resetInputs == NULL) {
-            validateSignature("void(*spwb_resetInputs)(List,List,List,int)");
-            p_spwb_resetInputs = (Ptr_spwb_resetInputs)R_GetCCallable("medfate", "_medfate_spwb_resetInputs");
-        }
-        RObject rcpp_result_gen;
-        {
-            RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_spwb_resetInputs(Shield<SEXP>(Rcpp::wrap(x)), Shield<SEXP>(Rcpp::wrap(soil)), Shield<SEXP>(Rcpp::wrap(from)), Shield<SEXP>(Rcpp::wrap(day)));
-        }
-        if (rcpp_result_gen.inherits("interrupted-error"))
-            throw Rcpp::internal::InterruptedException();
-        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
-            throw Rcpp::LongjumpException(rcpp_result_gen);
-        if (rcpp_result_gen.inherits("try-error"))
-            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
-    }
-
-    inline List spwb(List x, List soil, DataFrame meteo, double latitude = NA_REAL, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL) {
+    inline List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL) {
         typedef SEXP(*Ptr_spwb)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_spwb p_spwb = NULL;
         if (p_spwb == NULL) {
@@ -800,7 +780,7 @@ namespace medfate {
         return Rcpp::as<List >(rcpp_result_gen);
     }
 
-    inline List pwb(List x, List soil, DataFrame meteo, NumericMatrix W, double latitude = NA_REAL, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL, NumericVector canopyEvaporation = NumericVector(0), NumericVector snowMelt = NumericVector(0), NumericVector soilEvaporation = NumericVector(0)) {
+    inline List pwb(List x, List soil, DataFrame meteo, NumericMatrix W, double latitude, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL, NumericVector canopyEvaporation = NumericVector(0), NumericVector snowMelt = NumericVector(0), NumericVector soilEvaporation = NumericVector(0)) {
         typedef SEXP(*Ptr_pwb)(SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_pwb p_pwb = NULL;
         if (p_pwb == NULL) {

@@ -4,7 +4,6 @@
 \alias{transp_stomatalRegulationPlot}
 \alias{transp_transpirationSperry}
 \alias{transp_transpirationGranier}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Transpiration submodel functions
 }
@@ -13,7 +12,7 @@ Set of high-level functions used in the calculation of stomatal conductance and 
 }
 \usage{
 transp_profitMaximization(supplyFunction, photosynthesisFunction, Gwmin, Gwmax, 
-                          gainModifier = 1.0, costModifier = 1.0)
+                          gainModifier = 1.0, costModifier = 1.0, costWater = "dEdP")
 transp_transpirationGranier(x, soil, meteo, day, 
                             modifyInputX = TRUE, modifyInputSoil = TRUE)
 transp_transpirationSperry(x, soil, meteo, day,
@@ -26,12 +25,12 @@ transp_stomatalRegulationPlot(x, soil, meteo, day, timestep,
                               type="E")
 }
 
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{supplyFunction}{Water supply function (see \code{\link{hydraulics_supplyFunctionNetwork}}).}
   \item{photosynthesisFunction}{Function returned by \code{photo_photosynthesisFunction()}.}
   \item{Gwmin, Gwmax}{Minimum and maximum stomatal conductance (mol·m-2·s-1).}
   \item{gainModifier, costModifier}{Modifiers (exponents) of the gain and cost functions defined in Sperry et al. (2016).}
+  \item{costWater}{Cost water function, either "dEdP" (default) or "kterm" (experimental).}
   \item{x}{An object of class \code{\link{spwbInput}} built using the 'Sperry' transpiration mode.}
   \item{soil}{An object of class \code{\link{soil}}.}
   \item{meteo}{A data frame with daily meteorological data series:
@@ -55,18 +54,16 @@ transp_stomatalRegulationPlot(x, soil, meteo, day, timestep,
   \item{soilEvaporation}{Bare soil evaporation for \code{day} (mm).}
   \item{snowMelt}{Snow melt values  for \code{day} (mm).}
   \item{stepFunctions}{An integer to indicate a simulation step for which photosynthesis and profit maximization functions are desired.}
-  \item{type}{A string with plot type, either \code{"E"} (transpiration flow), \code{"An"} (net photosynthesis), \code{"Gw"} (stomatal conductance), \code{"T"} (temperature) or \code{"VPD"} (vapour pressure deficit).}
+  \item{type}{A string with plot type, either \code{"E"} (transpiration flow), \code{"Ag"} (gross photosynthesis), \code{"An"} (net photosynthesis), \code{"Gw"} (stomatal conductance), \code{"T"} (temperature) or \code{"VPD"} (vapour pressure deficit).}
   \item{modifyInputX, modifyInputSoil}{Boolean flags to indicate that the input \code{x} and \code{soil} objects are allowed to be modified during the simulation.}
-}
-\details{
-Details of the transpiration submodel are given in a vignette.
 }
 
 \value{
 Function \code{transp_transpirationGranier} and \code{transp_transpirationSperry} return a list with the following elements:
 \itemize{
   \item{\code{"cohorts"}: A data frame with cohort information, copied from \code{\link{spwbInput}}.}
-  \item{\code{"Plants"}: A data frame of results for each plant cohort:
+  \item{\code{"Stand"}: A vector of stand-level variables.}
+  \item{\code{"Plants"}: A data frame of results for each plant cohort. When using \code{transp_transpirationGranier}, element \code{"Plants"} includes:
     \itemize{
       \item{\code{"LAI"}: Leaf area index of the plant cohort.}
       \item{\code{"AbsorbedSWRFraction"}: Fraction of SWR absorbed by each cohort.}
@@ -77,19 +74,27 @@ Function \code{transp_transpirationGranier} and \code{transp_transpirationSperry
     }
     When using \code{transp_transpirationSperry}, element \code{"Plants"} includes:
     \itemize{
+      \item{\code{"LAI"}: Leaf area index of the plant cohort.}
       \item{\code{"Extraction"}: Water extracted from the soil (in mm) for each cohort.}
+      \item{\code{"Transpiration"}: Transpirated water (in mm) corresponding to each cohort.}
+      \item{\code{"GrossPhotosynthesis"}: Gross photosynthesis (in gC/m2) corresponding to each cohort.}
+      \item{\code{"NetPhotosynthesis"}: Net photosynthesis (in gC/m2) corresponding to each cohort.}
       \item{\code{"RootPsi"}: Minimum water potential (in MPa) at the root collar.}
       \item{\code{"StemPsi"}: Minimum water potential (in MPa) at the stem.}
+      \item{\code{"StemPLC"}: Proportion of conductance loss in stem.}
       \item{\code{"LeafPsiMin"}: Minimum (predawn) water potential (in MPa) at the leaf (representing an average leaf).}
       \item{\code{"LeafPsiMax"}: Maximum (midday) water potential (in MPa) at the leaf (representing an average leaf).}
       \item{\code{"LeafPsiMin_SL"}: Minimum (predawn) water potential (in MPa) at sunlit leaves.}
       \item{\code{"LeafPsiMax_SL"}: Maximum (midday) water potential (in MPa) at sunlit leaves.}
       \item{\code{"LeafPsiMin_SH"}: Minimum (predawn) water potential (in MPa) at shade leaves.}
       \item{\code{"LeafPsiMax_SH"}: Maximum (midday) water potential (in MPa) at shade leaves.}
-      \item{\code{"StemPLC"}: Proportion of conductance loss in stem.}
-      \item{\code{"StemRWC"}: Relative water content of symplastic stem tissue.}
-      \item{\code{"LeafRWC"}: Relative water content of symplastic leaf tissue.}
       \item{\code{"dEdP"}: Overall soil-plant conductance (derivative of the supply function).}
+      \item{\code{"DDS"}: Daily drought stress [0-1] (relative whole-plant conductance).}
+      \item{\code{"StemRWC"}: Relative water content of stem tissue (including symplasm and apoplasm).}
+      \item{\code{"LeafRWC"}: Relative water content of leaf tissue (including symplasm and apoplasm).}
+      \item{\code{"StemSympRWC"}: Relative water content of symplastic stem tissue.}
+      \item{\code{"LeafSympRWC"}: Relative water content of symplastic leaf tissue.}
+      \item{\code{"WaterBalance"}: Plant water balance (extraction - transpiration).}
     }
   }
   \item{\code{"Extraction"}: A data frame with mm of water extracted from each soil layer (in columns) by each cohort (in rows).}
@@ -103,14 +108,21 @@ Function \code{transp_transpirationGranier} and \code{transp_transpirationSperry
     }  
    }
    \item{\code{"RhizoPsi"}: Minimum water potential (in MPa) inside roots, after crossing rhizosphere, per cohort and soil layer.}
+   \item{\code{"Sunlitleaves"} and \code{"ShadeLeaves"}: Data frames for sunlit leaves and shade leaves and the following columns per cohort:
+      \itemize{
+      \item{\code{"LAI"}: Cumulative leaf area index of sunlit/shade leaves.}
+      \item{\code{"Vmax298"}: Average maximum carboxilation rate for sunlit/shade leaves.}
+      \item{\code{"Jmax298"}: Average maximum electron transport rate for sunlit/shade leaves.}
+    }  
+   }
    \item{\code{"ExtractionInst"}: Water extracted by each plant cohort during each time step.}
    \item{\code{"PlantsInst"}: A list with instantaneous (per time step) results for each plant cohort:
     \itemize{
       \item{\code{"E"}: A data frame with the cumulative transpiration (mm) for each plant cohort during each time step. }
+      \item{\code{"Ag"}: A data frame with the cumulative gross photosynthesis (gC/m2) for each plant cohort during each time step. }
       \item{\code{"An"}: A data frame with the cumulative net photosynthesis (gC/m2) for each plant cohort during each time step. }
       \item{\code{"Sunlitleaves"} and \code{"ShadeLeaves"}: Lists with instantaneous (for each time step) results for sunlit leaves and shade leaves and the following items:
         \itemize{
-            \item{\code{"LAI"}: Leaf area index of (sunlit or shade) leaves of the plant cohort.}
             \item{\code{"Abs_SWR"}: A data frame with instantaneous absorbed short-wave radiation (SWR).} 
             \item{\code{"Abs_LWR"}: A data frame with instantaneous absorbed long-wave radiation (LWR).} 
             \item{\code{"An"}: A data frame with instantaneous net photosynthesis (in micromol/m2/s). }
@@ -121,13 +133,15 @@ Function \code{transp_transpirationGranier} and \code{transp_transpirationSperry
             \item{\code{"Psi"}: A data frame with leaf water potential (in MPa). }
         }
       }
-      \item{\code{"dEdPinst"}: A data frame with the slope of the plant supply function (an estimation of whole-plant conductance).}
-      \item{\code{"PsiRoot"}: A data frame with root crown water potential (in MPa) for each plant cohort during each time step.}
-      \item{\code{"PsiStem"}: A data frame with stem water potential (in MPa) for each plant cohort during each time step.}
-      \item{\code{"PsiLeaf"}: A data frame with leaf (average) water potential (in MPa) for each plant cohort during each time step. }
-      \item{\code{"PLCstem"}: A data frame with the proportion loss of conductance [0-1] for each plant cohort during each time step. }
-      \item{\code{"RWCstem"}: A data frame with the (average) relative water content of symplastic stem tissue [0-1] for each plant cohort during each time step. }
-      \item{\code{"RWCleaf"}: A data frame with the relative water content of symplastic leaf tissue [0-1] for each plant cohort during each time step. }
+      \item{\code{"dEdP"}: A data frame with the slope of the plant supply function (an estimation of whole-plant conductance).}
+      \item{\code{"RootPsi"}: A data frame with root crown water potential (in MPa) for each plant cohort during each time step.}
+      \item{\code{"StemPsi"}: A data frame with stem water potential (in MPa) for each plant cohort during each time step.}
+      \item{\code{"LeafPsi"}: A data frame with leaf (average) water potential (in MPa) for each plant cohort during each time step. }
+      \item{\code{"StemPLC"}: A data frame with the proportion loss of conductance [0-1] for each plant cohort during each time step. }
+      \item{\code{"StemRWC"}: A data frame with the (average) relative water content of stem tissue [0-1] for each plant cohort during each time step. }
+      \item{\code{"LeafRWC"}: A data frame with the relative water content of leaf tissue [0-1] for each plant cohort during each time step. }
+      \item{\code{"StemSympRWC"}: A data frame with the (average) relative water content of symplastic stem tissue [0-1] for each plant cohort during each time step. }
+      \item{\code{"LeafSympRWC"}: A data frame with the relative water content of symplastic leaf tissue [0-1] for each plant cohort during each time step. }
       \item{\code{"PWB"}: A data frame with plant water balance (extraction - transpiration).}
     }
   }
@@ -153,7 +167,7 @@ Sperry, J. S., M. D. Venturas, W. R. L. Anderegg, M. Mencuccini, D. S. Mackay, Y
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 }
 \seealso{
-\code{\link{hydraulics_supplyFunctionNetwork}}, \code{\link{biophysics_leafTemperature}}, \code{\link{photo_photosynthesis}}, \code{\link{spwb}}
+\code{\link{hydraulics_supplyFunctionNetwork}}, \code{\link{biophysics_leafTemperature}}, \code{\link{photo_photosynthesis}}, \code{\link{spwb_day}}, \code{\link{plot.spwb_day}}
 }
 \examples{
 #Load example daily meteorological data
@@ -173,11 +187,11 @@ examplesoil = soil(defaultSoilParams(2))
 control = defaultControl()
 
 #Initialize input
-x = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+x1 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
 # Transpiration according to Granier's model, plant water potential 
 # and plant stress for a given day
-transp_transpirationGranier(x, examplesoil, examplemeteo, 1, 
+t1 = transp_transpirationGranier(x1, examplesoil, examplemeteo, 1, 
                             modifyInputX = FALSE, modifyInputSoil = FALSE)
 
 #Switch to 'Sperry' transpiration mode
@@ -189,6 +203,11 @@ examplesoil2 = soil(defaultSoilParams(2))
 #Initialize input
 x2 = forest2spwbInput(exampleforestMED,examplesoil2, SpParamsMED, control)
 
+# Transpiration according to Sperry's model
+t2 = transp_transpirationSperry(x2, examplesoil2, examplemeteo, 1, 
+                           latitude = 41.82592, elevation = 100, slope = 0, aspect = 0,
+                           modifyInputX = FALSE, modifyInputSoil = FALSE)
+                            
 # Stomatal VPD curve and chosen value for the 12th time step at day 100
 transp_stomatalRegulationPlot(x2, examplesoil2, examplemeteo, day=100, timestep = 12,
                               latitude = 41.82592, elevation = 100, type="VPD")

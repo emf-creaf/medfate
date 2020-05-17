@@ -37,7 +37,7 @@ hydraulics_findRhizosphereMaximumConductance(averageResistancePercent, n, alpha,
 hydraulics_maximumRootHydraulicConductance(xylemConductivity, Al2As, 
                                            v, widths, depthWidthRatio = 1.0)
 hydraulics_maximumStemHydraulicConductance(xylemConductivity, refheight, Al2As, height, 
-                                           angiosperm = TRUE, taper = FALSE)
+                                           taper = FALSE)
 hydraulics_referenceConductivityHeightFactor(refheight, height)
 hydraulics_terminalConduitRadius(height)
 hydraulics_taperFactorSavage(height)
@@ -65,8 +65,7 @@ hydraulics_leafWaterCapacity(SLA, ld)
   \item{xylemConductivity}{Xylem conductivity as flow per length of conduit and pressure drop (in kg·m-1·s-1·MPa-1).}
   \item{Al2As}{Leaf area to sapwood area (in m2·m-2).}
   \item{height}{Plant height (in cm).}
-  \item{refheight}{Reference plant height (in cm).}
-  \item{angiosperm}{A boolean flag to indicate an angiosperm species.}
+  \item{refheight}{Reference plant height of measurement of xylem conductivity (in cm).}
   \item{taper}{A boolean flag to indicate correction by taper of xylem conduits (Christoffersen et al. 2017).}
   \item{widths}{Soil layer depths (in mm).}
   \item{depthWidthRatio}{Ratio between radius of the soil layer with the largest radius and maximum rooting depth.}

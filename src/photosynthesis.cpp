@@ -19,20 +19,20 @@ const double lightResponseCurvature = 0.9;
  *  Bernacchi, C. J., E. L. Singsaas, C. Pimentel, A. R. Portis, and S. P. Long. 2001. Improved temperature response functions for models of Rubisco-limited photosynthesis. 
  *  Plant, Cell and Environment 24:253–259.
  *  
- *  leaf_temp - Leaf temperature (ºC)
+ *  Tleaf - Leaf temperature (ºC)
  *  Oi - Oxigen concentration (mmol*mol-1)
  */
 //Compensation point (micromol * mol-1)
 // [[Rcpp::export("photo_GammaTemp")]]
-double gammaTemp(double leaf_temp) {return(42.75*exp((37830*(leaf_temp-25.0))/(298.0*R_gas*(leaf_temp+273))));} 
+double gammaTemp(double Tleaf) {return(42.75*exp((37830*(Tleaf-25.0))/(298.0*R_gas*(Tleaf+273))));} 
 //Michaelis-Menten coefficients of Rubisco for Carbon (micromol * mol-1)
-double KcTemp(double leaf_temp) {return(404.9*exp((79430*(leaf_temp-25.0))/(298.0*R_gas*(leaf_temp+273))));}
+double KcTemp(double Tleaf) {return(404.9*exp((79430*(Tleaf-25.0))/(298.0*R_gas*(Tleaf+273))));}
 //Michaelis-Menten coefficients of Rubisco for Oxigen (mmol * mol-1)
-double KoTemp(double leaf_temp) {return(278.4*exp((36380*(leaf_temp-25.0))/(298.0*R_gas*(leaf_temp+273))));}
+double KoTemp(double Tleaf) {return(278.4*exp((36380*(Tleaf-25.0))/(298.0*R_gas*(Tleaf+273))));}
 // [[Rcpp::export("photo_KmTemp")]]
-double KmTemp(double leaf_temp, double Oi = 209.0) {
-  double Kc = KcTemp(leaf_temp);
-  double Ko = KoTemp(leaf_temp);  
+double KmTemp(double Tleaf, double Oi = 209.0) {
+  double Kc = KcTemp(Tleaf);
+  double Ko = KoTemp(Tleaf);  
   return(Kc*(1.0+(Oi/Ko)));
 }
 
@@ -45,16 +45,16 @@ double KmTemp(double leaf_temp, double Oi = 209.0) {
  *    
  * Eq.1 with parameters from Table 2
  * 
- *  leaf_temp - Leaf temperature (ºC)
+ *  Tleaf - Leaf temperature (ºC)
  *  Vmax298 - maximum carboxylation rate at 298ºK (ie. 25 ºC) (micromol*s-1*m-2)
  */
 // [[Rcpp::export("photo_VmaxTemp")]]
-double VmaxTemp(double Vmax298, double leaf_temp) {
+double VmaxTemp(double Vmax298, double Tleaf) {
   double Ha = 73637.0; //Energy of activation J * mol-1
   double Hd = 149252.0; //Energy of deactivation J * mol-1
   double Sv = 486.0;  //Entropy term J * mol-1 * K-1
   double C = 1.0+exp((Sv*298.2-Hd)/(R_gas*298.2));
-  return(Vmax298*(C*exp((Ha/(R_gas*298.2))*(1.0-298.2/(leaf_temp+273.2))))/(1.0+exp((Sv*leaf_temp-Hd)/(R_gas*(leaf_temp+273.2)))));
+  return(Vmax298*(C*exp((Ha/(R_gas*298.2))*(1.0-298.2/(Tleaf+273.2))))/(1.0+exp((Sv*Tleaf-Hd)/(R_gas*(Tleaf+273.2)))));
 }
 
 /**
@@ -66,16 +66,16 @@ double VmaxTemp(double Vmax298, double leaf_temp) {
  *    
  * Eq.1 with parameters from Table 2
  * 
- *  leaf_temp - Leaf temperature (ºC)
+ *  Tleaf - Leaf temperature (ºC)
  *  Jmax298 - maximum electron transport rate at 298ºK (ie. 25 ºC) (micromol*s-1*m-2)
  */
 // [[Rcpp::export("photo_JmaxTemp")]]
-double JmaxTemp(double Jmax298, double leaf_temp) {
+double JmaxTemp(double Jmax298, double Tleaf) {
   double Ha = 50300.0; //Energy of activation J * mol-1
   double Hd = 152044.0; //Energy of deactivation J * mol-1
   double Sv = 495.0;  //Entropy term J * mol-1 * K-1
   double C = 1.0+exp((Sv*298.2-Hd)/(R_gas*298.2));
-  return(Jmax298*(C*exp((Ha/(R_gas*298.2))*(1.0-298.2/(leaf_temp+273.2))))/(1.0+exp((Sv*leaf_temp-Hd)/(R_gas*(leaf_temp+273.2)))));
+  return(Jmax298*(C*exp((Ha/(R_gas*298.2))*(1.0-298.2/(Tleaf+273.2))))/(1.0+exp((Sv*Tleaf-Hd)/(R_gas*(Tleaf+273.2)))));
 }
 
 
@@ -154,19 +154,19 @@ double fder(double x, double Q, double Ca, double Gc, double GT, double Km, doub
  * Q - Active photon flux density (micromol * s-1 * m-2)
  * Ca - CO2 air concentration (micromol * mol-1)
  * Gc - CO2 stomatal conductance (mol * s-1 * m-2)
- * leaf_temp - Leaf temperature (ºC)
+ * Tleaf - Leaf temperature (ºC)
  * Jmax298 - maximum electron transport rate per leaf area at 298 ºK (i.e. 25 ºC) (micromol*s-1*m-2) 
  * Vmax298 - maximum Rubisco carboxylation rate per leaf area at 298 ºK (i.e. 25 ºC) (micromol*s-1*m-2) 
  * 
  * return units: micromol*s-1*m-2
  */
 // [[Rcpp::export("photo_photosynthesis")]]
-NumericVector leafphotosynthesis(double Q, double Catm, double Gc, double leaf_temp, double Vmax298, double Jmax298, bool verbose=false) {
+NumericVector leafphotosynthesis(double Q, double Catm, double Gc, double Tleaf, double Vmax298, double Jmax298, bool verbose=false) {
   //Corrections per leaf temperature
-  double GT = gammaTemp(leaf_temp);
-  double Km = KmTemp(leaf_temp, O2_conc);
-  double Vmax = VmaxTemp(Vmax298, leaf_temp);
-  double Jmax = JmaxTemp(Jmax298, leaf_temp);
+  double GT = gammaTemp(Tleaf);
+  double Km = KmTemp(Tleaf, O2_conc);
+  double Vmax = VmaxTemp(Vmax298, Tleaf);
+  double Jmax = JmaxTemp(Jmax298, Tleaf);
   double x,x1,e,fx,fx1;
   x1 = 0.0;//initial guess
   e = 0.001; // accuracy in micromol * mol-1
@@ -213,7 +213,7 @@ DataFrame leafPhotosynthesisFunction(NumericVector E, double Catm, double Patm, 
                       Named("LeafVPD") = leafVPD,
                       Named("WaterVaporConductance") = Gw,
                       Named("Ci") = Ci,
-                      Named("Photosynthesis") = Ag,
+                      Named("GrossPhotosynthesis") = Ag,
                       Named("NetPhotosynthesis") = An));
 }
 
@@ -292,7 +292,7 @@ DataFrame sunshadePhotosynthesisFunction(NumericVector E, double Catm, double Pa
     }
     
   }
-  return(DataFrame::create(Named("Photosynthesis") = Ag,
+  return(DataFrame::create(Named("GrossPhotosynthesis") = Ag,
                       Named("NetPhotosynthesis") = An,
                       Named("LeafCiSL") = leafCiSL,
                       Named("LeafCiSH") = leafCiSH,
@@ -342,7 +342,7 @@ DataFrame multilayerPhotosynthesisFunction(NumericVector E, double Catm, double 
       }
     }
   }
-  return(DataFrame::create(Named("Photosynthesis") = Ag,
+  return(DataFrame::create(Named("GrossPhotosynthesis") = Ag,
                       Named("NetPhotosynthesis") = An));
 }
 

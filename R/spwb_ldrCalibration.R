@@ -119,11 +119,8 @@ spwb_ldrCalibration <- function(x, soil, meteo, calibVar, obs,
     x_1sp <- x
     x_1sp$cohorts <- x_1sp[['cohorts']][sp,]
     x_1sp$above <- x_1sp[['above']][sp,]
-    x_1sp$paramsBase <- x_1sp[['paramsBase']][sp,] 
-    x_1sp$paramsTransp <- x_1sp[['paramsTransp']][sp,] 
-    x_1sp$Transpiration <- x_1sp[['Transpiration']][sp] 
-    x_1sp$Photosynthesis <- x_1sp[['Photosynthesis']][sp] 
-    x_1sp$ProportionCavitated <- x_1sp[['ProportionCavitated']][sp] 
+    x_1sp$paramsInterception <- x_1sp[['paramsInterception']][sp,] 
+    x_1sp$paramsTranspiration <- x_1sp[['paramsTranspiration']][sp,] 
     x_1sp$control$verbose <- FALSE
     
     # temp output

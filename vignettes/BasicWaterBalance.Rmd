@@ -158,20 +158,19 @@ Most of these parameters should normally be left to their default value. However
 
  1. Console output can be turned off by setting `verbose = FALSE`. 
  2. The soil water retention curves can be switched between Saxton's and Van Genuchten's using parameter `soilFunctions`. 
- 3. The complexity of the soil water balance calculations will be very different if we set `transpirationMode = "Sperry"`. Most of the other options apply in the case of complex soil water balance only. 
- 4. Non-reversible cavitation can be forced by setting `cavitationRefill = FALSE`.
-
+ 3. The complexity of the soil water balance calculations will be very different if we set `transpirationMode = "Sperry"`. Most of the other options apply in the case of advanced soil water balance only. 
+ 
 ### Water balance input object
 
 A last step is needed before calling simulation functions. It consists in the compilation of all aboveground and belowground parameters and the specification of additional parameter values for each plant cohort, such as their light extinction coefficient or their response to drought. This is done by calling function `spwbInput()` and taking species parameter values from species parameter data:
 ```{r}
 x = spwbInput(above, below, examplesoil, SpParamsMED, control)
 ```
-Different parameter variables will be drawn depending on the value of `transpirationMode`. For the simple model, relatively few parameters are needed. All the input information for forest data and species parameter values can be inspected by printing the input object.
+Different parameter variables will be drawn depending on the value of `transpirationMode`. For the simple water balance model (`transpirationMode = "Granier"`), relatively few parameters are needed. All the input information for forest data and species parameter values can be inspected by accessing the different elements of this object, whose names are.
 ```{r}
-x
+names(x)
 ```
-As with the soil input object, the `spwbInput` object may be modified during simulations. In the case of soil water balance, these modifications are minimal, for example concerning `LAI_expanded`, but in the case of growth simulations the object is used to store the status of vegetation during and at the end of simulations. If one has a `forest` object, the `spwbInput` object can be generated in directly from it, avoiding the need to explicitly build aboveground and belowground data frames:
+As with the soil input object, the `spwbInput` object **will be modified** during simulations. In the case of soil water balance, these modifications are small, for example concerning `LAI_expanded`, but in the case of growth simulations the object is used to store the status of vegetation during and at the end of simulations. If one has a `forest` object, the `spwbInput` object can be generated in directly from it, avoiding the need to explicitly build aboveground and belowground data frames:
 
 ```{r}
 x = forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
@@ -213,20 +212,18 @@ sd1
 
 ### Water balance for multiple days
 
-Most often, users will use function `spwb()` to run the soil water balance model. This function requires the `spwbInput` object, the `soil` object and the meteorological data frame. However, function `spwb_day()` modified the state variables of the input objects. In particular, the values of soil moisture and cumulative growth degree days are now:
+Most often, users will use function `spwb()` to run the soil water balance model. This function requires the `spwbInput` object, the `soil` object and the meteorological data frame. However, function `spwb_day()` modified the state variables of the input objects. In particular, the values of soil moisture are now:
 ```{r}
 examplesoil$W
-x$canopy$gdd
 ```
 We simply reset state variables to their default values so that new simulations are not affected by the end state of the previous simulation:
 ```{r}
-spwb_resetInputs(x, examplesoil)
+resetInputs(x, examplesoil)
 examplesoil$W
-x$canopy$gdd
 ```
 Now we are ready to call function `spwb()`:
 ```{r}
-S = spwb(x, examplesoil, examplemeteo, elevation = 100)
+S = spwb(x, examplesoil, examplemeteo, latitude = 41.82592, elevation = 100)
 ```
 Function `spwb()` returns an object of class with the same name, actually a list:
 ```{r}
@@ -244,9 +241,9 @@ As before, `WaterBalance` contains water balance components, but in this case in
 ```{r}
 head(S$WaterBalance)
 ```
-Elements `PlantLAI`, `PlantStress`, `PlantPsi`, `PlantTranspiration` and `PlantPhotosynthesis` contain daily values by plant cohorts, for example plant water potentials are:
+Element `Plants` is in turn a list with several dataframes with plant output variables, for example plant water potentials are in:
 ```{r}
-head(S$PlantPsi)
+head(S$Plants$PlantPsi)
 ```
 
 

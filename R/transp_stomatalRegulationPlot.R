@@ -1,6 +1,6 @@
 transp_stomatalRegulationPlot<-function(x, soil, meteo, day, timestep, latitude, elevation, slope = NA, aspect = NA,
                                         type = "E") {
-  type = match.arg(type, c("E","An" , "Gw", "T", "VPD"))
+  type = match.arg(type, c("E", "Ag","An" , "Gw", "T", "VPD"))
   dctr = transp_transpirationSperry(x, soil, meteo, day, latitude, elevation, slope, aspect,
                                     stepFunctions = timestep, 
                                     modifyInputX = FALSE, modifyInputSoil = FALSE)
@@ -15,6 +15,8 @@ transp_stomatalRegulationPlot<-function(x, soil, meteo, day, timestep, latitude,
   
   psi = numeric(0)
   E = numeric(0)
+  Ag_sunlit = numeric(0)
+  Ag_shade = numeric(0)
   An_sunlit = numeric(0)
   An_shade = numeric(0)
   Gw_sunlit = numeric(0)
@@ -29,8 +31,10 @@ transp_stomatalRegulationPlot<-function(x, soil, meteo, day, timestep, latitude,
   for(i in 1:ncoh) {
     psi = c(psi, -l[[i]]$psiLeaf)
     E = c(E, l[[i]]$E)
-    An_sunlit = c(An_sunlit, phsunlit[[i]]$Photosynthesis)
-    An_shade = c(An_shade, phshade[[i]]$Photosynthesis)
+    Ag_sunlit = c(Ag_sunlit, phsunlit[[i]]$GrossPhotosynthesis)
+    Ag_shade = c(Ag_shade, phshade[[i]]$GrossPhotosynthesis)
+    An_sunlit = c(An_sunlit, phsunlit[[i]]$NetPhotosynthesis)
+    An_shade = c(An_shade, phshade[[i]]$NetPhotosynthesis)
     Gw_sunlit = c(Gw_sunlit, phsunlit[[i]]$WaterVaporConductance)
     Gw_shade = c(Gw_shade, phshade[[i]]$WaterVaporConductance)
     Temp_sunlit = c(Temp_sunlit, phsunlit[[i]]$LeafTemperature)
@@ -46,13 +50,13 @@ transp_stomatalRegulationPlot<-function(x, soil, meteo, day, timestep, latitude,
     cohorts = c(cohorts, rep(cohnames[i], length(l[[i]]$psiLeaf)))
   }
   df_sunlit = data.frame(psi = psi, E = E, 
-                         An = An_sunlit, Gw = Gw_sunlit,
+                         Ag = Ag_sunlit, An = An_sunlit, Gw = Gw_sunlit,
                          Temp = Temp_sunlit, VPD = VPD_sunlit, 
                          PM = PM_sunlit,
                          cohort = cohorts, leaf = "sunlit", 
                          stringsAsFactors = F)
   df_shade = data.frame(psi = psi, E = E, 
-                        An = An_shade, Gw = Gw_shade,
+                        Ag = Ag_shade, An = An_shade, Gw = Gw_shade,
                         Temp = Temp_shade, VPD = VPD_shade, 
                         PM = PM_shade,
                         cohort = cohorts, leaf = "shade",
@@ -69,10 +73,15 @@ transp_stomatalRegulationPlot<-function(x, soil, meteo, day, timestep, latitude,
       geom_point(data = df_PM, aes_string(y="E", col = "cohort"))+
       ylab(expression(paste("Flow rate "(mmol%.%s^{-1}%.%m^{-2}))))
   } 
+  else if(type=="Ag") {
+    g<- g + geom_path(aes_string(y = "Ag", col = "cohort"))+
+      geom_point(data = df_PM, aes_string(y="Ag", col = "cohort"))+
+      ylab(expression(paste("Gross photosynthesis "(mu*mol*C%.%s^{-1}%.%m^{-2}))))
+  } 
   else if(type=="An") {
     g<- g + geom_path(aes_string(y = "An", col = "cohort"))+
       geom_point(data = df_PM, aes_string(y="An", col = "cohort"))+
-      ylab(expression(paste("Photosynthesis "(mu*mol*C%.%s^{-1}%.%m^{-2}))))
+      ylab(expression(paste("Net photosynthesis "(mu*mol*C%.%s^{-1}%.%m^{-2}))))
   } 
   else if(type=="Gw") {
     g<- g + geom_path(aes_string(y = "Gw", col = "cohort"))+

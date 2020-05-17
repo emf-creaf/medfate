@@ -18,7 +18,7 @@ Functions \code{forest2spwbInput} and \code{forest2growthInput} take an object o
 forest2aboveground(x, SpParams, gdd = NA, mode = "MED")
 forest2belowground(x, soil, SpParams)
 forest2growthInput(x, soil, SpParams, control)
-forest2spwbInput(x, soil, SpParams, control)
+forest2spwbInput(x, soil, SpParams, control, mode = "MED")
 growthInput(above,  Z, V,  soil, SpParams, control)
 spwbInput(above,  V,  soil, SpParams, control)
 }
@@ -45,30 +45,49 @@ Function \code{forest2aboveground} returns a data frame with the following colum
   \item{\code{DBH}: Tree diameter at breast height (cm).}
   \item{\code{H}: Plant total height (cm).}
   \item{\code{CR}: Crown ratio (crown length to total height) (between 0 and 1).}
-  \item{\code{LAI_live}: Live leaf area index (m2/m2) (one-side leaf area relative to plot area).}
+  \item{\code{LAI_live}: Live leaf area index (m2/m2) (one-side leaf area relative to plot area), includes leaves in winter dormant buds.}
+  \item{\code{LAI_expanded}: Leaf area index of expanded leaves (m2/m2) (one-side leaf area relative to plot area).}
   \item{\code{LAI_dead}: Dead leaf area index (m2/m2) (one-side leaf area relative to plot area).}
 }
 
 Functions \code{forest2spwbInput} and \code{spwbInput} return a list of class \code{spwbInput} with the following elements (rows of data frames are identified as specified by function \code{\link{plant_ID}}):
 \itemize{
   \item{\code{control}: List with control parameters (see \code{\link{defaultControl}}).}
+  \item{\code{canopy}: A list of stand-level state variables.}
   \item{\code{cohorts}: A data frame with cohort information, with columns \code{SP} and \code{Name}.}
   \item{\code{above}: A data frame with columns  \code{H}, \code{CR} and \code{LAI} (see function \code{forest2aboveground}).}
   \item{\code{below}: A list. If \code{control$transpirationMode = "Granier"} it contains a single element: 
      \itemize{
         \item{\code{V}: A matrix with the proportion of fine roots of each cohort (in rows) in each soil layer (in columns).}
+        \item{\code{Wpool}: A matrix with the soil moisture relative to field capacity around the rhizosphere of each cohort (in rows) in each soil layer (in columns).}
      }
      If \code{control$transpirationMode = "Sperry"} there are the following additional elements:
      \itemize{
         \item{\code{VGrhizo_kmax}: A matrix with maximum rhizosphere conductance values of each cohort (in rows) in each soil layer (in columns).}
         \item{\code{VGroot_kmax}: A matrix with maximum root xylem conductance values of each cohort (in rows) in each soil layer (in columns).}
+        \item{\code{RhizoPsi}: A matrix with the water potential around the rhizosphere of each cohort (in rows) in each soil layer (in columns).}
      }
   }
-  \item{\code{paramsBase}: A data frame with columns:
+  \item{\code{paramsPhenology}: A data frame with leaf phenology parameters.
+     \itemize{
+       \item{\code{Sgdd}: Growth degree days needed for leaf budburst (for winter decideous species).}
+     }
+  }
+  \item{\code{paramsAnatomy}: A data frame with plant anatomy parameters for each cohort (only if \code{control$transpirationMode = "Sperry"}):
+     \itemize{
+       \item{\code{Hmed}: Median plant height (cm).}
+       \item{\code{Al2As}: Leaf area to sapwood area ratio (in m2·m-2).}
+       \item{\code{SLA}: Specific leaf area (mm2/mg = m2/kg).}
+       \item{\code{LeafWidth}: Leaf width (in cm).}
+       \item{\code{LeafDensity}: Density of leaf tissue (dry weight over volume).}
+       \item{\code{WoodDensity}: Density of wood tissue (dry weight over volume).}
+       \item{\code{r635}: Ratio between the weight of leaves plus branches and the weight of leaves alone for branches of 6.35 mm..}
+     }
+  }
+  \item{\code{paramsInterception}: A data frame with rain interception and light extinction parameters for each cohort:
      \itemize{
        \item{\code{kPAR}: PAR extinction coefficient.}
        \item{\code{g}: Canopy water retention capacity per LAI unit (mm/LAI).}
-       \item{\code{Sgdd}: Growth degree days needed for leaf budburst (for winter decideous species).}
      }
      If \code{control$transpirationMode = "Sperry"} additional columns are:
      \itemize{
@@ -76,27 +95,42 @@ Functions \code{forest2spwbInput} and \code{spwbInput} return a list of class \c
        \item{\code{alphaSWR}: Absorbance coefficient for SWR .}
      }
   }
-  \item{\code{paramsTransp}: A data frame with transpiration parameters. If \code{control$transpirationMode = "Granier"}, columns are:
+  \item{\code{paramsTranspiration}: A data frame with parameters for transpiration and photosynthesis. If \code{control$transpirationMode = "Granier"}, columns are:
     \itemize{
        \item{\code{Psi_Extract}: Water potential corresponding to 50\% relative conductance (in MPa).}
        \item{\code{WUE}: Water use efficiency for carbon assimilation (g C/mm water).} 
+       \item{\code{pRootDisc}: Proportion of whole-plant conductance leading to disconnection from soil.}
     }
     If \code{control$transpirationMode = "Sperry"} columns are:
     \itemize{
        \item{\code{Gwmax}: Maximum stomatal conductance to water vapor (in mol H2O·m-2·s-1).}
        \item{\code{Vmax298}: Maximum Rubisco carboxilation rate at 25ºC (in micromol CO2·s-1·m-2).}
        \item{\code{Jmax298}: Maximum rate of electron transport at 25ºC (in micromol photons·s-1·m-2).}
-       \item{\code{VCroot_c}, \code{VCroot_d}: Parameters of the root xylem vulnerability curve.}
-       \item{\code{xylem_kmax}: Sapwood-specific hydraulic conductivity of stem xylem (in kg H2O·s-1·m-2).}
-       \item{\code{VCstem_kmax}: Maximum stem xylem conductance values of each cohort.}
+       \item{\code{Kmax_stemxylem}: Sapwood-specific hydraulic conductivity of stem xylem (in kg H2O·s-1·m-2).}
+       \item{\code{Kmax_rootxylem}: Sapwood-specific hydraulic conductivity of root xylem (in kg H2O·s-1·m-2).}
+       \item{\code{VCleaf_kmax}: Maximum leaf hydraulic conductance.}
+       \item{\code{VCleaf_c}, \code{VCleaf_d}: Parameters of the leaf vulnerability curve.}
+       \item{\code{VCstem_kmax}: Maximum stem xylem conductance.}
        \item{\code{VCstem_c}, \code{VCstem_d}: Parameters of the stem xylem vulnerability curve.}
+       \item{\code{VCroot_c}, \code{VCroot_d}: Parameters of the root xylem vulnerability curve.}
+       \item{\code{Plant_kmax}: Maximum whole-plant conductance.}
     }
   }
-  \item{\code{Transpiration}: Plant cohort transpiration of the current day (mm of water = L/m2; filled with zeroes before simulations).}
-  \item{\code{Photosynthesis}: Plant cohort photosynthesis of the current day (g C/m2; filled with zeroes before simulations).}
+  \item{\code{paramsWaterStorage}: A data frame with plant water storage parameters for each cohort (only if \code{control$transpirationMode = "Sperry"}):
+     \itemize{
+       \item{\code{LeafPI0}: Osmotic potential at full turgor of leaves (MPa).}
+       \item{\code{LeafEPS}: Modulus of elasticity (capacity of the cell wall to resist changes in volume in response to changes in turgor) of leaves (MPa).}
+       \item{\code{LeafAF}: Apoplastic fraction (proportion of water outside the living cells) in leaves.}
+       \item{\code{Vleaf}: Storage water capacity in leaves, per leaf area (L/m2).}
+       \item{\code{StemPI0}: Osmotic potential at full turgor of symplastic xylem tissue (MPa).}
+       \item{\code{StemEPS}: Modulus of elasticity (capacity of the cell wall to resist changes in volume in response to changes in turgor) of symplastic xylem tissue (Mpa).}
+       \item{\code{StemAF}: Apoplastic fraction (proportion of water outside the living cells) in stem xylem.}
+       \item{\code{Vstem}: Storage water capacity in sapwood, per leaf area (L/m2).}
+     }
+  }
+  \item{\code{internalPhenology} and \code{internalWater}: data frames to store internal state variables.}
 }
 Functions \code{forest2growthInput} and \code{growthInput} return a list of class \code{growthInput} with the same elements as \code{spwbInput}, but with additional information. 
-
 \itemize{
 \item{Element \code{above} includes the following additional columns:
   \itemize{
@@ -105,19 +139,13 @@ Functions \code{forest2growthInput} and \code{growthInput} return a list of clas
     \item{\code{SA}: Live sapwood area per individual (cm2/ind).} 
   }
   }
-  \item{\code{paramsGrowth}: A data frame with columns:
-     \itemize{
-       \item{\code{SLA}:Specific leaf area (mm2/mg = m2/kg).}
-       \item{\code{Al2As}: Leaf area to sapwood area ratio (in m2·m-2).}
-     }
-  }
 }
 
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 }
-\seealso{\code{\link{spwb}}, \code{\link{soil}},  \code{\link{forest}}, \code{\link{SpParamsMED}}, \code{\link{defaultSoilParams}}, \code{\link{plant_ID}}}
+\seealso{\code{\link{resetInputs}}, \code{\link{spwb}}, \code{\link{soil}},  \code{\link{forest}}, \code{\link{SpParamsMED}}, \code{\link{defaultSoilParams}}, \code{\link{plant_ID}}}
 
 \examples{
 #Load example plot plant data

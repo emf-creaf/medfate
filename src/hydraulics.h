@@ -11,6 +11,8 @@ double Psi2K(double psi, double Psi_extract, double ws= 3.0);
 NumericVector Psi2K(double psi, NumericVector Psi_extract, double ws= 3.0);
 double averagePsi(NumericVector psi, NumericVector v, double c, double d);
 
+double correctConductanceForViscosity(double kxylem, double temp);
+
 double vanGenuchtenConductance(double psi, double krhizomax, double n, double alpha);
 double xylemConductance(double psi, double kxylemmax, double c, double d);
 double xylemPsi(double kxylem, double kxylemmax, double c, double d);
@@ -18,7 +20,7 @@ double xylemPsi(double kxylem, double kxylemmax, double c, double d);
 double taperFactorSavage(double height);
 double terminalConduitRadius(double height);
 double referenceConductivityHeightFactor(double refheight, double height);
-double maximumStemHydraulicConductance(double xylemConductivity, double refheight, double Al2As,  double height, bool angiosperm = true, bool taper = false);
+double maximumStemHydraulicConductance(double xylemConductivity, double refheight, double Al2As,  double height, bool taper = false);
 double maximumRootHydraulicConductance(double xylemConductivity, double Al2As, NumericVector v, NumericVector d, double depthWidthRatio = 1.0);
 
 NumericVector psi2Weibull(double psi50, double psi88);

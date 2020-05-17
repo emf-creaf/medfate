@@ -80,7 +80,7 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
     }
   } 
   else if(type=="E") {
-    pt = x$PlantTranspiration
+    pt = x$Plants$Transpiration
     d = rownames(pt)
     LAI = x$spwbInput$above$LAI_live
     spnames = x$spwbInput$cohorts$Name
@@ -151,8 +151,8 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
     row.names(eval_res)<-c("Es+Tr", "Es+Tr+In")
   }
   else if(type=="WP"){
-    wtMD = x$LeafPsiMin
-    wtPD = x$LeafPsiMax
+    wtMD = x$Plants$LeafPsiMin
+    wtPD = x$Plants$LeafPsiMax
     d = rownames(wtMD)
     spnames = x$spwbInput$cohorts$Name
     allcohnames = row.names(x$spwbInput$cohorts)

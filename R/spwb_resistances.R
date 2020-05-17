@@ -10,21 +10,21 @@ spwb_resistances<-function(x, cohort = 1, relative = FALSE, draw = FALSE,
   VG_nc = x$soilInput$VG_n
   VG_alphac = x$soilInput$VG_alpha
   
-  paramsTransp = x$spwbInput$paramsTransp
-  VCroot_c = paramsTransp$VCroot_c
-  VCroot_d = paramsTransp$VCroot_d
-  VCstem_kmax = paramsTransp$VCstem_kmax
-  VCstem_c = paramsTransp$VCstem_c
-  VCstem_d = paramsTransp$VCstem_d
-  VCleaf_kmax = paramsTransp$VCleaf_kmax
-  VCleaf_c = paramsTransp$VCleaf_c
-  VCleaf_d = paramsTransp$VCleaf_d
+  paramsTranspiration = x$spwbInput$paramsTranspiration
+  VCroot_c = paramsTranspiration$VCroot_c
+  VCroot_d = paramsTranspiration$VCroot_d
+  VCstem_kmax = paramsTranspiration$VCstem_kmax
+  VCstem_c = paramsTranspiration$VCstem_c
+  VCstem_d = paramsTranspiration$VCstem_d
+  VCleaf_kmax = paramsTranspiration$VCleaf_kmax
+  VCleaf_c = paramsTranspiration$VCleaf_c
+  VCleaf_d = paramsTranspiration$VCleaf_d
   
-  psiLeaf = x$LeafPsiMin
-  psiStem = x$StemPsi
-  psiRoot = x$RootPsi
-  PLCstem = x$PlantStress
-  psiRhizo = x$RhizoPsi
+  LeafPsi = x$Plants$LeafPsiMin
+  StemPsi = x$Plants$StemPsi
+  RootPsi = x$Plants$RootPsi
+  StemPLC = x$Plants$PlantStress
+  RhizoPsi = x$Plants$RhizoPsi
   
   nlayers = length(VG_nc)
   psiSoil = x$Soil$psi.1
@@ -35,14 +35,14 @@ spwb_resistances<-function(x, cohort = 1, relative = FALSE, draw = FALSE,
   
   nsteps = nrow(psiSoil)
   resmat = matrix(0, nrow=nsteps, ncol = 4)
-  rownames(resmat) = rownames(psiStem)
+  rownames(resmat) = rownames(StemPsi)
   colnames(resmat) = c("Rhizosphere", "Root", "Stem", "Leaf")
   for(j in 1:nsteps) {
     rrow  = hydraulics_soilPlantResistances(psiSoil = psiSoil[j,],
-                                            psiRhizo = psiRhizo[[cohort]][j,],
-                                            psiStem = psiStem[j,cohort],
-                                            PLCstem = PLCstem[j,cohort],
-                                            psiLeaf = psiLeaf[j,cohort],
+                                            psiRhizo = RhizoPsi[[cohort]][j,],
+                                            psiStem = StemPsi[j,cohort],
+                                            PLCstem = StemPLC[j,cohort],
+                                            psiLeaf = LeafPsi[j,cohort],
                                             VGrhizo_kmax[cohort,],VG_nc,VG_alphac,
                                             VCroot_kmax[cohort,], VCroot_c[cohort],VCroot_d[cohort],
                                             VCstem_kmax[cohort], VCstem_c[cohort],VCstem_d[cohort], 

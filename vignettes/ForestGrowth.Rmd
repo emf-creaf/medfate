@@ -142,11 +142,6 @@ Most of these parameters should normally be left to their default value. However
 
  1. Console output can be turned off by setting `verbose = FALSE`. 
  2. The complexity of the soil water balance calculations is controlled using `transpirationMode`. 
- 3. The consideration of a single (or two) carbon storage pool is controlled using `storagePool`.
- 
-```{r}
-control$storagePool = "two"
-```
 
 
 ### Growth input object
@@ -169,10 +164,7 @@ First, information about the cohort species is found in element `cohorts`  (i.e.
 ```{r}
 x$cohorts
 ```
-Element `canopy` contains state variables of the whole canopy, which include growth degree days and canopy temperature:
-```{r}
-x$canopy
-```
+
 Element `above` contains the aboveground structure data that we already know, but with additional columns that describe the estimated initial amount of sapwood area and carbon reserves (if required):
 ```{r}
 x$above
@@ -204,39 +196,63 @@ Finally, note that one can play with plant-specific parameters for growth simula
 ## Executing the growth model
 In this vignette we will use one year of example meteorological data with the following precipitation and temperature seasonal trends:
 ```{r}
-G1<-growth(x, examplesoil, examplemeteo, elevation = 100)
+G1<-growth(x, examplesoil, examplemeteo, latitude = 41.82592, elevation = 100)
 
 ```
 
-### Plotting results
-```{r, fig=TRUE, echo=FALSE, fig.width=7, fig.height=4}
-plot(G1, "PlantPhotosynthesisPerLeaf")
-plot(G1, "PlantTranspirationPerLeaf")
+## Plotting results
+
+In addition to all the plots that were available for result of simulations with function `spwb()`, one can display the following information out of the output of function `growth()`:
+
+### Carbon balance components
+To inspect components of the plant carbon balance we can first display gross photosynthesis expressed as assimilation relative to biomass:
+```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
+plot(G1, "GrossPhotosynthesis", bySpecies = T)
+```
+Then we can draw the respiration costs (maintenance and growth) in the same units:
+```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
+plot(G1, "MaintenanceRespiration", bySpecies = T)
+plot(G1, "GrowthRespiration", bySpecies = T)
+```
+Finally we can display the daily negative or positive balance of the plant, which determines changes in plant carbon pools:
+```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
+plot(G1, "CarbonBalance", bySpecies = T)
+```
+
+### Carbon storage
+Carbon assimilation and respiration rates define the dynamics of stored carbon, which in medfate is divided into two organs (leaves and sapwood) and two chemical compounds (soluble sugars and starch):
+```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
+plot(G1, "SugarLeaf", bySpecies = T)
+plot(G1, "StarchLeaf", bySpecies = T)
+```
+
+```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
+plot(G1, "SugarSapwood", bySpecies = T)
+plot(G1, "StarchSapwood", bySpecies = T)
 ```
 
 
-```{r, fig=TRUE, echo=FALSE, fig.width=7, fig.height=4}
-plot(G1, "PlantRespiration")
-plot(G1, "PlantRespirationPerLeaf")
-plot(G1, "PlantRespirationPerIndividual")
-plot(G1, "PlantCBalance")
-plot(G1, "PlantCBalancePerLeaf")
-plot(G1, "PlantCBalancePerIndividual")
+### Leaf and sapwood area changes
+Leaf and sapwood area dynamics arising from the interplay between growth and senescence of tissues can be inspected using:
+```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
+plot(G1, "LeafArea", bySpecies = T)
+plot(G1, "SapwoodArea", bySpecies = T)
+```
+The corresponding daily growth rates can also be displayed:
+```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
+plot(G1, "LAgrowth", bySpecies = T)
+plot(G1, "SAgrowth", bySpecies = T)
 ```
 
 
-```{r, fig=TRUE, echo=FALSE, fig.width=7, fig.height=4}
-plot(G1, "PlantSAgrowth")
-plot(G1, "PlantRelativeSAgrowth")
+## Stand structure dynamics
+The output object returned by function `growth()` contains information of the year-by-year stand (aboveground) structure, starting with the initial one:
+```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
+G1$StandStructures
 ```
 
-
-```{r, fig=TRUE, echo=FALSE, fig.width=7, fig.height=4}
-plot(G1, "PlantLAIlive")
-plot(G1, "PlantLAIdead")
-```
-```{r, fig=TRUE, echo=FALSE, fig.width=7.5, fig.height=3.5}
-plot(G1, "PlantCstorageFast")
-plot(G1, "PlantCstorageSlow")
+We can also display summarized stand information (leaf area index, basal area, etc.) using:
+```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
+G1$StandStructures
 ```
 

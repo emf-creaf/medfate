@@ -1,6 +1,6 @@
 spwb_stress<-function(x, index = "NDD", freq = "years", bySpecies = FALSE, draw = TRUE) {
   index = match.arg(index,c("NDD","DI", "ADS", "MDS","WSI"))  
-  dates = as.Date(rownames(x$PlantStress))
+  dates = as.Date(rownames(x$Plants$PlantStress))
   ndaysTotal = length(dates)
   date.factor = cut(dates, breaks=freq)
   
@@ -17,18 +17,18 @@ spwb_stress<-function(x, index = "NDD", freq = "years", bySpecies = FALSE, draw 
     return(abs(sum(lwp-c, na.rm=T)))
   }
   if(index=="NDD") {
-    M <- apply(x$PlantStress,2,tapply, INDEX=date.factor, ndd)
+    M <- apply(x$Plants$PlantStress,2,tapply, INDEX=date.factor, ndd)
   } else if(index=="DI") {
-    M <- apply(x$PlantStress,2,tapply, INDEX=date.factor, di)
+    M <- apply(x$Plants$PlantStress,2,tapply, INDEX=date.factor, di)
   } else if(index=="ADS") {
-    M <- apply(x$PlantStress,2,tapply, INDEX=date.factor, function(x) {return(mean(x, na.rm=T))})
+    M <- apply(x$Plants$PlantStress,2,tapply, INDEX=date.factor, function(x) {return(mean(x, na.rm=T))})
   } else if(index=="MDS") {
-    M <- apply(x$PlantStress,2,tapply, INDEX=date.factor, function(x) {return(max(x, na.rm=T))})
+    M <- apply(x$Plants$PlantStress,2,tapply, INDEX=date.factor, function(x) {return(max(x, na.rm=T))})
   } else if(index=="WSI") {
     if(transpMode=="Granier") {
-      M <- apply(x$PlantPsi,2,tapply, INDEX=date.factor, wsi)
+      M <- apply(x$Plants$PlantPsi,2,tapply, INDEX=date.factor, wsi)
     } else {
-      M <- apply(x$LeafPsi,2,tapply, INDEX=date.factor, wsi)
+      M <- apply(x$Plants$LeafPsi,2,tapply, INDEX=date.factor, wsi)
     }
   }
   if(is.vector(M)) {
@@ -36,7 +36,7 @@ spwb_stress<-function(x, index = "NDD", freq = "years", bySpecies = FALSE, draw 
     rownames(M) <- levels(date.factor)
   }
   if(bySpecies) {
-    cohlai = apply(x$PlantLAI,2,max, na.rm=T)
+    cohlai = apply(x$Plants$LAI,2,max, na.rm=T)
     cohsp = as.character(x$spwbInput$cohorts$Name)
     lai1 = tapply(cohlai, cohsp, sum, na.rm=T)
     m1 = t(apply(sweep(M,2,cohlai,"*"),1,tapply, cohsp, sum, na.rm=T))

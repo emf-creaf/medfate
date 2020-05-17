@@ -12,7 +12,6 @@ spwb_sensitivity(x, soil, meteo,
                  p_change = c(-80,-40,-20,0,20,40,80), 
                  summary.fun = NULL, simplify=TRUE,...)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{An object of class \code{\link{spwbInput}}.}
   \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
@@ -30,13 +29,13 @@ Due to parameter dependence, modifying some parameters affects others:
 \itemize{
   \item{Setting \code{paramName = "Z50/Z95"} affects \code{below$V}, \code{below$VCroot_kmax} and \code{below$VGrhizo_kmax}.}
   \item{Modifying \code{LAI_live} also affects \code{LAI_expanded}.}
-  \item{Modifying \code{VCroot_kmax} from \code{paramsTransp} affects both \code{paramsTransp$VCroot_kmax} and \code{below$VCroot_kmax}.}
-  \item{Modifying \code{WaterStorage} affects simultaneously \code{paramsWaterStorage$Vleaf} and \code{paramsWaterStorage$Vsapwood}.}
-  \item{Modifying \code{c} affects simultaneously \code{paramsTransp$VCleaf_c}, \code{paramsTransp$VCstem_c} and \code{paramsTransp$VCroot_c}.}
-  \item{Modifying \code{d} affects simultaneously \code{paramsTransp$VCleaf_d}, \code{paramsTransp$VCstem_d} and \code{paramsTransp$VCroot_d}.}
-  \item{Modifying \code{Plant_kmax} from \code{paramsTransp} affects \code{paramsTransp$VCleaf_kmax}, \code{paramsTransp$VCstem_kmax}, \code{paramsTransp$VCroot_kmax} and \code{below$VCroot_kmax}.}
-  \item{Modifying \code{Al2As} from \code{paramsAnatomy} affects \code{paramsWaterStorage$Vsapwood}, \code{paramsTransp$VCstem_kmax}, \code{paramsTransp$VCroot_kmax} and \code{below$VCroot_kmax}.}
-  \item{Setting \code{paramName = "Vmax298/Jmax298"} affects both \code{paramsTransp$Vmax298} and \code{paramsTransp$Jmax298}.}
+  \item{Modifying \code{VCroot_kmax} from \code{paramsTranspiration} affects both \code{VCroot_kmax} and \code{below$VCroot_kmax}.}
+  \item{Modifying \code{WaterStorage} affects simultaneously \code{Vleaf} and \code{Vsapwood} from \code{paramsWaterStorage}.}
+  \item{Modifying \code{c} from \code{paramsTranspiration} affects simultaneously \code{VCleaf_c}, \code{VCstem_c} and \code{VCroot_c}.}
+  \item{Modifying \code{d} from \code{paramsTranspiration} affects simultaneously \code{VCleaf_d}, \code{VCstem_d} and \code{VCroot_d}.}
+  \item{Modifying \code{Plant_kmax} from \code{paramsTranspiration} affects \code{VCleaf_kmax}, \code{VCstem_kmax}, \code{VCroot_kmax} and \code{below$VCroot_kmax}.}
+  \item{Modifying \code{Al2As} from \code{paramsAnatomy} affects \code{Vsapwood} in \code{paramsWaterStorage}, \code{VCstem_kmax} and \code{VCroot_kmax} of \code{paramsTranspiration} and \code{below$VCroot_kmax}.}
+  \item{Setting \code{paramName = "Vmax298/Jmax298"} affects both \code{Vmax298} and \code{Jmax298} from \code{paramsTranspiration}.}
 }
 
 }
@@ -50,4 +49,19 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 \seealso{
 \code{\link{spwb}}, \code{\link{summary.spwb}}
 }
+\examples{
+\dontrun{
+#Load example data and species parameters
+data(examplemeteo)
+data(exampleforestMED)
+data(SpParamsMED)
 
+#Initialize input
+examplesoil = soil(defaultSoilParams(2))
+control = defaultControl()
+x = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+
+#Perform sensitivity analysis
+res = spwb_sensitivity(x, examplesoil, examplemeteo, latitude = 41, elevation = 100)
+}
+}

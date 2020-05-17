@@ -1,7 +1,7 @@
 #Draws the supply function (E vs PlantPsi) for the current soil state and plant hydraulic parameters
 hydraulics_supplyFunctionPlot<-function(x, soil, draw = TRUE, type="E", speciesNames = FALSE, ylim=NULL) {
   
-  TYPES = c("E","dEdP","psiStem","psiRoot","psiRhizo", "ERhizo")
+  TYPES = c("E","dEdP","StemPsi","RootPsi","RhizoPsi", "ERhizo")
   type = match.arg(type,TYPES)  
   
   psiSoil = soil_psi(soil, model="VG")
@@ -9,7 +9,7 @@ hydraulics_supplyFunctionPlot<-function(x, soil, draw = TRUE, type="E", speciesN
   VG_alphac = soil$VG_alpha
   VCroot_kmax = x$below$VCroot_kmax
   VGrhizo_kmax = x$below$VGrhizo_kmax
-  PLCstem = x$PLCstem
+  StemPLC = x$internalWater$StemPLC
   nlayer = length(psiSoil)
   col = rainbow(nlayer, start = 0.8, end = 0.1)
   
@@ -40,7 +40,7 @@ hydraulics_supplyFunctionPlot<-function(x, soil, draw = TRUE, type="E", speciesN
                                           VCroot_kmaxc, VCroot_c[i],VCroot_d[i],
                                           VCstem_kmax[i], VCstem_c[i],VCstem_d[i], 
                                           VCleaf_kmax[i], VCleaf_c[i],VCleaf_d[i],
-                                          PLCstem = PLCstem,
+                                          PLCstem = StemPLC,
                                           minFlow = 0.0, maxNsteps = numericParams$maxNsteps, 
                                           ntrial = numericParams$ntrial,
                                           psiTol = numericParams$psiTol, ETol = numericParams$ETol)
@@ -79,8 +79,8 @@ hydraulics_supplyFunctionPlot<-function(x, soil, draw = TRUE, type="E", speciesN
     dfRhizo$cohort = factor(dfRhizo$cohort, levels = cohortnames)
     
     df = data.frame("psi" = psi, 
-                    "psiStem" = psiStem, 
-                    "psiRoot" = psiRoot, 
+                    "StemPsi" = psiStem, 
+                    "RootPsi" = psiRoot, 
                     "E" = E, "dEdP" = dEdP, 
                     "cohort" = cohort)
     df$cohort = factor(df$cohort, levels = cohortnames)
@@ -105,9 +105,9 @@ hydraulics_supplyFunctionPlot<-function(x, soil, draw = TRUE, type="E", speciesN
       if(!is.null(ylim)) g<-g+ylim(ylim)
       return(g)
     }
-    else if(type=="psiStem") {
+    else if(type=="StemPsi") {
       ylab = "Stem pressure (-MPa)"
-      g<-ggplot(df, aes_string(x = "psi", y="psiStem"))+
+      g<-ggplot(df, aes_string(x = "psi", y="StemPsi"))+
         geom_path(aes_string(col="cohort", linetype="cohort"))+
         scale_color_discrete(name="")+
         scale_linetype_discrete(name="")
@@ -115,9 +115,9 @@ hydraulics_supplyFunctionPlot<-function(x, soil, draw = TRUE, type="E", speciesN
       if(!is.null(ylim)) g<-g+ylim(ylim)
       return(g)
     }
-    else if(type=="psiRoot") {
+    else if(type=="RootPsi") {
       ylab = "Root crown pressure (-MPa)"
-      g<-ggplot(df, aes_string(x = "psi", y="psiRoot"))+
+      g<-ggplot(df, aes_string(x = "psi", y="RootPsi"))+
         geom_path(aes_string(col="cohort", linetype="cohort"))+
         scale_color_discrete(name="")+
         scale_linetype_discrete(name="")
@@ -136,7 +136,7 @@ hydraulics_supplyFunctionPlot<-function(x, soil, draw = TRUE, type="E", speciesN
       if(!is.null(ylim)) g<-g+ylim(ylim)
       return(g)
     }
-    else if(type=="psiRhizo") {
+    else if(type=="PsiRhizo") {
       ylab = "Rhizosphere pressure (-MPa)"
       g<-ggplot(dfRhizo, aes_string(x = "Psi", y="PsiRhizo"))+
         geom_path(aes_string(col="cohort", linetype="layer"))+

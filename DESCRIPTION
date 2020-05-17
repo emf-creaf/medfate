@@ -1,14 +1,17 @@
 Package: medfate
 Type: Package
 Title: Mediterranean Forest Simulation
-Version: 0.9.1
-Date: 2020-03-30
+Version: 1.0.0
+Date: 2020-05-17
 Authors@R: c(
 	person('Miquel', 'De Cáceres', role=c('aut','cre'),
 	email='miquelcaceres@gmail.com'),
 	person('Shengli', 'Huang', role='aut'),
 	person('Víctor', 'Granda', role='aut'),
-	person('Antoine', 'Cabon', role='aut'))
+	person('Antoine', 'Cabon', role='aut'),
+	person('Jordi', 'Martínez-Vilalta', role='ctb'),
+	person('Maurizio', 'Mencuccini', role='ctb'),
+	person('Nicolas', 'Martin-StPaul', role='ctb'))
 Description: Functions to simulate Mediterranean forest functioning and dynamics using cohort-based description of vegetation [De Caceres et al. (2015) <doi:10.1016/j.agrformet.2015.06.012>].
 License: GPL (>= 2)
 URL: https://vegmod.github.io/software/medfate

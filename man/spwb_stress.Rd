@@ -9,7 +9,6 @@ Allows calculating annual-based or monthly-based drought stress indices from \co
 \usage{
 spwb_stress(x, index = "NDD", freq = "years", bySpecies = FALSE, draw = TRUE)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{An object of class \code{spwb}.}
   \item{index}{A string with the index to be calculated, either \code{"DI"}, \code{"NDD"}, \code{"ADS"}, \code{"MDS"} or \code{"WSI"} (see details).}

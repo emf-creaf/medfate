@@ -33,7 +33,6 @@ data(SpParamsMED)
 SpParamsMED$RGRmax=0.003
 
 control = defaultControl()
-control$storagePool="one"
 control$verbose = FALSE
 
 @

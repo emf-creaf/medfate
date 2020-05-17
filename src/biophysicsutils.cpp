@@ -23,6 +23,17 @@ IntegerVector date2doy(CharacterVector dateStrings) {
   return(doy);
 }
 
+NumericVector date2photoperiod(CharacterVector dateStrings, double latitude) {
+  NumericVector photoperiod(dateStrings.size());
+  //Derive photoperiod from date and latitude
+  for(int i=0;i<dateStrings.size();i++) {
+    std::string c = as<std::string>(dateStrings[i]);
+    int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
+    double delta = meteoland::radiation_solarDeclination(J);
+    photoperiod[i] = meteoland::radiation_daylength(latitude, 0.0, 0.0, delta);
+  }
+  return(photoperiod);
+}
 
 /**
  * Returns the proportion of daily radiation corresponding to the input time 
@@ -52,15 +63,27 @@ double radiationDiurnalPattern(double t, double daylength) {
  * Forest Ecology and Management 30:381–413.
  */
 // [[Rcpp::export("biophysics_temperatureDiurnalPattern")]]
-double temperatureDiurnalPattern(double t, double tmin, double tmax, double daylength) {
+double temperatureDiurnalPattern(double t, double tmin, double tmax, 
+                                 double tminPrev, double tmaxPrev, double tminNext, double daylength) {
   double temp;
-  if((t<0) | (t>daylength)) {
-    if(t<0) t = t + 86400.0;
-    t = t - daylength;
+  if((t<0.0) | (t>daylength)) {
     double tfin = 86400.0-daylength;
-    temp = (0.5*(tmax-tmin)*(1.0-(t/tfin)) + tmin*(t/tfin));
+    if(t<0.0) {
+      t = t + 86400.0 - daylength;
+      temp = (0.5*(tmaxPrev+tminPrev)*(1.0-(t/tfin)) + tmin*(t/tfin));
+      // Rcout<< t << " dl "<< daylength <<" ("<< tminPrev<< ", "<< tmaxPrev<<") ("<< tmin<< ", "<<tmax<<") to ("<<tminNext<<",) ";
+      // Rcout << " from prev tfin "<< tfin<< " ratio "<< t/tfin;
+    } else {
+      t = t - daylength;
+      temp = (0.5*(tmax+tmin)*(1.0-(t/tfin)) + tminNext*(t/tfin));
+      // Rcout<< t << " dl "<< daylength <<" ("<< tminPrev<< ", "<< tmaxPrev<<") ("<< tmin<< ", "<<tmax<<") to ("<<tminNext<<",) ";
+      // Rcout << " to next tfin "<< tfin<< " ratio "<< t/tfin;
+    }
+    // Rcout<<" "<< temp <<"\n";
   } else {
-    temp = 0.5*(tmin+tmax-(tmax-tmin)*cos(1.5*PI*t/daylength));
+    double ct = cos(1.5*PI*t/daylength);
+    temp = 0.5*(tmin+tmax-(tmax-tmin)*ct);
+    // Rcout<<" t "<< t << " dl "<< daylength << " ct "<<ct <<" "<< 0.5*(tmax+tmin)<<" "<<temp <<"\n";
   }
   return(temp);
 }
@@ -100,3 +123,17 @@ double irradianceToPhotonFlux(double I, double lambda = 546.6507) {
   return(I*lambda*0.836*1e-2);
 }
 
+/**
+ * Vogel equation for liquid dynamic viscosity (= 1 for 20ºC) (= 1/fluidity)
+ * 
+ * Hervé Cochard. A new mechanism for tree mortality due to drought and heatwaves. BioRxiv, 2019,
+ *  pp.531632. ff10.1101/531632ff. ffhal-02273372f
+ *  empirical equation for fluidity = 1/viscosity = 1.012e-4*pow(T,2.0) + 2.042e-2*T + 5.518e-1
+ *  where T in degrees C
+ *  
+ *  temp - Temperature in degrees C
+ */
+// [[Rcpp::export("biophysics_waterDynamicViscosity")]]
+double waterDynamicViscosity(double temp) {
+  return(exp(-3.7188+(578.919/(-137.546+ temp + 273.15))));
+}

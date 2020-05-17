@@ -1,16 +1,13 @@
 \encoding{UTF-8}
 \name{growth}
 \alias{growth}
-
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{Forest growth}
 \description{
 Function \code{growth} is a forest growth model that calculates changes in leaf area, sapwood area and structural variables for all plant cohorts in a given forest stand during a period specified in the input climatic data. 
 }
 \usage{
-growth(x, soil, meteo,  latitude = NA, elevation = NA, slope = NA, aspect = NA) 
+growth(x, soil, meteo,  latitude, elevation = NA, slope = NA, aspect = NA) 
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{An object of class \code{\link{growthInput}}.}
   \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
@@ -77,7 +74,7 @@ growth(x, soil, meteo,  latitude = NA, elevation = NA, slope = NA, aspect = NA)
           \item{\code{"LgroundSWR"}: The proportion of SWR that reaches the ground (accounting for leaf phenology).}
       }
   \item{\code{"PlantTranspiration"}: A data frame with the amount of daily transpiration (in mm) for each plant cohort. Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
-  \item{\code{"PlantPhotosynthesis"}: A data frame with the amount of daily photosynthesis (in g C · m-2) for each plant cohort. Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
+  \item{\code{"PlantGrossPhotosynthesis"}: A data frame with the amount of daily gross photosynthesis (in g C · m-2) for each plant cohort. Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
   \item{\code{"PlantRespiration"}: A data frame with the amount of daily maintenance respiration (in g C · m-2) for each plant cohort. Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
   \item{\code{"PlantCStorageFast"}: A data frame with the daily amount of fast-dynamics carbon reserves (as proportion of total storage capacity) for an average individual of each plant cohort. Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
   \item{\code{"PlantCStorageSlow"}: A data frame with the daily amount of slow-dynamics carbon reserves (as proportion of total storage capacity) for an average individual of each plant cohort. Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
@@ -98,7 +95,7 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 Objects \code{x} and \code{soil} are modified during the simulation.   
 }
 \seealso{
-\code{\link{growthInput}}, \code{\link{forest}}
+\code{\link{growthInput}}, \code{\link{growth_day}}, \code{\link{plot.growth}}
 }
 \examples{
 #Load example daily meteorological data
@@ -120,6 +117,6 @@ control = defaultControl()
 x = forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
 #Call simulation function
-G1<-growth(x, examplesoil, examplemeteo, elevation = 100)
+G1<-growth(x, examplesoil, examplemeteo, latitude = 41.82592, elevation = 100)
  
 }

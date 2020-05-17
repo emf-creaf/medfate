@@ -1,50 +1,55 @@
-plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
-                    xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, ...) {
-  dates = as.Date(rownames(x$WaterBalance))
+
+.averageBySpecies<-function(OM, spnames) {
+  if(ncol(OM)>1) OM = t(apply(OM,1, tapply, spnames, sum, na.rm=T))
+  else colnames(OM) = spnames[1]
+  return(OM)
+}
+.averageByLAISpecies<-function(OM, PlantsLAI, spnames) {
+  if(ncol(OM)>1) {
+    lai1 = t(apply(PlantsLAI,1, tapply, spnames, sum))
+    m1 = t(apply(PlantsLAI * OM,1, tapply, spnames, sum))
+    OM = m1/lai1
+    OM[lai1==0] = NA
+  }
+  else colnames(OM) = spnames[1]
+  return(OM)
+}
+plot.spwb<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = FALSE,
+                    dates = NULL, subdaily = FALSE, 
+                    xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL,...) {
   
-  input = x$spwbInput
+  if(subdaily) return(.plotsubdaily(x,type, cohorts, bySpecies, dates, 
+                                    xlim, ylim, xlab, ylab))
+  
+  if(("spwb" %in% class(x)) || ("pwb" %in% class(x))) {
+    input = x$spwbInput
+  } else {
+    input = x$growthInput
+  }
+  
   soilInput = x$soilInput
-  
   WaterBalance = x$WaterBalance
   Soil = x$Soil
   Stand = x$Stand
+  Plants = x$Plants
+  
   nlayers = length(soilInput$W)
   
   transpMode = input$control$transpirationMode
-  
-  TYPES = c("PET_Precipitation","PET_NetRain","Snow","Evapotranspiration",
-            "SoilPsi","SoilTheta","SoilRWC","SoilVol", 
-            "Export", "LAI", "WTD",
-            "PlantExtraction","PlantLAI",
-            "PlantStress", "PlantPsi","PlantPhotosynthesis", "PlantTranspiration", "PlantWUE",
-            "PlantPhotosynthesisPerLeaf","PlantTranspirationPerLeaf")
-  if(transpMode=="Sperry") {
-    TYPES = c("PET_Precipitation","PET_NetRain","Snow","Evapotranspiration",
-              "SoilPsi","SoilTheta", "SoilRWC", "SoilVol", 
-              "Export", "LAI", "WTD",
-              "PlantExtraction","HydraulicRedistribution",
-              "PlantLAI",
-              "SoilPlantConductance","PlantStress", 
-              "PlantPhotosynthesis", "PlantTranspiration","PlantWUE",
-              "PlantPhotosynthesisPerLeaf","PlantTranspirationPerLeaf", 
-              "LeafPsiMin", "LeafPsiMax", "LeafPsiMin_SL", "LeafPsiMax_SL", "LeafPsiMin_SH", "LeafPsiMax_SH",
-              "StemPsi","RootPsi","StemPLC", "StemRWC", "LeafRWC", 
-              "PlantWaterBalance",
-              "PlantAbsorbedSWR", "PlantAbsorbedSWRPerLeaf",
-              "PlantAbsorbedLWR", "PlantAbsorbedLWRPerLeaf",
-              "AirTemperature","SoilTemperature", "CanopyTemperature",
-              "CanopyEnergyBalance", "SoilEnergyBalance")
-  } 
+
+  TYPES = .getDailySPWBPlotTypes(transpMode)  
+
   type = match.arg(type,TYPES)  
   if(is.null(xlab)) xlab = ""
   if(type=="PET_Precipitation") {
     if(is.null(ylab)) ylab = expression(L%.%m^{-2})
     if(is.null(ylab)) ylab = expression(L%.%m^{-2}) 
-    df = data.frame(row.names=row.names(x$WaterBalance))
-    df[["PET"]] = x$WaterBalance$PET
-    df[["Precipitation"]] = x$WaterBalance$Precipitation
-    df[["Snow"]] = x$WaterBalance$Snow
-    df[["Date"]] = as.Date(row.names(x$WaterBalance))
+    df = data.frame(row.names=row.names(WaterBalance))
+    df[["PET"]] = WaterBalance$PET
+    df[["Precipitation"]] = WaterBalance$Precipitation
+    df[["Snow"]] = WaterBalance$Snow
+    df[["Date"]] = as.Date(row.names(WaterBalance))
+    if(!is.null(dates)) df = df[df$Date %in% dates,]
     Date = df$Date
     Snow = df$Snow
     Precipitation = df$Precipitation
@@ -60,10 +65,11 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
   } 
   else if(type=="PET_NetRain") {
     if(is.null(ylab)) ylab = expression(L%.%m^{-2}) 
-    df = data.frame(row.names=row.names(x$WaterBalance))
-    df[["PET"]] = x$WaterBalance$PET
-    df[["NetRain"]] = x$WaterBalance$NetRain
-    df[["Date"]] = as.Date(row.names(x$WaterBalance))
+    df = data.frame(row.names=row.names(WaterBalance))
+    df[["PET"]] = WaterBalance$PET
+    df[["NetRain"]] = WaterBalance$NetRain
+    df[["Date"]] = as.Date(row.names(WaterBalance))
+    if(!is.null(dates)) df = df[df$Date %in% dates,]
     Date = df$Date
     PET = df$PET
     NetRain = df$NetRain
@@ -78,10 +84,11 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
   } 
   else if(type=="Snow") {
     if(is.null(ylab)) ylab = expression(L%.%m^{-2})  
-    df = data.frame(row.names=row.names(x$WaterBalance))
-    df[["Snow"]] = x$WaterBalance$Snow
-    df[["Snowpack"]] = x$Soil$SWE
-    df[["Date"]] = as.Date(row.names(x$WaterBalance))
+    df = data.frame(row.names=row.names(WaterBalance))
+    df[["Snow"]] = WaterBalance$Snow
+    df[["Snowpack"]] = Soil$SWE
+    df[["Date"]] = as.Date(row.names(WaterBalance))
+    if(!is.null(dates)) df = df[df$Date %in% dates,]
     Date = df$Date
     Snow = df$Swow
     Snowpack = df$Snowpack
@@ -96,30 +103,29 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
   } 
   else if(type=="Evapotranspiration") {
     if(is.null(ylab)) ylab = expression(L%.%m^{-2})
-    df = data.frame(row.names=row.names(x$WaterBalance))
-    df[["Total evapotranspiration"]] = x$WaterBalance$Evapotranspiration
-    df[["Interception evaporation"]] = x$WaterBalance$Interception
-    df[["Plant transpiration"]] = x$WaterBalance$Transpiration
-    df[["Bare soil evaporation"]] = x$WaterBalance$SoilEvaporation
+    df = data.frame(row.names=row.names(WaterBalance))
+    df[["Total evapotranspiration"]] = WaterBalance$Evapotranspiration
+    df[["Interception evaporation"]] = WaterBalance$Interception
+    df[["Plant transpiration"]] = WaterBalance$Transpiration
+    df[["Bare soil evaporation"]] = WaterBalance$SoilEvaporation
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
     return(.multiple_dynamics(as.matrix(df), ylab=ylab, xlab=xlab, ylim = ylim))
-  } 
-  else if(type=="LAI") {
-    if(is.null(ylab)) ylab = expression(paste("Leaf Area Index   ",(m^{2}%.%m^{-2})))
-    return(.multiple_dynamics(as.matrix(Stand[,c("LAIcell", "LAIcelldead")]), ylab = ylab, ylim = ylim))
   } 
   else if(type=="WTD") {
     if(is.null(ylab)) ylab = expression(paste("Water table depth  (mm)"))
     xv = Soil$WTD
     names(xv) = row.names(Soil)
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
     return(.single_dynamics(xv, ylab = ylab, ylim = ylim))
   } 
   else if(type=="Export") {
     if(is.null(ylab)) ylab =  expression(L%.%m^{-2})    
-    df = data.frame(row.names=row.names(x$WaterBalance))
-    df[["Export"]] = x$WaterBalance$DeepDrainage + x$WaterBalance$Runoff
-    df[["DeepDrainage"]] = x$WaterBalance$DeepDrainage
-    df[["Runoff"]] = x$WaterBalance$Runoff 
-    df[["Date"]]= as.Date(row.names(x$WaterBalance))
+    df = data.frame(row.names=row.names(WaterBalance))
+    df[["Export"]] = WaterBalance$DeepDrainage + WaterBalance$Runoff
+    df[["DeepDrainage"]] = WaterBalance$DeepDrainage
+    df[["Runoff"]] = WaterBalance$Runoff 
+    df[["Date"]]= as.Date(row.names(WaterBalance))
+    if(!is.null(dates)) df = df[df$Date %in% dates,]
     Date = df$Date
     Export = df$Export
     DeepDrainage = df$DeepDrainage
@@ -137,59 +143,59 @@ plot.spwb<-function(x, type="PET_Precipitation", bySpecies = FALSE,
     if(is.null(ylab)) ylab = "Soil water content (mm)"
     MLM = data.frame("Total" = Soil$MLTot, 
                      Soil[,paste("ML",1:nlayers,sep=".")])
+    if(!is.null(dates)) MLM = MLM[row.names(MLM) %in% as.character(dates),]
     return(.multiple_dynamics(as.matrix(MLM), ylab = ylab, ylim = ylim,
                               xlab=xlab, labels = c("Total", paste("Layer", 1:nlayers))))
   } 
   else {
-    plot.pwb(x, type=type, bySpecies = bySpecies,
-             xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, ...)
+    plot.pwb(x, type=type, cohorts = cohorts, bySpecies = bySpecies,
+             dates = dates, xlim = xlim, ylim=ylim, xlab=xlab, ylab=ylab, ...)
   }
 }
 
-plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
+plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FALSE,
+                   dates = NULL, subdaily = FALSE,
                    xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, ...) {
-  dates = as.Date(rownames(x$WaterBalance))
   
-  input = x$spwbInput
+  if(subdaily) return(.plotsubdaily(x,type, cohorts, bySpecies, dates, 
+                                    xlim, ylim, xlab, ylab))
+  
+  if(("spwb" %in% class(x)) || ("pwb" %in% class(x))) {
+    input = x$spwbInput
+  } else {
+    input = x$growthInput
+  }
   soilInput = x$soilInput
   
   WaterBalance = x$WaterBalance
   Soil = x$Soil
   Stand = x$Stand
+  Plants = x$Plants
+  SunlitLeaves = x$SunlitLeaves
+  ShadeLeaves = x$ShadeLeaves
+  
   nlayers = length(soilInput$W)
   
   transpMode = input$control$transpirationMode
   
-  TYPES = c("SoilPsi","SoilTheta", "SoilRWC",
-            "PlantExtraction","PlantLAI",
-            "PlantStress", "PlantPsi","PlantPhotosynthesis", "PlantTranspiration", "PlantWUE",
-            "PlantPhotosynthesisPerLeaf","PlantTranspirationPerLeaf")
-  if(transpMode=="Sperry") {
-    TYPES = c("SoilPsi","SoilTheta", "SoilRWC",
-              "PlantExtraction","HydraulicRedistribution",
-              "PlantLAI",
-              "SoilPlantConductance","PlantStress", 
-              "PlantPhotosynthesis", "PlantTranspiration","PlantWUE",
-              "PlantPhotosynthesisPerLeaf","PlantTranspirationPerLeaf", 
-              "LeafPsiMin", "LeafPsiMax", "LeafPsiMin_SL", "LeafPsiMax_SL", "LeafPsiMin_SH", "LeafPsiMax_SH",
-              "StemPsi","RootPsi","StemPLC", "StemRWC", "LeafRWC", 
-              "PlantWaterBalance",
-              "PlantAbsorbedSWR", "PlantAbsorbedSWRPerLeaf",
-              "PlantAbsorbedLWR", "PlantAbsorbedLWRPerLeaf",
-              "AirTemperature","SoilTemperature", "CanopyTemperature",
-              "CanopyEnergyBalance", "SoilEnergyBalance")
-  } 
+  if(is.null(cohorts))  cohorts = row.names(input$cohorts)
+  spnames = as.character(input$cohorts[cohorts,"Name"])
+  PlantsLAI = Plants$LAI[,cohorts, drop=FALSE]
+  
+  TYPES = .getDailyPWBPlotTypes(transpMode)
   type = match.arg(type,TYPES)  
   if(is.null(xlab)) xlab = ""  
   
   if(type=="SoilPsi") {
     PsiM = Soil[,paste("psi",1:nlayers,sep=".")]
     if(is.null(ylab)) ylab = "Soil water potential (MPa)"    
+    if(!is.null(dates)) PsiM = PsiM[row.names(PsiM) %in% as.character(dates),]
     return(.multiple_dynamics(as.matrix(PsiM),  xlab = xlab, ylab = ylab, ylim = ylim,
                               labels = paste("Layer", 1:nlayers)))
   } 
   else if(type=="SoilTheta") {
     WM = Soil[,paste("W",1:nlayers,sep=".")]
+    if(!is.null(dates)) WM = WM[row.names(WM) %in% as.character(dates),]
     theta_FC = soil_thetaFC(soilInput, model = input$control$soilFunctions)
     WM = 100*sweep(WM, 2,theta_FC, "*")
     if(is.null(ylab)) ylab = "Soil moisture (% volume)"
@@ -198,12 +204,21 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
   } 
   else if(type=="SoilRWC") {
     WM = Soil[,paste("W",1:nlayers,sep=".")]
+    if(!is.null(dates)) WM = WM[row.names(WM) %in% as.character(dates),]
     if(is.null(ylab)) ylab = "Soil moisture (% field capacity)"
     return(.multiple_dynamics(as.matrix(WM),  xlab = xlab, ylab = ylab, ylim = ylim,
                               labels = paste("Layer", 1:nlayers)))
   } 
+  else if(type=="LAI") {
+    if(is.null(ylab)) ylab = expression(paste("Leaf Area Index   ",(m^{2}%.%m^{-2})))
+    df = Stand[,c("LAI", "LAIexpanded", "LAIdead")]
+    names(df)<-c("Total (live+dead)", "Live unfolded","Dead standing")
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
+    return(.multiple_dynamics(as.matrix(df), ylab = ylab, ylim = ylim))
+  } 
   else if(type=="PlantExtraction") {
     extrBal = Soil[,paste("PlantExt",1:nlayers,sep=".")]
+    if(!is.null(dates)) extrBal = extrBal[row.names(extrBal) %in% as.character(dates),]
     if(is.null(ylab)) ylab = "Extraction from soil layer (mm)"    
     g<-.multiple_dynamics(as.matrix(extrBal),  xlab = xlab, ylab = ylab, ylim = ylim,
                               labels = paste("Layer", 1:nlayers))
@@ -212,272 +227,113 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
   } 
   else if(type=="HydraulicRedistribution") {
     hydrIn = Soil[,paste("HydraulicInput",1:nlayers,sep=".")]
+    if(!is.null(dates)) hydrIn = hydrIn[row.names(hydrIn) %in% as.character(dates),]
     if(is.null(ylab)) ylab = "Hydraulic input (mm)"    
     return(.multiple_dynamics(as.matrix(hydrIn),  xlab = xlab, ylab = ylab, ylim = ylim,
                               labels = paste("Layer", 1:nlayers)))
   } 
   else if(type=="PlantLAI") {
-    OM = x$PlantLAI
-    if(bySpecies) {
-      OM = t(apply(OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
-    } 
+    OM = PlantsLAI
+    if(bySpecies) OM = .averageBySpecies(OM, spnames)
+    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     if(is.null(ylab)) ylab = expression(paste("Leaf Area Index   ",(m^{2}%.%m^{-2})))
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="SoilPlantConductance") {
-    OM = x$dEdP
-    if(bySpecies) {
-      lai1 = t(apply(x$PlantLAI,1, tapply, input$cohorts$Name, sum))
-      m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum))
-      OM = m1/lai1
-      OM[lai1==0] = NA
-    } 
+    OM = Plants$dEdP[,cohorts,drop=FALSE]
+    if(bySpecies) OM = .averageByLAISpecies(OM, PlantsLAI, spnames)
+    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     if(is.null(ylab)) ylab = expression(paste("Average soil-plant conductance ",(mmol%.%m^{-2}%.%s^{-1})))
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
-  else if(type=="PlantStress") {
-    OM = x$PlantStress
-    if(bySpecies) {
-      lai1 = t(apply(x$PlantLAI,1, tapply, input$cohorts$Name, sum))
-      m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum))
-      OM = m1/lai1
-      OM[lai1==0] = NA
-    } 
-    if(is.null(ylab)) ylab = "Drought stress [0-1]"
-    if(is.null(ylim)) ylim = c(0,1)
+  else if(type %in% c("StemPLC", "StemRWC", "LeafRWC", "StemSympRWC", "LeafSympRWC")) {
+    OM = Plants[[type]][,cohorts,drop=FALSE]*100
+    if(bySpecies) OM = .averageByLAISpecies(OM, PlantsLAI, spnames)
+    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
+    if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
-  else if(type=="StemPLC") {
-    OM = x$StemPLC*100
-    if(bySpecies) {
-      lai1 = t(apply(x$PlantLAI,1, tapply, input$cohorts$Name, sum))
-      m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum))
-      OM = m1/lai1
-      OM[lai1==0] = NA
-    } 
-    if(is.null(ylab)) ylab = "Percent loss conductance in stem [%]"
+  else if(type %in% c("PlantPsi", "LeafPsiMin","LeafPsiMax", "StemPsi", "RootPsi", "PlantStress")) {
+    OM = Plants[[type]][,cohorts,drop=FALSE]
+    if(bySpecies) OM = .averageByLAISpecies(OM, PlantsLAI, spnames)
+    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
+    if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
-  else if(type=="StemRWC") {
-    OM = x$StemRWC*100
+  else if(type == "LeafPsiRange") {
+    OM1 = Plants$LeafPsiMax[,cohorts,drop=FALSE]
+    OM2 = Plants$LeafPsiMin[,cohorts,drop=FALSE]
     if(bySpecies) {
-      lai1 = t(apply(x$PlantLAI,1, tapply, input$cohorts$Name, sum))
-      m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum))
-      OM = m1/lai1
-      OM[lai1==0] = NA
+      OM1 = .averageByLAISpecies(OM1, PlantsLAI, spnames)
+      OM2 = .averageByLAISpecies(OM2, PlantsLAI, spnames)
     } 
-    if(is.null(ylab)) ylab = "Relative water content in stem [%]"
-    return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
-  } 
-  else if(type=="LeafRWC") {
-    OM = x$LeafRWC*100
-    if(bySpecies) {
-      lai1 = t(apply(x$PlantLAI,1, tapply, input$cohorts$Name, sum))
-      m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum))
-      OM = m1/lai1
-      OM[lai1==0] = NA
-    } 
-    if(is.null(ylab)) ylab = "Relative water content in leaf [%]"
-    return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
-  } 
-  else if(type=="PlantPsi") {
-    OM = x$PlantPsi
-    if(bySpecies) {
-      lai1 = t(apply(x$PlantLAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      OM = m1/lai1
-      OM[lai1==0] = NA
-    } 
-    if(is.null(ylab)) ylab = "Plant water potential (MPa)"
-    return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
-  } 
-  else if(type=="LeafPsiMin") {
-    OM = x$LeafPsiMin
-    if(bySpecies) {
-      lai1 = t(apply(x$PlantLAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      OM = m1/lai1
-      OM[lai1==0] = NA
-    } 
-    if(is.null(ylab)) ylab = "Minimum (midday) leaf water potential (MPa)"
-    return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
-  } 
-  else if(type=="LeafPsiMax") {
-    OM = x$LeafPsiMax
-    if(bySpecies) {
-      lai1 = t(apply(x$PlantLAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      OM = m1/lai1
-      OM[lai1==0] = NA
-    } 
-    if(is.null(ylab)) ylab = "Maximum (predawn) leaf water potential (MPa)"
-    return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
-  } 
-  else if(type=="LeafPsiMin_SL") {
-    OM = x$LeafPsiMin_SL
-    if(bySpecies) {
-      lai1 = t(apply(x$PlantLAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      OM = m1/lai1
-      OM[lai1==0] = NA
-    } 
-    if(is.null(ylab)) ylab = "Minimum (midday) sunlit leaf water potential (MPa)"
-    return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
-  } 
-  else if(type=="LeafPsiMax_SL") {
-    OM = x$LeafPsiMax_SL
-    if(bySpecies) {
-      lai1 = t(apply(x$PlantLAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      OM = m1/lai1
-      OM[lai1==0] = NA
-    } 
-    if(is.null(ylab)) ylab = "Maximum (predawn) sunlit leaf water potential (MPa)"
-    return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
-  } 
-  else if(type=="LeafPsiMin_SH") {
-    OM = x$LeafPsiMin_SH
-    if(bySpecies) {
-      lai1 = t(apply(x$PlantLAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      OM = m1/lai1
-      OM[lai1==0] = NA
-    } 
-    if(is.null(ylab)) ylab = "Minimum (midday) shade leaf water potential (MPa)"
-    return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
-  } 
-  else if(type=="LeafPsiMax_SH") {
-    OM = x$LeafPsiMax_SH
-    if(bySpecies) {
-      lai1 = t(apply(x$PlantLAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      OM = m1/lai1
-      OM[lai1==0] = NA
-    } 
-    if(is.null(ylab)) ylab = "Maximum (predawn) shade leaf water potential (MPa)"
-    return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
-  }
-  else if(type=="StemPsi") {
-    OM = x$StemPsi
-    if(bySpecies) {
-      lai1 = t(apply(x$PlantLAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      OM = m1/lai1
-      OM[lai1==0] = NA
-    } 
-    if(is.null(ylab)) ylab = "Midday stem water potential (MPa)"
-    return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
-  } 
-  else if(type=="RootPsi") {
-    OM = x$RootPsi
-    if(bySpecies) {
-      lai1 = t(apply(x$PlantLAI,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      m1 = t(apply(x$PlantLAI * OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
-      OM = m1/lai1
-      OM[lai1==0] = NA
-    } 
-    if(is.null(ylab)) ylab = "Midday root crown water potential (MPa)"
-    return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
-  } 
-  else if(type=="PlantTranspiration") {
-    OM = x$PlantTranspiration
-    if(bySpecies) {
-      OM = t(apply(OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
-    } 
-    if(is.null(ylab)) ylab = expression(paste("Plant transpiration   ",(L%.%m^{-2})))
-    return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
-  } 
-  else if(type=="PlantTranspirationPerLeaf") {
-    df = x$PlantTranspiration
-    if(bySpecies) {
-      m1 = apply(df,1, tapply, input$cohorts$Name, sum, na.rm=T)
-      lai1 = apply(x$PlantLAI,1,tapply, input$cohorts$Name, sum, na.rm=T)
-      df = t(m1/lai1)
-    } else {
-      df = df/x$PlantLAI
-      df[x$PlantLAI==0] = NA
+    if(!is.null(dates)) {
+      OM1 = OM1[row.names(OM1) %in% as.character(dates),]
+      OM2 = OM2[row.names(OM2) %in% as.character(dates),]
     }
-    if(is.null(ylab)) ylab = expression(paste("Plant transpiration per leaf area  ",(L%.%m^{-2})))
-    return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab = ylab, ylim = ylim))
+    return(.multiple_dynamics_range(as.matrix(OM1), as.matrix(OM2),  xlab = xlab, ylab = ylab, ylim = ylim))
+  }
+  else if(type %in% c("LeafPsiMin_SL", "LeafPsiMax_SL", "GW_SL")) {
+    subType = strsplit(type,"_")[[1]][1]
+    OM = SunlitLeaves[[subType]][,cohorts,drop=FALSE]
+    if(bySpecies) OM = .averageByLAISpecies(OM, PlantsLAI, spnames)
+    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
+    if(is.null(ylab)) ylab = .getYLab(type)
+    return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
+  } 
+  else if(type %in% c("LeafPsiMin_SH", "LeafPsiMax_SH", "GW_SH")) {
+    subType = strsplit(type,"_")[[1]][1]
+    OM = ShadeLeaves[[subType]][,cohorts,drop=FALSE]
+    if(bySpecies) OM = .averageByLAISpecies(OM, PlantsLAI, spnames)
+    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
+    if(is.null(ylab)) ylab = .getYLab(type)
+    return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
+  } 
+  else if(type %in% c("PlantTranspiration","PlantNetPhotosynthesis", "PlantGrossPhotosynthesis","PlantPhotosynthesis",
+                      "PlantAbsorbedSWR","PlantAbsorbedLWR")) {
+    subtype = substr(type,6,nchar(type))
+    OM = Plants[[subtype]][,cohorts,drop=FALSE]
+    if(bySpecies) OM = .averageBySpecies(OM, spnames)
+    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
+    if(is.null(ylab)) ylab = .getYLab(type)
+    return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="PlantWaterBalance") {
-    OM = x$PlantWaterBalance
-    if(bySpecies) {
-      OM = t(apply(OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
-    } 
+    OM = Plants$PlantWaterBalance[,cohorts,drop=FALSE]
+    if(bySpecies) OM = .averageBySpecies(OM, spnames)
     if(is.null(ylab)) ylab = expression(paste("Plant water balance   ",(L%.%m^{-2})))
+    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
-  else if(type=="PlantPhotosynthesis") {
-    df = x$PlantPhotosynthesis
-    if(bySpecies) {
-      df = t(apply(df,1, tapply, input$cohorts$Name, sum, na.rm=T))
-    } 
-    if(is.null(ylab)) ylab = expression(paste("Plant photosynthesis   ",(g*C%.%m^{-2})))
-    return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab = ylab, ylim = ylim))
-  } 
-  else if(type=="PlantPhotosynthesisPerLeaf") {
-    df = x$PlantPhotosynthesis
-    if(bySpecies) {
-      m1 = apply(df,1, tapply, input$cohorts$Name, sum, na.rm=T)
-      lai1 = apply(x$PlantLAI,1,tapply, input$cohorts$Name, sum, na.rm=T)
-      df = t(m1/lai1)
-    } else {
-      df = df/x$PlantLAI
-      df[x$PlantLAI==0] = NA
-    }
-    if(is.null(ylab)) ylab = expression(paste("Plant photosynthesis per leaf area   ",(g*C%.%m^{-2})))
+  else if(type %in% c("TranspirationPerLeaf","PhotosynthesisPerLeaf", "GrossPhotosynthesisPerLeaf", "NetPhotosynthesisPerLeaf",
+                      "AbsorbedSWRPerLeaf", "AbsorbedLWRPerLeaf")) {
+    subtype = substr(type, 1, nchar(type)-7)
+    df = Plants[[subtype]][,cohorts,drop=FALSE]
+    df = df/PlantsLAI
+    df[PlantsLAI==0] = NA
+    if(bySpecies) df = .averageByLAISpecies(df, PlantsLAI, spnames)
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
+    if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="PlantWUE") {
-    OM = x$PlantPhotosynthesis/x$PlantTranspiration
-    if(bySpecies) {
-      OM = t(apply(OM,1, tapply, input$cohorts$Name, sum, na.rm=T))
-    } 
+    if("Photosynthesis" %in% names(Plants)) OM = Plants$Photosynthesis/Plants$Transpiration
+    else OM = Plants$GrossPhotosynthesis/Plants$Transpiration
+    OM[Plants$Transpiration==0] = 0
+    OM = OM[,cohorts,drop=FALSE]
+    if(bySpecies) OM = .averageBySpecies(OM, spnames)
+    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     if(is.null(ylab)) ylab = expression(paste("Plant daily WUE   ",(g*C%.%L^{-1})))
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
-  else if(type=="PlantAbsorbedSWR") {
-    df = x$PlantAbsorbedSWR
-    if(bySpecies) {
-      df = t(apply(df,1, tapply, input$cohorts$Name, sum, na.rm=T))
-    } 
-    if(is.null(ylab)) ylab = expression(paste("Plant absorbed SWR  ",(MJ%.%m^{-2})))
-    return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab = ylab, ylim = ylim))
-  } 
-  else if(type=="PlantAbsorbedSWRPerLeaf") {
-    df = x$PlantAbsorbedSWR
-    if(bySpecies) {
-      m1 = apply(df,1, tapply, input$cohorts$Name, sum, na.rm=T)
-      lai1 = apply(x$PlantLAI,1,tapply, input$cohorts$Name, sum, na.rm=T)
-      df = t(m1/lai1)
-    } else {
-      df = df/x$PlantLAI
-      df[x$PlantLAI==0] = NA
-    }
-    if(is.null(ylab)) ylab = expression(paste("Plant absorbed SWR per leaf area  ",(MJ%.%m^{-2})))
-    return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab = ylab, ylim = ylim))
-  } 
-  else if(type=="PlantAbsorbedLWR") {
-    df = x$PlantAbsorbedLWR
-    if(bySpecies) {
-      df = t(apply(df,1, tapply, input$cohorts$Name, sum, na.rm=T))
-    } 
-    if(is.null(ylab)) ylab = expression(paste("Plant absorbed LWR  ",(MJ%.%m^{-2})))
-    return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab = ylab, ylim = ylim))
-  } 
-  else if(type=="PlantAbsorbedLWRPerLeaf") {
-    df = x$PlantAbsorbedLWR
-    if(bySpecies) {
-      m1 = apply(df,1, tapply, input$cohorts$Name, sum, na.rm=T)
-      lai1 = apply(x$PlantLAI,1,tapply, input$cohorts$Name, sum, na.rm=T)
-      df = t(m1/lai1)
-    } else {
-      df = df/x$PlantLAI
-      df[x$PlantLAI==0] = NA
-    }
-    if(is.null(ylab)) ylab = expression(paste("Plant absorbed LWR per leaf area  ",(MJ%.%m^{-2})))
-    return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab = ylab, ylim = ylim))
+  else if(type=="Temperature") {
+    if(is.null(ylab)) ylab = "Temperature (Celsius)"
+    df = data.frame(row.names=row.names(x$Temperature))
+    df[["Above-canopy"]] = x$Temperature$Tatm_mean
+    df[["Inside-canopy"]] = x$Temperature$Tcan_mean
+    df[["Soil"]] = x$Temperature$Tsoil_mean
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
+    return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim))
   } 
   else if(type=="AirTemperature") {
     if(is.null(ylab)) ylab = "Above-canopy temperature (Celsius)"
@@ -485,6 +341,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     df[["Mean"]] = x$Temperature$Tatm_mean
     df[["Minimum"]] = x$Temperature$Tatm_min
     df[["Maximum"]] = x$Temperature$Tatm_max
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim))
   } 
   else if(type=="CanopyTemperature") {
@@ -493,6 +350,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     df[["Mean"]] = x$Temperature$Tcan_mean
     df[["Minimum"]] = x$Temperature$Tcan_min
     df[["Maximum"]] = x$Temperature$Tcan_max
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim))
   } 
   else if(type=="SoilTemperature") {
@@ -501,6 +359,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     df[["Mean"]] = x$Temperature$Tsoil_mean
     df[["Minimum"]] = x$Temperature$Tsoil_min
     df[["Maximum"]] = x$Temperature$Tsoil_max
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim))
   } 
   else if(type=="CanopyEnergyBalance") {
@@ -514,6 +373,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     df[["Latent heat"]] = -x$EnergyBalance$LEcan
     df[["Convection can./atm."]] = -x$EnergyBalance$Hcan
     df[["Convection soil/can."]] = -x$EnergyBalance$Hcansoil
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
     g<-.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim)
     return(g)
     # lines(dates, x$EnergyBalance$Ebalcan, col="black",...)
@@ -538,6 +398,7 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     df[["LWR emmited"]] = -x$EnergyBalance$LWRsoilout
     df[["Convection soil/can."]] = x$EnergyBalance$Hcansoil
     df[["Latent heat"]] = -x$EnergyBalance$LEsoil
+    if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
     g<-.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim)
     return(g)
     # lines(dates, x$EnergyBalance$Ebalsoil, col="black",...)
@@ -550,4 +411,190 @@ plot.pwb<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     # legend("topright", bty="n", col=c("red","brown","orange", "blue", "green", "gray", "black"), lty=1,
     #        legend=c("SWR abs. from atm.","LWR abs. from atm.", "LWR abs. from canopy","LWR emmited","Latent heat (L)",  "Convection soil/can.", "Balance"),...)        
   }
+}
+plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = FALSE, 
+                      dates = NULL, subdaily = FALSE, 
+                      xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, ...) {
+  
+  if(subdaily) return(.plotsubdaily(x,type, cohorts, bySpecies, dates, 
+                                    xlim, ylim, xlab, ylab))
+  
+  # Get common elements
+  input = x$growthInput
+  soilInput = x$soilInput
+  PlantGrowth = x$PlantGrowth
+  Plants = x$Plants
+  PCB = x$PlantCarbonBalance
+  
+  nlayers = length(soilInput$W)
+  
+  transpMode = input$control$transpirationMode
+  
+  TYPES_GROWTH = .getDailyGROWTHPlotTypes(transpMode)
+  TYPES_SWB = .getDailySPWBPlotTypes(transpMode)  
+
+  type = match.arg(type,TYPES_GROWTH)  
+  
+  if(is.null(cohorts))  cohorts = row.names(input$cohorts)
+  spnames = as.character(input$cohorts[cohorts,"Name"])
+  PlantsLAI = Plants$LAI[,cohorts, drop=FALSE]
+  
+  if(type %in% TYPES_SWB) {
+    plot.spwb(x,type, cohorts, bySpecies, dates, subdaily, xlim, ylim, xlab, ylab, ...)
+  } 
+  else if(type %in% c("GrossPhotosynthesis", "MaintenanceRespiration",  "GrowthRespiration", "CarbonBalance", 
+                      "SugarLeaf","StarchLeaf","SugarSapwood","StarchSapwood", "SugarTransport", "LeafPI0", "StemPI0")) {
+      OM = PCB[[type]][,cohorts,drop=FALSE]
+      if(bySpecies) OM = .averageBySpecies(OM, spnames)
+      if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
+      if(is.null(ylab)) ylab=.getYLab(type)
+      return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
+  } 
+  else if(type %in% c("SapwoodArea", "LeafArea","SAgrowth", "LAgrowth", "HuberValue")) {
+      OM = PlantGrowth[[type]][,cohorts,drop=FALSE]
+      if(bySpecies) OM = .averageBySpecies(OM, spnames)
+      if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
+      if(is.null(ylab)) ylab = .getYLab(type)
+      return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
+  } 
+}
+
+.averageSubdailyBySpecies<-function(OM, spnames) {
+  if(ncol(OM)>2) OM = cbind(OM[,1],t(apply(OM[,-1],1, tapply, spnames, sum, na.rm=T)))
+  else colnames(OM)[2] = spnames[1]
+  return(OM)
+}
+.plotsubdaily<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FALSE,
+                        dates = NULL, xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL) {
+  if(("spwb" %in% class(x)) || ("pwb" %in% class(x))) {
+    input = x$spwbInput
+    type = match.arg(type, .getSubdailySPWBPlotTypes())  
+  } else {
+    input = x$growthInput
+    type = match.arg(type, .getSubdailyGROWTHPlotTypes())  
+  }
+  
+  if(is.null(cohorts)) {cohorts = row.names(input$cohorts)}
+  else cohorts = {row.names(input$cohorts)[cohorts]}
+  spnames = as.character(input$cohorts[cohorts,"Name"])
+  
+  if(type=="PlantTranspiration") {
+    m = extractSubdaily(x, "E", dates)[,c("datetime", cohorts), drop=FALSE]
+    if(is.null(ylab)) ylab = expression(paste("Plant transpiration ",(L%.%m^{-2})))
+    return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
+  } 
+  else if(type=="PlantGrossPhotosynthesis") {
+    m = extractSubdaily(x, "Ag", dates)[,c("datetime", cohorts), drop=FALSE]
+    if(is.null(ylab)) ylab = expression(paste("Gross photosynthesis ",(gC%.%m^{-2})))
+    return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
+  } 
+  else if(type=="PlantNetPhotosynthesis") {
+    m = extractSubdaily(x, "An", dates)[,c("datetime", cohorts), drop=FALSE]
+    if(is.null(ylab)) ylab = expression(paste("Net photosynthesis ",(gC%.%m^{-2})))
+    return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
+  } 
+  else if(type=="LeafPsiAverage") {
+    m = extractSubdaily(x, "LeafPsi", dates)[,c("datetime", cohorts), drop=FALSE]
+    if(is.null(ylab)) ylab = expression(paste("Leaf water potential ",(MPa)))
+    return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
+  } 
+  else if(type %in% c("StemPsi", "RootPsi", "LeafRWC", "StemRWC","LeafSympRWC", "StemSympRWC")) {
+    m = extractSubdaily(x, type, dates)[,c("datetime", cohorts), drop=FALSE]
+    if(is.null(ylab)) ylab = .getYLab(type)
+    return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
+  } 
+  else if(type=="PlantWaterBalance") {
+    m = extractSubdaily(x, "PWB", dates)[,c("datetime", cohorts), drop=FALSE]
+    if(is.null(ylab)) ylab = expression(paste("Plant water balance ",(L%.%m^{-2})))
+    return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
+  } 
+  else if(type=="SoilPlantConductance") {
+    m = extractSubdaily(x, "dEdP", dates)[,c("datetime", cohorts), drop=FALSE]
+    if(is.null(ylab)) ylab = expression(paste("Soil-plant conductance ",(mmol%.%m^{-2}%.%s^{-1})))
+    return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
+  } 
+  else if(type=="Temperature") {
+    m = extractSubdaily(x, "Temperature", dates)
+    m = m[,c("datetime","Tatm", "Tcan", "Tsoil.1")]
+    names(m) = c("datetime", "Above-canopy","Inside-canopy", "Soil")
+    if(is.null(ylab)) ylab = "Temperature (Celsius)"
+    return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
+  } 
+  else if(type=="PlantExtraction") {
+    m = extractSubdaily(x, "ExtractionInst", dates)
+    if(is.null(ylab)) ylab = expression(paste("Extraction from soil layers ",(L%.%m^{-2})))
+    return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
+  } 
+  else if(type=="LeafPsi") {
+    mSu = extractSubdaily(x, "SunlitLeaves$Psi", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSh = extractSubdaily(x, "ShadeLeaves$Psi", dates)[,c("datetime", cohorts), drop=FALSE]
+    if(is.null(ylab)) ylab=expression(paste("Leaf water potential ", (MPa)))
+    return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
+  } 
+  else if(type=="LeafAbsorbedSWR") {
+    mSu = extractSubdaily(x, "SunlitLeaves$Abs_SWR", dates)
+    mSh = extractSubdaily(x, "ShadeLeaves$Abs_SWR", dates)
+    if(is.null(ylab)) ylab=expression(paste("Absorbed SWR per leaf area ",(W%.%m^{-2})))
+    return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
+  } 
+  else if(type=="LeafAbsorbedLWR") {
+    mSu = extractSubdaily(x, "SunlitLeaves$Abs_LWR", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSh = extractSubdaily(x, "ShadeLeaves$Abs_LWR", dates)[,c("datetime", cohorts), drop=FALSE]
+    if(is.null(ylab)) ylab=expression(paste("Absorbed LWR per leaf area ",(W%.%m^{-2})))
+    return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
+  } 
+  else if(type=="LeafTranspiration") {
+    mSu = extractSubdaily(x, "SunlitLeaves$E", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSh = extractSubdaily(x, "ShadeLeaves$E", dates)[,c("datetime", cohorts), drop=FALSE]
+    if(is.null(ylab)) ylab=expression(paste("Leaf transpiration ",(mmol%.%m^{-2}%.%s^{-1})))
+    return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
+  } 
+  else if(type=="LeafGrossPhotosynthesis") {
+    mSu = extractSubdaily(x, "SunlitLeaves$Ag", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSh = extractSubdaily(x, "ShadeLeaves$Ag", dates)[,c("datetime", cohorts), drop=FALSE]
+    if(is.null(ylab)) ylab=expression(paste("Leaf gross photosynthesis ",(mu%.%mol%.%m^{-2}%.%s^{-1})))
+    return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
+  } 
+  else if(type=="LeafNetPhotosynthesis") {
+    mSu = extractSubdaily(x, "SunlitLeaves$An", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSh = extractSubdaily(x, "ShadeLeaves$An", dates)[,c("datetime", cohorts), drop=FALSE]
+    if(is.null(ylab)) ylab=expression(paste("Leaf net photosynthesis ",(mu%.%mol%.%m^{-2}%.%s^{-1})))
+    return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
+  } 
+  else if(type=="LeafStomatalConductance") {
+    mSu = extractSubdaily(x, "SunlitLeaves$GW", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSh = extractSubdaily(x, "ShadeLeaves$GW", dates)[,c("datetime", cohorts), drop=FALSE]
+    if(is.null(ylab)) ylab=expression(paste("Stomatal conductance ", (mmol%.%m^{-2}%.%s^{-1})))
+    return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
+  } 
+  else if(type=="LeafTemperature") {
+    mSu = extractSubdaily(x, "SunlitLeaves$Temp", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSh = extractSubdaily(x, "ShadeLeaves$Temp", dates)[,c("datetime", cohorts), drop=FALSE]
+    if(is.null(ylab)) ylab="Leaf temperature (degrees C)"
+    return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
+  } 
+  else if(type=="LeafVPD") {
+    mSu = extractSubdaily(x, "SunlitLeaves$VPD", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSh = extractSubdaily(x, "ShadeLeaves$VPD", dates)[,c("datetime", cohorts), drop=FALSE]
+    if(is.null(ylab)) ylab="Leaf vapour pressure deficit (kPa)"
+    return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
+  } 
+  else if(type=="LeafCi") {
+    mSu = extractSubdaily(x, "SunlitLeaves$Ci", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSh = extractSubdaily(x, "ShadeLeaves$Ci", dates)[,c("datetime", cohorts), drop=FALSE]
+    if(is.null(ylab)) ylab=expression(paste("Intercellular CO2 concentration  ", (ppm)))
+    return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
+  } 
+  else if(type=="LeafIntrinsicWUE") {
+    mSu = extractSubdaily(x, "SunlitLeaves$iWUE", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSh = extractSubdaily(x, "ShadeLeaves$iWUE", dates)[,c("datetime", cohorts), drop=FALSE]
+    if(is.null(ylab)) ylab=expression(paste("iWUE  ", (mu%.%mol%.%mol^{-1})))
+    return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
+  } 
+  else if(type %in% c("GrossPhotosynthesis", "MaintenanceRespiration", "GrowthRespiration", "CarbonBalance",
+                      "SugarLeaf","StarchLeaf","SugarSapwood","StarchSapwood", "SugarTransport")) {
+    m = extractSubdaily(x, type, dates)[,c("datetime", cohorts), drop=FALSE]
+    if(is.null(ylab)) ylab=.getYLab(type)
+    return(.multiple_dynamics_subdaily(m,  xlab = xlab, ylab = ylab, ylim = ylim))
+  } 
 }

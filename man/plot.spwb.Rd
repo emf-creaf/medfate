@@ -9,14 +9,20 @@
 
 \title{Displays simulation results}
 \description{
-Function \code{plot} plots the results of the soil plant water balance model (see \code{\link{spwb}}), plant water balance model (see \code{\link{pwb}}) or the forest growth model (see \code{\link{growth}}), whereas function \code{summary} summarizes the model's output in different temporal steps (i.e. weekly, annual, ...).
+Function \code{plot} produces temporal graphs of the results of the soil plant water balance model (see \code{\link{spwb}}), plant water balance model (see \code{\link{pwb}}) or the forest growth model (see \code{\link{growth}}), whereas function \code{summary} summarizes the model's output in different temporal steps (i.e. weekly, annual, ...).
 }
 \usage{
-\method{plot}{spwb}(x, type="PET_Precipitation", bySpecies = FALSE,
+\method{plot}{spwb}(x, type="PET_Precipitation", 
+                    cohorts = NULL, bySpecies = FALSE,
+                    dates = NULL, subdaily = FALSE,
                     xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, ...)
-\method{plot}{pwb}(x, type="PlantTranspiration", bySpecies = FALSE,
-                   xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, ...)                   
-\method{plot}{growth}(x, type="PET_Precipitation", bySpecies = FALSE, 
+\method{plot}{pwb}(x, type="PlantTranspiration", 
+                   cohorts = NULL, bySpecies = FALSE,
+                   dates = NULL, subdaily = FALSE,
+                   xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, ...)
+\method{plot}{growth}(x, type="PET_Precipitation", 
+                      cohorts = NULL, bySpecies = FALSE, 
+                      dates = NULL, subdaily = FALSE,
                       xlim = NULL, ylim=NULL, xlab=NULL, ylab=NULL, ...)
 \method{summary}{pwb}(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, ...)
 \method{summary}{spwb}(object, freq="years", output="WaterBalance", FUN=sum, bySpecies = FALSE, ...)
@@ -24,7 +30,22 @@ Function \code{plot} plots the results of the soil plant water balance model (se
 }
 \arguments{
   \item{x, object}{An object of class \code{spwb}.}
-  \item{type}{The information to be plotted:
+  \item{type}{The information to be plotted (see details)}
+  \item{cohorts}{An integer, boolean or character vector to select the plant cohorts to be plotted.}
+  \item{bySpecies}{Allows aggregating output by species, before calculating summaries or drawing plots (only has an effect with some values of \code{type}). Aggregation can involve a sum (as for plant lai or transpiration) or a LAI-weighted mean (as for plant stress or plant water potential).}
+  \item{dates}{A Date vector with a subset of dates to be plotted.}
+  \item{subdaily}{Whether subdaily results should be shown, only for simulations using \code{transpirationMode = "Sperry"} and having set \code{subdailyResults = TRUE} in the simulation control object. If \code{subdaily = TRUE}, then the valid strings for \code{type} are listed in \code{\link{plot.spwb_day}}.}
+  \item{xlim}{Range of values for x.}
+  \item{ylim}{Range of values for y.}
+  \item{xlab}{x-axis label.}
+  \item{ylab}{y-axis label.}
+  \item{freq}{Frequency of summary statistics (see \code{\link{cut.Date}}).}
+  \item{output}{The data table to be summarized. Accepted values are \code{"DailyBalance"}, \code{"PlantStress"}, \code{"PlantPsi"}, \code{"PlantTranspiration"}, \code{"PlantPhotosynthesis"}  and \code{"SoilWaterBalance"}, \code{"Temperature"} and \code{"EnergyBalance"}.}
+  \item{FUN}{The function to summarize results (e.g., \code{sum}, \code{mean}, ...)}
+  \item{...}{Additional parameters for function \code{plot} or \code{summary}.}
+}
+\details{
+The following plots are currently available for \code{\link{spwb}} (most of them also for \code{\link{pwb}}):
   \itemize{
     \item{\code{"PET_Precipitation"}:}{ Potential evapotranspiration and Precipitation.}
     \item{\code{"PET_NetRain"}:}{ Potential evapotranspiration and Net rainfall.}
@@ -60,30 +81,23 @@ Function \code{plot} plots the results of the soil plant water balance model (se
     \item{\code{"SoilTemperature"}:}{ Minimum/maximum/mean daily temperatures inside the first soil layer (only for \code{transpirationMode = "Sperry"}).}
     \item{\code{"CanopyEnergyBalance"}:}{ Canopy energy balance components (only for \code{transpirationMode = "Sperry"}).}
     \item{\code{"SoilEnergyBalance"}:}{ Soil energy balance components (only for \code{transpirationMode = "Sperry"}).}
-    \item{\code{"PlantRespiration"}:}{ Plant cohort respiration (only for \code{plot.growth}).}
-    \item{\code{"PlantRespirationPerLeaf"}:}{ Plant cohort respiration per leaf area (only for \code{plot.growth}).}
-    \item{\code{"PlantRespirationPerIndividual"}:}{ Respiration per individual (only for \code{plot.growth}).}
-    \item{\code{"PlantCBalance"}:}{ Plant cohort carbon balance (only for \code{plot.growth}).}
-    \item{\code{"PlantCBalancePerLeaf"}:}{ Plant cohort carbon balance per leaf area (only for \code{plot.growth}).}
-    \item{\code{"PlantCBalancePerIndividual"}:}{ Carbon balance per individual (only for \code{plot.growth}).}
-    \item{\code{"PlantCstorageFast"}:}{ Amount of fast-dynamics carbon reserves  (only for \code{plot.growth}).}
-    \item{\code{"PlantCstorageSlow"}:}{ Amount of slow-dynamics carbon reserves  (only for \code{plot.growth}).}
-    \item{\code{"PlantSA"}:}{ Amount of sapwood area in an individual  (only for \code{plot.growth}).}
-    \item{\code{"PlantSAgrowth"}:}{ Amount of newly-created sapwood area  (only for \code{plot.growth}).}
-    \item{\code{"PlantRelativeSAgrowth"}:}{ Amount of newly-created sapwood area per sapwood area (only for \code{plot.growth}).}
-    \item{\code{"PlantLAIlive"}:}{ Plant cohort leaf area index of live leaves (only for \code{plot.growth}).}
-    \item{\code{"PlantLAIdead"}:}{ Plant cohort leaf area index of dead leaves (only for \code{plot.growth}).}
-   }
   }
-  \item{bySpecies}{Allows aggregating output by species, before calculating summaries or drawing plots (only has an effect with some values of \code{type}). Aggregation can involve a sum (as for plant lai or transpiration) or a LAI-weighted mean (as for plant stress or plant water potential).}
-  \item{xlim}{Range of values for x.}
-  \item{ylim}{Range of values for y.}
-  \item{xlab}{x-axis label.}
-  \item{ylab}{y-axis label.}
-  \item{freq}{Frequency of summary statistics (see \code{\link{cut.Date}}).}
-  \item{output}{The data table to be summarized. Accepted values are \code{"DailyBalance"}, \code{"PlantStress"}, \code{"PlantPsi"}, \code{"PlantTranspiration"}, \code{"PlantPhotosynthesis"}  and \code{"SoilWaterBalance"}, \code{"Temperature"} and \code{"EnergyBalance"}.}
-  \item{FUN}{The function to summarize results (e.g., \code{sum}, \code{mean}, ...)}
-  \item{...}{Additional parameters for function \code{plot} or \code{summary}.}
+The following are only available for \code{\link{growth}}:
+ \itemize{
+    \item{\code{"PlantRespiration"}:}{ Plant cohort respiration.}
+    \item{\code{"PlantRespirationPerLeaf"}:}{ Plant cohort respiration per leaf area.}
+    \item{\code{"PlantRespirationPerIndividual"}:}{ Respiration per individual.}
+    \item{\code{"PlantCBalance"}:}{ Plant cohort carbon balance.}
+    \item{\code{"PlantCBalancePerLeaf"}:}{ Plant cohort carbon balance per leaf area.}
+    \item{\code{"PlantCBalancePerIndividual"}:}{ Carbon balance per individual.}
+    \item{\code{"PlantCstorageFast"}:}{ Amount of fast-dynamics carbon reserves.}
+    \item{\code{"PlantCstorageSlow"}:}{ Amount of slow-dynamics carbon reserves.}
+    \item{\code{"PlantSA"}:}{ Amount of sapwood area in an individual.}
+    \item{\code{"PlantSAgrowth"}:}{ Amount of newly-created sapwood area.}
+    \item{\code{"PlantRelativeSAgrowth"}:}{ Amount of newly-created sapwood area per sapwood area.}
+    \item{\code{"PlantLAIlive"}:}{ Plant cohort leaf area index of live leaves.}
+    \item{\code{"PlantLAIdead"}:}{ Plant cohort leaf area index of dead leaves.}
+   }
 }
 \references{
 De \enc{Cáceres}{Caceres} M, \enc{Martínez}{Martinez}-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L. (2015) Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes. Agricultural and Forest Meteorology 213: 77-90 (doi:10.1016/j.agrformet.2015.06.012).
@@ -114,7 +128,7 @@ control = defaultControl()
 x = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
 #Call simulation function
-S1<-spwb(x, examplesoil, examplemeteo, elevation = 100)
+S1<-spwb(x, examplesoil, examplemeteo, latitude = 41.82592, elevation = 100)
         
 #Plot results
 plot(S1)

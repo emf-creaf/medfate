@@ -3,23 +3,28 @@ defaultControl<-function() {
     #For all
     verbose = TRUE,
     subdailyResults = FALSE,
-    # swb
+    defaultWindSpeed = 2.5, #m/s
     soilFunctions = "SX",
+    
+    # swb
     snowpack = TRUE,
     drainage = TRUE,
     unlimitedSoilWater = FALSE,
     plantWaterPools = FALSE,
     poolOverlapFactor = 0.5,
     leafPhenology = TRUE,
-    transpirationMode = "Granier", #vs. "Sperry"
-    cuticularTranspiration = TRUE,
-    gainModifier = 1, 
-    costModifier = 1, 
-    verticalLayerSize = 100,
-    # nStemSegments = 1,
-    capacitance = FALSE,
+    unfoldingDD = 300,
+    transpirationMode = "Granier",
     cavitationRefill = "total",
     refillMaximumRate = 0.05,
+    verticalLayerSize = 100,
+    
+    #spwb with sperry
+    gainModifier = 1, 
+    costModifier = 1, 
+    costWater = "dEdP",
+    cochard = FALSE,
+    capacitance = FALSE,
     klatstem = 0.01, # stem symplastic-apoplastic lateral conductance
     klatleaf = 0.01, # leaf symplastic-apoplastic lateral conductance
     taper = TRUE,
@@ -30,10 +35,15 @@ defaultControl<-function() {
     Catm = 386,
     ndailysteps = 24,
     thermalCapacityLAI = 1000000,
-    defaultWindSpeed = 2.5, #m/s
-    # growth
-    storagePool = "none"
     
+    # growth
+    allocationStrategy = "Plant_kmax",
+    nonStomatalPhotosynthesisLimitation = TRUE,
+    k_floem = 3.0e-5, # floem conductance per leaf area basis (l*m-2*MPa-1*s-1)
+    nonSugarConc = 0.3, # mol · l-1
+    minimumSugarConc = 0.3,
+    equilibriumLeafTotalConc = 0.8, # (Paljakka et al. 2017)
+    equilibriumSapwoodTotalConc = 0.6 # (Paljakka et al. 2017)
 #     #For water balance
     #For forest dynamics
 #     freqZopt = 20,

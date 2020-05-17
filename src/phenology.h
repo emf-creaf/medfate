@@ -7,8 +7,11 @@ using namespace Rcpp;
 
 NumericVector gdd(IntegerVector DOY, NumericVector Temp, double Tbase = 5.0, double cum = 0.0);
 
-double leafDevelopmentStatus(double Sgdd, double gdd);
+double leafDevelopmentStatus(double Sgdd, double gdd, double unfoldingDD = 300.0);
+bool leafSenescenceStatus(double Ssen, double sen);
 
-NumericVector leafDevelopmentStatus(NumericVector Sgdd, double gdd);
+NumericVector leafDevelopmentStatus(NumericVector Sgdd, NumericVector gdd, double unfoldingDD = 300.0);
+LogicalVector leafSenescenceStatus(NumericVector Ssen, NumericVector sen);
 
-void updateLeaves(List x, double doy, double tmean, double wind, double Tbase = 5.0);
+void updatePhenology(List x, int doy, double photoperiod, double tmean);
+void updateLeaves(List x, double wind, bool fromGrowthModel);

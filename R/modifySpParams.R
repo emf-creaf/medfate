@@ -44,8 +44,9 @@ modifyCohortParams<-function(x, customParams) {
   # get the names of the custom params and the input tables
   custom <- names(customParams)
   above_par <- names(x[['above']])
-  base_par <- names(x[['paramsBase']])
-  transp_par <- names(x[['paramsTransp']])
+  pheno_par <- names(x[['paramsPhenology']])
+  base_par <- names(x[['paramsInterception']])
+  transp_par <- names(x[['paramsTranspiration']])
   anatomy_par <- names(x[['paramsAnatomy']])
   waterstorage_par <- names(x[['paramsWaterStorage']])
   
@@ -55,10 +56,10 @@ modifyCohortParams<-function(x, customParams) {
       val <- customParams[customParams[['Cohort']] == coh, param]
       if(!is.na(val)) {
         if (param %in% above_par) x[['above']][[coh, param]] <- val
-        if (param %in% base_par) x[['paramsBase']][[coh, param]] <- val
-        if (param %in% transp_par) x[['paramsTransp']][[coh, param]] <- val
+        if (param %in% base_par) x[['paramsInterception']][[coh, param]] <- val
+        if (param %in% transp_par) x[['paramsTranspiration']][[coh, param]] <- val
         if (param %in% anatomy_par) x[['paramsAnatomy']][[coh, param]] <- val
-        if (param %in% waterstorage_par) x[['paramsWaterStorage']][[coh, param]] <- val
+        if(!is.null(waterstorage_par)) if (param %in% waterstorage_par) x[['paramsWaterStorage']][[coh, param]] <- val
       }
     }
   }

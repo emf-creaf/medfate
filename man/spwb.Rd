@@ -2,22 +2,18 @@
 \name{spwb}
 \alias{spwb}
 \alias{pwb}
-\alias{spwb_resetInputs}
 
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{Soil-plant water balance}
 \description{
-Function \code{spwb()} is a water balance model that determines changes in soil moisture, soil water potentials and plant transpiration and drought stress at daily steps for a given forest stand during a period specified in the input climatic data. Additionally, the function also calculates plant net photosynthesis. Function \code{pwb()} performs plant water balance only (i.e. soil moisture dynamics is an input) at daily steps for a given forest stand during a period specified in the input climatic data. On both simulation functions transpiration and photosynthesis processes are conducted with different level of detail depending on the transpiration mode.
+Function \code{spwb()} is a water balance model that determines changes in soil moisture, soil water potentials, plant transpiration and drought stress at daily steps for a given forest stand during a period specified in the input climatic data. Function \code{pwb()} performs plant water balance only (i.e. soil moisture dynamics is an input) at daily steps for a given forest stand during a period specified in the input climatic data. On both simulation functions plant transpiration and photosynthesis processes are conducted with different level of detail depending on the transpiration mode.
 }
 \usage{
-spwb(x, soil, meteo,  latitude = NA, elevation = NA, slope = NA, aspect = NA)
-pwb(x, soil, meteo, W, latitude = NA, elevation = NA, slope = NA, aspect = NA,
+spwb(x, soil, meteo,  latitude , elevation = NA, slope = NA, aspect = NA)
+pwb(x, soil, meteo, W, latitude, elevation = NA, slope = NA, aspect = NA,
     canopyEvaporation = numeric(0), 
     snowMelt = numeric(0), 
     soilEvaporation = numeric(0))
-spwb_resetInputs(x, soil, from = NULL, day = NA)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{An object of class \code{\link{spwbInput}}.}
   \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
@@ -41,16 +37,14 @@ spwb_resetInputs(x, soil, from = NULL, day = NA)
     }
   }
   \item{W}{A matrix with the same number of rows as \code{meteo} and as many columns as soil layers, containing the soil moisture of each layer as proportion of field capacity.}
-  \item{latitude}{Latitude (in degrees). Required when using the 'Sperry' transpiration mode.}
+  \item{latitude}{Latitude (in degrees).}
   \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when using the 'Sperry' transpiration mode. Elevation is also required for 'Granier' if snowpack dynamics are simulated.}
-  \item{from}{An object of class \code{spwb} storing the results of a previous simulation, including values of state variables. If \code{from = NULL}, state variables are set to their defaults (i.e. soil moisture set to field capacity and cumulative growth degree days set to zero).}
-  \item{day}{An integer with the day from which state variable values stored in \code{from} should be copied. If missing, values are copied from the first day of stored values.}
   \item{canopyEvaporation}{A vector of daily canopy evaporation (from interception) values (mm). The length should match the number of rows in \code{meteo}.}
   \item{soilEvaporation}{A vector of daily bare soil evaporation values (mm). The length should match the number of rows in \code{meteo}.}
   \item{snowMelt}{A vector of daily snow melt values (mm). The length should match the number of rows in \code{meteo}.}
 }
 \details{
-  Detailed model description is available in the vignettes section. The model using 'Granier' transpiration mode is illustrated by function \code{\link{transp_transpirationGranier}} and described in De Caceres et al. (2015). Simulations using the 'Sperry' transpiration mode are computationally much more expensive, are described in De Cáceres et al. (submitted) and are illustrated by function \code{\link{transp_transpirationSperry}}. Function \code{spwb_resetInputs()} allows resetting state variables in \code{x} and \code{soil} to their defaults, or to copy values of state variables from a previous \code{spwb()} simulation results stored in \code{from}.
+  The model using 'Granier' transpiration mode is illustrated by function \code{\link{transp_transpirationGranier}} and described in De Caceres et al. (2015). Simulations using the 'Sperry' transpiration mode are computationally much more expensive, are described in De Cáceres et al. (submitted) and are illustrated by function \code{\link{transp_transpirationSperry}}. 
 }
 \value{
   Function \code{spwb} returns a list of class 'spwb' whereas Function \code{pwb} returns a list of class 'pwb'. There are many elements in common in these lists, so they are listed here together:
@@ -71,11 +65,13 @@ spwb_resetInputs(x, soil, from = NULL, day = NA)
           \item{\code{"DeepDrainage"}: The amount of water exported via deep drainage (in mm).}
           \item{\code{"Evapotranspiration"}: Evapotranspiration (in mm).}
           \item{\code{"SoilEvaporation"}: Bare soil evaporation (in mm).}
-          \item{\code{"PlantExtraction"}: Amount of water extracted from soil by plants (in mm) (can only be diferent from transpiration for \code{transpirationMode = "Sperry"} when capacitance is considered).}
+          \item{\code{"PlantExtraction"}: Amount of water extracted from soil by plants (in mm) (can only be different from transpiration for \code{transpirationMode = "Sperry"} when capacitance is considered).}
           \item{\code{"Transpiration"}: Plant transpiration (considering all soil layers) (in mm).}
           \item{\code{"HydraulicRedistribution"}: Water redistributed among soil layers, transported through the plant hydraulic network (only for \code{transpirationMode = "Sperry"}).}
           
       }
+      \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"}).}
+      \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"}).}
     \item{\code{"Soil"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
         \itemize{
           \item{\code{"W.1"}, \code{...}, \code{"W.k"}: Relative soil moisture content (relative to field capacity) in each soil layer.}
@@ -89,40 +85,54 @@ spwb_resetInputs(x, soil, from = NULL, day = NA)
       \item{\code{"Stand"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
       
        \itemize{
-          \item{\code{"GDD"}: Cumulative growth degree days.}
-          \item{\code{"LAIcell"}: LAI of the stand (accounting for leaf phenology) (in m2/m2).}
-          \item{\code{"LAIcelldead"}: LAI of the stand corresponding to dead leaves (in m2/m2).}
+          \item{\code{"LAI"}: LAI of the stand (including live and dead leaves) (in m2/m2).}
+          \item{\code{"LAIlive"}: LAI of the stand assuming all leaves are unfolded (in m2/m2).}
+          \item{\code{"LAIexpanded"}: LAI of the stand of leaves actually unfolded (in m2/m2).}
+          \item{\code{"LAIdead"}: LAI of the stand corresponding to dead leaves (in m2/m2).}
           \item{\code{"Cm"}: Water retention capacity of the canopy (in mm) (accounting for leaf phenology).}
           \item{\code{"LgroundPAR"}: The proportion of PAR that reaches the ground (accounting for leaf phenology).}
           \item{\code{"LgroundSWR"}: The proportion of SWR that reaches the ground (accounting for leaf phenology).}
       }
-     \item{\code{"PlantLAI"}: A data frame with the daily leaf area index for each plant cohort. Days are in rows and plant cohorts are in columns.}
-     \item{\code{"PlantAbsorbedSWRFraction"}: A data frame with the fraction of SWR absorbed by each plant cohort. Days are in rows and plant cohorts are in columns.}
-     \item{\code{"PlantTranspiration"}: A data frame with the amount of daily transpiration (in mm) for each plant cohort. Days are in rows and plant cohorts are in columns.}
-     \item{\code{"PlantPhotosynthesis"}: A data frame with the amount of daily net photosynthesis (in g C·m-2) for each plant cohort. Days are in rows and plant cohorts are in columns.}
-     \item{\code{"PlantPsi"}: A data frame with the average daily water potential of each plant (in MPa). Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
-     \item{\code{"PlantStress"}: A data frame with the amount of daily stress [0-1] suffered by each plant cohort (relative whole-plant conductance). Days are in rows and plant cohorts are in columns.}
-     \item{\code{"subdaily"}: A list of objects of class \code{\link{spwb_day}}, one per day simulated (only if required in \code{control} parameters, see \code{\link{defaultControl}}).}
-  }
-  If \code{transpirationMode=="Sperry"} the list also includes the following elements:
+      \item{\code{"Plants"}: A list of daily results for plant cohorts (see below).}
+      \item{\code{"subdaily"}: A list of objects of class \code{\link{spwb_day}}, one per day simulated (only if required in \code{control} parameters, see \code{\link{defaultControl}}).}
+ }
+ 
+ When \code{transpirationMode = "Granier"}, element \code{"Plants"} is a list with the following subelements:
  \itemize{
-   \item{\code{"PlantAbsorbedSWR"}: A data frame with the daily SWR absorbed by each plant cohort. Days are in rows and plant cohorts are in columns.}
-  \item{\code{"PlantAbsorbedLWR"}: A data frame with the daily LWR absorbed by each plant cohort. Days are in rows and plant cohorts are in columns.}
-  \item{\code{"dEdP"}: A data frame with mean daily values of soil-plant conductance (derivative of the supply function) for each plant cohort. Days are in rows and plant cohorts in columns.}
-  \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy.}
- \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil.}
- \item{\code{"LeafPsiMin"}: A data frame with the minimum (midday) daily (average) leaf water potential of each plant (in MPa). Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
- \item{\code{"LeafPsiMax"}: A data frame with the maximum (predawn) daily (average) leaf water potential of each plant (in MPa). Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
- \item{\code{"LeafPsiMin_SL"}: A data frame with the minimum (midday) daily sunlit leaf water potential of each plant (in MPa). Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
- \item{\code{"LeafPsiMax_SL"}: A data frame with the maximum (predawn) daily sunlit leaf water potential of each plant (in MPa). Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
- \item{\code{"LeafPsiMin_SH"}: A data frame with the minimum (midday) daily shade leaf water potential of each plant (in MPa). Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
- \item{\code{"LeafPsiMax_SH"}: A data frame with the maximum (predawn) daily shade leaf water potential of each plant (in MPa). Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
- \item{\code{"LeafRWC"}: A data frame with the average daily leaf relative water content of each plant (in percent). Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
- \item{\code{"StemPsi"}: A data frame with the minimum daily stem water potential of each plant (in MPa). Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
- \item{\code{"StemPLC"}: A data frame with the average daily proportion of stem conductance loss of each plant ([0-1]). Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
- \item{\code{"StemRWC"}: A data frame with the average daily stem relative water content of each plant (in percent). Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
- \item{\code{"RootPsi"}: A data frame with the minimum daily root water potential of each plant (in MPa). Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
- \item{\code{"RhizoPsi"}: A list of data frames (one per plant cohort) with the minimum daily root water potential of each plant (in MPa). In each data frame, days are in rows and layers are in columns.}
+     \item{\code{"LAI"}: A data frame with the daily leaf area index for each plant cohort.}
+     \item{\code{"AbsorbedSWRFraction"}: A data frame with the fraction of SWR absorbed by each plant cohort. }
+     \item{\code{"Transpiration"}: A data frame with the amount of daily transpiration (in mm) for each plant cohort.}
+     \item{\code{"Photosynthesis"}: A data frame with the amount of daily net photosynthesis (in g C·m-2) for each plant cohort. }
+     \item{\code{"PlantPsi"}: A data frame with the average daily water potential of each plant (in MPa).}
+     \item{\code{"PlantStress"}: A data frame with the amount of daily stress [0-1] suffered by each plant cohort (relative whole-plant conductance).}
+}
+If \code{transpirationMode="Sperry"}, element \code{"Plants"} is a list with the following subelements:
+ \itemize{
+   \item{\code{"LAI"}: A data frame with the daily leaf area index for each plant cohort.}
+   \item{\code{"AbsorbedSWR"}: A data frame with the daily SWR absorbed by each plant cohort.}
+   \item{\code{"AbsorbedLWR"}: A data frame with the daily LWR absorbed by each plant cohort.}
+   \item{\code{"Transpiration"}: A data frame with the amount of daily transpiration (in mm) for each plant cohorts.}
+   \item{\code{"GrossPhotosynthesis"}: A data frame with the amount of daily gross photosynthesis (in g C·m-2) for each plant cohort. }
+   \item{\code{"NetPhotosynthesis"}: A data frame with the amount of daily net photosynthesis (in g C·m-2) for each plant cohort. }
+   \item{\code{"dEdP"}: A data frame with mean daily values of soil-plant conductance (derivative of the supply function) for each plant cohort.}
+   \item{\code{"PlantWaterBalance"}: A data frame with the daily balance between transpiration and soil water extraction for each plant cohort. }
+   \item{\code{"SunlitLeaves"} and \code{"ShadeLeaves"}: A list with daily results for sunlit and shade leaves:
+     \itemize{
+       \item{\code{"PsiMin"}: A data frame with the minimum (midday) daily sunlit or shade leaf water potential (in MPa). }
+      \item{\code{"PsiMax"}: A data frame with the maximum (predawn) daily sunlit or shade leaf water potential (in MPa). }
+     }
+   }
+   \item{\code{"LeafPsiMin"}: A data frame with the minimum (midday) daily (average) leaf water potential of each plant (in MPa).}
+   \item{\code{"LeafPsiMax"}: A data frame with the maximum (predawn) daily (average) leaf water potential of each plant (in MPa).}
+   \item{\code{"LeafRWC"}: A data frame with the average daily leaf relative water content of each plant (in percent).}
+   \item{\code{"StemRWC"}: A data frame with the average daily stem relative water content of each plant (in percent). }
+   \item{\code{"LeafSympRWC"}: A data frame with the average daily leaf symplasm relative water content of each plant (in percent).}
+   \item{\code{"StemSympRWC"}: A data frame with the average daily stem symplasm relative water content of each plant (in percent). }
+   \item{\code{"StemPsi"}: A data frame with the minimum daily stem water potential of each plant (in MPa). }
+   \item{\code{"StemPLC"}: A data frame with the average daily proportion of stem conductance loss of each plant ([0-1]).}
+ \item{\code{"RootPsi"}: A data frame with the minimum daily root water potential of each plant (in MPa). }
+ \item{\code{"RhizoPsi"}: A list of data frames (one per plant cohort) with the minimum daily root water potential of each plant (in MPa).}
+ \item{\code{"PlantStress"}: A data frame with the amount of daily stress [0-1] suffered by each plant cohort (relative whole-plant conductance).}
  }
 }
 \references{
@@ -134,7 +144,7 @@ De \enc{Cáceres}{Caceres} M, Mencuccini M, Martin-StPaul N, Limousin JM, Coll L
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 }
 \note{
-State variables stored in objects \code{x} and \code{soil} are modified during the simulation. Use function \code{spwb_resetInputs()} to reset state variables to defaults. Daily transpiration and photosynthesis values are stored in columns \code{Transpiration} and \code{Photosynthesis} of object \code{x}. Water content relative to field capacity (vector \code{W}) of \code{soil} is also modified.  
+State variables stored in objects \code{x} and \code{soil} are modified during the simulation.  
 }
 \seealso{
 \code{\link{spwbInput}}, \code{\link{spwb_day}}, \code{\link{plot.spwb}},  
@@ -160,7 +170,7 @@ control = defaultControl()
 x1 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
 #Call simulation function
-S1<-spwb(x1, examplesoil, examplemeteo, elevation = 100)
+S1<-spwb(x1, examplesoil, examplemeteo, latitude = 41.82592, elevation = 100)
         
 #Plot results
 plot(S1)

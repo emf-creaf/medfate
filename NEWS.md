@@ -2,6 +2,13 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 1.0.0
+- Reorganization of growth function
+- Clarification of gross and net photosynthesis
+- 'spwb_resetInputs' to 'resetInputs'
+- Dependence of kmax on temperature (due to sap dynamic viscosity) incorporated
+- Functions plot.spwb and plot.pwb modified to draw subdaily dynamics for a subset of dates 
+
 # Version 0.9.1
 - Small bug fixes
 - update 'spwb_resetInputs'

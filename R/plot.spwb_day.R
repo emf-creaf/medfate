@@ -1,3 +1,19 @@
+plot.growth_day<-function(x, type="PlantTranspiration", bySpecies = FALSE, 
+                          xlim = NULL, ylim=NULL, xlab = NULL, ylab = NULL, ...) {
+  GROWTH_TYPES = .getSubdailyGROWTHPlotTypes()
+  PWB_TYPES = .getSubdailySPWBPlotTypes()
+  type = match.arg(type,GROWTH_TYPES)
+  if(type %in% PWB_TYPES) {
+    plot.pwb_day(x, type, bySpecies, xlim, ylim, xlab, ylab,...)
+  }
+  CBInst = x$PlantCBInst
+  if(type=="SugarLeaf") {
+    OM = CBInst$SugarLeaf
+    if(is.null(ylab)) ylab = .getYLab(type)
+    return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
+  }
+}
+
 plot.spwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE, 
                         xlim = NULL, ylim=NULL, xlab = NULL, ylab = NULL, ...) {
   plot.pwb_day(x, type, bySpecies, xlim, ylim, xlab, ylab,...)
@@ -10,22 +26,14 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
   EB = x$EnergyBalance
   Plants = x$Plants
   PlantsInst = x$PlantsInst
-  TYPES = c("LeafPsi","LeafPsiAverage","RootPsi", "StemPsi", 
-            "StemPLC","StemRWC", "LeafRWC",
-            "SoilPlantConductance",
-            "PlantExtraction","PlantTranspiration", "PlantTranspirationPerLeaf",
-            "PlantPhotosynthesis","PlantPhotosynthesisPerLeaf", "PlantAbsorbedSWR",
-            "LeafTranspiration","LeafPhotosynthesis", "LeafAbsorbedSWR",
-            "LeafCi", "LeafIntrinsicWUE",
-            "LeafVPD","LeafStomatalConductance", "LeafTemperature",
-            "Temperature","CanopyEnergyBalance", "SoilEnergyBalance", 
-            "PlantWaterBalance", "PlantWaterBalancePerLeaf")
-  type = match.arg(type,TYPES)  
+  SunlitLeavesInst = x$SunlitLeavesInst
+  ShadeLeavesInst = x$ShadeLeavesInst
+  type = match.arg(type,.getSubdailySPWBPlotTypes())  
   cohortnames = row.names(x$cohorts)
-  timesteps = as.numeric(colnames(x$PlantsInst$PsiLeaf))
+  timesteps = as.numeric(colnames(x$PlantsInst$LeafPsi))
   if(is.null(xlab)) xlab = "Time step"
   if(type=="LeafPsiAverage") {
-    OM = PlantsInst$PsiLeaf
+    OM = PlantsInst$LeafPsi
     if(bySpecies) {
       lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
       OMlai = sweep(OM, 1, Plants$LAI, "*")
@@ -36,7 +44,7 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
   }
   else if(type=="StemPsi") {
-    OM = PlantsInst$PsiStem
+    OM = PlantsInst$StemPsi
     if(bySpecies) {
       lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
       OMlai = sweep(OM, 1, Plants$LAI, "*")
@@ -46,8 +54,30 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(is.null(ylab)) ylab = "Stem water potential (MPa)"
     return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
   }
+  else if(type=="LeafSympPsi") {
+    OM = PlantsInst$LeafSympPsi
+    if(bySpecies) {
+      lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
+      OMlai = sweep(OM, 1, Plants$LAI, "*")
+      m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM = sweep(m1,1,lai1,"/")
+    } 
+    if(is.null(ylab)) ylab = "Leaf symplastic water potential (MPa)"
+    return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
+  }
+  else if(type=="StemSympPsi") {
+    OM = PlantsInst$StemSympPsi
+    if(bySpecies) {
+      lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
+      OMlai = sweep(OM, 1, Plants$LAI, "*")
+      m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM = sweep(m1,1,lai1,"/")
+    } 
+    if(is.null(ylab)) ylab = "Stem symplastic water potential (MPa)"
+    return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
+  }
   else if(type=="RootPsi") {
-    OM = PlantsInst$PsiRoot
+    OM = PlantsInst$RootPsi
     if(bySpecies) {
       lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
       OMlai = sweep(OM, 1, Plants$LAI, "*")
@@ -58,7 +88,7 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
   }
   else if(type=="StemPLC") {
-    OM = PlantsInst$PLCstem*100
+    OM = PlantsInst$StemPLC*100
     if(bySpecies) {
       lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
       OMlai = sweep(OM, 1, Plants$LAI, "*")
@@ -69,7 +99,7 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
   }
   else if(type=="StemRWC") {
-    OM = PlantsInst$RWCstem*100
+    OM = PlantsInst$StemRWC*100
     if(bySpecies) {
       lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
       OMlai = sweep(OM, 1, Plants$LAI, "*")
@@ -79,8 +109,19 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(is.null(ylab)) ylab = "Stem relative water content (%)"
     return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
   }
+  else if(type=="StemSympRWC") {
+    OM = PlantsInst$StemSympRWC*100
+    if(bySpecies) {
+      lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
+      OMlai = sweep(OM, 1, Plants$LAI, "*")
+      m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM = sweep(m1,1,lai1,"/")
+    } 
+    if(is.null(ylab)) ylab = "Stem symplasm relative water content (%)"
+    return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
+  }
   else if(type=="LeafRWC") {
-    OM = PlantsInst$RWCleaf*100
+    OM = PlantsInst$LeafRWC*100
     if(bySpecies) {
       lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
       OMlai = sweep(OM, 1, Plants$LAI, "*")
@@ -90,8 +131,19 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(is.null(ylab)) ylab = "Leaf relative water content (%)"
     return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
   }
+  else if(type=="LeafSympRWC") {
+    OM = PlantsInst$LeafSympRWC*100
+    if(bySpecies) {
+      lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
+      OMlai = sweep(OM, 1, Plants$LAI, "*")
+      m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM = sweep(m1,1,lai1,"/")
+    } 
+    if(is.null(ylab)) ylab = "Leaf symplasm relative water content (%)"
+    return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
+  }
   else if(type=="SoilPlantConductance") {
-    OM = PlantsInst$dEdPinst
+    OM = PlantsInst$dEdP
     if(bySpecies) {
       OM = apply(OM,2, tapply, x$cohorts$Name, sum, na.rm=T)
     } 
@@ -109,7 +161,7 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(is.null(ylab)) ylab =  expression(paste("Extraction - transpiration (",L%.%m^{-2},")"))
     return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
   }
-  else if(type=="PlantWaterBalancePerLeaf") {
+  else if(type=="WaterBalancePerLeaf") {
     OM = PlantsInst$PWB
     if(bySpecies) {
       m1 = apply(OM,2, tapply, x$cohorts$Name, sum, na.rm=T)
@@ -135,7 +187,7 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(is.null(ylab)) ylab = expression(paste("Plant transpiration   ",(L%.%m^{-2})))
     return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
   }
-  else if(type=="PlantTranspirationPerLeaf") {
+  else if(type=="TranspirationPerLeaf") {
     OM = PlantsInst$E
     if(bySpecies) {
       m1 = apply(OM,2, tapply, x$cohorts$Name, sum, na.rm=T)
@@ -147,7 +199,15 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(is.null(ylab)) ylab = expression(paste("Transpiration per leaf area   ",(L%.%m^{-2})))
     return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
   }
-  else if(type=="PlantPhotosynthesis") {
+  else if(type=="PlantGrossPhotosynthesis") {
+    OM = PlantsInst$Ag
+    if(bySpecies) {
+      OM = apply(OM,2, tapply, x$cohorts$Name, sum, na.rm=T)
+    } 
+    if(is.null(ylab)) ylab = expression(paste("Plant gross photosynthesis  ",(gC%.%m^{-2})))
+    return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
+  }
+  else if(type=="PlantNetPhotosynthesis") {
     OM = PlantsInst$An
     if(bySpecies) {
       OM = apply(OM,2, tapply, x$cohorts$Name, sum, na.rm=T)
@@ -155,7 +215,19 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(is.null(ylab)) ylab = expression(paste("Plant net photosynthesis  ",(gC%.%m^{-2})))
     return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
   }
-  else if(type=="PlantPhotosynthesisPerLeaf") {
+  else if(type=="GrossPhotosynthesisPerLeaf") {
+    OM = PlantsInst$Ag
+    if(bySpecies) {
+      m1 = apply(OM,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
+      OM = sweep(m1,1,lai1,"/")
+    } else {
+      OM = sweep(OM,1,Plants$LAI,"/")
+    }
+    if(is.null(ylab)) ylab = expression(paste("Gross photosynthesis per leaf area ",(gC%.%m^{-2})))
+    return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
+  }
+  else if(type=="NetPhotosynthesisPerLeaf") {
     OM = PlantsInst$An
     if(bySpecies) {
       m1 = apply(OM,2, tapply, x$cohorts$Name, sum, na.rm=T)
@@ -164,12 +236,12 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     } else {
       OM = sweep(OM,1,Plants$LAI,"/")
     }
-    if(is.null(ylab)) ylab = expression(paste("Plant net photosynthesis per leaf area ",(gC%.%m^{-2})))
+    if(is.null(ylab)) ylab = expression(paste("Net photosynthesis per leaf area ",(gC%.%m^{-2})))
     return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
   }
   else if(type=="LeafTranspiration") {
-    OM_SL = PlantsInst$SunlitLeaves$VPD*PlantsInst$SunlitLeaves$GW
-    OM_SH = PlantsInst$ShadeLeaves$VPD*PlantsInst$ShadeLeaves$GW
+    OM_SL = SunlitLeavesInst$VPD*SunlitLeavesInst$GW
+    OM_SH = ShadeLeavesInst$VPD*ShadeLeavesInst$GW
     if(bySpecies) {
       lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
       OMlai = sweep(OM_SL, 1, Plants$LAI, "*")
@@ -182,9 +254,9 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(is.null(ylab)) ylab=expression(paste("Leaf transpiration ",(mmol%.%m^{-2}%.%s^{-1})))
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
-  else if(type=="LeafPhotosynthesis") {
-    OM_SL = PlantsInst$SunlitLeaves$An
-    OM_SH = PlantsInst$ShadeLeaves$An
+  else if(type=="LeafNetPhotosynthesis") {
+    OM_SL = SunlitLeavesInst$An
+    OM_SH = ShadeLeavesInst$An
     if(bySpecies) {
       lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
       OMlai = sweep(OM_SL, 1, Plants$LAI, "*")
@@ -197,9 +269,24 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(is.null(ylab)) ylab=expression(paste("Leaf net photosynthesis ",(mu%.%mol%.%m^{-2}%.%s^{-1})))
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
+  else if(type=="LeafGrossPhotosynthesis") {
+    OM_SL = SunlitLeavesInst$Ag
+    OM_SH = ShadeLeavesInst$Ag
+    if(bySpecies) {
+      lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
+      OMlai = sweep(OM_SL, 1, Plants$LAI, "*")
+      m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM_SL = sweep(m1,1,lai1,"/")
+      OMlai = sweep(OM_SH, 1, Plants$LAI, "*")
+      m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM_SH = sweep(m1,1,lai1,"/")
+    } 
+    if(is.null(ylab)) ylab=expression(paste("Leaf gross photosynthesis ",(mu%.%mol%.%m^{-2}%.%s^{-1})))
+    return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
+  }
   else if(type=="PlantAbsorbedSWR") {
-    OM_SL = PlantsInst$SunlitLeaves$Abs_SWR
-    OM_SH = PlantsInst$ShadeLeaves$Abs_SWR
+    OM_SL = SunlitLeavesInst$Abs_SWR
+    OM_SH = ShadeLeavesInst$Abs_SWR
     if(bySpecies) {
       lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
       OMlai = sweep(OM_SL, 1, Plants$LAI, "*")
@@ -213,8 +300,8 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
   else if(type=="LeafAbsorbedSWR") {
-    OM_SL = PlantsInst$SunlitLeaves$Abs_SWR
-    OM_SH = PlantsInst$ShadeLeaves$Abs_SWR
+    OM_SL = SunlitLeavesInst$Abs_SWR
+    OM_SH = ShadeLeavesInst$Abs_SWR
     if(bySpecies) {
       m1 = apply(OM_SL,2, tapply, x$cohorts$Name, sum, na.rm=T)
       lai1 = apply(x$SunlitLeaves$LAI,2, tapply, x$cohorts$Name, sum, na.rm=T)
@@ -229,9 +316,26 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(is.null(ylab)) ylab=expression(paste("Absorbed SWR per leaf area ",(W%.%m^{-2})))
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
+  else if(type=="LeafAbsorbedLWR") {
+    OM_SL = SunlitLeavesInst$Abs_LWR
+    OM_SH = ShadeLeavesInst$Abs_LWR
+    if(bySpecies) {
+      m1 = apply(OM_SL,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      lai1 = apply(x$SunlitLeaves$LAI,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM_SL = m1/lai1
+      m1 = apply(OM_SH,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      lai1 = apply(x$ShadeLeaves$LAI,2, tapply, x$cohorts$Name, sum, na.rm=T)
+      OM_SH = m1/lai1
+    } else {
+      OM_SL = OM_SL/x$SunlitLeaves$LAI
+      OM_SH = OM_SH/x$ShadeLeaves$LAI
+    }
+    if(is.null(ylab)) ylab=expression(paste("Absorbed LWR per leaf area ",(W%.%m^{-2})))
+    return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
+  }
   else if(type=="LeafPsi") {
-    OM_SL = PlantsInst$SunlitLeaves$Psi
-    OM_SH = PlantsInst$ShadeLeaves$Psi
+    OM_SL = SunlitLeavesInst$Psi
+    OM_SH = ShadeLeavesInst$Psi
     if(bySpecies) {
       lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
       OMlai = sweep(OM_SL, 1, Plants$LAI, "*")
@@ -245,8 +349,8 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
   else if(type=="LeafTemperature") {
-    OM_SL = PlantsInst$SunlitLeaves$Temp
-    OM_SH = PlantsInst$ShadeLeaves$Temp
+    OM_SL = SunlitLeavesInst$Temp
+    OM_SH = ShadeLeavesInst$Temp
     if(bySpecies) {
       lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
       OMlai = sweep(OM_SL, 1, Plants$LAI, "*")
@@ -260,8 +364,8 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
   else if(type=="LeafVPD") {
-    OM_SL = PlantsInst$SunlitLeaves$VPD
-    OM_SH = PlantsInst$ShadeLeaves$VPD
+    OM_SL = SunlitLeavesInst$VPD
+    OM_SH = ShadeLeavesInst$VPD
     if(bySpecies) {
       lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
       OMlai = sweep(OM_SL, 1, Plants$LAI, "*")
@@ -271,12 +375,12 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
       OM_SH = sweep(m1,1,lai1,"/")
     } 
-    if(is.null(ylab)) ylab="Vapour pressure deficit (kPa)"
+    if(is.null(ylab)) ylab="Leaf vapour pressure deficit (kPa)"
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
   else if(type=="LeafStomatalConductance") {
-    OM_SL = PlantsInst$SunlitLeaves$GW
-    OM_SH = PlantsInst$ShadeLeaves$GW
+    OM_SL = SunlitLeavesInst$GW
+    OM_SH = ShadeLeavesInst$GW
     if(bySpecies) {
       lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
       OMlai = sweep(OM_SL, 1, Plants$LAI, "*")
@@ -290,8 +394,8 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
   else if(type=="LeafIntrinsicWUE") {
-    OM_SL = PlantsInst$SunlitLeaves$An/PlantsInst$SunlitLeaves$GW
-    OM_SH = PlantsInst$ShadeLeaves$An/PlantsInst$ShadeLeaves$GW
+    OM_SL = SunlitLeavesInst$An/SunlitLeavesInst$GW
+    OM_SH = ShadeLeavesInst$An/ShadeLeavesInst$GW
     if(bySpecies) {
       lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
       OMlai = sweep(OM_SL, 1, Plants$LAI, "*")
@@ -301,12 +405,12 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
       OM_SH = sweep(m1,1,lai1,"/")
     } 
-    if(is.null(ylab)) ylab=expression(paste("iWUE sunlit   ", (mu%.%mol%.%mol^{-1})))
+    if(is.null(ylab)) ylab=expression(paste("iWUE  ", (mu%.%mol%.%mol^{-1})))
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
   else if(type=="LeafCi") {
-    OM_SL = PlantsInst$SunlitLeaves$Ci
-    OM_SH = PlantsInst$ShadeLeaves$Ci
+    OM_SL = SunlitLeavesInst$Ci
+    OM_SH = ShadeLeavesInst$Ci
     if(bySpecies) {
       lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
       OMlai = sweep(OM_SL, 1, Plants$LAI, "*")
@@ -316,7 +420,7 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       m1 = apply(OMlai,2, tapply, x$cohorts$Name, sum, na.rm=T)
       OM_SH = sweep(m1,1,lai1,"/")
     } 
-    if(is.null(ylab)) ylab=expression(paste("Intercellular CO2 concentration sunlit  ", (ppm)))
+    if(is.null(ylab)) ylab=expression(paste("Intercellular CO2 concentration ", (ppm)))
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
   else if(type=="Temperature") {

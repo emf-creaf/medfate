@@ -152,7 +152,7 @@ The vulnerability curves conformng the hydraulic network are used in the model t
 hydraulics_supplyFunctionPlot(x, examplesoil, type="E")
 hydraulics_supplyFunctionPlot(x, examplesoil, type="ERhizo")
 hydraulics_supplyFunctionPlot(x, examplesoil, type="dEdP")
-hydraulics_supplyFunctionPlot(x, examplesoil, type="psiStem")
+hydraulics_supplyFunctionPlot(x, examplesoil, type="StemPsi")
 ```
 
 Calls to `hydraulics_supplyFunctionPlot()` always need both a `spwbInput` object and a `soil` object. The soil moisture state (i.e. its water potential) is the starting point for the calculation of the supply function, so different curves will be obtained for different values of soil moisture.
@@ -241,8 +241,8 @@ sd1$Plants
 While `Plants` contains one value per cohort and variable that summarizes the whole simulated day, information by disaggregated by time step can be accessed in `PlantsInst`. Moreover, we can use function `plot.spwb_day()` to draw plots of sub-daily variation per species of plant transpiration per ground area (L·m$^{-2}$), transpiration per leaf area (also in L·m$^{-2}$), plant net photosynthesis (in g C·m$^{-2}$), and plant water potential (in MPa):
 ```{r, fig=TRUE, fig.align="center", fig.width=5, fig.height = 4}
 plot(sd1, type = "PlantTranspiration", bySpecies = T)
-plot(sd1, type = "PlantTranspirationPerLeaf", bySpecies = T)
-plot(sd1, type = "PlantPhotosynthesis", bySpecies = T)
+plot(sd1, type = "TranspirationPerLeaf", bySpecies = T)
+plot(sd1, type = "NetPhotosynthesis", bySpecies = T)
 plot(sd1, type = "LeafPsiAverage", bySpecies = T)
 ```
 
@@ -259,9 +259,13 @@ Instantaneous values are also stored for sunlit and shade leaves. We can also us
 plot(sd1, type = "LeafTemperature", bySpecies=TRUE)
 ```
 
-Note that sunlit leaves of some species reach temperatures higher than the canopy. We can also plot variations in instantaneous net photosynthesis rates:
+Note that sunlit leaves of some species reach temperatures higher than the canopy. We can also plot variations in instantaneous gross and net photosynthesis rates:
+
 ```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 4}
-plot(sd1, type = "LeafPhotosynthesis", bySpecies=TRUE)
+plot(sd1, type = "LeafGrossPhotosynthesis", bySpecies=TRUE)
+```
+```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 4}
+plot(sd1, type = "LeafNetPhotosynthesis", bySpecies=TRUE)
 ```
 
 Or variations in stomatal conductance:
@@ -303,9 +307,9 @@ We can also see the current state of canopy variables:
 ```{r}
 x$canopy
 ```
-We simply use function `spwb_resetInputs()` to reset state variables to their default values, so that the new simulation is not affected by the end state of the previous simulation:
+We simply use function `resetInputs()` to reset state variables to their default values, so that the new simulation is not affected by the end state of the previous simulation:
 ```{r}
-spwb_resetInputs(x, examplesoil)
+resetInputs(x, examplesoil)
 examplesoil$W
 examplesoil$Temp
 x$canopy
@@ -326,9 +330,9 @@ As before, `WaterBalance` contains water balance components, but in this case in
 ```{r}
 head(S$WaterBalance)
 ```
-Elements `PlantLAI`, `PlantStress`, `LeafPsi`, `PlantTranspiration` and `PlantPhotosynthesis` contain daily values by plant cohorts, for example plant water potentials are:
+Elements `Plants` is itself a list with several elements that contain daily output results by plant cohorts, for example leaf minimum (midday) water potentials are:
 ```{r}
-head(S$LeafPsi)
+head(S$Plants$LeafPsiMin)
 ```
 
 

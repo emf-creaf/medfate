@@ -4,6 +4,13 @@ spwb_waterUseEfficiency<-function(x, type = "Plant An/E", leaves = "average", fr
     stop("'x' should be of class 'spwb' or 'pwb'")
   }
   type = match.arg(type, c("Leaf Ci", "Leaf iWUE", "Plant An/E", "Stand An/E"))
+  
+  if("Photosynthesis" %in% names(x$Plants)) {
+    Andays = x$Plants$Photosynthesis
+  } else {
+    Andays = x$Plants$NetPhotosynthesis
+  }
+  
   if(type=="Leaf iWUE") {
     if(x$spwbInput$control$transpirationMode != "Sperry") {
       stop("iWUE can only be calculated with transpirationMode = 'Sperry'")
@@ -21,8 +28,8 @@ spwb_waterUseEfficiency<-function(x, type = "Plant An/E", leaves = "average", fr
     rownames(iWUEdays)= as.character(dates)
     colnames(iWUEdays) = rownames(coh)
     for(i in 1:ndays) {
-      sl = sd[[i]]$PlantsInst$SunlitLeaves
-      sh = sd[[i]]$PlantsInst$ShadeLeaves
+      sl = sd[[i]]$SunlitLeavesInst
+      sh = sd[[i]]$ShadeLeavesInst
       sl_lai = sd[[i]]$SunlitLeaves$LAI
       sh_lai = sd[[i]]$ShadeLeaves$LAI
       an_sl = sl$An
@@ -54,7 +61,6 @@ spwb_waterUseEfficiency<-function(x, type = "Plant An/E", leaves = "average", fr
       
       date.factor = cut(dates, breaks=freq)
       
-      Andays = x$PlantPhotosynthesis
       Andays[Andays<0] = 0
       #Perform summary at the desired temporal scale (weighted average of iWUE with An as weights)
       sumiWUEAn <- apply(iWUEdays*Andays,2,tapply, INDEX=date.factor, sum, na.rm=T)
@@ -86,8 +92,8 @@ spwb_waterUseEfficiency<-function(x, type = "Plant An/E", leaves = "average", fr
     rownames(Cidays)= as.character(dates)
     colnames(Cidays) = rownames(coh)
     for(i in 1:ndays) {
-      sl = sd[[i]]$PlantsInst$SunlitLeaves
-      sh = sd[[i]]$PlantsInst$ShadeLeaves
+      sl = sd[[i]]$SunlitLeavesInst
+      sh = sd[[i]]$ShadeLeavesInst
       sl_lai = sd[[i]]$SunlitLeaves$LAI
       sh_lai = sd[[i]]$ShadeLeaves$LAI
       an_sl = sl$An
@@ -116,7 +122,6 @@ spwb_waterUseEfficiency<-function(x, type = "Plant An/E", leaves = "average", fr
       
       date.factor = cut(dates, breaks=freq)
       
-      Andays = x$PlantPhotosynthesis
       Andays[Andays<0] = 0
       #Perform summary at the desired temporal scale (weighted average of iWUE with An as weights)
       sumCiAn <- apply(Cidays*Andays,2,tapply, INDEX=date.factor, sum, na.rm=T)
@@ -132,24 +137,28 @@ spwb_waterUseEfficiency<-function(x, type = "Plant An/E", leaves = "average", fr
     }
   }
   else if(type =="Plant An/E") {
-    x$PlantPhotosynthesis[x$PlantPhotosynthesis<0] = 0
-    x$PlantTranspiration[x$PlantTranspiration<0] = 0
+    if("Photosynthesis" %in% names(x$Plants)) x$Plants$Photosynthesis[x$Plants$Photosynthesis<0] = 0
+    else x$Plants$NetPhotosynthesis[x$Plants$NetPhotosynthesis<0] = 0
+    x$Plants$Transpiration[x$Plants$Transpiration<0] = 0
     if(freq=="days") {
-      res = x$PlantPhotosynthesis/x$PlantTranspiration
+      if("Photosynthesis" %in% names(x$Plants)) res = x$Plants$Photosynthesis/x$Plants$Transpiration
+      else res = x$Plants$NetPhotosynthesis/x$Plants$Transpiration
     } else {
-      pt = summary(x, freq=freq, output="PlantTranspiration", FUN=sum, na.rm=T)
-      pp = summary(x, freq=freq, output="PlantPhotosynthesis", FUN=sum, na.rm=T)
+      pt = summary(x, freq=freq, output="Transpiration", FUN=sum, na.rm=T)
+      pp = summary(x, freq=freq, output="Photosynthesis", FUN=sum, na.rm=T)
       res = pp/pt
     }
   }
   else if(type =="Stand An/E") {
-    x$PlantPhotosynthesis[x$PlantPhotosynthesis<0] = 0
-    x$PlantTranspiration[x$PlantTranspiration<0] = 0
+    if("Photosynthesis" %in% names(x$Plants)) x$Plants$Photosynthesis[x$Plants$Photosynthesis<0] = 0
+    else x$Plants$NetPhotosynthesis[x$Plants$NetPhotosynthesis<0] = 0
+    x$Plants$Transpiration[x$Plants$Transpiration<0] = 0
     if(freq=="days") {
-      res = rowSums(x$PlantPhotosynthesis, na.rm=T)/rowSums(x$PlantTranspiration, na.rm=T)
+      if("Photosynthesis" %in% names(x$Plants)) res = rowSums(x$Plants$Photosynthesis, na.rm=T)/rowSums(x$Plants$Transpiration, na.rm=T)
+      else res = rowSums(x$Plants$NetPhotosynthesis, na.rm=T)/rowSums(x$Plants$Transpiration, na.rm=T)
     } else {
-      pt = summary(x, freq=freq, output="PlantTranspiration", FUN=sum, na.rm=T)
-      pp = summary(x, freq=freq, output="PlantPhotosynthesis", FUN=sum, na.rm=T)
+      pt = summary(x, freq=freq, output="Transpiration", FUN=sum, na.rm=T)
+      pp = summary(x, freq=freq, output="Photosynthesis", FUN=sum, na.rm=T)
       res = rowSums(pp, na.rm=T)/rowSums(pt, na.rm=T)
     }
   }
