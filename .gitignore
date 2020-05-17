@@ -16,4 +16,3 @@ modeltests/*.pdf
 modeltests/*.gz
 modeltests/*.toc
 inst/doc/*.*
-data-raw/*
