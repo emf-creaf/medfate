@@ -880,9 +880,9 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
 
 
 // [[Rcpp::export("forest2spwbInput")]]
-List forest2spwbInput(List x, List soil, DataFrame SpParams, List control) {
+List forest2spwbInput(List x, List soil, DataFrame SpParams, List control, String mode = "MED") {
   NumericMatrix V = forest2belowground(x,soil, SpParams);
-  DataFrame above = forest2aboveground(x, SpParams, NA_REAL);
+  DataFrame above = forest2aboveground(x, SpParams, NA_REAL, mode);
   return(spwbInput(above,  V, soil, SpParams, control));
 }
 

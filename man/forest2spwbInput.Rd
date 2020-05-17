@@ -18,7 +18,7 @@ Functions \code{forest2spwbInput} and \code{forest2growthInput} take an object o
 forest2aboveground(x, SpParams, gdd = NA, mode = "MED")
 forest2belowground(x, soil, SpParams)
 forest2growthInput(x, soil, SpParams, control)
-forest2spwbInput(x, soil, SpParams, control)
+forest2spwbInput(x, soil, SpParams, control, mode = "MED")
 growthInput(above,  Z, V,  soil, SpParams, control)
 spwbInput(above,  V,  soil, SpParams, control)
 }

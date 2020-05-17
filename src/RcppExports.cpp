@@ -2418,8 +2418,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // forest2spwbInput
-List forest2spwbInput(List x, List soil, DataFrame SpParams, List control);
-RcppExport SEXP _medfate_forest2spwbInput(SEXP xSEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
+List forest2spwbInput(List x, List soil, DataFrame SpParams, List control, String mode);
+RcppExport SEXP _medfate_forest2spwbInput(SEXP xSEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP, SEXP modeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2427,7 +2427,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< List >::type control(controlSEXP);
-    rcpp_result_gen = Rcpp::wrap(forest2spwbInput(x, soil, SpParams, control));
+    Rcpp::traits::input_parameter< String >::type mode(modeSEXP);
+    rcpp_result_gen = Rcpp::wrap(forest2spwbInput(x, soil, SpParams, control, mode));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4269,7 +4270,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_checkSpeciesParameters", (DL_FUNC) &_medfate_checkSpeciesParameters, 2},
     {"_medfate_spwbInput", (DL_FUNC) &_medfate_spwbInput, 5},
     {"_medfate_growthInput", (DL_FUNC) &_medfate_growthInput, 6},
-    {"_medfate_forest2spwbInput", (DL_FUNC) &_medfate_forest2spwbInput, 4},
+    {"_medfate_forest2spwbInput", (DL_FUNC) &_medfate_forest2spwbInput, 5},
     {"_medfate_forest2growthInput", (DL_FUNC) &_medfate_forest2growthInput, 4},
     {"_medfate_resetInputs", (DL_FUNC) &_medfate_resetInputs, 2},
     {"_medfate_gdd", (DL_FUNC) &_medfate_gdd, 4},
