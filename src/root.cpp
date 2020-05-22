@@ -142,39 +142,84 @@ NumericMatrix rootDistribution(NumericVector z, List x) {
   return(rd);
 }
 
-/**
- *  Root axials lengths
- * 
- *  returns root axial lengths in mm (same units as d)
- */
-NumericVector rootRadialLengths(double Z95, NumericVector v, NumericVector d, double depthWidthRatio = 1.0) {
-  int nlayers = v.size();
-  //Radial lengths
-  NumericVector r(nlayers), rl(nlayers);
-  double maxr = 0.0;
-  for(int i=0;i<nlayers;i++) {
-    r[i] = sqrt(v[i]/(d[i]*PI));
-    maxr = std::max(r[i],maxr); 
-  }
-  for(int i=0;i<nlayers;i++) {
-    rl[i] = Z95*depthWidthRatio*(r[i]/maxr);
-    // Rcout<<rl[i]<<" ";
-  }
-  return(rl);
-}
+// DataFrame rootSpatialDimensions(double rootVolumeIndividual, NumericVector v, NumericVector d, NumericVector bulkDensity) {
+//   int numLayers = v.size();
+//   NumericVector lvol(numLayers,0.0);
+//   NumericVector larea(numLayers,0.0);
+//   NumericVector laxial(numLayers,0.0);
+//   NumericVector lradial(numLayers,0.0);
+//   for(int i=0;i<numLayers;i++) {
+//     lvol[i] = rootVolumeIndividual*v[i]; //m3
+//     laxial[i] = d[i]/1000.0; //mm to m
+//     lradial[i] = sqrt(lvol[i]/(laxial[i]*PI*(1.0 - (bulkDensity[i]/2.65))));
+//     larea[i] = PI*pow(lradial[i],2.0);
+//   }
+//   DataFrame df = DataFrame::create(_["Volume"] = lvol,
+//                                    _["GroundArea"] = larea,
+//                                    _["AxialLength"]  = laxial,
+//                                    _["RadialLength"] = lradial);
+//   return(df);
+// }
 
 /**
- * Stand area covered by roots (in m2/ha)
+ * Calculates root ground area for each layer of the root system of 
+ * an individual with a given total fine root volume (in m3) and fine root proportions
  */
-NumericVector areaWithRoots(double N, double Z95, NumericVector v, NumericVector d, double depthWidthRatio = 1.0) {
-  NumericVector rl = rootRadialLengths(Z95,v,d,depthWidthRatio);
-  int nlayer = rl.size();
-  NumericVector area(nlayer, 0.0);
-  for(int i=0;i<nlayer;i++) {
-    area[i] = std::min(pow(rl[i]/1000.0,2.0)*PI*N,10000.0);
+// [[Rcpp::export("root_individualGroundArea")]]
+NumericMatrix individualGroundArea(NumericVector VolInd, NumericMatrix V, NumericVector d, NumericVector bulkDensity) {
+  int numCohorts = V.nrow();
+  int numLayers = V.ncol();
+  NumericMatrix larea(numCohorts,numLayers);
+  for(int i=0;i<numCohorts;i++) {
+    for(int j=0;j<numLayers;j++) {
+      double lvol = VolInd[i]*V(i,j); //m3
+      double laxial = d[j]/1000.0; //mm to m
+      double lradial = sqrt(lvol/(laxial*PI*(1.0 - (bulkDensity[j]/2.65))));
+      larea(i,j) = PI*pow(lradial,2.0); //m2
+    }
   }
-  return(area);
+  larea.attr("dimnames") = V.attr("dimnames");
+  return(larea);
 }
+
+// [[Rcpp::export("root_horizontalProportionsAdvanced")]]
+List horizontalProportionsAdvanced(NumericVector VolInd, NumericVector N, NumericMatrix V, 
+                           NumericVector d, NumericVector bulkDensity) {
+  //Volume of roots per cohort (m3/ha)
+  NumericVector VolCoh = VolInd*N;
+  double volTotal = sum(VolCoh);
+
+  int numCohorts = V.nrow();
+  int numlayers = V.ncol();
+  List l(numCohorts);
+  NumericVector poolProportions(numCohorts), poolAreaInd(numCohorts);
+  for(int c=0;c<numCohorts;c++) {
+    poolProportions[c] = VolCoh[c]/volTotal;
+    poolAreaInd[c] = 10000.0*poolProportions[c]/N[c]; //area of the pool per individual of the cohort
+  }
+  
+  NumericMatrix iga = individualGroundArea(VolInd,V,d,bulkDensity);
+  
+  for(int coh=0;coh<numCohorts;coh++) {
+     NumericMatrix RHOP(numCohorts,numlayers);
+     for(int l=0;l<numlayers;l++) {
+       // Rcout<<coh<< " "<< l<< " "<<iga(coh,l)<<" "<< poolAreaInd[coh]<<"\n";
+       RHOP(coh,l) = std::min(poolAreaInd[coh],iga(coh,l))/iga(coh,l);
+       if(iga(coh,l)>poolAreaInd[coh]) {
+         double dif = iga(coh,l) - poolAreaInd[coh];
+         // Rcout<<dif<<"\n";
+         for(int c2=0; c2<numCohorts;c2++) { //divide the remainder among all cohorts (including itself) depending on their proportions
+           RHOP(c2,l) += poolProportions[c2]*dif/iga(coh,l);
+         }
+       }
+     }
+     RHOP.attr("dimnames") = V.attr("dimnames");
+     l[coh] = RHOP;
+  }
+  l.attr("names") = rownames(V);
+  return(l);
+}
+
 
 /**
  *  Root lengths
@@ -265,39 +310,6 @@ NumericVector xylemConductanceProportions(NumericVector v, NumericVector d, doub
 }
 
 
-List horizontalProportionsNew(NumericMatrix V, NumericVector N, NumericVector Z95, NumericVector LAIlive,
-                              NumericVector d, double depthWidthRatio = 1.0) {
-  int numCohorts = V.nrow();
-  int numlayers = V.ncol();
-  double LAIcelllive = sum(LAIlive);
-  NumericVector poolProportions(numCohorts);
-  for(int c=0;c<numCohorts;c++) poolProportions[c] = LAIlive[c]/LAIcelllive;
-  List l(numCohorts);
-  for(int coh=0;coh<numCohorts;coh++) {
-    NumericVector awr = areaWithRoots(N[coh], Z95[coh], V(coh,_),d, depthWidthRatio);
-    NumericMatrix RHOP(numCohorts,numlayers);
-    double poolarea = poolProportions[coh];
-    for(int l=0;l<numlayers;l++) {
-      double pal = awr[l]/10000.0;
-      // Rcout<<coh<< "  "<< l <<" "<<poolarea<< " "<<pal<<"\n";
-      double sv = 0.0;
-      for(int j=0;j<numCohorts;j++) if(j!=coh) sv += V(j,l);
-      for(int j=0;j<numCohorts;j++) {
-        if(j==coh) {
-          RHOP(coh,l) = std::min(poolarea,pal)/pal;
-        } else if(pal>poolarea) {
-          RHOP(j,l) = ((pal-poolarea)/pal)*V(j,l)/sv;
-        } else {
-          RHOP(j,l) = 0.0;
-        }
-      }
-    }
-    RHOP.attr("dimnames") = V.attr("dimnames");
-    l[coh] = RHOP;
-  }
-  l.attr("names") = rownames(V);
-  return(l);
-}
 
 
 // [[Rcpp::export("root_horizontalProportions")]]

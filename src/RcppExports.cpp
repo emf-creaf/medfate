@@ -363,6 +363,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// shrubIndividualAreaMED
+NumericVector shrubIndividualAreaMED(IntegerVector SP, NumericVector Cover, NumericVector H, DataFrame SpParams);
+RcppExport SEXP _medfate_shrubIndividualAreaMED(SEXP SPSEXP, SEXP CoverSEXP, SEXP HSEXP, SEXP SpParamsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type SP(SPSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Cover(CoverSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type H(HSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
+    rcpp_result_gen = Rcpp::wrap(shrubIndividualAreaMED(SP, Cover, H, SpParams));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cohortDensity
 NumericVector cohortDensity(List x, DataFrame SpParams, String mode);
 RcppExport SEXP _medfate_cohortDensity(SEXP xSEXP, SEXP SpParamsSEXP, SEXP modeSEXP) {
@@ -2727,6 +2741,35 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// individualGroundArea
+NumericMatrix individualGroundArea(NumericVector VolInd, NumericMatrix V, NumericVector d, NumericVector bulkDensity);
+RcppExport SEXP _medfate_individualGroundArea(SEXP VolIndSEXP, SEXP VSEXP, SEXP dSEXP, SEXP bulkDensitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type VolInd(VolIndSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type V(VSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type bulkDensity(bulkDensitySEXP);
+    rcpp_result_gen = Rcpp::wrap(individualGroundArea(VolInd, V, d, bulkDensity));
+    return rcpp_result_gen;
+END_RCPP
+}
+// horizontalProportionsAdvanced
+List horizontalProportionsAdvanced(NumericVector VolInd, NumericVector N, NumericMatrix V, NumericVector d, NumericVector bulkDensity);
+RcppExport SEXP _medfate_horizontalProportionsAdvanced(SEXP VolIndSEXP, SEXP NSEXP, SEXP VSEXP, SEXP dSEXP, SEXP bulkDensitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type VolInd(VolIndSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type N(NSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type V(VSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type bulkDensity(bulkDensitySEXP);
+    rcpp_result_gen = Rcpp::wrap(horizontalProportionsAdvanced(VolInd, N, V, d, bulkDensity));
+    return rcpp_result_gen;
+END_RCPP
+}
 // rootLengths
 NumericVector rootLengths(NumericVector v, NumericVector d, double depthWidthRatio);
 RcppExport SEXP _medfate_rootLengths(SEXP vSEXP, SEXP dSEXP, SEXP depthWidthRatioSEXP) {
@@ -4153,6 +4196,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_speciesBasalArea", (DL_FUNC) &_medfate_speciesBasalArea, 2},
     {"_medfate_cohortLargerTreeBasalArea", (DL_FUNC) &_medfate_cohortLargerTreeBasalArea, 1},
     {"_medfate_standBasalArea", (DL_FUNC) &_medfate_standBasalArea, 1},
+    {"_medfate_shrubIndividualAreaMED", (DL_FUNC) &_medfate_shrubIndividualAreaMED, 4},
     {"_medfate_cohortDensity", (DL_FUNC) &_medfate_cohortDensity, 3},
     {"_medfate_speciesDensity", (DL_FUNC) &_medfate_speciesDensity, 3},
     {"_medfate_cohortHeight", (DL_FUNC) &_medfate_cohortHeight, 1},
@@ -4291,6 +4335,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_conicDistribution", (DL_FUNC) &_medfate_conicDistribution, 2},
     {"_medfate_ldrDistribution", (DL_FUNC) &_medfate_ldrDistribution, 3},
     {"_medfate_rootDistribution", (DL_FUNC) &_medfate_rootDistribution, 2},
+    {"_medfate_individualGroundArea", (DL_FUNC) &_medfate_individualGroundArea, 4},
+    {"_medfate_horizontalProportionsAdvanced", (DL_FUNC) &_medfate_horizontalProportionsAdvanced, 5},
     {"_medfate_rootLengths", (DL_FUNC) &_medfate_rootLengths, 3},
     {"_medfate_xylemConductanceProportions", (DL_FUNC) &_medfate_xylemConductanceProportions, 3},
     {"_medfate_horizontalProportions", (DL_FUNC) &_medfate_horizontalProportions, 3},

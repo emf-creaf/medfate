@@ -320,6 +320,7 @@ NumericVector dbhClassDensity(List x, NumericVector DBHbreaks) {
 }
 
 //area of an individual (in m2)
+// [[Rcpp::export("plant_shrubIndividualArea")]]
 NumericVector shrubIndividualAreaMED(IntegerVector SP, NumericVector Cover, NumericVector H, DataFrame SpParams){
   NumericVector aShrubArea = cohortNumericParameter(SP,SpParams, "a_ash");
   int ncoh = SP.size();

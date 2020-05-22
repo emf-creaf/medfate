@@ -109,6 +109,10 @@ stand_basalArea <- function(x) {
     .Call(`_medfate_standBasalArea`, x)
 }
 
+plant_shrubIndividualArea <- function(SP, Cover, H, SpParams) {
+    .Call(`_medfate_shrubIndividualAreaMED`, SP, Cover, H, SpParams)
+}
+
 plant_density <- function(x, SpParams, mode = "MED") {
     .Call(`_medfate_cohortDensity`, x, SpParams, mode)
 }
@@ -659,6 +663,14 @@ root_ldrDistribution <- function(Z50, Z95, d) {
 
 .rootDistribution <- function(z, x) {
     .Call(`_medfate_rootDistribution`, z, x)
+}
+
+root_individualGroundArea <- function(VolInd, V, d, bulkDensity) {
+    .Call(`_medfate_individualGroundArea`, VolInd, V, d, bulkDensity)
+}
+
+root_horizontalProportionsAdvanced <- function(VolInd, N, V, d, bulkDensity) {
+    .Call(`_medfate_horizontalProportionsAdvanced`, VolInd, N, V, d, bulkDensity)
 }
 
 root_rootLengths <- function(v, d, depthWidthRatio = 1.0) {
