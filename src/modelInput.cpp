@@ -180,6 +180,7 @@ DataFrame paramsTranspirationSperry(DataFrame above, NumericMatrix V, List soil,
   
   NumericVector VCstem_kmax(numCohorts);
   NumericVector VCroottot_kmax(numCohorts, 0.0);
+  NumericVector VGrhizotot_kmax(numCohorts, 0.0);
   NumericVector Plant_kmax(numCohorts, 0.0);
   
   
@@ -323,6 +324,7 @@ DataFrame paramsTranspirationSperry(DataFrame above, NumericMatrix V, List soil,
         _["VCleaf_kmax"]=VCleaf_kmax,_["VCleaf_c"]=VCleaf_c,_["VCleaf_d"]=VCleaf_d,
         _["VCstem_kmax"]=VCstem_kmax,_["VCstem_c"]=VCstem_c,_["VCstem_d"]=VCstem_d, 
         _["VCroot_kmax"] = VCroottot_kmax ,_["VCroot_c"]=VCroot_c,_["VCroot_d"]=VCroot_d,
+        _["VGrhizo_kmax"] = VGrhizotot_kmax,
         _["Plant_kmax"] = Plant_kmax);
   paramsTranspirationdf.attr("row.names") = above.attr("row.names");
   return(paramsTranspirationdf);
@@ -351,6 +353,7 @@ List paramsBelow(DataFrame above, NumericMatrix V, List soil,
   NumericVector VCleaf_kmax = paramsTranspirationdf["VCleaf_kmax"];
   NumericVector VCleaf_c = paramsTranspirationdf["VCleaf_c"];
   NumericVector VCleaf_d = paramsTranspirationdf["VCleaf_d"];
+  NumericVector VGrhizotot_kmax = paramsTranspirationdf["VGrhizo_kmax"];
   
   int numCohorts = VCroottot_kmax.length();
   
@@ -363,9 +366,10 @@ List paramsBelow(DataFrame above, NumericMatrix V, List soil,
     for(int l=0;l<nlayers;l++) {
       VCroot_kmax(c,_) = VCroottot_kmax[c]*xylemConductanceProportions(Vc,dVec);
       VGrhizo_kmax(c,l) = V(c,l)*findRhizosphereMaximumConductance(averageFracRhizosphereResistance*100.0, VG_n[l], VG_alpha[l],
-                   VCroot_kmax[c], VCroot_c[c], VCroot_d[c],
+                   VCroottot_kmax[c], VCroot_c[c], VCroot_d[c],
                    VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
                    VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c]);
+      VGrhizotot_kmax[c] += VGrhizo_kmax(c,l); 
     }
   }
   VGrhizo_kmax.attr("dimnames") = List::create(above.attr("row.names"), slnames);
@@ -537,18 +541,23 @@ DataFrame internalAllocationDataFrame(DataFrame above,
 
   NumericVector allocationTarget(numCohorts,0.0);
   NumericVector leafAreaTarget(numCohorts,0.0);
+  NumericVector rootAreaTarget(numCohorts, 0.0);
   
   String transpirationMode = control["transpirationMode"];
   NumericVector SA = above["SA"];
   NumericVector Al2As = paramsAnatomydf["Al2As"];
+  DataFrame df;
   if(transpirationMode=="Granier") {
     for(int c=0;c<numCohorts;c++){
       leafAreaTarget[c] = Al2As[c]*(SA[c]/10000.0);
       allocationTarget[c] = Al2As[c];
     }
+    df = DataFrame::create(Named("allocationTarget") = allocationTarget,
+                           Named("leafAreaTarget") = leafAreaTarget);
   } else {
     String allocationStrategy = control["allocationStrategy"];
     NumericVector Plant_kmax = paramsTranspirationdf["Plant_kmax"];
+    NumericVector VGrhizo_kmax = paramsTranspirationdf["VGrhizo_kmax"];
     // NumericVector longtermStorage(numCohorts,0.0);
     for(int c=0;c<numCohorts;c++){
       leafAreaTarget[c] = Al2As[c]*(SA[c]/10000.0);
@@ -557,11 +566,13 @@ DataFrame internalAllocationDataFrame(DataFrame above,
       } else if(allocationStrategy=="Al2As") {
         allocationTarget[c] = Al2As[c];
       }
+      rootAreaTarget[c] = fineRootArea(VGrhizo_kmax[c],leafAreaTarget[c]); //m2
     }
+    
+    df = DataFrame::create(Named("allocationTarget") = allocationTarget,
+                           Named("leafAreaTarget") = leafAreaTarget,
+                           Named("rootAreaTarget") = rootAreaTarget);
   }
-  
-  DataFrame df = DataFrame::create(Named("allocationTarget") = allocationTarget,
-                                   Named("leafAreaTarget") = leafAreaTarget);
   df.attr("row.names") = above.attr("row.names");
   return(df);
 }  

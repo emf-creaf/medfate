@@ -2741,9 +2741,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// individualGroundArea
-NumericMatrix individualGroundArea(NumericVector VolInd, NumericMatrix V, NumericVector d, NumericVector bulkDensity);
-RcppExport SEXP _medfate_individualGroundArea(SEXP VolIndSEXP, SEXP VSEXP, SEXP dSEXP, SEXP bulkDensitySEXP) {
+// individualRootedGroundArea
+NumericMatrix individualRootedGroundArea(NumericVector VolInd, NumericMatrix V, NumericVector d, NumericVector bulkDensity);
+RcppExport SEXP _medfate_individualRootedGroundArea(SEXP VolIndSEXP, SEXP VSEXP, SEXP dSEXP, SEXP bulkDensitySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2751,7 +2751,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericMatrix >::type V(VSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type bulkDensity(bulkDensitySEXP);
-    rcpp_result_gen = Rcpp::wrap(individualGroundArea(VolInd, V, d, bulkDensity));
+    rcpp_result_gen = Rcpp::wrap(individualRootedGroundArea(VolInd, V, d, bulkDensity));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2767,6 +2767,30 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type bulkDensity(bulkDensitySEXP);
     rcpp_result_gen = Rcpp::wrap(horizontalProportionsAdvanced(VolInd, N, V, d, bulkDensity));
+    return rcpp_result_gen;
+END_RCPP
+}
+// specificRootSurfaceArea
+double specificRootSurfaceArea(double specificRootLength, double rootTissueDensity);
+RcppExport SEXP _medfate_specificRootSurfaceArea(SEXP specificRootLengthSEXP, SEXP rootTissueDensitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type specificRootLength(specificRootLengthSEXP);
+    Rcpp::traits::input_parameter< double >::type rootTissueDensity(rootTissueDensitySEXP);
+    rcpp_result_gen = Rcpp::wrap(specificRootSurfaceArea(specificRootLength, rootTissueDensity));
+    return rcpp_result_gen;
+END_RCPP
+}
+// averageRadius
+double averageRadius(double specificRootLength, double rootTissueDensity);
+RcppExport SEXP _medfate_averageRadius(SEXP specificRootLengthSEXP, SEXP rootTissueDensitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type specificRootLength(specificRootLengthSEXP);
+    Rcpp::traits::input_parameter< double >::type rootTissueDensity(rootTissueDensitySEXP);
+    rcpp_result_gen = Rcpp::wrap(averageRadius(specificRootLength, rootTissueDensity));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4335,8 +4359,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_conicDistribution", (DL_FUNC) &_medfate_conicDistribution, 2},
     {"_medfate_ldrDistribution", (DL_FUNC) &_medfate_ldrDistribution, 3},
     {"_medfate_rootDistribution", (DL_FUNC) &_medfate_rootDistribution, 2},
-    {"_medfate_individualGroundArea", (DL_FUNC) &_medfate_individualGroundArea, 4},
+    {"_medfate_individualRootedGroundArea", (DL_FUNC) &_medfate_individualRootedGroundArea, 4},
     {"_medfate_horizontalProportionsAdvanced", (DL_FUNC) &_medfate_horizontalProportionsAdvanced, 5},
+    {"_medfate_specificRootSurfaceArea", (DL_FUNC) &_medfate_specificRootSurfaceArea, 2},
+    {"_medfate_averageRadius", (DL_FUNC) &_medfate_averageRadius, 2},
     {"_medfate_rootLengths", (DL_FUNC) &_medfate_rootLengths, 3},
     {"_medfate_xylemConductanceProportions", (DL_FUNC) &_medfate_xylemConductanceProportions, 3},
     {"_medfate_horizontalProportions", (DL_FUNC) &_medfate_horizontalProportions, 3},

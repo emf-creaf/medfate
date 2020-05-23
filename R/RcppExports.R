@@ -665,12 +665,20 @@ root_ldrDistribution <- function(Z50, Z95, d) {
     .Call(`_medfate_rootDistribution`, z, x)
 }
 
-root_individualGroundArea <- function(VolInd, V, d, bulkDensity) {
-    .Call(`_medfate_individualGroundArea`, VolInd, V, d, bulkDensity)
+root_individualRootedGroundArea <- function(VolInd, V, d, bulkDensity) {
+    .Call(`_medfate_individualRootedGroundArea`, VolInd, V, d, bulkDensity)
 }
 
 root_horizontalProportionsAdvanced <- function(VolInd, N, V, d, bulkDensity) {
     .Call(`_medfate_horizontalProportionsAdvanced`, VolInd, N, V, d, bulkDensity)
+}
+
+root_specificRootSurfaceArea <- function(specificRootLength, rootTissueDensity) {
+    .Call(`_medfate_specificRootSurfaceArea`, specificRootLength, rootTissueDensity)
+}
+
+root_averageRadius <- function(specificRootLength, rootTissueDensity) {
+    .Call(`_medfate_averageRadius`, specificRootLength, rootTissueDensity)
 }
 
 root_rootLengths <- function(v, d, depthWidthRatio = 1.0) {

@@ -7,6 +7,7 @@
 #include "hydraulics.h"
 #include "hydrology.h"
 #include "carbon.h"
+#include "root.h"
 #include "woodformation.h"
 #include "soil.h"
 #include "spwb.h"
@@ -269,7 +270,7 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
       double B_total = (B_struct_leaves[j] + B_struct_sapwood[j] + B_struct_fineroots[j]+labileMassSapwoodIni+labileMassLeafIni);
       
       // Rcout << j << " Lvol: "<< Volume_leaves[j] << " Svol: "<<Volume_sapwood[j]<< " LStarchMax: "<<Starch_max_leaves[j]
-      //       << " SStarchMax: "<<Starch_max_sapwood[j]<< " Bleaf "<< B_struct_leaves[j]<< " Bsap "<< B_struct_sapwood[j]<< " Bfr "<< B_struct_fineroots[j]<<"\n";
+            // << " SStarchMax: "<<Starch_max_sapwood[j]<< " Bleaf "<< B_struct_leaves[j]<< " Bsap "<< B_struct_sapwood[j]<< " Bfr "<< B_struct_fineroots[j]<<"\n";
       
       double LAexpanded = leafArea(LAI_expanded[j], N[j]);
       double LAlive = leafArea(LAI_live[j], N[j]);
@@ -636,6 +637,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   NumericVector Plant_kmax= paramsTransp["Plant_kmax"];
   NumericVector VCstem_kmax = paramsTransp["VCstem_kmax"];
   NumericVector VCroot_kmaxVEC= paramsTransp["VCroot_kmax"];
+  NumericVector VGrhizo_kmaxVEC= paramsTransp["VGrhizo_kmax"];
   NumericMatrix VGrhizo_kmax = Rcpp::as<Rcpp::NumericMatrix>(below["VGrhizo_kmax"]);
   NumericMatrix VCroot_kmax = Rcpp::as<Rcpp::NumericMatrix>(below["VCroot_kmax"]);
   int numLayers = VCroot_kmax.ncol();
@@ -694,6 +696,12 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   //3. Carbon balance and growth
   for(int j=0;j<numCohorts;j++){
     if(Status[j]=="alive") {
+      double LAexpanded = leafArea(LAI_expanded[j], N[j]);
+      double LAlive = leafArea(LAI_live[j], N[j]);
+      double LAdead = leafArea(LAI_dead[j], N[j]);
+      double LAlive_ini = LAlive;
+      
+      
       double costPerLA = 1000.0*leaf_CC/SLA[j]; // Construction cost in g gluc · m-2 of leaf area
       double costPerSA = sapwood_CC*(H[j]+(Z[j]/10.0))*WoodDensity[j];  //Construction cost in g gluc ·cm-2 of sapwood
       double deltaLAgrowth = 0.0;
@@ -705,20 +713,17 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
       Starch_max_sapwood[j] = sapwoodStarchCapacity(SA[j], H[j],Z[j],WoodDensity[j], 0.2)/Volume_sapwood[j];
       B_struct_leaves[j] = leafStructuralBiomass(LAI_expanded[j],N[j],SLA[j]);
       B_struct_sapwood[j] = sapwoodStructuralLivingBiomass(SA[j], H[j], Z[j], WoodDensity[j], 0.5);
-      B_struct_fineroots[j] = B_struct_leaves[j]/2.0; //TO BE CHANGED
+      double FRA = fineRootArea(VGrhizo_kmaxVEC[j],LAlive);//m2 
+      double SSA = specificRootSurfaceArea(4000.0, 0.165); //cm2/g TO BE CHANGED
+      B_struct_fineroots[j] = 10000.0*FRA/SSA; 
       
       double labileMassLeafIni = (sugarLeaf[j]+starchLeaf[j])*(glucoseMolarMass*Volume_leaves[j]);
       double labileMassSapwoodIni = (sugarSapwood[j]+starchSapwood[j])*(glucoseMolarMass*Volume_sapwood[j]);
       
       double B_total = (B_struct_leaves[j] + B_struct_sapwood[j] + B_struct_fineroots[j]+labileMassSapwoodIni+labileMassLeafIni);
       
-      // Rcout << j << " Lvol: "<< Volume_leaves[j] << " Svol: "<<Volume_sapwood[j]<< " LStarchMax: "<<Starch_max_leaves[j]
-      //       << " SStarchMax: "<<Starch_max_sapwood[j]<< " Bleaf "<< B_struct_leaves[j]<< " Bsap "<< B_struct_sapwood[j]<< " Bfr "<< B_struct_fineroots[j]<<"\n";
-      
-      double LAexpanded = leafArea(LAI_expanded[j], N[j]);
-      double LAlive = leafArea(LAI_live[j], N[j]);
-      double LAdead = leafArea(LAI_dead[j], N[j]);
-      double LAlive_ini = LAlive;
+      Rcout << j << " Lvol: "<< Volume_leaves[j] << " Svol: "<<Volume_sapwood[j]<< " LStarchMax: "<<Starch_max_leaves[j]
+            << " SStarchMax: "<<Starch_max_sapwood[j]<< " Bleaf "<< B_struct_leaves[j]<< " Bsap "<< B_struct_sapwood[j]<< " Bfr "<< B_struct_fineroots[j]<<"\n";
       
       double leafRespDay = 0.0;
       // double sfrRespDay = 0.0;
@@ -952,7 +957,12 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
         VCroot_kmax(j,s) = VCroot_kmax(j,s)*(oldrootR/newrootR);
       }     
       Plant_kmax[j] = 1.0/((1.0/VCleaf_kmax[j])+(1.0/VCstem_kmax[j])+(1.0/VCroot_kmaxVEC[j]));
-      
+
+      //Update fine root area target      
+      // findRhizosphereMaximumConductance(averageFracRhizosphereResistance*100.0, VG_n[l], VG_alpha[l],
+      //                                   VCroot_kmaxVEC[j], VCroot_c[j], VCroot_d[j],
+      //                                   VCstem_kmax[j], VCstem_c[j], VCstem_d[j],
+      //                                   VCleaf_kmax[j], VCleaf_c[j], VCleaf_d[j]);
       
       //Update leaf and stem osmotic water potential at full turgor
       LeafPI0[j] = osmoticWaterPotential(sugarLeaf[j], 20.0, nonSugarConc); //Osmotic potential at full turgor assuming RWC = 1 and 20ºC

@@ -410,7 +410,9 @@ List soil(DataFrame SoilParams, String VG_PTF = "Toth", NumericVector W = Numeri
                       _["usda_Type"] = usda_Type,
                       _["VG_alpha"] = VG_alpha,_["VG_n"] = VG_n, 
                       _["VG_theta_res"] = VG_theta_res,_["VG_theta_sat"] = VG_theta_sat, 
-                      _["macro"] = macro, _["rfc"] = rfc);
+                      _["macro"] = macro,
+                      _["bd"] = bd,
+                      _["rfc"] = rfc);
   l.attr("class") = CharacterVector::create("soil","list");
   return(l);
 }

@@ -165,8 +165,8 @@ NumericMatrix rootDistribution(NumericVector z, List x) {
  * Calculates root ground area for each layer of the root system of 
  * an individual with a given total fine root volume (in m3) and fine root proportions
  */
-// [[Rcpp::export("root_individualGroundArea")]]
-NumericMatrix individualGroundArea(NumericVector VolInd, NumericMatrix V, NumericVector d, NumericVector bulkDensity) {
+// [[Rcpp::export("root_individualRootedGroundArea")]]
+NumericMatrix individualRootedGroundArea(NumericVector VolInd, NumericMatrix V, NumericVector d, NumericVector bulkDensity) {
   int numCohorts = V.nrow();
   int numLayers = V.ncol();
   NumericMatrix larea(numCohorts,numLayers);
@@ -198,7 +198,7 @@ List horizontalProportionsAdvanced(NumericVector VolInd, NumericVector N, Numeri
     poolAreaInd[c] = 10000.0*poolProportions[c]/N[c]; //area of the pool per individual of the cohort
   }
   
-  NumericMatrix iga = individualGroundArea(VolInd,V,d,bulkDensity);
+  NumericMatrix iga = individualRootedGroundArea(VolInd,V,d,bulkDensity);
   
   for(int coh=0;coh<numCohorts;coh++) {
      NumericMatrix RHOP(numCohorts,numlayers);
@@ -220,6 +220,23 @@ List horizontalProportionsAdvanced(NumericVector VolInd, NumericVector N, Numeri
   return(l);
 }
 
+/**
+ *  specificRootSurfaceArea (SRSA; cm2/g) as function of: 
+ *    . specific root length (SRL; cm/g) e.g. 3870 cm/g
+ *    . root tissue density (RTD; g/cm3) e.g. 0.165 g/cm3
+ */
+// [[Rcpp::export("root_specificRootSurfaceArea")]]
+double specificRootSurfaceArea(double specificRootLength, double rootTissueDensity) {
+  return(2.0*sqrt(PI*specificRootLength/rootTissueDensity));
+}
+// [[Rcpp::export("root_averageRadius")]]
+double averageRadius(double specificRootLength, double rootTissueDensity) {
+  return(sqrt(1.0/(PI*specificRootLength*rootTissueDensity)));
+}
+
+double fineRootArea(double vgrhizo_kmax, double leafArea) {
+  return(vgrhizo_kmax*leafArea/10000000.0);
+}
 
 /**
  *  Root lengths
