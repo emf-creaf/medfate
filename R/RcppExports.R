@@ -673,6 +673,10 @@ root_horizontalProportionsAdvanced <- function(VolInd, N, V, d, bulkDensity) {
     .Call(`_medfate_horizontalProportionsAdvanced`, VolInd, N, V, d, bulkDensity)
 }
 
+root_soilRootVolume <- function(fineRootBiomass, specificRootLength, rootLengthDensity = 10.0) {
+    .Call(`_medfate_soilRootVolume`, fineRootBiomass, specificRootLength, rootLengthDensity)
+}
+
 root_specificRootSurfaceArea <- function(specificRootLength, rootTissueDensity) {
     .Call(`_medfate_specificRootSurfaceArea`, specificRootLength, rootTissueDensity)
 }

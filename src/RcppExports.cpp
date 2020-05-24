@@ -2770,6 +2770,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// soilRootVolume
+double soilRootVolume(double fineRootBiomass, double specificRootLength, double rootLengthDensity);
+RcppExport SEXP _medfate_soilRootVolume(SEXP fineRootBiomassSEXP, SEXP specificRootLengthSEXP, SEXP rootLengthDensitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type fineRootBiomass(fineRootBiomassSEXP);
+    Rcpp::traits::input_parameter< double >::type specificRootLength(specificRootLengthSEXP);
+    Rcpp::traits::input_parameter< double >::type rootLengthDensity(rootLengthDensitySEXP);
+    rcpp_result_gen = Rcpp::wrap(soilRootVolume(fineRootBiomass, specificRootLength, rootLengthDensity));
+    return rcpp_result_gen;
+END_RCPP
+}
 // specificRootSurfaceArea
 double specificRootSurfaceArea(double specificRootLength, double rootTissueDensity);
 RcppExport SEXP _medfate_specificRootSurfaceArea(SEXP specificRootLengthSEXP, SEXP rootTissueDensitySEXP) {
@@ -4361,6 +4374,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_rootDistribution", (DL_FUNC) &_medfate_rootDistribution, 2},
     {"_medfate_individualRootedGroundArea", (DL_FUNC) &_medfate_individualRootedGroundArea, 4},
     {"_medfate_horizontalProportionsAdvanced", (DL_FUNC) &_medfate_horizontalProportionsAdvanced, 5},
+    {"_medfate_soilRootVolume", (DL_FUNC) &_medfate_soilRootVolume, 3},
     {"_medfate_specificRootSurfaceArea", (DL_FUNC) &_medfate_specificRootSurfaceArea, 2},
     {"_medfate_averageRadius", (DL_FUNC) &_medfate_averageRadius, 2},
     {"_medfate_rootLengths", (DL_FUNC) &_medfate_rootLengths, 3},

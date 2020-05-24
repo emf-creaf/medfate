@@ -221,6 +221,17 @@ List horizontalProportionsAdvanced(NumericVector VolInd, NumericVector N, Numeri
 }
 
 /**
+ *   Estimates soil volume (m3) occupied with fine roots
+ *    . fine root biomass (g)
+ *    . specific root length (SRL; cm/g) e.g. 3870 cm/g
+ *    . root length density (RLD; cm/cm3) e.g. 10 cm/cm3 = 0.1 mm/mm3
+ */
+// [[Rcpp::export("root_soilRootVolume")]]
+double soilRootVolume(double fineRootBiomass, double specificRootLength, double rootLengthDensity = 10.0) {
+  return(fineRootBiomass*(specificRootLength/rootLengthDensity)*1e-6);
+}
+
+/**
  *  specificRootSurfaceArea (SRSA; cm2/g) as function of: 
  *    . specific root length (SRL; cm/g) e.g. 3870 cm/g
  *    . root tissue density (RTD; g/cm3) e.g. 0.165 g/cm3
