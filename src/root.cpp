@@ -183,18 +183,14 @@ NumericMatrix individualRootedGroundArea(NumericVector VolInd, NumericMatrix V, 
 }
 
 // [[Rcpp::export("root_horizontalProportionsAdvanced")]]
-List horizontalProportionsAdvanced(NumericVector VolInd, NumericVector N, NumericMatrix V, 
+List horizontalProportionsAdvanced(NumericVector poolProportions, NumericVector VolInd, NumericVector N, NumericMatrix V, 
                            NumericVector d, NumericVector bulkDensity) {
-  //Volume of roots per cohort (m3/ha)
-  NumericVector VolCoh = VolInd*N;
-  double volTotal = sum(VolCoh);
 
   int numCohorts = V.nrow();
   int numlayers = V.ncol();
   List l(numCohorts);
-  NumericVector poolProportions(numCohorts), poolAreaInd(numCohorts);
+  NumericVector poolAreaInd(numCohorts);
   for(int c=0;c<numCohorts;c++) {
-    poolProportions[c] = VolCoh[c]/volTotal;
     poolAreaInd[c] = 10000.0*poolProportions[c]/N[c]; //area of the pool per individual of the cohort
   }
   
@@ -220,16 +216,7 @@ List horizontalProportionsAdvanced(NumericVector VolInd, NumericVector N, Numeri
   return(l);
 }
 
-/**
- *   Estimates soil volume (m3) occupied with fine roots
- *    . fine root biomass (g)
- *    . specific root length (SRL; cm/g) e.g. 3870 cm/g
- *    . root length density (RLD; cm/cm3) e.g. 10 cm/cm3 = 0.1 mm/mm3
- */
-// [[Rcpp::export("root_soilRootVolume")]]
-double soilRootVolume(double fineRootBiomass, double specificRootLength, double rootLengthDensity = 10.0) {
-  return(fineRootBiomass*(specificRootLength/rootLengthDensity)*1e-6);
-}
+
 
 /**
  *  specificRootSurfaceArea (SRSA; cm2/g) as function of: 
@@ -246,7 +233,29 @@ double averageRadius(double specificRootLength, double rootTissueDensity) {
 }
 
 double fineRootArea(double vgrhizo_kmax, double leafArea) {
-  return(vgrhizo_kmax*leafArea/10000000.0);
+  return(vgrhizo_kmax*leafArea/1000000.0);
+}
+
+/**
+ * Fine root biomass in g dry
+ */
+// [[Rcpp::export("root_fineRootBiomass")]]
+double fineRootBiomass(double vgrhizo_kmax, double leafArea, 
+                       double specificRootLength, double rootTissueDensity) {
+  double FRA = fineRootArea(vgrhizo_kmax,leafArea);//m2 
+  double SSA = specificRootSurfaceArea(specificRootLength, rootTissueDensity); //cm2/g
+  return((10000.0*FRA)/SSA);
+}
+
+/**
+ *   Estimates soil volume (m3) occupied with fine roots
+ *    . fine root biomass (g dry)
+ *    . specific root length (SRL; cm/g) e.g. 3870 cm/g
+ *    . root length density (RLD; cm/cm3) e.g. 10 cm/cm3 = 0.1 mm/mm3
+ */
+// [[Rcpp::export("root_fineRootSoilVolume")]]
+double fineRootSoilVolume(double fineRootBiomass, double specificRootLength, double rootLengthDensity = 10.0) {
+  return(fineRootBiomass*(specificRootLength/rootLengthDensity)*1e-6);
 }
 
 /**
@@ -341,13 +350,13 @@ NumericVector xylemConductanceProportions(NumericVector v, NumericVector d, doub
 
 
 // [[Rcpp::export("root_horizontalProportions")]]
-List horizontalProportions(NumericMatrix V, NumericVector LAIlive, double poolOverlapFactor) {
+List horizontalProportions(NumericMatrix V, 
+                           NumericVector poolProportions,
+                           double LAIcell,
+                           double poolOverlapFactor) {
   int numCohorts = V.nrow();
   int numlayers = V.ncol();
-  double LAIcelllive = sum(LAIlive);
-  double ropmax = (1.0 - exp(-(poolOverlapFactor*LAIcelllive)));
-  NumericVector poolProportions(numCohorts);
-  for(int c=0;c<numCohorts;c++) poolProportions[c] = LAIlive[c]/LAIcelllive;
+  double ropmax = (1.0 - exp(-(poolOverlapFactor*LAIcell)));
   List l(numCohorts);
   for(int coh=0;coh<numCohorts;coh++) {
     NumericMatrix RHOP(numCohorts,numlayers);

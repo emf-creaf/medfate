@@ -155,8 +155,9 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
   StringVector Status = Rcpp::as<Rcpp::StringVector>(above["Status"]);
   
   //Belowground parameters  
-  List below = Rcpp::as<Rcpp::List>(x["below"]);
-  NumericVector Z = Rcpp::as<Rcpp::NumericVector>(below["Z"]);
+  DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
+  List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
+  NumericVector Z = Rcpp::as<Rcpp::NumericVector>(belowdf["Z"]);
   
   //Internal state variables
   DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
@@ -220,7 +221,7 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
   
 
   //Ring of forming vessels
-  List ringList = as<Rcpp::List>(x["rings"]);
+  List ringList = as<Rcpp::List>(x["internalRings"]);
   
   
   //Daily output vectors
@@ -565,7 +566,8 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   
   
   //Belowground parameters  
-  List below = Rcpp::as<Rcpp::List>(x["below"]);
+  DataFrame below = Rcpp::as<Rcpp::DataFrame>(x["below"]);
+  List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
   NumericVector Z = Rcpp::as<Rcpp::NumericVector>(below["Z"]);
   
   //Internal state variables
@@ -638,8 +640,8 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   NumericVector VCstem_kmax = paramsTransp["VCstem_kmax"];
   NumericVector VCroot_kmaxVEC= paramsTransp["VCroot_kmax"];
   NumericVector VGrhizo_kmaxVEC= paramsTransp["VGrhizo_kmax"];
-  NumericMatrix VGrhizo_kmax = Rcpp::as<Rcpp::NumericMatrix>(below["VGrhizo_kmax"]);
-  NumericMatrix VCroot_kmax = Rcpp::as<Rcpp::NumericMatrix>(below["VCroot_kmax"]);
+  NumericMatrix VGrhizo_kmax = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VGrhizo_kmax"]);
+  NumericMatrix VCroot_kmax = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VCroot_kmax"]);
   int numLayers = VCroot_kmax.ncol();
   
   //Water storage parameters
@@ -655,7 +657,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   
   
   //Ring of forming vessels
-  List ringList = as<Rcpp::List>(x["rings"]);
+  List ringList = as<Rcpp::List>(x["internalRings"]);
   
   //Subdaily output matrices
   NumericMatrix CarbonBalanceInst(numCohorts, numSteps);  
@@ -1129,12 +1131,14 @@ void checkgrowthInput(List x, List soil, String transpirationMode, String soilFu
   if(!above.containsElementNamed("DBH")) stop("DBH missing in growthInput$above");
   
   if(!x.containsElementNamed("below")) stop("below missing in growthInput");
-  List below = Rcpp::as<Rcpp::List>(x["below"]);
+  DataFrame below = Rcpp::as<Rcpp::DataFrame>(x["below"]);
   if(!below.containsElementNamed("Z")) stop("Z missing in growthInput$below");
-  if(!below.containsElementNamed("V")) stop("V missing in growthInput$below");
+  if(!x.containsElementNamed("belowLayers")) stop("belowLayers missing in growthInput");
+  List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
+  if(!belowLayers.containsElementNamed("V")) stop("V missing in growthInput$belowLayers");
   if(transpirationMode=="Sperry"){
-    if(!below.containsElementNamed("VGrhizo_kmax")) stop("VGrhizo_kmax missing in growthInput$below");
-    if(!below.containsElementNamed("VCroot_kmax")) stop("VCroot_kmax missing in growthInput$below");
+    if(!belowLayers.containsElementNamed("VGrhizo_kmax")) stop("VGrhizo_kmax missing in growthInput$below");
+    if(!belowLayers.containsElementNamed("VCroot_kmax")) stop("VCroot_kmax missing in growthInput$below");
   }  
   
   if(!x.containsElementNamed("paramsPhenology")) stop("paramsPhenology missing in growthInput");
@@ -1609,7 +1613,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
       }
       
       //reset ring structures
-      List ringList = x["rings"];
+      List ringList = x["internalRings"];
       for(int j=0;j<numCohorts; j++) ringList[j] = initialize_ring();
       // Store stand structure
       standStructures[iyear] = clone(above);

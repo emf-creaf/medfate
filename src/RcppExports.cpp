@@ -2756,30 +2756,18 @@ BEGIN_RCPP
 END_RCPP
 }
 // horizontalProportionsAdvanced
-List horizontalProportionsAdvanced(NumericVector VolInd, NumericVector N, NumericMatrix V, NumericVector d, NumericVector bulkDensity);
-RcppExport SEXP _medfate_horizontalProportionsAdvanced(SEXP VolIndSEXP, SEXP NSEXP, SEXP VSEXP, SEXP dSEXP, SEXP bulkDensitySEXP) {
+List horizontalProportionsAdvanced(NumericVector poolProportions, NumericVector VolInd, NumericVector N, NumericMatrix V, NumericVector d, NumericVector bulkDensity);
+RcppExport SEXP _medfate_horizontalProportionsAdvanced(SEXP poolProportionsSEXP, SEXP VolIndSEXP, SEXP NSEXP, SEXP VSEXP, SEXP dSEXP, SEXP bulkDensitySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type poolProportions(poolProportionsSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type VolInd(VolIndSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type N(NSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type V(VSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type bulkDensity(bulkDensitySEXP);
-    rcpp_result_gen = Rcpp::wrap(horizontalProportionsAdvanced(VolInd, N, V, d, bulkDensity));
-    return rcpp_result_gen;
-END_RCPP
-}
-// soilRootVolume
-double soilRootVolume(double fineRootBiomass, double specificRootLength, double rootLengthDensity);
-RcppExport SEXP _medfate_soilRootVolume(SEXP fineRootBiomassSEXP, SEXP specificRootLengthSEXP, SEXP rootLengthDensitySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type fineRootBiomass(fineRootBiomassSEXP);
-    Rcpp::traits::input_parameter< double >::type specificRootLength(specificRootLengthSEXP);
-    Rcpp::traits::input_parameter< double >::type rootLengthDensity(rootLengthDensitySEXP);
-    rcpp_result_gen = Rcpp::wrap(soilRootVolume(fineRootBiomass, specificRootLength, rootLengthDensity));
+    rcpp_result_gen = Rcpp::wrap(horizontalProportionsAdvanced(poolProportions, VolInd, N, V, d, bulkDensity));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2804,6 +2792,33 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type specificRootLength(specificRootLengthSEXP);
     Rcpp::traits::input_parameter< double >::type rootTissueDensity(rootTissueDensitySEXP);
     rcpp_result_gen = Rcpp::wrap(averageRadius(specificRootLength, rootTissueDensity));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fineRootBiomass
+double fineRootBiomass(double vgrhizo_kmax, double leafArea, double specificRootLength, double rootTissueDensity);
+RcppExport SEXP _medfate_fineRootBiomass(SEXP vgrhizo_kmaxSEXP, SEXP leafAreaSEXP, SEXP specificRootLengthSEXP, SEXP rootTissueDensitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type vgrhizo_kmax(vgrhizo_kmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type leafArea(leafAreaSEXP);
+    Rcpp::traits::input_parameter< double >::type specificRootLength(specificRootLengthSEXP);
+    Rcpp::traits::input_parameter< double >::type rootTissueDensity(rootTissueDensitySEXP);
+    rcpp_result_gen = Rcpp::wrap(fineRootBiomass(vgrhizo_kmax, leafArea, specificRootLength, rootTissueDensity));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fineRootSoilVolume
+double fineRootSoilVolume(double fineRootBiomass, double specificRootLength, double rootLengthDensity);
+RcppExport SEXP _medfate_fineRootSoilVolume(SEXP fineRootBiomassSEXP, SEXP specificRootLengthSEXP, SEXP rootLengthDensitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type fineRootBiomass(fineRootBiomassSEXP);
+    Rcpp::traits::input_parameter< double >::type specificRootLength(specificRootLengthSEXP);
+    Rcpp::traits::input_parameter< double >::type rootLengthDensity(rootLengthDensitySEXP);
+    rcpp_result_gen = Rcpp::wrap(fineRootSoilVolume(fineRootBiomass, specificRootLength, rootLengthDensity));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2834,15 +2849,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // horizontalProportions
-List horizontalProportions(NumericMatrix V, NumericVector LAIlive, double poolOverlapFactor);
-RcppExport SEXP _medfate_horizontalProportions(SEXP VSEXP, SEXP LAIliveSEXP, SEXP poolOverlapFactorSEXP) {
+List horizontalProportions(NumericMatrix V, NumericVector poolProportions, double LAIcell, double poolOverlapFactor);
+RcppExport SEXP _medfate_horizontalProportions(SEXP VSEXP, SEXP poolProportionsSEXP, SEXP LAIcellSEXP, SEXP poolOverlapFactorSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericMatrix >::type V(VSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type LAIlive(LAIliveSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type poolProportions(poolProportionsSEXP);
+    Rcpp::traits::input_parameter< double >::type LAIcell(LAIcellSEXP);
     Rcpp::traits::input_parameter< double >::type poolOverlapFactor(poolOverlapFactorSEXP);
-    rcpp_result_gen = Rcpp::wrap(horizontalProportions(V, LAIlive, poolOverlapFactor));
+    rcpp_result_gen = Rcpp::wrap(horizontalProportions(V, poolProportions, LAIcell, poolOverlapFactor));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4373,13 +4389,14 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_ldrDistribution", (DL_FUNC) &_medfate_ldrDistribution, 3},
     {"_medfate_rootDistribution", (DL_FUNC) &_medfate_rootDistribution, 2},
     {"_medfate_individualRootedGroundArea", (DL_FUNC) &_medfate_individualRootedGroundArea, 4},
-    {"_medfate_horizontalProportionsAdvanced", (DL_FUNC) &_medfate_horizontalProportionsAdvanced, 5},
-    {"_medfate_soilRootVolume", (DL_FUNC) &_medfate_soilRootVolume, 3},
+    {"_medfate_horizontalProportionsAdvanced", (DL_FUNC) &_medfate_horizontalProportionsAdvanced, 6},
     {"_medfate_specificRootSurfaceArea", (DL_FUNC) &_medfate_specificRootSurfaceArea, 2},
     {"_medfate_averageRadius", (DL_FUNC) &_medfate_averageRadius, 2},
+    {"_medfate_fineRootBiomass", (DL_FUNC) &_medfate_fineRootBiomass, 4},
+    {"_medfate_fineRootSoilVolume", (DL_FUNC) &_medfate_fineRootSoilVolume, 3},
     {"_medfate_rootLengths", (DL_FUNC) &_medfate_rootLengths, 3},
     {"_medfate_xylemConductanceProportions", (DL_FUNC) &_medfate_xylemConductanceProportions, 3},
-    {"_medfate_horizontalProportions", (DL_FUNC) &_medfate_horizontalProportions, 3},
+    {"_medfate_horizontalProportions", (DL_FUNC) &_medfate_horizontalProportions, 4},
     {"_medfate_thetaSATSaxton", (DL_FUNC) &_medfate_thetaSATSaxton, 3},
     {"_medfate_theta2psiSaxton", (DL_FUNC) &_medfate_theta2psiSaxton, 4},
     {"_medfate_psi2thetaSaxton", (DL_FUNC) &_medfate_psi2thetaSaxton, 4},

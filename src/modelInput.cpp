@@ -382,20 +382,6 @@ List paramsBelow(DataFrame above, NumericMatrix V, List soil,
   return(below);
 }
 
-List paramsBelowZ(DataFrame above, NumericMatrix V, NumericVector Z, List soil, 
-                 DataFrame paramsTranspirationdf, List control) {
-  
-  List belowTemp = paramsBelow(above, V, soil, paramsTranspirationdf, control);
-
-  Z.attr("names") = above.attr("row.names");
-  
-  List below = List::create(_["V"] = V, _["Z"] = Z,
-                            _["VGrhizo_kmax"] = belowTemp["VGrhizo_kmax"],
-                            _["VCroot_kmax"] = belowTemp["VCroot_kmax"]);
-  
-  return(below);
-}
-
 DataFrame paramsGrowth(DataFrame above, DataFrame SpParams) {
   IntegerVector SP = above["SP"];
   int numCohorts = SP.size();
@@ -465,7 +451,7 @@ DataFrame internalPhenologyDataFrame(DataFrame above) {
   return(df);
 }
 DataFrame internalCarbonDataFrame(DataFrame above, 
-                                  List below,
+                                  DataFrame belowdf,
                                   DataFrame paramsAnatomydf,
                                   DataFrame paramsWaterStoragedf,
                                   DataFrame paramsGrowthdf,
@@ -483,7 +469,7 @@ DataFrame internalCarbonDataFrame(DataFrame above,
   
   NumericVector WoodC = paramsGrowthdf["WoodC"];
 
-  NumericVector Z = below["Z"];
+  NumericVector Z = belowdf["Z"];
   IntegerVector SP = above["SP"];
   NumericVector LAI_live = above["LAI_live"];
   NumericVector LAI_expanded = above["LAI_expanded"];
@@ -612,8 +598,11 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
   NumericVector LAI_expanded = above["LAI_expanded"];
   NumericVector LAI_dead = above["LAI_dead"];
   NumericVector H = above["H"];
+  NumericVector N = above["N"];
   NumericVector CR = above["CR"];
   String transpirationMode = control["transpirationMode"];
+  bool plantWaterPools = control["plantWaterPools"];
+  
   if((transpirationMode!="Granier") & (transpirationMode!="Sperry")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Granier' or 'Sperry')");
 
   
@@ -639,14 +628,15 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
   cohortDescdf.attr("row.names") = above.attr("row.names");
   
   //Above 
-  DataFrame plantsdf = DataFrame::create(_["H"]=H, _["CR"]=CR, 
+  DataFrame plantsdf = DataFrame::create(_["H"]=H, _["CR"]=CR, _["N"] = N, 
                                          _["LAI_live"]=LAI_live, 
                                          _["LAI_expanded"] = LAI_expanded, 
                                          _["LAI_dead"] = LAI_dead,
                                          _["Status"] = Status);
   plantsdf.attr("row.names") = above.attr("row.names");
   
- 
+  NumericVector dVec = soil["dVec"];
+  NumericVector bd = soil["bd"];
   NumericVector Wsoil = soil["W"];
   NumericMatrix Wpool = NumericMatrix(numCohorts, nlayers);
   Wpool.attr("dimnames") = V.attr("dimnames");
@@ -663,14 +653,31 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
                                                _["g"] = g);
     paramsInterceptiondf.attr("row.names") = above.attr("row.names");
   
-    List below = List::create(_["V"] = V,
-                              _["Wpool"] = Wpool);
+    DataFrame belowdf = DataFrame::create();
+    List belowLayers;
+    if(plantWaterPools) {
+      double LAIcelllive = sum(LAI_live);
+      NumericVector poolProportions(numCohorts);
+      for(int c=0;c<numCohorts;c++) poolProportions[c] = LAI_live[c]/LAIcelllive;
+      
+      double poolOverlapFactor = control["poolOverlapFactor"];
+      belowdf = DataFrame::create(_["poolProportions"] = poolProportions);
+      List RHOP = horizontalProportions(V, poolProportions, LAIcelllive, poolOverlapFactor); 
+      belowLayers = List::create(_["V"] = V,
+                                 _["Wpool"] = Wpool,
+                                 _["RHOP"] = RHOP);
+    } else {
+      belowLayers = List::create(_["V"] = V,
+                                 _["Wpool"] = Wpool);
+    }
+    belowdf.attr("row.names") = above.attr("row.names");
     List paramsCanopy = List::create(_["gdd"] = 0.0);
     input = List::create(_["control"] = clone(control),
                          _["canopy"] = paramsCanopy,
                          _["cohorts"] = cohortDescdf,
                          _["above"] = plantsdf,
-                         _["below"] = below,
+                         _["below"] = belowdf,
+                         _["belowLayers"] = belowLayers,
                          _["paramsPhenology"] = paramsPhenology(above, SpParams),
                          _["paramsInterception"] = paramsInterceptiondf,
                          _["paramsTranspiration"] = paramsTranspirationGranier(above,SpParams),
@@ -696,18 +703,42 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
       soilFunctions = "VG"; 
       warning("Soil pedotransfer functions set to Van Genuchten ('VG').");
     }
-    List below = paramsBelow(above, V, soil, 
-                             paramsTranspirationdf, control);
-    below["Wpool"] = Wpool;
-    below["RhizoPsi"] = RhizoPsi;
+    DataFrame belowdf = DataFrame::create();
+    List belowLayers = paramsBelow(above, V, soil, 
+                              paramsTranspirationdf, control);
+    belowLayers["Wpool"] = Wpool;
+    belowLayers["RhizoPsi"] = RhizoPsi;
+    if(plantWaterPools) {
+      NumericVector FRSV(numCohorts), FRB(numCohorts);
+      NumericVector VGrhizo_kmax = paramsTranspirationdf["VGrhizo_kmax"];
+      for(int c=0;c<numCohorts;c++)  {
+        double specificRootLength = 4000.0;
+        double rootTissueDensity = 0.165;
+        double LAlive = leafArea(LAI_live[c], N[c]);
+        FRB[c] = fineRootBiomass(VGrhizo_kmax[c], LAlive, specificRootLength, rootTissueDensity);
+        FRSV[c] = fineRootSoilVolume(FRB[c],specificRootLength);
+      }
+      NumericVector volumeN = FRSV*N;
+      double sumVolN = sum(volumeN);
+      NumericVector poolProportions(numCohorts);
+      for(int c=0;c<numCohorts;c++) poolProportions[c] = volumeN[c]/sumVolN;
+      belowdf = DataFrame::create(_["fineRootBiomass"] = FRB,
+                                  _["fineRootSoilVolume"] = FRSV,
+                                  _["poolProportions"] = poolProportions);
+      List RHOP = horizontalProportionsAdvanced(poolProportions, FRSV, N, V, dVec, bd);
+      belowLayers["RHOP"] = RHOP;
+    } 
+    belowdf.attr("row.names") = above.attr("row.names");
     
+
     List paramsCanopy = List::create(_["gdd"] = 0.0,_["Temp"] = NA_REAL);
     List ctl = clone(control);
     input = List::create(_["control"] = ctl,
                          _["canopy"] = paramsCanopy,
                          _["cohorts"] = cohortDescdf,
                          _["above"] = plantsdf,
-                         _["below"] = below,
+                         _["below"] = belowdf,
+                         _["belowLayers"] = belowLayers,
                          _["paramsPhenology"] = paramsPhenology(above, SpParams),
                          _["paramsAnatomy"] = paramsAnatomydf,
                          _["paramsInterception"] = paramsInterceptiondf,
@@ -749,7 +780,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   String soilFunctions = control["soilFunctions"]; 
   if((soilFunctions!="SX") & (soilFunctions!="VG")) stop("Wrong soil functions ('soilFunctions' should be either 'SX' or 'VG')");
   
-
+  bool plantWaterPools = control["plantWaterPools"];
   
   DataFrame paramsAnatomydf = paramsAnatomy(above, SpParams);
   NumericVector WoodDensity = paramsAnatomydf["WoodDensity"];
@@ -801,6 +832,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   for(int i=0;i<numCohorts;i++) ringList[i] = initialize_ring();
   ringList.attr("names") = above.attr("row.names");
   
+  DataFrame belowdf = DataFrame::create(_["Z"]=Z);
   List input;
   if(transpirationMode=="Granier") {
     //Base params
@@ -810,13 +842,31 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     
     DataFrame paramsTranspirationdf = paramsTranspirationGranier(above, SpParams);
     
-    List below = List::create( _["Z"]=Z,_["V"] = V,_["Wpool"] = Wpool);
+    List belowLayers;
+    if(plantWaterPools) {
+      double LAIcelllive = sum(LAI_live);
+      NumericVector poolProportions(numCohorts);
+      for(int c=0;c<numCohorts;c++) poolProportions[c] = LAI_live[c]/LAIcelllive;
+      
+      double poolOverlapFactor = control["poolOverlapFactor"];
+      belowdf = DataFrame::create(_["Z"]=Z,
+                                  _["poolProportions"] = poolProportions);
+      List RHOP = horizontalProportions(V, poolProportions, LAIcelllive, poolOverlapFactor); 
+      belowLayers = List::create(_["V"] = V,
+                                 _["Wpool"] = Wpool,
+                                 _["RHOP"] = RHOP);
+    } else {
+      belowLayers = List::create(_["V"] = V,
+                                 _["Wpool"] = Wpool);
+    }
+    belowdf.attr("row.names") = above.attr("row.names");
     List paramsCanopy = List::create(_["gdd"] = 0.0);
     input = List::create(_["control"] = clone(control),
                          _["canopy"] = paramsCanopy,
                          _["cohorts"] = cohortDescdf,
                          _["above"] = plantsdf,
-                         _["below"] = below,
+                         _["below"] = belowdf,
+                         _["belowLayers"] = belowLayers,
                          _["paramsPhenology"] = paramsPhenology(above, SpParams),
                          _["paramsAnatomy"] = paramsAnatomydf,
                          _["paramsInterception"] = paramsInterceptiondf,
@@ -826,14 +876,14 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                          _["paramsAllometries"] = paramsAllometriesdf,
                          _["internalPhenology"] = internalPhenologyDataFrame(above),
                          _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
-                         _["internalCarbon"] = internalCarbonDataFrame(plantsdf, below, 
+                         _["internalCarbon"] = internalCarbonDataFrame(plantsdf, belowdf, 
                                                          paramsAnatomydf, 
                                                          paramsWaterStoragedf,
                                                          paramsGrowthdf, control),
                         _["internalAllocation"] = internalAllocationDataFrame(plantsdf,
                                                             paramsAnatomydf,
                                                             paramsTranspirationdf, control),
-                        _["rings"] = ringList);
+                        _["internalRings"] = ringList);
   } else if(transpirationMode =="Sperry"){
     
     //Base params
@@ -845,14 +895,27 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     
     DataFrame paramsTranspirationdf = paramsTranspirationSperry(above, V, soil, SpParams,
                                                           paramsAnatomydf, control);
-    List below = paramsBelowZ(above, V, Z, soil, 
-                              paramsTranspirationdf, control);
-    
+    List belowLayers = paramsBelow(above, V, soil, 
+                                   paramsTranspirationdf, control);
+
     NumericMatrix RhizoPsi =  NumericMatrix(numCohorts, nlayers);
     RhizoPsi.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
     std::fill(RhizoPsi.begin(), RhizoPsi.end(), 0.0);
-    below["RhizoPsi"] = RhizoPsi;
-    below["Wpool"] = Wpool;
+    belowLayers["RhizoPsi"] = RhizoPsi;
+    belowLayers["Wpool"] = Wpool;
+    
+    if(plantWaterPools) {
+      double LAIcelllive = sum(LAI_live);
+      NumericVector poolProportions(numCohorts);
+      for(int c=0;c<numCohorts;c++) poolProportions[c] = LAI_live[c]/LAIcelllive;
+      
+      double poolOverlapFactor = control["poolOverlapFactor"];
+      belowdf = DataFrame::create(_["Z"]=Z,
+                                  _["poolProportions"] = poolProportions);
+      List RHOP = horizontalProportions(V, poolProportions, LAIcelllive, poolOverlapFactor); 
+      belowLayers["RHOP"] = RHOP;
+    } 
+    belowdf.attr("row.names") = above.attr("row.names");
     
     if(soilFunctions=="SX") {
       soilFunctions = "VG"; 
@@ -864,7 +927,8 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                          _["canopy"] = paramsCanopy,
                          _["cohorts"] = cohortDescdf,
                          _["above"] = plantsdf,
-                         _["below"] = below,
+                         _["below"] = belowdf,
+                         _["belowLayers"] = belowLayers,
                          _["paramsPhenology"] = paramsPhenology(above, SpParams),
                          _["paramsAnatomy"] = paramsAnatomydf,
                          _["paramsInterception"] = paramsInterceptiondf,
@@ -874,14 +938,14 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                          _["paramsAllometries"] = paramsAllometriesdf,
                          _["internalPhenology"] = internalPhenologyDataFrame(above),
                          _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
-                         _["internalCarbon"] = internalCarbonDataFrame(plantsdf, below,
+                         _["internalCarbon"] = internalCarbonDataFrame(plantsdf, belowdf,
                                                          paramsAnatomydf, 
                                                          paramsWaterStoragedf,
                                                          paramsGrowthdf, control),
                          _["internalAllocation"] = internalAllocationDataFrame(plantsdf,
                                                          paramsAnatomydf,
                                                          paramsTranspirationdf, control),
-                         _["rings"] = ringList);
+                         _["internalRings"] = ringList);
     
   } 
   
@@ -929,8 +993,8 @@ void resetInputs(List x, List soil) {
   NumericVector Temp = soil["Temp"];
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
-  List below = x["below"];
-  NumericMatrix Wpool = below["Wpool"];
+  List belowLayers = x["belowLayers"];
+  NumericMatrix Wpool = belowLayers["Wpool"];
   int nlayers = Wsoil.size();
   int numCohorts = Wpool.nrow();
   
@@ -949,7 +1013,7 @@ void resetInputs(List x, List soil) {
   NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
   
   if(transpirationMode=="Sperry") {
-    NumericMatrix RhizoPsi = Rcpp::as<Rcpp::NumericMatrix>(below["RhizoPsi"]);
+    NumericMatrix RhizoPsi = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["RhizoPsi"]);
     NumericVector RootCrownPsi = Rcpp::as<Rcpp::NumericVector>(internalWater["RootCrownPsi"]);
     NumericVector Stem1Psi = Rcpp::as<Rcpp::NumericVector>(internalWater["Stem1Psi"]);
     NumericVector Stem2Psi = Rcpp::as<Rcpp::NumericVector>(internalWater["Stem2Psi"]);

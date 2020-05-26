@@ -669,12 +669,8 @@ root_individualRootedGroundArea <- function(VolInd, V, d, bulkDensity) {
     .Call(`_medfate_individualRootedGroundArea`, VolInd, V, d, bulkDensity)
 }
 
-root_horizontalProportionsAdvanced <- function(VolInd, N, V, d, bulkDensity) {
-    .Call(`_medfate_horizontalProportionsAdvanced`, VolInd, N, V, d, bulkDensity)
-}
-
-root_soilRootVolume <- function(fineRootBiomass, specificRootLength, rootLengthDensity = 10.0) {
-    .Call(`_medfate_soilRootVolume`, fineRootBiomass, specificRootLength, rootLengthDensity)
+root_horizontalProportionsAdvanced <- function(poolProportions, VolInd, N, V, d, bulkDensity) {
+    .Call(`_medfate_horizontalProportionsAdvanced`, poolProportions, VolInd, N, V, d, bulkDensity)
 }
 
 root_specificRootSurfaceArea <- function(specificRootLength, rootTissueDensity) {
@@ -685,6 +681,14 @@ root_averageRadius <- function(specificRootLength, rootTissueDensity) {
     .Call(`_medfate_averageRadius`, specificRootLength, rootTissueDensity)
 }
 
+root_fineRootBiomass <- function(vgrhizo_kmax, leafArea, specificRootLength, rootTissueDensity) {
+    .Call(`_medfate_fineRootBiomass`, vgrhizo_kmax, leafArea, specificRootLength, rootTissueDensity)
+}
+
+root_fineRootSoilVolume <- function(fineRootBiomass, specificRootLength, rootLengthDensity = 10.0) {
+    .Call(`_medfate_fineRootSoilVolume`, fineRootBiomass, specificRootLength, rootLengthDensity)
+}
+
 root_rootLengths <- function(v, d, depthWidthRatio = 1.0) {
     .Call(`_medfate_rootLengths`, v, d, depthWidthRatio)
 }
@@ -693,8 +697,8 @@ root_xylemConductanceProportions <- function(v, d, depthWidthRatio = 1.0) {
     .Call(`_medfate_xylemConductanceProportions`, v, d, depthWidthRatio)
 }
 
-root_horizontalProportions <- function(V, LAIlive, poolOverlapFactor) {
-    .Call(`_medfate_horizontalProportions`, V, LAIlive, poolOverlapFactor)
+root_horizontalProportions <- function(V, poolProportions, LAIcell, poolOverlapFactor) {
+    .Call(`_medfate_horizontalProportions`, V, poolProportions, LAIcell, poolOverlapFactor)
 }
 
 soil_thetaSATSX <- function(clay, sand, om = NA_real_) {

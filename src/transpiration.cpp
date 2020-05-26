@@ -190,17 +190,21 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   List canopyParams = Rcpp::as<Rcpp::List>(x["canopy"]);
   
   //Root distribution input
-  List below = Rcpp::as<Rcpp::List>(x["below"]);
-  NumericMatrix V =Rcpp::as<Rcpp::NumericMatrix>(below["V"]);
-  NumericMatrix VCroot_kmax= Rcpp::as<Rcpp::NumericMatrix>(below["VCroot_kmax"]);
-  NumericMatrix VGrhizo_kmax= Rcpp::as<Rcpp::NumericMatrix>(below["VGrhizo_kmax"]);
+  DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
+  List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
+  NumericMatrix V =Rcpp::as<Rcpp::NumericMatrix>(belowLayers["V"]);
+  NumericMatrix VCroot_kmax= Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VCroot_kmax"]);
+  NumericMatrix VGrhizo_kmax= Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VGrhizo_kmax"]);
   
   //Water pools
-  NumericMatrix Wpool = Rcpp::as<Rcpp::NumericMatrix>(below["Wpool"]);
+  NumericMatrix Wpool = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["Wpool"]);
   NumericMatrix Wrhizo;
   List RHOP;
   NumericVector poolProportions(numCohorts);
-  
+  if(plantWaterPools) {
+    RHOP = belowLayers["RHOP"];
+    poolProportions = belowdf["poolProportions"];
+  }
   
   //Base parameters
   DataFrame paramsInterception = Rcpp::as<Rcpp::DataFrame>(x["paramsInterception"]);
@@ -251,7 +255,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   NumericVector Stem1PsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["Stem1Psi"]);
   NumericVector Stem2PsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["Stem2Psi"]);
   NumericVector RootCrownPsiVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["RootCrownPsi"]);
-  NumericMatrix RhizoPsiMAT = Rcpp::as<Rcpp::NumericMatrix>(below["RhizoPsi"]);
+  NumericMatrix RhizoPsiMAT = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["RhizoPsi"]);
   NumericVector EinstVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["Einst"]);
   NumericVector NSPLVEC = Rcpp::as<Rcpp::NumericVector>(internalWater["NSPL"]);
   
@@ -418,10 +422,6 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   //Hydraulics: supply functions
   List soil_c;
   if(plantWaterPools) {
-    //Calculate proportions of cohort-unique pools
-    for(int c=0;c<numCohorts;c++) poolProportions[c] = LAIlive[c]/LAIcelllive;
-    //Calculate proportions of rhizosphere overlapping other pools
-    RHOP = horizontalProportions(V, LAIlive, poolOverlapFactor);
     soil_c= clone(soil); //Clone soil
     //Calculate average rhizosphere moisture, including rhizosphere overlaps
     Wrhizo = cohortRhizosphereMoisture(Wpool, RHOP);
@@ -1321,15 +1321,19 @@ List transpirationGranier(List x, List soil, double tday, double pet,
   int numCohorts = LAIphe.size();
 
   //Root distribution input
-  List below = Rcpp::as<Rcpp::List>(x["below"]);
-  NumericMatrix V = Rcpp::as<Rcpp::NumericMatrix>(below["V"]);
+  DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
+  List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
+  NumericMatrix V = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["V"]);
 
   //Water pools
-  NumericMatrix Wpool = Rcpp::as<Rcpp::NumericMatrix>(below["Wpool"]);
+  NumericMatrix Wpool = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["Wpool"]);
   NumericMatrix Wrhizo;
   List RHOP;
   NumericVector poolProportions(numCohorts);
-  
+  if(plantWaterPools) {
+    RHOP = belowLayers["RHOP"];
+    poolProportions = belowdf["poolProportions"];
+  }
   //Parameters  
   DataFrame paramsInterception = Rcpp::as<Rcpp::DataFrame>(x["paramsInterception"]);
   NumericVector kPAR = Rcpp::as<Rcpp::NumericVector>(paramsInterception["kPAR"]);
@@ -1385,10 +1389,6 @@ List transpirationGranier(List x, List soil, double tday, double pet,
   NumericVector psiSoil = psi(soil,soilFunctions); //Update soil water potential
   List soil_c;
   if(plantWaterPools) {
-    //Calculate proportions of cohort-unique pools
-    for(int c=0;c<numCohorts;c++) poolProportions[c] = LAIlive[c]/LAIcelllive;
-    //Calculate proportions of rhizosphere overlapping other pools
-    RHOP = horizontalProportions(V, LAIlive, poolOverlapFactor);
     soil_c= clone(soil); //Clone soil
     //Calculate average rhizosphere moisture, including rhizosphere overlaps
     Wrhizo = cohortRhizosphereMoisture(Wpool, RHOP);
@@ -1450,7 +1450,6 @@ List transpirationGranier(List x, List soil, double tday, double pet,
     NumericVector Ws = soil["W"];
     for(int l=0;l<nlayers;l++) Ws[l] = Ws[l] - (sum(EplantCoh(_,l))/Water_FC[l]); 
     if(plantWaterPools) {
-      
       rhizosphereMoistureExtraction(EplantCoh, Water_FC,
                                     Wpool, RHOP,
                                     poolProportions);
