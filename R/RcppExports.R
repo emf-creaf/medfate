@@ -109,10 +109,6 @@ stand_basalArea <- function(x) {
     .Call(`_medfate_standBasalArea`, x)
 }
 
-plant_shrubIndividualArea <- function(SP, Cover, H, SpParams) {
-    .Call(`_medfate_shrubIndividualAreaMED`, SP, Cover, H, SpParams)
-}
-
 plant_density <- function(x, SpParams, mode = "MED") {
     .Call(`_medfate_cohortDensity`, x, SpParams, mode)
 }
@@ -669,16 +665,16 @@ root_individualRootedGroundArea <- function(VolInd, V, d, bulkDensity) {
     .Call(`_medfate_individualRootedGroundArea`, VolInd, V, d, bulkDensity)
 }
 
-root_horizontalProportionsAdvanced <- function(poolProportions, VolInd, N, V, d, bulkDensity) {
-    .Call(`_medfate_horizontalProportionsAdvanced`, poolProportions, VolInd, N, V, d, bulkDensity)
-}
-
 root_specificRootSurfaceArea <- function(specificRootLength, rootTissueDensity) {
     .Call(`_medfate_specificRootSurfaceArea`, specificRootLength, rootTissueDensity)
 }
 
-root_averageRadius <- function(specificRootLength, rootTissueDensity) {
-    .Call(`_medfate_averageRadius`, specificRootLength, rootTissueDensity)
+root_fineRootRadius <- function(specificRootLength, rootTissueDensity) {
+    .Call(`_medfate_fineRootRadius`, specificRootLength, rootTissueDensity)
+}
+
+root_fineRootArea <- function(vgrhizo_kmax, leafArea) {
+    .Call(`_medfate_fineRootArea`, vgrhizo_kmax, leafArea)
 }
 
 root_fineRootBiomass <- function(vgrhizo_kmax, leafArea, specificRootLength, rootTissueDensity) {
@@ -689,16 +685,20 @@ root_fineRootSoilVolume <- function(fineRootBiomass, specificRootLength, rootLen
     .Call(`_medfate_fineRootSoilVolume`, fineRootBiomass, specificRootLength, rootLengthDensity)
 }
 
-root_rootLengths <- function(v, d, depthWidthRatio = 1.0) {
-    .Call(`_medfate_rootLengths`, v, d, depthWidthRatio)
+root_coarseRootLengths <- function(v, d, depthWidthRatio = 1.0) {
+    .Call(`_medfate_coarseRootLengths`, v, d, depthWidthRatio)
 }
 
 root_xylemConductanceProportions <- function(v, d, depthWidthRatio = 1.0) {
     .Call(`_medfate_xylemConductanceProportions`, v, d, depthWidthRatio)
 }
 
-root_horizontalProportions <- function(V, poolProportions, LAIcell, poolOverlapFactor) {
-    .Call(`_medfate_horizontalProportions`, V, poolProportions, LAIcell, poolOverlapFactor)
+root_horizontalProportionsBasic <- function(poolProportions, V, LAIcell, poolOverlapFactor) {
+    .Call(`_medfate_horizontalProportionsBasic`, poolProportions, V, LAIcell, poolOverlapFactor)
+}
+
+root_horizontalProportionsAdvanced <- function(poolProportions, VolInd, N, V, d, bulkDensity, clumped = FALSE) {
+    .Call(`_medfate_horizontalProportionsAdvanced`, poolProportions, VolInd, N, V, d, bulkDensity, clumped)
 }
 
 soil_thetaSATSX <- function(clay, sand, om = NA_real_) {

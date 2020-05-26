@@ -5,6 +5,7 @@
 # Version 1.0.1
 - New root functions
 - Bulk density stored in soil object initialization
+- Advanced plant water pools
 
 # Version 1.0.0
 - Reorganization of growth function

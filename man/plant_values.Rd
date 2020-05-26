@@ -17,6 +17,7 @@
 \alias{plant_LAI}
 \alias{plant_largerTreeBasalArea}
 \alias{plant_phytovolume}
+\alias{plant_shrubIndividualArea}
 \alias{plant_species}
 \alias{plant_speciesName}
 

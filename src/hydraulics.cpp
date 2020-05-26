@@ -2373,7 +2373,7 @@ double maximumStemHydraulicConductance(double xylemConductivity, double refheigh
 // [[Rcpp::export("hydraulics_maximumRootHydraulicConductance")]]
 double maximumRootHydraulicConductance(double xylemConductivity, double Al2As, NumericVector v, 
                                        NumericVector widths, double depthWidthRatio = 1.0){
-  NumericVector rl = rootLengths(v,widths, depthWidthRatio);
+  NumericVector rl = coarseRootLengths(v,widths, depthWidthRatio);
   NumericVector w = xylemConductanceProportions(v,widths, depthWidthRatio);
   int nlayers = v.length();
   double kmax = 0.0;

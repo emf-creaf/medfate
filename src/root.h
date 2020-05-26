@@ -17,10 +17,10 @@ double fineRootBiomass(double vgrhizo_kmax, double leafArea,
                        double specificRootLength, double rootTissueDensity);
 double fineRootSoilVolume(double fineRootBiomass, double specificRootLength, double rootLengthDensity = 10.0);
 
-NumericVector rootLengths(NumericVector v, NumericVector d, double depthWidthRatio = 1.0);
+NumericVector coarseRootLengths(NumericVector v, NumericVector d, double depthWidthRatio = 1.0);
 NumericVector xylemConductanceProportions(NumericVector v, NumericVector d, double depthWidthRatio = 1.0);
-List horizontalProportions(NumericMatrix V, NumericVector poolProportions, double LAIcell,
-                           double poolOverlapFactor);
+List horizontalProportionsBasic(NumericVector poolProportions, NumericMatrix V, 
+                                double LAIcell, double poolOverlapFactor);
 List horizontalProportionsAdvanced(NumericVector poolProportions, NumericVector VolInd, 
                                    NumericVector N, NumericMatrix V, 
-                                   NumericVector d, NumericVector bulkDensity);
+                                   NumericVector d, NumericVector bulkDensity, bool clumped = false);

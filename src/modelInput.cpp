@@ -662,7 +662,7 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
       
       double poolOverlapFactor = control["poolOverlapFactor"];
       belowdf = DataFrame::create(_["poolProportions"] = poolProportions);
-      List RHOP = horizontalProportions(V, poolProportions, LAIcelllive, poolOverlapFactor); 
+      List RHOP = horizontalProportionsBasic(poolProportions, V,LAIcelllive, poolOverlapFactor); 
       belowLayers = List::create(_["V"] = V,
                                  _["Wpool"] = Wpool,
                                  _["RHOP"] = RHOP);
@@ -721,10 +721,6 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
       double LAIcelllive = sum(LAI_live);
       NumericVector poolProportions(numCohorts);
       for(int c=0;c<numCohorts;c++) poolProportions[c] = LAI_live[c]/LAIcelllive;
-      // NumericVector volumeN = FRSV*N;
-      // double sumVolN = sum(volumeN);
-      // NumericVector poolProportions(numCohorts);
-      // for(int c=0;c<numCohorts;c++) poolProportions[c] = volumeN[c]/sumVolN;
       belowdf = DataFrame::create(_["fineRootBiomass"] = FRB,
                                   _["fineRootSoilVolume"] = FRSV,
                                   _["poolProportions"] = poolProportions);
@@ -813,6 +809,8 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     SA[c] = 10000.0*(LAI_live[c]/(N[c]/10000.0))/Al2As[c];//Individual SA in cm2
   }
   
+  NumericVector dVec = soil["dVec"];
+  NumericVector bd = soil["bd"];
   NumericVector Wsoil = soil["W"];
   NumericMatrix Wpool = NumericMatrix(numCohorts, nlayers);
   Wpool.attr("dimnames") = V.attr("dimnames");
@@ -854,7 +852,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
       double poolOverlapFactor = control["poolOverlapFactor"];
       belowdf = DataFrame::create(_["Z"]=Z,
                                   _["poolProportions"] = poolProportions);
-      List RHOP = horizontalProportions(V, poolProportions, LAIcelllive, poolOverlapFactor); 
+      List RHOP = horizontalProportionsBasic(poolProportions, V, LAIcelllive, poolOverlapFactor); 
       belowLayers = List::create(_["V"] = V,
                                  _["Wpool"] = Wpool,
                                  _["RHOP"] = RHOP);
@@ -908,14 +906,25 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     belowLayers["Wpool"] = Wpool;
     
     if(plantWaterPools) {
+      NumericVector FRSV(numCohorts), FRB(numCohorts);
+      NumericVector VGrhizo_kmax = paramsTranspirationdf["VGrhizo_kmax"];
+      for(int c=0;c<numCohorts;c++)  {
+        double specificRootLength = 4000.0;
+        double rootTissueDensity = 0.165;
+        double LAlive = leafArea(LAI_live[c], N[c]);
+        FRB[c] = fineRootBiomass(VGrhizo_kmax[c], LAlive, specificRootLength, rootTissueDensity);
+        FRSV[c] = fineRootSoilVolume(FRB[c],specificRootLength);
+      }
       double LAIcelllive = sum(LAI_live);
       NumericVector poolProportions(numCohorts);
       for(int c=0;c<numCohorts;c++) poolProportions[c] = LAI_live[c]/LAIcelllive;
-      
-      double poolOverlapFactor = control["poolOverlapFactor"];
+      belowdf = DataFrame::create(_["fineRootBiomass"] = FRB,
+                                  _["fineRootSoilVolume"] = FRSV,
+                                  _["poolProportions"] = poolProportions);
+      List RHOP = horizontalProportionsAdvanced(poolProportions, FRSV, N, V, dVec, bd);
+
       belowdf = DataFrame::create(_["Z"]=Z,
                                   _["poolProportions"] = poolProportions);
-      List RHOP = horizontalProportions(V, poolProportions, LAIcelllive, poolOverlapFactor); 
       belowLayers["RHOP"] = RHOP;
     } 
     belowdf.attr("row.names") = above.attr("row.names");

@@ -182,40 +182,6 @@ NumericMatrix individualRootedGroundArea(NumericVector VolInd, NumericMatrix V, 
   return(larea);
 }
 
-// [[Rcpp::export("root_horizontalProportionsAdvanced")]]
-List horizontalProportionsAdvanced(NumericVector poolProportions, NumericVector VolInd, NumericVector N, NumericMatrix V, 
-                           NumericVector d, NumericVector bulkDensity) {
-
-  int numCohorts = V.nrow();
-  int numlayers = V.ncol();
-  List l(numCohorts);
-  NumericVector poolAreaInd(numCohorts);
-  for(int c=0;c<numCohorts;c++) {
-    poolAreaInd[c] = 10000.0*poolProportions[c]/N[c]; //area of the pool per individual of the cohort
-  }
-  
-  NumericMatrix iga = individualRootedGroundArea(VolInd,V,d,bulkDensity);
-  
-  for(int coh=0;coh<numCohorts;coh++) {
-     NumericMatrix RHOP(numCohorts,numlayers);
-     for(int l=0;l<numlayers;l++) {
-       // Rcout<<coh<< " "<< l<< " "<<iga(coh,l)<<" "<< poolAreaInd[coh]<<"\n";
-       RHOP(coh,l) = std::min(poolAreaInd[coh],iga(coh,l))/iga(coh,l);
-       if(iga(coh,l)>poolAreaInd[coh]) {
-         double dif = iga(coh,l) - poolAreaInd[coh];
-         // Rcout<<dif<<"\n";
-         for(int c2=0; c2<numCohorts;c2++) { //divide the remainder among all cohorts (including itself) depending on their proportions
-           RHOP(c2,l) += poolProportions[c2]*dif/iga(coh,l);
-         }
-       }
-     }
-     RHOP.attr("dimnames") = V.attr("dimnames");
-     l[coh] = RHOP;
-  }
-  l.attr("names") = rownames(V);
-  return(l);
-}
-
 
 
 /**
@@ -227,11 +193,11 @@ List horizontalProportionsAdvanced(NumericVector poolProportions, NumericVector 
 double specificRootSurfaceArea(double specificRootLength, double rootTissueDensity) {
   return(2.0*sqrt(PI*specificRootLength/rootTissueDensity));
 }
-// [[Rcpp::export("root_averageRadius")]]
-double averageRadius(double specificRootLength, double rootTissueDensity) {
+// [[Rcpp::export("root_fineRootRadius")]]
+double fineRootRadius(double specificRootLength, double rootTissueDensity) {
   return(sqrt(1.0/(PI*specificRootLength*rootTissueDensity)));
 }
-
+// [[Rcpp::export("root_fineRootArea")]]
 double fineRootArea(double vgrhizo_kmax, double leafArea) {
   return(vgrhizo_kmax*leafArea/1000000.0);
 }
@@ -267,11 +233,11 @@ double fineRootSoilVolume(double fineRootBiomass, double specificRootLength, dou
  * Pragmatic hydraulic theory predicts stomatal responses to climatic water deficits. 
  * New Phytologist 212:577–589.
  * 
- * Returs: root length in mm (same units as d)
+ * Returs: coarse root length in mm (same units as d)
  * 
  */
-// [[Rcpp::export("root_rootLengths")]]
-NumericVector rootLengths(NumericVector v, NumericVector d, double depthWidthRatio = 1.0) {
+// [[Rcpp::export("root_coarseRootLengths")]]
+NumericVector coarseRootLengths(NumericVector v, NumericVector d, double depthWidthRatio = 1.0) {
   int nlayers = v.size();
   double maxRootDepth = 0.0;
   //Vertical lengths
@@ -331,7 +297,7 @@ NumericVector xylemConductanceProportions(NumericVector v, NumericVector d, doub
   int nlayers = v.size();
 
   //Root lengths
-  NumericVector l = rootLengths(v, d, depthWidthRatio);
+  NumericVector l = coarseRootLengths(v, d, depthWidthRatio);
   
   //Weights
   NumericVector w(nlayers, 0.0);
@@ -349,11 +315,9 @@ NumericVector xylemConductanceProportions(NumericVector v, NumericVector d, doub
 
 
 
-// [[Rcpp::export("root_horizontalProportions")]]
-List horizontalProportions(NumericMatrix V, 
-                           NumericVector poolProportions,
-                           double LAIcell,
-                           double poolOverlapFactor) {
+// [[Rcpp::export("root_horizontalProportionsBasic")]]
+List horizontalProportionsBasic(NumericVector poolProportions, NumericMatrix V, 
+                                double LAIcell, double poolOverlapFactor) {
   int numCohorts = V.nrow();
   int numlayers = V.ncol();
   double ropmax = (1.0 - exp(-(poolOverlapFactor*LAIcell)));
@@ -380,3 +344,41 @@ List horizontalProportions(NumericMatrix V,
   l.attr("names") = rownames(V);
   return(l);
 }
+
+// [[Rcpp::export("root_horizontalProportionsAdvanced")]]
+List horizontalProportionsAdvanced(NumericVector poolProportions, NumericVector VolInd, NumericVector N, NumericMatrix V, 
+                                   NumericVector d, NumericVector bulkDensity, bool clumped = false) {
+  
+  int numCohorts = V.nrow();
+  int numlayers = V.ncol();
+  List l(numCohorts);
+  NumericVector poolAreaInd(numCohorts);
+  for(int c=0;c<numCohorts;c++) {
+    if(!clumped) poolAreaInd[c] = 10000.0*poolProportions[c]/N[c]; //area of the pool per individual of the cohort
+    else poolAreaInd[c] = 10000.0*poolProportions[c]; //area of the pool per cohort
+  }
+  
+  NumericMatrix iga;
+  if(!clumped) iga = individualRootedGroundArea(VolInd,V,d,bulkDensity);
+  else iga = individualRootedGroundArea(VolInd*N,V,d,bulkDensity);
+    
+  for(int coh=0;coh<numCohorts;coh++) {
+    NumericMatrix RHOP(numCohorts,numlayers);
+    for(int l=0;l<numlayers;l++) {
+      // Rcout<<coh<< " "<< l<< " "<<iga(coh,l)<<" "<< poolAreaInd[coh]<<"\n";
+      RHOP(coh,l) = std::min(poolAreaInd[coh],iga(coh,l))/iga(coh,l);
+      if(iga(coh,l)>poolAreaInd[coh]) {
+        double dif = iga(coh,l) - poolAreaInd[coh];
+        // Rcout<<dif<<"\n";
+        for(int c2=0; c2<numCohorts;c2++) { //divide the remainder among all cohorts (including itself) depending on their proportions
+          RHOP(c2,l) += poolProportions[c2]*dif/iga(coh,l);
+        }
+      }
+    }
+    RHOP.attr("dimnames") = V.attr("dimnames");
+    l[coh] = RHOP;
+  }
+  l.attr("names") = rownames(V);
+  return(l);
+}
+
