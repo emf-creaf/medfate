@@ -697,8 +697,8 @@ root_horizontalProportionsBasic <- function(poolProportions, V, LAIcell, poolOve
     .Call(`_medfate_horizontalProportionsBasic`, poolProportions, V, LAIcell, poolOverlapFactor)
 }
 
-root_horizontalProportionsAdvanced <- function(poolProportions, VolInd, N, V, d, bulkDensity, clumped = FALSE) {
-    .Call(`_medfate_horizontalProportionsAdvanced`, poolProportions, VolInd, N, V, d, bulkDensity, clumped)
+root_horizontalProportionsAdvanced <- function(poolProportions, VolInd, N, V, d, bulkDensity) {
+    .Call(`_medfate_horizontalProportionsAdvanced`, poolProportions, VolInd, N, V, d, bulkDensity)
 }
 
 soil_thetaSATSX <- function(clay, sand, om = NA_real_) {

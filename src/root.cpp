@@ -347,21 +347,18 @@ List horizontalProportionsBasic(NumericVector poolProportions, NumericMatrix V,
 
 // [[Rcpp::export("root_horizontalProportionsAdvanced")]]
 List horizontalProportionsAdvanced(NumericVector poolProportions, NumericVector VolInd, NumericVector N, NumericMatrix V, 
-                                   NumericVector d, NumericVector bulkDensity, bool clumped = false) {
+                                   NumericVector d, NumericVector bulkDensity) {
   
   int numCohorts = V.nrow();
   int numlayers = V.ncol();
   List l(numCohorts);
   NumericVector poolAreaInd(numCohorts);
   for(int c=0;c<numCohorts;c++) {
-    if(!clumped) poolAreaInd[c] = 10000.0*poolProportions[c]/N[c]; //area of the pool per individual of the cohort
-    else poolAreaInd[c] = 10000.0*poolProportions[c]; //area of the pool per cohort
+    poolAreaInd[c] = 10000.0*poolProportions[c]/N[c]; //area of the pool per individual of the cohort
   }
   
-  NumericMatrix iga;
-  if(!clumped) iga = individualRootedGroundArea(VolInd,V,d,bulkDensity);
-  else iga = individualRootedGroundArea(VolInd*N,V,d,bulkDensity);
-    
+  NumericMatrix iga = individualRootedGroundArea(VolInd,V,d,bulkDensity);
+
   for(int coh=0;coh<numCohorts;coh++) {
     NumericMatrix RHOP(numCohorts,numlayers);
     for(int l=0;l<numlayers;l++) {

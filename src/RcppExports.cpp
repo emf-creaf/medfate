@@ -2845,8 +2845,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // horizontalProportionsAdvanced
-List horizontalProportionsAdvanced(NumericVector poolProportions, NumericVector VolInd, NumericVector N, NumericMatrix V, NumericVector d, NumericVector bulkDensity, bool clumped);
-RcppExport SEXP _medfate_horizontalProportionsAdvanced(SEXP poolProportionsSEXP, SEXP VolIndSEXP, SEXP NSEXP, SEXP VSEXP, SEXP dSEXP, SEXP bulkDensitySEXP, SEXP clumpedSEXP) {
+List horizontalProportionsAdvanced(NumericVector poolProportions, NumericVector VolInd, NumericVector N, NumericMatrix V, NumericVector d, NumericVector bulkDensity);
+RcppExport SEXP _medfate_horizontalProportionsAdvanced(SEXP poolProportionsSEXP, SEXP VolIndSEXP, SEXP NSEXP, SEXP VSEXP, SEXP dSEXP, SEXP bulkDensitySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2856,8 +2856,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericMatrix >::type V(VSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type bulkDensity(bulkDensitySEXP);
-    Rcpp::traits::input_parameter< bool >::type clumped(clumpedSEXP);
-    rcpp_result_gen = Rcpp::wrap(horizontalProportionsAdvanced(poolProportions, VolInd, N, V, d, bulkDensity, clumped));
+    rcpp_result_gen = Rcpp::wrap(horizontalProportionsAdvanced(poolProportions, VolInd, N, V, d, bulkDensity));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4395,7 +4394,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_coarseRootLengths", (DL_FUNC) &_medfate_coarseRootLengths, 3},
     {"_medfate_xylemConductanceProportions", (DL_FUNC) &_medfate_xylemConductanceProportions, 3},
     {"_medfate_horizontalProportionsBasic", (DL_FUNC) &_medfate_horizontalProportionsBasic, 4},
-    {"_medfate_horizontalProportionsAdvanced", (DL_FUNC) &_medfate_horizontalProportionsAdvanced, 7},
+    {"_medfate_horizontalProportionsAdvanced", (DL_FUNC) &_medfate_horizontalProportionsAdvanced, 6},
     {"_medfate_thetaSATSaxton", (DL_FUNC) &_medfate_thetaSATSaxton, 3},
     {"_medfate_theta2psiSaxton", (DL_FUNC) &_medfate_theta2psiSaxton, 4},
     {"_medfate_psi2thetaSaxton", (DL_FUNC) &_medfate_psi2thetaSaxton, 4},

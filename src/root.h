@@ -23,4 +23,4 @@ List horizontalProportionsBasic(NumericVector poolProportions, NumericMatrix V,
                                 double LAIcell, double poolOverlapFactor);
 List horizontalProportionsAdvanced(NumericVector poolProportions, NumericVector VolInd, 
                                    NumericVector N, NumericMatrix V, 
-                                   NumericVector d, NumericVector bulkDensity, bool clumped = false);
+                                   NumericVector d, NumericVector bulkDensity);
