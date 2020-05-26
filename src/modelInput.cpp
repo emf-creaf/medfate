@@ -718,10 +718,13 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
         FRB[c] = fineRootBiomass(VGrhizo_kmax[c], LAlive, specificRootLength, rootTissueDensity);
         FRSV[c] = fineRootSoilVolume(FRB[c],specificRootLength);
       }
-      NumericVector volumeN = FRSV*N;
-      double sumVolN = sum(volumeN);
+      double LAIcelllive = sum(LAI_live);
       NumericVector poolProportions(numCohorts);
-      for(int c=0;c<numCohorts;c++) poolProportions[c] = volumeN[c]/sumVolN;
+      for(int c=0;c<numCohorts;c++) poolProportions[c] = LAI_live[c]/LAIcelllive;
+      // NumericVector volumeN = FRSV*N;
+      // double sumVolN = sum(volumeN);
+      // NumericVector poolProportions(numCohorts);
+      // for(int c=0;c<numCohorts;c++) poolProportions[c] = volumeN[c]/sumVolN;
       belowdf = DataFrame::create(_["fineRootBiomass"] = FRB,
                                   _["fineRootSoilVolume"] = FRSV,
                                   _["poolProportions"] = poolProportions);
