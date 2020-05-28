@@ -168,6 +168,7 @@ double sapwoodStructuralBiomass(double SA, double H, double Z, double woodDensit
 double sapwoodStructuralLivingBiomass(double SA, double H, double Z, double woodDensity, double vessel2sapwood) {
   return(sapwoodStructuralBiomass(SA,H,Z,woodDensity)*(1.0-vessel2sapwood));
 }
+
 /*
  *  Sapwood starch storage capacity in mol · ind-1
  *  Up to 50% of volume of non-conductive cells

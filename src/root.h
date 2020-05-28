@@ -11,16 +11,21 @@ NumericVector conicRS_one(double Z, NumericVector d);
 NumericMatrix conicDistribution(NumericVector Z, NumericVector d);
 NumericMatrix ldrDistribution(NumericVector Z50, NumericVector Z95, NumericVector d);
 
+double fineRootRadius(double specificRootLength, double rootTissueDensity);
 double specificRootSurfaceArea(double specificRootLength, double rootTissueDensity);
-double fineRootArea(double vgrhizo_kmax, double leafArea);
-double fineRootBiomass(double vgrhizo_kmax, double leafArea, 
-                       double specificRootLength, double rootTissueDensity);
+double fineRootAreaIndex(NumericVector Ksoil, NumericVector krhizo, double lai,
+                         double specificRootLength, double rootTissueDensity,  
+                         double rootLengthDensity = 10.0);
+double fineRootBiomassPerIndividual(NumericVector Ksoil, NumericVector krhizo,  double lai, double N,
+                                    double specificRootLength, double rootTissueDensity,  
+                                    double rootLengthDensity = 10.0);
 double fineRootSoilVolume(double fineRootBiomass, double specificRootLength, double rootLengthDensity = 10.0);
 
+double coarseRootSoilVolume(double dbh, double Z, double densityFactor = 20.0);
 NumericVector coarseRootLengths(NumericVector v, NumericVector d, double depthWidthRatio = 1.0);
 NumericVector xylemConductanceProportions(NumericVector v, NumericVector d, double depthWidthRatio = 1.0);
 List horizontalProportionsBasic(NumericVector poolProportions, NumericMatrix V, 
                                 double LAIcell, double poolOverlapFactor);
 List horizontalProportionsAdvanced(NumericVector poolProportions, NumericVector VolInd, 
                                    NumericVector N, NumericMatrix V, 
-                                   NumericVector d, NumericVector bulkDensity);
+                                   NumericVector d, NumericVector bulkDensity, NumericVector rfc);

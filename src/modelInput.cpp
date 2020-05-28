@@ -330,7 +330,48 @@ DataFrame paramsTranspirationSperry(DataFrame above, NumericMatrix V, List soil,
   return(paramsTranspirationdf);
 }
 
-List paramsBelow(DataFrame above, NumericMatrix V, List soil, 
+List paramsBelow(DataFrame above, NumericVector Z, NumericMatrix V, List soil, List belowLayers) {
+  
+  IntegerVector SP = above["SP"];
+  NumericVector LAI_live = above["LAI_live"];
+  NumericVector H = above["H"];
+  NumericVector DBH = above["DBH"];
+  NumericVector N = above["N"];
+  int numCohorts = SP.size();
+  
+  NumericVector dVec = soil["dVec"];
+  NumericVector VG_alpha = soil["VG_alpha"];
+  NumericVector VG_n = soil["VG_n"];
+  int nlayers = dVec.size();
+  DataFrame belowdf;
+  NumericVector FRSV(numCohorts), FRB(numCohorts), CRSV(numCohorts), TRSV(numCohorts),FRAI(numCohorts);
+  NumericMatrix VGrhizo_kmax = belowLayers["VGrhizo_kmax"];
+  NumericVector Ksat = soil["Ksat"];
+  for(int c=0;c<numCohorts;c++)  {
+    double specificRootLength = 4000.0;
+    double rootTissueDensity = 0.165;
+    FRAI[c] = fineRootAreaIndex(Ksat, VGrhizo_kmax(c,_), LAI_live[c], 
+                                specificRootLength, rootTissueDensity);
+    FRB[c] = fineRootBiomassPerIndividual(Ksat, VGrhizo_kmax(c,_), LAI_live[c], N[c], 
+                                          specificRootLength, rootTissueDensity);
+    FRSV[c] = fineRootSoilVolume(FRB[c],specificRootLength);
+    CRSV[c] = coarseRootSoilVolume(DBH[c], Z[c]);
+    TRSV[c] = FRSV[c]+CRSV[c];
+  }
+  NumericVector NVol = N*TRSV;
+  double sumNvol = sum(NVol);
+  NumericVector poolProportions = NVol/sumNvol;
+  belowdf = DataFrame::create(_["fineRootAreaIndex"] = FRAI,
+                              _["fineRootBiomass"] = FRB,
+                              _["fineRootSoilVolume"] = FRSV,
+                              _["coarseRootSoilVolume"] = CRSV,
+                              _["totalRootSoilVolume"] = TRSV,
+                              _["poolProportions"] = poolProportions);
+  belowdf.attr("row.names") = above.attr("row.names");
+  return(belowdf);
+}
+
+List paramsBelowLayers(DataFrame above, NumericMatrix V, List soil, 
                  DataFrame paramsTranspirationdf, List control) {
   NumericVector dVec = soil["dVec"];
   NumericVector VG_alpha = soil["VG_alpha"];
@@ -552,7 +593,7 @@ DataFrame internalAllocationDataFrame(DataFrame above,
       } else if(allocationStrategy=="Al2As") {
         allocationTarget[c] = Al2As[c];
       }
-      rootAreaTarget[c] = fineRootArea(VGrhizo_kmax[c],leafAreaTarget[c]); //m2
+      // rootAreaTarget[c] = fineRootArea(VGrhizo_kmax[c],leafAreaTarget[c]); //m2
     }
     
     df = DataFrame::create(Named("allocationTarget") = allocationTarget,
@@ -589,7 +630,7 @@ DataFrame internalWaterDataFrame(DataFrame above, String transpirationMode) {
  *  Prepare Soil Water Balance input
  */
 // [[Rcpp::export("spwbInput")]]
-List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, List control) {
+List spwbInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, DataFrame SpParams, List control) {
   
   int nlayers = V.ncol();
   
@@ -598,6 +639,7 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
   NumericVector LAI_expanded = above["LAI_expanded"];
   NumericVector LAI_dead = above["LAI_dead"];
   NumericVector H = above["H"];
+  NumericVector DBH = above["DBH"];
   NumericVector N = above["N"];
   NumericVector CR = above["CR"];
   String transpirationMode = control["transpirationMode"];
@@ -637,6 +679,7 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
   
   NumericVector dVec = soil["dVec"];
   NumericVector bd = soil["bd"];
+  NumericVector rfc = soil["rfc"];
   NumericVector Wsoil = soil["W"];
   NumericMatrix Wpool = NumericMatrix(numCohorts, nlayers);
   Wpool.attr("dimnames") = V.attr("dimnames");
@@ -670,7 +713,6 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
       belowLayers = List::create(_["V"] = V,
                                  _["Wpool"] = Wpool);
     }
-    belowdf.attr("row.names") = above.attr("row.names");
     List paramsCanopy = List::create(_["gdd"] = 0.0);
     input = List::create(_["control"] = clone(control),
                          _["canopy"] = paramsCanopy,
@@ -704,30 +746,17 @@ List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, 
       warning("Soil pedotransfer functions set to Van Genuchten ('VG').");
     }
     DataFrame belowdf = DataFrame::create();
-    List belowLayers = paramsBelow(above, V, soil, 
+    List belowLayers = paramsBelowLayers(above, V, soil, 
                               paramsTranspirationdf, control);
     belowLayers["Wpool"] = Wpool;
     belowLayers["RhizoPsi"] = RhizoPsi;
     if(plantWaterPools) {
-      NumericVector FRSV(numCohorts), FRB(numCohorts);
-      NumericVector VGrhizo_kmax = paramsTranspirationdf["VGrhizo_kmax"];
-      for(int c=0;c<numCohorts;c++)  {
-        double specificRootLength = 4000.0;
-        double rootTissueDensity = 0.165;
-        double LAlive = leafArea(LAI_live[c], N[c]);
-        FRB[c] = fineRootBiomass(VGrhizo_kmax[c], LAlive, specificRootLength, rootTissueDensity);
-        FRSV[c] = fineRootSoilVolume(FRB[c],specificRootLength);
-      }
-      double LAIcelllive = sum(LAI_live);
-      NumericVector poolProportions(numCohorts);
-      for(int c=0;c<numCohorts;c++) poolProportions[c] = LAI_live[c]/LAIcelllive;
-      belowdf = DataFrame::create(_["fineRootBiomass"] = FRB,
-                                  _["fineRootSoilVolume"] = FRSV,
-                                  _["poolProportions"] = poolProportions);
-      List RHOP = horizontalProportionsAdvanced(poolProportions, FRSV, N, V, dVec, bd);
+      belowdf = paramsBelow(above, Z,  V, soil, belowLayers);
+      NumericVector poolProportions = belowdf["poolProportions"];
+      NumericVector TRSV = belowdf["totalRootSoilVolume"];
+      List RHOP = horizontalProportionsAdvanced(poolProportions, TRSV, N, V, dVec, bd, rfc);
       belowLayers["RHOP"] = RHOP;
     } 
-    belowdf.attr("row.names") = above.attr("row.names");
     
 
     List paramsCanopy = List::create(_["gdd"] = 0.0,_["Temp"] = NA_REAL);
@@ -811,6 +840,8 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   
   NumericVector dVec = soil["dVec"];
   NumericVector bd = soil["bd"];
+  NumericVector rfc = soil["rfc"];
+  
   NumericVector Wsoil = soil["W"];
   NumericMatrix Wpool = NumericMatrix(numCohorts, nlayers);
   Wpool.attr("dimnames") = V.attr("dimnames");
@@ -896,7 +927,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     
     DataFrame paramsTranspirationdf = paramsTranspirationSperry(above, V, soil, SpParams,
                                                           paramsAnatomydf, control);
-    List belowLayers = paramsBelow(above, V, soil, 
+    List belowLayers = paramsBelowLayers(above, V, soil, 
                                    paramsTranspirationdf, control);
 
     NumericMatrix RhizoPsi =  NumericMatrix(numCohorts, nlayers);
@@ -906,28 +937,12 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     belowLayers["Wpool"] = Wpool;
     
     if(plantWaterPools) {
-      NumericVector FRSV(numCohorts), FRB(numCohorts);
-      NumericVector VGrhizo_kmax = paramsTranspirationdf["VGrhizo_kmax"];
-      for(int c=0;c<numCohorts;c++)  {
-        double specificRootLength = 4000.0;
-        double rootTissueDensity = 0.165;
-        double LAlive = leafArea(LAI_live[c], N[c]);
-        FRB[c] = fineRootBiomass(VGrhizo_kmax[c], LAlive, specificRootLength, rootTissueDensity);
-        FRSV[c] = fineRootSoilVolume(FRB[c],specificRootLength);
-      }
-      double LAIcelllive = sum(LAI_live);
-      NumericVector poolProportions(numCohorts);
-      for(int c=0;c<numCohorts;c++) poolProportions[c] = LAI_live[c]/LAIcelllive;
-      belowdf = DataFrame::create(_["fineRootBiomass"] = FRB,
-                                  _["fineRootSoilVolume"] = FRSV,
-                                  _["poolProportions"] = poolProportions);
-      List RHOP = horizontalProportionsAdvanced(poolProportions, FRSV, N, V, dVec, bd);
-
-      belowdf = DataFrame::create(_["Z"]=Z,
-                                  _["poolProportions"] = poolProportions);
+      belowdf = paramsBelow(above, Z,  V, soil, belowLayers);
+      NumericVector poolProportions = belowdf["poolProportions"];
+      NumericVector TRSV = belowdf["totalRootSoilVolume"];
+      List RHOP = horizontalProportionsAdvanced(poolProportions, TRSV, N, V, dVec, bd, rfc);
       belowLayers["RHOP"] = RHOP;
     } 
-    belowdf.attr("row.names") = above.attr("row.names");
     
     if(soilFunctions=="SX") {
       soilFunctions = "VG"; 
@@ -968,9 +983,22 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
 
 // [[Rcpp::export("forest2spwbInput")]]
 List forest2spwbInput(List x, List soil, DataFrame SpParams, List control, String mode = "MED") {
+  DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
+  DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
   NumericMatrix V = forest2belowground(x,soil, SpParams);
+  int ntree = treeData.nrows();
+  int nshrub = shrubData.nrows();
+  NumericVector treeZ95 = treeData["Z95"];
+  NumericVector shrubZ95 = shrubData["Z95"];  
+  NumericVector Z(ntree+nshrub); //Rooting depth in cm
+  for(int i=0;i<ntree;i++) {
+    Z[i] = treeZ95[i]/10.0;
+  }
+  for(int i=0;i<nshrub;i++) {
+    Z[ntree+i] = shrubZ95[i]/10.0; 
+  }
   DataFrame above = forest2aboveground(x, SpParams, NA_REAL, mode);
-  return(spwbInput(above,  V, soil, SpParams, control));
+  return(spwbInput(above,  Z, V, soil, SpParams, control));
 }
 
 
@@ -978,13 +1006,9 @@ List forest2spwbInput(List x, List soil, DataFrame SpParams, List control, Strin
 List forest2growthInput(List x, List soil, DataFrame SpParams, List control) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
   DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
-  NumericVector d = soil["dVec"];
   int ntree = treeData.nrows();
   int nshrub = shrubData.nrows();
-  
-  NumericVector treeZ50 = treeData["Z50"];
   NumericVector treeZ95 = treeData["Z95"];
-  NumericVector shrubZ50 = shrubData["Z50"];  
   NumericVector shrubZ95 = shrubData["Z95"];  
   NumericMatrix V = forest2belowground(x,soil, SpParams);
   NumericVector Z(ntree+nshrub); //Rooting depth in cm

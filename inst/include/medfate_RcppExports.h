@@ -213,6 +213,27 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
+    inline double soil_saturatedConductivitySX(double clay, double sand, double om = NA_REAL) {
+        typedef SEXP(*Ptr_soil_saturatedConductivitySX)(SEXP,SEXP,SEXP);
+        static Ptr_soil_saturatedConductivitySX p_soil_saturatedConductivitySX = NULL;
+        if (p_soil_saturatedConductivitySX == NULL) {
+            validateSignature("double(*soil_saturatedConductivitySX)(double,double,double)");
+            p_soil_saturatedConductivitySX = (Ptr_soil_saturatedConductivitySX)R_GetCCallable("medfate", "_medfate_soil_saturatedConductivitySX");
+        }
+        RObject rcpp_result_gen;
+        {
+            RNGScope RCPP_rngScope_gen;
+            rcpp_result_gen = p_soil_saturatedConductivitySX(Shield<SEXP>(Rcpp::wrap(clay)), Shield<SEXP>(Rcpp::wrap(sand)), Shield<SEXP>(Rcpp::wrap(om)));
+        }
+        if (rcpp_result_gen.inherits("interrupted-error"))
+            throw Rcpp::internal::InterruptedException();
+        if (Rcpp::internal::isLongjumpSentinel(rcpp_result_gen))
+            throw Rcpp::LongjumpException(rcpp_result_gen);
+        if (rcpp_result_gen.inherits("try-error"))
+            throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
+        return Rcpp::as<double >(rcpp_result_gen);
+    }
+
     inline double soil_thetaSATSX(double clay, double sand, double om = NA_REAL) {
         typedef SEXP(*Ptr_soil_thetaSATSX)(SEXP,SEXP,SEXP);
         static Ptr_soil_thetaSATSX p_soil_thetaSATSX = NULL;

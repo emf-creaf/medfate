@@ -569,8 +569,8 @@ light_instantaneousLightExtinctionAbsortion <- function(LAIme, LAImd, LAImx, kPA
     invisible(.Call(`_medfate_checkSpeciesParameters`, SpParams, params))
 }
 
-spwbInput <- function(above, V, soil, SpParams, control) {
-    .Call(`_medfate_spwbInput`, above, V, soil, SpParams, control)
+spwbInput <- function(above, Z, V, soil, SpParams, control) {
+    .Call(`_medfate_spwbInput`, above, Z, V, soil, SpParams, control)
 }
 
 growthInput <- function(above, Z, V, soil, SpParams, control) {
@@ -661,8 +661,8 @@ root_ldrDistribution <- function(Z50, Z95, d) {
     .Call(`_medfate_rootDistribution`, z, x)
 }
 
-root_individualRootedGroundArea <- function(VolInd, V, d, bulkDensity) {
-    .Call(`_medfate_individualRootedGroundArea`, VolInd, V, d, bulkDensity)
+root_individualRootedGroundArea <- function(VolInd, V, d, bulkDensity, rfc) {
+    .Call(`_medfate_individualRootedGroundArea`, VolInd, V, d, bulkDensity, rfc)
 }
 
 root_specificRootSurfaceArea <- function(specificRootLength, rootTissueDensity) {
@@ -673,16 +673,24 @@ root_fineRootRadius <- function(specificRootLength, rootTissueDensity) {
     .Call(`_medfate_fineRootRadius`, specificRootLength, rootTissueDensity)
 }
 
-root_fineRootArea <- function(vgrhizo_kmax, leafArea) {
-    .Call(`_medfate_fineRootArea`, vgrhizo_kmax, leafArea)
+root_fineRootHalfDistance <- function(rootLengthDensity) {
+    .Call(`_medfate_fineRootHalfDistance`, rootLengthDensity)
 }
 
-root_fineRootBiomass <- function(vgrhizo_kmax, leafArea, specificRootLength, rootTissueDensity) {
-    .Call(`_medfate_fineRootBiomass`, vgrhizo_kmax, leafArea, specificRootLength, rootTissueDensity)
+root_fineRootAreaIndex <- function(Ksoil, krhizo, lai, specificRootLength, rootTissueDensity, rootLengthDensity = 10.0) {
+    .Call(`_medfate_fineRootAreaIndex`, Ksoil, krhizo, lai, specificRootLength, rootTissueDensity, rootLengthDensity)
+}
+
+root_fineRootBiomass <- function(Ksoil, krhizo, lai, N, specificRootLength, rootTissueDensity, rootLengthDensity = 10.0) {
+    .Call(`_medfate_fineRootBiomassPerIndividual`, Ksoil, krhizo, lai, N, specificRootLength, rootTissueDensity, rootLengthDensity)
 }
 
 root_fineRootSoilVolume <- function(fineRootBiomass, specificRootLength, rootLengthDensity = 10.0) {
     .Call(`_medfate_fineRootSoilVolume`, fineRootBiomass, specificRootLength, rootLengthDensity)
+}
+
+root_coarseRootSoilVolume <- function(dbh, Z, densityFactor = 20.0) {
+    .Call(`_medfate_coarseRootSoilVolume`, dbh, Z, densityFactor)
 }
 
 root_coarseRootLengths <- function(v, d, depthWidthRatio = 1.0) {
@@ -697,8 +705,12 @@ root_horizontalProportionsBasic <- function(poolProportions, V, LAIcell, poolOve
     .Call(`_medfate_horizontalProportionsBasic`, poolProportions, V, LAIcell, poolOverlapFactor)
 }
 
-root_horizontalProportionsAdvanced <- function(poolProportions, VolInd, N, V, d, bulkDensity) {
-    .Call(`_medfate_horizontalProportionsAdvanced`, poolProportions, VolInd, N, V, d, bulkDensity)
+root_horizontalProportionsAdvanced <- function(poolProportions, VolInd, N, V, d, bulkDensity, rfc) {
+    .Call(`_medfate_horizontalProportionsAdvanced`, poolProportions, VolInd, N, V, d, bulkDensity, rfc)
+}
+
+soil_saturatedConductivitySX <- function(clay, sand, om = NA_real_) {
+    .Call(`_medfate_saturatedConductivitySaxton`, clay, sand, om)
 }
 
 soil_thetaSATSX <- function(clay, sand, om = NA_real_) {

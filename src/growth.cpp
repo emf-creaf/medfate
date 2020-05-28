@@ -545,6 +545,9 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   double minimumSugarConc = control["minimumSugarConc"];
   double k_floem = control["k_floem"];
   
+  //Soil info
+  NumericVector Ksat = soil["Ksat"];
+  
   //Cohort info
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   NumericVector SP = cohorts["SP"];
@@ -639,7 +642,6 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   NumericVector Plant_kmax= paramsTransp["Plant_kmax"];
   NumericVector VCstem_kmax = paramsTransp["VCstem_kmax"];
   NumericVector VCroot_kmaxVEC= paramsTransp["VCroot_kmax"];
-  NumericVector VGrhizo_kmaxVEC= paramsTransp["VGrhizo_kmax"];
   NumericMatrix VGrhizo_kmax = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VGrhizo_kmax"]);
   NumericMatrix VCroot_kmax = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VCroot_kmax"]);
   int numLayers = VCroot_kmax.ncol();
@@ -715,10 +717,9 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
       Starch_max_sapwood[j] = sapwoodStarchCapacity(SA[j], H[j],Z[j],WoodDensity[j], 0.2)/Volume_sapwood[j];
       B_struct_leaves[j] = leafStructuralBiomass(LAI_expanded[j],N[j],SLA[j]);
       B_struct_sapwood[j] = sapwoodStructuralLivingBiomass(SA[j], H[j], Z[j], WoodDensity[j], 0.5);
-      double FRA = fineRootArea(VGrhizo_kmaxVEC[j],LAlive);//m2 
-      double SSA = specificRootSurfaceArea(4000.0, 0.165); //cm2/g TO BE CHANGED
-      B_struct_fineroots[j] = 10000.0*FRA/SSA; 
-      
+      B_struct_fineroots[j] = fineRootBiomassPerIndividual(Ksat, VGrhizo_kmax(j,_), LAI_live[j], N[j], 
+                                                           4000.0, 0.165);
+
       double labileMassLeafIni = (sugarLeaf[j]+starchLeaf[j])*(glucoseMolarMass*Volume_leaves[j]);
       double labileMassSapwoodIni = (sugarSapwood[j]+starchSapwood[j])*(glucoseMolarMass*Volume_sapwood[j]);
       

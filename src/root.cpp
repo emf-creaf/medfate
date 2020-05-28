@@ -166,7 +166,8 @@ NumericMatrix rootDistribution(NumericVector z, List x) {
  * an individual with a given total fine root volume (in m3) and fine root proportions
  */
 // [[Rcpp::export("root_individualRootedGroundArea")]]
-NumericMatrix individualRootedGroundArea(NumericVector VolInd, NumericMatrix V, NumericVector d, NumericVector bulkDensity) {
+NumericMatrix individualRootedGroundArea(NumericVector VolInd, NumericMatrix V, NumericVector d, 
+                                         NumericVector bulkDensity, NumericVector rfc) {
   int numCohorts = V.nrow();
   int numLayers = V.ncol();
   NumericMatrix larea(numCohorts,numLayers);
@@ -174,7 +175,7 @@ NumericMatrix individualRootedGroundArea(NumericVector VolInd, NumericMatrix V, 
     for(int j=0;j<numLayers;j++) {
       double lvol = VolInd[i]*V(i,j); //m3
       double laxial = d[j]/1000.0; //mm to m
-      double lradial = sqrt(lvol/(laxial*PI*(1.0 - (bulkDensity[j]/2.65))));
+      double lradial = sqrt(lvol/(laxial*PI*(1.0 - (rfc[j]/100.0))*(1.0 - (bulkDensity[j]/2.65))));
       larea(i,j) = PI*pow(lradial,2.0); //m2
     }
   }
@@ -193,24 +194,59 @@ NumericMatrix individualRootedGroundArea(NumericVector VolInd, NumericMatrix V, 
 double specificRootSurfaceArea(double specificRootLength, double rootTissueDensity) {
   return(2.0*sqrt(PI*specificRootLength/rootTissueDensity));
 }
+/**
+ * Fine root radius in cm
+ */
 // [[Rcpp::export("root_fineRootRadius")]]
 double fineRootRadius(double specificRootLength, double rootTissueDensity) {
   return(sqrt(1.0/(PI*specificRootLength*rootTissueDensity)));
 }
-// [[Rcpp::export("root_fineRootArea")]]
-double fineRootArea(double vgrhizo_kmax, double leafArea) {
-  return(vgrhizo_kmax*leafArea/1000000.0);
+// [[Rcpp::export("root_fineRootHalfDistance")]]
+double fineRootHalfDistance(double rootLengthDensity) {
+  return(1.0/sqrt(PI*rootLengthDensity));
+}
+/**
+ * Derivation of fine root length per ground area (m·m-2) 
+ * from the conductance factor for cylindrical flow geometry of the rhizosphere
+ * 
+ */
+double fineRootLengthPerArea(double Ksoil, double krhizo, double lai,
+                      double radius, double rootLengthDensity = 10.0) {
+  double Xi = krhizo*lai/Ksoil;
+  double rmax = fineRootHalfDistance(rootLengthDensity);
+  return(log(pow(rmax,2.0)/pow(radius,2.0))*Xi/(4.0*PI));
 }
 
+// [[Rcpp::export("root_fineRootAreaIndex")]]
+double fineRootAreaIndex(NumericVector Ksoil, NumericVector krhizo, double lai,
+                                    double specificRootLength, double rootTissueDensity,  
+                                    double rootLengthDensity = 10.0) {
+  double r = fineRootRadius(specificRootLength, rootTissueDensity); //cm
+  int numLayers = Ksoil.size();
+  double frai = 0.0;
+  for(int l=0;l<numLayers;l++) {
+    double LA = fineRootLengthPerArea(Ksoil[l], krhizo[l], lai, r, rootLengthDensity);//m·m-2 
+    // Rcout<<l<<" "<<LA<<"\n";
+    frai += LA*2.0*PI*(r/100.0);
+  }
+  return(frai);
+}
 /**
- * Fine root biomass in g dry
+ * Fine root biomass in g dry · m-2 soil
  */
 // [[Rcpp::export("root_fineRootBiomass")]]
-double fineRootBiomass(double vgrhizo_kmax, double leafArea, 
-                       double specificRootLength, double rootTissueDensity) {
-  double FRA = fineRootArea(vgrhizo_kmax,leafArea);//m2 
-  double SSA = specificRootSurfaceArea(specificRootLength, rootTissueDensity); //cm2/g
-  return((10000.0*FRA)/SSA);
+double fineRootBiomassPerIndividual(NumericVector Ksoil, NumericVector krhizo, double lai, double N,
+                                    double specificRootLength, double rootTissueDensity,  
+                                    double rootLengthDensity = 10.0) {
+  double r = fineRootRadius(specificRootLength, rootTissueDensity); //cm
+  int numLayers = Ksoil.size();
+  double frb = 0.0;
+  for(int l=0;l<numLayers;l++) {
+    double LA = fineRootLengthPerArea(Ksoil[l], krhizo[l], lai, r, rootLengthDensity);//m·m-2 
+    // Rcout<<l<<" "<<LA<<"\n";
+    frb += (10000.0*LA)/(N*0.01*specificRootLength);
+  }
+  return(frb);
 }
 
 /**
@@ -222,6 +258,17 @@ double fineRootBiomass(double vgrhizo_kmax, double leafArea,
 // [[Rcpp::export("root_fineRootSoilVolume")]]
 double fineRootSoilVolume(double fineRootBiomass, double specificRootLength, double rootLengthDensity = 10.0) {
   return(fineRootBiomass*(specificRootLength/rootLengthDensity)*1e-6);
+}
+
+/**
+ *   Estimates soil volume (m3) occupied with coarse roots
+ *    . sapwood area (cm2)
+ *    . rooting depth (cm)
+ */
+// [[Rcpp::export("root_coarseRootSoilVolume")]]
+double coarseRootSoilVolume(double dbh, double Z, double densityFactor  = 20.0) {//Coarse root density factor
+  if(NumericVector::is_na(dbh)) dbh = 5.0;
+  return(densityFactor*1e-6*PI*pow(dbh/2.0,2.0)*Z); 
 }
 
 /**
@@ -347,7 +394,7 @@ List horizontalProportionsBasic(NumericVector poolProportions, NumericMatrix V,
 
 // [[Rcpp::export("root_horizontalProportionsAdvanced")]]
 List horizontalProportionsAdvanced(NumericVector poolProportions, NumericVector VolInd, NumericVector N, NumericMatrix V, 
-                                   NumericVector d, NumericVector bulkDensity) {
+                                   NumericVector d, NumericVector bulkDensity, NumericVector rfc) {
   
   int numCohorts = V.nrow();
   int numlayers = V.ncol();
@@ -357,12 +404,12 @@ List horizontalProportionsAdvanced(NumericVector poolProportions, NumericVector 
     poolAreaInd[c] = 10000.0*poolProportions[c]/N[c]; //area of the pool per individual of the cohort
   }
   
-  NumericMatrix iga = individualRootedGroundArea(VolInd,V,d,bulkDensity);
+  NumericMatrix iga = individualRootedGroundArea(VolInd,V,d,bulkDensity,rfc);
 
   for(int coh=0;coh<numCohorts;coh++) {
     NumericMatrix RHOP(numCohorts,numlayers);
     for(int l=0;l<numlayers;l++) {
-      // Rcout<<coh<< " "<< l<< " "<<iga(coh,l)<<" "<< poolAreaInd[coh]<<"\n";
+      Rcout<<coh<< " "<< l<< " "<<iga(coh,l)<<" "<< poolAreaInd[coh]<<"\n";
       RHOP(coh,l) = std::min(poolAreaInd[coh],iga(coh,l))/iga(coh,l);
       if(iga(coh,l)>poolAreaInd[coh]) {
         double dif = iga(coh,l) - poolAreaInd[coh];
