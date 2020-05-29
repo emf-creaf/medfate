@@ -2729,17 +2729,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // individualRootedGroundArea
-NumericMatrix individualRootedGroundArea(NumericVector VolInd, NumericMatrix V, NumericVector d, NumericVector bulkDensity, NumericVector rfc);
-RcppExport SEXP _medfate_individualRootedGroundArea(SEXP VolIndSEXP, SEXP VSEXP, SEXP dSEXP, SEXP bulkDensitySEXP, SEXP rfcSEXP) {
+NumericMatrix individualRootedGroundArea(NumericVector VolInd, NumericMatrix V, NumericVector d, NumericVector rfc);
+RcppExport SEXP _medfate_individualRootedGroundArea(SEXP VolIndSEXP, SEXP VSEXP, SEXP dSEXP, SEXP rfcSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type VolInd(VolIndSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type V(VSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type bulkDensity(bulkDensitySEXP);
     Rcpp::traits::input_parameter< NumericVector >::type rfc(rfcSEXP);
-    rcpp_result_gen = Rcpp::wrap(individualRootedGroundArea(VolInd, V, d, bulkDensity, rfc));
+    rcpp_result_gen = Rcpp::wrap(individualRootedGroundArea(VolInd, V, d, rfc));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2825,15 +2824,18 @@ BEGIN_RCPP
 END_RCPP
 }
 // coarseRootSoilVolume
-double coarseRootSoilVolume(double dbh, double Z, double densityFactor);
-RcppExport SEXP _medfate_coarseRootSoilVolume(SEXP dbhSEXP, SEXP ZSEXP, SEXP densityFactorSEXP) {
+double coarseRootSoilVolume(double Kmax_rootxylem, double VCroot_kmax, double Al2As, NumericVector V, NumericVector d, NumericVector rfc);
+RcppExport SEXP _medfate_coarseRootSoilVolume(SEXP Kmax_rootxylemSEXP, SEXP VCroot_kmaxSEXP, SEXP Al2AsSEXP, SEXP VSEXP, SEXP dSEXP, SEXP rfcSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type dbh(dbhSEXP);
-    Rcpp::traits::input_parameter< double >::type Z(ZSEXP);
-    Rcpp::traits::input_parameter< double >::type densityFactor(densityFactorSEXP);
-    rcpp_result_gen = Rcpp::wrap(coarseRootSoilVolume(dbh, Z, densityFactor));
+    Rcpp::traits::input_parameter< double >::type Kmax_rootxylem(Kmax_rootxylemSEXP);
+    Rcpp::traits::input_parameter< double >::type VCroot_kmax(VCroot_kmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type Al2As(Al2AsSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type V(VSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type rfc(rfcSEXP);
+    rcpp_result_gen = Rcpp::wrap(coarseRootSoilVolume(Kmax_rootxylem, VCroot_kmax, Al2As, V, d, rfc));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2878,8 +2880,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // horizontalProportionsAdvanced
-List horizontalProportionsAdvanced(NumericVector poolProportions, NumericVector VolInd, NumericVector N, NumericMatrix V, NumericVector d, NumericVector bulkDensity, NumericVector rfc);
-RcppExport SEXP _medfate_horizontalProportionsAdvanced(SEXP poolProportionsSEXP, SEXP VolIndSEXP, SEXP NSEXP, SEXP VSEXP, SEXP dSEXP, SEXP bulkDensitySEXP, SEXP rfcSEXP) {
+List horizontalProportionsAdvanced(NumericVector poolProportions, NumericVector VolInd, NumericVector N, NumericMatrix V, NumericVector d, NumericVector rfc);
+RcppExport SEXP _medfate_horizontalProportionsAdvanced(SEXP poolProportionsSEXP, SEXP VolIndSEXP, SEXP NSEXP, SEXP VSEXP, SEXP dSEXP, SEXP rfcSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -2888,9 +2890,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type N(NSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type V(VSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type bulkDensity(bulkDensitySEXP);
     Rcpp::traits::input_parameter< NumericVector >::type rfc(rfcSEXP);
-    rcpp_result_gen = Rcpp::wrap(horizontalProportionsAdvanced(poolProportions, VolInd, N, V, d, bulkDensity, rfc));
+    rcpp_result_gen = Rcpp::wrap(horizontalProportionsAdvanced(poolProportions, VolInd, N, V, d, rfc));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4457,18 +4458,18 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_conicDistribution", (DL_FUNC) &_medfate_conicDistribution, 2},
     {"_medfate_ldrDistribution", (DL_FUNC) &_medfate_ldrDistribution, 3},
     {"_medfate_rootDistribution", (DL_FUNC) &_medfate_rootDistribution, 2},
-    {"_medfate_individualRootedGroundArea", (DL_FUNC) &_medfate_individualRootedGroundArea, 5},
+    {"_medfate_individualRootedGroundArea", (DL_FUNC) &_medfate_individualRootedGroundArea, 4},
     {"_medfate_specificRootSurfaceArea", (DL_FUNC) &_medfate_specificRootSurfaceArea, 2},
     {"_medfate_fineRootRadius", (DL_FUNC) &_medfate_fineRootRadius, 2},
     {"_medfate_fineRootHalfDistance", (DL_FUNC) &_medfate_fineRootHalfDistance, 1},
     {"_medfate_fineRootAreaIndex", (DL_FUNC) &_medfate_fineRootAreaIndex, 6},
     {"_medfate_fineRootBiomassPerIndividual", (DL_FUNC) &_medfate_fineRootBiomassPerIndividual, 7},
     {"_medfate_fineRootSoilVolume", (DL_FUNC) &_medfate_fineRootSoilVolume, 3},
-    {"_medfate_coarseRootSoilVolume", (DL_FUNC) &_medfate_coarseRootSoilVolume, 3},
+    {"_medfate_coarseRootSoilVolume", (DL_FUNC) &_medfate_coarseRootSoilVolume, 6},
     {"_medfate_coarseRootLengths", (DL_FUNC) &_medfate_coarseRootLengths, 3},
     {"_medfate_xylemConductanceProportions", (DL_FUNC) &_medfate_xylemConductanceProportions, 3},
     {"_medfate_horizontalProportionsBasic", (DL_FUNC) &_medfate_horizontalProportionsBasic, 4},
-    {"_medfate_horizontalProportionsAdvanced", (DL_FUNC) &_medfate_horizontalProportionsAdvanced, 7},
+    {"_medfate_horizontalProportionsAdvanced", (DL_FUNC) &_medfate_horizontalProportionsAdvanced, 6},
     {"_medfate_saturatedConductivitySaxton", (DL_FUNC) &_medfate_saturatedConductivitySaxton, 3},
     {"_medfate_thetaSATSaxton", (DL_FUNC) &_medfate_thetaSATSaxton, 3},
     {"_medfate_theta2psiSaxton", (DL_FUNC) &_medfate_theta2psiSaxton, 4},

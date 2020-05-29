@@ -330,61 +330,33 @@ DataFrame paramsTranspirationSperry(DataFrame above, NumericMatrix V, List soil,
   return(paramsTranspirationdf);
 }
 
-List paramsBelow(DataFrame above, NumericVector Z, NumericMatrix V, List soil, List belowLayers) {
-  
-  IntegerVector SP = above["SP"];
-  NumericVector LAI_live = above["LAI_live"];
-  NumericVector H = above["H"];
-  NumericVector DBH = above["DBH"];
-  NumericVector N = above["N"];
-  int numCohorts = SP.size();
-  
-  NumericVector dVec = soil["dVec"];
-  NumericVector VG_alpha = soil["VG_alpha"];
-  NumericVector VG_n = soil["VG_n"];
-  int nlayers = dVec.size();
-  DataFrame belowdf;
-  NumericVector FRSV(numCohorts), FRB(numCohorts), CRSV(numCohorts), TRSV(numCohorts),FRAI(numCohorts);
-  NumericMatrix VGrhizo_kmax = belowLayers["VGrhizo_kmax"];
-  NumericVector Ksat = soil["Ksat"];
-  for(int c=0;c<numCohorts;c++)  {
-    double specificRootLength = 4000.0;
-    double rootTissueDensity = 0.165;
-    FRAI[c] = fineRootAreaIndex(Ksat, VGrhizo_kmax(c,_), LAI_live[c], 
-                                specificRootLength, rootTissueDensity);
-    FRB[c] = fineRootBiomassPerIndividual(Ksat, VGrhizo_kmax(c,_), LAI_live[c], N[c], 
-                                          specificRootLength, rootTissueDensity);
-    FRSV[c] = fineRootSoilVolume(FRB[c],specificRootLength);
-    CRSV[c] = coarseRootSoilVolume(DBH[c], Z[c]);
-    TRSV[c] = FRSV[c]+CRSV[c];
-  }
-  NumericVector NVol = N*TRSV;
-  double sumNvol = sum(NVol);
-  NumericVector poolProportions = NVol/sumNvol;
-  belowdf = DataFrame::create(_["fineRootAreaIndex"] = FRAI,
-                              _["fineRootBiomass"] = FRB,
-                              _["fineRootSoilVolume"] = FRSV,
-                              _["coarseRootSoilVolume"] = CRSV,
-                              _["totalRootSoilVolume"] = TRSV,
-                              _["poolProportions"] = poolProportions);
-  belowdf.attr("row.names") = above.attr("row.names");
-  return(belowdf);
-}
 
-List paramsBelowLayers(DataFrame above, NumericMatrix V, List soil, 
-                 DataFrame paramsTranspirationdf, List control) {
+List paramsBelow(DataFrame above, NumericVector Z, NumericMatrix V, List soil, 
+                 DataFrame paramsAnatomydf, DataFrame paramsTranspirationdf, List control) {
+
   NumericVector dVec = soil["dVec"];
+  // NumericVector bd = soil["bd"];
+  NumericVector rfc = soil["rfc"];
   NumericVector VG_alpha = soil["VG_alpha"];
   NumericVector VG_n = soil["VG_n"];
   int nlayers = dVec.size();
+  
+
+  
+  NumericVector LAI_live = above["LAI_live"];
+  NumericVector N = above["N"];
   
   double averageFracRhizosphereResistance = control["averageFracRhizosphereResistance"];
+  bool plantWaterPools = control["plantWaterPools"];
   
   //Soil layer names
   CharacterVector slnames(V.ncol());
   for(int i=0;i<V.ncol();i++) slnames[i] = i+1;
   V.attr("dimnames") = List::create(above.attr("row.names"), slnames);
   
+  NumericVector Al2As = paramsAnatomydf["Al2As"];
+  
+  NumericVector Kmax_stemxylem = paramsTranspirationdf["Kmax_stemxylem"];
   NumericVector VCroottot_kmax = paramsTranspirationdf["VCroot_kmax"];
   NumericVector VCroot_c = paramsTranspirationdf["VCroot_c"];
   NumericVector VCroot_d = paramsTranspirationdf["VCroot_d"];
@@ -397,6 +369,16 @@ List paramsBelowLayers(DataFrame above, NumericMatrix V, List soil,
   NumericVector VGrhizotot_kmax = paramsTranspirationdf["VGrhizo_kmax"];
   
   int numCohorts = VCroottot_kmax.length();
+  
+  NumericVector Wsoil = soil["W"];
+  NumericMatrix Wpool = NumericMatrix(numCohorts, nlayers);
+  Wpool.attr("dimnames") = V.attr("dimnames");
+  for(int c=0;c<numCohorts;c++){
+    for(int l=0;l<nlayers;l++) Wpool(c,l) = Wsoil[l]; //Init from soil state
+  }
+  NumericMatrix RhizoPsi =  NumericMatrix(numCohorts, nlayers);
+  RhizoPsi.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
+  std::fill(RhizoPsi.begin(), RhizoPsi.end(), 0.0);
   
   NumericMatrix VCroot_kmax(numCohorts, nlayers); 
   NumericMatrix VGrhizo_kmax(numCohorts, nlayers);
@@ -417,9 +399,46 @@ List paramsBelowLayers(DataFrame above, NumericMatrix V, List soil,
   VCroot_kmax.attr("dimnames") = List::create(above.attr("row.names"), slnames);
   
   
-  List below = List::create(_["V"] = V,
-                            _["VGrhizo_kmax"] = VGrhizo_kmax,
-                            _["VCroot_kmax"] = VCroot_kmax);
+  DataFrame belowdf = DataFrame::create(_["Z"]=Z);
+  if(plantWaterPools) {
+    NumericVector FRB(numCohorts), CRSV(numCohorts),FRAI(numCohorts);
+    NumericVector Ksat = soil["Ksat"];
+    for(int c=0;c<numCohorts;c++)  {
+      double specificRootLength = 4000.0;
+      double rootTissueDensity = 0.165;
+      FRAI[c] = fineRootAreaIndex(Ksat, VGrhizo_kmax(c,_), LAI_live[c], 
+                                  specificRootLength, rootTissueDensity);
+      FRB[c] = fineRootBiomassPerIndividual(Ksat, VGrhizo_kmax(c,_), LAI_live[c], N[c], 
+                                            specificRootLength, rootTissueDensity);
+      //We use Kmax_stemxylem instead of Kmax_rootxylem because of reliability
+      CRSV[c] = coarseRootSoilVolume(Kmax_stemxylem[c], VCroottot_kmax[c], Al2As[c],
+                                     V(c,_), dVec, rfc);
+    }
+    // NumericVector NVol = N*TRSV;
+    double sumLAI = sum(LAI_live);
+    NumericVector poolProportions = LAI_live/sumLAI;
+    belowdf = DataFrame::create(_["fineRootAreaIndex"] = FRAI,
+                                _["fineRootBiomass"] = FRB,
+                                _["coarseRootSoilVolume"] = CRSV,
+                                _["poolProportions"] = poolProportions);
+    
+  }
+  belowdf.attr("row.names") = above.attr("row.names");
+  
+  List belowLayers = List::create(_["V"] = V,
+                                  _["VGrhizo_kmax"] = VGrhizo_kmax,
+                                  _["VCroot_kmax"] = VCroot_kmax,
+                                  _["Wpool"] = Wpool,
+                                  _["RhizoPsi"] = RhizoPsi);
+  if(plantWaterPools) {
+    NumericVector poolProportions = belowdf["poolProportions"];
+    NumericVector CRSV = belowdf["coarseRootSoilVolume"];
+    List RHOP = horizontalProportionsAdvanced(poolProportions, CRSV, N, V, dVec, rfc);
+    belowLayers["RHOP"] = RHOP;
+  } 
+  
+  List below = List::create(_["below"] = belowdf,
+                            _["belowLayers"] = belowLayers);
   return(below);
 }
 
@@ -642,9 +661,8 @@ List spwbInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, Dat
   NumericVector DBH = above["DBH"];
   NumericVector N = above["N"];
   NumericVector CR = above["CR"];
-  String transpirationMode = control["transpirationMode"];
-  bool plantWaterPools = control["plantWaterPools"];
   
+  String transpirationMode = control["transpirationMode"];
   if((transpirationMode!="Granier") & (transpirationMode!="Sperry")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Granier' or 'Sperry')");
 
   
@@ -678,19 +696,19 @@ List spwbInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, Dat
   plantsdf.attr("row.names") = above.attr("row.names");
   
   NumericVector dVec = soil["dVec"];
-  NumericVector bd = soil["bd"];
-  NumericVector rfc = soil["rfc"];
-  NumericVector Wsoil = soil["W"];
-  NumericMatrix Wpool = NumericMatrix(numCohorts, nlayers);
-  Wpool.attr("dimnames") = V.attr("dimnames");
-  for(int c=0;c<numCohorts;c++){
-    for(int l=0;l<nlayers;l++) Wpool(c,l) = Wsoil[l]; //Init from soil state
-  }
+
   
   
   List input;
   if(transpirationMode=="Granier") {
+    bool plantWaterPools = control["plantWaterPools"];
     
+    NumericVector Wsoil = soil["W"];
+    NumericMatrix Wpool = NumericMatrix(numCohorts, nlayers);
+    Wpool.attr("dimnames") = V.attr("dimnames");
+    for(int c=0;c<numCohorts;c++){
+      for(int l=0;l<nlayers;l++) Wpool(c,l) = Wsoil[l]; //Init from soil state
+    }
     //Base params
     DataFrame paramsInterceptiondf = DataFrame::create(_["kPAR"] = kPAR, 
                                                _["g"] = g);
@@ -738,26 +756,14 @@ List spwbInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, Dat
     DataFrame paramsTranspirationdf = paramsTranspirationSperry(above, V, soil, SpParams,
                                                           paramsAnatomydf, control);
     DataFrame paramsWaterStoragedf = paramsWaterStorage(above, SpParams, paramsAnatomydf);
-    NumericMatrix RhizoPsi =  NumericMatrix(numCohorts, nlayers);
-    RhizoPsi.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
-    std::fill(RhizoPsi.begin(), RhizoPsi.end(), 0.0);
+
     if(soilFunctions=="SX") {
       soilFunctions = "VG"; 
       warning("Soil pedotransfer functions set to Van Genuchten ('VG').");
     }
-    DataFrame belowdf = DataFrame::create();
-    List belowLayers = paramsBelowLayers(above, V, soil, 
-                              paramsTranspirationdf, control);
-    belowLayers["Wpool"] = Wpool;
-    belowLayers["RhizoPsi"] = RhizoPsi;
-    if(plantWaterPools) {
-      belowdf = paramsBelow(above, Z,  V, soil, belowLayers);
-      NumericVector poolProportions = belowdf["poolProportions"];
-      NumericVector TRSV = belowdf["totalRootSoilVolume"];
-      List RHOP = horizontalProportionsAdvanced(poolProportions, TRSV, N, V, dVec, bd, rfc);
-      belowLayers["RHOP"] = RHOP;
-    } 
-    
+    List below = paramsBelow(above, Z, V, soil, 
+                             paramsAnatomydf, paramsTranspirationdf, 
+                             control);
 
     List paramsCanopy = List::create(_["gdd"] = 0.0,_["Temp"] = NA_REAL);
     List ctl = clone(control);
@@ -765,8 +771,8 @@ List spwbInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, Dat
                          _["canopy"] = paramsCanopy,
                          _["cohorts"] = cohortDescdf,
                          _["above"] = plantsdf,
-                         _["below"] = belowdf,
-                         _["belowLayers"] = belowLayers,
+                         _["below"] = below["below"],
+                         _["belowLayers"] = below["belowLayers"],
                          _["paramsPhenology"] = paramsPhenology(above, SpParams),
                          _["paramsAnatomy"] = paramsAnatomydf,
                          _["paramsInterception"] = paramsInterceptiondf,
@@ -808,7 +814,6 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   String soilFunctions = control["soilFunctions"]; 
   if((soilFunctions!="SX") & (soilFunctions!="VG")) stop("Wrong soil functions ('soilFunctions' should be either 'SX' or 'VG')");
   
-  bool plantWaterPools = control["plantWaterPools"];
   
   DataFrame paramsAnatomydf = paramsAnatomy(above, SpParams);
   NumericVector WoodDensity = paramsAnatomydf["WoodDensity"];
@@ -838,16 +843,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     SA[c] = 10000.0*(LAI_live[c]/(N[c]/10000.0))/Al2As[c];//Individual SA in cm2
   }
   
-  NumericVector dVec = soil["dVec"];
-  NumericVector bd = soil["bd"];
-  NumericVector rfc = soil["rfc"];
-  
-  NumericVector Wsoil = soil["W"];
-  NumericMatrix Wpool = NumericMatrix(numCohorts, nlayers);
-  Wpool.attr("dimnames") = V.attr("dimnames");
-  for(int c=0;c<numCohorts;c++){
-    for(int l=0;l<nlayers;l++) Wpool(c,l) = Wsoil[l]; //Init from soil state
-  }
+
   
   //Cohort description
   CharacterVector nsp = cohortCharacterParameter(SP, SpParams, "Name");
@@ -864,9 +860,18 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   for(int i=0;i<numCohorts;i++) ringList[i] = initialize_ring();
   ringList.attr("names") = above.attr("row.names");
   
-  DataFrame belowdf = DataFrame::create(_["Z"]=Z);
   List input;
   if(transpirationMode=="Granier") {
+    bool plantWaterPools = control["plantWaterPools"];
+    
+    DataFrame belowdf = DataFrame::create(_["Z"]=Z);
+    
+    NumericVector Wsoil = soil["W"];
+    NumericMatrix Wpool = NumericMatrix(numCohorts, nlayers);
+    Wpool.attr("dimnames") = V.attr("dimnames");
+    for(int c=0;c<numCohorts;c++){
+      for(int l=0;l<nlayers;l++) Wpool(c,l) = Wsoil[l]; //Init from soil state
+    }
     //Base params
     DataFrame paramsInterceptiondf = DataFrame::create(_["kPAR"] = kPAR, 
                                                _["g"] = g);
@@ -927,35 +932,25 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     
     DataFrame paramsTranspirationdf = paramsTranspirationSperry(above, V, soil, SpParams,
                                                           paramsAnatomydf, control);
-    List belowLayers = paramsBelowLayers(above, V, soil, 
-                                   paramsTranspirationdf, control);
 
-    NumericMatrix RhizoPsi =  NumericMatrix(numCohorts, nlayers);
-    RhizoPsi.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
-    std::fill(RhizoPsi.begin(), RhizoPsi.end(), 0.0);
-    belowLayers["RhizoPsi"] = RhizoPsi;
-    belowLayers["Wpool"] = Wpool;
-    
-    if(plantWaterPools) {
-      belowdf = paramsBelow(above, Z,  V, soil, belowLayers);
-      NumericVector poolProportions = belowdf["poolProportions"];
-      NumericVector TRSV = belowdf["totalRootSoilVolume"];
-      List RHOP = horizontalProportionsAdvanced(poolProportions, TRSV, N, V, dVec, bd, rfc);
-      belowLayers["RHOP"] = RHOP;
-    } 
-    
+
     if(soilFunctions=="SX") {
       soilFunctions = "VG"; 
       warning("Soil pedotransfer functions set to Van Genuchten ('VG').");
     }
     List paramsCanopy = List::create(_["gdd"] = 0.0,_["Temp"] = NA_REAL);
+    
+    List below = paramsBelow(above, Z, V, soil, 
+                             paramsAnatomydf, paramsTranspirationdf, 
+                             control);
+    
     List ctl = clone(control);
     input = List::create(_["control"] = ctl,
                          _["canopy"] = paramsCanopy,
                          _["cohorts"] = cohortDescdf,
                          _["above"] = plantsdf,
-                         _["below"] = belowdf,
-                         _["belowLayers"] = belowLayers,
+                         _["below"] = below["below"],
+                         _["belowLayers"] = below["belowLayers"],
                          _["paramsPhenology"] = paramsPhenology(above, SpParams),
                          _["paramsAnatomy"] = paramsAnatomydf,
                          _["paramsInterception"] = paramsInterceptiondf,
@@ -965,7 +960,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
                          _["paramsAllometries"] = paramsAllometriesdf,
                          _["internalPhenology"] = internalPhenologyDataFrame(above),
                          _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
-                         _["internalCarbon"] = internalCarbonDataFrame(plantsdf, belowdf,
+                         _["internalCarbon"] = internalCarbonDataFrame(plantsdf, below["below"],
                                                          paramsAnatomydf, 
                                                          paramsWaterStoragedf,
                                                          paramsGrowthdf, control),

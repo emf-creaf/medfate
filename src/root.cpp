@@ -1,5 +1,6 @@
 #include <Rcpp.h>
 #include <numeric>
+#include "hydraulics.h"
 using namespace Rcpp;
 using namespace std;
 using std::exp;
@@ -167,7 +168,7 @@ NumericMatrix rootDistribution(NumericVector z, List x) {
  */
 // [[Rcpp::export("root_individualRootedGroundArea")]]
 NumericMatrix individualRootedGroundArea(NumericVector VolInd, NumericMatrix V, NumericVector d, 
-                                         NumericVector bulkDensity, NumericVector rfc) {
+                                         NumericVector rfc) {
   int numCohorts = V.nrow();
   int numLayers = V.ncol();
   NumericMatrix larea(numCohorts,numLayers);
@@ -175,7 +176,7 @@ NumericMatrix individualRootedGroundArea(NumericVector VolInd, NumericMatrix V, 
     for(int j=0;j<numLayers;j++) {
       double lvol = VolInd[i]*V(i,j); //m3
       double laxial = d[j]/1000.0; //mm to m
-      double lradial = sqrt(lvol/(laxial*PI*(1.0 - (rfc[j]/100.0))*(1.0 - (bulkDensity[j]/2.65))));
+      double lradial = sqrt(lvol/(laxial*PI*(1.0 - (rfc[j]/100.0))));
       larea(i,j) = PI*pow(lradial,2.0); //m2
     }
   }
@@ -260,15 +261,53 @@ double fineRootSoilVolume(double fineRootBiomass, double specificRootLength, dou
   return(fineRootBiomass*(specificRootLength/rootLengthDensity)*1e-6);
 }
 
+double frv(double vol, double B, NumericVector V, NumericVector ax, NumericVector ra) {
+  int numLayers = ax.size();
+  double s = 0.0;
+  double li = 0.0;
+  for(int i=0;i<numLayers;i++) {
+    li = ax[i]+sqrt(vol)*ra[i];
+    s +=(V[i]/li); //No taper effect
+    // s +=(V[i]/(li*taperFactorSavage(li*100.0))); //TODO: Improve usage of Savage taper factor for roots
+  }
+  return(B*s - 1.0);
+}
 /**
  *   Estimates soil volume (m3) occupied with coarse roots
  *    . sapwood area (cm2)
  *    . rooting depth (cm)
  */
 // [[Rcpp::export("root_coarseRootSoilVolume")]]
-double coarseRootSoilVolume(double dbh, double Z, double densityFactor  = 20.0) {//Coarse root density factor
-  if(NumericVector::is_na(dbh)) dbh = 5.0;
-  return(densityFactor*1e-6*PI*pow(dbh/2.0,2.0)*Z); 
+double coarseRootSoilVolume(double Kmax_rootxylem, double VCroot_kmax, double Al2As,
+                                   NumericVector V, NumericVector d, NumericVector rfc) {
+  int numLayers = V.size();
+  NumericVector ra(numLayers, 0.0);
+  NumericVector ax(numLayers, 0.0);
+  for(int j=0;j<numLayers;j++) {
+    ra[j] = sqrt(V[j]/((d[j]/1000.0)*PI*(1.0 - (rfc[j]/100.0))));
+    if(j==0) ax[j] = (d[j]/1000.0);
+    else ax[j] = ax[j-1]+(d[j]/1000.0);
+    // Rcout<<j<<" "<<ax[j]<<" "<<ra[j]<<"\n";
+  }
+  double B = (1000.0/0.018)*Kmax_rootxylem/(VCroot_kmax*Al2As);
+  // Rcout<<" B: " << B<<"\n";
+  double step = 1.0;
+  double fTol = 0.005;
+  double vol = 0.0;
+  double f = frv(vol, B, V, ax, ra);
+  while(std::abs(f)>fTol) {
+    if(f>0.0) {
+      vol += step; 
+    } else {
+      vol -= step;
+      step = step/2.0;
+    }
+    f = frv(vol,B,V, ax,ra);
+  }
+  // for(int j=0;j<numLayers;j++) {
+    // Rcout<<j<<" "<<ax[j]<<" "<<sqrt(vol)*ra[j]<<" "<<((d[j]/1000.0)*PI*pow(sqrt(vol)*ra[j],2.0))<<"\n";
+  // }
+  return(vol);
 }
 
 /**
@@ -394,7 +433,7 @@ List horizontalProportionsBasic(NumericVector poolProportions, NumericMatrix V,
 
 // [[Rcpp::export("root_horizontalProportionsAdvanced")]]
 List horizontalProportionsAdvanced(NumericVector poolProportions, NumericVector VolInd, NumericVector N, NumericMatrix V, 
-                                   NumericVector d, NumericVector bulkDensity, NumericVector rfc) {
+                                   NumericVector d, NumericVector rfc) {
   
   int numCohorts = V.nrow();
   int numlayers = V.ncol();
@@ -404,12 +443,12 @@ List horizontalProportionsAdvanced(NumericVector poolProportions, NumericVector 
     poolAreaInd[c] = 10000.0*poolProportions[c]/N[c]; //area of the pool per individual of the cohort
   }
   
-  NumericMatrix iga = individualRootedGroundArea(VolInd,V,d,bulkDensity,rfc);
+  NumericMatrix iga = individualRootedGroundArea(VolInd,V,d,rfc);
 
   for(int coh=0;coh<numCohorts;coh++) {
     NumericMatrix RHOP(numCohorts,numlayers);
     for(int l=0;l<numlayers;l++) {
-      Rcout<<coh<< " "<< l<< " "<<iga(coh,l)<<" "<< poolAreaInd[coh]<<"\n";
+      // Rcout<<coh<< " "<< l<< " "<<iga(coh,l)<<" "<< poolAreaInd[coh]<<"\n";
       RHOP(coh,l) = std::min(poolAreaInd[coh],iga(coh,l))/iga(coh,l);
       if(iga(coh,l)>poolAreaInd[coh]) {
         double dif = iga(coh,l) - poolAreaInd[coh];

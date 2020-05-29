@@ -21,11 +21,12 @@ double fineRootBiomassPerIndividual(NumericVector Ksoil, NumericVector krhizo,  
                                     double rootLengthDensity = 10.0);
 double fineRootSoilVolume(double fineRootBiomass, double specificRootLength, double rootLengthDensity = 10.0);
 
-double coarseRootSoilVolume(double dbh, double Z, double densityFactor = 20.0);
+double coarseRootSoilVolume(double Kmax_rootxylem, double VCroot_kmax, double Al2As,
+                            NumericVector V, NumericVector d, NumericVector rfc);
 NumericVector coarseRootLengths(NumericVector v, NumericVector d, double depthWidthRatio = 1.0);
 NumericVector xylemConductanceProportions(NumericVector v, NumericVector d, double depthWidthRatio = 1.0);
 List horizontalProportionsBasic(NumericVector poolProportions, NumericMatrix V, 
                                 double LAIcell, double poolOverlapFactor);
 List horizontalProportionsAdvanced(NumericVector poolProportions, NumericVector VolInd, 
                                    NumericVector N, NumericMatrix V, 
-                                   NumericVector d, NumericVector bulkDensity, NumericVector rfc);
+                                   NumericVector d, NumericVector rfc);
