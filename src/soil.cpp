@@ -21,7 +21,7 @@ const double cmdTOmmolm2sMPa = 655.2934; //100.0/(18.01528*86400.0*0.00009804139
  * Returs saturated conductivity (mmolH20·m-1·s-1·MPa-1)
  */
 // [[Rcpp::export("soil_saturatedConductivitySX")]]
-double saturatedConductivitySaxton(double clay, double sand, double om = NA_REAL) {
+double saturatedConductivitySaxton(double clay, double sand, double om = NA_REAL, bool mmol = true) {
   double Ksat = NA_REAL;
   //If organic matter is missing use Saxton et al (1986)
   //Otherwise use Saxton & Rawls (2006)
@@ -47,7 +47,7 @@ double saturatedConductivitySaxton(double clay, double sand, double om = NA_REAL
     Ksat = Ksat*0.1*24.0;
   }
   //cm/day to mmolH20·m-1·s-1·MPa-1
-  Ksat = Ksat*cmdTOmmolm2sMPa;
+  if(mmol) Ksat = Ksat*cmdTOmmolm2sMPa;
   return(Ksat);
 }
 /**

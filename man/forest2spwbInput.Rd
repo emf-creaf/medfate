@@ -20,7 +20,7 @@ forest2belowground(x, soil, SpParams)
 forest2growthInput(x, soil, SpParams, control)
 forest2spwbInput(x, soil, SpParams, control, mode = "MED")
 growthInput(above,  Z, V,  soil, SpParams, control)
-spwbInput(above,  V,  soil, SpParams, control)
+spwbInput(above,  Z, V,  soil, SpParams, control)
 }
 \arguments{
   \item{x}{An object of class \code{\link{forest}}.}
@@ -165,11 +165,15 @@ examplesoil = soil(defaultSoilParams())
 below = forest2belowground(exampleforestMED, examplesoil, SpParamsMED)
 below
 
+# Maximum depths
+Z = c(exampleforestMED$treeData$Z95, exampleforestMED$shrubData$Z95)
+Z
+
 # Initialize control parameters
 control = defaultControl()
 
 # Prepare spwb input
-spwbInput(above, below, examplesoil,SpParamsMED, control)
+spwbInput(above, Z, below, examplesoil,SpParamsMED, control)
 
 # When starting from an object of class 'forest' the whole process
 # can be simplified:

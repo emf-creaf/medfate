@@ -2896,22 +2896,23 @@ BEGIN_RCPP
 END_RCPP
 }
 // saturatedConductivitySaxton
-double saturatedConductivitySaxton(double clay, double sand, double om);
-static SEXP _medfate_saturatedConductivitySaxton_try(SEXP claySEXP, SEXP sandSEXP, SEXP omSEXP) {
+double saturatedConductivitySaxton(double clay, double sand, double om, bool mmol);
+static SEXP _medfate_saturatedConductivitySaxton_try(SEXP claySEXP, SEXP sandSEXP, SEXP omSEXP, SEXP mmolSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::traits::input_parameter< double >::type clay(claySEXP);
     Rcpp::traits::input_parameter< double >::type sand(sandSEXP);
     Rcpp::traits::input_parameter< double >::type om(omSEXP);
-    rcpp_result_gen = Rcpp::wrap(saturatedConductivitySaxton(clay, sand, om));
+    Rcpp::traits::input_parameter< bool >::type mmol(mmolSEXP);
+    rcpp_result_gen = Rcpp::wrap(saturatedConductivitySaxton(clay, sand, om, mmol));
     return rcpp_result_gen;
 END_RCPP_RETURN_ERROR
 }
-RcppExport SEXP _medfate_saturatedConductivitySaxton(SEXP claySEXP, SEXP sandSEXP, SEXP omSEXP) {
+RcppExport SEXP _medfate_saturatedConductivitySaxton(SEXP claySEXP, SEXP sandSEXP, SEXP omSEXP, SEXP mmolSEXP) {
     SEXP rcpp_result_gen;
     {
         Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_medfate_saturatedConductivitySaxton_try(claySEXP, sandSEXP, omSEXP));
+        rcpp_result_gen = PROTECT(_medfate_saturatedConductivitySaxton_try(claySEXP, sandSEXP, omSEXP, mmolSEXP));
     }
     Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
     if (rcpp_isInterrupt_gen) {
@@ -4215,7 +4216,7 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("double(*hydrology_snowMelt)(double,double,double,double)");
         signatures.insert("NumericVector(*hydrology_soilWaterInputs)(List,String,double,double,double,double,double,double,double,double,double,bool,bool)");
         signatures.insert("NumericVector(*hydrology_soilInfiltrationPercolation)(List,String,double,bool,bool)");
-        signatures.insert("double(*soil_saturatedConductivitySX)(double,double,double)");
+        signatures.insert("double(*soil_saturatedConductivitySX)(double,double,double,bool)");
         signatures.insert("double(*soil_thetaSATSX)(double,double,double)");
         signatures.insert("double(*soil_theta2psiSX)(double,double,double,double)");
         signatures.insert("double(*soil_psi2thetaSX)(double,double,double,double)");
@@ -4470,7 +4471,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_xylemConductanceProportions", (DL_FUNC) &_medfate_xylemConductanceProportions, 3},
     {"_medfate_horizontalProportionsBasic", (DL_FUNC) &_medfate_horizontalProportionsBasic, 4},
     {"_medfate_horizontalProportionsAdvanced", (DL_FUNC) &_medfate_horizontalProportionsAdvanced, 6},
-    {"_medfate_saturatedConductivitySaxton", (DL_FUNC) &_medfate_saturatedConductivitySaxton, 3},
+    {"_medfate_saturatedConductivitySaxton", (DL_FUNC) &_medfate_saturatedConductivitySaxton, 4},
     {"_medfate_thetaSATSaxton", (DL_FUNC) &_medfate_thetaSATSaxton, 3},
     {"_medfate_theta2psiSaxton", (DL_FUNC) &_medfate_theta2psiSaxton, 4},
     {"_medfate_psi2thetaSaxton", (DL_FUNC) &_medfate_psi2thetaSaxton, 4},

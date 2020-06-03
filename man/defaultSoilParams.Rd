@@ -11,11 +11,12 @@ Creates a data frame with default soil physical description for model functions.
 defaultSoilParams(n = 4) 
 }
 \arguments{
- \item{n}{An integer with the number of soil layers.}
+ \item{n}{An integer with the number of soil layers (between two and five).}
 }
 \details{
 The function returns a data frame with default physical soil description, with soil layers in rows. Users can change those that need to be set to other values and use the list as input for function \code{\link{soil}}.
 }
+\note{While this function is limited to five soil layers, user defined data frames can discretize soils using an unlimited number of soil layers.}
 \value{
 A data frame with layers in rows and the following columns (and default values):
 \itemize{
