@@ -589,11 +589,11 @@ resetInputs <- function(x, soil) {
     invisible(.Call(`_medfate_resetInputs`, x, soil))
 }
 
-multiplyInputParam <- function(x, soil, paramType, paramName, cohort, f) {
+.multiplyInputParam <- function(x, soil, paramType, paramName, cohort, f) {
     invisible(.Call(`_medfate_multiplyInputParam`, x, soil, paramType, paramName, cohort, f))
 }
 
-modifyInputParam <- function(x, soil, paramType, paramName, cohort, newValue) {
+.modifyInputParam <- function(x, soil, paramType, paramName, cohort, newValue) {
     invisible(.Call(`_medfate_modifyInputParam`, x, soil, paramType, paramName, cohort, newValue))
 }
 

@@ -10,7 +10,7 @@ spwb_sensitivity<-function(x, soil, meteo,
     xi = x
     xi$control$verbose= FALSE
     f = (1+(p_change[i]/100))
-    multiplyInputParam(xi, soil, paramType, paramName, cohort, f)
+    .multiplyInputParam(xi, soil, paramType, paramName, cohort - 1, f)
     resetInputs(xi, soil)
     l[[i]] = spwb(xi, soil, meteo, ...)
   }

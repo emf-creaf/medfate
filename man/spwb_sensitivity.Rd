@@ -8,7 +8,7 @@ Performs a set of calls to \code{\link{spwb}} with the aim to determine the sens
 }
 \usage{
 spwb_sensitivity(x, soil, meteo, 
-                 paramType = "above", paramName = "LAI_live", cohort = NA,
+                 paramType = "above", paramName = "LAI_live", cohort = 1,
                  p_change = c(-80,-40,-20,0,20,40,80), 
                  summary.fun = NULL, simplify=TRUE,...)
 }
@@ -18,7 +18,7 @@ spwb_sensitivity(x, soil, meteo,
   \item{meteo}{A data frame with daily meteorological data series (see \code{\link{spwb}}).}
   \item{paramType}{Data frame of \code{x} to modify.}
   \item{paramName}{Name of the parameter to modify.}
-  \item{cohort}{Integer with the cohort to modify (if \code{NA} parameter values of all cohort are modified).}
+  \item{cohort}{Integer with the cohort to modify.}
   \item{p_change}{Numerical vector with percentages of change.}
   \item{summary.fun}{Summary function to be applied to the results of each simulation. }
   \item{simplify}{Whether the result of \code{summary.fun} should be simplified (see \code{\link{sapply}}). }

@@ -1167,7 +1167,7 @@ void multiplyInputParamSingle(List x, String paramType, String paramName, int co
   param[cohort] = param[cohort]*f;
 }
 
-// [[Rcpp::export("multiplyInputParam")]]
+// [[Rcpp::export(".multiplyInputParam")]]
 void multiplyInputParam(List x, List soil, String paramType, String paramName, int cohort, double f) {
   if(paramName=="Z50") {
     multiplyInputParamSingle(x, "below", "Z50", cohort, f);
@@ -1217,7 +1217,7 @@ void multiplyInputParam(List x, List soil, String paramType, String paramName, i
   }
 }
 
-// [[Rcpp::export("modifyInputParam")]]
+// [[Rcpp::export(".modifyInputParam")]]
 void modifyInputParam(List x, List soil, String paramType, String paramName, int cohort, double newValue) {
   if(paramName=="Z50") {
     modifyInputParamSingle(x, "below", "Z50", cohort, newValue);
