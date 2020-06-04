@@ -1067,38 +1067,69 @@ void resetInputs(List x, List soil) {
   }
 }
 
+void updatePlantKmax(List x) {
+  DataFrame paramsTranspirationdf =  Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
+  NumericVector Plant_kmax = paramsTranspirationdf["Plant_kmax"];
+  NumericVector VCleaf_kmax = paramsTranspirationdf["VCleaf_kmax"];
+  NumericVector VCstem_kmax = paramsTranspirationdf["VCstem_kmax"];
+  NumericVector VCroot_kmax = paramsTranspirationdf["VCroot_kmax"];
+  int numCohorts = Plant_kmax.size();
+  for(int i=0;i<numCohorts;i++) {
+    Plant_kmax[i] = 1.0/((1.0/VCleaf_kmax[i])+(1.0/VCstem_kmax[i])+(1.0/VCroot_kmax[i]));
+  }
+}
+void modifyInputParamSingle(List x, String paramType, String paramName, int cohort, double newValue) {
+  DataFrame paramdf = Rcpp::as<Rcpp::DataFrame>(x[paramType]);
+  NumericVector param = paramdf[paramName];
+  param[cohort] = newValue;
+}
+void modifyInputParamFactorSingle(List x, String paramType, String paramName, int cohort, double f) {
+  DataFrame paramdf = Rcpp::as<Rcpp::DataFrame>(x[paramType]);
+  NumericVector param = paramdf[paramName];
+  param[cohort] = param[cohort]*f;
+}
 // [[Rcpp::export(".modifyInputParamFactor")]]
 void modifyInputParamFactor(List x, List soil, String paramType, String paramName, int cohort, double f) {
   DataFrame above =  Rcpp::as<Rcpp::DataFrame>(x["above"]);
   DataFrame paramsWaterStoragedf =  Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
-  DataFrame paramsTranspirationdf =  Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
+  List belowLayers = x["belowLayers"];
   if(paramName=="WaterStorage") {
-    NumericVector Vsapwood = paramsWaterStoragedf["Vsapwood"];
-    NumericVector Vleaf = paramsWaterStoragedf["Vsapwood"];
-    Vsapwood[cohort] = Vsapwood[cohort]*f;
-    Vleaf[cohort] = Vleaf[cohort]*f;
+    modifyInputParamFactorSingle(x, "paramsWaterStorage", "Vsapwood", cohort, f);
+    modifyInputParamFactorSingle(x, "paramsWaterStorage", "Vleaf", cohort, f);
+  } else if(paramName=="VCroot_kmax") {
+    modifyInputParamFactorSingle(x, "paramsTranspiration", "VCroot_kmax", cohort, f);
+    NumericMatrix VCroot_kmaxMAT = belowLayers["VCroot_kmax"];
+    VCroot_kmaxMAT(cohort,_) = VCroot_kmaxMAT(cohort,_)*f;
+  } else if(paramName=="Plant_kmax") {
+    modifyInputParamFactorSingle(x, "paramsTranspiration", "VCleaf_kmax", cohort, f);
+    modifyInputParamFactorSingle(x, "paramsTranspiration", "VCstem_kmax", cohort, f);
+    modifyInputParamFactorSingle(x, "paramsTranspiration", "VCroot_kmax", cohort, f);
+    modifyInputParamFactorSingle(x, "paramsTranspiration", "Plant_kmax", cohort, f);
+    NumericMatrix VCroot_kmaxMAT = belowLayers["VCroot_kmax"];
+    VCroot_kmaxMAT(cohort,_) = VCroot_kmaxMAT(cohort,_)*f;
   } else if(paramName=="LAI_live") {
-    NumericVector LAI_live = above["LAI_live"];
-    NumericVector LAI_expanded = above["LAI_expanded"];
-    LAI_live[cohort] = LAI_live[cohort]*f;
-    LAI_expanded[cohort] =LAI_expanded[cohort]*f;
+    modifyInputParamFactorSingle(x, "above", "LAI_live", cohort, f);
+    modifyInputParamFactorSingle(x, "above", "LAI_expanded", cohort, f);
   } else if(paramName=="c") {
-    NumericVector VCleaf_c = paramsTranspirationdf["VCleaf_c"];
-    NumericVector VCstem_c = paramsTranspirationdf["VCstem_c"];
-    NumericVector VCroot_c = paramsTranspirationdf["VCroot_c"];
-    VCleaf_c[cohort] = VCleaf_c[cohort]*f;
-    VCstem_c[cohort] = VCstem_c[cohort]*f;
-    VCroot_c[cohort] = VCroot_c[cohort]*f;
+    modifyInputParamFactorSingle(x, "paramsTranspiration", "VCleaf_c", cohort, f);
+    modifyInputParamFactorSingle(x, "paramsTranspiration", "VCstem_c", cohort, f);
+    modifyInputParamFactorSingle(x, "paramsTranspiration", "VCroot_c", cohort, f);
   } else if(paramName=="d") {
-    NumericVector VCleaf_d = paramsTranspirationdf["VCleaf_d"];
-    NumericVector VCstem_d = paramsTranspirationdf["VCstem_d"];
-    NumericVector VCroot_d = paramsTranspirationdf["VCroot_d"];
-    VCleaf_d[cohort] = VCleaf_d[cohort]*f;
-    VCstem_d[cohort] = VCstem_d[cohort]*f;
-    VCroot_d[cohort] = VCroot_d[cohort]*f;
+    modifyInputParamFactorSingle(x, "paramsTranspiration", "VCleaf_d", cohort, f);
+    modifyInputParamFactorSingle(x, "paramsTranspiration", "VCstem_d", cohort, f);
+    modifyInputParamFactorSingle(x, "paramsTranspiration", "VCroot_d", cohort, f);
+  }else if(paramName=="Al2As") {
+    modifyInputParamFactorSingle(x, "paramsAnatomy", "Al2As", cohort, f);
+    modifyInputParamFactorSingle(x, "paramsWaterStorage", "Vsapwood", cohort, 1.0/f);
+    modifyInputParamFactorSingle(x, "paramsTranspiration", "VCstem_kmax", cohort, 1.0/f);
+    modifyInputParamFactorSingle(x, "paramsTranspiration", "VCroot_kmax", cohort, 1.0/f);
+    NumericMatrix VCroot_kmaxMAT = belowLayers["VCroot_kmax"];
+    VCroot_kmaxMAT(cohort,_) = VCroot_kmaxMAT(cohort,_)/f;
+    updatePlantKmax(x);
+  } else if(paramName=="Vmax298/Jmax298") {
+    modifyInputParamFactorSingle(x, "paramsTranspiration", "Vmax298", cohort, f);
+    modifyInputParamFactorSingle(x, "paramsTranspiration", "Jmax298", cohort, f);
   } else {
-    DataFrame paramdf = Rcpp::as<Rcpp::DataFrame>(x[paramType]);
-    NumericVector param = paramdf[paramName];
-    param[cohort] = param[cohort]*f;
+    modifyInputParamFactorSingle(x, paramType, paramName, cohort, f);
   }
 }

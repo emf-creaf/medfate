@@ -25,30 +25,6 @@ spwb_sensitivity<-function(x, soil, meteo,
         }
       }
     } 
-    else if(paramName=="Al2As") {
-      xi$paramsAnatomy$Al2As[cohort] =xi$paramsAnatomy$Al2As[cohort]*f
-      xi$paramsWaterStorage$Vsapwood[cohort] =xi$paramsWaterStorage$Vsapwood[cohort]/f
-      xi$paramsTranspiration$VCstem_kmax[cohort] = xi$paramsTranspiration$VCstem_kmax[cohort]/f
-      xi$paramsTranspiration$VCroot_kmax[cohort] = xi$paramsTranspiration$VCroot_kmax[cohort]/f
-      xi$below$VCroot_kmax[cohort,] = xi$below$VCroot_kmax[cohort,]/f
-      #Update plant kmax
-      xi$paramsTranspiration$Plant_kmax[cohort] = 1/((1/xi$paramsTranspiration$VCleaf_kmax[cohort])+(1/xi$paramsTranspiration$VCstem_kmax[cohort])+(1/xi$paramsTranspiration$VCroot_kmax[cohort]))
-    }
-    else if(paramName=="VCroot_kmax") {
-      xi$paramsTranspiration$VCroot_kmax[cohort] = xi$paramsTranspiration$VCroot_kmax[cohort]*f
-      xi$below$VCroot_kmax[cohort, ] = xi$below$VCroot_kmax[cohort, ]*f
-    }
-    else if(paramName=="Plant_kmax") {
-      xi$paramsTranspiration$Plant_kmax[cohort] = xi$paramsTranspiration$Plant_kmax[cohort]*f
-      xi$below$VCroot_kmax[cohort, ] = xi$below$VCroot_kmax[cohort, ]*f
-      xi$paramsTranspiration$VCleaf_kmax[cohort] = xi$paramsTranspiration$VCleaf_kmax[cohort]*f
-      xi$paramsTranspiration$VCstem_kmax[cohort] = xi$paramsTranspiration$VCstem_kmax[cohort]*f
-      xi$paramsTranspiration$VCroot_kmax[cohort] = xi$paramsTranspiration$VCroot_kmax[cohort]*f
-    } 
-    else if(paramName=="Vmax298/Jmax298") {
-      xi$paramsTranspiration$Vmax298[cohort] = xi$paramsTranspiration$Vmax298[cohort]*f
-      xi$paramsTranspiration$Jmax298[cohort] = xi$paramsTranspiration$Jmax298[cohort]*f
-    }
     else {
       .modifyInputParamFactor(xi, soil, paramType, paramName, cohort, f)
     }
