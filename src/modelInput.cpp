@@ -291,15 +291,10 @@ DataFrame paramsTranspirationSperry(DataFrame above, NumericMatrix V, List soil,
     //Mencuccini M (2003) The ecological significance of long-distance water transport : short-term regulation , long-term acclimation and the hydraulic costs of stature across plant life forms. Plant Cell Environ 26:163–182
     if(NumericVector::is_na(Gwmax[c])) Gwmax[c] = 0.12115*pow(VCleaf_kmax[c], 0.633);
     
-    double VCroot_kmaxc = NA_REAL;
-    if(NumericVector::is_na(fracRootResistance)) {
-      VCroot_kmaxc = maximumRootHydraulicConductance(Kmax_rootxylem[c],Al2As[c], Vc, dVec);
-    } else {
-      double rstem = (1.0/VCstem_kmax[c]);
-      double rleaf = (1.0/VCleaf_kmax[c]);
-      double rtot = (rstem+rleaf)/(1.0 - fracRootResistance);
-      VCroot_kmaxc = 1.0/(rtot - rstem - rleaf);
-    }
+    double rstem = (1.0/VCstem_kmax[c]);
+    double rleaf = (1.0/VCleaf_kmax[c]);
+    double rtot = (rstem+rleaf)/(1.0 - fracRootResistance);
+    double VCroot_kmaxc = 1.0/(rtot - rstem - rleaf);
     VCroottot_kmax[c] = VCroot_kmaxc;
     
     if(NumericVector::is_na(Vmax298[c]))  {
@@ -380,49 +375,49 @@ List paramsBelow(DataFrame above, NumericVector Z, NumericMatrix V, List soil,
   RhizoPsi.attr("dimnames") = List::create(above.attr("row.names"), seq(1,nlayers));
   std::fill(RhizoPsi.begin(), RhizoPsi.end(), 0.0);
   
+  
+  
+  double specificRootLength = 4000.0;
+  double rootTissueDensity = 0.165;
+  NumericVector FRB(numCohorts), CRSV(numCohorts),FRAI(numCohorts);
+  NumericVector Ksat = soil["Ksat"];
+  for(int c=0;c<numCohorts;c++)  {
+    //We use Kmax_stemxylem instead of Kmax_rootxylem because of reliability
+    CRSV[c] = coarseRootSoilVolume(Kmax_stemxylem[c], VCroottot_kmax[c], Al2As[c],
+                                   V(c,_), dVec, rfc);
+  }
+  // NumericVector NVol = N*TRSV;
+  double sumLAI = sum(LAI_live);
+  NumericVector poolProportions = LAI_live/sumLAI;
+
   NumericMatrix VCroot_kmax(numCohorts, nlayers); 
   NumericMatrix VGrhizo_kmax(numCohorts, nlayers);
   NumericVector Vc;
   for(int c=0;c<numCohorts;c++){
     Vc = V(c,_);
-    
+    NumericVector L = coarseRootLengths(CRSV[c], V(c,_), dVec, rfc); 
+    NumericVector xp = rootxylemConductanceProportions(L, V(c,_));
     for(int l=0;l<nlayers;l++) {
-      VCroot_kmax(c,_) = VCroottot_kmax[c]*xylemConductanceProportions(Vc,dVec);
-      VGrhizo_kmax(c,l) = V(c,l)*findRhizosphereMaximumConductance(averageFracRhizosphereResistance*100.0, VG_n[l], VG_alpha[l],
-                   VCroottot_kmax[c], VCroot_c[c], VCroot_d[c],
-                   VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
-                   VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c]);
-      VGrhizotot_kmax[c] += VGrhizo_kmax(c,l); 
+        VCroot_kmax(c,_) = VCroottot_kmax[c]*xp;
+        VGrhizo_kmax(c,l) = V(c,l)*findRhizosphereMaximumConductance(averageFracRhizosphereResistance*100.0, VG_n[l], VG_alpha[l],
+                     VCroottot_kmax[c], VCroot_c[c], VCroot_d[c],
+                     VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
+                     VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c]);
+        VGrhizotot_kmax[c] += VGrhizo_kmax(c,l); 
     }
+    FRB[c] = fineRootBiomassPerIndividual(Ksat, VGrhizo_kmax(c,_), LAI_live[c], N[c], 
+                                          specificRootLength, rootTissueDensity);
+    FRAI[c] = fineRootAreaIndex(Ksat, VGrhizo_kmax(c,_), LAI_live[c], 
+                                specificRootLength, rootTissueDensity);
   }
   VGrhizo_kmax.attr("dimnames") = List::create(above.attr("row.names"), slnames);
   VCroot_kmax.attr("dimnames") = List::create(above.attr("row.names"), slnames);
   
-  
-  DataFrame belowdf = DataFrame::create(_["Z"]=Z);
-  if(plantWaterPools) {
-    NumericVector FRB(numCohorts), CRSV(numCohorts),FRAI(numCohorts);
-    NumericVector Ksat = soil["Ksat"];
-    for(int c=0;c<numCohorts;c++)  {
-      double specificRootLength = 4000.0;
-      double rootTissueDensity = 0.165;
-      FRAI[c] = fineRootAreaIndex(Ksat, VGrhizo_kmax(c,_), LAI_live[c], 
-                                  specificRootLength, rootTissueDensity);
-      FRB[c] = fineRootBiomassPerIndividual(Ksat, VGrhizo_kmax(c,_), LAI_live[c], N[c], 
-                                            specificRootLength, rootTissueDensity);
-      //We use Kmax_stemxylem instead of Kmax_rootxylem because of reliability
-      CRSV[c] = coarseRootSoilVolume(Kmax_stemxylem[c], VCroottot_kmax[c], Al2As[c],
-                                     V(c,_), dVec, rfc);
-    }
-    // NumericVector NVol = N*TRSV;
-    double sumLAI = sum(LAI_live);
-    NumericVector poolProportions = LAI_live/sumLAI;
-    belowdf = DataFrame::create(_["fineRootAreaIndex"] = FRAI,
-                                _["fineRootBiomass"] = FRB,
-                                _["coarseRootSoilVolume"] = CRSV,
-                                _["poolProportions"] = poolProportions);
-    
-  }
+  DataFrame belowdf = DataFrame::create(_["Z"]=Z,
+                                        _["fineRootAreaIndex"] = FRAI,
+                                        _["fineRootBiomass"] = FRB,
+                                        _["coarseRootSoilVolume"] = CRSV,
+                                        _["poolProportions"] = poolProportions);
   belowdf.attr("row.names") = above.attr("row.names");
   
   List belowLayers = List::create(_["V"] = V,
@@ -431,8 +426,6 @@ List paramsBelow(DataFrame above, NumericVector Z, NumericMatrix V, List soil,
                                   _["Wpool"] = Wpool,
                                   _["RhizoPsi"] = RhizoPsi);
   if(plantWaterPools) {
-    NumericVector poolProportions = belowdf["poolProportions"];
-    NumericVector CRSV = belowdf["coarseRootSoilVolume"];
     List RHOP = horizontalProportionsAdvanced(poolProportions, CRSV, N, V, dVec, rfc);
     belowLayers["RHOP"] = RHOP;
   } 

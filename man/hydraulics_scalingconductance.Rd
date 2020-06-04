@@ -5,7 +5,7 @@
 \alias{hydraulics_averageRhizosphereResistancePercent}
 \alias{hydraulics_findRhizosphereMaximumConductance}
 \alias{hydraulics_maximumStemHydraulicConductance}
-\alias{hydraulics_maximumRootHydraulicConductance}
+\alias{hydraulics_rootxylemConductanceProportions}
 \alias{hydraulics_referenceConductivityHeightFactor}
 \alias{hydraulics_taperFactorSavage}
 \alias{hydraulics_terminalConduitRadius}
@@ -34,10 +34,9 @@ hydraulics_findRhizosphereMaximumConductance(averageResistancePercent, n, alpha,
                                              krootmax, rootc, rootd,
                                              kstemmax, stemc, stemd,
                                              kleafmax, leafc, leafd) 
-hydraulics_maximumRootHydraulicConductance(xylemConductivity, Al2As, 
-                                           v, widths, depthWidthRatio = 1.0)
 hydraulics_maximumStemHydraulicConductance(xylemConductivity, refheight, Al2As, height, 
                                            taper = FALSE)
+hydraulics_rootxylemConductanceProportions(L, V)
 hydraulics_referenceConductivityHeightFactor(refheight, height)
 hydraulics_terminalConduitRadius(height)
 hydraulics_taperFactorSavage(height)
@@ -51,7 +50,8 @@ hydraulics_leafWaterCapacity(SLA, ld)
   \item{psiStem}{Water potential (in MPa) in the stem.}
   \item{psiLeaf}{Water potential (in MPa) in the leaf.}
   \item{PLCstem}{Percent loss of conductance (in \%) in the stem.}
-  \item{v}{Proportion of fine roots within each soil layer.}
+  \item{L}{Vector with the length of coarse roots (mm) for each soil layer.}
+  \item{V}{Vector with the proportion [0-1] of fine roots within each soil layer.}
   \item{krhizomax}{Maximum rhizosphere hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}
   \item{kleafmax}{Maximum leaf hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}
   \item{kstemmax}{Maximum stem xylem hydraulic conductance (defined as flow per leaf surface unit and per pressure drop).}

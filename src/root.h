@@ -23,8 +23,9 @@ double fineRootSoilVolume(double fineRootBiomass, double specificRootLength, dou
 
 double coarseRootSoilVolume(double Kmax_rootxylem, double VCroot_kmax, double Al2As,
                             NumericVector V, NumericVector d, NumericVector rfc);
-NumericVector coarseRootLengths(NumericVector v, NumericVector d, double depthWidthRatio = 1.0);
-NumericVector xylemConductanceProportions(NumericVector v, NumericVector d, double depthWidthRatio = 1.0);
+
+NumericVector coarseRootLengths(double VolInd, NumericVector V, NumericVector d, NumericVector rfc);
+
 List horizontalProportionsBasic(NumericVector poolProportions, NumericMatrix V, 
                                 double LAIcell, double poolOverlapFactor);
 List horizontalProportionsAdvanced(NumericVector poolProportions, NumericVector VolInd, 

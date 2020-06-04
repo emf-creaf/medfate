@@ -461,8 +461,8 @@ hydraulics_maximumStemHydraulicConductance <- function(xylemConductivity, refhei
     .Call(`_medfate_maximumStemHydraulicConductance`, xylemConductivity, refheight, Al2As, height, taper)
 }
 
-hydraulics_maximumRootHydraulicConductance <- function(xylemConductivity, Al2As, v, widths, depthWidthRatio = 1.0) {
-    .Call(`_medfate_maximumRootHydraulicConductance`, xylemConductivity, Al2As, v, widths, depthWidthRatio)
+hydraulics_rootxylemConductanceProportions <- function(L, V) {
+    .Call(`_medfate_rootxylemConductanceProportions`, L, V)
 }
 
 hydraulics_stemWaterCapacity <- function(Al2As, height, wd) {
@@ -693,12 +693,8 @@ root_coarseRootSoilVolume <- function(Kmax_rootxylem, VCroot_kmax, Al2As, V, d, 
     .Call(`_medfate_coarseRootSoilVolume`, Kmax_rootxylem, VCroot_kmax, Al2As, V, d, rfc)
 }
 
-root_coarseRootLengths <- function(v, d, depthWidthRatio = 1.0) {
-    .Call(`_medfate_coarseRootLengths`, v, d, depthWidthRatio)
-}
-
-root_xylemConductanceProportions <- function(v, d, depthWidthRatio = 1.0) {
-    .Call(`_medfate_xylemConductanceProportions`, v, d, depthWidthRatio)
+root_coarseRootLengths <- function(VolInd, V, d, rfc) {
+    .Call(`_medfate_coarseRootLengths`, VolInd, V, d, rfc)
 }
 
 root_horizontalProportionsBasic <- function(poolProportions, V, LAIcell, poolOverlapFactor) {

@@ -233,7 +233,7 @@ double fineRootAreaIndex(NumericVector Ksoil, NumericVector krhizo, double lai,
   return(frai);
 }
 /**
- * Fine root biomass in g dry · m-2 soil
+ * Fine root biomass in g dry · ind-1
  */
 // [[Rcpp::export("root_fineRootBiomass")]]
 double fineRootBiomassPerIndividual(NumericVector Ksoil, NumericVector krhizo, double lai, double N,
@@ -323,80 +323,19 @@ double coarseRootSoilVolume(double Kmax_rootxylem, double VCroot_kmax, double Al
  * 
  */
 // [[Rcpp::export("root_coarseRootLengths")]]
-NumericVector coarseRootLengths(NumericVector v, NumericVector d, double depthWidthRatio = 1.0) {
-  int nlayers = v.size();
-  double maxRootDepth = 0.0;
-  //Vertical lengths
-  NumericVector vl(nlayers), zini(nlayers);
-  for(int i=0;i<nlayers;i++) {
-    if(i==0) {
-      zini[i] = 0.0;
-    } else {
-      zini[i] = zini[i-1]+ d[i-1];
-    }
-    if(v[i]>0.0) {
-      vl[i] = zini[i]+ d[i]/2.0;
-      maxRootDepth +=d[i];
-    } else {
-      vl[i] = NA_REAL;
-    }
-    // Rcout<<vl[i]<<" ";
+NumericVector coarseRootLengths(double VolInd, NumericVector V, NumericVector d, NumericVector rfc) {
+  int nlayers = V.size();
+  NumericVector rl(nlayers), vl(nlayers), tl(nlayers);
+  for(int j=0;j<nlayers;j++) {
+    if(j==0) vl[j] = d[j];
+    else vl[j] = vl[j-1]+d[j];
+    rl[j] = 1000.0*sqrt((VolInd*V[j])/((d[j]/1000.0)*PI*(1.0 - (rfc[j]/100.0))));
+    // Rcout<<vl[j]<<" "<< rl[j]<<"\n";
+    tl[j] = vl[j] + rl[j];
   }
-  // Rcout<<"\n";
-  int nlayerseff = nlayers;
-  for(int i=(nlayers-1);i>=0;i--) if(NumericVector::is_na(vl[i])) nlayerseff = i;
-  
-  //Radial lengths
-  NumericVector r(nlayerseff), rl(nlayerseff);
-  double maxr = 0.0;
-  for(int i=0;i<nlayerseff;i++) {
-    r[i] = sqrt(v[i]/(d[i]*PI));
-    maxr = std::max(r[i],maxr); 
-  }
-  // Rcout<<maxr<<"\n";
-  for(int i=0;i<nlayerseff;i++) {
-    rl[i] = maxRootDepth*depthWidthRatio*(r[i]/maxr);
-    // Rcout<<rl[i]<<" ";
-  }
-  // Rcout<<"\n";
-  //Weights
-  NumericVector l(nlayers, 0.0);
-  for(int i=0;i<nlayerseff;i++) {
-    l[i]= (rl[i]+vl[i]);
-  }
-  return(l);
+  return(tl);
 }
 
-/**
- * Proportions of root xylem conductance
- * 
- * Calculates the proportion of total xylem conductance that corresponds to each layer in a network of 
- * parallel xylem resistances.
- * 
- * Sperry, J. S., Y. Wang, B. T. Wolfe, D. S. Mackay, W. R. L. Anderegg, N. G. Mcdowell, and W. T. Pockman. 2016. 
- * Pragmatic hydraulic theory predicts stomatal responses to climatic water deficits. 
- * New Phytologist 212:577–589.
- * 
- */
-// [[Rcpp::export("root_xylemConductanceProportions")]]
-NumericVector xylemConductanceProportions(NumericVector v, NumericVector d, double depthWidthRatio = 1.0) {
-  int nlayers = v.size();
-
-  //Root lengths
-  NumericVector l = coarseRootLengths(v, d, depthWidthRatio);
-  
-  //Weights
-  NumericVector w(nlayers, 0.0);
-  double wsum=0.0;
-  for(int i=0;i<nlayers;i++) {
-    if(l[i]>0.0) {
-      w[i]= v[i]*(1.0/l[i]);
-      wsum +=w[i];
-    }
-  }
-  for(int i=0;i<nlayers;i++) w[i] = w[i]/wsum;
-  return(w);
-}
 
 
 

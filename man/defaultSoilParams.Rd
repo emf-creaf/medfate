@@ -25,7 +25,7 @@ A data frame with layers in rows and the following columns (and default values):
 \item{\code{sand (= 25)}: Sand percentage for each layer (in \%).}
 \item{\code{om (= NA)}: Organic matter percentage for each layer (in \%).}
 \item{\code{bd (= 1.5)}: Bulk density for each layer (in g/cm3).}
-\item{\code{rfc (= c(20,40,60,85))}: Percentage of rock fragment content for each layer.}
+\item{\code{rfc (= c(20,40,60,85))}: Percentage of rock fragment content (volume basis) for each layer.}
 }
 }
 \author{

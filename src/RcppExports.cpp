@@ -1777,18 +1777,15 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// maximumRootHydraulicConductance
-double maximumRootHydraulicConductance(double xylemConductivity, double Al2As, NumericVector v, NumericVector widths, double depthWidthRatio);
-RcppExport SEXP _medfate_maximumRootHydraulicConductance(SEXP xylemConductivitySEXP, SEXP Al2AsSEXP, SEXP vSEXP, SEXP widthsSEXP, SEXP depthWidthRatioSEXP) {
+// rootxylemConductanceProportions
+NumericVector rootxylemConductanceProportions(NumericVector L, NumericVector V);
+RcppExport SEXP _medfate_rootxylemConductanceProportions(SEXP LSEXP, SEXP VSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type xylemConductivity(xylemConductivitySEXP);
-    Rcpp::traits::input_parameter< double >::type Al2As(Al2AsSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type v(vSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type widths(widthsSEXP);
-    Rcpp::traits::input_parameter< double >::type depthWidthRatio(depthWidthRatioSEXP);
-    rcpp_result_gen = Rcpp::wrap(maximumRootHydraulicConductance(xylemConductivity, Al2As, v, widths, depthWidthRatio));
+    Rcpp::traits::input_parameter< NumericVector >::type L(LSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type V(VSEXP);
+    rcpp_result_gen = Rcpp::wrap(rootxylemConductanceProportions(L, V));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2840,28 +2837,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // coarseRootLengths
-NumericVector coarseRootLengths(NumericVector v, NumericVector d, double depthWidthRatio);
-RcppExport SEXP _medfate_coarseRootLengths(SEXP vSEXP, SEXP dSEXP, SEXP depthWidthRatioSEXP) {
+NumericVector coarseRootLengths(double VolInd, NumericVector V, NumericVector d, NumericVector rfc);
+RcppExport SEXP _medfate_coarseRootLengths(SEXP VolIndSEXP, SEXP VSEXP, SEXP dSEXP, SEXP rfcSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type v(vSEXP);
+    Rcpp::traits::input_parameter< double >::type VolInd(VolIndSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type V(VSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
-    Rcpp::traits::input_parameter< double >::type depthWidthRatio(depthWidthRatioSEXP);
-    rcpp_result_gen = Rcpp::wrap(coarseRootLengths(v, d, depthWidthRatio));
-    return rcpp_result_gen;
-END_RCPP
-}
-// xylemConductanceProportions
-NumericVector xylemConductanceProportions(NumericVector v, NumericVector d, double depthWidthRatio);
-RcppExport SEXP _medfate_xylemConductanceProportions(SEXP vSEXP, SEXP dSEXP, SEXP depthWidthRatioSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type v(vSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
-    Rcpp::traits::input_parameter< double >::type depthWidthRatio(depthWidthRatioSEXP);
-    rcpp_result_gen = Rcpp::wrap(xylemConductanceProportions(v, d, depthWidthRatio));
+    Rcpp::traits::input_parameter< NumericVector >::type rfc(rfcSEXP);
+    rcpp_result_gen = Rcpp::wrap(coarseRootLengths(VolInd, V, d, rfc));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4409,7 +4394,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_terminalConduitRadius", (DL_FUNC) &_medfate_terminalConduitRadius, 1},
     {"_medfate_referenceConductivityHeightFactor", (DL_FUNC) &_medfate_referenceConductivityHeightFactor, 2},
     {"_medfate_maximumStemHydraulicConductance", (DL_FUNC) &_medfate_maximumStemHydraulicConductance, 5},
-    {"_medfate_maximumRootHydraulicConductance", (DL_FUNC) &_medfate_maximumRootHydraulicConductance, 5},
+    {"_medfate_rootxylemConductanceProportions", (DL_FUNC) &_medfate_rootxylemConductanceProportions, 2},
     {"_medfate_stemWaterCapacity", (DL_FUNC) &_medfate_stemWaterCapacity, 3},
     {"_medfate_leafWaterCapacity", (DL_FUNC) &_medfate_leafWaterCapacity, 2},
     {"_medfate_erFactor", (DL_FUNC) &_medfate_erFactor, 5},
@@ -4467,8 +4452,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_fineRootBiomassPerIndividual", (DL_FUNC) &_medfate_fineRootBiomassPerIndividual, 7},
     {"_medfate_fineRootSoilVolume", (DL_FUNC) &_medfate_fineRootSoilVolume, 3},
     {"_medfate_coarseRootSoilVolume", (DL_FUNC) &_medfate_coarseRootSoilVolume, 6},
-    {"_medfate_coarseRootLengths", (DL_FUNC) &_medfate_coarseRootLengths, 3},
-    {"_medfate_xylemConductanceProportions", (DL_FUNC) &_medfate_xylemConductanceProportions, 3},
+    {"_medfate_coarseRootLengths", (DL_FUNC) &_medfate_coarseRootLengths, 4},
     {"_medfate_horizontalProportionsBasic", (DL_FUNC) &_medfate_horizontalProportionsBasic, 4},
     {"_medfate_horizontalProportionsAdvanced", (DL_FUNC) &_medfate_horizontalProportionsAdvanced, 6},
     {"_medfate_saturatedConductivitySaxton", (DL_FUNC) &_medfate_saturatedConductivitySaxton, 4},
