@@ -157,7 +157,8 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
   //Belowground parameters  
   DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
   List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
-  NumericVector Z = Rcpp::as<Rcpp::NumericVector>(belowdf["Z"]);
+  NumericVector Z95 = Rcpp::as<Rcpp::NumericVector>(belowdf["Z95"]);
+  NumericVector Z50 = Rcpp::as<Rcpp::NumericVector>(belowdf["Z50"]);
   
   //Internal state variables
   DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
@@ -255,14 +256,14 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
   for(int j=0;j<numCohorts;j++){
     if(Status[j]=="alive") {
       double costPerLA = 1000.0*leaf_CC/SLA[j]; // Construction cost in g gluc · m-2 of leaf area
-      double costPerSA = sapwood_CC*(H[j]+(Z[j]/10.0))*WoodDensity[j];  //Construction cost in g gluc ·cm-2 of sapwood
+      double costPerSA = sapwood_CC*(H[j]+(Z95[j]/10.0))*WoodDensity[j];  //Construction cost in g gluc ·cm-2 of sapwood
       
       Volume_leaves[j] = leafStorageVolume(LAI_expanded[j],  N[j], SLA[j], LeafDensity[j]);
-      Volume_sapwood[j] = sapwoodStorageVolume(SA[j], H[j],Z[j],WoodDensity[j], 0.5);
+      Volume_sapwood[j] = sapwoodStorageVolume(SA[j], H[j],Z95[j],WoodDensity[j], 0.5);
       Starch_max_leaves[j] = leafStarchCapacity(LAI_expanded[j],  N[j], SLA[j], 0.3)/Volume_leaves[j];
-      Starch_max_sapwood[j] = sapwoodStarchCapacity(SA[j], H[j],Z[j],WoodDensity[j], 0.2)/Volume_sapwood[j];
+      Starch_max_sapwood[j] = sapwoodStarchCapacity(SA[j], H[j],Z95[j],WoodDensity[j], 0.2)/Volume_sapwood[j];
       B_struct_leaves[j] = leafStructuralBiomass(LAI_expanded[j],N[j],SLA[j]);
-      B_struct_sapwood[j] = sapwoodStructuralLivingBiomass(SA[j], H[j], Z[j], WoodDensity[j], 0.5);
+      B_struct_sapwood[j] = sapwoodStructuralLivingBiomass(SA[j], H[j], Z95[j], WoodDensity[j], 0.5);
       B_struct_fineroots[j] = B_struct_leaves[j]/2.0; //TO BE CHANGED
       
       double labileMassLeafIni = (sugarLeaf[j]+starchLeaf[j])*(glucoseMolarMass*Volume_leaves[j]);
@@ -571,7 +572,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   //Belowground parameters  
   DataFrame below = Rcpp::as<Rcpp::DataFrame>(x["below"]);
   List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
-  NumericVector Z = Rcpp::as<Rcpp::NumericVector>(below["Z"]);
+  NumericVector Z95 = Rcpp::as<Rcpp::NumericVector>(below["Z95"]);
   
   //Internal state variables
   DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
@@ -707,16 +708,16 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
       
       
       double costPerLA = 1000.0*leaf_CC/SLA[j]; // Construction cost in g gluc · m-2 of leaf area
-      double costPerSA = sapwood_CC*(H[j]+(Z[j]/10.0))*WoodDensity[j];  //Construction cost in g gluc ·cm-2 of sapwood
+      double costPerSA = sapwood_CC*(H[j]+(Z95[j]/10.0))*WoodDensity[j];  //Construction cost in g gluc ·cm-2 of sapwood
       double deltaLAgrowth = 0.0;
       double deltaSAgrowth = 0.0;
       
       Volume_leaves[j] = leafStorageVolume(LAI_expanded[j],  N[j], SLA[j], LeafDensity[j]);
-      Volume_sapwood[j] = sapwoodStorageVolume(SA[j], H[j],Z[j],WoodDensity[j], 0.5);
+      Volume_sapwood[j] = sapwoodStorageVolume(SA[j], H[j], Z95[j],WoodDensity[j], 0.5);
       Starch_max_leaves[j] = leafStarchCapacity(LAI_expanded[j],  N[j], SLA[j], 0.3)/Volume_leaves[j];
-      Starch_max_sapwood[j] = sapwoodStarchCapacity(SA[j], H[j],Z[j],WoodDensity[j], 0.2)/Volume_sapwood[j];
+      Starch_max_sapwood[j] = sapwoodStarchCapacity(SA[j], H[j],Z95[j],WoodDensity[j], 0.2)/Volume_sapwood[j];
       B_struct_leaves[j] = leafStructuralBiomass(LAI_expanded[j],N[j],SLA[j]);
-      B_struct_sapwood[j] = sapwoodStructuralLivingBiomass(SA[j], H[j], Z[j], WoodDensity[j], 0.5);
+      B_struct_sapwood[j] = sapwoodStructuralLivingBiomass(SA[j], H[j], Z95[j], WoodDensity[j], 0.5);
       B_struct_fineroots[j] = fineRootBiomassPerIndividual(Ksat, VGrhizo_kmax(j,_), LAI_live[j], N[j], 
                                                            4000.0, 0.165);
 
@@ -1133,7 +1134,8 @@ void checkgrowthInput(List x, List soil, String transpirationMode, String soilFu
   
   if(!x.containsElementNamed("below")) stop("below missing in growthInput");
   DataFrame below = Rcpp::as<Rcpp::DataFrame>(x["below"]);
-  if(!below.containsElementNamed("Z")) stop("Z missing in growthInput$below");
+  if(!below.containsElementNamed("Z50")) stop("Z50 missing in growthInput$below");
+  if(!below.containsElementNamed("Z95")) stop("Z95 missing in growthInput$below");
   if(!x.containsElementNamed("belowLayers")) stop("belowLayers missing in growthInput");
   List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
   if(!belowLayers.containsElementNamed("V")) stop("V missing in growthInput$belowLayers");
@@ -1308,7 +1310,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
 
   //Belowground state variables  
   List below = Rcpp::as<Rcpp::List>(x["below"]);
-  NumericVector Z = Rcpp::as<Rcpp::NumericVector>(below["Z"]);
+  NumericVector Z95 = Rcpp::as<Rcpp::NumericVector>(below["Z95"]);
 
   //Internal state variables
   DataFrame internalWater = Rcpp::as<Rcpp::List>(x["internalWater"]);

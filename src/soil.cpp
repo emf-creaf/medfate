@@ -17,6 +17,16 @@ const double capacityClay = 1.23*1e6; //kg·m-3
  */
 const double cmdTOmmolm2sMPa = 655.2934; //100.0/(18.01528*86400.0*0.00009804139432); 
 
+
+CharacterVector layerNames(int nlayers) {
+  CharacterVector ln(nlayers);
+  for(int l=0;l<nlayers;l++){
+    char Result[16]; 
+    sprintf(Result, "%d", l+1);
+    ln[l] = Result;
+  }
+  return(ln);
+}
 /**
  * Returs saturated conductivity (mmolH20·m-1·s-1·MPa-1)
  */

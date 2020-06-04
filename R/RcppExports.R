@@ -229,8 +229,8 @@ forest2aboveground <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
     .Call(`_medfate_forest2aboveground`, x, SpParams, gdd, mode)
 }
 
-forest2belowground <- function(x, soil, SpParams) {
-    .Call(`_medfate_forest2belowground`, x, soil, SpParams)
+forest2belowground <- function(x, soil) {
+    .Call(`_medfate_forest2belowground`, x, soil)
 }
 
 .fuelConditions <- function(airTemp, airHumidity, fuelRadiation, fuelWindSpeed) {
@@ -569,12 +569,12 @@ light_instantaneousLightExtinctionAbsortion <- function(LAIme, LAImd, LAImx, kPA
     invisible(.Call(`_medfate_checkSpeciesParameters`, SpParams, params))
 }
 
-spwbInput <- function(above, Z, V, soil, SpParams, control) {
-    .Call(`_medfate_spwbInput`, above, Z, V, soil, SpParams, control)
+spwbInput <- function(above, Z50, Z95, soil, SpParams, control) {
+    .Call(`_medfate_spwbInput`, above, Z50, Z95, soil, SpParams, control)
 }
 
-growthInput <- function(above, Z, V, soil, SpParams, control) {
-    .Call(`_medfate_growthInput`, above, Z, V, soil, SpParams, control)
+growthInput <- function(above, Z50, Z95, soil, SpParams, control) {
+    .Call(`_medfate_growthInput`, above, Z50, Z95, soil, SpParams, control)
 }
 
 forest2spwbInput <- function(x, soil, SpParams, control, mode = "MED") {
@@ -589,8 +589,12 @@ resetInputs <- function(x, soil) {
     invisible(.Call(`_medfate_resetInputs`, x, soil))
 }
 
-.modifyInputParamFactor <- function(x, soil, paramType, paramName, cohort, f) {
-    invisible(.Call(`_medfate_modifyInputParamFactor`, x, soil, paramType, paramName, cohort, f))
+multiplyInputParam <- function(x, soil, paramType, paramName, cohort, f) {
+    invisible(.Call(`_medfate_multiplyInputParam`, x, soil, paramType, paramName, cohort, f))
+}
+
+modifyInputParam <- function(x, soil, paramType, paramName, cohort, newValue) {
+    invisible(.Call(`_medfate_modifyInputParam`, x, soil, paramType, paramName, cohort, newValue))
 }
 
 .gdd <- function(DOY, Temp, Tbase = 5.0, cum = 0.0) {

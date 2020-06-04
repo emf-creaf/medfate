@@ -112,12 +112,26 @@ NumericMatrix conicDistribution(NumericVector Zcone, NumericVector d) {
 NumericMatrix ldrDistribution(NumericVector Z50, NumericVector Z95, NumericVector d) {
   int numCohorts = Z50.size();
   NumericMatrix P(numCohorts,d.size());
-  NumericVector PC(d.size());
+  NumericVector PC;
   for(int c=0;c<numCohorts;c++){
     PC = ldrRS_one(Z50[c], Z95[c],d);
     for(int i=0;i<d.size();i++) P(c,i) = PC[i];
   }
   return(P);
+}
+NumericMatrix ldrDistribution(NumericVector treeZ50, NumericVector shrubZ50, 
+                              NumericVector treeZ95, NumericVector shrubZ95, NumericVector d) {
+  int ntree = treeZ50.size();
+  int nshrub = shrubZ50.size();
+  int nlayers = d.size();
+  NumericMatrix V(ntree+nshrub,nlayers);
+  for(int i=0;i<ntree;i++) {
+    V(i,_) = ldrRS_one(treeZ50[i], treeZ95[i],d);
+  }
+  for(int i=0;i<nshrub;i++) {
+    V(ntree+i,_) = ldrRS_one(shrubZ50[i],shrubZ95[i],d);
+  }
+  return(V);
 }
 
 // [[Rcpp::export(".rootDistribution")]]

@@ -12,15 +12,15 @@ Input for simulation models
 }
 
 \description{
-Functions \code{forest2spwbInput} and \code{forest2growthInput} take an object of class \code{\link{forest}} and calculate input data for functions \code{\link{spwb}}, \code{\link{pwb}} and \code{\link{growth}}, respectively. Functions \code{spwbInput} and \code{growthInput} does the same from input data. Function \code{forest2aboveground} calculates aboveground variables that may be used in \code{spwbInput} and \code{growthInput} functions. Similarly, function \code{forest2belowground} calculates belowground root distribution that may be used in \code{spwbInput} and \code{growthInput} functions.
+Functions \code{forest2spwbInput} and \code{forest2growthInput} take an object of class \code{\link{forest}} and calculate input data for functions \code{\link{spwb}}, \code{\link{pwb}} and \code{\link{growth}}, respectively. Functions \code{spwbInput} and \code{growthInput} does the same from input data. Function \code{forest2aboveground} calculates aboveground variables that may be used in \code{spwbInput} and \code{growthInput} functions. Similarly, function \code{forest2belowground} calculates belowground fine root distribution.
 }
 \usage{
 forest2aboveground(x, SpParams, gdd = NA, mode = "MED")
-forest2belowground(x, soil, SpParams)
+forest2belowground(x, soil)
 forest2growthInput(x, soil, SpParams, control)
 forest2spwbInput(x, soil, SpParams, control, mode = "MED")
-growthInput(above,  Z, V,  soil, SpParams, control)
-spwbInput(above,  Z, V,  soil, SpParams, control)
+growthInput(above,  Z50, Z95, soil, SpParams, control)
+spwbInput(above,  Z50, Z95, soil, SpParams, control)
 }
 \arguments{
   \item{x}{An object of class \code{\link{forest}}.}
@@ -29,10 +29,8 @@ spwbInput(above,  Z, V,  soil, SpParams, control)
   \item{mode}{Calculation mode, either "MED" or "US".}
   \item{soil}{An object of class \code{\link{soil}}.}
   \item{control}{A list with default control parameters (see \code{\link{defaultControl}}).}
-  \item{above}{A data frame with aboveground plant information (see the return value of \code{forest2aboveground} below). In the case of \code{spwbInput} the variables should include \code{SP}, \code{LAI_live}, \code{LAI_dead}, \code{H} and \code{CR}.}
-  \item{Z}{A numeric vector with cohort rooting depths (in cms).}
-  \item{V}{A numeric matrix (with as many columns as soil layers and as many rows as the length as \code{SP}) containing the proportion of roots of each plant in each soil layer.}
-  
+  \item{above}{A data frame with aboveground plant information (see the return value of \code{forest2aboveground} below). In the case of \code{spwbInput} the variables should include \code{SP}, \code{N}, \code{LAI_live}, \code{LAI_dead}, \code{H} and \code{CR}. In the case of \code{growthInput} variables should include \code{DBH} and \code{Cover}. }
+  \item{Z50, Z95}{Numeric vectors with cohort depths (in mm) corresponding to 50\% and 95\% of fine roots.}
 }
 \details{
 Functions \code{forest2spwbInput} and \code{forest2abovegroundInput} extracts height and species identity from plant cohorts of \code{x}, and calculate leaf area index and crown ratio.\code{forest2spwbInput} also calculates the distribution of fine roots across soil. Both \code{forest2spwbInput} and \code{spwbInput} find parameter values for each plant cohort according to the parameters of its species as specified in \code{SpParams}. If \code{control$transpirationMode = "Sperry"} the functions also estimate the maximum conductance of rhizosphere, root xylem and stem xylem elements.
@@ -162,7 +160,7 @@ above
 examplesoil = soil(defaultSoilParams())
 
 # Belowground parameters
-below = forest2belowground(exampleforestMED, examplesoil, SpParamsMED)
+below = forest2belowground(exampleforestMED, examplesoil)
 below
 
 # Maximum depths

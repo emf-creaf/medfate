@@ -765,15 +765,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // forest2belowground
-NumericMatrix forest2belowground(List x, List soil, DataFrame SpParams);
-RcppExport SEXP _medfate_forest2belowground(SEXP xSEXP, SEXP soilSEXP, SEXP SpParamsSEXP) {
+NumericMatrix forest2belowground(List x, List soil);
+RcppExport SEXP _medfate_forest2belowground(SEXP xSEXP, SEXP soilSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
-    rcpp_result_gen = Rcpp::wrap(forest2belowground(x, soil, SpParams));
+    rcpp_result_gen = Rcpp::wrap(forest2belowground(x, soil));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2384,34 +2383,34 @@ BEGIN_RCPP
 END_RCPP
 }
 // spwbInput
-List spwbInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, DataFrame SpParams, List control);
-RcppExport SEXP _medfate_spwbInput(SEXP aboveSEXP, SEXP ZSEXP, SEXP VSEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
+List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil, DataFrame SpParams, List control);
+RcppExport SEXP _medfate_spwbInput(SEXP aboveSEXP, SEXP Z50SEXP, SEXP Z95SEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< DataFrame >::type above(aboveSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type Z(ZSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type V(VSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Z50(Z50SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Z95(Z95SEXP);
     Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< List >::type control(controlSEXP);
-    rcpp_result_gen = Rcpp::wrap(spwbInput(above, Z, V, soil, SpParams, control));
+    rcpp_result_gen = Rcpp::wrap(spwbInput(above, Z50, Z95, soil, SpParams, control));
     return rcpp_result_gen;
 END_RCPP
 }
 // growthInput
-List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, DataFrame SpParams, List control);
-RcppExport SEXP _medfate_growthInput(SEXP aboveSEXP, SEXP ZSEXP, SEXP VSEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
+List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil, DataFrame SpParams, List control);
+RcppExport SEXP _medfate_growthInput(SEXP aboveSEXP, SEXP Z50SEXP, SEXP Z95SEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< DataFrame >::type above(aboveSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type Z(ZSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type V(VSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Z50(Z50SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Z95(Z95SEXP);
     Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< List >::type control(controlSEXP);
-    rcpp_result_gen = Rcpp::wrap(growthInput(above, Z, V, soil, SpParams, control));
+    rcpp_result_gen = Rcpp::wrap(growthInput(above, Z50, Z95, soil, SpParams, control));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2455,9 +2454,9 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
-// modifyInputParamFactor
-void modifyInputParamFactor(List x, List soil, String paramType, String paramName, int cohort, double f);
-RcppExport SEXP _medfate_modifyInputParamFactor(SEXP xSEXP, SEXP soilSEXP, SEXP paramTypeSEXP, SEXP paramNameSEXP, SEXP cohortSEXP, SEXP fSEXP) {
+// multiplyInputParam
+void multiplyInputParam(List x, List soil, String paramType, String paramName, int cohort, double f);
+RcppExport SEXP _medfate_multiplyInputParam(SEXP xSEXP, SEXP soilSEXP, SEXP paramTypeSEXP, SEXP paramNameSEXP, SEXP cohortSEXP, SEXP fSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
@@ -2466,7 +2465,22 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< String >::type paramName(paramNameSEXP);
     Rcpp::traits::input_parameter< int >::type cohort(cohortSEXP);
     Rcpp::traits::input_parameter< double >::type f(fSEXP);
-    modifyInputParamFactor(x, soil, paramType, paramName, cohort, f);
+    multiplyInputParam(x, soil, paramType, paramName, cohort, f);
+    return R_NilValue;
+END_RCPP
+}
+// modifyInputParam
+void modifyInputParam(List x, List soil, String paramType, String paramName, int cohort, double newValue);
+RcppExport SEXP _medfate_modifyInputParam(SEXP xSEXP, SEXP soilSEXP, SEXP paramTypeSEXP, SEXP paramNameSEXP, SEXP cohortSEXP, SEXP newValueSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< String >::type paramType(paramTypeSEXP);
+    Rcpp::traits::input_parameter< String >::type paramName(paramNameSEXP);
+    Rcpp::traits::input_parameter< int >::type cohort(cohortSEXP);
+    Rcpp::traits::input_parameter< double >::type newValue(newValueSEXP);
+    modifyInputParam(x, soil, paramType, paramName, cohort, newValue);
     return R_NilValue;
 END_RCPP
 }
@@ -4351,7 +4365,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_LAIprofileVectors", (DL_FUNC) &_medfate_LAIprofileVectors, 4},
     {"_medfate_LAIprofile", (DL_FUNC) &_medfate_LAIprofile, 5},
     {"_medfate_forest2aboveground", (DL_FUNC) &_medfate_forest2aboveground, 4},
-    {"_medfate_forest2belowground", (DL_FUNC) &_medfate_forest2belowground, 3},
+    {"_medfate_forest2belowground", (DL_FUNC) &_medfate_forest2belowground, 2},
     {"_medfate_fuelConditions", (DL_FUNC) &_medfate_fuelConditions, 4},
     {"_medfate_EMCdesorption", (DL_FUNC) &_medfate_EMCdesorption, 2},
     {"_medfate_EMCadsorption", (DL_FUNC) &_medfate_EMCadsorption, 2},
@@ -4441,7 +4455,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_forest2spwbInput", (DL_FUNC) &_medfate_forest2spwbInput, 5},
     {"_medfate_forest2growthInput", (DL_FUNC) &_medfate_forest2growthInput, 4},
     {"_medfate_resetInputs", (DL_FUNC) &_medfate_resetInputs, 2},
-    {"_medfate_modifyInputParamFactor", (DL_FUNC) &_medfate_modifyInputParamFactor, 6},
+    {"_medfate_multiplyInputParam", (DL_FUNC) &_medfate_multiplyInputParam, 6},
+    {"_medfate_modifyInputParam", (DL_FUNC) &_medfate_modifyInputParam, 6},
     {"_medfate_gdd", (DL_FUNC) &_medfate_gdd, 4},
     {"_medfate_leafDevelopmentStatus", (DL_FUNC) &_medfate_leafDevelopmentStatus, 3},
     {"_medfate_leafSenescenceStatus", (DL_FUNC) &_medfate_leafSenescenceStatus, 2},

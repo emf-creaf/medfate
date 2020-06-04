@@ -3,6 +3,7 @@
 #include "growth.h"
 #include "carbon.h"
 #include "root.h"
+#include "soil.h"
 #include "woodformation.h"
 #include "forestutils.h"
 #include "tissuemoisture.h"
@@ -326,7 +327,7 @@ DataFrame paramsTranspirationSperry(DataFrame above, NumericMatrix V, List soil,
 }
 
 
-List paramsBelow(DataFrame above, NumericVector Z, NumericMatrix V, List soil, 
+List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, NumericMatrix V, List soil, 
                  DataFrame paramsAnatomydf, DataFrame paramsTranspirationdf, List control) {
 
   NumericVector dVec = soil["dVec"];
@@ -407,28 +408,32 @@ List paramsBelow(DataFrame above, NumericVector Z, NumericMatrix V, List soil,
     }
     FRB[c] = fineRootBiomassPerIndividual(Ksat, VGrhizo_kmax(c,_), LAI_live[c], N[c], 
                                           specificRootLength, rootTissueDensity);
-    FRAI[c] = fineRootAreaIndex(Ksat, VGrhizo_kmax(c,_), LAI_live[c], 
-                                specificRootLength, rootTissueDensity);
   }
   VGrhizo_kmax.attr("dimnames") = List::create(above.attr("row.names"), slnames);
   VCroot_kmax.attr("dimnames") = List::create(above.attr("row.names"), slnames);
   
-  DataFrame belowdf = DataFrame::create(_["Z"]=Z,
-                                        _["fineRootAreaIndex"] = FRAI,
-                                        _["fineRootBiomass"] = FRB,
-                                        _["coarseRootSoilVolume"] = CRSV,
-                                        _["poolProportions"] = poolProportions);
-  belowdf.attr("row.names") = above.attr("row.names");
   
   List belowLayers = List::create(_["V"] = V,
                                   _["VGrhizo_kmax"] = VGrhizo_kmax,
                                   _["VCroot_kmax"] = VCroot_kmax,
                                   _["Wpool"] = Wpool,
                                   _["RhizoPsi"] = RhizoPsi);
+  DataFrame belowdf;
   if(plantWaterPools) {
+    belowdf = DataFrame::create(_["Z50"]=Z50,
+                                _["Z95"]=Z95,
+                                _["fineRootBiomass"] = FRB,
+                                _["coarseRootSoilVolume"] = CRSV,
+                                _["poolProportions"] = poolProportions);
     List RHOP = horizontalProportionsAdvanced(poolProportions, CRSV, N, V, dVec, rfc);
     belowLayers["RHOP"] = RHOP;
-  } 
+  } else {
+    belowdf = DataFrame::create(_["Z50"]=Z50,
+                                _["Z95"]=Z95,
+                                _["fineRootBiomass"] = FRB,
+                                _["coarseRootSoilVolume"] = CRSV);
+  }
+  belowdf.attr("row.names") = above.attr("row.names");
   
   List below = List::create(_["below"] = belowdf,
                             _["belowLayers"] = belowLayers);
@@ -522,7 +527,7 @@ DataFrame internalCarbonDataFrame(DataFrame above,
   
   NumericVector WoodC = paramsGrowthdf["WoodC"];
 
-  NumericVector Z = belowdf["Z"];
+  NumericVector Z95 = belowdf["Z95"];
   IntegerVector SP = above["SP"];
   NumericVector LAI_live = above["LAI_live"];
   NumericVector LAI_expanded = above["LAI_expanded"];
@@ -543,11 +548,11 @@ DataFrame internalCarbonDataFrame(DataFrame above,
   // NumericVector longtermStorage(numCohorts,0.0);
   for(int c=0;c<numCohorts;c++){
     double lvol = leafStorageVolume(LAI_expanded[c],  N[c], SLA[c], LeafDensity[c]);
-    double svol = sapwoodStorageVolume(SA[c], H[c],Z[c],WoodDensity[c], 0.5);
+    double svol = sapwoodStorageVolume(SA[c], H[c], Z95[c],WoodDensity[c], 0.5);
     
     // 50% in starch storage
     starchLeaf[c] = (0.5/(lvol*glucoseMolarMass))*leafStarchCapacity(LAI_expanded[c], N[c], SLA[c], LeafDensity[c]);
-    starchSapwood[c] = (0.5/(svol*glucoseMolarMass))*sapwoodStarchCapacity(SA[c], H[c], Z[c], WoodDensity[c], 0.5);
+    starchSapwood[c] = (0.5/(svol*glucoseMolarMass))*sapwoodStarchCapacity(SA[c], H[c], Z95[c], WoodDensity[c], 0.5);
     // starch[c] = starchLeaf[c]+starchSapwood[c];
     
     //Sugar storage from PI0
@@ -642,9 +647,14 @@ DataFrame internalWaterDataFrame(DataFrame above, String transpirationMode) {
  *  Prepare Soil Water Balance input
  */
 // [[Rcpp::export("spwbInput")]]
-List spwbInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, DataFrame SpParams, List control) {
+List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil, DataFrame SpParams, List control) {
   
-  int nlayers = V.ncol();
+  NumericVector dVec = soil["dVec"];
+  int nlayers = dVec.size();
+  
+  NumericMatrix V = ldrDistribution(Z50, Z95, dVec);
+  V.attr("dimnames") = List::create(above.attr("row.names"), layerNames(nlayers));
+  
   
   IntegerVector SP = above["SP"];
   NumericVector LAI_live = above["LAI_live"];
@@ -688,8 +698,6 @@ List spwbInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, Dat
                                          _["Status"] = Status);
   plantsdf.attr("row.names") = above.attr("row.names");
   
-  NumericVector dVec = soil["dVec"];
-
   
   
   List input;
@@ -707,7 +715,7 @@ List spwbInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, Dat
                                                _["g"] = g);
     paramsInterceptiondf.attr("row.names") = above.attr("row.names");
   
-    DataFrame belowdf = DataFrame::create();
+    DataFrame belowdf;
     List belowLayers;
     if(plantWaterPools) {
       double LAIcelllive = sum(LAI_live);
@@ -715,15 +723,21 @@ List spwbInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, Dat
       for(int c=0;c<numCohorts;c++) poolProportions[c] = LAI_live[c]/LAIcelllive;
       
       double poolOverlapFactor = control["poolOverlapFactor"];
-      belowdf = DataFrame::create(_["poolProportions"] = poolProportions);
+      belowdf = DataFrame::create(_["Z50"] = Z50,
+                                  _["Z95"] = Z95,
+                                  _["poolProportions"] = poolProportions);
       List RHOP = horizontalProportionsBasic(poolProportions, V,LAIcelllive, poolOverlapFactor); 
       belowLayers = List::create(_["V"] = V,
                                  _["Wpool"] = Wpool,
                                  _["RHOP"] = RHOP);
     } else {
+      belowdf = DataFrame::create(_["Z50"] = Z50,
+                                  _["Z95"] = Z95);
       belowLayers = List::create(_["V"] = V,
                                  _["Wpool"] = Wpool);
     }
+    belowdf.attr("row.names") = above.attr("row.names");
+    
     List paramsCanopy = List::create(_["gdd"] = 0.0);
     input = List::create(_["control"] = clone(control),
                          _["canopy"] = paramsCanopy,
@@ -754,7 +768,7 @@ List spwbInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, Dat
       soilFunctions = "VG"; 
       warning("Soil pedotransfer functions set to Van Genuchten ('VG').");
     }
-    List below = paramsBelow(above, Z, V, soil, 
+    List below = paramsBelow(above, Z50, Z95, V, soil, 
                              paramsAnatomydf, paramsTranspirationdf, 
                              control);
 
@@ -785,9 +799,13 @@ List spwbInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, Dat
  *  Prepare Forest growth input
  */
 // [[Rcpp::export("growthInput")]]
-List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, DataFrame SpParams, List control) {
+List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil, DataFrame SpParams, List control) {
   
-  int nlayers = V.ncol();
+  NumericVector dVec = soil["dVec"];
+  int nlayers = dVec.size();
+  
+  NumericMatrix V = ldrDistribution(Z50, Z95, dVec);
+  V.attr("dimnames") = List::create(above.attr("row.names"), layerNames(nlayers));
   
   IntegerVector SP = above["SP"];
   NumericVector LAI_live = above["LAI_live"];
@@ -857,7 +875,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
   if(transpirationMode=="Granier") {
     bool plantWaterPools = control["plantWaterPools"];
     
-    DataFrame belowdf = DataFrame::create(_["Z"]=Z);
+    DataFrame belowdf;
     
     NumericVector Wsoil = soil["W"];
     NumericMatrix Wpool = NumericMatrix(numCohorts, nlayers);
@@ -879,13 +897,16 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
       for(int c=0;c<numCohorts;c++) poolProportions[c] = LAI_live[c]/LAIcelllive;
       
       double poolOverlapFactor = control["poolOverlapFactor"];
-      belowdf = DataFrame::create(_["Z"]=Z,
+      belowdf = DataFrame::create(_["Z50"] = Z50,
+                                  _["Z95"] = Z95,
                                   _["poolProportions"] = poolProportions);
       List RHOP = horizontalProportionsBasic(poolProportions, V, LAIcelllive, poolOverlapFactor); 
       belowLayers = List::create(_["V"] = V,
                                  _["Wpool"] = Wpool,
                                  _["RHOP"] = RHOP);
     } else {
+      belowdf = DataFrame::create(_["Z50"] = Z50,
+                                  _["Z95"] = Z95);
       belowLayers = List::create(_["V"] = V,
                                  _["Wpool"] = Wpool);
     }
@@ -933,7 +954,7 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
     }
     List paramsCanopy = List::create(_["gdd"] = 0.0,_["Temp"] = NA_REAL);
     
-    List below = paramsBelow(above, Z, V, soil, 
+    List below = paramsBelow(above, Z50, Z95, V, soil, 
                              paramsAnatomydf, paramsTranspirationdf, 
                              control);
     
@@ -973,20 +994,23 @@ List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, D
 List forest2spwbInput(List x, List soil, DataFrame SpParams, List control, String mode = "MED") {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
   DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
-  NumericMatrix V = forest2belowground(x,soil, SpParams);
   int ntree = treeData.nrows();
   int nshrub = shrubData.nrows();
   NumericVector treeZ95 = treeData["Z95"];
   NumericVector shrubZ95 = shrubData["Z95"];  
-  NumericVector Z(ntree+nshrub); //Rooting depth in cm
+  NumericVector treeZ50 = treeData["Z50"];
+  NumericVector shrubZ50 = shrubData["Z50"];  
+  NumericVector Z95(ntree+nshrub), Z50(ntree+nshrub);
   for(int i=0;i<ntree;i++) {
-    Z[i] = treeZ95[i]/10.0;
+    Z95[i] = treeZ95[i];
+    Z50[i] = treeZ50[i];
   }
   for(int i=0;i<nshrub;i++) {
-    Z[ntree+i] = shrubZ95[i]/10.0; 
+    Z95[ntree+i] = shrubZ95[i]; 
+    Z50[ntree+i] = shrubZ50[i]; 
   }
   DataFrame above = forest2aboveground(x, SpParams, NA_REAL, mode);
-  return(spwbInput(above,  Z, V, soil, SpParams, control));
+  return(spwbInput(above, Z50, Z95, soil, SpParams, control));
 }
 
 
@@ -998,16 +1022,19 @@ List forest2growthInput(List x, List soil, DataFrame SpParams, List control) {
   int nshrub = shrubData.nrows();
   NumericVector treeZ95 = treeData["Z95"];
   NumericVector shrubZ95 = shrubData["Z95"];  
-  NumericMatrix V = forest2belowground(x,soil, SpParams);
-  NumericVector Z(ntree+nshrub); //Rooting depth in cm
+  NumericVector treeZ50 = treeData["Z50"];
+  NumericVector shrubZ50 = shrubData["Z50"];  
+  NumericVector Z95(ntree+nshrub), Z50(ntree+nshrub);
   for(int i=0;i<ntree;i++) {
-    Z[i] = treeZ95[i]/10.0;
+    Z95[i] = treeZ95[i];
+    Z50[i] = treeZ50[i];
   }
   for(int i=0;i<nshrub;i++) {
-    Z[ntree+i] = shrubZ95[i]/10.0; 
+    Z95[ntree+i] = shrubZ95[i]; 
+    Z50[ntree+i] = shrubZ50[i]; 
   }
   DataFrame above = forest2aboveground(x, SpParams, NA_REAL);
-  return(growthInput(above,  Z, V, soil, SpParams, control));
+  return(growthInput(above,  Z50, Z95, soil, SpParams, control));
 }
 
 // [[Rcpp::export("resetInputs")]]
@@ -1078,58 +1105,142 @@ void updatePlantKmax(List x) {
     Plant_kmax[i] = 1.0/((1.0/VCleaf_kmax[i])+(1.0/VCstem_kmax[i])+(1.0/VCroot_kmax[i]));
   }
 }
+void updateBelowgroundConductances(List x, List soil) {
+  NumericVector dVec = soil["dVec"];
+  NumericVector rfc = soil["dVec"];
+  List belowLayers = x["belowLayers"];
+  NumericMatrix V = belowLayers["V"];
+  int numCohorts = V.nrow();
+  int nlayers = V.ncol();
+  List control = x["control"];
+  String transpirationMode = control["transpirationMode"];
+  if(transpirationMode=="Sperry") {
+    DataFrame paramsTranspirationdf = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
+    DataFrame paramsAnatomydf = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
+    NumericVector Kmax_stemxylem = paramsTranspirationdf["Kmax_stemxylem"];
+    NumericVector VCroot_kmax = belowLayers["VCroot_kmax"];
+    NumericVector VGrhizo_kmax = belowLayers["VGrhizo_kmax"];
+    NumericVector VCroottot_kmax = paramsTranspirationdf["VCroot_kmax"];
+    NumericVector VGrhizotot_kmax = paramsTranspirationdf["VGrhizo_kmax"];
+    NumericVector Al2As = paramsAnatomydf["Al2As"];
+    for(int c=0;c<numCohorts;c++) {
+      double CRSV = coarseRootSoilVolume(Kmax_stemxylem[c], VCroottot_kmax[c], Al2As[c],
+                                         V(c,_), dVec, rfc);
+      NumericVector L = coarseRootLengths(CRSV, V(c,_), dVec, rfc); 
+      NumericVector xp = rootxylemConductanceProportions(L, V(c,_));
+      for(int l=0;l<nlayers;l++)  {
+        VCroot_kmax(c,l) = VCroottot_kmax[c]*xp[l]; 
+        VGrhizo_kmax(c,l) = VGrhizo_kmax[c]*V(c,l);
+      }
+    }
+  }
+}
+void updateFineRootDistribution(List x, List soil) {
+  NumericVector dVec = soil["dVec"];
+  DataFrame belowdf =  Rcpp::as<Rcpp::DataFrame>(x["below"]);
+  NumericVector Z50 = belowdf["Z50"];
+  NumericVector Z95 = belowdf["Z95"];
+  List belowLayers = x["belowLayers"];
+  NumericMatrix V = belowLayers["V"];
+  int numCohorts = V.nrow();
+  int nlayers = V.ncol();
+  for(int c=0;c<numCohorts;c++) {
+    NumericVector PC = ldrRS_one(Z50[c], Z95[c], dVec);
+    for(int l=0;l<nlayers;l++) V(c,l) = PC[l]; 
+  }
+  updateBelowgroundConductances(x, soil);
+}
+
+double getInputParamValue(List x, String paramType, String paramName, int cohort) {
+  DataFrame paramdf = Rcpp::as<Rcpp::DataFrame>(x[paramType]);
+  NumericVector param = paramdf[paramName];
+  return(param[cohort]);
+}
 void modifyInputParamSingle(List x, String paramType, String paramName, int cohort, double newValue) {
   DataFrame paramdf = Rcpp::as<Rcpp::DataFrame>(x[paramType]);
   NumericVector param = paramdf[paramName];
   param[cohort] = newValue;
 }
-void modifyInputParamFactorSingle(List x, String paramType, String paramName, int cohort, double f) {
+void multiplyInputParamSingle(List x, String paramType, String paramName, int cohort, double f) {
   DataFrame paramdf = Rcpp::as<Rcpp::DataFrame>(x[paramType]);
   NumericVector param = paramdf[paramName];
   param[cohort] = param[cohort]*f;
 }
-// [[Rcpp::export(".modifyInputParamFactor")]]
-void modifyInputParamFactor(List x, List soil, String paramType, String paramName, int cohort, double f) {
-  DataFrame above =  Rcpp::as<Rcpp::DataFrame>(x["above"]);
-  DataFrame paramsWaterStoragedf =  Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
-  List belowLayers = x["belowLayers"];
-  if(paramName=="WaterStorage") {
-    modifyInputParamFactorSingle(x, "paramsWaterStorage", "Vsapwood", cohort, f);
-    modifyInputParamFactorSingle(x, "paramsWaterStorage", "Vleaf", cohort, f);
+
+// [[Rcpp::export("multiplyInputParam")]]
+void multiplyInputParam(List x, List soil, String paramType, String paramName, int cohort, double f) {
+  if(paramName=="Z50") {
+    multiplyInputParamSingle(x, "below", "Z50", cohort, f);
+    updateFineRootDistribution(x, soil);
+  } else if(paramName=="Z95") {
+    multiplyInputParamSingle(x, "below", "Z95", cohort, f);
+    updateFineRootDistribution(x, soil);
+  } else if(paramName=="Z50/Z95") {
+    multiplyInputParamSingle(x, "below", "Z50", cohort, f);
+    multiplyInputParamSingle(x, "below", "Z95", cohort, f);
+    updateFineRootDistribution(x, soil);
+  } else  if(paramName=="WaterStorage") {
+    multiplyInputParamSingle(x, "paramsWaterStorage", "Vsapwood", cohort, f);
+    multiplyInputParamSingle(x, "paramsWaterStorage", "Vleaf", cohort, f);
   } else if(paramName=="VCroot_kmax") {
-    modifyInputParamFactorSingle(x, "paramsTranspiration", "VCroot_kmax", cohort, f);
-    NumericMatrix VCroot_kmaxMAT = belowLayers["VCroot_kmax"];
-    VCroot_kmaxMAT(cohort,_) = VCroot_kmaxMAT(cohort,_)*f;
+    multiplyInputParamSingle(x, "paramsTranspiration", "VCroot_kmax", cohort, f);
+    updateBelowgroundConductances(x, soil);
   } else if(paramName=="Plant_kmax") {
-    modifyInputParamFactorSingle(x, "paramsTranspiration", "VCleaf_kmax", cohort, f);
-    modifyInputParamFactorSingle(x, "paramsTranspiration", "VCstem_kmax", cohort, f);
-    modifyInputParamFactorSingle(x, "paramsTranspiration", "VCroot_kmax", cohort, f);
-    modifyInputParamFactorSingle(x, "paramsTranspiration", "Plant_kmax", cohort, f);
-    NumericMatrix VCroot_kmaxMAT = belowLayers["VCroot_kmax"];
-    VCroot_kmaxMAT(cohort,_) = VCroot_kmaxMAT(cohort,_)*f;
+    multiplyInputParamSingle(x, "paramsTranspiration", "VCleaf_kmax", cohort, f);
+    multiplyInputParamSingle(x, "paramsTranspiration", "VCstem_kmax", cohort, f);
+    multiplyInputParamSingle(x, "paramsTranspiration", "VCroot_kmax", cohort, f);
+    multiplyInputParamSingle(x, "paramsTranspiration", "Plant_kmax", cohort, f);
+    updateBelowgroundConductances(x, soil);
   } else if(paramName=="LAI_live") {
-    modifyInputParamFactorSingle(x, "above", "LAI_live", cohort, f);
-    modifyInputParamFactorSingle(x, "above", "LAI_expanded", cohort, f);
+    multiplyInputParamSingle(x, "above", "LAI_live", cohort, f);
+    multiplyInputParamSingle(x, "above", "LAI_expanded", cohort, f);
   } else if(paramName=="c") {
-    modifyInputParamFactorSingle(x, "paramsTranspiration", "VCleaf_c", cohort, f);
-    modifyInputParamFactorSingle(x, "paramsTranspiration", "VCstem_c", cohort, f);
-    modifyInputParamFactorSingle(x, "paramsTranspiration", "VCroot_c", cohort, f);
+    multiplyInputParamSingle(x, "paramsTranspiration", "VCleaf_c", cohort, f);
+    multiplyInputParamSingle(x, "paramsTranspiration", "VCstem_c", cohort, f);
+    multiplyInputParamSingle(x, "paramsTranspiration", "VCroot_c", cohort, f);
   } else if(paramName=="d") {
-    modifyInputParamFactorSingle(x, "paramsTranspiration", "VCleaf_d", cohort, f);
-    modifyInputParamFactorSingle(x, "paramsTranspiration", "VCstem_d", cohort, f);
-    modifyInputParamFactorSingle(x, "paramsTranspiration", "VCroot_d", cohort, f);
+    multiplyInputParamSingle(x, "paramsTranspiration", "VCleaf_d", cohort, f);
+    multiplyInputParamSingle(x, "paramsTranspiration", "VCstem_d", cohort, f);
+    multiplyInputParamSingle(x, "paramsTranspiration", "VCroot_d", cohort, f);
   }else if(paramName=="Al2As") {
-    modifyInputParamFactorSingle(x, "paramsAnatomy", "Al2As", cohort, f);
-    modifyInputParamFactorSingle(x, "paramsWaterStorage", "Vsapwood", cohort, 1.0/f);
-    modifyInputParamFactorSingle(x, "paramsTranspiration", "VCstem_kmax", cohort, 1.0/f);
-    modifyInputParamFactorSingle(x, "paramsTranspiration", "VCroot_kmax", cohort, 1.0/f);
-    NumericMatrix VCroot_kmaxMAT = belowLayers["VCroot_kmax"];
-    VCroot_kmaxMAT(cohort,_) = VCroot_kmaxMAT(cohort,_)/f;
+    multiplyInputParamSingle(x, "paramsAnatomy", "Al2As", cohort, f);
+    multiplyInputParamSingle(x, "paramsWaterStorage", "Vsapwood", cohort, 1.0/f);
+    multiplyInputParamSingle(x, "paramsTranspiration", "VCstem_kmax", cohort, 1.0/f);
+    multiplyInputParamSingle(x, "paramsTranspiration", "VCroot_kmax", cohort, 1.0/f);
     updatePlantKmax(x);
+    updateBelowgroundConductances(x, soil);
   } else if(paramName=="Vmax298/Jmax298") {
-    modifyInputParamFactorSingle(x, "paramsTranspiration", "Vmax298", cohort, f);
-    modifyInputParamFactorSingle(x, "paramsTranspiration", "Jmax298", cohort, f);
+    multiplyInputParamSingle(x, "paramsTranspiration", "Vmax298", cohort, f);
+    multiplyInputParamSingle(x, "paramsTranspiration", "Jmax298", cohort, f);
   } else {
-    modifyInputParamFactorSingle(x, paramType, paramName, cohort, f);
+    multiplyInputParamSingle(x, paramType, paramName, cohort, f);
+  }
+}
+
+// [[Rcpp::export("modifyInputParam")]]
+void modifyInputParam(List x, List soil, String paramType, String paramName, int cohort, double newValue) {
+  if(paramName=="Z50") {
+    modifyInputParamSingle(x, "below", "Z50", cohort, newValue);
+    updateFineRootDistribution(x, soil);
+  } else if(paramName=="Z95") {
+    modifyInputParamSingle(x, "below", "Z95", cohort, newValue);
+    updateFineRootDistribution(x, soil);
+  } else if(paramName=="VCroot_kmax") {
+    modifyInputParamSingle(x, "paramsTranspiration", "VCroot_kmax", cohort, newValue);
+    updateBelowgroundConductances(x, soil);
+  } else if(paramName=="LAI_live") {
+    modifyInputParamSingle(x, "above", "LAI_live", cohort, newValue);
+    modifyInputParamSingle(x, "above", "LAI_expanded", cohort, newValue);
+  } else if(paramName=="Al2As") {
+    double old = getInputParamValue(x, "paramsAnatomy", "Al2As", cohort);
+    double f = newValue/old;
+    modifyInputParamSingle(x, "paramsAnatomy", "Al2As", cohort, newValue);
+    multiplyInputParamSingle(x, "paramsWaterStorage", "Vsapwood", cohort, 1.0/f);
+    multiplyInputParamSingle(x, "paramsTranspiration", "VCstem_kmax", cohort, 1.0/f);
+    multiplyInputParamSingle(x, "paramsTranspiration", "VCroot_kmax", cohort, 1.0/f);
+    updatePlantKmax(x);
+    updateBelowgroundConductances(x, soil);
+  } else {
+    modifyInputParamSingle(x, paramType, paramName, cohort, newValue);
   }
 }

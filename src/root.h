@@ -10,6 +10,8 @@ NumericVector ldrRS_one(double Z50, double Z95, NumericVector d);
 NumericVector conicRS_one(double Z, NumericVector d);
 NumericMatrix conicDistribution(NumericVector Z, NumericVector d);
 NumericMatrix ldrDistribution(NumericVector Z50, NumericVector Z95, NumericVector d);
+NumericMatrix ldrDistribution(NumericVector treeZ50, NumericVector shrubZ50, 
+                              NumericVector treeZ95, NumericVector shrubZ95, NumericVector d);
 
 double fineRootRadius(double specificRootLength, double rootTissueDensity);
 double specificRootSurfaceArea(double specificRootLength, double rootTissueDensity);
