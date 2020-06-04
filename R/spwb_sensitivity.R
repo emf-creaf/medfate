@@ -25,10 +25,6 @@ spwb_sensitivity<-function(x, soil, meteo,
         }
       }
     } 
-    else if(paramName=="LAI_live") {
-      xi$above$LAI_live[cohort] =xi$above$LAI_live[cohort]*f
-      xi$above$LAI_expanded[cohort] =xi$above$LAI_expanded[cohort]*f
-    } 
     else if(paramName=="Al2As") {
       xi$paramsAnatomy$Al2As[cohort] =xi$paramsAnatomy$Al2As[cohort]*f
       xi$paramsWaterStorage$Vsapwood[cohort] =xi$paramsWaterStorage$Vsapwood[cohort]/f
@@ -38,10 +34,6 @@ spwb_sensitivity<-function(x, soil, meteo,
       #Update plant kmax
       xi$paramsTranspiration$Plant_kmax[cohort] = 1/((1/xi$paramsTranspiration$VCleaf_kmax[cohort])+(1/xi$paramsTranspiration$VCstem_kmax[cohort])+(1/xi$paramsTranspiration$VCroot_kmax[cohort]))
     }
-    else if(paramName=="WaterStorage") {
-      xi$paramsWaterStorage$Vsapwood[cohort] =xi$paramsWaterStorage$Vsapwood[cohort]*f
-      xi$paramsWaterStorage$Vleaf[cohort] =xi$paramsWaterStorage$Vleaf[cohort]*f
-    } 
     else if(paramName=="VCroot_kmax") {
       xi$paramsTranspiration$VCroot_kmax[cohort] = xi$paramsTranspiration$VCroot_kmax[cohort]*f
       xi$below$VCroot_kmax[cohort, ] = xi$below$VCroot_kmax[cohort, ]*f
@@ -53,22 +45,12 @@ spwb_sensitivity<-function(x, soil, meteo,
       xi$paramsTranspiration$VCstem_kmax[cohort] = xi$paramsTranspiration$VCstem_kmax[cohort]*f
       xi$paramsTranspiration$VCroot_kmax[cohort] = xi$paramsTranspiration$VCroot_kmax[cohort]*f
     } 
-    else if(paramName=="c") {
-      xi$paramsTranspiration$VCleaf_c[cohort] = xi$paramsTranspiration$VCleaf_c[cohort]*f
-      xi$paramsTranspiration$VCstem_c[cohort] = xi$paramsTranspiration$VCstem_c[cohort]*f
-      xi$paramsTranspiration$VCroot_c[cohort] = xi$paramsTranspiration$VCroot_c[cohort]*f
-    } 
-    else if(paramName=="d") {
-      xi$paramsTranspiration$VCleaf_d[cohort] = xi$paramsTranspiration$VCleaf_d[cohort]*f
-      xi$paramsTranspiration$VCstem_d[cohort] = xi$paramsTranspiration$VCstem_d[cohort]*f
-      xi$paramsTranspiration$VCroot_d[cohort] = xi$paramsTranspiration$VCroot_d[cohort]*f
-    } 
     else if(paramName=="Vmax298/Jmax298") {
       xi$paramsTranspiration$Vmax298[cohort] = xi$paramsTranspiration$Vmax298[cohort]*f
       xi$paramsTranspiration$Jmax298[cohort] = xi$paramsTranspiration$Jmax298[cohort]*f
     }
     else {
-      xi[[paramType]][[paramName]][cohort] = xi[[paramType]][[paramName]][cohort]*f
+      .modifyInputParamFactor(xi, soil, paramType, paramName, cohort, f)
     }
     resetInputs(xi, soil)
     l[[i]] = spwb(xi, soil, meteo, ...)

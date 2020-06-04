@@ -589,6 +589,10 @@ resetInputs <- function(x, soil) {
     invisible(.Call(`_medfate_resetInputs`, x, soil))
 }
 
+.modifyInputParamFactor <- function(x, soil, paramType, paramName, cohort, f) {
+    invisible(.Call(`_medfate_modifyInputParamFactor`, x, soil, paramType, paramName, cohort, f))
+}
+
 .gdd <- function(DOY, Temp, Tbase = 5.0, cum = 0.0) {
     .Call(`_medfate_gdd`, DOY, Temp, Tbase, cum)
 }

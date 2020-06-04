@@ -42,7 +42,6 @@ root_horizontalProportionsAdvanced(poolProportions, VolInd, N, V, d, rfc)
   \item{Zcone}{A vector of depths (in mm) corresponding to the root cone tip.}
   \item{d}{The width (in mm) corresponding to each soil layer.}
   \item{rfc}{Percentage of rock fragment content (volume basis) for each layer.}
-  \item{V}{Vector with proportions of fine roots, as returned by functions \code{root_conicDistribution} or \code{root_ldrDistribution}.}
   \item{Kmax_rootxylem}{Sapwood-specific hydraulic conductivity of root xylem (in kg H2O·s-1·m-1·MPa-1).}
   \item{VCroot_kmax}{Root xylem maximum conductance per leaf area (mmol·m-2·s-1·MPa-1). }
   \item{Al2As}{Leaf area to sapwood area ratio (in m2·m-2).}
@@ -51,7 +50,6 @@ root_horizontalProportionsAdvanced(poolProportions, VolInd, N, V, d, rfc)
   \item{Ksoil}{Soil saturated conductivity (mmol·m-1·s-1·MPa-1).}
   \item{krhizo}{Rhizosphere maximum conductance per leaf area (mmol·m-2·s-1·MPa-1).}
   \item{lai}{Leaf area index.}
-  \item{N}{Density as individuals per hectare.}
   \item{rootLengthDensity}{Fine root length density (length of fine roots over soil volume; cm/cm3)}
   \item{fineRootBiomass}{Biomass of fine roots (g).}
   \item{V}{Matrix of proportions of fine roots (cohorts x soil layers).}

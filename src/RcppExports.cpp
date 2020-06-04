@@ -2455,6 +2455,21 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// modifyInputParamFactor
+void modifyInputParamFactor(List x, List soil, String paramType, String paramName, int cohort, double f);
+RcppExport SEXP _medfate_modifyInputParamFactor(SEXP xSEXP, SEXP soilSEXP, SEXP paramTypeSEXP, SEXP paramNameSEXP, SEXP cohortSEXP, SEXP fSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< String >::type paramType(paramTypeSEXP);
+    Rcpp::traits::input_parameter< String >::type paramName(paramNameSEXP);
+    Rcpp::traits::input_parameter< int >::type cohort(cohortSEXP);
+    Rcpp::traits::input_parameter< double >::type f(fSEXP);
+    modifyInputParamFactor(x, soil, paramType, paramName, cohort, f);
+    return R_NilValue;
+END_RCPP
+}
 // gdd
 NumericVector gdd(IntegerVector DOY, NumericVector Temp, double Tbase, double cum);
 RcppExport SEXP _medfate_gdd(SEXP DOYSEXP, SEXP TempSEXP, SEXP TbaseSEXP, SEXP cumSEXP) {
@@ -4426,6 +4441,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_forest2spwbInput", (DL_FUNC) &_medfate_forest2spwbInput, 5},
     {"_medfate_forest2growthInput", (DL_FUNC) &_medfate_forest2growthInput, 4},
     {"_medfate_resetInputs", (DL_FUNC) &_medfate_resetInputs, 2},
+    {"_medfate_modifyInputParamFactor", (DL_FUNC) &_medfate_modifyInputParamFactor, 6},
     {"_medfate_gdd", (DL_FUNC) &_medfate_gdd, 4},
     {"_medfate_leafDevelopmentStatus", (DL_FUNC) &_medfate_leafDevelopmentStatus, 3},
     {"_medfate_leafSenescenceStatus", (DL_FUNC) &_medfate_leafSenescenceStatus, 2},

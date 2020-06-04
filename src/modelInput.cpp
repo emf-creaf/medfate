@@ -1066,3 +1066,39 @@ void resetInputs(List x, List soil) {
     }
   }
 }
+
+// [[Rcpp::export(".modifyInputParamFactor")]]
+void modifyInputParamFactor(List x, List soil, String paramType, String paramName, int cohort, double f) {
+  DataFrame above =  Rcpp::as<Rcpp::DataFrame>(x["above"]);
+  DataFrame paramsWaterStoragedf =  Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
+  DataFrame paramsTranspirationdf =  Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
+  if(paramName=="WaterStorage") {
+    NumericVector Vsapwood = paramsWaterStoragedf["Vsapwood"];
+    NumericVector Vleaf = paramsWaterStoragedf["Vsapwood"];
+    Vsapwood[cohort] = Vsapwood[cohort]*f;
+    Vleaf[cohort] = Vleaf[cohort]*f;
+  } else if(paramName=="LAI_live") {
+    NumericVector LAI_live = above["LAI_live"];
+    NumericVector LAI_expanded = above["LAI_expanded"];
+    LAI_live[cohort] = LAI_live[cohort]*f;
+    LAI_expanded[cohort] =LAI_expanded[cohort]*f;
+  } else if(paramName=="c") {
+    NumericVector VCleaf_c = paramsTranspirationdf["VCleaf_c"];
+    NumericVector VCstem_c = paramsTranspirationdf["VCstem_c"];
+    NumericVector VCroot_c = paramsTranspirationdf["VCroot_c"];
+    VCleaf_c[cohort] = VCleaf_c[cohort]*f;
+    VCstem_c[cohort] = VCstem_c[cohort]*f;
+    VCroot_c[cohort] = VCroot_c[cohort]*f;
+  } else if(paramName=="d") {
+    NumericVector VCleaf_d = paramsTranspirationdf["VCleaf_d"];
+    NumericVector VCstem_d = paramsTranspirationdf["VCstem_d"];
+    NumericVector VCroot_d = paramsTranspirationdf["VCroot_d"];
+    VCleaf_d[cohort] = VCleaf_d[cohort]*f;
+    VCstem_d[cohort] = VCstem_d[cohort]*f;
+    VCroot_d[cohort] = VCroot_d[cohort]*f;
+  } else {
+    DataFrame paramdf = Rcpp::as<Rcpp::DataFrame>(x[paramType]);
+    NumericVector param = paramdf[paramName];
+    param[cohort] = param[cohort]*f;
+  }
+}
