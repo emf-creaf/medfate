@@ -391,13 +391,14 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, NumericM
   double sumLAI = sum(LAI_live);
   NumericVector poolProportions = LAI_live/sumLAI;
 
+  NumericMatrix L = NumericMatrix(numCohorts, nlayers);
   NumericMatrix VCroot_kmax(numCohorts, nlayers); 
   NumericMatrix VGrhizo_kmax(numCohorts, nlayers);
   NumericVector Vc;
   for(int c=0;c<numCohorts;c++){
     Vc = V(c,_);
-    NumericVector L = coarseRootLengths(CRSV[c], V(c,_), dVec, rfc); 
-    NumericVector xp = rootxylemConductanceProportions(L, V(c,_));
+    L(c,_) = coarseRootLengths(CRSV[c], V(c,_), dVec, rfc); 
+    NumericVector xp = rootxylemConductanceProportions(L(c,_), V(c,_));
     for(int l=0;l<nlayers;l++) {
         VCroot_kmax(c,_) = VCroottot_kmax[c]*xp;
         VGrhizo_kmax(c,l) = V(c,l)*findRhizosphereMaximumConductance(averageFracRhizosphereResistance*100.0, VG_n[l], VG_alpha[l],
@@ -409,11 +410,13 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, NumericM
     FRB[c] = fineRootBiomassPerIndividual(Ksat, VGrhizo_kmax(c,_), LAI_live[c], N[c], 
                                           specificRootLength, rootTissueDensity);
   }
+  L.attr("dimnames") = List::create(above.attr("row.names"), slnames);
   VGrhizo_kmax.attr("dimnames") = List::create(above.attr("row.names"), slnames);
   VCroot_kmax.attr("dimnames") = List::create(above.attr("row.names"), slnames);
   
   
   List belowLayers = List::create(_["V"] = V,
+                                  _["L"] = L,
                                   _["VGrhizo_kmax"] = VGrhizo_kmax,
                                   _["VCroot_kmax"] = VCroot_kmax,
                                   _["Wpool"] = Wpool,
@@ -510,6 +513,7 @@ DataFrame internalPhenologyDataFrame(DataFrame above) {
 }
 DataFrame internalCarbonDataFrame(DataFrame above, 
                                   DataFrame belowdf,
+                                  List belowLayers,
                                   DataFrame paramsAnatomydf,
                                   DataFrame paramsWaterStoragedf,
                                   DataFrame paramsGrowthdf,
@@ -527,6 +531,9 @@ DataFrame internalCarbonDataFrame(DataFrame above,
   
   NumericVector WoodC = paramsGrowthdf["WoodC"];
 
+  NumericMatrix V = belowLayers["V"];
+  NumericMatrix L = belowLayers["L"];
+  
   NumericVector Z95 = belowdf["Z95"];
   IntegerVector SP = above["SP"];
   NumericVector LAI_live = above["LAI_live"];
@@ -548,11 +555,11 @@ DataFrame internalCarbonDataFrame(DataFrame above,
   // NumericVector longtermStorage(numCohorts,0.0);
   for(int c=0;c<numCohorts;c++){
     double lvol = leafStorageVolume(LAI_expanded[c],  N[c], SLA[c], LeafDensity[c]);
-    double svol = sapwoodStorageVolume(SA[c], H[c], Z95[c],WoodDensity[c], 0.5);
+    double svol = sapwoodStorageVolume(SA[c], H[c], L(c,_), V(c,_),WoodDensity[c], 0.5);
     
     // 50% in starch storage
     starchLeaf[c] = (0.5/(lvol*glucoseMolarMass))*leafStarchCapacity(LAI_expanded[c], N[c], SLA[c], LeafDensity[c]);
-    starchSapwood[c] = (0.5/(svol*glucoseMolarMass))*sapwoodStarchCapacity(SA[c], H[c], Z95[c], WoodDensity[c], 0.5);
+    starchSapwood[c] = (0.5/(svol*glucoseMolarMass))*sapwoodStarchCapacity(SA[c], H[c], L, V(c,_), WoodDensity[c], 0.5);
     // starch[c] = starchLeaf[c]+starchSapwood[c];
     
     //Sugar storage from PI0
@@ -927,7 +934,7 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
                          _["paramsAllometries"] = paramsAllometriesdf,
                          _["internalPhenology"] = internalPhenologyDataFrame(above),
                          _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
-                         _["internalCarbon"] = internalCarbonDataFrame(plantsdf, belowdf, 
+                         _["internalCarbon"] = internalCarbonDataFrame(plantsdf, belowdf, belowLayers,
                                                          paramsAnatomydf, 
                                                          paramsWaterStoragedf,
                                                          paramsGrowthdf, control),
@@ -959,12 +966,14 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
                              control);
     
     List ctl = clone(control);
+    DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(below["below"]);
+    List belowLayers = below["belowLayers"];
     input = List::create(_["control"] = ctl,
                          _["canopy"] = paramsCanopy,
                          _["cohorts"] = cohortDescdf,
                          _["above"] = plantsdf,
-                         _["below"] = below["below"],
-                         _["belowLayers"] = below["belowLayers"],
+                         _["below"] = belowdf,
+                         _["belowLayers"] = belowLayers,
                          _["paramsPhenology"] = paramsPhenology(above, SpParams),
                          _["paramsAnatomy"] = paramsAnatomydf,
                          _["paramsInterception"] = paramsInterceptiondf,
@@ -974,7 +983,7 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
                          _["paramsAllometries"] = paramsAllometriesdf,
                          _["internalPhenology"] = internalPhenologyDataFrame(above),
                          _["internalWater"] = internalWaterDataFrame(above, transpirationMode),
-                         _["internalCarbon"] = internalCarbonDataFrame(plantsdf, below["below"],
+                         _["internalCarbon"] = internalCarbonDataFrame(plantsdf, belowdf, belowLayers,
                                                          paramsAnatomydf, 
                                                          paramsWaterStoragedf,
                                                          paramsGrowthdf, control),
@@ -1110,24 +1119,19 @@ void updateBelowgroundConductances(List x, List soil) {
   NumericVector rfc = soil["dVec"];
   List belowLayers = x["belowLayers"];
   NumericMatrix V = belowLayers["V"];
+  NumericMatrix L = belowLayers["L"];
   int numCohorts = V.nrow();
   int nlayers = V.ncol();
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
   if(transpirationMode=="Sperry") {
     DataFrame paramsTranspirationdf = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
-    DataFrame paramsAnatomydf = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
-    NumericVector Kmax_stemxylem = paramsTranspirationdf["Kmax_stemxylem"];
     NumericVector VCroot_kmax = belowLayers["VCroot_kmax"];
     NumericVector VGrhizo_kmax = belowLayers["VGrhizo_kmax"];
     NumericVector VCroottot_kmax = paramsTranspirationdf["VCroot_kmax"];
     NumericVector VGrhizotot_kmax = paramsTranspirationdf["VGrhizo_kmax"];
-    NumericVector Al2As = paramsAnatomydf["Al2As"];
     for(int c=0;c<numCohorts;c++) {
-      double CRSV = coarseRootSoilVolume(Kmax_stemxylem[c], VCroottot_kmax[c], Al2As[c],
-                                         V(c,_), dVec, rfc);
-      NumericVector L = coarseRootLengths(CRSV, V(c,_), dVec, rfc); 
-      NumericVector xp = rootxylemConductanceProportions(L, V(c,_));
+      NumericVector xp = rootxylemConductanceProportions(L(c,_), V(c,_));
       for(int l=0;l<nlayers;l++)  {
         VCroot_kmax(c,l) = VCroottot_kmax[c]*xp[l]; 
         VGrhizo_kmax(c,l) = VGrhizo_kmax[c]*V(c,l);

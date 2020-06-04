@@ -155,46 +155,49 @@ BEGIN_RCPP
 END_RCPP
 }
 // sapwoodStructuralBiomass
-double sapwoodStructuralBiomass(double SA, double H, double Z, double woodDensity);
-RcppExport SEXP _medfate_sapwoodStructuralBiomass(SEXP SASEXP, SEXP HSEXP, SEXP ZSEXP, SEXP woodDensitySEXP) {
+double sapwoodStructuralBiomass(double SA, double H, NumericVector L, NumericVector V, double woodDensity);
+RcppExport SEXP _medfate_sapwoodStructuralBiomass(SEXP SASEXP, SEXP HSEXP, SEXP LSEXP, SEXP VSEXP, SEXP woodDensitySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type SA(SASEXP);
     Rcpp::traits::input_parameter< double >::type H(HSEXP);
-    Rcpp::traits::input_parameter< double >::type Z(ZSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type L(LSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type V(VSEXP);
     Rcpp::traits::input_parameter< double >::type woodDensity(woodDensitySEXP);
-    rcpp_result_gen = Rcpp::wrap(sapwoodStructuralBiomass(SA, H, Z, woodDensity));
+    rcpp_result_gen = Rcpp::wrap(sapwoodStructuralBiomass(SA, H, L, V, woodDensity));
     return rcpp_result_gen;
 END_RCPP
 }
 // sapwoodStructuralLivingBiomass
-double sapwoodStructuralLivingBiomass(double SA, double H, double Z, double woodDensity, double vessel2sapwood);
-RcppExport SEXP _medfate_sapwoodStructuralLivingBiomass(SEXP SASEXP, SEXP HSEXP, SEXP ZSEXP, SEXP woodDensitySEXP, SEXP vessel2sapwoodSEXP) {
+double sapwoodStructuralLivingBiomass(double SA, double H, NumericVector L, NumericVector V, double woodDensity, double vessel2sapwood);
+RcppExport SEXP _medfate_sapwoodStructuralLivingBiomass(SEXP SASEXP, SEXP HSEXP, SEXP LSEXP, SEXP VSEXP, SEXP woodDensitySEXP, SEXP vessel2sapwoodSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type SA(SASEXP);
     Rcpp::traits::input_parameter< double >::type H(HSEXP);
-    Rcpp::traits::input_parameter< double >::type Z(ZSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type L(LSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type V(VSEXP);
     Rcpp::traits::input_parameter< double >::type woodDensity(woodDensitySEXP);
     Rcpp::traits::input_parameter< double >::type vessel2sapwood(vessel2sapwoodSEXP);
-    rcpp_result_gen = Rcpp::wrap(sapwoodStructuralLivingBiomass(SA, H, Z, woodDensity, vessel2sapwood));
+    rcpp_result_gen = Rcpp::wrap(sapwoodStructuralLivingBiomass(SA, H, L, V, woodDensity, vessel2sapwood));
     return rcpp_result_gen;
 END_RCPP
 }
 // sapwoodStarchCapacity
-double sapwoodStarchCapacity(double SA, double H, double Z, double woodDensity, double vessel2sapwood);
-RcppExport SEXP _medfate_sapwoodStarchCapacity(SEXP SASEXP, SEXP HSEXP, SEXP ZSEXP, SEXP woodDensitySEXP, SEXP vessel2sapwoodSEXP) {
+double sapwoodStarchCapacity(double SA, double H, NumericVector L, NumericVector V, double woodDensity, double vessel2sapwood);
+RcppExport SEXP _medfate_sapwoodStarchCapacity(SEXP SASEXP, SEXP HSEXP, SEXP LSEXP, SEXP VSEXP, SEXP woodDensitySEXP, SEXP vessel2sapwoodSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type SA(SASEXP);
     Rcpp::traits::input_parameter< double >::type H(HSEXP);
-    Rcpp::traits::input_parameter< double >::type Z(ZSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type L(LSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type V(VSEXP);
     Rcpp::traits::input_parameter< double >::type woodDensity(woodDensitySEXP);
     Rcpp::traits::input_parameter< double >::type vessel2sapwood(vessel2sapwoodSEXP);
-    rcpp_result_gen = Rcpp::wrap(sapwoodStarchCapacity(SA, H, Z, woodDensity, vessel2sapwood));
+    rcpp_result_gen = Rcpp::wrap(sapwoodStarchCapacity(SA, H, L, V, woodDensity, vessel2sapwood));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4319,9 +4322,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_relativeSapViscosity", (DL_FUNC) &_medfate_relativeSapViscosity, 2},
     {"_medfate_leafStructuralBiomass", (DL_FUNC) &_medfate_leafStructuralBiomass, 3},
     {"_medfate_leafStarchCapacity", (DL_FUNC) &_medfate_leafStarchCapacity, 4},
-    {"_medfate_sapwoodStructuralBiomass", (DL_FUNC) &_medfate_sapwoodStructuralBiomass, 4},
-    {"_medfate_sapwoodStructuralLivingBiomass", (DL_FUNC) &_medfate_sapwoodStructuralLivingBiomass, 5},
-    {"_medfate_sapwoodStarchCapacity", (DL_FUNC) &_medfate_sapwoodStarchCapacity, 5},
+    {"_medfate_sapwoodStructuralBiomass", (DL_FUNC) &_medfate_sapwoodStructuralBiomass, 5},
+    {"_medfate_sapwoodStructuralLivingBiomass", (DL_FUNC) &_medfate_sapwoodStructuralLivingBiomass, 6},
+    {"_medfate_sapwoodStarchCapacity", (DL_FUNC) &_medfate_sapwoodStarchCapacity, 6},
     {"_medfate_criticalFirelineIntensity", (DL_FUNC) &_medfate_criticalFirelineIntensity, 2},
     {"_medfate_FCCSbehaviour", (DL_FUNC) &_medfate_FCCSbehaviour, 5},
     {"_medfate_rothermel", (DL_FUNC) &_medfate_rothermel, 11},

@@ -45,16 +45,16 @@ carbon_leafStarchCapacity <- function(LAI, N, SLA, leafDensity) {
     .Call(`_medfate_leafStarchCapacity`, LAI, N, SLA, leafDensity)
 }
 
-carbon_sapwoodStructuralBiomass <- function(SA, H, Z, woodDensity) {
-    .Call(`_medfate_sapwoodStructuralBiomass`, SA, H, Z, woodDensity)
+carbon_sapwoodStructuralBiomass <- function(SA, H, L, V, woodDensity) {
+    .Call(`_medfate_sapwoodStructuralBiomass`, SA, H, L, V, woodDensity)
 }
 
-carbon_sapwoodStructuralLivingBiomass <- function(SA, H, Z, woodDensity, vessel2sapwood) {
-    .Call(`_medfate_sapwoodStructuralLivingBiomass`, SA, H, Z, woodDensity, vessel2sapwood)
+carbon_sapwoodStructuralLivingBiomass <- function(SA, H, L, V, woodDensity, vessel2sapwood) {
+    .Call(`_medfate_sapwoodStructuralLivingBiomass`, SA, H, L, V, woodDensity, vessel2sapwood)
 }
 
-carbon_sapwoodStarchCapacity <- function(SA, H, Z, woodDensity, vessel2sapwood) {
-    .Call(`_medfate_sapwoodStarchCapacity`, SA, H, Z, woodDensity, vessel2sapwood)
+carbon_sapwoodStarchCapacity <- function(SA, H, L, V, woodDensity, vessel2sapwood) {
+    .Call(`_medfate_sapwoodStarchCapacity`, SA, H, L, V, woodDensity, vessel2sapwood)
 }
 
 .criticalFirelineIntensity <- function(CBH, M) {

@@ -141,6 +141,10 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
   NumericVector SP = cohorts["SP"];
   int numCohorts = SP.size();
   
+  //Soil
+  NumericVector dVec = soil["dVec"];
+  int nlayers = dVec.size();
+  
   //Aboveground parameters  
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   NumericVector DBH = above["DBH"];
@@ -157,6 +161,7 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
   //Belowground parameters  
   DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
   List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
+  NumericMatrix V = belowLayers["V"];
   NumericVector Z95 = Rcpp::as<Rcpp::NumericVector>(belowdf["Z95"]);
   NumericVector Z50 = Rcpp::as<Rcpp::NumericVector>(belowdf["Z50"]);
   
@@ -258,12 +263,14 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
       double costPerLA = 1000.0*leaf_CC/SLA[j]; // Construction cost in g gluc · m-2 of leaf area
       double costPerSA = sapwood_CC*(H[j]+(Z95[j]/10.0))*WoodDensity[j];  //Construction cost in g gluc ·cm-2 of sapwood
       
+      NumericVector L(nlayers, Z50[j]); //TO BE IMPROVED
+      
       Volume_leaves[j] = leafStorageVolume(LAI_expanded[j],  N[j], SLA[j], LeafDensity[j]);
-      Volume_sapwood[j] = sapwoodStorageVolume(SA[j], H[j],Z95[j],WoodDensity[j], 0.5);
+      Volume_sapwood[j] = sapwoodStorageVolume(SA[j], H[j], L, V(j,_),WoodDensity[j], 0.5);
       Starch_max_leaves[j] = leafStarchCapacity(LAI_expanded[j],  N[j], SLA[j], 0.3)/Volume_leaves[j];
-      Starch_max_sapwood[j] = sapwoodStarchCapacity(SA[j], H[j],Z95[j],WoodDensity[j], 0.2)/Volume_sapwood[j];
+      Starch_max_sapwood[j] = sapwoodStarchCapacity(SA[j], H[j], L, V(j,_),WoodDensity[j], 0.2)/Volume_sapwood[j];
       B_struct_leaves[j] = leafStructuralBiomass(LAI_expanded[j],N[j],SLA[j]);
-      B_struct_sapwood[j] = sapwoodStructuralLivingBiomass(SA[j], H[j], Z95[j], WoodDensity[j], 0.5);
+      B_struct_sapwood[j] = sapwoodStructuralLivingBiomass(SA[j], H[j], L, V(j,_), WoodDensity[j], 0.5);
       B_struct_fineroots[j] = B_struct_leaves[j]/2.0; //TO BE CHANGED
       
       double labileMassLeafIni = (sugarLeaf[j]+starchLeaf[j])*(glucoseMolarMass*Volume_leaves[j]);
@@ -548,6 +555,8 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   
   //Soil info
   NumericVector Ksat = soil["Ksat"];
+  NumericVector dVec = soil["dVec"];
+  NumericVector rfc = soil["rfc"];
   
   //Cohort info
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
@@ -573,6 +582,10 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   DataFrame below = Rcpp::as<Rcpp::DataFrame>(x["below"]);
   List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
   NumericVector Z95 = Rcpp::as<Rcpp::NumericVector>(below["Z95"]);
+  NumericVector Z50 = Rcpp::as<Rcpp::NumericVector>(below["Z50"]);
+  NumericVector CRSV = Rcpp::as<Rcpp::NumericVector>(below["coarseRootSoilVolume"]);
+  NumericMatrix V = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["V"]);
+  NumericMatrix L = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["L"]);
   
   //Internal state variables
   DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
@@ -713,11 +726,11 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
       double deltaSAgrowth = 0.0;
       
       Volume_leaves[j] = leafStorageVolume(LAI_expanded[j],  N[j], SLA[j], LeafDensity[j]);
-      Volume_sapwood[j] = sapwoodStorageVolume(SA[j], H[j], Z95[j],WoodDensity[j], 0.5);
+      Volume_sapwood[j] = sapwoodStorageVolume(SA[j], H[j], L(j,_),V(j,_),WoodDensity[j], 0.5);
       Starch_max_leaves[j] = leafStarchCapacity(LAI_expanded[j],  N[j], SLA[j], 0.3)/Volume_leaves[j];
-      Starch_max_sapwood[j] = sapwoodStarchCapacity(SA[j], H[j],Z95[j],WoodDensity[j], 0.2)/Volume_sapwood[j];
+      Starch_max_sapwood[j] = sapwoodStarchCapacity(SA[j], H[j],L(j,_),V(j,_),WoodDensity[j], 0.2)/Volume_sapwood[j];
       B_struct_leaves[j] = leafStructuralBiomass(LAI_expanded[j],N[j],SLA[j]);
-      B_struct_sapwood[j] = sapwoodStructuralLivingBiomass(SA[j], H[j], Z95[j], WoodDensity[j], 0.5);
+      B_struct_sapwood[j] = sapwoodStructuralLivingBiomass(SA[j], H[j], L(j,_),V(j,_), WoodDensity[j], 0.5);
       B_struct_fineroots[j] = fineRootBiomassPerIndividual(Ksat, VGrhizo_kmax(j,_), LAI_live[j], N[j], 
                                                            4000.0, 0.165);
 
