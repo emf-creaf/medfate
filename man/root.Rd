@@ -2,7 +2,8 @@
 \name{root}
 \alias{root_ldrDistribution}
 \alias{root_conicDistribution}
-\alias{root_coarseRootLengths}
+\alias{root_coarseRootLengthsBasic}
+\alias{root_coarseRootLengthsAdvanced}
 \alias{root_coarseRootSoilVolume}
 \alias{root_fineRootAreaIndex}
 \alias{root_fineRootRadius}
@@ -20,7 +21,8 @@ Functions to calculate properties of fine/coarse roots within the soil, given ro
 \usage{
 root_conicDistribution(Zcone, d)
 root_ldrDistribution(Z50, Z95, d)
-root_coarseRootLengths(VolInd, V, d, rfc)
+root_coarseRootLengthsBasic(v, d, depthWidthRatio = 1.0)
+root_coarseRootLengthsAdvanced(VolInd, v, d, rfc)
 root_coarseRootSoilVolume(Kmax_rootxylem, VCroot_kmax, Al2As,
                           V, d, rfc)
 root_fineRootRadius(specificRootLength, rootTissueDensity)
@@ -41,6 +43,8 @@ root_horizontalProportionsAdvanced(poolProportions, VolInd, N, V, d, rfc)
   \item{Z95}{A vector of depths (in mm) corresponding to 95\% of roots.}
   \item{Zcone}{A vector of depths (in mm) corresponding to the root cone tip.}
   \item{d}{The width (in mm) corresponding to each soil layer.}
+  \item{v}{Vector of proportions of fine roots in each soil layer.}
+  \item{depthWidthRatio}{Ratio between radius of the soil layer with the largest radius and maximum rooting depth.}
   \item{rfc}{Percentage of rock fragment content (volume basis) for each layer.}
   \item{Kmax_rootxylem}{Sapwood-specific hydraulic conductivity of root xylem (in kg H2O·s-1·m-1·MPa-1).}
   \item{VCroot_kmax}{Root xylem maximum conductance per leaf area (mmol·m-2·s-1·MPa-1). }
@@ -62,7 +66,7 @@ root_horizontalProportionsAdvanced(poolProportions, VolInd, N, V, d, rfc)
 \details{
 \itemize{
   \item{\code{root_conicDistribution()} assumes a (vertical) conic distribution of fine roots, whereas \code{root_ldrDistribution()} distributes fine roots according to the linear dose response model of Schenck & Jackson (2002). Return a matrix of fine root proportions in each layer with as many rows as elements in \code{Z} (or \code{Z50}) and as many columns as soil layers.}
-  \item{\code{root_coarseRootLengths()} estimates the length of coarse roots (mm) for each soil layer.}
+  \item{\code{root_coarseRootLengthsBasic()} and \code{root_coarseRootLengthsAdvanced()} estimate the length of coarse roots (mm) for each soil layer, including axial and radial lengths.}
   \item{\code{root_coarseRootSoilVolume} estimates the soil volume (m3) occupied by coarse roots of an individual.}
   \item{\code{root_fineRootHalfDistance()} calculates the half distance (cm) between neighbouring fine roots.}
   \item{\code{root_fineRootRadius()} calculates the radius of fine roots (cm).}

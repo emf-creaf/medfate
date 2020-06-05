@@ -275,13 +275,13 @@ double fineRootSoilVolume(double fineRootBiomass, double specificRootLength, dou
   return(fineRootBiomass*(specificRootLength/rootLengthDensity)*1e-6);
 }
 
-double frv(double vol, double B, NumericVector V, NumericVector ax, NumericVector ra) {
+double frv(double vol, double B, NumericVector v, NumericVector ax, NumericVector ra) {
   int numLayers = ax.size();
   double s = 0.0;
   double li = 0.0;
   for(int i=0;i<numLayers;i++) {
     li = ax[i]+sqrt(vol)*ra[i];
-    s +=(V[i]/li); //No taper effect
+    s +=(v[i]/li); //No taper effect
     // s +=(V[i]/(li*taperFactorSavage(li*100.0))); //TODO: Improve usage of Savage taper factor for roots
   }
   return(B*s - 1.0);
@@ -293,12 +293,12 @@ double frv(double vol, double B, NumericVector V, NumericVector ax, NumericVecto
  */
 // [[Rcpp::export("root_coarseRootSoilVolume")]]
 double coarseRootSoilVolume(double Kmax_rootxylem, double VCroot_kmax, double Al2As,
-                                   NumericVector V, NumericVector d, NumericVector rfc) {
-  int numLayers = V.size();
+                                   NumericVector v, NumericVector d, NumericVector rfc) {
+  int numLayers = v.size();
   NumericVector ra(numLayers, 0.0);
   NumericVector ax(numLayers, 0.0);
   for(int j=0;j<numLayers;j++) {
-    ra[j] = sqrt(V[j]/((d[j]/1000.0)*PI*(1.0 - (rfc[j]/100.0))));
+    ra[j] = sqrt(v[j]/((d[j]/1000.0)*PI*(1.0 - (rfc[j]/100.0))));
     if(j==0) ax[j] = (d[j]/1000.0);
     else ax[j] = ax[j-1]+(d[j]/1000.0);
     // Rcout<<j<<" "<<ax[j]<<" "<<ra[j]<<"\n";
@@ -308,7 +308,7 @@ double coarseRootSoilVolume(double Kmax_rootxylem, double VCroot_kmax, double Al
   double step = 1.0;
   double fTol = 0.005;
   double vol = 0.0;
-  double f = frv(vol, B, V, ax, ra);
+  double f = frv(vol, B, v, ax, ra);
   while(std::abs(f)>fTol) {
     if(f>0.0) {
       vol += step; 
@@ -316,7 +316,7 @@ double coarseRootSoilVolume(double Kmax_rootxylem, double VCroot_kmax, double Al
       vol -= step;
       step = step/2.0;
     }
-    f = frv(vol,B,V, ax,ra);
+    f = frv(vol,B,v, ax,ra);
   }
   // for(int j=0;j<numLayers;j++) {
     // Rcout<<j<<" "<<ax[j]<<" "<<sqrt(vol)*ra[j]<<" "<<((d[j]/1000.0)*PI*pow(sqrt(vol)*ra[j],2.0))<<"\n";
@@ -336,22 +336,64 @@ double coarseRootSoilVolume(double Kmax_rootxylem, double VCroot_kmax, double Al
  * Returs: coarse root length in mm (same units as d)
  * 
  */
-// [[Rcpp::export("root_coarseRootLengths")]]
-NumericVector coarseRootLengths(double VolInd, NumericVector V, NumericVector d, NumericVector rfc) {
-  int nlayers = V.size();
+// [[Rcpp::export("root_coarseRootLengthsAdvanced")]]
+NumericVector coarseRootLengthsAdvanced(double VolInd, NumericVector v, NumericVector d, NumericVector rfc) {
+  int nlayers = v.size();
   NumericVector rl(nlayers), vl(nlayers), tl(nlayers);
   for(int j=0;j<nlayers;j++) {
     if(j==0) vl[j] = d[j];
     else vl[j] = vl[j-1]+d[j];
-    rl[j] = 1000.0*sqrt((VolInd*V[j])/((d[j]/1000.0)*PI*(1.0 - (rfc[j]/100.0))));
+    rl[j] = 1000.0*sqrt((VolInd*v[j])/((d[j]/1000.0)*PI*(1.0 - (rfc[j]/100.0))));
     // Rcout<<vl[j]<<" "<< rl[j]<<"\n";
     tl[j] = vl[j] + rl[j];
   }
   return(tl);
 }
 
-
-
+// [[Rcpp::export("root_coarseRootLengthsBasic")]]
+NumericVector coarseRootLengthsBasic(NumericVector v, NumericVector d, double depthWidthRatio = 1.0) {
+  int nlayers = v.size();
+  double maxRootDepth = 0.0;
+  //Vertical lengths
+  NumericVector vl(nlayers), zini(nlayers);
+  for(int i=0;i<nlayers;i++) {
+    if(i==0) {
+      zini[i] = 0.0;
+    } else {
+      zini[i] = zini[i-1]+ d[i-1];
+    }
+    if(v[i]>0.0) {
+      vl[i] = zini[i]+ d[i]/2.0;
+      maxRootDepth +=d[i];
+    } else {
+      vl[i] = NA_REAL;
+    }
+    // Rcout<<vl[i]<<" ";
+  }
+  // Rcout<<"\n";
+  int nlayerseff = nlayers;
+  for(int i=(nlayers-1);i>=0;i--) if(NumericVector::is_na(vl[i])) nlayerseff = i;
+  
+  //Radial lengths
+  NumericVector r(nlayerseff), rl(nlayerseff);
+  double maxr = 0.0;
+  for(int i=0;i<nlayerseff;i++) {
+    r[i] = sqrt(v[i]/(d[i]*PI));
+    maxr = std::max(r[i],maxr); 
+  }
+  // Rcout<<maxr<<"\n";
+  for(int i=0;i<nlayerseff;i++) {
+    rl[i] = maxRootDepth*depthWidthRatio*(r[i]/maxr);
+    // Rcout<<rl[i]<<" ";
+  }
+  // Rcout<<"\n";
+  //Weights
+  NumericVector l(nlayers, 0.0);
+  for(int i=0;i<nlayerseff;i++) {
+    l[i]= (rl[i]+vl[i]);
+  }
+  return(l);
+}
 
 
 // [[Rcpp::export("root_horizontalProportionsBasic")]]

@@ -697,12 +697,16 @@ root_fineRootSoilVolume <- function(fineRootBiomass, specificRootLength, rootLen
     .Call(`_medfate_fineRootSoilVolume`, fineRootBiomass, specificRootLength, rootLengthDensity)
 }
 
-root_coarseRootSoilVolume <- function(Kmax_rootxylem, VCroot_kmax, Al2As, V, d, rfc) {
-    .Call(`_medfate_coarseRootSoilVolume`, Kmax_rootxylem, VCroot_kmax, Al2As, V, d, rfc)
+root_coarseRootSoilVolume <- function(Kmax_rootxylem, VCroot_kmax, Al2As, v, d, rfc) {
+    .Call(`_medfate_coarseRootSoilVolume`, Kmax_rootxylem, VCroot_kmax, Al2As, v, d, rfc)
 }
 
-root_coarseRootLengths <- function(VolInd, V, d, rfc) {
-    .Call(`_medfate_coarseRootLengths`, VolInd, V, d, rfc)
+root_coarseRootLengthsAdvanced <- function(VolInd, v, d, rfc) {
+    .Call(`_medfate_coarseRootLengthsAdvanced`, VolInd, v, d, rfc)
+}
+
+root_coarseRootLengthsBasic <- function(v, d, depthWidthRatio = 1.0) {
+    .Call(`_medfate_coarseRootLengthsBasic`, v, d, depthWidthRatio)
 }
 
 root_horizontalProportionsBasic <- function(poolProportions, V, LAIcell, poolOverlapFactor) {
