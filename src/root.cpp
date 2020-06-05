@@ -226,7 +226,7 @@ double fineRootHalfDistance(double rootLengthDensity) {
  * 
  */
 double fineRootLengthPerArea(double Ksoil, double krhizo, double lai,
-                      double radius, double rootLengthDensity = 10.0) {
+                      double radius, double rootLengthDensity) {
   double Xi = krhizo*lai/Ksoil;
   double rmax = fineRootHalfDistance(rootLengthDensity);
   return(log(pow(rmax,2.0)/pow(radius,2.0))*Xi/(4.0*PI));
@@ -235,7 +235,7 @@ double fineRootLengthPerArea(double Ksoil, double krhizo, double lai,
 // [[Rcpp::export("root_fineRootAreaIndex")]]
 double fineRootAreaIndex(NumericVector Ksoil, NumericVector krhizo, double lai,
                                     double specificRootLength, double rootTissueDensity,  
-                                    double rootLengthDensity = 10.0) {
+                                    double rootLengthDensity) {
   double r = fineRootRadius(specificRootLength, rootTissueDensity); //cm
   int numLayers = Ksoil.size();
   double frai = 0.0;
@@ -252,7 +252,7 @@ double fineRootAreaIndex(NumericVector Ksoil, NumericVector krhizo, double lai,
 // [[Rcpp::export("root_fineRootBiomass")]]
 double fineRootBiomassPerIndividual(NumericVector Ksoil, NumericVector krhizo, double lai, double N,
                                     double specificRootLength, double rootTissueDensity,  
-                                    double rootLengthDensity = 10.0) {
+                                    double rootLengthDensity) {
   double r = fineRootRadius(specificRootLength, rootTissueDensity); //cm
   int numLayers = Ksoil.size();
   double frb = 0.0;
@@ -271,7 +271,7 @@ double fineRootBiomassPerIndividual(NumericVector Ksoil, NumericVector krhizo, d
  *    . root length density (RLD; cm/cm3) e.g. 10 cm/cm3 = 0.1 mm/mm3
  */
 // [[Rcpp::export("root_fineRootSoilVolume")]]
-double fineRootSoilVolume(double fineRootBiomass, double specificRootLength, double rootLengthDensity = 10.0) {
+double fineRootSoilVolume(double fineRootBiomass, double specificRootLength, double rootLengthDensity) {
   return(fineRootBiomass*(specificRootLength/rootLengthDensity)*1e-6);
 }
 

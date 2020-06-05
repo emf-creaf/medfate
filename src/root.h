@@ -17,11 +17,11 @@ double fineRootRadius(double specificRootLength, double rootTissueDensity);
 double specificRootSurfaceArea(double specificRootLength, double rootTissueDensity);
 double fineRootAreaIndex(NumericVector Ksoil, NumericVector krhizo, double lai,
                          double specificRootLength, double rootTissueDensity,  
-                         double rootLengthDensity = 10.0);
+                         double rootLengthDensity );
 double fineRootBiomassPerIndividual(NumericVector Ksoil, NumericVector krhizo,  double lai, double N,
                                     double specificRootLength, double rootTissueDensity,  
-                                    double rootLengthDensity = 10.0);
-double fineRootSoilVolume(double fineRootBiomass, double specificRootLength, double rootLengthDensity = 10.0);
+                                    double rootLengthDensity );
+double fineRootSoilVolume(double fineRootBiomass, double specificRootLength, double rootLengthDensity );
 
 double coarseRootSoilVolume(double Kmax_rootxylem, double VCroot_kmax, double Al2As,
                             NumericVector V, NumericVector d, NumericVector rfc);

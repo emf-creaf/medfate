@@ -685,15 +685,15 @@ root_fineRootHalfDistance <- function(rootLengthDensity) {
     .Call(`_medfate_fineRootHalfDistance`, rootLengthDensity)
 }
 
-root_fineRootAreaIndex <- function(Ksoil, krhizo, lai, specificRootLength, rootTissueDensity, rootLengthDensity = 10.0) {
+root_fineRootAreaIndex <- function(Ksoil, krhizo, lai, specificRootLength, rootTissueDensity, rootLengthDensity) {
     .Call(`_medfate_fineRootAreaIndex`, Ksoil, krhizo, lai, specificRootLength, rootTissueDensity, rootLengthDensity)
 }
 
-root_fineRootBiomass <- function(Ksoil, krhizo, lai, N, specificRootLength, rootTissueDensity, rootLengthDensity = 10.0) {
+root_fineRootBiomass <- function(Ksoil, krhizo, lai, N, specificRootLength, rootTissueDensity, rootLengthDensity) {
     .Call(`_medfate_fineRootBiomassPerIndividual`, Ksoil, krhizo, lai, N, specificRootLength, rootTissueDensity, rootLengthDensity)
 }
 
-root_fineRootSoilVolume <- function(fineRootBiomass, specificRootLength, rootLengthDensity = 10.0) {
+root_fineRootSoilVolume <- function(fineRootBiomass, specificRootLength, rootLengthDensity) {
     .Call(`_medfate_fineRootSoilVolume`, fineRootBiomass, specificRootLength, rootLengthDensity)
 }
 

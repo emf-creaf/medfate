@@ -72,17 +72,27 @@ DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams) {
   NumericVector SLA = cohortNumericParameter(SP, SpParams, "SLA");
   NumericVector LeafDensity = cohortNumericParameter(SP, SpParams, "LeafDensity");
   NumericVector WoodDensity = cohortNumericParameter(SP, SpParams, "WoodDensity");
+  NumericVector FineRootDensity = cohortNumericParameter(SP, SpParams, "FineRootDensity");
   NumericVector r635 = cohortNumericParameter(SP, SpParams, "r635");
   NumericVector leafwidth = cohortNumericParameter(SP, SpParams, "LeafWidth");
   NumericVector Hmed = cohortNumericParameter(SP, SpParams, "Hmed"); //To correct conductivity
-    
-  for(int c=0;c<numCohorts;c++){
+  NumericVector SRL = cohortNumericParameter(SP, SpParams, "SRL");  
+  NumericVector RLD = cohortNumericParameter(SP, SpParams, "RLD");  
+  
+  for(int c=0;c<numCohorts;c++){ //default values for missing data
+    if(NumericVector::is_na(WoodDensity[c])) WoodDensity[c] = 0652;
+    if(NumericVector::is_na(LeafDensity[c])) LeafDensity[c] = 0.7;
+    if(NumericVector::is_na(FineRootDensity[c])) FineRootDensity[c] = 0.165; 
     if(NumericVector::is_na(Al2As[c])) Al2As[c] = 2500.0; // = 4 cm2·m-2
+    if(NumericVector::is_na(SRL[c])) SRL[c] = 3870; 
+    if(NumericVector::is_na(RLD[c])) RLD[c] = 10.0;
   }
   DataFrame paramsAnatomydf = DataFrame::create(
     _["Hmed"] = Hmed,
     _["Al2As"] = Al2As, _["SLA"] = SLA, _["LeafWidth"] = leafwidth, 
-    _["LeafDensity"] = LeafDensity, _["WoodDensity"] = WoodDensity, _["r635"] = r635
+    _["LeafDensity"] = LeafDensity, _["WoodDensity"] = WoodDensity, _["FineRootDensity"] = LeafDensity, 
+    _["SRL"] = SRL, _["RLD"] = RLD,  
+    _["r635"] = r635
   );
   paramsAnatomydf.attr("row.names") = above.attr("row.names");
   return(paramsAnatomydf);
@@ -351,6 +361,9 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, NumericM
   V.attr("dimnames") = List::create(above.attr("row.names"), slnames);
   
   NumericVector Al2As = paramsAnatomydf["Al2As"];
+  NumericVector FineRootDensity = paramsAnatomydf["FineRootDensity"];
+  NumericVector SRL = paramsAnatomydf["SRL"];
+  NumericVector RLD = paramsAnatomydf["RLD"];
   
   NumericVector Kmax_stemxylem = paramsTranspirationdf["Kmax_stemxylem"];
   NumericVector VCroottot_kmax = paramsTranspirationdf["VCroot_kmax"];
@@ -378,8 +391,6 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, NumericM
   
   
   
-  double specificRootLength = 4000.0;
-  double rootTissueDensity = 0.165;
   NumericVector FRB(numCohorts), CRSV(numCohorts),FRAI(numCohorts);
   NumericVector Ksat = soil["Ksat"];
   for(int c=0;c<numCohorts;c++)  {
@@ -408,7 +419,7 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, NumericM
         VGrhizotot_kmax[c] += VGrhizo_kmax(c,l); 
     }
     FRB[c] = fineRootBiomassPerIndividual(Ksat, VGrhizo_kmax(c,_), LAI_live[c], N[c], 
-                                          specificRootLength, rootTissueDensity);
+                                          SRL[c], FineRootDensity[c], RLD[c]);
   }
   L.attr("dimnames") = List::create(above.attr("row.names"), slnames);
   VGrhizo_kmax.attr("dimnames") = List::create(above.attr("row.names"), slnames);

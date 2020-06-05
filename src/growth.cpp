@@ -263,7 +263,7 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
       double costPerLA = 1000.0*leaf_CC/SLA[j]; // Construction cost in g gluc · m-2 of leaf area
       double costPerSA = sapwood_CC*(H[j]+(Z95[j]/10.0))*WoodDensity[j];  //Construction cost in g gluc ·cm-2 of sapwood
       
-      NumericVector L(nlayers, Z50[j]); //TO BE IMPROVED
+      NumericVector L(nlayers, Z95[j]); //TO BE IMPROVED
       
       Volume_leaves[j] = leafStorageVolume(LAI_expanded[j],  N[j], SLA[j], LeafDensity[j]);
       Volume_sapwood[j] = sapwoodStorageVolume(SA[j], H[j], L, V(j,_),WoodDensity[j], 0.5);
@@ -638,6 +638,10 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   NumericVector Al2As = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["Al2As"]);
   NumericVector WoodDensity = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["WoodDensity"]);
   NumericVector LeafDensity = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["LeafDensity"]);
+  NumericVector FineRootDensity = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["FineRootDensity"]);
+  NumericVector SRL = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["SRL"]);
+  NumericVector RLD = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["RLD"]);
+  
   //Growth parameters
   DataFrame paramsGrowth = Rcpp::as<Rcpp::DataFrame>(x["paramsGrowth"]);
   NumericVector WoodC = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["WoodC"]);
@@ -732,7 +736,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
       B_struct_leaves[j] = leafStructuralBiomass(LAI_expanded[j],N[j],SLA[j]);
       B_struct_sapwood[j] = sapwoodStructuralLivingBiomass(SA[j], H[j], L(j,_),V(j,_), WoodDensity[j], 0.5);
       B_struct_fineroots[j] = fineRootBiomassPerIndividual(Ksat, VGrhizo_kmax(j,_), LAI_live[j], N[j], 
-                                                           4000.0, 0.165);
+                                                           SRL[j], FineRootDensity[j], RLD[j]);
 
       double labileMassLeafIni = (sugarLeaf[j]+starchLeaf[j])*(glucoseMolarMass*Volume_leaves[j]);
       double labileMassSapwoodIni = (sugarSapwood[j]+starchSapwood[j])*(glucoseMolarMass*Volume_sapwood[j]);
