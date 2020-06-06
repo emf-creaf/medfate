@@ -2270,10 +2270,11 @@ double averageRhizosphereResistancePercent(double krhizomax, double n, double al
 double findRhizosphereMaximumConductance(double averageResistancePercent, double n, double alpha,
                                          double krootmax, double rootc, double rootd,
                                          double kstemmax, double stemc, double stemd,
-                                         double kleafmax, double leafc, double leafd) {
+                                         double kleafmax, double leafc, double leafd,
+                                         double initialValue = 0.0) {
   double step = 1.0;
   double fTol = 0.1;
-  double krhizomaxlog = 0.0;
+  double krhizomaxlog = initialValue;
   double f = averageRhizosphereResistancePercent(exp(krhizomaxlog), n,alpha,krootmax, rootc, rootd,
                                                  kstemmax, stemc,stemd,
                                                  kleafmax, leafc,leafd);

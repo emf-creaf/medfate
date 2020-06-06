@@ -1709,8 +1709,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // findRhizosphereMaximumConductance
-double findRhizosphereMaximumConductance(double averageResistancePercent, double n, double alpha, double krootmax, double rootc, double rootd, double kstemmax, double stemc, double stemd, double kleafmax, double leafc, double leafd);
-RcppExport SEXP _medfate_findRhizosphereMaximumConductance(SEXP averageResistancePercentSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP krootmaxSEXP, SEXP rootcSEXP, SEXP rootdSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP kleafmaxSEXP, SEXP leafcSEXP, SEXP leafdSEXP) {
+double findRhizosphereMaximumConductance(double averageResistancePercent, double n, double alpha, double krootmax, double rootc, double rootd, double kstemmax, double stemc, double stemd, double kleafmax, double leafc, double leafd, double initialValue);
+RcppExport SEXP _medfate_findRhizosphereMaximumConductance(SEXP averageResistancePercentSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP krootmaxSEXP, SEXP rootcSEXP, SEXP rootdSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP kleafmaxSEXP, SEXP leafcSEXP, SEXP leafdSEXP, SEXP initialValueSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1726,7 +1726,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type kleafmax(kleafmaxSEXP);
     Rcpp::traits::input_parameter< double >::type leafc(leafcSEXP);
     Rcpp::traits::input_parameter< double >::type leafd(leafdSEXP);
-    rcpp_result_gen = Rcpp::wrap(findRhizosphereMaximumConductance(averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd));
+    Rcpp::traits::input_parameter< double >::type initialValue(initialValueSEXP);
+    rcpp_result_gen = Rcpp::wrap(findRhizosphereMaximumConductance(averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, initialValue));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4434,7 +4435,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_maximumSoilPlantConductance", (DL_FUNC) &_medfate_maximumSoilPlantConductance, 4},
     {"_medfate_soilPlantResistances", (DL_FUNC) &_medfate_soilPlantResistances, 17},
     {"_medfate_averageRhizosphereResistancePercent", (DL_FUNC) &_medfate_averageRhizosphereResistancePercent, 13},
-    {"_medfate_findRhizosphereMaximumConductance", (DL_FUNC) &_medfate_findRhizosphereMaximumConductance, 12},
+    {"_medfate_findRhizosphereMaximumConductance", (DL_FUNC) &_medfate_findRhizosphereMaximumConductance, 13},
     {"_medfate_taperFactorSavage", (DL_FUNC) &_medfate_taperFactorSavage, 1},
     {"_medfate_terminalConduitRadius", (DL_FUNC) &_medfate_terminalConduitRadius, 1},
     {"_medfate_referenceConductivityHeightFactor", (DL_FUNC) &_medfate_referenceConductivityHeightFactor, 2},

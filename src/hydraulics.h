@@ -35,7 +35,8 @@ double maximumSoilPlantConductance(NumericVector krhizomax, NumericVector krootm
 double findRhizosphereMaximumConductance(double averageResistancePercent, double n, double alpha,
                                          double krootmax, double rootc, double rootd,
                                          double kstemmax, double stemc, double stemd,
-                                         double kleafmax, double leafc, double leafd);
+                                         double kleafmax, double leafc, double leafd,
+                                         double initialValue = 0.0);
 
 
 double EXylem(double psiPlant, double psiUpstream, 

@@ -441,8 +441,8 @@ hydraulics_averageRhizosphereResistancePercent <- function(krhizomax, n, alpha, 
     .Call(`_medfate_averageRhizosphereResistancePercent`, krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiStep)
 }
 
-hydraulics_findRhizosphereMaximumConductance <- function(averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd) {
-    .Call(`_medfate_findRhizosphereMaximumConductance`, averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd)
+hydraulics_findRhizosphereMaximumConductance <- function(averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, initialValue = 0.0) {
+    .Call(`_medfate_findRhizosphereMaximumConductance`, averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, initialValue)
 }
 
 hydraulics_taperFactorSavage <- function(height) {
