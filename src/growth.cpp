@@ -554,7 +554,9 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   double nonSugarConc = control["nonSugarConc"];
   double equilibriumLeafTotalConc = control["equilibriumLeafTotalConc"];
   double equilibriumSapwoodTotalConc = control["equilibriumSapwoodTotalConc"];
-  double minimumSugarConc = control["minimumSugarConc"];
+  double minimumSugarGrowthLeaves = control["minimumSugarGrowthLeaves"];
+  double minimumSugarGrowthSapwood = control["minimumSugarGrowthSapwood"];
+  double minimumSugarGrowthFineRoots = control["minimumSugarGrowthFineRoots"];
   double k_floem = control["k_floem"];
   
   //Soil info
@@ -821,12 +823,12 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
           double deltaLApheno = std::max(leafAreaTarget[j] - LAlive, 0.0);
           double deltaLAsink = std::min(deltaLApheno, (1.0/((double) numSteps))*SA[j]*RGRleafmax*(rleafcell/rleafcellmax));
           if(LAlive>0.0) {
-            double deltaLAavailable = std::max(0.0,((sugarLeaf[j] - minimumSugarConc)*(glucoseMolarMass*Volume_leaves[j]))/costPerLA);
+            double deltaLAavailable = std::max(0.0,((sugarLeaf[j] - minimumSugarGrowthLeaves)*(glucoseMolarMass*Volume_leaves[j]))/costPerLA);
             double deltaLAgrowthStep = std::min(deltaLAsink, deltaLAavailable);
             growthCostLAStep += deltaLAgrowthStep*costPerLA;
             deltaLAgrowth += deltaLAgrowthStep;
           } else { //Grow at expense of stem sugar
-            double deltaLAavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarConc)*(glucoseMolarMass*Volume_sapwood[j]))/costPerLA);
+            double deltaLAavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarGrowthLeaves)*(glucoseMolarMass*Volume_sapwood[j]))/costPerLA);
             double deltaLAgrowthStep = std::min(deltaLAsink, deltaLAavailable);
             // Rcout<<"hola"<< deltaLAavailable<< " "<< deltaLAsink<< " "<< deltaLAgrowthStep<<"\n";
             growthCostSAStep += deltaLAgrowthStep*costPerLA;
@@ -838,7 +840,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
         if(fineRootBiomass[j] < fineRootBiomassTarget[j]) {
           for(int s = 0;s<numLayers;s++) {
             double deltaFRBsink = (1.0/((double) numSteps))*(V(j,s)*fineRootBiomass[j])*RGRfinerootmax*(rfineroot[s]/rleafcellmax);
-            double deltaFRBavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarConc)*(glucoseMolarMass*Volume_sapwood[j]))/fineroots_CC);
+            double deltaFRBavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarGrowthFineRoots)*(glucoseMolarMass*Volume_sapwood[j]))/fineroots_CC);
             double deltaFRBgrowthStep = std::min(deltaFRBsink, deltaFRBavailable);
             growthCostFRBStep += deltaFRBgrowthStep*fineroots_CC;
             deltaFRBgrowth[s] += deltaFRBgrowthStep;
@@ -854,7 +856,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
           else deltaSAring = SAring[SAring.size()-1] - SAring[SAring.size()-2];
           double RGRcellmax = (2e-8/SA[j]);
           double deltaSAsink = (1e-8*(deltaSAring/10.0))*(RGRmax[j]/RGRcellmax)/((double) numSteps); //Correction for the difference in the number of cells
-          double deltaSAavailable = std::max(0.0,((sugarSapwood[j]- minimumSugarConc)*(glucoseMolarMass*Volume_sapwood[j]))/costPerSA);
+          double deltaSAavailable = std::max(0.0,((sugarSapwood[j]- minimumSugarGrowthSapwood)*(glucoseMolarMass*Volume_sapwood[j]))/costPerSA);
           double deltaSAgrowthStep = std::min(deltaSAsink, deltaSAavailable);
           growthCostSAStep += deltaSAgrowthStep*costPerSA; //increase cost (may be non zero if leaf growth was charged onto sapwood)
           deltaSAgrowth  +=deltaSAgrowthStep;
