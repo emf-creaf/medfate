@@ -555,7 +555,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   double equilibriumLeafTotalConc = control["equilibriumLeafTotalConc"];
   double equilibriumSapwoodTotalConc = control["equilibriumSapwoodTotalConc"];
   double minimumSugarGrowthLeaves = control["minimumSugarGrowthLeaves"];
-  double minimumSugarGrowthSapwood = control["minimumSugarGrowthSapwood"];
+  double minimumStarchGrowthSapwood = control["minimumStarchGrowthSapwood"];
   double minimumSugarGrowthFineRoots = control["minimumSugarGrowthFineRoots"];
   double k_floem = control["k_floem"];
   
@@ -856,7 +856,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
           else deltaSAring = SAring[SAring.size()-1] - SAring[SAring.size()-2];
           double RGRcellmax = (2e-8/SA[j]);
           double deltaSAsink = (1e-8*(deltaSAring/10.0))*(RGRmax[j]/RGRcellmax)/((double) numSteps); //Correction for the difference in the number of cells
-          double deltaSAavailable = std::max(0.0,((sugarSapwood[j]- minimumSugarGrowthSapwood)*(glucoseMolarMass*Volume_sapwood[j]))/costPerSA);
+          double deltaSAavailable = std::max(0.0,((starchSapwood[j]- minimumStarchGrowthSapwood)*(glucoseMolarMass*Volume_sapwood[j]))/costPerSA);
           double deltaSAgrowthStep = std::min(deltaSAsink, deltaSAavailable);
           growthCostSAStep += deltaSAgrowthStep*costPerSA; //increase cost (may be non zero if leaf growth was charged onto sapwood)
           deltaSAgrowth  +=deltaSAgrowthStep;
@@ -871,7 +871,8 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
         
         //sugar mass balance
         double leafSugarMassDeltaStep = leafAgStepG - leafRespStep - growthCostLAStep;
-        double sapwoodSugarMassDeltaStep = - sapwoodRespStep - finerootRespStep - growthCostSAStep - growthCostFRBStep;
+        double sapwoodSugarMassDeltaStep = - finerootRespStep  - growthCostFRBStep;
+        double sapwoodStarchMassDeltaStep = - growthCostSAStep - sapwoodRespStep;
         // Rcout<<" coh:"<<j<< " s:"<<s<<" dS: "<< leafSugarMassDeltaStep<<" sugar mass leaf: "<< leafSugarMassStep << " dS:"<< sapwoodSugarMassDeltaStep<< " sugar mass sap: "<< sapwoodSugarMassStep<<"\n";
         
         
@@ -882,6 +883,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
         double cts = 3600.0*Volume_sapwood[j]*glucoseMolarMass;
         for(int t=0;t<3600;t++) {
           sugarSapwood[j] += sapwoodSugarMassDeltaStep/cts;
+          starchSapwood[j] += sapwoodStarchMassDeltaStep/cts;
           
           double conversionSapwood = sugarStarchDynamicsStem(sugarSapwood[j]/StemSympRWCInst(j,s), starchSapwood[j]/StemSympRWCInst(j,s), minimumSapwoodSugarConc);
           // Rcout<<" coh:"<<j<< " s:"<<s<< " Lsugar: "<< sugarLeaf[j] << " Lstarch: "<< sugarSapwood[j]<<" starch formation: "<<conversionLeaf<< "\n";

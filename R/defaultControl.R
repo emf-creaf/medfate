@@ -44,7 +44,7 @@ defaultControl<-function() {
     equilibriumLeafTotalConc = 0.8, # (Paljakka et al. 2017)
     equilibriumSapwoodTotalConc = 0.6, # (Paljakka et al. 2017)
     minimumSugarGrowthLeaves = 0.25,
-    minimumSugarGrowthSapwood = 0.35,
+    minimumStarchGrowthSapwood = 0.25,
     minimumSugarGrowthFineRoots = 0.25
     #     #For water balance
     #For forest dynamics
