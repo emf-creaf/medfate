@@ -40,8 +40,8 @@ defaultControl<-function() {
     allocationStrategy = "Plant_kmax",
     nonStomatalPhotosynthesisLimitation = TRUE,
     k_floem = 3.0e-5, # floem conductance per leaf area basis (l*m-2*MPa-1*s-1)
-    nonSugarConc = 0.3, # mol · l-1
-    minimumSugarConc = 0.3,
+    nonSugarConc = 0.25, # mol · l-1
+    minimumSugarConc = 0.25,
     equilibriumLeafTotalConc = 0.8, # (Paljakka et al. 2017)
     equilibriumSapwoodTotalConc = 0.6 # (Paljakka et al. 2017)
 #     #For water balance

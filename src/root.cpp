@@ -231,6 +231,16 @@ double fineRootLengthPerArea(double Ksoil, double krhizo, double lai,
   double rmax = fineRootHalfDistance(rootLengthDensity);
   return(log(pow(rmax,2.0)/pow(radius,2.0))*Xi/(4.0*PI));
 }
+/**
+ * Derivation of maximum rhizosphere conductance (mmol·m-2·s·MPa-1)
+ * from the conductance factor for cylindrical flow geometry of the rhizosphere
+ * 
+ */
+double fineRootMaximumConductance(double Ksoil, double fineRootLengthPerArea, double lai,
+                                   double radius, double rootLengthDensity) {
+  double rmax = fineRootHalfDistance(rootLengthDensity);
+  return((fineRootLengthPerArea*Ksoil*4.0*PI)/(lai*log(pow(rmax,2.0)/pow(radius,2.0))));
+}
 
 // [[Rcpp::export("root_fineRootAreaIndex")]]
 double fineRootAreaIndex(NumericVector Ksoil, NumericVector krhizo, double lai,
@@ -263,6 +273,21 @@ double fineRootBiomassPerIndividual(NumericVector Ksoil, NumericVector krhizo, d
   }
   return(frb);
 }
+
+// [[Rcpp::export("root_rhizosphereMaximumConductance")]]
+NumericVector rhizosphereMaximumConductance(NumericVector Ksoil, NumericVector fineRootBiomass, double lai, double N,
+                                    double specificRootLength, double rootTissueDensity,  
+                                    double rootLengthDensity) {
+  double r = fineRootRadius(specificRootLength, rootTissueDensity); //cm
+  int numLayers = Ksoil.size();
+  NumericVector krhizo(numLayers, 0.0);
+  for(int l=0;l<numLayers;l++) {
+    double FRLA = 1e-6*fineRootBiomass[l]*N*specificRootLength;
+    krhizo[l] = fineRootMaximumConductance(Ksoil[l], FRLA, lai, r, rootLengthDensity);
+  }
+  return(krhizo);
+}
+
 
 /**
  *   Estimates soil volume (m3) occupied with fine roots

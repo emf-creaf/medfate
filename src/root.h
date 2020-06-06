@@ -21,6 +21,10 @@ double fineRootAreaIndex(NumericVector Ksoil, NumericVector krhizo, double lai,
 double fineRootBiomassPerIndividual(NumericVector Ksoil, NumericVector krhizo,  double lai, double N,
                                     double specificRootLength, double rootTissueDensity,  
                                     double rootLengthDensity );
+NumericVector rhizosphereMaximumConductance(NumericVector Ksoil, NumericVector fineRootBiomass, double lai, double N,
+                                         double specificRootLength, double rootTissueDensity,  
+                                         double rootLengthDensity);
+
 double fineRootSoilVolume(double fineRootBiomass, double specificRootLength, double rootLengthDensity );
 
 double coarseRootSoilVolume(double Kmax_rootxylem, double VCroot_kmax, double Al2As,

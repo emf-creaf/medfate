@@ -36,7 +36,7 @@ const double fineroots_CC = 1.30; // g gluc · g dw -1
 //Maximum relative growth rate of leaves (should be faster than RGRsapwood)
 const double RGRleafmax = 0.05; // m2 leaf ·cm-2 sapwood· day-1
 //Maximum relative growth rate of fine roots
-const double RGRfinerootmax = 0.05; // g gw · g gw -1 · day -1
+const double RGRfinerootmax = 0.1; // g gw · g gw -1 · day -1
 
 //Ogle & Pacala 2010
 //Tree Physiology 29, 587–605
@@ -530,12 +530,15 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
                 double solarConstant, double delta, 
                 double prec, double pet, double er, double runon=0.0, bool verbose = false) {
   
-  //Soil-plant water balance
+  //1. Soil-plant water balance
   List spwbOut = spwbDay2(x, soil, tmin, tmax, tminPrev, tmaxPrev, tminNext,
                           rhmin, rhmax, rad, wind, 
                           latitude, elevation, slope, aspect,
                           solarConstant, delta, 
                           prec, pet, er, runon, verbose);
+  
+
+  //2. Retrieve state
   
   //Control params
   List control = x["control"];  
@@ -591,6 +594,9 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   NumericMatrix V = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["V"]);
   NumericMatrix L = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["L"]);
   NumericMatrix RhizoPsi = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["RhizoPsi"]);
+  NumericMatrix VCroot_kmax = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VCroot_kmax"]);
+  NumericMatrix VGrhizo_kmax = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VGrhizo_kmax"]);
+  int numLayers = VCroot_kmax.ncol();
   
   //Internal state variables
   DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
@@ -674,10 +680,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   NumericVector VCroot_kmaxVEC= paramsTransp["VCroot_kmax"];
   NumericVector VCroot_c = paramsTransp["VCroot_c"];
   NumericVector VCroot_d = paramsTransp["VCroot_d"];
-  NumericMatrix VCroot_kmax = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VCroot_kmax"]);
-  NumericMatrix VGrhizo_kmax = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VGrhizo_kmax"]);
-
-  int numLayers = VCroot_kmax.ncol();
+  NumericVector VGrhizo_kmaxVEC= paramsTransp["VGrhizo_kmax"];
   
   //Water storage parameters
   DataFrame paramsWaterStorage = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
@@ -710,8 +713,8 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   NumericVector LabileMassLeaf(numCohorts,0.0), LabileMassSapwood(numCohorts,0.0);
   NumericVector PlantSugarTransport(numCohorts,0.0), PlantSugarLeaf(numCohorts,0.0), PlantStarchLeaf(numCohorts,0.0);
   NumericVector PlantSugarSapwood(numCohorts,0.0), PlantStarchSapwood(numCohorts,0.0);
-  NumericVector SapwoodArea(numCohorts,0.0), LeafArea(numCohorts,0.0), HuberValue(numCohorts,0.0);
-  NumericVector SAgrowth(numCohorts,0.0), LAgrowth(numCohorts,0.0), FRBgrowth(numCohorts,0.0);
+  NumericVector SapwoodArea(numCohorts,0.0), LeafArea(numCohorts,0.0), HuberValue(numCohorts,0.0), FineRootArea(numCohorts, 0.0);
+  NumericVector SAgrowth(numCohorts,0.0), LAgrowth(numCohorts,0.0), FRAgrowth(numCohorts,0.0);
   NumericVector GrossPhotosynthesis(numCohorts,0.0);
   NumericVector PlantLAIdead(numCohorts,0.0), PlantLAIlive(numCohorts,0.0),PlantLAIexpanded(numCohorts,0.0);
   
@@ -728,7 +731,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
 
   double rleafcellmax = relative_expansion_rate(0.0 ,25, -2.0,0.5,0.05,5.0);
 
-  //3. Carbon balance and growth
+  //3. Carbon balance, growth and senescence by cohort
   for(int j=0;j<numCohorts;j++){
     if(Status[j]=="alive") {
       double LAexpanded = leafArea(LAI_expanded[j], N[j]);
@@ -761,23 +764,14 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
       double leafRespDay = 0.0;
       // double sfrRespDay = 0.0;
       
-      //Set target leaf area if bud formation is allowed
-      if(budFormation[j]) {
-        if(allocationStrategy == "Plant_kmax") {
-          leafAreaTarget[j] = LAlive*(Plant_kmax[j]/allocationTarget[j]);
-        } else if(allocationStrategy =="Al2As") {
-          leafAreaTarget[j] = (SA[j]/10000.0)*allocationTarget[j];
-        }
-        // Rcout<< LAlive<< " "<< leafAreaTarget[j]<<"\n";
-      }
-      
-      //Xylogenesis
+ 
+      //3.0 Xylogenesis
       grow_ring(ringList[j], psiSympStem[j] ,tday, 10.0);
       double rleafcell = relative_expansion_rate(psiSympLeaf[j] ,tday, LeafPI0[j],0.5,0.05,5.0);
       NumericVector rfineroot(numLayers);
       for(int s=0;s<numLayers;s++) rfineroot[s] = relative_expansion_rate(RhizoPsi(j,s) ,tday, StemPI0[j],0.5,0.05,5.0);
       
-      //Carbon balance for labile carbon of leaves and stems
+      //3.1 Carbon balance and growth by steps
       for(int s=0;s<numSteps;s++) {
         
         // minimum concentration (mol gluc·l-1) to avoid turgor loss
@@ -920,8 +914,11 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
         
         // Rcout<<j<<" LeafTLP "<< turgorLossPoint(LeafPI0[j], LeafEPS[j])<< " Leaf PI "<< osmoticWaterPotential(sugarLeaf[j], tday)<< " Conc "<< sugarLeaf[j]<< " TLPconc"<< tlpConcLeaf<<"\n";
       }
-      
-      if(sugarLeaf[j] < 0.0) { //Leaf senescense due to C starvation
+  
+      //3.2 Apply growth and senescence
+      //3.2.1 Leaf growth and senescence
+      //Leaf senescense due to C starvation
+      if(sugarLeaf[j] < 0.0) { 
         double respirationExcess = -sugarLeaf[j]*(Volume_leaves[j]*glucoseMolarMass); //g gluc
         double propExcess = respirationExcess/leafRespDay; //day
         // Rcout<< j <<" Excess respiration: " << respirationExcess << " Prop:"<< propExcess<< " LAlive " << LAlive << " LAlivenew "<< LAlive*(1.0 - propExcess) <<"\n";
@@ -934,12 +931,9 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
         }
         sugarLeaf[j] = 0.0;
       }
-      
       //Leaf growth
       LAlive += deltaLAgrowth; //Update leaf area
       LAexpanded +=deltaLAgrowth;
-      LAgrowth[j] += deltaLAgrowth/SA[j];//Store Leaf area growth rate in relation to sapwood area (m2/cm2)
-      
       //Leaf senescence
       double propLeafSenescence = 0.0;
       //Leaf senescence due to age (Ca+ accumulation) only in evergreen species
@@ -957,35 +951,34 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
         propLeafSenescence = 1.0;
         Rcout<<" [Cohort "<< j<<" defoliated ] ";
       }
-      
+      //Apply senescence due to age/drought
       double LA_exp_prev= LAexpanded; //Store previous value
       LAdead += LAexpanded*propLeafSenescence;
       LAexpanded = LAexpanded*(1.0 - propLeafSenescence); //Update expanded leaf area
       LAlive = LAlive*(1.0 - propLeafSenescence); //Update expanded leaf area
       
-      //FRB growth senescence
-      FRBgrowth[j] = sum(deltaFRBgrowth);
+      //3.2.2 FRB growth and senescence
       NumericVector newFRB(numLayers,0.0);
       for(int s=0;s<numLayers;s++) {
         double initialFRB = fineRootBiomass[j]*V(j,s);
         newFRB[s] = std::max(0.0,initialFRB*(1.0 - dailyFineRootTurnoverProportion) + deltaFRBgrowth[s]);
       }
       fineRootBiomass[j] = sum(newFRB);
-      for(int s=0;s<numLayers;s++) { //Update vertical fine root distribution
+      //Update vertical fine root distribution
+      for(int s=0;s<numLayers;s++) { 
         V(j,s) = newFRB[s]/fineRootBiomass[j];
       }
-      
-      //SA growth senescense
+
+      //3.2.3 SA growth and senescense
       double SAprev = SA[j];
       double deltaSAturnover = (dailySAturnoverProportion/(1.0+15.0*exp(-0.01*H[j])))*SA[j];
       SA[j] = SA[j] - deltaSAturnover; //Update sapwood area
       //SA growth     
       SA[j] += deltaSAgrowth; //Update sapwood area
-      SAgrowth[j] += deltaSAgrowth/SA[j]; //Store sapwood area growth rate (cm2·cm-2·d-1)
       //Decrease PLC due to new SA growth
       if(cavitationRefill=="growth") StemPLC[j] = std::max(0.0, StemPLC[j] - (deltaSAgrowth/SA[j]));
       
-      //Death by carbon starvation or dessication
+      //3.3. Determine plant death by carbon starvation or dessication
       if((sugarSapwood[j]<0.0) || (StemSympRWC[j] <0.5)) {
         LAdead = LAlive;
         LAlive = 0.0;
@@ -996,7 +989,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
       }
       
       
-      //Update LAI
+      //3.4 Update functional variables (feed-back to soil-plant-water balance)
       LAI_live[j] = LAlive*N[j]/10000.0;
       LAI_expanded[j] = LAexpanded*N[j]/10000.0;
       LAI_dead[j] = LAdead*N[j]/10000.0;
@@ -1008,15 +1001,43 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
         Al2As[j] = (LAlive)/(SA[j]/10000.0);
         VCstem_kmax[j]=maximumStemHydraulicConductance(Kmax_stemxylem[j], Hmed[j], Al2As[j] ,H[j], taper); 
       }
-      //Update root conductance so that it keeps the same resistance proportion with stem conductance
+      //Update rhizosphere maximum conductance
+      NumericVector VGrhizo_new = rhizosphereMaximumConductance(Ksat, newFRB, LAI_live[j], N[j],
+                                                                SRL[j], FineRootDensity[j], RLD[j]);
+      for(int s=0;s<numLayers;s++) { 
+        VGrhizo_kmax(j,s) = VGrhizo_new[s];
+      }
+      VGrhizo_kmaxVEC[j] = sum(VGrhizo_kmax(j,_));
+      
+      //Update root maximum conductance so that it keeps the same resistance proportion with stem conductance
       double newstemR = 1.0/VCstem_kmax[j];
       double newrootR = oldrootprop*newstemR/(1.0-oldrootprop);
       VCroot_kmaxVEC[j] = 1.0/newrootR;
-      for(int s=0;s<numLayers;s++) { //TO DO UPDATE ALSO ACCORDING TO V
-        VCroot_kmax(j,s) = VCroot_kmax(j,s)*(oldrootR/newrootR);
-      }     
+      //Update coarse root soil volume
+      CRSV[j] = coarseRootSoilVolume(Kmax_stemxylem[j], VCroot_kmaxVEC[j], Al2As[j],
+                                     V(j,_), dVec, rfc);
+      //Update coarse root length and root maximum conductance
+      L(j,_) = coarseRootLengthsAdvanced(CRSV[j], V(j,_), dVec, rfc); 
+      NumericVector xp = rootxylemConductanceProportions(L(j,_), V(j,_));
+      VCroot_kmax(j,_) = VCroot_kmaxVEC[j]*xp;
+      //Update Plant_kmax
       Plant_kmax[j] = 1.0/((1.0/VCleaf_kmax[j])+(1.0/VCstem_kmax[j])+(1.0/VCroot_kmaxVEC[j]));
-
+      //Update leaf and stem osmotic water potential at full turgor
+      LeafPI0[j] = osmoticWaterPotential(sugarLeaf[j], 20.0, nonSugarConc); //Osmotic potential at full turgor assuming RWC = 1 and 20ºC
+      StemPI0[j] = osmoticWaterPotential(sugarSapwood[j], 20.0, nonSugarConc);
+      //Update non-stomatal photosynthesis limitations
+      if(nonStomatalPhotosynthesisLimitation) NSPL[j] = 1.0 - std::max(0.0, std::min(1.0, sugarLeaf[j] - 0.5)); //photosynthesis limited when conc > 0.5 and zero when conc > 1.5 mol·l-1
+      else NSPL[j] = 1.0;
+      
+      //3.5 Update allocation (leaf area and fine root biomass) targets
+      //Set leaf area target if bud formation is allowed
+      if(budFormation[j]) {
+        if(allocationStrategy == "Plant_kmax") {
+          leafAreaTarget[j] = LAlive*(Plant_kmax[j]/allocationTarget[j]);
+        } else if(allocationStrategy =="Al2As") {
+          leafAreaTarget[j] = (SA[j]/10000.0)*allocationTarget[j];
+        }
+      }
       //Update fine root biomass target      
       NumericVector VGrhizo_target(numLayers,0.0);
       for(int s=0;s<numLayers;s++) {
@@ -1030,22 +1051,17 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
       fineRootBiomassTarget[j] = fineRootBiomassPerIndividual(Ksat, VGrhizo_target, LAI_live[j], N[j],
                                                               SRL[j], FineRootDensity[j], RLD[j]);
 
-
-      //Update leaf and stem osmotic water potential at full turgor
-      LeafPI0[j] = osmoticWaterPotential(sugarLeaf[j], 20.0, nonSugarConc); //Osmotic potential at full turgor assuming RWC = 1 and 20ºC
-      StemPI0[j] = osmoticWaterPotential(sugarSapwood[j], 20.0, nonSugarConc);
-
-      //Update non-stomatal photosynthesis limitations
-      if(nonStomatalPhotosynthesisLimitation) NSPL[j] = 1.0 - std::max(0.0, std::min(1.0, sugarLeaf[j] - 0.5)); //photosynthesis limited when conc > 0.5 and zero when conc > 1.5 mol·l-1
-      else NSPL[j] = 1.0;
-      
-      //Output variables
+      //3.6 Output variables by cohort
       PlantSugarLeaf[j] = sugarLeaf[j];
       PlantStarchLeaf[j] = starchLeaf[j];
       PlantSugarSapwood[j] = sugarSapwood[j];
       PlantStarchSapwood[j] = starchSapwood[j];
       SapwoodArea[j] = SA[j];
       LeafArea[j] = LAexpanded;
+      FineRootArea[j] = fineRootBiomass[j]*specificRootSurfaceArea(SRL[j], FineRootDensity[j])*1e-4;
+      LAgrowth[j] += deltaLAgrowth/SA[j];//Store Leaf area growth rate in relation to sapwood area (m2·cm-2·d-1)
+      SAgrowth[j] += deltaSAgrowth/SA[j]; //Store sapwood area growth rate (cm2·cm-2·d-1)
+      FRAgrowth[j] = sum(deltaFRBgrowth)*specificRootSurfaceArea(SRL[j], FineRootDensity[j])*1e-4/SA[j];//Store fine root area growth rate (m2·cm-2·d-1)
       HuberValue[j] = 10000.0/Al2As[j];
       PlantLAIlive[j] = LAI_live[j];
       PlantLAIexpanded[j] = LAI_expanded[j];
@@ -1105,9 +1121,10 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
     _["SapwoodArea"] = SapwoodArea,
     _["LeafArea"] = LeafArea,
     _["HuberValue"] = HuberValue,
+    _["FineRootArea"] = FineRootArea,
     _["SAgrowth"] = SAgrowth,
     _["LAgrowth"] = LAgrowth,
-    _["FRBgrowth"] = FRBgrowth
+    _["FRAgrowth"] = FRAgrowth
     // _["LAIlive"] = PlantLAIlive,
     // _["LAIexpanded"] = PlantLAIexpanded,
     // _["LAIdead"] = PlantLAIdead,
@@ -1446,9 +1463,10 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   NumericMatrix PlantSugarTransport(numDays, numCohorts);
   NumericMatrix SapwoodArea(numDays, numCohorts);
   NumericMatrix LeafArea(numDays, numCohorts);
+  NumericMatrix FineRootArea(numDays, numCohorts);
   NumericMatrix SAgrowth(numDays, numCohorts);
   NumericMatrix LAgrowth(numDays, numCohorts);
-  NumericMatrix FRBgrowth(numDays, numCohorts);
+  NumericMatrix FRAgrowth(numDays, numCohorts);
   NumericMatrix HuberValue(numDays, numCohorts);
   NumericMatrix GrossPhotosynthesis(numDays, numCohorts);
   NumericMatrix PlantLAIexpanded(numDays, numCohorts), PlantLAIdead(numDays, numCohorts), PlantLAIlive(numDays, numCohorts);
@@ -1612,7 +1630,10 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
     HuberValue(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["HuberValue"]);
     LAgrowth(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["LAgrowth"]);
     SAgrowth(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["SAgrowth"]);
-    if(transpirationMode=="Sperry") FRBgrowth(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["FRBgrowth"]);
+    if(transpirationMode=="Sperry") {
+      FRAgrowth(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["FRAgrowth"]);
+      FineRootArea(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["FineRootArea"]);
+    }
       
     for(int j=0;j<numCohorts;j++){
       SAgrowthcum[j] += SAgrowth(i,j); //Store cumulative SA growth (for structural variable update)
@@ -1715,10 +1736,11 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   PlantSugarTransport.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   SapwoodArea.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   LeafArea.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
+  FineRootArea.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   HuberValue.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   LAgrowth.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   SAgrowth.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
-  FRBgrowth.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
+  FRAgrowth.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   StemPI0.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   LeafPI0.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   // PlantLAIdead.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
@@ -1753,15 +1775,15 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
     Named("StemPI0") = StemPI0
   );
 
-  List plantGrowth = List::create(Named("SapwoodArea")=SapwoodArea,
-                                  Named("LeafArea") = LeafArea,
-                                  Named("HuberValue") = HuberValue,
-                                  Named("LAgrowth") = LAgrowth,
-                                  Named("SAgrowth") = SAgrowth,
-                                  Named("FRBgrowth") = FRBgrowth);
+  List plantGrowth;
   
   List l;
   if(transpirationMode=="Granier") {
+    plantGrowth = List::create(Named("SapwoodArea")=SapwoodArea,
+                               Named("LeafArea") = LeafArea,
+                               Named("HuberValue") = HuberValue,
+                               Named("LAgrowth") = LAgrowth,
+                               Named("SAgrowth") = SAgrowth);
     l = List::create(Named("latitude") = latitude,
                      Named("topography") = topo,
                      Named("growthInput") = growthInput,
@@ -1777,7 +1799,13 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
                      Named("subdaily") =  subdailyRes);
     
   } else {
-  
+    plantGrowth = List::create(Named("SapwoodArea")=SapwoodArea,
+                               Named("LeafArea") = LeafArea,
+                               Named("FineRootArea") = FineRootArea,
+                               Named("HuberValue") = HuberValue,
+                               Named("LAgrowth") = LAgrowth,
+                               Named("SAgrowth") = SAgrowth,
+                               Named("FRAgrowth") = FRAgrowth);
     l = List::create(Named("latitude") = latitude,
                    Named("topography") = topo,
                    Named("growthInput") = growthInput,

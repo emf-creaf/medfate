@@ -2840,6 +2840,23 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// rhizosphereMaximumConductance
+NumericVector rhizosphereMaximumConductance(NumericVector Ksoil, NumericVector fineRootBiomass, double lai, double N, double specificRootLength, double rootTissueDensity, double rootLengthDensity);
+RcppExport SEXP _medfate_rhizosphereMaximumConductance(SEXP KsoilSEXP, SEXP fineRootBiomassSEXP, SEXP laiSEXP, SEXP NSEXP, SEXP specificRootLengthSEXP, SEXP rootTissueDensitySEXP, SEXP rootLengthDensitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type Ksoil(KsoilSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type fineRootBiomass(fineRootBiomassSEXP);
+    Rcpp::traits::input_parameter< double >::type lai(laiSEXP);
+    Rcpp::traits::input_parameter< double >::type N(NSEXP);
+    Rcpp::traits::input_parameter< double >::type specificRootLength(specificRootLengthSEXP);
+    Rcpp::traits::input_parameter< double >::type rootTissueDensity(rootTissueDensitySEXP);
+    Rcpp::traits::input_parameter< double >::type rootLengthDensity(rootLengthDensitySEXP);
+    rcpp_result_gen = Rcpp::wrap(rhizosphereMaximumConductance(Ksoil, fineRootBiomass, lai, N, specificRootLength, rootTissueDensity, rootLengthDensity));
+    return rcpp_result_gen;
+END_RCPP
+}
 // fineRootSoilVolume
 double fineRootSoilVolume(double fineRootBiomass, double specificRootLength, double rootLengthDensity);
 RcppExport SEXP _medfate_fineRootSoilVolume(SEXP fineRootBiomassSEXP, SEXP specificRootLengthSEXP, SEXP rootLengthDensitySEXP) {
@@ -4498,6 +4515,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_fineRootHalfDistance", (DL_FUNC) &_medfate_fineRootHalfDistance, 1},
     {"_medfate_fineRootAreaIndex", (DL_FUNC) &_medfate_fineRootAreaIndex, 6},
     {"_medfate_fineRootBiomassPerIndividual", (DL_FUNC) &_medfate_fineRootBiomassPerIndividual, 7},
+    {"_medfate_rhizosphereMaximumConductance", (DL_FUNC) &_medfate_rhizosphereMaximumConductance, 7},
     {"_medfate_fineRootSoilVolume", (DL_FUNC) &_medfate_fineRootSoilVolume, 3},
     {"_medfate_coarseRootSoilVolume", (DL_FUNC) &_medfate_coarseRootSoilVolume, 6},
     {"_medfate_coarseRootLengthsAdvanced", (DL_FUNC) &_medfate_coarseRootLengthsAdvanced, 4},

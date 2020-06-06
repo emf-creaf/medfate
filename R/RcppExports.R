@@ -693,6 +693,10 @@ root_fineRootBiomass <- function(Ksoil, krhizo, lai, N, specificRootLength, root
     .Call(`_medfate_fineRootBiomassPerIndividual`, Ksoil, krhizo, lai, N, specificRootLength, rootTissueDensity, rootLengthDensity)
 }
 
+root_rhizosphereMaximumConductance <- function(Ksoil, fineRootBiomass, lai, N, specificRootLength, rootTissueDensity, rootLengthDensity) {
+    .Call(`_medfate_rhizosphereMaximumConductance`, Ksoil, fineRootBiomass, lai, N, specificRootLength, rootTissueDensity, rootLengthDensity)
+}
+
 root_fineRootSoilVolume <- function(fineRootBiomass, specificRootLength, rootLengthDensity) {
     .Call(`_medfate_fineRootSoilVolume`, fineRootBiomass, specificRootLength, rootLengthDensity)
 }
