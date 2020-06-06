@@ -24,10 +24,14 @@ double leafStorageVolume(double LAI, double N, double SLA, double leafDensity);
 double leafStructuralBiomass(double LAI, double N, double SLA);
 double leafStarchCapacity(double LAI, double N, double SLA, double leafDensity);
 
-double sapwoodStorageVolume(double SA, double H, double Z, double woodDensity, double vessel2sapwood);
-double sapwoodStructuralBiomass(double SA, double H, double Z, double woodDensity);
-double sapwoodStructuralLivingBiomass(double SA, double H, double Z, double woodDensity, double vessel2sapwood);
-double sapwoodStarchCapacity(double SA, double H, double Z, double woodDensity, double vessel2sapwood);
+double sapwoodStorageVolume(double SA, double H, NumericVector L, NumericVector V, 
+                            double woodDensity, double vessel2sapwood);
+double sapwoodStructuralBiomass(double SA, double H, NumericVector L, NumericVector V, 
+                                double woodDensity);
+double sapwoodStructuralLivingBiomass(double SA, double H, NumericVector L, NumericVector V,
+                                      double woodDensity, double vessel2sapwood);
+double sapwoodStarchCapacity(double SA, double H, NumericVector L, NumericVector V, 
+                             double woodDensity, double vessel2sapwood);
 
 double sugarStarchDynamicsLeaf(double sugarConc, double starchConc, double eqSugarConc);
 double sugarStarchDynamicsStem(double sugarConc, double starchConc, double eqSugarConc);

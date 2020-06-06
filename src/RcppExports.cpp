@@ -155,46 +155,49 @@ BEGIN_RCPP
 END_RCPP
 }
 // sapwoodStructuralBiomass
-double sapwoodStructuralBiomass(double SA, double H, double Z, double woodDensity);
-RcppExport SEXP _medfate_sapwoodStructuralBiomass(SEXP SASEXP, SEXP HSEXP, SEXP ZSEXP, SEXP woodDensitySEXP) {
+double sapwoodStructuralBiomass(double SA, double H, NumericVector L, NumericVector V, double woodDensity);
+RcppExport SEXP _medfate_sapwoodStructuralBiomass(SEXP SASEXP, SEXP HSEXP, SEXP LSEXP, SEXP VSEXP, SEXP woodDensitySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type SA(SASEXP);
     Rcpp::traits::input_parameter< double >::type H(HSEXP);
-    Rcpp::traits::input_parameter< double >::type Z(ZSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type L(LSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type V(VSEXP);
     Rcpp::traits::input_parameter< double >::type woodDensity(woodDensitySEXP);
-    rcpp_result_gen = Rcpp::wrap(sapwoodStructuralBiomass(SA, H, Z, woodDensity));
+    rcpp_result_gen = Rcpp::wrap(sapwoodStructuralBiomass(SA, H, L, V, woodDensity));
     return rcpp_result_gen;
 END_RCPP
 }
 // sapwoodStructuralLivingBiomass
-double sapwoodStructuralLivingBiomass(double SA, double H, double Z, double woodDensity, double vessel2sapwood);
-RcppExport SEXP _medfate_sapwoodStructuralLivingBiomass(SEXP SASEXP, SEXP HSEXP, SEXP ZSEXP, SEXP woodDensitySEXP, SEXP vessel2sapwoodSEXP) {
+double sapwoodStructuralLivingBiomass(double SA, double H, NumericVector L, NumericVector V, double woodDensity, double vessel2sapwood);
+RcppExport SEXP _medfate_sapwoodStructuralLivingBiomass(SEXP SASEXP, SEXP HSEXP, SEXP LSEXP, SEXP VSEXP, SEXP woodDensitySEXP, SEXP vessel2sapwoodSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type SA(SASEXP);
     Rcpp::traits::input_parameter< double >::type H(HSEXP);
-    Rcpp::traits::input_parameter< double >::type Z(ZSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type L(LSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type V(VSEXP);
     Rcpp::traits::input_parameter< double >::type woodDensity(woodDensitySEXP);
     Rcpp::traits::input_parameter< double >::type vessel2sapwood(vessel2sapwoodSEXP);
-    rcpp_result_gen = Rcpp::wrap(sapwoodStructuralLivingBiomass(SA, H, Z, woodDensity, vessel2sapwood));
+    rcpp_result_gen = Rcpp::wrap(sapwoodStructuralLivingBiomass(SA, H, L, V, woodDensity, vessel2sapwood));
     return rcpp_result_gen;
 END_RCPP
 }
 // sapwoodStarchCapacity
-double sapwoodStarchCapacity(double SA, double H, double Z, double woodDensity, double vessel2sapwood);
-RcppExport SEXP _medfate_sapwoodStarchCapacity(SEXP SASEXP, SEXP HSEXP, SEXP ZSEXP, SEXP woodDensitySEXP, SEXP vessel2sapwoodSEXP) {
+double sapwoodStarchCapacity(double SA, double H, NumericVector L, NumericVector V, double woodDensity, double vessel2sapwood);
+RcppExport SEXP _medfate_sapwoodStarchCapacity(SEXP SASEXP, SEXP HSEXP, SEXP LSEXP, SEXP VSEXP, SEXP woodDensitySEXP, SEXP vessel2sapwoodSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type SA(SASEXP);
     Rcpp::traits::input_parameter< double >::type H(HSEXP);
-    Rcpp::traits::input_parameter< double >::type Z(ZSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type L(LSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type V(VSEXP);
     Rcpp::traits::input_parameter< double >::type woodDensity(woodDensitySEXP);
     Rcpp::traits::input_parameter< double >::type vessel2sapwood(vessel2sapwoodSEXP);
-    rcpp_result_gen = Rcpp::wrap(sapwoodStarchCapacity(SA, H, Z, woodDensity, vessel2sapwood));
+    rcpp_result_gen = Rcpp::wrap(sapwoodStarchCapacity(SA, H, L, V, woodDensity, vessel2sapwood));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -765,15 +768,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // forest2belowground
-NumericMatrix forest2belowground(List x, List soil, DataFrame SpParams);
-RcppExport SEXP _medfate_forest2belowground(SEXP xSEXP, SEXP soilSEXP, SEXP SpParamsSEXP) {
+NumericMatrix forest2belowground(List x, List soil);
+RcppExport SEXP _medfate_forest2belowground(SEXP xSEXP, SEXP soilSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
-    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
-    rcpp_result_gen = Rcpp::wrap(forest2belowground(x, soil, SpParams));
+    rcpp_result_gen = Rcpp::wrap(forest2belowground(x, soil));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1707,8 +1709,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // findRhizosphereMaximumConductance
-double findRhizosphereMaximumConductance(double averageResistancePercent, double n, double alpha, double krootmax, double rootc, double rootd, double kstemmax, double stemc, double stemd, double kleafmax, double leafc, double leafd);
-RcppExport SEXP _medfate_findRhizosphereMaximumConductance(SEXP averageResistancePercentSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP krootmaxSEXP, SEXP rootcSEXP, SEXP rootdSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP kleafmaxSEXP, SEXP leafcSEXP, SEXP leafdSEXP) {
+double findRhizosphereMaximumConductance(double averageResistancePercent, double n, double alpha, double krootmax, double rootc, double rootd, double kstemmax, double stemc, double stemd, double kleafmax, double leafc, double leafd, double initialValue);
+RcppExport SEXP _medfate_findRhizosphereMaximumConductance(SEXP averageResistancePercentSEXP, SEXP nSEXP, SEXP alphaSEXP, SEXP krootmaxSEXP, SEXP rootcSEXP, SEXP rootdSEXP, SEXP kstemmaxSEXP, SEXP stemcSEXP, SEXP stemdSEXP, SEXP kleafmaxSEXP, SEXP leafcSEXP, SEXP leafdSEXP, SEXP initialValueSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -1724,7 +1726,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type kleafmax(kleafmaxSEXP);
     Rcpp::traits::input_parameter< double >::type leafc(leafcSEXP);
     Rcpp::traits::input_parameter< double >::type leafd(leafdSEXP);
-    rcpp_result_gen = Rcpp::wrap(findRhizosphereMaximumConductance(averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd));
+    Rcpp::traits::input_parameter< double >::type initialValue(initialValueSEXP);
+    rcpp_result_gen = Rcpp::wrap(findRhizosphereMaximumConductance(averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, initialValue));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1777,18 +1780,15 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// maximumRootHydraulicConductance
-double maximumRootHydraulicConductance(double xylemConductivity, double Al2As, NumericVector v, NumericVector widths, double depthWidthRatio);
-RcppExport SEXP _medfate_maximumRootHydraulicConductance(SEXP xylemConductivitySEXP, SEXP Al2AsSEXP, SEXP vSEXP, SEXP widthsSEXP, SEXP depthWidthRatioSEXP) {
+// rootxylemConductanceProportions
+NumericVector rootxylemConductanceProportions(NumericVector L, NumericVector V);
+RcppExport SEXP _medfate_rootxylemConductanceProportions(SEXP LSEXP, SEXP VSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type xylemConductivity(xylemConductivitySEXP);
-    Rcpp::traits::input_parameter< double >::type Al2As(Al2AsSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type v(vSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type widths(widthsSEXP);
-    Rcpp::traits::input_parameter< double >::type depthWidthRatio(depthWidthRatioSEXP);
-    rcpp_result_gen = Rcpp::wrap(maximumRootHydraulicConductance(xylemConductivity, Al2As, v, widths, depthWidthRatio));
+    Rcpp::traits::input_parameter< NumericVector >::type L(LSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type V(VSEXP);
+    rcpp_result_gen = Rcpp::wrap(rootxylemConductanceProportions(L, V));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2387,33 +2387,34 @@ BEGIN_RCPP
 END_RCPP
 }
 // spwbInput
-List spwbInput(DataFrame above, NumericMatrix V, List soil, DataFrame SpParams, List control);
-RcppExport SEXP _medfate_spwbInput(SEXP aboveSEXP, SEXP VSEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
+List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil, DataFrame SpParams, List control);
+RcppExport SEXP _medfate_spwbInput(SEXP aboveSEXP, SEXP Z50SEXP, SEXP Z95SEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< DataFrame >::type above(aboveSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type V(VSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Z50(Z50SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Z95(Z95SEXP);
     Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< List >::type control(controlSEXP);
-    rcpp_result_gen = Rcpp::wrap(spwbInput(above, V, soil, SpParams, control));
+    rcpp_result_gen = Rcpp::wrap(spwbInput(above, Z50, Z95, soil, SpParams, control));
     return rcpp_result_gen;
 END_RCPP
 }
 // growthInput
-List growthInput(DataFrame above, NumericVector Z, NumericMatrix V, List soil, DataFrame SpParams, List control);
-RcppExport SEXP _medfate_growthInput(SEXP aboveSEXP, SEXP ZSEXP, SEXP VSEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
+List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil, DataFrame SpParams, List control);
+RcppExport SEXP _medfate_growthInput(SEXP aboveSEXP, SEXP Z50SEXP, SEXP Z95SEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< DataFrame >::type above(aboveSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type Z(ZSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type V(VSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Z50(Z50SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Z95(Z95SEXP);
     Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< List >::type control(controlSEXP);
-    rcpp_result_gen = Rcpp::wrap(growthInput(above, Z, V, soil, SpParams, control));
+    rcpp_result_gen = Rcpp::wrap(growthInput(above, Z50, Z95, soil, SpParams, control));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -2454,6 +2455,36 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
     resetInputs(x, soil);
+    return R_NilValue;
+END_RCPP
+}
+// multiplyInputParam
+void multiplyInputParam(List x, List soil, String paramType, String paramName, int cohort, double f);
+RcppExport SEXP _medfate_multiplyInputParam(SEXP xSEXP, SEXP soilSEXP, SEXP paramTypeSEXP, SEXP paramNameSEXP, SEXP cohortSEXP, SEXP fSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< String >::type paramType(paramTypeSEXP);
+    Rcpp::traits::input_parameter< String >::type paramName(paramNameSEXP);
+    Rcpp::traits::input_parameter< int >::type cohort(cohortSEXP);
+    Rcpp::traits::input_parameter< double >::type f(fSEXP);
+    multiplyInputParam(x, soil, paramType, paramName, cohort, f);
+    return R_NilValue;
+END_RCPP
+}
+// modifyInputParam
+void modifyInputParam(List x, List soil, String paramType, String paramName, int cohort, double newValue);
+RcppExport SEXP _medfate_modifyInputParam(SEXP xSEXP, SEXP soilSEXP, SEXP paramTypeSEXP, SEXP paramNameSEXP, SEXP cohortSEXP, SEXP newValueSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< String >::type paramType(paramTypeSEXP);
+    Rcpp::traits::input_parameter< String >::type paramName(paramNameSEXP);
+    Rcpp::traits::input_parameter< int >::type cohort(cohortSEXP);
+    Rcpp::traits::input_parameter< double >::type newValue(newValueSEXP);
+    modifyInputParam(x, soil, paramType, paramName, cohort, newValue);
     return R_NilValue;
 END_RCPP
 }
@@ -2727,44 +2758,227 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// rootLengths
-NumericVector rootLengths(NumericVector v, NumericVector d, double depthWidthRatio);
-RcppExport SEXP _medfate_rootLengths(SEXP vSEXP, SEXP dSEXP, SEXP depthWidthRatioSEXP) {
+// individualRootedGroundArea
+NumericMatrix individualRootedGroundArea(NumericVector VolInd, NumericMatrix V, NumericVector d, NumericVector rfc);
+RcppExport SEXP _medfate_individualRootedGroundArea(SEXP VolIndSEXP, SEXP VSEXP, SEXP dSEXP, SEXP rfcSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type v(vSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
-    Rcpp::traits::input_parameter< double >::type depthWidthRatio(depthWidthRatioSEXP);
-    rcpp_result_gen = Rcpp::wrap(rootLengths(v, d, depthWidthRatio));
-    return rcpp_result_gen;
-END_RCPP
-}
-// xylemConductanceProportions
-NumericVector xylemConductanceProportions(NumericVector v, NumericVector d, double depthWidthRatio);
-RcppExport SEXP _medfate_xylemConductanceProportions(SEXP vSEXP, SEXP dSEXP, SEXP depthWidthRatioSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type v(vSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
-    Rcpp::traits::input_parameter< double >::type depthWidthRatio(depthWidthRatioSEXP);
-    rcpp_result_gen = Rcpp::wrap(xylemConductanceProportions(v, d, depthWidthRatio));
-    return rcpp_result_gen;
-END_RCPP
-}
-// horizontalProportions
-List horizontalProportions(NumericMatrix V, NumericVector LAIlive, double poolOverlapFactor);
-RcppExport SEXP _medfate_horizontalProportions(SEXP VSEXP, SEXP LAIliveSEXP, SEXP poolOverlapFactorSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type VolInd(VolIndSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type V(VSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type LAIlive(LAIliveSEXP);
-    Rcpp::traits::input_parameter< double >::type poolOverlapFactor(poolOverlapFactorSEXP);
-    rcpp_result_gen = Rcpp::wrap(horizontalProportions(V, LAIlive, poolOverlapFactor));
+    Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type rfc(rfcSEXP);
+    rcpp_result_gen = Rcpp::wrap(individualRootedGroundArea(VolInd, V, d, rfc));
     return rcpp_result_gen;
 END_RCPP
+}
+// specificRootSurfaceArea
+double specificRootSurfaceArea(double specificRootLength, double rootTissueDensity);
+RcppExport SEXP _medfate_specificRootSurfaceArea(SEXP specificRootLengthSEXP, SEXP rootTissueDensitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type specificRootLength(specificRootLengthSEXP);
+    Rcpp::traits::input_parameter< double >::type rootTissueDensity(rootTissueDensitySEXP);
+    rcpp_result_gen = Rcpp::wrap(specificRootSurfaceArea(specificRootLength, rootTissueDensity));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fineRootRadius
+double fineRootRadius(double specificRootLength, double rootTissueDensity);
+RcppExport SEXP _medfate_fineRootRadius(SEXP specificRootLengthSEXP, SEXP rootTissueDensitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type specificRootLength(specificRootLengthSEXP);
+    Rcpp::traits::input_parameter< double >::type rootTissueDensity(rootTissueDensitySEXP);
+    rcpp_result_gen = Rcpp::wrap(fineRootRadius(specificRootLength, rootTissueDensity));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fineRootHalfDistance
+double fineRootHalfDistance(double rootLengthDensity);
+RcppExport SEXP _medfate_fineRootHalfDistance(SEXP rootLengthDensitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type rootLengthDensity(rootLengthDensitySEXP);
+    rcpp_result_gen = Rcpp::wrap(fineRootHalfDistance(rootLengthDensity));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fineRootAreaIndex
+double fineRootAreaIndex(NumericVector Ksoil, NumericVector krhizo, double lai, double specificRootLength, double rootTissueDensity, double rootLengthDensity);
+RcppExport SEXP _medfate_fineRootAreaIndex(SEXP KsoilSEXP, SEXP krhizoSEXP, SEXP laiSEXP, SEXP specificRootLengthSEXP, SEXP rootTissueDensitySEXP, SEXP rootLengthDensitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type Ksoil(KsoilSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type krhizo(krhizoSEXP);
+    Rcpp::traits::input_parameter< double >::type lai(laiSEXP);
+    Rcpp::traits::input_parameter< double >::type specificRootLength(specificRootLengthSEXP);
+    Rcpp::traits::input_parameter< double >::type rootTissueDensity(rootTissueDensitySEXP);
+    Rcpp::traits::input_parameter< double >::type rootLengthDensity(rootLengthDensitySEXP);
+    rcpp_result_gen = Rcpp::wrap(fineRootAreaIndex(Ksoil, krhizo, lai, specificRootLength, rootTissueDensity, rootLengthDensity));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fineRootBiomassPerIndividual
+double fineRootBiomassPerIndividual(NumericVector Ksoil, NumericVector krhizo, double lai, double N, double specificRootLength, double rootTissueDensity, double rootLengthDensity);
+RcppExport SEXP _medfate_fineRootBiomassPerIndividual(SEXP KsoilSEXP, SEXP krhizoSEXP, SEXP laiSEXP, SEXP NSEXP, SEXP specificRootLengthSEXP, SEXP rootTissueDensitySEXP, SEXP rootLengthDensitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type Ksoil(KsoilSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type krhizo(krhizoSEXP);
+    Rcpp::traits::input_parameter< double >::type lai(laiSEXP);
+    Rcpp::traits::input_parameter< double >::type N(NSEXP);
+    Rcpp::traits::input_parameter< double >::type specificRootLength(specificRootLengthSEXP);
+    Rcpp::traits::input_parameter< double >::type rootTissueDensity(rootTissueDensitySEXP);
+    Rcpp::traits::input_parameter< double >::type rootLengthDensity(rootLengthDensitySEXP);
+    rcpp_result_gen = Rcpp::wrap(fineRootBiomassPerIndividual(Ksoil, krhizo, lai, N, specificRootLength, rootTissueDensity, rootLengthDensity));
+    return rcpp_result_gen;
+END_RCPP
+}
+// rhizosphereMaximumConductance
+NumericVector rhizosphereMaximumConductance(NumericVector Ksoil, NumericVector fineRootBiomass, double lai, double N, double specificRootLength, double rootTissueDensity, double rootLengthDensity);
+RcppExport SEXP _medfate_rhizosphereMaximumConductance(SEXP KsoilSEXP, SEXP fineRootBiomassSEXP, SEXP laiSEXP, SEXP NSEXP, SEXP specificRootLengthSEXP, SEXP rootTissueDensitySEXP, SEXP rootLengthDensitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type Ksoil(KsoilSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type fineRootBiomass(fineRootBiomassSEXP);
+    Rcpp::traits::input_parameter< double >::type lai(laiSEXP);
+    Rcpp::traits::input_parameter< double >::type N(NSEXP);
+    Rcpp::traits::input_parameter< double >::type specificRootLength(specificRootLengthSEXP);
+    Rcpp::traits::input_parameter< double >::type rootTissueDensity(rootTissueDensitySEXP);
+    Rcpp::traits::input_parameter< double >::type rootLengthDensity(rootLengthDensitySEXP);
+    rcpp_result_gen = Rcpp::wrap(rhizosphereMaximumConductance(Ksoil, fineRootBiomass, lai, N, specificRootLength, rootTissueDensity, rootLengthDensity));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fineRootSoilVolume
+double fineRootSoilVolume(double fineRootBiomass, double specificRootLength, double rootLengthDensity);
+RcppExport SEXP _medfate_fineRootSoilVolume(SEXP fineRootBiomassSEXP, SEXP specificRootLengthSEXP, SEXP rootLengthDensitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type fineRootBiomass(fineRootBiomassSEXP);
+    Rcpp::traits::input_parameter< double >::type specificRootLength(specificRootLengthSEXP);
+    Rcpp::traits::input_parameter< double >::type rootLengthDensity(rootLengthDensitySEXP);
+    rcpp_result_gen = Rcpp::wrap(fineRootSoilVolume(fineRootBiomass, specificRootLength, rootLengthDensity));
+    return rcpp_result_gen;
+END_RCPP
+}
+// coarseRootSoilVolume
+double coarseRootSoilVolume(double Kmax_rootxylem, double VCroot_kmax, double Al2As, NumericVector v, NumericVector d, NumericVector rfc);
+RcppExport SEXP _medfate_coarseRootSoilVolume(SEXP Kmax_rootxylemSEXP, SEXP VCroot_kmaxSEXP, SEXP Al2AsSEXP, SEXP vSEXP, SEXP dSEXP, SEXP rfcSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type Kmax_rootxylem(Kmax_rootxylemSEXP);
+    Rcpp::traits::input_parameter< double >::type VCroot_kmax(VCroot_kmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type Al2As(Al2AsSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type v(vSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type rfc(rfcSEXP);
+    rcpp_result_gen = Rcpp::wrap(coarseRootSoilVolume(Kmax_rootxylem, VCroot_kmax, Al2As, v, d, rfc));
+    return rcpp_result_gen;
+END_RCPP
+}
+// coarseRootLengthsAdvanced
+NumericVector coarseRootLengthsAdvanced(double VolInd, NumericVector v, NumericVector d, NumericVector rfc);
+RcppExport SEXP _medfate_coarseRootLengthsAdvanced(SEXP VolIndSEXP, SEXP vSEXP, SEXP dSEXP, SEXP rfcSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type VolInd(VolIndSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type v(vSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type rfc(rfcSEXP);
+    rcpp_result_gen = Rcpp::wrap(coarseRootLengthsAdvanced(VolInd, v, d, rfc));
+    return rcpp_result_gen;
+END_RCPP
+}
+// coarseRootLengthsBasic
+NumericVector coarseRootLengthsBasic(NumericVector v, NumericVector d, double depthWidthRatio);
+RcppExport SEXP _medfate_coarseRootLengthsBasic(SEXP vSEXP, SEXP dSEXP, SEXP depthWidthRatioSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type v(vSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
+    Rcpp::traits::input_parameter< double >::type depthWidthRatio(depthWidthRatioSEXP);
+    rcpp_result_gen = Rcpp::wrap(coarseRootLengthsBasic(v, d, depthWidthRatio));
+    return rcpp_result_gen;
+END_RCPP
+}
+// horizontalProportionsBasic
+List horizontalProportionsBasic(NumericVector poolProportions, NumericMatrix V, double LAIcell, double poolOverlapFactor);
+RcppExport SEXP _medfate_horizontalProportionsBasic(SEXP poolProportionsSEXP, SEXP VSEXP, SEXP LAIcellSEXP, SEXP poolOverlapFactorSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type poolProportions(poolProportionsSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type V(VSEXP);
+    Rcpp::traits::input_parameter< double >::type LAIcell(LAIcellSEXP);
+    Rcpp::traits::input_parameter< double >::type poolOverlapFactor(poolOverlapFactorSEXP);
+    rcpp_result_gen = Rcpp::wrap(horizontalProportionsBasic(poolProportions, V, LAIcell, poolOverlapFactor));
+    return rcpp_result_gen;
+END_RCPP
+}
+// horizontalProportionsAdvanced
+List horizontalProportionsAdvanced(NumericVector poolProportions, NumericVector VolInd, NumericVector N, NumericMatrix V, NumericVector d, NumericVector rfc);
+RcppExport SEXP _medfate_horizontalProportionsAdvanced(SEXP poolProportionsSEXP, SEXP VolIndSEXP, SEXP NSEXP, SEXP VSEXP, SEXP dSEXP, SEXP rfcSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type poolProportions(poolProportionsSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type VolInd(VolIndSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type N(NSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type V(VSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type rfc(rfcSEXP);
+    rcpp_result_gen = Rcpp::wrap(horizontalProportionsAdvanced(poolProportions, VolInd, N, V, d, rfc));
+    return rcpp_result_gen;
+END_RCPP
+}
+// saturatedConductivitySaxton
+double saturatedConductivitySaxton(double clay, double sand, double om, bool mmol);
+static SEXP _medfate_saturatedConductivitySaxton_try(SEXP claySEXP, SEXP sandSEXP, SEXP omSEXP, SEXP mmolSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< double >::type clay(claySEXP);
+    Rcpp::traits::input_parameter< double >::type sand(sandSEXP);
+    Rcpp::traits::input_parameter< double >::type om(omSEXP);
+    Rcpp::traits::input_parameter< bool >::type mmol(mmolSEXP);
+    rcpp_result_gen = Rcpp::wrap(saturatedConductivitySaxton(clay, sand, om, mmol));
+    return rcpp_result_gen;
+END_RCPP_RETURN_ERROR
+}
+RcppExport SEXP _medfate_saturatedConductivitySaxton(SEXP claySEXP, SEXP sandSEXP, SEXP omSEXP, SEXP mmolSEXP) {
+    SEXP rcpp_result_gen;
+    {
+        Rcpp::RNGScope rcpp_rngScope_gen;
+        rcpp_result_gen = PROTECT(_medfate_saturatedConductivitySaxton_try(claySEXP, sandSEXP, omSEXP, mmolSEXP));
+    }
+    Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
+    if (rcpp_isInterrupt_gen) {
+        UNPROTECT(1);
+        Rf_onintr();
+    }
+    bool rcpp_isLongjump_gen = Rcpp::internal::isLongjumpSentinel(rcpp_result_gen);
+    if (rcpp_isLongjump_gen) {
+        Rcpp::internal::resumeJump(rcpp_result_gen);
+    }
+    Rboolean rcpp_isError_gen = Rf_inherits(rcpp_result_gen, "try-error");
+    if (rcpp_isError_gen) {
+        SEXP rcpp_msgSEXP_gen = Rf_asChar(rcpp_result_gen);
+        UNPROTECT(1);
+        Rf_error(CHAR(rcpp_msgSEXP_gen));
+    }
+    UNPROTECT(1);
+    return rcpp_result_gen;
 }
 // thetaSATSaxton
 double thetaSATSaxton(double clay, double sand, double om);
@@ -4050,6 +4264,7 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("double(*hydrology_snowMelt)(double,double,double,double)");
         signatures.insert("NumericVector(*hydrology_soilWaterInputs)(List,String,double,double,double,double,double,double,double,double,double,bool,bool)");
         signatures.insert("NumericVector(*hydrology_soilInfiltrationPercolation)(List,String,double,bool,bool)");
+        signatures.insert("double(*soil_saturatedConductivitySX)(double,double,double,bool)");
         signatures.insert("double(*soil_thetaSATSX)(double,double,double)");
         signatures.insert("double(*soil_theta2psiSX)(double,double,double,double)");
         signatures.insert("double(*soil_psi2thetaSX)(double,double,double,double)");
@@ -4093,6 +4308,7 @@ RcppExport SEXP _medfate_RcppExport_registerCCallable() {
     R_RegisterCCallable("medfate", "_medfate_hydrology_snowMelt", (DL_FUNC)_medfate_snowMelt_try);
     R_RegisterCCallable("medfate", "_medfate_hydrology_soilWaterInputs", (DL_FUNC)_medfate_soilWaterInputs_try);
     R_RegisterCCallable("medfate", "_medfate_hydrology_soilInfiltrationPercolation", (DL_FUNC)_medfate_soilInfiltrationPercolation_try);
+    R_RegisterCCallable("medfate", "_medfate_soil_saturatedConductivitySX", (DL_FUNC)_medfate_saturatedConductivitySaxton_try);
     R_RegisterCCallable("medfate", "_medfate_soil_thetaSATSX", (DL_FUNC)_medfate_thetaSATSaxton_try);
     R_RegisterCCallable("medfate", "_medfate_soil_theta2psiSX", (DL_FUNC)_medfate_theta2psiSaxton_try);
     R_RegisterCCallable("medfate", "_medfate_soil_psi2thetaSX", (DL_FUNC)_medfate_psi2thetaSaxton_try);
@@ -4137,9 +4353,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_relativeSapViscosity", (DL_FUNC) &_medfate_relativeSapViscosity, 2},
     {"_medfate_leafStructuralBiomass", (DL_FUNC) &_medfate_leafStructuralBiomass, 3},
     {"_medfate_leafStarchCapacity", (DL_FUNC) &_medfate_leafStarchCapacity, 4},
-    {"_medfate_sapwoodStructuralBiomass", (DL_FUNC) &_medfate_sapwoodStructuralBiomass, 4},
-    {"_medfate_sapwoodStructuralLivingBiomass", (DL_FUNC) &_medfate_sapwoodStructuralLivingBiomass, 5},
-    {"_medfate_sapwoodStarchCapacity", (DL_FUNC) &_medfate_sapwoodStarchCapacity, 5},
+    {"_medfate_sapwoodStructuralBiomass", (DL_FUNC) &_medfate_sapwoodStructuralBiomass, 5},
+    {"_medfate_sapwoodStructuralLivingBiomass", (DL_FUNC) &_medfate_sapwoodStructuralLivingBiomass, 6},
+    {"_medfate_sapwoodStarchCapacity", (DL_FUNC) &_medfate_sapwoodStarchCapacity, 6},
     {"_medfate_criticalFirelineIntensity", (DL_FUNC) &_medfate_criticalFirelineIntensity, 2},
     {"_medfate_FCCSbehaviour", (DL_FUNC) &_medfate_FCCSbehaviour, 5},
     {"_medfate_rothermel", (DL_FUNC) &_medfate_rothermel, 11},
@@ -4183,7 +4399,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_LAIprofileVectors", (DL_FUNC) &_medfate_LAIprofileVectors, 4},
     {"_medfate_LAIprofile", (DL_FUNC) &_medfate_LAIprofile, 5},
     {"_medfate_forest2aboveground", (DL_FUNC) &_medfate_forest2aboveground, 4},
-    {"_medfate_forest2belowground", (DL_FUNC) &_medfate_forest2belowground, 3},
+    {"_medfate_forest2belowground", (DL_FUNC) &_medfate_forest2belowground, 2},
     {"_medfate_fuelConditions", (DL_FUNC) &_medfate_fuelConditions, 4},
     {"_medfate_EMCdesorption", (DL_FUNC) &_medfate_EMCdesorption, 2},
     {"_medfate_EMCadsorption", (DL_FUNC) &_medfate_EMCadsorption, 2},
@@ -4236,12 +4452,12 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_maximumSoilPlantConductance", (DL_FUNC) &_medfate_maximumSoilPlantConductance, 4},
     {"_medfate_soilPlantResistances", (DL_FUNC) &_medfate_soilPlantResistances, 17},
     {"_medfate_averageRhizosphereResistancePercent", (DL_FUNC) &_medfate_averageRhizosphereResistancePercent, 13},
-    {"_medfate_findRhizosphereMaximumConductance", (DL_FUNC) &_medfate_findRhizosphereMaximumConductance, 12},
+    {"_medfate_findRhizosphereMaximumConductance", (DL_FUNC) &_medfate_findRhizosphereMaximumConductance, 13},
     {"_medfate_taperFactorSavage", (DL_FUNC) &_medfate_taperFactorSavage, 1},
     {"_medfate_terminalConduitRadius", (DL_FUNC) &_medfate_terminalConduitRadius, 1},
     {"_medfate_referenceConductivityHeightFactor", (DL_FUNC) &_medfate_referenceConductivityHeightFactor, 2},
     {"_medfate_maximumStemHydraulicConductance", (DL_FUNC) &_medfate_maximumStemHydraulicConductance, 5},
-    {"_medfate_maximumRootHydraulicConductance", (DL_FUNC) &_medfate_maximumRootHydraulicConductance, 5},
+    {"_medfate_rootxylemConductanceProportions", (DL_FUNC) &_medfate_rootxylemConductanceProportions, 2},
     {"_medfate_stemWaterCapacity", (DL_FUNC) &_medfate_stemWaterCapacity, 3},
     {"_medfate_leafWaterCapacity", (DL_FUNC) &_medfate_leafWaterCapacity, 2},
     {"_medfate_erFactor", (DL_FUNC) &_medfate_erFactor, 5},
@@ -4268,11 +4484,13 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_layerSunlitFraction", (DL_FUNC) &_medfate_layerSunlitFraction, 3},
     {"_medfate_instantaneousLightExtinctionAbsortion", (DL_FUNC) &_medfate_instantaneousLightExtinctionAbsortion, 11},
     {"_medfate_checkSpeciesParameters", (DL_FUNC) &_medfate_checkSpeciesParameters, 2},
-    {"_medfate_spwbInput", (DL_FUNC) &_medfate_spwbInput, 5},
+    {"_medfate_spwbInput", (DL_FUNC) &_medfate_spwbInput, 6},
     {"_medfate_growthInput", (DL_FUNC) &_medfate_growthInput, 6},
     {"_medfate_forest2spwbInput", (DL_FUNC) &_medfate_forest2spwbInput, 5},
     {"_medfate_forest2growthInput", (DL_FUNC) &_medfate_forest2growthInput, 4},
     {"_medfate_resetInputs", (DL_FUNC) &_medfate_resetInputs, 2},
+    {"_medfate_multiplyInputParam", (DL_FUNC) &_medfate_multiplyInputParam, 6},
+    {"_medfate_modifyInputParam", (DL_FUNC) &_medfate_modifyInputParam, 6},
     {"_medfate_gdd", (DL_FUNC) &_medfate_gdd, 4},
     {"_medfate_leafDevelopmentStatus", (DL_FUNC) &_medfate_leafDevelopmentStatus, 3},
     {"_medfate_leafSenescenceStatus", (DL_FUNC) &_medfate_leafSenescenceStatus, 2},
@@ -4291,9 +4509,20 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_conicDistribution", (DL_FUNC) &_medfate_conicDistribution, 2},
     {"_medfate_ldrDistribution", (DL_FUNC) &_medfate_ldrDistribution, 3},
     {"_medfate_rootDistribution", (DL_FUNC) &_medfate_rootDistribution, 2},
-    {"_medfate_rootLengths", (DL_FUNC) &_medfate_rootLengths, 3},
-    {"_medfate_xylemConductanceProportions", (DL_FUNC) &_medfate_xylemConductanceProportions, 3},
-    {"_medfate_horizontalProportions", (DL_FUNC) &_medfate_horizontalProportions, 3},
+    {"_medfate_individualRootedGroundArea", (DL_FUNC) &_medfate_individualRootedGroundArea, 4},
+    {"_medfate_specificRootSurfaceArea", (DL_FUNC) &_medfate_specificRootSurfaceArea, 2},
+    {"_medfate_fineRootRadius", (DL_FUNC) &_medfate_fineRootRadius, 2},
+    {"_medfate_fineRootHalfDistance", (DL_FUNC) &_medfate_fineRootHalfDistance, 1},
+    {"_medfate_fineRootAreaIndex", (DL_FUNC) &_medfate_fineRootAreaIndex, 6},
+    {"_medfate_fineRootBiomassPerIndividual", (DL_FUNC) &_medfate_fineRootBiomassPerIndividual, 7},
+    {"_medfate_rhizosphereMaximumConductance", (DL_FUNC) &_medfate_rhizosphereMaximumConductance, 7},
+    {"_medfate_fineRootSoilVolume", (DL_FUNC) &_medfate_fineRootSoilVolume, 3},
+    {"_medfate_coarseRootSoilVolume", (DL_FUNC) &_medfate_coarseRootSoilVolume, 6},
+    {"_medfate_coarseRootLengthsAdvanced", (DL_FUNC) &_medfate_coarseRootLengthsAdvanced, 4},
+    {"_medfate_coarseRootLengthsBasic", (DL_FUNC) &_medfate_coarseRootLengthsBasic, 3},
+    {"_medfate_horizontalProportionsBasic", (DL_FUNC) &_medfate_horizontalProportionsBasic, 4},
+    {"_medfate_horizontalProportionsAdvanced", (DL_FUNC) &_medfate_horizontalProportionsAdvanced, 6},
+    {"_medfate_saturatedConductivitySaxton", (DL_FUNC) &_medfate_saturatedConductivitySaxton, 4},
     {"_medfate_thetaSATSaxton", (DL_FUNC) &_medfate_thetaSATSaxton, 3},
     {"_medfate_theta2psiSaxton", (DL_FUNC) &_medfate_theta2psiSaxton, 4},
     {"_medfate_psi2thetaSaxton", (DL_FUNC) &_medfate_psi2thetaSaxton, 4},

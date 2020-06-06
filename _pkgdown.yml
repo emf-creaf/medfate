@@ -63,6 +63,9 @@ reference:
   - starts_with("growth")
   - starts_with("plot.spwb")
   - starts_with("plot.growth")
+  - starts_with("resetInputs")
+  - starts_with("extractSubdaily")
+  
 
 - title: Phenology
   desc:  Leaf phenology processes
@@ -91,6 +94,11 @@ reference:
   contents:
   - starts_with("transp_")
 
+- title: Carbon balance
+  desc: Carbon balance processes
+  contents:
+  - starts_with("carbon_")
+  
 - title: Fire hazard
   desc:  Fuel characteristics and fire hazard
   contents:

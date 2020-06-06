@@ -31,8 +31,8 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   //Number of soil layers
   int nlayers = Rcpp::as<Rcpp::NumericVector>(soil["dVec"]).size();
   
-  List below = x["below"];
-  NumericMatrix Wpool = below["Wpool"];
+  List belowLayers = x["belowLayers"];
+  NumericMatrix Wpool = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["Wpool"]);
   NumericVector Wsoil = soil["W"];
 
   //Vegetation input
@@ -171,8 +171,8 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double tminPrev, doub
   //Number of soil layers
   int nlayers = Rcpp::as<Rcpp::NumericVector>(soil["dVec"]).size();
 
-  List below = x["below"];
-  NumericMatrix Wpool = below["Wpool"];
+  List belowLayers = x["belowLayers"];
+  NumericMatrix Wpool = belowLayers["Wpool"];
   NumericVector Wsoil = soil["W"];
   
   //Vegetation input
@@ -392,12 +392,12 @@ void checkspwbInput(List x, List soil, String transpirationMode, String soilFunc
   if(!above.containsElementNamed("CR")) stop("CR missing in spwbInput$above");
   if(!above.containsElementNamed("H")) stop("H missing in spwbInput$above");
   
-  if(!x.containsElementNamed("below")) stop("below missing in spwbInput");
-  List below = Rcpp::as<Rcpp::List>(x["below"]);
-  if(!below.containsElementNamed("V")) stop("V missing in spwbInput$below");
+  if(!x.containsElementNamed("belowLayers")) stop("belowLayers missing in spwbInput");
+  List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
+  if(!belowLayers.containsElementNamed("V")) stop("V missing in spwbInput$belowLayers");
   if(transpirationMode=="Sperry"){
-    if(!below.containsElementNamed("VGrhizo_kmax")) stop("VGrhizo_kmax missing in spwbInput$below");
-    if(!below.containsElementNamed("VCroot_kmax")) stop("VCroot_kmax missing in spwbInput$below");
+    if(!belowLayers.containsElementNamed("VGrhizo_kmax")) stop("VGrhizo_kmax missing in spwbInput$belowLayers");
+    if(!belowLayers.containsElementNamed("VCroot_kmax")) stop("VCroot_kmax missing in spwbInput$belowLayers");
   }  
   
   if(!x.containsElementNamed("paramsPhenology")) stop("paramsPhenology missing in spwbInput");

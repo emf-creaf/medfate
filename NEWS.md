@@ -2,6 +2,12 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 1.0.1
+- New root functions
+- Bulk density stored in soil object initialization
+- Advanced plant water pools
+- Belowground inputs restructured
+
 # Version 1.0.0
 - Reorganization of growth function
 - Clarification of gross and net photosynthesis

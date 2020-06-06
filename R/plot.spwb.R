@@ -450,7 +450,7 @@ plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = F
       if(is.null(ylab)) ylab=.getYLab(type)
       return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
-  else if(type %in% c("SapwoodArea", "LeafArea","SAgrowth", "LAgrowth", "HuberValue")) {
+  else if(type %in% c("SapwoodArea", "LeafArea", "FineRootArea", "SAgrowth", "LAgrowth", "FRAgrowth", "HuberValue")) {
       OM = PlantGrowth[[type]][,cohorts,drop=FALSE]
       if(bySpecies) OM = .averageBySpecies(OM, spnames)
       if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
