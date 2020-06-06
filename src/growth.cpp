@@ -546,6 +546,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   String cavitationRefill = control["cavitationRefill"];
   bool taper = control["taper"];
   bool nonStomatalPhotosynthesisLimitation = control["nonStomatalPhotosynthesisLimitation"];
+  double averageFracRhizosphereResistance = control["averageFracRhizosphereResistance"];
   double nonSugarConc = control["nonSugarConc"];
   double equilibriumLeafTotalConc = control["equilibriumLeafTotalConc"];
   double equilibriumSapwoodTotalConc = control["equilibriumSapwoodTotalConc"];
@@ -556,6 +557,8 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   NumericVector Ksat = soil["Ksat"];
   NumericVector dVec = soil["dVec"];
   NumericVector rfc = soil["rfc"];
+  NumericVector VG_n = soil["VG_n"];
+  NumericVector VG_alpha = soil["VG_alpha"];
   
   //Cohort info
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
@@ -579,16 +582,19 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   
   //Belowground parameters  
   DataFrame below = Rcpp::as<Rcpp::DataFrame>(x["below"]);
-  List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
   NumericVector Z95 = Rcpp::as<Rcpp::NumericVector>(below["Z95"]);
   NumericVector Z50 = Rcpp::as<Rcpp::NumericVector>(below["Z50"]);
+  NumericVector fineRootBiomass = Rcpp::as<Rcpp::NumericVector>(below["fineRootBiomass"]);
   NumericVector CRSV = Rcpp::as<Rcpp::NumericVector>(below["coarseRootSoilVolume"]);
+  Rcout<<fineRootBiomass<<"\n";
+  List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
   NumericMatrix V = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["V"]);
   NumericMatrix L = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["L"]);
   
   //Internal state variables
   DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
   NumericVector NSPL = Rcpp::as<Rcpp::NumericVector>(internalWater["NSPL"]);
+
   //Values at the end of the day (after calling spwb)
   NumericVector psiApoLeaf = Rcpp::as<Rcpp::NumericVector>(internalWater["LeafPsi"]);
   NumericVector psiApoStem = Rcpp::as<Rcpp::NumericVector>(internalWater["Stem1Psi"]);
@@ -605,6 +611,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   DataFrame internalAllocation = Rcpp::as<Rcpp::DataFrame>(x["internalAllocation"]);
   NumericVector allocationTarget = internalAllocation["allocationTarget"];
   NumericVector leafAreaTarget = internalAllocation["leafAreaTarget"];
+  NumericVector fineRootBiomassTarget = internalAllocation["fineRootBiomassTarget"];
   
   DataFrame internalPhenology = Rcpp::as<Rcpp::DataFrame>(x["internalPhenology"]);
   LogicalVector leafUnfolding = internalPhenology["leafUnfolding"];
@@ -645,6 +652,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   DataFrame paramsGrowth = Rcpp::as<Rcpp::DataFrame>(x["paramsGrowth"]);
   NumericVector WoodC = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["WoodC"]);
   NumericVector RGRmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRmax"]);
+  
   //Phenology parameters
   DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
   CharacterVector phenoType = Rcpp::as<Rcpp::CharacterVector>(paramsPhenology["PhenologyType"]);
@@ -655,12 +663,19 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   //Transpiration parameters
   DataFrame paramsTransp = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
   NumericVector Kmax_stemxylem = paramsTransp["Kmax_stemxylem"];
-  NumericVector VCleaf_kmax= paramsTransp["VCleaf_kmax"];
   NumericVector Plant_kmax= paramsTransp["Plant_kmax"];
+  NumericVector VCleaf_kmax = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_kmax"]);
+  NumericVector VCleaf_c = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_c"]);
+  NumericVector VCleaf_d = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCleaf_d"]);
   NumericVector VCstem_kmax = paramsTransp["VCstem_kmax"];
+  NumericVector VCstem_c = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_c"]);
+  NumericVector VCstem_d = Rcpp::as<Rcpp::NumericVector>(paramsTransp["VCstem_d"]);
   NumericVector VCroot_kmaxVEC= paramsTransp["VCroot_kmax"];
-  NumericMatrix VGrhizo_kmax = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VGrhizo_kmax"]);
+  NumericVector VCroot_c = paramsTransp["VCroot_c"];
+  NumericVector VCroot_d = paramsTransp["VCroot_d"];
   NumericMatrix VCroot_kmax = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VCroot_kmax"]);
+  NumericMatrix VGrhizo_kmax = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["VGrhizo_kmax"]);
+
   int numLayers = VCroot_kmax.ncol();
   
   //Water storage parameters
@@ -707,7 +722,6 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   NumericVector Starch_max_sapwood(numCohorts,0.0);
   NumericVector B_struct_leaves(numCohorts,0.0);
   NumericVector B_struct_sapwood(numCohorts,0.0);
-  NumericVector B_struct_fineroots(numCohorts,0.0);
 
   double minimumLeafSugarConc = equilibriumLeafTotalConc - nonSugarConc;
   double minimumSapwoodSugarConc = equilibriumSapwoodTotalConc - nonSugarConc;
@@ -734,16 +748,14 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
       Starch_max_sapwood[j] = sapwoodStarchCapacity(SA[j], H[j],L(j,_),V(j,_),WoodDensity[j], 0.2)/Volume_sapwood[j];
       B_struct_leaves[j] = leafStructuralBiomass(LAI_expanded[j],N[j],SLA[j]);
       B_struct_sapwood[j] = sapwoodStructuralLivingBiomass(SA[j], H[j], L(j,_),V(j,_), WoodDensity[j], 0.5);
-      B_struct_fineroots[j] = fineRootBiomassPerIndividual(Ksat, VGrhizo_kmax(j,_), LAI_live[j], N[j], 
-                                                           SRL[j], FineRootDensity[j], RLD[j]);
 
       double labileMassLeafIni = (sugarLeaf[j]+starchLeaf[j])*(glucoseMolarMass*Volume_leaves[j]);
       double labileMassSapwoodIni = (sugarSapwood[j]+starchSapwood[j])*(glucoseMolarMass*Volume_sapwood[j]);
       
-      double B_total = (B_struct_leaves[j] + B_struct_sapwood[j] + B_struct_fineroots[j]+labileMassSapwoodIni+labileMassLeafIni);
+      double B_total = (B_struct_leaves[j] + B_struct_sapwood[j] + fineRootBiomass[j]+labileMassSapwoodIni+labileMassLeafIni);
       
-      Rcout << j << " Lvol: "<< Volume_leaves[j] << " Svol: "<<Volume_sapwood[j]<< " LStarchMax: "<<Starch_max_leaves[j]
-            << " SStarchMax: "<<Starch_max_sapwood[j]<< " Bleaf "<< B_struct_leaves[j]<< " Bsap "<< B_struct_sapwood[j]<< " Bfr "<< B_struct_fineroots[j]<<"\n";
+      // Rcout << j << " Lvol: "<< Volume_leaves[j] << " Svol: "<<Volume_sapwood[j]<< " LStarchMax: "<<Starch_max_leaves[j]
+      //       << " SStarchMax: "<<Starch_max_sapwood[j]<< " Bleaf "<< B_struct_leaves[j]<< " Bsap "<< B_struct_sapwood[j]<< " Bfr "<< B_struct_fineroots[j]<<"\n";
       
       double leafRespDay = 0.0;
       // double sfrRespDay = 0.0;
@@ -782,7 +794,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
         //Respiratory biomass (g dw · ind-1)
         double B_resp_leaves = B_struct_leaves[j] + leafSugarMassStep;
         double B_resp_sapwood = B_struct_sapwood[j] + sapwoodSugarMassStep;
-        double B_resp_fineroots = B_struct_fineroots[j];
+        double B_resp_fineroots = fineRootBiomass[j];
         double QR = qResp(Tcan[s]);
         double leafRespStep = 0.0;
         if(LAlive>0.0) leafRespStep = B_resp_leaves*leaf_RR*QR/((double) numSteps);
@@ -979,11 +991,18 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
       Plant_kmax[j] = 1.0/((1.0/VCleaf_kmax[j])+(1.0/VCstem_kmax[j])+(1.0/VCroot_kmaxVEC[j]));
 
       //Update fine root area target      
-      // findRhizosphereMaximumConductance(averageFracRhizosphereResistance*100.0, VG_n[l], VG_alpha[l],
-      //                                   VCroot_kmaxVEC[j], VCroot_c[j], VCroot_d[j],
-      //                                   VCstem_kmax[j], VCstem_c[j], VCstem_d[j],
-      //                                   VCleaf_kmax[j], VCleaf_c[j], VCleaf_d[j]);
-      
+      // NumericVector VGrhizo_target(0.0, numLayers);
+      // for(int s=0;s<numLayers;s++) {
+      //   VGrhizo_target[s] = V(j,s)*findRhizosphereMaximumConductance(averageFracRhizosphereResistance*100.0, 
+      //                                                              VG_n[s], VG_alpha[s],
+      //                                                              VCroot_kmaxVEC[j], VCroot_c[j], VCroot_d[j],
+      //                                                              VCstem_kmax[j], VCstem_c[j], VCstem_d[j],
+      //                                                              VCleaf_kmax[j], VCleaf_c[j], VCleaf_d[j]);
+      // }
+      // fineRootBiomassTarget[j] = fineRootBiomassPerIndividual(Ksat, VGrhizo_target, LAI_live[j], N[j], 
+      //                                                         SRL[j], FineRootDensity[j], RLD[j]);
+      // 
+
       //Update leaf and stem osmotic water potential at full turgor
       LeafPI0[j] = osmoticWaterPotential(sugarLeaf[j], 20.0, nonSugarConc); //Osmotic potential at full turgor assuming RWC = 1 and 20ºC
       StemPI0[j] = osmoticWaterPotential(sugarSapwood[j], 20.0, nonSugarConc);

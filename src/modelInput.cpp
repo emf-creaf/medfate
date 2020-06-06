@@ -444,8 +444,8 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
         VCroot_kmax(c,_) = VCroottot_kmax[c]*xp;
         VGrhizo_kmax(c,l) = V(c,l)*findRhizosphereMaximumConductance(averageFracRhizosphereResistance*100.0, VG_n[l], VG_alpha[l],
                      VCroottot_kmax[c], VCroot_c[c], VCroot_d[c],
-                                                             VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
-                                                                                                  VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c]);
+                     VCstem_kmax[c], VCstem_c[c], VCstem_d[c],
+                     VCleaf_kmax[c], VCleaf_c[c], VCleaf_d[c]);
         VGrhizotot_kmax[c] += VGrhizo_kmax(c,l); 
       }
       FRB[c] = fineRootBiomassPerIndividual(Ksat, VGrhizo_kmax(c,_), LAI_live[c], N[c], 
@@ -622,14 +622,15 @@ DataFrame internalCarbonDataFrame(DataFrame above,
 
 
 DataFrame internalAllocationDataFrame(DataFrame above, 
-                                  DataFrame paramsAnatomydf,
-                                  DataFrame paramsTranspirationdf,
-                                  List control) {
+                                      DataFrame belowdf, 
+                                      DataFrame paramsAnatomydf,
+                                      DataFrame paramsTranspirationdf,
+                                      List control) {
   int numCohorts = above.nrow();
 
   NumericVector allocationTarget(numCohorts,0.0);
   NumericVector leafAreaTarget(numCohorts,0.0);
-  NumericVector rootAreaTarget(numCohorts, 0.0);
+  NumericVector fineRootBiomassTarget(numCohorts, 0.0);
   
   String transpirationMode = control["transpirationMode"];
   NumericVector SA = above["SA"];
@@ -646,6 +647,7 @@ DataFrame internalAllocationDataFrame(DataFrame above,
     String allocationStrategy = control["allocationStrategy"];
     NumericVector Plant_kmax = paramsTranspirationdf["Plant_kmax"];
     NumericVector VGrhizo_kmax = paramsTranspirationdf["VGrhizo_kmax"];
+    NumericVector fineRootBiomass = belowdf["fineRootBiomass"];
     // NumericVector longtermStorage(numCohorts,0.0);
     for(int c=0;c<numCohorts;c++){
       leafAreaTarget[c] = Al2As[c]*(SA[c]/10000.0);
@@ -654,12 +656,12 @@ DataFrame internalAllocationDataFrame(DataFrame above,
       } else if(allocationStrategy=="Al2As") {
         allocationTarget[c] = Al2As[c];
       }
-      // rootAreaTarget[c] = fineRootArea(VGrhizo_kmax[c],leafAreaTarget[c]); //m2
+      fineRootBiomassTarget[c] = fineRootBiomass[c];
     }
     
     df = DataFrame::create(Named("allocationTarget") = allocationTarget,
                            Named("leafAreaTarget") = leafAreaTarget,
-                           Named("rootAreaTarget") = rootAreaTarget);
+                           Named("fineRootBiomassTarget") = fineRootBiomassTarget);
   }
   df.attr("row.names") = above.attr("row.names");
   return(df);
@@ -917,7 +919,7 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
                                                          paramsAnatomydf, 
                                                          paramsWaterStoragedf,
                                                          paramsGrowthdf, control),
-                        _["internalAllocation"] = internalAllocationDataFrame(plantsdf,
+                        _["internalAllocation"] = internalAllocationDataFrame(plantsdf, belowdf,
                                                             paramsAnatomydf,
                                                             paramsTranspirationdf, control),
                         _["internalRings"] = ringList);
@@ -947,7 +949,7 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
                                                          paramsAnatomydf, 
                                                          paramsWaterStoragedf,
                                                          paramsGrowthdf, control),
-                         _["internalAllocation"] = internalAllocationDataFrame(plantsdf,
+                         _["internalAllocation"] = internalAllocationDataFrame(plantsdf, belowdf,
                                                          paramsAnatomydf,
                                                          paramsTranspirationdf, control),
                          _["internalRings"] = ringList);
