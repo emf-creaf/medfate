@@ -132,10 +132,13 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
   String transpirationMode = control["transpirationMode"];
   String allocationStrategy = control["allocationStrategy"];
   String cavitationRefill = control["cavitationRefill"];
+  bool plantWaterPools = control["plantWaterPools"];
   double nonSugarConc = control["nonSugarConc"];
   double equilibriumLeafTotalConc = control["equilibriumLeafTotalConc"];
   double equilibriumSapwoodTotalConc = control["equilibriumSapwoodTotalConc"];
-  double minimumSugarConc = control["minimumSugarConc"];
+  double minimumSugarGrowthLeaves = control["minimumSugarGrowthLeaves"];
+  double minimumStarchGrowthSapwood = control["minimumStarchGrowthSapwood"];
+  double minimumSugarGrowthFineRoots = control["minimumSugarGrowthFineRoots"];
 
   //Cohort info
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
@@ -161,11 +164,11 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
   
   //Belowground parameters  
   DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
+  NumericVector Z95 = Rcpp::as<Rcpp::NumericVector>(belowdf["Z95"]);
+  NumericVector Z50 = Rcpp::as<Rcpp::NumericVector>(belowdf["Z50"]);
   List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
   NumericMatrix V = belowLayers["V"];
   NumericMatrix L = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["L"]);
-  NumericVector Z95 = Rcpp::as<Rcpp::NumericVector>(belowdf["Z95"]);
-  NumericVector Z50 = Rcpp::as<Rcpp::NumericVector>(belowdf["Z50"]);
   
   //Internal state variables
   DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
@@ -333,11 +336,11 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
         double deltaLApheno = std::max(leafAreaTarget[j] - LAlive, 0.0);
         double deltaLAsink = std::min(deltaLApheno, SA[j]*RGRleafmax*(rleafcell/rleafcellmax));
         if(LAlive>0.0) {
-          double deltaLAavailable = std::max(0.0,((sugarLeaf[j] - minimumSugarConc)*(glucoseMolarMass*Volume_leaves[j]))/costPerLA);
+          double deltaLAavailable = std::max(0.0,((sugarLeaf[j] - minimumSugarGrowthLeaves)*(glucoseMolarMass*Volume_leaves[j]))/costPerLA);
           deltaLAgrowth += std::min(deltaLAsink, deltaLAavailable);
           growthCostLA += deltaLAgrowth*costPerLA;
         } else { //Grow at expense of stem sugar
-          double deltaLAavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarConc)*(glucoseMolarMass*Volume_sapwood[j]))/costPerLA);
+          double deltaLAavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarGrowthLeaves)*(glucoseMolarMass*Volume_sapwood[j]))/costPerLA);
           deltaLAgrowth += std::min(deltaLAsink, deltaLAavailable);
           growthCostSA += deltaLAgrowth*costPerLA;
         }
@@ -350,7 +353,7 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
         else deltaSAring = SAring[SAring.size()-1] - SAring[SAring.size()-2];
         double RGRcellmax = (2e-8/SA[j]);
         double deltaSAsink = (1e-8*(deltaSAring/10.0))*(RGRmax[j]/RGRcellmax); //Correction for the difference in the number of cells
-        double deltaSAavailable = std::max(0.0,((sugarSapwood[j]- minimumSugarConc)*(glucoseMolarMass*Volume_sapwood[j]))/costPerSA);
+        double deltaSAavailable = std::max(0.0,((starchSapwood[j]- minimumStarchGrowthSapwood)*(glucoseMolarMass*Volume_sapwood[j]))/costPerSA);
         deltaSAgrowth = std::min(deltaSAsink, deltaSAavailable);
         // Rcout<< SAring.size()<<" " <<j<< " "<< PlantPsi[j]<< " "<< LeafPI0[j]<<" dSAring "<<deltaSAring<< " dSAsink "<< deltaSAsink<<" dSAgrowth "<< deltaSAgrowth<<"\n";
         growthCostSA = deltaSAgrowth*costPerSA; //increase cost (may be non zero if leaf growth was charged onto sapwood)
@@ -362,9 +365,12 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
       
       //sugar mass balance
       double leafSugarMassDelta = leafAgG - leafRespDay - growthCostLA;
-      double sapwoodSugarMassDelta = - sapwoodResp - finerootResp - growthCostSA;
-      
+      double sapwoodSugarMassDelta =  - finerootResp;
+      double sapwoodStarchMassDelta = - sapwoodResp - growthCostSA;
+        
       sugarSapwood[j] += sapwoodSugarMassDelta/(Volume_sapwood[j]*glucoseMolarMass);
+      starchSapwood[j] += sapwoodStarchMassDelta/(Volume_sapwood[j]*glucoseMolarMass);
+      
       if(LAlive>0.0) {
         sugarLeaf[j] += leafSugarMassDelta/(Volume_leaves[j]*glucoseMolarMass);
         //floem transport to make sugar concentrations equal     
@@ -401,7 +407,6 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
       //Leaf growth
       LAlive += deltaLAgrowth; //Update leaf area
       LAexpanded +=deltaLAgrowth;
-      LAgrowth[j] += deltaLAgrowth/SA[j];//Store Leaf area growth rate in relation to sapwood area (m2/cm2)
       // Rcout<< j<<" "<< growthCostLA << " "<<deltaLAgrowth<< " "<<LAlive<<"\n";
       //Leaf senescence
       double propLeafSenescence = 0.0;
@@ -431,7 +436,6 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
       SA[j] = SA[j] - deltaSAturnover; //Update sapwood area
       //SA growth     
       SA[j] += deltaSAgrowth; //Update sapwood area
-      SAgrowth[j] += deltaSAgrowth/SA[j]; //Store sapwood area growth rate (cm2/cm2)
       //Decrease PLC due to new SA growth
       if(cavitationRefill=="growth") StemPLC[j] = std::max(0.0, StemPLC[j] - (deltaSAgrowth/SA[j]));
       
@@ -465,6 +469,8 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
       PlantSugarSapwood[j] = sugarSapwood[j];
       PlantStarchSapwood[j] = starchSapwood[j];
       SapwoodArea[j] = SA[j];
+      SAgrowth[j] += deltaSAgrowth/SA[j]; //Store sapwood area growth rate (cm2/cm2)
+      LAgrowth[j] += deltaLAgrowth/SA[j];//Store Leaf area growth rate in relation to sapwood area (m2/cm2)
       LeafArea[j] = LAexpanded;
       HuberValue[j] = 10000.0/Al2As[j];
       PlantLAIlive[j] = LAI_live[j];
@@ -480,6 +486,11 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
       // Rcout<<j<<" CBLeaf "<< sumLeaf << " ChLabLeaf: "<< (LabileMassLeaf[j] - labileMassLeafIni);
       // Rcout<<" CBSapwood "<< sumSapwood << " ChLabSapwood: "<< (LabileMassSapwood[j] - labileMassSapwoodIni)<<"\n";
     }
+  }
+  //Update pool proportions??
+  if(plantWaterPools) {
+    NumericVector poolProportions = Rcpp::as<Rcpp::NumericVector>(belowdf["poolProportions"]);
+    // for(int j=0;j<numCohorts;j++) poolProportions[j] = LAI_live[j]/sum(LAI_live);
   }
   
   //Needed with string vectors
@@ -548,6 +559,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   String transpirationMode = control["transpirationMode"];
   String allocationStrategy = control["allocationStrategy"];
   String cavitationRefill = control["cavitationRefill"];
+  bool plantWaterPools = control["plantWaterPools"];
   bool taper = control["taper"];
   bool nonStomatalPhotosynthesisLimitation = control["nonStomatalPhotosynthesisLimitation"];
   double averageFracRhizosphereResistance = control["averageFracRhizosphereResistance"];
@@ -587,11 +599,11 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   
   
   //Belowground parameters  
-  DataFrame below = Rcpp::as<Rcpp::DataFrame>(x["below"]);
-  NumericVector Z95 = Rcpp::as<Rcpp::NumericVector>(below["Z95"]);
-  NumericVector Z50 = Rcpp::as<Rcpp::NumericVector>(below["Z50"]);
-  NumericVector fineRootBiomass = Rcpp::as<Rcpp::NumericVector>(below["fineRootBiomass"]);
-  NumericVector CRSV = Rcpp::as<Rcpp::NumericVector>(below["coarseRootSoilVolume"]);
+  DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
+  NumericVector Z95 = Rcpp::as<Rcpp::NumericVector>(belowdf["Z95"]);
+  NumericVector Z50 = Rcpp::as<Rcpp::NumericVector>(belowdf["Z50"]);
+  NumericVector fineRootBiomass = Rcpp::as<Rcpp::NumericVector>(belowdf["fineRootBiomass"]);
+  NumericVector CRSV = Rcpp::as<Rcpp::NumericVector>(belowdf["coarseRootSoilVolume"]);
   List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
   NumericMatrix V = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["V"]);
   NumericMatrix L = Rcpp::as<Rcpp::NumericMatrix>(belowLayers["L"]);
@@ -1081,7 +1093,12 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
       // Rcout<<" CBSapwood "<< sumSapwood << " ChLabSapwood: "<< (LabileMassSapwood[j] - labileMassSapwoodIni)<<"\n";
     }
   }
-
+  //Update pool proportions??
+  if(plantWaterPools) {
+    NumericVector poolProportions = Rcpp::as<Rcpp::NumericVector>(belowdf["poolProportions"]);
+    // for(int j=0;j<numCohorts;j++) poolProportions[j] = LAI_live[j]/sum(LAI_live);
+  }
+  
   //Needed with string vectors
   above["Status"] = Status;
   
@@ -1640,7 +1657,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
     }
       
     for(int j=0;j<numCohorts;j++){
-      SAgrowthcum[j] += SAgrowth(i,j); //Store cumulative SA growth (for structural variable update)
+      SAgrowthcum[j] += SAgrowth(i,j)*SapwoodArea(i,j); //Store cumulative SA growth (for structural variable update)
     }
     
     //4 Update structural variables

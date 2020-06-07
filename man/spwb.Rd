@@ -160,14 +160,14 @@ data(exampleforestMED)
 #Default species parameterization
 data(SpParamsMED)
 
-#Initialize soil with default soil params (2 layers)
-examplesoil = soil(defaultSoilParams(2))
+#Initialize soil with default soil params (4 layers)
+examplesoil1 = soil(defaultSoilParams(4))
 
 #Initialize control parameters
 control = defaultControl()
 
 #Initialize input
-x1 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
+x1 = forest2spwbInput(exampleforestMED,examplesoil1, SpParamsMED, control)
 
 #Call simulation function
 S1<-spwb(x1, examplesoil, examplemeteo, latitude = 41.82592, elevation = 100)
@@ -180,8 +180,7 @@ summary(S1, freq="months",FUN=mean, output="Soil")
 
 
 \dontrun{
-#Initialize soil with default soil params (2 layers)
-examplesoil2 = soil(defaultSoilParams(2))
+examplesoil2 = soil(defaultSoilParams(4))
 
 #Switch to 'Sperry' transpiration mode
 control$transpirationMode="Sperry"
