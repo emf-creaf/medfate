@@ -107,16 +107,30 @@ data(exampleforestMED)
 #Default species parameterization
 data(SpParamsMED)
 
-#Initialize soil with default soil params (2 layers)
-examplesoil = soil(defaultSoilParams(2))
-
 #Initialize control parameters
 control = defaultControl()
 
-#Initialize input
-x = forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#Initialize soil with default soil params (4 layers)
+examplesoil1 = soil(defaultSoilParams(4))
+
+#Initialize vegetation input
+x1 = forest2growthInput(exampleforestMED, examplesoil1, SpParamsMED, control)
 
 #Call simulation function
-G1<-growth(x, examplesoil, examplemeteo, latitude = 41.82592, elevation = 100)
- 
+G1<-growth(x1, examplesoil1, examplemeteo, latitude = 41.82592, elevation = 100)
+
+\dontrun{
+#Switch to 'Sperry' transpiration mode
+control$transpirationMode="Sperry"
+
+#Initialize soil with default soil params (4 layers)
+examplesoil2 = soil(defaultSoilParams(4))
+
+#Initialize vegetation input
+x2 = forest2growthInput(exampleforestMED,examplesoil2, SpParamsMED, control)
+
+#Call simulation function (11 days)
+d = 100:110
+G2<-growth(x2, examplesoil2, examplemeteo[d,], latitude = 41.82592, elevation = 100)
+}
 }

@@ -371,8 +371,7 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
     for(int l=0;l<nlayers;l++) Wpool(c,l) = Wsoil[l]; //Init from soil state
   }
   
-  double sumLAI = sum(LAI_live);
-  NumericVector poolProportions = LAI_live/sumLAI;
+  NumericVector poolProportions = LAI_live/sum(LAI_live);
   
   List belowLayers;
   DataFrame belowdf;
@@ -1116,6 +1115,7 @@ void updateFineRootDistribution(List x, List soil) {
   }
   updateBelowgroundConductances(x, soil);
 }
+
 
 double getInputParamValue(List x, String paramType, String paramName, int cohort) {
   DataFrame paramdf = Rcpp::as<Rcpp::DataFrame>(x[paramType]);
