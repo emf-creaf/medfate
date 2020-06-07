@@ -487,10 +487,10 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
       // Rcout<<" CBSapwood "<< sumSapwood << " ChLabSapwood: "<< (LabileMassSapwood[j] - labileMassSapwoodIni)<<"\n";
     }
   }
-  //Update pool proportions
+  //Update pool proportions??
   if(plantWaterPools) {
     NumericVector poolProportions = Rcpp::as<Rcpp::NumericVector>(belowdf["poolProportions"]);
-    for(int j=0;j<numCohorts;j++) poolProportions[j] = LAI_live[j]/sum(LAI_live);
+    // for(int j=0;j<numCohorts;j++) poolProportions[j] = LAI_live[j]/sum(LAI_live);
   }
   
   //Needed with string vectors
@@ -1093,10 +1093,10 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
       // Rcout<<" CBSapwood "<< sumSapwood << " ChLabSapwood: "<< (LabileMassSapwood[j] - labileMassSapwoodIni)<<"\n";
     }
   }
-  //Update pool proportions
+  //Update pool proportions??
   if(plantWaterPools) {
     NumericVector poolProportions = Rcpp::as<Rcpp::NumericVector>(belowdf["poolProportions"]);
-    for(int j=0;j<numCohorts;j++) poolProportions[j] = LAI_live[j]/sum(LAI_live);
+    // for(int j=0;j<numCohorts;j++) poolProportions[j] = LAI_live[j]/sum(LAI_live);
   }
   
   //Needed with string vectors
