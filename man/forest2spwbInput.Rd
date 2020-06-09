@@ -75,6 +75,7 @@ Functions \code{forest2spwbInput()} and \code{spwbInput()} return a list of clas
   }
   \item{\code{paramsAnatomy}: A data frame with plant anatomy parameters for each cohort (only if \code{control$transpirationMode = "Sperry"}):
      \itemize{
+       \item{\code{Hmax}: Maximum plant height (cm).}
        \item{\code{Hmed}: Median plant height (cm).}
        \item{\code{Al2As}: Leaf area to sapwood area ratio (in m2·m-2).}
        \item{\code{SLA}: Specific leaf area (mm2/mg = m2/kg).}
@@ -141,7 +142,31 @@ Functions \code{forest2growthInput} and \code{growthInput} return a list of clas
     \item{\code{LA_dead}: Dead leaf area per individual (m2/ind).}
     \item{\code{SA}: Live sapwood area per individual (cm2/ind).} 
   }
-  }
+}
+\item{\code{paramsGrowth}: A data frame with growth parameters for each cohort:
+     \itemize{
+    \item{\code{WoodC}: Wood carbon content per dry weight (g C /g dry).}
+    \item{\code{RGRsapwoodmax}: Maximum relative growth rate (in basal area or sapwood area) (in cm2·cm-2).}
+    \item{\code{fHDmin}: Minimum value of the height-to-diameter ratio (dimensionless).}
+    \item{\code{fHDmax}: Maximum value of the height-to-diameter ratio (dimensionless).}
+     }
+}
+\item{\code{paramsAllometry}: A data frame with allometric parameters for each cohort:
+     \itemize{
+    \item{\code{Aash}: Regression coefficient relating the square of shrub height with shrub area.}
+    \item{\code{Absh}, \code{Bbsh}: Allometric coefficients relating phytovolume with dry weight of shrub individuals.}
+    \item{\code{Acr}, \code{B1cr}, \code{B2cr}, \code{B3cr}, \code{C1cr}, \code{C2cr}: Regression coefficients used to calculate crown ratio of trees.}
+    \item{\code{Acw}, \code{Bcw}: Regression coefficients used to calculated crown width of trees.}
+     }
+}
+\item {\code{internalAllocation}: A data frame with internal allocation variables for each cohort:
+     \itemize{
+       \item{\code{allocationTarget}: Value of the allocation target variable.}
+       \item{\code{leafAreaTarget}: Target leaf area (m2) per individual.}
+       \item{\code{fineRootBiomassTarget}: Target fine root biomass (g dry) per individual (only if \code{transpirationMode = "Sperry"}).}
+     }
+}
+\item{\code{internalCarbon} and \code{internalRings}: data structures to store other internal state variables.}
 }
 
 }

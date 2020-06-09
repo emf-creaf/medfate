@@ -57,17 +57,21 @@ A list, with the following options (default values in parentheses):
    \item{\code{thermalCapacityLAI (=1000000)}: Thermal canopy capacitance per LAI unit.}
    \item{\code{Catm (=386)}: Atmospheric CO2 concentration (in micromol·mol-1 = ppm).}
    \item{\code{fracLeafResistance (= NA)}: Fraction of plant total resistance (leaf+stem+root) that corresponds to leaves. This fraction is used if \code{VCleaf_kmax = NA}.}
-   \item{\code{fracRootResistance (=0.40)}: Fraction of plant total resistance (leaf+stem+root) that corresponds to root system. If \code{fracRootResistance = NA} then root conductance is calculated from root xylem conductivity and root distribution.}
+   \item{\code{fracRootResistance (=0.40)}: Fraction of plant total resistance (leaf+stem+root) that corresponds to root system.}
    \item{\code{averageFracRhizosphereResistance (=0.15)}: Fraction to total continuum (leaf+stem+root+rhizosphere) resistance that corresponds to rhizosphere (averaged across soil water potential values).}
 }
 \bold{Growth}:
 \itemize{
-   \item{\code{nonStomatalPhotosynthesisLimitation (=TRUE)}: A flag to apply limitations of photosynthesis when leaf sugar levels become too high.}
-   \item{\code{k_floem (= 3.0e-5)}: Phloem conductance (only for transpirationMode = "Sperry").}
-   \item{\code{nonSugarConc (= 0.3)}: Non-sugar (inorganic) solute concentration in cells.}
-   \item{\code{minimumSugarConc (= 0.3)}: Minimum sugar concentration for metabolic functioning (only for transpirationMode = "Sperry").}
-   \item{\code{equilibriumLeafTotalConc (= 0.8)}: Equilibrium solute concentration for leaves.}
-   \item{\code{equilibriumSapwoodTotalConc (= 0.6)}: Equilibrium solute concentration for leaves.}
+   \item{\code{allocationStrategy (="Plant_kmax")}: Strategy for allocation (either "Plant_kmax", for constant maximum plant conductance, or "Al2As" for constant Huber value).}
+   \item{\code{nonStomatalPhotosynthesisLimitation (=TRUE)}: A flag to apply limitations of pho-tosynthesis when leaf sugar levels become too high.}
+   \item{\code{floemConductanceFactor (= 0.2))}: Factor to transform stem xylem conductance to stem floem conductance (only for transpirationMode = "Sperry").}
+   \item{\code{nonSugarConcentration (= 0.3)}: Non-sugar (inorganic) solute concentration  (mol·l-1) in cells.}
+   \item{\code{equilibriumOsmoticConcentration [=  c(leaf = 0.8, sapwood = 0.6)]}: Equilibrium osmotic concentrations (mol·l-1) for leaf and sapwood cells. The difference helps floem transport. }
+   \item{\code{minimumSugarForGrowth [=   c(leaf = 0.25, sapwood=0.25, fineroot = 0.25)]}: Minimum concentration of sugars (mol·l-1) for growth to occur in different tissues.}
+   \item{\code{respirationRates [=   c(leaf = 0.00260274, sapwood = 6.849315e-05, fineroot = 0.002054795)]}: Maintenance respiration rates for different tissues (g gluc · g dry-1 · day-1).}
+   \item{\code{turnoverRates [=   c(sapwood = 0.0001261398, fineroot = 0.001897231)]}: Turnover rates (day-1) for sapwood and fineroots. Default are equivalent to 4.5\% and 50\% annual turnover for sapwood and fine roots, respectively.}
+   \item{\code{constructionCosts [=   c(leaf = 1.5, sapwood = 1.47, fineroot = 1.30)]}: Construction costs, including respiration and structural carbon, per dry weight of new tissue (g gluc · g dry -1).}
+   \item{\code{maximumRelativeGrowthRates [=   c(leaf = 0.01, sapwood = 0.001, fineroot = 0.1)]}: Maximum relative growth rates for leaves (m2 leaf ·cm-2 sapwood· day-1), sapwood (cm2 sapwood ·cm-2 sapwood· day-1) and fine roots (g dw · g dw -1 · day -1). Values for leaves and fine roots are used for all species, whereas the value for sapwood is the default used when relative growth rate is not specified via SpParams.}
 }
 }
 }

@@ -28,11 +28,10 @@ data("SpParamsUS")
   }
   \bold{Plant size}:
   \itemize{
-    \item{\code{Hmed}: Median plant height (in cm).}
     \item{\code{Hmax}: Maximum plant height (in cm).}
+    \item{\code{Hmed}: Median plant height (in cm).}
     \item{\code{Z50}: Rooting depth (in mm) corresponding to 50\% of fine roots.}
     \item{\code{Z95}: Rooting depth (in mm) corresponding to 95\% of fine roots.}
-    \item{\code{Zmax}: Maximum rooting depth (in mm).}
   }
   \bold{Shrub allometric coefficients} (calibrated for Catalonia):
   \itemize{
@@ -110,7 +109,7 @@ data("SpParamsUS")
   \bold{Growth}:
   \itemize{  
     \item{\code{WoodC}: Wood carbon content per dry weight (g C /g dry).}
-    \item{\code{RGRmax}: Maximum relative growth rate (in basal area or sapwood area) (in cm2·cm-2).}
+    \item{\code{RGRsapwoodmax}: Maximum relative growth rate (in basal area or sapwood area) (in cm2·cm-2).}
     \item{\code{fHDmin}: Minimum value of the height-to-diameter ratio (dimensionless).}
     \item{\code{fHDmax}: Maximum value of the height-to-diameter ratio (dimensionless).}
     }
