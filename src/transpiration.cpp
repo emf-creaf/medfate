@@ -158,7 +158,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   double verticalLayerSize = control["verticalLayerSize"];
   double thermalCapacityLAI = control["thermalCapacityLAI"];
   double defaultWindSpeed = control["defaultWindSpeed"];
-  double nonSugarConc = control["nonSugarConc"];
+  double nonSugarConcentration = control["nonSugarConcentration"];
   
   //Vegetation input
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
@@ -488,8 +488,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   NumericVector sugarLeaf(numCohorts, 0.0);
   NumericVector sugarSapwood(numCohorts, 0.0);
   for(int c=0;c<numCohorts;c++) {
-    sugarLeaf[c] = sugarConcentration(LeafPI0[c],20.0, nonSugarConc);
-    sugarSapwood[c] = sugarConcentration(StemPI0[c],20.0, nonSugarConc);
+    sugarLeaf[c] = sugarConcentration(LeafPI0[c],20.0, nonSugarConcentration);
+    sugarSapwood[c] = sugarConcentration(StemPI0[c],20.0, nonSugarConcentration);
   }
   
   //Transpiration and photosynthesis
@@ -570,8 +570,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
     
     for(int c=0;c<numCohorts;c++) { //Plant cohort loop
       //Current osmotic potentials
-      double leafpi0 = osmoticWaterPotential(sugarLeaf[c], Tcan[n], nonSugarConc);
-      double stempi0 = osmoticWaterPotential(sugarSapwood[c], Tcan[n], nonSugarConc);
+      double leafpi0 = osmoticWaterPotential(sugarLeaf[c], Tcan[n], nonSugarConcentration);
+      double stempi0 = osmoticWaterPotential(sugarSapwood[c], Tcan[n], nonSugarConcentration);
       
       
       //default values

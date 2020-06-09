@@ -1012,63 +1012,67 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
       LAI_live[j] = LAlive*N[j]/10000.0;
       LAI_expanded[j] = LAexpanded*N[j]/10000.0;
       LAI_dead[j] = LAdead*N[j]/10000.0;
-      //Update Huber value, stem and root hydraulic conductance
-      double oldstemR = 1.0/VCstem_kmax[j];
-      double oldrootR = 1.0/VCroot_kmaxVEC[j];
-      double oldrootprop = oldrootR/(oldrootR+oldstemR);
+      
       if(LAlive>0.0) {
+        //Update Huber value, stem and root hydraulic conductance
+        double oldstemR = 1.0/VCstem_kmax[j];
+        double oldrootR = 1.0/VCroot_kmaxVEC[j];
+        double oldrootprop = oldrootR/(oldrootR+oldstemR);
+        
         Al2As[j] = (LAlive)/(SA[j]/10000.0);
         VCstem_kmax[j]=maximumStemHydraulicConductance(Kmax_stemxylem[j], Hmed[j], Al2As[j] ,H[j], taper); 
-      }
-      //Update rhizosphere maximum conductance
-      NumericVector VGrhizo_new = rhizosphereMaximumConductance(Ksat, newFRB, LAI_live[j], N[j],
-                                                                SRL[j], FineRootDensity[j], RLD[j]);
-      for(int s=0;s<numLayers;s++) { 
-        VGrhizo_kmax(j,s) = VGrhizo_new[s];
-      }
-      VGrhizo_kmaxVEC[j] = sum(VGrhizo_kmax(j,_));
-      
-      //Update root maximum conductance so that it keeps the same resistance proportion with stem conductance
-      double newstemR = 1.0/VCstem_kmax[j];
-      double newrootR = oldrootprop*newstemR/(1.0-oldrootprop);
-      VCroot_kmaxVEC[j] = 1.0/newrootR;
-      //Update coarse root soil volume
-      CRSV[j] = coarseRootSoilVolume(Kmax_stemxylem[j], VCroot_kmaxVEC[j], Al2As[j],
-                                     V(j,_), dVec, rfc);
-      //Update coarse root length and root maximum conductance
-      L(j,_) = coarseRootLengthsAdvanced(CRSV[j], V(j,_), dVec, rfc); 
-      NumericVector xp = rootxylemConductanceProportions(L(j,_), V(j,_));
-      VCroot_kmax(j,_) = VCroot_kmaxVEC[j]*xp;
-      //Update Plant_kmax
-      Plant_kmax[j] = 1.0/((1.0/VCleaf_kmax[j])+(1.0/VCstem_kmax[j])+(1.0/VCroot_kmaxVEC[j]));
-      //Update leaf and stem osmotic water potential at full turgor
-      // LeafPI0[j] = osmoticWaterPotential(sugarLeaf[j], 20.0, nonSugarConc); //Osmotic potential at full turgor assuming RWC = 1 and 20ºC
-      // StemPI0[j] = osmoticWaterPotential(sugarSapwood[j], 20.0, nonSugarConc);
-      //Update non-stomatal photosynthesis limitations
-      if(nonStomatalPhotosynthesisLimitation) NSPL[j] = 1.0 - std::max(0.0, std::min(1.0, sugarLeaf[j] - 0.5)); //photosynthesis limited when conc > 0.5 and zero when conc > 1.5 mol·l-1
-      else NSPL[j] = 1.0;
-      
-      //3.5 Update allocation (leaf area and fine root biomass) targets
-      //Set leaf area target if bud formation is allowed
-      if(budFormation[j]) {
-        if(allocationStrategy == "Plant_kmax") {
-          leafAreaTarget[j] = LAlive*(Plant_kmax[j]/allocationTarget[j]);
-        } else if(allocationStrategy =="Al2As") {
-          leafAreaTarget[j] = (SA[j]/10000.0)*allocationTarget[j];
+        
+        //Update rhizosphere maximum conductance
+        NumericVector VGrhizo_new = rhizosphereMaximumConductance(Ksat, newFRB, LAI_live[j], N[j],
+                                                                  SRL[j], FineRootDensity[j], RLD[j]);
+        for(int s=0;s<numLayers;s++) { 
+          VGrhizo_kmax(j,s) = VGrhizo_new[s];
         }
+        VGrhizo_kmaxVEC[j] = sum(VGrhizo_kmax(j,_));
+        
+        //Update root maximum conductance so that it keeps the same resistance proportion with stem conductance
+        double newstemR = 1.0/VCstem_kmax[j];
+        double newrootR = oldrootprop*newstemR/(1.0-oldrootprop);
+        VCroot_kmaxVEC[j] = 1.0/newrootR;
+        //Update coarse root soil volume
+        CRSV[j] = coarseRootSoilVolume(Kmax_stemxylem[j], VCroot_kmaxVEC[j], Al2As[j],
+                                       V(j,_), dVec, rfc);
+        //Update coarse root length and root maximum conductance
+        L(j,_) = coarseRootLengthsAdvanced(CRSV[j], V(j,_), dVec, rfc); 
+        NumericVector xp = rootxylemConductanceProportions(L(j,_), V(j,_));
+        VCroot_kmax(j,_) = VCroot_kmaxVEC[j]*xp;
+        //Update Plant_kmax
+        Plant_kmax[j] = 1.0/((1.0/VCleaf_kmax[j])+(1.0/VCstem_kmax[j])+(1.0/VCroot_kmaxVEC[j]));
+        //Update leaf and stem osmotic water potential at full turgor
+        // LeafPI0[j] = osmoticWaterPotential(sugarLeaf[j], 20.0, nonSugarConc); //Osmotic potential at full turgor assuming RWC = 1 and 20ºC
+        // StemPI0[j] = osmoticWaterPotential(sugarSapwood[j], 20.0, nonSugarConc);
+        //Update non-stomatal photosynthesis limitations
+        if(nonStomatalPhotosynthesisLimitation) NSPL[j] = 1.0 - std::max(0.0, std::min(1.0, sugarLeaf[j] - 0.5)); //photosynthesis limited when conc > 0.5 and zero when conc > 1.5 mol·l-1
+        else NSPL[j] = 1.0;
+
+        //3.5 Update allocation (leaf area and fine root biomass) targets
+        //Set leaf area target if bud formation is allowed
+        if(budFormation[j]) {
+          if(allocationStrategy == "Plant_kmax") {
+            leafAreaTarget[j] = LAlive*(Plant_kmax[j]/allocationTarget[j]);
+          } else if(allocationStrategy =="Al2As") {
+            leafAreaTarget[j] = (SA[j]/10000.0)*allocationTarget[j];
+          }
+        }
+        //Update fine root biomass target      
+        NumericVector VGrhizo_target(numLayers,0.0);
+        for(int s=0;s<numLayers;s++) {
+          VGrhizo_target[s] = V(j,s)*findRhizosphereMaximumConductance(averageFracRhizosphereResistance*100.0,
+                                VG_n[s], VG_alpha[s],
+                                                 VCroot_kmaxVEC[j], VCroot_c[j], VCroot_d[j],
+                                                                                         VCstem_kmax[j], VCstem_c[j], VCstem_d[j],
+                                                                                                                              VCleaf_kmax[j], VCleaf_c[j], VCleaf_d[j],
+                                                                                                                                                                   log(VGrhizo_kmax(j,s)));
+        }
+        fineRootBiomassTarget[j] = fineRootBiomassPerIndividual(Ksat, VGrhizo_target, LAI_live[j], N[j],
+                                                                SRL[j], FineRootDensity[j], RLD[j]);
       }
-      //Update fine root biomass target      
-      NumericVector VGrhizo_target(numLayers,0.0);
-      for(int s=0;s<numLayers;s++) {
-        VGrhizo_target[s] = V(j,s)*findRhizosphereMaximumConductance(averageFracRhizosphereResistance*100.0,
-                                                                   VG_n[s], VG_alpha[s],
-                                                                   VCroot_kmaxVEC[j], VCroot_c[j], VCroot_d[j],
-                                                                   VCstem_kmax[j], VCstem_c[j], VCstem_d[j],
-                                                                   VCleaf_kmax[j], VCleaf_c[j], VCleaf_d[j],
-                                                                   log(VGrhizo_kmax(j,s)));
-      }
-      fineRootBiomassTarget[j] = fineRootBiomassPerIndividual(Ksat, VGrhizo_target, LAI_live[j], N[j],
-                                                              SRL[j], FineRootDensity[j], RLD[j]);
+      
 
       //3.6 Output variables by cohort
       PlantSugarLeaf[j] = sugarLeaf[j];
