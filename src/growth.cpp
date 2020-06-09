@@ -1449,19 +1449,19 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   
   //Anatomy parameters
   DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
+  NumericVector Hmax  = paramsAnatomy["Hmax"];
   NumericVector SLA = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["SLA"]);
+  NumericVector r635  = paramsAnatomy["r635"];
+  
   // NumericVector Al2As = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["Al2As"]);
   // NumericVector WoodDensity = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["WoodDensity"]);
 
   
   //Allometric parameters
   DataFrame paramsAllometries = Rcpp::as<Rcpp::DataFrame>(x["paramsAllometries"]);
-  NumericVector Hmax  = paramsAllometries["Hmax"];
-  NumericVector Zmax  = paramsAllometries["Zmax"];
   NumericVector Aash  = paramsAllometries["Aash"];
   NumericVector Absh  = paramsAllometries["Absh"];
   NumericVector Bbsh  = paramsAllometries["Bbsh"];
-  NumericVector r635  = paramsAllometries["r635"];
   NumericVector Acw  = paramsAllometries["Acw"];
   NumericVector Bcw  = paramsAllometries["Bcw"];
   NumericVector Acr  = paramsAllometries["Acr"];

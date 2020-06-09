@@ -68,6 +68,8 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams) {
 DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams) {
   IntegerVector SP = above["SP"];
   int numCohorts = SP.size();
+  NumericVector Hmax = cohortNumericParameter(SP, SpParams, "Hmax");
+  NumericVector Hmed = cohortNumericParameter(SP, SpParams, "Hmed"); //To correct conductivity
   NumericVector Al2As = cohortNumericParameter(SP, SpParams, "Al2As");
   NumericVector SLA = cohortNumericParameter(SP, SpParams, "SLA");
   NumericVector LeafDensity = cohortNumericParameter(SP, SpParams, "LeafDensity");
@@ -75,7 +77,6 @@ DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams) {
   NumericVector FineRootDensity = cohortNumericParameter(SP, SpParams, "FineRootDensity");
   NumericVector r635 = cohortNumericParameter(SP, SpParams, "r635");
   NumericVector leafwidth = cohortNumericParameter(SP, SpParams, "LeafWidth");
-  NumericVector Hmed = cohortNumericParameter(SP, SpParams, "Hmed"); //To correct conductivity
   NumericVector SRL = cohortNumericParameter(SP, SpParams, "SRL");  
   NumericVector RLD = cohortNumericParameter(SP, SpParams, "RLD");  
   
@@ -88,7 +89,7 @@ DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams) {
     if(NumericVector::is_na(RLD[c])) RLD[c] = 10.0;
   }
   DataFrame paramsAnatomydf = DataFrame::create(
-    _["Hmed"] = Hmed,
+    _["Hmax"] = Hmax,_["Hmed"] = Hmed,
     _["Al2As"] = Al2As, _["SLA"] = SLA, _["LeafWidth"] = leafwidth, 
     _["LeafDensity"] = LeafDensity, _["WoodDensity"] = WoodDensity, _["FineRootDensity"] = LeafDensity, 
     _["SRL"] = SRL, _["RLD"] = RLD,  
@@ -506,9 +507,6 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
 DataFrame paramsAllometries(DataFrame above, DataFrame SpParams) {
   IntegerVector SP = above["SP"];
   
-  NumericVector Hmax = cohortNumericParameter(SP, SpParams, "Hmax");
-  NumericVector Zmax = cohortNumericParameter(SP, SpParams, "Zmax");
-  NumericVector r635 = cohortNumericParameter(SP, SpParams, "r635");
   NumericVector Aash = cohortNumericParameter(SP, SpParams, "a_ash");
   NumericVector Absh = cohortNumericParameter(SP, SpParams, "a_bsh");
   NumericVector Bbsh = cohortNumericParameter(SP, SpParams, "b_bsh");
@@ -521,10 +519,7 @@ DataFrame paramsAllometries(DataFrame above, DataFrame SpParams) {
   NumericVector Acw = cohortNumericParameter(SP, SpParams, "a_cw");
   NumericVector Bcw = cohortNumericParameter(SP, SpParams, "b_cw");
 
-  DataFrame paramsAllometriesdf = DataFrame::create(_["Hmax"] = Hmax,
-                                                    _["Zmax"] = Zmax,
-                                                    _["Aash"] = Aash, _["Absh"] = Absh, _["Bbsh"] = Bbsh,
-                                                    _["r635"] = r635,
+  DataFrame paramsAllometriesdf = DataFrame::create(_["Aash"] = Aash, _["Absh"] = Absh, _["Bbsh"] = Bbsh,
                                                     _["Acr"] = Acr, _["B1cr"] = B1cr, _["B2cr"] = B2cr, _["B3cr"] = B3cr,
                                                     _["C1cr"] = C1cr, _["C2cr"] = C2cr, 
                                                     _["Acw"] = Acw, _["Bcw"] = Bcw);
