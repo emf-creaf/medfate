@@ -550,7 +550,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   bool taper = control["taper"];
   bool nonStomatalPhotosynthesisLimitation = control["nonStomatalPhotosynthesisLimitation"];
   double averageFracRhizosphereResistance = control["averageFracRhizosphereResistance"];
-  double k_floem = control["k_floem"];
+  double floemConductanceFactor = control["floemConductanceFactor"];
   double nonSugarConcentration = control["nonSugarConcentration"];
   NumericVector equilibriumOsmoticConcentration  = control["equilibriumOsmoticConcentration"];
   double equilibriumLeafTotalConc = equilibriumOsmoticConcentration["leaf"];
@@ -781,7 +781,9 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
       double leafRespDay = 0.0;
       // double sfrRespDay = 0.0;
       
- 
+      //Estimate floem conductance as a factor of stem conductance
+      double k_floem = VCstem_kmax[j]*floemConductanceFactor*(0.018/1000.0);
+        
       //3.0 Xylogenesis
       grow_ring(ringList[j], psiSympStem[j] ,tday, 10.0);
       double rleafcell = relative_expansion_rate(psiSympLeaf[j] ,tday, LeafPI0[j],0.5,0.05,5.0);
