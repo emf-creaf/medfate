@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 1.0.2
+
+
 # Version 1.0.1
 - New root functions
 - Bulk density stored in soil object initialization

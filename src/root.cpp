@@ -316,8 +316,8 @@ double frv(double vol, double B, NumericVector v, NumericVector ax, NumericVecto
  *    . sapwood area (cm2)
  *    . rooting depth (cm)
  */
-// [[Rcpp::export("root_coarseRootSoilVolume")]]
-double coarseRootSoilVolume(double Kmax_rootxylem, double VCroot_kmax, double Al2As,
+// [[Rcpp::export("root_coarseRootSoilVolumeFromConductance")]]
+double coarseRootSoilVolumeFromConductance(double Kmax_rootxylem, double VCroot_kmax, double Al2As,
                                    NumericVector v, NumericVector d, NumericVector rfc) {
   int numLayers = v.size();
   NumericVector ra(numLayers, 0.0);
@@ -361,8 +361,8 @@ double coarseRootSoilVolume(double Kmax_rootxylem, double VCroot_kmax, double Al
  * Returs: coarse root length in mm (same units as d)
  * 
  */
-// [[Rcpp::export("root_coarseRootLengthsAdvanced")]]
-NumericVector coarseRootLengthsAdvanced(double VolInd, NumericVector v, NumericVector d, NumericVector rfc) {
+// [[Rcpp::export("root_coarseRootLengthsFromVolume")]]
+NumericVector coarseRootLengthsFromVolume(double VolInd, NumericVector v, NumericVector d, NumericVector rfc) {
   int nlayers = v.size();
   NumericVector rl(nlayers), vl(nlayers), tl(nlayers);
   for(int j=0;j<nlayers;j++) {
@@ -375,8 +375,7 @@ NumericVector coarseRootLengthsAdvanced(double VolInd, NumericVector v, NumericV
   return(tl);
 }
 
-// [[Rcpp::export("root_coarseRootLengthsBasic")]]
-NumericVector coarseRootLengthsBasic(NumericVector v, NumericVector d, double depthWidthRatio = 1.0) {
+List coarseRootRadialAxialLengths(NumericVector v, NumericVector d, double depthWidthRatio = 1.0) {
   int nlayers = v.size();
   double maxRootDepth = 0.0;
   //Vertical lengths
@@ -411,49 +410,67 @@ NumericVector coarseRootLengthsBasic(NumericVector v, NumericVector d, double de
     rl[i] = maxRootDepth*depthWidthRatio*(r[i]/maxr);
     // Rcout<<rl[i]<<" ";
   }
-  // Rcout<<"\n";
-  //Weights
+  return(List::create(_["radial"] = rl, _["axial"] = vl));
+}
+
+// [[Rcpp::export("root_coarseRootLengths")]]
+NumericVector coarseRootLengths(NumericVector v, NumericVector d, double depthWidthRatio = 1.0) {
+  List radax = coarseRootRadialAxialLengths(v, d, depthWidthRatio);
+  NumericVector rl = radax["radial"];
+  NumericVector vl = radax["axial"];
+  int nlayers = rl.size();
   NumericVector l(nlayers, 0.0);
-  for(int i=0;i<nlayerseff;i++) {
+  for(int i=0;i<nlayers;i++) {
     l[i]= (rl[i]+vl[i]);
   }
   return(l);
 }
 
-
-// [[Rcpp::export("root_horizontalProportionsBasic")]]
-List horizontalProportionsBasic(NumericVector poolProportions, NumericMatrix V, 
-                                double LAIcell, double poolOverlapFactor) {
-  int numCohorts = V.nrow();
-  int numlayers = V.ncol();
-  double ropmax = (1.0 - exp(-(poolOverlapFactor*LAIcell)));
-  List l(numCohorts);
-  for(int coh=0;coh<numCohorts;coh++) {
-    NumericMatrix RHOP(numCohorts,numlayers);
-    double Vmax = 0.0;
-    for(int l=0;l<numlayers;l++) {
-      Vmax = std::max(Vmax, V(coh,l));
-    }
-    for(int l=0;l<numlayers;l++) {
-      double s = 0.0;
-      for(int c=0;c<numCohorts;c++) {
-        if(c!=coh) {
-          RHOP(c,l) = poolProportions[c]*ropmax*sqrt(V(coh,l)*V(c,l))/Vmax;
-          s +=RHOP(c,l);
-        } 
-      }
-      RHOP(coh,l) = 1.0 - s;
-    }
-    RHOP.attr("dimnames") = V.attr("dimnames");
-    l[coh] = RHOP;
+// [[Rcpp::export("root_coarseRootSoilVolume")]]
+double coarseRootSoilVolume(NumericVector v, NumericVector d, double depthWidthRatio = 1.0) {
+  List radax = coarseRootRadialAxialLengths(v, d, depthWidthRatio);
+  NumericVector rl = radax["radial"];
+  int nlayers = rl.size();
+  //Weights
+  double volInd = 0.0;
+  for(int i=0;i<nlayers;i++) {
+    volInd += 1e-9*(std::pow(rl[i],2.0)*PI)*d[i];
   }
-  l.attr("names") = rownames(V);
-  return(l);
+  return(volInd);
 }
 
-// [[Rcpp::export("root_horizontalProportionsAdvanced")]]
-List horizontalProportionsAdvanced(NumericVector poolProportions, NumericVector VolInd, NumericVector N, NumericMatrix V, 
-                                   NumericVector d, NumericVector rfc) {
+// List horizontalProportionsBasic(NumericVector poolProportions, NumericMatrix V, 
+//                                 double LAIcell, double poolOverlapFactor) {
+//   int numCohorts = V.nrow();
+//   int numlayers = V.ncol();
+//   double ropmax = (1.0 - exp(-(poolOverlapFactor*LAIcell)));
+//   List l(numCohorts);
+//   for(int coh=0;coh<numCohorts;coh++) {
+//     NumericMatrix RHOP(numCohorts,numlayers);
+//     double Vmax = 0.0;
+//     for(int l=0;l<numlayers;l++) {
+//       Vmax = std::max(Vmax, V(coh,l));
+//     }
+//     for(int l=0;l<numlayers;l++) {
+//       double s = 0.0;
+//       for(int c=0;c<numCohorts;c++) {
+//         if(c!=coh) {
+//           RHOP(c,l) = poolProportions[c]*ropmax*sqrt(V(coh,l)*V(c,l))/Vmax;
+//           s +=RHOP(c,l);
+//         } 
+//       }
+//       RHOP(coh,l) = 1.0 - s;
+//     }
+//     RHOP.attr("dimnames") = V.attr("dimnames");
+//     l[coh] = RHOP;
+//   }
+//   l.attr("names") = rownames(V);
+//   return(l);
+// }
+
+// [[Rcpp::export("root_horizontalProportions")]]
+List horizontalProportions(NumericVector poolProportions, NumericVector VolInd, NumericVector N, NumericMatrix V, 
+                           NumericVector d, NumericVector rfc) {
   
   int numCohorts = V.nrow();
   int numlayers = V.ncol();

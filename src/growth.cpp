@@ -580,6 +580,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   NumericVector rfc = soil["rfc"];
   NumericVector VG_n = soil["VG_n"];
   NumericVector VG_alpha = soil["VG_alpha"];
+  NumericVector Tsoil = soil["Temp"];
   
   //Cohort info
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
@@ -982,7 +983,8 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
       NumericVector newFRB(numLayers,0.0);
       for(int s=0;s<numLayers;s++) {
         double initialFRB = fineRootBiomass[j]*V(j,s);
-        newFRB[s] = std::max(0.0,initialFRB*(1.0 - dailyFineRootTurnoverProportion) + deltaFRBgrowth[s]);
+        double dayTurnover = dailyFineRootTurnoverProportion*std::max(0.0,(Tsoil[s]-5.0)/20.0);
+        newFRB[s] = std::max(0.0,initialFRB*(1.0 - dayTurnover) + deltaFRBgrowth[s]);
       }
       fineRootBiomass[j] = sum(newFRB);
       //Update vertical fine root distribution
@@ -1037,10 +1039,10 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
         double newrootR = oldrootprop*newstemR/(1.0-oldrootprop);
         VCroot_kmaxVEC[j] = 1.0/newrootR;
         //Update coarse root soil volume
-        CRSV[j] = coarseRootSoilVolume(Kmax_stemxylem[j], VCroot_kmaxVEC[j], Al2As[j],
-                                       V(j,_), dVec, rfc);
+        CRSV[j] = coarseRootSoilVolumeFromConductance(Kmax_stemxylem[j], VCroot_kmaxVEC[j], Al2As[j],
+                                                      V(j,_), dVec, rfc);
         //Update coarse root length and root maximum conductance
-        L(j,_) = coarseRootLengthsAdvanced(CRSV[j], V(j,_), dVec, rfc); 
+        L(j,_) = coarseRootLengthsFromVolume(CRSV[j], V(j,_), dVec, rfc); 
         NumericVector xp = rootxylemConductanceProportions(L(j,_), V(j,_));
         VCroot_kmax(j,_) = VCroot_kmaxVEC[j]*xp;
         //Update Plant_kmax
@@ -1108,8 +1110,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
     // for(int j=0;j<numCohorts;j++) poolProportions[j] = LAI_live[j]/sum(LAI_live);
     //Update RHOP
     List RHOP = belowLayers["RHOP"];
-    List newRHOP = horizontalProportionsAdvanced(poolProportions, CRSV, N, V, 
-                                                 dVec, rfc);
+    List newRHOP = horizontalProportions(poolProportions, CRSV, N, V,dVec, rfc);
     for(int j=0;j<numCohorts;j++) RHOP[j] = newRHOP[j];
   }
   
