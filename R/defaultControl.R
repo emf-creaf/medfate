@@ -6,7 +6,7 @@ defaultControl<-function() {
     defaultWindSpeed = 2.5, #m/s
     soilFunctions = "SX",
     
-    # swb
+    # For water balance
     snowpack = TRUE,
     drainage = TRUE,
     unlimitedSoilWater = FALSE,
@@ -40,13 +40,17 @@ defaultControl<-function() {
     allocationStrategy = "Plant_kmax",
     nonStomatalPhotosynthesisLimitation = TRUE,
     k_floem = 3.0e-5, # floem conductance per leaf area basis (l*m-2*MPa-1*s-1)
-    nonSugarConc = 0.25, # mol · l-1
-    equilibriumLeafTotalConc = 0.8, # (Paljakka et al. 2017)
-    equilibriumSapwoodTotalConc = 0.6, # (Paljakka et al. 2017)
-    minimumSugarGrowthLeaves = 0.25,
-    minimumStarchGrowthSapwood = 0.25,
-    minimumSugarGrowthFineRoots = 0.25
-    #     #For water balance
+    nonSugarConcentration = 0.25, # mol · l-1
+    equilibriumOsmoticConcentration = c(leaf = 0.8, sapwood = 0.6),  # (Paljakka et al. 2017)
+    minimumSugarForGrowth = c(leaf = 0.25, sapwood=0.25, fineroot = 0.25),
+    # Ogle and Pacala 2010, Tree Physiology 29, 587–605
+    respirationRates = c(leaf = 0.00260274, sapwood = 6.849315e-05, fineroot = 0.002054795), # g gluc · g dw -1 · day -1
+    turnoverRates = c(sapwood = 0.0001261398, # day-1 Equivalent to annual 4.5% 1-(1-0.045)^(1.0/365)
+                      fineroot = 0.001897231), #day-1 Equivalent to annual 50% 1-(1-0.5)^(1.0/365)
+    constructionCosts = c(leaf = 1.5, sapwood = 1.47, fineroot = 1.30), #  g gluc · g dw -1
+    maximumRelativeGrowthRates = c(leaf = 0.01, # m2 leaf ·cm-2 sapwood· day-1
+                                   sapwood = 0.001, # cm2 sapwood ·cm-2 sapwood· day-1
+                                   fineroot = 0.1) # g dw · g dw -1 · day -1
     #For forest dynamics
 #     freqZopt = 20,
 #     sap2tree=TRUE,

@@ -478,18 +478,24 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   return(below);
 }
 
-DataFrame paramsGrowth(DataFrame above, DataFrame SpParams) {
+DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
   IntegerVector SP = above["SP"];
   int numCohorts = SP.size();
   
   NumericVector WoodC = cohortNumericParameter(SP, SpParams, "WoodC");
-  NumericVector RGRmax = cohortNumericParameter(SP, SpParams, "RGRmax");
+  NumericVector RGRsapwoodmax = cohortNumericParameter(SP, SpParams, "RGRsapwoodmax");
   NumericVector fHDmin = cohortNumericParameter(SP, SpParams, "fHDmin");
   NumericVector fHDmax = cohortNumericParameter(SP, SpParams, "fHDmax");
   
-
+  NumericVector maximumRelativeGrowthRates = control["maximumRelativeGrowthRates"];
+  double RGRmax = maximumRelativeGrowthRates["sapwood"];
+  
+  for(int c=0;c<numCohorts;c++){
+    if(NumericVector::is_na(RGRsapwoodmax[c])) RGRsapwoodmax[c] = RGRmax;
+  }
+  
   DataFrame paramsGrowthdf = DataFrame::create(_["WoodC"] = WoodC, 
-                                               _["RGRmax"] = RGRmax,
+                                               _["RGRsapwoodmax"] = RGRsapwoodmax,
                                                _["fHDmin"] = fHDmin,
                                                _["fHDmax"] = fHDmax);
   paramsGrowthdf.attr("row.names") = above.attr("row.names");
@@ -555,7 +561,7 @@ DataFrame internalCarbonDataFrame(DataFrame above,
                                   List control) {
   int numCohorts = above.nrow();
 
-  double nonSugarConc = control["nonSugarConc"];
+  double nonSugarConcentration = control["nonSugarConcentration"];
   String transpirationMode = control["transpirationMode"];
   
   NumericVector WoodDensity = paramsAnatomydf["WoodDensity"];
@@ -599,9 +605,9 @@ DataFrame internalCarbonDataFrame(DataFrame above,
     // starch[c] = starchLeaf[c]+starchSapwood[c];
     
     //Sugar storage from PI0
-    double lconc = sugarConcentration(LeafPI0[c],20.0, nonSugarConc);
+    double lconc = sugarConcentration(LeafPI0[c],20.0, nonSugarConcentration);
     sugarLeaf[c] = lconc;
-    double sconc = sugarConcentration(StemPI0[c],20.0, nonSugarConc);
+    double sconc = sugarConcentration(StemPI0[c],20.0, nonSugarConcentration);
     sugarSapwood[c] = sconc;
     // sugar[c] = sugarLeaf[c] + sugarSapwood[c];
   }
@@ -836,7 +842,7 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   NumericVector SLA = paramsAnatomydf["SLA"];
   NumericVector Al2As = paramsAnatomydf["Al2As"];
   
-  DataFrame paramsGrowthdf = paramsGrowth(above, SpParams);
+  DataFrame paramsGrowthdf = paramsGrowth(above, SpParams, control);
 
   DataFrame paramsWaterStoragedf = paramsWaterStorage(above, SpParams, paramsAnatomydf);
   

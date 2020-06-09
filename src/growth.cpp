@@ -15,35 +15,7 @@
 #include <meteoland.h>
 using namespace Rcpp;
 
-//Ogle & Pacala 2010
-//Tree Physiology 29, 587–605
-const double leaf_RR = 0.00260274; // g gluc · g dw -1 · day -1
-const double sapwood_RR = 6.849315e-05; // g gluc · g dw -1 · day -1
-const double fineroot_RR = 0.002054795; // g gluc · g dw -1 · day -1
-// const double leaf_RR = 0.0260274; // g gluc · g dw -1 · day -1
-// const double sapwood_RR = 6.849315e-04; // g gluc · g dw -1 · day -1
-// const double fineroot_RR = 0.02054795; // g gluc · g dw -1 · day -1
 const double Q10_resp = 2.0;
-//construction costs
-const double leaf_CC = 1.5; // g gluc · g dw -1
-const double sapwood_CC = 1.47; // g gluc · g dw -1
-const double fineroots_CC = 1.30; // g gluc · g dw -1
-
-// const double leaf_RR = 0.05; // g gluc · g dw -1 · day -1
-// const double sapwood_RR = 0.005; // g gluc · g dw -1 · day -1
-// const double fineroot_RR = 0.05; // g gluc · g dw -1 · day -1
-
-//Maximum relative growth rate of leaves (should be faster than RGRsapwood)
-const double RGRleafmax = 0.05; // m2 leaf ·cm-2 sapwood· day-1
-//Maximum relative growth rate of fine roots
-const double RGRfinerootmax = 0.1; // g gw · g gw -1 · day -1
-
-//Ogle & Pacala 2010
-//Tree Physiology 29, 587–605
-const double dailySAturnoverProportion = 0.0001261398; //day-1 Equivalent to annual 4.5% 1-(1-0.045)^(1.0/365)
-const double dailyFineRootTurnoverProportion = 0.001897231; //day-1 Equivalent to annual 50% 1-(1-0.5)^(1.0/365)
-
-
 
 
 /**
@@ -133,13 +105,28 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
   String allocationStrategy = control["allocationStrategy"];
   String cavitationRefill = control["cavitationRefill"];
   bool plantWaterPools = control["plantWaterPools"];
-  double nonSugarConc = control["nonSugarConc"];
-  double equilibriumLeafTotalConc = control["equilibriumLeafTotalConc"];
-  double equilibriumSapwoodTotalConc = control["equilibriumSapwoodTotalConc"];
-  double minimumSugarGrowthLeaves = control["minimumSugarGrowthLeaves"];
-  double minimumStarchGrowthSapwood = control["minimumStarchGrowthSapwood"];
-  double minimumSugarGrowthFineRoots = control["minimumSugarGrowthFineRoots"];
-
+  double nonSugarConcentration = control["nonSugarConcentration"];
+  NumericVector equilibriumOsmoticConcentration  = control["equilibriumOsmoticConcentration"];
+  double equilibriumLeafTotalConc = equilibriumOsmoticConcentration["leaf"];
+  double equilibriumSapwoodTotalConc = equilibriumOsmoticConcentration["sapwood"];
+  NumericVector minimumSugarForGrowth = control["minimumSugarForGrowth"];
+  double minimumSugarGrowthLeaves = minimumSugarForGrowth["leaf"];
+  double minimumStarchGrowthSapwood = minimumSugarForGrowth["sapwood"];
+  double minimumSugarGrowthFineRoots = minimumSugarForGrowth["fineroot"];
+  NumericVector respirationRates = control["respirationRates"];
+  double leaf_RR = respirationRates["leaf"];
+  double sapwood_RR = respirationRates["sapwood"];
+  double fineroot_RR = respirationRates["fineroot"];
+  NumericVector turnoverRates = control["turnoverRates"];
+  double dailySapwoodTurnoverProportion = turnoverRates["sapwood"];
+  double dailyFineRootTurnoverProportion = turnoverRates["fineroot"];
+  NumericVector constructionCosts = control["constructionCosts"];
+  double leaf_CC = constructionCosts["leaf"];
+  double sapwood_CC = constructionCosts["sapwood"];
+  NumericVector maximumRGR = control["maximumRelativeGrowthRates"];
+  double RGRleafmax = maximumRGR["leaf"];
+  double RGRfinerootmax = maximumRGR["fineroot"];
+  
   //Cohort info
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   NumericVector SP = cohorts["SP"];
@@ -208,7 +195,7 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
   //Growth parameters
   DataFrame paramsGrowth = Rcpp::as<Rcpp::DataFrame>(x["paramsGrowth"]);
   NumericVector WoodC = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["WoodC"]);
-  NumericVector RGRmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRmax"]);
+  NumericVector RGRsapwoodmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRsapwoodmax"]);
   //Phenology parameters
   DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
   CharacterVector phenoType = Rcpp::as<Rcpp::CharacterVector>(paramsPhenology["PhenologyType"]);
@@ -257,8 +244,8 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
   NumericVector B_struct_sapwood(numCohorts,0.0);
   NumericVector B_struct_fineroots(numCohorts,0.0);
   
-  double minimumLeafSugarConc = equilibriumLeafTotalConc - nonSugarConc;
-  double minimumSapwoodSugarConc = equilibriumSapwoodTotalConc - nonSugarConc;
+  double minimumLeafSugarConc = equilibriumLeafTotalConc - nonSugarConcentration;
+  double minimumSapwoodSugarConc = equilibriumSapwoodTotalConc - nonSugarConcentration;
   
   double rleafcellmax = relative_expansion_rate(0.0 ,25, -2.0,0.5,0.05,5.0);
   
@@ -352,7 +339,7 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
         if(SAring.size()==1) deltaSAring = SAring[0];
         else deltaSAring = SAring[SAring.size()-1] - SAring[SAring.size()-2];
         double RGRcellmax = (2e-8/SA[j]);
-        double deltaSAsink = (1e-8*(deltaSAring/10.0))*(RGRmax[j]/RGRcellmax); //Correction for the difference in the number of cells
+        double deltaSAsink = (1e-8*(deltaSAring/10.0))*(RGRsapwoodmax[j]/RGRcellmax); //Correction for the difference in the number of cells
         double deltaSAavailable = std::max(0.0,((starchSapwood[j]- minimumStarchGrowthSapwood)*(glucoseMolarMass*Volume_sapwood[j]))/costPerSA);
         deltaSAgrowth = std::min(deltaSAsink, deltaSAavailable);
         // Rcout<< SAring.size()<<" " <<j<< " "<< PlantPsi[j]<< " "<< LeafPI0[j]<<" dSAring "<<deltaSAring<< " dSAsink "<< deltaSAsink<<" dSAgrowth "<< deltaSAgrowth<<"\n";
@@ -432,7 +419,7 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
       
       //SA growth senescense
       double SAprev = SA[j];
-      double deltaSAturnover = (dailySAturnoverProportion/(1.0+15.0*exp(-0.01*H[j])))*SA[j];
+      double deltaSAturnover = (dailySapwoodTurnoverProportion/(1.0+15.0*exp(-0.01*H[j])))*SA[j];
       SA[j] = SA[j] - deltaSAturnover; //Update sapwood area
       //SA growth     
       SA[j] += deltaSAgrowth; //Update sapwood area
@@ -460,9 +447,9 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
         Al2As[j] = (LAlive)/(SA[j]/10000.0);
       }
       //Update leaf and stem osmotic water potential at full turgor
-      LeafPI0[j] = osmoticWaterPotential(sugarLeaf[j], 20.0, nonSugarConc); //Osmotic potential at full turgor assuming RWC = 1 and 20ºC
-      StemPI0[j] = osmoticWaterPotential(sugarSapwood[j], 20.0, nonSugarConc);
-      
+      // LeafPI0[j] = osmoticWaterPotential(sugarLeaf[j], 20.0, nonSugarConcentration); //Osmotic potential at full turgor assuming RWC = 1 and 20ºC
+      // StemPI0[j] = osmoticWaterPotential(sugarSapwood[j], 20.0, nonSugarConcentration);
+      // 
       //Output variables
       PlantSugarLeaf[j] = sugarLeaf[j];
       PlantStarchLeaf[j] = starchLeaf[j];
@@ -563,13 +550,29 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   bool taper = control["taper"];
   bool nonStomatalPhotosynthesisLimitation = control["nonStomatalPhotosynthesisLimitation"];
   double averageFracRhizosphereResistance = control["averageFracRhizosphereResistance"];
-  double nonSugarConc = control["nonSugarConc"];
-  double equilibriumLeafTotalConc = control["equilibriumLeafTotalConc"];
-  double equilibriumSapwoodTotalConc = control["equilibriumSapwoodTotalConc"];
-  double minimumSugarGrowthLeaves = control["minimumSugarGrowthLeaves"];
-  double minimumStarchGrowthSapwood = control["minimumStarchGrowthSapwood"];
-  double minimumSugarGrowthFineRoots = control["minimumSugarGrowthFineRoots"];
   double k_floem = control["k_floem"];
+  double nonSugarConcentration = control["nonSugarConcentration"];
+  NumericVector equilibriumOsmoticConcentration  = control["equilibriumOsmoticConcentration"];
+  double equilibriumLeafTotalConc = equilibriumOsmoticConcentration["leaf"];
+  double equilibriumSapwoodTotalConc = equilibriumOsmoticConcentration["sapwood"];
+  NumericVector minimumSugarForGrowth = control["minimumSugarForGrowth"];
+  double minimumSugarGrowthLeaves = minimumSugarForGrowth["leaf"];
+  double minimumStarchGrowthSapwood = minimumSugarForGrowth["sapwood"];
+  double minimumSugarGrowthFineRoots = minimumSugarForGrowth["fineroot"];
+  NumericVector respirationRates = control["respirationRates"];
+  double leaf_RR = respirationRates["leaf"];
+  double sapwood_RR = respirationRates["sapwood"];
+  double fineroot_RR = respirationRates["fineroot"];
+  NumericVector turnoverRates = control["turnoverRates"];
+  double dailySapwoodTurnoverProportion = turnoverRates["sapwood"];
+  double dailyFineRootTurnoverProportion = turnoverRates["fineroot"];
+  NumericVector constructionCosts = control["constructionCosts"];
+  double leaf_CC = constructionCosts["leaf"];
+  double sapwood_CC = constructionCosts["sapwood"];
+  double fineroot_CC = constructionCosts["fineroot"];
+  NumericVector maximumRGR = control["maximumRelativeGrowthRates"];
+  double RGRleafmax = maximumRGR["leaf"];
+  double RGRfinerootmax = maximumRGR["fineroot"];
   
   //Soil info
   NumericVector Ksat = soil["Ksat"];
@@ -672,7 +675,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   //Growth parameters
   DataFrame paramsGrowth = Rcpp::as<Rcpp::DataFrame>(x["paramsGrowth"]);
   NumericVector WoodC = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["WoodC"]);
-  NumericVector RGRmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRmax"]);
+  NumericVector RGRsapwoodmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRsapwoodmax"]);
   
   //Phenology parameters
   DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
@@ -740,8 +743,8 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   NumericVector B_struct_leaves(numCohorts,0.0);
   NumericVector B_struct_sapwood(numCohorts,0.0);
 
-  double minimumLeafSugarConc = equilibriumLeafTotalConc - nonSugarConc;
-  double minimumSapwoodSugarConc = equilibriumSapwoodTotalConc - nonSugarConc;
+  double minimumLeafSugarConc = equilibriumLeafTotalConc - nonSugarConcentration;
+  double minimumSapwoodSugarConc = equilibriumSapwoodTotalConc - nonSugarConcentration;
 
   double rleafcellmax = relative_expansion_rate(0.0 ,25, -2.0,0.5,0.05,5.0);
 
@@ -852,9 +855,9 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
         if(fineRootBiomass[j] < fineRootBiomassTarget[j]) {
           for(int s = 0;s<numLayers;s++) {
             double deltaFRBsink = (1.0/((double) numSteps))*(V(j,s)*fineRootBiomass[j])*RGRfinerootmax*(rfineroot[s]/rleafcellmax);
-            double deltaFRBavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarGrowthFineRoots)*(glucoseMolarMass*Volume_sapwood[j]))/fineroots_CC);
+            double deltaFRBavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarGrowthFineRoots)*(glucoseMolarMass*Volume_sapwood[j]))/fineroot_CC);
             double deltaFRBgrowthStep = std::min(deltaFRBsink, deltaFRBavailable);
-            growthCostFRBStep += deltaFRBgrowthStep*fineroots_CC;
+            growthCostFRBStep += deltaFRBgrowthStep*fineroot_CC;
             deltaFRBgrowth[s] += deltaFRBgrowthStep;
             // if(deltaFRBgrowthStep>0) Rcout << deltaFRBgrowthStep<<"\n";
           }
@@ -867,7 +870,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
           if(SAring.size()==1) deltaSAring = SAring[0];
           else deltaSAring = SAring[SAring.size()-1] - SAring[SAring.size()-2];
           double RGRcellmax = (2e-8/SA[j]);
-          double deltaSAsink = (1e-8*(deltaSAring/10.0))*(RGRmax[j]/RGRcellmax)/((double) numSteps); //Correction for the difference in the number of cells
+          double deltaSAsink = (1e-8*(deltaSAring/10.0))*(RGRsapwoodmax[j]/RGRcellmax)/((double) numSteps); //Correction for the difference in the number of cells
           double deltaSAavailable = std::max(0.0,((starchSapwood[j]- minimumStarchGrowthSapwood)*(glucoseMolarMass*Volume_sapwood[j]))/costPerSA);
           double deltaSAgrowthStep = std::min(deltaSAsink, deltaSAavailable);
           growthCostSAStep += deltaSAgrowthStep*costPerSA; //increase cost (may be non zero if leaf growth was charged onto sapwood)
@@ -905,7 +908,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
           
           if(LAlive>0.0) {
             sugarLeaf[j] += leafSugarMassDeltaStep/ctl;
-            double ft = floemFlow(LeafSympPsiInst(j,s), StemSympPsiInst(j,s), sugarLeaf[j]/LeafSympRWCInst(j,s), sugarSapwood[j]/StemSympRWCInst(j,s), Tcan[s], k_floem, nonSugarConc)*LAlive; //flow as mol glucose per s
+            double ft = floemFlow(LeafSympPsiInst(j,s), StemSympPsiInst(j,s), sugarLeaf[j]/LeafSympRWCInst(j,s), sugarSapwood[j]/StemSympRWCInst(j,s), Tcan[s], k_floem, nonSugarConcentration)*LAlive; //flow as mol glucose per s
             // sugar-starch dynamics
             double conversionLeaf = sugarStarchDynamicsLeaf(sugarLeaf[j]/LeafSympRWCInst(j,s), starchLeaf[j]/LeafSympRWCInst(j,s), minimumLeafSugarConc);
             double starchLeafIncrease = conversionLeaf*LeafSympRWCInst(j,s);
@@ -987,7 +990,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
 
       //3.2.3 SA growth and senescense
       double SAprev = SA[j];
-      double deltaSAturnover = (dailySAturnoverProportion/(1.0+15.0*exp(-0.01*H[j])))*SA[j];
+      double deltaSAturnover = (dailySapwoodTurnoverProportion/(1.0+15.0*exp(-0.01*H[j])))*SA[j];
       SA[j] = SA[j] - deltaSAturnover; //Update sapwood area
       //SA growth     
       SA[j] += deltaSAgrowth; //Update sapwood area
@@ -1039,8 +1042,8 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
       //Update Plant_kmax
       Plant_kmax[j] = 1.0/((1.0/VCleaf_kmax[j])+(1.0/VCstem_kmax[j])+(1.0/VCroot_kmaxVEC[j]));
       //Update leaf and stem osmotic water potential at full turgor
-      LeafPI0[j] = osmoticWaterPotential(sugarLeaf[j], 20.0, nonSugarConc); //Osmotic potential at full turgor assuming RWC = 1 and 20ºC
-      StemPI0[j] = osmoticWaterPotential(sugarSapwood[j], 20.0, nonSugarConc);
+      // LeafPI0[j] = osmoticWaterPotential(sugarLeaf[j], 20.0, nonSugarConc); //Osmotic potential at full turgor assuming RWC = 1 and 20ºC
+      // StemPI0[j] = osmoticWaterPotential(sugarSapwood[j], 20.0, nonSugarConc);
       //Update non-stomatal photosynthesis limitations
       if(nonStomatalPhotosynthesisLimitation) NSPL[j] = 1.0 - std::max(0.0, std::min(1.0, sugarLeaf[j] - 0.5)); //photosynthesis limited when conc > 0.5 and zero when conc > 1.5 mol·l-1
       else NSPL[j] = 1.0;
@@ -1097,6 +1100,11 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   if(plantWaterPools) {
     NumericVector poolProportions = Rcpp::as<Rcpp::NumericVector>(belowdf["poolProportions"]);
     // for(int j=0;j<numCohorts;j++) poolProportions[j] = LAI_live[j]/sum(LAI_live);
+    //Update RHOP
+    List RHOP = belowLayers["RHOP"];
+    List newRHOP = horizontalProportionsAdvanced(poolProportions, CRSV, N, V, 
+                                                 dVec, rfc);
+    for(int j=0;j<numCohorts;j++) RHOP[j] = newRHOP[j];
   }
   
   //Needed with string vectors
@@ -1258,7 +1266,7 @@ void checkgrowthInput(List x, List soil, String transpirationMode, String soilFu
   if(!x.containsElementNamed("paramsGrowth")) stop("paramsGrowth missing in growthInput");
   DataFrame paramsGrowth = Rcpp::as<Rcpp::DataFrame>(x["paramsGrowth"]);
   if(!paramsGrowth.containsElementNamed("WoodC")) stop("WoodC missing in growthInput$paramsGrowth");
-  if(!paramsGrowth.containsElementNamed("RGRmax")) stop("RGRmax missing in growthInput$paramsGrowth");
+  if(!paramsGrowth.containsElementNamed("RGRsapwoodmax")) stop("RGRsapwoodmax missing in growthInput$paramsGrowth");
   
   if(!x.containsElementNamed("paramsAnatomy")) stop("paramsAnatomy missing in growthInput");
   DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
