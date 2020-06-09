@@ -27,14 +27,13 @@ NumericVector rhizosphereMaximumConductance(NumericVector Ksoil, NumericVector f
 
 double fineRootSoilVolume(double fineRootBiomass, double specificRootLength, double rootLengthDensity );
 
-double coarseRootSoilVolume(double Kmax_rootxylem, double VCroot_kmax, double Al2As,
-                            NumericVector v, NumericVector d, NumericVector rfc);
+double coarseRootSoilVolumeFromConductance(double Kmax_rootxylem, double VCroot_kmax, double Al2As,
+                                    NumericVector v, NumericVector d, NumericVector rfc);
+double coarseRootSoilVolume(NumericVector v, NumericVector d, double depthWidthRatio = 1.0);
 
-NumericVector coarseRootLengthsAdvanced(double VolInd, NumericVector v, NumericVector d, NumericVector rfc);
-NumericVector coarseRootLengthsBasic(NumericVector v, NumericVector d, double depthWidthRatio = 1.0);
+NumericVector coarseRootLengthsFromVolume(double VolInd, NumericVector v, NumericVector d, NumericVector rfc);
+NumericVector coarseRootLengths(NumericVector v, NumericVector d, double depthWidthRatio = 1.0);
 
-List horizontalProportionsBasic(NumericVector poolProportions, NumericMatrix V, 
-                                double LAIcell, double poolOverlapFactor);
-List horizontalProportionsAdvanced(NumericVector poolProportions, NumericVector VolInd, 
-                                   NumericVector N, NumericMatrix V, 
-                                   NumericVector d, NumericVector rfc);
+List horizontalProportions(NumericVector poolProportions, NumericVector VolInd, 
+                           NumericVector N, NumericMatrix V, 
+                           NumericVector d, NumericVector rfc);

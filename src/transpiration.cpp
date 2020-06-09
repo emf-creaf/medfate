@@ -154,7 +154,6 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   double costModifier = control["costModifier"];
   double gainModifier = control["gainModifier"];
   bool plantWaterPools = control["plantWaterPools"];
-  double poolOverlapFactor = control["poolOverlapFactor"];
   double verticalLayerSize = control["verticalLayerSize"];
   double thermalCapacityLAI = control["thermalCapacityLAI"];
   double defaultWindSpeed = control["defaultWindSpeed"];
@@ -1305,8 +1304,7 @@ List transpirationGranier(List x, List soil, double tday, double pet,
   String soilFunctions = control["soilFunctions"];
   double verticalLayerSize = control["verticalLayerSize"];
   bool plantWaterPools = control["plantWaterPools"];
-  double poolOverlapFactor = control["poolOverlapFactor"];
-  
+
   //Soil water at field capacity
   NumericVector Water_FC = waterFC(soil, soilFunctions);
   

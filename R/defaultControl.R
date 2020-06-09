@@ -11,7 +11,6 @@ defaultControl<-function() {
     drainage = TRUE,
     unlimitedSoilWater = FALSE,
     plantWaterPools = FALSE,
-    poolOverlapFactor = 0.5,
     leafPhenology = TRUE,
     unfoldingDD = 300,
     transpirationMode = "Granier",

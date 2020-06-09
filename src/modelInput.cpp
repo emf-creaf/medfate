@@ -351,7 +351,6 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   
   
   bool plantWaterPools = control["plantWaterPools"];
-  double poolOverlapFactor = control["poolOverlapFactor"];
   String transpirationMode = control["transpirationMode"];
   double averageFracRhizosphereResistance = control["averageFracRhizosphereResistance"];
   
@@ -378,22 +377,26 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   DataFrame belowdf;
   
   if(transpirationMode == "Granier") {
+    NumericVector CRSV(numCohorts);
     for(int c=0;c<numCohorts;c++){
-      L(c,_) = coarseRootLengthsBasic(V(c,_), dVec); 
+      L(c,_) = coarseRootLengths(V(c,_), dVec, 0.5); //Arbitrary ratio (to revise some day)
+      CRSV[c] = coarseRootSoilVolume(V(c,_), dVec, 0.5);
     }
     if(plantWaterPools) {
       double LAIcelllive = sum(LAI_live);
       belowdf = DataFrame::create(_["Z50"] = Z50,
                                   _["Z95"] = Z95,
+                                  _["coarseRootSoilVolume"] = CRSV,
                                   _["poolProportions"] = poolProportions);
-      List RHOP = horizontalProportionsBasic(poolProportions, V,LAIcelllive, poolOverlapFactor); 
+      List RHOP = horizontalProportions(poolProportions, CRSV, N, V, dVec, rfc);
       belowLayers = List::create(_["V"] = V,
                                  _["L"] = L,
                                  _["Wpool"] = Wpool,
                                  _["RHOP"] = RHOP);
     } else {
       belowdf = DataFrame::create(_["Z50"] = Z50,
-                                  _["Z95"] = Z95);
+                                  _["Z95"] = Z95,
+                                  _["coarseRootSoilVolume"] = CRSV);
       belowLayers = List::create(_["V"] = V,
                                  _["L"] = L,
                                  _["Wpool"] = Wpool);
@@ -426,8 +429,8 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
     NumericVector Ksat = soil["Ksat"];
     for(int c=0;c<numCohorts;c++)  {
       //We use Kmax_stemxylem instead of Kmax_rootxylem because of reliability
-      CRSV[c] = coarseRootSoilVolume(Kmax_stemxylem[c], VCroottot_kmax[c], Al2As[c],
-                                     V(c,_), dVec, rfc);
+      CRSV[c] = coarseRootSoilVolumeFromConductance(Kmax_stemxylem[c], VCroottot_kmax[c], Al2As[c],
+                                                    V(c,_), dVec, rfc);
     }
     
     
@@ -438,7 +441,7 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
     NumericVector Vc;
     for(int c=0;c<numCohorts;c++){
       Vc = V(c,_);
-      L(c,_) = coarseRootLengthsAdvanced(CRSV[c], V(c,_), dVec, rfc); 
+      L(c,_) = coarseRootLengthsFromVolume(CRSV[c], V(c,_), dVec, rfc); 
       NumericVector xp = rootxylemConductanceProportions(L(c,_), V(c,_));
       for(int l=0;l<nlayers;l++) {
         VCroot_kmax(c,_) = VCroottot_kmax[c]*xp;
@@ -463,7 +466,7 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
                                   _["fineRootBiomass"] = FRB,
                                   _["coarseRootSoilVolume"] = CRSV,
                                   _["poolProportions"] = poolProportions);
-      List RHOP = horizontalProportionsAdvanced(poolProportions, CRSV, N, V, dVec, rfc);
+      List RHOP = horizontalProportions(poolProportions, CRSV, N, V, dVec, rfc);
       belowLayers["RHOP"] = RHOP;
     } else {
       belowdf = DataFrame::create(_["Z50"]=Z50,

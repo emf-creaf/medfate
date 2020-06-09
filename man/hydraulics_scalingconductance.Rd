@@ -33,7 +33,7 @@ hydraulics_averageRhizosphereResistancePercent(krhizomax, n, alpha,
 hydraulics_findRhizosphereMaximumConductance(averageResistancePercent, n, alpha,
                                              krootmax, rootc, rootd,
                                              kstemmax, stemc, stemd,
-                                             kleafmax, leafc, leafd) 
+                                             kleafmax, leafc, leafd, initialValue = 0) 
 hydraulics_maximumStemHydraulicConductance(xylemConductivity, refheight, Al2As, height, 
                                            taper = FALSE)
 hydraulics_rootxylemConductanceProportions(L, V)
@@ -62,6 +62,7 @@ hydraulics_leafWaterCapacity(SLA, ld)
   \item{leafc, leafd}{Parameters of the Weibull function for leaves (leaf vulnerability curve).}
   \item{n, alpha}{Parameters of the Van Genuchten function (rhizosphere vulnerability curve).}
   \item{averageResistancePercent}{Average (across water potential values) resistance percent of the rhizosphere, with respect to total resistance (rhizosphere + root xylem + stem xylem).}
+  \item{initialValue}{Initial value of rhizosphere conductance.}
   \item{xylemConductivity}{Xylem conductivity as flow per length of conduit and pressure drop (in kg·m-1·s-1·MPa-1).}
   \item{Al2As}{Leaf area to sapwood area (in m2·m-2).}
   \item{height}{Plant height (in cm).}
