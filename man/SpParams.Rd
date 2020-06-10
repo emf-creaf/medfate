@@ -54,12 +54,15 @@ data("SpParamsUS")
   \bold{Anatomy}:
   \itemize{  
     \item{\code{SLA}: Specific leaf area (mm2/mg = m2/kg).}
-    \item{\code{Al2As}: Leaf area to sapwood area ratio (in m2·m-2).}
-    \item{\code{LeafWidth}: Leaf width (in cm).}
     \item{\code{LeafDensity}: Density of leaf tissue (dry weight over volume).}
     \item{\code{WoodDensity}: Wood density (at 0 percent humidity!).}
+    \item{\code{FineRootDensity}: Density of fine root tissue (dry weight over volume).}
     \item{\code{r635}: Ratio between the weight of leaves plus branches and the weight of leaves alone for branches of 6.35 mm.}
     \item{\code{pDead}: Proportion of total fine fuels that are dead}
+    \item{\code{Al2As}: Leaf area to sapwood area ratio (in m2·m-2).}
+    \item{\code{LeafWidth}: Leaf width (in cm).}
+    \item{\code{SRL}: Specific root length (cm/g).}
+    \item{\code{RLD}: Fine root length density (i.e. density of root length per soil volume) (cm·cm-3).}
   }
   \bold{Tissue moisture}:
   \itemize{  

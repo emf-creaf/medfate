@@ -361,7 +361,7 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
       if(LAlive>0.0) {
         sugarLeaf[j] += leafSugarMassDelta/(Volume_leaves[j]*glucoseMolarMass);
         //floem transport to make sugar concentrations equal     
-        double ff = (sugarLeaf[j]-sugarSapwood[j])/2.0;
+        double ff = (sugarLeaf[j]-sugarSapwood[j])/2.0; 
         sugarLeaf[j] -=ff;
         PlantSugarTransport[j] = (ff*Volume_leaves[j])/(3600.0*24.0); //mol · s-1
         sugarSapwood[j] +=(Volume_leaves[j]/Volume_sapwood[j])*ff;
