@@ -61,15 +61,12 @@ growth(x, soil, meteo,  latitude, elevation = NA, slope = NA, aspect = NA)
         \item{\code{"StarchLeaf"}: Starch concentration (mol·l-1) in leaves.}
         \item{\code{"SugarSapwood"}: Sugar concentration (mol·l-1) in sapwood.}
         \item{\code{"StarchSapwood"}: Starch concentration (mol·l-1) in sapwood.}
-        \item{\code{"LabileMassLeaf"}: Labile sugar/starch mass (g·ind-1) in leaves.}
-        \item{\code{"LabileMassSapwood"}: Labile sugar/starch mass (g·ind-1) in sapwood.}
     }
   \item{\code{"PlantGrowth"}: A list of daily growth results for plant cohorts, with elements:}
     \itemize{
         \item{\code{"SapwoodArea"}: Daily amount of sapwood area (in cm2) for an average individual of each plant cohort.}
         \item{\code{"LeafArea"}: Daily amount of leaf area (in m2) for an average individual of each plant cohort.}
         \item{\code{"FineRootArea"}: Daily amount of fine root area (in m2) for an average individual of each plant cohort (only for \code{transpirationMode = "Sperry"}).}
-        \item{\code{"HuberValue"}: Daily Huber value for each plant cohort.}
         \item{\code{"SAgrowth"}: Sapwood area relative growth rate (in cm2·cm-2·day-1) for an average individual of each plant cohort.}
         \item{\code{"LAgrowth"}: Leaf area growth relative to sapwood area (in m2·cm-2·day-1) for an average individual of each plant cohort.}
         \item{\code{"FRAgrowth"}: Fine root area growth relative to sapwood area (in m2·cm-2·day-1) for an average individual of each plant cohort (only for \code{transpirationMode = "Sperry"}).}
