@@ -43,7 +43,7 @@ double saturatedConductivitySaxton(double clay, double sand, double om = NA_REAL
   } else {
     sand = sand/100.0;
     clay = clay/100.0;
-    om = om/100.0;
+    //om = om/100.0; //OM should be in percentage in Saxton's 2006
     double theta33t = (-0.251*sand) + (0.195*clay) + (0.011*om) + (0.006*(sand*om)) - (0.027*(clay*om)) + (0.452*(sand*clay)) + 0.299;
     double theta33 = theta33t + (1.283*pow(theta33t,2.0) - 0.374 * theta33t - 0.015);
     double theta_S33t = (0.278*sand) + (0.034*clay)+ (0.022*om) - (0.018*(sand*om)) - (0.027*(clay*om)) - (0.584*(sand*clay)) + 0.078;
@@ -73,7 +73,7 @@ double thetaSATSaxton(double clay, double sand, double om = NA_REAL) {
   } else {
     sand = sand/100.0;
     clay = clay/100.0;
-    om = om/100.0;
+    //om = om/100.0; // om as percentage in Saxton's 2006
     double theta33t = (-0.251*sand) + (0.195*clay) + (0.011*om) + (0.006*(sand*om)) - (0.027*(clay*om)) + (0.452*(sand*clay)) + 0.299;
     double theta33 = theta33t + (1.283*pow(theta33t,2.0) - 0.374 * theta33t - 0.015);
     double theta_S33t = (0.278*sand) + (0.034*clay)+ (0.022*om) - (0.018*(sand*om)) - (0.027*(clay*om)) - (0.584*(sand*clay)) + 0.078;
@@ -107,7 +107,7 @@ double theta2psiSaxton(double clay, double sand, double theta, double om = NA_RE
   } else {
     sand = sand/100.0;
     clay = clay/100.0;
-    om = om/100.0;
+    //om = om/100.0;//OM should be in percentage in Saxton's 2006
     double theta1500t = -0.024*sand + 0.487*clay+0.006*om + 0.005*(sand*om) - 0.013*(clay*om) + 0.068*(sand*clay) + 0.031;
     double theta1500 = theta1500t + (0.14*theta1500t - 0.02);
     if(theta1500<0.00001) theta1500 = 0.00001;//Truncate theta1500 to avoid NaN when taking logarithms
@@ -162,7 +162,7 @@ double psi2thetaSaxton(double clay, double sand, double psi, double om = NA_REAL
   } else {
     sand = sand/100.0;
     clay = clay/100.0;
-    om = om/100.0;
+    //om = om/100.0; // OM should be in percentage in Saxton's 2006
     double theta1500t = (-0.024*sand) + (0.487*clay) + (0.006*om) + (0.005*(sand*om)) - (0.013*(clay*om)) + (0.068*(sand*clay)) + 0.031;
     double theta1500 = theta1500t + ((0.14*theta1500t) - 0.02);
     if(theta1500<0.00001) theta1500 = 0.00001;//Truncate theta1500 to avoid NaN when taking logarithms
