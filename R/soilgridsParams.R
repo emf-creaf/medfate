@@ -1,9 +1,8 @@
-# function to use soilgrids to estimate soil characteristics (requires GSIF)
 soilgridsParams <- function(points, depths = c(300, 500, 1200), verbose = FALSE) {
-  
   if(!inherits(points, "SpatialPoints")) stop("Object 'points' has to be a SpatialPoints.")
-  
   coords_df = spTransform(as(points,"SpatialPoints"), sp::CRS("+proj=longlat +datum=WGS84")) # Transform to long lat
+  
+  
   
   npoints = length(points)
   # spatial points data frame
@@ -11,11 +10,28 @@ soilgridsParams <- function(points, depths = c(300, 500, 1200), verbose = FALSE)
   # sp::coordinates(coords_df) <- ~lon+lat
   # sp::proj4string(coords_df) <- sp::CRS("+proj=longlat +datum=WGS84")
   
+  url.base = "https://rest.soilgrids.org/soilgrids/v2.0/properties/query?"
+  
+  
+  props = "property=bdod&property=cfvo&property=clay&property=ocd&property=ocs&property=phh2o&property=sand&property=silt&property=soc"
+  depths = "depth=0-5cm&depth=0-30cm&depth=5-15cm&depth=15-30cm&depth=30-60cm&depth=60-100cm&depth=100-200cm"
+  
+  for(i in 1:npoints) {
+    coordstr = paste0("lon=",coords_df@coords[i,1],"&lat=", coords_df@coords[i,2])
+    dest = paste(coordstr, props, depths,"value=mean",sep="&")  
+    url1 = paste0(url.base, dest)
+    path1 <- httr::GET(url1, httr::add_headers("accept"= "application/json"))
+    ans.text <- httr::content(path1, as = "text")
+    ans <- jsonlite::fromJSON(ans.text)
+  }
+  
+  
+  
   # soilgrids REST API query
-  query <- GSIF::REST.SoilGrids(
-    attributes = c('BDTICM', 'BDRICM', 'BDRLOG', 'BLDFIE', 'CRFVOL',
-                   'CLYPPT', 'SLTPPT', 'SNDPPT', 'ORCDRC')
-  )
+  # query <- GSIF::REST.SoilGrids(
+  #   attributes = c('BDTICM', 'BDRICM', 'BDRLOG', 'BLDFIE', 'CRFVOL',
+  #                  'CLYPPT', 'SLTPPT', 'SNDPPT', 'ORCDRC')
+  # )
   
   if(is.null(query)) stop("Could not create GSIF query!")
   

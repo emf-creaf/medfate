@@ -1,6 +1,7 @@
 import(sp)
 import(spdep)
 import(methods)
+import(httr)
 import(meteoland)
 import(ggplot2)
 importFrom("stats", "aggregate","filter","uniroot", "median",
@@ -12,6 +13,7 @@ importFrom("utils", "setTxtProgressBar", "txtProgressBar", "head", "tail")
 useDynLib(medfate, .registration = TRUE)
 exportPattern("^[[:alpha:]]+")
 
+importFrom(jsonlite,fromJSON)
 
 importFrom(Rcpp, evalCpp)
 S3method(plot,pwb)

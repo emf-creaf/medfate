@@ -17,8 +17,8 @@ License: GPL (>= 2)
 URL: https://vegmod.github.io/software/medfate
 LazyLoad: yes
 Depends: R (>= 3.5.0), sp
-Imports: spdep, ggplot2, methods, meteoland (>= 0.8.1), Rcpp (>= 0.12.12)
-Suggests: knitr, GSIF, rmarkdown, rjson
+Imports: spdep, ggplot2, methods, httr, jsonlite, meteoland (>= 0.8.1), Rcpp (>= 0.12.12)
+Suggests: knitr, rmarkdown
 LinkingTo: Rcpp, meteoland
 Encoding: UTF-8
 NeedsCompilation: yes

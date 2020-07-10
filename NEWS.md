@@ -4,6 +4,7 @@
 
 # Version 1.0.2
 - Bug correction on the use of organic matter in Saxton (2006) equations (thanks to Milan Fischer).
+- Recodification of soilgridParams due to new SoilGrids REST API.
 
 # Version 1.0.1
 - New root functions
