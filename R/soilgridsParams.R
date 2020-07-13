@@ -75,8 +75,7 @@ soilgridsParams <- function(points, widths = c(300, 700, 1000, 2000), verbose = 
         reslist[[i]] = resSG
       }
     }, error  = function(cond) {
-      message(paste("Problems retrieving point",i,"."))
-      message(cond)
+      message(paste("Problems retrieving point",i,": ", cond,"\n"))
     })
 
     # soilgrids REST API query
