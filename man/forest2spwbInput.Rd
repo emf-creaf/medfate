@@ -1,5 +1,5 @@
 \encoding{UTF-8}
-\name{spwbInput}
+\name{modelInput}
 \alias{forest2aboveground}
 \alias{forest2belowground}
 \alias{forest2growthInput}
@@ -12,15 +12,15 @@ Input for simulation models
 }
 
 \description{
-Functions \code{forest2spwbInput} and \code{forest2growthInput} take an object of class \code{\link{forest}} and calculate input data for functions \code{\link{spwb}}, \code{\link{pwb}} and \code{\link{growth}}, respectively. Functions \code{spwbInput} and \code{growthInput} does the same from input data. Function \code{forest2aboveground} calculates aboveground variables that may be used in \code{spwbInput} and \code{growthInput} functions. Similarly, function \code{forest2belowground} calculates belowground root distribution that may be used in \code{spwbInput} and \code{growthInput} functions.
+Functions \code{forest2spwbInput} and \code{forest2growthInput} take an object of class \code{\link{forest}} and calculate input data for functions \code{\link{spwb}}, \code{\link{pwb}} and \code{\link{growth}}, respectively. Functions \code{spwbInput} and \code{growthInput} do the same but starting from different input data. Function \code{forest2aboveground} calculates aboveground variables that may be used in \code{spwbInput} and \code{growthInput} functions. Function \code{forest2belowground} calculates belowground fine root distribution.
 }
 \usage{
 forest2aboveground(x, SpParams, gdd = NA, mode = "MED")
-forest2belowground(x, soil, SpParams)
+forest2belowground(x, soil)
 forest2growthInput(x, soil, SpParams, control)
 forest2spwbInput(x, soil, SpParams, control, mode = "MED")
-growthInput(above,  Z, V,  soil, SpParams, control)
-spwbInput(above,  V,  soil, SpParams, control)
+growthInput(above,  Z50, Z95, soil, SpParams, control)
+spwbInput(above,  Z50, Z95, soil, SpParams, control)
 }
 \arguments{
   \item{x}{An object of class \code{\link{forest}}.}
@@ -29,16 +29,14 @@ spwbInput(above,  V,  soil, SpParams, control)
   \item{mode}{Calculation mode, either "MED" or "US".}
   \item{soil}{An object of class \code{\link{soil}}.}
   \item{control}{A list with default control parameters (see \code{\link{defaultControl}}).}
-  \item{above}{A data frame with aboveground plant information (see the return value of \code{forest2aboveground} below). In the case of \code{spwbInput} the variables should include \code{SP}, \code{LAI_live}, \code{LAI_dead}, \code{H} and \code{CR}.}
-  \item{Z}{A numeric vector with cohort rooting depths (in cms).}
-  \item{V}{A numeric matrix (with as many columns as soil layers and as many rows as the length as \code{SP}) containing the proportion of roots of each plant in each soil layer.}
-  
+  \item{above}{A data frame with aboveground plant information (see the return value of \code{forest2aboveground} below). In the case of \code{spwbInput} the variables should include \code{SP}, \code{N}, \code{LAI_live}, \code{LAI_dead}, \code{H} and \code{CR}. In the case of \code{growthInput} variables should include \code{DBH} and \code{Cover}. }
+  \item{Z50, Z95}{Numeric vectors with cohort depths (in mm) corresponding to 50\% and 95\% of fine roots.}
 }
 \details{
 Functions \code{forest2spwbInput} and \code{forest2abovegroundInput} extracts height and species identity from plant cohorts of \code{x}, and calculate leaf area index and crown ratio.\code{forest2spwbInput} also calculates the distribution of fine roots across soil. Both \code{forest2spwbInput} and \code{spwbInput} find parameter values for each plant cohort according to the parameters of its species as specified in \code{SpParams}. If \code{control$transpirationMode = "Sperry"} the functions also estimate the maximum conductance of rhizosphere, root xylem and stem xylem elements.
 }
 \value{
-Function \code{forest2aboveground} returns a data frame with the following columns (rows are identified as specified by function \code{\link{plant_ID}}):
+Function \code{forest2aboveground()} returns a data frame with the following columns (rows are identified as specified by function \code{\link{plant_ID}}):
 \itemize{
   \item{\code{SP}: Species identity (an integer) (first species is 0).}
   \item{\code{N}: Cohort density (ind/ha) (see function \code{\link{plant_density}}).}
@@ -50,15 +48,17 @@ Function \code{forest2aboveground} returns a data frame with the following colum
   \item{\code{LAI_dead}: Dead leaf area index (m2/m2) (one-side leaf area relative to plot area).}
 }
 
-Functions \code{forest2spwbInput} and \code{spwbInput} return a list of class \code{spwbInput} with the following elements (rows of data frames are identified as specified by function \code{\link{plant_ID}}):
+Functions \code{forest2spwbInput()} and \code{spwbInput()} return a list of class \code{spwbInput} with the following elements (rows of data frames are identified as specified by function \code{\link{plant_ID}}):
 \itemize{
   \item{\code{control}: List with control parameters (see \code{\link{defaultControl}}).}
   \item{\code{canopy}: A list of stand-level state variables.}
   \item{\code{cohorts}: A data frame with cohort information, with columns \code{SP} and \code{Name}.}
   \item{\code{above}: A data frame with columns  \code{H}, \code{CR} and \code{LAI} (see function \code{forest2aboveground}).}
-  \item{\code{below}: A list. If \code{control$transpirationMode = "Granier"} it contains a single element: 
+  \item{\code{below}: A data frame with columns \code{Z50}, \code{Z95}.  If \code{control$transpirationMode = "Sperry"} additional columns are \code{fineRootBiomass} and \code{coarseRootSoilVolume}.}
+  \item{\code{belowLayers}: A list. If \code{control$transpirationMode = "Granier"} it contains elements: 
      \itemize{
         \item{\code{V}: A matrix with the proportion of fine roots of each cohort (in rows) in each soil layer (in columns).}
+        \item{\code{L}: A matrix with the length of coarse roots of each cohort (in rows) in each soil layer (in columns).}
         \item{\code{Wpool}: A matrix with the soil moisture relative to field capacity around the rhizosphere of each cohort (in rows) in each soil layer (in columns).}
      }
      If \code{control$transpirationMode = "Sperry"} there are the following additional elements:
@@ -68,20 +68,24 @@ Functions \code{forest2spwbInput} and \code{spwbInput} return a list of class \c
         \item{\code{RhizoPsi}: A matrix with the water potential around the rhizosphere of each cohort (in rows) in each soil layer (in columns).}
      }
   }
-  \item{\code{paramsPhenology}: A data frame with leaf phenology parameters.
+  \item{\code{paramsPhenology}: A data frame with leaf phenology parameters:
      \itemize{
        \item{\code{Sgdd}: Growth degree days needed for leaf budburst (for winter decideous species).}
      }
   }
   \item{\code{paramsAnatomy}: A data frame with plant anatomy parameters for each cohort (only if \code{control$transpirationMode = "Sperry"}):
      \itemize{
+       \item{\code{Hmax}: Maximum plant height (cm).}
        \item{\code{Hmed}: Median plant height (cm).}
        \item{\code{Al2As}: Leaf area to sapwood area ratio (in m2·m-2).}
        \item{\code{SLA}: Specific leaf area (mm2/mg = m2/kg).}
        \item{\code{LeafWidth}: Leaf width (in cm).}
        \item{\code{LeafDensity}: Density of leaf tissue (dry weight over volume).}
        \item{\code{WoodDensity}: Density of wood tissue (dry weight over volume).}
-       \item{\code{r635}: Ratio between the weight of leaves plus branches and the weight of leaves alone for branches of 6.35 mm..}
+       \item{\code{FineRootDensity}: Density of fine root tissue (dry weight over volume).}
+       \item{\code{SRL}: Specific Root length (cm·g-1).}
+       \item{\code{RLD}: Root length density (cm·cm-3).}
+       \item{\code{r635}: Ratio between the weight of leaves plus branches and the weight of leaves alone for branches of 6.35 mm.}
      }
   }
   \item{\code{paramsInterception}: A data frame with rain interception and light extinction parameters for each cohort:
@@ -138,7 +142,31 @@ Functions \code{forest2growthInput} and \code{growthInput} return a list of clas
     \item{\code{LA_dead}: Dead leaf area per individual (m2/ind).}
     \item{\code{SA}: Live sapwood area per individual (cm2/ind).} 
   }
-  }
+}
+\item{\code{paramsGrowth}: A data frame with growth parameters for each cohort:
+     \itemize{
+    \item{\code{WoodC}: Wood carbon content per dry weight (g C /g dry).}
+    \item{\code{RGRsapwoodmax}: Maximum relative growth rate (in basal area or sapwood area) (in cm2·cm-2).}
+    \item{\code{fHDmin}: Minimum value of the height-to-diameter ratio (dimensionless).}
+    \item{\code{fHDmax}: Maximum value of the height-to-diameter ratio (dimensionless).}
+     }
+}
+\item{\code{paramsAllometry}: A data frame with allometric parameters for each cohort:
+     \itemize{
+    \item{\code{Aash}: Regression coefficient relating the square of shrub height with shrub area.}
+    \item{\code{Absh}, \code{Bbsh}: Allometric coefficients relating phytovolume with dry weight of shrub individuals.}
+    \item{\code{Acr}, \code{B1cr}, \code{B2cr}, \code{B3cr}, \code{C1cr}, \code{C2cr}: Regression coefficients used to calculate crown ratio of trees.}
+    \item{\code{Acw}, \code{Bcw}: Regression coefficients used to calculated crown width of trees.}
+     }
+}
+\item {\code{internalAllocation}: A data frame with internal allocation variables for each cohort:
+     \itemize{
+       \item{\code{allocationTarget}: Value of the allocation target variable.}
+       \item{\code{leafAreaTarget}: Target leaf area (m2) per individual.}
+       \item{\code{fineRootBiomassTarget}: Target fine root biomass (g dry) per individual (only if \code{transpirationMode = "Sperry"}).}
+     }
+}
+\item{\code{internalCarbon} and \code{internalRings}: data structures to store other internal state variables.}
 }
 
 }
@@ -161,15 +189,15 @@ above
 # Initialize soil with default soil params
 examplesoil = soil(defaultSoilParams())
 
-# Belowground parameters
-below = forest2belowground(exampleforestMED, examplesoil, SpParamsMED)
-below
+# Rooting depths
+Z50 = c(exampleforestMED$treeData$Z50, exampleforestMED$shrubData$Z50)
+Z95 = c(exampleforestMED$treeData$Z95, exampleforestMED$shrubData$Z95)
 
 # Initialize control parameters
 control = defaultControl()
 
 # Prepare spwb input
-spwbInput(above, below, examplesoil,SpParamsMED, control)
+spwbInput(above, Z50, Z95, examplesoil,SpParamsMED, control)
 
 # When starting from an object of class 'forest' the whole process
 # can be simplified:

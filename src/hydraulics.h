@@ -21,7 +21,7 @@ double taperFactorSavage(double height);
 double terminalConduitRadius(double height);
 double referenceConductivityHeightFactor(double refheight, double height);
 double maximumStemHydraulicConductance(double xylemConductivity, double refheight, double Al2As,  double height, bool taper = false);
-double maximumRootHydraulicConductance(double xylemConductivity, double Al2As, NumericVector v, NumericVector d, double depthWidthRatio = 1.0);
+NumericVector rootxylemConductanceProportions(NumericVector V, NumericVector L);
 
 NumericVector psi2Weibull(double psi50, double psi88);
 
@@ -35,7 +35,8 @@ double maximumSoilPlantConductance(NumericVector krhizomax, NumericVector krootm
 double findRhizosphereMaximumConductance(double averageResistancePercent, double n, double alpha,
                                          double krootmax, double rootc, double rootd,
                                          double kstemmax, double stemc, double stemd,
-                                         double kleafmax, double leafc, double leafd);
+                                         double kleafmax, double leafc, double leafd,
+                                         double initialValue = 0.0);
 
 
 double EXylem(double psiPlant, double psiUpstream, 

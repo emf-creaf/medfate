@@ -45,16 +45,16 @@ carbon_leafStarchCapacity <- function(LAI, N, SLA, leafDensity) {
     .Call(`_medfate_leafStarchCapacity`, LAI, N, SLA, leafDensity)
 }
 
-carbon_sapwoodStructuralBiomass <- function(SA, H, Z, woodDensity) {
-    .Call(`_medfate_sapwoodStructuralBiomass`, SA, H, Z, woodDensity)
+carbon_sapwoodStructuralBiomass <- function(SA, H, L, V, woodDensity) {
+    .Call(`_medfate_sapwoodStructuralBiomass`, SA, H, L, V, woodDensity)
 }
 
-carbon_sapwoodStructuralLivingBiomass <- function(SA, H, Z, woodDensity, vessel2sapwood) {
-    .Call(`_medfate_sapwoodStructuralLivingBiomass`, SA, H, Z, woodDensity, vessel2sapwood)
+carbon_sapwoodStructuralLivingBiomass <- function(SA, H, L, V, woodDensity, vessel2sapwood) {
+    .Call(`_medfate_sapwoodStructuralLivingBiomass`, SA, H, L, V, woodDensity, vessel2sapwood)
 }
 
-carbon_sapwoodStarchCapacity <- function(SA, H, Z, woodDensity, vessel2sapwood) {
-    .Call(`_medfate_sapwoodStarchCapacity`, SA, H, Z, woodDensity, vessel2sapwood)
+carbon_sapwoodStarchCapacity <- function(SA, H, L, V, woodDensity, vessel2sapwood) {
+    .Call(`_medfate_sapwoodStarchCapacity`, SA, H, L, V, woodDensity, vessel2sapwood)
 }
 
 .criticalFirelineIntensity <- function(CBH, M) {
@@ -229,8 +229,8 @@ forest2aboveground <- function(x, SpParams, gdd = NA_real_, mode = "MED") {
     .Call(`_medfate_forest2aboveground`, x, SpParams, gdd, mode)
 }
 
-forest2belowground <- function(x, soil, SpParams) {
-    .Call(`_medfate_forest2belowground`, x, soil, SpParams)
+forest2belowground <- function(x, soil) {
+    .Call(`_medfate_forest2belowground`, x, soil)
 }
 
 .fuelConditions <- function(airTemp, airHumidity, fuelRadiation, fuelWindSpeed) {
@@ -441,8 +441,8 @@ hydraulics_averageRhizosphereResistancePercent <- function(krhizomax, n, alpha, 
     .Call(`_medfate_averageRhizosphereResistancePercent`, krhizomax, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, psiStep)
 }
 
-hydraulics_findRhizosphereMaximumConductance <- function(averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd) {
-    .Call(`_medfate_findRhizosphereMaximumConductance`, averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd)
+hydraulics_findRhizosphereMaximumConductance <- function(averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, initialValue = 0.0) {
+    .Call(`_medfate_findRhizosphereMaximumConductance`, averageResistancePercent, n, alpha, krootmax, rootc, rootd, kstemmax, stemc, stemd, kleafmax, leafc, leafd, initialValue)
 }
 
 hydraulics_taperFactorSavage <- function(height) {
@@ -461,8 +461,8 @@ hydraulics_maximumStemHydraulicConductance <- function(xylemConductivity, refhei
     .Call(`_medfate_maximumStemHydraulicConductance`, xylemConductivity, refheight, Al2As, height, taper)
 }
 
-hydraulics_maximumRootHydraulicConductance <- function(xylemConductivity, Al2As, v, widths, depthWidthRatio = 1.0) {
-    .Call(`_medfate_maximumRootHydraulicConductance`, xylemConductivity, Al2As, v, widths, depthWidthRatio)
+hydraulics_rootxylemConductanceProportions <- function(L, V) {
+    .Call(`_medfate_rootxylemConductanceProportions`, L, V)
 }
 
 hydraulics_stemWaterCapacity <- function(Al2As, height, wd) {
@@ -569,12 +569,12 @@ light_instantaneousLightExtinctionAbsortion <- function(LAIme, LAImd, LAImx, kPA
     invisible(.Call(`_medfate_checkSpeciesParameters`, SpParams, params))
 }
 
-spwbInput <- function(above, V, soil, SpParams, control) {
-    .Call(`_medfate_spwbInput`, above, V, soil, SpParams, control)
+spwbInput <- function(above, Z50, Z95, soil, SpParams, control) {
+    .Call(`_medfate_spwbInput`, above, Z50, Z95, soil, SpParams, control)
 }
 
-growthInput <- function(above, Z, V, soil, SpParams, control) {
-    .Call(`_medfate_growthInput`, above, Z, V, soil, SpParams, control)
+growthInput <- function(above, Z50, Z95, soil, SpParams, control) {
+    .Call(`_medfate_growthInput`, above, Z50, Z95, soil, SpParams, control)
 }
 
 forest2spwbInput <- function(x, soil, SpParams, control, mode = "MED") {
@@ -587,6 +587,14 @@ forest2growthInput <- function(x, soil, SpParams, control) {
 
 resetInputs <- function(x, soil) {
     invisible(.Call(`_medfate_resetInputs`, x, soil))
+}
+
+.multiplyInputParam <- function(x, soil, paramType, paramName, cohort, f) {
+    invisible(.Call(`_medfate_multiplyInputParam`, x, soil, paramType, paramName, cohort, f))
+}
+
+.modifyInputParam <- function(x, soil, paramType, paramName, cohort, newValue) {
+    invisible(.Call(`_medfate_modifyInputParam`, x, soil, paramType, paramName, cohort, newValue))
 }
 
 .gdd <- function(DOY, Temp, Tbase = 5.0, cum = 0.0) {
@@ -661,16 +669,60 @@ root_ldrDistribution <- function(Z50, Z95, d) {
     .Call(`_medfate_rootDistribution`, z, x)
 }
 
-root_rootLengths <- function(v, d, depthWidthRatio = 1.0) {
-    .Call(`_medfate_rootLengths`, v, d, depthWidthRatio)
+root_individualRootedGroundArea <- function(VolInd, V, d, rfc) {
+    .Call(`_medfate_individualRootedGroundArea`, VolInd, V, d, rfc)
 }
 
-root_xylemConductanceProportions <- function(v, d, depthWidthRatio = 1.0) {
-    .Call(`_medfate_xylemConductanceProportions`, v, d, depthWidthRatio)
+root_specificRootSurfaceArea <- function(specificRootLength, rootTissueDensity) {
+    .Call(`_medfate_specificRootSurfaceArea`, specificRootLength, rootTissueDensity)
 }
 
-root_horizontalProportions <- function(V, LAIlive, poolOverlapFactor) {
-    .Call(`_medfate_horizontalProportions`, V, LAIlive, poolOverlapFactor)
+root_fineRootRadius <- function(specificRootLength, rootTissueDensity) {
+    .Call(`_medfate_fineRootRadius`, specificRootLength, rootTissueDensity)
+}
+
+root_fineRootHalfDistance <- function(rootLengthDensity) {
+    .Call(`_medfate_fineRootHalfDistance`, rootLengthDensity)
+}
+
+root_fineRootAreaIndex <- function(Ksoil, krhizo, lai, specificRootLength, rootTissueDensity, rootLengthDensity) {
+    .Call(`_medfate_fineRootAreaIndex`, Ksoil, krhizo, lai, specificRootLength, rootTissueDensity, rootLengthDensity)
+}
+
+root_fineRootBiomass <- function(Ksoil, krhizo, lai, N, specificRootLength, rootTissueDensity, rootLengthDensity) {
+    .Call(`_medfate_fineRootBiomassPerIndividual`, Ksoil, krhizo, lai, N, specificRootLength, rootTissueDensity, rootLengthDensity)
+}
+
+root_rhizosphereMaximumConductance <- function(Ksoil, fineRootBiomass, lai, N, specificRootLength, rootTissueDensity, rootLengthDensity) {
+    .Call(`_medfate_rhizosphereMaximumConductance`, Ksoil, fineRootBiomass, lai, N, specificRootLength, rootTissueDensity, rootLengthDensity)
+}
+
+root_fineRootSoilVolume <- function(fineRootBiomass, specificRootLength, rootLengthDensity) {
+    .Call(`_medfate_fineRootSoilVolume`, fineRootBiomass, specificRootLength, rootLengthDensity)
+}
+
+root_coarseRootSoilVolumeFromConductance <- function(Kmax_rootxylem, VCroot_kmax, Al2As, v, d, rfc) {
+    .Call(`_medfate_coarseRootSoilVolumeFromConductance`, Kmax_rootxylem, VCroot_kmax, Al2As, v, d, rfc)
+}
+
+root_coarseRootLengthsFromVolume <- function(VolInd, v, d, rfc) {
+    .Call(`_medfate_coarseRootLengthsFromVolume`, VolInd, v, d, rfc)
+}
+
+root_coarseRootLengths <- function(v, d, depthWidthRatio = 1.0) {
+    .Call(`_medfate_coarseRootLengths`, v, d, depthWidthRatio)
+}
+
+root_coarseRootSoilVolume <- function(v, d, depthWidthRatio = 1.0) {
+    .Call(`_medfate_coarseRootSoilVolume`, v, d, depthWidthRatio)
+}
+
+root_horizontalProportions <- function(poolProportions, VolInd, N, V, d, rfc) {
+    .Call(`_medfate_horizontalProportions`, poolProportions, VolInd, N, V, d, rfc)
+}
+
+soil_saturatedConductivitySX <- function(clay, sand, om = NA_real_, mmol = TRUE) {
+    .Call(`_medfate_saturatedConductivitySaxton`, clay, sand, om, mmol)
 }
 
 soil_thetaSATSX <- function(clay, sand, om = NA_real_) {

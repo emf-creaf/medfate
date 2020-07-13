@@ -117,20 +117,12 @@ vprofile_leafAreaDensity(above, byCohorts = F)
 vprofile_leafAreaDensity(above, byCohorts = T)
 ```
 
-Regarding **belowground** information, a matrix describing for each plant cohort, the proportion of fine roots in each soil layer. As before, we use function `forest2belowground()` on the object `exampleforestMED` to show how should the data look like:
+Regarding **belowground** information, we need vectors with depths corresponding to 50% and 95% of fine roots, which we simply concatenate from our forest data:
 ```{r}
-below = forest2belowground(exampleforestMED, examplesoil, SpParamsMED)
-below
+Z50 = c(exampleforestMED$treeData$Z50, exampleforestMED$shrubData$Z50)
+Z95 = c(exampleforestMED$treeData$Z95, exampleforestMED$shrubData$Z95)
 ```
-Function `forest2belowground()` internally takes values of `Z50` and `Z95` and calls  function `root_ldrDistribution()` to estimate the distribution of fine roots according to the linear dose response model. For example the first row is:
-```{r}
-root_ldrDistribution(exampleforestMED$treeData$Z50[1], 
-                     exampleforestMED$treeData$Z95[1],
-                     examplesoil$dVec)
-```
-An analogous function `root_conicDistribution()` can be used to estimate fine root distribution according to a cone. The user is free to build any numeric matrix for root distribution, as long as values in rows sum always one (i.e. we have proportions). Otherwise, functions `root_conicDistribution()` and `root_ldrDistribution()` can be used to calculate root distribution under specific assumptions.
-
-Users can visually inspect the distribution of fine roots of `forest` objects by calling function `vprofile_rootDistribution()`:
+These parameters specify a continuous distribution of fine roots. Users can visually inspect the distribution of fine roots of `forest` objects by calling function `vprofile_rootDistribution()`:
 
 ```{r, fig = TRUE, fig.width= 5, fig.height=3, fig.align= 'center', echo=TRUE}
 vprofile_rootDistribution(exampleforestMED, SpParamsMED)
@@ -162,15 +154,15 @@ Most of these parameters should normally be left to their default value. However
  
 ### Water balance input object
 
-A last step is needed before calling simulation functions. It consists in the compilation of all aboveground and belowground parameters and the specification of additional parameter values for each plant cohort, such as their light extinction coefficient or their response to drought. This is done by calling function `spwbInput()` and taking species parameter values from species parameter data:
+A last step is needed before calling simulation functions. It consists in the compilation of aboveground and belowground parameters and the specification of additional parameter values for each plant cohort, such as their light extinction coefficient or their response to drought. This is done by calling function `spwbInput()` and taking species parameter values from species parameter data:
 ```{r}
-x = spwbInput(above, below, examplesoil, SpParamsMED, control)
+x = spwbInput(above, Z50, Z95, examplesoil, SpParamsMED, control)
 ```
 Different parameter variables will be drawn depending on the value of `transpirationMode`. For the simple water balance model (`transpirationMode = "Granier"`), relatively few parameters are needed. All the input information for forest data and species parameter values can be inspected by accessing the different elements of this object, whose names are.
 ```{r}
 names(x)
 ```
-As with the soil input object, the `spwbInput` object **will be modified** during simulations. In the case of soil water balance, these modifications are small, for example concerning `LAI_expanded`, but in the case of growth simulations the object is used to store the status of vegetation during and at the end of simulations. If one has a `forest` object, the `spwbInput` object can be generated in directly from it, avoiding the need to explicitly build aboveground and belowground data frames:
+As with the soil input object, the `spwbInput` object **will be modified** during simulations. In the case of soil water balance, these modifications are small, for example concerning `LAI_expanded`, but in the case of growth simulations the object is used to store the status of vegetation during and at the end of simulations. If one has a `forest` object, the `spwbInput` object can be generated in directly from it, avoiding the need to explicitly define aboveground and belowground input data:
 
 ```{r}
 x = forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)

@@ -1,8 +1,8 @@
 Package: medfate
 Type: Package
 Title: Mediterranean Forest Simulation
-Version: 1.0.0
-Date: 2020-05-17
+Version: 1.0.2
+Date: 2020-06-09
 Authors@R: c(
 	person('Miquel', 'De Cáceres', role=c('aut','cre'),
 	email='miquelcaceres@gmail.com'),
@@ -17,8 +17,8 @@ License: GPL (>= 2)
 URL: https://vegmod.github.io/software/medfate
 LazyLoad: yes
 Depends: R (>= 3.5.0), sp
-Imports: spdep, ggplot2, methods, meteoland (>= 0.8.1), Rcpp (>= 0.12.12)
-Suggests: knitr, GSIF, rmarkdown, rjson
+Imports: spdep, ggplot2, methods, httr, jsonlite, meteoland (>= 0.8.1), Rcpp (>= 0.12.12)
+Suggests: knitr, rmarkdown
 LinkingTo: Rcpp, meteoland
 Encoding: UTF-8
 NeedsCompilation: yes

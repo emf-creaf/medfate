@@ -19,9 +19,9 @@ Set of functions used in the calculation of carbon balance.
 \usage{
 carbon_leafStarchCapacity(LAI, N, SLA, leafDensity)
 carbon_leafStructuralBiomass(LAI, N, SLA)
-carbon_sapwoodStarchCapacity(SA, H, Z, woodDensity, vessel2sapwood)
-carbon_sapwoodStructuralBiomass(SA, H, Z, woodDensity)
-carbon_sapwoodStructuralLivingBiomass(SA, H, Z, woodDensity, vessel2sapwood)
+carbon_sapwoodStarchCapacity(SA, H, L, V, woodDensity, vessel2sapwood)
+carbon_sapwoodStructuralBiomass(SA, H, L, V, woodDensity)
+carbon_sapwoodStructuralLivingBiomass(SA, H, L, V, woodDensity, vessel2sapwood)
 carbon_sugarConcentration(osmoticWP, temp, nonSugarConc)
 carbon_osmoticWaterPotential(sugarConc, temp, nonSugarConc)
 carbon_relativeSapViscosity(sugarConc, temp)
@@ -34,7 +34,8 @@ carbon_sugarStarchDynamicsLeaf(sugarConc, starchConc, eqSugarConc)
   \item{leafDensity}{ Density of leaf tissue (dry weight over volume).}
   \item{SA}{Sapwood area (cm2).}
   \item{H}{Plant height (cm).}
-  \item{Z}{Rooting depth (mm).}
+  \item{L}{Coarse root length (mm) for each soil layer.}
+  \item{V}{Proportion of fine roots in each soil layer.}
   \item{woodDensity}{Wood density (dry weight over volume).}
   \item{vessel2sapwood}{Proportion of sapwood corresponding to vessels.}
   \item{osmoticWP}{Osmotic water potential (MPa).}

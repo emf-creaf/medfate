@@ -108,18 +108,22 @@ Canopy temperature is a state variable (as soil temperature) needed for energy b
 x$above
 ```
 
-Belowground parameters can be seen in `below`, which in the case of advance water and energy balance include root distribution as well as maximum root and rhizosphere conductances by soil layer:
+Belowground parameters can be seen in `below`:
 ```{r}
 x$below
+```
+and in `belowLayers`:
+```{r}
+x$belowLayers
 ```
 
 The `spwbInput`object also includes cohort parameter values for several kinds of traits. For example, plant anatomy parameters are described in `paramsAnatomy`:
 ```{r}
 x$paramsAnatomy
 ```
-Parameters related to plant transpiration and photosynthesis can be seen in `paramsTransp`:
+Parameters related to plant transpiration and photosynthesis can be seen in `paramsTranspiration`:
 ```{r}
-x$paramsTransp
+x$paramsTranspiration
 ```
 Finally, parameters related to pressure-volume curves and water storage capacity of leaf and stem organs are in `paramsWaterStorage`:
 ```{r}
@@ -143,7 +147,7 @@ hydraulics_vulnerabilityCurvePlot(x, type="root")
 hydraulics_vulnerabilityCurvePlot(x, examplesoil, type="rhizo")
 ```
 
-The maximum values and shape of vulnerability curves for leaves and stems are regulated by parameters in `paramsTransp`. Roots have vulnerability curve parameters in the same data frame, but maximum conductance values need to be specified for each soil layer and are given in `below$VCroot_kmax`. Note that the last call to `hydraulics_vulnerabilityCurvePlot()` includes a `soil` object. This is because the van Genuchten parameters that define the shape of the vulnerability curve for the rhizosphere are stored in this object. Maximum conductance values in the rhizosphere are given in `below$VGrhizo_kmax`.
+The maximum values and shape of vulnerability curves for leaves and stems are regulated by parameters in `paramsTranspiration`. Roots have vulnerability curve parameters in the same data frame, but maximum conductance values need to be specified for each soil layer and are given in `belowLayers$VCroot_kmax`. Note that the last call to `hydraulics_vulnerabilityCurvePlot()` includes a `soil` object. This is because the van Genuchten parameters that define the shape of the vulnerability curve for the rhizosphere are stored in this object. Maximum conductance values in the rhizosphere are given in `belowLayers$VGrhizo_kmax`.
 
 ### Supply functions
 

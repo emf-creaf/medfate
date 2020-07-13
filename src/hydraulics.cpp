@@ -2270,10 +2270,11 @@ double averageRhizosphereResistancePercent(double krhizomax, double n, double al
 double findRhizosphereMaximumConductance(double averageResistancePercent, double n, double alpha,
                                          double krootmax, double rootc, double rootd,
                                          double kstemmax, double stemc, double stemd,
-                                         double kleafmax, double leafc, double leafd) {
+                                         double kleafmax, double leafc, double leafd,
+                                         double initialValue = 0.0) {
   double step = 1.0;
   double fTol = 0.1;
-  double krhizomaxlog = 0.0;
+  double krhizomaxlog = initialValue;
   double f = averageRhizosphereResistancePercent(exp(krhizomaxlog), n,alpha,krootmax, rootc, rootd,
                                                  kstemmax, stemc,stemd,
                                                  kleafmax, leafc,leafd);
@@ -2363,6 +2364,33 @@ double maximumStemHydraulicConductance(double xylemConductivity, double refheigh
 }
 
 /**
+ * Proportions of root xylem conductance
+ * 
+ * Calculates the proportion of total xylem conductance that corresponds to each layer in a network of 
+ * parallel xylem resistances.
+ * 
+ * Sperry, J. S., Y. Wang, B. T. Wolfe, D. S. Mackay, W. R. L. Anderegg, N. G. Mcdowell, and W. T. Pockman. 2016. 
+ * Pragmatic hydraulic theory predicts stomatal responses to climatic water deficits. 
+ * New Phytologist 212:577–589.
+ * 
+ */
+// [[Rcpp::export("hydraulics_rootxylemConductanceProportions")]]
+NumericVector rootxylemConductanceProportions(NumericVector L, NumericVector V) {
+  int nlayers = L.size();
+  //Weights
+  NumericVector w(nlayers, 0.0);
+  double wsum=0.0;
+  for(int i=0;i<nlayers;i++) {
+    if(L[i]>0.0) {
+      w[i]= V[i]*(1.0/L[i]);
+      wsum +=w[i];
+    }
+  }
+  for(int i=0;i<nlayers;i++) w[i] = w[i]/wsum;
+  return(w);
+}
+
+/**
  * Calculate maximum leaf-specific root hydraulic conductance (in mmol·m-2·s-1·MPa-1)
  * 
  * xylemConductivity - Sapwood-specific conductivity of root xylem (in kg·m-1·s-1·MPa-1)
@@ -2370,18 +2398,17 @@ double maximumStemHydraulicConductance(double xylemConductivity, double refheigh
  * v - proportion of fine roots in each soil layer
  * widths - soil layer depths (in mm)
  */
-// [[Rcpp::export("hydraulics_maximumRootHydraulicConductance")]]
-double maximumRootHydraulicConductance(double xylemConductivity, double Al2As, NumericVector v, 
-                                       NumericVector widths, double depthWidthRatio = 1.0){
-  NumericVector rl = rootLengths(v,widths, depthWidthRatio);
-  NumericVector w = xylemConductanceProportions(v,widths, depthWidthRatio);
-  int nlayers = v.length();
-  double kmax = 0.0;
-  for(int i=0;i<nlayers;i++) {
-    if(rl[i]>0.0) kmax = kmax + w[i]*(1000.0/0.018)*(xylemConductivity/((rl[i]/1000.0)*Al2As)); 
-  }
-  return(kmax); 
-}
+// double maximumRootHydraulicConductance(double xylemConductivity, double Al2As, NumericVector v, 
+//                                        NumericVector widths, double depthWidthRatio = 1.0){
+//   NumericVector rl = coarseRootLengths(v,widths, depthWidthRatio);
+//   NumericVector w = xylemConductanceProportions(v,widths, depthWidthRatio);
+//   int nlayers = v.length();
+//   double kmax = 0.0;
+//   for(int i=0;i<nlayers;i++) {
+//     if(rl[i]>0.0) kmax = kmax + w[i]*(1000.0/0.018)*(xylemConductivity/((rl[i]/1000.0)*Al2As)); 
+//   }
+//   return(kmax); 
+// }
 
 
 /**

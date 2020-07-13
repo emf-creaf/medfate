@@ -28,11 +28,10 @@ data("SpParamsUS")
   }
   \bold{Plant size}:
   \itemize{
-    \item{\code{Hmed}: Median plant height (in cm).}
     \item{\code{Hmax}: Maximum plant height (in cm).}
+    \item{\code{Hmed}: Median plant height (in cm).}
     \item{\code{Z50}: Rooting depth (in mm) corresponding to 50\% of fine roots.}
     \item{\code{Z95}: Rooting depth (in mm) corresponding to 95\% of fine roots.}
-    \item{\code{Zmax}: Maximum rooting depth (in mm).}
   }
   \bold{Shrub allometric coefficients} (calibrated for Catalonia):
   \itemize{
@@ -55,12 +54,15 @@ data("SpParamsUS")
   \bold{Anatomy}:
   \itemize{  
     \item{\code{SLA}: Specific leaf area (mm2/mg = m2/kg).}
-    \item{\code{Al2As}: Leaf area to sapwood area ratio (in m2·m-2).}
-    \item{\code{LeafWidth}: Leaf width (in cm).}
     \item{\code{LeafDensity}: Density of leaf tissue (dry weight over volume).}
     \item{\code{WoodDensity}: Wood density (at 0 percent humidity!).}
+    \item{\code{FineRootDensity}: Density of fine root tissue (dry weight over volume).}
     \item{\code{r635}: Ratio between the weight of leaves plus branches and the weight of leaves alone for branches of 6.35 mm.}
     \item{\code{pDead}: Proportion of total fine fuels that are dead}
+    \item{\code{Al2As}: Leaf area to sapwood area ratio (in m2·m-2).}
+    \item{\code{LeafWidth}: Leaf width (in cm).}
+    \item{\code{SRL}: Specific root length (cm/g).}
+    \item{\code{RLD}: Fine root length density (i.e. density of root length per soil volume) (cm·cm-3).}
   }
   \bold{Tissue moisture}:
   \itemize{  
@@ -110,7 +112,7 @@ data("SpParamsUS")
   \bold{Growth}:
   \itemize{  
     \item{\code{WoodC}: Wood carbon content per dry weight (g C /g dry).}
-    \item{\code{RGRmax}: Maximum relative growth rate (in basal area or sapwood area) (in cm2·cm-2).}
+    \item{\code{RGRsapwoodmax}: Maximum relative growth rate (in basal area or sapwood area) (in cm2·cm-2).}
     \item{\code{fHDmin}: Minimum value of the height-to-diameter ratio (dimensionless).}
     \item{\code{fHDmax}: Maximum value of the height-to-diameter ratio (dimensionless).}
     }

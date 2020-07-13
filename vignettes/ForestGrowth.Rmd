@@ -105,7 +105,7 @@ Regarding **belowground** information, a matrix describing for each plant cohort
 ```{r}
 Z = c(exampleforestMED$treeData$Z95, exampleforestMED$shrubData$Z)
 Z
-below = forest2belowground(exampleforestMED, examplesoil, SpParamsMED)
+below = forest2belowground(exampleforestMED, examplesoil)
 below
 ```
 Function `forest2belowground()` internally takes values of `Z50` and `Z95` and calls  function `root_ldrDistribution()` to estimate the distribution of fine roots according to the linear dose response model. For example the first row is:
@@ -148,7 +148,9 @@ Most of these parameters should normally be left to their default value. However
 
 A last step is needed before calling simulation functions. It consists in the compilation of all aboveground and belowground parameters and the specification of additional parameter values for each plant cohort, such as their light extinction coefficient or their response to drought. This is done by calling function `growthInput()` and taking species parameter values from species parameter data:
 ```{r}
-x = growthInput(above, Z, below, examplesoil, SpParamsMED, control)
+Z50 = c(exampleforestMED$treeData$Z50, exampleforestMED$shrubData$Z50)
+Z95 = c(exampleforestMED$treeData$Z95, exampleforestMED$shrubData$Z95)
+x = growthInput(above, Z50, Z95, examplesoil, SpParamsMED, control)
 ```
 If one has a `forest` object, the `growthInput` object can be generated in directly from it, avoiding the need to explicitly build aboveground and belowground data frames:
 

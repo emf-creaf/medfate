@@ -12,8 +12,54 @@ const double capacitySand = 1.25*1e6; //kg·m-3
 const double capacitySilt = 1.19*1e6; //kg·m-3 
 const double capacityClay = 1.23*1e6; //kg·m-3 
 
+/**
+ * Conversion factor from conductivity in cm·day-1 to molH20·m-1·MPa-1·s-1
+ */
+const double cmdTOmmolm2sMPa = 655.2934; //100.0/(18.01528*86400.0*0.00009804139432); 
 
 
+CharacterVector layerNames(int nlayers) {
+  CharacterVector ln(nlayers);
+  for(int l=0;l<nlayers;l++){
+    char Result[16]; 
+    sprintf(Result, "%d", l+1);
+    ln[l] = Result;
+  }
+  return(ln);
+}
+/**
+ * Returs saturated conductivity (mmolH20·m-1·s-1·MPa-1)
+ */
+// [[Rcpp::export("soil_saturatedConductivitySX")]]
+double saturatedConductivitySaxton(double clay, double sand, double om = NA_REAL, bool mmol = true) {
+  double Ksat = NA_REAL;
+  //If organic matter is missing use Saxton et al (1986)
+  //Otherwise use Saxton & Rawls (2006)
+  if(NumericVector::is_na(om)) {
+    double theta_sat = 0.332 - 7.251E-4*sand + 0.1276*log10(clay);
+    Ksat = 2.778e-6*exp(12.012+-7.55e-2*sand+(-3.8950 + 3.671e-2*sand - 0.1103*clay + 8.7546e-4*pow(clay,2.0))/theta_sat);
+    //m/s to cm/day
+    Ksat = Ksat*100.0*86400.0;
+  } else {
+    sand = sand/100.0;
+    clay = clay/100.0;
+    //om = om/100.0; //OM should be in percentage in Saxton's 2006
+    double theta33t = (-0.251*sand) + (0.195*clay) + (0.011*om) + (0.006*(sand*om)) - (0.027*(clay*om)) + (0.452*(sand*clay)) + 0.299;
+    double theta33 = theta33t + (1.283*pow(theta33t,2.0) - 0.374 * theta33t - 0.015);
+    double theta_S33t = (0.278*sand) + (0.034*clay)+ (0.022*om) - (0.018*(sand*om)) - (0.027*(clay*om)) - (0.584*(sand*clay)) + 0.078;
+    double theta_S33 = theta_S33t + (0.636*theta_S33t-0.107);
+    double theta_sat = theta33+theta_S33 - (0.097*sand) + 0.043;
+    double theta1500t = -0.024*sand + 0.487*clay+0.006*om + 0.005*(sand*om) - 0.013*(clay*om) + 0.068*(sand*clay) + 0.031;
+    double theta1500 = theta1500t + (0.14*theta1500t - 0.02);
+    double B = 3.816712/(log(theta33)-log(theta1500)); //3.816712 = log(1500) - log(33)
+    Ksat = 1930.0*pow(theta_sat - theta33, 3.0 - 2.0/B);
+    //mm/h to cm/day
+    Ksat = Ksat*0.1*24.0;
+  }
+  //cm/day to mmolH20·m-1·s-1·MPa-1
+  if(mmol) Ksat = Ksat*cmdTOmmolm2sMPa;
+  return(Ksat);
+}
 /**
  *  Returns water content (% volume) at saturation according to Saxton's pedotransfer model
  */
@@ -27,7 +73,7 @@ double thetaSATSaxton(double clay, double sand, double om = NA_REAL) {
   } else {
     sand = sand/100.0;
     clay = clay/100.0;
-    om = om/100.0;
+    //om = om/100.0; // om as percentage in Saxton's 2006
     double theta33t = (-0.251*sand) + (0.195*clay) + (0.011*om) + (0.006*(sand*om)) - (0.027*(clay*om)) + (0.452*(sand*clay)) + 0.299;
     double theta33 = theta33t + (1.283*pow(theta33t,2.0) - 0.374 * theta33t - 0.015);
     double theta_S33t = (0.278*sand) + (0.034*clay)+ (0.022*om) - (0.018*(sand*om)) - (0.027*(clay*om)) - (0.584*(sand*clay)) + 0.078;
@@ -61,7 +107,7 @@ double theta2psiSaxton(double clay, double sand, double theta, double om = NA_RE
   } else {
     sand = sand/100.0;
     clay = clay/100.0;
-    om = om/100.0;
+    //om = om/100.0;//OM should be in percentage in Saxton's 2006
     double theta1500t = -0.024*sand + 0.487*clay+0.006*om + 0.005*(sand*om) - 0.013*(clay*om) + 0.068*(sand*clay) + 0.031;
     double theta1500 = theta1500t + (0.14*theta1500t - 0.02);
     if(theta1500<0.00001) theta1500 = 0.00001;//Truncate theta1500 to avoid NaN when taking logarithms
@@ -116,7 +162,7 @@ double psi2thetaSaxton(double clay, double sand, double psi, double om = NA_REAL
   } else {
     sand = sand/100.0;
     clay = clay/100.0;
-    om = om/100.0;
+    //om = om/100.0; // OM should be in percentage in Saxton's 2006
     double theta1500t = (-0.024*sand) + (0.487*clay) + (0.006*om) + (0.005*(sand*om)) - (0.013*(clay*om)) + (0.068*(sand*clay)) + 0.031;
     double theta1500 = theta1500t + ((0.14*theta1500t) - 0.02);
     if(theta1500<0.00001) theta1500 = 0.00001;//Truncate theta1500 to avoid NaN when taking logarithms
@@ -196,29 +242,31 @@ String USDAType(double clay, double sand) {
  * after Carsel, R.F., & Parrish, R.S. 1988. Developing joint probability distributions of soil water retention characteristics. Water Resources Research 24: 755–769.
  * 
  * Parameter 'alpha' was transformed from pressure in cm to pressure in MPa
- * Textural parameters (1 MPa = 0.00009804139432 cm)
+ * Textural parameters (1 cm = 0.00009804139432 MPa)
  * 
  *  0 - alpha
  *  1 - n
  *  2 - residual volumetric water content
  *  3 - saturated water content 
+ *  4 - saturated soil conductivity (mmol·m-2·s-1·MPa-1)
  */
 // [[Rcpp::export("soil_vanGenuchtenParamsCarsel")]]
 NumericVector vanGenuchtenParamsCarsel(String soilType) {
-  NumericVector vg(4,NA_REAL);
-  if(soilType=="Sand") {vg[0]=1478.967; vg[1]=2.68; vg[2] = 0.045; vg[3]=0.43;}
-  else if(soilType=="Loamy sand") {vg[0]=1264.772; vg[1]=2.28;vg[2] = 0.057; vg[3]=0.41;}
-  else if(soilType=="Sandy loam") {vg[0]=764.983; vg[1]=1.89; vg[2] = 0.065; vg[3]=0.41;}
-  else if(soilType=="Loam") {vg[0]=367.1918; vg[1]=1.56; vg[2] = 0.078; vg[3]=0.43;}
-  else if(soilType=="Silt") {vg[0]=163.1964; vg[1]=1.37; vg[2] = 0.034; vg[3]=0.46;}
-  else if(soilType=="Silt loam") {vg[0]=203.9955; vg[1]=1.41; vg[2] = 0.067; vg[3]=0.45;}
-  else if(soilType=="Sandy clay loam") {vg[0]=601.7866; vg[1]=1.48; vg[2] = 0.100; vg[3]=0.39;}
-  else if(soilType=="Clay loam") {vg[0]=193.7957; vg[1]=1.31; vg[2] = 0.095; vg[3]=0.41;}
-  else if(soilType=="Silty clay loam") {vg[0]=101.9977; vg[1]=1.23; vg[2] = 0.089; vg[3]=0.43;}
-  else if(soilType=="Sandy clay") {vg[0]=275.3939; vg[1]=1.23; vg[2] = 0.100; vg[3]=0.38;}
-  else if(soilType=="Silty clay") {vg[0]=50.99887; vg[1]=1.09; vg[2] = 0.070; vg[3]=0.36;}
-  else if(soilType=="Clay") {vg[0]=81.59819; vg[1]=1.09; vg[2] = 0.068; vg[3]=0.38;}
-  vg.attr("names") = CharacterVector::create("alpha", "n", "theta_res", "theta_sat");
+  NumericVector vg(5,NA_REAL);
+  if(soilType=="Sand") {vg[0]=1478.967; vg[1]=2.68; vg[2] = 0.045; vg[3]=0.43; vg[4] = 712.80;}
+  else if(soilType=="Loamy sand") {vg[0]=1264.772; vg[1]=2.28;vg[2] = 0.057; vg[3]=0.41; vg[4] = 350.16;}
+  else if(soilType=="Sandy loam") {vg[0]=764.983; vg[1]=1.89; vg[2] = 0.065; vg[3]=0.41; vg[4] = 106.08;}
+  else if(soilType=="Loam") {vg[0]=367.1918; vg[1]=1.56; vg[2] = 0.078; vg[3]=0.43; vg[4] = 24.96;}
+  else if(soilType=="Silt") {vg[0]=163.1964; vg[1]=1.37; vg[2] = 0.034; vg[3]=0.46; vg[4] = 6.00;}
+  else if(soilType=="Silt loam") {vg[0]=203.9955; vg[1]=1.41; vg[2] = 0.067; vg[3]=0.45; vg[4]=10.80;}
+  else if(soilType=="Sandy clay loam") {vg[0]=601.7866; vg[1]=1.48; vg[2] = 0.100; vg[3]=0.39;vg[4]=31.44;}
+  else if(soilType=="Clay loam") {vg[0]=193.7957; vg[1]=1.31; vg[2] = 0.095; vg[3]=0.41;vg[4]=6.24;}
+  else if(soilType=="Silty clay loam") {vg[0]=101.9977; vg[1]=1.23; vg[2] = 0.089; vg[3]=0.43;vg[4]=1.68;}
+  else if(soilType=="Sandy clay") {vg[0]=275.3939; vg[1]=1.23; vg[2] = 0.100; vg[3]=0.38;vg[4]=2.88;}
+  else if(soilType=="Silty clay") {vg[0]=50.99887; vg[1]=1.09; vg[2] = 0.070; vg[3]=0.36;vg[4]=0.48;}
+  else if(soilType=="Clay") {vg[0]=81.59819; vg[1]=1.09; vg[2] = 0.068; vg[3]=0.38;vg[4]=4.80;}
+  vg[4] = vg[4]*cmdTOmmolm2sMPa;
+  vg.attr("names") = CharacterVector::create("alpha", "n", "theta_res", "theta_sat", "Ks");
   return(vg);
 }
 
@@ -227,6 +275,7 @@ NumericVector vanGenuchtenParamsCarsel(String soilType) {
  * Tóth, B., Weynants, M., Nemes, A., Makó, A., Bilas, G., & Tóth, G. 2015. New generation of hydraulic pedotransfer functions for Europe. European Journal of Soil Science 66: 226–238.
  * Parameter 'alpha' was transformed from pressure in cm to pressure in MPa
  * Textural parameters (1 MPa = 0.00009804139432 cm)
+ * Model #21
  * 
  *  0 - alpha
  *  1 - n
@@ -377,6 +426,7 @@ List soil(DataFrame SoilParams, String VG_PTF = "Toth", NumericVector W = Numeri
   NumericVector VG_n(nlayers);
   NumericVector VG_theta_res(nlayers);
   NumericVector VG_theta_sat(nlayers);
+  NumericVector Ksat(nlayers);
   for(int l=0;l<nlayers;l++) {
     usda_Type[l] = USDAType(clay[l],sand[l]);
     NumericVector vgl;
@@ -396,6 +446,7 @@ List soil(DataFrame SoilParams, String VG_PTF = "Toth", NumericVector W = Numeri
     VG_theta_sat[l] = vgl[3];
     // Stolf, R., Thurler, A., Oliveira, O., Bacchi, S., Reichardt, K., 2011. Method to estimate soil macroporosity and microporosity based on sand content and bulk density. Rev. Bras. Ciencias do Solo 35, 447–459.
     macro[l] = std::max(0.0,0.693 - 0.465*bd[l] + 0.212*(sand[l]/100.0));
+    Ksat[l] = saturatedConductivitySaxton(sand[l], clay[l], om[l]);
     SoilDepth +=dVec[l];
   }
   double Ksoil = 0.05;
@@ -409,8 +460,11 @@ List soil(DataFrame SoilParams, String VG_PTF = "Toth", NumericVector W = Numeri
                       _["sand"] = sand, _["clay"] = clay, _["om"] = om,
                       _["usda_Type"] = usda_Type,
                       _["VG_alpha"] = VG_alpha,_["VG_n"] = VG_n, 
-                      _["VG_theta_res"] = VG_theta_res,_["VG_theta_sat"] = VG_theta_sat, 
-                      _["macro"] = macro, _["rfc"] = rfc);
+                      _["VG_theta_res"] = VG_theta_res,_["VG_theta_sat"] = VG_theta_sat,
+                      _["Ksat"] = Ksat,
+                      _["macro"] = macro,
+                      _["bd"] = bd,
+                      _["rfc"] = rfc);
   l.attr("class") = CharacterVector::create("soil","list");
   return(l);
 }

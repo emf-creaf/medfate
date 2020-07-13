@@ -8,7 +8,7 @@ using namespace Rcpp;
 int findRowIndex(int sp, DataFrame SpParams);
 
 DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL, String mode = "MED");
-NumericMatrix forest2belowground(List x, List soil, DataFrame SpParams);
+NumericMatrix forest2belowground(List x, List soil);
 
 NumericVector cohortNumericParameter(List x, DataFrame SpParams, String parName);
 NumericVector cohortNumericParameter(IntegerVector SP, DataFrame SpParams, String parName);

@@ -42,51 +42,40 @@ growth(x, soil, meteo,  latitude, elevation = NA, slope = NA, aspect = NA)
   \itemize{
   \item{\code{"latitude"}: Latitude (in degrees) given as input.} 
   \item{\code{"topography"}: Vector with elevation, slope and aspect given as input.} 
-  \item{\code{"spwbInput"}: A copy of the object \code{x} of class \code{\link{spwbInput}} given as input.}
+  \item{\code{"growthInput"}: A copy of the object \code{x} of class \code{\link{growthInput}} given as input.}
   \item{\code{"soilInput"}: A copy of the object \code{soil} of class \code{\link{soil}} given as input.}
-  \item{\code{"WaterBalance"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
-  \itemize{
-  \item{\code{"PET"}: Potential evapotranspiration (in mm).}
-  \item{\code{"Rainfall"}: Input precipitation (in mm).}
-  \item{\code{"NetPrec"}: Net precipitation, after accounting for interception (in mm).}
-  \item{\code{"Infiltration"}: The amount of water infiltrating into the soil (in mm).}
-  \item{\code{"Runoff"}: The amount of water exported via surface runoff (in mm).}
-  \item{\code{"DeepDrainage"}: The amount of water exported via deep drainage (in mm).}
-  \item{\code{"Evapotranspiration"}: Evapotranspiration (in mm).}
-  \item{\code{"SoilEvaporation"}: Bare soil evaporation (in mm).}
-  \item{\code{"Transpiration"}: Plant transpiration (considering all soil layers) (in mm).}
-  }
-  \item{\code{"Soil"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
-  \itemize{
-  \item{\code{"W.1"}, \code{...}, \code{"W.k"}: Relative soil moisture content (relative to field capacity) in each soil layer.}
-  \item{\code{"ML.1"}, \code{...}, \code{"ML.k"}: Soil water volume in each soil layer (in L/m2).}
-  \item{\code{"MLTot"}: Total soil water volume (in L/m2).}
-  \item{\code{"PlantExt.1"}, \code{...}, \code{"PlantExt.k"}: Plant extraction from each soil layer (in mm).}
-  \item{\code{"psi.1"}, \code{...}, \code{"psi.k"}: Soil water potential in each soil layer (in MPa).}
-  }
-  \item{\code{"Stand"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
-       \itemize{
-          \item{\code{"GDD"}: Cumulative growth degree days.}
-          \item{\code{"LAIcell"}: LAI of the stand (accounting for leaf phenology) (in m2/m2).}
-          \item{\code{"LAIcelldead"}: LAI of the stand corresponding to dead leaves (in m2/m2).}
-          \item{\code{"Cm"}: Water retention capacity of the canopy (in mm) (accounting for leaf phenology).}
-          \item{\code{"LgroundPAR"}: The proportion of PAR that reaches the ground (accounting for leaf phenology).}
-          \item{\code{"LgroundSWR"}: The proportion of SWR that reaches the ground (accounting for leaf phenology).}
-      }
-  \item{\code{"PlantTranspiration"}: A data frame with the amount of daily transpiration (in mm) for each plant cohort. Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
-  \item{\code{"PlantGrossPhotosynthesis"}: A data frame with the amount of daily gross photosynthesis (in g C · m-2) for each plant cohort. Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
-  \item{\code{"PlantRespiration"}: A data frame with the amount of daily maintenance respiration (in g C · m-2) for each plant cohort. Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
-  \item{\code{"PlantCStorageFast"}: A data frame with the daily amount of fast-dynamics carbon reserves (as proportion of total storage capacity) for an average individual of each plant cohort. Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
-  \item{\code{"PlantCStorageSlow"}: A data frame with the daily amount of slow-dynamics carbon reserves (as proportion of total storage capacity) for an average individual of each plant cohort. Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
-  \item{\code{"PlantSAgrowth"}: A data frame with the daily amount of newly created sapwood area (in cm2) for an average individual of each plant cohort. Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
-  \item{\code{"PlantSA"}: A data frame with the daily amount of sapwood area (in cm2) for an average individual of each plant cohort. Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
-  \item{\code{"PlantStress"}: A data frame with the amount of daily stress suffered by each plant cohort (relative whole-plant conductance). Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
- \item{\code{"PlantPsi"}: A data frame with the average daily water potential of each plant (in MPa). Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
- \item{\code{"PlantLAIdead"}: A data frame with the dead leaf area index (in m2 · m-2) for each plant cohort. Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
- \item{\code{"PlantLAIlive"}: A data frame with the live leaf area index (in m2 · m-2) for each plant cohort. Days are in rows and plant cohorts are in columns. Columns in this data frame correspond to the elements in 'SP'.}
+  \item{\code{"WaterBalance"}: A data frame where different water balance variables (see \code{\link{spwb}}).}
+  \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"}; see \code{\link{spwb}}).}
+  \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"}; see \code{\link{spwb}}).}
+  \item{\code{"Soil"}: A data frame where different soil variables  (see \code{\link{spwb}}).}
+  \item{\code{"Stand"}: A data frame where different stand-level variables (see \code{\link{spwb}}).}
+  \item{\code{"Plants"}: A list of daily results for plant cohorts (see \code{\link{spwb}}).}
+  \item{\code{"SunlitLeaves"} and \code{"ShadeLeaves"}: A list with daily results for sunlit and shade leaves (only for \code{transpirationMode = "Sperry"}; see \code{\link{spwb}}).}
+  \item{\code{"PlantCarbonBalance"}: A list of daily carbon balance results for plant cohorts, with elements:}
+    \itemize{
+        \item{\code{"GrossPhotosynthesis"}: Gross photosynthesis rate per dry weight of living biomass (g gluc · g dry-1).}
+        \item{\code{"MaintentanceRespiration"}: Maintenance respiration rate per dry weight of living biomass (g gluc · g dry-1).}
+        \item{\code{"GrowthRespiration"}: Growth respiration rate per dry weight of living biomass (g gluc · g dry-1).}
+        \item{\code{"CarbonBalance"}: Carbon balance (photosynthesis - respiration) per dry weight of living biomass (g gluc · g dry-1).}
+        \item{\code{"SugarLeaf"}: Sugar concentration (mol·l-1) in leaves.}
+        \item{\code{"StarchLeaf"}: Starch concentration (mol·l-1) in leaves.}
+        \item{\code{"SugarSapwood"}: Sugar concentration (mol·l-1) in sapwood.}
+        \item{\code{"StarchSapwood"}: Starch concentration (mol·l-1) in sapwood.}
+    }
+  \item{\code{"PlantGrowth"}: A list of daily growth results for plant cohorts, with elements:}
+    \itemize{
+        \item{\code{"SapwoodArea"}: Daily amount of sapwood area (in cm2) for an average individual of each plant cohort.}
+        \item{\code{"LeafArea"}: Daily amount of leaf area (in m2) for an average individual of each plant cohort.}
+        \item{\code{"FineRootArea"}: Daily amount of fine root area (in m2) for an average individual of each plant cohort (only for \code{transpirationMode = "Sperry"}).}
+        \item{\code{"SAgrowth"}: Sapwood area relative growth rate (in cm2·cm-2·day-1) for an average individual of each plant cohort.}
+        \item{\code{"LAgrowth"}: Leaf area growth relative to sapwood area (in m2·cm-2·day-1) for an average individual of each plant cohort.}
+        \item{\code{"FRAgrowth"}: Fine root area growth relative to sapwood area (in m2·cm-2·day-1) for an average individual of each plant cohort (only for \code{transpirationMode = "Sperry"}).}
+    }
  \item{\code{"StandStructures"}: A list with the aboveground structure of the stand at the beginning of the simulation and after each simulated year.}
  \item{\code{"StandSummary"}: A data frame with stand-level summaries (leaf area index, tree basal area, tree density, shrub cover, etc.) at the beginning of the simulation and after each simulated year.}
-  }
+ \item{\code{"subdaily"}: A list of objects of class \code{\link{growth_day}}, one per day simulated (only if required in \code{control} parameters, see \code{\link{defaultControl}}).}
+}
+  
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
@@ -107,16 +96,30 @@ data(exampleforestMED)
 #Default species parameterization
 data(SpParamsMED)
 
-#Initialize soil with default soil params (2 layers)
-examplesoil = soil(defaultSoilParams(2))
-
 #Initialize control parameters
 control = defaultControl()
 
-#Initialize input
-x = forest2growthInput(exampleforestMED,examplesoil, SpParamsMED, control)
+#Initialize soil with default soil params (4 layers)
+examplesoil1 = soil(defaultSoilParams(4))
+
+#Initialize vegetation input
+x1 = forest2growthInput(exampleforestMED, examplesoil1, SpParamsMED, control)
 
 #Call simulation function
-G1<-growth(x, examplesoil, examplemeteo, latitude = 41.82592, elevation = 100)
- 
+G1<-growth(x1, examplesoil1, examplemeteo, latitude = 41.82592, elevation = 100)
+
+\dontrun{
+#Switch to 'Sperry' transpiration mode
+control$transpirationMode="Sperry"
+
+#Initialize soil with default soil params (4 layers)
+examplesoil2 = soil(defaultSoilParams(4))
+
+#Initialize vegetation input
+x2 = forest2growthInput(exampleforestMED,examplesoil2, SpParamsMED, control)
+
+#Call simulation function (11 days)
+d = 100:110
+G2<-growth(x2, examplesoil2, examplemeteo[d,], latitude = 41.82592, elevation = 100)
+}
 }

@@ -5,6 +5,8 @@
 #endif
 using namespace Rcpp;
 
+CharacterVector layerNames(int nlayers);
+
 double theta2psiSaxton(double clay, double sand, double theta, double om = NA_REAL);
 double psi2thetaSaxton(double clay, double sand, double psi, double om = NA_REAL);
 double theta2psiVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double theta);
