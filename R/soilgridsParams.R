@@ -49,28 +49,7 @@ soilgridsParams <- function(points, widths = c(300, 700, 1000, 2000), verbose = 
         }
       }
       if(!is.null(widths)) {
-        restarget = data.frame(matrix(nrow = length(widths), ncol = 6))
-        names(restarget) = c("widths", "clay", "sand", "om", "bd", "rfc")
-        restarget$widths = widths
-        
-        bottomdepths = cumsum(widths)
-        topdepths = bottomdepths - widths
-        sgbdepths = cumsum(resSG$widths)
-        sgtdepths = sgbdepths - resSG$widths
-        for(j in 1:length(widths)) {
-          ini = topdepths[j]
-          fin = bottomdepths[j]
-          p1 = pmin(pmax(fin -sgtdepths,0),resSG$widths)
-          p2 = pmin(pmax(sgbdepths -ini,0),resSG$widths)
-          p = pmin(p1,p2)/resSG$widths
-          if(sum(p)==0) p[length(p)] = 1
-          restarget$clay[j] = sum(resSG$clay*p)/sum(p)
-          restarget$sand[j] = sum(resSG$sand*p)/sum(p)
-          restarget$rfc[j] = sum(resSG$rfc*p)/sum(p)
-          restarget$bd[j] = sum(resSG$bd*p)/sum(p)
-          restarget$om[j] = sum(resSG$om*p)/sum(p)
-        }
-        reslist[[i]] = restarget
+        reslist[[i]] = redefineSoilLayers(resSG, widths) 
       } else {
         reslist[[i]] = resSG
       }

@@ -2,6 +2,7 @@
 \name{soil}
 \alias{soil}
 \alias{print.soil}
+\alias{redefineSoilLayers}
 
 \title{Soil initialization}
 \description{
@@ -10,6 +11,7 @@ Initializes soil parameters and state variables for its use in simulations.
 \usage{
 soil(SoilParams, VG_PTF = "Toth", W = as.numeric(c(1)), SWE = 0)
 \method{print}{soil}(x, model="SX", ...)
+redefineSoilLayers(SoilParams, widths = c(300, 700, 1000, 2000))
 }
 \arguments{
   \item{SoilParams}{A data frame of soil parameters (see an example in \code{\link{defaultSoilParams}}).}
@@ -18,13 +20,14 @@ soil(SoilParams, VG_PTF = "Toth", W = as.numeric(c(1)), SWE = 0)
   \item{SWE}{Initial snow water equivalent of the snow pack on the soil surface (mm).}
   \item{x}{An object of class \code{soil}.}
   \item{model}{Either 'SX' or 'VG' for Saxton or Van Genuchten pedotransfer models.}
+  \item{widths}{A numeric vector indicating the desired layer widths, in \emph{mm}.}
   \item{...}{Additional parameters to \code{print}.}
 }
 \details{
-Function \code{print} prompts a description of soil characteristics and state variables (water content and temperature) according to a water retention curve (either Saxton's or Van Genuchten's). Volume at field capacity is calculated assuming a soil water potential equal to -0.033 MPa. Parameter \code{Temp} is initialized as missing for all soil layers.
+Function \code{print} prompts a description of soil characteristics and state variables (water content and temperature) according to a water retention curve (either Saxton's or Van Genuchten's). Volume at field capacity is calculated assuming a soil water potential equal to -0.033 MPa. Parameter \code{Temp} is initialized as missing for all soil layers. Function \code{redefineSoilLayers} allows redefining soil layer widths of an input data frame of soil parameters.
 }
 \value{
-An list of class \code{soil} with the following elements:
+Function \code{soil} returns a list of class \code{soil} with the following elements:
 \itemize{
 \item{\code{SoilDepth}: Soil depth (in mm).}
 \item{\code{W}: State variable with relative water content of each layer (in as proportion relative to FC).}
