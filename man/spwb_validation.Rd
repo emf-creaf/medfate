@@ -36,10 +36,14 @@ A ggplot or evaluation statistics (a vector or a data frame depending on \code{t
   \item{\code{Bias}: Mean deviation (positive values correspond to model overestimations).}
   \item{\code{r}: Pearson's linear correlation coefficient.}
   \item{\code{NSE}: Nash-Sutcliffe model efficiency coefficient.}
+  \item{\code{NSEabs}: Modified Nash-Sutcliffe model efficiency coefficient (L1 norm) (Legates & McCabe 1999).}
 }
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
+}
+\references{
+Legates, D.R., McCabe, G.J., 1999. Evaluating the use of “goodness-of-fit” measures in hydrologic and hydroclimatic model validation. Water Resour. Res. 35, 233–241. 
 }
 \seealso{
 \code{\link{spwb}}

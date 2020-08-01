@@ -31,7 +31,8 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
     MAE <- mean(abs(E))
     r<- cor(obs, pred)
     NSE <- 1 - sum((obs-pred)^2)/sum((obs-mean(obs))^2)
-    return(c(n = sum(!is.na(obs) & !is.na(pred)), Bias= Bias, MAE = MAE, r = r, NSE = NSE))
+    NSEabs <- 1 - sum(abs(obs-pred))/sum(abs(obs-mean(obs)))
+    return(c(n = sum(!is.na(obs) & !is.na(pred)), Bias= Bias, MAE = MAE, r = r, NSE = NSE, NSEabs = NSEabs))
   }
   
   # Check arguments
