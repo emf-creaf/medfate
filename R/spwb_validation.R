@@ -35,7 +35,7 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
   }
   
   # Check arguments
-  type = match.arg(type, c("SWC", "SWC_scaled","E", "ETR", "WP"))
+  type = match.arg(type, c("SWC", "REW","E", "ETR", "WP"))
   plotType = match.arg(plotType, c("dynamics", "scatter"))
 
   if(type=="SWC") {
@@ -59,26 +59,29 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
       }
     } 
   } 
-  else if(type=="SWC_scaled") {
+  else if(type=="REW") {
     sm = x$Soil
     d = rownames(sm)
-    fc = soil_thetaFC(x$soilInput, model = x$spwbInput$control$soilFunctions)
-    q_mod = quantile(sm$W.1, p=c(0.05,0.95), na.rm=T)
-    df <- data.frame(Observed = NA, Modelled = (sm$W.1-q_mod[1])/(q_mod[2]-q_mod[1]), Dates = as.Date(d))
+    # fc = soil_thetaFC(x$soilInput, model = x$spwbInput$control$soilFunctions)
+    # q_mod = quantile(sm$W.1, p=c(0.05,0.95), na.rm=T)
+    # df <- data.frame(Observed = NA, Modelled = (sm$W.1-q_mod[1])/(q_mod[2]-q_mod[1]), Dates = as.Date(d))
+    df <- data.frame(Observed = NA, Modelled = sm$W.1, Dates = as.Date(d))
     
     if(!("SWC" %in% names(measuredData))) stop(paste0("Column 'SWC' not found in measured data frame."))
     seld = rownames(measuredData) %in% d
-    q_obs = quantile(measuredData$SWC[seld], p=c(0.05,0.95), na.rm=T)
-    df$Observed[d %in% rownames(measuredData)] =(measuredData$SWC[seld]-q_obs[1])/(q_obs[2]-q_obs[1])
+    # q_obs = quantile(measuredData$SWC[seld], p=c(0.05,0.95), na.rm=T)
+    q_obs = quantile(measuredData$SWC[seld], p=c(0.9), na.rm=T) # To avoid peaks over field capacity
+    # df$Observed[d %in% rownames(measuredData)] =(measuredData$SWC[seld]-q_obs[1])/(q_obs[2]-q_obs[1])
+    df$Observed[d %in% rownames(measuredData)] = measuredData$SWC[seld]/q_obs[1]
     
     eval_res = evalstats(df$Observed, df$Modelled)
     
     if(draw) {
       if(plotType=="dynamics") {
-        g<-dynamicsplot(df, ylab = "Soil moisture (scaled)")
+        g<-dynamicsplot(df, ylab = "Relative extractable soil water (REW)")
       } else {
-        g<-scatterplot(df, xlab  = "Modelled soil moisture (scaled)",
-                       ylab = "Measured soil moisture (scaled)")
+        g<-scatterplot(df, xlab  = "Modelled relative extractable soil water (REW)",
+                       ylab = "Measured relative extractable soil water (REW)")
 
       }
     }
