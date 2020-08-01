@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 1.0.3
+- Nash-Sutcliffe efficiency (NSE) implemented in spwb_validation
+
 # Version 1.0.2
 - Bug correction on the use of organic matter in Saxton (2006) equations (thanks to Milan Fischer).
 - Recodification of soilgridParams due to new SoilGrids REST API (removed dependency from GSIF).
