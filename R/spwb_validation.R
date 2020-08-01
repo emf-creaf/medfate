@@ -23,12 +23,15 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
     return(g)
   }
   evalstats<-function(obs, pred) {
+    sel_complete = !(is.na(obs) | is.na(pred))
+    obs = obs[sel_complete]
+    pred = pred[sel_complete]
     E <- pred-obs
-    Bias <- mean(E, na.rm=T)
-    MAE <- mean(abs(E), na.rm=T)
-    R<- cor(obs, pred, use="complete")
-    NSE <- sum((obs-pred)^2, na.rm=TRUE)/sum((obs-mean(obs, na.rm=T))^2, na.rm=TRUE)
-    return(c(n = sum(!is.na(obs) & !is.na(pred)), Bias= Bias, MAE = MAE, R = R, NSE = NSE))
+    Bias <- mean(E)
+    MAE <- mean(abs(E))
+    r<- cor(obs, pred)
+    NSE <- 1 - sum((obs-pred)^2)/sum((obs-mean(obs))^2)
+    return(c(n = sum(!is.na(obs) & !is.na(pred)), Bias= Bias, MAE = MAE, r = r, NSE = NSE))
   }
   
   # Check arguments

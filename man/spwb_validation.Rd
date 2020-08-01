@@ -34,7 +34,8 @@ A ggplot or evaluation statistics (a vector or a data frame depending on \code{t
 \itemize{
   \item{\code{MAE}: Mean absolute error.}
   \item{\code{Bias}: Mean deviation (positive values correspond to model overestimations).}
-  \item{\code{R2}: Squared linear correlation coefficient.}
+  \item{\code{r}: Pearson's linear correlation coefficient.}
+  \item{\code{NSE}: Nash-Sutcliffe model efficiency coefficient.}
 }
 }
 \author{
