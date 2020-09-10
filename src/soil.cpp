@@ -398,7 +398,7 @@ NumericVector temperatureChange(NumericVector dVec, NumericVector Temp,
 // [[Rcpp::export("soil")]]
 List soil(DataFrame SoilParams, String VG_PTF = "Toth", 
           NumericVector W = NumericVector::create(1.0), 
-          double SWE = 0.0, double AWT = 0.0) {
+          double SWE = 0.0) {
   double SoilDepth = 0.0;
   NumericVector dVec = clone(as<NumericVector>(SoilParams["widths"]));
   int nlayers = dVec.size();

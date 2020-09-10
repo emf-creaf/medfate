@@ -444,17 +444,17 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline List soil(DataFrame SoilParams, String VG_PTF = "Toth", NumericVector W = NumericVector::create(1.0), double SWE = 0.0, double AWT = 0.0) {
-        typedef SEXP(*Ptr_soil)(SEXP,SEXP,SEXP,SEXP,SEXP);
+    inline List soil(DataFrame SoilParams, String VG_PTF = "Toth", NumericVector W = NumericVector::create(1.0), double SWE = 0.0) {
+        typedef SEXP(*Ptr_soil)(SEXP,SEXP,SEXP,SEXP);
         static Ptr_soil p_soil = NULL;
         if (p_soil == NULL) {
-            validateSignature("List(*soil)(DataFrame,String,NumericVector,double,double)");
+            validateSignature("List(*soil)(DataFrame,String,NumericVector,double)");
             p_soil = (Ptr_soil)R_GetCCallable("medfate", "_medfate_soil");
         }
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_soil(Shield<SEXP>(Rcpp::wrap(SoilParams)), Shield<SEXP>(Rcpp::wrap(VG_PTF)), Shield<SEXP>(Rcpp::wrap(W)), Shield<SEXP>(Rcpp::wrap(SWE)), Shield<SEXP>(Rcpp::wrap(AWT)));
+            rcpp_result_gen = p_soil(Shield<SEXP>(Rcpp::wrap(SoilParams)), Shield<SEXP>(Rcpp::wrap(VG_PTF)), Shield<SEXP>(Rcpp::wrap(W)), Shield<SEXP>(Rcpp::wrap(SWE)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();
