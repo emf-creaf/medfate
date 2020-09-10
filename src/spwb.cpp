@@ -24,7 +24,7 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
   //Control parameters
   List control = x["control"];
   bool snowpack = control["snowpack"];
-  bool drainage = control["drainage"];
+  bool rockyLayerDrainage = control["rockyLayerDrainage"];
   bool plantWaterPools = control["plantWaterPools"];
   String soilFunctions = control["soilFunctions"];
 
@@ -79,7 +79,7 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
     //Soil infiltration and percolation
     infilPerc = soilInfiltrationPercolation(soil, soilFunctions, 
                                             hydroInputs["Input"],
-                                            drainage, true);
+                                            rockyLayerDrainage, true);
     //Evaporation from bare soil (if there is no snow)
     EsoilVec = soilEvaporation(soil, soilFunctions, pet, LgroundSWR, true);
     
@@ -105,7 +105,7 @@ List spwbDay1(List x, List soil, double tday, double pet, double prec, double er
       //Soil_c infiltration and percolation
       NumericVector infilPerc_c = soilInfiltrationPercolation(soil_c, soilFunctions, 
                                               hydroInputs["Input"],
-                                              drainage, true);
+                                              rockyLayerDrainage, true);
       //Evaporation from bare soil_c (if there is no snow)
       NumericVector EsoilVec_c = soilEvaporation(soil_c, soilFunctions, pet, LgroundSWR, true);
       //Copy result vectors
@@ -162,7 +162,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double tminPrev, doub
   
   //Control parameters
   List control = x["control"];
-  bool drainage = control["drainage"];
+  bool rockyLayerDrainage = control["rockyLayerDrainage"];
   bool snowpack = control["snowpack"];
   bool plantWaterPools = control["plantWaterPools"];
   String soilFunctions = control["soilFunctions"];
@@ -219,7 +219,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double tminPrev, doub
     //A.2 - Soil infiltration and percolation
     infilPerc = soilInfiltrationPercolation(soil, soilFunctions, 
                                             hydroInputs["Input"],
-                                                       drainage, true);
+                                            rockyLayerDrainage, true);
     //B.1 - Evaporation from bare soil if there is no snow
     EsoilVec = soilEvaporation(soil, soilFunctions, pet, LgroundSWR, true);
     
@@ -245,7 +245,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double tminPrev, doub
       //Soil_c infiltration and percolation
       NumericVector infilPerc_c = soilInfiltrationPercolation(soil_c, soilFunctions, 
                                                               hydroInputs["Input"],
-                                                                         drainage, true);
+                                                              rockyLayerDrainage, true);
       //Evaporation from bare soil_c (if there is no snow)
       NumericVector EsoilVec_c = soilEvaporation(soil_c, soilFunctions, pet, LgroundSWR, true);
       //Copy result vectors

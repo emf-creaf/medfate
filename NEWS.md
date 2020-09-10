@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 1.1.0
+- Control option 'rockyLayerDrainage' instead of 'drainage'
+
 # Version 1.0.3
 - Nash-Sutcliffe efficiency (NSE) implemented in spwb_validation
 

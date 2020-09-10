@@ -31,7 +31,8 @@ String USDAType(double clay, double sand);
 NumericVector vanGenuchtenParamsCarsel(String soilType);
 NumericVector vanGenuchtenParamsToth(double clay, double sand, double om, double bd, bool topsoil);
   
-List soil(List SoilParams, String VG_PTF = "Carsel", NumericVector W = NumericVector::create(1.0,1.0,1.0));
+List soil(List SoilParams, String VG_PTF = "Carsel", NumericVector W = NumericVector::create(1.0,1.0,1.0),
+          double SWE = 0.0, double AWT = 0.0);
 
 NumericVector layerThermalConductivity(NumericVector sand, NumericVector clay, NumericVector W, NumericVector Theta_FC);
 NumericVector temperatureChange(NumericVector dVec, NumericVector Temp,

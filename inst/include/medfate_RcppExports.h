@@ -192,7 +192,7 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline NumericVector hydrology_soilInfiltrationPercolation(List soil, String soilFunctions, double waterInput, bool drainage = true, bool modifySoil = true) {
+    inline NumericVector hydrology_soilInfiltrationPercolation(List soil, String soilFunctions, double waterInput, bool rockyLayerDrainage = true, bool modifySoil = true) {
         typedef SEXP(*Ptr_hydrology_soilInfiltrationPercolation)(SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_hydrology_soilInfiltrationPercolation p_hydrology_soilInfiltrationPercolation = NULL;
         if (p_hydrology_soilInfiltrationPercolation == NULL) {
@@ -202,7 +202,7 @@ namespace medfate {
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_hydrology_soilInfiltrationPercolation(Shield<SEXP>(Rcpp::wrap(soil)), Shield<SEXP>(Rcpp::wrap(soilFunctions)), Shield<SEXP>(Rcpp::wrap(waterInput)), Shield<SEXP>(Rcpp::wrap(drainage)), Shield<SEXP>(Rcpp::wrap(modifySoil)));
+            rcpp_result_gen = p_hydrology_soilInfiltrationPercolation(Shield<SEXP>(Rcpp::wrap(soil)), Shield<SEXP>(Rcpp::wrap(soilFunctions)), Shield<SEXP>(Rcpp::wrap(waterInput)), Shield<SEXP>(Rcpp::wrap(rockyLayerDrainage)), Shield<SEXP>(Rcpp::wrap(modifySoil)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();
@@ -444,17 +444,17 @@ namespace medfate {
         return Rcpp::as<NumericVector >(rcpp_result_gen);
     }
 
-    inline List soil(DataFrame SoilParams, String VG_PTF = "Toth", NumericVector W = NumericVector::create(1.0), double SWE = 0.0) {
-        typedef SEXP(*Ptr_soil)(SEXP,SEXP,SEXP,SEXP);
+    inline List soil(DataFrame SoilParams, String VG_PTF = "Toth", NumericVector W = NumericVector::create(1.0), double SWE = 0.0, double AWT = 0.0) {
+        typedef SEXP(*Ptr_soil)(SEXP,SEXP,SEXP,SEXP,SEXP);
         static Ptr_soil p_soil = NULL;
         if (p_soil == NULL) {
-            validateSignature("List(*soil)(DataFrame,String,NumericVector,double)");
+            validateSignature("List(*soil)(DataFrame,String,NumericVector,double,double)");
             p_soil = (Ptr_soil)R_GetCCallable("medfate", "_medfate_soil");
         }
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_soil(Shield<SEXP>(Rcpp::wrap(SoilParams)), Shield<SEXP>(Rcpp::wrap(VG_PTF)), Shield<SEXP>(Rcpp::wrap(W)), Shield<SEXP>(Rcpp::wrap(SWE)));
+            rcpp_result_gen = p_soil(Shield<SEXP>(Rcpp::wrap(SoilParams)), Shield<SEXP>(Rcpp::wrap(VG_PTF)), Shield<SEXP>(Rcpp::wrap(W)), Shield<SEXP>(Rcpp::wrap(SWE)), Shield<SEXP>(Rcpp::wrap(AWT)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();

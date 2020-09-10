@@ -8,7 +8,7 @@ defaultControl<-function() {
     
     # For water balance
     snowpack = TRUE,
-    drainage = TRUE,
+    rockyLayerDrainage = TRUE,
     unlimitedSoilWater = FALSE,
     plantWaterPools = FALSE,
     leafPhenology = TRUE,

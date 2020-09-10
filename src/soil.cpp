@@ -396,7 +396,9 @@ NumericVector temperatureChange(NumericVector dVec, NumericVector Temp,
 }
 
 // [[Rcpp::export("soil")]]
-List soil(DataFrame SoilParams, String VG_PTF = "Toth", NumericVector W = NumericVector::create(1.0), double SWE = 0.0) {
+List soil(DataFrame SoilParams, String VG_PTF = "Toth", 
+          NumericVector W = NumericVector::create(1.0), 
+          double SWE = 0.0, double AWT = 0.0) {
   double SoilDepth = 0.0;
   NumericVector dVec = clone(as<NumericVector>(SoilParams["widths"]));
   int nlayers = dVec.size();
@@ -449,6 +451,8 @@ List soil(DataFrame SoilParams, String VG_PTF = "Toth", NumericVector W = Numeri
     Ksat[l] = saturatedConductivitySaxton(sand[l], clay[l], om[l]);
     SoilDepth +=dVec[l];
   }
+  // Maximum percolation speed towards the aquifer (mm/day) estimated from soil saturated conductivity
+  double Vperc = saturatedConductivitySaxton(sand[nlayers-1], clay[nlayers-1], om[nlayers-1], false)/4.0;
   double Ksoil = 0.05;
   double Gsoil = 0.5; //TO DO, implement pedotransfer functions for Gsoil
   List l = List::create(_["SoilDepth"] = SoilDepth,
@@ -458,10 +462,10 @@ List soil(DataFrame SoilParams, String VG_PTF = "Toth", NumericVector W = Numeri
                       _["Ksoil"] = Ksoil, _["Gsoil"] = Gsoil,
                       _["dVec"] = dVec,
                       _["sand"] = sand, _["clay"] = clay, _["om"] = om,
-                      _["usda_Type"] = usda_Type,
                       _["VG_alpha"] = VG_alpha,_["VG_n"] = VG_n, 
                       _["VG_theta_res"] = VG_theta_res,_["VG_theta_sat"] = VG_theta_sat,
                       _["Ksat"] = Ksat,
+                      _["Vperc"] = Vperc,
                       _["macro"] = macro,
                       _["bd"] = bd,
                       _["rfc"] = rfc);

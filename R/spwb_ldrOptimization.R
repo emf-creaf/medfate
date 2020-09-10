@@ -135,7 +135,7 @@ spwb_ldrExploration<-function(x, soil, meteo, cohorts = NULL,
       s.[["VG_alpha"]] <- s.[["VG_alpha"]][1:nl]
       s.[["VG_theta_res"]] <- s.[["VG_theta_res"]][1:nl]
       s.[["VG_theta_sat"]] <- s.[["VG_theta_sat"]][1:nl]
-      s.[["usda_Type"]] <- s.[["usda_Type"]][1:nl]
+      s.[["Ksat"]] <- s.[["Ksat"]][1:nl]
       
       V[,i,j] <- 0
       x_1sp$below$V = x$below$V[sp,1:nl,drop = FALSE]

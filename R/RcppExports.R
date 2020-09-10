@@ -505,8 +505,8 @@ hydrology_soilWaterInputs <- function(soil, soilFunctions, prec, er, tday, rad, 
     .Call(`_medfate_soilWaterInputs`, soil, soilFunctions, prec, er, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, runon, snowpack, modifySoil)
 }
 
-hydrology_soilInfiltrationPercolation <- function(soil, soilFunctions, waterInput, drainage = TRUE, modifySoil = TRUE) {
-    .Call(`_medfate_soilInfiltrationPercolation`, soil, soilFunctions, waterInput, drainage, modifySoil)
+hydrology_soilInfiltrationPercolation <- function(soil, soilFunctions, waterInput, rockyLayerDrainage = TRUE, modifySoil = TRUE) {
+    .Call(`_medfate_soilInfiltrationPercolation`, soil, soilFunctions, waterInput, rockyLayerDrainage, modifySoil)
 }
 
 .incgam <- function(a, x) {
@@ -765,8 +765,8 @@ soil_temperatureChange <- function(dVec, Temp, sand, clay, W, Theta_FC, Gdown) {
     .Call(`_medfate_temperatureChange`, dVec, Temp, sand, clay, W, Theta_FC, Gdown)
 }
 
-soil <- function(SoilParams, VG_PTF = "Toth", W = as.numeric( c(1.0)), SWE = 0.0) {
-    .Call(`_medfate_soil`, SoilParams, VG_PTF, W, SWE)
+soil <- function(SoilParams, VG_PTF = "Toth", W = as.numeric( c(1.0)), SWE = 0.0, AWT = 0.0) {
+    .Call(`_medfate_soil`, SoilParams, VG_PTF, W, SWE, AWT)
 }
 
 soil_thetaFC <- function(soil, model = "SX") {
