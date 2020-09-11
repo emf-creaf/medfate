@@ -173,7 +173,7 @@ NumericVector soilInfiltrationPercolation(List soil, String soilFunctions,
   NumericVector dVec = soil["dVec"];
   NumericVector macro = soil["macro"];
   NumericVector rfc = soil["rfc"];
-  double Vperc = soil["Vperc"];
+  double Kperc = soil["Kperc"];
   NumericVector Water_FC = waterFC(soil, soilFunctions);
   NumericVector Water_SAT = waterSAT(soil, soilFunctions);
   int nlayers = W.size();
@@ -189,9 +189,8 @@ NumericVector soilInfiltrationPercolation(List soil, String soilFunctions,
     //Decide infiltration repartition among layers
     NumericVector Ivec = infiltrationRepartition(Infiltration, dVec, macro);
     //Input of the first soil layer is infiltration
-    double excess = 0.0;
+    double percolationExcess = 0.0;
     double Wn;
-    //Update topsoil layer
     for(int l=0;l<nlayers;l++) {
       if((dVec[l]>0.0) & (Ivec[l]>0.0)) {
         Wn = W[l]*Water_FC[l] + Ivec[l]; //Update water volume
@@ -201,33 +200,38 @@ NumericVector soilInfiltrationPercolation(List soil, String soilFunctions,
         } else {
           if((rfc[l]<95.0) | rockyLayerDrainage) { //If not a rock layer or rocky layer drainage is allowed
             W[l] = std::max(0.0,std::min(Wn, Water_FC[l])/Water_FC[l]); //Update theta (this modifies 'soil')
-            excess = std::max(Wn - Water_FC[l],0.0); //Set excess of the bottom layer using field capacity
+            percolationExcess = std::max(Wn - Water_FC[l],0.0); //Set excess of the bottom layer using field capacity
           } else {
             W[l] = std::max(0.0,std::min(Wn, Water_SAT[l])/Water_FC[l]); //Update theta (this modifies 'soil')
-            excess = std::max(Wn - Water_SAT[l],0.0); //Set excess of the bottom layer using saturation
+            percolationExcess = std::max(Wn - Water_SAT[l],0.0); //Set excess of the bottom layer using saturation
           }
         }
       } 
     } 
-    //If excess over field capacity determine deep percolation (i.e. percolation beyond root access)
-    if(excess>0.0) {
-      DeepDrainage = std::min(excess, Vperc);
-      excess = excess - DeepDrainage;
-      if(excess>0.0) {
-        for(int l=(nlayers-1);l>=0;l--) {
-          if((dVec[l]>0.0) & (excess>0.0)) {
-            Wn = W[l]*Water_FC[l] + excess; //Update water volume
-            excess = std::max(Wn - Water_SAT[l],0.0); //Update excess, using the excess of water over saturation
-            W[l] = std::max(0.0,std::min(Wn, Water_SAT[l])/Water_FC[l]); //Update theta (this modifies 'soil') here no upper
-          }
-        }
-        if(excess>0.0) { //If soil is completely saturated increase Runoff
-          Runoff = Runoff + excess;
+    //If there still excess fill layers over field capacity
+    if(percolationExcess>0.0) {
+      for(int l=(nlayers-1);l>=0;l--) {
+        if((dVec[l]>0.0) & (percolationExcess>0.0)) {
+          Wn = W[l]*Water_FC[l] + percolationExcess; //Update water volume
+          percolationExcess = std::max(Wn - Water_SAT[l],0.0); //Update excess, using the excess of water over saturation
+          W[l] = std::max(0.0,std::min(Wn, Water_SAT[l])/Water_FC[l]); //Update theta (this modifies 'soil') here no upper
         }
       }
+      //If soil is completely saturated increase surface Runoff
+      if(percolationExcess>0.0) { 
+        Runoff = Runoff + percolationExcess;
+      }
     }
-  } else { // There is no water input determine mm over field capacity and drain a daily maximum of Vperc
-    double maxDrainage = Vperc;
+  }
+  //If there is still room for additional drainage (water in macropores accumulated from previous days)
+  double head = 0.0;
+  for(int l=0;l<nlayers;l++) { //Add mm over field capacity
+    if((l<(nlayers-1)) | (rfc[l] < 95.0) | rockyLayerDrainage) {
+      head += Water_FC[l]*std::max(W[l] - 1.0, 0.0);
+    }
+  }
+  if(head>0.0) {
+    double maxDrainage = head*Kperc;
     for(int l=0;l<nlayers;l++) {
       if(maxDrainage>0.0) {
         double Wn = W[l]*Water_FC[l];
@@ -238,8 +242,8 @@ NumericVector soilInfiltrationPercolation(List soil, String soilFunctions,
         if(toDrain > 0.0) {
           DeepDrainage +=toDrain;
           maxDrainage -=toDrain;
-          Wn = Wn - toDrain;
-          W[l] = std::max(0.0,std::min(Wn, Water_SAT[l])/Water_FC[l]); //Update theta (this modifies 'soil') here no upper          
+          Wn -= toDrain;
+          W[l] = std::max(0.0, Wn/Water_FC[l]); //Update theta (this modifies 'soil') here no upper          
         }
       }
     }

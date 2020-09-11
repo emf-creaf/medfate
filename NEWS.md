@@ -3,7 +3,8 @@
 -------------------------------
 
 # Version 1.1.0
-- Control option 'rockyLayerDrainage' instead of 'drainage'
+- Control option 'rockyLayerDrainage' instead of 'drainage' to disable macropore vertical outflow in layers with > 95% of rocks
+- Soil parameter Kperc for saturated vertical hydraulic conductivity towards groundwaters (deep drainage)
 
 # Version 1.0.3
 - Nash-Sutcliffe efficiency (NSE) implemented in spwb_validation

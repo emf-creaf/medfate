@@ -448,11 +448,11 @@ List soil(DataFrame SoilParams, String VG_PTF = "Toth",
     VG_theta_sat[l] = vgl[3];
     // Stolf, R., Thurler, A., Oliveira, O., Bacchi, S., Reichardt, K., 2011. Method to estimate soil macroporosity and microporosity based on sand content and bulk density. Rev. Bras. Ciencias do Solo 35, 447–459.
     macro[l] = std::max(0.0,0.693 - 0.465*bd[l] + 0.212*(sand[l]/100.0));
-    Ksat[l] = saturatedConductivitySaxton(sand[l], clay[l], om[l]);
+    Ksat[l] = saturatedConductivitySaxton(clay[l], sand[l], om[l]);
     SoilDepth +=dVec[l];
   }
-  // Maximum percolation speed towards the aquifer (mm/day) estimated from soil saturated conductivity
-  double Vperc = saturatedConductivitySaxton(sand[nlayers-1], clay[nlayers-1], om[nlayers-1], false)/4.0;
+  // Saturated vertical hydraulic conductivity (mm/day) 
+  double Kperc = 0.05*saturatedConductivitySaxton(clay[nlayers-1], sand[nlayers-1], om[nlayers-1], false);
   double Ksoil = 0.05;
   double Gsoil = 0.5; //TO DO, implement pedotransfer functions for Gsoil
   List l = List::create(_["SoilDepth"] = SoilDepth,
@@ -465,7 +465,7 @@ List soil(DataFrame SoilParams, String VG_PTF = "Toth",
                       _["VG_alpha"] = VG_alpha,_["VG_n"] = VG_n, 
                       _["VG_theta_res"] = VG_theta_res,_["VG_theta_sat"] = VG_theta_sat,
                       _["Ksat"] = Ksat,
-                      _["Vperc"] = Vperc,
+                      _["Kperc"] = Kperc,
                       _["macro"] = macro,
                       _["bd"] = bd,
                       _["rfc"] = rfc);
