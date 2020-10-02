@@ -9,7 +9,7 @@ hydrology_soilWaterInputs(soil, soilFunctions, prec, er, tday, rad,
                           elevation, Cm, LgroundPAR, LgroundSWR, runon = 0,
                           snowpack = TRUE, modifySoil = TRUE)
 hydrology_soilInfiltrationPercolation(soil, soilFunctions, waterInput,
-                                      drainage = TRUE, modifySoil = TRUE)
+                                      rockyLayerDrainage = TRUE, modifySoil = TRUE)
 }
 \arguments{
   \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
@@ -25,7 +25,7 @@ hydrology_soilInfiltrationPercolation(soil, soilFunctions, waterInput,
   \item{LgroundSWR}{Proportion of short-wave radiation (SWR) reaching the ground.}
   \item{runon}{Surface water amount running on the target area from upslope (in mm).}
   \item{snowpack}{Boolean flag to indicate the simulation of snow accumulation and melting.}
-  \item{drainage}{Boolean flag to indicate the simulation of deep drainage.}
+  \item{rockyLayerDrainage}{Boolean flag to indicate the simulation of drainage from rocky layers (> 95\% of rocks).}
   \item{modifySoil}{Boolean flag to indicate that the input \code{soil} object should be modified during the simulation.}
 }
 \details{

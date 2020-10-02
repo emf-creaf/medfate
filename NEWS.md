@@ -2,9 +2,18 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 1.1.0
+- Control option 'rockyLayerDrainage' instead of 'drainage' to disable macropore vertical outflow in layers with > 95% of rocks
+- Soil parameter Kperc for saturated vertical hydraulic conductivity towards groundwaters (deep drainage)
+- Improved validation plots with confidence intervals
+
+# Version 1.0.3
+- Nash-Sutcliffe efficiency (NSE) implemented in spwb_validation
+
 # Version 1.0.2
 - Bug correction on the use of organic matter in Saxton (2006) equations (thanks to Milan Fischer).
 - Recodification of soilgridParams due to new SoilGrids REST API (removed dependency from GSIF).
+- New function 'redefineSoilLayers'
 
 # Version 1.0.1
 - New root functions

@@ -26,7 +26,7 @@ A list, with the following options (default values in parentheses):
 \bold{Water balance}:
 \itemize{
   \item{\code{snowpack (=TRUE)}: Boolean flag to indicate the simulation of snow accumulation and melting.}
-  \item{\code{drainage (=TRUE)}: Boolean flag to indicate the simulation of deep drainage.}
+  \item{\code{rockyLayerDrainage (=TRUE)}: Boolean flag to indicate the simulation of drainage from rocky layers (> 95\% of rocks).}
   \item{\code{unlimitedSoilWater (=FALSE)}: Boolean flag to indicate the simulation of plant transpiration assuming that soil water is always at field capacity.}
   \item{\code{leafPhenology (=TRUE)}: Boolean flag to indicate the simulation of leaf phenology for winter-deciduous species.}
   \item{\code{unfoldingDD (=300)}: Degree-days for complete leaf unfolding after budburst has occurred.}

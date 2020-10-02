@@ -782,13 +782,14 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
     
     DataFrame paramsWaterStoragedf = paramsWaterStorage(above, SpParams, paramsAnatomydf);
 
+    List paramsCanopy = List::create(_["Temp"] = NA_REAL);
+    List ctl = clone(control);
     if(soilFunctions=="SX") {
       soilFunctions = "VG"; 
+      ctl["soilFunctions"] = soilFunctions;
       warning("Soil pedotransfer functions set to Van Genuchten ('VG').");
     }
 
-    List paramsCanopy = List::create(_["Temp"] = NA_REAL);
-    List ctl = clone(control);
     input = List::create(_["control"] = ctl,
                          _["canopy"] = paramsCanopy,
                          _["cohorts"] = cohortDescdf,
