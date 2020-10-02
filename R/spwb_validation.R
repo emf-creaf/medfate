@@ -1,18 +1,28 @@
 spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRUE,
                           plotType = "dynamics") {
-  scatterplot<-function(df, xlab="", ylab="", title=NULL) {
-    g<-ggplot(df, aes_string(x="Modelled", y = "Observed"))+
-      geom_point(cex=0.5)+
+  scatterplot<-function(df, xlab="", ylab="", title=NULL, err = FALSE) {
+    g<-ggplot(df, aes_string(x="Modelled"))
+    if(err) {
+      g<-g+
+        geom_pointrange(aes_string(y = "Observed", ymin = "obs_lower", ymax = "obs_upper"),cex=0.5)
+    }
+    g<-g + 
+      geom_point(aes_string(y = "Observed"), cex=0.5)+
       geom_abline(intercept=0, slope=1, col="black")+
-      geom_smooth(method="lm", se = FALSE, col="gray", linetype="dashed")+
+      geom_smooth(aes_string(y = "Observed"), method="lm", se = FALSE, col="gray", linetype="dashed")+
       xlab(xlab)+
       ylab(ylab)+
       theme_bw()
     if(!is.null(title)) g<-g+labs(title=title)
     return(g)
   }
-  dynamicsplot<-function(df, xlab="", ylab="", title=NULL) {
-    g<-ggplot(df, aes_string(x="Dates"))+
+  dynamicsplot<-function(df, xlab="", ylab="", title=NULL, err = FALSE) {
+    g<-ggplot(df, aes_string(x="Dates"))
+    if(err) {
+      g <- g +          
+        geom_ribbon(aes_(ymin=~obs_lower, ymax=~obs_upper), col="gray", alpha= 0.5)
+    }
+    g<-g+       
       geom_path(aes_(y=~Observed, col="Observed"))+
       geom_path(aes_(y=~Modelled, col="Modelled"))+
       xlab(xlab)+
@@ -49,14 +59,19 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
     seld = rownames(measuredData) %in% d
     df$Observed[d %in% rownames(measuredData)] = measuredData$SWC[seld]
     
-    eval_res = evalstats(df$Observed, df$Modelled)
+    if("SWC_err" %in% names(measuredData))  {
+      df$obs_lower[d %in% rownames(measuredData)] = df$Observed[d %in% rownames(measuredData)] - 1.96*measuredData[["SWC_err"]][seld]
+      df$obs_upper[d %in% rownames(measuredData)] = df$Observed[d %in% rownames(measuredData)] + 1.96*measuredData[["SWC_err"]][seld]
+    }
     
+    eval_res = evalstats(df$Observed, df$Modelled)
+      
     if(draw) {
       if(plotType=="dynamics") {
-        g<-dynamicsplot(df, ylab = "Soil moisture (% vol)")
+        g<-dynamicsplot(df, ylab = "Soil moisture (% vol)", err = ("SWC_err" %in% names(measuredData)))
       } else {
         g<-scatterplot(df, xlab  = "Modelled soil moisture (% vol)",
-                       ylab = "Measured soil moisture (% vol)")
+                       ylab = "Measured soil moisture (% vol)", err = ("SWC_err" %in% names(measuredData)))
       }
     } 
   } 
