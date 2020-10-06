@@ -452,7 +452,7 @@ List soil(DataFrame SoilParams, String VG_PTF = "Toth",
     SoilDepth +=dVec[l];
   }
   // Saturated vertical hydraulic conductivity (mm/day) 
-  double Kperc = 0.05*saturatedConductivitySaxton(clay[nlayers-1], sand[nlayers-1], om[nlayers-1], false);
+  double Kdrain = 0.05*saturatedConductivitySaxton(clay[nlayers-1], sand[nlayers-1], om[nlayers-1], false);
   double Ksoil = 0.05;
   double Gsoil = 0.5; //TO DO, implement pedotransfer functions for Gsoil
   List l = List::create(_["SoilDepth"] = SoilDepth,
@@ -465,7 +465,7 @@ List soil(DataFrame SoilParams, String VG_PTF = "Toth",
                       _["VG_alpha"] = VG_alpha,_["VG_n"] = VG_n, 
                       _["VG_theta_res"] = VG_theta_res,_["VG_theta_sat"] = VG_theta_sat,
                       _["Ksat"] = Ksat,
-                      _["Kperc"] = Kperc,
+                      _["Kdrain"] = Kdrain,
                       _["macro"] = macro,
                       _["bd"] = bd,
                       _["rfc"] = rfc);

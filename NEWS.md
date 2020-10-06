@@ -4,7 +4,7 @@
 
 # Version 1.1.0
 - Control option 'rockyLayerDrainage' instead of 'drainage' to disable macropore vertical outflow in layers with > 95% of rocks
-- Soil parameter Kperc for saturated vertical hydraulic conductivity towards groundwaters (deep drainage)
+- Soil parameter Kdrain for saturated vertical hydraulic conductivity towards groundwaters (deep drainage)
 - Improved validation plots with confidence intervals
 
 # Version 1.0.3

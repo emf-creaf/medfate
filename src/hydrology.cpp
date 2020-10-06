@@ -173,7 +173,7 @@ NumericVector soilInfiltrationPercolation(List soil, String soilFunctions,
   NumericVector dVec = soil["dVec"];
   NumericVector macro = soil["macro"];
   NumericVector rfc = soil["rfc"];
-  double Kperc = soil["Kperc"];
+  double Kdrain = soil["Kdrain"];
   NumericVector Water_FC = waterFC(soil, soilFunctions);
   NumericVector Water_SAT = waterSAT(soil, soilFunctions);
   int nlayers = W.size();
@@ -231,7 +231,7 @@ NumericVector soilInfiltrationPercolation(List soil, String soilFunctions,
     }
   }
   if(head>0.0) {
-    double maxDrainage = head*Kperc;
+    double maxDrainage = head*Kdrain;
     for(int l=0;l<nlayers;l++) {
       if(maxDrainage>0.0) {
         double Wn = W[l]*Water_FC[l];
