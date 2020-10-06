@@ -25,4 +25,4 @@ NumericVector soilWaterInputs(List soil, String soilFunctions, double prec, doub
                               bool snowpack = true, bool modifySoil = true);
 NumericVector soilInfiltrationPercolation(List soil, String soilFunctions, 
                                           double waterInput,
-                                          bool drainage = true, bool modifySoil = true);
+                                          bool rockyLayerDrainage = true, bool modifySoil = true);

@@ -1,18 +1,28 @@
 spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRUE,
                           plotType = "dynamics") {
-  scatterplot<-function(df, xlab="", ylab="", title=NULL) {
-    g<-ggplot(df, aes_string(x="Modelled", y = "Observed"))+
-      geom_point(cex=0.5)+
+  scatterplot<-function(df, xlab="", ylab="", title=NULL, err = FALSE) {
+    g<-ggplot(df, aes_string(x="Modelled"))
+    if(err) {
+      g<-g+
+        geom_pointrange(aes_string(y = "Observed", ymin = "obs_lower", ymax = "obs_upper"),cex=0.5)
+    }
+    g<-g + 
+      geom_point(aes_string(y = "Observed"), cex=0.5)+
       geom_abline(intercept=0, slope=1, col="black")+
-      geom_smooth(method="lm", se = FALSE, col="gray", linetype="dashed")+
+      geom_smooth(aes_string(y = "Observed"), method="lm", se = FALSE, col="gray", linetype="dashed")+
       xlab(xlab)+
       ylab(ylab)+
       theme_bw()
     if(!is.null(title)) g<-g+labs(title=title)
     return(g)
   }
-  dynamicsplot<-function(df, xlab="", ylab="", title=NULL) {
-    g<-ggplot(df, aes_string(x="Dates"))+
+  dynamicsplot<-function(df, xlab="", ylab="", title=NULL, err = FALSE) {
+    g<-ggplot(df, aes_string(x="Dates"))
+    if(err) {
+      g <- g +          
+        geom_ribbon(aes_(ymin=~obs_lower, ymax=~obs_upper), col="gray", alpha= 0.5)
+    }
+    g<-g+       
       geom_path(aes_(y=~Observed, col="Observed"))+
       geom_path(aes_(y=~Modelled, col="Modelled"))+
       xlab(xlab)+
@@ -23,15 +33,20 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
     return(g)
   }
   evalstats<-function(obs, pred) {
+    sel_complete = !(is.na(obs) | is.na(pred))
+    obs = obs[sel_complete]
+    pred = pred[sel_complete]
     E <- pred-obs
-    Bias <- mean(E, na.rm=T)
-    MAE <- mean(abs(E), na.rm=T)
-    R2<- cor(obs, pred, use="complete")^2
-    return(c(n = sum(!is.na(obs) & !is.na(pred)), Bias= Bias, MAE = MAE, R2 = R2))
+    Bias <- mean(E)
+    MAE <- mean(abs(E))
+    r<- cor(obs, pred)
+    NSE <- 1 - (sum((obs-pred)^2)/sum((obs-mean(obs))^2))
+    NSEabs <- 1 - (sum(abs(obs-pred))/sum(abs(obs-mean(obs))))
+    return(c(n = sum(sel_complete), Bias= Bias, MAE = MAE, r = r, NSE = NSE, NSEabs = NSEabs))
   }
   
   # Check arguments
-  type = match.arg(type, c("SWC", "SWC_scaled","E", "ETR", "WP"))
+  type = match.arg(type, c("SWC", "REW","E", "ETR", "WP"))
   plotType = match.arg(plotType, c("dynamics", "scatter"))
 
   if(type=="SWC") {
@@ -44,37 +59,45 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
     seld = rownames(measuredData) %in% d
     df$Observed[d %in% rownames(measuredData)] = measuredData$SWC[seld]
     
-    eval_res = evalstats(df$Observed, df$Modelled)
+    if("SWC_err" %in% names(measuredData))  {
+      df$obs_lower[d %in% rownames(measuredData)] = df$Observed[d %in% rownames(measuredData)] - 1.96*measuredData[["SWC_err"]][seld]
+      df$obs_upper[d %in% rownames(measuredData)] = df$Observed[d %in% rownames(measuredData)] + 1.96*measuredData[["SWC_err"]][seld]
+    }
     
+    eval_res = evalstats(df$Observed, df$Modelled)
+      
     if(draw) {
       if(plotType=="dynamics") {
-        g<-dynamicsplot(df, ylab = "Soil moisture (% vol)")
+        g<-dynamicsplot(df, ylab = "Soil moisture (% vol)", err = ("SWC_err" %in% names(measuredData)))
       } else {
         g<-scatterplot(df, xlab  = "Modelled soil moisture (% vol)",
-                       ylab = "Measured soil moisture (% vol)")
+                       ylab = "Measured soil moisture (% vol)", err = ("SWC_err" %in% names(measuredData)))
       }
     } 
   } 
-  else if(type=="SWC_scaled") {
+  else if(type=="REW") {
     sm = x$Soil
     d = rownames(sm)
-    fc = soil_thetaFC(x$soilInput, model = x$spwbInput$control$soilFunctions)
-    q_mod = quantile(sm$W.1, p=c(0.05,0.95), na.rm=T)
-    df <- data.frame(Observed = NA, Modelled = (sm$W.1-q_mod[1])/(q_mod[2]-q_mod[1]), Dates = as.Date(d))
+    # fc = soil_thetaFC(x$soilInput, model = x$spwbInput$control$soilFunctions)
+    # q_mod = quantile(sm$W.1, p=c(0.05,0.95), na.rm=T)
+    # df <- data.frame(Observed = NA, Modelled = (sm$W.1-q_mod[1])/(q_mod[2]-q_mod[1]), Dates = as.Date(d))
+    df <- data.frame(Observed = NA, Modelled = sm$W.1, Dates = as.Date(d))
     
     if(!("SWC" %in% names(measuredData))) stop(paste0("Column 'SWC' not found in measured data frame."))
     seld = rownames(measuredData) %in% d
-    q_obs = quantile(measuredData$SWC[seld], p=c(0.05,0.95), na.rm=T)
-    df$Observed[d %in% rownames(measuredData)] =(measuredData$SWC[seld]-q_obs[1])/(q_obs[2]-q_obs[1])
+    # q_obs = quantile(measuredData$SWC[seld], p=c(0.05,0.95), na.rm=T)
+    q_obs = quantile(measuredData$SWC[seld], p=c(0.9), na.rm=T) # To avoid peaks over field capacity
+    # df$Observed[d %in% rownames(measuredData)] =(measuredData$SWC[seld]-q_obs[1])/(q_obs[2]-q_obs[1])
+    df$Observed[d %in% rownames(measuredData)] = measuredData$SWC[seld]/q_obs[1]
     
     eval_res = evalstats(df$Observed, df$Modelled)
     
     if(draw) {
       if(plotType=="dynamics") {
-        g<-dynamicsplot(df, ylab = "Soil moisture (scaled)")
+        g<-dynamicsplot(df, ylab = "Relative extractable soil water (REW)")
       } else {
-        g<-scatterplot(df, xlab  = "Modelled soil moisture (scaled)",
-                       ylab = "Measured soil moisture (scaled)")
+        g<-scatterplot(df, xlab  = "Modelled relative extractable soil water (REW)",
+                       ylab = "Measured relative extractable soil water (REW)")
 
       }
     }

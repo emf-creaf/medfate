@@ -43,7 +43,7 @@ double saturatedConductivitySaxton(double clay, double sand, double om = NA_REAL
   } else {
     sand = sand/100.0;
     clay = clay/100.0;
-    om = om/100.0;
+    //om = om/100.0; //OM should be in percentage in Saxton's 2006
     double theta33t = (-0.251*sand) + (0.195*clay) + (0.011*om) + (0.006*(sand*om)) - (0.027*(clay*om)) + (0.452*(sand*clay)) + 0.299;
     double theta33 = theta33t + (1.283*pow(theta33t,2.0) - 0.374 * theta33t - 0.015);
     double theta_S33t = (0.278*sand) + (0.034*clay)+ (0.022*om) - (0.018*(sand*om)) - (0.027*(clay*om)) - (0.584*(sand*clay)) + 0.078;
@@ -73,7 +73,7 @@ double thetaSATSaxton(double clay, double sand, double om = NA_REAL) {
   } else {
     sand = sand/100.0;
     clay = clay/100.0;
-    om = om/100.0;
+    //om = om/100.0; // om as percentage in Saxton's 2006
     double theta33t = (-0.251*sand) + (0.195*clay) + (0.011*om) + (0.006*(sand*om)) - (0.027*(clay*om)) + (0.452*(sand*clay)) + 0.299;
     double theta33 = theta33t + (1.283*pow(theta33t,2.0) - 0.374 * theta33t - 0.015);
     double theta_S33t = (0.278*sand) + (0.034*clay)+ (0.022*om) - (0.018*(sand*om)) - (0.027*(clay*om)) - (0.584*(sand*clay)) + 0.078;
@@ -107,7 +107,7 @@ double theta2psiSaxton(double clay, double sand, double theta, double om = NA_RE
   } else {
     sand = sand/100.0;
     clay = clay/100.0;
-    om = om/100.0;
+    //om = om/100.0;//OM should be in percentage in Saxton's 2006
     double theta1500t = -0.024*sand + 0.487*clay+0.006*om + 0.005*(sand*om) - 0.013*(clay*om) + 0.068*(sand*clay) + 0.031;
     double theta1500 = theta1500t + (0.14*theta1500t - 0.02);
     if(theta1500<0.00001) theta1500 = 0.00001;//Truncate theta1500 to avoid NaN when taking logarithms
@@ -162,7 +162,7 @@ double psi2thetaSaxton(double clay, double sand, double psi, double om = NA_REAL
   } else {
     sand = sand/100.0;
     clay = clay/100.0;
-    om = om/100.0;
+    //om = om/100.0; // OM should be in percentage in Saxton's 2006
     double theta1500t = (-0.024*sand) + (0.487*clay) + (0.006*om) + (0.005*(sand*om)) - (0.013*(clay*om)) + (0.068*(sand*clay)) + 0.031;
     double theta1500 = theta1500t + ((0.14*theta1500t) - 0.02);
     if(theta1500<0.00001) theta1500 = 0.00001;//Truncate theta1500 to avoid NaN when taking logarithms
@@ -396,7 +396,9 @@ NumericVector temperatureChange(NumericVector dVec, NumericVector Temp,
 }
 
 // [[Rcpp::export("soil")]]
-List soil(DataFrame SoilParams, String VG_PTF = "Toth", NumericVector W = NumericVector::create(1.0), double SWE = 0.0) {
+List soil(DataFrame SoilParams, String VG_PTF = "Toth", 
+          NumericVector W = NumericVector::create(1.0), 
+          double SWE = 0.0) {
   double SoilDepth = 0.0;
   NumericVector dVec = clone(as<NumericVector>(SoilParams["widths"]));
   int nlayers = dVec.size();
@@ -446,9 +448,11 @@ List soil(DataFrame SoilParams, String VG_PTF = "Toth", NumericVector W = Numeri
     VG_theta_sat[l] = vgl[3];
     // Stolf, R., Thurler, A., Oliveira, O., Bacchi, S., Reichardt, K., 2011. Method to estimate soil macroporosity and microporosity based on sand content and bulk density. Rev. Bras. Ciencias do Solo 35, 447–459.
     macro[l] = std::max(0.0,0.693 - 0.465*bd[l] + 0.212*(sand[l]/100.0));
-    Ksat[l] = saturatedConductivitySaxton(sand[l], clay[l], om[l]);
+    Ksat[l] = saturatedConductivitySaxton(clay[l], sand[l], om[l]);
     SoilDepth +=dVec[l];
   }
+  // Saturated vertical hydraulic conductivity (mm/day) 
+  double Kdrain = 0.05*saturatedConductivitySaxton(clay[nlayers-1], sand[nlayers-1], om[nlayers-1], false);
   double Ksoil = 0.05;
   double Gsoil = 0.5; //TO DO, implement pedotransfer functions for Gsoil
   List l = List::create(_["SoilDepth"] = SoilDepth,
@@ -458,10 +462,10 @@ List soil(DataFrame SoilParams, String VG_PTF = "Toth", NumericVector W = Numeri
                       _["Ksoil"] = Ksoil, _["Gsoil"] = Gsoil,
                       _["dVec"] = dVec,
                       _["sand"] = sand, _["clay"] = clay, _["om"] = om,
-                      _["usda_Type"] = usda_Type,
                       _["VG_alpha"] = VG_alpha,_["VG_n"] = VG_n, 
                       _["VG_theta_res"] = VG_theta_res,_["VG_theta_sat"] = VG_theta_sat,
                       _["Ksat"] = Ksat,
+                      _["Kdrain"] = Kdrain,
                       _["macro"] = macro,
                       _["bd"] = bd,
                       _["rfc"] = rfc);

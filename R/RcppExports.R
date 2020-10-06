@@ -505,8 +505,8 @@ hydrology_soilWaterInputs <- function(soil, soilFunctions, prec, er, tday, rad, 
     .Call(`_medfate_soilWaterInputs`, soil, soilFunctions, prec, er, tday, rad, elevation, Cm, LgroundPAR, LgroundSWR, runon, snowpack, modifySoil)
 }
 
-hydrology_soilInfiltrationPercolation <- function(soil, soilFunctions, waterInput, drainage = TRUE, modifySoil = TRUE) {
-    .Call(`_medfate_soilInfiltrationPercolation`, soil, soilFunctions, waterInput, drainage, modifySoil)
+hydrology_soilInfiltrationPercolation <- function(soil, soilFunctions, waterInput, rockyLayerDrainage = TRUE, modifySoil = TRUE) {
+    .Call(`_medfate_soilInfiltrationPercolation`, soil, soilFunctions, waterInput, rockyLayerDrainage, modifySoil)
 }
 
 .incgam <- function(a, x) {
