@@ -29,7 +29,7 @@ transp_stomatalRegulationPlot(x, soil, meteo, day, timestep,
   \item{supplyFunction}{Water supply function (see \code{\link{hydraulics_supplyFunctionNetwork}}).}
   \item{photosynthesisFunction}{Function returned by \code{photo_photosynthesisFunction()}.}
   \item{Gwmin, Gwmax}{Minimum and maximum stomatal conductance (mol·m-2·s-1).}
-  \item{gainModifier, costModifier}{Modifiers (exponents) of the gain and cost functions defined in Sperry et al. (2016).}
+  \item{gainModifier, costModifier}{Modifiers (exponents) of the gain and cost functions defined in Sperry et al. (2017).}
   \item{costWater}{Cost water function, either "dEdP" (default) or "kterm" (experimental).}
   \item{x}{An object of class \code{\link{spwbInput}} built using the 'Sperry' transpiration mode.}
   \item{soil}{An object of class \code{\link{soil}}.}
@@ -161,7 +161,7 @@ Function \code{transp_profitMaximization} returns a list with the following elem
 
 }
 \references{
-Sperry, J. S., M. D. Venturas, W. R. L. Anderegg, M. Mencuccini, D. S. Mackay, Y. Wang, and D. M. Love. 2016. Predicting stomatal responses to the environment from the optimization of photosynthetic gain and hydraulic cost. Plant Cell and Environment.
+Sperry, J. S., M. D. Venturas, W. R. L. Anderegg, M. Mencuccini, D. S. Mackay, Y. Wang, and D. M. Love. 2017. Predicting stomatal responses to the environment from the optimization of photosynthetic gain and hydraulic cost. Plant Cell and Environment 40, 816-830 (doi: 10.1111/pce.12852).
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
