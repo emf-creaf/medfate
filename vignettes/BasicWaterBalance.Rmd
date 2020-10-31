@@ -87,7 +87,7 @@ These species commonly occur in the Spanish forest inventory of Catalonia, but m
 names(SpParamsMED)
 ```
 
-Not all parameters are needed for all models. The user can find parameter definitions in the help page of this data set. However, to fully understand the role of parameters in the model, the user should read the details of model design and formulation (http://vegmod.ctfc.cat/software/medfate). 
+Not all parameters are needed for all models. The user can find parameter definitions in the help page of this data set. However, to fully understand the role of parameters in the model, the user should read the details of model design and formulation (https://vegmod.ctfc.cat/software/medfate). 
 
 ### Vegetation
 
