@@ -21,10 +21,13 @@ citEntry(entry="Manual",
          author = "De Caceres M, Mencuccini M, Martin-StPaul N, Limousin JM, Coll L, Poyatos R, Cabon A, Granda V, Forner A, Valladares F, Martinez-Vilalta J",
          journal = "Agricultural and Forest Meteorology",
          year = "2021",
+         volume = "296",
+         doi = "10.1016/j.agrformet.2020.108233",
          url  = "https://vegmod.ctfc.cat",         
          textVersion = 
          paste(" De Caceres M, Mencuccini M, Martin-StPaul N, Limousin JM, Coll L, Poyatos R, Cabon A, Granda V, Forner A, Valladares F, Martinez-Vilalta J (2021) Unravelling the effect of species mixing on water use and drought stress in holm oak forests: a modelling approach.",
-               " Agricultural and Forest Meteorology.",
+           " Agricultural and Forest Meteorology 296",
+  	       ". https://doi.org/10.1016/j.agrformet.2020.108233",
                sep=""),
          )
          
