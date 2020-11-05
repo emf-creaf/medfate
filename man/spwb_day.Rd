@@ -27,7 +27,7 @@ growth_day(x, soil, date, tmin, tmax, rhmin, rhmax, rad, wind,
   \item{runon}{Surface water amount running on the target area from upslope (in mm).}
 }
 \details{
-  Detailed model description is available in the vignettes section. The model using 'Granier' transpiration mode is described in De Caceres et al. (2015). Simulations using the 'Sperry' transpiration mode are computationally much more expensive. 
+  Detailed model description is available in the vignettes section. The model using 'Granier' transpiration mode is described in De Caceres et al. (2015). Simulations using the 'Sperry' transpiration mode are computationally much more expensive, are described in De Cáceres et al. (2021) and are illustrated by function \code{\link{transp_transpirationSperry}}. 
 }
 \value{
 Function \code{spwb_day()} returns a list of class \code{spwb_day} with the following elements:
