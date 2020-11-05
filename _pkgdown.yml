@@ -3,7 +3,7 @@ destination: "D:/Rservices/vegmod_web/static/medfatedocs"
 home:
   links:
   - text: Package website
-    href: https://vegmod.github.io/rpackage/medfate
+    href: https://vegmod.ctfc.cat/software/medfate
 
 articles:
 - title: Overview

@@ -1,4 +1,4 @@
-medfate - Mediterranean forest functioning
+medfate - Mediterranean Forest Simulation
 ================
 
 ## Introduction
@@ -9,8 +9,9 @@ forest stands. The package provides functions to simulate the following
 processes:
 
   - Soil water balance (De Cáceres et al. 2015)
-  - Plant hydraulics, transpiration and photosynthesis
-  - Plant growth
+  - Plant hydraulics, transpiration and photosynthesis (De Cáceres et
+    al. 2021)
+  - Plant growth (in preparation)
 
 The models are parameterized for species of the Mediterranean region
 (particularly for Catalonia, NE Spain), but forests with different
@@ -42,7 +43,7 @@ devtools::install_github("vegmod/medfate",
     illustrate how to run simulation models in **medfate**.
 
   - Additional documentation of the package, including a *reference
-    book*, can be found at <https://vegmod.github.io/software/medfate>.
+    book*, can be found at <https://vegmod.ctfc.cat/software/medfate>.
 
 ## References
 
@@ -51,4 +52,11 @@ devtools::install_github("vegmod/medfate",
     model with forest inventory data to predict drought stress: the role
     of forest structural changes vs. climate changes. Agricultural and
     Forest Meteorology 213: 77-90
-    (<doi:10.1016/j.agrformet.2015.06.012>).
+    (<https://doi.org/10.1016/j.agrformet.2015.06.012>).
+
+  - De Cáceres M, Mencuccini M, Martin-StPaul N, Limousin JM, Coll L,
+    Poyatos R, Cabon A, Granda V, Forner A, Valladares F,
+    Martínez-Vilalta J (2021) Unravelling the effect of species mixing
+    on water use and drought stress in holm oak forests: a modelling
+    approach. Agricultural and Forest Meteorology 296
+    (<https://doi.org/10.1016/j.agrformet.2020.108233>).
