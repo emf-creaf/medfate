@@ -43,7 +43,7 @@ devtools::install_github("vegmod/medfate",
     illustrate how to run simulation models in **medfate**.
 
   - Additional documentation of the package, including a *reference
-    book*, can be found at <https://vegmod.ctfc.cat/software/medfate>.
+    book*, can be found at <https://vegmod.ctfc.cat/software/medfate/>.
 
 ## References
 

@@ -2,6 +2,8 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 1.1.1
+
 # Version 1.1.0
 - Control option 'rockyLayerDrainage' instead of 'drainage' to disable macropore vertical outflow in layers with > 95% of rocks
 - Soil parameter Kdrain for saturated vertical hydraulic conductivity towards groundwaters (deep drainage)
