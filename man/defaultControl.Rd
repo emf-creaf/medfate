@@ -63,9 +63,9 @@ A list, with the following options (default values in parentheses):
 \itemize{
    \item{\code{allocationStrategy (="Plant_kmax")}: Strategy for allocation (either "Plant_kmax", for constant maximum plant conductance, or "Al2As" for constant Huber value).}
    \item{\code{nonStomatalPhotosynthesisLimitation (=TRUE)}: A flag to apply limitations of pho-tosynthesis when leaf sugar levels become too high.}
-   \item{\code{floemConductanceFactor (= 0.2))}: Factor to transform stem xylem conductance to stem floem conductance (only for transpirationMode = "Sperry").}
+   \item{\code{phloemConductanceFactor (= 0.2))}: Factor to transform stem xylem conductance to stem phloem conductance (only for transpirationMode = "Sperry").}
    \item{\code{nonSugarConcentration (= 0.3)}: Non-sugar (inorganic) solute concentration  (mol·l-1) in cells.}
-   \item{\code{equilibriumOsmoticConcentration [=  c(leaf = 0.8, sapwood = 0.6)]}: Equilibrium osmotic concentrations (mol·l-1) for leaf and sapwood cells. The difference helps floem transport. }
+   \item{\code{equilibriumOsmoticConcentration [=  c(leaf = 0.8, sapwood = 0.6)]}: Equilibrium osmotic concentrations (mol·l-1) for leaf and sapwood cells. The difference helps phloem transport. }
    \item{\code{minimumSugarForGrowth [=   c(leaf = 0.25, sapwood=0.25, fineroot = 0.25)]}: Minimum concentration of sugars (mol·l-1) for growth to occur in different tissues.}
    \item{\code{respirationRates [=   c(leaf = 0.00260274, sapwood = 6.849315e-05, fineroot = 0.002054795)]}: Maintenance respiration rates for different tissues (g gluc · g dry-1 · day-1).}
    \item{\code{turnoverRates [=   c(sapwood = 0.0001261398, fineroot = 0.001897231)]}: Turnover rates (day-1) for sapwood and fineroots. Default are equivalent to 4.5\% and 50\% annual turnover for sapwood and fine roots, respectively.}

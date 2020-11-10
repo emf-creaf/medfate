@@ -38,7 +38,7 @@ defaultControl<-function() {
     # growth
     allocationStrategy = "Plant_kmax",
     nonStomatalPhotosynthesisLimitation = TRUE,
-    floemConductanceFactor = 0.2, # floem conductance per leaf area basis (l*m-2*MPa-1*s-1)
+    phloemConductanceFactor = 0.2, # phloem conductance per leaf area basis (l*m-2*MPa-1*s-1)
     nonSugarConcentration = 0.25, # mol · l-1
     equilibriumOsmoticConcentration = c(leaf = 0.8, sapwood = 0.6),  # (Paljakka et al. 2017)
     minimumSugarForGrowth = c(leaf = 0.25, sapwood=0.25, fineroot = 0.25),

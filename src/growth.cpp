@@ -19,19 +19,19 @@ const double Q10_resp = 2.0;
 
 
 /**
- * floem flow (Holtta et al. 2017)
+ * phloem flow (Holtta et al. 2017)
  *  psiUpstream, psiDownstream - water potential upstream (leaves)  and downstream
  *  concUpstream, concDownstream - sugar concentration upstream (leaves) and downstream (stem)
- *  k_f - floem conductance per leaf area basis (l*m-2*MPa-1*s-1)
+ *  k_f - phloem conductance per leaf area basis (l*m-2*MPa-1*s-1)
  *  
  *  out mol*s-1*m-2 (flow per leaf area basis)
  */
-double floemFlow(double psiUpstream, double psiDownstream,
+double phloemFlow(double psiUpstream, double psiDownstream,
                  double concUpstream, double concDownstream,
                  double temp, double k_f, double nonSugarConc) {
   double turgor_up = turgor(psiUpstream, concUpstream, temp, nonSugarConc);
   double turgor_down = turgor(psiDownstream, concDownstream, temp, nonSugarConc);
-  if(temp < 0.0) k_f = 0.0; // No floem flow if temperature below zero
+  if(temp < 0.0) k_f = 0.0; // No phloem flow if temperature below zero
   double relVisc = relativeSapViscosity((concUpstream+concDownstream)/2.0, temp);
   if(turgor_up>turgor_down) {
     return(k_f*concUpstream*(turgor_up - turgor_down)/relVisc);
@@ -39,8 +39,8 @@ double floemFlow(double psiUpstream, double psiDownstream,
     return(k_f*concDownstream*(turgor_up - turgor_down)/relVisc);
   }
 }
-// // [[Rcpp::export("growth_dailyFloemFlow")]]
-// NumericMatrix dailyFloemFlow(List x, List spwbOut, 
+// // [[Rcpp::export("growth_dailyphloemFlow")]]
+// NumericMatrix dailyPhloemFlow(List x, List spwbOut, 
 //                              NumericVector concLeaf, NumericVector concSapwood) {
 //   DataFrame paramStorage =  Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
 //   NumericVector Vleaf = Rcpp::as<Rcpp::NumericVector>(paramStorage["Vleaf"]);
@@ -64,7 +64,7 @@ double floemFlow(double psiUpstream, double psiDownstream,
 //       // double sapwoodPI = osmoticWaterPotential(concs[c], Tcan[s]);
 //       double psiUp = symplasticWaterPotential(rwcLeaf(c,s), leafPI0[c], leafEPS[c]);
 //       double psiDown = symplasticWaterPotential(rwcStem(c,s), stemPI0[c], stemEPS[c]);
-//       ff(c,s) = floemFlow(psiUp, psiDown, concLeaf[c], concSapwood[c], Tcan[s], k_floem, nonSugarConc)*3600.0; //flow as mol per hour and leaf area basis
+//       ff(c,s) = phloemFlow(psiUp, psiDown, concLeaf[c], concSapwood[c], Tcan[s], k_phloem, nonSugarConc)*3600.0; //flow as mol per hour and leaf area basis
 //     }
 //   }
 //   ff.attr("dimnames") = rwcStem.attr("dimnames");
@@ -360,7 +360,7 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
       
       if(LAlive>0.0) {
         sugarLeaf[j] += leafSugarMassDelta/(Volume_leaves[j]*glucoseMolarMass);
-        //floem transport to make sugar concentrations equal     
+        //phloem transport to make sugar concentrations equal     
         double ff = (sugarLeaf[j]-sugarSapwood[j])/2.0; 
         sugarLeaf[j] -=ff;
         PlantSugarTransport[j] = (ff*Volume_leaves[j])/(3600.0*24.0); //mol · s-1
@@ -548,7 +548,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   bool taper = control["taper"];
   bool nonStomatalPhotosynthesisLimitation = control["nonStomatalPhotosynthesisLimitation"];
   double averageFracRhizosphereResistance = control["averageFracRhizosphereResistance"];
-  double floemConductanceFactor = control["floemConductanceFactor"];
+  double phloemConductanceFactor = control["phloemConductanceFactor"];
   double nonSugarConcentration = control["nonSugarConcentration"];
   NumericVector equilibriumOsmoticConcentration  = control["equilibriumOsmoticConcentration"];
   double equilibriumLeafTotalConc = equilibriumOsmoticConcentration["leaf"];
@@ -780,8 +780,8 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
       double leafRespDay = 0.0;
       // double sfrRespDay = 0.0;
       
-      //Estimate floem conductance as a factor of stem conductance
-      double k_floem = VCstem_kmax[j]*floemConductanceFactor*(0.018/1000.0);
+      //Estimate phloem conductance as a factor of stem conductance
+      double k_phloem = VCstem_kmax[j]*phloemConductanceFactor*(0.018/1000.0);
         
       //3.0 Xylogenesis
       grow_ring(ringList[j], psiSympStem[j] ,tday, 10.0);
@@ -892,7 +892,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
         // Rcout<<" coh:"<<j<< " s:"<<s<<" dS: "<< leafSugarMassDeltaStep<<" sugar mass leaf: "<< leafSugarMassStep << " dS:"<< sapwoodSugarMassDeltaStep<< " sugar mass sap: "<< sapwoodSugarMassStep<<"\n";
         
         
-        //floem transport      
+        //phloem transport      
         
         double ff = 0.0;
         double ctl = 3600.0*Volume_leaves[j]*glucoseMolarMass;
@@ -909,14 +909,14 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
           
           if(LAlive>0.0) {
             sugarLeaf[j] += leafSugarMassDeltaStep/ctl;
-            double ft = floemFlow(LeafSympPsiInst(j,s), StemSympPsiInst(j,s), sugarLeaf[j]/LeafSympRWCInst(j,s), sugarSapwood[j]/StemSympRWCInst(j,s), Tcan[s], k_floem, nonSugarConcentration)*LAlive; //flow as mol glucose per s
+            double ft = phloemFlow(LeafSympPsiInst(j,s), StemSympPsiInst(j,s), sugarLeaf[j]/LeafSympRWCInst(j,s), sugarSapwood[j]/StemSympRWCInst(j,s), Tcan[s], k_phloem, nonSugarConcentration)*LAlive; //flow as mol glucose per s
             // sugar-starch dynamics
             double conversionLeaf = sugarStarchDynamicsLeaf(sugarLeaf[j]/LeafSympRWCInst(j,s), starchLeaf[j]/LeafSympRWCInst(j,s), minimumLeafSugarConc);
             double starchLeafIncrease = conversionLeaf*LeafSympRWCInst(j,s);
             starchLeafIncrease = std::min(starchLeafIncrease, Starch_max_leaves[j] - starchLeaf[j]);
             starchLeaf[j]  += starchLeafIncrease;
             // Rcout<<" coh:"<<j<< " s:"<<s<< " Ssugar: "<< sugarSapwood[j] << " Sstarch: "<< starchSapwood[j]<<" starch formation: "<<conversionSapwood<< "\n";
-            //Apply floem transport (mol gluc) to sugar concentrations (mol gluc· l-1)
+            //Apply phloem transport (mol gluc) to sugar concentrations (mol gluc· l-1)
             sugarLeaf[j]  +=  (-ft/Volume_leaves[j]) - starchLeafIncrease;
             sugarSapwood[j] +=  (ft/Volume_sapwood[j]) - starchSapwoodIncrease;
             ff +=ft;
@@ -929,7 +929,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
         PlantStarchLeafInst(j,s) = starchLeaf[j];
         PlantStarchSapwoodInst(j,s) = starchSapwood[j];
         PlantSugarTransportInst(j,s) = 1000.0*ff/(3600.0); //mmol·s-1
-        PlantSugarTransport[j] += ff; //To calculate daily floem balance (positive means towards stem)
+        PlantSugarTransport[j] += ff; //To calculate daily phloem balance (positive means towards stem)
         // Rcout<<" coh:"<<j<< " s:"<<s<< " conc leaf: "<< sugarLeaf[j] << " conc sap: "<< sugarSapwood[j]<<" ff: "<<ff<< "\n";
         
         // Rcout<<j<<" LeafTLP "<< turgorLossPoint(LeafPI0[j], LeafEPS[j])<< " Leaf PI "<< osmoticWaterPotential(sugarLeaf[j], tday)<< " Conc "<< sugarLeaf[j]<< " TLPconc"<< tlpConcLeaf<<"\n";
