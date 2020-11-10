@@ -3,6 +3,7 @@
 -------------------------------
 
 # Version 1.1.1
+- Root exudation added to carbon balance
 
 # Version 1.1.0
 - Control option 'rockyLayerDrainage' instead of 'drainage' to disable macropore vertical outflow in layers with > 95% of rocks

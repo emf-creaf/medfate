@@ -443,7 +443,8 @@ plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = F
     plot.spwb(x,type, cohorts, bySpecies, dates, subdaily, xlim, ylim, xlab, ylab, ...)
   } 
   else if(type %in% c("GrossPhotosynthesis", "MaintenanceRespiration",  "GrowthRespiration", "CarbonBalance", 
-                      "SugarLeaf","StarchLeaf","SugarSapwood","StarchSapwood", "SugarTransport", "LeafPI0", "StemPI0")) {
+                      "SugarLeaf","StarchLeaf","SugarSapwood","StarchSapwood", "SugarTransport", "RootExudation",
+                      "LeafPI0", "StemPI0")) {
       OM = PCB[[type]][,cohorts,drop=FALSE]
       if(bySpecies) OM = .averageBySpecies(OM, spnames)
       if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]

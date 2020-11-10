@@ -234,6 +234,7 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
   NumericVector LAgrowth(numCohorts,0.0);
   NumericVector GrossPhotosynthesis(numCohorts,0.0);
   NumericVector PlantLAIdead(numCohorts,0.0), PlantLAIlive(numCohorts,0.0),PlantLAIexpanded(numCohorts,0.0);
+  NumericVector RootExudation(numCohorts,0.0);
   
   //Storage volume and maximum starch capacity for leaves and sapwood  
   NumericVector Volume_leaves(numCohorts,0.0);
@@ -373,10 +374,16 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
       starchSapwood[j] +=conversionSapwood;
       sugarSapwood[j] -=conversionSapwood;
 
-      //Excess is lost
-      starchLeaf[j] = std::min(starchLeaf[j], Starch_max_leaves[j]);
-      starchSapwood[j] = std::min(starchSapwood[j], Starch_max_sapwood[j]);
-      
+      //Excess starch carbon is lost as root exudation
+      if(starchLeaf[j] > Starch_max_leaves[j]) {
+        RootExudation[j] += ((starchLeaf[j] - Starch_max_leaves[j])*(Volume_leaves[j]*glucoseMolarMass)/B_total);
+        starchLeaf[j] = Starch_max_leaves[j];
+      }
+      if(starchSapwood[j] > Starch_max_sapwood[j]) {
+        RootExudation[j] += ((starchSapwood[j] - Starch_max_sapwood[j])*(Volume_sapwood[j]*glucoseMolarMass)/B_total);
+        starchSapwood[j] = Starch_max_sapwood[j];
+      }
+
       if(sugarLeaf[j] < 0.0) { //Leaf senescense due to C starvation
         double respirationExcess = -sugarLeaf[j]*(Volume_leaves[j]*glucoseMolarMass); //g gluc
         double propExcess = respirationExcess/leafRespDay; //day
@@ -492,6 +499,7 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
                                                    _["SugarSapwood"] = PlantSugarSapwood,
                                                    _["StarchSapwood"] = PlantStarchSapwood,
                                                    _["SugarTransport"] = PlantSugarTransport,
+                                                   _["RootExudation"] = RootExudation,
                                                    _["LabileMassLeaf"] = LabileMassLeaf,
                                                    _["LabileMassSapwood"] = LabileMassSapwood,
                                                    _["StemPI0"] = clone(StemPI0), //Store a copy of the current osmotic potential at full turgor
@@ -733,6 +741,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   NumericVector SAgrowth(numCohorts,0.0), LAgrowth(numCohorts,0.0), FRAgrowth(numCohorts,0.0);
   NumericVector GrossPhotosynthesis(numCohorts,0.0);
   NumericVector PlantLAIdead(numCohorts,0.0), PlantLAIlive(numCohorts,0.0),PlantLAIexpanded(numCohorts,0.0);
+  NumericVector RootExudation(numCohorts,0.0);
   
   //Storage volume and maximum starch capacity for leaves and sapwood  
   NumericVector Volume_leaves(numCohorts,0.0);
@@ -904,7 +913,11 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
           double conversionSapwood = sugarStarchDynamicsStem(sugarSapwood[j]/StemSympRWCInst(j,s), starchSapwood[j]/StemSympRWCInst(j,s), minimumSapwoodSugarConc);
           // Rcout<<" coh:"<<j<< " s:"<<s<< " Lsugar: "<< sugarLeaf[j] << " Lstarch: "<< sugarSapwood[j]<<" starch formation: "<<conversionLeaf<< "\n";
           double starchSapwoodIncrease = conversionSapwood*StemSympRWCInst(j,s);
-          starchSapwoodIncrease = std::min(starchSapwoodIncrease, Starch_max_sapwood[j] - starchSapwood[j]);
+          //Divert to root exudation if starch is over maximum capacity
+          if(starchSapwoodIncrease > Starch_max_sapwood[j] - starchSapwood[j]) {
+            RootExudation[j] += ((starchSapwood[j] + starchSapwoodIncrease - Starch_max_sapwood[j])*(Volume_sapwood[j]*glucoseMolarMass)/B_total);
+            starchSapwoodIncrease = Starch_max_sapwood[j] - starchSapwood[j];
+          }
           starchSapwood[j] += starchSapwoodIncrease;
           
           if(LAlive>0.0) {
@@ -913,7 +926,11 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
             // sugar-starch dynamics
             double conversionLeaf = sugarStarchDynamicsLeaf(sugarLeaf[j]/LeafSympRWCInst(j,s), starchLeaf[j]/LeafSympRWCInst(j,s), minimumLeafSugarConc);
             double starchLeafIncrease = conversionLeaf*LeafSympRWCInst(j,s);
-            starchLeafIncrease = std::min(starchLeafIncrease, Starch_max_leaves[j] - starchLeaf[j]);
+            //Divert to root exudation if starch is over maximum capacity
+            if(starchLeafIncrease > Starch_max_leaves[j] - starchLeaf[j]) {
+              RootExudation[j] += ((starchLeaf[j] + starchLeafIncrease - Starch_max_leaves[j])*(Volume_leaves[j]*glucoseMolarMass)/B_total);
+              starchLeafIncrease = Starch_max_leaves[j] - starchLeaf[j];
+            }
             starchLeaf[j]  += starchLeafIncrease;
             // Rcout<<" coh:"<<j<< " s:"<<s<< " Ssugar: "<< sugarSapwood[j] << " Sstarch: "<< starchSapwood[j]<<" starch formation: "<<conversionSapwood<< "\n";
             //Apply phloem transport (mol gluc) to sugar concentrations (mol gluc· l-1)
@@ -1144,6 +1161,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
                                    _["SugarSapwood"] = PlantSugarSapwood,
                                    _["StarchSapwood"] = PlantStarchSapwood,
                                    _["SugarTransport"] = PlantSugarTransport,
+                                   _["RootExudation"] = RootExudation,
                                    _["LabileMassLeaf"] = LabileMassLeaf,
                                    _["LabileMassSapwood"] = LabileMassSapwood,
                                    _["StemPI0"] = clone(StemPI0), //Store a copy of the current osmotic potential at full turgor
@@ -1503,6 +1521,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   NumericMatrix PlantLAIexpanded(numDays, numCohorts), PlantLAIdead(numDays, numCohorts), PlantLAIlive(numDays, numCohorts);
   NumericVector SAgrowthcum(numCohorts, 0.0);
   NumericMatrix StemPI0(numDays, numCohorts), LeafPI0(numDays, numCohorts);
+  NumericMatrix RootExudation(numDays, numCohorts);
   
   //Water balance output variables
   DataFrame DWB = defineWaterBalanceDailyOutput(meteo, PET, transpirationMode);
@@ -1655,6 +1674,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
     PlantSugarTransport(i,_) = Rcpp::as<Rcpp::NumericVector>(cb["SugarTransport"]);
     StemPI0(i,_) = Rcpp::as<Rcpp::NumericVector>(cb["StemPI0"]); 
     LeafPI0(i,_) = Rcpp::as<Rcpp::NumericVector>(cb["LeafPI0"]); 
+    RootExudation(i,_) = Rcpp::as<Rcpp::NumericVector>(cb["RootExudation"]);
     
     SapwoodArea(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["SapwoodArea"]);
     LeafArea(i,_) = Rcpp::as<Rcpp::NumericVector>(pg["LeafArea"]);
@@ -1772,6 +1792,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   FRAgrowth.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   StemPI0.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   LeafPI0.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
+  RootExudation.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   // PlantLAIdead.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   // PlantLAIlive.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
   // PlantLAIexpanded.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
@@ -1798,6 +1819,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
     Named("SugarSapwood") = PlantSugarSapwood,
     Named("StarchSapwood") = PlantStarchSapwood,
     Named("SugarTransport") = PlantSugarTransport,
+    Named("RootExudation") = RootExudation,
     // Named("LabileMassLeaf") = LabileMassLeaf,
     // Named("LabileMassSapwood") = LabileMassSapwood,
     Named("LeafPI0") = LeafPI0,

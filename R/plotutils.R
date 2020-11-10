@@ -50,7 +50,7 @@
 .getDailyGROWTHPlotTypes<-function(transpirationMode = "Granier"){
   TYPES = c("GrossPhotosynthesis","MaintenanceRespiration","GrowthRespiration", "CarbonBalance",
             "SugarTransport", "LeafPI0", "StemPI0",
-            "SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport",
+            "SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport", "RootExudation",
             "SapwoodArea", "LeafArea", "FineRootArea", "SAgrowth", "LAgrowth", "FRAgrowth",
             "HuberValue", "RootAreaLeafArea",
             .getDailySPWBPlotTypes(transpirationMode))
@@ -86,6 +86,7 @@
   else if(type=="SugarSapwood") ylab=expression(paste("Sapwood sugar concentration  ", (mol%.%L^{-1})))
   else if(type=="StarchSapwood") ylab=expression(paste("Sapwood starch concentration  ", (mol%.%L^{-1})))
   else if(type=="SugarTransport") ylab=expression(paste("Floem sugar transport rate ", (mmol%.%s^{-1})))
+  else if(type=="RootExudation") ylab=expression(paste("Root exudation ", (gGluc%.%gdry^{-1})))
   else if(type=="SapwoodArea")  ylab = expression(paste("Sapwood area  ",(cm^2)))
   else if(type=="LeafArea")  ylab = expression(paste("Leaf area  ",(m^2)))
   else if(type=="FineRootArea")  ylab = expression(paste("Fine root area  ",(m^2)))

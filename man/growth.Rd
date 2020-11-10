@@ -61,7 +61,8 @@ growth(x, soil, meteo,  latitude, elevation = NA, slope = NA, aspect = NA)
         \item{\code{"StarchLeaf"}: Starch concentration (mol·l-1) in leaves.}
         \item{\code{"SugarSapwood"}: Sugar concentration (mol·l-1) in sapwood.}
         \item{\code{"StarchSapwood"}: Starch concentration (mol·l-1) in sapwood.}
-    }
+        \item{\code{"Root exudation"}: Root exudation per dry weight of living biomass (g gluc · g dry-1).}    
+      }
   \item{\code{"PlantGrowth"}: A list of daily growth results for plant cohorts, with elements:}
     \itemize{
         \item{\code{"SapwoodArea"}: Daily amount of sapwood area (in cm2) for an average individual of each plant cohort.}
