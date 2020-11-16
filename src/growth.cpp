@@ -339,8 +339,8 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
         double deltaSAring = 0.0;
         if(SAring.size()==1) deltaSAring = SAring[0];
         else deltaSAring = SAring[SAring.size()-1] - SAring[SAring.size()-2];
-        double RGRcellmax = (2e-8/SA[j]);
-        double deltaSAsink = (1e-8*(deltaSAring/10.0))*(RGRsapwoodmax[j]/RGRcellmax); //Correction for the difference in the number of cells
+        double cellareamaxincrease = 20.0; 
+        double deltaSAsink = (SA[j]*RGRsapwoodmax[j]*(deltaSAring/10.0)/cellareamaxincrease); 
         double deltaSAavailable = std::max(0.0,((starchSapwood[j]- minimumStarchGrowthSapwood)*(glucoseMolarMass*Volume_sapwood[j]))/costPerSA);
         deltaSAgrowth = std::min(deltaSAsink, deltaSAavailable);
         // Rcout<< SAring.size()<<" " <<j<< " "<< PlantPsi[j]<< " "<< LeafPI0[j]<<" dSAring "<<deltaSAring<< " dSAsink "<< deltaSAsink<<" dSAgrowth "<< deltaSAgrowth<<"\n";
@@ -864,9 +864,10 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
         //fine root growth
         if(fineRootBiomass[j] < fineRootBiomassTarget[j]) {
           for(int s = 0;s<numLayers;s++) {
+            double deltaFRBpheno = std::max(fineRootBiomassTarget[j] - fineRootBiomass[j], 0.0);
             double deltaFRBsink = (1.0/((double) numSteps))*(V(j,s)*fineRootBiomass[j])*RGRfinerootmax*(rfineroot[s]/rleafcellmax);
             double deltaFRBavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarGrowthFineRoots)*(glucoseMolarMass*Volume_sapwood[j]))/fineroot_CC);
-            double deltaFRBgrowthStep = std::min(deltaFRBsink, deltaFRBavailable);
+            double deltaFRBgrowthStep = std::min(deltaFRBpheno, std::min(deltaFRBsink, deltaFRBavailable));
             growthCostFRBStep += deltaFRBgrowthStep*fineroot_CC;
             deltaFRBgrowth[s] += deltaFRBgrowthStep;
             // if(deltaFRBgrowthStep>0) Rcout << deltaFRBgrowthStep<<"\n";
@@ -879,8 +880,8 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
           double deltaSAring = 0.0;
           if(SAring.size()==1) deltaSAring = SAring[0];
           else deltaSAring = SAring[SAring.size()-1] - SAring[SAring.size()-2];
-          double RGRcellmax = (2e-8/SA[j]);
-          double deltaSAsink = (1e-8*(deltaSAring/10.0))*(RGRsapwoodmax[j]/RGRcellmax)/((double) numSteps); //Correction for the difference in the number of cells
+          double cellareamaxincrease = 20.0; 
+          double deltaSAsink = (SA[j]*RGRsapwoodmax[j]*(deltaSAring/10.0)/cellareamaxincrease)/((double) numSteps); 
           double deltaSAavailable = std::max(0.0,((starchSapwood[j]- minimumStarchGrowthSapwood)*(glucoseMolarMass*Volume_sapwood[j]))/costPerSA);
           double deltaSAgrowthStep = std::min(deltaSAsink, deltaSAavailable);
           growthCostSAStep += deltaSAgrowthStep*costPerSA; //increase cost (may be non zero if leaf growth was charged onto sapwood)
