@@ -1065,7 +1065,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
         Plant_kmax[j] = 1.0/((1.0/VCleaf_kmax[j])+(1.0/VCstem_kmax[j])+(1.0/VCroot_kmaxVEC[j]));
         //Update leaf and stem osmotic water potential at full turgor
         LeafPI0[j] = osmoticWaterPotential(sugarLeaf[j], 20.0, nonSugarConcentration); //Osmotic potential at full turgor assuming RWC = 1 and 20ºC
-        // StemPI0[j] = osmoticWaterPotential(sugarSapwood[j], 20.0, nonSugarConc);
+        StemPI0[j] = osmoticWaterPotential(sugarSapwood[j], 20.0, nonSugarConcentration);
         //Update non-stomatal photosynthesis limitations
         if(nonStomatalPhotosynthesisLimitation) NSPL[j] = 1.0 - std::max(0.0, std::min(1.0, sugarLeaf[j] - 0.5)); //photosynthesis limited when conc > 0.5 and zero when conc > 1.5 mol·l-1
         else NSPL[j] = 1.0;
