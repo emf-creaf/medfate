@@ -214,7 +214,7 @@ plot(G1, "GrossPhotosynthesis", bySpecies = T)
 Then we can draw the respiration costs (maintenance and growth) in the same units:
 ```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
 plot(G1, "MaintenanceRespiration", bySpecies = T)
-plot(G1, "GrowthRespiration", bySpecies = T)
+plot(G1, "GrowthCosts", bySpecies = T)
 ```
 Finally we can display the daily negative or positive balance of the plant, which determines changes in plant carbon pools:
 ```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}

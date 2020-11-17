@@ -442,7 +442,7 @@ plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = F
   if(type %in% TYPES_SWB) {
     plot.spwb(x,type, cohorts, bySpecies, dates, subdaily, xlim, ylim, xlab, ylab, ...)
   } 
-  else if(type %in% c("GrossPhotosynthesis", "MaintenanceRespiration",  "GrowthRespiration", "CarbonBalance", 
+  else if(type %in% c("GrossPhotosynthesis", "MaintenanceRespiration",  "GrowthCosts", "CarbonBalance", 
                       "SugarLeaf","StarchLeaf","SugarSapwood","StarchSapwood", "SugarTransport", "RootExudation",
                       "LeafPI0", "StemPI0")) {
       OM = PCB[[type]][,cohorts,drop=FALSE]
@@ -606,7 +606,7 @@ plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = F
     if(is.null(ylab)) ylab=expression(paste("iWUE  ", (mu%.%mol%.%mol^{-1})))
     return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
   } 
-  else if(type %in% c("GrossPhotosynthesis", "MaintenanceRespiration", "GrowthRespiration", "CarbonBalance",
+  else if(type %in% c("GrossPhotosynthesis", "MaintenanceRespiration", "GrowthCosts", "CarbonBalance",
                       "SugarLeaf","StarchLeaf","SugarSapwood","StarchSapwood", "SugarTransport")) {
     m = extractSubdaily(x, type, dates)[,c("datetime", cohorts), drop=FALSE]
     if(is.null(ylab)) ylab=.getYLab(type)

@@ -48,7 +48,7 @@
   return(TYPES)
 }
 .getDailyGROWTHPlotTypes<-function(transpirationMode = "Granier"){
-  TYPES = c("GrossPhotosynthesis","MaintenanceRespiration","GrowthRespiration", "CarbonBalance",
+  TYPES = c("GrossPhotosynthesis","MaintenanceRespiration","GrowthCosts", "CarbonBalance",
             "SugarTransport", "LeafPI0", "StemPI0",
             "SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport", "RootExudation",
             "SapwoodArea", "LeafArea", "FineRootArea", "SAgrowth", "LAgrowth", "FRAgrowth",
@@ -57,7 +57,7 @@
   return(TYPES)
 }
 .getSubdailyGROWTHPlotTypes<-function(){
-  TYPES = c("GrossPhotosynthesis","MaintenanceRespiration","GrowthRespiration", "CarbonBalance",
+  TYPES = c("GrossPhotosynthesis","MaintenanceRespiration","GrowthCosts", "CarbonBalance",
             "SugarTransport",
             "SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport",
             .getSubdailySPWBPlotTypes())
@@ -79,7 +79,7 @@
   else if(type=="AbsorbedLWRPerLeaf") ylab = expression(paste("Absorbed LWR per leaf area ",(MJ%.%m^{-2})))
   else if(type=="GrossPhotosynthesis") ylab=expression(paste("Gross photosynthesis ", (gGluc%.%gdry^{-1})))
   else if(type=="MaintenanceRespiration") ylab=expression(paste("Maintenance respiration ", (gGluc%.%gdry^{-1})))
-  else if(type=="GrowthRespiration") ylab=expression(paste("Growth respiration ", (gGluc%.%gdry^{-1})))
+  else if(type=="GrowthCosts") ylab=expression(paste("Growth costs ", (gGluc%.%gdry^{-1})))
   else if(type=="CarbonBalance") ylab=expression(paste("Carbon balance ", (gGluc%.%gdry^{-1})))
   else if(type=="SugarLeaf") ylab=expression(paste("Leaf sugar concentration  ", (mol%.%L^{-1})))
   else if(type=="StarchLeaf") ylab=expression(paste("Leaf starch concentration  ", (mol%.%L^{-1})))

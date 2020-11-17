@@ -53,15 +53,15 @@ growth(x, soil, meteo,  latitude, elevation = NA, slope = NA, aspect = NA)
   \item{\code{"SunlitLeaves"} and \code{"ShadeLeaves"}: A list with daily results for sunlit and shade leaves (only for \code{transpirationMode = "Sperry"}; see \code{\link{spwb}}).}
   \item{\code{"PlantCarbonBalance"}: A list of daily carbon balance results for plant cohorts, with elements:}
     \itemize{
-        \item{\code{"GrossPhotosynthesis"}: Gross photosynthesis rate per dry weight of living biomass (g gluc · g dry-1).}
-        \item{\code{"MaintentanceRespiration"}: Maintenance respiration rate per dry weight of living biomass (g gluc · g dry-1).}
-        \item{\code{"GrowthRespiration"}: Growth respiration rate per dry weight of living biomass (g gluc · g dry-1).}
-        \item{\code{"CarbonBalance"}: Carbon balance (photosynthesis - respiration) per dry weight of living biomass (g gluc · g dry-1).}
+        \item{\code{"GrossPhotosynthesis"}: Daily gross photosynthesis per dry weight of living biomass (g gluc · g dry-1).}
+        \item{\code{"MaintentanceRespiration"}: Daily maintenance respiration per dry weight of living biomass (g gluc · g dry-1).}
+        \item{\code{"GrowthCosts"}: Daily growth costs per dry weight of living biomass (g gluc · g dry-1).}
+        \item{\code{"RootExudation"}: Root exudation per dry weight of living biomass (g gluc · g dry-1).}    
+        \item{\code{"CarbonBalance"}: Daily plant carbon balance (photosynthesis - maintenance respiration - growth costs - root exudation) per dry weight of living biomass (g gluc · g dry-1).}
         \item{\code{"SugarLeaf"}: Sugar concentration (mol·l-1) in leaves.}
         \item{\code{"StarchLeaf"}: Starch concentration (mol·l-1) in leaves.}
         \item{\code{"SugarSapwood"}: Sugar concentration (mol·l-1) in sapwood.}
         \item{\code{"StarchSapwood"}: Starch concentration (mol·l-1) in sapwood.}
-        \item{\code{"Root exudation"}: Root exudation per dry weight of living biomass (g gluc · g dry-1).}    
       }
   \item{\code{"PlantGrowth"}: A list of daily growth results for plant cohorts, with elements:}
     \itemize{
