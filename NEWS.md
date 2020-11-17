@@ -5,6 +5,8 @@
 # Version 1.1.1
 - Root exudation added to carbon balance
 - Revision sapwood growth
+- Growth cost for fine roots in basic model
+- Translocation for carbon during senescence
 
 # Version 1.1.0
 - Control option 'rockyLayerDrainage' instead of 'drainage' to disable macropore vertical outflow in layers with > 95% of rocks
