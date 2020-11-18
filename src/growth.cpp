@@ -353,6 +353,20 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
       starchSapwood[j] += sapwoodStarchMassDelta/(Volume_sapwood[j]*glucoseMolarMass);
       if(LAlive>0.0) sugarLeaf[j] += leafSugarMassDelta/(Volume_leaves[j]*glucoseMolarMass);
 
+      //PHLOEM TRANSPORT AND SUGAR-STARCH DYNAMICS     
+      if(LAlive>0.0) {
+        double ff = (sugarLeaf[j]-sugarSapwood[j])/2.0; 
+        sugarLeaf[j] -=ff;
+        PlantSugarTransport[j] = (ff*Volume_leaves[j])/(3600.0*24.0); //mol · s-1
+        sugarSapwood[j] +=(Volume_leaves[j]/Volume_sapwood[j])*ff;
+        double conversionLeaf = std::max(-starchLeaf[j], sugarLeaf[j] - minimumLeafSugarConc);
+        starchLeaf[j] +=conversionLeaf;
+        sugarLeaf[j] -=conversionLeaf;
+      }
+      double conversionSapwood = std::max(-starchSapwood[j], sugarSapwood[j] - minimumSapwoodSugarConc);
+      starchSapwood[j] +=conversionSapwood;
+      sugarSapwood[j] -=conversionSapwood;
+
       //LEAF SENESCENCE DUE TO NEGATIVE CARBON BALANCE
       if(sugarLeaf[j] < 0.0) { 
         double respirationExcess = -sugarLeaf[j]*(Volume_leaves[j]*glucoseMolarMass); //g gluc
@@ -369,20 +383,6 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
         Starch_max_leaves[j] = leafStarchCapacity(LAI_expanded[j],  N[j], SLA[j], 0.3)/Volume_leaves[j];
       }
       
-      //PHLOEM TRANSPORT AND SUGAR-STARCH DYNAMICS     
-      if(LAlive>0.0) {
-        double ff = (sugarLeaf[j]-sugarSapwood[j])/2.0; 
-        sugarLeaf[j] -=ff;
-        PlantSugarTransport[j] = (ff*Volume_leaves[j])/(3600.0*24.0); //mol · s-1
-        sugarSapwood[j] +=(Volume_leaves[j]/Volume_sapwood[j])*ff;
-        double conversionLeaf = std::max(-starchLeaf[j], sugarLeaf[j] - minimumLeafSugarConc);
-        starchLeaf[j] +=conversionLeaf;
-        sugarLeaf[j] -=conversionLeaf;
-      }
-      double conversionSapwood = std::max(-starchSapwood[j], sugarSapwood[j] - minimumSapwoodSugarConc);
-      starchSapwood[j] +=conversionSapwood;
-      sugarSapwood[j] -=conversionSapwood;
-
       //SENESCENCE
       //Leaf senescence
       double propLeafSenescence = 0.0;
