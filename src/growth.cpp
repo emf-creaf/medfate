@@ -892,37 +892,18 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
         GrowthCosts[j] +=GrowthCostsInst(j,s); //growth cost in g gluc · gdry-1
 
         
+
+        //PHLOEM TRANSPORT AND SUGAR-STARCH DYNAMICS (INCLUDING EXUDATION and PARTIAL MASS BALANCE)
         //sugar mass balance
         double leafSugarMassDeltaStep = leafAgStepG - leafRespStep - growthCostLAStep;
         double sapwoodSugarMassDeltaStep = - finerootRespStep  - growthCostFRBStep;
         double sapwoodStarchMassDeltaStep = - growthCostSAStep - sapwoodRespStep;
-        // Rcout<<" coh:"<<j<< " s:"<<s<<" dS: "<< leafSugarMassDeltaStep<<" sugar mass leaf: "<< leafSugarMassStep << " dS:"<< sapwoodSugarMassDeltaStep<< " sugar mass sap: "<< sapwoodSugarMassStep<<"\n";
-        
-        sugarSapwood[j] += sapwoodSugarMassDeltaStep/(Volume_sapwood[j]*glucoseMolarMass);
-        starchSapwood[j] += sapwoodStarchMassDeltaStep/(Volume_sapwood[j]*glucoseMolarMass);
-        if(LAlive>0.0) sugarLeaf[j] += leafSugarMassDeltaStep/(Volume_leaves[j]*glucoseMolarMass);
-        
-        //LEAF SENESCENCE DUE TO NEGATIVE CARBON BALANCE
-        if(sugarLeaf[j] < 0.0) { 
-          double respirationExcess = -sugarLeaf[j]*(Volume_leaves[j]*glucoseMolarMass); //g gluc
-          double propExcess = respirationExcess/leafRespStep; //step excess
-          // Rcout<< j <<" Excess respiration: " << respirationExcess << " Prop:"<< propExcess<< " LAlive " << LAlive << " LAlivenew "<< LAlive*(1.0 - propExcess) <<"\n";
-          LAdead = LAdead + LAexpanded*propExcess;
-          LAexpanded = LAexpanded*(1.0 - propExcess);
-          LAlive = LAlive*(1.0 - propExcess);
-          LAI_expanded[j] = LAI_expanded[j]*(1.0 - propExcess);
-          LAI_live[j] = LAI_live[j]*(1.0 - propExcess);
-          sugarLeaf[j] = 0.0;
-          MaintenanceRespirationInst(j,s) -= (respirationExcess/B_total); //Remove respiration excess from carbon balance 
-          MaintenanceRespiration[j] -= (respirationExcess/B_total); //Remove respiration excess from carbon balance 
-          Volume_leaves[j] = leafStorageVolume(LAI_expanded[j],  N[j], SLA[j], LeafDensity[j]);
-          Starch_max_leaves[j] = leafStarchCapacity(LAI_expanded[j],  N[j], SLA[j], 0.3)/Volume_leaves[j];
-        }
-        
-        
-        //PHLOEM TRANSPORT AND SUGAR-STARCH DYNAMICS (INCLUDING EXUDATION)
         double ff = 0.0;
+        double ctl = 3600.0*Volume_leaves[j]*glucoseMolarMass;
+        double cts = 3600.0*Volume_sapwood[j]*glucoseMolarMass;
         for(int t=0;t<3600;t++) {
+          sugarSapwood[j] += sapwoodSugarMassDeltaStep/cts;
+          starchSapwood[j] += sapwoodStarchMassDeltaStep/cts;
           double conversionSapwood = sugarStarchDynamicsStem(sugarSapwood[j]/StemSympRWCInst(j,s), starchSapwood[j]/StemSympRWCInst(j,s), minimumSapwoodSugarConc);
           // Rcout<<" coh:"<<j<< " s:"<<s<< " Lsugar: "<< sugarLeaf[j] << " Lstarch: "<< sugarSapwood[j]<<" starch formation: "<<conversionLeaf<< "\n";
           double starchSapwoodIncrease = conversionSapwood*StemSympRWCInst(j,s);
@@ -934,6 +915,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
           starchSapwood[j] += starchSapwoodIncrease;
           
           if(LAlive>0.0) {
+            sugarLeaf[j] += leafSugarMassDeltaStep/ctl;
             double ft = phloemFlow(LeafSympPsiInst(j,s), StemSympPsiInst(j,s), sugarLeaf[j]/LeafSympRWCInst(j,s), sugarSapwood[j]/StemSympRWCInst(j,s), Tcan[s], k_phloem, nonSugarConcentration)*LAlive; //flow as mol glucose per s
             // sugar-starch dynamics
             double conversionLeaf = sugarStarchDynamicsLeaf(sugarLeaf[j]/LeafSympRWCInst(j,s), starchLeaf[j]/LeafSympRWCInst(j,s), minimumLeafSugarConc);
@@ -952,6 +934,23 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
           } else {
             sugarSapwood[j] += - starchSapwoodIncrease;
           }
+        }
+
+        //LEAF SENESCENCE DUE TO NEGATIVE CARBON BALANCE
+        if((LAlive>0.0) & (sugarLeaf[j] < 0.0)) { 
+          double respirationExcess = -sugarLeaf[j]*(Volume_leaves[j]*glucoseMolarMass); //g gluc
+          double propExcess = respirationExcess/leafRespStep; //step excess
+          // Rcout<< j <<" Excess respiration: " << respirationExcess << " Prop:"<< propExcess<< " LAlive " << LAlive << " LAlivenew "<< LAlive*(1.0 - propExcess) <<"\n";
+          LAdead = LAdead + LAexpanded*propExcess;
+          LAexpanded = LAexpanded*(1.0 - propExcess);
+          LAlive = LAlive*(1.0 - propExcess);
+          LAI_expanded[j] = LAI_expanded[j]*(1.0 - propExcess);
+          LAI_live[j] = LAI_live[j]*(1.0 - propExcess);
+          sugarLeaf[j] = 0.0;
+          MaintenanceRespirationInst(j,s) -= (respirationExcess/B_total); //Remove respiration excess from carbon balance 
+          MaintenanceRespiration[j] -= (respirationExcess/B_total); //Remove respiration excess from carbon balance 
+          Volume_leaves[j] = leafStorageVolume(LAI_expanded[j],  N[j], SLA[j], LeafDensity[j]);
+          Starch_max_leaves[j] = leafStarchCapacity(LAI_expanded[j],  N[j], SLA[j], 0.3)/Volume_leaves[j];
         }
         
         
