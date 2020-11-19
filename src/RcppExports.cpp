@@ -628,28 +628,30 @@ BEGIN_RCPP
 END_RCPP
 }
 // cohortEquilibriumLeafLitter
-NumericVector cohortEquilibriumLeafLitter(List x, DataFrame SpParams, double AET);
-RcppExport SEXP _medfate_cohortEquilibriumLeafLitter(SEXP xSEXP, SEXP SpParamsSEXP, SEXP AETSEXP) {
+NumericVector cohortEquilibriumLeafLitter(List x, DataFrame SpParams, double AET, String mode);
+RcppExport SEXP _medfate_cohortEquilibriumLeafLitter(SEXP xSEXP, SEXP SpParamsSEXP, SEXP AETSEXP, SEXP modeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< double >::type AET(AETSEXP);
-    rcpp_result_gen = Rcpp::wrap(cohortEquilibriumLeafLitter(x, SpParams, AET));
+    Rcpp::traits::input_parameter< String >::type mode(modeSEXP);
+    rcpp_result_gen = Rcpp::wrap(cohortEquilibriumLeafLitter(x, SpParams, AET, mode));
     return rcpp_result_gen;
 END_RCPP
 }
 // cohortEquilibriumSmallBranchLitter
-NumericVector cohortEquilibriumSmallBranchLitter(List x, DataFrame SpParams, double smallBranchDecompositionRate);
-RcppExport SEXP _medfate_cohortEquilibriumSmallBranchLitter(SEXP xSEXP, SEXP SpParamsSEXP, SEXP smallBranchDecompositionRateSEXP) {
+NumericVector cohortEquilibriumSmallBranchLitter(List x, DataFrame SpParams, double smallBranchDecompositionRate, String mode);
+RcppExport SEXP _medfate_cohortEquilibriumSmallBranchLitter(SEXP xSEXP, SEXP SpParamsSEXP, SEXP smallBranchDecompositionRateSEXP, SEXP modeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< double >::type smallBranchDecompositionRate(smallBranchDecompositionRateSEXP);
-    rcpp_result_gen = Rcpp::wrap(cohortEquilibriumSmallBranchLitter(x, SpParams, smallBranchDecompositionRate));
+    Rcpp::traits::input_parameter< String >::type mode(modeSEXP);
+    rcpp_result_gen = Rcpp::wrap(cohortEquilibriumSmallBranchLitter(x, SpParams, smallBranchDecompositionRate, mode));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4388,8 +4390,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_cohortFuel", (DL_FUNC) &_medfate_cohortFuel, 5},
     {"_medfate_speciesFuel", (DL_FUNC) &_medfate_speciesFuel, 5},
     {"_medfate_standFuel", (DL_FUNC) &_medfate_standFuel, 5},
-    {"_medfate_cohortEquilibriumLeafLitter", (DL_FUNC) &_medfate_cohortEquilibriumLeafLitter, 3},
-    {"_medfate_cohortEquilibriumSmallBranchLitter", (DL_FUNC) &_medfate_cohortEquilibriumSmallBranchLitter, 3},
+    {"_medfate_cohortEquilibriumLeafLitter", (DL_FUNC) &_medfate_cohortEquilibriumLeafLitter, 4},
+    {"_medfate_cohortEquilibriumSmallBranchLitter", (DL_FUNC) &_medfate_cohortEquilibriumSmallBranchLitter, 4},
     {"_medfate_cohortLAI", (DL_FUNC) &_medfate_cohortLAI, 4},
     {"_medfate_speciesLAI", (DL_FUNC) &_medfate_speciesLAI, 4},
     {"_medfate_standLAI", (DL_FUNC) &_medfate_standLAI, 4},

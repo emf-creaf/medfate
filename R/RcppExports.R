@@ -189,12 +189,12 @@ stand_fuel <- function(x, SpParams, gdd = NA_real_, includeDead = TRUE, mode = "
     .Call(`_medfate_standFuel`, x, SpParams, gdd, includeDead, mode)
 }
 
-plant_equilibriumLeafLitter <- function(x, SpParams, AET = 800) {
-    .Call(`_medfate_cohortEquilibriumLeafLitter`, x, SpParams, AET)
+plant_equilibriumLeafLitter <- function(x, SpParams, AET = 800, mode = "MED") {
+    .Call(`_medfate_cohortEquilibriumLeafLitter`, x, SpParams, AET, mode)
 }
 
-plant_equilibriumSmallBranchLitter <- function(x, SpParams, smallBranchDecompositionRate = 0.81) {
-    .Call(`_medfate_cohortEquilibriumSmallBranchLitter`, x, SpParams, smallBranchDecompositionRate)
+plant_equilibriumSmallBranchLitter <- function(x, SpParams, smallBranchDecompositionRate = 0.81, mode = "MED") {
+    .Call(`_medfate_cohortEquilibriumSmallBranchLitter`, x, SpParams, smallBranchDecompositionRate, mode)
 }
 
 plant_LAI <- function(x, SpParams, gdd = NA_real_, mode = "MED") {

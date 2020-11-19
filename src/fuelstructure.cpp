@@ -198,6 +198,7 @@ List fuelLiveStratification(List object, DataFrame SpParams, double gdd = NA_REA
     cbh = z[index2];
     cth = z[index3+1];
   }
+
   NumericVector cLAI = cohortLAI(object,SpParams, NA_REAL, mode);
   NumericVector cH = cohortHeight(object);
   NumericVector cCR = cohortCrownRatio(object,SpParams, mode);
@@ -222,10 +223,10 @@ DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, Dat
                                           heightProfileStep, maxHeightProfile, bulkDensityThreshold);
   
   NumericVector cohLoading = cohortFuel(object, SpParams, gdd, true, mode);
-  NumericVector cohLeafLitter = cohortEquilibriumLeafLitter(object, SpParams, AET);
-  NumericVector cohSmallBranchLitter = cohortEquilibriumSmallBranchLitter(object, SpParams, smallBranchDecompositionRate);
+  NumericVector cohLeafLitter = cohortEquilibriumLeafLitter(object, SpParams, AET, mode);
+  NumericVector cohSmallBranchLitter = cohortEquilibriumSmallBranchLitter(object, SpParams, smallBranchDecompositionRate, mode);
   NumericVector cohHeight = cohortHeight(object);
-  NumericVector cohCL = cohortCrownLength(object, SpParams);
+  NumericVector cohCL = cohortCrownLength(object, SpParams, mode);
     
   NumericVector cohParticleDensity = cohortNumericParameter(object, SpParams, "ParticleDensity");
   NumericVector cohSAV = cohortNumericParameter(object, SpParams, "SAV");
