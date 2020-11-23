@@ -882,7 +882,7 @@ void fillPlantWaterDailyOutput(List x, List sunlit, List shade, List sDay, int i
     List SunlitLeaves = sDay["SunlitLeaves"]; 
     List ShadeLeaves = sDay["ShadeLeaves"]; 
     LeafGW_SL(iday,_) = Rcpp::as<Rcpp::NumericVector>(SunlitLeaves["GW"]);
-    LeafGW_SH(iday,_) = Rcpp::as<Rcpp::NumericVector>(SunlitLeaves["GW"]);
+    LeafGW_SH(iday,_) = Rcpp::as<Rcpp::NumericVector>(ShadeLeaves["GW"]);
     LeafPsiMin_SL(iday,_) = Rcpp::as<Rcpp::NumericVector>(SunlitLeaves["LeafPsiMin"]);
     LeafPsiMax_SL(iday,_) = Rcpp::as<Rcpp::NumericVector>(SunlitLeaves["LeafPsiMax"]);
     LeafPsiMin_SH(iday,_) = Rcpp::as<Rcpp::NumericVector>(ShadeLeaves["LeafPsiMin"]);
