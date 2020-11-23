@@ -2,12 +2,14 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 1.1.2
+- GW sunlit/shade minimum/maximum daily output
+
 # Version 1.1.1
 - Root exudation added to carbon balance
 - Revision sapwood growth
 - Growth cost for fine roots in basic model
 - Translocation for carbon during senescence
-- Bug GW_shade output
 - Bug correction in fuel calculations with US mode
 
 # Version 1.1.0

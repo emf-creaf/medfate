@@ -562,13 +562,16 @@ List defineSunlitShadeLeavesDailyOutput(DataFrame meteo, DataFrame above) {
   int numCohorts = above.nrow();
   NumericMatrix LeafPsiMin(numDays, numCohorts);
   NumericMatrix LeafPsiMax(numDays, numCohorts);
-  NumericMatrix LeafGW(numDays, numCohorts);
+  NumericMatrix LeafGWMin(numDays, numCohorts);
+  NumericMatrix LeafGWMax(numDays, numCohorts);
   LeafPsiMin.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   LeafPsiMax.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  LeafGW.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
+  LeafGWMin.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
+  LeafGWMax.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   List shade = List::create(Named("LeafPsiMin") = LeafPsiMin, 
                             Named("LeafPsiMax") = LeafPsiMax,
-                            Named("GW") = LeafGW);
+                            Named("GWMin") = LeafGWMin,
+                            Named("GWMax") = LeafGWMax);
   return(shade);
 }
 
@@ -846,11 +849,13 @@ void fillPlantWaterDailyOutput(List x, List sunlit, List shade, List sDay, int i
     NumericMatrix PlantWaterBalance= Rcpp::as<Rcpp::NumericMatrix>(x["PlantWaterBalance"]);
     NumericMatrix LeafPsiMin_SL = Rcpp::as<Rcpp::NumericMatrix>(sunlit["LeafPsiMin"]);
     NumericMatrix LeafPsiMax_SL = Rcpp::as<Rcpp::NumericMatrix>(sunlit["LeafPsiMax"]);
-    NumericMatrix LeafGW_SL = Rcpp::as<Rcpp::NumericMatrix>(sunlit["GW"]);
+    NumericMatrix LeafGWMin_SL = Rcpp::as<Rcpp::NumericMatrix>(sunlit["GWMin"]);
+    NumericMatrix LeafGWMax_SL = Rcpp::as<Rcpp::NumericMatrix>(sunlit["GWMax"]);
     NumericMatrix LeafPsiMin_SH = Rcpp::as<Rcpp::NumericMatrix>(shade["LeafPsiMin"]);
     NumericMatrix LeafPsiMax_SH = Rcpp::as<Rcpp::NumericMatrix>(shade["LeafPsiMax"]);
-    NumericMatrix LeafGW_SH = Rcpp::as<Rcpp::NumericMatrix>(shade["GW"]);
-
+    NumericMatrix LeafGWMin_SH = Rcpp::as<Rcpp::NumericMatrix>(shade["GWMin"]);
+    NumericMatrix LeafGWMax_SH = Rcpp::as<Rcpp::NumericMatrix>(shade["GWMax"]);
+    
     List RhizoPsi = x["RhizoPsi"];
     NumericMatrix PlantNetPhotosynthesis= Rcpp::as<Rcpp::NumericMatrix>(x["NetPhotosynthesis"]);
     NumericMatrix PlantGrossPhotosynthesis= Rcpp::as<Rcpp::NumericMatrix>(x["GrossPhotosynthesis"]);
@@ -881,8 +886,10 @@ void fillPlantWaterDailyOutput(List x, List sunlit, List shade, List sDay, int i
     
     List SunlitLeaves = sDay["SunlitLeaves"]; 
     List ShadeLeaves = sDay["ShadeLeaves"]; 
-    LeafGW_SL(iday,_) = Rcpp::as<Rcpp::NumericVector>(SunlitLeaves["GW"]);
-    LeafGW_SH(iday,_) = Rcpp::as<Rcpp::NumericVector>(ShadeLeaves["GW"]);
+    LeafGWMin_SL(iday,_) = Rcpp::as<Rcpp::NumericVector>(SunlitLeaves["GWMin"]);
+    LeafGWMin_SH(iday,_) = Rcpp::as<Rcpp::NumericVector>(ShadeLeaves["GWMin"]);
+    LeafGWMax_SL(iday,_) = Rcpp::as<Rcpp::NumericVector>(SunlitLeaves["GWMax"]);
+    LeafGWMax_SH(iday,_) = Rcpp::as<Rcpp::NumericVector>(ShadeLeaves["GWMax"]);
     LeafPsiMin_SL(iday,_) = Rcpp::as<Rcpp::NumericVector>(SunlitLeaves["LeafPsiMin"]);
     LeafPsiMax_SL(iday,_) = Rcpp::as<Rcpp::NumericVector>(SunlitLeaves["LeafPsiMax"]);
     LeafPsiMin_SH(iday,_) = Rcpp::as<Rcpp::NumericVector>(ShadeLeaves["LeafPsiMin"]);

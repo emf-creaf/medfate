@@ -12,7 +12,7 @@
               "SoilPlantConductance","PlantStress", 
               "PlantNetPhotosynthesis", "PlantGrossPhotosynthesis", "PlantTranspiration","PlantWUE",
               "NetPhotosynthesisPerLeaf","GrossPhotosynthesisPerLeaf","TranspirationPerLeaf", 
-              "GW_SL", "GW_SH", "LeafPsiRange",
+              "GWMin_SL", "GWMin_SH", "GWMax_SL", "GWMax_SH", "LeafPsiRange",
               "LeafPsiMin", "LeafPsiMax", "LeafPsiMin_SL", "LeafPsiMax_SL", "LeafPsiMin_SH", "LeafPsiMax_SH",
               "StemPsi","RootPsi","StemPLC", "StemRWC", "LeafRWC", "StemSympRWC", "LeafSympRWC", 
               "PlantWaterBalance",
@@ -113,8 +113,10 @@
   else if(type=="LeafPsiMax_SL") ylab = "Maximum (midday) sunlit leaf water potential (MPa)"
   else if(type=="LeafPsiMin_SH") ylab = "Minimum (midday) shade leaf water potential (MPa)"
   else if(type=="LeafPsiMax_SH") ylab = "Maximum (midday) shade leaf water potential (MPa)"
-  else if(type=="GW_SH") ylab = expression(paste("Shade leaf stomatal conductance ",(mmol%.%m^{-2}%.%s^{-1})))
-  else if(type=="GW_SL") ylab = expression(paste("Sunlit leaf stomatal conductance ",(mmol%.%m^{-2}%.%s^{-1})))
+  else if(type=="GWMin_SH") ylab = expression(paste("Minimum (midday) shade leaf stomatal conductance ",(mmol%.%m^{-2}%.%s^{-1})))
+  else if(type=="GWMax_SH") ylab = expression(paste("Maximum (midday) shade leaf stomatal conductance ",(mmol%.%m^{-2}%.%s^{-1})))
+  else if(type=="GWMin_SL") ylab = expression(paste("Minimum (midday) sunlit leaf stomatal conductance ",(mmol%.%m^{-2}%.%s^{-1})))
+  else if(type=="GWMax_SL") ylab = expression(paste("Maximum (midday) sunlit leaf stomatal conductance ",(mmol%.%m^{-2}%.%s^{-1})))
   return(ylab)
 }
 
