@@ -906,7 +906,7 @@ NumericVector cohortFuel(List x, DataFrame SpParams, double gdd = NA_REAL, bool 
                        SpParams, gdd, includeDead);
   }
   else if(mode == "US") {
-    tFuel = treeFuelMED(treeData["Species"], treeData["N"], treeData["FoliageBiomass"], SpParams, gdd, includeDead);
+    tFuel = treeFuelUS(treeData["Species"], treeData["N"], treeData["FoliageBiomass"], SpParams, gdd, includeDead);
     shFuel = shrubFuelUS(shSP, shrubData["Height"], 
                          shrubData["SingleShrubCrownArea"], shrubData["FoliageBiomassPerUnitArea"],
                          SpParams, gdd, includeDead);
@@ -941,8 +941,8 @@ double standFuel(List x, DataFrame SpParams, double gdd = NA_REAL, bool includeD
  * Cohort equilibrium leaf litter (in kg/m2)
  */
 // [[Rcpp::export("plant_equilibriumLeafLitter")]]
-NumericVector cohortEquilibriumLeafLitter(List x, DataFrame SpParams, double AET = 800) {
-  NumericVector fb = cohortFoliarBiomass(x, SpParams);
+NumericVector cohortEquilibriumLeafLitter(List x, DataFrame SpParams, double AET = 800, String mode = "MED") {
+  NumericVector fb = cohortFoliarBiomass(x, SpParams, NA_REAL, mode);
   NumericVector ld = cohortNumericParameter(x, SpParams, "LeafDuration");
   NumericVector lignin = cohortNumericParameter(x, SpParams, "LigninPercent");
   int ncoh = fb.size();
@@ -961,9 +961,9 @@ NumericVector cohortEquilibriumLeafLitter(List x, DataFrame SpParams, double AET
  * Cohort equilibrium small branch (6.35mm) litter (in kg/m2)
  */
 // [[Rcpp::export("plant_equilibriumSmallBranchLitter")]]
-NumericVector cohortEquilibriumSmallBranchLitter(List x, DataFrame SpParams, double smallBranchDecompositionRate = 0.81) {
-  NumericVector fu = cohortFuel(x, SpParams);
-  NumericVector fb = cohortFoliarBiomass(x, SpParams);
+NumericVector cohortEquilibriumSmallBranchLitter(List x, DataFrame SpParams, double smallBranchDecompositionRate = 0.81, String mode = "MED") {
+  NumericVector fu = cohortFuel(x, SpParams,NA_REAL,true, mode);
+  NumericVector fb = cohortFoliarBiomass(x, SpParams, NA_REAL, mode);
   NumericVector ld = cohortNumericParameter(x, SpParams, "LeafDuration");
   int ncoh = fb.size();
   NumericVector eqli(ncoh);

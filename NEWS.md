@@ -8,6 +8,7 @@
 - Growth cost for fine roots in basic model
 - Translocation for carbon during senescence
 - Bug GW_shade output
+- Bug correction in fuel calculations with US mode
 
 # Version 1.1.0
 - Control option 'rockyLayerDrainage' instead of 'drainage' to disable macropore vertical outflow in layers with > 95% of rocks

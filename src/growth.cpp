@@ -112,31 +112,26 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
   NumericVector minimumSugarForGrowth = control["minimumSugarForGrowth"];
   double minimumSugarGrowthLeaves = minimumSugarForGrowth["leaf"];
   double minimumStarchGrowthSapwood = minimumSugarForGrowth["sapwood"];
-  double minimumSugarGrowthFineRoots = minimumSugarForGrowth["fineroot"];
   NumericVector respirationRates = control["respirationRates"];
   double leaf_RR = respirationRates["leaf"];
   double sapwood_RR = respirationRates["sapwood"];
   double fineroot_RR = respirationRates["fineroot"];
   NumericVector turnoverRates = control["turnoverRates"];
   double dailySapwoodTurnoverProportion = turnoverRates["sapwood"];
-  double dailyFineRootTurnoverProportion = turnoverRates["fineroot"];
   NumericVector constructionCosts = control["constructionCosts"];
   double leaf_CC = constructionCosts["leaf"];
   double sapwood_CC = constructionCosts["sapwood"];
   double fineroot_CC = constructionCosts["fineroot"];
   NumericVector maximumRGR = control["maximumRelativeGrowthRates"];
   double RGRleafmax = maximumRGR["leaf"];
-  double RGRfinerootmax = maximumRGR["fineroot"];
-  
+
   //Cohort info
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   NumericVector SP = cohorts["SP"];
   int numCohorts = SP.size();
   
   //Soil
-  NumericVector dVec = soil["dVec"];
-  int nlayers = dVec.size();
-  
+
   //Aboveground parameters  
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   NumericVector DBH = above["DBH"];
@@ -1404,7 +1399,6 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   String soilFunctions = control["soilFunctions"];
   
   bool verbose = control["verbose"];
-  bool snowpack = control["snowpack"];
   bool subdailyResults = control["subdailyResults"];
   bool leafPhenology = control["leafPhenology"];
   bool unlimitedSoilWater = control["unlimitedSoilWater"];
@@ -1478,8 +1472,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
 
   //Soil input
   NumericVector Water_FC = waterFC(soil, soilFunctions);
-  int nlayers = Water_FC.size();
-  
+
   //Anatomy parameters
   DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
   NumericVector Hmax  = paramsAnatomy["Hmax"];
@@ -1619,8 +1612,6 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
       s = growthDay1(x, soil, MeanTemperature[i], PET[i], Precipitation[i], er, 0.0, 
                      Radiation[i], elevation, false); //No Runon in simulations for a single cell
     } else if(transpirationMode=="Sperry") {
-      int ntimesteps = control["ndailysteps"];
-      double tstep = 86400.0/((double) ntimesteps);
       std::string c = as<std::string>(dateStrings[i]);
       int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
       double delta = meteoland::radiation_solarDeclination(J);
