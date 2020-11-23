@@ -68,10 +68,11 @@ spwb_validation<-function(x, measuredData, type="SWC", cohort = NULL, draw = TRU
       
     if(draw) {
       if(plotType=="dynamics") {
-        g<-dynamicsplot(df, ylab = "Soil moisture (% vol)", err = ("SWC_err" %in% names(measuredData)))
+        g<-dynamicsplot(df, ylab = expression(paste("Soil moisture ",(m^{3}%.%m^{-3}))), err = ("SWC_err" %in% names(measuredData)))
       } else {
-        g<-scatterplot(df, xlab  = "Modelled soil moisture (% vol)",
-                       ylab = "Measured soil moisture (% vol)", err = ("SWC_err" %in% names(measuredData)))
+        g<-scatterplot(df, xlab  = expression(paste("Measured soil moisture ",(m^{3}%.%m^{-3}))),
+                       ylab = expression(paste("Measured soil moisture ",(m^{3}%.%m^{-3}))), 
+                       err = ("SWC_err" %in% names(measuredData)))
       }
     } 
   } 
