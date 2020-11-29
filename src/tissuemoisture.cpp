@@ -99,7 +99,7 @@ double tissueFMC(double RWC, double density, double d0 = 1.54) {
  *   spwb - The output of spwb() or growth()
  */
 // [[Rcpp::export("moisture_cohortFMC")]]
-List cohortFMC(List spwb, DataFrame SpParams = NULL) {
+List cohortFMC(List spwb, DataFrame SpParams = R_NilValue) {
   List x;
   if(spwb.containsElementNamed("spwbInput")) x = spwb["spwbInput"];
   else if(spwb.containsElementNamed("growthInput")) x = spwb["growthInput"];
@@ -108,8 +108,8 @@ List cohortFMC(List spwb, DataFrame SpParams = NULL) {
   List plants = spwb["Plants"];
   NumericMatrix StemPLC = Rcpp::as<Rcpp::NumericMatrix>(plants["StemPLC"]);
   List l = StemPLC.attr("dimnames");
-  CharacterVector days = l[0];
-  CharacterVector cohNames = l[1];
+  StringVector days = l[0];
+  StringVector cohNames = l[1];
   int numDays = StemPLC.nrow();
   int numCohorts = StemPLC.ncol();
   
@@ -131,15 +131,13 @@ List cohortFMC(List spwb, DataFrame SpParams = NULL) {
     
     for(int c=0;c<numCohorts;c++) {
       if(NumericVector::is_na(LeafPI0[c])) {
-        String s("Default LeafPI0 value for cohort ");
-        s+= cohNames[c];
-        Rf_warning(s.get_cstring());
+        String s = cohNames[c];
+        warning("Default LeafPI0 value for cohort %s",s.get_cstring());
         LeafPI0[c] = -2.0; //Average values for Mediterranean climate species 
       }
       if(NumericVector::is_na(LeafEPS[c])) {
-        String s("Default LeafEPS value for cohort ");
-        s+= cohNames[c];
-        Rf_warning(s.get_cstring());
+        String s = cohNames[c];
+        warning("Default LeafEPS value for cohort %s",s.get_cstring());
         LeafEPS[c] = 17.0; 
       }
       for(int d=0;d<numDays;d++) {

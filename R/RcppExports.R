@@ -865,7 +865,7 @@ moisture_tissueFMC <- function(RWC, density, d0 = 1.54) {
     .Call(`_medfate_tissueFMC`, RWC, density, d0)
 }
 
-moisture_cohortFMC <- function(spwb, SpParams) {
+moisture_cohortFMC <- function(spwb, SpParams = NULL) {
     .Call(`_medfate_cohortFMC`, spwb, SpParams)
 }
 
