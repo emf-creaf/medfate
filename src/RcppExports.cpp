@@ -4106,13 +4106,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // cohortFMC
-List cohortFMC(List spwb);
-RcppExport SEXP _medfate_cohortFMC(SEXP spwbSEXP) {
+List cohortFMC(List spwb, DataFrame SpParams);
+RcppExport SEXP _medfate_cohortFMC(SEXP spwbSEXP, SEXP SpParamsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type spwb(spwbSEXP);
-    rcpp_result_gen = Rcpp::wrap(cohortFMC(spwb));
+    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
+    rcpp_result_gen = Rcpp::wrap(cohortFMC(spwb, SpParams));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4559,7 +4560,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_apoplasticWaterPotential", (DL_FUNC) &_medfate_apoplasticWaterPotential, 3},
     {"_medfate_tissueRelativeWaterContent", (DL_FUNC) &_medfate_tissueRelativeWaterContent, 8},
     {"_medfate_tissueFMC", (DL_FUNC) &_medfate_tissueFMC, 3},
-    {"_medfate_cohortFMC", (DL_FUNC) &_medfate_cohortFMC, 1},
+    {"_medfate_cohortFMC", (DL_FUNC) &_medfate_cohortFMC, 2},
     {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 7},
     {"_medfate_transpirationSperry", (DL_FUNC) &_medfate_transpirationSperry, 14},
     {"_medfate_transpirationGranier", (DL_FUNC) &_medfate_transpirationGranier, 6},

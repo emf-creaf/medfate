@@ -20,4 +20,4 @@ double tissueRelativeWaterContent(double psiSym, double pi0, double epsilon,
 
 double turgorLossPoint(double pi0, double epsilon);
 
-List cohortFMC(List spwb);
+List cohortFMC(List spwb, DataFrame SpParamsMED = NULL);

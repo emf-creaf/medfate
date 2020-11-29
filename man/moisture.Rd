@@ -25,7 +25,7 @@ moisture_tissueRWC(psiSym, pi0, epsilon,
                    psiApo, c, d, 
                    af, femb = 0)
 moisture_tissueFMC(RWC, density, d0 = 1.54)
-moisture_cohortFMC(spwb)
+moisture_cohortFMC(spwb, SpParams = NULL)
 moisture_pressureVolumeCurvePlot(x, segment="leaf", 
                     fraction = "all",
                     psiVec =  seq(-0.1, -8.0, by =-0.01),
@@ -47,6 +47,7 @@ moisture_pressureVolumeCurvePlot(x, segment="leaf",
   \item{density}{Tissue density (g·cm-1).}
   \item{d0}{Matric density (g·cm-1).}
   \item{spwb}{Object returned by function \code{\link{spwb}} or \code{\link{growth}}.}
+  \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}} and \code{\link{SpParamsMED}}).}
 }
 \details{
 Details of the tissue moisture calculations are given in a vignette. Function \code{moisture_cohortFMC()} calculates the fuel moisture content of leaves and twigs of each cohort, from the results of soil water balance.
@@ -60,6 +61,7 @@ Values returned for each function are:
 \item{\code{moisture_apoplasticWaterPotential}: Water potential (in MPa) of the apoplastic fraction.}
 \item{\code{moisture_turgorLossPoint}: Water potential (in MPa) corresponding to turgor loss point.}
 \item{\code{moisture_segmentRWC}: Segment relative water content [0-1].}
+\item{\code{moisture_cohortFMC}: A list of matrices, each one with days in rows and cohorts in columns. Data in moisture content per dry weight (in percent).}
 }
 }
 \references{

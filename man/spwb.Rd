@@ -194,8 +194,9 @@ S2<-spwb(x2, examplesoil2, examplemeteo[d,], latitude = 41.82592, elevation = 10
 
 # Run the model with 'Sperry' transpiration mode using the water balance of 
 # simulated with the 'Granier' model
+WS = as.matrix(S1$Soil[, c("W.1", "W.2", "W.3", "W.4")])
 P2<-pwb(x2, examplesoil2, examplemeteo[d,], latitude = 41.82592, elevation = 100, 
-        W = as.matrix(S1$Soil[d, c("W.1", "W.2")]),
+        W = WS[d,],
         canopyEvaporation = S1$WaterBalance$Interception[d],
         snowMelt = S1$WaterBalance$Snowmelt[d],
         soilEvaporation = S1$WaterBalance$SoilEvaporation[d])
