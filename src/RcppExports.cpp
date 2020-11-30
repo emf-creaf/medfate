@@ -4092,21 +4092,8 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// tissueFMC
-double tissueFMC(double RWC, double density, double d0);
-RcppExport SEXP _medfate_tissueFMC(SEXP RWCSEXP, SEXP densitySEXP, SEXP d0SEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type RWC(RWCSEXP);
-    Rcpp::traits::input_parameter< double >::type density(densitySEXP);
-    Rcpp::traits::input_parameter< double >::type d0(d0SEXP);
-    rcpp_result_gen = Rcpp::wrap(tissueFMC(RWC, density, d0));
-    return rcpp_result_gen;
-END_RCPP
-}
 // cohortFMC
-List cohortFMC(List spwb, DataFrame SpParams);
+NumericMatrix cohortFMC(List spwb, DataFrame SpParams);
 RcppExport SEXP _medfate_cohortFMC(SEXP spwbSEXP, SEXP SpParamsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -4559,7 +4546,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_apoplasticRelativeWaterContent", (DL_FUNC) &_medfate_apoplasticRelativeWaterContent, 3},
     {"_medfate_apoplasticWaterPotential", (DL_FUNC) &_medfate_apoplasticWaterPotential, 3},
     {"_medfate_tissueRelativeWaterContent", (DL_FUNC) &_medfate_tissueRelativeWaterContent, 8},
-    {"_medfate_tissueFMC", (DL_FUNC) &_medfate_tissueFMC, 3},
     {"_medfate_cohortFMC", (DL_FUNC) &_medfate_cohortFMC, 2},
     {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 7},
     {"_medfate_transpirationSperry", (DL_FUNC) &_medfate_transpirationSperry, 14},

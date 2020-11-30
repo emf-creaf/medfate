@@ -861,11 +861,7 @@ moisture_tissueRWC <- function(psiSym, pi0, epsilon, psiApo, c, d, af, femb = 0.
     .Call(`_medfate_tissueRelativeWaterContent`, psiSym, pi0, epsilon, psiApo, c, d, af, femb)
 }
 
-moisture_tissueFMC <- function(RWC, density, d0 = 1.54) {
-    .Call(`_medfate_tissueFMC`, RWC, density, d0)
-}
-
-moisture_cohortFMC <- function(spwb, SpParams = NULL) {
+moisture_cohortFMC <- function(spwb, SpParams) {
     .Call(`_medfate_cohortFMC`, spwb, SpParams)
 }
 
