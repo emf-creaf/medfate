@@ -24,8 +24,7 @@ moisture_turgorLossPoint(pi0, epsilon)
 moisture_tissueRWC(psiSym, pi0, epsilon, 
                    psiApo, c, d, 
                    af, femb = 0)
-moisture_tissueFMC(RWC, density, d0 = 1.54)
-moisture_cohortFMC(spwb, SpParams = NULL)
+moisture_cohortFMC(spwb, SpParams)
 moisture_pressureVolumeCurvePlot(x, segment="leaf", 
                     fraction = "all",
                     psiVec =  seq(-0.1, -8.0, by =-0.01),
@@ -44,8 +43,6 @@ moisture_pressureVolumeCurvePlot(x, segment="leaf",
   \item{fraction}{ Tissue fraction, either \code{"symplastic"}, \code{"apoplastic"} or \code{"all"}.}
   \item{psiVec}{Vector of water potential values to evaluate for the pressure-volume curve.}
   \item{speciesNames}{A flag to indicate the use of species names instead of cohort names in plots.}
-  \item{density}{Tissue density (g·cm-1).}
-  \item{d0}{Matric density (g·cm-1).}
   \item{spwb}{Object returned by function \code{\link{spwb}} or \code{\link{growth}}.}
   \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}} and \code{\link{SpParamsMED}}).}
 }
