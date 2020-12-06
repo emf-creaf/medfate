@@ -51,7 +51,10 @@
   TYPES = c("GrossPhotosynthesis","MaintenanceRespiration","GrowthCosts", "CarbonBalance",
             "SugarTransport", "LeafPI0", "StemPI0",
             "SugarLeaf", "SugarSapwood", "StarchLeaf", "StarchSapwood","SugarTransport", "RootExudation",
-            "SapwoodArea", "LeafArea", "FineRootArea", "SAgrowth", "LAgrowth", "FRAgrowth",
+            "SapwoodArea", "LeafArea", "FineRootArea",
+            "SapwoodBiomass", "LeafBiomass", "FineRootBiomass",
+            "LabileBiomass", "TotalLivingBiomass",
+            "SAgrowth", "LAgrowth", "FRAgrowth",
             "HuberValue", "RootAreaLeafArea",
             .getDailySPWBPlotTypes(transpirationMode))
   return(TYPES)
@@ -90,6 +93,11 @@
   else if(type=="SapwoodArea")  ylab = expression(paste("Sapwood area  ",(cm^2)))
   else if(type=="LeafArea")  ylab = expression(paste("Leaf area  ",(m^2)))
   else if(type=="FineRootArea")  ylab = expression(paste("Fine root area  ",(m^2)))
+  else if(type=="SapwoodBiomass")  ylab = expression(paste("Sapwood biomass  ", (gdry%.%ind^{-1})))
+  else if(type=="LeafBiomass")  ylab = expression(paste("Leaf biomass  ", (gdry%.%ind^{-1})))
+  else if(type=="FineRootArea")  ylab = expression(paste("Fine root biomass  ", (gdry%.%ind^{-1})))
+  else if(type=="LabileBiomass")  ylab = expression(paste("Labile C biomass  ", (gdry%.%ind^{-1})))
+  else if(type=="TotalLivingBiomass")  ylab = expression(paste("Total living biomass  ", (gdry%.%ind^{-1})))
   else if(type=="HuberValue")  ylab = expression(paste("Huber value  ",(cm^2 %.% m^{-2})))
   else if(type=="RootAreaLeafArea")  ylab = expression(paste("Root area / Leaf area  ",(m^2 %.% m^{-2})))
   else if(type=="SAgrowth") ylab = expression(paste("Sapwood area growth rate ",(cm^2 %.% cm^{-2} %.% d^{-1})))

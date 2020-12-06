@@ -5,6 +5,7 @@
 # Version 1.1.2
 - GW sunlit/shade minimum/maximum daily output
 - FMC calculations with basic water balance output
+- New output in growth simulation (biomass values)
 
 # Version 1.1.1
 - Root exudation added to carbon balance

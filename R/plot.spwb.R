@@ -422,6 +422,7 @@ plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = F
   # Get common elements
   input = x$growthInput
   soilInput = x$soilInput
+  PlantStructure = x$PlantStructure
   PlantGrowth = x$PlantGrowth
   Plants = x$Plants
   PCB = x$PlantCarbonBalance
@@ -451,7 +452,16 @@ plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = F
       if(is.null(ylab)) ylab=.getYLab(type)
       return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
-  else if(type %in% c("SapwoodArea", "LeafArea", "FineRootArea", "SAgrowth", "LAgrowth", "FRAgrowth")) {
+  else if(type %in% c("SapwoodArea", "LeafArea", "FineRootArea", 
+                      "SapwoodBiomass", "LeafBiomass", "FineRootBiomass",
+                      "LabileBiomass", "TotalLivingBiomass")) {
+    OM = PlantStructure[[type]][,cohorts,drop=FALSE]
+    if(bySpecies) OM = .averageBySpecies(OM, spnames)
+    if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
+    if(is.null(ylab)) ylab = .getYLab(type)
+    return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
+  } 
+  else if(type %in% c("SAgrowth", "LAgrowth", "FRAgrowth")) {
       OM = PlantGrowth[[type]][,cohorts,drop=FALSE]
       if(bySpecies) OM = .averageBySpecies(OM, spnames)
       if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
