@@ -204,4 +204,77 @@ NumericMatrix cohortFMC(List spwb, DataFrame SpParams) {
   }
 }
 
+
+// [[Rcpp::export("moisture_cohortFMCDay")]]
+NumericVector cohortFMCDay(List spwb_day, List x, DataFrame SpParams) {
+  DataFrame plants = spwb_day["Plants"];
   
+  //Draw cohort-based variables
+  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
+  DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
+  StringVector cohNames = above.attr("row.names");
+  int numCohorts = cohNames.size();
+  List control = x["control"];
+  String transpirationMode = control["transpirationMode"];
+  
+  
+  NumericVector leafFMC(numCohorts,0.0);
+  leafFMC.attr("names") = cohNames;
+  
+  //FMCmax
+  IntegerVector SP = cohorts["SP"];
+  NumericVector FMCmax = cohortNumericParameter(SP, SpParams, "maxFMC");
+  
+  if(transpirationMode == "Granier") {
+    NumericVector LeafPI0 = cohortNumericParameter(SP, SpParams, "LeafPI0");
+    NumericVector LeafEPS = cohortNumericParameter(SP, SpParams, "LeafEPS");
+    NumericVector LeafAF = cohortNumericParameter(SP, SpParams, "LeafAF");
+    NumericVector PlantPsi = Rcpp::as<Rcpp::NumericVector>(plants["PlantPsi"]);
+    NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(plants["StemPLC"]);
+    
+    //Average values for Mediterranean climate species
+    for(int c=0;c<numCohorts;c++) {
+      if(NumericVector::is_na(LeafPI0[c])) {
+        String s = cohNames[c];
+        LeafPI0[c] = -2.0;  
+        warning("Default LeafPI0 = %f for cohort %s", LeafPI0[c],s.get_cstring());
+      }
+      if(NumericVector::is_na(LeafEPS[c])) {
+        String s = cohNames[c];
+        LeafEPS[c] = 17.0; 
+        warning("Default LeafEPS = %f for cohort %s",LeafEPS[c],s.get_cstring());
+      }
+      if(NumericVector::is_na(LeafAF[c])) {
+        String s = cohNames[c];
+        LeafAF[c] = 0.29; 
+        warning("Default LeafAF = %f for cohort %s",LeafAF[c],s.get_cstring());
+      }
+      double rwc = symplasticRelativeWaterContent(PlantPsi(c), LeafPI0[c], LeafEPS[c]);
+      leafFMC[c] = (rwc*(1.0-LeafAF[c])+ (1.0 - StemPLC[c])*LeafAF[c])*FMCmax[c];
+    }
+    return(leafFMC);
+  } else {
+    DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
+    DataFrame paramsTranspiration = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
+    NumericVector VCleaf_c = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleaf_c"]);
+    NumericVector VCleaf_d = Rcpp::as<Rcpp::NumericVector>(paramsTranspiration["VCleaf_d"]);
+    
+    //Water storage parameters
+    DataFrame paramsWaterStorage = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
+    NumericVector LeafAF = Rcpp::as<Rcpp::NumericVector>(paramsWaterStorage["LeafAF"]);
+    
+    NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(plants["StemPLC"]);
+    NumericVector psiapoleaf = Rcpp::as<Rcpp::NumericVector>(plants["LeafPsiMin"]);
+    NumericVector RWCsymleaf = Rcpp::as<Rcpp::NumericVector>(plants["LeafSympRWC"]);
+    for(int c=0;c<numCohorts;c++) {
+      double f_apo_leaf = LeafAF[c];
+      double leafc = VCleaf_c[c];
+      double leafd = VCleaf_d[c];
+      double rwc_apo_leaf = apoplasticRelativeWaterContent(psiapoleaf[c], leafc, leafd);
+      double rwc_sym_leaf = RWCsymleaf[c];
+      double rwc_leaf = rwc_apo_leaf*f_apo_leaf + rwc_sym_leaf*(1.0 - f_apo_leaf);
+      leafFMC[c] = rwc_leaf*FMCmax[c];
+    }
+    return(leafFMC);
+  }
+}

@@ -865,6 +865,10 @@ moisture_cohortFMC <- function(spwb, SpParams) {
     .Call(`_medfate_cohortFMC`, spwb, SpParams)
 }
 
+moisture_cohortFMCDay <- function(spwb_day, x, SpParams) {
+    .Call(`_medfate_cohortFMCDay`, spwb_day, x, SpParams)
+}
+
 transp_profitMaximization <- function(supplyFunction, photosynthesisFunction, Gwmin, Gwmax, gainModifier = 1.0, costModifier = 1.0, costWater = "dEdP") {
     .Call(`_medfate_profitMaximization`, supplyFunction, photosynthesisFunction, Gwmin, Gwmax, gainModifier, costModifier, costWater)
 }
