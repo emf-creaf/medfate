@@ -2,6 +2,10 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+
+# Version 1.1.3
+- New model evaluation functions
+
 # Version 1.1.2
 - GW sunlit/shade minimum/maximum daily output
 - FMC calculations with basic water balance output
