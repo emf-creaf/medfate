@@ -34,7 +34,7 @@ modifySpParams<-function(SpParams, customParams, subsetSpecies = TRUE) {
   return(SpParams)
 }
 
-modifyCohortParams<-function(x, customParams) {
+modifyCohortParams<-function(x, customParams, soil = NULL) {
   
   # check if customParams exists, if not return swbInput without modification
   if (is.null(customParams)) {
@@ -51,19 +51,31 @@ modifyCohortParams<-function(x, customParams) {
   waterstorage_par <- names(x[['paramsWaterStorage']])
   
   # iterate between the custom params
+  rebuildBelow = FALSE
   for (param in custom) {
     for (coh in customParams[['Cohort']]) {
       val <- customParams[customParams[['Cohort']] == coh, param]
+      # cat(paste0(coh, " ", param, " ", val,"\n"))
       if(!is.na(val)) {
         if (param %in% above_par) x[['above']][[coh, param]] <- val
         if (param %in% base_par) x[['paramsInterception']][[coh, param]] <- val
         if (param %in% transp_par) x[['paramsTranspiration']][[coh, param]] <- val
         if (param %in% anatomy_par) x[['paramsAnatomy']][[coh, param]] <- val
         if(!is.null(waterstorage_par)) if (param %in% waterstorage_par) x[['paramsWaterStorage']][[coh, param]] <- val
+        if(param %in% c("Z50","Z95")) {
+          rebuildBelow = TRUE
+          x[['below']][[coh, param]]<-val
+        }
       }
     }
   }
-
+  if(rebuildBelow) {
+    if(is.null(soil)) stop("'soil' object must be provided to recalculate belowground parameters.")
+    newBelow = .paramsBelow(x$above, x$below$Z50, x$below$Z95, soil, 
+                 x$paramsAnatomy, x$paramsTranspiration, x$control)
+    x$below = newBelow$below
+    x$belowLayers = newBelow$belowLayers
+  }
   # return the modified input
   return(x)
 }

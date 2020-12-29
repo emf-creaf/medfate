@@ -569,6 +569,10 @@ light_instantaneousLightExtinctionAbsortion <- function(LAIme, LAImd, LAImx, kPA
     invisible(.Call(`_medfate_checkSpeciesParameters`, SpParams, params))
 }
 
+.paramsBelow <- function(above, Z50, Z95, soil, paramsAnatomydf, paramsTranspirationdf, control) {
+    .Call(`_medfate_paramsBelow`, above, Z50, Z95, soil, paramsAnatomydf, paramsTranspirationdf, control)
+}
+
 spwbInput <- function(above, Z50, Z95, soil, SpParams, control) {
     .Call(`_medfate_spwbInput`, above, Z50, Z95, soil, SpParams, control)
 }

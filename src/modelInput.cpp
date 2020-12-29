@@ -334,7 +334,7 @@ DataFrame paramsTranspirationSperry(DataFrame above, List soil, DataFrame SpPara
   return(paramsTranspirationdf);
 }
 
-
+// [[Rcpp::export(".paramsBelow")]]
 List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soil, 
                  DataFrame paramsAnatomydf, DataFrame paramsTranspirationdf, List control) {
 

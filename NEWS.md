@@ -7,6 +7,7 @@
 - FMC calculations with basic water balance output
 - New output in growth simulation (biomass values)
 - New function 'moisture_cohortFMCDay'
+- Modification of Z50/Z95
 
 # Version 1.1.1
 - Root exudation added to carbon balance

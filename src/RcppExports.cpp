@@ -2388,6 +2388,23 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// paramsBelow
+List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soil, DataFrame paramsAnatomydf, DataFrame paramsTranspirationdf, List control);
+RcppExport SEXP _medfate_paramsBelow(SEXP aboveSEXP, SEXP Z50SEXP, SEXP Z95SEXP, SEXP soilSEXP, SEXP paramsAnatomydfSEXP, SEXP paramsTranspirationdfSEXP, SEXP controlSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< DataFrame >::type above(aboveSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Z50(Z50SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Z95(Z95SEXP);
+    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type paramsAnatomydf(paramsAnatomydfSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type paramsTranspirationdf(paramsTranspirationdfSEXP);
+    Rcpp::traits::input_parameter< List >::type control(controlSEXP);
+    rcpp_result_gen = Rcpp::wrap(paramsBelow(above, Z50, Z95, soil, paramsAnatomydf, paramsTranspirationdf, control));
+    return rcpp_result_gen;
+END_RCPP
+}
 // spwbInput
 List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil, DataFrame SpParams, List control);
 RcppExport SEXP _medfate_spwbInput(SEXP aboveSEXP, SEXP Z50SEXP, SEXP Z95SEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP) {
@@ -4486,6 +4503,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_layerSunlitFraction", (DL_FUNC) &_medfate_layerSunlitFraction, 3},
     {"_medfate_instantaneousLightExtinctionAbsortion", (DL_FUNC) &_medfate_instantaneousLightExtinctionAbsortion, 11},
     {"_medfate_checkSpeciesParameters", (DL_FUNC) &_medfate_checkSpeciesParameters, 2},
+    {"_medfate_paramsBelow", (DL_FUNC) &_medfate_paramsBelow, 7},
     {"_medfate_spwbInput", (DL_FUNC) &_medfate_spwbInput, 6},
     {"_medfate_growthInput", (DL_FUNC) &_medfate_growthInput, 6},
     {"_medfate_forest2spwbInput", (DL_FUNC) &_medfate_forest2spwbInput, 5},
