@@ -69,3 +69,37 @@ Legates, D.R., McCabe, G.J., 1999. Evaluating the use of “goodness-of-fit” m
 \seealso{
 \code{\link{spwb}}, \code{\link{growth}}
 }
+\examples{
+#Load example daily meteorological data
+data(examplemeteo)
+
+#Load example plot plant data
+data(exampleforestMED)
+
+#Default species parameterization
+data(SpParamsMED)
+
+#Initialize soil with default soil params (4 layers)
+examplesoil1 = soil(defaultSoilParams(4))
+
+#Initialize control parameters
+control = defaultControl()
+
+#Initialize input
+x1 = forest2spwbInput(exampleforestMED,examplesoil1, SpParamsMED, control)
+
+#Call simulation function
+S1<-spwb(x1, examplesoil1, examplemeteo, latitude = 41.82592, elevation = 100)
+
+#Load observed data (in this case the same simulation results with some added error)  
+data(exampleobs)
+
+#Evaluation statistics for soil water content
+evaluation_stats(S1, exampleobs)
+
+#Comparison of temporal dynamics
+evaluation_plot(S1, exampleobs)
+
+#Loglikelihood value
+evaluation_loglikelihood(S1, exampleobs)
+}

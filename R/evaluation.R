@@ -174,6 +174,9 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
   type = match.arg(type, c("SWC", "REW","E", "ETR", "WP"))
   plotType = match.arg(plotType, c("dynamics", "scatter"))
   
+  
+  df = evaluation_table(out, measuredData, type, cohort)
+  
   if(type=="SWC") {
     if(plotType=="dynamics") {
       g<-dynamicsplot(df, ylab = expression(paste("Soil moisture ",(m^{3}%.%m^{-3}))), err = ("SWC_err" %in% names(measuredData)))
