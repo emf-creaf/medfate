@@ -1,23 +1,36 @@
 \encoding{UTF-8}
-\name{spwb_validation}
-\alias{spwb_validation}
+\name{evaluation}
+\alias{evaluation_table}
+\alias{evaluation_stats}
+\alias{evaluation_plot}
+\alias{evaluation_loglikelihood}
+\alias{evaluation_loglikelihood_function}
 \title{
-Validation of soil-plant water balance simulations
+Evaluation of simulations results
 }
 \description{
-Compares model predictions against observed values
+Functions to compares model predictions against observed values and a functional to build loglikelihood functions to be used in Bayesian calibration or sensitivity analysis.
 }
 \usage{
-spwb_validation(x, measuredData, type = "SWC", cohort = NULL, draw = TRUE,
-                plotType = "dynamics")
+evaluation_table(out, measuredData, type = "SWC", cohort = NULL)
+evaluation_stats(out, measuredData, type="SWC", cohort = NULL)
+evaluation_plot(out, measuredData, type="SWC", cohort = NULL, 
+                          plotType = "dynamics")
+evaluation_loglikelihood(out, measuredData, type="SWC", cohort=NULL)
+evaluation_loglikelihood_function(x, soil,
+                                  cohNames, parNames, 
+                                  measuredData, type = "SWC", cohort = NULL, 
+                                  ...)
 }
 \arguments{
-  \item{x}{An object of class \code{\link{spwb}} or \code{\link{pwb}}.}
+  \item{out}{An object of class \code{\link{spwb}}, \code{\link{growth}} or \code{\link{pwb}}.}
   \item{measuredData}{A data frame with observed/measured values. Dates should be in row names, whereas columns should be named according to the type of output to be evaluated (see details).}
   \item{type}{A string with the kind of model output to be evaluated. Accepted values are \code{"SWC"} (soil moisture content), \code{"REW"} relative extractable water, \code{"ETR"} (total evapotranspiration), \code{"E"} (transpiration per leaf area) and \code{"WP"} (plant water potentials).}
   \item{cohort}{A string of the cohort to be compared (e.g. "T1_68"). If \code{NULL} results for the first cohort will be evaluated.}
-  \item{draw}{A boolean flag to indicate that plots should be produced.}
   \item{plotType}{Plot type to draw, either \code{"dynamics"} or \code{"scatter"}.}
+  \item{x}{An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}.}
+  \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
+  \item{...}{Other parameters to be passed to functions \code{\link{spwb}} or \code{\link{growth}}.}
 }
 \details{
    Users should provide the appropriate columns in \code{measuredData}, depending on the type of output to be evaluated:
@@ -30,13 +43,19 @@ spwb_validation(x, measuredData, type = "SWC", cohort = NULL, draw = TRUE,
    Additional columns may exist with the standard error of measured quantities. These should be named as the referred quantity, followed by \code{"_err"} (e.g. \code{"PD_T1_68_err"}), and are used to draw confidence intervals around observations.
 }
 \value{
-A ggplot or evaluation statistics (a vector or a data frame depending on \code{type}):
 \itemize{
-  \item{\code{MAE}: Mean absolute error.}
-  \item{\code{Bias}: Mean deviation (positive values correspond to model overestimations).}
-  \item{\code{r}: Pearson's linear correlation coefficient.}
-  \item{\code{NSE}: Nash-Sutcliffe model efficiency coefficient.}
-  \item{\code{NSEabs}: Modified Nash-Sutcliffe model efficiency coefficient (L1 norm) (Legates & McCabe 1999).}
+  \item{Function \code{evaluation_table} returns a data frame with observed and predicted values.}
+  \item{
+    Function \code{evaluation_stats} returns evaluation statistics (a vector or a data frame depending on \code{type}):
+    \itemize{
+      \item{\code{MAE}: Mean absolute error.}
+      \item{\code{Bias}: Mean deviation (positive values correspond to model overestimations).}
+      \item{\code{r}: Pearson's linear correlation coefficient.}
+      \item{\code{NSE}: Nash-Sutcliffe model efficiency coefficient.}
+      \item{\code{NSEabs}: Modified Nash-Sutcliffe model efficiency coefficient (L1 norm) (Legates & McCabe 1999).}
+    }
+  }
+  \item{Function \code{evaluation_plot} returns a ggplot object.}
 }
 }
 \author{
@@ -46,5 +65,5 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 Legates, D.R., McCabe, G.J., 1999. Evaluating the use of “goodness-of-fit” measures in hydrologic and hydroclimatic model validation. Water Resour. Res. 35, 233–241. 
 }
 \seealso{
-\code{\link{spwb}}
+\code{\link{spwb}}, \code{\link{growth}}
 }
