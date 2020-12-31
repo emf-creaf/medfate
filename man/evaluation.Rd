@@ -56,6 +56,8 @@ evaluation_loglikelihood_function(x, soil,
     }
   }
   \item{Function \code{evaluation_plot} returns a ggplot object.}
+  \item{Function \code{evaluation_loglikelihood} returns the log of the likelihood of observing the data given the model predictions, assuming independent Gaussian errors.}
+  \item{Function \code{evaluation_loglikelihood_function} returns a function whose parameters are parameter values and whose return is a log-likelihood.}
 }
 }
 \author{
