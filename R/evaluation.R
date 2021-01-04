@@ -1,7 +1,7 @@
-evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL) {
+evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL, SpParams = NULL) {
   
   # Check arguments
-  type = match.arg(type, c("SWC", "REW","E", "ETR", "WP"))
+  type = match.arg(type, c("SWC", "REW","E", "ETR", "WP", "FMC"))
   if(type=="SWC") {
     sm = out$Soil
     d = rownames(sm)
@@ -97,10 +97,29 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL) {
       df$MD_obs_upper[d %in% rownames(measuredData)] = df$MD_obs[d %in% rownames(measuredData)] + 1.96*measuredData[[mderrcolumn]][seld]
     }
   }
+  else if(type=="FMC") {
+    fmc = moisture_cohortFMC(out, SpParams)
+    d = rownames(fmc)
+    spnames = out$spwbInput$cohorts$Name
+    allcohnames = row.names(out$spwbInput$cohorts)
+    
+    if(is.null(cohort)) {
+      icoh = 1
+      cohort = allcohnames[1] 
+      message("Choosing first cohort")
+    } else {
+      icoh = which(allcohnames==cohort)
+    }
+    df <- data.frame(Observed = NA, Modelled = fmc[,icoh], Dates = as.Date(d))
+    ## Fill observed values
+    obscolumn = paste0("FMC_", cohort)
+    if(!(obscolumn %in% names(measuredData))) stop(paste0("Column '", obscolumn, "' not found in measured data frame."))
+    df$Observed[d %in% rownames(measuredData)] = measuredData[[obscolumn]][rownames(measuredData) %in% d] 
+  }
   return(df)
 }
 
-evaluation_stats<-function(out, measuredData, type="SWC", cohort = NULL) {
+evaluation_stats<-function(out, measuredData, type="SWC", cohort = NULL, SpParams = NULL) {
   evalstats<-function(obs, pred) {
     sel_complete = !(is.na(obs) | is.na(pred))
     obs = obs[sel_complete]
@@ -115,12 +134,13 @@ evaluation_stats<-function(out, measuredData, type="SWC", cohort = NULL) {
   }
   
   # Check arguments
-  type = match.arg(type, c("SWC", "REW","E", "ETR", "WP"))
+  type = match.arg(type, c("SWC", "REW","E", "ETR", "WP", "FMC"))
   
-  df = evaluation_table(out, measuredData, type, cohort)
+  df = evaluation_table(out, measuredData, type, cohort, SpParams)
   if(type=="SWC") eval_res = evalstats(df$Observed, df$Modelled)
   else if(type=="REW") eval_res = evalstats(df$Observed, df$Modelled)
   else if(type=="E") eval_res = evalstats(df$Observed, df$Modelled)
+  else if(type=="FMC") eval_res = evalstats(df$Observed, df$Modelled)
   else if(type=="ETR") {
     eval_res = as.data.frame(rbind(evalstats(df$ETobs, df$ET1),
                                    evalstats(df$ETobs, df$ET2)))
@@ -135,7 +155,7 @@ evaluation_stats<-function(out, measuredData, type="SWC", cohort = NULL) {
   return(eval_res)
 }
 
-evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL, 
+evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL, SpParams = NULL, 
                           plotType = "dynamics") {
   scatterplot<-function(df, xlab="", ylab="", title=NULL, err = FALSE) {
     g<-ggplot(df, aes_string(x="Modelled"))
@@ -171,11 +191,11 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
   }
 
   # Check arguments
-  type = match.arg(type, c("SWC", "REW","E", "ETR", "WP"))
+  type = match.arg(type, c("SWC", "REW","E", "ETR", "WP", "FMC"))
   plotType = match.arg(plotType, c("dynamics", "scatter"))
   
   
-  df = evaluation_table(out, measuredData, type, cohort)
+  df = evaluation_table(out, measuredData, type, cohort, SpParams)
   
   if(type=="SWC") {
     if(plotType=="dynamics") {
@@ -197,6 +217,7 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
   }
   else if(type=="E") {
     allcohnames = row.names(out$spwbInput$cohorts)
+    spnames = out$spwbInput$cohorts$Name
     
     if(is.null(cohort)) {
       icoh = 1
@@ -213,6 +234,28 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
       g<-scatterplot(df, 
                      xlab = "Modelled transpiration per leaf area (mm/day)",
                      ylab = "Measured transpiration per leaf area (mm/day)", 
+                     title=paste0(cohort , " (",spnames[icoh],")"))
+    }
+  }
+  else if(type=="FMC") {
+    allcohnames = row.names(out$spwbInput$cohorts)
+    spnames = out$spwbInput$cohorts$Name
+    
+    if(is.null(cohort)) {
+      icoh = 1
+      cohort = allcohnames[1] 
+      message("Choosing first cohort")
+    } else {
+      icoh = which(allcohnames==cohort)
+    }
+    
+    if(plotType=="dynamics") {
+      g<-dynamicsplot(df, ylab = "Fuel moisture content (% of dry weight)", 
+                      title=paste0(cohort , " (",spnames[icoh],")"))
+    } else {
+      g<-scatterplot(df, 
+                     xlab = "Modelled fuel moisture content (% of dry weight)",
+                     ylab = "Measured fuel moisture content (% of dry weight)", 
                      title=paste0(cohort , " (",spnames[icoh],")"))
     }
   }
@@ -285,16 +328,16 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
   return(g)
 }
 
-evaluation_loglikelihood<-function(out, measuredData, type="SWC", cohort=NULL) {
-  df = evaluation_table(out, measuredData, type=type, cohort = cohort)
-  sd = sd(df$Modelled, na.rm=T)
+evaluation_loglikelihood<-function(out, measuredData, type="SWC", cohort=NULL, SpParams = NULL) {
+  df = evaluation_table(out, measuredData, type=type, cohort = cohort, SpParams = SpParams)
+  sd = sd(df$Observed, na.rm=T)
   ll = sum(dnorm(df$Observed, df$Modelled, sd, log=T), na.rm=T)
   return(ll)
 }
 
 evaluation_loglikelihood_function<-function(x, soil,
                                             cohNames, parNames, 
-                                            measuredData, type = "SWC", cohort = NULL, 
+                                            measuredData, type = "SWC", cohort = NULL, SpParams = NULL, 
                                             ...) {
   l = list(...)
   
@@ -309,6 +352,7 @@ evaluation_loglikelihood_function<-function(x, soil,
     resetInputs(x, soil)
     for(i in 1:length(parNames)) custom[custom$Cohort==cohNames[i], parNames[i]] = v[i]
     x = modifyCohortParams(x, custom, soil)
+    # print(x$below)
     if(model=="spwb") {
       S = spwb(x, soil, 
                meteo = l[["meteo"]], 
@@ -321,7 +365,8 @@ evaluation_loglikelihood_function<-function(x, soil,
                  latitude = l[["latitude"]], elevation = l[["elevation"]],
                  slope  = l[["slope"]], aspect = l[["aspect"]])
     }
-    ll = evaluation_loglikelihood(S, measuredData, type, cohort)
+    ll = evaluation_loglikelihood(S, measuredData, type, cohort, SpParams)
+    # print(ll)
     return(ll)
   }
   return(llf)

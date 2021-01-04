@@ -12,14 +12,15 @@ Evaluation of simulations results
 Functions to compares model predictions against observed values and a functional to build loglikelihood functions to be used in Bayesian calibration or sensitivity analysis.
 }
 \usage{
-evaluation_table(out, measuredData, type = "SWC", cohort = NULL)
-evaluation_stats(out, measuredData, type="SWC", cohort = NULL)
-evaluation_plot(out, measuredData, type="SWC", cohort = NULL, 
+evaluation_table(out, measuredData, type = "SWC", cohort = NULL, SpParams = NULL)
+evaluation_stats(out, measuredData, type="SWC", cohort = NULL, SpParams = NULL)
+evaluation_plot(out, measuredData, type="SWC", cohort = NULL, SpParams = NULL, 
                           plotType = "dynamics")
-evaluation_loglikelihood(out, measuredData, type="SWC", cohort=NULL)
+evaluation_loglikelihood(out, measuredData, type="SWC", cohort=NULL, SpParams = NULL)
 evaluation_loglikelihood_function(x, soil,
                                   cohNames, parNames, 
-                                  measuredData, type = "SWC", cohort = NULL, 
+                                  measuredData, type = "SWC", 
+                                  cohort = NULL, SpParams = NULL, 
                                   ...)
 }
 \arguments{
@@ -27,6 +28,7 @@ evaluation_loglikelihood_function(x, soil,
   \item{measuredData}{A data frame with observed/measured values. Dates should be in row names, whereas columns should be named according to the type of output to be evaluated (see details).}
   \item{type}{A string with the kind of model output to be evaluated. Accepted values are \code{"SWC"} (soil moisture content), \code{"REW"} relative extractable water, \code{"ETR"} (total evapotranspiration), \code{"E"} (transpiration per leaf area) and \code{"WP"} (plant water potentials).}
   \item{cohort}{A string of the cohort to be compared (e.g. "T1_68"). If \code{NULL} results for the first cohort will be evaluated.}
+  \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}), only needed if \code{type = "FMC"}.}
   \item{plotType}{Plot type to draw, either \code{"dynamics"} or \code{"scatter"}.}
   \item{x}{An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}.}
   \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
