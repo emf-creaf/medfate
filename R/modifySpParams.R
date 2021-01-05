@@ -49,6 +49,8 @@ modifyCohortParams<-function(x, customParams, soil = NULL) {
   transp_par <- names(x[['paramsTranspiration']])
   anatomy_par <- names(x[['paramsAnatomy']])
   waterstorage_par <- names(x[['paramsWaterStorage']])
+  growth_par <- names(x[['paramsGrowth']])
+  allom_par <- names(x[['paramsAllometries']])
   
   # iterate between the custom params
   rebuildBelow = FALSE
@@ -61,6 +63,8 @@ modifyCohortParams<-function(x, customParams, soil = NULL) {
         if (param %in% base_par) x[['paramsInterception']][[coh, param]] <- val
         if (param %in% transp_par) x[['paramsTranspiration']][[coh, param]] <- val
         if (param %in% anatomy_par) x[['paramsAnatomy']][[coh, param]] <- val
+        if(!is.null(growth_par)) if (param %in% growth_par) x[['paramsGrowth']][[coh, param]] <- val
+        if(!is.null(allom_par)) if (param %in% allom_par) x[['paramsAllometries']][[coh, param]] <- val
         if(!is.null(waterstorage_par)) if (param %in% waterstorage_par) x[['paramsWaterStorage']][[coh, param]] <- val
         if(param %in% c("Z50","Z95")) {
           rebuildBelow = TRUE

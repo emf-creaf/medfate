@@ -328,46 +328,19 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL, SpParams
   return(g)
 }
 
-evaluation_loglikelihood<-function(out, measuredData, type="SWC", cohort=NULL, SpParams = NULL) {
-  df = evaluation_table(out, measuredData, type=type, cohort = cohort, SpParams = SpParams)
-  sd = sd(df$Observed, na.rm=T)
-  ll = sum(dnorm(df$Observed, df$Modelled, sd, log=T), na.rm=T)
-  return(ll)
-}
-
-evaluation_loglikelihood_function<-function(x, soil,
-                                            cohNames, parNames, 
-                                            measuredData, type = "SWC", cohort = NULL, SpParams = NULL, 
-                                            ...) {
-  l = list(...)
-  
-  if(inherits(x, "spwbInput")) model = "spwb"
-  else model = "growth"
-  
-  custom = data.frame(Cohort = unique(cohNames), as.data.frame(matrix(NA, nrow = length(unique(cohNames)), ncol = length(parNames))))
-  names(custom) = c("Cohort", parNames)
-  x$control$verbose = FALSE
-  
-  llf<-function(v) {
-    resetInputs(x, soil)
-    for(i in 1:length(parNames)) custom[custom$Cohort==cohNames[i], parNames[i]] = v[i]
-    x = modifyCohortParams(x, custom, soil)
-    # print(x$below)
-    if(model=="spwb") {
-      S = spwb(x, soil, 
-               meteo = l[["meteo"]], 
-               latitude = l[["latitude"]], elevation = l[["elevation"]],
-               slope  = l[["slope"]],aspect = l[["aspect"]])
-    } 
-    else {
-      S = growth(x, soil, 
-                 meteo = l[["meteo"]], 
-                 latitude = l[["latitude"]], elevation = l[["elevation"]],
-                 slope  = l[["slope"]], aspect = l[["aspect"]])
-    }
-    ll = evaluation_loglikelihood(S, measuredData, type, cohort, SpParams)
-    # print(ll)
-    return(ll)
-  }
-  return(llf)
+evaluation_metric<-function(out, measuredData, type="SWC", cohort=NULL, SpParams = NULL,
+                            metric = "loglikelihood") {
+  df <- evaluation_table(out, measuredData = measuredData, type=type, cohort = cohort, SpParams = SpParams)
+  obs = df$Observed
+  pred = df$Modelled
+  sd <- sd(obs, na.rm=TRUE)
+  metric<-match.arg(metric, c("loglikelihood", "NSE", "NSEabs", "MAE", "r"))
+  m <- switch(metric,
+         "loglikelihood" = sum(dnorm(obs, pred, sd, log=TRUE), na.rm=TRUE),
+         "NSE" = 1 - (sum((obs-pred)^2, na.rm=TRUE)/sum((obs-mean(obs, na.rm=TRUE))^2, na.rm=TRUE)),
+         "MAE" = sum(abs(pred-obs), na.rm=TRUE),
+         "r" = cor(obs, pred),
+         "NSEabs" = 1 - (sum(abs(obs-pred))/sum(abs(obs-mean(obs))))
+  )
+  return(m)
 }

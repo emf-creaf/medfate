@@ -5,6 +5,7 @@
 
 # Version 1.1.3
 - New model evaluation functions
+- New optimization function factories
 
 # Version 1.1.2
 - GW sunlit/shade minimum/maximum daily output

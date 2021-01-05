@@ -1,27 +1,23 @@
 \encoding{UTF-8}
 \name{evaluation}
+\alias{evaluation}
 \alias{evaluation_table}
 \alias{evaluation_stats}
 \alias{evaluation_plot}
-\alias{evaluation_loglikelihood}
-\alias{evaluation_loglikelihood_function}
+\alias{evaluation_metric}
 \title{
 Evaluation of simulations results
 }
 \description{
-Functions to compares model predictions against observed values and a functional to build loglikelihood functions to be used in Bayesian calibration or sensitivity analysis.
+Functions to compare model predictions against observed values.
 }
 \usage{
 evaluation_table(out, measuredData, type = "SWC", cohort = NULL, SpParams = NULL)
 evaluation_stats(out, measuredData, type="SWC", cohort = NULL, SpParams = NULL)
 evaluation_plot(out, measuredData, type="SWC", cohort = NULL, SpParams = NULL, 
-                          plotType = "dynamics")
-evaluation_loglikelihood(out, measuredData, type="SWC", cohort=NULL, SpParams = NULL)
-evaluation_loglikelihood_function(x, soil,
-                                  cohNames, parNames, 
-                                  measuredData, type = "SWC", 
-                                  cohort = NULL, SpParams = NULL, 
-                                  ...)
+                plotType = "dynamics")
+evaluation_metric(out, measuredData, type="SWC", cohort=NULL, SpParams = NULL
+                  metric = "loglikelihood")
 }
 \arguments{
   \item{out}{An object of class \code{\link{spwb}}, \code{\link{growth}} or \code{\link{pwb}}.}
@@ -30,9 +26,15 @@ evaluation_loglikelihood_function(x, soil,
   \item{cohort}{A string of the cohort to be compared (e.g. "T1_68"). If \code{NULL} results for the first cohort will be evaluated.}
   \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}), only needed if \code{type = "FMC"}.}
   \item{plotType}{Plot type to draw, either \code{"dynamics"} or \code{"scatter"}.}
-  \item{x}{An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}.}
-  \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
-  \item{...}{Other parameters to be passed to functions \code{\link{spwb}} or \code{\link{growth}}.}
+  \item{metric}{An evaluation metric:
+    \itemize{
+      \item{\code{"MAE"}: Mean absolute error.}
+      \item{\code{"r"}: Pearson's linear correlation coefficient.}
+      \item{\code{"NSE"}: Nash-Sutcliffe model efficiency coefficient.}
+      \item{\code{"NSEabs"}: Modified Nash-Sutcliffe model efficiency coefficient (L1 norm) (Legates & McCabe 1999).}
+      \item{\code{"loglikelihood"}: Logarithm of the likelihood of observing the data given the model predictions, assuming independent Gaussian errors.}
+    }
+  }
 }
 \details{
    Users should provide the appropriate columns in \code{measuredData}, depending on the type of output to be evaluated:
@@ -58,8 +60,7 @@ evaluation_loglikelihood_function(x, soil,
     }
   }
   \item{Function \code{evaluation_plot} returns a ggplot object.}
-  \item{Function \code{evaluation_loglikelihood} returns the log of the likelihood of observing the data given the model predictions, assuming independent Gaussian errors.}
-  \item{Function \code{evaluation_loglikelihood_function} returns a function whose parameters are parameter values and whose return is a log-likelihood.}
+  \item{Function \code{evaluation_metric} returns a scalar with the desired metric.}
 }
 }
 \author{
@@ -99,9 +100,13 @@ data(exampleobs)
 #Evaluation statistics for soil water content
 evaluation_stats(S1, exampleobs)
 
+#NSE only
+evaluation_metric(S1, exampleobs, metric="NSE")
+
+
 #Comparison of temporal dynamics
 evaluation_plot(S1, exampleobs)
 
 #Loglikelihood value
-evaluation_loglikelihood(S1, exampleobs)
+evaluation_metric(S1, exampleobs)
 }
