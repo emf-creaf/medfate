@@ -113,6 +113,27 @@ modifyInputParams<-function(x, customParams, soil = NULL) {
   customCohortParams = customParams[isCohParam]
   customControlParams = customParams[!isCohParam]
   # Modify control params
+  if(length(customControlParams)>0) {
+    for(i in 1:length(customControlParams)) {
+      parName = names(customControlParams)[i]
+      s = strsplit(parName, "\\$")[[1]]
+      if(length(s)==1) {
+        if(s %in% names(x[["control"]])) {
+          x[["control"]][[s]] = customControlParams[[i]]
+        } else {
+          stop(paste0("Wrong control parameter name ", parName))
+        }
+      } else if(length(s)==2) {
+        if((s[1] %in% names(x[["control"]])) && (s[2] %in% names(x[["control"]][[s[1]]]))) {
+          x[["control"]][[s[1]]][[s[2]]] = customControlParams[[i]]
+        } else {
+          stop(paste0("Wrong control parameter name ", parName))
+        }
+      } else {
+        stop(paste0("Wrong control parameter name ", parName))
+      }
+    }
+  }
   # Modify cohort params
   x = modifyCohortParams(x, customCohortParams, soil)
   return(x)
