@@ -36,14 +36,19 @@ modifySpParams<-function(SpParams, customParams, subsetSpecies = TRUE) {
 
 modifyCohortParams<-function(x, customParams, soil = NULL) {
   
-  # check if customParams exists, if not return swbInput without modification
+  # check if customParams exists, if not return x without modification
   if (is.null(customParams)) {
     return(x)
+  }
+  # check class of customParams
+  if((!inherits(customParams, "data.frame")) && (!inherits(customParams, "numeric")) && (!inherits(customParams, "list"))) {
+    stop("'customParams' must be a named numeric vector, a list or a data frame")
   }
   
   # get the names of the custom params and the input tables
   custom <- names(customParams)
   above_par <- names(x[['above']])
+  below_par <- c("Z50","Z95")
   pheno_par <- names(x[['paramsPhenology']])
   base_par <- names(x[['paramsInterception']])
   transp_par <- names(x[['paramsTranspiration']])
@@ -52,34 +57,63 @@ modifyCohortParams<-function(x, customParams, soil = NULL) {
   growth_par <- names(x[['paramsGrowth']])
   allom_par <- names(x[['paramsAllometries']])
   
+  # clone object to modify
+  x = .cloneInput(x)
+  
+  x_coh = row.names(x$cohorts)
+  
+  modifyParameterValue<-function(param, icoh, val) {
+    if(!is.na(val)) {
+      if(param %in% above_par) .modifyInputParam(x, soil, "above", param, icoh - 1, val)
+      if(param %in% below_par) .modifyInputParam(x, soil, "below", param, icoh - 1, val) 
+      if(param %in% base_par) .modifyInputParam(x, soil, "paramsInterception", param, icoh - 1, val)
+      if(param %in% transp_par) .modifyInputParam(x, soil, "paramsTranspiration", param, icoh - 1, val) 
+      if(param %in% anatomy_par)  .modifyInputParam(x, soil, "paramsAnatomy", param, icoh - 1, val)
+      if(!is.null(growth_par)) if (param %in% growth_par) .modifyInputParam(x, soil, "paramsGrowth", param, icoh - 1, val)
+      if(!is.null(allom_par)) if (param %in% allom_par) .modifyInputParam(x, soil, "paramsAllometries", param, icoh - 1, val)
+      if(!is.null(waterstorage_par)) if (param %in% waterstorage_par) .modifyInputParam(x, soil, "paramsWaterStorage", param, icoh - 1, val)
+    }
+    return(x)
+  }
   # iterate between the custom params
-  rebuildBelow = FALSE
-  for (param in custom) {
-    for (coh in customParams[['Cohort']]) {
-      val <- customParams[customParams[['Cohort']] == coh, param]
-      # cat(paste0(coh, " ", param, " ", val,"\n"))
-      if(!is.na(val)) {
-        if (param %in% above_par) x[['above']][[coh, param]] <- val
-        if (param %in% base_par) x[['paramsInterception']][[coh, param]] <- val
-        if (param %in% transp_par) x[['paramsTranspiration']][[coh, param]] <- val
-        if (param %in% anatomy_par) x[['paramsAnatomy']][[coh, param]] <- val
-        if(!is.null(growth_par)) if (param %in% growth_par) x[['paramsGrowth']][[coh, param]] <- val
-        if(!is.null(allom_par)) if (param %in% allom_par) x[['paramsAllometries']][[coh, param]] <- val
-        if(!is.null(waterstorage_par)) if (param %in% waterstorage_par) x[['paramsWaterStorage']][[coh, param]] <- val
-        if(param %in% c("Z50","Z95")) {
-          rebuildBelow = TRUE
-          x[['below']][[coh, param]]<-val
-        }
+  if(inherits(customParams, "data.frame")) {
+    if(sum(!(customParams[['Cohort']] %in% x_coh))>0) stop("Cohort names do not match between 'x' and 'customParams'")
+    for (param in custom) {
+      for (coh in customParams[['Cohort']]) {
+        val <- customParams[customParams[['Cohort']] == coh, param]
+        icoh <- which(x_coh==coh)
+        modifyParameterValue(param, icoh, val)
       }
     }
-  }
-  if(rebuildBelow) {
-    if(is.null(soil)) stop("'soil' object must be provided to recalculate belowground parameters.")
-    newBelow = .paramsBelow(x$above, x$below$Z50, x$below$Z95, soil, 
-                 x$paramsAnatomy, x$paramsTranspiration, x$control)
-    x$below = newBelow$below
-    x$belowLayers = newBelow$belowLayers
+  } 
+  else { # assume a vector
+    s <- strsplit(custom, "/")
+    for(i in 1:length(s)) {
+      paramCoh <- s[[i]]
+      val <- customParams[[i]]
+      coh <- paramCoh[[1]]
+      if(!(coh %in% x_coh)) stop(paste0("Cohort '", coh,"' not found in 'x'"))
+      icoh <- which(x_coh==coh)
+      param <- paramCoh[[2]]
+      # cat(paste0(coh, " ", param, " ", val,"\n"))
+      modifyParameterValue(param, icoh, val)
+    }
   }
   # return the modified input
+  return(x)
+}
+
+modifyInputParams<-function(x, customParams, soil = NULL) {
+  # check class of customParams
+  if((!inherits(customParams, "numeric")) && (!inherits(customParams, "list"))) {
+    stop("'customParams' must be a named numeric vector or a named list")
+  }
+  cn = names(customParams)
+  isCohParam = unlist(lapply(strsplit(cn, "/"), length))==2 #detect cohort params
+  customCohortParams = customParams[isCohParam]
+  customControlParams = customParams[!isCohParam]
+  # Modify control params
+  # Modify cohort params
+  x = modifyCohortParams(x, customCohortParams, soil)
   return(x)
 }

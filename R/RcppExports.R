@@ -581,6 +581,10 @@ growthInput <- function(above, Z50, Z95, soil, SpParams, control) {
     .Call(`_medfate_growthInput`, above, Z50, Z95, soil, SpParams, control)
 }
 
+.cloneInput <- function(input) {
+    .Call(`_medfate_cloneInput`, input)
+}
+
 forest2spwbInput <- function(x, soil, SpParams, control, mode = "MED") {
     .Call(`_medfate_forest2spwbInput`, x, soil, SpParams, control, mode)
 }

@@ -2437,6 +2437,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// cloneInput
+List cloneInput(List input);
+RcppExport SEXP _medfate_cloneInput(SEXP inputSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type input(inputSEXP);
+    rcpp_result_gen = Rcpp::wrap(cloneInput(input));
+    return rcpp_result_gen;
+END_RCPP
+}
 // forest2spwbInput
 List forest2spwbInput(List x, List soil, DataFrame SpParams, List control, String mode);
 RcppExport SEXP _medfate_forest2spwbInput(SEXP xSEXP, SEXP soilSEXP, SEXP SpParamsSEXP, SEXP controlSEXP, SEXP modeSEXP) {
@@ -4506,6 +4517,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_paramsBelow", (DL_FUNC) &_medfate_paramsBelow, 7},
     {"_medfate_spwbInput", (DL_FUNC) &_medfate_spwbInput, 6},
     {"_medfate_growthInput", (DL_FUNC) &_medfate_growthInput, 6},
+    {"_medfate_cloneInput", (DL_FUNC) &_medfate_cloneInput, 1},
     {"_medfate_forest2spwbInput", (DL_FUNC) &_medfate_forest2spwbInput, 5},
     {"_medfate_forest2growthInput", (DL_FUNC) &_medfate_forest2growthInput, 4},
     {"_medfate_resetInputs", (DL_FUNC) &_medfate_resetInputs, 2},

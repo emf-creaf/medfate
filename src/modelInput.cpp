@@ -491,7 +491,7 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
   NumericVector fHDmin = cohortNumericParameter(SP, SpParams, "fHDmin");
   NumericVector fHDmax = cohortNumericParameter(SP, SpParams, "fHDmax");
   
-  NumericVector maximumRelativeGrowthRates = control["maximumRelativeGrowthRates"];
+  List maximumRelativeGrowthRates = control["maximumRelativeGrowthRates"];
   double RGRmax = maximumRelativeGrowthRates["sapwood"];
   
   for(int c=0;c<numCohorts;c++){
@@ -964,6 +964,10 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   return(input);
 }
 
+// [[Rcpp::export(".cloneInput")]]
+List cloneInput(List input) {
+  return(clone(input));
+}
 
 // [[Rcpp::export("forest2spwbInput")]]
 List forest2spwbInput(List x, List soil, DataFrame SpParams, List control, String mode = "MED") {
@@ -1070,14 +1074,19 @@ void resetInputs(List x, List soil) {
 }
 
 void updatePlantKmax(List x) {
-  DataFrame paramsTranspirationdf =  Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
-  NumericVector Plant_kmax = paramsTranspirationdf["Plant_kmax"];
-  NumericVector VCleaf_kmax = paramsTranspirationdf["VCleaf_kmax"];
-  NumericVector VCstem_kmax = paramsTranspirationdf["VCstem_kmax"];
-  NumericVector VCroot_kmax = paramsTranspirationdf["VCroot_kmax"];
-  int numCohorts = Plant_kmax.size();
-  for(int i=0;i<numCohorts;i++) {
-    Plant_kmax[i] = 1.0/((1.0/VCleaf_kmax[i])+(1.0/VCstem_kmax[i])+(1.0/VCroot_kmax[i]));
+  List control = x["control"];
+  String transpirationMode = control["transpirationMode"];
+  
+  if(transpirationMode=="Sperry") {
+    DataFrame paramsTranspirationdf =  Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
+    NumericVector Plant_kmax = paramsTranspirationdf["Plant_kmax"];
+    NumericVector VCleaf_kmax = paramsTranspirationdf["VCleaf_kmax"];
+    NumericVector VCstem_kmax = paramsTranspirationdf["VCstem_kmax"];
+    NumericVector VCroot_kmax = paramsTranspirationdf["VCroot_kmax"];
+    int numCohorts = Plant_kmax.size();
+    for(int i=0;i<numCohorts;i++) {
+      Plant_kmax[i] = 1.0/((1.0/VCleaf_kmax[i])+(1.0/VCstem_kmax[i])+(1.0/VCroot_kmax[i]));
+    }
   }
 }
 void updateBelowgroundConductances(List x, List soil) {
@@ -1120,7 +1129,22 @@ void updateFineRootDistribution(List x, List soil) {
   }
   updateBelowgroundConductances(x, soil);
 }
+void updateBelow(List x, List soil) {
+  List control = x["control"];
 
+  DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
+  DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
+  
+  DataFrame paramsAnatomydf = DataFrame::create();
+  if(x.containsElementNamed("paramsAnatomy")) paramsAnatomydf = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
+  DataFrame paramsTranspirationdf = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
+  NumericVector Z50 = belowdf["Z50"];
+  NumericVector Z95 = belowdf["Z95"];
+  List newBelowList = paramsBelow(above, Z50, Z95, soil, 
+                               paramsAnatomydf, paramsTranspirationdf, control);
+  x["below"] = newBelowList["below"];
+  x["belowLayers"] = newBelowList["belowLayers"];
+}
 
 double getInputParamValue(List x, String paramType, String paramName, int cohort) {
   DataFrame paramdf = Rcpp::as<Rcpp::DataFrame>(x[paramType]);
@@ -1140,22 +1164,13 @@ void multiplyInputParamSingle(List x, String paramType, String paramName, int co
 
 // [[Rcpp::export(".multiplyInputParam")]]
 void multiplyInputParam(List x, List soil, String paramType, String paramName, int cohort, double f) {
-  if(paramName=="Z50") {
-    multiplyInputParamSingle(x, "below", "Z50", cohort, f);
-    updateFineRootDistribution(x, soil);
-  } else if(paramName=="Z95") {
-    multiplyInputParamSingle(x, "below", "Z95", cohort, f);
-    updateFineRootDistribution(x, soil);
-  } else if(paramName=="Z50/Z95") {
+  if(paramName=="Z50/Z95") {
     multiplyInputParamSingle(x, "below", "Z50", cohort, f);
     multiplyInputParamSingle(x, "below", "Z95", cohort, f);
     updateFineRootDistribution(x, soil);
   } else  if(paramName=="WaterStorage") {
     multiplyInputParamSingle(x, "paramsWaterStorage", "Vsapwood", cohort, f);
     multiplyInputParamSingle(x, "paramsWaterStorage", "Vleaf", cohort, f);
-  } else if(paramName=="VCroot_kmax") {
-    multiplyInputParamSingle(x, "paramsTranspiration", "VCroot_kmax", cohort, f);
-    updateBelowgroundConductances(x, soil);
   } else if(paramName=="Plant_kmax") {
     multiplyInputParamSingle(x, "paramsTranspiration", "VCleaf_kmax", cohort, f);
     multiplyInputParamSingle(x, "paramsTranspiration", "VCstem_kmax", cohort, f);
@@ -1178,28 +1193,19 @@ void multiplyInputParam(List x, List soil, String paramType, String paramName, i
     multiplyInputParamSingle(x, "paramsWaterStorage", "Vsapwood", cohort, 1.0/f);
     multiplyInputParamSingle(x, "paramsTranspiration", "VCstem_kmax", cohort, 1.0/f);
     multiplyInputParamSingle(x, "paramsTranspiration", "VCroot_kmax", cohort, 1.0/f);
-    updatePlantKmax(x);
-    updateBelowgroundConductances(x, soil);
   } else if(paramName=="Vmax298/Jmax298") {
     multiplyInputParamSingle(x, "paramsTranspiration", "Vmax298", cohort, f);
     multiplyInputParamSingle(x, "paramsTranspiration", "Jmax298", cohort, f);
   } else {
     multiplyInputParamSingle(x, paramType, paramName, cohort, f);
   }
+  updatePlantKmax(x);
+  updateBelow(x, soil);
 }
 
 // [[Rcpp::export(".modifyInputParam")]]
 void modifyInputParam(List x, List soil, String paramType, String paramName, int cohort, double newValue) {
-  if(paramName=="Z50") {
-    modifyInputParamSingle(x, "below", "Z50", cohort, newValue);
-    updateFineRootDistribution(x, soil);
-  } else if(paramName=="Z95") {
-    modifyInputParamSingle(x, "below", "Z95", cohort, newValue);
-    updateFineRootDistribution(x, soil);
-  } else if(paramName=="VCroot_kmax") {
-    modifyInputParamSingle(x, "paramsTranspiration", "VCroot_kmax", cohort, newValue);
-    updateBelowgroundConductances(x, soil);
-  } else if(paramName=="LAI_live") {
+  if(paramName=="LAI_live") {
     modifyInputParamSingle(x, "above", "LAI_live", cohort, newValue);
     modifyInputParamSingle(x, "above", "LAI_expanded", cohort, newValue);
   } else if(paramName=="Al2As") {
@@ -1209,9 +1215,9 @@ void modifyInputParam(List x, List soil, String paramType, String paramName, int
     multiplyInputParamSingle(x, "paramsWaterStorage", "Vsapwood", cohort, 1.0/f);
     multiplyInputParamSingle(x, "paramsTranspiration", "VCstem_kmax", cohort, 1.0/f);
     multiplyInputParamSingle(x, "paramsTranspiration", "VCroot_kmax", cohort, 1.0/f);
-    updatePlantKmax(x);
-    updateBelowgroundConductances(x, soil);
   } else {
     modifyInputParamSingle(x, paramType, paramName, cohort, newValue);
   }
+  updatePlantKmax(x);
+  updateBelow(x, soil);
 }

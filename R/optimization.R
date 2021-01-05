@@ -1,5 +1,4 @@
-optimization_evaluation_function<-function(x, soil,
-                                           cohNames, parNames, 
+optimization_evaluation_function<-function(x, soil, parNames, 
                                            measuredData, type = "SWC", cohort = NULL, SpParams = NULL, 
                                            metric = "loglikelihood",
                                            ...) {
@@ -13,14 +12,13 @@ optimization_evaluation_function<-function(x, soil,
   if(inherits(x, "spwbInput")) model = "spwb"
   else model = "growth"
   
-  custom = data.frame(Cohort = unique(cohNames), as.data.frame(matrix(NA, nrow = length(unique(cohNames)), ncol = length(parNames))))
-  names(custom) = c("Cohort", parNames)
   x$control$verbose = FALSE
   
   yf<-function(v) {
     resetInputs(x, soil)
-    for(i in 1:length(parNames)) custom[custom$Cohort==cohNames[i], parNames[i]] = v[i]
-    x = modifyCohortParams(x, custom, soil)
+    customParams = v
+    names(customParams) <- parNames
+    x = modifyInputParams(x, customParams, soil)
     # print(x$below)
     if(model=="spwb") {
       S = spwb(x, soil, 
@@ -41,8 +39,7 @@ optimization_evaluation_function<-function(x, soil,
   return(yf)
 }
 
-optimization_prediction_function<-function(x, soil,
-                                           cohNames, parNames, 
+optimization_prediction_function<-function(x, soil, parNames, 
                                            summary_function,
                                            ...) {
   l = list(...)
@@ -55,14 +52,13 @@ optimization_prediction_function<-function(x, soil,
   if(inherits(x, "spwbInput")) model = "spwb"
   else model = "growth"
   
-  custom = data.frame(Cohort = unique(cohNames), as.data.frame(matrix(NA, nrow = length(unique(cohNames)), ncol = length(parNames))))
-  names(custom) = c("Cohort", parNames)
   x$control$verbose = FALSE
   
   yf<-function(v) {
     resetInputs(x, soil)
-    for(i in 1:length(parNames)) custom[custom$Cohort==cohNames[i], parNames[i]] = v[i]
-    x = modifyCohortParams(x, custom, soil)
+    customParams = v
+    names(customParams) <- parNames
+    x = modifyInputParams(x, customParams, soil)
     # print(x$below)
     if(model=="spwb") {
       S = spwb(x, soil, 

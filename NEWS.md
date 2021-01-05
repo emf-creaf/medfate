@@ -6,6 +6,8 @@
 # Version 1.1.3
 - New model evaluation functions
 - New optimization function factories
+- New function 'modifyParams'
+- Control parameters set to a nested list
 
 # Version 1.1.2
 - GW sunlit/shade minimum/maximum daily output
