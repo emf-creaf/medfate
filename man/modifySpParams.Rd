@@ -18,20 +18,20 @@ modifyInputParams(x, customParams, soil = NULL)
   \item{x}{A model input object of class \code{\link{spwbInput}}.}
   \item{SpParams}{A species parameter data frame, typically \code{\link{SpParamsMED}}.}
   \item{customParams}{A data frame or a named vector with new parameter values (see details).}
-  \item{subsetSpecies}{A flag to indicate that the only species mentioned in \code{customParams} should be returned.}
-  \item{soil}{An object of class \code{\link{soil}}, needed to recalculate belowground parameters when root distribution parameters ('Z50' or 'Z95') are modified in \code{customParams}.}
+  \item{subsetSpecies}{A flag to indicate that the output data frame should include only those species mentioned in \code{customParams}.}
+  \item{soil}{An object of class \code{\link{soil}}, to recalculate belowground parameters if needed, e.g. when root distribution parameters ('Z50' or 'Z95') are modified in \code{customParams}.}
 }
 \details{
 When calling function \code{modifySpParams}, \code{customParams} should be a data frame with as many rows as species and as many columns as parameters to modify, plus a column called 'SpIndex' to match species between the two tables.
 
 When calling \code{modifyCohortParams}, \code{customParams} can be a data frame with as many rows as  cohorts and as many columns as parameters to modify, plus a column called 'Cohort' which will be matched with the cohort names given by \code{\link{spwbInput}} or \code{\link{growthInput}}. Alternatively, \code{customParams} can be a named list or named numeric vector as for \code{modifyInputParams}.
 
-When calling \code{modifyInputParams}, \code{customParams} must be either a named list or a named numeric vector. Cohort parameters are specified using "<cohortName>/<paramName>" (e.g. "T2_68/Z50" to modify parameter 'Z50' of cohort 'T2_68'). Control parameters are specified using either "<paramName>" (e.g "phloemConductanceFactor") or "<paramName>$<subParamName>" (e.g "maximumRelativeGrowthRates$leaf"). It may seem unnecessary to modify control parameters via a function, but \code{modifyParams} is called from optimization functions (see \code{\link{optimization}}).
+When calling \code{modifyInputParams}, \code{customParams} must be either a named list or a named numeric vector. Cohort parameters are specified using "<cohortName>/<paramName>" (e.g. "T2_68/Z50" to modify parameter 'Z50' of cohort 'T2_68'). Control parameters are specified using either "<paramName>" (e.g "phloemConductanceFactor") or "<paramName>$<subParamName>" (e.g "maximumRelativeGrowthRates$leaf"). It may seem unnecessary to modify control parameters via a function, but \code{modifyInputParams} is called from optimization functions (see \code{\link{optimization}}).
 }
 \value{
 Function \code{modifySpParams} returns a modified species parameter data frame. 
 
-Functions \code{modifyCohortParams} and \code{modifyInputParams} return a modified \code{\link{spwbInput}} or \code{\link{growthInput}} object.
+Functions \code{modifyCohortParams} and \code{modifyInputParams} return a modified \code{\link{spwbInput}} or \code{\link{growthInput}} object. Note that modifications may affect other parameters beyond those indicated in \code{customParams}, as a result of parameter dependencies (see example).
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
