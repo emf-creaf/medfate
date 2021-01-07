@@ -6,6 +6,7 @@
 ^README.Rmd$
 ^data-raw/*$
 ^modeltests/*$
-^vignettes_build/*$
+^vignettes/*.rds$
+^vignettes/SensitivityCalibration.Rmd$
 ^docs/*$
 ^_pkgdown.yml$

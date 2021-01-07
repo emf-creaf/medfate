@@ -16,7 +16,7 @@ evaluation_table(out, measuredData, type = "SWC", cohort = NULL, SpParams = NULL
 evaluation_stats(out, measuredData, type="SWC", cohort = NULL, SpParams = NULL)
 evaluation_plot(out, measuredData, type="SWC", cohort = NULL, SpParams = NULL, 
                 plotType = "dynamics")
-evaluation_metric(out, measuredData, type="SWC", cohort=NULL, SpParams = NULL
+evaluation_metric(out, measuredData, type="SWC", cohort=NULL, SpParams = NULL,
                   metric = "loglikelihood")
 }
 \arguments{

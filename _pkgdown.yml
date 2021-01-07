@@ -1,4 +1,4 @@
-destination: "D:/Rservices/vegmod_web/static/medfatedocs/"
+destination: "~/Rservices/vegmod_web/static/medfatedocs/"
 
 home:
   links:
@@ -14,7 +14,10 @@ articles:
     - starts_with("Basic")
     - starts_with("Advanced")
     - starts_with("Forest")
-
+- title: Model analysis
+  contents:
+    - starts_with("Sensitivity")
+    
 reference:
 - title: Forest definition
   desc:  Forest definition and manipulation functions
@@ -67,6 +70,12 @@ reference:
   - starts_with("extractSubdaily")
   
 
+- title: Model analysis
+  desc:  Evaluation and optimization
+  contents:
+  - starts_with("evaluation_")
+  - starts_with("optimization_")
+  
 - title: Phenology
   desc:  Leaf phenology processes
   contents:
