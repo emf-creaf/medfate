@@ -1,7 +1,8 @@
 multiple_runs<-function(parMatrix, x, soil,
                         meteo, latitude,
                         elevation = NA, slope = NA, aspect = NA, 
-                        summary_function = NULL, args = NULL, verbose = TRUE) {
+                        summary_function = NULL, args = NULL, 
+                        verbose = TRUE) {
   if(inherits(x, "spwbInput")) model = "spwb"
   else model = "growth"
   
@@ -20,10 +21,10 @@ multiple_runs<-function(parMatrix, x, soil,
                             slope  = slope,aspect = aspect))
     if(!is.null(summary_function)) {
       res[[r]] = do.call(summary_function, c(list(S), args))
-      if(verbose) cat(paste0("Parameter values = [", paste0(customParams, collapse=", "), "] f = ", res[[r]], "\n"))
+      if(verbose) cat(paste0(r, ". Parameter values = [", paste0(customParams, collapse=", "), "] f = ", res[[r]], "\n"))
     } else {
       res[[r]] = S
-      if(verbose) cat(paste0("Parameter values = [", paste0(customParams, collapse=", "), "]\n"))
+      if(verbose) cat(paste0(r, ". Parameter values = [", paste0(customParams, collapse=", "), "]\n"))
     }
   }
   return(res)

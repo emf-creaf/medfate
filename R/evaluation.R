@@ -263,9 +263,9 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL, SpParams
     ETobs = df$ETobs
     if(plotType=="dynamics") {
       g<-ggplot(df, aes_string(x="Dates"))+
-        geom_path(aes(y=ETobs, col="Measured ETR"))+
-        geom_path(aes(y=ET1, col="Modelled Es+Tr"))+
-        geom_path(aes(y=ET2, col="Modelled Es+Tr+In"))+
+        geom_path(aes_string(y="ETobs", col="Measured ETR"))+
+        geom_path(aes_string(y="ET1", col="Modelled Es+Tr"))+
+        geom_path(aes_string(y="ET2", col="Modelled Es+Tr+In"))+
         xlab("")+
         ylab("ETR (mm)")+
         scale_color_manual(name="", values=c("Measured ETR"="red", 

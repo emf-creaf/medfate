@@ -7,7 +7,7 @@
 \alias{moisture_tissueRWC}
 \alias{moisture_tissueFMC}
 \alias{moisture_cohortFMC}
-\alias{moisture_cohortFMC_day}
+\alias{moisture_cohortFMCDay}
 \alias{moisture_pressureVolumeCurvePlot}
 \alias{moisture_turgorLossPoint}
 \title{
