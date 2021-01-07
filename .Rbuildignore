@@ -6,6 +6,6 @@
 ^README.Rmd$
 ^data-raw/*$
 ^modeltests/*$
-^medfatebook/*$
+^vignettes_build/*$
 ^docs/*$
 ^_pkgdown.yml$
