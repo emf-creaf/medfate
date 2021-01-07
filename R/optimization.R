@@ -1,7 +1,7 @@
 multiple_runs<-function(parMatrix, x, soil,
                         meteo, latitude,
                         elevation = NA, slope = NA, aspect = NA, 
-                        summary_function = NULL, args = NULL) {
+                        summary_function = NULL, args = NULL, verbose = TRUE) {
   if(inherits(x, "spwbInput")) model = "spwb"
   else model = "growth"
   
@@ -20,8 +20,10 @@ multiple_runs<-function(parMatrix, x, soil,
                             slope  = slope,aspect = aspect))
     if(!is.null(summary_function)) {
       res[[r]] = do.call(summary_function, c(list(S), args))
+      if(verbose) cat(paste0("Parameter values = [", paste0(customParams, collapse=", "), "] f = ", res[[r]], "\n"))
     } else {
       res[[r]] = S
+      if(verbose) cat(paste0("Parameter values = [", paste0(customParams, collapse=", "), "]\n"))
     }
   }
   return(res)
@@ -37,7 +39,7 @@ optimization_function<-function(parNames, x, soil,
   
   x$control$verbose = FALSE
   
-  yf<-function(v) {
+  yf<-function(v, verbose = FALSE) {
     resetInputs(x, soil)
     if(is.vector(v)) {
       customParams = v
@@ -48,6 +50,7 @@ optimization_function<-function(parNames, x, soil,
                               latitude = latitude, elevation = elevation,
                               slope  = slope,aspect = aspect))
       y = do.call(summary_function, c(list(S), args))
+      if(verbose) cat(paste0("Parameter values = [", paste0(customParams, collapse=", "), "] f = ", y, "\n"))
       return(y)
     } else if(is.matrix(v)) {
       colnames(v)<-parNames
@@ -55,7 +58,8 @@ optimization_function<-function(parNames, x, soil,
                        meteo = meteo,
                        latitude = latitude, elevation = elevation,
                        slope  = slope,aspect = aspect,
-                       summary_function = summary_function, args = args)
+                       summary_function = summary_function, args = args,
+                       verbose = verbose)
       return(as.numeric(y))
     } else {
       stop("Wrong 'v' class")
