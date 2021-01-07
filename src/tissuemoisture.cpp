@@ -207,7 +207,7 @@ NumericMatrix cohortFMC(List spwb, DataFrame SpParams) {
 
 // [[Rcpp::export("moisture_cohortFMCDay")]]
 NumericVector cohortFMCDay(List spwb_day, List x, DataFrame SpParams) {
-  DataFrame plants = spwb_day["Plants"];
+  DataFrame plants = Rcpp::as<Rcpp::DataFrame>(spwb_day["Plants"]);
   
   //Draw cohort-based variables
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);

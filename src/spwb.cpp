@@ -1116,7 +1116,6 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
                      Radiation[i], elevation, verbose); //No Runon in simulations for a single cell
       } else if(transpirationMode=="Sperry") {
         int ntimesteps = control["ndailysteps"];
-        double tstep = 86400.0/((double) ntimesteps);
         std::string c = as<std::string>(dateStrings[i]);
         int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
         double delta = meteoland::radiation_solarDeclination(J);
@@ -1367,8 +1366,7 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
       
     
     int ntimesteps = control["ndailysteps"];
-    double tstep = 86400.0/((double) ntimesteps);
-    
+   
     //2. transpiration and photosynthesis
     if(transpirationMode=="Granier") {
       s = transpirationGranier(x, soil, MeanTemperature[i], PET[i], true, true);

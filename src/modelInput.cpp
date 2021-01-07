@@ -383,7 +383,6 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
       CRSV[c] = coarseRootSoilVolume(V(c,_), dVec, 0.5);
     }
     if(plantWaterPools) {
-      double LAIcelllive = sum(LAI_live);
       belowdf = DataFrame::create(_["Z50"] = Z50,
                                   _["Z95"] = Z95,
                                   _["coarseRootSoilVolume"] = CRSV,
