@@ -2,12 +2,15 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 1.1.4
+- Flexible temporal resolution of model evaluation
 
 # Version 1.1.3
 - New model evaluation functions
 - New optimization function factories
-- New function 'modifyParams'
+- New function 'modifyInputParams'
 - Control parameters set to a nested list
+- New vignette for calibration and sensitivity analysis
 
 # Version 1.1.2
 - GW sunlit/shade minimum/maximum daily output

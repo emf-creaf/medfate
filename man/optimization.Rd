@@ -24,7 +24,8 @@ optimization_evaluation_function(parNames, x, soil,
                       meteo, latitude,
                       elevation = NA, slope = NA, aspect = NA, 
                       measuredData, type = "SWC", cohort = NULL, 
-                      SpParams = NULL, metric = "loglikelihood")
+                      temporalResolution = "day", SpParams = NULL, 
+                      metric = "loglikelihood")
 }
 \arguments{
   \item{parMatrix}{A matrix of parameter values with runs in rows and parameters in columns. Column names should follow parameter modification naming rules (see examples and naming rules in \code{\link{modifyInputParams}}).}
@@ -36,6 +37,7 @@ optimization_evaluation_function(parNames, x, soil,
   \item{measuredData}{A data frame with observed/measured values. Dates should be in row names, whereas columns should be named according to the type of output to be evaluated (see details).}
   \item{type}{A string with the kind of model output to be evaluated. Accepted values are \code{"SWC"} (soil moisture content), \code{"REW"} relative extractable water, \code{"ETR"} (total evapotranspiration), \code{"E"} (transpiration per leaf area), \code{"FMC"} (fuel moisture content) and \code{"WP"} (plant water potentials).}
   \item{cohort}{A string of the cohort to be compared (e.g. "T1_68"). If \code{NULL} results for the first cohort will be evaluated.}
+  \item{temporalResolution}{A string to indicate the temporal resolution of the model evaluation, which can be "day", "week", "month" or "year". Observed and modelled values are aggregated temporally (using either means or sums) before comparison.}
   \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}), only needed if \code{type = "FMC"}.}
   \item{metric}{An evaluation metric (see \code{\link{evaluation_metric}}).}
   \item{summary_function}{A function whose input is the result of \code{\link{spwb}} or \code{\link{growth}}. The function must return a numeric scalar in the case of \code{optimization_function}, but is not restricted in the case of \code{multiple_runs}.}

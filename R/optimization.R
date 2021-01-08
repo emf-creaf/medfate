@@ -72,11 +72,13 @@ optimization_function<-function(parNames, x, soil,
 optimization_evaluation_function<-function(parNames, x, soil, 
                                            meteo, latitude,
                                            elevation = NA, slope = NA, aspect = NA, 
-                                           measuredData, type = "SWC", cohort = NULL, SpParams = NULL, 
+                                           measuredData, type = "SWC", cohort = NULL, 
+                                           temporalResolution = "day", SpParams = NULL, 
                                            metric = "loglikelihood") {
   sf<-function(S) {
     y = evaluation_metric(S, measuredData = measuredData, type=type, 
-                           cohort=cohort, SpParams = SpParams, metric = metric)
+                          cohort=cohort, SpParams = SpParams, 
+                          temporalResolution = temporalResolution, metric = metric)
     return(y)
   }
   return(optimization_function(parNames = parNames, x = x, soil = soil,

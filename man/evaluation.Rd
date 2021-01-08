@@ -12,11 +12,15 @@ Evaluation of simulations results
 Functions to compare model predictions against observed values.
 }
 \usage{
-evaluation_table(out, measuredData, type = "SWC", cohort = NULL, SpParams = NULL)
-evaluation_stats(out, measuredData, type="SWC", cohort = NULL, SpParams = NULL)
-evaluation_plot(out, measuredData, type="SWC", cohort = NULL, SpParams = NULL, 
+evaluation_table(out, measuredData, type = "SWC", cohort = NULL, 
+                 temporalResolution = "day", SpParams = NULL)
+evaluation_stats(out, measuredData, type="SWC", cohort = NULL, 
+                 temporalResolution = "day", SpParams = NULL)
+evaluation_plot(out, measuredData, type="SWC", cohort = NULL, 
+                temporalResolution = "day", SpParams = NULL, 
                 plotType = "dynamics")
-evaluation_metric(out, measuredData, type="SWC", cohort=NULL, SpParams = NULL,
+evaluation_metric(out, measuredData, type="SWC", cohort=NULL, 
+                  temporalResolution = "day", SpParams = NULL,
                   metric = "loglikelihood")
 }
 \arguments{
@@ -24,6 +28,7 @@ evaluation_metric(out, measuredData, type="SWC", cohort=NULL, SpParams = NULL,
   \item{measuredData}{A data frame with observed/measured values. Dates should be in row names, whereas columns should be named according to the type of output to be evaluated (see details).}
   \item{type}{A string with the kind of model output to be evaluated. Accepted values are \code{"SWC"} (soil moisture content), \code{"REW"} relative extractable water, \code{"ETR"} (total evapotranspiration), \code{"E"} (transpiration per leaf area), \code{"FMC"} (fuel moisture content) and \code{"WP"} (plant water potentials).}
   \item{cohort}{A string of the cohort to be compared (e.g. "T1_68"). If \code{NULL} results for the first cohort will be evaluated.}
+  \item{temporalResolution}{A string to indicate the temporal resolution of the model evaluation, which can be "day", "week", "month" or "year". Observed and modelled values are aggregated temporally (using either means or sums) before comparison.}
   \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}), only needed if \code{type = "FMC"}.}
   \item{plotType}{Plot type to draw, either \code{"dynamics"} or \code{"scatter"}.}
   \item{metric}{An evaluation metric:

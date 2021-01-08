@@ -1,12 +1,15 @@
-evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL, SpParams = NULL) {
+evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL, 
+                           temporalResolution = "day", SpParams = NULL) {
   
   # Check arguments
-  type = match.arg(type, c("SWC", "REW","E", "ETR", "WP", "FMC"))
+  type = match.arg(type, c("SWC", "REW","E", "ETR", "WP", "FMC", "BAI"))
+  temporalResolution = match.arg(temporalResolution, c("day", "week", "month", "year"))
   if(type=="SWC") {
     sm = out$Soil
     d = rownames(sm)
     fc = soil_thetaFC(out$soilInput, model = out$spwbInput$control$soilFunctions)
-    df <- data.frame(Observed = NA, Modelled = sm$W.1*fc[1], Dates = as.Date(d))
+    mod = sm$W.1*fc[1]
+    df <- data.frame(Observed = NA, Modelled = mod, Dates = as.Date(d))
     
     if(!("SWC" %in% names(measuredData))) stop(paste0("Column 'SWC' not found in measured data frame."))
     seld = rownames(measuredData) %in% d
@@ -116,10 +119,35 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL, SpPar
     if(!(obscolumn %in% names(measuredData))) stop(paste0("Column '", obscolumn, "' not found in measured data frame."))
     df$Observed[d %in% rownames(measuredData)] = measuredData[[obscolumn]][rownames(measuredData) %in% d] 
   }
+  
+  if(temporalResolution != "day") {
+    d.cut = cut(as.Date(d), breaks=temporalResolution)
+    if(type %in% c("SWC", "REW", "FMC")) {
+      df = data.frame(Observed = tapply(df$Observed, d.cut, FUN = mean, na.rm = TRUE),
+                      Modelled = tapply(df$Modelled, d.cut, FUN = mean, na.rm = TRUE),
+                      Dates = as.Date(levels(d.cut)))
+    } else if(type == "WP") {
+      df = data.frame(PD_obs = tapply(df$PD_obs, d.cut, FUN = mean, na.rm = TRUE),
+                      PD_obs_lower = tapply(df$PD_obs_lower, d.cut, FUN = mean, na.rm = TRUE),
+                      PD_obs_upper = tapply(df$PD_obs_upper, d.cut, FUN = mean, na.rm = TRUE),
+                      MD_obs = tapply(df$MD_obs, d.cut, FUN = mean, na.rm = TRUE),
+                      MD_obs_lower = tapply(df$MD_obs_lower, d.cut, FUN = mean, na.rm = TRUE),
+                      MD_obs_upper = tapply(df$MD_obs_upper, d.cut, FUN = mean, na.rm = TRUE),
+                      PD_mod = tapply(df$PD_mod, d.cut, FUN = mean, na.rm = TRUE),
+                      MD_mod = tapply(df$MD_mod, d.cut, FUN = mean, na.rm = TRUE),
+                      Dates = as.Date(levels(d.cut)))
+    } else {
+      df = data.frame(Observed = tapply(df$Observed, d.cut, FUN = sum, na.rm = TRUE),
+                      Modelled = tapply(df$Modelled, d.cut, FUN = sum, na.rm = TRUE),
+                      Dates = as.Date(levels(d.cut)))
+    }
+  }
+  
   return(df)
 }
 
-evaluation_stats<-function(out, measuredData, type="SWC", cohort = NULL, SpParams = NULL) {
+evaluation_stats<-function(out, measuredData, type="SWC", cohort = NULL, 
+                           temporalResolution = "day", SpParams = NULL) {
   evalstats<-function(obs, pred) {
     sel_complete = !(is.na(obs) | is.na(pred))
     obs = obs[sel_complete]
@@ -134,9 +162,11 @@ evaluation_stats<-function(out, measuredData, type="SWC", cohort = NULL, SpParam
   }
   
   # Check arguments
-  type = match.arg(type, c("SWC", "REW","E", "ETR", "WP", "FMC"))
+  type = match.arg(type, c("SWC", "REW","E", "ETR", "WP", "FMC", "BAI"))
   
-  df = evaluation_table(out, measuredData, type, cohort, SpParams)
+  df = evaluation_table(out = out, measuredData = measuredData, 
+                        type = type, cohort = cohort, 
+                        temporalResolution = temporalResolution, SpParams = SpParams)
   if(type=="SWC") eval_res = evalstats(df$Observed, df$Modelled)
   else if(type=="REW") eval_res = evalstats(df$Observed, df$Modelled)
   else if(type=="E") eval_res = evalstats(df$Observed, df$Modelled)
@@ -155,7 +185,8 @@ evaluation_stats<-function(out, measuredData, type="SWC", cohort = NULL, SpParam
   return(eval_res)
 }
 
-evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL, SpParams = NULL, 
+evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL, 
+                          temporalResolution = "day", SpParams = NULL, 
                           plotType = "dynamics") {
   scatterplot<-function(df, xlab="", ylab="", title=NULL, err = FALSE) {
     g<-ggplot(df, aes_string(x="Modelled"))
@@ -191,15 +222,18 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL, SpParams
   }
 
   # Check arguments
-  type = match.arg(type, c("SWC", "REW","E", "ETR", "WP", "FMC"))
+  type = match.arg(type, c("SWC", "REW","E", "ETR", "WP", "FMC", "BAI"))
   plotType = match.arg(plotType, c("dynamics", "scatter"))
   
   
-  df = evaluation_table(out, measuredData, type, cohort, SpParams)
+  df = evaluation_table(out = out, measuredData = measuredData, 
+                        type = type, cohort = cohort, 
+                        temporalResolution = temporalResolution, SpParams = SpParams)
   
   if(type=="SWC") {
     if(plotType=="dynamics") {
-      g<-dynamicsplot(df, ylab = expression(paste("Soil moisture ",(m^{3}%.%m^{-3}))), err = ("SWC_err" %in% names(measuredData)))
+      g<-dynamicsplot(df, ylab = expression(paste("Soil moisture ",(m^{3}%.%m^{-3}))),
+                      err = ("SWC_err" %in% names(measuredData)))
     } else {
       g<-scatterplot(df, xlab  = expression(paste("Measured soil moisture ",(m^{3}%.%m^{-3}))),
                      ylab = expression(paste("Measured soil moisture ",(m^{3}%.%m^{-3}))), 
@@ -328,9 +362,12 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL, SpParams
   return(g)
 }
 
-evaluation_metric<-function(out, measuredData, type="SWC", cohort=NULL, SpParams = NULL,
+evaluation_metric<-function(out, measuredData, type="SWC", cohort=NULL, 
+                            temporalResolution = "day", SpParams = NULL,
                             metric = "loglikelihood") {
-  df <- evaluation_table(out, measuredData = measuredData, type=type, cohort = cohort, SpParams = SpParams)
+  df = evaluation_table(out = out, measuredData = measuredData, 
+                        type = type, cohort = cohort, 
+                        temporalResolution = temporalResolution, SpParams = SpParams)
   obs = df$Observed
   pred = df$Modelled
   sd <- sd(obs, na.rm=TRUE)
