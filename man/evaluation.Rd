@@ -71,7 +71,7 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 Legates, D.R., McCabe, G.J., 1999. Evaluating the use of “goodness-of-fit” measures in hydrologic and hydroclimatic model validation. Water Resour. Res. 35, 233–241. 
 }
 \seealso{
-\code{\link{spwb}}, \code{\link{growth}}, \code{\link{optimization}}
+\code{\link{spwb}}, \code{\link{growth}}, \code{\link{optimization}}, \code{\link{exampleobs}}
 }
 \examples{
 #Load example daily meteorological data

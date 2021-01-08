@@ -73,6 +73,7 @@ reference:
 - title: Model analysis
   desc:  Evaluation and optimization
   contents:
+  - exampleobs
   - starts_with("evaluation_")
   - starts_with("optimization_")
   
