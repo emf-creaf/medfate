@@ -11,47 +11,60 @@ vignette: >
   %\VignettePackage{medfate}
   \usepackage[utf8]{inputenc}
 ---
-<!-- Compile using: -->
-<!-- rmarkdown::render("vignettes_build/SensitivityCalibration.Rmd",output_dir = "vignettes") -->
+<!-- Compile using (Rmd is not included in build): -->
+<!-- rmarkdown::render("vignettes/SensitivityCalibration.Rmd",output_dir = "vignettes") -->
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+set.seed(382)
 ```
 
 ## About this vignette
 
 The present document shows how to conduct a sensitivity analyses and calibration exercises on the simulation models included in package `medfate`. The document is written assuming that the user is familiarized with the basic water balance model (i.e. function `spwb`). 
+The aim of the exercises presented here are:
+
+1. To determine which `spwb()` model parameters are more influential in determining stand transpiration and plant drought stress.
+2. To determine which model parameters are more influential to determine model fit to soil water content dynamics.
+3. To reduce the uncertainty in parameters determining fine root distribution, given an observed data set of soil water content dynamics.
 
 ## Preparing model inputs
 
-As an example data set we will use here the same data sets provided to illustrate simulation functions in **medfate**. This consists of a forest with two tree species (*Pinus halepensis* and *Quercus ilex*) and a shrub species (*Quercus coccifera* or Kermes oak). For simplicity, each species is represented by a single plant cohort. 
+As an example data set we will use here the same data sets provided to illustrate simulation functions in **medfate**. This data set consists of a forest with two tree species (*Pinus halepensis*/T1_54 and *Quercus ilex*/T2_68) and one shrub species (*Quercus coccifera*/S1_65 or Kermes oak). 
 
-We begin by loading the package, example weather data set and the default species parametrization:
+We begin by loading the package and the example forest data:
 ```{r}
 library(medfate)
-data(examplemeteo)
 data(exampleforestMED)
+exampleforestMED
+```
+
+We also load the example weather data set and the default species parametrization:
+```{r}
+data(examplemeteo)
 data(SpParamsMED)
 ```
 
-We then initialize a soil of four layers (default values of texture, bulk density and rock content) and the species input parameters for simulation function `spwb()`:
+We then initialize a soil with four layers (default values of texture, bulk density and rock content) and the species input parameters for simulation function `spwb()`:
 
 ```{r}
 examplesoil1 = soil(defaultSoilParams(4))
 x1 = forest2spwbInput(exampleforestMED,examplesoil1, SpParamsMED, control = defaultControl())
 ```
 
-Although it is not necessary, we make a call to `spwb()` with the default parameter settings:
+Although it is not necessary, we make an initial call to the model (`spwb()`) with the default parameter settings:
 
 ```{r}
 S1<-spwb(x1, examplesoil1, examplemeteo, latitude = 41.82592, elevation = 100)
 ```
 
-Function `spwb()` will be implicitly called multiple times in the sensitivity analyses and calibration analyses that we will illustrate below.
+Function `spwb()` will be implicitly called multiple times in the sensitivity analyses and calibration analyses that we will illustrate below. 
 
 ## Sensitivity analysis
 
-Model sensitivity analyses are used to investigate how variation in the output of a numerical model can be attributed to variations of its input factors. 
+### Introduction and input factors
+
+Model sensitivity analyses are used to investigate how variation in the output of a numerical model can be attributed to variations of its *input factors*. Input factors are elements that can be changed before model execution and may affect its output. They can be model parameters, initial values of state variables, boundary conditions or the input forcing data (Pianosi et al. 2016). 
 
 According to Saltelli et al. (2016), there are three main purposes of sensitivity analyses:
 
@@ -59,9 +72,14 @@ According to Saltelli et al. (2016), there are three main purposes of sensitivit
  + *Screening* aims at identifying the input factors, if any, which have a negligible influence on the output variability.
  + *Mapping* aims at determining the region of the input variability space that produces significant output values.
 
-### Input factors and variability space
+Here we will mostly interested in ranking parameters according to different objectives. We will take as input factors three plant traits (leaf area index, fine root distribution and the water potential corresponding to a reduction in plant conductance) in the three plant cohorts (species), so that nine model parameters will be studied. The following shows the initial values for those parameters:
+```{r}
+x1$above$LAI_live
+x1$below$Z50
+x1$paramsTransp$Psi_Extract
+```
 
-*Input factors* are elements that can be changed before model execution and may affect its output. They can be model parameters, initial values of state variables, boundary conditions or the input forcing data (Pianosi et al. 2016). Here we will take as input factors three plant traits (leaf area index, fine root distribution and the water potential corresponding to a reduction in plant conductance) in the three plant cohorts (species), so that nine model parameters will be studied: 
+In the following code we define a vector of parameter names (using naming rules of function `modifyInputParams()`) as well as the input variability space, defined by the minimum and maximum parameter values:
 
 ```{r}
 #Parameter names of interest
@@ -77,12 +95,10 @@ parMax = c(2,2,2,
            -1,-1,-1)
 ```
 
-The previous code defines de parameter names (using naming rules of function `modifyInputParams()`) as well as the input variability space, defined by the minimum and maximum parameter values.
 
+### Model output functions
 
-### Scalar model output
-
-In sensitivity analyses, model output is summarized into a single variable whose variation is to be analyzed. Pianosi et al. (2016) distinguish two types of scalar functions:
+In sensitivity analyses, model output is summarized into a single variable whose variation is to be analyzed. Pianosi et al. (2016) distinguish two types of model output functions:
  
  + *objective functions* (also called loss or cost functions), which are measures of model performance calculated by comparison of modelled and observed variables.
  + *prediction functions*, which are scalar values that are provided to the model-user for their practical use, and that can be computed even in the absence of observations.
@@ -105,7 +121,11 @@ sf_stress<-function(x) {
 sf_stress(S1)
 ```
 
-Sensitivity analysis requires model output functions whose parameters are the input factors to be studied. Hence we need functions that take trait values as input, run the soil plant water balance model and return the desired prediction function. These functions can be generated using the function factory `optimization_function()`.
+Sensitivity analysis requires model output functions whose parameters are the input factors to be studied. 
+\begin{equation}
+y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
+\end{equation}
+where $y$ is the output, $g$ is the output function and $\mathbf{x} = \{x_1, x_2, \dots, x_n\}$ is the vector of parameter input factors. Functions `of_transp` and `of_stress` take simulation results as input, not values of input factors. Instead, we need to define functions that take trait values as input, run the soil plant water balance model and return the desired prediction or performance statistic. These functions can be generated using the function factory `optimization_function()`. The following code defines one of such functions focusing on total transpiration:
 
 ```{r}
 of_transp<-optimization_function(parNames = parNames,
@@ -115,12 +135,15 @@ of_transp<-optimization_function(parNames = parNames,
                                  summary_function = sf_transp)
 ```
 
-The object `of_transp` is a function itself, which we can call with parameter values (or sets of parameter values) as input:
+Note that we provided all the data needed for simulations as input to `optimization_function()`, as well as the names of the parameters to study and the function `sf_transp`. The resulting object `of_transp` is a function itself, which we can call with parameter values (or sets of parameter values) as input:
 ```{r}
 of_transp(parMin)
 of_transp(parMax)
 ```
-It is important to understand how the process works: (1) Function `of_transp()` internally calls `spwb()` using all the parameters specified in its construction (i.e. in the call to the function factory), except for the input factors, which are specified as input at the time of calling `of_transp()`; (2) The result of soil plant water balance is then passed to function `sf_transp()` and the output of this last function is returned as output of `of_transp()`.
+It is important to understand the steps that are done when we call `of_transp()`: 
+
+1. The function `of_transp()` calls `spwb()` using all the parameters specified in its construction (i.e. in the call to the function factory), except for the input factors indicated in `parNames`, which are specified as input at the time of calling `of_transp()`.
+2. The result of soil plant water balance is then passed to function `sf_transp()` and the output of this last function is returned as output of `of_transp()`.
 
 We can build a similar model output function, in this case focusing on plant stress (note that the only difference in the call to the factory is in the specification of `sf_stress` as summary function, instead of `sf_transp`). 
 ```{r}
@@ -136,14 +159,15 @@ of_stress(parMax)
 As mentioned above, another kind of output function can be the evaluation of model performance. Here we will assume that performance in terms of predictability of soil water content is desired; and use a data set of 'observed' values (actually simulated values with gaussian error) as reference:
 ```{r}
 data(exampleobs)
+head(exampleobs)
 ```
-The model fit to observed data can be measured using the Nash-Sutcliffe coefficient, which we calculate for the initial run using function `evaluation_metric()`:
+where soil water content dynamics is in column `SWC`. The model fit to observed data can be measured using the Nash-Sutcliffe coefficient, which we calculate for the initial run using function `evaluation_metric()`:
 ```{r}
 evaluation_metric(S1, measuredData = exampleobs, type = "SWC", 
                   metric = "NSE")
 
 ```
-Analogously to the measures of total transpiration and average plant stress, we can use a function factory to define a model output function that takes input factors as inputs, runs the model and performs the evaluation:
+A call to `evaluation_metric()` provides the coefficient given a model simulation result, but is not a model output function as we defined above. Analogously to the measures of total transpiration and average plant stress, we can use a function factory to define a model output function that takes input factors as inputs, runs the model and performs the evaluation:
 
 ```{r}
 of_eval<-optimization_evaluation_function(parNames = parNames,
@@ -153,7 +177,7 @@ of_eval<-optimization_evaluation_function(parNames = parNames,
                 metric = "NSE")
 
 ```
-
+Function `of_eval()` stores internally both the data needed for conducting simulations and the data needed for evaluating simulation results, so that we only need to provide values for the input factors:
 ```{r}
 of_eval(parMin)
 of_eval(parMax)
@@ -180,10 +204,13 @@ Apart from indicating the sampling design to sample the input factor space, the 
 # saveRDS(sa_transp, file="sa_transp.rds")
 sa_transp = readRDS("sa_transp.rds")
 ```
-According to the result of this sensitivity analysis, leaf area index (`LAI_live`) parameters are the most relevant to determine total transpiration, much more than fine root distribution (`Z50`) and the water potentials corresponding to whole-plant conductance reduction (i.e. `Psi_Extract`).
+
 ```{r}
 print(sa_transp)
 ```
+
+`mu.star` values inform about the mean of elementary effects of each $i$ factor and can be used to rank all the input factors, whereas `sigma` inform about the degree of interaction of the $i$-th factor with others. According to the result of this sensitivity analysis, leaf area index (`LAI_live`) parameters are the most relevant to determine total transpiration, much more than fine root distribution (`Z50`) and the water potentials corresponding to whole-plant conductance reduction (i.e. `Psi_Extract`).
+
 ```{r, fig.width=5, fig.height = 5, fig.align="center"}
 plot(sa_transp, xlim=c(0,200))
 ```
@@ -199,10 +226,13 @@ sa_stress <- morris(of_stress, parNames, r = 50,
 # saveRDS(sa_stress, file="sa_stress.rds")
 sa_stress = readRDS("sa_stress.rds")
 ```
-Again, LAI values parameters are the most relevant, but closely followed by the water potentials corresponding to whole-plant conductance reduction (i.e. `Psi_Extract`), which appear as more relevant than parameters of fine root distribution (`Z50`). In addition, the `Psi_Extract` of trees (oaks and pines) appear as more relevant than that of shrubs (kermes oak).
+
 ```{r}
 print(sa_stress)
 ```
+
+Again, LAI values parameters are the most relevant, but closely followed by the water potentials corresponding to whole-plant conductance reduction (i.e. `Psi_Extract`), which appear as more relevant than parameters of fine root distribution (`Z50`). 
+
 ```{r, fig.width=5, fig.height = 5, fig.align="center"}
 plot(sa_stress, xlim=c(0,300))
 ```
@@ -220,10 +250,12 @@ sa_eval <- morris(of_eval, parNames, r = 50,
 sa_eval = readRDS("sa_eval.rds")
 ```
 
-Contrary to the previous cases, the contribution of LAI parameters is similar to that of parameters of fine root distribution (`Z50`), which appear as more relevant than the water potentials corresponding to whole-plant conductance reduction (i.e. `Psi_Extract`). 
 ```{r}
 print(sa_eval)
 ```
+
+Contrary to the previous cases, the contribution of LAI parameters is similar to that of parameters of fine root distribution (`Z50`), which appear as more relevant than the water potentials corresponding to whole-plant conductance reduction (i.e. `Psi_Extract`). 
+
 ```{r, fig.width=5, fig.height = 5, fig.align="center"}
 plot(sa_eval, xlim=c(0,100))
 ```
@@ -232,9 +264,9 @@ plot(sa_eval, xlim=c(0,100))
 
 By model calibration we mean here the process of finding suitable parameter values (or suitable parameter distributions) given a set of observations. Hence, the idea is to optimize the correspondence between model predictions and observations by changing model parameter values.
 
-### Defining parameter space and optimization function
+### Defining parameter space and objective function
 
-To simplify our analysis and avoid problems of parameter identifiability, we focus here on the calibration of parameter `Z50` of fine root distribution.
+To simplify our analysis and avoid problems of parameter identifiability, we focus here on the calibration of parameter `Z50` of fine root distribution. Below we redefine vectors `parNames`,  `parMin`, and `parMax`; and we specify a vector of initial values.
 
 ```{r}
 #Parameter names of interest
@@ -245,7 +277,7 @@ parMax = c(1000,1000,1000)
 parIni = x1$below$Z50
 ```
 
-We need to define a *likelihood function* in order to run calibration analyses. We can use the function factory `optimization_evaluation_function` and the 'observed' data to this aim, but in this case we specify a log-likelihood with Gaussian error as the evaluation metric. 
+In order to run calibration analyses we need to define an objective function. Many evaluation metrics could be used but it is common practice to use *likelihood functions* . We can use the function factory `optimization_evaluation_function` and the 'observed' data to this aim, but in this case we specify a log-likelihood with Gaussian error as the evaluation metric for `of_eval()`. 
 
 ```{r}
 of_eval<-optimization_evaluation_function(parNames = parNames,
@@ -258,7 +290,7 @@ of_eval<-optimization_evaluation_function(parNames = parNames,
 
 ### Calibration by gradient search
 
-Model calibration can be performed using a broad range of function optimization approaches, including simulated annealing, genetic algorithms, gradient methods, etc. To illustrate a common approach, we will use function `optim` from package **stats**, which provides several methods. In particular we will use "L-BFGS-B", which is the "BFGS" quasi-Newton method published by Broyden, Fletcher, Goldfarb and Shanno, modified by the inclusion of minimum and maximum boundaries. By default, function `optim` performs the minimization of the objective function (here `of_eval`), but we can specify a negative value for control parameter `fnscale` to turn the process into a maximization:
+Model calibration can be performed using a broad range of approaches. Many of them - including simulated annealing, genetic algorithms, gradient methods, etc. - focus on the maximization or minimization of the objective function. To illustrate this common approach, we will use function `optim` from package **stats**, which provides several optimization methods. In particular we will use "L-BFGS-B", which is the "BFGS" quasi-Newton method published by Broyden, Fletcher, Goldfarb and Shanno, modified by the inclusion of minimum and maximum boundaries. By default, function `optim` performs the minimization of the objective function (here `of_eval`), but we can specify a negative value for control parameter `fnscale` to turn the process into a maximization of maximum likelihood:
 
 ```{r, eval = FALSE}
 opt_cal = optim(parIni, of_eval, method = "L-BFGS-B",
@@ -275,25 +307,26 @@ The calibration result is the following:
 ```{r}
 print(opt_cal)
 ```
+
 Note that the optimized parameters are close to those of `Z50` in the original `x1`. 
 ```{r}
-x1$below
+cbind( x1$below[,"Z50", drop = FALSE], opt_cal$par)
 ```
 This occurs because these default values were used to generate the 'observed' data in `exampleobs`, which contains a small amount of non-systematic error. 
 
 ### Bayesian calibration
 
-As an example of a more sophisticated model calibration, we will use package **BayesianTools** to conduct a Bayesian calibration analysis. 
+As an example of a more sophisticated model calibration, we will conduct a Bayesian calibration analysis using package **BayesianTools** (Hartig et al. 2019): 
 ```{r}
 library(BayesianTools)
 ```
 
-In a Bayesian analysis one evaluates how the uncertainty in model parameters is changed by observations, because the same observed values do not have the same likelihood to be observed for all parameter sets. Hence, for a Bayesian analysis we need to specify a loglikelihood function and the prior distribution (i.e. the initial uncertainty) of the input factors. The central object in the **BayesianTools** package is the `BayesianSetup`. This class contains the information about the model to be fit (likelihood), and the priors for the model parameters. In absence of previous data, we specify a uniform distribution between the minimum and maximum values, which in the **BayesianTools** package can be done using function `createUniformPrior()`, which we use inside the call to `createBayesianSetup()`.
+In a Bayesian analysis one evaluates how the uncertainty in model parameters is changed (hopefully reduced) after observing some data, because observed values do not have the same likelihood under all regions of the parameter space. For a Bayesian analysis we need to specify a (log)likelihood function and the prior distribution (i.e. the initial uncertainty) of the input factors. The central object in the **BayesianTools** package is the `BayesianSetup`. This class, created by calls to `createBayesianSetup()`, contains the information about the model to be fit (likelihood), and the priors for model parameters. In absence of previous data, we specify a uniform distribution between the minimum and maximum values, which in the **BayesianTools** package can be done using function `createUniformPrior()`:
 ```{r}
-mcmc_setup <- createBayesianSetup(
-  likelihood = of_eval, 
-  prior = createUniformPrior(parMin, parMax, parIni), 
-  names = parNames)
+prior <- createUniformPrior(parMin, parMax, parIni)
+mcmc_setup <- createBayesianSetup(likelihood = of_eval, 
+                                  prior = prior, 
+                                  names = parNames)
 ```
 Function `createBayesianSetup()` automatically creates the posterior and various convenience functions for the Markov Chain Monte Carlo (MCMC) samplers. The `runMCMC()` function is the main wrapper for all other implemented MCMC functions. Here we call it with three chains of 3000 iterations each.
 ```{r, eval = FALSE}
@@ -329,17 +362,54 @@ correlationPlot(mcmc_out)
 ```
  Here it can be observed the large correlation between `Z50` of the two tree cohorts. Since their LAI values are similar, a similar  effect on soil water depletion can be obtained to some extent by exchanging their fine root distribution.
 
-Posterior model prediction distributions can be obtained if we take samples from the Markov chains and use them to perform simulations.
+Posterior model prediction distributions can be obtained if we take samples from the Markov chains and use them to perform simulations (here we use sample size of 99 but a larger value is preferred).
 ```{r}
-s = getSample(mcmc_out, numSamples = 90)
+s = getSample(mcmc_out, numSamples = 99)
 head(s)
 ```
-To this aim, **medfate** includes function `multiple_runs()` that allows running a simulation model with a matrix of parameter values. For example, this code will produce the distribution of total transpiration generated by the model given the posterior distribution of parameters.
-```{r, eval = FALSE}
+To this aim, **medfate** includes function `multiple_runs()` that allows running a simulation model with a matrix of parameter values. For example, the following code runs `spwb()` with all combinations of fine root distribution specified in `s`.
+```{r}
 MS = multiple_runs(s, x = x1, soil = examplesoil1, meteo = examplemeteo,
-                   latitude = 41.82592, elevation = 100, summary_function = sf_transp,
-                   verbose = FALSE)
+                   latitude = 41.82592, elevation = 100, verbose = FALSE)
 ```
+Function `multiple_runs()` determines the model to be called inspecting the class of `x` (here `x1` is a `spwbInput`). Once we have conducted the simulations we can inspect the posterior distribution of several prediction variables, for example total transpiration:
+```{r, fig.height=4, fig.width=5}
+plot(density(unlist(lapply(MS, sf_transp))), main = "Posterior transpiration", 
+     xlab = "Total transpiration (mm)")
+```
+
+or average plant drought stress:
+```{r, fig.height=4, fig.width=5}
+plot(density(unlist(lapply(MS, sf_stress))), 
+     xlab = "Average plant stress", main="Posterior stress")
+```
+
+Finally, we can use object `prior` to generate another sample under the prior parameter distribution, perform simulations: 
+```{r}
+s_prior = prior$sampler(99)
+colnames(s_prior)<- parNames
+MS_prior = multiple_runs(s_prior, x = x1, soil = examplesoil1, meteo = examplemeteo,
+                         latitude = 41.82592, elevation = 100, verbose = FALSE)
+```
+
+and compare the prior prediction uncertainty with the posterior prediction uncertainty for the same output variables:
+```{r, fig.height=4, fig.width=5}
+plot(density(unlist(lapply(MS_prior, sf_transp))), main = "Transpiration", 
+     xlab = "Total transpiration (mm)",
+     xlim = c(280,295), ylim = c(0,1.2))
+lines(density(unlist(lapply(MS, sf_transp))), col = "red")
+legend("topleft", legend = c("Prior", "Posterior"), 
+       col = c("black", "red"), lty=1, bty="n")
+```
+
+```{r, fig.height=4, fig.width=5}
+plot(density(unlist(lapply(MS_prior, sf_stress))), main = "Plant stress", 
+     xlab = "Average plant stress",
+     xlim = c(0,30), ylim = c(0,0.3))
+lines(density(unlist(lapply(MS, sf_stress))), col = "red")
+legend("topleft", legend = c("Prior", "Posterior"), col = c("black", "red"), lty=1, bty="n")
+```
+
 
 ## References
 
