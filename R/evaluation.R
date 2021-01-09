@@ -2,14 +2,20 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
                            temporalResolution = "day", SpParams = NULL) {
   
   # Check arguments
-  type = match.arg(type, c("SWC", "REW","E", "ETR", "WP", "FMC", "BAI"))
   temporalResolution = match.arg(temporalResolution, c("day", "week", "month", "year"))
+  if("spwbInput" %in% names(out)) {
+    modelInput<-out[["spwbInput"]]
+    type = match.arg(type, c("SWC", "REW","E", "ETR", "WP", "FMC"))
+  } else {
+    modelInput<- out[["growthInput"]]
+    type = match.arg(type, c("SWC", "REW","E", "ETR", "WP", "FMC", "BAI"))
+  }
   if(type=="SWC") {
     sm = out$Soil
     d = rownames(sm)
-    fc = soil_thetaFC(out$soilInput, model = out$spwbInput$control$soilFunctions)
+    fc = soil_thetaFC(out$soilInput, model = modelInput$control$soilFunctions)
     mod = sm$W.1*fc[1]
-    df <- data.frame(Observed = NA, Modelled = mod, Dates = as.Date(d))
+    df <- data.frame(Dates = as.Date(d), Observed = NA, Modelled = mod)
     
     if(!("SWC" %in% names(measuredData))) stop(paste0("Column 'SWC' not found in measured data frame."))
     seld = rownames(measuredData) %in% d
@@ -23,10 +29,10 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
   else if(type=="REW") {
     sm = out$Soil
     d = rownames(sm)
-    # fc = soil_thetaFC(out$soilInput, model = out$spwbInput$control$soilFunctions)
+    # fc = soil_thetaFC(out$soilInput, model = modelInput$control$soilFunctions)
     # q_mod = quantile(sm$W.1, p=c(0.05,0.95), na.rm=T)
     # df <- data.frame(Observed = NA, Modelled = (sm$W.1-q_mod[1])/(q_mod[2]-q_mod[1]), Dates = as.Date(d))
-    df <- data.frame(Observed = NA, Modelled = sm$W.1, Dates = as.Date(d))
+    df <- data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm$W.1)
     
     if(!("SWC" %in% names(measuredData))) stop(paste0("Column 'SWC' not found in measured data frame."))
     seld = rownames(measuredData) %in% d
@@ -39,9 +45,9 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
   else if(type=="E") {
     pt = out$Plants$Transpiration
     d = rownames(pt)
-    LAI = out$spwbInput$above$LAI_live
-    spnames = out$spwbInput$cohorts$Name
-    allcohnames = row.names(out$spwbInput$cohorts)
+    LAI = modelInput$above$LAI_live
+    spnames = modelInput$cohorts$Name
+    allcohnames = row.names(modelInput$cohorts)
     
     if(is.null(cohort)) {
       icoh = 1
@@ -50,7 +56,7 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
     } else {
       icoh = which(allcohnames==cohort)
     }
-    df <- data.frame(Observed = NA, Modelled = pt[,icoh]/LAI[icoh], Dates = as.Date(d))
+    df <- data.frame(Dates = as.Date(d), Observed = NA, Modelled = pt[,icoh]/LAI[icoh])
     ## Fill observed values
     obscolumn = paste0("E_", cohort)
     if(!(obscolumn %in% names(measuredData))) stop(paste0("Column '", obscolumn, "' not found in measured data frame."))
@@ -60,7 +66,7 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
     ET1 = out$WaterBalance$SoilEvaporation+out$WaterBalance$Transpiration
     ET2 = out$WaterBalance$Evapotranspiration
     d = rownames(out$WaterBalance)
-    df = data.frame(ETobs = NA, ET1 = ET1, ET2 = ET2, Dates = as.Date(d))
+    df = data.frame(Dates = as.Date(d), ETobs = NA, ET1 = ET1, ET2 = ET2)
     
     if(!("ETR" %in% names(measuredData))) stop(paste0("Column 'ETR' not found in measured data frame."))
     df$ETobs[d %in% rownames(measuredData)] = measuredData$ETR[rownames(measuredData) %in% d]
@@ -69,8 +75,8 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
     wtMD = out$Plants$LeafPsiMin
     wtPD = out$Plants$LeafPsiMax
     d = rownames(wtMD)
-    spnames = out$spwbInput$cohorts$Name
-    allcohnames = row.names(out$spwbInput$cohorts)
+    spnames = modelInput$cohorts$Name
+    allcohnames = row.names(modelInput$cohorts)
     
     if(is.null(cohort)) {
       icoh = 1
@@ -85,8 +91,9 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
     mderrcolumn = paste0("MD_", cohort, "_err")
     icoh = which(allcohnames==cohort)
     
-    df = data.frame(PD_obs = NA, MD_obs = NA, PD_obs_lower = NA, PD_obs_upper = NA, MD_obs_lower = NA, MD_obs_upper = NA,
-                    PD_mod = wtPD[,icoh], MD_mod = wtMD[,icoh], Dates = as.Date(d))
+    df = data.frame(Dates = as.Date(d), 
+                    PD_obs = NA, MD_obs = NA, PD_obs_lower = NA, PD_obs_upper = NA, MD_obs_lower = NA, MD_obs_upper = NA,
+                    PD_mod = wtPD[,icoh], MD_mod = wtMD[,icoh])
     
     seld = rownames(measuredData) %in% d
     if(pdcolumn %in% names(measuredData))  df$PD_obs[d %in% rownames(measuredData)] = measuredData[[pdcolumn]][seld]
@@ -103,8 +110,8 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
   else if(type=="FMC") {
     fmc = moisture_cohortFMC(out, SpParams)
     d = rownames(fmc)
-    spnames = out$spwbInput$cohorts$Name
-    allcohnames = row.names(out$spwbInput$cohorts)
+    spnames = modelInput$cohorts$Name
+    allcohnames = row.names(modelInput$cohorts)
     
     if(is.null(cohort)) {
       icoh = 1
@@ -113,33 +120,52 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
     } else {
       icoh = which(allcohnames==cohort)
     }
-    df <- data.frame(Observed = NA, Modelled = fmc[,icoh], Dates = as.Date(d))
+    df <- data.frame(Dates = as.Date(d), Observed = NA, Modelled = fmc[,icoh])
     ## Fill observed values
     obscolumn = paste0("FMC_", cohort)
     if(!(obscolumn %in% names(measuredData))) stop(paste0("Column '", obscolumn, "' not found in measured data frame."))
     df$Observed[d %in% rownames(measuredData)] = measuredData[[obscolumn]][rownames(measuredData) %in% d] 
   }
-  
+  else if(type=="BAI") {
+    SAg = out$PlantGrowth$SAgrowth
+    SA = out$PlantStructure$SapwoodArea
+    d = rownames(SAg)
+    spnames = modelInput$cohorts$Name
+    allcohnames = row.names(modelInput$cohorts)
+    
+    if(is.null(cohort)) {
+      icoh = 1
+      cohort = allcohnames[1] 
+      message("Choosing first cohort")
+    } else {
+      icoh = which(allcohnames==cohort)
+    }
+    df <- data.frame(Dates = as.Date(d), Observed = NA, Modelled = SAg[,icoh]*SA[,icoh])
+    ## Fill observed values
+    obscolumn = paste0("BAI_", cohort)
+    if(!(obscolumn %in% names(measuredData))) stop(paste0("Column '", obscolumn, "' not found in measured data frame."))
+    df$Observed[d %in% rownames(measuredData)] = measuredData[[obscolumn]][rownames(measuredData) %in% d] 
+  }  
   if(temporalResolution != "day") {
     d.cut = cut(as.Date(d), breaks=temporalResolution)
     if(type %in% c("SWC", "REW", "FMC")) {
-      df = data.frame(Observed = tapply(df$Observed, d.cut, FUN = mean, na.rm = TRUE),
-                      Modelled = tapply(df$Modelled, d.cut, FUN = mean, na.rm = TRUE),
-                      Dates = as.Date(levels(d.cut)))
+      df = data.frame(Dates = as.Date(levels(d.cut)),
+                      Observed = tapply(df$Observed, d.cut, FUN = mean, na.rm = TRUE),
+                      Modelled = tapply(df$Modelled, d.cut, FUN = mean, na.rm = TRUE))
     } else if(type == "WP") {
-      df = data.frame(PD_obs = tapply(df$PD_obs, d.cut, FUN = mean, na.rm = TRUE),
+      df = data.frame(Dates = as.Date(levels(d.cut)),
+                      PD_obs = tapply(df$PD_obs, d.cut, FUN = mean, na.rm = TRUE),
                       PD_obs_lower = tapply(df$PD_obs_lower, d.cut, FUN = mean, na.rm = TRUE),
                       PD_obs_upper = tapply(df$PD_obs_upper, d.cut, FUN = mean, na.rm = TRUE),
                       MD_obs = tapply(df$MD_obs, d.cut, FUN = mean, na.rm = TRUE),
                       MD_obs_lower = tapply(df$MD_obs_lower, d.cut, FUN = mean, na.rm = TRUE),
                       MD_obs_upper = tapply(df$MD_obs_upper, d.cut, FUN = mean, na.rm = TRUE),
                       PD_mod = tapply(df$PD_mod, d.cut, FUN = mean, na.rm = TRUE),
-                      MD_mod = tapply(df$MD_mod, d.cut, FUN = mean, na.rm = TRUE),
-                      Dates = as.Date(levels(d.cut)))
-    } else {
-      df = data.frame(Observed = tapply(df$Observed, d.cut, FUN = sum, na.rm = TRUE),
-                      Modelled = tapply(df$Modelled, d.cut, FUN = sum, na.rm = TRUE),
-                      Dates = as.Date(levels(d.cut)))
+                      MD_mod = tapply(df$MD_mod, d.cut, FUN = mean, na.rm = TRUE))
+    } else { # E, ETR, BAI
+      df = data.frame(Dates = as.Date(levels(d.cut)),
+                      Observed = tapply(df$Observed, d.cut, FUN = sum, na.rm = TRUE),
+                      Modelled = tapply(df$Modelled, d.cut, FUN = sum, na.rm = TRUE))
     }
   }
   
@@ -162,7 +188,13 @@ evaluation_stats<-function(out, measuredData, type="SWC", cohort = NULL,
   }
   
   # Check arguments
-  type = match.arg(type, c("SWC", "REW","E", "ETR", "WP", "FMC", "BAI"))
+  if("spwbInput" %in% names(out)) {
+    modelInput<-out[["spwbInput"]]
+    type = match.arg(type, c("SWC", "REW","E", "ETR", "WP", "FMC"))
+  } else {
+    modelInput<- out[["growthInput"]]
+    type = match.arg(type, c("SWC", "REW","E", "ETR", "WP", "FMC", "BAI"))
+  }
   
   df = evaluation_table(out = out, measuredData = measuredData, 
                         type = type, cohort = cohort, 
@@ -181,7 +213,7 @@ evaluation_stats<-function(out, measuredData, type="SWC", cohort = NULL,
                                    evalstats(df$MD_obs, df$MD_mod)))
     row.names(eval_res)<-c("Predawn potentials", "Midday potentials")
   }
-  
+  else if(type=="BAI") eval_res = evalstats(df$Observed, df$Modelled)
   return(eval_res)
 }
 
@@ -222,9 +254,14 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
   }
 
   # Check arguments
-  type = match.arg(type, c("SWC", "REW","E", "ETR", "WP", "FMC", "BAI"))
   plotType = match.arg(plotType, c("dynamics", "scatter"))
-  
+  if("spwbInput" %in% names(out)) {
+    modelInput<-out[["spwbInput"]]
+    type = match.arg(type, c("SWC", "REW","E", "ETR", "WP", "FMC"))
+  } else {
+    modelInput<- out[["growthInput"]]
+    type = match.arg(type, c("SWC", "REW","E", "ETR", "WP", "FMC", "BAI"))
+  }
   
   df = evaluation_table(out = out, measuredData = measuredData, 
                         type = type, cohort = cohort, 
@@ -250,8 +287,8 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
     }
   }
   else if(type=="E") {
-    allcohnames = row.names(out$spwbInput$cohorts)
-    spnames = out$spwbInput$cohorts$Name
+    allcohnames = row.names(modelInput$cohorts)
+    spnames = modelInput$cohorts$Name
     
     if(is.null(cohort)) {
       icoh = 1
@@ -262,18 +299,18 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
     }
     
     if(plotType=="dynamics") {
-      g<-dynamicsplot(df, ylab = "Transpiration per leaf area (mm/day)", 
+      g<-dynamicsplot(df, ylab = "Transpiration per leaf area (l/m2/day)", 
                       title=paste0(cohort , " (",spnames[icoh],")"))
     } else {
       g<-scatterplot(df, 
-                     xlab = "Modelled transpiration per leaf area (mm/day)",
-                     ylab = "Measured transpiration per leaf area (mm/day)", 
+                     xlab = "Modelled transpiration per leaf area (l/m2/day)",
+                     ylab = "Measured transpiration per leaf area (l/m2/day)", 
                      title=paste0(cohort , " (",spnames[icoh],")"))
     }
   }
   else if(type=="FMC") {
-    allcohnames = row.names(out$spwbInput$cohorts)
-    spnames = out$spwbInput$cohorts$Name
+    allcohnames = row.names(modelInput$cohorts)
+    spnames = modelInput$cohorts$Name
     
     if(is.null(cohort)) {
       icoh = 1
@@ -290,6 +327,28 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
       g<-scatterplot(df, 
                      xlab = "Modelled fuel moisture content (% of dry weight)",
                      ylab = "Measured fuel moisture content (% of dry weight)", 
+                     title=paste0(cohort , " (",spnames[icoh],")"))
+    }
+  }
+  else if(type=="BAI") {
+    allcohnames = row.names(modelInput$cohorts)
+    spnames = modelInput$cohorts$Name
+    
+    if(is.null(cohort)) {
+      icoh = 1
+      cohort = allcohnames[1] 
+      message("Choosing first cohort")
+    } else {
+      icoh = which(allcohnames==cohort)
+    }
+    
+    if(plotType=="dynamics") {
+      g<-dynamicsplot(df, ylab = paste0("Basal area increment (cm2/", temporalResolution,")"), 
+                      title=paste0(cohort , " (",spnames[icoh],")"))
+    } else {
+      g<-scatterplot(df, 
+                     xlab = paste0("Modelled basal area increment (cm2/", temporalResolution,")"),
+                     ylab = paste0("Measured basal area increment (cm2/", temporalResolution,")"), 
                      title=paste0(cohort , " (",spnames[icoh],")"))
     }
   }
@@ -322,8 +381,8 @@ evaluation_plot<-function(out, measuredData, type="SWC", cohort = NULL,
     wtMD = out$Plants$LeafPsiMin
     wtPD = out$Plants$LeafPsiMax
     d = rownames(wtMD)
-    spnames = out$spwbInput$cohorts$Name
-    allcohnames = row.names(out$spwbInput$cohorts)
+    spnames = modelInput$cohorts$Name
+    allcohnames = row.names(modelInput$cohorts)
     
     if(is.null(cohort)) {
       icoh = 1
