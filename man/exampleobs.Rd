@@ -17,6 +17,8 @@
 \item{\code{E_T2_68}}{Transpiration of Quercus ilex cohort 'T2_68' (L/m2 of leaf area).}
 \item{\code{FMC_T1_54}}{Fuel moisture content of Pinus halepensis cohort 'T1_54'  (in percent).}
 \item{\code{FMC_T2_68}}{Fuel moisture content of Quercus ilex cohort 'T2_68' (in percent).}
+\item{\code{BAI_T1_54}}{Basal area increment for Pinus halepensis cohort 'T1_54'  (in cm2).}
+\item{\code{BAI_T2_68}}{Basal area increment for Quercus ilex cohort 'T2_68' (in cm2).}
   }
 }
 \source{
