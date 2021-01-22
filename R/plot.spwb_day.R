@@ -240,8 +240,8 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     return(.multiple_subday_dynamics(t(OM), ylab = ylab, ylim = ylim))
   }
   else if(type=="LeafTranspiration") {
-    OM_SL = SunlitLeavesInst$VPD*SunlitLeavesInst$GW
-    OM_SH = ShadeLeavesInst$VPD*ShadeLeavesInst$GW
+    OM_SL = SunlitLeavesInst$E
+    OM_SH = ShadeLeavesInst$E
     if(bySpecies) {
       lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
       OMlai = sweep(OM_SL, 1, Plants$LAI, "*")
@@ -379,8 +379,8 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
   else if(type=="LeafStomatalConductance") {
-    OM_SL = SunlitLeavesInst$GW
-    OM_SH = ShadeLeavesInst$GW
+    OM_SL = SunlitLeavesInst$Gsw
+    OM_SH = ShadeLeavesInst$Gsw
     if(bySpecies) {
       lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
       OMlai = sweep(OM_SL, 1, Plants$LAI, "*")
@@ -394,8 +394,8 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
   else if(type=="LeafIntrinsicWUE") {
-    OM_SL = SunlitLeavesInst$An/SunlitLeavesInst$GW
-    OM_SH = ShadeLeavesInst$An/ShadeLeavesInst$GW
+    OM_SL = SunlitLeavesInst$An/SunlitLeavesInst$Gsw
+    OM_SH = ShadeLeavesInst$An/ShadeLeavesInst$Gsw
     if(bySpecies) {
       lai1 = tapply(Plants$LAI, x$cohorts$Name, sum, na.rm=T)
       OMlai = sweep(OM_SL, 1, Plants$LAI, "*")

@@ -4146,19 +4146,19 @@ BEGIN_RCPP
 END_RCPP
 }
 // profitMaximization
-List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, double Gwmin, double Gwmax, double gainModifier, double costModifier, String costWater);
-RcppExport SEXP _medfate_profitMaximization(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP, SEXP GwminSEXP, SEXP GwmaxSEXP, SEXP gainModifierSEXP, SEXP costModifierSEXP, SEXP costWaterSEXP) {
+List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, double Gswmin, double Gswmax, double gainModifier, double costModifier, String costWater);
+RcppExport SEXP _medfate_profitMaximization(SEXP supplyFunctionSEXP, SEXP photosynthesisFunctionSEXP, SEXP GswminSEXP, SEXP GswmaxSEXP, SEXP gainModifierSEXP, SEXP costModifierSEXP, SEXP costWaterSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type supplyFunction(supplyFunctionSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type photosynthesisFunction(photosynthesisFunctionSEXP);
-    Rcpp::traits::input_parameter< double >::type Gwmin(GwminSEXP);
-    Rcpp::traits::input_parameter< double >::type Gwmax(GwmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type Gswmin(GswminSEXP);
+    Rcpp::traits::input_parameter< double >::type Gswmax(GswmaxSEXP);
     Rcpp::traits::input_parameter< double >::type gainModifier(gainModifierSEXP);
     Rcpp::traits::input_parameter< double >::type costModifier(costModifierSEXP);
     Rcpp::traits::input_parameter< String >::type costWater(costWaterSEXP);
-    rcpp_result_gen = Rcpp::wrap(profitMaximization(supplyFunction, photosynthesisFunction, Gwmin, Gwmax, gainModifier, costModifier, costWater));
+    rcpp_result_gen = Rcpp::wrap(profitMaximization(supplyFunction, photosynthesisFunction, Gswmin, Gswmax, gainModifier, costModifier, costWater));
     return rcpp_result_gen;
 END_RCPP
 }

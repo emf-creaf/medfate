@@ -5,6 +5,7 @@
 # Version 1.1.4
 - Flexible temporal resolution of model evaluation
 - Basal area index evaluation
+- Stomatal conductance now denoted as Gsw or GSW
 
 # Version 1.1.3
 - New model evaluation functions

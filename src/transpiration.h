@@ -5,7 +5,7 @@
 #endif
 using namespace Rcpp;
 
-List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, double Gwmin, double Gwmax, 
+List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, double Gswmin, double Gswmax, 
                         double gainModifier = 1.0, double costModifier = 1.0, String costWater = "dEdP");
 List transpirationGranier(List x, List soil, double tday, double pet, 
                           bool modifyInputX = true, bool modifyInputSoil = true);

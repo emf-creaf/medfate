@@ -11,7 +11,7 @@ Transpiration submodel functions
 Set of high-level functions used in the calculation of stomatal conductance and transpiration. Function \code{transp_profitMaximization} calculates gain and cost functions, as well as profit maximization from supply and photosynthesis input functions. Function \code{transp_stomatalRegulationPlot} produces a plot with the cohort supply functions against water potential and a plot with the cohort photosynthesis functions against water potential, both with the maximum profit values indicated.
 }
 \usage{
-transp_profitMaximization(supplyFunction, photosynthesisFunction, Gwmin, Gwmax, 
+transp_profitMaximization(supplyFunction, photosynthesisFunction, Gswmin, Gswmax, 
                           gainModifier = 1.0, costModifier = 1.0, costWater = "dEdP")
 transp_transpirationGranier(x, soil, meteo, day, 
                             modifyInputX = TRUE, modifyInputSoil = TRUE)
@@ -28,7 +28,7 @@ transp_stomatalRegulationPlot(x, soil, meteo, day, timestep,
 \arguments{
   \item{supplyFunction}{Water supply function (see \code{\link{hydraulics_supplyFunctionNetwork}}).}
   \item{photosynthesisFunction}{Function returned by \code{photo_photosynthesisFunction()}.}
-  \item{Gwmin, Gwmax}{Minimum and maximum stomatal conductance (mol·m-2·s-1).}
+  \item{Gswmin, Gswmax}{Minimum and maximum stomatal conductance to water vapour (mol·m-2·s-1).}
   \item{gainModifier, costModifier}{Modifiers (exponents) of the gain and cost functions defined in Sperry et al. (2017).}
   \item{costWater}{Cost water function, either "dEdP" (default) or "kterm" (experimental).}
   \item{x}{An object of class \code{\link{spwbInput}} built using the 'Sperry' transpiration mode.}
@@ -54,7 +54,7 @@ transp_stomatalRegulationPlot(x, soil, meteo, day, timestep,
   \item{soilEvaporation}{Bare soil evaporation for \code{day} (mm).}
   \item{snowMelt}{Snow melt values  for \code{day} (mm).}
   \item{stepFunctions}{An integer to indicate a simulation step for which photosynthesis and profit maximization functions are desired.}
-  \item{type}{A string with plot type, either \code{"E"} (transpiration flow), \code{"Ag"} (gross photosynthesis), \code{"An"} (net photosynthesis), \code{"Gw"} (stomatal conductance), \code{"T"} (temperature) or \code{"VPD"} (vapour pressure deficit).}
+  \item{type}{A string with plot type, either \code{"E"} (transpiration flow), \code{"Ag"} (gross photosynthesis), \code{"An"} (net photosynthesis), \code{"Gsw"} (stomatal conductance to water vapour), \code{"T"} (temperature) or \code{"VPD"} (leaf vapour pressure deficit).}
   \item{modifyInputX, modifyInputSoil}{Boolean flags to indicate that the input \code{x} and \code{soil} objects are allowed to be modified during the simulation.}
 }
 

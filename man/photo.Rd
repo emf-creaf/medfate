@@ -82,7 +82,7 @@ Values returned for each function are:
   \item{\code{LeafTemperature}: Leaf temperature (ºC).}
   \item{\code{LeafVPD}: Leaf vapor pressure deficit (kPa).}
   \item{\code{LeafCi}: Internal CO2 concentration (micromol * mol-1).}
-  \item{\code{WaterVaporConductance}: Leaf vapor conductance (mol * s-1 * m-2).}
+  \item{\code{Gsw}: Leaf stomatal conductance to water vapor (mol * s-1 * m-2).}
   \item{\code{GrossPhotosynthesis}: Gross photosynthesis (micromol*s-1*m-2).}
   \item{\code{NetPhotosynthesis}: Net photosynthesis, after discounting autotrophic respiration (micromol*s-1*m-2).}
   }

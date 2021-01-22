@@ -420,7 +420,7 @@ void checkspwbInput(List x, List soil, String transpirationMode, String soilFunc
     if(!paramsTranspiration.containsElementNamed("VCstem_d")) stop("VCstem_d missing in spwbInput$paramsTranspiration");
     if(!paramsTranspiration.containsElementNamed("VCroot_c")) stop("VCroot_c missing in spwbInput$paramsTranspiration");
     if(!paramsTranspiration.containsElementNamed("VCroot_d")) stop("VCroot_d missing in spwbInput$paramsTranspiration");
-    if(!paramsTranspiration.containsElementNamed("Gwmax")) stop("Gwmax missing in spwbInput$paramsTranspiration");
+    if(!paramsTranspiration.containsElementNamed("Gswmax")) stop("Gswmax missing in spwbInput$paramsTranspiration");
     if(!paramsTranspiration.containsElementNamed("Vmax298")) stop("Vmax298 missing in spwbInput$paramsTranspiration");
     if(!paramsTranspiration.containsElementNamed("Jmax298")) stop("Jmax298 missing in spwbInput$paramsTranspiration");
   }
@@ -562,16 +562,16 @@ List defineSunlitShadeLeavesDailyOutput(DataFrame meteo, DataFrame above) {
   int numCohorts = above.nrow();
   NumericMatrix LeafPsiMin(numDays, numCohorts);
   NumericMatrix LeafPsiMax(numDays, numCohorts);
-  NumericMatrix LeafGWMin(numDays, numCohorts);
-  NumericMatrix LeafGWMax(numDays, numCohorts);
+  NumericMatrix LeafGSWMin(numDays, numCohorts);
+  NumericMatrix LeafGSWMax(numDays, numCohorts);
   LeafPsiMin.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   LeafPsiMax.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  LeafGWMin.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-  LeafGWMax.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
+  LeafGSWMin.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
+  LeafGSWMax.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   List shade = List::create(Named("LeafPsiMin") = LeafPsiMin, 
                             Named("LeafPsiMax") = LeafPsiMax,
-                            Named("GWMin") = LeafGWMin,
-                            Named("GWMax") = LeafGWMax);
+                            Named("GSWMin") = LeafGSWMin,
+                            Named("GSWMax") = LeafGSWMax);
   return(shade);
 }
 
@@ -849,12 +849,12 @@ void fillPlantWaterDailyOutput(List x, List sunlit, List shade, List sDay, int i
     NumericMatrix PlantWaterBalance= Rcpp::as<Rcpp::NumericMatrix>(x["PlantWaterBalance"]);
     NumericMatrix LeafPsiMin_SL = Rcpp::as<Rcpp::NumericMatrix>(sunlit["LeafPsiMin"]);
     NumericMatrix LeafPsiMax_SL = Rcpp::as<Rcpp::NumericMatrix>(sunlit["LeafPsiMax"]);
-    NumericMatrix LeafGWMin_SL = Rcpp::as<Rcpp::NumericMatrix>(sunlit["GWMin"]);
-    NumericMatrix LeafGWMax_SL = Rcpp::as<Rcpp::NumericMatrix>(sunlit["GWMax"]);
+    NumericMatrix LeafGSWMin_SL = Rcpp::as<Rcpp::NumericMatrix>(sunlit["GSWMin"]);
+    NumericMatrix LeafGSWMax_SL = Rcpp::as<Rcpp::NumericMatrix>(sunlit["GSWMax"]);
     NumericMatrix LeafPsiMin_SH = Rcpp::as<Rcpp::NumericMatrix>(shade["LeafPsiMin"]);
     NumericMatrix LeafPsiMax_SH = Rcpp::as<Rcpp::NumericMatrix>(shade["LeafPsiMax"]);
-    NumericMatrix LeafGWMin_SH = Rcpp::as<Rcpp::NumericMatrix>(shade["GWMin"]);
-    NumericMatrix LeafGWMax_SH = Rcpp::as<Rcpp::NumericMatrix>(shade["GWMax"]);
+    NumericMatrix LeafGSWMin_SH = Rcpp::as<Rcpp::NumericMatrix>(shade["GSWMin"]);
+    NumericMatrix LeafGSWMax_SH = Rcpp::as<Rcpp::NumericMatrix>(shade["GSWMax"]);
     
     List RhizoPsi = x["RhizoPsi"];
     NumericMatrix PlantNetPhotosynthesis= Rcpp::as<Rcpp::NumericMatrix>(x["NetPhotosynthesis"]);
@@ -886,10 +886,10 @@ void fillPlantWaterDailyOutput(List x, List sunlit, List shade, List sDay, int i
     
     List SunlitLeaves = sDay["SunlitLeaves"]; 
     List ShadeLeaves = sDay["ShadeLeaves"]; 
-    LeafGWMin_SL(iday,_) = Rcpp::as<Rcpp::NumericVector>(SunlitLeaves["GWMin"]);
-    LeafGWMin_SH(iday,_) = Rcpp::as<Rcpp::NumericVector>(ShadeLeaves["GWMin"]);
-    LeafGWMax_SL(iday,_) = Rcpp::as<Rcpp::NumericVector>(SunlitLeaves["GWMax"]);
-    LeafGWMax_SH(iday,_) = Rcpp::as<Rcpp::NumericVector>(ShadeLeaves["GWMax"]);
+    LeafGSWMin_SL(iday,_) = Rcpp::as<Rcpp::NumericVector>(SunlitLeaves["GSWMin"]);
+    LeafGSWMin_SH(iday,_) = Rcpp::as<Rcpp::NumericVector>(ShadeLeaves["GSWMin"]);
+    LeafGSWMax_SL(iday,_) = Rcpp::as<Rcpp::NumericVector>(SunlitLeaves["GSWMax"]);
+    LeafGSWMax_SH(iday,_) = Rcpp::as<Rcpp::NumericVector>(ShadeLeaves["GSWMax"]);
     LeafPsiMin_SL(iday,_) = Rcpp::as<Rcpp::NumericVector>(SunlitLeaves["LeafPsiMin"]);
     LeafPsiMax_SL(iday,_) = Rcpp::as<Rcpp::NumericVector>(SunlitLeaves["LeafPsiMax"]);
     LeafPsiMin_SH(iday,_) = Rcpp::as<Rcpp::NumericVector>(ShadeLeaves["LeafPsiMin"]);

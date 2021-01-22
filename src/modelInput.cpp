@@ -170,8 +170,8 @@ DataFrame paramsTranspirationSperry(DataFrame above, List soil, DataFrame SpPara
   CharacterVector phenoType = cohortCharacterParameter(SP, SpParams, "PhenologyType");
   
   NumericVector Hmed = cohortNumericParameter(SP, SpParams, "Hmed"); //To correct conductivity
-  NumericVector Gwmin = cohortNumericParameter(SP, SpParams, "Gwmin");
-  NumericVector Gwmax = cohortNumericParameter(SP, SpParams, "Gwmax");
+  NumericVector Gswmin = cohortNumericParameter(SP, SpParams, "Gswmin");
+  NumericVector Gswmax = cohortNumericParameter(SP, SpParams, "Gswmax");
   NumericVector VCleaf_kmax = cohortNumericParameter(SP, SpParams, "VCleaf_kmax");
   NumericVector Kmax_stemxylem = cohortNumericParameter(SP, SpParams, "Kmax_stemxylem");
   NumericVector VCleaf_c = cohortNumericParameter(SP, SpParams, "VCleaf_c");
@@ -272,33 +272,33 @@ DataFrame paramsTranspirationSperry(DataFrame above, List soil, DataFrame SpPara
     if(NumericVector::is_na(VCleaf_c[c])) VCleaf_c[c] = VCstem_c[c];
     if(NumericVector::is_na(VCleaf_d[c])) VCleaf_d[c] = VCstem_d[c]/1.5;
     //Duursma RA, Blackman CJ, Lopéz R, et al (2018) On the minimum leaf conductance: its role in models of plant water use, and ecological and environmental controls. New Phytol. doi: 10.1111/nph.15395
-    if(NumericVector::is_na(Gwmin[c])) {
+    if(NumericVector::is_na(Gswmin[c])) {
       if(Order[c]=="Pinales") {
-        Gwmin[c] = 0.003;
+        Gswmin[c] = 0.003;
       } else if(Order[c]=="Araucariales") {
-        Gwmin[c] = 0.003;
+        Gswmin[c] = 0.003;
       } else if(Order[c]=="Ericales") {
-        Gwmin[c] = 0.004;
+        Gswmin[c] = 0.004;
       } else if(Order[c]=="Fagales") {
-        Gwmin[c] = 0.0045;
+        Gswmin[c] = 0.0045;
       } else if(Order[c]=="Rosales") {
-        Gwmin[c] = 0.0045;
+        Gswmin[c] = 0.0045;
       } else if(Order[c]=="Cupressales") {
-        Gwmin[c] = 0.0045;
+        Gswmin[c] = 0.0045;
       } else if(Order[c]=="Lamiales") {
-        Gwmin[c] = 0.0055;
+        Gswmin[c] = 0.0055;
       } else if(Order[c]=="Fabales") {
-        Gwmin[c] = 0.0065;
+        Gswmin[c] = 0.0065;
       } else if(Order[c]=="Myrtales") {
-        Gwmin[c] = 0.0075;
+        Gswmin[c] = 0.0075;
       } else if(Order[c]=="Poales") {
-        Gwmin[c] = 0.0110;
+        Gswmin[c] = 0.0110;
       } else {
-        Gwmin[c] = 0.0049;
+        Gswmin[c] = 0.0049;
       }
     }
     //Mencuccini M (2003) The ecological significance of long-distance water transport : short-term regulation , long-term acclimation and the hydraulic costs of stature across plant life forms. Plant Cell Environ 26:163–182
-    if(NumericVector::is_na(Gwmax[c])) Gwmax[c] = 0.12115*pow(VCleaf_kmax[c], 0.633);
+    if(NumericVector::is_na(Gswmax[c])) Gswmax[c] = 0.12115*pow(VCleaf_kmax[c], 0.633);
     
     double rstem = (1.0/VCstem_kmax[c]);
     double rleaf = (1.0/VCleaf_kmax[c]);
@@ -323,7 +323,7 @@ DataFrame paramsTranspirationSperry(DataFrame above, List soil, DataFrame SpPara
     Plant_kmax[c] = 1.0/((1.0/VCleaf_kmax[c])+(1.0/VCstem_kmax[c])+(1.0/VCroottot_kmax[c]));
   }
   DataFrame paramsTranspirationdf = DataFrame::create(
-    _["Gwmin"]=Gwmin, _["Gwmax"]=Gwmax,_["Vmax298"]=Vmax298,
+    _["Gswmin"]=Gswmin, _["Gswmax"]=Gswmax,_["Vmax298"]=Vmax298,
       _["Jmax298"]=Jmax298, _["Kmax_stemxylem"] = Kmax_stemxylem, _["Kmax_rootxylem"] = Kmax_rootxylem,
         _["VCleaf_kmax"]=VCleaf_kmax,_["VCleaf_c"]=VCleaf_c,_["VCleaf_d"]=VCleaf_d,
         _["VCstem_kmax"]=VCstem_kmax,_["VCstem_c"]=VCstem_c,_["VCstem_d"]=VCstem_d, 

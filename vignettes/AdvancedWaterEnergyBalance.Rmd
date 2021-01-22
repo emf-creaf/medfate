@@ -173,7 +173,7 @@ transp_stomatalRegulationPlot(x, examplesoil, examplemeteo, day = d, timestep=12
 transp_stomatalRegulationPlot(x, examplesoil, examplemeteo, day = d, timestep=12,
                               latitude = 41.82592, elevation = 100, type="An")
 transp_stomatalRegulationPlot(x, examplesoil, examplemeteo, day = d, timestep=12,
-                              latitude = 41.82592, elevation = 100, type="Gw")
+                              latitude = 41.82592, elevation = 100, type="Gsw")
 transp_stomatalRegulationPlot(x, examplesoil, examplemeteo, day = d, timestep=12,
                               latitude = 41.82592, elevation = 100, type="T")
 transp_stomatalRegulationPlot(x, examplesoil, examplemeteo, day = d, timestep=12,

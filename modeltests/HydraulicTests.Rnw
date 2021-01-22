@@ -39,7 +39,7 @@ for(i in 1:npsi) {
     psiDrop[i,j] = psiSoil[i]-psiPlant[i,j]
     E[i,j] = supplyNetwork1$E[PM1$iMaxProfit+1]
     An[i,j] = psi2A1$NetPhotosynthesis[PM1$iMaxProfit+1]
-    Gw[i,j] = psi2A1$WaterVaporConductance[PM1$iMaxProfit+1]
+    Gw[i,j] = psi2A1$Gsw[PM1$iMaxProfit+1]
   }
 }
 
@@ -65,7 +65,7 @@ for(i in 1:npsi) {
     psiDropCav[i,j] = psiSoil[i]-psiCanopyCav[i,j]
     ECav[i,j] = supplyNetwork1$E[PM1$iMaxProfit+1]
     AnCav[i,j] = psi2A1$NetPhotosynthesis[PM1$iMaxProfit+1]
-    GwCav[i,j] = psi2A1$WaterVaporConductance[PM1$iMaxProfit+1]
+    GwCav[i,j] = psi2A1$Gsw[PM1$iMaxProfit+1]
   }
 }
 
@@ -113,7 +113,7 @@ for(i in 1:npsi) {
     psiDrop[i,j] = psiSoil[i]-psiPlant[i,j]
     E[i,j] = supplyNetwork1$E[PM1$iMaxProfit+1]
     An[i,j] = psi2A1$NetPhotosynthesis[PM1$iMaxProfit+1]
-    Gw[i,j] = psi2A1$WaterVaporConductance[PM1$iMaxProfit+1]
+    Gw[i,j] = psi2A1$Gsw[PM1$iMaxProfit+1]
     LeafVPD[i,j] = psi2A1$LeafVPD[PM1$iMaxProfit+1]
   }
 }
@@ -141,7 +141,7 @@ for(i in 1:npsi) {
     psiDropCav[i,j] = psiSoil[i]-psiCanopyCav[i,j]
     ECav[i,j] = supplyNetwork1$E[PM1$iMaxProfit+1]
     AnCav[i,j] = psi2A1$NetPhotosynthesis[PM1$iMaxProfit+1]
-    GwCav[i,j] = psi2A1$WaterVaporConductance[PM1$iMaxProfit+1]
+    GwCav[i,j] = psi2A1$Gsw[PM1$iMaxProfit+1]
     LeafVPDCav[i,j] = psi2A1$LeafVPD[PM1$iMaxProfit+1]
   }
 }
@@ -201,7 +201,7 @@ for(i in 1:nair) {
     psiDrop[i,j] = -0.1 - psiPlant[i,j]
     E[i,j] = supplyNetwork1$E[PM1$iMaxProfit+1]
     An[i,j] = psi2A1$NetPhotosynthesis[PM1$iMaxProfit+1]
-    Gw[i,j] = psi2A1$WaterVaporConductance[PM1$iMaxProfit+1]
+    Gw[i,j] = psi2A1$Gsw[PM1$iMaxProfit+1]
     LeafVPD[i,j] = psi2A1$LeafVPD[PM1$iMaxProfit+1]
   }
 }
@@ -223,7 +223,7 @@ for(i in 1:nair) {
     psiDropCav[i,j] = -0.1-psiCanopyCav[i,j]
     ECav[i,j] = supplyNetwork1$E[PM1$iMaxProfit+1]
     AnCav[i,j] = psi2A1$NetPhotosynthesis[PM1$iMaxProfit+1]
-    GwCav[i,j] = psi2A1$WaterVaporConductance[PM1$iMaxProfit+1]
+    GwCav[i,j] = psi2A1$Gsw[PM1$iMaxProfit+1]
     LeafVPDCav[i,j] = psi2A1$LeafVPD[PM1$iMaxProfit+1]
   }
 }
