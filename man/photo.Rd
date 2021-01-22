@@ -24,15 +24,15 @@ photo_JmaxTemp(Jmax298, Tleaf)
 photo_electronLimitedPhotosynthesis(Q, Ci, GT, Jmax)
 photo_rubiscoLimitedPhotosynthesis(Ci, GT, Km, Vmax)
 photo_photosynthesis(Q, Catm, Gc, Tleaf, Vmax298, Jmax298, verbose = FALSE)
-photo_leafPhotosynthesisFunction(E, Catm, Patm, Tair, vpa, u, 
+photo_leafPhotosynthesisFunction(E, psiLeaf, Catm, Patm, Tair, vpa, u, 
                              absRad, Q, Vmax298, Jmax298,
                              leafWidth = 1.0, refLeafArea = 1, verbose = FALSE)
-photo_sunshadePhotosynthesisFunction(E, Catm, Patm, Tair, vpa, 
+photo_sunshadePhotosynthesisFunction(E, psiLeaf, Catm, Patm, Tair, vpa, 
                                      SLarea, SHarea, u, 
                                      absRadSL, absRadSH, QSL, QSH, 
                                      Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, 
                                      leafWidth = 1.0, verbose = FALSE)
-photo_multilayerPhotosynthesisFunction(E, Catm, Patm, Tair, vpa, 
+photo_multilayerPhotosynthesisFunction(E, psiLeaf, Catm, Patm, Tair, vpa, 
                                       SLarea, SHarea, u, 
                                       absRadSL, absRadSH, QSL, QSH, 
                                       Vmax298, Jmax298, leafWidth = 1.0, 
@@ -52,6 +52,7 @@ photo_multilayerPhotosynthesisFunction(E, Catm, Patm, Tair, vpa,
   \item{Catm}{CO2 air concentration (micromol * mol-1).}
   \item{Gc}{CO2 leaf (stomatal) conductance (mol * s-1 * m-2).}
   \item{E}{Transpiration flow rate per leaf area (mmol*s-1*m-2).}
+  \item{psiLeaf}{Leaf water potential (MPa).}
   \item{Patm}{Atmospheric air pressure (in kPa).}
   \item{Tair}{Air temperature (in ºC).}
   \item{vpa}{Vapour pressure deficit (in kPa).}

@@ -1,6 +1,7 @@
 \encoding{UTF-8}
 \name{biophysics}
 \alias{biophysics_leafTemperature}
+\alias{biophysics_leafVapourPressure}
 \alias{biophysics_radiationDiurnalPattern}
 \alias{biophysics_temperatureDiurnalPattern}
 \alias{biophysics_waterDynamicViscosity}
@@ -13,6 +14,7 @@ Utility functions for the calculation of biophysical variables.
 }
 \usage{
 biophysics_leafTemperature(absRad, airTemperature, u, E, leafWidth = 1.0)
+biophysics_leafVapourPressure(leafTemp, leafPsi)
 biophysics_radiationDiurnalPattern(t, daylength)
 biophysics_temperatureDiurnalPattern(t, tmin, tmax, 
                                      tminPrev, tmaxPrev, tminNext, daylength)
@@ -30,6 +32,8 @@ biophysics_waterDynamicViscosity(temp)
   \item{t}{Time of the day (in seconds).}
   \item{daylength}{Day length (in seconds).}
   \item{temp}{Temperature (ºC).}
+  \item{leafTemp}{Leaf temperature (ºC).}
+  \item{leafPsi}{Leaf water potential (MPa).}
 }
 \details{
 Function \code{biophysics_leafTemperature} calculates leaf temperature according to energy balance equation given in Campbell and Norman (1988). Function \code{biophysics_radiationDiurnalPattern} follows the equations given in Liu and Jordan (1960). Function \code{biophysics_temperatureDiurnalPattern} determines diurnal temperature pattern assuming a sinusoidal pattern with T = Tmin at sunrise and T = (Tmin+Tmax)/2 at sunset and a linear change in temperature between sunset and Tmin of the day after (McMurtrie et al. 1990). Function \code{biophysics_waterDynamicViscosity} calculates water dynamic viscosity following the Vogel (1921) equation.
@@ -38,6 +42,7 @@ Function \code{biophysics_leafTemperature} calculates leaf temperature according
 Values returned for each function are:
 \itemize{
 \item{\code{biophysics_leafTemperature}: leaf temperature (in ºC)} 
+\item{\code{biophysics_leafVapourPressure}: leaf vapour pressure (in kPa)} 
 \item{\code{biophysics_radiationDiurnalPattern}: the proportion of daily radiation corresponding to the input time in seconds after sunrise.} 
 \item{\code{biophysics_temperatureDiurnalPattern}: diurnal pattern of temperature.}
 \item{\code{biophysics_waterDynamicViscosity}: Water dynamic viscosity relative to 20ºC.} 

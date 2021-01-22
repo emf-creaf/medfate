@@ -10,6 +10,8 @@ NumericVector date2photoperiod(CharacterVector dateStrings, double latitude);
 
 
 double leafTemperature(double absRad, double airTemperature, double u, double E,  double leafWidth = 0.01);
+double leafVapourPressure(double leafTemp,  double leafPsi);
+
 double temperatureDiurnalPattern(double t, double tmin, double tmax, 
                                  double tminPrev, double tmaxPrev, double tminNext, double daylength);
 double radiationDiurnalPattern(double t, double daylength);

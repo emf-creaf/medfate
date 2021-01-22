@@ -111,7 +111,18 @@ double leafTemperature(double absRad, double airTemperature, double u, double E,
   return(airTemperature+deltaTemp);
 }
 
-
+/*
+ *  leafPsi - Leaf water potential in MPa
+ *  leafTemp - Leaf temperature in degrees
+ *  
+ *  returns vapour pressure in kPa
+ */
+// [[Rcpp::export("biophysics_leafVapourPressure")]]
+double leafVapourPressure(double leafTemp,  double leafPsi) {
+  double vpsl = meteoland::utils_saturationVP(std::max(0.0,leafTemp));
+  double vpl = vpsl*exp((2.17*leafPsi)/(leafTemp+273.15));
+  return(vpl);
+}
 /**
  * Converts irradiance units (W*m-2) to quantum flux (micromol * m-2 * s-1), 
  * defined as the number of photons (in micromol) per second and unit area

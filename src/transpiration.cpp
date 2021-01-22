@@ -643,14 +643,14 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
         
         if(fittedE.size()>0) {
           //Photosynthesis function for sunlit and shade leaves
-          DataFrame photoSunlit = leafPhotosynthesisFunction(fittedE, Catm, Patm,Tcan[n], vpatm, 
+          DataFrame photoSunlit = leafPhotosynthesisFunction(fittedE, LeafPsi, Catm, Patm,Tcan[n], vpatm, 
                                                              zWind[c], 
                                                              absSWR_SL[c] + LWR_emmcan*LAI_SL[c], 
                                                              irradianceToPhotonFlux(absPAR_SL[c]), 
                                                              NSPLVEC[c]*Vmax298SL[c], 
                                                              NSPLVEC[c]*Jmax298SL[c], 
                                                              leafWidth[c], LAI_SL[c]);
-          DataFrame photoShade = leafPhotosynthesisFunction(fittedE, Catm, Patm,Tcan[n], vpatm, 
+          DataFrame photoShade = leafPhotosynthesisFunction(fittedE, LeafPsi, Catm, Patm,Tcan[n], vpatm, 
                                                             zWind[c], 
                                                             absSWR_SH[c] + LWR_emmcan*LAI_SH[c], 
                                                             irradianceToPhotonFlux(absPAR_SH[c]),

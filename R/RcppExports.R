@@ -13,6 +13,10 @@ biophysics_leafTemperature <- function(absRad, airTemperature, u, E, leafWidth =
     .Call(`_medfate_leafTemperature`, absRad, airTemperature, u, E, leafWidth)
 }
 
+biophysics_leafVapourPressure <- function(leafTemp, leafPsi) {
+    .Call(`_medfate_leafVapourPressure`, leafTemp, leafPsi)
+}
+
 biophysics_waterDynamicViscosity <- function(temp) {
     .Call(`_medfate_waterDynamicViscosity`, temp)
 }
@@ -653,16 +657,16 @@ photo_photosynthesis <- function(Q, Catm, Gc, Tleaf, Vmax298, Jmax298, verbose =
     .Call(`_medfate_leafphotosynthesis`, Q, Catm, Gc, Tleaf, Vmax298, Jmax298, verbose)
 }
 
-photo_leafPhotosynthesisFunction <- function(E, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, leafWidth = 1.0, refLeafArea = 1.0, verbose = FALSE) {
-    .Call(`_medfate_leafPhotosynthesisFunction`, E, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, leafWidth, refLeafArea, verbose)
+photo_leafPhotosynthesisFunction <- function(E, psiLeaf, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, leafWidth = 1.0, refLeafArea = 1.0, verbose = FALSE) {
+    .Call(`_medfate_leafPhotosynthesisFunction`, E, psiLeaf, Catm, Patm, Tair, vpa, u, absRad, Q, Vmax298, Jmax298, leafWidth, refLeafArea, verbose)
 }
 
-photo_sunshadePhotosynthesisFunction <- function(E, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, leafWidth = 1.0, verbose = FALSE) {
-    .Call(`_medfate_sunshadePhotosynthesisFunction`, E, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, leafWidth, verbose)
+photo_sunshadePhotosynthesisFunction <- function(E, psiLeaf, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, leafWidth = 1.0, verbose = FALSE) {
+    .Call(`_medfate_sunshadePhotosynthesisFunction`, E, psiLeaf, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298SL, Vmax298SH, Jmax298SL, Jmax298SH, leafWidth, verbose)
 }
 
-photo_multilayerPhotosynthesisFunction <- function(E, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298, Jmax298, leafWidth = 1.0, verbose = FALSE) {
-    .Call(`_medfate_multilayerPhotosynthesisFunction`, E, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298, Jmax298, leafWidth, verbose)
+photo_multilayerPhotosynthesisFunction <- function(E, psiLeaf, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298, Jmax298, leafWidth = 1.0, verbose = FALSE) {
+    .Call(`_medfate_multilayerPhotosynthesisFunction`, E, psiLeaf, Catm, Patm, Tair, vpa, SLarea, SHarea, u, absRadSL, absRadSH, QSL, QSH, Vmax298, Jmax298, leafWidth, verbose)
 }
 
 root_conicDistribution <- function(Zcone, d) {
