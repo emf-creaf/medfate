@@ -127,7 +127,7 @@ Function \code{transp_transpirationGranier} and \code{transp_transpirationSperry
             \item{\code{"Abs_LWR"}: A data frame with instantaneous absorbed long-wave radiation (LWR).} 
             \item{\code{"An"}: A data frame with instantaneous net photosynthesis (in micromol/m2/s). }
             \item{\code{"Ci"}: A data frame with instantaneous intercellular CO2 concentration (in ppm). }
-            \item{\code{"GW"}: A data frame with instantaneous stomatal conductance (in mmol/m2/s). }
+            \item{\code{"GW"}: A data frame with instantaneous stomatal conductance (in mol/m2/s). }
             \item{\code{"VPD"}: A data frame with instantaneous vapour pressure deficit (in kPa). }
             \item{\code{"Temp"}: A data frame with leaf temperature (in degrees Celsius). }
             \item{\code{"Psi"}: A data frame with leaf water potential (in MPa). }

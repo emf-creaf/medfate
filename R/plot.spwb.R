@@ -589,7 +589,7 @@ plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = F
   else if(type=="LeafStomatalConductance") {
     mSu = extractSubdaily(x, "SunlitLeaves$GW", dates)[,c("datetime", cohorts), drop=FALSE]
     mSh = extractSubdaily(x, "ShadeLeaves$GW", dates)[,c("datetime", cohorts), drop=FALSE]
-    if(is.null(ylab)) ylab=expression(paste("Stomatal conductance ", (mmol%.%m^{-2}%.%s^{-1})))
+    if(is.null(ylab)) ylab=expression(paste("Stomatal conductance ", (mol%.%m^{-2}%.%s^{-1})))
     return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafTemperature") {

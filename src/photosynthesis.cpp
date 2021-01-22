@@ -200,7 +200,10 @@ DataFrame leafPhotosynthesisFunction(NumericVector E, double Catm, double Patm, 
   for(int i=0;i<nsteps;i++){
     leafTemp[i] = leafTemperature(absRad/refLeafArea, Tair, u, E[i], leafWidth);
     leafVPD[i] = std::max(0.0,meteoland::utils_saturationVP(std::max(0.0,leafTemp[i]))-vpa);
-    Gw[i] = Patm*(E[i]/1000.0)/leafVPD[i]; //Transform flow from mmol to mol
+    Gw[i]  =  Patm*(E[i]/1000.0)/leafVPD[i]; //Transform flow from mmol to mol
+    // double gbound = 0.397*pow(u/(leafWidth*0.0072), 0.5); // mol
+    // double gcanopy = Patm*(E[i]/1000.0)/leafVPD[i]; //Transform flow from mmol to mol
+    // Gw[i]  = 1.0/((1.0/gcanopy) - (1.0/gbound)); //Accounts for leaf boundary conductance
     NumericVector LP = leafphotosynthesis(Q/refLeafArea, Catm, Gw[i]/1.6, std::max(0.0,leafTemp[i]), Vmax298/refLeafArea, Jmax298/refLeafArea);
     Ci[i] = LP[0];
     Ag[i] = LP[1];
