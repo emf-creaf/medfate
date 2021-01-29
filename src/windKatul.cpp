@@ -117,10 +117,10 @@ List k_model_CSL(NumericVector z, NumericVector Cx, double h, double d0,double z
   int N=z.size();
   double zmax=max(z);
   double dz=z[1]-z[0];
-  Rcout<<"starting\n";
   // Define starting conditions for U/u*, k/(u*^2), epsilon/(u*3/h)
   double Ulow=0.0;
   double Uhigh=(1.0/kv)*log((zmax-d0)/z0);
+  Rcout<<Ulow<< "-"<< Uhigh<<"\n";
   NumericVector U=linspace(Ulow,Uhigh,N);
   
   double khigh=0.5*(pow(AAu,2.0)+pow(AAv,2.0)+pow(AAw,2.0));
@@ -144,8 +144,12 @@ List k_model_CSL(NumericVector z, NumericVector Cx, double h, double d0,double z
   
   double am3=-pow(Aq,3.0)*(pow(AAu,2.0)-pow(AAw,2.0))/(pow(AAw,2.0)-pow(Aq,2.0)/3.0);
   NumericVector lambda3=am3*Lmix;
-  
-     
+  // return(List::create(Named("U1") = U,
+  //                     Named("epsilon1") = epsilon,
+  //                     Named("k1") = k,
+  //                     Named("z1") = z,
+  //                     Named("Lmix1") = Lmix));
+  //    
   NumericVector y(N); 
   NumericVector vt(N); //viscosity
   NumericVector dvt(N); //derivative
