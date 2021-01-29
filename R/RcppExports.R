@@ -893,6 +893,10 @@ transp_transpirationGranier <- function(x, soil, meteo, day, modifyInputX = TRUE
     .Call(`_medfate_transpirationGranier`, x, soil, meteo, day, modifyInputX, modifyInputSoil)
 }
 
+k_model_CSL <- function(z, Cx, h, d0, z0) {
+    .Call(`_medfate_k_model_CSL`, z, Cx, h, d0, z0)
+}
+
 .windSpeedAtCanopyHeight <- function(wind20H, canopyHeight) {
     .Call(`_medfate_windSpeedAtCanopyHeight`, wind20H, canopyHeight)
 }
