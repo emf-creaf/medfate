@@ -4217,9 +4217,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// k_model_CSL
-List k_model_CSL(NumericVector z, NumericVector Cx, double h, double d0, double z0);
-RcppExport SEXP _medfate_k_model_CSL(SEXP zSEXP, SEXP CxSEXP, SEXP hSEXP, SEXP d0SEXP, SEXP z0SEXP) {
+// wind_kU_CSL
+DataFrame wind_kU_CSL(NumericVector z, NumericVector Cx, double h, double d0, double z0);
+RcppExport SEXP _medfate_wind_kU_CSL(SEXP zSEXP, SEXP CxSEXP, SEXP hSEXP, SEXP d0SEXP, SEXP z0SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -4228,7 +4228,22 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type h(hSEXP);
     Rcpp::traits::input_parameter< double >::type d0(d0SEXP);
     Rcpp::traits::input_parameter< double >::type z0(z0SEXP);
-    rcpp_result_gen = Rcpp::wrap(k_model_CSL(z, Cx, h, d0, z0));
+    rcpp_result_gen = Rcpp::wrap(wind_kU_CSL(z, Cx, h, d0, z0));
+    return rcpp_result_gen;
+END_RCPP
+}
+// wind_kepsilon_CSL
+DataFrame wind_kepsilon_CSL(NumericVector z, NumericVector Cx, double h, double d0, double z0);
+RcppExport SEXP _medfate_wind_kepsilon_CSL(SEXP zSEXP, SEXP CxSEXP, SEXP hSEXP, SEXP d0SEXP, SEXP z0SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type z(zSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type Cx(CxSEXP);
+    Rcpp::traits::input_parameter< double >::type h(hSEXP);
+    Rcpp::traits::input_parameter< double >::type d0(d0SEXP);
+    Rcpp::traits::input_parameter< double >::type z0(z0SEXP);
+    rcpp_result_gen = Rcpp::wrap(wind_kepsilon_CSL(z, Cx, h, d0, z0));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4625,7 +4640,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 7},
     {"_medfate_transpirationSperry", (DL_FUNC) &_medfate_transpirationSperry, 14},
     {"_medfate_transpirationGranier", (DL_FUNC) &_medfate_transpirationGranier, 6},
-    {"_medfate_k_model_CSL", (DL_FUNC) &_medfate_k_model_CSL, 5},
+    {"_medfate_wind_kU_CSL", (DL_FUNC) &_medfate_wind_kU_CSL, 5},
+    {"_medfate_wind_kepsilon_CSL", (DL_FUNC) &_medfate_wind_kepsilon_CSL, 5},
     {"_medfate_windSpeedAtCanopyHeight", (DL_FUNC) &_medfate_windSpeedAtCanopyHeight, 2},
     {"_medfate_unshelteredMidflameWindSpeed", (DL_FUNC) &_medfate_unshelteredMidflameWindSpeed, 2},
     {"_medfate_shelteredMidflameWindSpeed", (DL_FUNC) &_medfate_shelteredMidflameWindSpeed, 3},

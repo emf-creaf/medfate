@@ -112,15 +112,14 @@ IntegerVector which(LogicalVector l) {
  *   d0 - displacement height (m)
  *   z0 - Momentum roughness height (m)
  */
-// [[Rcpp::export("k_model_CSL")]]
-List k_model_CSL(NumericVector z, NumericVector Cx, double h, double d0,double z0) {
+// [[Rcpp::export("wind_kU_CSL")]]
+DataFrame wind_kU_CSL(NumericVector z, NumericVector Cx, double h, double d0, double z0) {
   int N=z.size();
   double zmax=max(z);
   double dz=z[1]-z[0];
   // Define starting conditions for U/u*, k/(u*^2), epsilon/(u*3/h)
   double Ulow=0.0;
   double Uhigh=(1.0/kv)*log((zmax-d0)/z0);
-  Rcout<<Ulow<< "-"<< Uhigh<<"\n";
   NumericVector U=linspace(Ulow,Uhigh,N);
   
   double khigh=0.5*(pow(AAu,2.0)+pow(AAv,2.0)+pow(AAw,2.0));
@@ -131,7 +130,6 @@ List k_model_CSL(NumericVector z, NumericVector Cx, double h, double d0,double z
   double epsilonlow=0.001*epsilonhigh;
   NumericVector epsilon=linspace(epsilonlow,epsilonhigh,N);
   
-  Rcout<<"MLM\n";
   // Mixing Length model
   double alpha = kv*(h-d0)/h;  //fraction of mixing length (Lmixing = alpha x h) inside the canopy up to canopy top
   NumericVector Lmix(N, alpha*h);
@@ -144,12 +142,7 @@ List k_model_CSL(NumericVector z, NumericVector Cx, double h, double d0,double z
   
   double am3=-pow(Aq,3.0)*(pow(AAu,2.0)-pow(AAw,2.0))/(pow(AAw,2.0)-pow(Aq,2.0)/3.0);
   NumericVector lambda3=am3*Lmix;
-  // return(List::create(Named("U1") = U,
-  //                     Named("epsilon1") = epsilon,
-  //                     Named("k1") = k,
-  //                     Named("z1") = z,
-  //                     Named("Lmix1") = Lmix));
-  //    
+
   NumericVector y(N); 
   NumericVector vt(N); //viscosity
   NumericVector dvt(N); //derivative
@@ -160,8 +153,7 @@ List k_model_CSL(NumericVector z, NumericVector Cx, double h, double d0,double z
   NumericVector Un, Kn, uw;
   double eps1=0.1;
   double maxerr=9999.9;
-  Rcout<<"loop\n";
-  
+
   int cnt=0;
   while(maxerr>0.1) {
     // Viscocity (and derivative) Model
@@ -188,7 +180,6 @@ List k_model_CSL(NumericVector z, NumericVector Cx, double h, double d0,double z
     for(int i=0;i<N;i++) {
       epsilon[i] = (3.0/3.0)*(pow(sqrt(2.0*k[i]),3.0)/lambda3[i]);
     }
-    Rcout<<"*";
     //   Set up coefficients for Mean Momentum ODE-------------------------------------------
     a1=vt;
     a2=dvt;
@@ -246,18 +237,230 @@ List k_model_CSL(NumericVector z, NumericVector Cx, double h, double d0,double z
     maxerr=max(abs(Kn-k));
     // -----Use successive relaxations in iterations
     k=abs(eps1*Kn+(1.0-eps1)*k);
-    Rcout << cnt<< " maxerr"<<maxerr<<"\n";
     cnt++;
     if(cnt==100) stop("too many iterations");
   }
-  return(List::create(Named("U1") = U,
+  return(DataFrame::create(Named("z1") = z,
+                           Named("U1") = U,
                            Named("epsilon1") = epsilon,
                            Named("k1") = k,
                            Named("uw1") = uw/(abs(uw[N-1])),
-                           Named("z1") = z,
                            Named("Lmix1") = Lmix));
 }
+/* (D)
+ * 
+ *  K-epsilon model (equations 1-7 with equation 4b)
+ *  
+ *  k_epsilon_CSL(z, Cx, h, do,zo)
+ *  output [z1, U1, k1, uw1]
+ *  
+ *   z - Vector of heights
+ *   Cx - Effective drag = Cd x leaf area density
+ *   h - canopy height (m)
+ *   d0 - displacement height (m)
+ *   z0 - Momentum roughness height (m)
+ */
+// [[Rcpp::export("wind_kepsilon_CSL")]]
+DataFrame wind_kepsilon_CSL(NumericVector z, NumericVector Cx, double h, double d0, double z0) {
+  int N=z.size();
+  double zmax=max(z);
+  double dz=z[1]-z[0];
+  // ------- Define starting conditions for U/u*, k/(u*^2), epsilon/(u*3/h)
+  double Ulow=0.0;
+  double Uhigh=(1.0/kv)*log((zmax-d0)/z0);
+  NumericVector U=linspace(Ulow,Uhigh,N);
   
+  double khigh=0.5*(pow(AAu,2.0)+pow(AAv,2.0)+pow(AAw,2.0));
+  double klow=0.001*khigh;
+  NumericVector k=linspace(klow,khigh,N);
   
+  double epsilonhigh=(1.0/(kv*(zmax-d0)));
+  double epsilonlow=0.001*epsilonhigh;
+  NumericVector epsilon=linspace(epsilonlow,epsilonhigh,N);
 
+  // Mixing Length model
+  double alpha = kv*(h-d0)/h;  //fraction of mixing length (Lmixing = alpha x h) inside the canopy up to canopy top
+  NumericVector Lmix(N, alpha*h);
+  IntegerVector c1 = which(z < h);
+  int nn=max(c1);
+  for(int i=nn;i<N;i++) {
+    Lmix[i] = kv*(z[i] - d0);
+  }
+  Lmix[nn]=(Lmix[nn-1]+Lmix[nn+1])/2.0;
+  
+  double am3=-pow(Aq,3.0)*(pow(AAu,2.0)-pow(AAw,2.0))/(pow(AAw,2.0)-pow(Aq,2.0)/3.0);
+  NumericVector lambda3=am3*Lmix;
+  
+  NumericVector y(N); 
+  NumericVector vt(N); //viscosity
+  NumericVector dvt(N); //derivative
+  NumericVector dU(N); //derivative
+  NumericVector upd, dia, lod;
+  NumericVector aa(N), bb(N), cc(N), dd(N);
+  NumericVector a1, a2, a3;
+  NumericVector Un, Kn, uw;
+  double eps1=0.1;
+  double maxerr=9999.9;
+  
+  int cnt=0;
+  while(maxerr>0.1) {
+    // Viscocity (and derivative) Model
+    for(int i=0;i<N;i++) {
+      vt[i]=pow(Cu,1.0/4.0)*Lmix[i]*sqrt(abs(k[i])); 
+    }
+    for(int i=1;i<N;i++) {
+      y[i] = (vt[i] - vt[i-1])/dz;
+    }
+    y[0] = y[1];
+    dvt = y;
+    
+  }
+  return(DataFrame::create(
+      Named("z1") = z,
+      Named("U1") = U,
+      Named("epsilon1") = epsilon,
+      Named("k1") = k,
+      Named("uw1") = uw/(abs(uw[N-1]))));
+}
+  //   %-------- dU/dz
+  //     y=[];
+  //   dU=[];
+  //   y(2:N)=diff(U)./dz;
+  //   y(1)=y(2);
+  //   dU=y;
+  //   
+  //   
+  //   %----- Compute the Reynolds stress
+  //     
+  //     uw=-vt.*dU;
+  //   uw(N)=uw(N-1);
+  //   uw(1)=uw(2);
+  //   
+  //   %------Set up coefficients for Mean Momentum ODE-------------------------------------------
+  //     
+  //     a1=vt;
+  //   a2=dvt;
+  //   a3=-Cx.*abs(U);
+  //   dx=dz;
+  //   
+  //   %------ Set the elements of the Tri-diagonal Matrix
+  //     upd=(a1./(dx*dx)+a2./(2*dx));
+  //   dia=(-a1.*2/(dx*dx)+a3);
+  //   lod=(a1./(dx*dx)-a2./(2*dx));
+  //   co=ones(1,N)*0;
+  //   aa=[];
+  //   bb=[];
+  //   cc=[];
+  //   dd=[];
+  //   co(1)=0;
+  //   co(N)=Uhigh;
+  //   aa=lod;
+  //   bb=dia;
+  //   cc=upd;
+  //   dd=co;
+  //   aa(1)=0;
+  //   bb(1)=1;
+  //   cc(1)=-1;
+  //   dd(1)=0;
+  //   
+  //   aa(N)=0;
+  //   bb(N)=1;
+  //   cc(N)=0;
+  //   
+  //   %------Use the Thomas Algorithm to solve the tridiagonal matrix
+  //     Un=thomas(aa,bb,cc,dd);
+  //   
+  //   %-----Use successive relaxations in iterations
+  //     eps1=0.1;
+  //   U=abs(eps1*Un+(1-eps1)*U);
+  //   
+  //   %------Set up coefficients for TKE ODE------------------------------------------------------------
+  //     
+  //     a1=vt;
+  //   a2=dvt;
+  //   a3=-Bd*abs(U).*Cx;
+  //   dx=dz;
+  //   
+  //   %------ Set the elements of the Tri-diagonal Matrix
+  //     upd=(a1./(dx*dx)+a2./(2*dx));
+  //   dia=(-a1.*2/(dx*dx)+a3);
+  //   lod=(a1./(dx*dx)-a2./(2*dx));
+  //   co=epsilon-Cx.*Bp.*(abs(U)).^3-vt.*dU.^2;
+  //   aa=[];
+  //   bb=[];
+  //   cc=[];
+  //   dd=[];
+  //   
+  //   aa=lod;
+  //   bb=dia;
+  //   cc=upd;
+  //   dd=co;
+  //   
+  //   aa(1)=0;
+  //   bb(1)=1;
+  //   cc(1)=-1;
+  //   dd(1)=0;
+  //   
+  //   aa(N)=0;
+  //   cc(N)=0;
+  //   bb(N)=1;
+  //   dd(N)=khigh;
+  //   %------Use the Thomas Algorithm to solve the tridiagonal matrix
+  //     Kn=thomas(aa,bb,cc,dd);
+  //   maxerr=max(abs(Kn-k));
+  //   %-----Use successive relaxations in iterations
+  //     
+  //     k=abs(eps1*Kn+(1-eps1)*k);
+  //   
+  //   %------Set up coefficients for dissipation ODE ---------------------------------------------------------------------------------
+  //     Su=Cx.*U.^2;
+  //   Sk=Cx.*(Bp*U.^3-Bd*U.*k);
+  //   Se1=(Ce4*epsilon./k).*Sk;
+  //   Se2=epsilon.*Cx.*((Ce4*Bp*U.^3./k)-Bd*Ce5*U);
+  //   
+  //   
+  //   a1=vt/Pr;
+  //   a2=dvt/Pr;
+  //   a3=(-Ce2*epsilon./k);
+  //   dx=dz;
+  //   
+  //   %------ Set the elements of the Tri-diagonal Matrix
+  //     upd=(a1./(dx*dx)+a2./(2*dx));
+  //   dia=(-a1.*2/(dx*dx)+a3);
+  //   lod=(a1./(dx*dx)-a2./(2*dx));
+  //   co=-Ce1*Cu*k.*(dU.^2)-Se2;
+  //   aa=[];
+  //   bb=[];
+  //   cc=[];
+  //   dd=[];
+  //   
+  //   aa=lod;
+  //   bb=dia;
+  //   cc=upd;
+  //   dd=co;
+  //   
+  //   aa(1)=0;
+  //   bb(1)=1;
+  //   cc(1)=-1;
+  //   dd(1)=0;
+  //   
+  //   aa(N)=0;
+  //   cc(N)=0;
+  //   bb(N)=1;
+  //   dd(N)=epsilonhigh;
+  //   
+  //   %------Use the Thomas Algorithm to solve the tridiagonal matrix
+  //     epsilonn=thomas(aa,bb,cc,dd);
+  //   
+  //   %-----Use successive relaxations in iterations
+  //     epsilon=abs(eps1*epsilonn+(1-eps1)*epsilon);
+  //   
+  //   end
+  //     
+  //     U1=U;
+  //   epsilon1=epsilon;
+  //   k1=k;
+  //   uw1=uw./(abs(uw(N)));
+  //   z1=z;
+  //   Lmix1=Lmix;
 
