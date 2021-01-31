@@ -28,7 +28,7 @@ wind_canopyTurbulence(z, Cx, h, d0, z0, model = "k-epsilon")
 }
 }
 \details{
- Implementation in Rcpp of the models by Katul et al (2004) originally in Matlab code.
+ Implementation in Rcpp of the K-epsilon canopy turbulence models by Katul et al (2004) originally in Matlab code (https://nicholas.duke.edu/people/faculty/katul/k_epsilon_model.htm).
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC

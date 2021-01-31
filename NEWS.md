@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 1.1.6
+- New canopy turbulence models by Katul et al (2004)
+
 # Version 1.1.5
 - Stomatal conductance now denoted as Gsw or GSW
 - Boundary layer conductance considered
