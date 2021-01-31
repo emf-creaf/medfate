@@ -281,6 +281,7 @@ DataFrame wind_canopyTurbulence(NumericVector z, NumericVector Cx, double h, dou
   }
   return(DataFrame::create(Named("z1") = z,
                            Named("U1") = U,
+                           Named("dU1") = dU,
                            Named("epsilon1") = epsilon,
                            Named("k1") = k,
                            Named("uw1") = uw/(abs(uw[N-1])),
