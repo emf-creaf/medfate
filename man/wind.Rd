@@ -1,7 +1,6 @@
 \encoding{UTF-8}
 \name{Wind models}
-\alias{wind_kU_CSL}
-\alias{wind_kepsilon_CSL}
+\alias{wind_canopyTurbulence}
 \title{
 Models for canopy turbulence
 }
@@ -9,8 +8,7 @@ Models for canopy turbulence
 Models for canopy turbulence by Katul et al (2004).
 }
 \usage{
-wind_kU_CSL(z, Cx, h, d0, z0)
-wind_kepsilon_CSL(z, Cx, h, d0, z0)
+wind_canopyTurbulence(z, Cx, h, d0, z0, model = "k-epsilon")
 }
 \arguments{
   \item{z}{A numeric vector with height values.}
@@ -64,6 +62,6 @@ lad = vprofile_leafAreaDensity(exampleforestMED, SpParamsMED, draw = FALSE, z = 
 Cd = 0.2
 Cx = Cd*lad
 
-# kU model
-wind_kU_CSL(zm, Cx,h,d0,z0)
+# canopy turbulence model
+wind_canopyTurbulence(zm, Cx,h,d0,z0)
 }

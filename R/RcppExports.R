@@ -893,12 +893,8 @@ transp_transpirationGranier <- function(x, soil, meteo, day, modifyInputX = TRUE
     .Call(`_medfate_transpirationGranier`, x, soil, meteo, day, modifyInputX, modifyInputSoil)
 }
 
-wind_kU_CSL <- function(z, Cx, h, d0, z0) {
-    .Call(`_medfate_wind_kU_CSL`, z, Cx, h, d0, z0)
-}
-
-wind_kepsilon_CSL <- function(z, Cx, h, d0, z0) {
-    .Call(`_medfate_wind_kepsilon_CSL`, z, Cx, h, d0, z0)
+wind_canopyTurbulence <- function(z, Cx, h, d0, z0, model = "k-epsilon") {
+    .Call(`_medfate_wind_canopyTurbulence`, z, Cx, h, d0, z0, model)
 }
 
 .windSpeedAtCanopyHeight <- function(wind20H, canopyHeight) {
