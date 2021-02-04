@@ -691,6 +691,35 @@ DataFrame internalWaterDataFrame(DataFrame above, String transpirationMode) {
   return(df);
 }
 
+DataFrame paramsCanopy(DataFrame above, List control) {
+  NumericVector LAI_live = above["LAI_live"];
+  NumericVector LAI_expanded = above["LAI_expanded"];
+  NumericVector LAI_dead = above["LAI_dead"];
+  NumericVector H = above["H"];
+  int numCohorts = H.size();
+  //Determine number of vertical layers
+  double verticalLayerSize = control["verticalLayerSize"];
+  double canopyHeight = 0.0;
+  for(int c=0;c<numCohorts;c++) {
+    if((canopyHeight<H[c]) & ((LAI_live[c]+LAI_dead[c])>0.0)) canopyHeight = H[c];
+  }
+  int nz = ceil(canopyHeight/verticalLayerSize); //Number of vertical layers
+  NumericVector zlow(nz,0.0);
+  NumericVector zmid(nz, verticalLayerSize/2.0);
+  NumericVector zup(nz, verticalLayerSize);
+  for(int i=1;i<nz;i++) {
+    zlow[i] = zlow[i-1] + verticalLayerSize;
+    zmid[i] = zmid[i-1] + verticalLayerSize;
+    zup[i] = zup[i-1] + verticalLayerSize;
+  }
+  DataFrame paramsCanopy = DataFrame::create(_["zlow"] = zlow,
+                                             _["zmid"] = zmid,
+                                             _["zup"] = zup,
+                                             _["Tair"] = NumericVector(nz, NA_REAL),
+                                             _["Cair"] = NumericVector(nz, control["Catm"]),
+                                             _["VPair"] = NumericVector(nz, NA_REAL));
+  return(paramsCanopy);
+}
 /**
  *  Prepare Soil Water Balance input
  */
@@ -781,7 +810,6 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
     
     DataFrame paramsWaterStoragedf = paramsWaterStorage(above, SpParams, paramsAnatomydf);
 
-    List paramsCanopy = List::create(_["Temp"] = NA_REAL);
     List ctl = clone(control);
     if(soilFunctions=="SX") {
       soilFunctions = "VG"; 
@@ -790,7 +818,7 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
     }
 
     input = List::create(_["control"] = ctl,
-                         _["canopy"] = paramsCanopy,
+                         _["canopy"] = paramsCanopy(above, control),
                          _["cohorts"] = cohortDescdf,
                          _["above"] = plantsdf,
                          _["below"] = belowdf,
@@ -931,10 +959,9 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
       soilFunctions = "VG"; 
       warning("Soil pedotransfer functions set to Van Genuchten ('VG').");
     }
-    List paramsCanopy = List::create(_["gdd"] = 0.0,_["Temp"] = NA_REAL);
-    
+
     input = List::create(_["control"] = clone(control),
-                         _["canopy"] = paramsCanopy,
+                         _["canopy"] = paramsCanopy(above, control),
                          _["cohorts"] = cohortDescdf,
                          _["above"] = plantsdf,
                          _["below"] = belowdf,
