@@ -34,6 +34,7 @@ defaultControl<-function() {
     Catm = 386,
     ndailysteps = 24,
     thermalCapacityLAI = 1000000,
+    multiLayerBalance = FALSE,
     
     # growth
     allocationStrategy = "Plant_kmax",

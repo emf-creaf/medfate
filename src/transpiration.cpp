@@ -165,6 +165,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   bool plantWaterPools = control["plantWaterPools"];
   double verticalLayerSize = control["verticalLayerSize"];
   double thermalCapacityLAI = control["thermalCapacityLAI"];
+  bool multiLayerBalance = control["multiLayerBalance"];
   double defaultWindSpeed = control["defaultWindSpeed"];
   double nonSugarConcentration = control["nonSugarConcentration"];
   
@@ -195,7 +196,11 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   NumericVector psiSoil = psi(soil, soilFunctions); //Get soil water potential
   
   //Canopy params
-  List canopyParams = Rcpp::as<Rcpp::List>(x["canopy"]);
+  DataFrame canopyParams = Rcpp::as<Rcpp::DataFrame>(x["canopy"]);
+  NumericVector Tair = canopyParams["Tair"];
+  NumericVector VPair = canopyParams["VPair"];
+  NumericVector Cair = canopyParams["Cair"];
+  int ncanlayers = Tair.size(); //Number of canopy layers
   
   //Root distribution input
   DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
@@ -276,14 +281,15 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   //Step in seconds
   double tstep = 86400.0/((double) ntimesteps);
   
-  //Atmospheric pressure, CO2 concentration
+  //Atmospheric pressure
   double Patm = meteoland::utils_atmosphericPressure(elevation);
-  double Catm = control["Catm"];
-  
   
   //Daily average water vapor pressure at the atmosphere (kPa)
   double vpatm = meteoland::utils_averageDailyVP(tmin, tmax, rhmin,rhmax);
-  
+  //If canopy VP is missing or not multilayer initiate it to vpatm
+  if(NumericVector::is_na(VPair[0]) || (!multiLayerBalance)){
+    for(int i=0;i<ncanlayers;i++) VPair[i] = vpatm;
+  }
   //Daily cloud cover
   double cloudcover = 0.0;
   if(prec >0.0) cloudcover = 1.0;
@@ -302,13 +308,9 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
     LAIcellexpanded +=LAIphe[c];
     if((canopyHeight<H[c]) & ((LAIphe[c]+LAIdead[c])>0.0)) canopyHeight = H[c];
   }
-  int nz = ceil(canopyHeight/verticalLayerSize); //Number of vertical layers
-  NumericVector z(nz+1,0.0);
-  NumericVector zmid(nz);
-  for(int i=1;i<=nz;i++) {
-    z[i] = z[i-1] + verticalLayerSize;
-    zmid[i-1] = (verticalLayerSize/2.0) + verticalLayerSize*((double) (i-1));
-  }
+  //Create z vector with all layer height limits
+  NumericVector z(ncanlayers+1,0.0);
+  for(int i=1;i<=ncanlayers;i++) z[i] = z[i-1] + verticalLayerSize;
   NumericMatrix LAIme = LAIdistributionVectors(z, LAIphe, H, CR); //Expanded leaves
   NumericMatrix LAImd = LAIdistributionVectors(z, LAIdead, H, CR); //Dead (standing) leaves
   NumericMatrix LAImx = LAIdistributionVectors(z, LAIlive, H, CR); //Maximum leaf expansion
@@ -342,8 +344,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
     //Longwave sky diffuse radiation (W/m2)
     lwdr[n] = meteoland::radiation_skyLongwaveRadiation(Tatm[n], vpatm, cloudcover);
   }
-  Tcan[0] = canopyParams["Temp"]; //Take canopy temperature from previous day
-  Tsoil_mat(0,_) = Tsoil;
+  Tcan[0] = Tair[0]; //Take canopy air temperature from previous day
+  Tsoil_mat(0,_) = Tsoil; //Take temperature soil vector 
   
   
   
@@ -375,10 +377,10 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   for(int c=0;c<numCohorts;c++) {
     // Rcout<<"cohort "<<c<<":\n";
     //Constant properties through time steps
-    NumericVector Vmax298layer(nz), Jmax298layer(nz);
-    NumericVector SLarealayer(nz), SHarealayer(nz);
+    NumericVector Vmax298layer(ncanlayers), Jmax298layer(ncanlayers);
+    NumericVector SLarealayer(ncanlayers), SHarealayer(ncanlayers);
     double sn =0.0;
-    for(int i=(nz-1);i>=0.0;i--) {
+    for(int i=(ncanlayers-1);i>=0.0;i--) {
       //Effect of nitrogen concentration decay through the canopy
       double fn = exp(-0.713*(sn+LAIme(i,c)/2.0)/sum(LAIme(_,c)));
       // Rcout<<" l"<<i<<" fsunlit: "<< fsunlit[i]<<" lai: "<< LAIme(i,c)<<" fn: "<< fn <<"\n";
@@ -388,7 +390,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
       Vmax298layer[i] = Vmax298[c]*fn;
       Jmax298layer[i] = Jmax298[c]*fn;
     }
-    for(int i=0;i<nz;i++) {
+    for(int i=0;i<ncanlayers;i++) {
       LAI_SL[c] +=SLarealayer[i];
       LAI_SH[c] +=SHarealayer[i];
       Vmax298SL[c] +=Vmax298layer[i]*LAIme(i,c)*fsunlit[i];
@@ -559,7 +561,10 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   
   for(int n=0;n<ntimesteps;n++) { //Time loop
     //Long-wave radiation due to canopy temperature
-    if(NumericVector::is_na(Tcan[n])) Tcan[n] = Tatm[n]; //If missing take above-canopy air temperature
+    if(NumericVector::is_na(Tair[0])) {//If missing initialize canopy profile with above-canopy air temperature 
+      for(int i=0;i<ncanlayers;i++) Tair[i] = Tatm[n];
+      Tcan[n] = Tair[0]; 
+    }
     if(NumericVector::is_na(Tsoil[0])) {//Initialize Soil temperature (to minimum air temperature) if missing
       for(int l=0;l<nlayers; l++) {
         Tsoil[l] = Tatm[n];
@@ -644,14 +649,14 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
         
         if(fittedE.size()>0) {
           //Photosynthesis function for sunlit and shade leaves
-          DataFrame photoSunlit = leafPhotosynthesisFunction(fittedE, LeafPsi, Catm, Patm,Tcan[n], vpatm, 
+          DataFrame photoSunlit = leafPhotosynthesisFunction(fittedE, LeafPsi, Cair[0], Patm,Tcan[n], VPair[0], 
                                                              zWind[c], 
                                                              absSWR_SL[c] + LWR_emmcan*LAI_SL[c], 
                                                              irradianceToPhotonFlux(absPAR_SL[c]), 
                                                              NSPLVEC[c]*Vmax298SL[c], 
                                                              NSPLVEC[c]*Jmax298SL[c], 
                                                              leafWidth[c], LAI_SL[c]);
-          DataFrame photoShade = leafPhotosynthesisFunction(fittedE, LeafPsi, Catm, Patm,Tcan[n], vpatm, 
+          DataFrame photoShade = leafPhotosynthesisFunction(fittedE, LeafPsi, Cair[0], Patm,Tcan[n], VPair[0], 
                                                             zWind[c], 
                                                             absSWR_SH[c] + LWR_emmcan*LAI_SH[c], 
                                                             irradianceToPhotonFlux(absPAR_SH[c]),
@@ -1029,9 +1034,9 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
     //Soil energy balance including exchange with canopy
     Ebalsoil[n] = abs_SWR_soil[n] + abs_LWR_soil[n] + LWRcanout[n] + Hcansoil[n] - LEsoil_heat[n] - LWRsoilout[n]; //Here we use all energy escaping to atmosphere
     
-    //save canopy temperature
-    canopyParams["Temp"] = Tcannext;
-    
+    //save canopy temperature (no profile)
+    for(int i=0;i<ncanlayers;i++) Tair[i] = Tcannext;
+
    
     //Soil temperature changes
     NumericVector soilTchange = temperatureChange(dVec, Tsoil, sand, clay, Ws, Theta_FC, Ebalsoil[n]);

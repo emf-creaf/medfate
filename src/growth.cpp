@@ -1470,9 +1470,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   IntegerVector DOY = date2doy(dateStrings);
   NumericVector Photoperiod = date2photoperiod(dateStrings, latrad);
   
-  //Canpopy parameters
-  List canopyParams = x["canopy"];
-  
+
   //Aboveground parameters  
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   int numCohorts = SP.size();

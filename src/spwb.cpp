@@ -1035,9 +1035,6 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
   IntegerVector DOY = date2doy(dateStrings);
   NumericVector Photoperiod = date2photoperiod(dateStrings, latrad);
   
-  //Canpopy parameters
-  List canopyParams = x["canopy"];
-  
 
   //Plant input
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
@@ -1284,9 +1281,6 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
   
   IntegerVector DOY = date2doy(dateStrings);
   NumericVector Photoperiod = date2photoperiod(dateStrings, latrad);
-  
-  //Canpopy parameters
-  List canopyParams = x["canopy"];
   
   
   //Plant input
