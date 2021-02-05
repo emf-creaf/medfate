@@ -24,8 +24,7 @@ light_cohortSunlitShadeAbsorbedRadiation(Ib0, Id0, Ibf, Idf, beta,
 light_instantaneousLightExtinctionAbsortion(LAIme, LAImd, LAImx,
                                             kPAR, alphaSWR, gammaSWR,
                                             ddd, LWR_diffuse,
-                                            ntimesteps = 24, canopyMode= "sunshade", 
-                                            trunkExtinctionFraction = 0.1)
+                                            ntimesteps = 24, trunkExtinctionFraction = 0.1)
 light_cohortAbsorbedSWRFraction(z, x, SpParams, gdd = NA)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -49,7 +48,6 @@ light_cohortAbsorbedSWRFraction(z, x, SpParams, gdd = NA)
   \item{ddd}{A dataframe with direct and diffuse radiation for different subdaily time steps (see function \code{radiation_directDiffuseDay} in package meteoland).}
   \item{LWR_diffuse}{A vector with diffuse longwave radiation for different subdaily time steps.}
   \item{ntimesteps}{Number of subdaily time steps.}
-  \item{canopyMode}{Indicates how crowns should be described to calculate photosynthesis/extinction. Accepted values are \code{"sunshade"} (distinguishes photosynthesis in sun leaves from shade leaves) and \code{"multilayer"} (distinguishes photosynthesis of sun leaves and shade leaves in each canopy layer).}
   \item{trunkExtinctionFraction}{Fraction of extinction due to trunks (for winter deciduous forests).}
   \item{x}{An object of class \code{\link{forest}}}
   \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}

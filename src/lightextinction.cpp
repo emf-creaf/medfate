@@ -323,7 +323,7 @@ NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd, Nume
 List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, 
                                            NumericVector kPAR, NumericVector alphaSWR, NumericVector gammaSWR,
                                            DataFrame ddd, NumericVector LWR_diffuse, 
-                                           int ntimesteps = 24, String canopyMode= "sunshade", double trunkExtinctionFraction = 0.1) {
+                                           int ntimesteps = 24, double trunkExtinctionFraction = 0.1) {
 
   int numCohorts = LAIme.ncol();
   int nz = LAIme.nrow();
@@ -368,12 +368,18 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
 
   // Rcout<<rad<<" "<< solarElevation[0]<<" "<<SWR_direct[0]<<"\n";
 
-  List abs_PAR_SL_list(ntimesteps);
-  List abs_SWR_SL_list(ntimesteps);
-  List abs_PAR_SH_list(ntimesteps);
-  List abs_SWR_SH_list(ntimesteps);
-  List abs_LWR_SL_list(ntimesteps);
-  List abs_LWR_SH_list(ntimesteps);
+  List abs_PAR_SL_COH_list(ntimesteps);
+  List abs_SWR_SL_COH_list(ntimesteps);
+  List abs_PAR_SH_COH_list(ntimesteps);
+  List abs_SWR_SH_COH_list(ntimesteps);
+  List abs_LWR_SL_COH_list(ntimesteps);
+  List abs_LWR_SH_COH_list(ntimesteps);
+  List abs_PAR_SL_ML_list(ntimesteps);
+  List abs_SWR_SL_ML_list(ntimesteps);
+  List abs_PAR_SH_ML_list(ntimesteps);
+  List abs_SWR_SH_ML_list(ntimesteps);
+  List abs_LWR_SL_ML_list(ntimesteps);
+  List abs_LWR_SH_ML_list(ntimesteps);
   NumericVector abs_SWR_can(ntimesteps,0.0), abs_LWR_can(ntimesteps,0.0);
   NumericVector abs_SWR_soil(ntimesteps,0.0), abs_LWR_soil(ntimesteps,0.0);
   for(int n=0;n<ntimesteps;n++) {
@@ -404,44 +410,42 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
     NumericMatrix mparsh = abs_PAR["I_shade"];
 
     // Rcout << SWR_direct[n]*1000.0 << " "<< SWR_diffuse[n]*1000.0 << " " << LWR_diffuse[n] << "\n";
-    if(canopyMode=="multilayer") {
-      abs_PAR_SL_list[n] = mparsl;
-      abs_PAR_SH_list[n] = mparsh;
-      abs_SWR_SL_list[n] = mswrsl;
-      abs_SWR_SH_list[n] = mswrsh;
-      NumericMatrix vlwr_sl(nz, numCohorts), vlwr_sh(nz, numCohorts);
-      for(int c=0;c<numCohorts;c++){
-        for(int i=0;i<nz;i++){
-          vlwr_sl(i,c)+= (abs_LWR_sky(i,c)+abs_LWR_ground(i,c))*LAIme(i,c)*fsunlit[i]; //Add top-down and bottom-up lwr 
-          vlwr_sh(i,c)+= (abs_LWR_sky(i,c)+abs_LWR_ground(i,c))*LAIme(i,c)*(1.0 - fsunlit[i]); 
-        }
+    //Multiple layer
+    abs_PAR_SL_ML_list[n] = mparsl;
+    abs_PAR_SH_ML_list[n] = mparsh;
+    abs_SWR_SL_ML_list[n] = mswrsl;
+    abs_SWR_SH_ML_list[n] = mswrsh;
+    NumericMatrix mlwr_sl(nz, numCohorts), mlwr_sh(nz, numCohorts);
+    for(int c=0;c<numCohorts;c++){
+      for(int i=0;i<nz;i++){
+        mlwr_sl(i,c)+= (abs_LWR_sky(i,c)+abs_LWR_ground(i,c))*LAIme(i,c)*fsunlit[i]; //Add top-down and bottom-up lwr 
+        mlwr_sh(i,c)+= (abs_LWR_sky(i,c)+abs_LWR_ground(i,c))*LAIme(i,c)*(1.0 - fsunlit[i]); 
       }
-      abs_LWR_SL_list[n] = vlwr_sl;
-      abs_LWR_SH_list[n] = vlwr_sh;
-    }  else if (canopyMode=="sunshade"){
-      //Aggregate light (PAR, SWR, LWR) for sunlit leaves and shade leaves
-      NumericVector vparsl(numCohorts,0.0), vparsh(numCohorts,0.0);
-      NumericVector vswrsl(numCohorts,0.0), vswrsh(numCohorts,0.0);
-      NumericVector vlwr_sl(numCohorts,0.0), vlwr_sh(numCohorts,0.0);
-      for(int c=0;c<numCohorts;c++){
-        for(int i=0;i<nz;i++){
-          vparsl[c]+=mparsl(i,c)*LAIme(i,c)*fsunlit[i];
-          vparsh[c]+=mparsh(i,c)*LAIme(i,c)*(1.0-fsunlit[i]);
-          vswrsl[c]+=mswrsl(i,c)*LAIme(i,c)*fsunlit[i];
-          vswrsh[c]+=mswrsh(i,c)*LAIme(i,c)*(1.0-fsunlit[i]);
-          vlwr_sl[c]+= (abs_LWR_sky(i,c)+abs_LWR_ground(i,c))*LAIme(i,c)*fsunlit[i]; //Add top-down and bottom-up lwr 
-          vlwr_sh[c]+= (abs_LWR_sky(i,c)+abs_LWR_ground(i,c))*LAIme(i,c)*(1.0 - fsunlit[i]); 
-        }
-        // Rcout<<"Hola "<<vswrsl[c]<<" "<<vswrsh[c]<<" "<<vparsl[c]<<" "<<vparsh[c]<<"\n";
-      }
-      
-      abs_PAR_SL_list[n] = vparsl;
-      abs_PAR_SH_list[n] = vparsh;
-      abs_SWR_SL_list[n] = vswrsl;
-      abs_SWR_SH_list[n] = vswrsh;
-      abs_LWR_SL_list[n] = vlwr_sl;
-      abs_LWR_SH_list[n] = vlwr_sh;
     }
+    abs_LWR_SL_ML_list[n] = mlwr_sl;
+    abs_LWR_SH_ML_list[n] = mlwr_sh;
+    //Aggregate light (PAR, SWR, LWR) for sunlit leaves and shade leaves
+    NumericVector vparsl(numCohorts,0.0), vparsh(numCohorts,0.0);
+    NumericVector vswrsl(numCohorts,0.0), vswrsh(numCohorts,0.0);
+    NumericVector vlwr_sl(numCohorts,0.0), vlwr_sh(numCohorts,0.0);
+    for(int c=0;c<numCohorts;c++){
+      for(int i=0;i<nz;i++){
+        vparsl[c]+=mparsl(i,c)*LAIme(i,c)*fsunlit[i];
+        vparsh[c]+=mparsh(i,c)*LAIme(i,c)*(1.0-fsunlit[i]);
+        vswrsl[c]+=mswrsl(i,c)*LAIme(i,c)*fsunlit[i];
+        vswrsh[c]+=mswrsh(i,c)*LAIme(i,c)*(1.0-fsunlit[i]);
+        vlwr_sl[c]+= (abs_LWR_sky(i,c)+abs_LWR_ground(i,c))*LAIme(i,c)*fsunlit[i]; //Add top-down and bottom-up lwr 
+        vlwr_sh[c]+= (abs_LWR_sky(i,c)+abs_LWR_ground(i,c))*LAIme(i,c)*(1.0 - fsunlit[i]); 
+      }
+      // Rcout<<"Hola "<<vswrsl[c]<<" "<<vswrsh[c]<<" "<<vparsl[c]<<" "<<vparsh[c]<<"\n";
+    }
+    
+    abs_PAR_SL_COH_list[n] = vparsl;
+    abs_PAR_SH_COH_list[n] = vparsh;
+    abs_SWR_SL_COH_list[n] = vswrsl;
+    abs_SWR_SH_COH_list[n] = vswrsh;
+    abs_LWR_SL_COH_list[n] = vlwr_sl;
+    abs_LWR_SH_COH_list[n] = vlwr_sh;
     //Calculate canopy absorbed radiation (includes absortion by trunks in winter)
     double abs_dir_swr = SWR_direct[n]*1000.0*(1.0 - gbf); //W/m2
     double abs_dif_swr = SWR_diffuse[n]*1000.0*(1.0 - gdf); //W/m2
@@ -454,14 +458,22 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
     
     // Rcout<<n<<" PAR : "<<(PAR_direct[n]*1000.0)+(PAR_diffuse[n]*1000.0)<<" SWR: "<<(SWR_direct[n]*1000.0)+(SWR_diffuse[n]*1000.0) <<" can: "<< abs_SWR_can[n]<< " soil: "<< abs_SWR_soil[n]<<" LWR: "<< (LWR_diffuse[n]) <<" can: "<< abs_LWR_can[n]<< " soil: "<< abs_LWR_soil[n]<<"\n";
   }
+  List multilayer = List::create(_["PAR_SL"] = abs_PAR_SL_ML_list,
+                                 _["PAR_SH"] = abs_PAR_SH_ML_list,
+                                 _["SWR_SL"] = abs_SWR_SL_ML_list,
+                                 _["SWR_SH"] = abs_SWR_SH_ML_list,
+                                 _["LWR_SL"] = abs_LWR_SL_ML_list,
+                                 _["LWR_SH"] = abs_LWR_SH_ML_list);
+  List sunshade = List::create(_["PAR_SL"] = abs_PAR_SL_COH_list,
+                               _["PAR_SH"] = abs_PAR_SH_COH_list,
+                               _["SWR_SL"] = abs_SWR_SL_COH_list,
+                               _["SWR_SH"] = abs_SWR_SH_COH_list,
+                               _["LWR_SL"] = abs_LWR_SL_COH_list,
+                               _["LWR_SH"] = abs_LWR_SH_COH_list);
   List res = List::create(_["kb"] = kb,
                           _["fsunlit"] = fsunlit,
-                          _["PAR_SL"] = abs_PAR_SL_list,
-                          _["PAR_SH"] = abs_PAR_SH_list,
-                          _["SWR_SL"] = abs_SWR_SL_list,
-                          _["SWR_SH"] = abs_SWR_SH_list,
-                          _["LWR_SL"] = abs_LWR_SL_list,
-                          _["LWR_SH"] = abs_LWR_SH_list,
+                          _["multilayer"] = multilayer,
+                          _["sunshade"] = sunshade,
                           _["SWR_can"] = abs_SWR_can,
                           _["LWR_can"] = abs_LWR_can, //Includes only absorbed LWR from sky
                           _["SWR_soil"] = abs_SWR_soil,

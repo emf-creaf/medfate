@@ -25,4 +25,4 @@ NumericVector layerSunlitFraction(NumericMatrix LAIme, NumericMatrix LAImd, Nume
 List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, 
                                            NumericVector kPAR, NumericVector alphaSWR, NumericVector gammaSWR,
                                            DataFrame ddd, NumericVector LWR_diffuse, 
-                                           int ntimesteps = 24, String canopyMode= "sunshade", double trunkExtinctionFraction = 0.1);
+                                           int ntimesteps = 24, double trunkExtinctionFraction = 0.1);
