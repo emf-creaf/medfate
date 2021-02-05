@@ -146,7 +146,7 @@ Function \code{transp_transpirationGranier} and \code{transp_transpirationSperry
     }
   }
   \item{\code{"LightExtinction"}: A list of information regarding radiation balance through the canopy, as returned by function \code{\link{light_instantaneousLightExtinctionAbsortion}}.}
-  \item{\code{"WindExtinction"}: A numeric vector with the wind speed (in m/s) for each plant cohort.}
+  \item{\code{"CanopyTurbulence"}: Canopy turbulence (see \code{\link{wind_canopyTurbulence}}).}
   \item{\code{"SupplyFunctions"}: If \code{stepFunctions} is not missing, a list of supply functions, photosynthesis functions and profit maximization functions.}
  
  }

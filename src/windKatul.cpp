@@ -107,18 +107,18 @@ IntegerVector which(LogicalVector l) {
  *  k_epsilon_CSL(z, Cx, h, do,zo)
  *  output [z1, U1, k1, uw1, Lmix1]
  *  
- *   z - Vector of heights
- *   Cx - Effective drag = Cd x leaf area density
- *   h - canopy height (m)
- *   d0 - displacement height (m)
- *   z0 - Momentum roughness height (m)
+ *  zm - height vector in m
+ *  Effective drag = Cd x leaf area density
+ *  hm - canopy height (m)
+ *  d0 - displacement height (m)
+ *  z0 - Momentum roughness height (m)
  */
-// [[Rcpp::export("wind_canopyTurbulence")]]
-DataFrame wind_canopyTurbulence(NumericVector z, NumericVector Cx, double h, double d0, double z0,
-                               String model = "k-epsilon") {
-  int N=z.size();
-  double zmax=max(z);
-  double dz=z[1]-z[0];
+// [[Rcpp::export("wind_canopyTurbulenceModel")]]
+DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double hm, double d0, double z0,
+                                     String model = "k-epsilon") {
+  int N=zm.size();
+  double zmax=max(zm);
+  double dz=zm[1]-zm[0];
   // ------- Define starting conditions for U/u*, k/(u*^2), epsilon/(u*3/h)
   double Ulow=0.0;
   double Uhigh=(1.0/kv)*log((zmax-d0)/z0);
@@ -133,12 +133,12 @@ DataFrame wind_canopyTurbulence(NumericVector z, NumericVector Cx, double h, dou
   NumericVector epsilon=linspace(epsilonlow,epsilonhigh,N);
 
   // Mixing Length model
-  double alpha = kv*(h-d0)/h;  //fraction of mixing length (Lmixing = alpha x h) inside the canopy up to canopy top
-  NumericVector Lmix(N, alpha*h);
-  IntegerVector c1 = which(z < h);
+  double alpha = kv*(hm-d0)/hm;  //fraction of mixing length (Lmixing = alpha x h) inside the canopy up to canopy top
+  NumericVector Lmix(N, alpha*hm);
+  IntegerVector c1 = which(zm < hm);
   int nn=max(c1);
   for(int i=nn;i<N;i++) {
-    Lmix[i] = kv*(z[i] - d0);
+    Lmix[i] = kv*(zm[i] - d0);
   }
   Lmix[nn]=(Lmix[nn-1]+Lmix[nn+1])/2.0;
   
@@ -279,11 +279,47 @@ DataFrame wind_canopyTurbulence(NumericVector z, NumericVector Cx, double h, dou
     cnt++;
     if(cnt==100) stop("too many iterations");
   }
-  return(DataFrame::create(Named("z1") = z,
+  return(DataFrame::create(Named("z1") = zm,
                            Named("U1") = U,
                            Named("dU1") = dU,
                            Named("epsilon1") = epsilon,
                            Named("k1") = k,
                            Named("uw1") = uw/(abs(uw[N-1])),
                            Named("Lmix1") = Lmix));
+}
+/*
+ *   zmid - Vector of mid heights for canopy layers (cm)
+ *   LAD - Vector of leaf area density for canopy layers (m2/m3)
+ *   canopyHeight - Canopy height (cm)
+ *   u2m - Wind speed at 2m over the canopy (m/s)
+ */
+// [[Rcpp::export("wind_canopyTurbulence")]]
+DataFrame windCanopyTurbulence(NumericVector zmid, NumericVector LAD, double canopyHeight,
+                                double u2m, String model = "k-epsilon") {
+  //z - height vector in m
+  NumericVector zm = zmid/100.0;
+  //Effective drag = Cd x leaf area density
+  NumericVector Cx = LAD*0.2; 
+  //hm - canopy height (m)
+  double hm = (canopyHeight/100.0);
+  //d0 - displacement height (m)
+  double d0 = 0.67*hm;
+  //z0 - Momentum roughness height (m)
+  double z0 = 0.08*hm;
+  
+  //u_f - Friction velocity
+  double u_f = u2m*kv/log(((hm + 2.0)-d0)/z0);
+  DataFrame cmout = windCanopyTurbulenceModel(zm, Cx, hm, d0, z0);
+  NumericVector U1 = cmout["U1"];
+  NumericVector dU1 = cmout["dU1"];
+  NumericVector epsilon1 = cmout["epsilon1"];
+  NumericVector k1 = cmout["k1"];
+  NumericVector uw1 = cmout["uw1"];
+  NumericVector Lmix1 = cmout["Lmix1"];
+  return(DataFrame::create(Named("zmid") = zmid,
+                           Named("u") = U1*u_f,
+                           Named("du") = dU1*u_f,
+                           Named("epsilon") = epsilon1*(pow(u_f,3.0)/hm),
+                           Named("k") = k1*pow(u_f,2.0),
+                           Named("uw") = uw1*pow(u_f,2.0)));
 }

@@ -4217,19 +4217,34 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// wind_canopyTurbulence
-DataFrame wind_canopyTurbulence(NumericVector z, NumericVector Cx, double h, double d0, double z0, String model);
-RcppExport SEXP _medfate_wind_canopyTurbulence(SEXP zSEXP, SEXP CxSEXP, SEXP hSEXP, SEXP d0SEXP, SEXP z0SEXP, SEXP modelSEXP) {
+// windCanopyTurbulenceModel
+DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double hm, double d0, double z0, String model);
+RcppExport SEXP _medfate_windCanopyTurbulenceModel(SEXP zmSEXP, SEXP CxSEXP, SEXP hmSEXP, SEXP d0SEXP, SEXP z0SEXP, SEXP modelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type z(zSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type zm(zmSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type Cx(CxSEXP);
-    Rcpp::traits::input_parameter< double >::type h(hSEXP);
+    Rcpp::traits::input_parameter< double >::type hm(hmSEXP);
     Rcpp::traits::input_parameter< double >::type d0(d0SEXP);
     Rcpp::traits::input_parameter< double >::type z0(z0SEXP);
     Rcpp::traits::input_parameter< String >::type model(modelSEXP);
-    rcpp_result_gen = Rcpp::wrap(wind_canopyTurbulence(z, Cx, h, d0, z0, model));
+    rcpp_result_gen = Rcpp::wrap(windCanopyTurbulenceModel(zm, Cx, hm, d0, z0, model));
+    return rcpp_result_gen;
+END_RCPP
+}
+// windCanopyTurbulence
+DataFrame windCanopyTurbulence(NumericVector zmid, NumericVector LAD, double canopyHeight, double u2m, String model);
+RcppExport SEXP _medfate_windCanopyTurbulence(SEXP zmidSEXP, SEXP LADSEXP, SEXP canopyHeightSEXP, SEXP u2mSEXP, SEXP modelSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type zmid(zmidSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type LAD(LADSEXP);
+    Rcpp::traits::input_parameter< double >::type canopyHeight(canopyHeightSEXP);
+    Rcpp::traits::input_parameter< double >::type u2m(u2mSEXP);
+    Rcpp::traits::input_parameter< String >::type model(modelSEXP);
+    rcpp_result_gen = Rcpp::wrap(windCanopyTurbulence(zmid, LAD, canopyHeight, u2m, model));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4626,7 +4641,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 7},
     {"_medfate_transpirationSperry", (DL_FUNC) &_medfate_transpirationSperry, 14},
     {"_medfate_transpirationGranier", (DL_FUNC) &_medfate_transpirationGranier, 6},
-    {"_medfate_wind_canopyTurbulence", (DL_FUNC) &_medfate_wind_canopyTurbulence, 6},
+    {"_medfate_windCanopyTurbulenceModel", (DL_FUNC) &_medfate_windCanopyTurbulenceModel, 6},
+    {"_medfate_windCanopyTurbulence", (DL_FUNC) &_medfate_windCanopyTurbulence, 5},
     {"_medfate_windSpeedAtCanopyHeight", (DL_FUNC) &_medfate_windSpeedAtCanopyHeight, 2},
     {"_medfate_unshelteredMidflameWindSpeed", (DL_FUNC) &_medfate_unshelteredMidflameWindSpeed, 2},
     {"_medfate_shelteredMidflameWindSpeed", (DL_FUNC) &_medfate_shelteredMidflameWindSpeed, 3},

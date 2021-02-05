@@ -59,6 +59,7 @@ NumericVector treeLAI(IntegerVector SP, NumericVector N, NumericVector dbh, Data
 NumericVector shrubLAI(IntegerVector SP, NumericVector Cover, NumericVector H, DataFrame SpParams, double gdd = NA_REAL);
 NumericVector cohortLAI(List x, DataFrame SpParams, double gdd = NA_REAL, String mode = "MED");
 NumericMatrix LAIdistributionVectors(NumericVector z, NumericVector LAI, NumericVector H, NumericVector CR);
+NumericVector LAIprofileVectors(NumericVector z, NumericVector LAI, NumericVector H, NumericVector CR);
 NumericMatrix LAIdistribution(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL, String mode = "MED");
 
 double shrubCover(List x, double excludeMinHeight = 0.0);

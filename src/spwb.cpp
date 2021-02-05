@@ -322,7 +322,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double tminPrev, doub
                         _["SunlitLeavesInst"] = transp["SunlitLeavesInst"],
                         _["ShadeLeavesInst"] = transp["ShadeLeavesInst"],
                         _["LightExtinction"] = transp["LightExtinction"],
-                        _["WindExtinction"] = transp["WindExtinction"]);
+                        _["CanopyTurbulence"] = transp["CanopyTurbulence"]);
   l.attr("class") = CharacterVector::create("spwb_day","list");
   return(l);
 }

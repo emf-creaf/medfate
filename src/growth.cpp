@@ -1237,7 +1237,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
                         _["ShadeLeavesInst"] = spwbOut["ShadeLeavesInst"],
                         _["PlantCBInst"] = plantCBInst,
                         _["LightExtinction"] = spwbOut["LightExtinction"],
-                        _["WindExtinction"] = spwbOut["WindExtinction"]);
+                        _["CanopyTurbulence"] = spwbOut["CanopyTurbulence"]);
   l.attr("class") = CharacterVector::create("growth_day","list");
   return(l);
 }

@@ -703,7 +703,7 @@ DataFrame paramsCanopy(DataFrame above, List control) {
   for(int c=0;c<numCohorts;c++) {
     if((canopyHeight<H[c]) & ((LAI_live[c]+LAI_dead[c])>0.0)) canopyHeight = H[c];
   }
-  int nz = ceil(canopyHeight/verticalLayerSize); //Number of vertical layers
+  int nz = ceil((canopyHeight+200.0)/verticalLayerSize); //Number of vertical layers (adding 2 m above to match wind measurement height)
   NumericVector zlow(nz,0.0);
   NumericVector zmid(nz, verticalLayerSize/2.0);
   NumericVector zup(nz, verticalLayerSize);
