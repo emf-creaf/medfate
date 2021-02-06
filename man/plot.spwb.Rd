@@ -73,9 +73,9 @@ The following plots are currently available for \code{\link{spwb}} (most of them
     \item{\code{"PlantPhotosynthesisPerLeaf"}:}{ Plant cohort photosynthesis per leaf area.}
     \item{\code{"PlantWUE"}:}{ Plant cohort daily water use efficiency (photosynthesis over transpiration).}
     \item{\code{"PlantAbsorbedSWR"}:}{ Plant cohort absorbed short wave radiation (only for \code{transpirationMode = "Sperry"}).}
-    \item{\code{"PlantAbsorbedSWRPerLeaf"}:}{ Plant cohort absorbed short wave radiation per leaf area (only for \code{transpirationMode = "Sperry"}).}
+    \item{\code{"AbsorbedSWRPerLeaf"}:}{ Plant cohort absorbed short wave radiation per leaf area (only for \code{transpirationMode = "Sperry"}).}
     \item{\code{"PlantNetLWR"}:}{ Plant cohort net long wave radiation (only for \code{transpirationMode = "Sperry"}).}
-    \item{\code{"PlantNetLWRPerLeaf"}:}{ Plant cohort net long wave radiation per leaf area (only for \code{transpirationMode = "Sperry"}).}
+    \item{\code{"NetLWRPerLeaf"}:}{ Plant cohort net long wave radiation per leaf area (only for \code{transpirationMode = "Sperry"}).}
     \item{\code{"AirTemperature"}:}{ Minimum/maximum/mean daily temperatures above canopy (only for \code{transpirationMode = "Sperry"}).}
     \item{\code{"CanopyTemperature"}:}{ Minimum/maximum/mean daily temperatures inside canopy (only for \code{transpirationMode = "Sperry"}).}
     \item{\code{"SoilTemperature"}:}{ Minimum/maximum/mean daily temperatures inside the first soil layer (only for \code{transpirationMode = "Sperry"}).}
