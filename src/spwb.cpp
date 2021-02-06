@@ -514,24 +514,21 @@ DataFrame defineSoilWaterBalanceDailyOutput(DataFrame meteo, List soil, String t
 DataFrame defineEnergyBalanceDailyOutput(DataFrame meteo) {
   CharacterVector dateStrings = meteo.attr("row.names");
   int numDays = dateStrings.length();
-  NumericVector SWRcanin(numDays, NA_REAL);
-  NumericVector LWRcanin(numDays, NA_REAL);
-  NumericVector LWRcanout(numDays, NA_REAL);
+  NumericVector SWRcan(numDays, NA_REAL);
+  NumericVector LWRcan(numDays, NA_REAL);
   NumericVector LEcan_heat(numDays, NA_REAL);
   NumericVector LEsoil_heat(numDays, NA_REAL);
   NumericVector Hcan_heat(numDays, NA_REAL);
   NumericVector Ebalcan(numDays, NA_REAL);
-  NumericVector SWRsoilin(numDays, NA_REAL);
-  NumericVector LWRsoilin(numDays, NA_REAL);
-  NumericVector LWRsoilout(numDays, NA_REAL);
+  NumericVector SWRsoil(numDays, NA_REAL);
+  NumericVector LWRsoil(numDays, NA_REAL);
   NumericVector Ebalsoil(numDays, NA_REAL);
-  NumericVector LWRsoilcan(numDays, NA_REAL);
   NumericVector Hcansoil(numDays, NA_REAL);
 
-  DataFrame DEB = DataFrame::create(_["SWRcanin"] = SWRcanin, _["LWRcanin"] = LWRcanin, _["LWRcanout"] = LWRcanout,
-                                    _["LEcan"] = LEcan_heat, _["Hcan"] = Hcan_heat, _["LWRsoilcan"] = LWRsoilcan, _["Ebalcan"] = Ebalcan, 
-                                      _["Hcansoil"] = Hcansoil, _["SWRsoilin"] = SWRsoilin, _["LWRsoilin"] = LWRsoilin, _["LWRsoilout"] = LWRsoilout,
-                                        _["LEsoil"] = LEsoil_heat, _["Ebalsoil"] = Ebalsoil);  
+  DataFrame DEB = DataFrame::create(_["SWRcan"] = SWRcan, _["LWRcan"] = LWRcan,
+                                    _["LEcan"] = LEcan_heat, _["Hcan"] = Hcan_heat, _["Ebalcan"] = Ebalcan, 
+                                    _["Hcansoil"] = Hcansoil, _["SWRsoil"] = SWRsoil, _["LWRsoil"] = LWRsoil, 
+                                    _["LEsoil"] = LEsoil_heat, _["Ebalsoil"] = Ebalsoil);  
   DEB.attr("row.names") = meteo.attr("row.names") ;
   return(DEB);
 }
@@ -631,7 +628,7 @@ List definePlantWaterDailyOutput(DataFrame meteo, DataFrame above, List soil, Li
     NumericMatrix PlantNetPhotosynthesis(numDays, numCohorts);
     NumericMatrix PlantGrossPhotosynthesis(numDays, numCohorts);
     NumericMatrix PlantAbsSWR(numDays, numCohorts);
-    NumericMatrix PlantAbsLWR(numDays, numCohorts);
+    NumericMatrix PlantNetLWR(numDays, numCohorts);
     StemRWC.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
     LeafRWC.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
     StemSympRWC.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
@@ -645,11 +642,11 @@ List definePlantWaterDailyOutput(DataFrame meteo, DataFrame above, List soil, Li
     PlantGrossPhotosynthesis.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
     PlantNetPhotosynthesis.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
     PlantAbsSWR.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-    PlantAbsLWR.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
+    PlantNetLWR.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
     
     plants = List::create(Named("LAI") = PlantLAI,
                                Named("AbsorbedSWR") = PlantAbsSWR,
-                               Named("AbsorbedLWR") = PlantAbsLWR,
+                               Named("NetLWR") = PlantNetLWR,
                                Named("Transpiration") = PlantTranspiration,
                                Named("GrossPhotosynthesis") = PlantGrossPhotosynthesis,
                                Named("NetPhotosynthesis") = PlantNetPhotosynthesis,
@@ -762,29 +759,23 @@ void fillEnergyBalanceTemperatureDailyOutput(DataFrame DEB, DataFrame DT, List s
   int ntimesteps = Tcan.length();
   double tstep = 86400.0/((double) ntimesteps);
   
-  NumericVector SWRcanin = DEB["SWRcanin"];
-  NumericVector LWRcanin = DEB["LWRcanin"];
-  NumericVector LWRcanout = DEB["LWRcanout"];
+  NumericVector SWRcan = DEB["SWRcan"];
+  NumericVector LWRcan = DEB["LWRcan"];
   NumericVector LEcan_heat = DEB["LEcan"];
   NumericVector Hcan_heat = DEB["Hcan"];
   NumericVector Ebalcan = DEB["Ebalcan"];
-  SWRcanin[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(CEBinst["SWRcanin"]))*tstep;
-  LWRcanin[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(CEBinst["LWRcanin"]))*tstep;
-  LWRcanout[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(CEBinst["LWRcanout"]))*tstep;
+  SWRcan[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(CEBinst["SWRcan"]))*tstep;
+  LWRcan[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(CEBinst["LWRcan"]))*tstep;
   LEcan_heat[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(CEBinst["LEcan"]))*tstep;
   Hcan_heat[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(CEBinst["Hcan"]))*tstep;
   Ebalcan[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(CEBinst["Ebalcan"]))*tstep;
-  NumericVector LWRsoilcan = DEB["LWRsoilcan"];
-  NumericVector SWRsoilin = DEB["SWRsoilin"];
-  NumericVector LWRsoilin = DEB["LWRsoilin"];
-  NumericVector LWRsoilout = DEB["LWRsoilout"];
+  NumericVector SWRsoil = DEB["SWRsoil"];
+  NumericVector LWRsoil = DEB["LWRsoil"];
   NumericVector LEsoil_heat = DEB["LEsoil"];
   NumericVector Hcansoil = DEB["Hcansoil"];
   NumericVector Ebalsoil = DEB["Ebalsoil"];
-  LWRsoilcan[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(CEBinst["LWRsoilcan"]))*tstep;
-  SWRsoilin[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(SEBinst["SWRsoilin"]))*tstep;
-  LWRsoilin[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(SEBinst["LWRsoilin"]))*tstep;
-  LWRsoilout[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(SEBinst["LWRsoilout"]))*tstep;
+  SWRsoil[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(SEBinst["SWRsoil"]))*tstep;
+  LWRsoil[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(SEBinst["LWRsoil"]))*tstep;
   LEsoil_heat[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(SEBinst["LEsoil"]))*tstep;
   Hcansoil[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(SEBinst["Hcansoil"]))*tstep;
   Ebalsoil[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(SEBinst["Ebalsoil"]))*tstep;
@@ -855,7 +846,7 @@ void fillPlantWaterDailyOutput(List x, List sunlit, List shade, List sDay, int i
     NumericMatrix PlantNetPhotosynthesis= Rcpp::as<Rcpp::NumericMatrix>(x["NetPhotosynthesis"]);
     NumericMatrix PlantGrossPhotosynthesis= Rcpp::as<Rcpp::NumericMatrix>(x["GrossPhotosynthesis"]);
     NumericMatrix PlantAbsSWR= Rcpp::as<Rcpp::NumericMatrix>(x["AbsorbedSWR"]);
-    NumericMatrix PlantAbsLWR= Rcpp::as<Rcpp::NumericMatrix>(x["AbsorbedLWR"]);
+    NumericMatrix PlantNetLWR= Rcpp::as<Rcpp::NumericMatrix>(x["NetLWR"]);
     NumericMatrix StemRWC= Rcpp::as<Rcpp::NumericMatrix>(x["StemRWC"]);
     NumericMatrix LeafRWC= Rcpp::as<Rcpp::NumericMatrix>(x["LeafRWC"]);
     NumericMatrix StemSympRWC= Rcpp::as<Rcpp::NumericMatrix>(x["StemSympRWC"]);
@@ -866,8 +857,8 @@ void fillPlantWaterDailyOutput(List x, List sunlit, List shade, List sDay, int i
 
     NumericMatrix SWR_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitLeavesInst["Abs_SWR"]);
     NumericMatrix SWR_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeLeavesInst["Abs_SWR"]);
-    NumericMatrix LWR_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitLeavesInst["Abs_LWR"]);
-    NumericMatrix LWR_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeLeavesInst["Abs_LWR"]);
+    NumericMatrix LWR_SL = Rcpp::as<Rcpp::NumericMatrix>(SunlitLeavesInst["Net_LWR"]);
+    NumericMatrix LWR_SH = Rcpp::as<Rcpp::NumericMatrix>(ShadeLeavesInst["Net_LWR"]);
     
     int ntimesteps = LWR_SH.ncol();
     double tstep = 86400.0/((double) ntimesteps);
@@ -875,7 +866,7 @@ void fillPlantWaterDailyOutput(List x, List sunlit, List shade, List sDay, int i
     for(int j=0;j<numCohorts;j++) {
       for(int n=0;n<ntimesteps;n++){
         PlantAbsSWR(iday,j) += 0.000001*(SWR_SL(j,n)+SWR_SH(j,n))*tstep;
-        PlantAbsLWR(iday,j) += 0.000001*(LWR_SL(j,n)+LWR_SH(j,n))*tstep;
+        PlantNetLWR(iday,j) += 0.000001*(LWR_SL(j,n)+LWR_SH(j,n))*tstep;
       }
     }
     

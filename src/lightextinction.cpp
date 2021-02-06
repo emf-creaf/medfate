@@ -495,17 +495,20 @@ List longwaveRadiationSHAW(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatr
   int ncoh = LAIme.ncol();
   int ncanlayers = Tair.size();
   NumericVector Lup(ncanlayers), Ldown(ncanlayers), Lnet(ncanlayers);
-  NumericVector tau(ncanlayers);
-  NumericMatrix tauM(ncoh, ncanlayers);
+  NumericVector tau(ncanlayers), sumTauComp(ncanlayers);
+  NumericMatrix tauM(ncanlayers, ncoh);
+  NumericMatrix LnetM(ncanlayers, ncoh);
   double Kdlw = 0.7815; //Extinction coefficient fo LWR
-  double eps_c = 0.95;
-  double eps_g = 0.95;
+  double eps_c = 0.97;
+  double eps_g = 0.97;
   //Transmissivity
   for(int i=0;i<ncanlayers;i++) {
     double lai_layer = 0.0;
+    sumTauComp[i] = 0.0;
     for(int j=0;j<ncoh;j++) {
       double lai_ij = std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j));
       tauM(i,j) = exp(-Kdlw*lai_ij);
+      sumTauComp[i] += (1.0-tauM(i,j)); 
       lai_layer +=lai_ij;
     }
     tau[i] = exp(-Kdlw*lai_layer);
@@ -531,11 +534,14 @@ List longwaveRadiationSHAW(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatr
     if(i==0) Lup_lower = Lup_g;
     else Lup_lower = Lup[i-1];
     Lnet[i] = eps_c*(1.0 - tau[i])*(Ldown[i]+Lup_lower - 2.0*SIGMA_Wm2*pow(Tair[i]+273.16,4.0));
+    for(int j=0;j<ncoh;j++) {
+      LnetM(i,j) =  Lnet[i]*((1.0-tauM(i,j))/sumTauComp[i]);
+      if(sumTauComp[i]==0.0) LnetM(i,j) =0.0;
+    }
   }
   double Lnet_g = eps_g*(Ldown[0] - SIGMA_Wm2*pow(Tsoil+273.16,4.0));
   double Lnet_c = sum(Lnet);
-  DataFrame LWR = DataFrame::create(_["tau"] = tau,
-                                    _["Ldown"] = Ldown, 
+  DataFrame LWR = DataFrame::create(_["Ldown"] = Ldown, 
                                     _["Lup"] = Lup,
                                     _["Lnet"] = Lnet);
   return(List::create(_["LWR_layer"] = LWR,
@@ -544,5 +550,6 @@ List longwaveRadiationSHAW(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatr
                       _["Lnet_ground"] = Lnet_g,
                       _["Ldown_canopy"] = LWRatm,
                       _["Lup_canopy"] = Lup[(ncanlayers-1)],
-                      _["Lnet_canopy"] = Lnet_c));
+                      _["Lnet_canopy"] = Lnet_c,
+                      _["Lnet_cohort_layer"] = LnetM));
 }

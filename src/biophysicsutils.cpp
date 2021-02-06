@@ -110,7 +110,15 @@ double leafTemperature(double absRad, double airTemperature, double u, double E,
   double deltaTemp = (absRad- (0.97*SIGMA_W*pow(273.16+airTemperature,4.0)) - (lambda*(E/2000.0)))/(Cp_Jmol*(gr+gHa));
   return(airTemperature+deltaTemp);
 }
-
+// [[Rcpp::export("biophysics_leafTemperature2")]]
+double leafTemperature2(double SWRabs, double LWRnet, double airTemperature, double u, double E,  double leafWidth = 1.0) {
+  double lambda = meteoland::utils_latentHeatVaporisationMol(airTemperature);
+  u = std::max(u, 0.1);//Force minimum wind speed to avoid excessive heating
+  double gHa = 0.189*pow(u/(leafWidth*0.0072), 0.5);
+  double gr = 4.0*0.97*SIGMA_W*pow(273.16+airTemperature,3.0)/Cp_Jmol;
+  double deltaTemp = (SWRabs + LWRnet - (lambda*(E/2000.0)))/(Cp_Jmol*(gr+gHa));
+  return(airTemperature+deltaTemp);
+}
 /*
  *  leafPsi - Leaf water potential in MPa
  *  leafTemp - Leaf temperature in degrees

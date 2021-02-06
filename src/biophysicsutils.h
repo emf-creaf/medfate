@@ -9,7 +9,9 @@ IntegerVector date2doy(CharacterVector dateStrings);
 NumericVector date2photoperiod(CharacterVector dateStrings, double latitude);
 
 
-double leafTemperature(double absRad, double airTemperature, double u, double E,  double leafWidth = 0.01);
+double leafTemperature(double absRad, double airTemperature, double u, double E,  double leafWidth = 1.0);
+double leafTemperature2(double SWRabs, double LWRnet, double airTemperature, double u, double E,  double leafWidth = 1.0);
+  
 double leafVapourPressure(double leafTemp,  double leafPsi);
 
 double temperatureDiurnalPattern(double t, double tmin, double tmax, 

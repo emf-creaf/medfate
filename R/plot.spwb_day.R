@@ -316,9 +316,9 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(is.null(ylab)) ylab=expression(paste("Absorbed SWR per leaf area ",(W%.%m^{-2})))
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
-  else if(type=="LeafAbsorbedLWR") {
-    OM_SL = SunlitLeavesInst$Abs_LWR
-    OM_SH = ShadeLeavesInst$Abs_LWR
+  else if(type=="LeafNetLWR") {
+    OM_SL = SunlitLeavesInst$Net_LWR
+    OM_SH = ShadeLeavesInst$Net_LWR
     if(bySpecies) {
       m1 = apply(OM_SL,2, tapply, x$cohorts$Name, sum, na.rm=T)
       lai1 = apply(x$SunlitLeaves$LAI,2, tapply, x$cohorts$Name, sum, na.rm=T)
@@ -330,7 +330,7 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
       OM_SL = OM_SL/x$SunlitLeaves$LAI
       OM_SH = OM_SH/x$ShadeLeaves$LAI
     }
-    if(is.null(ylab)) ylab=expression(paste("Absorbed LWR per leaf area ",(W%.%m^{-2})))
+    if(is.null(ylab)) ylab=expression(paste("Net LWR per leaf area ",(W%.%m^{-2})))
     return(.multiple_subday_dynamics_sunlit_shade(t(OM_SL), t(OM_SH), ylab = ylab, ylim = ylim))
   }
   else if(type=="LeafPsi") {
@@ -437,10 +437,8 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(is.null(ylab)) ylab = expression(W%.%m^{-2})
     df = data.frame(row.names=timesteps)
     df[["Balance"]] = EB$CanopyEnergyBalance$Ebalcan
-    df[["SWR abs. from atm."]] = EB$CanopyEnergyBalance$SWRcanin 
-    df[["LWR abs. from atm."]] = EB$CanopyEnergyBalance$LWRcanin
-    df[["LWR abs. from soil"]] = EB$CanopyEnergyBalance$LWRsoilcan
-    df[["LWR emmited"]] = -EB$CanopyEnergyBalance$LWRcanout
+    df[["SWR abs."]] = EB$CanopyEnergyBalance$SWRcan 
+    df[["LWR net"]] = EB$CanopyEnergyBalance$LWRcan
     df[["Latent heat"]] = -EB$CanopyEnergyBalance$LEcan
     df[["Convection can./atm."]] = -EB$CanopyEnergyBalance$Hcan
     df[["Convection soil/can."]] = -EB$SoilEnergyBalance$Hcansoil
@@ -454,10 +452,8 @@ plot.pwb_day<-function(x, type="PlantTranspiration", bySpecies = FALSE,
     if(is.null(ylab)) ylab = expression(W%.%m^{-2})    
     df = data.frame(row.names=timesteps)
     df[["Balance"]] = EB$SoilEnergyBalance$Ebalsoil
-    df[["SWR abs. from atm."]] = EB$SoilEnergyBalance$SWRsoilin
-    df[["LWR abs. from atm."]] = EB$SoilEnergyBalance$LWRsoilin
-    df[["LWR abs. from canopy"]] = EB$CanopyEnergyBalance$LWRcanout
-    df[["LWR emmited"]] = -EB$SoilEnergyBalance$LWRsoilout
+    df[["SWR abs."]] = EB$SoilEnergyBalance$SWRsoil
+    df[["LWR net"]] = EB$SoilEnergyBalance$LWRsoil
     df[["Convection soil/can."]] = EB$SoilEnergyBalance$Hcansoil
     df[["Latent heat"]] = -EB$SoilEnergyBalance$LEsoil
     g<-.multiple_subday_dynamics(as.matrix(df), ylab=ylab, ylim = ylim)

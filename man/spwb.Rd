@@ -110,7 +110,7 @@ If \code{transpirationMode="Sperry"}, element \code{"Plants"} is a list with the
  \itemize{
    \item{\code{"LAI"}: A data frame with the daily leaf area index for each plant cohort.}
    \item{\code{"AbsorbedSWR"}: A data frame with the daily SWR absorbed by each plant cohort.}
-   \item{\code{"AbsorbedLWR"}: A data frame with the daily LWR absorbed by each plant cohort.}
+   \item{\code{"NetLWR"}: A data frame with the daily net LWR by each plant cohort.}
    \item{\code{"Transpiration"}: A data frame with the amount of daily transpiration (in mm) for each plant cohorts.}
    \item{\code{"GrossPhotosynthesis"}: A data frame with the amount of daily gross photosynthesis (in g C·m-2) for each plant cohort. }
    \item{\code{"NetPhotosynthesis"}: A data frame with the amount of daily net photosynthesis (in g C·m-2) for each plant cohort. }

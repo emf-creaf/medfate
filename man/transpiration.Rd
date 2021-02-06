@@ -124,7 +124,7 @@ Function \code{transp_transpirationGranier} and \code{transp_transpirationSperry
       \item{\code{"Sunlitleaves"} and \code{"ShadeLeaves"}: Lists with instantaneous (for each time step) results for sunlit leaves and shade leaves and the following items:
         \itemize{
             \item{\code{"Abs_SWR"}: A data frame with instantaneous absorbed short-wave radiation (SWR).} 
-            \item{\code{"Abs_LWR"}: A data frame with instantaneous absorbed long-wave radiation (LWR).} 
+            \item{\code{"Net_LWR"}: A data frame with instantaneous net long-wave radiation (LWR).} 
             \item{\code{"An"}: A data frame with instantaneous net photosynthesis (in micromol/m2/s). }
             \item{\code{"Ci"}: A data frame with instantaneous intercellular CO2 concentration (in ppm). }
             \item{\code{"GW"}: A data frame with instantaneous stomatal conductance (in mol/m2/s). }

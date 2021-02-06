@@ -290,7 +290,7 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type %in% c("PlantTranspiration","PlantNetPhotosynthesis", "PlantGrossPhotosynthesis","PlantPhotosynthesis",
-                      "PlantAbsorbedSWR","PlantAbsorbedLWR")) {
+                      "PlantAbsorbedSWR","PlantNetLWR")) {
     subtype = substr(type,6,nchar(type))
     OM = Plants[[subtype]][,cohorts,drop=FALSE]
     if(bySpecies) OM = .averageBySpecies(OM, spnames)
@@ -306,7 +306,7 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type %in% c("TranspirationPerLeaf","PhotosynthesisPerLeaf", "GrossPhotosynthesisPerLeaf", "NetPhotosynthesisPerLeaf",
-                      "AbsorbedSWRPerLeaf", "AbsorbedLWRPerLeaf")) {
+                      "AbsorbedSWRPerLeaf", "NetLWRPerLeaf")) {
     subtype = substr(type, 1, nchar(type)-7)
     df = Plants[[subtype]][,cohorts,drop=FALSE]
     df = df/PlantsLAI
@@ -366,36 +366,21 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
     if(is.null(ylab)) ylab = expression(MJ%.%m^{-2})    
     df = data.frame(row.names=row.names(x$EnergyBalance))
     df[["Balance"]] = x$EnergyBalance$Ebalcan
-    df[["SWR abs. from atm."]] = x$EnergyBalance$SWRcanin 
-    df[["LWR abs. from atm."]] = x$EnergyBalance$LWRcanin
-    df[["LWR abs. from soil"]] = x$EnergyBalance$LWRsoilcan
-    df[["LWR emmited"]] = -x$EnergyBalance$LWRcanout
+    df[["SWR abs."]] = x$EnergyBalance$SWRcan 
+    df[["Net LWR"]] = x$EnergyBalance$LWRcan
     df[["Latent heat"]] = -x$EnergyBalance$LEcan
     df[["Convection can./atm."]] = -x$EnergyBalance$Hcan
     df[["Convection soil/can."]] = -x$EnergyBalance$Hcansoil
     if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
     g<-.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim)
     return(g)
-    # lines(dates, x$EnergyBalance$Ebalcan, col="black",...)
-    # lines(dates, x$EnergyBalance$SWRcanin, col="red",...)
-    # lines(dates, x$EnergyBalance$LWRcanin, col="brown",...)
-    # lines(dates, -x$EnergyBalance$LWRcanout, col="blue",...)
-    # lines(dates, x$EnergyBalance$LWRsoilcan, col="orange",...)
-    # lines(dates, -x$EnergyBalance$LEcan, col="green",...)
-    # lines(dates, -x$EnergyBalance$Hcan, col="gray",...)
-    # lines(dates, -x$EnergyBalance$Hcansoil, col="dark gray",...)
-    # legend("topright", bty="n", col=c("red","brown","orange", "blue","green", "gray", "dark gray", "black"), lty=1,
-    #        legend=c("SWR abs. from atm.","LWR abs. from atm.","LWR abs. from soil","LWR emmited", "Latent heat (L)",
-    #                 "Convection can./atm.","Convection soil/can.", "Balance"),...)        
   } 
   else if(type=="SoilEnergyBalance") {
     if(is.null(ylab)) ylab = expression(MJ%.%m^{-2})    
     df = data.frame(row.names=row.names(x$EnergyBalance))
     df[["Balance"]] = x$EnergyBalance$Ebalsoil
-    df[["SWR abs. from atm."]] = x$EnergyBalance$SWRsoilin
-    df[["LWR abs. from atm."]] = x$EnergyBalance$LWRsoilin
-    df[["LWR abs. from canopy"]] = x$EnergyBalance$LWRcanout
-    df[["LWR emmited"]] = -x$EnergyBalance$LWRsoilout
+    df[["SWR abs."]] = x$EnergyBalance$SWRsoil
+    df[["Net LWR"]] = x$EnergyBalance$LWRsoil
     df[["Convection soil/can."]] = x$EnergyBalance$Hcansoil
     df[["Latent heat"]] = -x$EnergyBalance$LEsoil
     if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
@@ -562,10 +547,10 @@ plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = F
     if(is.null(ylab)) ylab=expression(paste("Absorbed SWR per leaf area ",(W%.%m^{-2})))
     return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
   } 
-  else if(type=="LeafAbsorbedLWR") {
-    mSu = extractSubdaily(x, "SunlitLeaves$Abs_LWR", dates)[,c("datetime", cohorts), drop=FALSE]
-    mSh = extractSubdaily(x, "ShadeLeaves$Abs_LWR", dates)[,c("datetime", cohorts), drop=FALSE]
-    if(is.null(ylab)) ylab=expression(paste("Absorbed LWR per leaf area ",(W%.%m^{-2})))
+  else if(type=="LeafNetLWR") {
+    mSu = extractSubdaily(x, "SunlitLeaves$Net_LWR", dates)[,c("datetime", cohorts), drop=FALSE]
+    mSh = extractSubdaily(x, "ShadeLeaves$Net_LWR", dates)[,c("datetime", cohorts), drop=FALSE]
+    if(is.null(ylab)) ylab=expression(paste("Net LWR per leaf area ",(W%.%m^{-2})))
     return(.multiple_dynamics_subdaily_sunlit_shade(mSu, mSh, ylab = ylab, ylim = ylim))
   } 
   else if(type=="LeafTranspiration") {
