@@ -3,7 +3,7 @@
 #include <meteoland.h>
 using namespace Rcpp;
 
-
+const double SIGMA_Wm2 = 5.67*1e-8;
 /***
  * FUNCTIONS FOR LIGHT EXTINCTION
  */
@@ -482,4 +482,67 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
                           _["gdf"] = gdf, //ground diffuse SWR fraction
                           _["glwr"] = glwr); //ground diffuse LWR fraction
   return(res);
+}
+
+/**
+ *  LWR model of Ma and Liu (2019), based on Flerchinger et al (2009)
+ *  
+ *  Ma Y, Liu H (2019) An Advanced Multiple-Layer Canopy Model in the WRF Model With Large-Eddy Simulations to Simulate Canopy Flows and Scalar Transport Under Different Stability Conditions. J Adv Model Earth Syst 11:2330–2351. https://doi.org/10.1029/2018MS001347
+ *  Flerchinger GN, Xiao W, Sauer TJ, Yu Q (2009) Simulation of within-canopy radiation exchange. NJAS - Wageningen J Life Sci 57:5–15. https://doi.org/10.1016/j.njas.2009.07.004
+ */
+List longwaveRadiationSHAW(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, 
+                           double LWRatm, double Tsoil, NumericVector Tair, double trunkExtinctionFraction = 0.1) {
+  int ncoh = LAIme.ncol();
+  int ncanlayers = Tair.size();
+  NumericVector Lup(ncanlayers), Ldown(ncanlayers), Lnet(ncanlayers);
+  NumericVector tau(ncanlayers);
+  NumericMatrix tauM(ncoh, ncanlayers);
+  double Kdlw = 0.7815; //Extinction coefficient fo LWR
+  double eps_c = 0.95;
+  double eps_g = 0.95;
+  //Transmissivity
+  for(int i=0;i<ncanlayers;i++) {
+    double lai_layer = 0.0;
+    for(int j=0;j<ncoh;j++) {
+      double lai_ij = std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j));
+      tauM(i,j) = exp(-Kdlw*lai_ij);
+      lai_layer +=lai_ij;
+    }
+    tau[i] = exp(-Kdlw*lai_layer);
+  }
+  //Downwards
+  for(int i=(ncanlayers-1);i>=0;i--) {
+    double Ldown_upper = 0.0;
+    if(i==(ncanlayers-1)) Ldown_upper = LWRatm;
+    else Ldown_upper = Ldown[i+1];
+    Ldown[i] = tau[i]*Ldown_upper + (1.0 - tau[i])*eps_c*SIGMA_Wm2*pow(Tair[i]+273.16,4.0);
+  }
+  //Upwards
+  double Lup_g = (1.0 - eps_g)*Ldown[0] + eps_g*SIGMA_Wm2*pow(Tsoil+273.16,4.0);
+  for(int i=0;i<ncanlayers;i++) {
+    double Lup_lower = 0.0;
+    if(i==0) Lup_lower = Lup_g;
+    else Lup_lower = Lup[i-1];
+    Lup[i] = tau[i]*Lup_lower + (1.0 - tau[i])*eps_c*SIGMA_Wm2*pow(Tair[i]+273.16,4.0);
+  }
+  //Net
+  for(int i=0;i<ncanlayers;i++) {
+    double Lup_lower = 0.0;
+    if(i==0) Lup_lower = Lup_g;
+    else Lup_lower = Lup[i-1];
+    Lnet[i] = eps_c*(1.0 - tau[i])*(Ldown[i]+Lup_lower - 2.0*SIGMA_Wm2*pow(Tair[i]+273.16,4.0));
+  }
+  double Lnet_g = eps_g*(Ldown[0] - SIGMA_Wm2*pow(Tsoil+273.16,4.0));
+  double Lnet_c = sum(Lnet);
+  DataFrame LWR = DataFrame::create(_["tau"] = tau,
+                                    _["Ldown"] = Ldown, 
+                                    _["Lup"] = Lup,
+                                    _["Lnet"] = Lnet);
+  return(List::create(_["LWR_layer"] = LWR,
+                      _["Ldown_ground"] = Ldown[0],
+                      _["Lup_ground"] = Lup_g,
+                      _["Lnet_ground"] = Lnet_g,
+                      _["Ldown_canopy"] = LWRatm,
+                      _["Lup_canopy"] = Lup[(ncanlayers-1)],
+                      _["Lnet_canopy"] = Lnet_c));
 }

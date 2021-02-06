@@ -603,6 +603,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   outPMSunlit.attr("names") = above.attr("row.names");
   outPMShade.attr("names") = above.attr("row.names");
   
+  List lwrExtinctionList(ntimesteps);
   
   for(int n=0;n<ntimesteps;n++) { //Time loop
     //Long-wave radiation due to canopy temperature
@@ -610,6 +611,10 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
     double LWR_emmcan = 0.95*SIGMA_Wm2*pow(Tcan[n]+273.16,4.0);
     //Soil longwave emmission
     emm_LWR_soil[n] =  0.95*SIGMA_Wm2*pow(Tsoil[0]+273.16,4.0);
+    
+    //Longwave radiation
+    lwrExtinctionList[n] = longwaveRadiationSHAW(LAIme, LAImd, LAImx, 
+                                                 lwdr[n], Tsoil[0], Tair);
     
     //Retrieve radiation absorbed for the current time step
     NumericVector absPAR_SL_COH = abs_PAR_SL_COH_list[n];
@@ -1046,11 +1051,17 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
     double LEsoilevap = (1e6)*meteoland::utils_latentHeatVaporisation(Tsoil[0])*soilEvapStep/tstep;
     double LEsnow = (1e6)*(snowMeltStep*0.33355)/tstep; // 0.33355 = latent heat of fusion
     LEsoil_heat[n] = LEsoilevap + LEsnow;
+    
+    List lwrExtinction = lwrExtinctionList[n];
+    double LWRnet_soil = lwrExtinction["Lnet_ground"];
+    double LWRnet_can = lwrExtinction["Lnet_canopy"];
+    
     //Soil LWR emmission
-    LWRsoilout[n] = emm_LWR_soil[n];
+    // OLD LWRsoilout[n] = emm_LWR_soil[n];
+    LWRsoilout[n] = lwrExtinction["Lup_ground"];
 
     //Proportion of the canopy exchanging LWR radiation  as the fraction of incoming LWR
-    double canLWRexchprop = abs_LWR_can[n]/lwdr[n];
+    // OLD double canLWRexchprop = abs_LWR_can[n]/lwdr[n];
     //Canopy evaporation (mm) in the current step
     double canEvapStep = canopyEvaporation*(abs_SWR_can[n]/sum(abs_SWR_can));
     
@@ -1060,7 +1071,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
       double LEwat = (1e6)*meteoland::utils_latentHeatVaporisation(Tcan[n])*(sum(Einst(_,n)) + canEvapStep)/tstep;
       LEcan_heat[n] = LEwat; 
       //Canopy longwave emmission
-      LWRcanout[n] = LWR_emmcan*canLWRexchprop;
+      // OLD LWRcanout[n] = LWR_emmcan*canLWRexchprop;
+      LWRcanout[n] = lwrExtinction["Lup_canopy"];
       //Canopy convective heat exchange
       double RAcan = aerodynamicResistance(canopyHeight,std::max(wind,1.0)); //Aerodynamic resistance to convective heat transfer
       Hcan_heat[n] = (meteoland::utils_airDensity(Tatm[n],Patm)*Cp_JKG*(Tcan[n]-Tatm[n]))/RAcan;
@@ -1070,10 +1082,12 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
       double RAsoil = aerodynamicResistance(200.0, std::max(wind2m,1.0)); //Aerodynamic resistance to convective heat transfer from soil
       Hcansoil[n] = (meteoland::utils_airDensity(Tcan[n],Patm)*Cp_JKG*(Tcan[n]-Tsoil[0]))/RAsoil;
       //Soil-canopy heat exchange
-      LWRsoilcan[n] =  LWRsoilout[n]*canLWRexchprop;
-      double G = LWRcanout[n] - LWRsoilcan[n] + Hcansoil[n]; //Only include a fraction equal to absorption
+      // OLD LWRsoilcan[n] =  LWRsoilout[n]*canLWRexchprop;
+      LWRsoilcan[n] =  LWRsoilout[n];
       //Canopy temperature changes
-      Ebal[n] = abs_SWR_can[n]+abs_LWR_can[n] - LWRcanout[n] - LEcan_heat[n] - Hcan_heat[n] - G;
+      // OLD double G = LWRcanout[n] - LWRsoilcan[n] + Hcansoil[n]; //Only include a fraction equal to absorption
+      // OLD Ebal[n] = abs_SWR_can[n]+abs_LWR_can[n] - LWRcanout[n] - LEcan_heat[n] - Hcan_heat[n] - G;
+      Ebal[n] = abs_SWR_can[n]+ LWRnet_can - LEcan_heat[n] - Hcan_heat[n] - Hcansoil[n];
       double canopyAirThermalCapacity = meteoland::utils_airDensity(Tcan[n],Patm)*Cp_JKG;
       double canopyThermalCapacity =  canopyAirThermalCapacity + (0.5*(0.8*LAIcelllive + 1.2*LAIcell) + LAIcelldead)*thermalCapacityLAI; //Avoids zero capacity for winter deciduous
       double Tcannext = Tcan[n]+ std::max(-3.0, std::min(3.0, tstep*Ebal[n]/canopyThermalCapacity)); //Avoids changes in temperature that are too fast
@@ -1129,14 +1143,14 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
           Hlayer += Cp_JKG*rholayer*((Tatm[n] - Tair[i])/dU[i]);
           Hlayer -= Cp_JKG*rholayer*((Tair[i] - Tair[i-1])/dU[i]);
         }
-        //Net radiation
-        double abs_SWR_layer = sum(absSWR_SL_ML(i,_)) + sum(absSWR_SH_ML(i,_));
-        double Rnlayer = abs_SWR_layer + LWRbal;
-        
-        double EbalLayer = Rnlayer + LElayer + Hlayer;
-        double layerAirThermalCapacity = rholayer*Cp_JKG;
-        double layerThermalCapacity = layerAirThermalCapacity + (0.5*(0.8*LAIpx[i] + 1.2*LAIpe[i]) + LAIpd[i])*thermalCapacityLAI; //Avoids zero capacity for winter deciduous
-        Tair[i] = Tair[i]+ std::max(-3.0, std::min(3.0, tstep*EbalLayer/layerThermalCapacity)); //Avoids changes in temperature that are too fast
+        // //Net radiation
+        // double abs_SWR_layer = sum(absSWR_SL_ML(i,_)) + sum(absSWR_SH_ML(i,_));
+        // double Rnlayer = abs_SWR_layer + LWRbal;
+        // 
+        // double EbalLayer = Rnlayer + LElayer + Hlayer;
+        // double layerAirThermalCapacity = rholayer*Cp_JKG;
+        // double layerThermalCapacity = layerAirThermalCapacity + (0.5*(0.8*LAIpx[i] + 1.2*LAIpe[i]) + LAIpd[i])*thermalCapacityLAI; //Avoids zero capacity for winter deciduous
+        // Tair[i] = Tair[i]+ std::max(-3.0, std::min(3.0, tstep*EbalLayer/layerThermalCapacity)); //Avoids changes in temperature that are too fast
         //Changes in water vapour
         //Changes in CO2
       }
@@ -1147,7 +1161,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
 
     
     //Soil energy balance including exchange with canopy
-    Ebalsoil[n] = abs_SWR_soil[n] + abs_LWR_soil[n] + LWRcanout[n] + Hcansoil[n] - LEsoil_heat[n] - LWRsoilout[n]; //Here we use all energy escaping to atmosphere
+    // OLD Ebalsoil[n] = abs_SWR_soil[n] + abs_LWR_soil[n] + LWRcanout[n] + Hcansoil[n] - LEsoil_heat[n] - LWRsoilout[n]; //Here we use all energy escaping to atmosphere
+    Ebalsoil[n] = abs_SWR_soil[n] + LWRnet_soil + Hcansoil[n] - LEsoil_heat[n]; //Here we use all energy escaping to atmosphere
     
    
     //Soil temperature changes
@@ -1357,6 +1372,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
                      _["SunlitLeavesInst"] = SunlitInst,
                      _["ShadeLeavesInst"] = ShadeInst,
                      _["LightExtinction"] = lightExtinctionAbsortion,
+                     _["LWRExtinction"] = lwrExtinctionList,
                      _["CanopyTurbulence"] = canopyTurbulence,
                      _["SupplyFunctions"] = supply,
                      _["PhotoSunlitFunctions"] = outPhotoSunlit,
@@ -1377,6 +1393,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
                      _["SunlitLeavesInst"] = SunlitInst,
                      _["ShadeLeavesInst"] = ShadeInst,
                      _["LightExtinction"] = lightExtinctionAbsortion,
+                     _["LWRExtinction"] = lwrExtinctionList,
                      _["CanopyTurbulence"] = canopyTurbulence,
                      _["SupplyFunctions"] = supply);
     

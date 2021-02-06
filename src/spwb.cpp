@@ -322,6 +322,7 @@ List spwbDay2(List x, List soil, double tmin, double tmax, double tminPrev, doub
                         _["SunlitLeavesInst"] = transp["SunlitLeavesInst"],
                         _["ShadeLeavesInst"] = transp["ShadeLeavesInst"],
                         _["LightExtinction"] = transp["LightExtinction"],
+                        _["LWRExtinction"] = transp["LWRExtinction"],
                         _["CanopyTurbulence"] = transp["CanopyTurbulence"]);
   l.attr("class") = CharacterVector::create("spwb_day","list");
   return(l);
@@ -526,13 +527,11 @@ DataFrame defineEnergyBalanceDailyOutput(DataFrame meteo) {
   NumericVector Ebalsoil(numDays, NA_REAL);
   NumericVector LWRsoilcan(numDays, NA_REAL);
   NumericVector Hcansoil(numDays, NA_REAL);
-  NumericVector RAcan(numDays, NA_REAL);
-  NumericVector RAsoil(numDays, NA_REAL);
-  
+
   DataFrame DEB = DataFrame::create(_["SWRcanin"] = SWRcanin, _["LWRcanin"] = LWRcanin, _["LWRcanout"] = LWRcanout,
                                     _["LEcan"] = LEcan_heat, _["Hcan"] = Hcan_heat, _["LWRsoilcan"] = LWRsoilcan, _["Ebalcan"] = Ebalcan, 
                                       _["Hcansoil"] = Hcansoil, _["SWRsoilin"] = SWRsoilin, _["LWRsoilin"] = LWRsoilin, _["LWRsoilout"] = LWRsoilout,
-                                        _["LEsoil"] = LEsoil_heat, _["Ebalsoil"] = Ebalsoil, _["RAcan"] = RAcan, _["RAsoil"] = RAsoil);  
+                                        _["LEsoil"] = LEsoil_heat, _["Ebalsoil"] = Ebalsoil);  
   DEB.attr("row.names") = meteo.attr("row.names") ;
   return(DEB);
 }
@@ -776,24 +775,20 @@ void fillEnergyBalanceTemperatureDailyOutput(DataFrame DEB, DataFrame DT, List s
   Hcan_heat[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(CEBinst["Hcan"]))*tstep;
   Ebalcan[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(CEBinst["Ebalcan"]))*tstep;
   NumericVector LWRsoilcan = DEB["LWRsoilcan"];
-  NumericVector RAcan = DEB["RAcan"];
   NumericVector SWRsoilin = DEB["SWRsoilin"];
   NumericVector LWRsoilin = DEB["LWRsoilin"];
   NumericVector LWRsoilout = DEB["LWRsoilout"];
   NumericVector LEsoil_heat = DEB["LEsoil"];
   NumericVector Hcansoil = DEB["Hcansoil"];
   NumericVector Ebalsoil = DEB["Ebalsoil"];
-  NumericVector RAsoil = DEB["RAsoil"];
   LWRsoilcan[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(CEBinst["LWRsoilcan"]))*tstep;
-  RAcan[iday] = sum(Rcpp::as<Rcpp::NumericVector>(CEBinst["RAcan"]))/((double) ntimesteps);
   SWRsoilin[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(SEBinst["SWRsoilin"]))*tstep;
   LWRsoilin[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(SEBinst["LWRsoilin"]))*tstep;
   LWRsoilout[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(SEBinst["LWRsoilout"]))*tstep;
   LEsoil_heat[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(SEBinst["LEsoil"]))*tstep;
   Hcansoil[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(SEBinst["Hcansoil"]))*tstep;
   Ebalsoil[iday] = 0.000001*sum(Rcpp::as<Rcpp::NumericVector>(SEBinst["Ebalsoil"]))*tstep;
-  RAsoil[iday] = sum(Rcpp::as<Rcpp::NumericVector>(SEBinst["RAsoil"]))/((double) ntimesteps);
-  
+
   NumericVector Tatm_min = DT["Tatm_min"];
   NumericVector Tatm_max = DT["Tatm_max"];
   NumericVector Tatm_mean = DT["Tatm_mean"];
