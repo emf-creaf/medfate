@@ -1086,6 +1086,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
       //     dCdz[i] = (Catm - Cair[i])/dz;
       //   }
       // }
+      NumericVector Tairnext(ncanlayers);
       for(int i=0;i<ncanlayers;i++) {
         //Layer air density
         double rholayer = meteoland::utils_airDensity(Tair[i],Patm);
@@ -1099,9 +1100,9 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
         //Define sensible heat (H) as function of sunlit/shade leaf temperature and canopy layer temperature
         double Hlayer = 0.0;
         for(int c=0;c<numCohorts;c++) {
-          double gHa = 0.189*pow(std::max(zWind[i],0.1)/(leafWidth[c]*0.0072), 0.5);
-          double Hsunlit = 2.0*Cp_Jmol*rholayer*(Temp_SL(c, n)-Tair[i])*gHa;
-          double Hshade = 2.0*Cp_Jmol*rholayer*(Temp_SH(c, n)-Tair[i])*gHa;
+          double rHa = 307.0*pow(leafWidth[c]/std::max(zWind[i],0.1), 0.5);
+          double Hsunlit = 2.0*Cp_Jmol*rholayer*(Temp_SL(c, n)-Tair[i])/rHa;
+          double Hshade = 2.0*Cp_Jmol*rholayer*(Temp_SH(c, n)-Tair[i])/rHa;
           // Rcout<<c<<" " << Hsunlit<< " "<<Hshade<<" \n";
           Hlayer +=(Hsunlit*fsunlit[i] + Hshade*(1.0-fsunlit[i]))*LAIme(i,c);
         }
@@ -1109,17 +1110,17 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
         //Add turbulent heat flow (positive gradient when temperature is larger above)
         if(i==0) {
           //Turbulent exchange
-          Hlayer += Cp_JKG*rholayer*((Tair[i+1] - Tair[i])/dU[i]);
+          Hlayer -= Cp_JKG*rholayer*((Tair[i+1] - Tair[i])/dU[i])*uw[i];
           //Add heat from soil
           Hlayer -= Cp_JKG*rholayer*(Tair[i]-Tsoil[0])/aerodynamicResistance(200.0, std::max(zWind[i],1.0));
         } else if(i<(ncanlayers-1)) {
           //Turbulent exchange
-          Hlayer += Cp_JKG*rholayer*((Tair[i+1] - Tair[i])/dU[i]);
-          Hlayer -= Cp_JKG*rholayer*((Tair[i] - Tair[i-1])/dU[i]);
+          Hlayer -= Cp_JKG*rholayer*((Tair[i+1] - Tair[i])/dU[i])*uw[i];
+          Hlayer += Cp_JKG*rholayer*((Tair[i] - Tair[i-1])/dU[i])*uw[i];
         } else {
           //Turbulent exchange
-          Hlayer += Cp_JKG*rholayer*((Tatm[n] - Tair[i])/dU[i]);
-          Hlayer -= Cp_JKG*rholayer*((Tair[i] - Tair[i-1])/dU[i]);
+          Hlayer -= Cp_JKG*rholayer*((Tatm[n] - Tair[i])/dU[i])*uw[i];
+          Hlayer += Cp_JKG*rholayer*((Tair[i] - Tair[i-1])/dU[i])*uw[i];
         }
         //Absorbed SWR
         double abs_SWR_layer = sum(absSWR_SL_ML(i,_)) + sum(absSWR_SH_ML(i,_));
@@ -1132,9 +1133,12 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
         double layerThermalCapacity = layerAirThermalCapacity + (0.5*(0.8*LAIpx[i] + 1.2*LAIpe[i]) + LAIpd[i])*thermalCapacityLAI; //Avoids zero capacity for winter deciduous
         double deltaT = std::max(-3.0, std::min(3.0, tstep*EbalLayer/layerThermalCapacity)); //Avoids changes in temperature that are too fast
         Rcout<<i<< " "<< n<< " - Rn: "<<Rnlayer<<" LE: "<<LElayer<<" Hprev: "<< Hlayerprev<<" H: "<<Hlayer<< " Ebal: "<<EbalLayer<< " Tini: "<< Tair[i]<< " deltaT: "<<deltaT<<"\n";
-        Tair[i] = Tair[i]+ deltaT; //Avoids changes in temperature that are too fast
+        Tairnext[i] = Tair[i]+ deltaT; //Avoids changes in temperature that are too fast
         //Changes in water vapour
         //Changes in CO2
+      }
+      for(int i=0;i<ncanlayers;i++) {
+        Tair[i] = Tairnext[i];
       }
       if(n<(ntimesteps-1)) {
         Tcan[n+1] = sum(Tair)/Tair.size(); 
