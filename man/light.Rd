@@ -23,8 +23,7 @@ light_cohortSunlitShadeAbsorbedRadiation(Ib0, Id0, Ibf, Idf, beta,
                                          kb, kd, alpha, gamma)
 light_instantaneousLightExtinctionAbsortion(LAIme, LAImd, LAImx,
                                             kPAR, alphaSWR, gammaSWR,
-                                            ddd, LWR_diffuse,
-                                            ntimesteps = 24, trunkExtinctionFraction = 0.1)
+                                            ddd, ntimesteps = 24, trunkExtinctionFraction = 0.1)
 light_cohortAbsorbedSWRFraction(z, x, SpParams, gdd = NA)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -46,7 +45,6 @@ light_cohortAbsorbedSWRFraction(z, x, SpParams, gdd = NA)
   \item{alphaSWR}{A vecfor of hort-wave absorbance coefficients for each cohort.}
   \item{gammaSWR}{A vector of short-wave reflectance coefficients (albedo) for each cohort.}
   \item{ddd}{A dataframe with direct and diffuse radiation for different subdaily time steps (see function \code{radiation_directDiffuseDay} in package meteoland).}
-  \item{LWR_diffuse}{A vector with diffuse longwave radiation for different subdaily time steps.}
   \item{ntimesteps}{Number of subdaily time steps.}
   \item{trunkExtinctionFraction}{Fraction of extinction due to trunks (for winter deciduous forests).}
   \item{x}{An object of class \code{\link{forest}}}
