@@ -361,7 +361,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
     for(int l=0;l<nlayers; l++) Tsoil[l] = Tatm[0];
   }
   //Take initial canopy air temperature from previous day
-  Tcan[0] = sum(Tair)/Tair.size();
+  Tcan[0] = sum(Tair*LAIpx)/sum(LAIpx);
   //Take temperature soil vector 
   Tsoil_mat(0,_) = Tsoil; 
   
@@ -1044,15 +1044,14 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
     //Canopy evaporation (mm) in the current step
     double canEvapStep = canopyEvaporation*(abs_SWR_can[n]/sum(abs_SWR_can));
     
-    //Canopy convective heat exchange
-    double RAcan = aerodynamicResistance(canopyHeight,std::max(wind,1.0)); //Aerodynamic resistance to convective heat transfer
-    Hcan_heat[n] = (meteoland::utils_airDensity(Tatm[n],Patm)*Cp_JKG*(Tcan[n]-Tatm[n]))/RAcan;
-    //Soil-canopy turbulent heat exchange
-    double wind2m = windSpeedMassmanExtinction(200.0, wind, LAIcell, canopyHeight);
-    double RAsoil = aerodynamicResistance(200.0, std::max(wind2m,1.0)); //Aerodynamic resistance to convective heat transfer from soil
-    Hcansoil[n] = (meteoland::utils_airDensity(Tcan[n],Patm)*Cp_JKG*(Tcan[n]-Tsoil[0]))/RAsoil;
-    
     if(!multiLayerBalance) {//Canopy balance assuming a single layer
+      //Canopy convective heat exchange
+      double RAcan = aerodynamicResistance(canopyHeight,std::max(wind,1.0)); //Aerodynamic resistance to convective heat transfer
+      Hcan_heat[n] = (meteoland::utils_airDensity(Tatm[n],Patm)*Cp_JKG*(Tcan[n]-Tatm[n]))/RAcan;
+      //Soil-canopy turbulent heat exchange
+      double wind2m = windSpeedMassmanExtinction(200.0, wind, LAIcell, canopyHeight);
+      double RAsoil = aerodynamicResistance(200.0, std::max(wind2m,1.0)); //Aerodynamic resistance to convective heat transfer from soil
+      Hcansoil[n] = (meteoland::utils_airDensity(Tcan[n],Patm)*Cp_JKG*(Tcan[n]-Tsoil[0]))/RAsoil;
       //Latent heat (evaporation + transpiration)
       double LEwat = (1e6)*meteoland::utils_latentHeatVaporisation(Tcan[n])*(sum(Einst(_,n)) + canEvapStep)/tstep;
       LEcan_heat[n] = LEwat; 
@@ -1063,98 +1062,103 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
       double Tcannext = Tcan[n]+ std::max(-3.0, std::min(3.0, tstep*Ebal[n]/canopyThermalCapacity)); //Avoids changes in temperature that are too fast
       if(n<(ntimesteps-1)) Tcan[n+1] = Tcannext;
       for(int i=0;i<ncanlayers;i++) Tair[i] = Tcannext;
+      
+      
+      //Soil energy balance including exchange with canopy
+      Ebalsoil[n] = abs_SWR_soil[n] + abs_LWR_soil[n] + Hcansoil[n] - LEsoil_heat[n]; //Here we use all energy escaping to atmosphere
+      
+      
+      //Soil temperature changes
+      NumericVector soilTchange = temperatureChange(dVec, Tsoil, sand, clay, Ws, Theta_FC, Ebalsoil[n]);
+      for(int l=0;l<nlayers;l++) Tsoil[l] = Tsoil[l] + (soilTchange[l]*tstep);
+      if(n<(ntimesteps-1)) Tsoil_mat(n+1,_)= Tsoil;
+      
     } else { //Multilayer canopy balance
       DataFrame LWR_layer = Rcpp::as<Rcpp::DataFrame>(lwrExtinction["LWR_layer"]);
       NumericVector LWRnet_layer = LWR_layer["Lnet"];
       Ebal[n] = 0.0;
       LEcan_heat[n] = 0.0;
+      Hcan_heat[n] = 0.0;
       double layerEvapStep = canEvapStep/((double) ncanlayers); //Assumes all layers contribute equally to evaporation
-      //Caltulate temperature, vapour pressure and CO2 gradients
-      // NumericVector dTdz(ncanlayers), dVPdz(ncanlayers), dCdz(ncanlayers);
-      // for(int i=0;i<ncanlayers;i++) {
-      //   if(i==0) {
-      //     dTdz[i] = (Tair[i+1] - Tair[i])/dz;
-      //     dVPdz[i] = (VPair[i+1] - VPair[i])/dz;
-      //     dCdz[i] = (Cair[i+1] - Cair[i])/dz;
-      //   } else if(i<(ncanlayers-1)) {
-      //     dTdz[i] = (Tair[i+1] - Tair[i-1])/(2.0*dz);
-      //     dVPdz[i] = (VPair[i+1] - VPair[i-1])/(2.0*dz);
-      //     dCdz[i] = (Cair[i+1] - Cair[i-1])/(2.0*dz);
-      //   } else {
-      //     dTdz[i] = (Tatm[n] - Tair[i])/dz;
-      //     dVPdz[i] = (vpatm - VPair[i])/dz;
-      //     dCdz[i] = (Catm - Cair[i])/dz;
-      //   }
-      // }
-      NumericVector Tairnext(ncanlayers);
+      NumericVector Tairnext(ncanlayers), LElayer(ncanlayers), Rnlayer(ncanlayers), Hleaflayer(ncanlayers);
+      NumericVector layerThermalCapacity(ncanlayers);
       for(int i=0;i<ncanlayers;i++) {
-        //Layer air density
-        double rholayer = meteoland::utils_airDensity(Tair[i],Patm);
-    
+        //Radiation balance
+        Rnlayer[i] = sum(absSWR_SL_ML(i,_)) + sum(absSWR_SH_ML(i,_)) + LWRnet_layer[i];
         NumericVector pLayer = LAIme(i,_)/LAIphe; //Proportion of each cohort LAI in layer i
         //Latent heat (evaporation + transpiration)
         double Ecanlayer = sum(Einst(_,n)*pLayer);
         double LEwat = (1e6)*meteoland::utils_latentHeatVaporisation(Tair[i])*(Ecanlayer + layerEvapStep)/tstep;
-        double LElayer = LEwat; //Energy spent in vaporisation
-        LEcan_heat[n] = LElayer;
-        //Define sensible heat (H) as function of sunlit/shade leaf temperature and canopy layer temperature
-        double Hlayer = 0.0;
+        LElayer[i] = LEwat; //Energy spent in vaporisation
+        LEcan_heat[n] = LElayer[i];
+        layerThermalCapacity[i] = (0.5*(0.8*LAIcelllive + 1.2*LAIcell) + LAIcelldead)*thermalCapacityLAI/((double) ncanlayers);
+        // layerThermalCapacity[i] =  (0.5*(0.8*LAIpx[i] + 1.2*LAIpe[i]) + LAIpd[i])*thermalCapacityLAI; //Avoids zero capacity for winter deciduous
+        //Layer air density
+        double rholayer = meteoland::utils_airDensity(Tair[i],Patm);
+        Hleaflayer[i] = 0.0;
         for(int c=0;c<numCohorts;c++) {
           double rHa = 307.0*pow(leafWidth[c]/std::max(zWind[i],0.1), 0.5);
-          double Hsunlit = 2.0*Cp_Jmol*rholayer*(Temp_SL(c, n)-Tair[i])/rHa;
-          double Hshade = 2.0*Cp_Jmol*rholayer*(Temp_SH(c, n)-Tair[i])/rHa;
+          double Hsunlit = 2.0*Cp_JKG*rholayer*(Temp_SL(c, n)-Tair[i])/rHa;
+          double Hshade = 2.0*Cp_JKG*rholayer*(Temp_SH(c, n)-Tair[i])/rHa;
           // Rcout<<c<<" " << Hsunlit<< " "<<Hshade<<" \n";
-          Hlayer +=(Hsunlit*fsunlit[i] + Hshade*(1.0-fsunlit[i]))*LAIme(i,c);
+          Hleaflayer[i] +=(Hsunlit*fsunlit[i] + Hshade*(1.0-fsunlit[i]))*LAIme(i,c);
         }
-        double Hlayerprev = Hlayer;
-        //Add turbulent heat flow (positive gradient when temperature is larger above)
-        if(i==0) {
-          //Turbulent exchange
-          Hlayer -= Cp_JKG*rholayer*((Tair[i+1] - Tair[i])/dU[i])*uw[i];
-          //Add heat from soil
-          Hlayer -= Cp_JKG*rholayer*(Tair[i]-Tsoil[0])/aerodynamicResistance(200.0, std::max(zWind[i],1.0));
-        } else if(i<(ncanlayers-1)) {
-          //Turbulent exchange
-          Hlayer -= Cp_JKG*rholayer*((Tair[i+1] - Tair[i])/dU[i])*uw[i];
-          Hlayer += Cp_JKG*rholayer*((Tair[i] - Tair[i-1])/dU[i])*uw[i];
-        } else {
-          //Turbulent exchange
-          Hlayer -= Cp_JKG*rholayer*((Tatm[n] - Tair[i])/dU[i])*uw[i];
-          Hlayer += Cp_JKG*rholayer*((Tair[i] - Tair[i-1])/dU[i])*uw[i];
+        Rcout<<n<< " "<< i<< " - Rn: "<<Rnlayer[i]<<" LE: "<<LElayer[i]<<" Hleaf: "<<Hleaflayer[i]<< " Tini: "<< Tair[i]<<"\n";
+      }
+      int nsubsteps = 60; //1 min substeps
+      double tsubstep = tstep/((double) nsubsteps); 
+      double RAcan = aerodynamicResistance(canopyHeight,std::max(wind,1.0)); //Aerodynamic resistance to convective heat transfer
+      double RAsoil = aerodynamicResistance(200.0, std::max(zWind[0],1.0));
+      for(int s=0;s<nsubsteps;s++) {
+        double Hcansoils = Cp_JKG*meteoland::utils_airDensity(Tair[0],Patm)*(Tair[0]-Tsoil[0])/RAsoil;
+        double Hcan_heats = (meteoland::utils_airDensity(Tatm[n],Patm)*Cp_JKG*(Tair[ncanlayers-1]-Tatm[n]))/RAcan;
+        for(int i=0;i<ncanlayers;i++) {
+          //Layer air density
+          double rholayer = meteoland::utils_airDensity(Tair[i],Patm);
+          //Define sensible heat (H) as function of sunlit/shade leaf temperature and canopy layer temperature
+          // double Hlayers = Hleaflayer[i];
+          double Hlayers = 0.0;
+          //Add turbulent heat flow (positive gradient when temperature is larger above)
+          if(i==0) { //Lower layer
+            Hlayers -= Cp_JKG*rholayer*((Tair[i+1] - Tair[i])/dU[i])*uw[i];
+            Hlayers -= Hcansoils;
+          } else if(i<(ncanlayers-1)) { //Intermediate layers
+            Hlayers -= Cp_JKG*rholayer*((Tair[i+1] - Tair[i])/dU[i])*uw[i];
+            Hlayers += Cp_JKG*rholayer*((Tair[i] - Tair[i-1])/dU[i])*uw[i];
+          } else { //Upper layer
+            Hlayers -= Hcan_heats;
+            Hlayers += Cp_JKG*rholayer*((Tair[i] - Tair[i-1])/dU[i])*uw[i];
+          }
+          double EbalLayer = Rnlayer[i] - LElayer[i] + Hlayers; 
+          double deltaT = std::max(-3.0, std::min(3.0, tsubstep*EbalLayer/(rholayer*Cp_JKG + layerThermalCapacity[i]))); //Avoids changes in temperature that are too fast
+          if(s==0) Rcout<<n<< " "<< i<< " "<< s <<" - Rn: "<<Rnlayer[i]<<" LE: "<<LElayer[i]<<" Hleaf: "<<Hleaflayer[i]<<" H: "<<Hlayers<< " Ebal: "<<EbalLayer<< " LTC: " << layerThermalCapacity[i]<< " Tini: "<< Tair[i]<< " deltaT: "<<deltaT<<"\n";
+          Tairnext[i] = Tair[i]+ deltaT; //Avoids changes in temperature that are too fast
+          //Changes in water vapour
+          //Changes in CO2
         }
-        //Absorbed SWR
-        double abs_SWR_layer = sum(absSWR_SL_ML(i,_)) + sum(absSWR_SH_ML(i,_));
-        // Net LWR
-        double Rnlayer = abs_SWR_layer + LWRnet_layer[i];
-
-        double EbalLayer = Rnlayer - LElayer + Hlayer;
-        Ebal[n] +=EbalLayer;
-        double layerAirThermalCapacity = rholayer*Cp_JKG;
-        double layerThermalCapacity = layerAirThermalCapacity + (0.5*(0.8*LAIpx[i] + 1.2*LAIpe[i]) + LAIpd[i])*thermalCapacityLAI; //Avoids zero capacity for winter deciduous
-        double deltaT = std::max(-3.0, std::min(3.0, tstep*EbalLayer/layerThermalCapacity)); //Avoids changes in temperature that are too fast
-        Rcout<<i<< " "<< n<< " - Rn: "<<Rnlayer<<" LE: "<<LElayer<<" Hprev: "<< Hlayerprev<<" H: "<<Hlayer<< " Ebal: "<<EbalLayer<< " Tini: "<< Tair[i]<< " deltaT: "<<deltaT<<"\n";
-        Tairnext[i] = Tair[i]+ deltaT; //Avoids changes in temperature that are too fast
-        //Changes in water vapour
-        //Changes in CO2
+        for(int i=0;i<ncanlayers;i++) Tair[i] = Tairnext[i];
+        
+        //Soil energy balance including exchange with canopy
+        double Ebalsoils =  abs_SWR_soil[n] + abs_LWR_soil[n]  - LEsoil_heat[n] + Hcansoils; //Here we use all energy escaping to atmosphere
+        Ebalsoil[n] +=Ebalsoils;
+        Hcansoil[n] +=Hcansoils;
+        Hcan_heat[n] += Hcan_heats;
+        //Soil temperature changes
+        NumericVector soilTchange = temperatureChange(dVec, Tsoil, sand, clay, Ws, Theta_FC, Ebalsoils);
+        for(int l=0;l<nlayers;l++) Tsoil[l] = Tsoil[l] + (soilTchange[l]*tsubstep);
       }
-      for(int i=0;i<ncanlayers;i++) {
-        Tair[i] = Tairnext[i];
-      }
+      Hcan_heat[n] = Hcan_heat[n]/((double) nsubsteps);
+      Hcansoil[n] = Hcansoil[n]/((double) nsubsteps);
+      Ebalsoil[n] = Ebalsoil[n]/((double) nsubsteps);
+      //Canopy energy balance
+      Ebal[n] = abs_SWR_can[n]+ abs_LWR_can[n] - LEcan_heat[n] - Hcan_heat[n] - Hcansoil[n];
       if(n<(ntimesteps-1)) {
-        Tcan[n+1] = sum(Tair)/Tair.size(); 
+        Tcan[n+1] = sum(Tair*LAIpx)/sum(LAIpx); 
+        Tsoil_mat(n+1,_)= Tsoil;
       }
     }
 
-    
-    //Soil energy balance including exchange with canopy
-    Ebalsoil[n] = abs_SWR_soil[n] + abs_LWR_soil[n] + Hcansoil[n] - LEsoil_heat[n]; //Here we use all energy escaping to atmosphere
-    
-   
-    //Soil temperature changes
-    NumericVector soilTchange = temperatureChange(dVec, Tsoil, sand, clay, Ws, Theta_FC, Ebalsoil[n]);
-    for(int l=0;l<nlayers;l++) Tsoil[l] = Tsoil[l] + (soilTchange[l]*tstep);
-    if(n<(ntimesteps-1)) Tsoil_mat(n+1,_)= Tsoil;
-    
+
     
   } //End of timestep loop
 
