@@ -344,6 +344,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   NumericVector net_LWR_can(ntimesteps),LEcan_heat(ntimesteps), Hcan_heat(ntimesteps), Ebal(ntimesteps);
   NumericVector net_LWR_soil(ntimesteps), Ebalsoil(ntimesteps), Hcansoil(ntimesteps), LEsoil_heat(ntimesteps);
   NumericMatrix Tsoil_mat(ntimesteps, nlayers);
+  NumericMatrix Tcan_mat(ntimesteps, ncanlayers);
   //Daylength in seconds (assuming flat area because we want to model air temperature variation)
   double tauday = meteoland::radiation_daylengthseconds(latrad,0.0,0.0, delta); 
   for(int n=0;n<ntimesteps;n++) {
@@ -1106,8 +1107,9 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
         }
         // Rcout<<n<< " "<< i<< " - Rn: "<<Rnlayer[i]<<" LE: "<<LElayer[i]<<" Hleaf: "<<Hleaflayer[i]<< " Tini: "<< Tair[i]<<"\n";
       }
-      int nsubsteps = 3600; //1 min substeps
+      int nsubsteps = 120; //30-s substeps
       double tsubstep = tstep/((double) nsubsteps); 
+      double maxTchange = 3.0/((double) nsubsteps);
       double RAcan = aerodynamicResistance(canopyHeight,std::max(wind,1.0)); //Aerodynamic resistance to convective heat transfer
       double RAsoil = aerodynamicResistance(200.0, std::max(zWind[0],1.0));
       for(int s=0;s<nsubsteps;s++) {
@@ -1131,7 +1133,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
             Hlayers += Cp_JKG*rholayer*((Tair[i] - Tair[i-1])/dU[i])*uw[i];
           }
           double EbalLayer = Rnlayer[i] - LElayer[i] + Hlayers; 
-          double deltaT = std::max(-3.0, std::min(3.0, tsubstep*EbalLayer/(rholayer*Cp_JKG + layerThermalCapacity[i]))); //Avoids changes in temperature that are too fast
+          double deltaT = std::max(-1.0*maxTchange, std::min(maxTchange, tsubstep*EbalLayer/(rholayer*Cp_JKG + layerThermalCapacity[i]))); //Avoids changes in temperature that are too fast
           // if(s==0) Rcout<<n<< " "<< i<< " "<< s <<" - Rn: "<<Rnlayer[i]<<" LE: "<<LElayer[i]<<" Hleaf: "<<Hleaflayer[i]<<" H: "<<Hlayers<< " Ebal: "<<EbalLayer<< " LTC: " << rholayer*Cp_JKG + layerThermalCapacity[i]<< " Tini: "<< Tair[i]<< " deltaT: "<<deltaT<<"\n";
           Tairnext[i] = Tair[i]+ deltaT; //Avoids changes in temperature that are too fast
           //Changes in water vapour
@@ -1160,7 +1162,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
         Tsoil_mat(n+1,_)= Tsoil;
       }
     }
-
+    for(int i=0;i<ncanlayers;i++) Tcan_mat(n,i) = Tair[i];
 
     
   } //End of timestep loop
@@ -1217,13 +1219,15 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   
   DataFrame Tinst = DataFrame::create(_["SolarHour"] = solarHour, 
                                       _["Tatm"] = Tatm, _["Tcan"] = Tcan, _["Tsoil"] = Tsoil_mat);
+  Tcan_mat.attr("dimnames") = List::create(seq(1,ntimesteps), seq(1,ncanlayers));
   DataFrame CEBinst = DataFrame::create(_["SolarHour"] = solarHour, 
                                         _["SWRcan"] = abs_SWR_can, _["LWRcan"] = net_LWR_can,
                                         _["LEcan"] = LEcan_heat, _["Hcan"] = Hcan_heat, _["Ebalcan"] = Ebal);
   DataFrame SEBinst = DataFrame::create(_["SolarHour"] = solarHour, 
                                         _["Hcansoil"] = Hcansoil, _["LEsoil"] = LEsoil_heat, _["SWRsoil"] = abs_SWR_soil, _["LWRsoil"] = net_LWR_soil,
                                         _["Ebalsoil"] = Ebalsoil);
-  List EB = List::create(_["Temperature"]=Tinst, _["CanopyEnergyBalance"] = CEBinst, _["SoilEnergyBalance"] = SEBinst);
+  List EB = List::create(_["Temperature"]=Tinst, _["CanopyEnergyBalance"] = CEBinst, _["SoilEnergyBalance"] = SEBinst,
+                         _["TemperatureLayers"] = Tcan_mat);
   E_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   E_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   Psi_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
