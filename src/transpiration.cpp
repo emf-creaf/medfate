@@ -1079,10 +1079,13 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
       
     } else { //Multilayer canopy balance
       double moistureAtm = 0.622*(vpatm/Patm)*meteoland::utils_airDensity(Tatm[n],Patm);
+      double CO2Atm = 0.409*Catm*44.01; //mg/m3
+        
       int nsubsteps = 120; //30-s substeps
       double tsubstep = tstep/((double) nsubsteps); 
       double maxTchange = 3.0/((double) nsubsteps);
       double maxMoistureChange = 0.0005/((double)nsubsteps);
+      double maxCO2Change = 18.0/((double)nsubsteps); //= 1ppm per h
 
       DataFrame LWR_layer = Rcpp::as<Rcpp::DataFrame>(lwrExtinction["LWR_layer"]);
       NumericVector LWRnet_layer = LWR_layer["Lnet"];
@@ -1092,7 +1095,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
       NumericVector Tairnext(ncanlayers), LElayer(ncanlayers), absSWRlayer(ncanlayers), Rnlayer(ncanlayers), Hleaflayer(ncanlayers);
       NumericVector layerThermalCapacity(ncanlayers);
       NumericVector moistureET(ncanlayers), rho(ncanlayers), moistureLayer(ncanlayers), moistureLayernext(ncanlayers);
-      NumericVector deltaT(ncanlayers);
+      NumericVector CO2An(ncanlayers), CO2Layer(ncanlayers), CO2Layernext(ncanlayers);
       for(int i=0;i<ncanlayers;i++) {
         rho[i] = meteoland::utils_airDensity(Tair[i],Patm);
         absSWRlayer[i] = sum(absSWR_SL_ML(i,_)) + sum(absSWR_SH_ML(i,_));
@@ -1101,6 +1104,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
         NumericVector pLayer = LAIme(i,_)/LAIphe; //Proportion of each cohort LAI in layer i
         //Latent heat (evaporation + transpiration)
         double Ecanlayer = sum(Einst(_,n)*pLayer);
+        double Anlayer = 1000.0*(44.01/12.0)*sum(Aninst(_,n)*pLayer); //from gC/m2 to mgCO2/m2
         double LEwat = (1e6)*meteoland::utils_latentHeatVaporisation(Tair[i])*(Ecanlayer + layerEvapStep)/tstep;
         LElayer[i] = LEwat; //Energy spent in vaporisation
         LEcan_heat[n] = LElayer[i];
@@ -1108,7 +1112,10 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
         layerThermalCapacity[i] =  (0.5*(0.8*LAIpx[i] + 1.2*LAIpe[i]) + LAIpd[i])*thermalCapacityLAI; //Avoids zero capacity for winter deciduous
         
         moistureLayer[i] = 0.622*(VPair[i]/Patm)*rho[i]; //kg water vapour/m3
-        moistureET[i] = ((Ecanlayer + layerEvapStep)/verticalLayerSize)/tstep; //kg water vapour /m3/s-1
+        moistureET[i] = ((Ecanlayer + layerEvapStep)/verticalLayerSize)/tstep; //kg water vapour /m3/s
+        
+        CO2Layer[i] = 0.409*Cair[i]*44.01; //mg/m3
+        CO2An[i] = (Anlayer/verticalLayerSize)/tstep; //mg/m3/s
         // Rcout<<n<< " "<< i<< " - Rn: "<<Rnlayer[i]<<" LE: "<<LElayer[i]<<" Hleaf: "<<Hleaflayer[i]<< " Tini: "<< Tair[i]<<"\n";
       }
       //Add soil moisture evaporation
@@ -1122,22 +1129,28 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
         for(int i=0;i<ncanlayers;i++) {
           double deltaH = 0.0;
           double deltaMoisture = 0.0;
+          double deltaCO2 = 0.0;
           // double Hlayers = 0.0;
           //Add turbulent heat flow (positive gradient when temperature is larger above)
           if(i==0) { //Lower layer
             deltaH -= Cp_JKG*rho[i]*((Tair[i+1] - Tair[i])/dU[i])*uw[i];
             deltaH -= Hcansoils;
             deltaMoisture -= ((moistureLayer[i+1] - moistureLayer[i])/dU[i])*uw[i];
+            deltaCO2 -= ((CO2Layer[i+1] - CO2Layer[i])/dU[i])*uw[i];
           } else if((i > 0) & (i<(ncanlayers-1))) { //Intermediate layers
             deltaH -= Cp_JKG*rho[i]*((Tair[i+1] - Tair[i])/dU[i])*uw[i];
             deltaH += Cp_JKG*rho[i]*((Tair[i] - Tair[i-1])/dU[i])*uw[i];
             deltaMoisture -= ((moistureLayer[i+1] - moistureLayer[i])/dU[i])*uw[i];
             deltaMoisture += ((moistureLayer[i] - moistureLayer[i-1])/dU[i])*uw[i];
+            deltaCO2 -= ((CO2Layer[i+1] - CO2Layer[i])/dU[i])*uw[i];
+            deltaCO2 += ((CO2Layer[i] - CO2Layer[i-1])/dU[i])*uw[i];
           } else if(i==(ncanlayers-1)){ //Upper layer
             deltaH -= Hcan_heats;
             deltaH += Cp_JKG*rho[i]*((Tair[i] - Tair[i-1])/dU[i])*uw[i];
             deltaMoisture -= ((moistureAtm - moistureLayer[i])/dU[i])*uw[i];
             deltaMoisture += ((moistureLayer[i] - moistureLayer[i-1])/dU[i])*uw[i];
+            deltaCO2 -= ((CO2Atm - CO2Layer[i])/dU[i])*uw[i];
+            deltaCO2 += ((CO2Layer[i] - CO2Layer[i-1])/dU[i])*uw[i];
           }
           Hleaflayer[i] = 0.0;
           for(int c=0;c<numCohorts;c++) {
@@ -1149,18 +1162,20 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
           }
           double EbalLayer = Rnlayer[i] - LElayer[i] + Hleaflayer[i] + deltaH; 
           //Instantaneous changes in temperature due to internal energy balance
-          deltaT[i] = EbalLayer/(rho[i]*Cp_JKG + layerThermalCapacity[i]); 
+          double deltaT = EbalLayer/(rho[i]*Cp_JKG + layerThermalCapacity[i]); 
           
           // if(s==0) Rcout<<n<< " "<< i<< " "<< s <<" - Rn: "<<Rnlayer[i]<<" LE: "<<LElayer[i]<<" Hleaf: "<<Hleaflayer[i]<<" H: "<<Hlayers<< " Ebal: "<<EbalLayer<< " LTC: " << rholayer*Cp_JKG + layerThermalCapacity[i]<< " Tini: "<< Tair[i]<< " deltaT: "<<deltaT<<"\n";
-          Tairnext[i] = Tair[i] +  std::max(-1.0*maxTchange, std::min(maxTchange, tsubstep*deltaT[i])); //Avoids changes in temperature that are too fast
+          Tairnext[i] = Tair[i] +  std::max(-1.0*maxTchange, std::min(maxTchange, tsubstep*deltaT)); //Avoids changes in temperature that are too fast
           //Changes in water vapour
           moistureLayernext[i] = moistureLayer[i] + (moistureET[i]*tsubstep) + std::max(-1.0*maxMoistureChange, std::min(maxMoistureChange, tsubstep*deltaMoisture));
           // if(i==0) Rcout<<n<< " "<< i<< " "<< s <<" - moisture: "<<moistureLayer[i]<<" delta: "<<deltaMoisture<<" next: "<< moistureLayernext[i]<<"\n";
           //Changes in CO2
+          CO2Layernext[i] = CO2Layer[i] - (CO2An[i]*tsubstep) + std::max(-1.0*maxCO2Change, std::min(maxCO2Change, tsubstep*deltaCO2));
         }
         for(int i=0;i<ncanlayers;i++) {
           Tair[i] = Tairnext[i]; 
           moistureLayer[i] = moistureLayernext[i];
+          CO2Layer[i] = CO2Layernext[i];
         }
         
         //Soil energy balance including exchange with canopy
@@ -1175,6 +1190,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
       Ebalsoil[n] = Ebalsoil[n]/((double) nsubsteps);
       for(int i=0;i<ncanlayers;i++) {
         VPair[i] = ((moistureLayer[i]/rho[i])*Patm)/0.622;
+        Cair[i] = CO2Layer[i]/(0.409*44.01);
         // Rcout<< n << " "<<i << " - " << moistureLayer[i]<< " "<< VPair[i]<<"\n";
       }
       // stop("kk");
