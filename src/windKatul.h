@@ -9,4 +9,4 @@ DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double h
                                      String model = "k-epsilon");
 
 DataFrame windCanopyTurbulence(NumericVector zmid, NumericVector LAD, double canopyHeight,
-                                double u2m, String model = "k-epsilon");
+                                double u, double windMeasurementHeight = 200, String model = "k-epsilon");

@@ -4273,17 +4273,18 @@ BEGIN_RCPP
 END_RCPP
 }
 // windCanopyTurbulence
-DataFrame windCanopyTurbulence(NumericVector zmid, NumericVector LAD, double canopyHeight, double u2m, String model);
-RcppExport SEXP _medfate_windCanopyTurbulence(SEXP zmidSEXP, SEXP LADSEXP, SEXP canopyHeightSEXP, SEXP u2mSEXP, SEXP modelSEXP) {
+DataFrame windCanopyTurbulence(NumericVector zmid, NumericVector LAD, double canopyHeight, double u, double windMeasurementHeight, String model);
+RcppExport SEXP _medfate_windCanopyTurbulence(SEXP zmidSEXP, SEXP LADSEXP, SEXP canopyHeightSEXP, SEXP uSEXP, SEXP windMeasurementHeightSEXP, SEXP modelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericVector >::type zmid(zmidSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type LAD(LADSEXP);
     Rcpp::traits::input_parameter< double >::type canopyHeight(canopyHeightSEXP);
-    Rcpp::traits::input_parameter< double >::type u2m(u2mSEXP);
+    Rcpp::traits::input_parameter< double >::type u(uSEXP);
+    Rcpp::traits::input_parameter< double >::type windMeasurementHeight(windMeasurementHeightSEXP);
     Rcpp::traits::input_parameter< String >::type model(modelSEXP);
-    rcpp_result_gen = Rcpp::wrap(windCanopyTurbulence(zmid, LAD, canopyHeight, u2m, model));
+    rcpp_result_gen = Rcpp::wrap(windCanopyTurbulence(zmid, LAD, canopyHeight, u, windMeasurementHeight, model));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4683,7 +4684,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_transpirationSperry", (DL_FUNC) &_medfate_transpirationSperry, 14},
     {"_medfate_transpirationGranier", (DL_FUNC) &_medfate_transpirationGranier, 6},
     {"_medfate_windCanopyTurbulenceModel", (DL_FUNC) &_medfate_windCanopyTurbulenceModel, 6},
-    {"_medfate_windCanopyTurbulence", (DL_FUNC) &_medfate_windCanopyTurbulence, 5},
+    {"_medfate_windCanopyTurbulence", (DL_FUNC) &_medfate_windCanopyTurbulence, 6},
     {"_medfate_windSpeedAtCanopyHeight", (DL_FUNC) &_medfate_windSpeedAtCanopyHeight, 2},
     {"_medfate_unshelteredMidflameWindSpeed", (DL_FUNC) &_medfate_unshelteredMidflameWindSpeed, 2},
     {"_medfate_shelteredMidflameWindSpeed", (DL_FUNC) &_medfate_shelteredMidflameWindSpeed, 3},

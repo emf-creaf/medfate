@@ -905,8 +905,8 @@ wind_canopyTurbulenceModel <- function(zm, Cx, hm, d0, z0, model = "k-epsilon") 
     .Call(`_medfate_windCanopyTurbulenceModel`, zm, Cx, hm, d0, z0, model)
 }
 
-wind_canopyTurbulence <- function(zmid, LAD, canopyHeight, u2m, model = "k-epsilon") {
-    .Call(`_medfate_windCanopyTurbulence`, zmid, LAD, canopyHeight, u2m, model)
+wind_canopyTurbulence <- function(zmid, LAD, canopyHeight, u, windMeasurementHeight = 200, model = "k-epsilon") {
+    .Call(`_medfate_windCanopyTurbulence`, zmid, LAD, canopyHeight, u, windMeasurementHeight, model)
 }
 
 .windSpeedAtCanopyHeight <- function(wind20H, canopyHeight) {

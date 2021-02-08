@@ -17,6 +17,8 @@ defaultControl<-function() {
     cavitationRefill = "total",
     refillMaximumRate = 0.05,
     verticalLayerSize = 100,
+    boundaryLayerSize = 2000,
+    windMeasurementHeight = 200,
     
     #spwb with sperry
     gainModifier = 1, 

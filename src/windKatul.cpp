@@ -291,11 +291,12 @@ DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double h
  *   zmid - Vector of mid heights for canopy layers (cm)
  *   LAD - Vector of leaf area density for canopy layers (m2/m3)
  *   canopyHeight - Canopy height (cm)
- *   u2m - Wind speed at 2m over the canopy (m/s)
+ *   u - Wind speed over the canopy (m/s)
+ *   windMeasurementHeight - Height of wind measurement over canopy
  */
 // [[Rcpp::export("wind_canopyTurbulence")]]
 DataFrame windCanopyTurbulence(NumericVector zmid, NumericVector LAD, double canopyHeight,
-                                double u2m, String model = "k-epsilon") {
+                                double u, double windMeasurementHeight = 200, String model = "k-epsilon") {
   //z - height vector in m
   NumericVector zm = zmid/100.0;
   //Effective drag = Cd x leaf area density
@@ -308,7 +309,7 @@ DataFrame windCanopyTurbulence(NumericVector zmid, NumericVector LAD, double can
   double z0 = 0.08*hm;
   
   //u_f - Friction velocity
-  double u_f = u2m*kv/log(((hm + 2.0)-d0)/z0);
+  double u_f = u*kv/log(((hm + windMeasurementHeight/100.0)-d0)/z0);
   DataFrame cmout = windCanopyTurbulenceModel(zm, Cx, hm, d0, z0);
   NumericVector U1 = cmout["U1"];
   NumericVector dU1 = cmout["dU1"];
