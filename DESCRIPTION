@@ -17,7 +17,7 @@ License: GPL (>= 2)
 URL: https://vegmod.ctfc.cat/software/medfate/
 LazyLoad: yes
 Depends: R (>= 3.5.0), sp
-Imports: spdep, ggplot2, methods, httr, jsonlite, meteoland (>= 0.8.1), Rcpp (>= 0.12.12)
+Imports: spdep, ggplot2, methods, httr, jsonlite, meteoland (>= 0.8.1), Rcpp (>= 1.0.6)
 Suggests: knitr, rmarkdown
 LinkingTo: Rcpp, meteoland
 Encoding: UTF-8

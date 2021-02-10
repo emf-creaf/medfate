@@ -9,7 +9,8 @@ List fuelLiveStratification(List x, DataFrame SpParams, double gdd = NA_REAL, St
                             double heightProfileStep = 10.0, double maxHeightProfile = 5000.0, double bulkDensityThreshold = 0.05);
 DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, DataFrame SpParams, NumericVector cohortFMC = NumericVector::create(), 
                          double gdd = NA_REAL, String mode = "MED", 
-                         double heightProfileStep = 10.0, double maxHeightProfile = 5000, double bulkDensityThreshold = 0.05);
+                         double heightProfileStep = 10.0, double maxHeightProfile = 5000, double bulkDensityThreshold = 0.05,
+                         String depthMode = "crownaverage");
 // List fuelStructure(List object, DataFrame SpParams, DataFrame FuelModelParams, 
 //                    double gdd = NA_REAL, String mode = "MED", 
 //                    double heightProfileStep = 10.0, double maxHeightProfile = 5000, double bulkDensityThreshold = 0.05, bool useModelForLive = false);

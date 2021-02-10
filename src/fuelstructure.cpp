@@ -171,34 +171,52 @@ List fuelLiveStratification(List object, DataFrame SpParams, double gdd = NA_REA
   //Profile has length numSteps-1
   NumericVector wfp = woodyFuelProfile(z, object, SpParams, gdd, mode); //kg/m3
   int index0 = 0;
-
-  //Minimum height between 0 and 200 cm where BD > BDT
+  int index0abs = 0;
+  
+  //Minimum height between 0 and 200 cm where BD > BDT (BD > 0 in abs)
   while((wfp[index0]<bulkDensityThreshold) & (z[index0+1]<=200)){index0++;}
-    
+  while((wfp[index0abs]<0.0) & (z[index0abs+1]<=200)){index0abs++;}
+  
   int index1 = 0;
-  //Maximum height between 0 and 200 cm where BD > BDT
+  int index1abs = 0;
+  //Maximum height between 0 and 200 cm where BD > BDT (BD > 0 in abs)
   for(int i=0;z[i+1]<=200;i++) {
     if((wfp[i]>bulkDensityThreshold) & (i>index1)) {index1 = i;}
+    if((wfp[i]>0.0) & (i>index1abs)) {index1abs = i;}
   }
-  //Minimum height above index1 where BD > BDT
-  int index2 = index1+1;
-  while((wfp[index2]<bulkDensityThreshold) & (index2<(numSteps-1))) {index2 = index2 +1;}
+  //Ensure minimum height <= maximum height
+  if(index0>index1) index0 = index1;
+  if(index0abs>index1abs) index0abs = index1abs;
   
-  //Maximum height where BD > BDT
+  //Minimum height above index1 where BD > BDT (BD > 0 in abs)
+  int index2 = index1+1;
+  int index2abs = index1abs+1;
+  while((wfp[index2]<bulkDensityThreshold) & (index2<(numSteps-1))) {index2 = index2 +1;}
+  while((wfp[index2abs]==0.0) & (index2abs<(numSteps-1))) {index2abs = index2abs +1;}
+  
+  //Maximum height where BD > BDT (BD > 0 in abs)
   int index3 = numSteps-2;
+  int index3abs = numSteps-2;
   while((wfp[index3]<bulkDensityThreshold) & (index3>index2)) {index3 = index3 - 1;}  
-
+  while((wfp[index3abs]==0.0) & (index3abs>index2abs)) {index3abs = index3abs - 1;}  
+  
   //Fuelbed height
   double fbbh = z[index0];
   double fbh = z[index1+1];
+  double fbbhabs = z[index0abs];
+  double fbhabs = z[index1abs+1];
   
   //Crown base and top heights (cm)
-  double cbh = NA_REAL, cth = NA_REAL;
+  double cbh = NA_REAL, cth = NA_REAL, cbhabs = NA_REAL, cthabs = NA_REAL;
   if(index2<(numSteps-1)) {
     cbh = z[index2];
     cth = z[index3+1];
   }
-
+  if(index2abs<(numSteps-1)) {
+    cbhabs = z[index2abs];
+    cthabs = z[index3abs+1];
+  }
+  
   NumericVector cLAI = cohortLAI(object,SpParams, NA_REAL, mode);
   NumericVector cH = cohortHeight(object);
   NumericVector cCR = cohortCrownRatio(object,SpParams, mode);
@@ -206,9 +224,13 @@ List fuelLiveStratification(List object, DataFrame SpParams, double gdd = NA_REA
   double canopyLAI = layerLAI(cbh, cth, cLAI, cH, cCR);
   return(List::create(_["surfaceLayerBaseHeight"] = fbbh,
                       _["surfaceLayerTopHeight"] = fbh,
+                      _["surfaceLayerAbsoluteBaseHeight"] = fbbhabs,
+                      _["surfaceLayerAbsoluteTopHeight"] = fbhabs,
                       _["understoryLAI"] = understoryLAI,
                       _["canopyBaseHeight"] = cbh,
                       _["canopyTopHeight"] = cth,
+                      _["canopyAbsoluteBaseHeight"] = cbhabs,
+                      _["canopyAbsoluteTopHeight"] = cthabs,
                       _["canopyLAI"] = canopyLAI));
 }  
 
@@ -218,7 +240,8 @@ List fuelLiveStratification(List object, DataFrame SpParams, double gdd = NA_REA
 // [[Rcpp::export("fuel_FCCS")]]
 DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, DataFrame SpParams, NumericVector cohortFMC = NumericVector::create(), 
                          double gdd = NA_REAL, String mode = "MED", 
-                   double heightProfileStep = 10.0, double maxHeightProfile = 5000, double bulkDensityThreshold = 0.05) {
+                         double heightProfileStep = 10.0, double maxHeightProfile = 5000, double bulkDensityThreshold = 0.05,
+                         String depthMode = "crownaverage") {
   List liveStrat = fuelLiveStratification(object, SpParams, gdd, mode, 
                                           heightProfileStep, maxHeightProfile, bulkDensityThreshold);
   
@@ -241,14 +264,33 @@ DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, Dat
   //Canopy limits and loading  
   double canopyBaseHeight = liveStrat["canopyBaseHeight"];
   double canopyTopHeight = liveStrat["canopyTopHeight"];
-  double canopyDepth = layerFuelAverageCrownLength(200.0,10000.0,  cohCL, cohLoading, cohHeight, cohCR)/100.0;
+  double canopyAbsoluteBaseHeight = liveStrat["canopyAbsoluteBaseHeight"];
+  double canopyAbsoluteTopHeight = liveStrat["canopyAbsoluteTopHeight"];
+  double canopyDepth = NA_REAL;
+  if(depthMode=="profile") {
+    canopyDepth = (canopyTopHeight - canopyBaseHeight)/100.0;
+  } else if(depthMode=="absoluteprofile") {
+    canopyDepth = (canopyAbsoluteTopHeight - canopyAbsoluteBaseHeight)/100.0;
+  } else if(depthMode == "crownaverage"){
+    canopyDepth = layerFuelAverageCrownLength(200.0,10000.0,  cohCL, cohLoading, cohHeight, cohCR)/100.0; 
+  }
   NumericVector cohCanopyLoading = layerCohortFuelLoading(200.0, 10000.0, cohLoading, cohHeight, cohCR);
   double canopyLoading = std::accumulate(cohCanopyLoading.begin(),cohCanopyLoading.end(),0.0);
   
   //Shrub limits and loading  
   double shrubBaseHeight = liveStrat["surfaceLayerBaseHeight"];
   double shrubTopHeight = liveStrat["surfaceLayerTopHeight"];
-  double shrubDepth = layerFuelAverageCrownLength(0.0,200.0,  cohCL, cohLoading, cohHeight, cohCR)/100.0; //in m
+  double shrubAbsoluteBaseHeight = liveStrat["surfaceLayerAbsoluteBaseHeight"];
+  double shrubAbsoluteTopHeight = liveStrat["surfaceLayerAbsoluteTopHeight"];
+  double shrubDepth = NA_REAL;
+  if(depthMode=="profile") {
+    shrubDepth = (shrubTopHeight - shrubBaseHeight)/100.0;
+  } else if(depthMode=="absoluteprofile") {
+    shrubDepth = (shrubAbsoluteTopHeight - shrubAbsoluteBaseHeight)/100.0;
+  } else if(depthMode == "crownaverage"){
+    shrubDepth = layerFuelAverageCrownLength(0.0,200.0,  cohCL, cohLoading, cohHeight, cohCR)/100.0; //in m
+  }
+
   NumericVector cohShrubLoading = layerCohortFuelLoading(0.0, 200.0, cohLoading, cohHeight, cohCR);
   double shrubLoading = std::accumulate(cohShrubLoading.begin(),cohShrubLoading.end(),0.0);
   //Herb limits and loading  
@@ -274,11 +316,17 @@ DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, Dat
   hbc[0] = canopyBaseHeight/100.0;
   hbc[1] = shrubBaseHeight/100.0; //in m
   hbc[2] = hbc[3] = hbc[4] = 0.0;
+  NumericVector habc(5,NA_REAL); //Crown absolute base height (m)
+  habc[0] = canopyAbsoluteBaseHeight/100.0;
+  habc[1] = shrubAbsoluteBaseHeight/100.0; //in m
+  habc[2] = habc[3] = habc[4] = 0.0;
   
   NumericVector htc(5,NA_REAL); //Crown top height (m)
   htc[0] = canopyTopHeight/100.0;//in m
   htc[1] = shrubTopHeight/100.0; //in m
-
+  NumericVector hatc(5,NA_REAL); //Crown absolute top height (m)
+  hatc[0] = canopyAbsoluteTopHeight/100.0;//in m
+  hatc[1] = shrubAbsoluteTopHeight/100.0; //in m
   
   NumericVector rhob(5,0.0); //Bulk density (kg/m3)
   if(canopyDepth>0.0) rhob[0] = canopyLoading/canopyDepth;
@@ -456,6 +504,8 @@ DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, Dat
                                                      _["cover"] = cover,
                                                      _["hbc"] = hbc,
                                                      _["htc"] = htc,
+                                                     _["habc"] = habc,
+                                                     _["hatc"] = hatc,
                                                      _["delta"] = delta,
                                                      _["rhob"]=rhob, 
                                                      _["rhop"]=rhop,
@@ -468,10 +518,10 @@ DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, Dat
                                                      _["FAI"] = FAI,
                                                      _["h"] = h,
                                                      _["etaF"] = etaF,
-                                                     _["RV"] = RV,
-                                                     _["MinFMC"] = minFMC,
-                                                     _["MaxFMC"] = maxFMC,
-                                                     _["ActFMC"] = actFMC);
+                                                     _["RV"] = RV);
+  FCCSProperties.push_back(minFMC, "MinFMC");
+  FCCSProperties.push_back(maxFMC, "MaxFMC");
+  FCCSProperties.push_back(actFMC,"ActFMC");
   FCCSProperties.attr("row.names") = CharacterVector::create("canopy","shrub", "herb", "woody","litter");
   return(FCCSProperties);
 }

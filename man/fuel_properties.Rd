@@ -15,7 +15,7 @@ fuel_stratification(object, SpParams, gdd = NA, mode = "MED",
                       bulkDensityThreshold = 0.05)
 fuel_FCCS(object, ShrubCover, CanopyCover, SpParams, cohortFMC = as.numeric(c()),
           gdd = NA, mode = "MED", heightProfileStep = 10, maxHeightProfile = 5000, 
-          bulkDensityThreshold = 0.05)
+          bulkDensityThreshold = 0.05, depthMode = "crownaverage")
 fuel_windAdjustmentFactor(topShrubHeight, bottomCanopyHeight, topCanopyHeight,
                           canopyCover)
 }
@@ -31,6 +31,13 @@ fuel_windAdjustmentFactor(topShrubHeight, bottomCanopyHeight, topCanopyHeight,
   \item{heightProfileStep}{Precision for the fuel bulk density profile.}
   \item{maxHeightProfile}{Maximum height for the fuel bulk density profile.}
   \item{bulkDensityThreshold}{Minimum fuel bulk density to delimit fuel strata.}
+  \item{depthMode}{Specifies how fuel depth (and therefore canopy and understory bulk density) should be estimated: 
+     \itemize{
+       \item{\code{"crownaverage"}: As weighed average of crown lengths using loadings as weights.}
+       \item{\code{"profile"}: As the difference of base and top heights in bulk density profiles.}  
+       \item{\code{"absoluteprofile"}: As the difference of absolute base and absolute top heights in bulk density profiles.}  
+     }
+  }
   \item{topShrubHeight}{Shrub stratum top height (in m).}
   \item{bottomCanopyHeight}{Canopy base height (in m).}
   \item{topCanopyHeight}{Canopy top height (in m).}

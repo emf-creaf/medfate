@@ -289,8 +289,8 @@ fuel_stratification <- function(object, SpParams, gdd = NA_real_, mode = "MED", 
     .Call(`_medfate_fuelLiveStratification`, object, SpParams, gdd, mode, heightProfileStep, maxHeightProfile, bulkDensityThreshold)
 }
 
-fuel_FCCS <- function(object, ShrubCover, CanopyCover, SpParams, cohortFMC = as.numeric( c()), gdd = NA_real_, mode = "MED", heightProfileStep = 10.0, maxHeightProfile = 5000, bulkDensityThreshold = 0.05) {
-    .Call(`_medfate_FCCSproperties`, object, ShrubCover, CanopyCover, SpParams, cohortFMC, gdd, mode, heightProfileStep, maxHeightProfile, bulkDensityThreshold)
+fuel_FCCS <- function(object, ShrubCover, CanopyCover, SpParams, cohortFMC = as.numeric( c()), gdd = NA_real_, mode = "MED", heightProfileStep = 10.0, maxHeightProfile = 5000, bulkDensityThreshold = 0.05, depthMode = "crownaverage") {
+    .Call(`_medfate_FCCSproperties`, object, ShrubCover, CanopyCover, SpParams, cohortFMC, gdd, mode, heightProfileStep, maxHeightProfile, bulkDensityThreshold, depthMode)
 }
 
 growth_day <- function(x, soil, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, runon = 0.0) {
