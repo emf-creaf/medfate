@@ -260,7 +260,7 @@ DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, Dat
   NumericVector cohMaxFMC = cohortNumericParameter(object, SpParams, "maxFMC");
   NumericVector cohpDead = cohortNumericParameter(object, SpParams, "pDead");
   CharacterVector leafLitterType = cohortCharacterParameter(object, SpParams, "LeafLitterFuelType");
-
+  
   //Canopy limits and loading  
   double canopyBaseHeight = liveStrat["canopyBaseHeight"];
   double canopyTopHeight = liveStrat["canopyTopHeight"];
@@ -327,7 +327,7 @@ DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, Dat
   NumericVector hatc(5,NA_REAL); //Crown absolute top height (m)
   hatc[0] = canopyAbsoluteTopHeight/100.0;//in m
   hatc[1] = shrubAbsoluteTopHeight/100.0; //in m
-  
+
   NumericVector rhob(5,0.0); //Bulk density (kg/m3)
   if(canopyDepth>0.0) rhob[0] = canopyLoading/canopyDepth;
   if(shrubDepth>0.0) rhob[1] = shrubLoading/shrubDepth;
@@ -391,7 +391,7 @@ DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, Dat
   else maxFMC[0] = NA_REAL;
   if(shrubLoading>0.0) maxFMC[1] = layerFuelAverageParameter(0.0, 200.0, cohMaxFMC, cohLoading, cohHeight, cohCR);
   else maxFMC[1] = NA_REAL;
-  
+
   NumericVector actFMC(5,NA_REAL); //Actual FMC
   if(cohortFMC.size()==cohLoading.size()) {
     if(canopyLoading>0.0) actFMC[0] = layerFuelAverageParameter(200.0, 10000.0, cohortFMC, cohLoading, cohHeight, cohCR);
