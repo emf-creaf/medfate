@@ -43,11 +43,12 @@ reference:
   - starts_with("vprofile_")
 
 
-- title: Meteorology
-  desc:  Forest meteorology and biophysics
+- title: Meteorology and physics
+  desc:  Forest meteorology and environmental physics
   contents:
   - examplemeteo
   - starts_with("biophysics")
+  - starts_with("wind")
 
 - title: Soil
   desc:  Soil-related functions

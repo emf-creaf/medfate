@@ -99,11 +99,13 @@ The `spwbInput` object for advanced water and energy balance is similar to that 
 x$cohorts
 ```
 
-Element `canopy` contains state variables of the whole canopy, which include growth degree days and canopy temperature:
+Element `canopy` contains state variables within the canopy:
 ```{r}
 x$canopy
 ```
-Canopy temperature is a state variable (as soil temperature) needed for energy balance. As you may already known, element `above` contains the aboveground structure data that we already know:
+Canopy temperature, water vapour pressure and $CO_2$ concentration are state variables needed for canopy energy balance. If the canopy energy balance assumes a single canopy layer, the same values will be assumed through the canopy. Variation of within-canopy state variables is modelled if a multi-canopy energy balance is used (see control parameter `multiLayerBalance`). 
+
+As you may already known, element `above` contains the aboveground structure data that we already know:
 ```{r}
 x$above
 ```

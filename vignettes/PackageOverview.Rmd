@@ -91,6 +91,7 @@ Many of the functions included in `medfate` are internally called by simulation 
 * `soil_*`: Soil hydraulics and thermodynamics.
 * `spwb_*`: Soil water balance parameter optimization/calibration routines.
 * `transp_*`: Stomatal regulation and resulting transpiration/photosynthesis.
+* `wind_*`: Canopy turbulence.
 
 ## Static functions
 ### Plant, species and stand attributes
