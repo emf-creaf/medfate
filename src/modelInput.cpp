@@ -1045,27 +1045,32 @@ List forest2growthInput(List x, List soil, DataFrame SpParams, List control) {
 
 // [[Rcpp::export("resetInputs")]]
 void resetInputs(List x, List soil) {
-  DataFrame can = Rcpp::as<Rcpp::DataFrame>(x["canopy"]);
-  NumericVector Tair = can["Tair"];
-  NumericVector Cair = can["Cair"];
-  NumericVector VPair = can["VPair"];
-  NumericVector Wsoil = soil["W"];
-  NumericVector Temp = soil["Temp"];
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
+  //Reset of canopy layer state variables 
+  if(transpirationMode=="Sperry") {
+    DataFrame can = Rcpp::as<Rcpp::DataFrame>(x["canopy"]);
+    NumericVector Tair = can["Tair"];
+    NumericVector Cair = can["Cair"];
+    NumericVector VPair = can["VPair"];
+    int ncanlayers = can.nrow();
+    for(int i=0;i<ncanlayers;i++) {
+      Tair[i] = NA_REAL;
+      Cair[i] = control["Catm"];
+      VPair[i] = NA_REAL;
+    }
+  }
+  //Reset of soil state variables
+  NumericVector Wsoil = soil["W"];
+  NumericVector Temp = soil["Temp"];
   List belowLayers = x["belowLayers"];
   NumericMatrix Wpool = belowLayers["Wpool"];
-  int ncanlayers = can.nrow();
-  for(int i=0;i<ncanlayers;i++) {
-    Tair[i] = NA_REAL;
-    Cair[i] = control["Catm"];
-    VPair[i] = NA_REAL;
-  }
   int nlayers = Wsoil.size();
   for(int i=0;i<nlayers;i++) {
     Wsoil[i] = 1.0; //Defaults to soil at field capacity
     Temp[i] = NA_REAL;
   }
+  //Reset of cohort-based state variables
   int numCohorts = Wpool.nrow();
   for(int c=0;c<numCohorts;c++) {
     for(int l=0;l<nlayers;l++) {
