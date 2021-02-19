@@ -4,8 +4,9 @@
 
 # Version 1.1.6
 - New canopy turbulence models by Katul et al (2004)
-- Multicanopy energy balance as in Bonan et al. (2014)
+- Multi-layer canopy energy balance as in Bonan et al. (2014)
 - New option 'depthMode' to calculate fuel depth in 'fuel_FCCS'.
+- Modification of 'vprofile_windExtinction' to draw turbulence models.
 
 # Version 1.1.5
 - Stomatal conductance now denoted as Gsw or GSW

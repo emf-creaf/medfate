@@ -18,7 +18,7 @@
               "PlantWaterBalance",
               "PlantAbsorbedSWR", "AbsorbedSWRPerLeaf",
               "PlantNetLWR", "NetLWRPerLeaf",
-              "Temperature","AirTemperature","SoilTemperature", "CanopyTemperature",
+              "Temperature","TemperatureRange", "AirTemperature","SoilTemperature", "CanopyTemperature",
               "CanopyEnergyBalance", "SoilEnergyBalance")
   }
   return(TYPES)

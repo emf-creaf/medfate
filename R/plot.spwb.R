@@ -334,7 +334,23 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
     df[["Soil"]] = x$Temperature$Tsoil_mean
     if(!is.null(dates)) df = df[row.names(df) %in% as.character(dates),]
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab=ylab, ylim = ylim))
-  } 
+  }
+  else if(type=="TemperatureRange") {
+    if(is.null(ylab)) ylab = "Temperature (Celsius)"
+    df1 = data.frame(row.names=row.names(x$Temperature))
+    df1[["Above-canopy"]] = x$Temperature$Tatm_min
+    df1[["Inside-canopy"]] = x$Temperature$Tcan_min
+    df1[["Soil"]] = x$Temperature$Tsoil_min
+    df2 = data.frame(row.names=row.names(x$Temperature))
+    df2[["Above-canopy"]] = x$Temperature$Tatm_max
+    df2[["Inside-canopy"]] = x$Temperature$Tcan_max
+    df2[["Soil"]] = x$Temperature$Tsoil_max
+    if(!is.null(dates)) {
+      df1 = df1[row.names(df1) %in% as.character(dates),]
+      df2 = df2[row.names(df2) %in% as.character(dates),]
+    }
+    return(.multiple_dynamics_range(as.matrix(df1),  as.matrix(df2), xlab = xlab, ylab=ylab, ylim = ylim))
+  }
   else if(type=="AirTemperature") {
     if(is.null(ylab)) ylab = "Above-canopy temperature (Celsius)"
     df = data.frame(row.names=row.names(x$Temperature))

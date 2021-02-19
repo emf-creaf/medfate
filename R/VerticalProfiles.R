@@ -128,24 +128,35 @@ vprofile_SWRExtinction<-function(x, SpParams, z = NULL, gdd = NA, mode = "MED",
   if(draw) return(g)
   else return(swr)
 }
-vprofile_windExtinction<-function(x, SpParams, wind20H, z = NULL, gdd = NA, mode = "MED", 
+vprofile_windExtinction<-function(x, SpParams, u = 1, measurementHeightOverCanopy = 200,
+                                  boundaryLayerSize = 2000, target = "windspeed",
+                                  z = NULL, gdd = NA, mode = "MED", 
                                   draw = TRUE, xlim = NULL) {
-  if(is.null(z)) z = seq(0, ceiling(max(plant_height(x))/100)*100 +10, by=10)
-  fls = fuel_stratification(x, SpParams, gdd, mode = mode)
-  LAIc = fls$canopyLAI
-  canopyHeight = fls$canopyTopHeight
-  wep = .windExtinctionProfile(z, wind20H, LAIc, canopyHeight)
-  df = data.frame("WS" = wep, "Z" = z)
+  if(is.null(z)) z = seq(0, ceiling(max(plant_height(x))/100)*100 +boundaryLayerSize, by=10)
+  lad = vprofile_leafAreaDensity(x, SpParams, z,gdd,mode,FALSE,FALSE,FALSE, xlim)
+  canopyHeight = max(plant_height(x), na.rm=T)
+  zmid = 0.5*(z[1:(length(z)-1)] + z[2:(length(z))])
+  df = wind_canopyTurbulence(zmid, lad, canopyHeight, u, measurementHeightOverCanopy)
+  target = match.arg(target, c("windspeed", "kineticenergy", "stress"))
   if(draw) {
-    g<-ggplot(df, aes_string(x="WS", y="Z"))+
-      geom_path()+
-      xlab("Wind speed (m/s)")+
+    if(target=="windspeed") {
+      g<-ggplot(df, aes_string(x="u", y="zmid"))+
+        geom_path()+
+        xlab("Wind speed (m/s)")
+    } else if(target == "kineticenergy") {
+      g<-ggplot(df, aes_string(x="k", y="zmid"))+
+        geom_path()+
+        xlab("Turbulent kinetic energy (m2/s2)")
+    } else if(target == "stress") {
+      g<-ggplot(df, aes_string(x="uw", y="zmid"))+
+        geom_path()+
+        xlab("Reynolds stress (m2/s2)")
+    }
+    g <- g + geom_hline(yintercept=canopyHeight, col="gray", linetype="dashed")+
       ylab("Height (cm)")+
-      geom_hline(yintercept=canopyHeight, col="gray", linetype="dashed")+
-      geom_vline(xintercept=wind20H, col="gray", linetype="dashed")+
       theme_bw()
     if(!is.null(xlim)) g <- g + xlim(xlim)
   }
   if(draw) return(g)
-  else return(wep)
+  else return(df)
 }

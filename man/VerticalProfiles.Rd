@@ -24,7 +24,9 @@ vprofile_PARExtinction(x, SpParams, z = NULL, gdd = NA, mode = "MED",
                        draw = TRUE, xlim = c(0,100))
 vprofile_SWRExtinction(x, SpParams, z = NULL, gdd = NA, mode = "MED",
                        draw = TRUE, xlim = c(0,100))
-vprofile_windExtinction(x, SpParams, wind20H, z = NULL,  gdd = NA, mode = "MED",
+vprofile_windExtinction(x, SpParams, u = 1, measurementHeightOverCanopy = 200,
+                        boundaryLayerSize = 2000, target = "windspeed",
+                        z = NULL, gdd = NA, mode = "MED", 
                         draw = TRUE, xlim = NULL)
 }
 \arguments{
@@ -36,7 +38,10 @@ vprofile_windExtinction(x, SpParams, wind20H, z = NULL,  gdd = NA, mode = "MED",
   \item{mode}{Calculation mode, either "MED" or "US".}
   \item{byCohorts}{Separate profiles for each cohort.}
   \item{bySpecies}{Aggregate cohort profiles by species.}
-  \item{wind20H}{The value of measured wind speed at 6 m = 20ft (in m/s).}
+  \item{u}{The value of measured wind speed (in m/s).}
+  \item{windMeasurementHeight}{Height corresponding to wind measurement (in cm over the canopy).}
+  \item{boundaryLayerSize}{Size of the boundary layer (in cm) over the canopy.}
+  \item{target}{Wind property to draw, either "windspeed", "kineticenergy" (turbulent kinetic energy) or "stress" (Reynold's stress).}
   \item{draw}{Logical flag to indicate that a plot is desired.}
   \item{xlim}{Limits of the x-axis.}
 }
@@ -53,7 +58,7 @@ vprofile_windExtinction(x, SpParams, wind20H, z = NULL,  gdd = NA, mode = "MED",
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 }
 \seealso{
-\code{\link{forest}}
+\code{\link{forest}}, \code{\link{wind_canopyTurbulence}}
 }
 \examples{
 #Default species parameterization
@@ -68,6 +73,6 @@ vprofile_fuelBulkDensity(exampleforestMED, SpParamsMED)
 vprofile_PARExtinction(exampleforestMED, SpParamsMED)
 vprofile_SWRExtinction(exampleforestMED, SpParamsMED)
 
-vprofile_windExtinction(exampleforestMED, SpParamsMED, 20)
+vprofile_windExtinction(exampleforestMED, SpParamsMED)
 
 }
