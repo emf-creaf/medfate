@@ -581,6 +581,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   NumericVector minLeafPsi(numCohorts,0.0), maxLeafPsi(numCohorts,-99999.0); 
   NumericVector maxGSW_SL(numCohorts,-99999.0), maxGSW_SH(numCohorts,-99999.0); 
   NumericVector minGSW_SL(numCohorts,99999.0), minGSW_SH(numCohorts,99999.0); 
+  NumericVector maxTemp_SL(numCohorts,-99999.0), maxTemp_SH(numCohorts,-99999.0); 
+  NumericVector minTemp_SL(numCohorts,99999.0), minTemp_SH(numCohorts,99999.0); 
   NumericVector minLeafPsi_SL(numCohorts,0.0), maxLeafPsi_SL(numCohorts,-99999.0); 
   NumericVector minLeafPsi_SH(numCohorts,0.0), maxLeafPsi_SH(numCohorts,-99999.0);
   NumericVector minStemPsi(numCohorts, 0.0), minRootPsi(numCohorts,0.0); //Minimum potentials experienced
@@ -1012,6 +1014,10 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
         minGSW_SH[c] = std::min(minGSW_SH[c], GSW_SH(c,n));
         maxGSW_SL[c] = std::max(maxGSW_SL[c], GSW_SL(c,n));
         maxGSW_SH[c] = std::max(maxGSW_SH[c], GSW_SH(c,n));
+        minTemp_SL[c] = std::min(minTemp_SL[c], Temp_SL(c,n));
+        minTemp_SH[c] = std::min(minTemp_SH[c], Temp_SH(c,n));
+        maxTemp_SL[c] = std::max(maxTemp_SL[c], Temp_SL(c,n));
+        maxTemp_SH[c] = std::max(maxTemp_SH[c], Temp_SH(c,n));
         minLeafPsi_SL[c] = std::min(minLeafPsi_SL[c],Psi_SL(c,n));
         minLeafPsi_SH[c] = std::min(minLeafPsi_SH[c],Psi_SH(c,n));
         maxLeafPsi_SL[c] = std::max(maxLeafPsi_SL[c],Psi_SL(c,n));
@@ -1320,7 +1326,9 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
     _["LeafPsiMin"] = minLeafPsi_SL, 
     _["LeafPsiMax"] = maxLeafPsi_SL, 
     _["GSWMin"] = minGSW_SL,
-    _["GSWMax"] = maxGSW_SL  
+    _["GSWMax"] = maxGSW_SL,
+    _["TempMin"] = minTemp_SL,
+    _["TempMax"] = maxTemp_SL  
   );
   DataFrame Shade = DataFrame::create(
     _["LAI"] = LAI_SH, 
@@ -1329,7 +1337,9 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
     _["LeafPsiMin"] = minLeafPsi_SH, 
     _["LeafPsiMax"] = maxLeafPsi_SH, 
     _["GSWMin"] = minGSW_SH,
-    _["GSWMax"] = maxGSW_SH  
+    _["GSWMax"] = maxGSW_SH,
+    _["TempMin"] = minTemp_SH,
+    _["TempMax"] = maxTemp_SH  
   );
   Sunlit.attr("row.names") = above.attr("row.names");
   Shade.attr("row.names") = above.attr("row.names");

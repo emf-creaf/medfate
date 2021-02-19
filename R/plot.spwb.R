@@ -273,7 +273,7 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
     }
     return(.multiple_dynamics_range(as.matrix(OM1), as.matrix(OM2),  xlab = xlab, ylab = ylab, ylim = ylim))
   }
-  else if(type %in% c("LeafPsiMin_SL", "LeafPsiMax_SL", "GSWMin_SL", "GSWMax_SL")) {
+  else if(type %in% c("LeafPsiMin_SL", "LeafPsiMax_SL", "GSWMin_SL", "GSWMax_SL", "TempMin_SL", "TempMax_SL")) {
     subType = strsplit(type,"_")[[1]][1]
     OM = SunlitLeaves[[subType]][,cohorts,drop=FALSE]
     if(bySpecies) OM = .averageByLAISpecies(OM, PlantsLAI, spnames)
@@ -281,7 +281,7 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
     if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
-  else if(type %in% c("LeafPsiMin_SH", "LeafPsiMax_SH", "GSWMin_SH", "GSWMax_SH")) {
+  else if(type %in% c("LeafPsiMin_SH", "LeafPsiMax_SH", "GSWMin_SH", "GSWMax_SH", "TempMin_SH", "TempMax_SH")) {
     subType = strsplit(type,"_")[[1]][1]
     OM = ShadeLeaves[[subType]][,cohorts,drop=FALSE]
     if(bySpecies) OM = .averageByLAISpecies(OM, PlantsLAI, spnames)
