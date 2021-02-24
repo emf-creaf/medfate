@@ -250,6 +250,13 @@ DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, Dat
   NumericVector cohSmallBranchLitter = cohortEquilibriumSmallBranchLitter(object, SpParams, smallBranchDecompositionRate, mode);
   NumericVector cohHeight = cohortHeight(object);
   NumericVector cohCL = cohortCrownLength(object, SpParams, mode);
+  for(int i=0;i<cohLoading.size();i++) {
+    if(NumericVector::is_na(cohLoading[i])) cohLoading[i] = 0.0;
+    if(NumericVector::is_na(cohLeafLitter[i])) cohLeafLitter[i] = 0.0;
+    if(NumericVector::is_na(cohSmallBranchLitter[i])) cohSmallBranchLitter[i] = 0.0;
+    if(NumericVector::is_na(cohHeight[i])) cohHeight[i] = 0.0;
+    if(NumericVector::is_na(cohCL[i])) cohCL[i] = 0.0;
+  }
     
   NumericVector cohParticleDensity = cohortNumericParameter(object, SpParams, "ParticleDensity");
   NumericVector cohSAV = cohortNumericParameter(object, SpParams, "SAV");
