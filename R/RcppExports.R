@@ -573,6 +573,10 @@ light_instantaneousLightExtinctionAbsortion <- function(LAIme, LAImd, LAImx, kPA
     .Call(`_medfate_instantaneousLightExtinctionAbsortion`, LAIme, LAImd, LAImx, kPAR, alphaSWR, gammaSWR, ddd, ntimesteps, trunkExtinctionFraction)
 }
 
+light_longwaveRadiationSHAW <- function(LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair, trunkExtinctionFraction = 0.1) {
+    .Call(`_medfate_longwaveRadiationSHAW`, LAIme, LAImd, LAImx, LWRatm, Tsoil, Tair, trunkExtinctionFraction)
+}
+
 .checkSpeciesParameters <- function(SpParams, params) {
     invisible(.Call(`_medfate_checkSpeciesParameters`, SpParams, params))
 }

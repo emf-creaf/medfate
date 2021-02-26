@@ -460,6 +460,7 @@ List instantaneousLightExtinctionAbsortion(NumericMatrix LAIme, NumericMatrix LA
  *  Ma Y, Liu H (2019) An Advanced Multiple-Layer Canopy Model in the WRF Model With Large-Eddy Simulations to Simulate Canopy Flows and Scalar Transport Under Different Stability Conditions. J Adv Model Earth Syst 11:2330–2351. https://doi.org/10.1029/2018MS001347
  *  Flerchinger GN, Xiao W, Sauer TJ, Yu Q (2009) Simulation of within-canopy radiation exchange. NJAS - Wageningen J Life Sci 57:5–15. https://doi.org/10.1016/j.njas.2009.07.004
  */
+// [[Rcpp::export("light_longwaveRadiationSHAW")]]
 List longwaveRadiationSHAW(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatrix LAImx, 
                            double LWRatm, double Tsoil, NumericVector Tair, double trunkExtinctionFraction = 0.1) {
   int ncoh = LAIme.ncol();
@@ -468,6 +469,8 @@ List longwaveRadiationSHAW(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatr
   NumericVector tau(ncanlayers), sumTauComp(ncanlayers);
   NumericMatrix tauM(ncanlayers, ncoh);
   NumericMatrix LnetM(ncanlayers, ncoh);
+  if(ncoh>0) LnetM.attr("dimnames") = List::create(seq(1,ncanlayers), seq(1,ncoh));
+  
   double Kdlw = 0.7815; //Extinction coefficient fo LWR
   double eps_c = 0.97;
   double eps_g = 0.97;

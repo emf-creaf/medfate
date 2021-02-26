@@ -587,7 +587,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   NumericVector minLeafPsi_SH(numCohorts,0.0), maxLeafPsi_SH(numCohorts,-99999.0);
   NumericVector minStemPsi(numCohorts, 0.0), minRootPsi(numCohorts,0.0); //Minimum potentials experienced
   NumericMatrix minPsiRhizo(numCohorts, nlayers);
-  std::fill(minPsiRhizo.begin(), minPsiRhizo.end(), 0.0);
+  if(numCohorts>0) std::fill(minPsiRhizo.begin(), minPsiRhizo.end(), 0.0);
   NumericMatrix PLC(numCohorts, ntimesteps);
   NumericVector PLCm(numCohorts), RWCsm(numCohorts), RWClm(numCohorts),RWCssm(numCohorts), RWClsm(numCohorts);
   NumericVector dEdPm(numCohorts);
