@@ -3,7 +3,8 @@
 -------------------------------
 
 # Version 1.1.6
-- New canopy turbulence models by Katul et al (2004)
+- New canopy turbulence models by Katul et al (2004).
+- Long-wave net radiation balance for layered canopies following Flerchinger et al. (2009).
 - Multi-layer canopy energy balance as in Bonan et al. (2014)
 - New option 'depthMode' to calculate fuel depth in 'fuel_FCCS'.
 - Modification of 'vprofile_windExtinction' to draw turbulence models.
