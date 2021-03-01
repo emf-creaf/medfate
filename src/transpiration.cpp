@@ -1097,7 +1097,6 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
       NumericVector LWRnet_layer = LWR_layer["Lnet"];
       Ebal[n] = 0.0;
       LEcan_heat[n] = 0.0;
-      double layerEvapStep = canEvapStep/((double) ncanlayers); //Assumes all layers contribute equally to evaporation
       NumericVector Tairnext(ncanlayers), LElayer(ncanlayers), absSWRlayer(ncanlayers), Rnlayer(ncanlayers), Hleaflayer(ncanlayers);
       NumericVector layerThermalCapacity(ncanlayers);
       NumericVector moistureET(ncanlayers), rho(ncanlayers), moistureLayer(ncanlayers), moistureLayernext(ncanlayers);
@@ -1110,6 +1109,8 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
         NumericVector pLayer = LAIme(i,_)/LAIphe; //Proportion of each cohort LAI in layer i
         //Latent heat (evaporation + transpiration)
         double Ecanlayer = sum(Einst(_,n)*pLayer);
+        //Assumes Layers contribute to evaporation proportionally to their LAI fraction
+        double layerEvapStep = canEvapStep * (LAIpe[i]/LAIcellexpanded);
         double Anlayer = 1000.0*(44.01/12.0)*sum(Aninst(_,n)*pLayer); //from gC/m2 to mgCO2/m2
         double LEwat = (1e6)*meteoland::utils_latentHeatVaporisation(Tair[i])*(Ecanlayer + layerEvapStep)/tstep;
         LElayer[i] = LEwat; //Energy spent in vaporisation
