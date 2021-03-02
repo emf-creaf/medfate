@@ -1161,9 +1161,9 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
           }
           Hleaflayer[i] = 0.0;
           for(int c=0;c<numCohorts;c++) {
-            double rHa = 307.0*pow(leafWidth[c]/std::max(zWind[i],0.1), 0.5);
-            double Hsunlit = 2.0*Cp_JKG*rho[i]*(Temp_SL(c, n)-Tair[i])/rHa;
-            double Hshade = 2.0*Cp_JKG*rho[i]*(Temp_SH(c, n)-Tair[i])/rHa;
+            double gHa = 0.189*pow(std::max(zWind[i],0.1)/(leafWidth[c]*0.0072), 0.5);
+            double Hsunlit = 2.0*Cp_Jmol*rho[i]*(Temp_SL(c, n)-Tair[i])*gHa;
+            double Hshade = 2.0*Cp_Jmol*rho[i]*(Temp_SH(c, n)-Tair[i])*gHa;
             // Rcout<<c<<" " << Hsunlit<< " "<<Hshade<<" \n";
             Hleaflayer[i] +=(Hsunlit*fsunlit[i] + Hshade*(1.0-fsunlit[i]))*LAIme(i,c);
           }
