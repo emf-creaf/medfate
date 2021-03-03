@@ -35,6 +35,7 @@ defaultControl<-function() {
     averageFracRhizosphereResistance = 0.15,
     Catm = 386,
     ndailysteps = 24,
+    nsubsteps = 200,
     thermalCapacityLAI = 1000000,
     multiLayerBalance = FALSE,
     
