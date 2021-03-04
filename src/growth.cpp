@@ -1618,7 +1618,13 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   List s;
   int iyear = 0;
   for(int i=0;i<numDays;i++) {
-    if(verbose && (i%10 == 0)) Rcout<<".";//<<i;
+    if(verbose) {
+      if(DOY[i]==1 || i==0) {
+        std::string c = as<std::string>(dateStrings[i]);
+        Rcout<<"\n Year "<< c.substr(0, 4)<< ":";
+      } 
+      else if(i%10 == 0) Rcout<<".";//<<i;
+    } 
     
     double wind = WindSpeed[i];
     if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; //Default 1 m/s -> 10% of fall every day

@@ -366,6 +366,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   }
   //Take initial canopy air temperature from previous day
   Tcan[0] = sum(Tair*LAIpx)/sum(LAIpx);
+  for(int j=0;j<ncanlayers; j++) Tcan_mat(0,j) = Tair[j];
   //Take temperature soil vector 
   Tsoil_mat(0,_) = Tsoil; 
   
@@ -1090,10 +1091,9 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
         
       double tsubstep = tstep/((double) nsubsteps); 
       double maxTchange = 3.0/((double) nsubsteps);
-      double maxMoistureChange = 0.01/((double)nsubsteps);
-      double maxCO2Change = 18.0/((double)nsubsteps); //= 1ppm per h
+      double maxMoistureChange = 0.01/((double)nsubsteps); //=1.6 kPa per step
+      double maxCO2Change = 180.0/((double)nsubsteps); //= 10 ppm per step
       double deltaZ = (verticalLayerSize/100.0); //Vertical layer size in m
-      
       DataFrame LWR_layer = Rcpp::as<Rcpp::DataFrame>(lwrExtinction["LWR_layer"]);
       NumericVector LWRnet_layer = LWR_layer["Lnet"];
       Ebal[n] = 0.0;
@@ -1108,22 +1108,26 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
         //Radiation balance
         Rnlayer[i] = absSWRlayer[i] + LWRnet_layer[i];
         NumericVector pLayer = LAIme(i,_)/LAIphe; //Proportion of each cohort LAI in layer i
-        //Latent heat (evaporation + transpiration)
-        double Ecanlayer = sum(Einst(_,n)*pLayer);
+        //Instantaneous layer transpiration
+        //from mmolH2O/m2/s to kgH2O/m2/s
+        double ElayerInst = 0.001*0.01802*sum(LAIme(i,_)*(E_SL(_,n)*fsunlit[i] + E_SH(_,n)*(1.0-fsunlit[i])));
         //Assumes Layers contribute to evaporation proportionally to their LAI fraction
-        double layerEvapStep = canEvapStep * (LAIpe[i]/LAIcellexpanded);
-        double Anlayer = 1000.0*(44.01/12.0)*sum(Aninst(_,n)*pLayer); //from gC/m2 to mgCO2/m2
-        double LEwat = (1e6)*meteoland::utils_latentHeatVaporisation(Tair[i])*(Ecanlayer + layerEvapStep)/tstep;
+        double layerEvapInst = (canEvapStep/tstep)*(LAIpe[i]/LAIcellexpanded);
+        //Estimate instantaneous mgCO2/m2 absorption for the layer, taking into account the proportion of sunlit and shade leaves of each cohort
+        //from micro.molCO2/m2/s to mgCO2/m2/s
+        double Anlayer =(1e-3)*44.01*sum(LAIme(i,_)*(An_SL(_,n)*fsunlit[i] + An_SH(_,n)*(1.0-fsunlit[i])));
+        // 1000.0*(44.01/12.0)*sum(Aninst(_,n)*pLayer); 
+        double LEwat = (1e6)*meteoland::utils_latentHeatVaporisation(Tair[i])*(ElayerInst + layerEvapInst);
         LElayer[i] = LEwat; //Energy spent in vaporisation
         LEcan_heat[n] = LElayer[i];
         // layerThermalCapacity[i] = (0.5*(0.8*LAIcelllive + 1.2*LAIcell) + LAIcelldead)*thermalCapacityLAI/((double) ncanlayers);
         layerThermalCapacity[i] =  (0.5*(0.8*LAIpx[i] + 1.2*LAIpe[i]) + LAIpd[i])*thermalCapacityLAI; //Avoids zero capacity for winter deciduous
         
         moistureLayer[i] = 0.622*(VPair[i]/Patm)*rho[i]; //kg water vapour/m3
-        moistureET[i] = (Ecanlayer + layerEvapStep)/(deltaZ*tstep); //kg water vapour /m3/s
+        moistureET[i] = (ElayerInst + layerEvapInst)/(deltaZ); //kg water vapour /m3/s
         
         CO2Layer[i] = 0.409*Cair[i]*44.01; //mg/m3
-        CO2An[i] = -1.0*Anlayer/(deltaZ*tstep); //mg/m3/s
+        CO2An[i] = -1.0*Anlayer/(deltaZ); //mg/m3/s
         // Rcout<<n<< " "<< i<< " - Rn: "<<Rnlayer[i]<<" LE: "<<LElayer[i]<<" Hleaf: "<<Hleaflayer[i]<< " Tini: "<< Tair[i]<<"\n";
       }
       //Add soil moisture evaporation
@@ -1204,7 +1208,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
         Tsoil_mat(n+1,_)= Tsoil;
       }
     }
-    for(int i=0;i<ncanlayers;i++) Tcan_mat(n,i) = Tair[i];
+    if(n<(ntimesteps-1)) for(int i=0;i<ncanlayers;i++) Tcan_mat(n+1,i) = Tair[i];
 
     
   } //End of timestep loop

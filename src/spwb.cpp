@@ -1074,11 +1074,13 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
   NumericVector Eplanttot(numDays,0.0);
   List s;
   for(int i=0;i<numDays;i++) {
-      if(verbose & (DOY[i]==1 || i==0)){
-        std::string c = as<std::string>(dateStrings[i]);
-        Rcout<<"\n Year "<< c.substr(0, 4)<< ":";
+      if(verbose) {
+        if(DOY[i]==1 || i==0) {
+          std::string c = as<std::string>(dateStrings[i]);
+          Rcout<<"\n Year "<< c.substr(0, 4)<< ":";
+        } 
+        else if(i%10 == 0) Rcout<<".";//<<i;
       } 
-      if(verbose & (i%10 == 0)) Rcout<<".";//<<i;
       
       double wind = WindSpeed[i];
       if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; //Default 1 m/s -> 10% of fall every day
@@ -1330,11 +1332,13 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
   NumericVector Eplanttot(numDays,0.0);
   List s;
   for(int i=0;i<numDays;i++) {
-    if(verbose & (DOY[i]==1 || i==0)){
-      std::string c = as<std::string>(dateStrings[i]);
-      Rcout<<"\n Year "<< c.substr(0, 4)<< ":";
+    if(verbose) {
+      if(DOY[i]==1 || i==0) {
+        std::string c = as<std::string>(dateStrings[i]);
+        Rcout<<"\n Year "<< c.substr(0, 4)<< ":";
+      } 
+      else if(i%10 == 0) Rcout<<".";//<<i;
     } 
-    if(verbose & (i%10 == 0)) Rcout<<".";//<<i;
     double wind = WindSpeed[i];
     if(NumericVector::is_na(wind)) wind = control["defaultWindSpeed"]; //Default 1 m/s -> 10% of fall every day
     if(wind<0.1) wind = 0.1; //Minimum windspeed abovecanopy
