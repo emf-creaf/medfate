@@ -1428,6 +1428,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   bool subdailyResults = control["subdailyResults"];
   bool leafPhenology = control["leafPhenology"];
   bool unlimitedSoilWater = control["unlimitedSoilWater"];
+  bool multiLayerBalance = control["multiLayerBalance"];
   checkgrowthInput(x, soil, transpirationMode, soilFunctions);
   
   if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
@@ -1470,7 +1471,10 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   IntegerVector DOY = date2doy(dateStrings);
   NumericVector Photoperiod = date2photoperiod(dateStrings, latrad);
   
-
+  
+  //Canopy scalars
+  DataFrame canopy = Rcpp::as<Rcpp::DataFrame>(x["canopy"]);
+  
   //Aboveground parameters  
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   int numCohorts = SP.size();
@@ -1534,6 +1538,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   //EnergyBalance output variables
   DataFrame DEB = defineEnergyBalanceDailyOutput(meteo);
   DataFrame DT = defineTemperatureDailyOutput(meteo);
+  NumericMatrix DLT =  defineTemperatureLayersDailyOutput(meteo, canopy);
   
   //Plant carbon output variables
   NumericMatrix CarbonBalance(numDays, numCohorts);
@@ -1678,7 +1683,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
                    er, 0.0, verbose);
       // Rcout<<" coh 1: "<< Status[1]<<"\n";
       
-      fillEnergyBalanceTemperatureDailyOutput(DEB,DT,s,i);
+      fillEnergyBalanceTemperatureDailyOutput(DEB,DT,DLT,s,i);
     }    
     
     fillPlantWaterDailyOutput(plantDWOL, sunlitDO, shadeDO, s, i, transpirationMode);
@@ -1924,6 +1929,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
                    Named("WaterBalance")=DWB, 
                    Named("EnergyBalance") = DEB,
                    Named("Temperature") = DT,
+                   Named("TemperatureLayers") = NA_REAL,
                    Named("Soil")=SWB,
                    Named("Stand")=Stand,
                    Named("Plants") = plantDWOL,
@@ -1935,7 +1941,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
                    Named("StandStructures") = standStructures,
                    Named("StandSummary") = standSummary,
                    Named("subdaily") =  subdailyRes);
-  
+    if(multiLayerBalance) l["TemperatureLayers"] = DLT;
   }
   l.attr("class") = CharacterVector::create("growth","list");
   return(l);
