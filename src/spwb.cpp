@@ -761,12 +761,12 @@ void fillSoilWaterBalanceDailyOutput(DataFrame SWB, List soil, List sDay,
   WaterTable[iday] = waterTableDepth(soil, soilFunctions);
 }
 
-void fillEnergyBalanceTemperatureDailyOutput(DataFrame DEB, DataFrame DT, NumericMatrix DLT, List sDay, int iday) {
+void fillEnergyBalanceTemperatureDailyOutput(DataFrame DEB, DataFrame DT, NumericMatrix DLT, List sDay, 
+                                             int iday, bool multiLayerBalance) {
   List EB = Rcpp::as<Rcpp::List>(sDay["EnergyBalance"]);
   DataFrame Tinst = Rcpp::as<Rcpp::DataFrame>(EB["Temperature"]); 
   DataFrame CEBinst = Rcpp::as<Rcpp::DataFrame>(EB["CanopyEnergyBalance"]); 
   DataFrame SEBinst = Rcpp::as<Rcpp::DataFrame>(EB["SoilEnergyBalance"]); 
-  NumericMatrix LTinst = Rcpp::as<Rcpp::NumericMatrix>(EB["TemperatureLayers"]); 
   NumericVector Tatm = Rcpp::as<Rcpp::NumericVector>(Tinst["Tatm"]);
   NumericVector Tcan = Rcpp::as<Rcpp::NumericVector>(Tinst["Tcan"]);
   NumericVector Tsoil = Rcpp::as<Rcpp::NumericVector>(Tinst["Tsoil.1"]);
@@ -813,7 +813,10 @@ void fillEnergyBalanceTemperatureDailyOutput(DataFrame DEB, DataFrame DT, Numeri
   Tsoil_min[iday] = min(Tsoil);
   Tsoil_max[iday] = max(Tsoil);
   Tsoil_mean[iday] = sum(Tsoil)/((double) ntimesteps);
-  for(int l=0;l<ncanlayers;l++) DLT(iday, l) = sum(LTinst(_,l))/((double) ntimesteps);
+  if(multiLayerBalance) {
+    NumericMatrix LTinst = Rcpp::as<Rcpp::NumericMatrix>(EB["TemperatureLayers"]); 
+    for(int l=0;l<ncanlayers;l++) DLT(iday, l) = sum(LTinst(_,l))/((double) ntimesteps);
+  }
 }
 void fillPlantWaterDailyOutput(List x, List sunlit, List shade, List sDay, int iday, String transpirationMode) {
   List Plants = sDay["Plants"];
@@ -1068,7 +1071,8 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
   //EnergyBalance output variables
   DataFrame DEB = defineEnergyBalanceDailyOutput(meteo);
   DataFrame DT = defineTemperatureDailyOutput(meteo);
-  NumericMatrix DLT =  defineTemperatureLayersDailyOutput(meteo, canopy);
+  NumericMatrix DLT;
+  if(transpirationMode=="Sperry") DLT =  defineTemperatureLayersDailyOutput(meteo, canopy);
   
   //Plant output variables
   List sunlitDO = defineSunlitShadeLeavesDailyOutput(meteo, above);
@@ -1160,7 +1164,7 @@ List spwb(List x, List soil, DataFrame meteo, double latitude, double elevation 
                      solarConstant, delta, Precipitation[i], PET[i], 
                      er, 0.0, verbose);
         
-        fillEnergyBalanceTemperatureDailyOutput(DEB,DT,DLT, s,i);
+        fillEnergyBalanceTemperatureDailyOutput(DEB,DT,DLT, s,i, multiLayerBalance);
       }
       
       //Update plant daily water output
@@ -1328,7 +1332,8 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
   //EnergyBalance output variables
   DataFrame DEB = defineEnergyBalanceDailyOutput(meteo);
   DataFrame DT = defineTemperatureDailyOutput(meteo);
-  NumericMatrix DLT  =  defineTemperatureLayersDailyOutput(meteo, canopy);
+  NumericMatrix DLT;
+  if(transpirationMode=="Sperry") DLT =  defineTemperatureLayersDailyOutput(meteo, canopy);
   
   //Stand output variables
   NumericVector LAI(numDays),LAIlive(numDays),LAIexpanded(numDays),LAIdead(numDays);
@@ -1420,7 +1425,7 @@ List pwb(List x, List soil, DataFrame meteo, NumericMatrix W,
                               solarConstant, delta, prec,
                               canopyEvaporation[i], snowMelt[i], soilEvaporation[i],
                               verbose, NA_INTEGER, true, true);
-      fillEnergyBalanceTemperatureDailyOutput(DEB,DT,DLT,s,i);
+      fillEnergyBalanceTemperatureDailyOutput(DEB,DT,DLT,s,i, multiLayerBalance);
     }
     
     //Update plant daily water output

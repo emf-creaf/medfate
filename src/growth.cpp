@@ -1538,7 +1538,8 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   //EnergyBalance output variables
   DataFrame DEB = defineEnergyBalanceDailyOutput(meteo);
   DataFrame DT = defineTemperatureDailyOutput(meteo);
-  NumericMatrix DLT =  defineTemperatureLayersDailyOutput(meteo, canopy);
+  NumericMatrix DLT;
+  if(transpirationMode=="Sperry") DLT =  defineTemperatureLayersDailyOutput(meteo, canopy);
   
   //Plant carbon output variables
   NumericMatrix CarbonBalance(numDays, numCohorts);
@@ -1683,7 +1684,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
                    er, 0.0, verbose);
       // Rcout<<" coh 1: "<< Status[1]<<"\n";
       
-      fillEnergyBalanceTemperatureDailyOutput(DEB,DT,DLT,s,i);
+      fillEnergyBalanceTemperatureDailyOutput(DEB,DT,DLT,s,i, multiLayerBalance);
     }    
     
     fillPlantWaterDailyOutput(plantDWOL, sunlitDO, shadeDO, s, i, transpirationMode);

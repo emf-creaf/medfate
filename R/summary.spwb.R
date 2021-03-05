@@ -12,6 +12,7 @@ summary.spwb<-function(object, freq="years", output="WaterBalance", FUN=sum, byS
   else if(output=="PlantTranspiration") OM = object$PlantTranspiration
   else if(output=="EnergyBalance") OM = object$EnergyBalance
   else if(output=="Temperature") OM = object$Temperature
+  else if(output=="TemperatureLayers") OM = object$TemperatureLayers
   else if(output=="PlantLAI") {
     OM = object$Plants$LAI
     if(bySpecies) {

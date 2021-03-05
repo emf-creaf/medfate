@@ -19,7 +19,8 @@ void fillWaterBalanceDailyOutput(DataFrame DWB, List sDay, int iday, String tran
 void fillSoilWaterBalanceDailyOutput(DataFrame SWB, List soil, List sDay, 
                                      int iday, int numDays, String transpirationMode,
                                      String soilFunctions);
-void fillEnergyBalanceTemperatureDailyOutput(DataFrame DEB, DataFrame DT, NumericMatrix DLT, List sDay, int iday);
+void fillEnergyBalanceTemperatureDailyOutput(DataFrame DEB, DataFrame DT, NumericMatrix DLT, List sDay, 
+                                             int iday, bool multiLayerBalance);
 void fillPlantWaterDailyOutput(List x, List sunlit, List shade, List sDay, int day, String transpirationMode);
 
 void printWaterBalanceResult(DataFrame DWB, List plantDWOL, 
