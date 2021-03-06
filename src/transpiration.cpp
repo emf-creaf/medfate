@@ -348,6 +348,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   NumericVector net_LWR_soil(ntimesteps), Ebalsoil(ntimesteps), Hcansoil(ntimesteps), LEsoil_heat(ntimesteps);
   NumericMatrix Tsoil_mat(ntimesteps, nlayers);
   NumericMatrix Tcan_mat(ntimesteps, ncanlayers);
+  NumericMatrix VPcan_mat(ntimesteps, ncanlayers);
   //Daylength in seconds (assuming flat area because we want to model air temperature variation)
   double tauday = meteoland::radiation_daylengthseconds(latrad,0.0,0.0, delta); 
   for(int n=0;n<ntimesteps;n++) {
@@ -366,7 +367,10 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   }
   //Take initial canopy air temperature from previous day
   Tcan[0] = sum(Tair*LAIpx)/sum(LAIpx);
-  for(int j=0;j<ncanlayers; j++) Tcan_mat(0,j) = Tair[j];
+  for(int j=0;j<ncanlayers; j++) {
+    Tcan_mat(0,j) = Tair[j];
+    VPcan_mat(0,j) = VPair[j];
+  }
   //Take temperature soil vector 
   Tsoil_mat(0,_) = Tsoil; 
   
@@ -1091,7 +1095,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
         
       double tsubstep = tstep/((double) nsubsteps); 
       double maxTchange = 3.0/((double) nsubsteps);
-      double maxMoistureChange = 0.01/((double)nsubsteps); //=1.6 kPa per step
+      double maxMoistureChange = 0.001/((double)nsubsteps); //=0.16 kPa per step
       double maxCO2Change = 180.0/((double)nsubsteps); //= 10 ppm per step
       double deltaZ = (verticalLayerSize/100.0); //Vertical layer size in m
       DataFrame LWR_layer = Rcpp::as<Rcpp::DataFrame>(lwrExtinction["LWR_layer"]);
@@ -1129,6 +1133,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
         CO2Layer[i] = 0.409*Cair[i]*44.01; //mg/m3
         CO2An[i] = -1.0*Anlayer/(deltaZ); //mg/m3/s
         // Rcout<<n<< " "<< i<< " - Rn: "<<Rnlayer[i]<<" LE: "<<LElayer[i]<<" Hleaf: "<<Hleaflayer[i]<< " Tini: "<< Tair[i]<<"\n";
+        // Rcout<<n<< " "<< i<< " - moistureET: "<<moistureET[i]<<" moistureLayer: "<<moistureLayer[i]<<" CO2An: "<<CO2An[i]<< " CO2Layer: "<< CO2Layer[i]<<"\n";
       }
       //Add soil moisture evaporation
       moistureET[0] += soilEvapStep/(deltaZ*tstep); //kg/m3/s
@@ -1208,9 +1213,10 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
         Tsoil_mat(n+1,_)= Tsoil;
       }
     }
-    if(n<(ntimesteps-1)) for(int i=0;i<ncanlayers;i++) Tcan_mat(n+1,i) = Tair[i];
-
-    
+    if(n<(ntimesteps-1)) for(int i=0;i<ncanlayers;i++) {
+      Tcan_mat(n+1,i) = Tair[i];
+      VPcan_mat(n+1,i) = VPair[i];
+    }
   } //End of timestep loop
 
   //4z. Plant daily drought stress (from root collar mid-day water potential)
@@ -1266,6 +1272,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   DataFrame Tinst = DataFrame::create(_["SolarHour"] = solarHour, 
                                       _["Tatm"] = Tatm, _["Tcan"] = Tcan, _["Tsoil"] = Tsoil_mat);
   Tcan_mat.attr("dimnames") = List::create(seq(1,ntimesteps), seq(1,ncanlayers));
+  VPcan_mat.attr("dimnames") = List::create(seq(1,ntimesteps), seq(1,ncanlayers));
   DataFrame CEBinst = DataFrame::create(_["SolarHour"] = solarHour, 
                                         _["SWRcan"] = abs_SWR_can, _["LWRcan"] = net_LWR_can,
                                         _["LEcan"] = LEcan_heat, _["Hcan"] = Hcan_heat, _["Ebalcan"] = Ebal);
@@ -1273,8 +1280,11 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
                                         _["Hcansoil"] = Hcansoil, _["LEsoil"] = LEsoil_heat, _["SWRsoil"] = abs_SWR_soil, _["LWRsoil"] = net_LWR_soil,
                                         _["Ebalsoil"] = Ebalsoil);
   List EB = List::create(_["Temperature"]=Tinst, _["CanopyEnergyBalance"] = CEBinst, _["SoilEnergyBalance"] = SEBinst,
-                         _["TemperatureLayers"] = NA_REAL);
-  if(multiLayerBalance) EB["TemperatureLayers"] = Tcan_mat;
+                         _["TemperatureLayers"] = NA_REAL, _["VaporPressureLayers"] = NA_REAL);
+  if(multiLayerBalance) {
+    EB["TemperatureLayers"] = Tcan_mat;
+    EB["VaporPressureLayers"] = VPcan_mat;
+  }
   E_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   E_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   Psi_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
