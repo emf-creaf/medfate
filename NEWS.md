@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 1.1.7
+- Bug correction: NaN values for theta > theta_sat in van Genuchten psi computation
+
 # Version 1.1.6
 - New canopy turbulence models by Katul et al (2004).
 - Long-wave net radiation balance for layered canopies following Flerchinger et al. (2009).

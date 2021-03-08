@@ -226,10 +226,11 @@ NumericVector soilInfiltrationPercolation(List soil, String soilFunctions,
   //If there is still room for additional drainage (water in macropores accumulated from previous days)
   double head = 0.0;
   for(int l=0;l<nlayers;l++) { //Add mm over field capacity
-    if((l<(nlayers-1)) | (rfc[l] < 95.0) | rockyLayerDrainage) {
+    if((l<(nlayers-1)) | rockyLayerDrainage) {
       head += Water_FC[l]*std::max(W[l] - 1.0, 0.0);
     }
   }
+  // Rcout<<head<<"\n";
   if(head>0.0) {
     double maxDrainage = head*Kdrain;
     for(int l=0;l<nlayers;l++) {

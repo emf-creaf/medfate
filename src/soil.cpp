@@ -205,6 +205,8 @@ double psi2thetaVanGenuchten(double n, double alpha, double theta_res, double th
  */
 // [[Rcpp::export("soil_theta2psiVG")]]
 double theta2psiVanGenuchten(double n, double alpha, double theta_res, double theta_sat, double theta) {
+  //if theta > theta_sat then psi = 0
+  theta = std::min(theta, theta_sat);
   double T = (theta-theta_res)/(theta_sat-theta_res); //content relative
   double m = 1.0 - (1.0/n);
   // double T = pow(pow(alpha*std::abs(psi),n)+1.0,-m);
