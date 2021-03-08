@@ -98,7 +98,7 @@ control$transpirationMode="Sperry"
 #Simulate one day only
 x2 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 d = 100
-sd2<-spwb_day(x2, examplesoil, rownames(examplemeteo)[d], 
+sd2<-spwb_day(x2, rownames(examplemeteo)[d], 
              examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
              examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
              examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 

@@ -1,4 +1,4 @@
-multiple_runs<-function(parMatrix, x, soil,
+multiple_runs<-function(parMatrix, x,
                         meteo, latitude,
                         elevation = NA, slope = NA, aspect = NA, 
                         summary_function = NULL, args = NULL, 
@@ -10,12 +10,12 @@ multiple_runs<-function(parMatrix, x, soil,
   res = vector("list", n)
   parNames = colnames(parMatrix)
   for(r in 1:n) {
-    resetInputs(x, soil)
+    resetInputs(x)
     customParams = parMatrix[r,]
     names(customParams) <- parNames
-    x = modifyInputParams(x, customParams, soil)
+    x = modifyInputParams(x, customParams)
     x$control$verbose = FALSE
-    S = do.call(model, list(x = x, soil = soil, 
+    S = do.call(model, list(x = x,
                             meteo = meteo, 
                             latitude = latitude, elevation = elevation,
                             slope  = slope,aspect = aspect))
@@ -30,7 +30,7 @@ multiple_runs<-function(parMatrix, x, soil,
   return(res)
 }
 
-optimization_function<-function(parNames, x, soil,  
+optimization_function<-function(parNames, x, 
                                 meteo, latitude,
                                 elevation = NA, slope = NA, aspect = NA, 
                                 summary_function, args= NULL) {
@@ -41,12 +41,12 @@ optimization_function<-function(parNames, x, soil,
   x$control$verbose = FALSE
   
   yf<-function(v, verbose = FALSE) {
-    resetInputs(x, soil)
+    resetInputs(x)
     if(is.vector(v)) {
       customParams = v
       names(customParams) <- parNames
-      x = modifyInputParams(x, customParams, soil)
-      S = do.call(model, list(x = x, soil = soil, 
+      x = modifyInputParams(x, customParams)
+      S = do.call(model, list(x = x, 
                               meteo = meteo, 
                               latitude = latitude, elevation = elevation,
                               slope  = slope,aspect = aspect))
@@ -55,7 +55,7 @@ optimization_function<-function(parNames, x, soil,
       return(y)
     } else if(is.matrix(v)) {
       colnames(v)<-parNames
-      y<-multiple_runs(parMatrix = v, x = x, soil = soil, 
+      y<-multiple_runs(parMatrix = v, x = x, 
                        meteo = meteo,
                        latitude = latitude, elevation = elevation,
                        slope  = slope,aspect = aspect,
@@ -69,7 +69,7 @@ optimization_function<-function(parNames, x, soil,
   return(yf)
 }
 
-optimization_evaluation_function<-function(parNames, x, soil, 
+optimization_evaluation_function<-function(parNames, x, 
                                            meteo, latitude,
                                            elevation = NA, slope = NA, aspect = NA, 
                                            measuredData, type = "SWC", cohort = NULL, 
@@ -81,7 +81,7 @@ optimization_evaluation_function<-function(parNames, x, soil,
                           temporalResolution = temporalResolution, metric = metric)
     return(y)
   }
-  return(optimization_function(parNames = parNames, x = x, soil = soil,
+  return(optimization_function(parNames = parNames, x = x,
                                meteo = meteo, latitude = latitude,
                                elevation = elevation, slope = slope, aspect = aspect,
                                summary_function = sf))

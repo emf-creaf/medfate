@@ -6,7 +6,7 @@
 Function \code{resetInputs()} allows resetting state variables in \code{x} to their defaults.
 }
 \usage{
-resetInputs(x, soil)
+resetInputs(x)
 }
 \arguments{
   \item{x}{An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}.}

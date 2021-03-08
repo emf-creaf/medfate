@@ -7,15 +7,14 @@
 Function \code{spwb_day} performs water balance for a single day and \code{growth_day} performs water and carbon balance for a single day.
 }
 \usage{
-spwb_day(x, soil, date, tmin, tmax, rhmin, rhmax, rad, wind, 
+spwb_day(x, date, tmin, tmax, rhmin, rhmax, rad, wind, 
          latitude, elevation, slope, aspect, prec, runon = 0.0)
-growth_day(x, soil, date, tmin, tmax, rhmin, rhmax, rad, wind, 
+growth_day(x, date, tmin, tmax, rhmin, rhmax, rad, wind, 
            latitude, elevation, slope, aspect, prec, runon = 0.0)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}.}
-  \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
   \item{date}{Date as string "yyyy-mm-dd".}
   \item{tmin, tmax}{Minimum and maximum temperature (in degrees Celsius).}
   \item{rhmin, rhmax}{Minimum and maximum relative humidity (in percent).}
@@ -67,7 +66,7 @@ De \enc{Cáceres}{Caceres} M, Mencuccini M, Martin-StPaul N, Limousin JM, Coll L
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 }
 \note{
-Objects \code{x} and \code{soil} are modified during the simulation.
+Object \code{x} is modified during the simulation.
 }
 \seealso{
 \code{\link{spwbInput}}, \code{\link{spwb}},  \code{\link{plot.spwb_day}},  
@@ -93,7 +92,7 @@ d = 100
 #Simulate water balance one day only (Granier)
 examplesoil = soil(defaultSoilParams(2))
 x1 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
-sd1<-spwb_day(x1, examplesoil, rownames(examplemeteo)[d],  
+sd1<-spwb_day(x1, rownames(examplemeteo)[d],  
              examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
              examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
              examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
@@ -105,7 +104,7 @@ sd1<-spwb_day(x1, examplesoil, rownames(examplemeteo)[d],
 control$transpirationMode="Sperry"
 examplesoil2 = soil(defaultSoilParams(2))
 x2 = forest2spwbInput(exampleforestMED,examplesoil2, SpParamsMED, control)
-sd2<-spwb_day(x2, examplesoil2, rownames(examplemeteo)[d],
+sd2<-spwb_day(x2, rownames(examplemeteo)[d],
              examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
              examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
              examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
@@ -119,7 +118,7 @@ plot(sd2)
 #Simulate water and carbon balance for one day only
 examplesoil3 = soil(defaultSoilParams(2))
 x3 = forest2growthInput(exampleforestMED,examplesoil3, SpParamsMED, control)
-sd3<-growth_day(x3, examplesoil3, rownames(examplemeteo)[d],
+sd3<-growth_day(x3, rownames(examplemeteo)[d],
              examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
              examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
              examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 

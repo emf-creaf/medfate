@@ -56,7 +56,6 @@ spwb_maximumTranspirationRatioPlot<-function(x, meteo, latitude, elevation, slop
     xIni = x
     xIni$above$LAI_live[-i] = 0 #Set LAI of other cohors to zero
     xIni$above$LAI_expanded[-i] = 0
-    s = x$soil
     xIni$control$cavitationRefill = "total"
     xIni$control$verbose = FALSE
     xIni$control$leafPhenology = FALSE
@@ -72,8 +71,8 @@ spwb_maximumTranspirationRatioPlot<-function(x, meteo, latitude, elevation, slop
       xlai$above$LAI_live = xlai$above$LAI_live*LAIComp/sum(xlai$above$LAI_live)
       xlai$above$LAI_expanded = xlai$above$LAI_live
       resetInputs(xlai)
-      W = matrix(1, nrow=ndays, ncol = length(s$W))
-      pwb_res[[j]] = pwb(xlai,s,meteo,W, latitude = latitude, elevation = elevation, slope = slope, aspect = aspect)
+      W = matrix(1, nrow=ndays, ncol = length(xlai$soil$W))
+      pwb_res[[j]] = pwb(xlai, meteo,W, latitude = latitude, elevation = elevation, slope = slope, aspect = aspect)
       Tmax[,j] = pwb_res[[j]]$WaterBalance$Transpiration
       setTxtProgressBar(pb, j)
     }
@@ -86,7 +85,6 @@ spwb_maximumTranspirationRatioPlot<-function(x, meteo, latitude, elevation, slop
   rownames(Tmax_all) = row.names(meteo)
   
   xIni = x
-  s = x$soil
   xIni$control$cavitationRefill = "total"
   xIni$control$verbose = FALSE
   
@@ -99,8 +97,8 @@ spwb_maximumTranspirationRatioPlot<-function(x, meteo, latitude, elevation, slop
     xlai$above$LAI_live = xlai$above$LAI_live*LAIComp/sum(xlai$above$LAI_live)
     xlai$above$LAI_expanded = xlai$above$LAI_live
     resetInputs(xlai)
-    W = matrix(1, nrow=ndays, ncol = length(s$W))
-    pwb_res[[j]] = pwb(xlai,s,meteo,W, latitude = latitude, elevation = elevation)
+    W = matrix(1, nrow=ndays, ncol = length(xlai$soil$W))
+    pwb_res[[j]] = pwb(xlai,meteo,W, latitude = latitude, elevation = elevation)
     Tmax_all[,j] = pwb_res[[j]]$WaterBalance$Transpiration
     setTxtProgressBar(pb, j)
   }

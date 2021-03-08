@@ -13,14 +13,14 @@ Set of high-level functions used in the calculation of stomatal conductance and 
 \usage{
 transp_profitMaximization(supplyFunction, photosynthesisFunction, Gswmin, Gswmax, 
                           gainModifier = 1.0, costModifier = 1.0, costWater = "dEdP")
-transp_transpirationGranier(x, soil, meteo, day, 
+transp_transpirationGranier(x, meteo, day, 
                             modifyInputX = TRUE, modifyInputSoil = TRUE)
-transp_transpirationSperry(x, soil, meteo, day,
+transp_transpirationSperry(x, meteo, day,
                            latitude, elevation, slope, aspect, 
                            canopyEvaporation = 0, snowMelt = 0, soilEvaporation = 0, 
                            stepFunctions = NA, 
                            modifyInputX = TRUE, modifyInputSoil = TRUE)
-transp_stomatalRegulationPlot(x, soil, meteo, day, timestep, 
+transp_stomatalRegulationPlot(x, meteo, day, timestep, 
                               latitude, elevation, slope = NA, aspect = NA,
                               type="E")
 }

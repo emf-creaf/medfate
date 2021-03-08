@@ -129,7 +129,7 @@ where $y$ is the output, $g$ is the output function and $\mathbf{x} = \{x_1, x_2
 
 ```{r}
 of_transp<-optimization_function(parNames = parNames,
-                                 x = x1, soil = examplesoil1,
+                                 x = x1,
                                  meteo = examplemeteo, 
                                  latitude = 41.82592, elevation = 100,
                                  summary_function = sf_transp)
@@ -148,7 +148,7 @@ It is important to understand the steps that are done when we call `of_transp()`
 We can build a similar model output function, in this case focusing on plant stress (note that the only difference in the call to the factory is in the specification of `sf_stress` as summary function, instead of `sf_transp`). 
 ```{r}
 of_stress<-optimization_function(parNames = parNames,
-                                 x = x1, soil = examplesoil1,
+                                 x = x1, 
                                  meteo = examplemeteo, 
                                  latitude = 41.82592, elevation = 100,
                                  summary_function = sf_stress)
@@ -171,7 +171,7 @@ A call to `evaluation_metric()` provides the coefficient given a model simulatio
 
 ```{r}
 of_eval<-optimization_evaluation_function(parNames = parNames,
-                x = x1, soil = examplesoil1,
+                x = x1,
                 meteo = examplemeteo, latitude = 41.82592, elevation = 100,
                 measuredData = exampleobs, type = "SWC", 
                 metric = "NSE")
@@ -281,7 +281,7 @@ In order to run calibration analyses we need to define an objective function. Ma
 
 ```{r}
 of_eval<-optimization_evaluation_function(parNames = parNames,
-                x = x1, soil = examplesoil1,
+                x = x1,
                 meteo = examplemeteo, latitude = 41.82592, elevation = 100,
                 measuredData = exampleobs, type = "SWC", 
                 metric = "loglikelihood")
@@ -369,7 +369,7 @@ head(s)
 ```
 To this aim, **medfate** includes function `multiple_runs()` that allows running a simulation model with a matrix of parameter values. For example, the following code runs `spwb()` with all combinations of fine root distribution specified in `s`.
 ```{r}
-MS = multiple_runs(s, x = x1, soil = examplesoil1, meteo = examplemeteo,
+MS = multiple_runs(s, x = x1, meteo = examplemeteo,
                    latitude = 41.82592, elevation = 100, verbose = FALSE)
 ```
 Function `multiple_runs()` determines the model to be called inspecting the class of `x` (here `x1` is a `spwbInput`). Once we have conducted the simulations we can inspect the posterior distribution of several prediction variables, for example total transpiration:
@@ -388,7 +388,7 @@ Finally, we can use object `prior` to generate another sample under the prior pa
 ```{r}
 s_prior = prior$sampler(99)
 colnames(s_prior)<- parNames
-MS_prior = multiple_runs(s_prior, x = x1, soil = examplesoil1, meteo = examplemeteo,
+MS_prior = multiple_runs(s_prior, x = x1, meteo = examplemeteo,
                          latitude = 41.82592, elevation = 100, verbose = FALSE)
 ```
 

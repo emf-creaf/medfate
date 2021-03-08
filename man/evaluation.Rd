@@ -101,7 +101,7 @@ control = defaultControl()
 x1 = forest2spwbInput(exampleforestMED,examplesoil1, SpParamsMED, control)
 
 #Call simulation function
-S1<-spwb(x1, examplesoil1, examplemeteo, latitude = 41.82592, elevation = 100)
+S1<-spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 
 #Load observed data (in this case the same simulation results with some added error)  
 data(exampleobs)

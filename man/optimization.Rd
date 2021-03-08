@@ -11,16 +11,16 @@ Multiple model runs and function factories for optimization routines
 Function factories to generate functions to be used in model calibration, uncertainty or sensitivity analysis.
 }
 \usage{
-multiple_runs(parMatrix, x, soil,
+multiple_runs(parMatrix, x,
               meteo, latitude,
               elevation = NA, slope = NA, aspect = NA, 
               summary_function = NULL, args = NULL, 
               verbose = TRUE)
-optimization_function(parNames, x, soil,
+optimization_function(parNames, x, 
                       meteo, latitude,
                       elevation = NA, slope = NA, aspect = NA, 
                       summary_function, args= NULL)
-optimization_evaluation_function(parNames, x, soil, 
+optimization_evaluation_function(parNames, x, 
                       meteo, latitude,
                       elevation = NA, slope = NA, aspect = NA, 
                       measuredData, type = "SWC", cohort = NULL, 
@@ -31,7 +31,6 @@ optimization_evaluation_function(parNames, x, soil,
   \item{parMatrix}{A matrix of parameter values with runs in rows and parameters in columns. Column names should follow parameter modification naming rules (see examples and naming rules in \code{\link{modifyInputParams}}).}
   \item{parNames}{A string vector of parameter names (see examples and naming rules in \code{\link{modifyInputParams}}).}
   \item{x}{An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}.}
-  \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
   \item{meteo, latitude, elevation, slope, aspect}{Additional parameters to simulation functions \code{\link{spwb}} or \code{\link{growth}}.}
   \item{verbose}{A flag to indicate extra console output.}
   \item{measuredData}{A data frame with observed/measured values. Dates should be in row names, whereas columns should be named according to the type of output to be evaluated (see details).}
@@ -95,14 +94,14 @@ sf<-function(x) {sum(x$WaterBalance$Transpiration, na.rm=TRUE)}
 
 #Perform two runs and evaluate the summary function
 multiple_runs(parMatrix, 
-              x1, examplesoil1, examplemeteo, latitude = 42, elevation = 100,
+              x1, examplemeteo, latitude = 42, elevation = 100,
               summary_function = sf)
               
 #Load observed data (in this case the same simulation results with some added error)  
 # Generate a prediction function for total transpiration over the simulated period
 # as a function of parameters "Z50" and "Z95" for cohort "T1_54"
 of<-optimization_function(parNames = parNames,
-                          x = x1, soil = examplesoil1,
+                          x = x1,
                           meteo = examplemeteo, 
                           latitude = 41.82592, elevation = 100,
                           summary_function = sf)
@@ -116,7 +115,7 @@ of(parMatrix)
 # as a function of parameters "Z50" and "Z95" for cohort "T1_54"
 data(exampleobs)
 oef<-optimization_evaluation_function(parNames = parNames,
-                x = x1, soil = examplesoil1,
+                x = x1,
                 meteo = examplemeteo, latitude = 41.82592, elevation = 100,
                 measuredData = exampleobs, type = "SWC", 
                 metric = "loglikelihood")
