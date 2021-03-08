@@ -27,14 +27,14 @@ spwb_sensitivity(x, soil, meteo,
 \details{
 Due to parameter dependence, modifying some parameters affects others:
 \itemize{
-  \item{Setting \code{paramName = "Z50/Z95"} affects \code{below$V}, \code{below$VCroot_kmax} and \code{below$VGrhizo_kmax}.}
+  \item{Setting \code{paramName = "Z50/Z95"} affects \code{belowLayers$V}, \code{belowLayers$VCroot_kmax} and \code{belowLayers$VGrhizo_kmax}.}
   \item{Modifying \code{LAI_live} also affects \code{LAI_expanded}.}
-  \item{Modifying \code{VCroot_kmax} from \code{paramsTranspiration} affects both \code{VCroot_kmax} and \code{below$VCroot_kmax}.}
+  \item{Modifying \code{VCroot_kmax} from \code{paramsTranspiration} affects both \code{VCroot_kmax} and \code{belowLayers$VCroot_kmax}.}
   \item{Modifying \code{WaterStorage} affects simultaneously \code{Vleaf} and \code{Vsapwood} from \code{paramsWaterStorage}.}
   \item{Modifying \code{c} from \code{paramsTranspiration} affects simultaneously \code{VCleaf_c}, \code{VCstem_c} and \code{VCroot_c}.}
   \item{Modifying \code{d} from \code{paramsTranspiration} affects simultaneously \code{VCleaf_d}, \code{VCstem_d} and \code{VCroot_d}.}
-  \item{Modifying \code{Plant_kmax} from \code{paramsTranspiration} affects \code{VCleaf_kmax}, \code{VCstem_kmax}, \code{VCroot_kmax} and \code{below$VCroot_kmax}.}
-  \item{Modifying \code{Al2As} from \code{paramsAnatomy} affects \code{Vsapwood} in \code{paramsWaterStorage}, \code{VCstem_kmax} and \code{VCroot_kmax} of \code{paramsTranspiration} and \code{below$VCroot_kmax}.}
+  \item{Modifying \code{Plant_kmax} from \code{paramsTranspiration} affects \code{VCleaf_kmax}, \code{VCstem_kmax}, \code{VCroot_kmax} and \code{belowLayers$VCroot_kmax}.}
+  \item{Modifying \code{Al2As} from \code{paramsAnatomy} affects \code{Vsapwood} in \code{paramsWaterStorage}, \code{VCstem_kmax} and \code{VCroot_kmax} of \code{paramsTranspiration} and \code{belowLayers$VCroot_kmax}.}
   \item{Setting \code{paramName = "Vmax298/Jmax298"} affects both \code{Vmax298} and \code{Jmax298} from \code{paramsTranspiration}.}
 }
 

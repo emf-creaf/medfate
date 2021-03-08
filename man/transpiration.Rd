@@ -32,7 +32,6 @@ transp_stomatalRegulationPlot(x, meteo, day, timestep,
   \item{gainModifier, costModifier}{Modifiers (exponents) of the gain and cost functions defined in Sperry et al. (2017).}
   \item{costWater}{Cost water function, either "dEdP" (default) or "kterm" (experimental).}
   \item{x}{An object of class \code{\link{spwbInput}} built using the 'Sperry' transpiration mode.}
-  \item{soil}{An object of class \code{\link{soil}}.}
   \item{meteo}{A data frame with daily meteorological data series:
    \itemize{
      \item{\code{DOY}: Day of the year (Julian day).}
@@ -191,7 +190,7 @@ x1 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
 # Transpiration according to Granier's model, plant water potential 
 # and plant stress for a given day
-t1 = transp_transpirationGranier(x1, examplesoil, examplemeteo, 1, 
+t1 = transp_transpirationGranier(x1, examplemeteo, 1, 
                             modifyInputX = FALSE, modifyInputSoil = FALSE)
 
 #Switch to 'Sperry' transpiration mode
@@ -204,11 +203,11 @@ examplesoil2 = soil(defaultSoilParams(2))
 x2 = forest2spwbInput(exampleforestMED,examplesoil2, SpParamsMED, control)
 
 # Transpiration according to Sperry's model
-t2 = transp_transpirationSperry(x2, examplesoil2, examplemeteo, 1, 
+t2 = transp_transpirationSperry(x2, examplemeteo, 1, 
                            latitude = 41.82592, elevation = 100, slope = 0, aspect = 0,
                            modifyInputX = FALSE, modifyInputSoil = FALSE)
                             
 # Stomatal VPD curve and chosen value for the 12th time step at day 100
-transp_stomatalRegulationPlot(x2, examplesoil2, examplemeteo, day=100, timestep = 12,
+transp_stomatalRegulationPlot(x2, examplemeteo, day=100, timestep = 12,
                               latitude = 41.82592, elevation = 100, type="VPD")
 }

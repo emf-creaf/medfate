@@ -138,7 +138,7 @@ List profitMaximization(List supplyFunction, DataFrame photosynthesisFunction, d
 }
 
 
-List transpirationSperry(List x, List soil, double tmin, double tmax, 
+List transpirationSperry(List x, double tmin, double tmax, 
                          double tminPrev, double tmaxPrev, double tminNext, 
                          double rhmin, double rhmax, double rad, double wind, 
                   double latitude, double elevation, double slope, double aspect, 
@@ -186,6 +186,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
   int numCohorts = LAIlive.size();
   
   //Soil input
+  List soil = x["soil"];
   NumericVector dVec = soil["dVec"];
   int nlayers = dVec.length();
   NumericVector Water_FC = waterFC(soil, soilFunctions);
@@ -1460,7 +1461,7 @@ List transpirationSperry(List x, List soil, double tmin, double tmax,
 }
 
 // [[Rcpp::export("transp_transpirationSperry")]]
-List transpirationSperry(List x, List soil, DataFrame meteo, int day,
+List transpirationSperry(List x, DataFrame meteo, int day,
                         double latitude, double elevation, double slope, double aspect,
                         double canopyEvaporation = 0.0, double snowMelt = 0.0, double soilEvaporation = 0.0,
                         int stepFunctions = NA_INTEGER, 
@@ -1500,7 +1501,7 @@ List transpirationSperry(List x, List soil, DataFrame meteo, int day,
   double delta = meteoland::radiation_solarDeclination(J);
   double solarConstant = meteoland::radiation_solarConstant(J);
 
-  return(transpirationSperry(x,soil, tmin, tmax, tminPrev, tmaxPrev, tminNext, rhmin, rhmax, rad, wind, 
+  return(transpirationSperry(x, tmin, tmax, tminPrev, tmaxPrev, tminNext, rhmin, rhmax, rad, wind, 
                      latitude, elevation, slope, aspect,
                      solarConstant, delta, prec,
                      canopyEvaporation, snowMelt, soilEvaporation,
@@ -1509,7 +1510,7 @@ List transpirationSperry(List x, List soil, DataFrame meteo, int day,
 } 
 
 
-List transpirationGranier(List x, List soil, double tday, double pet, 
+List transpirationGranier(List x, double tday, double pet, 
                           bool modifyInputX = true, bool modifyInputSoil = true) {
   //Control parameters
   List control = x["control"];
@@ -1519,6 +1520,7 @@ List transpirationGranier(List x, List soil, double tday, double pet,
   bool plantWaterPools = control["plantWaterPools"];
 
   //Soil water at field capacity
+  List soil = x["soil"];
   NumericVector Water_FC = waterFC(soil, soilFunctions);
   
   //Vegetation input
@@ -1700,7 +1702,7 @@ List transpirationGranier(List x, List soil, double tday, double pet,
 
 
 // [[Rcpp::export("transp_transpirationGranier")]]
-List transpirationGranier(List x, List soil, DataFrame meteo, int day,
+List transpirationGranier(List x, DataFrame meteo, int day,
                           bool modifyInputX = true, bool modifyInputSoil = true) {
   if(!meteo.containsElementNamed("MeanTemperature")) stop("Please include variable 'MeanTemperature' in weather input.");
   NumericVector MeanTemperature = meteo["MeanTemperature"];
@@ -1708,6 +1710,6 @@ List transpirationGranier(List x, List soil, DataFrame meteo, int day,
   NumericVector PET = meteo["PET"];
   double pet = PET[day-1];
   double tday = MeanTemperature[day-1];
-  return(transpirationGranier(x,soil, tday, pet, modifyInputX, modifyInputSoil));
+  return(transpirationGranier(x, tday, pet, modifyInputX, modifyInputSoil));
 } 
 

@@ -5,8 +5,8 @@ spwb_resistances<-function(x, cohort = 1, relative = FALSE, draw = FALSE,
     stop("Resistances can only be calculated when transpirationMode = 'Sperry'.")
   }
     
-  VCroot_kmax = x$spwbInput$below$VCroot_kmax
-  VGrhizo_kmax = x$spwbInput$below$VGrhizo_kmax
+  VCroot_kmax = x$spwbInput$belowLayers$VCroot_kmax
+  VGrhizo_kmax = x$spwbInput$belowLayers$VGrhizo_kmax
   VG_nc = x$spwbInput$soil$VG_n
   VG_alphac = x$spwbInput$soil$VG_alpha
   

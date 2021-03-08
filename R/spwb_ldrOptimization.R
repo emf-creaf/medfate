@@ -12,7 +12,7 @@
   function (y) uniroot((function (x) f(x) - y), lower = lower, upper = upper, extendInt = "yes")[1]
 }
 
-spwb_ldrExploration<-function(x, soil, meteo, cohorts = NULL, 
+spwb_ldrExploration<-function(x, meteo, cohorts = NULL, 
                               RZmin = 301, RZmax = 4000, V1min = 0.01, V1max = 0.94, resolution = 10, 
                               heat_stop = 0, transformation = "identity", verbose = FALSE, 
                               ...) {
@@ -23,7 +23,7 @@ spwb_ldrExploration<-function(x, soil, meteo, cohorts = NULL,
   trans <- function(x) do.call(transformation, list(x))
   inverse_trans <- .inverse(trans, lower = 0.01, upper = 100) # inverse of the function used for the transformation
   
-  if(RZmax > soil$SoilDepth){
+  if(RZmax > x$soil$SoilDepth){
     if(verbose) cat("\n RZmax is larger than soil depth\n")
   }
   
@@ -31,7 +31,7 @@ spwb_ldrExploration<-function(x, soil, meteo, cohorts = NULL,
   RZ <- as.numeric(unlist(sapply(RZ_trans, FUN = inverse_trans)))
   
   # the case where RZ = Z1 will create problems when using the LDR model -> remove if it exists
-  Z1 <- soil$dVec[1]
+  Z1 <- x$soil$dVec[1]
   if(sum(RZ == Z1) > 0){
     if(verbose) cat("\nThe function to derive the root proportion in each soil layer is not defined for RZ = Z1 (depth of the first soil layer)\n",
                     "This value is removed\n", 
@@ -57,8 +57,8 @@ spwb_ldrExploration<-function(x, soil, meteo, cohorts = NULL,
   Z50 <- .root_ldrZ50(V = array(V1,dim = dim(mExplore)), Z = array(Z1, dim = dim(mExplore)), Z95 = t(array(RZ, dim = dim(mExplore))))
   dimnames(Z50) <- dimnames(mExplore)
   # Prepare array for V 
-  V <- array(dim = c(length(soil$dVec),length(V1), length(RZ)), 
-             dimnames = list(layer = 1:length(soil$dVec), V1 = V1, RZ = RZ))
+  V <- array(dim = c(length(x$soil$dVec),length(V1), length(RZ)), 
+             dimnames = list(layer = 1:length(x$soil$dVec), V1 = V1, RZ = RZ))
   
   # Sum LAI of all species
   x$above$LAI_live <- sum(x$above$LAI_live) 
@@ -73,7 +73,7 @@ spwb_ldrExploration<-function(x, soil, meteo, cohorts = NULL,
   cc <- which(mExplore == T, arr.ind = T)
   
   # Reset input
-  resetInputs(x, soil)
+  resetInputs(x)
   
   for(ci in 1:length(cohorts)){
     coh = cohorts[ci]
@@ -85,7 +85,7 @@ spwb_ldrExploration<-function(x, soil, meteo, cohorts = NULL,
     x_1sp$cohorts <- x$cohorts[sp,,drop = FALSE]
     x_1sp$above <- x$above[sp,,drop = FALSE]
     x_1sp$below <- x$below
-    x_1sp$below$V <- x$below$V[sp,,drop = FALSE] 
+    x_1sp$belowLayers$V <- x$belowLayers$V[sp,,drop = FALSE] 
     x_1sp$paramsInterception <- x$paramsInterception[sp,,drop = FALSE] 
     x_1sp$paramsTransp <- x$paramsTransp[sp,,drop = FALSE] 
     x_1sp$Transpiration <- x$Transpiration[sp,drop = FALSE] 
@@ -93,8 +93,8 @@ spwb_ldrExploration<-function(x, soil, meteo, cohorts = NULL,
     if(x_1sp$control$transpirationMode=="Granier") {
       x_1sp$PLC <- x$PLC[sp,drop = FALSE] 
     } else {
-      x_1sp$below$VGrhizo_kmax <- x$below$V[sp,,drop = FALSE] 
-      x_1sp$below$VCroot_kmax <- x$below$V[sp,,drop = FALSE] 
+      x_1sp$belowLayers$VGrhizo_kmax <- x$belowLayers$V[sp,,drop = FALSE] 
+      x_1sp$belowLayers$VCroot_kmax <- x$belowLayers$V[sp,,drop = FALSE] 
       x_1sp$paramsAnatomy <- x$paramsAnatomy[sp,,drop = FALSE] 
       x_1sp$paramsWaterStorage <- x$paramsWaterStorage[sp,,drop = FALSE] 
       x_1sp$StemPLC <- x$StemPLC[sp,drop = FALSE] 
@@ -115,7 +115,7 @@ spwb_ldrExploration<-function(x, soil, meteo, cohorts = NULL,
       j <- cc[row,2]
       
       # Update the depth of the different soil layer to match RZ
-      s. <- soil
+      s. <- x$soil
       s.$SoilDepth <- RZ[j]
       dCum <- cumsum(s.$dVec)
       layersWithinRZ <- dCum < RZ[j]
@@ -138,11 +138,12 @@ spwb_ldrExploration<-function(x, soil, meteo, cohorts = NULL,
       s.[["Ksat"]] <- s.[["Ksat"]][1:nl]
       
       V[,i,j] <- 0
-      x_1sp$below$V = x$below$V[sp,1:nl,drop = FALSE]
-      x_1sp$below$V[1,] <- root_ldrDistribution(Z50 = Z50[i,j], Z95 = RZ[j], d=s.$dVec)
-      V[1:length(x_1sp$below$V),i,j] <- x_1sp$below$V
+      x_1sp$belowLayers$V = x$belowLayers$V[sp,1:nl,drop = FALSE]
+      x_1sp$belowLayers$V[1,] <- root_ldrDistribution(Z50 = Z50[i,j], Z95 = RZ[j], d=s.$dVec)
+      V[1:length(x_1sp$belowLayers$V),i,j] <- x_1sp$belowLayers$V
 
-      s_res <- spwb(x = x_1sp, meteo = meteo, soil = s., ...)
+      x_1sp[["soil"]] <- s.
+      s_res <- spwb(x = x_1sp, meteo = meteo, ...)
       
       # Outputs
       years <- substr(as.Date(rownames(meteo)), start = 1, stop = 4)

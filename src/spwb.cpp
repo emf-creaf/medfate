@@ -124,7 +124,7 @@ List spwbDay1(List x, double tday, double pet, double prec, double er, double ru
   
   //Canopy transpiration  
   // Rcout<<"hola";
-  List transp = transpirationGranier(x, soil, tday, pet, true, true);
+  List transp = transpirationGranier(x, tday, pet, true, true);
   // Rcout<<"hola2";
   NumericMatrix EplantCoh = Rcpp::as<Rcpp::NumericMatrix>(transp["Extraction"]);
   for(int l=0;l<nlayers;l++) EplantVec[l] = sum(EplantCoh(_,l));
@@ -264,7 +264,7 @@ List spwbDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPrev
   }
 
   //B.2 - Canopy transpiration  
-  List transp = transpirationSperry(x, soil,tmin, tmax, tminPrev, tmaxPrev, tminNext, 
+  List transp = transpirationSperry(x, tmin, tmax, tminPrev, tmaxPrev, tminNext, 
                                     rhmin, rhmax, rad, wind, 
                                     latitude, elevation, slope, aspect, 
                                     solarConstant, delta, prec, 
@@ -1404,7 +1404,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
    
     //2. transpiration and photosynthesis
     if(transpirationMode=="Granier") {
-      s = transpirationGranier(x, soil, MeanTemperature[i], PET[i], true, true);
+      s = transpirationGranier(x, MeanTemperature[i], PET[i], true, true);
     } else if(transpirationMode=="Sperry") {
       std::string c = as<std::string>(dateStrings[i]);
       int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
@@ -1425,7 +1425,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
       double rad = Radiation[i];
       double prec = Precipitation[i];
       
-      s = transpirationSperry(x, soil, tmin, tmax, tminPrev, tmaxPrev, tminNext, 
+      s = transpirationSperry(x, tmin, tmax, tminPrev, tmaxPrev, tminNext, 
                               rhmin, rhmax, rad, wind, 
                               latitude, elevation, slope, aspect,
                               solarConstant, delta, prec,

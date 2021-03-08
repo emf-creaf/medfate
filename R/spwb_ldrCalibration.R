@@ -1,4 +1,4 @@
-spwb_ldrCalibration <- function(x, soil, meteo, calibVar, obs,
+spwb_ldrCalibration <- function(x, meteo, calibVar, obs,
                                RZmin = 301, RZmax = 4000, V1min = 0.01,
                                V1max = 0.94, resolution = 20, heat_stop = 0,
                                transformation = "identity", verbose = FALSE) {
@@ -22,7 +22,7 @@ spwb_ldrCalibration <- function(x, soil, meteo, calibVar, obs,
   ## inverse of the function used for the transformation
   inverse_trans <- .inverse(trans, lower = 0.01, upper = 100)
   ## Inform if the RZmax is deeper than the SoilDepth
-  if (RZmax > soil$SoilDepth) {
+  if (RZmax > x$soil$SoilDepth) {
     if (verbose) {
       cat("\n RZmax is larger than soil depth\n")
     }
@@ -32,7 +32,7 @@ spwb_ldrCalibration <- function(x, soil, meteo, calibVar, obs,
   RZ <- unlist(sapply(RZ_trans, FUN = inverse_trans))
   ## the case where RZ = Z1 will create problems when using
   ## the LDR model -> remove if it exists
-  Z1 <- soil$dVec[1]
+  Z1 <- x$soil$dVec[1]
   if (sum(RZ == Z1) > 0) {
     if (verbose) {
       cat("\nThe function to derive the root proportion in each soil layer is ",
@@ -72,8 +72,8 @@ spwb_ldrCalibration <- function(x, soil, meteo, calibVar, obs,
   dimnames(Z50) <- dimnames(mExplore)
   
   # Prepare V array
-  V <- array(dim = c(length(soil$dVec),length(V1), length(RZ)), 
-             dimnames = list(layer = 1:length(soil$dVec), V1 = V1, RZ = RZ))
+  V <- array(dim = c(length(x$soil$dVec),length(V1), length(RZ)), 
+             dimnames = list(layer = 1:length(x$soil$dVec), V1 = V1, RZ = RZ))
   
   # store the original input to be able to access the cohorts LAI in case it
   # is needed (calibVar = 'Cohorts')
@@ -154,21 +154,21 @@ spwb_ldrCalibration <- function(x, soil, meteo, calibVar, obs,
         # calculate Z50 assuming Z95 as soil depth and Z as depth of first layer
         Z50_val <- .root_ldrZ50(
           V = V1[i],
-          Z = soil$dVec[1],
-          Z95 = soil$SoilDepth
+          Z = x$soil$dVec[1],
+          Z95 = x$soil$SoilDepth
         )
         # Calculate the V and modify x accordingly
         x_1sp[['below']][['V']] <- root_ldrDistribution(
           Z50 = Z50_val,
-          Z95 = soil$SoilDepth,
-          d = soil$dVec
+          Z95 = x$soil$SoilDepth,
+          d = x$soil$dVec
         )
         
         # Run the model
-        res_model <- spwb(x = x_1sp, meteo = meteo, soil = soil)
+        res_model <- spwb(x = x_1sp, meteo = meteo)
         
         # calculate the MAE
-        predicted <- res_model[['SoilWaterBalance']][['W.1']]*soil[["Theta_FC"]][[1]]
+        predicted <- res_model[['SoilWaterBalance']][['W.1']]*x$soil[["Theta_FC"]][[1]]
         
         # Store the MAE value
         MAE_res[,i] <- .MAE(obs, predicted)
@@ -179,7 +179,7 @@ spwb_ldrCalibration <- function(x, soil, meteo, calibVar, obs,
         ### Id calib and valid are done by E
         # Here we need to update the depth of the different soil layers to match
         # RZ value
-        s. <- soil
+        s. <- x$soil
         s.$SoilDepth <- RZ[j]
         dCum <- cumsum(s.$dVec)
         layersWithinRZ <- dCum < RZ[j]
@@ -204,9 +204,10 @@ spwb_ldrCalibration <- function(x, soil, meteo, calibVar, obs,
           Z95 = RZ[j],
           d = s.$dVec
         )
+        x_1sp[['soil']] <- s.
         
         # Run the model
-        res_model <- spwb(x = x_1sp, meteo = meteo, soil = s.)
+        res_model <- spwb(x = x_1sp, meteo = meteo)
         # build a data frame with transpiration values to compare to obs
         E_df <- data.frame(Eplanttot = res_model[["DailyBalance"]][["Eplanttot"]])
         E_df <- cbind(E_df, res_model[["PlantTranspiration"]])

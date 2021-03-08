@@ -4265,13 +4265,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // transpirationSperry
-List transpirationSperry(List x, List soil, DataFrame meteo, int day, double latitude, double elevation, double slope, double aspect, double canopyEvaporation, double snowMelt, double soilEvaporation, int stepFunctions, bool modifyInputX, bool modifyInputSoil);
-RcppExport SEXP _medfate_transpirationSperry(SEXP xSEXP, SEXP soilSEXP, SEXP meteoSEXP, SEXP daySEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP canopyEvaporationSEXP, SEXP snowMeltSEXP, SEXP soilEvaporationSEXP, SEXP stepFunctionsSEXP, SEXP modifyInputXSEXP, SEXP modifyInputSoilSEXP) {
+List transpirationSperry(List x, DataFrame meteo, int day, double latitude, double elevation, double slope, double aspect, double canopyEvaporation, double snowMelt, double soilEvaporation, int stepFunctions, bool modifyInputX, bool modifyInputSoil);
+RcppExport SEXP _medfate_transpirationSperry(SEXP xSEXP, SEXP meteoSEXP, SEXP daySEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP canopyEvaporationSEXP, SEXP snowMeltSEXP, SEXP soilEvaporationSEXP, SEXP stepFunctionsSEXP, SEXP modifyInputXSEXP, SEXP modifyInputSoilSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type meteo(meteoSEXP);
     Rcpp::traits::input_parameter< int >::type day(daySEXP);
     Rcpp::traits::input_parameter< double >::type latitude(latitudeSEXP);
@@ -4284,23 +4283,22 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type stepFunctions(stepFunctionsSEXP);
     Rcpp::traits::input_parameter< bool >::type modifyInputX(modifyInputXSEXP);
     Rcpp::traits::input_parameter< bool >::type modifyInputSoil(modifyInputSoilSEXP);
-    rcpp_result_gen = Rcpp::wrap(transpirationSperry(x, soil, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, stepFunctions, modifyInputX, modifyInputSoil));
+    rcpp_result_gen = Rcpp::wrap(transpirationSperry(x, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, stepFunctions, modifyInputX, modifyInputSoil));
     return rcpp_result_gen;
 END_RCPP
 }
 // transpirationGranier
-List transpirationGranier(List x, List soil, DataFrame meteo, int day, bool modifyInputX, bool modifyInputSoil);
-RcppExport SEXP _medfate_transpirationGranier(SEXP xSEXP, SEXP soilSEXP, SEXP meteoSEXP, SEXP daySEXP, SEXP modifyInputXSEXP, SEXP modifyInputSoilSEXP) {
+List transpirationGranier(List x, DataFrame meteo, int day, bool modifyInputX, bool modifyInputSoil);
+RcppExport SEXP _medfate_transpirationGranier(SEXP xSEXP, SEXP meteoSEXP, SEXP daySEXP, SEXP modifyInputXSEXP, SEXP modifyInputSoilSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type meteo(meteoSEXP);
     Rcpp::traits::input_parameter< int >::type day(daySEXP);
     Rcpp::traits::input_parameter< bool >::type modifyInputX(modifyInputXSEXP);
     Rcpp::traits::input_parameter< bool >::type modifyInputSoil(modifyInputSoilSEXP);
-    rcpp_result_gen = Rcpp::wrap(transpirationGranier(x, soil, meteo, day, modifyInputX, modifyInputSoil));
+    rcpp_result_gen = Rcpp::wrap(transpirationGranier(x, meteo, day, modifyInputX, modifyInputSoil));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4733,8 +4731,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_cohortFMC", (DL_FUNC) &_medfate_cohortFMC, 2},
     {"_medfate_cohortFMCDay", (DL_FUNC) &_medfate_cohortFMCDay, 3},
     {"_medfate_profitMaximization", (DL_FUNC) &_medfate_profitMaximization, 7},
-    {"_medfate_transpirationSperry", (DL_FUNC) &_medfate_transpirationSperry, 14},
-    {"_medfate_transpirationGranier", (DL_FUNC) &_medfate_transpirationGranier, 6},
+    {"_medfate_transpirationSperry", (DL_FUNC) &_medfate_transpirationSperry, 13},
+    {"_medfate_transpirationGranier", (DL_FUNC) &_medfate_transpirationGranier, 5},
     {"_medfate_windCanopyTurbulenceModel", (DL_FUNC) &_medfate_windCanopyTurbulenceModel, 6},
     {"_medfate_windCanopyTurbulence", (DL_FUNC) &_medfate_windCanopyTurbulence, 6},
     {"_medfate_windSpeedAtCanopyHeight", (DL_FUNC) &_medfate_windSpeedAtCanopyHeight, 2},

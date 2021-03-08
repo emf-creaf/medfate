@@ -901,12 +901,12 @@ transp_profitMaximization <- function(supplyFunction, photosynthesisFunction, Gs
     .Call(`_medfate_profitMaximization`, supplyFunction, photosynthesisFunction, Gswmin, Gswmax, gainModifier, costModifier, costWater)
 }
 
-transp_transpirationSperry <- function(x, soil, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation = 0.0, snowMelt = 0.0, soilEvaporation = 0.0, stepFunctions = NA_integer_, modifyInputX = TRUE, modifyInputSoil = TRUE) {
-    .Call(`_medfate_transpirationSperry`, x, soil, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, stepFunctions, modifyInputX, modifyInputSoil)
+transp_transpirationSperry <- function(x, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation = 0.0, snowMelt = 0.0, soilEvaporation = 0.0, stepFunctions = NA_integer_, modifyInputX = TRUE, modifyInputSoil = TRUE) {
+    .Call(`_medfate_transpirationSperry`, x, meteo, day, latitude, elevation, slope, aspect, canopyEvaporation, snowMelt, soilEvaporation, stepFunctions, modifyInputX, modifyInputSoil)
 }
 
-transp_transpirationGranier <- function(x, soil, meteo, day, modifyInputX = TRUE, modifyInputSoil = TRUE) {
-    .Call(`_medfate_transpirationGranier`, x, soil, meteo, day, modifyInputX, modifyInputSoil)
+transp_transpirationGranier <- function(x, meteo, day, modifyInputX = TRUE, modifyInputSoil = TRUE) {
+    .Call(`_medfate_transpirationGranier`, x, meteo, day, modifyInputX, modifyInputSoil)
 }
 
 wind_canopyTurbulenceModel <- function(zm, Cx, hm, d0, z0, model = "k-epsilon") {

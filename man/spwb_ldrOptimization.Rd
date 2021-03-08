@@ -5,10 +5,10 @@
 
 \title{Optimization of root distribution}
 
-\description{Functions \code{spwb_ldrExploration} and \code{spwb_ldrOptimization} are used to find optimum the species root distribution within \code{spwb}, given the arguments \code{x}, \code{meteo}, \code{soil} and \code{psi_crit}.}
+\description{Functions \code{spwb_ldrExploration} and \code{spwb_ldrOptimization} are used to find optimum the species root distribution within \code{spwb}, given the arguments \code{x}, \code{meteo} and \code{psi_crit}.}
 
 \usage{
-spwb_ldrExploration(x, soil, meteo, cohorts = NULL,
+spwb_ldrExploration(x, meteo, cohorts = NULL,
                      RZmin = 301, RZmax = 4000, 
                      V1min = 0.01, V1max = 0.94, resolution = 10, heat_stop = 0, 
                      transformation = "identity", 
@@ -18,7 +18,6 @@ spwb_ldrOptimization(y, psi_crit, opt_mode = 1)
 
 \arguments{
   \item{x}{An object of class \code{\link{spwbInput}}.}
-  \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
   \item{meteo}{A data frame with daily meteorological data series (see \code{\link{spwb}}).}
   \item{cohorts}{A character string with the names of cohorts to be explored. If \code{NULL} then all cohorts are explored.}
   \item{RZmin}{The minimum value of RZ (the rooting depth) to be explored (in mm)}
@@ -43,7 +42,7 @@ spwb_ldrOptimization(y, psi_crit, opt_mode = 1)
   \item{verbose}{A logical value. Print the internal messages of the function?}
 }
 \details{
-For each combination of the parameters RZ and V1 the function \code{spwb_ldrExploration} runs \code{spwb}, setting the total soil depth equal to RZ. The root proportion in each soil layer is derived from V1, the depth of the first soil layer (as defined in the argument \code{soil}) and RZ using the LDR root distribution model (Schenk and Jackson, 2002) and assuming that the depth containing 95 percent of the roots is equal to RZ.
+For each combination of the parameters RZ and V1 the function \code{spwb_ldrExploration} runs \code{spwb}, setting the total soil depth equal to RZ. The root proportion in each soil layer is derived from V1, the depth of the first soil layer and RZ using the LDR root distribution model (Schenk and Jackson, 2002) and assuming that the depth containing 95 percent of the roots is equal to RZ.
 Function \code{spwb_ldrOptimization} takes the result of the exploration and tries to find optimum root distribution parameters. \code{psi_crit}, the species specific water potential inducing hydraulic failure, can be approached by the water potential inducing 50 percent of loss of conductance for the and gymnosperms and 88 percent for the angiosperms (Urli et al., 2013, Brodribb et al., 2010). Details of the hypothesis and limitations of the optimization method are given in Cabon et al. (2019).
 }
 \value{
@@ -92,8 +91,8 @@ control = defaultControl()
 x = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
 #Run exploration
-y = spwb_ldrExploration(x = x, soil = examplesoil, meteo = examplemeteo, 
-                        elevation = 100)
+y = spwb_ldrExploration(x = x, meteo = examplemeteo, 
+                        elevation = 100, latitude = 41.82592)
 
 #Optimization under different modes
 spwb_ldrOptimization(y = y, psi_crit = c(-2,-3,-4), opt_mode = 1)

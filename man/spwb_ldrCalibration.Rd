@@ -6,7 +6,7 @@
 
 \description{The function \code{spwb_ldrCalibration} calibrates the species root
 distribution within \code{\link{spwb}}, given the arguments \code{x}, \code{meteo},
-\code{soil}, \code{psi_crit}, \code{obs} and \code{calibVar}. This calibration
+\code{psi_crit}, \code{obs} and \code{calibVar}. This calibration
 is based on reference measured values. These reference measured values can be
 \code{Soil water content}, \code{Total tranpiration} or \code{Transpiration by
 cohort}. Return the calibrated root distribution for each tree species (no
@@ -14,7 +14,7 @@ shrub calibration is done), expressed as parameters of the function
 \code{\link{root_ldrDistribution}}.}
 
 \usage{
-spwb_ldrCalibration(x, soil, meteo, calibVar, obs,
+spwb_ldrCalibration(x, meteo, calibVar, obs,
                    RZmin = 301, RZmax = 4000,
                    V1min = 0.01, V1max = 0.94, resolution = 20, heat_stop = 0, 
                    transformation = "identity", verbose = FALSE)
@@ -22,7 +22,6 @@ spwb_ldrCalibration(x, soil, meteo, calibVar, obs,
 
 \arguments{
   \item{x}{An object of class \code{\link{spwbInput}}.}
-  \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
   \item{meteo}{A data frame with daily meteorological data series. When using the 'Granier' transpiration mode the following columns are required:
    \itemize{
      \item{\code{DOY}: Day of the year (Julian day).}
