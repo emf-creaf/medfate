@@ -13,7 +13,7 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
   if(type=="SWC") {
     sm = out$Soil
     d = rownames(sm)
-    fc = soil_thetaFC(out$soilInput, model = modelInput$control$soilFunctions)
+    fc = soil_thetaFC(modelInput$soil, model = modelInput$control$soilFunctions)
     mod = sm$W.1*fc[1]
     df <- data.frame(Dates = as.Date(d), Observed = NA, Modelled = mod)
     
@@ -29,9 +29,6 @@ evaluation_table<-function(out, measuredData, type = "SWC", cohort = NULL,
   else if(type=="REW") {
     sm = out$Soil
     d = rownames(sm)
-    # fc = soil_thetaFC(out$soilInput, model = modelInput$control$soilFunctions)
-    # q_mod = quantile(sm$W.1, p=c(0.05,0.95), na.rm=T)
-    # df <- data.frame(Observed = NA, Modelled = (sm$W.1-q_mod[1])/(q_mod[2]-q_mod[1]), Dates = as.Date(d))
     df <- data.frame(Dates = as.Date(d), Observed = NA, Modelled = sm$W.1)
     
     if(!("SWC" %in% names(measuredData))) stop(paste0("Column 'SWC' not found in measured data frame."))

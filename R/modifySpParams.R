@@ -34,7 +34,7 @@ modifySpParams<-function(SpParams, customParams, subsetSpecies = TRUE) {
   return(SpParams)
 }
 
-modifyCohortParams<-function(x, customParams, soil = NULL) {
+modifyCohortParams<-function(x, customParams) {
   
   # check if customParams exists, if not return x without modification
   if (is.null(customParams)) {
@@ -64,14 +64,14 @@ modifyCohortParams<-function(x, customParams, soil = NULL) {
   
   modifyParameterValue<-function(param, icoh, val) {
     if(!is.na(val)) {
-      if(param %in% above_par) .modifyInputParam(x, soil, "above", param, icoh - 1, val)
-      if(param %in% below_par) .modifyInputParam(x, soil, "below", param, icoh - 1, val) 
-      if(param %in% base_par) .modifyInputParam(x, soil, "paramsInterception", param, icoh - 1, val)
-      if(param %in% transp_par) .modifyInputParam(x, soil, "paramsTranspiration", param, icoh - 1, val) 
-      if(param %in% anatomy_par)  .modifyInputParam(x, soil, "paramsAnatomy", param, icoh - 1, val)
-      if(!is.null(growth_par)) if (param %in% growth_par) .modifyInputParam(x, soil, "paramsGrowth", param, icoh - 1, val)
-      if(!is.null(allom_par)) if (param %in% allom_par) .modifyInputParam(x, soil, "paramsAllometries", param, icoh - 1, val)
-      if(!is.null(waterstorage_par)) if (param %in% waterstorage_par) .modifyInputParam(x, soil, "paramsWaterStorage", param, icoh - 1, val)
+      if(param %in% above_par) .modifyInputParam(x, "above", param, icoh - 1, val)
+      if(param %in% below_par) .modifyInputParam(x, "below", param, icoh - 1, val) 
+      if(param %in% base_par) .modifyInputParam(x, "paramsInterception", param, icoh - 1, val)
+      if(param %in% transp_par) .modifyInputParam(x, "paramsTranspiration", param, icoh - 1, val) 
+      if(param %in% anatomy_par)  .modifyInputParam(x, "paramsAnatomy", param, icoh - 1, val)
+      if(!is.null(growth_par)) if (param %in% growth_par) .modifyInputParam(x, "paramsGrowth", param, icoh - 1, val)
+      if(!is.null(allom_par)) if (param %in% allom_par) .modifyInputParam(x, "paramsAllometries", param, icoh - 1, val)
+      if(!is.null(waterstorage_par)) if (param %in% waterstorage_par) .modifyInputParam(x, "paramsWaterStorage", param, icoh - 1, val)
     }
     return(x)
   }
@@ -103,7 +103,7 @@ modifyCohortParams<-function(x, customParams, soil = NULL) {
   return(x)
 }
 
-modifyInputParams<-function(x, customParams, soil = NULL) {
+modifyInputParams<-function(x, customParams) {
   # check class of customParams
   if((!inherits(customParams, "numeric")) && (!inherits(customParams, "list"))) {
     stop("'customParams' must be a named numeric vector or a named list")
@@ -137,6 +137,6 @@ modifyInputParams<-function(x, customParams, soil = NULL) {
     }
   }
   # Modify cohort params
-  x = modifyCohortParams(x, customCohortParams, soil)
+  x = modifyCohortParams(x, customCohortParams)
   return(x)
 }

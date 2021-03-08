@@ -609,12 +609,12 @@ resetInputs <- function(x) {
     invisible(.Call(`_medfate_resetInputs`, x))
 }
 
-.multiplyInputParam <- function(x, soil, paramType, paramName, cohort, f) {
-    invisible(.Call(`_medfate_multiplyInputParam`, x, soil, paramType, paramName, cohort, f))
+.multiplyInputParam <- function(x, paramType, paramName, cohort, f) {
+    invisible(.Call(`_medfate_multiplyInputParam`, x, paramType, paramName, cohort, f))
 }
 
-.modifyInputParam <- function(x, soil, paramType, paramName, cohort, newValue) {
-    invisible(.Call(`_medfate_modifyInputParam`, x, soil, paramType, paramName, cohort, newValue))
+.modifyInputParam <- function(x, paramType, paramName, cohort, newValue) {
+    invisible(.Call(`_medfate_modifyInputParam`, x, paramType, paramName, cohort, newValue))
 }
 
 .gdd <- function(DOY, Temp, Tbase = 5.0, cum = 0.0) {

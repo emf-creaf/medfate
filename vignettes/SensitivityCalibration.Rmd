@@ -55,7 +55,7 @@ x1 = forest2spwbInput(exampleforestMED,examplesoil1, SpParamsMED, control = defa
 Although it is not necessary, we make an initial call to the model (`spwb()`) with the default parameter settings:
 
 ```{r}
-S1<-spwb(x1, examplesoil1, examplemeteo, latitude = 41.82592, elevation = 100)
+S1<-spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 ```
 
 Function `spwb()` will be implicitly called multiple times in the sensitivity analyses and calibration analyses that we will illustrate below. 

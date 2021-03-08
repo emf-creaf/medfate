@@ -2530,32 +2530,30 @@ BEGIN_RCPP
 END_RCPP
 }
 // multiplyInputParam
-void multiplyInputParam(List x, List soil, String paramType, String paramName, int cohort, double f);
-RcppExport SEXP _medfate_multiplyInputParam(SEXP xSEXP, SEXP soilSEXP, SEXP paramTypeSEXP, SEXP paramNameSEXP, SEXP cohortSEXP, SEXP fSEXP) {
+void multiplyInputParam(List x, String paramType, String paramName, int cohort, double f);
+RcppExport SEXP _medfate_multiplyInputParam(SEXP xSEXP, SEXP paramTypeSEXP, SEXP paramNameSEXP, SEXP cohortSEXP, SEXP fSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< String >::type paramType(paramTypeSEXP);
     Rcpp::traits::input_parameter< String >::type paramName(paramNameSEXP);
     Rcpp::traits::input_parameter< int >::type cohort(cohortSEXP);
     Rcpp::traits::input_parameter< double >::type f(fSEXP);
-    multiplyInputParam(x, soil, paramType, paramName, cohort, f);
+    multiplyInputParam(x, paramType, paramName, cohort, f);
     return R_NilValue;
 END_RCPP
 }
 // modifyInputParam
-void modifyInputParam(List x, List soil, String paramType, String paramName, int cohort, double newValue);
-RcppExport SEXP _medfate_modifyInputParam(SEXP xSEXP, SEXP soilSEXP, SEXP paramTypeSEXP, SEXP paramNameSEXP, SEXP cohortSEXP, SEXP newValueSEXP) {
+void modifyInputParam(List x, String paramType, String paramName, int cohort, double newValue);
+RcppExport SEXP _medfate_modifyInputParam(SEXP xSEXP, SEXP paramTypeSEXP, SEXP paramNameSEXP, SEXP cohortSEXP, SEXP newValueSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< String >::type paramType(paramTypeSEXP);
     Rcpp::traits::input_parameter< String >::type paramName(paramNameSEXP);
     Rcpp::traits::input_parameter< int >::type cohort(cohortSEXP);
     Rcpp::traits::input_parameter< double >::type newValue(newValueSEXP);
-    modifyInputParam(x, soil, paramType, paramName, cohort, newValue);
+    modifyInputParam(x, paramType, paramName, cohort, newValue);
     return R_NilValue;
 END_RCPP
 }
@@ -4662,8 +4660,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_forest2spwbInput", (DL_FUNC) &_medfate_forest2spwbInput, 5},
     {"_medfate_forest2growthInput", (DL_FUNC) &_medfate_forest2growthInput, 4},
     {"_medfate_resetInputs", (DL_FUNC) &_medfate_resetInputs, 1},
-    {"_medfate_multiplyInputParam", (DL_FUNC) &_medfate_multiplyInputParam, 6},
-    {"_medfate_modifyInputParam", (DL_FUNC) &_medfate_modifyInputParam, 6},
+    {"_medfate_multiplyInputParam", (DL_FUNC) &_medfate_multiplyInputParam, 5},
+    {"_medfate_modifyInputParam", (DL_FUNC) &_medfate_modifyInputParam, 5},
     {"_medfate_gdd", (DL_FUNC) &_medfate_gdd, 4},
     {"_medfate_leafDevelopmentStatus", (DL_FUNC) &_medfate_leafDevelopmentStatus, 3},
     {"_medfate_leafSenescenceStatus", (DL_FUNC) &_medfate_leafSenescenceStatus, 2},

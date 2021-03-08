@@ -197,7 +197,7 @@ moisture_pressureVolumeCurvePlot(x, segment="stem", fraction="apoplastic")
 ### Running the model
 Soil water balance simulations will normally span periods of several months or years, but since the model operates at a daily and subdaily temporal scales, it is possible to perform soil water balance for one day only. This is done using function `spwb_day()`. In the following code we select the same day as before from the meteorological input data and perform soil water balance for that day only:
 ```{r}
-sd1<-spwb_day(x, examplesoil, rownames(examplemeteo)[d],  
+sd1<-spwb_day(x, rownames(examplemeteo)[d],  
              examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
              examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
              examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
@@ -303,11 +303,11 @@ plot(sd1, type = "LeafIntrinsicWUE", bySpecies=TRUE)
 ### Running the model
 Users will often use function `spwb()` to run the soil water balance model for several days. This function requires the `spwbInput` object, the `soil` object and the meteorological data frame. However, running `spwb_day()` modified the input objects. In particular, the soil moisture at the end of the simulation was:
 ```{r}
-examplesoil$W
+x$soil$W
 ```
 And the temperature of soil layers:
 ```{r}
-examplesoil$Temp
+x$soil$Temp
 ```
 We can also see the current state of canopy variables:
 ```{r}
@@ -315,14 +315,14 @@ x$canopy
 ```
 We simply use function `resetInputs()` to reset state variables to their default values, so that the new simulation is not affected by the end state of the previous simulation:
 ```{r}
-resetInputs(x, examplesoil)
-examplesoil$W
-examplesoil$Temp
+resetInputs(x)
+x$soil$W
+x$soil$Temp
 x$canopy
 ```
 Now we are ready to call function `spwb()`. In this example, we only simulate 61 days to save computational time:
 ```{r}
-S = spwb(x, examplesoil, examplemeteo[110:170,], latitude = 41.82592, elevation = 100)
+S = spwb(x, examplemeteo[110:170,], latitude = 41.82592, elevation = 100)
 ```
 Function `spwb()` returns an object of class *spwb*. If we inspect its elements, we realize that the output is arranged differently than in `spwb_day()`:
 ```{r}

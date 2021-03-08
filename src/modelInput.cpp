@@ -1132,7 +1132,8 @@ void updatePlantKmax(List x) {
     }
   }
 }
-void updateBelowgroundConductances(List x, List soil) {
+void updateBelowgroundConductances(List x) {
+  List soil = x["soil"];
   NumericVector dVec = soil["dVec"];
   NumericVector rfc = soil["dVec"];
   List belowLayers = x["belowLayers"];
@@ -1157,7 +1158,8 @@ void updateBelowgroundConductances(List x, List soil) {
     }
   }
 }
-void updateFineRootDistribution(List x, List soil) {
+void updateFineRootDistribution(List x) {
+  List soil = x["soil"];
   NumericVector dVec = soil["dVec"];
   DataFrame belowdf =  Rcpp::as<Rcpp::DataFrame>(x["below"]);
   NumericVector Z50 = belowdf["Z50"];
@@ -1170,10 +1172,11 @@ void updateFineRootDistribution(List x, List soil) {
     NumericVector PC = ldrRS_one(Z50[c], Z95[c], dVec);
     for(int l=0;l<nlayers;l++) V(c,l) = PC[l]; 
   }
-  updateBelowgroundConductances(x, soil);
+  updateBelowgroundConductances(x);
 }
-void updateBelow(List x, List soil) {
+void updateBelow(List x) {
   List control = x["control"];
+  List soil = x["soil"];
 
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
@@ -1206,11 +1209,11 @@ void multiplyInputParamSingle(List x, String paramType, String paramName, int co
 }
 
 // [[Rcpp::export(".multiplyInputParam")]]
-void multiplyInputParam(List x, List soil, String paramType, String paramName, int cohort, double f) {
+void multiplyInputParam(List x, String paramType, String paramName, int cohort, double f) {
   if(paramName=="Z50/Z95") {
     multiplyInputParamSingle(x, "below", "Z50", cohort, f);
     multiplyInputParamSingle(x, "below", "Z95", cohort, f);
-    updateFineRootDistribution(x, soil);
+    updateFineRootDistribution(x);
   } else  if(paramName=="WaterStorage") {
     multiplyInputParamSingle(x, "paramsWaterStorage", "Vsapwood", cohort, f);
     multiplyInputParamSingle(x, "paramsWaterStorage", "Vleaf", cohort, f);
@@ -1219,7 +1222,7 @@ void multiplyInputParam(List x, List soil, String paramType, String paramName, i
     multiplyInputParamSingle(x, "paramsTranspiration", "VCstem_kmax", cohort, f);
     multiplyInputParamSingle(x, "paramsTranspiration", "VCroot_kmax", cohort, f);
     multiplyInputParamSingle(x, "paramsTranspiration", "Plant_kmax", cohort, f);
-    updateBelowgroundConductances(x, soil);
+    updateBelowgroundConductances(x);
   } else if(paramName=="LAI_live") {
     multiplyInputParamSingle(x, "above", "LAI_live", cohort, f);
     multiplyInputParamSingle(x, "above", "LAI_expanded", cohort, f);
@@ -1243,11 +1246,11 @@ void multiplyInputParam(List x, List soil, String paramType, String paramName, i
     multiplyInputParamSingle(x, paramType, paramName, cohort, f);
   }
   updatePlantKmax(x);
-  updateBelow(x, soil);
+  updateBelow(x);
 }
 
 // [[Rcpp::export(".modifyInputParam")]]
-void modifyInputParam(List x, List soil, String paramType, String paramName, int cohort, double newValue) {
+void modifyInputParam(List x, String paramType, String paramName, int cohort, double newValue) {
   if(paramName=="LAI_live") {
     modifyInputParamSingle(x, "above", "LAI_live", cohort, newValue);
     modifyInputParamSingle(x, "above", "LAI_expanded", cohort, newValue);
@@ -1262,5 +1265,5 @@ void modifyInputParam(List x, List soil, String paramType, String paramName, int
     modifyInputParamSingle(x, paramType, paramName, cohort, newValue);
   }
   updatePlantKmax(x);
-  updateBelow(x, soil);
+  updateBelow(x);
 }
