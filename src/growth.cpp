@@ -90,12 +90,12 @@ double qResp(double Tmean) {
 // }
 
 
-List growthDay1(List x, List soil, double tday, double pet, double prec, double er, double runon=0.0, 
+List growthDay1(List x, double tday, double pet, double prec, double er, double runon=0.0, 
               double rad = NA_REAL, double elevation = NA_REAL, bool verbose = false) {
   
   
   //Soil-plant water balance
-  List spwbOut = spwbDay1(x, soil, tday, pet, prec, er,runon,
+  List spwbOut = spwbDay1(x, tday, pet, prec, er,runon,
                           rad, elevation, verbose);
   
   //Control params
@@ -543,14 +543,14 @@ List growthDay1(List x, List soil, double tday, double pet, double prec, double 
 
 
 
-List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, double tmaxPrev, double tminNext, 
+List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPrev, double tminNext, 
                 double rhmin, double rhmax, double rad, double wind, 
                 double latitude, double elevation, double slope, double aspect,
                 double solarConstant, double delta, 
                 double prec, double pet, double er, double runon=0.0, bool verbose = false) {
   
   //1. Soil-plant water balance
-  List spwbOut = spwbDay2(x, soil, tmin, tmax, tminPrev, tmaxPrev, tminNext,
+  List spwbOut = spwbDay2(x, tmin, tmax, tminPrev, tmaxPrev, tminNext,
                           rhmin, rhmax, rad, wind, 
                           latitude, elevation, slope, aspect,
                           solarConstant, delta, 
@@ -561,6 +561,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   
   //Control params
   List control = x["control"];  
+
   
   double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
   
@@ -595,7 +596,8 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
   double RGRleafmax = maximumRGR["leaf"];
   double RGRfinerootmax = maximumRGR["fineroot"];
   
-  //Soil info
+  //Soil params
+  List soil  = x["soil"];
   NumericVector Ksat = soil["Ksat"];
   NumericVector dVec = soil["dVec"];
   NumericVector rfc = soil["rfc"];
@@ -1244,7 +1246,7 @@ List growthDay2(List x, List soil, double tmin, double tmax, double tminPrev, do
 
 
 // [[Rcpp::export("growth_day")]]
-List growthDay(List x, List soil, CharacterVector date, double tmin, double tmax, double rhmin, 
+List growthDay(List x, CharacterVector date, double tmin, double tmax, double rhmin, 
                double rhmax, double rad, double wind, 
                double latitude, double elevation, double slope, double aspect,  
                double prec, double runon=0.0) {
@@ -1279,9 +1281,9 @@ List growthDay(List x, List soil, CharacterVector date, double tmin, double tmax
   double er = erFactor(doy, pet, prec);
   List s;
   if(transpirationMode=="Granier") {
-    s = growthDay1(x,soil, tday, pet, prec, er, runon, rad, elevation, verbose);
+    s = growthDay1(x, tday, pet, prec, er, runon, rad, elevation, verbose);
   } else {
-    s = growthDay2(x,soil, tmin, tmax, tmin, tmax, tmin, rhmin, rhmax, rad, wind, 
+    s = growthDay2(x, tmin, tmax, tmin, tmax, tmin, rhmin, rhmax, rad, wind, 
                  latitude, elevation, slope, aspect,
                  solarConstant, delta, prec, pet, er, runon, verbose);
   }
@@ -1290,7 +1292,9 @@ List growthDay(List x, List soil, CharacterVector date, double tmin, double tmax
 }
 
 
-void checkgrowthInput(List x, List soil, String transpirationMode, String soilFunctions) {
+void checkgrowthInput(List x, String transpirationMode, String soilFunctions) {
+  
+  List soil = x["soil"];
   if(!x.containsElementNamed("above")) stop("above missing in growthInput");
   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   if(!above.containsElementNamed("LAI_live")) stop("LAI_live missing in growthInput$above");
@@ -1406,14 +1410,16 @@ void recordStandSummary(DataFrame standSummary, DataFrame above, int pos) {
 
 
 // [[Rcpp::export("growth")]]
-List growth(List x, List soil, DataFrame meteo, double latitude, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL) {
+List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL) {
   
   //Control params 
   List control =x["control"];  
+  //Soil params 
+  List soil = x["soil"];
+  
   //Store input
   List growthInput = clone(x);
-  List soilInput = clone(soil);
-  
+
     
   // Rcout<<"1";
   
@@ -1429,7 +1435,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
   bool leafPhenology = control["leafPhenology"];
   bool unlimitedSoilWater = control["unlimitedSoilWater"];
   bool multiLayerBalance = control["multiLayerBalance"];
-  checkgrowthInput(x, soil, transpirationMode, soilFunctions);
+  checkgrowthInput(x, transpirationMode, soilFunctions);
   
   if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
   double latrad = latitude * (PI/180.0);
@@ -1650,7 +1656,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
     //2. Water balance and photosynthesis
     if(transpirationMode=="Granier") {
       double er = erFactor(DOY[i], PET[i], Precipitation[i]);
-      s = growthDay1(x, soil, MeanTemperature[i], PET[i], Precipitation[i], er, 0.0, 
+      s = growthDay1(x, MeanTemperature[i], PET[i], Precipitation[i], er, 0.0, 
                      Radiation[i], elevation, false); //No Runon in simulations for a single cell
     } else if(transpirationMode=="Sperry") {
       std::string c = as<std::string>(dateStrings[i]);
@@ -1677,7 +1683,7 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
       double rad = Radiation[i];
       PET[i] = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
       double er = erFactor(DOY[i], PET[i], Precipitation[i]);
-      s = growthDay2(x, soil, tmin, tmax, tminPrev, tmaxPrev, tminNext,
+      s = growthDay2(x, tmin, tmax, tminPrev, tmaxPrev, tminNext,
                    rhmin, rhmax, rad, wind, 
                    latitude, elevation, slope, aspect,
                    solarConstant, delta, Precipitation[i], PET[i], 
@@ -1899,7 +1905,6 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
     l = List::create(Named("latitude") = latitude,
                      Named("topography") = topo,
                      Named("growthInput") = growthInput,
-                     Named("soilInput") = soilInput,
                      Named("WaterBalance")=DWB, 
                      Named("Soil")=SWB,
                      Named("Stand")=Stand,
@@ -1926,7 +1931,6 @@ List growth(List x, List soil, DataFrame meteo, double latitude, double elevatio
     l = List::create(Named("latitude") = latitude,
                    Named("topography") = topo,
                    Named("growthInput") = growthInput,
-                   Named("soilInput") = soilInput,
                    Named("WaterBalance")=DWB, 
                    Named("EnergyBalance") = DEB,
                    Named("Temperature") = DT,

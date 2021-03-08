@@ -180,7 +180,7 @@ Finally, note that one can play with plant-specific parameters for soil water ba
 Soil water balance simulations will normally span periods of several months or years, but since the model operates at a daily temporal scale, it is possible to perform soil water balance for one day only. This is done using function `spwb_day()`. In the following code we select day 100 from the meteorological input data and perform soil water balance for that day only:
 ```{r}
 d = 100
-sd1<-spwb_day(x, examplesoil, rownames(examplemeteo)[d],  
+sd1<-spwb_day(x, rownames(examplemeteo)[d],  
              examplemeteo$MinTemperature[d], examplemeteo$MaxTemperature[d], 
              examplemeteo$MinRelativeHumidity[d], examplemeteo$MaxRelativeHumidity[d], 
              examplemeteo$Radiation[d], examplemeteo$WindSpeed[d], 
@@ -206,16 +206,16 @@ sd1
 
 Most often, users will use function `spwb()` to run the soil water balance model. This function requires the `spwbInput` object, the `soil` object and the meteorological data frame. However, function `spwb_day()` modified the state variables of the input objects. In particular, the values of soil moisture are now:
 ```{r}
-examplesoil$W
+x$soil$W
 ```
 We simply reset state variables to their default values so that new simulations are not affected by the end state of the previous simulation:
 ```{r}
-resetInputs(x, examplesoil)
-examplesoil$W
+resetInputs(x)
+x$soil$W
 ```
 Now we are ready to call function `spwb()`:
 ```{r}
-S = spwb(x, examplesoil, examplemeteo, latitude = 41.82592, elevation = 100)
+S = spwb(x, examplemeteo, latitude = 41.82592, elevation = 100)
 ```
 Function `spwb()` returns an object of class with the same name, actually a list:
 ```{r}

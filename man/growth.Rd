@@ -6,11 +6,10 @@
 Function \code{growth} is a forest growth model that calculates changes in leaf area, sapwood area and structural variables for all plant cohorts in a given forest stand during a period specified in the input climatic data. 
 }
 \usage{
-growth(x, soil, meteo,  latitude, elevation = NA, slope = NA, aspect = NA) 
+growth(x, meteo,  latitude, elevation = NA, slope = NA, aspect = NA) 
 }
 \arguments{
   \item{x}{An object of class \code{\link{growthInput}}.}
-  \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
   \item{meteo}{A data frame with daily meteorological data series. Row names of the data frame should correspond to date strings with format "yyyy-mm-dd" (see \code{\link{Date}}). When  \code{x$TranspirationMode = "Granier"} the following columns are required:
    \itemize{
      \item{\code{MeanTemperature}: Mean temperature (in degrees Celsius).}
@@ -43,7 +42,6 @@ growth(x, soil, meteo,  latitude, elevation = NA, slope = NA, aspect = NA)
   \item{\code{"latitude"}: Latitude (in degrees) given as input.} 
   \item{\code{"topography"}: Vector with elevation, slope and aspect given as input.} 
   \item{\code{"growthInput"}: A copy of the object \code{x} of class \code{\link{growthInput}} given as input.}
-  \item{\code{"soilInput"}: A copy of the object \code{soil} of class \code{\link{soil}} given as input.}
   \item{\code{"WaterBalance"}: A data frame where different water balance variables (see \code{\link{spwb}}).}
   \item{\code{"EnergyBalance"}: A data frame with the daily values of energy balance components for the soil and the canopy (only for \code{transpirationMode = "Sperry"}; see \code{\link{spwb}}).}
   \item{\code{"Temperature"}: A data frame with the daily values of minimum/mean/maximum temperatures for the atmosphere (input), canopy and soil (only for \code{transpirationMode = "Sperry"}; see \code{\link{spwb}}).}
@@ -115,7 +113,7 @@ examplesoil1 = soil(defaultSoilParams(4))
 x1 = forest2growthInput(exampleforestMED, examplesoil1, SpParamsMED, control)
 
 #Call simulation function
-G1<-growth(x1, examplesoil1, examplemeteo, latitude = 41.82592, elevation = 100)
+G1<-growth(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 
 \dontrun{
 #Switch to 'Sperry' transpiration mode
@@ -129,6 +127,6 @@ x2 = forest2growthInput(exampleforestMED,examplesoil2, SpParamsMED, control)
 
 #Call simulation function (11 days)
 d = 100:110
-G2<-growth(x2, examplesoil2, examplemeteo[d,], latitude = 41.82592, elevation = 100)
+G2<-growth(x2, examplemeteo[d,], latitude = 41.82592, elevation = 100)
 }
 }

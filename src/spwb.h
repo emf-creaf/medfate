@@ -5,7 +5,7 @@
 #endif
 using namespace Rcpp;
 
-void checkspwbInput(List x, List soil, String transpirationMode);
+void checkspwbInput(List x, String transpirationMode);
 
 DataFrame defineWaterBalanceDailyOutput(DataFrame meteo, NumericVector PET, String transpirationMode);
 DataFrame defineSoilWaterBalanceDailyOutput(DataFrame meteo, List soil, String transpirationMode);
@@ -28,13 +28,13 @@ void printWaterBalanceResult(DataFrame DWB, List plantDWOL,
                              NumericVector initialContent, double initialSnowContent,
                              String transpirationMode);
 
-List spwbDay(List x, List soil, CharacterVector date, double tmin, double tmax, 
+List spwbDay(List x, CharacterVector date, double tmin, double tmax, 
              double rhmin, double rhmax, double rad, double wind, 
              double latitude, double elevation, double slope, double aspect,  
              double prec, double runon=0.0);
-List spwbDay1(List x, List soil, double tday, double pet, double prec, double er, double runon=0.0, 
+List spwbDay1(List x, double tday, double pet, double prec, double er, double runon=0.0, 
               double rad = NA_REAL, double elevation = NA_REAL, bool verbose=false);
-List spwbDay2(List x, List soil, double tmin, double tmax, double tminPrev, double tmaxPrev, double tminNext, 
+List spwbDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPrev, double tminNext, 
               double rhmin, double rhmax, double rad, double wind, 
               double latitude, double elevation, double slope, double aspect,
               double solarConstant, double delta, 

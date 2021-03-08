@@ -109,9 +109,11 @@ modifyInputParams<-function(x, customParams, soil = NULL) {
     stop("'customParams' must be a named numeric vector or a named list")
   }
   cn = names(customParams)
+  isSoilParam = unlist(lapply(strsplit(cn, "%"), length))==2 #detect soil params
   isCohParam = unlist(lapply(strsplit(cn, "/"), length))==2 #detect cohort params
   customCohortParams = customParams[isCohParam]
-  customControlParams = customParams[!isCohParam]
+  customSoilParams = customParams[isSoilParam]
+  customControlParams = customParams[(!isCohParam) && (!isSoilParam)]
   # Modify control params
   if(length(customControlParams)>0) {
     for(i in 1:length(customControlParams)) {

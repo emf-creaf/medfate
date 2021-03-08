@@ -797,6 +797,7 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
   List input;
   if(transpirationMode=="Granier") {
     input = List::create(_["control"] = clone(control),
+                         _["soil"] = clone(soil),
                          _["canopy"] = List::create(),
                          _["cohorts"] = cohortDescdf,
                          _["above"] = plantsdf,
@@ -819,6 +820,7 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
     }
 
     input = List::create(_["control"] = ctl,
+                         _["soil"] = clone(soil),
                          _["canopy"] = paramsCanopy(above, control),
                          _["cohorts"] = cohortDescdf,
                          _["above"] = plantsdf,
@@ -933,6 +935,7 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   List input;
   if(transpirationMode=="Granier") {
     input = List::create(_["control"] = clone(control),
+                         _["soil"] = clone(soil),
                          _["canopy"] = List::create(),
                          _["cohorts"] = cohortDescdf,
                          _["above"] = plantsdf,
@@ -962,6 +965,7 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
     }
 
     input = List::create(_["control"] = clone(control),
+                         _["soil"] = clone(soil),
                          _["canopy"] = paramsCanopy(above, control),
                          _["cohorts"] = cohortDescdf,
                          _["above"] = plantsdf,
@@ -1044,8 +1048,9 @@ List forest2growthInput(List x, List soil, DataFrame SpParams, List control) {
 }
 
 // [[Rcpp::export("resetInputs")]]
-void resetInputs(List x, List soil) {
+void resetInputs(List x) {
   List control = x["control"];
+  List soil = x["soil"];
   String transpirationMode = control["transpirationMode"];
   //Reset of canopy layer state variables 
   if(transpirationMode=="Sperry") {

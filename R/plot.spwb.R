@@ -27,13 +27,12 @@ plot.spwb<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = FAL
     input = x$growthInput
   }
   
-  soilInput = x$soilInput
   WaterBalance = x$WaterBalance
   Soil = x$Soil
   Stand = x$Stand
   Plants = x$Plants
   
-  nlayers = length(soilInput$W)
+  nlayers = length(input$soil$W)
   
   transpMode = input$control$transpirationMode
 
@@ -165,8 +164,7 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
   } else {
     input = x$growthInput
   }
-  soilInput = x$soilInput
-  
+
   WaterBalance = x$WaterBalance
   Soil = x$Soil
   Stand = x$Stand
@@ -174,7 +172,7 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
   SunlitLeaves = x$SunlitLeaves
   ShadeLeaves = x$ShadeLeaves
   
-  nlayers = length(soilInput$W)
+  nlayers = length(input$soil$W)
   
   transpMode = input$control$transpirationMode
   
@@ -196,7 +194,7 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
   else if(type=="SoilTheta") {
     WM = Soil[,paste("W",1:nlayers,sep=".")]
     if(!is.null(dates)) WM = WM[row.names(WM) %in% as.character(dates),]
-    theta_FC = soil_thetaFC(soilInput, model = input$control$soilFunctions)
+    theta_FC = soil_thetaFC(input$soil, model = input$control$soilFunctions)
     WM = 100*sweep(WM, 2,theta_FC, "*")
     if(is.null(ylab)) ylab = "Soil moisture (% volume)"
     return(.multiple_dynamics(as.matrix(WM),  xlab = xlab, ylab = ylab, ylim = ylim,
@@ -422,13 +420,12 @@ plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = F
   
   # Get common elements
   input = x$growthInput
-  soilInput = x$soilInput
   PlantStructure = x$PlantStructure
   PlantGrowth = x$PlantGrowth
   Plants = x$Plants
   PCB = x$PlantCarbonBalance
   
-  nlayers = length(soilInput$W)
+  nlayers = length(input$soil$W)
   
   transpMode = input$control$transpirationMode
   

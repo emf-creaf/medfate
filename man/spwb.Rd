@@ -8,15 +8,14 @@
 Function \code{spwb()} is a water balance model that determines changes in soil moisture, soil water potentials, plant transpiration and drought stress at daily steps for a given forest stand during a period specified in the input climatic data. Function \code{pwb()} performs plant water balance only (i.e. soil moisture dynamics is an input) at daily steps for a given forest stand during a period specified in the input climatic data. On both simulation functions plant transpiration and photosynthesis processes are conducted with different level of detail depending on the transpiration mode.
 }
 \usage{
-spwb(x, soil, meteo,  latitude , elevation = NA, slope = NA, aspect = NA)
-pwb(x, soil, meteo, W, latitude, elevation = NA, slope = NA, aspect = NA,
+spwb(x, meteo,  latitude , elevation = NA, slope = NA, aspect = NA)
+pwb(x, meteo, W, latitude, elevation = NA, slope = NA, aspect = NA,
     canopyEvaporation = numeric(0), 
     snowMelt = numeric(0), 
     soilEvaporation = numeric(0))
 }
 \arguments{
   \item{x}{An object of class \code{\link{spwbInput}}.}
-  \item{soil}{A list containing the description of the soil (see \code{\link{soil}}).}
   \item{meteo}{A data frame with daily meteorological data series. Row names of the data frame should correspond to date strings with format "yyyy-mm-dd" (see \code{\link{Date}}). When using the 'Granier' transpiration mode the following columns are required:
    \itemize{
      \item{\code{MeanTemperature}: Mean temperature (in degrees Celsius).}
@@ -52,7 +51,6 @@ pwb(x, soil, meteo, W, latitude, elevation = NA, slope = NA, aspect = NA,
      \item{\code{"latitude"}: Latitude (in degrees) given as input.} 
      \item{\code{"topography"}: Vector with elevation, slope and aspect given as input.} 
      \item{\code{"spwbInput"}: An (unmodified) copy of the object \code{x} of class \code{\link{spwbInput}} given as input  (note that \code{x} is modified by the simulation function).}
-     \item{\code{"soilInput"}: An (unmodified) copy of the object \code{soil} of class \code{\link{soil}} given as input (note that \code{soil} is modified by the simulation function).}
      \item{\code{"WaterBalance"}: A data frame where different variables (in columns) are given for each simulated day (in rows):}
        \itemize{
           \item{\code{"PET"}: Potential evapotranspiration (in mm).}
@@ -144,7 +142,7 @@ De \enc{Cáceres}{Caceres} M, Mencuccini M, Martin-StPaul N, Limousin JM, Coll L
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
 }
 \note{
-State variables stored in objects \code{x} and \code{soil} are modified during the simulation.  
+State variables stored in objects \code{x} are modified during the simulation.  
 }
 \seealso{
 \code{\link{spwbInput}}, \code{\link{spwb_day}}, \code{\link{plot.spwb}},  
@@ -170,7 +168,7 @@ control = defaultControl()
 x1 = forest2spwbInput(exampleforestMED,examplesoil1, SpParamsMED, control)
 
 #Call simulation function
-S1<-spwb(x1, examplesoil1, examplemeteo, latitude = 41.82592, elevation = 100)
+S1<-spwb(x1, examplemeteo, latitude = 41.82592, elevation = 100)
         
 #Plot results
 plot(S1)
@@ -190,12 +188,12 @@ x2 = forest2spwbInput(exampleforestMED,examplesoil2, SpParamsMED, control)
 
 #Call simulation function (11 days)
 d = 100:110
-S2<-spwb(x2, examplesoil2, examplemeteo[d,], latitude = 41.82592, elevation = 100)
+S2<-spwb(x2, examplemeteo[d,], latitude = 41.82592, elevation = 100)
 
 # Run the model with 'Sperry' transpiration mode using the water balance of 
 # simulated with the 'Granier' model
 WS = as.matrix(S1$Soil[, c("W.1", "W.2", "W.3", "W.4")])
-P2<-pwb(x2, examplesoil2, examplemeteo[d,], latitude = 41.82592, elevation = 100, 
+P2<-pwb(x2, examplemeteo[d,], latitude = 41.82592, elevation = 100, 
         W = WS[d,],
         canopyEvaporation = S1$WaterBalance$Interception[d],
         snowMelt = S1$WaterBalance$Snowmelt[d],

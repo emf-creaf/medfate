@@ -424,7 +424,6 @@ List soil(DataFrame SoilParams, String VG_PTF = "Toth",
   //Parameters to be calculated and state variables
   NumericVector macro(nlayers, NA_REAL);
   NumericVector temperature(nlayers, NA_REAL);
-  NumericVector Theta_FC(nlayers);
   CharacterVector usda_Type(nlayers);
   NumericVector VG_alpha(nlayers);
   NumericVector VG_n(nlayers);
@@ -474,7 +473,62 @@ List soil(DataFrame SoilParams, String VG_PTF = "Toth",
   l.attr("class") = CharacterVector::create("soil","list");
   return(l);
 }
+// [[Rcpp::export("modifySoilLayerParam")]]
+List modifySoilLayerParam(List x, String paramName, int layer, double newValue, 
+                          String VG_PTF = "Toth") {
+  
+  List soil = clone(x);
+  
+  //Perform modification
+  NumericVector paramVec = as<NumericVector>(soil[paramName]);
+  paramVec[layer-1] = newValue;
+  
+  //Recalculate necessary soil parameters
+  NumericVector clay = as<NumericVector>(soil["clay"]);
+  NumericVector sand = as<NumericVector>(soil["sand"]);
+  NumericVector om = as<NumericVector>(soil["om"]);
+  NumericVector bd = as<NumericVector>(soil["bd"]);
+  NumericVector rfc =as<NumericVector>(soil["rfc"]);
+  NumericVector dVec = as<NumericVector>(soil["dVec"]);
+  NumericVector macro = as<NumericVector>(soil["macro"]);
+  NumericVector VG_alpha = as<NumericVector>(soil["VG_alpha"]);
+  NumericVector VG_n = as<NumericVector>(soil["VG_n"]);
+  NumericVector VG_theta_res = as<NumericVector>(soil["VG_theta_res"]);
+  NumericVector VG_theta_sat = as<NumericVector>(soil["VG_theta_sat"]);
+  NumericVector Ksat = as<NumericVector>(soil["Ksat"]);
+  
+  int nlayers = dVec.size();
 
+  //Parameters to be re-calculated
+  double SoilDepth = 0.0;
+  CharacterVector usda_Type(nlayers);
+  for(int l=0;l<nlayers;l++) {
+    usda_Type[l] = USDAType(clay[l],sand[l]);
+    NumericVector vgl;
+    if(VG_PTF=="Carsel") {
+      vgl = vanGenuchtenParamsCarsel(usda_Type[l]); 
+    } else if(VG_PTF=="Toth") {
+      if(l==0) vgl = vanGenuchtenParamsToth(clay[l], sand[l], om[l], bd[l], TRUE);
+      else vgl = vanGenuchtenParamsToth(clay[l], sand[l], om[l], bd[l], FALSE);
+    } else {
+      stop("Wrong value for 'VG_PTF'");
+    }
+    VG_alpha[l] = vgl[0];
+    VG_n[l] = vgl[1];
+    VG_theta_res[l] = vgl[2];
+    VG_theta_sat[l] = vgl[3];
+    // Stolf, R., Thurler, A., Oliveira, O., Bacchi, S., Reichardt, K., 2011. Method to estimate soil macroporosity and microporosity based on sand content and bulk density. Rev. Bras. Ciencias do Solo 35, 447–459.
+    macro[l] = std::max(0.0,0.693 - 0.465*bd[l] + 0.212*(sand[l]/100.0));
+    Ksat[l] = saturatedConductivitySaxton(clay[l], sand[l], om[l]);
+    SoilDepth +=dVec[l];
+  }
+  // Saturated vertical hydraulic conductivity (mm/day) 
+  double Kdrain = 0.05*saturatedConductivitySaxton(clay[nlayers-1], sand[nlayers-1], om[nlayers-1], false);
+  soil["Kdrain"] = Kdrain;
+  //Update SoilDepth
+  soil["SoilDepth"] = SoilDepth;
+  
+}
 
 NumericVector psi2thetasoil(List soil, double psi, String model="SX") {
   NumericVector SD = soil["dVec"];

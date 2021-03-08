@@ -2,8 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
-# Version 1.1.7
+# Version 2.0.0
 - Bug correction: NaN values for theta > theta_sat in van Genuchten psi computation
+- Soil input merged with model input!
 
 # Version 1.1.6
 - New canopy turbulence models by Katul et al (2004).
