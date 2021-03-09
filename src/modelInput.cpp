@@ -1174,6 +1174,7 @@ void updateFineRootDistribution(List x) {
   }
   updateBelowgroundConductances(x);
 }
+// [[Rcpp::export(".updateBelow")]]
 void updateBelow(List x) {
   List control = x["control"];
   List soil = x["soil"];

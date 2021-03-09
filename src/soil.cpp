@@ -473,15 +473,13 @@ List soil(DataFrame SoilParams, String VG_PTF = "Toth",
   l.attr("class") = CharacterVector::create("soil","list");
   return(l);
 }
-// [[Rcpp::export("modifySoilLayerParam")]]
-List modifySoilLayerParam(List x, String paramName, int layer, double newValue, 
+// [[Rcpp::export(".modifySoilLayerParam")]]
+void modifySoilLayerParam(List soil, String paramName, int layer, double newValue, 
                           String VG_PTF = "Toth") {
-  
-  List soil = clone(x);
   
   //Perform modification
   NumericVector paramVec = as<NumericVector>(soil[paramName]);
-  paramVec[layer-1] = newValue;
+  paramVec[layer] = newValue;
   
   //Recalculate necessary soil parameters
   NumericVector clay = as<NumericVector>(soil["clay"]);

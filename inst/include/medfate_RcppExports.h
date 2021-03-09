@@ -465,17 +465,17 @@ namespace medfate {
         return Rcpp::as<List >(rcpp_result_gen);
     }
 
-    inline List modifySoilLayerParam(List x, String paramName, int layer, double newValue, String VG_PTF = "Toth") {
-        typedef SEXP(*Ptr_modifySoilLayerParam)(SEXP,SEXP,SEXP,SEXP,SEXP);
-        static Ptr_modifySoilLayerParam p_modifySoilLayerParam = NULL;
-        if (p_modifySoilLayerParam == NULL) {
-            validateSignature("List(*modifySoilLayerParam)(List,String,int,double,String)");
-            p_modifySoilLayerParam = (Ptr_modifySoilLayerParam)R_GetCCallable("medfate", "_medfate_modifySoilLayerParam");
+    inline void _modifySoilLayerParam(List soil, String paramName, int layer, double newValue, String VG_PTF = "Toth") {
+        typedef SEXP(*Ptr__modifySoilLayerParam)(SEXP,SEXP,SEXP,SEXP,SEXP);
+        static Ptr__modifySoilLayerParam p__modifySoilLayerParam = NULL;
+        if (p__modifySoilLayerParam == NULL) {
+            validateSignature("void(*_modifySoilLayerParam)(List,String,int,double,String)");
+            p__modifySoilLayerParam = (Ptr__modifySoilLayerParam)R_GetCCallable("medfate", "_medfate__modifySoilLayerParam");
         }
         RObject rcpp_result_gen;
         {
             RNGScope RCPP_rngScope_gen;
-            rcpp_result_gen = p_modifySoilLayerParam(Shield<SEXP>(Rcpp::wrap(x)), Shield<SEXP>(Rcpp::wrap(paramName)), Shield<SEXP>(Rcpp::wrap(layer)), Shield<SEXP>(Rcpp::wrap(newValue)), Shield<SEXP>(Rcpp::wrap(VG_PTF)));
+            rcpp_result_gen = p__modifySoilLayerParam(Shield<SEXP>(Rcpp::wrap(soil)), Shield<SEXP>(Rcpp::wrap(paramName)), Shield<SEXP>(Rcpp::wrap(layer)), Shield<SEXP>(Rcpp::wrap(newValue)), Shield<SEXP>(Rcpp::wrap(VG_PTF)));
         }
         if (rcpp_result_gen.inherits("interrupted-error"))
             throw Rcpp::internal::InterruptedException();
@@ -483,7 +483,6 @@ namespace medfate {
             throw Rcpp::LongjumpException(rcpp_result_gen);
         if (rcpp_result_gen.inherits("try-error"))
             throw Rcpp::exception(Rcpp::as<std::string>(rcpp_result_gen).c_str());
-        return Rcpp::as<List >(rcpp_result_gen);
     }
 
     inline NumericVector soil_thetaFC(List soil, String model = "SX") {

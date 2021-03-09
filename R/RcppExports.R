@@ -609,6 +609,10 @@ resetInputs <- function(x) {
     invisible(.Call(`_medfate_resetInputs`, x))
 }
 
+.updateBelow <- function(x) {
+    invisible(.Call(`_medfate_updateBelow`, x))
+}
+
 .multiplyInputParam <- function(x, paramType, paramName, cohort, f) {
     invisible(.Call(`_medfate_multiplyInputParam`, x, paramType, paramName, cohort, f))
 }
@@ -793,8 +797,8 @@ soil <- function(SoilParams, VG_PTF = "Toth", W = as.numeric( c(1.0)), SWE = 0.0
     .Call(`_medfate_soil`, SoilParams, VG_PTF, W, SWE)
 }
 
-modifySoilLayerParam <- function(x, paramName, layer, newValue, VG_PTF = "Toth") {
-    .Call(`_medfate_modifySoilLayerParam`, x, paramName, layer, newValue, VG_PTF)
+.modifySoilLayerParam <- function(soil, paramName, layer, newValue, VG_PTF = "Toth") {
+    invisible(.Call(`_medfate_modifySoilLayerParam`, soil, paramName, layer, newValue, VG_PTF))
 }
 
 soil_thetaFC <- function(soil, model = "SX") {

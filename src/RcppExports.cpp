@@ -2529,6 +2529,16 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// updateBelow
+void updateBelow(List x);
+RcppExport SEXP _medfate_updateBelow(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    updateBelow(x);
+    return R_NilValue;
+END_RCPP
+}
 // multiplyInputParam
 void multiplyInputParam(List x, String paramType, String paramName, int cohort, double f);
 RcppExport SEXP _medfate_multiplyInputParam(SEXP xSEXP, SEXP paramTypeSEXP, SEXP paramNameSEXP, SEXP cohortSEXP, SEXP fSEXP) {
@@ -3482,24 +3492,23 @@ RcppExport SEXP _medfate_soil(SEXP SoilParamsSEXP, SEXP VG_PTFSEXP, SEXP WSEXP, 
     return rcpp_result_gen;
 }
 // modifySoilLayerParam
-List modifySoilLayerParam(List x, String paramName, int layer, double newValue, String VG_PTF);
-static SEXP _medfate_modifySoilLayerParam_try(SEXP xSEXP, SEXP paramNameSEXP, SEXP layerSEXP, SEXP newValueSEXP, SEXP VG_PTFSEXP) {
+void modifySoilLayerParam(List soil, String paramName, int layer, double newValue, String VG_PTF);
+static SEXP _medfate_modifySoilLayerParam_try(SEXP soilSEXP, SEXP paramNameSEXP, SEXP layerSEXP, SEXP newValueSEXP, SEXP VG_PTFSEXP) {
 BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::traits::input_parameter< List >::type x(xSEXP);
+    Rcpp::traits::input_parameter< List >::type soil(soilSEXP);
     Rcpp::traits::input_parameter< String >::type paramName(paramNameSEXP);
     Rcpp::traits::input_parameter< int >::type layer(layerSEXP);
     Rcpp::traits::input_parameter< double >::type newValue(newValueSEXP);
     Rcpp::traits::input_parameter< String >::type VG_PTF(VG_PTFSEXP);
-    rcpp_result_gen = Rcpp::wrap(modifySoilLayerParam(x, paramName, layer, newValue, VG_PTF));
-    return rcpp_result_gen;
+    modifySoilLayerParam(soil, paramName, layer, newValue, VG_PTF);
+    return R_NilValue;
 END_RCPP_RETURN_ERROR
 }
-RcppExport SEXP _medfate_modifySoilLayerParam(SEXP xSEXP, SEXP paramNameSEXP, SEXP layerSEXP, SEXP newValueSEXP, SEXP VG_PTFSEXP) {
+RcppExport SEXP _medfate_modifySoilLayerParam(SEXP soilSEXP, SEXP paramNameSEXP, SEXP layerSEXP, SEXP newValueSEXP, SEXP VG_PTFSEXP) {
     SEXP rcpp_result_gen;
     {
         Rcpp::RNGScope rcpp_rngScope_gen;
-        rcpp_result_gen = PROTECT(_medfate_modifySoilLayerParam_try(xSEXP, paramNameSEXP, layerSEXP, newValueSEXP, VG_PTFSEXP));
+        rcpp_result_gen = PROTECT(_medfate_modifySoilLayerParam_try(soilSEXP, paramNameSEXP, layerSEXP, newValueSEXP, VG_PTFSEXP));
     }
     Rboolean rcpp_isInterrupt_gen = Rf_inherits(rcpp_result_gen, "interrupted-error");
     if (rcpp_isInterrupt_gen) {
@@ -4438,7 +4447,7 @@ static int _medfate_RcppExport_validate(const char* sig) {
         signatures.insert("NumericVector(*soil_temperatureGradient)(NumericVector,NumericVector)");
         signatures.insert("NumericVector(*soil_temperatureChange)(NumericVector,NumericVector,NumericVector,NumericVector,NumericVector,NumericVector,double)");
         signatures.insert("List(*soil)(DataFrame,String,NumericVector,double)");
-        signatures.insert("List(*modifySoilLayerParam)(List,String,int,double,String)");
+        signatures.insert("void(*.modifySoilLayerParam)(List,String,int,double,String)");
         signatures.insert("NumericVector(*soil_thetaFC)(List,String)");
         signatures.insert("NumericVector(*soil_thetaWP)(List,String)");
         signatures.insert("NumericVector(*soil_thetaSAT)(List,String)");
@@ -4483,7 +4492,7 @@ RcppExport SEXP _medfate_RcppExport_registerCCallable() {
     R_RegisterCCallable("medfate", "_medfate_soil_temperatureGradient", (DL_FUNC)_medfate_temperatureGradient_try);
     R_RegisterCCallable("medfate", "_medfate_soil_temperatureChange", (DL_FUNC)_medfate_temperatureChange_try);
     R_RegisterCCallable("medfate", "_medfate_soil", (DL_FUNC)_medfate_soil_try);
-    R_RegisterCCallable("medfate", "_medfate_modifySoilLayerParam", (DL_FUNC)_medfate_modifySoilLayerParam_try);
+    R_RegisterCCallable("medfate", "_medfate_.modifySoilLayerParam", (DL_FUNC)_medfate_modifySoilLayerParam_try);
     R_RegisterCCallable("medfate", "_medfate_soil_thetaFC", (DL_FUNC)_medfate_thetaFC_try);
     R_RegisterCCallable("medfate", "_medfate_soil_thetaWP", (DL_FUNC)_medfate_thetaWP_try);
     R_RegisterCCallable("medfate", "_medfate_soil_thetaSAT", (DL_FUNC)_medfate_thetaSAT_try);
@@ -4658,6 +4667,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_forest2spwbInput", (DL_FUNC) &_medfate_forest2spwbInput, 5},
     {"_medfate_forest2growthInput", (DL_FUNC) &_medfate_forest2growthInput, 4},
     {"_medfate_resetInputs", (DL_FUNC) &_medfate_resetInputs, 1},
+    {"_medfate_updateBelow", (DL_FUNC) &_medfate_updateBelow, 1},
     {"_medfate_multiplyInputParam", (DL_FUNC) &_medfate_multiplyInputParam, 5},
     {"_medfate_modifyInputParam", (DL_FUNC) &_medfate_modifyInputParam, 5},
     {"_medfate_gdd", (DL_FUNC) &_medfate_gdd, 4},

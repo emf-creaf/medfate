@@ -109,7 +109,7 @@ modifyInputParams<-function(x, customParams) {
     stop("'customParams' must be a named numeric vector or a named list")
   }
   cn = names(customParams)
-  isSoilParam = unlist(lapply(strsplit(cn, "%"), length))==2 #detect soil params
+  isSoilParam = unlist(lapply(strsplit(cn, "@"), length))==2 #detect soil params
   isCohParam = unlist(lapply(strsplit(cn, "/"), length))==2 #detect cohort params
   customCohortParams = customParams[isCohParam]
   customSoilParams = customParams[isSoilParam]
@@ -137,6 +137,23 @@ modifyInputParams<-function(x, customParams) {
     }
   }
   # Modify cohort params
-  x = modifyCohortParams(x, customCohortParams)
+  if(length(customCohortParams)>0) {
+    x = modifyCohortParams(x, customCohortParams)
+  } else {
+    x = .cloneInput(x)
+  }
+  # Modify soil layer params
+  if(length(customSoilParams)>0) {
+    s <- strsplit(names(customSoilParams), "@")
+    for(i in 1:length(s)) {
+      paramLayer <- s[[i]]
+      val <- customSoilParams[[i]]
+      param <- paramLayer[[1]]
+      layer <- as.numeric(paramLayer[[2]])
+      if(!(layer %in% 1:length(x$soil$dVec))) stop(paste0("Soil layer '", layer,"' not found in 'x'"))
+      .modifySoilLayerParam(x$soil, param, layer-1, val)
+    }
+    .updateBelow(x)
+  }
   return(x)
 }
