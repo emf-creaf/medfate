@@ -1,6 +1,7 @@
 \encoding{UTF-8}
 \name{biophysics}
 \alias{biophysics_leafTemperature}
+\alias{biophysics_leafTemperature2}
 \alias{biophysics_leafVapourPressure}
 \alias{biophysics_radiationDiurnalPattern}
 \alias{biophysics_temperatureDiurnalPattern}

@@ -24,7 +24,7 @@ vprofile_PARExtinction(x, SpParams, z = NULL, gdd = NA, mode = "MED",
                        draw = TRUE, xlim = c(0,100))
 vprofile_SWRExtinction(x, SpParams, z = NULL, gdd = NA, mode = "MED",
                        draw = TRUE, xlim = c(0,100))
-vprofile_windExtinction(x, SpParams, u = 1, measurementHeightOverCanopy = 200,
+vprofile_windExtinction(x, SpParams, u = 1, windMeasurementHeight = 200,
                         boundaryLayerSize = 2000, target = "windspeed",
                         z = NULL, gdd = NA, mode = "MED", 
                         draw = TRUE, xlim = NULL)

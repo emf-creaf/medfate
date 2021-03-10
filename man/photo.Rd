@@ -8,6 +8,7 @@
 \alias{photo_rubiscoLimitedPhotosynthesis}
 \alias{photo_photosynthesis}
 \alias{photo_leafPhotosynthesisFunction}
+\alias{photo_leafPhotosynthesisFunction2}
 \alias{photo_sunshadePhotosynthesisFunction}
 \alias{photo_multilayerPhotosynthesisFunction}
 \title{
