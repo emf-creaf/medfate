@@ -10,12 +10,12 @@ multiple_runs<-function(parMatrix, x,
   res = vector("list", n)
   parNames = colnames(parMatrix)
   for(r in 1:n) {
-    resetInputs(x)
+    x_r = .cloneInput(x)
     customParams = parMatrix[r,]
     names(customParams) <- parNames
-    x = modifyInputParams(x, customParams)
-    x$control$verbose = FALSE
-    S = do.call(model, list(x = x,
+    x_r = modifyInputParams(x_r, customParams)
+    x_r$control$verbose = FALSE
+    S = do.call(model, list(x = x_r,
                             meteo = meteo, 
                             latitude = latitude, elevation = elevation,
                             slope  = slope,aspect = aspect))
@@ -39,14 +39,13 @@ optimization_function<-function(parNames, x,
   else model = "growth"
   
   x$control$verbose = FALSE
-  
   yf<-function(v, verbose = FALSE) {
-    resetInputs(x)
+    x_i <- .cloneInput(x)
     if(is.vector(v)) {
       customParams = v
       names(customParams) <- parNames
-      x = modifyInputParams(x, customParams)
-      S = do.call(model, list(x = x, 
+      x_i = modifyInputParams(x_i, customParams)
+      S = do.call(model, list(x = x_i, 
                               meteo = meteo, 
                               latitude = latitude, elevation = elevation,
                               slope  = slope,aspect = aspect))
@@ -55,7 +54,7 @@ optimization_function<-function(parNames, x,
       return(y)
     } else if(is.matrix(v)) {
       colnames(v)<-parNames
-      y<-multiple_runs(parMatrix = v, x = x, 
+      y<-multiple_runs(parMatrix = v, x = x_i, 
                        meteo = meteo,
                        latitude = latitude, elevation = elevation,
                        slope  = slope,aspect = aspect,

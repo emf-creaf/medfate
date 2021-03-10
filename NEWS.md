@@ -3,6 +3,7 @@
 -------------------------------
 
 # Version 2.0.1
+- Cloning initial object for optimization
 
 # Version 2.0.0
 - IMPORTANT: Soil input merged with model input. Now the calls to simulation functions (e.g., `spwb`, `growth`) do not need to include soil as input parameter.
