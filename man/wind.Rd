@@ -10,8 +10,8 @@ Models for canopy turbulence by Katul et al (2004).
 }
 \usage{
 wind_canopyTurbulenceModel(zm, Cx, hm, d0, z0, model = "k-epsilon")
-wind_canopyTurbulence(zmid, lad, canopyHeight, 
-                      u, measurementHeightOverCanopy = 200, model = "k-epsilon")
+wind_canopyTurbulence(zmid, LAD, canopyHeight, 
+                      u, windMeasurementHeight = 200, model = "k-epsilon")
 }
 \arguments{
   \item{zm}{A numeric vector with height values (m).}
@@ -20,7 +20,7 @@ wind_canopyTurbulence(zmid, lad, canopyHeight,
   \item{d0}{Zero displacement height (m).}
   \item{z0}{Momentum roughness height (m).}
   \item{zmid}{A numeric vector of mid-point heights (in cm) for canopy layers.}
-  \item{lad}{A numeric vector of leaf area density values (m3/m2).}
+  \item{LAD}{A numeric vector of leaf area density values (m3/m2).}
   \item{canopyHeight}{Canopy height (in cm).}
   \item{u}{Measured wind speed (m/s).}
   \item{windMeasurementHeight}{Height of wind speed measurement with respect to canopy height (cm).}

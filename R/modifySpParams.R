@@ -113,7 +113,7 @@ modifyInputParams<-function(x, customParams) {
   isCohParam = unlist(lapply(strsplit(cn, "/"), length))==2 #detect cohort params
   customCohortParams = customParams[isCohParam]
   customSoilParams = customParams[isSoilParam]
-  customControlParams = customParams[(!isCohParam) && (!isSoilParam)]
+  customControlParams = customParams[(!isCohParam) & (!isSoilParam)]
   # Modify control params
   if(length(customControlParams)>0) {
     for(i in 1:length(customControlParams)) {

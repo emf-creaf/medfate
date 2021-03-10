@@ -27,6 +27,9 @@ photo_photosynthesis(Q, Catm, Gc, Tleaf, Vmax298, Jmax298, verbose = FALSE)
 photo_leafPhotosynthesisFunction(E, psiLeaf, Catm, Patm, Tair, vpa, u, 
                              absRad, Q, Vmax298, Jmax298,
                              leafWidth = 1.0, refLeafArea = 1, verbose = FALSE)
+photo_leafPhotosynthesisFunction2(E, psiLeaf, Catm, Patm, Tair, vpa, u, 
+                             SWRabs, LWRnet, Q, Vmax298, Jmax298,
+                             leafWidth = 1.0, refLeafArea = 1, verbose = FALSE)
 photo_sunshadePhotosynthesisFunction(E, psiLeaf, Catm, Patm, Tair, vpa, 
                                      SLarea, SHarea, u, 
                                      absRadSL, absRadSH, QSL, QSH, 
@@ -58,6 +61,8 @@ photo_multilayerPhotosynthesisFunction(E, psiLeaf, Catm, Patm, Tair, vpa,
   \item{vpa}{Vapour pressure deficit (in kPa).}
   \item{u}{Wind speed above the leaf boundary (in m/s) (for each canopy layer in the case of \code{photo_multilayerPhotosynthesisFunction}).}
   \item{absRad}{Absorbed long- and short-wave radiation (in W*m^-2).}
+  \item{SWRabs}{Absorbed short-wave radiation (in W·m-2).}
+  \item{LWRnet}{Net long-wave radiation balance (in W·m-2).}
   \item{leafWidth}{Leaf width (in cm).}
   \item{refLeafArea}{Leaf reference area.}
   \item{verbose}{Boolean flag to indicate console output.}

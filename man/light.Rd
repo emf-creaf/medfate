@@ -22,7 +22,8 @@ light_cohortSunlitShadeAbsorbedRadiation(Ib0, Id0, Ibf, Idf, beta,
                                          kb, kd, alpha, gamma)
 light_instantaneousLightExtinctionAbsortion(LAIme, LAImd, LAImx,
                                             kPAR, alphaSWR, gammaSWR,
-                                            ddd, ntimesteps = 24, trunkExtinctionFraction = 0.1)
+                                            ddd, ntimesteps = 24, 
+                                            trunkExtinctionFraction = 0.1)
 light_longwaveRadiationSHAW(LAIme, LAImd, LAImx, 
                             LWRatm, Tsoil, Tair, trunkExtinctionFraction = 0.1)
 light_cohortAbsorbedSWRFraction(z, x, SpParams, gdd = NA)
