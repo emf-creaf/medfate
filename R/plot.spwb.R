@@ -467,14 +467,14 @@ plot.growth<-function(x, type="PET_Precipitation", cohorts = NULL, bySpecies = F
       return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="HuberValue") {
-    OM = PlantGrowth[["SapwoodArea"]][,cohorts,drop=FALSE] / PlantGrowth[["LeafArea"]][,cohorts,drop=FALSE]
+    OM = PlantStructure[["SapwoodArea"]][,cohorts,drop=FALSE] / PlantStructure[["LeafArea"]][,cohorts,drop=FALSE]
     if(bySpecies) OM = .averageBySpecies(OM, spnames)
     if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="RootAreaLeafArea") {
-    OM = PlantGrowth[["FineRootArea"]][,cohorts,drop=FALSE] / PlantGrowth[["LeafArea"]][,cohorts,drop=FALSE]
+    OM = PlantStructure[["FineRootArea"]][,cohorts,drop=FALSE] / PlantStructure[["LeafArea"]][,cohorts,drop=FALSE]
     if(bySpecies) OM = .averageBySpecies(OM, spnames)
     if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     if(is.null(ylab)) ylab = .getYLab(type)

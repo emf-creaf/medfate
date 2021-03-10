@@ -2,6 +2,8 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 2.0.1
+
 # Version 2.0.0
 - IMPORTANT: Soil input merged with model input. Now the calls to simulation functions (e.g., `spwb`, `growth`) do not need to include soil as input parameter.
 - Bug correction: NaN values for theta > theta_sat in van Genuchten psi computation

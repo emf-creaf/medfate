@@ -56,7 +56,7 @@
             "SapwoodBiomass", "LeafBiomass", "FineRootBiomass",
             "LabileBiomass", "TotalLivingBiomass",
             "SAgrowth", "LAgrowth", "FRAgrowth",
-            "HuberValue", "RootAreaLeafArea",
+            "HuberValue", "FineRootBiomassLeafArea",
             .getDailySPWBPlotTypes(transpirationMode))
   return(TYPES)
 }
