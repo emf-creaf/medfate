@@ -103,7 +103,7 @@ The following are only available for \code{\link{growth}}:
 De \enc{Cáceres}{Caceres} M, \enc{Martínez}{Martinez}-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L. (2015) Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes. Agricultural and Forest Meteorology 213: 77-90 (doi:10.1016/j.agrformet.2015.06.012).
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \seealso{
  \code{\link{spwb}}

@@ -35,7 +35,7 @@ De \enc{Cáceres}{Caceres} M, \enc{Martínez}{Martinez}-Vilalta J, Coll L, Llore
 Myers BJ (1988) Water stress integral - a link between short-term stress and long-term growth. Tree Physiology 4: 315–323 (doi: 10.1093/treephys/4.4.315)
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 
 \seealso{

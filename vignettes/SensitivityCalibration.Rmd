@@ -72,11 +72,12 @@ According to Saltelli et al. (2016), there are three main purposes of sensitivit
  + *Screening* aims at identifying the input factors, if any, which have a negligible influence on the output variability.
  + *Mapping* aims at determining the region of the input variability space that produces significant output values.
 
-Here we will mostly interested in ranking parameters according to different objectives. We will take as input factors three plant traits (leaf area index, fine root distribution and the water potential corresponding to a reduction in plant conductance) in the three plant cohorts (species), so that nine model parameters will be studied. The following shows the initial values for those parameters:
+Here we will mostly interested in ranking parameters according to different objectives. We will take as input factors three plant traits (leaf area index, fine root distribution and the water potential corresponding to a reduction in plant conductance) in the three plant cohorts (species), and two soil factors (the rock fragment content of soil layer 1 and 2). In total, eleven model parameters will be studied. The following shows the initial values for plant trait parameters:
 ```{r}
 x1$above$LAI_live
 x1$below$Z50
 x1$paramsTransp$Psi_Extract
+x1$soil$rfc[1:2]
 ```
 
 In the following code we define a vector of parameter names (using naming rules of function `modifyInputParams()`) as well as the input variability space, defined by the minimum and maximum parameter values:
@@ -85,14 +86,17 @@ In the following code we define a vector of parameter names (using naming rules 
 #Parameter names of interest
 parNames = c("T1_54/LAI_live", "T2_68/LAI_live", "S1_65/LAI_live",
              "T1_54/Z50", "T2_68/Z50", "S1_65/Z50",
-             "T1_54/Psi_Extract", "T2_68/Psi_Extract", "S1_65/Psi_Extract")
+             "T1_54/Psi_Extract", "T2_68/Psi_Extract", "S1_65/Psi_Extract",
+             "rfc@1", "rfc@2")
 #Parameter minimum and maximum values
 parMin = c(0.1,0.1,0.1,
            100,100,100,
-           -7,-7,-7)
+           -7,-7,-7,
+           25,25)
 parMax = c(2,2,2,
            1000,1000,1000,
-           -1,-1,-1)
+           -1,-1,-1,
+           75,75)
 ```
 
 
@@ -125,7 +129,7 @@ Sensitivity analysis requires model output functions whose parameters are the in
 \begin{equation}
 y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 \end{equation}
-where $y$ is the output, $g$ is the output function and $\mathbf{x} = \{x_1, x_2, \dots, x_n\}$ is the vector of parameter input factors. Functions `of_transp` and `of_stress` take simulation results as input, not values of input factors. Instead, we need to define functions that take trait values as input, run the soil plant water balance model and return the desired prediction or performance statistic. These functions can be generated using the function factory `optimization_function()`. The following code defines one of such functions focusing on total transpiration:
+where $y$ is the output, $g$ is the output function and $\mathbf{x} = \{x_1, x_2, \dots, x_n\}$ is the vector of parameter input factors. Functions `of_transp` and `of_stress` take simulation results as input, not values of input factors. Instead, we need to define functions that take soil and plant trait values as input, run the soil plant water balance model and return the desired prediction or performance statistic. These functions can be generated using the function factory `optimization_function()`. The following code defines one of such functions focusing on total transpiration:
 
 ```{r}
 of_transp<-optimization_function(parNames = parNames,
@@ -209,7 +213,7 @@ sa_transp = readRDS("sa_transp.rds")
 print(sa_transp)
 ```
 
-`mu.star` values inform about the mean of elementary effects of each $i$ factor and can be used to rank all the input factors, whereas `sigma` inform about the degree of interaction of the $i$-th factor with others. According to the result of this sensitivity analysis, leaf area index (`LAI_live`) parameters are the most relevant to determine total transpiration, much more than fine root distribution (`Z50`) and the water potentials corresponding to whole-plant conductance reduction (i.e. `Psi_Extract`).
+`mu.star` values inform about the mean of elementary effects of each $i$ factor and can be used to rank all the input factors, whereas `sigma` inform about the degree of interaction of the $i$-th factor with others. According to the result of this sensitivity analysis, leaf area index (`LAI_live`) parameters are the most relevant to determine total transpiration, much more than fine root distribution (`Z50`), the rock fragment content in the soil and the water potentials corresponding to whole-plant conductance reduction (i.e. `Psi_Extract`).
 
 ```{r, fig.width=5, fig.height = 5, fig.align="center"}
 plot(sa_transp, xlim=c(0,200))
@@ -231,7 +235,7 @@ sa_stress = readRDS("sa_stress.rds")
 print(sa_stress)
 ```
 
-Again, LAI values parameters are the most relevant, but closely followed by the water potentials corresponding to whole-plant conductance reduction (i.e. `Psi_Extract`), which appear as more relevant than parameters of fine root distribution (`Z50`). 
+Again, LAI values parameters are the most relevant, but closely followed by the water potentials corresponding to whole-plant conductance reduction (i.e. `Psi_Extract`), which appear as more relevant than parameters of fine root distribution (`Z50`) and rock fragment content (`rfc`). 
 
 ```{r, fig.width=5, fig.height = 5, fig.align="center"}
 plot(sa_stress, xlim=c(0,300))

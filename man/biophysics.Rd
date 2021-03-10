@@ -58,7 +58,7 @@ McMurtrie, R. E., D. A. Rook, and F. M. Kelliher. 1990. Modelling the yield of P
 H. Vogel, "Das Temperaturabhangigkeitsgesetz der Viskositat von Flussigkeiten", Physikalische Zeitschrift, vol. 22, pp. 645–646, 1921.
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \seealso{
 \code{\link{spwb}}

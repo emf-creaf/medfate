@@ -53,7 +53,7 @@ Values returned for each function are:
 }
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \seealso{
 \code{\link{growth}}

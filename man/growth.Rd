@@ -85,7 +85,7 @@ growth(x, meteo,  latitude, elevation = NA, slope = NA, aspect = NA)
   
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \note{
 Objects \code{x} and \code{soil} are modified during the simulation.   

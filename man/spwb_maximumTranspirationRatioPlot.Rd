@@ -23,7 +23,7 @@ spwb_maximumTranspirationRatioPlot(x, meteo, latitude, elevation, slope, aspect,
 TO BE DONE
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \seealso{
 \code{\link{spwb}}

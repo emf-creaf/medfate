@@ -27,7 +27,7 @@ This function only works when simulations have been carried using control option
 }
 \value{A data frame with a column 'datetime' and as many columns as plant cohorts.}
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \seealso{
 \code{\link{spwb}}, \code{\link{pwb}}, \code{\link{defaultControl}}

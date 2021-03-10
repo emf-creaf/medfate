@@ -78,7 +78,7 @@ A list, with the following options (default values in parentheses):
 }
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \seealso{
  \code{\link{spwbInput}}, \code{\link{spwb}}

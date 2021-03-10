@@ -34,7 +34,7 @@ pheno_updateLeaves(x, wind, fromGrowthModel)
 Function \code{pheno_leafDevelopmentStatus} returns a vector of values between 0 and 1, whereas function \code{pheno_leafSenescenceStatus} returns a vector of 0 (senescent) and 1 (expanded) values. The other two functions do not return any value (see details).
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \note{
 Functions \code{pheno_updatePhenology} and \code{pheno_updateLeaves} modify the input object \code{x}. The first modifies phenological state and the second modifies the leaf area accordingly.

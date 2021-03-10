@@ -52,7 +52,7 @@ Kergoat L. (1998). A model for hydrological equilibrium of leaf area index on a 
 Ritchie (1972). Model for predicting evaporation from a row crop with incomplete cover. - Water resources research.
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \seealso{
  \code{\link{spwb}}, \code{\link{hydrology_soilWaterInputs}}

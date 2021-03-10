@@ -29,9 +29,9 @@ If only one point is supplied, a data frame containing the soil characteristics 
 }
 
 \author{
-\enc{Víctor}{Victor} Granda, CREAF/CTFC
+\enc{Víctor}{Victor} Granda, CREAF/CREAF
 
-Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 
 \references{

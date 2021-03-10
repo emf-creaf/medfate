@@ -43,7 +43,7 @@ Due to parameter dependence, modifying some parameters affects others:
 If \code{summary.fun = NULL} the function returns a list whose elements are the result of calling \code{\link{spwb}}. Otherwise, the function applies \code{summary.fun} to each simulation result and returns these summaries (actually, a call to \code{\link{sapply}} is done).
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 
 \seealso{

@@ -171,7 +171,7 @@ Functions \code{forest2growthInput} and \code{growthInput} return a list of clas
 
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \seealso{\code{\link{resetInputs}}, \code{\link{spwb}}, \code{\link{soil}},  \code{\link{forest}}, \code{\link{SpParamsMED}}, \code{\link{defaultSoilParams}}, \code{\link{plant_ID}}}
 

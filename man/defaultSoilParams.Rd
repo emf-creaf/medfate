@@ -29,7 +29,7 @@ A data frame with layers in rows and the following columns (and default values):
 }
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \seealso{
  \code{\link{soil}}, \code{\link{soilgridsParams}}, \code{\link{defaultControl}}, \code{\link{SpParamsMED}}

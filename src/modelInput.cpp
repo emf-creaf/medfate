@@ -816,7 +816,7 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
     if(soilFunctions=="SX") {
       soilFunctions = "VG"; 
       ctl["soilFunctions"] = soilFunctions;
-      warning("Soil pedotransfer functions set to Van Genuchten ('VG').");
+      Rcerr<<"Soil pedotransfer functions set to Van Genuchten ('VG').\n";
     }
 
     input = List::create(_["control"] = ctl,

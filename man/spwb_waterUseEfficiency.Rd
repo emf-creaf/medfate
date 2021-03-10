@@ -34,7 +34,7 @@ Temporal aggregation of WUE values is done differently depending on the value of
 If \code{draw=TRUE} a plot is returned. Otherwise, the function returns a matrix with WUE values, where rows are dates (at the desired temporal scale), and columns are plant cohorts. In the case of \code{type = "Plant An/E"} and \code{type = "Stand An/E"} values are in gC/L. In the case of \code{type = "Leaf iWUE"} values are in micromol of carbon per mmol of water.
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \seealso{
 \code{\link{spwb}}

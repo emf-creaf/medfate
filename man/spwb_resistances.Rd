@@ -26,7 +26,7 @@ The function makes internal calls to \code{\link{hydraulics_soilPlantResistances
 A data frame with dates in rows and resistance segments in columns (Rhizosphere, Root, Stem and Leaf). Values depend on whether \code{relative = TRUE} (percentages) or \code{relative = FALSE} (absolute resistance values). If \code{draw = TRUE} then a plot object is returned.
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \seealso{
  \code{\link{spwb}}, \code{\link{plot.spwb}}

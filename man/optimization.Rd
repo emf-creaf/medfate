@@ -58,7 +58,7 @@ Function \code{optimization_evaluation_function} returns a function whose parame
 
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \seealso{
 \code{\link{evaluation_metric}}, \code{\link{modifyInputParams}}, \code{\link{spwb}}, \code{\link{growth}}

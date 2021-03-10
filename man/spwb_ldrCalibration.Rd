@@ -65,11 +65,11 @@ THe function returns a data frame containing the species index used in medfate,
 calibrated values for Z50, Z95 and V1 and the MAE value for that combination.
 }
 \author{
-\enc{Víctor}{Victor} Granda, CTFC-CREAF
+\enc{Víctor}{Victor} Granda, CREAF
 
-Antoine Cabon, CTFC
+Antoine Cabon, CTFC-CREAF
 
-Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \seealso{
  \code{\link{spwb_ldrOptimization}} for when no measured data is available,

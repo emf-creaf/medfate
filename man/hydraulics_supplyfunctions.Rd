@@ -220,7 +220,7 @@ Sperry, J. S., F. R. Adler, G. S. Campbell, and J. P. Comstock. 1998. Limitation
 Sperry, J. S., and D. M. Love. 2015. What plant hydraulics can tell us about responses to climate-change droughts. New Phytologist 207:14–27.
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC.
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF.
 }
 \seealso{
 \code{\link{hydraulics_psi2K}}, \code{\link{hydraulics_maximumStemHydraulicConductance}}, \code{\link{spwb}}, \code{\link{soil}}

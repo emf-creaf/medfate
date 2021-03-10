@@ -15,7 +15,7 @@ resetInputs(x)
 Does not return any value. Instead, it modifies input object \code{x}.
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \seealso{
 \code{\link{spwbInput}}, \code{\link{growthInput}}, \code{\link{spwb}}

@@ -47,7 +47,7 @@ Function \code{hydrology_soilInfiltrationPercolation} returns a named vector wit
 \item{DeepDrainage}{Water leaving the target soil towards the water table.}
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \seealso{
 \code{\link{spwb_day}}, \code{\link{hydrology_rainInterception}}, \code{\link{hydrology_soilEvaporation}}

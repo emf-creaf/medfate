@@ -55,7 +55,7 @@ vprofile_windExtinction(x, SpParams, u = 1, measurementHeightOverCanopy = 200,
 }
 }
 \author{
-Miquel De \enc{Cáceres}{Caceres} Ainsa, CTFC
+Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \seealso{
 \code{\link{forest}}, \code{\link{wind_canopyTurbulence}}
