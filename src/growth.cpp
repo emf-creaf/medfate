@@ -256,6 +256,7 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
       Volume_leaves[j] = leafStorageVolume(LAI_expanded[j],  N[j], SLA[j], LeafDensity[j]);
       Volume_sapwood[j] = sapwoodStorageVolume(SA[j], H[j], L(j,_), V(j,_),WoodDensity[j], 0.5);
       Starch_max_leaves[j] = leafStarchCapacity(LAI_expanded[j],  N[j], SLA[j], 0.3)/Volume_leaves[j];
+      if(Volume_leaves[j]==0.0) Starch_max_leaves[j] = 0.0;
       Starch_max_sapwood[j] = sapwoodStarchCapacity(SA[j], H[j], L(j,_), V(j,_),WoodDensity[j], 0.2)/Volume_sapwood[j];
       LeafStructBiomass[j] = leafStructuralBiomass(LAI_expanded[j],N[j],SLA[j]);
       SapwoodStructBiomass[j] = sapwoodStructuralLivingBiomass(SA[j], H[j], L(j,_), V(j,_), WoodDensity[j], 0.5);
@@ -316,11 +317,7 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
         double deltaLApheno = std::max(leafAreaTarget[j] - LAlive, 0.0);
         double deltaLAsink = std::min(deltaLApheno, SA[j]*RGRleafmax*(rleafcell/rleafcellmax));
         double deltaLAavailable = 0.0;
-        if(LAlive>0.0) {
-          deltaLAavailable = std::max(0.0,((sugarLeaf[j] - minimumSugarGrowthLeaves)*(glucoseMolarMass*Volume_leaves[j]))/costPerLA);
-        } else { //Grow at expense of stem sugar
-          deltaLAavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarGrowthLeaves)*(glucoseMolarMass*Volume_sapwood[j]))/costPerLA);
-        }
+        deltaLAavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarGrowthLeaves)*(glucoseMolarMass*Volume_sapwood[j]))/costPerLA);
         deltaLAgrowth = std::min(deltaLAsink, deltaLAavailable);
         growthCostLA = deltaLAgrowth*costPerLA;
       }
@@ -343,10 +340,10 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
 
       
       //PARTIAL CARBON BALANCE
-      double leafSugarMassDelta = leafAgG - leafRespDay - growthCostLA;
-      double sapwoodSugarMassDelta =  - finerootResp - growthCostFR; 
+      double leafSugarMassDelta = leafAgG - leafRespDay;
+      double sapwoodSugarMassDelta =  - finerootResp - growthCostFR - growthCostLA; 
       double sapwoodStarchMassDelta = - sapwoodResp - growthCostSA;
-        
+      
       sugarSapwood[j] += sapwoodSugarMassDelta/(Volume_sapwood[j]*glucoseMolarMass);
       starchSapwood[j] += sapwoodStarchMassDelta/(Volume_sapwood[j]*glucoseMolarMass);
       if(LAlive>0.0) sugarLeaf[j] += leafSugarMassDelta/(Volume_leaves[j]*glucoseMolarMass);
@@ -379,6 +376,7 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
         MaintenanceRespiration[j] -= (respirationExcess/TotalLivingBiomass[j]); //Remove respiration excess from carbon balance 
         Volume_leaves[j] = leafStorageVolume(LAI_expanded[j],  N[j], SLA[j], LeafDensity[j]);
         Starch_max_leaves[j] = leafStarchCapacity(LAI_expanded[j],  N[j], SLA[j], 0.3)/Volume_leaves[j];
+        if(Volume_leaves[j]==0) Starch_max_leaves[j] = 0.0;
       }
       
       //SENESCENCE
@@ -402,8 +400,10 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
       double translocationSugarLeaf = propLeafSenescence*Volume_leaves[j]*sugarLeaf[j];
       double translocationStarchLeaf = propLeafSenescence*Volume_leaves[j]*starchLeaf[j];
       double translocationSugarSapwood = propSAturnover*Volume_sapwood[j]*starchSapwood[j];
-      sugarLeaf[j] = ((sugarLeaf[j]*Volume_leaves[j]) - translocationSugarLeaf)/Volume_leaves[j]; 
-      starchLeaf[j] = ((starchLeaf[j]*Volume_leaves[j]) - translocationStarchLeaf)/Volume_leaves[j]; 
+      if(Volume_leaves[j]>0) {
+        sugarLeaf[j] = ((sugarLeaf[j]*Volume_leaves[j]) - translocationSugarLeaf)/Volume_leaves[j]; 
+        starchLeaf[j] = ((starchLeaf[j]*Volume_leaves[j]) - translocationStarchLeaf)/Volume_leaves[j]; 
+      }
       sugarSapwood[j] = ((sugarSapwood[j]*Volume_sapwood[j]) - translocationSugarSapwood)/Volume_sapwood[j]; 
       starchSapwood[j] = ((starchSapwood[j]*Volume_sapwood[j]) + translocationSugarLeaf + translocationStarchLeaf + translocationSugarSapwood)/Volume_sapwood[j]; 
       
@@ -432,8 +432,13 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
       //Recalculate storage concentrations
       double newVolumeSapwood = Volume_sapwood[j]*(SA[j]/SAprev);
       double newVolumeLeaves = Volume_leaves[j]*(LAlive/LAprev);
-      sugarLeaf[j] = sugarLeaf[j]*(Volume_leaves[j]/newVolumeLeaves);
-      starchLeaf[j] = starchLeaf[j]*(Volume_leaves[j]/newVolumeLeaves); 
+      if(newVolumeLeaves > 0.0) {
+        sugarLeaf[j] = sugarLeaf[j]*(Volume_leaves[j]/newVolumeLeaves);
+        starchLeaf[j] = starchLeaf[j]*(Volume_leaves[j]/newVolumeLeaves); 
+      } else {
+        sugarLeaf[j] = 0.0;
+        starchLeaf[j] = 0.0;
+      }
       sugarSapwood[j] = sugarSapwood[j]*(Volume_sapwood[j]/newVolumeSapwood);
       starchSapwood[j] = starchSapwood[j]*(Volume_sapwood[j]/newVolumeSapwood); 
       
@@ -793,6 +798,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
       Volume_leaves[j] = leafStorageVolume(LAI_expanded[j],  N[j], SLA[j], LeafDensity[j]);
       Volume_sapwood[j] = sapwoodStorageVolume(SA[j], H[j], L(j,_),V(j,_),WoodDensity[j], 0.5);
       Starch_max_leaves[j] = leafStarchCapacity(LAI_expanded[j],  N[j], SLA[j], 0.3)/Volume_leaves[j];
+      if(Volume_leaves[j]==0.0) Starch_max_leaves[j] = 0.0;
       Starch_max_sapwood[j] = sapwoodStarchCapacity(SA[j], H[j],L(j,_),V(j,_),WoodDensity[j], 0.2)/Volume_sapwood[j];
       LeafStructBiomass[j] = leafStructuralBiomass(LAI_expanded[j],N[j],SLA[j]);
       SapwoodStructBiomass[j] = sapwoodStructuralLivingBiomass(SA[j], H[j], L(j,_),V(j,_), WoodDensity[j], 0.5);
@@ -866,12 +872,8 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
         if(leafUnfolding[j]) {
           double deltaLApheno = std::max(leafAreaTarget[j] - LAlive, 0.0);
           double deltaLAsink = std::min(deltaLApheno, (1.0/((double) numSteps))*SA[j]*RGRleafmax*(rleafcell/rleafcellmax));
-          double deltaLAavailable = 0.0;
-          if(LAlive>0.0) {
-            deltaLAavailable = std::max(0.0,((sugarLeaf[j] - minimumSugarGrowthLeaves)*(glucoseMolarMass*Volume_leaves[j]))/costPerLA);
-          } else { //Grow at expense of stem sugar
-            deltaLAavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarGrowthLeaves)*(glucoseMolarMass*Volume_sapwood[j]))/costPerLA);
-          }
+          //Grow at expense of stem sugar
+          double deltaLAavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarGrowthLeaves)*(glucoseMolarMass*Volume_sapwood[j]))/costPerLA);
           double deltaLAgrowthStep = std::min(deltaLAsink, deltaLAavailable);
           growthCostLAStep += deltaLAgrowthStep*costPerLA;
           deltaLAgrowth += deltaLAgrowthStep;
@@ -909,8 +911,8 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
 
         //PHLOEM TRANSPORT AND SUGAR-STARCH DYNAMICS (INCLUDING EXUDATION and PARTIAL MASS BALANCE)
         //sugar mass balance
-        double leafSugarMassDeltaStep = leafAgStepG - leafRespStep - growthCostLAStep;
-        double sapwoodSugarMassDeltaStep = - finerootRespStep  - growthCostFRBStep;
+        double leafSugarMassDeltaStep = leafAgStepG - leafRespStep;
+        double sapwoodSugarMassDeltaStep = - finerootRespStep  - growthCostFRBStep - growthCostLAStep;
         double sapwoodStarchMassDeltaStep = - growthCostSAStep - sapwoodRespStep;
         double ff = 0.0;
         double ctl = 3600.0*Volume_leaves[j]*glucoseMolarMass;
@@ -965,6 +967,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
           MaintenanceRespiration[j] -= (respirationExcess/TotalLivingBiomass[j]); //Remove respiration excess from carbon balance 
           Volume_leaves[j] = leafStorageVolume(LAI_expanded[j],  N[j], SLA[j], LeafDensity[j]);
           Starch_max_leaves[j] = leafStarchCapacity(LAI_expanded[j],  N[j], SLA[j], 0.3)/Volume_leaves[j];
+          if(Volume_leaves[j]==0.0) Starch_max_leaves[j] = 0.0;
         }
         
         
@@ -1013,8 +1016,10 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
       double translocationSugarLeaf = propLeafSenescence*Volume_leaves[j]*sugarLeaf[j];
       double translocationStarchLeaf = propLeafSenescence*Volume_leaves[j]*starchLeaf[j];
       double translocationSugarSapwood = propSAturnover*Volume_sapwood[j]*starchSapwood[j];
-      sugarLeaf[j] = ((sugarLeaf[j]*Volume_leaves[j]) - translocationSugarLeaf)/Volume_leaves[j]; 
-      starchLeaf[j] = ((starchLeaf[j]*Volume_leaves[j]) - translocationStarchLeaf)/Volume_leaves[j]; 
+      if(Volume_leaves[j]>0) {
+        sugarLeaf[j] = ((sugarLeaf[j]*Volume_leaves[j]) - translocationSugarLeaf)/Volume_leaves[j]; 
+        starchLeaf[j] = ((starchLeaf[j]*Volume_leaves[j]) - translocationStarchLeaf)/Volume_leaves[j]; 
+      }
       sugarSapwood[j] = ((sugarSapwood[j]*Volume_sapwood[j]) - translocationSugarSapwood)/Volume_sapwood[j]; 
       starchSapwood[j] = ((starchSapwood[j]*Volume_sapwood[j]) + translocationSugarLeaf + translocationStarchLeaf + translocationSugarSapwood)/Volume_sapwood[j]; 
       
@@ -1041,8 +1046,13 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
       //Recalculate storage concentrations
       double newVolumeSapwood = Volume_sapwood[j]*(SA[j]/SAprev);
       double newVolumeLeaves = Volume_leaves[j]*(LAlive/LAprev);
-      sugarLeaf[j] = sugarLeaf[j]*(Volume_leaves[j]/newVolumeLeaves);
-      starchLeaf[j] = starchLeaf[j]*(Volume_leaves[j]/newVolumeLeaves); 
+      if(newVolumeLeaves>0.0) {
+        sugarLeaf[j] = sugarLeaf[j]*(Volume_leaves[j]/newVolumeLeaves);
+        starchLeaf[j] = starchLeaf[j]*(Volume_leaves[j]/newVolumeLeaves); 
+      } else {
+        sugarLeaf[j] = 0.0;
+        starchLeaf[j] = 0.0;
+      }
       sugarSapwood[j] = sugarSapwood[j]*(Volume_sapwood[j]/newVolumeSapwood);
       starchSapwood[j] = starchSapwood[j]*(Volume_sapwood[j]/newVolumeSapwood); 
       
