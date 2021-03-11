@@ -643,6 +643,8 @@ List transpirationSperry(List x, double tmin, double tmax,
       if(LAIphe[c]>0.0) { //Process transpiration and photosynthesis only if there are some leaves
         SWR_SL(c,n) = absSWR_SL_COH[c];
         SWR_SH(c,n) = absSWR_SH_COH[c];
+        // for(int j=0;j<ncanlayers;j++) Rcout<< n << " "<< c<< " "<<j<<" " << Lnet_cohort_layer(j,c)<<"\n";
+        // Rcout<< n << " "<< c<< " LAIsl: " << LAI_SL[c]<< " LAIsh: " << LAI_SH[c]<< " LWRnet: "<< sum(Lnet_cohort_layer(_,c))<<" "<< sum(Lnet_cohort_layer(_,c)*fsunlit)<< " "<<sum(Lnet_cohort_layer(_,c)*(1.0 - fsunlit))<<"\n";
         LWR_SL(c,n) = sum(Lnet_cohort_layer(_,c)*fsunlit);
         LWR_SH(c,n) = sum(Lnet_cohort_layer(_,c)*(1.0 - fsunlit));
         

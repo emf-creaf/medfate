@@ -467,6 +467,7 @@ List longwaveRadiationSHAW(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatr
   int ncanlayers = Tair.size();
   NumericVector Lup(ncanlayers), Ldown(ncanlayers), Lnet(ncanlayers);
   NumericVector tau(ncanlayers), sumTauComp(ncanlayers);
+  NumericMatrix lai_ij(ncanlayers, ncoh);
   NumericMatrix tauM(ncanlayers, ncoh);
   NumericMatrix LnetM(ncanlayers, ncoh);
   if(ncoh>0) LnetM.attr("dimnames") = List::create(seq(1,ncanlayers), seq(1,ncoh));
@@ -479,10 +480,10 @@ List longwaveRadiationSHAW(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatr
     double lai_layer = 0.0;
     sumTauComp[i] = 0.0;
     for(int j=0;j<ncoh;j++) {
-      double lai_ij = std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j));
-      tauM(i,j) = exp(-Kdlw*lai_ij);
+      lai_ij(i,j) = std::max(LAIme(i,j)+LAImd(i,j), trunkExtinctionFraction*LAImx(i,j));
+      tauM(i,j) = exp(-Kdlw*lai_ij(i,j));
       sumTauComp[i] += (1.0-tauM(i,j)); 
-      lai_layer +=lai_ij;
+      lai_layer +=lai_ij(i,j);
     }
     tau[i] = exp(-Kdlw*lai_layer);
   }
@@ -509,7 +510,8 @@ List longwaveRadiationSHAW(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatr
     Lnet[i] = eps_c*(1.0 - tau[i])*(Ldown[i]+Lup_lower - 2.0*SIGMA_Wm2*pow(Tair[i]+273.16,4.0));
     for(int j=0;j<ncoh;j++) {
       LnetM(i,j) =  Lnet[i]*((1.0-tauM(i,j))/sumTauComp[i]);
-      if(sumTauComp[i]==0.0) LnetM(i,j) =0.0;
+      if(LAIme(i,j)>0.0) LnetM(i,j) = LnetM(i,j)*(LAIme(i,j)/lai_ij(i,j)); //Correct for the fact that extinction included all leaves and energy balance is on expanded leaves
+      else LnetM(i,j) =0.0;
     }
   }
   double Lnet_g = eps_g*(Ldown[0] - SIGMA_Wm2*pow(Tsoil+273.16,4.0));

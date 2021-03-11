@@ -231,6 +231,7 @@ DataFrame leafPhotosynthesisFunction2(NumericVector E, NumericVector psiLeaf, do
   NumericVector Gsw(nsteps), Ci(nsteps);
   NumericVector Ag(nsteps), An(nsteps);
   double Gwdiff, Gbw;
+  // Rcout <<refLeafArea<<" "<<SWRabs/refLeafArea<< " "<< LWRnet/refLeafArea << "  "<<Tair<< " "<<u<<"\n";
   for(int i=0;i<nsteps;i++){
     leafTemp[i] = leafTemperature2(SWRabs/refLeafArea, LWRnet/refLeafArea, Tair, u, E[i], leafWidth);
     leafVPD[i] = std::max(0.0,leafVapourPressure(leafTemp[i], psiLeaf[i]) - vpa);
