@@ -332,12 +332,15 @@ List transpirationSperry(List x, double tmin, double tmax,
   NumericVector lad = 100.0*(LAIpe + LAIpd)/verticalLayerSize;
   //3. Wind extinction profile
   if(NumericVector::is_na(wind)) wind = defaultWindSpeed; //set to default if missing
-  DataFrame canopyTurbulence = windCanopyTurbulence(zmid, lad,  canopyHeight, 
-                                                    wind, windMeasurementHeight);
-  NumericVector zWind = canopyTurbulence["u"]; 
-  NumericVector dU = Rcpp::as<Rcpp::NumericVector>(canopyTurbulence["du"]);
-  NumericVector uw = canopyTurbulence["uw"];
-  
+  DataFrame canopyTurbulence = NA_REAL;
+  NumericVector zWind(ncanlayers,wind), dU(ncanlayers, 0.0), uw(ncanlayers, 0.0);
+  if(canopyHeight>0.0) {
+    canopyTurbulence = windCanopyTurbulence(zmid, lad,  canopyHeight, 
+                                                      wind, windMeasurementHeight);
+    zWind = canopyTurbulence["u"]; 
+    dU = Rcpp::as<Rcpp::NumericVector>(canopyTurbulence["du"]);
+    uw = canopyTurbulence["uw"];
+  } 
   //4a. Instantaneous direct and diffuse shorwave radiation
   DataFrame ddd = meteoland::radiation_directDiffuseDay(solarConstant, latrad, slorad, asprad, delta,
                                                         rad, clearday, ntimesteps);
