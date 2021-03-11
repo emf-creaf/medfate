@@ -27,37 +27,37 @@ List initialize_ring(){
                            _["cells"] = cells);
   
   
-  return ring;
+  return(ring);
 }
 
 ////// Effect of temperature (on metabolic rate and microtubule stability)
 double _microT(double Tc, double inflection, double scale=5.0){
   double out = 1.0/(1.0+exp((-Tc+inflection)*scale));
-  return out;
+  return(out);
 }
 double _metR(double Tc, double DHa, double DSd, double DHd){
   double Tk = Tc-T0;
   double out = Tk*exp(-DHa/(Rn*Tk)) / (1.0+exp(DSd/Rn*(1.0-(DHd/(DSd*Tk)))));
-  return out;
+  return(out);
 }
 double T_fun(double Tc, double Y_T=8.0, double DHa=87.5e3, double DSd=1.09e3, double DHd=333e3){
   double out = _metR(Tc, DHa, DSd, DHd);
   out = out/_metR(Tref, DHa, DSd, DHd); // the output is equal to 1 at Tref degC
   out = out*_microT(Tc, Y_T);
   // out = 1;
-  return out;
+  return(out);
 }
 
 
 //// Convert osmotic potential to osmolyte quantity and back
 double _pi2n(double pi, double V, double Tc){
   double n = -pi*V/(Rn*(Tc-T0));
-  return n;
+  return(n);
 }
 
 double _n2pi(double n, double V, double Tc){
   double pi = -n*Rn*(Tc-T0)/V;
-  return pi;
+  return(pi);
 }
 
 ////// Cell expansion model
@@ -65,7 +65,7 @@ double relative_expansion_rate(double psi, double Tc, double pi, double phi, dou
   double out = phi*(psi-pi-Y_P);
   if(out<0.0) out=0.0;
   out = out*T_fun(Tc,Y_T);
-  return out;
+  return(out);
 }
 
 ////// Cell division model
