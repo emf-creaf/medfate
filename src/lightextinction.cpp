@@ -509,9 +509,13 @@ List longwaveRadiationSHAW(NumericMatrix LAIme, NumericMatrix LAImd, NumericMatr
     else Lup_lower = Lup[i-1];
     Lnet[i] = eps_c*(1.0 - tau[i])*(Ldown[i]+Lup_lower - 2.0*SIGMA_Wm2*pow(Tair[i]+273.16,4.0));
     for(int j=0;j<ncoh;j++) {
-      LnetM(i,j) =  Lnet[i]*((1.0-tauM(i,j))/sumTauComp[i]);
-      if(LAIme(i,j)>0.0) LnetM(i,j) = LnetM(i,j)*(LAIme(i,j)/lai_ij(i,j)); //Correct for the fact that extinction included all leaves and energy balance is on expanded leaves
-      else LnetM(i,j) =0.0;
+      LnetM(i,j) =0.0;
+      if(LAIme(i,j)>0.0) {
+        LnetM(i,j) =  Lnet[i]*((1.0-tauM(i,j))/sumTauComp[i]);
+        //Correct for the fact that extinction included all leaves and energy balance is on expanded leaves
+        LnetM(i,j) = LnetM(i,j)*(LAIme(i,j)/lai_ij(i,j)); 
+        
+      } 
     }
   }
   double Lnet_g = eps_g*(Ldown[0] - SIGMA_Wm2*pow(Tsoil+273.16,4.0));
