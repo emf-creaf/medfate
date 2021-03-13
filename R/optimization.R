@@ -13,7 +13,7 @@ multiple_runs<-function(parMatrix, x,
     x_r = .cloneInput(x)
     customParams = parMatrix[r,]
     names(customParams) <- parNames
-    x_r = modifyInputParams(x_r, customParams)
+    x_r = modifyInputParams(x_r, customParams, FALSE)
     x_r$control$verbose = FALSE
     S = do.call(model, list(x = x_r,
                             meteo = meteo, 

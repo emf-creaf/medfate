@@ -103,7 +103,7 @@ modifyCohortParams<-function(x, customParams, verbose = TRUE) {
   return(x)
 }
 
-modifyInputParams<-function(x, customParams) {
+modifyInputParams<-function(x, customParams, verbose = TRUE) {
   # check class of customParams
   if((!inherits(customParams, "numeric")) && (!inherits(customParams, "list"))) {
     stop("'customParams' must be a named numeric vector or a named list")
@@ -138,7 +138,7 @@ modifyInputParams<-function(x, customParams) {
   }
   # Modify cohort params
   if(length(customCohortParams)>0) {
-    x = modifyCohortParams(x, customCohortParams)
+    x = modifyCohortParams(x, customCohortParams, verbose)
   } else {
     x = .cloneInput(x)
   }
