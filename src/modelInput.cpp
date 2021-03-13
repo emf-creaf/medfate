@@ -1211,6 +1211,8 @@ void multiplyInputParamSingle(List x, String paramType, String paramName, int co
 
 // [[Rcpp::export(".multiplyInputParam")]]
 void multiplyInputParam(List x, String paramType, String paramName, int cohort, double f) {
+  List control = x["control"];
+  String transpirationMode = control["transpirationMode"];
   if(paramName=="Z50/Z95") {
     multiplyInputParamSingle(x, "below", "Z50", cohort, f);
     multiplyInputParamSingle(x, "below", "Z95", cohort, f);
@@ -1238,8 +1240,10 @@ void multiplyInputParam(List x, String paramType, String paramName, int cohort, 
   }else if(paramName=="Al2As") {
     multiplyInputParamSingle(x, "paramsAnatomy", "Al2As", cohort, f);
     multiplyInputParamSingle(x, "paramsWaterStorage", "Vsapwood", cohort, 1.0/f);
-    multiplyInputParamSingle(x, "paramsTranspiration", "VCstem_kmax", cohort, 1.0/f);
-    multiplyInputParamSingle(x, "paramsTranspiration", "VCroot_kmax", cohort, 1.0/f);
+    if(transpirationMode=="Sperry") {
+      multiplyInputParamSingle(x, "paramsTranspiration", "VCstem_kmax", cohort, 1.0/f);
+      multiplyInputParamSingle(x, "paramsTranspiration", "VCroot_kmax", cohort, 1.0/f);
+    }
   } else if(paramName=="Vmax298/Jmax298") {
     multiplyInputParamSingle(x, "paramsTranspiration", "Vmax298", cohort, f);
     multiplyInputParamSingle(x, "paramsTranspiration", "Jmax298", cohort, f);
@@ -1252,6 +1256,8 @@ void multiplyInputParam(List x, String paramType, String paramName, int cohort, 
 
 // [[Rcpp::export(".modifyInputParam")]]
 void modifyInputParam(List x, String paramType, String paramName, int cohort, double newValue) {
+  List control = x["control"];
+  String transpirationMode = control["transpirationMode"];
   if(paramName=="LAI_live") {
     modifyInputParamSingle(x, "above", "LAI_live", cohort, newValue);
     modifyInputParamSingle(x, "above", "LAI_expanded", cohort, newValue);
@@ -1260,8 +1266,10 @@ void modifyInputParam(List x, String paramType, String paramName, int cohort, do
     double f = newValue/old;
     modifyInputParamSingle(x, "paramsAnatomy", "Al2As", cohort, newValue);
     multiplyInputParamSingle(x, "paramsWaterStorage", "Vsapwood", cohort, 1.0/f);
-    multiplyInputParamSingle(x, "paramsTranspiration", "VCstem_kmax", cohort, 1.0/f);
-    multiplyInputParamSingle(x, "paramsTranspiration", "VCroot_kmax", cohort, 1.0/f);
+    if(transpirationMode=="Sperry") {
+      multiplyInputParamSingle(x, "paramsTranspiration", "VCstem_kmax", cohort, 1.0/f);
+      multiplyInputParamSingle(x, "paramsTranspiration", "VCroot_kmax", cohort, 1.0/f);
+    }
   } else {
     modifyInputParamSingle(x, paramType, paramName, cohort, newValue);
   }

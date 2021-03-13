@@ -1,4 +1,4 @@
-defaultControl<-function() {
+defaultControl<-function(transpirationMode = "Granier") {
   return(list(
     #For all
     verbose = TRUE,
@@ -13,7 +13,7 @@ defaultControl<-function() {
     plantWaterPools = FALSE,
     leafPhenology = TRUE,
     unfoldingDD = 300,
-    transpirationMode = "Granier",
+    transpirationMode = transpirationMode,
     cavitationRefill = "total",
     refillMaximumRate = 0.05,
     verticalLayerSize = 100,
