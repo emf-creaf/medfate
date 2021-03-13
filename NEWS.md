@@ -2,12 +2,15 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 2.1.0
+- Parameter modification dependencies revised
+- Modification of input objects is now optional
+
 # Version 2.0.1
 - Cloning initial object for optimization
 - Leaf growth costs always drawn from sugar sapwood
 - Bug correction: LWRnet calculation
 - Bug correction: Sperry model does not crash when LAIstand = 0
-- Parameter modification dependencies revised
 
 # Version 2.0.0
 - IMPORTANT: Soil input merged with model input. Now the calls to simulation functions (e.g., `spwb`, `growth`) do not need to include soil as input parameter.
