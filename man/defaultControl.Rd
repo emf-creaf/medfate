@@ -7,7 +7,10 @@
 Creates a list with global default parameters for simulation models.
 }
 \usage{
-defaultControl() 
+defaultControl(transpirationMode = "Granier") 
+}
+\arguments{
+  \item{transpirationMode}{Transpiration model (either 'Granier' or 'Sperry'). See \code{\link{spwbInput}}.}
 }
 \details{
 The function returns a list with default parameters. Users can change those defaults that need to be set to other values and use the list as input for model functions. The relevant parameters are different for each model function.

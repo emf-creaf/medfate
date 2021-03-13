@@ -11,14 +11,15 @@ Routines to modify species parameter table or model input objects
 }
 \usage{
 modifySpParams(SpParams, customParams, subsetSpecies = TRUE)
-modifyCohortParams(x, customParams)
-modifyInputParams(x, customParams)
+modifyCohortParams(x, customParams, verbose = TRUE)
+modifyInputParams(x, customParams, verbose = TRUE)
 }
 \arguments{
   \item{x}{A model input object of class \code{\link{spwbInput}} or \code{\link{growthInput}}.}
   \item{SpParams}{A species parameter data frame, typically \code{\link{SpParamsMED}}.}
   \item{customParams}{A data frame or a named vector with new parameter values (see details).}
   \item{subsetSpecies}{A flag to indicate that the output data frame should include only those species mentioned in \code{customParams}.}
+  \item{verbose}{A flag to indicate that messages should be printed on the console.}
 }
 \details{
 When calling function \code{modifySpParams}, \code{customParams} should be a data frame with as many rows as species and as many columns as parameters to modify, plus a column called 'SpIndex' to match species between the two tables.

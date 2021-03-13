@@ -128,7 +128,7 @@ vprofile_SWRExtinction<-function(x, SpParams, z = NULL, gdd = NA, mode = "MED",
   if(draw) return(g)
   else return(swr)
 }
-vprofile_windExtinction<-function(x, SpParams, u = 1, measurementHeightOverCanopy = 200,
+vprofile_windExtinction<-function(x, SpParams, u = 1, windMeasurementHeight = 200,
                                   boundaryLayerSize = 2000, target = "windspeed",
                                   z = NULL, gdd = NA, mode = "MED", 
                                   draw = TRUE, xlim = NULL) {
@@ -136,7 +136,7 @@ vprofile_windExtinction<-function(x, SpParams, u = 1, measurementHeightOverCanop
   lad = vprofile_leafAreaDensity(x, SpParams, z,gdd,mode,FALSE,FALSE,FALSE, xlim)
   canopyHeight = max(plant_height(x), na.rm=T)
   zmid = 0.5*(z[1:(length(z)-1)] + z[2:(length(z))])
-  df = wind_canopyTurbulence(zmid, lad, canopyHeight, u, measurementHeightOverCanopy)
+  df = wind_canopyTurbulence(zmid, lad, canopyHeight, u, windMeasurementHeight)
   target = match.arg(target, c("windspeed", "kineticenergy", "stress"))
   if(draw) {
     if(target=="windspeed") {
