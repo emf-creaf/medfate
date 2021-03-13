@@ -337,8 +337,14 @@ List spwbDay(List x, CharacterVector date, double tmin, double tmax, double rhmi
   //Control parameters
   List control = x["control"];
   bool verbose = control["verbose"];
+  bool modifyInput = control["modifyInput"];
   bool leafPhenology = control["leafPhenology"];
   String transpirationMode = control["transpirationMode"];
+  
+  //Will not modify input x 
+  if(!modifyInput) {
+    x = clone(x);
+  }
   
   //Soul parameters
   List soil = x["soil"];
@@ -1001,10 +1007,8 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
   String transpirationMode = control["transpirationMode"];
   String soilFunctions = control["soilFunctions"];
   String cavitationRefill = control["cavitationRefill"];
-  
-  List soil = x["soil"];
-  
   bool verbose = control["verbose"];
+  bool modifyInput = control["modifyInput"];
   bool subdailyResults = control["subdailyResults"];
   bool leafPhenology = control["leafPhenology"];
   bool unlimitedSoilWater = control["unlimitedSoilWater"];
@@ -1012,7 +1016,17 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
   checkspwbInput(x,transpirationMode, soilFunctions);
   
   //Store input
-  List spwbInput = clone(x);
+  List spwbInput;
+  if(modifyInput) {
+    spwbInput = clone(x); // Will modify x and return the unmodified object
+  } else {
+    x = clone(x);
+    spwbInput = x; //Will not modified input x and return the final modified object
+  }
+  
+  List soil = x["soil"];
+  
+  
 
   //Meteorological input    
   NumericVector MinTemperature, MaxTemperature;
@@ -1256,17 +1270,24 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
   String transpirationMode = control["transpirationMode"];
   String soilFunctions = control["soilFunctions"];
   String cavitationRefill = control["cavitationRefill"];
-
   bool verbose = control["verbose"];
+  bool modifyInput = control["modifyInput"];
   bool subdailyResults = control["subdailyResults"];
   bool leafPhenology = control["leafPhenology"];
   bool multiLayerBalance = control["multiLayerBalance"];
   
+  //Store input
+  List spwbInput;
+  if(modifyInput) {
+    spwbInput = clone(x); // Will modify x and return the unmodified object
+  } else {
+    x = clone(x);
+    spwbInput = x; //Will not modified input x and return the final modified object
+  }
+  
+  
   List soil = x["soil"];
   
-  //Store input
-  List spwbInput = clone(x);
-
   if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
   double latrad = latitude * (PI/180.0);
 

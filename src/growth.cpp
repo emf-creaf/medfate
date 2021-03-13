@@ -1263,8 +1263,15 @@ List growthDay(List x, CharacterVector date, double tmin, double tmax, double rh
   //Control parameters
   List control = x["control"];
   bool verbose = control["verbose"];
+  bool modifyInput = control["modifyInput"];
   bool leafPhenology = control["leafPhenology"];
   String transpirationMode = control["transpirationMode"];
+  
+  //Will not modify input x 
+  if(!modifyInput) {
+    x = clone(x);
+  }
+  
   std::string c = as<std::string>(date[0]);
   int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
   double delta = meteoland::radiation_solarDeclination(J);
@@ -1421,32 +1428,36 @@ void recordStandSummary(DataFrame standSummary, DataFrame above, int pos) {
 
 // [[Rcpp::export("growth")]]
 List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL) {
-  
+
   //Control params 
   List control =x["control"];  
-  //Soil params 
-  List soil = x["soil"];
-  
-  //Store input
-  List growthInput = clone(x);
-
-    
-  // Rcout<<"1";
-  
-  //Cohort info
-  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
-  NumericVector SP = cohorts["SP"];
-
   String transpirationMode = control["transpirationMode"];
   String soilFunctions = control["soilFunctions"];
-  
   bool verbose = control["verbose"];
+  bool modifyInput = control["modifyInput"];
   bool subdailyResults = control["subdailyResults"];
   bool leafPhenology = control["leafPhenology"];
   bool unlimitedSoilWater = control["unlimitedSoilWater"];
   bool multiLayerBalance = control["multiLayerBalance"];
   checkgrowthInput(x, transpirationMode, soilFunctions);
+
+  //Store input
+  List growthInput;
+  if(modifyInput) {
+    growthInput = clone(x); // Will modify x and return the unmodified object
+  } else {
+    x = clone(x);
+    growthInput = x; //Will not modified input x and return the final modified object
+  }
   
+  //Soil params 
+  List soil = x["soil"];
+  
+  //Cohort info
+  DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
+  NumericVector SP = cohorts["SP"];
+
+
   if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
   double latrad = latitude * (PI/180.0);
   

@@ -21,6 +21,7 @@ A list, with the following options (default values in parentheses):
 \bold{General}:
 \itemize{
    \item{\code{verbose (=TRUE)}: Boolean flag to indicate console output during calculations.}
+   \item{\code{modifyInput (=TRUE)}: Boolean flag to indicate that simulations will modify input object. If set to FALSE, simulations will not modify the input R object but return the current (modified) state variables within the output.}
    \item{\code{subdailyResults (=FALSE)}: Boolean flag to force subdaily results to be stored (as a list called 'subdaily' of \code{\link{spwb_day}} objects, one by simulated date) in calls to \code{\link{spwb}}.}
    \item{\code{soilFunctions (="SX")}: Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten).}
    \item{\code{defaultWindSpeed (= 2.5)}: Default wind speed value (in m/s) to be used when missing from data. }

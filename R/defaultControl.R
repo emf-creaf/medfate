@@ -1,6 +1,7 @@
 defaultControl<-function(transpirationMode = "Granier") {
   return(list(
     #For all
+    modifyInput = TRUE,
     verbose = TRUE,
     subdailyResults = FALSE,
     defaultWindSpeed = 2.5, #m/s
