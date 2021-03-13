@@ -44,7 +44,7 @@ optimization_function<-function(parNames, x,
     if(is.vector(v)) {
       customParams = v
       names(customParams) <- parNames
-      x_i = modifyInputParams(x_i, customParams)
+      x_i = modifyInputParams(x_i, customParams, FALSE)
       S = do.call(model, list(x = x_i, 
                               meteo = meteo, 
                               latitude = latitude, elevation = elevation,

@@ -1218,7 +1218,9 @@ void multiplyInputParamSingle(List x, String paramType, String paramName, int co
 }
 
 // [[Rcpp::export(".multiplyInputParam")]]
-void multiplyInputParam(List x, String paramType, String paramName, int cohort, double f) {
+void multiplyInputParam(List x, String paramType, String paramName, 
+                        int cohort, double f,
+                        bool message) {
   List control = x["control"];
   String transpirationMode = control["transpirationMode"];
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
@@ -1226,24 +1228,24 @@ void multiplyInputParam(List x, String paramType, String paramName, int cohort, 
   if(paramName=="Z50/Z95") {
     multiplyInputParamSingle(x, "below", "Z50", cohort, f);
     multiplyInputParamSingle(x, "below", "Z95", cohort, f);
-    Rcerr<< "[Message] Updating fine root distribution for cohort " << cohNames[cohort] <<".\n";
+    if(message) Rcerr<< "[Message] Updating fine root distribution for cohort " << cohNames[cohort] <<".\n";
     updateFineRootDistribution(x);
   } else  if(paramName=="WaterStorage") {
     multiplyInputParamSingle(x, "paramsWaterStorage", "Vsapwood", cohort, f);
     multiplyInputParamSingle(x, "paramsWaterStorage", "Vleaf", cohort, f);
   } else if(paramName=="Plant_kmax") {
     multiplyInputParamSingle(x, "paramsTranspiration", "Plant_kmax", cohort, f);
-    multiplyMessage("VCleaf_kmax", cohNames[cohort], f);
+    if(message) multiplyMessage("VCleaf_kmax", cohNames[cohort], f);
     multiplyInputParamSingle(x, "paramsTranspiration", "VCleaf_kmax", cohort, f);
-    multiplyMessage("VCstem_kmax", cohNames[cohort], f);
+    if(message) multiplyMessage("VCstem_kmax", cohNames[cohort], f);
     multiplyInputParamSingle(x, "paramsTranspiration", "VCstem_kmax", cohort, f);
-    multiplyMessage("VCroot_kmax", cohNames[cohort], f);
+    if(message) multiplyMessage("VCroot_kmax", cohNames[cohort], f);
     multiplyInputParamSingle(x, "paramsTranspiration", "VCroot_kmax", cohort, f);
-    Rcerr<< "[Message] Updating below-ground conductances for cohort " << cohNames[cohort] <<".\n";
+    if(message) Rcerr<< "[Message] Updating below-ground conductances for cohort " << cohNames[cohort] <<".\n";
     updateBelowgroundConductances(x);
   } else if(paramName=="LAI_live") {
     multiplyInputParamSingle(x, "above", "LAI_live", cohort, f);
-    multiplyMessage("LAI_expanded", cohNames[cohort], f);
+    if(message) multiplyMessage("LAI_expanded", cohNames[cohort], f);
     multiplyInputParamSingle(x, "above", "LAI_expanded", cohort, f);
   } else if(paramName=="c") {
     multiplyInputParamSingle(x, "paramsTranspiration", "VCleaf_c", cohort, f);
@@ -1255,12 +1257,12 @@ void multiplyInputParam(List x, String paramType, String paramName, int cohort, 
     multiplyInputParamSingle(x, "paramsTranspiration", "VCroot_d", cohort, f);
   }else if(paramName=="Al2As") {
     multiplyInputParamSingle(x, "paramsAnatomy", "Al2As", cohort, f);
-    multiplyMessage("Vsapwood", cohNames[cohort], f);
+    if(message) multiplyMessage("Vsapwood", cohNames[cohort], f);
     multiplyInputParamSingle(x, "paramsWaterStorage", "Vsapwood", cohort, 1.0/f);
     if(transpirationMode=="Sperry") {
-      multiplyMessage("VCstem_kmax", cohNames[cohort], f);
+      if(message) multiplyMessage("VCstem_kmax", cohNames[cohort], f);
       multiplyInputParamSingle(x, "paramsTranspiration", "VCstem_kmax", cohort, 1.0/f);
-      multiplyMessage("VCroot_kmax", cohNames[cohort], f);
+      if(message) multiplyMessage("VCroot_kmax", cohNames[cohort], f);
       multiplyInputParamSingle(x, "paramsTranspiration", "VCroot_kmax", cohort, 1.0/f);
     }
     if(x.containsElementNamed("internalAllocation")) {
@@ -1268,7 +1270,7 @@ void multiplyInputParam(List x, String paramType, String paramName, int cohort, 
       DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
       DataFrame paramsTranspirationdf = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
       DataFrame paramsAnatomydf = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
-      Rcerr<< "[Message] Rebuilding allocation targets for cohort " << cohNames[cohort] <<".\n";
+      if(message) Rcerr<< "[Message] Rebuilding allocation targets for cohort " << cohNames[cohort] <<".\n";
       x["internalAllocation"]  = internalAllocationDataFrame(above, 
                                            belowdf, 
                                            paramsAnatomydf,
@@ -1282,16 +1284,18 @@ void multiplyInputParam(List x, String paramType, String paramName, int cohort, 
     multiplyInputParamSingle(x, paramType, paramName, cohort, f);
   }
   if(transpirationMode=="Sperry") {
-    Rcerr<< "[Message] Recalculating plant maximum conductances.\n";
+    if(message) Rcerr<< "[Message] Recalculating plant maximum conductances.\n";
     updatePlantKmax(x);
   }
-  Rcerr<< "[Message] Updating below-ground parameters.\n";
+  if(message) Rcerr<< "[Message] Updating below-ground parameters.\n";
   updateBelow(x);
 }
 
 
 // [[Rcpp::export(".modifyInputParam")]]
-void modifyInputParam(List x, String paramType, String paramName, int cohort, double newValue) {
+void modifyInputParam(List x, String paramType, String paramName, 
+                      int cohort, double newValue,
+                      bool message) {
   List control = x["control"];
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
   CharacterVector cohNames = cohorts.attr("row.names");
@@ -1299,18 +1303,18 @@ void modifyInputParam(List x, String paramType, String paramName, int cohort, do
   String transpirationMode = control["transpirationMode"];
   if(paramName=="LAI_live") {
     modifyInputParamSingle(x, "above", "LAI_live", cohort, newValue);
-    modifyMessage("LAI_expanded", cohNames[cohort], newValue);
+    if(message) modifyMessage("LAI_expanded", cohNames[cohort], newValue);
     modifyInputParamSingle(x, "above", "LAI_expanded", cohort, newValue);
   } else if(paramName=="Al2As") {
     double old = getInputParamValue(x, "paramsAnatomy", "Al2As", cohort);
     double f = newValue/old;
     modifyInputParamSingle(x, "paramsAnatomy", "Al2As", cohort, newValue);
-    multiplyMessage("Vsapwood", cohNames[cohort], 1.0/f);
+    if(message) multiplyMessage("Vsapwood", cohNames[cohort], 1.0/f);
     multiplyInputParamSingle(x, "paramsWaterStorage", "Vsapwood", cohort, 1.0/f);
     if(transpirationMode=="Sperry") {
-      multiplyMessage("VCstem_kmax", cohNames[cohort], 1.0/f);
+      if(message) multiplyMessage("VCstem_kmax", cohNames[cohort], 1.0/f);
       multiplyInputParamSingle(x, "paramsTranspiration", "VCstem_kmax", cohort, 1.0/f);
-      multiplyMessage("VCroot_kmax", cohNames[cohort], 1.0/f);
+      if(message) multiplyMessage("VCroot_kmax", cohNames[cohort], 1.0/f);
       multiplyInputParamSingle(x, "paramsTranspiration", "VCroot_kmax", cohort, 1.0/f);
     }
     if(x.containsElementNamed("internalAllocation")) {
@@ -1318,7 +1322,7 @@ void modifyInputParam(List x, String paramType, String paramName, int cohort, do
       DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
       DataFrame paramsTranspirationdf = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
       DataFrame paramsAnatomydf = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
-      Rcerr<< "[Message] Rebuilding allocation targets for cohort " << cohNames[cohort] <<".\n";
+      if(message) Rcerr<< "[Message] Rebuilding allocation targets for cohort " << cohNames[cohort] <<".\n";
       x["internalAllocation"]  = internalAllocationDataFrame(above, 
                                                              belowdf, 
                                                              paramsAnatomydf,
@@ -1329,9 +1333,9 @@ void modifyInputParam(List x, String paramType, String paramName, int cohort, do
     modifyInputParamSingle(x, paramType, paramName, cohort, newValue);
   }
   if(transpirationMode=="Sperry") {
-    Rcerr<< "[Message] Recalculating plant maximum conductances.\n";
+    if(message) Rcerr<< "[Message] Recalculating plant maximum conductances.\n";
     updatePlantKmax(x);
   }
-  Rcerr<< "[Message] Updating below-ground parameters.\n";
+  if(message) Rcerr<< "[Message] Updating below-ground parameters.\n";
   updateBelow(x);
 }

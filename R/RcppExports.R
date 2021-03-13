@@ -613,12 +613,12 @@ resetInputs <- function(x) {
     invisible(.Call(`_medfate_updateBelow`, x))
 }
 
-.multiplyInputParam <- function(x, paramType, paramName, cohort, f) {
-    invisible(.Call(`_medfate_multiplyInputParam`, x, paramType, paramName, cohort, f))
+.multiplyInputParam <- function(x, paramType, paramName, cohort, f, message) {
+    invisible(.Call(`_medfate_multiplyInputParam`, x, paramType, paramName, cohort, f, message))
 }
 
-.modifyInputParam <- function(x, paramType, paramName, cohort, newValue) {
-    invisible(.Call(`_medfate_modifyInputParam`, x, paramType, paramName, cohort, newValue))
+.modifyInputParam <- function(x, paramType, paramName, cohort, newValue, message) {
+    invisible(.Call(`_medfate_modifyInputParam`, x, paramType, paramName, cohort, newValue, message))
 }
 
 .gdd <- function(DOY, Temp, Tbase = 5.0, cum = 0.0) {

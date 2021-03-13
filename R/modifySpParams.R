@@ -34,7 +34,7 @@ modifySpParams<-function(SpParams, customParams, subsetSpecies = TRUE) {
   return(SpParams)
 }
 
-modifyCohortParams<-function(x, customParams) {
+modifyCohortParams<-function(x, customParams, verbose = TRUE) {
   
   # check if customParams exists, if not return x without modification
   if (is.null(customParams)) {
@@ -64,14 +64,14 @@ modifyCohortParams<-function(x, customParams) {
   
   modifyParameterValue<-function(param, icoh, val) {
     if(!is.na(val)) {
-      if(param %in% above_par) .modifyInputParam(x, "above", param, icoh - 1, val)
-      if(param %in% below_par) .modifyInputParam(x, "below", param, icoh - 1, val) 
-      if(param %in% base_par) .modifyInputParam(x, "paramsInterception", param, icoh - 1, val)
-      if(param %in% transp_par) .modifyInputParam(x, "paramsTranspiration", param, icoh - 1, val) 
-      if(param %in% anatomy_par)  .modifyInputParam(x, "paramsAnatomy", param, icoh - 1, val)
-      if(!is.null(growth_par)) if (param %in% growth_par) .modifyInputParam(x, "paramsGrowth", param, icoh - 1, val)
-      if(!is.null(allom_par)) if (param %in% allom_par) .modifyInputParam(x, "paramsAllometries", param, icoh - 1, val)
-      if(!is.null(waterstorage_par)) if (param %in% waterstorage_par) .modifyInputParam(x, "paramsWaterStorage", param, icoh - 1, val)
+      if(param %in% above_par) .modifyInputParam(x, "above", param, icoh - 1, val, verbose)
+      if(param %in% below_par) .modifyInputParam(x, "below", param, icoh - 1, val, verbose) 
+      if(param %in% base_par) .modifyInputParam(x, "paramsInterception", param, icoh - 1, val, verbose)
+      if(param %in% transp_par) .modifyInputParam(x, "paramsTranspiration", param, icoh - 1, val, verbose) 
+      if(param %in% anatomy_par)  .modifyInputParam(x, "paramsAnatomy", param, icoh - 1, val, verbose)
+      if(!is.null(growth_par)) if (param %in% growth_par) .modifyInputParam(x, "paramsGrowth", param, icoh - 1, val, verbose)
+      if(!is.null(allom_par)) if (param %in% allom_par) .modifyInputParam(x, "paramsAllometries", param, icoh - 1, val, verbose)
+      if(!is.null(waterstorage_par)) if (param %in% waterstorage_par) .modifyInputParam(x, "paramsWaterStorage", param, icoh - 1, val, verbose)
     }
     return(x)
   }
