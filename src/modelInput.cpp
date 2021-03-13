@@ -1281,7 +1281,11 @@ void multiplyInputParam(List x, String paramType, String paramName, int cohort, 
   } else {
     multiplyInputParamSingle(x, paramType, paramName, cohort, f);
   }
-  updatePlantKmax(x);
+  if(transpirationMode=="Sperry") {
+    Rcerr<< "[Message] Recalculating plant maximum conductances.\n";
+    updatePlantKmax(x);
+  }
+  Rcerr<< "[Message] Updating below-ground parameters.\n";
   updateBelow(x);
 }
 
@@ -1325,9 +1329,9 @@ void modifyInputParam(List x, String paramType, String paramName, int cohort, do
     modifyInputParamSingle(x, paramType, paramName, cohort, newValue);
   }
   if(transpirationMode=="Sperry") {
-    Rcerr<< "[Message] Recalculating plant maximum conductance for cohort " << cohNames[cohort] <<".\n";
+    Rcerr<< "[Message] Recalculating plant maximum conductances.\n";
     updatePlantKmax(x);
   }
-  Rcerr<< "[Message] Updating below-ground parameters for cohort " << cohNames[cohort] <<".\n";
+  Rcerr<< "[Message] Updating below-ground parameters.\n";
   updateBelow(x);
 }
