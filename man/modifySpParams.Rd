@@ -75,4 +75,10 @@ x1s <- modifyInputParams(x1, c("rfc@1" = 5, "sand@1" = 10))
 x1$soil
 x1s$soil
 
+# When modifying growth input objects dependencies increase
+x1 = forest2growthInput(exampleforestMED,examplesoil1, SpParamsMED, control)
+customParams = c("T1_54/Al2As" = 2000, "T1_54/LAI_live" = 2)
+x1m <- modifyInputParams(x1, customParams)
+
+
 }

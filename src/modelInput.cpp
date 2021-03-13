@@ -1298,36 +1298,35 @@ void modifyInputParam(List x, String paramType, String paramName,
                       bool message) {
   List control = x["control"];
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
+  DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
   CharacterVector cohNames = cohorts.attr("row.names");
   
   String transpirationMode = control["transpirationMode"];
   if(paramName=="LAI_live") {
+    double old = getInputParamValue(x, "above", "LAI_live", cohort);
+    double f = newValue/old;
     modifyInputParamSingle(x, "above", "LAI_live", cohort, newValue);
     if(message) modifyMessage("LAI_expanded", cohNames[cohort], newValue);
     modifyInputParamSingle(x, "above", "LAI_expanded", cohort, newValue);
+    if(above.containsElementNamed("SA")) {
+      if(message) multiplyMessage("SA", cohNames[cohort], f);
+      multiplyInputParamSingle(x, "above", "SA", cohort, f);
+    }
   } else if(paramName=="Al2As") {
     double old = getInputParamValue(x, "paramsAnatomy", "Al2As", cohort);
     double f = newValue/old;
     modifyInputParamSingle(x, "paramsAnatomy", "Al2As", cohort, newValue);
     if(message) multiplyMessage("Vsapwood", cohNames[cohort], 1.0/f);
     multiplyInputParamSingle(x, "paramsWaterStorage", "Vsapwood", cohort, 1.0/f);
+    if(above.containsElementNamed("SA")) {
+      if(message) multiplyMessage("SA", cohNames[cohort], 1.0/f);
+      multiplyInputParamSingle(x, "above", "SA", cohort, 1.0/f);
+    }
     if(transpirationMode=="Sperry") {
       if(message) multiplyMessage("VCstem_kmax", cohNames[cohort], 1.0/f);
       multiplyInputParamSingle(x, "paramsTranspiration", "VCstem_kmax", cohort, 1.0/f);
       if(message) multiplyMessage("VCroot_kmax", cohNames[cohort], 1.0/f);
       multiplyInputParamSingle(x, "paramsTranspiration", "VCroot_kmax", cohort, 1.0/f);
-    }
-    if(x.containsElementNamed("internalAllocation")) {
-      DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
-      DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
-      DataFrame paramsTranspirationdf = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
-      DataFrame paramsAnatomydf = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
-      if(message) Rcerr<< "[Message] Rebuilding allocation targets for cohort " << cohNames[cohort] <<".\n";
-      x["internalAllocation"]  = internalAllocationDataFrame(above, 
-                                                             belowdf, 
-                                                             paramsAnatomydf,
-                                                             paramsTranspirationdf,
-                                                             control);
     }
   } else {
     modifyInputParamSingle(x, paramType, paramName, cohort, newValue);
@@ -1338,4 +1337,31 @@ void modifyInputParam(List x, String paramType, String paramName,
   }
   if(message) Rcerr<< "[Message] Updating below-ground parameters.\n";
   updateBelow(x);
+  if(x.containsElementNamed("internalAllocation")) {
+    DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
+    DataFrame paramsTranspirationdf = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
+    DataFrame paramsAnatomydf = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
+    if(message) Rcerr<< "[Message] Rebuilding allocation targets.\n";
+    x["internalAllocation"]  = internalAllocationDataFrame(above, 
+                                         belowdf, 
+                                         paramsAnatomydf,
+                                         paramsTranspirationdf,
+                                         control);
+  }
+  if(x.containsElementNamed("internalCarbon")) {
+    DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
+    List belowLayers = Rcpp::as<Rcpp::List>(x["belowLayers"]);
+    DataFrame paramsGrowthdf = Rcpp::as<Rcpp::DataFrame>(x["paramsGrowth"]);
+    DataFrame paramsWaterStoragedf = Rcpp::as<Rcpp::DataFrame>(x["paramsWaterStorage"]);
+    DataFrame paramsTranspirationdf = Rcpp::as<Rcpp::DataFrame>(x["paramsTranspiration"]);
+    DataFrame paramsAnatomydf = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
+    if(message) Rcerr<< "[Message] Rebuilding internal carbon.\n";
+    x["internalCarbon"]  = internalCarbonDataFrame(above, 
+                                     belowdf,
+                                     belowLayers,
+                                     paramsAnatomydf,
+                                     paramsWaterStoragedf,
+                                     paramsGrowthdf,
+                                     control);
+  }
 }
