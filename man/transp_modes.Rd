@@ -1,37 +1,25 @@
 \encoding{UTF-8}
-\name{transpiration}
-\alias{transp_profitMaximization}
-\alias{transp_stomatalRegulationPlot}
+\name{transp_modes}
 \alias{transp_transpirationSperry}
 \alias{transp_transpirationGranier}
 \title{
-Transpiration submodel functions
+Transpiration modes
 }
 \description{
-Set of high-level functions used in the calculation of stomatal conductance and transpiration. Function \code{transp_profitMaximization} calculates gain and cost functions, as well as profit maximization from supply and photosynthesis input functions. Function \code{transp_stomatalRegulationPlot} produces a plot with the cohort supply functions against water potential and a plot with the cohort photosynthesis functions against water potential, both with the maximum profit values indicated.
+High-level sub-models to represent transpiration, plant hydraulics and water relations within plants. The two submodels represent a very different degree of complexity, and correspond to Granier et al. (1999) or Sperry et al. (2017).
 }
 \usage{
-transp_profitMaximization(supplyFunction, photosynthesisFunction, Gswmin, Gswmax, 
-                          gainModifier = 1.0, costModifier = 1.0, costWater = "dEdP")
 transp_transpirationGranier(x, meteo, day, 
-                            modifyInputX = TRUE, modifyInputSoil = TRUE)
+                            modifyInput = TRUE)
 transp_transpirationSperry(x, meteo, day,
                            latitude, elevation, slope, aspect, 
                            canopyEvaporation = 0, snowMelt = 0, soilEvaporation = 0, 
                            stepFunctions = NA, 
-                           modifyInputX = TRUE, modifyInputSoil = TRUE)
-transp_stomatalRegulationPlot(x, meteo, day, timestep, 
-                              latitude, elevation, slope = NA, aspect = NA,
-                              type="E")
+                           modifyInput = TRUE)
 }
 
 \arguments{
-  \item{supplyFunction}{Water supply function (see \code{\link{hydraulics_supplyFunctionNetwork}}).}
-  \item{photosynthesisFunction}{Function returned by \code{photo_photosynthesisFunction()}.}
-  \item{Gswmin, Gswmax}{Minimum and maximum stomatal conductance to water vapour (mol·m-2·s-1).}
-  \item{gainModifier, costModifier}{Modifiers (exponents) of the gain and cost functions defined in Sperry et al. (2017).}
-  \item{costWater}{Cost water function, either "dEdP" (default) or "kterm" (experimental).}
-  \item{x}{An object of class \code{\link{spwbInput}} built using the 'Sperry' transpiration mode.}
+  \item{x}{An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}, built using the 'Granier' or 'Sperry' transpiration modes, depending on the function to be called.}
   \item{meteo}{A data frame with daily meteorological data series:
    \itemize{
      \item{\code{DOY}: Day of the year (Julian day).}
@@ -46,15 +34,13 @@ transp_stomatalRegulationPlot(x, meteo, day, timestep,
     }
   }  
   \item{day}{An integer to identify a day within \code{meteo}.}
-  \item{timestep}{An integer between 1 and \code{ndailysteps} specified in \code{x} (see \code{\link{defaultControl}}).}
   \item{latitude}{Latitude (in degrees).}
   \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North).} 
   \item{canopyEvaporation}{Canopy evaporation (from interception) for \code{day} (mm).}
   \item{soilEvaporation}{Bare soil evaporation for \code{day} (mm).}
   \item{snowMelt}{Snow melt values  for \code{day} (mm).}
   \item{stepFunctions}{An integer to indicate a simulation step for which photosynthesis and profit maximization functions are desired.}
-  \item{type}{A string with plot type, either \code{"E"} (transpiration flow), \code{"Ag"} (gross photosynthesis), \code{"An"} (net photosynthesis), \code{"Gsw"} (stomatal conductance to water vapour), \code{"T"} (temperature) or \code{"VPD"} (leaf vapour pressure deficit).}
-  \item{modifyInputX, modifyInputSoil}{Boolean flags to indicate that the input \code{x} and \code{soil} objects are allowed to be modified during the simulation.}
+  \item{modifyInput}{Boolean flag to indicate that the input \code{x} object is allowed to be modified during the simulation.}
 }
 
 \value{
@@ -149,24 +135,17 @@ Function \code{transp_transpirationGranier} and \code{transp_transpirationSperry
   \item{\code{"SupplyFunctions"}: If \code{stepFunctions} is not missing, a list of supply functions, photosynthesis functions and profit maximization functions.}
  
  }
-
-Function \code{transp_profitMaximization} returns a list with the following elements:
-\itemize{
-  \item{\code{Cost}: Cost function [0-1].}
-  \item{\code{Gain}: Gain function [0-1].}
-  \item{\code{Profit}: Profit function [0-1].}
-  \item{\code{iMaxProfit}: Index corresponding to maximum profit (starting from 0).}
-}
-
 }
 \references{
+Granier A, \enc{Bréda}{Breda} N, Biron P, Villette S (1999) A lumped water balance model to evaluate duration and intensity of drought constraints in forest stands. Ecol Modell 116:269–283. https://doi.org/10.1016/S0304-3800(98)00205-1.
+
 Sperry, J. S., M. D. Venturas, W. R. L. Anderegg, M. Mencuccini, D. S. Mackay, Y. Wang, and D. M. Love. 2017. Predicting stomatal responses to the environment from the optimization of photosynthetic gain and hydraulic cost. Plant Cell and Environment 40, 816-830 (doi: 10.1111/pce.12852).
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \seealso{
-\code{\link{hydraulics_supplyFunctionNetwork}}, \code{\link{biophysics_leafTemperature}}, \code{\link{photo_photosynthesis}}, \code{\link{spwb_day}}, \code{\link{plot.spwb_day}}
+\code{\link{spwb_day}}, \code{\link{plot.spwb_day}}
 }
 \examples{
 #Load example daily meteorological data
@@ -177,7 +156,6 @@ data(exampleforestMED)
 
 #Default species parameterization
 data(SpParamsMED)
-
 
 #Initialize soil with default soil params (2 layers)
 examplesoil = soil(defaultSoilParams(2))
@@ -206,8 +184,4 @@ x2 = forest2spwbInput(exampleforestMED,examplesoil2, SpParamsMED, control)
 t2 = transp_transpirationSperry(x2, examplemeteo, 1, 
                            latitude = 41.82592, elevation = 100, slope = 0, aspect = 0,
                            modifyInputX = FALSE, modifyInputSoil = FALSE)
-                            
-# Stomatal VPD curve and chosen value for the 12th time step at day 100
-transp_stomatalRegulationPlot(x2, examplemeteo, day=100, timestep = 12,
-                              latitude = 41.82592, elevation = 100, type="VPD")
 }
