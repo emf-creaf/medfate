@@ -112,7 +112,9 @@ spwb_maximumTranspirationRatioModels<-function(x, meteo, latitude, elevation, sl
     laivec = as.numeric(as.character(gl(n=ncol(Tmax),k = nrow(Tmax), labels = colnames(Tmax))))
     df = data.frame(y=Tmaxratiovec, LAI = laivec)
     df = df[(df$y > 0.0) & (df$y < 1.0),]
-    mods[[i]] <- glm(y ~ -1 + LAI + I(LAI^2), data =df, family=Gamma(link="identity"))
+    mods[[i]] <- glm(y ~ -1 + LAI + I(LAI^2), 
+                     start = c(0.134,-0.006),
+                     data =df, family=Gamma(link="identity"))
   }
   # TmaxRatio = sweep(Tmax_all,1,PET,"/")
   # m = apply(TmaxRatio, 2, median, na.rm=T)
