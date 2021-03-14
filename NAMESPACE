@@ -5,7 +5,7 @@ import(httr)
 import(meteoland)
 import(ggplot2)
 importFrom("stats", "aggregate","filter","uniroot", "median",
-           "cor","quantile", "dnorm")
+           "cor","quantile", "dnorm", "Gamma", "glm", "predict")
 importFrom("grDevices", "rainbow")
 importFrom("graphics", "axis", "abline", "barplot", "legend", "lines", "matplot","mtext",
            "matlines", "par", "polygon","axis.Date")

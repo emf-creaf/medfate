@@ -1,6 +1,6 @@
 spwb_maximumTranspirationRatioModels<-function(x, meteo, latitude, elevation, slope, aspect,
                                          ndays = 100, 
-                                         LAI_seq = c(0.1,0.25, seq(0.5, 7, by=0.5)),
+                                         LAI_seq = c(0.1,0.25, seq(0.5, 10, by=0.5)),
                                          draw = TRUE) {
   
   #Exclude days with precipitation
