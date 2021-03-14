@@ -66,7 +66,7 @@ De \enc{Cáceres}{Caceres} M, Mencuccini M, Martin-StPaul N, Limousin JM, Coll L
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \note{
-Object \code{x} is modified during the simulation.
+Object \code{x} is modified during the simulation, unless control parameter \code{modifyInput = FALSE}.
 }
 \seealso{
 \code{\link{spwbInput}}, \code{\link{spwb}},  \code{\link{plot.spwb_day}},  

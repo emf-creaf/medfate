@@ -3,7 +3,7 @@ transp_stomatalRegulationPlot<-function(x, meteo, day, timestep, latitude, eleva
   type = match.arg(type, c("E", "Ag","An" , "Gsw", "T", "VPD"))
   dctr = transp_transpirationSperry(x, meteo, day, latitude, elevation, slope, aspect,
                                     stepFunctions = timestep, 
-                                    modifyInputX = FALSE, modifyInputSoil = FALSE)
+                                    modifyInput = FALSE)
   ncoh = length(dctr$SupplyFunctions)
 
   l = dctr$SupplyFunctions

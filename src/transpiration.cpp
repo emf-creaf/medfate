@@ -145,7 +145,7 @@ List transpirationSperry(List x, double tmin, double tmax,
                   double solarConstant, double delta, double prec,
                   double canopyEvaporation = 0.0, double snowMelt = 0.0, double soilEvaporation = 0.0,
                   bool verbose = false, int stepFunctions = NA_INTEGER, 
-                  bool modifyInputX = true, bool modifyInputSoil = true) {
+                  bool modifyInput = true) {
   //Control parameters
   List control = x["control"];
   String soilFunctions = control["soilFunctions"];
@@ -1248,7 +1248,7 @@ List transpirationSperry(List x, double tmin, double tmax,
   
   
   //B.3 - Substract  extracted water from soil moisture 
-  if(modifyInputSoil){
+  if(modifyInput){
     for(int l=0;l<nlayers;l++) {
       Ws[l] = std::max(Ws[l] - (sum(soilLayerExtractInst(l,_))/Water_FC[l]),0.0);
     } 
@@ -1470,7 +1470,7 @@ List transpirationSperry(List x, DataFrame meteo, int day,
                         double latitude, double elevation, double slope, double aspect,
                         double canopyEvaporation = 0.0, double snowMelt = 0.0, double soilEvaporation = 0.0,
                         int stepFunctions = NA_INTEGER, 
-                        bool modifyInputX = true, bool modifyInputSoil = true) {
+                        bool modifyInput = true) {
   if(!meteo.containsElementNamed("MinTemperature")) stop("Please include variable 'MinTemperature' in weather input.");
   NumericVector MinTemperature = meteo["MinTemperature"];
   if(!meteo.containsElementNamed("MaxTemperature")) stop("Please include variable 'MaxTemperature' in weather input.");
@@ -1511,12 +1511,12 @@ List transpirationSperry(List x, DataFrame meteo, int day,
                      solarConstant, delta, prec,
                      canopyEvaporation, snowMelt, soilEvaporation,
                      false, stepFunctions, 
-                     modifyInputX, modifyInputSoil));
+                     modifyInput));
 } 
 
 
 List transpirationGranier(List x, double tday, double pet, 
-                          bool modifyInputX = true, bool modifyInputSoil = true) {
+                          bool modifyInput = true) {
   //Control parameters
   List control = x["control"];
   String cavitationRefill = control["cavitationRefill"];
@@ -1664,12 +1664,12 @@ List transpirationGranier(List x, double tday, double pet,
   }
   
   
-  if(modifyInputX) {
+  if(modifyInput) {
     internalWater["StemPLC"] = StemPLC;
     internalWater["PlantPsi"] = PlantPsi;
   }
   //Modifies input soil
-  if(modifyInputSoil) {
+  if(modifyInput) {
     NumericVector Ws = soil["W"];
     for(int l=0;l<nlayers;l++) Ws[l] = Ws[l] - (sum(EplantCoh(_,l))/Water_FC[l]); 
     if(plantWaterPools) {
@@ -1713,13 +1713,13 @@ List transpirationGranier(List x, double tday, double pet,
 
 // [[Rcpp::export("transp_transpirationGranier")]]
 List transpirationGranier(List x, DataFrame meteo, int day,
-                          bool modifyInputX = true, bool modifyInputSoil = true) {
+                          bool modifyInput = true) {
   if(!meteo.containsElementNamed("MeanTemperature")) stop("Please include variable 'MeanTemperature' in weather input.");
   NumericVector MeanTemperature = meteo["MeanTemperature"];
   if(!meteo.containsElementNamed("PET")) stop("Please include variable 'PET' in weather input.");
   NumericVector PET = meteo["PET"];
   double pet = PET[day-1];
   double tday = MeanTemperature[day-1];
-  return(transpirationGranier(x, tday, pet, modifyInputX, modifyInputSoil));
+  return(transpirationGranier(x, tday, pet, modifyInput));
 } 
 

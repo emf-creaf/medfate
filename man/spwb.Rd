@@ -142,7 +142,7 @@ De \enc{Cáceres}{Caceres} M, Mencuccini M, Martin-StPaul N, Limousin JM, Coll L
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \note{
-State variables stored in objects \code{x} are modified during the simulation.  
+State variables stored in objects \code{x} are modified during the simulation, unless control parameter \code{modifyInput = FALSE}.  
 }
 \seealso{
 \code{\link{spwbInput}}, \code{\link{spwb_day}}, \code{\link{plot.spwb}},  

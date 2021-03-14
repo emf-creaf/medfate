@@ -124,7 +124,7 @@ List spwbDay1(List x, double tday, double pet, double prec, double er, double ru
   
   //Canopy transpiration  
   // Rcout<<"hola";
-  List transp = transpirationGranier(x, tday, pet, true, true);
+  List transp = transpirationGranier(x, tday, pet, true);
   // Rcout<<"hola2";
   NumericMatrix EplantCoh = Rcpp::as<Rcpp::NumericMatrix>(transp["Extraction"]);
   for(int l=0;l<nlayers;l++) EplantVec[l] = sum(EplantCoh(_,l));
@@ -269,7 +269,7 @@ List spwbDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPrev
                                     latitude, elevation, slope, aspect, 
                                     solarConstant, delta, prec, 
                                     hydroInputs["Interception"], hydroInputs["Snowmelt"], sum(EsoilVec),
-                                    verbose, NA_INTEGER, true, true);
+                                    verbose, NA_INTEGER, true);
 
   
   NumericMatrix soilLayerExtractInst = Rcpp::as<Rcpp::NumericMatrix>(transp["ExtractionInst"]);
@@ -1425,7 +1425,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
    
     //2. transpiration and photosynthesis
     if(transpirationMode=="Granier") {
-      s = transpirationGranier(x, MeanTemperature[i], PET[i], true, true);
+      s = transpirationGranier(x, MeanTemperature[i], PET[i], true);
     } else if(transpirationMode=="Sperry") {
       std::string c = as<std::string>(dateStrings[i]);
       int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
@@ -1451,7 +1451,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
                               latitude, elevation, slope, aspect,
                               solarConstant, delta, prec,
                               canopyEvaporation[i], snowMelt[i], soilEvaporation[i],
-                              verbose, NA_INTEGER, true, true);
+                              verbose, NA_INTEGER, true);
       fillEnergyBalanceTemperatureDailyOutput(DEB,DT,DLT,s,i, multiLayerBalance);
     }
     
