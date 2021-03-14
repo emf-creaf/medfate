@@ -1561,7 +1561,12 @@ List transpirationGranier(List x, double tday, double pet,
   NumericVector Psi_Critic = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Psi_Critic"]);
   NumericVector WUE = Rcpp::as<Rcpp::NumericVector>(paramsTransp["WUE"]);
   NumericVector pRootDisc = Rcpp::as<Rcpp::NumericVector>(paramsTransp["pRootDisc"]);
-  
+  NumericVector Tmax_LAI(numCohorts, 0.134);
+  NumericVector Tmax_LAIsq(numCohorts, -0.006);
+  if(paramsTransp.containsElementNamed("Tmax_LAI")) {
+    Tmax_LAI = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Tmax_LAI"]);
+    Tmax_LAIsq = Rcpp::as<Rcpp::NumericVector>(paramsTransp["Tmax_LAIsq"]);
+  }
   //Communication vectors
   //Comunication with outside
   DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
@@ -1595,7 +1600,7 @@ List transpirationGranier(List x, double tday, double pet,
   //Apply fractions to potential evapotranspiration
   //Maximum canopy transpiration
   //    Tmax = PET[i]*(-0.006*pow(LAIcell[i],2.0)+0.134*LAIcell[i]+0.036); //From Granier (1999)
-  double Tmax = pet*(-0.006*pow(LAIcell,2.0)+0.134*LAIcell); //From Granier (1999)
+  NumericVector Tmax = pet*(Tmax_LAIsq*pow(LAIcell,2.0)+ Tmax_LAI*LAIcell); //From Granier (1999)
   
   //Fraction of Tmax attributed to each plant cohort
   double pabs = std::accumulate(CohASWRF.begin(),CohASWRF.end(),0.0);

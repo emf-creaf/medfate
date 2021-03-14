@@ -147,7 +147,17 @@ DataFrame paramsTranspirationGranier(DataFrame above,  DataFrame SpParams) {
   NumericVector Psi_Extract = cohortNumericParameter(SP, SpParams, "Psi_Extract");
   NumericVector Psi_Critic = cohortNumericParameter(SP, SpParams, "Psi_Critic");
   NumericVector pRootDisc = cohortNumericParameter(SP, SpParams, "pRootDisc");
-  DataFrame paramsTranspirationdf = DataFrame::create(_["Psi_Extract"]=Psi_Extract,
+  NumericVector Tmax_LAI(SP.size(), NA_REAL);
+  if(SpParams.containsElementNamed("Tmax_LAI")) Tmax_LAI = cohortNumericParameter(SP, SpParams, "Tmax_LAI");
+  NumericVector Tmax_LAIsq(SP.size(), NA_REAL);
+  if(SpParams.containsElementNamed("Tmax_LAIsq")) Tmax_LAIsq = cohortNumericParameter(SP, SpParams, "Tmax_LAIsq");
+  for(int i=0;i<SP.size();i++) {
+    if(NumericVector::is_na(Tmax_LAI[i])) Tmax_LAI[i] = 0.134; //Granier coefficient for LAI
+    if(NumericVector::is_na(Tmax_LAIsq[i])) Tmax_LAIsq[i] =-0.006; //Granier coefficient for LAI^2
+  }
+  DataFrame paramsTranspirationdf = DataFrame::create(_["Tmax_LAI"] = Tmax_LAI,
+                                                      _["Tmax_LAIsq"] = Tmax_LAIsq,
+                                                      _["Psi_Extract"]=Psi_Extract,
                                                       _["Psi_Critic"] = Psi_Critic,
                                                       _["WUE"] = WUE, _["pRootDisc"] = pRootDisc);
   paramsTranspirationdf.attr("row.names") = above.attr("row.names");

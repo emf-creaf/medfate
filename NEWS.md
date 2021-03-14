@@ -3,6 +3,7 @@
 -------------------------------
 
 # Version 2.1.0
+- Parameters of Granier's equation made species-specific if available
 - Parameter modification dependencies revised
 - Modification of input objects is now optional
 - Update of function `spwb_maximumTranspirationRatioModels`
