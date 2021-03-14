@@ -5,6 +5,7 @@
 # Version 2.1.0
 - Parameter modification dependencies revised
 - Modification of input objects is now optional
+- Update of function `spwb_maximumTranspirationRatioModels`
 
 # Version 2.0.1
 - Cloning initial object for optimization
