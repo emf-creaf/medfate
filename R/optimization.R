@@ -68,6 +68,39 @@ optimization_function<-function(parNames, x,
   return(yf)
 }
 
+
+optimization_cohorts_function<-function(parNames, cohorts, x, 
+                                        meteo, latitude,
+                                        elevation = NA, slope = NA, aspect = NA, 
+                                        summary_function, args= NULL) {
+  
+  if(inherits(x, "spwbInput")) model = "spwb"
+  else model = "growth"
+  
+  x$control$verbose = FALSE
+  x$control$modifyInput = FALSE
+  yf<-function(v, verbose = FALSE) {
+    x_i <- x
+    if(is.vector(v)) {
+      for(j in 1:length(cohorts)) {
+        customParams = v
+        names(customParams) <- paste0(cohorts[j],"/",parNames)
+        x_i = modifyInputParams(x_i, customParams, FALSE)
+      }
+      S = do.call(model, list(x = x_i, 
+                              meteo = meteo, 
+                              latitude = latitude, elevation = elevation,
+                              slope  = slope,aspect = aspect))
+      y = do.call(summary_function, c(list(S), args))
+      if(verbose) cat(paste0("Parameter values = [", paste0(customParams, collapse=", "), "] f = ", y, "\n"))
+      return(y)
+    } else {
+      stop("Wrong 'v' class")
+    }
+  }
+  return(yf)
+}
+
 optimization_evaluation_function<-function(parNames, x, 
                                            meteo, latitude,
                                            elevation = NA, slope = NA, aspect = NA, 
@@ -88,6 +121,15 @@ optimization_evaluation_function<-function(parNames, x,
                             cohort=NULL, SpParams = SpParams, 
                             temporalResolution = temporalResolution, metric = metric)
       return(y)
+    }
+  }
+  if(!is.null(cohorts)) {
+    if(length(cohorts)>1) {
+      print("cohorts")
+      return(optimization_cohorts_function(parNames = parNames, cohorts = cohorts, x = x,
+                                           meteo = meteo, latitude = latitude,
+                                           elevation = elevation, slope = slope, aspect = aspect,
+                                           summary_function = sf))
     }
   }
   return(optimization_function(parNames = parNames, x = x,
