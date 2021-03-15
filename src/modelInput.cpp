@@ -1210,10 +1210,10 @@ double getInputParamValue(List x, String paramType, String paramName, int cohort
 }
 
 void modifyMessage(String paramName, String cohortName, double newValue) {
-  Rcerr<< "[Message] Modifying dependent parameter "<< paramName.get_cstring()<< "' of cohort '" << cohortName.get_cstring() << "' to value " << newValue <<".\n";
+  Rcerr<< "[Message] Modifying parameter "<< paramName.get_cstring()<< "' of cohort '" << cohortName.get_cstring() << "' to value " << newValue <<".\n";
 }
 void multiplyMessage(String paramName, String cohortName, double factor) {
-  Rcerr<< "[Message] Multiplying dependent parameter "<< paramName.get_cstring()<< "' of cohort '" << cohortName.get_cstring() << "' by factor " << factor <<".\n";
+  Rcerr<< "[Message] Multiplying parameter "<< paramName.get_cstring()<< "' of cohort '" << cohortName.get_cstring() << "' by factor " << factor <<".\n";
 }
 
 void modifyInputParamSingle(List x, String paramType, String paramName, int cohort, double newValue) {
