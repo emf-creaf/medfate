@@ -3,7 +3,7 @@ transp_maximumTranspirationModel<-function(x, meteo, latitude, elevation, slope,
                                            draw = TRUE) {
   
   #Exclude days with precipitation
-  meteo = meteo[meteo$Precipitation==0, ] 
+  # meteo = meteo[meteo$Precipitation==0, ] 
   
   #Calculate PET using penman
   if("PET" %in% names(meteo)) meteo$PET = NULL
@@ -61,7 +61,6 @@ transp_maximumTranspirationModel<-function(x, meteo, latitude, elevation, slope,
     xIni$control$unlimitedSoilWater = TRUE
     xIni$control$cavitationRefill = "total"
     xIni$control$verbose = FALSE
-    xIni$control$leafPhenology = FALSE
     Tmax = matrix(NA, nrow=ndays, ncol = nlai)  
     colnames(Tmax) = LAI_seq
     rownames(Tmax) = row.names(meteo)
@@ -70,7 +69,7 @@ transp_maximumTranspirationModel<-function(x, meteo, latitude, elevation, slope,
     pb = txtProgressBar(0, nlai, style=3)
     for(j in 1:nlai) {
       customParams = rep(0, ncoh)
-      customParams[i] = LAI_seq[j]*(xIni$above$LAI_live[i]/LAItotal)
+      customParams[i] = LAI_seq[j]
       names(customParams) = paste0(cohnames,"/LAI_live")
       xlai = modifyInputParams(xIni, customParams, FALSE)
       s_res[[j]] = spwb(xlai, meteo,
