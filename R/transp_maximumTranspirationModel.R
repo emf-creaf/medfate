@@ -84,7 +84,7 @@ transp_maximumTranspirationModel<-function(x, meteo, latitude, elevation, slope,
     Tmaxratiovec = as.vector(TmaxRatio)
     laivec = as.vector(LAI)
     df = data.frame(y=Tmaxratiovec, LAI = laivec, Prec = meteo$Precipitation)
-    df = df[df$Prec>0,] #Exclude precipitation days
+    df = df[df$Prec==0,] #Exclude precipitation days
     df = df[!is.na(df$y),, drop=FALSE] # Exclude missing ratio
     df = df[(df$y > 0.0) & (df$y < 1.0),, drop=FALSE] # Exclude extreme ratio
     mods[[i]] <- glm(y ~ -1 + LAI + I(LAI^2), 
