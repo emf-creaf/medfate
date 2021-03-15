@@ -2,8 +2,6 @@ transp_maximumTranspirationModel<-function(x, meteo, latitude, elevation, slope,
                                            LAI_seq = c(0.1,0.25, seq(0.5, 10, by=0.5)),
                                            draw = TRUE) {
   
-  #Exclude days with precipitation
-  # meteo = meteo[meteo$Precipitation==0, ] 
   
   #Calculate PET using penman
   if("PET" %in% names(meteo)) meteo$PET = NULL
@@ -30,6 +28,8 @@ transp_maximumTranspirationModel<-function(x, meteo, latitude, elevation, slope,
   #Exclude days without PET
   meteo = meteo[!is.na(PET), ]
   PET = PET[!is.na(PET)]
+  #Days with precipitation
+  isPrec = meteo$Precipitation>0 
   
   #Subsample days from PET
   # PET_cut = cut(PET,breaks = seq(0, max(PET), length.out = 20))
@@ -64,7 +64,10 @@ transp_maximumTranspirationModel<-function(x, meteo, latitude, elevation, slope,
     Tmax = matrix(NA, nrow=ndays, ncol = nlai)  
     colnames(Tmax) = LAI_seq
     rownames(Tmax) = row.names(meteo)
-
+    LAI = matrix(NA, nrow=ndays, ncol = nlai)  
+    colnames(LAI) = LAI_seq
+    rownames(LAI) = row.names(meteo)
+    
     s_res = vector("list", nlai)
     pb = txtProgressBar(0, nlai, style=3)
     for(j in 1:nlai) {
@@ -76,11 +79,12 @@ transp_maximumTranspirationModel<-function(x, meteo, latitude, elevation, slope,
                         latitude = latitude, 
                         elevation = elevation, slope = slope, aspect = aspect)
       Tmax[,j] = s_res[[j]]$WaterBalance$Transpiration
+      LAI[,j] = s_res[[j]]$Stand$LAI
       setTxtProgressBar(pb, j)
     }
     TmaxRatio = sweep(Tmax,1,PET,"/")
     Tmaxratiovec = as.vector(TmaxRatio)
-    laivec = as.numeric(as.character(gl(n=ncol(Tmax),k = nrow(Tmax), labels = colnames(Tmax))))
+    laivec = as.vector(LAI)
     df = data.frame(y=Tmaxratiovec, LAI = laivec)
     df = df[!is.na(df$y),, drop=FALSE]
     df = df[(df$y > 0.0) & (df$y < 1.0),, drop=FALSE]
