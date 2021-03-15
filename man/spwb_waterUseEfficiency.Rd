@@ -13,15 +13,15 @@ spwb_waterUseEfficiency(x, type = "Plant Ag/E", leaves = "average", freq = "days
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{An object of class \code{spwb} or \code{pwb}.}
+  \item{x}{An object of class \code{spwb}, \code{pwb} or \code{growth}.}
   \item{type}{A string to indicate the scale of WUE calculation. Either:
     \itemize{
       \item{\code{"Leaf iWUE"}: Leaf intrinsic WUE, i.e. instantaneous ratio between photosynthesis and stomatal conductance (only for simulations with \code{transpirationMode = "Sperry"} and \code{subdailyResults = TRUE}). }
       \item{\code{"Leaf Ci"}: Leaf intercellular CO2 concentration (only for simulations with \code{transpirationMode = "Sperry"} and \code{subdailyResults = TRUE}).}
-      \item{\code{"Plant An/E"}: Plant (cohort) net photosynthesis over plant transpiration)}
-      \item{\code{"Stand An/E"}: Stand net photosynthesis over stand transpiration)}
-      \item{\code{"Plant Ag/E"}: Plant (cohort) gross photosynthesis over plant transpiration)}
-      \item{\code{"Stand Ag/E"}: Stand gross photosynthesis over stand transpiration)}
+      \item{\code{"Plant An/E"}: Plant (cohort) net photosynthesis over plant transpiration (only for simulations with \code{transpirationMode = "Sperry"})}
+      \item{\code{"Stand An/E"}: Stand net photosynthesis over stand transpiration (only for simulations with \code{transpirationMode = "Sperry"})}
+      \item{\code{"Plant Ag/E"}: Plant (cohort) gross photosynthesis over plant transpiration}
+      \item{\code{"Stand Ag/E"}: Stand gross photosynthesis over stand transpiration}
     }
   }
   \item{leaves}{Either \code{"sunlit"}, \code{"shade"} or \code{"average"}. Refers to the WUE of different leaf types or the average (with weights according to the LAI of sunlit and shade leaves). Only relevant for \code{type = "iWUE"}. }
