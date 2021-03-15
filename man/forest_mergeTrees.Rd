@@ -7,10 +7,11 @@
 Functions to manipulate a \code{\link{forest}} object.
 }
 \usage{
-forest_mergeTrees(x)
+forest_mergeTrees(x, byDBHclass = TRUE)
 }
 \arguments{
   \item{x}{An object of class \code{\link{forest}}.}
+  \item{byDBHclass}{Boolean flag to indicate that DBH classes should be kept separated.}
 }
 \value{
 Depending on the function:

@@ -1,17 +1,62 @@
-forest_mergeTrees<-function(x) {
-  x2 = x
-  td = x2$treeData
+forest_mergeTrees<-function(x, byDBHclass = TRUE) {
+  mergeTreesSize<-function(x) {
+    ntree = nrow(x)
+    if(ntree>0) {
+      BA = x$N*pi*(x$DBH/200)^2
+      BAsp = tapply(BA, x$Species, FUN = sum)
+      Nsp = as.numeric(tapply(x$N, x$Species, FUN = sum))
+      DBHsp =  2*sqrt(10000*as.numeric(BAsp)/(pi*Nsp))
+      y = data.frame(Species = as.numeric(names(BAsp)),
+                     N = Nsp, DBH = DBHsp, 
+                     row.names = 1:length(BAsp),
+                     stringsAsFactors = FALSE)
+      y$Height = as.numeric(tapply(x$Height*BA, x$Species, FUN = sum)/BAsp)
+      y$Z50 = as.numeric(tapply(x$Z50*BA, x$Species, FUN = sum)/BAsp)
+      y$Z95 = as.numeric(tapply(x$Z95*BA, x$Species, FUN = sum)/BAsp)
+      return(y)
+    }
+    return(x)
+  }
+  mergeTreesBySizeClass<-function(x) {
+    sel0a = (x$DBH >= 47.5) & (x$DBH < 52.5)
+    sel0b = (x$DBH >= 42.5) & (x$DBH < 47.5)
+    sel1a = (x$DBH >= 37.5) & (x$DBH < 42.5)
+    sel1b = (x$DBH >= 32.5) & (x$DBH < 37.5)
+    sel1c = (x$DBH >= 27.5) & (x$DBH < 32.5)
+    sel1d = (x$DBH >= 22.5) & (x$DBH < 27.5)
+    sel2a = (x$DBH >= 17.5) & (x$DBH < 22.5)
+    sel2b = (x$DBH >= 12.5) & (x$DBH < 17.5)
+    sel3 = (x$DBH < 12.5)
+    nosel = !(sel0a | sel0b | sel1a | sel1b| sel1c| sel1d| sel2a| sel2b | sel3)
+    y = x[nosel,, drop = FALSE]
+    if(sum(sel0a)>0) y <- rbind(y, mergeTreesSize(x[sel0a,, drop = FALSE]))
+    if(sum(sel0b)>0) y <- rbind(y, mergeTreesSize(x[sel0b,, drop = FALSE]))
+    if(sum(sel1a)>0) y <- rbind(y, mergeTreesSize(x[sel1a,, drop = FALSE]))
+    if(sum(sel1b)>0) y <- rbind(y, mergeTreesSize(x[sel1b,, drop = FALSE]))
+    if(sum(sel1c)>0) y <- rbind(y, mergeTreesSize(x[sel1c,, drop = FALSE]))
+    if(sum(sel1d)>0) y <- rbind(y, mergeTreesSize(x[sel1d,, drop = FALSE]))
+    if(sum(sel2a)>0) y <- rbind(y, mergeTreesSize(x[sel2a,, drop = FALSE]))
+    if(sum(sel2b)>0) y <- rbind(y, mergeTreesSize(x[sel2b,, drop = FALSE]))
+    if(sum(sel3)>0) y <- rbind(y, mergeTreesSize(x[sel3,, drop = FALSE]))
+    return(y)
+  }
+  td = x$treeData
   ntree = nrow(td)
+  x2 = x
   if(ntree>0) {
-    BA = plant_basalArea(x)[1:ntree]
-    BAsp = tapply(BA, td$Species, FUN = sum)
-    Nsp = as.numeric(tapply(td$N, td$Species, FUN = sum))
-    Hsp = as.numeric(tapply(td$Height*BA, td$Species, FUN = sum)/BAsp)
-    DBHsp =  2*sqrt(10000*as.numeric(BAsp)/(pi*Nsp))
-    Z50sp = as.numeric(tapply(td$Z50*BA, td$Species, FUN = sum)/BAsp)
-    Z95sp = as.numeric(tapply(td$Z95*BA, td$Species, FUN = sum)/BAsp)
-    td2 = data.frame(Species = as.numeric(names(BAsp)), N = Nsp, DBH = DBHsp,
-                     Height = Hsp, Z50 = Z50sp, Z95 = Z95sp, row.names = 1:length(BAsp), stringsAsFactors = FALSE)
+    if(byDBHclass) {
+      td2 = mergeTreesBySizeClass(x$treeData)
+    } else {
+      BA = plant_basalArea(x)[1:ntree]
+      BAsp = tapply(BA, td$Species, FUN = sum)
+      Nsp = as.numeric(tapply(td$N, td$Species, FUN = sum))
+      Hsp = as.numeric(tapply(td$Height*BA, td$Species, FUN = sum)/BAsp)
+      DBHsp =  2*sqrt(10000*as.numeric(BAsp)/(pi*Nsp))
+      Z50sp = as.numeric(tapply(td$Z50*BA, td$Species, FUN = sum)/BAsp)
+      Z95sp = as.numeric(tapply(td$Z95*BA, td$Species, FUN = sum)/BAsp)
+      td2 = data.frame(Species = as.numeric(names(BAsp)), N = Nsp, DBH = DBHsp,
+                       Height = Hsp, Z50 = Z50sp, Z95 = Z95sp, row.names = 1:length(BAsp), stringsAsFactors = FALSE)
+    }
     x2$treeData = td2
   }
   return(x2)
