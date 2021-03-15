@@ -28,9 +28,7 @@ transp_maximumTranspirationModel<-function(x, meteo, latitude, elevation, slope,
   #Exclude days without PET
   meteo = meteo[!is.na(PET), ]
   PET = PET[!is.na(PET)]
-  #Days with precipitation
-  isPrec = meteo$Precipitation>0 
-  
+
   #Subsample days from PET
   # PET_cut = cut(PET,breaks = seq(0, max(PET), length.out = 20))
   # nPET = table(PET_cut)
@@ -85,9 +83,10 @@ transp_maximumTranspirationModel<-function(x, meteo, latitude, elevation, slope,
     TmaxRatio = sweep(Tmax,1,PET,"/")
     Tmaxratiovec = as.vector(TmaxRatio)
     laivec = as.vector(LAI)
-    df = data.frame(y=Tmaxratiovec, LAI = laivec)
-    df = df[!is.na(df$y),, drop=FALSE]
-    df = df[(df$y > 0.0) & (df$y < 1.0),, drop=FALSE]
+    df = data.frame(y=Tmaxratiovec, LAI = laivec, Prec = meteo$Precipitation)
+    df = df[df$Prec>0,] #Exclude precipitation days
+    df = df[!is.na(df$y),, drop=FALSE] # Exclude missing ratio
+    df = df[(df$y > 0.0) & (df$y < 1.0),, drop=FALSE] # Exclude extreme ratio
     mods[[i]] <- glm(y ~ -1 + LAI + I(LAI^2), 
                      start = c(0.134,-0.006),
                      data =df, family=Gamma(link="identity"))
