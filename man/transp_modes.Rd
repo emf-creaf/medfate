@@ -53,7 +53,7 @@ Function \code{transp_transpirationGranier} and \code{transp_transpirationSperry
       \item{\code{"LAI"}: Leaf area index of the plant cohort.}
       \item{\code{"AbsorbedSWRFraction"}: Fraction of SWR absorbed by each cohort.}
       \item{\code{"Transpiration"}: Transpirated water (in mm) corresponding to each cohort.}
-      \item{\code{"Photosynthesis"}: Net photosynthesis (in gC/m2) corresponding to each cohort.}
+      \item{\code{"GrossPhotosynthesis"}: Gross photosynthesis (in gC/m2) corresponding to each cohort.}
       \item{\code{"psi"}: Water potential (in MPa) of the plant cohort (average over soil layers).}
       \item{\code{"DDS"}: Daily drought stress [0-1] (relative whole-plant conductance).}
     }

@@ -287,7 +287,7 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
     if(is.null(ylab)) ylab = .getYLab(type)
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
-  else if(type %in% c("PlantTranspiration","PlantNetPhotosynthesis", "PlantGrossPhotosynthesis","PlantPhotosynthesis",
+  else if(type %in% c("PlantTranspiration","PlantNetPhotosynthesis", "PlantGrossPhotosynthesis",
                       "PlantAbsorbedSWR","PlantNetLWR")) {
     subtype = substr(type,6,nchar(type))
     OM = Plants[[subtype]][,cohorts,drop=FALSE]
@@ -303,7 +303,7 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
     if(!is.null(dates)) OM = OM[row.names(OM) %in% as.character(dates),]
     return(.multiple_dynamics(as.matrix(OM),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
-  else if(type %in% c("TranspirationPerLeaf","PhotosynthesisPerLeaf", "GrossPhotosynthesisPerLeaf", "NetPhotosynthesisPerLeaf",
+  else if(type %in% c("TranspirationPerLeaf","GrossPhotosynthesisPerLeaf", "NetPhotosynthesisPerLeaf",
                       "AbsorbedSWRPerLeaf", "NetLWRPerLeaf")) {
     subtype = substr(type, 1, nchar(type)-7)
     df = Plants[[subtype]][,cohorts,drop=FALSE]
@@ -315,8 +315,7 @@ plot.pwb<-function(x, type="PlantTranspiration", cohorts = NULL, bySpecies = FAL
     return(.multiple_dynamics(as.matrix(df),  xlab = xlab, ylab = ylab, ylim = ylim))
   } 
   else if(type=="PlantWUE") {
-    if("Photosynthesis" %in% names(Plants)) OM = Plants$Photosynthesis/Plants$Transpiration
-    else OM = Plants$GrossPhotosynthesis/Plants$Transpiration
+    OM = Plants$GrossPhotosynthesis/Plants$Transpiration
     OM[Plants$Transpiration==0] = 0
     OM = OM[,cohorts,drop=FALSE]
     if(bySpecies) OM = .averageBySpecies(OM, spnames)

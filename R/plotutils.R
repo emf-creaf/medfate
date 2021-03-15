@@ -3,8 +3,8 @@
     TYPES = c("SoilPsi","SoilTheta", "SoilRWC", "LAI",
               "PlantExtraction","PlantLAI", 
               "PlantStress", "PlantPsi","StemPLC",
-              "PlantPhotosynthesis", "PlantTranspiration", "PlantWUE",
-              "PhotosynthesisPerLeaf","TranspirationPerLeaf")
+              "PlantGrossPhotosynthesis", "PlantTranspiration",
+              "GrossPhotosynthesisPerLeaf","TranspirationPerLeaf")
   } else {
     TYPES = c("SoilPsi","SoilTheta", "SoilRWC", "LAI",
               "PlantExtraction","HydraulicRedistribution",

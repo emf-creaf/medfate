@@ -16,7 +16,7 @@ data(SpParamsMED)
 examplesoil1 = soil(defaultSoilParams(4))
 control = defaultControl()
 x1 = forest2growthInput(exampleforestMED,examplesoil1, SpParamsMED, control)
-S1<-growth(x1, examplesoil1, examplemeteo, latitude = 41.82592, elevation = 100)
+S1<-growth(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 fmc<-moisture_cohortFMC(S1, SpParamsMED)
 exampleobs = data.frame(SWC = S1$Soil$W.1*(soil_thetaFC(examplesoil1)[1]), 
              ETR  = S1$WaterBalance$Evapotranspiration, 

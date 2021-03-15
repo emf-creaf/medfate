@@ -100,7 +100,7 @@ pwb(x, meteo, W, latitude, elevation = NA, slope = NA, aspect = NA,
      \item{\code{"LAI"}: A data frame with the daily leaf area index for each plant cohort.}
      \item{\code{"AbsorbedSWRFraction"}: A data frame with the fraction of SWR absorbed by each plant cohort. }
      \item{\code{"Transpiration"}: A data frame with the amount of daily transpiration (in mm) for each plant cohort.}
-     \item{\code{"Photosynthesis"}: A data frame with the amount of daily net photosynthesis (in g C·m-2) for each plant cohort. }
+     \item{\code{"GrossPhotosynthesis"}: A data frame with the amount of daily gross photosynthesis (in g C·m-2) for each plant cohort. }
      \item{\code{"PlantPsi"}: A data frame with the average daily water potential of each plant (in MPa).}
      \item{\code{"PlantStress"}: A data frame with the amount of daily stress [0-1] suffered by each plant cohort (relative whole-plant conductance).}
 }

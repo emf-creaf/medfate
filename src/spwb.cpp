@@ -623,15 +623,15 @@ List definePlantWaterDailyOutput(DataFrame meteo, DataFrame above, List soil, Li
   List plants;
   if(transpirationMode=="Granier") {
     NumericMatrix PlantPsi(numDays, numCohorts);
-    NumericMatrix PlantPhotosynthesis(numDays, numCohorts);
+    NumericMatrix PlantGrossPhotosynthesis(numDays, numCohorts);
     NumericMatrix PlantAbsSWRFraction(numDays, numCohorts);
     PlantAbsSWRFraction.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
-    PlantPhotosynthesis.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
+    PlantGrossPhotosynthesis.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
     PlantPsi.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
     plants = List::create(Named("LAI") = PlantLAI,
                                Named("AbsorbedSWRFraction") = PlantAbsSWRFraction,
                                Named("Transpiration") = PlantTranspiration,
-                               Named("Photosynthesis") = PlantPhotosynthesis,
+                               Named("GrossPhotosynthesis") = PlantGrossPhotosynthesis,
                                Named("PlantPsi") = PlantPsi, 
                                Named("StemPLC") = StemPLC,
                                Named("PlantStress") = PlantStress);
@@ -848,12 +848,12 @@ void fillPlantWaterDailyOutput(List x, List sunlit, List shade, List sDay, int i
   StemPLC(iday,_) = Rcpp::as<Rcpp::NumericVector>(Plants["StemPLC"]); 
   
   if(transpirationMode=="Granier") {
-    NumericMatrix PlantPhotosynthesis= Rcpp::as<Rcpp::NumericMatrix>(x["Photosynthesis"]);
+    NumericMatrix PlantGrossPhotosynthesis= Rcpp::as<Rcpp::NumericMatrix>(x["GrossPhotosynthesis"]);
     NumericMatrix PlantPsi = Rcpp::as<Rcpp::NumericMatrix>(x["PlantPsi"]);
     NumericMatrix PlantAbsSWRFraction= Rcpp::as<Rcpp::NumericMatrix>(x["AbsorbedSWRFraction"]);
     
     PlantPsi(iday,_) =  Rcpp::as<Rcpp::NumericVector>(Plants["PlantPsi"]);  
-    PlantPhotosynthesis(iday,_) =  Rcpp::as<Rcpp::NumericVector>(Plants["Photosynthesis"]);  
+    PlantGrossPhotosynthesis(iday,_) =  Rcpp::as<Rcpp::NumericVector>(Plants["GrossPhotosynthesis"]);  
     PlantAbsSWRFraction(iday,_) =  Rcpp::as<Rcpp::NumericVector>(Plants["AbsorbedSWRFraction"]);  
   } else {
     NumericMatrix RhizoPsiStep = Rcpp::as<Rcpp::NumericMatrix>(sDay["RhizoPsi"]);

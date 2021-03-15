@@ -175,7 +175,7 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
   
   List stand = spwbOut["Stand"];
   DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(spwbOut["Plants"]);
-  NumericVector Ag = Plants["Photosynthesis"];
+  NumericVector Ag = Plants["GrossPhotosynthesis"];
 
   //Data from spwb
   // NumericVector LeafRWC = Plants["LeafRWC"];

@@ -262,11 +262,11 @@ plot(S, type="SoilPsi")
 plot(S, type="SoilVol")
 ```
 
-Finally, the same function can also be used to draw the dynamics of plant variables by cohorts, such as transpiration, photosynthesis, water potential or drought stress:
+Finally, the same function can also be used to draw the dynamics of plant variables by cohorts, such as transpiration, gross photosynthesis, water potential or drought stress:
 
 ```{r, fig=TRUE, fig.align="center", fig.width=7, fig.height = 4}
-plot(S, type="PlantTranspiration")
-plot(S, type="PlantPhotosynthesis")
+plot(S, type="Transpiration")
+plot(S, type="GrossPhotosynthesis")
 plot(S, type="PlantPsi")
 plot(S, type="PlantStress")
 ```
@@ -303,8 +303,8 @@ As the general summary function, `spwb_stress()` allows calculating stress indic
 spwb_stress(S, index = "WSI", freq = "months", draw=TRUE)
 ```
 
-Another specific summary function is `spwb_waterUseEfficiency()`. This is most useful with advanced water and energy balance modeling, but for simple water balance it calculates the ratio between photosynthesis and transpiration at the desired scale:
+Another specific summary function is `spwb_waterUseEfficiency()`. This is most useful with advanced water and energy balance modeling, but for simple water balance it calculates the ratio between photosynthesis and transpiration at the desired scale. In this case it is equal to the value of the input species parameter `WUE`:
 
 ```{r}
-spwb_waterUseEfficiency(S, type = "Stand An/E", freq = "months", draw=FALSE)
+spwb_waterUseEfficiency(S, type = "Stand Ag/E", freq = "months", draw=FALSE)
 ```

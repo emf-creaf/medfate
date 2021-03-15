@@ -1,27 +1,30 @@
-spwb_waterUseEfficiency<-function(x, type = "Plant An/E", leaves = "average", freq="days", draw = TRUE,
+spwb_waterUseEfficiency<-function(x, type = "Plant Ag/E", leaves = "average", freq="days", draw = TRUE,
                                   ylim=NULL) {
-  if(!("spwb" %in% class(x)) && !("pwb" %in% class(x))) {
-    stop("'x' should be of class 'spwb' or 'pwb'")
+  if(!("spwb" %in% class(x)) && !("pwb" %in% class(x))&& !("growth" %in% class(x))) {
+    stop("'x' should be of class 'spwb', 'pwb' or 'growth'")
   }
-  type = match.arg(type, c("Leaf Ci", "Leaf iWUE", "Plant An/E", "Stand An/E"))
-  
-  if("Photosynthesis" %in% names(x$Plants)) {
-    Andays = x$Plants$Photosynthesis
+  if(("spwb" %in% class(x)) || ("pwb" %in% class(x))) {
+    input = x$spwbInput  
   } else {
-    Andays = x$Plants$NetPhotosynthesis
+    input = x$growthInput
   }
-  
+  if(input$control$transpirationMode == "Granier") {
+    type = match.arg(type, c("Plant Ag/E", "Stand Ag/E"))
+  } else {
+    type = match.arg(type, c("Leaf Ci", "Leaf iWUE", "Plant An/E", "Stand An/E", "Plant Ag/E", "Stand Ag/E"))
+  }
+
+
   if(type=="Leaf iWUE") {
-    if(x$spwbInput$control$transpirationMode != "Sperry") {
-      stop("iWUE can only be calculated with transpirationMode = 'Sperry'")
-    }
-    if(!x$spwbInput$control$subdailyResults) {
+    if(!input$control$subdailyResults) {
       stop("iWUE can only be calculated with subdailyResults = TRUE")
     }
+    Andays = x$Plants$NetPhotosynthesis
+    Agdays = x$Plants$GrossPhotosynthesis
     leaves = match.arg(leaves, c("average", "sunlit", "shade"))
     sd = x$subdaily
     ndays = length(sd)
-    coh = x$spwbInput$cohorts
+    coh = input$cohorts
     ncoh = nrow(coh)
     dates = as.Date(names(sd))
     iWUEdays = matrix(NA, nrow=ndays, ncol=ncoh)
@@ -76,16 +79,15 @@ spwb_waterUseEfficiency<-function(x, type = "Plant An/E", leaves = "average", fr
     }
   }
   else if(type=="Leaf Ci") {
-    if(x$spwbInput$control$transpirationMode != "Sperry") {
-      stop("Ci can only be calculated with transpirationMode = 'Sperry'")
-    }
-    if(!x$spwbInput$control$subdailyResults) {
+    Andays = x$Plants$NetPhotosynthesis
+    Agdays = x$Plants$GrossPhotosynthesis
+    if(!input$control$subdailyResults) {
       stop("Ci can only be calculated with subdailyResults = TRUE")
     }
     leaves = match.arg(leaves, c("average", "sunlit", "shade"))
     sd = x$subdaily
     ndays = length(sd)
-    coh = x$spwbInput$cohorts
+    coh = input$cohorts
     ncoh = nrow(coh)
     dates = as.Date(names(sd))
     Cidays = matrix(NA, nrow=ndays, ncol=ncoh)
@@ -137,28 +139,46 @@ spwb_waterUseEfficiency<-function(x, type = "Plant An/E", leaves = "average", fr
     }
   }
   else if(type =="Plant An/E") {
-    if("Photosynthesis" %in% names(x$Plants)) x$Plants$Photosynthesis[x$Plants$Photosynthesis<0] = 0
-    else x$Plants$NetPhotosynthesis[x$Plants$NetPhotosynthesis<0] = 0
+    x$Plants$NetPhotosynthesis[x$Plants$NetPhotosynthesis<0] = 0
     x$Plants$Transpiration[x$Plants$Transpiration<0] = 0
     if(freq=="days") {
-      if("Photosynthesis" %in% names(x$Plants)) res = x$Plants$Photosynthesis/x$Plants$Transpiration
-      else res = x$Plants$NetPhotosynthesis/x$Plants$Transpiration
+      res = x$Plants$NetPhotosynthesis/x$Plants$Transpiration
     } else {
       pt = summary(x, freq=freq, output="Transpiration", FUN=sum, na.rm=T)
-      pp = summary(x, freq=freq, output="Photosynthesis", FUN=sum, na.rm=T)
+      pp = summary(x, freq=freq, output="NetPhotosynthesis", FUN=sum, na.rm=T)
+      res = pp/pt
+    }
+  }
+  else if(type =="Plant Ag/E") {
+    x$Plants$GrossPhotosynthesis[x$Plants$GrossPhotosynthesis<0] = 0
+    x$Plants$Transpiration[x$Plants$Transpiration<0] = 0
+    if(freq=="days") {
+      res = x$Plants$GrossPhotosynthesis/x$Plants$Transpiration
+    } else {
+      pt = summary(x, freq=freq, output="Transpiration", FUN=sum, na.rm=T)
+      pp = summary(x, freq=freq, output="GrossPhotosynthesis", FUN=sum, na.rm=T)
       res = pp/pt
     }
   }
   else if(type =="Stand An/E") {
-    if("Photosynthesis" %in% names(x$Plants)) x$Plants$Photosynthesis[x$Plants$Photosynthesis<0] = 0
-    else x$Plants$NetPhotosynthesis[x$Plants$NetPhotosynthesis<0] = 0
+    x$Plants$NetPhotosynthesis[x$Plants$NetPhotosynthesis<0] = 0
     x$Plants$Transpiration[x$Plants$Transpiration<0] = 0
     if(freq=="days") {
-      if("Photosynthesis" %in% names(x$Plants)) res = rowSums(x$Plants$Photosynthesis, na.rm=T)/rowSums(x$Plants$Transpiration, na.rm=T)
-      else res = rowSums(x$Plants$NetPhotosynthesis, na.rm=T)/rowSums(x$Plants$Transpiration, na.rm=T)
+      res = rowSums(x$Plants$NetPhotosynthesis, na.rm=T)/rowSums(x$Plants$Transpiration, na.rm=T)
     } else {
       pt = summary(x, freq=freq, output="Transpiration", FUN=sum, na.rm=T)
-      pp = summary(x, freq=freq, output="Photosynthesis", FUN=sum, na.rm=T)
+      pp = summary(x, freq=freq, output="NetPhotosynthesis", FUN=sum, na.rm=T)
+      res = rowSums(pp, na.rm=T)/rowSums(pt, na.rm=T)
+    }
+  }
+  else if(type =="Stand Ag/E") {
+    x$Plants$GrossPhotosynthesis[x$Plants$GrossPhotosynthesis<0] = 0
+    x$Plants$Transpiration[x$Plants$Transpiration<0] = 0
+    if(freq=="days") {
+      res = rowSums(x$Plants$GrossPhotosynthesis, na.rm=T)/rowSums(x$Plants$Transpiration, na.rm=T)
+    } else {
+      pt = summary(x, freq=freq, output="Transpiration", FUN=sum, na.rm=T)
+      pp = summary(x, freq=freq, output="GrossPhotosynthesis", FUN=sum, na.rm=T)
       res = rowSums(pp, na.rm=T)/rowSums(pt, na.rm=T)
     }
   }
@@ -168,8 +188,14 @@ spwb_waterUseEfficiency<-function(x, type = "Plant An/E", leaves = "average", fr
     if(type=="Stand An/E") {
       g<-.single_dynamics(res, ylab = "Stand An/E (gC/L)", ylim = ylim)
     } 
+    else if(type=="Stand Ag/E") {
+      g<-.single_dynamics(res, ylab = "Stand Ag/E (gC/L)", ylim = ylim)
+    }
     else if(type=="Plant An/E") {
       g<-.multiple_dynamics(res, ylab = "Plant An/E (gC/L)", ylim = ylim)
+    }
+    else if(type=="Plant Ag/E") {
+      g<-.multiple_dynamics(res, ylab = "Plant Ag/E (gC/L)", ylim = ylim)
     }
     else if(type %in% c("Leaf iWUE", "Leaf Ci")) {
       if(type=="Leaf iWUE" && leaves == "sunlit") ylab = expression(paste("Sunlit leaf iWUE  (",mu%.%mol%.%mol^{-1},")"))

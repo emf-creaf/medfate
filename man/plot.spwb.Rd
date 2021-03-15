@@ -68,10 +68,12 @@ The following plots are currently available for \code{\link{spwb}} (most of them
     \item{\code{"StemPsi"}:}{ Midday (upper) stem water potential (only for \code{transpirationMode = "Sperry"}).}
     \item{\code{"RootPsi"}:}{ Midday root crown water potential (only for \code{transpirationMode = "Sperry"}).}
     \item{\code{"PlantTranspiration"}:}{ Plant cohort transpiration.}
-    \item{\code{"PlantTranspirationPerLeaf"}:}{ Plant cohort transpiration per leaf area.}
-    \item{\code{"PlantPhotosynthesis"}:}{ Plant cohort photosynthesis.}
-    \item{\code{"PlantPhotosynthesisPerLeaf"}:}{ Plant cohort photosynthesis per leaf area.}
-    \item{\code{"PlantWUE"}:}{ Plant cohort daily water use efficiency (photosynthesis over transpiration).}
+    \item{\code{"TranspirationPerLeaf"}:}{ Plant cohort transpiration per leaf area.}
+    \item{\code{"PlantGrossPhotosynthesis"}:}{ Plant cohort photosynthesis.}
+    \item{\code{"GrossPhotosynthesisPerLeaf"}:}{ Plant cohort photosynthesis per leaf area.}
+    \item{\code{"PlantNetPhotosynthesis"}:}{ Plant cohort net photosynthesis (only for \code{transpirationMode = "Sperry"}).}
+    \item{\code{"NetPhotosynthesisPerLeaf"}:}{ Plant cohort net photosynthesis per leaf area (only for \code{transpirationMode = "Sperry"}).}
+    \item{\code{"PlantWUE"}:}{ Plant cohort daily water use efficiency (gross photosynthesis over transpiration; only for \code{transpirationMode = "Sperry"}).}
     \item{\code{"PlantAbsorbedSWR"}:}{ Plant cohort absorbed short wave radiation (only for \code{transpirationMode = "Sperry"}).}
     \item{\code{"AbsorbedSWRPerLeaf"}:}{ Plant cohort absorbed short wave radiation per leaf area (only for \code{transpirationMode = "Sperry"}).}
     \item{\code{"PlantNetLWR"}:}{ Plant cohort net long wave radiation (only for \code{transpirationMode = "Sperry"}).}

@@ -1619,7 +1619,7 @@ List transpirationGranier(List x, double tday, double pet,
   int nlayers = Wpool.ncol();
   NumericMatrix EplantCoh(numCohorts, nlayers);
   NumericMatrix RootPsi(numCohorts, nlayers);
-  NumericVector Eplant(numCohorts, 0.0), Anplant(numCohorts, 0.0);
+  NumericVector Eplant(numCohorts, 0.0), Agplant(numCohorts, 0.0);
   NumericVector DDS(numCohorts, 0.0);
   NumericVector Kl, epc, Vl;
   double WeibullShape=3.0;
@@ -1652,7 +1652,6 @@ List transpirationGranier(List x, double tday, double pet,
     }
   }
 
-  double alpha = std::max(std::min(tday/20.0,1.0),0.0);
   for(int c=0;c<numCohorts;c++) {
     PlantPsi[c] = averagePsi(RootPsi(c,_), V(c,_), WeibullShape, Psi_Extract[c]);
     if(cavitationRefill!="total") {
@@ -1660,7 +1659,7 @@ List transpirationGranier(List x, double tday, double pet,
     } else {
       StemPLC[c] = 1.0 - Psi2K(PlantPsi[c],Psi_Critic[c],WeibullShape);
     }
-    Anplant[c] = alpha*WUE[c]*Eplant[c];
+    Agplant[c] = WUE[c]*Eplant[c];
   }
   
   
@@ -1697,7 +1696,7 @@ List transpirationGranier(List x, double tday, double pet,
   DataFrame Plants = DataFrame::create(_["LAI"] = LAIcohort,
                                        _["AbsorbedSWRFraction"] = CohASWRF, 
                                        _["Transpiration"] = Eplant, 
-                                       _["Photosynthesis"] = Anplant,
+                                       _["GrossPhotosynthesis"] = Agplant,
                                        _["PlantPsi"] = PlantPsi, 
                                        _["DDS"] = DDS,
                                        _["StemPLC"] = StemPLC);

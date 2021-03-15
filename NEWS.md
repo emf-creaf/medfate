@@ -7,6 +7,7 @@
 - Parameter modification dependencies revised
 - Modification of input objects is now optional
 - Update of function `transp_maximumTranspirationModel`
+- Photosynthesis in Granier's model corresponds to gross photosynthesis and is proportional to transpiration
 
 # Version 2.0.1
 - Cloning initial object for optimization
