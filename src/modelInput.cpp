@@ -1315,9 +1315,23 @@ void modifyInputParam(List x, String paramType, String paramName,
   if(paramName=="LAI_live") {
     double old = getInputParamValue(x, "above", "LAI_live", cohort);
     double f = newValue/old;
+    if(message) modifyMessage("LAI_live", cohNames[cohort], newValue);
     modifyInputParamSingle(x, "above", "LAI_live", cohort, newValue);
-    if(message) modifyMessage("LAI_expanded", cohNames[cohort], newValue);
-    modifyInputParamSingle(x, "above", "LAI_expanded", cohort, newValue);
+    if(message) multiplyMessage("LAI_expanded", cohNames[cohort], f);
+    multiplyInputParamSingle(x, "above", "LAI_expanded", cohort, f);
+    if(above.containsElementNamed("SA")) {
+      if(message) multiplyMessage("SA", cohNames[cohort], f);
+      multiplyInputParamSingle(x, "above", "SA", cohort, f);
+    }
+  } else if(paramName=="SLA") {
+    double old = getInputParamValue(x, "paramsAnatomy", "SLA", cohort);
+    double f = newValue/old;
+    if(message) modifyMessage("SLA", cohNames[cohort], newValue);
+    modifyInputParamSingle(x, "paramsAnatomy", "SLA", cohort, newValue);
+    if(message) multiplyMessage("LAI_live", cohNames[cohort], f);
+    multiplyInputParamSingle(x, "above", "LAI_live", cohort, f);
+    if(message) multiplyMessage("LAI_expanded", cohNames[cohort], f);
+    multiplyInputParamSingle(x, "above", "LAI_expanded", cohort, f);
     if(above.containsElementNamed("SA")) {
       if(message) multiplyMessage("SA", cohNames[cohort], f);
       multiplyInputParamSingle(x, "above", "SA", cohort, f);
@@ -1325,6 +1339,7 @@ void modifyInputParam(List x, String paramType, String paramName,
   } else if(paramName=="Al2As") {
     double old = getInputParamValue(x, "paramsAnatomy", "Al2As", cohort);
     double f = newValue/old;
+    if(message) modifyMessage("Al2As", cohNames[cohort], newValue);
     modifyInputParamSingle(x, "paramsAnatomy", "Al2As", cohort, newValue);
     if(message) multiplyMessage("Vsapwood", cohNames[cohort], 1.0/f);
     multiplyInputParamSingle(x, "paramsWaterStorage", "Vsapwood", cohort, 1.0/f);
@@ -1339,6 +1354,7 @@ void modifyInputParam(List x, String paramType, String paramName,
       multiplyInputParamSingle(x, "paramsTranspiration", "VCroot_kmax", cohort, 1.0/f);
     }
   } else {
+    if(message) modifyMessage(paramName, cohNames[cohort], newValue);
     modifyInputParamSingle(x, paramType, paramName, cohort, newValue);
   }
   if(transpirationMode=="Sperry") {
