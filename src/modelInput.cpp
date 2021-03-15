@@ -1336,13 +1336,19 @@ void modifyInputParam(List x, String paramType, String paramName,
       if(message) multiplyMessage("SA", cohNames[cohort], f);
       multiplyInputParamSingle(x, "above", "SA", cohort, f);
     }
+    if(x.containsElementNamed("paramsWaterStorage")) {
+      if(message) multiplyMessage("Vleaf", cohNames[cohort], 1.0/f);
+      multiplyInputParamSingle(x, "paramsWaterStorage", "Vleaf", cohort, 1.0/f);
+    }
   } else if(paramName=="Al2As") {
     double old = getInputParamValue(x, "paramsAnatomy", "Al2As", cohort);
     double f = newValue/old;
     if(message) modifyMessage("Al2As", cohNames[cohort], newValue);
     modifyInputParamSingle(x, "paramsAnatomy", "Al2As", cohort, newValue);
-    if(message) multiplyMessage("Vsapwood", cohNames[cohort], 1.0/f);
-    multiplyInputParamSingle(x, "paramsWaterStorage", "Vsapwood", cohort, 1.0/f);
+    if(x.containsElementNamed("paramsWaterStorage")) {
+      if(message) multiplyMessage("Vsapwood", cohNames[cohort], 1.0/f);
+      multiplyInputParamSingle(x, "paramsWaterStorage", "Vsapwood", cohort, 1.0/f);
+    }
     if(above.containsElementNamed("SA")) {
       if(message) multiplyMessage("SA", cohNames[cohort], 1.0/f);
       multiplyInputParamSingle(x, "above", "SA", cohort, 1.0/f);
