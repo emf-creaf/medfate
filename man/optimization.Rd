@@ -23,7 +23,7 @@ optimization_function(parNames, x,
 optimization_evaluation_function(parNames, x, 
                       meteo, latitude,
                       elevation = NA, slope = NA, aspect = NA, 
-                      measuredData, type = "SWC", cohort = NULL, 
+                      measuredData, type = "SWC", cohorts = NULL, 
                       temporalResolution = "day", SpParams = NULL, 
                       metric = "loglikelihood")
 }
@@ -35,7 +35,7 @@ optimization_evaluation_function(parNames, x,
   \item{verbose}{A flag to indicate extra console output.}
   \item{measuredData}{A data frame with observed/measured values. Dates should be in row names, whereas columns should be named according to the type of output to be evaluated (see details).}
   \item{type}{A string with the kind of model output to be evaluated. Accepted values are \code{"SWC"} (soil moisture content), \code{"REW"} relative extractable water, \code{"ETR"} (total evapotranspiration), \code{"E"} (transpiration per leaf area), \code{"FMC"} (fuel moisture content) and \code{"WP"} (plant water potentials).}
-  \item{cohort}{A string of the cohort to be compared (e.g. "T1_68"). If \code{NULL} results for the first cohort will be evaluated.}
+  \item{cohorts}{A string or a vector of strings with the cohorts to be compared (e.g. "T1_68"). If several cohort names are provided, the function evaluates the performance for each one and provides the mean value. If \code{NULL} results for the first cohort will be evaluated.}
   \item{temporalResolution}{A string to indicate the temporal resolution of the model evaluation, which can be "day", "week", "month" or "year". Observed and modelled values are aggregated temporally (using either means or sums) before comparison.}
   \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}), only needed if \code{type = "FMC"}.}
   \item{metric}{An evaluation metric (see \code{\link{evaluation_metric}}).}

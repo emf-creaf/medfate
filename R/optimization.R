@@ -71,14 +71,24 @@ optimization_function<-function(parNames, x,
 optimization_evaluation_function<-function(parNames, x, 
                                            meteo, latitude,
                                            elevation = NA, slope = NA, aspect = NA, 
-                                           measuredData, type = "SWC", cohort = NULL, 
+                                           measuredData, type = "SWC", cohorts = NULL, 
                                            temporalResolution = "day", SpParams = NULL, 
                                            metric = "loglikelihood") {
   sf<-function(S) {
-    y = evaluation_metric(S, measuredData = measuredData, type=type, 
-                          cohort=cohort, SpParams = SpParams, 
-                          temporalResolution = temporalResolution, metric = metric)
-    return(y)
+    if(!is.null(cohort)) {
+      y = numeric(length(cohorts))
+      for(i in 1:length(cohorts)) {
+        y = evaluation_metric(S, measuredData = measuredData, type=type, 
+                              cohort=cohorts[i], SpParams = SpParams, 
+                              temporalResolution = temporalResolution, metric = metric)
+      }
+      return(mean(y, na.rm=TRUE))
+    } else {
+      y = evaluation_metric(S, measuredData = measuredData, type=type, 
+                            cohort=NULL, SpParams = SpParams, 
+                            temporalResolution = temporalResolution, metric = metric)
+      return(y)
+    }
   }
   return(optimization_function(parNames = parNames, x = x,
                                meteo = meteo, latitude = latitude,
