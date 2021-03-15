@@ -125,7 +125,6 @@ optimization_evaluation_function<-function(parNames, x,
   }
   if(!is.null(cohorts)) {
     if(length(cohorts)>1) {
-      print("cohorts")
       return(optimization_cohorts_function(parNames = parNames, cohorts = cohorts, x = x,
                                            meteo = meteo, latitude = latitude,
                                            elevation = elevation, slope = slope, aspect = aspect,
