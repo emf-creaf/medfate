@@ -75,7 +75,7 @@ optimization_evaluation_function<-function(parNames, x,
                                            temporalResolution = "day", SpParams = NULL, 
                                            metric = "loglikelihood") {
   sf<-function(S) {
-    if(!is.null(cohort)) {
+    if(!is.null(cohorts)) {
       y = numeric(length(cohorts))
       for(i in 1:length(cohorts)) {
         y = evaluation_metric(S, measuredData = measuredData, type=type, 
