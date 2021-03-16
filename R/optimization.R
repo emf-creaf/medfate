@@ -109,11 +109,13 @@ optimization_evaluation_function<-function(parNames, x,
                                            metric = "loglikelihood") {
   sf<-function(S) {
     if(!is.null(cohorts)) {
-      y = numeric(length(cohorts))
+      y = rep(NA, length(cohorts))
       for(i in 1:length(cohorts)) {
-        y = evaluation_metric(S, measuredData = measuredData, type=type, 
-                              cohort=cohorts[i], SpParams = SpParams, 
-                              temporalResolution = temporalResolution, metric = metric)
+        if(paste0(type,"_", cohorts[i]) %in% names(measuredData)) {
+          y[i] = evaluation_metric(S, measuredData = measuredData, type=type, 
+                                cohort=cohorts[i], SpParams = SpParams, 
+                                temporalResolution = temporalResolution, metric = metric)
+        }
       }
       return(mean(y, na.rm=TRUE))
     } else {
