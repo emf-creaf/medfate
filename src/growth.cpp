@@ -113,7 +113,6 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
   double minimumSugarGrowthLeaves = minimumSugarForGrowth["leaf"];
   double minimumStarchGrowthSapwood = minimumSugarForGrowth["sapwood"];
   List respirationRates = control["respirationRates"];
-  double leaf_RR = respirationRates["leaf"];
   double sapwood_RR = respirationRates["sapwood"];
   double fineroot_RR = respirationRates["fineroot"];
   List turnoverRates = control["turnoverRates"];
@@ -191,6 +190,7 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
   //Growth parameters
   DataFrame paramsGrowth = Rcpp::as<Rcpp::DataFrame>(x["paramsGrowth"]);
   NumericVector WoodC = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["WoodC"]);
+  NumericVector RERleaf = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RERleaf"]);
   NumericVector RGRsapwoodmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRsapwoodmax"]);
   //Phenology parameters
   DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
@@ -288,7 +288,7 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
       double B_resp_sapwood = SapwoodStructBiomass[j] + sapwoodSugarMass;
       double B_resp_fineroots = FineRootStructBiomass[j];
       double QR = qResp(tday);
-      if(LAlive>0.0) leafRespDay = B_resp_leaves*leaf_RR*QR;
+      if(LAlive>0.0) leafRespDay = B_resp_leaves*RERleaf[j]*QR;
       double sapwoodResp = B_resp_sapwood*sapwood_RR*QR;
       double finerootResp = B_resp_fineroots*fineroot_RR*QR;
       MaintenanceRespiration[j] += (leafRespDay+sapwoodResp+finerootResp)/TotalLivingBiomass[j]; 
@@ -587,7 +587,6 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
   double minimumStarchGrowthSapwood = minimumSugarForGrowth["sapwood"];
   double minimumSugarGrowthFineRoots = minimumSugarForGrowth["fineroot"];
   List respirationRates = control["respirationRates"];
-  double leaf_RR = respirationRates["leaf"];
   double sapwood_RR = respirationRates["sapwood"];
   double fineroot_RR = respirationRates["fineroot"];
   List turnoverRates = control["turnoverRates"];
@@ -704,6 +703,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
   //Growth parameters
   DataFrame paramsGrowth = Rcpp::as<Rcpp::DataFrame>(x["paramsGrowth"]);
   NumericVector WoodC = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["WoodC"]);
+  NumericVector RERleaf = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RERleaf"]);
   NumericVector RGRsapwoodmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRsapwoodmax"]);
   
   //Phenology parameters
@@ -848,7 +848,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
         double B_resp_fineroots = fineRootBiomass[j];
         double QR = qResp(Tcan[s]);
         double leafRespStep = 0.0;
-        if(LAlive>0.0) leafRespStep = B_resp_leaves*leaf_RR*QR/((double) numSteps);
+        if(LAlive>0.0) leafRespStep = B_resp_leaves*RERleaf[j]*QR/((double) numSteps);
         double sapwoodRespStep = B_resp_sapwood*sapwood_RR*QR/((double) numSteps);
         double finerootRespStep = B_resp_fineroots*fineroot_RR*QR/((double) numSteps);
         leafRespDay +=leafRespStep;
