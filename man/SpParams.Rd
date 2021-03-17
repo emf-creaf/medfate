@@ -113,6 +113,7 @@ data("SpParamsUS")
   }
   \bold{Growth}:
   \itemize{  
+    \item{\code{RERleaf}: Maintenance respiration rate for leaves (g gluc · g dry-1 · day-1).}
     \item{\code{WoodC}: Wood carbon content per dry weight (g C /g dry).}
     \item{\code{RGRsapwoodmax}: Maximum relative growth rate (in basal area or sapwood area) (in cm2·cm-2).}
     \item{\code{fHDmin}: Minimum value of the height-to-diameter ratio (dimensionless).}

@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 2.1.1
+- Respiration rate for leaves made optionally species-specific.
+
 # Version 2.1.0
 - Parameters of Granier's equation made species-specific if available
 - Parameter modification dependencies revised

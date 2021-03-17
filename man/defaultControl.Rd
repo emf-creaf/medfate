@@ -74,10 +74,10 @@ A list, with the following options (default values in parentheses):
    \item{\code{nonSugarConcentration (= 0.3)}: Non-sugar (inorganic) solute concentration  (mol·l-1) in cells.}
    \item{\code{equilibriumOsmoticConcentration [=  c(leaf = 0.8, sapwood = 0.6)]}: Equilibrium osmotic concentrations (mol·l-1) for leaf and sapwood cells. The difference helps phloem transport. }
    \item{\code{minimumSugarForGrowth [=   c(leaf = 0.25, sapwood=0.25, fineroot = 0.25)]}: Minimum concentration of sugars (mol·l-1) for growth to occur in different tissues.}
-   \item{\code{respirationRates [=   c(leaf = 0.00260274, sapwood = 6.849315e-05, fineroot = 0.002054795)]}: Maintenance respiration rates for different tissues (g gluc · g dry-1 · day-1).}
+   \item{\code{respirationRates [=   c(leaf = 0.00260274, sapwood = 6.849315e-05, fineroot = 0.002054795)]}: Maintenance respiration rates for different tissues (g gluc · g dry-1 · day-1). Values for sapwood and fine roots are used for all species, whereas the value for leaves is the default used when leaf respiration is not specified via SpParams (\code{RERleaf}).}
    \item{\code{turnoverRates [=   c(sapwood = 0.0001261398, fineroot = 0.001897231)]}: Turnover rates (day-1) for sapwood and fineroots. Default are equivalent to 4.5\% and 50\% annual turnover for sapwood and fine roots, respectively.}
    \item{\code{constructionCosts [=   c(leaf = 1.5, sapwood = 1.47, fineroot = 1.30)]}: Construction costs, including respiration and structural carbon, per dry weight of new tissue (g gluc · g dry -1).}
-   \item{\code{maximumRelativeGrowthRates [=   c(leaf = 0.01, sapwood = 0.001, fineroot = 0.1)]}: Maximum relative growth rates for leaves (m2 leaf ·cm-2 sapwood· day-1), sapwood (cm2 sapwood ·cm-2 sapwood· day-1) and fine roots (g dw · g dw -1 · day -1). Values for leaves and fine roots are used for all species, whereas the value for sapwood is the default used when relative growth rate is not specified via SpParams.}
+   \item{\code{maximumRelativeGrowthRates [=   c(leaf = 0.01, sapwood = 0.001, fineroot = 0.1)]}: Maximum relative growth rates for leaves (m2 leaf ·cm-2 sapwood· day-1), sapwood (cm2 sapwood ·cm-2 sapwood· day-1) and fine roots (g dw · g dw -1 · day -1). Values for leaves and fine roots are used for all species, whereas the value for sapwood is the default used when relative growth rate is not specified via SpParams (\code{RGRsapwoodmax}).}
 }
 }
 }

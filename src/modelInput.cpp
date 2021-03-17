@@ -495,22 +495,34 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
   IntegerVector SP = above["SP"];
   int numCohorts = SP.size();
   
+  NumericVector RERleaf(numCohorts, NA_REAL);
+  if(SpParams.containsElementNamed("RERleaf")) {
+    RERleaf = cohortNumericParameter(SP, SpParams, "RERleaf");
+  }
+  NumericVector RGRsapwoodmax(numCohorts, NA_REAL);
+  if(SpParams.containsElementNamed("RGRsapwoodmax")) {
+    RGRsapwoodmax = cohortNumericParameter(SP, SpParams, "RGRsapwoodmax");
+  }
   NumericVector WoodC = cohortNumericParameter(SP, SpParams, "WoodC");
-  NumericVector RGRsapwoodmax = cohortNumericParameter(SP, SpParams, "RGRsapwoodmax");
   NumericVector fHDmin = cohortNumericParameter(SP, SpParams, "fHDmin");
   NumericVector fHDmax = cohortNumericParameter(SP, SpParams, "fHDmax");
   
   List maximumRelativeGrowthRates = control["maximumRelativeGrowthRates"];
-  double RGRmax = maximumRelativeGrowthRates["sapwood"];
+  double RGRmax_default = maximumRelativeGrowthRates["sapwood"];
+
+  List respirationRates = control["respirationRates"];
+  double RERleaf_default = respirationRates["leaf"];
   
   for(int c=0;c<numCohorts;c++){
-    if(NumericVector::is_na(RGRsapwoodmax[c])) RGRsapwoodmax[c] = RGRmax;
+    if(NumericVector::is_na(RGRsapwoodmax[c])) RGRsapwoodmax[c] = RGRmax_default;
+    if(NumericVector::is_na(RERleaf[c])) RERleaf[c] = RERleaf_default;
   }
   
-  DataFrame paramsGrowthdf = DataFrame::create(_["WoodC"] = WoodC, 
+  DataFrame paramsGrowthdf = DataFrame::create(_["RERleaf"] = RERleaf,
                                                _["RGRsapwoodmax"] = RGRsapwoodmax,
                                                _["fHDmin"] = fHDmin,
-                                               _["fHDmax"] = fHDmax);
+                                               _["fHDmax"] = fHDmax,
+                                               _["WoodC"] = WoodC);
   paramsGrowthdf.attr("row.names") = above.attr("row.names");
   return(paramsGrowthdf);
 }

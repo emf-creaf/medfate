@@ -43,65 +43,52 @@ transp_maximumTranspirationModel<-function(x, meteo, latitude, elevation, slope,
   ndays = nrow(meteo)
   nlai = length(LAI_seq)
   
- 
   cohnames <- row.names(x$cohorts)
-  
-  mods <- vector("list", ncoh)
-  names(mods) <- cohnames
   LAItotal <- sum(x$above$LAI_live)
   
-  for(i in 1:ncoh) {
-    cohname = row.names(x$above)[i]
-    cat(paste0("\n Cohort: ", cohname,"\n"))
-    
-    xIni = x
-    xIni$control$modifyInput = FALSE
-    xIni$control$unlimitedSoilWater = TRUE
-    xIni$control$cavitationRefill = "total"
-    xIni$control$verbose = FALSE
-    Tmax = matrix(NA, nrow=ndays, ncol = nlai)  
-    colnames(Tmax) = LAI_seq
-    rownames(Tmax) = row.names(meteo)
-    LAI = matrix(NA, nrow=ndays, ncol = nlai)  
-    colnames(LAI) = LAI_seq
-    rownames(LAI) = row.names(meteo)
-    
-    s_res = vector("list", nlai)
-    pb = txtProgressBar(0, nlai, style=3)
-    for(j in 1:nlai) {
-      customParams = rep(0, ncoh)
-      customParams[i] = LAI_seq[j]
-      names(customParams) = paste0(cohnames,"/LAI_live")
-      xlai = modifyInputParams(xIni, customParams, FALSE)
-      s_res[[j]] = spwb(xlai, meteo,
-                        latitude = latitude, 
-                        elevation = elevation, slope = slope, aspect = aspect)
-      Tmax[,j] = s_res[[j]]$WaterBalance$Transpiration
-      LAI[,j] = s_res[[j]]$Stand$LAI
-      setTxtProgressBar(pb, j)
-    }
-    TmaxRatio = sweep(Tmax,1,PET,"/")
-    Tmaxratiovec = as.vector(TmaxRatio)
-    laivec = as.vector(LAI)
-    df = data.frame(y=Tmaxratiovec, LAI = laivec, Prec = meteo$Precipitation)
-    df = df[df$Prec==0,] #Exclude precipitation days
-    df = df[!is.na(df$y),, drop=FALSE] # Exclude missing ratio
-    df = df[(df$y > 0.0) & (df$y < 1.0),, drop=FALSE] # Exclude extreme ratio
-    mods[[i]] <- glm(y ~ -1 + LAI + I(LAI^2), 
-                     start = c(0.134,-0.006),
-                     data =df, family=Gamma(link="identity"))
+  xIni = x
+  xIni$control$modifyInput = FALSE
+  xIni$control$unlimitedSoilWater = TRUE
+  xIni$control$cavitationRefill = "total"
+  xIni$control$verbose = FALSE
+  Tmax = matrix(NA, nrow=ndays, ncol = nlai)  
+  colnames(Tmax) = LAI_seq
+  rownames(Tmax) = row.names(meteo)
+  LAI = matrix(NA, nrow=ndays, ncol = nlai)  
+  colnames(LAI) = LAI_seq
+  rownames(LAI) = row.names(meteo)
+  
+  s_res = vector("list", nlai)
+  pb = txtProgressBar(0, nlai, style=3)
+  for(j in 1:nlai) {
+    customParams = LAI_seq[j]*(x$above$LAI_live/LAItotal)
+    names(customParams) = paste0(cohnames,"/LAI_live")
+    xlai = modifyInputParams(xIni, customParams, FALSE)
+    s_res[[j]] = spwb(xlai, meteo,
+                      latitude = latitude, 
+                      elevation = elevation, slope = slope, aspect = aspect)
+    Tmax[,j] = s_res[[j]]$WaterBalance$Transpiration
+    LAI[,j] = s_res[[j]]$Stand$LAI
+    setTxtProgressBar(pb, j)
   }
+  TmaxRatio = sweep(Tmax,1,PET,"/")
+  Tmaxratiovec = as.vector(TmaxRatio)
+  laivec = as.vector(LAI)
+  df = data.frame(y=Tmaxratiovec, LAI = laivec, Prec = meteo$Precipitation)
+  df = df[df$Prec==0,] #Exclude precipitation days
+  df = df[!is.na(df$y),, drop=FALSE] # Exclude missing ratio
+  df = df[(df$y > 0.0) & (df$y < 1.0),, drop=FALSE] # Exclude extreme ratio
+  mod <- glm(y ~ -1 + LAI + I(LAI^2), 
+                   start = c(0.134,-0.006),
+                   data =df, family=Gamma(link="identity"))
   if(draw==TRUE) {
     TmaxPETGranier = -0.006*(LAI_seq^2)+0.134*LAI_seq
     plot(LAI_seq, TmaxPETGranier, type="l", col="gray", lwd=2, 
          xlab = "Stand's Leaf Area Index", ylab = "Tmax/PET", ylim=c(0,1))
     df2<-data.frame(LAI = LAI_seq)
-    for(i in 1:ncoh) {
-      m = mods[[i]]
-      lines(df2$LAI, predict(m, newdata = df2), col=i, lwd=1, lty=i)
-    }
-    legend("topright", legend=c("Granier's equation"), lwd=2, lty=1, col=c("gray"),bty="n", cex =0.8)
-    legend("topleft", legend=c(row.names(x$cohorts)), lwd=1, lty=1:ncoh, col=1:ncoh,bty="n", cex=0.8)
+    lines(df2$LAI, predict(mod, newdata = df2), col="black", lwd=2)
+    legend("topright", legend=c("Granier's equation", "Forest stand"),
+           lwd=2, lty=1, col=c("gray", "black"),bty="n", cex =0.8)
   }
-  return(mods)
+  return(mod)
 }
