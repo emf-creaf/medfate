@@ -431,7 +431,7 @@ evaluation_metric<-function(out, measuredData, type="SWC", cohort=NULL,
   m <- switch(metric,
          "loglikelihood" = sum(dnorm(obs, pred, sd, log=TRUE), na.rm=TRUE),
          "NSE" = 1 - (sum((obs-pred)^2, na.rm=TRUE)/sum((obs-mean(obs, na.rm=TRUE))^2, na.rm=TRUE)),
-         "MAE" = sum(abs(pred-obs), na.rm=TRUE),
+         "MAE" = mean(abs(pred-obs), na.rm=TRUE),
          "r" = cor(obs, pred),
          "NSEabs" = 1 - (sum(abs(obs-pred))/sum(abs(obs-mean(obs))))
   )
