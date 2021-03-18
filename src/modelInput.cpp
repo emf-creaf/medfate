@@ -152,6 +152,7 @@ DataFrame paramsTranspirationGranier(DataFrame above,  DataFrame SpParams) {
   NumericVector Tmax_LAIsq(SP.size(), NA_REAL);
   if(SpParams.containsElementNamed("Tmax_LAIsq")) Tmax_LAIsq = cohortNumericParameter(SP, SpParams, "Tmax_LAIsq");
   for(int i=0;i<SP.size();i++) {
+    if(NumericVector::is_na(WUE[i])) WUE[i] = 4;
     if(NumericVector::is_na(Tmax_LAI[i])) Tmax_LAI[i] = 0.134; //Granier coefficient for LAI
     if(NumericVector::is_na(Tmax_LAIsq[i])) Tmax_LAIsq[i] =-0.006; //Granier coefficient for LAI^2
   }
