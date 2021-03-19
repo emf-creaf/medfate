@@ -112,17 +112,12 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
   List minimumSugarForGrowth = control["minimumSugarForGrowth"];
   double minimumSugarGrowthLeaves = minimumSugarForGrowth["leaf"];
   double minimumStarchGrowthSapwood = minimumSugarForGrowth["sapwood"];
-  List respirationRates = control["respirationRates"];
-  double sapwood_RR = respirationRates["sapwood"];
-  double fineroot_RR = respirationRates["fineroot"];
   List turnoverRates = control["turnoverRates"];
   double dailySapwoodTurnoverProportion = turnoverRates["sapwood"];
   List constructionCosts = control["constructionCosts"];
   double leaf_CC = constructionCosts["leaf"];
   double sapwood_CC = constructionCosts["sapwood"];
   double fineroot_CC = constructionCosts["fineroot"];
-  List maximumRGR = control["maximumRelativeGrowthRates"];
-  double RGRleafmax = maximumRGR["leaf"];
 
   //Cohort info
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
@@ -191,6 +186,9 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
   DataFrame paramsGrowth = Rcpp::as<Rcpp::DataFrame>(x["paramsGrowth"]);
   NumericVector WoodC = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["WoodC"]);
   NumericVector RERleaf = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RERleaf"]);
+  NumericVector RERsapwood = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RERsapwood"]);
+  NumericVector RERfineroot = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RERfineroot"]);
+  NumericVector RGRleafmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRleafmax"]);
   NumericVector RGRsapwoodmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRsapwoodmax"]);
   //Phenology parameters
   DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
@@ -289,8 +287,8 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
       double B_resp_fineroots = FineRootStructBiomass[j];
       double QR = qResp(tday);
       if(LAlive>0.0) leafRespDay = B_resp_leaves*RERleaf[j]*QR;
-      double sapwoodResp = B_resp_sapwood*sapwood_RR*QR;
-      double finerootResp = B_resp_fineroots*fineroot_RR*QR;
+      double sapwoodResp = B_resp_sapwood*RERsapwood[j]*QR;
+      double finerootResp = B_resp_fineroots*RERfineroot[j]*QR;
       MaintenanceRespiration[j] += (leafRespDay+sapwoodResp+finerootResp)/TotalLivingBiomass[j]; 
       
       //PHOTOSYNTHESIS
@@ -315,7 +313,7 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
       
       if(leafUnfolding[j]) {
         double deltaLApheno = std::max(leafAreaTarget[j] - LAlive, 0.0);
-        double deltaLAsink = std::min(deltaLApheno, SA[j]*RGRleafmax*(rleafcell/rleafcellmax));
+        double deltaLAsink = std::min(deltaLApheno, SA[j]*RGRleafmax[j]*(rleafcell/rleafcellmax));
         double deltaLAavailable = 0.0;
         deltaLAavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarGrowthLeaves)*(glucoseMolarMass*Volume_sapwood[j]))/costPerLA);
         deltaLAgrowth = std::min(deltaLAsink, deltaLAavailable);
@@ -586,9 +584,6 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
   double minimumSugarGrowthLeaves = minimumSugarForGrowth["leaf"];
   double minimumStarchGrowthSapwood = minimumSugarForGrowth["sapwood"];
   double minimumSugarGrowthFineRoots = minimumSugarForGrowth["fineroot"];
-  List respirationRates = control["respirationRates"];
-  double sapwood_RR = respirationRates["sapwood"];
-  double fineroot_RR = respirationRates["fineroot"];
   List turnoverRates = control["turnoverRates"];
   double dailySapwoodTurnoverProportion = turnoverRates["sapwood"];
   double dailyFineRootTurnoverProportion = turnoverRates["fineroot"];
@@ -596,10 +591,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
   double leaf_CC = constructionCosts["leaf"];
   double sapwood_CC = constructionCosts["sapwood"];
   double fineroot_CC = constructionCosts["fineroot"];
-  List maximumRGR = control["maximumRelativeGrowthRates"];
-  double RGRleafmax = maximumRGR["leaf"];
-  double RGRfinerootmax = maximumRGR["fineroot"];
-  
+
   //Soil params
   List soil  = x["soil"];
   NumericVector Ksat = soil["Ksat"];
@@ -704,7 +696,11 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
   DataFrame paramsGrowth = Rcpp::as<Rcpp::DataFrame>(x["paramsGrowth"]);
   NumericVector WoodC = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["WoodC"]);
   NumericVector RERleaf = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RERleaf"]);
+  NumericVector RERsapwood = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RERsapwood"]);
+  NumericVector RERfineroot = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RERfineroot"]);
+  NumericVector RGRleafmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRleafmax"]);
   NumericVector RGRsapwoodmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRsapwoodmax"]);
+  NumericVector RGRfinerootmax = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["RGRfinerootmax"]);
   
   //Phenology parameters
   DataFrame paramsPhenology = Rcpp::as<Rcpp::DataFrame>(x["paramsPhenology"]);
@@ -849,8 +845,8 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
         double QR = qResp(Tcan[s]);
         double leafRespStep = 0.0;
         if(LAlive>0.0) leafRespStep = B_resp_leaves*RERleaf[j]*QR/((double) numSteps);
-        double sapwoodRespStep = B_resp_sapwood*sapwood_RR*QR/((double) numSteps);
-        double finerootRespStep = B_resp_fineroots*fineroot_RR*QR/((double) numSteps);
+        double sapwoodRespStep = B_resp_sapwood*RERsapwood[j]*QR/((double) numSteps);
+        double finerootRespStep = B_resp_fineroots*RERfineroot[j]*QR/((double) numSteps);
         leafRespDay +=leafRespStep;
         MaintenanceRespirationInst(j,s) = (leafRespStep+sapwoodRespStep+finerootRespStep)/TotalLivingBiomass[j];//Rm in g gluc· gdry-1
         MaintenanceRespiration[j] += MaintenanceRespirationInst(j,s); 
@@ -871,7 +867,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
         //Leaf growth
         if(leafUnfolding[j]) {
           double deltaLApheno = std::max(leafAreaTarget[j] - LAlive, 0.0);
-          double deltaLAsink = std::min(deltaLApheno, (1.0/((double) numSteps))*SA[j]*RGRleafmax*(rleafcell/rleafcellmax));
+          double deltaLAsink = std::min(deltaLApheno, (1.0/((double) numSteps))*SA[j]*RGRleafmax[j]*(rleafcell/rleafcellmax));
           //Grow at expense of stem sugar
           double deltaLAavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarGrowthLeaves)*(glucoseMolarMass*Volume_sapwood[j]))/costPerLA);
           double deltaLAgrowthStep = std::min(deltaLAsink, deltaLAavailable);
@@ -882,7 +878,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
         if(fineRootBiomass[j] < fineRootBiomassTarget[j]) {
           for(int s = 0;s<numLayers;s++) {
             double deltaFRBpheno = std::max(fineRootBiomassTarget[j] - fineRootBiomass[j], 0.0);
-            double deltaFRBsink = (1.0/((double) numSteps))*(V(j,s)*fineRootBiomass[j])*RGRfinerootmax*(rfineroot[s]/rleafcellmax);
+            double deltaFRBsink = (1.0/((double) numSteps))*(V(j,s)*fineRootBiomass[j])*RGRfinerootmax[j]*(rfineroot[s]/rleafcellmax);
             double deltaFRBavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarGrowthFineRoots)*(glucoseMolarMass*Volume_sapwood[j]))/fineroot_CC);
             double deltaFRBgrowthStep = std::min(deltaFRBpheno, std::min(deltaFRBsink, deltaFRBavailable));
             growthCostFRBStep += deltaFRBgrowthStep*fineroot_CC;
@@ -1347,7 +1343,12 @@ void checkgrowthInput(List x, String transpirationMode, String soilFunctions) {
   if(!x.containsElementNamed("paramsGrowth")) stop("paramsGrowth missing in growthInput");
   DataFrame paramsGrowth = Rcpp::as<Rcpp::DataFrame>(x["paramsGrowth"]);
   if(!paramsGrowth.containsElementNamed("WoodC")) stop("WoodC missing in growthInput$paramsGrowth");
+  if(!paramsGrowth.containsElementNamed("RGRleafmax")) stop("RGRleafmax missing in growthInput$paramsGrowth");
   if(!paramsGrowth.containsElementNamed("RGRsapwoodmax")) stop("RGRsapwoodmax missing in growthInput$paramsGrowth");
+  if(!paramsGrowth.containsElementNamed("RGRfinerootmax")) stop("RGRfinerootmax missing in growthInput$paramsGrowth");
+  if(!paramsGrowth.containsElementNamed("RERleaf")) stop("RERleaf missing in growthInput$paramsGrowth");
+  if(!paramsGrowth.containsElementNamed("RERsapwood")) stop("RERsapwood missing in growthInput$paramsGrowth");
+  if(!paramsGrowth.containsElementNamed("RERfineroot")) stop("RERfineroot missing in growthInput$paramsGrowth");
   
   if(!x.containsElementNamed("paramsAnatomy")) stop("paramsAnatomy missing in growthInput");
   DataFrame paramsAnatomy = Rcpp::as<Rcpp::DataFrame>(x["paramsAnatomy"]);
