@@ -443,12 +443,17 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
       starchSapwood[j] = starchSapwood[j]*(Volume_sapwood[j]/newVolumeSapwood); 
       
       //MORTALITY Death by carbon starvation or dessication
-      if((sugarSapwood[j]<0.0) || (StemPLC[j] > 0.5)) {
+      if((sugarSapwood[j]<0.0) & allowStarvation) {
         LAdead = LAlive;
         LAlive = 0.0;
         LAexpanded = 0.0;
-        if((sugarSapwood[j]<0.0) & allowStarvation) Status(j) = "starvation";
-        else if((StemPLC[j]>0.5) & allowDessication) Status(j) = "dessication";
+        Status(j) = "starvation";
+        Rcout<<" [Cohort "<< j<<" died from " << Status(j)<<"] ";
+      } else if((StemPLC[j] > 0.5) & allowDessication) {
+        LAdead = LAlive;
+        LAlive = 0.0;
+        LAexpanded = 0.0;
+        Status(j) = "dessication";
         Rcout<<" [Cohort "<< j<<" died from " << Status(j)<<"] ";
       }
       
@@ -1057,12 +1062,17 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
       starchSapwood[j] = starchSapwood[j]*(Volume_sapwood[j]/newVolumeSapwood); 
       
       //MORTALITY Death by carbon starvation or dessication
-      if((sugarSapwood[j]<0.0) || (StemSympRWC[j] <0.5)) {
+      if((sugarSapwood[j]<0.0) & allowStarvation) {
         LAdead = LAlive;
         LAlive = 0.0;
         LAexpanded = 0.0;
-        if((sugarSapwood[j]<0.0) & allowStarvation) Status(j) = "starvation";
-        else if((StemSympRWC[j]<0.5) & allowDessication) Status(j) = "dessication";
+        Status(j) = "starvation";
+        Rcout<<" [Cohort "<< j<<" died from " << Status(j)<<"] ";
+      } else if((StemSympRWC[j] <0.5) & allowDessication) {
+        LAdead = LAlive;
+        LAlive = 0.0;
+        LAexpanded = 0.0;
+        Status(j) = "dessication";
         Rcout<<" [Cohort "<< j<<" died from " << Status(j)<<"] ";
       }
       
