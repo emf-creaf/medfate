@@ -535,9 +535,9 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
   double RERfineroot_default = respirationRates["fineroot"];
   
   for(int c=0;c<numCohorts;c++){
-    if(NumericVector::is_na(RGRleafmax[c])) RGRleafmax[c] = RERleaf_default;
+    if(NumericVector::is_na(RGRleafmax[c])) RGRleafmax[c] = RGRleafmax_default;
     if(NumericVector::is_na(RGRsapwoodmax[c])) RGRsapwoodmax[c] = RGRsapwoodmax_default;
-    if(NumericVector::is_na(RGRfinerootmax[c])) RGRfinerootmax[c] = RERfineroot_default;
+    if(NumericVector::is_na(RGRfinerootmax[c])) RGRfinerootmax[c] = RGRfinerootmax_default;
     if(NumericVector::is_na(RERleaf[c])) RERleaf[c] = RERleaf_default;
     if(NumericVector::is_na(RERsapwood[c])) RERsapwood[c] = RERsapwood_default;
     if(NumericVector::is_na(RERfineroot[c])) RERfineroot[c] = RERfineroot_default;
