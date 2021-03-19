@@ -102,6 +102,8 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
   List control = x["control"];  
   
   String transpirationMode = control["transpirationMode"];
+  bool allowDessication = control["allowDessication"];
+  bool allowStarvation = control["allowStarvation"];
   String allocationStrategy = control["allocationStrategy"];
   String cavitationRefill = control["cavitationRefill"];
   bool plantWaterPools = control["plantWaterPools"];
@@ -445,8 +447,8 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
         LAdead = LAlive;
         LAlive = 0.0;
         LAexpanded = 0.0;
-        if(sugarSapwood[j]<0.0) Status(j) = "starvation";
-        else if(StemPLC[j]>0.5) Status(j) = "dessication";
+        if((sugarSapwood[j]<0.0) & allowStarvation) Status(j) = "starvation";
+        else if((StemPLC[j]>0.5) & allowDessication) Status(j) = "dessication";
         Rcout<<" [Cohort "<< j<<" died from " << Status(j)<<"] ";
       }
       
@@ -569,6 +571,8 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
   double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
   
   String transpirationMode = control["transpirationMode"];
+  bool allowDessication = control["allowDessication"];
+  bool allowStarvation = control["allowStarvation"];
   String allocationStrategy = control["allocationStrategy"];
   String cavitationRefill = control["cavitationRefill"];
   bool plantWaterPools = control["plantWaterPools"];
@@ -1057,8 +1061,8 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
         LAdead = LAlive;
         LAlive = 0.0;
         LAexpanded = 0.0;
-        if(sugarSapwood[j]<0.0) Status(j) = "starvation";
-        else if(StemSympRWC[j]<0.5) Status(j) = "dessication";
+        if((sugarSapwood[j]<0.0) & allowStarvation) Status(j) = "starvation";
+        else if((StemSympRWC[j]<0.5) & allowDessication) Status(j) = "dessication";
         Rcout<<" [Cohort "<< j<<" died from " << Status(j)<<"] ";
       }
       
