@@ -25,7 +25,7 @@ fuel_windAdjustmentFactor(topShrubHeight, bottomCanopyHeight, topCanopyHeight,
   \item{ShrubCover}{Total shrub cover (in percent) of the stand.}
   \item{CanopyCover}{Total canopy cover (in percent) of the stand.}
   \item{SpParams}{A data frame with species parameters (see \code{\link{SpParamsMED}}).}
-  \item{cohortFMC}{A numeric vector of (actual) fuel moisture content by cohort (e.g. taken from the result of \code{fuel_cohortFineFMC}).}
+  \item{cohortFMC}{A numeric vector of (actual) fuel moisture content by cohort (e.g. can be taken as a row of the matrix returned by \code{\link{moisture_cohortFMC}}).}
   \item{gdd}{Growth degree-days.}
   \item{mode}{Calculation mode, either "MED" or "US".}
   \item{heightProfileStep}{Precision for the fuel bulk density profile.}

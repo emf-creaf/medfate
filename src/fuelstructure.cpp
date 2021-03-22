@@ -139,8 +139,10 @@ double layerFuelAverageParameter(double minHeight, double maxHeight, NumericVect
   int nCoh = cohortLoading.size();
   for(int i=0;i<nCoh; i++) {
     cfl = crownFuelInLayer(minHeight, maxHeight, cohortLoading[i], H[i], H[i]*(1.0 - CR[i]));
-    num +=(cohortParameter[i]*cfl);
-    den += cfl;
+    if(!NumericVector::is_na(cohortParameter[i])) {
+      num +=(cohortParameter[i]*cfl);
+      den += cfl;
+    }
   }
   if(den>0) return(num/den);
   return(NA_REAL);
