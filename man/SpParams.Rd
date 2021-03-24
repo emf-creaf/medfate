@@ -57,6 +57,7 @@ data("SpParamsUS")
     \item{\code{LeafDensity}: Density of leaf tissue (dry weight over volume).}
     \item{\code{WoodDensity}: Wood density (at 0 percent humidity!).}
     \item{\code{FineRootDensity}: Density of fine root tissue (dry weight over volume).}
+    \item{\code{conduit2sapwood}: Proportion of sapwood corresponding to conducive elements (vessels or tracheids) as opposed to parenchymatic tissue.}
     \item{\code{r635}: Ratio between the weight of leaves plus branches and the weight of leaves alone for branches of 6.35 mm.}
     \item{\code{pDead}: Proportion of total fine fuels that are dead}
     \item{\code{Al2As}: Leaf area to sapwood area ratio (in m2·m-2).}
@@ -113,9 +114,13 @@ data("SpParamsUS")
   }
   \bold{Growth}:
   \itemize{  
-    \item{\code{RERleaf}: Maintenance respiration rate for leaves (g gluc · g dry-1 · day-1).}
     \item{\code{WoodC}: Wood carbon content per dry weight (g C /g dry).}
-    \item{\code{RGRsapwoodmax}: Maximum relative growth rate (in basal area or sapwood area) (in cm2·cm-2).}
+    \item{\code{RERleaf}: Maintenance respiration rate for leaves (g gluc · g dry-1 · day-1).}
+    \item{\code{RERsapwood}: Maintenance respiration rate for living cells of sapwood (g gluc · g dry-1 · day-1).}
+    \item{\code{RERfineroot}: Maintenance respiration rate for fine roots (g gluc · g dry-1 · day-1).}
+    \item{\code{RGRleafmax}: Maximum leaf area growth rate relative to sapwood area (in m2·cm-2· day-1).}
+    \item{\code{RGRsapwoodmax}: Maximum sapwood area relative growth rate (in cm2·cm-2·day-1).}
+    \item{\code{RGRfinerootmax}: Maximum fine root relative growth rate (in g dry·g dry-1· day-1).}
     \item{\code{fHDmin}: Minimum value of the height-to-diameter ratio (dimensionless).}
     \item{\code{fHDmax}: Maximum value of the height-to-diameter ratio (dimensionless).}
     }

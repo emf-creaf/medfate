@@ -68,6 +68,9 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams) {
 DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams) {
   IntegerVector SP = above["SP"];
   int numCohorts = SP.size();
+  
+  CharacterVector Group = cohortCharacterParameter(SP, SpParams, "Group");
+  
   NumericVector Hmax = cohortNumericParameter(SP, SpParams, "Hmax");
   NumericVector Hmed = cohortNumericParameter(SP, SpParams, "Hmed"); //To correct conductivity
   NumericVector Al2As = cohortNumericParameter(SP, SpParams, "Al2As");
@@ -75,6 +78,10 @@ DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams) {
   NumericVector LeafDensity = cohortNumericParameter(SP, SpParams, "LeafDensity");
   NumericVector WoodDensity = cohortNumericParameter(SP, SpParams, "WoodDensity");
   NumericVector FineRootDensity = cohortNumericParameter(SP, SpParams, "FineRootDensity");
+  NumericVector conduit2sapwood(numCohorts, NA_REAL);
+  if(SpParams.containsElementNamed("conduit2sapwood")) {
+    conduit2sapwood = cohortNumericParameter(SP, SpParams, "conduit2sapwood");
+  }
   NumericVector r635 = cohortNumericParameter(SP, SpParams, "r635");
   NumericVector leafwidth = cohortNumericParameter(SP, SpParams, "LeafWidth");
   NumericVector SRL = cohortNumericParameter(SP, SpParams, "SRL");  
@@ -84,14 +91,19 @@ DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams) {
     if(NumericVector::is_na(WoodDensity[c])) WoodDensity[c] = 0652;
     if(NumericVector::is_na(LeafDensity[c])) LeafDensity[c] = 0.7;
     if(NumericVector::is_na(FineRootDensity[c])) FineRootDensity[c] = 0.165; 
+    if(NumericVector::is_na(conduit2sapwood[c])) {
+      if(Group[c]=="Angiosperm") conduit2sapwood[c] = 0.70; //20-40% parenchyma in angiosperms.
+      else conduit2sapwood[c] = 0.925; //5-10% parenchyma in gymnosperms (https://link.springer.com/chapter/10.1007/978-3-319-15783-2_8)
+    }
     if(NumericVector::is_na(Al2As[c])) Al2As[c] = 2500.0; // = 4 cm2·m-2
-    if(NumericVector::is_na(SRL[c])) SRL[c] = 3870; 
+    if(NumericVector::is_na(SRL[c])) SRL[c] = 3870.0; 
     if(NumericVector::is_na(RLD[c])) RLD[c] = 10.0;
   }
   DataFrame paramsAnatomydf = DataFrame::create(
     _["Hmax"] = Hmax,_["Hmed"] = Hmed,
     _["Al2As"] = Al2As, _["SLA"] = SLA, _["LeafWidth"] = leafwidth, 
     _["LeafDensity"] = LeafDensity, _["WoodDensity"] = WoodDensity, _["FineRootDensity"] = LeafDensity, 
+    _["conduit2sapwood"] = conduit2sapwood,
     _["SRL"] = SRL, _["RLD"] = RLD,  
     _["r635"] = r635
   );
@@ -615,6 +627,7 @@ DataFrame internalCarbonDataFrame(DataFrame above,
   NumericVector WoodDensity = paramsAnatomydf["WoodDensity"];
   NumericVector LeafDensity = paramsAnatomydf["LeafDensity"];
   NumericVector SLA = paramsAnatomydf["SLA"];
+  NumericVector conduit2sapwood = paramsAnatomydf["conduit2sapwood"];
   NumericVector LeafPI0 = paramsWaterStoragedf["LeafPI0"];
   NumericVector StemPI0 = paramsWaterStoragedf["StemPI0"];
   
@@ -645,11 +658,11 @@ DataFrame internalCarbonDataFrame(DataFrame above,
   // NumericVector longtermStorage(numCohorts,0.0);
   for(int c=0;c<numCohorts;c++){
     double lvol = leafStorageVolume(LAI_expanded[c],  N[c], SLA[c], LeafDensity[c]);
-    double svol = sapwoodStorageVolume(SA[c], H[c], L(c,_), V(c,_),WoodDensity[c], 0.5);
+    double svol = sapwoodStorageVolume(SA[c], H[c], L(c,_), V(c,_),WoodDensity[c], conduit2sapwood[c]);
     
     // 50% in starch storage
     starchLeaf[c] = (0.5/(lvol*glucoseMolarMass))*leafStarchCapacity(LAI_expanded[c], N[c], SLA[c], LeafDensity[c]);
-    starchSapwood[c] = (0.5/(svol*glucoseMolarMass))*sapwoodStarchCapacity(SA[c], H[c], L, V(c,_), WoodDensity[c], 0.5);
+    starchSapwood[c] = (0.5/(svol*glucoseMolarMass))*sapwoodStarchCapacity(SA[c], H[c], L, V(c,_), WoodDensity[c], conduit2sapwood[c]);
     // starch[c] = starchLeaf[c]+starchSapwood[c];
     
     //Sugar storage from PI0

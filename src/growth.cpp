@@ -184,6 +184,8 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
   NumericVector Al2As = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["Al2As"]);
   NumericVector WoodDensity = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["WoodDensity"]);
   NumericVector LeafDensity = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["LeafDensity"]);
+  NumericVector conduit2sapwood = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["conduit2sapwood"]);
+  
   //Growth parameters
   DataFrame paramsGrowth = Rcpp::as<Rcpp::DataFrame>(x["paramsGrowth"]);
   NumericVector WoodC = Rcpp::as<Rcpp::NumericVector>(paramsGrowth["WoodC"]);
@@ -254,12 +256,12 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
       double costPerSA = sapwood_CC*(H[j]+(Z95[j]/10.0))*WoodDensity[j];  //Construction cost in g gluc ·cm-2 of sapwood
       
       Volume_leaves[j] = leafStorageVolume(LAI_expanded[j],  N[j], SLA[j], LeafDensity[j]);
-      Volume_sapwood[j] = sapwoodStorageVolume(SA[j], H[j], L(j,_), V(j,_),WoodDensity[j], 0.5);
+      Volume_sapwood[j] = sapwoodStorageVolume(SA[j], H[j], L(j,_), V(j,_),WoodDensity[j], conduit2sapwood[j]);
       Starch_max_leaves[j] = leafStarchCapacity(LAI_expanded[j],  N[j], SLA[j], 0.3)/Volume_leaves[j];
       if(Volume_leaves[j]==0.0) Starch_max_leaves[j] = 0.0;
       Starch_max_sapwood[j] = sapwoodStarchCapacity(SA[j], H[j], L(j,_), V(j,_),WoodDensity[j], 0.2)/Volume_sapwood[j];
       LeafStructBiomass[j] = leafStructuralBiomass(LAI_expanded[j],N[j],SLA[j]);
-      SapwoodStructBiomass[j] = sapwoodStructuralLivingBiomass(SA[j], H[j], L(j,_), V(j,_), WoodDensity[j], 0.5);
+      SapwoodStructBiomass[j] = sapwoodStructuralLivingBiomass(SA[j], H[j], L(j,_), V(j,_), WoodDensity[j], conduit2sapwood[j]);
       //Assumes biomass of fine roots is half biomass of leaves TO BE CHANGED
       FineRootStructBiomass[j] = LeafStructBiomass[j]/2.0;
       
@@ -700,6 +702,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
   NumericVector FineRootDensity = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["FineRootDensity"]);
   NumericVector SRL = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["SRL"]);
   NumericVector RLD = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["RLD"]);
+  NumericVector conduit2sapwood = Rcpp::as<Rcpp::NumericVector>(paramsAnatomy["conduit2sapwood"]);
   
   //Growth parameters
   DataFrame paramsGrowth = Rcpp::as<Rcpp::DataFrame>(x["paramsGrowth"]);
@@ -801,12 +804,12 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
       NumericVector deltaFRBgrowth(numLayers, 0.0);
         
       Volume_leaves[j] = leafStorageVolume(LAI_expanded[j],  N[j], SLA[j], LeafDensity[j]);
-      Volume_sapwood[j] = sapwoodStorageVolume(SA[j], H[j], L(j,_),V(j,_),WoodDensity[j], 0.5);
+      Volume_sapwood[j] = sapwoodStorageVolume(SA[j], H[j], L(j,_),V(j,_),WoodDensity[j], conduit2sapwood[j]);
       Starch_max_leaves[j] = leafStarchCapacity(LAI_expanded[j],  N[j], SLA[j], 0.3)/Volume_leaves[j];
       if(Volume_leaves[j]==0.0) Starch_max_leaves[j] = 0.0;
       Starch_max_sapwood[j] = sapwoodStarchCapacity(SA[j], H[j],L(j,_),V(j,_),WoodDensity[j], 0.2)/Volume_sapwood[j];
       LeafStructBiomass[j] = leafStructuralBiomass(LAI_expanded[j],N[j],SLA[j]);
-      SapwoodStructBiomass[j] = sapwoodStructuralLivingBiomass(SA[j], H[j], L(j,_),V(j,_), WoodDensity[j], 0.5);
+      SapwoodStructBiomass[j] = sapwoodStructuralLivingBiomass(SA[j], H[j], L(j,_),V(j,_), WoodDensity[j], conduit2sapwood[j]);
       FineRootStructBiomass[j] = fineRootBiomass[j];
         
       double labileMassLeafIni = (sugarLeaf[j]+starchLeaf[j])*(glucoseMolarMass*Volume_leaves[j]);

@@ -198,8 +198,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // sapwoodStructuralLivingBiomass
-double sapwoodStructuralLivingBiomass(double SA, double H, NumericVector L, NumericVector V, double woodDensity, double vessel2sapwood);
-RcppExport SEXP _medfate_sapwoodStructuralLivingBiomass(SEXP SASEXP, SEXP HSEXP, SEXP LSEXP, SEXP VSEXP, SEXP woodDensitySEXP, SEXP vessel2sapwoodSEXP) {
+double sapwoodStructuralLivingBiomass(double SA, double H, NumericVector L, NumericVector V, double woodDensity, double conduit2sapwood);
+RcppExport SEXP _medfate_sapwoodStructuralLivingBiomass(SEXP SASEXP, SEXP HSEXP, SEXP LSEXP, SEXP VSEXP, SEXP woodDensitySEXP, SEXP conduit2sapwoodSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -208,14 +208,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type L(LSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type V(VSEXP);
     Rcpp::traits::input_parameter< double >::type woodDensity(woodDensitySEXP);
-    Rcpp::traits::input_parameter< double >::type vessel2sapwood(vessel2sapwoodSEXP);
-    rcpp_result_gen = Rcpp::wrap(sapwoodStructuralLivingBiomass(SA, H, L, V, woodDensity, vessel2sapwood));
+    Rcpp::traits::input_parameter< double >::type conduit2sapwood(conduit2sapwoodSEXP);
+    rcpp_result_gen = Rcpp::wrap(sapwoodStructuralLivingBiomass(SA, H, L, V, woodDensity, conduit2sapwood));
     return rcpp_result_gen;
 END_RCPP
 }
 // sapwoodStarchCapacity
-double sapwoodStarchCapacity(double SA, double H, NumericVector L, NumericVector V, double woodDensity, double vessel2sapwood);
-RcppExport SEXP _medfate_sapwoodStarchCapacity(SEXP SASEXP, SEXP HSEXP, SEXP LSEXP, SEXP VSEXP, SEXP woodDensitySEXP, SEXP vessel2sapwoodSEXP) {
+double sapwoodStarchCapacity(double SA, double H, NumericVector L, NumericVector V, double woodDensity, double conduit2sapwood);
+RcppExport SEXP _medfate_sapwoodStarchCapacity(SEXP SASEXP, SEXP HSEXP, SEXP LSEXP, SEXP VSEXP, SEXP woodDensitySEXP, SEXP conduit2sapwoodSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -224,8 +224,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type L(LSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type V(VSEXP);
     Rcpp::traits::input_parameter< double >::type woodDensity(woodDensitySEXP);
-    Rcpp::traits::input_parameter< double >::type vessel2sapwood(vessel2sapwoodSEXP);
-    rcpp_result_gen = Rcpp::wrap(sapwoodStarchCapacity(SA, H, L, V, woodDensity, vessel2sapwood));
+    Rcpp::traits::input_parameter< double >::type conduit2sapwood(conduit2sapwoodSEXP);
+    rcpp_result_gen = Rcpp::wrap(sapwoodStarchCapacity(SA, H, L, V, woodDensity, conduit2sapwood));
     return rcpp_result_gen;
 END_RCPP
 }

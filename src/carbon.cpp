@@ -153,9 +153,9 @@ double sapwoodVolume(double SA, double H, NumericVector L, NumericVector V) {
  *  woodDensity - g/cm3
  */
 double sapwoodStorageVolume(double SA, double H, NumericVector L, NumericVector V, 
-                            double woodDensity, double vessel2sapwood) { 
+                            double woodDensity, double conduit2sapwood) { 
   double woodPorosity = (1.0- (woodDensity/1.54));
-  return((1.0 - vessel2sapwood)*sapwoodVolume(SA,H,L,V)*woodPorosity);
+  return((1.0 - conduit2sapwood)*sapwoodVolume(SA,H,L,V)*woodPorosity);
 }
 
 /**
@@ -174,8 +174,8 @@ double sapwoodStructuralBiomass(double SA, double H, NumericVector L, NumericVec
 
 // [[Rcpp::export("carbon_sapwoodStructuralLivingBiomass")]]
 double sapwoodStructuralLivingBiomass(double SA, double H, NumericVector L, NumericVector V, 
-                                      double woodDensity, double vessel2sapwood) {
-  return(sapwoodStructuralBiomass(SA,H,L,V,woodDensity)*(1.0-vessel2sapwood));
+                                      double woodDensity, double conduit2sapwood) {
+  return(sapwoodStructuralBiomass(SA,H,L,V,woodDensity)*(1.0-conduit2sapwood));
 }
 
 /*
@@ -189,8 +189,8 @@ double sapwoodStructuralLivingBiomass(double SA, double H, NumericVector L, Nume
  */
 // [[Rcpp::export("carbon_sapwoodStarchCapacity")]]
 double sapwoodStarchCapacity(double SA, double H, NumericVector L, NumericVector V, 
-                             double woodDensity, double vessel2sapwood) {
-  return(0.5*1000.0*sapwoodStorageVolume(SA,H,L,V,woodDensity,vessel2sapwood)*starchDensity/starchMolarMass);
+                             double woodDensity, double conduit2sapwood) {
+  return(0.5*1000.0*sapwoodStorageVolume(SA,H,L,V,woodDensity,conduit2sapwood)*starchDensity/starchMolarMass);
 }
 
 // NumericVector carbonCompartments(double SA, double LAI, double H, double Z, double N, double SLA, double WoodDensity, double WoodC) {
