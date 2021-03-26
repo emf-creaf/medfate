@@ -559,9 +559,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// shrubCrownPhytovolume
-NumericVector shrubCrownPhytovolume(IntegerVector SP, NumericVector Cover, NumericVector H, NumericVector CR, DataFrame SpParams);
-RcppExport SEXP _medfate_shrubCrownPhytovolume(SEXP SPSEXP, SEXP CoverSEXP, SEXP HSEXP, SEXP CRSEXP, SEXP SpParamsSEXP) {
+// shrubPhytovolume
+NumericVector shrubPhytovolume(IntegerVector SP, NumericVector Cover, NumericVector H, NumericVector CR, DataFrame SpParams);
+RcppExport SEXP _medfate_shrubPhytovolume(SEXP SPSEXP, SEXP CoverSEXP, SEXP HSEXP, SEXP CRSEXP, SEXP SpParamsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -570,7 +570,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type H(HSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type CR(CRSEXP);
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
-    rcpp_result_gen = Rcpp::wrap(shrubCrownPhytovolume(SP, Cover, H, CR, SpParams));
+    rcpp_result_gen = Rcpp::wrap(shrubPhytovolume(SP, Cover, H, CR, SpParams));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4557,7 +4557,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_shrubCover", (DL_FUNC) &_medfate_shrubCover, 2},
     {"_medfate_cohortCover", (DL_FUNC) &_medfate_cohortCover, 1},
     {"_medfate_speciesCover", (DL_FUNC) &_medfate_speciesCover, 2},
-    {"_medfate_shrubCrownPhytovolume", (DL_FUNC) &_medfate_shrubCrownPhytovolume, 5},
+    {"_medfate_shrubPhytovolume", (DL_FUNC) &_medfate_shrubPhytovolume, 5},
     {"_medfate_cohortPhytovolume", (DL_FUNC) &_medfate_cohortPhytovolume, 2},
     {"_medfate_speciesPhytovolume", (DL_FUNC) &_medfate_speciesPhytovolume, 2},
     {"_medfate_standPhytovolume", (DL_FUNC) &_medfate_standPhytovolume, 2},

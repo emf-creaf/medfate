@@ -573,6 +573,7 @@ DataFrame paramsAllometries(DataFrame above, DataFrame SpParams) {
   IntegerVector SP = above["SP"];
   
   NumericVector Aash = cohortNumericParameter(SP, SpParams, "a_ash");
+  NumericVector Bash = cohortNumericParameter(SP, SpParams, "b_ash");
   NumericVector Absh = cohortNumericParameter(SP, SpParams, "a_bsh");
   NumericVector Bbsh = cohortNumericParameter(SP, SpParams, "b_bsh");
   NumericVector Acr = cohortNumericParameter(SP, SpParams, "a_cr");
@@ -584,7 +585,7 @@ DataFrame paramsAllometries(DataFrame above, DataFrame SpParams) {
   NumericVector Acw = cohortNumericParameter(SP, SpParams, "a_cw");
   NumericVector Bcw = cohortNumericParameter(SP, SpParams, "b_cw");
 
-  DataFrame paramsAllometriesdf = DataFrame::create(_["Aash"] = Aash, _["Absh"] = Absh, _["Bbsh"] = Bbsh,
+  DataFrame paramsAllometriesdf = DataFrame::create(_["Aash"] = Aash, _["Bash"] = Bash, _["Absh"] = Absh, _["Bbsh"] = Bbsh,
                                                     _["Acr"] = Acr, _["B1cr"] = B1cr, _["B2cr"] = B2cr, _["B3cr"] = B3cr,
                                                     _["C1cr"] = C1cr, _["C2cr"] = C2cr, 
                                                     _["Acw"] = Acw, _["Bcw"] = Bcw);

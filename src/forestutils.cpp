@@ -323,11 +323,12 @@ NumericVector dbhClassDensity(List x, NumericVector DBHbreaks) {
 //area of an individual (in m2)
 NumericVector shrubIndividualAreaMED(IntegerVector SP, NumericVector Cover, NumericVector H, DataFrame SpParams){
   NumericVector aShrubArea = cohortNumericParameter(SP,SpParams, "a_ash");
+  NumericVector bShrubArea = cohortNumericParameter(SP,SpParams, "b_ash");
   int ncoh = SP.size();
   NumericVector areaind(ncoh);
   for(int i=0;i<ncoh;i++) {
     if((!NumericVector::is_na(Cover[i])) & (!NumericVector::is_na(H[i]))) {
-      areaind[i] = aShrubArea[i]*pow(H[i],2.0)/10000.0; 
+      areaind[i] = aShrubArea[i]*pow(H[i],bShrubArea[i])/10000.0; 
     }
   }
   return(areaind);
@@ -600,7 +601,6 @@ NumericVector treeFoliarBiomassUS(IntegerVector SP, NumericVector N, NumericVect
 
 NumericVector shrubFoliarBiomassMED(IntegerVector SP, NumericVector Cover, NumericVector H, NumericVector CR, 
                                     DataFrame SpParams, double gdd = NA_REAL){
-  NumericVector aShrubArea = cohortNumericParameter(SP, SpParams, "a_ash");
   NumericVector aShrubFuel = cohortNumericParameter(SP, SpParams, "a_bsh");
   NumericVector bShrubFuel = cohortNumericParameter(SP, SpParams, "b_bsh");
   NumericVector Sgdd = cohortNumericParameter(SP, SpParams, "Sgdd");
@@ -734,17 +734,16 @@ NumericVector speciesCover(List x, DataFrame SpParams) {
 /**
  *  Shrub phytovolume (in m3/m2)
  */
-// [[Rcpp::export(".shrubCrownPhytovolume")]]
-NumericVector shrubCrownPhytovolume(IntegerVector SP, NumericVector Cover, NumericVector H, NumericVector CR, DataFrame SpParams){
-  NumericVector aShrubArea = cohortNumericParameter(SP, SpParams, "a_ash");
+// [[Rcpp::export(".shrubPhytovolume")]]
+NumericVector shrubPhytovolume(IntegerVector SP, NumericVector Cover, NumericVector H, NumericVector CR, DataFrame SpParams){
   int ncoh = Cover.size();
   NumericVector vol(ncoh);
+  NumericVector areaind = shrubIndividualAreaMED(SP,Cover,H,SpParams); //area of an individual (in m2)
   for(int i=0;i<ncoh;i++) {
     if((!NumericVector::is_na(Cover[i]))& (!NumericVector::is_na(H[i]))) {
-      double areaind = aShrubArea[i]*pow(H[i],2.0)/10000.0; //area of an individual (in m2)
-      double volind = areaind*((H[i]-(H[i]*(1.0-CR[i])))/100.0); //Crown phytovolume of an individual (in m3)
+      double volind = areaind[i]*(H[i]/100.0); //Phytovolume of an individual (in m3)
       // Rcout <<areaind<<" "<< volind<<"\n";
-      vol[i] = volind * (Cover[i]/(100*areaind));
+      vol[i] = volind * (Cover[i]/(100.0*areaind[i]));
     } else {
       vol[i] = NA_REAL;
     }
@@ -757,7 +756,7 @@ NumericVector cohortPhytovolume(List x, DataFrame SpParams) {
   DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
   IntegerVector SP = shrubData["Species"];
   NumericVector CR = shrubCrownRatio(SP, SpParams);
-  NumericVector shvol = shrubCrownPhytovolume(SP, shrubData["Cover"], shrubData["Height"], CR, SpParams);
+  NumericVector shvol = shrubPhytovolume(SP, shrubData["Cover"], shrubData["Height"], CR, SpParams);
   NumericVector vol(treeData.nrows()+shrubData.nrows(), NA_REAL);
   for(int i=0;i<shvol.size();i++) {
     vol[i+treeData.nrows()] = shvol[i];
@@ -829,25 +828,24 @@ NumericVector treeFuelUS(IntegerVector SP, NumericVector N, NumericVector Foliag
 }
 
 NumericVector shrubFuelMED(IntegerVector SP, NumericVector Cover, NumericVector H, NumericVector CR, DataFrame SpParams, double gdd = NA_REAL, bool includeDead = true){
-  NumericVector aShrubArea = cohortNumericParameter(SP, SpParams, "a_ash");
   NumericVector aShrubFuel = cohortNumericParameter(SP, SpParams, "a_bsh");
   NumericVector bShrubFuel = cohortNumericParameter(SP, SpParams, "b_bsh");
   NumericVector pDead = cohortNumericParameter(SP, SpParams, "pDead");
   NumericVector fTreeFuel = cohortNumericParameter(SP, SpParams, "r635");
 
   int ncoh = SP.size();
-  double areaind = NA_REAL, volind = NA_REAL, weightkgind = NA_REAL;
+  double volind = NA_REAL, weightkgind = NA_REAL;
   //W in kg/m2. Fine fuel, does not include phenology 
   NumericVector W(ncoh);
+  NumericVector areaind = shrubIndividualAreaMED(SP,Cover,H,SpParams); //area of an individual (in m2)
   for(int i=0;i<ncoh;i++) {
     if((!NumericVector::is_na(Cover[i])) & (!NumericVector::is_na(H[i]))) {
-      areaind = aShrubArea[i]*pow(H[i],2.0)/10000.0; //area of an individual (in m2)
-      volind = areaind*((H[i]-(H[i]*(1.0-CR[i])))/100.0); //Crown phytovolume of an individual (in m3)
+      volind = areaind[i]*(H[i]/100.0); //Phytovolume of an individual (in m3)
       weightkgind = aShrubFuel[i]*pow(volind,bShrubFuel[i]); //Dry weight (in kg) of an individual
       if(!includeDead) weightkgind = weightkgind - (weightkgind*pDead[i]); //Remove dead fuels if asked
-      if(areaind>0.0) {
+      if(areaind[i]>0.0) {
         // multiply by 'number of individuals' per m2 
-        W[i] = weightkgind*(Cover[i]/(100*areaind)); 
+        W[i] = weightkgind*(Cover[i]/(100.0*areaind[i])); 
       }
     }
     else W[i] = NA_REAL;

@@ -33,9 +33,9 @@ data("SpParamsUS")
     \item{\code{Z50}: Rooting depth (in mm) corresponding to 50\% of fine roots.}
     \item{\code{Z95}: Rooting depth (in mm) corresponding to 95\% of fine roots.}
   }
-  \bold{Shrub allometric coefficients} (calibrated for Catalonia):
+  \bold{Shrub allometric coefficients} (calibrated for Catalonia; see De \enc{Cáceres}{Caceres} et al. 2019):
   \itemize{
-    \item{\code{a_ash}: Regression coefficient relating the square of shrub height with shrub area.}
+    \item{\code{a_ash}, \code{b_ash}: Allometric coefficients relating shrub height with the projected area of shrub individuals.}
     \item{\code{a_bsh}, \code{b_bsh}: Allometric coefficients relating phytovolume with dry weight of shrub individuals.}
     \item{\code{cr}: Ratio between shrub crown length and total height.}
   }
@@ -133,6 +133,9 @@ See details of parameterization in De Caceres et al. (2015) and De Caceres et al
 De \enc{Cáceres}{Caceres} M, \enc{Martínez}{Martinez}-Vilalta J, Coll L, Llorens P, Casals P, Poyatos R, Pausas JG, Brotons L. (2015) Coupling a water balance model with forest inventory data to predict drought stress: the role of forest structural changes vs. climate changes. Agricultural and Forest Meteorology (doi:10.1016/j.agrformet.2015.06.012).
 
 De \enc{Cáceres}{Caceres} M, Mencuccini M, Martin-StPaul N, Limousin JM, Coll L, Poyatos R, Cabon A, Granda V, Forner A, Valladares F, \enc{Martínez}{Martinez}-Vilalta J (2021) Unravelling the effect of species mixing on water use and drought stress in holm oak forests: a modelling approach. Agricultural and Forest Meteorology 296 (doi:10.1016/j.agrformet.2020.108233).
+
+De \enc{Cáceres}{Caceres} M, Casals P, Gabriel E, Castro X (2019) Scaling-up individual-level allometric equations to predict stand-level fuel loading in Mediterranean shrublands. Ann For Sci 76:87 (doi:10.1007/s13595-019-0873-4).
+
 
 DGCN (2005). Tercer Inventario Forestal Nacional (1997-2007): Catalunya. Dirección General de Conservación de la Naturaleza, Ministerio de Medio Ambiente, Madrid.
 

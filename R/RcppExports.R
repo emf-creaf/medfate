@@ -169,8 +169,8 @@ species_cover <- function(x, SpParams) {
     .Call(`_medfate_speciesCover`, x, SpParams)
 }
 
-.shrubCrownPhytovolume <- function(SP, Cover, H, CR, SpParams) {
-    .Call(`_medfate_shrubCrownPhytovolume`, SP, Cover, H, CR, SpParams)
+.shrubPhytovolume <- function(SP, Cover, H, CR, SpParams) {
+    .Call(`_medfate_shrubPhytovolume`, SP, Cover, H, CR, SpParams)
 }
 
 plant_phytovolume <- function(x, SpParams) {
