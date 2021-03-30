@@ -96,7 +96,7 @@
   else if(type=="FineRootArea")  ylab = expression(paste("Fine root area  ",(m^2)))
   else if(type=="SapwoodBiomass")  ylab = expression(paste("Sapwood biomass  ", (gdry%.%ind^{-1})))
   else if(type=="LeafBiomass")  ylab = expression(paste("Leaf biomass  ", (gdry%.%ind^{-1})))
-  else if(type=="FineRootArea")  ylab = expression(paste("Fine root biomass  ", (gdry%.%ind^{-1})))
+  else if(type=="FineRootBiomass")  ylab = expression(paste("Fine root biomass  ", (gdry%.%ind^{-1})))
   else if(type=="LabileBiomass")  ylab = expression(paste("Labile C biomass  ", (gdry%.%ind^{-1})))
   else if(type=="TotalLivingBiomass")  ylab = expression(paste("Total living biomass  ", (gdry%.%ind^{-1})))
   else if(type=="HuberValue")  ylab = expression(paste("Huber value  ",(cm^2 %.% m^{-2})))

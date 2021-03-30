@@ -179,7 +179,6 @@ void updateLeaves(List x, double wind, bool fromGrowthModel) {
       if(leafSenescence[j]) {
         double LAI_exp_prev= LAI_expanded[j]; //Store previous value
         LAI_expanded[j] = 0.0; //Update expanded leaf area (will decrease if LAI_live decreases)
-        if(fromGrowthModel) LAI_live[j] = LAI_expanded[j];
         LAI_dead[j] += LAI_exp_prev;//Check increase dead leaf area if expanded leaf area has decreased
         leafSenescence[j] = false;
         budFormation[j] = false;
@@ -188,7 +187,6 @@ void updateLeaves(List x, double wind, bool fromGrowthModel) {
       else if(leafDormancy[j]) {
         if(phenoType[j] == "winter-semideciduous") LAI_dead[j] += LAI_expanded[j];
         LAI_expanded[j] = 0.0;
-        if(fromGrowthModel) LAI_live[j] = LAI_expanded[j];
       }
       else if(!fromGrowthModel && leafUnfolding[j]) {
         LAI_expanded[j] = LAI_live[j]*phi[j]; //Update expanded leaf area (will decrease if LAI_live decreases)

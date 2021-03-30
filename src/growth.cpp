@@ -290,14 +290,14 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
       double B_resp_sapwood = SapwoodLivingStructBiomass[j] + sapwoodSugarMass;
       double B_resp_fineroots = FineRootStructBiomass[j];
       double QR = qResp(tday);
-      if(LAlive>0.0) leafRespDay = B_resp_leaves*RERleaf[j]*QR;
+      if(LAexpanded>0.0) leafRespDay = B_resp_leaves*RERleaf[j]*QR;
       double sapwoodResp = B_resp_sapwood*RERsapwood[j]*QR;
       double finerootResp = B_resp_fineroots*RERfineroot[j]*QR;
       MaintenanceRespiration[j] += (leafRespDay+sapwoodResp+finerootResp)/TotalLivingBiomass[j]; 
       
       //PHOTOSYNTHESIS
       double leafAgG = 0.0;
-      if(LAlive>0.0) {
+      if(LAexpanded>0.0) {
         //gross fotosynthesis
         double leafAgC = Ag[j]/(N[j]/10000.0); //Translate g C · m-2 · h-1 to g C · h-1
         leafAgG = leafAgC*(glucoseMolarMass/(carbonMolarMass*6.0)); // from g C· h-1 to g gluc · h-1
@@ -316,7 +316,7 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
       double rleafcell = relative_expansion_rate(PlantPsi[j] ,tday, LeafPI0[j],0.5,0.05,5.0);
       
       if(leafUnfolding[j]) {
-        double deltaLApheno = std::max(leafAreaTarget[j] - LAlive, 0.0);
+        double deltaLApheno = std::max(leafAreaTarget[j] - LAexpanded, 0.0);
         double deltaLAsink = std::min(deltaLApheno, SA[j]*RGRleafmax[j]*(rleafcell/rleafcellmax));
         double deltaLAavailable = 0.0;
         deltaLAavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarGrowthLeaves)*(glucoseMolarMass*Volume_sapwood[j]))/costPerLA);
@@ -324,8 +324,8 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
         growthCostLA = deltaLAgrowth*costPerLA;
       }
       double growthCostFR = (growthCostLA/2.0)*(fineroot_CC/leaf_CC); //Assumes increment biomass of fine roots is half leaf biomass increment  
-        
-      if(LAlive > 0.0) {
+      
+      if(LAexpanded>0.0) {
         NumericVector SAring = ring["SA"];
         double deltaSAring = 0.0;
         if(SAring.size()==1) deltaSAring = SAring[0];
@@ -336,10 +336,10 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
         deltaSAgrowth = std::min(deltaSAsink, deltaSAavailable);
         // Rcout<< SAring.size()<<" " <<j<< " "<< PlantPsi[j]<< " "<< LeafPI0[j]<<" dSAring "<<deltaSAring<< " dSAsink "<< deltaSAsink<<" dSAgrowth "<< deltaSAgrowth<<"\n";
         growthCostSA = deltaSAgrowth*costPerSA; //increase cost (may be non zero if leaf growth was charged onto sapwood)
-      }      
+      }
       
       GrowthCosts[j] +=(growthCostLA + growthCostSA + growthCostFR)/TotalLivingBiomass[j]; //growth cost in g gluc · gdry-1
-
+      
       
       //PARTIAL CARBON BALANCE
       double leafSugarMassDelta = leafAgG - leafRespDay;
@@ -348,10 +348,10 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
       
       sugarSapwood[j] += sapwoodSugarMassDelta/(Volume_sapwood[j]*glucoseMolarMass);
       starchSapwood[j] += sapwoodStarchMassDelta/(Volume_sapwood[j]*glucoseMolarMass);
-      if(LAlive>0.0) sugarLeaf[j] += leafSugarMassDelta/(Volume_leaves[j]*glucoseMolarMass);
+      if(LAexpanded>0.0) sugarLeaf[j] += leafSugarMassDelta/(Volume_leaves[j]*glucoseMolarMass);
 
       //PHLOEM TRANSPORT AND SUGAR-STARCH DYNAMICS     
-      if(LAlive>0.0) {
+      if(LAexpanded>0.0) {
         double ff = (sugarLeaf[j]-sugarSapwood[j])/2.0; 
         sugarLeaf[j] -=ff;
         PlantSugarTransport[j] = (ff*Volume_leaves[j])/(3600.0*24.0); //mol · s-1
@@ -371,9 +371,7 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
         // Rcout<< j <<" Excess respiration: " << respirationExcess << " Prop:"<< propExcess<< " LAlive " << LAlive << " LAlivenew "<< LAlive*(1.0 - propExcess) <<"\n";
         LAdead = LAdead + LAexpanded*propExcess;
         LAexpanded = LAexpanded*(1.0 - propExcess);
-        LAlive = LAlive*(1.0 - propExcess);
         LAI_expanded[j] = LAI_expanded[j]*(1.0 - propExcess);
-        LAI_live[j] = LAI_live[j]*(1.0 - propExcess);
         sugarLeaf[j] = 0.0;
         MaintenanceRespiration[j] -= (respirationExcess/TotalLivingBiomass[j]); //Remove respiration excess from carbon balance 
         Volume_leaves[j] = leafStorageVolume(LAI_expanded[j],  N[j], SLA[j], LeafDensity[j]);
@@ -389,9 +387,9 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
         propLeafSenescence = (1.0/(365.25*leafDuration[j]));
       }
       //Leaf senescence due to drought 
-      double LAplc = std::min(LAlive, (1.0 - StemPLC[j])*leafAreaTarget[j]);
-      if(LAplc<LAlive) {
-        propLeafSenescence = std::max((LAlive-LAplc)/LAlive, propLeafSenescence); 
+      double LAplc = std::min(LAexpanded, (1.0 - StemPLC[j])*leafAreaTarget[j]);
+      if(LAplc<LAexpanded) {
+        propLeafSenescence = std::max((LAexpanded-LAplc)/LAexpanded, propLeafSenescence); 
       }
       double deltaLAsenescence = LAexpanded*propLeafSenescence;
       //Define sapwood senescense
@@ -425,15 +423,14 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
   
   
       //UPDATE LEAF AREA, SAPWOOD AREA AND CONCENTRATION IN LABILE POOLS
-      double LAprev = LAlive;
-      LAlive += deltaLAgrowth - deltaLAsenescence;
-      LAexpanded +=deltaLAgrowth - deltaLAsenescence;
+      double LAprev = LAexpanded;
+      LAexpanded += deltaLAgrowth - deltaLAsenescence;
       LAdead += deltaLAsenescence;
       double SAprev = SA[j];
       SA[j] = SA[j] + deltaSAgrowth - deltaSAturnover; 
       //Recalculate storage concentrations
       double newVolumeSapwood = Volume_sapwood[j]*(SA[j]/SAprev);
-      double newVolumeLeaves = Volume_leaves[j]*(LAlive/LAprev);
+      double newVolumeLeaves = Volume_leaves[j]*(LAexpanded/LAprev);
       if(newVolumeLeaves > 0.0) {
         sugarLeaf[j] = sugarLeaf[j]*(Volume_leaves[j]/newVolumeLeaves);
         starchLeaf[j] = starchLeaf[j]*(Volume_leaves[j]/newVolumeLeaves); 
@@ -446,14 +443,12 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
       
       //MORTALITY Death by carbon starvation or dessication
       if((sugarSapwood[j]<0.0) & allowStarvation) {
-        LAdead = LAlive;
-        LAlive = 0.0;
+        LAdead = LAexpanded;
         LAexpanded = 0.0;
         Status(j) = "starvation";
         Rcout<<" [Cohort "<< j<<" died from " << Status(j)<<"] ";
       } else if((StemPLC[j] > 0.5) & allowDessication) {
-        LAdead = LAlive;
-        LAlive = 0.0;
+        LAdead = LAexpanded;
         LAexpanded = 0.0;
         Status(j) = "dessication";
         Rcout<<" [Cohort "<< j<<" died from " << Status(j)<<"] ";
@@ -462,7 +457,6 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
 
       //UPDATE DERIVED QUANTITIES      
       //Update LAI
-      LAI_live[j] = LAlive*N[j]/10000.0;
       LAI_expanded[j] = LAexpanded*N[j]/10000.0;
       LAI_dead[j] = LAdead*N[j]/10000.0;
       //Update Huber value
@@ -476,6 +470,7 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
       //Set target leaf area if bud formation is allowed
       if(budFormation[j]) {
         leafAreaTarget[j] = (SA[j]/10000.0)*allocationTarget[j];
+        LAI_live[j] = leafAreaTarget[j]*N[j]/10000.0;
       }
 
 
@@ -503,7 +498,6 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
   //Update pool proportions??
   if(plantWaterPools) {
     NumericVector poolProportions = Rcpp::as<Rcpp::NumericVector>(belowdf["poolProportions"]);
-    // for(int j=0;j<numCohorts;j++) poolProportions[j] = LAI_live[j]/sum(LAI_live);
   }
   
   //Needed with string vectors
@@ -811,13 +805,13 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
       Starch_max_sapwood[j] = sapwoodStarchCapacity(SA[j], H[j],L(j,_),V(j,_),WoodDensity[j], 0.2)/Volume_sapwood[j];
       LeafStructBiomass[j] = leafStructuralBiomass(LAI_expanded[j],N[j],SLA[j]);
       SapwoodLivingStructBiomass[j] = sapwoodStructuralLivingBiomass(SA[j], H[j], L(j,_),V(j,_), WoodDensity[j], conduit2sapwood[j]);
-      FineRootStructBiomass[j] = fineRootBiomass[j];
+      FineRootStructBiomass[j] = (LAexpanded/LAlive)*fineRootBiomass[j]; //Not all fine roots are active
         
       double labileMassLeafIni = (sugarLeaf[j]+starchLeaf[j])*(glucoseMolarMass*Volume_leaves[j]);
       double labileMassSapwoodIni = (sugarSapwood[j]+starchSapwood[j])*(glucoseMolarMass*Volume_sapwood[j]);
       
       LabileBiomass[j] = labileMassSapwoodIni+labileMassLeafIni;
-      TotalLivingBiomass[j] = LeafStructBiomass[j] + SapwoodLivingStructBiomass[j] + fineRootBiomass[j]+ LabileBiomass[j];
+      TotalLivingBiomass[j] = LeafStructBiomass[j] + SapwoodLivingStructBiomass[j] + FineRootStructBiomass[j]+ LabileBiomass[j];
       
       // Rcout << j << " Lvol: "<< Volume_leaves[j] << " Svol: "<<Volume_sapwood[j]<< " LStarchMax: "<<Starch_max_leaves[j]
       //       << " SStarchMax: "<<Starch_max_sapwood[j]<< " Bleaf "<< LeafStructBiomass[j]<< " Bsap "<< SapwoodLivingStructBiomass[j]<< " Bfr "<< FineRootStructBiomass[j]<<"\n";
@@ -854,10 +848,10 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
         //MAINTENANCE RESPIRATION
         double B_resp_leaves = LeafStructBiomass[j] + leafSugarMassStep;
         double B_resp_sapwood = SapwoodLivingStructBiomass[j] + sapwoodSugarMassStep;
-        double B_resp_fineroots = fineRootBiomass[j];
+        double B_resp_fineroots = FineRootStructBiomass[j];
         double QR = qResp(Tcan[s]);
         double leafRespStep = 0.0;
-        if(LAlive>0.0) leafRespStep = B_resp_leaves*RERleaf[j]*QR/((double) numSteps);
+        if(LAexpanded>0.0) leafRespStep = B_resp_leaves*RERleaf[j]*QR/((double) numSteps);
         double sapwoodRespStep = B_resp_sapwood*RERsapwood[j]*QR/((double) numSteps);
         double finerootRespStep = B_resp_fineroots*RERfineroot[j]*QR/((double) numSteps);
         leafRespDay +=leafRespStep;
@@ -866,7 +860,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
         
         //PHOTOSYNTHESIS
         double leafAgStepG = 0.0;
-        if(LAlive>0.0) {
+        if(LAexpanded>0.0) {
           double leafAgStepC = AgStep(j,s)/(N[j]/10000.0); //Translate g C · m-2 · h-1 to g C · h-1
           leafAgStepG = leafAgStepC*(glucoseMolarMass/(carbonMolarMass*6.0)); // from g C· h-1 to g gluc · h-1
           GrossPhotosynthesisInst(j,s) = leafAgStepG/TotalLivingBiomass[j]; //Ag in g gluc · gdry-1
@@ -879,7 +873,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
         double growthCostFRBStep = 0.0;        
         //Leaf growth
         if(leafUnfolding[j]) {
-          double deltaLApheno = std::max(leafAreaTarget[j] - LAlive, 0.0);
+          double deltaLApheno = std::max(leafAreaTarget[j] - LAexpanded, 0.0);
           double deltaLAsink = std::min(deltaLApheno, (1.0/((double) numSteps))*SA[j]*RGRleafmax[j]*(rleafcell/rleafcellmax));
           //Grow at expense of stem sugar
           double deltaLAavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarGrowthLeaves)*(glucoseMolarMass*Volume_sapwood[j]))/costPerLA);
@@ -899,7 +893,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
           }
         }
         //sapwood area growth
-        if(LAlive > 0.0) {
+        if(LAexpanded>0.0) {
           List ring = ringList[j];
           NumericVector SAring = ring["SA"];
           double deltaSAring = 0.0;
@@ -911,11 +905,10 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
           double deltaSAgrowthStep = std::min(deltaSAsink, deltaSAavailable);
           growthCostSAStep += deltaSAgrowthStep*costPerSA; //increase cost (may be non zero if leaf growth was charged onto sapwood)
           deltaSAgrowth  +=deltaSAgrowthStep;
-          // Rcout<< SAring.size()<<" " <<j<< " "<< psiSympStem[j]<< " "<< StemPI0[j]<<" dSAring "<<deltaSAring<< " dSAsink "<< deltaSAsink<<" dSAgrowth "<< deltaSAgrowthStep<<"\n";
-        }      
+        }
         GrowthCostsInst(j,s) += (growthCostLAStep + growthCostSAStep + growthCostFRBStep)/TotalLivingBiomass[j];
         GrowthCosts[j] +=GrowthCostsInst(j,s); //growth cost in g gluc · gdry-1
-
+        
         
 
         //PHLOEM TRANSPORT AND SUGAR-STARCH DYNAMICS (INCLUDING EXUDATION and PARTIAL MASS BALANCE)
@@ -939,7 +932,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
           }
           starchSapwood[j] += starchSapwoodIncrease;
           
-          if(LAlive>0.0) {
+          if(LAexpanded>0.0) {
             sugarLeaf[j] += leafSugarMassDeltaStep/ctl;
             double ft = phloemFlow(LeafSympPsiInst(j,s), StemSympPsiInst(j,s), sugarLeaf[j]/LeafSympRWCInst(j,s), sugarSapwood[j]/StemSympRWCInst(j,s), Tcan[s], k_phloem, nonSugarConcentration)*LAlive; //flow as mol glucose per s
             // sugar-starch dynamics
@@ -962,15 +955,13 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
         }
 
         //LEAF SENESCENCE DUE TO NEGATIVE CARBON BALANCE
-        if((LAlive>0.0) & (sugarLeaf[j] < 0.0)) { 
+        if((LAexpanded>0.0) & (sugarLeaf[j] < 0.0)) { 
           double respirationExcess = -sugarLeaf[j]*(Volume_leaves[j]*glucoseMolarMass); //g gluc
           double propExcess = respirationExcess/leafRespStep; //step excess
           // Rcout<< j <<" Excess respiration: " << respirationExcess << " Prop:"<< propExcess<< " LAlive " << LAlive << " LAlivenew "<< LAlive*(1.0 - propExcess) <<"\n";
           LAdead = LAdead + LAexpanded*propExcess;
           LAexpanded = LAexpanded*(1.0 - propExcess);
-          LAlive = LAlive*(1.0 - propExcess);
           LAI_expanded[j] = LAI_expanded[j]*(1.0 - propExcess);
-          LAI_live[j] = LAI_live[j]*(1.0 - propExcess);
           sugarLeaf[j] = 0.0;
           MaintenanceRespirationInst(j,s) -= (respirationExcess/TotalLivingBiomass[j]); //Remove respiration excess from carbon balance 
           MaintenanceRespiration[j] -= (respirationExcess/TotalLivingBiomass[j]); //Remove respiration excess from carbon balance 
@@ -1007,12 +998,12 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
         propLeafSenescence = (1.0/(365.25*leafDuration[j]));
       }
       //Leaf senescence due to drought 
-      double LAplc = std::min(LAlive, (1.0 - StemPLC[j])*leafAreaTarget[j]);
-      if(LAplc<LAlive) {
-        propLeafSenescence = std::max((LAlive-LAplc)/LAlive, propLeafSenescence); 
+      double LAplc = std::min(LAexpanded, (1.0 - StemPLC[j])*leafAreaTarget[j]);
+      if(LAplc<LAexpanded) {
+        propLeafSenescence = std::max((LAexpanded-LAplc)/LAexpanded, propLeafSenescence); 
       }
       //Complete defoliation if RWCsymp < 0.5
-      if(LAlive > 0.0 && LeafSympRWC[j]<0.5){
+      if(LAexpanded > 0.0 && LeafSympRWC[j]<0.5){
         if(allowDefoliation) {
           propLeafSenescence = 1.0;
           Rcout<<" [Cohort "<< j<<" defoliated ] ";
@@ -1048,15 +1039,14 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
       }
 
       //UPDATE LEAF AREA, SAPWOOD AREA AND CONCENTRATION IN LABILE POOLS
-      double LAprev = LAlive;
-      LAlive += deltaLAgrowth - deltaLAsenescence;
+      double LAprev = LAexpanded;
       LAexpanded +=deltaLAgrowth - deltaLAsenescence;
       LAdead += deltaLAsenescence;
       double SAprev = SA[j];
       SA[j] = SA[j] + deltaSAgrowth - deltaSAturnover; 
       //Recalculate storage concentrations
       double newVolumeSapwood = Volume_sapwood[j]*(SA[j]/SAprev);
-      double newVolumeLeaves = Volume_leaves[j]*(LAlive/LAprev);
+      double newVolumeLeaves = Volume_leaves[j]*(LAexpanded/LAprev);
       if(newVolumeLeaves>0.0) {
         sugarLeaf[j] = sugarLeaf[j]*(Volume_leaves[j]/newVolumeLeaves);
         starchLeaf[j] = starchLeaf[j]*(Volume_leaves[j]/newVolumeLeaves); 
@@ -1069,14 +1059,12 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
       
       //MORTALITY Death by carbon starvation or dessication
       if((sugarSapwood[j]<0.0) & allowStarvation) {
-        LAdead = LAlive;
-        LAlive = 0.0;
+        LAdead = LAexpanded;
         LAexpanded = 0.0;
         Status(j) = "starvation";
         Rcout<<" [Cohort "<< j<<" died from " << Status(j)<<"] ";
       } else if((StemSympRWC[j] <0.5) & allowDessication) {
-        LAdead = LAlive;
-        LAlive = 0.0;
+        LAdead = LAexpanded;
         LAexpanded = 0.0;
         Status(j) = "dessication";
         Rcout<<" [Cohort "<< j<<" died from " << Status(j)<<"] ";
@@ -1085,7 +1073,6 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
       
       //UPDATE DERIVED QUANTITIES   
       //Update LAI
-      LAI_live[j] = LAlive*N[j]/10000.0;
       LAI_expanded[j] = LAexpanded*N[j]/10000.0;
       LAI_dead[j] = LAdead*N[j]/10000.0;
       if(LAlive>0.0) {
@@ -1137,6 +1124,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
         } else if(allocationStrategy =="Al2As") {
           leafAreaTarget[j] = (SA[j]/10000.0)*allocationTarget[j];
         }
+        LAI_live[j] =  leafAreaTarget[j]*N[j]/10000.0;
       }
       //Update fine root biomass target     
       if(LAI_live[j]>0) {

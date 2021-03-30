@@ -5,6 +5,7 @@
 # Version 2.1.1
 - Respiration rate for leaves made optionally species-specific.
 - Update shrub allometries from De Caceres et al. (2019).
+- LAI_live and LAI_expanded in growth.
 
 # Version 2.1.0
 - Parameters of Granier's equation made species-specific if available
