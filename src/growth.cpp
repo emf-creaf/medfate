@@ -580,6 +580,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
   String transpirationMode = control["transpirationMode"];
   bool allowDessication = control["allowDessication"];
   bool allowStarvation = control["allowStarvation"];
+  bool allowDefoliation = control["allowDefoliation"];
   String allocationStrategy = control["allocationStrategy"];
   String cavitationRefill = control["cavitationRefill"];
   bool plantWaterPools = control["plantWaterPools"];
@@ -1012,8 +1013,10 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
       }
       //Complete defoliation if RWCsymp < 0.5
       if(LAlive > 0.0 && LeafSympRWC[j]<0.5){
-        propLeafSenescence = 1.0;
-        Rcout<<" [Cohort "<< j<<" defoliated ] ";
+        if(allowDefoliation) {
+          propLeafSenescence = 1.0;
+          Rcout<<" [Cohort "<< j<<" defoliated ] ";
+        }
       }
       double deltaLAsenescence = LAexpanded*propLeafSenescence;
       //SA senescence
@@ -1559,6 +1562,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   //Allometric parameters
   DataFrame paramsAllometries = Rcpp::as<Rcpp::DataFrame>(x["paramsAllometries"]);
   NumericVector Aash  = paramsAllometries["Aash"];
+  NumericVector Bash  = paramsAllometries["Bash"];
   NumericVector Absh  = paramsAllometries["Absh"];
   NumericVector Bbsh  = paramsAllometries["Bbsh"];
   NumericVector Acw  = paramsAllometries["Acw"];
@@ -1839,7 +1843,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
         if(NumericVector::is_na(DBH[j]) && Status[j]=="alive") {
           double Wleaves = leafAreaTarget[j]/SLA[j];  //Calculates the biomass (kg dry weight) of leaves
           double PV = pow(Wleaves*r635[j]/Absh[j], 1.0/Bbsh[j]); //Calculates crown phytovolume (in m3)
-          H[j] = pow(1e6*PV/(Aash[j]*CR[j]), 1.0/3.0); //Updates shrub height
+          H[j] = pow(1e6*PV/Aash[j], 1.0/Bash[j]); //Updates shrub height
           if(H[j]> Hmax[j]) { //Limit height (and update the former variables)
             H[j] = Hmax[j];
             // PV = (Aash[j]*pow(H[j],2.0)/10000.0)*(H[j]/100.0)*CR[j];
@@ -1848,7 +1852,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
             // LAI_live[j] = Wleaves*((N[j]/10000)*SLA[j]); //Update LAI_live to the maximum
             // LAI_dead[j] += prevLive - LAI_live[j]; //Increment dead LAI with the difference
           }
-          Cover[j] = (N[j]*Aash[j]*pow(H[j],2.0)/1e6); //Updates shrub cover
+          Cover[j] = (N[j]*Aash[j]*pow(H[j],Bash[j])/1e6); //Updates shrub cover
         }
       }
       
