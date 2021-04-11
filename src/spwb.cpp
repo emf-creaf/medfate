@@ -1130,13 +1130,8 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
       if(cavitationRefill=="annual") {
         if(DOY[i]==1) {
           DataFrame internalWater = Rcpp::as<Rcpp::DataFrame>(x["internalWater"]);
-          if(transpirationMode=="Granier") {
-            NumericVector PLC = Rcpp::as<Rcpp::NumericVector>(internalWater["PLC"]);
-            for(int j=0;j<PLC.length();j++) PLC[j] = 0.0;
-          } else {
-            NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
-            for(int j=0;j<StemPLC.length();j++) StemPLC[j] = 0.0;
-          }
+          NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(internalWater["StemPLC"]);
+          for(int j=0;j<StemPLC.length();j++) StemPLC[j] = 0.0;
         }
       }
 
