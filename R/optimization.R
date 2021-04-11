@@ -137,17 +137,11 @@ optimization_evaluation_cohorts_function<-function(parNames, cohorts, x,
     }
     return(mean(y, na.rm=TRUE))
   }
-  if(length(cohorts)>1) {
-    return(optimization_cohorts_function(parNames = parNames, cohorts = cohorts, 
-                                         x = x,
-                                         meteo = meteo, latitude = latitude,
-                                         otherParNames = otherParNames,
-                                         elevation = elevation, slope = slope, aspect = aspect,
-                                         summary_function = sf))
-  }
-  return(optimization_function(parNames = parNames, x = x,
-                               meteo = meteo, latitude = latitude,
-                               elevation = elevation, slope = slope, aspect = aspect,
-                               summary_function = sf))
+  return(optimization_cohorts_function(parNames = parNames, cohorts = cohorts, 
+                                       x = x,
+                                       meteo = meteo, latitude = latitude,
+                                       otherParNames = otherParNames,
+                                       elevation = elevation, slope = slope, aspect = aspect,
+                                       summary_function = sf))
 }
 
