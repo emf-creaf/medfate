@@ -68,9 +68,27 @@ optimization_function<-function(parNames, x,
   return(yf)
 }
 
+optimization_evaluation_function<-function(parNames, x, 
+                                           meteo, latitude,
+                                           elevation = NA, slope = NA, aspect = NA, 
+                                           measuredData, type = "SWC",  
+                                           temporalResolution = "day", SpParams = NULL, 
+                                           metric = "loglikelihood") {
+  sf<-function(S) {
+    y = evaluation_metric(S, measuredData = measuredData, type=type, 
+                          cohort=NULL, SpParams = SpParams, 
+                          temporalResolution = temporalResolution, metric = metric)
+    return(y)
+  }
+  return(optimization_function(parNames = parNames, x = x,
+                               meteo = meteo, latitude = latitude,
+                               elevation = elevation, slope = slope, aspect = aspect,
+                               summary_function = sf))
+}
 
 optimization_cohorts_function<-function(parNames, cohorts, x, 
-                                        meteo, latitude,
+                                        meteo, latitude, 
+                                        otherParNames = NULL,
                                         elevation = NA, slope = NA, aspect = NA, 
                                         summary_function, args= NULL) {
   
@@ -84,7 +102,7 @@ optimization_cohorts_function<-function(parNames, cohorts, x,
     if(is.vector(v)) {
       for(j in 1:length(cohorts)) {
         customParams = v
-        names(customParams) <- paste0(cohorts[j],"/",parNames)
+        names(customParams) <- c(paste0(cohorts[j],"/",parNames), otherParNames)
         x_i = modifyInputParams(x_i, customParams, FALSE)
       }
       S = do.call(model, list(x = x_i, 
@@ -101,37 +119,31 @@ optimization_cohorts_function<-function(parNames, cohorts, x,
   return(yf)
 }
 
-optimization_evaluation_function<-function(parNames, x, 
-                                           meteo, latitude,
-                                           elevation = NA, slope = NA, aspect = NA, 
-                                           measuredData, type = "SWC", cohorts = NULL, 
-                                           temporalResolution = "day", SpParams = NULL, 
-                                           metric = "loglikelihood") {
+optimization_evaluation_cohorts_function<-function(parNames, cohorts, x, 
+                                                   meteo, latitude,
+                                                   otherParNames = NULL,
+                                                   elevation = NA, slope = NA, aspect = NA, 
+                                                   measuredData, type = "SWC", 
+                                                   temporalResolution = "day", SpParams = NULL, 
+                                                   metric = "loglikelihood") {
   sf<-function(S) {
-    if(!is.null(cohorts)) {
-      y = rep(NA, length(cohorts))
-      for(i in 1:length(cohorts)) {
-        if(paste0(type,"_", cohorts[i]) %in% names(measuredData)) {
-          y[i] = evaluation_metric(S, measuredData = measuredData, type=type, 
-                                cohort=cohorts[i], SpParams = SpParams, 
-                                temporalResolution = temporalResolution, metric = metric)
-        }
+    y = rep(NA, length(cohorts))
+    for(i in 1:length(cohorts)) {
+      if(paste0(type,"_", cohorts[i]) %in% names(measuredData)) {
+        y[i] = evaluation_metric(S, measuredData = measuredData, type=type, 
+                                 cohort=cohorts[i], SpParams = SpParams, 
+                                 temporalResolution = temporalResolution, metric = metric)
       }
-      return(mean(y, na.rm=TRUE))
-    } else {
-      y = evaluation_metric(S, measuredData = measuredData, type=type, 
-                            cohort=NULL, SpParams = SpParams, 
-                            temporalResolution = temporalResolution, metric = metric)
-      return(y)
     }
+    return(mean(y, na.rm=TRUE))
   }
-  if(!is.null(cohorts)) {
-    if(length(cohorts)>1) {
-      return(optimization_cohorts_function(parNames = parNames, cohorts = cohorts, x = x,
-                                           meteo = meteo, latitude = latitude,
-                                           elevation = elevation, slope = slope, aspect = aspect,
-                                           summary_function = sf))
-    }
+  if(length(cohorts)>1) {
+    return(optimization_cohorts_function(parNames = parNames, cohorts = cohorts, 
+                                         x = x,
+                                         meteo = meteo, latitude = latitude,
+                                         otherParNames = otherParNames,
+                                         elevation = elevation, slope = slope, aspect = aspect,
+                                         summary_function = sf))
   }
   return(optimization_function(parNames = parNames, x = x,
                                meteo = meteo, latitude = latitude,
