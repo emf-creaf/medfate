@@ -3,8 +3,9 @@
 \alias{optimization}
 \alias{multiple_runs}
 \alias{optimization_function}
-\alias{optimization_cohorts_function}
 \alias{optimization_evaluation_function}
+\alias{optimization_multicohort_function}
+\alias{optimization_evaluation_multicohort_function}
 \title{
 Multiple model runs and function factories for optimization routines
 }
@@ -21,14 +22,22 @@ optimization_function(parNames, x,
                       meteo, latitude,
                       elevation = NA, slope = NA, aspect = NA, 
                       summary_function, args= NULL)
-optimization_cohorts_function(parNames, cohorts, x, 
-                              meteo, latitude,
-                              elevation = NA, slope = NA, aspect = NA, 
-                              summary_function, args= NULL)
 optimization_evaluation_function(parNames, x, 
                       meteo, latitude,
                       elevation = NA, slope = NA, aspect = NA, 
                       measuredData, type = "SWC", cohorts = NULL, 
+                      temporalResolution = "day", SpParams = NULL, 
+                      metric = "loglikelihood")
+optimization_multicohort_function(cohortParNames, cohortNames, x, 
+                      meteo, latitude, 
+                      otherParNames = NULL,
+                      elevation = NA, slope = NA, aspect = NA, 
+                      summary_function, args= NULL)
+optimization_evaluation_multicohort_function(cohortParNames, cohortNames, x, 
+                      meteo, latitude,
+                      otherParNames = NULL,
+                      elevation = NA, slope = NA, aspect = NA, 
+                      measuredData, type = "SWC", cohorts = cohortNames,
                       temporalResolution = "day", SpParams = NULL, 
                       metric = "loglikelihood")
 }
@@ -46,22 +55,26 @@ optimization_evaluation_function(parNames, x,
   \item{metric}{An evaluation metric (see \code{\link{evaluation_metric}}).}
   \item{summary_function}{A function whose input is the result of \code{\link{spwb}} or \code{\link{growth}}. The function must return a numeric scalar in the case of \code{optimization_function}, but is not restricted in the case of \code{multiple_runs}.}
   \item{args}{A list of additional arguments of \code{optimization_function}.}
+  \item{cohortParNames}{A string vector of parameter names for cohorts (e.g. 'Z95' or 'psiExtract').}
+  \item{cohortNames}{A string vector of cohort names. All cohorts will be given the same parameter values for each parameter in 'cohortParNames'.}
 }
 \details{
 See \code{\link{evaluation}} for details regarding how to specify measured data.
 
 Functions produced by these function factories should be useful for sensitivity analyses using package 'sensitivity'.
 
-Parameter naming should follow the rules specified in section details of \code{\link{modifyInputParams}}. The exception to the naming rules applies when multiple cohorts are to be modified to the same values with \code{optimization_cohorts_function}. Then, only a vector of parameter names is supplied.
+Parameter naming (i.e. \code{parNames}) should follow the rules specified in section details of \code{\link{modifyInputParams}}. The exception to the naming rules applies when multiple cohorts are to be modified to the same values with functions \code{optimization_multicohort_function} and \code{optimization_evaluation_multicohort_function}. Then, only a vector of parameter names is supplied for \code{cohortParNames}.
 }
 \value{
 Function \code{multiple_runs} returns a list, whose elements are either the result of calling simulation models or the result of calling \code{summary_function} afterwards. 
 
 Function \code{optimization_function} returns a function whose parameters are parameter values and whose return is a prediction scalar (e.g. total transpiration).
 
-Function \code{optimization_cohorts_function} returns a function whose parameters are parameter values and whose return is a prediction scalar (e.g. total transpiration). The difference with the previous function is that multiple cohorts are set to the same parameter values.
+Function \code{optimization_evaluation_function} returns a function whose parameters are parameter values and whose return is an evaluation metric (e.g. loglikelihood of the data observations given model predictions). If evaluation data contains information for different cohorts (e.g. plant water potentials or transpiration rates) then the evaluation is performed for each cohort and the metrics are averaged. 
 
-Function \code{optimization_evaluation_function} returns a function whose parameters are parameter values and whose return is an evaluation metric (e.g. loglikelihood of the data observations given model predictions).
+Function \code{optimization_multicohorts_function} returns a function whose parameters are parameter values and whose return is a prediction scalar (e.g. total transpiration). The difference with \code{optimization_function} is that multiple cohorts are set to the same parameter values.
+
+Function \code{optimization_evaluation_multicohort_function} returns a function whose parameters are parameter values and whose return is an evaluation metric (e.g. loglikelihood of the data observations given model predictions). If evaluation data contains information for different cohorts (e.g. plant water potentials or transpiration rates) then the evaluation is performed for each cohort and the metrics are averaged. The difference with \code{optimization_evaluation_function} is that multiple cohorts are set to the same parameter values.
 
 }
 \author{

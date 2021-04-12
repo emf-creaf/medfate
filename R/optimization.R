@@ -71,13 +71,25 @@ optimization_function<-function(parNames, x,
 optimization_evaluation_function<-function(parNames, x, 
                                            meteo, latitude,
                                            elevation = NA, slope = NA, aspect = NA, 
-                                           measuredData, type = "SWC",  
+                                           measuredData, type = "SWC", cohorts = NULL, 
                                            temporalResolution = "day", SpParams = NULL, 
                                            metric = "loglikelihood") {
   sf<-function(S) {
-    y = evaluation_metric(S, measuredData = measuredData, type=type, 
-                          cohort=NULL, SpParams = SpParams, 
-                          temporalResolution = temporalResolution, metric = metric)
+    if(!is.null(cohorts)) { # If cohorts != NULL evaluate output for each cohort and average the result
+      y = rep(NA, length(cohorts))
+      for(i in 1:length(cohorts)) {
+        if(paste0(type,"_", cohorts[i]) %in% names(measuredData)) {
+          y[i] = evaluation_metric(S, measuredData = measuredData, type=type, 
+                                   cohort=cohorts[i], SpParams = SpParams, 
+                                   temporalResolution = temporalResolution, metric = metric)
+        }
+      }
+      return(mean(y, na.rm=TRUE))
+    } else { # If cohorts == NULL evaluate output for first cohort (or no referred to any)
+      y = evaluation_metric(S, measuredData = measuredData, type=type, 
+                            cohort=NULL, SpParams = SpParams, 
+                            temporalResolution = temporalResolution, metric = metric)
+    }
     return(y)
   }
   return(optimization_function(parNames = parNames, x = x,
@@ -86,11 +98,11 @@ optimization_evaluation_function<-function(parNames, x,
                                summary_function = sf))
 }
 
-optimization_cohorts_function<-function(parNames, cohorts, x, 
-                                        meteo, latitude, 
-                                        otherParNames = NULL,
-                                        elevation = NA, slope = NA, aspect = NA, 
-                                        summary_function, args= NULL) {
+optimization_multicohort_function<-function(cohortParNames, cohortNames, x, 
+                                            meteo, latitude, 
+                                            otherParNames = NULL,
+                                            elevation = NA, slope = NA, aspect = NA, 
+                                            summary_function, args= NULL) {
   
   if(inherits(x, "spwbInput")) model = "spwb"
   else model = "growth"
@@ -98,11 +110,11 @@ optimization_cohorts_function<-function(parNames, cohorts, x,
   x$control$verbose = FALSE
   x$control$modifyInput = FALSE
   yf<-function(v, verbose = FALSE) {
-    x_i <- x
+    x_i <- .cloneInput(x)
     if(is.vector(v)) {
-      for(j in 1:length(cohorts)) {
+      for(j in 1:length(cohortNames)) {
         customParams = v
-        names(customParams) <- c(paste0(cohorts[j],"/",parNames), otherParNames)
+        names(customParams) <- c(paste0(cohortNames[j],"/",cohortParNames), otherParNames)
         x_i = modifyInputParams(x_i, customParams, FALSE)
       }
       S = do.call(model, list(x = x_i, 
@@ -112,6 +124,15 @@ optimization_cohorts_function<-function(parNames, cohorts, x,
       y = do.call(summary_function, c(list(S), args))
       if(verbose) cat(paste0("Parameter values = [", paste0(customParams, collapse=", "), "] f = ", y, "\n"))
       return(y)
+    } else if(is.matrix(v)) {
+      colnames(v) <- c(paste0(cohortNames[j],"/",cohortParNames), otherParNames)
+      y<-multiple_runs(parMatrix = v, x = x_i, 
+                       meteo = meteo,
+                       latitude = latitude, elevation = elevation,
+                       slope  = slope,aspect = aspect,
+                       summary_function = summary_function, args = args,
+                       verbose = verbose)
+      return(as.numeric(y))
     } else {
       stop("Wrong 'v' class")
     }
@@ -119,29 +140,37 @@ optimization_cohorts_function<-function(parNames, cohorts, x,
   return(yf)
 }
 
-optimization_evaluation_cohorts_function<-function(parNames, cohorts, x, 
-                                                   meteo, latitude,
-                                                   otherParNames = NULL,
-                                                   elevation = NA, slope = NA, aspect = NA, 
-                                                   measuredData, type = "SWC", 
-                                                   temporalResolution = "day", SpParams = NULL, 
-                                                   metric = "loglikelihood") {
+optimization_evaluation_multicohort_function<-function(cohortParNames, cohortNames, x, 
+                                                       meteo, latitude,
+                                                       otherParNames = NULL,
+                                                       elevation = NA, slope = NA, aspect = NA, 
+                                                       measuredData, type = "SWC", cohorts = cohortNames,
+                                                       temporalResolution = "day", SpParams = NULL, 
+                                                       metric = "loglikelihood") {
   sf<-function(S) {
-    y = rep(NA, length(cohorts))
-    for(i in 1:length(cohorts)) {
-      if(paste0(type,"_", cohorts[i]) %in% names(measuredData)) {
-        y[i] = evaluation_metric(S, measuredData = measuredData, type=type, 
-                                 cohort=cohorts[i], SpParams = SpParams, 
-                                 temporalResolution = temporalResolution, metric = metric)
+    if(!is.null(cohorts)) { # If cohorts != NULL evaluate output for each cohort and average the result
+      y = rep(NA, length(cohorts))
+      for(i in 1:length(cohorts)) {
+        if(paste0(type,"_", cohorts[i]) %in% names(measuredData)) {
+          y[i] = evaluation_metric(S, measuredData = measuredData, type=type, 
+                                   cohort=cohorts[i], SpParams = SpParams, 
+                                   temporalResolution = temporalResolution, metric = metric)
+        }
       }
+      return(mean(y, na.rm=TRUE))
+    } else { # If cohorts == NULL evaluate output for first cohort (or no referred to any)
+      y = evaluation_metric(S, measuredData = measuredData, type=type, 
+                            cohort=NULL, SpParams = SpParams, 
+                            temporalResolution = temporalResolution, metric = metric)
     }
-    return(mean(y, na.rm=TRUE))
+    return(y)
   }
-  return(optimization_cohorts_function(parNames = parNames, cohorts = cohorts, 
-                                       x = x,
-                                       meteo = meteo, latitude = latitude,
-                                       otherParNames = otherParNames,
-                                       elevation = elevation, slope = slope, aspect = aspect,
-                                       summary_function = sf))
+  return(optimization_multicohorts_function(cohortParNames = cohortParNames, 
+                                            cohortNames = cohortNames, 
+                                            x = x,
+                                            meteo = meteo, latitude = latitude,
+                                            otherParNames = otherParNames,
+                                            elevation = elevation, slope = slope, aspect = aspect,
+                                            summary_function = sf))
 }
 
