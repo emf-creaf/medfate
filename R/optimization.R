@@ -165,12 +165,12 @@ optimization_evaluation_multicohort_function<-function(cohortParNames, cohortNam
     }
     return(y)
   }
-  return(optimization_multicohorts_function(cohortParNames = cohortParNames, 
-                                            cohortNames = cohortNames, 
-                                            x = x,
-                                            meteo = meteo, latitude = latitude,
-                                            otherParNames = otherParNames,
-                                            elevation = elevation, slope = slope, aspect = aspect,
-                                            summary_function = sf))
+  return(optimization_multicohort_function(cohortParNames = cohortParNames, 
+                                           cohortNames = cohortNames, 
+                                           x = x,
+                                           meteo = meteo, latitude = latitude,
+                                           otherParNames = otherParNames,
+                                           elevation = elevation, slope = slope, aspect = aspect,
+                                           summary_function = sf))
 }
 
