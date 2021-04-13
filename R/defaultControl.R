@@ -41,10 +41,11 @@ defaultControl<-function(transpirationMode = "Granier") {
     multiLayerBalance = FALSE,
     
     # growth
-    allocationStrategy = "Plant_kmax",
     allowDessication = TRUE,
     allowStarvation = TRUE,
     allowDefoliation = TRUE,
+    sinkLimitation = TRUE,
+    allocationStrategy = "Plant_kmax",
     nonStomatalPhotosynthesisLimitation = TRUE,
     phloemConductanceFactor = 0.2, # phloem conductance per leaf area basis (l*m-2*MPa-1*s-1)
     nonSugarConcentration = 0.25, # mol · l-1

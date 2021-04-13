@@ -104,6 +104,7 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
   String transpirationMode = control["transpirationMode"];
   bool allowDessication = control["allowDessication"];
   bool allowStarvation = control["allowStarvation"];
+  bool sinkLimitation = control["sinkLimitation"];
   String allocationStrategy = control["allocationStrategy"];
   String cavitationRefill = control["cavitationRefill"];
   bool plantWaterPools = control["plantWaterPools"];
@@ -318,6 +319,7 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
       if(leafUnfolding[j]) {
         double deltaLApheno = std::max(leafAreaTarget[j] - LAexpanded, 0.0);
         double deltaLAsink = std::min(deltaLApheno, SA[j]*RGRleafmax[j]*(rleafcell/rleafcellmax));
+        if(!sinkLimitation) deltaLAsink = std::min(deltaLApheno, SA[j]*RGRleafmax[j]); //Deactivates temperature and turgor limitation
         double deltaLAavailable = 0.0;
         deltaLAavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarGrowthLeaves)*(glucoseMolarMass*Volume_sapwood[j]))/costPerLA);
         deltaLAgrowth = std::min(deltaLAsink, deltaLAavailable);
@@ -332,6 +334,7 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
         else deltaSAring = SAring[SAring.size()-1] - SAring[SAring.size()-2];
         double cellareamaxincrease = 20.0; 
         double deltaSAsink = (SA[j]*RGRsapwoodmax[j]*(deltaSAring/10.0)/cellareamaxincrease); 
+        if(!sinkLimitation) deltaSAsink = SA[j]*RGRsapwoodmax[j]; //Deactivates temperature and turgor limitation
         double deltaSAavailable = std::max(0.0,((starchSapwood[j]- minimumStarchGrowthSapwood)*(glucoseMolarMass*Volume_sapwood[j]))/costPerSA);
         deltaSAgrowth = std::min(deltaSAsink, deltaSAavailable);
         // Rcout<< SAring.size()<<" " <<j<< " "<< PlantPsi[j]<< " "<< LeafPI0[j]<<" dSAring "<<deltaSAring<< " dSAsink "<< deltaSAsink<<" dSAgrowth "<< deltaSAgrowth<<"\n";
@@ -575,6 +578,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
   bool allowDessication = control["allowDessication"];
   bool allowStarvation = control["allowStarvation"];
   bool allowDefoliation = control["allowDefoliation"];
+  bool sinkLimitation = control["sinkLimitation"];
   String allocationStrategy = control["allocationStrategy"];
   String cavitationRefill = control["cavitationRefill"];
   bool plantWaterPools = control["plantWaterPools"];
@@ -875,6 +879,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
         if(leafUnfolding[j]) {
           double deltaLApheno = std::max(leafAreaTarget[j] - LAexpanded, 0.0);
           double deltaLAsink = std::min(deltaLApheno, (1.0/((double) numSteps))*SA[j]*RGRleafmax[j]*(rleafcell/rleafcellmax));
+          if(!sinkLimitation) deltaLAsink = std::min(deltaLApheno, (1.0/((double) numSteps))*SA[j]*RGRleafmax[j]); //Deactivates temperature and turgor limitation
           //Grow at expense of stem sugar
           double deltaLAavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarGrowthLeaves)*(glucoseMolarMass*Volume_sapwood[j]))/costPerLA);
           double deltaLAgrowthStep = std::min(deltaLAsink, deltaLAavailable);
@@ -886,6 +891,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
           for(int s = 0;s<numLayers;s++) {
             double deltaFRBpheno = std::max(fineRootBiomassTarget[j] - fineRootBiomass[j], 0.0);
             double deltaFRBsink = (1.0/((double) numSteps))*(V(j,s)*fineRootBiomass[j])*RGRfinerootmax[j]*(rfineroot[s]/rleafcellmax);
+            if(!sinkLimitation) deltaFRBsink = (1.0/((double) numSteps))*(V(j,s)*fineRootBiomass[j])*RGRfinerootmax[j]; //Deactivates temperature and turgor limitation
             double deltaFRBavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarGrowthFineRoots)*(glucoseMolarMass*Volume_sapwood[j]))/fineroot_CC);
             double deltaFRBgrowthStep = std::min(deltaFRBpheno, std::min(deltaFRBsink, deltaFRBavailable));
             growthCostFRBStep += deltaFRBgrowthStep*fineroot_CC;
@@ -901,6 +907,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
           else deltaSAring = SAring[SAring.size()-1] - SAring[SAring.size()-2];
           double cellareamaxincrease = 20.0; 
           double deltaSAsink = (SA[j]*RGRsapwoodmax[j]*(deltaSAring/10.0)/cellareamaxincrease)/((double) numSteps); 
+          if(!sinkLimitation) deltaSAsink = SA[j]*RGRsapwoodmax[j]/((double) numSteps); //Deactivates temperature and turgor limitation
           double deltaSAavailable = std::max(0.0,((starchSapwood[j]- minimumStarchGrowthSapwood)*(glucoseMolarMass*Volume_sapwood[j]))/costPerSA);
           double deltaSAgrowthStep = std::min(deltaSAsink, deltaSAavailable);
           growthCostSAStep += deltaSAgrowthStep*costPerSA; //increase cost (may be non zero if leaf growth was charged onto sapwood)

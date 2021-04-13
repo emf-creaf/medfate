@@ -2,6 +2,10 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 2.1.2
+- New control flags for defoliation/starvation/dessication in growth simulations
+- New control flag for sink limitation in growth simulations
+
 # Version 2.1.1
 - Respiration rate for leaves made optionally species-specific.
 - Update shrub allometries from De Caceres et al. (2019).
