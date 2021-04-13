@@ -43,7 +43,7 @@ optimization_evaluation_multicohort_function(cohortParNames, cohortNames, x,
 }
 \arguments{
   \item{parMatrix}{A matrix of parameter values with runs in rows and parameters in columns. Column names should follow parameter modification naming rules (see examples and naming rules in \code{\link{modifyInputParams}}).}
-  \item{parNames}{A string vector of parameter names (see examples and naming rules in \code{\link{modifyInputParams}}). The exception to the naming rules applies when multiple cohorts are to be modified to the same values. Then, only a vector of parameter names is supplied.}
+  \item{parNames}{A string vector of parameter names (see examples and naming rules in \code{\link{modifyInputParams}}).}
   \item{x}{An object of class \code{\link{spwbInput}} or \code{\link{growthInput}}.}
   \item{meteo, latitude, elevation, slope, aspect}{Additional parameters to simulation functions \code{\link{spwb}} or \code{\link{growth}}.}
   \item{verbose}{A flag to indicate extra console output.}
@@ -55,8 +55,9 @@ optimization_evaluation_multicohort_function(cohortParNames, cohortNames, x,
   \item{metric}{An evaluation metric (see \code{\link{evaluation_metric}}).}
   \item{summary_function}{A function whose input is the result of \code{\link{spwb}} or \code{\link{growth}}. The function must return a numeric scalar in the case of \code{optimization_function}, but is not restricted in the case of \code{multiple_runs}.}
   \item{args}{A list of additional arguments of \code{optimization_function}.}
-  \item{cohortParNames}{A string vector of parameter names for cohorts (e.g. 'Z95' or 'psiExtract').}
+  \item{cohortParNames}{A string vector of vegetation parameter names for cohorts (e.g. 'Z95' or 'psiExtract').}
   \item{cohortNames}{A string vector of cohort names. All cohorts will be given the same parameter values for each parameter in 'cohortParNames'.}
+  \item{otherParNames}{A string vector of parameter names (see examples and naming rules in \code{\link{modifyInputParams}}) for non-vegetation parameters (i.e. control parameters and soil parameters).}
 }
 \details{
 See \code{\link{evaluation}} for details regarding how to specify measured data.
