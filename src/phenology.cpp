@@ -79,24 +79,25 @@ void updatePhenology(List x, int doy, double photoperiod, double tmean) {
   for(int j=0;j<numCohorts;j++) {
     if(phenoType[j] == "winter-deciduous" || phenoType[j] == "winter-semideciduous") {
       if(doy>200) {
-        double rsen = 0.0;
-        phi[j] = 0.0;
         gdd[j] = 0.0;
-        leafUnfolding[j] = false;
-        if(photoperiod>Psen[j]) {
+        if(photoperiod>Psen[j]) { //Primary growth still possible until decrease of photoperiod
           sen[j] = 0.0;
+          leafUnfolding[j] = true;
           leafSenescence[j] = false;
           budFormation[j] = false;
           leafDormancy[j] = false;
-        } else if(!leafDormancy[j]) {
-          if(tmean-Tbsen[j]<0.0) {
-            rsen = pow(Tbsen[j]-tmean,2.0);
-            // rsen = pow(Tbsen[j]-tmean,2.0) * pow(photoperiod/Psen[j],2.0);
+        } else { //Start (or continue) accumulation
+          leafUnfolding[j] = false; //Primary growth has arrested
+          if(!leafDormancy[j]) { // Check temperature accumulation until dormancy occurs
+            double rsen = 0.0;
+            if(tmean-Tbsen[j]<0.0) {
+              rsen = pow(Tbsen[j]-tmean,2.0);
+            }
+            sen[j] = sen[j] + rsen;
+            leafSenescence[j] = leafSenescenceStatus(Ssen[j],sen[j]);
+            leafDormancy[j] = leafSenescence[j];
           }
-          sen[j] = sen[j] + rsen;
-          leafSenescence[j] = leafSenescenceStatus(Ssen[j],sen[j]);
-          budFormation[j] = leafSenescence[j];
-          leafDormancy[j] = leafSenescence[j];
+          budFormation[j] = !leafDormancy[j]; //Buds can be formed (i.e target leaf area) until dormancy occurs
         }
         // Rcout << doy<< " "<< photoperiod<<" "<< rsen <<" "<< sen[j]<<" "<<  leafSenescence[j] << "\n";
       } else if (doy<=200) { //Only increase in the first part of the year
@@ -132,7 +133,7 @@ void updatePhenology(List x, int doy, double photoperiod, double tmean) {
       } else if (doy<=200) { //Only increase in the first part of the year
         sen[j] = 0.0;
         budFormation[j] = false;
-        if(!leafUnfolding[j]) {
+        if(!leafUnfolding[j]) { //Check until unfolding starts
           if(tmean-Tbgdd[j]>0.0) gdd[j] = gdd[j] + (tmean - Tbgdd[j]);
           double ph = leafDevelopmentStatus(Sgdd[j], gdd[j],unfoldingDD);
           leafSenescence[j] = (ph>0.0);
@@ -175,22 +176,19 @@ void updateLeaves(List x, double wind, bool fromGrowthModel) {
     bool leafFall = true;
     if(phenoType[j] == "winter-semideciduous") leafFall = leafUnfolding[j];
     if(leafFall) LAI_dead[j] *= exp(-1.0*(wind/10.0)); //Decrease dead leaf area according to wind speed
-    if(phenoType[j] == "winter-deciduous" || phenoType[j] == "winter-semideciduous") {
-      if(leafSenescence[j]) {
-        double LAI_exp_prev= LAI_expanded[j]; //Store previous value
-        LAI_expanded[j] = 0.0; //Update expanded leaf area (will decrease if LAI_live decreases)
-        LAI_dead[j] += LAI_exp_prev;//Check increase dead leaf area if expanded leaf area has decreased
-        leafSenescence[j] = false;
-        budFormation[j] = false;
-        leafDormancy[j] = true;
+    //Leaf unfolding and senescence only dealt with if called from spwb
+    if(!fromGrowthModel) {
+      if(phenoType[j] == "winter-deciduous" || phenoType[j] == "winter-semideciduous") {
+        if((leafSenescence[j]) & (LAI_expanded[j]>0.0)) {
+          double LAI_exp_prev= LAI_expanded[j]; //Store previous value
+          LAI_expanded[j] = 0.0; //Update expanded leaf area (will decrease if LAI_live decreases)
+          LAI_dead[j] += LAI_exp_prev;//Check increase dead leaf area if expanded leaf area has decreased
+          leafSenescence[j] = false;
+        } 
+        else if(leafUnfolding[j]) {
+          LAI_expanded[j] = LAI_live[j]*phi[j]; //Update expanded leaf area (will decrease if LAI_live decreases)
+        }
       } 
-      else if(leafDormancy[j]) {
-        if(phenoType[j] == "winter-semideciduous") LAI_dead[j] += LAI_expanded[j];
-        LAI_expanded[j] = 0.0;
-      }
-      else if(!fromGrowthModel && leafUnfolding[j]) {
-        LAI_expanded[j] = LAI_live[j]*phi[j]; //Update expanded leaf area (will decrease if LAI_live decreases)
-      }
-    } 
+    }
   }    
 }

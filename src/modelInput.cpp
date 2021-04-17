@@ -30,6 +30,9 @@ void checkSpeciesParameters(DataFrame SpParams, CharacterVector params) {
 
 DataFrame paramsPhenology(DataFrame above, DataFrame SpParams) {
   IntegerVector SP = above["SP"];
+  NumericVector LAI_expanded = above["LAI_expanded"];
+  NumericVector LAI_live = above["LAI_live"];
+  NumericVector LAI_dead = above["LAI_dead"];
   int numCohorts = SP.size();
   CharacterVector phenoType = cohortCharacterParameter(SP, SpParams, "PhenologyType");
   NumericVector leafDuration  = cohortNumericParameter(SP, SpParams, "LeafDuration");
@@ -48,11 +51,13 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams) {
       Ssen[j] = 8268.0;
       Psen[j] = 12.5;
       Tbsen[j] = 28.5;
+      LAI_expanded[j] = 0.0; //Set initial LAI to zero, assuming simulations start at Jan 1st
+      if(phenoType[j] == "winter-semideciduous") LAI_dead[j] = LAI_live[j];
     } else if(phenoType[j] == "oneflush-evergreen") {
       Tbgdd[j]= 5.0;
       Ssen[j] = 8268.0;
       Psen[j] = 12.5;
-      Tbsen[j] = 8.5;
+      Tbsen[j] = 28.5;
     }
   }
   DataFrame paramsPhenologydf = DataFrame::create(
@@ -834,7 +839,6 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
                                          _["LAI_dead"] = LAI_dead,
                                          _["Status"] = Status);
   plantsdf.attr("row.names") = above.attr("row.names");
-  
   
   DataFrame paramsAnatomydf;
   DataFrame paramsTranspirationdf;

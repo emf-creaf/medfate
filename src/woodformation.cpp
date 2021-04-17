@@ -7,6 +7,7 @@ double T0 = -273.15; // Absolute 0 temperature in degC
 double Tref = 15.0; // Reference temperature in degC
 
 
+// [[Rcpp::export("woodformation_initRing")]]
 List initialize_ring(){
   
   IntegerVector formation(0);
@@ -61,6 +62,7 @@ double _n2pi(double n, double V, double Tc){
 }
 
 ////// Cell expansion model
+// [[Rcpp::export("woodformation_relativeExpansionRate")]]
 double relative_expansion_rate(double psi, double Tc, double pi, double phi, double Y_P, double Y_T){
   double out = phi*(psi-pi-Y_P);
   if(out<0.0) out=0.0;
@@ -129,6 +131,7 @@ void _expand_ring(List ring, double psi, double Tc,
   }
 }
 
+// [[Rcpp::export("woodformation_growRing")]]
 void grow_ring(List ring, double psi, double Tc,
                 double Nc=8.85, double phi0=0.13, double pi0=-0.8, double CRD0=8.3,
                 double Y_P=0.05, double Y_T=8.0, double h=0.043*1.8, double s=1.8){

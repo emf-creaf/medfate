@@ -169,6 +169,7 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
   DataFrame internalPhenology = Rcpp::as<Rcpp::DataFrame>(x["internalPhenology"]);
   LogicalVector leafUnfolding = internalPhenology["leafUnfolding"];
   LogicalVector budFormation = internalPhenology["budFormation"];
+  LogicalVector leafSenescence = internalPhenology["leafSenescence"];
   
   List stand = spwbOut["Stand"];
   DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(spwbOut["Plants"]);
@@ -386,8 +387,16 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
       //Leaf senescence
       double propLeafSenescence = 0.0;
       //Leaf senescence due to age (Ca+ accumulation) only in evergreen species
-      if(phenoType[j] == "oneflush-evergreen" || phenoType[j] == "progressive-evergreen") {
+      if(phenoType[j] == "progressive-evergreen") {
         propLeafSenescence = (1.0/(365.25*leafDuration[j]));
+      }
+      else if(phenoType[j] == "oneflush-evergreen" & leafSenescence[j]) {
+        propLeafSenescence = (1.0/leafDuration[j]); // Fraction of old leaves that die
+        leafSenescence[j] = false; //To prevent further loss
+      }
+      else if((phenoType[j] == "winter-deciduous" || phenoType[j] == "winter-semideciduous") & leafSenescence[j]) {
+        propLeafSenescence = 1.0;
+        leafSenescence[j] = false; //To prevent further loss
       }
       //Leaf senescence due to drought 
       double LAplc = std::min(LAexpanded, (1.0 - StemPLC[j])*leafAreaTarget[j]);
@@ -670,6 +679,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
   DataFrame internalPhenology = Rcpp::as<Rcpp::DataFrame>(x["internalPhenology"]);
   LogicalVector leafUnfolding = internalPhenology["leafUnfolding"];
   LogicalVector budFormation = internalPhenology["budFormation"];
+  LogicalVector leafSenescence = internalPhenology["leafSenescence"];
   
   List stand = spwbOut["Stand"];
   DataFrame Plants = Rcpp::as<Rcpp::DataFrame>(spwbOut["Plants"]);
@@ -1001,8 +1011,16 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
       //Leaf senescence
       double propLeafSenescence = 0.0;
       //Leaf senescence due to age (Ca+ accumulation) only in evergreen species
-      if(phenoType[j] == "oneflush-evergreen" || phenoType[j] == "progressive-evergreen") {
+      if(phenoType[j] == "progressive-evergreen") {
         propLeafSenescence = (1.0/(365.25*leafDuration[j]));
+      }
+      else if(phenoType[j] == "oneflush-evergreen" & leafSenescence[j]) {
+        propLeafSenescence = (1.0/leafDuration[j]); // Fraction of old leaves that die
+        leafSenescence[j] = false; //To prevent further loss
+      }
+      else if((phenoType[j] == "winter-deciduous" || phenoType[j] == "winter-semideciduous") & leafSenescence[j]) {
+        propLeafSenescence = 1.0;
+        leafSenescence[j] = false; //To prevent further loss
       }
       //Leaf senescence due to drought 
       double LAplc = std::min(LAexpanded, (1.0 - StemPLC[j])*leafAreaTarget[j]);
