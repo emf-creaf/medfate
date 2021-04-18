@@ -108,7 +108,6 @@ optimization_multicohort_function<-function(cohortParNames, cohortNames, x,
   else model = "growth"
   
   x$control$verbose = FALSE
-  x$control$modifyInput = FALSE
   yf<-function(v, verbose = FALSE) {
     x_i <- .cloneInput(x)
     if(is.vector(v)) {

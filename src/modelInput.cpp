@@ -667,13 +667,15 @@ DataFrame internalCarbonDataFrame(DataFrame above,
     double svol = sapwoodStorageVolume(SA[c], H[c], L(c,_), V(c,_),WoodDensity[c], conduit2sapwood[c]);
     
     // 50% in starch storage
-    starchLeaf[c] = (0.5/(lvol*glucoseMolarMass))*leafStarchCapacity(LAI_expanded[c], N[c], SLA[c], LeafDensity[c]);
+    if(LAI_expanded[c]>0.0) starchLeaf[c] = (0.5/(lvol*glucoseMolarMass))*leafStarchCapacity(LAI_expanded[c], N[c], SLA[c], LeafDensity[c]);
     starchSapwood[c] = (0.5/(svol*glucoseMolarMass))*sapwoodStarchCapacity(SA[c], H[c], L, V(c,_), WoodDensity[c], conduit2sapwood[c]);
     // starch[c] = starchLeaf[c]+starchSapwood[c];
     
     //Sugar storage from PI0
-    double lconc = sugarConcentration(LeafPI0[c],20.0, nonSugarConcentration);
-    sugarLeaf[c] = lconc;
+    if(LAI_expanded[c]>0.0) {
+      double lconc = sugarConcentration(LeafPI0[c],20.0, nonSugarConcentration);
+      sugarLeaf[c] = lconc;
+    }
     double sconc = sugarConcentration(StemPI0[c],20.0, nonSugarConcentration);
     sugarSapwood[c] = sconc;
     // sugar[c] = sugarLeaf[c] + sugarSapwood[c];
