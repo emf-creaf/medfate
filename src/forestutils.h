@@ -62,6 +62,8 @@ NumericMatrix LAIdistributionVectors(NumericVector z, NumericVector LAI, Numeric
 NumericVector LAIprofileVectors(NumericVector z, NumericVector LAI, NumericVector H, NumericVector CR);
 NumericMatrix LAIdistribution(NumericVector z, List x, DataFrame SpParams, double gdd = NA_REAL, String mode = "MED");
 
+IntegerVector uniqueSpp(IntegerVector sp);
+
 double shrubCover(List x, double excludeMinHeight = 0.0);
 
 void deleteTreeCohort(List x, int treeCohort);

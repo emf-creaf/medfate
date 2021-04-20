@@ -124,7 +124,7 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
 
   //Cohort info
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
-  NumericVector SP = cohorts["SP"];
+  IntegerVector SP = Rcpp::as<Rcpp::IntegerVector>(cohorts["SP"]);
   int numCohorts = SP.size();
   
   //Soil
@@ -622,7 +622,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
   
   //Cohort info
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
-  NumericVector SP = cohorts["SP"];
+  IntegerVector SP = Rcpp::as<Rcpp::IntegerVector>(cohorts["SP"]);
   int numCohorts = SP.size();
   
   //Aboveground parameters  
@@ -1459,6 +1459,101 @@ void recordStandSummary(DataFrame standSummary, DataFrame above, int pos) {
   }
 }
 
+void recordSpeciesSummary(DataFrame speciesSummary, DataFrame above, DataFrame cohorts,
+                               IntegerVector SPunique, 
+                               int yearPos) {
+  
+  NumericVector SP = above["SP"];
+  NumericVector DBH = above["DBH"];
+  NumericVector Cover = above["Cover"];
+  NumericVector H = above["H"];
+  NumericVector N = above["N"];
+  NumericVector LAI_live = above["LAI_live"];
+  StringVector Status = above["Status"];
+  StringVector Name = cohorts["Name"];
+  
+  int nspp = SPunique.size();  
+  
+  IntegerVector Yearvec = as<Rcpp::IntegerVector>(speciesSummary["Year"]);
+  IntegerVector SPvec = as<Rcpp::IntegerVector>(speciesSummary["SP"]);
+  CharacterVector Namevec = as<Rcpp::CharacterVector>(speciesSummary["Name"]);
+  NumericVector SLAI = as<Rcpp::NumericVector>(speciesSummary["LeafAreaIndex"]);
+  NumericVector TBAL = as<Rcpp::NumericVector>(speciesSummary["TreeBasalAreaLive"]);
+  NumericVector TBAD = as<Rcpp::NumericVector>(speciesSummary["TreeBasalAreaDead"]);
+  NumericVector SCoverL = as<Rcpp::NumericVector>(speciesSummary["ShrubCoverLive"]);
+  NumericVector SCoverD = as<Rcpp::NumericVector>(speciesSummary["ShrubCoverDead"]);
+  NumericVector MaxHeight = as<Rcpp::NumericVector>(speciesSummary["MaxHeight"]);
+  for(int i=0;i<nspp;i++) {
+    int posIni = (yearPos*nspp);
+    // Rcout << posIni + i<<"\n";
+    Yearvec[posIni+i] = yearPos;
+    SPvec[posIni+i] = SPunique[i];
+    SLAI[posIni+i] = 0.0;
+    TBAL[posIni+i] = 0.0;
+    TBAD[posIni+i] = 0.0;
+    SCoverL[posIni+i] = 0.0;
+    SCoverD[posIni+i] = 0.0;
+    MaxHeight[posIni+i] = 0.0;
+  }
+  int numCohorts = N.length();
+  NumericVector treeBA = treeBasalArea(N, DBH);
+  for(int i=0;i<numCohorts;i++) {
+    int jSP = -1;
+    for(int j=0;j<nspp;j++) if(SP[i]==SPunique[j]) jSP = j;
+    int pos = (yearPos*nspp) + jSP;
+    Namevec[pos] = Name[i];
+    SLAI[pos] += LAI_live[i];
+    if(!NumericVector::is_na(treeBA[i])) {
+      if(Status[i]=="alive") TBAL[pos] += treeBA[i];
+      else TBAD[pos] += treeBA[i];
+      MaxHeight[pos] = std::max(MaxHeight[pos], H[i]);
+    } else {
+      if(Status[i]=="alive") SCoverL[pos] +=Cover[i];
+      else SCoverD[pos] +=Cover[i];
+    }
+  }
+}
+
+void recordCohortSummary(DataFrame cohortSummary, DataFrame above, DataFrame cohorts,
+                         int yearPos) {
+  
+  NumericVector SP = above["SP"];
+  NumericVector DBH = above["DBH"];
+  NumericVector Cover = above["Cover"];
+  NumericVector H = above["H"];
+  NumericVector N = above["N"];
+  NumericVector LAI_live = above["LAI_live"];
+  StringVector Status = above["Status"];
+  StringVector Name = cohorts["Name"];
+  CharacterVector Cohorts = cohorts.attr("row.names");
+  int numCohorts = Cohorts.size();
+  
+  IntegerVector Yearvec = as<Rcpp::IntegerVector>(cohortSummary["Year"]);
+  IntegerVector SPvec = as<Rcpp::IntegerVector>(cohortSummary["SP"]);
+  CharacterVector Namevec = as<Rcpp::CharacterVector>(cohortSummary["Name"]);
+  CharacterVector Cohortvec = as<Rcpp::CharacterVector>(cohortSummary["Cohort"]);
+  NumericVector SLAI = as<Rcpp::NumericVector>(cohortSummary["LeafAreaIndex"]);
+  NumericVector TBAL = as<Rcpp::NumericVector>(cohortSummary["TreeBasalAreaLive"]);
+  NumericVector TBAD = as<Rcpp::NumericVector>(cohortSummary["TreeBasalAreaDead"]);
+  NumericVector SCoverL = as<Rcpp::NumericVector>(cohortSummary["ShrubCoverLive"]);
+  NumericVector SCoverD = as<Rcpp::NumericVector>(cohortSummary["ShrubCoverDead"]);
+  NumericVector treeBA = treeBasalArea(N, DBH);
+  for(int i=0;i<numCohorts;i++) {
+    int pos = (yearPos*numCohorts) + i;
+    Yearvec[pos] = yearPos;
+    SPvec[pos] = SP[i];
+    Namevec[pos] = Name[i];
+    SLAI[pos] = LAI_live[i];
+    Cohortvec[pos] = Cohorts[i];
+    if(!NumericVector::is_na(treeBA[i])) {
+      if(Status[i]=="alive") TBAL[pos] = treeBA[i];
+      else TBAD[pos] = treeBA[i];
+    } else {
+      if(Status[i]=="alive") SCoverL[pos] =Cover[i];
+      else SCoverD[pos] =Cover[i];
+    }
+  }
+}
 
 // [[Rcpp::export("growth")]]
 List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL) {
@@ -1489,9 +1584,10 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   
   //Cohort info
   DataFrame cohorts = Rcpp::as<Rcpp::DataFrame>(x["cohorts"]);
-  NumericVector SP = cohorts["SP"];
-
-
+  IntegerVector SP = Rcpp::as<Rcpp::IntegerVector>(cohorts["SP"]);
+  IntegerVector SPunique = uniqueSpp(SP);
+  int numSpecies = SPunique.size();
+  
   if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
   double latrad = latitude * (PI/180.0);
   
@@ -1659,6 +1755,30 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
     _["ShrubCoverDead"] = NumericVector(numYears+1,0.0),
     _["MaxHeight"] = NumericVector(numYears+1,0.0)
   );
+  int nrowsSS = (numYears+1)*numSpecies;
+  DataFrame speciesSummary = DataFrame::create(
+    _["Year"] = IntegerVector(nrowsSS,0),
+    _["SP"] = IntegerVector(nrowsSS,0),
+    _["Name"] = CharacterVector(nrowsSS),
+    _["LeafAreaIndex"] = NumericVector(nrowsSS,0.0),
+    _["TreeBasalAreaLive"] = NumericVector(nrowsSS,0.0),
+    _["TreeBasalAreaDead"] = NumericVector(nrowsSS,0.0),
+    _["ShrubCoverLive"] = NumericVector(nrowsSS,0.0),
+    _["ShrubCoverDead"] = NumericVector(nrowsSS,0.0),
+    _["MaxHeight"] = NumericVector(nrowsSS,0.0)
+  );
+  int nrowsCS = (numYears+1)*numCohorts;
+  DataFrame cohortSummary = DataFrame::create(
+    _["Year"] = IntegerVector(nrowsCS,0),
+    _["SP"] = IntegerVector(nrowsCS,0),
+    _["Name"] = CharacterVector(nrowsCS),
+    _["Cohort"] = CharacterVector(nrowsCS),
+    _["LeafAreaIndex"] = NumericVector(nrowsCS,0.0),
+    _["TreeBasalAreaLive"] = NumericVector(nrowsCS,0.0),
+    _["TreeBasalAreaDead"] = NumericVector(nrowsCS,0.0),
+    _["ShrubCoverLive"] = NumericVector(nrowsCS,0.0),
+    _["ShrubCoverDead"] = NumericVector(nrowsCS,0.0)
+  );
   List standStructures(numYears+1);
   CharacterVector nss(numYears+1);
   for(int i=0;i<(numYears+1);i++) {
@@ -1674,6 +1794,9 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   standStructures.attr("names") = nss;
   standStructures[0] = clone(above);
   recordStandSummary(standSummary, above, 0);
+  recordSpeciesSummary(speciesSummary, above, cohorts, 
+                            SPunique,0);
+  recordCohortSummary(cohortSummary, above, cohorts,0);
   
   NumericVector initialContent = water(soil, soilFunctions);
   double initialSnowContent = soil["SWE"];
@@ -1875,6 +1998,10 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
       // Store stand structure
       standStructures[iyear] = clone(above);
       recordStandSummary(standSummary, above,iyear);
+      recordSpeciesSummary(speciesSummary, above, cohorts, 
+                                SPunique,iyear);
+      recordCohortSummary(cohortSummary, above, cohorts,iyear);
+      
     }
 
     if(subdailyResults) {
@@ -1970,6 +2097,8 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
                      Named("PlantGrowth") = plantGrowth,
                      Named("StandStructures") = standStructures,
                      Named("StandSummary") = standSummary,
+                     Named("SpeciesSummary") = speciesSummary,
+                     Named("CohortSummary") = cohortSummary,
                      Named("subdaily") =  subdailyRes);
     
   } else {
@@ -2001,6 +2130,8 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
                    Named("PlantGrowth") = plantGrowth,
                    Named("StandStructures") = standStructures,
                    Named("StandSummary") = standSummary,
+                   Named("SpeciesSummary") = speciesSummary,
+                   Named("CohortSummary") = cohortSummary,
                    Named("subdaily") =  subdailyRes);
     if(multiLayerBalance) l["TemperatureLayers"] = DLT;
   }

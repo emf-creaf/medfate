@@ -80,6 +80,8 @@ growth(x, meteo,  latitude, elevation = NA, slope = NA, aspect = NA)
     }
  \item{\code{"StandStructures"}: A list with the aboveground structure of the stand at the beginning of the simulation and after each simulated year.}
  \item{\code{"StandSummary"}: A data frame with stand-level summaries (leaf area index, tree basal area, tree density, shrub cover, etc.) at the beginning of the simulation and after each simulated year.}
+ \item{\code{"SpeciesSummary"}: A data frame with species-level summaries (leaf area index, tree basal area, tree density, shrub cover, etc.) at the beginning of the simulation and after each simulated year.}
+ \item{\code{"CohortSummary"}: A data frame with cohort-level summaries (leaf area index, tree basal area, tree density, shrub cover, etc.) at the beginning of the simulation and after each simulated year.}
  \item{\code{"subdaily"}: A list of objects of class \code{\link{growth_day}}, one per day simulated (only if required in \code{control} parameters, see \code{\link{defaultControl}}).}
 }
   
