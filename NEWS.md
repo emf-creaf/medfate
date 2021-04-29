@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 2.1.3
+- Update Psi_Extract according to Psi_TLP (Hydratry)
+
 # Version 2.1.2
 - New control flags for defoliation/starvation/dessication in growth simulations
 - New control flag for sink limitation in growth simulations
