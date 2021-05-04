@@ -1,4 +1,5 @@
 // [[Rcpp::depends(meteoland)]]
+#define STRICT_R_HEADERS
 #include <Rcpp.h>
 #include <numeric>
 #include <math.h>
@@ -253,7 +254,7 @@ List FCCSbehaviour(DataFrame FCCSpropsSI,
   double Ac = 2.6296; //if sigma_c <= 2000 ft2/ft3
   if(sigma[0] > 2000) Ac = 3.2868; //if sigma_c > 2000 ft2/ft3
   double TFAIc = Ac*exp(-0.0019*U);
-  // Rcout << " FAIc "<< FAI[0] << " TFAI/3pi "<< (TFAIc/(3.0*PI))<<"\n";
+  // Rcout << " FAIc "<< FAI[0] << " TFAI/3pi "<< (TFAIc/(3.0*M_PI))<<"\n";
 
   //Crown fire spread rate
   double I_r_ca  = pow(etabetarel[0], A_ca)*Gmax_ca*w[0]*h[0]*etaM[0]*etaK*etaF[0];
@@ -283,7 +284,7 @@ List FCCSbehaviour(DataFrame FCCSpropsSI,
       IC = std::min(9.0, 4.0*pow(ic_ratio,0.2));
     }
   } 
-  if(FAI[0]> (TFAIc/(3.0*PI))) {
+  if(FAI[0]> (TFAIc/(3.0*M_PI))) {
     if(!NumericVector::is_na(TCq)) TC = std::min(9.0, 10.0*TCq);
   }
   if(!NumericVector::is_na(ros_crown)) RC = std::min(9.0, 1.0*pow(ros_crown, 0.5));
@@ -384,7 +385,7 @@ List rothermel(String modeltype, NumericVector wSI, NumericVector sSI, double de
   delta = delta*0.0328084; //from cm to feet
   mx_dead = mx_dead/100.0;//from percent to proportions
   u=u*196.8504; //from m/s to ft/min
-  slope = tan(slope*180.0/PI)/100.0; //from degrees to proportions
+  slope = tan(slope*180.0/M_PI)/100.0; //from degrees to proportions
 
   // transfer partially cured herbaceous fuels to dead
   if (modeltype=="D") {
@@ -518,8 +519,8 @@ List rothermel(String modeltype, NumericVector wSI, NumericVector sSI, double de
   if(beta==0.0) fs = 0.0;
   
   //calculate 'effective wind' direction and spread
-  NumericVector vS = NumericVector::create(fs, (aspect*PI/180.0)+PI); //add 180 degrees for pushing fire in the direction opposite of the aspect
-  NumericVector vW = NumericVector::create(fw, (windDir*PI/180.0)+PI); //add 180 degrees for blowing 'in the direction of'
+  NumericVector vS = NumericVector::create(fs, (aspect*M_PI/180.0)+M_PI); //add 180 degrees for pushing fire in the direction opposite of the aspect
+  NumericVector vW = NumericVector::create(fw, (windDir*M_PI/180.0)+M_PI); //add 180 degrees for blowing 'in the direction of'
   NumericVector vEff = vectorAddition(vS,vW);
 //  Rcout << " fw " << fw << " dir " << (windDir+3.141592)*(180.0/3.141592) << " fs " << fs << " dir " << (slopeDir+3.141592)*(180.0/3.141592) << "res: " << vEff[0] <<","<<vEff[1]*(180.0/3.141592)<<"\n";
   
@@ -707,8 +708,8 @@ List rothermel(String modeltype, NumericVector wSI, NumericVector sSI, double de
 //     double rainDuration = std::min(24.0,Precipitation[i]/6.35);
 //     
 //     //Number of hours of insolation
-//     NumericVector srs = meteoland::radiation_sunRiseSet(latitude*(PI/180.0),  slope*(PI/180.0), aspect*(PI/180.0),DOY[i]);
-//     double n = std::max(0.0, (srs[1] - srs[0])*12.0/PI); 
+//     NumericVector srs = meteoland::radiation_sunRiseSet(latitude*(M_PI/180.0),  slope*(M_PI/180.0), aspect*(M_PI/180.0),DOY[i]);
+//     double n = std::max(0.0, (srs[1] - srs[0])*12.0/M_PI); 
 //     if(n<=0.0) n = 0.0;
 //     
 //     //Dead fuel moisture

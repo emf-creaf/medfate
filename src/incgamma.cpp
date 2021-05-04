@@ -1,3 +1,4 @@
+#define STRICT_R_HEADERS
 #include <Rcpp.h>
 #include <math.h>
 using namespace Rcpp;
@@ -463,7 +464,7 @@ double dompart(double a, double x, bool qt) {
       if((a*c)>log(giant)) {
         dompart = -100.0;
       } else {
-        dompart = exp(a*c)/(sqrt(a*2.0*PI)*gamstar(a));
+        dompart = exp(a*c)/(sqrt(a*2.0*M_PI)*gamstar(a));
       }
     }
   }
@@ -941,7 +942,7 @@ double pqasymp(double a, double x, double dp, bool p) {
       v = -v;
     }
     u=0.5*errorfunction(s*v,true,false);
-    v=s*exp(-y)*saeta(a,eta)/sqrt(2.0*PI*a);
+    v=s*exp(-y)*saeta(a,eta)/sqrt(2.0*M_PI*a);
     pqasymp=u+v;
   }
   return(pqasymp);
@@ -1193,7 +1194,7 @@ double inverfc(double x)  {
     // f= erfc(y0)-x;
     f=errorfunction(y0,true,false)-x;
     y02= y0*y0;
-    fp=-2.0/sqrt(PI)*exp(-y02);
+    fp=-2.0/sqrt(M_PI)*exp(-y02);
     c1=-1.0/fp;
     c2= y0;
     c3=(4.0*y02+1.0)/3.0;

@@ -1,5 +1,6 @@
 // [[Rcpp::interfaces(r,cpp)]]
-
+#define STRICT_R_HEADERS
+#include <Rcpp.h>
 #include <numeric>
 #include <math.h>
 #include "lightextinction.h"
@@ -12,7 +13,6 @@
 #include "phenology.h"
 #include "transpiration.h"
 #include "soil.h"
-#include <Rcpp.h>
 #include <meteoland.h>
 using namespace Rcpp;
 
@@ -354,9 +354,9 @@ List spwbDay(List x, CharacterVector date, double tmin, double tmax, double rhmi
   double delta = meteoland::radiation_solarDeclination(J);
   double solarConstant = meteoland::radiation_solarConstant(J);
   double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
-  double latrad = latitude * (PI/180.0);
-  double asprad = aspect * (PI/180.0);
-  double slorad = slope * (PI/180.0);
+  double latrad = latitude * (M_PI/180.0);
+  double asprad = aspect * (M_PI/180.0);
+  double slorad = slope * (M_PI/180.0);
   double photoperiod = meteoland::radiation_daylength(latrad, 0.0, 0.0, delta);
   double pet = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
 
@@ -1034,7 +1034,7 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
   NumericVector Radiation;
   
   if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
-  double latrad = latitude * (PI/180.0);
+  double latrad = latitude * (M_PI/180.0);
   
   
   if(!meteo.containsElementNamed("Precipitation")) stop("Please include variable 'Precipitation' in weather input.");
@@ -1159,8 +1159,8 @@ List spwb(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, 
         double solarConstant = meteoland::radiation_solarConstant(J);
         if(NumericVector::is_na(aspect)) aspect = 0.0;
         if(NumericVector::is_na(slope)) slope = 0.0;
-        double asprad = aspect * (PI/180.0);
-        double slorad = slope * (PI/180.0);
+        double asprad = aspect * (M_PI/180.0);
+        double slorad = slope * (M_PI/180.0);
         double tmin = MinTemperature[i];
         double tmax = MaxTemperature[i];
         double tmaxPrev = tmax;
@@ -1284,7 +1284,7 @@ List pwb(List x, DataFrame meteo, NumericMatrix W,
   List soil = x["soil"];
   
   if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
-  double latrad = latitude * (PI/180.0);
+  double latrad = latitude * (M_PI/180.0);
 
     //Meteorological input    
   NumericVector MinTemperature, MaxTemperature;

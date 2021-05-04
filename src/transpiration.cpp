@@ -1,3 +1,5 @@
+#define STRICT_R_HEADERS
+#include <Rcpp.h>
 #include <numeric>
 #include "lightextinction.h"
 #include "windextinction.h"
@@ -11,7 +13,6 @@
 #include "photosynthesis.h"
 #include "root.h"
 #include "soil.h"
-#include <Rcpp.h>
 #include <meteoland.h>
 using namespace Rcpp;
 
@@ -282,9 +283,9 @@ List transpirationSperry(List x, double tmin, double tmax,
   
   if(NumericVector::is_na(aspect)) aspect = 0.0;
   if(NumericVector::is_na(slope)) slope = 0.0;
-  double latrad = latitude * (PI/180.0);
-  double asprad = aspect * (PI/180.0);
-  double slorad = slope * (PI/180.0);
+  double latrad = latitude * (M_PI/180.0);
+  double asprad = aspect * (M_PI/180.0);
+  double slorad = slope * (M_PI/180.0);
   
   //Step in seconds
   double tstep = 86400.0/((double) ntimesteps);
@@ -357,7 +358,7 @@ List transpirationSperry(List x, double tmin, double tmax,
   double tauday = meteoland::radiation_daylengthseconds(latrad,0.0,0.0, delta); 
   for(int n=0;n<ntimesteps;n++) {
     //From solar hour (radians) to seconds from sunrise
-    Tsunrise[n] = (solarHour[n]*43200.0/PI)+ (tauday/2.0) +(tstep/2.0); 
+    Tsunrise[n] = (solarHour[n]*43200.0/M_PI)+ (tauday/2.0) +(tstep/2.0); 
     //Calculate instantaneous temperature and light conditions
     Tatm[n] = temperatureDiurnalPattern(Tsunrise[n], tmin, tmax, tminPrev, tmaxPrev, tminNext, tauday);
     //Longwave sky diffuse radiation (W/m2)

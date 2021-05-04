@@ -1,3 +1,4 @@
+#define STRICT_R_HEADERS
 #include <Rcpp.h>
 #include <numeric>
 #include <math.h>
@@ -46,9 +47,9 @@ NumericVector date2photoperiod(CharacterVector dateStrings, double latitude) {
  */
 // [[Rcpp::export("biophysics_radiationDiurnalPattern")]]
 double radiationDiurnalPattern(double t, double daylength) {
-  double ws = (daylength/3600.0)*(PI/24.0); //sunrise
+  double ws = (daylength/3600.0)*(M_PI/24.0); //sunrise
   double w = ws - (t/daylength)*(ws*2.0);
-  double prop = ((PI/24.0)*(cos(w)-cos(ws)))/(sin(ws)-ws*cos(ws));
+  double prop = ((M_PI/24.0)*(cos(w)-cos(ws)))/(sin(ws)-ws*cos(ws));
   return(prop/3600.0);
 }
 /**
@@ -81,7 +82,7 @@ double temperatureDiurnalPattern(double t, double tmin, double tmax,
     }
     // Rcout<<" "<< temp <<"\n";
   } else {
-    double ct = cos(1.5*PI*t/daylength);
+    double ct = cos(1.5*M_PI*t/daylength);
     temp = 0.5*(tmin+tmax-(tmax-tmin)*ct);
     // Rcout<<" t "<< t << " dl "<< daylength << " ct "<<ct <<" "<< 0.5*(tmax+tmin)<<" "<<temp <<"\n";
   }
