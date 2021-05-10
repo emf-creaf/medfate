@@ -220,9 +220,9 @@ spwb_emissions<-function(x, verbose = FALSE) {
       
       #This is Megan 2016 paper equation 13 for soil moisture---start
       if(MEGANParams$Compound.Class[mm] == "Isoprene"){
-        THETAw = sum(soil_waterWP(S11$spwbInput$soil, model = "SX"))  #soil_waterWP calculate the water volume (in mm of soil volume) of each soil layer at wilting point (-1.5 MPa),
+        THETAw = sum(soil_waterWP(x$spwbInput$soil, model = "SX"))  #soil_waterWP calculate the water volume (in mm of soil volume) of each soil layer at wilting point (-1.5 MPa),
         THETA1 = THETAw + 40   #(note 40 is defined in Megan as 0.04 m, so I converted it to 40 mm)
-        THETA = S11$Soil$MLTot  #MLTot": Total soil water volume (in L/m2) in Medfate. We can be converted to mm (1 mm = 1 l / m?), see https://www.researchgate.net/post/How-can-I-convert-Satellite-Soil-Moisture-data-m3-m3-into-mm
+        THETA = x$Soil$MLTot  #MLTot": Total soil water volume (in L/m2) in Medfate. We can be converted to mm (1 mm = 1 l / m?), see https://www.researchgate.net/post/How-can-I-convert-Satellite-Soil-Moisture-data-m3-m3-into-mm
         Ysm = THETA #borrow the structure
         for(kk in 1:length(THETA)){   #I used kk instead i here because i is used for numberofay in the whole loop
           if(THETA[kk] > THETA1){Ysm[kk] = 1}
