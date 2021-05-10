@@ -1,3 +1,4 @@
+#define STRICT_R_HEADERS
 #include <numeric>
 #include <Rcpp.h>
 #include <string.h>
@@ -441,7 +442,7 @@ double crownCompetitionFactorMED(NumericVector N, NumericVector dbh, NumericVect
   for(int i=0;i<ntree;i++) {
     if(!NumericVector::is_na(dbh[i])) {
       double cw = Acw[i]*pow(dbh[i], Bcw[i]);
-      ccf = ccf + (N[i]*PI*pow(cw/2.0,2.0)/100.0);
+      ccf = ccf + (N[i]*M_PI*pow(cw/2.0,2.0)/100.0);
     }
   }
   return(ccf);
@@ -458,7 +459,7 @@ double crownCompetitionFactorUS(NumericVector N, NumericVector dbh, NumericVecto
   for(int i=0;i<ntree;i++) {
     if(!NumericVector::is_na(dbh[i])) {
       double cw = CrownWidth[i]; //Shengli: This is tree crown width. We will get the info from treedata, so I modify the sentence here. Note Crown width (unit in meter) that a tree of cohort i would have in open-ground conditions
-      ccf = ccf + (N[i]*PI*pow(cw/2.0,2.0)/100.0);  //I do not understand why there is 100.0 in this sentence. I believe the cw unit in medfate in meter (see I need to ask what is the cw unit in medfate.)
+      ccf = ccf + (N[i]*M_PI*pow(cw/2.0,2.0)/100.0);  //I do not understand why there is 100.0 in this sentence. I believe the cw unit in medfate in meter (see I need to ask what is the cw unit in medfate.)
     }
   }
   return(ccf);

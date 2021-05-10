@@ -1,3 +1,5 @@
+#define STRICT_R_HEADERS
+#include <Rcpp.h>
 #include <numeric>
 #include "lightextinction.h"
 #include "phenology.h"
@@ -11,7 +13,6 @@
 #include "woodformation.h"
 #include "soil.h"
 #include "spwb.h"
-#include <Rcpp.h>
 #include <meteoland.h>
 using namespace Rcpp;
 
@@ -1306,9 +1307,9 @@ List growthDay(List x, CharacterVector date, double tmin, double tmax, double rh
   double delta = meteoland::radiation_solarDeclination(J);
   double solarConstant = meteoland::radiation_solarConstant(J);
   double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
-  double latrad = latitude * (PI/180.0);
-  double asprad = aspect * (PI/180.0);
-  double slorad = slope * (PI/180.0);
+  double latrad = latitude * (M_PI/180.0);
+  double asprad = aspect * (M_PI/180.0);
+  double slorad = slope * (M_PI/180.0);
   double photoperiod = meteoland::radiation_daylength(latrad, 0.0, 0.0, delta);
   double pet = meteoland::penman(latrad, elevation, slorad, asprad, J, tmin, tmax, rhmin, rhmax, rad, wind);
   
@@ -1589,7 +1590,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   int numSpecies = SPunique.size();
   
   if(NumericVector::is_na(latitude)) stop("Value for 'latitude' should not be missing.");
-  double latrad = latitude * (PI/180.0);
+  double latrad = latitude * (M_PI/180.0);
   
   //Meteorological input    
   NumericVector MinTemperature, MaxTemperature;
@@ -1842,11 +1843,11 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
       int J = meteoland::radiation_julianDay(std::atoi(c.substr(0, 4).c_str()),std::atoi(c.substr(5,2).c_str()),std::atoi(c.substr(8,2).c_str()));
       double delta = meteoland::radiation_solarDeclination(J);
       double solarConstant = meteoland::radiation_solarConstant(J);
-      double latrad = latitude * (PI/180.0);
+      double latrad = latitude * (M_PI/180.0);
       if(NumericVector::is_na(aspect)) aspect = 0.0;
       if(NumericVector::is_na(slope)) slope = 0.0;
-      double asprad = aspect * (PI/180.0);
-      double slorad = slope * (PI/180.0);
+      double asprad = aspect * (M_PI/180.0);
+      double slorad = slope * (M_PI/180.0);
       double tmin = MinTemperature[i];
       double tmax = MaxTemperature[i];
       double tmaxPrev = tmax;
@@ -1952,7 +1953,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
       NumericVector deltaDBH(numCohorts, 0.0);
       for(int j=0;j<numCohorts; j++) {
         if(!NumericVector::is_na(DBH[j])) {
-          deltaDBH[j] = 2.0*sqrt(pow(DBH[j]/2.0,2.0)+(SAgrowthcum[j]/PI)) - DBH[j];
+          deltaDBH[j] = 2.0*sqrt(pow(DBH[j]/2.0,2.0)+(SAgrowthcum[j]/M_PI)) - DBH[j];
           DBH[j] = DBH[j] + deltaDBH[j];
         } 
         SAgrowthcum[j] = 0.0; //Reset cumulative growth
