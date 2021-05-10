@@ -139,6 +139,7 @@ double leafVapourPressure(double leafTemp,  double leafPsi) {
  *  I - Irradiance (in W*m-2)
  *  lambda - wavelength (in nm)
  */
+// [[Rcpp::export("biophysics_irradianceToPhotonFlux")]]
 double irradianceToPhotonFlux(double I, double lambda = 546.6507) {
   return(I*lambda*0.836*1e-2);
 }

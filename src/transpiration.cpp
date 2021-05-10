@@ -581,6 +581,8 @@ List transpirationSperry(List x, double tmin, double tmax,
   NumericMatrix Ci_SH(numCohorts, ntimesteps);
   NumericMatrix SWR_SL(numCohorts, ntimesteps);
   NumericMatrix SWR_SH(numCohorts, ntimesteps);
+  NumericMatrix PAR_SL(numCohorts, ntimesteps);
+  NumericMatrix PAR_SH(numCohorts, ntimesteps);
   NumericMatrix LWR_SL(numCohorts, ntimesteps);
   NumericMatrix LWR_SH(numCohorts, ntimesteps);
   NumericMatrix GSW_SH(numCohorts, ntimesteps);
@@ -645,6 +647,8 @@ List transpirationSperry(List x, double tmin, double tmax,
       Aninst(c,n) = 0.0;
       
       if(LAIphe[c]>0.0) { //Process transpiration and photosynthesis only if there are some leaves
+        PAR_SL(c,n) = absPAR_SL_COH[c];
+        PAR_SH(c,n) = absPAR_SH_COH[c];
         SWR_SL(c,n) = absSWR_SL_COH[c];
         SWR_SH(c,n) = absSWR_SH_COH[c];
         // for(int j=0;j<ncanlayers;j++) Rcout<< n << " "<< c<< " "<<j<<" " << Lnet_cohort_layer(j,c)<<"\n";
@@ -703,7 +707,7 @@ List transpirationSperry(List x, double tmin, double tmax,
                                                              Tair[iLayerSunlit[c]], VPair[iLayerSunlit[c]], 
                                                              zWind[iLayerSunlit[c]], 
                                                              SWR_SL(c,n), LWR_SL(c,n), 
-                                                             irradianceToPhotonFlux(absPAR_SL_COH[c]), 
+                                                             irradianceToPhotonFlux(PAR_SL(c,n)), 
                                                              NSPLVEC[c]*Vmax298SL[c], 
                                                              NSPLVEC[c]*Jmax298SL[c], 
                                                              leafWidth[c], LAI_SL[c]);
@@ -711,7 +715,7 @@ List transpirationSperry(List x, double tmin, double tmax,
                                                             Tair[iLayerShade[c]], VPair[iLayerShade[c]], 
                                                             zWind[iLayerShade[c]], 
                                                             SWR_SH(c,n), LWR_SH(c,n), 
-                                                            irradianceToPhotonFlux(absPAR_SH_COH[c]),
+                                                            irradianceToPhotonFlux(PAR_SH(c,n)),
                                                             NSPLVEC[c]*Vmax298SH[c], 
                                                             NSPLVEC[c]*Jmax298SH[c], 
                                                             leafWidth[c], LAI_SH[c]);
@@ -1302,6 +1306,8 @@ List transpirationSperry(List x, double tmin, double tmax,
   Ag_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   SWR_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   SWR_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  PAR_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
+  PAR_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   LWR_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   LWR_SL.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
   Ci_SH.attr("dimnames") = List::create(above.attr("row.names"), seq(1,ntimesteps));
@@ -1363,6 +1369,7 @@ List transpirationSperry(List x, double tmin, double tmax,
   
   List ShadeInst = List::create(
     _["Abs_SWR"] = SWR_SH,
+    _["Abs_PAR"]=PAR_SH,
     _["Net_LWR"] = LWR_SH,
     _["Ag"] = Ag_SH,
     _["An"] = An_SH,
@@ -1374,6 +1381,7 @@ List transpirationSperry(List x, double tmin, double tmax,
     _["Psi"] = Psi_SH);
   List SunlitInst = List::create(
     _["Abs_SWR"]=SWR_SL,
+    _["Abs_PAR"]=PAR_SL,
     _["Net_LWR"] = LWR_SL,
     _["Ag"] = Ag_SL,
     _["An"] = An_SL,

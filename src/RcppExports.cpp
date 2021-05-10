@@ -80,6 +80,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// irradianceToPhotonFlux
+double irradianceToPhotonFlux(double I, double lambda);
+RcppExport SEXP _medfate_irradianceToPhotonFlux(SEXP ISEXP, SEXP lambdaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type I(ISEXP);
+    Rcpp::traits::input_parameter< double >::type lambda(lambdaSEXP);
+    rcpp_result_gen = Rcpp::wrap(irradianceToPhotonFlux(I, lambda));
+    return rcpp_result_gen;
+END_RCPP
+}
 // waterDynamicViscosity
 double waterDynamicViscosity(double temp);
 RcppExport SEXP _medfate_waterDynamicViscosity(SEXP tempSEXP) {
@@ -4566,6 +4578,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_leafTemperature", (DL_FUNC) &_medfate_leafTemperature, 5},
     {"_medfate_leafTemperature2", (DL_FUNC) &_medfate_leafTemperature2, 6},
     {"_medfate_leafVapourPressure", (DL_FUNC) &_medfate_leafVapourPressure, 2},
+    {"_medfate_irradianceToPhotonFlux", (DL_FUNC) &_medfate_irradianceToPhotonFlux, 2},
     {"_medfate_waterDynamicViscosity", (DL_FUNC) &_medfate_waterDynamicViscosity, 1},
     {"_medfate_sugarStarchDynamicsLeaf", (DL_FUNC) &_medfate_sugarStarchDynamicsLeaf, 3},
     {"_medfate_sugarStarchDynamicsStem", (DL_FUNC) &_medfate_sugarStarchDynamicsStem, 3},

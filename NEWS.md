@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 2.1.4
+- New function 'spwb_emissions' by Shengli Huang
+
 # Version 2.1.3
 - Update Psi_Extract according to Psi_TLP (Hydratry)
 

@@ -1,5 +1,6 @@
 \encoding{UTF-8}
 \name{biophysics}
+\alias{biophysics_irradianceToPhotonFlux}
 \alias{biophysics_leafTemperature}
 \alias{biophysics_leafTemperature2}
 \alias{biophysics_leafVapourPressure}
@@ -14,6 +15,7 @@ Physical and biophysical utility functions
 Utility functions for the calculation of biophysical variables. 
 }
 \usage{
+biophysics_irradianceToPhotonFlux(I, lambda)
 biophysics_leafTemperature(absRad, airTemperature, u, E, leafWidth = 1.0)
 biophysics_leafTemperature2(SWRabs, LWRnet, airTemperature, u, E, leafWidth = 1.0)
 biophysics_leafVapourPressure(leafTemp, leafPsi)
@@ -24,6 +26,8 @@ biophysics_waterDynamicViscosity(temp)
 }
 
 \arguments{
+  \item{I}{Irradiance (in W*m-2).}
+  \item{lambda}{Wavelength (in nm).}
   \item{u}{Wind speed above the leaf boundary layer (in m/s).}
   \item{airTemperature}{Air temperature (in ºC).}
   \item{tmin, tmax}{Minimum and maximum daily temperature (ºC).}

@@ -21,6 +21,10 @@ biophysics_leafVapourPressure <- function(leafTemp, leafPsi) {
     .Call(`_medfate_leafVapourPressure`, leafTemp, leafPsi)
 }
 
+biophysics_irradianceToPhotonFlux <- function(I, lambda = 546.6507) {
+    .Call(`_medfate_irradianceToPhotonFlux`, I, lambda)
+}
+
 biophysics_waterDynamicViscosity <- function(temp) {
     .Call(`_medfate_waterDynamicViscosity`, temp)
 }
