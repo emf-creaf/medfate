@@ -1,4 +1,8 @@
-## Script to reload parameters from 'SpParams.xlsx'
+## Reload MEGAN parameters
+MEGANParams<-read.csv("data-raw/MEGANParams.csv",skip=0)
+usethis::use_data(MEGANParams, overwrite = T)
+
+## Reload parameters from 'SpParams.xlsx'
 SpParamsMED <-as.data.frame(readxl::read_xlsx("data-raw/SpParams.xlsx",
                                               sheet="SpParamsMED", na = "NA"), stringsAsFactors=FALSE)
 usethis::use_data(SpParamsMED, overwrite = T)
