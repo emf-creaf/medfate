@@ -816,7 +816,6 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
   String soilFunctions = control["soilFunctions"]; 
   if((soilFunctions!="SX") & (soilFunctions!="VG")) stop("Wrong soil functions ('soilFunctions' should be either 'SX' or 'VG')");
   
-
   NumericVector alphaSWR = cohortNumericParameter(SP, SpParams, "alphaSWR");
   NumericVector gammaSWR = cohortNumericParameter(SP, SpParams, "gammaSWR");
   NumericVector kPAR = cohortNumericParameter(SP, SpParams, "kPAR");
@@ -828,7 +827,6 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
   
   StringVector Status(numCohorts, "alive");
   
-
   //Cohort description
   CharacterVector nsp = cohortCharacterParameter(SP, SpParams, "Name");
   DataFrame cohortDescdf = DataFrame::create(_["SP"] = SP, _["Name"] = nsp);
@@ -864,7 +862,7 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
                            paramsAnatomydf, paramsTranspirationdf, control);
   List belowLayers = below["belowLayers"];
   DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(below["below"]);
-  
+
   List input;
   if(transpirationMode=="Granier") {
     input = List::create(_["control"] = clone(control),

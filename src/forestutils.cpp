@@ -84,7 +84,7 @@ NumericVector cohortNumericParameter(List x, DataFrame SpParams, String parName)
 
 NumericVector cohortNumericParameter(IntegerVector SP, DataFrame SpParams, String parName){
   NumericVector par(SP.size());
-  NumericVector parSP = SpParams[parName];
+  NumericVector parSP = Rcpp::as<Rcpp::NumericVector>(SpParams[parName]);
   for(int i=0;i<SP.size();i++) {
     int iSP = findRowIndex(SP[i], SpParams);
     par[i] = parSP[iSP];
