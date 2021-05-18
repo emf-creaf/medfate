@@ -105,6 +105,7 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
   String transpirationMode = control["transpirationMode"];
   bool allowDessication = control["allowDessication"];
   bool allowStarvation = control["allowStarvation"];
+  bool allowDefoliation = control["allowDefoliation"];
   bool sinkLimitation = control["sinkLimitation"];
   String allocationStrategy = control["allocationStrategy"];
   String cavitationRefill = control["cavitationRefill"];
@@ -404,6 +405,14 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
       if(LAplc<LAexpanded) {
         propLeafSenescence = std::max((LAexpanded-LAplc)/LAexpanded, propLeafSenescence); 
       }
+      //Complete defoliation if leaf RWCsymp < 0.5
+      double leafSympRWC = symplasticRelativeWaterContent(PlantPsi[j], LeafPI0[j], LeafEPS[j]);
+      if(LAexpanded > 0.0 && leafSympRWC<0.5){
+        if(allowDefoliation) {
+          propLeafSenescence = 1.0;
+          Rcout<<" [Cohort "<< j<<" defoliated ] ";
+        }
+      }
       double deltaLAsenescence = LAexpanded*propLeafSenescence;
       //Define sapwood senescense
       double propSAturnover = dailySapwoodTurnoverProportion/(1.0+15.0*exp(-0.01*H[j]));
@@ -455,12 +464,13 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
       starchSapwood[j] = starchSapwood[j]*(Volume_sapwood[j]/newVolumeSapwood); 
       
       //MORTALITY Death by carbon starvation or dessication
+      double stemSympRWC = symplasticRelativeWaterContent(PlantPsi[j], StemPI0[j], StemEPS[j]);
       if((sugarSapwood[j]<0.0) & allowStarvation) {
         LAdead = LAexpanded;
         LAexpanded = 0.0;
         Status(j) = "starvation";
         Rcout<<" [Cohort "<< j<<" died from " << Status(j)<<"] ";
-      } else if((StemPLC[j] > 0.5) & allowDessication) {
+      } else if( (stemSympRWC < 0.5) & allowDessication) {
         LAdead = LAexpanded;
         LAexpanded = 0.0;
         Status(j) = "dessication";

@@ -4,6 +4,7 @@
 
 # Version 2.1.4
 - New function 'spwb_emissions' by Shengli Huang
+- Dessication/defoliation homogenized across transpiration modes in growth function
 
 # Version 2.1.3
 - Update Psi_Extract according to Psi_TLP (Hydratry)
