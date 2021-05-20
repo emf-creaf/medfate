@@ -694,7 +694,13 @@ DataFrame internalCarbonDataFrame(DataFrame above,
   return(df);
 }  
 
-
+DataFrame internalMortalityDataFrame(DataFrame above) {
+  int numCohorts = above.nrow();
+  NumericVector N_dead(numCohorts, 0.0);
+  DataFrame df = DataFrame::create(Named("N_dead") = N_dead);
+  df.attr("row.names") = above.attr("row.names");
+  return(df);
+}
 DataFrame internalAllocationDataFrame(DataFrame above, 
                                       DataFrame belowdf, 
                                       DataFrame paramsAnatomydf,
@@ -1030,6 +1036,7 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
                         _["internalAllocation"] = internalAllocationDataFrame(plantsdf, belowdf,
                                                             paramsAnatomydf,
                                                             paramsTranspirationdf, control),
+                        _["internalMortality"] = internalMortalityDataFrame(plantsdf),
                         _["internalRings"] = ringList);
   } else if(transpirationMode =="Sperry"){
     if(soilFunctions=="SX") {
@@ -1060,6 +1067,7 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
                          _["internalAllocation"] = internalAllocationDataFrame(plantsdf, belowdf,
                                                          paramsAnatomydf,
                                                          paramsTranspirationdf, control),
+                         _["internalMortality"] = internalMortalityDataFrame(plantsdf),
                          _["internalRings"] = ringList);
     
   } 
