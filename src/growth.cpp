@@ -514,8 +514,9 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
               Rcout<<" [Cohort "<< j<<" died from starvation] ";
             }
           }
-        } else if(mortalityMode =="density/stochastic") {
-          Ndead_day = ((double) R::rbinom(round(N[j]), P_day));
+        } else if(mortalityMode == "density/stochastic") {
+          Ndead_day = R::rbinom(round(N[j]), P_day);
+          // Rcout<< j<< " "<< P_day<< " "<< N[j]<< " "<< Ndead_day<< " "<< R::rbinom(750, 2.82309e-05)<< "\n";
         }
       }
         
@@ -1176,8 +1177,12 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
             }
           }
         } else if(mortalityMode =="density/stochastic") {
-          Ndead_day = ((double) R::rbinom(round(N[j]), P_day));
+          // NumericVector nv = Rcpp::runif(round(N[j]), 0.0,1.0);
+          // for(int k=0;k<nv.size();k++) if(nv[k]< P_day) Ndead_day += 1.0;
+          Ndead_day = R::rbinom(round(N[j]), P_day);
+          // Rcout<< j<< " "<< P_day<< " "<< N[j]<< " "<< Ndead_day<< " "<< R::rbinom(750, 2.82309e-05) << "\n";
         }
+        // if(Ndead_day>0.0) Rcout<< j<< " "<< P_day<< " "<< Ndead_day<< "\n";
       }
       
       // Update density and increase the number of dead plants

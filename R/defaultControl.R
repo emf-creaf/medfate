@@ -41,6 +41,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     multiLayerBalance = FALSE,
     
     # growth
+    allowRecruitment = TRUE,
     allowDessication = TRUE,
     allowStarvation = TRUE,
     allowDefoliation = TRUE,
@@ -63,11 +64,14 @@ defaultControl<-function(transpirationMode = "Granier") {
     maximumRelativeGrowthRates = list(leaf = 0.01, # m2 leaf ·cm-2 sapwood· day-1
                                       sapwood = 0.002, # cm2 sapwood ·cm-2 sapwood· day-1
                                       fineroot = 0.1), # g dw · g dw -1 · day -1
-    mortalityMode = "density/stochastic",
+    mortalityMode = "density/deterministic",
     mortalityBaselineRate = 0.01,
     mortalitySugarThreshold = 0.1,
-    mortalityRWCThreshold = 0.5
+    mortalityRWCThreshold = 0.5,
     
+    recruitmentDensity = 200,
+    recruitmentDBH = 1.0,
+    recruitmentLAI = 0.1
     #For forest dynamics
 #     freqZopt = 20,
 #     sap2tree=TRUE,
