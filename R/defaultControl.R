@@ -41,7 +41,6 @@ defaultControl<-function(transpirationMode = "Granier") {
     multiLayerBalance = FALSE,
     
     # growth
-    allowRecruitment = TRUE,
     allowDessication = TRUE,
     allowStarvation = TRUE,
     allowDefoliation = TRUE,
@@ -69,9 +68,6 @@ defaultControl<-function(transpirationMode = "Granier") {
     mortalitySugarThreshold = 0.1,
     mortalityRWCThreshold = 0.5,
     
-    recruitmentDensity = 200,
-    recruitmentDBH = 1.0,
-    recruitmentLAI = 0.1
     #For forest dynamics
 #     freqZopt = 20,
 #     sap2tree=TRUE,
