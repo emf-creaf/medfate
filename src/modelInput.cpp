@@ -825,19 +825,17 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
     if(NumericVector::is_na(CR[c])) CR[c] = 0.5; //PATCH TO AVOID MISSING VALUES!!!!
   }
   
-  StringVector Status(numCohorts, "alive");
-  
+
   //Cohort description
   CharacterVector nsp = cohortCharacterParameter(SP, SpParams, "Name");
   DataFrame cohortDescdf = DataFrame::create(_["SP"] = SP, _["Name"] = nsp);
   cohortDescdf.attr("row.names") = above.attr("row.names");
   
   //Above 
-  DataFrame plantsdf = DataFrame::create(_["H"]=H, _["CR"]=CR, _["N"] = N, 
+  DataFrame plantsdf = DataFrame::create(_["H"]=H, _["CR"]=CR, _["N"] = N,
                                          _["LAI_live"]=LAI_live, 
                                          _["LAI_expanded"] = LAI_expanded, 
-                                         _["LAI_dead"] = LAI_dead,
-                                         _["Status"] = Status);
+                                         _["LAI_dead"] = LAI_dead);
   plantsdf.attr("row.names") = above.attr("row.names");
   
   DataFrame paramsAnatomydf;
@@ -973,7 +971,6 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   
   
   NumericVector SA(numCohorts);
-  StringVector Status(numCohorts, "alive");
   for(int c=0;c<numCohorts;c++){
     SA[c] = 10000.0*(LAI_live[c]/(N[c]/10000.0))/Al2As[c];//Individual SA in cm2
   }
@@ -985,9 +982,16 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   DataFrame cohortDescdf = DataFrame::create(_["SP"] = SP, _["Name"] = nsp);
   cohortDescdf.attr("row.names") = above.attr("row.names");
   
-  DataFrame plantsdf = DataFrame::create(_["SP"]=SP, _["N"]=N,_["DBH"]=DBH, _["Cover"] = Cover, _["H"]=H, _["CR"]=CR,
-                               _["LAI_live"]=LAI_live, _["LAI_expanded"]=LAI_expanded, _["LAI_dead"] = LAI_dead,  
-                               _["SA"] = SA, _["Status"] = Status);
+  DataFrame plantsdf = DataFrame::create(_["SP"]=SP, 
+                                         _["N"]=N,
+                                         _["DBH"]=DBH, 
+                                         _["Cover"] = Cover, 
+                                         _["H"]=H, 
+                                         _["CR"]=CR,
+                                         _["SA"] = SA, 
+                                         _["LAI_live"]=LAI_live, 
+                                         _["LAI_expanded"]=LAI_expanded, 
+                                         _["LAI_dead"] = LAI_dead);
   plantsdf.attr("row.names") = above.attr("row.names");
   
 

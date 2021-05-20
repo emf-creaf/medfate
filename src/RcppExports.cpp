@@ -1017,6 +1017,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// dailyMortalityProbability
+double dailyMortalityProbability(double mortalityBaselineRate, double value, double threshold, bool allowStress, double minValue, double slope);
+RcppExport SEXP _medfate_dailyMortalityProbability(SEXP mortalityBaselineRateSEXP, SEXP valueSEXP, SEXP thresholdSEXP, SEXP allowStressSEXP, SEXP minValueSEXP, SEXP slopeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type mortalityBaselineRate(mortalityBaselineRateSEXP);
+    Rcpp::traits::input_parameter< double >::type value(valueSEXP);
+    Rcpp::traits::input_parameter< double >::type threshold(thresholdSEXP);
+    Rcpp::traits::input_parameter< bool >::type allowStress(allowStressSEXP);
+    Rcpp::traits::input_parameter< double >::type minValue(minValueSEXP);
+    Rcpp::traits::input_parameter< double >::type slope(slopeSEXP);
+    rcpp_result_gen = Rcpp::wrap(dailyMortalityProbability(mortalityBaselineRate, value, threshold, allowStress, minValue, slope));
+    return rcpp_result_gen;
+END_RCPP
+}
 // growthDay
 List growthDay(List x, CharacterVector date, double tmin, double tmax, double rhmin, double rhmax, double rad, double wind, double latitude, double elevation, double slope, double aspect, double prec, double runon);
 RcppExport SEXP _medfate_growthDay(SEXP xSEXP, SEXP dateSEXP, SEXP tminSEXP, SEXP tmaxSEXP, SEXP rhminSEXP, SEXP rhmaxSEXP, SEXP radSEXP, SEXP windSEXP, SEXP latitudeSEXP, SEXP elevationSEXP, SEXP slopeSEXP, SEXP aspectSEXP, SEXP precSEXP, SEXP runonSEXP) {
@@ -4647,6 +4663,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_layerFuelAverageCrownLength", (DL_FUNC) &_medfate_layerFuelAverageCrownLength, 6},
     {"_medfate_fuelLiveStratification", (DL_FUNC) &_medfate_fuelLiveStratification, 7},
     {"_medfate_FCCSproperties", (DL_FUNC) &_medfate_FCCSproperties, 11},
+    {"_medfate_dailyMortalityProbability", (DL_FUNC) &_medfate_dailyMortalityProbability, 6},
     {"_medfate_growthDay", (DL_FUNC) &_medfate_growthDay, 14},
     {"_medfate_growth", (DL_FUNC) &_medfate_growth, 6},
     {"_medfate_Psi2K", (DL_FUNC) &_medfate_Psi2K, 3},

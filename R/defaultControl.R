@@ -50,7 +50,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     phloemConductanceFactor = 0.2, # phloem conductance per leaf area basis (l*m-2*MPa-1*s-1)
     nonSugarConcentration = 0.25, # mol · l-1
     equilibriumOsmoticConcentration = list(leaf = 0.8, sapwood = 0.6),  # (Paljakka et al. 2017)
-    minimumSugarForGrowth = list(leaf = 0.25, sapwood=0.25, fineroot = 0.25),
+    minimumSugarForGrowth = 0.25,
     # Ogle and Pacala 2010, Tree Physiology 29, 587–605
     respirationRates = list(leaf = 0.00260274, 
                             sapwood = 6.849315e-05, 
@@ -62,7 +62,12 @@ defaultControl<-function(transpirationMode = "Granier") {
                              fineroot = 1.30), #  g gluc · g dw -1
     maximumRelativeGrowthRates = list(leaf = 0.01, # m2 leaf ·cm-2 sapwood· day-1
                                       sapwood = 0.002, # cm2 sapwood ·cm-2 sapwood· day-1
-                                      fineroot = 0.1) # g dw · g dw -1 · day -1
+                                      fineroot = 0.1), # g dw · g dw -1 · day -1
+    mortalityMode = "density/stochastic",
+    mortalityBaselineRate = 0.01,
+    mortalitySugarThreshold = 0.1,
+    mortalityRWCThreshold = 0.5
+    
     #For forest dynamics
 #     freqZopt = 20,
 #     sap2tree=TRUE,

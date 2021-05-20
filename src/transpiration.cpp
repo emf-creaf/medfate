@@ -182,7 +182,7 @@ List transpirationSperry(List x, double tmin, double tmax,
   NumericVector LAIdead = Rcpp::as<Rcpp::NumericVector>(above["LAI_dead"]);
   NumericVector H = Rcpp::as<Rcpp::NumericVector>(above["H"]);
   NumericVector CR = Rcpp::as<Rcpp::NumericVector>(above["CR"]);
-  StringVector Status = Rcpp::as<Rcpp::StringVector>(above["Status"]);
+  NumericVector N = Rcpp::as<Rcpp::NumericVector>(above["N"]);
   
   int numCohorts = LAIlive.size();
   
@@ -993,7 +993,7 @@ List transpirationSperry(List x, double tmin, double tmax,
           Temp_SH(c,n)= NA_REAL;
           Temp_SL(c,n)= NA_REAL;
         }        
-      } else if(Status[c]=="alive") { //Living plants with no LAI should be in equilibrium with soil (i.e. no transpiration)
+      } else if(N[c]>0.0) { //Cohorts with living individuals but no LAI should be in equilibrium with soil (i.e. no transpiration)
         List sFunctionBelow = supply[c];
         NumericVector  psiRootCrown = sFunctionBelow["psiRootCrown"];
         RootCrownPsiVEC[c] = psiRootCrown[0];
@@ -1013,7 +1013,7 @@ List transpirationSperry(List x, double tmin, double tmax,
         }
       }
       
-      if(Status[c]=="alive") {
+      if(N[c]>0.0) {
         //Store (for output) instantaneous leaf, stem and root potential, plc and rwc values
         PLC(c,n) = StemPLCVEC[c];
         StemSympRWCInst(c,n) = symplasticRelativeWaterContent(StemSympPsiVEC[c], stempi0, StemEPS[c]);

@@ -18,6 +18,18 @@ using namespace Rcpp;
 
 const double Q10_resp = 2.0;
 
+// [[Rcpp::export("mortality_dailyProbability")]]
+double dailyMortalityProbability(double mortalityBaselineRate, 
+                                 double value, 
+                                 double threshold, bool allowStress = true,
+                                 double minValue = 0.0, double slope = 1.0) {
+  double P_day = 1.0 - exp(log(1.0 - mortalityBaselineRate)/356.0);
+  if(allowStress) {
+    double P_stress = (1.0-exp(slope*(value - threshold)))/(1.0-exp(slope*(minValue-threshold)));
+    P_day = std::max(P_day, P_stress);
+  }
+  return(P_day);
+}
 
 /**
  * phloem flow (Holtta et al. 2017)
@@ -102,7 +114,10 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
   //Control params
   List control = x["control"];  
   
-  String transpirationMode = control["transpirationMode"];
+  String mortalityMode = control["mortalityMode"];
+  double mortalityBaselineRate = control["mortalityBaselineRate"];
+  double mortalitySugarThreshold= control["mortalitySugarThreshold"];
+  double mortalityRWCThreshold= control["mortalityRWCThreshold"];
   bool allowDessication = control["allowDessication"];
   bool allowStarvation = control["allowStarvation"];
   bool allowDefoliation = control["allowDefoliation"];
@@ -114,9 +129,7 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
   List equilibriumOsmoticConcentration  = control["equilibriumOsmoticConcentration"];
   double equilibriumLeafTotalConc = equilibriumOsmoticConcentration["leaf"];
   double equilibriumSapwoodTotalConc = equilibriumOsmoticConcentration["sapwood"];
-  List minimumSugarForGrowth = control["minimumSugarForGrowth"];
-  double minimumSugarGrowthLeaves = minimumSugarForGrowth["leaf"];
-  double minimumStarchGrowthSapwood = minimumSugarForGrowth["sapwood"];
+  double minimumSugarForGrowth = control["minimumSugarForGrowth"];
   List turnoverRates = control["turnoverRates"];
   double dailySapwoodTurnoverProportion = turnoverRates["sapwood"];
   List constructionCosts = control["constructionCosts"];
@@ -142,8 +155,7 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
   NumericVector LAI_expanded = above["LAI_expanded"];
   NumericVector LAI_dead = above["LAI_dead"];
   NumericVector SA = above["SA"];
-  StringVector Status = Rcpp::as<Rcpp::StringVector>(above["Status"]);
-  
+
   //Belowground parameters  
   DataFrame belowdf = Rcpp::as<Rcpp::DataFrame>(x["below"]);
   NumericVector Z95 = Rcpp::as<Rcpp::NumericVector>(belowdf["Z95"]);
@@ -255,7 +267,7 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
   
   //3. Carbon balance and growth
   for(int j=0;j<numCohorts;j++){
-    if(Status[j]=="alive") {
+    if(N[j] > 0.0) {
       double costPerLA = 1000.0*leaf_CC/SLA[j]; // Construction cost in g gluc · m-2 of leaf area
       double costPerSA = sapwood_CC*(H[j]+(Z95[j]/10.0))*WoodDensity[j];  //Construction cost in g gluc ·cm-2 of sapwood
       
@@ -324,7 +336,7 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
         double deltaLAsink = std::min(deltaLApheno, SA[j]*RGRleafmax[j]*(rleafcell/rleafcellmax));
         if(!sinkLimitation) deltaLAsink = std::min(deltaLApheno, SA[j]*RGRleafmax[j]); //Deactivates temperature and turgor limitation
         double deltaLAavailable = 0.0;
-        deltaLAavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarGrowthLeaves)*(glucoseMolarMass*Volume_sapwood[j]))/costPerLA);
+        deltaLAavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarForGrowth)*(glucoseMolarMass*Volume_sapwood[j]))/costPerLA);
         deltaLAgrowth = std::min(deltaLAsink, deltaLAavailable);
         growthCostLA = deltaLAgrowth*costPerLA;
       }
@@ -338,7 +350,10 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
         double cellareamaxincrease = 20.0; 
         double deltaSAsink = (SA[j]*RGRsapwoodmax[j]*(deltaSAring/10.0)/cellareamaxincrease); 
         if(!sinkLimitation) deltaSAsink = SA[j]*RGRsapwoodmax[j]; //Deactivates temperature and turgor limitation
-        double deltaSAavailable = std::max(0.0,((starchSapwood[j]- minimumStarchGrowthSapwood)*(glucoseMolarMass*Volume_sapwood[j]))/costPerSA);
+        double deltaSAavailable = 0.0;
+        if(sugarSapwood[j] > minimumSugarForGrowth) {
+          deltaSAavailable = (starchSapwood[j]*(glucoseMolarMass*Volume_sapwood[j]))/costPerSA;
+        }
         deltaSAgrowth = std::min(deltaSAsink, deltaSAavailable);
         // Rcout<< SAring.size()<<" " <<j<< " "<< PlantPsi[j]<< " "<< LeafPI0[j]<<" dSAring "<<deltaSAring<< " dSAsink "<< deltaSAsink<<" dSAgrowth "<< deltaSAgrowth<<"\n";
         growthCostSA = deltaSAgrowth*costPerSA; //increase cost (may be non zero if leaf growth was charged onto sapwood)
@@ -462,26 +477,54 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
       }
       sugarSapwood[j] = sugarSapwood[j]*(Volume_sapwood[j]/newVolumeSapwood);
       starchSapwood[j] = starchSapwood[j]*(Volume_sapwood[j]/newVolumeSapwood); 
+      //Update LAI
+      LAI_dead[j] = LAdead*N[j]/10000.0;
+      LAI_expanded[j] = LAexpanded*N[j]/10000.0;
       
       //MORTALITY Death by carbon starvation or dessication
       double stemSympRWC = symplasticRelativeWaterContent(PlantPsi[j], StemPI0[j], StemEPS[j]);
-      if((sugarSapwood[j]<0.0) & allowStarvation) {
-        LAdead = LAexpanded;
-        LAexpanded = 0.0;
-        Status(j) = "starvation";
-        Rcout<<" [Cohort "<< j<<" died from " << Status(j)<<"] ";
-      } else if( (stemSympRWC < 0.5) & allowDessication) {
-        LAdead = LAexpanded;
-        LAexpanded = 0.0;
-        Status(j) = "dessication";
-        Rcout<<" [Cohort "<< j<<" died from " << Status(j)<<"] ";
+      double Ndead_day = 0.0;
+      if(mortalityMode=="whole-cohort/deterministic") {
+        if((sugarSapwood[j]<mortalitySugarThreshold) & allowStarvation) {
+          Ndead_day = N[j];
+          Rcout<<" [Cohort "<< j<<" died from starvation] ";
+        } else if( (stemSympRWC < mortalityRWCThreshold) & allowDessication) {
+          Ndead_day = N[j];
+          Rcout<<" [Cohort "<< j<<" died from dessication] ";
+        }
+      } else {
+        double P_starv = dailyMortalityProbability(mortalityBaselineRate, sugarSapwood[j], 
+                                            mortalitySugarThreshold, allowStarvation,
+                                            0.0, 2.0);
+        double P_dess = dailyMortalityProbability(mortalityBaselineRate, stemSympRWC, 
+                                           mortalityRWCThreshold, allowDessication,
+                                           0.0, 2.0);
+        double P_day = std::max(P_dess, P_starv);
+        if(mortalityMode =="density/deterministic") {
+          Ndead_day = N[j]*P_day;
+        } else if(mortalityMode =="whole-cohort/stochastic") {
+          if(R::runif(0.0,1.0) < P_day) {
+            Ndead_day = N[j];
+            if(P_dess>P_starv) {
+              Rcout<<" [Cohort "<< j<<" died from dessication] ";
+            } else {
+              Rcout<<" [Cohort "<< j<<" died from starvation] ";
+            }
+          }
+        } else if(mortalityMode =="density/stochastic") {
+          Ndead_day = ((double) R::rbinom(round(N[j]), P_day));
+        }
       }
-      
+        
+      // Update density and increase the number of dead plants
+      N[j] = std::max(0.0, N[j] - Ndead_day);
 
+      //Update LAI dead and LAI expanded as a result of density decrease
+      double LAI_change = LAexpanded*Ndead_day/10000.0;
+      LAI_dead[j] = LAI_dead[j] + LAI_change;
+      LAI_expanded[j] = LAI_expanded[j] - LAI_change;
+      
       //UPDATE DERIVED QUANTITIES      
-      //Update LAI
-      LAI_expanded[j] = LAexpanded*N[j]/10000.0;
-      LAI_dead[j] = LAdead*N[j]/10000.0;
       //Update Huber value
       if(LAlive>0.0) {
         Al2As[j] = (LAlive)/(SA[j]/10000.0);
@@ -522,9 +565,6 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
   if(plantWaterPools) {
     NumericVector poolProportions = Rcpp::as<Rcpp::NumericVector>(belowdf["poolProportions"]);
   }
-  
-  //Needed with string vectors
-  above["Status"] = Status;
   
 
   DataFrame plantCarbonBalance = DataFrame::create(_["GrossPhotosynthesis"] = GrossPhotosynthesis,
@@ -594,7 +634,11 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
   
   double tday = meteoland::utils_averageDaylightTemperature(tmin, tmax);
   
-  String transpirationMode = control["transpirationMode"];
+  String mortalityMode = control["mortalityMode"];
+  double mortalityBaselineRate = control["mortalityBaselineRate"];
+  double mortalitySugarThreshold= control["mortalitySugarThreshold"];
+  double mortalityRWCThreshold= control["mortalityRWCThreshold"];
+  
   bool allowDessication = control["allowDessication"];
   bool allowStarvation = control["allowStarvation"];
   bool allowDefoliation = control["allowDefoliation"];
@@ -610,10 +654,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
   List equilibriumOsmoticConcentration  = control["equilibriumOsmoticConcentration"];
   double equilibriumLeafTotalConc = equilibriumOsmoticConcentration["leaf"];
   double equilibriumSapwoodTotalConc = equilibriumOsmoticConcentration["sapwood"];
-  List minimumSugarForGrowth = control["minimumSugarForGrowth"];
-  double minimumSugarGrowthLeaves = minimumSugarForGrowth["leaf"];
-  double minimumStarchGrowthSapwood = minimumSugarForGrowth["sapwood"];
-  double minimumSugarGrowthFineRoots = minimumSugarForGrowth["fineroot"];
+  double minimumSugarForGrowth = control["minimumSugarForGrowth"];
   List turnoverRates = control["turnoverRates"];
   double dailySapwoodTurnoverProportion = turnoverRates["sapwood"];
   double dailyFineRootTurnoverProportion = turnoverRates["fineroot"];
@@ -647,8 +688,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
   NumericVector LAI_expanded = above["LAI_expanded"];
   NumericVector LAI_dead = above["LAI_dead"];
   NumericVector SA = above["SA"];
-  StringVector Status = Rcpp::as<Rcpp::StringVector>(above["Status"]);
-  
+
   
   
   //Belowground parameters  
@@ -811,7 +851,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
 
   //3. Carbon balance, growth and senescence by cohort
   for(int j=0;j<numCohorts;j++){
-    if(Status[j]=="alive") {
+    if(N[j]>0.0){
       double LAexpanded = leafArea(LAI_expanded[j], N[j]);
       double LAlive = leafArea(LAI_live[j], N[j]);
       double LAdead = leafArea(LAI_dead[j], N[j]);
@@ -902,7 +942,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
           double deltaLAsink = std::min(deltaLApheno, (1.0/((double) numSteps))*SA[j]*RGRleafmax[j]*(rleafcell/rleafcellmax));
           if(!sinkLimitation) deltaLAsink = std::min(deltaLApheno, (1.0/((double) numSteps))*SA[j]*RGRleafmax[j]); //Deactivates temperature and turgor limitation
           //Grow at expense of stem sugar
-          double deltaLAavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarGrowthLeaves)*(glucoseMolarMass*Volume_sapwood[j]))/costPerLA);
+          double deltaLAavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarForGrowth)*(glucoseMolarMass*Volume_sapwood[j]))/costPerLA);
           double deltaLAgrowthStep = std::min(deltaLAsink, deltaLAavailable);
           growthCostLAStep += deltaLAgrowthStep*costPerLA;
           deltaLAgrowth += deltaLAgrowthStep;
@@ -913,7 +953,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
             double deltaFRBpheno = std::max(fineRootBiomassTarget[j] - fineRootBiomass[j], 0.0);
             double deltaFRBsink = (1.0/((double) numSteps))*(V(j,s)*fineRootBiomass[j])*RGRfinerootmax[j]*(rfineroot[s]/rleafcellmax);
             if(!sinkLimitation) deltaFRBsink = (1.0/((double) numSteps))*(V(j,s)*fineRootBiomass[j])*RGRfinerootmax[j]; //Deactivates temperature and turgor limitation
-            double deltaFRBavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarGrowthFineRoots)*(glucoseMolarMass*Volume_sapwood[j]))/fineroot_CC);
+            double deltaFRBavailable = std::max(0.0,((sugarSapwood[j] - minimumSugarForGrowth)*(glucoseMolarMass*Volume_sapwood[j]))/fineroot_CC);
             double deltaFRBgrowthStep = std::min(deltaFRBpheno, std::min(deltaFRBsink, deltaFRBavailable));
             growthCostFRBStep += deltaFRBgrowthStep*fineroot_CC;
             deltaFRBgrowth[s] += deltaFRBgrowthStep;
@@ -929,7 +969,10 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
           double cellareamaxincrease = 20.0; 
           double deltaSAsink = (SA[j]*RGRsapwoodmax[j]*(deltaSAring/10.0)/cellareamaxincrease)/((double) numSteps); 
           if(!sinkLimitation) deltaSAsink = SA[j]*RGRsapwoodmax[j]/((double) numSteps); //Deactivates temperature and turgor limitation
-          double deltaSAavailable = std::max(0.0,((starchSapwood[j]- minimumStarchGrowthSapwood)*(glucoseMolarMass*Volume_sapwood[j]))/costPerSA);
+          double deltaSAavailable = 0.0;
+          if(sugarSapwood[j] > minimumSugarForGrowth) {
+            deltaSAavailable = (starchSapwood[j]*(glucoseMolarMass*Volume_sapwood[j]))/costPerSA;
+          }
           double deltaSAgrowthStep = std::min(deltaSAsink, deltaSAavailable);
           growthCostSAStep += deltaSAgrowthStep*costPerSA; //increase cost (may be non zero if leaf growth was charged onto sapwood)
           deltaSAgrowth  +=deltaSAgrowthStep;
@@ -1092,25 +1135,55 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
       }
       sugarSapwood[j] = sugarSapwood[j]*(Volume_sapwood[j]/newVolumeSapwood);
       starchSapwood[j] = starchSapwood[j]*(Volume_sapwood[j]/newVolumeSapwood); 
+      //Update LAI
+      LAI_dead[j] = LAdead*N[j]/10000.0;
+      LAI_expanded[j] = LAexpanded*N[j]/10000.0;
       
       //MORTALITY Death by carbon starvation or dessication
-      if((sugarSapwood[j]<0.0) & allowStarvation) {
-        LAdead = LAexpanded;
-        LAexpanded = 0.0;
-        Status(j) = "starvation";
-        Rcout<<" [Cohort "<< j<<" died from " << Status(j)<<"] ";
-      } else if((StemSympRWC[j] <0.5) & allowDessication) {
-        LAdead = LAexpanded;
-        LAexpanded = 0.0;
-        Status(j) = "dessication";
-        Rcout<<" [Cohort "<< j<<" died from " << Status(j)<<"] ";
+      double Ndead_day = 0.0;
+      if(mortalityMode=="whole-cohort/deterministic") {
+        if((sugarSapwood[j]<mortalitySugarThreshold) & allowStarvation) {
+          Ndead_day = N[j];
+          Rcout<<" [Cohort "<< j<<" died from starvation] ";
+        } else if( (StemSympRWC[j] < mortalityRWCThreshold) & allowDessication) {
+          Ndead_day = N[j];
+          Rcout<<" [Cohort "<< j<<" died from dessication] ";
+        }
+      } else {
+        double P_starv = dailyMortalityProbability(mortalityBaselineRate, sugarSapwood[j], 
+                                                   mortalitySugarThreshold, allowStarvation,
+                                                   0.0, 2.0);
+        double P_dess = dailyMortalityProbability(mortalityBaselineRate, StemSympRWC[j], 
+                                                  mortalityRWCThreshold, allowDessication,
+                                                  0.0, 2.0);
+        double P_day = std::max(P_dess, P_starv);
+        if(mortalityMode =="density/deterministic") {
+          Ndead_day = N[j]*P_day;
+        } else if(mortalityMode =="whole-cohort/stochastic") {
+          if(R::runif(0.0,1.0) < P_day) {
+            Ndead_day = N[j];
+            if(P_dess>P_starv) {
+              Rcout<<" [Cohort "<< j<<" died from dessication] ";
+            } else {
+              Rcout<<" [Cohort "<< j<<" died from starvation] ";
+            }
+          }
+        } else if(mortalityMode =="density/stochastic") {
+          Ndead_day = ((double) R::rbinom(round(N[j]), P_day));
+        }
       }
+      
+      // Update density and increase the number of dead plants
+      N[j] = std::max(0.0, N[j] - Ndead_day);
+      
+      //Update LAI dead and LAI expanded as a result of density decrease
+      double LAI_change = LAexpanded*Ndead_day/10000.0;
+      LAI_dead[j] = LAI_dead[j] + LAI_change;
+      LAI_expanded[j] = LAI_expanded[j] - LAI_change;
+      
       
       
       //UPDATE DERIVED QUANTITIES   
-      //Update LAI
-      LAI_expanded[j] = LAexpanded*N[j]/10000.0;
-      LAI_dead[j] = LAdead*N[j]/10000.0;
       if(LAlive>0.0) {
         //Update Huber value, stem and root hydraulic conductance
         double oldstemR = 1.0/VCstem_kmax[j];
@@ -1210,9 +1283,6 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
     List newRHOP = horizontalProportions(poolProportions, CRSV, N, V,dVec, rfc);
     for(int j=0;j<numCohorts;j++) RHOP[j] = newRHOP[j];
   }
-  
-  //Needed with string vectors
-  above["Status"] = Status;
   
   GrossPhotosynthesisInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
   MaintenanceRespirationInst.attr("dimnames") = List::create(above.attr("row.names"), seq(1,numSteps));
@@ -1441,8 +1511,7 @@ void recordStandSummary(DataFrame standSummary, DataFrame above, int pos) {
   NumericVector H = above["H"];
   NumericVector N = above["N"];
   NumericVector LAI_live = above["LAI_live"];
-  StringVector Status = above["Status"];
-  
+
   NumericVector SLAI = as<Rcpp::NumericVector>(standSummary["LeafAreaIndex"]);
   SLAI[pos] = 0.0;
   NumericVector TBAL = as<Rcpp::NumericVector>(standSummary["TreeBasalAreaLive"]);
@@ -1456,16 +1525,14 @@ void recordStandSummary(DataFrame standSummary, DataFrame above, int pos) {
   NumericVector MaxHeight = as<Rcpp::NumericVector>(standSummary["MaxHeight"]);
   MaxHeight[pos] = 0.0;
   int numCohorts = N.length();
-  NumericVector treeBA = treeBasalArea(N, DBH);
+  NumericVector treeBA_live = treeBasalArea(N, DBH);
   for(int i=0;i<numCohorts;i++) {
     SLAI[pos] += LAI_live[i];
-    if(!NumericVector::is_na(treeBA[i])) {
-      if(Status[i]=="alive") TBAL[pos] += treeBA[i];
-      else TBAD[pos] += treeBA[i];
+    if(!NumericVector::is_na(DBH[i])) {
+      TBAL[pos] += treeBA_live[i];
       MaxHeight[pos] = std::max(MaxHeight[pos], H[i]);
     } else {
-      if(Status[i]=="alive") SCoverL[pos] +=Cover[i];
-      else SCoverD[pos] +=Cover[i];
+      SCoverL[pos] +=Cover[i];
     }
   }
 }
@@ -1480,7 +1547,6 @@ void recordSpeciesSummary(DataFrame speciesSummary, DataFrame above, DataFrame c
   NumericVector H = above["H"];
   NumericVector N = above["N"];
   NumericVector LAI_live = above["LAI_live"];
-  StringVector Status = above["Status"];
   StringVector Name = cohorts["Name"];
   
   int nspp = SPunique.size();  
@@ -1514,13 +1580,11 @@ void recordSpeciesSummary(DataFrame speciesSummary, DataFrame above, DataFrame c
     int pos = (yearPos*nspp) + jSP;
     Namevec[pos] = Name[i];
     SLAI[pos] += LAI_live[i];
-    if(!NumericVector::is_na(treeBA[i])) {
-      if(Status[i]=="alive") TBAL[pos] += treeBA[i];
-      else TBAD[pos] += treeBA[i];
+    if(!NumericVector::is_na(DBH[i])) {
+      TBAL[pos] += treeBA[i];
       MaxHeight[pos] = std::max(MaxHeight[pos], H[i]);
     } else {
-      if(Status[i]=="alive") SCoverL[pos] +=Cover[i];
-      else SCoverD[pos] +=Cover[i];
+      SCoverL[pos] +=Cover[i];
     }
   }
 }
@@ -1534,7 +1598,6 @@ void recordCohortSummary(DataFrame cohortSummary, DataFrame above, DataFrame coh
   NumericVector H = above["H"];
   NumericVector N = above["N"];
   NumericVector LAI_live = above["LAI_live"];
-  StringVector Status = above["Status"];
   StringVector Name = cohorts["Name"];
   CharacterVector Cohorts = cohorts.attr("row.names");
   int numCohorts = Cohorts.size();
@@ -1556,12 +1619,10 @@ void recordCohortSummary(DataFrame cohortSummary, DataFrame above, DataFrame coh
     Namevec[pos] = Name[i];
     SLAI[pos] = LAI_live[i];
     Cohortvec[pos] = Cohorts[i];
-    if(!NumericVector::is_na(treeBA[i])) {
-      if(Status[i]=="alive") TBAL[pos] = treeBA[i];
-      else TBAD[pos] = treeBA[i];
+    if(!NumericVector::is_na(DBH[i])) {
+      TBAL[pos] = treeBA[i];
     } else {
-      if(Status[i]=="alive") SCoverL[pos] =Cover[i];
-      else SCoverD[pos] =Cover[i];
+      SCoverL[pos] =Cover[i];
     }
   }
 }
@@ -1878,8 +1939,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
                    latitude, elevation, slope, aspect,
                    solarConstant, delta, Precipitation[i], PET[i], 
                    er, 0.0, verbose);
-      // Rcout<<" coh 1: "<< Status[1]<<"\n";
-      
+
       fillEnergyBalanceTemperatureDailyOutput(DEB,DT,DLT,s,i, multiLayerBalance);
     }    
     
@@ -1954,8 +2014,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
       NumericVector LAI_expanded = above["LAI_expanded"];
       NumericVector LAI_dead = above["LAI_dead"];
       NumericVector SA = above["SA"];
-      StringVector Status = above["Status"];
-      
+
       DataFrame internalAllocation = Rcpp::as<Rcpp::DataFrame>(x["internalAllocation"]);
       NumericVector allocationTarget = internalAllocation["allocationTarget"];
       NumericVector leafAreaTarget = internalAllocation["leafAreaTarget"];
@@ -1971,7 +2030,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
 
       NumericVector L = parcohortC(H, LAI_live, LAI_dead, kPAR, CR);
       for(int j=0;j<numCohorts; j++) {
-        if(!NumericVector::is_na(DBH[j]) && Status[j]=="alive") {
+        if(!NumericVector::is_na(DBH[j]) && N[j]>0.0) {
           double fHmod = std::max(0.0,std::min(1.0,(1.0-((H[j]-137.0)/(Hmax[j]-137.0)))));
           double fHD = (fHDmin[j]*(L[j]/100.0) + fHDmax[j]*(1.0-(L[j]/100.0)))*fHmod;
           // Rcout << fHmod<<" "<< fHD<<" "<< L[j]<<"\n";
@@ -1980,14 +2039,14 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
       }
       NumericVector crNew = treeCrownRatioMED(N, DBH, H, Acw, Bcw, Acr, B1cr, B2cr, B3cr, C1cr, C2cr);
       for(int j=0;j<numCohorts; j++) {
-        if(!NumericVector::is_na(DBH[j]) && Status[j]=="alive") {
+        if(!NumericVector::is_na(DBH[j]) && N[j]>0.0) {
           CR[j] = crNew[j];
         }
       }
 
       //Shrub variables
       for(int j=0;j<numCohorts; j++) {
-        if(NumericVector::is_na(DBH[j]) && Status[j]=="alive") {
+        if(NumericVector::is_na(DBH[j]) && N[j]>0.0) {
           double Wleaves = leafAreaTarget[j]/SLA[j];  //Calculates the biomass (kg dry weight) of leaves
           double PV = pow(Wleaves*r635[j]/Absh[j], 1.0/Bbsh[j]); //Calculates crown phytovolume (in m3)
           H[j] = pow(1e6*PV/Aash[j], 1.0/Bash[j]); //Updates shrub height
