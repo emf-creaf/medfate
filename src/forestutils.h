@@ -17,7 +17,7 @@ CharacterVector cohortCharacterParameter(IntegerVector SP, DataFrame SpParams, S
 
 double leafAreaProportion(double z1, double z2, double zmin, double zmax);
 
-CharacterVector cohortIDs(List x);
+CharacterVector cohortIDs(List x, int treeOffset = 0, int shrubOffset = 0);
 
 NumericVector cohortHeight(List x);
 

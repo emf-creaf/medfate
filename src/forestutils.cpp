@@ -39,7 +39,7 @@ double leafAreaProportion(double z1, double z2, double zmin, double zmax) {
 
 
 // [[Rcpp::export("plant_ID")]]
-CharacterVector cohortIDs(List x) {
+CharacterVector cohortIDs(List x, int treeOffset = 0, int shrubOffset = 0) {
   DataFrame treeData = Rcpp::as<Rcpp::DataFrame>(x["treeData"]);
   DataFrame shrubData = Rcpp::as<Rcpp::DataFrame>(x["shrubData"]);
   int ntree = treeData.nrows();
@@ -51,12 +51,12 @@ CharacterVector cohortIDs(List x) {
   CharacterVector IDs(numCohorts);
   for(int i=0;i<ntree;i++) {
     char Result[16];
-    sprintf(Result, "T%d_%d", i+1, treeSP[i]);
+    sprintf(Result, "T%d_%d", i+treeOffset+1, treeSP[i]);
     IDs[i] = Result;
   }
   for(int i=0;i<nshrub;i++) {
     char Result[16];
-    sprintf(Result, "S%d_%d", i+1, shrubSP[i]);
+    sprintf(Result, "S%d_%d", i+shrubOffset+1, shrubSP[i]);
     IDs[ntree+i] =Result;
   }
   return(IDs);

@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 2.2.0
+- New simulation function 'dynamics'.
+
 # Version 2.1.4
 - New function 'spwb_emissions' by Shengli Huang
 - Dessication/defoliation homogenized across transpiration modes in growth function

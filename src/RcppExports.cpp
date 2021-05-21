@@ -290,13 +290,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // cohortIDs
-CharacterVector cohortIDs(List x);
-RcppExport SEXP _medfate_cohortIDs(SEXP xSEXP) {
+CharacterVector cohortIDs(List x, int treeOffset, int shrubOffset);
+RcppExport SEXP _medfate_cohortIDs(SEXP xSEXP, SEXP treeOffsetSEXP, SEXP shrubOffsetSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(cohortIDs(x));
+    Rcpp::traits::input_parameter< int >::type treeOffset(treeOffsetSEXP);
+    Rcpp::traits::input_parameter< int >::type shrubOffset(shrubOffsetSEXP);
+    rcpp_result_gen = Rcpp::wrap(cohortIDs(x, treeOffset, shrubOffset));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4609,7 +4611,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_criticalFirelineIntensity", (DL_FUNC) &_medfate_criticalFirelineIntensity, 2},
     {"_medfate_FCCSbehaviour", (DL_FUNC) &_medfate_FCCSbehaviour, 5},
     {"_medfate_rothermel", (DL_FUNC) &_medfate_rothermel, 11},
-    {"_medfate_cohortIDs", (DL_FUNC) &_medfate_cohortIDs, 1},
+    {"_medfate_cohortIDs", (DL_FUNC) &_medfate_cohortIDs, 3},
     {"_medfate_cohortNumericParameter", (DL_FUNC) &_medfate_cohortNumericParameter, 3},
     {"_medfate_cohortCharacterParameter", (DL_FUNC) &_medfate_cohortCharacterParameter, 3},
     {"_medfate_cohortSpecies", (DL_FUNC) &_medfate_cohortSpecies, 1},

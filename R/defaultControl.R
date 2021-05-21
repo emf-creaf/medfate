@@ -66,7 +66,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     mortalityMode = "density/deterministic",
     mortalityBaselineRate = 0.01,
     mortalitySugarThreshold = 0.1,
-    mortalityRWCThreshold = 0.5,
+    mortalityRWCThreshold = 0.5
     
     #For forest dynamics
 #     freqZopt = 20,

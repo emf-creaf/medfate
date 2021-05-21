@@ -81,8 +81,8 @@ fire_Rothermel <- function(modeltype, wSI, sSI, delta, mx_dead, hSI, mSI, u, win
     .Call(`_medfate_rothermel`, modeltype, wSI, sSI, delta, mx_dead, hSI, mSI, u, windDir, slope, aspect)
 }
 
-plant_ID <- function(x) {
-    .Call(`_medfate_cohortIDs`, x)
+plant_ID <- function(x, treeOffset = 0L, shrubOffset = 0L) {
+    .Call(`_medfate_cohortIDs`, x, treeOffset, shrubOffset)
 }
 
 plant_parameter <- function(x, SpParams, parName) {

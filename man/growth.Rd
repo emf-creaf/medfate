@@ -3,7 +3,7 @@
 \alias{growth}
 \title{Forest growth}
 \description{
-Function \code{growth} is a forest growth model that calculates changes in leaf area, sapwood area and structural variables for all plant cohorts in a given forest stand during a period specified in the input climatic data. 
+Function \code{growth} is a process-based model that performs energy, water and carbon balances; and determines changes in water/carbon pools, functional variables (leaf area, sapwood area, root area) and structural ones (tree diameter, tree height, shrub cover) for woody plant cohorts in a given forest stand during a period specified in the input climatic data. 
 }
 \usage{
 growth(x, meteo,  latitude, elevation = NA, slope = NA, aspect = NA) 
@@ -78,13 +78,8 @@ growth(x, meteo,  latitude, elevation = NA, slope = NA, aspect = NA)
         \item{\code{"SAgrowth"}: Sapwood area relative growth rate (in cm2·cm-2·day-1) for an average individual of each plant cohort.}
         \item{\code{"FRAgrowth"}: Fine root area growth relative to sapwood area (in m2·cm-2·day-1) for an average individual of each plant cohort (only for \code{transpirationMode = "Sperry"}).}
     }
- \item{\code{"StandStructures"}: A list with the aboveground structure of the stand at the beginning of the simulation and after each simulated year.}
- \item{\code{"StandSummary"}: A data frame with stand-level summaries (leaf area index, tree basal area, tree density, shrub cover, etc.) at the beginning of the simulation and after each simulated year.}
- \item{\code{"SpeciesSummary"}: A data frame with species-level summaries (leaf area index, tree basal area, tree density, shrub cover, etc.) at the beginning of the simulation and after each simulated year.}
- \item{\code{"CohortSummary"}: A data frame with cohort-level summaries (leaf area index, tree basal area, tree density, shrub cover, etc.) at the beginning of the simulation and after each simulated year.}
- \item{\code{"subdaily"}: A list of objects of class \code{\link{growth_day}}, one per day simulated (only if required in \code{control} parameters, see \code{\link{defaultControl}}).}
-}
-  
+    \item{\code{"subdaily"}: A list of objects of class \code{\link{growth_day}}, one per day simulated (only if required in \code{control} parameters, see \code{\link{defaultControl}}).}
+  }
 }
 \author{
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
