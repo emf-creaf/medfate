@@ -89,6 +89,8 @@ dynamics<-function(forest, soil, SpParams,
   }
   
   #Initialization
+  treeOffset = nrow(forest$treeData)
+  shrubOffset = nrow(forest$shrubData)
   xi = forest2growthInput(forest, soil, SpParams, control)
   
   #initial summaries
@@ -131,10 +133,25 @@ dynamics<-function(forest, soil, SpParams,
     # Store forest state
     forestStructures[[iYear+1]] = forest
     # Simulate recruitment
-    
-    
+    recr_forest = forest
+    recr_forest$treeData$N = 100
+    recr_forest$treeData$DBH = 1
+    recr_forest$treeData$Height = 100
+    recr_forest$shrubData$Cover = 1
+    recr_forest$shrubData$Height = 100
+    recr_above = forest2aboveground(recr_forest, SpParams, NA, "MED")
+    row.names(recr_above) = plant_ID(recr_forest, treeOffset, shrubOffset)
+    treeOffset = treeOffset + nrow(recr_forest$treeData)
+    shrubOffset = shrubOffset + nrow(recr_forest$shrubData)
+    forest_above = forest2aboveground(forest, SpParams, NA, "MED")
+    # merge in forest
+    forest$treeData = rbind(forest$treeData, recr_forest$treeData)
+    forest$shrubData = rbind(forest$shrubData, recr_forest$shrubData)
     # Prepare input for next year
-    xi = forest2growthInput(forest, soil, SpParams, control)
+    xi = growthInput(above = rbind(forest_above, recr_above),
+                     Z50 = c(forest$treeData$Z50, forest$shrubData$Z50),
+                     Z95 = c(forest$treeData$Z95, forest$shrubData$Z95),
+                     soil, SpParams, control)
   }
   res = list(
     "StandSummary" = standSummary,
