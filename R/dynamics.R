@@ -133,22 +133,45 @@ dynamics<-function(forest, soil, SpParams,
     # Store forest state
     forestStructures[[iYear+1]] = forest
     # Simulate recruitment
-    recr_forest = forest
-    recr_forest$treeData$N = 100
-    recr_forest$treeData$DBH = 1
-    recr_forest$treeData$Height = 100
-    recr_forest$shrubData$Cover = 1
-    recr_forest$shrubData$Height = 100
+    treeSpp = unique(forest$treeData$Species)
+    shrubSpp = unique(forest$shrubData$Species)
+    recr_forest = emptyforest(ntree = length(treeSpp), nshrub=length(shrubSpp))
+    if(length(treeSpp)>0) {
+      recr_forest$treeData$Species = treeSpp
+      recr_forest$treeData$N = 100
+      recr_forest$treeData$DBH = 1
+      recr_forest$treeData$Height = 100
+      for(i in 1:length(treeSpp)) {
+        j = which(forest$treeData$Species==treeSpp[i])[1]
+        recr_forest$treeData$Z50[i] = forest$treeData$Z50[j]
+        recr_forest$treeData$Z95[i] = forest$treeData$Z95[j]
+      }
+    }
+    if(length(shrubSpp)>0) {
+      recr_forest$shrubData$Species = shrubSpp
+      recr_forest$shrubData$Cover = 1
+      recr_forest$shrubData$Height = 100
+      for(i in 1:length(shrubSpp)) {
+        j = which(forest$shrubData$Species==shrubSpp[i])[1]
+        recr_forest$shrubData$Z50[i] = forest$shrubData$Z50[j]
+        recr_forest$shrubData$Z95[i] = forest$shrubData$Z95[j]
+      }
+    }
     recr_above = forest2aboveground(recr_forest, SpParams, NA, "MED")
     row.names(recr_above) = plant_ID(recr_forest, treeOffset, shrubOffset)
     treeOffset = treeOffset + nrow(recr_forest$treeData)
     shrubOffset = shrubOffset + nrow(recr_forest$shrubData)
     forest_above = forest2aboveground(forest, SpParams, NA, "MED")
+    # Merge above (first trees)
+    above_all = rbind(forest_above[!is.na(forest_above$DBH),, drop = FALSE], 
+                      recr_above[!is.na(recr_above$DBH),, drop = FALSE],
+                      forest_above[is.na(forest_above$DBH),, drop = FALSE], 
+                      recr_above[is.na(recr_above$DBH),, drop = FALSE])
     # merge in forest
     forest$treeData = rbind(forest$treeData, recr_forest$treeData)
     forest$shrubData = rbind(forest$shrubData, recr_forest$shrubData)
     # Prepare input for next year
-    xi = growthInput(above = rbind(forest_above, recr_above),
+    xi = growthInput(above = above_all,
                      Z50 = c(forest$treeData$Z50, forest$shrubData$Z50),
                      Z95 = c(forest$treeData$Z95, forest$shrubData$Z95),
                      soil, SpParams, control)

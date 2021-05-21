@@ -41,9 +41,12 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 data(examplemeteo)
 meteo2001 = examplemeteo
 meteo2002 = examplemeteo
+meteo2003 = examplemeteo
 row.names(meteo2002) = seq(as.Date("2002-01-01"), 
                            as.Date("2002-12-31"), by="day")
-meteo_01_02 = rbind(meteo2001, meteo2002)
+row.names(meteo2003) = seq(as.Date("2003-01-01"), 
+                           as.Date("2003-12-31"), by="day")
+meteo_01_03 = rbind(meteo2001, meteo2002, meteo2003)
 
 #Load example plot plant data
 data(exampleforestMED)
@@ -59,7 +62,7 @@ examplesoil = soil(defaultSoilParams(4))
 
 #Call simulation function
 fd<-dynamics(exampleforestMED, examplesoil, 
-             SpParamsMED, meteo_01_02, control,
+             SpParamsMED, meteo_01_03, control,
              latitude = 41.82592, elevation = 100)
 
 #Examine stand-level summaries
