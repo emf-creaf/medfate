@@ -20,14 +20,14 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Being able to anticipate the impact of global change on forest ecosystems is one of the major environmental challenges in contemporary societies. However, uncertainties in how forests function and practical constraints in how to integrate available information prevent the development of robust and reliable predictive models. Despite the amount of knowledge accumulated about the functioning and dynamics of Mediterranean forests, scientists should make coordinate their efforts to address the challenge of integrating the different global change drivers in a modelling framework useful for research and applications.
 
-The R package `medfate` has been designed to study the characteristics and simulate functioning and dynamics of Mediterranean forests. Fire and drought impacts are the main environmental drivers covered by the package. Representation of vegetation is not spatially-explicit (i.e. trees or shrubs do not have explicit coordinates within forest stands). This simplified representation is chosen so that package functions can be easily applied to forest plot data from national forest inventories. Since the package intends to facilitate predictions of not only forest functioning but also forest structure and composition, the taxonomic identity of plants is stored, and parameter values need to be provided for each taxonomic entity (but the package could be used with functional groups). 
+The R package `medfate` has been designed to study the characteristics and simulate functioning and dynamics of Mediterranean forests. Climatic conditions are the main environmental drivers covered by the package, with a particular focus on drought impacts. Representation of vegetation is not spatially-explicit (i.e. trees or shrubs do not have explicit coordinates within forest stands). This simplified representation is chosen so that package functions can be easily applied to forest plot data from national forest inventories. Since the package intends to facilitate predictions of not only forest functioning but also forest structure and composition, the taxonomic identity of plants is stored, and parameter values need to be provided for each taxonomic entity (but the package could be used with functional groups). 
 
 ```{r, echo=TRUE, include=FALSE}
 library(medfate)
 ```
 
 
-Package vignettes only cover how to run models using the package functions. Complete documentation on the design and formulation of medfate models can be found in the **medfate reference book** at https://vegmod.ctfc.cat/software/medfate/.
+Package vignettes only cover how to run models using the package functions. Complete documentation on the design and formulation of medfate models can be found in the **medfate reference book** at https://vegmod.github.io/software/medfate/.
 
 ## Data structures
 
@@ -59,21 +59,15 @@ In addition to the physical soil description, this object contains soil paramete
 ## Dynamic simulation functions
 ### Water balance and plant drought stress
 
-Eco-hydrological processes are fundamental for the simulation models included in the `medfate` package. In particular, the package allows the simulation of water balance of soils and plants within forest stands. Processes affecting soil water content include rainfall, canopy interception, infiltration and runoff, percolation and deep drainage, soil evaporation and plant transpiration. In `medfate`, the soil water balance of a forest is primarily used to predict drought stress for living plants in it. Soil water balance can be studied for a single forest stand using function  `spwb()`. Function `spwb()` may be used to:
+Eco-hydrological processes are fundamental for the simulation models included in the `medfate` package. In particular, the package allows the simulation of water balance of soils and plants within forest stands. Processes affecting soil water content include rainfall, canopy interception, infiltration and runoff, percolation and deep drainage, soil evaporation and plant transpiration. In `medfate`, the soil water balance of a forest is primarily used to predict drought stress for living plants in it. Soil/plant water balance can be studied for a given forest stand using function  `spwb()`. Function `spwb()` may be used to monitor or forecast temporal variation in soil water content and/or plant drought stress in particular stands.
 
-1. Monitor or forecast temporal variation in soil water content in particular stands (for example to estimate mushroom yield).
-2. Monitor or forecast temporal variation of plant drought stress in particular stands (for example to anticipate mortality events).
-3. Monitor or forecast temporal variation of fuel moisture in particular stands (for example to monitor wildfire risk).
+### Water/carbon balance, growth and mortality
 
-### Forest growth
+Changes in leaf area and plant growth are key to evaluate the influence of climatic conditions on forest structure and function. Processes affecting annual changes leaf area and plant size are those involved in water and carbon balances, as well as those directly affecting meristematic activity (e.g. phenology or other sink limitations). Processes influencing plant water balance include those affecting soil water content, such as rainfall, canopy interception, infiltration and runoff, percolation and deep drainage, soil evaporation and plant transpiration. Carbon balance arises from the relationship between plant photosynthesis and maintenance/growth respiration. Water and carbon balances are coupled through the regulation of transpiration done by stomata. Plant growth is affected by the availability of carbon (source limitation), but also by temperature and water status (sink limitation). In addition, water and carbon status of cohort plants can increase the likelihood of mortality, resulting in a decrease of the number of individuals in the cohort. Package `medfate` allows simulating daily water/carbon balances, growth and mortality of a set of cohorts (competing for light and water) in a single forest stand using function `growth()`, which adds carbon balance, growth and mortality processes to those simulated by function `spwb()`. 
 
-Changes in leaf area and plant growth are key to evaluate the influence of climatic conditions on forest structure and function. Processes affecting annual changes leaf area and plant size are those involved water and carbon balances, as well as those affecting growth directly. Processes influencing plant water balance include those affecting soil water content, such as rainfall, canopy interception, infiltration and runoff, percolation and deep drainage, soil evaporation and plant transpiration. Carbon balance arises from the relationship between plant photosynthesis and respiration, although carbon reserves play a role in the availabity of carbon for growth. Water and carbon balances are coupled through the regulation of transpiration done by stomata. Plant growth is affected by the availability of carbon (source limitation), but also by temperature and water status (sink limitation). 
+### Forest dynamics
+Changes in forest structure and composition result from the interplay of demographic processes: growth, mortality and recruitment. Since version 2.2.0, the package includes function `dynamics()`, which allows simulating these processes at yearly time steps on a given forest stand. Function `dynamics()` builds on the previous two simulation functions and incorporates recruitment to the set of simulated processes.
 
-Package `medfate` allows simulating plant growth of a set of cohorts (competing for light and water) in a single forest stand using function `growth()`. Leaf area of plants can be severely decreased by drought stress, causing an increase in dead leaf area and affecting carbon and water fluxes. Function `growth()` may be used to:
-
-1. Monitor or forecast temporal variation in water fluxes and soil water content in particular stands (for example to estimate regulation ecosystem services) taking into account processes determining plant growth.
-2. Monitor or forecast temporal variation of plant drought stress in particular stands(for example to anticipate mortality events) taking into account processes determining plant growth.
-3. Monitor or forecast temporal variation of live fuel moisture and the amount of standing dead and live fuels in particular stands (for example to monitor wildfire risk).
 
 ### Sub-model functions
 
@@ -81,6 +75,7 @@ Many of the functions included in `medfate` are internally called by simulation 
 
 
 * `biophysics_*`: Physical and biophysical utility functions.
+* `carbon_*`: Carbon balance.
 * `hydraulics_*`: Plant hydraulics.
 * `hydrology_*`: Canopy and soil hydrology (rainfall interception, soil evaporation, soil infiltration).
 * `light_*`: Light extinction and absortion.
@@ -97,8 +92,8 @@ Many of the functions included in `medfate` are internally called by simulation 
 ### Plant, species and stand attributes
 Package `medfate` include a number of functions to examine properties of the plants conforming the `forest` object, summary functions at the stand level or vertical profiles of several physical properties:
 
-* `plant_*`: Cohort-level information (species name, id, leaf area, height...).
-* `species_*`: Cohort-level attributes aggregated by species (e.g. basal area).
+* `plant_*`: Cohort-level information (species name, id, leaf area index, height...).
+* `species_*`: Species-level attributes (e.g. basal area, leaf area index).
 * `stand_*`: Stand-level attributes (e.g. basal area).
 * `vprofile_*`: Vertical profiles (light, wind, fuel density, leaf area density).
 
