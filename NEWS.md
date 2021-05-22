@@ -4,6 +4,7 @@
 
 # Version 2.2.0
 - New simulation function 'dynamics'.
+- New function 'mergeShrubs'
 
 # Version 2.1.4
 - New function 'spwb_emissions' by Shengli Huang

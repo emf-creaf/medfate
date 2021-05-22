@@ -66,12 +66,15 @@ defaultControl<-function(transpirationMode = "Granier") {
     mortalityMode = "density/deterministic",
     mortalityBaselineRate = 0.01,
     mortalitySugarThreshold = 0.1,
-    mortalityRWCThreshold = 0.5
+    mortalityRWCThreshold = 0.5,
+    
+    #dynamics
+    mergeCohorts = FALSE,
+    removeDeadCohorts=TRUE
     
     #For forest dynamics
 #     freqZopt = 20,
 #     sap2tree=TRUE,
-#     mergeCohorts=TRUE,
 #     removeDeadCohorts=TRUE,
 #     initRadius = 5000,
 #     setDefaults = TRUE,

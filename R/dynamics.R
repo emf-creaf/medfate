@@ -105,8 +105,9 @@ dynamics<-function(forest, soil, SpParams,
   #Simulations
   for(iYear in 1:nYears) {
     year = yearsUnique[iYear]
-    cat(paste0("Growth simulation for year ", year, " (", iYear,"/", nYears,")\n"))
+    cat(paste0("Simulating dynamics for year ", year, " (", iYear,"/", nYears,")\n"))
     meteoYear = meteo[years==year,]
+    cat(paste0("   Growth/mortality\n"))
     Gi = growth(xi, meteoYear, latitude = latitude, elevation = elevation, slope = slope, aspect = aspect)
     # Modified growth output
     xo = Gi$growthInput
@@ -132,7 +133,15 @@ dynamics<-function(forest, soil, SpParams,
     
     # Store forest state
     forestStructures[[iYear+1]] = forest
+    
+    # Merge cohorts if required
+    if(control$mergeCohorts) {
+      cat(paste0("   Merging cohorts (identities will not match cohort tables)\n"))
+      forest = forest_mergeTrees(forest, TRUE)
+      forest = forest_mergeShrubs(forest, TRUE)
+    }
     # Simulate recruitment
+    cat(paste0("   Recruitment\n"))
     treeSpp = unique(forest$treeData$Species)
     shrubSpp = unique(forest$shrubData$Species)
     recr_forest = emptyforest(ntree = length(treeSpp), nshrub=length(shrubSpp))
@@ -150,7 +159,7 @@ dynamics<-function(forest, soil, SpParams,
     if(length(shrubSpp)>0) {
       recr_forest$shrubData$Species = shrubSpp
       recr_forest$shrubData$Cover = 1
-      recr_forest$shrubData$Height = 100
+      recr_forest$shrubData$Height = 10
       for(i in 1:length(shrubSpp)) {
         j = which(forest$shrubData$Species==shrubSpp[i])[1]
         recr_forest$shrubData$Z50[i] = forest$shrubData$Z50[j]
@@ -170,6 +179,7 @@ dynamics<-function(forest, soil, SpParams,
     # merge in forest
     forest$treeData = rbind(forest$treeData, recr_forest$treeData)
     forest$shrubData = rbind(forest$shrubData, recr_forest$shrubData)
+
     # Prepare input for next year
     xi = growthInput(above = above_all,
                      Z50 = c(forest$treeData$Z50, forest$shrubData$Z50),
