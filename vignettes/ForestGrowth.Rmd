@@ -19,7 +19,7 @@ library(medfate)
 
 ## About this vignette
 
-This document describes how to run a growth model of `medfate`. This document is meant to teach users to run the simulation model within R. All the details of the model design and formulation can be found at https://vegmod.ctfc.cat/software/medfate/. 
+This document describes how to run a growth model of `medfate`. This document is meant to teach users to run the simulation model within R. All the details of the model design and formulation can be found at https://vegmod.github.io/software/medfate/. 
 
 ## Preparing model inputs
 Any forest growth model needs information on climate, vegetation and soils of the forest stand to be simulated. Moreover, since models in `medfate` differentiate between species, information on species-specific model parameters is also needed. In this subsection we explain the different steps (including optional pathways) to prepare all the data needed to run function `growth()`.
@@ -245,16 +245,3 @@ The corresponding daily growth rates can also be displayed:
 plot(G1, "LAgrowth", bySpecies = T)
 plot(G1, "SAgrowth", bySpecies = T)
 ```
-
-
-## Stand structure dynamics
-The output object returned by function `growth()` contains information of the year-by-year stand (aboveground) structure, starting with the initial one:
-```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
-G1$StandStructures
-```
-
-We can also display summarized stand information (leaf area index, basal area, etc.) using:
-```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
-G1$StandStructures
-```
-

@@ -144,7 +144,7 @@ Apart from data inputs, the behaviour of simulation models can be controlled usi
 
 ```{r}
 control = defaultControl()
-control
+names(control)
 ```
 Most of these parameters should normally be left to their default value. However, there are three that deserve explanation here: 
 

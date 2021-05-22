@@ -19,7 +19,7 @@ library(medfate)
 
 ## About this vignette
 
-This document describes how to run a water and energy balance model that uses a more detailed approach for hydraulics and stomatal regulation described in De Cáceres et al. (2021). This document is meant to teach users to run the simulation model within R. All the details of the model design and formulation can be found at  https://vegmod.ctfc.cat/software/medfate/. 
+This document describes how to run a water and energy balance model that uses a more detailed approach for hydraulics and stomatal regulation described in De Cáceres et al. (2021). This document is meant to teach users to run the simulation model within R. All the details of the model design and formulation can be found at  https://vegmod.github.io/software/medfate/. 
 
 ## Preparing model inputs
 Most details of the soil plant water balance model inputs are already covered in vignette **1. Introduction to water balance simulation**. Here only differences are mentioned.
@@ -51,7 +51,7 @@ These species commonly occur in the Spanish forest inventory of Catalonia, but m
 names(SpParamsMED)
 ```
 
-Not all parameters are needed for all models. The user can find parameter definitions in the help page of this data set. However, to fully understand the role of parameters in the model, the user should read the details of model design and formulation (https://vegmod.ctfc.cat/software/medfate/). 
+Not all parameters are needed for all models. The user can find parameter definitions in the help page of this data set. However, to fully understand the role of parameters in the model, the user should read the details of model design and formulation (https://vegmod.github.io/software/medfate/). 
 
 ### Vegetation
 
@@ -77,6 +77,7 @@ Apart from data inputs, the behaviour of simulation models is controlled using a
 
 ```{r}
 control = defaultControl()
+names(control)
 ```
 
 To use the complex soil water balance model we must change the values of `transpirationMode` (to switch from "Granier" to "Sperry") and `soilFunctions` (to switch from Saxton's retention curve, "SX", to Van Genuchten's retention curve, "VG"):
