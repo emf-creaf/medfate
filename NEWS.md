@@ -3,8 +3,9 @@
 -------------------------------
 
 # Version 2.2.0
-- New simulation function 'dynamics'.
+- New simulation function 'dynamics', including recruitment process
 - New function 'mergeShrubs'
+- New functions 'species_parameter' and 'species_characterParameter'
 
 # Version 2.1.4
 - New function 'spwb_emissions' by Shengli Huang
