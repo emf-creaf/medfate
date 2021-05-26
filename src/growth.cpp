@@ -428,7 +428,7 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
       if(LAexpanded > 0.0 && leafSympRWC<0.5){
         if(allowDefoliation) {
           propLeafSenescence = 1.0;
-          Rcout<<" [Cohort "<< j<<" defoliated ] ";
+          if(verbose) Rcout<<" [Cohort "<< j<<" defoliated ] ";
         }
       }
       double deltaLAsenescence = LAexpanded*propLeafSenescence;
@@ -490,10 +490,10 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
       if(mortalityMode=="whole-cohort/deterministic") {
         if((sugarSapwood[j]<mortalitySugarThreshold) & allowStarvation) {
           Ndead_day = N[j];
-          Rcout<<" [Cohort "<< j<<" died from starvation] ";
+          if(verbose) Rcout<<" [Cohort "<< j<<" died from starvation] ";
         } else if( (stemSympRWC < mortalityRWCThreshold) & allowDessication) {
           Ndead_day = N[j];
-          Rcout<<" [Cohort "<< j<<" died from dessication] ";
+          if(verbose) Rcout<<" [Cohort "<< j<<" died from dessication] ";
         }
       } else {
         double P_starv = dailyMortalityProbability(mortalityBaselineRate, sugarSapwood[j], 
@@ -1093,7 +1093,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
       if(LAexpanded > 0.0 && LeafSympRWC[j]<0.5){
         if(allowDefoliation) {
           propLeafSenescence = 1.0;
-          Rcout<<" [Cohort "<< j<<" defoliated ] ";
+          if(verbose) Rcout<<" [Cohort "<< j<<" defoliated ] ";
         }
       }
       double deltaLAsenescence = LAexpanded*propLeafSenescence;
@@ -1152,10 +1152,10 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
       if(mortalityMode=="whole-cohort/deterministic") {
         if((sugarSapwood[j]<mortalitySugarThreshold) & allowStarvation) {
           Ndead_day = N[j];
-          Rcout<<" [Cohort "<< j<<" died from starvation] ";
+          if(verbose) Rcout<<" [Cohort "<< j<<" died from starvation] ";
         } else if( (StemSympRWC[j] < mortalityRWCThreshold) & allowDessication) {
           Ndead_day = N[j];
-          Rcout<<" [Cohort "<< j<<" died from dessication] ";
+          if(verbose) Rcout<<" [Cohort "<< j<<" died from dessication] ";
         }
       } else {
         double P_starv = dailyMortalityProbability(mortalityBaselineRate, sugarSapwood[j], 

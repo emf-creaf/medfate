@@ -70,7 +70,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     
     #dynamics
     shrubDynamics = FALSE,
-    mergeCohorts = FALSE,
+    # mergeCohorts = FALSE,
     removeDeadCohorts=TRUE,
     minimumDensity = 1
     

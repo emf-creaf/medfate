@@ -19,7 +19,13 @@ dynamics(forest, soil, SpParams, meteo, control,
   \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when \code{x$TranspirationMode = "Sperry"}. Elevation is also required for 'Granier' if snowpack dynamics are simulated.}
 }
 \details{
-  Function \code{dynamics} simulates forest dynamics for annual time steps, building on other simulation functions. For each simulated year, the function first calls function \code{\link{growth}} to simulate daily water/carbon balance, growth and mortality processes. Next, \code{dynamics} simulates recruitment for species already present in the stand and prepares the input of function \code{\link{growth}} for the next annual time step.
+  Function \code{dynamics} simulates forest dynamics for annual time steps, building on other simulation functions. For each simulated year, the function performs the following steps:
+  \enumerate{
+  \item{Calls function \code{\link{growth}} to simulate daily water/carbon balance, growth and mortality processes.}
+  \item{Simulate recruitment (for species present in the stand).}
+  \item{Prepares the input of function \code{\link{growth}} for the next annual time step.}
+  \item{Store forest status and summaries.}
+  }
 }
 \value{
   A list of class 'dynamics' with the following elements:
