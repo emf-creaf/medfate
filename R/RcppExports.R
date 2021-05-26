@@ -89,8 +89,16 @@ plant_parameter <- function(x, SpParams, parName) {
     .Call(`_medfate_cohortNumericParameter`, x, SpParams, parName)
 }
 
+species_parameter <- function(SP, SpParams, parName) {
+    .Call(`_medfate_speciesNumericParameter`, SP, SpParams, parName)
+}
+
 plant_characterParameter <- function(x, SpParams, parName) {
     .Call(`_medfate_cohortCharacterParameter`, x, SpParams, parName)
+}
+
+species_characterParameter <- function(SP, SpParams, parName) {
+    .Call(`_medfate_speciesCharacterParameter`, SP, SpParams, parName)
 }
 
 plant_species <- function(x) {

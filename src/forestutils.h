@@ -11,9 +11,9 @@ DataFrame forest2aboveground(List x, DataFrame SpParams, double gdd = NA_REAL, S
 NumericMatrix forest2belowground(List x, List soil);
 
 NumericVector cohortNumericParameter(List x, DataFrame SpParams, String parName);
-NumericVector cohortNumericParameter(IntegerVector SP, DataFrame SpParams, String parName);
+NumericVector speciesNumericParameter(IntegerVector SP, DataFrame SpParams, String parName);
 CharacterVector cohortCharacterParameter(List x, DataFrame SpParams, String parName);
-CharacterVector cohortCharacterParameter(IntegerVector SP, DataFrame SpParams, String parName);
+CharacterVector speciesCharacterParameter(IntegerVector SP, DataFrame SpParams, String parName);
 
 double leafAreaProportion(double z1, double z2, double zmin, double zmax);
 

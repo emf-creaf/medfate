@@ -7,6 +7,7 @@ dynamics<-function(forest, soil, SpParams,
   
   dates = as.Date(row.names(meteo))
   years = as.numeric(format(dates, "%Y"))
+  months = as.numeric(format(dates, "%m"))
   yearsUnique = unique(years)
   nYears = length(yearsUnique)
   growthResults = vector("list", nYears)
@@ -97,6 +98,7 @@ dynamics<-function(forest, soil, SpParams,
     year = yearsUnique[iYear]
     cat(paste0("Simulating forest dynamics for year ", year, " (", iYear,"/", nYears,")\n"))
     meteoYear = meteo[years==year,]
+    monthsYear = months[years==year]
     cat(paste0("   (a) Growth/mortality\n"))
     Gi = growth(xi, meteoYear, latitude = latitude, elevation = elevation, slope = slope, aspect = aspect)
     
@@ -158,31 +160,63 @@ dynamics<-function(forest, soil, SpParams,
     
     # Simulate species recruitment
     cat(paste0("   (b) Recruitment\n"))
-    treeSpp = unique(forest$treeData$Species)
-    shrubSpp = unique(forest$shrubData$Species)
+    monthlyTemp = tapply(meteoYear$MeanTemperature, monthsYear, FUN="mean", na.rm=TRUE)
+    minMonthTemp = min(monthlyTemp, na.rm=TRUE)
+    moistureIndex = sum(meteoYear$Precipitation, na.rm=TRUE)/sum(meteoYear$PET, na.rm=TRUE)
+    PARperc = vprofile_PARExtinction(forest, SpParamsMED, draw = FALSE)[1]
+    cat(paste0("       Minimum temperature of the coldest month (ºC): ", round(minMonthTemp,2), "   Moisture index: ", round(moistureIndex,2), "   FPAR (%): ", round(PARperc,1), "\n"))
+    if(is.null(control$seedRain)) {
+      treeSpp = unique(forest$treeData$Species)
+      shrubSpp = unique(forest$shrubData$Species)
+    } else {
+      isTree = !(species_characterParameter(control$seedRain, SpParams, "GrowthForm")=="Shrub")
+      treeSpp = control$seedRain[isTree]
+      shrubSpp = control$seedRain[!isTree]
+    }
     recr_forest = emptyforest(ntree = length(treeSpp), nshrub=length(shrubSpp))
     if(length(treeSpp)>0) {
       recr_forest$treeData$Species = treeSpp
-      recr_forest$treeData$N = 100
-      recr_forest$treeData$DBH = 1
-      recr_forest$treeData$Height = 100
-      for(i in 1:length(treeSpp)) {
-        j = which(forest$treeData$Species==treeSpp[i])[1]
-        recr_forest$treeData$Z50[i] = forest$treeData$Z50[j]
-        recr_forest$treeData$Z95[i] = forest$treeData$Z95[j]
-      }
+      recr_forest$treeData$N = species_parameter(treeSpp, SpParams, "RecrTreeDensity")
+      recr_forest$treeData$N[is.na(recr_forest$treeData$N)] = control$recrTreeDensity
+      recr_forest$treeData$DBH = species_parameter(treeSpp, SpParams, "RecrTreeDBH")
+      recr_forest$treeData$DBH[is.na(recr_forest$treeData$DBH)] = control$recrTreeDBH
+      recr_forest$treeData$Height = species_parameter(treeSpp, SpParams, "RecrTreeHeight")
+      recr_forest$treeData$Height[is.na(recr_forest$treeData$Height)] = control$recrTreeHeight
+      recr_forest$treeData$Z50 = species_parameter(treeSpp, SpParams, "RecrZ50")
+      recr_forest$treeData$Z50[is.na(recr_forest$treeData$Z50)] = control$recrTreeZ50
+      recr_forest$treeData$Z95 = species_parameter(treeSpp, SpParams, "RecrZ95")
+      recr_forest$treeData$Z95[is.na(recr_forest$treeData$Z95)] = control$recrTreeZ95
+      minTemp = species_parameter(treeSpp, SpParams, "MinTempRecr")
+      minMoisture = species_parameter(treeSpp, SpParams, "MinMoistureRecr")
+      minFPAR = species_parameter(treeSpp, SpParams, "MinFPARRecr")
+      minTemp[is.na(minTemp)] = control$minTempRecr
+      minMoisture[is.na(minMoisture)] = control$minMoistureRecr
+      minFPAR[is.na(minFPAR)] = control$minFPARRecr
+      recr_selection = (minMonthTemp > minTemp) & (moistureIndex > minMoisture) & (PARperc > minFPAR)
+      recr_forest$treeData = recr_forest$treeData[recr_selection, , drop = FALSE]
+      if(sum(recr_selection)>0) cat(paste0("       Tree species recruited: ", paste0(treeSpp[recr_selection], collapse =",") ,"\n"))
     }
     if((length(shrubSpp)>0)) {
       recr_forest$shrubData$Species = shrubSpp
-      recr_forest$shrubData$Cover = 1
-      recr_forest$shrubData$Height = 10
-      for(i in 1:length(shrubSpp)) {
-        j = which(forest$shrubData$Species==shrubSpp[i])[1]
-        recr_forest$shrubData$Z50[i] = forest$shrubData$Z50[j]
-        recr_forest$shrubData$Z95[i] = forest$shrubData$Z95[j]
-      }
+      recr_forest$shrubData$Cover = species_parameter(shrubSpp, SpParams, "RecrShrubCover")
+      recr_forest$shrubData$Cover[is.na(recr_forest$shrubData$Cover)] = control$recrShrubCover
+      recr_forest$shrubData$Height = species_parameter(shrubSpp, SpParams, "RecrShrubHeight")
+      recr_forest$shrubData$Height[is.na(recr_forest$shrubData$Height)] = control$recrShrubHeight
+      recr_forest$shrubData$Z50 = species_parameter(shrubSpp, SpParams, "RecrZ50")
+      recr_forest$shrubData$Z50[is.na(recr_forest$shrubData$Z50)] = control$recrShrubZ50
+      recr_forest$shrubData$Z95 = species_parameter(shrubSpp, SpParams, "RecrZ95")
+      recr_forest$shrubData$Z95[is.na(recr_forest$shrubData$Z95)] = control$recrShrubZ95
+      minTemp = species_parameter(shrubSpp, SpParams, "MinTempRecr")
+      minMoisture = species_parameter(shrubSpp, SpParams, "MinMoistureRecr")
+      minFPAR = species_parameter(shrubSpp, SpParams, "MinFPARRecr")
+      minTemp[is.na(minTemp)] = control$minTempRecr
+      minMoisture[is.na(minMoisture)] = control$minMoistureRecr
+      minFPAR[is.na(minFPAR)] = control$minFPARRecr
+      recr_selection = (minMonthTemp > minTemp) & (moistureIndex > minMoisture) & (PARperc > minFPAR)
+      if(!control$shrubDynamics) recr_selection = rep(FALSE, nrow(recr_forest$shrubData))
+      if(sum(recr_selection)>0) cat(paste0("       Shrub species recruited: ", paste0(shrubSpp[recr_selection], collapse =",") ,"\n"))
+      recr_forest$shrubData = recr_forest$shrubData[recr_selection, , drop = FALSE]
     }
-    if(!control$shrubDynamics) recr_forest$shrubData = recr_forest$shrubData[numeric(0),, drop=FALSE]
     
     # Generate above-ground data
     recr_above = forest2aboveground(recr_forest, SpParams, NA, "MED")

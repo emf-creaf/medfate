@@ -34,13 +34,13 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams) {
   NumericVector LAI_live = above["LAI_live"];
   NumericVector LAI_dead = above["LAI_dead"];
   int numCohorts = SP.size();
-  CharacterVector phenoType = cohortCharacterParameter(SP, SpParams, "PhenologyType");
-  NumericVector leafDuration  = cohortNumericParameter(SP, SpParams, "LeafDuration");
-  NumericVector Sgdd  = cohortNumericParameter(SP, SpParams, "Sgdd");
-  // NumericVector TbaseGdd = cohortNumericParameter(SP, SpParams, "TbaseGdd");
-  // NumericVector Ssen = cohortNumericParameter(SP, SpParams, "Ssen");
-  // NumericVector PstartSen = cohortNumericParameter(SP, SpParams, "PstartSen");
-  // NumericVector TbaseSen = cohortNumericParameter(SP, SpParams, "TbaseSen");
+  CharacterVector phenoType = speciesCharacterParameter(SP, SpParams, "PhenologyType");
+  NumericVector leafDuration  = speciesNumericParameter(SP, SpParams, "LeafDuration");
+  NumericVector Sgdd  = speciesNumericParameter(SP, SpParams, "Sgdd");
+  // NumericVector TbaseGdd = speciesNumericParameter(SP, SpParams, "TbaseGdd");
+  // NumericVector Ssen = speciesNumericParameter(SP, SpParams, "Ssen");
+  // NumericVector PstartSen = speciesNumericParameter(SP, SpParams, "PstartSen");
+  // NumericVector TbaseSen = speciesNumericParameter(SP, SpParams, "TbaseSen");
   NumericVector Tbgdd(numCohorts, 0.0);
   NumericVector Ssen(numCohorts, 0.0);
   NumericVector Psen(numCohorts, 0.0);
@@ -74,23 +74,23 @@ DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams) {
   IntegerVector SP = above["SP"];
   int numCohorts = SP.size();
   
-  CharacterVector Group = cohortCharacterParameter(SP, SpParams, "Group");
+  CharacterVector Group = speciesCharacterParameter(SP, SpParams, "Group");
   
-  NumericVector Hmax = cohortNumericParameter(SP, SpParams, "Hmax");
-  NumericVector Hmed = cohortNumericParameter(SP, SpParams, "Hmed"); //To correct conductivity
-  NumericVector Al2As = cohortNumericParameter(SP, SpParams, "Al2As");
-  NumericVector SLA = cohortNumericParameter(SP, SpParams, "SLA");
-  NumericVector LeafDensity = cohortNumericParameter(SP, SpParams, "LeafDensity");
-  NumericVector WoodDensity = cohortNumericParameter(SP, SpParams, "WoodDensity");
-  NumericVector FineRootDensity = cohortNumericParameter(SP, SpParams, "FineRootDensity");
+  NumericVector Hmax = speciesNumericParameter(SP, SpParams, "Hmax");
+  NumericVector Hmed = speciesNumericParameter(SP, SpParams, "Hmed"); //To correct conductivity
+  NumericVector Al2As = speciesNumericParameter(SP, SpParams, "Al2As");
+  NumericVector SLA = speciesNumericParameter(SP, SpParams, "SLA");
+  NumericVector LeafDensity = speciesNumericParameter(SP, SpParams, "LeafDensity");
+  NumericVector WoodDensity = speciesNumericParameter(SP, SpParams, "WoodDensity");
+  NumericVector FineRootDensity = speciesNumericParameter(SP, SpParams, "FineRootDensity");
   NumericVector conduit2sapwood(numCohorts, NA_REAL);
   if(SpParams.containsElementNamed("conduit2sapwood")) {
-    conduit2sapwood = cohortNumericParameter(SP, SpParams, "conduit2sapwood");
+    conduit2sapwood = speciesNumericParameter(SP, SpParams, "conduit2sapwood");
   }
-  NumericVector r635 = cohortNumericParameter(SP, SpParams, "r635");
-  NumericVector leafwidth = cohortNumericParameter(SP, SpParams, "LeafWidth");
-  NumericVector SRL = cohortNumericParameter(SP, SpParams, "SRL");  
-  NumericVector RLD = cohortNumericParameter(SP, SpParams, "RLD");  
+  NumericVector r635 = speciesNumericParameter(SP, SpParams, "r635");
+  NumericVector leafwidth = speciesNumericParameter(SP, SpParams, "LeafWidth");
+  NumericVector SRL = speciesNumericParameter(SP, SpParams, "SRL");  
+  NumericVector RLD = speciesNumericParameter(SP, SpParams, "RLD");  
   
   for(int c=0;c<numCohorts;c++){ //default values for missing data
     if(NumericVector::is_na(WoodDensity[c])) WoodDensity[c] = 0652;
@@ -122,12 +122,12 @@ DataFrame paramsWaterStorage(DataFrame above, DataFrame SpParams,
   NumericVector H = above["H"];
   int numCohorts = SP.size();
   
-  NumericVector LeafPI0 = cohortNumericParameter(SP, SpParams, "LeafPI0");
-  NumericVector LeafEPS = cohortNumericParameter(SP, SpParams, "LeafEPS");
-  NumericVector LeafAF = cohortNumericParameter(SP, SpParams, "LeafAF");
-  NumericVector StemPI0 = cohortNumericParameter(SP, SpParams, "StemPI0");
-  NumericVector StemEPS = cohortNumericParameter(SP, SpParams, "StemEPS");
-  NumericVector StemAF = cohortNumericParameter(SP, SpParams, "StemAF");
+  NumericVector LeafPI0 = speciesNumericParameter(SP, SpParams, "LeafPI0");
+  NumericVector LeafEPS = speciesNumericParameter(SP, SpParams, "LeafEPS");
+  NumericVector LeafAF = speciesNumericParameter(SP, SpParams, "LeafAF");
+  NumericVector StemPI0 = speciesNumericParameter(SP, SpParams, "StemPI0");
+  NumericVector StemEPS = speciesNumericParameter(SP, SpParams, "StemEPS");
+  NumericVector StemAF = speciesNumericParameter(SP, SpParams, "StemAF");
   
   NumericVector Vsapwood(numCohorts), Vleaf(numCohorts);
   
@@ -160,14 +160,14 @@ DataFrame paramsWaterStorage(DataFrame above, DataFrame SpParams,
 
 DataFrame paramsTranspirationGranier(DataFrame above,  DataFrame SpParams) {
   IntegerVector SP = above["SP"];
-  NumericVector WUE = cohortNumericParameter(SP, SpParams, "WUE");
-  NumericVector Psi_Extract = cohortNumericParameter(SP, SpParams, "Psi_Extract");
-  NumericVector Psi_Critic = cohortNumericParameter(SP, SpParams, "Psi_Critic");
-  NumericVector pRootDisc = cohortNumericParameter(SP, SpParams, "pRootDisc");
+  NumericVector WUE = speciesNumericParameter(SP, SpParams, "WUE");
+  NumericVector Psi_Extract = speciesNumericParameter(SP, SpParams, "Psi_Extract");
+  NumericVector Psi_Critic = speciesNumericParameter(SP, SpParams, "Psi_Critic");
+  NumericVector pRootDisc = speciesNumericParameter(SP, SpParams, "pRootDisc");
   NumericVector Tmax_LAI(SP.size(), NA_REAL);
-  if(SpParams.containsElementNamed("Tmax_LAI")) Tmax_LAI = cohortNumericParameter(SP, SpParams, "Tmax_LAI");
+  if(SpParams.containsElementNamed("Tmax_LAI")) Tmax_LAI = speciesNumericParameter(SP, SpParams, "Tmax_LAI");
   NumericVector Tmax_LAIsq(SP.size(), NA_REAL);
-  if(SpParams.containsElementNamed("Tmax_LAIsq")) Tmax_LAIsq = cohortNumericParameter(SP, SpParams, "Tmax_LAIsq");
+  if(SpParams.containsElementNamed("Tmax_LAIsq")) Tmax_LAIsq = speciesNumericParameter(SP, SpParams, "Tmax_LAIsq");
   for(int i=0;i<SP.size();i++) {
     if(NumericVector::is_na(WUE[i])) WUE[i] = 4;
     if(NumericVector::is_na(Tmax_LAI[i])) Tmax_LAI[i] = 0.134; //Granier coefficient for LAI
@@ -192,28 +192,28 @@ DataFrame paramsTranspirationSperry(DataFrame above, List soil, DataFrame SpPara
   
   NumericVector dVec = soil["dVec"];
   
-  CharacterVector Group = cohortCharacterParameter(SP, SpParams, "Group");
-  CharacterVector Order = cohortCharacterParameter(SP, SpParams, "Order");
-  CharacterVector GrowthForm = cohortCharacterParameter(SP, SpParams, "GrowthForm");
-  CharacterVector phenoType = cohortCharacterParameter(SP, SpParams, "PhenologyType");
+  CharacterVector Group = speciesCharacterParameter(SP, SpParams, "Group");
+  CharacterVector Order = speciesCharacterParameter(SP, SpParams, "Order");
+  CharacterVector GrowthForm = speciesCharacterParameter(SP, SpParams, "GrowthForm");
+  CharacterVector phenoType = speciesCharacterParameter(SP, SpParams, "PhenologyType");
   
-  NumericVector Hmed = cohortNumericParameter(SP, SpParams, "Hmed"); //To correct conductivity
-  NumericVector Gswmin = cohortNumericParameter(SP, SpParams, "Gswmin");
-  NumericVector Gswmax = cohortNumericParameter(SP, SpParams, "Gswmax");
-  NumericVector VCleaf_kmax = cohortNumericParameter(SP, SpParams, "VCleaf_kmax");
-  NumericVector Kmax_stemxylem = cohortNumericParameter(SP, SpParams, "Kmax_stemxylem");
-  NumericVector VCleaf_c = cohortNumericParameter(SP, SpParams, "VCleaf_c");
-  NumericVector VCleaf_d = cohortNumericParameter(SP, SpParams, "VCleaf_d");
-  NumericVector VCstem_c = cohortNumericParameter(SP, SpParams, "VCstem_c");
-  NumericVector VCstem_d = cohortNumericParameter(SP, SpParams, "VCstem_d");
-  NumericVector Kmax_rootxylem = cohortNumericParameter(SP, SpParams, "Kmax_rootxylem");
-  NumericVector VCroot_c = cohortNumericParameter(SP, SpParams, "VCroot_c");
-  NumericVector VCroot_d = cohortNumericParameter(SP, SpParams, "VCroot_d");
-  NumericVector SLA = cohortNumericParameter(SP, SpParams, "SLA");
-  NumericVector Narea = cohortNumericParameter(SP, SpParams, "Narea");
-  NumericVector Vmax298 = cohortNumericParameter(SP, SpParams, "Vmax298");
-  NumericVector Jmax298 = cohortNumericParameter(SP, SpParams, "Jmax298");
-  NumericVector pRootDisc = cohortNumericParameter(SP, SpParams, "pRootDisc");
+  NumericVector Hmed = speciesNumericParameter(SP, SpParams, "Hmed"); //To correct conductivity
+  NumericVector Gswmin = speciesNumericParameter(SP, SpParams, "Gswmin");
+  NumericVector Gswmax = speciesNumericParameter(SP, SpParams, "Gswmax");
+  NumericVector VCleaf_kmax = speciesNumericParameter(SP, SpParams, "VCleaf_kmax");
+  NumericVector Kmax_stemxylem = speciesNumericParameter(SP, SpParams, "Kmax_stemxylem");
+  NumericVector VCleaf_c = speciesNumericParameter(SP, SpParams, "VCleaf_c");
+  NumericVector VCleaf_d = speciesNumericParameter(SP, SpParams, "VCleaf_d");
+  NumericVector VCstem_c = speciesNumericParameter(SP, SpParams, "VCstem_c");
+  NumericVector VCstem_d = speciesNumericParameter(SP, SpParams, "VCstem_d");
+  NumericVector Kmax_rootxylem = speciesNumericParameter(SP, SpParams, "Kmax_rootxylem");
+  NumericVector VCroot_c = speciesNumericParameter(SP, SpParams, "VCroot_c");
+  NumericVector VCroot_d = speciesNumericParameter(SP, SpParams, "VCroot_d");
+  NumericVector SLA = speciesNumericParameter(SP, SpParams, "SLA");
+  NumericVector Narea = speciesNumericParameter(SP, SpParams, "Narea");
+  NumericVector Vmax298 = speciesNumericParameter(SP, SpParams, "Vmax298");
+  NumericVector Jmax298 = speciesNumericParameter(SP, SpParams, "Jmax298");
+  NumericVector pRootDisc = speciesNumericParameter(SP, SpParams, "pRootDisc");
   
   NumericVector Al2As = paramsAnatomydf["Al2As"];
   
@@ -515,31 +515,31 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
   
   NumericVector RERleaf(numCohorts, NA_REAL);
   if(SpParams.containsElementNamed("RERleaf")) {
-    RERleaf = cohortNumericParameter(SP, SpParams, "RERleaf");
+    RERleaf = speciesNumericParameter(SP, SpParams, "RERleaf");
   }
   NumericVector RERsapwood(numCohorts, NA_REAL);
   if(SpParams.containsElementNamed("RERsapwood")) {
-    RERsapwood = cohortNumericParameter(SP, SpParams, "RERsapwood");
+    RERsapwood = speciesNumericParameter(SP, SpParams, "RERsapwood");
   }
   NumericVector RERfineroot(numCohorts, NA_REAL);
   if(SpParams.containsElementNamed("RERfineroot")) {
-    RERfineroot = cohortNumericParameter(SP, SpParams, "RERfineroot");
+    RERfineroot = speciesNumericParameter(SP, SpParams, "RERfineroot");
   }
   NumericVector RGRleafmax(numCohorts, NA_REAL);
   if(SpParams.containsElementNamed("RGRleafmax")) {
-    RGRleafmax = cohortNumericParameter(SP, SpParams, "RGRleafmax");
+    RGRleafmax = speciesNumericParameter(SP, SpParams, "RGRleafmax");
   }
   NumericVector RGRsapwoodmax(numCohorts, NA_REAL);
   if(SpParams.containsElementNamed("RGRsapwoodmax")) {
-    RGRsapwoodmax = cohortNumericParameter(SP, SpParams, "RGRsapwoodmax");
+    RGRsapwoodmax = speciesNumericParameter(SP, SpParams, "RGRsapwoodmax");
   }
   NumericVector RGRfinerootmax(numCohorts, NA_REAL);
   if(SpParams.containsElementNamed("RGRfinerootmax")) {
-    RGRfinerootmax = cohortNumericParameter(SP, SpParams, "RGRfinerootmax");
+    RGRfinerootmax = speciesNumericParameter(SP, SpParams, "RGRfinerootmax");
   }
-  NumericVector WoodC = cohortNumericParameter(SP, SpParams, "WoodC");
-  NumericVector fHDmin = cohortNumericParameter(SP, SpParams, "fHDmin");
-  NumericVector fHDmax = cohortNumericParameter(SP, SpParams, "fHDmax");
+  NumericVector WoodC = speciesNumericParameter(SP, SpParams, "WoodC");
+  NumericVector fHDmin = speciesNumericParameter(SP, SpParams, "fHDmin");
+  NumericVector fHDmax = speciesNumericParameter(SP, SpParams, "fHDmax");
   
   List maximumRelativeGrowthRates = control["maximumRelativeGrowthRates"];
   double RGRleafmax_default = maximumRelativeGrowthRates["leaf"];
@@ -577,18 +577,18 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
 DataFrame paramsAllometries(DataFrame above, DataFrame SpParams) {
   IntegerVector SP = above["SP"];
   
-  NumericVector Aash = cohortNumericParameter(SP, SpParams, "a_ash");
-  NumericVector Bash = cohortNumericParameter(SP, SpParams, "b_ash");
-  NumericVector Absh = cohortNumericParameter(SP, SpParams, "a_bsh");
-  NumericVector Bbsh = cohortNumericParameter(SP, SpParams, "b_bsh");
-  NumericVector Acr = cohortNumericParameter(SP, SpParams, "a_cr");
-  NumericVector B1cr = cohortNumericParameter(SP, SpParams, "b_1cr");
-  NumericVector B2cr = cohortNumericParameter(SP, SpParams, "b_2cr");
-  NumericVector B3cr = cohortNumericParameter(SP, SpParams, "b_3cr");
-  NumericVector C1cr = cohortNumericParameter(SP, SpParams, "c_1cr");
-  NumericVector C2cr = cohortNumericParameter(SP, SpParams, "c_2cr");
-  NumericVector Acw = cohortNumericParameter(SP, SpParams, "a_cw");
-  NumericVector Bcw = cohortNumericParameter(SP, SpParams, "b_cw");
+  NumericVector Aash = speciesNumericParameter(SP, SpParams, "a_ash");
+  NumericVector Bash = speciesNumericParameter(SP, SpParams, "b_ash");
+  NumericVector Absh = speciesNumericParameter(SP, SpParams, "a_bsh");
+  NumericVector Bbsh = speciesNumericParameter(SP, SpParams, "b_bsh");
+  NumericVector Acr = speciesNumericParameter(SP, SpParams, "a_cr");
+  NumericVector B1cr = speciesNumericParameter(SP, SpParams, "b_1cr");
+  NumericVector B2cr = speciesNumericParameter(SP, SpParams, "b_2cr");
+  NumericVector B3cr = speciesNumericParameter(SP, SpParams, "b_3cr");
+  NumericVector C1cr = speciesNumericParameter(SP, SpParams, "c_1cr");
+  NumericVector C2cr = speciesNumericParameter(SP, SpParams, "c_2cr");
+  NumericVector Acw = speciesNumericParameter(SP, SpParams, "a_cw");
+  NumericVector Bcw = speciesNumericParameter(SP, SpParams, "b_cw");
 
   DataFrame paramsAllometriesdf = DataFrame::create(_["Aash"] = Aash, _["Bash"] = Bash, _["Absh"] = Absh, _["Bbsh"] = Bbsh,
                                                     _["Acr"] = Acr, _["B1cr"] = B1cr, _["B2cr"] = B2cr, _["B3cr"] = B3cr,
@@ -822,10 +822,10 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
   String soilFunctions = control["soilFunctions"]; 
   if((soilFunctions!="SX") & (soilFunctions!="VG")) stop("Wrong soil functions ('soilFunctions' should be either 'SX' or 'VG')");
   
-  NumericVector alphaSWR = cohortNumericParameter(SP, SpParams, "alphaSWR");
-  NumericVector gammaSWR = cohortNumericParameter(SP, SpParams, "gammaSWR");
-  NumericVector kPAR = cohortNumericParameter(SP, SpParams, "kPAR");
-  NumericVector g = cohortNumericParameter(SP, SpParams, "g");
+  NumericVector alphaSWR = speciesNumericParameter(SP, SpParams, "alphaSWR");
+  NumericVector gammaSWR = speciesNumericParameter(SP, SpParams, "gammaSWR");
+  NumericVector kPAR = speciesNumericParameter(SP, SpParams, "kPAR");
+  NumericVector g = speciesNumericParameter(SP, SpParams, "g");
   int numCohorts = SP.size();
   for(int c=0;c<numCohorts;c++){
     if(NumericVector::is_na(CR[c])) CR[c] = 0.5; //PATCH TO AVOID MISSING VALUES!!!!
@@ -833,7 +833,7 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
   
 
   //Cohort description
-  CharacterVector nsp = cohortCharacterParameter(SP, SpParams, "Name");
+  CharacterVector nsp = speciesCharacterParameter(SP, SpParams, "Name");
   DataFrame cohortDescdf = DataFrame::create(_["SP"] = SP, _["Name"] = nsp);
   cohortDescdf.attr("row.names") = above.attr("row.names");
   
@@ -950,10 +950,10 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   
   DataFrame paramsAllometriesdf = paramsAllometries(above, SpParams);
   
-  NumericVector alphaSWR = cohortNumericParameter(SP, SpParams, "alphaSWR");
-  NumericVector gammaSWR = cohortNumericParameter(SP, SpParams, "gammaSWR");
-  NumericVector kPAR = cohortNumericParameter(SP, SpParams, "kPAR");
-  NumericVector g = cohortNumericParameter(SP, SpParams, "g");
+  NumericVector alphaSWR = speciesNumericParameter(SP, SpParams, "alphaSWR");
+  NumericVector gammaSWR = speciesNumericParameter(SP, SpParams, "gammaSWR");
+  NumericVector kPAR = speciesNumericParameter(SP, SpParams, "kPAR");
+  NumericVector g = speciesNumericParameter(SP, SpParams, "g");
   
   DataFrame paramsInterceptiondf;
   DataFrame paramsTranspirationdf;
@@ -984,7 +984,7 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
 
   
   //Cohort description
-  CharacterVector nsp = cohortCharacterParameter(SP, SpParams, "Name");
+  CharacterVector nsp = speciesCharacterParameter(SP, SpParams, "Name");
   DataFrame cohortDescdf = DataFrame::create(_["SP"] = SP, _["Name"] = nsp);
   cohortDescdf.attr("row.names") = above.attr("row.names");
   

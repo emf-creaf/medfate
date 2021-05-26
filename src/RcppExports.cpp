@@ -315,6 +315,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// speciesNumericParameter
+NumericVector speciesNumericParameter(IntegerVector SP, DataFrame SpParams, String parName);
+RcppExport SEXP _medfate_speciesNumericParameter(SEXP SPSEXP, SEXP SpParamsSEXP, SEXP parNameSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type SP(SPSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
+    Rcpp::traits::input_parameter< String >::type parName(parNameSEXP);
+    rcpp_result_gen = Rcpp::wrap(speciesNumericParameter(SP, SpParams, parName));
+    return rcpp_result_gen;
+END_RCPP
+}
 // cohortCharacterParameter
 CharacterVector cohortCharacterParameter(List x, DataFrame SpParams, String parName);
 RcppExport SEXP _medfate_cohortCharacterParameter(SEXP xSEXP, SEXP SpParamsSEXP, SEXP parNameSEXP) {
@@ -325,6 +338,19 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
     Rcpp::traits::input_parameter< String >::type parName(parNameSEXP);
     rcpp_result_gen = Rcpp::wrap(cohortCharacterParameter(x, SpParams, parName));
+    return rcpp_result_gen;
+END_RCPP
+}
+// speciesCharacterParameter
+CharacterVector speciesCharacterParameter(IntegerVector SP, DataFrame SpParams, String parName);
+RcppExport SEXP _medfate_speciesCharacterParameter(SEXP SPSEXP, SEXP SpParamsSEXP, SEXP parNameSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type SP(SPSEXP);
+    Rcpp::traits::input_parameter< DataFrame >::type SpParams(SpParamsSEXP);
+    Rcpp::traits::input_parameter< String >::type parName(parNameSEXP);
+    rcpp_result_gen = Rcpp::wrap(speciesCharacterParameter(SP, SpParams, parName));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4613,7 +4639,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_rothermel", (DL_FUNC) &_medfate_rothermel, 11},
     {"_medfate_cohortIDs", (DL_FUNC) &_medfate_cohortIDs, 3},
     {"_medfate_cohortNumericParameter", (DL_FUNC) &_medfate_cohortNumericParameter, 3},
+    {"_medfate_speciesNumericParameter", (DL_FUNC) &_medfate_speciesNumericParameter, 3},
     {"_medfate_cohortCharacterParameter", (DL_FUNC) &_medfate_cohortCharacterParameter, 3},
+    {"_medfate_speciesCharacterParameter", (DL_FUNC) &_medfate_speciesCharacterParameter, 3},
     {"_medfate_cohortSpecies", (DL_FUNC) &_medfate_cohortSpecies, 1},
     {"_medfate_cohortSpeciesName", (DL_FUNC) &_medfate_cohortSpeciesName, 2},
     {"_medfate_treeBasalArea", (DL_FUNC) &_medfate_treeBasalArea, 2},

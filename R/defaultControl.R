@@ -70,9 +70,22 @@ defaultControl<-function(transpirationMode = "Granier") {
     
     #dynamics
     shrubDynamics = FALSE,
-    # mergeCohorts = FALSE,
+    seedRain = NULL,
     removeDeadCohorts=TRUE,
-    minimumDensity = 1
+    minimumDensity = 1,
+    recrTreeDBH = 1,
+    recrTreeDensity = 100,
+    recrShrubCover = 1,
+    recrTreeHeight = 100,
+    recrShrubHeight = 10,
+    recrTreeZ50 = 100,
+    recrShrubZ50 = 50,
+    recrTreeZ95 = 1000,
+    recrShrubZ95 = 500,
+    minTempRecr	= 0,
+    minMoistureRecr	= 0.3,
+    minFPARRecr = 30
+    
     
     #For forest dynamics
 #     freqZopt = 20,

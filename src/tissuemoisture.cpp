@@ -117,12 +117,12 @@ NumericMatrix cohortFMC(List spwb, DataFrame SpParams) {
   
   //FMCmax
   IntegerVector SP = cohorts["SP"];
-  NumericVector FMCmax = cohortNumericParameter(SP, SpParams, "maxFMC");
+  NumericVector FMCmax = speciesNumericParameter(SP, SpParams, "maxFMC");
   
   if(transpirationMode == "Granier") {
-    NumericVector LeafPI0 = cohortNumericParameter(SP, SpParams, "LeafPI0");
-    NumericVector LeafEPS = cohortNumericParameter(SP, SpParams, "LeafEPS");
-    NumericVector LeafAF = cohortNumericParameter(SP, SpParams, "LeafAF");
+    NumericVector LeafPI0 = speciesNumericParameter(SP, SpParams, "LeafPI0");
+    NumericVector LeafEPS = speciesNumericParameter(SP, SpParams, "LeafEPS");
+    NumericVector LeafAF = speciesNumericParameter(SP, SpParams, "LeafAF");
     NumericMatrix PlantPsi = Rcpp::as<Rcpp::NumericMatrix>(plants["PlantPsi"]);
 
     NumericMatrix leafFMC(numDays, numCohorts);
@@ -223,12 +223,12 @@ NumericVector cohortFMCDay(List spwb_day, List x, DataFrame SpParams) {
   
   //FMCmax
   IntegerVector SP = cohorts["SP"];
-  NumericVector FMCmax = cohortNumericParameter(SP, SpParams, "maxFMC");
+  NumericVector FMCmax = speciesNumericParameter(SP, SpParams, "maxFMC");
   
   if(transpirationMode == "Granier") {
-    NumericVector LeafPI0 = cohortNumericParameter(SP, SpParams, "LeafPI0");
-    NumericVector LeafEPS = cohortNumericParameter(SP, SpParams, "LeafEPS");
-    NumericVector LeafAF = cohortNumericParameter(SP, SpParams, "LeafAF");
+    NumericVector LeafPI0 = speciesNumericParameter(SP, SpParams, "LeafPI0");
+    NumericVector LeafEPS = speciesNumericParameter(SP, SpParams, "LeafEPS");
+    NumericVector LeafAF = speciesNumericParameter(SP, SpParams, "LeafAF");
     NumericVector PlantPsi = Rcpp::as<Rcpp::NumericVector>(plants["PlantPsi"]);
     NumericVector StemPLC = Rcpp::as<Rcpp::NumericVector>(plants["StemPLC"]);
     
