@@ -69,10 +69,13 @@ defaultControl<-function(transpirationMode = "Granier") {
     mortalityRWCThreshold = 0.5,
     
     #dynamics
+    recruitmentMode = "deterministic",
     shrubDynamics = FALSE,
     seedRain = NULL,
     removeDeadCohorts=TRUE,
     minimumDensity = 1,
+    seedProductionTreeHeight = 300,
+    seedProductionShrubHeight = 30,
     recrTreeDBH = 1,
     recrTreeDensity = 100,
     recrShrubCover = 1,

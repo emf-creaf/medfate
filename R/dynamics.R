@@ -59,7 +59,9 @@ dynamics<-function(forest, soil, SpParams,
                    Name = x$cohorts$Name[1:nt],
                    N = x$above$N[1:nt],
                    DBH = x$above$DBH[1:nt],
-                   Height = x$above$H[1:nt])
+                   Height = x$above$H[1:nt],
+                   Z50 = x$below$Z50[1:nt],
+                   Z95 = x$below$Z95[1:nt])
     if(control$removeDeadCohorts) tt = tt[tt$N>control$minimumDensity,]
     return(tt)
   }
@@ -74,7 +76,9 @@ dynamics<-function(forest, soil, SpParams,
                    Species = x$above$SP[range],
                    Name = x$cohorts$Name[range],
                    Cover = x$above$Cover[range],
-                   Height = x$above$H[range])
+                   Height = x$above$H[range],
+                   Z50 = x$below$Z50[range],
+                   Z95 = x$below$Z95[range])
     if(control$removeDeadCohorts) st = st[st$N>control$minimumDensity,]
     return(st)
   }
@@ -166,8 +170,20 @@ dynamics<-function(forest, soil, SpParams,
     PARperc = vprofile_PARExtinction(forest, SpParamsMED, draw = FALSE)[1]
     cat(paste0("       Minimum temperature of the coldest month (ºC): ", round(minMonthTemp,2), "   Moisture index: ", round(moistureIndex,2), "   FPAR (%): ", round(PARperc,1), "\n"))
     if(is.null(control$seedRain)) {
-      treeSpp = unique(forest$treeData$Species)
-      shrubSpp = unique(forest$shrubData$Species)
+      treeSpp = forest$treeData$Species
+      if(length(treeSpp)>0) {
+        sph = species_parameter(treeSpp, SpParams, "SeedProductionHeight")
+        sph[is.na(sph)] = control$seedProductionTreeHeight
+        treeSpp = treeSpp[forest$treeData$Height > sph]
+        treeSpp = unique(treeSpp)
+      }
+      shrubSpp = forest$shrubData$Species
+      if(length(shrubSpp)>0) {
+        sph = species_parameter(shrubSpp, SpParams, "SeedProductionHeight")
+        sph[is.na(sph)] = control$seedProductionShrubHeight
+        shrubSpp = shrubSpp[forest$shrubData$Height > sph]
+        shrubSpp = unique(shrubSpp)
+      }
     } else {
       isTree = !(species_characterParameter(control$seedRain, SpParams, "GrowthForm")=="Shrub")
       treeSpp = control$seedRain[isTree]
@@ -178,6 +194,7 @@ dynamics<-function(forest, soil, SpParams,
       recr_forest$treeData$Species = treeSpp
       recr_forest$treeData$N = species_parameter(treeSpp, SpParams, "RecrTreeDensity")
       recr_forest$treeData$N[is.na(recr_forest$treeData$N)] = control$recrTreeDensity
+      if(control$recruitmentMode=="stochastic") recr_forest$treeData$N = rpois(length(treeSpp), recr_forest$treeData$N)
       recr_forest$treeData$DBH = species_parameter(treeSpp, SpParams, "RecrTreeDBH")
       recr_forest$treeData$DBH[is.na(recr_forest$treeData$DBH)] = control$recrTreeDBH
       recr_forest$treeData$Height = species_parameter(treeSpp, SpParams, "RecrTreeHeight")
@@ -194,12 +211,16 @@ dynamics<-function(forest, soil, SpParams,
       minFPAR[is.na(minFPAR)] = control$minFPARRecr
       recr_selection = (minMonthTemp > minTemp) & (moistureIndex > minMoisture) & (PARperc > minFPAR)
       recr_forest$treeData = recr_forest$treeData[recr_selection, , drop = FALSE]
-      if(sum(recr_selection)>0) cat(paste0("       Tree species recruited: ", paste0(treeSpp[recr_selection], collapse =",") ,"\n"))
+      recrString = paste0(treeSpp[recr_selection], collapse =",")
+      if(recrString=="") recrString = "<none>"
+      cat(paste0("       Tree species with seed rain: ", paste0(treeSpp, collapse =","), 
+                 " recruited: ", recrString ,"\n"))
     }
     if((length(shrubSpp)>0)) {
       recr_forest$shrubData$Species = shrubSpp
       recr_forest$shrubData$Cover = species_parameter(shrubSpp, SpParams, "RecrShrubCover")
       recr_forest$shrubData$Cover[is.na(recr_forest$shrubData$Cover)] = control$recrShrubCover
+      if(control$recruitmentMode=="stochastic") recr_forest$shrubData$Cover = rpois(length(shrubSpp), recr_forest$shrubData$Cover)
       recr_forest$shrubData$Height = species_parameter(shrubSpp, SpParams, "RecrShrubHeight")
       recr_forest$shrubData$Height[is.na(recr_forest$shrubData$Height)] = control$recrShrubHeight
       recr_forest$shrubData$Z50 = species_parameter(shrubSpp, SpParams, "RecrZ50")
@@ -214,7 +235,10 @@ dynamics<-function(forest, soil, SpParams,
       minFPAR[is.na(minFPAR)] = control$minFPARRecr
       recr_selection = (minMonthTemp > minTemp) & (moistureIndex > minMoisture) & (PARperc > minFPAR)
       if(!control$shrubDynamics) recr_selection = rep(FALSE, nrow(recr_forest$shrubData))
-      if(sum(recr_selection)>0) cat(paste0("       Shrub species recruited: ", paste0(shrubSpp[recr_selection], collapse =",") ,"\n"))
+      recrString = paste0(shrubSpp[recr_selection], collapse =",")
+      if(recrString=="") recrString = "<none>"
+      cat(paste0("       Shrub species with seed rain: ", paste0(shrubSpp, collapse =","), 
+                 " recruited: ", recrString ,"\n"))
       recr_forest$shrubData = recr_forest$shrubData[recr_selection, , drop = FALSE]
     }
     
