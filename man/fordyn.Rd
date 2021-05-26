@@ -1,12 +1,12 @@
 \encoding{UTF-8}
-\name{dynamics}
-\alias{dynamics}
+\name{fordyn}
+\alias{fordyn}
 \title{Forest dynamics}
 \description{
-Function \code{dynamics} implements a forest dynamics model that simulates growth, mortality and recruitment for plant cohorts in a given forest stand during a period specified in the input climatic data. 
+Function \code{fordyn} implements a forest dynamics model that simulates growth, mortality and recruitment for plant cohorts in a given forest stand during a period specified in the input climatic data. 
 }
 \usage{
-dynamics(forest, soil, SpParams, meteo, control,
+fordyn(forest, soil, SpParams, meteo, control,
          latitude , elevation = NA, slope = NA, aspect = NA) 
 }
 \arguments{
@@ -19,7 +19,7 @@ dynamics(forest, soil, SpParams, meteo, control,
   \item{elevation, slope, aspect}{Elevation above sea level (in m), slope (in degrees) and aspect (in degrees from North). Required when \code{x$TranspirationMode = "Sperry"}. Elevation is also required for 'Granier' if snowpack dynamics are simulated.}
 }
 \details{
-  Function \code{dynamics} simulates forest dynamics for annual time steps, building on other simulation functions. For each simulated year, the function performs the following steps:
+  Function \code{fordyn} simulates forest dynamics for annual time steps, building on other simulation functions. For each simulated year, the function performs the following steps:
   \enumerate{
   \item{Calls function \code{\link{growth}} to simulate daily water/carbon balance, growth and mortality processes.}
   \item{Simulate recruitment (for species present in the stand).}
@@ -28,7 +28,7 @@ dynamics(forest, soil, SpParams, meteo, control,
   }
 }
 \value{
-  A list of class 'dynamics' with the following elements:
+  A list of class 'fordyn' with the following elements:
   \itemize{
  \item{\code{"StandSummary"}: A data frame with stand-level summaries (leaf area index, tree basal area, tree density, shrub cover, etc.) at the beginning of the simulation and after each simulated year.}
  \item{\code{"SpeciesSummary"}: A data frame with species-level summaries (leaf area index, tree basal area, tree density, shrub cover, etc.) at the beginning of the simulation and after each simulated year.}
@@ -71,7 +71,7 @@ control = defaultControl()
 examplesoil = soil(defaultSoilParams(4))
 
 #Call simulation function
-fd<-dynamics(exampleforestMED, examplesoil, 
+fd<-fordyn(exampleforestMED, examplesoil, 
              SpParamsMED, meteo_01_03, control,
              latitude = 41.82592, elevation = 100)
 

@@ -1,4 +1,4 @@
-dynamics<-function(forest, soil, SpParams,
+fordyn<-function(forest, soil, SpParams,
                    meteo, control,
                    latitude , elevation = NA, slope = NA, aspect = NA) {
   
@@ -168,7 +168,7 @@ dynamics<-function(forest, soil, SpParams,
     minMonthTemp = min(monthlyTemp, na.rm=TRUE)
     moistureIndex = sum(meteoYear$Precipitation, na.rm=TRUE)/sum(meteoYear$PET, na.rm=TRUE)
     PARperc = vprofile_PARExtinction(forest, SpParamsMED, draw = FALSE)[1]
-    cat(paste0("       Minimum temperature of the coldest month (ºC): ", round(minMonthTemp,2), "   Moisture index: ", round(moistureIndex,2), "   FPAR (%): ", round(PARperc,1), "\n"))
+    cat(paste0("       Minimum temperature of the coldest month (Celsius): ", round(minMonthTemp,2), "   Moisture index: ", round(moistureIndex,2), "   FPAR (%): ", round(PARperc,1), "\n"))
     if(is.null(control$seedRain)) {
       treeSpp = forest$treeData$Species
       if(length(treeSpp)>0) {
@@ -325,6 +325,6 @@ dynamics<-function(forest, soil, SpParams,
     "ShrubTable" = shrubTable,
     "ForestStructures" = forestStructures,
     "GrowthResults" = growthResults)
-  class(res)<-c("forestdynamics", "list")
+  class(res)<-c("fordyn", "list")
   return(res)
 }
