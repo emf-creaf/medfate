@@ -69,8 +69,10 @@ defaultControl<-function(transpirationMode = "Granier") {
     mortalityRWCThreshold = 0.5,
     
     #dynamics
+    shrubDynamics = FALSE,
     mergeCohorts = FALSE,
-    removeDeadCohorts=TRUE
+    removeDeadCohorts=TRUE,
+    minimumDensity = 1
     
     #For forest dynamics
 #     freqZopt = 20,
