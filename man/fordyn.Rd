@@ -7,7 +7,7 @@ Function \code{fordyn} implements a forest dynamics model that simulates growth,
 }
 \usage{
 fordyn(forest, soil, SpParams, meteo, control,
-         latitude , elevation = NA, slope = NA, aspect = NA) 
+       latitude , elevation = NA, slope = NA, aspect = NA) 
 }
 \arguments{
   \item{forest}{An object of class \code{\link{forest}}.}
@@ -33,9 +33,11 @@ fordyn(forest, soil, SpParams, meteo, control,
  \item{\code{"StandSummary"}: A data frame with stand-level summaries (leaf area index, tree basal area, tree density, shrub cover, etc.) at the beginning of the simulation and after each simulated year.}
  \item{\code{"SpeciesSummary"}: A data frame with species-level summaries (leaf area index, tree basal area, tree density, shrub cover, etc.) at the beginning of the simulation and after each simulated year.}
  \item{\code{"CohortSummary"}: A data frame with cohort-level summaries (leaf area index, tree basal area, tree density, shrub cover, etc.) at the beginning of the simulation and after each simulated year.}
- \item{\code{"TreeTable"}: A data frame with tree-cohort data (species, density, diameter, height, etc.) at the beginning of the simulation and after each simulated year.}
+ \item{\code{"TreeTable"}: A data frame with tree-cohort data (species, density, diameter, height, etc.) at the beginning of the simulation (if any) and after each simulated year.}
+ \item{\code{"DeadTreeTable"}: A data frame with dead tree-cohort data (species, density, diameter, height, etc.) at the beginning of the simulation and after each simulated year.}
  \item{\code{"ShrubTable"}: A data frame with shrub-cohort data (species, density, cover, height, etc.) at the beginning of the simulation and after each simulated year.}
- \item{\code{"ForestStructures"}: A list with the structure of the stand at the beginning of the simulation and after each simulated year.}
+ \item{\code{"DeadShrubTable"}: A data frame with dead shrub-cohort data (species, density, cover, height, etc.) at the beginning of the simulation (if any) and after each simulated year.}
+ \item{\code{"ForestStructures"}: A list with the \code{\link{forest}} object of the stand at the beginning of the simulation and after each simulated year.}
  \item{\code{"GrowthResults"}: A list with the results of calling function \code{\link{growth}} for each simulated year.}
   }
 }
@@ -48,9 +50,11 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 \examples{
 #Load example daily meteorological data
 data(examplemeteo)
-#Prepare a three-year meteorological data
+#Prepare a three-year meteorological data with half precipitation during 
+#the second year
 meteo2001 = examplemeteo
 meteo2002 = examplemeteo
+meteo2002$Precipitation = meteo2002$Precipitation/2
 meteo2003 = examplemeteo
 row.names(meteo2002) = seq(as.Date("2002-01-01"), 
                            as.Date("2002-12-31"), by="day")
@@ -72,12 +76,15 @@ examplesoil = soil(defaultSoilParams(4))
 
 #Call simulation function
 fd<-fordyn(exampleforestMED, examplesoil, 
-             SpParamsMED, meteo_01_03, control,
-             latitude = 41.82592, elevation = 100)
+           SpParamsMED, meteo_01_03, control,
+           latitude = 41.82592, elevation = 100)
 
 #Stand-level summaries
 fd$StandSummary
 
 #Tree table by annual steps
 fd$TreeTable
+
+#Dead tree table by annual steps
+fd$DeadTreeTable
 }

@@ -178,6 +178,7 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
 
   DataFrame internalMortality = Rcpp::as<Rcpp::DataFrame>(x["internalMortality"]);
   NumericVector N_dead = internalMortality["N_dead"];
+  NumericVector Cover_dead = internalMortality["Cover_dead"];
   
   DataFrame internalAllocation = Rcpp::as<Rcpp::DataFrame>(x["internalAllocation"]);
   NumericVector allocationTarget = internalAllocation["allocationTarget"];
@@ -521,9 +522,14 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
       }
         
       // Update density and increase the number of dead plants
+      double Cdead_day = Cover[j]*(Ndead_day/N[j]);
       N[j] = std::max(0.0, N[j] - Ndead_day);
       N_dead[j] = N_dead[j] + Ndead_day;
-
+      if(!NumericVector::is_na(Cover[j])) {
+        Cover[j] = std::max(0.0, Cover[j] - Cdead_day);
+        Cover_dead[j] = Cover_dead[j] + Cdead_day;
+      }
+      
       //Update LAI dead and LAI expanded as a result of density decrease
       double LAI_change = LAexpanded*Ndead_day/10000.0;
       LAI_dead[j] = LAI_dead[j] + LAI_change;
@@ -729,6 +735,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
   
   DataFrame internalMortality = Rcpp::as<Rcpp::DataFrame>(x["internalMortality"]);
   NumericVector N_dead = internalMortality["N_dead"];
+  NumericVector Cover_dead = internalMortality["Cover_dead"];
   
   DataFrame internalAllocation = Rcpp::as<Rcpp::DataFrame>(x["internalAllocation"]);
   NumericVector allocationTarget = internalAllocation["allocationTarget"];
@@ -1186,8 +1193,14 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
       }
       
       // Update density and increase the number of dead plants
+      double Cdead_day = Cover[j]*(Ndead_day/N[j]);
       N[j] = std::max(0.0, N[j] - Ndead_day);
       N_dead[j] = N_dead[j] + Ndead_day;
+      if(!NumericVector::is_na(Cover[j])) {
+        Cover[j] = std::max(0.0, Cover[j] - Cdead_day);
+        Cover_dead[j] = Cover_dead[j] + Cdead_day;
+      }
+      
       
       //Update LAI dead and LAI expanded as a result of density decrease
       double LAI_change = LAexpanded*Ndead_day/10000.0;

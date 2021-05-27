@@ -697,7 +697,9 @@ DataFrame internalCarbonDataFrame(DataFrame above,
 DataFrame internalMortalityDataFrame(DataFrame above) {
   int numCohorts = above.nrow();
   NumericVector N_dead(numCohorts, 0.0);
-  DataFrame df = DataFrame::create(Named("N_dead") = N_dead);
+  NumericVector Cover_dead(numCohorts, 0.0);
+  DataFrame df = DataFrame::create(Named("N_dead") = N_dead,
+                                   Named("Cover_dead") = Cover_dead);
   df.attr("row.names") = above.attr("row.names");
   return(df);
 }

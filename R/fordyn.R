@@ -54,18 +54,33 @@ fordyn<-function(forest, soil, SpParams,
   }
   createTreeTable<-function(step, year, x) {
     isTree = !is.na(x$above$DBH)
-    nt = sum(isTree)
+    range = 1:sum(isTree)
     tt<-data.frame(Step = step, Year = year,
-                   Cohort = row.names(x$cohorts)[1:nt],
-                   Species = x$above$SP[1:nt],
-                   Name = x$cohorts$Name[1:nt],
-                   N = x$above$N[1:nt],
-                   DBH = x$above$DBH[1:nt],
-                   Height = x$above$H[1:nt],
-                   Z50 = x$below$Z50[1:nt],
-                   Z95 = x$below$Z95[1:nt])
-    if(control$removeDeadCohorts) tt = tt[tt$N>control$minimumCohortDensity,]
+                   Cohort = row.names(x$cohorts)[range],
+                   Species = x$above$SP[range],
+                   Name = x$cohorts$Name[range],
+                   N = x$above$N[range],
+                   DBH = x$above$DBH[range],
+                   Height = x$above$H[range],
+                   Z50 = x$below$Z50[range],
+                   Z95 = x$below$Z95[range])
+    if(control$removeDeadCohorts) tt = tt[tt$N>control$minimumCohortDensity,, drop=FALSE]
     return(tt)
+  }
+  createDeadTreeTable<-function(step, year, x) {
+    isTree = !is.na(x$above$DBH)
+    range = 1:sum(isTree)
+    dtt<-data.frame(Step = step, Year = year,
+                   Cohort = row.names(x$cohorts)[range],
+                   Species = x$above$SP[range],
+                   Name = x$cohorts$Name[range],
+                   N = x$internalMortality$N_dead[range],
+                   DBH = x$above$DBH[range],
+                   Height = x$above$H[range],
+                   Z50 = x$below$Z50[range],
+                   Z95 = x$below$Z95[range])
+    dtt = dtt[dtt$N>0,, drop = FALSE]
+    return(dtt)
   }
   createShrubTable<-function(step, year, x) {
     isShrub = !is.na(x$above$Cover)
@@ -81,8 +96,25 @@ fordyn<-function(forest, soil, SpParams,
                    Height = x$above$H[range],
                    Z50 = x$below$Z50[range],
                    Z95 = x$below$Z95[range])
-    if(control$removeDeadCohorts) st = st[st$N>control$minimumCohortDensity,]
+    if(control$removeDeadCohorts) st = st[st$N>control$minimumCohortDensity,, drop = FALSE]
     return(st)
+  }
+  createDeadShrubTable<-function(step, year, x) {
+    isShrub = !is.na(x$above$Cover)
+    nt = sum(!isShrub)
+    numCohorts = length(isShrub)
+    range = numeric(0)
+    if(numCohorts>nt) range = (nt+1):numCohorts
+    dst<-data.frame(Step = step, Year = year,
+                   Cohort = row.names(x$cohorts)[range],
+                   Species = x$above$SP[range],
+                   Name = x$cohorts$Name[range],
+                   Cover = x$internalMortality$Cover_dead[range],
+                   Height = x$above$H[range],
+                   Z50 = x$below$Z50[range],
+                   Z95 = x$below$Z95[range])
+    dst = dst[dst$Cover>0,,drop=FALSE]
+    return(dst)
   }
   
   #Initialization
@@ -98,6 +130,8 @@ fordyn<-function(forest, soil, SpParams,
   #initial tree/shrub tables
   treeTable = createTreeTable(0, NA, xi)
   shrubTable = createShrubTable(0, NA, xi)
+  deadTreeTable = createDeadTreeTable(0, NA, xi)
+  deadShrubTable = createDeadShrubTable(0, NA, xi)
   
   #Simulations
   for(iYear in 1:nYears) {
@@ -113,6 +147,10 @@ fordyn<-function(forest, soil, SpParams,
     
     # Retrieve modified growth output
     xo = Gi$growthInput
+    
+    # Update dead tree/shrub tables
+    deadTreeTable = rbind(deadTreeTable, createDeadTreeTable(iYear, year, xo))
+    deadShrubTable = rbind(deadShrubTable, createDeadShrubTable(iYear, year, xo))
     
     # Update forest structural variables
     isTree = is.na(xo$above$Cover)
@@ -300,7 +338,6 @@ fordyn<-function(forest, soil, SpParams,
     xi$internalWater[repl_vec,] <- xo$internalWater
     xi$internalCarbon[repl_vec,] <- xo$internalCarbon
     xi$internalAllocation[repl_vec,] <- xo$internalAllocation
-    xi$internalMortality[repl_vec,] <- xo$internalMortality
     xi$internalRings[repl_vec] <- xo$internalRings
 
     cat(paste0("   (c) Summaries\n"))
@@ -324,7 +361,9 @@ fordyn<-function(forest, soil, SpParams,
     "SpeciesSummary" = speciesSummary,
     "CohortSummary" = cohortSummary,
     "TreeTable" = treeTable,
+    "DeadTreeTable" = deadTreeTable,
     "ShrubTable" = shrubTable,
+    "DeadShrubTable" = deadShrubTable,
     "ForestStructures" = forestStructures,
     "GrowthResults" = growthResults)
   class(res)<-c("fordyn", "list")
