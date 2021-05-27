@@ -21,7 +21,6 @@
 \alias{plant_species}
 \alias{plant_speciesName}
 
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{Plant description functions}
 \description{
 Functions to calculate attributes of plants in a \code{\link{forest}} object.

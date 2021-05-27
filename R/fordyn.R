@@ -2,8 +2,10 @@ fordyn<-function(forest, soil, SpParams,
                    meteo, control,
                    latitude , elevation = NA, slope = NA, aspect = NA) {
   
+  # Modify control parameters
   control$modifyInput = FALSE
   control$verbose = FALSE
+  control$subdailyResults = FALSE
   
   dates = as.Date(row.names(meteo))
   years = as.numeric(format(dates, "%Y"))
@@ -62,7 +64,7 @@ fordyn<-function(forest, soil, SpParams,
                    Height = x$above$H[1:nt],
                    Z50 = x$below$Z50[1:nt],
                    Z95 = x$below$Z95[1:nt])
-    if(control$removeDeadCohorts) tt = tt[tt$N>control$minimumDensity,]
+    if(control$removeDeadCohorts) tt = tt[tt$N>control$minimumCohortDensity,]
     return(tt)
   }
   createShrubTable<-function(step, year, x) {
@@ -79,7 +81,7 @@ fordyn<-function(forest, soil, SpParams,
                    Height = x$above$H[range],
                    Z50 = x$below$Z50[range],
                    Z95 = x$below$Z95[range])
-    if(control$removeDeadCohorts) st = st[st$N>control$minimumDensity,]
+    if(control$removeDeadCohorts) st = st[st$N>control$minimumCohortDensity,]
     return(st)
   }
   
@@ -126,8 +128,8 @@ fordyn<-function(forest, soil, SpParams,
     deadTrees = rep(FALSE, nrow(forest$treeData))
     deadShrubs = rep(FALSE, nrow(forest$shrubData))
     if(control$removeDeadCohorts) {
-      deadTrees = (forest$treeData$N < control$minimumDensity)
-      if(control$shrubDynamics) deadShrubs = (forest$shrubData$Cover < control$minimumDensity)
+      deadTrees = (forest$treeData$N < control$minimumCohortDensity)
+      if(control$shrubDynamics) deadShrubs = (forest$shrubData$Cover < control$minimumCohortDensity)
     }
     deadCohorts = c(deadTrees, deadShrubs)
     if(sum(deadCohorts)>0) {

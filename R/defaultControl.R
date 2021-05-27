@@ -1,11 +1,11 @@
 defaultControl<-function(transpirationMode = "Granier") {
   return(list(
-    #For all
+    #For all functions
     modifyInput = TRUE,
     verbose = TRUE,
     subdailyResults = FALSE,
-    defaultWindSpeed = 2.5, #m/s
     soilFunctions = "SX",
+    defaultWindSpeed = 2.5, #m/s
     
     # For water balance
     snowpack = TRUE,
@@ -40,7 +40,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     thermalCapacityLAI = 1000000,
     multiLayerBalance = FALSE,
     
-    # growth
+    # growth/mortality
     allowDessication = TRUE,
     allowStarvation = TRUE,
     allowDefoliation = TRUE,
@@ -71,23 +71,23 @@ defaultControl<-function(transpirationMode = "Granier") {
     #dynamics
     recruitmentMode = "deterministic",
     shrubDynamics = FALSE,
-    seedRain = NULL,
     removeDeadCohorts=TRUE,
-    minimumDensity = 1,
+    minimumCohortDensity = 1,
+    seedRain = NULL,
     seedProductionTreeHeight = 300,
     seedProductionShrubHeight = 30,
+    minTempRecr	= 0,
+    minMoistureRecr	= 0.3,
+    minFPARRecr = 30,
     recrTreeDBH = 1,
     recrTreeDensity = 100,
-    recrShrubCover = 1,
     recrTreeHeight = 100,
+    recrShrubCover = 1,
     recrShrubHeight = 10,
     recrTreeZ50 = 100,
     recrShrubZ50 = 50,
     recrTreeZ95 = 1000,
-    recrShrubZ95 = 500,
-    minTempRecr	= 0,
-    minMoistureRecr	= 0.3,
-    minFPARRecr = 30
+    recrShrubZ95 = 500
     
     
     #For forest dynamics
