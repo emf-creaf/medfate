@@ -124,6 +124,20 @@ data("SpParamsUS")
     \item{\code{fHDmin}: Minimum value of the height-to-diameter ratio (dimensionless).}
     \item{\code{fHDmax}: Maximum value of the height-to-diameter ratio (dimensionless).}
     }
+  \bold{Recruitment}:
+  \itemize{  
+    \item{\code{SeedProductionHeight}: Minimum height (cm) for seed production.}
+    \item{\code{MinTempRecr}: Minimum average temperature (Celsius) of the coldest month for successful recruitment.}
+    \item{\code{MinMoistureRecr}: Minimum value of the moisture index (annual precipitation over annual PET) for successful recruitment.}
+    \item{\code{MinFPARRecr}: Minimum percentage of PAR at the ground level for successful recruitment.}
+    \item{\code{RecrTreeDBH}: Recruitment DBH (cm) for trees.}
+    \item{\code{RecrTreeHeight}: Recruitment height (cm) for trees.}
+    \item{\code{RecrTreeDensity}: Recruitment density (ind·ha-1) for trees.}
+    \item{\code{RecrShrubCover}: Recruitment cover (\%) for shrubs.}
+    \item{\code{RecrShrubHeight}: Recruitment height (cm) for shrubs.}
+    \item{\code{RecrZ50}: Soil depth (mm) corresponding to 50\% of fine roots for recruitment.}
+    \item{\code{RecrZ95}: Soil depth (mm) corresponding to 95\% of fine roots for recruitment.}
+  }
   }
 }
 \details{

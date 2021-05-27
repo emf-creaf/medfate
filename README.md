@@ -12,6 +12,7 @@ processes:
 -   Plant hydraulics, transpiration and photosynthesis (De Cáceres et
     al. 2021)
 -   Plant growth (in preparation)
+-   Forest dynamics (in preparation)
 
 The models are parameterized for species of the Mediterranean region
 (particularly for Catalonia, NE Spain), but forests with different
