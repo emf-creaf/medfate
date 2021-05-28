@@ -45,6 +45,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     allowStarvation = TRUE,
     allowDefoliation = TRUE,
     sinkLimitation = TRUE,
+    shrubDynamics = FALSE,
     allocationStrategy = "Plant_kmax",
     nonStomatalPhotosynthesisLimitation = TRUE,
     phloemConductanceFactor = 0.2, # phloem conductance per leaf area basis (l*m-2*MPa-1*s-1)
@@ -70,7 +71,6 @@ defaultControl<-function(transpirationMode = "Granier") {
     
     #dynamics
     recruitmentMode = "deterministic",
-    shrubDynamics = FALSE,
     removeDeadCohorts=TRUE,
     minimumCohortDensity = 1,
     seedRain = NULL,

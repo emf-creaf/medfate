@@ -21,26 +21,28 @@ fordyn<-function(forest, soil, SpParams,
 
 
   summarizeCohorts<-function(step, x) {
+    isTree = !is.na(x$above$DBH)
     cohortSummary = data.frame("Step" = rep(step, nrow(x$cohorts)),
                                "Species" = x$cohorts$SP,
                                "Name" = x$cohorts$Name,
                                "Cohort" = row.names(x$cohorts),
-                               "LeafAreaIndex" = x$above$LAI_expanded,
-                               "DensityLive" = x$above$N,
+                               "LeafAreaIndex" = x$above$LAI_live,
+                               "TreeDensityLive" = x$above$N,
                                "TreeBasalAreaLive"= x$above$N*pi*(x$above$DBH/200)^2,
                                "ShrubCoverLive"= x$above$Cover)
+    cohortSummary$TreeDensityLive[!isTree] = NA
     return(cohortSummary)
   }
   summarizeSpecies<-function(step, cohSum, x) {
     lai_sp = tapply(cohSum$LeafAreaIndex, cohSum$Species, sum, na.rm=TRUE)
-    nl_sp = tapply(cohSum$DensityLive, cohSum$Species, sum, na.rm=TRUE)
+    nl_sp = tapply(cohSum$TreeDensityLive, cohSum$Species, sum, na.rm=TRUE)
     bal_sp = tapply(cohSum$TreeBasalAreaLive, cohSum$Species, sum, na.rm=TRUE)
     shl_sp = tapply(cohSum$ShrubCoverLive, cohSum$Species, sum, na.rm=TRUE)
     mh_sp = tapply(x$above$H, x$above$SP, max, na.rm=TRUE)
     spSumYear <-data.frame("Step" = rep(step, length(lai_sp)),
                            "Species" = as.numeric(names(lai_sp)),
                            "LeafAreaIndex" = as.numeric(lai_sp),
-                           "DensityLive"= as.numeric(nl_sp),
+                           "TreeDensityLive"= as.numeric(nl_sp),
                            "TreeBasalAreaLive"= as.numeric(bal_sp),
                            "ShrubCoverLive"= as.numeric(shl_sp),
                            "MaxHeight"= as.numeric(mh_sp))
@@ -48,7 +50,7 @@ fordyn<-function(forest, soil, SpParams,
   summarizeStand<-function(step, cohSum, x) {
     standSumYear = data.frame("Step" = step,
                               "LeafAreaIndex" = sum(cohSum$LeafAreaIndex, na.rm = TRUE),
-                              "DensityLive"= sum(cohSum$DensityLive, na.rm = TRUE),
+                              "TreeDensityLive"= sum(cohSum$TreeDensityLive, na.rm = TRUE),
                               "TreeBasalAreaLive"= sum(cohSum$TreeBasalAreaLive, na.rm = TRUE),
                               "ShrubCoverLive"= sum(cohSum$ShrubCoverLive, na.rm=TRUE),
                               "MaxHeight"= max(x$above$H, na.rm=TRUE))
@@ -56,7 +58,8 @@ fordyn<-function(forest, soil, SpParams,
   createTreeTable<-function(step, year, x) {
     isTree = !is.na(x$above$DBH)
     range = 1:sum(isTree)
-    tt<-data.frame(Step = step, Year = year,
+    tt<-data.frame(Step = rep(step, length(range)), 
+                   Year = rep(year, length(range)),
                    Cohort = row.names(x$cohorts)[range],
                    Species = x$above$SP[range],
                    Name = x$cohorts$Name[range],
@@ -71,7 +74,8 @@ fordyn<-function(forest, soil, SpParams,
   createDeadTreeTable<-function(step, year, x) {
     isTree = !is.na(x$above$DBH)
     range = 1:sum(isTree)
-    dtt<-data.frame(Step = step, Year = year,
+    dtt<-data.frame(Step = rep(step, length(range)), 
+                    Year = rep(year, length(range)),
                    Cohort = row.names(x$cohorts)[range],
                    Species = x$above$SP[range],
                    Name = x$cohorts$Name[range],
@@ -89,7 +93,8 @@ fordyn<-function(forest, soil, SpParams,
     numCohorts = length(isShrub)
     range = numeric(0)
     if(numCohorts>nt) range = (nt+1):numCohorts
-    st<-data.frame(Step = step, Year = year,
+    st<-data.frame(Step = rep(step, length(range)), 
+                   Year = rep(year, length(range)),
                    Cohort = row.names(x$cohorts)[range],
                    Species = x$above$SP[range],
                    Name = x$cohorts$Name[range],
@@ -106,14 +111,15 @@ fordyn<-function(forest, soil, SpParams,
     numCohorts = length(isShrub)
     range = numeric(0)
     if(numCohorts>nt) range = (nt+1):numCohorts
-    dst<-data.frame(Step = step, Year = year,
-                   Cohort = row.names(x$cohorts)[range],
-                   Species = x$above$SP[range],
-                   Name = x$cohorts$Name[range],
-                   Cover = x$internalMortality$Cover_dead[range],
-                   Height = x$above$H[range],
-                   Z50 = x$below$Z50[range],
-                   Z95 = x$below$Z95[range])
+    dst<-data.frame(Step = rep(step, length(range)), 
+                    Year = rep(year, length(range)),
+                    Cohort = row.names(x$cohorts)[range],
+                    Species = x$above$SP[range],
+                    Name = x$cohorts$Name[range],
+                    Cover = x$internalMortality$Cover_dead[range],
+                    Height = x$above$H[range],
+                    Z50 = x$below$Z50[range],
+                    Z95 = x$below$Z95[range])
     dst = dst[dst$Cover>0,,drop=FALSE]
     return(dst)
   }
@@ -210,6 +216,8 @@ fordyn<-function(forest, soil, SpParams,
     moistureIndex = sum(meteoYear$Precipitation, na.rm=TRUE)/sum(meteoYear$PET, na.rm=TRUE)
     PARperc = vprofile_PARExtinction(forest, SpParamsMED, draw = FALSE)[1]
     if(verboseDyn) cat(paste0("       Minimum temperature of the coldest month (Celsius): ", round(minMonthTemp,2), "   Moisture index: ", round(moistureIndex,2), "   FPAR (%): ", round(PARperc,1), "\n"))
+    treeSpp = numeric(0)
+    shrubSpp = numeric(0)
     if(is.null(control$seedRain)) {
       treeSpp = forest$treeData$Species
       if(length(treeSpp)>0) {
@@ -218,17 +226,19 @@ fordyn<-function(forest, soil, SpParams,
         treeSpp = treeSpp[forest$treeData$Height > sph]
         treeSpp = unique(treeSpp)
       }
-      shrubSpp = forest$shrubData$Species
-      if(length(shrubSpp)>0) {
-        sph = species_parameter(shrubSpp, SpParams, "SeedProductionHeight")
-        sph[is.na(sph)] = control$seedProductionShrubHeight
-        shrubSpp = shrubSpp[forest$shrubData$Height > sph]
-        shrubSpp = unique(shrubSpp)
-      }
+      if(control$shrubDynamics) {
+        shrubSpp = forest$shrubData$Species
+        if(length(shrubSpp)>0) {
+          sph = species_parameter(shrubSpp, SpParams, "SeedProductionHeight")
+          sph[is.na(sph)] = control$seedProductionShrubHeight
+          shrubSpp = shrubSpp[forest$shrubData$Height > sph]
+          shrubSpp = unique(shrubSpp)
+        }
+      } 
     } else {
       isTree = !(species_characterParameter(control$seedRain, SpParams, "GrowthForm")=="Shrub")
       treeSpp = control$seedRain[isTree]
-      shrubSpp = control$seedRain[!isTree]
+      if(control$shrubDynamics) shrubSpp = control$seedRain[!isTree]
     }
     recr_forest = emptyforest(ntree = length(treeSpp), nshrub=length(shrubSpp))
     if(length(treeSpp)>0) {
@@ -294,8 +304,12 @@ fordyn<-function(forest, soil, SpParams,
     shrubOffset = shrubOffset + nrow(recr_forest$shrubData)
     forest_above = forest2aboveground(forest, SpParams, NA, "MED")
     row.names(forest_above) = row.names(xo$cohorts)
-    forest_above$LAI_live = xo$above$LAI_live
-    forest_above$LAI_expanded = xo$above$LAI_expanded
+    forest_above$LAI_live[!is.na(forest_above$DBH)] = xo$above$LAI_live[!is.na(forest_above$DBH)]
+    forest_above$LAI_expanded[!is.na(forest_above$DBH)] = xo$above$LAI_expanded[!is.na(forest_above$DBH)]
+    if(control$shrubDynamics) {
+      forest_above$LAI_live[is.na(forest_above$DBH)] = xo$above$LAI_live[is.na(forest_above$DBH)]
+      forest_above$LAI_expanded[is.na(forest_above$DBH)] = xo$above$LAI_expanded[is.na(forest_above$DBH)]
+    }
 
     # Merge above-ground data (first trees)
     above_all = rbind(forest_above[!is.na(forest_above$DBH),, drop = FALSE], 
@@ -306,8 +320,10 @@ fordyn<-function(forest, soil, SpParams,
     # Logical vector for replacement
     repl_vec <- c(rep(TRUE, nrow(forest$treeData)),
                   rep(FALSE, nrow(recr_forest$treeData)),
-                  rep(TRUE, nrow(forest$shrubData)),
+                  rep(control$shrubDynamics, nrow(forest$shrubData)),
                   rep(FALSE, nrow(recr_forest$shrubData)))
+    sel_vec = c(rep(TRUE, nrow(forest$treeData)),
+                rep(control$shrubDynamics, nrow(forest$shrubData)))
     
     # Merge cohorts in forest object
     forest$treeData = rbind(forest$treeData, recr_forest$treeData)
@@ -321,29 +337,29 @@ fordyn<-function(forest, soil, SpParams,
                      xo$soil, SpParams, control)
     
     # Replace previous state for surviving cohorts
-    xi$cohorts[repl_vec,] <- xo$cohorts
-    xi$above[repl_vec,] <- xo$above
-    xi$below[repl_vec,] <- xo$below
-    xi$belowLayers$V[repl_vec,] <- xo$belowLayers$V
-    xi$belowLayers$L[repl_vec,] <- xo$belowLayers$L
+    xi$cohorts[repl_vec,] <- xo$cohorts[sel_vec,, drop=FALSE]
+    xi$above[repl_vec,] <- xo$above[sel_vec,, drop=FALSE]
+    xi$below[repl_vec,] <- xo$below[sel_vec,, drop=FALSE]
+    xi$belowLayers$V[repl_vec,] <- xo$belowLayers$V[sel_vec,, drop=FALSE]
+    xi$belowLayers$L[repl_vec,] <- xo$belowLayers$L[sel_vec,, drop=FALSE]
     if(control$transpirationMode=="Sperry") {
-      xi$belowLayers$VGrhizo_kmax[repl_vec,] <- xo$belowLayers$VGrhizo_kmax
-      xi$belowLayers$VCroot_kmax[repl_vec,] <- xo$belowLayers$VCroot_kmax
-      xi$belowLayers$RhizoPsi[repl_vec,] <- xo$belowLayers$RhizoPsi
+      xi$belowLayers$VGrhizo_kmax[repl_vec,] <- xo$belowLayers$VGrhizo_kmax[sel_vec,, drop=FALSE]
+      xi$belowLayers$VCroot_kmax[repl_vec,] <- xo$belowLayers$VCroot_kmax[sel_vec,, drop=FALSE]
+      xi$belowLayers$RhizoPsi[repl_vec,] <- xo$belowLayers$RhizoPsi[sel_vec,, drop=FALSE]
     }
-    xi$belowLayers$Wpool[repl_vec,] <- xo$belowLayers$Wpool
-    xi$paramsPhenology[repl_vec,] <- xo$paramsPhenology
-    xi$paramsAnatomy[repl_vec,] <- xo$paramsAnatomy
-    xi$paramsInterception[repl_vec,] <- xo$paramsInterception
-    xi$paramsTranspiration[repl_vec,] <- xo$paramsTranspiration
-    xi$paramsWaterStorage[repl_vec,] <- xo$paramsWaterStorage
-    xi$paramsGrowth[repl_vec,] <- xo$paramsGrowth
-    xi$paramsAllometries[repl_vec,] <- xo$paramsAllometries
-    xi$internalPhenology[repl_vec,] <- xo$internalPhenology
-    xi$internalWater[repl_vec,] <- xo$internalWater
-    xi$internalCarbon[repl_vec,] <- xo$internalCarbon
-    xi$internalAllocation[repl_vec,] <- xo$internalAllocation
-    xi$internalRings[repl_vec] <- xo$internalRings
+    xi$belowLayers$Wpool[repl_vec,] <- xo$belowLayers$Wpool[sel_vec,, drop=FALSE]
+    xi$paramsPhenology[repl_vec,] <- xo$paramsPhenology[sel_vec,, drop=FALSE]
+    xi$paramsAnatomy[repl_vec,] <- xo$paramsAnatomy[sel_vec,, drop=FALSE]
+    xi$paramsInterception[repl_vec,] <- xo$paramsInterception[sel_vec,, drop=FALSE]
+    xi$paramsTranspiration[repl_vec,] <- xo$paramsTranspiration[sel_vec,, drop=FALSE]
+    xi$paramsWaterStorage[repl_vec,] <- xo$paramsWaterStorage[sel_vec,, drop=FALSE]
+    xi$paramsGrowth[repl_vec,] <- xo$paramsGrowth[sel_vec,, drop=FALSE]
+    xi$paramsAllometries[repl_vec,] <- xo$paramsAllometries[sel_vec,, drop=FALSE]
+    xi$internalPhenology[repl_vec,] <- xo$internalPhenology[sel_vec,, drop=FALSE]
+    xi$internalWater[repl_vec,] <- xo$internalWater[sel_vec,, drop=FALSE]
+    xi$internalCarbon[repl_vec,] <- xo$internalCarbon[sel_vec,, drop=FALSE]
+    xi$internalAllocation[repl_vec,] <- xo$internalAllocation[sel_vec,, drop=FALSE]
+    xi$internalRings[repl_vec] <- xo$internalRings[sel_vec]
 
     if(verboseDyn) cat(paste0("   (c) Summaries\n"))
     

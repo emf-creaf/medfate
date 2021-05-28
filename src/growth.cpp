@@ -122,6 +122,7 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
   bool allowStarvation = control["allowStarvation"];
   bool allowDefoliation = control["allowDefoliation"];
   bool sinkLimitation = control["sinkLimitation"];
+  bool shrubDynamics = control["shrubDynamics"];
   String allocationStrategy = control["allocationStrategy"];
   String cavitationRefill = control["cavitationRefill"];
   bool plantWaterPools = control["plantWaterPools"];
@@ -466,6 +467,10 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
       //UPDATE LEAF AREA, SAPWOOD AREA AND CONCENTRATION IN LABILE POOLS
       double LAprev = LAexpanded;
       LAexpanded += deltaLAgrowth - deltaLAsenescence;
+      if(LAexpanded < 0.0) {
+        deltaLAsenescence -= LAexpanded;
+        LAexpanded = 0.0;
+      }
       LAdead += deltaLAsenescence;
       double SAprev = SA[j];
       SA[j] = SA[j] + deltaSAgrowth - deltaSAturnover; 
@@ -486,55 +491,58 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
       LAI_expanded[j] = LAexpanded*N[j]/10000.0;
       
       //MORTALITY Death by carbon starvation or dessication
-      double stemSympRWC = symplasticRelativeWaterContent(PlantPsi[j], StemPI0[j], StemEPS[j]);
       double Ndead_day = 0.0;
-      if(mortalityMode=="whole-cohort/deterministic") {
-        if((sugarSapwood[j]<mortalitySugarThreshold) & allowStarvation) {
-          Ndead_day = N[j];
-          if(verbose) Rcout<<" [Cohort "<< j<<" died from starvation] ";
-        } else if( (stemSympRWC < mortalityRWCThreshold) & allowDessication) {
-          Ndead_day = N[j];
-          if(verbose) Rcout<<" [Cohort "<< j<<" died from dessication] ";
-        }
-      } else {
-        double P_starv = dailyMortalityProbability(mortalityBaselineRate, sugarSapwood[j], 
-                                            mortalitySugarThreshold, allowStarvation,
-                                            0.0, 2.0);
-        double P_dess = dailyMortalityProbability(mortalityBaselineRate, stemSympRWC, 
-                                           mortalityRWCThreshold, allowDessication,
-                                           0.0, 2.0);
-        double P_day = std::max(P_dess, P_starv);
-        if(mortalityMode =="density/deterministic") {
-          Ndead_day = N[j]*P_day;
-        } else if(mortalityMode =="whole-cohort/stochastic") {
-          if(R::runif(0.0,1.0) < P_day) {
+      bool dynamicCohort = true;
+      bool isShrub = !NumericVector::is_na(Cover[j]);
+      if((!shrubDynamics) & isShrub) dynamicCohort = false;
+      double stemSympRWC = symplasticRelativeWaterContent(PlantPsi[j], StemPI0[j], StemEPS[j]);
+      if(dynamicCohort) {
+        if(mortalityMode=="whole-cohort/deterministic") {
+          if((sugarSapwood[j]<mortalitySugarThreshold) & allowStarvation) {
             Ndead_day = N[j];
-            if(P_dess>P_starv) {
-              Rcout<<" [Cohort "<< j<<" died from dessication] ";
-            } else {
-              Rcout<<" [Cohort "<< j<<" died from starvation] ";
-            }
+            if(verbose) Rcout<<" [Cohort "<< j<<" died from starvation] ";
+          } else if( (stemSympRWC < mortalityRWCThreshold) & allowDessication) {
+            Ndead_day = N[j];
+            if(verbose) Rcout<<" [Cohort "<< j<<" died from dessication] ";
           }
-        } else if(mortalityMode == "density/stochastic") {
-          Ndead_day = R::rbinom(round(N[j]), P_day);
-          // Rcout<< j<< " "<< P_day<< " "<< N[j]<< " "<< Ndead_day<< " "<< R::rbinom(750, 2.82309e-05)<< "\n";
+        } else {
+          double P_starv = dailyMortalityProbability(mortalityBaselineRate, sugarSapwood[j], 
+                                                     mortalitySugarThreshold, allowStarvation,
+                                                     0.0, 2.0);
+          double P_dess = dailyMortalityProbability(mortalityBaselineRate, stemSympRWC, 
+                                                    mortalityRWCThreshold, allowDessication,
+                                                    0.0, 2.0);
+          double P_day = std::max(P_dess, P_starv);
+          if(mortalityMode =="density/deterministic") {
+            Ndead_day = N[j]*P_day;
+          } else if(mortalityMode =="whole-cohort/stochastic") {
+            if(R::runif(0.0,1.0) < P_day) {
+              Ndead_day = N[j];
+              if(P_dess>P_starv) {
+                Rcout<<" [Cohort "<< j<<" died from dessication] ";
+              } else {
+                Rcout<<" [Cohort "<< j<<" died from starvation] ";
+              }
+            }
+          } else if(mortalityMode == "density/stochastic") {
+            Ndead_day = R::rbinom(round(N[j]), P_day);
+            // Rcout<< j<< " "<< P_day<< " "<< N[j]<< " "<< Ndead_day<< " "<< R::rbinom(750, 2.82309e-05)<< "\n";
+          }
         }
+        // Update density and increase the number of dead plants
+        double Cdead_day = Cover[j]*(Ndead_day/N[j]);
+        N[j] = std::max(0.0, N[j] - Ndead_day);
+        N_dead[j] = N_dead[j] + Ndead_day;
+        if(isShrub) {
+          Cover[j] = std::max(0.0, Cover[j] - Cdead_day);
+          Cover_dead[j] = Cover_dead[j] + Cdead_day;
+        }
+        //Update LAI dead and LAI expanded as a result of density decrease
+        double LAI_change = LAexpanded*Ndead_day/10000.0;
+        LAI_dead[j] = LAI_dead[j] + LAI_change;
+        LAI_expanded[j] = LAI_expanded[j] - LAI_change;
       }
-        
-      // Update density and increase the number of dead plants
-      double Cdead_day = Cover[j]*(Ndead_day/N[j]);
-      N[j] = std::max(0.0, N[j] - Ndead_day);
-      N_dead[j] = N_dead[j] + Ndead_day;
-      if(!NumericVector::is_na(Cover[j])) {
-        Cover[j] = std::max(0.0, Cover[j] - Cdead_day);
-        Cover_dead[j] = Cover_dead[j] + Cdead_day;
-      }
-      
-      //Update LAI dead and LAI expanded as a result of density decrease
-      double LAI_change = LAexpanded*Ndead_day/10000.0;
-      LAI_dead[j] = LAI_dead[j] + LAI_change;
-      LAI_expanded[j] = LAI_expanded[j] - LAI_change;
-      
+       
       //UPDATE DERIVED QUANTITIES      
       //Update Huber value
       if(LAlive>0.0) {
@@ -654,6 +662,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
   bool allowStarvation = control["allowStarvation"];
   bool allowDefoliation = control["allowDefoliation"];
   bool sinkLimitation = control["sinkLimitation"];
+  bool shrubDynamics = control["shrubDynamics"];
   String allocationStrategy = control["allocationStrategy"];
   String cavitationRefill = control["cavitationRefill"];
   bool plantWaterPools = control["plantWaterPools"];
@@ -1135,6 +1144,10 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
       //UPDATE LEAF AREA, SAPWOOD AREA AND CONCENTRATION IN LABILE POOLS
       double LAprev = LAexpanded;
       LAexpanded +=deltaLAgrowth - deltaLAsenescence;
+      if(LAexpanded < 0.0) {
+        deltaLAsenescence -= LAexpanded;
+        LAexpanded = 0.0;
+      }
       LAdead += deltaLAsenescence;
       double SAprev = SA[j];
       SA[j] = SA[j] + deltaSAgrowth - deltaSAturnover; 
@@ -1156,57 +1169,59 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
       
       //MORTALITY Death by carbon starvation or dessication
       double Ndead_day = 0.0;
-      if(mortalityMode=="whole-cohort/deterministic") {
-        if((sugarSapwood[j]<mortalitySugarThreshold) & allowStarvation) {
-          Ndead_day = N[j];
-          if(verbose) Rcout<<" [Cohort "<< j<<" died from starvation] ";
-        } else if( (StemSympRWC[j] < mortalityRWCThreshold) & allowDessication) {
-          Ndead_day = N[j];
-          if(verbose) Rcout<<" [Cohort "<< j<<" died from dessication] ";
-        }
-      } else {
-        double P_starv = dailyMortalityProbability(mortalityBaselineRate, sugarSapwood[j], 
-                                                   mortalitySugarThreshold, allowStarvation,
-                                                   0.0, 2.0);
-        double P_dess = dailyMortalityProbability(mortalityBaselineRate, StemSympRWC[j], 
-                                                  mortalityRWCThreshold, allowDessication,
-                                                  0.0, 2.0);
-        double P_day = std::max(P_dess, P_starv);
-        if(mortalityMode =="density/deterministic") {
-          Ndead_day = N[j]*P_day;
-        } else if(mortalityMode =="whole-cohort/stochastic") {
-          if(R::runif(0.0,1.0) < P_day) {
+      bool dynamicCohort = true;
+      bool isShrub = !NumericVector::is_na(Cover[j]);
+      if((!shrubDynamics) & isShrub) dynamicCohort = false;
+      
+      if(dynamicCohort) {
+        if(mortalityMode=="whole-cohort/deterministic") {
+          if((sugarSapwood[j]<mortalitySugarThreshold) & allowStarvation) {
             Ndead_day = N[j];
-            if(P_dess>P_starv) {
-              Rcout<<" [Cohort "<< j<<" died from dessication] ";
-            } else {
-              Rcout<<" [Cohort "<< j<<" died from starvation] ";
-            }
+            if(verbose) Rcout<<" [Cohort "<< j<<" died from starvation] ";
+          } else if( (StemSympRWC[j] < mortalityRWCThreshold) & allowDessication) {
+            Ndead_day = N[j];
+            if(verbose) Rcout<<" [Cohort "<< j<<" died from dessication] ";
           }
-        } else if(mortalityMode =="density/stochastic") {
-          // NumericVector nv = Rcpp::runif(round(N[j]), 0.0,1.0);
-          // for(int k=0;k<nv.size();k++) if(nv[k]< P_day) Ndead_day += 1.0;
-          Ndead_day = R::rbinom(round(N[j]), P_day);
-          // Rcout<< j<< " "<< P_day<< " "<< N[j]<< " "<< Ndead_day<< " "<< R::rbinom(750, 2.82309e-05) << "\n";
+        } else {
+          double P_starv = dailyMortalityProbability(mortalityBaselineRate, sugarSapwood[j], 
+                                                     mortalitySugarThreshold, allowStarvation,
+                                                     0.0, 2.0);
+          double P_dess = dailyMortalityProbability(mortalityBaselineRate, StemSympRWC[j], 
+                                                    mortalityRWCThreshold, allowDessication,
+                                                    0.0, 2.0);
+          double P_day = std::max(P_dess, P_starv);
+          if(mortalityMode =="density/deterministic") {
+            Ndead_day = N[j]*P_day;
+          } else if(mortalityMode =="whole-cohort/stochastic") {
+            if(R::runif(0.0,1.0) < P_day) {
+              Ndead_day = N[j];
+              if(P_dess>P_starv) {
+                Rcout<<" [Cohort "<< j<<" died from dessication] ";
+              } else {
+                Rcout<<" [Cohort "<< j<<" died from starvation] ";
+              }
+            }
+          } else if(mortalityMode =="density/stochastic") {
+            // NumericVector nv = Rcpp::runif(round(N[j]), 0.0,1.0);
+            // for(int k=0;k<nv.size();k++) if(nv[k]< P_day) Ndead_day += 1.0;
+            Ndead_day = R::rbinom(round(N[j]), P_day);
+            // Rcout<< j<< " "<< P_day<< " "<< N[j]<< " "<< Ndead_day<< " "<< R::rbinom(750, 2.82309e-05) << "\n";
+          }
+          // if(Ndead_day>0.0) Rcout<< j<< " "<< P_day<< " "<< Ndead_day<< "\n";
         }
-        // if(Ndead_day>0.0) Rcout<< j<< " "<< P_day<< " "<< Ndead_day<< "\n";
+        // Update density and increase the number of dead plants
+        double Cdead_day = Cover[j]*(Ndead_day/N[j]);
+        N[j] = std::max(0.0, N[j] - Ndead_day);
+        N_dead[j] = N_dead[j] + Ndead_day;
+        if(isShrub) {
+          Cover[j] = std::max(0.0, Cover[j] - Cdead_day);
+          Cover_dead[j] = Cover_dead[j] + Cdead_day;
+        }
+        //Update LAI dead and LAI expanded as a result of density decrease
+        double LAI_change = LAexpanded*Ndead_day/10000.0;
+        LAI_dead[j] = LAI_dead[j] + LAI_change;
+        LAI_expanded[j] = LAI_expanded[j] - LAI_change;
       }
-      
-      // Update density and increase the number of dead plants
-      double Cdead_day = Cover[j]*(Ndead_day/N[j]);
-      N[j] = std::max(0.0, N[j] - Ndead_day);
-      N_dead[j] = N_dead[j] + Ndead_day;
-      if(!NumericVector::is_na(Cover[j])) {
-        Cover[j] = std::max(0.0, Cover[j] - Cdead_day);
-        Cover_dead[j] = Cover_dead[j] + Cdead_day;
-      }
-      
-      
-      //Update LAI dead and LAI expanded as a result of density decrease
-      double LAI_change = LAexpanded*Ndead_day/10000.0;
-      LAI_dead[j] = LAI_dead[j] + LAI_change;
-      LAI_expanded[j] = LAI_expanded[j] - LAI_change;
-      
       
       
       //UPDATE DERIVED QUANTITIES   
@@ -1734,6 +1749,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   bool leafPhenology = control["leafPhenology"];
   bool unlimitedSoilWater = control["unlimitedSoilWater"];
   bool multiLayerBalance = control["multiLayerBalance"];
+  bool shrubDynamics = control["shrubDynamics"];
   checkgrowthInput(x, transpirationMode, soilFunctions);
 
   //Store input
@@ -2145,20 +2161,22 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
       }
 
       //Shrub variables
-      for(int j=0;j<numCohorts; j++) {
-        if(NumericVector::is_na(DBH[j]) && N[j]>0.0) {
-          double Wleaves = leafAreaTarget[j]/SLA[j];  //Calculates the biomass (kg dry weight) of leaves
-          double PV = pow(Wleaves*r635[j]/Absh[j], 1.0/Bbsh[j]); //Calculates crown phytovolume (in m3)
-          H[j] = pow(1e6*PV/Aash[j], 1.0/Bash[j]); //Updates shrub height
-          if(H[j]> Hmax[j]) { //Limit height (and update the former variables)
-            H[j] = Hmax[j];
-            // PV = (Aash[j]*pow(H[j],2.0)/10000.0)*(H[j]/100.0)*CR[j];
-            // Wleaves = Absh[j]*pow(PV, Bbsh[j])/r635[j];
-            // double prevLive = LAI_live[j];
-            // LAI_live[j] = Wleaves*((N[j]/10000)*SLA[j]); //Update LAI_live to the maximum
-            // LAI_dead[j] += prevLive - LAI_live[j]; //Increment dead LAI with the difference
+      if(shrubDynamics) {
+        for(int j=0;j<numCohorts; j++) {
+          if(NumericVector::is_na(DBH[j]) && N[j]>0.0) {
+            double Wleaves = leafAreaTarget[j]/SLA[j];  //Calculates the biomass (kg dry weight) of leaves
+            double PV = pow(Wleaves*r635[j]/Absh[j], 1.0/Bbsh[j]); //Calculates crown phytovolume (in m3)
+            H[j] = pow(1e6*PV/Aash[j], 1.0/Bash[j]); //Updates shrub height
+            if(H[j]> Hmax[j]) { //Limit height (and update the former variables)
+              H[j] = Hmax[j];
+              // PV = (Aash[j]*pow(H[j],2.0)/10000.0)*(H[j]/100.0)*CR[j];
+              // Wleaves = Absh[j]*pow(PV, Bbsh[j])/r635[j];
+              // double prevLive = LAI_live[j];
+              // LAI_live[j] = Wleaves*((N[j]/10000)*SLA[j]); //Update LAI_live to the maximum
+              // LAI_dead[j] += prevLive - LAI_live[j]; //Increment dead LAI with the difference
+            }
+            Cover[j] = (N[j]*Aash[j]*pow(H[j],Bash[j])/1e6); //Updates shrub cover
           }
-          Cover[j] = (N[j]*Aash[j]*pow(H[j],Bash[j])/1e6); //Updates shrub cover
         }
       }
       

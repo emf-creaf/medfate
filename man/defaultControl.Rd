@@ -72,6 +72,7 @@ A list, with the following options (default values in parentheses):
    \item{\code{allowStarvation (=TRUE)}: Boolean flag to indicate that mortality by starvation is allowed.}
    \item{\code{allowDefoliation (=TRUE)}: Boolean flag to indicate that complete drought-driven defoliation is allowed.}
    \item{\code{sinkLimitation (=TRUE): Boolean flag to indicate that temperature and turgor limitations to growth are applied.}}
+   \item{\code{ shrubDynamics [= FALSE]}: Boolean flag to allow the application of demographic processes to shrubs.}
    \item{\code{allocationStrategy (="Plant_kmax")}: Strategy for allocation (either "Plant_kmax", for constant maximum plant conductance, or "Al2As" for constant Huber value).}
    \item{\code{nonStomatalPhotosynthesisLimitation (=TRUE)}: A flag to apply limitations of pho-tosynthesis when leaf sugar levels become too high.}
    \item{\code{phloemConductanceFactor (= 0.2))}: Factor to transform stem xylem conductance to stem phloem conductance (only for transpirationMode = "Sperry").}
@@ -90,7 +91,6 @@ A list, with the following options (default values in parentheses):
 \bold{Forest dynamics}:
 \itemize{
    \item{\code{ recruitmentMode [= "deterministic"]}: String describing how recruitment is applied. Current accepted values are "deterministic" or "stochastic".}
-   \item{\code{ shrubDynamics [= FALSE]}: Boolean flag to allow the application of demographic processes to shrubs.}
    \item{\code{ removeDeadCohorts [= TRUE]}: Boolean flag to indicate the removal of cohorts whose density is too low.}
    \item{\code{ minimumCohortDensity [= 1]}: Threshold of density resulting in cohort removal.}
    \item{\code{ seedRain [= NULL]}: Vector of species codes whose seed rain is to be simulated. If \code{NULL} the species identity of seed rain is taken from species currently present in the forest stand and with minimum size (see below).}
