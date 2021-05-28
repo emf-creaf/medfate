@@ -253,9 +253,11 @@ fordyn<-function(forest, soil, SpParams,
       recr_selection = (minMonthTemp > minTemp) & (moistureIndex > minMoisture) & (PARperc > minFPAR)
       recr_forest$treeData = recr_forest$treeData[recr_selection, , drop = FALSE]
       recrString = paste0(treeSpp[recr_selection], collapse =",")
-      if(recrString=="") recrString = "<none>"
-      if(verboseDyn) cat(paste0("       Tree species with seed rain: ", paste0(treeSpp, collapse =","), 
-                 " recruited: ", recrString ,"\n"))
+      if(verboseDyn) {
+        if(recrString=="") recrString = "<none>"
+        cat(paste0("       Tree species with seed rain: ", paste0(treeSpp, collapse =","), 
+                   " recruited: ", recrString ,"\n"))
+      }
     }
     if((length(shrubSpp)>0)) {
       recr_forest$shrubData$Species = shrubSpp
@@ -277,9 +279,11 @@ fordyn<-function(forest, soil, SpParams,
       recr_selection = (minMonthTemp > minTemp) & (moistureIndex > minMoisture) & (PARperc > minFPAR)
       if(!control$shrubDynamics) recr_selection = rep(FALSE, nrow(recr_forest$shrubData))
       recrString = paste0(shrubSpp[recr_selection], collapse =",")
-      if(recrString=="") recrString = "<none>"
-      cat(paste0("       Shrub species with seed rain: ", paste0(shrubSpp, collapse =","), 
+      if(verboseDyn) {
+        if(recrString=="") recrString = "<none>"
+        cat(paste0("       Shrub species with seed rain: ", paste0(shrubSpp, collapse =","), 
                  " recruited: ", recrString ,"\n"))
+      }
       recr_forest$shrubData = recr_forest$shrubData[recr_selection, , drop = FALSE]
     }
     
