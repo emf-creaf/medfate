@@ -6,14 +6,16 @@ home:
     href: https://vegmod.github.io/software/medfate/
 
 articles:
-- title: Overview
+- title: Introduction
   contents:
     - starts_with("Package")
+    - starts_with("Preparing")
 - title: Simulation models
   contents:
     - starts_with("Basic")
     - starts_with("Advanced")
-    - starts_with("Forest")
+    - starts_with("ForestGrowth")
+    - starts_with("ForestDynamics")
 - title: Model analysis
   contents:
     - starts_with("Sensitivity")

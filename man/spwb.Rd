@@ -181,7 +181,7 @@ summary(S1, freq="months",FUN=mean, output="Soil")
 examplesoil2 = soil(defaultSoilParams(4))
 
 #Switch to 'Sperry' transpiration mode
-control$transpirationMode="Sperry"
+control = defaultControl("Sperry")
 
 #Initialize input
 x2 = forest2spwbInput(exampleforestMED,examplesoil2, SpParamsMED, control)

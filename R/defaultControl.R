@@ -4,7 +4,7 @@ defaultControl<-function(transpirationMode = "Granier") {
     modifyInput = TRUE,
     verbose = TRUE,
     subdailyResults = FALSE,
-    soilFunctions = "SX",
+    soilFunctions = ifelse(transpirationMode=="Sperry", "VG", "SX"),
     defaultWindSpeed = 2.5, #m/s
     
     # For water balance

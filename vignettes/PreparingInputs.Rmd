@@ -1,0 +1,165 @@
+---
+title: "Preparing inputs"
+author: "Miquel De Caceres"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: TRUE
+vignette: >
+  %\VignetteIndexEntry{Preparing inputs}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignettePackage{medfate}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=FALSE, include=FALSE}
+library(medfate)
+```
+
+## About this vignette
+
+Any forest water balance model needs information on **climate**, **vegetation** and **soils** of the forest stand to be simulated. Moreover, since `medfate` differentiates between species,  **species-specific parameters** are also needed. This vignette explains data structures required as input to run simulations using the package.
+
+## Species-specific parameters
+
+Simulation models in `medfate` require a data frame with species parameter values. The package provides a default data set of parameter values for Mediterranean species (rows), resulting from bibliographic search, fit to empirical data or expert-based guesses:
+
+```{r}
+data("SpParamsMED")
+```
+
+These species commonly occur in the Spanish forest inventory of Catalonia, but may not be sufficient for other areas. A large number of parameters (columns) can be found in `SpParamsMED`:
+
+```{r}
+names(SpParamsMED)
+```
+
+Not all parameters are needed for all models. The user can find parameter definitions in the help page of this data set. However, to fully understand the role of parameters in the model, the user should read the details of model design and formulation (<https://vegmod.github.io/software/medfate>).
+
+## Vegetation
+
+### Forest objects
+
+Models included in `medfate` were primarily designed to be ran on **forest inventory plots**. In this kind of data, the vegetation of a sampled area is often described by several records of woody plants (trees and shrubs) along with their size and species identity. Forest plots in `medfate` are assumed to be in a format that follows closely the Spanish national forest inventory. Each forest plot is represented in an object of class `forest`, a list that contains several elements. Among them, the most important items are two data frames, `treeData` (for trees) and `shrubData` for shrubs:
+
+```{r}
+data(exampleforestMED)
+exampleforestMED
+```
+
+Trees are expected to be primarily described in terms of species, diameter (DBH; cm) and height (cm), whereas shrubs are described in terms of species, percent cover (%) and mean height (cm). Root distribution has to be specified for both growth forms, in terms of the depths (mm) corresponding to 50% and 95% of cumulative fine root distribution. Functions are provided to map variables in user data frames into tables `treeData` and `shrubData` (see function `forest_mapWoodyTables()`).
+
+### Aboveground and belowground data
+
+We recommend users to define `forest` objects as starting point for simulations with `medfate`. 
+However, simulation functions in `medfate` allow starting in a more general way using two data frames, one with **aboveground** information (i.e. the leave area and size of plants) and the other with **belowground** information (i.e. root distribution). The aboveground data frame does not distinguish between trees and shrubs. It includes, for each plant cohort to be considered in rows, its *species identity*, *height* and *leaf area index* (LAI). While users can build their input data themselves, we use function `forest2aboveground()` on the object `exampleforestMED` to show how should the data look like:
+```{r}
+above = forest2aboveground(exampleforestMED, SpParamsMED)
+above
+```
+Note that the call to `forest2aboveground()` included species parameters, because species-specific values are needed to calculate leaf area from tree diameters or shrub cover. Columns `N`, `DBH` and `Cover` are required for simulating growth, but not for soil water balance, which only requires columns `SP`, `H` (in cm), `CR` (i.e. the crown ratio), `LAI_live`, `LAI_expanded` and `LAI_dead`. Here plant cohorts are given unique codes that tell us whether they correspond to trees or shrubs, but the user can use other row identifiers as long as they are unique. In practice, the user only needs to worry to calculate the values for `LAI_live`. `LAI_live` and `LAI_expanded` can contain the same LAI values, and `LAI_dead` is normally zero. This is so because models update `LAI_expanded` and `LAI_dead` according to the leaf phenology of species.
+
+Aboveground leaf area distribution (with or without distinguishing among cohorts) can be examined by calling function `vprofile_leafAreaDensity()`:
+
+```{r, fig = TRUE, fig.width= 4, fig.height=3, fig.align= 'center', echo=TRUE}
+vprofile_leafAreaDensity(above, byCohorts = F)
+```
+```{r, fig = TRUE, fig.width= 5, fig.height=3, fig.align= 'center', echo=TRUE}
+vprofile_leafAreaDensity(above, byCohorts = T)
+```
+
+Regarding **belowground** information, we need vectors with depths corresponding to 50% and 95% of fine roots, which we simply concatenate from our forest data:
+```{r}
+Z50 = c(exampleforestMED$treeData$Z50, exampleforestMED$shrubData$Z50)
+Z95 = c(exampleforestMED$treeData$Z95, exampleforestMED$shrubData$Z95)
+```
+These parameters specify a continuous distribution of fine roots. Users can visually inspect the distribution of fine roots of `forest` objects by calling function `vprofile_rootDistribution()`:
+
+```{r, fig = TRUE, fig.width= 5, fig.height=3, fig.align= 'center', echo=TRUE}
+vprofile_rootDistribution(exampleforestMED, SpParamsMED)
+```
+
+
+## Soils
+
+### Soil physical description
+
+Simulation models in `medfate` require information on the physical attributes of soil, namely soil depth, texture, bulk density and rock fragment content. Soil physical attributes can be initialized to default values, for a given number of layers, using function `defaultSoilParams()`:
+
+```{r}
+spar = defaultSoilParams(2)
+print(spar)
+```
+
+where `widths` are soil layer widths in mm; `clay` and `sand` are the percentage of clay and sand, in percent of dry weight, `om` stands for organic matter, `bd` is bulk density (in $g \cdot cm^{-3}$) and `rfc` the percentage of rock fragments. Because soil properties vary strongly at fine spatial scales, ideally soil physical attributes should be measured on samples taken at the forest stand to be simulated. For those users lacking such data, soil properties modelled at larger scales are available via SoilGrids.org (see function `soilgridsParams()`).
+
+### Soil input object
+
+The soil input for simulations is an object of class `soil` (a list) that is created using a function with the same name:
+
+```{r}
+examplesoil = soil(spar)
+class(soil)
+```
+
+In addition to the physical soil description, this object contains soil parameters needed for soil water balance simulations:
+```{r}
+names(examplesoil)
+```
+For example, `macro` specifies the macroporosity of each layer; `Gsoil` and `Ksoil` are parameters needed to model the process of water infiltration into the soil. The meaning of all elements in the soil object can be found in the help page for function `soil()`.
+
+At any time, one can show the characteristics and status of the soil object using its `print` function:
+```{r}
+print(examplesoil, model = "SX")
+```
+
+Importantly, the soil object is used to store the degree of moisture of each soil layer. In particular, element `W` contains the state variable that represents moisture content - the proportion of moisture **relative to field capacity** - which is normally initialized to 1 for each layer:
+```{r}
+examplesoil$W
+```
+
+Advanced soil plant energy and water balance modelling requires considering the temperature of soil. Hence, `Temp` contains the temperature (in degrees) of soil layers:
+```{r}
+examplesoil$Temp
+```
+Soil layer temperatures are initialized to missing values, so that at the first time step they will be set to atmospheric temperature. While simple water balance modeling can be run using either Saxton's or Van Genuchten's equations as water retention curves, Van Genuchten's model is forced for advanced modelling.
+
+### Water retention curves
+
+The modelled moisture content of the soil depends on the **water retention curve** used to represent the relationship between soil volumetric water content ($\theta$; %) and soil water potential ($\Psi$; MPa). By default the Saxton (`model = "SX"`) equations are used to model the water retention curve, but the user may choose to follow Van Genuchten - Mualem equations, which will give slightly different values for the same texture:
+```{r}
+print(examplesoil, model="VG")
+```
+While Saxton equations use texture and organic matter as inputs, the Van Genuchten-Mualem equations need other parameters, which are estimated using pedotransfer functions and their names start with `VG_` (two alternative options are provided in function `soil` to estimate Van Genuchten parameters). The following code calls function `soil_retentionCurvePlot()` to illustrate the difference between the two water retention models in this soil:
+
+```{r, fig = TRUE, fig.width= 5, fig.height=3, fig.align= 'center', echo=TRUE}
+soil_retentionCurvePlot(examplesoil, model="both")
+```
+
+Low-level functions, such as `soil_psi2thetaSX()` and `soil_psi2thetaVG()` (and their counterparts `soil_theta2psiSX()` and `soil_theta2psiVG()`), can be used to calculate volumetric soil moisture from the water potential (and viceversa) using the two models. When simulating soil water balance, the user can choose among the two models (see `control` parameters below).
+
+
+## Meteorological forcing
+
+All simulations in the package require daily weather inputs. The weather variables that are required depend on the complexity of model we are using. In the simplest case, only mean temperature, precipitation and potential evapotranspiration is required, but the more complex simulation model also requires radiation, wind speed, min/max temparature and relative humitidy. Here we show an example of meteorological forcing data. 
+```{r}
+data(examplemeteo)
+head(examplemeteo)
+```
+Simulation models in `medfate` have been designed to work along with data generated from package `meteoland`. The user is strongly recommended to resort to this package to obtain suitable weather input for medfate simulations.
+
+
+## Simulation control
+
+Apart from data inputs, the behaviour of simulation models can be controlled using a set of global parameters. The default parameterization is obtained using function `defaultControl()`:
+
+```{r}
+control = defaultControl()
+names(control)
+```
+These parameters should normally be left to their default value under their effect on simulations is fully understood.
+

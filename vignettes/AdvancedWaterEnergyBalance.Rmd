@@ -1,12 +1,12 @@
 ---
-title: "Advanced water and energy balance simulation"
+title: "Advanced water and energy balance"
 author: "Miquel De Caceres"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
     toc: TRUE
 vignette: >
-  %\VignetteIndexEntry{Advanced water and energy balance simulation}
+  %\VignetteIndexEntry{Advanced water and energy balance}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignettePackage{medfate}
   \usepackage[utf8]{inputenc}
@@ -22,46 +22,28 @@ library(medfate)
 This document describes how to run a water and energy balance model that uses a more detailed approach for hydraulics and stomatal regulation described in De Cáceres et al. (2021). This document is meant to teach users to run the simulation model within R. All the details of the model design and formulation can be found at  https://vegmod.github.io/software/medfate/. 
 
 ## Preparing model inputs
-Most details of the soil plant water balance model inputs are already covered in vignette **1. Introduction to water balance simulation**. Here only differences are mentioned.
 
-### Soils
+Model inputs are explained in greater detail in vignette '*Simulation inputs*'. Here we only review the different steps required to run function `spwb()`.
 
-The soil input for function is actually an object of class `soil` that is created using a function with the same name:
-```{r}
-examplesoil = soil(defaultSoilParams(2))
-```
+### Soil, vegetation, meteorology and species data
 
-Advanced soil plant energy and water balance modelling requires considering the temperature of soil. Hence, `Temp` contains the temperature (in degrees) of soil layers:
-```{r}
-examplesoil$Temp
-```
-Soil layer temperatures are initialized to missing values, so that at the first time step they will be set to atmospheric temperature. While simple water balance modeling can be run using either Saxton's or Van Genuchten's equations as water retention curves, Van Genuchten's model is forced for advanced modelling.
 
-### Species data table
-
-Simulation models in `medfate` require a data frame with species parameter values. The package provides a default data set of parameter values for 89 Mediterranean species (rows), resulting from bibliographic search, fit to empirical data or expert-based guesses:
+Soil information needs to be entered as a `data frame` with soil layers in rows and physical attributes in columns. Soil physical attributes can be initialized to default values, for a given number of layers, using function `defaultSoilParams()`:
 
 ```{r}
-data("SpParamsMED")
+spar = defaultSoilParams(2)
 ```
 
-These species commonly occur in the Spanish forest inventory of Catalonia, but may not be sufficient for other areas. A large number of parameters (columns) can be found in `SpParamsMED`:
-
+The soil input for water balance simulation is actually a list of class `soil` that is created using a function with the same name:
 ```{r}
-names(SpParamsMED)
+examplesoil = soil(spar)
 ```
 
-Not all parameters are needed for all models. The user can find parameter definitions in the help page of this data set. However, to fully understand the role of parameters in the model, the user should read the details of model design and formulation (https://vegmod.github.io/software/medfate/). 
-
-### Vegetation
-
-Models included in `medfate` were primarily designed to be ran on **forest inventory plots** (these are explained in detail in **1. Introduction to water balance simulation**):
+As explained in the package overview, models included in `medfate` were primarily designed to be ran on **forest inventory plots**. Here we use the example object provided with the package:
 ```{r}
 data(exampleforestMED)
 exampleforestMED
 ```
-
-### Meteorological forcing
 
 Advanced water and energy balance modeling requires daily precipitation, radiation, wind speed, min/max temparatures and relative humitidy as inputs: 
 ```{r}
@@ -69,27 +51,25 @@ data(examplemeteo)
 head(examplemeteo)
 ```
 
-Simulation models in `medfate` have been designed to work along with data generated from package `meteoland`. The user is strongly recommended to resort to this package to obtain suitable weather input for soil water balance simulations.
+Finally, simulations in `medfate` require a data frame with species parameter values, which we load using defaults for Catalonia (NE Spain):
+
+```{r}
+data("SpParamsMED")
+```
+
 
 ### Simulation control
 
 Apart from data inputs, the behaviour of simulation models is controlled using a set of global parameters. The default parameterization is obtained using function `defaultControl()`:
 
 ```{r}
-control = defaultControl()
-names(control)
+control = defaultControl("Sperry")
 ```
 
-To use the complex soil water balance model we must change the values of `transpirationMode` (to switch from "Granier" to "Sperry") and `soilFunctions` (to switch from Saxton's retention curve, "SX", to Van Genuchten's retention curve, "VG"):
-```{r}
-control$transpirationMode = "Sperry"
-control$soilFunctions = "VG"
-```
-
+To use the complex soil water balance model we must change the values of `transpirationMode` (to switch from "Granier" to "Sperry") and `soilFunctions` (to switch from Saxton's retention curve, "SX", to Van Genuchten's retention curve, "VG"). This is automatically done when calling function `defaultControl()` with `"Sperry"` as parameter input.
 
 ### Water balance input object
-
-A last step is needed before running the simulation function, consisting in the compilation of parameters and the calculation of additional parameter values for each plant cohort. If one has a `forest` object, the `spwbInput` object can be generated in directly from it:
+A last object is needed before calling simulation functions, called `spwbInput`. It consists in the compilation of aboveground and belowground parameters and the specification of additional parameter values for each plant cohort. This is done by calling function `spwbInput()`, but if one has a `forest` object, the object can be generated more directly using function `forest2spwbInput()`:
 
 ```{r}
 x = forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)

@@ -114,7 +114,7 @@ G1<-growth(x1, examplemeteo, latitude = 41.82592, elevation = 100)
 
 \dontrun{
 #Switch to 'Sperry' transpiration mode
-control$transpirationMode="Sperry"
+control = defaultControl("Sperry")
 
 #Initialize soil with default soil params (4 layers)
 examplesoil2 = soil(defaultSoilParams(4))
