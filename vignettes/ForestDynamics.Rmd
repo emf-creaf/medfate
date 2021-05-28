@@ -24,74 +24,39 @@ This document describes how to run the forest dynamics model of `medfate`. This 
 ## Preparing model inputs
 Any forest dynamics model needs information on climate, vegetation and soils of the forest stand to be simulated. Moreover, since models in `medfate` differentiate between species, information on species-specific model parameters is also needed. In this subsection we explain the different steps to prepare the data needed to run function `fordyn()`.
 
-### Soils
+## Preparing model inputs
+Model inputs are explained in greater detail in vignette '*Simulation inputs*'. Here we only review the different steps required to run function `fordyn()`.
 
-#### Required soil data
-Simulation models in `medfate` require information on the physical attributes of soil, namely soil depth, texture, bulk density and rock fragment content. Soil information needs to be entered as a data frame with soil layers in rows and physical attributes in columns. The model accepts different layer definitions (from one to five layers). Soil physical attributes can be initialized to default values, for a given number of layers, using function `defaultSoilParams()`:
+### Soil, vegetation, meteorology and species data
+
+Soil information needs to be entered as a `data frame` with soil layers in rows and physical attributes in columns. Soil physical attributes can be initialized to default values, for a given number of layers, using function `defaultSoilParams()`:
 
 ```{r}
 spar = defaultSoilParams(2)
-print(spar)
 ```
-where `widths` are soil layer widths in mm; `clay` and `sand` are the percentage of clay and sand, in percent of dry weight, `om` stands for organic matter, `bd` is bulk density (in g·cm$^{-3}$) and `rfc` the percentage of rock fragments. Because soil properties vary strongly at fine spatial scales, ideally soil physical attributes should be measured on samples taken at the forest stand to be simulated. For those users lacking such data, soil properties modelled at larger scales are available via soilgrids.org (see function `soilgridsParams()`).
 
-#### Soil input object
-
-The soil input for growth simulations is actually an object of class `soil` that is created using a function with the same name:
+The soil input for water balance simulation is actually a list of class `soil` that is created using a function with the same name:
 ```{r}
 examplesoil = soil(spar)
-names(examplesoil)
-```
-In addition to the physical soil description, this object contains soil parameters needed for soil water balance simulations. For example, `macro` specifies the macroporosity of each layer; `Gsoil` and `Ksoil` are parameters needed to model  infiltration of water into the soil. Details of all elements in the soil object can be found in the help page for function `soil()`.
-
-
-#### Water retention curves
-At any time, one can print the status of the soil object using its `print` function:
-```{r}
-print(examplesoil, model = "SX")
-```
-The modelled moisture content of the soil depends on the **water retention curve** used to represent the relationship between soil volumetric water content ($\theta$; %) and soil water potential ($\Psi$; MPa). By default the Saxton equations are used as water retention curve, but the user may choose to follow Van Genuchten - Mualem equations, which will give different values for the same texture:
-```{r}
-print(examplesoil, model="VG")
-```
-While Saxton equations use texture and organic matter as inputs, the Van Genuchten-Mualem equations need other parameters, which are estimated using pedotransfer functions and their names start with `VG_`. Functions `soil_psi2thetaSX()` and `soil_psi2thetaVG()` (and their counterparts) can be used to calculate volumetric soil moisture from the water potential using the two models. 
-
-### Species data table
-
-Simulation models in `medfate` require a data frame with species parameter values. The package provides a default data set of parameter values for Mediterranean species (rows), resulting from bibliographic search, fit to empirical data or expert-based guesses:
-
-```{r}
-data("SpParamsMED")
 ```
 
-These species commonly occur in the Spanish forest inventory of Catalonia, but may not be sufficient for other areas. A large number of parameters (columns) can be found in `SpParamsMED`:
-
-```{r}
-names(SpParamsMED)
-```
-
-Not all parameters are needed for all models. The user can find parameter definitions in the help page of this data set. However, to fully understand the role of parameters in the model, the user should read the details of model design and formulation (https://vegmod.github.io/software/medfate/). 
-
-### Vegetation
-
-#### Forest plot data
-
-Models included in `medfate` were primarily designed to be ran on **forest inventory plots**. In this kind of data, the  vegetation of a sampled area is described in terms of woody plants (trees and shrubs) along with their size and species identity. Forest plots in `medfate` are assumed to be in a format that follows closely the Spanish forest inventory. Each forest plot is represented in an object of class `forest`, a list that contains several elements. Among them, the most important items are two data frames, `treeData` (for trees) and `shrubData` for shrubs:
+As explained in the package overview, models included in `medfate` were primarily designed to be ran on **forest inventory plots**. Here we use the example object provided with the package:
 ```{r}
 data(exampleforestMED)
 exampleforestMED
 ```
-Trees are expected to be primarily described in terms of species, diameter (DBH) and height, whereas shrubs are described in terms of species, percent cover and mean height. 
 
-
-### Meteorological forcing
-
-Soil water simulations require daily weather inputs. The weather variables that are required depend on the complexity of the soil water balance model we are using. The complex simulation model requires precipitation, radiation, wind speed, min/max temparature and relative humitidy. Here we show an example of meteorological forcing data. 
+In the basic water balance, only mean temperature, precipitation and potential evapotranspiration is required, but radiation may also be necessary to simulate snow melt. 
 ```{r}
 data(examplemeteo)
 head(examplemeteo)
 ```
-Simulation models in `medfate` have been designed to work along with data generated from package `meteoland`. The user is strongly recommended to resort to this package to obtain suitable weather input for soil water balance simulations.
+
+Finally, simulations in `medfate` require a data frame with species parameter values, which we load using defaults for Catalonia (NE Spain):
+
+```{r}
+data("SpParamsMED")
+```
 
 ### Simulation control
 
@@ -100,17 +65,72 @@ Apart from data inputs, the behaviour of simulation models can be controlled usi
 ```{r}
 control = defaultControl()
 ```
-The names of all control parameters are:
+Here we will run simulations of forest dynamics using the basic water balance model (i.e. `transpirationMode = "Granier"`). The complexity of the soil water balance calculations can be changed by using `"Sperry"` as input to `defaultControl()`. However, when running `fordyn()` sub-daily output will never be stored (i.e. setting `subdailyResults = TRUE` is useless).
+
+## Executing the forest dynamics model
+
+In this vignette we will fake a three-year weather input by repeating the example weather data frame three times, while reducing precipitation of the second year to the half.
 ```{r}
-names(control)
+meteo2001 = examplemeteo
+meteo2002 = examplemeteo
+meteo2002$Precipitation = meteo2002$Precipitation/2
+meteo2003 = examplemeteo
+row.names(meteo2002) = seq(as.Date("2002-01-01"), 
+                           as.Date("2002-12-31"), by="day")
+row.names(meteo2003) = seq(as.Date("2003-01-01"), 
+                           as.Date("2003-12-31"), by="day")
+meteo_01_03 = rbind(meteo2001, meteo2002, meteo2003)
 ```
 
 
-## Executing the growth model
-In this vignette we will use one year of example meteorological data with the following precipitation and temperature seasonal trends:
+Now we run the forest dynamics model using all inputs (note that no intermediate input object is needed, as in `spwb()` or  `growth()`):
 ```{r}
-fd<-fordyn(exampleforestMED, examplesoil, SpParamsMED, examplemeteo, control, 
+fd<-fordyn(exampleforestMED, examplesoil, SpParamsMED, meteo_01_03, control, 
            latitude = 41.82592, elevation = 100)
 ```
+It is worth noting that, while `fordyn()` calls function `growth()` internally for each simulated year, the `verbose` option of the control parameters only affects function `fordyn()` (i.e. all console output from `growth()` is hidden). Recruitment and summaries are done only once a year at the level of function `fordyn()`.
 
-## Plotting results
+## Inspecting model outputs
+
+### Stand, species and cohort summaries
+
+Among other outputs, function `fordyn()` calculates standard summary statistics that describe the structural and compositional state of the forest at each time step. For example, we can access stand-level statistics using:
+
+```{r}
+fd$StandSummary
+```
+
+where we can observe an increase in stand basal area and leaf area index during years 1 and 3, but a reduction during the second (drier) year. Species-level analogous statistics are shown using:
+```{r}
+fd$SpeciesSummary
+```
+
+### Tree/shrub tables
+
+Another useful output of `fordyn()` are tables in long format with cohort structural information (i.e. DBH, height, density, etc) for each time step:
+
+```{r}
+fd$TreeTable
+```
+
+The same can be shown for dead trees, where we see larger mortality rates during the second (drier) year:
+```{r}
+fd$DeadTreeTable
+```
+
+### Accessing the output from function growth()
+
+Since function `fordyn()` makes internal calls to function `growth()`, it stores the result in a vector called `GrowthResults`, which we can use to inspect intra-annual patterns of desired variables. For example, the following shows the leaf area for individuals of the three cohorts during the three consecutive years:
+
+```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
+plot(fd$GrowthResults[[1]], "LeafArea", bySpecies = T)
+plot(fd$GrowthResults[[2]], "LeafArea", bySpecies = T)
+plot(fd$GrowthResults[[3]], "LeafArea", bySpecies = T)
+```
+where we see that the second (drier) year, resulted in a decrease in leaf area, due to the sink limitation caused by drought, and the third (normal) year lead to a recovery of leaf area. Note also the sink limitation to sapwood area (hence diameter) growth during the second year:
+
+```{r, fig=TRUE, echo=TRUE, fig.width=7, fig.height=3}
+plot(fd$GrowthResults[[1]], "SapwoodArea", bySpecies = T)
+plot(fd$GrowthResults[[2]], "SapwoodArea", bySpecies = T)
+plot(fd$GrowthResults[[3]], "SapwoodArea", bySpecies = T)
+```

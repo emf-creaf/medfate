@@ -215,7 +215,7 @@ fordyn<-function(forest, soil, SpParams,
     minMonthTemp = min(monthlyTemp, na.rm=TRUE)
     moistureIndex = sum(meteoYear$Precipitation, na.rm=TRUE)/sum(meteoYear$PET, na.rm=TRUE)
     PARperc = vprofile_PARExtinction(forest, SpParamsMED, draw = FALSE)[1]
-    if(verboseDyn) cat(paste0("       Minimum temperature of the coldest month (Celsius): ", round(minMonthTemp,2), "   Moisture index: ", round(moistureIndex,2), "   FPAR (%): ", round(PARperc,1), "\n"))
+    if(verboseDyn) cat(paste0("       Coldest month mean temp. (Celsius): ", round(minMonthTemp,2), "   Moisture index: ", round(moistureIndex,2), "   FPAR (%): ", round(PARperc,1), "\n"))
     treeSpp = numeric(0)
     shrubSpp = numeric(0)
     if(is.null(control$seedRain)) {

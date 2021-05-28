@@ -163,3 +163,8 @@ names(control)
 ```
 These parameters should normally be left to their default value under their effect on simulations is fully understood.
 
+## Input objects for simulation functions
+
+Simulation functions `spwb()` and `growth()` (and similar functions) require first combining forest, soil, species-parameter and simulation control inputs into a single input object (of class `spwbInput` or `growthInput`) that is then used as input to the corresponding simulation function along with weather data. The combination of inputs is done via functions `spwbInput()` and `growthInput()`, respectively, or the more convenient `forest2spwbInput()` and `forest2growthInput()`. While it complicates the code, having this additional step is handy because cohort-level parameters and state variables initialized can then be modified by the user (or an automated calibration algorithm) before calling the actual simulation functions. The input objects for functions `spwb()` and `growth()` are presented in more detail in then vignettes corresponding to each model. 
+
+Function `fordyn()` is different from the other two models, in the sense that the user enters forest, soil, species-parameter and simulation control inputs directly into the simulation function (in fact, `fordyn()` internally calls `forest2growthInput()` to initialize the input object to function `growth()`).

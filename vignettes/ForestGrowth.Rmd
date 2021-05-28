@@ -62,10 +62,7 @@ Apart from data inputs, the behaviour of simulation models can be controlled usi
 ```{r}
 control = defaultControl()
 ```
-Some parameters deserve explanation here: 
-
- 1. Console output can be turned off by setting `verbose = FALSE`. 
- 2. The complexity of the soil water balance calculations is controlled using `transpirationMode`. 
+Here we will run growth simulations using the basic water balance model (i.e. `transpirationMode = "Granier"`). The complexity of the soil water balance calculations can be changed by using `"Sperry"` as input to `defaultControl()`. 
 
 
 ### Growth input object
@@ -92,7 +89,7 @@ x$above
 
 As with the soil input object, the `growthInput` object will be modified during simulations. In the case of `growth()`, these modifications concern `SA`, `fastCstorage`, `slowCstorage`, `LAI_expanded` and `LAI_dead` in element `above`, as well as canopy variables.
 
-Aboveground parameters related to plant transpiration can be seen in `paramsTransp`:
+Elements starting with `params*` contain cohort-specific model parameters. Aboveground parameters related to plant transpiration can be seen in `paramsTransp`:
 ```{r}
 x$paramsTransp
 ```
@@ -108,6 +105,10 @@ x$paramsGrowth
 x$paramsAllometries
 ```
 
+Finally, elements starting with `internal*` contain state variables required to keep track of plant status. For example, the carbon storage levels can be seen in `internalCarbon`:
+```{r}
+x$internalCarbon
+```
 
 ## Executing the growth model
 
@@ -116,6 +117,8 @@ In this vignette we will use one year of example meteorological data with the fo
 G1<-growth(x, examplemeteo, latitude = 41.82592, elevation = 100)
 
 ```
+
+While water/carbon balances and growth of leaf/sapwood/root tissues is performed on a daily basis, structural variables are only updated once a year, here coinciding with the end of the simulation.
 
 ## Plotting results
 
