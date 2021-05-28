@@ -98,7 +98,7 @@ vprofile_fuelBulkDensity<-function(x, SpParams, z = NULL, gdd = NA, mode = "MED"
 }
 vprofile_PARExtinction<-function(x, SpParams, z = NULL, gdd = NA, mode = "MED", 
                                  draw = TRUE, xlim = c(0,100)) {
-  if(is.null(z)) z = seq(0, ceiling(max(plant_height(x))/100)*100 +10, by=10)
+  if(is.null(z)) z = seq(0, ceiling(max(plant_height(x), na.rm = TRUE)/100)*100 +10, by=10)
   pep = .parExtinctionProfile(z,x, SpParams, gdd, mode = mode)
   df = data.frame("PEP" = pep, "Z" = z)
   if(draw) {

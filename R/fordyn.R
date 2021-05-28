@@ -3,6 +3,7 @@ fordyn<-function(forest, soil, SpParams,
                    latitude , elevation = NA, slope = NA, aspect = NA) {
   
   # Modify control parameters
+  verboseDyn = control$verbose
   control$modifyInput = FALSE
   control$verbose = FALSE
   control$subdailyResults = FALSE
@@ -136,10 +137,10 @@ fordyn<-function(forest, soil, SpParams,
   #Simulations
   for(iYear in 1:nYears) {
     year = yearsUnique[iYear]
-    cat(paste0("Simulating forest dynamics for year ", year, " (", iYear,"/", nYears,")\n"))
+    if(verboseDyn) cat(paste0("Simulating forest dynamics for year ", year, " (", iYear,"/", nYears,")\n"))
     meteoYear = meteo[years==year,]
     monthsYear = months[years==year]
-    cat(paste0("   (a) Growth/mortality\n"))
+    if(verboseDyn) cat(paste0("   (a) Growth/mortality\n"))
     Gi = growth(xi, meteoYear, latitude = latitude, elevation = elevation, slope = slope, aspect = aspect)
     
     # Store growth results
@@ -171,7 +172,7 @@ fordyn<-function(forest, soil, SpParams,
     }
     deadCohorts = c(deadTrees, deadShrubs)
     if(sum(deadCohorts)>0) {
-      cat(paste0("   (-) Removing dead cohorts: ", paste(row.names(xo$above)[deadCohorts], collapse=","),"\n"))
+      if(verboseDyn) cat(paste0("   (-) Removing dead cohorts: ", paste(row.names(xo$above)[deadCohorts], collapse=","),"\n"))
       forest$treeData = forest$treeData[!deadTrees,, drop=FALSE] 
       forest$shrubData = forest$shrubData[!deadShrubs,, drop=FALSE] 
       # Remove from growth input object
@@ -203,12 +204,12 @@ fordyn<-function(forest, soil, SpParams,
 
     
     # Simulate species recruitment
-    cat(paste0("   (b) Recruitment\n"))
+    if(verboseDyn) cat(paste0("   (b) Recruitment\n"))
     monthlyTemp = tapply(meteoYear$MeanTemperature, monthsYear, FUN="mean", na.rm=TRUE)
     minMonthTemp = min(monthlyTemp, na.rm=TRUE)
     moistureIndex = sum(meteoYear$Precipitation, na.rm=TRUE)/sum(meteoYear$PET, na.rm=TRUE)
     PARperc = vprofile_PARExtinction(forest, SpParamsMED, draw = FALSE)[1]
-    cat(paste0("       Minimum temperature of the coldest month (Celsius): ", round(minMonthTemp,2), "   Moisture index: ", round(moistureIndex,2), "   FPAR (%): ", round(PARperc,1), "\n"))
+    if(verboseDyn) cat(paste0("       Minimum temperature of the coldest month (Celsius): ", round(minMonthTemp,2), "   Moisture index: ", round(moistureIndex,2), "   FPAR (%): ", round(PARperc,1), "\n"))
     if(is.null(control$seedRain)) {
       treeSpp = forest$treeData$Species
       if(length(treeSpp)>0) {
@@ -253,7 +254,7 @@ fordyn<-function(forest, soil, SpParams,
       recr_forest$treeData = recr_forest$treeData[recr_selection, , drop = FALSE]
       recrString = paste0(treeSpp[recr_selection], collapse =",")
       if(recrString=="") recrString = "<none>"
-      cat(paste0("       Tree species with seed rain: ", paste0(treeSpp, collapse =","), 
+      if(verboseDyn) cat(paste0("       Tree species with seed rain: ", paste0(treeSpp, collapse =","), 
                  " recruited: ", recrString ,"\n"))
     }
     if((length(shrubSpp)>0)) {
@@ -340,7 +341,7 @@ fordyn<-function(forest, soil, SpParams,
     xi$internalAllocation[repl_vec,] <- xo$internalAllocation
     xi$internalRings[repl_vec] <- xo$internalRings
 
-    cat(paste0("   (c) Summaries\n"))
+    if(verboseDyn) cat(paste0("   (c) Summaries\n"))
     
     # Store current forest state (after recruitment)
     forestStructures[[iYear+1]] = forest
