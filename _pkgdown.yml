@@ -1,9 +1,9 @@
-destination: "/home/miquel/Rservices/static/medfatedocs/"
+destination: "docs/"
 
 home:
   links:
-  - text: Package website
-    href: https://vegmod.github.io/software/medfate/
+  - text: Medfate book
+    href: https://emf-creaf.github.io/medfatebook/index.html
 
 articles:
 - title: Introduction
