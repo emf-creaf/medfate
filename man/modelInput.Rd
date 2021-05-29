@@ -207,8 +207,8 @@ spwbInput(above, Z50, Z95, examplesoil,SpParamsMED, control)
 forest2spwbInput(exampleforestMED, examplesoil, SpParamsMED, control)
 
 
-# Prepare input for complex transpiration mode
-control$transpirationMode = "Sperry"
+# Prepare input for Sperry transpiration mode
+control = defaultControl("Sperry")
 forest2spwbInput(exampleforestMED,examplesoil,SpParamsMED, control)
 
 }

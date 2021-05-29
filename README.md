@@ -35,16 +35,18 @@ package vignettes, by forcing their inclusion in installation:
 
 ``` r
 devtools::install_github("emf-creaf/medfate", 
-                         build_opts = c("--no-resave-data", "--no-manual"))
+                         build_opts = c("--no-resave-data", "--no-manual"),
+                         build_vignettes = TRUE)
 ```
 
 ## Documentation
 
--   The package installation includes a number of *vignettes* that
-    illustrate how to run simulation models in **medfate**.
+-   The package includes a number of *vignettes* that illustrate how to
+    run simulation models in **medfate**.
 
--   Additional documentation of the package, including a *reference
-    book*, can be found at <https://vegmod.github.io/software/medfate>.
+-   Complete documentation of the models included in the package can be
+    found at the *reference book*
+    <https://emf-creaf.github.io/medfatebook/index.html>.
 
 ## References
 

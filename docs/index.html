@@ -53,14 +53,7 @@
   <a href="news/index.html">Changelog</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right">
-<li>
-  <a href="https://github.com/emf-creaf/medfate/">
-    <span class="fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
-      </ul>
+<ul class="nav navbar-nav navbar-right"></ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -96,14 +89,15 @@
 <p>Additionally, users can have help to run package functions directly as package vignettes, by forcing their inclusion in installation:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"emf-creaf/medfate"</span>, 
-                         build_opts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"--no-resave-data"</span>, <span class="st">"--no-manual"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+                         build_opts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"--no-resave-data"</span>, <span class="st">"--no-manual"</span><span class="op">)</span>,
+                         build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="documentation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#documentation" class="anchor"></a>Documentation</h2>
 <ul>
-<li><p>The package installation includes a number of <em>vignettes</em> that illustrate how to run simulation models in <strong>medfate</strong>.</p></li>
-<li><p>Additional documentation of the package, including a <em>reference book</em>, can be found at <a href="https://vegmod.github.io/software/medfate" class="uri">https://vegmod.github.io/software/medfate</a>.</p></li>
+<li><p>The package includes a number of <em>vignettes</em> that illustrate how to run simulation models in <strong>medfate</strong>.</p></li>
+<li><p>Complete documentation of the models included in the package can be found at the <em>reference book</em> <a href="https://emf-creaf.github.io/medfatebook/index.html" class="uri">https://emf-creaf.github.io/medfatebook/index.html</a>.</p></li>
 </ul>
 </div>
 <div id="references" class="section level2">
@@ -123,9 +117,7 @@
 <ul class="list-unstyled">
 <li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=medfate">https://​cloud.r-project.org/​package=medfate</a>
 </li>
-<li>Browse source code at <br><a href="https://github.com/emf-creaf/medfate/">https://​github.com/​emf-creaf/​medfate/​</a>
-</li>
-<li>Medfate book at <br><a href="https://emf-creaf.github.io/medfatebook/index.html">https://​emf-creaf.github.io/​medfatebook/​index.html</a>
+<li>Reference book at <br><a href="https://emf-creaf.github.io/medfatebook/index.html">https://​emf-creaf.github.io/​medfatebook/​index.html</a>
 </li>
 </ul>
 </div>

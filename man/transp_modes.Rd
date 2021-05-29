@@ -172,7 +172,7 @@ t1 = transp_transpirationGranier(x1, examplemeteo, 1,
                             modifyInput = FALSE)
 
 #Switch to 'Sperry' transpiration mode
-control$transpirationMode="Sperry"
+control = defaultControl("Sperry")
 
 #Initialize soil with default soil params (2 layers)
 examplesoil2 = soil(defaultSoilParams(2))

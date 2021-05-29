@@ -93,7 +93,7 @@ examplesoil = soil(defaultSoilParams(2), W=c(0.5,0.5))
 
 
 #Switch to 'Sperry' transpiration mode
-control$transpirationMode="Sperry"
+control = defaultControl("Sperry")
 
 #Simulate one day only
 x2 = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)

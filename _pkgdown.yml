@@ -2,7 +2,7 @@ destination: "docs/"
 
 home:
   links:
-  - text: Medfate book
+  - text: Reference book
     href: https://emf-creaf.github.io/medfatebook/index.html
 
 articles:
