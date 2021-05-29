@@ -86,7 +86,7 @@ A list, with the following options (default values in parentheses):
    \item{\code{mortalityMode [= "density/deterministic"]}: String describing how mortality is applied. Current accepted values are combinations of "cohort" vs "density" (for whole-cohort mortality vs reduction of stem density) and "deterministic" vs. "stochastic".}
    \item{\code{mortalityBaselineRate [= 0.01]}: Deterministic proportion or probability specifying the baseline reduction of cohort's density occurring in a year (for \code{mortalityMode = "density/deterministic" or "density/stochastic").}}
    \item{\code{mortalitySugarThreshold [= 0.1]}: Threshold of stem sugar concentration resulting in increased mortality rate/probability whenever levels are below.}
-   \item{\code{mortalityRWCThreshold [= 0.5]}: Threshold of stem relative water content resulting in increased mortality rate/probability whenever levels are below.}
+   \item{\code{mortalityRWCThreshold [= 0.3]}: Threshold of stem relative water content resulting in increased mortality rate/probability whenever levels are below.}
 }
 \bold{Forest dynamics}:
 \itemize{
