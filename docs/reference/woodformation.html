@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Forest utility functions — Forest manipulation • medfate</title>
+<title>Wood formation — Wood formation • medfate</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Forest utility functions — Forest manipulation" />
-<meta property="og:description" content="Functions to manipulate a forest object." />
+<meta property="og:title" content="Wood formation — Wood formation" />
+<meta property="og:description" content="Functions to initialize and expand a ring of tracheids to simulate secondary growth." />
 
 
 
@@ -109,44 +109,95 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Forest utility functions</h1>
+    <h1>Wood formation</h1>
     
-    <div class="hidden name"><code>forest_mergeTrees.Rd</code></div>
+    <div class="hidden name"><code>woodformation.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Functions to manipulate a <code><a href='forest.html'>forest</a></code> object.</p>
+    <p>Functions to initialize and expand a ring of tracheids to simulate secondary growth.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>forest_mergeTrees</span><span class='op'>(</span><span class='va'>x</span>, byDBHclass <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-<span class='fu'>forest_mergeShrubs</span><span class='op'>(</span><span class='va'>x</span>, byHeightclass <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>woodformation_initRing</span><span class='op'>(</span><span class='op'>)</span>
+<span class='fu'>woodformation_growRing</span><span class='op'>(</span><span class='va'>ring</span>, <span class='va'>psi</span>, <span class='va'>Tc</span>,
+                       Nc<span class='op'>=</span><span class='fl'>8.85</span>, phi0<span class='op'>=</span><span class='fl'>0.13</span>, pi0<span class='op'>=</span><span class='op'>-</span><span class='fl'>0.8</span>, CRD0<span class='op'>=</span><span class='fl'>8.3</span>,
+                       Y_P<span class='op'>=</span><span class='fl'>0.05</span>, Y_T<span class='op'>=</span><span class='fl'>8.0</span>, h<span class='op'>=</span><span class='fl'>0.043</span><span class='op'>*</span><span class='fl'>1.8</span>, s<span class='op'>=</span><span class='fl'>1.8</span><span class='op'>)</span>
+<span class='fu'>woodformation_relativeExpansionRate</span><span class='op'>(</span><span class='va'>psi</span>, <span class='va'>Tc</span>, <span class='va'>pi</span>, <span class='va'>phi</span>, <span class='va'>Y_P</span>, <span class='va'>Y_T</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>An object of class <code><a href='forest.html'>forest</a></code>.</p></td>
+      <th>ring</th>
+      <td><p>An object of class <code><a href='https://rdrr.io/r/grDevices/plotmath.html'>ring</a></code> returned by function <code>woodformation_initRing</code>.</p></td>
     </tr>
     <tr>
-      <th>byDBHclass</th>
-      <td><p>Boolean flag to indicate that 5-cm tree DBH classes should be kept separated.</p></td>
+      <th>psi</th>
+      <td><p>Water potential (in MPa).</p></td>
     </tr>
     <tr>
-      <th>byHeightclass</th>
-      <td><p>Boolean flag to indicate that 10-cm shrub height classes should be kept separated.</p></td>
+      <th>Tc</th>
+      <td><p>Temperature in Celsius.</p></td>
+    </tr>
+    <tr>
+      <th>Nc</th>
+      <td><p>Number of active cells in the cambium.</p></td>
+    </tr>
+    <tr>
+      <th>phi0</th>
+      <td><p>Initial value of cell extensibility (in MPa-1 day-1)</p></td>
+    </tr>
+    <tr>
+      <th>pi0</th>
+      <td><p>Initial value of cell osmotic potential (in MPa)</p></td>
+    </tr>
+    <tr>
+      <th>CRD0</th>
+      <td><p>Initial value of cell radial diameter</p></td>
+    </tr>
+    <tr>
+      <th>Y_P</th>
+      <td><p>Turgor pressure yield threshold (in MPa)</p></td>
+    </tr>
+    <tr>
+      <th>Y_T</th>
+      <td><p>Temperature yield threshold (in Celsius)</p></td>
+    </tr>
+    <tr>
+      <th>h</th>
+      <td><p>Cell wall hardening coefficient (in day-1)</p></td>
+    </tr>
+    <tr>
+      <th>s</th>
+      <td><p>Cell wall softening coefficient (unitless)</p></td>
+    </tr>
+    <tr>
+      <th>pi</th>
+      <td><p>Osmotic potential (in MPa)</p></td>
+    </tr>
+    <tr>
+      <th>phi</th>
+      <td><p>Cell extensibility (in MPa-1 day-1)</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Another <code><a href='forest.html'>forest</a></code> object with merged trees or shrubs, depending on the function.</p>
+    <p>Function <code>woodformation_initRing()</code> returns a list of class 'ring', that is a list containing a data frame <code>cells</code> and two vectors: <code>P</code> and <code>SA</code>. Dataframe <code>cells</code> contains the columns "formation_date", "phi", "pi" and "CRD" and as many rows as dates processed. Vectors <code>P</code> and <code>SA</code> contain, respectively, the number of cells produced and the sapwood area corresponding to the ring of cells (assuming a tangencial radius of 20 micrometers). Function <code>woodformation_growRing()</code> modifies the input 'ring' object according to the environmental conditions given as input. Function <code>woodformation_relativeExpansionRate()</code> returns a numeric scalar with the relative expansion rate.</p>
+    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
+
+    <p>Code modified from package xylomod (https://github.com/AntoineCabon/xylomod) by Antoine Cabon</p>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
-    <p>Miquel De Cáceres Ainsa, CREAF</p>
+    <p>Antoine Cabon, CTFC</p>
+<p>Miquel De Cáceres Ainsa, CREAF</p>
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Cabon A, Fernández‐de‐Uña L, Gea‐Izquierdo G, Meinzer FC, Woodruff DR, Martínez‐Vilalta J, De Cáceres M. 2020a. Water potential control of turgor‐driven tracheid enlargement in Scots pine at its xeric distribution edge. New Phytologist 225: 209–221.</p>
+<p>Cabon A, Peters RL, Fonti P, Martínez‐Vilalta  J, De Cáceres M. 2020b. Temperature and water potential co‐limit stem cambial activity along a steep elevational gradient. New Phytologist: nph.16456.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='spwb.html'>spwb</a></code>, <code><a href='forest.html'>forest</a></code>,  <code><a href='fordyn.html'>fordyn</a></code>, <code><a href='forest.html'>summary.forest</a></code></p></div>
+    <div class='dont-index'><p><code><a href='growth.html'>growth</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

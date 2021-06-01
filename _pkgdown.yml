@@ -113,6 +113,12 @@ reference:
   contents:
   - starts_with("carbon_")
   
+- title: Secondary growth and mortality
+  desc: Wood formation and mortality processes
+  contents:
+  - starts_with("woodformation_")
+  - starts_with("mortality_")
+  
 - title: Fire hazard
   desc:  Fuel characteristics and fire hazard
   contents:

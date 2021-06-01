@@ -20,12 +20,12 @@ const double Q10_resp = 2.0;
 
 // [[Rcpp::export("mortality_dailyProbability")]]
 double dailyMortalityProbability(double mortalityBaselineRate, 
-                                 double value, 
-                                 double threshold, bool allowStress = true,
+                                 double stressValue, double stressThreshold, 
+                                 bool allowStress = true,
                                  double minValue = 0.0, double slope = 1.0) {
   double P_day = 1.0 - exp(log(1.0 - mortalityBaselineRate)/356.0);
   if(allowStress) {
-    double P_stress = (1.0-exp(slope*(value - threshold)))/(1.0-exp(slope*(minValue-threshold)));
+    double P_stress = (1.0-exp(slope*(stressValue - stressThreshold)))/(1.0-exp(slope*(minValue-stressThreshold)));
     P_day = std::max(P_day, P_stress);
   }
   return(P_day);

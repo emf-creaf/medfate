@@ -8,7 +8,7 @@
 \alias{species_LAI}
 \alias{species_phytovolume}
 \alias{species_parameter}
-\alias{specie_characterParameter}
+\alias{species_characterParameter}
 
 
 \title{Species description functions}

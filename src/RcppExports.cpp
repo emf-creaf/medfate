@@ -1046,18 +1046,18 @@ BEGIN_RCPP
 END_RCPP
 }
 // dailyMortalityProbability
-double dailyMortalityProbability(double mortalityBaselineRate, double value, double threshold, bool allowStress, double minValue, double slope);
-RcppExport SEXP _medfate_dailyMortalityProbability(SEXP mortalityBaselineRateSEXP, SEXP valueSEXP, SEXP thresholdSEXP, SEXP allowStressSEXP, SEXP minValueSEXP, SEXP slopeSEXP) {
+double dailyMortalityProbability(double mortalityBaselineRate, double stressValue, double stressThreshold, bool allowStress, double minValue, double slope);
+RcppExport SEXP _medfate_dailyMortalityProbability(SEXP mortalityBaselineRateSEXP, SEXP stressValueSEXP, SEXP stressThresholdSEXP, SEXP allowStressSEXP, SEXP minValueSEXP, SEXP slopeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type mortalityBaselineRate(mortalityBaselineRateSEXP);
-    Rcpp::traits::input_parameter< double >::type value(valueSEXP);
-    Rcpp::traits::input_parameter< double >::type threshold(thresholdSEXP);
+    Rcpp::traits::input_parameter< double >::type stressValue(stressValueSEXP);
+    Rcpp::traits::input_parameter< double >::type stressThreshold(stressThresholdSEXP);
     Rcpp::traits::input_parameter< bool >::type allowStress(allowStressSEXP);
     Rcpp::traits::input_parameter< double >::type minValue(minValueSEXP);
     Rcpp::traits::input_parameter< double >::type slope(slopeSEXP);
-    rcpp_result_gen = Rcpp::wrap(dailyMortalityProbability(mortalityBaselineRate, value, threshold, allowStress, minValue, slope));
+    rcpp_result_gen = Rcpp::wrap(dailyMortalityProbability(mortalityBaselineRate, stressValue, stressThreshold, allowStress, minValue, slope));
     return rcpp_result_gen;
 END_RCPP
 }

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Forest utility functions — Forest manipulation • medfate</title>
+<title>Mortality — Mortality • medfate</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Forest utility functions — Forest manipulation" />
-<meta property="og:description" content="Functions to manipulate a forest object." />
+<meta property="og:title" content="Mortality — Mortality" />
+<meta property="og:description" content="A simple function to determine a daily mortality likelihood according to the value of a stress variable." />
 
 
 
@@ -109,44 +109,58 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Forest utility functions</h1>
+    <h1>Mortality</h1>
     
-    <div class="hidden name"><code>forest_mergeTrees.Rd</code></div>
+    <div class="hidden name"><code>mortality.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Functions to manipulate a <code><a href='forest.html'>forest</a></code> object.</p>
+    <p>A simple function to determine a daily mortality likelihood according to the value of a stress variable.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>forest_mergeTrees</span><span class='op'>(</span><span class='va'>x</span>, byDBHclass <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-<span class='fu'>forest_mergeShrubs</span><span class='op'>(</span><span class='va'>x</span>, byHeightclass <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>mortality_dailyProbability</span><span class='op'>(</span><span class='va'>mortalityBaselineRate</span>, 
+                           <span class='va'>stressValue</span>, <span class='va'>stressThreshold</span>, 
+                           allowStress <span class='op'>=</span> <span class='cn'>TRUE</span>,
+                           minValue <span class='op'>=</span> <span class='fl'>0.0</span>, slope <span class='op'>=</span> <span class='fl'>1.0</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>An object of class <code><a href='forest.html'>forest</a></code>.</p></td>
+      <th>mortalityBaselineRate</th>
+      <td><p>Baseline mortality rate at the annual scale.</p></td>
     </tr>
     <tr>
-      <th>byDBHclass</th>
-      <td><p>Boolean flag to indicate that 5-cm tree DBH classes should be kept separated.</p></td>
+      <th>stressValue</th>
+      <td><p>Current value of the stress variable (lower values indicate stronger stress).</p></td>
     </tr>
     <tr>
-      <th>byHeightclass</th>
-      <td><p>Boolean flag to indicate that 10-cm shrub height classes should be kept separated.</p></td>
+      <th>stressThreshold</th>
+      <td><p>Threshold to indicate that lower values increase mortality likelihood.</p></td>
+    </tr>
+    <tr>
+      <th>allowStress</th>
+      <td><p>A boolean function to activate stress effects.</p></td>
+    </tr>
+    <tr>
+      <th>minValue</th>
+      <td><p>Minimum value of the stress variable (i.e. maximum stress), corresponding to probability of mortality equal to 1.</p></td>
+    </tr>
+    <tr>
+      <th>slope</th>
+      <td><p>Slope coefficient modulating how fast probability increases after the stress threshold has been reached.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Another <code><a href='forest.html'>forest</a></code> object with merged trees or shrubs, depending on the function.</p>
+    <p>Returns a probability (between 0 and 1).</p>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Miquel De Cáceres Ainsa, CREAF</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='spwb.html'>spwb</a></code>, <code><a href='forest.html'>forest</a></code>,  <code><a href='fordyn.html'>fordyn</a></code>, <code><a href='forest.html'>summary.forest</a></code></p></div>
+    <div class='dont-index'><p><code><a href='growth.html'>growth</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

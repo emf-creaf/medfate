@@ -8,7 +8,6 @@
 - New functions 'species_parameter' and 'species_characterParameter'
 
 # Version 2.1.4
-- New function 'spwb_emissions' by Shengli Huang
 - Dessication/defoliation homogenized across transpiration modes in growth function
 - Revision of mortality (stochastic/deterministic, whole-cohort/density)
 

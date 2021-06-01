@@ -305,8 +305,8 @@ fuel_FCCS <- function(object, ShrubCover, CanopyCover, SpParams, cohortFMC = as.
     .Call(`_medfate_FCCSproperties`, object, ShrubCover, CanopyCover, SpParams, cohortFMC, gdd, mode, heightProfileStep, maxHeightProfile, bulkDensityThreshold, depthMode)
 }
 
-mortality_dailyProbability <- function(mortalityBaselineRate, value, threshold, allowStress = TRUE, minValue = 0.0, slope = 1.0) {
-    .Call(`_medfate_dailyMortalityProbability`, mortalityBaselineRate, value, threshold, allowStress, minValue, slope)
+mortality_dailyProbability <- function(mortalityBaselineRate, stressValue, stressThreshold, allowStress = TRUE, minValue = 0.0, slope = 1.0) {
+    .Call(`_medfate_dailyMortalityProbability`, mortalityBaselineRate, stressValue, stressThreshold, allowStress, minValue, slope)
 }
 
 growth_day <- function(x, date, tmin, tmax, rhmin, rhmax, rad, wind, latitude, elevation, slope, aspect, prec, runon = 0.0) {
