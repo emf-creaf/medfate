@@ -23,5 +23,5 @@ Another \code{\link{forest}} object with merged trees or shrubs, depending on th
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \seealso{
- \code{\link{spwb}}, \code{\link{forest}},  \code{\link{dynamics}}, \code{\link{summary.forest}}
+ \code{\link{spwb}}, \code{\link{forest}},  \code{\link{fordyn}}, \code{\link{summary.forest}}
 }
