@@ -116,7 +116,7 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
   
   String mortalityMode = control["mortalityMode"];
   double mortalityBaselineRate = control["mortalityBaselineRate"];
-  double mortalitySugarThreshold= control["mortalitySugarThreshold"];
+  double mortalityRelativeSugarThreshold= control["mortalityRelativeSugarThreshold"];
   double mortalityRWCThreshold= control["mortalityRWCThreshold"];
   bool allowDessication = control["allowDessication"];
   bool allowStarvation = control["allowStarvation"];
@@ -130,7 +130,7 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
   List equilibriumOsmoticConcentration  = control["equilibriumOsmoticConcentration"];
   double equilibriumLeafTotalConc = equilibriumOsmoticConcentration["leaf"];
   double equilibriumSapwoodTotalConc = equilibriumOsmoticConcentration["sapwood"];
-  double minimumSugarForGrowth = control["minimumSugarForGrowth"];
+  double minimumRelativeSugarForGrowth = control["minimumRelativeSugarForGrowth"];
   List turnoverRates = control["turnoverRates"];
   double dailySapwoodTurnoverProportion = turnoverRates["sapwood"];
   List constructionCosts = control["constructionCosts"];
@@ -265,9 +265,11 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
   NumericVector Starch_max_leaves(numCohorts,0.0);
   NumericVector Starch_max_sapwood(numCohorts,0.0);
   
-  double minimumLeafSugarConc = equilibriumLeafTotalConc - nonSugarConcentration;
-  double minimumSapwoodSugarConc = equilibriumSapwoodTotalConc - nonSugarConcentration;
-  
+  double equilibriumLeafSugarConc = equilibriumLeafTotalConc - nonSugarConcentration;
+  double equilibriumSapwoodSugarConc = equilibriumSapwoodTotalConc - nonSugarConcentration;
+  double minimumSugarForGrowth = equilibriumSapwoodSugarConc*minimumRelativeSugarForGrowth;
+  double mortalitySugarThreshold = equilibriumSapwoodSugarConc*mortalityRelativeSugarThreshold;
+    
   double rleafcellmax = relative_expansion_rate(0.0 ,25, -2.0,0.5,0.05,5.0);
   
   //3. Carbon balance and growth
@@ -382,11 +384,11 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
         sugarLeaf[j] -=ff;
         PlantSugarTransport[j] = 1000.0*(ff*Volume_leaves[j])/(3600.0*24.0); //mmol · s-1
         sugarSapwood[j] +=(Volume_leaves[j]/Volume_sapwood[j])*ff;
-        double conversionLeaf = std::max(-starchLeaf[j], sugarLeaf[j] - minimumLeafSugarConc);
+        double conversionLeaf = std::max(-starchLeaf[j], sugarLeaf[j] - equilibriumLeafSugarConc);
         starchLeaf[j] +=conversionLeaf;
         sugarLeaf[j] -=conversionLeaf;
       }
-      double conversionSapwood = std::max(-starchSapwood[j], sugarSapwood[j] - minimumSapwoodSugarConc);
+      double conversionSapwood = std::max(-starchSapwood[j], sugarSapwood[j] - equilibriumSapwoodSugarConc);
       starchSapwood[j] +=conversionSapwood;
       sugarSapwood[j] -=conversionSapwood;
 
@@ -655,7 +657,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
   
   String mortalityMode = control["mortalityMode"];
   double mortalityBaselineRate = control["mortalityBaselineRate"];
-  double mortalitySugarThreshold= control["mortalitySugarThreshold"];
+  double mortalityRelativeSugarThreshold= control["mortalityRelativeSugarThreshold"];
   double mortalityRWCThreshold= control["mortalityRWCThreshold"];
   
   bool allowDessication = control["allowDessication"];
@@ -674,7 +676,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
   List equilibriumOsmoticConcentration  = control["equilibriumOsmoticConcentration"];
   double equilibriumLeafTotalConc = equilibriumOsmoticConcentration["leaf"];
   double equilibriumSapwoodTotalConc = equilibriumOsmoticConcentration["sapwood"];
-  double minimumSugarForGrowth = control["minimumSugarForGrowth"];
+  double minimumRelativeSugarForGrowth = control["minimumRelativeSugarForGrowth"];
   List turnoverRates = control["turnoverRates"];
   double dailySapwoodTurnoverProportion = turnoverRates["sapwood"];
   double dailyFineRootTurnoverProportion = turnoverRates["fineroot"];
@@ -868,9 +870,11 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
   NumericVector Starch_max_leaves(numCohorts,0.0);
   NumericVector Starch_max_sapwood(numCohorts,0.0);
 
-  double minimumLeafSugarConc = equilibriumLeafTotalConc - nonSugarConcentration;
-  double minimumSapwoodSugarConc = equilibriumSapwoodTotalConc - nonSugarConcentration;
-
+  double equilibriumLeafSugarConc = equilibriumLeafTotalConc - nonSugarConcentration;
+  double equilibriumSapwoodSugarConc = equilibriumSapwoodTotalConc - nonSugarConcentration;
+  double minimumSugarForGrowth = equilibriumSapwoodSugarConc*minimumRelativeSugarForGrowth;
+  double mortalitySugarThreshold = equilibriumSapwoodSugarConc*mortalityRelativeSugarThreshold;
+  
   double rleafcellmax = relative_expansion_rate(0.0 ,25, -2.0,0.5,0.05,5.0);
 
   //3. Carbon balance, growth and senescence by cohort
@@ -1017,7 +1021,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
         for(int t=0;t<3600;t++) {
           sugarSapwood[j] += sapwoodSugarMassDeltaStep/cts;
           starchSapwood[j] += sapwoodStarchMassDeltaStep/cts;
-          double conversionSapwood = sugarStarchDynamicsStem(sugarSapwood[j]/StemSympRWCInst(j,s), starchSapwood[j]/StemSympRWCInst(j,s), minimumSapwoodSugarConc);
+          double conversionSapwood = sugarStarchDynamicsStem(sugarSapwood[j]/StemSympRWCInst(j,s), starchSapwood[j]/StemSympRWCInst(j,s), equilibriumSapwoodSugarConc);
           // Rcout<<" coh:"<<j<< " s:"<<s<< " Lsugar: "<< sugarLeaf[j] << " Lstarch: "<< sugarSapwood[j]<<" starch formation: "<<conversionLeaf<< "\n";
           double starchSapwoodIncrease = conversionSapwood*StemSympRWCInst(j,s);
           //Divert to root exudation if starch is over maximum capacity
@@ -1031,7 +1035,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
             sugarLeaf[j] += leafSugarMassDeltaStep/ctl;
             double ft = phloemFlow(LeafSympPsiInst(j,s), StemSympPsiInst(j,s), sugarLeaf[j]/LeafSympRWCInst(j,s), sugarSapwood[j]/StemSympRWCInst(j,s), Tcan[s], k_phloem, nonSugarConcentration)*LAlive; //flow as mol glucose per s
             // sugar-starch dynamics
-            double conversionLeaf = sugarStarchDynamicsLeaf(sugarLeaf[j]/LeafSympRWCInst(j,s), starchLeaf[j]/LeafSympRWCInst(j,s), minimumLeafSugarConc);
+            double conversionLeaf = sugarStarchDynamicsLeaf(sugarLeaf[j]/LeafSympRWCInst(j,s), starchLeaf[j]/LeafSympRWCInst(j,s), equilibriumLeafSugarConc);
             double starchLeafIncrease = conversionLeaf*LeafSympRWCInst(j,s);
             //Divert to root exudation if starch is over maximum capacity
             if(starchLeafIncrease > Starch_max_leaves[j] - starchLeaf[j]) {
