@@ -60,6 +60,9 @@ growth(x, meteo,  latitude, elevation = NA, slope = NA, aspect = NA)
         \item{\code{"StarchLeaf"}: Starch concentration (mol·l-1) in leaves.}
         \item{\code{"SugarSapwood"}: Sugar concentration (mol·l-1) in sapwood.}
         \item{\code{"StarchSapwood"}: Starch concentration (mol·l-1) in sapwood.}
+        \item{\code{"SugarTransport"}:  Average instantaneous rate of carbon transferred between leaves and stem compartments via floem (mol gluc·s-1).}
+        \item{\code{"LeafPI0"}: Osmotic potential at full turgor of symplastic leaf tissue (MPa).}
+        \item{\code{"StemPI0"}: Osmotic potential at full turgor of symplastic stem tissue (MPa).}
       }
   \item{\code{"PlantStructure"}: A list of daily area and biomass values for compartments of plant cohorts, with elements:}
     \itemize{

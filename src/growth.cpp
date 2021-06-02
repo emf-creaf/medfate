@@ -380,7 +380,7 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
       if(LAexpanded>0.0) {
         double ff = (sugarLeaf[j]-sugarSapwood[j])/2.0; 
         sugarLeaf[j] -=ff;
-        PlantSugarTransport[j] = (ff*Volume_leaves[j])/(3600.0*24.0); //mol · s-1
+        PlantSugarTransport[j] = 1000.0*(ff*Volume_leaves[j])/(3600.0*24.0); //mmol · s-1
         sugarSapwood[j] +=(Volume_leaves[j]/Volume_sapwood[j])*ff;
         double conversionLeaf = std::max(-starchLeaf[j], sugarLeaf[j] - minimumLeafSugarConc);
         starchLeaf[j] +=conversionLeaf;
@@ -1078,7 +1078,7 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
         PlantStarchLeafInst(j,s) = starchLeaf[j];
         PlantStarchSapwoodInst(j,s) = starchSapwood[j];
         PlantSugarTransportInst(j,s) = 1000.0*ff/(3600.0); //mmol·s-1
-        PlantSugarTransport[j] += ff; //To calculate daily phloem balance (positive means towards stem)
+        PlantSugarTransport[j] += ff/((double) numSteps); //Average daily rate To calculate daily phloem balance (positive means towards stem)
         // Rcout<<" coh:"<<j<< " s:"<<s<< " conc leaf: "<< sugarLeaf[j] << " conc sap: "<< sugarSapwood[j]<<" ff: "<<ff<< "\n";
         
         // Rcout<<j<<" LeafTLP "<< turgorLossPoint(LeafPI0[j], LeafEPS[j])<< " Leaf PI "<< osmoticWaterPotential(sugarLeaf[j], tday)<< " Conc "<< sugarLeaf[j]<< " TLPconc"<< tlpConcLeaf<<"\n";
