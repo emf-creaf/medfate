@@ -1,6 +1,10 @@
 medfate - Mediterranean Forest Simulation
 ================
 
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/emf-creaf/medfate/workflows/R-CMD-check/badge.svg)](https://github.com/emf-creaf/medfate/actions)
+<!-- badges: end -->
+
 ## Introduction
 
 Package **medfate** is designed to assist forest scientists to simulate

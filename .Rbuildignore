@@ -10,3 +10,4 @@
 ^vignettes/SensitivityCalibration\.Rmd$
 ^docs/*$
 ^_pkgdown\.yml$
+^\.github$

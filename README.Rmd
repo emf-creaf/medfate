@@ -8,6 +8,10 @@ output: github_document
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.path = "README-")
 ```
 
+  <!-- badges: start -->
+  [![R-CMD-check](https://github.com/emf-creaf/medfate/workflows/R-CMD-check/badge.svg)](https://github.com/emf-creaf/medfate/actions)
+  <!-- badges: end -->
+
 ## Introduction
 
 Package **medfate** is designed to assist forest scientists to simulate forest functioning and dynamics, using cohort-based description of forest stands. The package provides functions to simulate the following processes:
