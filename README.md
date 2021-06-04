@@ -2,6 +2,8 @@ medfate - Mediterranean Forest Simulation
 ================
 
 <!-- badges: start -->
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/medfate)](https://cran.r-project.org/package=medfate)
+[![](https://cranlogs.r-pkg.org/badges/medfate)](https://cran.rstudio.com/web/packages/medfate/index.html)
 [![R-CMD-check](https://github.com/emf-creaf/medfate/workflows/R-CMD-check/badge.svg)](https://github.com/emf-creaf/medfate/actions)
 <!-- badges: end -->
 
