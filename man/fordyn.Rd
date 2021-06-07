@@ -50,17 +50,14 @@ Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 \examples{
 #Load example daily meteorological data
 data(examplemeteo)
-#Prepare a three-year meteorological data with half precipitation during 
+#Prepare a two-year meteorological data with half precipitation during 
 #the second year
 meteo2001 = examplemeteo
 meteo2002 = examplemeteo
 meteo2002$Precipitation = meteo2002$Precipitation/2
-meteo2003 = examplemeteo
 row.names(meteo2002) = seq(as.Date("2002-01-01"), 
                            as.Date("2002-12-31"), by="day")
-row.names(meteo2003) = seq(as.Date("2003-01-01"), 
-                           as.Date("2003-12-31"), by="day")
-meteo_01_03 = rbind(meteo2001, meteo2002, meteo2003)
+meteo_01_02 = rbind(meteo2001, meteo2002)
 
 #Load example plot plant data
 data(exampleforestMED)
@@ -76,7 +73,7 @@ examplesoil = soil(defaultSoilParams(4))
 
 #Call simulation function
 fd<-fordyn(exampleforestMED, examplesoil, 
-           SpParamsMED, meteo_01_03, control,
+           SpParamsMED, meteo_01_02, control,
            latitude = 41.82592, elevation = 100)
 
 #Stand-level summaries
