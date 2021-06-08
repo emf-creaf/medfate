@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 2.2.1
+- Calibrated minimum bioclimatic parameters for recruitment (SpParamsMED)
+
 # Version 2.2.0
 - New simulation function 'dynamics', including recruitment process
 - New function 'mergeShrubs'
