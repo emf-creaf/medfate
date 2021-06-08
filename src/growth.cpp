@@ -414,11 +414,11 @@ List growthDay1(List x, double tday, double pet, double prec, double er, double 
       if(phenoType[j] == "progressive-evergreen") {
         propLeafSenescence = (1.0/(365.25*leafDuration[j]));
       }
-      else if(phenoType[j] == "oneflush-evergreen" & leafSenescence[j]) {
+      else if((phenoType[j] == "oneflush-evergreen") & (leafSenescence[j])) {
         propLeafSenescence = (1.0/leafDuration[j]); // Fraction of old leaves that die
         leafSenescence[j] = false; //To prevent further loss
       }
-      else if((phenoType[j] == "winter-deciduous" || phenoType[j] == "winter-semideciduous") & leafSenescence[j]) {
+      else if(((phenoType[j] == "winter-deciduous") || (phenoType[j] == "winter-semideciduous")) & leafSenescence[j]) {
         propLeafSenescence = 1.0;
         leafSenescence[j] = false; //To prevent further loss
       }
@@ -1096,11 +1096,11 @@ List growthDay2(List x, double tmin, double tmax, double tminPrev, double tmaxPr
       if(phenoType[j] == "progressive-evergreen") {
         propLeafSenescence = (1.0/(365.25*leafDuration[j]));
       }
-      else if(phenoType[j] == "oneflush-evergreen" & leafSenescence[j]) {
+      else if((phenoType[j] == "oneflush-evergreen") & (leafSenescence[j])) {
         propLeafSenescence = (1.0/leafDuration[j]); // Fraction of old leaves that die
         leafSenescence[j] = false; //To prevent further loss
       }
-      else if((phenoType[j] == "winter-deciduous" || phenoType[j] == "winter-semideciduous") & leafSenescence[j]) {
+      else if(((phenoType[j] == "winter-deciduous") || (phenoType[j] == "winter-semideciduous")) & leafSenescence[j]) {
         propLeafSenescence = 1.0;
         leafSenescence[j] = false; //To prevent further loss
       }
