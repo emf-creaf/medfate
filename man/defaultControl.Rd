@@ -98,7 +98,7 @@ A list, with the following options (default values in parentheses):
    \item{\code{ seedProductionShrubHeight [= 30]}: Default minimum shrub height for producing seeds (when species parameter \code{SeedProductionHeight} is missing).}
    \item{\code{ minTempRecr [= 0]}: Default threshold of minimum average temperature of the coldest month necessary for recruiting (when species parameter \code{MinTempRecr} is missing).} 
    \item{\code{ minMoistureRecr [= 0.3]}: Default threshold of minimum moisture index (annual precipitation over annual ETP) necessary for recruiting (when species parameter \code{MinMoistureRecr} is missing).} 
-   \item{\code{ minFPARRecr [= 30]}: Default threshold of minimum fraction of PAR (in \%)  reaching the ground necessary for recruiting (when species parameter \code{MinFPARRecr} is missing).} 
+   \item{\code{ minFPARRecr [= 10]}: Default threshold of minimum fraction of PAR (in \%)  reaching the ground necessary for recruiting (when species parameter \code{MinFPARRecr} is missing).} 
    \item{\code{ recrTreeDBH [= 1]}: Default DBH (cm) for recruited trees  (when species parameter \code{RecrTreeDBH} is missing).}
    \item{\code{ recrTreeDensity [= 100]}: Default density (ind·ha-1) for recruited trees  (when species parameter \code{RecrTreeDensity} is missing).}
    \item{\code{ recrTreeHeight [= 100]}: Default height (cm) for recruited trees  (when species parameter \code{RecrTreeHeight} is missing).}
