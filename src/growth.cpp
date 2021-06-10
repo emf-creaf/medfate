@@ -1549,197 +1549,6 @@ void checkgrowthInput(List x, String transpirationMode, String soilFunctions) {
   }
 }
 
-// DataFrame annualDeadStructure(List x) {
-//   DataFrame internalMortality = Rcpp::as<Rcpp::DataFrame>(x["internalMortality"]);
-//   DataFrame above = Rcpp::as<Rcpp::DataFrame>(x["above"]);
-//   NumericVector SP = above["SP"];
-//   NumericVector DBH = above["DBH"];
-//   NumericVector Cover = above["Cover"];
-//   NumericVector H = above["H"];
-//   NumericVector N = above["N"];
-//   NumericVector N_dead = internalMortality["N_dead"];
-//   
-// 
-//   DataFrame dead = DataFrame::create(
-//     _["SP"] = clone(SP),
-//     _["N"] = clone(N_dead),
-//     _["DBH"] = clone(DBH),
-//     _["Cover"] = clone(Cover)*N_dead/N,
-//     _["H"] = clone(H)
-//   );
-//   dead.attr("row.names") = above.attr("row.names");
-//   //Reset number of dead individuals
-//   N_dead.fill(0.0);
-//   return(dead);
-// }
-// 
-// void recordStandSummary(DataFrame standSummary, DataFrame above, DataFrame dead, int pos) {
-//   
-//   NumericVector DBH = above["DBH"];
-//   NumericVector Cover = above["Cover"];
-//   NumericVector H = above["H"];
-//   NumericVector N = above["N"];
-//   NumericVector LAI_live = above["LAI_live"];
-//   
-//   NumericVector DBH_dead = dead["DBH"];
-//   NumericVector Cover_dead = dead["Cover"];
-//   NumericVector N_dead = dead["N"];
-//   
-//   NumericVector SLAI = as<Rcpp::NumericVector>(standSummary["LeafAreaIndex"]);
-//   SLAI[pos] = 0.0;
-//   NumericVector TBAL = as<Rcpp::NumericVector>(standSummary["TreeBasalAreaLive"]);
-//   TBAL[pos] = 0.0;
-//   NumericVector TBAD = as<Rcpp::NumericVector>(standSummary["TreeBasalAreaDead"]);
-//   TBAD[pos] = 0.0;
-//   if(pos>0) TBAD[pos]  = TBAD[pos-1];
-//   NumericVector SCoverL = as<Rcpp::NumericVector>(standSummary["ShrubCoverLive"]);
-//   SCoverL[pos] = 0.0;
-//   NumericVector SCoverD = as<Rcpp::NumericVector>(standSummary["ShrubCoverDead"]);
-//   SCoverD[pos] = 0.0;
-//   if(pos>0) SCoverD[pos]  = SCoverD[pos-1];
-//   NumericVector MaxHeight = as<Rcpp::NumericVector>(standSummary["MaxHeight"]);
-//   MaxHeight[pos] = 0.0;
-//   int numCohorts = N.length();
-//   NumericVector treeBA_live = treeBasalArea(N, DBH);
-//   NumericVector treeBA_dead = treeBasalArea(N_dead, DBH_dead);
-//   for(int i=0;i<numCohorts;i++) {
-//     SLAI[pos] += LAI_live[i];
-//     if(!NumericVector::is_na(DBH[i])) {
-//       TBAL[pos] += treeBA_live[i];
-//       MaxHeight[pos] = std::max(MaxHeight[pos], H[i]);
-//     } else {
-//       SCoverL[pos] +=Cover[i];
-//     }
-//     if(!NumericVector::is_na(DBH_dead[i])) {
-//       TBAD[pos] += treeBA_dead[i];
-//     } else {
-//       SCoverD[pos] +=Cover_dead[i];
-//     }
-//   }
-// }
-// 
-// void recordSpeciesSummary(DataFrame speciesSummary, DataFrame above, DataFrame dead, DataFrame cohorts,
-//                                IntegerVector SPunique, 
-//                                int yearPos) {
-//   
-//   NumericVector SP = above["SP"];
-//   NumericVector DBH = above["DBH"];
-//   NumericVector Cover = above["Cover"];
-//   NumericVector H = above["H"];
-//   NumericVector N = above["N"];
-//   NumericVector LAI_live = above["LAI_live"];
-//   StringVector Name = cohorts["Name"];
-//   
-//   NumericVector DBH_dead = dead["DBH"];
-//   NumericVector Cover_dead = dead["Cover"];
-//   NumericVector N_dead = dead["N"];
-//   
-//   int nspp = SPunique.size();  
-//   
-//   IntegerVector Yearvec = as<Rcpp::IntegerVector>(speciesSummary["Year"]);
-//   IntegerVector SPvec = as<Rcpp::IntegerVector>(speciesSummary["SP"]);
-//   CharacterVector Namevec = as<Rcpp::CharacterVector>(speciesSummary["Name"]);
-//   NumericVector SLAI = as<Rcpp::NumericVector>(speciesSummary["LeafAreaIndex"]);
-//   NumericVector TBAL = as<Rcpp::NumericVector>(speciesSummary["TreeBasalAreaLive"]);
-//   NumericVector TBAD = as<Rcpp::NumericVector>(speciesSummary["TreeBasalAreaDead"]);
-//   NumericVector SCoverL = as<Rcpp::NumericVector>(speciesSummary["ShrubCoverLive"]);
-//   NumericVector SCoverD = as<Rcpp::NumericVector>(speciesSummary["ShrubCoverDead"]);
-//   NumericVector MaxHeight = as<Rcpp::NumericVector>(speciesSummary["MaxHeight"]);
-//   for(int i=0;i<nspp;i++) {
-//     int posIni = (yearPos*nspp);
-//     // Rcout << posIni + i<<"\n";
-//     Yearvec[posIni+i] = yearPos;
-//     SPvec[posIni+i] = SPunique[i];
-//     SLAI[posIni+i] = 0.0;
-//     TBAL[posIni+i] = 0.0;
-//     TBAD[posIni+i] = 0.0;
-//     SCoverL[posIni+i] = 0.0;
-//     SCoverD[posIni+i] = 0.0;
-//     MaxHeight[posIni+i] = 0.0;
-//     if(yearPos>0) { //Copy previous values
-//       TBAD[posIni+i] = TBAD[((yearPos-1)*nspp)+i];
-//       SCoverD[posIni+i] = SCoverD[((yearPos-1)*nspp)+i];
-//     }
-//   }
-//   int numCohorts = N.length();
-//   NumericVector treeBA_live = treeBasalArea(N, DBH);
-//   NumericVector treeBA_dead = treeBasalArea(N_dead, DBH_dead);
-//   for(int i=0;i<numCohorts;i++) {
-//     int jSP = -1;
-//     for(int j=0;j<nspp;j++) if(SP[i]==SPunique[j]) jSP = j;
-//     int pos = (yearPos*nspp) + jSP;
-//     Namevec[pos] = Name[i];
-//     SLAI[pos] += LAI_live[i];
-//     if(!NumericVector::is_na(DBH[i])) {
-//       TBAL[pos] += treeBA_live[i];
-//       MaxHeight[pos] = std::max(MaxHeight[pos], H[i]);
-//     } else {
-//       SCoverL[pos] +=Cover[i];
-//     }
-//     if(!NumericVector::is_na(DBH_dead[i])) {
-//       TBAD[pos] += treeBA_dead[i];
-//     } else {
-//       SCoverD[pos] +=Cover_dead[i];
-//     }
-//   }
-// }
-// 
-// void recordCohortSummary(DataFrame cohortSummary, DataFrame above, DataFrame dead, DataFrame cohorts,
-//                          int yearPos) {
-//   
-//   NumericVector SP = above["SP"];
-//   NumericVector DBH = above["DBH"];
-//   NumericVector Cover = above["Cover"];
-//   NumericVector H = above["H"];
-//   NumericVector N = above["N"];
-//   NumericVector LAI_live = above["LAI_live"];
-//   StringVector Name = cohorts["Name"];
-//   CharacterVector Cohorts = cohorts.attr("row.names");
-//   int numCohorts = Cohorts.size();
-//   
-//   NumericVector DBH_dead = dead["DBH"];
-//   NumericVector Cover_dead = dead["Cover"];
-//   NumericVector N_dead = dead["N"];
-//   
-//   IntegerVector Yearvec = as<Rcpp::IntegerVector>(cohortSummary["Year"]);
-//   IntegerVector SPvec = as<Rcpp::IntegerVector>(cohortSummary["SP"]);
-//   CharacterVector Namevec = as<Rcpp::CharacterVector>(cohortSummary["Name"]);
-//   CharacterVector Cohortvec = as<Rcpp::CharacterVector>(cohortSummary["Cohort"]);
-//   NumericVector SLAI = as<Rcpp::NumericVector>(cohortSummary["LeafAreaIndex"]);
-//   NumericVector TBAL = as<Rcpp::NumericVector>(cohortSummary["TreeBasalAreaLive"]);
-//   NumericVector TBAD = as<Rcpp::NumericVector>(cohortSummary["TreeBasalAreaDead"]);
-//   NumericVector SCoverL = as<Rcpp::NumericVector>(cohortSummary["ShrubCoverLive"]);
-//   NumericVector SCoverD = as<Rcpp::NumericVector>(cohortSummary["ShrubCoverDead"]);
-//   NumericVector treeBA_live = treeBasalArea(N, DBH);
-//   NumericVector treeBA_dead = treeBasalArea(N_dead, DBH_dead);
-//   for(int i=0;i<numCohorts;i++) {
-//     int pos = (yearPos*numCohorts) + i;
-//     if(yearPos>0) { //Copy previous values
-//       TBAD[pos] = TBAD[((yearPos-1)*numCohorts)+i];
-//       SCoverD[pos] = SCoverD[((yearPos-1)*numCohorts)+i];
-//     } else {
-//       TBAD[pos] =0.0;
-//       SCoverD[pos] = 0.0;
-//     }
-//     
-//     Yearvec[pos] = yearPos;
-//     SPvec[pos] = SP[i];
-//     Namevec[pos] = Name[i];
-//     SLAI[pos] = LAI_live[i];
-//     Cohortvec[pos] = Cohorts[i];
-//     if(!NumericVector::is_na(DBH[i])) {
-//       TBAL[pos] = treeBA_live[i];
-//     } else {
-//       SCoverL[pos] =Cover[i];
-//     }
-//     if(!NumericVector::is_na(DBH_dead[i])) {
-//       TBAD[pos] += treeBA_dead[i];
-//     } else {
-//       SCoverD[pos] +=Cover_dead[i];
-//     }
-//   }
-// }
-
 // [[Rcpp::export("growth")]]
 List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL, double slope = NA_REAL, double aspect = NA_REAL) {
 
@@ -1933,60 +1742,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   for(int i=0;i<numDays;i++) {
     if(((DOY[i]==1) && (i>0)) | ((i==(numDays-1)) && (DOY[i]>=365))) numYears = numYears + 1;
   }
-  // DataFrame standSummary = DataFrame::create(
-  //   _["LeafAreaIndex"] = NumericVector(numYears+1,0.0),
-  //   _["TreeBasalAreaLive"] = NumericVector(numYears+1,0.0),
-  //   _["TreeBasalAreaDead"] = NumericVector(numYears+1,0.0),
-  //   _["ShrubCoverLive"] = NumericVector(numYears+1,0.0),
-  //   _["ShrubCoverDead"] = NumericVector(numYears+1,0.0),
-  //   _["MaxHeight"] = NumericVector(numYears+1,0.0)
-  // );
-  // int nrowsSS = (numYears+1)*numSpecies;
-  // DataFrame speciesSummary = DataFrame::create(
-  //   _["Year"] = IntegerVector(nrowsSS,0),
-  //   _["SP"] = IntegerVector(nrowsSS,0),
-  //   _["Name"] = CharacterVector(nrowsSS),
-  //   _["LeafAreaIndex"] = NumericVector(nrowsSS,0.0),
-  //   _["TreeBasalAreaLive"] = NumericVector(nrowsSS,0.0),
-  //   _["TreeBasalAreaDead"] = NumericVector(nrowsSS,0.0),
-  //   _["ShrubCoverLive"] = NumericVector(nrowsSS,0.0),
-  //   _["ShrubCoverDead"] = NumericVector(nrowsSS,0.0),
-  //   _["MaxHeight"] = NumericVector(nrowsSS,0.0)
-  // );
-  // int nrowsCS = (numYears+1)*numCohorts;
-  // DataFrame cohortSummary = DataFrame::create(
-  //   _["Year"] = IntegerVector(nrowsCS,0),
-  //   _["SP"] = IntegerVector(nrowsCS,0),
-  //   _["Name"] = CharacterVector(nrowsCS),
-  //   _["Cohort"] = CharacterVector(nrowsCS),
-  //   _["LeafAreaIndex"] = NumericVector(nrowsCS,0.0),
-  //   _["TreeBasalAreaLive"] = NumericVector(nrowsCS,0.0),
-  //   _["TreeBasalAreaDead"] = NumericVector(nrowsCS,0.0),
-  //   _["ShrubCoverLive"] = NumericVector(nrowsCS,0.0),
-  //   _["ShrubCoverDead"] = NumericVector(nrowsCS,0.0)
-  // );
-  // List standStructures(numYears+1);
-  // List standDeadStructures(numYears+1);
-  // CharacterVector nss(numYears+1);
-  // for(int i=0;i<(numYears+1);i++) {
-  //   if(i==0) {
-  //     nss[i] = "Initial"; 
-  //   } else {
-  //     char Result[16];
-  //     sprintf(Result, "Year_%d", i);
-  //     nss[i] = Result;
-  //   }
-  // }
-  // standSummary.attr("row.names") = nss;
-  // standStructures.attr("names") = nss;
-  // DataFrame dead = annualDeadStructure(x);
-  // standStructures[0] = List::create(_["live"] = clone(above),
-  //                                   _["dead"] = dead);
-  // recordStandSummary(standSummary, above, dead, 0);
-  // recordSpeciesSummary(speciesSummary, above, dead, cohorts, 
-  //                           SPunique,0);
-  // recordCohortSummary(cohortSummary, above, dead, cohorts,0);
-  
+
   NumericVector initialContent = water(soil, soilFunctions);
   double initialSnowContent = soil["SWE"];
   if(verbose) {
@@ -2121,7 +1877,6 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
     if(((DOY[i]==1) && (i>0)) | ((i==(numDays-1)) && (DOY[i]>=365))) { 
 
       //Dead structure before applying growth
-      // DataFrame dead = annualDeadStructure(x);
       if(verbose) Rcout<<" [update structural variables] ";
       iyear++;
       
@@ -2173,11 +1928,6 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
             H[j] = pow(1e6*PV/Aash[j], 1.0/Bash[j]); //Updates shrub height
             if(H[j]> Hmax[j]) { //Limit height (and update the former variables)
               H[j] = Hmax[j];
-              // PV = (Aash[j]*pow(H[j],2.0)/10000.0)*(H[j]/100.0)*CR[j];
-              // Wleaves = Absh[j]*pow(PV, Bbsh[j])/r635[j];
-              // double prevLive = LAI_live[j];
-              // LAI_live[j] = Wleaves*((N[j]/10000)*SLA[j]); //Update LAI_live to the maximum
-              // LAI_dead[j] += prevLive - LAI_live[j]; //Increment dead LAI with the difference
             }
             Cover[j] = (N[j]*Aash[j]*pow(H[j],Bash[j])/1e6); //Updates shrub cover
           }
@@ -2187,14 +1937,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
       //reset ring structures
       List ringList = x["internalRings"];
       for(int j=0;j<numCohorts; j++) ringList[j] = initialize_ring();
-      // Store stand structure
-      // standStructures[iyear] = List::create(_["live"] = clone(above),
-      //                                       _["dead"] = dead);
-      // recordStandSummary(standSummary, above, dead, iyear);
-      // recordSpeciesSummary(speciesSummary, above, dead, cohorts, 
-      //                           SPunique,iyear);
-      // recordCohortSummary(cohortSummary, above, dead, cohorts,iyear);
-      
+    
     }
 
     if(subdailyResults) {
@@ -2234,10 +1977,7 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
   StemPI0.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   LeafPI0.attr("dimnames") = List::create(meteo.attr("row.names"), above.attr("row.names")) ;
   RootExudation.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
-  // PlantLAIdead.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
-  // PlantLAIlive.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
-  // PlantLAIexpanded.attr("dimnames") = List::create(meteo.attr("row.names"), cohorts.attr("row.names")) ;
-  
+ 
   subdailyRes.attr("names") = meteo.attr("row.names") ;
   
   NumericVector topo = NumericVector::create(elevation, slope, aspect);
@@ -2288,10 +2028,6 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
                      Named("PlantCarbonBalance") = plantCarbonBalance,
                      Named("PlantStructure") = plantStructure,
                      Named("PlantGrowth") = plantGrowth,
-                     // Named("StandStructures") = standStructures,
-                     // Named("StandSummary") = standSummary,
-                     // Named("SpeciesSummary") = speciesSummary,
-                     // Named("CohortSummary") = cohortSummary,
                      Named("subdaily") =  subdailyRes);
     
   } else {
@@ -2321,10 +2057,6 @@ List growth(List x, DataFrame meteo, double latitude, double elevation = NA_REAL
                    Named("PlantCarbonBalance") = plantCarbonBalance,
                    Named("PlantStructure") = plantStructure,
                    Named("PlantGrowth") = plantGrowth,
-                   // Named("StandStructures") = standStructures,
-                   // Named("StandSummary") = standSummary,
-                   // Named("SpeciesSummary") = speciesSummary,
-                   // Named("CohortSummary") = cohortSummary,
                    Named("subdaily") =  subdailyRes);
     if(multiLayerBalance) l["TemperatureLayers"] = DLT;
   }

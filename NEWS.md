@@ -6,7 +6,7 @@
 - Calibrated minimum bioclimatic parameters for recruitment (SpParamsMED)
 
 # Version 2.2.0
-- New simulation function 'dynamics', including recruitment process
+- New simulation function 'fordyn()', including recruitment process
 - New function 'mergeShrubs'
 - New functions 'species_parameter' and 'species_characterParameter'
 

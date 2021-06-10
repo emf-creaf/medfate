@@ -146,20 +146,21 @@ fordyn<-function(forest, soil, SpParams,
     if(verboseDyn) cat(paste0("Simulating forest dynamics for year ", year, " (", iYear,"/", nYears,")\n"))
     meteoYear = meteo[years==year,]
     monthsYear = months[years==year]
+    # 1.1 Calls growth model
     if(verboseDyn) cat(paste0("   (a) Growth/mortality\n"))
     Gi = growth(xi, meteoYear, latitude = latitude, elevation = elevation, slope = slope, aspect = aspect)
     
-    # Store growth results
+    # 1.2 Store growth results
     growthResults[[iYear]] = Gi
     
-    # Retrieve modified growth output
+    # 1.3 Retrieve modified growth output
     xo = Gi$growthInput
     
-    # Update dead tree/shrub tables
+    # 2.2 Update dead tree/shrub tables
     deadTreeTable = rbind(deadTreeTable, createDeadTreeTable(iYear, year, xo))
     deadShrubTable = rbind(deadShrubTable, createDeadShrubTable(iYear, year, xo))
     
-    # Update forest structural variables
+    # 2.2 Update forest structural variables
     isTree = is.na(xo$above$Cover)
     forest$treeData$N  = xo$above$N[isTree]
     forest$treeData$DBH  = xo$above$DBH[isTree]
@@ -169,7 +170,7 @@ fordyn<-function(forest, soil, SpParams,
       forest$shrubData$Height  = xo$above$H[!isTree]
     }
     
-    # Remove dead cohorts if required
+    # 2.3 Remove dead cohorts if required
     deadTrees = rep(FALSE, nrow(forest$treeData))
     deadShrubs = rep(FALSE, nrow(forest$shrubData))
     if(control$removeDeadCohorts) {
@@ -209,7 +210,7 @@ fordyn<-function(forest, soil, SpParams,
     }
 
     
-    # Simulate species recruitment
+    # 3. Simulate species recruitment
     if(verboseDyn) cat(paste0("   (b) Recruitment\n"))
     monthlyTemp = tapply(meteoYear$MeanTemperature, monthsYear, FUN="mean", na.rm=TRUE)
     minMonthTemp = min(monthlyTemp, na.rm=TRUE)
@@ -297,7 +298,7 @@ fordyn<-function(forest, soil, SpParams,
       recr_forest$shrubData = recr_forest$shrubData[recr_selection, , drop = FALSE]
     }
     
-    # Generate above-ground data
+    # 4.1 Generate above-ground data
     recr_above = forest2aboveground(recr_forest, SpParams, NA, "MED")
     row.names(recr_above) = plant_ID(recr_forest, treeOffset, shrubOffset)
     treeOffset = treeOffset + nrow(recr_forest$treeData)
@@ -311,13 +312,13 @@ fordyn<-function(forest, soil, SpParams,
       forest_above$LAI_expanded[is.na(forest_above$DBH)] = xo$above$LAI_expanded[is.na(forest_above$DBH)]
     }
 
-    # Merge above-ground data (first trees)
+    # 4.2 Merge above-ground data (first trees)
     above_all = rbind(forest_above[!is.na(forest_above$DBH),, drop = FALSE], 
                       recr_above[!is.na(recr_above$DBH),, drop = FALSE],
                       forest_above[is.na(forest_above$DBH),, drop = FALSE], 
                       recr_above[is.na(recr_above$DBH),, drop = FALSE])
     
-    # Logical vector for replacement
+    # 4.3 Logical vector for replacement
     repl_vec <- c(rep(TRUE, nrow(forest$treeData)),
                   rep(FALSE, nrow(recr_forest$treeData)),
                   rep(control$shrubDynamics, nrow(forest$shrubData)),
@@ -325,18 +326,18 @@ fordyn<-function(forest, soil, SpParams,
     sel_vec = c(rep(TRUE, nrow(forest$treeData)),
                 rep(control$shrubDynamics, nrow(forest$shrubData)))
     
-    # Merge cohorts in forest object
+    # 4.4 Merge cohorts in forest object
     forest$treeData = rbind(forest$treeData, recr_forest$treeData)
     forest$shrubData = rbind(forest$shrubData, recr_forest$shrubData)
     
     
-    # Prepare growth input for next year
+    # 4.5 Prepare growth input for next year
     xi = growthInput(above = above_all,
                      Z50 = c(forest$treeData$Z50, forest$shrubData$Z50),
                      Z95 = c(forest$treeData$Z95, forest$shrubData$Z95),
                      xo$soil, SpParams, control)
     
-    # Replace previous state for surviving cohorts
+    # 4.6 Replace previous state for surviving cohorts
     xi$cohorts[repl_vec,] <- xo$cohorts[sel_vec,, drop=FALSE]
     xi$above[repl_vec,] <- xo$above[sel_vec,, drop=FALSE]
     xi$below[repl_vec,] <- xo$below[sel_vec,, drop=FALSE]
@@ -363,16 +364,16 @@ fordyn<-function(forest, soil, SpParams,
 
     if(verboseDyn) cat(paste0("   (c) Summaries\n"))
     
-    # Store current forest state (after recruitment)
+    # 5.1 Store current forest state (after recruitment)
     forestStructures[[iYear+1]] = forest
     
-    # Process summaries (after recruitment)
+    # 5.2 Process summaries (after recruitment)
     cohSumYear = summarizeCohorts(iYear, xi)
     speciesSummary = rbind(speciesSummary,  summarizeSpecies(iYear,cohSumYear, xi))
     standSummary = rbind(standSummary,  summarizeStand(iYear,cohSumYear, xi))
     cohortSummary = rbind(cohortSummary, cohSumYear)
     
-    # Update tree/shrub tables (after recruitment)
+    # 5.3 Update tree/shrub tables (after recruitment)
     treeTable = rbind(treeTable, createTreeTable(iYear, year, xi))
     shrubTable = rbind(shrubTable, createShrubTable(iYear, year, xi))
     
