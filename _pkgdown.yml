@@ -33,15 +33,18 @@ reference:
   - SpParamsMED
   - modifySpParams
 
-- title: Forest attributes
+- title: Forest structure
   desc:  Plant, species and forest attributes
   contents:
   - starts_with("stand_")
   - starts_with("plant_")
-  - starts_with("root_")
   - starts_with("species_")
   - starts_with("vprofile_")
 
+- title: Roots
+  desc:  Belowground structure
+  contents:
+  - starts_with("root_")
 
 - title: Meteorology and physics
   desc:  Forest meteorology and environmental physics
@@ -58,24 +61,38 @@ reference:
   - soilgridsParams
   - starts_with("soil_")
 
+- title: Simulation inputs
+  desc:  Simulation control and input objects
+  contents:
+  - starts_with("defaultControl")
+  - starts_with("resetInputs")
+
 - title: Simulation
   desc:  Simulation model functions
   contents:
-  - starts_with("defaultControl")
-  - starts_with("spwb_")
-  - starts_with("pwb")
-  - starts_with("growth")
-  - starts_with("fordyn")
+  - spwb
+  - spwb_day
+  - pwb
+  - growth
+  - growth_day
+  - fordyn
+  
+- title: Post-processing
+  desc:  Summaries, plots and other post-processing functions
+  contents:
+  - spwb_resistances
+  - spwb_stress
+  - spwb_sensitivity
+  - spwb_waterUseEfficiency
   - starts_with("plot.spwb")
   - starts_with("plot.growth")
-  - starts_with("resetInputs")
   - starts_with("extractSubdaily")
-  
 
 - title: Model analysis
   desc:  Evaluation and optimization
   contents:
   - exampleobs
+  - starts_with("spwb_ldr")
   - starts_with("evaluation_")
   - starts_with("optimization_")
   
