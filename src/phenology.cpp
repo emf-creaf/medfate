@@ -55,7 +55,7 @@ void updatePhenology(List x, int doy, double photoperiod, double tmean) {
   NumericVector Sgdd = paramsPhenology["Sgdd"];
   NumericVector Tbgdd = paramsPhenology["Tbgdd"];
   NumericVector Ssen = paramsPhenology["Ssen"];
-  NumericVector Psen = paramsPhenology["Psen"];
+  NumericVector Phsen = paramsPhenology["Phsen"];
   NumericVector Tbsen = paramsPhenology["Tbsen"];
   
   //Plant input
@@ -80,7 +80,7 @@ void updatePhenology(List x, int doy, double photoperiod, double tmean) {
     if(phenoType[j] == "winter-deciduous" || phenoType[j] == "winter-semideciduous") {
       if(doy>200) {
         gdd[j] = 0.0;
-        if(photoperiod>Psen[j]) { //Primary growth still possible until decrease of photoperiod
+        if(photoperiod>Phsen[j]) { //Primary growth still possible until decrease of photoperiod
           sen[j] = 0.0;
           leafUnfolding[j] = true;
           leafSenescence[j] = false;
@@ -116,7 +116,7 @@ void updatePhenology(List x, int doy, double photoperiod, double tmean) {
         gdd[j] = 0.0;
         leafUnfolding[j] = false;
         leafSenescence[j] = false;
-        if(photoperiod>Psen[j]) {
+        if(photoperiod>Phsen[j]) {
           sen[j] = 0.0;
           budFormation[j] = true;
           leafDormancy[j] = false;
@@ -124,7 +124,7 @@ void updatePhenology(List x, int doy, double photoperiod, double tmean) {
           double rsen = 0.0;
           if(tmean-Tbsen[j]<0.0) {
             rsen = pow(Tbsen[j]-tmean,2.0);
-            // rsen = pow(Tbsen[j]-tmean,2.0) * pow(photoperiod/Psen[j],2.0);
+            // rsen = pow(Tbsen[j]-tmean,2.0) * pow(photoperiod/Phsen[j],2.0);
           }
           sen[j] = sen[j] + rsen;
           leafDormancy[j] = leafSenescenceStatus(Ssen[j],sen[j]);

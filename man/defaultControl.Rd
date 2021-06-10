@@ -23,34 +23,40 @@ A list, with the following options (default values in parentheses):
    \item{\code{verbose (=TRUE)}: Boolean flag to indicate console output during calculations. In function \code{fordyn} \code{verbose} is always set to FALSE.}
    \item{\code{modifyInput (=TRUE)}: Boolean flag to indicate that simulations will modify input object. If set to FALSE, simulations will not modify the input R object but return the current (modified) state variables within the output. In function \code{fordyn} \code{modifyInput} is always set to FALSE.}
    \item{\code{subdailyResults (=FALSE)}: Boolean flag to force subdaily results to be stored (as a list called 'subdaily' of \code{\link{spwb_day}} objects, one by simulated date) in calls to \code{\link{spwb}}. In function \code{fordyn} \code{subdailyResults} is always set to FALSE.}
-   \item{\code{soilFunctions (="SX")}: Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten). If \code{transpirationMode = "Sperry"} then soilFunctions is set by default to \code{'VG'}.}
-   \item{\code{defaultWindSpeed (= 2.5)}: Default wind speed value (in m/s) to be used when missing from data. }
 }
 \bold{Water balance}:
 \itemize{
-  \item{\code{snowpack (=TRUE)}: Boolean flag to indicate the simulation of snow accumulation and melting.}
+   \item{\code{transpirationMode (="Granier")}: Transpiration model (either 'Granier' or 'Sperry'). See \code{\link{spwbInput}}.}
+   \item{\code{soilFunctions (="SX")}: Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten). If \code{transpirationMode = "Sperry"} then soilFunctions is set by default to \code{'VG'}.}
+   \item{\code{defaultWindSpeed (= 2.5)}: Default wind speed value (in m/s) to be used when missing from data. }
+   \item{\code{snowpack (=TRUE)}: Boolean flag to indicate the simulation of snow accumulation and melting.}
+   \item{\code{leafPhenology (=TRUE)}: Boolean flag to indicate the simulation of leaf phenology for winter-deciduous species.}
   \item{\code{rockyLayerDrainage (=TRUE)}: Boolean flag to indicate the simulation of drainage from rocky layers (> 95\% of rocks).}
   \item{\code{unlimitedSoilWater (=FALSE)}: Boolean flag to indicate the simulation of plant transpiration assuming that soil water is always at field capacity.}
-  \item{\code{leafPhenology (=TRUE)}: Boolean flag to indicate the simulation of leaf phenology for winter-deciduous species.}
   \item{\code{unfoldingDD (=300)}: Degree-days for complete leaf unfolding after budburst has occurred.}
   \item{\code{plantWaterPools (=FALSE)}: Boolean flag to indicate the simulation of water balance assuming that each cohort has its own water pools.}
-  \item{\code{transpirationMode (="Granier")}: Transpiration model (either 'Granier' or 'Sperry'). See \code{\link{spwbInput}}.}
-  \item{\code{verticalLayerSize (= 100)}: Size of vertical layers (in cm) for photosynthesis calculation.}
-  \item{\code{boundaryLayerSize (= 2000)}: Size of the boundary layer (in cm) over the canopy (relevant for multi-layer canopy energy balance).}
+  \item{\code{verticalLayerSize (= 100)}: Size of vertical layers (in cm) for the calculation of light extinction (and photosynthesis).}
   \item{\code{windMeasurementHeight (=200)}: Height (in cm) over the canopy corresponding to wind measurements.}
-  \item{\code{cavitationRefill (= "total")}: A string indicating how refilling of embolized conduits is done ("none" - no refilling, "annual" - every first day of the year, "rate" - following a rate of new sapwood formation, "total" - instantaneous complete refilling).}
-  \item{\code{refillMaximumRate (= 0.05)}: Maximum rate of daily refilling of embolized conduits as sapwood area per leaf area (in cm2·m-2·day-1).}
+  \item{\code{cavitationRefill (= "total")}: A string indicating how refilling of embolized conduits is done:
+    \itemize{
+      \item{"none" - no refilling.}
+      \item{"annual" - every first day of the year.}
+      \item{"rate" - following a rate of new sapwood formation (only available if \code{transpirationMode = "Sperry"})}
+      \item{"total" - instantaneous complete refilling.}
+    }
+  }
 }
 \bold{Water balance with 'Sperry'}:
 \itemize{
-   \item{\code{gainModifier, costModifier (= 1)}: Modifiers (exponents) of the gain and cost functions defined in Sperry et al. (2016).}
-   \item{\code{cochard (=FALSE)}: Boolean flag to indicate the stomatal closure when leaf water potential is below turgor loss point so that transpiration depends on cuticular properties (Martin-StPaul et al. 2017).}
    \item{\code{ndailysteps (= 24)}: Number of steps into which each day is divided for determination of stomatal conductance, transpiration and photosynthesis (24 equals 1-hour intervals).}
    \item{\code{nsubsteps (= 3600)}: Number of substeps into which each step is divided for multi-layer canopy energy balance solving.}
+   \item{\code{cochard (=FALSE)}: Boolean flag to indicate the stomatal closure when leaf water potential is below turgor loss point so that transpiration depends on cuticular properties (Martin-StPaul et al. 2017).}
    \item{\code{capacitance (=FALSE)}: Whether the effect of plant water compartments is considered in simulations.}
+   \item{\code{taper (= TRUE)}: Whether taper of xylem conduits is accounted for when calculating aboveground stem conductance from xylem conductivity.}
+   \item{\code{multiLayerBalance (=FALSE)}: Flag to indicate multiple canopy energy balance. If \code{FALSE}, canopy is considered a single layer for energy balance.}
+   \item{\code{gainModifier, costModifier (= 1)}: Modifiers (exponents) of the gain and cost functions defined in Sperry et al. (2016).}
    \item{\code{klatstem (= 0.01)}: Stem symplastic-apoplastic lateral conductance (in mmol·s-1·m-2·MPa-1). Only relevant when \code{capacitance = TRUE}.}
    \item{\code{klatleaf (= 0.01)}: Leaf symplastic-apoplastic lateral conductance (in mmol·s-1·m-2·MPa-1). Only relevant when \code{capacitance = TRUE}.}
-   \item{\code{taper (= TRUE)}: Whether taper of xylem conduits is accounted for when calculating aboveground stem conductance from xylem conductivity.}
    \item{\code{numericParams}: A list with the following elements:
       \itemize{
         \item{\code{maxNsteps (= 400)}: Maximum number of steps in supply function.}
@@ -64,7 +70,8 @@ A list, with the following options (default values in parentheses):
    \item{\code{fracLeafResistance (= NA)}: Fraction of plant total resistance (leaf+stem+root) that corresponds to leaves. This fraction is used if \code{VCleaf_kmax = NA}.}
    \item{\code{fracRootResistance (=0.40)}: Fraction of plant total resistance (leaf+stem+root) that corresponds to root system.}
    \item{\code{averageFracRhizosphereResistance (=0.15)}: Fraction to total continuum (leaf+stem+root+rhizosphere) resistance that corresponds to rhizosphere (averaged across soil water potential values).}
-   \item{\code{multiLayerBalance (=FALSE)}: Flag to indicate multiple canopy energy balance. If \code{FALSE}, canopy is considered a single layer for energy balance.}
+   \item{\code{boundaryLayerSize (= 2000)}: Size of the boundary layer (in cm) over the canopy (relevant for multi-layer canopy energy balance).}
+   \item{\code{refillMaximumRate (= 0.05)}: Maximum rate of daily refilling of embolized conduits as sapwood area per leaf area (in cm2·m-2·day-1).}
 }
 \bold{Growth/mortality}:
 \itemize{

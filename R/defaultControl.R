@@ -4,41 +4,41 @@ defaultControl<-function(transpirationMode = "Granier") {
     modifyInput = TRUE,
     verbose = TRUE,
     subdailyResults = FALSE,
-    soilFunctions = ifelse(transpirationMode=="Sperry", "VG", "SX"),
-    defaultWindSpeed = 2.5, #m/s
     
     # For water balance
+    transpirationMode = transpirationMode,
+    soilFunctions = ifelse(transpirationMode=="Sperry", "VG", "SX"),
+    defaultWindSpeed = 2.5, #m/s
     snowpack = TRUE,
+    leafPhenology = TRUE,
     rockyLayerDrainage = TRUE,
     unlimitedSoilWater = FALSE,
     plantWaterPools = FALSE,
-    leafPhenology = TRUE,
     unfoldingDD = 300,
-    transpirationMode = transpirationMode,
-    cavitationRefill = "total",
-    refillMaximumRate = 0.05,
     verticalLayerSize = 100,
-    boundaryLayerSize = 2000,
     windMeasurementHeight = 200,
+    cavitationRefill = "total",
     
     #spwb with sperry
+    ndailysteps = 24,
+    nsubsteps = 3600,
+    cochard = FALSE,
+    capacitance = FALSE,
+    taper = TRUE,
+    multiLayerBalance = FALSE,
     gainModifier = 1, 
     costModifier = 1, 
     costWater = "dEdP",
-    cochard = FALSE,
-    capacitance = FALSE,
     klatstem = 0.01, # stem symplastic-apoplastic lateral conductance
     klatleaf = 0.01, # leaf symplastic-apoplastic lateral conductance
-    taper = TRUE,
     numericParams=list(maxNsteps = 400, ntrial = 200, psiTol = 0.0001, ETol = 0.0000001),
     fracLeafResistance = NA,
     fracRootResistance = 0.4,
     averageFracRhizosphereResistance = 0.15,
     Catm = 386,
-    ndailysteps = 24,
-    nsubsteps = 3600,
     thermalCapacityLAI = 1000000,
-    multiLayerBalance = FALSE,
+    boundaryLayerSize = 2000,
+    refillMaximumRate = 0.05,
     
     # growth/mortality
     allowDessication = TRUE,

@@ -4,6 +4,7 @@
 
 # Version 2.2.1
 - Calibrated minimum bioclimatic parameters for recruitment (SpParamsMED)
+- Explicit species input parameters for phenology
 
 # Version 2.2.0
 - New simulation function 'fordyn()', including recruitment process

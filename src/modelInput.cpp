@@ -37,34 +37,33 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams) {
   CharacterVector phenoType = speciesCharacterParameter(SP, SpParams, "PhenologyType");
   NumericVector leafDuration  = speciesNumericParameter(SP, SpParams, "LeafDuration");
   NumericVector Sgdd  = speciesNumericParameter(SP, SpParams, "Sgdd");
-  // NumericVector TbaseGdd = speciesNumericParameter(SP, SpParams, "TbaseGdd");
-  // NumericVector Ssen = speciesNumericParameter(SP, SpParams, "Ssen");
-  // NumericVector PstartSen = speciesNumericParameter(SP, SpParams, "PstartSen");
-  // NumericVector TbaseSen = speciesNumericParameter(SP, SpParams, "TbaseSen");
-  NumericVector Tbgdd(numCohorts, 0.0);
-  NumericVector Ssen(numCohorts, 0.0);
-  NumericVector Psen(numCohorts, 0.0);
-  NumericVector Tbsen(numCohorts, 0.0);
+  NumericVector Tbgdd(numCohorts, NA_REAL);
+  NumericVector Ssen(numCohorts, NA_REAL);
+  NumericVector Phsen(numCohorts, NA_REAL);
+  NumericVector Tbsen(numCohorts, NA_REAL);
+  if(SpParams.containsElementNamed("Tbgdd")) Tbgdd = speciesNumericParameter(SP, SpParams, "Tbgdd");
+  if(SpParams.containsElementNamed("Ssen")) Ssen = speciesNumericParameter(SP, SpParams, "Ssen");
+  if(SpParams.containsElementNamed("Phsen")) Phsen = speciesNumericParameter(SP, SpParams, "Phsen");
+  if(SpParams.containsElementNamed("Tbsen")) Tbsen = speciesNumericParameter(SP, SpParams, "Tbsen");
   for(int j=0; j<numCohorts;j++) {
+    if(NumericVector::is_na(Tbgdd[j])) Tbgdd[j]= 5.0;
     if(phenoType[j] == "winter-deciduous" || phenoType[j] == "winter-semideciduous") { //Delpierre et al 2009
-      Tbgdd[j]= 5.0;
-      Ssen[j] = 8268.0;
-      Psen[j] = 12.5;
-      Tbsen[j] = 28.5;
+      if(NumericVector::is_na(Ssen[j])) Ssen[j] = 8268.0;
+      if(NumericVector::is_na(Phsen[j])) Phsen[j] = 12.5;
+      if(NumericVector::is_na(Tbsen[j])) Tbsen[j] = 28.5;
       LAI_expanded[j] = 0.0; //Set initial LAI to zero, assuming simulations start at Jan 1st
       if(phenoType[j] == "winter-semideciduous") LAI_dead[j] = LAI_live[j];
     } else if(phenoType[j] == "oneflush-evergreen") {
-      Tbgdd[j]= 5.0;
-      Ssen[j] = 8268.0;
-      Psen[j] = 12.5;
-      Tbsen[j] = 28.5;
+      if(NumericVector::is_na(Ssen[j])) Ssen[j] = 8268.0;
+      if(NumericVector::is_na(Phsen[j])) Phsen[j] = 12.5;
+      if(NumericVector::is_na(Tbsen[j])) Tbsen[j] = 28.5;
     }
   }
   DataFrame paramsPhenologydf = DataFrame::create(
     _["PhenologyType"] = phenoType,
     _["LeafDuration"] = leafDuration,
     _["Sgdd"] = Sgdd, _["Tbgdd"] = Tbgdd, 
-    _["Ssen"] = Ssen, _["Psen"] = Psen, _["Tbsen"] = Tbsen 
+    _["Ssen"] = Ssen, _["Phsen"] = Phsen, _["Tbsen"] = Tbsen 
   );
   paramsPhenologydf.attr("row.names") = above.attr("row.names");
   return(paramsPhenologydf);
