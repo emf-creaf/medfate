@@ -64,6 +64,7 @@ reference:
 - title: Simulation inputs
   desc:  Simulation control and input objects
   contents:
+  - spwbInput
   - starts_with("defaultControl")
   - starts_with("resetInputs")
 
