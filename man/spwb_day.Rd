@@ -83,7 +83,7 @@ data(exampleforestMED)
 data(SpParamsMED)
 
 #Initialize control parameters
-control = defaultControl()
+control = defaultControl("Granier")
 
 # Day to be simulated
 d = 100

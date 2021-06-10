@@ -162,7 +162,7 @@ data(SpParamsMED)
 examplesoil1 = soil(defaultSoilParams(4))
 
 #Initialize control parameters
-control = defaultControl()
+control = defaultControl("Granier")
 
 #Initialize input
 x1 = forest2spwbInput(exampleforestMED,examplesoil1, SpParamsMED, control)

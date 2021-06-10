@@ -61,7 +61,7 @@ data("SpParamsMED")
 Apart from data inputs, the behaviour of simulation models can be controlled using a set of global parameters. The default parameterization is obtained using function `defaultControl()`:
 
 ```{r}
-control = defaultControl()
+control = defaultControl("Granier")
 ```
 Some parameters deserve explanation here: 
 

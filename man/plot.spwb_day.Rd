@@ -85,7 +85,7 @@ data(exampleforestMED)
 data(SpParamsMED)
 
 #Initialize control parameters
-control = defaultControl()
+control = defaultControl("Granier")
 control$ndailysteps = 24  
 
 #Initialize soil with default soil params (2 layers)

@@ -66,7 +66,7 @@ data(exampleforestMED)
 data(SpParamsMED)
 
 #Initialize control parameters
-control = defaultControl()
+control = defaultControl("Granier")
 
 #Initialize soil with default soil params (4 layers)
 examplesoil = soil(defaultSoilParams(4))

@@ -203,7 +203,7 @@ Z50 = c(exampleforestMED$treeData$Z50, exampleforestMED$shrubData$Z50)
 Z95 = c(exampleforestMED$treeData$Z95, exampleforestMED$shrubData$Z95)
 
 # Initialize control parameters
-control = defaultControl()
+control = defaultControl("Granier")
 
 # Prepare spwb input
 spwbInput(above, Z50, Z95, examplesoil,SpParamsMED, control)

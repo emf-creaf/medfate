@@ -101,7 +101,7 @@ data(SpParamsMED)
 examplesoil = soil(defaultSoilParams(2)) 
 
 #Initialize control parameters
-control = defaultControl()
+control = defaultControl("Granier")
 
 #Switch to 'Sperry' transpiration mode
 control = defaultControl("Sperry")

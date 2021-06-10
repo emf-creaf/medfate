@@ -58,7 +58,7 @@ data(SpParamsMED)
 
 #Initialize input
 examplesoil = soil(defaultSoilParams(2))
-control = defaultControl()
+control = defaultControl("Granier")
 x = forest2spwbInput(exampleforestMED,examplesoil, SpParamsMED, control)
 
 #Perform sensitivity analysis
