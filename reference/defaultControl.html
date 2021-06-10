@@ -139,30 +139,35 @@
 <li><p><code>verbose (=TRUE)</code>: Boolean flag to indicate console output during calculations. In function <code>fordyn</code> <code>verbose</code> is always set to FALSE.</p></li>
 <li><p><code>modifyInput (=TRUE)</code>: Boolean flag to indicate that simulations will modify input object. If set to FALSE, simulations will not modify the input R object but return the current (modified) state variables within the output. In function <code>fordyn</code> <code>modifyInput</code> is always set to FALSE.</p></li>
 <li><p><code>subdailyResults (=FALSE)</code>: Boolean flag to force subdaily results to be stored (as a list called 'subdaily' of <code><a href='spwb_day.html'>spwb_day</a></code> objects, one by simulated date) in calls to <code><a href='spwb.html'>spwb</a></code>. In function <code>fordyn</code> <code>subdailyResults</code> is always set to FALSE.</p></li>
+</ul><p><b>Water balance</b>:</p><ul>
+<li><p><code>transpirationMode (="Granier")</code>: Transpiration model (either 'Granier' or 'Sperry'). See <code><a href='modelInput.html'>spwbInput</a></code>.</p></li>
 <li><p><code>soilFunctions (="SX")</code>: Soil water retention curve and conductivity functions, either 'SX' (for Saxton) or 'VG' (for Van Genuchten). If <code>transpirationMode = "Sperry"</code> then soilFunctions is set by default to <code>'VG'</code>.</p></li>
 <li><p><code>defaultWindSpeed (= 2.5)</code>: Default wind speed value (in m/s) to be used when missing from data.</p></li>
-</ul><p><b>Water balance</b>:</p><ul>
 <li><p><code>snowpack (=TRUE)</code>: Boolean flag to indicate the simulation of snow accumulation and melting.</p></li>
+<li><p><code>leafPhenology (=TRUE)</code>: Boolean flag to indicate the simulation of leaf phenology for winter-deciduous species.</p></li>
 <li><p><code>rockyLayerDrainage (=TRUE)</code>: Boolean flag to indicate the simulation of drainage from rocky layers (&gt; 95% of rocks).</p></li>
 <li><p><code>unlimitedSoilWater (=FALSE)</code>: Boolean flag to indicate the simulation of plant transpiration assuming that soil water is always at field capacity.</p></li>
-<li><p><code>leafPhenology (=TRUE)</code>: Boolean flag to indicate the simulation of leaf phenology for winter-deciduous species.</p></li>
 <li><p><code>unfoldingDD (=300)</code>: Degree-days for complete leaf unfolding after budburst has occurred.</p></li>
 <li><p><code>plantWaterPools (=FALSE)</code>: Boolean flag to indicate the simulation of water balance assuming that each cohort has its own water pools.</p></li>
-<li><p><code>transpirationMode (="Granier")</code>: Transpiration model (either 'Granier' or 'Sperry'). See <code><a href='modelInput.html'>spwbInput</a></code>.</p></li>
-<li><p><code>verticalLayerSize (= 100)</code>: Size of vertical layers (in cm) for photosynthesis calculation.</p></li>
-<li><p><code>boundaryLayerSize (= 2000)</code>: Size of the boundary layer (in cm) over the canopy (relevant for multi-layer canopy energy balance).</p></li>
+<li><p><code>verticalLayerSize (= 100)</code>: Size of vertical layers (in cm) for the calculation of light extinction (and photosynthesis).</p></li>
 <li><p><code>windMeasurementHeight (=200)</code>: Height (in cm) over the canopy corresponding to wind measurements.</p></li>
-<li><p><code>cavitationRefill (= "total")</code>: A string indicating how refilling of embolized conduits is done ("none" - no refilling, "annual" - every first day of the year, "rate" - following a rate of new sapwood formation, "total" - instantaneous complete refilling).</p></li>
-<li><p><code>refillMaximumRate (= 0.05)</code>: Maximum rate of daily refilling of embolized conduits as sapwood area per leaf area (in cm2·m-2·day-1).</p></li>
+<li><p><code>cavitationRefill (= "total")</code>: A string indicating how refilling of embolized conduits is done:
+    <ul>
+<li><p>"none" - no refilling.</p></li>
+<li><p>"annual" - every first day of the year.</p></li>
+<li><p>"rate" - following a rate of new sapwood formation (only available if <code>transpirationMode = "Sperry"</code>)</p></li>
+<li><p>"total" - instantaneous complete refilling.</p></li>
+</ul></p></li>
 </ul><p><b>Water balance with 'Sperry'</b>:</p><ul>
-<li><p><code>gainModifier, costModifier (= 1)</code>: Modifiers (exponents) of the gain and cost functions defined in Sperry et al. (2016).</p></li>
-<li><p><code>cochard (=FALSE)</code>: Boolean flag to indicate the stomatal closure when leaf water potential is below turgor loss point so that transpiration depends on cuticular properties (Martin-StPaul et al. 2017).</p></li>
 <li><p><code>ndailysteps (= 24)</code>: Number of steps into which each day is divided for determination of stomatal conductance, transpiration and photosynthesis (24 equals 1-hour intervals).</p></li>
 <li><p><code>nsubsteps (= 3600)</code>: Number of substeps into which each step is divided for multi-layer canopy energy balance solving.</p></li>
 <li><p><code>capacitance (=FALSE)</code>: Whether the effect of plant water compartments is considered in simulations.</p></li>
+<li><p><code>multiLayerBalance (=FALSE)</code>: Flag to indicate multiple canopy energy balance. If <code>FALSE</code>, canopy is considered a single layer for energy balance.</p></li>
+<li><p><code>cochard (=FALSE)</code>: Boolean flag to indicate the stomatal closure when leaf water potential is below turgor loss point so that transpiration depends on cuticular properties (Martin-StPaul et al. 2017).</p></li>
+<li><p><code>taper (= TRUE)</code>: Whether taper of xylem conduits is accounted for when calculating aboveground stem conductance from xylem conductivity.</p></li>
+<li><p><code>gainModifier, costModifier (= 1)</code>: Modifiers (exponents) of the gain and cost functions defined in Sperry et al. (2016).</p></li>
 <li><p><code>klatstem (= 0.01)</code>: Stem symplastic-apoplastic lateral conductance (in mmol·s-1·m-2·MPa-1). Only relevant when <code>capacitance = TRUE</code>.</p></li>
 <li><p><code>klatleaf (= 0.01)</code>: Leaf symplastic-apoplastic lateral conductance (in mmol·s-1·m-2·MPa-1). Only relevant when <code>capacitance = TRUE</code>.</p></li>
-<li><p><code>taper (= TRUE)</code>: Whether taper of xylem conduits is accounted for when calculating aboveground stem conductance from xylem conductivity.</p></li>
 <li><p><code>numericParams</code>: A list with the following elements:
       <ul>
 <li><p><code>maxNsteps (= 400)</code>: Maximum number of steps in supply function.</p></li>
@@ -175,7 +180,8 @@
 <li><p><code>fracLeafResistance (= NA)</code>: Fraction of plant total resistance (leaf+stem+root) that corresponds to leaves. This fraction is used if <code>VCleaf_kmax = NA</code>.</p></li>
 <li><p><code>fracRootResistance (=0.40)</code>: Fraction of plant total resistance (leaf+stem+root) that corresponds to root system.</p></li>
 <li><p><code>averageFracRhizosphereResistance (=0.15)</code>: Fraction to total continuum (leaf+stem+root+rhizosphere) resistance that corresponds to rhizosphere (averaged across soil water potential values).</p></li>
-<li><p><code>multiLayerBalance (=FALSE)</code>: Flag to indicate multiple canopy energy balance. If <code>FALSE</code>, canopy is considered a single layer for energy balance.</p></li>
+<li><p><code>boundaryLayerSize (= 2000)</code>: Size of the boundary layer (in cm) over the canopy (relevant for multi-layer canopy energy balance).</p></li>
+<li><p><code>refillMaximumRate (= 0.05)</code>: Maximum rate of daily refilling of embolized conduits as sapwood area per leaf area (in cm2·m-2·day-1).</p></li>
 </ul><p><b>Growth/mortality</b>:</p><ul>
 <li><p><code>allowDessication (=TRUE)</code>: Boolean flag to indicate that mortality by dessication is allowed.</p></li>
 <li><p><code>allowStarvation (=TRUE)</code>: Boolean flag to indicate that mortality by starvation is allowed.</p></li>

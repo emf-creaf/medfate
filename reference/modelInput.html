@@ -198,7 +198,13 @@
 </ul></p></li>
 <li><p><code>paramsPhenology</code>: A data frame with leaf phenology parameters:
      <ul>
-<li><p><code>Sgdd</code>: Growth degree days needed for leaf budburst (for winter decideous species).</p></li>
+<li><p><code>PhenologyType</code>: Leaf phenology type.</p></li>
+<li><p><code>LeafDuration</code>: Leaf duration (in years).</p></li>
+<li><p><code>Sgdd</code>: Degree days needed for leaf budburst (for winter decideous species).</p></li>
+<li><p><code>Tbgdd</code>: Base temperature for the calculation of degree days to leaf budburst.</p></li>
+<li><p><code>Ssen</code>: Degree days corresponding to leaf senescence.</p></li>
+<li><p><code>Phsen</code>: Photoperiod corresponding to start counting senescence degree-days.</p></li>
+<li><p><code>Tbsen</code>: Base temperature for the calculation of degree days to leaf senescence.</p></li>
 </ul></p></li>
 <li><p><code>paramsAnatomy</code>: A data frame with plant anatomy parameters for each cohort (only if <code>control$transpirationMode = "Sperry"</code>):
      <ul>
@@ -319,7 +325,7 @@
 <span class='va'>Z95</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>exampleforestMED</span><span class='op'>$</span><span class='va'>treeData</span><span class='op'>$</span><span class='va'>Z95</span>, <span class='va'>exampleforestMED</span><span class='op'>$</span><span class='va'>shrubData</span><span class='op'>$</span><span class='va'>Z95</span><span class='op'>)</span>
 
 <span class='co'># Initialize control parameters</span>
-<span class='va'>control</span> <span class='op'>=</span> <span class='fu'><a href='defaultControl.html'>defaultControl</a></span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>control</span> <span class='op'>=</span> <span class='fu'><a href='defaultControl.html'>defaultControl</a></span><span class='op'>(</span><span class='st'>"Granier"</span><span class='op'>)</span>
 
 <span class='co'># Prepare spwb input</span>
 <span class='fu'>spwbInput</span><span class='op'>(</span><span class='va'>above</span>, <span class='va'>Z50</span>, <span class='va'>Z95</span>, <span class='va'>examplesoil</span>,<span class='va'>SpParamsMED</span>, <span class='va'>control</span><span class='op'>)</span>
@@ -333,6 +339,9 @@
 #&gt; $control$subdailyResults
 #&gt; [1] FALSE
 #&gt; 
+#&gt; $control$transpirationMode
+#&gt; [1] "Granier"
+#&gt; 
 #&gt; $control$soilFunctions
 #&gt; [1] "SX"
 #&gt; 
@@ -340,6 +349,9 @@
 #&gt; [1] 2.5
 #&gt; 
 #&gt; $control$snowpack
+#&gt; [1] TRUE
+#&gt; 
+#&gt; $control$leafPhenology
 #&gt; [1] TRUE
 #&gt; 
 #&gt; $control$rockyLayerDrainage
@@ -351,29 +363,35 @@
 #&gt; $control$plantWaterPools
 #&gt; [1] FALSE
 #&gt; 
-#&gt; $control$leafPhenology
-#&gt; [1] TRUE
-#&gt; 
 #&gt; $control$unfoldingDD
 #&gt; [1] 300
-#&gt; 
-#&gt; $control$transpirationMode
-#&gt; [1] "Granier"
-#&gt; 
-#&gt; $control$cavitationRefill
-#&gt; [1] "total"
-#&gt; 
-#&gt; $control$refillMaximumRate
-#&gt; [1] 0.05
 #&gt; 
 #&gt; $control$verticalLayerSize
 #&gt; [1] 100
 #&gt; 
-#&gt; $control$boundaryLayerSize
-#&gt; [1] 2000
-#&gt; 
 #&gt; $control$windMeasurementHeight
 #&gt; [1] 200
+#&gt; 
+#&gt; $control$cavitationRefill
+#&gt; [1] "total"
+#&gt; 
+#&gt; $control$ndailysteps
+#&gt; [1] 24
+#&gt; 
+#&gt; $control$nsubsteps
+#&gt; [1] 3600
+#&gt; 
+#&gt; $control$cochard
+#&gt; [1] FALSE
+#&gt; 
+#&gt; $control$capacitance
+#&gt; [1] FALSE
+#&gt; 
+#&gt; $control$taper
+#&gt; [1] TRUE
+#&gt; 
+#&gt; $control$multiLayerBalance
+#&gt; [1] FALSE
 #&gt; 
 #&gt; $control$gainModifier
 #&gt; [1] 1
@@ -384,20 +402,11 @@
 #&gt; $control$costWater
 #&gt; [1] "dEdP"
 #&gt; 
-#&gt; $control$cochard
-#&gt; [1] FALSE
-#&gt; 
-#&gt; $control$capacitance
-#&gt; [1] FALSE
-#&gt; 
 #&gt; $control$klatstem
 #&gt; [1] 0.01
 #&gt; 
 #&gt; $control$klatleaf
 #&gt; [1] 0.01
-#&gt; 
-#&gt; $control$taper
-#&gt; [1] TRUE
 #&gt; 
 #&gt; $control$numericParams
 #&gt; $control$numericParams$maxNsteps
@@ -425,17 +434,14 @@
 #&gt; $control$Catm
 #&gt; [1] 386
 #&gt; 
-#&gt; $control$ndailysteps
-#&gt; [1] 24
-#&gt; 
-#&gt; $control$nsubsteps
-#&gt; [1] 3600
-#&gt; 
 #&gt; $control$thermalCapacityLAI
 #&gt; [1] 1e+06
 #&gt; 
-#&gt; $control$multiLayerBalance
-#&gt; [1] FALSE
+#&gt; $control$boundaryLayerSize
+#&gt; [1] 2000
+#&gt; 
+#&gt; $control$refillMaximumRate
+#&gt; [1] 0.05
 #&gt; 
 #&gt; $control$allowDessication
 #&gt; [1] TRUE
@@ -665,10 +671,10 @@
 #&gt; 
 #&gt; 
 #&gt; $paramsPhenology
-#&gt;            PhenologyType LeafDuration Sgdd Tbgdd Ssen Psen Tbsen
-#&gt; T1_54 oneflush-evergreen         3.00  200     5 8268 12.5  28.5
-#&gt; T2_68 oneflush-evergreen         3.00  200     5 8268 12.5  28.5
-#&gt; S1_65 oneflush-evergreen         1.33  200     5 8268 12.5  28.5
+#&gt;            PhenologyType LeafDuration Sgdd Tbgdd Ssen Phsen Tbsen
+#&gt; T1_54 oneflush-evergreen         3.00  200     5 8268  12.5  28.5
+#&gt; T2_68 oneflush-evergreen         3.00  200     5 8268  12.5  28.5
+#&gt; S1_65 oneflush-evergreen         1.33  200     5 8268  12.5  28.5
 #&gt; 
 #&gt; $paramsInterception
 #&gt;       kPAR    g
@@ -709,6 +715,9 @@
 #&gt; $control$subdailyResults
 #&gt; [1] FALSE
 #&gt; 
+#&gt; $control$transpirationMode
+#&gt; [1] "Granier"
+#&gt; 
 #&gt; $control$soilFunctions
 #&gt; [1] "SX"
 #&gt; 
@@ -716,6 +725,9 @@
 #&gt; [1] 2.5
 #&gt; 
 #&gt; $control$snowpack
+#&gt; [1] TRUE
+#&gt; 
+#&gt; $control$leafPhenology
 #&gt; [1] TRUE
 #&gt; 
 #&gt; $control$rockyLayerDrainage
@@ -727,29 +739,35 @@
 #&gt; $control$plantWaterPools
 #&gt; [1] FALSE
 #&gt; 
-#&gt; $control$leafPhenology
-#&gt; [1] TRUE
-#&gt; 
 #&gt; $control$unfoldingDD
 #&gt; [1] 300
-#&gt; 
-#&gt; $control$transpirationMode
-#&gt; [1] "Granier"
-#&gt; 
-#&gt; $control$cavitationRefill
-#&gt; [1] "total"
-#&gt; 
-#&gt; $control$refillMaximumRate
-#&gt; [1] 0.05
 #&gt; 
 #&gt; $control$verticalLayerSize
 #&gt; [1] 100
 #&gt; 
-#&gt; $control$boundaryLayerSize
-#&gt; [1] 2000
-#&gt; 
 #&gt; $control$windMeasurementHeight
 #&gt; [1] 200
+#&gt; 
+#&gt; $control$cavitationRefill
+#&gt; [1] "total"
+#&gt; 
+#&gt; $control$ndailysteps
+#&gt; [1] 24
+#&gt; 
+#&gt; $control$nsubsteps
+#&gt; [1] 3600
+#&gt; 
+#&gt; $control$cochard
+#&gt; [1] FALSE
+#&gt; 
+#&gt; $control$capacitance
+#&gt; [1] FALSE
+#&gt; 
+#&gt; $control$taper
+#&gt; [1] TRUE
+#&gt; 
+#&gt; $control$multiLayerBalance
+#&gt; [1] FALSE
 #&gt; 
 #&gt; $control$gainModifier
 #&gt; [1] 1
@@ -760,20 +778,11 @@
 #&gt; $control$costWater
 #&gt; [1] "dEdP"
 #&gt; 
-#&gt; $control$cochard
-#&gt; [1] FALSE
-#&gt; 
-#&gt; $control$capacitance
-#&gt; [1] FALSE
-#&gt; 
 #&gt; $control$klatstem
 #&gt; [1] 0.01
 #&gt; 
 #&gt; $control$klatleaf
 #&gt; [1] 0.01
-#&gt; 
-#&gt; $control$taper
-#&gt; [1] TRUE
 #&gt; 
 #&gt; $control$numericParams
 #&gt; $control$numericParams$maxNsteps
@@ -801,17 +810,14 @@
 #&gt; $control$Catm
 #&gt; [1] 386
 #&gt; 
-#&gt; $control$ndailysteps
-#&gt; [1] 24
-#&gt; 
-#&gt; $control$nsubsteps
-#&gt; [1] 3600
-#&gt; 
 #&gt; $control$thermalCapacityLAI
 #&gt; [1] 1e+06
 #&gt; 
-#&gt; $control$multiLayerBalance
-#&gt; [1] FALSE
+#&gt; $control$boundaryLayerSize
+#&gt; [1] 2000
+#&gt; 
+#&gt; $control$refillMaximumRate
+#&gt; [1] 0.05
 #&gt; 
 #&gt; $control$allowDessication
 #&gt; [1] TRUE
@@ -1041,10 +1047,10 @@
 #&gt; 
 #&gt; 
 #&gt; $paramsPhenology
-#&gt;            PhenologyType LeafDuration Sgdd Tbgdd Ssen Psen Tbsen
-#&gt; T1_54 oneflush-evergreen         3.00  200     5 8268 12.5  28.5
-#&gt; T2_68 oneflush-evergreen         3.00  200     5 8268 12.5  28.5
-#&gt; S1_65 oneflush-evergreen         1.33  200     5 8268 12.5  28.5
+#&gt;            PhenologyType LeafDuration Sgdd Tbgdd Ssen Phsen Tbsen
+#&gt; T1_54 oneflush-evergreen         3.00  200     5 8268  12.5  28.5
+#&gt; T2_68 oneflush-evergreen         3.00  200     5 8268  12.5  28.5
+#&gt; S1_65 oneflush-evergreen         1.33  200     5 8268  12.5  28.5
 #&gt; 
 #&gt; $paramsInterception
 #&gt;       kPAR    g
@@ -1086,6 +1092,9 @@
 #&gt; $control$subdailyResults
 #&gt; [1] FALSE
 #&gt; 
+#&gt; $control$transpirationMode
+#&gt; [1] "Sperry"
+#&gt; 
 #&gt; $control$soilFunctions
 #&gt; [1] "VG"
 #&gt; 
@@ -1093,6 +1102,9 @@
 #&gt; [1] 2.5
 #&gt; 
 #&gt; $control$snowpack
+#&gt; [1] TRUE
+#&gt; 
+#&gt; $control$leafPhenology
 #&gt; [1] TRUE
 #&gt; 
 #&gt; $control$rockyLayerDrainage
@@ -1104,29 +1116,35 @@
 #&gt; $control$plantWaterPools
 #&gt; [1] FALSE
 #&gt; 
-#&gt; $control$leafPhenology
-#&gt; [1] TRUE
-#&gt; 
 #&gt; $control$unfoldingDD
 #&gt; [1] 300
-#&gt; 
-#&gt; $control$transpirationMode
-#&gt; [1] "Sperry"
-#&gt; 
-#&gt; $control$cavitationRefill
-#&gt; [1] "total"
-#&gt; 
-#&gt; $control$refillMaximumRate
-#&gt; [1] 0.05
 #&gt; 
 #&gt; $control$verticalLayerSize
 #&gt; [1] 100
 #&gt; 
-#&gt; $control$boundaryLayerSize
-#&gt; [1] 2000
-#&gt; 
 #&gt; $control$windMeasurementHeight
 #&gt; [1] 200
+#&gt; 
+#&gt; $control$cavitationRefill
+#&gt; [1] "total"
+#&gt; 
+#&gt; $control$ndailysteps
+#&gt; [1] 24
+#&gt; 
+#&gt; $control$nsubsteps
+#&gt; [1] 3600
+#&gt; 
+#&gt; $control$cochard
+#&gt; [1] FALSE
+#&gt; 
+#&gt; $control$capacitance
+#&gt; [1] FALSE
+#&gt; 
+#&gt; $control$taper
+#&gt; [1] TRUE
+#&gt; 
+#&gt; $control$multiLayerBalance
+#&gt; [1] FALSE
 #&gt; 
 #&gt; $control$gainModifier
 #&gt; [1] 1
@@ -1137,20 +1155,11 @@
 #&gt; $control$costWater
 #&gt; [1] "dEdP"
 #&gt; 
-#&gt; $control$cochard
-#&gt; [1] FALSE
-#&gt; 
-#&gt; $control$capacitance
-#&gt; [1] FALSE
-#&gt; 
 #&gt; $control$klatstem
 #&gt; [1] 0.01
 #&gt; 
 #&gt; $control$klatleaf
 #&gt; [1] 0.01
-#&gt; 
-#&gt; $control$taper
-#&gt; [1] TRUE
 #&gt; 
 #&gt; $control$numericParams
 #&gt; $control$numericParams$maxNsteps
@@ -1178,17 +1187,14 @@
 #&gt; $control$Catm
 #&gt; [1] 386
 #&gt; 
-#&gt; $control$ndailysteps
-#&gt; [1] 24
-#&gt; 
-#&gt; $control$nsubsteps
-#&gt; [1] 3600
-#&gt; 
 #&gt; $control$thermalCapacityLAI
 #&gt; [1] 1e+06
 #&gt; 
-#&gt; $control$multiLayerBalance
-#&gt; [1] FALSE
+#&gt; $control$boundaryLayerSize
+#&gt; [1] 2000
+#&gt; 
+#&gt; $control$refillMaximumRate
+#&gt; [1] 0.05
 #&gt; 
 #&gt; $control$allowDessication
 #&gt; [1] TRUE
@@ -1464,10 +1470,10 @@
 #&gt; 
 #&gt; 
 #&gt; $paramsPhenology
-#&gt;            PhenologyType LeafDuration Sgdd Tbgdd Ssen Psen Tbsen
-#&gt; T1_54 oneflush-evergreen         3.00  200     5 8268 12.5  28.5
-#&gt; T2_68 oneflush-evergreen         3.00  200     5 8268 12.5  28.5
-#&gt; S1_65 oneflush-evergreen         1.33  200     5 8268 12.5  28.5
+#&gt;            PhenologyType LeafDuration Sgdd Tbgdd Ssen Phsen Tbsen
+#&gt; T1_54 oneflush-evergreen         3.00  200     5 8268  12.5  28.5
+#&gt; T2_68 oneflush-evergreen         3.00  200     5 8268  12.5  28.5
+#&gt; S1_65 oneflush-evergreen         1.33  200     5 8268  12.5  28.5
 #&gt; 
 #&gt; $paramsAnatomy
 #&gt;         Hmax Hmed    Al2As   SLA LeafWidth LeafDensity WoodDensity
