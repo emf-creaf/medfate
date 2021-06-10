@@ -49,7 +49,11 @@ data("SpParamsUS")
   \itemize{  
     \item{\code{PhenologyType}: Leaf phenology type, either "oneflush-evergreen" (new leaves develop in spring-summer), "progressive-evergreen" (new leaves develop during any season), "winter-deciduous" (leaf senescence in autumn, new leaves in spring-summer) or "winter-semideciduous" (same as before, but abscission of senescent leaves occurs when new leaves are produced).}
     \item{\code{LeafDuration}: Leaf duration (in years).}
-    \item{\code{Sgdd}: Growth degree days for leaf budburst (in Celsius).}
+    \item{\code{Sgdd}: Degree days for leaf budburst (in Celsius).}
+    \item{\code{Tbgdd}: Base temperature for the calculation of degree days to leaf budburst.}
+    \item{\code{Ssen}: Degree days corresponding to leaf senescence.}
+    \item{\code{Phsen}: Photoperiod corresponding to start counting senescence degree-days.}
+    \item{\code{Tbsen}: Base temperature for the calculation of degree days to leaf senescence.}
   }
   \bold{Anatomy}:
   \itemize{  

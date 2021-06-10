@@ -70,7 +70,13 @@ Functions \code{forest2spwbInput()} and \code{spwbInput()} return a list of clas
   }
   \item{\code{paramsPhenology}: A data frame with leaf phenology parameters:
      \itemize{
-       \item{\code{Sgdd}: Growth degree days needed for leaf budburst (for winter decideous species).}
+       \item{\code{PhenologyType}: Leaf phenology type.}
+       \item{\code{LeafDuration}: Leaf duration (in years).}
+       \item{\code{Sgdd}: Degree days needed for leaf budburst (for winter decideous species).}
+       \item{\code{Tbgdd}: Base temperature for the calculation of degree days to leaf budburst.}
+       \item{\code{Ssen}: Degree days corresponding to leaf senescence.}
+       \item{\code{Phsen}: Photoperiod corresponding to start counting senescence degree-days.}
+       \item{\code{Tbsen}: Base temperature for the calculation of degree days to leaf senescence.}
      }
   }
   \item{\code{paramsAnatomy}: A data frame with plant anatomy parameters for each cohort (only if \code{control$transpirationMode = "Sperry"}):
