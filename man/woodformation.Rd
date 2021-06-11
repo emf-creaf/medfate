@@ -34,7 +34,7 @@ woodformation_relativeExpansionRate(psi, Tc, pi, phi, Y_P, Y_T)
 Function \code{woodformation_initRing()} returns a list of class 'ring', that is a list containing a data frame \code{cells} and two vectors: \code{P} and \code{SA}. Dataframe \code{cells} contains the columns "formation_date", "phi", "pi" and "CRD" and as many rows as dates processed. Vectors \code{P} and \code{SA} contain, respectively, the number of cells produced and the sapwood area corresponding to the ring of cells (assuming a tangencial radius of 20 micrometers). Function \code{woodformation_growRing()} modifies the input 'ring' object according to the environmental conditions given as input. Function \code{woodformation_relativeExpansionRate()} returns a numeric scalar with the relative expansion rate.
 }
 \note{
-Code modified from package xylomod (https://github.com/AntoineCabon/xylomod) by Antoine Cabon
+Code modified from package xylomod by Antoine Cabon, available at GitHub
 }
 \author{
 Antoine Cabon, CTFC
@@ -42,9 +42,9 @@ Antoine Cabon, CTFC
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \references{
-Cabon A, \enc{Fernández‐de‐Uña}{Fernandez-de-Una} L, Gea‐Izquierdo G, Meinzer FC, Woodruff DR, \enc{Martínez‐Vilalta}{Martinez-Vilalta} J, De \enc{Cáceres}{Caceres} M. 2020a. Water potential control of turgor‐driven tracheid enlargement in Scots pine at its xeric distribution edge. New Phytologist 225: 209–221.
+Cabon A, \enc{Fernández-de-Uña}{Fernandez-de-Una} L, Gea-Izquierdo G, Meinzer FC, Woodruff DR, \enc{Martínez-Vilalta}{Martinez-Vilalta} J, De \enc{Cáceres}{Caceres} M. 2020a. Water potential control of turgor-driven tracheid enlargement in Scots pine at its xeric distribution edge. New Phytologist 225: 209–221.
 
-Cabon A, Peters RL, Fonti P, \enc{Martínez‐Vilalta}{Martinez-Vilalta}  J, De \enc{Cáceres}{Caceres} M. 2020b. Temperature and water potential co‐limit stem cambial activity along a steep elevational gradient. New Phytologist: nph.16456.
+Cabon A, Peters RL, Fonti P, \enc{Martínez-Vilalta}{Martinez-Vilalta}  J, De \enc{Cáceres}{Caceres} M. 2020b. Temperature and water potential co-limit stem cambial activity along a steep elevational gradient. New Phytologist: nph.16456.
 }
 \seealso{
  \code{\link{growth}}
