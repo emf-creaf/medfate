@@ -17,7 +17,7 @@ License: GPL (>= 2)
 URL: https://emf-creaf.github.io/medfate/index.html
 LazyLoad: yes
 Depends: R (>= 3.5.0)
-Imports: ggplot2, methods, httr, jsonlite, meteoland (>= 0.8.1), Rcpp (>= 1.0.6)
+Imports: sp, ggplot2, methods, httr, jsonlite, meteoland (>= 0.8.1), Rcpp (>= 1.0.6)
 Suggests: knitr, rmarkdown
 LinkingTo: Rcpp, meteoland
 Encoding: UTF-8

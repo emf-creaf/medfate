@@ -1,6 +1,6 @@
 soilgridsParams <- function(points, widths = c(300, 700, 1000, 2000), verbose = FALSE) {
   if(!inherits(points, "SpatialPoints")) stop("Object 'points' has to be a SpatialPoints.")
-  coords_df = spTransform(as(points,"SpatialPoints"), sp::CRS("+proj=longlat +datum=WGS84")) # Transform to long lat
+  coords_df = sp::spTransform(as(points,"SpatialPoints"), sp::CRS("+proj=longlat +datum=WGS84")) # Transform to long lat
   
   
   

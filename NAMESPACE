@@ -1,6 +1,7 @@
 import(methods)
 import(meteoland)
 import(ggplot2)
+importFrom("sp", "spTransform")
 importFrom("httr", "GET", "content")
 importFrom("stats", "aggregate","filter","uniroot", "median",
            "cor","quantile", "dnorm", "Gamma", "glm", "predict",
