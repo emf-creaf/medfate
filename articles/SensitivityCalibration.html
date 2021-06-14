@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.2</span>
       </span>
     </div>
 
@@ -69,7 +69,7 @@
       <h1 data-toc-skip>Sensitivity analysis and calibration</h1>
                         <h4 class="author">Miquel De Caceres</h4>
             
-            <h4 class="date">2021-06-11</h4>
+            <h4 class="date">2021-06-14</h4>
       
       
       <div class="hidden name"><code>SensitivityCalibration.Rmd</code></div>
@@ -96,10 +96,8 @@
 <p>As an example data set we will use here the same data sets provided to illustrate simulation functions in <strong>medfate</strong>. This data set consists of a forest with two tree species (<em>Pinus halepensis</em>/T1_54 and <em>Quercus ilex</em>/T2_68) and one shrub species (<em>Quercus coccifera</em>/S1_65 or Kermes oak).</p>
 <p>We begin by loading the package and the example forest data:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://emf-creaf.github.io/medfate/index.html">medfate</a></span><span class="op">)</span></code></pre></div>
-<pre><code>## Loading required package: sp</code></pre>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://emf-creaf.github.io/medfate/index.html">medfate</a></span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">exampleforestMED</span><span class="op">)</span>
 <span class="va">exampleforestMED</span></code></pre></div>
 <pre><code>## $ID
 ## [1] "1"
@@ -125,15 +123,15 @@
 ## attr(,"class")
 ## [1] "forest" "list"</code></pre>
 <p>We also load the example weather data set and the default species parametrization:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">examplemeteo</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">SpParamsMED</span><span class="op">)</span></code></pre></div>
 <p>We then initialize a soil with four layers (default values of texture, bulk density and rock content) and the species input parameters for simulation function <code><a href="../reference/spwb.html">spwb()</a></code>:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">examplesoil1</span> <span class="op">=</span> <span class="fu"><a href="../reference/soil.html">soil</a></span><span class="op">(</span><span class="fu"><a href="../reference/defaultSoilParams.html">defaultSoilParams</a></span><span class="op">(</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span>
 <span class="va">x1</span> <span class="op">=</span> <span class="fu"><a href="../reference/modelInput.html">forest2spwbInput</a></span><span class="op">(</span><span class="va">exampleforestMED</span>,<span class="va">examplesoil1</span>, <span class="va">SpParamsMED</span>, control <span class="op">=</span> <span class="fu"><a href="../reference/defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>Although it is not necessary, we make an initial call to the model (<code><a href="../reference/spwb.html">spwb()</a></code>) with the default parameter settings:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">S1</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/spwb.html">spwb</a></span><span class="op">(</span><span class="va">x1</span>, <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></code></pre></div>
 <pre><code>## Initial soil water content (mm): 291.257
 ## Initial snowpack content (mm): 0
@@ -170,20 +168,20 @@
 <em>Mapping</em> aims at determining the region of the input variability space that produces significant output values.</li>
 </ul>
 <p>Here we will mostly interested in ranking parameters according to different objectives. We will take as input factors three plant traits (leaf area index, fine root distribution and the water potential corresponding to a reduction in plant conductance) in the three plant cohorts (species), and two soil factors (the rock fragment content of soil layer 1 and 2). In total, eleven model parameters will be studied. The following shows the initial values for plant trait parameters:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x1</span><span class="op">$</span><span class="va">above</span><span class="op">$</span><span class="va">LAI_live</span></code></pre></div>
 <pre><code>## [1] 0.81670117 0.79779523 0.04817502</code></pre>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x1</span><span class="op">$</span><span class="va">below</span><span class="op">$</span><span class="va">Z50</span></code></pre></div>
 <pre><code>## [1] 750 750 300</code></pre>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x1</span><span class="op">$</span><span class="va">paramsTransp</span><span class="op">$</span><span class="va">Psi_Extract</span></code></pre></div>
 <pre><code>## [1] -3.00 -3.92 -3.96</code></pre>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">x1</span><span class="op">$</span><span class="va">soil</span><span class="op">$</span><span class="va">rfc</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span></code></pre></div>
 <pre><code>## [1] 25 45</code></pre>
 <p>In the following code we define a vector of parameter names (using naming rules of function <code><a href="../reference/modifyParams.html">modifyInputParams()</a></code>) as well as the input variability space, defined by the minimum and maximum parameter values:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#Parameter names of interest</span>
 <span class="va">parNames</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"T1_54/LAI_live"</span>, <span class="st">"T2_68/LAI_live"</span>, <span class="st">"S1_65/LAI_live"</span>,
              <span class="st">"T1_54/Z50"</span>, <span class="st">"T2_68/Z50"</span>, <span class="st">"S1_65/Z50"</span>,
@@ -210,12 +208,12 @@
 <em>prediction functions</em>, which are scalar values that are provided to the model-user for their practical use, and that can be computed even in the absence of observations.</li>
 </ul>
 <p>Here we will use examples of both kinds. First, we define a function that, given a simulation result, calculates total transpiration (mm) over the simulated period (one year):</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sf_transp</span><span class="op">&lt;-</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">WaterBalance</span><span class="op">$</span><span class="va">Transpiration</span>, na.rm<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">}</span>
 <span class="fu">sf_transp</span><span class="op">(</span><span class="va">S1</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 290.32</code></pre>
 <p>Another prediction function can focus on plant drought stress. We define a function that, given a simulation result, calculates the average drought stress of plants (measured using the water stress index) over the simulated period:</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sf_stress</span><span class="op">&lt;-</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span>
   <span class="va">lai</span> <span class="op">&lt;-</span> <span class="va">x</span><span class="op">$</span><span class="va">spwbInput</span><span class="op">$</span><span class="va">above</span><span class="op">$</span><span class="va">LAI_live</span>
   <span class="va">lai_p</span> <span class="op">&lt;-</span> <span class="va">lai</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">lai</span><span class="op">)</span>
@@ -227,17 +225,17 @@
 <p>Sensitivity analysis requires model output functions whose parameters are the input factors to be studied. <span class="math display">\[\begin{equation}
 y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 \end{equation}\]</span> where <span class="math inline">\(y\)</span> is the output, <span class="math inline">\(g\)</span> is the output function and <span class="math inline">\(\mathbf{x} = \{x_1, x_2, \dots, x_n\}\)</span> is the vector of parameter input factors. Functions <code>of_transp</code> and <code>of_stress</code> take simulation results as input, not values of input factors. Instead, we need to define functions that take soil and plant trait values as input, run the soil plant water balance model and return the desired prediction or performance statistic. These functions can be generated using the function factory <code><a href="../reference/optimization.html">optimization_function()</a></code>. The following code defines one of such functions focusing on total transpiration:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">of_transp</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/optimization.html">optimization_function</a></span><span class="op">(</span>parNames <span class="op">=</span> <span class="va">parNames</span>,
                                  x <span class="op">=</span> <span class="va">x1</span>,
                                  meteo <span class="op">=</span> <span class="va">examplemeteo</span>, 
                                  latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>,
                                  summary_function <span class="op">=</span> <span class="va">sf_transp</span><span class="op">)</span></code></pre></div>
 <p>Note that we provided all the data needed for simulations as input to <code><a href="../reference/optimization.html">optimization_function()</a></code>, as well as the names of the parameters to study and the function <code>sf_transp</code>. The resulting object <code>of_transp</code> is a function itself, which we can call with parameter values (or sets of parameter values) as input:</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">of_transp</span><span class="op">(</span><span class="va">parMin</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 55.93924</code></pre>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">of_transp</span><span class="op">(</span><span class="va">parMax</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 295.2266</code></pre>
 <p>It is important to understand the steps that are done when we call <code>of_transp()</code>:</p>
@@ -246,7 +244,7 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <li>The result of soil plant water balance is then passed to function <code>sf_transp()</code> and the output of this last function is returned as output of <code>of_transp()</code>.</li>
 </ol>
 <p>We can build a similar model output function, in this case focusing on plant stress (note that the only difference in the call to the factory is in the specification of <code>sf_stress</code> as summary function, instead of <code>sf_transp</code>).</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">of_stress</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/optimization.html">optimization_function</a></span><span class="op">(</span>parNames <span class="op">=</span> <span class="va">parNames</span>,
                                  x <span class="op">=</span> <span class="va">x1</span>, 
                                  meteo <span class="op">=</span> <span class="va">examplemeteo</span>, 
@@ -254,11 +252,11 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
                                  summary_function <span class="op">=</span> <span class="va">sf_stress</span><span class="op">)</span>
 <span class="fu">of_stress</span><span class="op">(</span><span class="va">parMin</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 0.7316116</code></pre>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">of_stress</span><span class="op">(</span><span class="va">parMax</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 121.2211</code></pre>
 <p>As mentioned above, another kind of output function can be the evaluation of model performance. Here we will assume that performance in terms of predictability of soil water content is desired; and use a data set of ‘observed’ values (actually simulated values with gaussian error) as reference:</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">exampleobs</span><span class="op">)</span></code></pre></div>
 <pre><code>##                  SWC       ETR   E_T1_54    E_T2_68 FMC_T1_54 FMC_T2_68
@@ -276,22 +274,22 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 ## 2001-01-05  0.08116292 -0.024324354
 ## 2001-01-06  0.15782495 -0.037228647</code></pre>
 <p>where soil water content dynamics is in column <code>SWC</code>. The model fit to observed data can be measured using the Nash-Sutcliffe coefficient, which we calculate for the initial run using function <code><a href="../reference/evaluation.html">evaluation_metric()</a></code>:</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/evaluation.html">evaluation_metric</a></span><span class="op">(</span><span class="va">S1</span>, measuredData <span class="op">=</span> <span class="va">exampleobs</span>, type <span class="op">=</span> <span class="st">"SWC"</span>, 
                   metric <span class="op">=</span> <span class="st">"NSE"</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 0.9226711</code></pre>
 <p>A call to <code><a href="../reference/evaluation.html">evaluation_metric()</a></code> provides the coefficient given a model simulation result, but is not a model output function as we defined above. Analogously to the measures of total transpiration and average plant stress, we can use a function factory to define a model output function that takes input factors as inputs, runs the model and performs the evaluation:</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">of_eval</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/optimization.html">optimization_evaluation_function</a></span><span class="op">(</span>parNames <span class="op">=</span> <span class="va">parNames</span>,
                 x <span class="op">=</span> <span class="va">x1</span>,
                 meteo <span class="op">=</span> <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>,
                 measuredData <span class="op">=</span> <span class="va">exampleobs</span>, type <span class="op">=</span> <span class="st">"SWC"</span>, 
                 metric <span class="op">=</span> <span class="st">"NSE"</span><span class="op">)</span></code></pre></div>
 <p>Function <code>of_eval()</code> stores internally both the data needed for conducting simulations and the data needed for evaluating simulation results, so that we only need to provide values for the input factors:</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">of_eval</span><span class="op">(</span><span class="va">parMin</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 0.8896676</code></pre>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">of_eval</span><span class="op">(</span><span class="va">parMax</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] -7.202206</code></pre>
 </div>
@@ -299,15 +297,15 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <h3 class="hasAnchor">
 <a href="#global-sensitivity-analyses" class="anchor"></a>Global sensitivity analyses</h3>
 <p>Sensitivity analysis is either referred to as <em>local</em> or <em>global</em>, depending on variation of input factors is studied with respect to some initial parameter set (local) or the whole space of input factors is taken into account (global). Here we will conduct global sensitivity analyses using package <strong>sensitivity</strong> (Ioss et al. 2020):</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">sensitivity</span><span class="op">)</span></code></pre></div>
 <p>This package provides a suite of approaches to global sensitivity analysis. Among them, we will follow the <em>Elementary Effect Test</em> implemented in function <code><a href="https://rdrr.io/pkg/sensitivity/man/morris.html">morris()</a></code>. We call this function to analyze sensitivity of total transpiration simulated by <code><a href="../reference/spwb.html">spwb()</a></code> to input factors (500 runs are done, so be patient):</p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sa_transp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/morris.html">morris</a></span><span class="op">(</span><span class="va">of_transp</span>, <span class="va">parNames</span>, r <span class="op">=</span> <span class="fl">50</span>, 
              design <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"oat"</span>, levels <span class="op">=</span> <span class="fl">10</span>, grid.jump <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>, 
              binf <span class="op">=</span> <span class="va">parMin</span>, bsup <span class="op">=</span> <span class="va">parMax</span>, scale<span class="op">=</span><span class="cn">TRUE</span>, verbose<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <p>Apart from indicating the sampling design to sample the input factor space, the call to <code><a href="https://rdrr.io/pkg/sensitivity/man/morris.html">morris()</a></code> includes the response model function (in our case <code>of_transp</code>), the parameter names and parameter value boundaries (i.e. <code>parMin</code> and <code>parMax</code>).</p>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">sa_transp</span><span class="op">)</span></code></pre></div>
 <pre><code>## 
 ## Call:
@@ -327,15 +325,15 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 ## rfc@1             -29.975953 29.975953 22.288449
 ## rfc@2             -43.618475 43.618475 24.402543</code></pre>
 <p><code>mu.star</code> values inform about the mean of elementary effects of each <span class="math inline">\(i\)</span> factor and can be used to rank all the input factors, whereas <code>sigma</code> inform about the degree of interaction of the <span class="math inline">\(i\)</span>-th factor with others. According to the result of this sensitivity analysis, leaf area index (<code>LAI_live</code>) parameters are the most relevant to determine total transpiration, much more than fine root distribution (<code>Z50</code>), the rock fragment content in the soil and the water potentials corresponding to whole-plant conductance reduction (i.e. <code>Psi_Extract</code>).</p>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html">plot</a></span><span class="op">(</span><span class="va">sa_transp</span>, xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">200</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-20-1.png" width="480" style="display: block; margin: auto;"></p>
 <p>We can run the same sensitivity analysis but focusing on the input factors relevant for predicted plant drought stress (i.e. using <code>of_stress</code> as model output function):</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sa_stress</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/morris.html">morris</a></span><span class="op">(</span><span class="va">of_stress</span>, <span class="va">parNames</span>, r <span class="op">=</span> <span class="fl">50</span>, 
              design <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"oat"</span>, levels <span class="op">=</span> <span class="fl">10</span>, grid.jump <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>, 
              binf <span class="op">=</span> <span class="va">parMin</span>, bsup <span class="op">=</span> <span class="va">parMax</span>, scale<span class="op">=</span><span class="cn">TRUE</span>, verbose<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">sa_stress</span><span class="op">)</span></code></pre></div>
 <pre><code>## 
 ## Call:
@@ -355,15 +353,15 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 ## rfc@1               42.35095  42.35095  31.97437
 ## rfc@2               47.83777  47.98895  35.67034</code></pre>
 <p>Again, LAI values parameters are the most relevant, but closely followed by the water potentials corresponding to whole-plant conductance reduction (i.e. <code>Psi_Extract</code>), which appear as more relevant than parameters of fine root distribution (<code>Z50</code>) and rock fragment content (<code>rfc</code>).</p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html">plot</a></span><span class="op">(</span><span class="va">sa_stress</span>, xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">300</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-24-1.png" width="480" style="display: block; margin: auto;"></p>
 <p>Finally, we can study the contribution of input factors to model performance in terms of soil water content dynamics (i.e. using <code>of_eval</code> as model output function):</p>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sa_eval</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/morris.html">morris</a></span><span class="op">(</span><span class="va">of_eval</span>, <span class="va">parNames</span>, r <span class="op">=</span> <span class="fl">50</span>, 
              design <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"oat"</span>, levels <span class="op">=</span> <span class="fl">10</span>, grid.jump <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>, 
              binf <span class="op">=</span> <span class="va">parMin</span>, bsup <span class="op">=</span> <span class="va">parMax</span>, scale<span class="op">=</span><span class="cn">TRUE</span>, verbose<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">sa_eval</span><span class="op">)</span></code></pre></div>
 <pre><code>## 
 ## Call:
@@ -383,7 +381,7 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 ## rfc@1             -46.920809 46.920809 35.602770
 ## rfc@2               0.000000  0.000000  0.000000</code></pre>
 <p>Contrary to the previous cases, the contribution of LAI parameters is similar to that of parameters of fine root distribution (<code>Z50</code>), which appear as more relevant than the water potentials corresponding to whole-plant conductance reduction (i.e. <code>Psi_Extract</code>).</p>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html">plot</a></span><span class="op">(</span><span class="va">sa_eval</span>, xlim<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">100</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-28-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
@@ -396,7 +394,7 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <h3 class="hasAnchor">
 <a href="#defining-parameter-space-and-objective-function" class="anchor"></a>Defining parameter space and objective function</h3>
 <p>To simplify our analysis and avoid problems of parameter identifiability, we focus here on the calibration of parameter <code>Z50</code> of fine root distribution. Below we redefine vectors <code>parNames</code>, <code>parMin</code>, and <code>parMax</code>; and we specify a vector of initial values.</p>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#Parameter names of interest</span>
 <span class="va">parNames</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"T1_54/Z50"</span>, <span class="st">"T2_68/Z50"</span>, <span class="st">"S1_65/Z50"</span><span class="op">)</span>
 <span class="co">#Parameter minimum and maximum values</span>
@@ -404,7 +402,7 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <span class="va">parMax</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1000</span>,<span class="fl">1000</span>,<span class="fl">1000</span><span class="op">)</span>
 <span class="va">parIni</span> <span class="op">=</span> <span class="va">x1</span><span class="op">$</span><span class="va">below</span><span class="op">$</span><span class="va">Z50</span></code></pre></div>
 <p>In order to run calibration analyses we need to define an objective function. Many evaluation metrics could be used but it is common practice to use <em>likelihood functions</em> . We can use the function factory <code>optimization_evaluation_function</code> and the ‘observed’ data to this aim, but in this case we specify a log-likelihood with Gaussian error as the evaluation metric for <code>of_eval()</code>.</p>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">of_eval</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/optimization.html">optimization_evaluation_function</a></span><span class="op">(</span>parNames <span class="op">=</span> <span class="va">parNames</span>,
                 x <span class="op">=</span> <span class="va">x1</span>,
                 meteo <span class="op">=</span> <span class="va">examplemeteo</span>, latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>,
@@ -415,11 +413,11 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <h3 class="hasAnchor">
 <a href="#calibration-by-gradient-search" class="anchor"></a>Calibration by gradient search</h3>
 <p>Model calibration can be performed using a broad range of approaches. Many of them - including simulated annealing, genetic algorithms, gradient methods, etc. - focus on the maximization or minimization of the objective function. To illustrate this common approach, we will use function <code>optim</code> from package <strong>stats</strong>, which provides several optimization methods. In particular we will use “L-BFGS-B”, which is the “BFGS” quasi-Newton method published by Broyden, Fletcher, Goldfarb and Shanno, modified by the inclusion of minimum and maximum boundaries. By default, function <code>optim</code> performs the minimization of the objective function (here <code>of_eval</code>), but we can specify a negative value for control parameter <code>fnscale</code> to turn the process into a maximization of maximum likelihood:</p>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">opt_cal</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/optim.html">optim</a></span><span class="op">(</span><span class="va">parIni</span>, <span class="va">of_eval</span>, method <span class="op">=</span> <span class="st">"L-BFGS-B"</span>,
                 control <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>fnscale <span class="op">=</span> <span class="op">-</span><span class="fl">1</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <p>The calibration result is the following:</p>
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">opt_cal</span><span class="op">)</span></code></pre></div>
 <pre><code>## $par
 ## [1] 762.1804 762.1580 302.1945
@@ -437,7 +435,7 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 ## $message
 ## [1] "CONVERGENCE: REL_REDUCTION_OF_F &lt;= FACTR*EPSMCH"</code></pre>
 <p>Note that the optimized parameters are close to those of <code>Z50</code> in the original <code>x1</code>.</p>
-<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span> <span class="va">x1</span><span class="op">$</span><span class="va">below</span><span class="op">[</span>,<span class="st">"Z50"</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span>, <span class="va">opt_cal</span><span class="op">$</span><span class="va">par</span><span class="op">)</span></code></pre></div>
 <pre><code>##       Z50 opt_cal$par
 ## T1_54 750    762.1804
@@ -449,23 +447,23 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <h3 class="hasAnchor">
 <a href="#bayesian-calibration" class="anchor"></a>Bayesian calibration</h3>
 <p>As an example of a more sophisticated model calibration, we will conduct a Bayesian calibration analysis using package <strong>BayesianTools</strong> (Hartig et al. 2019):</p>
-<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/florianhartig/BayesianTools">BayesianTools</a></span><span class="op">)</span></code></pre></div>
 <p>In a Bayesian analysis one evaluates how the uncertainty in model parameters is changed (hopefully reduced) after observing some data, because observed values do not have the same likelihood under all regions of the parameter space. For a Bayesian analysis we need to specify a (log)likelihood function and the prior distribution (i.e. the initial uncertainty) of the input factors. The central object in the <strong>BayesianTools</strong> package is the <code>BayesianSetup</code>. This class, created by calls to <code><a href="https://rdrr.io/pkg/BayesianTools/man/createBayesianSetup.html">createBayesianSetup()</a></code>, contains the information about the model to be fit (likelihood), and the priors for model parameters. In absence of previous data, we specify a uniform distribution between the minimum and maximum values, which in the <strong>BayesianTools</strong> package can be done using function <code><a href="https://rdrr.io/pkg/BayesianTools/man/createUniformPrior.html">createUniformPrior()</a></code>:</p>
-<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">prior</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BayesianTools/man/createUniformPrior.html">createUniformPrior</a></span><span class="op">(</span><span class="va">parMin</span>, <span class="va">parMax</span>, <span class="va">parIni</span><span class="op">)</span>
 <span class="va">mcmc_setup</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BayesianTools/man/createBayesianSetup.html">createBayesianSetup</a></span><span class="op">(</span>likelihood <span class="op">=</span> <span class="va">of_eval</span>, 
                                   prior <span class="op">=</span> <span class="va">prior</span>, 
                                   names <span class="op">=</span> <span class="va">parNames</span><span class="op">)</span></code></pre></div>
 <p>Function <code><a href="https://rdrr.io/pkg/BayesianTools/man/createBayesianSetup.html">createBayesianSetup()</a></code> automatically creates the posterior and various convenience functions for the Markov Chain Monte Carlo (MCMC) samplers. The <code><a href="https://rdrr.io/pkg/BayesianTools/man/runMCMC.html">runMCMC()</a></code> function is the main wrapper for all other implemented MCMC functions. Here we call it with three chains of 3000 iterations each.</p>
-<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mcmc_out</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BayesianTools/man/runMCMC.html">runMCMC</a></span><span class="op">(</span>
   bayesianSetup <span class="op">=</span> <span class="va">mcmc_setup</span>, 
   sampler <span class="op">=</span> <span class="st">"DEzs"</span>,
   settings <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>iterations <span class="op">=</span> <span class="fl">1000</span>, nrChains <span class="op">=</span> <span class="fl">9</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>By default <code><a href="https://rdrr.io/pkg/BayesianTools/man/runMCMC.html">runMCMC()</a></code> uses parallel computation, but the calibration process is nevertheless rather slow.</p>
 <p>A summary function is provided to inspect convergence results and correlation between parameters:</p>
-<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">mcmc_out</span><span class="op">)</span></code></pre></div>
 <pre><code>## Parameter values  759.71375388525 748.202113236463 558.78422896857</code></pre>
 <pre><code>## Problem encountered in the calculation of the likelihood with parameter 759.71375388525748.202113236463558.78422896857
@@ -499,18 +497,18 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 ## T2_68/Z50    -0.884     1.000    -0.066
 ## S1_65/Z50    -0.097    -0.066     1.000</code></pre>
 <p>According to the Gelman-Rubin diagnostic, the convergence can be accepted because the multivariate potential scale reduction factor was ≤ 1.1. We can plot the Markov Chains and the posterior density distribution of parameters that they generate using:</p>
-<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html">plot</a></span><span class="op">(</span><span class="va">mcmc_out</span><span class="op">)</span></code></pre></div>
 <p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-40-1.png" width="633.6"> We can also plot the marginal prior and posterior density distributions for each parameter. In this case, we see a similar <code>Z50</code> distribution for the two trees, which is more informative than the prior distribution. In contrast, the posterior distribution of <code>Z50</code> for the kermes oak remains as uncertain as the prior one. This happens because the LAI value of kermes oak is low, so that it has small influence on soil water dynamics regardless of its root distribution.</p>
-<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/BayesianTools/man/marginalPlot.html">marginalPlot</a></span><span class="op">(</span><span class="va">mcmc_out</span>, prior <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
 <p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-41-1.png" width="633.6"></p>
 <p>Plots can also be produced to display the correlation between parameter values.</p>
-<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/BayesianTools/man/correlationPlot.html">correlationPlot</a></span><span class="op">(</span><span class="va">mcmc_out</span><span class="op">)</span></code></pre></div>
 <p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-42-1.png" width="633.6"> Here it can be observed the large correlation between <code>Z50</code> of the two tree cohorts. Since their LAI values are similar, a similar effect on soil water depletion can be obtained to some extent by exchanging their fine root distribution.</p>
 <p>Posterior model prediction distributions can be obtained if we take samples from the Markov chains and use them to perform simulations (here we use sample size of 99 but a larger value is preferred).</p>
-<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">s</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/BayesianTools/man/getSample.html">getSample</a></span><span class="op">(</span><span class="va">mcmc_out</span>, numSamples <span class="op">=</span> <span class="fl">99</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">s</span><span class="op">)</span></code></pre></div>
 <pre><code>##      T1_54/Z50 T2_68/Z50 S1_65/Z50
@@ -521,27 +519,27 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 ## [5,]  161.8533  641.4018  286.4261
 ## [6,]  641.1469  758.0742  376.1948</code></pre>
 <p>To this aim, <strong>medfate</strong> includes function <code><a href="../reference/optimization.html">multiple_runs()</a></code> that allows running a simulation model with a matrix of parameter values. For example, the following code runs <code><a href="../reference/spwb.html">spwb()</a></code> with all combinations of fine root distribution specified in <code>s</code>.</p>
-<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">MS</span> <span class="op">=</span> <span class="fu"><a href="../reference/optimization.html">multiple_runs</a></span><span class="op">(</span><span class="va">s</span>, x <span class="op">=</span> <span class="va">x1</span>, meteo <span class="op">=</span> <span class="va">examplemeteo</span>,
                    latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <p>Function <code><a href="../reference/optimization.html">multiple_runs()</a></code> determines the model to be called inspecting the class of <code>x</code> (here <code>x1</code> is a <code>spwbInput</code>). Once we have conducted the simulations we can inspect the posterior distribution of several prediction variables, for example total transpiration:</p>
-<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/density.html">density</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">MS</span>, <span class="va">sf_transp</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"Posterior transpiration"</span>, 
      xlab <span class="op">=</span> <span class="st">"Total transpiration (mm)"</span><span class="op">)</span></code></pre></div>
 <p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-45-1.png" width="480"></p>
 <p>or average plant drought stress:</p>
-<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/density.html">density</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">MS</span>, <span class="va">sf_stress</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, 
      xlab <span class="op">=</span> <span class="st">"Average plant stress"</span>, main<span class="op">=</span><span class="st">"Posterior stress"</span><span class="op">)</span></code></pre></div>
 <p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-46-1.png" width="480"></p>
 <p>Finally, we can use object <code>prior</code> to generate another sample under the prior parameter distribution, perform simulations:</p>
-<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">s_prior</span> <span class="op">=</span> <span class="va">prior</span><span class="op">$</span><span class="fu">sampler</span><span class="op">(</span><span class="fl">99</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">s_prior</span><span class="op">)</span><span class="op">&lt;-</span> <span class="va">parNames</span>
 <span class="va">MS_prior</span> <span class="op">=</span> <span class="fu"><a href="../reference/optimization.html">multiple_runs</a></span><span class="op">(</span><span class="va">s_prior</span>, x <span class="op">=</span> <span class="va">x1</span>, meteo <span class="op">=</span> <span class="va">examplemeteo</span>,
                          latitude <span class="op">=</span> <span class="fl">41.82592</span>, elevation <span class="op">=</span> <span class="fl">100</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <p>and compare the prior prediction uncertainty with the posterior prediction uncertainty for the same output variables:</p>
-<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/density.html">density</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">MS_prior</span>, <span class="va">sf_transp</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"Transpiration"</span>, 
      xlab <span class="op">=</span> <span class="st">"Total transpiration (mm)"</span>,
      xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">280</span>,<span class="fl">295</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1.2</span><span class="op">)</span><span class="op">)</span>
@@ -549,7 +547,7 @@ y = g(\mathbf{x}) = g(x_1, x_2, \dots, x_n)
 <span class="fu"><a href="https://rdrr.io/r/graphics/legend.html">legend</a></span><span class="op">(</span><span class="st">"topleft"</span>, legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Prior"</span>, <span class="st">"Posterior"</span><span class="op">)</span>, 
        col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"black"</span>, <span class="st">"red"</span><span class="op">)</span>, lty<span class="op">=</span><span class="fl">1</span>, bty<span class="op">=</span><span class="st">"n"</span><span class="op">)</span></code></pre></div>
 <p><img src="SensitivityCalibration_files/figure-html/unnamed-chunk-48-1.png" width="480"></p>
-<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/sensitivity/man/plot.support.html">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/density.html">density</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">MS_prior</span>, <span class="va">sf_stress</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, main <span class="op">=</span> <span class="st">"Plant stress"</span>, 
      xlab <span class="op">=</span> <span class="st">"Average plant stress"</span>,
      xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">30</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0.3</span><span class="op">)</span><span class="op">)</span>

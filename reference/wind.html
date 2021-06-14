@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.2</span>
       </span>
     </div>
 
@@ -204,7 +204,8 @@
     <div class='dont-index'><p><code><a href='Vertical profiles.html'>vprofile_windExtinction</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'>#Default species parameterization</span>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='co'>#Default species parameterization</span>
 <span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='va'>SpParamsMED</span><span class='op'>)</span>
 
 <span class='co'>#Load example plot plant data</span>
@@ -228,27 +229,8 @@
 
 <span class='co'># canopy turbulence model</span>
 <span class='fu'>wind_canopyTurbulence</span><span class='op'>(</span><span class='va'>zm</span>, <span class='va'>Cx</span>,<span class='va'>h</span>,<span class='va'>d0</span>,<span class='va'>z0</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;    zmid        u       du  epsilon        k        uw
-#&gt; 1   0.5 5.977306 3.229486 1002.700 8.148157 -1.013463
-#&gt; 2   1.0 6.004586 3.229486 1009.079 8.188812 -1.013463
-#&gt; 3   1.5 6.031865 3.229486 1036.810 8.273680 -1.018782
-#&gt; 4   2.0 6.059144 3.229486 1057.987 8.346818 -1.023305
-#&gt; 5   2.5 6.086447 3.231886 1083.021 8.425798 -1.028956
-#&gt; 6   3.0 6.113863 3.242739 1106.786 8.503385 -1.037188
-#&gt; 7   3.5 6.141335 3.247904 1132.276 8.583132 -1.043739
-#&gt; 8   4.0 6.168870 3.253907 1157.596 8.663041 -1.050554
-#&gt; 9   4.5 6.196445 3.257609 1184.075 8.744305 -1.056698
-#&gt; 10  5.0 6.224034 3.258872 1210.798 8.826135 -1.062062
-#&gt; 11  5.5 6.251601 3.256810 1238.471 8.909012 -1.066377
-#&gt; 12  6.0 6.279125 3.252622 1266.616 8.992608 -1.069999
-#&gt; 13  6.5 6.306593 3.247340 1295.648 9.077164 -1.073275
-#&gt; 14  7.0 6.333960 3.237538 1325.294 9.162486 -1.075048
-#&gt; 15  7.5 6.361312 3.236426 1355.860 9.248869 -1.079723
-#&gt; 16  8.0 6.388640 3.234065 1387.153 9.336138 -1.083997
-#&gt; 17  8.5 6.415908 3.228229 1419.357 9.424361 -1.293012
-#&gt; 18  9.0 6.443190 3.229855 1452.370 9.513292 -1.506678
-#&gt; 19  9.5 6.470468 3.229351 1486.274 9.603027 -1.721377
-#&gt; 20 10.0 6.497748 3.229544 1521.059 9.693506 -1.721377</div></pre>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
