@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 2.2.2
+- Dependency 'spdep' removed
+
 # Version 2.2.1
 - Calibrated minimum bioclimatic parameters for recruitment (SpParamsMED)
 - Explicit species input parameters for phenology

@@ -1,7 +1,7 @@
 Package: medfate
 Type: Package
 Title: Mediterranean Forest Simulation
-Version: 2.2.1
+Version: 2.2.2
 Date: 2021-06-08
 Authors@R: c(
 	person('Miquel', 'De Cáceres', role=c('aut','cre'),
@@ -16,8 +16,8 @@ Description: Functions to simulate Mediterranean forest functioning and dynamics
 License: GPL (>= 2)
 URL: https://emf-creaf.github.io/medfate/index.html
 LazyLoad: yes
-Depends: R (>= 3.5.0), sp
-Imports: spdep, ggplot2, methods, httr, jsonlite, meteoland (>= 0.8.1), Rcpp (>= 1.0.6)
+Depends: R (>= 3.5.0)
+Imports: ggplot2, methods, httr, jsonlite, meteoland (>= 0.8.1), Rcpp (>= 1.0.6)
 Suggests: knitr, rmarkdown
 LinkingTo: Rcpp, meteoland
 Encoding: UTF-8
