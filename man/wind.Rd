@@ -59,7 +59,6 @@ Katul GG, Mahrt L, Poggi D, Sanz C (2004) One- and two-equation models for canop
 \code{\link{vprofile_windExtinction}}
 }
 \examples{
-\dontrun{
 #Default species parameterization
 data(SpParamsMED)
 
@@ -84,5 +83,4 @@ Cx = Cd*lad
 
 # canopy turbulence model
 wind_canopyTurbulence(zm, Cx,h,d0,z0)
-}
 }

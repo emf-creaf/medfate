@@ -190,7 +190,7 @@ DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double h
     double dx=dz;
     //  ------ Set the elements of the Tri-diagonal Matrix
     upd=(a1/(dx*dx)+a2/(2.0*dx));
-    dia=(-a1*2.0/(dx*dx)+a3);
+    dia=(a1*(-2.0)/(dx*dx)+a3);
     lod=(a1/(dx*dx)-a2/(2.0*dx));
     for(int i=0;i<N;i++) {
       aa[i]=lod[i];
@@ -218,7 +218,7 @@ DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double h
     dx=dz;
     //  ------ Set the elements of the Tri-diagonal Matrix
     upd=(a1/(dx*dx)+a2/(2.0*dx));
-    dia=(-a1*2.0/(dx*dx)+a3);
+    dia=(a1*(-2.0)/(dx*dx)+a3);
     lod=(a1/(dx*dx)-a2/(2.0*dx));
     for(int i=0;i<N;i++) {
       aa[i]=lod[i];
@@ -255,7 +255,7 @@ DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double h
       dx=dz;
       //  ------ Set the elements of the Tri-diagonal Matrix
       upd=(a1/(dx*dx)+a2/(2.0*dx));
-      dia=(-a1*2.0/(dx*dx)+a3);
+      dia=(a1*(-2.0)/(dx*dx)+a3);
       lod=(a1/(dx*dx)-a2/(2.0*dx));
       for(int i=0;i<N;i++) {
         aa[i]=lod[i];
