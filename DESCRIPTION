@@ -14,7 +14,7 @@ Authors@R: c(
 	person('Nicolas', 'Martin-StPaul', role='ctb'))
 Description: Functions to simulate Mediterranean forest functioning and dynamics using cohort-based description of vegetation [De Caceres et al. (2015) <doi:10.1016/j.agrformet.2015.06.012>; De Caceres et al. (2021) <doi:10.1016/j.agrformet.2020.108233>].
 License: GPL (>= 2)
-URL: https://emf-creaf.github.io/medfate/index.html
+URL: https://github.com/emf-creaf/medfate
 LazyLoad: yes
 Depends: R (>= 3.5.0)
 Imports: sp, ggplot2, methods, httr, jsonlite, meteoland (>= 0.8.1), Rcpp (>= 1.0.6)
@@ -24,3 +24,4 @@ Encoding: UTF-8
 NeedsCompilation: yes
 VignetteBuilder: utils, knitr
 RoxygenNote: 6.1.1
+BugReports: https://github.com/emf-creaf/medfate/issues

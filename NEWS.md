@@ -4,6 +4,7 @@
 
 # Version 2.2.2
 - Dependency 'spdep' removed
+- Bug correction 'windKatul.cpp'
 
 # Version 2.2.1
 - Calibrated minimum bioclimatic parameters for recruitment (SpParamsMED)
