@@ -58,7 +58,6 @@ reference:
   contents:
   - starts_with("defaultSoil")
   - soil
-  - soilgridsParams
   - starts_with("soil_")
 
 - title: Simulation inputs

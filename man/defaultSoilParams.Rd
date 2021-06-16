@@ -32,7 +32,7 @@ A data frame with layers in rows and the following columns (and default values):
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \seealso{
- \code{\link{soil}}, \code{\link{soilgridsParams}}, \code{\link{defaultControl}}, \code{\link{SpParamsMED}}
+ \code{\link{soil}},  \code{\link{defaultControl}}, \code{\link{SpParamsMED}}
 }
 \examples{
 defaultSoilParams(4)

@@ -22,7 +22,7 @@ library(medfate)
 
 ## About this vignette
 
-Any forest water balance model needs information on **climate**, **vegetation** and **soils** of the forest stand to be simulated. Moreover, since `medfate` differentiates between species,  **species-specific parameters** are also needed. This vignette explains data structures required as input to run simulations using the package.
+Any forest water balance model needs information on **climate**, **vegetation** and **soils** of the forest stand to be simulated. Moreover, since `medfate` differentiates between species,  **species-specific parameters** are also needed. This vignette explains data structures required as input to run simulations using the package. Package [medfateutils](https://github.com/emf-creaf/medfateutils) provides functions for creating suitable inputs for simulations with `medfate`.
 
 ## Species-specific parameters
 
@@ -95,7 +95,7 @@ spar = defaultSoilParams(2)
 print(spar)
 ```
 
-where `widths` are soil layer widths in mm; `clay` and `sand` are the percentage of clay and sand, in percent of dry weight, `om` stands for organic matter, `bd` is bulk density (in $g \cdot cm^{-3}$) and `rfc` the percentage of rock fragments. Because soil properties vary strongly at fine spatial scales, ideally soil physical attributes should be measured on samples taken at the forest stand to be simulated. For those users lacking such data, soil properties modelled at larger scales are available via SoilGrids.org (see function `soilgridsParams()`).
+where `widths` are soil layer widths in mm; `clay` and `sand` are the percentage of clay and sand, in percent of dry weight, `om` stands for organic matter, `bd` is bulk density (in $g \cdot cm^{-3}$) and `rfc` the percentage of rock fragments. Because soil properties vary strongly at fine spatial scales, ideally soil physical attributes should be measured on samples taken at the forest stand to be simulated. For those users lacking such data, soil properties modelled at larger scales are available via SoilGrids.org (see function `soilgridsParams()` in package [medfateutils](https://github.com/emf-creaf/medfateutils)).
 
 ### Soil input object
 
