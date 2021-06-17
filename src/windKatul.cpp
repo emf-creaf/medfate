@@ -175,7 +175,7 @@ DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double h
     y[0] = y[1];
     dU = y;
     //  Compute the Reynolds stress
-    uw= -vt*dU;
+    uw= (-1.0)*vt*dU;
     uw[N-1]=uw[N-2];
     uw[0]=uw[1];
     if(model=="k-U") { // Estimate dissipation rate in k-U model
@@ -186,7 +186,7 @@ DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double h
     //   Set up coefficients for Mean Momentum ODE-------------------------------------------
     a1=vt;
     a2=dvt;
-    a3=-Cx * abs(U);
+    a3=(-1.0)*Cx*abs(U);
     double dx=dz;
     //  ------ Set the elements of the Tri-diagonal Matrix
     upd=(a1/(dx*dx)+a2/(2.0*dx));
@@ -214,7 +214,7 @@ DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double h
     //   Set up coefficients for TKE ODE------------------------------------------------------------
     a1=vt;
     a2=dvt;
-    a3=-Bd*abs(U)*Cx;
+    a3=(-1.0)*Bd*abs(U)*Cx;
     dx=dz;
     //  ------ Set the elements of the Tri-diagonal Matrix
     upd=(a1/(dx*dx)+a2/(2.0*dx));
@@ -251,7 +251,7 @@ DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double h
       }
       a1=vt/Pr;
       a2=dvt/Pr;
-      a3=(-Ce2*epsilon/k);
+      a3=((-1.0)*Ce2*epsilon/k);
       dx=dz;
       //  ------ Set the elements of the Tri-diagonal Matrix
       upd=(a1/(dx*dx)+a2/(2.0*dx));
