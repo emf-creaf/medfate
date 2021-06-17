@@ -3,7 +3,7 @@
 -------------------------------
 
 # Version 2.2.3
-- Function soilgridsParams() moved to package 'medfateutils' available at GitHub (emf-creaf/medfateutils).
+- Functions soilgridsParams() and forest_map*Tables() moved to package 'medfateutils' available at GitHub (emf-creaf/medfateutils).
 
 # Version 2.2.2
 - Dependency 'spdep' removed
