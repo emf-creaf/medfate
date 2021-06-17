@@ -69,7 +69,7 @@ emptyforest(ID="", patchsize=10000, ntree = 0, nshrub = 0)
 Miquel De \enc{Cáceres}{Caceres} Ainsa, CREAF
 }
 \seealso{
- \code{\link{exampleforestMED}}, \code{\link{forest_mapWoodyTables}}
+ \code{\link{exampleforestMED}}, \code{\link{forest_mergeTrees}}
 }
 \examples{
 data(exampleforestMED)
