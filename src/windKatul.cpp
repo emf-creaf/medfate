@@ -116,6 +116,7 @@ IntegerVector which(LogicalVector l) {
 // [[Rcpp::export("wind_canopyTurbulenceModel")]]
 DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double hm, double d0, double z0,
                                      String model = "k-epsilon") {
+  if(zm.size() != Cx.size()) stop("Height and effective drag vectors should have the same length!");
   int N=zm.size();
   double zmax=max(zm);
   double dz=zm[1]-zm[0];
@@ -123,7 +124,7 @@ DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double h
   double Ulow=0.0;
   double Uhigh=(1.0/kv)*log((zmax-d0)/z0);
   NumericVector U=linspace(Ulow,Uhigh,N);
-  
+
   double khigh=0.5*(pow(AAu,2.0)+pow(AAv,2.0)+pow(AAw,2.0));
   double klow=0.001*khigh;
   NumericVector k=linspace(klow,khigh,N);
@@ -149,11 +150,11 @@ DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double h
   NumericVector vt(N); //viscosity
   NumericVector dvt(N); //derivative
   NumericVector dU(N); //derivative
-  NumericVector upd, dia, lod;
+  NumericVector upd(N), dia(N), lod(N);
   NumericVector aa(N), bb(N), cc(N), dd(N);
   NumericVector Su(N),Sk(N),Se1(N),Se2(N); 
-  NumericVector a1, a2, a3;
-  NumericVector Un, Kn, uw;
+  NumericVector a1(N), a2(N), a3(N);
+  NumericVector uw(N);
   double eps1=0.1;
   double maxerr=9999.9;
   
@@ -161,21 +162,27 @@ DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double h
   while(maxerr>0.1) {
     // Viscocity (and derivative) Model
     for(int i=0;i<N;i++) {
-      vt[i]=pow(Cu,1.0/4.0)*Lmix[i]*sqrt(abs(k[i])); 
+      vt[i]=pow(Cu,1.0/4.0)*Lmix[i]*sqrt(std::abs(k[i])); 
     }
     for(int i=1;i<N;i++) {
       y[i] = (vt[i] - vt[i-1])/dz;
     }
     y[0] = y[1];
-    dvt = y;
+    for(int i=1;i<N;i++) {
+      dvt[i] = y[i];
+    }
     //  dU/dz
     for(int i=1;i<N;i++) {
       y[i] = (U[i] - U[i-1])/dz;
     }
     y[0] = y[1];
-    dU = y;
+    for(int i=0;i<N;i++) {
+      dU[i] = y[i];
+    }
     //  Compute the Reynolds stress
-    uw= (-1.0)*vt*dU;
+    for(int i=0;i<N;i++) {
+      uw[i]= (-1.0)*vt[i]*dU[i];
+    }
     uw[N-1]=uw[N-2];
     uw[0]=uw[1];
     if(model=="k-U") { // Estimate dissipation rate in k-U model
@@ -184,15 +191,17 @@ DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double h
       }
     }
     //   Set up coefficients for Mean Momentum ODE-------------------------------------------
-    a1=vt;
-    a2=dvt;
-    a3=(-1.0)*Cx*abs(U);
+    for(int i=0;i<N;i++) {
+      a1[i]=vt[i];
+      a2[i]=dvt[i];
+      a3[i]=(-1.0)*Cx[i]*std::abs(U[i]);
+    }
     double dx=dz;
     //  ------ Set the elements of the Tri-diagonal Matrix
-    upd=(a1/(dx*dx)+a2/(2.0*dx));
-    dia=(a1*(-2.0)/(dx*dx)+a3);
-    lod=(a1/(dx*dx)-a2/(2.0*dx));
     for(int i=0;i<N;i++) {
+      upd[i]=(a1[i]/(dx*dx)+a2[i]/(2.0*dx));
+      dia[i]=(a1[i]*(-2.0)/(dx*dx)+a3[i]);
+      lod[i]=(a1[i]/(dx*dx)-a2[i]/(2.0*dx));
       aa[i]=lod[i];
       bb[i]=dia[i];
       cc[i]=upd[i];
@@ -207,24 +216,27 @@ DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double h
     cc[N-1]=0.0;
     dd[N-1]=Uhigh;
     //   Use the Thomas Algorithm to solve the tridiagonal matrix
-    Un=thomas(aa,bb,cc,dd);
+    NumericVector Un=thomas(aa,bb,cc,dd);
     //   Use successive relaxations in iterations
-    U=abs(eps1*Un+(1.0-eps1)*U);
-    
+    for(int i=0;i<N;i++) {
+      U[i]=std::abs(eps1*Un[i]+(1.0-eps1)*U[i]);
+    }
     //   Set up coefficients for TKE ODE------------------------------------------------------------
-    a1=vt;
-    a2=dvt;
-    a3=(-1.0)*Bd*abs(U)*Cx;
+    for(int i=0;i<N;i++) {
+      a1[i]=vt[i];
+      a2[i]=dvt[i];
+      a3[i]=(-1.0)*Bd*std::abs(U[i])*Cx[i];
+    }
     dx=dz;
     //  ------ Set the elements of the Tri-diagonal Matrix
-    upd=(a1/(dx*dx)+a2/(2.0*dx));
-    dia=(a1*(-2.0)/(dx*dx)+a3);
-    lod=(a1/(dx*dx)-a2/(2.0*dx));
     for(int i=0;i<N;i++) {
+      upd[i]=(a1[i]/(dx*dx)+a2[i]/(2.0*dx));
+      dia[i]=(a1[i]*(-2.0)/(dx*dx)+a3[i]);
+      lod[i]=(a1[i]/(dx*dx)-a2[i]/(2.0*dx));
       aa[i]=lod[i];
       bb[i]=dia[i];
       cc[i]=upd[i];
-      dd[i] = epsilon[i]-Cx[i]*Bp*pow(abs(U[i]),3.0)-vt[i]*pow(dU[i],2.0);
+      dd[i] = epsilon[i]-Cx[i]*Bp*pow(std::abs(U[i]),3.0)-vt[i]*pow(dU[i],2.0);
     }
     aa[0]=0.0;
     bb[0]=1.0;
@@ -236,10 +248,12 @@ DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double h
     dd[N-1]=khigh;
 
     //   ------Use the Thomas Algorithm to solve the tridiagonal matrix
-    Kn=thomas(aa,bb,cc,dd);
+    NumericVector Kn=thomas(aa,bb,cc,dd);
     maxerr=max(abs(Kn-k));
     // -----Use successive relaxations in iterations
-    k=abs(eps1*Kn+(1.0-eps1)*k);
+    for(int i=0;i<N;i++){
+      k[i]=std::abs(eps1*Kn[i]+(1.0-eps1)*k[i]);
+    }
     
     if(model=="k-epsilon") {
       //   Set up coefficients for dissipation ODE ---------------------------------------------------------------------------------
@@ -249,15 +263,17 @@ DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double h
         Se1[i]=(Ce4*epsilon[i]/k[i])*Sk[i];
         Se2[i]=epsilon[i]*Cx[i]*((Ce4*Bp*pow(U[i],3.0)/k[i])-Bd*Ce5*U[i]);
       }
-      a1=vt/Pr;
-      a2=dvt/Pr;
-      a3=((-1.0)*Ce2*epsilon/k);
+      for(int i=0;i<N;i++){
+        a1[i]=vt[i]/Pr;
+        a2[i]=dvt[i]/Pr;
+        a3[i]=((-1.0)*Ce2*epsilon[i]/k[i]);
+      }
       dx=dz;
       //  ------ Set the elements of the Tri-diagonal Matrix
-      upd=(a1/(dx*dx)+a2/(2.0*dx));
-      dia=(a1*(-2.0)/(dx*dx)+a3);
-      lod=(a1/(dx*dx)-a2/(2.0*dx));
       for(int i=0;i<N;i++) {
+        upd[i]=(a1[i]/(dx*dx)+a2[i]/(2.0*dx));
+        dia[i]=(a1[i]*(-2.0)/(dx*dx)+a3[i]);
+        lod[i]=(a1[i]/(dx*dx)-a2[i]/(2.0*dx));
         aa[i]=lod[i];
         bb[i]=dia[i];
         cc[i]=upd[i];
@@ -274,7 +290,9 @@ DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double h
       //   Use the Thomas Algorithm to solve the tridiagonal matrix
       NumericVector epsilonn=thomas(aa,bb,cc,dd);
       //   Use successive relaxations in iterations
-      epsilon=abs(eps1*epsilonn+(1.0-eps1)*epsilon);
+      for(int i=0;i<N;i++) {
+        epsilon[i]=std::abs(eps1*epsilonn[i]+(1.0-eps1)*epsilon[i]);
+      }
     }
     cnt++;
     if(cnt==100) stop("too many iterations");
@@ -297,10 +315,13 @@ DataFrame windCanopyTurbulenceModel(NumericVector zm, NumericVector Cx, double h
 // [[Rcpp::export("wind_canopyTurbulence")]]
 DataFrame windCanopyTurbulence(NumericVector zmid, NumericVector LAD, double canopyHeight,
                                 double u, double windMeasurementHeight = 200, String model = "k-epsilon") {
+  
   //z - height vector in m
-  NumericVector zm = zmid/100.0;
+  NumericVector zm(zmid.size());
+  for(int i=0;i<zmid.size();i++) zm[i]= zmid[i]/100.0;
   //Effective drag = Cd x leaf area density
-  NumericVector Cx = LAD*0.2; 
+  NumericVector Cx(LAD.size());
+  for(int i=0;i<LAD.size();i++) Cx[i]= LAD[i]*0.2;
   //hm - canopy height (m)
   double hm = (canopyHeight/100.0);
   //d0 - displacement height (m)

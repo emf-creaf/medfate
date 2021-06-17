@@ -75,12 +75,13 @@ z = seq(50,1000, by=50)
 zm = z/100 # (in m)
 
 # Leaf area density
-lad = vprofile_leafAreaDensity(exampleforestMED, SpParamsMED, draw = FALSE, z = z)
+lad = vprofile_leafAreaDensity(exampleforestMED, SpParamsMED, draw = FALSE,
+                               z = c(0,z))
 
 # Effective drag
 Cd = 0.2
 Cx = Cd*lad
 
 # canopy turbulence model
-wind_canopyTurbulence(zm, Cx,h,d0,z0)
+wind_canopyTurbulenceModel(zm, Cx,h,d0,z0)
 }
