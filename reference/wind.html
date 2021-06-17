@@ -225,35 +225,36 @@
 <span class='va'>zm</span> <span class='op'>=</span> <span class='va'>z</span><span class='op'>/</span><span class='fl'>100</span> <span class='co'># (in m)</span>
 
 <span class='co'># Leaf area density</span>
-<span class='va'>lad</span> <span class='op'>=</span> <span class='fu'><a href='Vertical profiles.html'>vprofile_leafAreaDensity</a></span><span class='op'>(</span><span class='va'>exampleforestMED</span>, <span class='va'>SpParamsMED</span>, draw <span class='op'>=</span> <span class='cn'>FALSE</span>, z <span class='op'>=</span> <span class='va'>z</span><span class='op'>)</span>
+<span class='va'>lad</span> <span class='op'>=</span> <span class='fu'><a href='Vertical profiles.html'>vprofile_leafAreaDensity</a></span><span class='op'>(</span><span class='va'>exampleforestMED</span>, <span class='va'>SpParamsMED</span>, draw <span class='op'>=</span> <span class='cn'>FALSE</span>,
+                               z <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='va'>z</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># Effective drag</span>
 <span class='va'>Cd</span> <span class='op'>=</span> <span class='fl'>0.2</span>
 <span class='va'>Cx</span> <span class='op'>=</span> <span class='va'>Cd</span><span class='op'>*</span><span class='va'>lad</span>
 
 <span class='co'># canopy turbulence model</span>
-<span class='fu'>wind_canopyTurbulence</span><span class='op'>(</span><span class='va'>zm</span>, <span class='va'>Cx</span>,<span class='va'>h</span>,<span class='va'>d0</span>,<span class='va'>z0</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;    zmid        u       du  epsilon        k        uw
-#&gt; 1   0.5 5.977306 3.229486 1002.700 8.148157 -1.013463
-#&gt; 2   1.0 6.004586 3.229486 1009.079 8.188812 -1.013463
-#&gt; 3   1.5 6.031865 3.229486 1036.810 8.273680 -1.018782
-#&gt; 4   2.0 6.059144 3.229486 1057.987 8.346818 -1.023305
-#&gt; 5   2.5 6.086447 3.231886 1083.021 8.425798 -1.028956
-#&gt; 6   3.0 6.113863 3.242739 1106.786 8.503385 -1.037188
-#&gt; 7   3.5 6.141335 3.247904 1132.276 8.583132 -1.043739
-#&gt; 8   4.0 6.168870 3.253907 1157.596 8.663041 -1.050554
-#&gt; 9   4.5 6.196445 3.257609 1184.075 8.744305 -1.056698
-#&gt; 10  5.0 6.224034 3.258872 1210.798 8.826135 -1.062062
-#&gt; 11  5.5 6.251601 3.256810 1238.471 8.909012 -1.066377
-#&gt; 12  6.0 6.279125 3.252622 1266.616 8.992608 -1.069999
-#&gt; 13  6.5 6.306593 3.247340 1295.648 9.077164 -1.073275
-#&gt; 14  7.0 6.333960 3.237538 1325.294 9.162486 -1.075048
-#&gt; 15  7.5 6.361312 3.236426 1355.860 9.248869 -1.079723
-#&gt; 16  8.0 6.388640 3.234065 1387.153 9.336138 -1.083997
-#&gt; 17  8.5 6.415908 3.228229 1419.357 9.424361 -1.293012
-#&gt; 18  9.0 6.443190 3.229855 1452.370 9.513292 -1.506678
-#&gt; 19  9.5 6.470468 3.229351 1486.274 9.603027 -1.721377
-#&gt; 20 10.0 6.497748 3.229544 1521.059 9.693506 -1.721377</div></pre>
+<span class='fu'>wind_canopyTurbulenceModel</span><span class='op'>(</span><span class='va'>zm</span>, <span class='va'>Cx</span>,<span class='va'>h</span>,<span class='va'>d0</span>,<span class='va'>z0</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;      z1        U1        dU1    epsilon1        k1          uw1 Lmix1
+#&gt; 1   0.5 0.7994446 0.01790035 0.002780826 0.1998220 -0.003528914 1.056
+#&gt; 2   1.0 0.8074997 0.01790035 0.003535942 0.2089720 -0.003528914 1.056
+#&gt; 3   1.5 0.8213925 0.02934599 0.004513764 0.2240592 -0.005999961 1.056
+#&gt; 4   2.0 0.8349945 0.02875362 0.005426287 0.2441546 -0.006143946 1.056
+#&gt; 5   2.5 0.8483115 0.02818244 0.006247171 0.2703080 -0.006341512 1.056
+#&gt; 6   3.0 0.8652856 0.03537784 0.007175833 0.3046743 -0.008455399 1.056
+#&gt; 7   3.5 0.9041935 0.07862821 0.009517822 0.3580301 -0.020365097 1.056
+#&gt; 8   4.0 0.9771912 0.14598695 0.014477382 0.4412919 -0.041925651 1.056
+#&gt; 9   4.5 1.0950272 0.23481677 0.023891873 0.5697963 -0.076474030 1.056
+#&gt; 10  5.0 1.2681311 0.34463435 0.040870251 0.7654717 -0.129783417 1.056
+#&gt; 11  5.5 1.5046077 0.47095163 0.069941244 1.0547030 -0.207713164 1.056
+#&gt; 12  6.0 1.8079493 0.60463699 0.116195661 1.4614795 -0.313356884 1.056
+#&gt; 13  6.5 2.1755252 0.73341529 0.182940675 1.9963620 -0.443697175 1.056
+#&gt; 14  7.0 2.5989113 0.84555837 0.268595783 2.6468237 -0.588579904 1.056
+#&gt; 15  7.5 3.0421256 0.88601071 0.354401695 3.3169899 -0.690204886 1.056
+#&gt; 16  8.0 3.5005602 0.91689354 0.433541821 3.9861676 -0.782909433 1.056
+#&gt; 17  8.5 3.9728096 0.94473578 0.497793586 4.6365250 -1.034750231 1.256
+#&gt; 18  9.0 4.3537893 0.76270189 0.520671991 5.0650620 -1.012246840 1.456
+#&gt; 19  9.5 4.6747212 0.64274772 0.530648531 5.3798228 -1.000000000 1.656
+#&gt; 20 10.0 4.9525037 0.55650239 0.538793103 5.6312500 -1.000000000 1.856</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
