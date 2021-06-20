@@ -54,6 +54,23 @@ devtools::install_github("emf-creaf/medfate",
     found at the *reference book*
     <https://emf-creaf.github.io/medfatebook/index.html>.
 
+## Companion packages
+
+During the development of **medfate** some functions have been
+originally placed there and then moved to more specialized packages
+which no evolve together with **medfate**:
+
+-   Package [**meteoland**](https://github.com/emf-creaf/meteoland)
+    allows generating daily weather input for simulation models in
+    **medfate**.
+-   Package [**medfateland**](https://github.com/emf-creaf/medfateland)
+    extends **medfate** by allowing simulations to be performed in a
+    spatially explicit context.
+-   Package
+    [**medfateutils**](https://github.com/emf-creaf/medfateutils)
+    provides functions to help initializing vegetation, soil and species
+    parameter inputs for **medfate** simulation functions.
+
 ## References
 
 -   De Cáceres M, Martínez-Vilalta J, Coll L, Llorens P, Casals P,
