@@ -1,5 +1,6 @@
 \encoding{UTF-8}
 \name{SpParams}
+\alias{SpParams}
 \alias{SpParamsMED}
 \alias{SpParamsUS}
 \docType{data}
