@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
       </span>
     </div>
 
@@ -76,7 +76,7 @@
       <h1 data-toc-skip>Preparing inputs</h1>
                         <h4 class="author">Miquel De Caceres</h4>
             
-            <h4 class="date">2021-06-20</h4>
+            <h4 class="date">2021-06-21</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/emf-creaf/medfate/blob/master/vignettes/PreparingInputs.Rmd"><code>vignettes/PreparingInputs.Rmd</code></a></small>
       <div class="hidden name"><code>PreparingInputs.Rmd</code></div>
@@ -341,42 +341,42 @@
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">control</span> <span class="op">=</span> <span class="fu"><a href="../reference/defaultControl.html">defaultControl</a></span><span class="op">(</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">control</span><span class="op">)</span></code></pre></div>
-<pre><code>##  [1] "modifyInput"                         "verbose"                            
-##  [3] "subdailyResults"                     "transpirationMode"                  
-##  [5] "soilFunctions"                       "defaultWindSpeed"                   
-##  [7] "snowpack"                            "leafPhenology"                      
-##  [9] "rockyLayerDrainage"                  "unlimitedSoilWater"                 
-## [11] "plantWaterPools"                     "unfoldingDD"                        
-## [13] "verticalLayerSize"                   "windMeasurementHeight"              
-## [15] "cavitationRefill"                    "ndailysteps"                        
-## [17] "nsubsteps"                           "cochard"                            
-## [19] "capacitance"                         "taper"                              
-## [21] "multiLayerBalance"                   "gainModifier"                       
-## [23] "costModifier"                        "costWater"                          
-## [25] "klatstem"                            "klatleaf"                           
-## [27] "numericParams"                       "fracLeafResistance"                 
-## [29] "fracRootResistance"                  "averageFracRhizosphereResistance"   
-## [31] "Catm"                                "thermalCapacityLAI"                 
-## [33] "boundaryLayerSize"                   "refillMaximumRate"                  
-## [35] "allowDessication"                    "allowStarvation"                    
-## [37] "allowDefoliation"                    "sinkLimitation"                     
-## [39] "shrubDynamics"                       "allocationStrategy"                 
-## [41] "nonStomatalPhotosynthesisLimitation" "phloemConductanceFactor"            
-## [43] "nonSugarConcentration"               "equilibriumOsmoticConcentration"    
-## [45] "minimumRelativeSugarForGrowth"       "respirationRates"                   
-## [47] "turnoverRates"                       "constructionCosts"                  
-## [49] "maximumRelativeGrowthRates"          "mortalityMode"                      
-## [51] "mortalityBaselineRate"               "mortalityRelativeSugarThreshold"    
-## [53] "mortalityRWCThreshold"               "recruitmentMode"                    
-## [55] "removeDeadCohorts"                   "minimumCohortDensity"               
-## [57] "seedRain"                            "seedProductionTreeHeight"           
-## [59] "seedProductionShrubHeight"           "minTempRecr"                        
-## [61] "minMoistureRecr"                     "minFPARRecr"                        
-## [63] "recrTreeDBH"                         "recrTreeDensity"                    
-## [65] "recrTreeHeight"                      "recrShrubCover"                     
-## [67] "recrShrubHeight"                     "recrTreeZ50"                        
-## [69] "recrShrubZ50"                        "recrTreeZ95"                        
-## [71] "recrShrubZ95"</code></pre>
+<pre><code>##  [1] "modifyInput"                         "fillMissingSpParams"                
+##  [3] "verbose"                             "subdailyResults"                    
+##  [5] "transpirationMode"                   "soilFunctions"                      
+##  [7] "defaultWindSpeed"                    "snowpack"                           
+##  [9] "leafPhenology"                       "rockyLayerDrainage"                 
+## [11] "unlimitedSoilWater"                  "plantWaterPools"                    
+## [13] "unfoldingDD"                         "verticalLayerSize"                  
+## [15] "windMeasurementHeight"               "cavitationRefill"                   
+## [17] "ndailysteps"                         "nsubsteps"                          
+## [19] "cochard"                             "capacitance"                        
+## [21] "taper"                               "multiLayerBalance"                  
+## [23] "gainModifier"                        "costModifier"                       
+## [25] "costWater"                           "klatstem"                           
+## [27] "klatleaf"                            "numericParams"                      
+## [29] "fracLeafResistance"                  "fracRootResistance"                 
+## [31] "averageFracRhizosphereResistance"    "Catm"                               
+## [33] "thermalCapacityLAI"                  "boundaryLayerSize"                  
+## [35] "refillMaximumRate"                   "allowDessication"                   
+## [37] "allowStarvation"                     "allowDefoliation"                   
+## [39] "sinkLimitation"                      "shrubDynamics"                      
+## [41] "allocationStrategy"                  "nonStomatalPhotosynthesisLimitation"
+## [43] "phloemConductanceFactor"             "nonSugarConcentration"              
+## [45] "equilibriumOsmoticConcentration"     "minimumRelativeSugarForGrowth"      
+## [47] "respirationRates"                    "turnoverRates"                      
+## [49] "constructionCosts"                   "maximumRelativeGrowthRates"         
+## [51] "mortalityMode"                       "mortalityBaselineRate"              
+## [53] "mortalityRelativeSugarThreshold"     "mortalityRWCThreshold"              
+## [55] "recruitmentMode"                     "removeDeadCohorts"                  
+## [57] "minimumCohortDensity"                "seedRain"                           
+## [59] "seedProductionTreeHeight"            "seedProductionShrubHeight"          
+## [61] "minTempRecr"                         "minMoistureRecr"                    
+## [63] "minFPARRecr"                         "recrTreeDBH"                        
+## [65] "recrTreeDensity"                     "recrTreeHeight"                     
+## [67] "recrShrubCover"                      "recrShrubHeight"                    
+## [69] "recrTreeZ50"                         "recrShrubZ50"                       
+## [71] "recrTreeZ95"                         "recrShrubZ95"</code></pre>
 <p>These parameters should normally be left to their default value under their effect on simulations is fully understood.</p>
 </div>
 <div id="input-objects-for-simulation-functions" class="section level2">

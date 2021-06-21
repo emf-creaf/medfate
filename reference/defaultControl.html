@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Default control parameters for models — defaultControl • medfate</title>
+<title>Default simulation control parameters for models — defaultControl • medfate</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Default control parameters for models — defaultControl" />
+<meta property="og:title" content="Default simulation control parameters for models — defaultControl" />
 <meta property="og:description" content="Creates a list with global default parameters for simulation models." />
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">medfate</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.2.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2.3.0</span>
       </span>
     </div>
 
@@ -114,7 +114,7 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Default control parameters for models</h1>
+    <h1>Default simulation control parameters for models</h1>
     
     <div class="hidden name"><code>defaultControl.Rd</code></div>
     </div>
@@ -143,6 +143,7 @@
 <li><p><b>General</b>:</p><ul>
 <li><p><code>verbose (=TRUE)</code>: Boolean flag to indicate console output during calculations. In function <code>fordyn</code> <code>verbose</code> is always set to FALSE.</p></li>
 <li><p><code>modifyInput (=TRUE)</code>: Boolean flag to indicate that simulations will modify input object. If set to FALSE, simulations will not modify the input R object but return the current (modified) state variables within the output. In function <code>fordyn</code> <code>modifyInput</code> is always set to FALSE.</p></li>
+<li><p><code>fillMissingSpParams (=TRUE)</code>: Boolean flag to indicate that functions <code><a href='modelInput.html'>spwbInput</a></code> and <code><a href='modelInput.html'>growthInput</a></code> should provide estimates for functional parameters if these are lacking in the species parameter table <code>SpParams</code>. Note that if <code>fillMissingSpParams</code> is set to <code>FALSE</code> then simulations may fail if the user does not provide values for required parameters.</p></li>
 <li><p><code>subdailyResults (=FALSE)</code>: Boolean flag to force subdaily results to be stored (as a list called 'subdaily' of <code><a href='spwb_day.html'>spwb_day</a></code> objects, one by simulated date) in calls to <code><a href='spwb.html'>spwb</a></code>. In function <code>fordyn</code> <code>subdailyResults</code> is always set to FALSE.</p></li>
 </ul><p><b>Water balance</b>:</p><ul>
 <li><p><code>transpirationMode (="Granier")</code>: Transpiration model (either 'Granier' or 'Sperry'). See <code><a href='modelInput.html'>spwbInput</a></code>.</p></li>
