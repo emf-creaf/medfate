@@ -67,6 +67,33 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams, bool fillMissingS
   return(paramsPhenologydf);
 }
 
+DataFrame paramsInterception(DataFrame above, DataFrame SpParams, List control) {
+  IntegerVector SP = above["SP"];
+  int numCohorts = SP.size();
+  
+  String transpirationMode = control["transpirationMode"];
+  bool fillMissingSpParams = control["fillMissingSpParams"];
+  
+  NumericVector alphaSWR = speciesNumericParameter(SP, SpParams, "alphaSWR");
+  NumericVector gammaSWR = speciesNumericParameter(SP, SpParams, "gammaSWR");
+  NumericVector kPAR = speciesNumericParameter(SP, SpParams, "kPAR");
+  NumericVector g = speciesNumericParameter(SP, SpParams, "g");
+  
+  DataFrame paramsInterceptiondf;
+  if(transpirationMode=="Granier") {
+    paramsInterceptiondf = DataFrame::create(_["kPAR"] = kPAR, 
+                                             _["g"] = g);
+  } else {
+    paramsInterceptiondf = DataFrame::create(_["alphaSWR"] = alphaSWR,
+                                             _["gammaSWR"] = gammaSWR, 
+                                             _["kPAR"] = kPAR, 
+                                             _["g"] = g);
+  }
+  paramsInterceptiondf.attr("row.names") = above.attr("row.names");
+  return(paramsInterceptiondf);
+}
+
+
 DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams, bool fillMissingSpParams) {
   IntegerVector SP = above["SP"];
   int numCohorts = SP.size();
@@ -91,7 +118,7 @@ DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams, bool fillMissingSpP
   
   if(fillMissingSpParams) {
     for(int c=0;c<numCohorts;c++){ //default values for missing data
-      if(NumericVector::is_na(WoodDensity[c])) WoodDensity[c] = 0652;
+      if(NumericVector::is_na(WoodDensity[c])) WoodDensity[c] = 0.652;
       if(NumericVector::is_na(LeafDensity[c])) LeafDensity[c] = 0.7;
       if(NumericVector::is_na(FineRootDensity[c])) FineRootDensity[c] = 0.165; 
       if(NumericVector::is_na(conduit2sapwood[c])) {
@@ -179,7 +206,8 @@ DataFrame paramsTranspirationGranier(DataFrame above,  DataFrame SpParams, bool 
   
   if(fillMissingSpParams) {
     for(int i=0;i<SP.size();i++) {
-      if(NumericVector::is_na(WUE[i])) WUE[i] = 4;
+      if(NumericVector::is_na(WUE[i])) WUE[i] = 4.0;
+      if(NumericVector::is_na(pRootDisc[i])) pRootDisc[i] = 0.0;
     }
   }
   DataFrame paramsTranspirationdf = DataFrame::create(_["Tmax_LAI"] = Tmax_LAI,
@@ -236,12 +264,14 @@ DataFrame paramsTranspirationSperry(DataFrame above, List soil, DataFrame SpPara
   
   if(fillMissingSpParams) {
     for(int c=0;c<numCohorts;c++){
+      if(NumericVector::is_na(pRootDisc[c])) pRootDisc[c] = 0.0;
+      
       if(NumericVector::is_na(Kmax_stemxylem[c])) {
         // From: Maherali H, Pockman W, Jackson R (2004) Adaptive variation in the vulnerability of woody plants to xylem cavitation. Ecology 85:2184–2199
         if(Group[c]=="Angiosperm") {
-          if((GrowthForm[c]=="Shrub") && (phenoType[c] == "winter-deciduous")) {
+          if((GrowthForm[c]=="Shrub") && (phenoType[c] == "winter-deciduous" | phenoType[c] == "winter-semideciduous")) {
             Kmax_stemxylem[c] = 1.55; //Angiosperm deciduous shrub
-          } else if((GrowthForm[c]=="Tree" || GrowthForm[c]=="Tree/Shrub") && (phenoType[c] == "winter-deciduous")) {
+          } else if((GrowthForm[c]=="Tree" | GrowthForm[c]=="Tree/Shrub") && (phenoType[c] == "winter-deciduous" | phenoType[c] == "winter-semideciduous")) {
             Kmax_stemxylem[c] = 1.58; //Angiosperm winter-deciduous tree
           } else { 
             Kmax_stemxylem[c] = 2.43; //Angiosperm evergreen tree
@@ -263,9 +293,9 @@ DataFrame paramsTranspirationSperry(DataFrame above, List soil, DataFrame SpPara
         double psi50 = NA_REAL;
         // From: Maherali H, Pockman W, Jackson R (2004) Adaptive variation in the vulnerability of woody plants to xylem cavitation. Ecology 85:2184–2199
         if(Group[c]=="Angiosperm") {
-          if((GrowthForm[c]=="Shrub") && (phenoType[c] != "winter-deciduous")) {
+          if((GrowthForm[c]=="Shrub") && (phenoType[c] != "winter-deciduous") && (phenoType[c] != "winter-semideciduous")) {
             psi50 = -5.09; //Angiosperm evergreen shrub
-          } else if((GrowthForm[c]!="Shrub") && (phenoType[c] == "winter-deciduous")) {
+          } else if((GrowthForm[c]!="Shrub") && (phenoType[c] == "winter-deciduous" | phenoType[c] == "winter-semideciduous")) {
             psi50 = -2.34; //Angiosperm winter-deciduous tree
           } else { 
             psi50 = -1.51; //Angiosperm evergreen tree
@@ -283,7 +313,7 @@ DataFrame paramsTranspirationSperry(DataFrame above, List soil, DataFrame SpPara
         if(NumericVector::is_na(VCstem_d[c])) VCstem_d[c] = par["d"];
       }
       
-      //Default vulnerability curve parameters if missing
+      //Default root vulnerability curve parameters if missing
       if(NumericVector::is_na(VCroot_d[c]) | NumericVector::is_na(VCroot_c[c])) {
         double psi50stem = VCstem_d[c]*pow(0.6931472,1.0/VCstem_c[c]);
         double psi50root = 0.742*psi50stem + 0.4892; //Regression using data from Bartlett et al. 2016
@@ -565,6 +595,8 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
       if(NumericVector::is_na(RERleaf[c])) RERleaf[c] = RERleaf_default;
       if(NumericVector::is_na(RERsapwood[c])) RERsapwood[c] = RERsapwood_default;
       if(NumericVector::is_na(RERfineroot[c])) RERfineroot[c] = RERfineroot_default;
+      
+      if(NumericVector::is_na(WoodC[c])) WoodC[c] = 0.5;
     }
   }
   
@@ -832,10 +864,6 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
   String soilFunctions = control["soilFunctions"]; 
   if((soilFunctions!="SX") & (soilFunctions!="VG")) stop("Wrong soil functions ('soilFunctions' should be either 'SX' or 'VG')");
   
-  NumericVector alphaSWR = speciesNumericParameter(SP, SpParams, "alphaSWR");
-  NumericVector gammaSWR = speciesNumericParameter(SP, SpParams, "gammaSWR");
-  NumericVector kPAR = speciesNumericParameter(SP, SpParams, "kPAR");
-  NumericVector g = speciesNumericParameter(SP, SpParams, "g");
   int numCohorts = SP.size();
   for(int c=0;c<numCohorts;c++){
     if(NumericVector::is_na(CR[c])) CR[c] = 0.5; //PATCH TO AVOID MISSING VALUES!!!!
@@ -856,22 +884,14 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
   
   DataFrame paramsAnatomydf;
   DataFrame paramsTranspirationdf;
-  DataFrame paramsInterceptiondf;
   if(transpirationMode=="Granier") {
     paramsAnatomydf = DataFrame::create();
     paramsTranspirationdf = paramsTranspirationGranier(above,SpParams, fillMissingSpParams);
-    paramsInterceptiondf = DataFrame::create(_["kPAR"] = kPAR, 
-                                             _["g"] = g);
   } else {
     paramsAnatomydf = paramsAnatomy(above, SpParams, fillMissingSpParams);
     paramsTranspirationdf = paramsTranspirationSperry(above, soil, SpParams, paramsAnatomydf, control);
-    paramsInterceptiondf = DataFrame::create(_["alphaSWR"] = alphaSWR,
-                                             _["gammaSWR"] = gammaSWR, 
-                                             _["kPAR"] = kPAR, 
-                                             _["g"] = g);
   }
-  paramsInterceptiondf.attr("row.names") = above.attr("row.names");
-  
+
   List below = paramsBelow(above, Z50, Z95, soil, 
                            paramsAnatomydf, paramsTranspirationdf, control);
   List belowLayers = below["belowLayers"];
@@ -887,7 +907,7 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
                          _["below"] = belowdf,
                          _["belowLayers"] = belowLayers,
                          _["paramsPhenology"] = paramsPhenology(above, SpParams, fillMissingSpParams),
-                         _["paramsInterception"] = paramsInterceptiondf,
+                         _["paramsInterception"] = paramsInterception(above, SpParams, control),
                          _["paramsTranspiration"] = paramsTranspirationdf,
                          _["internalPhenology"] = internalPhenologyDataFrame(above),
                          _["internalWater"] = internalWaterDataFrame(above, transpirationMode));
@@ -911,7 +931,7 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
                          _["belowLayers"] = belowLayers,
                          _["paramsPhenology"] = paramsPhenology(above, SpParams, fillMissingSpParams),
                          _["paramsAnatomy"] = paramsAnatomydf,
-                         _["paramsInterception"] = paramsInterceptiondf,
+                         _["paramsInterception"] = paramsInterception(above, SpParams, control),
                          _["paramsTranspiration"] = paramsTranspirationdf,
                          _["paramsWaterStorage"] = paramsWaterStoragedf,
                          _["internalPhenology"] = internalPhenologyDataFrame(above),
@@ -962,25 +982,14 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   
   DataFrame paramsAllometriesdf = paramsAllometries(above, SpParams, fillMissingSpParams);
   
-  NumericVector alphaSWR = speciesNumericParameter(SP, SpParams, "alphaSWR");
-  NumericVector gammaSWR = speciesNumericParameter(SP, SpParams, "gammaSWR");
-  NumericVector kPAR = speciesNumericParameter(SP, SpParams, "kPAR");
-  NumericVector g = speciesNumericParameter(SP, SpParams, "g");
   
-  DataFrame paramsInterceptiondf;
   DataFrame paramsTranspirationdf;
   if(transpirationMode=="Granier") {
-    paramsInterceptiondf = DataFrame::create(_["kPAR"] = kPAR,_["g"] = g);
     paramsTranspirationdf = paramsTranspirationGranier(above,SpParams, fillMissingSpParams);
   } else {
-    paramsInterceptiondf = DataFrame::create(_["alphaSWR"] = alphaSWR,
-                                             _["gammaSWR"] = gammaSWR, 
-                                             _["kPAR"] = kPAR, 
-                                             _["g"] = g);
     paramsTranspirationdf = paramsTranspirationSperry(above, soil, SpParams, paramsAnatomydf, control);
   }
-  paramsInterceptiondf.attr("row.names") = above.attr("row.names");
-  
+
 
   int numCohorts = SP.size();
   for(int c=0;c<numCohorts;c++){
@@ -1034,7 +1043,7 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
                          _["belowLayers"] = belowLayers,
                          _["paramsPhenology"] = paramsPhenology(above, SpParams, fillMissingSpParams),
                          _["paramsAnatomy"] = paramsAnatomydf,
-                         _["paramsInterception"] = paramsInterceptiondf,
+                         _["paramsInterception"] = paramsInterception(above, SpParams, control),
                          _["paramsTranspiration"] = paramsTranspirationdf,
                          _["paramsWaterStorage"] = paramsWaterStoragedf,
                          _["paramsGrowth"]= paramsGrowthdf,
@@ -1065,7 +1074,7 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
                          _["belowLayers"] = belowLayers,
                          _["paramsPhenology"] = paramsPhenology(above, SpParams, fillMissingSpParams),
                          _["paramsAnatomy"] = paramsAnatomydf,
-                         _["paramsInterception"] = paramsInterceptiondf,
+                         _["paramsInterception"] = paramsInterception(above, SpParams, control),
                          _["paramsTranspiration"] = paramsTranspirationdf,
                          _["paramsWaterStorage"] = paramsWaterStoragedf,
                          _["paramsGrowth"]= paramsGrowthdf,
