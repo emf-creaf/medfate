@@ -2,6 +2,9 @@
  NEWS for R Package "medfate"
 -------------------------------
 
+# Version 2.3.0
+- New control parameter 'fillMissingSpParams'
+
 # Version 2.2.3
 - Functions soilgridsParams() and forest_map*Tables() moved to package 'medfateutils' available at GitHub (emf-creaf/medfateutils).
 

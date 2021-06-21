@@ -83,11 +83,15 @@ NumericVector cohortNumericParameter(List x, DataFrame SpParams, String parName)
 }
 // [[Rcpp::export("species_parameter")]]
 NumericVector speciesNumericParameter(IntegerVector SP, DataFrame SpParams, String parName){
-  NumericVector par(SP.size());
-  NumericVector parSP = Rcpp::as<Rcpp::NumericVector>(SpParams[parName]);
-  for(int i=0;i<SP.size();i++) {
-    int iSP = findRowIndex(SP[i], SpParams);
-    par[i] = parSP[iSP];
+  NumericVector par(SP.size(), NA_REAL);
+  if(SpParams.containsElementNamed(parName.get_cstring())) {
+    NumericVector parSP = Rcpp::as<Rcpp::NumericVector>(SpParams[parName]);
+    for(int i=0;i<SP.size();i++) {
+      int iSP = findRowIndex(SP[i], SpParams);
+      par[i] = parSP[iSP];
+    }
+  } else {
+    Rcerr << "Variable '" << parName.get_cstring() << "' was not found in SpParams!\n";
   }
   return(par);
 }
@@ -114,11 +118,15 @@ CharacterVector cohortCharacterParameter(List x, DataFrame SpParams, String parN
 
 // [[Rcpp::export("species_characterParameter")]]
 CharacterVector speciesCharacterParameter(IntegerVector SP, DataFrame SpParams, String parName){
-  CharacterVector par(SP.size());
-  CharacterVector parSP = SpParams[parName];
-  for(int i=0;i<SP.size();i++) {
-    int iSP = findRowIndex(SP[i], SpParams);
-    par[i] = parSP[iSP];
+  CharacterVector par(SP.size(), NA_STRING);
+  if(SpParams.containsElementNamed(parName.get_cstring())) {
+    CharacterVector parSP = SpParams[parName];
+    for(int i=0;i<SP.size();i++) {
+      int iSP = findRowIndex(SP[i], SpParams);
+      par[i] = parSP[iSP];
+    }
+  } else {
+    Rcerr << "Variable '" << parName.get_cstring() << "' was not found in SpParams!\n";
   }
   return(par);
 }

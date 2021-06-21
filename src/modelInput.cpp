@@ -28,7 +28,7 @@ void checkSpeciesParameters(DataFrame SpParams, CharacterVector params) {
   }
 }
 
-DataFrame paramsPhenology(DataFrame above, DataFrame SpParams) {
+DataFrame paramsPhenology(DataFrame above, DataFrame SpParams, bool fillMissingSpParams) {
   IntegerVector SP = above["SP"];
   NumericVector LAI_expanded = above["LAI_expanded"];
   NumericVector LAI_live = above["LAI_live"];
@@ -37,26 +37,24 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams) {
   CharacterVector phenoType = speciesCharacterParameter(SP, SpParams, "PhenologyType");
   NumericVector leafDuration  = speciesNumericParameter(SP, SpParams, "LeafDuration");
   NumericVector Sgdd  = speciesNumericParameter(SP, SpParams, "Sgdd");
-  NumericVector Tbgdd(numCohorts, NA_REAL);
-  NumericVector Ssen(numCohorts, NA_REAL);
-  NumericVector Phsen(numCohorts, NA_REAL);
-  NumericVector Tbsen(numCohorts, NA_REAL);
-  if(SpParams.containsElementNamed("Tbgdd")) Tbgdd = speciesNumericParameter(SP, SpParams, "Tbgdd");
-  if(SpParams.containsElementNamed("Ssen")) Ssen = speciesNumericParameter(SP, SpParams, "Ssen");
-  if(SpParams.containsElementNamed("Phsen")) Phsen = speciesNumericParameter(SP, SpParams, "Phsen");
-  if(SpParams.containsElementNamed("Tbsen")) Tbsen = speciesNumericParameter(SP, SpParams, "Tbsen");
-  for(int j=0; j<numCohorts;j++) {
-    if(NumericVector::is_na(Tbgdd[j])) Tbgdd[j]= 5.0;
-    if(phenoType[j] == "winter-deciduous" || phenoType[j] == "winter-semideciduous") { //Delpierre et al 2009
-      if(NumericVector::is_na(Ssen[j])) Ssen[j] = 8268.0;
-      if(NumericVector::is_na(Phsen[j])) Phsen[j] = 12.5;
-      if(NumericVector::is_na(Tbsen[j])) Tbsen[j] = 28.5;
-      LAI_expanded[j] = 0.0; //Set initial LAI to zero, assuming simulations start at Jan 1st
-      if(phenoType[j] == "winter-semideciduous") LAI_dead[j] = LAI_live[j];
-    } else if(phenoType[j] == "oneflush-evergreen") {
-      if(NumericVector::is_na(Ssen[j])) Ssen[j] = 8268.0;
-      if(NumericVector::is_na(Phsen[j])) Phsen[j] = 12.5;
-      if(NumericVector::is_na(Tbsen[j])) Tbsen[j] = 28.5;
+  NumericVector Tbgdd = speciesNumericParameter(SP, SpParams, "Tbgdd");
+  NumericVector Ssen = speciesNumericParameter(SP, SpParams, "Ssen");
+  NumericVector Phsen = speciesNumericParameter(SP, SpParams, "Phsen");
+  NumericVector Tbsen  = speciesNumericParameter(SP, SpParams, "Tbsen");
+  if(fillMissingSpParams) {
+    for(int j=0; j<numCohorts;j++) {
+      if(NumericVector::is_na(Tbgdd[j])) Tbgdd[j]= 5.0;
+      if(phenoType[j] == "winter-deciduous" || phenoType[j] == "winter-semideciduous") { //Delpierre et al 2009
+        if(NumericVector::is_na(Ssen[j])) Ssen[j] = 8268.0;
+        if(NumericVector::is_na(Phsen[j])) Phsen[j] = 12.5;
+        if(NumericVector::is_na(Tbsen[j])) Tbsen[j] = 28.5;
+        LAI_expanded[j] = 0.0; //Set initial LAI to zero, assuming simulations start at Jan 1st
+        if(phenoType[j] == "winter-semideciduous") LAI_dead[j] = LAI_live[j];
+      } else if(phenoType[j] == "oneflush-evergreen") {
+        if(NumericVector::is_na(Ssen[j])) Ssen[j] = 8268.0;
+        if(NumericVector::is_na(Phsen[j])) Phsen[j] = 12.5;
+        if(NumericVector::is_na(Tbsen[j])) Tbsen[j] = 28.5;
+      }
     }
   }
   DataFrame paramsPhenologydf = DataFrame::create(
@@ -69,7 +67,7 @@ DataFrame paramsPhenology(DataFrame above, DataFrame SpParams) {
   return(paramsPhenologydf);
 }
 
-DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams) {
+DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams, bool fillMissingSpParams) {
   IntegerVector SP = above["SP"];
   int numCohorts = SP.size();
   
@@ -91,17 +89,19 @@ DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams) {
   NumericVector SRL = speciesNumericParameter(SP, SpParams, "SRL");  
   NumericVector RLD = speciesNumericParameter(SP, SpParams, "RLD");  
   
-  for(int c=0;c<numCohorts;c++){ //default values for missing data
-    if(NumericVector::is_na(WoodDensity[c])) WoodDensity[c] = 0652;
-    if(NumericVector::is_na(LeafDensity[c])) LeafDensity[c] = 0.7;
-    if(NumericVector::is_na(FineRootDensity[c])) FineRootDensity[c] = 0.165; 
-    if(NumericVector::is_na(conduit2sapwood[c])) {
-      if(Group[c]=="Angiosperm") conduit2sapwood[c] = 0.70; //20-40% parenchyma in angiosperms.
-      else conduit2sapwood[c] = 0.925; //5-10% parenchyma in gymnosperms (https://link.springer.com/chapter/10.1007/978-3-319-15783-2_8)
+  if(fillMissingSpParams) {
+    for(int c=0;c<numCohorts;c++){ //default values for missing data
+      if(NumericVector::is_na(WoodDensity[c])) WoodDensity[c] = 0652;
+      if(NumericVector::is_na(LeafDensity[c])) LeafDensity[c] = 0.7;
+      if(NumericVector::is_na(FineRootDensity[c])) FineRootDensity[c] = 0.165; 
+      if(NumericVector::is_na(conduit2sapwood[c])) {
+        if(Group[c]=="Angiosperm") conduit2sapwood[c] = 0.70; //20-40% parenchyma in angiosperms.
+        else conduit2sapwood[c] = 0.925; //5-10% parenchyma in gymnosperms (https://link.springer.com/chapter/10.1007/978-3-319-15783-2_8)
+      }
+      if(NumericVector::is_na(Al2As[c])) Al2As[c] = 2500.0; // = 4 cm2·m-2
+      if(NumericVector::is_na(SRL[c])) SRL[c] = 3870.0; 
+      if(NumericVector::is_na(RLD[c])) RLD[c] = 10.0;
     }
-    if(NumericVector::is_na(Al2As[c])) Al2As[c] = 2500.0; // = 4 cm2·m-2
-    if(NumericVector::is_na(SRL[c])) SRL[c] = 3870.0; 
-    if(NumericVector::is_na(RLD[c])) RLD[c] = 10.0;
   }
   DataFrame paramsAnatomydf = DataFrame::create(
     _["Hmax"] = Hmax,_["Hmed"] = Hmed,
@@ -116,7 +116,7 @@ DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams) {
 }
 
 DataFrame paramsWaterStorage(DataFrame above, DataFrame SpParams,
-                             DataFrame paramsAnatomydf) {
+                             DataFrame paramsAnatomydf, bool fillMissingSpParams) {
   IntegerVector SP = above["SP"];
   NumericVector H = above["H"];
   int numCohorts = SP.size();
@@ -135,17 +135,20 @@ DataFrame paramsWaterStorage(DataFrame above, DataFrame SpParams,
   NumericVector SLA = paramsAnatomydf["SLA"];
   NumericVector Al2As = paramsAnatomydf["Al2As"];
   
+  if(fillMissingSpParams) {
+    for(int c=0;c<numCohorts;c++){
+      //From: Christoffersen, B.O., Gloor, M., Fauset, S., Fyllas, N.M., Galbraith, D.R., Baker, T.R., Rowland, L., Fisher, R.A., Binks, O.J., Sevanto, S.A., Xu, C., Jansen, S., Choat, B., Mencuccini, M., McDowell, N.G., & Meir, P. 2016. Linking hydraulic traits to tropical forest function in a size-structured and trait-driven model (TFS v.1-Hydro). Geoscientific Model Development Discussions 0: 1–60.
+      if(NumericVector::is_na(StemPI0[c])) StemPI0[c] = 0.52 - 4.16*WoodDensity[c]; 
+      if(NumericVector::is_na(StemEPS[c])) StemEPS[c] = sqrt(1.02*exp(8.5*WoodDensity[c])-2.89); 
+      if(NumericVector::is_na(StemAF[c])) StemAF[c] = 0.8;
+      //From: Bartlett MK, Scoffoni C, Sack L (2012) The determinants of leaf turgor loss point and prediction of drought tolerance of species and biomes: a global meta-analysis. Ecol Lett 15:393–405. doi: 10.1111/j.1461-0248.2012.01751.x
+      if(NumericVector::is_na(LeafPI0[c])) LeafPI0[c] = -2.0; //Average values for Mediterranean climate species
+      if(NumericVector::is_na(LeafEPS[c])) LeafEPS[c] = 17.0;
+      if(NumericVector::is_na(LeafAF[c])) LeafAF[c] = 0.29;
+    }
+  }
+  //Calculate stem and leaf capacity per leaf area (in m3·m-2)
   for(int c=0;c<numCohorts;c++){
-    //From: Christoffersen, B.O., Gloor, M., Fauset, S., Fyllas, N.M., Galbraith, D.R., Baker, T.R., Rowland, L., Fisher, R.A., Binks, O.J., Sevanto, S.A., Xu, C., Jansen, S., Choat, B., Mencuccini, M., McDowell, N.G., & Meir, P. 2016. Linking hydraulic traits to tropical forest function in a size-structured and trait-driven model (TFS v.1-Hydro). Geoscientific Model Development Discussions 0: 1–60.
-    if(NumericVector::is_na(StemPI0[c])) StemPI0[c] = 0.52 - 4.16*WoodDensity[c]; 
-    if(NumericVector::is_na(StemEPS[c])) StemEPS[c] = sqrt(1.02*exp(8.5*WoodDensity[c])-2.89); 
-    if(NumericVector::is_na(StemAF[c])) StemAF[c] = 0.8;
-    //From: Bartlett MK, Scoffoni C, Sack L (2012) The determinants of leaf turgor loss point and prediction of drought tolerance of species and biomes: a global meta-analysis. Ecol Lett 15:393–405. doi: 10.1111/j.1461-0248.2012.01751.x
-    if(NumericVector::is_na(LeafPI0[c])) LeafPI0[c] = -2.0; //Average values for Mediterranean climate species
-    if(NumericVector::is_na(LeafEPS[c])) LeafEPS[c] = 17.0;
-    if(NumericVector::is_na(LeafAF[c])) LeafAF[c] = 0.29;
-    
-    //Calculate stem and leaf capacity per leaf area (in m3·m-2)
     Vsapwood[c] = stemWaterCapacity(Al2As[c], H[c], WoodDensity[c]); 
     Vleaf[c] = leafWaterCapacity(SLA[c], LeafDensity[c]); 
   }
@@ -157,20 +160,27 @@ DataFrame paramsWaterStorage(DataFrame above, DataFrame SpParams,
   return(paramsWaterStoragedf);
 }
 
-DataFrame paramsTranspirationGranier(DataFrame above,  DataFrame SpParams) {
+DataFrame paramsTranspirationGranier(DataFrame above,  DataFrame SpParams, bool fillMissingSpParams) {
   IntegerVector SP = above["SP"];
   NumericVector WUE = speciesNumericParameter(SP, SpParams, "WUE");
   NumericVector Psi_Extract = speciesNumericParameter(SP, SpParams, "Psi_Extract");
   NumericVector Psi_Critic = speciesNumericParameter(SP, SpParams, "Psi_Critic");
   NumericVector pRootDisc = speciesNumericParameter(SP, SpParams, "pRootDisc");
   NumericVector Tmax_LAI(SP.size(), NA_REAL);
+  
+  //Granier's parameters will not raise error messages when missing and will be filled always 
   if(SpParams.containsElementNamed("Tmax_LAI")) Tmax_LAI = speciesNumericParameter(SP, SpParams, "Tmax_LAI");
   NumericVector Tmax_LAIsq(SP.size(), NA_REAL);
   if(SpParams.containsElementNamed("Tmax_LAIsq")) Tmax_LAIsq = speciesNumericParameter(SP, SpParams, "Tmax_LAIsq");
   for(int i=0;i<SP.size();i++) {
-    if(NumericVector::is_na(WUE[i])) WUE[i] = 4;
     if(NumericVector::is_na(Tmax_LAI[i])) Tmax_LAI[i] = 0.134; //Granier coefficient for LAI
     if(NumericVector::is_na(Tmax_LAIsq[i])) Tmax_LAIsq[i] =-0.006; //Granier coefficient for LAI^2
+  }
+  
+  if(fillMissingSpParams) {
+    for(int i=0;i<SP.size();i++) {
+      if(NumericVector::is_na(WUE[i])) WUE[i] = 4;
+    }
   }
   DataFrame paramsTranspirationdf = DataFrame::create(_["Tmax_LAI"] = Tmax_LAI,
                                                       _["Tmax_LAIsq"] = Tmax_LAIsq,
@@ -188,6 +198,8 @@ DataFrame paramsTranspirationSperry(DataFrame above, List soil, DataFrame SpPara
   double fracRootResistance = control["fracRootResistance"];
   double fracLeafResistance = control["fracLeafResistance"];
   String transpirationMode = control["transpirationMode"];
+  
+  bool fillMissingSpParams = control["fillMissingSpParams"];
   
   NumericVector dVec = soil["dVec"];
   
@@ -222,133 +234,143 @@ DataFrame paramsTranspirationSperry(DataFrame above, List soil, DataFrame SpPara
   NumericVector Plant_kmax(numCohorts, 0.0);
   
   
-  for(int c=0;c<numCohorts;c++){
-    if(NumericVector::is_na(Kmax_stemxylem[c])) {
-      // From: Maherali H, Pockman W, Jackson R (2004) Adaptive variation in the vulnerability of woody plants to xylem cavitation. Ecology 85:2184–2199
-      if(Group[c]=="Angiosperm") {
-        if((GrowthForm[c]=="Shrub") && (phenoType[c] == "winter-deciduous")) {
-          Kmax_stemxylem[c] = 1.55; //Angiosperm deciduous shrub
-        } else if((GrowthForm[c]=="Tree" || GrowthForm[c]=="Tree/Shrub") && (phenoType[c] == "winter-deciduous")) {
-          Kmax_stemxylem[c] = 1.58; //Angiosperm winter-deciduous tree
-        } else { 
-          Kmax_stemxylem[c] = 2.43; //Angiosperm evergreen tree
-        }
-      } else {
-        if(GrowthForm[c]=="Shrub") {
-          Kmax_stemxylem[c] = 0.24; //Gymnosperm shrub
+  if(fillMissingSpParams) {
+    for(int c=0;c<numCohorts;c++){
+      if(NumericVector::is_na(Kmax_stemxylem[c])) {
+        // From: Maherali H, Pockman W, Jackson R (2004) Adaptive variation in the vulnerability of woody plants to xylem cavitation. Ecology 85:2184–2199
+        if(Group[c]=="Angiosperm") {
+          if((GrowthForm[c]=="Shrub") && (phenoType[c] == "winter-deciduous")) {
+            Kmax_stemxylem[c] = 1.55; //Angiosperm deciduous shrub
+          } else if((GrowthForm[c]=="Tree" || GrowthForm[c]=="Tree/Shrub") && (phenoType[c] == "winter-deciduous")) {
+            Kmax_stemxylem[c] = 1.58; //Angiosperm winter-deciduous tree
+          } else { 
+            Kmax_stemxylem[c] = 2.43; //Angiosperm evergreen tree
+          }
         } else {
-          Kmax_stemxylem[c] = 0.48; //Gymnosperm tree
+          if(GrowthForm[c]=="Shrub") {
+            Kmax_stemxylem[c] = 0.24; //Gymnosperm shrub
+          } else {
+            Kmax_stemxylem[c] = 0.48; //Gymnosperm tree
+          }
         }
       }
-    }
-    //Oliveras I, Martínez-Vilalta J, Jimenez-Ortiz T, et al (2003) Hydraulic architecture of Pinus halepensis, P . pinea and Tetraclinis articulata in a dune ecosystem of Eastern Spain. Plant Ecol 131–141
-    if(NumericVector::is_na(Kmax_rootxylem[c])) Kmax_rootxylem[c] = 4.0*Kmax_stemxylem[c];
-    
-    //Calculate stem maximum conductance (in mmol·m-2·s-1·MPa-1)
-    VCstem_kmax[c]=maximumStemHydraulicConductance(Kmax_stemxylem[c], Hmed[c], Al2As[c],H[c],control["taper"]); 
-    
-    //Xylem vulnerability curve
-    if(NumericVector::is_na(VCstem_d[c]) | NumericVector::is_na(VCstem_c[c])) {
-      double psi50 = NA_REAL;
-      // From: Maherali H, Pockman W, Jackson R (2004) Adaptive variation in the vulnerability of woody plants to xylem cavitation. Ecology 85:2184–2199
-      if(Group[c]=="Angiosperm") {
-        if((GrowthForm[c]=="Shrub") && (phenoType[c] != "winter-deciduous")) {
-          psi50 = -5.09; //Angiosperm evergreen shrub
-        } else if((GrowthForm[c]!="Shrub") && (phenoType[c] == "winter-deciduous")) {
-          psi50 = -2.34; //Angiosperm winter-deciduous tree
-        } else { 
-          psi50 = -1.51; //Angiosperm evergreen tree
-        }
-      } else {
-        if(GrowthForm[c]=="Shrub") {
-          psi50 = -8.95; //Gymnosperm shrub
+      //Oliveras I, Martínez-Vilalta J, Jimenez-Ortiz T, et al (2003) Hydraulic architecture of Pinus halepensis, P . pinea and Tetraclinis articulata in a dune ecosystem of Eastern Spain. Plant Ecol 131–141
+      if(NumericVector::is_na(Kmax_rootxylem[c])) Kmax_rootxylem[c] = 4.0*Kmax_stemxylem[c];
+      
+      
+      //Xylem vulnerability curve
+      if(NumericVector::is_na(VCstem_d[c]) | NumericVector::is_na(VCstem_c[c])) {
+        double psi50 = NA_REAL;
+        // From: Maherali H, Pockman W, Jackson R (2004) Adaptive variation in the vulnerability of woody plants to xylem cavitation. Ecology 85:2184–2199
+        if(Group[c]=="Angiosperm") {
+          if((GrowthForm[c]=="Shrub") && (phenoType[c] != "winter-deciduous")) {
+            psi50 = -5.09; //Angiosperm evergreen shrub
+          } else if((GrowthForm[c]!="Shrub") && (phenoType[c] == "winter-deciduous")) {
+            psi50 = -2.34; //Angiosperm winter-deciduous tree
+          } else { 
+            psi50 = -1.51; //Angiosperm evergreen tree
+          }
         } else {
-          psi50 = -4.17; //Gymnosperm tree
+          if(GrowthForm[c]=="Shrub") {
+            psi50 = -8.95; //Gymnosperm shrub
+          } else {
+            psi50 = -4.17; //Gymnosperm tree
+          }
         }
+        double psi88 = 1.2593*psi50 - 1.4264; //Regression using data from Choat et al. 2012
+        NumericVector par = psi2Weibull(psi50, psi88);
+        if(NumericVector::is_na(VCstem_c[c])) VCstem_c[c] = par["c"];
+        if(NumericVector::is_na(VCstem_d[c])) VCstem_d[c] = par["d"];
       }
-      double psi88 = 1.2593*psi50 - 1.4264; //Regression using data from Choat et al. 2012
-      NumericVector par = psi2Weibull(psi50, psi88);
-      if(NumericVector::is_na(VCstem_c[c])) VCstem_c[c] = par["c"];
-      if(NumericVector::is_na(VCstem_d[c])) VCstem_d[c] = par["d"];
-    }
-    
-    //Default vulnerability curve parameters if missing
-    if(NumericVector::is_na(VCroot_d[c]) | NumericVector::is_na(VCroot_c[c])) {
-      double psi50stem = VCstem_d[c]*pow(0.6931472,1.0/VCstem_c[c]);
-      double psi50root = 0.742*psi50stem + 0.4892; //Regression using data from Bartlett et al. 2016
-      double psi88root = 1.2593*psi50root - 1.4264; //Regression using data from Choat et al. 2012
-      NumericVector par = psi2Weibull(psi50root, psi88root);
-      if(NumericVector::is_na(VCroot_c[c])) VCroot_c[c] = par["c"];
-      if(NumericVector::is_na(VCroot_d[c])) VCroot_d[c] = par["d"];
-    }
-    //Sack, L., & Holbrook, N.M. 2006. Leaf Hydraulics. Annual Review of Plant Biology 57: 361–381.
-    if(NumericVector::is_na(VCleaf_kmax[c])) { 
-      if(NumericVector::is_na(fracLeafResistance)) {
+      
+      //Default vulnerability curve parameters if missing
+      if(NumericVector::is_na(VCroot_d[c]) | NumericVector::is_na(VCroot_c[c])) {
+        double psi50stem = VCstem_d[c]*pow(0.6931472,1.0/VCstem_c[c]);
+        double psi50root = 0.742*psi50stem + 0.4892; //Regression using data from Bartlett et al. 2016
+        double psi88root = 1.2593*psi50root - 1.4264; //Regression using data from Choat et al. 2012
+        NumericVector par = psi2Weibull(psi50root, psi88root);
+        if(NumericVector::is_na(VCroot_c[c])) VCroot_c[c] = par["c"];
+        if(NumericVector::is_na(VCroot_d[c])) VCroot_d[c] = par["d"];
+      }
+      //Sack, L., & Holbrook, N.M. 2006. Leaf Hydraulics. Annual Review of Plant Biology 57: 361–381.
+      if(NumericVector::is_na(VCleaf_kmax[c])) { 
         if(Group[c]=="Angiosperm") {
           VCleaf_kmax[c] = 8.0;
         } else {
           VCleaf_kmax[c] = 6.0;
         }
-      } else {
-        double rstem = (1.0/VCstem_kmax[c]);
-        double rtot = rstem/(1.0-fracRootResistance - fracLeafResistance);
-        VCleaf_kmax[c] = 1.0/(rtot*fracLeafResistance);
+      } 
+      //Default vulnerability curve parameters if missing
+      if(NumericVector::is_na(VCleaf_c[c])) VCleaf_c[c] = VCstem_c[c];
+      if(NumericVector::is_na(VCleaf_d[c])) VCleaf_d[c] = VCstem_d[c]/1.5;
+      //Duursma RA, Blackman CJ, Lopéz R, et al (2018) On the minimum leaf conductance: its role in models of plant water use, and ecological and environmental controls. New Phytol. doi: 10.1111/nph.15395
+      if(NumericVector::is_na(Gswmin[c])) {
+        if(Order[c]=="Pinales") {
+          Gswmin[c] = 0.003;
+        } else if(Order[c]=="Araucariales") {
+          Gswmin[c] = 0.003;
+        } else if(Order[c]=="Ericales") {
+          Gswmin[c] = 0.004;
+        } else if(Order[c]=="Fagales") {
+          Gswmin[c] = 0.0045;
+        } else if(Order[c]=="Rosales") {
+          Gswmin[c] = 0.0045;
+        } else if(Order[c]=="Cupressales") {
+          Gswmin[c] = 0.0045;
+        } else if(Order[c]=="Lamiales") {
+          Gswmin[c] = 0.0055;
+        } else if(Order[c]=="Fabales") {
+          Gswmin[c] = 0.0065;
+        } else if(Order[c]=="Myrtales") {
+          Gswmin[c] = 0.0075;
+        } else if(Order[c]=="Poales") {
+          Gswmin[c] = 0.0110;
+        } else {
+          Gswmin[c] = 0.0049;
+        }
       }
-    } 
-    //Default vulnerability curve parameters if missing
-    if(NumericVector::is_na(VCleaf_c[c])) VCleaf_c[c] = VCstem_c[c];
-    if(NumericVector::is_na(VCleaf_d[c])) VCleaf_d[c] = VCstem_d[c]/1.5;
-    //Duursma RA, Blackman CJ, Lopéz R, et al (2018) On the minimum leaf conductance: its role in models of plant water use, and ecological and environmental controls. New Phytol. doi: 10.1111/nph.15395
-    if(NumericVector::is_na(Gswmin[c])) {
-      if(Order[c]=="Pinales") {
-        Gswmin[c] = 0.003;
-      } else if(Order[c]=="Araucariales") {
-        Gswmin[c] = 0.003;
-      } else if(Order[c]=="Ericales") {
-        Gswmin[c] = 0.004;
-      } else if(Order[c]=="Fagales") {
-        Gswmin[c] = 0.0045;
-      } else if(Order[c]=="Rosales") {
-        Gswmin[c] = 0.0045;
-      } else if(Order[c]=="Cupressales") {
-        Gswmin[c] = 0.0045;
-      } else if(Order[c]=="Lamiales") {
-        Gswmin[c] = 0.0055;
-      } else if(Order[c]=="Fabales") {
-        Gswmin[c] = 0.0065;
-      } else if(Order[c]=="Myrtales") {
-        Gswmin[c] = 0.0075;
-      } else if(Order[c]=="Poales") {
-        Gswmin[c] = 0.0110;
-      } else {
-        Gswmin[c] = 0.0049;
+      //Mencuccini M (2003) The ecological significance of long-distance water transport : short-term regulation , long-term acclimation and the hydraulic costs of stature across plant life forms. Plant Cell Environ 26:163–182
+      if(NumericVector::is_na(Gswmax[c])) Gswmax[c] = 0.12115*pow(VCleaf_kmax[c], 0.633);
+      
+
+      if(NumericVector::is_na(Vmax298[c]))  {
+        if(!NumericVector::is_na(SLA[c]) & !NumericVector::is_na(Narea[c]))  {
+          //Walker AP, Beckerman AP, Gu L, et al (2014) The relationship of leaf photosynthetic traits - Vcmax and Jmax - to leaf nitrogen, leaf phosphorus, and specific leaf area: A meta-analysis and modeling study. Ecol Evol 4:3218–3235. doi: 10.1002/ece3.1173
+          double lnN = log(Narea[c]);
+          double lnSLA = log(SLA[c]/1000.0); //SLA in m2*g-1
+          Vmax298[c] = exp(1.993 + 2.555*lnN - 0.372*lnSLA + 0.422*lnN*lnSLA);
+        } else {
+          Vmax298[c] = 100.0; //Default value of Vmax298 = 100.0
+        }
       }
+      //Walker AP, Beckerman AP, Gu L, et al (2014) The relationship of leaf photosynthetic traits - Vcmax and Jmax - to leaf nitrogen, leaf phosphorus, and specific leaf area: A meta-analysis and modeling study. Ecol Evol 4:3218–3235. doi: 10.1002/ece3.1173
+      if(NumericVector::is_na(Jmax298[c])) Jmax298[c] = exp(1.197 + 0.847*log(Vmax298[c])); 
+      
     }
-    //Mencuccini M (2003) The ecological significance of long-distance water transport : short-term regulation , long-term acclimation and the hydraulic costs of stature across plant life forms. Plant Cell Environ 26:163–182
-    if(NumericVector::is_na(Gswmax[c])) Gswmax[c] = 0.12115*pow(VCleaf_kmax[c], 0.633);
-    
+  }
+
+  // Scaled conductance parameters parameters
+  for(int c=0;c<numCohorts;c++){
+    //Stem maximum conductance (in mmol·m-2·s-1·MPa-1)
+    VCstem_kmax[c]=maximumStemHydraulicConductance(Kmax_stemxylem[c], Hmed[c], Al2As[c],H[c],control["taper"]); 
+  
+    //Root maximum conductance
     double rstem = (1.0/VCstem_kmax[c]);
     double rleaf = (1.0/VCleaf_kmax[c]);
     double rtot = (rstem+rleaf)/(1.0 - fracRootResistance);
     double VCroot_kmaxc = 1.0/(rtot - rstem - rleaf);
     VCroottot_kmax[c] = VCroot_kmaxc;
     
-    if(NumericVector::is_na(Vmax298[c]))  {
-      if(!NumericVector::is_na(SLA[c]) & !NumericVector::is_na(Narea[c]))  {
-        //Walker AP, Beckerman AP, Gu L, et al (2014) The relationship of leaf photosynthetic traits - Vcmax and Jmax - to leaf nitrogen, leaf phosphorus, and specific leaf area: A meta-analysis and modeling study. Ecol Evol 4:3218–3235. doi: 10.1002/ece3.1173
-        double lnN = log(Narea[c]);
-        double lnSLA = log(SLA[c]/1000.0); //SLA in m2*g-1
-        Vmax298[c] = exp(1.993 + 2.555*lnN - 0.372*lnSLA + 0.422*lnN*lnSLA);
-      } else {
-        Vmax298[c] = 100.0; //Default value of Vmax298 = 100.0
-      }
+    //Leaf maximum conductance
+    if(!NumericVector::is_na(fracLeafResistance)) {
+      double rstem = (1.0/VCstem_kmax[c]);
+      double rtot = rstem/(1.0-fracRootResistance - fracLeafResistance);
+      VCleaf_kmax[c] = 1.0/(rtot*fracLeafResistance);
     }
-    //Walker AP, Beckerman AP, Gu L, et al (2014) The relationship of leaf photosynthetic traits - Vcmax and Jmax - to leaf nitrogen, leaf phosphorus, and specific leaf area: A meta-analysis and modeling study. Ecol Evol 4:3218–3235. doi: 10.1002/ece3.1173
-    if(NumericVector::is_na(Jmax298[c])) Jmax298[c] = exp(1.197 + 0.847*log(Vmax298[c])); 
-    
     //Plant kmax
     Plant_kmax[c] = 1.0/((1.0/VCleaf_kmax[c])+(1.0/VCstem_kmax[c])+(1.0/VCroottot_kmax[c]));
   }
+  
   DataFrame paramsTranspirationdf = DataFrame::create(
     _["Gswmin"]=Gswmin, _["Gswmax"]=Gswmax,_["Vmax298"]=Vmax298,
       _["Jmax298"]=Jmax298, _["Kmax_stemxylem"] = Kmax_stemxylem, _["Kmax_rootxylem"] = Kmax_rootxylem,
@@ -509,33 +531,18 @@ List paramsBelow(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
 }
 
 DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
+  
+  bool fillMissingSpParams = control["fillMissingSpParams"];
+  
   IntegerVector SP = above["SP"];
   int numCohorts = SP.size();
   
-  NumericVector RERleaf(numCohorts, NA_REAL);
-  if(SpParams.containsElementNamed("RERleaf")) {
-    RERleaf = speciesNumericParameter(SP, SpParams, "RERleaf");
-  }
-  NumericVector RERsapwood(numCohorts, NA_REAL);
-  if(SpParams.containsElementNamed("RERsapwood")) {
-    RERsapwood = speciesNumericParameter(SP, SpParams, "RERsapwood");
-  }
-  NumericVector RERfineroot(numCohorts, NA_REAL);
-  if(SpParams.containsElementNamed("RERfineroot")) {
-    RERfineroot = speciesNumericParameter(SP, SpParams, "RERfineroot");
-  }
-  NumericVector RGRleafmax(numCohorts, NA_REAL);
-  if(SpParams.containsElementNamed("RGRleafmax")) {
-    RGRleafmax = speciesNumericParameter(SP, SpParams, "RGRleafmax");
-  }
-  NumericVector RGRsapwoodmax(numCohorts, NA_REAL);
-  if(SpParams.containsElementNamed("RGRsapwoodmax")) {
-    RGRsapwoodmax = speciesNumericParameter(SP, SpParams, "RGRsapwoodmax");
-  }
-  NumericVector RGRfinerootmax(numCohorts, NA_REAL);
-  if(SpParams.containsElementNamed("RGRfinerootmax")) {
-    RGRfinerootmax = speciesNumericParameter(SP, SpParams, "RGRfinerootmax");
-  }
+  NumericVector RERleaf = speciesNumericParameter(SP, SpParams, "RERleaf");
+  NumericVector RERsapwood = speciesNumericParameter(SP, SpParams, "RERsapwood");
+  NumericVector RERfineroot = speciesNumericParameter(SP, SpParams, "RERfineroot");
+  NumericVector RGRleafmax = speciesNumericParameter(SP, SpParams, "RGRleafmax");
+  NumericVector RGRsapwoodmax = speciesNumericParameter(SP, SpParams, "RGRsapwoodmax");
+  NumericVector RGRfinerootmax = speciesNumericParameter(SP, SpParams, "RGRfinerootmax");
   NumericVector WoodC = speciesNumericParameter(SP, SpParams, "WoodC");
   NumericVector fHDmin = speciesNumericParameter(SP, SpParams, "fHDmin");
   NumericVector fHDmax = speciesNumericParameter(SP, SpParams, "fHDmax");
@@ -550,13 +557,15 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
   double RERsapwood_default = respirationRates["sapwood"];
   double RERfineroot_default = respirationRates["fineroot"];
   
-  for(int c=0;c<numCohorts;c++){
-    if(NumericVector::is_na(RGRleafmax[c])) RGRleafmax[c] = RGRleafmax_default;
-    if(NumericVector::is_na(RGRsapwoodmax[c])) RGRsapwoodmax[c] = RGRsapwoodmax_default;
-    if(NumericVector::is_na(RGRfinerootmax[c])) RGRfinerootmax[c] = RGRfinerootmax_default;
-    if(NumericVector::is_na(RERleaf[c])) RERleaf[c] = RERleaf_default;
-    if(NumericVector::is_na(RERsapwood[c])) RERsapwood[c] = RERsapwood_default;
-    if(NumericVector::is_na(RERfineroot[c])) RERfineroot[c] = RERfineroot_default;
+  if(fillMissingSpParams) {
+    for(int c=0;c<numCohorts;c++){
+      if(NumericVector::is_na(RGRleafmax[c])) RGRleafmax[c] = RGRleafmax_default;
+      if(NumericVector::is_na(RGRsapwoodmax[c])) RGRsapwoodmax[c] = RGRsapwoodmax_default;
+      if(NumericVector::is_na(RGRfinerootmax[c])) RGRfinerootmax[c] = RGRfinerootmax_default;
+      if(NumericVector::is_na(RERleaf[c])) RERleaf[c] = RERleaf_default;
+      if(NumericVector::is_na(RERsapwood[c])) RERsapwood[c] = RERsapwood_default;
+      if(NumericVector::is_na(RERfineroot[c])) RERfineroot[c] = RERfineroot_default;
+    }
   }
   
   DataFrame paramsGrowthdf = DataFrame::create(_["RERleaf"] = RERleaf,
@@ -573,7 +582,7 @@ DataFrame paramsGrowth(DataFrame above, DataFrame SpParams, List control) {
 }
 
 
-DataFrame paramsAllometries(DataFrame above, DataFrame SpParams) {
+DataFrame paramsAllometries(DataFrame above, DataFrame SpParams, bool fillMissingSpParams) {
   IntegerVector SP = above["SP"];
   
   NumericVector Aash = speciesNumericParameter(SP, SpParams, "a_ash");
@@ -819,7 +828,7 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
   String transpirationMode = control["transpirationMode"];
   if((transpirationMode!="Granier") & (transpirationMode!="Sperry")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Granier' or 'Sperry')");
 
-  
+  bool fillMissingSpParams = control["fillMissingSpParams"];
   String soilFunctions = control["soilFunctions"]; 
   if((soilFunctions!="SX") & (soilFunctions!="VG")) stop("Wrong soil functions ('soilFunctions' should be either 'SX' or 'VG')");
   
@@ -850,11 +859,11 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
   DataFrame paramsInterceptiondf;
   if(transpirationMode=="Granier") {
     paramsAnatomydf = DataFrame::create();
-    paramsTranspirationdf = paramsTranspirationGranier(above,SpParams);
+    paramsTranspirationdf = paramsTranspirationGranier(above,SpParams, fillMissingSpParams);
     paramsInterceptiondf = DataFrame::create(_["kPAR"] = kPAR, 
                                              _["g"] = g);
   } else {
-    paramsAnatomydf = paramsAnatomy(above, SpParams);
+    paramsAnatomydf = paramsAnatomy(above, SpParams, fillMissingSpParams);
     paramsTranspirationdf = paramsTranspirationSperry(above, soil, SpParams, paramsAnatomydf, control);
     paramsInterceptiondf = DataFrame::create(_["alphaSWR"] = alphaSWR,
                                              _["gammaSWR"] = gammaSWR, 
@@ -877,14 +886,14 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
                          _["above"] = plantsdf,
                          _["below"] = belowdf,
                          _["belowLayers"] = belowLayers,
-                         _["paramsPhenology"] = paramsPhenology(above, SpParams),
+                         _["paramsPhenology"] = paramsPhenology(above, SpParams, fillMissingSpParams),
                          _["paramsInterception"] = paramsInterceptiondf,
                          _["paramsTranspiration"] = paramsTranspirationdf,
                          _["internalPhenology"] = internalPhenologyDataFrame(above),
                          _["internalWater"] = internalWaterDataFrame(above, transpirationMode));
   } else if(transpirationMode =="Sperry"){
     
-    DataFrame paramsWaterStoragedf = paramsWaterStorage(above, SpParams, paramsAnatomydf);
+    DataFrame paramsWaterStoragedf = paramsWaterStorage(above, SpParams, paramsAnatomydf, fillMissingSpParams);
 
     List ctl = clone(control);
     if(soilFunctions=="SX") {
@@ -900,7 +909,7 @@ List spwbInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soil,
                          _["above"] = plantsdf,
                          _["below"] = belowdf,
                          _["belowLayers"] = belowLayers,
-                         _["paramsPhenology"] = paramsPhenology(above, SpParams),
+                         _["paramsPhenology"] = paramsPhenology(above, SpParams, fillMissingSpParams),
                          _["paramsAnatomy"] = paramsAnatomydf,
                          _["paramsInterception"] = paramsInterceptiondf,
                          _["paramsTranspiration"] = paramsTranspirationdf,
@@ -936,20 +945,22 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   String transpirationMode = control["transpirationMode"];
   if((transpirationMode!="Granier") & (transpirationMode!="Sperry")) stop("Wrong Transpiration mode ('transpirationMode' should be either 'Granier' or 'Sperry')");
 
+  bool fillMissingSpParams = control["fillMissingSpParams"];
+  
   String soilFunctions = control["soilFunctions"]; 
   if((soilFunctions!="SX") & (soilFunctions!="VG")) stop("Wrong soil functions ('soilFunctions' should be either 'SX' or 'VG')");
   
   
-  DataFrame paramsAnatomydf = paramsAnatomy(above, SpParams);
+  DataFrame paramsAnatomydf = paramsAnatomy(above, SpParams, fillMissingSpParams);
   NumericVector WoodDensity = paramsAnatomydf["WoodDensity"];
   NumericVector SLA = paramsAnatomydf["SLA"];
   NumericVector Al2As = paramsAnatomydf["Al2As"];
   
   DataFrame paramsGrowthdf = paramsGrowth(above, SpParams, control);
 
-  DataFrame paramsWaterStoragedf = paramsWaterStorage(above, SpParams, paramsAnatomydf);
+  DataFrame paramsWaterStoragedf = paramsWaterStorage(above, SpParams, paramsAnatomydf, fillMissingSpParams);
   
-  DataFrame paramsAllometriesdf = paramsAllometries(above, SpParams);
+  DataFrame paramsAllometriesdf = paramsAllometries(above, SpParams, fillMissingSpParams);
   
   NumericVector alphaSWR = speciesNumericParameter(SP, SpParams, "alphaSWR");
   NumericVector gammaSWR = speciesNumericParameter(SP, SpParams, "gammaSWR");
@@ -960,7 +971,7 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
   DataFrame paramsTranspirationdf;
   if(transpirationMode=="Granier") {
     paramsInterceptiondf = DataFrame::create(_["kPAR"] = kPAR,_["g"] = g);
-    paramsTranspirationdf = paramsTranspirationGranier(above,SpParams);
+    paramsTranspirationdf = paramsTranspirationGranier(above,SpParams, fillMissingSpParams);
   } else {
     paramsInterceptiondf = DataFrame::create(_["alphaSWR"] = alphaSWR,
                                              _["gammaSWR"] = gammaSWR, 
@@ -1021,7 +1032,7 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
                          _["above"] = plantsdf,
                          _["below"] = belowdf,
                          _["belowLayers"] = belowLayers,
-                         _["paramsPhenology"] = paramsPhenology(above, SpParams),
+                         _["paramsPhenology"] = paramsPhenology(above, SpParams, fillMissingSpParams),
                          _["paramsAnatomy"] = paramsAnatomydf,
                          _["paramsInterception"] = paramsInterceptiondf,
                          _["paramsTranspiration"] = paramsTranspirationdf,
@@ -1052,7 +1063,7 @@ List growthInput(DataFrame above, NumericVector Z50, NumericVector Z95, List soi
                          _["above"] = plantsdf,
                          _["below"] = belowdf,
                          _["belowLayers"] = belowLayers,
-                         _["paramsPhenology"] = paramsPhenology(above, SpParams),
+                         _["paramsPhenology"] = paramsPhenology(above, SpParams, fillMissingSpParams),
                          _["paramsAnatomy"] = paramsAnatomydf,
                          _["paramsInterception"] = paramsInterceptiondf,
                          _["paramsTranspiration"] = paramsTranspirationdf,

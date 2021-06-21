@@ -2,6 +2,7 @@ defaultControl<-function(transpirationMode = "Granier") {
   return(list(
     #For all functions
     modifyInput = TRUE,
+    fillMissingSpParams = TRUE,
     verbose = TRUE,
     subdailyResults = FALSE,
     

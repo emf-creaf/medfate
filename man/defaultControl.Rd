@@ -2,7 +2,7 @@
 \name{defaultControl}
 \alias{defaultControl}
 
-\title{Default control parameters for models}
+\title{Default simulation control parameters for models}
 \description{
 Creates a list with global default parameters for simulation models.
 }
@@ -22,6 +22,7 @@ A list, with the following options (default values in parentheses):
 \itemize{
    \item{\code{verbose (=TRUE)}: Boolean flag to indicate console output during calculations. In function \code{fordyn} \code{verbose} is always set to FALSE.}
    \item{\code{modifyInput (=TRUE)}: Boolean flag to indicate that simulations will modify input object. If set to FALSE, simulations will not modify the input R object but return the current (modified) state variables within the output. In function \code{fordyn} \code{modifyInput} is always set to FALSE.}
+   \item{\code{fillMissingSpParams (=TRUE)}: Boolean flag to indicate that functions \code{\link{spwbInput}} and \code{\link{growthInput}} should provide estimates for functional parameters if these are lacking in the species parameter table \code{\link{SpParams}}. Note that if \code{fillMissingSpParams} is set to \code{FALSE} then simulations may fail if the user does not provide values for required parameters.}
    \item{\code{subdailyResults (=FALSE)}: Boolean flag to force subdaily results to be stored (as a list called 'subdaily' of \code{\link{spwb_day}} objects, one by simulated date) in calls to \code{\link{spwb}}. In function \code{fordyn} \code{subdailyResults} is always set to FALSE.}
 }
 \bold{Water balance}:
