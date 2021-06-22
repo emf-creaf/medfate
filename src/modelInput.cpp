@@ -142,6 +142,23 @@ DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams, bool fillMissingSpP
           SLA[c] = 5.440;
         }
       }
+      if(NumericVector::is_na(leafwidth[c]) && !CharacterVector::is_na(LeafShape[c]) && !CharacterVector::is_na(LeafSize[c])) {
+        if(LeafShape[c]=="Linear") {
+          leafwidth[c]= 0.6393182;
+        } else if(LeafShape[c]=="Needle") {
+          leafwidth[c]= 0.3792844;
+        } else if(LeafShape[c]=="Broad") {
+          if(LeafSize[c]=="Small") {
+            leafwidth[c] = 0.6439761;
+          } else if(LeafSize[c]=="Medium") {
+            leafwidth[c] = 3.0537686;
+          } else if(LeafSize[c]=="Large") {
+            leafwidth[c]= 6.8980354;
+          }
+        } else if(LeafShape[c]=="Scale") { 
+          leafwidth[c] = 0.1007839;
+        }
+      }
       if(NumericVector::is_na(WoodDensity[c])) WoodDensity[c] = 0.652;
       if(NumericVector::is_na(LeafDensity[c])) LeafDensity[c] = 0.7;
       if(NumericVector::is_na(FineRootDensity[c])) FineRootDensity[c] = 0.165; 
