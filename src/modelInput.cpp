@@ -122,24 +122,26 @@ DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams, bool fillMissingSpP
   if(fillMissingSpParams) {
     for(int c=0;c<numCohorts;c++){ //default values for missing data
       if(NumericVector::is_na(SLA[c]) && !CharacterVector::is_na(LeafShape[c]) && !CharacterVector::is_na(LeafSize[c])) {
-        if(LeafShape[c]=="Linear" | LeafShape[c]=="Needle") {
+        if(LeafShape[c]=="Linear") {
           if(LeafSize[c]=="Small") {
-            SLA[c] = 8.198;
+            SLA[c] = 13.189;
           } else if(LeafSize[c]=="Medium") {
-            SLA[c] = 4.978;
+            SLA[c] = 4.144;
           } else if(LeafSize[c]=="Large") {
-            SLA[c]= 3.265;
+            SLA[c]= 5.522;
           }
         } else if(LeafShape[c]=="Broad") {
           if(LeafSize[c]=="Small") {
-            SLA[c] = 6.798;
+            SLA[c] = 9.540;
           } else if(LeafSize[c]=="Medium") {
-            SLA[c] = 8.342;
+            SLA[c] = 11.499;
           } else if(LeafSize[c]=="Large") {
-            SLA[c]= 13.992;
+            SLA[c]= 16.039;
           }
+        } else if(LeafShape[c]=="Needle") { 
+          SLA[c] = 9.024;
         } else if(LeafShape[c]=="Scale") { 
-          SLA[c] = 5.440;
+          SLA[c] = 4.544;
         }
       }
       if(NumericVector::is_na(leafwidth[c]) && !CharacterVector::is_na(LeafShape[c]) && !CharacterVector::is_na(LeafSize[c])) {
