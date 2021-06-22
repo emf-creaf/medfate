@@ -17,7 +17,7 @@ data("SpParamsUS")
 \format{
   A data frame with species as rows and the following columns (variables), grouped by categories.
   \describe{
-  \bold{Plant identity}:
+  \bold{Taxonomic identity}:
   \itemize{
     \item{\code{Name}: A factor with taxon names (mostly species names).}
     \item{\code{IFNcodes}: A factor with levels corresponding to species codes in the Third Spanish forest inventory (DGCN 2005).}
@@ -25,7 +25,13 @@ data("SpParamsUS")
     \item{\code{Group}: Either "Gymnosperm" or "Angiosperm".}
     \item{\code{Order}: Taxonomical order.}
     \item{\code{Family}: Taxonomical family.}
-    \item{\code{GrowthForm}: Either \code{Shrub}, \code{Tree} and \code{Tree/Shrub}.}
+  }
+  \describe{
+  \bold{Plant/leaf classes}:
+  \itemize{
+    \item{\code{GrowthForm}: Either \code{"Shrub"}, \code{"Tree"} or \code{"Tree/Shrub"}.}
+    \item{\code{LeafShape}: Either \code{"Broad"}, \code{"Needle"}, \code{"Linear"}, \code{"Scale"}, \code{"Spines"} or \code{"Succulent"}.}
+    \item{\code{LeafSize}: Either \code{"Small"} (< 225 mm), \code{"Medium"} (> 225 mm & < 2025 mm) or \code{"Large"} (> 2025 mm).}
   }
   \bold{Plant size}:
   \itemize{
