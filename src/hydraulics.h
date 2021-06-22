@@ -23,7 +23,7 @@ double referenceConductivityHeightFactor(double refheight, double height);
 double maximumStemHydraulicConductance(double xylemConductivity, double refheight, double Al2As,  double height, bool taper = false);
 NumericVector rootxylemConductanceProportions(NumericVector V, NumericVector L);
 
-NumericVector psi2Weibull(double psi50, double psi88);
+NumericVector psi2Weibull(double psi50, double psi88 = NA_REAL, double psi12 = NA_REAL);
 
 double stemWaterCapacity(double Al2As, double height, double wd);
 double leafWaterCapacity(double SLA, double ld);

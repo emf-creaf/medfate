@@ -29,7 +29,7 @@ hydraulics_vanGenuchtenConductance(psi, krhizomax, n, alpha)
 hydraulics_xylemConductance(psi, kxylemmax, c, d)
 hydraulics_xylemPsi(kxylem, kxylemmax, c, d)
 hydraulics_correctConductanceForViscosity(kxylem, temp)
-hydraulics_psi2Weibull(psi50, psi88)
+hydraulics_psi2Weibull(psi50, psi88 = NA, psi12 = NA)
 }
 \arguments{
   \item{psi}{A scalar (or a vector, depending on the function) with water potential (in MPa).}
@@ -51,7 +51,7 @@ hydraulics_psi2Weibull(psi50, psi88)
   \item{draw}{A flag to indicate whether the vulnerability curve should be drawn or just returned.}
   \item{ylim, xlab, ylab}{Graphical parameters to override function defaults.}
   \item{pCrit}{Proportion of maximum conductance considered critical for hydraulic functioning.}
-  \item{psi50, psi88}{Water potentials (in MPa) corresponding to 50\% and 88\% of percent loss of conductance.}
+  \item{psi50, psi88, psi12}{Water potentials (in MPa) corresponding to 50\%, 88\% and 12\% percent conductance loss.}
   \item{temp}{Temperature (in degrees Celsius).}
 }
 \details{

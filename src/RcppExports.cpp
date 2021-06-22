@@ -1718,14 +1718,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // psi2Weibull
-NumericVector psi2Weibull(double psi50, double psi88);
-RcppExport SEXP _medfate_psi2Weibull(SEXP psi50SEXP, SEXP psi88SEXP) {
+NumericVector psi2Weibull(double psi50, double psi88, double psi12);
+RcppExport SEXP _medfate_psi2Weibull(SEXP psi50SEXP, SEXP psi88SEXP, SEXP psi12SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< double >::type psi50(psi50SEXP);
     Rcpp::traits::input_parameter< double >::type psi88(psi88SEXP);
-    rcpp_result_gen = Rcpp::wrap(psi2Weibull(psi50, psi88));
+    Rcpp::traits::input_parameter< double >::type psi12(psi12SEXP);
+    rcpp_result_gen = Rcpp::wrap(psi2Weibull(psi50, psi88, psi12));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -4729,7 +4730,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_medfate_supplyFunctionNetwork", (DL_FUNC) &_medfate_supplyFunctionNetwork, 20},
     {"_medfate_regulatedPsiXylem", (DL_FUNC) &_medfate_regulatedPsiXylem, 6},
     {"_medfate_regulatedPsiTwoElements", (DL_FUNC) &_medfate_regulatedPsiTwoElements, 10},
-    {"_medfate_psi2Weibull", (DL_FUNC) &_medfate_psi2Weibull, 2},
+    {"_medfate_psi2Weibull", (DL_FUNC) &_medfate_psi2Weibull, 3},
     {"_medfate_maximumSoilPlantConductance", (DL_FUNC) &_medfate_maximumSoilPlantConductance, 4},
     {"_medfate_soilPlantResistances", (DL_FUNC) &_medfate_soilPlantResistances, 17},
     {"_medfate_averageRhizosphereResistancePercent", (DL_FUNC) &_medfate_averageRhizosphereResistancePercent, 13},

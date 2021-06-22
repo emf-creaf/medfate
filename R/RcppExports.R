@@ -449,8 +449,8 @@ hydraulics_regulatedPsiTwoElements <- function(Emax, psiSoil, krhizomax, kxylemm
     .Call(`_medfate_regulatedPsiTwoElements`, Emax, psiSoil, krhizomax, kxylemmax, n, alpha, c, d, dE, psiMax)
 }
 
-hydraulics_psi2Weibull <- function(psi50, psi88) {
-    .Call(`_medfate_psi2Weibull`, psi50, psi88)
+hydraulics_psi2Weibull <- function(psi50, psi88 = NA_real_, psi12 = NA_real_) {
+    .Call(`_medfate_psi2Weibull`, psi50, psi88, psi12)
 }
 
 hydraulics_maximumSoilPlantConductance <- function(krhizomax, krootmax, kstemmax, kleafmax) {

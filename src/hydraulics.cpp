@@ -2175,9 +2175,16 @@ NumericVector regulatedPsiTwoElements(double Emax, double psiSoil, double krhizo
 
 
 // [[Rcpp::export("hydraulics_psi2Weibull")]]
-NumericVector psi2Weibull(double psi50, double psi88) {
-  double psiRatio = psi50/psi88;
-  double a = 0.3269156; // log(0.5)/log(0.12);
+NumericVector psi2Weibull(double psi50, double psi88 = NA_REAL, double psi12 = NA_REAL) {
+  if(NumericVector::is_na(psi88) && NumericVector::is_na(psi12)) stop("Either 'psi88' or 'psi12' has to be non-missing");
+  double a, psiRatio;
+  if(!NumericVector::is_na(psi88)) {
+    psiRatio = psi50/psi88;
+    a = 0.3269156; // log(0.5)/log(0.12);
+  } else {
+    psiRatio = psi50/psi12;
+    a = 5.422271; // log(0.5)/log(0.88);
+  }
   double c = log(a)/log(psiRatio);
   double d = psi50/pow(0.6931472,1.0/c);
   NumericVector par = NumericVector::create(c,d);
