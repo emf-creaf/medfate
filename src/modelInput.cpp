@@ -168,7 +168,23 @@ DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams, bool fillMissingSpP
         if(Group[c]=="Angiosperm") conduit2sapwood[c] = 0.70; //20-40% parenchyma in angiosperms.
         else conduit2sapwood[c] = 0.925; //5-10% parenchyma in gymnosperms (https://link.springer.com/chapter/10.1007/978-3-319-15783-2_8)
       }
-      if(NumericVector::is_na(Al2As[c])) Al2As[c] = 2500.0; // = 4 cm2·m-2
+      if(NumericVector::is_na(Al2As[c]) && !CharacterVector::is_na(LeafShape[c]) && !CharacterVector::is_na(LeafSize[c])) {
+        if(LeafShape[c]=="Linear") {
+          Al2As[c]= 2156.0;
+        } else if(LeafShape[c]=="Needle") {
+          Al2As[c]= 2751.7;
+        } else if(LeafShape[c]=="Broad") {
+          if(LeafSize[c]=="Small") {
+            Al2As[c] = 2284.9;
+          } else if(LeafSize[c]=="Medium") {
+            Al2As[c] = 2446.1;
+          } else if(LeafSize[c]=="Large") {
+            Al2As[c]= 4768.7;
+          }
+        } else if(LeafShape[c]=="Scale") { 
+          Al2As[c] = 1696.6;
+        }
+      }
       if(NumericVector::is_na(SRL[c])) SRL[c] = 3870.0; 
       if(NumericVector::is_na(RLD[c])) RLD[c] = 10.0;
     }
