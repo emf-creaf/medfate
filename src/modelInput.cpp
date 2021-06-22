@@ -116,8 +116,32 @@ DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams, bool fillMissingSpP
   NumericVector SRL = speciesNumericParameter(SP, SpParams, "SRL");  
   NumericVector RLD = speciesNumericParameter(SP, SpParams, "RLD");  
   
+  CharacterVector LeafSize = speciesCharacterParameter(SP, SpParams, "LeafSize");
+  CharacterVector LeafShape = speciesCharacterParameter(SP, SpParams, "LeafShape");
+  
   if(fillMissingSpParams) {
     for(int c=0;c<numCohorts;c++){ //default values for missing data
+      if(NumericVector::is_na(SLA[c]) && !CharacterVector::is_na(LeafShape[c]) && !CharacterVector::is_na(LeafSize[c])) {
+        if(LeafShape[c]=="Linear" | LeafShape[c]=="Needle") {
+          if(LeafSize[c]=="Small") {
+            SLA[c] = 8.198;
+          } else if(LeafSize[c]=="Medium") {
+            SLA[c] = 4.978;
+          } else if(LeafSize[c]=="Large") {
+            SLA[c]= 3.265;
+          }
+        } else if(LeafShape[c]=="Broad") {
+          if(LeafSize[c]=="Small") {
+            SLA[c] = 6.798;
+          } else if(LeafSize[c]=="Medium") {
+            SLA[c] = 8.342;
+          } else if(LeafSize[c]=="Large") {
+            SLA[c]= 13.992;
+          }
+        } else if(LeafShape[c]=="Scale") { 
+          SLA[c] = 5.440;
+        }
+      }
       if(NumericVector::is_na(WoodDensity[c])) WoodDensity[c] = 0.652;
       if(NumericVector::is_na(LeafDensity[c])) LeafDensity[c] = 0.7;
       if(NumericVector::is_na(FineRootDensity[c])) FineRootDensity[c] = 0.165; 
