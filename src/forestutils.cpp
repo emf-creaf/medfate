@@ -957,6 +957,7 @@ NumericVector cohortEquilibriumLeafLitter(List x, DataFrame SpParams, double AET
   NumericVector eqli(ncoh);
   double ki = 0.0;
   for(int i=0;i<ncoh;i++) {
+    if(NumericVector::is_na(lignin[i])) lignin[i] = 20.0; // Default to 20%
     ki = (-0.5365+0.00241*AET) - (-0.01586+0.000056*AET)*lignin[i];//Meentemeyer (1978)
     // Rcout<<ki<<"\n";
     eqli[i] = fb[i]/(ld[i]*ki);

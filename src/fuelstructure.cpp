@@ -13,9 +13,6 @@ const double broadleavedBulkDensity = 13.30; //kg/m3
 
 const double defaultParticleDensity = 400.0; //kg/m3
 const double defaultLowHeatContent = 18608.0; //kJ/kg
-const double defaultWoodyFlammabilityIndex = 1.0; // 1, 1.5 or 2
-const double defaultHerbFlammabilityIndex = 1.0; // 1, 1.5 or 2
-const double defaultLitterFlammabilityIndex = 1.0; // 1, 1.5 or 2
 
 const double AET = 700; //mm (leads to k = 0.6837 for Lignin = 20)
 const double smallBranchDecompositionRate = 0.3336; //year^-1 (AET = 700, Lignin = 35)
@@ -236,6 +233,91 @@ List fuelLiveStratification(List object, DataFrame SpParams, double gdd = NA_REA
                       _["canopyLAI"] = canopyLAI));
 }  
 
+
+CharacterVector leafLitterFuelType(List object, DataFrame SpParams) {
+  CharacterVector leafShape = cohortCharacterParameter(object, SpParams, "LeafShape");
+  CharacterVector leafSize = cohortCharacterParameter(object, SpParams, "LeafSize");
+  CharacterVector leafLitterType(leafShape.size(), NA_STRING);
+  for(int i=0;i<leafShape.size();i++) {
+    if(leafShape[i]=="Linear" || leafShape[i] =="Needle") {
+      if(leafSize[i]=="Small") {
+        leafLitterType[i] = "ShortLinear";
+      } else {
+        leafLitterType[i] = "LongLinear";
+      }
+    } else if(leafShape[i] == "Scale") {
+      leafLitterType[i] = "Scale";
+    } else {
+      leafLitterType[i] = "Broadleaved";
+    }
+  }
+  return(leafLitterType);
+}
+
+NumericVector surfaceToAreaRatio(List object, DataFrame SpParams) {
+  CharacterVector leafShape = cohortCharacterParameter(object, SpParams, "LeafShape");
+  CharacterVector leafSize = cohortCharacterParameter(object, SpParams, "LeafSize");
+  NumericVector cohSAV = cohortNumericParameter(object, SpParams, "SAV");
+  for(int i=0;i<cohSAV.size();i++) {
+    if(NumericVector::is_na(cohSAV[i])) {
+      if(leafShape[i]=="Scale") {
+        cohSAV[i] = 1120.0;
+      } else if(leafShape[i]=="Spines") {
+        cohSAV[i] = 6750.0;
+      } else if(leafShape[i]=="Linear" | leafShape[i]=="Needle") {
+        if(leafSize[i]=="Small") {
+          cohSAV[i] = 3620.0;
+        } else if(leafSize[i] == "Medium") {
+          cohSAV[i] = 4758.0;
+        } else { 
+          cohSAV[i] = 3620.0;
+        }
+      } else { //Broad
+        if(leafSize[i]=="Small") {
+          cohSAV[i] = 4386.0;
+        } else if(leafSize[i] == "Medium") {
+          cohSAV[i] = 4039.0;
+        } else { 
+          cohSAV[i] = 5740.0;
+        }
+      }
+    }
+  }
+  return(cohSAV);
+}
+
+NumericVector heatContent(List object, DataFrame SpParams) {
+  CharacterVector leafShape = cohortCharacterParameter(object, SpParams, "LeafShape");
+  CharacterVector leafSize = cohortCharacterParameter(object, SpParams, "LeafSize");
+  NumericVector cohHeatContent = cohortNumericParameter(object, SpParams, "HeatContent");
+  for(int i=0;i<cohHeatContent.size();i++) {
+    if(NumericVector::is_na(cohHeatContent[i])) {
+      if(leafShape[i]=="Scale") {
+        cohHeatContent[i] = 20504.0;
+      } else if(leafShape[i]=="Spines") {
+        cohHeatContent[i] = 20433.0;
+      } else if(leafShape[i]=="Linear" | leafShape[i]=="Needle") {
+        if(leafSize[i]=="Small") {
+          cohHeatContent[i] = 21888.0;
+        } else if(leafSize[i] == "Medium") {
+          cohHeatContent[i] = 21182.0;
+        } else { 
+          cohHeatContent[i] = 18250.0;
+        }
+      } else { //Broad
+        if(leafSize[i]=="Small") {
+          cohHeatContent[i] = 20062.0;
+        } else if(leafSize[i] == "Medium") {
+          cohHeatContent[i] = 19825.0;
+        } else { 
+          cohHeatContent[i] = 19740.0;
+        }
+      }
+    }
+  }
+  return(cohHeatContent);
+}
+
 /**
  * FCCS fuel definition
  */
@@ -261,15 +343,16 @@ DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, Dat
   }
     
   NumericVector cohParticleDensity = cohortNumericParameter(object, SpParams, "ParticleDensity");
-  NumericVector cohSAV = cohortNumericParameter(object, SpParams, "SAV");
-  NumericVector cohFlammability = cohortNumericParameter(object, SpParams, "Flammability");
-  NumericVector cohHeatContent = cohortNumericParameter(object, SpParams, "HeatContent");
+  NumericVector cohSAV = surfaceToAreaRatio(object, SpParams);
+  NumericVector cohHeatContent = heatContent(object, SpParams);
   NumericVector cohCR = cohortCrownRatio(object, SpParams, mode);
   NumericVector cohMinFMC = cohortNumericParameter(object, SpParams, "minFMC");
   NumericVector cohMaxFMC = cohortNumericParameter(object, SpParams, "maxFMC");
   NumericVector cohpDead = cohortNumericParameter(object, SpParams, "pDead");
-  CharacterVector leafLitterType = cohortCharacterParameter(object, SpParams, "LeafLitterFuelType");
-  
+  CharacterVector leafLitterType = leafLitterFuelType(object, SpParams);
+  for(int i=0;i<cohLoading.size();i++) { //defaults
+    if(NumericVector::is_na(cohParticleDensity[i])) cohParticleDensity[i] = 400.0;
+  }
   //Canopy limits and loading  
   double canopyBaseHeight = liveStrat["canopyBaseHeight"];
   double canopyTopHeight = liveStrat["canopyTopHeight"];
@@ -381,15 +464,7 @@ DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, Dat
   if(shrubLoading>0.0) h[1] = layerFuelAverageParameter(0.0, 200.0, cohHeatContent, cohLoading, cohHeight, cohCR);
   else h[1] = NA_REAL;
   h[2] = h[3] = h[4] = defaultLowHeatContent;
-  NumericVector etaF(5,0.0); //Flammability index (1 or 2)
-  if(canopyLoading>0.0) etaF[0] = layerFuelAverageParameter(200.0, 10000.0, cohFlammability, cohLoading, cohHeight, cohCR);
-  else etaF[0] = NA_REAL;
-  if(shrubLoading>0.0) etaF[1] = layerFuelAverageParameter(0.0, 200.0, cohFlammability, cohLoading, cohHeight, cohCR);
-  else etaF[1] = NA_REAL;
-  etaF[2] = defaultHerbFlammabilityIndex;
-  etaF[3] = defaultWoodyFlammabilityIndex;
-  etaF[4] = defaultLitterFlammabilityIndex;
-  
+
   NumericVector minFMC(5,NA_REAL); //Minimum FMC
   if(canopyLoading>0.0) minFMC[0] = layerFuelAverageParameter(200.0, 10000.0, cohMinFMC, cohLoading, cohHeight, cohCR);
   else minFMC[0] = NA_REAL;
@@ -526,7 +601,6 @@ DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, Dat
                                                      _["pDead"]=pDead,
                                                      _["FAI"] = FAI,
                                                      _["h"] = h,
-                                                     _["etaF"] = etaF,
                                                      _["RV"] = RV);
   FCCSProperties.push_back(minFMC, "MinFMC");
   FCCSProperties.push_back(maxFMC, "MaxFMC");

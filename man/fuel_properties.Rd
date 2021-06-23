@@ -19,7 +19,6 @@ fuel_FCCS(object, ShrubCover, CanopyCover, SpParams, cohortFMC = as.numeric(c())
 fuel_windAdjustmentFactor(topShrubHeight, bottomCanopyHeight, topCanopyHeight,
                           canopyCover)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{An object of class \code{\link{forest}}}
   \item{ShrubCover}{Total shrub cover (in percent) of the stand.}
@@ -64,7 +63,6 @@ Function \code{fuel_FCCS} returns a data frame with five rows corresponding to  
 \item{\code{pDead}: Proportion of dead fuels.}
 \item{\code{FAI}: Fuel area index (unitless).}
 \item{\code{h}: High heat content (in kJ/kg).}
-\item{\code{etaF}: Flammability modifier (between 1 and 2).}
 \item{\code{RV}: Reactive volume (in m3/m2).}
 \item{\code{MinFMC}: Minimum fuel moisture content (as percent over dry weight).}
 \item{\code{MaxFMC}: Maximum fuel moisture content (as percent over dry weight).}

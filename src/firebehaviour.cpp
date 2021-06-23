@@ -82,7 +82,6 @@ List FCCSbehaviour(DataFrame FCCSpropsSI,
   NumericVector pDead = FCCSpropsSI["pDead"];
   NumericVector FAI = FCCSpropsSI["FAI"]; //unitless
   NumericVector hdefSI = FCCSpropsSI["h"];
-  NumericVector etaF = FCCSpropsSI["etaF"]; //unitless
   NumericVector RVSI = FCCSpropsSI["RV"];
   //Rescale variables to British units
   NumericVector Mlive = MliveSI/100.0; //from percent to proportions
@@ -139,10 +138,10 @@ List FCCSbehaviour(DataFrame FCCSpropsSI,
   // Rcout<<"etaM: "<<etaM[0]<<" "<<etaM[1]<<" "<<etaM[2]<<" "<<etaM[3]<<" "<<etaM[4]<<"\n";
   
   //Reaction intensity
-  double I_r_sh = pow(etabetarel[1], A_sh)*Gmax_sh*w[1]*h[1]*etaM[1]*etaK*etaF[1];
-  double I_r_he = pow(etabetarel[2], A_he)*Gmax_he*w[2]*h[2]*etaM[2]*etaK*etaF[2];
-  double I_r_wo = pow(etabetarel[3], A_wo)*Gmax_wo*w[3]*h[3]*etaM[3]*etaK*etaF[3];
-  double I_r_li = pow(etabetarel[4], A_li)*Gmax_li*w[4]*h[4]*etaM[4]*etaK*etaF[4];
+  double I_r_sh = pow(etabetarel[1], A_sh)*Gmax_sh*w[1]*h[1]*etaM[1]*etaK;
+  double I_r_he = pow(etabetarel[2], A_he)*Gmax_he*w[2]*h[2]*etaM[2]*etaK;
+  double I_r_wo = pow(etabetarel[3], A_wo)*Gmax_wo*w[3]*h[3]*etaM[3]*etaK;
+  double I_r_li = pow(etabetarel[4], A_li)*Gmax_li*w[4]*h[4]*etaM[4]*etaK;
   double I_r_surf = I_r_sh+ I_r_he+I_r_wo+I_r_li;
   double I_r_litter = I_r_li;
   
@@ -257,7 +256,7 @@ List FCCSbehaviour(DataFrame FCCSpropsSI,
   // Rcout << " FAIc "<< FAI[0] << " TFAI/3pi "<< (TFAIc/(3.0*M_PI))<<"\n";
 
   //Crown fire spread rate
-  double I_r_ca  = pow(etabetarel[0], A_ca)*Gmax_ca*w[0]*h[0]*etaM[0]*etaK*etaF[0];
+  double I_r_ca  = pow(etabetarel[0], A_ca)*Gmax_ca*w[0]*h[0]*etaM[0]*etaK;
   double I_r_crown = I_r_surf+I_r_ca;
   double xi_crown = 1.0 - exp(-1.0*(FAI[0]/(4.0*delta[0])));
   double q_ca = (0.5*FAI[0]*RT_ca*rhop[0]*Qig_ca)/((cover[0]/100.0)*delta[0]);

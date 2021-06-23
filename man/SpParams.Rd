@@ -26,8 +26,7 @@ data("SpParamsUS")
     \item{\code{Order}: Taxonomical order.}
     \item{\code{Family}: Taxonomical family.}
   }
-  \describe{
-  \bold{Plant/leaf classes}:
+  \bold{Plant/leaf classification}:
   \itemize{
     \item{\code{GrowthForm}: Either \code{"Shrub"}, \code{"Tree"} or \code{"Tree/Shrub"}.}
     \item{\code{LeafShape}: Either \code{"Broad"}, \code{"Needle"}, \code{"Linear"}, \code{"Scale"}, \code{"Spines"} or \code{"Succulent"}.}
@@ -91,8 +90,6 @@ data("SpParamsUS")
   \itemize{  
     \item{\code{LigninPercent}: Percent of lignin+cutin over dry weight in leaves.}
     \item{\code{ParticleDensity}: Particle density (kg/m3).}
-    \item{\code{LeafLitterFuelType}: Fuel type for leaf litter, with levels \code{Broadleaved}, \code{LongLinear}, \code{Scale} and \code{ShortLinear}.}
-    \item{\code{Flammability}: Flammability modifier (either 1 or 2 for normal or high, respectively).}
     \item{\code{SAV}: Surface-area-to-volume ratio of the small fuel (1h) fraction (leaves and branches < 6.35mm) (m2/m3).}
     \item{\code{HeatContent}: High fuel heat content (kJ/kg).}
     }
@@ -148,7 +145,7 @@ data("SpParamsUS")
     \item{\code{RecrShrubHeight}: Recruitment height (cm) for shrubs.}
     \item{\code{RecrZ50}: Soil depth (mm) corresponding to 50\% of fine roots for recruitment.}
     \item{\code{RecrZ95}: Soil depth (mm) corresponding to 95\% of fine roots for recruitment.}
-  }
+   }
   }
 }
 \details{
