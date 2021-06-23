@@ -30,7 +30,7 @@ reference:
 - title: Species parameters
   desc:  Species parameter data and utility functions.
   contents:
-  - SpParamsMED
+  - starts_with("SpParams")
   - modifySpParams
   - getSpParamsNames
 

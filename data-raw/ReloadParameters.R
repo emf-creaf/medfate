@@ -4,6 +4,9 @@ usethis::use_data(MEGANParams, overwrite = T)
 rm(MEGANParams)
 
 ## Reload parameters from 'SpParams.xlsx'
+SpParamsDefinition <-as.data.frame(readxl::read_xlsx("data-raw/SpParams.xlsx",
+                                              sheet="Definition", na = "NA"), stringsAsFactors=FALSE)
+usethis::use_data(SpParamsDefinition, overwrite = T)
 SpParamsMED <-as.data.frame(readxl::read_xlsx("data-raw/SpParams.xlsx",
                                               sheet="SpParamsMED", na = "NA"), stringsAsFactors=FALSE)
 usethis::use_data(SpParamsMED, overwrite = T)
