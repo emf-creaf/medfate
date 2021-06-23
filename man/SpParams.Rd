@@ -1,23 +1,21 @@
 \encoding{UTF-8}
 \name{SpParams}
 \alias{SpParams}
-\alias{SpParamsDefinition}
 \alias{SpParamsMED}
 \alias{SpParamsUS}
 \docType{data}
 \title{
-Data tables with species parameter definition and values for Mediterranean and US
+Data tables with species parameter values for Mediterranean and US
 }
 \description{
-A data sets of species parameter definition and values, the latter resulting from bibliographic search, fit to empirical data or expert-based guesses.
+A data sets of species parameter values, the latter resulting from bibliographic search, fit to empirical data or expert-based guesses.
 }
 \usage{
-data("SpParamsDefinition")
 data("SpParamsMED")
 data("SpParamsUS")
 }
 \format{
-  Data frame \code{SpParamsDefinition} contains parameters in rows and columns "ParameterName", "ParameterGroup", "Definition", "Type" and "Units". Data frames \code{SpParamsMED} and \code{SpParamsUS} have species or genus as rows and column names equal to "ParameterName" in \code{SpParamsDefinition}.
+ Data frames \code{SpParamsMED} and \code{SpParamsUS} have species or genus as rows and column names equal to parameter names (see  \code{\link{getSpParamsDefinition}}).
 }
 \details{
 See details of parameterization in De Caceres et al. (2015) and De Caceres et al. (2021).
@@ -33,9 +31,8 @@ De \enc{Cáceres}{Caceres} M, Casals P, Gabriel E, Castro X (2019) Scaling-up in
 DGCN (2005). Tercer Inventario Forestal Nacional (1997-2007): Catalunya. Dirección General de Conservación de la Naturaleza, Ministerio de Medio Ambiente, Madrid.
 
 }
-\seealso{\code{\link{getSpParamsNames}},\code{\link{spwb}}}
+\seealso{\code{\link{getSpParamsDefinition}},\code{\link{spwb}}}
 \examples{
-data(SpParamsDefinition)
 data(SpParamsMED)
 }
 \keyword{datasets}
