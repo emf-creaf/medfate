@@ -7,7 +7,7 @@
 - New species categorical params (for inbuilt imputation) 'LeafShape' and 'LeafSize'
 - Parameter 'Flammability' index eliminated (non-meansurable property of flammability).
 - Parameter 'LeafLitterFuelType' eliminated because it is derived from 'LeafShape' and 'LeafSize'.
-- Defaults added for 'heatContent' and 'SAV' according to 'LeafShape' and 'LeafSize'
+- Defaults added for 'r635', 'heatContent' and 'SAV' according to 'LeafShape' and 'LeafSize'
 
 # Version 2.2.3
 - Functions soilgridsParams() and forest_map*Tables() moved to package 'medfateutils' available at GitHub (emf-creaf/medfateutils).

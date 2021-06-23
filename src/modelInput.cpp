@@ -23,7 +23,7 @@ void checkSpeciesParameters(DataFrame SpParams, CharacterVector params) {
     s = params[i];
     if(!SpParams.containsElementNamed(params[i])) {
       Rcout << params[i]<<"\n";
-      stop("Parameter missing in species params");
+      stop("Parameter column missing in species params");
     }
   }
 }
@@ -112,6 +112,8 @@ DataFrame paramsAnatomy(DataFrame above, DataFrame SpParams, bool fillMissingSpP
     conduit2sapwood = speciesNumericParameter(SP, SpParams, "conduit2sapwood");
   }
   NumericVector r635 = speciesNumericParameter(SP, SpParams, "r635");
+  if(fillMissingSpParams) r635 = fineFoliarRatioWithImputation(SP, SpParams); 
+
   NumericVector leafwidth = speciesNumericParameter(SP, SpParams, "LeafWidth");
   NumericVector SRL = speciesNumericParameter(SP, SpParams, "SRL");  
   NumericVector RLD = speciesNumericParameter(SP, SpParams, "RLD");  

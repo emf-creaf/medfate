@@ -15,6 +15,10 @@ NumericVector speciesNumericParameter(IntegerVector SP, DataFrame SpParams, Stri
 CharacterVector cohortCharacterParameter(List x, DataFrame SpParams, String parName);
 CharacterVector speciesCharacterParameter(IntegerVector SP, DataFrame SpParams, String parName);
 
+NumericVector surfaceToAreaRatioWithImputation(List object, DataFrame SpParams);
+NumericVector heatContentWithImputation(List object, DataFrame SpParams);
+NumericVector fineFoliarRatioWithImputation(IntegerVector SP, DataFrame SpParams);
+
 double leafAreaProportion(double z1, double z2, double zmin, double zmax);
 
 CharacterVector cohortIDs(List x, int treeOffset = 0, int shrubOffset = 0);

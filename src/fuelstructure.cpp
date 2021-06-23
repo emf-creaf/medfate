@@ -254,69 +254,6 @@ CharacterVector leafLitterFuelType(List object, DataFrame SpParams) {
   return(leafLitterType);
 }
 
-NumericVector surfaceToAreaRatio(List object, DataFrame SpParams) {
-  CharacterVector leafShape = cohortCharacterParameter(object, SpParams, "LeafShape");
-  CharacterVector leafSize = cohortCharacterParameter(object, SpParams, "LeafSize");
-  NumericVector cohSAV = cohortNumericParameter(object, SpParams, "SAV");
-  for(int i=0;i<cohSAV.size();i++) {
-    if(NumericVector::is_na(cohSAV[i])) {
-      if(leafShape[i]=="Scale") {
-        cohSAV[i] = 1120.0;
-      } else if(leafShape[i]=="Spines") {
-        cohSAV[i] = 6750.0;
-      } else if(leafShape[i]=="Linear" | leafShape[i]=="Needle") {
-        if(leafSize[i]=="Small") {
-          cohSAV[i] = 3620.0;
-        } else if(leafSize[i] == "Medium") {
-          cohSAV[i] = 4758.0;
-        } else { 
-          cohSAV[i] = 3620.0;
-        }
-      } else { //Broad
-        if(leafSize[i]=="Small") {
-          cohSAV[i] = 4386.0;
-        } else if(leafSize[i] == "Medium") {
-          cohSAV[i] = 4039.0;
-        } else { 
-          cohSAV[i] = 5740.0;
-        }
-      }
-    }
-  }
-  return(cohSAV);
-}
-
-NumericVector heatContent(List object, DataFrame SpParams) {
-  CharacterVector leafShape = cohortCharacterParameter(object, SpParams, "LeafShape");
-  CharacterVector leafSize = cohortCharacterParameter(object, SpParams, "LeafSize");
-  NumericVector cohHeatContent = cohortNumericParameter(object, SpParams, "HeatContent");
-  for(int i=0;i<cohHeatContent.size();i++) {
-    if(NumericVector::is_na(cohHeatContent[i])) {
-      if(leafShape[i]=="Scale") {
-        cohHeatContent[i] = 20504.0;
-      } else if(leafShape[i]=="Spines") {
-        cohHeatContent[i] = 20433.0;
-      } else if(leafShape[i]=="Linear" | leafShape[i]=="Needle") {
-        if(leafSize[i]=="Small") {
-          cohHeatContent[i] = 21888.0;
-        } else if(leafSize[i] == "Medium") {
-          cohHeatContent[i] = 21182.0;
-        } else { 
-          cohHeatContent[i] = 18250.0;
-        }
-      } else { //Broad
-        if(leafSize[i]=="Small") {
-          cohHeatContent[i] = 20062.0;
-        } else if(leafSize[i] == "Medium") {
-          cohHeatContent[i] = 19825.0;
-        } else { 
-          cohHeatContent[i] = 19740.0;
-        }
-      }
-    }
-  }
-  return(cohHeatContent);
-}
 
 /**
  * FCCS fuel definition
@@ -343,8 +280,8 @@ DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, Dat
   }
     
   NumericVector cohParticleDensity = cohortNumericParameter(object, SpParams, "ParticleDensity");
-  NumericVector cohSAV = surfaceToAreaRatio(object, SpParams);
-  NumericVector cohHeatContent = heatContent(object, SpParams);
+  NumericVector cohSAV = surfaceToAreaRatioWithImputation(object, SpParams);
+  NumericVector cohHeatContent = heatContentWithImputation(object, SpParams);
   NumericVector cohCR = cohortCrownRatio(object, SpParams, mode);
   NumericVector cohMinFMC = cohortNumericParameter(object, SpParams, "minFMC");
   NumericVector cohMaxFMC = cohortNumericParameter(object, SpParams, "maxFMC");
