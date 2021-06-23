@@ -74,11 +74,29 @@ DataFrame paramsInterception(DataFrame above, DataFrame SpParams, List control) 
   String transpirationMode = control["transpirationMode"];
   bool fillMissingSpParams = control["fillMissingSpParams"];
   
+  CharacterVector leafShape = speciesCharacterParameter(SP, SpParams, "LeafShape");
   NumericVector alphaSWR = speciesNumericParameter(SP, SpParams, "alphaSWR");
   NumericVector gammaSWR = speciesNumericParameter(SP, SpParams, "gammaSWR");
   NumericVector kPAR = speciesNumericParameter(SP, SpParams, "kPAR");
   NumericVector g = speciesNumericParameter(SP, SpParams, "g");
-  
+  if(fillMissingSpParams) {
+    for(int j=0; j<numCohorts;j++) {
+      if(NumericVector::is_na(alphaSWR[j])) alphaSWR[j] = 0.7;
+      if(leafShape[j] == "broad") {
+        if(NumericVector::is_na(g[j])) g[j] = 0.5;
+        if(NumericVector::is_na(gammaSWR[j])) gammaSWR[j] = 0.18;
+        if(NumericVector::is_na(kPAR[j])) kPAR[j] = 0.55;
+      } else if(leafShape[j]=="Linear") {
+        if(NumericVector::is_na(g[j])) g[j] = 0.8;
+        if(NumericVector::is_na(gammaSWR[j])) gammaSWR[j] = 0.15;
+        if(NumericVector::is_na(kPAR[j])) kPAR[j] = 0.45;
+      } else if(leafShape[j]=="Needle" | leafShape[j]=="Scale"){
+        if(NumericVector::is_na(g[j])) g[j] = 1.0;
+        if(NumericVector::is_na(gammaSWR[j])) gammaSWR[j] = 0.14;
+        if(NumericVector::is_na(kPAR[j])) kPAR[j] = 0.50;
+      }
+    }
+  }
   DataFrame paramsInterceptiondf;
   if(transpirationMode=="Granier") {
     paramsInterceptiondf = DataFrame::create(_["kPAR"] = kPAR, 
@@ -256,13 +274,36 @@ DataFrame paramsTranspirationGranier(DataFrame above,  DataFrame SpParams, bool 
   NumericVector pRootDisc = speciesNumericParameter(SP, SpParams, "pRootDisc");
   NumericVector Tmax_LAI(SP.size(), NA_REAL);
   
+  CharacterVector Group = speciesCharacterParameter(SP, SpParams, "Group");
+  CharacterVector Order = speciesCharacterParameter(SP, SpParams, "Order");
+  CharacterVector GrowthForm = speciesCharacterParameter(SP, SpParams, "GrowthForm");
+  CharacterVector phenoType = speciesCharacterParameter(SP, SpParams, "PhenologyType");
+  
   //Granier's parameters will not raise error messages when missing and will be filled always 
   if(SpParams.containsElementNamed("Tmax_LAI")) Tmax_LAI = speciesNumericParameter(SP, SpParams, "Tmax_LAI");
   NumericVector Tmax_LAIsq(SP.size(), NA_REAL);
   if(SpParams.containsElementNamed("Tmax_LAIsq")) Tmax_LAIsq = speciesNumericParameter(SP, SpParams, "Tmax_LAIsq");
-  for(int i=0;i<SP.size();i++) {
-    if(NumericVector::is_na(Tmax_LAI[i])) Tmax_LAI[i] = 0.134; //Granier coefficient for LAI
-    if(NumericVector::is_na(Tmax_LAIsq[i])) Tmax_LAIsq[i] =-0.006; //Granier coefficient for LAI^2
+  for(int c=0;c<SP.size();c++) {
+    if(NumericVector::is_na(Tmax_LAI[c])) Tmax_LAI[c] = 0.134; //Granier coefficient for LAI
+    if(NumericVector::is_na(Tmax_LAIsq[c])) Tmax_LAIsq[c] =-0.006; //Granier coefficient for LAI^2
+    if(NumericVector::is_na(Psi_Critic[c])) {
+      // From: Maherali H, Pockman W, Jackson R (2004) Adaptive variation in the vulnerability of woody plants to xylem cavitation. Ecology 85:2184–2199
+      if(Group[c]=="Angiosperm") {
+        if((GrowthForm[c]=="Shrub") && (phenoType[c] != "winter-deciduous") && (phenoType[c] != "winter-semideciduous")) {
+          Psi_Critic[c] = -5.09; //Angiosperm evergreen shrub
+        } else if((GrowthForm[c]!="Shrub") && (phenoType[c] == "winter-deciduous" | phenoType[c] == "winter-semideciduous")) {
+          Psi_Critic[c] = -2.34; //Angiosperm winter-deciduous tree
+        } else { 
+          Psi_Critic[c] = -1.51; //Angiosperm evergreen tree
+        }
+      } else {
+        if(GrowthForm[c]=="Shrub") {
+          Psi_Critic[c] = -8.95; //Gymnosperm shrub
+        } else {
+          Psi_Critic[c] = -4.17; //Gymnosperm tree
+        }
+      }
+    }
   }
   
   if(fillMissingSpParams) {
