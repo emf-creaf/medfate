@@ -17,20 +17,26 @@ data("SpParamsUS")
 \format{
   A data frame with species as rows and the following columns (variables), grouped by categories.
   \describe{
+  \bold{Identity}:
+  \itemize{
+    \item{\code{Name}: Taxon names (species binomials or genus).}
+    \item{\code{IFNcodes}: A factor with levels corresponding to species codes in the Third Spanish forest inventory (DGCN 2005).}
+    \item{\code{SpIndex}: Numeric species index.}
+  }    
   \bold{Taxonomic identity}:
   \itemize{
-    \item{\code{Name}: A factor with taxon names (mostly species names).}
-    \item{\code{IFNcodes}: A factor with levels corresponding to species codes in the Third Spanish forest inventory (DGCN 2005).}
-    \item{\code{SpIndex}: A numeric vector of the species index.}
-    \item{\code{Group}: Either "Gymnosperm" or "Angiosperm".}
+    \item{\code{Genus}: Taxonomical genus.}
     \item{\code{Order}: Taxonomical order.}
     \item{\code{Family}: Taxonomical family.}
+    \item{\code{Group}: Either "Gymnosperm" or "Angiosperm".}
   }
   \bold{Plant/leaf classification}:
   \itemize{
     \item{\code{GrowthForm}: Either \code{"Shrub"}, \code{"Tree"} or \code{"Tree/Shrub"}.}
+    \item{\code{LifeForm}: Raunkiaer life form.}
     \item{\code{LeafShape}: Either \code{"Broad"}, \code{"Needle"}, \code{"Linear"}, \code{"Scale"}, \code{"Spines"} or \code{"Succulent"}.}
     \item{\code{LeafSize}: Either \code{"Small"} (< 225 mm), \code{"Medium"} (> 225 mm & < 2025 mm) or \code{"Large"} (> 2025 mm).}
+    \item{\code{PhenologyType}: Leaf phenology type, either "oneflush-evergreen" (new leaves develop in spring-summer), "progressive-evergreen" (new leaves develop during any season), "winter-deciduous" (leaf senescence in autumn, new leaves in spring-summer) or "winter-semideciduous" (same as before, but abscission of senescent leaves occurs when new leaves are produced).}
   }
   \bold{Plant size}:
   \itemize{
@@ -38,14 +44,16 @@ data("SpParamsUS")
     \item{\code{Hmed}: Median plant height (in cm).}
     \item{\code{Z50}: Rooting depth (in mm) corresponding to 50\% of fine roots.}
     \item{\code{Z95}: Rooting depth (in mm) corresponding to 95\% of fine roots.}
+    \item{\code{fHDmin}: Minimum value of the height-to-diameter ratio (dimensionless).}
+    \item{\code{fHDmax}: Maximum value of the height-to-diameter ratio (dimensionless).}
   }
-  \bold{Shrub allometric coefficients} (calibrated for Catalonia; see De \enc{Cáceres}{Caceres} et al. 2019):
+  \bold{Shrub allometric coefficients}:
   \itemize{
     \item{\code{a_ash}, \code{b_ash}: Allometric coefficients relating shrub height with the projected area of shrub individuals.}
     \item{\code{a_bsh}, \code{b_bsh}: Allometric coefficients relating phytovolume with dry weight of shrub individuals.}
     \item{\code{cr}: Ratio between shrub crown length and total height.}
   }
-  \bold{Tree allometric coefficients} (calibrated for Catalonia):
+  \bold{Tree allometric coefficients}:
   \itemize{
     \item{\code{a_fbt}, \code{b_fbt}, \code{c_fbt}, \code{d_fbt}: Regression coefficients used to calculate foliar biomass of an individual tree from its dbh and the cummulative basal area of larger trees.}
     \item{\code{a_cr}, \code{b_1cr}, \code{b_2cr}, \code{b_3cr}, \code{c_1cr}, \code{c_2cr}: Regression coefficients used to calculate crown ratio of trees.}
@@ -53,7 +61,6 @@ data("SpParamsUS")
   }
   \bold{Phenology}:
   \itemize{  
-    \item{\code{PhenologyType}: Leaf phenology type, either "oneflush-evergreen" (new leaves develop in spring-summer), "progressive-evergreen" (new leaves develop during any season), "winter-deciduous" (leaf senescence in autumn, new leaves in spring-summer) or "winter-semideciduous" (same as before, but abscission of senescent leaves occurs when new leaves are produced).}
     \item{\code{LeafDuration}: Leaf duration (in years).}
     \item{\code{Sgdd}: Degree days for leaf budburst (in Celsius).}
     \item{\code{Tbgdd}: Base temperature for the calculation of degree days to leaf budburst.}
@@ -129,8 +136,6 @@ data("SpParamsUS")
     \item{\code{RGRleafmax}: Maximum leaf area growth rate relative to sapwood area (in m2·cm-2· day-1).}
     \item{\code{RGRsapwoodmax}: Maximum sapwood area relative growth rate (in cm2·cm-2·day-1).}
     \item{\code{RGRfinerootmax}: Maximum fine root relative growth rate (in g dry·g dry-1· day-1).}
-    \item{\code{fHDmin}: Minimum value of the height-to-diameter ratio (dimensionless).}
-    \item{\code{fHDmax}: Maximum value of the height-to-diameter ratio (dimensionless).}
     }
   \bold{Recruitment}:
   \itemize{  
@@ -162,7 +167,7 @@ De \enc{Cáceres}{Caceres} M, Casals P, Gabriel E, Castro X (2019) Scaling-up in
 DGCN (2005). Tercer Inventario Forestal Nacional (1997-2007): Catalunya. Dirección General de Conservación de la Naturaleza, Ministerio de Medio Ambiente, Madrid.
 
 }
-\seealso{ \code{\link{spwb}}}
+\seealso{\code{\link{getSpParamsNames}},\code{\link{spwb}}}
 \examples{
 data(SpParamsMED)
 }
