@@ -278,6 +278,8 @@ DataFrame paramsTranspirationGranier(DataFrame above,  DataFrame SpParams, bool 
   CharacterVector Order = speciesCharacterParameter(SP, SpParams, "Order");
   CharacterVector GrowthForm = speciesCharacterParameter(SP, SpParams, "GrowthForm");
   CharacterVector phenoType = speciesCharacterParameter(SP, SpParams, "PhenologyType");
+  CharacterVector LeafSize = speciesCharacterParameter(SP, SpParams, "LeafSize");
+  CharacterVector LeafShape = speciesCharacterParameter(SP, SpParams, "LeafShape");
   
   //Granier's parameters will not raise error messages when missing and will be filled always 
   if(SpParams.containsElementNamed("Tmax_LAI")) Tmax_LAI = speciesNumericParameter(SP, SpParams, "Tmax_LAI");
@@ -286,30 +288,46 @@ DataFrame paramsTranspirationGranier(DataFrame above,  DataFrame SpParams, bool 
   for(int c=0;c<SP.size();c++) {
     if(NumericVector::is_na(Tmax_LAI[c])) Tmax_LAI[c] = 0.134; //Granier coefficient for LAI
     if(NumericVector::is_na(Tmax_LAIsq[c])) Tmax_LAIsq[c] =-0.006; //Granier coefficient for LAI^2
-    if(NumericVector::is_na(Psi_Critic[c])) {
-      // From: Maherali H, Pockman W, Jackson R (2004) Adaptive variation in the vulnerability of woody plants to xylem cavitation. Ecology 85:2184–2199
-      if(Group[c]=="Angiosperm") {
-        if((GrowthForm[c]=="Shrub") && (phenoType[c] != "winter-deciduous") && (phenoType[c] != "winter-semideciduous")) {
-          Psi_Critic[c] = -5.09; //Angiosperm evergreen shrub
-        } else if((GrowthForm[c]!="Shrub") && (phenoType[c] == "winter-deciduous" | phenoType[c] == "winter-semideciduous")) {
-          Psi_Critic[c] = -2.34; //Angiosperm winter-deciduous tree
-        } else { 
-          Psi_Critic[c] = -1.51; //Angiosperm evergreen tree
-        }
-      } else {
-        if(GrowthForm[c]=="Shrub") {
-          Psi_Critic[c] = -8.95; //Gymnosperm shrub
-        } else {
-          Psi_Critic[c] = -4.17; //Gymnosperm tree
-        }
-      }
-    }
   }
   
   if(fillMissingSpParams) {
-    for(int i=0;i<SP.size();i++) {
-      if(NumericVector::is_na(WUE[i])) WUE[i] = 4.0;
-      if(NumericVector::is_na(pRootDisc[i])) pRootDisc[i] = 0.0;
+    for(int c=0;c<SP.size();c++) {
+      if(NumericVector::is_na(WUE[c]) && !CharacterVector::is_na(LeafShape[c]) && !CharacterVector::is_na(LeafSize[c])) {
+        if(LeafShape[c]=="Linear") {
+          WUE[c]= 3.707131;
+        } else if(LeafShape[c]=="Needle") {
+          WUE[c]= 3.707131;
+        } else if(LeafShape[c]=="Broad") {
+          if(LeafSize[c]=="Small") {
+            WUE[c] = 4.289629;
+          } else if(LeafSize[c]=="Medium") {
+            WUE[c] = 3.982086;
+          } else if(LeafSize[c]=="Large") {
+            WUE[c]= 3.027647;
+          }
+        } else if(LeafShape[c]=="Scale") { 
+          WUE[c] = 1.665034;
+        }
+      }
+      if(NumericVector::is_na(pRootDisc[c])) pRootDisc[c] = 0.0;
+      if(NumericVector::is_na(Psi_Critic[c])) {
+        // From: Maherali H, Pockman W, Jackson R (2004) Adaptive variation in the vulnerability of woody plants to xylem cavitation. Ecology 85:2184–2199
+        if(Group[c]=="Angiosperm") {
+          if((GrowthForm[c]=="Shrub") && (phenoType[c] != "winter-deciduous") && (phenoType[c] != "winter-semideciduous")) {
+            Psi_Critic[c] = -5.09; //Angiosperm evergreen shrub
+          } else if((GrowthForm[c]!="Shrub") && (phenoType[c] == "winter-deciduous" | phenoType[c] == "winter-semideciduous")) {
+            Psi_Critic[c] = -2.34; //Angiosperm winter-deciduous tree
+          } else { 
+            Psi_Critic[c] = -1.51; //Angiosperm evergreen tree
+          }
+        } else {
+          if(GrowthForm[c]=="Shrub") {
+            Psi_Critic[c] = -8.95; //Gymnosperm shrub
+          } else {
+            Psi_Critic[c] = -4.17; //Gymnosperm tree
+          }
+        }
+      }
     }
   }
   DataFrame paramsTranspirationdf = DataFrame::create(_["Tmax_LAI"] = Tmax_LAI,
