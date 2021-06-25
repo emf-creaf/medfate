@@ -12,6 +12,7 @@ Data tables with species parameter definition and values for Mediterranean and U
 A data sets of species parameter definition and values, the latter resulting from existing databases, fit to empirical data or expert-based guesses.
 }
 \usage{
+data("SpParamsDefinition")
 data("SpParamsMED")
 data("SpParamsUS")
 }
@@ -32,7 +33,7 @@ De \enc{Cáceres}{Caceres} M, Casals P, Gabriel E, Castro X (2019) Scaling-up in
 DGCN (2005). Tercer Inventario Forestal Nacional (1997-2007): Catalunya. Dirección General de Conservación de la Naturaleza, Ministerio de Medio Ambiente, Madrid.
 
 }
-\seealso{\code{\link{getSpParamsDefinition}},\code{\link{spwb}}}
+\seealso{\code{\link{spwb}}}
 \examples{
 data(SpParamsMED)
 }

@@ -32,7 +32,6 @@ reference:
   contents:
   - starts_with("SpParams")
   - modifySpParams
-  - getSpParamsDefinition
 
 - title: Forest structure
   desc:  Plant, species and forest attributes
