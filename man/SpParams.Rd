@@ -1,21 +1,22 @@
 \encoding{UTF-8}
 \name{SpParams}
 \alias{SpParams}
+\alias{SpParamsDefinition}
 \alias{SpParamsMED}
 \alias{SpParamsUS}
 \docType{data}
 \title{
-Data tables with species parameter values for Mediterranean and US
+Data tables with species parameter definition and values for Mediterranean and US
 }
 \description{
-A data sets of species parameter values, the latter resulting from bibliographic search, fit to empirical data or expert-based guesses.
+A data sets of species parameter definition and values, the latter resulting from existing databases, fit to empirical data or expert-based guesses.
 }
 \usage{
 data("SpParamsMED")
 data("SpParamsUS")
 }
 \format{
- Data frames \code{SpParamsMED} and \code{SpParamsUS} have species or genus as rows and column names equal to parameter names (see  \code{\link{getSpParamsDefinition}}).
+Data frame \code{SpParamsDefinition} has parameters in rows and columns 'ParameterName', 'ParameterGroup', 'Definition', 'Type' and 'Units'. Data frames \code{SpParamsMED} and \code{SpParamsUS} have species or genus as rows and column names equal to parameter names in \code{SpParamsDefinition}.
 }
 \details{
 See details of parameterization in De Caceres et al. (2015) and De Caceres et al. (2021).
