@@ -13,6 +13,7 @@ CharacterVector cohortCharacterParameter(List x, DataFrame SpParams, String parN
 
 NumericVector surfaceToAreaRatioWithImputation(List object, DataFrame SpParams);
 NumericVector heatContentWithImputation(List object, DataFrame SpParams);
+NumericVector ligninPercentWithImputation(List object, DataFrame SpParams);
 
 double leafAreaProportion(double z1, double z2, double zmin, double zmax);
 

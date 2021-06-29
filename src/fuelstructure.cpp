@@ -278,10 +278,11 @@ DataFrame FCCSproperties(List object, double ShrubCover, double CanopyCover, Dat
     if(NumericVector::is_na(cohHeight[i])) cohHeight[i] = 0.0;
     if(NumericVector::is_na(cohCL[i])) cohCL[i] = 0.0;
   }
-    
-  NumericVector cohParticleDensity = cohortNumericParameter(object, SpParams, "ParticleDensity");
+  
   NumericVector cohSAV = surfaceToAreaRatioWithImputation(object, SpParams);
   NumericVector cohHeatContent = heatContentWithImputation(object, SpParams);
+  
+  NumericVector cohParticleDensity = cohortNumericParameter(object, SpParams, "ParticleDensity");
   NumericVector cohCR = cohortCrownRatio(object, SpParams, mode);
   NumericVector cohMinFMC = cohortNumericParameter(object, SpParams, "minFMC");
   NumericVector cohMaxFMC = cohortNumericParameter(object, SpParams, "maxFMC");

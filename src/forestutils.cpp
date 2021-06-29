@@ -158,6 +158,38 @@ NumericVector heatContentWithImputation(List object, DataFrame SpParams) {
   }
   return(cohHeatContent);
 }
+/** Parameter retrieval with imputation */
+NumericVector ligninPercentWithImputation(List object, DataFrame SpParams) {
+  CharacterVector leafShape = cohortCharacterParameter(object, SpParams, "LeafShape");
+  CharacterVector leafSize = cohortCharacterParameter(object, SpParams, "LeafSize");
+  NumericVector cohLigninPercent = cohortNumericParameter(object, SpParams, "LigninPercent");
+  for(int i=0;i<cohLigninPercent.size();i++) {
+    if(NumericVector::is_na(cohLigninPercent[i])) {
+      if(leafShape[i]=="Scale") {
+        cohLigninPercent[i] = 14.55;
+      } else if(leafShape[i]=="Spines") {
+        cohLigninPercent[i] = 14.55;
+      } else if(leafShape[i]=="Linear" | leafShape[i]=="Needle") {
+        if(leafSize[i]=="Small") {
+          cohLigninPercent[i] = 18.55;
+        } else if(leafSize[i] == "Medium") {
+          cohLigninPercent[i] = 24.52;
+        } else { 
+          cohLigninPercent[i] = 24.52;
+        }
+      } else { //Broad
+        if(leafSize[i]=="Small") {
+          cohLigninPercent[i] = 22.32;
+        } else if(leafSize[i] == "Medium") {
+          cohLigninPercent[i] = 20.21;
+        } else { 
+          cohLigninPercent[i] = 15.50;
+        }
+      }
+    }
+  }
+  return(cohLigninPercent);
+}
 
 
 
@@ -992,12 +1024,11 @@ double standFuel(List x, DataFrame SpParams, double gdd = NA_REAL, bool includeD
 NumericVector cohortEquilibriumLeafLitter(List x, DataFrame SpParams, double AET = 800, String mode = "MED") {
   NumericVector fb = cohortFoliarBiomass(x, SpParams, NA_REAL, mode);
   NumericVector ld = cohortNumericParameter(x, SpParams, "LeafDuration");
-  NumericVector lignin = cohortNumericParameter(x, SpParams, "LigninPercent");
+  NumericVector lignin = ligninPercentWithImputation(x, SpParams);
   int ncoh = fb.size();
   NumericVector eqli(ncoh);
   double ki = 0.0;
   for(int i=0;i<ncoh;i++) {
-    if(NumericVector::is_na(lignin[i])) lignin[i] = 20.0; // Default to 20%
     ki = (-0.5365+0.00241*AET) - (-0.01586+0.000056*AET)*lignin[i];//Meentemeyer (1978)
     // Rcout<<ki<<"\n";
     eqli[i] = fb[i]/(ld[i]*ki);

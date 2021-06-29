@@ -7,7 +7,7 @@
 - New species categorical params (for inbuilt imputation) 'LeafShape' and 'LeafSize'
 - Parameter 'Flammability' index eliminated (non-meansurable property of flammability).
 - Parameter 'LeafLitterFuelType' eliminated because it is derived from 'LeafShape' and 'LeafSize'.
-- Defaults added for 'r635', 'heatContent' and 'SAV' according to 'LeafShape' and 'LeafSize'
+- Defaults added for 'r635', 'heatContent', 'LigninPercent' and 'SAV' according to 'LeafShape' and 'LeafSize'
 - New function 'getSpParamsDefinition()' returns definition of species parameters.
 - Inbuilt defaults added for shrub allometries, depending on 'LifeForm' and 'Hmax', and for tree allometries, depending on 'Group'.
 - Default value added for 'pDead'.
